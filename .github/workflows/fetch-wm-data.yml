@@ -155,6 +155,13 @@ jobs:
         run: python compute_player_streaks.py
         continue-on-error: true
 
+      # ── Signal-Check „Analyse"-Tab (Content) — vorgerechnete Signal-Bilanz je Spiel×Markt ──
+      # 06.07.2026 (Lucas): eigener Nav-Tab. STRIKT isoliert (kein Verdict, nicht in Picks/Ledger).
+      # Muss NACH allen Daten-/Signal-Files laufen. Statisches Pages-Frontend liest signal_check.json.
+      - name: 🔎 Signal-Check-Batch (Analyse-Tab)
+        run: python signal_check.py --batch
+        continue-on-error: true
+
       # ── API-Football Predictions (externes Cross-Model) ───────────────
       # Drittes Modell unabhängig von Skellam+Elo und Pinnacle. apif_predictions
       # Signal vergleicht pro 1X2/DNB-Pick gegen Pinnacle implied. Cache 24h
@@ -407,6 +414,7 @@ jobs:
           git add wm_status.json 2>/dev/null || true
           git add wm_streaks.json 2>/dev/null || true   # Streak-Content (neu/untracked, 28.06.2026)
           git add player_streaks.json 2>/dev/null || true   # Spieler-Serien-Content (06.07.2026)
+          git add signal_check.json 2>/dev/null || true      # Signal-Check „Analyse"-Tab (06.07.2026)
           git add pick_announce_state.json 2>/dev/null || true   # Neuer-Pick-Noti-Basis (03.07.2026)
           git add streak_watch.json 2>/dev/null || true          # Serien-Watch-State (04.07.2026)
           # Diagnose: was ist staged? (im Log sichtbar, kein stilles Versagen mehr)

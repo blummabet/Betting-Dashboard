@@ -38,7 +38,7 @@ const _ALL_PANELS = [
   'intlCardsPanel', 'intlTrackingPanel', 'intlWm2026Panel', 'intlTelegramPanel',
   'tiktokStudioPanel', 'streaksPanel',
   'polymarketPanel', 'polyTraderPanel', 'polyWalletsPanel',
-  'heartPanel', 'statusPanel',
+  'heartPanel', 'statusPanel', 'signalCheckPanel',
 ];
 
 // Top-nav button IDs (Heart/Status seit 28.06.2026 im „Mehr"-Dropdown, nicht mehr hier)
@@ -74,6 +74,7 @@ function showView(view) {
     'polytrading':       'polyTraderPanel',
     'polybetting':       'polymarketPanel',
     'polywallets':       'polyWalletsPanel',
+    'analyse':           'signalCheckPanel',
     'heart':             'heartPanel',
     'status':            'statusPanel',
   };
@@ -132,14 +133,14 @@ function showView(view) {
   // ── „Mehr"-Menü (28.06.2026, Lucas): Heart/Status/Telegram/TikTok gebündelt ──
   // Desktop = Dropdown (#navMore + .top-more-menu), Mobile = Bottom-Sheet (.more-sheet).
   // Telegram/TikTok haben Section 'intl' → über die volle View (_activeView) matchen.
-  const MORE_SECS  = ['polybetting', 'polywallets', 'heart', 'status'];
+  const MORE_SECS  = ['polybetting', 'polywallets', 'heart', 'status', 'analyse'];
   const MORE_VIEWS = ['intl-studio'];   // Telegram lebt jetzt im Status-Tab (28.06.2026)
   const isMore = MORE_SECS.includes(_activeSection) || MORE_VIEWS.includes(_activeView);
 
   // Desktop: „Mehr"-Button aktiv nur für seine eigenen Einträge (Poly bleibt eigene Top-Buttons).
   const navMore = document.getElementById('navMore');
   if (navMore) navMore.classList.toggle('active',
-    ['heart', 'status'].includes(_activeView) || MORE_VIEWS.includes(_activeView));
+    ['heart', 'status', 'analyse'].includes(_activeView) || MORE_VIEWS.includes(_activeView));
   document.querySelectorAll('.top-more-menu .tm-item').forEach(b => {
     b.classList.toggle('active', b.getAttribute('data-view') === _activeView);
   });
@@ -171,6 +172,7 @@ function showView(view) {
   if (view === 'polybetting')       initPolymarket();
   if (view === 'polytrading')       initPolyTrader();
   if (view === 'polywallets'  && typeof initPolyWallets === 'function') initPolyWallets();
+  if (view === 'analyse'      && typeof initSignalCheck === 'function') initSignalCheck();
   // (25.06.2026, Lucas: Liga auf WM-Stack) National-Views laufen jetzt auf dem
   // bewährten WM-Renderer/Tracking (liest liga-data.json) statt statischem
   // renderer.js-Output bzw. initResultsV2.
