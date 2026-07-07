@@ -332,14 +332,27 @@ def main() -> int:
         "public_static_bias": "nur bei Sharp-vs-Public-Divergenz",
         "weather_signal":   "nur bei ≥30°C + Klima-Asymmetrie",
         "apif_predictions": "nur wenn APIF-Daten vorhanden",
+        # 07.07.2026 (Lucas: Status aufräumen): Liga/kontext-Signale sind in der WM per Design still —
+        # National-Teams haben keine Liga-Tabelle, kein Transferfenster, keine Trainerwechsel-Feeds.
+        "league_pressure":    "nur Liga (WM: nicht anwendbar)",
+        "topscorer_momentum": "nur Liga/kontextabhängig",
+        "coach_change":       "nur bei Trainerwechsel (Liga)",
+        "transfer_shift":     "nur bei Kader-Abgängen (Liga)",
+        "streak_momentum":    "nur bei laufender Serie",
+        "smart_money":        "nur bei Big-Wallet-Konzentration",
+        "chance_creation":    "nur bei xG-Detailabdeckung",
+        "form_rating":        "nur bei Rating-Abdeckung",
     }
     for n in signal_names:
         if fire[n] > 0:
             continue
         if n in CORE:
             errors.append(f"🧠 Signal '{n}' feuert in 0 Picks — sollte als Kern-Signal feuern!")
-        else:
-            warns.append(f"🧠 Signal '{n}' feuert nicht ({CONDITIONAL_OK.get(n, 'kontextabhängig')})")
+        elif n not in CONDITIONAL_OK:
+            # Nur GENUINE Anomalien warnen (nicht-Kern, aber ohne bekannten Kontext-Grund).
+            # Erwartbar stille Signale (CONDITIONAL_OK) erzeugen KEIN Gelb mehr — den echten
+            # „Signal verstummt trotz Historie"-Fall fängt check_signal_coverage (history-basiert).
+            warns.append(f"🧠 Signal '{n}' feuert nicht — unerwartet still, Engine prüfen")
 
     # ── Report ───────────────────────────────────────────────────────────
     fired = [n for n in signal_names if fire[n] > 0]

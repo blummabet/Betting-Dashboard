@@ -180,6 +180,23 @@ def check_venue_matches_schedule(ctx):
                 "Seed-Venues waren reihenweise falsch (KOR-CZE SoFi statt Guadalajara).")
 
 
+def _finished_keys(ctx):
+    """Match-Keys (HOME-AWAY) BEENDETER Spiele (07.07.2026, Lucas: Status aufräumen). Readiness-
+    Guards, die eine Write-Seiten-Aktion einfordern, sollen nur AKTIONABLE (anstehende/live) Spiele
+    flaggen — auf ein beendetes Spiel lässt sich Closing/Safer-Line/Odds nicht mehr anwenden; die
+    historische CLV-Wirkung trägt compute_clv_summary. Live-Lecks werden weiter geflaggt."""
+    FINAL = {"FT", "AET", "PEN", "AWD", "WO"}
+    done = set()
+    for gd in (ctx.wm.get("groups") or {}).values():
+        for fx in gd.get("fixtures", []):
+            if fx.get("home") and str((fx.get("result") or {}).get("status") or "").upper() in FINAL:
+                done.add(f"{fx['home']}-{fx['away']}")
+    for kf in (ctx.wm.get("koFixtures") or []):
+        if kf.get("home") and str((kf.get("result") or {}).get("status") or "").upper() in FINAL:
+            done.add(f"{kf['home']}-{kf['away']}")
+    return done
+
+
 @integrity_check
 def check_closing_prematch(ctx):
     """In-Play-Schutz für den CLV (16.06.2026 → QAT-SUI-Phantom).
@@ -194,10 +211,11 @@ def check_closing_prematch(ctx):
     if not isinstance(cl, dict) or not cl:
         return None
     ko_by_key = {ctx.mk(fx): fx.get("kickoff") for _g, fx in ctx.fixtures}
+    finished = _finished_keys(ctx)
     fails = []
     for key, snap in cl.items():
-        if not isinstance(snap, dict):
-            continue
+        if not isinstance(snap, dict) or key in finished:
+            continue   # beendete Spiele: historisch, nicht mehr aktionierbar (CLV-Summary trägt es)
         frozen, ko = snap.get("frozenAt"), ko_by_key.get(key)
         if not frozen or not ko:
             continue
@@ -448,10 +466,11 @@ def _real_match_keys(ctx):
 @integrity_check
 def check_odds_sane(ctx):
     real = _real_match_keys(ctx)
+    finished = _finished_keys(ctx)
     fails = []
     for mk, o in ctx.odds.items():
-        if mk not in real:
-            continue   # Phantom-Keys separat (check_no_phantom_odds)
+        if mk not in real or mk in finished:
+            continue   # Phantom-Keys separat (check_no_phantom_odds); beendete Spiele = historisch
         hw, dr, aw = o.get("hw"), o.get("dr"), o.get("aw")
         if not all(isinstance(x, (int, float)) and x > 1.0 for x in (hw, dr, aw)):
             fails.append(f"{mk}: 1X2 unvollständig hw={hw} dr={dr} aw={aw}")
@@ -1019,6 +1038,7 @@ def check_safer_line_applied(ctx):
     FLOOR = 1.35
     picks = ctx.wm.get("picks") or {}
     odds = ctx.odds
+    finished = _finished_keys(ctx)
     fails = []
     for key, plist in picks.items():
         if not isinstance(plist, list):
@@ -1027,6 +1047,8 @@ def check_safer_line_applied(ctx):
         if len(parts) < 4:
             continue
         ha = f"{parts[-2]}-{parts[-1]}"
+        if ha in finished:
+            continue   # beendetes Spiel: Pick immutable, Safer-Line nicht mehr ableitbar (Übergangsrauschen)
         o = odds.get(ha) or {}
         for p in plist:
             if p.get("source") != "steam" or p.get("trackingExcluded"):
