@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "wm",
-    "generatedAt": "2026-07-07T07:30:57.559495+00:00",
+    "generatedAt": "2026-07-07T10:47:34.506075+00:00",
     "games": 99,
     "markets": [
       "Heimsieg",
@@ -47451,8 +47451,8 @@
         },
         "Auswärtssieg": {
           "tip": "Spanien (Auswärtssieg)",
-          "headline": "4 von 5 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Spanien (Auswärtssieg)“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 1 Signal(e) dagegenhalten.",
+          "headline": "4 von 6 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Spanien (Auswärtssieg)“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 2 Signal(e) dagegenhalten.",
           "confirm": [
             {
               "name": "form_trend",
@@ -47481,6 +47481,12 @@
           ],
           "contradict": [
             {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung",
+              "evidence": "Pinnacle hat Auswärts um -1.9pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
+              "dir": "contradict"
+            },
+            {
               "name": "lineup_signal",
               "label": "die Aufstellung",
               "evidence": "🚨 bei Auswärts sitzt nur auf der Bank Ferran Torres (ATT) · bei Auswärts sitzt nur auf der Bank Víctor Muñoz (ATT) · bei Auswärts fehlt Jesús Rodríguez (ATT) · bei Auswärts sitzt nur auf der Bank Borja Iglesias (ATT) · bei Auswärts fehlt Fermín (MID)",
@@ -47489,10 +47495,6 @@
           ],
           "neutral": [],
           "silent": [
-            {
-              "name": "lead_lag_bias",
-              "label": "die Pinnacle-Bewegung"
-            },
             {
               "name": "public_static_bias",
               "label": "der Public-Bias"
@@ -47572,9 +47574,9 @@
           ],
           "score": {
             "confirm": 4,
-            "contradict": 1,
+            "contradict": 2,
             "neutral": 0,
-            "decisive": 5
+            "decisive": 6
           }
         },
         "Über 2.5 Tore": {
@@ -48379,15 +48381,9 @@
       "markets": {
         "Heimsieg": {
           "tip": "Argentinien (Heimsieg)",
-          "headline": "4 von 5 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Argentinien (Heimsieg)“ mehrheitlich — am deutlichsten die Pinnacle-Bewegung, auch wenn 1 Signal(e) dagegenhalten.",
+          "headline": "3 von 4 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Argentinien (Heimsieg)“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 1 Signal(e) dagegenhalten.",
           "confirm": [
-            {
-              "name": "lead_lag_bias",
-              "label": "die Pinnacle-Bewegung",
-              "evidence": "Pinnacle hat Heim um +2.2pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
-              "dir": "confirm"
-            },
             {
               "name": "form_trend",
               "label": "die Formkurve",
@@ -48417,6 +48413,10 @@
           ],
           "neutral": [],
           "silent": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung"
+            },
             {
               "name": "public_static_bias",
               "label": "der Public-Bias"
@@ -48499,10 +48499,10 @@
             }
           ],
           "score": {
-            "confirm": 4,
+            "confirm": 3,
             "contradict": 1,
             "neutral": 0,
-            "decisive": 5
+            "decisive": 4
           }
         },
         "Auswärtssieg": {
@@ -48521,7 +48521,7 @@
             {
               "name": "lead_lag_bias",
               "label": "die Pinnacle-Bewegung",
-              "evidence": "Pinnacle hat Auswärts um -1.5pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
+              "evidence": "Pinnacle hat Auswärts um -1.6pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
               "dir": "contradict"
             },
             {
@@ -50155,8 +50155,8 @@
         },
         "Über 2.5 Tore": {
           "tip": "Über 2.5 Tore",
-          "headline": "3 von 4 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Über 2.5 Tore“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 1 Signal(e) dagegenhalten.",
+          "headline": "3 von 5 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Über 2.5 Tore“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 2 Signal(e) dagegenhalten.",
           "confirm": [
             {
               "name": "form_trend",
@@ -50182,6 +50182,12 @@
               "name": "pressure_index",
               "label": "der Tabellendruck",
               "evidence": "🎯 KO-Vorsicht (gegen Über)",
+              "dir": "contradict"
+            },
+            {
+              "name": "weather_signal",
+              "label": "das Wetter",
+              "evidence": "🌡 Bei 31°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ESP temperate · BEL temperate",
               "dir": "contradict"
             }
           ],
@@ -50222,10 +50228,6 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell"
-            },
-            {
-              "name": "weather_signal",
-              "label": "das Wetter"
             },
             {
               "name": "incentive_signal",
@@ -50274,20 +50276,26 @@
           ],
           "score": {
             "confirm": 3,
-            "contradict": 1,
+            "contradict": 2,
             "neutral": 0,
-            "decisive": 4
+            "decisive": 5
           }
         },
         "Unter 2.5 Tore": {
           "tip": "Unter 2.5 Tore",
-          "headline": "1 von 4 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „Unter 2.5 Tore“ kritisch — vor allem die Formkurve spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
+          "headline": "2 von 5 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „Unter 2.5 Tore“ kritisch — vor allem die Formkurve spricht dagegen, 2 Signal(e) stützen ihn dennoch.",
           "confirm": [
             {
               "name": "pressure_index",
               "label": "der Tabellendruck",
               "evidence": "🎯 KO-Vorsicht (Unter wahrscheinlicher)",
+              "dir": "confirm"
+            },
+            {
+              "name": "weather_signal",
+              "label": "das Wetter",
+              "evidence": "🌡 Bei 31°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ESP temperate · BEL temperate",
               "dir": "confirm"
             }
           ],
@@ -50350,10 +50358,6 @@
               "label": "das externe Prognosemodell"
             },
             {
-              "name": "weather_signal",
-              "label": "das Wetter"
-            },
-            {
               "name": "incentive_signal",
               "label": "die Anreizlage"
             },
@@ -50399,10 +50403,10 @@
             }
           ],
           "score": {
-            "confirm": 1,
+            "confirm": 2,
             "contradict": 3,
             "neutral": 0,
-            "decisive": 4
+            "decisive": 5
           }
         }
       }
@@ -50547,15 +50551,9 @@
         },
         "Auswärtssieg": {
           "tip": "England (Auswärtssieg)",
-          "headline": "4 von 5 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „England (Auswärtssieg)“ mehrheitlich — am deutlichsten die Pinnacle-Bewegung, auch wenn 1 Signal(e) dagegenhalten.",
+          "headline": "3 von 4 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „England (Auswärtssieg)“ mehrheitlich — am deutlichsten das Wetter, auch wenn 1 Signal(e) dagegenhalten.",
           "confirm": [
-            {
-              "name": "lead_lag_bias",
-              "label": "die Pinnacle-Bewegung",
-              "evidence": "Pinnacle hat Auswärts um +2.0pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
-              "dir": "confirm"
-            },
             {
               "name": "weather_signal",
               "label": "das Wetter",
@@ -50585,6 +50583,10 @@
           ],
           "neutral": [],
           "silent": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung"
+            },
             {
               "name": "public_static_bias",
               "label": "der Public-Bias"
@@ -50667,10 +50669,10 @@
             }
           ],
           "score": {
-            "confirm": 4,
+            "confirm": 3,
             "contradict": 1,
             "neutral": 0,
-            "decisive": 5
+            "decisive": 4
           }
         },
         "Über 2.5 Tore": {

@@ -1,5 +1,5 @@
 {
-  "savedAt": "2026-07-07T07:31:15.025968+00:00",
+  "savedAt": "2026-07-07T10:48:08.565700+00:00",
   "picks": {
     "A-1-KOR-CZE": [
       {
@@ -20865,25 +20865,6 @@
         "baseVerdict": "ABWÄGEN",
         "signals": [
           {
-            "name": "lead_lag_bias",
-            "score": 2.61,
-            "confidence": 0.7,
-            "evidence": "Pinnacle hat Auswärts um +2.0pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
-            "weight": 1.206,
-            "weighted_score": 2.2,
-            "metadata": {
-              "stage": "confirmed",
-              "pinn_move_pp": 1.96,
-              "soft_moves": [
-                {
-                  "bk": "public",
-                  "move_pp": 2.22
-                }
-              ],
-              "outcome": "aw"
-            }
-          },
-          {
             "name": "injury",
             "score": -1.2,
             "confidence": 0.57,
@@ -20904,19 +20885,19 @@
           },
           {
             "name": "weather_signal",
-            "score": 0.99,
+            "score": 1.02,
             "confidence": 0.65,
             "evidence": "🌡 Bei 33°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — Heim NOR (cold) leidet",
             "weight": 0.892,
-            "weighted_score": 0.23,
+            "weighted_score": 0.24,
             "metadata": {
               "temp_max": 33.8,
-              "tempAtKickoff": 33.3,
-              "effective_temp": 33.3,
+              "tempAtKickoff": 33.4,
+              "effective_temp": 33.4,
               "kickoff_mod": 1.0,
               "home_climate": "cold",
               "away_climate": "temperate",
-              "heat_intensity": 0.66,
+              "heat_intensity": 0.68,
               "climate_controlled": false,
               "side": "away"
             },
@@ -20967,35 +20948,35 @@
           },
           {
             "name": "smart_money",
-            "score": -0.46,
+            "score": -0.44,
             "confidence": 0.41,
-            "evidence": "💰 Auf Polymarket liegen 44% des Geldes auf Auswärts — weniger als der faire Preis hergibt (53%), und es sind echte Wale dahinter (Top-Wallets 78%).",
+            "evidence": "💰 Auf Polymarket liegen 44% des Geldes auf Auswärts — weniger als der faire Preis hergibt (53%), und es sind echte Wale dahinter (Top-Wallets 75%).",
             "weight": 1.25,
-            "weighted_score": -0.24,
+            "weighted_score": -0.23,
             "metadata": {
               "outcome": "away",
-              "share": 0.436,
-              "topHolderShare": 0.779,
+              "share": 0.437,
+              "topHolderShare": 0.752,
               "fairShare": 0.535,
-              "excessPP": -9.9,
-              "totalUsd": 105262.0,
-              "topTraders": 18,
+              "excessPP": -9.8,
+              "totalUsd": 112219.0,
+              "topTraders": 20,
               "cluster": 0,
               "clustered": false,
               "netFlowUsd": null,
-              "hoursToKickoff": 111.8,
+              "hoursToKickoff": 109.5,
               "exitFlag": false
             }
           }
         ],
-        "signalAdjustmentPP": 1.25,
-        "signalCountPos": 4,
+        "signalAdjustmentPP": 0.88,
+        "signalCountPos": 3,
         "signalCountNeg": 2,
-        "signalAdjustmentPP_trade": 1.7,
-        "signalCountPos_trade": 4,
+        "signalAdjustmentPP_trade": 1.3,
+        "signalCountPos_trade": 3,
         "signalCountNeg_trade": 1,
-        "effectiveEdgePP": -2.8,
-        "effectiveEdgePP_trade": -2.3,
+        "effectiveEdgePP": -3.1,
+        "effectiveEdgePP_trade": -2.7,
         "convictionScore": 5,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
@@ -21010,31 +20991,27 @@
           "move_pp": 2.77
         },
         "smartMoney": {
-          "totalUsd": 105262.0,
-          "topTraders": 18,
-          "hoursToKickoff": 111.8,
+          "totalUsd": 112219.0,
+          "topTraders": 20,
+          "hoursToKickoff": 109.5,
           "outcomes": {
             "home": {
-              "usd": 47655.0,
-              "topHolderShare": 0.391,
+              "usd": 51298.0,
+              "topHolderShare": 0.406,
               "holders": 200,
-              "share": 0.453,
-              "cluster": 1,
-              "buyUsd": 3000.0,
-              "sellUsd": 0.0,
-              "netFlowUsd": 3000.0
+              "share": 0.457
             },
             "draw": {
-              "usd": 11686.0,
-              "topHolderShare": 0.923,
-              "holders": 161,
-              "share": 0.111
+              "usd": 11853.0,
+              "topHolderShare": 0.908,
+              "holders": 179,
+              "share": 0.106
             },
             "away": {
-              "usd": 45921.0,
-              "topHolderShare": 0.779,
+              "usd": 49068.0,
+              "topHolderShare": 0.752,
               "holders": 200,
-              "share": 0.436
+              "share": 0.437
             }
           }
         },
@@ -21043,15 +21020,15 @@
       },
       {
         "market": "Beide Teams treffen — Ja",
-        "odds": 1.69,
-        "modelOdds": 1.63,
+        "odds": 1.67,
+        "modelOdds": 1.617,
         "conf": "medium",
         "verdict": "ABWÄGEN",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": -2,
-        "info": "📉 Pinnacle 1.76→1.57 (Sharp-Money-Drop +6.9pp) · Soft-Konsens hinkt +4.3pp (Value, noch nicht bestätigt)",
+        "info": "📉 Pinnacle 1.76→1.56 (Sharp-Money-Drop +7.7pp) · Soft-Konsens hinkt +4.0pp (Value, noch nicht bestätigt)",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -21060,17 +21037,17 @@
         "lamA": null,
         "lamTotal": null,
         "source": "steam",
-        "steamMovePP": 6.9,
+        "steamMovePP": 7.7,
         "steamOpen": 1.76,
-        "steamCur": 1.57,
+        "steamCur": 1.56,
         "softOpen": 1.69,
-        "softNow": 1.685,
+        "softNow": 1.665,
         "entryBook": "soft",
-        "entryOdd": 1.69,
+        "entryOdd": 1.67,
         "lateEntry": false,
         "steamDerived": false,
         "softConfirmed": false,
-        "softFollowPP": 0.2,
+        "softFollowPP": 0.9,
         "ahLine": null,
         "recentMovePP": 6.5,
         "freshnessState": "confirm",
@@ -21082,16 +21059,16 @@
         "signals": [
           {
             "name": "public_static_bias",
-            "score": -1.94,
-            "confidence": 0.54,
-            "evidence": "Die breite Masse (Konsens (12 Books)) lässt BTTS Ja um 3.5pp links liegen (vs Pinnacle) — kein Publikums-Hebel hier.",
+            "score": -1.85,
+            "confidence": 0.53,
+            "evidence": "Die breite Masse (Konsens (12 Books)) lässt BTTS Ja um 3.3pp links liegen (vs Pinnacle) — kein Publikums-Hebel hier.",
             "weight": 0.947,
-            "weighted_score": -0.99,
+            "weighted_score": -0.93,
             "metadata": {
               "market_key": "bttsY",
-              "diff_pp": -3.48,
-              "sharp_p": 0.589,
-              "public_p": 0.5542,
+              "diff_pp": -3.31,
+              "sharp_p": 0.5938,
+              "public_p": 0.5607,
               "public_bk": "Konsens (12 Books)"
             }
           },
@@ -21125,13 +21102,13 @@
             }
           }
         ],
-        "signalAdjustmentPP": 3.04,
+        "signalAdjustmentPP": 3.09,
         "signalCountPos": 2,
         "signalCountNeg": 1,
         "signalAdjustmentPP_trade": -0.2,
         "signalCountPos_trade": 1,
         "signalCountNeg_trade": 1,
-        "effectiveEdgePP": 1.0,
+        "effectiveEdgePP": 1.1,
         "effectiveEdgePP_trade": -2.2,
         "convictionScore": 4,
         "convictionVerdict": "watch",
@@ -21143,31 +21120,27 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 105262.0,
-          "topTraders": 18,
-          "hoursToKickoff": 111.8,
+          "totalUsd": 112219.0,
+          "topTraders": 20,
+          "hoursToKickoff": 109.5,
           "outcomes": {
             "home": {
-              "usd": 47655.0,
-              "topHolderShare": 0.391,
+              "usd": 51298.0,
+              "topHolderShare": 0.406,
               "holders": 200,
-              "share": 0.453,
-              "cluster": 1,
-              "buyUsd": 3000.0,
-              "sellUsd": 0.0,
-              "netFlowUsd": 3000.0
+              "share": 0.457
             },
             "draw": {
-              "usd": 11686.0,
-              "topHolderShare": 0.923,
-              "holders": 161,
-              "share": 0.111
+              "usd": 11853.0,
+              "topHolderShare": 0.908,
+              "holders": 179,
+              "share": 0.106
             },
             "away": {
-              "usd": 45921.0,
-              "topHolderShare": 0.779,
+              "usd": 49068.0,
+              "topHolderShare": 0.752,
               "holders": 200,
-              "share": 0.436
+              "share": 0.437
             }
           }
         },
@@ -21176,15 +21149,15 @@
       },
       {
         "market": "Über 2.5 Tore",
-        "odds": 1.77,
-        "modelOdds": 1.735,
+        "odds": 1.74,
+        "modelOdds": 1.723,
         "conf": "high",
         "verdict": "ABWÄGEN",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": -3,
-        "info": "📉 Pinnacle 1.85→1.68 (Sharp-Money-Drop +5.5pp) · Soft-Konsens hinkt +3.2pp (Value, noch nicht bestätigt)",
+        "info": "📉 Pinnacle 1.85→1.67 (Sharp-Money-Drop +5.8pp) · ✅ Soft-Konsens folgte +2.5pp (bestätigt)",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -21193,17 +21166,17 @@
         "lamA": null,
         "lamTotal": null,
         "source": "steam",
-        "steamMovePP": 5.5,
+        "steamMovePP": 5.8,
         "steamOpen": 1.85,
-        "steamCur": 1.68,
+        "steamCur": 1.67,
         "softOpen": 1.82,
-        "softNow": 1.775,
+        "softNow": 1.74,
         "entryBook": "soft",
-        "entryOdd": 1.77,
+        "entryOdd": 1.74,
         "lateEntry": false,
         "steamDerived": false,
-        "softConfirmed": false,
-        "softFollowPP": 1.4,
+        "softConfirmed": true,
+        "softFollowPP": 2.5,
         "ahLine": null,
         "recentMovePP": 5.2,
         "freshnessState": "confirm",
@@ -21213,21 +21186,6 @@
         "flipReady": false,
         "baseVerdict": "ABWÄGEN",
         "signals": [
-          {
-            "name": "public_static_bias",
-            "score": -1.31,
-            "confidence": 0.49,
-            "evidence": "Die breite Masse (Konsens (12 Books)) lässt Über 2.5 um 2.2pp links liegen (vs Pinnacle) — kein Publikums-Hebel hier.",
-            "weight": 0.947,
-            "weighted_score": -0.61,
-            "metadata": {
-              "market_key": "o25",
-              "diff_pp": -2.21,
-              "sharp_p": 0.5532,
-              "public_p": 0.531,
-              "public_bk": "Konsens (12 Books)"
-            }
-          },
           {
             "name": "form_trend",
             "score": 3.6,
@@ -21276,19 +21234,19 @@
           },
           {
             "name": "weather_signal",
-            "score": -2.31,
+            "score": -2.38,
             "confidence": 0.65,
             "evidence": "🌡 Bei 33°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — NOR cold · ENG temperate",
             "weight": 0.892,
-            "weighted_score": -1.34,
+            "weighted_score": -1.38,
             "metadata": {
               "temp_max": 33.8,
-              "tempAtKickoff": 33.3,
-              "effective_temp": 33.3,
+              "tempAtKickoff": 33.4,
+              "effective_temp": 33.4,
               "kickoff_mod": 1.0,
               "home_climate": "cold",
               "away_climate": "temperate",
-              "heat_intensity": 0.66,
+              "heat_intensity": 0.68,
               "climate_controlled": false,
               "side": "over"
             }
@@ -21321,14 +21279,14 @@
             }
           }
         ],
-        "signalAdjustmentPP": 1.31,
+        "signalAdjustmentPP": 1.61,
         "signalCountPos": 4,
-        "signalCountNeg": 3,
-        "signalAdjustmentPP_trade": -1.3,
+        "signalCountNeg": 2,
+        "signalAdjustmentPP_trade": -1.0,
         "signalCountPos_trade": 3,
-        "signalCountNeg_trade": 3,
-        "effectiveEdgePP": -1.7,
-        "effectiveEdgePP_trade": -4.3,
+        "signalCountNeg_trade": 2,
+        "effectiveEdgePP": -1.4,
+        "effectiveEdgePP_trade": -4.0,
         "convictionScore": 5,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
@@ -21339,31 +21297,27 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 105262.0,
-          "topTraders": 18,
-          "hoursToKickoff": 111.8,
+          "totalUsd": 112219.0,
+          "topTraders": 20,
+          "hoursToKickoff": 109.5,
           "outcomes": {
             "home": {
-              "usd": 47655.0,
-              "topHolderShare": 0.391,
+              "usd": 51298.0,
+              "topHolderShare": 0.406,
               "holders": 200,
-              "share": 0.453,
-              "cluster": 1,
-              "buyUsd": 3000.0,
-              "sellUsd": 0.0,
-              "netFlowUsd": 3000.0
+              "share": 0.457
             },
             "draw": {
-              "usd": 11686.0,
-              "topHolderShare": 0.923,
-              "holders": 161,
-              "share": 0.111
+              "usd": 11853.0,
+              "topHolderShare": 0.908,
+              "holders": 179,
+              "share": 0.106
             },
             "away": {
-              "usd": 45921.0,
-              "topHolderShare": 0.779,
+              "usd": 49068.0,
+              "topHolderShare": 0.752,
               "holders": 200,
-              "share": 0.436
+              "share": 0.437
             }
           }
         },
@@ -23233,31 +23187,31 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 500623.0,
-          "topTraders": 43,
-          "hoursToKickoff": 14.8,
+          "totalUsd": 508031.0,
+          "topTraders": 47,
+          "hoursToKickoff": 12.5,
           "outcomes": {
             "home": {
-              "usd": 54188.0,
-              "topHolderShare": 0.637,
+              "usd": 58746.0,
+              "topHolderShare": 0.615,
               "holders": 200,
-              "share": 0.108
+              "share": 0.116,
+              "cluster": 1,
+              "buyUsd": 3000.0,
+              "sellUsd": 0.0,
+              "netFlowUsd": 3000.0
             },
             "draw": {
-              "usd": 55944.0,
-              "topHolderShare": 0.83,
+              "usd": 57639.0,
+              "topHolderShare": 0.812,
               "holders": 200,
-              "share": 0.112
+              "share": 0.113
             },
             "away": {
-              "usd": 390491.0,
-              "topHolderShare": 0.764,
+              "usd": 391646.0,
+              "topHolderShare": 0.755,
               "holders": 200,
-              "share": 0.78,
-              "cluster": 1,
-              "buyUsd": 10425.0,
-              "sellUsd": 0.0,
-              "netFlowUsd": 10425.0
+              "share": 0.771
             }
           }
         },
