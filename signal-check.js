@@ -56,7 +56,11 @@ function _scStyles() {
   #signalCheckPanel .sc-card.neg .mk{color:#f87171;}
   #signalCheckPanel .sc-card .desc{font-size:11px;color:#8b949e;line-height:1.4;margin-top:3px;}
   #signalCheckPanel .sc-disc{color:#8b949e;font-size:12px;text-align:center;margin-top:8px;
-    border-top:1px solid rgba(125,211,252,.22);padding-top:14px;}`;
+    border-top:1px solid rgba(125,211,252,.22);padding-top:14px;}
+  #signalCheckPanel .sc-export{display:flex;gap:10px;justify-content:center;margin-top:18px;flex-wrap:wrap;}
+  #signalCheckPanel .sc-btn{background:rgba(125,211,252,.10);color:#7dd3fc;border:1px solid rgba(125,211,252,.35);
+    border-radius:12px;padding:11px 18px;font-size:14px;font-weight:700;cursor:pointer;}
+  #signalCheckPanel .sc-btn:hover{background:rgba(125,211,252,.18);}`;
   var st = document.createElement('style');
   st.id = 'scStyles'; st.textContent = css;
   document.head.appendChild(st);
@@ -116,7 +120,7 @@ function _scRender() {
   if (!m) { view.innerHTML = '<p style="color:#8b949e">Für diesen Markt liegt keine Analyse vor.</p>'; return; }
   var dec = (m.score && m.score.decisive) || 0;
   var conf = (m.score && m.score.confirm) || 0;
-  var html =
+  var html = '<div id="scCapture" style="background:#0a0e27;padding:22px;border-radius:18px;">' +
     '<div class="sc-match"><div class="sc-mline">' +
     '<div class="sc-teams">' + (g.homeFlag || '') + ' ' + g.home + ' <span class="vs">vs</span> ' +
     (g.awayFlag || '') + ' ' + g.away + '</div>' +
@@ -137,5 +141,37 @@ function _scRender() {
   if (sil) html += '<p class="sc-gh">Stumm — kein Signal (z.B. kein Markt-Move)</p><div class="sc-grid">' + sil + '</div>';
   var disc = (_scData._meta && _scData._meta.disclaimer) || 'Reine Signal-Analyse — kein Wettaufruf.';
   html += '<div class="sc-disc">' + disc + '</div>';
+  html += '</div>';  // #scCapture Ende
+  html += '<div class="sc-export">' +
+    '<button class="sc-btn" id="scImg">📷 Als Bild exportieren</button>' +
+    '<button class="sc-btn" id="scTxt">📋 Text kopieren</button></div>';
   view.innerHTML = html;
+  document.getElementById('scImg').addEventListener('click', function () { _scExportImage(g, m); });
+  document.getElementById('scTxt').addEventListener('click', function () { _scCopyText(g, m); });
+}
+
+function _scExportImage(g, m) {
+  var node = document.getElementById('scCapture');
+  if (!node || typeof html2canvas !== 'function') { alert('Export nicht verfügbar.'); return; }
+  html2canvas(node, { backgroundColor: '#0a0e27', scale: 2 }).then(function (canvas) {
+    var a = document.createElement('a');
+    a.download = 'signalcheck_' + g.key + '_' + (m.tip || '').replace(/[^\wäöüÄÖÜ]+/g, '-') + '.png';
+    a.href = canvas.toDataURL('image/png');
+    a.click();
+  });
+}
+
+function _scCopyText(g, m) {
+  var lines = ['🔎 Signal-Check: ' + (m.tip || ''),
+               g.home + ' vs ' + g.away + ' · ' + g.round, '',
+               (m.headline || '')];
+  (m.confirm || []).forEach(function (s) { lines.push('✅ ' + s.label); });
+  (m.contradict || []).forEach(function (s) { lines.push('❌ ' + s.label); });
+  lines.push('', m.reason || '', '', (_scData._meta && _scData._meta.disclaimer) || '');
+  var txt = lines.join('\n');
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(txt).then(function () {
+      var b = document.getElementById('scTxt'); if (b) { b.textContent = '✓ Kopiert'; setTimeout(function () { b.textContent = '📋 Text kopieren'; }, 1500); }
+    });
+  } else { alert(txt); }
 }
