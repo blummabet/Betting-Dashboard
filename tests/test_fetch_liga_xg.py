@@ -46,15 +46,32 @@ class TestApply(unittest.TestCase):
         self.assertEqual(calls, [(40, "40"), (50, "50")])   # api_id als int, our_id als str
         self.assertEqual(wm["xgStats"]["40"]["source"], "apif_real")
 
-    def test_skips_fresh(self):
+    def test_skips_fresh_und_angereichert(self):
+        # Frisch UND bereits angereichert (keyPassesForAvg da) → übersprungen.
         wm = self._wm()
-        wm["xgStats"]["40"] = {"xgForAvg": 1.2, "updatedAt": datetime.now(timezone.utc).isoformat()}
+        wm["xgStats"]["40"] = {"xgForAvg": 1.2, "keyPassesForAvg": 9.1,
+                               "updatedAt": datetime.now(timezone.utc).isoformat()}
         called = []
         def fake(api_id, our_id):
             called.append(our_id)
             return {"xgForAvg": 1.0, "xgGames": 4}
         X.apply_to_wm(wm, fake)
-        self.assertEqual(called, ["50"])   # 40 ist frisch → übersprungen
+        self.assertEqual(called, ["50"])   # 40 frisch+angereichert → übersprungen
+
+    def test_reichert_frische_basis_an(self):
+        # 06.07.2026 (Lucas): frische Basis-xgStats von fetch_wm_corners (KEINE keyPassesForAvg)
+        # darf NICHT übersprungen werden — sonst fehlen die Shot-Quality-Extras dauerhaft.
+        wm = self._wm()
+        wm["xgStats"]["40"] = {"xgForAvg": 1.2, "xgAgainstAvg": 1.0, "games": 7,
+                               "updatedAt": datetime.now(timezone.utc).isoformat()}
+        called = []
+        def fake(api_id, our_id):
+            called.append(our_id)
+            return {"xgForAvg": 1.5, "xgAgainstAvg": 0.9, "xgGames": 6, "games": 8,
+                    "keyPassesForAvg": 9.4, "ratingAvg": 7.1}
+        X.apply_to_wm(wm, fake)
+        self.assertEqual(sorted(called), ["40", "50"])   # 40 wird angereichert, nicht übersprungen
+        self.assertEqual(wm["xgStats"]["40"]["keyPassesForAvg"], 9.4)
 
     def test_aggregate_none_skipped(self):
         wm = self._wm()

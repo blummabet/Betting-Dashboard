@@ -5,9 +5,15 @@ zudem iterierte main() nur groups. Beides gefixt."""
 import sys
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 sys.path.insert(0, str(Path(__file__).parent.parent))
 import generate_wm_rule_preview as R
+
+# Die KO-Texte sind zufalls-variiert (random.choice). Für deterministische Assertions immer die
+# ERSTE Variante wählen — die enthält je Runde das wörtliche Label (Halb-/Finale-Varianten sonst
+# auch mal „Endspiel" statt „Finale").
+_first = lambda lst: lst[0]
 
 
 class TestRulePreviewKO(unittest.TestCase):
@@ -18,15 +24,17 @@ class TestRulePreviewKO(unittest.TestCase):
 
     def test_ko_string_matchday_kein_crash(self):
         # Vorher: TypeError '>=' str vs int
-        full, tg = R.build_preview(self._info("R16"))
+        with patch("generate_wm_rule_preview.random.choice", _first):
+            full, tg = R.build_preview(self._info("R16"))
         self.assertTrue(full and tg)
         self.assertIn("Achtelfinale", full)
 
     def test_ko_verschiedene_runden(self):
-        for code, label in [("R32", "Sechzehntelfinale"), ("QF", "Viertelfinale"),
-                            ("SF", "Halbfinale"), ("F", "Finale")]:
-            full, _ = R.build_preview(self._info(code))
-            self.assertIn(label, full)
+        with patch("generate_wm_rule_preview.random.choice", _first):
+            for code, label in [("R32", "Sechzehntelfinale"), ("QF", "Viertelfinale"),
+                                ("SF", "Halbfinale"), ("F", "Finale")]:
+                full, _ = R.build_preview(self._info(code))
+                self.assertIn(label, full)
 
     def test_gruppe_int_matchday_weiter_ok(self):
         full, tg = R.build_preview(self._info(3, group="A"))

@@ -64,7 +64,12 @@ def apply_to_wm(wm: dict, aggregate_fn) -> int:
                 teams.append(tid)
     updated = 0
     for tid in teams:
-        if _is_fresh((wm["xgStats"].get(tid) or {}).get("updatedAt")):
+        _ex = wm["xgStats"].get(tid) or {}
+        # 06.07.2026 (Lucas: „MLS-Signale dünn"): NUR überspringen, wenn frisch UND bereits von uns
+        # angereichert (Shot-Quality-Extras da). fetch_wm_corners schreibt vorher eine Basis-xgStats
+        # (nur xgForAvg/xgAgainstAvg, frischer updatedAt, KEINE keyPassesForAvg) → ohne diese Bedingung
+        # überspringt der Frische-Check die Anreicherung dauerhaft → chance_creation/form_rating tot.
+        if _is_fresh(_ex.get("updatedAt")) and _ex.get("keyPassesForAvg") is not None:
             continue
         try:
             stats = aggregate_fn(int(tid), tid)
