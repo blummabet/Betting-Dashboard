@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "wm",
-    "generatedAt": "2026-07-07T05:09:37.694201+00:00",
+    "generatedAt": "2026-07-07T07:30:56.473899+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -576,7 +576,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 87,
-        "label": "Eigentendenz 87%"
+        "label": "Eigen 87% + Gegner 27% → 63%"
       },
       "ratePct": 87,
       "seq": [
@@ -589,7 +589,16 @@
         true,
         true
       ],
-      "xgBacked": null
+      "xgBacked": null,
+      "next": {
+        "oppId": "ESP",
+        "oppName": "Spanien",
+        "atHome": false,
+        "date": "2026-07-10",
+        "oppRatePct": 27
+      },
+      "oppSupportPct": 27,
+      "matchupPct": 63
     },
     {
       "teamId": "FRA",
@@ -1013,8 +1022,9 @@
       "signalInfo": {
         "state": "confirm",
         "count": 2,
-        "conviction": 3,
+        "conviction": 4,
         "names": [
+          "public_static_bias",
           "xg_strength",
           "freshness_leg"
         ],
@@ -1335,8 +1345,9 @@
       "signalInfo": {
         "state": "confirm",
         "count": 2,
-        "conviction": 3,
+        "conviction": 4,
         "names": [
+          "public_static_bias",
           "xg_strength",
           "freshness_leg"
         ],
@@ -1912,7 +1923,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 87,
-        "label": "Eigentendenz 87%"
+        "label": "Eigen 87% + Gegner 53% → 73%"
       },
       "ratePct": 87,
       "seq": [
@@ -1922,7 +1933,16 @@
         true,
         true
       ],
-      "xgBacked": null
+      "xgBacked": null,
+      "next": {
+        "oppId": "BEL",
+        "oppName": "Belgien",
+        "atHome": true,
+        "date": "2026-07-10",
+        "oppRatePct": 53
+      },
+      "oppSupportPct": 53,
+      "matchupPct": 73
     },
     {
       "teamId": "GER",
@@ -2081,14 +2101,14 @@
       "signalInfo": {
         "state": "confirm",
         "count": 4,
-        "conviction": 4,
+        "conviction": 5,
         "names": [
+          "public_static_bias",
           "form_trend",
           "xg_strength",
           "pressure_index",
           "weather_signal",
-          "chance_creation",
-          "freshness_leg"
+          "chance_creation"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -2505,7 +2525,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 73,
-        "label": "Eigentendenz 73%"
+        "label": "Eigen 73% + Gegner 47% → 63%"
       },
       "ratePct": 73,
       "seq": [
@@ -2518,36 +2538,16 @@
         true,
         true
       ],
-      "xgBacked": null
-    },
-    {
-      "teamId": "ESP",
-      "team": "Spanien",
-      "flag": "🇪🇸",
-      "league": "H",
-      "leagueName": "Gruppe H",
-      "type": "cleanSheet",
-      "market": "Zu null",
-      "length": 4,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 73,
-        "label": "Eigentendenz 73%"
+      "xgBacked": null,
+      "next": {
+        "oppId": "BEL",
+        "oppName": "Belgien",
+        "atHome": true,
+        "date": "2026-07-10",
+        "oppRatePct": 53
       },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null
+      "oppSupportPct": 47,
+      "matchupPct": 63
     },
     {
       "teamId": "JOR",
@@ -3160,6 +3160,44 @@
       "matchupPct": 51
     },
     {
+      "teamId": "ESP",
+      "team": "Spanien",
+      "flag": "🇪🇸",
+      "league": "H",
+      "leagueName": "Gruppe H",
+      "type": "cleanSheet",
+      "market": "Zu null",
+      "length": 4,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 73,
+        "label": "Eigen 73% + Gegner 13% → 49%"
+      },
+      "ratePct": 73,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "BEL",
+        "oppName": "Belgien",
+        "atHome": true,
+        "date": "2026-07-10",
+        "oppRatePct": 13
+      },
+      "oppSupportPct": 13,
+      "matchupPct": 49
+    },
+    {
       "teamId": "GER",
       "team": "Deutschland",
       "flag": "🇩🇪",
@@ -3589,7 +3627,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 73,
-        "label": "Eigentendenz 73%"
+        "label": "Eigen 73% + Gegner 47% → 63%"
       },
       "ratePct": 73,
       "seq": [
@@ -3602,7 +3640,16 @@
         false,
         true
       ],
-      "xgBacked": null
+      "xgBacked": null,
+      "next": {
+        "oppId": "BEL",
+        "oppName": "Belgien",
+        "atHome": true,
+        "date": "2026-07-10",
+        "oppRatePct": 53
+      },
+      "oppSupportPct": 47,
+      "matchupPct": 63
     },
     {
       "teamId": "ESP",
@@ -3618,7 +3665,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 87,
-        "label": "Eigentendenz 87%"
+        "label": "Eigen 87% + Gegner 53% → 73%"
       },
       "ratePct": 87,
       "seq": [
@@ -3631,36 +3678,16 @@
         false,
         true
       ],
-      "xgBacked": null
-    },
-    {
-      "teamId": "ESP",
-      "team": "Spanien",
-      "flag": "🇪🇸",
-      "league": "H",
-      "leagueName": "Gruppe H",
-      "type": "cleanSheet",
-      "market": "Zu null",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 73,
-        "label": "Eigentendenz 73%"
+      "xgBacked": null,
+      "next": {
+        "oppId": "BEL",
+        "oppName": "Belgien",
+        "atHome": true,
+        "date": "2026-07-10",
+        "oppRatePct": 53
       },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null
+      "oppSupportPct": 53,
+      "matchupPct": 73
     },
     {
       "teamId": "GER",
@@ -4130,14 +4157,14 @@
       "signalInfo": {
         "state": "confirm",
         "count": 4,
-        "conviction": 4,
+        "conviction": 5,
         "names": [
+          "public_static_bias",
           "form_trend",
           "xg_strength",
           "pressure_index",
           "weather_signal",
-          "chance_creation",
-          "freshness_leg"
+          "chance_creation"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -4180,14 +4207,14 @@
       "signalInfo": {
         "state": "confirm",
         "count": 4,
-        "conviction": 4,
+        "conviction": 5,
         "names": [
+          "public_static_bias",
           "form_trend",
           "xg_strength",
           "pressure_index",
           "weather_signal",
-          "chance_creation",
-          "freshness_leg"
+          "chance_creation"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -4232,8 +4259,9 @@
       "signalInfo": {
         "state": "confirm",
         "count": 2,
-        "conviction": 3,
+        "conviction": 4,
         "names": [
+          "public_static_bias",
           "xg_strength",
           "freshness_leg"
         ],
@@ -5125,6 +5153,44 @@
       "matchupPct": 57
     },
     {
+      "teamId": "ESP",
+      "team": "Spanien",
+      "flag": "🇪🇸",
+      "league": "H",
+      "leagueName": "Gruppe H",
+      "type": "cleanSheet",
+      "market": "Zu null",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 73,
+        "label": "Eigen 73% + Gegner 13% → 49%"
+      },
+      "ratePct": 73,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "BEL",
+        "oppName": "Belgien",
+        "atHome": true,
+        "date": "2026-07-10",
+        "oppRatePct": 13
+      },
+      "oppSupportPct": 13,
+      "matchupPct": 49
+    },
+    {
       "teamId": "GER",
       "team": "Deutschland",
       "flag": "🇩🇪",
@@ -5316,35 +5382,6 @@
         false,
         true,
         false
-      ],
-      "xgBacked": null
-    },
-    {
-      "teamId": "ESP",
-      "team": "Spanien",
-      "flag": "🇪🇸",
-      "league": "H",
-      "leagueName": "Gruppe H",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 50,
-        "label": "Eigentendenz 50%"
-      },
-      "ratePct": 50,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        true,
-        true
       ],
       "xgBacked": null
     },
@@ -5757,6 +5794,44 @@
       },
       "oppSupportPct": 20,
       "matchupPct": 44
+    },
+    {
+      "teamId": "ESP",
+      "team": "Spanien",
+      "flag": "🇪🇸",
+      "league": "H",
+      "leagueName": "Gruppe H",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 50,
+        "label": "Eigen 50% + Gegner 27% → 41%"
+      },
+      "ratePct": 50,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "BEL",
+        "oppName": "Belgien",
+        "atHome": true,
+        "date": "2026-07-10",
+        "oppRatePct": 73
+      },
+      "oppSupportPct": 27,
+      "matchupPct": 41
     },
     {
       "teamId": "MAR",

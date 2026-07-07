@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-07T05:10:21Z",
+  "generatedAt": "2026-07-07T07:31:28Z",
   "windowDays": 2,
   "upcoming": 0,
   "signalsFired": [
@@ -43,7 +43,7 @@
     "chance_creation": 53,
     "form_rating": 17,
     "freshness_leg": 25,
-    "smart_money": 38,
+    "smart_money": 39,
     "league_pressure": 0,
     "fixture_congestion": 3,
     "topscorer_momentum": 0,
@@ -63,6 +63,7 @@
     "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))",
     "🛡️ Pinnacle-1X2 vollständig + plausibel: 1 Fehler (z.B. GER-PRY: 1X2 unvollständig hw=None dr=None aw=None)",
     "🛡️ Trade-Auswertung: CLV/Closing erfasst: 1 Fehler (z.B. polyClose fehlt durchgängig → 'halten bis Closing'-Gegenrechnung nicht möglich (Poly-Closing-Snapshot nicht erfasst))",
+    "🛡️ Public = Multi-Book-Konsens (nicht Einzel-Book): 1 Fehler (z.B. ESP-BEL: public aus Einzel-Book 'williamhill' statt Konsens)",
     "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 3 Fehler (z.B. BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet)"
   ],
   "oks": [
@@ -71,7 +72,7 @@
     "📊 APIF-Predictions: 59 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 48 Teams",
-    "📉 Odds-History: 98 Fixtures, Ø 112.9 Snapshots",
+    "📉 Odds-History: 99 Fixtures, Ø 112.0 Snapshots",
     "💹 Poly-Preise: 4 Fixtures",
     "💼 Poly-Balance: $425.37",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
@@ -282,9 +283,11 @@
       "id": "public_is_multibook",
       "label": "Public = Multi-Book-Konsens (nicht Einzel-Book)",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "ESP-BEL: public aus Einzel-Book 'williamhill' statt Konsens"
+      ],
       "note": "public_static_bias soll auf Median-Konsens laufen, nicht 1 verrauschtem Soft-Book. Single-Book = fetch_wm_multibook_odds hat (noch) nicht geschrieben."
     },
     {

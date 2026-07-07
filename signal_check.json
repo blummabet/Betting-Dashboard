@@ -1,8 +1,8 @@
 {
   "_meta": {
     "dataset": "wm",
-    "generatedAt": "2026-07-07T05:09:39.077836+00:00",
-    "games": 98,
+    "generatedAt": "2026-07-07T07:30:57.559495+00:00",
+    "games": 99,
     "markets": [
       "Heimsieg",
       "Auswärtssieg",
@@ -47451,8 +47451,8 @@
         },
         "Auswärtssieg": {
           "tip": "Spanien (Auswärtssieg)",
-          "headline": "4 von 6 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Spanien (Auswärtssieg)“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 2 Signal(e) dagegenhalten.",
+          "headline": "4 von 5 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Spanien (Auswärtssieg)“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 1 Signal(e) dagegenhalten.",
           "confirm": [
             {
               "name": "form_trend",
@@ -47481,12 +47481,6 @@
           ],
           "contradict": [
             {
-              "name": "lead_lag_bias",
-              "label": "die Pinnacle-Bewegung",
-              "evidence": "Pinnacle hat Auswärts um -2.4pp bewegt, public hängen noch hinterher (1) — wir sind früh dran.",
-              "dir": "contradict"
-            },
-            {
               "name": "lineup_signal",
               "label": "die Aufstellung",
               "evidence": "🚨 bei Auswärts sitzt nur auf der Bank Ferran Torres (ATT) · bei Auswärts sitzt nur auf der Bank Víctor Muñoz (ATT) · bei Auswärts fehlt Jesús Rodríguez (ATT) · bei Auswärts sitzt nur auf der Bank Borja Iglesias (ATT) · bei Auswärts fehlt Fermín (MID)",
@@ -47495,6 +47489,10 @@
           ],
           "neutral": [],
           "silent": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung"
+            },
             {
               "name": "public_static_bias",
               "label": "der Public-Bias"
@@ -47574,15 +47572,15 @@
           ],
           "score": {
             "confirm": 4,
-            "contradict": 2,
+            "contradict": 1,
             "neutral": 0,
-            "decisive": 6
+            "decisive": 5
           }
         },
         "Über 2.5 Tore": {
           "tip": "Über 2.5 Tore",
-          "headline": "3 von 6 klaren Signalen bestätigen den Tipp",
-          "reason": "Gemischtes Bild: 3 Signal(e) dafür, 3 dagegen — kein klares Signal-Übergewicht.",
+          "headline": "3 von 5 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Über 2.5 Tore“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 2 Signal(e) dagegenhalten.",
           "confirm": [
             {
               "name": "form_trend",
@@ -47614,12 +47612,6 @@
               "name": "lineup_signal",
               "label": "die Aufstellung",
               "evidence": "🚨 bei Auswärts sitzt nur auf der Bank Ferran Torres (ATT) · bei Auswärts sitzt nur auf der Bank Víctor Muñoz (ATT) · bei Auswärts fehlt Jesús Rodríguez (ATT) · bei Auswärts sitzt nur auf der Bank Borja Iglesias (ATT) · bei Auswärts fehlt Fermín (MID)",
-              "dir": "contradict"
-            },
-            {
-              "name": "weather_signal",
-              "label": "das Wetter",
-              "evidence": "🌡 Bei 40°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — POR temperate · ESP temperate",
               "dir": "contradict"
             }
           ],
@@ -47656,6 +47648,10 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell"
+            },
+            {
+              "name": "weather_signal",
+              "label": "das Wetter"
             },
             {
               "name": "incentive_signal",
@@ -47704,15 +47700,15 @@
           ],
           "score": {
             "confirm": 3,
-            "contradict": 3,
+            "contradict": 2,
             "neutral": 0,
-            "decisive": 6
+            "decisive": 5
           }
         },
         "Unter 2.5 Tore": {
           "tip": "Unter 2.5 Tore",
-          "headline": "3 von 6 klaren Signalen bestätigen den Tipp",
-          "reason": "Gemischtes Bild: 3 Signal(e) dafür, 3 dagegen — kein klares Signal-Übergewicht.",
+          "headline": "2 von 5 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „Unter 2.5 Tore“ kritisch — vor allem die Formkurve spricht dagegen, 2 Signal(e) stützen ihn dennoch.",
           "confirm": [
             {
               "name": "pressure_index",
@@ -47724,12 +47720,6 @@
               "name": "lineup_signal",
               "label": "die Aufstellung",
               "evidence": "🚨 bei Auswärts sitzt nur auf der Bank Ferran Torres (ATT) · bei Auswärts sitzt nur auf der Bank Víctor Muñoz (ATT) · bei Auswärts fehlt Jesús Rodríguez (ATT) · bei Auswärts sitzt nur auf der Bank Borja Iglesias (ATT) · bei Auswärts fehlt Fermín (MID)",
-              "dir": "confirm"
-            },
-            {
-              "name": "weather_signal",
-              "label": "das Wetter",
-              "evidence": "🌡 Bei 40°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — POR temperate · ESP temperate",
               "dir": "confirm"
             }
           ],
@@ -47788,6 +47778,10 @@
               "label": "das externe Prognosemodell"
             },
             {
+              "name": "weather_signal",
+              "label": "das Wetter"
+            },
+            {
               "name": "incentive_signal",
               "label": "die Anreizlage"
             },
@@ -47833,10 +47827,10 @@
             }
           ],
           "score": {
-            "confirm": 3,
+            "confirm": 2,
             "contradict": 3,
             "neutral": 0,
-            "decisive": 6
+            "decisive": 5
           }
         }
       }
@@ -48391,7 +48385,7 @@
             {
               "name": "lead_lag_bias",
               "label": "die Pinnacle-Bewegung",
-              "evidence": "Pinnacle hat Heim um +1.6pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
+              "evidence": "Pinnacle hat Heim um +2.2pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
               "dir": "confirm"
             },
             {
@@ -48417,7 +48411,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 36°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — Heim ARG (temperate) leidet",
+              "evidence": "🌡 Bei 35°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — Heim ARG (temperate) leidet",
               "dir": "contradict"
             }
           ],
@@ -48513,17 +48507,23 @@
         },
         "Auswärtssieg": {
           "tip": "Ägypten (Auswärtssieg)",
-          "headline": "1 von 4 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „Ägypten (Auswärtssieg)“ kritisch — vor allem die Formkurve spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
+          "headline": "1 von 5 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „Ägypten (Auswärtssieg)“ kritisch — vor allem die Pinnacle-Bewegung spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
           "confirm": [
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 36°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — Heim ARG (temperate) leidet",
+              "evidence": "🌡 Bei 35°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — Heim ARG (temperate) leidet",
               "dir": "confirm"
             }
           ],
           "contradict": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung",
+              "evidence": "Pinnacle hat Auswärts um -1.5pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
+              "dir": "contradict"
+            },
             {
               "name": "form_trend",
               "label": "die Formkurve",
@@ -48545,10 +48545,6 @@
           ],
           "neutral": [],
           "silent": [
-            {
-              "name": "lead_lag_bias",
-              "label": "die Pinnacle-Bewegung"
-            },
             {
               "name": "public_static_bias",
               "label": "der Public-Bias"
@@ -48632,9 +48628,9 @@
           ],
           "score": {
             "confirm": 1,
-            "contradict": 3,
+            "contradict": 4,
             "neutral": 0,
-            "decisive": 4
+            "decisive": 5
           }
         },
         "Über 2.5 Tore": {
@@ -48652,7 +48648,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 36°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ARG temperate",
+              "evidence": "🌡 Bei 35°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ARG temperate",
               "dir": "contradict"
             }
           ],
@@ -48772,7 +48768,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 36°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ARG temperate",
+              "evidence": "🌡 Bei 35°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ARG temperate",
               "dir": "confirm"
             }
           ],
@@ -49904,6 +49900,514 @@
       }
     },
     {
+      "key": "ESP-BEL",
+      "home": "Spanien",
+      "away": "Belgien",
+      "homeFlag": "🇪🇸",
+      "awayFlag": "🇧🇪",
+      "homeId": "ESP",
+      "awayId": "BEL",
+      "round": "Viertelfinale",
+      "date": "2026-07-10",
+      "kickoff": "2026-07-10T19:00:00Z",
+      "markets": {
+        "Heimsieg": {
+          "tip": "Spanien (Heimsieg)",
+          "headline": "2 von 2 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Spanien (Heimsieg)“ mehrheitlich — am deutlichsten injury.",
+          "confirm": [
+            {
+              "name": "injury",
+              "label": "injury",
+              "evidence": "🩹 Auswärts 1.2pp (Z. Debast (?), J. Doku (?))",
+              "dir": "confirm"
+            },
+            {
+              "name": "form_rating",
+              "label": "die Spieler-Ratings",
+              "evidence": "📋 Im Form-Rating steht Heim bei 7.26, Auswärts bei 7.20 — Vorsprung +0.06, in der Abwehr -0.50.",
+              "dir": "confirm"
+            }
+          ],
+          "contradict": [],
+          "neutral": [],
+          "silent": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung"
+            },
+            {
+              "name": "public_static_bias",
+              "label": "der Public-Bias"
+            },
+            {
+              "name": "travel_burden",
+              "label": "die Reisebelastung"
+            },
+            {
+              "name": "form_trend",
+              "label": "die Formkurve"
+            },
+            {
+              "name": "h2h_pattern",
+              "label": "der Direktvergleich"
+            },
+            {
+              "name": "xg_strength",
+              "label": "die xG-Werte"
+            },
+            {
+              "name": "polymarket_sharp",
+              "label": "der Polymarket-Fluss"
+            },
+            {
+              "name": "steam_lag",
+              "label": "der Steam-Move"
+            },
+            {
+              "name": "pressure_index",
+              "label": "der Tabellendruck"
+            },
+            {
+              "name": "lineup_signal",
+              "label": "die Aufstellung"
+            },
+            {
+              "name": "apif_predictions",
+              "label": "das externe Prognosemodell"
+            },
+            {
+              "name": "weather_signal",
+              "label": "das Wetter"
+            },
+            {
+              "name": "incentive_signal",
+              "label": "die Anreizlage"
+            },
+            {
+              "name": "altitude_signal",
+              "label": "die Höhenlage"
+            },
+            {
+              "name": "chance_creation",
+              "label": "die Chancenqualität"
+            },
+            {
+              "name": "freshness_leg",
+              "label": "die Frische der Bewegung"
+            },
+            {
+              "name": "smart_money",
+              "label": "das Smart Money"
+            },
+            {
+              "name": "league_pressure",
+              "label": "der Ligadruck"
+            },
+            {
+              "name": "fixture_congestion",
+              "label": "die Termindichte"
+            },
+            {
+              "name": "topscorer_momentum",
+              "label": "die Torjäger-Form"
+            },
+            {
+              "name": "coach_change",
+              "label": "der Trainerwechsel"
+            },
+            {
+              "name": "transfer_shift",
+              "label": "Kader-Abgänge"
+            },
+            {
+              "name": "streak_momentum",
+              "label": "die aktuelle Serie"
+            }
+          ],
+          "score": {
+            "confirm": 2,
+            "contradict": 0,
+            "neutral": 0,
+            "decisive": 2
+          }
+        },
+        "Auswärtssieg": {
+          "tip": "Belgien (Auswärtssieg)",
+          "headline": "0 von 2 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „Belgien (Auswärtssieg)“ kritisch — vor allem injury spricht dagegen.",
+          "confirm": [],
+          "contradict": [
+            {
+              "name": "injury",
+              "label": "injury",
+              "evidence": "🩹 Auswärts 1.2pp (Z. Debast (?), J. Doku (?))",
+              "dir": "contradict"
+            },
+            {
+              "name": "form_rating",
+              "label": "die Spieler-Ratings",
+              "evidence": "📋 Im Form-Rating steht Heim bei 7.26, Auswärts bei 7.20 — Vorsprung +0.06, in der Abwehr -0.50.",
+              "dir": "contradict"
+            }
+          ],
+          "neutral": [],
+          "silent": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung"
+            },
+            {
+              "name": "public_static_bias",
+              "label": "der Public-Bias"
+            },
+            {
+              "name": "travel_burden",
+              "label": "die Reisebelastung"
+            },
+            {
+              "name": "form_trend",
+              "label": "die Formkurve"
+            },
+            {
+              "name": "h2h_pattern",
+              "label": "der Direktvergleich"
+            },
+            {
+              "name": "xg_strength",
+              "label": "die xG-Werte"
+            },
+            {
+              "name": "polymarket_sharp",
+              "label": "der Polymarket-Fluss"
+            },
+            {
+              "name": "steam_lag",
+              "label": "der Steam-Move"
+            },
+            {
+              "name": "pressure_index",
+              "label": "der Tabellendruck"
+            },
+            {
+              "name": "lineup_signal",
+              "label": "die Aufstellung"
+            },
+            {
+              "name": "apif_predictions",
+              "label": "das externe Prognosemodell"
+            },
+            {
+              "name": "weather_signal",
+              "label": "das Wetter"
+            },
+            {
+              "name": "incentive_signal",
+              "label": "die Anreizlage"
+            },
+            {
+              "name": "altitude_signal",
+              "label": "die Höhenlage"
+            },
+            {
+              "name": "chance_creation",
+              "label": "die Chancenqualität"
+            },
+            {
+              "name": "freshness_leg",
+              "label": "die Frische der Bewegung"
+            },
+            {
+              "name": "smart_money",
+              "label": "das Smart Money"
+            },
+            {
+              "name": "league_pressure",
+              "label": "der Ligadruck"
+            },
+            {
+              "name": "fixture_congestion",
+              "label": "die Termindichte"
+            },
+            {
+              "name": "topscorer_momentum",
+              "label": "die Torjäger-Form"
+            },
+            {
+              "name": "coach_change",
+              "label": "der Trainerwechsel"
+            },
+            {
+              "name": "transfer_shift",
+              "label": "Kader-Abgänge"
+            },
+            {
+              "name": "streak_momentum",
+              "label": "die aktuelle Serie"
+            }
+          ],
+          "score": {
+            "confirm": 0,
+            "contradict": 2,
+            "neutral": 0,
+            "decisive": 2
+          }
+        },
+        "Über 2.5 Tore": {
+          "tip": "Über 2.5 Tore",
+          "headline": "3 von 4 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Über 2.5 Tore“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 1 Signal(e) dagegenhalten.",
+          "confirm": [
+            {
+              "name": "form_trend",
+              "label": "die Formkurve",
+              "evidence": "📈 Nach der Form fallen ~3.6 Tore pro Spiel, die Linie liegt bei 2.5 — spricht für Über (+1.1 ggü. Linie).",
+              "dir": "confirm"
+            },
+            {
+              "name": "xg_strength",
+              "label": "die xG-Werte",
+              "evidence": "⚡ Die xG-Werte deuten auf ~3.12 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Über (+0.62).",
+              "dir": "confirm"
+            },
+            {
+              "name": "chance_creation",
+              "label": "die Chancenqualität",
+              "evidence": "🎨 Zusammen kreieren beide eher viel Chancen (40.0 aus Schlüsselpässen + Abschlüssen) — spricht für Over.",
+              "dir": "confirm"
+            }
+          ],
+          "contradict": [
+            {
+              "name": "pressure_index",
+              "label": "der Tabellendruck",
+              "evidence": "🎯 KO-Vorsicht (gegen Über)",
+              "dir": "contradict"
+            }
+          ],
+          "neutral": [],
+          "silent": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung"
+            },
+            {
+              "name": "public_static_bias",
+              "label": "der Public-Bias"
+            },
+            {
+              "name": "travel_burden",
+              "label": "die Reisebelastung"
+            },
+            {
+              "name": "injury",
+              "label": "injury"
+            },
+            {
+              "name": "h2h_pattern",
+              "label": "der Direktvergleich"
+            },
+            {
+              "name": "polymarket_sharp",
+              "label": "der Polymarket-Fluss"
+            },
+            {
+              "name": "steam_lag",
+              "label": "der Steam-Move"
+            },
+            {
+              "name": "lineup_signal",
+              "label": "die Aufstellung"
+            },
+            {
+              "name": "apif_predictions",
+              "label": "das externe Prognosemodell"
+            },
+            {
+              "name": "weather_signal",
+              "label": "das Wetter"
+            },
+            {
+              "name": "incentive_signal",
+              "label": "die Anreizlage"
+            },
+            {
+              "name": "altitude_signal",
+              "label": "die Höhenlage"
+            },
+            {
+              "name": "form_rating",
+              "label": "die Spieler-Ratings"
+            },
+            {
+              "name": "freshness_leg",
+              "label": "die Frische der Bewegung"
+            },
+            {
+              "name": "smart_money",
+              "label": "das Smart Money"
+            },
+            {
+              "name": "league_pressure",
+              "label": "der Ligadruck"
+            },
+            {
+              "name": "fixture_congestion",
+              "label": "die Termindichte"
+            },
+            {
+              "name": "topscorer_momentum",
+              "label": "die Torjäger-Form"
+            },
+            {
+              "name": "coach_change",
+              "label": "der Trainerwechsel"
+            },
+            {
+              "name": "transfer_shift",
+              "label": "Kader-Abgänge"
+            },
+            {
+              "name": "streak_momentum",
+              "label": "die aktuelle Serie"
+            }
+          ],
+          "score": {
+            "confirm": 3,
+            "contradict": 1,
+            "neutral": 0,
+            "decisive": 4
+          }
+        },
+        "Unter 2.5 Tore": {
+          "tip": "Unter 2.5 Tore",
+          "headline": "1 von 4 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „Unter 2.5 Tore“ kritisch — vor allem die Formkurve spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
+          "confirm": [
+            {
+              "name": "pressure_index",
+              "label": "der Tabellendruck",
+              "evidence": "🎯 KO-Vorsicht (Unter wahrscheinlicher)",
+              "dir": "confirm"
+            }
+          ],
+          "contradict": [
+            {
+              "name": "form_trend",
+              "label": "die Formkurve",
+              "evidence": "📈 Nach der Form fallen ~3.6 Tore pro Spiel, die Linie liegt bei 2.5 — spricht eher gegen Unter (+1.1 ggü. Linie).",
+              "dir": "contradict"
+            },
+            {
+              "name": "xg_strength",
+              "label": "die xG-Werte",
+              "evidence": "⚡ Die xG-Werte deuten auf ~3.12 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Unter (+0.62).",
+              "dir": "contradict"
+            },
+            {
+              "name": "chance_creation",
+              "label": "die Chancenqualität",
+              "evidence": "🎨 Zusammen kreieren beide eher viel Chancen (40.0 aus Schlüsselpässen + Abschlüssen) — spricht eher gegen Under.",
+              "dir": "contradict"
+            }
+          ],
+          "neutral": [],
+          "silent": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung"
+            },
+            {
+              "name": "public_static_bias",
+              "label": "der Public-Bias"
+            },
+            {
+              "name": "travel_burden",
+              "label": "die Reisebelastung"
+            },
+            {
+              "name": "injury",
+              "label": "injury"
+            },
+            {
+              "name": "h2h_pattern",
+              "label": "der Direktvergleich"
+            },
+            {
+              "name": "polymarket_sharp",
+              "label": "der Polymarket-Fluss"
+            },
+            {
+              "name": "steam_lag",
+              "label": "der Steam-Move"
+            },
+            {
+              "name": "lineup_signal",
+              "label": "die Aufstellung"
+            },
+            {
+              "name": "apif_predictions",
+              "label": "das externe Prognosemodell"
+            },
+            {
+              "name": "weather_signal",
+              "label": "das Wetter"
+            },
+            {
+              "name": "incentive_signal",
+              "label": "die Anreizlage"
+            },
+            {
+              "name": "altitude_signal",
+              "label": "die Höhenlage"
+            },
+            {
+              "name": "form_rating",
+              "label": "die Spieler-Ratings"
+            },
+            {
+              "name": "freshness_leg",
+              "label": "die Frische der Bewegung"
+            },
+            {
+              "name": "smart_money",
+              "label": "das Smart Money"
+            },
+            {
+              "name": "league_pressure",
+              "label": "der Ligadruck"
+            },
+            {
+              "name": "fixture_congestion",
+              "label": "die Termindichte"
+            },
+            {
+              "name": "topscorer_momentum",
+              "label": "die Torjäger-Form"
+            },
+            {
+              "name": "coach_change",
+              "label": "der Trainerwechsel"
+            },
+            {
+              "name": "transfer_shift",
+              "label": "Kader-Abgänge"
+            },
+            {
+              "name": "streak_momentum",
+              "label": "die aktuelle Serie"
+            }
+          ],
+          "score": {
+            "confirm": 1,
+            "contradict": 3,
+            "neutral": 0,
+            "decisive": 4
+          }
+        }
+      }
+    },
+    {
       "key": "NOR-ENG",
       "home": "Norwegen",
       "away": "England",
@@ -49931,7 +50435,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 32°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — Heim NOR (cold) leidet",
+              "evidence": "🌡 Bei 33°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — Heim NOR (cold) leidet",
               "dir": "contradict"
             },
             {
@@ -50049,13 +50553,13 @@
             {
               "name": "lead_lag_bias",
               "label": "die Pinnacle-Bewegung",
-              "evidence": "Pinnacle hat Auswärts um +1.8pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
+              "evidence": "Pinnacle hat Auswärts um +2.0pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
               "dir": "confirm"
             },
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 32°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — Heim NOR (cold) leidet",
+              "evidence": "🌡 Bei 33°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — Heim NOR (cold) leidet",
               "dir": "confirm"
             },
             {
@@ -50203,7 +50707,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 32°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — NOR cold · ENG temperate",
+              "evidence": "🌡 Bei 33°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — NOR cold · ENG temperate",
               "dir": "contradict"
             }
           ],
@@ -50311,7 +50815,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 32°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — NOR cold · ENG temperate",
+              "evidence": "🌡 Bei 33°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — NOR cold · ENG temperate",
               "dir": "confirm"
             }
           ],
