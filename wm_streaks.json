@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "wm",
-    "generatedAt": "2026-07-06T21:23:23.341454+00:00",
+    "generatedAt": "2026-07-07T05:09:37.694201+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -576,7 +576,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 87,
-        "label": "Eigen 87% + Gegner 80% → 84%"
+        "label": "Eigentendenz 87%"
       },
       "ratePct": 87,
       "seq": [
@@ -589,16 +589,7 @@
         true,
         true
       ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "USA",
-        "oppName": "USA",
-        "atHome": false,
-        "date": "2026-07-06",
-        "oppRatePct": 80
-      },
-      "oppSupportPct": 80,
-      "matchupPct": 84
+      "xgBacked": null
     },
     {
       "teamId": "FRA",
@@ -764,6 +755,35 @@
       "xgBacked": null
     },
     {
+      "teamId": "POR",
+      "team": "Portugal",
+      "flag": "🇵🇹",
+      "league": "K",
+      "leagueName": "Gruppe K",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 8,
+      "venue": "H",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 80,
+        "label": "Eigentendenz 80%"
+      },
+      "ratePct": 80,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null
+    },
+    {
       "teamId": "SEN",
       "team": "Senegal",
       "flag": "🇸🇳",
@@ -829,44 +849,6 @@
       },
       "oppSupportPct": 54,
       "matchupPct": 70
-    },
-    {
-      "teamId": "POR",
-      "team": "Portugal",
-      "flag": "🇵🇹",
-      "league": "K",
-      "leagueName": "Gruppe K",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 8,
-      "venue": "H",
-      "strong": true,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 80,
-        "label": "Eigen 80% + Gegner 27% → 59%"
-      },
-      "ratePct": 80,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "ESP",
-        "oppName": "Spanien",
-        "atHome": true,
-        "date": "2026-07-06",
-        "oppRatePct": 27
-      },
-      "oppSupportPct": 27,
-      "matchupPct": 59
     },
     {
       "teamId": "FRA",
@@ -1031,7 +1013,7 @@
       "signalInfo": {
         "state": "confirm",
         "count": 2,
-        "conviction": 4,
+        "conviction": 3,
         "names": [
           "xg_strength",
           "freshness_leg"
@@ -1353,7 +1335,7 @@
       "signalInfo": {
         "state": "confirm",
         "count": 2,
-        "conviction": 4,
+        "conviction": 3,
         "names": [
           "xg_strength",
           "freshness_leg"
@@ -1561,7 +1543,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 87,
-        "label": "Eigen 87% + Gegner 53% → 73%"
+        "label": "Eigentendenz 87%"
       },
       "ratePct": 87,
       "seq": [
@@ -1574,16 +1556,7 @@
         false,
         true
       ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "BEL",
-        "oppName": "Belgien",
-        "atHome": true,
-        "date": "2026-07-06",
-        "oppRatePct": 53
-      },
-      "oppSupportPct": 53,
-      "matchupPct": 73
+      "xgBacked": null
     },
     {
       "teamId": "AUT",
@@ -1939,7 +1912,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 87,
-        "label": "Eigen 87% + Gegner 60% → 76%"
+        "label": "Eigentendenz 87%"
       },
       "ratePct": 87,
       "seq": [
@@ -1949,16 +1922,7 @@
         true,
         true
       ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "POR",
-        "oppName": "Portugal",
-        "atHome": false,
-        "date": "2026-07-06",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 76
+      "xgBacked": null
     },
     {
       "teamId": "GER",
@@ -2116,14 +2080,15 @@
       "matchupPct": 63,
       "signalInfo": {
         "state": "confirm",
-        "count": 3,
+        "count": 4,
         "conviction": 4,
         "names": [
           "form_trend",
           "xg_strength",
           "pressure_index",
           "weather_signal",
-          "chance_creation"
+          "chance_creation",
+          "freshness_leg"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -2168,7 +2133,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 87,
-        "label": "Eigen 87% + Gegner 53% → 73%"
+        "label": "Eigentendenz 87%"
       },
       "ratePct": 87,
       "seq": [
@@ -2181,16 +2146,7 @@
         true,
         true
       ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "BEL",
-        "oppName": "Belgien",
-        "atHome": true,
-        "date": "2026-07-06",
-        "oppRatePct": 53
-      },
-      "oppSupportPct": 53,
-      "matchupPct": 73
+      "xgBacked": null
     },
     {
       "teamId": "AUT",
@@ -2549,7 +2505,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 73,
-        "label": "Eigen 73% + Gegner 47% → 63%"
+        "label": "Eigentendenz 73%"
       },
       "ratePct": 73,
       "seq": [
@@ -2562,16 +2518,36 @@
         true,
         true
       ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "POR",
-        "oppName": "Portugal",
-        "atHome": false,
-        "date": "2026-07-06",
-        "oppRatePct": 53
+      "xgBacked": null
+    },
+    {
+      "teamId": "ESP",
+      "team": "Spanien",
+      "flag": "🇪🇸",
+      "league": "H",
+      "leagueName": "Gruppe H",
+      "type": "cleanSheet",
+      "market": "Zu null",
+      "length": 4,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 73,
+        "label": "Eigentendenz 73%"
       },
-      "oppSupportPct": 47,
-      "matchupPct": 63
+      "ratePct": 73,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": null
     },
     {
       "teamId": "JOR",
@@ -3184,44 +3160,6 @@
       "matchupPct": 51
     },
     {
-      "teamId": "ESP",
-      "team": "Spanien",
-      "flag": "🇪🇸",
-      "league": "H",
-      "leagueName": "Gruppe H",
-      "type": "cleanSheet",
-      "market": "Zu null",
-      "length": 4,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 73,
-        "label": "Eigen 73% + Gegner 20% → 52%"
-      },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "POR",
-        "oppName": "Portugal",
-        "atHome": false,
-        "date": "2026-07-06",
-        "oppRatePct": 20
-      },
-      "oppSupportPct": 20,
-      "matchupPct": 52
-    },
-    {
       "teamId": "GER",
       "team": "Deutschland",
       "flag": "🇩🇪",
@@ -3264,7 +3202,7 @@
       "continuation": {
         "state": "neutral",
         "ratePct": 47,
-        "label": "Eigen 47% + Gegner 73% → 57%"
+        "label": "Eigentendenz 47%"
       },
       "ratePct": 47,
       "seq": [
@@ -3276,16 +3214,7 @@
         true,
         false
       ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "ESP",
-        "oppName": "Spanien",
-        "atHome": true,
-        "date": "2026-07-06",
-        "oppRatePct": 27
-      },
-      "oppSupportPct": 73,
-      "matchupPct": 57
+      "xgBacked": null
     },
     {
       "teamId": "COL",
@@ -3427,7 +3356,7 @@
       "continuation": {
         "state": "wackelt",
         "ratePct": 40,
-        "label": "Eigen 40% + Gegner 33% → 37%"
+        "label": "Eigentendenz 40%"
       },
       "ratePct": 40,
       "seq": [
@@ -3439,16 +3368,7 @@
         false,
         false
       ],
-      "xgBacked": false,
-      "next": {
-        "oppId": "ESP",
-        "oppName": "Spanien",
-        "atHome": true,
-        "date": "2026-07-06",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 33,
-      "matchupPct": 37
+      "xgBacked": false
     },
     {
       "teamId": "ARG",
@@ -3669,7 +3589,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 73,
-        "label": "Eigen 73% + Gegner 47% → 63%"
+        "label": "Eigentendenz 73%"
       },
       "ratePct": 73,
       "seq": [
@@ -3682,16 +3602,7 @@
         false,
         true
       ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "POR",
-        "oppName": "Portugal",
-        "atHome": false,
-        "date": "2026-07-06",
-        "oppRatePct": 53
-      },
-      "oppSupportPct": 47,
-      "matchupPct": 63
+      "xgBacked": null
     },
     {
       "teamId": "ESP",
@@ -3707,7 +3618,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 87,
-        "label": "Eigen 87% + Gegner 60% → 76%"
+        "label": "Eigentendenz 87%"
       },
       "ratePct": 87,
       "seq": [
@@ -3720,16 +3631,36 @@
         false,
         true
       ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "POR",
-        "oppName": "Portugal",
-        "atHome": false,
-        "date": "2026-07-06",
-        "oppRatePct": 60
+      "xgBacked": null
+    },
+    {
+      "teamId": "ESP",
+      "team": "Spanien",
+      "flag": "🇪🇸",
+      "league": "H",
+      "leagueName": "Gruppe H",
+      "type": "cleanSheet",
+      "market": "Zu null",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 73,
+        "label": "Eigentendenz 73%"
       },
-      "oppSupportPct": 60,
-      "matchupPct": 76
+      "ratePct": 73,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        true
+      ],
+      "xgBacked": null
     },
     {
       "teamId": "GER",
@@ -4198,14 +4129,15 @@
       "matchupPct": 63,
       "signalInfo": {
         "state": "confirm",
-        "count": 3,
+        "count": 4,
         "conviction": 4,
         "names": [
           "form_trend",
           "xg_strength",
           "pressure_index",
           "weather_signal",
-          "chance_creation"
+          "chance_creation",
+          "freshness_leg"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -4247,14 +4179,15 @@
       "matchupPct": 63,
       "signalInfo": {
         "state": "confirm",
-        "count": 3,
+        "count": 4,
         "conviction": 4,
         "names": [
           "form_trend",
           "xg_strength",
           "pressure_index",
           "weather_signal",
-          "chance_creation"
+          "chance_creation",
+          "freshness_leg"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -4299,7 +4232,7 @@
       "signalInfo": {
         "state": "confirm",
         "count": 2,
-        "conviction": 4,
+        "conviction": 3,
         "names": [
           "xg_strength",
           "freshness_leg"
@@ -4885,44 +4818,6 @@
       "matchupPct": 64
     },
     {
-      "teamId": "ESP",
-      "team": "Spanien",
-      "flag": "🇪🇸",
-      "league": "H",
-      "leagueName": "Gruppe H",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 50,
-        "label": "Eigen 50% + Gegner 80% → 62%"
-      },
-      "ratePct": 50,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "POR",
-        "oppName": "Portugal",
-        "atHome": false,
-        "date": "2026-07-06",
-        "oppRatePct": 20
-      },
-      "oppSupportPct": 80,
-      "matchupPct": 62
-    },
-    {
       "teamId": "GHA",
       "team": "Ghana",
       "flag": "🇬🇭",
@@ -5041,7 +4936,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 80,
-        "label": "Eigen 80% + Gegner 50% → 68%"
+        "label": "Eigentendenz 80%"
       },
       "ratePct": 80,
       "seq": [
@@ -5053,16 +4948,7 @@
         true,
         true
       ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "ESP",
-        "oppName": "Spanien",
-        "atHome": true,
-        "date": "2026-07-06",
-        "oppRatePct": 50
-      },
-      "oppSupportPct": 50,
-      "matchupPct": 68
+      "xgBacked": null
     },
     {
       "teamId": "SAU",
@@ -5237,44 +5123,6 @@
       },
       "oppSupportPct": 33,
       "matchupPct": 57
-    },
-    {
-      "teamId": "ESP",
-      "team": "Spanien",
-      "flag": "🇪🇸",
-      "league": "H",
-      "leagueName": "Gruppe H",
-      "type": "cleanSheet",
-      "market": "Zu null",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 73,
-        "label": "Eigen 73% + Gegner 20% → 52%"
-      },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "POR",
-        "oppName": "Portugal",
-        "atHome": false,
-        "date": "2026-07-06",
-        "oppRatePct": 20
-      },
-      "oppSupportPct": 20,
-      "matchupPct": 52
     },
     {
       "teamId": "GER",
@@ -5468,6 +5316,35 @@
         false,
         true,
         false
+      ],
+      "xgBacked": null
+    },
+    {
+      "teamId": "ESP",
+      "team": "Spanien",
+      "flag": "🇪🇸",
+      "league": "H",
+      "leagueName": "Gruppe H",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 50,
+        "label": "Eigentendenz 50%"
+      },
+      "ratePct": 50,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        true,
+        true
       ],
       "xgBacked": null
     },
@@ -5804,7 +5681,7 @@
       "continuation": {
         "state": "wackelt",
         "ratePct": 40,
-        "label": "Eigen 40% + Gegner 13% → 29%"
+        "label": "Eigentendenz 40%"
       },
       "ratePct": 40,
       "seq": [
@@ -5816,16 +5693,7 @@
         true,
         false
       ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "ESP",
-        "oppName": "Spanien",
-        "atHome": true,
-        "date": "2026-07-06",
-        "oppRatePct": 13
-      },
-      "oppSupportPct": 13,
-      "matchupPct": 29
+      "xgBacked": null
     },
     {
       "teamId": "CAN",
