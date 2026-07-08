@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-07T21:17:36Z",
+  "generatedAt": "2026-07-08T13:43:44Z",
   "windowDays": 2,
   "upcoming": 0,
   "signalsFired": [
@@ -29,20 +29,20 @@
     "public_static_bias": 19,
     "travel_burden": 77,
     "injury": 6,
-    "form_trend": 135,
+    "form_trend": 136,
     "h2h_pattern": 7,
-    "xg_strength": 125,
+    "xg_strength": 126,
     "polymarket_sharp": 0,
     "steam_lag": 0,
-    "pressure_index": 42,
+    "pressure_index": 43,
     "lineup_signal": 30,
     "apif_predictions": 11,
     "weather_signal": 26,
     "incentive_signal": 24,
     "altitude_signal": 4,
-    "chance_creation": 53,
+    "chance_creation": 54,
     "form_rating": 17,
-    "freshness_leg": 25,
+    "freshness_leg": 26,
     "smart_money": 39,
     "league_pressure": 0,
     "fixture_congestion": 3,
@@ -54,17 +54,19 @@
   "verdict": "warn",
   "errors": [],
   "warns": [
-    "🛡️ Trade-Auswertung: CLV/Closing erfasst: 1 Fehler (z.B. polyClose fehlt durchgängig → 'halten bis Closing'-Gegenrechnung nicht möglich (Poly-Closing-Snapshot nicht erfasst))"
+    "🛡️ Trade-Auswertung: CLV/Closing erfasst: 1 Fehler (z.B. polyClose fehlt durchgängig → 'halten bis Closing'-Gegenrechnung nicht möglich (Poly-Closing-Snapshot nicht erfasst))",
+    "🛡️ Public = Multi-Book-Konsens (nicht Einzel-Book): 1 Fehler (z.B. ARG-SUI: public aus Einzel-Book 'williamhill' statt Konsens)",
+    "🛡️ Soft-Eröffnung echt erfasst: 1 Fehler (z.B. NOR-ENG: Soft bewegte sich 3.75→4.0, aber Opening==Jetzt (3.95) — nicht eingefroren)"
   ],
   "oks": [
-    "🌡️ Weather: 5 Spiele mit Forecast",
+    "🌡️ Weather: 4 Spiele mit Forecast",
     "🎲 Pinnacle-Odds: frischeste 0.0h alt",
-    "📊 APIF-Predictions: 64 Spiele",
+    "📊 APIF-Predictions: 65 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 48 Teams",
-    "📉 Odds-History: 99 Fixtures, Ø 113.1 Snapshots",
+    "📉 Odds-History: 100 Fixtures, Ø 112.4 Snapshots",
     "💹 Poly-Preise: 4 Fixtures",
-    "💼 Poly-Balance: $324.63",
+    "💼 Poly-Balance: $319.17",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
   ],
   "checks": [
@@ -272,9 +274,11 @@
       "id": "public_is_multibook",
       "label": "Public = Multi-Book-Konsens (nicht Einzel-Book)",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "ARG-SUI: public aus Einzel-Book 'williamhill' statt Konsens"
+      ],
       "note": "public_static_bias soll auf Median-Konsens laufen, nicht 1 verrauschtem Soft-Book. Single-Book = fetch_wm_multibook_odds hat (noch) nicht geschrieben."
     },
     {
@@ -425,9 +429,11 @@
       "id": "soft_opening_captured",
       "label": "Soft-Eröffnung echt erfasst",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "NOR-ENG: Soft bewegte sich 3.75→4.0, aber Opening==Jetzt (3.95) — nicht eingefroren"
+      ],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
     },
     {
