@@ -28,6 +28,7 @@ from pathlib import Path
 import cocobet_dataset as D
 from sharp_signals.base import market_side
 from sharp_signals.registry import ACTIVE_SIGNALS, evaluate_signals, _DISABLED_SIGNALS
+from sharp_signals.apif_predictions import _devig_1x2
 
 BASE = Path(__file__).parent
 NEUTRAL_EPS = 0.05   # |score| darunter = neutral (⚪), sonst Vorzeichen entscheidet
@@ -213,6 +214,17 @@ def run_signal_check(wm: dict, home_id: str, away_id: str, market: str, ctx: dic
             "homeId": home_id, "awayId": away_id, "verdict": "SIGNAL_CHECK"}
     if ctx is None:
         ctx = build_context(wm, home_id, away_id)
+
+    # modelOdds = de-viggte Pinnacle-Fair der Pick-Seite. Der echte Motor stempelt das pro Pick;
+    # ohne es bleiben smart_money + apif_predictions still (brauchen die scharfe Baseline). So spiegelt
+    # der Tab die volle Signal-Tiefe der Engine, statt sie zu unterzeichnen. (07.07.2026, Lucas)
+    _snap = ctx.get("odds_snapshot") or {}
+    if side in ("home", "away") and _snap.get("hw"):
+        _dv = _devig_1x2(_snap.get("hw"), _snap.get("dr"), _snap.get("aw"))
+        if _dv:
+            _p = _dv[0] if side == "home" else _dv[2]
+            if _p and _p > 0:
+                pick["modelOdds"] = round(1.0 / _p, 3)
 
     out = evaluate_signals(pick, ctx, weights={})   # neutrale Gewichte → reine Signal-Sicht
     fired = out.get("signals") or []
