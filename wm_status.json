@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-07T10:48:17Z",
+  "generatedAt": "2026-07-07T21:17:36Z",
   "windowDays": 2,
   "upcoming": 0,
   "signalsFired": [
@@ -26,7 +26,7 @@
   "signalsTotal": 25,
   "perSignal": {
     "lead_lag_bias": 14,
-    "public_static_bias": 20,
+    "public_static_bias": 19,
     "travel_burden": 77,
     "injury": 6,
     "form_trend": 135,
@@ -35,8 +35,8 @@
     "polymarket_sharp": 0,
     "steam_lag": 0,
     "pressure_index": 42,
-    "lineup_signal": 29,
-    "apif_predictions": 10,
+    "lineup_signal": 30,
+    "apif_predictions": 11,
     "weather_signal": 26,
     "incentive_signal": 24,
     "altitude_signal": 4,
@@ -54,26 +54,17 @@
   "verdict": "warn",
   "errors": [],
   "warns": [
-    "🧠 Signal 'polymarket_sharp' feuert nicht (nur bei Poly↔Pinnacle-Divergenz)",
-    "🧠 Signal 'steam_lag' feuert nicht (nur bei Quotenbewegung)",
-    "🧠 Signal 'league_pressure' feuert nicht (kontextabhängig)",
-    "🧠 Signal 'topscorer_momentum' feuert nicht (kontextabhängig)",
-    "🧠 Signal 'coach_change' feuert nicht (kontextabhängig)",
-    "🧠 Signal 'transfer_shift' feuert nicht (kontextabhängig)",
-    "🛡️ Closing-Snapshot vor Anpfiff (kein In-Play-Leck): 7 Fehler (z.B. MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen))",
-    "🛡️ Pinnacle-1X2 vollständig + plausibel: 1 Fehler (z.B. GER-PRY: 1X2 unvollständig hw=None dr=None aw=None)",
-    "🛡️ Trade-Auswertung: CLV/Closing erfasst: 1 Fehler (z.B. polyClose fehlt durchgängig → 'halten bis Closing'-Gegenrechnung nicht möglich (Poly-Closing-Snapshot nicht erfasst))",
-    "🛡️ Safer-Line abgeleitet wo verfügbar (≥1.35): 3 Fehler (z.B. BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet)"
+    "🛡️ Trade-Auswertung: CLV/Closing erfasst: 1 Fehler (z.B. polyClose fehlt durchgängig → 'halten bis Closing'-Gegenrechnung nicht möglich (Poly-Closing-Snapshot nicht erfasst))"
   ],
   "oks": [
     "🌡️ Weather: 5 Spiele mit Forecast",
     "🎲 Pinnacle-Odds: frischeste 0.0h alt",
-    "📊 APIF-Predictions: 59 Spiele",
+    "📊 APIF-Predictions: 64 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 48 Teams",
-    "📉 Odds-History: 99 Fixtures, Ø 112.3 Snapshots",
-    "💹 Poly-Preise: 5 Fixtures",
-    "💼 Poly-Balance: $425.37",
+    "📉 Odds-History: 99 Fixtures, Ø 113.1 Snapshots",
+    "💹 Poly-Preise: 4 Fixtures",
+    "💼 Poly-Balance: $324.63",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
   ],
   "checks": [
@@ -99,17 +90,9 @@
       "id": "closing_prematch",
       "label": "Closing-Snapshot vor Anpfiff (kein In-Play-Leck)",
       "severity": "warn",
-      "ok": false,
-      "nFail": 7,
-      "failures": [
-        "MEX-ZAF: Closing +24min nach Anpfiff eingefroren (In-Play → CLV verworfen)",
-        "CAN-BIH: Closing +41min nach Anpfiff eingefroren (In-Play → CLV verworfen)",
-        "QAT-SUI: Closing +123min nach Anpfiff eingefroren (In-Play → CLV verworfen)",
-        "AUS-TUR: Closing +203min nach Anpfiff eingefroren (In-Play → CLV verworfen)",
-        "NED-JPN: Closing +68min nach Anpfiff eingefroren (In-Play → CLV verworfen)",
-        "BEL-EGY: Closing +191min nach Anpfiff eingefroren (In-Play → CLV verworfen)",
-        "ESP-CPV: Closing +60min nach Anpfiff eingefroren (In-Play → CLV verworfen)"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "frozenAt nach Anpfiff = Live-Quoten. Resolver nullt den CLV; Write-Seite sollte Closing spätestens bei Anpfiff einfrieren."
     },
     {
@@ -170,11 +153,9 @@
       "id": "odds_sane",
       "label": "Pinnacle-1X2 vollständig + plausibel",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "GER-PRY: 1X2 unvollständig hw=None dr=None aw=None"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Quelle für Modell-Baseline + Edge."
     },
     {
@@ -185,6 +166,15 @@
       "nFail": 0,
       "failures": [],
       "note": "fetch_wm_poly_prices.real_keys muss bothResolved koFixtures enthalten."
+    },
+    {
+      "id": "ko_apif_coverage",
+      "label": "Anstehende KO-Spiele haben apif-Prognose",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "fetch_wm_apifootball_predictions._load_wm_fixtures muss koFixtures iterieren (KO-Datenpfad)."
     },
     {
       "id": "ko_settlement_ninety_min",
@@ -345,13 +335,9 @@
       "id": "safer_line_applied",
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
-      "ok": false,
-      "nFail": 3,
-      "failures": [
-        "BRA-SCO Unter 2.5 Tore @1.95: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet",
-        "JPN-SWE Heimsieg @1.91: sichere Linie Doppelte Chance — 1X @1.35 verfügbar (≥1.35), nicht abgeleitet",
-        "POR-COL Unter 2.5 Tore @1.91: sichere Linie Unter 3.5 Tore @1.5 verfügbar (≥1.35), nicht abgeleitet"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
     {
