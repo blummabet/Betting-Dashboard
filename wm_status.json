@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-08T17:21:49Z",
+  "generatedAt": "2026-07-08T21:22:27Z",
   "windowDays": 2,
   "upcoming": 0,
   "signalsFired": [
@@ -54,20 +54,20 @@
   "verdict": "warn",
   "errors": [],
   "warns": [
-    "🛡️ Closing nah am Anpfiff erfasst (≤45min): 3 Fehler (z.B. USA-BEL: Closing 355min VOR Anpfiff eingefroren (veraltet — Nah-am-Anpfiff-Capture lief nicht?))",
+    "🛡️ Closing nah am Anpfiff erfasst (≤45min): 2 Fehler (z.B. USA-BEL: Closing 355min VOR Anpfiff eingefroren (veraltet — Nah-am-Anpfiff-Capture lief nicht?))",
     "🛡️ Trade-Auswertung: CLV/Closing erfasst: 1 Fehler (z.B. polyClose fehlt durchgängig → 'halten bis Closing'-Gegenrechnung nicht möglich (Poly-Closing-Snapshot nicht erfasst))",
     "🛡️ Public = Multi-Book-Konsens (nicht Einzel-Book): 1 Fehler (z.B. ARG-SUI: public aus Einzel-Book 'williamhill' statt Konsens)",
-    "🛡️ Soft-Eröffnung echt erfasst: 1 Fehler (z.B. NOR-ENG: Soft bewegte sich 3.75→4.0, aber Opening==Jetzt (3.95) — nicht eingefroren)"
+    "🛡️ Soft-Eröffnung echt erfasst: 1 Fehler (z.B. NOR-ENG: Soft bewegte sich 3.75→4.2, aber Opening==Jetzt (3.95) — nicht eingefroren)"
   ],
   "oks": [
     "🌡️ Weather: 4 Spiele mit Forecast",
-    "🎲 Pinnacle-Odds: frischeste 0.0h alt",
+    "🎲 Pinnacle-Odds: frischeste 0.4h alt",
     "📊 APIF-Predictions: 65 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 48 Teams",
-    "📉 Odds-History: 100 Fixtures, Ø 112.7 Snapshots",
+    "📉 Odds-History: 100 Fixtures, Ø 112.8 Snapshots",
     "💹 Poly-Preise: 4 Fixtures",
-    "💼 Poly-Balance: $319.17",
+    "💼 Poly-Balance: $225.82",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
   ],
   "checks": [
@@ -103,10 +103,9 @@
       "label": "Closing nah am Anpfiff erfasst (≤45min)",
       "severity": "warn",
       "ok": false,
-      "nFail": 3,
+      "nFail": 2,
       "failures": [
         "USA-BEL: Closing 355min VOR Anpfiff eingefroren (veraltet — Nah-am-Anpfiff-Capture lief nicht?)",
-        "POR-ESP: Closing 55min VOR Anpfiff eingefroren (veraltet — Nah-am-Anpfiff-Capture lief nicht?)",
         "SUI-COL: Closing 128min VOR Anpfiff eingefroren (veraltet — Nah-am-Anpfiff-Capture lief nicht?)"
       ],
       "note": "Closing weit vor Anpfiff = tote Linie → CLV unzuverlässig. capture-closing.yml (alle 15min in Anpfiff-Bändern) + ODDS_API_KEY prüfen."
@@ -446,7 +445,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "NOR-ENG: Soft bewegte sich 3.75→4.0, aber Opening==Jetzt (3.95) — nicht eingefroren"
+        "NOR-ENG: Soft bewegte sich 3.75→4.2, aber Opening==Jetzt (3.95) — nicht eingefroren"
       ],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
     },

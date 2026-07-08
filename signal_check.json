@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "wm",
-    "generatedAt": "2026-07-08T17:21:23.281634+00:00",
+    "generatedAt": "2026-07-08T21:22:03.058209+00:00",
     "games": 100,
     "markets": [
       "Heimsieg",
@@ -2066,7 +2066,7 @@
       "markets": {
         "Heimsieg": {
           "tip": "Mexiko (Heimsieg)",
-          "headline": "5 von 6 klaren Signalen bestätigen den Tipp",
+          "headline": "4 von 5 klaren Signalen bestätigen den Tipp",
           "reason": "Unsere Signale stützen „Mexiko (Heimsieg)“ mehrheitlich — am deutlichsten die Reisebelastung, auch wenn 1 Signal(e) dagegenhalten.",
           "confirm": [
             {
@@ -2079,12 +2079,6 @@
               "name": "form_trend",
               "label": "die Formkurve",
               "evidence": "📈 Letzte 15 Spiele: Heim trifft 1.7 pro Partie und kassiert 0.5, Auswärts 1.8 und 1.1.",
-              "dir": "confirm"
-            },
-            {
-              "name": "xg_strength",
-              "label": "die xG-Werte",
-              "evidence": "⚡ xG-Stärke: Heim erspielt sich 1.16 Tor-Chancen (xG) und gibt 0.46 her, Auswärts 1.41 und 1.13 — macht +0.42 Unterschied.",
               "dir": "confirm"
             },
             {
@@ -2127,6 +2121,10 @@
               "label": "der Direktvergleich"
             },
             {
+              "name": "xg_strength",
+              "label": "die xG-Werte"
+            },
+            {
               "name": "polymarket_sharp",
               "label": "der Polymarket-Fluss"
             },
@@ -2188,15 +2186,15 @@
             }
           ],
           "score": {
-            "confirm": 5,
+            "confirm": 4,
             "contradict": 1,
             "neutral": 0,
-            "decisive": 6
+            "decisive": 5
           }
         },
         "Auswärtssieg": {
           "tip": "Tschechien (Auswärtssieg)",
-          "headline": "1 von 6 klaren Signalen bestätigen den Tipp",
+          "headline": "1 von 5 klaren Signalen bestätigen den Tipp",
           "reason": "Unsere Signale sehen „Tschechien (Auswärtssieg)“ kritisch — vor allem die Reisebelastung spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
           "confirm": [
             {
@@ -2217,12 +2215,6 @@
               "name": "form_trend",
               "label": "die Formkurve",
               "evidence": "📈 Letzte 15 Spiele: Heim trifft 1.7 pro Partie und kassiert 0.5, Auswärts 1.8 und 1.1.",
-              "dir": "contradict"
-            },
-            {
-              "name": "xg_strength",
-              "label": "die xG-Werte",
-              "evidence": "⚡ xG-Stärke: Heim erspielt sich 1.16 Tor-Chancen (xG) und gibt 0.46 her, Auswärts 1.41 und 1.13 — macht +0.42 Unterschied.",
               "dir": "contradict"
             },
             {
@@ -2255,6 +2247,10 @@
             {
               "name": "h2h_pattern",
               "label": "der Direktvergleich"
+            },
+            {
+              "name": "xg_strength",
+              "label": "die xG-Werte"
             },
             {
               "name": "polymarket_sharp",
@@ -2319,15 +2315,15 @@
           ],
           "score": {
             "confirm": 1,
-            "contradict": 5,
+            "contradict": 4,
             "neutral": 0,
-            "decisive": 6
+            "decisive": 5
           }
         },
         "Über 2.5 Tore": {
           "tip": "Über 2.5 Tore",
-          "headline": "1 von 3 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „Über 2.5 Tore“ kritisch — vor allem die xG-Werte spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
+          "headline": "1 von 2 klaren Signalen bestätigen den Tipp",
+          "reason": "Gemischtes Bild: 1 Signal(e) dafür, 1 dagegen — kein klares Signal-Übergewicht.",
           "confirm": [
             {
               "name": "chance_creation",
@@ -2337,12 +2333,6 @@
             }
           ],
           "contradict": [
-            {
-              "name": "xg_strength",
-              "label": "die xG-Werte",
-              "evidence": "⚡ Die xG-Werte deuten auf ~2.08 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Über (-0.42).",
-              "dir": "contradict"
-            },
             {
               "name": "incentive_signal",
               "label": "die Anreizlage",
@@ -2375,6 +2365,10 @@
             {
               "name": "h2h_pattern",
               "label": "der Direktvergleich"
+            },
+            {
+              "name": "xg_strength",
+              "label": "die xG-Werte"
             },
             {
               "name": "polymarket_sharp",
@@ -2443,22 +2437,16 @@
           ],
           "score": {
             "confirm": 1,
-            "contradict": 2,
+            "contradict": 1,
             "neutral": 0,
-            "decisive": 3
+            "decisive": 2
           }
         },
         "Unter 2.5 Tore": {
           "tip": "Unter 2.5 Tore",
-          "headline": "2 von 3 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Unter 2.5 Tore“ mehrheitlich — am deutlichsten die xG-Werte, auch wenn 1 Signal(e) dagegenhalten.",
+          "headline": "1 von 2 klaren Signalen bestätigen den Tipp",
+          "reason": "Gemischtes Bild: 1 Signal(e) dafür, 1 dagegen — kein klares Signal-Übergewicht.",
           "confirm": [
-            {
-              "name": "xg_strength",
-              "label": "die xG-Werte",
-              "evidence": "⚡ Die xG-Werte deuten auf ~2.08 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Unter (-0.42).",
-              "dir": "confirm"
-            },
             {
               "name": "incentive_signal",
               "label": "die Anreizlage",
@@ -2501,6 +2489,10 @@
               "label": "der Direktvergleich"
             },
             {
+              "name": "xg_strength",
+              "label": "die xG-Werte"
+            },
+            {
               "name": "polymarket_sharp",
               "label": "der Polymarket-Fluss"
             },
@@ -2566,10 +2558,10 @@
             }
           ],
           "score": {
-            "confirm": 2,
+            "confirm": 1,
             "contradict": 1,
             "neutral": 0,
-            "decisive": 3
+            "decisive": 2
           }
         }
       }
@@ -3088,7 +3080,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ xG-Stärke: Heim erspielt sich 1.93 Tor-Chancen (xG) und gibt 0.64 her, Auswärts 1.34 und 1.33 — macht +1.28 Unterschied.",
+              "evidence": "⚡ xG-Stärke: Heim erspielt sich 1.93 Tor-Chancen (xG) und gibt 0.65 her, Auswärts 1.34 und 1.33 — macht +1.27 Unterschied.",
               "dir": "confirm"
             },
             {
@@ -3224,7 +3216,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ xG-Stärke: Heim erspielt sich 1.93 Tor-Chancen (xG) und gibt 0.64 her, Auswärts 1.34 und 1.33 — macht +1.28 Unterschied.",
+              "evidence": "⚡ xG-Stärke: Heim erspielt sich 1.93 Tor-Chancen (xG) und gibt 0.65 her, Auswärts 1.34 und 1.33 — macht +1.27 Unterschied.",
               "dir": "contradict"
             },
             {
@@ -8238,13 +8230,19 @@
       "markets": {
         "Heimsieg": {
           "tip": "Brasilien (Heimsieg)",
-          "headline": "3 von 4 klaren Signalen bestätigen den Tipp",
+          "headline": "4 von 5 klaren Signalen bestätigen den Tipp",
           "reason": "Unsere Signale stützen „Brasilien (Heimsieg)“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 1 Signal(e) dagegenhalten.",
           "confirm": [
             {
               "name": "form_trend",
               "label": "die Formkurve",
               "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.3 pro Partie und kassiert 1.0, Auswärts 1.8 und 1.1.",
+              "dir": "confirm"
+            },
+            {
+              "name": "xg_strength",
+              "label": "die xG-Werte",
+              "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.33 Tor-Chancen (xG) und gibt 0.78 her, Auswärts 1.25 und 1.73 — macht +2.02 Unterschied.",
               "dir": "confirm"
             },
             {
@@ -8289,10 +8287,6 @@
             {
               "name": "h2h_pattern",
               "label": "der Direktvergleich"
-            },
-            {
-              "name": "xg_strength",
-              "label": "die xG-Werte"
             },
             {
               "name": "polymarket_sharp",
@@ -8356,15 +8350,15 @@
             }
           ],
           "score": {
-            "confirm": 3,
+            "confirm": 4,
             "contradict": 1,
             "neutral": 0,
-            "decisive": 4
+            "decisive": 5
           }
         },
         "Auswärtssieg": {
           "tip": "Schottland (Auswärtssieg)",
-          "headline": "1 von 4 klaren Signalen bestätigen den Tipp",
+          "headline": "1 von 5 klaren Signalen bestätigen den Tipp",
           "reason": "Unsere Signale sehen „Schottland (Auswärtssieg)“ kritisch — vor allem die Formkurve spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
           "confirm": [
             {
@@ -8379,6 +8373,12 @@
               "name": "form_trend",
               "label": "die Formkurve",
               "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.3 pro Partie und kassiert 1.0, Auswärts 1.8 und 1.1.",
+              "dir": "contradict"
+            },
+            {
+              "name": "xg_strength",
+              "label": "die xG-Werte",
+              "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.33 Tor-Chancen (xG) und gibt 0.78 her, Auswärts 1.25 und 1.73 — macht +2.02 Unterschied.",
               "dir": "contradict"
             },
             {
@@ -8415,10 +8415,6 @@
             {
               "name": "h2h_pattern",
               "label": "der Direktvergleich"
-            },
-            {
-              "name": "xg_strength",
-              "label": "die xG-Werte"
             },
             {
               "name": "polymarket_sharp",
@@ -8483,9 +8479,9 @@
           ],
           "score": {
             "confirm": 1,
-            "contradict": 3,
+            "contradict": 4,
             "neutral": 0,
-            "decisive": 4
+            "decisive": 5
           }
         },
         "Über 2.5 Tore": {
@@ -8502,7 +8498,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Die xG-Werte deuten auf ~3.13 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Über (+0.63).",
+              "evidence": "⚡ Die xG-Werte deuten auf ~3.04 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Über (+0.54).",
               "dir": "confirm"
             },
             {
@@ -8636,7 +8632,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Die xG-Werte deuten auf ~3.13 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Unter (+0.63).",
+              "evidence": "⚡ Die xG-Werte deuten auf ~3.04 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Unter (+0.54).",
               "dir": "contradict"
             },
             {
@@ -11570,7 +11566,7 @@
         },
         "Über 2.5 Tore": {
           "tip": "Über 2.5 Tore",
-          "headline": "4 von 5 klaren Signalen bestätigen den Tipp",
+          "headline": "3 von 4 klaren Signalen bestätigen den Tipp",
           "reason": "Unsere Signale stützen „Über 2.5 Tore“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 1 Signal(e) dagegenhalten.",
           "confirm": [
             {
@@ -11583,12 +11579,6 @@
               "name": "h2h_pattern",
               "label": "der Direktvergleich",
               "evidence": "⚔️ Aus den letzten 2 Duellen: im Schnitt 4.0 Tore (Linie 2.5) · in 100% fielen über 2.5 Tore → spricht für Über 2.5.",
-              "dir": "confirm"
-            },
-            {
-              "name": "xg_strength",
-              "label": "die xG-Werte",
-              "evidence": "⚡ Die xG-Werte deuten auf ~3.47 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Über (+0.97).",
               "dir": "confirm"
             },
             {
@@ -11623,6 +11613,10 @@
             {
               "name": "injury",
               "label": "injury"
+            },
+            {
+              "name": "xg_strength",
+              "label": "die xG-Werte"
             },
             {
               "name": "polymarket_sharp",
@@ -11690,15 +11684,15 @@
             }
           ],
           "score": {
-            "confirm": 4,
+            "confirm": 3,
             "contradict": 1,
             "neutral": 0,
-            "decisive": 5
+            "decisive": 4
           }
         },
         "Unter 2.5 Tore": {
           "tip": "Unter 2.5 Tore",
-          "headline": "1 von 5 klaren Signalen bestätigen den Tipp",
+          "headline": "1 von 4 klaren Signalen bestätigen den Tipp",
           "reason": "Unsere Signale sehen „Unter 2.5 Tore“ kritisch — vor allem die Formkurve spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
           "confirm": [
             {
@@ -11719,12 +11713,6 @@
               "name": "h2h_pattern",
               "label": "der Direktvergleich",
               "evidence": "⚔️ Aus den letzten 2 Duellen: im Schnitt 4.0 Tore (Linie 2.5) · in 100% fielen über 2.5 Tore → spricht für Unter 2.5.",
-              "dir": "contradict"
-            },
-            {
-              "name": "xg_strength",
-              "label": "die xG-Werte",
-              "evidence": "⚡ Die xG-Werte deuten auf ~3.47 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Unter (+0.97).",
               "dir": "contradict"
             },
             {
@@ -11751,6 +11739,10 @@
             {
               "name": "injury",
               "label": "injury"
+            },
+            {
+              "name": "xg_strength",
+              "label": "die xG-Werte"
             },
             {
               "name": "polymarket_sharp",
@@ -11819,9 +11811,9 @@
           ],
           "score": {
             "confirm": 1,
-            "contradict": 4,
+            "contradict": 3,
             "neutral": 0,
-            "decisive": 5
+            "decisive": 4
           }
         }
       }
@@ -18540,13 +18532,13 @@
             {
               "name": "form_trend",
               "label": "die Formkurve",
-              "evidence": "📈 Letzte 15 Spiele: Heim trifft 3.4 pro Partie und kassiert 0.8, Auswärts 1.3 und 0.9.",
+              "evidence": "📈 Letzte 15 Spiele: Heim trifft 3.4 pro Partie und kassiert 0.8, Auswärts 1.4 und 1.1.",
               "dir": "confirm"
             },
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 3.40 Tor-Chancen (xG) und gibt 0.80 her, Auswärts 1.33 und 0.93 — macht +2.20 Unterschied.",
+              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 3.40 Tor-Chancen (xG) und gibt 0.80 her, Auswärts 1.40 und 1.07 — macht +2.27 Unterschied.",
               "dir": "confirm"
             },
             {
@@ -18669,13 +18661,13 @@
             {
               "name": "form_trend",
               "label": "die Formkurve",
-              "evidence": "📈 Letzte 15 Spiele: Heim trifft 3.4 pro Partie und kassiert 0.8, Auswärts 1.3 und 0.9.",
+              "evidence": "📈 Letzte 15 Spiele: Heim trifft 3.4 pro Partie und kassiert 0.8, Auswärts 1.4 und 1.1.",
               "dir": "contradict"
             },
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 3.40 Tor-Chancen (xG) und gibt 0.80 her, Auswärts 1.33 und 0.93 — macht +2.20 Unterschied.",
+              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 3.40 Tor-Chancen (xG) und gibt 0.80 her, Auswärts 1.40 und 1.07 — macht +2.27 Unterschied.",
               "dir": "contradict"
             },
             {
@@ -18795,7 +18787,7 @@
             {
               "name": "form_trend",
               "label": "die Formkurve",
-              "evidence": "📈 Nach der Form fallen ~3.2 Tore pro Spiel, die Linie liegt bei 2.5 — spricht für Über (+0.7 ggü. Linie).",
+              "evidence": "📈 Nach der Form fallen ~3.3 Tore pro Spiel, die Linie liegt bei 2.5 — spricht für Über (+0.8 ggü. Linie).",
               "dir": "confirm"
             },
             {
@@ -18807,7 +18799,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Die xG-Werte deuten auf ~3.23 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Über (+0.73).",
+              "evidence": "⚡ Die xG-Werte deuten auf ~3.33 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Über (+0.83).",
               "dir": "confirm"
             },
             {
@@ -18931,7 +18923,7 @@
             {
               "name": "form_trend",
               "label": "die Formkurve",
-              "evidence": "📈 Nach der Form fallen ~3.2 Tore pro Spiel, die Linie liegt bei 2.5 — spricht eher gegen Unter (+0.7 ggü. Linie).",
+              "evidence": "📈 Nach der Form fallen ~3.3 Tore pro Spiel, die Linie liegt bei 2.5 — spricht eher gegen Unter (+0.8 ggü. Linie).",
               "dir": "contradict"
             },
             {
@@ -18943,7 +18935,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Die xG-Werte deuten auf ~3.23 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Unter (+0.73).",
+              "evidence": "⚡ Die xG-Werte deuten auf ~3.33 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Unter (+0.83).",
               "dir": "contradict"
             },
             {
@@ -20123,7 +20115,7 @@
             {
               "name": "form_trend",
               "label": "die Formkurve",
-              "evidence": "📈 Letzte 15 Spiele: Heim trifft 0.9 pro Partie und kassiert 2.0, Auswärts 1.3 und 0.9.",
+              "evidence": "📈 Letzte 15 Spiele: Heim trifft 0.9 pro Partie und kassiert 2.0, Auswärts 1.4 und 1.1.",
               "dir": "contradict"
             },
             {
@@ -20135,7 +20127,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 0.87 Tor-Chancen (xG) und gibt 2.00 her, Auswärts 1.33 und 0.93 — macht -1.53 Unterschied.",
+              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 0.87 Tor-Chancen (xG) und gibt 2.00 her, Auswärts 1.40 und 1.07 — macht -1.47 Unterschied.",
               "dir": "contradict"
             },
             {
@@ -20245,7 +20237,7 @@
             {
               "name": "form_trend",
               "label": "die Formkurve",
-              "evidence": "📈 Letzte 15 Spiele: Heim trifft 0.9 pro Partie und kassiert 2.0, Auswärts 1.3 und 0.9.",
+              "evidence": "📈 Letzte 15 Spiele: Heim trifft 0.9 pro Partie und kassiert 2.0, Auswärts 1.4 und 1.1.",
               "dir": "confirm"
             },
             {
@@ -20257,7 +20249,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 0.87 Tor-Chancen (xG) und gibt 2.00 her, Auswärts 1.33 und 0.93 — macht -1.53 Unterschied.",
+              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 0.87 Tor-Chancen (xG) und gibt 2.00 her, Auswärts 1.40 und 1.07 — macht -1.47 Unterschied.",
               "dir": "confirm"
             },
             {
@@ -21170,13 +21162,13 @@
             {
               "name": "form_trend",
               "label": "die Formkurve",
-              "evidence": "📈 Letzte 15 Spiele: Heim trifft 1.3 pro Partie und kassiert 0.9, Auswärts 2.0 und 0.9.",
+              "evidence": "📈 Letzte 15 Spiele: Heim trifft 1.4 pro Partie und kassiert 1.1, Auswärts 2.0 und 0.9.",
               "dir": "contradict"
             },
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 1.33 Tor-Chancen (xG) und gibt 0.93 her, Auswärts 2.00 und 0.93 — macht -0.67 Unterschied.",
+              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 1.40 Tor-Chancen (xG) und gibt 1.07 her, Auswärts 2.00 und 0.93 — macht -0.73 Unterschied.",
               "dir": "contradict"
             },
             {
@@ -21288,13 +21280,13 @@
             {
               "name": "form_trend",
               "label": "die Formkurve",
-              "evidence": "📈 Letzte 15 Spiele: Heim trifft 1.3 pro Partie und kassiert 0.9, Auswärts 2.0 und 0.9.",
+              "evidence": "📈 Letzte 15 Spiele: Heim trifft 1.4 pro Partie und kassiert 1.1, Auswärts 2.0 und 0.9.",
               "dir": "confirm"
             },
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 1.33 Tor-Chancen (xG) und gibt 0.93 her, Auswärts 2.00 und 0.93 — macht -0.67 Unterschied.",
+              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 1.40 Tor-Chancen (xG) und gibt 1.07 her, Auswärts 2.00 und 0.93 — macht -0.73 Unterschied.",
               "dir": "confirm"
             },
             {
@@ -27870,13 +27862,13 @@
             {
               "name": "form_trend",
               "label": "die Formkurve",
-              "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.5 pro Partie und kassiert 0.3, Auswärts 2.1 und 0.9.",
+              "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.5 pro Partie und kassiert 0.4, Auswärts 2.1 und 0.9.",
               "dir": "confirm"
             },
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 2.53 Tor-Chancen (xG) und gibt 0.33 her, Auswärts 2.07 und 0.87 — macht +1.00 Unterschied.",
+              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 2.47 Tor-Chancen (xG) und gibt 0.40 her, Auswärts 2.07 und 0.87 — macht +0.87 Unterschied.",
               "dir": "confirm"
             },
             {
@@ -27996,13 +27988,13 @@
             {
               "name": "form_trend",
               "label": "die Formkurve",
-              "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.5 pro Partie und kassiert 0.3, Auswärts 2.1 und 0.9.",
+              "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.5 pro Partie und kassiert 0.4, Auswärts 2.1 und 0.9.",
               "dir": "contradict"
             },
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 2.53 Tor-Chancen (xG) und gibt 0.33 her, Auswärts 2.07 und 0.87 — macht +1.00 Unterschied.",
+              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 2.47 Tor-Chancen (xG) und gibt 0.40 her, Auswärts 2.07 und 0.87 — macht +0.87 Unterschied.",
               "dir": "contradict"
             },
             {
@@ -28900,13 +28892,13 @@
             {
               "name": "form_trend",
               "label": "die Formkurve",
-              "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.5 pro Partie und kassiert 0.3, Auswärts 2.3 und 0.9.",
+              "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.5 pro Partie und kassiert 0.4, Auswärts 2.3 und 0.9.",
               "dir": "confirm"
             },
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 2.53 Tor-Chancen (xG) und gibt 0.33 her, Auswärts 2.33 und 0.93 — macht +0.80 Unterschied.",
+              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 2.47 Tor-Chancen (xG) und gibt 0.40 her, Auswärts 2.33 und 0.93 — macht +0.67 Unterschied.",
               "dir": "confirm"
             },
             {
@@ -29044,13 +29036,13 @@
             {
               "name": "form_trend",
               "label": "die Formkurve",
-              "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.5 pro Partie und kassiert 0.3, Auswärts 2.3 und 0.9.",
+              "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.5 pro Partie und kassiert 0.4, Auswärts 2.3 und 0.9.",
               "dir": "contradict"
             },
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 2.53 Tor-Chancen (xG) und gibt 0.33 her, Auswärts 2.33 und 0.93 — macht +0.80 Unterschied.",
+              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 2.47 Tor-Chancen (xG) und gibt 0.40 her, Auswärts 2.33 und 0.93 — macht +0.67 Unterschied.",
               "dir": "contradict"
             },
             {
@@ -29932,13 +29924,13 @@
             {
               "name": "form_trend",
               "label": "die Formkurve",
-              "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.5 pro Partie und kassiert 0.3, Auswärts 1.5 und 1.8.",
+              "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.5 pro Partie und kassiert 0.4, Auswärts 1.5 und 1.8.",
               "dir": "confirm"
             },
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 2.53 Tor-Chancen (xG) und gibt 0.33 her, Auswärts 1.47 und 1.80 — macht +2.53 Unterschied.",
+              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 2.47 Tor-Chancen (xG) und gibt 0.40 her, Auswärts 1.47 und 1.80 — macht +2.40 Unterschied.",
               "dir": "confirm"
             },
             {
@@ -30070,13 +30062,13 @@
             {
               "name": "form_trend",
               "label": "die Formkurve",
-              "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.5 pro Partie und kassiert 0.3, Auswärts 1.5 und 1.8.",
+              "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.5 pro Partie und kassiert 0.4, Auswärts 1.5 und 1.8.",
               "dir": "contradict"
             },
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 2.53 Tor-Chancen (xG) und gibt 0.33 her, Auswärts 1.47 und 1.80 — macht +2.53 Unterschied.",
+              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 2.47 Tor-Chancen (xG) und gibt 0.40 her, Auswärts 1.47 und 1.80 — macht +2.40 Unterschied.",
               "dir": "contradict"
             },
             {
@@ -34055,7 +34047,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.13 Tor-Chancen (xG) und gibt 0.51 her, Auswärts 1.79 und 0.96 — macht +0.79 Unterschied.",
+              "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.07 Tor-Chancen (xG) und gibt 0.65 her, Auswärts 1.79 und 0.96 — macht +0.59 Unterschied.",
               "dir": "confirm"
             },
             {
@@ -34201,7 +34193,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.13 Tor-Chancen (xG) und gibt 0.51 her, Auswärts 1.79 und 0.96 — macht +0.79 Unterschied.",
+              "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.07 Tor-Chancen (xG) und gibt 0.65 her, Auswärts 1.79 und 0.96 — macht +0.59 Unterschied.",
               "dir": "contradict"
             },
             {
@@ -35075,7 +35067,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.13 Tor-Chancen (xG) und gibt 0.51 her, Auswärts 0.83 und 1.24 — macht +2.03 Unterschied.",
+              "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.07 Tor-Chancen (xG) und gibt 0.65 her, Auswärts 0.83 und 1.24 — macht +1.84 Unterschied.",
               "dir": "confirm"
             },
             {
@@ -35211,7 +35203,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.13 Tor-Chancen (xG) und gibt 0.51 her, Auswärts 0.83 und 1.24 — macht +2.03 Unterschied.",
+              "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.07 Tor-Chancen (xG) und gibt 0.65 her, Auswärts 0.83 und 1.24 — macht +1.84 Unterschied.",
               "dir": "contradict"
             },
             {
@@ -39171,7 +39163,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.45 Tor-Chancen (xG) und gibt 0.70 her, Auswärts 0.98 und 1.74 — macht +2.51 Unterschied.",
+              "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.46 Tor-Chancen (xG) und gibt 0.70 her, Auswärts 0.98 und 1.74 — macht +2.52 Unterschied.",
               "dir": "confirm"
             },
             {
@@ -39297,7 +39289,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.45 Tor-Chancen (xG) und gibt 0.70 her, Auswärts 0.98 und 1.74 — macht +2.51 Unterschied.",
+              "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.46 Tor-Chancen (xG) und gibt 0.70 her, Auswärts 0.98 und 1.74 — macht +2.52 Unterschied.",
               "dir": "contradict"
             },
             {
@@ -41435,19 +41427,13 @@
         },
         "Über 2.5 Tore": {
           "tip": "Über 2.5 Tore",
-          "headline": "3 von 3 klaren Signalen bestätigen den Tipp",
+          "headline": "2 von 2 klaren Signalen bestätigen den Tipp",
           "reason": "Unsere Signale stützen „Über 2.5 Tore“ mehrheitlich — am deutlichsten die Formkurve.",
           "confirm": [
             {
               "name": "form_trend",
               "label": "die Formkurve",
               "evidence": "📈 Nach der Form fallen ~3.3 Tore pro Spiel, die Linie liegt bei 2.5 — spricht für Über (+0.8 ggü. Linie).",
-              "dir": "confirm"
-            },
-            {
-              "name": "xg_strength",
-              "label": "die xG-Werte",
-              "evidence": "⚡ Die xG-Werte deuten auf ~3.33 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Über (+0.83).",
               "dir": "confirm"
             },
             {
@@ -41479,6 +41465,10 @@
             {
               "name": "h2h_pattern",
               "label": "der Direktvergleich"
+            },
+            {
+              "name": "xg_strength",
+              "label": "die xG-Werte"
             },
             {
               "name": "polymarket_sharp",
@@ -41550,15 +41540,15 @@
             }
           ],
           "score": {
-            "confirm": 3,
+            "confirm": 2,
             "contradict": 0,
             "neutral": 0,
-            "decisive": 3
+            "decisive": 2
           }
         },
         "Unter 2.5 Tore": {
           "tip": "Unter 2.5 Tore",
-          "headline": "0 von 3 klaren Signalen bestätigen den Tipp",
+          "headline": "0 von 2 klaren Signalen bestätigen den Tipp",
           "reason": "Unsere Signale sehen „Unter 2.5 Tore“ kritisch — vor allem die Formkurve spricht dagegen.",
           "confirm": [],
           "contradict": [
@@ -41566,12 +41556,6 @@
               "name": "form_trend",
               "label": "die Formkurve",
               "evidence": "📈 Nach der Form fallen ~3.3 Tore pro Spiel, die Linie liegt bei 2.5 — spricht eher gegen Unter (+0.8 ggü. Linie).",
-              "dir": "contradict"
-            },
-            {
-              "name": "xg_strength",
-              "label": "die xG-Werte",
-              "evidence": "⚡ Die xG-Werte deuten auf ~3.33 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Unter (+0.83).",
               "dir": "contradict"
             },
             {
@@ -41602,6 +41586,10 @@
             {
               "name": "h2h_pattern",
               "label": "der Direktvergleich"
+            },
+            {
+              "name": "xg_strength",
+              "label": "die xG-Werte"
             },
             {
               "name": "polymarket_sharp",
@@ -41674,9 +41662,9 @@
           ],
           "score": {
             "confirm": 0,
-            "contradict": 3,
+            "contradict": 2,
             "neutral": 0,
-            "decisive": 3
+            "decisive": 2
           }
         }
       }
@@ -42217,7 +42205,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.69 Tor-Chancen (xG) und gibt 0.94 her, Auswärts 1.79 und 0.96 — macht +0.92 Unterschied.",
+              "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.50 Tor-Chancen (xG) und gibt 1.00 her, Auswärts 1.79 und 0.96 — macht +0.66 Unterschied.",
               "dir": "confirm"
             },
             {
@@ -42341,7 +42329,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.69 Tor-Chancen (xG) und gibt 0.94 her, Auswärts 1.79 und 0.96 — macht +0.92 Unterschied.",
+              "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.50 Tor-Chancen (xG) und gibt 1.00 her, Auswärts 1.79 und 0.96 — macht +0.66 Unterschied.",
               "dir": "contradict"
             },
             {
@@ -42463,7 +42451,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Die xG-Werte deuten auf ~3.19 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Über (+0.69).",
+              "evidence": "⚡ Die xG-Werte deuten auf ~3.13 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Über (+0.63).",
               "dir": "confirm"
             },
             {
@@ -42587,7 +42575,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Die xG-Werte deuten auf ~3.19 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Unter (+0.69).",
+              "evidence": "⚡ Die xG-Werte deuten auf ~3.13 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Unter (+0.63).",
               "dir": "contradict"
             },
             {
@@ -42723,7 +42711,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.76 Tor-Chancen (xG) und gibt 0.38 her, Auswärts 1.82 und 1.37 — macht +1.93 Unterschied.",
+              "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.66 Tor-Chancen (xG) und gibt 0.40 her, Auswärts 1.82 und 1.37 — macht +1.81 Unterschied.",
               "dir": "confirm"
             },
             {
@@ -42849,7 +42837,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.76 Tor-Chancen (xG) und gibt 0.38 her, Auswärts 1.82 und 1.37 — macht +1.93 Unterschied.",
+              "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.66 Tor-Chancen (xG) und gibt 0.40 her, Auswärts 1.82 und 1.37 — macht +1.81 Unterschied.",
               "dir": "contradict"
             },
             {
@@ -42973,7 +42961,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Die xG-Werte deuten auf ~3.16 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Über (+0.66).",
+              "evidence": "⚡ Die xG-Werte deuten auf ~3.12 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Über (+0.62).",
               "dir": "confirm"
             },
             {
@@ -43097,7 +43085,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Die xG-Werte deuten auf ~3.16 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Unter (+0.66).",
+              "evidence": "⚡ Die xG-Werte deuten auf ~3.12 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Unter (+0.62).",
               "dir": "contradict"
             },
             {
@@ -43729,13 +43717,13 @@
             {
               "name": "form_trend",
               "label": "die Formkurve",
-              "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.5 pro Partie und kassiert 0.3, Auswärts 1.8 und 0.8.",
+              "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.5 pro Partie und kassiert 0.4, Auswärts 1.8 und 0.8.",
               "dir": "confirm"
             },
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 2.53 Tor-Chancen (xG) und gibt 0.33 her, Auswärts 1.80 und 0.80 — macht +1.20 Unterschied.",
+              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 2.47 Tor-Chancen (xG) und gibt 0.40 her, Auswärts 1.80 und 0.80 — macht +1.07 Unterschied.",
               "dir": "confirm"
             },
             {
@@ -43855,13 +43843,13 @@
             {
               "name": "form_trend",
               "label": "die Formkurve",
-              "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.5 pro Partie und kassiert 0.3, Auswärts 1.8 und 0.8.",
+              "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.5 pro Partie und kassiert 0.4, Auswärts 1.8 und 0.8.",
               "dir": "contradict"
             },
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 2.53 Tor-Chancen (xG) und gibt 0.33 her, Auswärts 1.80 und 0.80 — macht +1.20 Unterschied.",
+              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 2.47 Tor-Chancen (xG) und gibt 0.40 her, Auswärts 1.80 und 0.80 — macht +1.07 Unterschied.",
               "dir": "contradict"
             },
             {
@@ -44957,16 +44945,10 @@
         },
         "Über 2.5 Tore": {
           "tip": "Über 2.5 Tore",
-          "headline": "0 von 2 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „Über 2.5 Tore“ kritisch — vor allem die Formkurve spricht dagegen.",
+          "headline": "0 von 1 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „Über 2.5 Tore“ kritisch — vor allem die Chancenqualität spricht dagegen.",
           "confirm": [],
           "contradict": [
-            {
-              "name": "form_trend",
-              "label": "die Formkurve",
-              "evidence": "📈 Nach der Form fallen ~2.2 Tore pro Spiel, die Linie liegt bei 2.5 — spricht eher gegen Über (-0.3 ggü. Linie).",
-              "dir": "contradict"
-            },
             {
               "name": "chance_creation",
               "label": "die Chancenqualität",
@@ -44991,6 +44973,10 @@
             {
               "name": "injury",
               "label": "injury"
+            },
+            {
+              "name": "form_trend",
+              "label": "die Formkurve"
             },
             {
               "name": "h2h_pattern",
@@ -45071,22 +45057,16 @@
           ],
           "score": {
             "confirm": 0,
-            "contradict": 2,
+            "contradict": 1,
             "neutral": 0,
-            "decisive": 2
+            "decisive": 1
           }
         },
         "Unter 2.5 Tore": {
           "tip": "Unter 2.5 Tore",
-          "headline": "2 von 2 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Unter 2.5 Tore“ mehrheitlich — am deutlichsten die Formkurve.",
+          "headline": "1 von 1 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Unter 2.5 Tore“ mehrheitlich — am deutlichsten die Chancenqualität.",
           "confirm": [
-            {
-              "name": "form_trend",
-              "label": "die Formkurve",
-              "evidence": "📈 Nach der Form fallen ~2.2 Tore pro Spiel, die Linie liegt bei 2.5 — spricht für Unter (-0.3 ggü. Linie).",
-              "dir": "confirm"
-            },
             {
               "name": "chance_creation",
               "label": "die Chancenqualität",
@@ -45112,6 +45092,10 @@
             {
               "name": "injury",
               "label": "injury"
+            },
+            {
+              "name": "form_trend",
+              "label": "die Formkurve"
             },
             {
               "name": "h2h_pattern",
@@ -45191,10 +45175,10 @@
             }
           ],
           "score": {
-            "confirm": 2,
+            "confirm": 1,
             "contradict": 0,
             "neutral": 0,
-            "decisive": 2
+            "decisive": 1
           }
         }
       }
@@ -46509,7 +46493,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Die xG-Werte deuten auf ~3.67 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Über (+1.17).",
+              "evidence": "⚡ Die xG-Werte deuten auf ~3.44 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Über (+0.94).",
               "dir": "confirm"
             },
             {
@@ -46651,7 +46635,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Die xG-Werte deuten auf ~3.67 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Unter (+1.17).",
+              "evidence": "⚡ Die xG-Werte deuten auf ~3.44 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Unter (+0.94).",
               "dir": "contradict"
             },
             {
@@ -46787,7 +46771,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ xG-Stärke: Heim erspielt sich 1.16 Tor-Chancen (xG) und gibt 0.46 her, Auswärts 2.13 und 0.51 — macht -0.92 Unterschied.",
+              "evidence": "⚡ xG-Stärke: Heim erspielt sich 1.28 Tor-Chancen (xG) und gibt 0.64 her, Auswärts 2.07 und 0.65 — macht -0.79 Unterschied.",
               "dir": "contradict"
             },
             {
@@ -46907,7 +46891,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ xG-Stärke: Heim erspielt sich 1.16 Tor-Chancen (xG) und gibt 0.46 her, Auswärts 2.13 und 0.51 — macht -0.92 Unterschied.",
+              "evidence": "⚡ xG-Stärke: Heim erspielt sich 1.28 Tor-Chancen (xG) und gibt 0.64 her, Auswärts 2.07 und 0.65 — macht -0.79 Unterschied.",
               "dir": "confirm"
             },
             {
@@ -47023,8 +47007,8 @@
         },
         "Über 2.5 Tore": {
           "tip": "Über 2.5 Tore",
-          "headline": "1 von 4 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „Über 2.5 Tore“ kritisch — vor allem die xG-Werte spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
+          "headline": "1 von 3 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „Über 2.5 Tore“ kritisch — vor allem der Tabellendruck spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
           "confirm": [
             {
               "name": "chance_creation",
@@ -47034,12 +47018,6 @@
             }
           ],
           "contradict": [
-            {
-              "name": "xg_strength",
-              "label": "die xG-Werte",
-              "evidence": "⚡ Die xG-Werte deuten auf ~2.13 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Über (-0.37).",
-              "dir": "contradict"
-            },
             {
               "name": "pressure_index",
               "label": "der Tabellendruck",
@@ -47078,6 +47056,10 @@
             {
               "name": "h2h_pattern",
               "label": "der Direktvergleich"
+            },
+            {
+              "name": "xg_strength",
+              "label": "die xG-Werte"
             },
             {
               "name": "polymarket_sharp",
@@ -47142,22 +47124,16 @@
           ],
           "score": {
             "confirm": 1,
-            "contradict": 3,
+            "contradict": 2,
             "neutral": 0,
-            "decisive": 4
+            "decisive": 3
           }
         },
         "Unter 2.5 Tore": {
           "tip": "Unter 2.5 Tore",
-          "headline": "3 von 4 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Unter 2.5 Tore“ mehrheitlich — am deutlichsten die xG-Werte, auch wenn 1 Signal(e) dagegenhalten.",
+          "headline": "2 von 3 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Unter 2.5 Tore“ mehrheitlich — am deutlichsten der Tabellendruck, auch wenn 1 Signal(e) dagegenhalten.",
           "confirm": [
-            {
-              "name": "xg_strength",
-              "label": "die xG-Werte",
-              "evidence": "⚡ Die xG-Werte deuten auf ~2.13 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Unter (-0.37).",
-              "dir": "confirm"
-            },
             {
               "name": "pressure_index",
               "label": "der Tabellendruck",
@@ -47204,6 +47180,10 @@
             {
               "name": "h2h_pattern",
               "label": "der Direktvergleich"
+            },
+            {
+              "name": "xg_strength",
+              "label": "die xG-Werte"
             },
             {
               "name": "polymarket_sharp",
@@ -47267,10 +47247,10 @@
             }
           ],
           "score": {
-            "confirm": 3,
+            "confirm": 2,
             "contradict": 1,
             "neutral": 0,
-            "decisive": 4
+            "decisive": 3
           }
         }
       }
@@ -47309,7 +47289,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.69 Tor-Chancen (xG) und gibt 0.94 her, Auswärts 2.76 und 0.38 — macht -0.62 Unterschied.",
+              "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.50 Tor-Chancen (xG) und gibt 1.00 her, Auswärts 2.66 und 0.40 — macht -0.76 Unterschied.",
               "dir": "contradict"
             },
             {
@@ -47429,7 +47409,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.69 Tor-Chancen (xG) und gibt 0.94 her, Auswärts 2.76 und 0.38 — macht -0.62 Unterschied.",
+              "evidence": "⚡ xG-Stärke: Heim erspielt sich 2.50 Tor-Chancen (xG) und gibt 1.00 her, Auswärts 2.66 und 0.40 — macht -0.76 Unterschied.",
               "dir": "confirm"
             },
             {
@@ -47557,7 +47537,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Die xG-Werte deuten auf ~3.38 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Über (+0.88).",
+              "evidence": "⚡ Die xG-Werte deuten auf ~3.29 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Über (+0.79).",
               "dir": "confirm"
             },
             {
@@ -47699,7 +47679,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Die xG-Werte deuten auf ~3.38 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Unter (+0.88).",
+              "evidence": "⚡ Die xG-Werte deuten auf ~3.29 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Unter (+0.79).",
               "dir": "contradict"
             },
             {
@@ -47841,7 +47821,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 1.93 Tor-Chancen (xG) und gibt 1.67 her, Auswärts 3.40 und 0.80 — macht -2.33 Unterschied.",
+              "evidence": "⚡ xG-Stärke: Heim erspielt sich 1.24 Tor-Chancen (xG) und gibt 1.24 her, Auswärts 2.65 und 0.41 — macht -2.24 Unterschied.",
               "dir": "contradict"
             },
             {
@@ -47963,7 +47943,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 1.93 Tor-Chancen (xG) und gibt 1.67 her, Auswärts 3.40 und 0.80 — macht -2.33 Unterschied.",
+              "evidence": "⚡ xG-Stärke: Heim erspielt sich 1.24 Tor-Chancen (xG) und gibt 1.24 her, Auswärts 2.65 und 0.41 — macht -2.24 Unterschied.",
               "dir": "confirm"
             },
             {
@@ -48075,19 +48055,13 @@
         },
         "Über 2.5 Tore": {
           "tip": "Über 2.5 Tore",
-          "headline": "3 von 5 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Über 2.5 Tore“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 2 Signal(e) dagegenhalten.",
+          "headline": "2 von 4 klaren Signalen bestätigen den Tipp",
+          "reason": "Gemischtes Bild: 2 Signal(e) dafür, 2 dagegen — kein klares Signal-Übergewicht.",
           "confirm": [
             {
               "name": "form_trend",
               "label": "die Formkurve",
               "evidence": "📈 Nach der Form fallen ~3.9 Tore pro Spiel, die Linie liegt bei 2.5 — spricht für Über (+1.4 ggü. Linie).",
-              "dir": "confirm"
-            },
-            {
-              "name": "xg_strength",
-              "label": "die xG-Werte",
-              "evidence": "⚡ Die xG-Werte deuten auf ~3.90 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Über (+1.40).",
               "dir": "confirm"
             },
             {
@@ -48134,132 +48108,8 @@
               "label": "der Direktvergleich"
             },
             {
-              "name": "polymarket_sharp",
-              "label": "der Polymarket-Fluss"
-            },
-            {
-              "name": "steam_lag",
-              "label": "der Steam-Move"
-            },
-            {
-              "name": "apif_predictions",
-              "label": "das externe Prognosemodell"
-            },
-            {
-              "name": "weather_signal",
-              "label": "das Wetter"
-            },
-            {
-              "name": "incentive_signal",
-              "label": "die Anreizlage"
-            },
-            {
-              "name": "altitude_signal",
-              "label": "die Höhenlage"
-            },
-            {
-              "name": "form_rating",
-              "label": "die Spieler-Ratings"
-            },
-            {
-              "name": "freshness_leg",
-              "label": "die Frische der Bewegung"
-            },
-            {
-              "name": "smart_money",
-              "label": "das Smart Money"
-            },
-            {
-              "name": "league_pressure",
-              "label": "der Ligadruck"
-            },
-            {
-              "name": "fixture_congestion",
-              "label": "die Termindichte"
-            },
-            {
-              "name": "topscorer_momentum",
-              "label": "die Torjäger-Form"
-            },
-            {
-              "name": "coach_change",
-              "label": "der Trainerwechsel"
-            },
-            {
-              "name": "transfer_shift",
-              "label": "Kader-Abgänge"
-            },
-            {
-              "name": "streak_momentum",
-              "label": "die aktuelle Serie"
-            }
-          ],
-          "score": {
-            "confirm": 3,
-            "contradict": 2,
-            "neutral": 0,
-            "decisive": 5
-          }
-        },
-        "Unter 2.5 Tore": {
-          "tip": "Unter 2.5 Tore",
-          "headline": "2 von 5 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „Unter 2.5 Tore“ kritisch — vor allem die Formkurve spricht dagegen, 2 Signal(e) stützen ihn dennoch.",
-          "confirm": [
-            {
-              "name": "pressure_index",
-              "label": "der Tabellendruck",
-              "evidence": "🎯 KO-Vorsicht (Unter wahrscheinlicher)",
-              "dir": "confirm"
-            },
-            {
-              "name": "lineup_signal",
-              "label": "die Aufstellung",
-              "evidence": "🚨 bei Auswärts sitzt nur auf der Bank J. Doku (MID) · bei Auswärts sitzt nur auf der Bank K. De Bruyne (MID) · bei Auswärts sitzt nur auf der Bank T. Meunier (DEF)",
-              "dir": "confirm"
-            }
-          ],
-          "contradict": [
-            {
-              "name": "form_trend",
-              "label": "die Formkurve",
-              "evidence": "📈 Nach der Form fallen ~3.9 Tore pro Spiel, die Linie liegt bei 2.5 — spricht eher gegen Unter (+1.4 ggü. Linie).",
-              "dir": "contradict"
-            },
-            {
               "name": "xg_strength",
-              "label": "die xG-Werte",
-              "evidence": "⚡ Die xG-Werte deuten auf ~3.90 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Unter (+1.40).",
-              "dir": "contradict"
-            },
-            {
-              "name": "chance_creation",
-              "label": "die Chancenqualität",
-              "evidence": "🎨 Zusammen kreieren beide eher viel Chancen (32.4 aus Schlüsselpässen + Abschlüssen) — spricht eher gegen Under.",
-              "dir": "contradict"
-            }
-          ],
-          "neutral": [],
-          "silent": [
-            {
-              "name": "lead_lag_bias",
-              "label": "die Pinnacle-Bewegung"
-            },
-            {
-              "name": "public_static_bias",
-              "label": "der Public-Bias"
-            },
-            {
-              "name": "travel_burden",
-              "label": "die Reisebelastung"
-            },
-            {
-              "name": "injury",
-              "label": "injury"
-            },
-            {
-              "name": "h2h_pattern",
-              "label": "der Direktvergleich"
+              "label": "die xG-Werte"
             },
             {
               "name": "polymarket_sharp",
@@ -48324,9 +48174,135 @@
           ],
           "score": {
             "confirm": 2,
-            "contradict": 3,
+            "contradict": 2,
             "neutral": 0,
-            "decisive": 5
+            "decisive": 4
+          }
+        },
+        "Unter 2.5 Tore": {
+          "tip": "Unter 2.5 Tore",
+          "headline": "2 von 4 klaren Signalen bestätigen den Tipp",
+          "reason": "Gemischtes Bild: 2 Signal(e) dafür, 2 dagegen — kein klares Signal-Übergewicht.",
+          "confirm": [
+            {
+              "name": "pressure_index",
+              "label": "der Tabellendruck",
+              "evidence": "🎯 KO-Vorsicht (Unter wahrscheinlicher)",
+              "dir": "confirm"
+            },
+            {
+              "name": "lineup_signal",
+              "label": "die Aufstellung",
+              "evidence": "🚨 bei Auswärts sitzt nur auf der Bank J. Doku (MID) · bei Auswärts sitzt nur auf der Bank K. De Bruyne (MID) · bei Auswärts sitzt nur auf der Bank T. Meunier (DEF)",
+              "dir": "confirm"
+            }
+          ],
+          "contradict": [
+            {
+              "name": "form_trend",
+              "label": "die Formkurve",
+              "evidence": "📈 Nach der Form fallen ~3.9 Tore pro Spiel, die Linie liegt bei 2.5 — spricht eher gegen Unter (+1.4 ggü. Linie).",
+              "dir": "contradict"
+            },
+            {
+              "name": "chance_creation",
+              "label": "die Chancenqualität",
+              "evidence": "🎨 Zusammen kreieren beide eher viel Chancen (32.4 aus Schlüsselpässen + Abschlüssen) — spricht eher gegen Under.",
+              "dir": "contradict"
+            }
+          ],
+          "neutral": [],
+          "silent": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung"
+            },
+            {
+              "name": "public_static_bias",
+              "label": "der Public-Bias"
+            },
+            {
+              "name": "travel_burden",
+              "label": "die Reisebelastung"
+            },
+            {
+              "name": "injury",
+              "label": "injury"
+            },
+            {
+              "name": "h2h_pattern",
+              "label": "der Direktvergleich"
+            },
+            {
+              "name": "xg_strength",
+              "label": "die xG-Werte"
+            },
+            {
+              "name": "polymarket_sharp",
+              "label": "der Polymarket-Fluss"
+            },
+            {
+              "name": "steam_lag",
+              "label": "der Steam-Move"
+            },
+            {
+              "name": "apif_predictions",
+              "label": "das externe Prognosemodell"
+            },
+            {
+              "name": "weather_signal",
+              "label": "das Wetter"
+            },
+            {
+              "name": "incentive_signal",
+              "label": "die Anreizlage"
+            },
+            {
+              "name": "altitude_signal",
+              "label": "die Höhenlage"
+            },
+            {
+              "name": "form_rating",
+              "label": "die Spieler-Ratings"
+            },
+            {
+              "name": "freshness_leg",
+              "label": "die Frische der Bewegung"
+            },
+            {
+              "name": "smart_money",
+              "label": "das Smart Money"
+            },
+            {
+              "name": "league_pressure",
+              "label": "der Ligadruck"
+            },
+            {
+              "name": "fixture_congestion",
+              "label": "die Termindichte"
+            },
+            {
+              "name": "topscorer_momentum",
+              "label": "die Torjäger-Form"
+            },
+            {
+              "name": "coach_change",
+              "label": "der Trainerwechsel"
+            },
+            {
+              "name": "transfer_shift",
+              "label": "Kader-Abgänge"
+            },
+            {
+              "name": "streak_momentum",
+              "label": "die aktuelle Serie"
+            }
+          ],
+          "score": {
+            "confirm": 2,
+            "contradict": 2,
+            "neutral": 0,
+            "decisive": 4
           }
         }
       }
@@ -48345,19 +48321,19 @@
       "markets": {
         "Heimsieg": {
           "tip": "Argentinien (Heimsieg)",
-          "headline": "4 von 5 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Argentinien (Heimsieg)“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 1 Signal(e) dagegenhalten.",
+          "headline": "4 von 4 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Argentinien (Heimsieg)“ mehrheitlich — am deutlichsten die Formkurve.",
           "confirm": [
             {
               "name": "form_trend",
               "label": "die Formkurve",
-              "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.5 pro Partie und kassiert 0.3, Auswärts 1.3 und 0.9.",
+              "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.5 pro Partie und kassiert 0.4, Auswärts 1.4 und 1.1.",
               "dir": "confirm"
             },
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 2.53 Tor-Chancen (xG) und gibt 0.33 her, Auswärts 1.33 und 0.93 — macht +1.80 Unterschied.",
+              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 2.47 Tor-Chancen (xG) und gibt 0.40 her, Auswärts 1.40 und 1.07 — macht +1.73 Unterschied.",
               "dir": "confirm"
             },
             {
@@ -48373,16 +48349,13 @@
               "dir": "confirm"
             }
           ],
-          "contradict": [
-            {
-              "name": "lead_lag_bias",
-              "label": "die Pinnacle-Bewegung",
-              "evidence": "Pinnacle hat Heim um -47.6pp bewegt, public hängen noch hinterher (1) — wir sind früh dran.",
-              "dir": "contradict"
-            }
-          ],
+          "contradict": [],
           "neutral": [],
           "silent": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung"
+            },
             {
               "name": "public_static_bias",
               "label": "der Public-Bias"
@@ -48466,34 +48439,27 @@
           ],
           "score": {
             "confirm": 4,
-            "contradict": 1,
+            "contradict": 0,
             "neutral": 0,
-            "decisive": 5
+            "decisive": 4
           }
         },
         "Auswärtssieg": {
           "tip": "Ägypten (Auswärtssieg)",
-          "headline": "1 von 4 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „Ägypten (Auswärtssieg)“ kritisch — vor allem die Formkurve spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
-          "confirm": [
-            {
-              "name": "lead_lag_bias",
-              "label": "die Pinnacle-Bewegung",
-              "evidence": "Pinnacle hat Auswärts um +1.6pp bewegt, public hängen noch hinterher (1) — wir sind früh dran.",
-              "dir": "confirm"
-            }
-          ],
+          "headline": "0 von 3 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „Ägypten (Auswärtssieg)“ kritisch — vor allem die Formkurve spricht dagegen.",
+          "confirm": [],
           "contradict": [
             {
               "name": "form_trend",
               "label": "die Formkurve",
-              "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.5 pro Partie und kassiert 0.3, Auswärts 1.3 und 0.9.",
+              "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.5 pro Partie und kassiert 0.4, Auswärts 1.4 und 1.1.",
               "dir": "contradict"
             },
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 2.53 Tor-Chancen (xG) und gibt 0.33 her, Auswärts 1.33 und 0.93 — macht +1.80 Unterschied.",
+              "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 2.47 Tor-Chancen (xG) und gibt 0.40 her, Auswärts 1.40 und 1.07 — macht +1.73 Unterschied.",
               "dir": "contradict"
             },
             {
@@ -48505,6 +48471,10 @@
           ],
           "neutral": [],
           "silent": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung"
+            },
             {
               "name": "public_static_bias",
               "label": "der Public-Bias"
@@ -48591,10 +48561,10 @@
             }
           ],
           "score": {
-            "confirm": 1,
+            "confirm": 0,
             "contradict": 3,
             "neutral": 0,
-            "decisive": 4
+            "decisive": 3
           }
         },
         "Über 2.5 Tore": {
@@ -49395,7 +49365,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 79% des Geldes auf Heim — mehr als der faire Preis hergibt (61%), und es sind echte Wale dahinter (Top-Wallets 65%).",
+              "evidence": "💰 Auf Polymarket liegen 83% des Geldes auf Heim — mehr als der faire Preis hergibt (61%), und es sind echte Wale dahinter (Top-Wallets 67%).",
               "dir": "confirm"
             }
           ],
@@ -49403,7 +49373,7 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) sieht Heim um 15.6pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+              "evidence": "📊 Ein zweites Modell (API-Football) sieht Heim um 15.9pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
               "dir": "contradict"
             }
           ],
@@ -49522,7 +49492,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 12% des Geldes auf Auswärts — weniger als der faire Preis hergibt (15%), und es sind echte Wale dahinter (Top-Wallets 81%).",
+              "evidence": "💰 Auf Polymarket liegen 10% des Geldes auf Auswärts — weniger als der faire Preis hergibt (14%), und es sind echte Wale dahinter (Top-Wallets 76%).",
               "dir": "contradict"
             }
           ],
@@ -49910,7 +49880,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 70% des Geldes auf Heim — mehr als der faire Preis hergibt (59%), und es sind echte Wale dahinter (Top-Wallets 75%).",
+              "evidence": "💰 Auf Polymarket liegen 82% des Geldes auf Heim — mehr als der faire Preis hergibt (59%), und es sind echte Wale dahinter (Top-Wallets 84%).",
               "dir": "confirm"
             }
           ],
@@ -49924,7 +49894,7 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) sieht Heim um 13.8pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+              "evidence": "📊 Ein zweites Modell (API-Football) sieht Heim um 14.1pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
               "dir": "contradict"
             }
           ],
@@ -50040,7 +50010,7 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 7.1pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 6.9pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
               "dir": "contradict"
             },
             {
@@ -50052,7 +50022,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 12% des Geldes auf Auswärts — weniger als der faire Preis hergibt (17%), und es sind echte Wale dahinter (Top-Wallets 67%).",
+              "evidence": "💰 Auf Polymarket liegen 8% des Geldes auf Auswärts — weniger als der faire Preis hergibt (17%), und es sind echte Wale dahinter (Top-Wallets 67%).",
               "dir": "contradict"
             }
           ],
@@ -50160,7 +50130,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Die xG-Werte deuten auf ~3.12 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Über (+0.62).",
+              "evidence": "⚡ Die xG-Werte deuten auf ~3.06 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Über (+0.56).",
               "dir": "confirm"
             },
             {
@@ -50302,7 +50272,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Die xG-Werte deuten auf ~3.12 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Unter (+0.62).",
+              "evidence": "⚡ Die xG-Werte deuten auf ~3.06 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Unter (+0.56).",
               "dir": "contradict"
             },
             {
@@ -50430,7 +50400,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 30% des Geldes auf Heim — mehr als der faire Preis hergibt (23%), und es sind echte Wale dahinter (Top-Wallets 35%).",
+              "evidence": "💰 Auf Polymarket liegen 30% des Geldes auf Heim — mehr als der faire Preis hergibt (22%), und es sind echte Wale dahinter (Top-Wallets 35%).",
               "dir": "confirm"
             }
           ],
@@ -50438,7 +50408,7 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) sieht Heim um 12.6pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+              "evidence": "📊 Ein zweites Modell (API-Football) sieht Heim um 12.0pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
               "dir": "contradict"
             },
             {
@@ -50580,7 +50550,7 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 6.6pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 6.9pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
               "dir": "contradict"
             }
           ],
@@ -50688,7 +50658,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Die xG-Werte deuten auf ~3.21 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Über (+0.71).",
+              "evidence": "⚡ Die xG-Werte deuten auf ~3.24 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Über (+0.74).",
               "dir": "confirm"
             },
             {
@@ -50830,7 +50800,7 @@
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
-              "evidence": "⚡ Die xG-Werte deuten auf ~3.21 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Unter (+0.71).",
+              "evidence": "⚡ Die xG-Werte deuten auf ~3.24 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Unter (+0.74).",
               "dir": "contradict"
             },
             {
@@ -50952,7 +50922,7 @@
             {
               "name": "form_trend",
               "label": "die Formkurve",
-              "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.5 pro Partie und kassiert 0.3, Auswärts 2.3 und 0.7.",
+              "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.5 pro Partie und kassiert 0.4, Auswärts 2.3 und 0.7.",
               "dir": "confirm"
             },
             {
@@ -50966,7 +50936,7 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) sieht Heim um 11.4pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+              "evidence": "📊 Ein zweites Modell (API-Football) sieht Heim um 10.7pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
               "dir": "contradict"
             }
           ],
@@ -51077,13 +51047,13 @@
             {
               "name": "form_trend",
               "label": "die Formkurve",
-              "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.5 pro Partie und kassiert 0.3, Auswärts 2.3 und 0.7.",
+              "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.5 pro Partie und kassiert 0.4, Auswärts 2.3 und 0.7.",
               "dir": "contradict"
             },
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 6.7pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 7.0pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
               "dir": "contradict"
             },
             {

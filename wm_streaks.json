@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "wm",
-    "generatedAt": "2026-07-08T17:21:22.170813+00:00",
+    "generatedAt": "2026-07-08T20:59:56.758192+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -170,6 +170,44 @@
       "xgBacked": null
     },
     {
+      "teamId": "ARG",
+      "team": "Argentinien",
+      "flag": "🇦🇷",
+      "league": "J",
+      "leagueName": "Gruppe J",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 11,
+      "venue": "all",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 93,
+        "label": "Eigen 93% + Gegner 53% → 77%"
+      },
+      "ratePct": 93,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "SUI",
+        "oppName": "Schweiz",
+        "atHome": true,
+        "date": "2026-07-11",
+        "oppRatePct": 53
+      },
+      "oppSupportPct": 53,
+      "matchupPct": 77
+    },
+    {
       "teamId": "BRA",
       "team": "Brasilien",
       "flag": "🇧🇷",
@@ -226,44 +264,6 @@
         true
       ],
       "xgBacked": null
-    },
-    {
-      "teamId": "ARG",
-      "team": "Argentinien",
-      "flag": "🇦🇷",
-      "league": "J",
-      "leagueName": "Gruppe J",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 10,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 93,
-        "label": "Eigen 93% + Gegner 53% → 77%"
-      },
-      "ratePct": 93,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "SUI",
-        "oppName": "Schweiz",
-        "atHome": true,
-        "date": "2026-07-11",
-        "oppRatePct": 53
-      },
-      "oppSupportPct": 53,
-      "matchupPct": 77
     },
     {
       "teamId": "ARG",
@@ -1286,6 +1286,35 @@
       "type": "scored",
       "market": "Team trifft",
       "length": 6,
+      "venue": "all",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 73,
+        "label": "Eigentendenz 73%"
+      },
+      "ratePct": 73,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "xgBacked": null
+    },
+    {
+      "teamId": "EGY",
+      "team": "Ägypten",
+      "flag": "🇪🇬",
+      "league": "G",
+      "leagueName": "Gruppe G",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 6,
       "venue": "H",
       "strong": true,
       "continuation": {
@@ -1715,44 +1744,6 @@
       }
     },
     {
-      "teamId": "ARG",
-      "team": "Argentinien",
-      "flag": "🇦🇷",
-      "league": "J",
-      "leagueName": "Gruppe J",
-      "type": "bttsNo",
-      "market": "Beide treffen — Nein",
-      "length": 5,
-      "venue": "H",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 73,
-        "label": "Eigen 73% + Gegner 47% → 63%"
-      },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "SUI",
-        "oppName": "Schweiz",
-        "atHome": true,
-        "date": "2026-07-11",
-        "oppRatePct": 53
-      },
-      "oppSupportPct": 47,
-      "matchupPct": 63
-    },
-    {
       "teamId": "AUS",
       "team": "Australien",
       "flag": "🇦🇺",
@@ -1885,35 +1876,6 @@
         true,
         true,
         true
-      ],
-      "xgBacked": null
-    },
-    {
-      "teamId": "EGY",
-      "team": "Ägypten",
-      "flag": "🇪🇬",
-      "league": "G",
-      "leagueName": "Gruppe G",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 5,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 73,
-        "label": "Eigentendenz 73%"
-      },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        false
       ],
       "xgBacked": null
     },
@@ -2301,22 +2263,22 @@
       "xgBacked": null
     },
     {
-      "teamId": "ARG",
-      "team": "Argentinien",
-      "flag": "🇦🇷",
-      "league": "J",
-      "leagueName": "Gruppe J",
-      "type": "cleanSheet",
-      "market": "Zu null",
+      "teamId": "EGY",
+      "team": "Ägypten",
+      "flag": "🇪🇬",
+      "league": "G",
+      "leagueName": "Gruppe G",
+      "type": "bttsYes",
+      "market": "Beide Teams treffen",
       "length": 5,
-      "venue": "H",
+      "venue": "all",
       "strong": true,
       "continuation": {
         "state": "neutral",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 13% → 45%"
+        "ratePct": 53,
+        "label": "Eigentendenz 53%"
       },
-      "ratePct": 67,
+      "ratePct": 53,
       "seq": [
         true,
         true,
@@ -2324,19 +2286,10 @@
         true,
         true,
         false,
-        true,
-        true
+        false,
+        false
       ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "SUI",
-        "oppName": "Schweiz",
-        "atHome": true,
-        "date": "2026-07-11",
-        "oppRatePct": 13
-      },
-      "oppSupportPct": 13,
-      "matchupPct": 45
+      "xgBacked": null
     },
     {
       "teamId": "ESP",
@@ -2496,6 +2449,35 @@
         true
       ],
       "xgBacked": true
+    },
+    {
+      "teamId": "EGY",
+      "team": "Ägypten",
+      "flag": "🇪🇬",
+      "league": "G",
+      "leagueName": "Gruppe G",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 4,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 73,
+        "label": "Eigentendenz 73%"
+      },
+      "ratePct": 73,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null
     },
     {
       "teamId": "ESP",
@@ -3165,7 +3147,7 @@
       "type": "bttsYes",
       "market": "Beide Teams treffen",
       "length": 4,
-      "venue": "all",
+      "venue": "A",
       "strong": false,
       "continuation": {
         "state": "neutral",
@@ -3460,35 +3442,6 @@
       "seq": [
         true,
         true,
-        true
-      ],
-      "xgBacked": null
-    },
-    {
-      "teamId": "EGY",
-      "team": "Ägypten",
-      "flag": "🇪🇬",
-      "league": "G",
-      "leagueName": "Gruppe G",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 3,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 73,
-        "label": "Eigentendenz 73%"
-      },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        false,
         true
       ],
       "xgBacked": null
@@ -4923,35 +4876,6 @@
         false,
         false,
         false
-      ],
-      "xgBacked": null
-    },
-    {
-      "teamId": "EGY",
-      "team": "Ägypten",
-      "flag": "🇪🇬",
-      "league": "G",
-      "leagueName": "Gruppe G",
-      "type": "bttsYes",
-      "market": "Beide Teams treffen",
-      "length": 3,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 53,
-        "label": "Eigentendenz 53%"
-      },
-      "ratePct": 53,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        false,
-        true
       ],
       "xgBacked": null
     },
