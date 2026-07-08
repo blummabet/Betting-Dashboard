@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-08T13:43:44Z",
+  "generatedAt": "2026-07-08T17:21:49Z",
   "windowDays": 2,
   "upcoming": 0,
   "signalsFired": [
@@ -54,6 +54,7 @@
   "verdict": "warn",
   "errors": [],
   "warns": [
+    "🛡️ Closing nah am Anpfiff erfasst (≤45min): 3 Fehler (z.B. USA-BEL: Closing 355min VOR Anpfiff eingefroren (veraltet — Nah-am-Anpfiff-Capture lief nicht?))",
     "🛡️ Trade-Auswertung: CLV/Closing erfasst: 1 Fehler (z.B. polyClose fehlt durchgängig → 'halten bis Closing'-Gegenrechnung nicht möglich (Poly-Closing-Snapshot nicht erfasst))",
     "🛡️ Public = Multi-Book-Konsens (nicht Einzel-Book): 1 Fehler (z.B. ARG-SUI: public aus Einzel-Book 'williamhill' statt Konsens)",
     "🛡️ Soft-Eröffnung echt erfasst: 1 Fehler (z.B. NOR-ENG: Soft bewegte sich 3.75→4.0, aber Opening==Jetzt (3.95) — nicht eingefroren)"
@@ -64,7 +65,7 @@
     "📊 APIF-Predictions: 65 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 48 Teams",
-    "📉 Odds-History: 100 Fixtures, Ø 112.4 Snapshots",
+    "📉 Odds-History: 100 Fixtures, Ø 112.7 Snapshots",
     "💹 Poly-Preise: 4 Fixtures",
     "💼 Poly-Balance: $319.17",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
@@ -96,6 +97,19 @@
       "nFail": 0,
       "failures": [],
       "note": "frozenAt nach Anpfiff = Live-Quoten. Resolver nullt den CLV; Write-Seite sollte Closing spätestens bei Anpfiff einfrieren."
+    },
+    {
+      "id": "closing_capture_fresh",
+      "label": "Closing nah am Anpfiff erfasst (≤45min)",
+      "severity": "warn",
+      "ok": false,
+      "nFail": 3,
+      "failures": [
+        "USA-BEL: Closing 355min VOR Anpfiff eingefroren (veraltet — Nah-am-Anpfiff-Capture lief nicht?)",
+        "POR-ESP: Closing 55min VOR Anpfiff eingefroren (veraltet — Nah-am-Anpfiff-Capture lief nicht?)",
+        "SUI-COL: Closing 128min VOR Anpfiff eingefroren (veraltet — Nah-am-Anpfiff-Capture lief nicht?)"
+      ],
+      "note": "Closing weit vor Anpfiff = tote Linie → CLV unzuverlässig. capture-closing.yml (alle 15min in Anpfiff-Bändern) + ODDS_API_KEY prüfen."
     },
     {
       "id": "kickoff_present",
