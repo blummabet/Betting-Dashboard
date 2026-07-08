@@ -235,6 +235,60 @@ def check_closing_prematch(ctx):
                 "Write-Seite sollte Closing spätestens bei Anpfiff einfrieren.")
 
 
+# Wie nah am Anpfiff muss das Closing spätestens eingefroren sein, damit es die ECHTE Schlusslinie
+# ist? capture-closing.yml läuft alle 15 min in Anpfiff-Bändern → Closing sollte ≤~30 min alt sein.
+CLOSING_FRESH_TOL_MIN = 45.0
+
+
+@integrity_check
+def check_closing_capture_fresh(ctx):
+    """07.07.2026 (Lucas: „Guard der im Status zeigt, ob wir die Odds nah am Anpfiff holen").
+    Gegenstück zu check_closing_prematch: WARNT, wenn ein KÜRZLICH angepfiffenes Spiel (letzte 48h)
+    sein Closing zu FRÜH (> CLOSING_FRESH_TOL_MIN vor Anpfiff) eingefroren hat → veraltete Linie,
+    CLV misst gegen tote Quote. Zeigt live, ob capture-closing.yml (Nah-am-Anpfiff-Erfassung) greift.
+    Nur letzte 48h → aktionierbar, akkumuliert nicht. Ältere Spiele sind historisch (nicht flaggbar)."""
+    if ctx.is_liga:
+        return None
+    cl = _lazy("wm_closing_lines.json")
+    if not isinstance(cl, dict) or not cl:
+        return None
+    # Anpfiff-Map über Gruppen UND koFixtures (nicht nur ctx.fixtures = Gruppen).
+    ko_by_key = {}
+    for gd in (ctx.wm.get("groups") or {}).values():
+        for fx in gd.get("fixtures", []):
+            if fx.get("home") and fx.get("away"):
+                ko_by_key[f"{fx['home']}-{fx['away']}"] = fx.get("kickoff")
+    for kf in (ctx.wm.get("koFixtures") or []):
+        if kf.get("home") and kf.get("away"):
+            ko_by_key[f"{kf['home']}-{kf['away']}"] = kf.get("kickoff")
+    now = datetime.now(timezone.utc)
+    fails = []
+    for key, snap in cl.items():
+        if not isinstance(snap, dict):
+            continue
+        frozen, ko = snap.get("frozenAt"), ko_by_key.get(key)
+        if not frozen or not ko:
+            continue
+        try:
+            fz = datetime.fromisoformat(str(frozen).replace("Z", "+00:00"))
+            kk = datetime.fromisoformat(str(ko).replace("Z", "+00:00"))
+        except Exception:
+            continue
+        if fz.tzinfo is None: fz = fz.replace(tzinfo=timezone.utc)
+        if kk.tzinfo is None: kk = kk.replace(tzinfo=timezone.utc)
+        # nur kürzlich angepfiffene Spiele (letzte 48h); noch nicht angepfiffte ignorieren
+        hrs_since_ko = (now - kk).total_seconds() / 3600.0
+        if hrs_since_ko < 0 or hrs_since_ko > 48:
+            continue
+        early_min = (kk - fz).total_seconds() / 60.0
+        if early_min > CLOSING_FRESH_TOL_MIN:
+            fails.append(f"{key}: Closing {early_min:.0f}min VOR Anpfiff eingefroren "
+                         f"(veraltet — Nah-am-Anpfiff-Capture lief nicht?)")
+    return _chk("closing_capture_fresh", "Closing nah am Anpfiff erfasst (≤45min)", "warn", fails,
+                "Closing weit vor Anpfiff = tote Linie → CLV unzuverlässig. "
+                "capture-closing.yml (alle 15min in Anpfiff-Bändern) + ODDS_API_KEY prüfen.")
+
+
 @integrity_check
 def check_kickoff_present(ctx):
     fails = []
