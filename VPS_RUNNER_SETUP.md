@@ -1,3 +1,9 @@
+> ⛔️ **VERALTET / FUNKTIONIERT NICHT (07.07.2026).** Der EU-VPS wurde ausprobiert und von
+> **Polymarket trotz DE/EU-Standort GEBLOCKT** (Region-Restriction) — hat Geld für nichts gekostet.
+> Die Annahme unten („EU = erlaubte Region ✅") ist in der Praxis FALSCH. **Diesen Weg NICHT gehen.**
+> Der einzige tragfähige Poly-Trading-Runner ist Lucas' **Mac** (erlaubte Region). Für Neustarts:
+> Runner als Service installieren (`actions-runner/svc.sh install` + `start`) + Mac wachhalten.
+
 # EU-VPS Self-Hosted Runner — Setup für manage-wm-poly
 
 **Warum:** Der Auto-Trader (`manage-wm-poly`) braucht einen Runner, der **immer an** UND **in einer erlaubten Region** ist:

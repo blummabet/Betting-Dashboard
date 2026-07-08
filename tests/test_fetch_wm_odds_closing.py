@@ -111,5 +111,34 @@ class TestMergeClosingLines(unittest.TestCase):
         self.assertEqual(out, {})
 
 
+class TestImminentGuard(unittest.TestCase):
+    """07.07.2026 (Lucas: CLV kaputt, weil Closing 1-7h veraltet). _has_imminent_kickoff steuert die
+    quota-schonende Nah-am-Anpfiff-Capture: nur bei einem Spiel in [-20 … +90] min feuert der Fetch."""
+    from datetime import datetime as _d, timezone as _t, timedelta as _td
+
+    def _wm(self, minutes_to_ko, final=False):
+        from datetime import datetime, timezone, timedelta
+        ko = (datetime.now(timezone.utc) + timedelta(minutes=minutes_to_ko)).isoformat()
+        wm = {"groups": {}, "koFixtures": [{"home": "AAA", "away": "BBB", "kickoff": ko}]}
+        if final:
+            wm["odds"] = {"AAA-BBB": {"odds_closing": {"final": True}}}
+        return wm
+
+    def test_imminent_true(self):
+        self.assertTrue(f._has_imminent_kickoff(self._wm(30)))     # in 30 min
+
+    def test_just_kicked_off_still_true(self):
+        self.assertTrue(f._has_imminent_kickoff(self._wm(-10)))    # gerade angepfiffen (Finalisierung)
+
+    def test_far_future_false(self):
+        self.assertFalse(f._has_imminent_kickoff(self._wm(360)))   # 6h weg → No-Op
+
+    def test_final_closing_skipped(self):
+        self.assertFalse(f._has_imminent_kickoff(self._wm(30, final=True)))
+
+    def test_no_fixtures_false(self):
+        self.assertFalse(f._has_imminent_kickoff({"groups": {}, "koFixtures": []}))
+
+
 if __name__ == "__main__":
     unittest.main()

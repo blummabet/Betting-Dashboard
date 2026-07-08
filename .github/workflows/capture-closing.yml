@@ -1,0 +1,67 @@
+name: 🔒 Closing-Capture (nah am Anpfiff)
+
+# 07.07.2026 (Lucas: CLV-Messung war kaputt). Der 4h-Cron von fetch-wm-data verpasst die letzten
+# Stunden vor Anpfiff → die „Closing"-Linie war 1-7h veraltet → CLV gegen tote Linie gemessen.
+# Dieser Workflow läuft alle 15 min in den Anpfiff-Bändern und ruft fetch_wm_odds im
+# CLOSING_CAPTURE_ONLY-Modus: der interne Guard (_has_imminent_kickoff) feuert TheOddsAPI NUR an,
+# wenn ein Spiel in [-20 … +90] min anpfeift — sonst sofortiger No-Op (quota-schonend).
+# So ist die Closing-Linie am Anpfiff ≤15 min alt statt Stunden.
+
+on:
+  schedule:
+    - cron: '*/15 14-23 * * *'   # Abend-Anpfiffe (UTC) inkl. ~90 min Vorlauf
+    - cron: '*/15 0-5 * * *'     # Nacht-Anpfiffe (UTC)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: capture-closing
+  cancel-in-progress: false
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 🔒 Closing nah am Anpfiff erfassen
+        run: python fetch_wm_odds.py
+        continue-on-error: true
+        env:
+          CLOSING_CAPTURE_ONLY: '1'
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+
+      - name: 💾 Closing committen (nur wenn geändert)
+        run: |
+          git config user.name  "Dashboard Bot"
+          git config user.email "actions@github.com"
+          # Die große wm2026-data.json bewusst VERWERFEN — der CLV-Resolver liest primär
+          # wm_closing_lines.json (merge_closing_lines hat das Closing schon dort gespiegelt).
+          # So clobbert dieser 15min-Job NIEMALS die Picks/Daten der Haupt-Pipeline.
+          git checkout -- wm2026-data.json 2>/dev/null || true
+          git add wm_closing_lines.json wm2026-odds-history.json 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "Keine Closing-Änderung — nichts zu committen."
+            exit 0
+          fi
+          git commit -m "🔒 Closing-Capture $(date -u +'%d.%m.%Y %H:%M') UTC"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          # Robust gegen parallelen fetch-wm-data-Commit: pull --autostash + Retry.
+          for attempt in 1 2 3 4 5; do
+            git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+            CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null)
+            if [ -n "$CONFLICTS" ]; then
+              echo "$CONFLICTS" | while read f; do git checkout --ours -- "$f"; git add "$f"; done
+              git diff --staged --quiet || git commit -m "🔧 auto-resolve closing merge"
+            fi
+            if git push 2>&1; then echo "✅ Push nach Versuch $attempt"; exit 0; fi
+            echo "⚠️ Push $attempt fehlgeschlagen — retry…"; sleep $((attempt * 3))
+          done
+          echo "❌ Push fehlgeschlagen"; exit 1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

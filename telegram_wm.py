@@ -224,15 +224,28 @@ def _stake_str(p) -> str:
     return f" · 💶 €{v:.0f}" if float(v).is_integer() else f" · 💶 €{v:.1f}"
 
 
+def _is_posted(p) -> bool:
+    """Zeigt/wertet Telegram diesen Pick? EXAKT dieselbe Auswahl wie die Dashboard-Card
+    (wm2026-renderer._livePicks): BET/ABWÄGEN, nicht trackingExcluded, nicht boldAlt (Safer-Line-
+    Alternative wird inline gezeigt, kein eigener Pick). KEIN Conviction-Floor — die Card hat auch
+    keinen. (07.07.2026, Lucas: „posten alles auf Telegram was auch in der Card ist" → Morning-Card,
+    Recap und kumulative Bilanz nutzen dieselbe Auswahl → nie mehr „gewertet aber nicht gepostet".)"""
+    if not p or p.get("trackingExcluded") or p.get("boldAlt"):
+        return False
+    return p.get("verdict") in ("BET", "ABWÄGEN")
+
+
 def bilanz_footer(wm: dict, lang: str = "de") -> str:
-    """Berechnet WM P&L aus recorded results (conviction-gewichtet, case-robust)."""
+    """Berechnet WM P&L aus recorded results (conviction-gewichtet, case-robust). Nur GEPOSTETE
+    Picks (dieselbe Auswahl wie die Morning-Card) — sonst zählen nie gesendete Low-Conviction-
+    ABWÄGEN in die öffentliche Bilanz."""
     picks_all = wm.get("picks", {})
     w = l = push = 0
     pnl = 0.0
     staked = 0.0
     for pick_list in picks_all.values():
         for p in pick_list:
-            if p.get("trackingExcluded"):
+            if not _is_posted(p):
                 continue
             r = _norm_result(p.get("result"))
             stake = _pick_stake(p)
@@ -429,11 +442,10 @@ def build_morning_card(wm: dict, target_date: str, lang: str = "de") -> str | No
         # FIX 11.06.2026: trackingExcluded raus (Cross-Market-Konflikte). Der Dashboard-
         # Renderer filtert das seit 06.06., der Telegram-Sender hat es nie getan →
         # widersprüchliche Picks (z.B. Auswärtssieg + AH Heim −0.5) landeten im Card.
-        bet_picks = [p for p in m["picks"] if p.get("verdict") == "BET"
-                     and not p.get("trackingExcluded")]
-        abw_picks = [p for p in m["picks"] if p.get("verdict") == "ABWÄGEN"
-                     and (p.get("convictionScore") or 0) >= MIN_ABW_CONVICTION
-                     and not p.get("trackingExcluded")]
+        # 07.07.2026 (Lucas): SELBE Auswahl wie die Dashboard-Card (_is_posted) — kein Conviction-
+        # Floor mehr, boldAlt raus. Telegram zeigt exakt was die Card zeigt → Recap/Bilanz konsistent.
+        bet_picks = [p for p in m["picks"] if p.get("verdict") == "BET" and _is_posted(p)]
+        abw_picks = [p for p in m["picks"] if p.get("verdict") == "ABWÄGEN" and _is_posted(p)]
 
         # Spiel-Block
         us = m["upsetScore"]
@@ -663,8 +675,7 @@ def build_recap_card(wm: dict, target_date: str, lang: str = "de") -> str | None
     for pick_key, fix_info in fix_lookup.items():
         fix_picks = all_picks.get(pick_key, [])
         pick_results = [(p, _norm_result(p.get("result"))) for p in fix_picks
-                        if p.get("verdict") in ("BET", "ABWÄGEN") and p.get("result")
-                        and not p.get("trackingExcluded")]
+                        if _is_posted(p) and p.get("result")]
         if not pick_results:
             continue
         had_any = True

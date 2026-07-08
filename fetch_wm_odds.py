@@ -755,6 +755,40 @@ def _snap_changed(last: dict | None, new_hw: float, new_dr: float | None, new_aw
     )
 
 
+def _has_imminent_kickoff(wm: dict, lo_min: float = -20.0, hi_min: float = 90.0) -> bool:
+    """True, wenn ein bothResolved-Spiel (Gruppe ODER KO) im Fenster [jetzt+lo … jetzt+hi] Minuten
+    anpfeift und noch KEIN finales Closing hat. Steuert die quota-schonende Nah-am-Anpfiff-Capture:
+    nur dann feuert fetch_wm_odds im CLOSING_CAPTURE_ONLY-Modus TheOddsAPI an."""
+    from datetime import datetime as _d, timezone as _t
+    now = _d.now(_t.utc)
+    odds = wm.get("odds") or {}
+    fixtures = []
+    for gd in (wm.get("groups") or {}).values():
+        fixtures += gd.get("fixtures", [])
+    fixtures += [f for f in (wm.get("koFixtures") or []) if f.get("home") and f.get("away")]
+    for fx in fixtures:
+        if not (fx.get("home") and fx.get("away")):
+            continue
+        if ((odds.get(f"{fx['home']}-{fx['away']}") or {}).get("odds_closing") or {}).get("final"):
+            continue   # Closing schon final → nicht mehr nötig
+        dt = None
+        if fx.get("kickoff"):
+            try:
+                dt = _d.fromisoformat(str(fx["kickoff"]).replace("Z", "+00:00"))
+            except Exception:
+                dt = None
+        if dt is None and fx.get("date"):
+            try:
+                dt = _d.fromisoformat(f"{fx['date']}T{(fx.get('time') or '21:00')}:00+02:00")
+            except Exception:
+                dt = None
+        if dt is None:
+            continue
+        if lo_min <= (dt - now).total_seconds() / 60.0 <= hi_min:
+            return True
+    return False
+
+
 def main():
     now_iso = datetime.now(timezone.utc).isoformat()
     print(f"💰  fetch_wm_odds.py — WM 2026 Odds")
@@ -772,6 +806,15 @@ def main():
 
     with open(WM_FILE, encoding="utf-8") as f:
         wm = json.load(f)
+
+    # ── Nah-am-Anpfiff Closing-Capture (07.07.2026, Lucas: CLV-Messung war kaputt) ──
+    # Der 4h-Cron verpasst die letzten Stunden vor Anpfiff → „Closing" war 1-7h veraltet → CLV
+    # gegen tote Linie gemessen. capture-closing.yml ruft dieses Skript alle 15 min in Anpfiff-
+    # Bändern mit CLOSING_CAPTURE_ONLY=1. Guard: NUR fetchen (API-Quota!), wenn ein Spiel im Fenster
+    # [jetzt-20min … jetzt+90min] steht — sonst sofort raus. So ist die Closing-Linie ≤15min alt.
+    if os.environ.get("CLOSING_CAPTURE_ONLY") == "1" and not _has_imminent_kickoff(wm):
+        print("  ⏭️  Kein Spiel in [-20 … +90] min — Closing-Capture übersprungen (spart API).")
+        return
 
     odds_out: dict[str, dict] = wm.get("odds") or {}
     groups = wm.get("groups", {})
