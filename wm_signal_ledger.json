@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-07-08T01:06:09Z",
-    "total_records": 162
+    "updated_at": "2026-07-08T01:21:09Z",
+    "total_records": 163
   },
   "records": [
     {
@@ -3605,6 +3605,40 @@
       "engineVersion": "v2"
     },
     {
+      "key": "KO-R16-SUI-COL|Unter 2.5 Tore",
+      "matchKey": "KO-R16-SUI-COL",
+      "market": "Unter 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": -1.87
+        },
+        {
+          "name": "xg_strength",
+          "score": -1.14
+        },
+        {
+          "name": "pressure_index",
+          "score": 1.0
+        },
+        {
+          "name": "lineup_signal",
+          "score": 3.77
+        },
+        {
+          "name": "chance_creation",
+          "score": -2.07
+        }
+      ],
+      "resolvedAt": "2026-07-08T01:09:57Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": false,
+      "engineVersion": "v2",
+      "processVerdict": "JUSTIFIED"
+    },
+    {
       "key": "KO-R16-USA-BEL|Doppelte Chance — X2",
       "matchKey": "KO-R16-USA-BEL",
       "market": "Doppelte Chance — X2",
@@ -3943,7 +3977,7 @@
           "score": -5.78
         }
       ],
-      "resolvedAt": "2026-07-08T01:06:09Z",
+      "resolvedAt": "2026-07-08T01:21:09Z",
       "source": "steam",
       "convictionScore": 4,
       "lateEntry": true,
@@ -3968,7 +4002,7 @@
           "score": -1.8
         }
       ],
-      "resolvedAt": "2026-07-08T01:06:09Z",
+      "resolvedAt": "2026-07-08T01:21:09Z",
       "source": "steam",
       "convictionScore": 2,
       "lateEntry": false,
