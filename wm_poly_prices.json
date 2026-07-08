@@ -12,7 +12,7 @@
       "title": "Argentina vs. Switzerland",
       "date": "2026-07-11",
       "kickoff": "2026-07-12T01:00:00Z",
-      "vol": 161036.92,
+      "vol": 164206.54,
       "negRiskMarketId": "0xbf8e504576f20e3c1b48a307e8d2b9c957d597504564b67c55bc12b4860cb200",
       "hwTokens": [
         "14635675870982897917581198649476127837975251193150495566552970565909631535281",
@@ -65,7 +65,7 @@
             ]
           },
           "-4.5": {
-            "yes": 0.0555,
+            "yes": 0.055,
             "tokens": [
               "25332628000151331799008233375211276031286575731789187588035502545609189376029",
               "99830958849196684699778203815069300980746754665470020911468822864214412364998"
@@ -102,7 +102,7 @@
             ]
           },
           "-4.5": {
-            "yes": 0.0085,
+            "yes": 0.0095,
             "tokens": [
               "92780256998068982882170634648616599351101435111723561549742092566291164591695",
               "65208709500938041723146317264591201206928376226550367310892994651591112982814"
@@ -131,7 +131,7 @@
       "title": "Spain vs. Belgium",
       "date": "2026-07-10",
       "kickoff": "2026-07-10T19:00:00Z",
-      "vol": 935930.21,
+      "vol": 936442.98,
       "negRiskMarketId": "0xd299565db682ef20192fb904d9d767182c66f78878b104f95b248c8baaf89200",
       "hwTokens": [
         "114083367175349101587118456512209157494315102378898420654169806682644264287063",
@@ -250,7 +250,7 @@
       "title": "Norway vs. England",
       "date": "2026-07-11",
       "kickoff": "2026-07-11T21:00:00Z",
-      "vol": 1532167.25,
+      "vol": 1532439.96,
       "negRiskMarketId": "0x8d0593b38a433528f49f8e211d7307635c3736b0e8047669aa41cc7296a6d300",
       "hwTokens": [
         "101609312241167873882360947921080859853145865660281247946682387335776462114544",
@@ -369,7 +369,7 @@
       "title": "France vs. Morocco",
       "date": "2026-07-09",
       "kickoff": "2026-07-09T20:00:00Z",
-      "vol": 5041217.47,
+      "vol": 5053617.25,
       "negRiskMarketId": "0x8ed4081ad2d806d64003a7a0891fae77285342e39c2ec1512a4b515868a5d100",
       "hwTokens": [
         "59376244379747988336832016917908236721650516433890704080422157946407884434153",
@@ -487,7 +487,7 @@
       "kickoff": "2026-07-12T01:00:00Z",
       "slug": "fifwc-arg-che-2026-07-11",
       "moreMktSlug": "fifwc-arg-che-2026-07-11-more-markets",
-      "vol": 161037.0,
+      "vol": 164207.0,
       "poly_hw": 0.565,
       "poly_dr": 0.275,
       "poly_aw": 0.165,
@@ -629,9 +629,9 @@
       "edgeDelta_o25": null,
       "edgeDelta_u25": null,
       "edgeTrend": "new",
-      "steamLag": false,
-      "pinnSteamMove": null,
-      "momentumScore": 2.5
+      "steamLag": true,
+      "pinnSteamMove": 2.4,
+      "momentumScore": 7.5
     },
     {
       "key": "NOR-ENG",
@@ -645,7 +645,7 @@
       "kickoff": "2026-07-11T21:00:00Z",
       "slug": "fifwc-nor-eng-2026-07-11",
       "moreMktSlug": "fifwc-nor-eng-2026-07-11-more-markets",
-      "vol": 1532167.0,
+      "vol": 1532440.0,
       "poly_hw": 0.225,
       "poly_dr": 0.265,
       "poly_aw": 0.525,
@@ -803,7 +803,7 @@
       "kickoff": "2026-07-10T19:00:00Z",
       "slug": "fifwc-esp-bel-2026-07-10",
       "moreMktSlug": "fifwc-esp-bel-2026-07-10-more-markets",
-      "vol": 935930.0,
+      "vol": 936443.0,
       "poly_hw": 0.605,
       "poly_dr": 0.245,
       "poly_aw": 0.165,
@@ -961,9 +961,9 @@
       "trackingExcluded_btts": null,
       "trackingExcluded_btts_no": null,
       "dataQuality": "elo_only",
-      "edgeDelta_hw": -0.7,
+      "edgeDelta_hw": -0.9,
       "edgeDelta_aw": 0.6,
-      "edgeDelta_dr": 0.2,
+      "edgeDelta_dr": 0.3,
       "edgeDelta_o25": -2.0,
       "edgeDelta_u25": 2.0,
       "edgeTrend": "stable",
@@ -983,7 +983,7 @@
       "kickoff": "2026-07-09T20:00:00Z",
       "slug": "fifwc-fra-mar-2026-07-09",
       "moreMktSlug": "fifwc-fra-mar-2026-07-09-more-markets",
-      "vol": 5041217.0,
+      "vol": 5053617.0,
       "poly_hw": 0.625,
       "poly_dr": 0.245,
       "poly_aw": 0.135,
@@ -1119,8 +1119,8 @@
       "edgeDelta_hw": 1.3,
       "edgeDelta_aw": 0.0,
       "edgeDelta_dr": -0.3,
-      "edgeDelta_o25": 0.5,
-      "edgeDelta_u25": -0.5,
+      "edgeDelta_o25": 1.5,
+      "edgeDelta_u25": -1.5,
       "edgeTrend": "stable",
       "steamLag": false,
       "pinnSteamMove": 1.6,
@@ -1128,5 +1128,5 @@
     }
   ],
   "count": 4,
-  "generatedAt": "08.07.2026 22:26 UTC"
+  "generatedAt": "08.07.2026 22:41 UTC"
 }
