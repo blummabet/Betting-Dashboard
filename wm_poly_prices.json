@@ -12,7 +12,7 @@
       "title": "Spain vs. Belgium",
       "date": "2026-07-10",
       "kickoff": "2026-07-10T19:00:00Z",
-      "vol": 241569.82,
+      "vol": 258986.05,
       "negRiskMarketId": "0xd299565db682ef20192fb904d9d767182c66f78878b104f95b248c8baaf89200",
       "hwTokens": [
         "114083367175349101587118456512209157494315102378898420654169806682644264287063",
@@ -131,7 +131,7 @@
       "title": "Norway vs. England",
       "date": "2026-07-11",
       "kickoff": "2026-07-11T21:00:00Z",
-      "vol": 1041441.09,
+      "vol": 1064365.37,
       "negRiskMarketId": "0x8d0593b38a433528f49f8e211d7307635c3736b0e8047669aa41cc7296a6d300",
       "hwTokens": [
         "101609312241167873882360947921080859853145865660281247946682387335776462114544",
@@ -250,7 +250,7 @@
       "title": "France vs. Morocco",
       "date": "2026-07-09",
       "kickoff": "2026-07-09T20:00:00Z",
-      "vol": 2666667.59,
+      "vol": 2684702.07,
       "negRiskMarketId": "0x8ed4081ad2d806d64003a7a0891fae77285342e39c2ec1512a4b515868a5d100",
       "hwTokens": [
         "59376244379747988336832016917908236721650516433890704080422157946407884434153",
@@ -286,7 +286,7 @@
             ]
           },
           "-2.5": {
-            "yes": 0.155,
+            "yes": 0.145,
             "tokens": [
               "30522122607915687324395116685556108332542080407241871300978554260961019107715",
               "18257525225898492175244667197343516468172890586431143691734521493336584311745"
@@ -307,7 +307,7 @@
             ]
           },
           "-5.5": {
-            "yes": 0.017,
+            "yes": 0.0165,
             "tokens": [
               "61319763518973545990016591736837679051156430659512024883230965448153120483509",
               "94407904187382504240139060529563044335968771191905179999673507478548054194889"
@@ -368,7 +368,7 @@
       "kickoff": "2026-07-10T19:00:00Z",
       "slug": "fifwc-esp-bel-2026-07-10",
       "moreMktSlug": "fifwc-esp-bel-2026-07-10-more-markets",
-      "vol": 241570.0,
+      "vol": 258986.0,
       "poly_hw": 0.605,
       "poly_dr": 0.245,
       "poly_aw": 0.165,
@@ -420,8 +420,8 @@
           "side": "home",
           "line": -2.5,
           "poly": 0.165,
-          "fair": 0.1719,
-          "edge": 0.7,
+          "fair": 0.1706,
+          "edge": 0.6,
           "tokens": [
             "36000273937470608788569779400849546492457433880642122249748652248094889595498",
             "62520229529280307063194498373915805203168971620393643603012642301982782525526"
@@ -532,9 +532,9 @@
       "edgeDelta_o25": null,
       "edgeDelta_u25": null,
       "edgeTrend": "new",
-      "steamLag": false,
-      "pinnSteamMove": null,
-      "momentumScore": 2.5
+      "steamLag": true,
+      "pinnSteamMove": 2.3,
+      "momentumScore": 7.5
     },
     {
       "key": "FRA-MAR",
@@ -548,7 +548,7 @@
       "kickoff": "2026-07-09T20:00:00Z",
       "slug": "fifwc-fra-mar-2026-07-09",
       "moreMktSlug": "fifwc-fra-mar-2026-07-09-more-markets",
-      "vol": 2666668.0,
+      "vol": 2684702.0,
       "poly_hw": 0.625,
       "poly_dr": 0.245,
       "poly_aw": 0.145,
@@ -561,22 +561,22 @@
       "poly_btts": null,
       "poly_btts_no": null,
       "poly_btts_tokens": [],
-      "pinn_hw": 1.6,
+      "pinn_hw": 1.61,
       "pinn_dr": 3.86,
-      "pinn_aw": 6.46,
+      "pinn_aw": 6.44,
       "pinn_o25": 1.95,
       "pinn_u25": 1.8,
-      "fair_hw": 0.6016,
-      "fair_dr": 0.2494,
-      "fair_aw": 0.149,
+      "fair_hw": 0.5998,
+      "fair_dr": 0.2502,
+      "fair_aw": 0.15,
       "fair_o25": 0.48,
       "fair_u25": 0.52,
       "fair_btts": 0.4667,
       "fair_btts_no": 0.5333,
       "btts_templated": false,
-      "edge_hw": -2.3,
-      "edge_dr": 0.4,
-      "edge_aw": 0.4,
+      "edge_hw": -2.5,
+      "edge_dr": 0.5,
+      "edge_aw": 0.5,
       "edge_o25": 0.5,
       "edge_u25": -0.5,
       "edge_btts": null,
@@ -596,16 +596,16 @@
         {
           "side": "home",
           "line": -2.5,
-          "poly": 0.155,
+          "poly": 0.145,
           "fair": 0.1896,
-          "edge": 3.5,
+          "edge": 4.5,
           "tokens": [
             "30522122607915687324395116685556108332542080407241871300978554260961019107715",
             "18257525225898492175244667197343516468172890586431143691734521493336584311745"
           ]
         }
       ],
-      "bestEdge": 0.4,
+      "bestEdge": 0.5,
       "bestEdgeKey": "dr",
       "hasPinnacle": true,
       "hasMoreMarkets": true,
@@ -681,15 +681,15 @@
       "trackingExcluded_btts": null,
       "trackingExcluded_btts_no": null,
       "dataQuality": "elo_only",
-      "edgeDelta_hw": -1.2,
-      "edgeDelta_aw": 0.1,
-      "edgeDelta_dr": 0.0,
+      "edgeDelta_hw": -1.4,
+      "edgeDelta_aw": 0.2,
+      "edgeDelta_dr": 0.1,
       "edgeDelta_o25": 1.0,
       "edgeDelta_u25": -1.0,
       "edgeTrend": "stable",
       "steamLag": false,
-      "pinnSteamMove": 1.6,
-      "momentumScore": 0.4
+      "pinnSteamMove": null,
+      "momentumScore": 0.5
     },
     {
       "key": "NOR-ENG",
@@ -703,7 +703,7 @@
       "kickoff": "2026-07-11T21:00:00Z",
       "slug": "fifwc-nor-eng-2026-07-11",
       "moreMktSlug": "fifwc-nor-eng-2026-07-11-more-markets",
-      "vol": 1041441.0,
+      "vol": 1064365.0,
       "poly_hw": 0.225,
       "poly_dr": 0.265,
       "poly_aw": 0.525,
@@ -839,11 +839,11 @@
       "trackingExcluded_btts": null,
       "trackingExcluded_btts_no": null,
       "dataQuality": "steam",
-      "edgeDelta_hw": 0.2,
+      "edgeDelta_hw": 0.1,
       "edgeDelta_aw": -0.9,
-      "edgeDelta_dr": -0.3,
-      "edgeDelta_o25": -3.3,
-      "edgeDelta_u25": 3.3,
+      "edgeDelta_dr": -0.2,
+      "edgeDelta_o25": -2.3,
+      "edgeDelta_u25": 2.3,
       "edgeTrend": "stable",
       "steamLag": false,
       "pinnSteamMove": 2.8,
@@ -851,5 +851,5 @@
     }
   ],
   "count": 3,
-  "generatedAt": "08.07.2026 04:06 UTC"
+  "generatedAt": "08.07.2026 04:36 UTC"
 }
