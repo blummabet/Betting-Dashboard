@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "liga",
-    "generatedAt": "2026-07-07T09:43:30.630945+00:00",
+    "generatedAt": "2026-07-08T08:42:12.019528+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -2884,7 +2884,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 73,
-        "label": "Eigen 73% + Gegner 53% → 65%"
+        "label": "Eigen 73% + Gegner 47% → 63%"
       },
       "ratePct": 73,
       "seq": [
@@ -2902,10 +2902,10 @@
         "oppName": "FSV Mainz 05",
         "atHome": false,
         "date": "2026-08-29",
-        "oppRatePct": 53
+        "oppRatePct": 47
       },
-      "oppSupportPct": 53,
-      "matchupPct": 65
+      "oppSupportPct": 47,
+      "matchupPct": 63
     },
     {
       "teamId": "185",
@@ -2921,7 +2921,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 87,
-        "label": "Eigen 87% + Gegner 67% → 79%"
+        "label": "Eigen 87% + Gegner 60% → 76%"
       },
       "ratePct": 87,
       "seq": [
@@ -2939,10 +2939,10 @@
         "oppName": "FSV Mainz 05",
         "atHome": false,
         "date": "2026-08-29",
-        "oppRatePct": 67
+        "oppRatePct": 60
       },
-      "oppSupportPct": 67,
-      "matchupPct": 79
+      "oppSupportPct": 60,
+      "matchupPct": 76
     },
     {
       "teamId": "192",
@@ -4292,6 +4292,44 @@
       "matchupPct": 83
     },
     {
+      "teamId": "164",
+      "team": "FSV Mainz 05",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/164.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "GER",
+      "leagueName": "Bundesliga",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 6,
+      "venue": "all",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 80,
+        "label": "Eigen 80% + Gegner 73% → 77%"
+      },
+      "ratePct": 80,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "185",
+        "oppName": "SC Paderborn 07",
+        "atHome": true,
+        "date": "2026-08-29",
+        "oppRatePct": 73
+      },
+      "oppSupportPct": 73,
+      "matchupPct": 77
+    },
+    {
       "teamId": "167",
       "team": "1899 Hoffenheim",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/167.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -5011,11 +5049,12 @@
       "matchupPct": 73,
       "signalInfo": {
         "state": "confirm",
-        "count": 2,
+        "count": 3,
         "conviction": 3,
         "names": [
           "form_trend",
-          "h2h_pattern"
+          "h2h_pattern",
+          "chance_creation"
         ],
         "market": "Unter 2.5 Tore"
       }
@@ -5511,44 +5550,6 @@
       },
       "oppSupportPct": 60,
       "matchupPct": 64
-    },
-    {
-      "teamId": "164",
-      "team": "FSV Mainz 05",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/164.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "GER",
-      "leagueName": "Bundesliga",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 5,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 80,
-        "label": "Eigen 80% + Gegner 73% → 77%"
-      },
-      "ratePct": 80,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "185",
-        "oppName": "SC Paderborn 07",
-        "atHome": true,
-        "date": "2026-08-29",
-        "oppRatePct": 73
-      },
-      "oppSupportPct": 73,
-      "matchupPct": 77
     },
     {
       "teamId": "1660",
@@ -8376,6 +8377,44 @@
       "matchupPct": 83
     },
     {
+      "teamId": "164",
+      "team": "FSV Mainz 05",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/164.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "GER",
+      "leagueName": "Bundesliga",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 4,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 80,
+        "label": "Eigen 80% + Gegner 73% → 77%"
+      },
+      "ratePct": 80,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "185",
+        "oppName": "SC Paderborn 07",
+        "atHome": true,
+        "date": "2026-08-29",
+        "oppRatePct": 73
+      },
+      "oppSupportPct": 73,
+      "matchupPct": 77
+    },
+    {
       "teamId": "168",
       "team": "Bayer Leverkusen",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/168.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -10076,7 +10115,7 @@
       "continuation": {
         "state": "neutral",
         "ratePct": 60,
-        "label": "Eigen 60% + Gegner 47% → 55%"
+        "label": "Eigen 60% + Gegner 53% → 57%"
       },
       "ratePct": 60,
       "seq": [
@@ -10094,10 +10133,10 @@
         "oppName": "FSV Mainz 05",
         "atHome": false,
         "date": "2026-08-29",
-        "oppRatePct": 47
+        "oppRatePct": 53
       },
-      "oppSupportPct": 47,
-      "matchupPct": 55
+      "oppSupportPct": 53,
+      "matchupPct": 57
     },
     {
       "teamId": "1298",
@@ -11861,11 +11900,12 @@
       "matchupPct": 73,
       "signalInfo": {
         "state": "confirm",
-        "count": 2,
+        "count": 3,
         "conviction": 3,
         "names": [
           "form_trend",
-          "h2h_pattern"
+          "h2h_pattern",
+          "chance_creation"
         ],
         "market": "Unter 2.5 Tore"
       }
@@ -12419,44 +12459,6 @@
       },
       "oppSupportPct": 80,
       "matchupPct": 68
-    },
-    {
-      "teamId": "164",
-      "team": "FSV Mainz 05",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/164.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "GER",
-      "leagueName": "Bundesliga",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 3,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 80,
-        "label": "Eigen 80% + Gegner 73% → 77%"
-      },
-      "ratePct": 80,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "185",
-        "oppName": "SC Paderborn 07",
-        "atHome": true,
-        "date": "2026-08-29",
-        "oppRatePct": 73
-      },
-      "oppSupportPct": 73,
-      "matchupPct": 77
     },
     {
       "teamId": "1660",

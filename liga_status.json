@@ -59,10 +59,9 @@
       "label": "Pinnacle-1X2 vollständig + plausibel",
       "severity": "warn",
       "ok": false,
-      "nFail": 2,
+      "nFail": 1,
       "failures": [
-        "499-488: Margin 1.876 unplausibel",
-        "81-95: Margin 2.941 unplausibel"
+        "499-488: Margin 1.876 unplausibel"
       ],
       "note": "Quelle für Modell-Baseline + Edge."
     },
@@ -162,9 +161,12 @@
       "id": "public_consensus",
       "label": "Public-Konsens (Soft-Books) vorhanden",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 2,
+      "failures": [
+        "77-79: kein public_hw",
+        "85-94: kein public_hw"
+      ],
       "note": "Ohne public_* feuert public_static_bias nicht."
     },
     {
@@ -172,7 +174,7 @@
       "label": "Public = Multi-Book-Konsens (nicht Einzel-Book)",
       "severity": "warn",
       "ok": false,
-      "nFail": 48,
+      "nFail": 46,
       "failures": [
         "42-1346: public aus Einzel-Book 'williamhill' statt Konsens",
         "64-33: public aus Einzel-Book 'williamhill' statt Konsens",
@@ -446,6 +448,6 @@
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-07-07T09:54:07.756210+00:00"
+  "nFail": 4,
+  "generatedAt": "2026-07-08T08:52:48.712843+00:00"
 }
