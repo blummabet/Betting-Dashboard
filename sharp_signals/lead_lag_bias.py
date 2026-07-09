@@ -88,9 +88,10 @@ def _parse_ts(ts: str) -> Optional[datetime]:
 
 def _select_outcome_key_from_market(market: str) -> Optional[str]:
     """
-    Welches 1X2-Outcome wird vom Pick bewettet?
-    Mappt freie Market-Strings auf hw/dr/aw.
-    Nicht-1X2-Märkte (O/U, AH, BTTS) → None (Signal nicht anwendbar).
+    Welches Outcome wird vom Pick bewettet? Mappt freie Market-Strings auf
+    Snapshot-Keys: 1X2 → hw/dr/aw, O/U → o15/o25/o35/u15/u25/u35.
+    09.07.2026 (Lucas): O/U ergänzt — Softbook-Lag jetzt auch auf Tor-Linien.
+    AH/BTTS → None (Signal nicht anwendbar).
     """
     m = (market or "").lower()
     if "heimsieg" in m or m == "1":
@@ -104,6 +105,40 @@ def _select_outcome_key_from_market(market: str) -> Optional[str]:
         return "hw"
     if "dnb" in m and ("ausw" in m or "away" in m):
         return "aw"
+    # O/U-Tor-Linien (2-way): über/unter × 1.5/2.5/3.5
+    if "tore" in m:
+        over = "über" in m or "uber" in m or "over" in m
+        under = "unter" in m or "under" in m
+        if over or under:
+            for lbl, suf in (("1.5", "15"), ("1,5", "15"),
+                             ("2.5", "25"), ("2,5", "25"),
+                             ("3.5", "35"), ("3,5", "35")):
+                if lbl in m:
+                    return ("o" if over else "u") + suf
+    return None
+
+
+# Komplementär-Keys für O/U-2-way-Devig
+_OU_COMPLEMENT = {"o15": "u15", "u15": "o15", "o25": "u25",
+                  "u25": "o25", "o35": "u35", "u35": "o35"}
+
+
+def _implied_for_outcome(snap: dict, outcome: str) -> Optional[float]:
+    """De-viggte implied Wkt eines Outcomes aus einem Snapshot.
+    1X2 (hw/dr/aw) → proportionales 3-way-Devig; O/U (oNN/uNN) → 2-way complementary-devig.
+    Fallback (Gegenquote fehlt) → rohe implied 1/odds."""
+    if outcome in ("hw", "dr", "aw"):
+        p = _devig_implied(snap.get("hw"), snap.get("dr"), snap.get("aw"))
+        return p[{"hw": 0, "dr": 1, "aw": 2}[outcome]]
+    if outcome in _OU_COMPLEMENT:
+        o = snap.get(outcome)
+        if not o or o <= 1.0:
+            return None
+        opp = snap.get(_OU_COMPLEMENT[outcome])
+        if opp and opp > 1.0:
+            a, b = 1.0 / o, 1.0 / opp
+            return a / (a + b)
+        return 1.0 / o
     return None
 
 
@@ -205,7 +240,10 @@ class LeadLagBiasSignal(Signal):
         confidence = min(0.95, confidence)
 
         # Evidence-Text für die Card
-        oc_label = {"hw": "Heim", "dr": "X", "aw": "Auswärts"}[outcome]
+        oc_label = {"hw": "Heim", "dr": "X", "aw": "Auswärts",
+                    "o15": "Über 1.5", "u15": "Unter 1.5",
+                    "o25": "Über 2.5", "u25": "Unter 2.5",
+                    "o35": "Über 3.5", "u35": "Unter 3.5"}.get(outcome, outcome)
         if is_confirmed:
             soft_str = ", ".join(bk for bk, _ in followed[:2])
             evidence = (f"Pinnacle hat {oc_label} um {pinn_move:+.1f}pp bewegt, und {soft_str} "
@@ -256,12 +294,9 @@ class LeadLagBiasSignal(Signal):
         if first_in_window is last:
             return None  # zu wenig Auflösung im Fenster
 
-        p_before = _devig_implied(first_in_window.get("hw"),
-                                  first_in_window.get("dr"),
-                                  first_in_window.get("aw"))
-        p_after  = _devig_implied(last.get("hw"), last.get("dr"), last.get("aw"))
+        p_before = _implied_for_outcome(first_in_window, outcome)
+        p_after  = _implied_for_outcome(last, outcome)
 
-        idx = {"hw": 0, "dr": 1, "aw": 2}[outcome]
-        if p_before[idx] is None or p_after[idx] is None:
+        if p_before is None or p_after is None:
             return None
-        return (p_after[idx] - p_before[idx]) * 100.0
+        return (p_after - p_before) * 100.0

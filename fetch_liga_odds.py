@@ -170,8 +170,77 @@ def _map_1x2(outs: list, home_name: str, away_name: str):
     return hw, dr, aw
 
 
+_OU_LINES = (("15", 1.5), ("25", 2.5), ("35", 3.5))
+
+
+def _extract_ou(outs: list, prefix: str = "") -> dict:
+    """totals-Outcomes → {f'{prefix}o15': .., f'{prefix}u15': .., …} für 1.5/2.5/3.5."""
+    res = {}
+    for o in (outs or []):
+        pt = o.get("point")
+        if pt is None:
+            continue
+        for suf, line in _OU_LINES:
+            if abs(pt - line) < 1e-6:
+                nm = (o.get("name") or "").lower()
+                if nm == "over":
+                    res[f"{prefix}o{suf}"] = o.get("price")
+                elif nm == "under":
+                    res[f"{prefix}u{suf}"] = o.get("price")
+    return res
+
+
+def _extract_btts(outs: list, prefix: str = "") -> dict:
+    res = {}
+    for o in (outs or []):
+        nm = (o.get("name") or "").lower()
+        if nm == "yes":
+            res[f"{prefix}bttsY"] = o.get("price")
+        elif nm == "no":
+            res[f"{prefix}bttsN"] = o.get("price")
+    return res
+
+
+# AH-Viertel-Leiter (identisch zu fetch_wm_odds / steam_engine)
+_AH_STEPS = ((0.25, "025"), (0.5, "050"), (0.75, "075"), (1.0, "100"),
+             (1.25, "125"), (1.5, "150"), (1.75, "175"), (2.0, "200"), (2.25, "225"))
+
+
+def _extract_ah(outs: list, home_name: str, away_name: str) -> dict:
+    """spreads-Outcomes → AH-Leiter + diskrete Keys (ahH_n*/ahA_p*/ahA_n*), alles in
+    Heim-Linien-Perspektive normalisiert. TheOddsAPI liefert point je Team-Sicht:
+    Heim point=-1.0 = „Heim −1", Auswärts point=+1.0 = dieselbe Linie von der Gegenseite."""
+    home_odds: dict[float, float] = {}   # heim-linie → heim-quote
+    away_odds: dict[float, float] = {}    # heim-linie → auswärts-quote
+    for o in (outs or []):
+        nm, pt, price = o.get("name", ""), o.get("point"), o.get("price")
+        if pt is None or not price:
+            continue
+        if _names_match(nm, home_name):
+            home_odds[round(float(pt), 2)] = price
+        elif _names_match(nm, away_name):
+            away_odds[round(-float(pt), 2)] = price   # in Heim-Linien-Perspektive spiegeln
+    res: dict = {}
+    ladder = {}
+    for hl in sorted(set(home_odds) | set(away_odds)):
+        ho, ao = home_odds.get(hl), away_odds.get(hl)
+        if ho and ao:
+            ladder[str(hl)] = [round(ho, 3), round(ao, 3)]
+    if ladder:
+        res["ahLadder"] = ladder
+    for val, suf in _AH_STEPS:
+        if -val in home_odds:          # Heim −val
+            res[f"ahH_n{suf}"] = round(home_odds[-val], 3)
+        if -val in away_odds:          # Auswärts +val (Underdog-Deckung)
+            res[f"ahA_p{suf}"] = round(away_odds[-val], 3)
+        if val in away_odds:           # Auswärts −val (Auswärts-Favorit)
+            res[f"ahA_n{suf}"] = round(away_odds[val], 3)
+    return res
+
+
 def extract_prices(event: dict, orientation: str, home_name: str, away_name: str) -> dict:
-    """1X2 + O/U 2.5 + BTTS aus einem Event ziehen, Heim/Auswärts korrekt zugeordnet."""
+    """1X2 + O/U (1.5/2.5/3.5) + BTTS + AH-Leiter aus einem Event ziehen — Sharp + Public.
+    Heim/Auswärts korrekt zugeordnet (orientierungs-agnostisch)."""
     out = {}
     bks = event.get("bookmakers") or []
     # ── 1X2 (h2h) — Sharp-Anker ──
@@ -191,25 +260,25 @@ def extract_prices(event: dict, orientation: str, home_name: str, away_name: str
     bhw, bdr, baw = _map_1x2(bfouts, home_name, away_name)
     if bhw and bdr and baw:
         out.update({"bf_hw": bhw, "bf_dr": bdr, "bf_aw": baw})
-    # ── Über/Unter 2.5 ──
+    # ── Über/Unter (1.5/2.5/3.5) — Sharp ──
     _, t_outs = _best_book(bks, "totals")
-    if t_outs:
-        for o in t_outs:
-            if abs((o.get("point") or 0) - 2.5) < 1e-6:
-                nm = (o.get("name") or "").lower()
-                if nm == "over":
-                    out["o25"] = o.get("price")
-                elif nm == "under":
-                    out["u25"] = o.get("price")
-    # ── BTTS ──
+    out.update(_extract_ou(t_outs))
+    # ── Public/Soft-Konsens O/U (public_static_bias + lead_lag auf Tor-Linien) ──
+    _pt_bk, pt_outs = _best_book(bks, "totals", priority=SOFT_PRIORITY)
+    _pub_ou = _extract_ou(pt_outs, prefix="public_")
+    out.update(_pub_ou)
+    # ── BTTS — Sharp ──
     _, b_outs = _best_book(bks, "btts")
-    if b_outs:
-        for o in b_outs:
-            nm = (o.get("name") or "").lower()
-            if nm == "yes":
-                out["bttsY"] = o.get("price")
-            elif nm == "no":
-                out["bttsN"] = o.get("price")
+    out.update(_extract_btts(b_outs))
+    # ── Public/Soft-Konsens BTTS ──
+    _pb_bk, pb_outs = _best_book(bks, "btts", priority=SOFT_PRIORITY)
+    _pub_btts = _extract_btts(pb_outs, prefix="public_")
+    out.update(_pub_btts)
+    if _pub_ou or _pub_btts:
+        out["public_ou_bookmaker"] = _pt_bk or _pb_bk
+    # ── Asian Handicap (spreads) — Sharp-Leiter + diskrete Keys ──
+    _, sp_outs = _best_book(bks, "spreads")
+    out.update(_extract_ah(sp_outs, home_name, away_name))
     return out
 
 
@@ -242,8 +311,9 @@ def build_odds_entry(prices: dict, existing: dict, now_iso: str, hist: list | No
         else:
             for k in ("hw", "dr", "aw"):
                 odds_open.pop(k, None)
-    # O/U + BTTS: per-Outcome-Carry (unkritischer, kein 3-Wege-Markt).
-    for k in ("o25", "u25", "bttsY", "bttsN"):
+    # O/U (alle Linien) + BTTS: per-Outcome-Carry (unkritischer, kein 3-Wege-Markt).
+    _OU_BTTS = ("o15", "u15", "o25", "u25", "o35", "u35", "bttsY", "bttsN")
+    for k in _OU_BTTS:
         if prices.get(k) and not odds_open.get(k):
             odds_open[k] = prices[k]
     entry = {
@@ -251,11 +321,21 @@ def build_odds_entry(prices: dict, existing: dict, now_iso: str, hist: list | No
         "bookmaker": prices.get("bookmaker"),
         "odds_open": odds_open, "updatedAt": now_iso,
     }
-    for k in ("o25", "u25", "bttsY", "bttsN"):
+    for k in _OU_BTTS:
         if prices.get(k):
             entry[k] = prices[k]
-    # Public/Soft-Konsens 1X2 durchreichen (public_static_bias liest public_hw/dr/aw).
-    for k in ("public_hw", "public_dr", "public_aw", "public_bookmaker"):
+    # AH-Leiter + diskrete Keys durchreichen (09.07.2026 — Liga/MLS AH-Parität mit WM).
+    if prices.get("ahLadder"):
+        entry["ahLadder"] = prices["ahLadder"]
+    for k in list(prices.keys()):
+        if k.startswith("ahH_n") or k.startswith("ahA_p") or k.startswith("ahA_n"):
+            entry[k] = prices[k]
+    # Public/Soft-Konsens 1X2 + O/U + BTTS durchreichen (public_static_bias/lead_lag).
+    _PUB = ("public_hw", "public_dr", "public_aw", "public_bookmaker",
+            "public_o15", "public_u15", "public_o25", "public_u25",
+            "public_o35", "public_u35", "public_bttsY", "public_bttsN",
+            "public_ou_bookmaker")
+    for k in _PUB:
         if prices.get(k) is not None:
             entry[k] = prices[k]
     # Betfair-Exchange-Anker 1X2 durchreichen (Sharp-Konsens-Cross-Check im Radar).
@@ -264,11 +344,15 @@ def build_odds_entry(prices: dict, existing: dict, now_iso: str, hist: list | No
             entry[k] = prices[k]
     W.carry_soft_open(existing, entry)   # trägt vorhandene public_*_open mit (Soft-Opening-Fix)
     # Soft-Opening seeden (1×), falls nicht aus existing getragen — sonst „Opening==Jetzt".
-    for k in ("hw", "dr", "aw"):
+    for k in ("hw", "dr", "aw", "o15", "u15", "o25", "u25", "o35", "u35", "bttsY", "bttsN"):
         if entry.get(f"public_{k}_open") is None and prices.get(f"public_{k}"):
             entry[f"public_{k}_open"] = prices[f"public_{k}"]
     # Closing-Snapshot (pre-match laufend, nach Anpfiff eingefroren) — gleiche Mechanik wie WM.
-    cur = {k: prices[k] for k in ("hw", "dr", "aw", "o25", "u25", "bttsY", "bttsN") if prices.get(k)}
+    # AH-Leiter mit-einfrieren → CLV für AH-Trades (wie WM, 23.06.2026).
+    cur = {k: prices[k] for k in ("hw", "dr", "aw", "o15", "u15", "o25", "u25",
+                                  "o35", "u35", "bttsY", "bttsN") if prices.get(k)}
+    if prices.get("ahLadder"):
+        cur["ahLadder"] = prices["ahLadder"]
     try:
         _closing = W.compute_closing(existing.get("odds_closing"), cur, None, now_iso)
         if _closing is not None:
@@ -306,17 +390,30 @@ def append_snapshot(history: dict, key: str, prices: dict, now_iso: str, post_ko
         return 0
     added = 0
     snaps = history.setdefault(key, [])
+
+    def _ou_fields(prefix: str) -> dict:
+        # O/U-Linien in den Snap (09.07.2026: lead_lag-O/U braucht Pinnacle+Public-Zeitreihe).
+        f = {}
+        for suf in ("15", "25", "35"):
+            v = prices.get(f"{prefix}o{suf}")
+            if v:
+                f[f"o{suf}"] = v
+                f[f"u{suf}"] = prices.get(f"{prefix}u{suf}")
+        return f
+
     hw, dr, aw = prices.get("hw"), prices.get("dr"), prices.get("aw")
     if hw and dr and aw:
         last_pinn = next((s for s in reversed(snaps) if s.get("bk") != "public"), None)
         if _snap_changed(last_pinn, hw, dr, aw):
-            snaps.append({"ts": now_iso, "bk": "pinnacle", "hw": hw, "dr": dr, "aw": aw})
+            snaps.append({"ts": now_iso, "bk": "pinnacle", "hw": hw, "dr": dr, "aw": aw,
+                          **_ou_fields("")})
             added += 1
     phw, pdr, paw = prices.get("public_hw"), prices.get("public_dr"), prices.get("public_aw")
     if phw and pdr and paw:
         last_pub = next((s for s in reversed(snaps) if s.get("bk") == "public"), None)
         if _snap_changed(last_pub, phw, pdr, paw):
-            snaps.append({"ts": now_iso, "bk": "public", "hw": phw, "dr": pdr, "aw": paw})
+            snaps.append({"ts": now_iso, "bk": "public", "hw": phw, "dr": pdr, "aw": paw,
+                          **_ou_fields("public_")})
             added += 1
     return added
 
@@ -328,8 +425,9 @@ def _fetch_events(sport_key: str) -> list:
     # btts/double_chance brauchen den per-Event-Endpoint (/events/{id}/odds), NICHT den Batch →
     # im Bulk-Call nur die Featured-Markets h2h,totals (1X2 + O/U). BTTS später per-Event (Phase 2).
     import fetch_wm_odds as W
+    # 09.07.2026: spreads (Asian Handicap) ergänzt → Liga/MLS bekommen AH-Picks wie die WM.
     path = (f"/v4/sports/{sport_key}/odds?apiKey={W.ODDS_KEY}"
-            f"&regions=eu,uk&markets=h2h,totals&oddsFormat=decimal")
+            f"&regions=eu,uk&markets=h2h,totals,spreads&oddsFormat=decimal")
     data = W.odds_get(path)
     return data if isinstance(data, list) else []
 

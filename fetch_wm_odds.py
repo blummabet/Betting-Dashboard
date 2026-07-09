@@ -668,6 +668,15 @@ def _extract_totals_btts(bookmakers: list, our_book_prio: list, home_id: str = "
     ah_175 = _pick_ah(-1.75)
     ah_225 = _pick_ah(-2.25)
 
+    # Auswärts-Favoriten-Leiter (09.07.2026, Lucas): „Auswärts-Favorit Sieg zu kurz → AH
+    # Auswärts −X" war tot, weil nur die positive (Underdog-)Auswärts-Seite ahA_p* gespeichert
+    # wurde. Eine Auswärts-Minus-Linie = Heim-PLUS-Linie: _pick_ah(+X) gibt [heim_odds, ausw_odds];
+    # die ausw_odds ([1]) sind der Auswärts-Favorit-Preis (ahA_nXXX). So wird die Ableitung
+    # symmetrisch (steam_engine._best_ah(snap,'ahA_n') findet jetzt Linien).
+    ahp_025 = _pick_ah(0.25); ahp_050 = _pick_ah(0.5);  ahp_075 = _pick_ah(0.75)
+    ahp_100 = _pick_ah(1.0);  ahp_125 = _pick_ah(1.25); ahp_150 = _pick_ah(1.5)
+    ahp_175 = _pick_ah(1.75); ahp_200 = _pick_ah(2.0);  ahp_225 = _pick_ah(2.25)
+
     # Volle AH-Leiter (13.06.2026): Pinnacle bietet AH als schmale Bande um die faire
     # Linie — KEINE festen Buckets. Bei Blowouts (GER-CUW) ist die Bande z.B. −2.75…−3.75.
     # Daher die KOMPLETTE angebotene Leiter speichern, damit generate_wm_picks die
@@ -769,6 +778,17 @@ def _extract_totals_btts(bookmakers: list, our_book_prio: list, home_id: str = "
         "ahA_p200": round(ah_20[1], 3)  if ah_20  else None,
         "ahH_n225": round(ah_225[0], 3) if ah_225 else None,
         "ahA_p225": round(ah_225[1], 3) if ah_225 else None,
+        # Auswärts-Favorit-Seite (ahA_nXXX = ausw_odds an Heim-PLUS-Linie): für die
+        # symmetrische „Auswärts-Favorit zu kurz → AH Auswärts −X"-Ableitung.
+        "ahA_n025": round(ahp_025[1], 3) if ahp_025 else None,
+        "ahA_n050": round(ahp_050[1], 3) if ahp_050 else None,
+        "ahA_n075": round(ahp_075[1], 3) if ahp_075 else None,
+        "ahA_n100": round(ahp_100[1], 3) if ahp_100 else None,
+        "ahA_n125": round(ahp_125[1], 3) if ahp_125 else None,
+        "ahA_n150": round(ahp_150[1], 3) if ahp_150 else None,
+        "ahA_n175": round(ahp_175[1], 3) if ahp_175 else None,
+        "ahA_n200": round(ahp_200[1], 3) if ahp_200 else None,
+        "ahA_n225": round(ahp_225[1], 3) if ahp_225 else None,
         "ahLadder": ah_ladder,          # volle angebotene Leiter (dynamische Linien-Wahl)
     }
 
@@ -1153,6 +1173,8 @@ def main():
             "ahH_n125", "ahA_p125",
             "ahH_n150", "ahA_p150", "ahH_n175", "ahA_p175", "ahH_n200", "ahA_p200",
             "ahH_n225", "ahA_p225",
+            "ahA_n025", "ahA_n050", "ahA_n075", "ahA_n100", "ahA_n125",
+            "ahA_n150", "ahA_n175", "ahA_n200", "ahA_n225",
             "cornerLine", "cOver", "cUnder",
         )
         odds_open = existing.get("odds_open")
@@ -1223,7 +1245,9 @@ def main():
                   "ahH_n050", "ahA_p050", "ahH_n075", "ahA_p075", "ahH_n100", "ahA_p100",
                   "ahH_n125", "ahA_p125",
                   "ahH_n150", "ahA_p150", "ahH_n175", "ahA_p175", "ahH_n200", "ahA_p200",
-                  "ahH_n225", "ahA_p225"):
+                  "ahH_n225", "ahA_p225",
+                  "ahA_n025", "ahA_n050", "ahA_n075", "ahA_n100", "ahA_n125",
+                  "ahA_n150", "ahA_n175", "ahA_n200", "ahA_n225"):
             if tb.get(k):
                 new_entry[k] = tb[k]
         # Volle AH-Leiter für die dynamische Linien-Wahl in generate_wm_picks.
@@ -1286,9 +1310,12 @@ def main():
                 "aw":  h2h["aw"],
                 "bk":  h2h["bookmaker"],
             }
-            if tb["o25"]:
-                snap_entry["o25"]   = tb["o25"]
-                snap_entry["u25"]   = tb["u25"]
+            # O/U komplette Leiter in den Pinnacle-Snap (09.07.2026: lead_lag-O/U braucht
+            # die Pinnacle-Zeitreihe je Linie, nicht nur 2.5).
+            for _ln in ("15", "25", "35"):
+                if tb.get(f"o{_ln}"):
+                    snap_entry[f"o{_ln}"] = tb[f"o{_ln}"]
+                    snap_entry[f"u{_ln}"] = tb.get(f"u{_ln}")
             if tb["bttsY"]:
                 snap_entry["bttsY"] = tb["bttsY"]
             snaps.append(snap_entry)
