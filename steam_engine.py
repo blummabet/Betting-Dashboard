@@ -37,23 +37,36 @@ _SIDES_1X2 = [
 ]
 # O/U + BTTS: (Key, Gegen-Key, Anzeigename, Soft-Key)
 _SIDES_OU = [
-    ("o15", "u15", "Über 1.5 Tore", None),
-    ("u15", "o15", "Unter 1.5 Tore", None),
+    ("o15", "u15", "Über 1.5 Tore", "public_o15"),
+    ("u15", "o15", "Unter 1.5 Tore", "public_u15"),
     ("o25", "u25", "Über 2.5 Tore", "public_o25"),
     ("u25", "o25", "Unter 2.5 Tore", "public_u25"),
-    ("o35", "u35", "Über 3.5 Tore", None),
-    ("u35", "o35", "Unter 3.5 Tore", None),
+    ("o35", "u35", "Über 3.5 Tore", "public_o35"),
+    ("u35", "o35", "Unter 3.5 Tore", "public_u35"),
     ("bttsY", "bttsN", "Beide Teams treffen — Ja", "public_bttsY"),
     ("bttsN", "bttsY", "Beide Teams treffen — Nein", "public_bttsN"),
 ]
 # AH-Leiter: Feld → (Linienwert, Anzeige-Suffix)
+# Viertel-Linien (09.07.2026, Lucas): komplette 0.25-Leiter, damit _best_ah bei einem
+# unbettbar kurzen Favoriten die IDEALE Cover-Linie in der Zielzone (1.45–1.95) treffen
+# kann — z.B. −1.25 wenn −1.0 zu kurz (1.39) und −1.5 zu lang (1.91) ist.
 _AH_LADDER = {
+    "ahH_n025": (-0.25, "AH Heim −0.25"),
     "ahH_n050": (-0.5, "AH Heim −0.5"), "ahH_n075": (-0.75, "AH Heim −0.75"),
-    "ahH_n100": (-1.0, "AH Heim −1"),   "ahH_n150": (-1.5, "AH Heim −1.5"),
+    "ahH_n100": (-1.0, "AH Heim −1"),
+    "ahH_n125": (-1.25, "AH Heim −1.25"),
+    "ahH_n150": (-1.5, "AH Heim −1.5"),
+    "ahH_n175": (-1.75, "AH Heim −1.75"),
     "ahH_n200": (-2.0, "AH Heim −2"),
+    "ahH_n225": (-2.25, "AH Heim −2.25"),
+    "ahA_n025": (-0.25, "AH Auswärts −0.25"),
     "ahA_n050": (-0.5, "AH Auswärts −0.5"), "ahA_n075": (-0.75, "AH Auswärts −0.75"),
-    "ahA_n100": (-1.0, "AH Auswärts −1"),   "ahA_n150": (-1.5, "AH Auswärts −1.5"),
+    "ahA_n100": (-1.0, "AH Auswärts −1"),
+    "ahA_n125": (-1.25, "AH Auswärts −1.25"),
+    "ahA_n150": (-1.5, "AH Auswärts −1.5"),
+    "ahA_n175": (-1.75, "AH Auswärts −1.75"),
     "ahA_n200": (-2.0, "AH Auswärts −2"),
+    "ahA_n225": (-2.25, "AH Auswärts −2.25"),
 }
 
 

@@ -111,7 +111,8 @@ def _median(vals: list) -> float | None:
 
 def consensus_for_fixture(bookmakers: list) -> dict:
     """Median-Konsens (Dezimalquote) über alle Soft-Books (ohne Pinnacle)."""
-    acc = {k: [] for k in ("hw", "dr", "aw", "o25", "u25", "bttsY", "bttsN")}
+    acc = {k: [] for k in ("hw", "dr", "aw", "o15", "u15", "o25", "u25",
+                            "o35", "u35", "bttsY", "bttsN")}
     n_books = 0
     for bk in bookmakers:
         name = (bk.get("name") or "").lower()
@@ -126,8 +127,13 @@ def consensus_for_fixture(bookmakers: list) -> dict:
                 if "draw" in vals: acc["dr"].append(vals["draw"])
                 if "away" in vals: acc["aw"].append(vals["away"])
             elif bname == "goals over/under":
+                # 09.07.2026: komplette Tor-Leiter (1.5/2.5/3.5) statt nur 2.5
+                if "over 1.5" in vals:  acc["o15"].append(vals["over 1.5"])
+                if "under 1.5" in vals: acc["u15"].append(vals["under 1.5"])
                 if "over 2.5" in vals:  acc["o25"].append(vals["over 2.5"])
                 if "under 2.5" in vals: acc["u25"].append(vals["under 2.5"])
+                if "over 3.5" in vals:  acc["o35"].append(vals["over 3.5"])
+                if "under 3.5" in vals: acc["u35"].append(vals["under 3.5"])
             elif bname == "both teams score":
                 if "yes" in vals: acc["bttsY"].append(vals["yes"])
                 if "no" in vals:  acc["bttsN"].append(vals["no"])
@@ -176,7 +182,9 @@ def main() -> int:
         before = entry.get("public_hw")
         new_pub = {
             "public_hw": con["hw"], "public_dr": con["dr"], "public_aw": con["aw"],
+            "public_o15": con["o15"], "public_u15": con["u15"],
             "public_o25": con["o25"], "public_u25": con["u25"],
+            "public_o35": con["o35"], "public_u35": con["u35"],
             "public_bttsY": con["bttsY"], "public_bttsN": con["bttsN"],
             "public_bookmaker": f"Konsens ({con['n_books']} Books)",
             "public_ou_bookmaker": f"Konsens ({con['n_books']} Books)",
@@ -186,7 +194,8 @@ def main() -> int:
             # Soft-Konsens-OPENING einmalig festhalten (erste Sichtung) → erlaubt später
             # die echte Follow-Bestätigung: ist der Soft-Konsens dem Pinnacle-Move GEFOLGT?
             # (Fix 14.06.2026 für Steam-Modell.) Nie überschreiben = Eröffnungswert bleibt.
-            for _side in ("hw", "dr", "aw", "o25", "u25", "bttsY", "bttsN"):
+            for _side in ("hw", "dr", "aw", "o15", "u15", "o25", "u25",
+                          "o35", "u35", "bttsY", "bttsN"):
                 _ov = con.get(_side)
                 _ok = f"public_{_side}_open"
                 if _ov is not None and entry.get(_ok) is None:
