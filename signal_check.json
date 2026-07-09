@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "wm",
-    "generatedAt": "2026-07-09T17:50:30.846304+00:00",
+    "generatedAt": "2026-07-09T21:16:08.436406+00:00",
     "games": 100,
     "markets": [
       "Heimsieg",
@@ -49347,8 +49347,8 @@
       "markets": {
         "Heimsieg": {
           "tip": "Frankreich (Heimsieg)",
-          "headline": "3 von 4 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Frankreich (Heimsieg)“ mehrheitlich — am deutlichsten die Chancenqualität, auch wenn 1 Signal(e) dagegenhalten.",
+          "headline": "3 von 5 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Frankreich (Heimsieg)“ mehrheitlich — am deutlichsten die Chancenqualität, auch wenn 2 Signal(e) dagegenhalten.",
           "confirm": [
             {
               "name": "chance_creation",
@@ -49365,7 +49365,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 81% des Geldes auf Heim — mehr als der faire Preis hergibt (60%), und es sind echte Wale dahinter (Top-Wallets 55%).",
+              "evidence": "💰 Auf Polymarket liegen 79% des Geldes auf Heim — mehr als der faire Preis hergibt (60%), und es sind echte Wale dahinter (Top-Wallets 58%).",
               "dir": "confirm"
             }
           ],
@@ -49373,7 +49373,13 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) sieht Heim um 14.7pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+              "evidence": "📊 Ein zweites Modell (API-Football) sieht Heim um 15.3pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+              "dir": "contradict"
+            },
+            {
+              "name": "weather_signal",
+              "label": "das Wetter",
+              "evidence": "🌡 Bei 34°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — Heim FRA (temperate) leidet",
               "dir": "contradict"
             }
           ],
@@ -49422,10 +49428,6 @@
             {
               "name": "lineup_signal",
               "label": "die Aufstellung"
-            },
-            {
-              "name": "weather_signal",
-              "label": "das Wetter"
             },
             {
               "name": "incentive_signal",
@@ -49466,16 +49468,23 @@
           ],
           "score": {
             "confirm": 3,
-            "contradict": 1,
+            "contradict": 2,
             "neutral": 0,
-            "decisive": 4
+            "decisive": 5
           }
         },
         "Auswärtssieg": {
           "tip": "Marokko (Auswärtssieg)",
-          "headline": "0 von 3 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „Marokko (Auswärtssieg)“ kritisch — vor allem die Chancenqualität spricht dagegen.",
-          "confirm": [],
+          "headline": "1 von 4 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „Marokko (Auswärtssieg)“ kritisch — vor allem die Chancenqualität spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
+          "confirm": [
+            {
+              "name": "weather_signal",
+              "label": "das Wetter",
+              "evidence": "🌡 Bei 34°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — Heim FRA (temperate) leidet",
+              "dir": "confirm"
+            }
+          ],
           "contradict": [
             {
               "name": "chance_creation",
@@ -49492,7 +49501,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 8% des Geldes auf Auswärts — weniger als der faire Preis hergibt (15%), und es sind echte Wale dahinter (Top-Wallets 63%).",
+              "evidence": "💰 Auf Polymarket liegen 8% des Geldes auf Auswärts — weniger als der faire Preis hergibt (14%), und es sind echte Wale dahinter (Top-Wallets 61%).",
               "dir": "contradict"
             }
           ],
@@ -49547,10 +49556,6 @@
               "label": "das externe Prognosemodell"
             },
             {
-              "name": "weather_signal",
-              "label": "das Wetter"
-            },
-            {
               "name": "incentive_signal",
               "label": "die Anreizlage"
             },
@@ -49588,16 +49593,16 @@
             }
           ],
           "score": {
-            "confirm": 0,
+            "confirm": 1,
             "contradict": 3,
             "neutral": 0,
-            "decisive": 3
+            "decisive": 4
           }
         },
         "Über 2.5 Tore": {
           "tip": "Über 2.5 Tore",
-          "headline": "3 von 4 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Über 2.5 Tore“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 1 Signal(e) dagegenhalten.",
+          "headline": "4 von 6 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Über 2.5 Tore“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 2 Signal(e) dagegenhalten.",
           "confirm": [
             {
               "name": "form_trend",
@@ -49612,6 +49617,12 @@
               "dir": "confirm"
             },
             {
+              "name": "lineup_signal",
+              "label": "die Aufstellung",
+              "evidence": "🚨 bei Heim sitzt nur auf der Bank M. Lacroix (DEF) · bei Auswärts sitzt nur auf der Bank C. Riad (DEF)",
+              "dir": "confirm"
+            },
+            {
               "name": "chance_creation",
               "label": "die Chancenqualität",
               "evidence": "🎨 Zusammen kreieren beide eher viel Chancen (30.9 aus Schlüsselpässen + Abschlüssen) — spricht für Over.",
@@ -49623,6 +49634,12 @@
               "name": "pressure_index",
               "label": "der Tabellendruck",
               "evidence": "🎯 KO-Vorsicht (gegen Über)",
+              "dir": "contradict"
+            },
+            {
+              "name": "weather_signal",
+              "label": "das Wetter",
+              "evidence": "🌡 Bei 34°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — FRA temperate",
               "dir": "contradict"
             }
           ],
@@ -49657,16 +49674,8 @@
               "label": "der Steam-Move"
             },
             {
-              "name": "lineup_signal",
-              "label": "die Aufstellung"
-            },
-            {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell"
-            },
-            {
-              "name": "weather_signal",
-              "label": "das Wetter"
             },
             {
               "name": "incentive_signal",
@@ -49714,21 +49723,27 @@
             }
           ],
           "score": {
-            "confirm": 3,
-            "contradict": 1,
+            "confirm": 4,
+            "contradict": 2,
             "neutral": 0,
-            "decisive": 4
+            "decisive": 6
           }
         },
         "Unter 2.5 Tore": {
           "tip": "Unter 2.5 Tore",
-          "headline": "1 von 4 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „Unter 2.5 Tore“ kritisch — vor allem die Formkurve spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
+          "headline": "2 von 6 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „Unter 2.5 Tore“ kritisch — vor allem die Formkurve spricht dagegen, 2 Signal(e) stützen ihn dennoch.",
           "confirm": [
             {
               "name": "pressure_index",
               "label": "der Tabellendruck",
               "evidence": "🎯 KO-Vorsicht (Unter wahrscheinlicher)",
+              "dir": "confirm"
+            },
+            {
+              "name": "weather_signal",
+              "label": "das Wetter",
+              "evidence": "🌡 Bei 34°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — FRA temperate",
               "dir": "confirm"
             }
           ],
@@ -49743,6 +49758,12 @@
               "name": "xg_strength",
               "label": "die xG-Werte",
               "evidence": "⚡ Die xG-Werte deuten auf ~3.03 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Unter (+0.53).",
+              "dir": "contradict"
+            },
+            {
+              "name": "lineup_signal",
+              "label": "die Aufstellung",
+              "evidence": "🚨 bei Heim sitzt nur auf der Bank M. Lacroix (DEF) · bei Auswärts sitzt nur auf der Bank C. Riad (DEF)",
               "dir": "contradict"
             },
             {
@@ -49783,16 +49804,8 @@
               "label": "der Steam-Move"
             },
             {
-              "name": "lineup_signal",
-              "label": "die Aufstellung"
-            },
-            {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell"
-            },
-            {
-              "name": "weather_signal",
-              "label": "das Wetter"
             },
             {
               "name": "incentive_signal",
@@ -49840,10 +49853,10 @@
             }
           ],
           "score": {
-            "confirm": 1,
-            "contradict": 3,
+            "confirm": 2,
+            "contradict": 4,
             "neutral": 0,
-            "decisive": 4
+            "decisive": 6
           }
         }
       }
@@ -49880,7 +49893,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 88% des Geldes auf Heim — mehr als der faire Preis hergibt (58%), und es sind echte Wale dahinter (Top-Wallets 85%).",
+              "evidence": "💰 Auf Polymarket liegen 87% des Geldes auf Heim — mehr als der faire Preis hergibt (58%), und es sind echte Wale dahinter (Top-Wallets 83%).",
               "dir": "confirm"
             }
           ],
@@ -50022,7 +50035,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 5% des Geldes auf Auswärts — weniger als der faire Preis hergibt (18%), und es sind echte Wale dahinter (Top-Wallets 59%).",
+              "evidence": "💰 Auf Polymarket liegen 5% des Geldes auf Auswärts — weniger als der faire Preis hergibt (18%), und es sind echte Wale dahinter (Top-Wallets 60%).",
               "dir": "contradict"
             }
           ],
@@ -50556,7 +50569,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 46% des Geldes auf Auswärts — weniger als der faire Preis hergibt (52%), und es sind echte Wale dahinter (Top-Wallets 86%).",
+              "evidence": "💰 Auf Polymarket liegen 46% des Geldes auf Auswärts — weniger als der faire Preis hergibt (52%), und es sind echte Wale dahinter (Top-Wallets 85%).",
               "dir": "contradict"
             }
           ],
@@ -50936,7 +50949,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 88% des Geldes auf Heim — mehr als der faire Preis hergibt (56%), und es sind echte Wale dahinter (Top-Wallets 50%).",
+              "evidence": "💰 Auf Polymarket liegen 88% des Geldes auf Heim — mehr als der faire Preis hergibt (56%), und es sind echte Wale dahinter (Top-Wallets 51%).",
               "dir": "confirm"
             }
           ],
@@ -51069,7 +51082,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 8% des Geldes auf Auswärts — weniger als der faire Preis hergibt (17%), und es sind echte Wale dahinter (Top-Wallets 66%).",
+              "evidence": "💰 Auf Polymarket liegen 7% des Geldes auf Auswärts — weniger als der faire Preis hergibt (17%), und es sind echte Wale dahinter (Top-Wallets 65%).",
               "dir": "contradict"
             }
           ],
