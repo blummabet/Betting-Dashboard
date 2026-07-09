@@ -48,8 +48,23 @@ jobs:
           git config user.name  "CocoBet Bot"
           git config user.email "bot@cocobet.local"
           git add wm2026-data.json wm2026-odds-history.json wm_sharp_moves_log.json wm_sharp_dedup.json 2>/dev/null || true
-          git diff --staged --quiet || git commit -m "pinnacle: dichter Odds-Refresh + Move-Scan [skip ci]"
+          if git diff --staged --quiet; then
+            echo "Keine Änderung — nichts zu committen."; exit 0
+          fi
+          git commit -m "pinnacle: dichter Odds-Refresh + Move-Scan [skip ci]"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git push
+          # 08.07.2026 (Lucas: Push „rejected — fetch first"): robust gegen parallele Pushes anderer
+          # Workflows. Pull --autostash + Konflikt-Resolve (ours) + Retry, statt nacktem git push.
+          for attempt in 1 2 3 4 5; do
+            git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+            CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null)
+            if [ -n "$CONFLICTS" ]; then
+              echo "$CONFLICTS" | while read f; do git checkout --ours -- "$f"; git add "$f"; done
+              git diff --staged --quiet || git commit -m "🔧 auto-resolve merge conflicts"
+            fi
+            if git push 2>&1; then echo "✅ Push nach Versuch $attempt"; exit 0; fi
+            echo "⚠️ Push $attempt fehlgeschlagen — retry in $((attempt * 3))s…"; sleep $((attempt * 3))
+          done
+          echo "❌ Push fehlgeschlagen"; exit 1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
