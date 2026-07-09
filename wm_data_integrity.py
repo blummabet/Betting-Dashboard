@@ -537,6 +537,26 @@ def check_odds_sane(ctx):
 
 
 @integrity_check
+def check_opening_plausible(ctx):
+    """08.07.2026 (Lucas: Liga-Sharp-Radar zeigte Fake-Drops bis -84pp). odds_open MUSS ein echter
+    1X2-Markt sein — Platzhalter-Eröffnungen (dr=1.01, aw=1.06, Overround >1.25) beim Markt-Opening
+    erzeugen erfundene Drifts im Radar. fetch_liga_odds friert das 1X2-Opening jetzt kohärent ein +
+    heilt Müll aus der History; dieser Guard macht Reste/Regression im Status sichtbar."""
+    fails = []
+    for mk, o in ctx.odds.items():
+        oo = o.get("odds_open") or {}
+        hw, dr, aw = oo.get("hw"), oo.get("dr"), oo.get("aw")
+        if not (hw and dr and aw):
+            continue   # kein 1X2-Opening gesetzt → kein Fake-Drift, nichts zu flaggen
+        orr = 1.0 / hw + 1.0 / dr + 1.0 / aw
+        if hw < 1.05 or aw < 1.05 or dr < 1.5 or orr > 1.25:
+            fails.append(f"{mk}: Opening unplausibel hw={hw} dr={dr} aw={aw} (Overround {orr:.2f}) "
+                         f"→ erfundener Drift im Sharp Radar")
+    return _chk("opening_plausible", "Opening-Odds = echter 1X2-Markt (kein Platzhalter)", "warn", fails,
+                "fetch_liga_odds friert 1X2-Opening kohärent + heilt aus History (erster plausibler Snap).")
+
+
+@integrity_check
 def check_liga_leagues_populated(ctx):
     """NEU 26.06.2026 (Lucas): jede der 5 Top-Ligen muss Teams + Fixtures haben. La Liga/Bundesliga
     veröffentlichen ihren Spielplan oft später als EPL/Serie A/Ligue 1 → bis dahin liefert

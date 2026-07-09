@@ -14,6 +14,36 @@ sys.path.insert(0, str(REPO))
 import fetch_liga_odds as L  # noqa: E402
 
 
+class TestOpeningPlausibility(unittest.TestCase):
+    """08.07.2026 (Lucas: Radar-Fake-Drops bis -84pp). odds_open darf keinen Platzhalter-Markt
+    (dr=1.01, aw=1.06 …) per-Outcome einfrieren; 1X2-Opening kohärent + selbstheilend aus History."""
+
+    def test_plausible(self):
+        self.assertTrue(L._plausible_1x2(2.1, 3.4, 3.3))
+        self.assertTrue(L._plausible_1x2(1.3, 5.8, 11.25))
+
+    def test_implausible(self):
+        self.assertFalse(L._plausible_1x2(1.32, 1.01, 1.32))   # dr-Platzhalter
+        self.assertFalse(L._plausible_1x2(1.26, 4.9, 1.06))    # aw-Platzhalter, Overround 1.94
+        self.assertFalse(L._plausible_1x2(None, 3.4, 3.3))
+
+    def test_heals_garbage_from_history(self):
+        existing = {"odds_open": {"hw": 1.26, "dr": 4.9, "aw": 1.06}}   # Müll
+        hist = [{"hw": 1.26, "dr": 4.9, "aw": 1.06},                     # 1. Snap = Müll
+                {"hw": 1.3, "dr": 5.8, "aw": 11.25}]                     # 1. plausibler = echte Eröffnung
+        e = L.build_odds_entry({"hw": 1.39, "dr": 4.96, "aw": 6.81}, existing, "T", hist=hist)
+        self.assertEqual((e["odds_open"]["hw"], e["odds_open"]["dr"], e["odds_open"]["aw"]), (1.3, 5.8, 11.25))
+
+    def test_keeps_plausible_opening(self):
+        existing = {"odds_open": {"hw": 2.1, "dr": 3.4, "aw": 3.3}}
+        e = L.build_odds_entry({"hw": 1.9, "dr": 3.5, "aw": 4.0}, existing, "T", hist=[])
+        self.assertEqual(e["odds_open"]["hw"], 2.1)   # echte Eröffnung bleibt
+
+    def test_no_plausible_no_garbage_freeze(self):
+        e = L.build_odds_entry({"hw": 1.02, "dr": 1.01, "aw": 1.03}, {}, "T", hist=[])
+        self.assertNotIn("hw", e["odds_open"])   # nichts Plausibles → kein Müll-Freeze
+
+
 class TestNameMatch(unittest.TestCase):
     def test_norm_strips_rechtsform_accents(self):
         self.assertEqual(L._norm_name("Atlético Madrid"), "atletico madrid")

@@ -213,13 +213,37 @@ def extract_prices(event: dict, orientation: str, home_name: str, away_name: str
     return out
 
 
-def build_odds_entry(prices: dict, existing: dict, now_iso: str) -> dict:
+def _plausible_1x2(hw, dr, aw) -> bool:
+    """Bildet hw/dr/aw einen ECHTEN 1X2-Markt? (08.07.2026, Lucas: Radar zeigte Fake-Drops bis -84pp.)
+    Beim Markt-Opening liefert The Odds API oft Platzhalter (dr=1.01, aw=1.06 …) bevor der Markt
+    settlet. Filter: kein Outcome < 1.05, Remis ≥ 1.5, Overround plausibel [1.0, 1.25]."""
+    if not (hw and dr and aw):
+        return False
+    if hw < 1.05 or aw < 1.05 or dr < 1.5:
+        return False
+    return 1.0 <= (1.0 / hw + 1.0 / dr + 1.0 / aw) <= 1.25
+
+
+def build_odds_entry(prices: dict, existing: dict, now_iso: str, hist: list | None = None) -> dict:
     """Preise → gespeicherte Odds-Form (wie fetch_wm_odds.new_entry). Opening-Carry + Closing."""
     import fetch_wm_odds as W   # carry_soft_open + compute_closing wiederverwenden
     existing = existing or {}
-    # Opening seeden (1×) bzw. aus altem Eintrag halten.
     odds_open = dict(existing.get("odds_open") or {})
-    for k in ("hw", "dr", "aw", "o25", "u25", "bttsY", "bttsN"):
+    # 1X2-Opening als KOHÄRENTES plausibles Set einfrieren — NICHT per-Outcome (sonst friert ein
+    # Platzhalter wie dr=1.01 dauerhaft ein → Frankenstein-Markt → Fake-Drops im Radar). Bestehendes
+    # plausibles Opening behalten; Müll/unset → erste PLAUSIBLE Quote aus der History (echte Eröffnung),
+    # sonst die aktuelle plausible Quote. Nichts Plausibles → 1X2-Opening NICHT setzen.
+    if not _plausible_1x2(odds_open.get("hw"), odds_open.get("dr"), odds_open.get("aw")):
+        src = next((e for e in (hist or []) if _plausible_1x2(e.get("hw"), e.get("dr"), e.get("aw"))), None)
+        if src is None and _plausible_1x2(prices.get("hw"), prices.get("dr"), prices.get("aw")):
+            src = prices
+        if src:
+            odds_open["hw"], odds_open["dr"], odds_open["aw"] = src["hw"], src["dr"], src["aw"]
+        else:
+            for k in ("hw", "dr", "aw"):
+                odds_open.pop(k, None)
+    # O/U + BTTS: per-Outcome-Carry (unkritischer, kein 3-Wege-Markt).
+    for k in ("o25", "u25", "bttsY", "bttsN"):
         if prices.get(k) and not odds_open.get(k):
             odds_open[k] = prices[k]
     entry = {
@@ -354,7 +378,7 @@ def main():
             if not prices.get("hw"):
                 continue
             key = f"{fx['home']}-{fx['away']}"
-            odds_out[key] = build_odds_entry(prices, odds_out.get(key), now_iso)
+            odds_out[key] = build_odds_entry(prices, odds_out.get(key), now_iso, hist=history.get(key))
             snaps_added += append_snapshot(history, key, prices, now_iso, post_ko=_kickoff_passed(fx.get("kickoff")))
             matched_keys.add(key)
             total += 1
