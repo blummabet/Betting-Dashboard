@@ -526,12 +526,28 @@ def determine_result(bet: dict, res: dict) -> str:
     # (kein P&L, kein Lernen). [[project_poly_handicap_trading]] [[project_btts_auto_trade]].
     dyn = _resolve_ah_btts(market, res)
     if dyn is not None:
+        # AH-Viertel-Linien (−0.25/−1.25/…) sind Split-Wetten (halber Einsatz je Nachbar-
+        # Halblinie). _resolve_ah_btts liefert die richtige RICHTUNG (WIN/LOSS), aber die
+        # P&L muss den Halb-Stake kennen → resultStakeFactor aus dem gemeinsamen Card-Resolver
+        # _ah_result übernehmen (Single Source, keine Drift zwischen den Auflöse-Pfaden).
+        _ml = (market or "").lower()
+        if "ah " in _ml or _ml.startswith("ah") or "handicap" in _ml:
+            try:
+                from resolve_wm_picks import _ah_result
+                _hs, _as = int(res.get("home_score")), int(res.get("away_score"))
+                _fac = _ah_result(_ml, _hs - _as)[1]
+                if _fac != 1.0:
+                    bet["resultStakeFactor"] = _fac
+            except Exception:
+                pass
         return dyn
     return "VOID"
 
 
 def compute_pnl(bet: dict, result: str) -> float:
-    stake      = float(bet.get("stake", 0))
+    # resultStakeFactor (0.5) bei AH-Viertel-Linien-Halb-Ergebnissen → halber Einsatz
+    # gewinnt/verliert, die andere Hälfte ist Push (identisch zum Card-Resolver _ah_result).
+    stake      = float(bet.get("stake", 0)) * float(bet.get("resultStakeFactor", 1.0))
     poly_price = float(bet.get("polyPrice", 0))
 
     if result == "WIN":

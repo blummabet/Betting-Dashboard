@@ -62,6 +62,29 @@ class TestAhBttsSettlement(unittest.TestCase):
         self.assertEqual(self.dr("Over 2.5 Tore", 2, 1), "WIN")
         self.assertEqual(self.dr("Under 2.5 Tore", 1, 1), "WIN")
 
+    def test_quarter_line_half_stake_pnl(self):
+        """AH-Viertel-Linien (09.07.2026) sind Split-Wetten → die P&L muss den halben
+        Einsatz buchen (resultStakeFactor 0.5), nicht den vollen. Der Card-Resolver
+        (_ah_result) und der Placed-Bet-Grader (determine_result/compute_pnl) müssen
+        übereinstimmen — sonst still über-/unterbuchte Beträge auf .25/.75/1.25-Linien."""
+        # AH Heim −1.25, Heimsieg mit genau 1 Tor → Half-Loss (−1.0 Push, −1.5 Loss)
+        bet = {"market": "AH Heim −1.25", "stake": 5.0, "polyPrice": 0.5}
+        r = R.determine_result(bet, _res(1, 0))
+        self.assertEqual(r, "LOSS")
+        self.assertEqual(bet.get("resultStakeFactor"), 0.5)
+        self.assertAlmostEqual(R.compute_pnl(bet, r), -2.5)   # halber Stake, nicht −5
+        # AH Auswärts +0.25, Remis → Half-Win (0 Push, +0.5 Win)
+        bet2 = {"market": "AH Auswärts +0.25", "stake": 5.0, "polyPrice": 0.5}
+        r2 = R.determine_result(bet2, _res(0, 0))
+        self.assertEqual(r2, "WIN")
+        self.assertEqual(bet2.get("resultStakeFactor"), 0.5)
+        self.assertAlmostEqual(R.compute_pnl(bet2, r2), 2.5)  # (2.0−1)·(5·0.5)
+        # Ganze/halbe Linien unberührt: voller Stake
+        bet3 = {"market": "AH Heim −1.5", "stake": 5.0, "polyPrice": 0.5}
+        r3 = R.determine_result(bet3, _res(2, 0))
+        self.assertIsNone(bet3.get("resultStakeFactor"))
+        self.assertAlmostEqual(R.compute_pnl(bet3, r3), 5.0)
+
 
 class TestMonitorMarketResolve(unittest.TestCase):
     """AH/BTTS-Positionen über den Token bewerten, NICHT über 1X2-fair."""
