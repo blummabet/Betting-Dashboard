@@ -62,6 +62,17 @@ function _pwWallet(w){if(!w)return '—';const s=String(w);return s.length>12?s.
 function _pwLink(w){return 'https://polymarket.com/profile/'+encodeURIComponent(w);}
 function _pwAgo(ts){return (ts && typeof _timeAgo==='function')?_timeAgo(ts):'';}
 function _pwFlag(flag){if(!flag)return '<span class="pw-flag">🏳️</span>';const s=String(flag);if(s.indexOf('<img')===0)return s.replace('<img','<img class="pw-logo"');if(/^https?:\/\//.test(s))return '<img class="pw-logo" src="'+s+'" alt="" loading="lazy">';return '<span class="pw-flag">'+s+'</span>';}
+// Flagge/Logo NUR des im Pick genannten Teams (side). Remis/unbekannt → beide (kein Team einzeln gemeint).
+function _pwSideFlag(teams,key,side){
+  if(!key||!teams)return '';
+  const parts=String(key).split('-'); if(parts.length<2)return '';
+  const hf=teams[parts[0]]&&teams[parts[0]].flag, af=teams[parts[parts.length-1]]&&teams[parts[parts.length-1]].flag;
+  let flags;
+  if(side==='home') flags=_pwFlag(hf);
+  else if(side==='away') flags=_pwFlag(af);
+  else { if(!hf&&!af)return ''; flags=_pwFlag(hf)+_pwFlag(af); }
+  return '<span class="pw-mflags">'+flags+'</span>';
+}
 
 function _pwTeamsMap(wm){const m={};Object.values((wm&&wm.groups)||{}).forEach(g=>(g.teams||[]).forEach(t=>{if(t&&t.id)m[t.id]={name:t.name||t.id,flag:t.flag};}));return m;}
 function _pwOddsMap(wm){return (wm&&wm.odds)||{};}
@@ -193,9 +204,9 @@ function _pwRender(){
   h+=_pwKpiBand(edges,wallets);
   h+=_pwScatterSection(edges);
   h+=_pwEdgeBoard(edges,teams,wallets,hist);
-  h+=_pwExitWatch(wallets);
-  h+=_pwFlowTape(wallets);
-  h+=_pwLeaderboard(wallets);
+  h+=_pwExitWatch(wallets,teams);
+  h+=_pwFlowTape(wallets,teams);
+  h+=_pwLeaderboard(wallets,teams);
   panel.innerHTML=h;
   // Charts nach DOM-Insert zeichnen
   _pwDrawScatter(edges);
@@ -360,24 +371,26 @@ function _pwExitWatch(w){
       +'<div class="pw-edge"><div class="pw-edge-n pw-noise">'+_pwUsd(c.netFlowUsd)+'</div><div class="pw-chips"><span class="pw-wh pw-wh-fade">🐋 EXIT</span></div></div></div></div>';});
   h+='</div></section>'; return h;
 }
-function _pwFlowTape(w){
+function _pwFlowTape(w,teams){
   const tr=(w&&w.bigTradesAll)||[]; if(!tr.length)return '';
   let h='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">📟 Flow-Tape</span>'
     +'<span class="pw-sec-note">Jüngste große Trades — frische Edge oder schon gegessen?</span></div><div class="pw-tape">';
   tr.slice(0,25).forEach(t=>{const buy=(t.action||'').toUpperCase()==='BUY';
     h+='<div class="pw-tp-row"><span class="pw-tp-act '+(buy?'pw-buy':'pw-sell')+'">'+(buy?'KAUF':'VERK')+'</span>'
+      +_pwSideFlag(teams,t.key,t.side)
       +'<div class="pw-tp-mid"><a href="'+_pwLink(t.wallet)+'" target="_blank" rel="noopener">'+_pwWallet(t.wallet)+'</a>'
       +'<span style="color:'+_pwSideCol(t.side)+'">'+(t.pick||t.side)+'</span> · '+(t.match||t.key)
       +(t.price?' @'+Math.round(t.price*100)+'¢':'')+(_pwAgo(t.ts)?' · '+_pwAgo(t.ts):'')+'</div><b>'+_pwUsd(t.usd)+'</b></div>';});
   h+='</div></section>'; return h;
 }
-function _pwLeaderboard(w){
+function _pwLeaderboard(w,teams){
   const pos=(w&&w.topPositionsAll)||[]; if(!pos.length)return '';
   const max=pos[0]?pos[0].usd:1;
   let h='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🏦 Whale-Leaderboard</span>'
     +'<span class="pw-sec-note">Größte Einzelpositionen (Discovery)</span></div><div class="pw-lb">';
   pos.slice(0,20).forEach((p,i)=>{const wpc=Math.max(6,(p.usd/max)*100);
     h+='<div class="pw-lb-row"><span class="pw-rank '+(i<3?'pw-rank-top':'')+'">'+(i+1)+'</span>'
+      +_pwSideFlag(teams,p.key,p.side)
       +'<div class="pw-lb-mid"><a href="'+_pwLink(p.wallet)+'" target="_blank" rel="noopener">'+_pwWallet(p.wallet)+'</a>'
       +'<div class="pw-lb-bar"><i style="width:'+wpc+'%;background:'+_pwSideCol(p.side)+'"></i></div>'
       +'<div class="pw-lb-sub"><span style="color:'+_pwSideCol(p.side)+'">'+(p.pick||p.side)+'</span> · '+(p.match||p.key)+'</div></div>'
@@ -456,7 +469,10 @@ function _pwInjectStyle(){
   #polyWalletsPanel .pw-whale{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;font-size:12.5px}
   #polyWalletsPanel .pw-whale a{font-family:ui-monospace,monospace;color:#c6d0e4;text-decoration:none;border-bottom:1px dashed #414c66}#polyWalletsPanel .pw-whale b{font-family:ui-monospace,monospace}
   #polyWalletsPanel .pw-tape,#polyWalletsPanel .pw-lb{display:flex;flex-direction:column;gap:6px}
-  #polyWalletsPanel .pw-tp-row,#polyWalletsPanel .pw-lb-row{display:grid;grid-template-columns:auto 1fr auto;gap:11px;align-items:center;background:#0f1626;border:1px solid rgba(255,255,255,.05);border-radius:11px;padding:10px 13px}
+  #polyWalletsPanel .pw-tp-row,#polyWalletsPanel .pw-lb-row{display:grid;grid-template-columns:auto auto 1fr auto;gap:11px;align-items:center;background:#0f1626;border:1px solid rgba(255,255,255,.05);border-radius:11px;padding:10px 13px}
+  #polyWalletsPanel .pw-mflags{display:inline-flex;align-items:center;gap:2px;white-space:nowrap}
+  #polyWalletsPanel .pw-mflags .pw-flag{font-size:17px}
+  #polyWalletsPanel .pw-mflags .pw-logo{width:19px;height:19px}
   #polyWalletsPanel .pw-tp-act{font-size:10px;font-weight:800;padding:3px 8px;border-radius:6px}#polyWalletsPanel .pw-buy{background:rgba(45,212,126,.14);color:#2dd47e}#polyWalletsPanel .pw-sell{background:rgba(255,93,93,.14);color:#ff5d5d}
   #polyWalletsPanel .pw-tp-mid,#polyWalletsPanel .pw-lb-mid{min-width:0;font-size:12px;color:#9db2d6;overflow:hidden}
   #polyWalletsPanel .pw-tp-mid{white-space:nowrap;text-overflow:ellipsis}
