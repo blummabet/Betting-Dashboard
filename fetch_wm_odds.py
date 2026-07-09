@@ -159,7 +159,10 @@ def compute_closing(existing, cur_odds, hours_to_ko, now_iso):
 # gesetzt. MUSS wie odds_open über Läufe hinweg erhalten bleiben.
 _SOFT_OPEN_KEYS = (
     "public_hw_open", "public_dr_open", "public_aw_open",
-    "public_o25_open", "public_u25_open", "public_bttsY_open", "public_bttsN_open",
+    "public_o15_open", "public_u15_open",
+    "public_o25_open", "public_u25_open",
+    "public_o35_open", "public_u35_open",
+    "public_bttsY_open", "public_bttsN_open",
 )
 
 
@@ -657,6 +660,13 @@ def _extract_totals_btts(bookmakers: list, our_book_prio: list, home_id: str = "
     # (z.B. QAT +1.5/+2) jetzt verfügbar dank alternate_spreads.
     ah_15 = _pick_ah(-1.5)
     ah_20 = _pick_ah(-2.0)
+    # Viertel-Linien (09.07.2026, Lucas): die Leiter bietet sie an (ahLadder), aber MARKET_CFG
+    # konnte nur die halben/vollen Stufen picken. Jetzt komplett — „Sieg zu kurz → AH −1.25"
+    # wird als echter AH-Pick möglich, nicht nur Doppelte Chance.
+    ah_025 = _pick_ah(-0.25)
+    ah_125 = _pick_ah(-1.25)
+    ah_175 = _pick_ah(-1.75)
+    ah_225 = _pick_ah(-2.25)
 
     # Volle AH-Leiter (13.06.2026): Pinnacle bietet AH als schmale Bande um die faire
     # Linie — KEINE festen Buckets. Bei Blowouts (GER-CUW) ist die Bande z.B. −2.75…−3.75.
@@ -693,12 +703,18 @@ def _extract_totals_btts(bookmakers: list, our_book_prio: list, home_id: str = "
             public_bk = pp
             break
 
-    pub_o25 = pub_u25 = pub_bttsY = pub_bttsN = None
+    pub_o15 = pub_u15 = pub_o25 = pub_u25 = pub_o35 = pub_u35 = None
+    pub_bttsY = pub_bttsN = None
     if public_bk:
-        # Public O/U 2.5
+        # Public O/U ALLE Linien (09.07.2026, Lucas: „andere O/U-Linien auch vom Softbook
+        # covern"): 1.5 + 2.5 + 3.5 für public_static_bias + lead_lag.
         pub_totals = totals_lines_by_bk.get(public_bk, {})
+        if 1.5 in pub_totals and pub_totals[1.5][0] and pub_totals[1.5][1]:
+            pub_o15, pub_u15 = pub_totals[1.5]
         if 2.5 in pub_totals and pub_totals[2.5][0] and pub_totals[2.5][1]:
             pub_o25, pub_u25 = pub_totals[2.5]
+        if 3.5 in pub_totals and pub_totals[3.5][0] and pub_totals[3.5][1]:
+            pub_o35, pub_u35 = pub_totals[3.5]
         # Public BTTS
         if public_bk in btts_cands:
             pub_bttsY, pub_bttsN = btts_cands[public_bk]
@@ -718,28 +734,41 @@ def _extract_totals_btts(bookmakers: list, our_book_prio: list, home_id: str = "
         "o25_src":  t25[2] if t25 else None,
         "o35_src":  t35[2] if t35 else None,
         "btts_src": b[2]  if b   else None,
-        # Public-Bookmaker O/U 2.5 + BTTS für public_static_bias / lead_lag (NEU 09.06.2026)
+        # Public-Bookmaker O/U (1.5/2.5/3.5) + BTTS für public_static_bias / lead_lag
+        # (09.07.2026 erweitert: vorher nur 2.5 — jetzt komplette Tor-Leiter softbook-gecovered)
+        "public_o15":   round(pub_o15, 3) if pub_o15 else None,
+        "public_u15":   round(pub_u15, 3) if pub_u15 else None,
         "public_o25":   round(pub_o25, 3) if pub_o25 else None,
         "public_u25":   round(pub_u25, 3) if pub_u25 else None,
+        "public_o35":   round(pub_o35, 3) if pub_o35 else None,
+        "public_u35":   round(pub_u35, 3) if pub_u35 else None,
         "public_bttsY": round(pub_bttsY, 3) if pub_bttsY else None,
         "public_bttsN": round(pub_bttsN, 3) if pub_bttsN else None,
-        "public_ou_bookmaker": public_bk if (pub_o25 or pub_bttsY) else None,
+        "public_ou_bookmaker": public_bk if (pub_o15 or pub_o25 or pub_o35 or pub_bttsY) else None,
         "cornerLine": c[0] if c else None,
         "cOver":   round(c[1], 3) if c and c[1] else None,
         "cUnder":  round(c[2], 3) if c and c[2] else None,
         "dc1X":    round(dc[0], 3) if dc and dc[0] else None,
         "dc12":    round(dc[1], 3) if dc and dc[1] else None,
         "dcX2":    round(dc[2], 3) if dc and dc[2] else None,
+        "ahH_n025": round(ah_025[0], 3) if ah_025 else None,
+        "ahA_p025": round(ah_025[1], 3) if ah_025 else None,
         "ahH_n050": round(ah_05[0], 3)  if ah_05  else None,
         "ahA_p050": round(ah_05[1], 3)  if ah_05  else None,
         "ahH_n075": round(ah_075[0], 3) if ah_075 else None,
         "ahA_p075": round(ah_075[1], 3) if ah_075 else None,
         "ahH_n100": round(ah_10[0], 3)  if ah_10  else None,
         "ahA_p100": round(ah_10[1], 3)  if ah_10  else None,
+        "ahH_n125": round(ah_125[0], 3) if ah_125 else None,
+        "ahA_p125": round(ah_125[1], 3) if ah_125 else None,
         "ahH_n150": round(ah_15[0], 3)  if ah_15  else None,
         "ahA_p150": round(ah_15[1], 3)  if ah_15  else None,
+        "ahH_n175": round(ah_175[0], 3) if ah_175 else None,
+        "ahA_p175": round(ah_175[1], 3) if ah_175 else None,
         "ahH_n200": round(ah_20[0], 3)  if ah_20  else None,
         "ahA_p200": round(ah_20[1], 3)  if ah_20  else None,
+        "ahH_n225": round(ah_225[0], 3) if ah_225 else None,
+        "ahA_p225": round(ah_225[1], 3) if ah_225 else None,
         "ahLadder": ah_ladder,          # volle angebotene Leiter (dynamische Linien-Wahl)
     }
 
@@ -1119,8 +1148,11 @@ def main():
             "o15", "u15", "o25", "u25", "o35", "u35",
             "bttsY", "bttsN",
             "dc1X", "dc12", "dcX2",
+            "ahH_n025", "ahA_p025",
             "ahH_n050", "ahA_p050", "ahH_n075", "ahA_p075", "ahH_n100", "ahA_p100",
-            "ahH_n150", "ahA_p150", "ahH_n200", "ahA_p200",
+            "ahH_n125", "ahA_p125",
+            "ahH_n150", "ahA_p150", "ahH_n175", "ahA_p175", "ahH_n200", "ahA_p200",
+            "ahH_n225", "ahA_p225",
             "cornerLine", "cOver", "cUnder",
         )
         odds_open = existing.get("odds_open")
@@ -1166,8 +1198,10 @@ def main():
             new_entry["bttsY"] = tb["bttsY"]
             if tb.get("bttsN"):
                 new_entry["bttsN"] = tb["bttsN"]
-        # Public-Bookmaker O/U + BTTS (NEU 09.06.2026 — Signal-O/U-Coverage)
-        for pk in ("public_o25", "public_u25", "public_bttsY", "public_bttsN",
+        # Public-Bookmaker O/U + BTTS (NEU 09.06.2026 — Signal-O/U-Coverage;
+        # 09.07.2026 erweitert auf 1.5/3.5)
+        for pk in ("public_o15", "public_u15", "public_o25", "public_u25",
+                   "public_o35", "public_u35", "public_bttsY", "public_bttsN",
                    "public_ou_bookmaker"):
             if tb.get(pk) is not None:
                 new_entry[pk] = tb[pk]
@@ -1185,8 +1219,11 @@ def main():
         # FIX 13.06.2026: ahH_n150/200 + ahLadder fehlten in dieser Kopier-Liste →
         # wurden zwar von get_match_odds zurückgegeben, aber nie ins gespeicherte
         # new_entry übernommen (DARUM blieb ahLadder ewig leer trotz neuem Code).
-        for k in ("ahH_n050", "ahA_p050", "ahH_n075", "ahA_p075", "ahH_n100", "ahA_p100",
-                  "ahH_n150", "ahA_p150", "ahH_n200", "ahA_p200"):
+        for k in ("ahH_n025", "ahA_p025",
+                  "ahH_n050", "ahA_p050", "ahH_n075", "ahA_p075", "ahH_n100", "ahA_p100",
+                  "ahH_n125", "ahA_p125",
+                  "ahH_n150", "ahA_p150", "ahH_n175", "ahA_p175", "ahH_n200", "ahA_p200",
+                  "ahH_n225", "ahA_p225"):
             if tb.get(k):
                 new_entry[k] = tb[k]
         # Volle AH-Leiter für die dynamische Linien-Wahl in generate_wm_picks.
@@ -1279,9 +1316,13 @@ def main():
                     "bk":  "public",
                     "bookmaker": h2h.get("public_bookmaker"),   # i.d.R. bet365
                 }
-                if tb.get("public_o25"):
-                    pub_entry["o25"] = tb["public_o25"]
-                    pub_entry["u25"] = tb.get("public_u25")
+                # Public-O/U-Zeitreihe (09.07.2026): alle Linien in den Snap, damit
+                # lead_lag/Move-Detection Softbook-Lag auch auf O/U 1.5/2.5/3.5 sieht.
+                for _line in ("15", "25", "35"):
+                    _po = tb.get(f"public_o{_line}")
+                    if _po:
+                        pub_entry[f"o{_line}"] = _po
+                        pub_entry[f"u{_line}"] = tb.get(f"public_u{_line}")
                 snaps.append(pub_entry)
 
         # Track snapshot count + log

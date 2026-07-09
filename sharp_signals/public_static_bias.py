@@ -68,14 +68,20 @@ def _outcome_key_from_market(market: str) -> Optional[str]:
 
 
 def _ou_btts_key(market: str) -> Optional[str]:
-    """Map O/U 2.5 + BTTS auf entsprechende Snapshot-Keys.
-    Andere O/U-Linien (1.5/3.5) haben wir Public-side nicht — wird ignoriert."""
+    """Map O/U (1.5/2.5/3.5) + BTTS auf entsprechende Snapshot-Keys.
+    09.07.2026: 1.5 + 3.5 ergänzt — Softbook covert jetzt die komplette Tor-Leiter."""
     m = (market or "").lower()
     if "ecken" in m or "corner" in m: return None
-    # O/U 2.5 (nur diese Linie haben wir Public-side)
-    if ("2.5" in m or "2,5" in m) and "tore" in m:
-        if "über" in m or "uber" in m or "over" in m: return "o25"
-        if "unter" in m or "under" in m: return "u25"
+    # O/U-Linien (Public-side jetzt für 1.5/2.5/3.5 verfügbar)
+    if "tore" in m:
+        over = "über" in m or "uber" in m or "over" in m
+        under = "unter" in m or "under" in m
+        if over or under:
+            for lbl, suf in (("1.5", "15"), ("1,5", "15"),
+                             ("2.5", "25"), ("2,5", "25"),
+                             ("3.5", "35"), ("3,5", "35")):
+                if lbl in m:
+                    return ("o" if over else "u") + suf
     # BTTS
     if "beide" in m or "btts" in m:
         return "bttsN" if ("nein" in m or "no" in m) else "bttsY"
@@ -124,7 +130,10 @@ class PublicStaticBiasSignal(Signal):
         if sharp_odds <= 1.0 or public_odds <= 1.0: return None
 
         # Komplementärer Markt-Key für devig (z.B. o25 ↔ u25)
-        pairs = {"o25": "u25", "u25": "o25", "bttsY": "bttsN", "bttsN": "bttsY"}
+        pairs = {"o15": "u15", "u15": "o15",
+                 "o25": "u25", "u25": "o25",
+                 "o35": "u35", "u35": "o35",
+                 "bttsY": "bttsN", "bttsN": "bttsY"}
         opp = pairs.get(key)
         sharp_opp  = snap.get(opp) if opp else None
         public_opp = snap.get(f"public_{opp}") if opp else None
@@ -152,7 +161,9 @@ class PublicStaticBiasSignal(Signal):
         score = direction * (self._t["base_score_pp"] + extra)
         confidence = min(0.80, 0.40 + abs_diff * 0.04)
 
-        oc_label = {"o25": "Über 2.5", "u25": "Unter 2.5",
+        oc_label = {"o15": "Über 1.5", "u15": "Unter 1.5",
+                    "o25": "Über 2.5", "u25": "Unter 2.5",
+                    "o35": "Über 3.5", "u35": "Unter 3.5",
                     "bttsY": "BTTS Ja", "bttsN": "BTTS Nein"}[key]
         public_bk = snap.get("public_ou_bookmaker", "Public")
         direction_str = "über-bettet" if diff_pp > 0 else "unter-bettet"

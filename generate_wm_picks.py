@@ -669,17 +669,27 @@ MARKET_CFG = [
     ("under35",   "Unter 3.5 Tore",             EDGE_MIN_OU),
     ("btts",      "Beide Teams treffen — Ja",   EDGE_MIN_OU),
     # ── Asian Handicap (sicherer Markt für Underdogs) ──
+    # Viertel-Linien (09.07.2026, Lucas): komplette Leiter in 0.25-Schritten, damit
+    # „Sieg-Quote zu kurz → AH −0.25/−1.25" als echter AH-Pick greift (Odds aus ahLadder).
+    ("ahH_n025",  "AH Heim −0.25",              EDGE_MIN_AH),
+    ("ahA_p025",  "AH Auswärts +0.25",          EDGE_MIN_AH),
     ("ahH_n050",  "AH Heim −0.5",               EDGE_MIN_AH),
     ("ahA_p050",  "AH Auswärts +0.5",           EDGE_MIN_AH),
     ("ahH_n075",  "AH Heim −0.75",              EDGE_MIN_AH),
     ("ahA_p075",  "AH Auswärts +0.75",          EDGE_MIN_AH),
     ("ahH_n100",  "AH Heim −1.0",               EDGE_MIN_AH),
     ("ahA_p100",  "AH Auswärts +1.0",           EDGE_MIN_AH),
+    ("ahH_n125",  "AH Heim −1.25",              EDGE_MIN_AH),
+    ("ahA_p125",  "AH Auswärts +1.25",          EDGE_MIN_AH),
     # Breitere Linien für Mismatches (13.06.2026) — sicherere Underdog-Absicherung
     ("ahH_n150",  "AH Heim −1.5",               EDGE_MIN_AH),
     ("ahA_p150",  "AH Auswärts +1.5",           EDGE_MIN_AH),
+    ("ahH_n175",  "AH Heim −1.75",              EDGE_MIN_AH),
+    ("ahA_p175",  "AH Auswärts +1.75",          EDGE_MIN_AH),
     ("ahH_n200",  "AH Heim −2.0",               EDGE_MIN_AH),
     ("ahA_p200",  "AH Auswärts +2.0",           EDGE_MIN_AH),
+    ("ahH_n225",  "AH Heim −2.25",              EDGE_MIN_AH),
+    ("ahA_p225",  "AH Auswärts +2.25",          EDGE_MIN_AH),
     # ── Corner-Picks (Pinnacle listet 1-3 Tage vor Anpfiff) ──
     ("o_corners85",  "Über 8.5 Ecken",          EDGE_MIN_OU),
     ("o_corners95",  "Über 9.5 Ecken",          EDGE_MIN_OU),
