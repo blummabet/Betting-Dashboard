@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "liga",
-    "generatedAt": "2026-07-08T08:42:12.019528+00:00",
+    "generatedAt": "2026-07-09T09:54:12.296640+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -2201,6 +2201,44 @@
       "matchupPct": 71
     },
     {
+      "teamId": "96",
+      "team": "Toulouse",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/96.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 7,
+      "venue": "all",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 60% → 60%"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "80",
+        "oppName": "Lyon",
+        "atHome": true,
+        "date": "2026-08-22",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 60
+    },
+    {
       "teamId": "4665",
       "team": "Racing Santander",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/4665.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -3395,44 +3433,6 @@
       "matchupPct": 56
     },
     {
-      "teamId": "96",
-      "team": "Toulouse",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/96.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 7,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 53% → 57%"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "80",
-        "oppName": "Lyon",
-        "atHome": true,
-        "date": "2026-08-22",
-        "oppRatePct": 53
-      },
-      "oppSupportPct": 53,
-      "matchupPct": 57
-    },
-    {
       "teamId": "512",
       "team": "Frosinone",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/512.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -4068,6 +4068,44 @@
       },
       "oppSupportPct": 67,
       "matchupPct": 79
+    },
+    {
+      "teamId": "80",
+      "team": "Lyon",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/80.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 6,
+      "venue": "all",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 60% → 60%"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "96",
+        "oppName": "Toulouse",
+        "atHome": false,
+        "date": "2026-08-22",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 60
     },
     {
       "teamId": "538",
@@ -5024,7 +5062,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 73,
-        "label": "Eigen 73% + Gegner 73% → 73% · Signale bestätigen"
+        "label": "Eigen 73% + Gegner 73% → 73%"
       },
       "ratePct": 73,
       "seq": [
@@ -5046,18 +5084,7 @@
         "oppRatePct": 27
       },
       "oppSupportPct": 73,
-      "matchupPct": 73,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 3,
-        "conviction": 3,
-        "names": [
-          "form_trend",
-          "h2h_pattern",
-          "chance_creation"
-        ],
-        "market": "Unter 2.5 Tore"
-      }
+      "matchupPct": 73
     },
     {
       "teamId": "895",
@@ -5103,46 +5130,8 @@
       "flag": "<img src=\"https://media.api-sports.io/football/teams/96.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "FRA",
       "leagueName": "Ligue 1",
-      "type": "bttsYes",
-      "market": "Beide Teams treffen",
-      "length": 5,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 60% → 60%"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "80",
-        "oppName": "Lyon",
-        "atHome": true,
-        "date": "2026-08-22",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 60
-    },
-    {
-      "teamId": "96",
-      "team": "Toulouse",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/96.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "bttsYes",
-      "market": "Beide Teams treffen",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
       "length": 5,
       "venue": "A",
       "strong": true,
@@ -5179,6 +5168,82 @@
       "flag": "<img src=\"https://media.api-sports.io/football/teams/96.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "FRA",
       "leagueName": "Ligue 1",
+      "type": "bttsYes",
+      "market": "Beide Teams treffen",
+      "length": 5,
+      "venue": "all",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 67% → 63%"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "80",
+        "oppName": "Lyon",
+        "atHome": true,
+        "date": "2026-08-22",
+        "oppRatePct": 67
+      },
+      "oppSupportPct": 67,
+      "matchupPct": 63
+    },
+    {
+      "teamId": "96",
+      "team": "Toulouse",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/96.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
+      "type": "bttsYes",
+      "market": "Beide Teams treffen",
+      "length": 5,
+      "venue": "A",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 67% → 63%"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "80",
+        "oppName": "Lyon",
+        "atHome": true,
+        "date": "2026-08-22",
+        "oppRatePct": 67
+      },
+      "oppSupportPct": 67,
+      "matchupPct": 63
+    },
+    {
+      "teamId": "96",
+      "team": "Toulouse",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/96.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
       "type": "scored",
       "market": "Team trifft",
       "length": 5,
@@ -5187,7 +5252,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 73,
-        "label": "Eigen 73% + Gegner 73% → 73%"
+        "label": "Eigen 73% + Gegner 80% → 76%"
       },
       "ratePct": 73,
       "seq": [
@@ -5206,10 +5271,10 @@
         "oppName": "Lyon",
         "atHome": true,
         "date": "2026-08-22",
-        "oppRatePct": 73
+        "oppRatePct": 80
       },
-      "oppSupportPct": 73,
-      "matchupPct": 73
+      "oppSupportPct": 80,
+      "matchupPct": 76
     },
     {
       "teamId": "96",
@@ -5225,7 +5290,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 73,
-        "label": "Eigen 73% + Gegner 73% → 73%"
+        "label": "Eigen 73% + Gegner 80% → 76%"
       },
       "ratePct": 73,
       "seq": [
@@ -5244,10 +5309,10 @@
         "oppName": "Lyon",
         "atHome": true,
         "date": "2026-08-22",
-        "oppRatePct": 73
+        "oppRatePct": 80
       },
-      "oppSupportPct": 73,
-      "matchupPct": 73
+      "oppSupportPct": 80,
+      "matchupPct": 76
     },
     {
       "teamId": "4665",
@@ -6529,82 +6594,6 @@
       "matchupPct": 57
     },
     {
-      "teamId": "80",
-      "team": "Lyon",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/80.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 5,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 53,
-        "label": "Eigen 53% + Gegner 60% → 56%"
-      },
-      "ratePct": 53,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "96",
-        "oppName": "Toulouse",
-        "atHome": false,
-        "date": "2026-08-22",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 56
-    },
-    {
-      "teamId": "96",
-      "team": "Toulouse",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/96.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 5,
-      "venue": "A",
-      "strong": true,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 53% → 57%"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "80",
-        "oppName": "Lyon",
-        "atHome": true,
-        "date": "2026-08-22",
-        "oppRatePct": 53
-      },
-      "oppSupportPct": 53,
-      "matchupPct": 57
-    },
-    {
       "teamId": "543",
       "team": "Real Betis",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/543.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -7847,6 +7836,44 @@
       },
       "oppSupportPct": 73,
       "matchupPct": 69
+    },
+    {
+      "teamId": "80",
+      "team": "Lyon",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/80.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 4,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 60% → 60%"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "96",
+        "oppName": "Toulouse",
+        "atHome": false,
+        "date": "2026-08-22",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 60
     },
     {
       "teamId": "94",
@@ -11875,7 +11902,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 73,
-        "label": "Eigen 73% + Gegner 73% → 73% · Signale bestätigen"
+        "label": "Eigen 73% + Gegner 73% → 73%"
       },
       "ratePct": 73,
       "seq": [
@@ -11897,18 +11924,7 @@
         "oppRatePct": 27
       },
       "oppSupportPct": 73,
-      "matchupPct": 73,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 3,
-        "conviction": 3,
-        "names": [
-          "form_trend",
-          "h2h_pattern",
-          "chance_creation"
-        ],
-        "market": "Unter 2.5 Tore"
-      }
+      "matchupPct": 73
     },
     {
       "teamId": "79",
@@ -12022,6 +12038,43 @@
       },
       "oppSupportPct": 73,
       "matchupPct": 65
+    },
+    {
+      "teamId": "96",
+      "team": "Toulouse",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/96.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 60% → 60%"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "80",
+        "oppName": "Lyon",
+        "atHome": true,
+        "date": "2026-08-22",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 60
     },
     {
       "teamId": "530",
@@ -14235,44 +14288,6 @@
       "matchupPct": 57
     },
     {
-      "teamId": "80",
-      "team": "Lyon",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/80.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 53,
-        "label": "Eigen 53% + Gegner 60% → 56%"
-      },
-      "ratePct": 53,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "96",
-        "oppName": "Toulouse",
-        "atHome": false,
-        "date": "2026-08-22",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 56
-    },
-    {
       "teamId": "81",
       "team": "Marseille",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/81.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -14383,43 +14398,6 @@
       },
       "oppSupportPct": 47,
       "matchupPct": 51
-    },
-    {
-      "teamId": "96",
-      "team": "Toulouse",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/96.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 53% → 57%"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "80",
-        "oppName": "Lyon",
-        "atHome": true,
-        "date": "2026-08-22",
-        "oppRatePct": 53
-      },
-      "oppSupportPct": 53,
-      "matchupPct": 57
     },
     {
       "teamId": "531",
