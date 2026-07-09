@@ -1,0 +1,70 @@
+name: 🔒 Liga Closing-Capture (nah am Anpfiff)
+
+# 09.07.2026 (Lucas: „Liga auf top"). Pendant zu capture-closing.yml (WM). Der volle Liga-Lauf
+# (2×/Tag) + dichter 2h-Refresh verpassen die letzten Minuten vor Anpfiff → „Closing" veraltet →
+# CLV gegen tote Linie. Dieser Job läuft alle 15 min in den Anpfiff-Bändern und ruft fetch_liga_odds
+# im CLOSING_CAPTURE_ONLY-Modus: der interne Guard (_has_imminent_kickoff) feuert TheOddsAPI NUR an,
+# wenn ein Liga-Spiel in [-20 … +90] min anpfeift — sonst sofortiger No-Op (quota-schonend).
+# Committet NUR liga_closing_lines.json + liga-odds-history.json (verwirft liga-data.json → clobbert
+# nie Picks/Daten). resolve_wm_results liest liga_closing_lines.json bevorzugt.
+on:
+  schedule:
+    - cron: '*/15 11-23 * * *'   # Nachmittags-/Abend-Anpfiffe EU + MLS-Vorlauf (UTC)
+    - cron: '*/15 0-4 * * *'     # späte MLS-Anpfiffe (US-Abend = UTC-Nacht)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: capture-closing-liga
+  cancel-in-progress: false
+
+jobs:
+  capture:
+    runs-on: ubuntu-latest
+    env:
+      COCOBET_DATASET: liga
+      COCOBET_PROFILE: liga_default
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: 📦 Dependencies
+        run: pip install -r requirements.txt
+
+      - name: 🔒 Liga-Closing nah am Anpfiff erfassen
+        run: python fetch_liga_odds.py
+        continue-on-error: true
+        env:
+          CLOSING_CAPTURE_ONLY: '1'
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+
+      - name: 💾 Closing committen (nur wenn geändert)
+        run: |
+          git config user.name  "CocoBet Bot"
+          git config user.email "bot@cocobet.local"
+          # liga-data.json bewusst VERWERFEN — der CLV-Resolver liest primär liga_closing_lines.json
+          # (merge_closing_lines hat das Closing schon dort gespiegelt). So clobbert der 15min-Job
+          # NIEMALS die Picks/Daten der Haupt-Pipeline.
+          git checkout -- liga-data.json 2>/dev/null || true
+          git add liga_closing_lines.json liga-odds-history.json 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "Keine Closing-Änderung — nichts zu committen."; exit 0
+          fi
+          git commit -m "🔒 Liga Closing-Capture $(date -u +'%d.%m.%Y %H:%M') UTC"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          for attempt in 1 2 3 4 5; do
+            git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+            CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null)
+            if [ -n "$CONFLICTS" ]; then
+              echo "$CONFLICTS" | while read f; do git checkout --ours -- "$f"; git add "$f"; done
+              git diff --staged --quiet || git commit -m "🔧 auto-resolve closing merge"
+            fi
+            if git push 2>&1; then echo "✅ Push nach Versuch $attempt"; exit 0; fi
+            echo "⚠️ Push $attempt fehlgeschlagen — retry…"; sleep $((attempt * 3))
+          done
+          echo "❌ Push fehlgeschlagen"; exit 1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

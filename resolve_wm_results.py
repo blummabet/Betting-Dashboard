@@ -73,7 +73,12 @@ import re
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
+import cocobet_dataset as D   # dataset-aware Closing-Datei (WM vs Liga/MLS)
+
 BASE          = Path(__file__).parent
+# Minutengenaue Closing-Linien liegen je Dataset in einer eigenen Datei
+# (wm_closing_lines.json / liga_closing_lines.json), geschrieben vom 15min-Capture-Job.
+CLOSING_LINES_FILE = BASE / D.file("wm_closing_lines.json", "liga_closing_lines.json").name
 PLACED_FILE   = BASE / "wm_auto_bets_placed.json"
 HISTORY_FILE  = BASE / "picks_history.json"
 WM_FILE       = BASE / "wm2026-data.json"
@@ -238,9 +243,8 @@ def build_result_lookup(wm: dict) -> dict:
     # wm2026-data.json (bis-4h-frühe Closing). Macht CLV präziser.
     closing_lines = {}
     try:
-        _clf = BASE / "wm_closing_lines.json"
-        if _clf.exists():
-            closing_lines = json.loads(_clf.read_text(encoding="utf-8")) or {}
+        if CLOSING_LINES_FILE.exists():
+            closing_lines = json.loads(CLOSING_LINES_FILE.read_text(encoding="utf-8")) or {}
     except Exception:
         closing_lines = {}
 

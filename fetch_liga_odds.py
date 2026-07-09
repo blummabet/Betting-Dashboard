@@ -31,6 +31,9 @@ LIGA_FILE = str(D.data_file())
 # Zeitreihe der Pinnacle-/Public-Snapshots (für Sharp Radar + detect_wm_sharp_moves, 26.06.2026).
 # Format identisch zu wm2026-odds-history.json: {key: [{ts,bk,hw,dr,aw}...], _meta:{oddsFetchedAt}}.
 LIGA_HISTORY = str(D.file("wm2026-odds-history.json", "liga-odds-history.json"))
+# Minutengenaue Closing-Linien (vom 15min-Capture-Job nahe Anpfiff) — Parität zur WM
+# (wm_closing_lines.json). resolve_wm_results.build_result_lookup liest sie bevorzugt.
+LIGA_CLOSING = str(D.file("wm_closing_lines.json", "liga_closing_lines.json"))
 
 # TheOddsAPI-Sport-Keys der Top 5 (stabil etabliert) + MLS (Brücken-Liga nach WM, 29.06.2026).
 LEAGUE_SPORT_KEYS = {
@@ -443,6 +446,14 @@ def main():
         sys.exit(1)
     with open(LIGA_FILE, encoding="utf-8") as f:
         wm = json.load(f)
+    # Closing-Capture-Modus (nah am Anpfiff, 15min-Cron): NUR TheOddsAPI anfeuern, wenn ein
+    # Liga-Spiel im Fenster [-20…+90] min anpfeift und noch kein finales Closing hat — sonst
+    # sofort No-Op (quota-schonend). Gleicher Guard wie WM (_has_imminent_kickoff).
+    if os.environ.get("CLOSING_CAPTURE_ONLY") == "1":
+        import fetch_wm_odds as W
+        if not W._has_imminent_kickoff(wm):
+            print("  ⏸️  Kein Liga-Spiel nah am Anpfiff — Closing-Capture No-Op (Quota gespart).")
+            sys.exit(0)
     groups = wm.get("groups") or {}
     odds_out = wm.setdefault("odds", {})
     # Odds-History laden (Zeitreihe für Sharp Radar / detect_wm_sharp_moves).
@@ -496,6 +507,20 @@ def main():
     history.setdefault("_meta", {})["oddsFetchedAt"] = now_iso
     with open(LIGA_HISTORY, "w", encoding="utf-8") as f:
         json.dump(history, f, ensure_ascii=False, indent=2)
+    # Minutengenaue Closing-Linien spiegeln (wie WM merge_closing_lines) → liga_closing_lines.json.
+    # Der 15min-Capture-Job committet NUR diese Datei (verwirft liga-data.json) → clobbert nie Picks.
+    import fetch_wm_odds as W
+    _existing_cl = {}
+    if os.path.exists(LIGA_CLOSING):
+        try:
+            with open(LIGA_CLOSING, encoding="utf-8") as f:
+                _existing_cl = json.load(f) or {}
+        except Exception:
+            _existing_cl = {}
+    _merged_cl = W.merge_closing_lines(_existing_cl, odds_out)
+    if _merged_cl != _existing_cl:
+        with open(LIGA_CLOSING, "w", encoding="utf-8") as f:
+            json.dump(_merged_cl, f, ensure_ascii=False, indent=2)
     print(f"  ✅ {total} Liga-Spiele bepreist · {snaps_added} neue Odds-Snapshots")
 
 

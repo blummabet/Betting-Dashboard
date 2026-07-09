@@ -703,6 +703,36 @@ def check_liga_odds_round_sane(ctx):
                 "fetch_liga_odds.pick_event_for_fixture trennt Hin/Rück per Datum.")
 
 
+@integrity_check
+def check_liga_market_coverage(ctx):
+    """NEU 09.07.2026 (Lucas: „Liga auf top" — AH + Softbook-O/U ergänzt). Fängt einen STILLEN
+    Ausfall der neuen Märkte: wenn Liga-Odds fließen, aber die AH-Leiter (spreads-Markt) oder die
+    Public/Softbook-O/U komplett fehlen (falsche Book-Region, API-Markt weg, Extraktions-Regression),
+    würden AH-Picks + die O/U-Softbook-Signale still verstummen. Warnt nur bei TOTALER Abwesenheit
+    (einzelne Spiele ohne AH sind normal). Braucht ≥5 bepreiste Spiele, sonst No-Op (Vorsaison)."""
+    if not ctx.is_liga:
+        return None
+    played = {ctx.mk(fx) for _g, fx in ctx.fixtures
+              if (fx.get("result") or {}).get("status") in ("FT", "AET", "PEN")}
+    priced = [e for k, e in (ctx.odds or {}).items()
+              if k not in played and isinstance(e, dict) and e.get("hw")]
+    if len(priced) < 5:
+        return None   # zu wenig bepreist (Vorsaison) → nichts Aussagekräftiges
+    n_ah = sum(1 for e in priced
+               if e.get("ahLadder") or any(k.startswith("ahH_n") for k in e))
+    n_pub_ou = sum(1 for e in priced
+                   if e.get("public_o15") or e.get("public_o25") or e.get("public_o35"))
+    fails = []
+    if n_ah == 0:
+        fails.append(f"AH-Leiter fehlt bei ALLEN {len(priced)} bepreisten Spielen "
+                     f"— spreads-Markt/Region prüfen (fetch_liga_odds)")
+    if n_pub_ou == 0:
+        fails.append(f"Public/Softbook-O/U fehlt bei ALLEN {len(priced)} Spielen "
+                     f"— SOFT_PRIORITY-Buch/Region prüfen")
+    return _chk("liga_market_coverage", "Liga AH + Softbook-O/U vorhanden", "warn", fails,
+                f"{n_ah}/{len(priced)} mit AH · {n_pub_ou}/{len(priced)} mit Public-O/U.")
+
+
 # Frische-Schwelle für Pinnacle-Odds (Stunden). Der Auto-Trader stoppt erst hart
 # bei 24h (max_odds_age_hours) — dieser Guard WARNT viel früher, damit eingefrorene
 # fetch_wm_odds-Läufe im 🛡️-Panel sichtbar werden, BEVOR auf 13h alten Preisen
