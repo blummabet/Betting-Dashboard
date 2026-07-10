@@ -42,6 +42,11 @@ from sharp_signals.topscorer_momentum import TopscorerMomentumSignal
 from sharp_signals.coach_change import CoachChangeSignal
 from sharp_signals.transfer_shift import TransferShiftSignal
 from sharp_signals.streak_momentum import StreakMomentumSignal
+from sharp_signals.reverse_line_move import ReverseLineMoveSignal
+from sharp_signals.opener_move import OpenerMoveSignal
+from sharp_signals.multi_book_steam import MultiBookSteamSignal
+from sharp_signals.game_state_openness import GameStateOpennessSignal
+from sharp_signals.mls_travel import MLSTravelSignal
 
 
 # Pro-Profil deaktivierte Signale (25.06.2026, Lucas: Liga auf WM-Stack). Manche WM-only-Signale
@@ -96,6 +101,11 @@ ACTIVE_SIGNALS: list[Signal] = [
     CoachChangeSignal(),        # Neue-Trainer-Bounce (26.06.2026); context-Familie, zerfällt über 75d
     TransferShiftSignal(),      # Schlüsselspieler-Abgang (26.06.2026); context-Familie
     StreakMomentumSignal(),     # Serien als Pick-Signal (29.06.2026, Lucas); form-Familie, klein+gelernt
+    ReverseLineMoveSignal(),    # 09.07.2026: Linie bewegt gegen Public → Sharp-Seite (RLM-Proxy)
+    OpenerMoveSignal(),         # 09.07.2026: schärfster früher Linien-Abschnitt (Sharp Window)
+    MultiBookSteamSignal(),     # 09.07.2026: Pinnacle+Betfair korroborieren vs Public
+    GameStateOpennessSignal(),  # 09.07.2026: asymmetrische Verzweiflung → Über/BTTS
+    MLSTravelSignal(),          # 09.07.2026: MLS Reise/Höhe/Turf-Bürde; nur MLS (Venue-Tabelle)
 ]
 
 
@@ -160,6 +170,15 @@ SIGNAL_GROUPS: dict[str, str] = {
     "lead_lag_bias":      "sharp_money",
     "steam_lag":          "sharp_money",
     "polymarket_sharp":   "sharp_money",
+    # Neue Mikrostruktur-Signale (09.07.2026) — alle basieren auf Pinnacle-Linienbewegung / Sharp-vs-
+    # Public → sharp_money-Familie, Anti-Korr-Discount verhindert Mehrfachzählung desselben Moves.
+    "reverse_line_move":  "sharp_money",
+    "opener_move":        "sharp_money",
+    "multi_book_steam":   "sharp_money",
+    # game_state_openness nutzt dieselbe Tabellen-Druck-Story wie league_pressure → incentive-Familie.
+    "game_state_openness": "incentive",
+    # mls_travel: Spielort-/Fitness-Faktor wie travel_burden/injury/congestion → context-Familie.
+    "mls_travel":         "context",
     "form_trend":         "form",
     "xg_strength":        "form",
     "h2h_pattern":        "form",

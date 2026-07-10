@@ -621,16 +621,13 @@
     },
     "mls_default": {
       "engine_version": "v1",
-      "description": "MLS-Saison (Brücken-Liga nach WM) — Klon von liga_default. Reise/Höhe/Wetter folgen in Phase 2 (Geo-Daten).",
+      "description": "MLS-Saison (Brücken-Liga nach WM). Poly-Signale AN (Polymarket = offizieller MLS-Partner, echte Märkte+Volumen). incentive/pressure_index bleiben WM-only (league_pressure ersetzt). altitude/weather/travel_burden aus → mls_travel-Composite ersetzt (Reise+Höhe+Turf).",
       "disabled_signals": [
         "incentive_signal",
         "altitude_signal",
         "weather_signal",
         "travel_burden",
-        "smart_money",
-        "polymarket_sharp",
-        "pressure_index",
-        "steam_lag"
+        "pressure_index"
       ],
       "nt_xg": {
         "lookback_fixtures": 6,
