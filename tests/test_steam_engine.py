@@ -35,6 +35,26 @@ class TestDetect(unittest.TestCase):
         trigs = se.detect_steam(snap)
         self.assertTrue(any(t["key"] == "o25" for t in trigs))
 
+    def test_implausible_full_opening_no_fake_steam(self):
+        # 09.07.2026 (Lucas, MLS Chicago–Vancouver): Opening 1.17/1.01/1.17 (Overround 270%,
+        # Platzhalter) erzeugte einen erfundenen +25pp-Move → Fake-Auswärtssieg-Pick. Ein
+        # VOLLES, implausibles 1X2-Opening darf keinen 1X2-Steam auslösen.
+        snap = {"hw": 2.95, "dr": 3.69, "aw": 2.27,
+                "odds_open": {"hw": 1.17, "dr": 1.01, "aw": 1.17}}
+        trigs = [t for t in se.detect_steam(snap) if t["kind"] == "1x2"]
+        self.assertEqual(trigs, [])
+
+    def test_partial_opening_still_triggers(self):
+        # Teil-Opening (nur eine Seite, wie in echten Snaps/Tests) wird NICHT beurteilt → feuert.
+        snap = {"hw": 1.70, "dr": 3.5, "aw": 5.0, "odds_open": {"hw": 1.90}}
+        self.assertTrue(any(t["key"] == "hw" for t in se.detect_steam(snap)))
+
+    def test_plausible_full_opening_triggers(self):
+        # Echter Move mit plausiblem Voll-Opening (Overround ~1.06) → Steam feuert normal.
+        snap = {"hw": 2.95, "dr": 3.40, "aw": 2.60,
+                "odds_open": {"hw": 2.70, "dr": 3.30, "aw": 2.90}}
+        self.assertTrue(any(t["key"] == "aw" for t in se.detect_steam(snap)))
+
 
 class TestDerive(unittest.TestCase):
     def test_heavy_favorite_to_handicap(self):

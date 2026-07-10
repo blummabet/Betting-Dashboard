@@ -74,6 +74,18 @@ def _imp(o):
     return (1.0 / o) if (o and o > 1.0) else None
 
 
+def _plausible_1x2(hw, dr, aw) -> bool:
+    """Bildet ein 1X2-Opening einen ECHTEN Markt? (09.07.2026, Lucas: MLS Chicago–Vancouver zeigte
+    Opening 1.17/1.01/1.17, Overround 270% → Fake-Steam +25pp → Fake-Pick.) Platzhalter-Openings
+    (dr≈1.01, gleiche hw/aw) dürfen keinen Steam-Move auslösen. Gleicher Filter wie fetch_liga_odds:
+    kein Outcome <1.05, Remis ≥1.5, Overround plausibel [1.0, 1.30]."""
+    if not (hw and dr and aw):
+        return False
+    if hw < 1.05 or aw < 1.05 or dr < 1.5:
+        return False
+    return 1.0 <= (1.0 / hw + 1.0 / dr + 1.0 / aw) <= 1.30
+
+
 def detect_steam(snap: dict, trigger_pp: float = TRIGGER_PP,
                  drift: dict | None = None,
                  max_trigger_odds: float = MAX_TRIGGER_ODDS) -> list[dict]:
@@ -104,8 +116,17 @@ def detect_steam(snap: dict, trigger_pp: float = TRIGGER_PP,
             d.update(extra)
         out.append(d)
 
+    # 1X2-Opening nur als Move-Basis nehmen, wenn es ein PLAUSIBLER Markt ist. Ein Platzhalter-
+    # Opening (Overround ≫ 1.3, dr≈1.01) würde sonst einen erfundenen Riesen-Move + Fake-Steam-Pick
+    # erzeugen (MLS-Befund 09.07.). Implausibel → opn=None → kein 1X2-Trigger (self-defense zusätzlich
+    # zur Heilung in fetch_liga_odds, unabhängig von der Fetch-Reihenfolge).
+    # Nur suppress, wenn ein VOLLES 1X2-Opening (hw+dr+aw) vorliegt UND es implausibel ist
+    # (Platzhalter). Teil-Openings (nur eine Seite) werden nicht beurteilt → Altverhalten.
+    _op_full = bool(op.get("hw") and op.get("dr") and op.get("aw"))
+    _op_1x2_ok = (not _op_full) or _plausible_1x2(op.get("hw"), op.get("dr"), op.get("aw"))
     for key, label, side, ah_pref in _SIDES_1X2:
-        _add(key, label, snap.get(key), op.get(key), "1x2", {"side": side, "ah_pref": ah_pref})
+        _opn = op.get(key) if _op_1x2_ok else None
+        _add(key, label, snap.get(key), _opn, "1x2", {"side": side, "ah_pref": ah_pref})
     for key, _opp, label, soft_key in _SIDES_OU:
         _add(key, label, snap.get(key), op.get(key), "ou", {"soft_key": soft_key})
 
