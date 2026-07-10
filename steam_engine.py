@@ -116,14 +116,16 @@ def detect_steam(snap: dict, trigger_pp: float = TRIGGER_PP,
             d.update(extra)
         out.append(d)
 
-    # 1X2-Opening nur als Move-Basis nehmen, wenn es ein PLAUSIBLER Markt ist. Ein Platzhalter-
-    # Opening (Overround ≫ 1.3, dr≈1.01) würde sonst einen erfundenen Riesen-Move + Fake-Steam-Pick
-    # erzeugen (MLS-Befund 09.07.). Implausibel → opn=None → kein 1X2-Trigger (self-defense zusätzlich
-    # zur Heilung in fetch_liga_odds, unabhängig von der Fetch-Reihenfolge).
-    # Nur suppress, wenn ein VOLLES 1X2-Opening (hw+dr+aw) vorliegt UND es implausibel ist
-    # (Platzhalter). Teil-Openings (nur eine Seite) werden nicht beurteilt → Altverhalten.
-    _op_full = bool(op.get("hw") and op.get("dr") and op.get("aw"))
-    _op_1x2_ok = (not _op_full) or _plausible_1x2(op.get("hw"), op.get("dr"), op.get("aw"))
+    # 1X2-Move nur nehmen, wenn SOWOHL der aktuelle ALS AUCH der Opening-Satz ein PLAUSIBLER Markt
+    # ist. Ein Platzhalter-Satz (Overround ≫ 1.3, dr≈1.01) — egal ob im Opening (MLS Chicago 09.07.:
+    # Opening 1.17/1.01/1.17) oder im aktuellen Snap (MLS Nashville 09.07.: jetzt 1.04/1.02/1.04) —
+    # würde sonst einen erfundenen Riesen-Move + Fake-Steam-Pick erzeugen. Implausibel → opn=None →
+    # kein 1X2-Trigger (Self-Defense unabhängig von der Fetch-Heilung/Reihenfolge). Teil-Sätze (nur
+    # eine Seite, wie in echten Snaps/Tests) werden NICHT beurteilt → Altverhalten.
+    def _full_ok(d):
+        full = bool(d.get("hw") and d.get("dr") and d.get("aw"))
+        return (not full) or _plausible_1x2(d.get("hw"), d.get("dr"), d.get("aw"))
+    _op_1x2_ok = _full_ok(snap) and _full_ok(op)
     for key, label, side, ah_pref in _SIDES_1X2:
         _opn = op.get(key) if _op_1x2_ok else None
         _add(key, label, snap.get(key), _opn, "1x2", {"side": side, "ah_pref": ah_pref})

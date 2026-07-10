@@ -44,6 +44,15 @@ class TestDetect(unittest.TestCase):
         trigs = [t for t in se.detect_steam(snap) if t["kind"] == "1x2"]
         self.assertEqual(trigs, [])
 
+    def test_implausible_current_snap_no_fake_steam(self):
+        # 09.07.2026 (Lucas, MLS Nashville–Atlanta): umgekehrter Fall — der AKTUELLE Satz ist der
+        # Platzhalter (1.04/1.02/1.04, Overround 290%), das Opening (1.36/4.6/7.0) ist real →
+        # erfundener 1.36→1.04-Move. Auch das darf keinen 1X2-Steam auslösen.
+        snap = {"hw": 1.04, "dr": 1.02, "aw": 1.04,
+                "odds_open": {"hw": 1.36, "dr": 4.6, "aw": 7.0}}
+        trigs = [t for t in se.detect_steam(snap) if t["kind"] == "1x2"]
+        self.assertEqual(trigs, [])
+
     def test_partial_opening_still_triggers(self):
         # Teil-Opening (nur eine Seite, wie in echten Snaps/Tests) wird NICHT beurteilt → feuert.
         snap = {"hw": 1.70, "dr": 3.5, "aw": 5.0, "odds_open": {"hw": 1.90}}
