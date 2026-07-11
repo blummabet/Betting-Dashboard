@@ -58,12 +58,9 @@
       "id": "odds_sane",
       "label": "Pinnacle-1X2 vollständig + plausibel",
       "severity": "warn",
-      "ok": false,
-      "nFail": 2,
-      "failures": [
-        "499-488: Margin 1.876 unplausibel",
-        "503-489: Margin 1.600 unplausibel"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Quelle für Modell-Baseline + Edge."
     },
     {
@@ -79,19 +76,16 @@
       "id": "liga_leagues_populated",
       "label": "Alle Liga-Gruppen haben Teams + Fixtures",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 5,
+      "failures": [
+        "ENG: 0 Teams / 0 Fixtures — Spielplan noch nicht veröffentlicht?",
+        "ESP: 0 Teams / 0 Fixtures — Spielplan noch nicht veröffentlicht?",
+        "GER: 0 Teams / 0 Fixtures — Spielplan noch nicht veröffentlicht?",
+        "ITA: 0 Teams / 0 Fixtures — Spielplan noch nicht veröffentlicht?",
+        "FRA: 0 Teams / 0 Fixtures — Spielplan noch nicht veröffentlicht?"
+      ],
       "note": "Leer = API-Football hat den Spielplan noch nicht (La Liga/Bundesliga spät). Kurz vor Saisonstart = echtes Problem."
-    },
-    {
-      "id": "liga_odds_round_sane",
-      "label": "Liga-Odds nur auf nahen Spieltagen",
-      "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
-      "note": "fetch_liga_odds.pick_event_for_fixture trennt Hin/Rück per Datum."
     },
     {
       "id": "liga_market_coverage",
@@ -180,56 +174,53 @@
       "id": "public_consensus",
       "label": "Public-Konsens (Soft-Books) vorhanden",
       "severity": "warn",
-      "ok": false,
-      "nFail": 2,
-      "failures": [
-        "77-79: kein public_hw",
-        "85-94: kein public_hw"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Ohne public_* feuert public_static_bias nicht."
     },
     {
       "id": "public_is_multibook",
       "label": "Public = Multi-Book-Konsens (nicht Einzel-Book)",
       "severity": "warn",
-      "ok": false,
-      "nFail": 46,
-      "failures": [
-        "42-1346: public aus Einzel-Book 'williamhill' statt Konsens",
-        "64-33: public aus Einzel-Book 'williamhill' statt Konsens",
-        "45-52: public aus Einzel-Book 'williamhill' statt Konsens",
-        "57-746: public aus Einzel-Book 'williamhill' statt Konsens",
-        "65-63: public aus Einzel-Book 'williamhill' statt Konsens",
-        "55-47: public aus Einzel-Book 'williamhill' statt Konsens",
-        "50-35: public aus Einzel-Book 'williamhill' statt Konsens",
-        "51-66: public aus Einzel-Book 'williamhill' statt Konsens",
-        "34-40: public aus Einzel-Book 'williamhill' statt Konsens",
-        "36-49: public aus Einzel-Book 'williamhill' statt Konsens",
-        "494-895: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "495-492: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "497-502: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "499-488: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "500-487: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "503-489: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "505-1579: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "512-496: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "517-867: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "523-490: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "529-531: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "530-535: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "532-543: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "536-728: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "538-727: public aus Einzel-Book 'marathonbet' statt Konsens"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "public_static_bias soll auf Median-Konsens laufen, nicht 1 verrauschtem Soft-Book. Single-Book = fetch_wm_multibook_odds hat (noch) nicht geschrieben."
     },
     {
       "id": "no_phantom_odds",
       "label": "Keine Phantom-Odds-Keys (verkehrte Reihenfolge)",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 48,
+      "failures": [
+        "42-1346: kein echtes Fixture (Spiegel-Key?)",
+        "64-33: kein echtes Fixture (Spiegel-Key?)",
+        "45-52: kein echtes Fixture (Spiegel-Key?)",
+        "57-746: kein echtes Fixture (Spiegel-Key?)",
+        "65-63: kein echtes Fixture (Spiegel-Key?)",
+        "55-47: kein echtes Fixture (Spiegel-Key?)",
+        "50-35: kein echtes Fixture (Spiegel-Key?)",
+        "51-66: kein echtes Fixture (Spiegel-Key?)",
+        "34-40: kein echtes Fixture (Spiegel-Key?)",
+        "36-49: kein echtes Fixture (Spiegel-Key?)",
+        "494-895: kein echtes Fixture (Spiegel-Key?)",
+        "495-492: kein echtes Fixture (Spiegel-Key?)",
+        "497-502: kein echtes Fixture (Spiegel-Key?)",
+        "499-488: kein echtes Fixture (Spiegel-Key?)",
+        "500-487: kein echtes Fixture (Spiegel-Key?)",
+        "503-489: kein echtes Fixture (Spiegel-Key?)",
+        "505-1579: kein echtes Fixture (Spiegel-Key?)",
+        "512-496: kein echtes Fixture (Spiegel-Key?)",
+        "517-867: kein echtes Fixture (Spiegel-Key?)",
+        "523-490: kein echtes Fixture (Spiegel-Key?)",
+        "529-531: kein echtes Fixture (Spiegel-Key?)",
+        "530-535: kein echtes Fixture (Spiegel-Key?)",
+        "532-543: kein echtes Fixture (Spiegel-Key?)",
+        "536-728: kein echtes Fixture (Spiegel-Key?)",
+        "538-727: kein echtes Fixture (Spiegel-Key?)"
+      ],
       "note": "84 Odds-Keys vs 72 Fixtures = 12 leere Spiegel-Einträge. Quelle prüfen."
     },
     {
@@ -467,6 +458,6 @@
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 4,
-  "generatedAt": "2026-07-11T08:09:33.831161+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-07-11T18:39:55.165902+00:00"
 }
