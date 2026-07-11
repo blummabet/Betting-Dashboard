@@ -1,5 +1,5 @@
 {
-  "savedAt": "2026-07-11T16:45:33.385752+00:00",
+  "savedAt": "2026-07-11T20:40:23.137678+00:00",
   "picks": {
     "A-1-KOR-CZE": [
       {
@@ -20836,7 +20836,7 @@
         "info": "📉 Pinnacle 1.61→1.55 (Sharp-Money-Drop +3.5pp)",
         "icon": "🔥",
         "result": null,
-        "clvPP": 0.0,
+        "clvPP": -4.9,
         "dataQuality": "steam",
         "lamH": null,
         "lamA": null,
@@ -20960,34 +20960,31 @@
         "nobetSince": "2026-07-08T10:09:27.847783+00:00",
         "nobetReason": "Edge weg — Linie gegen den Pick gelaufen (1.55→1.64)",
         "smartMoney": {
-          "totalUsd": 800626.0,
-          "topTraders": 114,
-          "hoursToKickoff": 12.0,
+          "totalUsd": 1019679.0,
+          "topTraders": 136,
+          "hoursToKickoff": 8.2,
           "outcomes": {
             "home": {
-              "usd": 706170.0,
-              "topHolderShare": 0.494,
+              "usd": 910910.0,
+              "topHolderShare": 0.521,
               "holders": 200,
-              "share": 0.882,
-              "cluster": 1,
-              "buyUsd": 21508.0,
-              "sellUsd": 0.0,
-              "netFlowUsd": 21508.0
+              "share": 0.893
             },
             "draw": {
-              "usd": 49246.0,
-              "topHolderShare": 0.701,
+              "usd": 54879.0,
+              "topHolderShare": 0.691,
               "holders": 200,
-              "share": 0.062
+              "share": 0.054
             },
             "away": {
-              "usd": 45210.0,
-              "topHolderShare": 0.673,
+              "usd": 53890.0,
+              "topHolderShare": 0.682,
               "holders": 200,
-              "share": 0.056
+              "share": 0.053
             }
           }
-        }
+        },
+        "clvResolved": true
       }
     ],
     "KO-QF-ESP-BEL": [],
@@ -21006,7 +21003,7 @@
         "info": "📉 Pinnacle 1.95→1.87 (Sharp-Money-Drop +4.3pp) · ⏱️ Late Entry — Lernwert, weniger CLV",
         "icon": "🔥",
         "result": null,
-        "clvPP": 0.0,
+        "clvPP": -3.78,
         "dataQuality": "steam",
         "lamH": null,
         "lamA": null,
@@ -21033,6 +21030,21 @@
         "baseVerdict": "ABWÄGEN",
         "signals": [
           {
+            "name": "public_static_bias",
+            "score": -1.42,
+            "confidence": 0.55,
+            "evidence": "Die breite Masse (williamhill) lässt Auswärts um 2.4pp links liegen (vs Pinnacle) — kein Publikums-Hebel hier.",
+            "weight": 0.947,
+            "weighted_score": -0.74,
+            "metadata": {
+              "outcome": "aw",
+              "diff_pp": -2.43,
+              "sharp_p": 0.5293,
+              "public_p": 0.505,
+              "public_bk": "williamhill"
+            }
+          },
+          {
             "name": "injury",
             "score": -2.0,
             "confidence": 0.62,
@@ -21054,6 +21066,21 @@
                 "J. Quansah (?)",
                 "J. Quansah (?)"
               ]
+            }
+          },
+          {
+            "name": "apif_predictions",
+            "score": -1.44,
+            "confidence": 0.52,
+            "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 7.9pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+            "weight": 0.82,
+            "weighted_score": -0.61,
+            "metadata": {
+              "outcome": "away",
+              "apif_p": 0.45,
+              "sharp_p": 0.5293,
+              "diff_pp": -7.93,
+              "advice": "Combo Winner : England and +1.5 goals"
             }
           },
           {
@@ -21121,24 +21148,37 @@
           },
           {
             "name": "smart_money",
-            "score": 0.32,
-            "confidence": 0.53,
-            "evidence": "💰 Auf Polymarket liegen 60% des Geldes auf Auswärts — mehr als der faire Preis hergibt (54%), und es sind echte Wale dahinter (Top-Wallets 80%).",
+            "score": 0.11,
+            "confidence": 0.6,
+            "evidence": "💰 Auf Polymarket liegen 56% des Geldes auf Auswärts — mehr als der faire Preis hergibt (54%), und es sind echte Wale dahinter (Top-Wallets 78%).",
             "weight": 1.25,
-            "weighted_score": 0.21,
+            "weighted_score": 0.08,
             "metadata": {
               "outcome": "away",
-              "share": 0.605,
-              "topHolderShare": 0.799,
+              "share": 0.562,
+              "topHolderShare": 0.779,
               "fairShare": 0.538,
-              "excessPP": 6.7,
-              "totalUsd": 2682561.0,
-              "topTraders": 188,
-              "cluster": 1,
+              "excessPP": 2.4,
+              "totalUsd": 3993695.0,
+              "topTraders": 270,
+              "cluster": 0,
               "clustered": false,
-              "netFlowUsd": 7537.0,
-              "hoursToKickoff": 8.0,
+              "netFlowUsd": null,
+              "hoursToKickoff": 4.2,
               "exitFlag": false
+            }
+          },
+          {
+            "name": "reverse_line_move",
+            "score": 2.13,
+            "confidence": 0.57,
+            "evidence": "Reverse Line Move: Das Publikum meidet Auswärts (-2.4pp), aber Pinnacle zieht die Linie genau dorthin (+3.4pp) — scharfes Geld auf unserer unbeliebten Seite.",
+            "weight": 1.0,
+            "weighted_score": 1.21,
+            "metadata": {
+              "pinn_move_pp": 3.39,
+              "public_lean_pp": -2.43,
+              "outcome": "away"
             }
           },
           {
@@ -21147,21 +21187,22 @@
             "confidence": 0.45,
             "evidence": "Sharp-Window: Schon im frühen Fenster nach der Eröffnung zog Pinnacle Auswärts um +1.8pp an — das ist die schärfste, früheste Geldbewegung, bevor das Public-Volumen kam.",
             "weight": 1.0,
-            "weighted_score": 0.23,
+            "weighted_score": 0.09,
             "metadata": {
               "early_move_pp": 1.79,
               "outcome": "away",
               "opener_odds": null
-            }
+            },
+            "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 0.64,
-        "signalCountPos": 5,
-        "signalCountNeg": 1,
+        "signalAdjustmentPP": 0.38,
+        "signalCountPos": 6,
+        "signalCountNeg": 3,
         "signalAdjustmentPP_trade": 0.3,
-        "signalCountPos_trade": 4,
-        "signalCountNeg_trade": 1,
-        "effectiveEdgePP": -3.4,
+        "signalCountPos_trade": 5,
+        "signalCountNeg_trade": 3,
+        "effectiveEdgePP": -3.6,
         "effectiveEdgePP_trade": -3.7,
         "convictionScore": 5,
         "convictionVerdict": "watch",
@@ -21179,40 +21220,41 @@
         "betHeld": true,
         "firstBetAt": "2026-07-08T10:09:27.847783+00:00",
         "smartMoney": {
-          "totalUsd": 2682561.0,
-          "topTraders": 188,
-          "hoursToKickoff": 8.0,
+          "totalUsd": 3993695.0,
+          "topTraders": 270,
+          "hoursToKickoff": 4.2,
           "outcomes": {
             "home": {
-              "usd": 543983.0,
-              "topHolderShare": 0.492,
+              "usd": 1067153.0,
+              "topHolderShare": 0.657,
               "holders": 200,
-              "share": 0.203,
+              "share": 0.267,
               "cluster": 1,
-              "buyUsd": 3366.0,
+              "buyUsd": 72383.0,
               "sellUsd": 0.0,
-              "netFlowUsd": 3366.0
+              "netFlowUsd": 72383.0
             },
             "draw": {
-              "usd": 516300.0,
-              "topHolderShare": 0.859,
+              "usd": 683146.0,
+              "topHolderShare": 0.802,
               "holders": 200,
-              "share": 0.192
+              "share": 0.171,
+              "cluster": 2,
+              "buyUsd": 20146.0,
+              "sellUsd": 60880.0,
+              "netFlowUsd": -40734.0
             },
             "away": {
-              "usd": 1622278.0,
-              "topHolderShare": 0.799,
+              "usd": 2243396.0,
+              "topHolderShare": 0.779,
               "holders": 200,
-              "share": 0.605,
-              "cluster": 1,
-              "buyUsd": 7537.0,
-              "sellUsd": 0.0,
-              "netFlowUsd": 7537.0
+              "share": 0.562
             }
           }
         },
         "stake": 2.0,
-        "engineVersion": "v2"
+        "engineVersion": "v2",
+        "clvResolved": true
       },
       {
         "market": "Beide Teams treffen — Ja",
@@ -21227,7 +21269,7 @@
         "info": "📉 Pinnacle 1.76→1.62 (Sharp-Money-Drop +5.5pp) · ✅ Soft-Konsens folgte +2.6pp (bestätigt) · ⏱️ Late Entry — Lernwert, weniger CLV",
         "icon": "🔥",
         "result": null,
-        "clvPP": 0.0,
+        "clvPP": -1.19,
         "dataQuality": "steam",
         "lamH": null,
         "lamA": null,
@@ -21301,40 +21343,41 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 2682561.0,
-          "topTraders": 188,
-          "hoursToKickoff": 8.0,
+          "totalUsd": 3993695.0,
+          "topTraders": 270,
+          "hoursToKickoff": 4.2,
           "outcomes": {
             "home": {
-              "usd": 543983.0,
-              "topHolderShare": 0.492,
+              "usd": 1067153.0,
+              "topHolderShare": 0.657,
               "holders": 200,
-              "share": 0.203,
+              "share": 0.267,
               "cluster": 1,
-              "buyUsd": 3366.0,
+              "buyUsd": 72383.0,
               "sellUsd": 0.0,
-              "netFlowUsd": 3366.0
+              "netFlowUsd": 72383.0
             },
             "draw": {
-              "usd": 516300.0,
-              "topHolderShare": 0.859,
+              "usd": 683146.0,
+              "topHolderShare": 0.802,
               "holders": 200,
-              "share": 0.192
+              "share": 0.171,
+              "cluster": 2,
+              "buyUsd": 20146.0,
+              "sellUsd": 60880.0,
+              "netFlowUsd": -40734.0
             },
             "away": {
-              "usd": 1622278.0,
-              "topHolderShare": 0.799,
+              "usd": 2243396.0,
+              "topHolderShare": 0.779,
               "holders": 200,
-              "share": 0.605,
-              "cluster": 1,
-              "buyUsd": 7537.0,
-              "sellUsd": 0.0,
-              "netFlowUsd": 7537.0
+              "share": 0.562
             }
           }
         },
         "stake": 2.0,
-        "engineVersion": "v2"
+        "engineVersion": "v2",
+        "clvResolved": true
       },
       {
         "market": "Über 2.5 Tore",
@@ -21349,7 +21392,7 @@
         "info": "📉 Pinnacle 1.85→1.7 (Sharp-Money-Drop +4.8pp) · ✅ Soft-Konsens folgte +2.9pp (bestätigt)",
         "icon": "🔥",
         "result": null,
-        "clvPP": 0.0,
+        "clvPP": -0.39,
         "dataQuality": "steam",
         "lamH": null,
         "lamA": null,
@@ -21499,40 +21542,41 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 2682561.0,
-          "topTraders": 188,
-          "hoursToKickoff": 8.0,
+          "totalUsd": 3993695.0,
+          "topTraders": 270,
+          "hoursToKickoff": 4.2,
           "outcomes": {
             "home": {
-              "usd": 543983.0,
-              "topHolderShare": 0.492,
+              "usd": 1067153.0,
+              "topHolderShare": 0.657,
               "holders": 200,
-              "share": 0.203,
+              "share": 0.267,
               "cluster": 1,
-              "buyUsd": 3366.0,
+              "buyUsd": 72383.0,
               "sellUsd": 0.0,
-              "netFlowUsd": 3366.0
+              "netFlowUsd": 72383.0
             },
             "draw": {
-              "usd": 516300.0,
-              "topHolderShare": 0.859,
+              "usd": 683146.0,
+              "topHolderShare": 0.802,
               "holders": 200,
-              "share": 0.192
+              "share": 0.171,
+              "cluster": 2,
+              "buyUsd": 20146.0,
+              "sellUsd": 60880.0,
+              "netFlowUsd": -40734.0
             },
             "away": {
-              "usd": 1622278.0,
-              "topHolderShare": 0.799,
+              "usd": 2243396.0,
+              "topHolderShare": 0.779,
               "holders": 200,
-              "share": 0.605,
-              "cluster": 1,
-              "buyUsd": 7537.0,
-              "sellUsd": 0.0,
-              "netFlowUsd": 7537.0
+              "share": 0.562
             }
           }
         },
         "stake": 2.0,
-        "engineVersion": "v2"
+        "engineVersion": "v2",
+        "clvResolved": true
       }
     ],
     "KO-R16-ARG-EGY": [],
