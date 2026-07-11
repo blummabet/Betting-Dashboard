@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "wm",
-    "generatedAt": "2026-07-11T09:19:31.478813+00:00",
+    "generatedAt": "2026-07-11T12:58:24.522187+00:00",
     "games": 101,
     "markets": [
       "Heimsieg",
@@ -57963,8 +57963,8 @@
         },
         "Über 2.5 Tore": {
           "tip": "Über 2.5 Tore",
-          "headline": "3 von 6 klaren Signalen bestätigen den Tipp",
-          "reason": "Gemischtes Bild: 3 Signal(e) dafür, 3 dagegen — kein klares Signal-Übergewicht.",
+          "headline": "3 von 5 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Über 2.5 Tore“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 2 Signal(e) dagegenhalten.",
           "confirm": [
             {
               "name": "form_trend",
@@ -57996,12 +57996,6 @@
               "name": "lineup_signal",
               "label": "die Aufstellung",
               "evidence": "🚨 bei Heim sitzt nur auf der Bank Ferran Torres (ATT) · bei Heim sitzt nur auf der Bank Víctor Muñoz (ATT) · bei Heim fehlt Jesús Rodríguez (ATT) · bei Heim sitzt nur auf der Bank Borja Iglesias (ATT) · bei Heim fehlt Fermín (MID) · bei Auswärts fehlt A. Onana (MID) · bei Auswärts sitzt nur auf der Bank T. Meunier (DEF)",
-              "dir": "contradict"
-            },
-            {
-              "name": "weather_signal",
-              "label": "das Wetter",
-              "evidence": "🌡 Bei 34°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ESP temperate · BEL temperate",
               "dir": "contradict"
             }
           ],
@@ -58038,6 +58032,10 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell"
+            },
+            {
+              "name": "weather_signal",
+              "label": "das Wetter"
             },
             {
               "name": "incentive_signal",
@@ -58106,15 +58104,15 @@
           ],
           "score": {
             "confirm": 3,
-            "contradict": 3,
+            "contradict": 2,
             "neutral": 0,
-            "decisive": 6
+            "decisive": 5
           }
         },
         "Unter 2.5 Tore": {
           "tip": "Unter 2.5 Tore",
-          "headline": "3 von 6 klaren Signalen bestätigen den Tipp",
-          "reason": "Gemischtes Bild: 3 Signal(e) dafür, 3 dagegen — kein klares Signal-Übergewicht.",
+          "headline": "2 von 5 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „Unter 2.5 Tore“ kritisch — vor allem die Formkurve spricht dagegen, 2 Signal(e) stützen ihn dennoch.",
           "confirm": [
             {
               "name": "pressure_index",
@@ -58126,12 +58124,6 @@
               "name": "lineup_signal",
               "label": "die Aufstellung",
               "evidence": "🚨 bei Heim sitzt nur auf der Bank Ferran Torres (ATT) · bei Heim sitzt nur auf der Bank Víctor Muñoz (ATT) · bei Heim fehlt Jesús Rodríguez (ATT) · bei Heim sitzt nur auf der Bank Borja Iglesias (ATT) · bei Heim fehlt Fermín (MID) · bei Auswärts fehlt A. Onana (MID) · bei Auswärts sitzt nur auf der Bank T. Meunier (DEF)",
-              "dir": "confirm"
-            },
-            {
-              "name": "weather_signal",
-              "label": "das Wetter",
-              "evidence": "🌡 Bei 34°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ESP temperate · BEL temperate",
               "dir": "confirm"
             }
           ],
@@ -58190,6 +58182,10 @@
               "label": "das externe Prognosemodell"
             },
             {
+              "name": "weather_signal",
+              "label": "das Wetter"
+            },
+            {
               "name": "incentive_signal",
               "label": "die Anreizlage"
             },
@@ -58255,10 +58251,10 @@
             }
           ],
           "score": {
-            "confirm": 3,
+            "confirm": 2,
             "contradict": 3,
             "neutral": 0,
-            "decisive": 6
+            "decisive": 5
           }
         }
       }
@@ -58277,9 +58273,15 @@
       "markets": {
         "Heimsieg": {
           "tip": "Norwegen (Heimsieg)",
-          "headline": "1 von 6 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „Norwegen (Heimsieg)“ kritisch — vor allem das externe Prognosemodell spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
+          "headline": "2 von 7 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „Norwegen (Heimsieg)“ kritisch — vor allem das externe Prognosemodell spricht dagegen, 2 Signal(e) stützen ihn dennoch.",
           "confirm": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung",
+              "evidence": "Pinnacle hat Heim um +2.0pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
+              "dir": "confirm"
+            },
             {
               "name": "injury",
               "label": "injury",
@@ -58291,7 +58293,7 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) sieht Heim um 13.9pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+              "evidence": "📊 Ein zweites Modell (API-Football) sieht Heim um 14.6pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
               "dir": "contradict"
             },
             {
@@ -58315,16 +58317,12 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 20% des Geldes auf Heim — weniger als der faire Preis hergibt (24%), und es sind echte Wale dahinter (Top-Wallets 53%).",
+              "evidence": "💰 Auf Polymarket liegen 21% des Geldes auf Heim — weniger als der faire Preis hergibt (25%), und es sind echte Wale dahinter (Top-Wallets 52%).",
               "dir": "contradict"
             }
           ],
           "neutral": [],
           "silent": [
-            {
-              "name": "lead_lag_bias",
-              "label": "die Pinnacle-Bewegung"
-            },
             {
               "name": "public_static_bias",
               "label": "der Public-Bias"
@@ -58419,10 +58417,10 @@
             }
           ],
           "score": {
-            "confirm": 1,
+            "confirm": 2,
             "contradict": 5,
             "neutral": 0,
-            "decisive": 6
+            "decisive": 7
           }
         },
         "Auswärtssieg": {
@@ -58451,7 +58449,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 61% des Geldes auf Auswärts — mehr als der faire Preis hergibt (50%), und es sind echte Wale dahinter (Top-Wallets 85%).",
+              "evidence": "💰 Auf Polymarket liegen 61% des Geldes auf Auswärts — mehr als der faire Preis hergibt (49%), und es sind echte Wale dahinter (Top-Wallets 84%).",
               "dir": "confirm"
             },
             {
@@ -58463,24 +58461,20 @@
           ],
           "contradict": [
             {
-              "name": "injury",
-              "label": "injury",
-              "evidence": "🩹 Heim 0.4pp (M. Pedersen (?)) · Auswärts 2.4pp (R. James (?), R. James (?))",
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung",
+              "evidence": "Pinnacle hat Auswärts um -2.0pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
               "dir": "contradict"
             },
             {
-              "name": "apif_predictions",
-              "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 5.1pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+              "name": "injury",
+              "label": "injury",
+              "evidence": "🩹 Heim 0.4pp (M. Pedersen (?)) · Auswärts 2.4pp (R. James (?), R. James (?))",
               "dir": "contradict"
             }
           ],
           "neutral": [],
           "silent": [
-            {
-              "name": "lead_lag_bias",
-              "label": "die Pinnacle-Bewegung"
-            },
             {
               "name": "public_static_bias",
               "label": "der Public-Bias"
@@ -58516,6 +58510,10 @@
             {
               "name": "lineup_signal",
               "label": "die Aufstellung"
+            },
+            {
+              "name": "apif_predictions",
+              "label": "das externe Prognosemodell"
             },
             {
               "name": "incentive_signal",
@@ -58909,7 +58907,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 86% des Geldes auf Heim — mehr als der faire Preis hergibt (57%), und es sind echte Wale dahinter (Top-Wallets 49%).",
+              "evidence": "💰 Auf Polymarket liegen 86% des Geldes auf Heim — mehr als der faire Preis hergibt (57%), und es sind echte Wale dahinter (Top-Wallets 48%).",
               "dir": "confirm"
             }
           ],
@@ -58917,7 +58915,7 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) sieht Heim um 12.1pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+              "evidence": "📊 Ein zweites Modell (API-Football) sieht Heim um 12.3pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
               "dir": "contradict"
             }
           ],
@@ -59050,7 +59048,7 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 6.4pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 6.1pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
               "dir": "contradict"
             },
             {
@@ -59062,7 +59060,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 6% des Geldes auf Auswärts — weniger als der faire Preis hergibt (16%), und es sind echte Wale dahinter (Top-Wallets 67%).",
+              "evidence": "💰 Auf Polymarket liegen 6% des Geldes auf Auswärts — weniger als der faire Preis hergibt (16%), und es sind echte Wale dahinter (Top-Wallets 68%).",
               "dir": "contradict"
             }
           ],
@@ -59641,7 +59639,7 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) schätzt Auswärts um 15.2pp höher ein als Pinnacle — Rückendeckung für den Pick.",
+              "evidence": "📊 Ein zweites Modell (API-Football) schätzt Auswärts um 15.7pp höher ein als Pinnacle — Rückendeckung für den Pick.",
               "dir": "confirm"
             },
             {
@@ -59772,8 +59770,8 @@
         },
         "Über 2.5 Tore": {
           "tip": "Über 2.5 Tore",
-          "headline": "3 von 5 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Über 2.5 Tore“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 2 Signal(e) dagegenhalten.",
+          "headline": "3 von 4 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Über 2.5 Tore“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 1 Signal(e) dagegenhalten.",
           "confirm": [
             {
               "name": "form_trend",
@@ -59799,12 +59797,6 @@
               "name": "pressure_index",
               "label": "der Tabellendruck",
               "evidence": "🎯 KO-Vorsicht (gegen Über)",
-              "dir": "contradict"
-            },
-            {
-              "name": "weather_signal",
-              "label": "das Wetter",
-              "evidence": "🌡 Bei 33°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — FRA temperate · ESP temperate",
               "dir": "contradict"
             }
           ],
@@ -59845,6 +59837,10 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell"
+            },
+            {
+              "name": "weather_signal",
+              "label": "das Wetter"
             },
             {
               "name": "incentive_signal",
@@ -59913,26 +59909,20 @@
           ],
           "score": {
             "confirm": 3,
-            "contradict": 2,
+            "contradict": 1,
             "neutral": 0,
-            "decisive": 5
+            "decisive": 4
           }
         },
         "Unter 2.5 Tore": {
           "tip": "Unter 2.5 Tore",
-          "headline": "2 von 5 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „Unter 2.5 Tore“ kritisch — vor allem die Formkurve spricht dagegen, 2 Signal(e) stützen ihn dennoch.",
+          "headline": "1 von 4 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „Unter 2.5 Tore“ kritisch — vor allem die Formkurve spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
           "confirm": [
             {
               "name": "pressure_index",
               "label": "der Tabellendruck",
               "evidence": "🎯 KO-Vorsicht (Unter wahrscheinlicher) · semi-Stage extra-vorsichtig",
-              "dir": "confirm"
-            },
-            {
-              "name": "weather_signal",
-              "label": "das Wetter",
-              "evidence": "🌡 Bei 33°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — FRA temperate · ESP temperate",
               "dir": "confirm"
             }
           ],
@@ -59993,6 +59983,10 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell"
+            },
+            {
+              "name": "weather_signal",
+              "label": "das Wetter"
             },
             {
               "name": "incentive_signal",
@@ -60060,10 +60054,10 @@
             }
           ],
           "score": {
-            "confirm": 2,
+            "confirm": 1,
             "contradict": 3,
             "neutral": 0,
-            "decisive": 5
+            "decisive": 4
           }
         }
       }
