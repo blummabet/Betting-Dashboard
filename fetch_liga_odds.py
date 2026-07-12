@@ -71,7 +71,10 @@ NAME_ALIASES = {
     "los angeles galaxy": "galaxy", "la galaxy": "galaxy",
     "sporting kansas city": "sporting kc", "sporting kc": "sporting kc",
     "new york city fc": "nycfc", "nycfc": "nycfc", "new york city": "nycfc",
-    "d.c. united": "dc united", "dc united": "dc united", "washington dc united": "dc united",
+    # „D.C. United SC" (so nennt Polymarket es real, 12.07. Live-Lauf) — der Punkt-Split macht aus
+    # „d.c." die Tokens {d,c}, die gegen unser {dc} nicht überlappen → Alias auf einen gemeinsamen Kern.
+    "d.c. united": "dc united", "d.c. united sc": "dc united", "dc united sc": "dc united",
+    "dc united": "dc united", "washington dc united": "dc united",
     "cf montreal": "montreal", "cf montreal impact": "montreal", "montreal impact": "montreal",
     "st. louis city sc": "st louis city", "st louis city sc": "st louis city",
     "san diego fc": "san diego", "charlotte fc": "charlotte", "austin fc": "austin",

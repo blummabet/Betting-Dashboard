@@ -79,10 +79,14 @@ BASE          = Path(__file__).parent
 # Minutengenaue Closing-Linien liegen je Dataset in einer eigenen Datei
 # (wm_closing_lines.json / liga_closing_lines.json), geschrieben vom 15min-Capture-Job.
 CLOSING_LINES_FILE = BASE / D.file("wm_closing_lines.json", "liga_closing_lines.json").name
-PLACED_FILE   = BASE / "wm_auto_bets_placed.json"
-HISTORY_FILE  = BASE / "picks_history.json"
-WM_FILE       = BASE / "wm2026-data.json"
-RESULTS_FILE  = BASE / "wm_results.json"
+# DATASET-AWARE (12.07.2026, Lucas' 1. MLS-Poly-Lauf): Diese vier hingen HART auf wm_* → im
+# MLS-Lauf (COCOBET_DATASET=mls) hat resolve_wm_results die WM-Bets aufgelöst (Ghana, Katar …)
+# und wm_results.json überschrieben, statt die MLS-Bets zu verarbeiten. Falscher Datensatz +
+# Konfliktgefahr mit dem WM-Workflow, der dieselbe Datei besitzt.
+PLACED_FILE   = Path(str(D.file("wm_auto_bets_placed.json", "liga_auto_bets_placed.json")))
+HISTORY_FILE  = BASE / "picks_history.json"      # manuelles Log, bewusst datensatz-übergreifend
+WM_FILE       = Path(str(D.data_file()))
+RESULTS_FILE  = Path(str(D.file("wm_results.json", "liga_results.json")))
 POLY_HIST_FILE = BASE / "wm2026-poly-history.json"
 
 # Mapping zwischen Pick-Market-Label und Poly-Snapshot-Key

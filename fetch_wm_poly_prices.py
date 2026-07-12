@@ -692,9 +692,16 @@ def main():
         print(f"   ⏰ {ko_patched} Fixture-Kickoff-Zeiten aus Polymarket gesetzt")
 
     if wm is not None:
+        # FORMAT-FIX (12.07.2026, Lucas' 1. MLS-Poly-Lauf: „38552 deletions"): Dieser Writer war der
+        # EINZIGE, der die Datendatei KOMPAKT (separators, eine Zeile) schrieb — alle anderen
+        # (fetch_wm_odds, fetch_liga_odds, build_liga_data, generate_wm_picks) nutzen indent=2.
+        # Folge: jeder Poly-Lauf kippte die Datei auf 1 Zeile, der nächste update-Lauf zurück →
+        # 38k-Zeilen-Diff hin und her. Nicht nur Churn: bei einem Merge-Konflikt auf so einer Datei
+        # kann das `git pull -X ours` im Retry-Loop echte Daten des anderen Workflows verwerfen.
+        # Jetzt gleiches Format wie alle → minimale, lesbare Diffs, kaum Konfliktfläche.
         with open(WM_FILE, "w", encoding="utf-8") as f:
-            json.dump(wm, f, ensure_ascii=False, separators=(",", ":"))
-        print(f"  Patched {patched} fixtures in wm2026-data.json (poly_hw/dr/aw fields)")
+            json.dump(wm, f, ensure_ascii=False, indent=2)
+        print(f"  Patched {patched} fixtures in {os.path.basename(str(WM_FILE))} (poly_hw/dr/aw fields)")
 
     # ── Build allFixtures (all 72 games, Pinnacle + Poly + Edge — for dashboard table) ──
     # allFixtures shows everything so the
@@ -1316,7 +1323,7 @@ def main():
     with open(OUT_FILE, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=2)
 
-    print(f"\n✅ {ok} matches written → wm_poly_prices.json  ({skip} skipped)")
+    print(f"\n✅ {ok} matches written → {os.path.basename(str(OUT_FILE))}  ({skip} skipped)")
 
 
 if __name__ == "__main__":

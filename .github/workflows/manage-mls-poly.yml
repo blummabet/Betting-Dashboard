@@ -126,6 +126,12 @@ jobs:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
+      # 12.07.2026: Dieser Workflow committet mls-data.json → braucht denselben harten Wipe-Stopp
+      # wie update-mls. Ohne ihn könnte ein leer-geschriebener Datensatz gepusht werden.
+      # KEIN `|| true`: ein Wipe macht den Job ROT statt ins Live-Frontend zu wandern.
+      - name: 🛡️ Wipe-Check (kein leerer Datensatz darf committet werden)
+        run: ${{ env.POLY_PYTHON }} check_not_wiped.py
+
       - name: 💾 Status speichern
         run: |
           git config user.name "CocoBet Bot"

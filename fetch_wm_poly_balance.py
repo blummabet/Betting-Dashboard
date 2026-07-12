@@ -253,7 +253,7 @@ def main():
     balance = balance_raw / USDC_DECIMALS
 
     out = _save(balance, 0.0, funder_addr)
-    print(f"\n✅  wm_poly_balance.json geschrieben")
+    print(f"\n✅  {OUT_FILE.name} geschrieben")
     print(f"    Handelbare CLOB Balance: ${out['total']:.2f} USDC  (Rohwert: {int(balance_raw)})")
 
 
