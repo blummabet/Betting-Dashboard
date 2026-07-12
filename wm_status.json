@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-12T10:07:43Z",
+  "generatedAt": "2026-07-12T12:59:39Z",
   "windowDays": 2,
   "upcoming": 0,
   "signalsFired": [
@@ -65,19 +65,18 @@
     "🧠 Signal 'game_state_openness' feuert nicht — unerwartet still, Engine prüfen",
     "🧠 Signal 'mls_travel' feuert nicht — unerwartet still, Engine prüfen",
     "🛡️ Closing nah am Anpfiff erfasst (≤45min): 3 Fehler (z.B. ESP-BEL: Closing 79min VOR Anpfiff eingefroren (veraltet — Nah-am-Anpfiff-Capture lief nicht?))",
-    "🛡️ Pinnacle-1X2 vollständig + plausibel: 1 Fehler (z.B. ENG-ARG: 1X2 unvollständig hw=None dr=None aw=None)",
     "🛡️ Opening-Odds = echter 1X2-Markt (kein Platzhalter): 2 Fehler (z.B. BRA-HTI: Opening unplausibel hw=1.04 dr=15.0 aw=51.0 (Overround 1.05) → erfundener Drift im Sharp Radar)",
     "🛡️ Trade-Auswertung: CLV/Closing erfasst: 1 Fehler (z.B. polyClose fehlt durchgängig → 'halten bis Closing'-Gegenrechnung nicht möglich (Poly-Closing-Snapshot nicht erfasst))",
-    "🛡️ Public-Konsens (Soft-Books) vorhanden: 1 Fehler (z.B. ENG-ARG: kein public_hw)",
-    "🛡️ Soft-Eröffnung echt erfasst: 1 Fehler (z.B. FRA-ESP: Soft bewegte sich 2.2→2.32, aber Opening==Jetzt (2.3) — nicht eingefroren)"
+    "🛡️ Public = Multi-Book-Konsens (nicht Einzel-Book): 1 Fehler (z.B. ENG-ARG: public aus Einzel-Book 'williamhill' statt Konsens)",
+    "🛡️ Soft-Eröffnung echt erfasst: 1 Fehler (z.B. FRA-ESP: Soft bewegte sich 2.2→2.3, aber Opening==Jetzt (2.3) — nicht eingefroren)"
   ],
   "oks": [
-    "🌡️ Weather: 1 Spiele mit Forecast",
-    "🎲 Pinnacle-Odds: frischeste 0.4h alt",
-    "📊 APIF-Predictions: 66 Spiele",
+    "🌡️ Weather: 2 Spiele mit Forecast",
+    "🎲 Pinnacle-Odds: frischeste 0.0h alt",
+    "📊 APIF-Predictions: 67 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 48 Teams",
-    "📉 Odds-History: 101 Fixtures, Ø 114.7 Snapshots",
+    "📉 Odds-History: 102 Fixtures, Ø 113.6 Snapshots",
     "💹 Poly-Preise: 2 Fixtures",
     "💼 Poly-Balance: $132.28",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
@@ -181,11 +180,9 @@
       "id": "odds_sane",
       "label": "Pinnacle-1X2 vollständig + plausibel",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "ENG-ARG: 1X2 unvollständig hw=None dr=None aw=None"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Quelle für Modell-Baseline + Edge."
     },
     {
@@ -314,20 +311,20 @@
       "id": "public_consensus",
       "label": "Public-Konsens (Soft-Books) vorhanden",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "ENG-ARG: kein public_hw"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Ohne public_* feuert public_static_bias nicht."
     },
     {
       "id": "public_is_multibook",
       "label": "Public = Multi-Book-Konsens (nicht Einzel-Book)",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "ENG-ARG: public aus Einzel-Book 'williamhill' statt Konsens"
+      ],
       "note": "public_static_bias soll auf Median-Konsens laufen, nicht 1 verrauschtem Soft-Book. Single-Book = fetch_wm_multibook_odds hat (noch) nicht geschrieben."
     },
     {
@@ -481,9 +478,18 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "FRA-ESP: Soft bewegte sich 2.2→2.32, aber Opening==Jetzt (2.3) — nicht eingefroren"
+        "FRA-ESP: Soft bewegte sich 2.2→2.3, aber Opening==Jetzt (2.3) — nicht eingefroren"
       ],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
+    },
+    {
+      "id": "smartmoney_cluster_sane",
+      "label": "Smart-Money-Cluster kohärent",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "cluster ∈ ℕ₀, ≤ holders; buy/sell ≥ 0; netFlow = buy − sell. Sonst rechnet der Cluster-Boost/Exit-Penalty im smart_money-Signal auf Müll."
     },
     {
       "id": "card_only_not_in_trade",
