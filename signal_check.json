@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "wm",
-    "generatedAt": "2026-07-12T12:59:15.309545+00:00",
+    "generatedAt": "2026-07-12T16:49:39.104964+00:00",
     "games": 102,
     "markets": [
       "Heimsieg",
@@ -59484,19 +59484,13 @@
       "markets": {
         "Heimsieg": {
           "tip": "Frankreich (Heimsieg)",
-          "headline": "2 von 3 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Frankreich (Heimsieg)“ mehrheitlich — am deutlichsten die Pinnacle-Bewegung, auch wenn 1 Signal(e) dagegenhalten.",
+          "headline": "1 von 2 klaren Signalen bestätigen den Tipp",
+          "reason": "Gemischtes Bild: 1 Signal(e) dafür, 1 dagegen — kein klares Signal-Übergewicht.",
           "confirm": [
-            {
-              "name": "lead_lag_bias",
-              "label": "die Pinnacle-Bewegung",
-              "evidence": "Pinnacle hat Heim um +2.0pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
-              "dir": "confirm"
-            },
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 77% des Geldes auf Heim — mehr als der faire Preis hergibt (42%), und es sind echte Wale dahinter (Top-Wallets 76%).",
+              "evidence": "💰 Auf Polymarket liegen 84% des Geldes auf Heim — mehr als der faire Preis hergibt (41%), und es sind echte Wale dahinter (Top-Wallets 78%).",
               "dir": "confirm"
             }
           ],
@@ -59510,6 +59504,10 @@
           ],
           "neutral": [],
           "silent": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung"
+            },
             {
               "name": "public_static_bias",
               "label": "der Public-Bias"
@@ -59620,21 +59618,21 @@
             }
           ],
           "score": {
-            "confirm": 2,
+            "confirm": 1,
             "contradict": 1,
             "neutral": 0,
-            "decisive": 3
+            "decisive": 2
           }
         },
         "Auswärtssieg": {
           "tip": "Spanien (Auswärtssieg)",
-          "headline": "2 von 4 klaren Signalen bestätigen den Tipp",
-          "reason": "Gemischtes Bild: 2 Signal(e) dafür, 2 dagegen — kein klares Signal-Übergewicht.",
+          "headline": "2 von 3 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Spanien (Auswärtssieg)“ mehrheitlich — am deutlichsten das externe Prognosemodell, auch wenn 1 Signal(e) dagegenhalten.",
           "confirm": [
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) schätzt Auswärts um 16.0pp höher ein als Pinnacle — Rückendeckung für den Pick.",
+              "evidence": "📊 Ein zweites Modell (API-Football) schätzt Auswärts um 16.1pp höher ein als Pinnacle — Rückendeckung für den Pick.",
               "dir": "confirm"
             },
             {
@@ -59646,20 +59644,18 @@
           ],
           "contradict": [
             {
-              "name": "lead_lag_bias",
-              "label": "die Pinnacle-Bewegung",
-              "evidence": "Pinnacle hat Auswärts um -1.6pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
-              "dir": "contradict"
-            },
-            {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 12% des Geldes auf Auswärts — weniger als der faire Preis hergibt (29%), und es sind echte Wale dahinter (Top-Wallets 86%).",
+              "evidence": "💰 Auf Polymarket liegen 9% des Geldes auf Auswärts — weniger als der faire Preis hergibt (29%), und es sind echte Wale dahinter (Top-Wallets 82%).",
               "dir": "contradict"
             }
           ],
           "neutral": [],
           "silent": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung"
+            },
             {
               "name": "public_static_bias",
               "label": "der Public-Bias"
@@ -59767,9 +59763,9 @@
           ],
           "score": {
             "confirm": 2,
-            "contradict": 2,
+            "contradict": 1,
             "neutral": 0,
-            "decisive": 4
+            "decisive": 3
           }
         },
         "Über 2.5 Tore": {
@@ -60084,8 +60080,8 @@
       "markets": {
         "Heimsieg": {
           "tip": "England (Heimsieg)",
-          "headline": "1 von 3 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „England (Heimsieg)“ kritisch — vor allem injury spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
+          "headline": "1 von 4 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „England (Heimsieg)“ kritisch — vor allem die Pinnacle-Bewegung spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
           "confirm": [
             {
               "name": "chance_creation",
@@ -60095,6 +60091,12 @@
             }
           ],
           "contradict": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung",
+              "evidence": "Pinnacle hat Heim um -1.6pp bewegt, public hängen noch hinterher (1) — wir sind früh dran.",
+              "dir": "contradict"
+            },
             {
               "name": "injury",
               "label": "injury",
@@ -60110,10 +60112,6 @@
           ],
           "neutral": [],
           "silent": [
-            {
-              "name": "lead_lag_bias",
-              "label": "die Pinnacle-Bewegung"
-            },
             {
               "name": "public_static_bias",
               "label": "der Public-Bias"
@@ -60221,20 +60219,26 @@
           ],
           "score": {
             "confirm": 1,
-            "contradict": 2,
+            "contradict": 3,
             "neutral": 0,
-            "decisive": 3
+            "decisive": 4
           }
         },
         "Auswärtssieg": {
           "tip": "Argentinien (Auswärtssieg)",
-          "headline": "2 von 3 klaren Signalen bestätigen den Tipp",
+          "headline": "3 von 4 klaren Signalen bestätigen den Tipp",
           "reason": "Unsere Signale stützen „Argentinien (Auswärtssieg)“ mehrheitlich — am deutlichsten injury, auch wenn 1 Signal(e) dagegenhalten.",
           "confirm": [
             {
               "name": "injury",
               "label": "injury",
               "evidence": "🩹 Heim 2.8pp (R. James (?), R. James (?))",
+              "dir": "confirm"
+            },
+            {
+              "name": "apif_predictions",
+              "label": "das externe Prognosemodell",
+              "evidence": "📊 Ein zweites Modell (API-Football) schätzt Auswärts um 13.9pp höher ein als Pinnacle — Rückendeckung für den Pick.",
               "dir": "confirm"
             },
             {
@@ -60293,10 +60297,6 @@
             {
               "name": "lineup_signal",
               "label": "die Aufstellung"
-            },
-            {
-              "name": "apif_predictions",
-              "label": "das externe Prognosemodell"
             },
             {
               "name": "weather_signal",
@@ -60364,16 +60364,16 @@
             }
           ],
           "score": {
-            "confirm": 2,
+            "confirm": 3,
             "contradict": 1,
             "neutral": 0,
-            "decisive": 3
+            "decisive": 4
           }
         },
         "Über 2.5 Tore": {
           "tip": "Über 2.5 Tore",
-          "headline": "2 von 3 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Über 2.5 Tore“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 1 Signal(e) dagegenhalten.",
+          "headline": "2 von 4 klaren Signalen bestätigen den Tipp",
+          "reason": "Gemischtes Bild: 2 Signal(e) dafür, 2 dagegen — kein klares Signal-Übergewicht.",
           "confirm": [
             {
               "name": "form_trend",
@@ -60393,6 +60393,12 @@
               "name": "pressure_index",
               "label": "der Tabellendruck",
               "evidence": "🎯 KO-Vorsicht (gegen Über)",
+              "dir": "contradict"
+            },
+            {
+              "name": "weather_signal",
+              "label": "das Wetter",
+              "evidence": "🌡 Bei 34°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ENG temperate · ARG temperate",
               "dir": "contradict"
             }
           ],
@@ -60437,10 +60443,6 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell"
-            },
-            {
-              "name": "weather_signal",
-              "label": "das Wetter"
             },
             {
               "name": "incentive_signal",
@@ -60509,20 +60511,26 @@
           ],
           "score": {
             "confirm": 2,
-            "contradict": 1,
+            "contradict": 2,
             "neutral": 0,
-            "decisive": 3
+            "decisive": 4
           }
         },
         "Unter 2.5 Tore": {
           "tip": "Unter 2.5 Tore",
-          "headline": "1 von 3 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „Unter 2.5 Tore“ kritisch — vor allem die Formkurve spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
+          "headline": "2 von 4 klaren Signalen bestätigen den Tipp",
+          "reason": "Gemischtes Bild: 2 Signal(e) dafür, 2 dagegen — kein klares Signal-Übergewicht.",
           "confirm": [
             {
               "name": "pressure_index",
               "label": "der Tabellendruck",
               "evidence": "🎯 KO-Vorsicht (Unter wahrscheinlicher) · semi-Stage extra-vorsichtig",
+              "dir": "confirm"
+            },
+            {
+              "name": "weather_signal",
+              "label": "das Wetter",
+              "evidence": "🌡 Bei 34°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ENG temperate · ARG temperate",
               "dir": "confirm"
             }
           ],
@@ -60583,10 +60591,6 @@
               "label": "das externe Prognosemodell"
             },
             {
-              "name": "weather_signal",
-              "label": "das Wetter"
-            },
-            {
               "name": "incentive_signal",
               "label": "die Anreizlage"
             },
@@ -60652,10 +60656,10 @@
             }
           ],
           "score": {
-            "confirm": 1,
+            "confirm": 2,
             "contradict": 2,
             "neutral": 0,
-            "decisive": 3
+            "decisive": 4
           }
         }
       }
