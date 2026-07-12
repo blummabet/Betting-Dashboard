@@ -1,0 +1,154 @@
+name: 💹 MLS Poly Positionen überwachen
+
+# 12.07.2026 (Lucas: „MLS ist auf Polymarket da", Woche 25, Spiele ab 17.07.).
+# Pendant zu manage-wm-poly.yml, aber für den MLS-Datensatz (COCOBET_DATASET=mls) →
+# arbeitet ausschließlich auf mls_poly_prices.json / mls_auto_bets_placed.json /
+# mls_poly_balance.json / mls_position_health.json. WM bleibt vollständig unberührt.
+#
+# ⚠️ TRADING IST STANDARDMÄSSIG AUS. Bewusst EIGENE Secrets (MLS_AUTO_TRIGGER_ENABLED /
+# MLS_AUTO_SELL_ENABLED), NICHT die WM-Schalter — sonst hätte ein aktiver WM-Trader sofort
+# auch MLS mitgehandelt. Solange die MLS-Secrets nicht existieren, ist der Default 'false':
+# der Auto-Trader analysiert nur (Dry-Run), platziert und verkauft NICHTS.
+# Lucas flippt MLS live selbst, wenn er die Namens-/Preis-Zuordnung am 1. Lauf geprüft hat.
+#
+# Läuft self-hosted auf dem Mac: Polymarket geoblockt JEDE Rechenzentrums-IP (GitHub-Cloud
+# US UND EU-VPS → 403). Nur Wohn-/Privat-IPs dürfen Orders platzieren. (Die reinen DATEN-
+# Fetcher — Preise/Smart-Money — laufen dagegen in update-mls.yml auf ubuntu, das geht.)
+on:
+  schedule:
+    - cron: '0,30 22,23 * * *'   # Vorlauf US-Abend-Anpfiffe (UTC)
+    - cron: '0,30 0-5 * * *'     # MLS-Anpfiffe US-Abend = UTC-Nacht
+    - cron: '0 12 * * *'         # Tages-Housekeeping (lang gehaltene Positionen)
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Grund für manuellen Run (optional)'
+        required: false
+        default: 'manual check'
+
+permissions:
+  contents: write
+
+# Teilt die Gruppe mit update-mls / fetch-mls-odds-dense — alle schreiben mls-data.json +
+# mls_poly_prices.json → serialisieren, sonst überschreiben sich die Pushes.
+concurrency:
+  group: update-mls
+  cancel-in-progress: false
+
+jobs:
+  monitor-mls-positions:
+    runs-on: [self-hosted, macOS]
+    env:
+      COCOBET_DATASET: mls
+      COCOBET_PROFILE: mls_default
+
+    steps:
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python + py-clob-client-v2 einrichten (Mac)
+        run: |
+          PYTHON=""
+          for PY in /opt/homebrew/bin/python3.13 /opt/homebrew/bin/python3.12 /opt/homebrew/bin/python3.11 /usr/local/bin/python3.13 /usr/local/bin/python3.12 /usr/local/bin/python3.11; do
+            if "$PY" --version &>/dev/null 2>&1; then PYTHON="$PY"; break; fi
+          done
+          if [ -z "$PYTHON" ]; then echo "❌ Kein Python >= 3.11 gefunden"; exit 1; fi
+          echo "✅ $PYTHON ($($PYTHON --version))"
+          echo "POLY_PYTHON=$PYTHON" >> $GITHUB_ENV
+          $PYTHON -m pip install --break-system-packages requests --quiet
+          $PYTHON -m pip uninstall -y py-clob-client py-clob-client-v2 2>/dev/null || true
+          $PYTHON -m pip install --break-system-packages "git+https://github.com/Polymarket/py-clob-client-v2.git@main" 2>&1 | tail -3
+          $PYTHON -c "from py_clob_client_v2.client import ClobClient; print('✅ py-clob-client-v2 ok')"
+
+      # Frische Pinnacle-Fair VOR den Poly-Preisen: der Trade-Edge = Pinnacle-fair vs Live-Poly.
+      - name: 📈 MLS Pinnacle-Odds frisch (Steam-Frische)
+        run: ${{ env.POLY_PYTHON }} fetch_liga_odds.py
+        continue-on-error: true
+        env:
+          ODDS_API_KEY:            ${{ secrets.ODDS_API_KEY }}
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
+      - name: 💹 MLS Polymarket Preise aktualisieren
+        run: ${{ env.POLY_PYTHON }} fetch_wm_poly_prices.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
+      - name: 💰 MLS Polymarket Balance fetchen
+        run: ${{ env.POLY_PYTHON }} fetch_wm_poly_balance.py
+        continue-on-error: true
+        env:
+          POLY_PRIVATE_KEY:    ${{ secrets.POLY_PRIVATE_KEY }}
+          POLY_FUNDER_ADDRESS: ${{ secrets.POLY_FUNDER_ADDRESS }}
+          POLY_API_KEY:        ${{ secrets.POLY_API_KEY }}
+          POLY_API_SECRET:     ${{ secrets.POLY_API_SECRET }}
+          POLY_API_PASSPHRASE: ${{ secrets.POLY_API_PASSPHRASE }}
+
+      # ⚠️ AUTO-TRADER — MLS-EIGENER Schalter, Default 'false' (Dry-Run: analysiert, kauft NICHT).
+      - name: 🤖 Auto-Trigger MLS Bets (Default AUS)
+        run: ${{ env.POLY_PYTHON }} auto_wm_poly_trigger.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:            ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID:   ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+          POLY_PRIVATE_KEY:          ${{ secrets.POLY_PRIVATE_KEY }}
+          POLY_FUNDER_ADDRESS:       ${{ secrets.POLY_FUNDER_ADDRESS }}
+          POLY_API_KEY:              ${{ secrets.POLY_API_KEY }}
+          POLY_API_SECRET:           ${{ secrets.POLY_API_SECRET }}
+          POLY_API_PASSPHRASE:       ${{ secrets.POLY_API_PASSPHRASE }}
+          AUTO_TRIGGER_ENABLED:      ${{ secrets.MLS_AUTO_TRIGGER_ENABLED || 'false' }}
+
+      # ⚠️ AUTO-SELL — MLS-eigener Schalter, Default 'false' (nur Alerts, kein Verkauf).
+      - name: 📊 MLS Poly Positionen prüfen + Auto-Sell (Default AUS)
+        run: ${{ env.POLY_PYTHON }} manage_wm_poly_positions.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:           ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID:         ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_TRADES_CHAT_ID:  ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+          POLY_PRIVATE_KEY:         ${{ secrets.POLY_PRIVATE_KEY }}
+          POLY_FUNDER_ADDRESS:      ${{ secrets.POLY_FUNDER_ADDRESS }}
+          POLY_API_KEY:             ${{ secrets.POLY_API_KEY }}
+          POLY_API_SECRET:          ${{ secrets.POLY_API_SECRET }}
+          POLY_API_PASSPHRASE:      ${{ secrets.POLY_API_PASSPHRASE }}
+          AUTO_SELL_ENABLED:        ${{ secrets.MLS_AUTO_SELL_ENABLED || 'false' }}
+
+      - name: 📈 MLS Bets resolven (P&L + CLV)
+        run: ${{ env.POLY_PYTHON }} resolve_wm_results.py
+        continue-on-error: true
+
+      - name: 🩺 MLS Position-Health-Check
+        run: ${{ env.POLY_PYTHON }} monitor_open_positions.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
+      - name: 💾 Status speichern
+        run: |
+          git config user.name "CocoBet Bot"
+          git config user.email "bot@cocobet.local"
+          git add mls_poly_prices.json mls_poly_balance.json mls_auto_bets_placed.json 2>/dev/null || true
+          git add mls_poly_positions.json mls_position_health.json mls_position_health_alerts.json 2>/dev/null || true
+          git add mls-poly-history.json mls_book_health.json mls_kill_switch.json 2>/dev/null || true
+          git add mls-data.json mls-odds-history.json 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "Keine Änderungen — kein Commit."; exit 0
+          fi
+          git commit -m "💹 MLS Poly Update $(date -u +'%d.%m.%Y %H:%M') UTC"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          for attempt in 1 2 3 4 5; do
+            git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+            CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null)
+            if [ -n "$CONFLICTS" ]; then
+              echo "$CONFLICTS" | while read f; do git checkout --ours -- "$f"; git add "$f"; done
+              git diff --staged --quiet || git commit -m "🔧 auto-resolve merge conflicts"
+            fi
+            if git push 2>&1; then echo "✅ Push nach Versuch $attempt"; exit 0; fi
+            echo "⚠️ Push $attempt fehlgeschlagen — retry…"; sleep $((attempt * 3))
+          done
+          echo "❌ Push fehlgeschlagen"; exit 1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

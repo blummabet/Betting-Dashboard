@@ -43,9 +43,14 @@ def _kickoff_passed(fx):
         return False
 
 BASE = Path(__file__).parent
-PRICES_FILE  = BASE / "wm_poly_prices.json"
-OUT_FILE     = BASE / "wm_poly_smartmoney.json"
-WALLETS_FILE = BASE / "wm_poly_wallets.json"     # 21.06.2026: Wallet-Dashboard
+# DATASET-AWARE (12.07.2026, Lucas: „MLS ist auf Polymarket da"). Vorher HART auf wm_*: unter
+# COCOBET_DATASET=mls hätte dieser Fetcher die WM-Dateien überschrieben, und das smart_money-
+# Signal + der 🐋-Wallets-Tab hätten für MLS NIE Daten gesehen (die Konsumenten lesen längst
+# {prefix}poly_smartmoney.json). → mls_poly_smartmoney.json / mls_poly_wallets.json.
+import cocobet_dataset as D  # noqa: E402
+PRICES_FILE  = Path(str(D.file("wm_poly_prices.json",     "liga_poly_prices.json")))
+OUT_FILE     = Path(str(D.file("wm_poly_smartmoney.json", "liga_poly_smartmoney.json")))
+WALLETS_FILE = Path(str(D.file("wm_poly_wallets.json",    "liga_poly_wallets.json")))  # Wallet-Dashboard
 HOLDERS_URL  = "https://data-api.polymarket.com/holders?market={cond}&limit=200"
 TRADES_URL   = "https://data-api.polymarket.com/trades?market={cond}&limit=100"
 

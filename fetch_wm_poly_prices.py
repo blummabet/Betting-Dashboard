@@ -249,15 +249,34 @@ _ACTIVE_NAME_MAP = _build_name_map_from_data() if D.is_liga() else POLY_NAME_TO_
 
 
 def resolve_team_id(name: str) -> str | None:
-    """Map Polymarket team name → our team ID. Exakt, dann getrimmt, dann Teilstring."""
+    """Map Polymarket team name → our team ID.
+
+    12.07.2026 (Lucas: „MLS ist auf Polymarket da"): Der alte Resolver war exakt + naiver
+    Teilstring — für MLS reicht das NICHT. Polymarket nennt die Klubs anders als API-Football
+    („LA Galaxy" / „Sporting KC" / „CF Montréal" / „D.C. United" / „NYCFC"), die Zuordnung wäre
+    still ins Leere gelaufen (keine Poly-Edges, keine smart_money/polymarket_sharp-Signale).
+    Schlimmer: „Los Angeles FC" → norm „los angeles" hätte per Teilstring auf „Los Angeles
+    Galaxy" gematcht → Wette auf das FALSCHE LA-Team.
+
+    Jetzt: exakt → getrimmt → robuster Matcher aus fetch_liga_odds (_names_match: Akzente,
+    Interpunktion, Rechtsform-Stoppwörter, Alias-Map inkl. kollisionsfreier LA-Aliase,
+    Token-Überlapp). Fällt NUR auf einen eindeutigen Treffer zurück: matchen mehrere Teams,
+    geben wir lieber None zurück (kein Trade) als das falsche Team.
+    """
     nm_map = _ACTIVE_NAME_MAP
-    tid = nm_map.get(name) or nm_map.get(name.strip())
+    tid = nm_map.get(name) or nm_map.get((name or "").strip())
     if tid:
         return tid
-    name_lower = name.lower()
-    for poly_name, team_id in nm_map.items():
-        if poly_name.lower() in name_lower or name_lower in poly_name.lower():
-            return team_id
+    try:
+        from fetch_liga_odds import _names_match
+    except Exception:
+        return None
+    hits = {team_id for our_name, team_id in nm_map.items() if _names_match(name, our_name)}
+    if len(hits) == 1:
+        return hits.pop()
+    if len(hits) > 1:
+        print(f"  ⚠️  Poly-Name '{name}' passt auf MEHRERE Teams {sorted(hits)} — "
+              f"kein eindeutiger Treffer, übersprungen (lieber kein Trade als der falsche).")
     return None
 
 

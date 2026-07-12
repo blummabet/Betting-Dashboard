@@ -61,6 +61,25 @@ NAME_ALIASES = {
     # Sprach-Varianten (TheOddsAPI englisch ↔ API-Football lokal)
     "bayern munich": "bayern", "bayern munchen": "bayern", "fc bayern munchen": "bayern",
     "fc bayern munich": "bayern",
+    # ── MLS (12.07.2026, Lucas: „MLS ist auf Polymarket da") ──────────────────────────────
+    # Polymarket UND TheOddsAPI nennen MLS-Klubs anders als API-Football. Ohne diese Aliase
+    # läuft die Zuordnung still ins Leere (keine Odds, keine Poly-Edges, keine Signale).
+    # ⚠️ LA-KOLLISION: „Los Angeles FC" normalisiert zu „los angeles" (FC ist Stoppwort) und
+    # würde per Substring auf „Los Angeles Galaxy" matchen → wir hätten auf das FALSCHE LA-Team
+    # gewettet. Darum beide auf eigene, kollisionsfreie Kerne mappen (lafc ≠ galaxy).
+    "los angeles fc": "lafc", "lafc": "lafc", "la fc": "lafc",
+    "los angeles galaxy": "galaxy", "la galaxy": "galaxy",
+    "sporting kansas city": "sporting kc", "sporting kc": "sporting kc",
+    "new york city fc": "nycfc", "nycfc": "nycfc", "new york city": "nycfc",
+    "d.c. united": "dc united", "dc united": "dc united", "washington dc united": "dc united",
+    "cf montreal": "montreal", "cf montreal impact": "montreal", "montreal impact": "montreal",
+    "st. louis city sc": "st louis city", "st louis city sc": "st louis city",
+    "san diego fc": "san diego", "charlotte fc": "charlotte", "austin fc": "austin",
+    "inter miami cf": "inter miami", "columbus crew sc": "columbus crew",
+    "vancouver whitecaps fc": "vancouver whitecaps", "seattle sounders fc": "seattle sounders",
+    "houston dynamo fc": "houston dynamo", "chicago fire fc": "chicago fire",
+    "minnesota united": "minnesota united", "orlando city": "orlando city",
+    "ny red bulls": "new york red bulls", "new york red bulls": "new york red bulls",
 }
 # Tokens, die bei der Normalisierung wegfallen (Rechtsform/Präfixe).
 _STOP = {"fc", "cf", "ac", "sc", "ssc", "as", "rc", "cd", "ud", "sd", "afc", "bsc",

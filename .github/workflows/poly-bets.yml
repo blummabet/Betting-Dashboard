@@ -21,6 +21,12 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: write
+    # DATASET-AWARE (12.07.2026, Lucas: „MLS ist auf Polymarket da"). Das Dashboard schickt im
+    # repository_dispatch-Payload optional `dataset` ("mls"/"liga"); ohne Angabe bleibt es WM.
+    # polymarket_bet.py ist bereits dataset-aware → schreibt dann mls_auto_bets_placed.json usw.
+    env:
+      COCOBET_DATASET: ${{ github.event.client_payload.dataset || 'wm' }}
+      COCOBET_PROFILE: ${{ github.event.client_payload.profile || 'wm2026' }}
 
     steps:
       - name: Checkout repo
@@ -62,6 +68,8 @@ jobs:
           git config user.name  "CocoBet Bot"
           git config user.email "bot@cocobet.local"
           git add picks_history.json
+          # dataset-aware: platzierte Bets landen je Datensatz in eigener Datei
+          git add wm_auto_bets_placed.json mls_auto_bets_placed.json liga_auto_bets_placed.json 2>/dev/null || true
           # Only commit if there are actual changes
           git diff --staged --quiet && { echo "nichts zu committen"; exit 0; }
           git commit -m "poly: log placed bets [skip ci]"

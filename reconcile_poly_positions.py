@@ -22,7 +22,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 BASE = Path(__file__).resolve().parent
-AUTO_BETS_FILE = BASE / "wm_auto_bets_placed.json"
+# DATASET-AWARE (12.07.2026, Lucas: „MLS auf Polymarket") — MLS-Bets liegen in
+# mls_auto_bets_placed.json; ein MLS-Reconcile darf nicht die WM-Bets anfassen.
+import cocobet_dataset as D  # noqa: E402
+AUTO_BETS_FILE = Path(str(D.file("wm_auto_bets_placed.json", "liga_auto_bets_placed.json")))
 
 POSITIONS_URL = "https://data-api.polymarket.com/positions?user={user}&sizeThreshold=0.01"
 TRADES_URL    = "https://data-api.polymarket.com/trades?user={user}&limit=200"
@@ -187,7 +190,7 @@ def _load_finished_keys() -> set:
     """Match-Keys fertiger Spiele aus wm2026-data.json (Settlement ≠ manueller Eingriff)."""
     keys = set()
     try:
-        wm = json.loads((BASE / "wm2026-data.json").read_text(encoding="utf-8"))
+        wm = json.loads(Path(str(D.data_file())).read_text(encoding="utf-8"))
     except Exception:
         return keys
     for _g, gd in (wm.get("groups") or {}).items():

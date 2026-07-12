@@ -104,6 +104,23 @@ jobs:
         run: python detect_wm_sharp_moves.py || true
 
       # Pick-/Resolve-Schritte dürfen den Daten-Commit NICHT blockieren (|| true + commit if: always()).
+      # ── Polymarket MLS (12.07.2026, Lucas: „MLS ist auf Polymarket da", Woche 25 ab 17.07.) ──
+      # MUSS VOR der Pick-Generierung laufen: die Signale smart_money / polymarket_sharp /
+      # steam_lag sind für mls_default aktiv und lesen mls_poly_prices.json + mls_poly_smartmoney.json.
+      # Läuft GitHub-hosted (ubuntu) — wie bei der WM (fetch-wm-data.yml) erreicht der US-Runner
+      # Gamma + data-api. continue-on-error: ein Poly-Ausfall darf die MLS-Pipeline nie stoppen
+      # (die Fetcher haben Wipe-Schutz → schreiben bei 0 Märkten gar nicht).
+      - name: 💹 MLS Polymarket Preise + Edges (series_slug soccer-mls)
+        run: python fetch_wm_poly_prices.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
+      - name: 💰 MLS Polymarket Smart-Money + Wallets
+        run: python fetch_wm_poly_smartmoney.py
+        continue-on-error: true
+
       - name: 🎯 MLS-Picks generieren (Signal-Engine, mls_default)
         run: python generate_mls_picks.py || true
 
@@ -228,6 +245,12 @@ jobs:
           git add mls_tiktok_sent.json mls-telegram-log.json 2>/dev/null || true
           git add mls_pick_announce_state.json 2>/dev/null || true
           git add mls_streak_watch.json 2>/dev/null || true
+          # Polymarket-MLS (12.07.2026): Preise/Smart-Money/Wallets speisen Signale + 🐋-Tab.
+          git add mls_poly_prices.json 2>/dev/null || true
+          git add mls_poly_smartmoney.json 2>/dev/null || true
+          git add mls_poly_wallets.json 2>/dev/null || true
+          git add mls-poly-history.json 2>/dev/null || true
+          git add mls_edge_alert_dedup.json 2>/dev/null || true
           git diff --staged --quiet || git commit -m "mls: Daten + Quoten + Picks + Resolve + Lernen [skip ci]"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           # Remote kann sich zwischenzeitlich bewegt haben (paralleler Workflow) → rebasen, dann push.

@@ -32,10 +32,14 @@ from datetime import datetime, timezone, date
 from pathlib import Path
 
 # ── Config ────────────────────────────────────────────────────────────────────
+# DATASET-AWARE (12.07.2026, Lucas: „MLS ist auf Polymarket da"). Vorher HART auf wm_*: unter
+# COCOBET_DATASET=mls hätte der Monitor die WM-Poly-Preise gelesen und in die WM-Logs geschrieben.
+# steam_lag ist für mls_default jetzt AKTIV → braucht mls_poly_prices.json + eigene Logs.
 BASE          = Path(__file__).parent
-LOG_FILE      = BASE / "steam_lag_log.json"
-POLY_FILE     = BASE / "wm_poly_prices.json"   # Written by GitHub Action (latest known state)
-SELL_DEDUP_FILE = BASE / "steam_lag_sell_dedup.json"
+import cocobet_dataset as D  # noqa: E402
+LOG_FILE      = Path(str(D.file("steam_lag_log.json",       "liga_steam_lag_log.json")))
+POLY_FILE     = Path(str(D.file("wm_poly_prices.json",      "liga_poly_prices.json")))
+SELL_DEDUP_FILE = Path(str(D.file("steam_lag_sell_dedup.json", "liga_steam_lag_sell_dedup.json")))
 
 # Telegram
 # CHANNEL-FIX 05.06.2026: Steam-Lag-Signale (Pinnacle-vs-Polymarket-Edges)
@@ -63,8 +67,8 @@ SELL_MIN_ENTRY_EDGE = _cfg("steam", "sell_min_entry_edge", 2.5)   # Only alert f
 
 # High-confidence threshold
 HIGH_CONF_EDGE_MIN  = _cfg("steam", "high_conf_edge_min", 3.0)    # Entry edge ≥ 3pp + steamLag → high confidence
-POLY_HIST     = BASE / "wm2026-poly-history.json"
-ODDS_HIST     = BASE / "wm2026-odds-history.json"
+POLY_HIST     = Path(str(D.file("wm2026-poly-history.json", "liga-poly-history.json")))
+ODDS_HIST     = Path(str(D.file("wm2026-odds-history.json", "liga-odds-history.json")))
 
 # Schwellenwerte
 MIN_EDGE_PP            = _cfg("steam", "min_edge_pp",        1.5)  # Mindest-Edge für Log-Eintrag

@@ -47,9 +47,22 @@ jobs:
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
         run: python detect_wm_sharp_moves.py || true
 
+      # Polymarket-Preise mit-aktualisieren (12.07.2026): Poly ist die Trade-Gegenseite und speist
+      # smart_money/polymarket_sharp/steam_lag. Im 2h-Takt frisch → Edges + Signale aktuell.
+      - name: 💹 MLS Polymarket Preise + Edges
+        run: python fetch_wm_poly_prices.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
+      - name: 💰 MLS Polymarket Smart-Money + Wallets
+        run: python fetch_wm_poly_smartmoney.py
+        continue-on-error: true
+
       # Picks aus den frischen Odds neu generieren — MLS läuft voll nur 2×/Tag; ohne diesen
       # Schritt wären Steam-Picks bis zu 12h alt. Nutzt die bestehenden Signal-Daten (Form/xG/
-      # Lineups vom letzten Volllauf) + die eben geholten Odds.
+      # Lineups vom letzten Volllauf) + die eben geholten Odds + die frischen Poly-Preise.
       - name: 🎯 MLS-Picks aus frischen Odds generieren
         run: python generate_mls_picks.py || true
 
@@ -69,6 +82,8 @@ jobs:
           git add mls_sharp_moves_log.json 2>/dev/null || true
           git add mls_sharp_dedup.json 2>/dev/null || true
           git add mls_pick_announce_state.json 2>/dev/null || true
+          git add mls_poly_prices.json mls_poly_smartmoney.json mls_poly_wallets.json 2>/dev/null || true
+          git add mls-poly-history.json mls_edge_alert_dedup.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Änderung — nichts zu committen."; exit 0
           fi

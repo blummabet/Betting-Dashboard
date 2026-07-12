@@ -42,11 +42,14 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 BASE = Path(__file__).parent
-BETS_FILE     = BASE / "wm_auto_bets_placed.json"
-POLY_FILE     = BASE / "wm_poly_prices.json"
-WM_FILE       = BASE / "wm2026-data.json"
-HEALTH_FILE   = BASE / "position_health.json"
-DEDUP_FILE    = BASE / "position_health_alerts.json"
+# DATASET-AWARE (12.07.2026, Lucas: „MLS auf Polymarket"). Positions-Health muss je Datensatz
+# getrennt laufen — sonst würde ein MLS-Lauf die WM-Positionen bewerten (und umgekehrt).
+import cocobet_dataset as D  # noqa: E402
+BETS_FILE     = Path(str(D.file("wm_auto_bets_placed.json",     "liga_auto_bets_placed.json")))
+POLY_FILE     = Path(str(D.file("wm_poly_prices.json",          "liga_poly_prices.json")))
+WM_FILE       = Path(str(D.data_file()))
+HEALTH_FILE   = Path(str(D.file("position_health.json",         "liga_position_health.json")))
+DEDUP_FILE    = Path(str(D.file("position_health_alerts.json",  "liga_position_health_alerts.json")))
 
 # ── Refactor 2026-06-06: Konstanten aus cocobet_config.json (Profile-aware) ──
 try:

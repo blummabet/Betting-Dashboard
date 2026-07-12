@@ -32,7 +32,11 @@ from pathlib import Path
 import requests
 
 BASE      = Path(__file__).parent
-OUT_FILE  = BASE / "wm_poly_balance.json"
+# DATASET-AWARE (12.07.2026, Lucas: „MLS auf Polymarket"). auto_wm_poly_trigger + polymarket_bet
+# lesen BALANCE_FILE bereits per D.file → mls_poly_balance.json. Ohne diese Umstellung hätte der
+# MLS-Trader die Balance-Datei nie gefunden (Guthaben-Check → Trade-Blockade).
+import cocobet_dataset as D  # noqa: E402
+OUT_FILE  = Path(str(D.file("wm_poly_balance.json", "liga_poly_balance.json")))
 CLOB_HOST = "https://clob.polymarket.com"
 CHAIN_ID  = 137  # Polygon
 
