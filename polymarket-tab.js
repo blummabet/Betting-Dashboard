@@ -3669,16 +3669,40 @@ function renderAutoTraderConfig() {
 let _polyStatsCache = null;
 let _polyStatsLoading = false;
 
+// 12.07.2026 (Lucas: „MLS ist auf Polymarket da" — MLS-Bets müssen hier auftauchen).
+// Die Betting-Seite bleibt bewusst TAGESWEISE mit ALLEN Ligen gemeinsam (kein Umschalter,
+// Lucas: „das stört mich nicht") → wir MERGEN die Datensätze statt zu wechseln.
+// Neue Liga dazu = eine Zeile in dieser Liste.
+const _POLY_BET_DATASETS = [
+  { results: 'wm_results.json',   placed: 'wm_auto_bets_placed.json',   bal: 'wm_poly_balance.json'   },
+  { results: 'mls_results.json',  placed: 'mls_auto_bets_placed.json',  bal: 'mls_poly_balance.json'  },
+  { results: 'liga_results.json', placed: 'liga_auto_bets_placed.json', bal: 'liga_poly_balance.json' },
+];
+
+const _pbFetch = (f) => fetch(f + '?t=' + Date.now())
+  .then(r => r.ok ? r.json() : null).catch(() => null);
+
 async function _loadPolyStatsData() {
   if (_polyStatsLoading) return;
   _polyStatsLoading = true;
   try {
-    const [res, placed, bal] = await Promise.all([
-      fetch('wm_results.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
-      fetch('wm_auto_bets_placed.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
-      fetch('wm_poly_balance.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
-    ]);
-    _polyStatsCache = { res, placed, bal };
+    const per = await Promise.all(_POLY_BET_DATASETS.map(async d => ({
+      res:    await _pbFetch(d.results),
+      placed: await _pbFetch(d.placed),
+      bal:    await _pbFetch(d.bal),
+    })));
+    // Bets aller Datensätze zusammenführen. Die KPIs (Trefferquote/P&L/Einsatz) werden in
+    // _polyStatsHtml lokal aus res.bets gerechnet → simples Concat reicht, keine Summary-Mathe.
+    const bets = [], placedBets = [];
+    let bal = null, summary = null;
+    for (const p of per) {
+      if (p.res && Array.isArray(p.res.bets)) bets.push(...p.res.bets);
+      if (p.res && p.res.summary && !summary) summary = p.res.summary;
+      if (p.placed && Array.isArray(p.placed.bets)) placedBets.push(...p.placed.bets);
+      // Balance = dieselbe Polymarket-Wallet über alle Datensätze → erste vorhandene nehmen.
+      if (!bal && p.bal) bal = p.bal;
+    }
+    _polyStatsCache = { res: { bets, summary }, placed: { bets: placedBets }, bal };
     const el = document.getElementById('polyStatsSection');
     if (el) el.innerHTML = _polyStatsHtml(_polyStatsCache);
   } finally { _polyStatsLoading = false; }

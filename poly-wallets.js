@@ -25,12 +25,45 @@ const PW_SPREAD_HAIRCUT = 1.5, PW_NOISE = 2.0, PW_TRADE = 4.0, PW_MOVE_FRESH = 2
 const PW_C = { home:'#4cc2ff', away:'#ff5d5d', draw:'#f5c518', over:'#2dd47e', under:'#a78bfa',
   teal:'#5eead4', txt:'#e6ebf5', mut:'#76819c', dim:'#414c66', card:'#0f1626', green:'#2dd47e', red:'#ff6b6b' };
 
-function _pwDataset(){ return (typeof window!=='undefined' && window._pwDataset) ? window._pwDataset : 'wm'; }
+// ── Datensätze (Liga-Auswahl oben im Tab) ───────────────────────────────────
+// 12.07.2026 (Lucas: „im Whale-Wallets-Tab brauche ich oben eine Ligen-Auswahl, da wir danach
+// weitere Ligen hinzufügen"). NEUE LIGA HINZUFÜGEN = EINE ZEILE hier. Der Rest (Fetch, Flaggen/
+// Logos, Edge-Board, Charts) ist komplett generisch.
+const PW_DATASETS = [
+  { id:'wm',   icon:'🏆', label:'WM 2026',
+    prices:'wm_poly_prices.json',   wallets:'wm_poly_wallets.json',
+    data:'wm2026-data.json',        hist:'wm2026-odds-history.json' },
+  { id:'mls',  icon:'🇺🇸', label:'MLS',
+    prices:'mls_poly_prices.json',  wallets:'mls_poly_wallets.json',
+    data:'mls-data.json',           hist:'mls-odds-history.json' },
+  { id:'liga', icon:'⚽', label:'Top-5',
+    prices:'liga_poly_prices.json', wallets:'liga_poly_wallets.json',
+    data:'liga-data.json',          hist:'liga-odds-history.json' },
+];
+
+function _pwDataset(){
+  const ds = (typeof window!=='undefined' && window._pwDataset) ? window._pwDataset : 'wm';
+  return PW_DATASETS.some(d=>d.id===ds) ? ds : 'wm';
+}
 function _pwFiles(){
   const ds=_pwDataset();
-  return ds==='liga'
-    ? { prices:'liga_poly_prices.json', wallets:'liga_poly_wallets.json', data:'liga-data.json', hist:'liga-odds-history.json' }
-    : { prices:'wm_poly_prices.json', wallets:'wm_poly_wallets.json', data:'wm2026-data.json', hist:'wm2026-odds-history.json' };
+  return PW_DATASETS.find(d=>d.id===ds) || PW_DATASETS[0];
+}
+// Datensatz wechseln: Cache leeren, State zurücksetzen, neu laden.
+function _pwSwitchDataset(id){
+  if (!PW_DATASETS.some(d=>d.id===id) || _pwDataset()===id) return;
+  window._pwDataset = id;
+  _pwCache = null;
+  _pwState.open = null;
+  _polyWalletsLoaded = false;
+  _pwDestroyCharts();
+  initPolyWallets();
+}
+function _pwDatasetTabs(){
+  const cur=_pwDataset();
+  return '<div class="pw-ds">'+PW_DATASETS.map(d=>
+    '<button class="pw-ds-btn'+(d.id===cur?' pw-ds-on':'')+'" onclick="_pwSwitchDataset(\''+d.id+'\')">'
+    +'<span>'+d.icon+'</span>'+d.label+'</button>').join('')+'</div>';
 }
 
 function initPolyWallets(){
@@ -192,15 +225,20 @@ function _pwRender(){
   const teams=_pwTeamsMap(wm), oddsMap=_pwOddsMap(wm);
   const edges=_pwBuildEdges(prices,oddsMap);
   const hasPoly=wallets&&((wallets.topPositionsAll||[]).length||(wallets.matches&&Object.keys(wallets.matches).length));
+  const f=_pwFiles();
   if(!hasPoly&&!edges.length){
-    panel.innerHTML='<div class="pw-empty"><div class="pw-empty-ico">🐋</div><h2>Polymarket Edge & Smart-Money</h2>'
-      +'<p>Noch keine Daten. Der Mac-Runner befüllt <code>'+_pwFiles().wallets+'</code> + <code>'+_pwFiles().prices+'</code> stündlich (Polymarket geoblockt).</p></div>';
+    // Liga-Auswahl AUCH im Leer-Zustand zeigen → man kann umschalten, wenn eine Liga noch nichts hat.
+    panel.innerHTML=_pwDatasetTabs()
+      +'<div class="pw-empty"><div class="pw-empty-ico">🐋</div><h2>Polymarket Edge & Smart-Money</h2>'
+      +'<p>Für <b>'+f.label+'</b> noch keine Polymarket-Daten. Sobald der Runner '
+      +'<code>'+f.wallets+'</code> + <code>'+f.prices+'</code> befüllt, erscheint hier das Edge-Board.</p></div>';
     return;
   }
   const upd=wallets&&wallets.updatedAt?_pwAgo(wallets.updatedAt):'—';
-  let h='<div class="pw-head"><div><h1>🐋 Polymarket <span class="pw-accent">Edge</span> & Smart-Money</h1>'
+  let h=_pwDatasetTabs()
+    +'<div class="pw-head"><div><h1>🐋 Polymarket <span class="pw-accent">Edge</span> & Smart-Money</h1>'
     +'<p class="pw-sub">Wo Polymarket vs. dem scharfen Pinnacle-Anker fehlbepreist ist — bestätigt oder gevetot vom großen Geld. <b>Die Edge ist das Signal, die Whales sind das Veto.</b></p></div>'
-    +'<div class="pw-stamp">Stand '+upd+'<br><span>Beträge geschätzt (Anteile × Preis)</span></div></div>';
+    +'<div class="pw-stamp">'+f.icon+' '+f.label+' · Stand '+upd+'<br><span>Beträge geschätzt (Anteile × Preis)</span></div></div>';
   h+=_pwKpiBand(edges,wallets);
   h+=_pwScatterSection(edges);
   h+=_pwEdgeBoard(edges,teams,wallets,hist);
@@ -410,6 +448,11 @@ function _pwInjectStyle(){
   #polyWalletsPanel .pw-loading,#polyWalletsPanel .pw-empty{text-align:center;color:#76819c;padding:48px 16px;line-height:1.7}
   #polyWalletsPanel .pw-empty-ico{font-size:44px;margin-bottom:10px}#polyWalletsPanel .pw-empty h2{color:#e6ebf5;margin:0 0 8px}
   #polyWalletsPanel code{background:#0f1626;padding:2px 6px;border-radius:5px;font-size:12px;color:#9db2d6}
+  #polyWalletsPanel .pw-ds{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:18px}
+  #polyWalletsPanel .pw-ds-btn{display:flex;align-items:center;gap:6px;background:#0f1626;border:1px solid rgba(255,255,255,.08);color:#8a95ad;font-size:13px;font-weight:700;padding:8px 14px;border-radius:10px;cursor:pointer;transition:all .15s;font-family:inherit}
+  #polyWalletsPanel .pw-ds-btn:hover{border-color:rgba(94,234,212,.4);color:#cdd6ea}
+  #polyWalletsPanel .pw-ds-btn.pw-ds-on{background:linear-gradient(145deg,#164e46,#0f2f2b);border-color:#5eead4;color:#5eead4}
+  #polyWalletsPanel .pw-ds-btn span{font-size:15px}
   #polyWalletsPanel .pw-head{display:flex;justify-content:space-between;align-items:flex-start;gap:16px;flex-wrap:wrap;margin-bottom:20px}
   #polyWalletsPanel .pw-head h1{font-size:24px;font-weight:800;margin:0 0 6px}#polyWalletsPanel .pw-accent{color:#5eead4}
   #polyWalletsPanel .pw-sub{color:#8a95ad;font-size:13px;line-height:1.6;margin:0;max-width:640px}#polyWalletsPanel .pw-sub b{color:#cdd6ea}
