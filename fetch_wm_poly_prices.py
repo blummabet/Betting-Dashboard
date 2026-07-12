@@ -97,6 +97,14 @@ ALERT_EDGE_MIN_PP = float(_cfg("telegram", "alert_edge_min_pp", 5.0))
 # Polymarket-Serie pro Datensatz (29.06.2026): WM=soccer-fifwc, MLS=soccer-mls (am 1. Live-Lauf
 # am self-hosted Runner verifizieren — Gamma ist geoblockt, aus der Sandbox nicht prüfbar).
 POLY_SERIES_SLUG = _cfg("poly", "series_slug", "soccer-fifwc")
+# 12.07.2026 (Lucas, 1. MLS-Live-Lauf: „0 events received from Gamma API"): Der MLS-Filter ist
+# KEIN series_slug. Gegen die echte API verifiziert:
+#   · series_slug=soccer-mls  → 0 Events (existiert nicht)
+#   · tag_slug=mls            → alle MLS-Spiele ✅
+# Die MLS-Serie heißt „mls-2025" (saison-spezifisch → als Dauerfilter untauglich, bricht jede
+# Saison). Der TAG „mls" ist stabil. Darum: Profile können statt series_slug einen tag_slug setzen
+# (mls_default.poly.tag_slug = "mls"); kommende Ligen laufen vermutlich genauso über Tags.
+POLY_TAG_SLUG = _cfg("poly", "tag_slug", "")
 # 01.07.2026 (Lucas: „ich wette den KO-Modus seit Tagen auf Polymarket, natürlich haben sie die Spiele"):
 # Die KO-Events FEHLTEN in unseren Daten (endeten am letzten Gruppenspieltag). Ursache war NICHT
 # Polymarket — die R32-Events sind live+handelbar (verifiziert via /events?slug=fifwc-esp-aut-…) und
@@ -104,9 +112,11 @@ POLY_SERIES_SLUG = _cfg("poly", "series_slug", "soccer-fifwc")
 # nur nie im BATCH an: series_slug=…&limit=100&active=true ohne `closed=false`/Sortierung liefert bei
 # 100+ Events (die Serie läuft seit März) die ÄLTESTEN 100 (Gruppenphase) → die neuesten KO-Events
 # werden abgeschnitten. Fix: closed=false (nur offene Spiele) + newest-first + mehr Headroom.
+_GAMMA_FILTER = (f"tag_slug={POLY_TAG_SLUG}" if POLY_TAG_SLUG
+                 else f"series_slug={POLY_SERIES_SLUG}")
 GAMMA_URL = (
     "https://gamma-api.polymarket.com/events"
-    f"?series_slug={POLY_SERIES_SLUG}&limit=300&active=true&closed=false"
+    f"?{_GAMMA_FILTER}&limit=300&active=true&closed=false"
     "&order=startDate&ascending=false"
 )
 GAMMA_SLUG_URL = "https://gamma-api.polymarket.com/events?slug={slug}&markets=true"

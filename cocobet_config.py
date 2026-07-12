@@ -104,7 +104,10 @@ DEFAULT_FALLBACK = {
     },
     # 29.06.2026: Polymarket-Serie je Profil (WM=soccer-fifwc, MLS=soccer-mls).
     "poly": {
+        # WM läuft über eine Serie; MLS (und vermutlich kommende Ligen) über einen TAG.
+        # tag_slug hat Vorrang, wenn gesetzt (12.07.2026, gegen die echte Gamma-API verifiziert).
         "series_slug": "soccer-fifwc",
+        "tag_slug": "",
     },
 }
 
