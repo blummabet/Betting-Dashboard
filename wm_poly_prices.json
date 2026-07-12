@@ -12,7 +12,7 @@
       "title": "England vs. Argentina",
       "date": "2026-07-15",
       "kickoff": "2026-07-15T19:00:00Z",
-      "vol": 55771.86,
+      "vol": 56909.71,
       "negRiskMarketId": "0x4ef356bda896e6182faa527a2786f17a0157d6561d52ba29cc37ad6c10b61900",
       "hwTokens": [
         "62975583795498792086117213116943744194566684233762863056174017776352240969485",
@@ -58,7 +58,7 @@
             ]
           },
           "-3.5": {
-            "yes": 0.015,
+            "yes": 0.0165,
             "tokens": [
               "89610777510706713183468002297522888246634953848702741218519357539709971334508",
               "18185865344542787623247796425835045609312190751525712556283432814727058973579"
@@ -102,7 +102,7 @@
             ]
           },
           "-4.5": {
-            "yes": 0.05,
+            "yes": 0.045,
             "tokens": [
               "11208710509028131629835257433974006514475513393105115531078253558877480090228",
               "21053106365632383072561384752323424021181523305545620264761869661264635585258"
@@ -131,7 +131,7 @@
       "title": "France vs. Spain",
       "date": "2026-07-14",
       "kickoff": "2026-07-14T19:00:00Z",
-      "vol": 2566657.9,
+      "vol": 2584408.89,
       "negRiskMarketId": "0x6dfb9f380450dd29df57e68454836c3cdb24312fbfb2a68a9d5fc35ead72d400",
       "hwTokens": [
         "25312457392074064866955638920139332428292497556441446372623464789018436410183",
@@ -200,7 +200,7 @@
         },
         "ESP": {
           "-1.5": {
-            "yes": 0.105,
+            "yes": 0.115,
             "tokens": [
               "40623375375347445562845619891828800649578505088228629014330514725147817988700",
               "106906313287170293201122737554454743657374650410263936547197137801182395880303"
@@ -252,7 +252,7 @@
       "kickoff": "2026-07-15T19:00:00Z",
       "slug": "fifwc-eng-arg-2026-07-15",
       "moreMktSlug": "fifwc-eng-arg-2026-07-15-more-markets",
-      "vol": 55772.0,
+      "vol": 56910.0,
       "poly_hw": 0.375,
       "poly_dr": 0.325,
       "poly_aw": 0.305,
@@ -410,7 +410,7 @@
       "kickoff": "2026-07-14T19:00:00Z",
       "slug": "fifwc-fra-esp-2026-07-14",
       "moreMktSlug": "fifwc-fra-esp-2026-07-14-more-markets",
-      "vol": 2566658.0,
+      "vol": 2584409.0,
       "poly_hw": 0.415,
       "poly_dr": 0.295,
       "poly_aw": 0.285,
@@ -426,26 +426,26 @@
         "48208521961816492239948780573157134894288519996473576193996943308552989258978",
         "114851653579916708225902120458586876702829707995854633657858827308088953335807"
       ],
-      "pinn_hw": 2.39,
-      "pinn_dr": 3.27,
-      "pinn_aw": 3.23,
+      "pinn_hw": 2.36,
+      "pinn_dr": 3.28,
+      "pinn_aw": 3.29,
       "pinn_o25": 1.85,
       "pinn_u25": 1.85,
-      "fair_hw": 0.4047,
-      "fair_dr": 0.2958,
-      "fair_aw": 0.2995,
+      "fair_hw": 0.4104,
+      "fair_dr": 0.2953,
+      "fair_aw": 0.2944,
       "fair_o25": 0.5,
       "fair_u25": 0.5,
-      "fair_btts": 0.56,
-      "fair_btts_no": 0.44,
-      "btts_templated": false,
-      "edge_hw": -1.0,
-      "edge_dr": 0.1,
-      "edge_aw": 1.5,
+      "fair_btts": null,
+      "fair_btts_no": null,
+      "btts_templated": true,
+      "edge_hw": -0.5,
+      "edge_dr": 0.0,
+      "edge_aw": 0.9,
       "edge_o25": -1.5,
       "edge_u25": 1.5,
-      "edge_btts": -2.5,
-      "edge_btts_no": 2.5,
+      "edge_btts": null,
+      "edge_btts_no": null,
       "ah_edges": [
         {
           "side": "home",
@@ -461,16 +461,16 @@
         {
           "side": "away",
           "line": -1.5,
-          "poly": 0.105,
+          "poly": 0.115,
           "fair": 0.1401,
-          "edge": 3.5,
+          "edge": 2.5,
           "tokens": [
             "40623375375347445562845619891828800649578505088228629014330514725147817988700",
             "106906313287170293201122737554454743657374650410263936547197137801182395880303"
           ]
         }
       ],
-      "bestEdge": 1.5,
+      "bestEdge": 0.9,
       "bestEdgeKey": "aw",
       "hasPinnacle": true,
       "hasMoreMarkets": true,
@@ -546,17 +546,17 @@
       "trackingExcluded_btts": null,
       "trackingExcluded_btts_no": null,
       "dataQuality": "elo_only",
-      "edgeDelta_hw": 2.0,
-      "edgeDelta_aw": 0.5,
-      "edgeDelta_dr": 0.6,
+      "edgeDelta_hw": 2.4,
+      "edgeDelta_aw": 0.0,
+      "edgeDelta_dr": 0.1,
       "edgeDelta_o25": -0.9,
       "edgeDelta_u25": 0.9,
       "edgeTrend": "stable",
       "steamLag": false,
       "pinnSteamMove": 2.2,
-      "momentumScore": 1.5
+      "momentumScore": 0.9
     }
   ],
   "count": 2,
-  "generatedAt": "12.07.2026 13:48 UTC"
+  "generatedAt": "12.07.2026 14:03 UTC"
 }
