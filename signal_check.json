@@ -1,8 +1,8 @@
 {
   "_meta": {
     "dataset": "wm",
-    "generatedAt": "2026-07-12T10:07:22.211813+00:00",
-    "games": 101,
+    "generatedAt": "2026-07-12T12:59:15.309545+00:00",
+    "games": 102,
     "markets": [
       "Heimsieg",
       "Auswärtssieg",
@@ -59484,13 +59484,19 @@
       "markets": {
         "Heimsieg": {
           "tip": "Frankreich (Heimsieg)",
-          "headline": "1 von 2 klaren Signalen bestätigen den Tipp",
-          "reason": "Gemischtes Bild: 1 Signal(e) dafür, 1 dagegen — kein klares Signal-Übergewicht.",
+          "headline": "2 von 3 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Frankreich (Heimsieg)“ mehrheitlich — am deutlichsten die Pinnacle-Bewegung, auch wenn 1 Signal(e) dagegenhalten.",
           "confirm": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung",
+              "evidence": "Pinnacle hat Heim um +2.0pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
+              "dir": "confirm"
+            },
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 78% des Geldes auf Heim — mehr als der faire Preis hergibt (41%), und es sind echte Wale dahinter (Top-Wallets 80%).",
+              "evidence": "💰 Auf Polymarket liegen 77% des Geldes auf Heim — mehr als der faire Preis hergibt (42%), und es sind echte Wale dahinter (Top-Wallets 76%).",
               "dir": "confirm"
             }
           ],
@@ -59504,10 +59510,6 @@
           ],
           "neutral": [],
           "silent": [
-            {
-              "name": "lead_lag_bias",
-              "label": "die Pinnacle-Bewegung"
-            },
             {
               "name": "public_static_bias",
               "label": "der Public-Bias"
@@ -59618,21 +59620,21 @@
             }
           ],
           "score": {
-            "confirm": 1,
+            "confirm": 2,
             "contradict": 1,
             "neutral": 0,
-            "decisive": 2
+            "decisive": 3
           }
         },
         "Auswärtssieg": {
           "tip": "Spanien (Auswärtssieg)",
-          "headline": "2 von 3 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Spanien (Auswärtssieg)“ mehrheitlich — am deutlichsten das externe Prognosemodell, auch wenn 1 Signal(e) dagegenhalten.",
+          "headline": "2 von 4 klaren Signalen bestätigen den Tipp",
+          "reason": "Gemischtes Bild: 2 Signal(e) dafür, 2 dagegen — kein klares Signal-Übergewicht.",
           "confirm": [
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) schätzt Auswärts um 15.9pp höher ein als Pinnacle — Rückendeckung für den Pick.",
+              "evidence": "📊 Ein zweites Modell (API-Football) schätzt Auswärts um 16.0pp höher ein als Pinnacle — Rückendeckung für den Pick.",
               "dir": "confirm"
             },
             {
@@ -59644,18 +59646,20 @@
           ],
           "contradict": [
             {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung",
+              "evidence": "Pinnacle hat Auswärts um -1.6pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
+              "dir": "contradict"
+            },
+            {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 12% des Geldes auf Auswärts — weniger als der faire Preis hergibt (29%), und es sind echte Wale dahinter (Top-Wallets 90%).",
+              "evidence": "💰 Auf Polymarket liegen 12% des Geldes auf Auswärts — weniger als der faire Preis hergibt (29%), und es sind echte Wale dahinter (Top-Wallets 86%).",
               "dir": "contradict"
             }
           ],
           "neutral": [],
           "silent": [
-            {
-              "name": "lead_lag_bias",
-              "label": "die Pinnacle-Bewegung"
-            },
             {
               "name": "public_static_bias",
               "label": "der Public-Bias"
@@ -59763,9 +59767,9 @@
           ],
           "score": {
             "confirm": 2,
-            "contradict": 1,
+            "contradict": 2,
             "neutral": 0,
-            "decisive": 3
+            "decisive": 4
           }
         },
         "Über 2.5 Tore": {
@@ -59802,7 +59806,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 34°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — FRA temperate · ESP temperate",
+              "evidence": "🌡 Bei 33°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — FRA temperate · ESP temperate",
               "dir": "contradict"
             }
           ],
@@ -59930,7 +59934,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 34°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — FRA temperate · ESP temperate",
+              "evidence": "🌡 Bei 33°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — FRA temperate · ESP temperate",
               "dir": "confirm"
             }
           ],
@@ -60062,6 +60066,596 @@
             "contradict": 3,
             "neutral": 0,
             "decisive": 5
+          }
+        }
+      }
+    },
+    {
+      "key": "ENG-ARG",
+      "home": "England",
+      "away": "Argentinien",
+      "homeFlag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+      "awayFlag": "🇦🇷",
+      "homeId": "ENG",
+      "awayId": "ARG",
+      "round": "Halbfinale",
+      "date": "2026-07-15",
+      "kickoff": "2026-07-15T19:00:00Z",
+      "markets": {
+        "Heimsieg": {
+          "tip": "England (Heimsieg)",
+          "headline": "1 von 3 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „England (Heimsieg)“ kritisch — vor allem injury spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
+          "confirm": [
+            {
+              "name": "chance_creation",
+              "label": "die Chancenqualität",
+              "evidence": "🎨 Beim Chancen-Kreieren liegt Heim bei 18.1, Auswärts bei 12.1 (Schlüsselpässe + Abschlüsse) — Vorsprung +6.0.",
+              "dir": "confirm"
+            }
+          ],
+          "contradict": [
+            {
+              "name": "injury",
+              "label": "injury",
+              "evidence": "🩹 Heim 2.8pp (R. James (?), R. James (?))",
+              "dir": "contradict"
+            },
+            {
+              "name": "form_rating",
+              "label": "die Spieler-Ratings",
+              "evidence": "📋 Im Form-Rating steht Heim bei 7.05, Auswärts bei 7.06 — Vorsprung -0.01, in der Abwehr +0.30.",
+              "dir": "contradict"
+            }
+          ],
+          "neutral": [],
+          "silent": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung"
+            },
+            {
+              "name": "public_static_bias",
+              "label": "der Public-Bias"
+            },
+            {
+              "name": "travel_burden",
+              "label": "die Reisebelastung"
+            },
+            {
+              "name": "form_trend",
+              "label": "die Formkurve"
+            },
+            {
+              "name": "h2h_pattern",
+              "label": "der Direktvergleich"
+            },
+            {
+              "name": "xg_strength",
+              "label": "die xG-Werte"
+            },
+            {
+              "name": "polymarket_sharp",
+              "label": "der Polymarket-Fluss"
+            },
+            {
+              "name": "steam_lag",
+              "label": "der Steam-Move"
+            },
+            {
+              "name": "pressure_index",
+              "label": "der Tabellendruck"
+            },
+            {
+              "name": "lineup_signal",
+              "label": "die Aufstellung"
+            },
+            {
+              "name": "apif_predictions",
+              "label": "das externe Prognosemodell"
+            },
+            {
+              "name": "weather_signal",
+              "label": "das Wetter"
+            },
+            {
+              "name": "incentive_signal",
+              "label": "die Anreizlage"
+            },
+            {
+              "name": "altitude_signal",
+              "label": "die Höhenlage"
+            },
+            {
+              "name": "freshness_leg",
+              "label": "die Frische der Bewegung"
+            },
+            {
+              "name": "smart_money",
+              "label": "das Smart Money"
+            },
+            {
+              "name": "league_pressure",
+              "label": "der Ligadruck"
+            },
+            {
+              "name": "fixture_congestion",
+              "label": "die Termindichte"
+            },
+            {
+              "name": "topscorer_momentum",
+              "label": "die Torjäger-Form"
+            },
+            {
+              "name": "coach_change",
+              "label": "der Trainerwechsel"
+            },
+            {
+              "name": "transfer_shift",
+              "label": "Kader-Abgänge"
+            },
+            {
+              "name": "streak_momentum",
+              "label": "die aktuelle Serie"
+            },
+            {
+              "name": "reverse_line_move",
+              "label": "reverse_line_move"
+            },
+            {
+              "name": "opener_move",
+              "label": "opener_move"
+            },
+            {
+              "name": "multi_book_steam",
+              "label": "multi_book_steam"
+            },
+            {
+              "name": "game_state_openness",
+              "label": "game_state_openness"
+            },
+            {
+              "name": "mls_travel",
+              "label": "mls_travel"
+            }
+          ],
+          "score": {
+            "confirm": 1,
+            "contradict": 2,
+            "neutral": 0,
+            "decisive": 3
+          }
+        },
+        "Auswärtssieg": {
+          "tip": "Argentinien (Auswärtssieg)",
+          "headline": "2 von 3 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Argentinien (Auswärtssieg)“ mehrheitlich — am deutlichsten injury, auch wenn 1 Signal(e) dagegenhalten.",
+          "confirm": [
+            {
+              "name": "injury",
+              "label": "injury",
+              "evidence": "🩹 Heim 2.8pp (R. James (?), R. James (?))",
+              "dir": "confirm"
+            },
+            {
+              "name": "form_rating",
+              "label": "die Spieler-Ratings",
+              "evidence": "📋 Im Form-Rating steht Heim bei 7.05, Auswärts bei 7.06 — Vorsprung -0.01, in der Abwehr +0.30.",
+              "dir": "confirm"
+            }
+          ],
+          "contradict": [
+            {
+              "name": "chance_creation",
+              "label": "die Chancenqualität",
+              "evidence": "🎨 Beim Chancen-Kreieren liegt Heim bei 18.1, Auswärts bei 12.1 (Schlüsselpässe + Abschlüsse) — Vorsprung +6.0.",
+              "dir": "contradict"
+            }
+          ],
+          "neutral": [],
+          "silent": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung"
+            },
+            {
+              "name": "public_static_bias",
+              "label": "der Public-Bias"
+            },
+            {
+              "name": "travel_burden",
+              "label": "die Reisebelastung"
+            },
+            {
+              "name": "form_trend",
+              "label": "die Formkurve"
+            },
+            {
+              "name": "h2h_pattern",
+              "label": "der Direktvergleich"
+            },
+            {
+              "name": "xg_strength",
+              "label": "die xG-Werte"
+            },
+            {
+              "name": "polymarket_sharp",
+              "label": "der Polymarket-Fluss"
+            },
+            {
+              "name": "steam_lag",
+              "label": "der Steam-Move"
+            },
+            {
+              "name": "pressure_index",
+              "label": "der Tabellendruck"
+            },
+            {
+              "name": "lineup_signal",
+              "label": "die Aufstellung"
+            },
+            {
+              "name": "apif_predictions",
+              "label": "das externe Prognosemodell"
+            },
+            {
+              "name": "weather_signal",
+              "label": "das Wetter"
+            },
+            {
+              "name": "incentive_signal",
+              "label": "die Anreizlage"
+            },
+            {
+              "name": "altitude_signal",
+              "label": "die Höhenlage"
+            },
+            {
+              "name": "freshness_leg",
+              "label": "die Frische der Bewegung"
+            },
+            {
+              "name": "smart_money",
+              "label": "das Smart Money"
+            },
+            {
+              "name": "league_pressure",
+              "label": "der Ligadruck"
+            },
+            {
+              "name": "fixture_congestion",
+              "label": "die Termindichte"
+            },
+            {
+              "name": "topscorer_momentum",
+              "label": "die Torjäger-Form"
+            },
+            {
+              "name": "coach_change",
+              "label": "der Trainerwechsel"
+            },
+            {
+              "name": "transfer_shift",
+              "label": "Kader-Abgänge"
+            },
+            {
+              "name": "streak_momentum",
+              "label": "die aktuelle Serie"
+            },
+            {
+              "name": "reverse_line_move",
+              "label": "reverse_line_move"
+            },
+            {
+              "name": "opener_move",
+              "label": "opener_move"
+            },
+            {
+              "name": "multi_book_steam",
+              "label": "multi_book_steam"
+            },
+            {
+              "name": "game_state_openness",
+              "label": "game_state_openness"
+            },
+            {
+              "name": "mls_travel",
+              "label": "mls_travel"
+            }
+          ],
+          "score": {
+            "confirm": 2,
+            "contradict": 1,
+            "neutral": 0,
+            "decisive": 3
+          }
+        },
+        "Über 2.5 Tore": {
+          "tip": "Über 2.5 Tore",
+          "headline": "2 von 3 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Über 2.5 Tore“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 1 Signal(e) dagegenhalten.",
+          "confirm": [
+            {
+              "name": "form_trend",
+              "label": "die Formkurve",
+              "evidence": "📈 Nach der Form fallen ~2.8 Tore pro Spiel, die Linie liegt bei 2.5 — spricht für Über (+0.3 ggü. Linie).",
+              "dir": "confirm"
+            },
+            {
+              "name": "chance_creation",
+              "label": "die Chancenqualität",
+              "evidence": "🎨 Zusammen kreieren beide eher viel Chancen (30.1 aus Schlüsselpässen + Abschlüssen) — spricht für Over.",
+              "dir": "confirm"
+            }
+          ],
+          "contradict": [
+            {
+              "name": "pressure_index",
+              "label": "der Tabellendruck",
+              "evidence": "🎯 KO-Vorsicht (gegen Über)",
+              "dir": "contradict"
+            }
+          ],
+          "neutral": [],
+          "silent": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung"
+            },
+            {
+              "name": "public_static_bias",
+              "label": "der Public-Bias"
+            },
+            {
+              "name": "travel_burden",
+              "label": "die Reisebelastung"
+            },
+            {
+              "name": "injury",
+              "label": "injury"
+            },
+            {
+              "name": "h2h_pattern",
+              "label": "der Direktvergleich"
+            },
+            {
+              "name": "xg_strength",
+              "label": "die xG-Werte"
+            },
+            {
+              "name": "polymarket_sharp",
+              "label": "der Polymarket-Fluss"
+            },
+            {
+              "name": "steam_lag",
+              "label": "der Steam-Move"
+            },
+            {
+              "name": "lineup_signal",
+              "label": "die Aufstellung"
+            },
+            {
+              "name": "apif_predictions",
+              "label": "das externe Prognosemodell"
+            },
+            {
+              "name": "weather_signal",
+              "label": "das Wetter"
+            },
+            {
+              "name": "incentive_signal",
+              "label": "die Anreizlage"
+            },
+            {
+              "name": "altitude_signal",
+              "label": "die Höhenlage"
+            },
+            {
+              "name": "form_rating",
+              "label": "die Spieler-Ratings"
+            },
+            {
+              "name": "freshness_leg",
+              "label": "die Frische der Bewegung"
+            },
+            {
+              "name": "smart_money",
+              "label": "das Smart Money"
+            },
+            {
+              "name": "league_pressure",
+              "label": "der Ligadruck"
+            },
+            {
+              "name": "fixture_congestion",
+              "label": "die Termindichte"
+            },
+            {
+              "name": "topscorer_momentum",
+              "label": "die Torjäger-Form"
+            },
+            {
+              "name": "coach_change",
+              "label": "der Trainerwechsel"
+            },
+            {
+              "name": "transfer_shift",
+              "label": "Kader-Abgänge"
+            },
+            {
+              "name": "streak_momentum",
+              "label": "die aktuelle Serie"
+            },
+            {
+              "name": "reverse_line_move",
+              "label": "reverse_line_move"
+            },
+            {
+              "name": "opener_move",
+              "label": "opener_move"
+            },
+            {
+              "name": "multi_book_steam",
+              "label": "multi_book_steam"
+            },
+            {
+              "name": "game_state_openness",
+              "label": "game_state_openness"
+            },
+            {
+              "name": "mls_travel",
+              "label": "mls_travel"
+            }
+          ],
+          "score": {
+            "confirm": 2,
+            "contradict": 1,
+            "neutral": 0,
+            "decisive": 3
+          }
+        },
+        "Unter 2.5 Tore": {
+          "tip": "Unter 2.5 Tore",
+          "headline": "1 von 3 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „Unter 2.5 Tore“ kritisch — vor allem die Formkurve spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
+          "confirm": [
+            {
+              "name": "pressure_index",
+              "label": "der Tabellendruck",
+              "evidence": "🎯 KO-Vorsicht (Unter wahrscheinlicher) · semi-Stage extra-vorsichtig",
+              "dir": "confirm"
+            }
+          ],
+          "contradict": [
+            {
+              "name": "form_trend",
+              "label": "die Formkurve",
+              "evidence": "📈 Nach der Form fallen ~2.8 Tore pro Spiel, die Linie liegt bei 2.5 — spricht eher gegen Unter (+0.3 ggü. Linie).",
+              "dir": "contradict"
+            },
+            {
+              "name": "chance_creation",
+              "label": "die Chancenqualität",
+              "evidence": "🎨 Zusammen kreieren beide eher viel Chancen (30.1 aus Schlüsselpässen + Abschlüssen) — spricht eher gegen Under.",
+              "dir": "contradict"
+            }
+          ],
+          "neutral": [],
+          "silent": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung"
+            },
+            {
+              "name": "public_static_bias",
+              "label": "der Public-Bias"
+            },
+            {
+              "name": "travel_burden",
+              "label": "die Reisebelastung"
+            },
+            {
+              "name": "injury",
+              "label": "injury"
+            },
+            {
+              "name": "h2h_pattern",
+              "label": "der Direktvergleich"
+            },
+            {
+              "name": "xg_strength",
+              "label": "die xG-Werte"
+            },
+            {
+              "name": "polymarket_sharp",
+              "label": "der Polymarket-Fluss"
+            },
+            {
+              "name": "steam_lag",
+              "label": "der Steam-Move"
+            },
+            {
+              "name": "lineup_signal",
+              "label": "die Aufstellung"
+            },
+            {
+              "name": "apif_predictions",
+              "label": "das externe Prognosemodell"
+            },
+            {
+              "name": "weather_signal",
+              "label": "das Wetter"
+            },
+            {
+              "name": "incentive_signal",
+              "label": "die Anreizlage"
+            },
+            {
+              "name": "altitude_signal",
+              "label": "die Höhenlage"
+            },
+            {
+              "name": "form_rating",
+              "label": "die Spieler-Ratings"
+            },
+            {
+              "name": "freshness_leg",
+              "label": "die Frische der Bewegung"
+            },
+            {
+              "name": "smart_money",
+              "label": "das Smart Money"
+            },
+            {
+              "name": "league_pressure",
+              "label": "der Ligadruck"
+            },
+            {
+              "name": "fixture_congestion",
+              "label": "die Termindichte"
+            },
+            {
+              "name": "topscorer_momentum",
+              "label": "die Torjäger-Form"
+            },
+            {
+              "name": "coach_change",
+              "label": "der Trainerwechsel"
+            },
+            {
+              "name": "transfer_shift",
+              "label": "Kader-Abgänge"
+            },
+            {
+              "name": "streak_momentum",
+              "label": "die aktuelle Serie"
+            },
+            {
+              "name": "reverse_line_move",
+              "label": "reverse_line_move"
+            },
+            {
+              "name": "opener_move",
+              "label": "opener_move"
+            },
+            {
+              "name": "multi_book_steam",
+              "label": "multi_book_steam"
+            },
+            {
+              "name": "game_state_openness",
+              "label": "game_state_openness"
+            },
+            {
+              "name": "mls_travel",
+              "label": "mls_travel"
+            }
+          ],
+          "score": {
+            "confirm": 1,
+            "contradict": 2,
+            "neutral": 0,
+            "decisive": 3
           }
         }
       }
