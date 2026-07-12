@@ -377,15 +377,6 @@
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
     },
     {
-      "id": "smartmoney_cluster_sane",
-      "label": "Smart-Money-Cluster kohärent",
-      "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
-      "note": "cluster ∈ ℕ₀, ≤ holders; buy/sell ≥ 0; netFlow = buy − sell. Sonst rechnet der Cluster-Boost/Exit-Penalty im smart_money-Signal auf Müll."
-    },
-    {
       "id": "card_only_not_in_trade",
       "label": "Card-Signale nicht im Trade-Pfad",
       "severity": "warn",
@@ -477,5 +468,5 @@
     }
   ],
   "nFail": 4,
-  "generatedAt": "2026-07-12T08:30:40.013481+00:00"
+  "generatedAt": "2026-07-12T19:26:13.879209+00:00"
 }
