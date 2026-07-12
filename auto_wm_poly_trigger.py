@@ -728,7 +728,9 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
 
 def main():
     print(f"\n{'='*55}")
-    print(f"  🤖 WM 2026 Auto-Trigger — {datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M')} UTC")
+    # Datensatz im Header zeigen (12.07.2026): im MLS-Lauf stand hier „WM 2026" → verwirrend.
+    print(f"  🤖 {D.active_dataset().upper()} Auto-Trigger — "
+          f"{datetime.now(timezone.utc).strftime('%Y-%m-%d %H:%M')} UTC")
     print(f"{'='*55}\n")
 
     # Kill-Switch zuerst prüfen — hat Vorrang vor allen anderen Schaltern

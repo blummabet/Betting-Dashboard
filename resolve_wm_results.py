@@ -1072,7 +1072,7 @@ def _write_results(bets: list[dict], now_iso: str) -> None:
     with open(RESULTS_FILE, "w", encoding="utf-8") as f:
         json.dump(out, f, ensure_ascii=False, indent=2)
 
-    print(f"\n✅  wm_results.json geschrieben")
+    print(f"\n✅  {RESULTS_FILE.name} geschrieben")
     print(f"    Bets: {summary['totalBets']} gesamt | {summary['resolved']} resolved | {summary['pending']} pending")
     print(f"    P&L:  €{total_pnl:+.2f} | ROI: {roi:+.1f}% | Ø CLV: {avg_clv:+.1f}pp" if avg_clv else
           f"    P&L:  €{total_pnl:+.2f} | ROI: {roi:+.1f}% | CLV: noch keine Daten")
