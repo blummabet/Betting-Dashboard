@@ -94,6 +94,15 @@
       "note": "fetch_liga_odds.pick_event_for_fixture trennt Hin/Rück per Datum."
     },
     {
+      "id": "data_not_wiped",
+      "label": "Datensatz nicht leer-geschrieben",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "96 Teams · 1752 Fixtures · 1752 pick-Keys. Fetcher-Wipe-Schutz: safe_write.py + build_liga_data.merge_groups_preserve."
+    },
+    {
       "id": "liga_market_coverage",
       "label": "Liga AH + Softbook-O/U vorhanden",
       "severity": "warn",
@@ -468,5 +477,5 @@
     }
   ],
   "nFail": 4,
-  "generatedAt": "2026-07-12T07:09:58.240249+00:00"
+  "generatedAt": "2026-07-12T08:30:40.013481+00:00"
 }
