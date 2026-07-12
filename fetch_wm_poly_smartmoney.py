@@ -296,6 +296,15 @@ def main():
               + " · ".join(f"{s} {o['share']*100:.0f}%" for s, o in outcomes.items())
               + f" · {len(positions)} Wallets, {len(trades)} große Trades")
 
+    # WIPE-SCHUTZ (12.07.2026, Wipe-Audit): Fällt die Polymarket-Holders/Trades-API für ALLE Legs
+    # aus (Geoblock, Rate-Limit) — oder ist wm_poly_prices.json leer — bleiben matches/wallet_matches
+    # leer und hätten die befüllten Dateien überschrieben → smart_money-Signal tot + 🐋-Wallets-Tab
+    # leer. Bei 0 verarbeiteten Spielen NICHT schreiben (alter Stand bleibt).
+    if not matches and OUT_FILE.exists():
+        print(f"\n❌ 0 Spiele mit Smart-Money-Daten (Poly-API/Geoblock?) — {OUT_FILE.name} + "
+              f"{WALLETS_FILE.name} NICHT überschrieben, alter Stand bleibt erhalten.")
+        return
+
     OUT_FILE.write_text(json.dumps(
         {"matches": matches, "updatedAt": datetime.now(timezone.utc).isoformat()},
         ensure_ascii=False, indent=2), encoding="utf-8")

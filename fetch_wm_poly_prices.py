@@ -1270,6 +1270,14 @@ def main():
             print("  📵 TELEGRAM_TRADES_CHAT_ID nicht gesetzt — Edge Alerts deaktiviert")
 
     # ── Write output JSON ─────────────────────────────────────────────────────
+    # WIPE-SCHUTZ (12.07.2026, Wipe-Audit): Gamma kann 200 + LEERE Liste liefern (Geoblock,
+    # geänderter Serien-Slug/Tag) → ok == 0. Vorher wurde die Datei trotzdem mit
+    # {"prices": {}, "count": 0} überschrieben → Poly-Tab, Edge-Board und die Smart-Money-Kette
+    # (die auf wm_poly_prices.json aufsetzt) waren tot. Bei 0 Märkten NICHT schreiben.
+    if ok == 0 and os.path.exists(str(OUT_FILE)):
+        print(f"\n❌ 0 Märkte von Gamma (Geoblock/Slug/Ausfall?) — {os.path.basename(str(OUT_FILE))} "
+              f"NICHT überschrieben, alter Stand bleibt erhalten.")
+        return
     out = {
         "prices":      prices,
         "allFixtures": all_fixtures, # All 72 games — momentum scores, edge trends, CLOB depth

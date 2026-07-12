@@ -467,6 +467,11 @@ def main():
     snaps_added = 0
     total = 0
     matched_keys = set()
+    leagues_ok: set = set()      # Ligen, für die TheOddsAPI diesen Lauf WIRKLICH Events lieferte
+    key_league: dict = {}        # Odds-Key → Liga (fürs per-Liga-Pruning)
+    for lk, gd in groups.items():
+        for fx in (gd.get("fixtures") or []):
+            key_league[f"{fx['home']}-{fx['away']}"] = lk
     for lk, sport_key in LEAGUE_SPORT_KEYS.items():
         gd = groups.get(lk) or {}
         fixtures = gd.get("fixtures") or []
@@ -474,6 +479,13 @@ def main():
             continue
         events = _fetch_events(sport_key)
         print(f"  {lk}: {len(events)} Events von TheOddsAPI")
+        if not events:
+            # 12.07.2026 (Wipe-Audit): Ausfall/Quota/429 für DIESE Liga → sie darf NICHT gepruned
+            # werden, sonst löschen wir ihre Odds (inkl. odds_open/Opening-Linien) obwohl sie
+            # nur nicht abgefragt werden konnten.
+            print(f"  ⚠️  {lk}: 0 Events — Liga wird beim Pruning ÜBERSPRUNGEN (kein Wipe).")
+            continue
+        leagues_ok.add(lk)
         for fx in fixtures:
             if (fx.get("result") or {}).get("status") in ("FT", "AET", "PEN"):
                 continue   # gespielt
@@ -492,15 +504,27 @@ def main():
             matched_keys.add(key)
             total += 1
     # Altlasten-Pruning (Bug 26.06.2026): früher fehl-gematchte Odds (falsche Runde) aus odds_out
-    # entfernen. Behalten: diesen Lauf gematchte + gespielte Spiele (für Resolve/CLV). Nur prunen,
-    # wenn der Lauf überhaupt etwas matchte (sonst API-Ausfall → nichts löschen).
-    if total > 0:
+    # entfernen. Behalten: diesen Lauf gematchte + gespielte Spiele (für Resolve/CLV).
+    # 12.07.2026 (Wipe-Audit, Lucas): NUR PRO LIGA prunen, und nur für Ligen, die diesen Lauf
+    # wirklich Events lieferten. Vorher reichte `total > 0` (also EINE erfolgreiche Liga), um die
+    # Odds ALLER anderen Ligen zu löschen, wenn deren Abfrage still fehlschlug (Quota/429/Timeout
+    # → _fetch_events gibt []). Das hätte odds_open/Opening-Linien vernichtet → Fake-Drops + CLV weg.
+    if leagues_ok:
         played_keys = {f"{fx['home']}-{fx['away']}"
                        for g in groups.values() for fx in (g.get("fixtures") or [])
                        if (fx.get("result") or {}).get("status") in ("FT", "AET", "PEN")}
+        pruned = 0
         for k in list(odds_out.keys()):
+            if key_league.get(k) not in leagues_ok:
+                continue          # Liga nicht (erfolgreich) abgefragt → NICHT anfassen
             if k not in matched_keys and k not in played_keys:
                 del odds_out[k]
+                pruned += 1
+        skipped = [lk for lk in LEAGUE_SPORT_KEYS if (groups.get(lk) or {}).get("fixtures")
+                   and lk not in leagues_ok]
+        if skipped:
+            print(f"  🛡️  Pruning übersprungen für {skipped} (keine Events geliefert) — Odds bleiben.")
+        print(f"  🧹 {pruned} Altlast-Odds entfernt (nur aus {sorted(leagues_ok)}).")
     wm.setdefault("_meta", {})["oddsUpdatedAt"] = now_iso
     with open(LIGA_FILE, "w", encoding="utf-8") as f:
         json.dump(wm, f, ensure_ascii=False, indent=2)

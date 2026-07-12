@@ -70,7 +70,12 @@ def main():
             if stats is None:
                 ex = N._extract_fixture_stats(int(fid))
                 stats = build_match_stats(ex, fx["home"], fx["away"]) or {}
-                cache[key] = stats
+                # NEGATIV-CACHE-SCHUTZ (12.07.2026, Wipe-Audit): Ein leeres {} NICHT cachen —
+                # sonst gilt der Cache-Eintrag als HIT (`is None` ist False) und das Spiel wird
+                # NIE wieder geholt → Match-xG fehlt dauerhaft → Prozess-Lernen verliert es still.
+                # Bei API-Ausfall/Quota lieber nichts cachen und beim nächsten Lauf erneut versuchen.
+                if stats:
+                    cache[key] = stats
                 fetched += 1
                 # Spieler-Form: /fixtures/players GENAU EINMAL pro Spiel (Cache-Miss) → Ledger-Rohzeilen.
                 try:

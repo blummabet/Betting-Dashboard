@@ -704,6 +704,30 @@ def check_liga_odds_round_sane(ctx):
 
 
 @integrity_check
+def check_data_not_wiped(ctx):
+    """NEU 12.07.2026 (Lucas: „Cards für Liga kaputt" — API-Zugang lief nachts ab). Ein Fetcher
+    hatte mls-data.json mit LEEREN groups überschrieben (0 Teams/0 Fixtures), die picks-Leichen
+    blieben → Liga-Cards kippten. Wipe-Schutz sitzt jetzt in den Fetchern (safe_write); DIESER
+    Guard ist das Sicherheitsnetz: er macht einen durchgerutschten Wipe im Status SOFORT sichtbar,
+    statt dass er tagelang still im Frontend blutet. ERROR, nicht warn — das ist Datenverlust."""
+    fails = []
+    n_fx = sum(len(g.get("fixtures") or []) for g in (ctx.wm.get("groups") or {}).values())
+    n_tm = sum(len(g.get("teams") or []) for g in (ctx.wm.get("groups") or {}).values())
+    n_picks = len(ctx.wm.get("picks") or {})
+    if n_fx == 0:
+        fails.append("0 Fixtures in groups — Datensatz leer/gewiped (API-Ausfall?)")
+    if n_tm == 0:
+        fails.append("0 Teams in groups — Datensatz leer/gewiped (API-Ausfall?)")
+    # Verwaiste Picks: picks-Keys da, aber keine Fixtures → genau das Muster, das die Cards killte
+    if n_picks > 0 and n_fx == 0:
+        fails.append(f"{n_picks} picks-Keys ohne EIN einziges Fixture — verwaiste Pick-Leichen "
+                     f"(genau das Muster, das die Liga-Cards gekillt hat)")
+    return _chk("data_not_wiped", "Datensatz nicht leer-geschrieben", "error", fails,
+                f"{n_tm} Teams · {n_fx} Fixtures · {n_picks} pick-Keys. "
+                f"Fetcher-Wipe-Schutz: safe_write.py + build_liga_data.merge_groups_preserve.")
+
+
+@integrity_check
 def check_liga_market_coverage(ctx):
     """NEU 09.07.2026 (Lucas: „Liga auf top" — AH + Softbook-O/U ergänzt). Fängt einen STILLEN
     Ausfall der neuen Märkte: wenn Liga-Odds fließen, aber die AH-Leiter (spreads-Markt) oder die

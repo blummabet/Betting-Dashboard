@@ -199,6 +199,12 @@ jobs:
           TG_STREAK_MODE:   recap
         run: python telegram_streak_watch.py || true
 
+      # 12.07.2026 (Lucas: „Cards für Liga kaputt"): HARTER Stopp vor dem Commit. Genau dieser
+      # Datensatz (mls-data.json) wurde bei abgelaufenem API-Key leer geschrieben und gepusht →
+      # die Liga-Cards (die MLS mit-mergen) kippten. KEIN `|| true`: ein Wipe macht den Job ROT.
+      - name: 🛡️ Wipe-Check (kein leerer Datensatz darf committet werden)
+        run: python check_not_wiped.py
+
       - name: 💾 mls-data.json committen
         if: always()
         run: |

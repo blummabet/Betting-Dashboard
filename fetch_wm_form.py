@@ -372,8 +372,15 @@ def fetch_h2h(wm: dict) -> dict:
             print(f"H{h2h['homeWins']} X{h2h['draws']} A{h2h['awayWins']} ({h2h['games']} Sp.)")
             updated += 1
         else:
-            wm["h2h"][key] = {"games": 0, "updatedAt": now_iso()}
-            print("keine H2H-Daten")
+            # WIPE-SCHUTZ (12.07.2026, Wipe-Audit): Bei Quota/Ausfall liefert die API nichts →
+            # der {"games": 0}-Stub hätte ein BEFÜLLTES H2H überschrieben UND updatedAt neu
+            # gesetzt → die Frische-Prüfung hätte tagelang nicht erneut geholt (doppelt schädlich).
+            _prev = (wm["h2h"] or {}).get(key) or {}
+            if _prev.get("games"):
+                print("keine H2H-Daten — bestehenden H2H-Stand BEHALTEN (kein Stub-Overwrite)")
+            else:
+                wm["h2h"][key] = {"games": 0, "updatedAt": now_iso()}
+                print("keine H2H-Daten")
 
     print(f"  [H2H] {updated} Paarungen aktualisiert.")
     return wm

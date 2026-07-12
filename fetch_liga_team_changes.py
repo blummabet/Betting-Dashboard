@@ -144,8 +144,18 @@ def main():
             deps = key_departures(_apif_get(f"/transfers?team={tid}"), tid, key_names, today)
             if deps:
                 dep_out[tid] = deps
-    wm["coachChange"] = coach_out
-    wm["keyDepartures"] = dep_out
+    # WIPE-SCHUTZ (12.07.2026, Wipe-Audit): _apif_get gibt bei Quota/Key-Ablauf [] zurück →
+    # coach_out/dep_out blieben leer und hätten die BEFÜLLTEN Felder in liga-/mls-data.json
+    # gelöscht (dieselbe Klasse wie der build_liga_data-Wipe). Nie befülltes Alt mit Leer ersetzen.
+    from safe_write import preserve_nonempty
+    merged_coach, kept_c = preserve_nonempty(wm.get("coachChange"), coach_out)
+    merged_dep, kept_d = preserve_nonempty(wm.get("keyDepartures"), dep_out)
+    if not coach_out and (wm.get("coachChange") or {}):
+        print("  🛡️  API lieferte 0 Trainer — bestehende coachChange-Daten BEHALTEN (API/Quota prüfen!)")
+    if not dep_out and (wm.get("keyDepartures") or {}):
+        print("  🛡️  API lieferte 0 Abgänge — bestehende keyDepartures BEHALTEN (API/Quota prüfen!)")
+    wm["coachChange"] = merged_coach
+    wm["keyDepartures"] = merged_dep
     LIGA_FILE.write_text(json.dumps(wm, ensure_ascii=False, indent=2), encoding="utf-8")
     print(f"  ✅ {len(coach_out)} frische Trainer · {len(dep_out)} Teams mit Schlüssel-Abgang")
 

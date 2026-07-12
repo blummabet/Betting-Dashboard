@@ -199,6 +199,13 @@ jobs:
           TG_STREAK_MODE:   recap
         run: python telegram_streak_watch.py || true
 
+      # 12.07.2026 (Lucas: „Cards für Liga kaputt"): HARTER Stopp vor dem Commit. Alle Schritte
+      # laufen mit `|| true` und das git add ist bedingungslos → ohne diesen Check würde ein
+      # leer-geschriebener Datensatz (API-Key abgelaufen) einfach gepusht. KEIN `|| true` hier:
+      # ein Wipe muss den Job ROT machen, nicht ins Live-Frontend wandern.
+      - name: 🛡️ Wipe-Check (kein leerer Datensatz darf committet werden)
+        run: python check_not_wiped.py
+
       - name: 💾 liga-data.json committen
         if: always()
         run: |

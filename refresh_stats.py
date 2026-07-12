@@ -667,8 +667,16 @@ def main():
     # ── Step 3: (handled inside merge_elo_into_stats — stubs auto-created) ──────
 
     # ── Step 4: Write output ──────────────────────────────────────────────────
-    with open(out, "w", encoding="utf-8") as f:
-        json.dump(all_stats, f, ensure_ascii=False, indent=2)
+    # WIPE-SCHUTZ (12.07.2026, Wipe-Audit): process_league() gibt bei API-Fehler {} zurück →
+    # bei abgelaufenem Key/Quota wäre stats_cache.json zu {"BL1": {}, "PL": {}, …} geworden.
+    # Das ist eine STILLE Qualitäts-Degradierung (Picks fallen auf Tor-Proxy statt xG/Elo zurück).
+    # write_json_guarded bricht LAUT ab (roter Workflow), wenn die Team-Zahl einbricht.
+    from safe_write import write_json_guarded
+    write_json_guarded(
+        out, all_stats,
+        count=lambda d: sum(len(v) for v in d.values() if isinstance(v, dict)),
+        min_ratio=0.5, label="stats_cache.json",
+    )
 
     total_teams   = sum(len(v) for v in all_stats.values())
     elo_populated = sum(
