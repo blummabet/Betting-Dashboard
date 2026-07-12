@@ -12,7 +12,7 @@
       "title": "France vs. Spain",
       "date": "2026-07-14",
       "kickoff": "2026-07-14T19:00:00Z",
-      "vol": 706651.37,
+      "vol": 730124.97,
       "negRiskMarketId": "0x6dfb9f380450dd29df57e68454836c3cdb24312fbfb2a68a9d5fc35ead72d400",
       "hwTokens": [
         "25312457392074064866955638920139332428292497556441446372623464789018436410183",
@@ -72,7 +72,7 @@
             ]
           },
           "-5.5": {
-            "yes": 0.0025,
+            "yes": 0.002,
             "tokens": [
               "73890530779810239314041282700775321999324436802550131453638869233484467687150",
               "65282586811200101276858408511076373816898906897909815360759231430945466787003"
@@ -131,7 +131,7 @@
       "title": "Argentina vs. Switzerland",
       "date": "2026-07-11",
       "kickoff": "2026-07-12T01:00:00Z",
-      "vol": 33173718.27,
+      "vol": 34171846.43,
       "negRiskMarketId": "0xbf8e504576f20e3c1b48a307e8d2b9c957d597504564b67c55bc12b4860cb200",
       "hwTokens": [
         "14635675870982897917581198649476127837975251193150495566552970565909631535281",
@@ -252,7 +252,7 @@
       "kickoff": "2026-07-12T01:00:00Z",
       "slug": "fifwc-arg-che-2026-07-11",
       "moreMktSlug": "fifwc-arg-che-2026-07-11-more-markets",
-      "vol": 33173718.0,
+      "vol": 34171846.0,
       "poly_hw": 0.0013,
       "poly_dr": 0.9988,
       "poly_aw": 0.0013,
@@ -268,28 +268,51 @@
         "93027458130746032971783598877275065017778969624188839525689809798724528082914",
         "16864372109834282336069910820544170707703158387214541142922413776217200555786"
       ],
-      "pinn_hw": 2.65,
-      "pinn_dr": 1.49,
-      "pinn_aw": 26.0,
-      "pinn_o25": null,
-      "pinn_u25": null,
-      "fair_hw": 0.3472,
-      "fair_dr": 0.6174,
-      "fair_aw": 0.0354,
-      "fair_o25": null,
-      "fair_u25": null,
-      "fair_btts": null,
-      "fair_btts_no": null,
+      "pinn_hw": 1.72,
+      "pinn_dr": 3.56,
+      "pinn_aw": 6.13,
+      "pinn_o25": 2.28,
+      "pinn_u25": 1.6,
+      "fair_hw": 0.567,
+      "fair_dr": 0.2739,
+      "fair_aw": 0.1591,
+      "fair_o25": 0.4124,
+      "fair_u25": 0.5876,
+      "fair_btts": 0.4259,
+      "fair_btts_no": 0.5741,
       "btts_templated": false,
-      "edge_hw": 34.6,
-      "edge_dr": -38.1,
-      "edge_aw": 3.4,
-      "edge_o25": null,
-      "edge_u25": null,
-      "edge_btts": null,
-      "edge_btts_no": null,
-      "ah_edges": [],
-      "bestEdge": 34.6,
+      "edge_hw": 56.6,
+      "edge_dr": -72.5,
+      "edge_aw": 15.8,
+      "edge_o25": 41.1,
+      "edge_u25": -41.1,
+      "edge_btts": -57.4,
+      "edge_btts_no": 57.4,
+      "ah_edges": [
+        {
+          "side": "home",
+          "line": -1.5,
+          "poly": 0.0013,
+          "fair": 0.3287,
+          "edge": 32.7,
+          "tokens": [
+            "86856806540103921345122388994885836278304167474480026579408228314653172746297",
+            "23427133638417952206795257322339810627539802162874648935730203606227763307519"
+          ]
+        },
+        {
+          "side": "home",
+          "line": -2.5,
+          "poly": 0.0013,
+          "fair": 0.1551,
+          "edge": 15.4,
+          "tokens": [
+            "82899308099402117126912240521239200665421649167643703508582148389121114969601",
+            "438876993544292464278258136005282825032932987908268513863451847691341936763"
+          ]
+        }
+      ],
+      "bestEdge": 56.6,
       "bestEdgeKey": "hw",
       "hasPinnacle": true,
       "hasMoreMarkets": true,
@@ -365,15 +388,15 @@
       "trackingExcluded_btts": null,
       "trackingExcluded_btts_no": null,
       "dataQuality": "steam",
-      "edgeDelta_hw": 35.5,
-      "edgeDelta_aw": 3.2,
-      "edgeDelta_dr": -37.9,
-      "edgeDelta_o25": null,
-      "edgeDelta_u25": null,
+      "edgeDelta_hw": 57.5,
+      "edgeDelta_aw": 15.6,
+      "edgeDelta_dr": -72.3,
+      "edgeDelta_o25": 40.5,
+      "edgeDelta_u25": -40.5,
       "edgeTrend": "growing",
       "steamLag": true,
       "pinnSteamMove": 3.1,
-      "momentumScore": 42.6
+      "momentumScore": 64.6
     },
     {
       "key": "FRA-ESP",
@@ -387,7 +410,7 @@
       "kickoff": "2026-07-14T19:00:00Z",
       "slug": "fifwc-fra-esp-2026-07-14",
       "moreMktSlug": "fifwc-fra-esp-2026-07-14-more-markets",
-      "vol": 706651.0,
+      "vol": 730125.0,
       "poly_hw": 0.425,
       "poly_dr": 0.295,
       "poly_aw": 0.295,
@@ -512,5 +535,5 @@
     }
   ],
   "count": 2,
-  "generatedAt": "12.07.2026 03:33 UTC"
+  "generatedAt": "12.07.2026 03:48 UTC"
 }
