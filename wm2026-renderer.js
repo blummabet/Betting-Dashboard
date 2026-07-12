@@ -452,11 +452,20 @@
           const mlsResp = await fetch('mls-data.json?t=' + Date.now());
           if (mlsResp && mlsResp.ok) {
             const mls = await mlsResp.json();
-            if (mls && mls.groups) {
+            // 12.07.2026 (Lucas: „Liga-Cards kaputt"): NUR mergen, wenn der MLS-Datensatz auch
+            // wirklich Fixtures hat. Als der API-Zugang ablief, schrieb build_liga_data leere
+            // groups (0 Teams/0 Fixtures), die picks-Leichen (292 Keys) blieben aber drin → der
+            // Merge zog verwaiste Picks auf nicht-existente Fixtures/Teams in die Liga-Ansicht
+            // und der Card-Bau kippte. Leerer/kaputter MLS-Stand wird jetzt schlicht ignoriert.
+            const mlsHasFixtures = !!(mls && mls.groups && Object.keys(mls.groups).length
+              && Object.values(mls.groups).some(g => ((g && g.fixtures) || []).length > 0));
+            if (mlsHasFixtures) {
               _wmData.groups  = Object.assign({}, _wmData.groups  || {}, mls.groups);
               _wmData.picks   = Object.assign({}, _wmData.picks   || {}, mls.picks   || {});
               _wmData.odds    = Object.assign({}, _wmData.odds    || {}, mls.odds    || {});
               _wmData.teamIds = Object.assign({}, _wmData.teamIds || {}, mls.teamIds || {});
+            } else if (mls && mls.groups) {
+              console.warn('MLS-Datensatz ohne Fixtures — Merge übersprungen (Liga-Cards bleiben intakt).');
             }
           }
         } catch (e) { /* MLS optional — National läuft auch ohne */ }

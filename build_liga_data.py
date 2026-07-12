@@ -182,6 +182,36 @@ def _api_get(path: str) -> dict | None:
         return None
 
 
+def merge_groups_preserve(old_groups, new_groups) -> tuple[dict, list]:
+    """WIPE-SCHUTZ (12.07.2026, Lucas: „Liga-Cards kaputt"). Der API-Zugang lief über Nacht ab →
+    /fixtures lieferte 0 Ergebnisse → build_liga_data überschrieb mls-data.json mit LEEREN groups
+    (0 Teams/0 Fixtures). Die Liga-Cards-Ansicht merged mls-data.json mit → verwaiste Picks auf
+    nicht-existente Fixtures/Teams → National-Ansicht kippte.
+
+    Regel: eine Liga-Gruppe wird NIE mit LEER überschrieben, solange die bestehende Datei dafür
+    Daten hat. Ligen, die im neuen Build ganz fehlen, bleiben ebenfalls erhalten.
+    Returns (merged_groups, kept_league_keys). Rein/testbar."""
+    old_groups = old_groups if isinstance(old_groups, dict) else {}
+    new_groups = new_groups if isinstance(new_groups, dict) else {}
+    merged: dict = {}
+    kept: list = []
+    for lk, g in new_groups.items():
+        g = g or {}
+        n_new = len(g.get("fixtures") or []) + len(g.get("teams") or [])
+        old = old_groups.get(lk) or {}
+        n_old = len(old.get("fixtures") or []) + len(old.get("teams") or [])
+        if n_new == 0 and n_old > 0:
+            merged[lk] = old          # API lieferte nichts → alten Stand BEHALTEN
+            kept.append(lk)
+        else:
+            merged[lk] = g
+    for lk, old in old_groups.items():   # Ligen die im Build ganz fehlen, aber alt da sind
+        if lk not in merged:
+            merged[lk] = old
+            kept.append(lk)
+    return merged, kept
+
+
 def main():
     season = int(os.environ.get("LIGA_SEASON") or current_season())
     print(f"=== build_liga_data.py — Saison {season} ===")
@@ -233,7 +263,18 @@ def main():
                 wm = json.load(f)
         except Exception:
             wm = {}
-    wm["groups"] = groups
+    # ── WIPE-SCHUTZ (12.07.2026, Lucas: „Liga-Cards kaputt") ─────────────────────────────
+    merged_groups, kept = merge_groups_preserve(wm.get("groups"), groups)
+    if kept:
+        print(f"  🛡️  API lieferte 0 Daten für {sorted(set(kept))} — bestehende Gruppen BEHALTEN "
+              f"(kein Wipe). API-Key/Quota prüfen!")
+    if sum(len(g.get("fixtures") or []) for g in merged_groups.values()) == 0:
+        print("  ❌  Kein einziges Fixture (API-Ausfall/Key abgelaufen?) — Datei NICHT "
+              "überschrieben, alter Stand bleibt erhalten.")
+        sys.exit(1)
+
+    wm["groups"] = merged_groups
+    groups = merged_groups
     # teamIds-Identitäts-Map (25.06.2026, Lucas): Liga-Team-id IST schon die API-Football-ID →
     # so funktioniert der WM-Form-/H2H-Fetcher (nutzt wm["teamIds"][code]=api_id) direkt für Liga.
     _tids = {}
