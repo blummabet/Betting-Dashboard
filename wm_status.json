@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T06:48:32Z",
+  "generatedAt": "2026-07-13T10:53:25Z",
   "windowDays": 2,
   "upcoming": 0,
   "signalsFired": [
@@ -66,15 +66,16 @@
     "🧠 Signal 'mls_travel' feuert nicht — unerwartet still, Engine prüfen",
     "🛡️ Closing nah am Anpfiff erfasst (≤45min): 2 Fehler (z.B. NOR-ENG: Closing 133min VOR Anpfiff eingefroren (veraltet — Nah-am-Anpfiff-Capture lief nicht?))",
     "🛡️ Opening-Odds = echter 1X2-Markt (kein Platzhalter): 2 Fehler (z.B. BRA-HTI: Opening unplausibel hw=1.04 dr=15.0 aw=51.0 (Overround 1.05) → erfundener Drift im Sharp Radar)",
-    "🛡️ Trade-Auswertung: CLV/Closing erfasst: 1 Fehler (z.B. polyClose fehlt durchgängig → 'halten bis Closing'-Gegenrechnung nicht möglich (Poly-Closing-Snapshot nicht erfasst))"
+    "🛡️ Trade-Auswertung: CLV/Closing erfasst: 1 Fehler (z.B. polyClose fehlt durchgängig → 'halten bis Closing'-Gegenrechnung nicht möglich (Poly-Closing-Snapshot nicht erfasst))",
+    "🛡️ Soft-Eröffnung echt erfasst: 1 Fehler (z.B. ENG-ARG: Soft bewegte sich 2.5→2.6, aber Opening==Jetzt (2.63) — nicht eingefroren)"
   ],
   "oks": [
     "🌡️ Weather: 2 Spiele mit Forecast",
-    "🎲 Pinnacle-Odds: frischeste 0.1h alt",
+    "🎲 Pinnacle-Odds: frischeste 0.0h alt",
     "📊 APIF-Predictions: 67 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 48 Teams",
-    "📉 Odds-History: 102 Fixtures, Ø 113.9 Snapshots",
+    "📉 Odds-History: 102 Fixtures, Ø 114.0 Snapshots",
     "💹 Poly-Preise: 2 Fixtures",
     "💼 Poly-Balance: $180.78",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
@@ -470,9 +471,11 @@
       "id": "soft_opening_captured",
       "label": "Soft-Eröffnung echt erfasst",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "ENG-ARG: Soft bewegte sich 2.5→2.6, aber Opening==Jetzt (2.63) — nicht eingefroren"
+      ],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
     },
     {
