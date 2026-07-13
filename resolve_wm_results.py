@@ -87,7 +87,9 @@ PLACED_FILE   = Path(str(D.file("wm_auto_bets_placed.json", "liga_auto_bets_plac
 HISTORY_FILE  = BASE / "picks_history.json"      # manuelles Log, bewusst datensatz-übergreifend
 WM_FILE       = Path(str(D.data_file()))
 RESULTS_FILE  = Path(str(D.file("wm_results.json", "liga_results.json")))
-POLY_HIST_FILE = BASE / "wm2026-poly-history.json"
+# 13.07.2026 (MLS-Audit): war hart wm2026 → find_poly_close_price fand für MLS-Trades NIE einen
+# Schlusskurs → Poly-CLV blieb dauerhaft None, obwohl mls-poly-history.json committet wird.
+POLY_HIST_FILE = Path(str(D.file("wm2026-poly-history.json", "liga-poly-history.json")))
 
 # Mapping zwischen Pick-Market-Label und Poly-Snapshot-Key
 # (Polymarket-Snapshots haben Keys wie poly_hw / poly_dr / poly_aw / poly_o25 / poly_u25)

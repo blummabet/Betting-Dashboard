@@ -22,7 +22,9 @@ from pathlib import Path
 BASE = Path(__file__).parent
 import cocobet_dataset as D  # 29.06.2026: dataset-aware (MLS)
 LIGA_FILE = D.data_file()   # 29.06.2026: liga-data.json ODER mls-data.json je COCOBET_DATASET
-CACHE_FILE = BASE / "liga_match_stats_cache.json"
+# 13.07.2026 (MLS-Audit): war hart liga_ → der MLS-Cache wurde nie geschrieben (update-mls
+# committet mls_match_stats_cache.json) → jeder Lauf holte alle xG-Stats neu (API-Quota).
+CACHE_FILE = D.file("wm_match_stats_cache.json", "liga_match_stats_cache.json")
 FINISHED = {"FT", "AET", "PEN"}
 
 

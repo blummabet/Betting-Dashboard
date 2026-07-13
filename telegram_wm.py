@@ -74,7 +74,13 @@ MIN_ABW_CONVICTION = _cfg("telegram", "min_abw_conviction", 4)   # 0-10
 # Workflows (fetch-wm-data + daily-wm-story) committet wird. Der `-X ours`-Merge
 # beim Push clobberte den morning_card-Marker → Dedup sah nichts → Morning-Card
 # wurde bei jedem Lauf erneut gesendet (Spam). Eigene Single-Writer-Datei behebt das.
-SENT_STATE = os.path.join(os.path.dirname(os.path.abspath(__file__)), "wm_telegram_sent.json")
+# 13.07.2026 (MLS-Audit) — STILLER UNTERDRÜCKER. SENT_STATE hing hart auf wm_telegram_sent.json,
+# und der Dedup-Key ist `f"{type_}:{datum}"` — OHNE Datensatz. Hatte die WM an einem Tag ihre
+# Morning-Card gesendet, galt derselbe Marker auch für MLS und Liga: deren Digest wurde für dieses
+# Datum still verworfen. Kein Fehler im Log, einfach keine Nachricht. Gehört in dieselbe Familie wie
+# der „stille Telegram-Send"-Bug (leeres CHAT_ID-Secret).
+# Jetzt eigene Datei je Datensatz → jeder Datensatz hat seinen eigenen Tages-Marker.
+SENT_STATE = str(D.file("wm_telegram_sent.json", "liga_telegram_sent.json"))
 
 
 def _already_sent_today(type_: str, target_date: str) -> bool:

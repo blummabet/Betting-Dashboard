@@ -121,7 +121,9 @@ CAL_MIN_SEG_N = _cfg("pick_calibration", "min_segment_n", 15)
 CAL_SCALE     = _cfg("pick_calibration", "scale",         5.0)
 CAL_MAX_NUDGE = _cfg("pick_calibration", "max_nudge",     0.5)
 try:
-    _PICK_CALIBRATION = json.loads((BASE / "pick_calibration.json").read_text(encoding="utf-8"))
+    # 13.07.2026 (MLS-Audit): war hart → MLS-/Liga-Conviction wurde von der WM-Performance genudged.
+    _PICK_CALIBRATION = json.loads(
+        D.file("pick_calibration.json", "liga_pick_calibration.json").read_text(encoding="utf-8"))
 except Exception:
     _PICK_CALIBRATION = {}
 
@@ -1584,8 +1586,11 @@ def main():
     # Liga-tauglich (Spieler-ID-basiert). Leer/fehlend = neutral (Faktor 1.0).
     player_form_data: dict = {}
     try:
-        _pf_file = os.path.join(os.path.dirname(WM_FILE),
-                                "liga_player_form.json" if IS_LIGA else "player_form.json")
+        # 13.07.2026 (MLS-Audit): IS_LIGA ist auch für MLS True → die Pick-Engine las unter MLS
+        # die LIGA-Spielerform (liga_player_form.json). Damit war die player_form-Skalierung des
+        # lineup_signal für MLS tot — und sobald die Liga-Datei existiert, hätte die MLS-Engine mit
+        # Top-5-Spielerform gerechnet. Einziger Fund direkt auf der Geld-Fläche.
+        _pf_file = str(D.file("player_form.json", "liga_player_form.json"))
         if os.path.exists(_pf_file):
             with open(_pf_file, encoding="utf-8") as f:
                 player_form_data = (json.load(f) or {}).get("players", {})

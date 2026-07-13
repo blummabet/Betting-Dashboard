@@ -136,10 +136,26 @@ def _resolve_active_profile(raw: dict) -> dict:
     if not profile or not isinstance(profile, dict):
         # Profile nicht gefunden → Fallback
         return DEFAULT_FALLBACK
-    # Sicherstellen dass alle erwarteten Sections existieren — verschmelzen mit Default
+    # ── 13.07.2026 (MLS-Audit) — STILLER SEKTIONS-VERLUST ────────────────────────────────────
+    # Vorher lief der Merge NUR über DEFAULT_FALLBACK.keys(). Jede Sektion, die im Profil steht,
+    # aber nicht im Fallback, wurde kommentarlos VERWORFEN. Betroffen war unter anderem
+    # `conviction_score` — und darin `steam_bet_threshold`: Liga/MLS sind auf **8** konfiguriert
+    # („Liga strenger"), der Code-Default ist **6**. Liga und MLS haben also mit der lockeren
+    # WM-Schwelle gewettet und mehr Picks veröffentlicht, als eingestellt war. Ebenso
+    # `pick_calibration` (Lern-Ebene 2 lief mit WM-Parametern).
+    #
+    # Dieselbe Falle hat heute schon zweimal zugeschlagen (`tag_slug`, `smartmoney_min_usd`):
+    # ein neuer Config-Key wirkt einfach nicht, ohne jede Fehlermeldung. Deshalb jetzt die URSACHE
+    # beheben statt der Symptome: über die VEREINIGUNG beider Schlüsselmengen mergen.
+    # DEFAULT_FALLBACK bleibt der Sicherheitsnetz-Default; das Profil gewinnt.
     merged = {}
-    for section in DEFAULT_FALLBACK.keys():
-        merged[section] = {**DEFAULT_FALLBACK[section], **profile.get(section, {})}
+    for section in set(DEFAULT_FALLBACK) | set(profile):
+        default_sec = DEFAULT_FALLBACK.get(section, {})
+        profile_sec = profile.get(section, {})
+        if isinstance(default_sec, dict) and isinstance(profile_sec, dict):
+            merged[section] = {**default_sec, **profile_sec}
+        else:
+            merged[section] = profile_sec if section in profile else default_sec
     return merged
 
 

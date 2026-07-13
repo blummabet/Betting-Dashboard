@@ -104,7 +104,14 @@ class IntegrityCtx:
         self.lineups = lineups or {}
         self.now = now or datetime.now(timezone.utc)
         # Auto-Bets + Odds-History (14.06.2026): injizierbar (Tests) oder lazy von Disk.
-        _ab = auto_bets if auto_bets is not None else _lazy("wm_auto_bets_placed.json")
+        # 13.07.2026 — 🔴 GELD-KRITISCH. War hart `wm_auto_bets_placed.json`: unter
+        # COCOBET_DATASET=mls prüften damit FÜNF Guards die WM-Wetten statt der MLS-Positionen —
+        # darunter check_autobet_kickoff_present, der nach dem In-Play-Verlust QAT–SUI (−€5,50)
+        # gebaut wurde. Sobald der MLS-Auto-Trader scharf ist, schreibt er nach
+        # mls_auto_bets_placed.json — und KEIN Guard hätte je hingesehen. Genau der Schutz, der
+        # greifen soll, wäre in dem Moment blind, in dem Geld fließt.
+        _ab = auto_bets if auto_bets is not None else _lazy(
+            D.file("wm_auto_bets_placed.json", "liga_auto_bets_placed.json").name)
         self.auto_bets = (_ab.get("bets") if isinstance(_ab, dict) else _ab) or []
         # Odds-History dataset-bewusst (26.06.2026): Liga-Guards (z.B. soft_opening_captured) liefen
         # sonst gegen die WM-History → effektiv tot. is_liga kommt aus _meta.profile (oben gesetzt).
@@ -207,7 +214,7 @@ def check_closing_prematch(ctx):
     (resolve_wm_results.closing_is_prematch); dieser Guard macht die Lecks sichtbar,
     damit die Write-Seite (Closing-Freeze) nachgezogen werden kann.
     """
-    cl = _lazy("wm_closing_lines.json")
+    cl = _lazy(D.file("wm_closing_lines.json", "liga_closing_lines.json").name)
     if not isinstance(cl, dict) or not cl:
         return None
     ko_by_key = {ctx.mk(fx): fx.get("kickoff") for _g, fx in ctx.fixtures}
@@ -249,7 +256,7 @@ def check_closing_capture_fresh(ctx):
     Nur letzte 48h → aktionierbar, akkumuliert nicht. Ältere Spiele sind historisch (nicht flaggbar)."""
     if ctx.is_liga:
         return None
-    cl = _lazy("wm_closing_lines.json")
+    cl = _lazy(D.file("wm_closing_lines.json", "liga_closing_lines.json").name)
     if not isinstance(cl, dict) or not cl:
         return None
     # Anpfiff-Map über Gruppen UND koFixtures (nicht nur ctx.fixtures = Gruppen).
@@ -714,7 +721,7 @@ def check_ko_apif_coverage(ctx):
         return None   # Liga/MLS haben keine koFixtures → No-Op
     import json as _j
     try:
-        apif = _j.loads((_BASE / "wm_apif_predictions.json").read_text(encoding="utf-8"))
+        apif = _j.loads((_BASE / D.file("wm_apif_predictions.json", "liga_apif_predictions.json").name).read_text(encoding="utf-8"))
     except Exception:
         return None   # File fehlt → anderer Guard/Job zuständig, kein False-Positive
     now = datetime.now(timezone.utc)
@@ -900,7 +907,7 @@ def check_odds_freshness(ctx):
                 "warnt früh. Root-Cause: fetch_wm_odds-Workflow/Cron prüfen.")
 
 
-SWAP_HISTORY_FILE = _BASE / "wm_swap_history.json"
+SWAP_HISTORY_FILE = _BASE / D.file("wm_swap_history.json", "liga_swap_history.json").name
 
 
 def _record_swap_history(fails, now):
@@ -981,7 +988,7 @@ SIGCOV_BASELINE_DAYS = 7    # Trailing-Fenster
 @integrity_check
 def check_signal_coverage(ctx):
     import statistics
-    hist = _lazy("wm_signal_history.json")
+    hist = _lazy(D.file("wm_signal_history.json", "liga_signal_history.json").name)
     if not isinstance(hist, list) or len(hist) < 4:
         return _chk("signal_coverage", "Kein Signal still verstummt", "warn", [],
                     "Zu wenig History (<4 Tage) für Coverage-Vergleich — sammelt sich an.")
@@ -1015,7 +1022,7 @@ def check_trade_clv_coverage(ctx):
     # Auswertung blind. Dieser Guard meldet, wenn geschlossene Trades keine CLV/Closing-Daten
     # haben (Closing-Snapshot nicht zuverlässig bei Anpfiff erfasst) → Post-Mortem teilblind.
     import json
-    res = _lazy("wm_results.json")
+    res = _lazy(D.file("wm_results.json", "liga_results.json").name)
     pm = ((res.get("summary") or {}).get("postmortem") or {}) if isinstance(res, dict) else {}
     closed = pm.get("closedN") or 0
     fails = []
@@ -1399,7 +1406,7 @@ def check_smartmoney_sane(ctx):
     /trades vom Mac-Runner) muss kohärent sein — Outcome-Shares summieren ~1, totalUsd da. Fängt
     kaputte/partielle Aggregation, bevor das (niedrig gewichtete) smart_money-Signal darauf läuft.
     Fehlt die Datei → still (Feature noch nicht am Runner deployt)."""
-    sm = _lazy("wm_poly_smartmoney.json")
+    sm = _lazy(D.file("wm_poly_smartmoney.json", "liga_poly_smartmoney.json").name)
     if not isinstance(sm, dict):
         return None
     matches = sm.get("matches", sm)
@@ -1618,7 +1625,7 @@ def check_smartmoney_cluster_sane(ctx):
       · cluster ist ein nicht-negativer Integer und NIE größer als die Holder-Zahl der Seite
       · buyUsd/sellUsd ≥ 0 und netFlowUsd ≈ buyUsd − sellUsd
     Fehlt die Datei / hat noch keine Cluster-Felder (alter Runner-Stand) → still."""
-    sm = _lazy("wm_poly_smartmoney.json")
+    sm = _lazy(D.file("wm_poly_smartmoney.json", "liga_poly_smartmoney.json").name)
     if not isinstance(sm, dict):
         return None
     matches = sm.get("matches", sm)
@@ -1696,7 +1703,7 @@ def check_book_fetch_healthy(ctx):
     Der Trigger/Manage schreiben jetzt wm_book_health.json {attempts, transport_fail, ok}.
     Hier: Versuche>0 aber 0 echte Bücher = Endpoint/Netz tot → ERROR (Transport-Fehler) bzw.
     WARN (alles leer/dünn). Macht den stillen Totalausfall sofort sichtbar."""
-    bh = _lazy("wm_book_health.json")
+    bh = _lazy(D.file("wm_book_health.json", "liga_book_health.json").name)
     if not isinstance(bh, dict):
         return None                       # nie gelaufen / keine Daten → kein Signal
     att = bh.get("attempts") or 0

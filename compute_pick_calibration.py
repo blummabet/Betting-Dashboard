@@ -23,9 +23,14 @@ import sys
 from datetime import datetime, timezone
 from pathlib import Path
 
+import cocobet_dataset as D
+
 BASE = Path(__file__).parent
-LEDGER_FILE = BASE / "wm_signal_ledger.json"
-OUT_FILE    = BASE / "pick_calibration.json"
+# 13.07.2026 (MLS-Audit): beide waren hart → die Kalibrierung wurde NUR aus dem WM-Ledger gebaut,
+# aber von generate_wm_picks für JEDEN Datensatz gelesen. MLS-/Liga-Conviction wurde also von der
+# WM-Performance genudged (Cross-Dataset-Leck in Lern-Ebene 2).
+LEDGER_FILE = D.file("wm_signal_ledger.json", "liga_signal_ledger.json")
+OUT_FILE    = D.file("pick_calibration.json", "liga_pick_calibration.json")
 
 # Prozess-Outcome — identisch zu update_signal_weights (eine Quelle der Wahrheit im Geist).
 PROCESS_OUTCOME = {"JUSTIFIED": 1.0, "LUCKY": 0.65, "UNLUCKY": 0.35, "DESERVED_LOSS": 0.0}
