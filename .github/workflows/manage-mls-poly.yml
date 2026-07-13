@@ -140,6 +140,9 @@ jobs:
           git add mls_poly_positions.json mls_position_health.json mls_position_health_alerts.json 2>/dev/null || true
           git add mls-poly-history.json mls_book_health.json mls_kill_switch.json 2>/dev/null || true
           git add mls-data.json mls-odds-history.json 2>/dev/null || true
+          # 13.07.2026 (MLS-Audit): resolve_wm_results SCHREIBT mls_results.json — es wurde nur nie
+          # committet. Damit war der Trade-P&L/CLV nach jedem Lauf weg und der Betting-Tab blieb leer.
+          git add mls_results.json mls_pick_calibration.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Änderungen — kein Commit."; exit 0
           fi

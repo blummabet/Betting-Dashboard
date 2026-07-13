@@ -38,7 +38,8 @@ BASE         = Path(__file__).parent
 _IS_LIGA     = D.is_liga()
 HISTORY_FILE = D.file("wm2026-odds-history.json", "liga-odds-history.json")
 WM_FILE      = D.data_file()
-POLY_FILE    = BASE / "wm_poly_prices.json"
+# 13.07.2026 (MLS-Audit): war hart wm → MLS-Sharp-Alerts bekamen nie ihre Poly-Edge angereichert.
+POLY_FILE    = D.file("wm_poly_prices.json", "liga_poly_prices.json")
 LOG_FILE     = BASE / "telegram-log.json"
 MOVES_LOG    = D.file("wm_sharp_moves_log.json", "liga_sharp_moves_log.json")
 DEDUP_FILE   = D.file("wm_sharp_dedup.json", "liga_sharp_dedup.json")

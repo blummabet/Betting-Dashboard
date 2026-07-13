@@ -22,7 +22,10 @@ os.makedirs(DATA_DIR, exist_ok=True)
 # nicht-existente Pfade → load_json gibt {} → leer.
 import cocobet_dataset as D
 _IS_LIGA     = D.is_liga()
-_PFX         = "liga" if _IS_LIGA else "wm"
+# 13.07.2026 (MLS-Audit) — 🔴 D.is_liga() ist auch für MLS True → der MLS-Lauf schrieb
+# matches/liga-*.json und ÜBERSCHRIEB matches/liga-index.json mit MLS-Inhalten. Ergebnis:
+# 0 MLS-Match-Pages (171 wm-, 65 liga-, 0 mls-) UND beschädigte Liga-Seiten.
+_PFX         = D.active_dataset()
 WM_FILE      = str(D.data_file())
 HISTORY_FILE = str(D.file("wm2026-odds-history.json", "liga-odds-history.json"))
 POLY_FILE    = str(D.file("wm_poly_prices.json", "liga_poly_prices.json"))
@@ -298,7 +301,9 @@ def _smartmoney_all(_cache={}):
     return _cache["d"]
 
 
-LINEUPS_FILE = os.path.join(BASE, "wm_lineups.json")
+# 13.07.2026 (MLS-Audit): war hart wm_lineups → MLS-Match-Pages zeigten NIE eine Aufstellung,
+# obwohl fetch_wm_lineups mls_lineups.json schreibt.
+LINEUPS_FILE = str(D.file("wm_lineups.json", "liga_lineups.json"))
 
 def _lineups_all(_cache={}):
     """Aufstellungen (wm_lineups.json) einmal laden + memoizen. {} wenn fehlt."""

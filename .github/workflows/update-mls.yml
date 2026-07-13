@@ -251,6 +251,9 @@ jobs:
           git add mls_poly_wallets.json 2>/dev/null || true
           git add mls-poly-history.json 2>/dev/null || true
           git add mls_edge_alert_dedup.json 2>/dev/null || true
+          # 13.07.2026 (MLS-Audit): wurden geschrieben, aber nie committet → Swap-Guard ohne
+          # Gedächtnis, Telegram-Tagesmarker wirkungslos (Doppelpost-Risiko).
+          git add mls_swap_history.json mls_telegram_sent.json 2>/dev/null || true
           git diff --staged --quiet || git commit -m "mls: Daten + Quoten + Picks + Resolve + Lernen [skip ci]"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           # Remote kann sich zwischenzeitlich bewegt haben (paralleler Workflow) → rebasen, dann push.

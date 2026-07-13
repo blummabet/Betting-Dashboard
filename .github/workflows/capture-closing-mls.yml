@@ -8,7 +8,11 @@ name: 🔒 MLS Closing-Capture (nah am Anpfiff)
 # Picks). resolve_wm_results liest mls_closing_lines.json bevorzugt (cocobet_dataset → mls_-Präfix).
 on:
   schedule:
-    - cron: '*/15 22,23 * * *'   # Vorlauf US-Ost-Abendspiele (UTC)
+    # 13.07.2026 (MLS-Audit): Band begann erst 22:00 UTC → Nachmittags-/Frühabend-Anstöße
+    # (13:00–17:00 ET = 17:00–21:00 UTC; Hitze-Slots, Feiertage, Decision Day 15:00 ET) liefen
+    # gegen eine TOTE Closing-Linie → CLV dort wertlos. Der interne _has_imminent_kickoff-Guard
+    # macht Läufe ohne nahen Anpfiff zum No-Op → Quota-neutral.
+    - cron: '*/15 16-23 * * *'   # US-Nachmittag + Abend (UTC)
     - cron: '*/15 0-5 * * *'     # US-Abend/-Nacht-Anpfiffe (UTC)
   workflow_dispatch:
 

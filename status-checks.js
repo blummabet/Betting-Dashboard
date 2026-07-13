@@ -60,6 +60,27 @@ let _stRunning = false;
 // 'liga' = schlanke Liga-Ops-Health aus liga_status.json + liga-data.json.
 let _stDataset = 'intl';
 
+// 13.07.2026 (MLS-Audit) — Status-Tab war zweigeteilt (International/Liga). mls_status.json wurde
+// erzeugt und committet, war im UI aber nicht erreichbar: der MLS-Gesundheitszustand (60 Guards,
+// Lern-Loop) war unsichtbar. Neue Liga = EINE Zeile hier.
+const ST_DATASETS = [
+  { id: 'intl', label: '🌍 International' },
+  { id: 'liga', label: '⚽ Top-5' },
+  { id: 'mls',  label: '🇺🇸 MLS' },
+];
+// Dateien je Datensatz. 'intl' läuft über den eigenen WM-Pfad (Poly/Kill-Switch/Auto-Bets).
+function ST_FILES(ds) {
+  const p = ds === 'mls' ? 'mls' : 'liga';
+  return {
+    data:    p === 'mls' ? 'mls-data.json' : 'liga-data.json',
+    status:  `${p}_status.json`,
+    ledger:  `${p}_signal_ledger.json`,
+    weights: `${p}_signal_weights.json`,
+  };
+}
+// „Liga-artig" = alles außer dem WM-Pfad.
+function _stIsLigaLike(ds) { return ds === 'liga' || ds === 'mls'; }
+
 // (26.06.2026, Lucas: Status Liga/Intl-Toggle) — Toggle-Buttons oben im
 // statusPanel per JS injizieren (idempotent), damit alles in status-checks.js
 // bleibt und season-finish-v2.html unangetastet ist.
@@ -79,7 +100,10 @@ function _stRenderToggle() {
     const bd = on ? 'var(--text)' : 'var(--border)';
     return `<button data-ds="${ds}" style="background:${bg};border:1px solid ${bd};color:${col};border-radius:8px;padding:8px 16px;font-size:13px;font-weight:${on ? 700 : 600};cursor:pointer;font-family:inherit;${on ? 'box-shadow:0 0 0 1px var(--text) inset;' : ''}">${label}</button>`;
   };
-  bar.innerHTML = btn('intl', '🌍 International') + btn('liga', '⚽ Liga');
+  // 13.07.2026 (MLS-Audit): mls_status.json wird erzeugt UND committet, war im UI aber nicht
+  // erreichbar — der MLS-Gesundheitszustand (Guards, Lern-Loop) war schlicht unsichtbar.
+  // Neue Liga = ein Eintrag in ST_DATASETS.
+  bar.innerHTML = ST_DATASETS.map(d => btn(d.id, d.label)).join('');
   bar.querySelectorAll('button').forEach(b => {
     b.onclick = () => {
       const ds = b.getAttribute('data-ds');
@@ -280,7 +304,7 @@ async function runStatusPage(force) {
 
     // (26.06.2026, Lucas: Status Liga/Intl-Toggle) — früher Liga-Abzweig.
     // WM/Intl-Flow darunter bleibt komplett unverändert.
-    if (_stDataset === 'liga') { await _runLigaStatus(); return; }
+    if (_stIsLigaLike(_stDataset)) { await _runLigaStatus(); return; }
 
     const [data, poly, oddsHist, bal, ks, autobets, status, valRep, ledger, weights] = await Promise.all([
       _stGet('wm2026-data.json'), _stGet('wm_poly_prices.json'), _stGet('wm2026-odds-history.json'),
@@ -395,10 +419,12 @@ async function runStatusPage(force) {
 // (26.06.2026, Lucas: Status Liga/Intl-Toggle) — schlanker Liga-Pfad.
 // Nutzt dieselben Render-Helfer wie WM (Verdict/Problems/Integrity), aber
 // KEINE Poly/Kill-Switch/Auto-Bet/Signal-Live-Checks (die sind WM-spezifisch).
+// 13.07.2026: generisch über ST_DATASETS — vorher hart auf liga-*.json, damit war der
+// MLS-Status unerreichbar, obwohl mls_status.json existiert und committet wird.
 async function _runLigaStatus() {
+  const f = ST_FILES(_stDataset);
   const [ligaData, ligaStatus, ligaLedger, ligaWeights] = await Promise.all([
-    _stGet('liga-data.json'), _stGet('liga_status.json'),
-    _stGet('liga_signal_ledger.json'), _stGet('liga_signal_weights.json'),
+    _stGet(f.data), _stGet(f.status), _stGet(f.ledger), _stGet(f.weights),
   ]);
   // Lern-Status auch im Liga-Tab (dataset-eigene Dateien) — greift der Loop dort?
   _stRenderLearning(ligaData, ligaLedger, ligaWeights);

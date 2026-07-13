@@ -14,7 +14,15 @@ from pathlib import Path
 
 REPO = Path(__file__).parent.parent
 sys.path.insert(0, str(REPO))
-os.environ.setdefault("COCOBET_DATASET", "liga")
+
+# 13.07.2026 — hier stand `os.environ.setdefault("COCOBET_DATASET", "liga")` auf MODUL-Ebene.
+# Das wirkt schon beim EINSAMMELN der Tests, also bevor irgendein Test läuft: die halbe Suite lief
+# danach im Liga-Datensatz. Solange alle Guards ihre Dateien hart als "wm_*.json" verdrahtet hatten,
+# fiel das nicht auf. Als die Guards dataset-aware wurden, kippten schlagartig 13 völlig
+# unbeteiligte Tests (book_health, smart_money, ko_apif …) — isoliert waren sie grün.
+#
+# merge_groups_preserve ist eine reine Funktion und braucht den Datensatz gar nicht.
+# Env-Isolation je Test kommt jetzt zentral aus tests/conftest.py.
 
 from build_liga_data import merge_groups_preserve
 
