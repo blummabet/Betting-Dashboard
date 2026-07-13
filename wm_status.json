@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T10:53:25Z",
+  "generatedAt": "2026-07-13T14:08:47Z",
   "windowDays": 2,
   "upcoming": 0,
   "signalsFired": [
@@ -66,8 +66,8 @@
     "🧠 Signal 'mls_travel' feuert nicht — unerwartet still, Engine prüfen",
     "🛡️ Closing nah am Anpfiff erfasst (≤45min): 2 Fehler (z.B. NOR-ENG: Closing 133min VOR Anpfiff eingefroren (veraltet — Nah-am-Anpfiff-Capture lief nicht?))",
     "🛡️ Opening-Odds = echter 1X2-Markt (kein Platzhalter): 2 Fehler (z.B. BRA-HTI: Opening unplausibel hw=1.04 dr=15.0 aw=51.0 (Overround 1.05) → erfundener Drift im Sharp Radar)",
-    "🛡️ Trade-Auswertung: CLV/Closing erfasst: 1 Fehler (z.B. polyClose fehlt durchgängig → 'halten bis Closing'-Gegenrechnung nicht möglich (Poly-Closing-Snapshot nicht erfasst))",
-    "🛡️ Soft-Eröffnung echt erfasst: 1 Fehler (z.B. ENG-ARG: Soft bewegte sich 2.5→2.6, aber Opening==Jetzt (2.63) — nicht eingefroren)"
+    "🛡️ History-Snapshots = echte Märkte (kein Platzhalter): 46 Fehler (z.B. CZE-ZAF: 2 Platzhalter-Snap(s), z.B. 6.1/1.21/13.0 (Overround 1.07) → Geister-Move im Radar + Fake-Steam-Alert)",
+    "🛡️ Trade-Auswertung: CLV/Closing erfasst: 1 Fehler (z.B. polyClose fehlt durchgängig → 'halten bis Closing'-Gegenrechnung nicht möglich (Poly-Closing-Snapshot nicht erfasst))"
   ],
   "oks": [
     "🌡️ Weather: 2 Spiele mit Forecast",
@@ -194,6 +194,41 @@
         "GER-CUW: Opening unplausibel hw=1.03 dr=17.0 aw=67.0 (Overround 1.04) → erfundener Drift im Sharp Radar"
       ],
       "note": "fetch_liga_odds friert 1X2-Opening kohärent + heilt aus History (erster plausibler Snap)."
+    },
+    {
+      "id": "history_snaps_plausible",
+      "label": "History-Snapshots = echte Märkte (kein Platzhalter)",
+      "severity": "warn",
+      "ok": false,
+      "nFail": 46,
+      "failures": [
+        "CZE-ZAF: 2 Platzhalter-Snap(s), z.B. 6.1/1.21/13.0 (Overround 1.07) → Geister-Move im Radar + Fake-Steam-Alert",
+        "QAT-SUI: 1 Platzhalter-Snap(s), z.B. 81.0/1.06/11.0 (Overround 1.05) → Geister-Move im Radar + Fake-Steam-Alert",
+        "BRA-HTI: 2 Platzhalter-Snap(s), z.B. 1.04/15.0/51.0 (Overround 1.05) → Geister-Move im Radar + Fake-Steam-Alert",
+        "SCO-MAR: 2 Platzhalter-Snap(s), z.B. 1751.0/21.0/1.02 (Overround 1.03) → Geister-Move im Radar + Fake-Steam-Alert",
+        "BRA-SCO: 5 Platzhalter-Snap(s), z.B. 1.01/26.0/101.0 (Overround 1.04) → Geister-Move im Radar + Fake-Steam-Alert",
+        "USA-AUS: 3 Platzhalter-Snap(s), z.B. 1.02/25.0/111.0 (Overround 1.03) → Geister-Move im Radar + Fake-Steam-Alert",
+        "TUR-PRY: 1 Platzhalter-Snap(s), z.B. 1101.0/16.0/1.03 (Overround 1.03) → Geister-Move im Radar + Fake-Steam-Alert",
+        "GER-CUW: 8 Platzhalter-Snap(s), z.B. 1.03/17.0/67.0 (Overround 1.04) → Geister-Move im Radar + Fake-Steam-Alert",
+        "GER-CIV: 2 Platzhalter-Snap(s), z.B. 4.04/1.46/7.94 (Overround 1.06) → Geister-Move im Radar + Fake-Steam-Alert",
+        "ECU-CUW: 1 Platzhalter-Snap(s), z.B. 9.0/1.08/61.0 (Overround 1.05) → Geister-Move im Radar + Fake-Steam-Alert",
+        "NED-SWE: 2 Platzhalter-Snap(s), z.B. 1.04/15.0/41.0 (Overround 1.05) → Geister-Move im Radar + Fake-Steam-Alert",
+        "TUN-JPN: 3 Platzhalter-Snap(s), z.B. 81.0/20.0/1.02 (Overround 1.04) → Geister-Move im Radar + Fake-Steam-Alert",
+        "BEL-IRN: 1 Platzhalter-Snap(s), z.B. 25.0/1.03/26.0 (Overround 1.05) → Geister-Move im Radar + Fake-Steam-Alert",
+        "ESP-SAU: 1 Platzhalter-Snap(s), z.B. 1.02/25.0/91.0 (Overround 1.03) → Geister-Move im Radar + Fake-Steam-Alert",
+        "URU-CPV: 1 Platzhalter-Snap(s), z.B. 12.5/1.07/23.0 (Overround 1.06) → Geister-Move im Radar + Fake-Steam-Alert",
+        "FRA-IRQ: 7 Platzhalter-Snap(s), z.B. 1.02/21.0/91.0 (Overround 1.04) → Geister-Move im Radar + Fake-Steam-Alert",
+        "NOR-SEN: 2 Platzhalter-Snap(s), z.B. 1.03/15.0/76.0 (Overround 1.05) → Geister-Move im Radar + Fake-Steam-Alert",
+        "AUT-JOR: 1 Platzhalter-Snap(s), z.B. 1.02/18.0/901.0 (Overround 1.04) → Geister-Move im Radar + Fake-Steam-Alert",
+        "POR-COD: 3 Platzhalter-Snap(s), z.B. 3.4/1.41/16.0 (Overround 1.07) → Geister-Move im Radar + Fake-Steam-Alert",
+        "UZB-COL: 1 Platzhalter-Snap(s), z.B. 551.0/18.0/1.02 (Overround 1.04) → Geister-Move im Radar + Fake-Steam-Alert",
+        "COL-COD: 1 Platzhalter-Snap(s), z.B. 1.02/18.0/3501.0 (Overround 1.04) → Geister-Move im Radar + Fake-Steam-Alert",
+        "POR-COL: 1 Platzhalter-Snap(s), z.B. 19.0/1.04/21.0 (Overround 1.06) → Geister-Move im Radar + Fake-Steam-Alert",
+        "GHA-PAN: 3 Platzhalter-Snap(s), z.B. 11.0/1.17/10.42 (Overround 1.04) → Geister-Move im Radar + Fake-Steam-Alert",
+        "ENG-GHA: 2 Platzhalter-Snap(s), z.B. 3.05/1.45/20.0 (Overround 1.07) → Geister-Move im Radar + Fake-Steam-Alert",
+        "PAN-CRO: 1 Platzhalter-Snap(s), z.B. 4001.0/23.0/1.01 (Overround 1.03) → Geister-Move im Radar + Fake-Steam-Alert"
+      ],
+      "note": "Verbraucher filtern via odds_plausibility.clean_snaps; verseuchte Snaps bleiben trotzdem ein Quellen-Fehler und werden hier sichtbar."
     },
     {
       "id": "ko_odds_present",
@@ -471,11 +506,9 @@
       "id": "soft_opening_captured",
       "label": "Soft-Eröffnung echt erfasst",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "ENG-ARG: Soft bewegte sich 2.5→2.6, aber Opening==Jetzt (2.63) — nicht eingefroren"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
     },
     {

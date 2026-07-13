@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "wm",
-    "generatedAt": "2026-07-13T10:53:02.555839+00:00",
+    "generatedAt": "2026-07-13T14:08:26.676260+00:00",
     "games": 102,
     "markets": [
       "Heimsieg",
@@ -59490,7 +59490,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 68% des Geldes auf Heim — mehr als der faire Preis hergibt (41%), und es sind echte Wale dahinter (Top-Wallets 73%).",
+              "evidence": "💰 Auf Polymarket liegen 68% des Geldes auf Heim — mehr als der faire Preis hergibt (41%), und es sind echte Wale dahinter (Top-Wallets 71%).",
               "dir": "confirm"
             }
           ],
@@ -59646,7 +59646,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 17% des Geldes auf Auswärts — weniger als der faire Preis hergibt (29%), und es sind echte Wale dahinter (Top-Wallets 93%).",
+              "evidence": "💰 Auf Polymarket liegen 17% des Geldes auf Auswärts — weniger als der faire Preis hergibt (29%), und es sind echte Wale dahinter (Top-Wallets 91%).",
               "dir": "contradict"
             }
           ],
@@ -59802,7 +59802,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 34°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — FRA temperate · ESP temperate",
+              "evidence": "🌡 Bei 33°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — FRA temperate · ESP temperate",
               "dir": "contradict"
             }
           ],
@@ -59930,7 +59930,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 34°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — FRA temperate · ESP temperate",
+              "evidence": "🌡 Bei 33°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — FRA temperate · ESP temperate",
               "dir": "confirm"
             }
           ],
@@ -60080,23 +60080,23 @@
       "markets": {
         "Heimsieg": {
           "tip": "England (Heimsieg)",
-          "headline": "1 von 4 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „England (Heimsieg)“ kritisch — vor allem die Pinnacle-Bewegung spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
+          "headline": "2 von 4 klaren Signalen bestätigen den Tipp",
+          "reason": "Gemischtes Bild: 2 Signal(e) dafür, 2 dagegen — kein klares Signal-Übergewicht.",
           "confirm": [
             {
               "name": "chance_creation",
               "label": "die Chancenqualität",
               "evidence": "🎨 Beim Chancen-Kreieren liegt Heim bei 18.1, Auswärts bei 12.1 (Schlüsselpässe + Abschlüsse) — Vorsprung +6.0.",
               "dir": "confirm"
+            },
+            {
+              "name": "smart_money",
+              "label": "das Smart Money",
+              "evidence": "💰 Auf Polymarket liegen 41% des Geldes auf Heim — mehr als der faire Preis hergibt (36%), und es sind echte Wale dahinter (Top-Wallets 55%).",
+              "dir": "confirm"
             }
           ],
           "contradict": [
-            {
-              "name": "lead_lag_bias",
-              "label": "die Pinnacle-Bewegung",
-              "evidence": "Pinnacle hat Heim um -1.6pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
-              "dir": "contradict"
-            },
             {
               "name": "injury",
               "label": "injury",
@@ -60112,6 +60112,10 @@
           ],
           "neutral": [],
           "silent": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung"
+            },
             {
               "name": "public_static_bias",
               "label": "der Public-Bias"
@@ -60169,10 +60173,6 @@
               "label": "die Frische der Bewegung"
             },
             {
-              "name": "smart_money",
-              "label": "das Smart Money"
-            },
-            {
               "name": "league_pressure",
               "label": "der Ligadruck"
             },
@@ -60218,16 +60218,16 @@
             }
           ],
           "score": {
-            "confirm": 1,
-            "contradict": 3,
+            "confirm": 2,
+            "contradict": 2,
             "neutral": 0,
             "decisive": 4
           }
         },
         "Auswärtssieg": {
           "tip": "Argentinien (Auswärtssieg)",
-          "headline": "3 von 4 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Argentinien (Auswärtssieg)“ mehrheitlich — am deutlichsten injury, auch wenn 1 Signal(e) dagegenhalten.",
+          "headline": "3 von 5 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Argentinien (Auswärtssieg)“ mehrheitlich — am deutlichsten injury, auch wenn 2 Signal(e) dagegenhalten.",
           "confirm": [
             {
               "name": "injury",
@@ -60238,7 +60238,7 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) schätzt Auswärts um 13.9pp höher ein als Pinnacle — Rückendeckung für den Pick.",
+              "evidence": "📊 Ein zweites Modell (API-Football) schätzt Auswärts um 14.1pp höher ein als Pinnacle — Rückendeckung für den Pick.",
               "dir": "confirm"
             },
             {
@@ -60253,6 +60253,12 @@
               "name": "chance_creation",
               "label": "die Chancenqualität",
               "evidence": "🎨 Beim Chancen-Kreieren liegt Heim bei 18.1, Auswärts bei 12.1 (Schlüsselpässe + Abschlüsse) — Vorsprung +6.0.",
+              "dir": "contradict"
+            },
+            {
+              "name": "smart_money",
+              "label": "das Smart Money",
+              "evidence": "💰 Auf Polymarket liegen 22% des Geldes auf Auswärts — weniger als der faire Preis hergibt (31%), und es sind echte Wale dahinter (Top-Wallets 58%).",
               "dir": "contradict"
             }
           ],
@@ -60313,10 +60319,6 @@
             {
               "name": "freshness_leg",
               "label": "die Frische der Bewegung"
-            },
-            {
-              "name": "smart_money",
-              "label": "das Smart Money"
             },
             {
               "name": "league_pressure",
@@ -60365,15 +60367,15 @@
           ],
           "score": {
             "confirm": 3,
-            "contradict": 1,
+            "contradict": 2,
             "neutral": 0,
-            "decisive": 4
+            "decisive": 5
           }
         },
         "Über 2.5 Tore": {
           "tip": "Über 2.5 Tore",
-          "headline": "2 von 4 klaren Signalen bestätigen den Tipp",
-          "reason": "Gemischtes Bild: 2 Signal(e) dafür, 2 dagegen — kein klares Signal-Übergewicht.",
+          "headline": "2 von 3 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Über 2.5 Tore“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 1 Signal(e) dagegenhalten.",
           "confirm": [
             {
               "name": "form_trend",
@@ -60393,12 +60395,6 @@
               "name": "pressure_index",
               "label": "der Tabellendruck",
               "evidence": "🎯 KO-Vorsicht (gegen Über)",
-              "dir": "contradict"
-            },
-            {
-              "name": "weather_signal",
-              "label": "das Wetter",
-              "evidence": "🌡 Bei 33°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ENG temperate · ARG temperate",
               "dir": "contradict"
             }
           ],
@@ -60443,6 +60439,10 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell"
+            },
+            {
+              "name": "weather_signal",
+              "label": "das Wetter"
             },
             {
               "name": "incentive_signal",
@@ -60511,26 +60511,20 @@
           ],
           "score": {
             "confirm": 2,
-            "contradict": 2,
+            "contradict": 1,
             "neutral": 0,
-            "decisive": 4
+            "decisive": 3
           }
         },
         "Unter 2.5 Tore": {
           "tip": "Unter 2.5 Tore",
-          "headline": "2 von 4 klaren Signalen bestätigen den Tipp",
-          "reason": "Gemischtes Bild: 2 Signal(e) dafür, 2 dagegen — kein klares Signal-Übergewicht.",
+          "headline": "1 von 3 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „Unter 2.5 Tore“ kritisch — vor allem die Formkurve spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
           "confirm": [
             {
               "name": "pressure_index",
               "label": "der Tabellendruck",
               "evidence": "🎯 KO-Vorsicht (Unter wahrscheinlicher) · semi-Stage extra-vorsichtig",
-              "dir": "confirm"
-            },
-            {
-              "name": "weather_signal",
-              "label": "das Wetter",
-              "evidence": "🌡 Bei 33°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ENG temperate · ARG temperate",
               "dir": "confirm"
             }
           ],
@@ -60591,6 +60585,10 @@
               "label": "das externe Prognosemodell"
             },
             {
+              "name": "weather_signal",
+              "label": "das Wetter"
+            },
+            {
               "name": "incentive_signal",
               "label": "die Anreizlage"
             },
@@ -60656,10 +60654,10 @@
             }
           ],
           "score": {
-            "confirm": 2,
+            "confirm": 1,
             "contradict": 2,
             "neutral": 0,
-            "decisive": 4
+            "decisive": 3
           }
         }
       }
