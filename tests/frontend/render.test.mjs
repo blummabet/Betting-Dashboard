@@ -86,28 +86,80 @@ test('Sharp Radar: In-Play-Snapshots (nach Anpfiff) verfälschen die Mover NICHT
   assert.ok(!/9\d(\.\d)?%/.test(html), 'Keine In-Play-98%-Wahrscheinlichkeit');
 });
 
-test('Sharp Radar (Liga): MLS wird im Liga-Toggle gemerged (erscheint als Mover)', () => {
+// 13.07.2026 (Lucas: „der Sharp Radar hat noch kein MLS, nur Liga"): MLS WAR drin — aber in den
+// Liga-Toggle gemerged und dadurch unsichtbar. Jetzt eigener Button. Dieser Test hielt vorher die
+// ALTE Absicht fest („MLS erscheint unter Liga") und ist bewusst umgeschrieben:
+//   · MLS erscheint unter 🇺🇸 MLS
+//   · und NICHT mehr unter ⚽ Top-5 (sonst wäre die Trennung nur Deko)
+function _sharpLigaMlsWorld() {
   const w = loadFull();
   w.LEAGUES = {};
   const now = Date.now();
   const ko = new Date(now + 6 * 3600000);   // Anpfiff in 6h → pre-match
   const iso = (ms) => new Date(ms).toISOString();
   const today = new Date().toISOString().slice(0, 10);
-  // LIGA_DATA + LIGA_ODDS_HISTORY vorab setzen → _loadLigaSharpData kehrt früh zurück (kein Fetch-Overwrite).
-  // Simuliert das Ergebnis des MLS-Merges (Gruppe „MLS" steckt in LIGA_DATA.groups).
-  w.LIGA_DATA = { groups: { MLS: {
-    teams: [{ id: 'mia', name: 'Inter Miami', flag: '🇺🇸' }, { id: 'rsl', name: 'Real Salt Lake', flag: '🇺🇸' }],
-    fixtures: [{ home: 'mia', away: 'rsl', date: today, time: '23:00',
-                 kickoff: ko.toISOString(), matchday: 25, result: null }],
-  } } };
-  w.LIGA_ODDS_HISTORY = { 'mia-rsl': [
-    { ts: iso(now - 5 * 3600000), hw: 2.10, dr: 3.40, aw: 3.30 },
-    { ts: iso(now - 1 * 3600000), hw: 1.85, dr: 3.60, aw: 3.90 },   // Steam Heim (~6pp)
-  ] };
+  // LIGA_DATA vorab setzen → _loadLigaSharpData kehrt früh zurück (kein Fetch-Overwrite).
+  // Enthält BEIDES, so wie nach dem MLS-Merge: eine echte Liga-Gruppe + die MLS-Gruppe.
+  w.LIGA_DATA = { groups: {
+    ENG: {
+      teams: [{ id: 'ars', name: 'Arsenal', flag: '🏴' }, { id: 'che', name: 'Chelsea', flag: '🏴' }],
+      fixtures: [{ home: 'ars', away: 'che', date: today, time: '20:00',
+                   kickoff: ko.toISOString(), matchday: 1, result: null }],
+    },
+    MLS: {
+      teams: [{ id: 'mia', name: 'Inter Miami', flag: '🇺🇸' }, { id: 'rsl', name: 'Real Salt Lake', flag: '🇺🇸' }],
+      fixtures: [{ home: 'mia', away: 'rsl', date: today, time: '23:00',
+                   kickoff: ko.toISOString(), matchday: 25, result: null }],
+    },
+  } };
+  w.LIGA_ODDS_HISTORY = {
+    'mia-rsl': [
+      { ts: iso(now - 5 * 3600000), hw: 2.10, dr: 3.40, aw: 3.30 },
+      { ts: iso(now - 1 * 3600000), hw: 1.85, dr: 3.60, aw: 3.90 },   // Steam Heim (~6pp)
+    ],
+    'ars-che': [
+      { ts: iso(now - 5 * 3600000), hw: 2.00, dr: 3.50, aw: 3.60 },
+      { ts: iso(now - 1 * 3600000), hw: 1.80, dr: 3.70, aw: 4.10 },
+    ],
+  };
+  return w;
+}
+
+test('Sharp Radar: MLS hat einen EIGENEN Toggle (nicht mehr im Liga-Topf versteckt)', () => {
+  const w = _sharpLigaMlsWorld();
+  w._sharpSetDataset('mls');
+  w.renderSharpRadar();
+  const html = w.document.getElementById('mainContent').innerHTML;
+  assert.match(html, /Inter Miami/, 'MLS-Fixture erscheint im MLS-Radar');
+  assert.doesNotMatch(html, /Arsenal/, 'Top-5-Spiele dürfen im MLS-Radar NICHT auftauchen');
+});
+
+test('Sharp Radar: Top-5 zeigt kein MLS mehr (saubere Trennung)', () => {
+  const w = _sharpLigaMlsWorld();
   w._sharpSetDataset('liga');
   w.renderSharpRadar();
   const html = w.document.getElementById('mainContent').innerHTML;
-  assert.match(html, /Inter Miami/, 'MLS-Fixture erscheint im Liga-Sharp-Radar');
+  assert.match(html, /Arsenal/, 'Liga-Fixture erscheint im Top-5-Radar');
+  assert.doesNotMatch(html, /Inter Miami/, 'MLS darf im Top-5-Radar NICHT mehr auftauchen');
+});
+
+test('Sharp Radar: Platzhalter-Quoten erzeugen keinen Geister-Mover', () => {
+  // 13.07.2026: Die MLS-History eröffnete real mit 1.04/1.01/1.04 (Overround 291 %) →
+  // daraus wurden 80pp-„Steam"-Geister. Der Radar muss solche Snaps verwerfen.
+  const w = _sharpLigaMlsWorld();
+  const now = Date.now();
+  const iso = (ms) => new Date(ms).toISOString();
+  w.LIGA_ODDS_HISTORY = { 'mia-rsl': [
+    { ts: iso(now - 9 * 3600000), hw: 1.04, dr: 1.01, aw: 1.04 },   // ← Platzhalter, kein Markt
+    { ts: iso(now - 5 * 3600000), hw: 1.86, dr: 3.60, aw: 3.90 },
+    { ts: iso(now - 1 * 3600000), hw: 1.85, dr: 3.60, aw: 3.90 },   // faktisch unbewegt
+  ] };
+  w._sharpSetDataset('mls');
+  w.renderSharpRadar();
+  const html = w.document.getElementById('mainContent').innerHTML;
+  // Ein zweistelliger pp-Move darf hier NICHT stehen — er käme allein aus dem Platzhalter.
+  const zweistellig = /[1-9]\d+\.\d\s*pp/.test(html.replace(/&nbsp;/g, ' '));
+  assert.ok(!zweistellig, 'kein zweistelliger pp-Mover aus einer Platzhalter-Eröffnung');
 });
 
 test('CLV-Scoreboard: Ø CLV + %beat + Abdeckung + Markt-Tabelle', () => {

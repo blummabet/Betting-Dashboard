@@ -1942,7 +1942,36 @@ function _sharpRenderToggleHtml() {
     const bd  = on ? 'var(--text)' : 'var(--border)';
     return `<button onclick="_sharpSetDataset('${ds}')" style="background:${bg};border:1px solid ${bd};color:${col};border-radius:8px;padding:8px 16px;font-size:13px;font-weight:${on ? 700 : 600};cursor:pointer;font-family:inherit;${on ? 'box-shadow:0 0 0 1px var(--text) inset;' : ''}">${label}</button>`;
   };
-  return `<div id="sharp_datasetToggle" style="display:flex;gap:8px;margin-bottom:16px;">${btn('intl', '🌍 International')}${btn('liga', '⚽ Liga')}</div>`;
+  // 13.07.2026 (Lucas: „der Sharp Radar hat noch kein MLS, nur Liga"). MLS war zwar drin —
+  // aber in den Liga-Toggle GEMERGT und damit unsichtbar. Eigener Button. Neue Liga später:
+  // Eintrag in SHARP_SUBSETS + ein btn(...) hier.
+  return `<div id="sharp_datasetToggle" style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">`
+    + btn('intl', '🌍 International') + btn('liga', '⚽ Top-5') + btn('mls', '🇺🇸 MLS')
+    + `</div>`;
+}
+
+// Welche Gruppen gehören zu welchem Radar-Datensatz? MLS und die Top-5 liegen gemeinsam in
+// window.LIGA_DATA (ein Fetch), werden hier aber sauber getrennt angezeigt.
+//   liga → alles AUSSER MLS · mls → nur MLS
+const SHARP_SUBSETS = { liga: g => g !== 'MLS', mls: g => g === 'MLS' };
+
+// Datensatz auf die gewünschten Gruppen zuschneiden — inkl. passender History (nur die Fixture-
+// Keys der behaltenen Gruppen), sonst rechnet der Radar Mover aus Spielen, die gar nicht sichtbar sind.
+function _sharpSliceData(data, hist, ds) {
+  const keep = SHARP_SUBSETS[ds];
+  if (!keep || !data || !data.groups) return { data, hist };
+  const groups = {};
+  const keys = new Set();
+  for (const [gid, grp] of Object.entries(data.groups)) {
+    if (!keep(gid)) continue;
+    groups[gid] = grp;
+    for (const fx of (grp.fixtures || [])) keys.add(`${fx.home}-${fx.away}`);
+  }
+  const odds = {};
+  for (const [k, v] of Object.entries(data.odds || {})) if (keys.has(k)) odds[k] = v;
+  const h = {};
+  for (const [k, v] of Object.entries(hist || {})) if (k === '_meta' || keys.has(k)) h[k] = v;
+  return { data: Object.assign({}, data, { groups, odds }), hist: h };
 }
 
 // (26.06.2026, Lucas: Sharp Radar Liga-Toggle) — Klick-Handler (global, da via inline
@@ -1951,7 +1980,8 @@ function _sharpRenderToggleHtml() {
 function _sharpSetDataset(ds) {
   if (ds === _sharpDataset) return;
   _sharpDataset = ds;
-  if (ds === 'liga') _loadLigaSharpData();
+  // 13.07.2026: 'mls' liest dieselben Liga-Globals (MLS ist dort mit-gemergt) → gleicher Lazy-Load.
+  if (ds === 'liga' || ds === 'mls') _loadLigaSharpData();
   renderSharpRadar();
 }
 if (typeof window !== 'undefined') window._sharpSetDataset = _sharpSetDataset;
@@ -2020,15 +2050,40 @@ function _renderLigaCurrentLinesHtml(data) {
   return h;
 }
 
+// ── Platzhalter-Quoten erkennen (13.07.2026) ────────────────────────────────
+// Spiegelbild von odds_plausibility.py — die Regel muss auf BEIDEN Seiten gleich sein, sonst
+// zeigt das Frontend Mover, die das Backend längst verworfen hat (oder umgekehrt).
+// Ein echter 1X2-Markt: keine Quote < 1.05, Remis ≥ 1.50, Overround 100–130 %.
+// Platzhalter der Quellen-API beim Opening (1.04/1.01/1.04 → 291 %) erzeugen sonst Geister-Moves.
+function _sharpPlausible1x2(hw, dr, aw) {
+  if (!hw || !dr || !aw) return false;
+  if (hw < 1.05 || aw < 1.05 || dr < 1.5) return false;
+  const orr = 1 / hw + 1 / dr + 1 / aw;
+  return orr >= 1.0 && orr <= 1.30;
+}
+// Teil-Snapshots (kein volles 1X2) bleiben drin — dort ist die Marge nicht prüfbar.
+function _sharpSnapOk(s) {
+  if (!s || typeof s !== 'object') return false;
+  if (!(s.hw && s.dr && s.aw)) return true;
+  return _sharpPlausible1x2(s.hw, s.dr, s.aw);
+}
+function _sharpCleanSnaps(snaps) {
+  return Array.isArray(snaps) ? snaps.filter(_sharpSnapOk) : [];
+}
+
 function renderSharpRadar() {
   const mc = document.getElementById('mainContent');
 
   // (26.06.2026, Lucas: Sharp Radar Liga-Toggle) — Datensatz-Aliase. Im Default
   // ('intl') exakt das bisherige WM-Verhalten (_data=window.WM2026_DATA). Im Liga-
   // Modus aus den separat geladenen Liga-Globals (identisches JSON-Format).
-  const _isLiga = _sharpDataset === 'liga';
-  const _data = _isLiga ? (window.LIGA_DATA || {}) : window.WM2026_DATA;
-  const _hist = _isLiga ? (window.LIGA_ODDS_HISTORY || {}) : window.WM2026_ODDS_HISTORY;
+  // 13.07.2026: 'mls' verhält sich wie 'liga' (gleiche Globals), zeigt aber NUR die MLS-Gruppe.
+  const _isLiga = _sharpDataset === 'liga' || _sharpDataset === 'mls';
+  const _raw  = _isLiga ? (window.LIGA_DATA || {}) : window.WM2026_DATA;
+  const _rawH = _isLiga ? (window.LIGA_ODDS_HISTORY || {}) : window.WM2026_ODDS_HISTORY;
+  const _sliced = _isLiga ? _sharpSliceData(_raw, _rawH, _sharpDataset) : { data: _raw, hist: _rawH };
+  const _data = _sliced.data;
+  const _hist = _sliced.hist;
 
   // (26.06.2026, Lucas: Sharp Radar Liga-Toggle) — Liga-Daten noch nicht da/leer?
   // Freundlicher Hinweis statt leerem/kaputtem Radar. liga-odds-history.json kommt
@@ -2144,10 +2199,16 @@ function renderSharpRadar() {
   const _preHist = {};
   for (const [k, snaps] of Object.entries(_hist0)) {
     if (k === '_meta' || !Array.isArray(snaps)) { _preHist[k] = snaps; continue; }
+    // 13.07.2026 (Lucas: „schau dir den Sharp Radar nochmal an"): Platzhalter-Snapshots raus,
+    // BEVOR irgendetwas gerechnet wird. Die MLS-History eröffnete mit 1.04/1.01/1.04 (Overround
+    // 291 %) — daraus wurden Geister-Mover („PSG 1.02 → 1.40, +37pp") und 80pp-„Steam".
+    // Ein echter 1X2-Markt hat 102–110 % Marge. Spiegelt odds_plausibility.py (Python-Seite).
+    const clean = _sharpCleanSnaps(snaps);
+    const base  = clean.length ? clean : [];
     const ko = _koByKey[k];
-    if (!ko) { _preHist[k] = snaps; continue; }
-    const pre = snaps.filter(s => s && s.ts && new Date(s.ts).getTime() <= ko);
-    _preHist[k] = pre.length ? pre : snaps;   // Fallback: nie leer machen
+    if (!ko) { _preHist[k] = base; continue; }
+    const pre = base.filter(s => s && s.ts && new Date(s.ts).getTime() <= ko);
+    _preHist[k] = pre.length ? pre : base;   // Fallback: nie leer machen
   }
   _sharpActiveHist = _preHist;   // Mini-Sparkline + Letzte-Bewegung lesen daraus
   const _wmOddsHist  = _preHist;

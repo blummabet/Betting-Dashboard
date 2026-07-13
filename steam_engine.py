@@ -74,16 +74,11 @@ def _imp(o):
     return (1.0 / o) if (o and o > 1.0) else None
 
 
-def _plausible_1x2(hw, dr, aw) -> bool:
-    """Bildet ein 1X2-Opening einen ECHTEN Markt? (09.07.2026, Lucas: MLS Chicago–Vancouver zeigte
-    Opening 1.17/1.01/1.17, Overround 270% → Fake-Steam +25pp → Fake-Pick.) Platzhalter-Openings
-    (dr≈1.01, gleiche hw/aw) dürfen keinen Steam-Move auslösen. Gleicher Filter wie fetch_liga_odds:
-    kein Outcome <1.05, Remis ≥1.5, Overround plausibel [1.0, 1.30]."""
-    if not (hw and dr and aw):
-        return False
-    if hw < 1.05 or aw < 1.05 or dr < 1.5:
-        return False
-    return 1.0 <= (1.0 / hw + 1.0 / dr + 1.0 / aw) <= 1.30
+from odds_plausibility import plausible_1x2 as _plausible_1x2   # 13.07.2026: EINE Quelle
+# (09.07.2026, Lucas: MLS Chicago–Vancouver zeigte Opening 1.17/1.01/1.17, Overround 270 % →
+#  Fake-Steam +25pp → Fake-Pick.) Die Regel lag dreifach im Repo (hier, fetch_liga_odds,
+#  detect_wm_sharp_moves) — jetzt zentral in odds_plausibility.py, damit die Schwellen nie
+#  auseinanderlaufen. Verhalten identisch: <1.05, Remis <1.5, Overround außerhalb [1.0, 1.30] → raus.
 
 
 def detect_steam(snap: dict, trigger_pp: float = TRIGGER_PP,

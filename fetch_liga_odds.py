@@ -307,15 +307,11 @@ def extract_prices(event: dict, orientation: str, home_name: str, away_name: str
     return out
 
 
-def _plausible_1x2(hw, dr, aw) -> bool:
-    """Bildet hw/dr/aw einen ECHTEN 1X2-Markt? (08.07.2026, Lucas: Radar zeigte Fake-Drops bis -84pp.)
-    Beim Markt-Opening liefert The Odds API oft Platzhalter (dr=1.01, aw=1.06 …) bevor der Markt
-    settlet. Filter: kein Outcome < 1.05, Remis ≥ 1.5, Overround plausibel [1.0, 1.25]."""
-    if not (hw and dr and aw):
-        return False
-    if hw < 1.05 or aw < 1.05 or dr < 1.5:
-        return False
-    return 1.0 <= (1.0 / hw + 1.0 / dr + 1.0 / aw) <= 1.25
+from odds_plausibility import plausible_1x2 as _plausible_1x2   # 13.07.2026: EINE Quelle
+# (08.07.2026, Lucas: Radar zeigte Fake-Drops bis -84pp.) Beim Markt-Opening liefert The Odds API
+# Platzhalter (dr=1.01, aw=1.06 …), bevor der Markt settlet. Die Regel lebt jetzt zentral in
+# odds_plausibility.py — vorher lag sie dreifach im Repo mit UNTERSCHIEDLICHEN Overround-Grenzen
+# (1.25 hier vs 1.30 in steam_engine): genau so laufen Schwellen still auseinander.
 
 
 def build_odds_entry(prices: dict, existing: dict, now_iso: str, hist: list | None = None) -> dict:

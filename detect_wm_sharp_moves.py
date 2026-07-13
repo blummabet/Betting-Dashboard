@@ -28,6 +28,8 @@ import urllib.error
 from datetime import datetime, timezone, timedelta, date
 from pathlib import Path
 
+import odds_plausibility as OP   # 13.07.2026: EINE Quelle für „echter Markt vs Platzhalter"
+
 # ── Config ────────────────────────────────────────────────────────────────────
 import cocobet_dataset as D
 
@@ -395,6 +397,12 @@ def analyze_moves(history: dict, wm: dict, poly_edges: dict) -> list[dict]:
         # public war → falscher kumulativer Drift (DZA-AUT „29 Tage/62 Snaps/public", 2.37→2.30).
         # Soft-Bestätigung läuft separat über die Card-Soft-Bar. bk fehlt (Legacy) → als sharp werten.
         snaps = [s for s in raw_snaps if isinstance(s, dict) and s.get("bk") != "public"]
+        # 13.07.2026 (Lucas: „schau dir den Sharp Radar nochmal an"): Platzhalter-Snapshots raus.
+        # Die MLS-History eröffnete mit hw=1.04/dr=1.01/aw=1.04 → Overround 291 %. Daraus wurden
+        # Geister-Moves von 80,8pp („🔥 STEAM") — und die sind bereits als Telegram-Alert rausgegangen.
+        # Betroffen sind BEIDE Modi: prev (Snap-zu-Snap) und snaps[0] (kumulativer Drift).
+        # Hier zentral filtern statt an jeder Rechenstelle einzeln → ein Geist kann nirgends überleben.
+        snaps = OP.clean_snaps(snaps)
         if len(snaps) < 2:
             continue
 

@@ -557,6 +557,45 @@ def check_opening_plausible(ctx):
 
 
 @integrity_check
+def check_history_snaps_plausible(ctx):
+    """13.07.2026 (Lucas: „schau dir den Sharp Radar nochmal an").
+
+    BLINDER FLECK des Guards oben: der prüft nur `odds_open` — und das war bei MLS sauber geheilt
+    (Marge 1.09), also meldete er GRÜN. Sharp Radar und detect_wm_sharp_moves lesen aber gar nicht
+    odds_open, sondern die **History** (snaps[0] als Opening, prev für Snap-zu-Snap). Und dort lagen
+    die Platzhalter weiter drin: hw=1.04 / dr=1.01 / aw=1.04 → Overround **291 %**.
+
+    Folge: Geister-Mover im Radar und **80,8pp „🔥 STEAM"-Alerts, die bereits per Telegram
+    rausgingen**. Ein Guard, der die falsche Datei prüft, ist schlimmer als keiner — er beruhigt.
+
+    Dieser Check schaut dorthin, wo die Verbraucher wirklich lesen. Konsumenten filtern jetzt
+    (odds_plausibility.clean_snaps / _sharpCleanSnaps), aber verseuchte History bleibt ein
+    Datenfehler der Quelle → sichtbar machen, nicht verstecken.
+    """
+    import odds_plausibility as OP
+    hist = ctx.history if isinstance(getattr(ctx, "history", None), dict) else None
+    if not hist:
+        return _chk("history_snaps_plausible", "History-Snapshots = echte Märkte (kein Platzhalter)",
+                    "warn", [], "keine Odds-History im Kontext")
+    fails = []
+    for mk, snaps in hist.items():
+        if mk == "_meta" or not isinstance(snaps, list):
+            continue
+        bad = [s for s in snaps
+               if isinstance(s, dict) and s.get("hw") and s.get("dr") and s.get("aw")
+               and not OP.plausible_1x2(s["hw"], s["dr"], s["aw"])]
+        if bad:
+            b = bad[0]
+            orr = 1.0 / b["hw"] + 1.0 / b["dr"] + 1.0 / b["aw"]
+            fails.append(f"{mk}: {len(bad)} Platzhalter-Snap(s), z.B. {b['hw']}/{b['dr']}/{b['aw']} "
+                         f"(Overround {orr:.2f}) → Geister-Move im Radar + Fake-Steam-Alert")
+    return _chk("history_snaps_plausible", "History-Snapshots = echte Märkte (kein Platzhalter)",
+                "warn", fails,
+                "Verbraucher filtern via odds_plausibility.clean_snaps; verseuchte Snaps bleiben "
+                "trotzdem ein Quellen-Fehler und werden hier sichtbar.")
+
+
+@integrity_check
 def check_liga_leagues_populated(ctx):
     """NEU 26.06.2026 (Lucas): jede der 5 Top-Ligen muss Teams + Fixtures haben. La Liga/Bundesliga
     veröffentlichen ihren Spielplan oft später als EPL/Serie A/Ligue 1 → bis dahin liefert
