@@ -1649,8 +1649,11 @@ function _renderSharpWatchlist() {
 function _renderBayesianWeights() {
   // Dataset-bewusst (26.06.2026, Lucas): im Liga-Tab die LIGA-Gewichte + nur die liga-aktiven
   // Signale zeigen — sonst standen WM-Signale (Travel/Wetter/Anreiz) fälschlich im Liga-Panel.
-  const _isLiga = (typeof _sharpDataset !== 'undefined') && _sharpDataset === 'liga';
-  const weights = (_isLiga ? window.LIGA_SIGNAL_WEIGHTS : window.SIGNAL_WEIGHTS) || {};
+  // 13.07.2026: MLS zählt zu den Liga-Signalen (keine WM-Signale wie Travel/Wetter/Anreiz) und
+  // hat EIGENE Gewichte (mls_signal_weights.json) — vorher fiel es still auf die WM-Gewichte zurück.
+  const _isLiga = (typeof _sharpDataset !== 'undefined') && _sharpIsLigaLike(_sharpDataset);
+  const weights = (typeof _sharpDataset !== 'undefined'
+    ? window[_sharpMeta(_sharpDataset).weightsGlobal] : null) || {};
   const signalNames = _isLiga ? [
     "lead_lag_bias", "public_static_bias", "injury", "form_trend", "h2h_pattern",
     "xg_strength", "chance_creation", "form_rating", "freshness_leg", "lineup_signal",
@@ -1728,15 +1731,16 @@ function _renderBayesianWeights() {
 
 // ── CLV-Bilanz (28.06.2026, Lucas: „CLV als Nordstern") ──────────────────────
 // Lädt {wm_,liga_}clv_summary.json (compute_clv_summary.py) lazy, dataset-aware, re-rendert.
-let _clvLoading = { intl: false, liga: false };
+let _clvLoading = { intl: false, liga: false, mls: false };
 function _loadClvSummary() {
-  const isLiga = _sharpDataset === 'liga';
-  const gkey = isLiga ? 'LIGA_CLV_SUMMARY' : 'WM_CLV_SUMMARY';
+  // 13.07.2026: datensatz-generisch (vorher `=== 'liga'` → MLS zeigte still die WM-CLV-Bilanz).
+  const meta = _sharpMeta(_sharpDataset);
+  const gkey = meta.clvGlobal;
   if (window[gkey] !== undefined) return;            // schon geladen (auch {} zählt)
-  const lk = isLiga ? 'liga' : 'intl';
+  const lk = _sharpDataset;
   if (_clvLoading[lk]) return;
   _clvLoading[lk] = true;
-  const f = isLiga ? 'liga_clv_summary.json' : 'wm_clv_summary.json';
+  const f = meta.clvFile;
   fetch(f + '?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null)
     .then(j => { window[gkey] = j || {}; })
     .finally(() => { _clvLoading[lk] = false; renderSharpRadar(); });
@@ -1744,8 +1748,7 @@ function _loadClvSummary() {
 
 // Scoreboard: Ø CLV + % schlägt Schluss + Abdeckung, dann Schnitt nach Markt/Liga/Zeit.
 function _renderClvScoreboard() {
-  const isLiga = _sharpDataset === 'liga';
-  const s = (isLiga ? window.LIGA_CLV_SUMMARY : window.WM_CLV_SUMMARY) || null;
+  const s = window[_sharpMeta(_sharpDataset).clvGlobal] || null;
   const head = `<div class="section-label" style="margin-bottom:10px;">🎯 CLV-Bilanz · schlagen wir die Closing-Linie?</div>`;
   const wrap = (inner) => head + `<div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:24px;">${inner}</div>`;
 
@@ -1804,7 +1807,7 @@ function _renderClvScoreboard() {
   html += miniTable('Nach Pick-Typ', Object.entries(s.byVerdict || {})
     .sort((a, b) => (_vOrder[a[0]] ?? 9) - (_vOrder[b[0]] ?? 9)));
   html += miniTable('Nach Markt', Object.entries(s.byMarket || {}).sort((a, b) => (b[1].n || 0) - (a[1].n || 0)));
-  html += miniTable(isLiga ? 'Nach Liga' : 'Nach Gruppe', Object.entries(s.byLeague || {}).sort((a, b) => (b[1].n || 0) - (a[1].n || 0)));
+  html += miniTable(_sharpIsLigaLike(_sharpDataset) ? 'Nach Liga' : 'Nach Gruppe', Object.entries(s.byLeague || {}).sort((a, b) => (b[1].n || 0) - (a[1].n || 0)));
   html += miniTable('Nach Spieltag', (s.byTime || []).map(b => [b.bucket, b]));
 
   // BET-Quote pro Liga (Steuerungs-Hebel: nicht zu viele BET bei ~50 Spielen/Runde).
@@ -1912,10 +1915,13 @@ function _loadLigaSharpData() {
     // 29.06.2026 (Lucas: MLS „wie die anderen Ligen") — MLS-Moves in den Liga-Radar mit-mergen.
     fetch('mls-data.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
     fetch('mls-odds-history.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
-  ]).then(([ld, lh, lw, md, mh]) => {
+    // 13.07.2026: MLS hat EIGENE Signal-Gewichte — ohne die zeigte der MLS-Radar die WM-Gewichte.
+    fetch('mls_signal_weights.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
+  ]).then(([ld, lh, lw, md, mh, mw]) => {
     window.LIGA_DATA           = ld || {};
     window.LIGA_ODDS_HISTORY   = lh || {};
     window.LIGA_SIGNAL_WEIGHTS = lw || {};
+    window.MLS_SIGNAL_WEIGHTS  = mw || {};
     // MLS-Gruppen/Odds dazumischen (kollisionsfrei: Gruppe „MLS", Fixture-Keys „MLS-…").
     if (md && md.groups) {
       window.LIGA_DATA.groups = Object.assign({}, window.LIGA_DATA.groups || {}, md.groups);
@@ -1927,7 +1933,11 @@ function _loadLigaSharpData() {
     window.LIGA_ODDS_HISTORY = window.LIGA_ODDS_HISTORY || {};
   }).finally(() => {
     _sharpLigaLoading = false;
-    if (_sharpDataset === 'liga') renderSharpRadar();  // mit echten Daten neu zeichnen
+    // 13.07.2026 BUG: hier stand nur `=== 'liga'`. Beim neuen MLS-Toggle lud der Fetch zwar sauber,
+    // löste danach aber KEIN Re-Render aus → das Panel blieb ewig auf „⚽ Liga-Sharp-Daten werden
+    // geladen …" stehen (Lucas: „MLS-Daten werden im Sharp Radar nicht geladen" — sie WAREN geladen,
+    // nur nie gezeichnet). Jeder Liga-artige Datensatz muss hier neu zeichnen.
+    if (_sharpIsLigaLike(_sharpDataset)) renderSharpRadar();
   });
 }
 
@@ -1955,6 +1965,24 @@ function _sharpRenderToggleHtml() {
 //   liga → alles AUSSER MLS · mls → nur MLS
 const SHARP_SUBSETS = { liga: g => g !== 'MLS', mls: g => g === 'MLS' };
 
+// „Liga-artig" = liest window.LIGA_DATA (Top-5 UND MLS liegen dort gemeinsam), im Gegensatz zu
+// 'intl' (WM-Globals). 13.07.2026: Vorher stand `=== 'liga'` an DREI Stellen verstreut — beim
+// Einbau des MLS-Toggles habe ich eine davon übersehen (den Re-Render nach dem Lazy-Load), und
+// der MLS-Radar hing für immer im Lade-Zustand. Eine Funktion, ein Ort, kein Vergessen mehr.
+// Neuer Datensatz = Eintrag in SHARP_SUBSETS, sonst nichts.
+function _sharpIsLigaLike(ds) { return Object.prototype.hasOwnProperty.call(SHARP_SUBSETS, ds); }
+
+// Pro Radar-Datensatz: wo liegen Signal-Gewichte und CLV-Bilanz? MLS hat EIGENE Dateien
+// (mls_signal_weights.json / mls_clv_summary.json) — vorher fiel der MLS-Tab still auf die
+// WM-Gewichte und die WM-CLV-Bilanz zurück, weil überall `=== 'liga'` geprüft wurde.
+// Neuer Datensatz = eine Zeile hier.
+const SHARP_DS_META = {
+  intl: { clvFile: 'wm_clv_summary.json',   clvGlobal: 'WM_CLV_SUMMARY',   weightsGlobal: 'SIGNAL_WEIGHTS'      },
+  liga: { clvFile: 'liga_clv_summary.json', clvGlobal: 'LIGA_CLV_SUMMARY', weightsGlobal: 'LIGA_SIGNAL_WEIGHTS' },
+  mls:  { clvFile: 'mls_clv_summary.json',  clvGlobal: 'MLS_CLV_SUMMARY',  weightsGlobal: 'MLS_SIGNAL_WEIGHTS'  },
+};
+function _sharpMeta(ds) { return SHARP_DS_META[ds] || SHARP_DS_META.intl; }
+
 // Datensatz auf die gewünschten Gruppen zuschneiden — inkl. passender History (nur die Fixture-
 // Keys der behaltenen Gruppen), sonst rechnet der Radar Mover aus Spielen, die gar nicht sichtbar sind.
 function _sharpSliceData(data, hist, ds) {
@@ -1981,7 +2009,7 @@ function _sharpSetDataset(ds) {
   if (ds === _sharpDataset) return;
   _sharpDataset = ds;
   // 13.07.2026: 'mls' liest dieselben Liga-Globals (MLS ist dort mit-gemergt) → gleicher Lazy-Load.
-  if (ds === 'liga' || ds === 'mls') _loadLigaSharpData();
+  if (_sharpIsLigaLike(ds)) _loadLigaSharpData();
   renderSharpRadar();
 }
 if (typeof window !== 'undefined') window._sharpSetDataset = _sharpSetDataset;
@@ -2078,7 +2106,7 @@ function renderSharpRadar() {
   // ('intl') exakt das bisherige WM-Verhalten (_data=window.WM2026_DATA). Im Liga-
   // Modus aus den separat geladenen Liga-Globals (identisches JSON-Format).
   // 13.07.2026: 'mls' verhält sich wie 'liga' (gleiche Globals), zeigt aber NUR die MLS-Gruppe.
-  const _isLiga = _sharpDataset === 'liga' || _sharpDataset === 'mls';
+  const _isLiga = _sharpIsLigaLike(_sharpDataset);
   const _raw  = _isLiga ? (window.LIGA_DATA || {}) : window.WM2026_DATA;
   const _rawH = _isLiga ? (window.LIGA_ODDS_HISTORY || {}) : window.WM2026_ODDS_HISTORY;
   const _sliced = _isLiga ? _sharpSliceData(_raw, _rawH, _sharpDataset) : { data: _raw, hist: _rawH };

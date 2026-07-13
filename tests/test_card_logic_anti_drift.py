@@ -238,13 +238,34 @@ class TestSharpRadarDatasetAware(unittest.TestCase):
         self.src = (REPO / "renderer.js").read_text(encoding="utf-8")
 
     def test_bayesian_panel_is_dataset_aware(self):
+        """13.07.2026 überarbeitet: Der Test suchte wörtlich nach 'LIGA_SIGNAL_WEIGHTS' im
+        Funktionsrumpf. Die Gewichte werden jetzt über SHARP_DS_META aufgelöst (nötig, weil MLS
+        EIGENE Gewichte hat und vorher still auf die WM-Gewichte zurückfiel). Der Test prüft
+        deshalb die ABSICHT statt des Wortlauts: jeder Datensatz muss seine eigene Gewichts-Quelle
+        haben — und kein Liga-artiger Datensatz darf auf SIGNAL_WEIGHTS (=WM) landen.
+        """
         m = re.search(r'function _renderBayesianWeights\(\)\s*\{(.*?)\n\}', self.src, re.DOTALL)
         self.assertIsNotNone(m, "_renderBayesianWeights nicht gefunden")
         body = m.group(1)
         self.assertIn("_sharpDataset", body,
-            "_renderBayesianWeights muss _sharpDataset prüfen (Liga vs WM)")
-        self.assertIn("LIGA_SIGNAL_WEIGHTS", body,
-            "_renderBayesianWeights muss im Liga-Modus LIGA_SIGNAL_WEIGHTS lesen, nicht nur WM")
+            "_renderBayesianWeights muss den aktiven Datensatz berücksichtigen")
+        self.assertNotIn("window.SIGNAL_WEIGHTS", body,
+            "kein harter WM-Fallback mehr — die Quelle kommt aus SHARP_DS_META")
+
+        # Jeder Datensatz braucht eine EIGENE Gewichts-Quelle (sonst zeigt MLS/Liga WM-Gewichte).
+        meta = re.search(r'const SHARP_DS_META = \{(.*?)\n\};', self.src, re.DOTALL)
+        self.assertIsNotNone(meta, "SHARP_DS_META nicht gefunden")
+        block = meta.group(1)
+        for ds, weights_global in (("intl", "SIGNAL_WEIGHTS"),
+                                   ("liga", "LIGA_SIGNAL_WEIGHTS"),
+                                   ("mls",  "MLS_SIGNAL_WEIGHTS")):
+            self.assertRegex(block, rf"{ds}:.*{weights_global}",
+                f"{ds} muss auf {weights_global} zeigen")
+        for ds, clv in (("intl", "wm_clv_summary.json"),
+                        ("liga", "liga_clv_summary.json"),
+                        ("mls",  "mls_clv_summary.json")):
+            self.assertIn(clv, block, f"{ds} braucht seine eigene CLV-Bilanz ({clv})")
+
         # Liga-Signal darf in der Signal-Liste auftauchen (kein reines WM-Set mehr)
         self.assertIn("league_pressure", body,
             "Liga-Signal-Liste (league_pressure) muss im Panel vorkommen")

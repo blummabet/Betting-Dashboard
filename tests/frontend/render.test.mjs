@@ -143,6 +143,62 @@ test('Sharp Radar: Top-5 zeigt kein MLS mehr (saubere Trennung)', () => {
   assert.doesNotMatch(html, /Inter Miami/, 'MLS darf im Top-5-Radar NICHT mehr auftauchen');
 });
 
+test('Sharp Radar: MLS bleibt nicht im Lade-Zustand hängen (Re-Render nach Lazy-Load)', async () => {
+  // 13.07.2026 BUG (Lucas: „MLS-Daten werden im Sharp Radar nicht geladen"): Die Daten WAREN da —
+  // der Lazy-Loader zeichnete am Ende aber nur bei `_sharpDataset === 'liga'` neu. Bei 'mls' blieb
+  // ewig „⚽ Liga-Sharp-Daten werden geladen …" stehen.
+  //
+  // WICHTIG: Dieser Test MUSS den echten Lazy-Load-Pfad durchlaufen (LIGA_DATA NICHT vorbelegen) —
+  // sonst kehrt _loadLigaSharpData früh zurück und der Bug wird gar nicht ausgelöst. Genau das ist
+  // mir beim ersten Versuch passiert: der Test war grün, obwohl der Bug wieder drin war.
+  const w = loadFull();
+  w.LEAGUES = {};
+  const now = Date.now();
+  const iso = (ms) => new Date(ms).toISOString();
+  const ko = new Date(now + 6 * 3600000);
+  const today = new Date().toISOString().slice(0, 10);
+
+  const mlsData = { groups: { MLS: {
+    teams: [{ id: 'mia', name: 'Inter Miami', flag: '🇺🇸' }, { id: 'rsl', name: 'Real Salt Lake', flag: '🇺🇸' }],
+    fixtures: [{ home: 'mia', away: 'rsl', date: today, time: '23:00',
+                 kickoff: ko.toISOString(), matchday: 25, result: null }],
+  } } };
+  const mlsHist = { 'mia-rsl': [
+    { ts: iso(now - 5 * 3600000), hw: 2.10, dr: 3.40, aw: 3.30 },
+    { ts: iso(now - 1 * 3600000), hw: 1.85, dr: 3.60, aw: 3.90 },
+  ] };
+
+  // Fetch nach Dateiname bedienen — so wie es im Browser wirklich läuft.
+  w.fetch = (url) => {
+    const u = String(url);
+    const body = u.startsWith('mls-data') ? mlsData
+      : u.startsWith('mls-odds-history') ? mlsHist
+      : {};
+    return Promise.resolve({ ok: true, json: () => Promise.resolve(body) });
+  };
+
+  w._sharpSetDataset('mls');          // löst den Lazy-Load aus
+  await new Promise(r => setTimeout(r, 50));   // Promise-Kette durchlaufen lassen
+
+  const html = w.document.getElementById('mainContent').innerHTML;
+  assert.doesNotMatch(html, /werden geladen/,
+    'MLS-Radar hängt im Lade-Zustand → der Lazy-Load hat kein Re-Render ausgelöst');
+  assert.match(html, /Inter Miami/, 'MLS-Inhalte müssen nach dem Laden gerendert sein');
+});
+
+test('Sharp Radar: jeder Datensatz kennt seine eigenen Gewichte + CLV-Dateien', () => {
+  // MLS fiel vorher still auf die WM-Gewichte und die WM-CLV-Bilanz zurück (überall `=== 'liga'`).
+  const w = _sharpLigaMlsWorld();
+  for (const ds of ['intl', 'liga', 'mls']) {
+    const meta = w._sharpMeta(ds);
+    assert.ok(meta && meta.clvFile && meta.clvGlobal && meta.weightsGlobal, `Meta fehlt für ${ds}`);
+  }
+  assert.notEqual(w._sharpMeta('mls').clvFile, w._sharpMeta('intl').clvFile,
+    'MLS darf NICHT die WM-CLV-Bilanz anzeigen');
+  assert.notEqual(w._sharpMeta('mls').weightsGlobal, w._sharpMeta('intl').weightsGlobal,
+    'MLS darf NICHT die WM-Signal-Gewichte anzeigen');
+});
+
 test('Sharp Radar: Platzhalter-Quoten erzeugen keinen Geister-Mover', () => {
   // 13.07.2026: Die MLS-History eröffnete real mit 1.04/1.01/1.04 (Overround 291 %) →
   // daraus wurden 80pp-„Steam"-Geister. Der Radar muss solche Snaps verwerfen.
