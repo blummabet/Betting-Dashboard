@@ -57,12 +57,34 @@ TRADES_URL   = "https://data-api.polymarket.com/trades?market={cond}&limit=100"
 TOP_N           = 10        # für topHolderShare
 BIG_TRADER_USD  = 1000      # Wallet ab $ = „Top-Trader"
 HOLDERS_TIMEOUT = 15
-MIN_WRITE_USD   = 5000      # darunter ($0.00M-Platzhalter/gelaufene Spiele) NICHT schreiben
+MIN_WRITE_USD   = 5000      # Default (WM): darunter ($0.00M-Platzhalter/gelaufene Spiele) nicht schreiben
 
 # Wallet-Dashboard (21.06.2026, Lucas): einzelne fette Einsätze sichtbar machen
 TOP_WALLETS_PER_OUTCOME = 8      # wie viele Einzel-Wallets je Outcome behalten
 BIG_TRADE_USD           = 2000   # Trade ab $ kommt in den „große Trades"-Feed
 LEADERBOARD_MAX         = 60     # globale Bestenliste begrenzen
+
+
+def _cfg_min_write_usd() -> float:
+    """ANZEIGE-Schwelle: ab welchem offenen Interesse (USD) ein Spiel überhaupt in
+    {prefix}_poly_smartmoney/_wallets geschrieben wird.
+
+    12.07.2026 (Lucas: „im Whale-Wallets-Tab erscheint nichts bei MLS"): Der harte Default 5000
+    stammt aus der WM (Millionen-Märkte) und filterte dort $0.00M-Platzhalter weg. Die frisch
+    gelisteten MLS-Märkte haben real nur $0–130 Volumen → JEDES Spiel fiel durch → Datei leer →
+    Tab leer, ohne dass irgendwo stand warum.
+
+    ⚠️ Das ist NUR die Anzeige-/Schreibschwelle. Das **Trading**-Volumen-Gate (Vol ≥ 5.000 in
+    auto_wm_poly_trigger) ist davon unabhängig und bleibt unangetastet — bei $0 Volumen gibt es
+    keinen Fill. Whales anzeigen ≠ Whales handeln.
+    """
+    try:
+        import json as _j
+        raw = _j.loads((BASE / "cocobet_config.json").read_text(encoding="utf-8"))
+        active = os.environ.get("COCOBET_PROFILE") or raw["profiles"].get("active", "wm2026")
+        return float(raw["profiles"][active].get("poly", {}).get("smartmoney_min_usd", MIN_WRITE_USD))
+    except Exception:
+        return float(MIN_WRITE_USD)
 
 
 def _cfg_cluster_window_h() -> float:
@@ -126,12 +148,18 @@ def _cluster_metrics(trades, window_h):
     return out
 
 
+_HTTP_STATS = {"ok": 0, "fail": 0}   # 12.07.2026: API-Ausfall von „kein Volumen" unterscheidbar machen
+
+
 def _http_get(url: str):
     req = urllib.request.Request(url, headers={"User-Agent": "BetEdge/1.0", "Accept": "application/json"})
     try:
         with urllib.request.urlopen(req, timeout=HOLDERS_TIMEOUT) as r:
-            return json.loads(r.read())
+            data = json.loads(r.read())
+        _HTTP_STATS["ok"] += 1
+        return data
     except Exception as e:
+        _HTTP_STATS["fail"] += 1
         print(f"  HTTP error {url[:70]}…: {e}")
         return None
 
@@ -234,6 +262,11 @@ def main():
     all_positions, all_trades, all_clusters = [], [], []   # 22.06.: Konsens-Cluster-Feed
     n_ok = 0
     n_skip_ko = 0
+    n_seen = 0                     # Spiele, die wir überhaupt abgefragt haben (nicht angepfiffen)
+    n_low_vol = 0                  # API lieferte, aber offenes Interesse < Anzeige-Schwelle
+    low_vol_examples: list[str] = []
+    min_write_usd = _cfg_min_write_usd()
+    print(f"  Anzeige-Schwelle: offenes Interesse ≥ ${min_write_usd:,.0f} je Spiel")
     for fx in fixtures:
         key = fx.get("key")
         if not key:
@@ -251,6 +284,7 @@ def main():
             "away": (fx.get("awCondition"), (fx.get("awTokens") or [None])[0], fx.get("poly_aw")),
         }
         outcomes, total, top_traders = {}, 0.0, 0
+        n_seen += 1
         positions, trades = [], []
         for side, (cond, tok, price) in legs.items():
             sm = _outcome_smartmoney(cond, tok, price)
@@ -264,8 +298,12 @@ def main():
                 positions.append({"wallet": w["wallet"], "usd": w["usd"], "shares": w["shares"],
                                   "side": side, "pick": pick_label[side]})
             trades.extend(_big_trades(cond, pick_label[side], side, price))
-        if not outcomes or total < MIN_WRITE_USD:
-            continue   # $0.00M-Platzhalter → nicht schreiben
+        if not outcomes or total < min_write_usd:
+            # 12.07.2026: NICHT mehr stumm verwerfen — sonst sieht man im Log nur „0 Spiele"
+            # und weiß nicht, ob die API tot war oder ob schlicht kein Geld im Markt liegt.
+            n_low_vol += 1
+            low_vol_examples.append(f"{home_nm}–{away_nm} ${total:,.0f}")
+            continue   # $0.00M-Platzhalter / noch kein Volumen → nicht schreiben
         # Konsens-Cluster + Net-Flow je Seite aus den großen Trades (21.06.→22.06., PolymarketScan)
         cluster = _cluster_metrics(trades, _cfg_cluster_window_h())
         hk = _hours_to_kickoff(fx)
@@ -305,10 +343,39 @@ def main():
     # aus (Geoblock, Rate-Limit) — oder ist wm_poly_prices.json leer — bleiben matches/wallet_matches
     # leer und hätten die befüllten Dateien überschrieben → smart_money-Signal tot + 🐋-Wallets-Tab
     # leer. Bei 0 verarbeiteten Spielen NICHT schreiben (alter Stand bleibt).
-    if not matches and OUT_FILE.exists():
-        print(f"\n❌ 0 Spiele mit Smart-Money-Daten (Poly-API/Geoblock?) — {OUT_FILE.name} + "
-              f"{WALLETS_FILE.name} NICHT überschrieben, alter Stand bleibt erhalten.")
-        return
+    #
+    # 12.07.2026: Die alte Meldung war für ZWEI grundverschiedene Ursachen identisch
+    # („0 Spiele — Poly-API/Geoblock?") → man konnte am Log nicht erkennen, ob die API tot war
+    # oder ob die Märkte schlicht leer sind. Jetzt sauber getrennt:
+    api_dead = _HTTP_STATS["ok"] == 0 and _HTTP_STATS["fail"] > 0
+    if not matches:
+        if api_dead:
+            # Echter Ausfall → alten Stand NIE überschreiben (Signal + 🐋-Tab würden sterben).
+            print(f"\n❌ Polymarket-API nicht erreichbar ({_HTTP_STATS['fail']} Fehl-Requests, "
+                  f"0 erfolgreich) — Geoblock/Rate-Limit? {OUT_FILE.name} + {WALLETS_FILE.name} "
+                  f"NICHT überschrieben, alter Stand bleibt erhalten.")
+            return
+        if n_low_vol:
+            # KEIN Fehler: API antwortet, aber es liegt (noch) kein Geld in den Märkten.
+            print(f"\nℹ️  API ok ({_HTTP_STATS['ok']} Requests) — aber {n_low_vol}/{n_seen} Spiele "
+                  f"unter der Anzeige-Schwelle von ${min_write_usd:,.0f} offenem Interesse.")
+            print(f"    Beispiele: {', '.join(low_vol_examples[:4])}")
+            print(f"    → Die Märkte sind frisch gelistet und haben noch kein Volumen. "
+                  f"Whales erscheinen automatisch, sobald gehandelt wird.")
+            # Leere Dateien MIT Begründung schreiben → das Frontend kann den Zustand erklären,
+            # statt einfach blank zu bleiben.
+        else:
+            print(f"\n⚠️  0 Spiele verarbeitet ({n_skip_ko} bereits angepfiffen).")
+
+    empty_reason = None
+    if not matches:
+        empty_reason = {
+            "code":        "no_volume" if n_low_vol else "no_fixtures",
+            "minWriteUsd": min_write_usd,
+            "gamesBelow":  n_low_vol,
+            "gamesSeen":   n_seen,
+            "examples":    low_vol_examples[:6],
+        }
 
     OUT_FILE.write_text(json.dumps(
         {"matches": matches, "updatedAt": datetime.now(timezone.utc).isoformat()},
@@ -324,6 +391,8 @@ def main():
         "topPositionsAll":  all_positions[:LEADERBOARD_MAX],
         "bigTradesAll":     all_trades[:LEADERBOARD_MAX],
         "clustersAll":      all_clusters[:LEADERBOARD_MAX],
+        # 12.07.2026: Warum ist es leer? Das Frontend soll den Zustand ERKLÄREN statt blank zu sein.
+        "emptyReason":      empty_reason,
         "updatedAt":        datetime.now(timezone.utc).isoformat(),
     }, ensure_ascii=False, indent=2), encoding="utf-8")
 

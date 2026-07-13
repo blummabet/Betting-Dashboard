@@ -41,9 +41,16 @@ const PW_DATASETS = [
     data:'liga-data.json',          hist:'liga-odds-history.json' },
 ];
 
+// ⚠️ 12.07.2026 — BUG-FIX (Lucas: „im Whale-Tab erscheint nichts, wenn ich auf MLS klicke").
+// Der aktive Datensatz lag in `window._pwDataset` — GENAU der Name der Funktion `_pwDataset()`.
+// Top-Level-`function`-Deklarationen hängen im Browser aber selbst an `window`. `window._pwDataset = id`
+// hat die FUNKTION mit dem String überschrieben → der nächste Aufruf warf
+// „TypeError: _pwDataset is not a function" → _pwRender starb → Panel blieb leer.
+// (WM lief, weil dort nie umgeschaltet werden musste.) Zustand heißt jetzt `_pwDsId` — nie wieder
+// gleich benennen wie eine Funktion. Guard: tests/test_poly_wallets_dataset_switch.js
+let _pwDsId = 'wm';
 function _pwDataset(){
-  const ds = (typeof window!=='undefined' && window._pwDataset) ? window._pwDataset : 'wm';
-  return PW_DATASETS.some(d=>d.id===ds) ? ds : 'wm';
+  return PW_DATASETS.some(d=>d.id===_pwDsId) ? _pwDsId : 'wm';
 }
 function _pwFiles(){
   const ds=_pwDataset();
@@ -52,12 +59,22 @@ function _pwFiles(){
 // Datensatz wechseln: Cache leeren, State zurücksetzen, neu laden.
 function _pwSwitchDataset(id){
   if (!PW_DATASETS.some(d=>d.id===id) || _pwDataset()===id) return;
-  window._pwDataset = id;
+  _pwDsId = id;
   _pwCache = null;
   _pwState.open = null;
   _polyWalletsLoaded = false;
   _pwDestroyCharts();
   initPolyWallets();
+}
+// Warum sind keine Whales da? Ehrlich beantworten statt „keine Daten" (12.07.2026).
+// Der Fetcher legt `emptyReason` ab: no_volume = API lieferte, aber der Markt ist noch leer.
+function _pwWhyNoWhales(wallets){
+  const r = wallets && wallets.emptyReason;
+  if (r && r.code==='no_volume')
+    return 'Noch keine Whale-Positionen: die Märkte sind frisch gelistet und haben unter '
+      + _pwUsd(r.minWriteUsd) + ' offenes Interesse ('+r.gamesBelow+'/'+r.gamesSeen+' Spiele). '
+      + 'Die Edges oben sind trotzdem gültig — Whales erscheinen, sobald echtes Geld fließt.';
+  return 'Keine erfassten Whale-Positionen.';
 }
 function _pwDatasetTabs(){
   const cur=_pwDataset();
@@ -84,6 +101,15 @@ function initPolyWallets(){
   ]).then(([wm,prices,wallets,hist])=>{
     _pwCache={wm,prices,wallets,hist};
     _pwRender();
+  }).catch(err=>{
+    // 12.07.2026: Vorher gab es KEIN catch — eine Exception im Render (z.B. der
+    // _pwDataset-Namensclash) ließ das Panel einfach leer stehen, ohne jeden Hinweis.
+    // Stiller Ausfall → nie wieder: Fehler sichtbar machen, Liga-Umschalter bleibt bedienbar.
+    console.error('[poly-wallets] Render fehlgeschlagen:', err);
+    panel.innerHTML=_pwDatasetTabs()
+      +'<div class="pw-empty"><div class="pw-empty-ico">⚠️</div><h2>Anzeige fehlgeschlagen</h2>'
+      +'<p>Das Edge-Board konnte für <b>'+f.label+'</b> nicht gerendert werden.<br>'
+      +'<code>'+String(err && err.message || err)+'</code></p></div>';
   });
 }
 
@@ -361,7 +387,7 @@ function _pwDrill(e,teams,wallets){
       +'<span><i style="background:'+PW_C.home+'"></i>'+sides[0].label+' '+_pwUsd(usd.home)+'</span>'
       +'<span><i style="background:'+PW_C.draw+'"></i>Remis '+_pwUsd(usd.draw)+'</span>'
       +'<span><i style="background:'+PW_C.away+'"></i>'+sides[2].label+' '+_pwUsd(usd.away)+'</span></div></div>';
-  } else h+='<div class="pw-none-sm">Keine erfassten Whale-Positionen.</div>';
+  } else h+='<div class="pw-none-sm">'+_pwWhyNoWhales(wallets)+'</div>';
   h+='</div></div>';
   // Conviction-Gauges
   h+='<div class="pw-gauges">';

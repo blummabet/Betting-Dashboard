@@ -832,7 +832,9 @@
       "poly": {
         "_comment": "12.07.2026: MLS hat KEINEN series_slug (soccer-mls → 0 Events). Die Serie heisst mls-2025 (saison-spezifisch, bricht jede Saison). Der TAG 'mls' ist stabil → tag_slug. Gegen die echte Gamma-API verifiziert.",
         "series_slug": "soccer-mls",
-        "tag_slug": "mls"
+        "tag_slug": "mls",
+        "_comment_minusd": "12.07.2026: ANZEIGE-Schwelle fuers 🐋-Wallets-Tab. Default 5000 stammt aus der WM (Millionen-Maerkte) und filterte dort $0.00M-Platzhalter weg. Frisch gelistete MLS-Maerkte haben real nur $0-130 → jedes Spiel fiel durch → Tab blank. NICHT das Trading-Gate (Vol>=5000 in auto_wm_poly_trigger) — das bleibt unangetastet.",
+        "smartmoney_min_usd": 100
       },
       "streak_momentum": {
         "_comment": "Streak-Signal (04.07.2026): Markt-Persistenz + xG-Deckung + Gegner-Kontext. Defaults im Code (sharp_signals/streak_momentum.py), hier überschreibbar.",

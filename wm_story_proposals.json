@@ -1,49 +1,49 @@
 {
-  "today": "2026-07-12T07:29:54.154644+00:00",
+  "today": "2026-07-13T04:34:54.625674+00:00",
   "chosen": {
     "angle_id": "killerStat",
-    "entity_key": "avgScored:BEL",
+    "entity_key": "defensiveWall:ESP",
     "theme": "killer_stat",
-    "score": 0.85,
+    "score": 0.667,
     "hook_slots": {
       "big_number": {
-        "value": "3.4",
-        "source": "form.BEL.avgScored",
+        "value": "0.3",
+        "source": "form.ESP.avgConceded",
         "source_file": "wm2026-data.json",
         "derived": false,
-        "raw": 3.4
+        "raw": 0.333
       },
       "sub_title": {
-        "value": "Tore pro Spiel · Belgien",
+        "value": "Gegentore pro Spiel · Spanien",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "hook_line_1": {
-        "value": "<span class=\"acc\">Belgien</span> 🇧🇪 trifft",
+        "value": "<span class=\"acc\">Spanien</span> 🇪🇸 kassiert",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "hook_line_2": {
-        "value": "<span class=\"yellow\">jeden Gegner.</span>",
+        "value": "<span class=\"yellow\">fast keine Tore.</span>",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "mystery_question": {
-        "value": "Wer stoppt diese Maschine?",
+        "value": "Wer durchbricht die Mauer?",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "highlight_fact": {
-        "value": "Ø 3.4 Tore in 15 Spielen — Gegen Ø 0.8",
-        "source": "form.BEL.avgScored + form.BEL.games + form.BEL.avgConceded",
+        "value": "0.3 Tore/Spiel kassiert — Ø 2.4 eigene",
+        "source": "form.ESP.avgConceded + form.ESP.avgScored",
         "source_file": "wm2026-data.json",
         "derived": true,
         "raw": null
@@ -51,77 +51,77 @@
     },
     "info_slots": {
       "flag": {
-        "value": "🇧🇪",
+        "value": "🇪🇸",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "name": {
-        "value": "Belgien",
+        "value": "Spanien",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "role_line": {
-        "value": "Ø 3.4 Tore/Spiel · 15 Spiele Datenbasis",
+        "value": "Bestes Defensivteam laut Form · 15 Spiele Datenbasis",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "stat1_val": {
-        "value": "3.4",
-        "source": "form.BEL.avgScored",
+        "value": "0.3",
+        "source": "form.ESP.avgConceded",
         "source_file": "wm2026-data.json",
         "derived": false,
-        "raw": 3.4
+        "raw": 0.333
       },
       "stat1_lbl": {
-        "value": "Tore Ø",
-        "source": "",
-        "source_file": "",
-        "derived": false,
-        "raw": null
-      },
-      "stat2_val": {
-        "value": "0.8",
-        "source": "form.BEL.avgConceded",
-        "source_file": "wm2026-data.json",
-        "derived": false,
-        "raw": 0.8
-      },
-      "stat2_lbl": {
         "value": "Gegen Ø",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
-      "stat3_val": {
-        "value": "15",
-        "source": "form.BEL.games",
+      "stat2_val": {
+        "value": "2.4",
+        "source": "form.ESP.avgScored",
         "source_file": "wm2026-data.json",
         "derived": false,
-        "raw": 15
+        "raw": 2.4
+      },
+      "stat2_lbl": {
+        "value": "Tore Ø",
+        "source": "",
+        "source_file": "",
+        "derived": false,
+        "raw": null
+      },
+      "stat3_val": {
+        "value": "60%",
+        "source": "form.ESP.over25Rate",
+        "source_file": "wm2026-data.json",
+        "derived": false,
+        "raw": 0.6
       },
       "stat3_lbl": {
-        "value": "Spiele",
+        "value": "3+ Tore",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "closing_line": {
-        "value": "<strong>Höchster Tor-Schnitt</strong> aller 48 qualifizierten WM-Teams. Form-Datenbasis: 15 Spiele.",
+        "value": "<strong>Beste Defensive</strong> aller 48 qualifizierten Teams. Ø 0.3 Tore über 15 Spiele.",
         "source": "",
         "source_file": "",
         "derived": false,
         "raw": null
       },
       "quote_line": {
-        "value": "Tor-Maschine ohne <span class=\"acc\">Stopper</span> in Sicht. ⚽",
+        "value": "Wer hier <span class=\"acc\">zwei Tore</span> macht, gewinnt. 🛡️",
         "source": "",
         "source_file": "",
         "derived": false,
@@ -136,11 +136,11 @@
       }
     },
     "series_tag": "",
-    "reason": "avgScored=3.4 (15 games) — höchster aller 48 Teams"
+    "reason": "avgConceded=0.3 (15 games) — niedrigster aller Teams"
   },
   "verifier": {
     "angle_id": "killerStat",
-    "entity": "avgScored:BEL",
+    "entity": "defensiveWall:ESP",
     "ok": true,
     "failures": [],
     "details": [
@@ -242,14 +242,14 @@
       "angle_id": "killerStat",
       "entity_key": "avgScored:BEL",
       "theme": "killer_stat",
-      "score": 0.85,
+      "score": 0.78,
       "hook_slots": {
         "big_number": {
-          "value": "3.4",
+          "value": "3.2",
           "source": "form.BEL.avgScored",
           "source_file": "wm2026-data.json",
           "derived": false,
-          "raw": 3.4
+          "raw": 3.2
         },
         "sub_title": {
           "value": "Tore pro Spiel · Belgien",
@@ -280,7 +280,7 @@
           "raw": null
         },
         "highlight_fact": {
-          "value": "Ø 3.4 Tore in 15 Spielen — Gegen Ø 0.8",
+          "value": "Ø 3.2 Tore in 15 Spielen — Gegen Ø 0.7",
           "source": "form.BEL.avgScored + form.BEL.games + form.BEL.avgConceded",
           "source_file": "wm2026-data.json",
           "derived": true,
@@ -303,18 +303,18 @@
           "raw": null
         },
         "role_line": {
-          "value": "Ø 3.4 Tore/Spiel · 15 Spiele Datenbasis",
+          "value": "Ø 3.2 Tore/Spiel · 15 Spiele Datenbasis",
           "source": "",
           "source_file": "",
           "derived": false,
           "raw": null
         },
         "stat1_val": {
-          "value": "3.4",
+          "value": "3.2",
           "source": "form.BEL.avgScored",
           "source_file": "wm2026-data.json",
           "derived": false,
-          "raw": 3.4
+          "raw": 3.2
         },
         "stat1_lbl": {
           "value": "Tore Ø",
@@ -324,11 +324,11 @@
           "raw": null
         },
         "stat2_val": {
-          "value": "0.8",
+          "value": "0.7",
           "source": "form.BEL.avgConceded",
           "source_file": "wm2026-data.json",
           "derived": false,
-          "raw": 0.8
+          "raw": 0.733
         },
         "stat2_lbl": {
           "value": "Gegen Ø",
@@ -374,20 +374,20 @@
         }
       },
       "series_tag": "",
-      "reason": "avgScored=3.4 (15 games) — höchster aller 48 Teams"
+      "reason": "avgScored=3.2 (15 games) — höchster aller 48 Teams"
     },
     {
       "angle_id": "killerStat",
       "entity_key": "defensiveWall:ESP",
       "theme": "killer_stat",
-      "score": 0.733,
+      "score": 0.667,
       "hook_slots": {
         "big_number": {
           "value": "0.3",
           "source": "form.ESP.avgConceded",
           "source_file": "wm2026-data.json",
           "derived": false,
-          "raw": 0.267
+          "raw": 0.333
         },
         "sub_title": {
           "value": "Gegentore pro Spiel · Spanien",
@@ -418,7 +418,7 @@
           "raw": null
         },
         "highlight_fact": {
-          "value": "0.3 Tore/Spiel kassiert — Ø 2.5 eigene",
+          "value": "0.3 Tore/Spiel kassiert — Ø 2.4 eigene",
           "source": "form.ESP.avgConceded + form.ESP.avgScored",
           "source_file": "wm2026-data.json",
           "derived": true,
@@ -452,7 +452,7 @@
           "source": "form.ESP.avgConceded",
           "source_file": "wm2026-data.json",
           "derived": false,
-          "raw": 0.267
+          "raw": 0.333
         },
         "stat1_lbl": {
           "value": "Gegen Ø",
@@ -462,11 +462,11 @@
           "raw": null
         },
         "stat2_val": {
-          "value": "2.5",
+          "value": "2.4",
           "source": "form.ESP.avgScored",
           "source_file": "wm2026-data.json",
           "derived": false,
-          "raw": 2.467
+          "raw": 2.4
         },
         "stat2_lbl": {
           "value": "Tore Ø",

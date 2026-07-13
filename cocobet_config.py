@@ -108,6 +108,10 @@ DEFAULT_FALLBACK = {
         # tag_slug hat Vorrang, wenn gesetzt (12.07.2026, gegen die echte Gamma-API verifiziert).
         "series_slug": "soccer-fifwc",
         "tag_slug": "",
+        # ANZEIGE-Schwelle fürs 🐋-Wallets-Tab (offenes Interesse je Spiel in USD).
+        # 5000 passt zu WM-Millionenmärkten; frisch gelistete Ligen (MLS: $0–130) brauchen weniger,
+        # sonst bleibt das Tab kommentarlos leer. NICHT das Trading-Gate (das bleibt bei 5000).
+        "smartmoney_min_usd": 5000,
     },
 }
 

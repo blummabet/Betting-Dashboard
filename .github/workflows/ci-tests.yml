@@ -36,3 +36,9 @@ jobs:
         run: npm install --no-audit --no-fund
       - name: 🖥️ Frontend-Render-Tests (jsdom)
         run: npm test
+
+      # 12.07.2026: Der Whale-Tab blieb beim Umschalten auf MLS stumm leer
+      # (window._pwDataset überschrieb die gleichnamige Funktion _pwDataset()).
+      # Dieser Guard schaltet den Datensatz WIRKLICH um und hätte das sofort gefangen.
+      - name: 🐋 Poly-Wallets Datensatz-Umschalter
+        run: node tests/test_poly_wallets_dataset_switch.js
