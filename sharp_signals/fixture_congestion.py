@@ -20,6 +20,32 @@ MAX_PP = 1.5
 SHORT_REST_DAYS = 3   # ≤ 3 Tage Pause = englische Woche / Stau
 
 
+def build_team_schedule(groups: dict) -> dict:
+    """{team_id: [sortierte Datums-Strings]} aus allen Fixtures. Rein aus dem Plan, kein API-Call.
+
+    13.07.2026 (Lucas: „MLS startet Freitag — haben wir die Saisondaten am Schirm?"): Diese Logik
+    lag NUR in generate_wm_picks. signal_check (der „Analyse"-Tab) baute sie nicht nach → dort war
+    `team_schedule` leer → fixture_congestion blieb für JEDES Spiel still, und der Tab zeigte
+    weniger Signale, als die Engine wirklich benutzt. Genau das soll signal_check aber spiegeln.
+    Jetzt EINE Funktion, die beide Seiten aufrufen — das Format kann nicht mehr auseinanderlaufen.
+
+    Für die MLS besonders relevant: dort wird viel unter der Woche gespielt (englische Wochen sind
+    die Regel, nicht die Ausnahme), Ruhetage sind also ein echter Faktor.
+    """
+    out: dict = {}
+    for gd in (groups or {}).values():
+        for fx in (gd.get("fixtures") or []):
+            d = fx.get("date")
+            if not d:
+                continue
+            for tid in (fx.get("home"), fx.get("away")):
+                if tid:
+                    out.setdefault(tid, []).append(d)
+    for tid in out:
+        out[tid] = sorted(set(out[tid]))
+    return out
+
+
 def rest_days(schedule: list, match_date: str) -> Optional[int]:
     """Tage seit dem letzten Spiel vor match_date (aus sortierter Datums-Liste). None wenn kein
     Vorgänger (erstes Saisonspiel) oder Datum unparsebar. Reine Funktion (testbar)."""

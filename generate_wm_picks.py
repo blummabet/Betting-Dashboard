@@ -31,6 +31,7 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 import cocobet_dataset as D
+from sharp_signals.fixture_congestion import build_team_schedule
 
 BASE    = Path(__file__).parent
 # Dataset-Modus (Single Source: cocobet_dataset). COCOBET_DATASET=liga → läuft auf liga-data.json
@@ -1752,19 +1753,11 @@ def main():
         _iter_groups.append(("KO", {"teams": _all_teams, "fixtures": _ko_fixtures}))
 
     # Spielplan je Team (für fixture_congestion / Erschöpfung): {team_id: [sortierte Datumsstrings]}.
-    # Einmal aus allen Fixtures gebaut, in den Signal-Kontext gereicht (Ruhetage = Datum-Abstand zum
-    # letzten Spiel). Rein aus dem Plan, kein API-Call.
-    _team_dates: dict = {}
-    for _gd in groups.values():
-        for _fx in (_gd.get("fixtures") or []):
-            _d = _fx.get("date")
-            if not _d:
-                continue
-            for _tid in (_fx.get("home"), _fx.get("away")):
-                if _tid:
-                    _team_dates.setdefault(_tid, []).append(_d)
-    for _tid in _team_dates:
-        _team_dates[_tid] = sorted(set(_team_dates[_tid]))
+    # 13.07.2026: Die Logik lag NUR hier — signal_check (der „Analyse"-Tab) baute sie nicht nach,
+    # also blieb fixture_congestion dort für JEDES Spiel still und der Tab zeigte weniger Signale,
+    # als die Engine wirklich nutzt. Jetzt eine gemeinsame Funktion (build_team_schedule), damit die
+    # beiden Kontexte nicht wieder auseinanderlaufen.
+    _team_dates = build_team_schedule(groups)
 
     for gkey, gdata in _iter_groups:
         teams_map = {t["id"]: t for t in gdata.get("teams", [])}

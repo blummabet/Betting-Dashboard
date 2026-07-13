@@ -58,12 +58,9 @@
       "id": "odds_sane",
       "label": "Pinnacle-1X2 vollständig + plausibel",
       "severity": "warn",
-      "ok": false,
-      "nFail": 2,
-      "failures": [
-        "499-488: Margin 1.876 unplausibel",
-        "503-489: Margin 1.600 unplausibel"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Quelle für Modell-Baseline + Edge."
     },
     {
@@ -79,9 +76,35 @@
       "id": "injuries_plausible",
       "label": "Ausfall-Liste = aktueller Stand (kein Archiv)",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 31,
+      "failures": [
+        "1603: 116 Ausfälle — unplausibel hoch",
+        "1596: 60 Ausfälle — unplausibel hoch",
+        "1606: 108 Ausfälle — unplausibel hoch",
+        "1597: 76 Ausfälle — unplausibel hoch",
+        "1616: 95 Ausfälle — unplausibel hoch",
+        "1595: 96 Ausfälle — unplausibel hoch",
+        "1600: 72 Ausfälle — unplausibel hoch",
+        "1612: 76 Ausfälle — unplausibel hoch",
+        "1605: 86 Ausfälle — unplausibel hoch",
+        "25484: 107 Ausfälle — unplausibel hoch",
+        "1610: 68 Ausfälle — unplausibel hoch",
+        "20787: 75 Ausfälle — unplausibel hoch",
+        "1617: 69 Ausfälle — unplausibel hoch",
+        "16489: 68 Ausfälle — unplausibel hoch",
+        "1611: 75 Ausfälle — unplausibel hoch",
+        "9569: 47 Ausfälle — unplausibel hoch",
+        "9568: 38 Ausfälle — unplausibel hoch",
+        "1607: 90 Ausfälle — unplausibel hoch",
+        "1609: 62 Ausfälle — unplausibel hoch",
+        "1602: 78 Ausfälle — unplausibel hoch",
+        "18310: 39 Ausfälle — unplausibel hoch",
+        "2242: 91 Ausfälle — unplausibel hoch",
+        "1604: 90 Ausfälle — unplausibel hoch",
+        "1615: 78 Ausfälle — unplausibel hoch",
+        "1613: 59 Ausfälle — unplausibel hoch"
+      ],
       "note": "fetch_wm_injuries dedupliziert je Spieler (jüngster gewinnt) + verwirft Einträge älter als INJURY_RECENT_DAYS."
     },
     {
@@ -89,29 +112,13 @@
       "label": "History-Snapshots = echte Märkte (kein Platzhalter)",
       "severity": "warn",
       "ok": false,
-      "nFail": 21,
+      "nFail": 5,
       "failures": [
-        "499-488: 4 Platzhalter-Snap(s), z.B. 1.56/3.15/1.09 (Overround 1.88) → Geister-Move im Radar + Fake-Steam-Alert",
-        "503-489: 6 Platzhalter-Snap(s), z.B. 1.49/2.7/1.79 (Overround 1.60) → Geister-Move im Radar + Fake-Steam-Alert",
-        "530-535: 6 Platzhalter-Snap(s), z.B. 1.26/4.9/1.06 (Overround 1.94) → Geister-Move im Radar + Fake-Steam-Alert",
-        "540-539: 2 Platzhalter-Snap(s), z.B. 1.96/3.4/1.09 (Overround 1.72) → Geister-Move im Radar + Fake-Steam-Alert",
-        "160-162: 2 Platzhalter-Snap(s), z.B. 1.32/1.01/1.32 (Overround 2.51) → Geister-Move im Radar + Fake-Steam-Alert",
-        "164-185: 3 Platzhalter-Snap(s), z.B. 1.23/1.01/1.23 (Overround 2.62) → Geister-Move im Radar + Fake-Steam-Alert",
-        "165-175: 1 Platzhalter-Snap(s), z.B. 1.31/1.01/1.17 (Overround 2.61) → Geister-Move im Radar + Fake-Steam-Alert",
-        "1660-168: 2 Platzhalter-Snap(s), z.B. 1.18/1.01/1.44 (Overround 2.53) → Geister-Move im Radar + Fake-Steam-Alert",
-        "170-174: 2 Platzhalter-Snap(s), z.B. 1.3/1.01/1.3 (Overround 2.53) → Geister-Move im Radar + Fake-Steam-Alert",
-        "173-163: 4 Platzhalter-Snap(s), z.B. 1.48/1.01/1.2 (Overround 2.50) → Geister-Move im Radar + Fake-Steam-Alert",
-        "182-169: 2 Platzhalter-Snap(s), z.B. 1.34/1.01/1.34 (Overround 2.48) → Geister-Move im Radar + Fake-Steam-Alert",
-        "192-167: 2 Platzhalter-Snap(s), z.B. 1.3/1.01/1.3 (Overround 2.53) → Geister-Move im Radar + Fake-Steam-Alert",
-        "110-114: 2 Platzhalter-Snap(s), z.B. 1.01/1.02/1.01 (Overround 2.96) → Geister-Move im Radar + Fake-Steam-Alert",
-        "111-91: 2 Platzhalter-Snap(s), z.B. 1.02/1.02/1.02 (Overround 2.94) → Geister-Move im Radar + Fake-Steam-Alert",
-        "116-108: 3 Platzhalter-Snap(s), z.B. 1.02/1.02/1.02 (Overround 2.94) → Geister-Move im Radar + Fake-Steam-Alert",
-        "1298-106: 2 Platzhalter-Snap(s), z.B. 1.18/1.02/1.18 (Overround 2.68) → Geister-Move im Radar + Fake-Steam-Alert",
-        "77-79: 3 Platzhalter-Snap(s), z.B. 1.02/1.02/1.02 (Overround 2.94) → Geister-Move im Radar + Fake-Steam-Alert",
-        "81-95: 5 Platzhalter-Snap(s), z.B. 1.02/1.02/1.02 (Overround 2.94) → Geister-Move im Radar + Fake-Steam-Alert",
-        "84-97: 2 Platzhalter-Snap(s), z.B. 1.19/1.02/1.19 (Overround 2.66) → Geister-Move im Radar + Fake-Steam-Alert",
-        "85-94: 3 Platzhalter-Snap(s), z.B. 1.02/1.02/1.02 (Overround 2.94) → Geister-Move im Radar + Fake-Steam-Alert",
-        "96-80: 2 Platzhalter-Snap(s), z.B. 1.02/1.02/1.02 (Overround 2.94) → Geister-Move im Radar + Fake-Steam-Alert"
+        "1614-1601: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "1607-1603: 2 Platzhalter-Snap(s), z.B. 1.17/1.01/1.17 (Overround 2.70) → Geister-Move im Radar + Fake-Steam-Alert",
+        "20787-1611: 3 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "1595-1617: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "9569-1608: 2 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert"
       ],
       "note": "Verbraucher filtern via odds_plausibility.clean_snaps; verseuchte Snaps bleiben trotzdem ein Quellen-Fehler und werden hier sichtbar."
     },
@@ -140,7 +147,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "96 Teams · 1752 Fixtures · 1752 pick-Keys. Fetcher-Wipe-Schutz: safe_write.py + build_liga_data.merge_groups_preserve."
+      "note": "30 Teams · 510 Fixtures · 292 pick-Keys. Fetcher-Wipe-Schutz: safe_write.py + build_liga_data.merge_groups_preserve."
     },
     {
       "id": "liga_market_coverage",
@@ -149,7 +156,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "48/48 mit AH · 10/48 mit Public-O/U."
+      "note": "21/21 mit AH · 21/21 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -229,12 +236,9 @@
       "id": "public_consensus",
       "label": "Public-Konsens (Soft-Books) vorhanden",
       "severity": "warn",
-      "ok": false,
-      "nFail": 2,
-      "failures": [
-        "77-79: kein public_hw",
-        "85-94: kein public_hw"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Ohne public_* feuert public_static_bias nicht."
     },
     {
@@ -242,33 +246,29 @@
       "label": "Public = Multi-Book-Konsens (nicht Einzel-Book)",
       "severity": "warn",
       "ok": false,
-      "nFail": 46,
+      "nFail": 21,
       "failures": [
-        "42-1346: public aus Einzel-Book 'williamhill' statt Konsens",
-        "64-33: public aus Einzel-Book 'williamhill' statt Konsens",
-        "45-52: public aus Einzel-Book 'williamhill' statt Konsens",
-        "57-746: public aus Einzel-Book 'williamhill' statt Konsens",
-        "65-63: public aus Einzel-Book 'williamhill' statt Konsens",
-        "55-47: public aus Einzel-Book 'williamhill' statt Konsens",
-        "50-35: public aus Einzel-Book 'williamhill' statt Konsens",
-        "51-66: public aus Einzel-Book 'williamhill' statt Konsens",
-        "34-40: public aus Einzel-Book 'williamhill' statt Konsens",
-        "36-49: public aus Einzel-Book 'williamhill' statt Konsens",
-        "494-895: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "495-492: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "497-502: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "499-488: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "500-487: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "503-489: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "505-1579: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "512-496: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "517-867: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "523-490: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "529-531: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "530-535: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "532-543: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "536-728: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "538-727: public aus Einzel-Book 'marathonbet' statt Konsens"
+        "1614-1601: public aus Einzel-Book 'williamhill' statt Konsens",
+        "1607-1603: public aus Einzel-Book 'williamhill' statt Konsens",
+        "20787-1611: public aus Einzel-Book 'williamhill' statt Konsens",
+        "1595-1617: public aus Einzel-Book 'williamhill' statt Konsens",
+        "9569-1608: public aus Einzel-Book 'williamhill' statt Konsens",
+        "1599-1602: public aus Einzel-Book 'williamhill' statt Konsens",
+        "1609-1601: public aus Einzel-Book 'williamhill' statt Konsens",
+        "1613-1604: public aus Einzel-Book 'williamhill' statt Konsens",
+        "2242-1603: public aus Einzel-Book 'williamhill' statt Konsens",
+        "9568-1607: public aus Einzel-Book 'williamhill' statt Konsens",
+        "18310-1608: public aus Einzel-Book 'williamhill' statt Konsens",
+        "1611-1612: public aus Einzel-Book 'williamhill' statt Konsens",
+        "16489-1595: public aus Einzel-Book 'williamhill' statt Konsens",
+        "9569-1614: public aus Einzel-Book 'williamhill' statt Konsens",
+        "1610-25484: public aus Einzel-Book 'williamhill' statt Konsens",
+        "1596-1598: public aus Einzel-Book 'williamhill' statt Konsens",
+        "1616-1606: public aus Einzel-Book 'williamhill' statt Konsens",
+        "1617-1597: public aus Einzel-Book 'williamhill' statt Konsens",
+        "1605-1616: public aus Einzel-Book 'williamhill' statt Konsens",
+        "1600-1615: public aus Einzel-Book 'williamhill' statt Konsens",
+        "1605-20787: public aus Einzel-Book 'williamhill' statt Konsens"
       ],
       "note": "public_static_bias soll auf Median-Konsens laufen, nicht 1 verrauschtem Soft-Book. Single-Book = fetch_wm_multibook_odds hat (noch) nicht geschrieben."
     },
@@ -516,6 +516,6 @@
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 5,
-  "generatedAt": "2026-07-13T14:03:01.267723+00:00"
+  "nFail": 4,
+  "generatedAt": "2026-07-13T14:03:09.913386+00:00"
 }

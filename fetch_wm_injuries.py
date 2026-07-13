@@ -56,6 +56,12 @@ WM_START   = date(2026, 6, 11)
 LIGA_LEAGUES = D.leagues()
 LIGA_SEASON  = D.season()
 
+# Aktualitätsfenster für Ausfälle (13.07.2026). /injuries?league&season liefert je FIXTURE einen
+# Eintrag → über eine Saison entsteht ein Archiv statt eines Ausfallstands. Ein Ausfall, der zuletzt
+# vor >21 Tagen gemeldet wurde, ist mit hoher Wahrscheinlichkeit ausgeheilt. Bewusst großzügig:
+# lieber ein Eintrag zu viel als eine echte Verletzung zu übersehen.
+INJURY_RECENT_DAYS = int(os.environ.get("INJURY_RECENT_DAYS", "21"))
+
 
 def apif_get(endpoint: str, params: dict) -> list:
     """API-Football GET → response list. Gibt [] bei Fehler zurück."""
@@ -115,30 +121,64 @@ def fetch_wm_injuries_league() -> dict[str, list]:
         print("  ℹ️  Keine Verletzungsdaten — Saison noch nicht begonnen oder API leer.")
         return {}
 
-    by_team: dict[str, list] = {}
+    # ── 13.07.2026 (Lucas: „MLS startet Freitag — haben wir die Saisondaten am Schirm?") ──
+    #
+    # BEFUND: Für die MLS standen 116 „Verletzte" bei einem 30-Mann-Kader — mehr Ausfälle als
+    # Spieler. Grund: /injuries?league&season liefert einen Eintrag JE FIXTURE. Über eine Saison
+    # mit 15 gespielten Runden sammelt sich so ein ARCHIV aller je gefehlten Spieler an, nicht der
+    # aktuelle Ausfallstand. Bei der WM (ein Turnier über 4 Wochen) fiel das nie auf.
+    #
+    # Wäre das ins injury-Signal gelaufen, hätten wir jedem Team eine halbe Mannschaft „verletzt"
+    # gerechnet — bei jedem Spiel, dauerhaft. Dass das Signal bisher schwieg, war Glück, kein Schutz.
+    #
+    # FIX (universal, gilt für WM + Liga + MLS):
+    #   1. je Spieler nur den JÜNGSTEN Eintrag behalten (Dedup)
+    #   2. nur Einträge aus dem Aktualitätsfenster — ältere Ausfälle sind längst ausgeheilt
+    from datetime import datetime as _dt, timezone as _tz, timedelta as _td
+
+    def _fix_date(e):
+        raw = ((e.get("fixture") or {}).get("date") or "")[:10]
+        try:
+            return _dt.fromisoformat(raw).date()
+        except ValueError:
+            return None
+
+    heute  = _dt.now(_tz.utc).date()
+    fenster = heute - _td(days=INJURY_RECENT_DAYS)
+
+    # Jüngster Eintrag je (Team, Spieler) gewinnt.
+    latest: dict[tuple, tuple] = {}
     for e in entries:
-        player = e.get("player", {})
-        team   = e.get("team", {})
-        fix    = e.get("fixture", {})
-
-        team_name = team.get("name", "")
-        inj_type  = e.get("type", "Unknown")       # "Injury" or "Suspension"
-        inj_reason = e.get("reason", "")           # e.g. "Hamstring"
-
+        team_name = (e.get("team") or {}).get("name", "")
+        pname     = (e.get("player") or {}).get("name", "?")
         if not team_name:
             continue
+        d = _fix_date(e)
+        key = (team_name, pname)
+        vorher = latest.get(key)
+        if vorher is None or (d and (vorher[0] is None or d > vorher[0])):
+            latest[key] = (d, e)
 
-        entry = {
-            "name":    player.get("name", "?"),
-            "type":    inj_type,
-            "reason":  inj_reason,
+    by_team: dict[str, list] = {}
+    verworfen_alt = 0
+    for (team_name, pname), (d, e) in latest.items():
+        # Kein Datum → behalten (nicht beurteilbar; ein Fehlurteil wäre schlimmer als ein Eintrag zu viel).
+        if d is not None and d < fenster:
+            verworfen_alt += 1
+            continue
+        by_team.setdefault(team_name, []).append({
+            "name":    pname,
+            "type":    e.get("type", "Unknown"),        # "Injury" oder "Suspension"
+            "reason":  e.get("reason", ""),             # z.B. "Hamstring"
             "status":  "missing",
-            "fixture": fix.get("date", ""),
-        }
+            "fixture": ((e.get("fixture") or {}).get("date") or ""),
+        })
 
-        by_team.setdefault(team_name, []).append(entry)
-
-    print(f"  ✅ {sum(len(v) for v in by_team.values())} Einträge für {len(by_team)} Teams")
+    roh = len(entries)
+    behalten = sum(len(v) for v in by_team.values())
+    print(f"  ✅ {behalten} aktuelle Ausfälle für {len(by_team)} Teams "
+          f"(aus {roh} Roh-Einträgen · {roh - len(latest)} Duplikate, "
+          f"{verworfen_alt} älter als {INJURY_RECENT_DAYS} Tage)")
     return by_team
 
 
@@ -164,18 +204,35 @@ def fetch_sidelined_per_team(team_map: dict[str, str], team_ids: dict[str, int])
             continue
         queried += 1
         time.sleep(DELAY)
-        entries = apif_get("injuries", {"team": apif_id, "season": WM_SEASON})
+        # 13.07.2026: Season war hart auf WM_SEASON — im Liga-Modus die falsche Saison.
+        entries = apif_get("injuries", {"team": apif_id,
+                                        "season": LIGA_SEASON if _IS_LIGA else WM_SEASON})
         if not entries:
             continue
 
-        team_entries = []
-        seen: set = set()
+        # 13.07.2026: Dedup gab es hier schon — aber es gewann der ERSTE Eintrag (also der
+        # ÄLTESTE Ausfall) und alte Einträge wurden nie verworfen. Über eine Saison landete so
+        # ein im Februar verletzter, längst genesener Spieler dauerhaft im „aktuell verletzt".
+        # Jetzt: jüngster Eintrag gewinnt + Aktualitätsfenster (wie im League-Pfad).
+        from datetime import datetime as _dt, timezone as _tz, timedelta as _td
+        fenster = _dt.now(_tz.utc).date() - _td(days=INJURY_RECENT_DAYS)
+
+        neueste: dict = {}
         for e in entries:
-            player = e.get("player", {})
-            name   = player.get("name", "?")
-            if name in seen:        # API listet pro Fixture — pro Spieler nur 1×
-                continue
-            seen.add(name)
+            name = (e.get("player") or {}).get("name", "?")
+            raw  = ((e.get("fixture") or {}).get("date") or "")[:10]
+            try:
+                d = _dt.fromisoformat(raw).date()
+            except ValueError:
+                d = None
+            vor = neueste.get(name)
+            if vor is None or (d and (vor[0] is None or d > vor[0])):
+                neueste[name] = (d, e)
+
+        team_entries = []
+        for name, (d, e) in neueste.items():
+            if d is not None and d < fenster:
+                continue                      # längst ausgeheilt → kein aktueller Ausfall
             team_entries.append({
                 "name":    name,
                 "type":    e.get("type", "Unknown"),    # "Missing Fixture" / "Questionable"

@@ -557,6 +557,70 @@ def check_opening_plausible(ctx):
 
 
 @integrity_check
+def check_injuries_plausible(ctx):
+    """13.07.2026 (Lucas: „MLS startet Freitag — haben wir die Saisondaten am Schirm?").
+
+    BEFUND: Die MLS-Verletzungsdaten listeten **116 Ausfälle für einen 30-Mann-Kader** — mehr
+    „Verletzte" als Spieler. /injuries?league&season liefert einen Eintrag JE FIXTURE, über eine
+    Saison entsteht daraus ein ARCHIV aller je gefehlten Spieler statt des aktuellen Stands.
+    Jüngster Eintrag: Mai. Wir schrieben Juli.
+
+    Dass das injury-Signal trotzdem schwieg, war Glück — kein Schutz. Hätte es gefeuert, hätten wir
+    jedem Team dauerhaft eine halbe Mannschaft „verletzt" gerechnet und Favoriten grundlos abgewertet.
+
+    Dieser Guard macht zwei stille Fehler sichtbar:
+      · MEHR Ausfälle als Kaderspieler → unmöglich, also Datenmüll
+      · Ausfalldaten VERALTET (jüngster Eintrag älter als 45 Tage) → Fetcher liefert nichts Neues
+    """
+    from datetime import datetime as _dt, timezone as _tz
+
+    inj = (ctx.wm.get("injuries") or {})
+    squads = (ctx.wm.get("squads") or {})
+    if not inj:
+        return _chk("injuries_plausible", "Ausfall-Liste = aktueller Stand (kein Archiv)",
+                    "warn", [], "keine Verletzungsdaten (früh in der Saison normal)")
+
+    fails = []
+    neuestes = None
+    for tid, entry in inj.items():
+        players = (entry or {}).get("players") or []
+        n = len(players)
+
+        # Kadergröße ermitteln (Struktur variiert je Datensatz → defensiv).
+        sq = squads.get(tid)
+        kader = 0
+        if isinstance(sq, dict):
+            kader = len(sq.get("players") or [])
+        elif isinstance(sq, list):
+            kader = len(sq)
+
+        if kader and n > kader:
+            fails.append(f"{tid}: {n} Ausfälle bei {kader} Kaderspielern → Archiv statt "
+                         f"Ausfallstand (/injuries liefert je Fixture einen Eintrag)")
+        elif n > 25:   # ohne Kaderdaten: 25+ Ausfälle sind nie ein echter Ausfallstand
+            fails.append(f"{tid}: {n} Ausfälle — unplausibel hoch")
+
+        for p in players:
+            d = (p.get("fixture") or "")[:10]
+            if d and (neuestes is None or d > neuestes):
+                neuestes = d
+
+    if neuestes:
+        try:
+            alter = (_dt.now(_tz.utc).date() - _dt.fromisoformat(neuestes).date()).days
+            if alter > 45:
+                fails.append(f"jüngster Ausfall-Eintrag ist {alter} Tage alt ({neuestes}) → "
+                             f"Fetcher liefert keine aktuellen Daten mehr")
+        except ValueError:
+            pass
+
+    return _chk("injuries_plausible", "Ausfall-Liste = aktueller Stand (kein Archiv)",
+                "warn", fails,
+                "fetch_wm_injuries dedupliziert je Spieler (jüngster gewinnt) + verwirft Einträge "
+                f"älter als INJURY_RECENT_DAYS.")
+
+
+@integrity_check
 def check_history_snaps_plausible(ctx):
     """13.07.2026 (Lucas: „schau dir den Sharp Radar nochmal an").
 
@@ -1911,13 +1975,20 @@ if __name__ == "__main__":
     # Dataset-Modus (Single Source: cocobet_dataset): Liga → Guards auf liga-data.json + Ergebnis
     # nach liga_status.json (Liga-Health sichtbar). WM-/Poly-only Guards no-oppen mangels Daten.
     _is_liga = D.is_liga()
+    # 13.07.2026 — BUG: hier stand hart `liga-data.json` / `liga_lineups.json` für JEDEN Nicht-WM-
+    # Datensatz. Unter COCOBET_DATASET=mls liefen damit ALLE Guards gegen die LIGA-Daten und das
+    # Ergebnis landete in liga_status.json. Der MLS-Status war nie echt — und mein neuer
+    # Ausfall-Guard meldete „0 Fehler", obwohl die MLS-Verletzungsdaten nachweislich kaputt sind:
+    # er hat schlicht die falsche Datei geprüft. Jetzt über cocobet_dataset (D.data_file/D.file),
+    # damit jeder Datensatz seine eigenen Daten prüft und in {prefix}_status.json schreibt.
     if _is_liga:
-        res = run_checks(load("liga-data.json"), {}, {}, {}, lineups=load("liga_lineups.json"))
+        res = run_checks(load(D.data_file().name), {}, {}, {},
+                         lineups=load(D.file("wm_lineups.json", "liga_lineups.json").name))
     else:
         res = run_checks(load("wm2026-data.json"), load("wm_poly_prices.json"),
                          load("wm_venue_schedule.json"), load("wm_venues.json"))
     nfail = sum(1 for c in res if not c["ok"])
-    print(f"=== Daten-Integrität ({'LIGA' if _is_liga else 'WM'}): {len(res)-nfail}/{len(res)} Checks ok "
+    print(f"=== Daten-Integrität ({D.active_dataset().upper()}): {len(res)-nfail}/{len(res)} Checks ok "
           f"({len(INTEGRITY_CHECKS)} Guards registriert) ===\n")
     for c in res:
         icon = "✅" if c["ok"] else ("🔴" if c["severity"] == "error" else "🟡")
@@ -1928,8 +1999,11 @@ if __name__ == "__main__":
         for f in c["failures"][:6]:
             print(f"     · {f}")
     if _is_liga:
-        (B / "liga_status.json").write_text(json.dumps(
+        # 13.07.2026: war hart liga_status.json → MLS überschrieb den LIGA-Status mit MLS-Ergebnissen
+        # (bzw. umgekehrt) und mls_status.json wurde nie aktualisiert. Jetzt datensatz-eigen.
+        _status = D.file("wm_status.json", "liga_status.json")
+        _status.write_text(json.dumps(
             {"checks": res, "nFail": nfail,
              "generatedAt": datetime.now(timezone.utc).isoformat()},
             ensure_ascii=False, indent=2), encoding="utf-8")
-        print(f"\n💾 liga_status.json geschrieben ({nfail} Warnungen/Fehler).")
+        print(f"\n💾 {_status.name} geschrieben ({nfail} Warnungen/Fehler).")

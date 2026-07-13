@@ -29,6 +29,7 @@ import cocobet_dataset as D
 from sharp_signals.base import market_side
 from sharp_signals.registry import ACTIVE_SIGNALS, evaluate_signals, _DISABLED_SIGNALS
 from sharp_signals.apif_predictions import _devig_1x2
+from sharp_signals.fixture_congestion import build_team_schedule
 
 BASE = Path(__file__).parent
 NEUTRAL_EPS = 0.05   # |score| darunter = neutral (⚪), sonst Vorzeichen entscheidet
@@ -150,6 +151,12 @@ def build_context(wm: dict, home_id: str, away_id: str, sources: dict | None = N
         "weather":          weather,
         "standings":        wm.get("standings") or {},
         "team_elo":         team_elo,
+        # 13.07.2026: fixture_congestion braucht Spielplan + Spieldatum. Beides fehlte hier → das
+        # Signal war im „Analyse"-Tab für JEDES Spiel still, obwohl die Engine es längst nutzt.
+        # Gleiche Quelle wie generate_wm_picks (build_team_schedule) → kann nicht auseinanderlaufen.
+        "team_schedule":      build_team_schedule(wm.get("groups") or {}),
+        "current_match_date": fx.get("date"),
+        "next_match_date":    fx.get("next_match_date"),
         "snapshot_ts":      None,
     }
 

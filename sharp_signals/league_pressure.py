@@ -24,7 +24,62 @@ LEAGUE_META = {
     "ITA": {"total": 20, "rounds": 38, "europe_cut": 7, "rel": 3},
     "GER": {"total": 18, "rounds": 34, "europe_cut": 7, "rel": 3},  # inkl. Relegations-Platz
     "FRA": {"total": 18, "rounds": 34, "europe_cut": 6, "rel": 3},
+    # 13.07.2026 (Lucas: „MLS startet Freitag"). MLS ist STRUKTURELL anders — deshalb nicht
+    # einfach eine sechste Zeile mit europäischen Annahmen:
+    #   · KEIN ABSTIEG (rel=0) → der übliche „Abstiegskampf"-Zweig darf gar nicht greifen,
+    #     sonst erfinden wir Druck, den es nicht gibt (Tabellenletzter spielt trotzdem um nichts).
+    #   · Das Rennen läuft JE CONFERENCE (East/West), nicht in der Gesamttabelle. Ein Team auf
+    #     Gesamtrang 18 kann in seiner Conference locker Playoff-Platz 6 sein.
+    #   · Playoff-Schnitt: Top 9 je Conference (15 Teams je Conference).
+    #   · Unter dem Strich jagt JEDES Team die Playoffs (chase_window=all) — anders als in Europa,
+    #     wo das Mittelfeld irgendwann wirklich um nichts mehr spielt.
+    "MLS": {"total": 15, "rounds": 34, "europe_cut": 9, "rel": 0,
+            "conference": True, "chase_all": True},
 }
+
+# Wie weit unter dem Qualifikations-Strich jagt ein Team noch aktiv? (Europa: 3 Plätze;
+# MLS: alle — die Playoff-Jagd geht bis zum Tabellenende, weil es keinen Abstieg gibt.)
+DEFAULT_CHASE_WINDOW = 3
+
+
+def _conference_of(team_id: str) -> str | None:
+    """East/West aus mls_conferences.json (lazy, gecacht). None → keine Conference-Liga."""
+    global _CONF_CACHE
+    if _CONF_CACHE is None:
+        try:
+            import json as _j
+            from pathlib import Path as _P
+            raw = _j.loads((_P(__file__).parent.parent / "mls_conferences.json").read_text("utf-8"))
+            _CONF_CACHE = {k: v.get("conference") for k, v in (raw.get("teams") or {}).items()}
+        except Exception:
+            _CONF_CACHE = {}
+    return _CONF_CACHE.get(str(team_id))
+
+
+_CONF_CACHE: dict | None = None
+
+
+def _conference_view(rows: list, team_id: str) -> tuple[list, dict | None]:
+    """Tabelle auf die Conference des Teams zuschneiden und NEU durchnummerieren.
+
+    Ohne das rechnet der Playoff-Druck gegen die falsche Grenze: Gesamtrang ≠ Conference-Rang.
+    Gibt (conference_rows, row_des_teams) — beides None-sicher.
+    """
+    conf = _conference_of(team_id)
+    if not conf:
+        return [], None
+    sub = [r for r in rows if _conference_of(r.get("team")) == conf]
+    # Nach Punkten (dann Tordifferenz) sortieren und Conference-Position vergeben.
+    sub = sorted(sub, key=lambda r: (-(r.get("points", r.get("pts")) or 0), -(r.get("gd") or 0)))
+    out = []
+    me = None
+    for i, r in enumerate(sub, start=1):
+        rr = dict(r)
+        rr["pos"] = i
+        out.append(rr)
+        if str(rr.get("team")) == str(team_id):
+            me = rr
+    return out, me
 
 MAX_PP = 2.0   # konservativer Deckel wie incentive
 
@@ -48,33 +103,49 @@ def _time_factor(rounds_left: int, rounds_total: int) -> float:
 def team_pressure(row: dict, rows: list, meta: dict, rounds_left: int) -> tuple[float, str]:
     """Gibt (pressure 0..1, motive 'win'|'dead'|'mid') für ein Team zurück.
     pressure = wie sehr das Team Punkte BRAUCHT × Zeit-Faktor. dead = nichts mehr zu spielen."""
+    # 13.07.2026 (MLS): Das Playoff-Rennen läuft JE CONFERENCE. Ohne diesen Zuschnitt würde gegen
+    # die Gesamttabelle gerechnet — ein Team auf Gesamtrang 18 kann in seiner Conference bequem
+    # Playoff-Platz 6 sein. Erst zuschneiden, dann rechnen.
+    if meta.get("conference"):
+        conf_rows, conf_row = _conference_view(rows, row.get("team"))
+        if not conf_rows or not conf_row:
+            return 0.0, "mid"          # keine Conference-Zuordnung → lieber schweigen als raten
+        rows, row = conf_rows, conf_row
+
     pos = row.get("pos")
     pts = row.get("points", row.get("pts"))
     if pos is None or pts is None:
         return 0.0, "mid"
     total = meta["total"]
-    euro_cut = meta["europe_cut"]
-    rel_start = total - meta["rel"] + 1
+    euro_cut = meta["europe_cut"]      # Europa-Platz bzw. (MLS) Playoff-Schnitt
+    has_rel = meta.get("rel", 0) > 0   # MLS: KEIN Abstieg → der Zweig darf nie greifen
+    rel_start = total - meta["rel"] + 1 if has_rel else None
+    chase_window = total if meta.get("chase_all") else DEFAULT_CHASE_WINDOW
     max_gain = rounds_left * 3
     tf = _time_factor(rounds_left, meta["rounds"])
     if max_gain <= 0 or tf <= 0:
         return 0.0, "mid"
 
+    # Titel/Shield vs Playoff-Jagd sprachlich trennen — die Karten-Texte lesen das.
+    top_label   = "Supporters' Shield" if meta.get("conference") else "Titel"
+    hold_label  = "Playoff-Platz halten" if meta.get("conference") else "Europa halten"
+    chase_label = "Playoff-Jagd" if meta.get("conference") else "Europa-Jagd"
+
     # Nächste relevante Grenze + benötigte Punkte bestimmen.
     needed = None
-    if pos <= 2:                       # Titel-Endspurt: Platz 1 halten/erreichen
+    if pos <= 2:                       # Endspurt an der Spitze
         lead_pts = _pts_at(rows, 1)
         needed = max(0, (lead_pts - pts)) if lead_pts is not None else 0
-        race = "Titel"
-    elif pos <= euro_cut:              # Europa-Platz halten — Druck = wie nah der erste Verfolger
+        race = top_label
+    elif pos <= euro_cut:              # Quali-Platz halten — Druck = wie nah der erste Verfolger
         chaser = _pts_at(rows, euro_cut + 1)
         needed = max(0, max_gain - (pts - chaser)) if chaser is not None else 0
-        race = "Europa halten"
-    elif pos <= euro_cut + 3:          # Europa jagen
+        race = hold_label
+    elif pos <= euro_cut + chase_window:   # Quali-Platz jagen
         cut_pts = _pts_at(rows, euro_cut)
         needed = (cut_pts - pts + 1) if cut_pts is not None else None
-        race = "Europa-Jagd"
-    elif pos >= rel_start - 1:         # Abstiegskampf (Drop-Zone + ein Platz darüber)
+        race = chase_label
+    elif has_rel and pos >= rel_start - 1:   # Abstiegskampf (Drop-Zone + ein Platz darüber)
         safe_pts = _pts_at(rows, rel_start - 1)
         if pos >= rel_start:
             needed = (safe_pts - pts + 1) if safe_pts is not None else None
