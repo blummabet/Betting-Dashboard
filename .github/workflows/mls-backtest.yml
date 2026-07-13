@@ -1,0 +1,100 @@
+name: 🧪 MLS Backtest → Signal-Priors
+
+# 13.07.2026 (Lucas: „Backtest VOR dem Lineup-Watcher — 1) es gibt schon Daten aus dieser Saison,
+# 2) wir starten in Runde 16, da können wir nicht 10 Runden lang lernen").
+#
+# WARUM DAS WICHTIG IST: Signal-Gewichte starten bei 1.0 — „ich vertraue jedem Signal gleich".
+# Der Bayesian-Loop korrigiert das erst nach ~30 aufgelösten Picks JE SIGNAL. Bei Saisonstart in
+# Runde 16 von 34 wäre die halbe Saison verlernt, bevor die Engine weiß, was in der MLS taugt.
+# Der Backtest spielt die Signale gegen die Historie und liefert START-Gewichte → der Loop beginnt
+# informiert statt bei null.
+#
+# Datenbasis: MLS-Saison 2025 (komplett, ~510 Spiele) + 2026 (laufend, 218 gespielt).
+# Beide zusammen reichen für MIN_CALLS=50 je Signal.
+#
+# Kein football-data.co.uk-CSV für die MLS → KEINE historischen Closing-Quoten. Das ist ok:
+# prime_liga_priors baut die Priors aus TREFFERQUOTE und Anzahl der Calls; ROI/CLV im Report
+# bleiben leer. Ehrlich statt erfunden.
+#
+# Läuft manuell (Backtest ist teuer: xG je Fixture = 1 API-Call).
+on:
+  workflow_dispatch:
+    inputs:
+      seasons:
+        description: "Saison(s), z.B. '2025,2026'. Leer = Vorsaison + laufende."
+        required: false
+        default: ""
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-mls        # teilt mls_signal_weights/-priors mit update-mls
+  cancel-in-progress: false
+
+jobs:
+  backtest:
+    runs-on: ubuntu-latest
+    env:
+      COCOBET_DATASET: mls
+      COCOBET_PROFILE: mls_default
+
+    steps:
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Dependencies installieren
+        run: pip install -r requirements.txt
+
+      - name: 🧪 Backtest laufen (nur MLS — keine europäischen Ergebnisse einmischen)
+        env:
+          APISPORTS_KEY:   ${{ secrets.APISPORTS_KEY }}
+          BACKTEST_SEASON: ${{ inputs.seasons }}
+        run: python liga_backtest.py
+
+      - name: 🌱 Backtest-als-Prior bauen (MLS-Signal-Gewichte vorwärmen)
+        run: python prime_liga_priors.py
+
+      # Ohne Prior-Datei war der Lauf umsonst → sichtbar scheitern statt still durchwinken.
+      - name: 🛡️ Prior-Datei muss entstanden sein
+        run: |
+          python - <<'PY'
+          import json, sys, pathlib
+          p = pathlib.Path("mls_signal_priors.json")
+          if not p.exists():
+              print("❌ mls_signal_priors.json fehlt — Backtest hat nichts geliefert."); sys.exit(1)
+          d = json.loads(p.read_text())
+          prio = d.get("priors", d)
+          if not prio:
+              print("❌ Priors leer — zu wenige Calls je Signal (MIN_CALLS=50)?"); sys.exit(1)
+          print(f"✅ {len(prio)} Signale vorgewärmt:")
+          for sig, v in sorted(prio.items(), key=lambda x: -(x[1].get('hitRate') or 0)):
+              print(f"   {sig:24} Trefferquote {v.get('hitRate')} · {v.get('calls')} Calls")
+          PY
+
+      - name: 💾 Report + Priors committen
+        run: |
+          git config user.name "CocoBet Bot"
+          git config user.email "bot@cocobet.local"
+          git add mls_backtest_report.json mls_signal_priors.json mls_backtest_cache.json 2>/dev/null || true
+          if git diff --staged --quiet; then echo "Keine Änderungen."; exit 0; fi
+          git commit -m "🧪 MLS-Backtest → Signal-Priors $(date -u +'%d.%m.%Y %H:%M') UTC"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          for attempt in 1 2 3 4 5; do
+            git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+            CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null)
+            if [ -n "$CONFLICTS" ]; then
+              echo "$CONFLICTS" | while read f; do git checkout --ours -- "$f"; git add "$f"; done
+              git diff --staged --quiet || git commit -m "🔧 auto-resolve merge conflicts"
+            fi
+            if git push 2>&1; then echo "✅ Push nach Versuch $attempt"; exit 0; fi
+            echo "⚠️ Push $attempt fehlgeschlagen — retry…"; sleep $((attempt * 3))
+          done
+          echo "❌ Push fehlgeschlagen"; exit 1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

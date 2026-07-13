@@ -22,8 +22,12 @@ import os
 from pathlib import Path
 
 BASE = Path(__file__).parent
-REPORT = BASE / "liga_backtest_report.json"
-OUT = BASE / "liga_signal_priors.json"
+import cocobet_dataset as D
+# 13.07.2026: datensatz-eigen. Vorher hätte ein MLS-Lauf die LIGA-Priors überschrieben — und
+# update_signal_weights liest längst D.file(...) → mls_signal_priors.json, hätte also nie etwas
+# gefunden. Beide Enden müssen zusammenpassen.
+REPORT = D.file("wm_backtest_report.json", "liga_backtest_report.json")
+OUT    = D.file("signal_priors.json",      "liga_signal_priors.json")
 PRIOR_STRENGTH = float(os.environ.get("PRIOR_STRENGTH") or 25)   # max Pseudo-Obs je Signal
 MIN_CALLS = 50          # unter so wenig Backtest-Calls kein Prior (zu verrauscht)
 
@@ -45,7 +49,7 @@ def build_priors(report: dict, strength: float = PRIOR_STRENGTH) -> dict:
 def main():
     print("=== prime_liga_priors.py (Backtest → Prior) ===")
     if not REPORT.exists():
-        print("  ❌  liga_backtest_report.json fehlt — erst den Backtest laufen lassen.")
+        print(f"  ❌  {REPORT.name} fehlt — erst den Backtest laufen lassen.")
         return
     report = json.loads(REPORT.read_text(encoding="utf-8"))
     priors = build_priors(report)

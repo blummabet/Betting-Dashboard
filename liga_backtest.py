@@ -24,11 +24,20 @@ from datetime import datetime
 BASE = os.path.dirname(os.path.abspath(__file__))
 APIF_HOST = "v3.football.api-sports.io"
 APIF_KEY = os.environ.get("APISPORTS_KEY", "")
-REPORT_FILE = os.path.join(BASE, "liga_backtest_report.json")
+import cocobet_dataset as D
+# 13.07.2026: datensatz-eigen — sonst überschriebe ein MLS-Lauf den Liga-Report (und umgekehrt).
+REPORT_FILE = str(D.file("wm_backtest_report.json", "liga_backtest_report.json"))
 
-# Top-5-Ligen: code → (API-Football league_id, football-data CSV-Code)
+# Liga-Code → (API-Football league_id, football-data CSV-Code oder None)
+# 13.07.2026 (Lucas: „Backtest VOR dem Lineup-Watcher — wir starten in Runde 16, wir können nicht
+# 10 Runden lang lernen"). MLS aufgenommen. football-data.co.uk führt die MLS nicht in der
+# Standard-Liste → fd_code None → KEINE historischen Closing-Quoten.
+# Das ist verkraftbar: prime_liga_priors baut die Priors ausschließlich aus TREFFERQUOTE und
+# Anzahl der Calls (build_priors liest hitRate/calls) — Quoten liefern nur ROI/CLV als Beiwerk.
+# Für MLS bleiben diese Felder im Report also leer, die Priors entstehen trotzdem.
 LEAGUES = {"ENG": (39, "E0"), "ESP": (140, "SP1"), "GER": (78, "D1"),
-           "ITA": (135, "I1"), "FRA": (61, "F1")}
+           "ITA": (135, "I1"), "FRA": (61, "F1"),
+           "MLS": (253, None)}
 VALUE_THRESHOLDS = [0.0, 2.0, 4.0]   # Conviction-Schwellen (combined_score_pp) für den Value-Filter
 WARMUP_GAMES = 4          # erst werten, wenn beide Teams ≥4 Spiele Historie haben
 FORM_N = 5                # Form über die letzten N Spiele
@@ -141,6 +150,18 @@ def replay(matches: list, evaluate_fn, league: str = "ENG"):
     """matches = chronologisch sortierte [{home, away, hs, as_, matchday}]. evaluate_fn(pick, ctx)
     = registry.evaluate_signals (injizierbar → testbar). Gibt (ledger, system_ledger) zurück:
     ledger = pro-Signal-Calls; system_ledger = combined_score_pp pro (Spiel,Markt) für Value-Filter."""
+    # 13.07.2026: Spielplan je Team → fixture_congestion (Ruhetage) kann im Backtest überhaupt
+    # erst feuern. Vorher fehlte team_schedule im Replay-Kontext, das Signal bekam also nie einen
+    # Call und damit auch nie einen Prior — obwohl es live regelmäßig anschlägt (MLS spielt viel
+    # unter der Woche). Gilt für Liga genauso.
+    schedule: dict = defaultdict(list)             # teamId → [Datums-Strings]
+    for _m in matches:
+        for _t in (_m.get("home"), _m.get("away")):
+            if _t and _m.get("date"):
+                schedule[_t].append(str(_m["date"])[:10])
+    for _t in schedule:
+        schedule[_t] = sorted(set(schedule[_t]))
+
     team_results: dict = defaultdict(list)         # teamId → [(gf, ga)]
     team_xg: dict = defaultdict(list)              # teamId → [(xgFor, xgAgainst)]  (Phase 2)
     table: dict = defaultdict(lambda: {"points": 0, "gf": 0, "ga": 0})
@@ -160,6 +181,9 @@ def replay(matches: list, evaluate_fn, league: str = "ENG"):
                 "standings": {league: standings_rows(table)},
                 # Phase 2: echtes xG point-in-time (xg_strength nutzt es statt Form-Fallback).
                 "xg_stats": {h: xg_entry(team_xg[h]), a: xg_entry(team_xg[a])},
+                # 13.07.2026: Erschöpfung/Spielstau — rest_days rechnet gegen das Spieldatum.
+                "team_schedule": dict(schedule),
+                "current_match_date": str(m.get("date") or "")[:10],
             }
             for market in CANDIDATE_MARKETS:
                 res = evaluate_fn({"market": market, "odds": m_odds.get(market, 2.0)}, ctx)
@@ -367,28 +391,54 @@ def attach_odds(matches: list, fd_rows: list) -> int:
     return n
 
 
+def _default_leagues() -> list:
+    """Welche Ligen backtesten? Im MLS-Datensatz NUR MLS (sonst primen wir die MLS-Gewichte mit
+    europäischen Ergebnissen — genau die Cross-Dataset-Kontamination, die wir überall entfernen)."""
+    if D.active_dataset() == "mls":
+        return ["MLS"]
+    return [c for c in LEAGUES if c != "MLS"]          # Top-5 = Liga-Datensatz
+
+
+def _default_seasons() -> list:
+    """13.07.2026 (Lucas: „wir starten in Runde 16, wir können nicht 10 Runden lang lernen").
+
+    Europa-Ligen: die abgeschlossene Vorsaison (year-1).
+    MLS: Kalenderjahr-Saison → die abgeschlossene VORSAISON **plus die laufende**. Die laufende
+    liefert 218 gespielte Spiele (Runde 15/34) — wertvoll, weil aktueller Kader/Trainer; die
+    Vorsaison liefert die Masse (~510 Spiele) für belastbare Trefferquoten. Zusammen ist die
+    Stichprobe groß genug für MIN_CALLS=50 je Signal.
+    """
+    jetzt = datetime.utcnow().year
+    if D.active_dataset() == "mls":
+        return [jetzt - 1, jetzt]
+    return [jetzt - 1]
+
+
 def main():
     import time
-    season = int(os.environ.get("BACKTEST_SEASON") or (datetime.utcnow().year - 1))
-    only = os.environ.get("BACKTEST_LEAGUES")          # optional "ENG,ESP" — Default alle 5
-    leagues = [c for c in (only.split(",") if only else LEAGUES) if c in LEAGUES]
-    print(f"=== liga_backtest.py — {','.join(leagues)} Saison {season} (Phase 2: xG + ROI + Value) ===")
+    _env_season = os.environ.get("BACKTEST_SEASON")    # "2025" oder "2025,2026"
+    seasons = ([int(x) for x in _env_season.split(",") if x.strip()]
+               if _env_season else _default_seasons())
+    only = os.environ.get("BACKTEST_LEAGUES")          # optional "ENG,ESP"
+    leagues = [c for c in (only.split(",") if only else _default_leagues()) if c in LEAGUES]
+    print(f"=== liga_backtest.py — {','.join(leagues)} · Saison(s) {','.join(map(str,seasons))} "
+          f"· Datensatz {D.active_dataset()} ===")
     if not APIF_KEY:
         print("  ❌  APISPORTS_KEY nicht gesetzt — übersprungen.")
         return
 
-    CACHE = os.path.join(BASE, "liga_backtest_cache.json")
+    CACHE = str(D.file("wm_backtest_cache.json", "liga_backtest_cache.json"))
     cache = json.load(open(CACHE)) if os.path.exists(CACHE) else {}
     import sharp_signals.registry as R
     weights = R.load_signal_weights()
 
     all_ledger, all_system = [], []
     per_league_meta = {}
-    for code in leagues:
+    for code, season in [(c, s_) for c in leagues for s_ in seasons]:
         lid, fd_code = LEAGUES[code]
         matches = fetch_league_matches(lid, season)
         if not matches:
-            print(f"  {code}: 0 Spiele — übersprungen")
+            print(f"  {code} {season}: 0 Spiele — übersprungen")
             continue
         # Echtes xG je Spiel (gecacht).
         xg_n = 0
@@ -400,13 +450,16 @@ def main():
                 m["xg"] = {"home": stats[m["home"]], "away": stats[m["away"]]}
                 xg_n += 1
             time.sleep(0.2)
-        # Historische Closing-Quoten (football-data.co.uk, pro Liga).
-        fd_text = _http_get(f"https://www.football-data.co.uk/mmz4281/{_fd_season_code(season)}/{fd_code}.csv")
-        odds_n = attach_odds(matches, parse_fd_csv(fd_text)) if fd_text else 0
+        # Historische Closing-Quoten (football-data.co.uk, pro Liga). Ohne CSV-Quelle (MLS) → 0:
+        # Trefferquoten-Priors funktionieren trotzdem, nur ROI/CLV bleiben leer.
+        odds_n = 0
+        if fd_code:
+            fd_text = _http_get(f"https://www.football-data.co.uk/mmz4281/{_fd_season_code(season)}/{fd_code}.csv")
+            odds_n = attach_odds(matches, parse_fd_csv(fd_text)) if fd_text else 0
         led, sysd = replay(matches, lambda pick, ctx: R.evaluate_signals(pick, ctx, weights), league=code)
         all_ledger += led; all_system += sysd
-        per_league_meta[code] = {"matches": len(matches), "xg": xg_n, "odds": odds_n}
-        print(f"  {code}: {len(matches)} Spiele · xG {xg_n} · Quoten {odds_n}")
+        per_league_meta[f"{code}-{season}"] = {"matches": len(matches), "xg": xg_n, "odds": odds_n}
+        print(f"  {code} {season}: {len(matches)} Spiele · xG {xg_n} · Quoten {odds_n}")
     json.dump(cache, open(CACHE, "w"), ensure_ascii=False)
 
     report = aggregate(all_ledger)
