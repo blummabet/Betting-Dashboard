@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "liga",
-    "generatedAt": "2026-07-12T19:15:44.100940+00:00",
+    "generatedAt": "2026-07-13T09:32:15.233852+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -683,44 +683,6 @@
       "next": {
         "oppId": "163",
         "oppName": "Borussia Mönchengladbach",
-        "atHome": true,
-        "date": "2026-08-29",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 79
-    },
-    {
-      "teamId": "182",
-      "team": "Union Berlin",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/182.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "GER",
-      "leagueName": "Bundesliga",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 9,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 87,
-        "label": "Eigen 87% + Gegner 67% → 79%"
-      },
-      "ratePct": 87,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "169",
-        "oppName": "Eintracht Frankfurt",
         "atHome": true,
         "date": "2026-08-29",
         "oppRatePct": 67
@@ -3769,42 +3731,6 @@
       "matchupPct": 76
     },
     {
-      "teamId": "52",
-      "team": "Crystal Palace",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/52.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 6,
-      "venue": "A",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 73,
-        "label": "Eigen 73% + Gegner 67% → 71%"
-      },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "45",
-        "oppName": "Everton",
-        "atHome": false,
-        "date": "2026-08-22",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 71
-    },
-    {
       "teamId": "65",
       "team": "Nottingham Forest",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/65.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -4491,10 +4417,10 @@
       "strong": true,
       "continuation": {
         "state": "intakt",
-        "ratePct": 87,
-        "label": "Eigen 87% + Gegner 67% → 79%"
+        "ratePct": 80,
+        "label": "Eigen 80% + Gegner 67% → 75%"
       },
-      "ratePct": 87,
+      "ratePct": 80,
       "seq": [
         true,
         true,
@@ -4512,7 +4438,7 @@
         "oppRatePct": 67
       },
       "oppSupportPct": 67,
-      "matchupPct": 79
+      "matchupPct": 75
     },
     {
       "teamId": "116",
@@ -4815,6 +4741,56 @@
       },
       "oppSupportPct": 27,
       "matchupPct": 51
+    },
+    {
+      "teamId": "52",
+      "team": "Crystal Palace",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/52.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 6,
+      "venue": "A",
+      "strong": true,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 73,
+        "label": "Eigen 73% + Gegner 67% → 71% · Linie/Signale dagegen"
+      },
+      "ratePct": 73,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "45",
+        "oppName": "Everton",
+        "atHome": false,
+        "date": "2026-08-22",
+        "oppRatePct": 67
+      },
+      "oppSupportPct": 67,
+      "matchupPct": 71,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 3,
+        "conviction": 3,
+        "names": [
+          "public_static_bias",
+          "form_trend",
+          "xg_strength",
+          "chance_creation",
+          "transfer_shift",
+          "streak_momentum"
+        ],
+        "market": "Unter 2.5 Tore"
+      }
     },
     {
       "teamId": "108",
@@ -5712,7 +5688,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 73,
-        "label": "Eigen 73% + Gegner 67% → 71%"
+        "label": "Eigen 73% + Gegner 60% → 68%"
       },
       "ratePct": 73,
       "seq": [
@@ -5731,10 +5707,10 @@
         "oppName": "Union Berlin",
         "atHome": false,
         "date": "2026-08-29",
-        "oppRatePct": 67
+        "oppRatePct": 60
       },
-      "oppSupportPct": 67,
-      "matchupPct": 71
+      "oppSupportPct": 60,
+      "matchupPct": 68
     },
     {
       "teamId": "172",
@@ -5962,82 +5938,6 @@
       },
       "oppSupportPct": 60,
       "matchupPct": 76
-    },
-    {
-      "teamId": "182",
-      "team": "Union Berlin",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/182.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "GER",
-      "leagueName": "Bundesliga",
-      "type": "bttsYes",
-      "market": "Beide Teams treffen",
-      "length": 5,
-      "venue": "A",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 67% → 67%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "169",
-        "oppName": "Eintracht Frankfurt",
-        "atHome": true,
-        "date": "2026-08-29",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 67
-    },
-    {
-      "teamId": "182",
-      "team": "Union Berlin",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/182.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "GER",
-      "leagueName": "Bundesliga",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 5,
-      "venue": "A",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 87,
-        "label": "Eigen 87% + Gegner 67% → 79%"
-      },
-      "ratePct": 87,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "169",
-        "oppName": "Eintracht Frankfurt",
-        "atHome": true,
-        "date": "2026-08-29",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 79
     },
     {
       "teamId": "192",
@@ -7542,43 +7442,6 @@
       "matchupPct": 73
     },
     {
-      "teamId": "45",
-      "team": "Everton",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/45.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 73% → 69%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "52",
-        "oppName": "Crystal Palace",
-        "atHome": true,
-        "date": "2026-08-22",
-        "oppRatePct": 73
-      },
-      "oppSupportPct": 73,
-      "matchupPct": 69
-    },
-    {
       "teamId": "488",
       "team": "Sassuolo",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/488.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -8144,82 +8007,6 @@
       "matchupPct": 64
     },
     {
-      "teamId": "548",
-      "team": "Real Sociedad",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/548.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "bttsYes",
-      "market": "Beide Teams treffen",
-      "length": 4,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 67% → 67%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "541",
-        "oppName": "Real Madrid",
-        "atHome": false,
-        "date": "2026-08-16",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 67
-    },
-    {
-      "teamId": "548",
-      "team": "Real Sociedad",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/548.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 4,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 87,
-        "label": "Eigen 87% + Gegner 73% → 81%"
-      },
-      "ratePct": 87,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "541",
-        "oppName": "Real Madrid",
-        "atHome": false,
-        "date": "2026-08-16",
-        "oppRatePct": 73
-      },
-      "oppSupportPct": 73,
-      "matchupPct": 81
-    },
-    {
       "teamId": "797",
       "team": "Elche",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/797.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -8534,7 +8321,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 73,
-        "label": "Eigen 73% + Gegner 67% → 71%"
+        "label": "Eigen 73% + Gegner 60% → 68%"
       },
       "ratePct": 73,
       "seq": [
@@ -8552,10 +8339,10 @@
         "oppName": "Union Berlin",
         "atHome": false,
         "date": "2026-08-29",
-        "oppRatePct": 67
+        "oppRatePct": 60
       },
-      "oppSupportPct": 67,
-      "matchupPct": 71
+      "oppSupportPct": 60,
+      "matchupPct": 68
     },
     {
       "teamId": "169",
@@ -8571,7 +8358,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 67,
-        "label": "Eigen 67% + Gegner 67% → 67%"
+        "label": "Eigen 67% + Gegner 60% → 64%"
       },
       "ratePct": 67,
       "seq": [
@@ -8589,10 +8376,10 @@
         "oppName": "Union Berlin",
         "atHome": false,
         "date": "2026-08-29",
-        "oppRatePct": 67
+        "oppRatePct": 60
       },
-      "oppSupportPct": 67,
-      "matchupPct": 67
+      "oppSupportPct": 60,
+      "matchupPct": 64
     },
     {
       "teamId": "170",
@@ -9868,6 +9655,43 @@
       "matchupPct": 49
     },
     {
+      "teamId": "541",
+      "team": "Real Madrid",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/541.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "under25",
+      "market": "Unter 2,5 Tore",
+      "length": 4,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 40,
+        "label": "Eigen 40% + Gegner 53% → 45%"
+      },
+      "ratePct": 40,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "548",
+        "oppName": "Real Sociedad",
+        "atHome": true,
+        "date": "2026-08-16",
+        "oppRatePct": 47
+      },
+      "oppSupportPct": 53,
+      "matchupPct": 45
+    },
+    {
       "teamId": "544",
       "team": "Deportivo La Coruna",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/544.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -10656,6 +10480,57 @@
       "matchupPct": 57
     },
     {
+      "teamId": "45",
+      "team": "Everton",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/45.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 4,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 73% → 69% · Linie/Signale dagegen"
+      },
+      "ratePct": 67,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "52",
+        "oppName": "Crystal Palace",
+        "atHome": true,
+        "date": "2026-08-22",
+        "oppRatePct": 73
+      },
+      "oppSupportPct": 73,
+      "matchupPct": 69,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 3,
+        "conviction": 3,
+        "names": [
+          "public_static_bias",
+          "form_trend",
+          "xg_strength",
+          "chance_creation",
+          "transfer_shift",
+          "streak_momentum"
+        ],
+        "market": "Unter 2.5 Tore"
+      }
+    },
+    {
       "teamId": "499",
       "team": "Atalanta",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/499.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -10763,43 +10638,6 @@
       },
       "oppSupportPct": 27,
       "matchupPct": 35
-    },
-    {
-      "teamId": "541",
-      "team": "Real Madrid",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/541.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "under25",
-      "market": "Unter 2,5 Tore",
-      "length": 4,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 40,
-        "label": "Eigen 40% + Gegner 47% → 43%"
-      },
-      "ratePct": 40,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "548",
-        "oppName": "Real Sociedad",
-        "atHome": true,
-        "date": "2026-08-16",
-        "oppRatePct": 53
-      },
-      "oppSupportPct": 47,
-      "matchupPct": 43
     },
     {
       "teamId": "49",
@@ -12503,7 +12341,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 73,
-        "label": "Eigen 73% + Gegner 67% → 71%"
+        "label": "Eigen 73% + Gegner 60% → 68%"
       },
       "ratePct": 73,
       "seq": [
@@ -12522,10 +12360,10 @@
         "oppName": "Union Berlin",
         "atHome": false,
         "date": "2026-08-29",
-        "oppRatePct": 67
+        "oppRatePct": 60
       },
-      "oppSupportPct": 67,
-      "matchupPct": 71
+      "oppSupportPct": 60,
+      "matchupPct": 68
     },
     {
       "teamId": "172",
@@ -12654,10 +12492,10 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 73% → 69%"
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 73% → 65%"
       },
-      "ratePct": 67,
+      "ratePct": 60,
       "seq": [
         true,
         true,
@@ -12675,7 +12513,7 @@
         "oppRatePct": 73
       },
       "oppSupportPct": 73,
-      "matchupPct": 69
+      "matchupPct": 65
     },
     {
       "teamId": "42",
@@ -14561,6 +14399,43 @@
       "matchupPct": 52
     },
     {
+      "teamId": "548",
+      "team": "Real Sociedad",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/548.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "under25",
+      "market": "Unter 2,5 Tore",
+      "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 53,
+        "label": "Eigen 53% + Gegner 40% → 48%"
+      },
+      "ratePct": 53,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "541",
+        "oppName": "Real Madrid",
+        "atHome": false,
+        "date": "2026-08-16",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 40,
+      "matchupPct": 48
+    },
+    {
       "teamId": "164",
       "team": "FSV Mainz 05",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/164.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -16192,7 +16067,7 @@
       "continuation": {
         "state": "wackelt",
         "ratePct": 33,
-        "label": "Eigen 33% + Gegner 33% → 33%"
+        "label": "Eigen 33% + Gegner 40% → 36%"
       },
       "ratePct": 33,
       "seq": [
@@ -16210,47 +16085,10 @@
         "oppName": "Real Sociedad",
         "atHome": true,
         "date": "2026-08-16",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 33,
-      "matchupPct": 33
-    },
-    {
-      "teamId": "548",
-      "team": "Real Sociedad",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/548.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "under25",
-      "market": "Unter 2,5 Tore",
-      "length": 3,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 47,
-        "label": "Eigen 47% + Gegner 40% → 44%"
-      },
-      "ratePct": 47,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "541",
-        "oppName": "Real Madrid",
-        "atHome": false,
-        "date": "2026-08-16",
         "oppRatePct": 60
       },
       "oppSupportPct": 40,
-      "matchupPct": 44
+      "matchupPct": 36
     },
     {
       "teamId": "164",
