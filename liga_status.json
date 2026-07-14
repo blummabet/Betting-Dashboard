@@ -1,15 +1,6 @@
 {
   "checks": [
     {
-      "id": "closing_prematch",
-      "label": "Closing-Snapshot vor Anpfiff (kein In-Play-Leck)",
-      "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
-      "note": "frozenAt nach Anpfiff = Live-Quoten. Resolver nullt den CLV; Write-Seite sollte Closing spätestens bei Anpfiff einfrieren."
-    },
-    {
       "id": "kickoff_present",
       "label": "Kickoff-Zeit real + plausibel",
       "severity": "error",
@@ -59,10 +50,11 @@
       "label": "Pinnacle-1X2 vollständig + plausibel",
       "severity": "warn",
       "ok": false,
-      "nFail": 3,
+      "nFail": 4,
       "failures": [
         "499-488: Margin 1.876 unplausibel",
-        "77-79: Margin 1.817 unplausibel",
+        "503-489: Margin 1.600 unplausibel",
+        "77-79: Margin 1.871 unplausibel",
         "85-94: Margin 1.896 unplausibel"
       ],
       "note": "Quelle für Modell-Baseline + Edge."
@@ -93,7 +85,7 @@
       "nFail": 21,
       "failures": [
         "499-488: 4 Platzhalter-Snap(s), z.B. 1.56/3.15/1.09 (Overround 1.88) → Geister-Move im Radar + Fake-Steam-Alert",
-        "503-489: 6 Platzhalter-Snap(s), z.B. 1.49/2.7/1.79 (Overround 1.60) → Geister-Move im Radar + Fake-Steam-Alert",
+        "503-489: 7 Platzhalter-Snap(s), z.B. 1.49/2.7/1.79 (Overround 1.60) → Geister-Move im Radar + Fake-Steam-Alert",
         "530-535: 6 Platzhalter-Snap(s), z.B. 1.26/4.9/1.06 (Overround 1.94) → Geister-Move im Radar + Fake-Steam-Alert",
         "540-539: 2 Platzhalter-Snap(s), z.B. 1.96/3.4/1.09 (Overround 1.72) → Geister-Move im Radar + Fake-Steam-Alert",
         "160-162: 2 Platzhalter-Snap(s), z.B. 1.32/1.01/1.32 (Overround 2.51) → Geister-Move im Radar + Fake-Steam-Alert",
@@ -108,7 +100,7 @@
         "111-91: 2 Platzhalter-Snap(s), z.B. 1.02/1.02/1.02 (Overround 2.94) → Geister-Move im Radar + Fake-Steam-Alert",
         "116-108: 3 Platzhalter-Snap(s), z.B. 1.02/1.02/1.02 (Overround 2.94) → Geister-Move im Radar + Fake-Steam-Alert",
         "1298-106: 2 Platzhalter-Snap(s), z.B. 1.18/1.02/1.18 (Overround 2.68) → Geister-Move im Radar + Fake-Steam-Alert",
-        "77-79: 4 Platzhalter-Snap(s), z.B. 1.02/1.02/1.02 (Overround 2.94) → Geister-Move im Radar + Fake-Steam-Alert",
+        "77-79: 5 Platzhalter-Snap(s), z.B. 1.02/1.02/1.02 (Overround 2.94) → Geister-Move im Radar + Fake-Steam-Alert",
         "81-95: 5 Platzhalter-Snap(s), z.B. 1.02/1.02/1.02 (Overround 2.94) → Geister-Move im Radar + Fake-Steam-Alert",
         "84-97: 2 Platzhalter-Snap(s), z.B. 1.19/1.02/1.19 (Overround 2.66) → Geister-Move im Radar + Fake-Steam-Alert",
         "85-94: 4 Platzhalter-Snap(s), z.B. 1.02/1.02/1.02 (Overround 2.94) → Geister-Move im Radar + Fake-Steam-Alert",
@@ -177,17 +169,15 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Ein Signal das die letzten Tage zuverlässig feuerte und heute slatewide 0 zeigt = Verdacht auf Daten-/Fetcher-Ausfall oder Code-Regression. Engine prüfen, nicht ignorieren. WARN, weil auch ein Spieltag ohne passende Lage sein kann."
+      "note": "Zu wenig History (<4 Tage) für Coverage-Vergleich — sammelt sich an."
     },
     {
       "id": "trade_clv_coverage",
       "label": "Trade-Auswertung: CLV/Closing erfasst",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "polyClose fehlt durchgängig → 'halten bis Closing'-Gegenrechnung nicht möglich (Poly-Closing-Snapshot nicht erfasst)"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "CLV (Entry vs Pinnacle-Closing) ist DER Frühindikator für +EV; ohne ihn lässt sich nicht sagen ob die Strategie Wert holt. Lücke = Closing-Snapshot wird nicht zuverlässig bei Anpfiff eingefroren (pinnClose/polyClose). Schließt an den Closing-In-Play-Guard an — die Write-Seite muss bei Anpfiff einfrieren."
     },
     {
@@ -361,15 +351,6 @@
       "note": "freshness_leg-Signal muss bei confirm/reverse feuern, damit der Bayesian-Loop das Gewicht lernt. Fehlt es → Signal-Engine lief vor dem Frische-Block oder Signal nicht registriert."
     },
     {
-      "id": "smartmoney_sane",
-      "label": "Smart-Money-Daten kohärent",
-      "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
-      "note": "Shares müssen ~1 summieren + totalUsd da. Sonst läuft das smart_money-Signal auf Müll. Quelle: fetch_wm_poly_smartmoney.py (data-api, Mac-Runner)."
-    },
-    {
       "id": "btts_not_templated_traded",
       "label": "BTTS-Platzhalter nicht handelbar",
       "severity": "warn",
@@ -413,15 +394,6 @@
       "nFail": 0,
       "failures": [],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
-    },
-    {
-      "id": "smartmoney_cluster_sane",
-      "label": "Smart-Money-Cluster kohärent",
-      "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
-      "note": "cluster ∈ ℕ₀, ≤ holders; buy/sell ≥ 0; netFlow = buy − sell. Sonst rechnet der Cluster-Boost/Exit-Penalty im smart_money-Signal auf Müll."
     },
     {
       "id": "card_only_not_in_trade",
@@ -514,6 +486,6 @@
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 4,
-  "generatedAt": "2026-07-13T19:17:51.923857+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-07-14T08:17:49.758297+00:00"
 }
