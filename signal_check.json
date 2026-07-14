@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "wm",
-    "generatedAt": "2026-07-14T09:48:42.489523+00:00",
+    "generatedAt": "2026-07-14T13:12:38.705062+00:00",
     "games": 102,
     "markets": [
       "Heimsieg",
@@ -59475,7 +59475,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 63% des Geldes auf Heim — mehr als der faire Preis hergibt (40%), und es sind echte Wale dahinter (Top-Wallets 62%).",
+              "evidence": "💰 Auf Polymarket liegen 63% des Geldes auf Heim — mehr als der faire Preis hergibt (39%), und es sind echte Wale dahinter (Top-Wallets 62%).",
               "dir": "confirm"
             }
           ],
@@ -59617,7 +59617,7 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) schätzt Auswärts um 15.0pp höher ein als Pinnacle — Rückendeckung für den Pick.",
+              "evidence": "📊 Ein zweites Modell (API-Football) schätzt Auswärts um 15.8pp höher ein als Pinnacle — Rückendeckung für den Pick.",
               "dir": "confirm"
             },
             {
@@ -59631,7 +59631,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 19% des Geldes auf Auswärts — weniger als der faire Preis hergibt (30%), und es sind echte Wale dahinter (Top-Wallets 88%).",
+              "evidence": "💰 Auf Polymarket liegen 18% des Geldes auf Auswärts — weniger als der faire Preis hergibt (29%), und es sind echte Wale dahinter (Top-Wallets 84%). ⚠️ Aber kurz vor Anpfiff verkaufen Wale netto rund $237k auf dieser Seite — die Überzeugung kippt.",
               "dir": "contradict"
             }
           ],
@@ -59787,7 +59787,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 32°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — FRA temperate · ESP temperate",
+              "evidence": "🌡 Bei 31°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — FRA temperate · ESP temperate",
               "dir": "contradict"
             }
           ],
@@ -59915,7 +59915,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 32°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — FRA temperate · ESP temperate",
+              "evidence": "🌡 Bei 31°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — FRA temperate · ESP temperate",
               "dir": "confirm"
             }
           ],
@@ -60077,7 +60077,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 45% des Geldes auf Heim — mehr als der faire Preis hergibt (36%), und es sind echte Wale dahinter (Top-Wallets 62%).",
+              "evidence": "💰 Auf Polymarket liegen 46% des Geldes auf Heim — mehr als der faire Preis hergibt (36%), und es sind echte Wale dahinter (Top-Wallets 61%).",
               "dir": "confirm"
             }
           ],
@@ -60243,7 +60243,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 28% des Geldes auf Auswärts — weniger als der faire Preis hergibt (31%), und es sind echte Wale dahinter (Top-Wallets 72%).",
+              "evidence": "💰 Auf Polymarket liegen 28% des Geldes auf Auswärts — weniger als der faire Preis hergibt (31%), und es sind echte Wale dahinter (Top-Wallets 71%).",
               "dir": "contradict"
             }
           ],
@@ -60359,8 +60359,8 @@
         },
         "Über 2.5 Tore": {
           "tip": "Über 2.5 Tore",
-          "headline": "2 von 3 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Über 2.5 Tore“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 1 Signal(e) dagegenhalten.",
+          "headline": "2 von 4 klaren Signalen bestätigen den Tipp",
+          "reason": "Gemischtes Bild: 2 Signal(e) dafür, 2 dagegen — kein klares Signal-Übergewicht.",
           "confirm": [
             {
               "name": "form_trend",
@@ -60380,6 +60380,12 @@
               "name": "pressure_index",
               "label": "der Tabellendruck",
               "evidence": "🎯 KO-Vorsicht (gegen Über)",
+              "dir": "contradict"
+            },
+            {
+              "name": "weather_signal",
+              "label": "das Wetter",
+              "evidence": "🌡 Bei 31°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ENG temperate · ARG temperate",
               "dir": "contradict"
             }
           ],
@@ -60424,10 +60430,6 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell"
-            },
-            {
-              "name": "weather_signal",
-              "label": "das Wetter"
             },
             {
               "name": "incentive_signal",
@@ -60496,20 +60498,26 @@
           ],
           "score": {
             "confirm": 2,
-            "contradict": 1,
+            "contradict": 2,
             "neutral": 0,
-            "decisive": 3
+            "decisive": 4
           }
         },
         "Unter 2.5 Tore": {
           "tip": "Unter 2.5 Tore",
-          "headline": "1 von 3 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „Unter 2.5 Tore“ kritisch — vor allem die Formkurve spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
+          "headline": "2 von 4 klaren Signalen bestätigen den Tipp",
+          "reason": "Gemischtes Bild: 2 Signal(e) dafür, 2 dagegen — kein klares Signal-Übergewicht.",
           "confirm": [
             {
               "name": "pressure_index",
               "label": "der Tabellendruck",
               "evidence": "🎯 KO-Vorsicht (Unter wahrscheinlicher) · semi-Stage extra-vorsichtig",
+              "dir": "confirm"
+            },
+            {
+              "name": "weather_signal",
+              "label": "das Wetter",
+              "evidence": "🌡 Bei 31°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ENG temperate · ARG temperate",
               "dir": "confirm"
             }
           ],
@@ -60568,10 +60576,6 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell"
-            },
-            {
-              "name": "weather_signal",
-              "label": "das Wetter"
             },
             {
               "name": "incentive_signal",
@@ -60639,10 +60643,10 @@
             }
           ],
           "score": {
-            "confirm": 1,
+            "confirm": 2,
             "contradict": 2,
             "neutral": 0,
-            "decisive": 3
+            "decisive": 4
           }
         }
       }
