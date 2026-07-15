@@ -49,25 +49,9 @@
       "id": "odds_sane",
       "label": "Pinnacle-1X2 vollständig + plausibel",
       "severity": "warn",
-      "ok": false,
-      "nFail": 15,
-      "failures": [
-        "1598-9569: 1X2 unvollständig hw=None dr=None aw=None",
-        "1604-1607: 1X2 unvollständig hw=None dr=None aw=None",
-        "1616-1611: 1X2 unvollständig hw=None dr=None aw=None",
-        "20787-1610: 1X2 unvollständig hw=None dr=None aw=None",
-        "1600-16489: 1X2 unvollständig hw=None dr=None aw=None",
-        "1615-1601: 1X2 unvollständig hw=None dr=None aw=None",
-        "1612-1603: 1X2 unvollständig hw=None dr=None aw=None",
-        "1609-1608: 1X2 unvollständig hw=None dr=None aw=None",
-        "25484-1597: 1X2 unvollständig hw=None dr=None aw=None",
-        "1599-1595: 1X2 unvollständig hw=None dr=None aw=None",
-        "1596-1605: 1X2 unvollständig hw=None dr=None aw=None",
-        "1617-1606: 1X2 unvollständig hw=None dr=None aw=None",
-        "1613-2242: 1X2 unvollständig hw=None dr=None aw=None",
-        "1614-9568: 1X2 unvollständig hw=None dr=None aw=None",
-        "1602-18310: 1X2 unvollständig hw=None dr=None aw=None"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Quelle für Modell-Baseline + Edge."
     },
     {
@@ -78,6 +62,18 @@
       "nFail": 0,
       "failures": [],
       "note": "fetch_liga_odds friert 1X2-Opening kohärent + heilt aus History (erster plausibler Snap)."
+    },
+    {
+      "id": "no_ghost_picks",
+      "label": "Keine Picks aus Platzhalter-Quoten",
+      "severity": "warn",
+      "ok": false,
+      "nFail": 2,
+      "failures": [
+        "MLS-17-1607-1603 Auswärtssieg: Eröffnung 1.17 → 2.27 stammt aus einer Platzhalter-Quote (echte Eröffnung: 2.7/3.5/2.3)",
+        "MLS-17-9569-1608 AH Heim −1.5: Eröffnung 1.36 → 1.04 stammt aus einer Platzhalter-Quote (echte Eröffnung: 1.36/4.6/7.0)"
+      ],
+      "note": "steam_engine blockt implausible Openings; _carry_nobet sortiert Altbestand aus."
     },
     {
       "id": "injuries_plausible",
@@ -169,9 +165,11 @@
       "id": "odds_freshness",
       "label": "Pinnacle-Odds frisch (< 6h)",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "Frischeste Pinnacle-Odds 9.5h alt (> 6h) — fetch_wm_odds eingefroren? Edges laufen gegen veraltete Preise."
+      ],
       "note": "Auto-Trader stoppt hart erst bei max_odds_age_hours (24h) — dieser Guard warnt früh. Root-Cause: fetch_wm_odds-Workflow/Cron prüfen."
     },
     {
@@ -241,25 +239,9 @@
       "id": "public_consensus",
       "label": "Public-Konsens (Soft-Books) vorhanden",
       "severity": "warn",
-      "ok": false,
-      "nFail": 15,
-      "failures": [
-        "1598-9569: kein public_hw",
-        "1604-1607: kein public_hw",
-        "1616-1611: kein public_hw",
-        "20787-1610: kein public_hw",
-        "1600-16489: kein public_hw",
-        "1615-1601: kein public_hw",
-        "1612-1603: kein public_hw",
-        "1609-1608: kein public_hw",
-        "25484-1597: kein public_hw",
-        "1599-1595: kein public_hw",
-        "1596-1605: kein public_hw",
-        "1617-1606: kein public_hw",
-        "1613-2242: kein public_hw",
-        "1614-9568: kein public_hw",
-        "1602-18310: kein public_hw"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Ohne public_* feuert public_static_bias nicht."
     },
     {
@@ -520,5 +502,5 @@
     }
   ],
   "nFail": 5,
-  "generatedAt": "2026-07-13T20:24:12.511831+00:00"
+  "generatedAt": "2026-07-14T05:49:17.284690+00:00"
 }

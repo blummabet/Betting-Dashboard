@@ -1282,6 +1282,74 @@ def fixture_pick_state(fx, has_pick, today, now_dt, cutover_dt):
 _VERDICT_RANK = {"BET": 3, "ABWÄGEN": 2, "BEOBACHTEN": 1, "SKIP": 0}
 
 
+# ── Geister-Picks (14.07.2026) ───────────────────────────────────────────────────────────────
+# Ein „Steam-Move" von 25pp ist kein Marktereignis. Echte Sharp-Moves liegen bei 2–8pp (unser
+# eigener Backtest sieht den Sweet Spot bei 3–5pp). Solche Ausschläge entstehen ausschließlich aus
+# PLATZHALTER-Eröffnungen der Quellen-API (z.B. 1.17/1.01/1.17 → Overround 270 %).
+#
+# Die beiden ersten MLS-Picks waren genau das: „Pinnacle 1.17→2.27 · Sharp-Money-Drop +25pp" —
+# ein Move, den es nie gab. Sie entstanden VOR dem Plausibilitäts-Guard in steam_engine. Neue
+# Geister können nicht mehr geboren werden — aber _carry_nobet schleppt bestehende „über Rebuilds
+# bis Anpfiff" mit, inklusive erfundener Move-Texte auf den Cards.
+#
+# Deshalb hier die zweite Verteidigungslinie: beim Rebuild aussortieren. Das heilt sich selbst,
+# ohne dass jemand von Hand in den Daten herumschneidet (Pipeline-Output bearbeitet man nicht).
+# ⚠️ NICHT über die Move-GRÖSSE gehen! Mein erster Versuch war eine 20pp-Schwelle — die hätte
+# DREI legitime Picks vernichtet (WM „Über 3.5" 23pp, Liga 48pp und 44pp). Deren Eröffnungen sind
+# nachweislich echt (Overround 1.07); Linien reifen über Wochen tatsächlich von 5.64 auf 1.50.
+# Ein großer Move ist KEIN Beweis für einen Geist.
+#
+# Das echte Kriterium ist die QUELLE: stammt die Quote aus einem Platzhalter-Snapshot?
+#   (a) Die im Pick gespeicherte Eröffnung passt nicht zur (geheilten) odds_open in den Daten
+#       → der Pick sah beim Erzeugen eine Quote, die es real nie gab.  [MLS 1607-1603: 1.17 vs 2.30]
+#   (b) Eine der beiden Quoten liegt unter der Plausibilitätsgrenze (1.05) — so kurz notiert kein
+#       echter Markt.                                                  [MLS 9569-1608: steamCur 1.04]
+# steamCur wird NICHT gegen die Live-Quote geprüft: der Wert ist ein Schnappschuss vom
+# Erzeugungszeitpunkt und darf legitim abweichen.
+_GHOST_OPEN_TOLERANZ = 0.25          # relative Abweichung Eröffnung ↔ odds_open
+_GHOST_MIN_ODDS      = 1.05          # = odds_plausibility.MIN_SIDE_ODDS
+
+
+def _is_ghost_pick(pick: dict, odds_snap: dict | None = None) -> bool:
+    """Wurde dieser Pick aus einer Platzhalter-Quote geboren? (rein, testbar)
+
+    Aufgelöste Picks (result gesetzt) sind ausgenommen — was gelaufen ist, bleibt in der Bilanz.
+    """
+    if not isinstance(pick, dict) or pick.get("result") is not None:
+        return False
+
+    s_open, s_cur = pick.get("steamOpen"), pick.get("steamCur")
+
+    # (b) Quote unter der Plausibilitätsgrenze → Platzhalter, egal an welchem Ende.
+    for v in (s_open, s_cur):
+        try:
+            if v is not None and float(v) < _GHOST_MIN_ODDS:
+                return True
+        except (TypeError, ValueError):
+            pass
+
+    # (a) Eröffnung des Picks ↔ geheilte odds_open der Partie.
+    #
+    # NUR für 1X2 (hw/dr/aw). Bei Tor-Märkten und AH ist die Zuordnung Markt→Quote NICHT eindeutig:
+    # die Linie kann abgeleitet sein (Safer-Line, andere O/U-Stufe), dann passt steamOpen bewusst
+    # nicht zu odds_open[key]. Vier legitime WM-Picks („Über 2.5", steamOpen 4.0 vs o25-Opening 2.11)
+    # wären sonst als Geister entsorgt worden. Für 1X2 ist die Zuordnung dagegen sicher — und genau
+    # dort sitzt der reale Schaden (MLS-Auswärtssieg: gespeicherte Eröffnung 1.17, echte 2.30).
+    if not (odds_snap and s_open):
+        return False
+    key = _reverser_key(pick.get("market"))
+    if key not in ("hw", "dr", "aw"):
+        return False
+    ref = (odds_snap.get("odds_open") or {}).get(key)
+    try:
+        s_open, ref = float(s_open), float(ref)
+    except (TypeError, ValueError):
+        return False
+    if ref <= 0:
+        return False
+    return abs(s_open - ref) / ref > _GHOST_OPEN_TOLERANZ
+
+
 def _carry_nobet(existing_pk, new_picks, odds_snap, now_iso):
     """NOBET-Karten (23.06.2026, Lucas): ein Markt, der mal BET/ABWÄGEN war und jetzt KEIN echter
     Pick mehr ist (z.B. COL-COD Unter — Edge gekippt), verschwindet nicht lautlos, sondern bleibt
@@ -1294,6 +1362,8 @@ def _carry_nobet(existing_pk, new_picks, odds_snap, now_iso):
     for old in existing_pk:
         if not isinstance(old, dict):
             continue
+        if _is_ghost_pick(old, odds_snap):
+            continue   # aus Platzhalter-Quote geboren → nicht weiterschleppen (s.o.)
         m = old.get("market")
         if not m or m in new_markets:
             continue   # weiterhin echter Pick → kein NOBET

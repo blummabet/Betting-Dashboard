@@ -524,14 +524,37 @@ def _real_match_keys(ctx):
     return keys
 
 
+def _far_future_keys(ctx, tage: int = 7):
+    """Fixtures, deren Anpfiff weiter als `tage` entfernt ist.
+
+    14.07.2026: Buchmacher eröffnen ihre Linien erst rund eine Woche vorher — Polymarket listet
+    früher. Dadurch entstehen Odds-Einträge, die (noch) nur poly_*-Felder haben. Der 1X2- und der
+    Public-Guard meldeten dafür 15 „Fehler" (alle MLS-Spiele am 25.07.), obwohl schlicht noch
+    niemand bepreist hat. Solches Dauer-Gelb ist schädlich: es stumpft gegen echte Warnungen ab.
+    """
+    out = set()
+    for _g, fx in ctx.fixtures:
+        ko = fx.get("kickoff")
+        if not ko:
+            continue
+        try:
+            t = datetime.fromisoformat(str(ko).replace("Z", "+00:00"))
+        except ValueError:
+            continue
+        if (t - ctx.now).days > tage:
+            out.add(f"{fx.get('home')}-{fx.get('away')}")
+    return out
+
+
 @integrity_check
 def check_odds_sane(ctx):
     real = _real_match_keys(ctx)
     finished = _finished_keys(ctx)
+    zu_frueh = _far_future_keys(ctx)
     fails = []
     for mk, o in ctx.odds.items():
-        if mk not in real or mk in finished:
-            continue   # Phantom-Keys separat (check_no_phantom_odds); beendete Spiele = historisch
+        if mk not in real or mk in finished or mk in zu_frueh:
+            continue   # Phantom-Keys separat; beendete = historisch; weit weg = noch nicht bepreist
         hw, dr, aw = o.get("hw"), o.get("dr"), o.get("aw")
         if not all(isinstance(x, (int, float)) and x > 1.0 for x in (hw, dr, aw)):
             fails.append(f"{mk}: 1X2 unvollständig hw={hw} dr={dr} aw={aw}")
@@ -561,6 +584,38 @@ def check_opening_plausible(ctx):
                          f"→ erfundener Drift im Sharp Radar")
     return _chk("opening_plausible", "Opening-Odds = echter 1X2-Markt (kein Platzhalter)", "warn", fails,
                 "fetch_liga_odds friert 1X2-Opening kohärent + heilt aus History (erster plausibler Snap).")
+
+
+@integrity_check
+def check_no_ghost_picks(ctx):
+    """14.07.2026 — Picks, die aus einer PLATZHALTER-Quote geboren wurden.
+
+    Die beiden ersten MLS-Picks trugen Texte wie „Pinnacle 1.17→2.27 · Sharp-Money-Drop +25pp" —
+    einen Move, den es nie gab. Ursache: die Quellen-API eröffnete mit 1.17/1.01/1.17 (Overround
+    270 %). Der Plausibilitäts-Guard in steam_engine verhindert die Geburt neuer Geister; dieser
+    Check hier macht sichtbar, wenn trotzdem einer in den Daten steht (z.B. Altbestand, den
+    _carry_nobet noch mitschleppt).
+
+    Ein echter Sharp-Move liegt bei 2–8pp. Alles jenseits von 20pp ist kein Marktereignis.
+    Aufgelöste Picks bleiben ausgenommen — was gelaufen ist, bleibt in der Bilanz.
+    """
+    from generate_wm_picks import _is_ghost_pick    # EINE Quelle für die Regel
+
+    fails = []
+    for key, plist in (ctx.wm.get("picks") or {}).items():
+        fx_key = "-".join(key.split("-")[-2:])       # Pick-Key → Fixture-Key
+        snap = ctx.odds.get(fx_key) or {}
+        for pk in (plist if isinstance(plist, list) else [plist]):
+            if not isinstance(pk, dict):
+                continue
+            if _is_ghost_pick(pk, snap):
+                fails.append(f"{key} {pk.get('market')}: Eröffnung {pk.get('steamOpen')} → "
+                             f"{pk.get('steamCur')} stammt aus einer Platzhalter-Quote "
+                             f"(echte Eröffnung: {(snap.get('odds_open') or {}).get('hw')}/"
+                             f"{(snap.get('odds_open') or {}).get('dr')}/"
+                             f"{(snap.get('odds_open') or {}).get('aw')})")
+    return _chk("no_ghost_picks", "Keine Picks aus Platzhalter-Quoten", "warn", fails,
+                "steam_engine blockt implausible Openings; _carry_nobet sortiert Altbestand aus.")
 
 
 @integrity_check
@@ -1130,8 +1185,11 @@ def check_lineup_present(ctx):
 @integrity_check
 def check_public_consensus(ctx):
     real = _real_match_keys(ctx)
+    # 14.07.2026: weit entfernte Anpfiffe raus — Softbooks eröffnen erst ~1 Woche vorher,
+    # Polymarket listet früher. Sonst Dauer-Gelb für Spiele, die schlicht noch niemand bepreist hat.
+    _zu_frueh = _far_future_keys(ctx)
     fails = [f"{mk}: kein public_hw" for mk, o in ctx.odds.items()
-             if mk in real and not o.get("public_hw")]
+             if mk in real and mk not in _zu_frueh and not o.get("public_hw")]
     return _chk("public_consensus", "Public-Konsens (Soft-Books) vorhanden", "warn", fails,
                 "Ohne public_* feuert public_static_bias nicht.")
 
