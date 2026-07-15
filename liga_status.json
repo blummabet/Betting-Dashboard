@@ -49,12 +49,9 @@
       "id": "odds_sane",
       "label": "Pinnacle-1X2 vollständig + plausibel",
       "severity": "warn",
-      "ok": false,
-      "nFail": 2,
-      "failures": [
-        "499-488: Margin 1.876 unplausibel",
-        "77-79: Margin 1.868 unplausibel"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Quelle für Modell-Baseline + Edge."
     },
     {
@@ -65,6 +62,15 @@
       "nFail": 0,
       "failures": [],
       "note": "fetch_liga_odds friert 1X2-Opening kohärent + heilt aus History (erster plausibler Snap)."
+    },
+    {
+      "id": "no_ghost_picks",
+      "label": "Keine Picks aus Platzhalter-Quoten",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "steam_engine blockt implausible Openings; _carry_nobet sortiert Altbestand aus."
     },
     {
       "id": "injuries_plausible",
@@ -83,12 +89,12 @@
       "nFail": 24,
       "failures": [
         "497-502: 1 Platzhalter-Snap(s), z.B. 1.42/1.06/1.35 (Overround 2.39) → Geister-Move im Radar + Fake-Steam-Alert",
-        "499-488: 7 Platzhalter-Snap(s), z.B. 1.56/3.15/1.09 (Overround 1.88) → Geister-Move im Radar + Fake-Steam-Alert",
+        "499-488: 9 Platzhalter-Snap(s), z.B. 1.56/3.15/1.09 (Overround 1.88) → Geister-Move im Radar + Fake-Steam-Alert",
         "500-487: 1 Platzhalter-Snap(s), z.B. 1.44/1.07/1.49 (Overround 2.30) → Geister-Move im Radar + Fake-Steam-Alert",
         "503-489: 8 Platzhalter-Snap(s), z.B. 1.49/2.7/1.79 (Overround 1.60) → Geister-Move im Radar + Fake-Steam-Alert",
         "530-535: 6 Platzhalter-Snap(s), z.B. 1.26/4.9/1.06 (Overround 1.94) → Geister-Move im Radar + Fake-Steam-Alert",
         "540-539: 2 Platzhalter-Snap(s), z.B. 1.96/3.4/1.09 (Overround 1.72) → Geister-Move im Radar + Fake-Steam-Alert",
-        "544-797: 2 Platzhalter-Snap(s), z.B. 1.48/1.09/1.53 (Overround 2.25) → Geister-Move im Radar + Fake-Steam-Alert",
+        "544-797: 3 Platzhalter-Snap(s), z.B. 1.48/1.09/1.53 (Overround 2.25) → Geister-Move im Radar + Fake-Steam-Alert",
         "160-162: 2 Platzhalter-Snap(s), z.B. 1.32/1.01/1.32 (Overround 2.51) → Geister-Move im Radar + Fake-Steam-Alert",
         "164-185: 3 Platzhalter-Snap(s), z.B. 1.23/1.01/1.23 (Overround 2.62) → Geister-Move im Radar + Fake-Steam-Alert",
         "165-175: 1 Platzhalter-Snap(s), z.B. 1.31/1.01/1.17 (Overround 2.61) → Geister-Move im Radar + Fake-Steam-Alert",
@@ -101,7 +107,7 @@
         "111-91: 2 Platzhalter-Snap(s), z.B. 1.02/1.02/1.02 (Overround 2.94) → Geister-Move im Radar + Fake-Steam-Alert",
         "116-108: 3 Platzhalter-Snap(s), z.B. 1.02/1.02/1.02 (Overround 2.94) → Geister-Move im Radar + Fake-Steam-Alert",
         "1298-106: 2 Platzhalter-Snap(s), z.B. 1.18/1.02/1.18 (Overround 2.68) → Geister-Move im Radar + Fake-Steam-Alert",
-        "77-79: 9 Platzhalter-Snap(s), z.B. 1.02/1.02/1.02 (Overround 2.94) → Geister-Move im Radar + Fake-Steam-Alert",
+        "77-79: 11 Platzhalter-Snap(s), z.B. 1.02/1.02/1.02 (Overround 2.94) → Geister-Move im Radar + Fake-Steam-Alert",
         "81-95: 5 Platzhalter-Snap(s), z.B. 1.02/1.02/1.02 (Overround 2.94) → Geister-Move im Radar + Fake-Steam-Alert",
         "84-97: 2 Platzhalter-Snap(s), z.B. 1.19/1.02/1.19 (Overround 2.66) → Geister-Move im Radar + Fake-Steam-Alert",
         "85-94: 5 Platzhalter-Snap(s), z.B. 1.02/1.02/1.02 (Overround 2.94) → Geister-Move im Radar + Fake-Steam-Alert",
@@ -143,7 +149,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "47/48 mit AH · 10/48 mit Public-O/U."
+      "note": "48/48 mit AH · 10/48 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -221,11 +227,9 @@
       "id": "public_consensus",
       "label": "Public-Konsens (Soft-Books) vorhanden",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "542-546: kein public_hw"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Ohne public_* feuert public_static_bias nicht."
     },
     {
@@ -233,7 +237,7 @@
       "label": "Public = Multi-Book-Konsens (nicht Einzel-Book)",
       "severity": "warn",
       "ok": false,
-      "nFail": 47,
+      "nFail": 48,
       "failures": [
         "42-1346: public aus Einzel-Book 'williamhill' statt Konsens",
         "64-33: public aus Einzel-Book 'williamhill' statt Konsens",
@@ -255,9 +259,9 @@
         "512-496: public aus Einzel-Book 'marathonbet' statt Konsens",
         "517-867: public aus Einzel-Book 'marathonbet' statt Konsens",
         "523-490: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "529-531: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "530-535: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "532-543: public aus Einzel-Book 'marathonbet' statt Konsens",
+        "529-531: public aus Einzel-Book 'betfair_ex_eu' statt Konsens",
+        "530-535: public aus Einzel-Book 'betfair_ex_eu' statt Konsens",
+        "532-543: public aus Einzel-Book 'betfair_ex_eu' statt Konsens",
         "536-728: public aus Einzel-Book 'marathonbet' statt Konsens",
         "538-727: public aus Einzel-Book 'marathonbet' statt Konsens"
       ],
@@ -489,6 +493,6 @@
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 4,
-  "generatedAt": "2026-07-15T08:31:53.008444+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-07-15T19:35:51.594069+00:00"
 }
