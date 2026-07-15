@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-13T17:50:07Z",
+  "generatedAt": "2026-07-15T17:07:52Z",
   "windowDays": 2,
   "upcoming": 0,
   "signalsFired": [
@@ -31,20 +31,20 @@
     "public_static_bias": 20,
     "travel_burden": 77,
     "injury": 6,
-    "form_trend": 136,
+    "form_trend": 138,
     "h2h_pattern": 7,
-    "xg_strength": 126,
+    "xg_strength": 129,
     "polymarket_sharp": 0,
     "steam_lag": 0,
-    "pressure_index": 43,
-    "lineup_signal": 30,
+    "pressure_index": 44,
+    "lineup_signal": 32,
     "apif_predictions": 11,
-    "weather_signal": 26,
+    "weather_signal": 27,
     "incentive_signal": 24,
     "altitude_signal": 4,
-    "chance_creation": 54,
+    "chance_creation": 56,
     "form_rating": 17,
-    "freshness_leg": 26,
+    "freshness_leg": 29,
     "smart_money": 39,
     "league_pressure": 0,
     "fixture_congestion": 3,
@@ -52,7 +52,7 @@
     "coach_change": 0,
     "transfer_shift": 0,
     "streak_momentum": 2,
-    "reverse_line_move": 1,
+    "reverse_line_move": 2,
     "opener_move": 2,
     "multi_book_steam": 0,
     "game_state_openness": 0,
@@ -64,20 +64,20 @@
     "🧠 Signal 'multi_book_steam' feuert nicht — unerwartet still, Engine prüfen",
     "🧠 Signal 'game_state_openness' feuert nicht — unerwartet still, Engine prüfen",
     "🧠 Signal 'mls_travel' feuert nicht — unerwartet still, Engine prüfen",
-    "🛡️ Closing nah am Anpfiff erfasst (≤45min): 2 Fehler (z.B. NOR-ENG: Closing 133min VOR Anpfiff eingefroren (veraltet — Nah-am-Anpfiff-Capture lief nicht?))",
+    "🛡️ Closing nah am Anpfiff erfasst (≤45min): 1 Fehler (z.B. FRA-ESP: Closing 116min VOR Anpfiff eingefroren (veraltet — Nah-am-Anpfiff-Capture lief nicht?))",
     "🛡️ Opening-Odds = echter 1X2-Markt (kein Platzhalter): 2 Fehler (z.B. BRA-HTI: Opening unplausibel hw=1.04 dr=15.0 aw=51.0 (Overround 1.05) → erfundener Drift im Sharp Radar)",
     "🛡️ History-Snapshots = echte Märkte (kein Platzhalter): 46 Fehler (z.B. CZE-ZAF: 2 Platzhalter-Snap(s), z.B. 6.1/1.21/13.0 (Overround 1.07) → Geister-Move im Radar + Fake-Steam-Alert)",
     "🛡️ Trade-Auswertung: CLV/Closing erfasst: 1 Fehler (z.B. polyClose fehlt durchgängig → 'halten bis Closing'-Gegenrechnung nicht möglich (Poly-Closing-Snapshot nicht erfasst))"
   ],
   "oks": [
-    "🌡️ Weather: 2 Spiele mit Forecast",
+    "🌡️ Weather: 3 Spiele mit Forecast",
     "🎲 Pinnacle-Odds: frischeste 0.0h alt",
     "📊 APIF-Predictions: 67 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 48 Teams",
-    "📉 Odds-History: 102 Fixtures, Ø 114.1 Snapshots",
-    "💹 Poly-Preise: 2 Fixtures",
-    "💼 Poly-Balance: $99.46",
+    "📉 Odds-History: 102 Fixtures, Ø 115.6 Snapshots",
+    "💹 Poly-Preise: 1 Fixtures",
+    "💼 Poly-Balance: $82.01",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
   ],
   "checks": [
@@ -113,10 +113,9 @@
       "label": "Closing nah am Anpfiff erfasst (≤45min)",
       "severity": "warn",
       "ok": false,
-      "nFail": 2,
+      "nFail": 1,
       "failures": [
-        "NOR-ENG: Closing 133min VOR Anpfiff eingefroren (veraltet — Nah-am-Anpfiff-Capture lief nicht?)",
-        "ARG-SUI: Closing 373min VOR Anpfiff eingefroren (veraltet — Nah-am-Anpfiff-Capture lief nicht?)"
+        "FRA-ESP: Closing 116min VOR Anpfiff eingefroren (veraltet — Nah-am-Anpfiff-Capture lief nicht?)"
       ],
       "note": "Closing weit vor Anpfiff = tote Linie → CLV unzuverlässig. capture-closing.yml (alle 15min in Anpfiff-Bändern) + ODDS_API_KEY prüfen."
     },
@@ -273,7 +272,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "48 Teams · 72 Fixtures · 102 pick-Keys. Fetcher-Wipe-Schutz: safe_write.py + build_liga_data.merge_groups_preserve."
+      "note": "48 Teams · 72 Fixtures · 104 pick-Keys. Fetcher-Wipe-Schutz: safe_write.py + build_liga_data.merge_groups_preserve."
     },
     {
       "id": "odds_freshness",
