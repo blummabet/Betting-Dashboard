@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-07-15T06:10:11Z",
-    "total_records": 167
+    "updated_at": "2026-07-15T06:24:22Z",
+    "total_records": 170
   },
   "records": [
     {
@@ -3339,6 +3339,99 @@
       "engineVersion": "v2"
     },
     {
+      "key": "KO-3RD-FRA-SEN|Beide Teams treffen — Ja",
+      "matchKey": "KO-3RD-FRA-SEN",
+      "market": "Beide Teams treffen — Ja",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "xg_strength",
+          "score": 5.63
+        },
+        {
+          "name": "freshness_leg",
+          "score": -4.0
+        }
+      ],
+      "resolvedAt": "2026-07-15T06:09:37Z",
+      "source": "steam",
+      "convictionScore": 2,
+      "lateEntry": false,
+      "engineVersion": "v2",
+      "processVerdict": "LUCKY"
+    },
+    {
+      "key": "KO-3RD-FRA-SEN|Über 2.5 Tore",
+      "matchKey": "KO-3RD-FRA-SEN",
+      "market": "Über 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 3.2
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.96
+        },
+        {
+          "name": "lineup_signal",
+          "score": -1.11
+        },
+        {
+          "name": "weather_signal",
+          "score": -0.58
+        },
+        {
+          "name": "chance_creation",
+          "score": 3.91
+        },
+        {
+          "name": "freshness_leg",
+          "score": -4.0
+        }
+      ],
+      "resolvedAt": "2026-07-15T06:09:37Z",
+      "source": "steam",
+      "convictionScore": 3,
+      "lateEntry": false,
+      "engineVersion": "v2",
+      "processVerdict": "LUCKY"
+    },
+    {
+      "key": "KO-F-ESP-BEL|Unter 3.5 Tore",
+      "matchKey": "KO-F-ESP-BEL",
+      "market": "Unter 3.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "xg_strength",
+          "score": 1.81
+        },
+        {
+          "name": "pressure_index",
+          "score": 2.5
+        },
+        {
+          "name": "lineup_signal",
+          "score": 3.43
+        },
+        {
+          "name": "chance_creation",
+          "score": -5.48
+        },
+        {
+          "name": "reverse_line_move",
+          "score": 3.5
+        }
+      ],
+      "resolvedAt": "2026-07-15T06:09:37Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": false,
+      "engineVersion": "v2"
+    },
+    {
       "key": "KO-QF-ARG-SUI|Unter 2.5 Tore",
       "matchKey": "KO-QF-ARG-SUI",
       "market": "Unter 2.5 Tore",
@@ -4113,7 +4206,7 @@
           "score": -5.78
         }
       ],
-      "resolvedAt": "2026-07-15T06:10:11Z",
+      "resolvedAt": "2026-07-15T06:24:22Z",
       "source": "steam",
       "convictionScore": 4,
       "lateEntry": true,
@@ -4138,7 +4231,7 @@
           "score": -1.8
         }
       ],
-      "resolvedAt": "2026-07-15T06:10:11Z",
+      "resolvedAt": "2026-07-15T06:24:22Z",
       "source": "steam",
       "convictionScore": 2,
       "lateEntry": false,
