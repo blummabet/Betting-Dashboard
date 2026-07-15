@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "wm",
-    "generatedAt": "2026-07-15T06:08:56.166619+00:00",
+    "generatedAt": "2026-07-15T09:52:42.919359+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -3083,82 +3083,6 @@
       "flag": "🇧🇪",
       "league": "G",
       "leagueName": "Gruppe G",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 60% → 60%"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        false,
-        false
-      ],
-      "xgBacked": true,
-      "next": {
-        "oppId": "ESP",
-        "oppName": "Spanien",
-        "atHome": false,
-        "date": "2026-07-19",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 60
-    },
-    {
-      "teamId": "BEL",
-      "team": "Belgien",
-      "flag": "🇧🇪",
-      "league": "G",
-      "leagueName": "Gruppe G",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 60% → 60%"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": true,
-      "next": {
-        "oppId": "ESP",
-        "oppName": "Spanien",
-        "atHome": false,
-        "date": "2026-07-19",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 60
-    },
-    {
-      "teamId": "BEL",
-      "team": "Belgien",
-      "flag": "🇧🇪",
-      "league": "G",
-      "leagueName": "Gruppe G",
       "type": "scored",
       "market": "Team trifft",
       "length": 3,
@@ -3331,44 +3255,6 @@
       },
       "oppSupportPct": 33,
       "matchupPct": 65
-    },
-    {
-      "teamId": "ESP",
-      "team": "Spanien",
-      "flag": "🇪🇸",
-      "league": "H",
-      "leagueName": "Gruppe H",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 60% → 60%"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": false,
-      "next": {
-        "oppId": "BEL",
-        "oppName": "Belgien",
-        "atHome": true,
-        "date": "2026-07-19",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 60
     },
     {
       "teamId": "ESP",
@@ -5220,6 +5106,108 @@
       "flag": "🇧🇪",
       "league": "G",
       "leagueName": "Gruppe G",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 60% → 60% · Linie/Signale dagegen"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": true,
+      "next": {
+        "oppId": "ESP",
+        "oppName": "Spanien",
+        "atHome": false,
+        "date": "2026-07-19",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 60,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 4,
+        "conviction": 4,
+        "names": [
+          "xg_strength",
+          "pressure_index",
+          "lineup_signal",
+          "chance_creation",
+          "reverse_line_move"
+        ],
+        "market": "Unter 3.5 Tore"
+      }
+    },
+    {
+      "teamId": "BEL",
+      "team": "Belgien",
+      "flag": "🇧🇪",
+      "league": "G",
+      "leagueName": "Gruppe G",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 60% → 60% · Linie/Signale dagegen"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        false,
+        true
+      ],
+      "xgBacked": true,
+      "next": {
+        "oppId": "ESP",
+        "oppName": "Spanien",
+        "atHome": false,
+        "date": "2026-07-19",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 60,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 4,
+        "conviction": 4,
+        "names": [
+          "xg_strength",
+          "pressure_index",
+          "lineup_signal",
+          "chance_creation",
+          "reverse_line_move"
+        ],
+        "market": "Unter 3.5 Tore"
+      }
+    },
+    {
+      "teamId": "BEL",
+      "team": "Belgien",
+      "flag": "🇧🇪",
+      "league": "G",
+      "leagueName": "Gruppe G",
       "type": "bttsYes",
       "market": "Beide Teams treffen",
       "length": 3,
@@ -5318,6 +5306,57 @@
         false
       ],
       "xgBacked": true
+    },
+    {
+      "teamId": "ESP",
+      "team": "Spanien",
+      "flag": "🇪🇸",
+      "league": "H",
+      "leagueName": "Gruppe H",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 60% → 60% · Linie/Signale dagegen"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": false,
+      "next": {
+        "oppId": "BEL",
+        "oppName": "Belgien",
+        "atHome": true,
+        "date": "2026-07-19",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 60,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 4,
+        "conviction": 4,
+        "names": [
+          "xg_strength",
+          "pressure_index",
+          "lineup_signal",
+          "chance_creation",
+          "reverse_line_move"
+        ],
+        "market": "Unter 3.5 Tore"
+      }
     },
     {
       "teamId": "FRA",
