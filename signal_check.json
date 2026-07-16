@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "wm",
-    "generatedAt": "2026-07-16T13:24:20.358730+00:00",
+    "generatedAt": "2026-07-16T17:05:08.301845+00:00",
     "games": 104,
     "markets": [
       "Heimsieg",
@@ -60659,7 +60659,7 @@
             {
               "name": "lead_lag_bias",
               "label": "die Pinnacle-Bewegung",
-              "evidence": "Pinnacle hat Heim um +3.5pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
+              "evidence": "Pinnacle hat Heim um +3.2pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
               "dir": "confirm"
             },
             {
@@ -60677,7 +60677,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 54% des Geldes auf Heim — mehr als der faire Preis hergibt (51%), und es sind echte Wale dahinter (Top-Wallets 60%).",
+              "evidence": "💰 Auf Polymarket liegen 77% des Geldes auf Heim — mehr als der faire Preis hergibt (50%), und es sind echte Wale dahinter (Top-Wallets 85%).",
               "dir": "confirm"
             },
             {
@@ -60691,7 +60691,7 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) sieht Heim um 5.6pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+              "evidence": "📊 Ein zweites Modell (API-Football) sieht Heim um 5.3pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
               "dir": "contradict"
             }
           ],
@@ -60803,23 +60803,10 @@
         },
         "Auswärtssieg": {
           "tip": "England (Auswärtssieg)",
-          "headline": "1 von 5 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „England (Auswärtssieg)“ kritisch — vor allem die Pinnacle-Bewegung spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
-          "confirm": [
-            {
-              "name": "smart_money",
-              "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 28% des Geldes auf Auswärts — mehr als der faire Preis hergibt (25%), und es sind echte Wale dahinter (Top-Wallets 73%).",
-              "dir": "confirm"
-            }
-          ],
+          "headline": "0 von 4 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „England (Auswärtssieg)“ kritisch — vor allem injury spricht dagegen.",
+          "confirm": [],
           "contradict": [
-            {
-              "name": "lead_lag_bias",
-              "label": "die Pinnacle-Bewegung",
-              "evidence": "Pinnacle hat Auswärts um -1.7pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
-              "dir": "contradict"
-            },
             {
               "name": "injury",
               "label": "injury",
@@ -60829,7 +60816,7 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 14.6pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 15.2pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
               "dir": "contradict"
             },
             {
@@ -60837,10 +60824,20 @@
               "label": "die Spieler-Ratings",
               "evidence": "📋 Im Form-Rating steht Heim bei 7.19, Auswärts bei 6.99 — Vorsprung +0.20, in der Abwehr +0.01.",
               "dir": "contradict"
+            },
+            {
+              "name": "smart_money",
+              "label": "das Smart Money",
+              "evidence": "💰 Auf Polymarket liegen 13% des Geldes auf Auswärts — weniger als der faire Preis hergibt (25%), und es sind echte Wale dahinter (Top-Wallets 71%).",
+              "dir": "contradict"
             }
           ],
           "neutral": [],
           "silent": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung"
+            },
             {
               "name": "public_static_bias",
               "label": "der Public-Bias"
@@ -60943,10 +60940,10 @@
             }
           ],
           "score": {
-            "confirm": 1,
+            "confirm": 0,
             "contradict": 4,
             "neutral": 0,
-            "decisive": 5
+            "decisive": 4
           }
         },
         "Über 2.5 Tore": {
@@ -61255,8 +61252,8 @@
       "markets": {
         "Heimsieg": {
           "tip": "Spanien (Heimsieg)",
-          "headline": "2 von 3 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Spanien (Heimsieg)“ mehrheitlich — am deutlichsten die Chancenqualität, auch wenn 1 Signal(e) dagegenhalten.",
+          "headline": "2 von 4 klaren Signalen bestätigen den Tipp",
+          "reason": "Gemischtes Bild: 2 Signal(e) dafür, 2 dagegen — kein klares Signal-Übergewicht.",
           "confirm": [
             {
               "name": "chance_creation",
@@ -61276,6 +61273,12 @@
               "name": "form_trend",
               "label": "die Formkurve",
               "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.1 pro Partie und kassiert 0.3, Auswärts 2.5 und 0.5.",
+              "dir": "contradict"
+            },
+            {
+              "name": "smart_money",
+              "label": "das Smart Money",
+              "evidence": "💰 Auf Polymarket liegen 38% des Geldes auf Heim — weniger als der faire Preis hergibt (42%), und es sind echte Wale dahinter (Top-Wallets 72%).",
               "dir": "contradict"
             }
           ],
@@ -61342,10 +61345,6 @@
               "label": "die Frische der Bewegung"
             },
             {
-              "name": "smart_money",
-              "label": "das Smart Money"
-            },
-            {
               "name": "league_pressure",
               "label": "der Ligadruck"
             },
@@ -61392,9 +61391,9 @@
           ],
           "score": {
             "confirm": 2,
-            "contradict": 1,
+            "contradict": 2,
             "neutral": 0,
-            "decisive": 3
+            "decisive": 4
           }
         },
         "Auswärtssieg": {
@@ -61411,7 +61410,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 35% des Geldes auf Auswärts — mehr als der faire Preis hergibt (26%), und es sind echte Wale dahinter (Top-Wallets 52%).",
+              "evidence": "💰 Auf Polymarket liegen 39% des Geldes auf Auswärts — mehr als der faire Preis hergibt (26%), und es sind echte Wale dahinter (Top-Wallets 56%).",
               "dir": "confirm"
             }
           ],
@@ -61419,7 +61418,7 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 16.3pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 16.2pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
               "dir": "contradict"
             },
             {

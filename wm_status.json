@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-16T13:24:40Z",
+  "generatedAt": "2026-07-16T17:05:32Z",
   "windowDays": 2,
   "upcoming": 0,
   "signalsFired": [
@@ -45,7 +45,7 @@
     "chance_creation": 59,
     "form_rating": 19,
     "freshness_leg": 35,
-    "smart_money": 39,
+    "smart_money": 40,
     "league_pressure": 0,
     "fixture_congestion": 3,
     "topscorer_momentum": 0,
@@ -68,7 +68,8 @@
     "🛡️ Opening-Odds = echter 1X2-Markt (kein Platzhalter): 2 Fehler (z.B. BRA-HTI: Opening unplausibel hw=1.04 dr=15.0 aw=51.0 (Overround 1.05) → erfundener Drift im Sharp Radar)",
     "🛡️ History-Snapshots = echte Märkte (kein Platzhalter): 46 Fehler (z.B. CZE-ZAF: 2 Platzhalter-Snap(s), z.B. 6.1/1.21/13.0 (Overround 1.07) → Geister-Move im Radar + Fake-Steam-Alert)",
     "🛡️ Trade-Auswertung: CLV/Closing erfasst: 1 Fehler (z.B. polyClose fehlt durchgängig → 'halten bis Closing'-Gegenrechnung nicht möglich (Poly-Closing-Snapshot nicht erfasst))",
-    "🛡️ Public = Multi-Book-Konsens (nicht Einzel-Book): 2 Fehler (z.B. FRA-ENG: public aus Einzel-Book 'williamhill' statt Konsens)"
+    "🛡️ Public = Multi-Book-Konsens (nicht Einzel-Book): 1 Fehler (z.B. ESP-ARG: public aus Einzel-Book 'williamhill' statt Konsens)",
+    "🛡️ Soft-Eröffnung echt erfasst: 1 Fehler (z.B. FRA-ENG: Soft bewegte sich 2.05→1.91, aber Opening==Jetzt (1.91) — nicht eingefroren)"
   ],
   "oks": [
     "🌡️ Weather: 2 Spiele mit Forecast",
@@ -76,7 +77,7 @@
     "📊 APIF-Predictions: 69 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 48 Teams",
-    "📉 Odds-History: 104 Fixtures, Ø 114.3 Snapshots",
+    "📉 Odds-History: 104 Fixtures, Ø 114.5 Snapshots",
     "💹 Poly-Preise: 2 Fixtures",
     "💼 Poly-Balance: $193.63",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
@@ -372,9 +373,8 @@
       "label": "Public = Multi-Book-Konsens (nicht Einzel-Book)",
       "severity": "warn",
       "ok": false,
-      "nFail": 2,
+      "nFail": 1,
       "failures": [
-        "FRA-ENG: public aus Einzel-Book 'williamhill' statt Konsens",
         "ESP-ARG: public aus Einzel-Book 'williamhill' statt Konsens"
       ],
       "note": "public_static_bias soll auf Median-Konsens laufen, nicht 1 verrauschtem Soft-Book. Single-Book = fetch_wm_multibook_odds hat (noch) nicht geschrieben."
@@ -527,9 +527,11 @@
       "id": "soft_opening_captured",
       "label": "Soft-Eröffnung echt erfasst",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "FRA-ENG: Soft bewegte sich 2.05→1.91, aber Opening==Jetzt (1.91) — nicht eingefroren"
+      ],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
     },
     {
