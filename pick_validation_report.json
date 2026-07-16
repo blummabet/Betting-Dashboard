@@ -1,10 +1,41 @@
 {
-  "lastRun": "2026-07-15T20:53:31.194809+00:00",
+  "lastRun": "2026-07-16T06:12:06.719343+00:00",
   "stats": {
-    "total": 204,
+    "total": 206,
     "errors": 0,
-    "warnings": 0,
+    "warnings": 2,
     "ok": 204
   },
-  "issues": []
+  "issues": [
+    {
+      "matchKey": "KO-3RD-FRA-SEN",
+      "market": "Beide Teams treffen — Ja",
+      "level": "warning",
+      "code": "E_ORPHAN_MATCH",
+      "message": "Pick existiert aber Match FRA-SEN nicht in koFixtures",
+      "pickSnapshot": {
+        "verdict": "BEOBACHTEN",
+        "odds": 1.87,
+        "modelOdds": 1.92,
+        "edgePP": -5,
+        "clvPP": -0.74,
+        "dataQuality": "steam"
+      }
+    },
+    {
+      "matchKey": "KO-3RD-FRA-SEN",
+      "market": "Über 2.5 Tore",
+      "level": "warning",
+      "code": "E_ORPHAN_MATCH",
+      "message": "Pick existiert aber Match FRA-SEN nicht in koFixtures",
+      "pickSnapshot": {
+        "verdict": "BEOBACHTEN",
+        "odds": 1.75,
+        "modelOdds": 1.714,
+        "edgePP": -3,
+        "clvPP": -0.37,
+        "dataQuality": "steam"
+      }
+    }
+  ]
 }
