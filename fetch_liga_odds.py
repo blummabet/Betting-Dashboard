@@ -342,15 +342,53 @@ def build_odds_entry(prices: dict, existing: dict, now_iso: str, hist: list | No
         "bookmaker": prices.get("bookmaker"),
         "odds_open": odds_open, "updatedAt": now_iso,
     }
+    # ── 15.07.2026 (Lucas: „quotentechnisch was von MLS?") — O/U-QUOTEN NICHT LÖSCHEN ──
+    # BEFUND: TheOddsAPI liefert `totals` für die MLS nur sporadisch (bei 14 von 16 Fetch-Zyklen
+    # fehlten sie). Der Eintrag wurde bei JEDEM Lauf komplett neu gebaut und O/U nur übernommen,
+    # wenn der aktuelle Fetch sie hatte → jeder Lauf ohne totals LÖSCHTE die letzte O/U-Quote.
+    # Die Spiele nahe am Anpfiff werden am häufigsten gerefresht → traf genau sie am härtesten
+    # (erster Spieltag stand ganz ohne O/U da). Gilt für Liga genauso.
+    #
+    # Fix wie bei odds_open: fehlt die frische Quote, die letzte bekannte behalten (leicht veraltet
+    # ist für O/U-Signale/Picks weit besser als gar keine; der nächste Fetch mit totals überschreibt
+    # sie). Nur der aktuelle Stand (entry) wird getragen — die History-Snaps bleiben roh, damit die
+    # Bewegungsanalyse echt bleibt.
+    carried = False
     for k in _OU_BTTS:
         if prices.get(k):
             entry[k] = prices[k]
+        elif existing.get(k):
+            entry[k] = existing[k]
+            carried = True
     # AH-Leiter + diskrete Keys durchreichen (09.07.2026 — Liga/MLS AH-Parität mit WM).
     if prices.get("ahLadder"):
         entry["ahLadder"] = prices["ahLadder"]
-    for k in list(prices.keys()):
-        if k.startswith("ahH_n") or k.startswith("ahA_p") or k.startswith("ahA_n"):
+    elif existing.get("ahLadder"):
+        entry["ahLadder"] = existing["ahLadder"]
+        carried = True
+    _ah_keys = {k for k in list(prices) + list(existing)
+                if k.startswith("ahH_n") or k.startswith("ahA_p") or k.startswith("ahA_n")}
+    for k in _ah_keys:
+        if prices.get(k):
             entry[k] = prices[k]
+        elif existing.get(k):
+            entry[k] = existing[k]
+            carried = True
+    # 15.07.2026: Polymarket-Patches durchreichen. fetch_wm_poly_prices schreibt poly_* NACH dem
+    # Odds-Lauf in dieselbe Datei. Baut fetch_liga_odds den Eintrag beim nächsten 2h-Lauf neu, ohne
+    # diese Felder zu tragen, löscht es die Poly-Preise → Steam-Lag-Signal, Poly-Edge im Radar und
+    # der Whale-Tab standen für die anstehenden Spiele ohne Poly da (bei JEDEM Odds-Lauf aufs Neue).
+    # Poly kommt aus einem anderen Prozess → immer aus existing tragen (TheOddsAPI liefert kein poly).
+    for k in list(existing.keys()):
+        if k.startswith("poly_") and k not in entry:
+            entry[k] = existing[k]
+
+    # Transparenz: wann war die letzte Quote frisch? Guard/Frontend können Stale erkennen.
+    if carried:
+        entry["marketsCarriedAt"] = now_iso
+        entry["marketsFreshAt"] = existing.get("marketsFreshAt") or existing.get("updatedAt")
+    else:
+        entry["marketsFreshAt"] = now_iso
     # Public/Soft-Konsens 1X2 + O/U + BTTS durchreichen (public_static_bias/lead_lag).
     _PUB = ("public_hw", "public_dr", "public_aw", "public_bookmaker",
             "public_o15", "public_u15", "public_o25", "public_u25",
