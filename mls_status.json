@@ -49,25 +49,9 @@
       "id": "odds_sane",
       "label": "Pinnacle-1X2 vollständig + plausibel",
       "severity": "warn",
-      "ok": false,
-      "nFail": 15,
-      "failures": [
-        "1598-9569: 1X2 unvollständig hw=None dr=None aw=None",
-        "1604-1607: 1X2 unvollständig hw=None dr=None aw=None",
-        "1616-1611: 1X2 unvollständig hw=None dr=None aw=None",
-        "20787-1610: 1X2 unvollständig hw=None dr=None aw=None",
-        "1600-16489: 1X2 unvollständig hw=None dr=None aw=None",
-        "1615-1601: 1X2 unvollständig hw=None dr=None aw=None",
-        "1612-1603: 1X2 unvollständig hw=None dr=None aw=None",
-        "1609-1608: 1X2 unvollständig hw=None dr=None aw=None",
-        "25484-1597: 1X2 unvollständig hw=None dr=None aw=None",
-        "1599-1595: 1X2 unvollständig hw=None dr=None aw=None",
-        "1596-1605: 1X2 unvollständig hw=None dr=None aw=None",
-        "1617-1606: 1X2 unvollständig hw=None dr=None aw=None",
-        "1613-2242: 1X2 unvollständig hw=None dr=None aw=None",
-        "1614-9568: 1X2 unvollständig hw=None dr=None aw=None",
-        "1602-18310: 1X2 unvollständig hw=None dr=None aw=None"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Quelle für Modell-Baseline + Edge."
     },
     {
@@ -78,6 +62,15 @@
       "nFail": 0,
       "failures": [],
       "note": "fetch_liga_odds friert 1X2-Opening kohärent + heilt aus History (erster plausibler Snap)."
+    },
+    {
+      "id": "no_ghost_picks",
+      "label": "Keine Picks aus Platzhalter-Quoten",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "steam_engine blockt implausible Openings; _carry_nobet sortiert Altbestand aus."
     },
     {
       "id": "injuries_plausible",
@@ -234,25 +227,9 @@
       "id": "public_consensus",
       "label": "Public-Konsens (Soft-Books) vorhanden",
       "severity": "warn",
-      "ok": false,
-      "nFail": 15,
-      "failures": [
-        "1598-9569: kein public_hw",
-        "1604-1607: kein public_hw",
-        "1616-1611: kein public_hw",
-        "20787-1610: kein public_hw",
-        "1600-16489: kein public_hw",
-        "1615-1601: kein public_hw",
-        "1612-1603: kein public_hw",
-        "1609-1608: kein public_hw",
-        "25484-1597: kein public_hw",
-        "1599-1595: kein public_hw",
-        "1596-1605: kein public_hw",
-        "1617-1606: kein public_hw",
-        "1613-2242: kein public_hw",
-        "1614-9568: kein public_hw",
-        "1602-18310: kein public_hw"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Ohne public_* feuert public_static_bias nicht."
     },
     {
@@ -512,6 +489,6 @@
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 5,
-  "generatedAt": "2026-07-15T09:13:04.232150+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-07-15T20:16:44.229622+00:00"
 }

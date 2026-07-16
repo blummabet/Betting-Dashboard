@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T17:07:52Z",
+  "generatedAt": "2026-07-15T20:53:32Z",
   "windowDays": 2,
   "upcoming": 0,
   "signalsFired": [
@@ -58,8 +58,10 @@
     "game_state_openness": 0,
     "mls_travel": 0
   },
-  "verdict": "warn",
-  "errors": [],
+  "verdict": "error",
+  "errors": [
+    "🛡️ Home/Away nicht vertauscht (Pinn vs Poly): 1 Fehler (z.B. ENG-ARG: Pinnacle-Fav Heim (hw 1.41/aw 13.84) ≠ Poly-Fav Ausw (Swap-Verdacht))"
+  ],
   "warns": [
     "🧠 Signal 'multi_book_steam' feuert nicht — unerwartet still, Engine prüfen",
     "🧠 Signal 'game_state_openness' feuert nicht — unerwartet still, Engine prüfen",
@@ -75,7 +77,7 @@
     "📊 APIF-Predictions: 67 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 48 Teams",
-    "📉 Odds-History: 102 Fixtures, Ø 115.6 Snapshots",
+    "📉 Odds-History: 102 Fixtures, Ø 115.7 Snapshots",
     "💹 Poly-Preise: 1 Fixtures",
     "💼 Poly-Balance: $82.01",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
@@ -195,6 +197,15 @@
       "note": "fetch_liga_odds friert 1X2-Opening kohärent + heilt aus History (erster plausibler Snap)."
     },
     {
+      "id": "no_ghost_picks",
+      "label": "Keine Picks aus Platzhalter-Quoten",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "steam_engine blockt implausible Openings; _carry_nobet sortiert Altbestand aus."
+    },
+    {
       "id": "injuries_plausible",
       "label": "Ausfall-Liste = aktueller Stand (kein Archiv)",
       "severity": "warn",
@@ -287,10 +298,12 @@
       "id": "homeaway_consistent",
       "label": "Home/Away nicht vertauscht (Pinn vs Poly)",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
-      "note": "fetch_wm_odds:241 hatte hw↔aw-Swap → Mexiko als Underdog gelistet. Bei knappen Quoten ggf. echte Markt-Uneinigkeit — Fixture-Orientierung prüfen."
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "ENG-ARG: Pinnacle-Fav Heim (hw 1.41/aw 13.84) ≠ Poly-Fav Ausw (Swap-Verdacht)"
+      ],
+      "note": "fetch_wm_odds:241 hatte hw↔aw-Swap → Mexiko als Underdog gelistet. Bei knappen Quoten ggf. echte Markt-Uneinigkeit — Fixture-Orientierung prüfen. · Verlauf: 4× an 4 Tag(en) (zuletzt ENG-ARG am 07-15) — erst bei Muster fixen."
     },
     {
       "id": "signal_coverage",
@@ -457,15 +470,6 @@
       "note": "freshness_leg-Signal muss bei confirm/reverse feuern, damit der Bayesian-Loop das Gewicht lernt. Fehlt es → Signal-Engine lief vor dem Frische-Block oder Signal nicht registriert."
     },
     {
-      "id": "smartmoney_sane",
-      "label": "Smart-Money-Daten kohärent",
-      "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
-      "note": "Shares müssen ~1 summieren + totalUsd da. Sonst läuft das smart_money-Signal auf Müll. Quelle: fetch_wm_poly_smartmoney.py (data-api, Mac-Runner)."
-    },
-    {
       "id": "btts_not_templated_traded",
       "label": "BTTS-Platzhalter nicht handelbar",
       "severity": "warn",
@@ -518,15 +522,6 @@
       "nFail": 0,
       "failures": [],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
-    },
-    {
-      "id": "smartmoney_cluster_sane",
-      "label": "Smart-Money-Cluster kohärent",
-      "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
-      "note": "cluster ∈ ℕ₀, ≤ holders; buy/sell ≥ 0; netFlow = buy − sell. Sonst rechnet der Cluster-Boost/Exit-Penalty im smart_money-Signal auf Müll."
     },
     {
       "id": "card_only_not_in_trade",

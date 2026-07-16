@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "wm",
-    "generatedAt": "2026-07-15T17:07:31.258536+00:00",
+    "generatedAt": "2026-07-15T20:53:09.686521+00:00",
     "games": 104,
     "markets": [
       "Heimsieg",
@@ -60049,13 +60049,25 @@
       "markets": {
         "Heimsieg": {
           "tip": "England (Heimsieg)",
-          "headline": "1 von 4 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „England (Heimsieg)“ kritisch — vor allem injury spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
+          "headline": "3 von 5 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „England (Heimsieg)“ mehrheitlich — am deutlichsten die Aufstellung, auch wenn 2 Signal(e) dagegenhalten.",
           "confirm": [
+            {
+              "name": "lineup_signal",
+              "label": "die Aufstellung",
+              "evidence": "🚨 bei Auswärts sitzt nur auf der Bank Lautaro Martínez (ATT) · bei Auswärts sitzt nur auf der Bank T. Almada (MID) · bei Auswärts sitzt nur auf der Bank N. González (ATT) · bei Auswärts ist zurück E. Fernández (MID)",
+              "dir": "confirm"
+            },
             {
               "name": "chance_creation",
               "label": "die Chancenqualität",
               "evidence": "🎨 Beim Chancen-Kreieren liegt Heim bei 17.8, Auswärts bei 13.9 (Schlüsselpässe + Abschlüsse) — Vorsprung +3.9.",
+              "dir": "confirm"
+            },
+            {
+              "name": "smart_money",
+              "label": "das Smart Money",
+              "evidence": "💰 Auf Polymarket liegen 49% des Geldes auf Heim — mehr als der faire Preis hergibt (36%), und es sind echte Wale dahinter (Top-Wallets 51%).",
               "dir": "confirm"
             }
           ],
@@ -60070,12 +60082,6 @@
               "name": "form_rating",
               "label": "die Spieler-Ratings",
               "evidence": "📋 Im Form-Rating steht Heim bei 6.99, Auswärts bei 7.09 — Vorsprung -0.10, in der Abwehr +0.26.",
-              "dir": "contradict"
-            },
-            {
-              "name": "smart_money",
-              "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 45% des Geldes auf Heim — mehr als der faire Preis hergibt (36%), und es sind echte Wale dahinter (Top-Wallets 54%). ⚠️ Aber kurz vor Anpfiff verkaufen Wale netto rund $47k auf dieser Seite — die Überzeugung kippt.",
               "dir": "contradict"
             }
           ],
@@ -60116,10 +60122,6 @@
             {
               "name": "pressure_index",
               "label": "der Tabellendruck"
-            },
-            {
-              "name": "lineup_signal",
-              "label": "die Aufstellung"
             },
             {
               "name": "apif_predictions",
@@ -60187,16 +60189,16 @@
             }
           ],
           "score": {
-            "confirm": 1,
-            "contradict": 3,
+            "confirm": 3,
+            "contradict": 2,
             "neutral": 0,
-            "decisive": 4
+            "decisive": 5
           }
         },
         "Auswärtssieg": {
           "tip": "Argentinien (Auswärtssieg)",
-          "headline": "4 von 5 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Argentinien (Auswärtssieg)“ mehrheitlich — am deutlichsten injury, auch wenn 1 Signal(e) dagegenhalten.",
+          "headline": "4 von 6 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Argentinien (Auswärtssieg)“ mehrheitlich — am deutlichsten injury, auch wenn 2 Signal(e) dagegenhalten.",
           "confirm": [
             {
               "name": "injury",
@@ -60207,7 +60209,7 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) schätzt Auswärts um 14.2pp höher ein als Pinnacle — Rückendeckung für den Pick.",
+              "evidence": "📊 Ein zweites Modell (API-Football) schätzt Auswärts um 14.0pp höher ein als Pinnacle — Rückendeckung für den Pick.",
               "dir": "confirm"
             },
             {
@@ -60219,11 +60221,17 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 35% des Geldes auf Auswärts — mehr als der faire Preis hergibt (31%), und es sind echte Wale dahinter (Top-Wallets 59%).",
+              "evidence": "💰 Auf Polymarket liegen 35% des Geldes auf Auswärts — mehr als der faire Preis hergibt (31%), und es sind echte Wale dahinter (Top-Wallets 57%).",
               "dir": "confirm"
             }
           ],
           "contradict": [
+            {
+              "name": "lineup_signal",
+              "label": "die Aufstellung",
+              "evidence": "🚨 bei Auswärts sitzt nur auf der Bank Lautaro Martínez (ATT) · bei Auswärts sitzt nur auf der Bank T. Almada (MID) · bei Auswärts sitzt nur auf der Bank N. González (ATT) · bei Auswärts ist zurück E. Fernández (MID)",
+              "dir": "contradict"
+            },
             {
               "name": "chance_creation",
               "label": "die Chancenqualität",
@@ -60268,10 +60276,6 @@
             {
               "name": "pressure_index",
               "label": "der Tabellendruck"
-            },
-            {
-              "name": "lineup_signal",
-              "label": "die Aufstellung"
             },
             {
               "name": "weather_signal",
@@ -60336,15 +60340,15 @@
           ],
           "score": {
             "confirm": 4,
-            "contradict": 1,
+            "contradict": 2,
             "neutral": 0,
-            "decisive": 5
+            "decisive": 6
           }
         },
         "Über 2.5 Tore": {
           "tip": "Über 2.5 Tore",
-          "headline": "2 von 3 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Über 2.5 Tore“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 1 Signal(e) dagegenhalten.",
+          "headline": "2 von 5 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „Über 2.5 Tore“ kritisch — vor allem der Tabellendruck spricht dagegen, 2 Signal(e) stützen ihn dennoch.",
           "confirm": [
             {
               "name": "form_trend",
@@ -60364,6 +60368,18 @@
               "name": "pressure_index",
               "label": "der Tabellendruck",
               "evidence": "🎯 KO-Vorsicht (gegen Über)",
+              "dir": "contradict"
+            },
+            {
+              "name": "lineup_signal",
+              "label": "die Aufstellung",
+              "evidence": "🚨 bei Auswärts sitzt nur auf der Bank Lautaro Martínez (ATT) · bei Auswärts sitzt nur auf der Bank T. Almada (MID) · bei Auswärts sitzt nur auf der Bank N. González (ATT) · bei Auswärts ist zurück E. Fernández (MID)",
+              "dir": "contradict"
+            },
+            {
+              "name": "weather_signal",
+              "label": "das Wetter",
+              "evidence": "🌡 Bei 33°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ENG temperate · ARG temperate",
               "dir": "contradict"
             }
           ],
@@ -60402,16 +60418,8 @@
               "label": "der Steam-Move"
             },
             {
-              "name": "lineup_signal",
-              "label": "die Aufstellung"
-            },
-            {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell"
-            },
-            {
-              "name": "weather_signal",
-              "label": "das Wetter"
             },
             {
               "name": "incentive_signal",
@@ -60480,20 +60488,32 @@
           ],
           "score": {
             "confirm": 2,
-            "contradict": 1,
+            "contradict": 3,
             "neutral": 0,
-            "decisive": 3
+            "decisive": 5
           }
         },
         "Unter 2.5 Tore": {
           "tip": "Unter 2.5 Tore",
-          "headline": "1 von 3 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „Unter 2.5 Tore“ kritisch — vor allem die Formkurve spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
+          "headline": "3 von 5 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Unter 2.5 Tore“ mehrheitlich — am deutlichsten der Tabellendruck, auch wenn 2 Signal(e) dagegenhalten.",
           "confirm": [
             {
               "name": "pressure_index",
               "label": "der Tabellendruck",
               "evidence": "🎯 KO-Vorsicht (Unter wahrscheinlicher) · semi-Stage extra-vorsichtig",
+              "dir": "confirm"
+            },
+            {
+              "name": "lineup_signal",
+              "label": "die Aufstellung",
+              "evidence": "🚨 bei Auswärts sitzt nur auf der Bank Lautaro Martínez (ATT) · bei Auswärts sitzt nur auf der Bank T. Almada (MID) · bei Auswärts sitzt nur auf der Bank N. González (ATT) · bei Auswärts ist zurück E. Fernández (MID)",
+              "dir": "confirm"
+            },
+            {
+              "name": "weather_signal",
+              "label": "das Wetter",
+              "evidence": "🌡 Bei 33°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ENG temperate · ARG temperate",
               "dir": "confirm"
             }
           ],
@@ -60546,16 +60566,8 @@
               "label": "der Steam-Move"
             },
             {
-              "name": "lineup_signal",
-              "label": "die Aufstellung"
-            },
-            {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell"
-            },
-            {
-              "name": "weather_signal",
-              "label": "das Wetter"
             },
             {
               "name": "incentive_signal",
@@ -60623,10 +60635,10 @@
             }
           ],
           "score": {
-            "confirm": 1,
+            "confirm": 3,
             "contradict": 2,
             "neutral": 0,
-            "decisive": 3
+            "decisive": 5
           }
         }
       }
