@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "wm",
-    "generatedAt": "2026-07-16T06:11:42.786888+00:00",
+    "generatedAt": "2026-07-16T09:59:33.434657+00:00",
     "games": 104,
     "markets": [
       "Heimsieg",
@@ -60343,8 +60343,8 @@
         },
         "Über 2.5 Tore": {
           "tip": "Über 2.5 Tore",
-          "headline": "2 von 5 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „Über 2.5 Tore“ kritisch — vor allem der Tabellendruck spricht dagegen, 2 Signal(e) stützen ihn dennoch.",
+          "headline": "2 von 4 klaren Signalen bestätigen den Tipp",
+          "reason": "Gemischtes Bild: 2 Signal(e) dafür, 2 dagegen — kein klares Signal-Übergewicht.",
           "confirm": [
             {
               "name": "form_trend",
@@ -60370,12 +60370,6 @@
               "name": "lineup_signal",
               "label": "die Aufstellung",
               "evidence": "🚨 bei Auswärts sitzt nur auf der Bank Lautaro Martínez (ATT) · bei Auswärts sitzt nur auf der Bank T. Almada (MID) · bei Auswärts sitzt nur auf der Bank N. González (ATT) · bei Auswärts ist zurück E. Fernández (MID)",
-              "dir": "contradict"
-            },
-            {
-              "name": "weather_signal",
-              "label": "das Wetter",
-              "evidence": "🌡 Bei 32°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ENG temperate · ARG temperate",
               "dir": "contradict"
             }
           ],
@@ -60416,6 +60410,10 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell"
+            },
+            {
+              "name": "weather_signal",
+              "label": "das Wetter"
             },
             {
               "name": "incentive_signal",
@@ -60484,15 +60482,15 @@
           ],
           "score": {
             "confirm": 2,
-            "contradict": 3,
+            "contradict": 2,
             "neutral": 0,
-            "decisive": 5
+            "decisive": 4
           }
         },
         "Unter 2.5 Tore": {
           "tip": "Unter 2.5 Tore",
-          "headline": "3 von 5 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Unter 2.5 Tore“ mehrheitlich — am deutlichsten der Tabellendruck, auch wenn 2 Signal(e) dagegenhalten.",
+          "headline": "2 von 4 klaren Signalen bestätigen den Tipp",
+          "reason": "Gemischtes Bild: 2 Signal(e) dafür, 2 dagegen — kein klares Signal-Übergewicht.",
           "confirm": [
             {
               "name": "pressure_index",
@@ -60504,12 +60502,6 @@
               "name": "lineup_signal",
               "label": "die Aufstellung",
               "evidence": "🚨 bei Auswärts sitzt nur auf der Bank Lautaro Martínez (ATT) · bei Auswärts sitzt nur auf der Bank T. Almada (MID) · bei Auswärts sitzt nur auf der Bank N. González (ATT) · bei Auswärts ist zurück E. Fernández (MID)",
-              "dir": "confirm"
-            },
-            {
-              "name": "weather_signal",
-              "label": "das Wetter",
-              "evidence": "🌡 Bei 32°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — ENG temperate · ARG temperate",
               "dir": "confirm"
             }
           ],
@@ -60566,6 +60558,10 @@
               "label": "das externe Prognosemodell"
             },
             {
+              "name": "weather_signal",
+              "label": "das Wetter"
+            },
+            {
               "name": "incentive_signal",
               "label": "die Anreizlage"
             },
@@ -60631,10 +60627,10 @@
             }
           ],
           "score": {
-            "confirm": 3,
+            "confirm": 2,
             "contradict": 2,
             "neutral": 0,
-            "decisive": 5
+            "decisive": 4
           }
         }
       }
@@ -60653,9 +60649,15 @@
       "markets": {
         "Heimsieg": {
           "tip": "Frankreich (Heimsieg)",
-          "headline": "2 von 2 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Frankreich (Heimsieg)“ mehrheitlich — am deutlichsten injury.",
+          "headline": "4 von 5 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Frankreich (Heimsieg)“ mehrheitlich — am deutlichsten die Pinnacle-Bewegung, auch wenn 1 Signal(e) dagegenhalten.",
           "confirm": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung",
+              "evidence": "Pinnacle hat Heim um +3.9pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
+              "dir": "confirm"
+            },
             {
               "name": "injury",
               "label": "injury",
@@ -60667,15 +60669,24 @@
               "label": "die Spieler-Ratings",
               "evidence": "📋 Im Form-Rating steht Heim bei 7.19, Auswärts bei 6.99 — Vorsprung +0.20, in der Abwehr +0.01.",
               "dir": "confirm"
+            },
+            {
+              "name": "opener_move",
+              "label": "opener_move",
+              "evidence": "Sharp-Window: Schon im frühen Fenster nach der Eröffnung zog Pinnacle Heim um +3.9pp an — das ist die schärfste, früheste Geldbewegung, bevor das Public-Volumen kam.",
+              "dir": "confirm"
             }
           ],
-          "contradict": [],
+          "contradict": [
+            {
+              "name": "apif_predictions",
+              "label": "das externe Prognosemodell",
+              "evidence": "📊 Ein zweites Modell (API-Football) sieht Heim um 6.0pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+              "dir": "contradict"
+            }
+          ],
           "neutral": [],
           "silent": [
-            {
-              "name": "lead_lag_bias",
-              "label": "die Pinnacle-Bewegung"
-            },
             {
               "name": "public_static_bias",
               "label": "der Public-Bias"
@@ -60711,10 +60722,6 @@
             {
               "name": "lineup_signal",
               "label": "die Aufstellung"
-            },
-            {
-              "name": "apif_predictions",
-              "label": "das externe Prognosemodell"
             },
             {
               "name": "weather_signal",
@@ -60769,10 +60776,6 @@
               "label": "reverse_line_move"
             },
             {
-              "name": "opener_move",
-              "label": "opener_move"
-            },
-            {
               "name": "multi_book_steam",
               "label": "multi_book_steam"
             },
@@ -60786,22 +60789,34 @@
             }
           ],
           "score": {
-            "confirm": 2,
-            "contradict": 0,
+            "confirm": 4,
+            "contradict": 1,
             "neutral": 0,
-            "decisive": 2
+            "decisive": 5
           }
         },
         "Auswärtssieg": {
           "tip": "England (Auswärtssieg)",
-          "headline": "0 von 2 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „England (Auswärtssieg)“ kritisch — vor allem injury spricht dagegen.",
+          "headline": "0 von 4 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „England (Auswärtssieg)“ kritisch — vor allem die Pinnacle-Bewegung spricht dagegen.",
           "confirm": [],
           "contradict": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung",
+              "evidence": "Pinnacle hat Auswärts um -2.1pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
+              "dir": "contradict"
+            },
             {
               "name": "injury",
               "label": "injury",
               "evidence": "🩹 Auswärts 1.2pp (R. James (?), J. Quansah (?))",
+              "dir": "contradict"
+            },
+            {
+              "name": "apif_predictions",
+              "label": "das externe Prognosemodell",
+              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 14.3pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
               "dir": "contradict"
             },
             {
@@ -60813,10 +60828,6 @@
           ],
           "neutral": [],
           "silent": [
-            {
-              "name": "lead_lag_bias",
-              "label": "die Pinnacle-Bewegung"
-            },
             {
               "name": "public_static_bias",
               "label": "der Public-Bias"
@@ -60852,10 +60863,6 @@
             {
               "name": "lineup_signal",
               "label": "die Aufstellung"
-            },
-            {
-              "name": "apif_predictions",
-              "label": "das externe Prognosemodell"
             },
             {
               "name": "weather_signal",
@@ -60928,15 +60935,15 @@
           ],
           "score": {
             "confirm": 0,
-            "contradict": 2,
+            "contradict": 4,
             "neutral": 0,
-            "decisive": 2
+            "decisive": 4
           }
         },
         "Über 2.5 Tore": {
           "tip": "Über 2.5 Tore",
-          "headline": "3 von 3 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Über 2.5 Tore“ mehrheitlich — am deutlichsten die Formkurve.",
+          "headline": "3 von 4 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Über 2.5 Tore“ mehrheitlich — am deutlichsten die Formkurve, auch wenn 1 Signal(e) dagegenhalten.",
           "confirm": [
             {
               "name": "form_trend",
@@ -60953,11 +60960,18 @@
             {
               "name": "opener_move",
               "label": "opener_move",
-              "evidence": "Sharp-Window: Schon im frühen Fenster nach der Eröffnung zog Pinnacle Über um +5.0pp an — das ist die schärfste, früheste Geldbewegung, bevor das Public-Volumen kam.",
+              "evidence": "Sharp-Window: Schon im frühen Fenster nach der Eröffnung zog Pinnacle Über um +6.2pp an — das ist die schärfste, früheste Geldbewegung, bevor das Public-Volumen kam.",
               "dir": "confirm"
             }
           ],
-          "contradict": [],
+          "contradict": [
+            {
+              "name": "weather_signal",
+              "label": "das Wetter",
+              "evidence": "🌡 Bei 33°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — FRA temperate · ENG temperate",
+              "dir": "contradict"
+            }
+          ],
           "neutral": [],
           "silent": [
             {
@@ -61003,10 +61017,6 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell"
-            },
-            {
-              "name": "weather_signal",
-              "label": "das Wetter"
             },
             {
               "name": "incentive_signal",
@@ -61071,16 +61081,23 @@
           ],
           "score": {
             "confirm": 3,
-            "contradict": 0,
+            "contradict": 1,
             "neutral": 0,
-            "decisive": 3
+            "decisive": 4
           }
         },
         "Unter 2.5 Tore": {
           "tip": "Unter 2.5 Tore",
-          "headline": "0 von 2 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „Unter 2.5 Tore“ kritisch — vor allem die Formkurve spricht dagegen.",
-          "confirm": [],
+          "headline": "1 von 3 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „Unter 2.5 Tore“ kritisch — vor allem die Formkurve spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
+          "confirm": [
+            {
+              "name": "weather_signal",
+              "label": "das Wetter",
+              "evidence": "🌡 Bei 33°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — FRA temperate · ENG temperate",
+              "dir": "confirm"
+            }
+          ],
           "contradict": [
             {
               "name": "form_trend",
@@ -61142,10 +61159,6 @@
               "label": "das externe Prognosemodell"
             },
             {
-              "name": "weather_signal",
-              "label": "das Wetter"
-            },
-            {
               "name": "incentive_signal",
               "label": "die Anreizlage"
             },
@@ -61211,10 +61224,10 @@
             }
           ],
           "score": {
-            "confirm": 0,
+            "confirm": 1,
             "contradict": 2,
             "neutral": 0,
-            "decisive": 2
+            "decisive": 3
           }
         }
       }
@@ -61377,8 +61390,8 @@
         },
         "Auswärtssieg": {
           "tip": "Argentinien (Auswärtssieg)",
-          "headline": "1 von 3 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „Argentinien (Auswärtssieg)“ kritisch — vor allem die Chancenqualität spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
+          "headline": "1 von 4 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „Argentinien (Auswärtssieg)“ kritisch — vor allem das externe Prognosemodell spricht dagegen, 1 Signal(e) stützen ihn dennoch.",
           "confirm": [
             {
               "name": "form_trend",
@@ -61388,6 +61401,12 @@
             }
           ],
           "contradict": [
+            {
+              "name": "apif_predictions",
+              "label": "das externe Prognosemodell",
+              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 16.4pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+              "dir": "contradict"
+            },
             {
               "name": "chance_creation",
               "label": "die Chancenqualität",
@@ -61442,10 +61461,6 @@
             {
               "name": "lineup_signal",
               "label": "die Aufstellung"
-            },
-            {
-              "name": "apif_predictions",
-              "label": "das externe Prognosemodell"
             },
             {
               "name": "weather_signal",
@@ -61514,9 +61529,9 @@
           ],
           "score": {
             "confirm": 1,
-            "contradict": 2,
+            "contradict": 3,
             "neutral": 0,
-            "decisive": 3
+            "decisive": 4
           }
         },
         "Über 2.5 Tore": {
