@@ -1,8 +1,11 @@
 name: 🔥 Serien der Woche (Telegram Public)
 
 # 29.06.2026 (Lucas): wöchentlicher „Serien der Woche"-Digest in den Public-Channel.
-# Liest das committete wm_streaks.json (von fetch-wm-data). TikTok-safe, keine Quoten.
-# Montags 09:00 UTC = 11:00 Wien. Dataset: WM (default). Liga/MLS später via COCOBET_DATASET.
+# Liest das committete {prefix}streaks.json (von update-*). TikTok-safe, keine Quoten.
+# Montags 09:00 UTC = 11:00 Wien.
+# 15.07.2026 (Lucas: „Serien-der-Woche für MLS"): Matrix über alle drei Datensätze. telegram_streaks
+# ist dataset-aware (D.prefix()), COCOBET_DATASET=wm ist funktional identisch zum Default → WM
+# unverändert. Fehlt ein {prefix}streaks.json, ist der Lauf ein No-Op.
 on:
   schedule:
     - cron: '0 9 * * 1'   # Montag 09:00 UTC
@@ -14,12 +17,25 @@ permissions:
 jobs:
   streaks-digest:
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false      # ein Datensatz-Fehler stoppt die anderen nicht
+      matrix:
+        include:
+          - dataset: wm
+            profile: wm2026
+          - dataset: liga
+            profile: liga_default
+          - dataset: mls
+            profile: mls_default
+    env:
+      COCOBET_DATASET: ${{ matrix.dataset }}
+      COCOBET_PROFILE: ${{ matrix.profile }}
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
           python-version: '3.11'
-      - name: 🔥 Serien-Digest senden
+      - name: 🔥 Serien-Digest senden (${{ matrix.dataset }})
         run: python telegram_streaks.py
         env:
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}

@@ -77,24 +77,35 @@ class TestKeineFehlalarme:
 class TestEchteDaten:
     """Gegen die echten Datensätze — der Filter darf NUR die MLS-Geister treffen."""
 
-    @pytest.mark.parametrize("datei,erwartete_geister", [
-        ("mls-data.json", 2),      # die beiden bekannten
-        ("wm2026-data.json", 0),
-        ("liga-data.json", 0),
-    ])
-    def test_nur_die_echten_geister(self, datei, erwartete_geister):
+    # KEINE harte Erwartungszahl mehr: die MLS-Geister waren eine Momentaufnahme und sind mit dem
+    # nächsten Pick-Lauf (_carry_nobet) verschwunden — der Fix wirkt. Der bleibende Wert des Tests
+    # ist: der Filter darf auf ECHTEN Daten KEINE FEHLALARME produzieren. Ein Geist auf WM/Liga wäre
+    # ein legitimer Pick, den wir zu Unrecht entsorgen (genau die Falle vom ersten Versuch). Also:
+    # WM + Liga müssen 0 sein; MLS ist datenabhängig und darf 0 sein.
+    @pytest.mark.parametrize("datei", ["wm2026-data.json", "liga-data.json", "mls-data.json"])
+    def test_keine_fehlalarme_auf_echten_daten(self, datei):
         p = REPO / datei
         if not p.exists():
             pytest.skip(f"{datei} nicht vorhanden")
         wm = json.loads(p.read_text("utf-8"))
         odds = wm.get("odds") or {}
-        n = 0
+        geister = []
         for key, plist in (wm.get("picks") or {}).items():
             fx = "-".join(key.split("-")[-2:])
             for pk in (plist if isinstance(plist, list) else [plist]):
                 if isinstance(pk, dict) and _is_ghost_pick(pk, odds.get(fx) or {}):
-                    n += 1
-        assert n == erwartete_geister, f"{datei}: {n} Geister statt {erwartete_geister}"
+                    geister.append(f"{key} {pk.get('market')} ({pk.get('steamOpen')}→{pk.get('steamCur')})")
+        # Jeder Treffer MUSS eine nachweisbar unplausible Quelle haben (Quote <1.05 ODER
+        # Eröffnung ≠ geheilte odds_open). Auf WM/Liga (etablierte Daten) erwarten wir null.
+        if datei != "mls-data.json":
+            assert not geister, f"{datei}: Fehlalarm — legitime Picks als Geist markiert: {geister}"
+        # Für alle: kein Geist darf ein aufgelöster Pick sein (result gesetzt).
+        for key, plist in (wm.get("picks") or {}).items():
+            for pk in (plist if isinstance(plist, list) else [plist]):
+                if isinstance(pk, dict) and pk.get("result") is not None:
+                    fx = "-".join(key.split("-")[-2:])
+                    assert not _is_ghost_pick(pk, odds.get(fx) or {}), \
+                        f"{datei}: aufgelöster Pick {key} fälschlich als Geist"
 
 
 class TestCarryEntferntSie:

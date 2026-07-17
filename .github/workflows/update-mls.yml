@@ -39,6 +39,15 @@ jobs:
       - name: 📦 Dependencies installieren
         run: pip install -r requirements.txt
 
+      # 15.07.2026 (Lucas: „ganzer Telegram/TikTok-Ablauf für MLS"). generate_daily_tiktok rendert
+      # HTML→PNG via Playwright/Chromium. Ohne den Renderer fing render_to_png den ImportError still
+      # ab → 0 Cards (mls_daily-tiktok/ war LEER, Liga genauso). Nur der WM-Workflow installierte
+      # Chromium. Analog zu daily-tiktok.yml.
+      - name: 🎭 Playwright + Chromium (für TikTok-Card-Rendering)
+        run: |
+          pip install playwright
+          playwright install chromium --with-deps
+
       - name: 🗂️ MLS-Daten bauen (Teams + Fixtures + Ergebnisse)
         env:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
@@ -59,6 +68,17 @@ jobs:
 
       - name: 🔥 MLS-Serien berechnen (Streak-Content)
         run: python compute_streaks.py || true
+
+      # 15.07.2026: Spieler-Serien (Torserie/Zu-Null) für TikTok-Player-Cards + Wochen-Digest.
+      # fetch_wm_player_stats hält das player_form_ledger frisch (MUSS vor compute_player_streaks);
+      # beide sind dataset-aware (mls_player_form_ledger.json / mls_player_streaks.json).
+      - name: 🧾 MLS Spieler-Match-Stats nachladen (Ledger-Backfill)
+        run: python fetch_wm_player_stats.py || true
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+
+      - name: 🎯 MLS Spieler-Serien berechnen
+        run: python compute_player_streaks.py || true
 
       - name: 📈 MLS xG holen (echtes Klub-xG aus /fixtures/statistics)
         env:
@@ -242,6 +262,10 @@ jobs:
           git add mls_match_stats_cache.json 2>/dev/null || true
           git add mls_apif_predictions.json 2>/dev/null || true
           git add mls_player_form.json mls_player_form_ledger.json 2>/dev/null || true
+          # 15.07.2026: Datenbasis für Player-TikTok-Cards + Wochen-Digest — ohne Commit nach
+          # jedem Lauf weg, der Wochen-Digest fände dann nichts.
+          git add mls_player_streaks.json 2>/dev/null || true
+          git add mls_daily-tiktok 2>/dev/null || true   # gerenderte TikTok-Cards (Archiv)
           git add mls_tiktok_sent.json mls-telegram-log.json 2>/dev/null || true
           git add mls_pick_announce_state.json 2>/dev/null || true
           git add mls_streak_watch.json 2>/dev/null || true

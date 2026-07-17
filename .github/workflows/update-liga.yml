@@ -37,6 +37,13 @@ jobs:
       - name: 📦 Dependencies installieren
         run: pip install -r requirements.txt
 
+      # 15.07.2026: Liga rendert seit Wochen 0 TikTok-Cards, weil Playwright/Chromium fehlte
+      # (render_to_png fing den ImportError still ab). Analog update-mls + daily-tiktok.yml.
+      - name: 🎭 Playwright + Chromium (für TikTok-Card-Rendering)
+        run: |
+          pip install playwright
+          playwright install chromium --with-deps
+
       - name: 🗂️ Liga-Daten bauen (Teams + Fixtures + Ergebnisse)
         env:
           APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
@@ -57,6 +64,15 @@ jobs:
 
       - name: 🔥 Liga-Serien berechnen (Streak-Content)
         run: python compute_streaks.py || true
+
+      # 15.07.2026: Spieler-Serien für TikTok-Player-Cards + Wochen-Digest (fehlten der Liga bisher).
+      - name: 🧾 Liga Spieler-Match-Stats nachladen (Ledger-Backfill)
+        run: python fetch_wm_player_stats.py || true
+        env:
+          APISPORTS_KEY: ${{ secrets.APISPORTS_KEY }}
+
+      - name: 🎯 Liga Spieler-Serien berechnen
+        run: python compute_player_streaks.py || true
 
       - name: 📈 Liga xG holen (echtes Klub-xG aus /fixtures/statistics)
         env:
@@ -228,6 +244,8 @@ jobs:
           git add liga_match_stats_cache.json 2>/dev/null || true
           git add liga_apif_predictions.json 2>/dev/null || true
           git add liga_player_form.json liga_player_form_ledger.json 2>/dev/null || true
+          git add liga_player_streaks.json 2>/dev/null || true
+          git add liga_daily-tiktok 2>/dev/null || true
           git add liga_tiktok_sent.json liga-telegram-log.json 2>/dev/null || true
           git add liga_pick_announce_state.json 2>/dev/null || true
           git add liga_streak_watch.json 2>/dev/null || true

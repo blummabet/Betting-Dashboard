@@ -1,0 +1,72 @@
+name: 📊 MLS Track-Record-Card (Daily Telegram)
+
+# 15.07.2026 (Lucas: „Track-Record-Card für MLS"). Pendant zu track-record-card.yml, aber für den
+# MLS-Datensatz: generate_track_record_card ist jetzt dataset-aware (mls-data.json → mls_daily-tiktok/
+# → mls_track_record_state.json). Postet die laufende MLS-Bilanz (Genauigkeit, TikTok-safe) in den
+# Trades-Channel — aber nur, wenn seit dem letzten Post genug neue Picks resolved sind (Schwellen).
+on:
+  # 07:00 UTC = nach den US-Abend/Nacht-Spielen (MLS-Anpfiffe 23:00–02:00 UTC)
+  schedule:
+    - cron: '0 7 * * *'
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Trigger-Schwellen ignorieren (immer senden)'
+        required: false
+        default: 'false'
+        type: boolean
+
+permissions:
+  contents: write
+
+concurrency:
+  group: track-record-card-mls
+  cancel-in-progress: false
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    env:
+      COCOBET_DATASET: mls
+      COCOBET_PROFILE: mls_default
+
+    steps:
+      - name: 📥 Repo
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Playwright + Chromium
+        run: |
+          pip install playwright
+          playwright install chromium --with-deps
+
+      - name: 📊 MLS Track-Record-Card generieren + posten
+        run: python generate_track_record_card.py
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+          FORCE:                   ${{ github.event.inputs.force || 'false' }}
+          TRACK_RECORD_MIN_RESOLVED: "5"
+          TRACK_RECORD_MIN_NEW:      "3"
+
+      - name: 💾 MLS Track-Record-State persistieren
+        run: |
+          git config user.name "CocoBet Bot"
+          git config user.email "bot@cocobet.local"
+          git add mls_track_record_state.json mls_daily-tiktok 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "Keine State-Änderung — kein Commit."; exit 0
+          fi
+          git commit -m "📊 MLS Track-Record-State $(date -u +'%d.%m.%Y %H:%M') UTC [skip ci]"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          for attempt in 1 2 3; do
+            git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+            if git push 2>&1; then echo "✅ State-Commit (Versuch $attempt)"; break; fi
+            sleep $((attempt * 3))
+          done
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

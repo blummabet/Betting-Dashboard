@@ -166,8 +166,18 @@ def build_prompt(info: dict) -> str:
 
     lines = []
 
+    # 15.07.2026 (Lucas: „Content für MLS"): Liga-Kontext datensatz-abhängig. Vorher stand in JEDEM
+    # Prompt „WM 2026 Gruppe X" — für ein MLS-Spiel inhaltlich falsch (keine Gruppen, keine WM).
+    _ds = D.active_dataset()
+    if _ds == "mls":
+        _comp = f"MLS 2026 (Regular Season), Spieltag {matchday}"
+    elif _ds == "liga":
+        _comp = f"{group or 'Top-5-Liga'} 2025/26, Spieltag {matchday}"
+    else:
+        _comp = f"WM 2026 Gruppe {group}, Spieltag {matchday}"
+
     # ── Spielinfo ─────────────────────────────────────────────────────────────
-    lines.append(f"Spiel: {home} vs {away} | WM 2026 Gruppe {group}, Spieltag {matchday} | {date_str}")
+    lines.append(f"Spiel: {home} vs {away} | {_comp} | {date_str}")
     lines.append(f"Elo-Rating: {home} {h_elo} vs {away} {a_elo} | Favorit: {fav} (Differenz: {elo_diff})")
 
     if co_host:
@@ -314,7 +324,10 @@ def build_prompt(info: dict) -> str:
 
     context = "\n".join(lines)
 
-    return f"""Du bist CocoBet, ein deutschsprachiger Sportwetten-Analyst für die WM 2026. Schreibe eine prägnante Match-Vorschau.
+    _ds2 = D.active_dataset()
+    _rolle = {"mls": "die MLS", "liga": "die europäischen Top-5-Ligen"}.get(_ds2, "die WM 2026")
+
+    return f"""Du bist CocoBet, ein deutschsprachiger Sportwetten-Analyst für {_rolle}. Schreibe eine prägnante Match-Vorschau.
 
 MATCH-DATEN:
 {context}
@@ -333,8 +346,8 @@ SATZ 3: Wetthinweis — Nenne den konkreten Pick. WICHTIG zur Begründung: unser
         Wenn eine sichere Linie abgeleitet wurde: kurz erklären, dass der Move zwar auf der
         riskanten Linie kam, wir aber die sicherere Linie spielen (höhere Trefferquote).
         Nur wenn WIRKLICH kein Move und kein Pick da ist: ehrlich "heute kein klares Signal".
-SATZ 4: Kontext — Co-Gastgeber-Vorteil, H2H-Besonderheit, Upset-Risiko, Gruppenrelevanz, ODER
-        wenn ein Engine-Signal (Hitze/Klima-Dome, Travel, Höhe, Anreiz, Druck, Aufstellung) stark
+SATZ 4: Kontext — H2H-Besonderheit, Upset-Risiko, {"Playoff-Rennen/Conference-Stand, Reise/Rasen (MLS spielt weite Distanzen)" if _ds2 == "mls" else "Tabellenlage/Europa- oder Abstiegsrelevanz" if _ds2 == "liga" else "Co-Gastgeber-Vorteil, Gruppenrelevanz"}, ODER
+        wenn ein Engine-Signal (Reise, Höhe, Druck, Aufstellung, Erschöpfung) stark
         feuert: das konkret nennen.
 
 REGELN:

@@ -27,10 +27,14 @@ import urllib.request
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
+import cocobet_dataset as D   # 15.07.2026: datensatz-aware (Lucas: „Track-Record-Card für MLS")
+
 BASE        = Path(__file__).parent
-WM_FILE     = BASE / "wm2026-data.json"
-OUTPUT_DIR  = BASE / "daily-tiktok"
-STATE_FILE  = BASE / "track_record_state.json"
+# War hart auf wm2026 → unter COCOBET_DATASET=mls rechnete die Card die WM-Bilanz und schrieb in
+# den WM-Ordner/-State. Jetzt je Datensatz eigene Datei, Ordner und State.
+WM_FILE     = Path(str(D.data_file()))
+OUTPUT_DIR  = BASE / f"{D.prefix()}daily-tiktok"
+STATE_FILE  = Path(str(D.file("track_record_state.json", "liga_track_record_state.json")))
 OUTPUT_DIR.mkdir(exist_ok=True)
 
 STAKE_EUR = 10
