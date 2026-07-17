@@ -49,9 +49,14 @@
       "id": "odds_sane",
       "label": "Pinnacle-1X2 vollständig + plausibel",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 4,
+      "failures": [
+        "18310-1608: Margin 2.913 unplausibel",
+        "9569-1614: Margin 2.913 unplausibel",
+        "1616-1606: Margin 2.913 unplausibel",
+        "1605-20787: Margin 2.913 unplausibel"
+      ],
       "note": "Quelle für Modell-Baseline + Edge."
     },
     {
@@ -105,13 +110,20 @@
       "label": "History-Snapshots = echte Märkte (kein Platzhalter)",
       "severity": "warn",
       "ok": false,
-      "nFail": 5,
+      "nFail": 12,
       "failures": [
         "1614-1601: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
         "1607-1603: 2 Platzhalter-Snap(s), z.B. 1.17/1.01/1.17 (Overround 2.70) → Geister-Move im Radar + Fake-Steam-Alert",
         "20787-1611: 3 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
         "1595-1617: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
-        "9569-1608: 2 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert"
+        "9569-1608: 2 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "2242-1603: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "9568-1607: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "18310-1608: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "16489-1595: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "9569-1614: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "1616-1606: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "1605-20787: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert"
       ],
       "note": "Verbraucher filtern via odds_plausibility.clean_snaps; verseuchte Snaps bleiben trotzdem ein Quellen-Fehler und werden hier sichtbar."
     },
@@ -149,7 +161,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "21/21 mit AH · 21/21 mit Public-O/U."
+      "note": "17/17 mit AH · 17/17 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -237,12 +249,8 @@
       "label": "Public = Multi-Book-Konsens (nicht Einzel-Book)",
       "severity": "warn",
       "ok": false,
-      "nFail": 21,
+      "nFail": 17,
       "failures": [
-        "1614-1601: public aus Einzel-Book 'williamhill' statt Konsens",
-        "1607-1603: public aus Einzel-Book 'williamhill' statt Konsens",
-        "20787-1611: public aus Einzel-Book 'williamhill' statt Konsens",
-        "1595-1617: public aus Einzel-Book 'williamhill' statt Konsens",
         "9569-1608: public aus Einzel-Book 'williamhill' statt Konsens",
         "1599-1602: public aus Einzel-Book 'williamhill' statt Konsens",
         "1609-1601: public aus Einzel-Book 'williamhill' statt Konsens",
@@ -375,9 +383,11 @@
       "id": "played_games_resolved",
       "label": "Gespielte Spiele haben Endstand",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "1607-1603: Anpfiff 2026-07-17T00:30 vorbei, aber Ergebnis-Status 'leer' — Result-Fetch-Lücke?"
+      ],
       "note": "fetch_wm_match_results muss FT-Endstände schreiben. Fehlt's > 5h nach Anpfiff: Team-Matching (Orientierung/Team-ID) oder API-Football-Lag prüfen."
     },
     {
@@ -489,6 +499,6 @@
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-07-15T20:16:44.229622+00:00"
+  "nFail": 5,
+  "generatedAt": "2026-07-17T09:14:10.301726+00:00"
 }
