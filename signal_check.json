@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "wm",
-    "generatedAt": "2026-07-17T17:03:43.037724+00:00",
+    "generatedAt": "2026-07-17T20:44:39.551620+00:00",
     "games": 104,
     "markets": [
       "Heimsieg",
@@ -60651,8 +60651,8 @@
       "markets": {
         "Heimsieg": {
           "tip": "Frankreich (Heimsieg)",
-          "headline": "4 von 4 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Frankreich (Heimsieg)“ mehrheitlich — am deutlichsten injury.",
+          "headline": "4 von 5 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Frankreich (Heimsieg)“ mehrheitlich — am deutlichsten injury, auch wenn 1 Signal(e) dagegenhalten.",
           "confirm": [
             {
               "name": "injury",
@@ -60669,7 +60669,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 72% des Geldes auf Heim — mehr als der faire Preis hergibt (50%), und es sind echte Wale dahinter (Top-Wallets 73%).",
+              "evidence": "💰 Auf Polymarket liegen 68% des Geldes auf Heim — mehr als der faire Preis hergibt (51%), und es sind echte Wale dahinter (Top-Wallets 71%).",
               "dir": "confirm"
             },
             {
@@ -60679,7 +60679,14 @@
               "dir": "confirm"
             }
           ],
-          "contradict": [],
+          "contradict": [
+            {
+              "name": "apif_predictions",
+              "label": "das externe Prognosemodell",
+              "evidence": "📊 Ein zweites Modell (API-Football) sieht Heim um 5.8pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+              "dir": "contradict"
+            }
+          ],
           "neutral": [],
           "silent": [
             {
@@ -60721,10 +60728,6 @@
             {
               "name": "lineup_signal",
               "label": "die Aufstellung"
-            },
-            {
-              "name": "apif_predictions",
-              "label": "das externe Prognosemodell"
             },
             {
               "name": "weather_signal",
@@ -60789,9 +60792,9 @@
           ],
           "score": {
             "confirm": 4,
-            "contradict": 0,
+            "contradict": 1,
             "neutral": 0,
-            "decisive": 4
+            "decisive": 5
           }
         },
         "Auswärtssieg": {
@@ -60809,7 +60812,7 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 15.6pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 14.8pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
               "dir": "contradict"
             },
             {
@@ -60821,7 +60824,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 12% des Geldes auf Auswärts — weniger als der faire Preis hergibt (26%), und es sind echte Wale dahinter (Top-Wallets 75%).",
+              "evidence": "💰 Auf Polymarket liegen 10% des Geldes auf Auswärts — weniger als der faire Preis hergibt (25%), und es sind echte Wale dahinter (Top-Wallets 71%).",
               "dir": "contradict"
             }
           ],
@@ -61401,7 +61404,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 38% des Geldes auf Auswärts — mehr als der faire Preis hergibt (26%), und es sind echte Wale dahinter (Top-Wallets 66%).",
+              "evidence": "💰 Auf Polymarket liegen 40% des Geldes auf Auswärts — mehr als der faire Preis hergibt (26%), und es sind echte Wale dahinter (Top-Wallets 68%).",
               "dir": "confirm"
             }
           ],
@@ -61409,7 +61412,7 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 16.5pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 16.4pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
               "dir": "contradict"
             },
             {
