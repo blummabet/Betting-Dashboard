@@ -1,5 +1,5 @@
 {
-  "savedAt": "2026-07-18T16:46:22.746298+00:00",
+  "savedAt": "2026-07-18T20:40:33.410921+00:00",
   "picks": {
     "A-1-KOR-CZE": [
       {
@@ -20836,7 +20836,7 @@
         "info": "📉 Pinnacle 1.46→1.38 (Sharp-Money-Drop +5.0pp) · Soft-Konsens hinkt +2.5pp (Value, noch nicht bestätigt)",
         "icon": "🔥",
         "result": "WIN",
-        "clvPP": 0.0,
+        "clvPP": -3.66,
         "dataQuality": "steam",
         "lamH": null,
         "lamA": null,
@@ -20949,7 +20949,8 @@
         "stake": 2.0,
         "engineVersion": "v2",
         "finalScore": "3-1",
-        "resolvedAt": "2026-07-16T20:48:23Z"
+        "resolvedAt": "2026-07-16T20:48:23Z",
+        "clvResolved": true
       },
       {
         "market": "Heimsieg",
@@ -20964,7 +20965,7 @@
         "info": "📉 Pinnacle 2.01→1.9 (Sharp-Money-Drop +4.7pp) · ⏱️ Late Entry — Lernwert, weniger CLV",
         "icon": "🔥",
         "result": "WIN",
-        "clvPP": 0.0,
+        "clvPP": -0.04,
         "dataQuality": "steam",
         "lamH": null,
         "lamA": null,
@@ -21161,7 +21162,8 @@
           "current_pinn_odds": 1.83,
           "move_age_decay": 1.0,
           "move_age_days": 2.8
-        }
+        },
+        "clvResolved": true
       },
       {
         "market": "Über 2.5 Tore",
@@ -21176,7 +21178,7 @@
         "info": "📉 Pinnacle 2.3→2.1 (Sharp-Money-Drop +4.1pp) · Soft-Konsens hinkt +1.1pp (Value, noch nicht bestätigt) · ✅ Sichere Linie abgeleitet: Über 2.5 Tore @1.42 (These: Über 3.5 Tore @2.15)",
         "icon": "🔥",
         "result": "WIN",
-        "clvPP": 0.0,
+        "clvPP": -4.15,
         "dataQuality": "steam",
         "lamH": null,
         "lamA": null,
@@ -21352,7 +21354,8 @@
         "openingMovement": {
           "in_pick_direction": true,
           "move_pp": 8.84
-        }
+        },
+        "clvResolved": true
       }
     ],
     "KO-3RD-FRA-SEN": [
@@ -21757,35 +21760,31 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 611589.0,
-          "topTraders": 68,
-          "hoursToKickoff": 29.7,
+          "totalUsd": 660377.0,
+          "topTraders": 70,
+          "hoursToKickoff": 26.2,
           "outcomes": {
             "home": {
-              "usd": 231414.0,
-              "topHolderShare": 0.664,
+              "usd": 240079.0,
+              "topHolderShare": 0.65,
               "holders": 200,
-              "share": 0.378
+              "share": 0.364,
+              "cluster": 1,
+              "buyUsd": 7830.0,
+              "sellUsd": 0.0,
+              "netFlowUsd": 7830.0
             },
             "draw": {
-              "usd": 102505.0,
-              "topHolderShare": 0.819,
+              "usd": 102848.0,
+              "topHolderShare": 0.813,
               "holders": 200,
-              "share": 0.168,
-              "cluster": 2,
-              "buyUsd": 4857.0,
-              "sellUsd": 0.0,
-              "netFlowUsd": 4857.0
+              "share": 0.156
             },
             "away": {
-              "usd": 277670.0,
-              "topHolderShare": 0.749,
+              "usd": 317450.0,
+              "topHolderShare": 0.758,
               "holders": 200,
-              "share": 0.454,
-              "cluster": 1,
-              "buyUsd": 2001.0,
-              "sellUsd": 0.0,
-              "netFlowUsd": 2001.0
+              "share": 0.481
             }
           }
         },
@@ -21919,35 +21918,35 @@
           },
           {
             "name": "smart_money",
-            "score": -0.71,
+            "score": -0.59,
             "confidence": 0.43,
-            "evidence": "💰 Auf Polymarket liegen 45% des Geldes auf Auswärts — weniger als der faire Preis hergibt (61%), und es sind echte Wale dahinter (Top-Wallets 75%).",
+            "evidence": "💰 Auf Polymarket liegen 48% des Geldes auf Auswärts — weniger als der faire Preis hergibt (61%), und es sind echte Wale dahinter (Top-Wallets 76%).",
             "weight": 1.256,
-            "weighted_score": -0.38,
+            "weighted_score": -0.32,
             "metadata": {
               "outcome": "away",
-              "share": 0.454,
-              "topHolderShare": 0.749,
+              "share": 0.481,
+              "topHolderShare": 0.758,
               "fairShare": 0.611,
-              "excessPP": -15.7,
-              "totalUsd": 611589.0,
-              "topTraders": 68,
-              "cluster": 1,
+              "excessPP": -13.0,
+              "totalUsd": 660377.0,
+              "topTraders": 70,
+              "cluster": 0,
               "clustered": false,
-              "netFlowUsd": 2001.0,
-              "hoursToKickoff": 29.7,
+              "netFlowUsd": null,
+              "hoursToKickoff": 26.2,
               "exitFlag": false
             }
           }
         ],
-        "signalAdjustmentPP": -0.55,
+        "signalAdjustmentPP": -0.53,
         "signalCountPos": 1,
         "signalCountNeg": 4,
-        "signalAdjustmentPP_trade": 0.2,
+        "signalAdjustmentPP_trade": 0.1,
         "signalCountPos_trade": 1,
         "signalCountNeg_trade": 3,
         "effectiveEdgePP": -2.5,
-        "effectiveEdgePP_trade": -1.8,
+        "effectiveEdgePP_trade": -1.9,
         "convictionScore": 3,
         "convictionVerdict": "skip",
         "convictionLabel": null,
@@ -21968,35 +21967,31 @@
         "nobetSince": "2026-07-16T09:59:47.959788+00:00",
         "nobetReason": "Edge weg — Linie gegen den Pick gelaufen (1.71→3.67)",
         "smartMoney": {
-          "totalUsd": 611589.0,
-          "topTraders": 68,
-          "hoursToKickoff": 29.7,
+          "totalUsd": 660377.0,
+          "topTraders": 70,
+          "hoursToKickoff": 26.2,
           "outcomes": {
             "home": {
-              "usd": 231414.0,
-              "topHolderShare": 0.664,
+              "usd": 240079.0,
+              "topHolderShare": 0.65,
               "holders": 200,
-              "share": 0.378
+              "share": 0.364,
+              "cluster": 1,
+              "buyUsd": 7830.0,
+              "sellUsd": 0.0,
+              "netFlowUsd": 7830.0
             },
             "draw": {
-              "usd": 102505.0,
-              "topHolderShare": 0.819,
+              "usd": 102848.0,
+              "topHolderShare": 0.813,
               "holders": 200,
-              "share": 0.168,
-              "cluster": 2,
-              "buyUsd": 4857.0,
-              "sellUsd": 0.0,
-              "netFlowUsd": 4857.0
+              "share": 0.156
             },
             "away": {
-              "usd": 277670.0,
-              "topHolderShare": 0.749,
+              "usd": 317450.0,
+              "topHolderShare": 0.758,
               "holders": 200,
-              "share": 0.454,
-              "cluster": 1,
-              "buyUsd": 2001.0,
-              "sellUsd": 0.0,
-              "netFlowUsd": 2001.0
+              "share": 0.481
             }
           }
         }
@@ -22104,35 +22099,31 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 611589.0,
-          "topTraders": 68,
-          "hoursToKickoff": 29.7,
+          "totalUsd": 660377.0,
+          "topTraders": 70,
+          "hoursToKickoff": 26.2,
           "outcomes": {
             "home": {
-              "usd": 231414.0,
-              "topHolderShare": 0.664,
+              "usd": 240079.0,
+              "topHolderShare": 0.65,
               "holders": 200,
-              "share": 0.378
+              "share": 0.364,
+              "cluster": 1,
+              "buyUsd": 7830.0,
+              "sellUsd": 0.0,
+              "netFlowUsd": 7830.0
             },
             "draw": {
-              "usd": 102505.0,
-              "topHolderShare": 0.819,
+              "usd": 102848.0,
+              "topHolderShare": 0.813,
               "holders": 200,
-              "share": 0.168,
-              "cluster": 2,
-              "buyUsd": 4857.0,
-              "sellUsd": 0.0,
-              "netFlowUsd": 4857.0
+              "share": 0.156
             },
             "away": {
-              "usd": 277670.0,
-              "topHolderShare": 0.749,
+              "usd": 317450.0,
+              "topHolderShare": 0.758,
               "holders": 200,
-              "share": 0.454,
-              "cluster": 1,
-              "buyUsd": 2001.0,
-              "sellUsd": 0.0,
-              "netFlowUsd": 2001.0
+              "share": 0.481
             }
           }
         },
