@@ -50,12 +50,23 @@
       "label": "Pinnacle-1X2 vollständig + plausibel",
       "severity": "warn",
       "ok": false,
-      "nFail": 4,
+      "nFail": 15,
       "failures": [
-        "18310-1608: Margin 2.913 unplausibel",
-        "9569-1614: Margin 2.913 unplausibel",
-        "1616-1606: Margin 2.913 unplausibel",
-        "1605-20787: Margin 2.913 unplausibel"
+        "1598-9569: 1X2 unvollständig hw=None dr=None aw=None",
+        "1604-1607: 1X2 unvollständig hw=None dr=None aw=None",
+        "1616-1611: 1X2 unvollständig hw=None dr=None aw=None",
+        "20787-1610: 1X2 unvollständig hw=None dr=None aw=None",
+        "1615-1601: 1X2 unvollständig hw=None dr=None aw=None",
+        "1600-16489: 1X2 unvollständig hw=None dr=None aw=None",
+        "1612-1603: 1X2 unvollständig hw=None dr=None aw=None",
+        "1609-1608: 1X2 unvollständig hw=None dr=None aw=None",
+        "25484-1597: 1X2 unvollständig hw=None dr=None aw=None",
+        "1599-1595: 1X2 unvollständig hw=None dr=None aw=None",
+        "1596-1605: 1X2 unvollständig hw=None dr=None aw=None",
+        "1617-1606: 1X2 unvollständig hw=None dr=None aw=None",
+        "1613-2242: 1X2 unvollständig hw=None dr=None aw=None",
+        "1614-9568: 1X2 unvollständig hw=None dr=None aw=None",
+        "1602-18310: 1X2 unvollständig hw=None dr=None aw=None"
       ],
       "note": "Quelle für Modell-Baseline + Edge."
     },
@@ -67,6 +78,17 @@
       "nFail": 0,
       "failures": [],
       "note": "fetch_liga_odds friert 1X2-Opening kohärent + heilt aus History (erster plausibler Snap)."
+    },
+    {
+      "id": "closing_capture_alive",
+      "label": "Closing-Erfassung liefert Daten (CLV lebt)",
+      "severity": "warn",
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "5 Spiele in 14 Tagen gespielt, aber die Closing-Datei ist LEER → CLV-Kette tot. Prüfen: bekommt compute_closing ein hours_to_ko? Läuft capture-closing-*?"
+      ],
+      "note": "fetch_liga_odds reicht kickoff → compute_closing; capture-closing-* läuft alle 15min in den Anpfiff-Bändern."
     },
     {
       "id": "no_ghost_picks",
@@ -121,7 +143,7 @@
         "9568-1607: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
         "18310-1608: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
         "16489-1595: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
-        "9569-1614: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "9569-1614: 4 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
         "1616-1606: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
         "1605-20787: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert"
       ],
@@ -161,7 +183,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "17/17 mit AH · 17/17 mit Public-O/U."
+      "note": "15/15 mit AH · 15/15 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -239,9 +261,25 @@
       "id": "public_consensus",
       "label": "Public-Konsens (Soft-Books) vorhanden",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 15,
+      "failures": [
+        "1598-9569: kein public_hw",
+        "1604-1607: kein public_hw",
+        "1616-1611: kein public_hw",
+        "20787-1610: kein public_hw",
+        "1615-1601: kein public_hw",
+        "1600-16489: kein public_hw",
+        "1612-1603: kein public_hw",
+        "1609-1608: kein public_hw",
+        "25484-1597: kein public_hw",
+        "1599-1595: kein public_hw",
+        "1596-1605: kein public_hw",
+        "1617-1606: kein public_hw",
+        "1613-2242: kein public_hw",
+        "1614-9568: kein public_hw",
+        "1602-18310: kein public_hw"
+      ],
       "note": "Ohne public_* feuert public_static_bias nicht."
     },
     {
@@ -249,9 +287,8 @@
       "label": "Public = Multi-Book-Konsens (nicht Einzel-Book)",
       "severity": "warn",
       "ok": false,
-      "nFail": 17,
+      "nFail": 15,
       "failures": [
-        "9569-1608: public aus Einzel-Book 'williamhill' statt Konsens",
         "1599-1602: public aus Einzel-Book 'williamhill' statt Konsens",
         "1609-1601: public aus Einzel-Book 'williamhill' statt Konsens",
         "1613-1604: public aus Einzel-Book 'williamhill' statt Konsens",
@@ -265,7 +302,6 @@
         "1596-1598: public aus Einzel-Book 'williamhill' statt Konsens",
         "1616-1606: public aus Einzel-Book 'williamhill' statt Konsens",
         "1617-1597: public aus Einzel-Book 'williamhill' statt Konsens",
-        "1605-1616: public aus Einzel-Book 'williamhill' statt Konsens",
         "1600-1615: public aus Einzel-Book 'williamhill' statt Konsens",
         "1605-20787: public aus Einzel-Book 'williamhill' statt Konsens"
       ],
@@ -383,11 +419,9 @@
       "id": "played_games_resolved",
       "label": "Gespielte Spiele haben Endstand",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "1607-1603: Anpfiff 2026-07-17T00:30 vorbei, aber Ergebnis-Status 'leer' — Result-Fetch-Lücke?"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "fetch_wm_match_results muss FT-Endstände schreiben. Fehlt's > 5h nach Anpfiff: Team-Matching (Orientierung/Team-ID) oder API-Football-Lag prüfen."
     },
     {
@@ -499,6 +533,6 @@
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 5,
-  "generatedAt": "2026-07-17T20:13:09.244712+00:00"
+  "nFail": 6,
+  "generatedAt": "2026-07-18T08:38:03.795734+00:00"
 }
