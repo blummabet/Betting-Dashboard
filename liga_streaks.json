@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "liga",
-    "generatedAt": "2026-07-17T18:50:21.639906+00:00",
+    "generatedAt": "2026-07-18T07:53:13.389431+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -1160,7 +1160,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 80,
-        "label": "Eigen 80% + Gegner 33% → 61%"
+        "label": "Eigen 80% + Gegner 33% → 61% · Signale bestätigen"
       },
       "ratePct": 80,
       "seq": [
@@ -1185,11 +1185,12 @@
       "matchupPct": 61,
       "signalInfo": {
         "state": "confirm",
-        "count": 1,
+        "count": 2,
         "conviction": 2,
         "names": [
           "form_trend",
-          "chance_creation"
+          "chance_creation",
+          "streak_momentum"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -9575,53 +9576,6 @@
       "matchupPct": 47
     },
     {
-      "teamId": "111",
-      "team": "Le Havre",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/111.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "under25",
-      "market": "Unter 2,5 Tore",
-      "length": 4,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 20% → 48%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "91",
-        "oppName": "Monaco",
-        "atHome": true,
-        "date": "2026-08-23",
-        "oppRatePct": 80
-      },
-      "oppSupportPct": 20,
-      "matchupPct": 48,
-      "signalInfo": {
-        "state": "contradict",
-        "count": 1,
-        "conviction": 2,
-        "names": [
-          "form_trend",
-          "chance_creation"
-        ],
-        "market": "Über 2.5 Tore"
-      }
-    },
-    {
       "teamId": "494",
       "team": "Udinese",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/494.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -10633,6 +10587,54 @@
       },
       "oppSupportPct": 33,
       "matchupPct": 57
+    },
+    {
+      "teamId": "111",
+      "team": "Le Havre",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/111.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
+      "type": "under25",
+      "market": "Unter 2,5 Tore",
+      "length": 4,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 20% → 48% · Linie/Signale dagegen"
+      },
+      "ratePct": 67,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "91",
+        "oppName": "Monaco",
+        "atHome": true,
+        "date": "2026-08-23",
+        "oppRatePct": 80
+      },
+      "oppSupportPct": 20,
+      "matchupPct": 48,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 2,
+        "conviction": 2,
+        "names": [
+          "form_trend",
+          "chance_creation",
+          "streak_momentum"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "45",
