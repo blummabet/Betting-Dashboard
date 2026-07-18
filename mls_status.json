@@ -86,7 +86,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "3 Spiele in 14 Tagen gespielt, aber die Closing-Datei ist LEER → CLV-Kette tot. Prüfen: bekommt compute_closing ein hours_to_ko? Läuft capture-closing-*?"
+        "5 Spiele in 14 Tagen gespielt, aber die Closing-Datei ist LEER → CLV-Kette tot. Prüfen: bekommt compute_closing ein hours_to_ko? Läuft capture-closing-*?"
       ],
       "note": "fetch_liga_odds reicht kickoff → compute_closing; capture-closing-* läuft alle 15min in den Anpfiff-Bändern."
     },
@@ -419,13 +419,9 @@
       "id": "played_games_resolved",
       "label": "Gespielte Spiele haben Endstand",
       "severity": "warn",
-      "ok": false,
-      "nFail": 3,
-      "failures": [
-        "1607-1603: Anpfiff 2026-07-17T00:30 vorbei, aber Ergebnis-Status 'leer' — Result-Fetch-Lücke?",
-        "9569-1608: Anpfiff 2026-07-18T00:10 vorbei, aber Ergebnis-Status 'leer' — Result-Fetch-Lücke?",
-        "1605-1616: Anpfiff 2026-07-18T02:25 vorbei, aber Ergebnis-Status 'leer' — Result-Fetch-Lücke?"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "fetch_wm_match_results muss FT-Endstände schreiben. Fehlt's > 5h nach Anpfiff: Team-Matching (Orientierung/Team-ID) oder API-Football-Lag prüfen."
     },
     {
@@ -537,6 +533,6 @@
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 7,
-  "generatedAt": "2026-07-18T08:50:43.703184+00:00"
+  "nFail": 6,
+  "generatedAt": "2026-07-18T08:52:44.079291+00:00"
 }

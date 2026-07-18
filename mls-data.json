@@ -19,6 +19,13 @@
           "elo": null
         },
         {
+          "id": "1616",
+          "name": "Los Angeles FC",
+          "logo": "https://media.api-sports.io/football/teams/1616.png",
+          "flag": "<img src=\"https://media.api-sports.io/football/teams/1616.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+          "elo": null
+        },
+        {
           "id": "1606",
           "name": "Real Salt Lake",
           "logo": "https://media.api-sports.io/football/teams/1606.png",
@@ -30,13 +37,6 @@
           "name": "FC Dallas",
           "logo": "https://media.api-sports.io/football/teams/1597.png",
           "flag": "<img src=\"https://media.api-sports.io/football/teams/1597.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-          "elo": null
-        },
-        {
-          "id": "1616",
-          "name": "Los Angeles FC",
-          "logo": "https://media.api-sports.io/football/teams/1616.png",
-          "flag": "<img src=\"https://media.api-sports.io/football/teams/1616.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
           "elo": null
         },
         {
@@ -5035,18 +5035,6 @@
           }
         },
         {
-          "home": "1607",
-          "away": "1603",
-          "homeName": "Chicago Fire",
-          "awayName": "Vancouver Whitecaps",
-          "matchday": 17,
-          "date": "2026-07-17",
-          "kickoff": "2026-07-17T00:30:00+00:00",
-          "venue": "Soldier Field",
-          "fid": 1490326,
-          "result": null
-        },
-        {
           "home": "20787",
           "away": "1611",
           "homeName": "St. Louis City",
@@ -5100,7 +5088,17 @@
           "kickoff": "2026-07-18T00:10:00+00:00",
           "venue": "Geodis Park",
           "fid": 1490329,
-          "result": null
+          "result": {
+            "status": "FT",
+            "home_score": 1,
+            "away_score": 0,
+            "stats": {
+              "xgHome": 0.47,
+              "xgAway": 1.66,
+              "xgTotal": 2.13,
+              "xgSource": "api"
+            }
+          }
         },
         {
           "home": "1605",
@@ -5112,7 +5110,17 @@
           "kickoff": "2026-07-18T02:25:00+00:00",
           "venue": "Dignity Health Sports Park",
           "fid": 1490330,
-          "result": null
+          "result": {
+            "status": "FT",
+            "home_score": 0,
+            "away_score": 3,
+            "stats": {
+              "xgHome": 0.72,
+              "xgAway": 1.83,
+              "xgTotal": 2.55,
+              "xgSource": "api"
+            }
+          }
         },
         {
           "home": "1599",
@@ -7314,6 +7322,18 @@
           "result": null
         },
         {
+          "home": "1607",
+          "away": "1603",
+          "homeName": "Chicago Fire",
+          "awayName": "Vancouver Whitecaps",
+          "matchday": 17,
+          "date": "2026-10-07",
+          "kickoff": "2026-10-07T00:30:00+00:00",
+          "venue": "Soldier Field",
+          "fid": 1490326,
+          "result": null
+        },
+        {
           "home": "1601",
           "away": "1614",
           "homeName": "Toronto FC",
@@ -8567,9 +8587,9 @@
   "teamIds": {
     "1603": 1603,
     "1596": 1596,
+    "1616": 1616,
     "1606": 1606,
     "1597": 1597,
-    "1616": 1616,
     "1595": 1595,
     "1600": 1600,
     "1612": 1612,
@@ -8609,16 +8629,16 @@
         "o25": 1.44,
         "u25": 2.5
       },
-      "updatedAt": "2026-07-18T07:13:57.147427+00:00",
+      "updatedAt": "2026-07-18T08:52:31.738382+00:00",
       "ahLadder": {
         "-0.75": [
           1.91,
           1.94
         ]
       },
-      "ahH_n075": 1.91,
       "ahA_p075": 1.94,
-      "marketsFreshAt": "2026-07-18T07:13:57.147427+00:00",
+      "ahH_n075": 1.91,
+      "marketsFreshAt": "2026-07-18T08:52:31.738382+00:00",
       "public_hw": 1.7,
       "public_dr": 3.8,
       "public_aw": 4.2,
@@ -8647,7 +8667,7 @@
         "o25": 1.73,
         "u25": 2.0
       },
-      "updatedAt": "2026-07-18T07:13:57.147427+00:00",
+      "updatedAt": "2026-07-18T08:52:31.738382+00:00",
       "o25": 1.73,
       "u25": 2.0,
       "ahLadder": {
@@ -8656,11 +8676,11 @@
           1.87
         ]
       },
-      "ahA_p050": 1.87,
-      "ahA_p150": 1.37,
       "ahH_n150": 3.29,
       "ahH_n050": 1.99,
-      "marketsCarriedAt": "2026-07-18T07:13:57.147427+00:00",
+      "ahA_p150": 1.37,
+      "ahA_p050": 1.87,
+      "marketsCarriedAt": "2026-07-18T08:52:31.738382+00:00",
       "marketsFreshAt": "2026-07-16T22:57:32.074340+00:00",
       "public_hw": 1.91,
       "public_dr": 3.4,
@@ -8669,9 +8689,9 @@
       "public_o25": 1.73,
       "public_u25": 2.0,
       "public_ou_bookmaker": "williamhill",
-      "bf_hw": 1.44,
-      "bf_dr": 1.48,
-      "bf_aw": 3.3,
+      "bf_hw": 1.46,
+      "bf_dr": 1.5,
+      "bf_aw": 1.07,
       "public_hw_open": 1.75,
       "public_dr_open": 3.5,
       "public_aw_open": 4.33,
@@ -8690,16 +8710,16 @@
         "o25": 1.67,
         "u25": 2.15
       },
-      "updatedAt": "2026-07-18T07:13:57.147427+00:00",
+      "updatedAt": "2026-07-18T08:52:31.738382+00:00",
       "ahLadder": {
         "-0.5": [
           1.98,
           1.88
         ]
       },
-      "ahA_p050": 1.88,
       "ahH_n050": 1.98,
-      "marketsFreshAt": "2026-07-18T07:13:57.147427+00:00",
+      "ahA_p050": 1.88,
+      "marketsFreshAt": "2026-07-18T08:52:31.738382+00:00",
       "public_hw": 1.95,
       "public_dr": 3.4,
       "public_aw": 3.5,
@@ -8728,7 +8748,7 @@
         "o25": 1.35,
         "u25": 3.0
       },
-      "updatedAt": "2026-07-18T07:13:57.147427+00:00",
+      "updatedAt": "2026-07-18T08:52:31.738382+00:00",
       "o25": 1.35,
       "u25": 3.0,
       "ahLadder": {
@@ -8738,7 +8758,7 @@
         ]
       },
       "ahA_n075": 2.01,
-      "marketsCarriedAt": "2026-07-18T07:13:57.147427+00:00",
+      "marketsCarriedAt": "2026-07-18T08:52:31.738382+00:00",
       "marketsFreshAt": "2026-07-16T23:56:55.823067+00:00",
       "public_hw": 3.75,
       "public_dr": 3.8,
@@ -8747,8 +8767,8 @@
       "public_o25": 1.35,
       "public_u25": 3.0,
       "public_ou_bookmaker": "williamhill",
-      "bf_hw": 1.25,
-      "bf_dr": 1.12,
+      "bf_hw": 1.28,
+      "bf_dr": 1.15,
       "bf_aw": 1.64,
       "public_hw_open": 3.4,
       "public_dr_open": 3.75,
@@ -8770,7 +8790,7 @@
         "o35": 1.85,
         "u35": 2.0
       },
-      "updatedAt": "2026-07-18T07:13:57.147427+00:00",
+      "updatedAt": "2026-07-18T08:52:31.738382+00:00",
       "o25": 1.25,
       "u25": 3.6,
       "o35": 1.87,
@@ -8781,9 +8801,9 @@
           1.85
         ]
       },
-      "ahA_p050": 1.85,
       "ahH_n050": 2.0,
-      "marketsCarriedAt": "2026-07-18T07:13:57.147427+00:00",
+      "ahA_p050": 1.85,
+      "marketsCarriedAt": "2026-07-18T08:52:31.738382+00:00",
       "marketsFreshAt": "2026-07-16T23:56:55.823067+00:00",
       "public_hw": 1.95,
       "public_dr": 3.9,
@@ -8793,8 +8813,8 @@
       "public_u25": 3.3,
       "public_ou_bookmaker": "williamhill",
       "bf_hw": 2.06,
-      "bf_dr": 2.04,
-      "bf_aw": 2.04,
+      "bf_dr": 2.08,
+      "bf_aw": 2.08,
       "public_hw_open": 1.55,
       "public_dr_open": 4.2,
       "public_aw_open": 4.8,
@@ -8813,7 +8833,7 @@
         "o25": 1.65,
         "u25": 2.15
       },
-      "updatedAt": "2026-07-18T07:13:57.147427+00:00",
+      "updatedAt": "2026-07-18T08:52:31.738382+00:00",
       "o25": 1.65,
       "u25": 2.15,
       "ahLadder": {
@@ -8822,11 +8842,11 @@
           2.01
         ]
       },
-      "ahA_p050": 2.01,
-      "ahA_p150": 1.47,
       "ahH_n150": 2.84,
       "ahH_n050": 1.85,
-      "marketsCarriedAt": "2026-07-18T07:13:57.147427+00:00",
+      "ahA_p150": 1.47,
+      "ahA_p050": 2.01,
+      "marketsCarriedAt": "2026-07-18T08:52:31.738382+00:00",
       "marketsFreshAt": "2026-07-17T23:50:14.284806+00:00",
       "public_hw": 1.8,
       "public_dr": 3.5,
@@ -8835,7 +8855,7 @@
       "public_o25": 1.65,
       "public_u25": 2.15,
       "public_ou_bookmaker": "williamhill",
-      "bf_hw": 1.12,
+      "bf_hw": 1.14,
       "bf_dr": 3.05,
       "bf_aw": 1.04,
       "public_hw_open": 1.65,
@@ -8856,7 +8876,7 @@
         "o25": 1.5,
         "u25": 2.45
       },
-      "updatedAt": "2026-07-18T07:13:57.147427+00:00",
+      "updatedAt": "2026-07-18T08:52:31.738382+00:00",
       "o25": 1.5,
       "u25": 2.45,
       "ahLadder": {
@@ -8866,7 +8886,7 @@
         ]
       },
       "ahA_n050": 1.93,
-      "marketsCarriedAt": "2026-07-18T07:13:57.147427+00:00",
+      "marketsCarriedAt": "2026-07-18T08:52:31.738382+00:00",
       "marketsFreshAt": "2026-07-16T23:56:55.823067+00:00",
       "public_hw": 3.5,
       "public_dr": 3.5,
@@ -8896,7 +8916,7 @@
         "o25": 1.7,
         "u25": 2.05
       },
-      "updatedAt": "2026-07-18T07:13:57.147427+00:00",
+      "updatedAt": "2026-07-18T08:52:31.738382+00:00",
       "o25": 1.7,
       "u25": 2.05,
       "ahLadder": {
@@ -8906,7 +8926,7 @@
         ]
       },
       "ahA_n050": 2.0,
-      "marketsCarriedAt": "2026-07-18T07:13:57.147427+00:00",
+      "marketsCarriedAt": "2026-07-18T08:52:31.738382+00:00",
       "marketsFreshAt": "2026-07-17T02:43:43.482311+00:00",
       "public_hw": 3.4,
       "public_dr": 3.4,
@@ -8915,9 +8935,9 @@
       "public_o25": 1.7,
       "public_u25": 2.05,
       "public_ou_bookmaker": "williamhill",
-      "bf_hw": 1.14,
-      "bf_dr": 1.14,
-      "bf_aw": 1.12,
+      "bf_hw": 1.16,
+      "bf_dr": 1.16,
+      "bf_aw": 1.14,
       "public_hw_open": 3.3,
       "public_dr_open": 3.3,
       "public_aw_open": 2.05,
@@ -8936,7 +8956,7 @@
         "o25": 1.53,
         "u25": 2.38
       },
-      "updatedAt": "2026-07-18T07:13:57.147427+00:00",
+      "updatedAt": "2026-07-18T08:52:31.738382+00:00",
       "o25": 1.53,
       "u25": 2.38,
       "ahLadder": {
@@ -8945,13 +8965,13 @@
           1.86
         ]
       },
-      "ahH_n150": 2.14,
       "ahA_p100": 2.07,
-      "ahA_p125": 1.86,
       "ahH_n100": 1.81,
       "ahH_n125": 2.0,
+      "ahH_n150": 2.14,
+      "ahA_p125": 1.86,
       "ahA_p150": 1.77,
-      "marketsCarriedAt": "2026-07-18T07:13:57.147427+00:00",
+      "marketsCarriedAt": "2026-07-18T08:52:31.738382+00:00",
       "marketsFreshAt": "2026-07-17T23:50:14.284806+00:00",
       "public_hw": 1.44,
       "public_dr": 4.2,
@@ -8960,7 +8980,7 @@
       "public_o25": 1.53,
       "public_u25": 2.38,
       "public_ou_bookmaker": "williamhill",
-      "bf_hw": 1.06,
+      "bf_hw": 1.08,
       "bf_dr": 1.09,
       "bf_aw": 1.09,
       "public_hw_open": 1.4,
@@ -8981,16 +9001,16 @@
         "o25": 1.44,
         "u25": 2.6
       },
-      "updatedAt": "2026-07-18T07:13:57.147427+00:00",
+      "updatedAt": "2026-07-18T08:52:31.738382+00:00",
       "ahLadder": {
         "-0.25": [
           1.85,
           2.0
         ]
       },
-      "ahH_n025": 1.85,
       "ahA_p025": 2.0,
-      "marketsFreshAt": "2026-07-18T07:13:57.147427+00:00",
+      "ahH_n025": 1.85,
+      "marketsFreshAt": "2026-07-18T08:52:31.738382+00:00",
       "public_hw": 2.05,
       "public_dr": 3.7,
       "public_aw": 3.0,
@@ -9021,7 +9041,7 @@
         "o35": 1.88,
         "u35": 1.96
       },
-      "updatedAt": "2026-07-18T07:13:57.147427+00:00",
+      "updatedAt": "2026-07-18T08:52:31.738382+00:00",
       "ahLadder": {
         "-1.25": [
           2.01,
@@ -9030,7 +9050,7 @@
       },
       "ahA_p125": 1.85,
       "ahH_n125": 2.01,
-      "marketsFreshAt": "2026-07-18T07:13:57.147427+00:00",
+      "marketsFreshAt": "2026-07-18T08:52:31.738382+00:00",
       "public_hw": 1.44,
       "public_dr": 4.6,
       "public_aw": 5.0,
@@ -9059,7 +9079,7 @@
         "o25": 1.53,
         "u25": 2.4
       },
-      "updatedAt": "2026-07-18T07:13:57.147427+00:00",
+      "updatedAt": "2026-07-18T08:52:31.738382+00:00",
       "o25": 1.53,
       "u25": 2.4,
       "ahLadder": {
@@ -9068,11 +9088,11 @@
           1.91
         ]
       },
-      "ahH_n075": 1.94,
-      "ahA_p075": 1.91,
       "ahH_n150": 2.88,
+      "ahA_p075": 1.91,
       "ahA_p150": 1.46,
-      "marketsCarriedAt": "2026-07-18T07:13:57.147427+00:00",
+      "ahH_n075": 1.94,
+      "marketsCarriedAt": "2026-07-18T08:52:31.738382+00:00",
       "marketsFreshAt": "2026-07-18T02:34:43.226914+00:00",
       "public_hw": 1.7,
       "public_dr": 3.9,
@@ -9081,9 +9101,9 @@
       "public_o25": 1.53,
       "public_u25": 2.4,
       "public_ou_bookmaker": "williamhill",
-      "bf_hw": 1.04,
-      "bf_dr": 1.01,
-      "bf_aw": 1.04,
+      "bf_hw": 1.05,
+      "bf_dr": 1.07,
+      "bf_aw": 1.08,
       "public_hw_open": 1.7,
       "public_dr_open": 3.8,
       "public_aw_open": 4.0,
@@ -9102,7 +9122,7 @@
         "o25": 1.44,
         "u25": 2.6
       },
-      "updatedAt": "2026-07-18T07:13:57.147427+00:00",
+      "updatedAt": "2026-07-18T08:52:31.738382+00:00",
       "o25": 1.44,
       "u25": 2.6,
       "ahLadder": {
@@ -9111,7 +9131,7 @@
           2.06
         ]
       },
-      "marketsCarriedAt": "2026-07-18T07:13:57.147427+00:00",
+      "marketsCarriedAt": "2026-07-18T08:52:31.738382+00:00",
       "marketsFreshAt": "2026-07-17T02:43:43.482311+00:00",
       "public_hw": 2.3,
       "public_dr": 3.4,
@@ -9120,9 +9140,9 @@
       "public_o25": 1.5,
       "public_u25": 2.45,
       "public_ou_bookmaker": "williamhill",
-      "bf_hw": 1.23,
+      "bf_hw": 1.26,
       "bf_dr": 1.06,
-      "bf_aw": 1.24,
+      "bf_aw": 1.27,
       "public_hw_open": 2.2,
       "public_dr_open": 3.6,
       "public_aw_open": 2.75,
@@ -9141,16 +9161,16 @@
         "o25": 1.7,
         "u25": 2.05
       },
-      "updatedAt": "2026-07-18T07:13:57.147427+00:00",
+      "updatedAt": "2026-07-18T08:52:31.738382+00:00",
       "ahLadder": {
         "-0.75": [
           2.03,
           1.83
         ]
       },
-      "ahH_n075": 2.03,
       "ahA_p075": 1.83,
-      "marketsFreshAt": "2026-07-18T07:13:57.147427+00:00",
+      "ahH_n075": 2.03,
+      "marketsFreshAt": "2026-07-18T08:52:31.738382+00:00",
       "public_hw": 1.75,
       "public_dr": 3.5,
       "public_aw": 4.2,
@@ -9179,7 +9199,7 @@
         "o25": 1.53,
         "u25": 2.38
       },
-      "updatedAt": "2026-07-18T07:13:57.147427+00:00",
+      "updatedAt": "2026-07-18T08:52:31.738382+00:00",
       "o25": 1.53,
       "u25": 2.38,
       "ahLadder": {
@@ -9188,9 +9208,9 @@
           1.85
         ]
       },
-      "ahA_p050": 1.85,
       "ahH_n050": 2.0,
-      "marketsCarriedAt": "2026-07-18T07:13:57.147427+00:00",
+      "ahA_p050": 1.85,
+      "marketsCarriedAt": "2026-07-18T08:52:31.738382+00:00",
       "marketsFreshAt": "2026-07-18T02:34:43.226914+00:00",
       "public_hw": 1.91,
       "public_dr": 3.6,
@@ -9209,21 +9229,21 @@
       "public_u25_open": 2.38
     },
     "1598-9569": {
-      "poly_hw": 0.28,
+      "poly_hw": 0.35,
       "poly_dr": 0.34,
-      "poly_aw": 0.505,
-      "poly_vol": 0,
+      "poly_aw": 0.425,
+      "poly_vol": 6.81,
       "poly_slug": "mls-orl-nas-2026-07-25"
     },
     "1604-1607": {
-      "poly_hw": 0.42,
-      "poly_dr": 0.43,
-      "poly_aw": 0.43,
+      "poly_hw": 0.465,
+      "poly_dr": 0.425,
+      "poly_aw": 0.36,
       "poly_vol": 0,
       "poly_slug": "mls-nyc-chi-2026-07-25"
     },
     "1616-1611": {
-      "poly_hw": 0.515,
+      "poly_hw": 0.52,
       "poly_dr": 0.355,
       "poly_aw": 0.28,
       "poly_vol": 0,
@@ -9237,9 +9257,9 @@
       "poly_slug": "mls-stl-col-2026-07-25"
     },
     "1615-1601": {
-      "poly_hw": 0.43,
-      "poly_dr": 0.41,
-      "poly_aw": 0.395,
+      "poly_hw": 0.455,
+      "poly_dr": 0.405,
+      "poly_aw": 0.35,
       "poly_vol": 0,
       "poly_slug": "mls-dcu-tor-2026-07-25"
     },
@@ -9258,9 +9278,9 @@
       "poly_slug": "mls-min-vwh-2026-07-25"
     },
     "1609-1608": {
-      "poly_hw": 0.43,
-      "poly_dr": 0.415,
-      "poly_aw": 0.325,
+      "poly_hw": 0.46,
+      "poly_dr": 0.41,
+      "poly_aw": 0.33,
       "poly_vol": 0,
       "poly_slug": "mls-ner-atl-2026-07-25"
     },
@@ -9272,9 +9292,9 @@
       "poly_slug": "mls-sdg-dal-2026-07-25"
     },
     "1599-1595": {
-      "poly_hw": 0.34,
-      "poly_dr": 0.44,
-      "poly_aw": 0.435,
+      "poly_hw": 0.395,
+      "poly_dr": 0.425,
+      "poly_aw": 0.37,
       "poly_vol": 0,
       "poly_slug": "mls-phi-sea-2026-07-25"
     },
@@ -9295,21 +9315,21 @@
     "1613-2242": {
       "poly_hw": 0.445,
       "poly_dr": 0.395,
-      "poly_aw": 0.415,
+      "poly_aw": 0.365,
       "poly_vol": 0,
       "poly_slug": "mls-clb-fcc-2026-07-25"
     },
     "1614-9568": {
-      "poly_hw": 0.38,
+      "poly_hw": 0.42,
       "poly_dr": 0.38,
-      "poly_aw": 0.47,
+      "poly_aw": 0.395,
       "poly_vol": 0,
       "poly_slug": "mls-mim-mia-2026-07-25"
     },
     "1602-18310": {
-      "poly_hw": 0.435,
-      "poly_dr": 0.41,
-      "poly_aw": 0.425,
+      "poly_hw": 0.455,
+      "poly_dr": 0.4,
+      "poly_aw": 0.355,
       "poly_vol": 0,
       "poly_slug": "mls-nyr-clt-2026-07-25"
     }
@@ -9550,11 +9570,11 @@
           "pinn_move_pp": 5.48,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 141.0,
+          "hours_since_open": 143.8,
           "open_pinn_odds": 4.33,
           "current_pinn_odds": 3.5,
           "move_age_decay": 1.0,
-          "move_age_days": 5.9
+          "move_age_days": 6.0
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -9716,11 +9736,11 @@
           "pinn_move_pp": 10.91,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 141.0,
+          "hours_since_open": 143.8,
           "open_pinn_odds": 4.8,
           "current_pinn_odds": 3.15,
           "move_age_decay": 1.0,
-          "move_age_days": 5.9
+          "move_age_days": 6.0
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -9998,7 +10018,7 @@
         "origVerdict": "ABWÄGEN",
         "origOdds": 2.5,
         "nobetSince": "2026-07-17T06:18:36.840976+00:00",
-        "nobetReason": "Edge weg — Linie gegen den Pick gelaufen (2.5→2.73)"
+        "nobetReason": "Edge weg — Linie gegen den Pick gelaufen (2.5→2.62)"
       }
     ],
     "MLS-19-1602-18310": [],
@@ -10276,12 +10296,12 @@
   "_meta": {
     "profile": "mls_default",
     "season": 2026,
-    "dataUpdatedAt": "2026-07-17T20:08:32.242992+00:00",
-    "formUpdatedAt": "2026-07-17T20:09:23.539468+00:00",
-    "cornersUpdatedAt": "2026-07-17T20:09:23.647575+00:00",
-    "xgUpdatedAt": "2026-07-17T20:09:23.647583+00:00",
-    "picksUpdatedAt": "2026-07-18T06:06:10.693690+00:00",
-    "oddsUpdatedAt": "2026-07-18T07:13:57.147427+00:00",
+    "dataUpdatedAt": "2026-07-18T08:49:17.668371+00:00",
+    "formUpdatedAt": "2026-07-18T08:49:19.046792+00:00",
+    "cornersUpdatedAt": "2026-07-18T08:49:19.148366+00:00",
+    "xgUpdatedAt": "2026-07-18T08:49:19.148375+00:00",
+    "picksUpdatedAt": "2026-07-18T08:52:43.224917+00:00",
+    "oddsUpdatedAt": "2026-07-18T08:52:31.738382+00:00",
     "engineVersion": "v1"
   },
   "form": {
@@ -14346,6 +14366,36 @@
       "over25Rate": 0.4,
       "bttsRate": 0.7,
       "updatedAt": "2026-07-17T09:10:17.400503+00:00"
+    },
+    "1607-1617": {
+      "games": 10,
+      "homeWins": 2,
+      "draws": 5,
+      "awayWins": 3,
+      "avgGoals": 3.1,
+      "over25Rate": 0.6,
+      "bttsRate": 0.8,
+      "updatedAt": "2026-07-18T08:33:58.914946+00:00"
+    },
+    "1610-1611": {
+      "games": 10,
+      "homeWins": 4,
+      "draws": 2,
+      "awayWins": 4,
+      "avgGoals": 2.8,
+      "over25Rate": 0.6,
+      "bttsRate": 0.6,
+      "updatedAt": "2026-07-18T08:34:00.649076+00:00"
+    },
+    "1616-25484": {
+      "games": 3,
+      "homeWins": 0,
+      "draws": 1,
+      "awayWins": 2,
+      "avgGoals": 4.0,
+      "over25Rate": 1.0,
+      "bttsRate": 1.0,
+      "updatedAt": "2026-07-18T08:34:02.406733+00:00"
     }
   },
   "cornersForm": {
@@ -16517,7 +16567,7 @@
         1490275,
         1490251
       ],
-      "updatedAt": "2026-07-17T20:09:43.736154+00:00"
+      "updatedAt": "2026-07-18T08:49:39.568899+00:00"
     },
     "1596": {
       "xgForAvg": 1.393,
@@ -16539,7 +16589,7 @@
         1490292,
         1490276
       ],
-      "updatedAt": "2026-07-17T20:09:30.275861+00:00"
+      "updatedAt": "2026-07-18T08:49:26.194005+00:00"
     },
     "1597": {
       "xgForAvg": 1.663,
@@ -16563,7 +16613,7 @@
         1490258,
         1490248
       ],
-      "updatedAt": "2026-07-17T20:09:37.039652+00:00"
+      "updatedAt": "2026-07-18T08:49:36.229557+00:00"
     },
     "1598": {
       "xgForAvg": 1.834,
@@ -16586,7 +16636,7 @@
         1490268,
         1490254
       ],
-      "updatedAt": "2026-07-17T20:10:55.627085+00:00"
+      "updatedAt": "2026-07-18T08:50:51.378131+00:00"
     },
     "1599": {
       "xgForAvg": 1.728,
@@ -16610,7 +16660,7 @@
         1490255,
         1490240
       ],
-      "updatedAt": "2026-07-17T20:11:02.601686+00:00"
+      "updatedAt": "2026-07-18T08:50:58.105591+00:00"
     },
     "1600": {
       "xgForAvg": 1.15,
@@ -16631,7 +16681,7 @@
         1490302,
         1490294
       ],
-      "updatedAt": "2026-07-17T20:09:47.128000+00:00"
+      "updatedAt": "2026-07-18T08:49:42.955533+00:00"
     },
     "1601": {
       "xgForAvg": 0.936,
@@ -16654,7 +16704,7 @@
         1490267,
         1490252
       ],
-      "updatedAt": "2026-07-17T20:10:52.289548+00:00"
+      "updatedAt": "2026-07-18T08:50:48.045871+00:00"
     },
     "1602": {
       "xgForAvg": 1.684,
@@ -16677,28 +16727,29 @@
         1490266,
         1490258
       ],
-      "updatedAt": "2026-07-17T20:10:29.433895+00:00"
+      "updatedAt": "2026-07-18T08:50:25.584783+00:00"
     },
     "1603": {
-      "xgForAvg": 1.72,
-      "xgAgainstAvg": 1.14,
-      "xgGames": 3,
-      "xgSimForAvg": 1.683,
-      "xgSimAgainstAvg": 1.299,
-      "shotsInsideForAvg": 8.33,
-      "sotForAvg": 7.0,
-      "savesForAvg": 2.67,
-      "blocksForAvg": 3.33,
+      "xgForAvg": 1.848,
+      "xgAgainstAvg": 1.11,
+      "xgGames": 4,
+      "xgSimForAvg": 1.653,
+      "xgSimAgainstAvg": 1.226,
+      "shotsInsideForAvg": 8.5,
+      "sotForAvg": 6.5,
+      "savesForAvg": 2.5,
+      "blocksForAvg": 3.25,
       "keyPassesForAvg": null,
       "ratingAvg": null,
-      "games": 3,
+      "games": 4,
       "source": "apif_real",
       "fixture_ids": [
         1490318,
         1490302,
-        1490290
+        1490290,
+        1490276
       ],
-      "updatedAt": "2026-07-17T20:09:26.838414+00:00"
+      "updatedAt": "2026-07-18T08:49:22.826082+00:00"
     },
     "1604": {
       "xgForAvg": 1.062,
@@ -16721,29 +16772,29 @@
         1490278,
         1490264
       ],
-      "updatedAt": "2026-07-17T20:10:39.079171+00:00"
+      "updatedAt": "2026-07-18T08:50:35.170702+00:00"
     },
     "1605": {
-      "xgForAvg": 1.947,
-      "xgAgainstAvg": 1.388,
+      "xgForAvg": 1.593,
+      "xgAgainstAvg": 1.58,
       "xgGames": 4,
-      "xgSimForAvg": 1.646,
-      "xgSimAgainstAvg": 1.562,
-      "shotsInsideForAvg": 9.5,
-      "sotForAvg": 5.25,
+      "xgSimForAvg": 1.492,
+      "xgSimAgainstAvg": 1.524,
+      "shotsInsideForAvg": 9.25,
+      "sotForAvg": 4.0,
       "savesForAvg": 3.5,
-      "blocksForAvg": 3.75,
+      "blocksForAvg": 4.5,
       "keyPassesForAvg": null,
       "ratingAvg": null,
       "games": 4,
       "source": "apif_real",
       "fixture_ids": [
+        1490330,
         1490321,
         1490304,
-        1490289,
-        1490269
+        1490289
       ],
-      "updatedAt": "2026-07-17T20:09:53.840049+00:00"
+      "updatedAt": "2026-07-18T08:49:49.666660+00:00"
     },
     "1606": {
       "xgForAvg": 1.438,
@@ -16766,7 +16817,7 @@
         1490272,
         1490253
       ],
-      "updatedAt": "2026-07-17T20:09:33.712712+00:00"
+      "updatedAt": "2026-07-18T08:49:32.888227+00:00"
     },
     "1607": {
       "xgForAvg": 2.078,
@@ -16789,29 +16840,30 @@
         1490266,
         1490260
       ],
-      "updatedAt": "2026-07-17T20:10:23.802385+00:00"
+      "updatedAt": "2026-07-18T08:50:19.936565+00:00"
     },
     "1608": {
-      "xgForAvg": 1.288,
-      "xgAgainstAvg": 1.465,
-      "xgGames": 4,
-      "xgSimForAvg": 1.58,
-      "xgSimAgainstAvg": 1.246,
-      "shotsInsideForAvg": 10.0,
-      "sotForAvg": 4.0,
-      "savesForAvg": 3.0,
-      "blocksForAvg": 7.25,
+      "xgForAvg": 1.362,
+      "xgAgainstAvg": 1.266,
+      "xgGames": 5,
+      "xgSimForAvg": 1.576,
+      "xgSimAgainstAvg": 1.152,
+      "shotsInsideForAvg": 9.8,
+      "sotForAvg": 4.2,
+      "savesForAvg": 2.8,
+      "blocksForAvg": 6.8,
       "keyPassesForAvg": null,
       "ratingAvg": null,
-      "games": 4,
+      "games": 5,
       "source": "apif_real",
       "fixture_ids": [
+        1490329,
         1490322,
         1490296,
         1490269,
         1490257
       ],
-      "updatedAt": "2026-07-17T20:10:58.991043+00:00"
+      "updatedAt": "2026-07-18T08:50:54.732980+00:00"
     },
     "1609": {
       "xgForAvg": 1.035,
@@ -16833,7 +16885,7 @@
         1490285,
         1490271
       ],
-      "updatedAt": "2026-07-17T20:10:26.092214+00:00"
+      "updatedAt": "2026-07-18T08:50:22.229225+00:00"
     },
     "1610": {
       "xgForAvg": 0.943,
@@ -16855,7 +16907,7 @@
         1490291,
         1490274
       ],
-      "updatedAt": "2026-07-17T20:10:07.821771+00:00"
+      "updatedAt": "2026-07-18T08:50:03.408774+00:00"
     },
     "1611": {
       "xgForAvg": 1.337,
@@ -16879,7 +16931,7 @@
         1490277,
         1490251
       ],
-      "updatedAt": "2026-07-17T20:10:14.196319+00:00"
+      "updatedAt": "2026-07-18T08:50:09.820624+00:00"
     },
     "1612": {
       "xgForAvg": 1.45,
@@ -16902,7 +16954,7 @@
         1490279,
         1490256
       ],
-      "updatedAt": "2026-07-17T20:09:50.492442+00:00"
+      "updatedAt": "2026-07-18T08:49:46.305002+00:00"
     },
     "1613": {
       "xgForAvg": 1.17,
@@ -16924,7 +16976,7 @@
         1490284,
         1490278
       ],
-      "updatedAt": "2026-07-17T20:10:45.582216+00:00"
+      "updatedAt": "2026-07-18T08:50:41.350101+00:00"
     },
     "1614": {
       "xgForAvg": 1.72,
@@ -16946,7 +16998,7 @@
         1490299,
         1490286
       ],
-      "updatedAt": "2026-07-17T20:10:48.928357+00:00"
+      "updatedAt": "2026-07-18T08:50:44.691340+00:00"
     },
     "1615": {
       "xgForAvg": 1.698,
@@ -16969,30 +17021,30 @@
         1490273,
         1490264
       ],
-      "updatedAt": "2026-07-17T20:10:41.898295+00:00"
+      "updatedAt": "2026-07-18T08:50:37.978728+00:00"
     },
     "1616": {
-      "xgForAvg": 1.592,
-      "xgAgainstAvg": 1.958,
+      "xgForAvg": 1.774,
+      "xgAgainstAvg": 1.094,
       "xgGames": 5,
-      "xgSimForAvg": 1.549,
-      "xgSimAgainstAvg": 1.399,
-      "shotsInsideForAvg": 9.4,
-      "sotForAvg": 4.4,
-      "savesForAvg": 3.6,
-      "blocksForAvg": 6.0,
+      "xgSimForAvg": 1.7,
+      "xgSimAgainstAvg": 0.977,
+      "shotsInsideForAvg": 10.0,
+      "sotForAvg": 5.2,
+      "savesForAvg": 1.6,
+      "blocksForAvg": 6.4,
       "keyPassesForAvg": null,
       "ratingAvg": null,
       "games": 5,
       "source": "apif_real",
       "fixture_ids": [
+        1490330,
         1490324,
         1490309,
         1490288,
-        1490280,
-        1540848
+        1490280
       ],
-      "updatedAt": "2026-07-17T20:09:40.370297+00:00"
+      "updatedAt": "2026-07-18T08:49:29.524870+00:00"
     },
     "1617": {
       "xgForAvg": 1.568,
@@ -17016,7 +17068,7 @@
         1490277,
         1490253
       ],
-      "updatedAt": "2026-07-17T20:10:00.620855+00:00"
+      "updatedAt": "2026-07-18T08:49:56.350490+00:00"
     },
     "16489": {
       "xgForAvg": 0.447,
@@ -17037,7 +17089,7 @@
         1490303,
         1490293
       ],
-      "updatedAt": "2026-07-17T20:10:10.738394+00:00"
+      "updatedAt": "2026-07-18T08:50:06.420596+00:00"
     },
     "18310": {
       "xgForAvg": 1.502,
@@ -17060,7 +17112,7 @@
         1490270,
         1490259
       ],
-      "updatedAt": "2026-07-17T20:10:32.361293+00:00"
+      "updatedAt": "2026-07-18T08:50:28.409067+00:00"
     },
     "20787": {
       "xgForAvg": 1.612,
@@ -17083,7 +17135,7 @@
         1490288,
         1490274
       ],
-      "updatedAt": "2026-07-17T20:09:57.172085+00:00"
+      "updatedAt": "2026-07-18T08:49:53.002630+00:00"
     },
     "2242": {
       "xgForAvg": 2.052,
@@ -17106,7 +17158,7 @@
         1490270,
         1490260
       ],
-      "updatedAt": "2026-07-17T20:10:35.718290+00:00"
+      "updatedAt": "2026-07-18T08:50:31.759002+00:00"
     },
     "25484": {
       "xgForAvg": 1.595,
@@ -17130,7 +17182,7 @@
         1490262,
         1490247
       ],
-      "updatedAt": "2026-07-17T20:10:04.261683+00:00"
+      "updatedAt": "2026-07-18T08:49:59.679855+00:00"
     },
     "9568": {
       "xgForAvg": 3.045,
@@ -17154,31 +17206,31 @@
         1490254,
         1490239
       ],
-      "updatedAt": "2026-07-17T20:10:20.968116+00:00"
+      "updatedAt": "2026-07-18T08:50:16.602482+00:00"
     },
     "9569": {
-      "xgForAvg": 0.75,
-      "xgAgainstAvg": 1.288,
+      "xgForAvg": 0.745,
+      "xgAgainstAvg": 1.292,
       "xgGames": 6,
-      "xgSimForAvg": 0.996,
-      "xgSimAgainstAvg": 1.433,
-      "shotsInsideForAvg": 5.33,
-      "sotForAvg": 3.67,
-      "savesForAvg": 3.5,
-      "blocksForAvg": 3.0,
+      "xgSimForAvg": 1.01,
+      "xgSimAgainstAvg": 1.371,
+      "shotsInsideForAvg": 5.17,
+      "sotForAvg": 4.0,
+      "savesForAvg": 3.67,
+      "blocksForAvg": 2.67,
       "keyPassesForAvg": null,
       "ratingAvg": null,
       "games": 6,
       "source": "apif_real",
       "fixture_ids": [
+        1490329,
         1490314,
         1490309,
         1490285,
         1490273,
-        1540847,
-        1490255
+        1540847
       ],
-      "updatedAt": "2026-07-17T20:10:17.576756+00:00"
+      "updatedAt": "2026-07-18T08:50:13.215705+00:00"
     }
   },
   "squads": {
@@ -21372,7 +21424,7 @@
     "9569": {
       "name": "S. Surridge",
       "goals": 9.0,
-      "appearances": 8.0
+      "appearances": 9.0
     },
     "2242": {
       "name": "K. Denkey",
@@ -21406,6 +21458,16 @@
     },
     "18310": {
       "name": "Pep Biel",
+      "goals": 7.0,
+      "appearances": 15.0
+    },
+    "1617": {
+      "name": "K. Kelsy",
+      "goals": 7.0,
+      "appearances": 15.0
+    },
+    "1611": {
+      "name": "D. Joveljić",
       "goals": 7.0,
       "appearances": 15.0
     }
@@ -21455,7 +21517,7 @@
   },
   "injuries": {
     "1603": {
-      "updatedAt": "2026-07-17T20:11:54.743986+00:00",
+      "updatedAt": "2026-07-18T08:51:49.934297+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -23229,18 +23291,11 @@
       ]
     },
     "1616": {
-      "updatedAt": "2026-07-17T20:11:54.743986+00:00",
+      "updatedAt": "2026-07-18T08:51:49.934297+00:00",
       "source": "wm_league",
       "players": [
         {
           "name": "Igor Jesus",
-          "type": "Unknown",
-          "reason": "",
-          "status": "missing",
-          "fixture": "2026-07-18T02:25:00+00:00"
-        },
-        {
-          "name": "L. Dellavalle",
           "type": "Unknown",
           "reason": "",
           "status": "missing",
@@ -23252,11 +23307,18 @@
           "reason": "",
           "status": "missing",
           "fixture": "2026-07-18T02:25:00+00:00"
+        },
+        {
+          "name": "T. Tillman",
+          "type": "Unknown",
+          "reason": "",
+          "status": "missing",
+          "fixture": "2026-07-18T02:25:00+00:00"
         }
       ]
     },
     "1595": {
-      "updatedAt": "2026-07-17T20:11:54.743986+00:00",
+      "updatedAt": "2026-07-18T08:51:49.934297+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -24359,18 +24421,11 @@
       ]
     },
     "1605": {
-      "updatedAt": "2026-07-17T20:11:54.743986+00:00",
+      "updatedAt": "2026-07-18T08:51:49.934297+00:00",
       "source": "wm_league",
       "players": [
         {
           "name": "R. Puig",
-          "type": "Unknown",
-          "reason": "",
-          "status": "missing",
-          "fixture": "2026-07-18T02:25:00+00:00"
-        },
-        {
-          "name": "C. Garces",
           "type": "Unknown",
           "reason": "",
           "status": "missing",
@@ -25623,7 +25678,7 @@
       ]
     },
     "20787": {
-      "updatedAt": "2026-07-17T20:11:54.743986+00:00",
+      "updatedAt": "2026-07-18T08:51:49.934297+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -25650,7 +25705,7 @@
       ]
     },
     "1617": {
-      "updatedAt": "2026-07-17T20:11:54.743986+00:00",
+      "updatedAt": "2026-07-18T08:51:49.934297+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -26173,7 +26228,7 @@
       ]
     },
     "1611": {
-      "updatedAt": "2026-07-17T20:11:54.743986+00:00",
+      "updatedAt": "2026-07-18T08:51:49.934297+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -26200,11 +26255,11 @@
       ]
     },
     "9569": {
-      "updatedAt": "2026-07-17T20:11:54.743986+00:00",
+      "updatedAt": "2026-07-18T08:51:49.934297+00:00",
       "source": "wm_league",
       "players": [
         {
-          "name": "E. Tagseth",
+          "name": "R. Baker-Whiting",
           "type": "Unknown",
           "reason": "",
           "status": "missing",
@@ -26212,13 +26267,6 @@
         },
         {
           "name": "P. Yazbek",
-          "type": "Unknown",
-          "reason": "",
-          "status": "missing",
-          "fixture": "2026-07-18T00:10:00+00:00"
-        },
-        {
-          "name": "A. Najar",
           "type": "Unknown",
           "reason": "",
           "status": "missing",
@@ -26499,7 +26547,7 @@
       ]
     },
     "1607": {
-      "updatedAt": "2026-07-17T20:11:54.743986+00:00",
+      "updatedAt": "2026-07-18T08:51:49.934297+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -30047,7 +30095,7 @@
       ]
     },
     "1614": {
-      "updatedAt": "2026-07-17T20:11:54.743986+00:00",
+      "updatedAt": "2026-07-18T08:51:49.934297+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -30689,7 +30737,7 @@
       ]
     },
     "1601": {
-      "updatedAt": "2026-07-17T20:11:54.743986+00:00",
+      "updatedAt": "2026-07-18T08:51:49.934297+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -30737,11 +30785,11 @@
       ]
     },
     "1608": {
-      "updatedAt": "2026-07-17T20:11:54.743986+00:00",
+      "updatedAt": "2026-07-18T08:51:49.934297+00:00",
       "source": "wm_league",
       "players": [
         {
-          "name": "F. Picault",
+          "name": "Sergio Santos",
           "type": "Unknown",
           "reason": "",
           "status": "missing",
@@ -30755,7 +30803,7 @@
           "fixture": "2026-07-18T00:10:00+00:00"
         },
         {
-          "name": "E. Latte Lath",
+          "name": "P. Diaz",
           "type": "Unknown",
           "reason": "",
           "status": "missing",
@@ -31421,7 +31469,7 @@
       ]
     },
     "_meta": {
-      "updatedAt": "2026-07-17T20:11:54.743986+00:00",
+      "updatedAt": "2026-07-18T08:51:49.934297+00:00",
       "daysUntilWM": 0,
       "status": "live",
       "teamsWithData": 30
@@ -31431,14 +31479,14 @@
     "MLS": [
       {
         "team": "9569",
-        "played": 14,
-        "won": 10,
+        "played": 15,
+        "won": 11,
         "draw": 3,
         "lost": 1,
-        "points": 33,
-        "gf": 31,
+        "points": 36,
+        "gf": 32,
         "ga": 11,
-        "gd": 20,
+        "gd": 21,
         "pos": 1
       },
       {
@@ -31478,6 +31526,18 @@
         "pos": 4
       },
       {
+        "team": "1616",
+        "played": 16,
+        "won": 8,
+        "draw": 3,
+        "lost": 5,
+        "points": 27,
+        "gf": 27,
+        "ga": 17,
+        "gd": 10,
+        "pos": 5
+      },
+      {
         "team": "1607",
         "played": 14,
         "won": 8,
@@ -31487,7 +31547,7 @@
         "gf": 27,
         "ga": 16,
         "gd": 11,
-        "pos": 5
+        "pos": 6
       },
       {
         "team": "1606",
@@ -31499,7 +31559,7 @@
         "gf": 26,
         "ga": 19,
         "gd": 7,
-        "pos": 6
+        "pos": 7
       },
       {
         "team": "1597",
@@ -31511,7 +31571,7 @@
         "gf": 30,
         "ga": 22,
         "gd": 8,
-        "pos": 7
+        "pos": 8
       },
       {
         "team": "1609",
@@ -31523,18 +31583,6 @@
         "gf": 22,
         "ga": 18,
         "gd": 4,
-        "pos": 8
-      },
-      {
-        "team": "1616",
-        "played": 15,
-        "won": 7,
-        "draw": 3,
-        "lost": 5,
-        "points": 24,
-        "gf": 24,
-        "ga": 17,
-        "gd": 7,
         "pos": 9
       },
       {
@@ -31598,18 +31646,6 @@
         "pos": 14
       },
       {
-        "team": "1605",
-        "played": 15,
-        "won": 5,
-        "draw": 5,
-        "lost": 5,
-        "points": 20,
-        "gf": 22,
-        "ga": 22,
-        "gd": 0,
-        "pos": 15
-      },
-      {
         "team": "2242",
         "played": 15,
         "won": 5,
@@ -31619,6 +31655,18 @@
         "gf": 36,
         "ga": 37,
         "gd": -1,
+        "pos": 15
+      },
+      {
+        "team": "1605",
+        "played": 16,
+        "won": 5,
+        "draw": 5,
+        "lost": 6,
+        "points": 20,
+        "gf": 22,
+        "ga": 25,
+        "gd": -3,
         "pos": 16
       },
       {
@@ -31755,14 +31803,14 @@
       },
       {
         "team": "1608",
-        "played": 14,
+        "played": 15,
         "won": 3,
         "draw": 2,
-        "lost": 9,
+        "lost": 10,
         "points": 11,
         "gf": 14,
-        "ga": 23,
-        "gd": -9,
+        "ga": 24,
+        "gd": -10,
         "pos": 28
       },
       {
