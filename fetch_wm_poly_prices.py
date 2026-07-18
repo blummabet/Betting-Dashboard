@@ -114,11 +114,45 @@ POLY_TAG_SLUG = _cfg("poly", "tag_slug", "")
 # werden abgeschnitten. Fix: closed=false (nur offene Spiele) + newest-first + mehr Headroom.
 _GAMMA_FILTER = (f"tag_slug={POLY_TAG_SLUG}" if POLY_TAG_SLUG
                  else f"series_slug={POLY_SERIES_SLUG}")
-GAMMA_URL = (
+# 18.07.2026 (Lucas: „MLS-Trading muss laufen") — 🔴 DER FALSCHE SPIELTAG KAM AN.
+# `order=startDate&ascending=false` sortiert nach dem ERSTELLUNGSDATUM des Marktes, nicht nach dem
+# Anpfiff. Und die Gamma-API deckelt bei **100 Events pro Request** — `limit=300` wird ignoriert.
+# Folge: wir bekamen nur die ZULETZT ANGELEGTEN Märkte (Spieltag 25./26.07.), während die Spiele am
+# 22./23.07. — die einzigen mit Pinnacle-Quoten — hinten rausfielen. Ergebnis: NULL Überschneidung
+# zwischen Poly und Pinnacle → keine Edge berechenbar → der Auto-Trader fand nie einen Kandidaten.
+# Fix: paginieren (offset) statt auf einen Request zu hoffen. Verifiziert gegen die Live-API:
+# Seite 1 liefert 25./26.07., Seite 2 die Spiele vom 22./23.07.
+GAMMA_PAGE_LIMIT = 100          # hartes Server-Maximum
+GAMMA_MAX_PAGES = 6             # 600 Events Headroom; bricht früher ab, wenn eine Seite kurz ist
+GAMMA_URL_TMPL = (
     "https://gamma-api.polymarket.com/events"
-    f"?{_GAMMA_FILTER}&limit=300&active=true&closed=false"
+    f"?{_GAMMA_FILTER}&limit={{limit}}&offset={{offset}}&active=true&closed=false"
     "&order=startDate&ascending=false"
 )
+GAMMA_URL = GAMMA_URL_TMPL.format(limit=GAMMA_PAGE_LIMIT, offset=0)   # nur fürs Logging/Tests
+
+
+def fetch_gamma_all(fetch=None) -> list:
+    """Alle offenen Events der Serie/des Tags — über Seiten hinweg.
+
+    Ohne Paginierung fehlten ganze Spieltage (s. Kommentar oben). `fetch` ist injizierbar (Tests).
+    """
+    _get = fetch or fetch_gamma
+    out, gesehen = [], set()
+    for seite in range(GAMMA_MAX_PAGES):
+        url = GAMMA_URL_TMPL.format(limit=GAMMA_PAGE_LIMIT, offset=seite * GAMMA_PAGE_LIMIT)
+        page = _get(url) or []
+        neu = 0
+        for e in page:
+            eid = e.get("id") or e.get("slug")
+            if eid in gesehen:
+                continue        # Überlappung zwischen Seiten ignorieren
+            gesehen.add(eid)
+            out.append(e)
+            neu += 1
+        if len(page) < GAMMA_PAGE_LIMIT or neu == 0:
+            break               # letzte Seite erreicht
+    return out
 GAMMA_SLUG_URL = "https://gamma-api.polymarket.com/events?slug={slug}&markets=true"
 CLOB_URL = "https://clob.polymarket.com/books?token_id={token_id}"
 
@@ -521,9 +555,9 @@ def compute_btts_edges(pinn_bttsY, pinn_bttsN, poly_btts, poly_btts_no, template
 def main():
     print("=== fetch_wm_poly_prices.py ===")
 
-    print(f"  Fetching {GAMMA_URL}")
+    print(f"  Fetching {GAMMA_URL} (+ Folgeseiten)")
     try:
-        events = fetch_gamma(GAMMA_URL)
+        events = fetch_gamma_all()
     except Exception as e:
         print(f"  ERROR: {e}")
         sys.exit(1)

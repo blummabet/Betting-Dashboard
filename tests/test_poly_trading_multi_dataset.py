@@ -104,3 +104,44 @@ class TestManuellesBettingTrifftDenRichtigenDatensatz:
         src = self._js()
         for code in ("ENG", "ESP", "GER", "ITA", "FRA"):
             assert code in src, f"Liga-Code {code} fehlt in der Datensatz-Zuordnung"
+
+
+class TestGammaPaginierung:
+    """18.07.2026 — der falsche Spieltag kam an.
+
+    `order=startDate` sortiert nach ERSTELLUNG des Marktes, nicht nach Anpfiff, und die Gamma-API
+    deckelt bei 100 Events (limit=300 wird ignoriert). Wir bekamen nur die zuletzt angelegten
+    Märkte (Spieltag 25./26.07.) — die Spiele am 22./23.07., die einzigen mit Pinnacle-Quoten,
+    fielen hinten raus. Ergebnis: 0 Überschneidung Poly↔Pinnacle → keine Edge → nie ein Kandidat.
+    """
+
+    def test_holt_alle_seiten(self):
+        import fetch_wm_poly_prices as F
+        seiten = {0: [{"id": i} for i in range(100)],
+                  100: [{"id": 100 + i} for i in range(35)]}
+
+        def fake(url):
+            import re
+            off = int(re.search(r"offset=(\d+)", url).group(1))
+            return seiten.get(off, [])
+
+        assert len(F.fetch_gamma_all(fetch=fake)) == 135, "Folgeseiten werden nicht geholt"
+
+    def test_stoppt_bei_kurzer_seite(self):
+        import fetch_wm_poly_prices as F
+        rufe = []
+
+        def fake(url):
+            rufe.append(url)
+            return [{"id": 1}]          # kurze Seite → sofort Schluss
+
+        F.fetch_gamma_all(fetch=fake)
+        assert len(rufe) == 1, "läuft weiter, obwohl die Seite kurz war (Quota-Verschwendung)"
+
+    def test_duplikate_werden_entfernt(self):
+        import fetch_wm_poly_prices as F
+        assert len(F.fetch_gamma_all(fetch=lambda u: [{"id": 7}, {"id": 7}])) == 1
+
+    def test_url_enthaelt_offset(self):
+        import fetch_wm_poly_prices as F
+        assert "offset=" in F.GAMMA_URL_TMPL
