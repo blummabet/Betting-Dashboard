@@ -587,6 +587,49 @@ def check_opening_plausible(ctx):
 
 
 @integrity_check
+def check_closing_capture_alive(ctx):
+    """17.07.2026 — 🔴 CLV WAR FÜR LIGA + MLS WOCHENLANG TOT, ohne dass es jemand merkte.
+
+    Ursache: fetch_liga_odds übergab `hours_to_ko=None` an compute_closing → die Funktion fiel durch
+    alle Zweige und gab None zurück → `odds_closing` wurde NIE gesetzt → keine closing_lines →
+    **kein CLV**. Die WM nutzt einen eigenen Fetcher und war nie betroffen (100/104 Odds mit
+    Closing), deshalb sah der Status immer gesund aus.
+
+    Die Lehre: Alle bisherigen Guards prüften, ob DATEIEN richtig verdrahtet sind — keiner, ob am
+    Ende auch DATEN ankommen. Dieser Check fragt genau das: Gibt es bepreiste, angepfiffene Spiele,
+    aber KEIN einziges Closing? Dann ist die CLV-Kette tot, egal wie sauber die Pfade aussehen.
+    """
+    # ⚠️ NICHT über ctx.odds gehen: gespielte Spiele werden dort weggeprunt. Genau deshalb gibt es
+    # die persistente {ds}_closing_lines.json — sie überlebt das Pruning und IST die CLV-Quelle.
+    # (Mein erster Versuch fragte ctx.odds ab und fand deshalb nichts — derselbe Fehler, den dieser
+    #  Guard aufdecken soll.)
+    from datetime import datetime as _d, timedelta as _td
+
+    cl = _lazy(D.file("wm_closing_lines.json", "liga_closing_lines.json").name) or {}
+
+    # Wie viele Spiele wurden zuletzt gespielt? (Nur die zählen — vorher kann nichts erfasst sein.)
+    grenze = (ctx.now - _td(days=14)).date().isoformat()
+    kuerzlich = 0
+    for _g, fx in ctx.fixtures:
+        if (fx.get("result") or {}).get("status") in ("FT", "AET", "PEN") \
+                and str(fx.get("date", "")) >= grenze:
+            kuerzlich += 1
+
+    fails = []
+    if kuerzlich >= 3 and not cl:
+        fails.append(
+            f"{kuerzlich} Spiele in 14 Tagen gespielt, aber die Closing-Datei ist LEER → "
+            f"CLV-Kette tot. Prüfen: bekommt compute_closing ein hours_to_ko? Läuft capture-closing-*?")
+    elif kuerzlich >= 5 and len(cl) < kuerzlich * 0.4:
+        fails.append(f"nur {len(cl)} Closing-Einträge bei {kuerzlich} gespielten Spielen — "
+                     f"Capture greift nur sporadisch, CLV bleibt lückenhaft")
+    return _chk("closing_capture_alive", "Closing-Erfassung liefert Daten (CLV lebt)",
+                "warn", fails,
+                "fetch_liga_odds reicht kickoff → compute_closing; capture-closing-* läuft alle 15min "
+                "in den Anpfiff-Bändern.")
+
+
+@integrity_check
 def check_no_ghost_picks(ctx):
     """14.07.2026 — Picks, die aus einer PLATZHALTER-Quote geboren wurden.
 

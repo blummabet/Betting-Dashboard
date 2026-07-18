@@ -314,7 +314,24 @@ from odds_plausibility import plausible_1x2 as _plausible_1x2   # 13.07.2026: EI
 # (1.25 hier vs 1.30 in steam_engine): genau so laufen Schwellen still auseinander.
 
 
-def build_odds_entry(prices: dict, existing: dict, now_iso: str, hist: list | None = None) -> dict:
+def _hours_to_kickoff(kickoff, now_iso: str):
+    """Stunden bis Anpfiff (negativ = angepfiffen). None wenn unbekannt.
+
+    17.07.2026: nötig für compute_closing — siehe build_odds_entry.
+    """
+    if not kickoff:
+        return None
+    from datetime import datetime as _d
+    try:
+        ko = _d.fromisoformat(str(kickoff).replace("Z", "+00:00"))
+        now = _d.fromisoformat(str(now_iso).replace("Z", "+00:00"))
+        return (ko - now).total_seconds() / 3600.0
+    except (ValueError, TypeError):
+        return None
+
+
+def build_odds_entry(prices: dict, existing: dict, now_iso: str, hist: list | None = None,
+                     kickoff=None) -> dict:
     """Preise → gespeicherte Odds-Form (wie fetch_wm_odds.new_entry). Opening-Carry + Closing."""
     import fetch_wm_odds as W   # carry_soft_open + compute_closing wiederverwenden
     existing = existing or {}
@@ -413,7 +430,14 @@ def build_odds_entry(prices: dict, existing: dict, now_iso: str, hist: list | No
     if prices.get("ahLadder"):
         cur["ahLadder"] = prices["ahLadder"]
     try:
-        _closing = W.compute_closing(existing.get("odds_closing"), cur, None, now_iso)
+        # 17.07.2026 — 🔴 CLV WAR FÜR LIGA + MLS KOMPLETT TOT.
+        # Hier stand `None` als hours_to_ko. compute_closing braucht den Abstand zum Anpfiff, um zu
+        # entscheiden: pre-match im Fenster → provisional, nach Anpfiff → final. Mit None fällt es
+        # durch ALLE Zweige und gibt None zurück → `odds_closing` wurde NIE gesetzt → keine
+        # closing_lines → **kein CLV**. Belegt: WM 100/104 Odds mit Closing (84 final), Liga 0/48,
+        # MLS 0/30. Die WM nutzt einen eigenen Fetcher und war nie betroffen — deshalb fiel es nicht auf.
+        _closing = W.compute_closing(existing.get("odds_closing"), cur,
+                                     _hours_to_kickoff(kickoff, now_iso), now_iso)
         if _closing is not None:
             entry["odds_closing"] = _closing
     except Exception:
@@ -555,7 +579,8 @@ def main():
             if not prices.get("hw"):
                 continue
             key = f"{fx['home']}-{fx['away']}"
-            odds_out[key] = build_odds_entry(prices, odds_out.get(key), now_iso, hist=history.get(key))
+            odds_out[key] = build_odds_entry(prices, odds_out.get(key), now_iso,
+                                             hist=history.get(key), kickoff=fx.get("kickoff"))
             snaps_added += append_snapshot(history, key, prices, now_iso, post_ko=_kickoff_passed(fx.get("kickoff")))
             matched_keys.add(key)
             total += 1
