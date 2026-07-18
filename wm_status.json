@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-18T16:46:27Z",
+  "generatedAt": "2026-07-18T20:40:38Z",
   "windowDays": 2,
   "upcoming": 0,
   "signalsFired": [
@@ -74,9 +74,9 @@
     "📊 APIF-Predictions: 69 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 48 Teams",
-    "📉 Odds-History: 104 Fixtures, Ø 115.3 Snapshots",
+    "📉 Odds-History: 104 Fixtures, Ø 115.4 Snapshots",
     "💹 Poly-Preise: 2 Fixtures",
-    "💼 Poly-Balance: $162.88",
+    "💼 Poly-Balance: $99.92",
     "📅 Spielplan: Daten stimmen mit Polymarket überein"
   ],
   "checks": [
@@ -199,6 +199,15 @@
       "nFail": 0,
       "failures": [],
       "note": "fetch_liga_odds reicht kickoff → compute_closing; capture-closing-* läuft alle 15min in den Anpfiff-Bändern."
+    },
+    {
+      "id": "wallet_ledger_growing",
+      "label": "Wallet-Ledger wächst (Track-Record-Basis)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "build_poly_wallet_ledger.py läuft direkt nach jedem fetch_wm_poly_smartmoney.py."
     },
     {
       "id": "no_ghost_picks",
