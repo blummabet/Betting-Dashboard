@@ -29,16 +29,18 @@ const PW_C = { home:'#4cc2ff', away:'#ff5d5d', draw:'#f5c518', over:'#2dd47e', u
 // 12.07.2026 (Lucas: „im Whale-Wallets-Tab brauche ich oben eine Ligen-Auswahl, da wir danach
 // weitere Ligen hinzufügen"). NEUE LIGA HINZUFÜGEN = EINE ZEILE hier. Der Rest (Fetch, Flaggen/
 // Logos, Edge-Board, Charts) ist komplett generisch.
+// Reihenfolge = Tab-Reihenfolge. 18.07.2026: MLS zuerst (laufende Saison + Poly-Liquidität),
+// WM ans Ende — nach dem Finale am 19.07. ist sie Archiv, kein Einstieg.
 const PW_DATASETS = [
-  { id:'wm',   icon:'🏆', label:'WM 2026',
-    prices:'wm_poly_prices.json',   wallets:'wm_poly_wallets.json',
-    data:'wm2026-data.json',        hist:'wm2026-odds-history.json' },
   { id:'mls',  icon:'🇺🇸', label:'MLS',
     prices:'mls_poly_prices.json',  wallets:'mls_poly_wallets.json',
     data:'mls-data.json',           hist:'mls-odds-history.json' },
   { id:'liga', icon:'⚽', label:'Top-5',
     prices:'liga_poly_prices.json', wallets:'liga_poly_wallets.json',
     data:'liga-data.json',          hist:'liga-odds-history.json' },
+  { id:'wm',   icon:'🏆', label:'WM 2026',
+    prices:'wm_poly_prices.json',   wallets:'wm_poly_wallets.json',
+    data:'wm2026-data.json',        hist:'wm2026-odds-history.json' },
 ];
 
 // ⚠️ 12.07.2026 — BUG-FIX (Lucas: „im Whale-Tab erscheint nichts, wenn ich auf MLS klicke").
@@ -48,9 +50,13 @@ const PW_DATASETS = [
 // „TypeError: _pwDataset is not a function" → _pwRender starb → Panel blieb leer.
 // (WM lief, weil dort nie umgeschaltet werden musste.) Zustand heißt jetzt `_pwDsId` — nie wieder
 // gleich benennen wie eine Funktion. Guard: tests/test_poly_wallets_dataset_switch.js
-let _pwDsId = 'wm';
+// 18.07.2026 (Lucas): Einstieg ist MLS statt WM — die WM endet mit dem Finale am 19.07.
+// MLS ist der Datensatz mit laufenden Spielen UND echter Poly-Liquidität; Top-5 hat bewusst
+// kein Polymarket (siehe registry.py-Gates), wäre als Default also dauerhaft leer.
+const PW_DEFAULT_DS = 'mls';
+let _pwDsId = PW_DEFAULT_DS;
 function _pwDataset(){
-  return PW_DATASETS.some(d=>d.id===_pwDsId) ? _pwDsId : 'wm';
+  return PW_DATASETS.some(d=>d.id===_pwDsId) ? _pwDsId : PW_DEFAULT_DS;
 }
 function _pwFiles(){
   const ds=_pwDataset();

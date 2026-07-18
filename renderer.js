@@ -1891,10 +1891,16 @@ function _renderClvAggregation() {
 }
 
 // (26.06.2026, Lucas: Sharp Radar Liga-Toggle) — Modul-State: welcher Datensatz
-// wird im Sharp-Radar-Tab gezeigt. 'intl' = bestehendes WM-Verhalten (Default,
-// liest window.WM2026_DATA/_ODDS_HISTORY), 'liga' = derselbe Radar auf Liga-Daten
-// (liga-data.json + liga-odds-history.json, identisches Format).
-let _sharpDataset = 'intl';
+// wird im Sharp-Radar-Tab gezeigt. 'intl' = WM (window.WM2026_DATA/_ODDS_HISTORY),
+// 'liga'/'mls' = derselbe Radar auf Liga-/MLS-Daten (identisches Format).
+//
+// 18.07.2026 (Lucas): Einstieg ist jetzt LIGA statt WM. Die WM endet mit dem Finale am
+// 19.07. — danach wäre der Default eine Fläche ohne kommende Spiele, und der aktive
+// Datensatz läge immer einen Klick entfernt. WM bleibt über den Toggle erreichbar.
+// ⚠️ Liga-Daten werden LAZY geladen: der Default-Wechsel allein reicht nicht, der
+// Erstaufruf muss den Ladevorgang selbst anstoßen (siehe renderSharpRadar) — sonst
+// hängt der Tab dauerhaft im „kommt mit dem nächsten Liga-Lauf"-Zustand fest.
+let _sharpDataset = 'liga';
 
 // (26.06.2026, Lucas: Sharp Radar Liga-Toggle) — Liga-Daten EINMALIG lazy laden
 // und in window.LIGA_DATA / window.LIGA_ODDS_HISTORY cachen. Danach re-render.
@@ -1955,8 +1961,10 @@ function _sharpRenderToggleHtml() {
   // 13.07.2026 (Lucas: „der Sharp Radar hat noch kein MLS, nur Liga"). MLS war zwar drin —
   // aber in den Liga-Toggle GEMERGT und damit unsichtbar. Eigener Button. Neue Liga später:
   // Eintrag in SHARP_SUBSETS + ein btn(...) hier.
+  // 18.07.2026: Reihenfolge folgt dem Einstieg — Top-5 zuerst, WM ans Ende (nach dem Finale
+  // am 19.07. Archiv). Der Datensatz mit laufenden Spielen steht vorn.
   return `<div id="sharp_datasetToggle" style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">`
-    + btn('intl', '🌍 International') + btn('liga', '⚽ Top-5') + btn('mls', '🇺🇸 MLS')
+    + btn('liga', '⚽ Top-5') + btn('mls', '🇺🇸 MLS') + btn('intl', '🌍 International')
     + `</div>`;
 }
 
@@ -2117,6 +2125,13 @@ function renderSharpRadar() {
   // Freundlicher Hinweis statt leerem/kaputtem Radar. liga-odds-history.json kommt
   // erst mit dem nächsten Liga-Lauf; liga-data.json ohne History ergibt keine Moves.
   if (_isLiga) {
+    // 18.07.2026 — Liga ist jetzt der EINSTIEG, nicht mehr nur ein Toggle-Ziel. Vorher stieß
+    // nur _sharpSwitchDataset() den Lazy-Load an; beim Erstaufruf gab es keinen Switch, also
+    // wären die Globals leer geblieben und der Tab hätte für immer „kommt mit dem nächsten
+    // Liga-Lauf" gezeigt, obwohl die Daten längst da sind. Deshalb hier selbst anstoßen.
+    if (!window.LIGA_DATA || !window.LIGA_ODDS_HISTORY) {
+      _loadLigaSharpData();     // re-rendert selbst, sobald geladen (setzt _sharpLigaLoading)
+    }
     const _histKeys = _hist && typeof _hist === 'object'
       ? Object.keys(_hist).filter(k => k !== '_meta') : [];
     if (_sharpLigaLoading) {

@@ -32,6 +32,18 @@ function loadFull() {
   return window;
 }
 
+// 18.07.2026 — Der Sharp-Radar-Einstieg ist jetzt 'liga' (WM endet mit dem Finale am 19.07.).
+// Vorher verließen sich die WM-Tests still auf den Default 'intl'. Das war ohnehin schlechte
+// Hygiene: ein Test, der auf einem Default beruht, den er nicht nennt, bricht beim nächsten
+// Produktentscheid — genau das ist hier passiert. Datensatz wird jetzt überall explizit gesetzt.
+function alsWm(w) {
+  // _sharpSetDataset rendert direkt mit — dabei läuft der Legacy-Liga-Loop über LEAGUES.
+  // In Tests, die nur ein Panel prüfen, ist das nicht gesetzt → ReferenceError. Leer vorbelegen.
+  if (typeof w.LEAGUES === 'undefined') w.LEAGUES = {};
+  w._sharpSetDataset('intl');
+  return w;
+}
+
 test('Renderer lädt + exportiert die Render-Funktionen global', () => {
   const w = loadRenderer();
   assert.equal(typeof w._renderBayesianWeights, 'function');
@@ -41,6 +53,7 @@ test('Renderer lädt + exportiert die Render-Funktionen global', () => {
 
 test('Bayesian-Panel (WM): zeigt WM-Signale aus window.SIGNAL_WEIGHTS', () => {
   const w = loadRenderer();
+  alsWm(w);
   w.SIGNAL_WEIGHTS = {
     travel_burden: { weight: 0.94, n_observations: 50, wins_when_triggered: 23 },
     form_trend: { weight: 1.28, n_observations: 48, wins_when_triggered: 31 },
@@ -66,6 +79,7 @@ test('Bayesian-Panel (Liga): nur Liga-Signale, KEINE WM-only-Signale', () => {
 test('Sharp Radar: In-Play-Snapshots (nach Anpfiff) verfälschen die Mover NICHT', () => {
   const w = loadFull();
   w.LEAGUES = {};
+  alsWm(w);
   const today = new Date().toISOString().slice(0, 10);
   const ko = new Date(Date.now() - 2 * 3600000);                     // Anpfiff vor 2h (gespielt)
   const iso = (ms) => new Date(ms).toISOString();
@@ -220,6 +234,7 @@ test('Sharp Radar: Platzhalter-Quoten erzeugen keinen Geister-Mover', () => {
 
 test('CLV-Scoreboard: Ø CLV + %beat + Abdeckung + Markt-Tabelle', () => {
   const w = loadRenderer();
+  alsWm(w);
   w.WM_CLV_SUMMARY = {
     overall: { n: 10, avgClvPP: 1.5, pctBeatClose: 60, coverage: { withClosing: 10, resolved: 12, pct: 83.3 } },
     byVerdict: { BET: { n: 6, avgClvPP: 2.5, pctBeatClose: 70 }, 'ABWÄGEN': { n: 4, avgClvPP: -0.5, pctBeatClose: 45 } },
@@ -240,6 +255,7 @@ test('CLV-Scoreboard: Ø CLV + %beat + Abdeckung + Markt-Tabelle', () => {
 
 test('CLV-Scoreboard: keine aufgelösten Picks → freundlicher Hinweis', () => {
   const w = loadRenderer();
+  alsWm(w);
   w.WM_CLV_SUMMARY = { overall: { n: 0, coverage: { resolved: 0, withClosing: 0, pct: null } }, byMarket: {}, byLeague: {}, byTime: [] };
   const html = w._renderClvScoreboard();
   assert.match(html, /Noch keine aufgelösten Steam-Picks/);
@@ -247,6 +263,7 @@ test('CLV-Scoreboard: keine aufgelösten Picks → freundlicher Hinweis', () => 
 
 test('Sharp Radar: Mover-Hero (Top-5) + Snapshot-KPI rendern (abgeschaut bei SteamWatch)', () => {
   const w = loadFull();
+  alsWm(w);
   w.LEAGUES = {};                                  // Legacy-Liga-Loop leer halten
   const near = new Date(Date.now() + 3 * 86400000).toISOString().slice(0, 10);
   const tsOld = new Date(Date.now() - 2 * 86400000).toISOString();
@@ -271,6 +288,7 @@ test('Sharp Radar: Mover-Hero (Top-5) + Snapshot-KPI rendern (abgeschaut bei Ste
 
 test('Mover-Hero: Liga-Logos (<img>) werden sauber gestrippt, kein kaputter Link/Attr', () => {
   const w = loadFull();
+  alsWm(w);
   w.LEAGUES = {};
   const near = new Date(Date.now() + 3 * 86400000).toISOString().slice(0, 10);
   const tsOld = new Date(Date.now() - 2 * 86400000).toISOString();
@@ -310,4 +328,45 @@ test('Liga-Linien: nur nächste ~3 Wochen, ferne Spiele (2027) gefiltert', () =>
   const html = w._renderLigaCurrentLinesHtml(data);
   assert.match(html, /Alpha – Beta/, 'Spiel in 3 Tagen muss erscheinen');
   assert.ok(!/Gamma – Delta/.test(html), 'Spiel im April 2027 muss aus dem 3-Wochen-Fenster fallen');
+});
+
+// ── Einstiegs-Datensätze (18.07.2026, Lucas: „Sharp Radar Einstieg auf Liga, Wallets auf MLS") ──
+// Die WM endet mit dem Finale am 19.07. Ein Default, der auf eine Fläche ohne kommende Spiele
+// zeigt, ist ab dann schlicht falsch. Festgehalten, weil ein Default leise zurückkippt: er steht
+// an EINER Stelle, niemand merkt es beim Lesen, und auffallen würde es erst im Betrieb.
+test('Sharp Radar startet auf Top-5, nicht mehr auf der WM', () => {
+  const w = loadRenderer();
+  w.LEAGUES = {};
+  assert.match(w._sharpRenderToggleHtml(), /box-shadow[^"]*inset[^"]*"[^>]*>⚽ Top-5/,
+    'aktiver Toggle-Button ist nicht Top-5');
+});
+
+test('Sharp Radar: Liga-Einstieg stößt den Lazy-Load selbst an', async () => {
+  // Vorher lud NUR _sharpSwitchDataset() die Liga-Daten. Beim Erstaufruf gibt es keinen Switch —
+  // ohne eigenen Anstoß hinge der Tab dauerhaft auf „kommt mit dem nächsten Liga-Lauf", obwohl
+  // die Daten längst da sind. Genau die Bug-Klasse, die MLS schon einmal hatte.
+  const dom = new JSDOM('<!DOCTYPE html><body><div id="mainContent"></div></body>', {
+    url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true,
+  });
+  const { window: w } = dom;
+  const geholt = [];
+  w.fetch = (url) => {
+    geholt.push(String(url).split('?')[0]);
+    return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+  };
+  w.eval(readFileSync(PICK_ENGINE, 'utf8'));
+  w.eval(readFileSync(RENDERER, 'utf8'));
+  w.LEAGUES = {};
+  w.renderSharpRadar();                       // Erstaufruf, KEIN Switch
+  await new Promise(r => setTimeout(r, 0));
+  assert.ok(geholt.includes('liga-data.json'),
+    `Liga-Daten werden beim Einstieg nicht geladen (geholt: ${geholt.join(', ') || 'nichts'})`);
+});
+
+test('Poly-Wallets startet auf MLS (Top-5 hat kein Polymarket)', () => {
+  const src = readFileSync(new URL('../../poly-wallets.js', import.meta.url), 'utf8');
+  assert.match(src, /PW_DEFAULT_DS\s*=\s*'mls'/, 'Wallet-Tab-Default ist nicht MLS');
+  // Reihenfolge = Tab-Reihenfolge: der Datensatz mit laufender Saison steht vorn.
+  const ids = [...src.matchAll(/\{\s*id:'(\w+)'/g)].map(m => m[1]);
+  assert.deepEqual(ids.slice(0, 3), ['mls', 'liga', 'wm'], 'Tab-Reihenfolge stimmt nicht');
 });
