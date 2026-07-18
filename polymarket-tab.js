@@ -333,6 +333,60 @@ function _getAvailableDates() {
   });
 }
 
+// ── TAGES-FILTER als Chips (18.07.2026) ─────────────────────────────────────────
+// Vorher ein <select>, das genau EINEN Tag zeigte — man sah nie, ob an anderen Tagen
+// überhaupt Picks liegen, und musste blind durchklicken. Jetzt: eine Chip-Reihe mit
+// Pick-Anzahl pro Tag plus „Alle" (dateStr='' → beide Extraktoren überspringen den
+// Datumsfilter). Tage ohne Picks bleiben sichtbar, aber gedimmt.
+function _polyPickCountForDate(d) {
+  try {
+    return getWmPolyPicks(d).length + getPolyPicks(d).length;
+  } catch (_e) { return 0; }
+}
+
+function _renderPolyDateChips(activeDate) {
+  // _getAvailableDates() speist sich aus LEAGUES/_polyLookup — WM-Picks kommen aus einer
+  // eigenen Quelle und tauchen dort nicht auf. Ohne Union verschwindet ein Tag aus der Leiste,
+  // obwohl Picks darauf liegen: der Pick wäre unerreichbar. Deshalb Union über die Pick-Tage.
+  const set = new Set(_getAvailableDates());
+  for (const p of (getWmPolyPicks('') || [])) {
+    const [y, m, d] = String(p.date || '').split('-');
+    if (y && m && d) set.add(`${d}.${m}.${y}`);
+    else if (p.date && p.date.includes('.')) set.add(p.date);
+  }
+  const dates = [...set].sort((a, b) => {
+    const [ad, am, ay] = a.split('.'), [bd, bm, by] = b.split('.');
+    return new Date(`${ay}-${am}-${ad}`) - new Date(`${by}-${bm}-${bd}`);
+  }).slice(0, WM_POLY_DAYS_AHEAD);
+  if (!dates.length) return '';
+
+  const weekdays = ['So','Mo','Di','Mi','Do','Fr','Sa'];
+  const chip = (val, label, count, isActive) => {
+    const dim = count === 0 && !isActive;
+    const bg     = isActive ? 'rgba(167,139,250,.18)' : 'transparent';
+    const border = isActive ? '#a78bfa' : '#30363d';
+    const col    = isActive ? '#a78bfa' : (dim ? '#6e7681' : '#c9d1d9');
+    const badge  = count > 0
+      ? `<span style="margin-left:5px;background:${isActive ? '#a78bfa' : '#30363d'};color:${isActive ? '#0d1117' : '#8b949e'};border-radius:7px;padding:0 5px;font-size:10px;font-weight:800">${count}</span>`
+      : '';
+    return `<button onclick="polyChangeDate('${val}')" data-polydate="${val}"
+      style="background:${bg};border:1px solid ${border};border-radius:8px;color:${col};
+             font-size:11px;font-weight:700;padding:6px 10px;cursor:pointer;font-family:inherit;
+             transition:border-color .15s,color .15s;white-space:nowrap"
+      onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='${border}'"
+      >${label}${badge}</button>`;
+  };
+
+  const total = _polyPickCountForDate('');
+  const out = [chip('', 'Alle', total, !activeDate)];
+  for (const d of dates) {
+    const [dd, mm, yy] = d.split('.');
+    const wd = weekdays[new Date(`${yy}-${mm}-${dd}`).getDay()];
+    out.push(chip(d, `${wd} ${dd}.${mm}.`, _polyPickCountForDate(d), d === activeDate));
+  }
+  return `<div id="polyDateChips" style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">${out.join('')}</div>`;
+}
+
 function polyChangeDate(dateStr) {
   _polyState.dateStr  = dateStr;
   // Merge club league picks + WM 2026 picks
@@ -343,9 +397,13 @@ function polyChangeDate(dateStr) {
   _polyState.selected = new Set(_polyState.picks.map(p => p.id));
   _polyRefreshStickyBar();
 
+  // Aktiven Chip umsetzen (der Chip-Block rendert sich komplett neu — Zähler inklusive)
+  const chips = document.getElementById('polyDateChips');
+  if (chips) chips.outerHTML = _renderPolyDateChips(dateStr);
+
   // Update subtitle
   const sub = document.getElementById('polyDateSub');
-  if (sub) sub.textContent = `${dateStr} · ${_polyState.picks.length} eligible pick${_polyState.picks.length !== 1 ? 's' : ''}`;
+  if (sub) sub.textContent = `${dateStr || 'Alle Tage'} · ${_polyState.picks.length} eligible pick${_polyState.picks.length !== 1 ? 's' : ''}`;
 
   // Update status label
   const status = document.getElementById('polyPriceStatus');
@@ -365,7 +423,7 @@ function getPolyPicks(dateStr) {
   for (const [lk, lg] of Object.entries(LEAGUES)) {
     if (!POLY_LEAGUES.has(lk)) continue;
     for (const fx of (lg.fixtures || [])) {
-      if (fx.date !== dateStr) continue;
+      if (dateStr && fx.date !== dateStr) continue;   // 18.07.: null = alle Tage
 
       const rawOdds = (typeof findOdds === 'function')
         ? findOdds(fx.leagueKey || lk, fx.home, fx.away)
@@ -464,8 +522,30 @@ async function _loadWmDataAsync() {
 // Steam-BET hat am Spieltag edgePP ~0 BY DESIGN — der Wert steckt in der Signal-
 // Bestätigung, nicht im Preis. Betting-Tab zeigt jetzt ALLE verdict==BET (wie die Cards).
 // (Der Auto-Trader/Trading-Cockpit ist davon UNBERÜHRT — der bleibt voll edge-getrieben.)
-const WM_POLY_BET_ONLY      = true;     // nur verdict=BET, ABWÄGEN raus
-const WM_POLY_DAYS_AHEAD    = 7;        // nicht nur heute — Tag-für-Tag-Filter macht Lucas mit Datums-Picker
+// 18.07.2026 (Lucas: „kann bei BET bleiben und ABWÄGEN mit hoher Conviction").
+// Vorher: NUR verdict=BET. Bei dünnen Märkten (MLS) entstehen aber oft ausschließlich
+// ABWÄGEN-Picks — der Tab zeigte dann nichts, obwohl Picks da waren.
+// Jetzt: BET immer, ABWÄGEN nur ab hoher Conviction. Schwach begründete ABWÄGEN bleiben draußen
+// (die gehören auf die Card zum Beobachten, nicht ins Wett-Interface). NOBET/SKIP nie.
+//
+// SCHWELLE 5 — empirisch, nicht aus verdict_thresholds abgeleitet. Naheliegend wäre die
+// „abwaegen"-Schwelle 6 aus cocobet_config gewesen; die wäre aber wirkungslos: `verdict` kommt
+// aus computeVerdict() (Modell/Markt/Story), NICHT aus dem Conviction-Score — und über alle
+// 248 gestempelten Picks (WM+Liga+MLS) erreicht KEIN einziges ABWÄGEN jemals 6.
+// Verteilung ABWÄGEN: 0:7 1:17 2:16 3:42 4:50 5:34 — Maximum 5. Mit 6 hätte der Filter exakt
+// dasselbe getan wie das alte BET-only und der Tab wäre weiter leer geblieben.
+// 5 = oberstes Fünftel der ABWÄGEN-Picks (34/166 ≈ 20 %). Wenn die Verteilung wandert, hier
+// nachziehen — der Test `poly-betting-filter` schlägt an, wenn die Schwelle wieder zum No-Op wird.
+const WM_POLY_BET_ONLY          = false;
+const WM_POLY_ABWAEGEN_MIN_CONV = 5;
+const WM_POLY_DAYS_AHEAD        = 14;   // Sichtfenster für die Tages-Chips
+
+// Gehört der Pick ins manuelle Wett-Interface?
+function _polyPickEligible(verdict, conviction) {
+  if (verdict === 'BET') return true;
+  if (verdict !== 'ABWÄGEN') return false;
+  return typeof conviction === 'number' && conviction >= WM_POLY_ABWAEGEN_MIN_CONV;
+}
 
 // Anpfiff bereits vorbei?  Primär: echte UTC-Kickoff-Zeit fx.kickoff (von
 // Polymarket-Gamma, z.B. "2026-06-12T02:00:00Z"). Fallback: fx.date + fx.time.
@@ -518,7 +598,8 @@ function _extractWmPicksForDate(wm, dateStr) {
     if (!g) continue;
     const fx = (g.fixtures || []).find(f => f.home === hId && f.away === aId && f.matchday === md);
     // fx.date ist ISO YYYY-MM-DD — gegen konvertiertes dateStrIso vergleichen
-    if (!fx || fx.date !== dateStrIso) continue;
+    if (!fx) continue;
+    if (dateStrIso && fx.date !== dateStrIso) continue;   // 18.07.: null = alle Tage
     // FIX 11.06.2026: Spiele mit bereits vergangenem Anpfiff NICHT mehr als Wette
     // anbieten. Betrifft v.a. die 00:00-Platzhalter-Zeiten (8 Fixtures): ein Spiel
     // mit Anpfiff "heute 00:00" ist schon vorbei/läuft → darf nicht als frische
@@ -539,8 +620,8 @@ function _extractWmPicksForDate(wm, dateStr) {
       const edge = parseFloat(p.edgePP) || 0;
       const verdict = p.verdict;
 
-      // Filter: nur verdict=BET (Card-Edge-Floor entfernt 17.06.2026 — siehe oben).
-      if (WM_POLY_BET_ONLY && verdict !== 'BET') continue;
+      // BET immer, ABWÄGEN nur mit hoher Conviction (siehe _polyPickEligible).
+      if (!_polyPickEligible(verdict, p.convictionScore)) continue;
       // FIX 1 (09.06.2026): synthetische saferAlt-Picks sind Card-Insurance,
       // keine Trade-Kandidaten — werden im Polymarket-Tab nicht gelistet.
       if (p.synthetic) continue;
@@ -632,8 +713,8 @@ function getWmPolyPicks(dateStr) {
     const entryDateFmt = (y && m && d) ? `${d}.${m}.${y}` : null;
     if (dateStr && entryDateFmt && entryDateFmt !== dateStr) continue;
 
-    // Only BET and ABWÄGEN
-    if (!['BET', 'ABWÄGEN'].includes(entry.verdict)) continue;
+    // BET immer, ABWÄGEN nur mit hoher Conviction (siehe _polyPickEligible).
+    if (!_polyPickEligible(entry.verdict, entry.convictionScore)) continue;
     // FIX 1 (09.06.2026): synthetische saferAlt-Picks raus — Insurance, kein Trade
     if (entry.synthetic) continue;
 
@@ -2984,7 +3065,13 @@ function renderPolyPickCards() {
     return `<div style="grid-column:1/-1;text-align:center;padding:60px 24px;color:#8b949e">
       <div style="font-size:40px;margin-bottom:14px">🟣</div>
       <div style="font-size:16px;font-weight:600;margin-bottom:6px;color:#e6edf3">Keine Picks verfügbar</div>
-      <div style="font-size:13px;line-height:1.6">Für <strong>${_polyState.dateStr}</strong> gibt es keine Picks.</div>
+      <div style="font-size:13px;line-height:1.6">${_polyState.dateStr
+        ? `Für <strong>${_polyState.dateStr}</strong> gibt es keine Picks.`
+        : `Aktuell steht kein Pick zum Wetten an.`}</div>
+      <div style="font-size:12px;line-height:1.6;color:#6e7681;margin-top:8px">
+        Hier landen Picks mit Verdict <strong>BET</strong> sowie <strong>ABWÄGEN ab Conviction ${WM_POLY_ABWAEGEN_MIN_CONV}</strong>.
+        Schwächere ABWÄGEN-Picks stehen bewusst nur auf den Cards.
+      </div>
     </div>`;
   }
 
@@ -4470,7 +4557,7 @@ function initPolymarket() {
   // This prevents a two-phase render (stale picks → live picks) that causes
   // a jarring flash and may show wrong picks (e.g. ITA instead of ENG).
   if (!window._oddsLoaded) {
-    _polyState.dateStr = _todayStr();     // remember chosen date for deferred render
+    _polyState.dateStr = '';              // '' = alle Tage (Default seit 18.07.2026)
     window._pendingPolyInit = true;       // signal: call initPolymarket() when odds ready
     panel.innerHTML = `
       <div style="text-align:center;padding:80px 24px;color:#8b949e">
@@ -4484,7 +4571,10 @@ function initPolymarket() {
   // Proactively free localStorage quota before any saves
   _trimLocalStorageQuota();
 
-  const dateStr = _polyState.dateStr || _todayStr();
+  // 18.07.2026: Default ist ALLE Tage ('') statt heute. Der Tab zeigte sonst an einem
+  // spielfreien Tag „keine Picks", obwohl für übermorgen welche dastanden. null = noch
+  // nie gewählt → '' ; ein bewusst gewähltes '' bleibt '' (deshalb kein `||`).
+  const dateStr = _polyState.dateStr == null ? '' : _polyState.dateStr;
   _polyState.dateStr  = dateStr;
   _polyState.picks    = getPolyPicks(dateStr);
   _polyState.prices   = {};
@@ -4525,21 +4615,10 @@ function initPolymarket() {
     <div style="display:flex;align-items:flex-start;gap:12px;margin-bottom:20px;flex-wrap:wrap">
       <div>
         <h2 style="margin:0;font-size:22px;font-weight:900;color:#a78bfa;letter-spacing:-.01em">🟣 Polymarket</h2>
-        <div id="polyDateSub" style="font-size:12px;color:#8b949e;margin-top:3px">${dateStr} &nbsp;·&nbsp; ${n} eligible pick${n !== 1 ? 's' : ''}</div>
+        <div id="polyDateSub" style="font-size:12px;color:#8b949e;margin-top:3px">${dateStr || 'Alle Tage'} &nbsp;·&nbsp; ${n} eligible pick${n !== 1 ? 's' : ''}</div>
       </div>
       <div style="margin-left:auto;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
-        ${(() => {
-          const dates = _getAvailableDates();
-          const weekdays = ['So','Mo','Di','Mi','Do','Fr','Sa'];
-          const opts = dates.map(d => {
-            const [dd,mm,yy] = d.split('.');
-            const wd = weekdays[new Date(`${yy}-${mm}-${dd}`).getDay()];
-            return `<option value="${d}" ${d === dateStr ? 'selected' : ''}>${wd} ${dd}.${mm}.</option>`;
-          }).join('');
-          return dates.length > 1
-            ? `<select onchange="polyChangeDate(this.value)" style="background:#161b22;border:1px solid #30363d;border-radius:8px;color:#e6edf3;font-size:12px;padding:7px 10px;cursor:pointer;font-family:inherit;outline:none">${opts}</select>`
-            : '';
-        })()}
+        ${_renderPolyDateChips(dateStr)}
         <button onclick="polySelectAll()"  style="background:none;border:1px solid #30363d;border-radius:8px;color:#8b949e;font-size:11px;font-weight:600;padding:7px 13px;cursor:pointer;font-family:inherit;transition:border-color .15s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#30363d'">☑️ Alle</button>
         <button onclick="polySelectNone()" style="background:none;border:1px solid #30363d;border-radius:8px;color:#8b949e;font-size:11px;font-weight:600;padding:7px 13px;cursor:pointer;font-family:inherit;transition:border-color .15s" onmouseover="this.style.borderColor='#a78bfa'" onmouseout="this.style.borderColor='#30363d'">⬜ Keine</button>
         <button onclick="initPolymarket()" style="background:none;border:1px solid #30363d;border-radius:8px;color:#8b949e;font-size:11px;font-weight:600;padding:7px 13px;cursor:pointer;font-family:inherit;transition:border-color .15s" onmouseover="this.style.borderColor='#00d4a1'" onmouseout="this.style.borderColor='#30363d'">🔄 Refresh</button>
