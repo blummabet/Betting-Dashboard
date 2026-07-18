@@ -220,6 +220,21 @@ def market_drift(odds: dict, min_samples: int = 5) -> dict:
         if not isinstance(o, dict):
             continue
         op = o.get("odds_open") or {}
+        # 17.07.2026 (Lucas: „MLS-Cards morgens da, dann weg — Radar hat Moves") — die
+        # eigentliche Ursache. Vier MLS-Openings waren noch Platzhalter (1.04/1.01/1.04) → daraus
+        # entstanden 67–81pp „Moves", die den markt-weiten Median-Drift von echten 1.2 auf 1.8pp
+        # hochzogen. Der Drift wird in detect_steam vom Move abgezogen → legitime 4.5pp-Steam-Picks
+        # fielen dadurch unter die 3pp-Schwelle → NOBET → Cards verschwanden. Ein einziges Fixture
+        # mit implausiblem 1X2-Opening vergiftet also die Pick-Auswahl ALLER Spiele.
+        # Fix: Ein Fixture zählt nur in den Drift, wenn SEIN 1X2 an BEIDEN Enden ein echter Markt
+        # ist — Opening UND aktuell. Bei den fernen MLS-Spieltagen war der AKTUELLE Wert noch ein
+        # Platzhalter (aw=1.04, während das Opening plausibel 4.75 war) → 75pp Geister-Move.
+        oh, od, oa = op.get("hw"), op.get("dr"), op.get("aw")
+        ch, cd, ca = o.get("hw"), o.get("dr"), o.get("aw")
+        if oh and od and oa and not _plausible_1x2(oh, od, oa):
+            continue   # Platzhalter-Opening
+        if ch and cd and ca and not _plausible_1x2(ch, cd, ca):
+            continue   # Platzhalter-aktuell (fernes Spiel, noch nicht bepreist)
         for s in _DRIFT_SIDES:
             ci, oi = _imp(o.get(s)), _imp(op.get(s))
             if ci is not None and oi is not None:

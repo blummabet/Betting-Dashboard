@@ -1379,11 +1379,25 @@ def _carry_nobet(existing_pk, new_picks, odds_snap, now_iso):
         nb["verdict"] = "NOBET"
         nb["result"]  = None
         nb.pop("trackingExcluded", None)
-        # Grund ableiten: aktuelle Quote (über _reverser_key-Mapping) vs Original
+        # Grund ableiten: aktuelle Quote (über _reverser_key-Mapping) vs Original.
+        #
+        # 17.07.2026 (Lucas: „MLS-Cards morgens da, dann weg — Radar hat Moves") — BUCHKONSISTENZ.
+        # BUG: der Pick wurde zum entryBook-Preis gegeben (bei 1X2/O/U der SOFTBOOK), aber die
+        # „aktuelle Quote" wurde immer aus dem Pinnacle-Feld (odds_snap[key]) genommen. Pinnacle und
+        # Softbook weichen bauartbedingt IMMER ab → ein Softbook-Pick wurde gegen die falsche Linie
+        # geprüft und fälschlich zu NOBET. Belegt: NE–Toronto, Einstieg Soft 3.6, Softbook bietet
+        # weiter 3.5 (Pick gültig!), aber Pinnacle 3.62 löste NOBET aus → Card verschwand.
+        # Jetzt gegen DIESELBE Buchquelle vergleichen wie der Einstieg. AH bleibt Pinnacle
+        # (dort ist die Pick-Quote Pinnacle), 1X2/O/U-Soft-Picks gegen public_*.
         cur = None
         try:
             k = _reverser_key(m)
-            v = (odds_snap or {}).get(k) if k else None
+            v = None
+            if k:
+                if old.get("entryBook") == "soft" and (odds_snap or {}).get(f"public_{k}") is not None:
+                    v = odds_snap.get(f"public_{k}")     # Pick war Softbook → Softbook-jetzt
+                else:
+                    v = odds_snap.get(k)                 # Pinnacle (AH / kein Soft-Feld)
             cur = float(v) if isinstance(v, (int, float)) else None
         except Exception:
             cur = None
