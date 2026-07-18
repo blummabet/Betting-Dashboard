@@ -50,7 +50,7 @@
       "label": "Pinnacle-1X2 vollständig + plausibel",
       "severity": "warn",
       "ok": false,
-      "nFail": 15,
+      "nFail": 16,
       "failures": [
         "1598-9569: 1X2 unvollständig hw=None dr=None aw=None",
         "1604-1607: 1X2 unvollständig hw=None dr=None aw=None",
@@ -66,7 +66,8 @@
         "1617-1606: 1X2 unvollständig hw=None dr=None aw=None",
         "1613-2242: 1X2 unvollständig hw=None dr=None aw=None",
         "1614-9568: 1X2 unvollständig hw=None dr=None aw=None",
-        "1602-18310: 1X2 unvollständig hw=None dr=None aw=None"
+        "1602-18310: 1X2 unvollständig hw=None dr=None aw=None",
+        "1607-1603: 1X2 unvollständig hw=None dr=None aw=None"
       ],
       "note": "Quelle für Modell-Baseline + Edge."
     },
@@ -89,6 +90,15 @@
         "5 Spiele in 14 Tagen gespielt, aber die Closing-Datei ist LEER → CLV-Kette tot. Prüfen: bekommt compute_closing ein hours_to_ko? Läuft capture-closing-*?"
       ],
       "note": "fetch_liga_odds reicht kickoff → compute_closing; capture-closing-* läuft alle 15min in den Anpfiff-Bändern."
+    },
+    {
+      "id": "wallet_ledger_growing",
+      "label": "Wallet-Ledger wächst (Track-Record-Basis)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "build_poly_wallet_ledger.py läuft direkt nach jedem fetch_wm_poly_smartmoney.py."
     },
     {
       "id": "no_ghost_picks",
@@ -162,9 +172,35 @@
       "id": "liga_odds_round_sane",
       "label": "Liga-Odds nur auf nahen Spieltagen",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 33,
+      "failures": [
+        "1599-1602: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1609-1601: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1613-1604: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "2242-1603: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "9568-1607: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "18310-1608: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1611-1612: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "16489-1595: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "9569-1614: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1610-25484: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1596-1598: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1616-1606: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1617-1597: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1600-1615: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1605-20787: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1598-9569: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1604-1607: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1616-1611: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "20787-1610: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1615-1601: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1600-16489: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1612-1603: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1609-1608: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "25484-1597: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1599-1595: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?"
+      ],
       "note": "fetch_liga_odds.pick_event_for_fixture trennt Hin/Rück per Datum."
     },
     {
@@ -262,7 +298,7 @@
       "label": "Public-Konsens (Soft-Books) vorhanden",
       "severity": "warn",
       "ok": false,
-      "nFail": 15,
+      "nFail": 16,
       "failures": [
         "1598-9569: kein public_hw",
         "1604-1607: kein public_hw",
@@ -278,7 +314,8 @@
         "1617-1606: kein public_hw",
         "1613-2242: kein public_hw",
         "1614-9568: kein public_hw",
-        "1602-18310: kein public_hw"
+        "1602-18310: kein public_hw",
+        "1607-1603: kein public_hw"
       ],
       "note": "Ohne public_* feuert public_static_bias nicht."
     },
@@ -398,6 +435,15 @@
       "note": "freshness_leg-Signal muss bei confirm/reverse feuern, damit der Bayesian-Loop das Gewicht lernt. Fehlt es → Signal-Engine lief vor dem Frische-Block oder Signal nicht registriert."
     },
     {
+      "id": "smartmoney_sane",
+      "label": "Smart-Money-Daten kohärent",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Shares müssen ~1 summieren + totalUsd da. Sonst läuft das smart_money-Signal auf Müll. Quelle: fetch_wm_poly_smartmoney.py (data-api, Mac-Runner)."
+    },
+    {
       "id": "btts_not_templated_traded",
       "label": "BTTS-Platzhalter nicht handelbar",
       "severity": "warn",
@@ -419,9 +465,11 @@
       "id": "played_games_resolved",
       "label": "Gespielte Spiele haben Endstand",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "1607-1603: Anpfiff 2026-07-17T00:30 vorbei, aber Ergebnis-Status 'leer' — Result-Fetch-Lücke?"
+      ],
       "note": "fetch_wm_match_results muss FT-Endstände schreiben. Fehlt's > 5h nach Anpfiff: Team-Matching (Orientierung/Team-ID) oder API-Football-Lag prüfen."
     },
     {
@@ -441,6 +489,15 @@
       "nFail": 0,
       "failures": [],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
+    },
+    {
+      "id": "smartmoney_cluster_sane",
+      "label": "Smart-Money-Cluster kohärent",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "cluster ∈ ℕ₀, ≤ holders; buy/sell ≥ 0; netFlow = buy − sell. Sonst rechnet der Cluster-Boost/Exit-Penalty im smart_money-Signal auf Müll."
     },
     {
       "id": "card_only_not_in_trade",
@@ -533,6 +590,6 @@
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 6,
-  "generatedAt": "2026-07-18T08:52:44.079291+00:00"
+  "nFail": 8,
+  "generatedAt": "2026-07-18T14:51:16.836257+00:00"
 }

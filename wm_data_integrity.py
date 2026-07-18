@@ -630,6 +630,60 @@ def check_closing_capture_alive(ctx):
 
 
 @integrity_check
+def check_wallet_ledger_growing(ctx):
+    """18.07.2026 — Der Wallet-Ledger sammelt Längsschnittdaten, die nicht nachholbar sind.
+
+    Die Polymarket-API liefert nur das AKTUELLE Fenster (Top-Holder + jüngste große Trades).
+    Was `build_poly_wallet_ledger.py` nicht wegschreibt, ist beim nächsten Lauf weg — und der
+    spätere Wallet-Track-Record hat diese Beobachtung dann für immer nicht.
+
+    Genau deshalb dieser Guard: der Ledger-Step läuft mit `continue-on-error: true` (er darf den
+    Datenlauf nie kippen), das heißt ein Fehler ist STILL. Und die Datei existiert dann trotzdem,
+    nur eingefroren — die Klasse Bug, die uns bei CLV wochenlang unentdeckt blieb
+    (siehe check_closing_capture_alive). Wir fragen deshalb nicht „gibt es die Datei", sondern
+    „steht da neuer Bestand drin, obwohl es frischen Input gab".
+
+    Still bei Liga: dort gibt es bewusst kein Polymarket (Liquidität fehlt) → kein Dauer-Gelb.
+    """
+    from datetime import datetime as _d, timedelta as _td
+
+    if D.active_dataset() == "liga":
+        return _chk("wallet_ledger_growing", "Wallet-Ledger wächst", "warn", [],
+                    "Liga hat bewusst kein Polymarket — Check nicht anwendbar.")
+
+    snap = _lazy(D.file("wm_poly_wallets.json", "liga_poly_wallets.json").name) or {}
+    hat_input = bool(snap.get("topPositionsAll") or snap.get("bigTradesAll"))
+    if not hat_input:
+        # Kein frischer Input (Runner aus, Spielpause) → nichts zu sammeln, kein Alarm.
+        return _chk("wallet_ledger_growing", "Wallet-Ledger wächst", "warn", [],
+                    "Kein frischer Wallet-Snapshot — nichts zu sammeln.")
+
+    led = _lazy(D.file("wm_poly_wallet_ledger.json", "liga_poly_wallet_ledger.json").name) or {}
+    fails = []
+    if not led:
+        fails.append("Wallet-Snapshot hat Daten, aber der Ledger fehlt komplett → "
+                     "build_poly_wallet_ledger.py läuft nicht (oder committet nicht). "
+                     "Jeder Lauf ohne Ledger ist unwiederbringlich verlorene Historie.")
+    else:
+        try:
+            alter_h = (ctx.now - _d.fromisoformat(
+                str(led.get("updatedAt")).replace("Z", "+00:00"))).total_seconds() / 3600
+        except Exception:
+            alter_h = None
+        # Der dichteste Takt ist 2h; 24h ohne Fortschreibung sind also ~12 verpasste Läufe.
+        if alter_h is not None and alter_h > 24:
+            fails.append(f"Ledger seit {alter_h:.0f}h nicht fortgeschrieben, obwohl frische "
+                         f"Wallet-Daten vorliegen → Sammlung steht still")
+        if not (led.get("trades") or led.get("positions")):
+            fails.append("Ledger existiert, ist aber leer — Snapshot-Format geändert? "
+                         "(erwartet: bigTradesAll / topPositionsAll)")
+
+    return _chk("wallet_ledger_growing", "Wallet-Ledger wächst (Track-Record-Basis)",
+                "warn", fails,
+                "build_poly_wallet_ledger.py läuft direkt nach jedem fetch_wm_poly_smartmoney.py.")
+
+
+@integrity_check
 def check_no_ghost_picks(ctx):
     """14.07.2026 — Picks, die aus einer PLATZHALTER-Quote geboren wurden.
 

@@ -141,6 +141,13 @@ jobs:
         run: python fetch_wm_poly_smartmoney.py
         continue-on-error: true
 
+      # Wallet-Ledger MUSS direkt nach dem Fetch laufen: der Snapshot hält nur das aktuelle
+      # Fenster (Top-Holder + jüngste große Trades). Was hier nicht weggeschrieben wird, ist
+      # beim nächsten Lauf weg — der spätere Wallet-Track-Record hat diese Beobachtung dann nie.
+      - name: 📒 MLS Wallet-Ledger fortschreiben
+        run: python build_poly_wallet_ledger.py
+        continue-on-error: true
+
       - name: 🎯 MLS-Picks generieren (Signal-Engine, mls_default)
         run: python generate_mls_picks.py || true
 
@@ -273,6 +280,7 @@ jobs:
           git add mls_poly_prices.json 2>/dev/null || true
           git add mls_poly_smartmoney.json 2>/dev/null || true
           git add mls_poly_wallets.json 2>/dev/null || true
+          git add mls_poly_wallet_ledger.json 2>/dev/null || true
           git add mls-poly-history.json 2>/dev/null || true
           git add mls_edge_alert_dedup.json 2>/dev/null || true
           # 13.07.2026 (MLS-Audit): wurden geschrieben, aber nie committet → Swap-Guard ohne

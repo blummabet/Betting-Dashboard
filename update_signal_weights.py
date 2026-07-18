@@ -56,6 +56,58 @@ MIN_LEARN_MATCHDAY = 1 if _IS_LIGA else 2
 LEDGER_FILE  = D.file("wm_signal_ledger.json", "liga_signal_ledger.json")
 WEIGHTS_FILE = D.file("signal_weights.json", "liga_signal_weights.json")
 
+# ─────────────────────────────────────────────────────────────────────────────────────
+# CLV als ZWEITER Beobachtungsstrom (18.07.2026, Lucas)
+#
+# Problem: ein aufgelöster Pick liefert genau EINE won/lost-Beobachtung je Signal. Bei ~100
+# Picks auf 30 Signale hungert der Loop — deshalb bewegen sich die Gewichte kaum. CLV ist
+# stetig statt binär, hat viel kleinere Varianz und steht schon beim Anpfiff fest.
+#
+# ⚠️ NICHT als Ersatz, sondern als zweiter Strom — und NICHT für jedes Signal. Lucas' Einwand:
+# „CLV ist der Maßstab, wenn du plump nach Odd-Drops spielst; wenn du Signale hast, die dagegen
+# schießen, ist das was anderes und kann so nicht 1:1 gesagt werden." Genau das bildet
+# CLV_LEARNING_GROUPS ab:
+#
+#   · sharp_money-Signale (lead_lag, steam_lag, polymarket_sharp, reverse_line_move, opener_move,
+#     multi_book_steam) behaupten wörtlich „dieser Move ist echt und läuft weiter" → CLV ist der
+#     DIREKTE Test dieser Behauptung. Ob der Ball reingeht, ist dafür fast nebensächlich.
+#   · form/context/incentive-Signale behaupten „diese Mannschaft ist besser als der Markt denkt".
+#     Das ist eine Ergebnis-Aussage. Sie feuern oft bewusst GEGEN den Move — sie an CLV zu
+#     messen würde genau das bestrafen, wofür sie da sind.
+#
+# Ein CLV-Datenpunkt zählt bewusst weniger als ein echtes Ergebnis (CLV_OBS_WEIGHT): er ist
+# präziser, aber indirekt — er misst die Markt-Zustimmung, nicht die Realität.
+CLV_LEARNING_GROUPS = {"sharp_money"}
+CLV_FULL_PP     = 5.0   # ±5pp ⇒ Score 1.0 / 0.0. Darüber wird geklippt (Ausreißer dominieren nicht).
+CLV_OBS_WEIGHT  = 0.5   # eine CLV-Beobachtung zählt als halbe Ergebnis-Beobachtung
+CLV_DEADBAND_PP = 0.5   # darunter ist es Rauschen, keine Markt-Zustimmung
+
+
+def _clv_outcome_score(pick: dict) -> float | None:
+    """CLV → Score ∈ [0,1]. 0.5 = Linie stand still (neutral), 1.0 = +5pp unser Weg.
+
+    None bedeutet „keine verwertbare Beobachtung" — bei fehlendem CLV (Markt ohne Closing-
+    Erfassung, z.B. BTTS/DC/AH) und innerhalb der Deadband. Bewusst kein Default 0.5: eine
+    erfundene neutrale Beobachtung würde echte Signale Richtung 1.0 verwässern."""
+    v = pick.get("clvPP")
+    if v is None:
+        return None
+    try:
+        pp = float(v)
+    except (TypeError, ValueError):
+        return None
+    if abs(pp) < CLV_DEADBAND_PP:
+        return None
+    return max(0.0, min(1.0, 0.5 + pp / (2.0 * CLV_FULL_PP)))
+
+
+def _learns_on_clv(signal_name: str) -> bool:
+    try:
+        from sharp_signals.registry import SIGNAL_GROUPS
+    except Exception:
+        return False
+    return SIGNAL_GROUPS.get(signal_name, "unique") in CLV_LEARNING_GROUPS
+
 
 def _matchday_of(pick: dict) -> int | None:
     """Matchday aus dem Record. Bevorzugt explizites Feld, sonst aus matchKey
@@ -182,7 +234,23 @@ def update_weights() -> dict:
     #   score < 0 = Signal sagte "schlechter Pick" → Loss = predicted correctly
     counts: dict[str, dict] = {}
     for pick in picks:
-        o = _process_outcome_score(pick)   # ∈ [0,1], prozess-justiert (FIX 14.06.2026)
+        o     = _process_outcome_score(pick)   # ∈ [0,1], prozess-justiert (FIX 14.06.2026)
+        o_clv = _clv_outcome_score(pick)       # ∈ [0,1], Markt-Zustimmung (18.07.2026)
+
+        # CLV-Strom: getrennt gezählt, damit ein Pick OHNE Ergebnis (noch nicht gespielt, aber
+        # Closing steht) schon lernbar ist — das ist der halbe Punkt der Übung.
+        if o_clv is not None:
+            for s in pick.get("signals") or []:
+                name, score = s.get("name"), s.get("score", 0.0)
+                if not name or score == 0.0 or not _learns_on_clv(name):
+                    continue
+                c = counts.setdefault(name, {"n": 0, "predicted_correctly": 0.0,
+                                             "n_clv": 0.0, "clv_correct": 0.0})
+                c.setdefault("n_clv", 0.0)
+                c.setdefault("clv_correct", 0.0)
+                c["n_clv"] += CLV_OBS_WEIGHT
+                c["clv_correct"] += CLV_OBS_WEIGHT * (o_clv if score > 0 else (1.0 - o_clv))
+
         if o is None:
             continue
         for s in pick.get("signals") or []:
@@ -213,9 +281,13 @@ def update_weights() -> dict:
         pr          = priors.get(sig_name) or {}
         n_prior     = float(pr.get("nPrior") or 0.0)
         wins_prior  = float(pr.get("winsPrior") or 0.0)
-        # Prior + Live verschmolzen (Prior verblasst mit wachsendem n_live).
-        n           = n_live + n_prior
-        wins        = wins_live + wins_prior
+        # CLV-Strom (nur sharp_money-Familie, siehe CLV_LEARNING_GROUPS). Bereits mit
+        # CLV_OBS_WEIGHT skaliert — geht als vollwertige, aber leichtere Beobachtung ein.
+        n_clv       = float(c.get("n_clv") or 0.0)
+        wins_clv    = float(c.get("clv_correct") or 0.0)
+        # Prior + Live + CLV verschmolzen (Prior verblasst mit wachsendem n).
+        n           = n_live + n_prior + n_clv
+        wins        = wins_live + wins_prior + wins_clv
         losses      = n - wins
         # Posterior Mean mit Prior
         post_mean   = (PRIOR_ALPHA + wins) / (PRIOR_ALPHA + PRIOR_BETA + n)
@@ -235,8 +307,12 @@ def update_weights() -> dict:
         prev = weights.get(sig_name) or {}
         weights[sig_name] = {
             "weight":              round(clamped_weight, 3),
-            "n_observations":      round(n_live, 2),     # ECHTE Live-Beobachtungen
+            "n_observations":      round(n_live, 2),     # ECHTE Live-Beobachtungen (Ergebnis)
             "n_prior":             round(n_prior, 2),    # Backtest-Pseudo-Obs (verblassen)
+            # Getrennt ausgewiesen, damit im Lern-Panel sichtbar bleibt, WORAUS ein Signal gelernt
+            # hat. Ein Gewicht, das nur auf CLV beruht, ist eine andere Aussage als eines aus
+            # echten Ergebnissen — das darf nicht in einer Zahl verschwinden.
+            "n_clv":               round(n_clv, 2),
             "wins_when_triggered": round(wins, 2),       # fraktional (Live + Prior)
             "losses_when_triggered": round(losses, 2),
             "posterior_mean":      round(post_mean, 3),

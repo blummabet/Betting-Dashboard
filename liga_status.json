@@ -64,6 +64,24 @@
       "note": "fetch_liga_odds friert 1X2-Opening kohärent + heilt aus History (erster plausibler Snap)."
     },
     {
+      "id": "closing_capture_alive",
+      "label": "Closing-Erfassung liefert Daten (CLV lebt)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "fetch_liga_odds reicht kickoff → compute_closing; capture-closing-* läuft alle 15min in den Anpfiff-Bändern."
+    },
+    {
+      "id": "wallet_ledger_growing",
+      "label": "Wallet-Ledger wächst",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Liga hat bewusst kein Polymarket — Check nicht anwendbar."
+    },
+    {
       "id": "no_ghost_picks",
       "label": "Keine Picks aus Platzhalter-Quoten",
       "severity": "warn",
@@ -494,5 +512,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-07-18T08:05:19.224930+00:00"
+  "generatedAt": "2026-07-18T14:51:16.942897+00:00"
 }

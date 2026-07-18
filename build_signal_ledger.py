@@ -128,6 +128,13 @@ def collect_observations(wm: dict) -> list[dict]:
                 # 04.07.2026 (Lucas): Engine-Version mitschreiben → der Loop lernt nur auf der
                 # aktuellen Version. Legacy-Picks ohne Stempel → None (Matchday-Fallback greift).
                 "engineVersion":    p.get("engineVersion"),
+                # 18.07.2026 — CLV als ZWEITER Lernstrom (siehe update_signal_weights).
+                # Ein aufgelöster Pick liefert bisher genau EINE won/lost-Beobachtung je Signal;
+                # bei ~100 Picks auf 30 Signale bewegt sich der Loop deshalb kaum. clvPP ist
+                # stetig, hat viel kleinere Varianz und steht schon beim Anpfiff fest — gleiche
+                # Pick-Zahl, deutlich mehr Information. Muss hier durchgereicht werden, sonst
+                # sieht der Updater es nie (der liest NUR den Ledger, nicht die Picks).
+                "clvPP":            p.get("clvPP"),
             }
             if _process_verdict:
                 pv = _process_verdict(market, result, stats_lookup.get(match_key))

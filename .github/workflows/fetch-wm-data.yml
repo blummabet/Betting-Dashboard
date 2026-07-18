@@ -295,6 +295,14 @@ jobs:
         run: python fetch_wm_poly_smartmoney.py
         continue-on-error: true
 
+      # Direkt nach dem Fetch: der Snapshot hält nur das aktuelle Fenster, was hier nicht
+      # weggeschrieben wird, ist beim nächsten Lauf weg. Läuft auch nach der WM weiter —
+      # der Wallet-Track-Record ist datensatz-übergreifend wertvoll (dieselben Wallets
+      # handeln später MLS/CL), deshalb ist WM-Historie kein Wegwerf-Bestand.
+      - name: 📒 WM Wallet-Ledger fortschreiben
+        run: python build_poly_wallet_ledger.py
+        continue-on-error: true
+
       # ── Pick-Validator — NACH fetch_wm_poly_prices (FIX 16.06.2026) ──────────────
       # MUSS nach der Poly-Normalisierung laufen: E_HOMEAWAY_SWAP prüft den 1X2-Favoriten
       # gegen Polymarket. Vorher (Step ~233, vor Poly) sah er gespiegelte/veraltete poly_hw
