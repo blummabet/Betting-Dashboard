@@ -4104,6 +4104,21 @@ function polySavePAT() {
 
 // ── GitHub dispatch ─────────────────────────────────────
 
+// ── Datensatz aus der Liga ableiten (18.07.2026) ────────────────────────────────────────────
+// 🔴 GELD-BUG: Der Dispatch sendete nur `{ orders }`. poly-bets.yml liest aber
+// `client_payload.dataset` und fällt OHNE Angabe auf 'wm' zurück — eine MLS- oder Liga-Wette
+// wäre also als WM-Wette platziert und in wm_auto_bets_placed.json geschrieben worden
+// (falscher Datensatz in P&L, CLV und Lern-Loop). Seit der Betting-Tab alle Datensätze mergt,
+// ist das der Normalfall, nicht der Sonderfall.
+const _POLY_LIGA_CODES = ['ENG', 'ESP', 'GER', 'ITA', 'FRA'];
+
+function _polyDatasetForLeague(league) {
+  const L = String(league || '').toUpperCase();
+  if (L === 'MLS') return { dataset: 'mls', profile: 'mls_default' };
+  if (_POLY_LIGA_CODES.includes(L)) return { dataset: 'liga', profile: 'liga_default' };
+  return { dataset: 'wm', profile: 'wm2026' };   // WM-Gruppen (A–L) + KO
+}
+
 async function _callGitHubDispatch(orders) {
   const pat = _getGithubPAT();
   if (!pat) {
@@ -4111,21 +4126,32 @@ async function _callGitHubDispatch(orders) {
     return false;
   }
 
-  const resp = await fetch(`https://api.github.com/repos/${POLY_GITHUB_REPO}/dispatches`, {
-    method:  'POST',
-    headers: {
-      'Authorization': `Bearer ${pat}`,
-      'Accept':        'application/vnd.github+json',
-      'Content-Type':  'application/json',
-      'X-GitHub-Api-Version': '2022-11-28',
-    },
-    body: JSON.stringify({
-      event_type:     'place-poly-bets',
-      client_payload: { orders },
-    }),
-  });
+  // Nach Datensatz gruppieren: ein gemischter Batch (z.B. MLS + Liga) darf NICHT in einem
+  // einzigen Lauf landen — sonst schreibt der Workflow alles in dieselbe Datei.
+  const gruppen = {};
+  for (const o of (orders || [])) {
+    const { dataset, profile } = _polyDatasetForLeague(o.league);
+    (gruppen[dataset] = gruppen[dataset] || { profile, orders: [] }).orders.push(o);
+  }
 
-  return resp.ok || resp.status === 204; // GitHub returns 204 No Content on success
+  let alleOk = true;
+  for (const [dataset, grp] of Object.entries(gruppen)) {
+    const resp = await fetch(`https://api.github.com/repos/${POLY_GITHUB_REPO}/dispatches`, {
+      method:  'POST',
+      headers: {
+        'Authorization': `Bearer ${pat}`,
+        'Accept':        'application/vnd.github+json',
+        'Content-Type':  'application/json',
+        'X-GitHub-Api-Version': '2022-11-28',
+      },
+      body: JSON.stringify({
+        event_type:     'place-poly-bets',
+        client_payload: { orders: grp.orders, dataset, profile: grp.profile },
+      }),
+    });
+    if (!(resp.ok || resp.status === 204)) alleOk = false;
+  }
+  return alleOk;
 }
 
 // 23.06.2026 (Lucas): Position manuell als geschlossen markieren (hab direkt auf Polymarket

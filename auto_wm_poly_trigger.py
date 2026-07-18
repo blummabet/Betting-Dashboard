@@ -294,6 +294,57 @@ def load_json(path: str, default):
         return default
 
 
+# ── Gemeinsame Wallet über alle Datensätze (18.07.2026) ─────────────────────────────────────
+# WM, Liga und MLS traden auf DERSELBEN Polymarket-Wallet. Balance und Limits sind deshalb
+# wallet-weit, nicht datensatz-weit. Die Dateien liegen aber pro Datensatz vor.
+_DATASET_PREFIXES = ("wm_", "liga_", "mls_")
+
+
+def _load_wallet_balance():
+    """Frischeste Balance über ALLE Datensatz-Dateien. → (data, quelle)
+
+    Der eigene Datensatz hat Vorrang, wenn er aktuell ist; sonst zählt der jüngste Stand aus
+    einer anderen Datei. Es ist physisch dieselbe Wallet — welcher Lauf sie zuletzt abgefragt
+    hat, ist für den Kontostand egal.
+    """
+    best, best_ts, best_src = None, "", "—"
+    for pfx in _DATASET_PREFIXES:
+        p = os.path.join(BASE_DIR, f"{pfx}poly_balance.json")
+        d = load_json(p, None)
+        if not isinstance(d, dict) or d.get("usdc") is None:
+            continue
+        ts = str(d.get("updatedAt") or "")
+        if best is None or ts > best_ts:
+            best, best_ts, best_src = d, ts, os.path.basename(p)
+    return (best or {"usdc": 0.0}), best_src
+
+
+def _cross_dataset_exposure(today_str: str):
+    """Offene + heutige Stakes der ANDEREN Datensätze. → (offen, heute, anzahl)
+
+    Ohne das würde jeder Datensatz sein Tages-/Exposure-Limit auf die volle gemeinsame Balance
+    rechnen — WM, Liga und MLS könnten zusammen ein Vielfaches des gewollten Einsatzes platzieren.
+    """
+    eigen = os.path.basename(PLACED_FILE)
+    offen = heute = 0.0
+    n = 0
+    for pfx in _DATASET_PREFIXES:
+        name = f"{pfx}auto_bets_placed.json"
+        if name == eigen:
+            continue                      # eigener Datensatz ist schon gezählt
+        d = load_json(os.path.join(BASE_DIR, name), None)
+        for b in ((d or {}).get("bets") or []):
+            if not isinstance(b, dict):
+                continue
+            stake = float(b.get("stake") or 0)
+            if not b.get("resolved") and not b.get("soldAt"):
+                offen += stake
+                n += 1
+            if (b.get("placedAt") or "")[:10] == today_str:
+                heute += stake
+    return offen, heute, n
+
+
 def save_json(path: str, data) -> None:
     with open(path, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
@@ -808,10 +859,27 @@ def main():
     open_exposure = sum(float(b.get("stake") or 0) for b in open_bets)
     print(f"  📈 Open Exposure: {len(open_bets)} Position(en), ${open_exposure:.2f} USDC")
 
-    # Aktuelle Balance laden (wird vor diesem Skript via fetch_wm_poly_balance.py geholt)
-    balance_data = load_json(BALANCE_FILE, {"usdc": 0.0})
+    # ── 18.07.2026 (Lucas: „Auto-Trading muss für MLS/Liga laufen") ──────────────────────────
+    # EINE WALLET, MEHRERE DATENSÄTZE. Die Balance wurde pro Datensatz gelesen
+    # (mls_poly_balance.json). Existiert die Datei nicht — weil der self-hosted MLS-Workflow noch
+    # nicht lief — sah der Trigger $0.00, kappte seinen Daily-Cap auf 0 und brach ab, obwohl die
+    # Wallet real $162 hatte (in wm_poly_balance.json). Genau das blockierte MLS komplett.
+    #
+    # Fix: Balance über ALLE Datensatz-Dateien suchen und die FRISCHESTE nehmen — es ist physisch
+    # dieselbe Wallet, egal welcher Lauf sie zuletzt abgefragt hat.
+    balance_data, _bal_src = _load_wallet_balance()
     available_balance = float(balance_data.get("usdc") or 0)
-    print(f"  💼 Verfügbare Balance: ${available_balance:.2f} USDC")
+    print(f"  💼 Verfügbare Balance: ${available_balance:.2f} USDC  (Quelle: {_bal_src})")
+
+    # ⚠️ KEHRSEITE derselben Medaille: Wenn alle Datensätze dieselbe Wallet teilen, darf NICHT
+    # jeder sein Tages-/Exposure-Limit auf die volle Balance rechnen — sonst setzen WM+Liga+MLS
+    # zusammen ein Vielfaches ein. Limits deshalb über ALLE Datensätze summieren.
+    _fremd_open, _fremd_today, _fremd_n = _cross_dataset_exposure(today_str)
+    if _fremd_open or _fremd_today:
+        open_exposure += _fremd_open
+        stake_today += _fremd_today
+        print(f"  🔗 Andere Datensätze: +${_fremd_open:.2f} offen, +${_fremd_today:.2f} heute "
+              f"({_fremd_n} Bets) — gemeinsame Wallet, Limits gelten global")
 
     # Adaptive Daily-Cap: skaliert mit Balance — schützt letzte Reserven
     adaptive_daily_cap = min(
