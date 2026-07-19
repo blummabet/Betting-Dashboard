@@ -413,7 +413,7 @@ def _maker_intent(price_hint, best_bid=None, best_ask=None, hours_to_ko=None):
 def place_market_order(token_id: str, amount_usdc: float, private_key: str,
                        price_hint: float = None,
                        best_bid: float = None, best_ask: float = None,
-                       hours_to_ko: float = None) -> dict:
+                       hours_to_ko: float = None, force_taker: bool = False) -> dict:
     """
     Place a BUY order on Polymarket CLOB v2.
 
@@ -515,7 +515,9 @@ def place_market_order(token_id: str, amount_usdc: float, private_key: str,
     # Ist maker_enabled gesetzt UND genug Zeit UND Spread breit, legen wir eine RUHENDE Limit-Order
     # oben aufs Gebot — Spread einsparen statt zahlen. Default (maker_enabled=false) → übersprungen,
     # Verhalten unverändert. Nutzt denselben Post-Mechanismus wie der FOK-Fallback (create_and_post_order).
-    _intent = _maker_intent(price_hint, best_bid, best_ask, hours_to_ko)
+    # force_taker: die Wieder-Platzierung durch den Lebenszyklus-Monitor (manage_poly_maker_orders)
+    # überspringt den Maker-Schritt — dort ist die Entscheidung „jetzt crossen" schon gefallen.
+    _intent = {} if force_taker else _maker_intent(price_hint, best_bid, best_ask, hours_to_ko)
     if _intent.get("mode") == "maker" and _intent.get("price"):
         mk_price = _intent["price"]
         mk_size  = round(amount_usdc / mk_price, 4)
@@ -529,7 +531,7 @@ def place_market_order(token_id: str, amount_usdc: float, private_key: str,
             oid0, err0 = _parse_resp(resp0)
             if oid0:
                 return {"status": "placed", "orderId": oid0, "error": None,
-                        "method": "maker_limit", "makerPrice": mk_price}
+                        "method": "maker_limit", "makerPrice": mk_price, "makerSize": mk_size}
             # Maker abgelehnt → NICHT scheitern, sondern als Taker weiter (Fill-Sicherheit).
             print(f"  ⚠️  Maker abgelehnt ({err0}) — weiter als Taker")
         except Exception as e:
@@ -1027,6 +1029,22 @@ def main():
                 label  = {"limit_gtc": "Limit GTC", "maker_limit": "Maker (ruht)"}.get(method, "Market")
                 print(f"  ✅ Order platziert ({label}) — ID: {result['orderId']}")
                 placed += 1
+                # 19.07.2026: Eine ruhende Maker-Order ins Register aufnehmen, damit der
+                # Lebenszyklus-Monitor sie kurz vor Anpfiff eskalieren kann, falls sie nicht füllt.
+                if method == "maker_limit":
+                    try:
+                        import poly_resting
+                        _ro = poly_resting.load()
+                        _ro = poly_resting.record(_ro, {
+                            "orderId": result["orderId"], "tokenId": token_id,
+                            "price": result.get("makerPrice"), "size": result.get("makerSize"),
+                            "stakeUsdc": float(stake), "market": market,
+                            "matchKey": order.get("matchKey") or f"{home}-{away}",
+                            "kickoff": order.get("kickoff"),
+                        })
+                        poly_resting.save(_ro)
+                    except Exception as e:
+                        print(f"  ⚠️  Resting-Order nicht registriert ({e}) — Monitor sieht sie nicht")
 
                 # Bankroll-Tally updaten
                 running_count   += 1

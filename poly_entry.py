@@ -43,11 +43,15 @@ TICK = 0.01   # kleinste Poly-Preisstufe (1 Cent)
 
 @dataclass
 class EntryConfig:
-    maker_enabled: bool = False    # Default AUS — Lucas aktiviert, wenn der Order-Lebenszyklus steht
+    maker_enabled: bool = False    # Default AUS — Lucas aktiviert; der Order-Lebenszyklus steht (19.07.)
     maker_min_hours: float = 3.0   # so viel Zeit muss die ruhende Order zum Füllen haben
     maker_min_spread_pp: float = 3.0   # darunter lohnt der Maker-Aufwand nicht
     taker_buffer_pp: float = 2.0   # Taker crosst um so viel über das Ask (Fill-Priorität)
     max_price: float = 0.97        # nie teurer einsteigen (darüber kaum Ertrag, hohes Downside)
+    # Lebenszyklus einer RUHENDEN Order: ab dieser Rest-Zeit vor Anpfiff geben wir das Warten auf
+    # und crossen doch (Fill-Sicherheit schlägt Spread-Ersparnis). MUSS < maker_min_hours sein,
+    # sonst würde ein gerade platzierter Maker-Order sofort wieder eskaliert.
+    taker_escalate_hours: float = 1.5
 
 
 def _clamp(p: float) -> float:
@@ -97,3 +101,29 @@ def decide_entry(fair: float, best_bid, best_ask, hours_to_ko,
                 "reason": "Maker-Preis würde crossen → gleich als Taker"}
     return {"mode": "maker", "price": maker_price,
             "reason": f"Spread {spread_pp:.1f}pp, {hours_to_ko:.1f}h Zeit → ruhen, Spread einsparen"}
+
+
+def decide_maker_action(is_filled, hours_to_ko, cfg: EntryConfig | None = None) -> dict:
+    """Was tun mit einer bereits RUHENDEN Maker-Order? (Lebenszyklus, 19.07.2026)
+
+    Läuft periodisch auf dem Runner (manage_poly_maker_orders). Reine Entscheidung, keine Order.
+
+      · gefüllt          → nichts, sie ist jetzt eine Position.
+      · Anpfiff vorbei   → stornieren. Nicht mehr in ein laufendes Spiel crossen (der ganze
+                           Pre-Match-Grund ist weg, In-Play ist ein anderes Tier).
+      · Rest-Zeit ≤ Deadline & noch offen → stornieren UND als Taker crossen. Genau das ist der
+                           Kern: ein unerfüllter Maker-Order darf uns den Move nicht kosten.
+      · sonst            → weiter warten, der Spread ist es wert.
+
+    Rückgabe: {action ∈ filled|cancel_expired|escalate_taker|wait, reason}
+    """
+    cfg = cfg or EntryConfig()
+    if is_filled:
+        return {"action": "filled", "reason": "Order gefüllt → jetzt eine Position"}
+    if hours_to_ko is None or hours_to_ko <= 0:
+        return {"action": "cancel_expired",
+                "reason": "Anpfiff vorbei — nicht ins laufende Spiel crossen"}
+    if hours_to_ko <= cfg.taker_escalate_hours:
+        return {"action": "escalate_taker",
+                "reason": f"nur noch {hours_to_ko:.1f}h, unerfüllt → stornieren + als Taker crossen"}
+    return {"action": "wait", "reason": f"{hours_to_ko:.1f}h Zeit — Maker-Order ruht weiter"}

@@ -115,6 +115,20 @@ jobs:
           POLY_API_PASSPHRASE:      ${{ secrets.POLY_API_PASSPHRASE }}
           AUTO_SELL_ENABLED:        ${{ secrets.MLS_AUTO_SELL_ENABLED || 'false' }}
 
+      # 19.07.2026 — Maker-Lebenszyklus: ruhende Limit-Orders, die nicht füllen, kurz vor Anpfiff
+      # stornieren + als Taker crossen. No-op solange maker_enabled=false (Default).
+      - name: 🅼 MLS Maker-Orders verwalten (Default AUS)
+        run: ${{ env.POLY_PYTHON }} manage_poly_maker_orders.py
+        continue-on-error: true
+        env:
+          COCOBET_DATASET:     mls
+          COCOBET_PROFILE:     mls_default
+          POLY_PRIVATE_KEY:    ${{ secrets.POLY_PRIVATE_KEY }}
+          POLY_FUNDER_ADDRESS: ${{ secrets.POLY_FUNDER_ADDRESS }}
+          POLY_API_KEY:        ${{ secrets.POLY_API_KEY }}
+          POLY_API_SECRET:     ${{ secrets.POLY_API_SECRET }}
+          POLY_API_PASSPHRASE: ${{ secrets.POLY_API_PASSPHRASE }}
+
       - name: 📈 MLS Bets resolven (P&L + CLV)
         run: ${{ env.POLY_PYTHON }} resolve_wm_results.py
         continue-on-error: true
@@ -138,6 +152,7 @@ jobs:
           git config user.email "bot@cocobet.local"
           git add mls_poly_prices.json mls_poly_balance.json mls_auto_bets_placed.json 2>/dev/null || true
           git add mls_poly_positions.json mls_position_health.json mls_position_health_alerts.json 2>/dev/null || true
+          git add mls_poly_resting_orders.json 2>/dev/null || true
           git add mls-poly-history.json mls_book_health.json mls_kill_switch.json 2>/dev/null || true
           git add mls-data.json mls-odds-history.json 2>/dev/null || true
           # 13.07.2026 (MLS-Audit): resolve_wm_results SCHREIBT mls_results.json — es wurde nur nie

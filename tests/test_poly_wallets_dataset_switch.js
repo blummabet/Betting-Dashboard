@@ -46,7 +46,8 @@ vm.runInContext(fs.readFileSync(path.join(ROOT, 'poly-wallets.js'), 'utf8'), ctx
 console.log('\n🐋 poly-wallets — Datensatz-Umschalter\n');
 
 ok('_pwDataset() ist eine Funktion', typeof ctx._pwDataset === 'function');
-ok('Default-Datensatz = wm', ctx._pwDataset() === 'wm');
+// 19.07.2026: Default ist MLS (WM endet mit dem Finale — Top-5 hat kein Poly, wäre leer).
+ok('Default-Datensatz = mls', ctx._pwDataset() === 'mls');
 
 // ── DER eigentliche Guard: umschalten und danach WEITER benutzen können.
 ctx._pwSwitchDataset('mls');

@@ -148,6 +148,17 @@ jobs:
           POLY_API_PASSPHRASE:      ${{ secrets.POLY_API_PASSPHRASE }}
           AUTO_SELL_ENABLED:        ${{ secrets.AUTO_SELL_ENABLED || 'false' }}
 
+      # 19.07.2026 — Maker-Lebenszyklus (No-op solange maker_enabled=false).
+      - name: 🅼 WM Maker-Orders verwalten (Default AUS)
+        run: ${{ env.POLY_PYTHON }} manage_poly_maker_orders.py
+        continue-on-error: true
+        env:
+          POLY_PRIVATE_KEY:    ${{ secrets.POLY_PRIVATE_KEY }}
+          POLY_FUNDER_ADDRESS: ${{ secrets.POLY_FUNDER_ADDRESS }}
+          POLY_API_KEY:        ${{ secrets.POLY_API_KEY }}
+          POLY_API_SECRET:     ${{ secrets.POLY_API_SECRET }}
+          POLY_API_PASSPHRASE: ${{ secrets.POLY_API_PASSPHRASE }}
+
       # ── Bets gegen Ergebnisse resolven: P&L + CLV berechnen ──────────────────
       - name: 📈 WM Bets resolven (P&L + CLV)
         run: ${{ env.POLY_PYTHON }} resolve_wm_results.py
