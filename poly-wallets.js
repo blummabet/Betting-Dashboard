@@ -447,35 +447,67 @@ function _pwWhaleEntryQuality(ledger){
 // ── Breit über ALLE Poly-Ligen (19.07.2026, Lucas) ───────────────────────────
 // „Wo hat die Masse mehr recht?" — alle Poly-Ligen mit Volumen ≥ Schwelle, triviale Favoriten
 // (Quote < min) raus. Aus poly_money_broad.py (Mac-Runner, Polys eigene Auflösung).
+// League-Tag → Kategorie (Ordnung, 19.07.2026, Lucas). Unbekannte → „Sonstige".
+const PW_LEAGUE_CAT={
+  nba:['US-Sport','🇺🇸'],nfl:['US-Sport','🇺🇸'],mlb:['US-Sport','🇺🇸'],nhl:['US-Sport','🇺🇸'],
+  epl:['Fußball','⚽'],soccer:['Fußball','⚽'],ucl:['Fußball','⚽'],mls:['Fußball','⚽'],
+  esports:['E-Sport','🎮'],cs2:['E-Sport','🎮'],lol:['E-Sport','🎮'],dota:['E-Sport','🎮'],valorant:['E-Sport','🎮'],
+  tennis:['Tennis','🎾'],
+};
+function _pwCatOf(league){const c=PW_LEAGUE_CAT[String(league||'').toLowerCase()];return c?c:['Sonstige','·'];}
+
 function _pwMoneyBroad(broad){
   const b=broad||{};
+  const V={geld_schaerfer:['🟢','#3fb950'],preis_besser:['🔴','#f85149'],gleichauf:['⚪','#8b949e']};
   if(!b.n && !(b.byLeague&&b.byLeague.length)){
     return '<div class="pw-sec" style="margin-top:6px"><div class="pw-sec-head">'
       +'<span class="pw-kicker">🌐 Alle Poly-Ligen</span>'
       +'<span class="pw-sec-note">liga-übergreifend · sammelt am Mac-Runner</span></div>'
-      +'<div class="pw-sec-p">Breiter Scan über alles, was Polymarket anbietet (Volumen ≥ Schwelle, '
-      +'triviale Favoriten raus). Zeigt je Liga, ob das Geld schärfer ist als der Preis. Füllt sich '
-      +'über die kommenden Tage, sobald der Runner läuft.</div></div>';
+      +'<div class="pw-sec-p">Breiter Scan über alles, was Polymarket anbietet — inkl. <b>🎮 E-Sport</b> '
+      +'(CS2/LoL/Dota/Valorant), US-Sport, Fußball, Tennis (Volumen ≥ Schwelle, triviale Favoriten raus). '
+      +'Zeigt je Liga, ob das Geld schärfer ist als der Preis. Füllt sich über die kommenden Tage, sobald der Runner läuft.</div></div>';
   }
-  const V={geld_schaerfer:['🟢','#3fb950'],preis_besser:['🔴','#f85149'],gleichauf:['⚪','#8b949e']};
-  const rows=(b.byLeague||[]).map(l=>{
-    const f=V[l.verdict]||['·','#8b949e'];
-    const edge=(l.brierPrice-l.brierMoney);   // >0 = Geld schärfer
-    return '<tr><td class="pw-cm">'+_pwEsc(l.league)+'</td>'
-      +'<td class="pw-cn pw-mut">'+l.n+'</td>'
+
+  const leagues=(b.byLeague||[]).map(l=>({...l,edge:(l.brierPrice-l.brierMoney)}));
+  // Gimmick 1: schärfste + dümmste Liga (größter/kleinster Geld-Vorteil) als Highlight-Kacheln.
+  let highlight='';
+  if(leagues.length>=2){
+    const s=leagues.slice().sort((a,b)=>b.edge-a.edge);
+    const best=s[0], worst=s[s.length-1];
+    const tile=(t,l,col)=>'<div style="flex:1;min-width:200px;background:'+col+'14;border:1px solid '+col+'44;border-radius:12px;padding:12px 14px">'
+      +'<div style="font-size:11px;color:#8b949e;text-transform:uppercase;letter-spacing:.5px">'+t+'</div>'
+      +'<div style="font-size:17px;font-weight:800;color:'+col+';margin-top:2px">'+_pwCatOf(l.league)[1]+' '+_pwEsc(l.league)+'</div>'
+      +'<div style="font-size:12px;color:#8b949e">Geld-Vorteil '+(l.edge>0?'+':'')+l.edge.toFixed(3)+' · '+l.n+' Märkte</div></div>';
+    highlight='<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">'
+      +tile('🏆 Masse am schärfsten',best,'#3fb950')+tile('🃏 Masse am dümmsten',worst,'#f85149')+'</div>';
+  }
+
+  // Gimmick 2: nach Kategorie gruppieren (Ordnung) mit Subtotal je Kategorie.
+  const cats={};
+  leagues.forEach(l=>{const[cat,icon]=_pwCatOf(l.league);(cats[cat]=cats[cat]||{icon,rows:[],n:0,edgeW:0}).rows.push(l);
+    cats[cat].n+=l.n; cats[cat].edgeW+=l.edge*l.n;});
+  const catOrder=['Fußball','US-Sport','E-Sport','Tennis','Sonstige'];
+  const row=l=>{const f=V[l.verdict]||['·','#8b949e'];
+    return '<tr><td class="pw-cm">'+_pwEsc(l.league)+'</td><td class="pw-cn pw-mut">'+l.n+'</td>'
       +'<td class="pw-cn">'+Math.round(l.moneyHitRate*100)+'%</td>'
       +'<td class="pw-cn" style="color:#a78bfa">'+l.brierMoney.toFixed(3)+'</td>'
       +'<td class="pw-cn" style="color:#5eead4">'+l.brierPrice.toFixed(3)+'</td>'
-      +'<td class="pw-cn" style="color:'+f[1]+';font-weight:700">'+f[0]+' '+(edge>0?'+':'')+edge.toFixed(3)+'</td></tr>';
+      +'<td class="pw-cn" style="color:'+f[1]+';font-weight:700">'+f[0]+' '+(l.edge>0?'+':'')+l.edge.toFixed(3)+'</td></tr>';};
+  const blocks=catOrder.filter(c=>cats[c]).map(cat=>{
+    const c=cats[cat], sub=c.n>0?c.edgeW/c.n:0, subCol=sub>0.005?'#3fb950':sub<-0.005?'#f85149':'#8b949e';
+    return '<div style="margin-top:12px"><div style="display:flex;justify-content:space-between;align-items:center;padding:4px 2px">'
+      +'<span style="font-size:13px;font-weight:800;color:#e6edf3">'+c.icon+' '+cat+'</span>'
+      +'<span style="font-size:12px;color:'+subCol+';font-weight:700">Ø Geld-Vorteil '+(sub>0?'+':'')+sub.toFixed(3)+' · '+c.n+' Märkte</span></div>'
+      +'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
+      +'<th>Liga</th><th>n</th><th>Geld trifft</th><th>Brier Geld</th><th>Brier Preis</th><th>Geld-Vorteil</th>'
+      +'</tr></thead><tbody>'+c.rows.sort((a,b)=>b.edge-a.edge).map(row).join('')+'</tbody></table></div></div>';
   }).join('');
+
   const note='Volumen ≥ '+_pwUsd(b.minVolUsd||0)+' · Mindest-Quote '+(b.minOdds||'—')+' (triviale Favoriten raus) · '+(b.n||0)+' Märkte';
   return '<div class="pw-sec" style="margin-top:6px"><div class="pw-sec-head">'
     +'<span class="pw-kicker">🌐 Alle Poly-Ligen — wo hat die Masse mehr recht?</span>'
-    +'<span class="pw-sec-note">'+note+'</span></div>'
-    +(rows?('<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
-      +'<th>Liga</th><th>n</th><th>Geld trifft</th><th>Brier Geld</th><th>Brier Preis</th><th>Geld-Vorteil</th>'
-      +'</tr></thead><tbody>'+rows+'</tbody></table></div>')
-     :'<div class="pw-sec-p">Noch keine Liga mit genug aufgelösten Märkten (min 5). Sammelt weiter.</div>')
+    +'<span class="pw-sec-note">'+note+'</span></div>'+highlight
+    +(blocks||'<div class="pw-sec-p">Noch keine Liga mit genug aufgelösten Märkten (min 5). Sammelt weiter.</div>')
     +'</div>';
 }
 

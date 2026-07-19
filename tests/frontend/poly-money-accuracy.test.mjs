@@ -84,3 +84,18 @@ test('Alle Poly-Ligen: leerer Zustand ist ein ehrlicher Sammel-Hinweis', async (
   const html = await renderMoney({ n: 0 }, { n: 0 });
   assert.match(html, /sammelt am Mac-Runner/);
 });
+
+test('Alle Poly-Ligen: nach Kategorie geordnet inkl. E-Sport + Highlight-Kacheln', async () => {
+  const html = await renderMoney({ n: 0 }, {
+    n: 200, minVolUsd: 7500, minOdds: 1.35, byLeague: [
+      { league: 'NBA', n: 40, moneyHitRate: 0.62, brierMoney: 0.42, brierPrice: 0.50, verdict: 'geld_schaerfer' },
+      { league: 'EPL', n: 25, moneyHitRate: 0.50, brierMoney: 0.55, brierPrice: 0.52, verdict: 'preis_besser' },
+      { league: 'CS2', n: 30, moneyHitRate: 0.58, brierMoney: 0.45, brierPrice: 0.48, verdict: 'geld_schaerfer' },
+    ],
+  });
+  assert.match(html, /🎮 E-Sport/, 'E-Sport-Kategorie muss erscheinen');
+  assert.match(html, /🇺🇸 US-Sport/);
+  assert.match(html, /⚽ Fußball/);
+  assert.match(html, /Masse am schärfsten/, 'Highlight-Gimmick fehlt');
+  assert.match(html, /Ø Geld-Vorteil/, 'Kategorie-Subtotal fehlt');
+});

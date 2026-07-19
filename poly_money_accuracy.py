@@ -58,6 +58,21 @@ def _norm3(vals: dict):
     return {k: v / s for k, v in xs.items()}
 
 
+def _norm(vals: dict, keys):
+    """Wie _norm3, aber über BELIEBIGE Ausgangs-Labels (nicht nur home/draw/away) — nötig für den
+    breiten Cross-Sport-Scan, wo Ausgänge Teamnamen o.ä. heißen."""
+    xs = {}
+    for k in keys:
+        try:
+            xs[k] = float(vals.get(k) or 0)
+        except (TypeError, ValueError):
+            xs[k] = 0.0
+    s = sum(xs.values())
+    if s <= 0:
+        return None
+    return {k: v / s for k, v in xs.items()}
+
+
 def capture(smartmoney: dict, prices: dict, frozen: dict, now=None) -> dict:
     """Geld-Verteilung + Preis nah am Anpfiff einfrieren. REIN.
 
@@ -128,24 +143,28 @@ def evaluate(frozen: dict, results: dict, min_odds: float = 1.0) -> dict:
 
     for key, f in (frozen or {}).items():
         winner = results.get(key)
-        if winner not in _OUT:
+        shares_d, prices_d = f.get("shares") or {}, f.get("prices") or {}
+        # Ausgänge outcome-agnostisch aus den Daten ableiten (home/draw/away ODER Teamnamen).
+        keys = [k for k in set(shares_d) | set(prices_d)
+                if isinstance((shares_d.get(k) if shares_d.get(k) is not None else prices_d.get(k)), (int, float))]
+        if winner not in keys:
             continue
-        mp = _norm3(f.get("shares") or {})
-        pp = _norm3(f.get("prices") or {})
+        mp = _norm(shares_d, keys)
+        pp = _norm(prices_d, keys)
         if not mp or not pp:
             continue
         if max(pp.values()) > fav_prob_cap:
             continue                       # Favorit zu klar (Quote < min_odds) → nicht aussagekräftig
 
         n += 1
-        onehot = {k: (1.0 if k == winner else 0.0) for k in _OUT}
-        bm_i = sum((mp[k] - onehot[k]) ** 2 for k in _OUT)
-        bp_i = sum((pp[k] - onehot[k]) ** 2 for k in _OUT)
+        onehot = {k: (1.0 if k == winner else 0.0) for k in keys}
+        bm_i = sum((mp[k] - onehot[k]) ** 2 for k in keys)
+        bp_i = sum((pp[k] - onehot[k]) ** 2 for k in keys)
         brier_money += bm_i
         brier_price += bp_i
 
-        money_fav = max(_OUT, key=lambda k: mp[k])
-        price_fav = max(_OUT, key=lambda k: pp[k])
+        money_fav = max(keys, key=lambda k: mp[k])
+        price_fav = max(keys, key=lambda k: pp[k])
         m_ok, p_ok = (money_fav == winner), (price_fav == winner)
         money_hit += m_ok
         price_hit += p_ok

@@ -93,3 +93,32 @@ class TestCaptureBroad:
         m = [{"key": "x", "league": "EPL", "hoursToKickoff": 1.0, "totalUsd": 20000,
               "shares": {"home": 0.6, "away": 0.4}, "prices": {"home": 0.5, "away": 0.5}}]
         assert B.capture(m, {})["x"]["league"] == "EPL"
+
+
+class TestGammaParser:
+    """Die reinen Parser-Helfer (ohne Netz) — Gamma-Event → Ausgänge/Anpfiff."""
+
+    def test_outcomes_zwei_wege(self):
+        ev = {"markets": [{"outcomes": '["Lakers","Celtics"]',
+                           "outcomePrices": '["0.62","0.38"]',
+                           "clobTokenIds": '["t0","t1"]', "conditionId": "0xabc"}]}
+        oc = B._outcomes(ev)
+        assert [o["label"] for o in oc] == ["Lakers", "Celtics"]
+        assert oc[0]["price"] == 0.62 and oc[0]["cond"] == "0xabc" and oc[0]["token"] == "t0"
+
+    def test_outcomes_drei_wege(self):
+        ev = {"markets": [{"outcomes": '["Home","Draw","Away"]',
+                           "outcomePrices": '["0.5","0.3","0.2"]',
+                           "clobTokenIds": '["a","b","c"]', "conditionId": "0x1"}]}
+        assert len(B._outcomes(ev)) == 3
+
+    def test_outcomes_kaputt_gibt_leer(self):
+        assert B._outcomes({"markets": [{"outcomes": "nichtjson"}]}) == []
+        assert B._outcomes({}) == []
+
+    def test_hours_to_ko(self):
+        from datetime import datetime, timedelta, timezone
+        now = datetime(2026, 7, 20, 12, 0, tzinfo=timezone.utc)
+        ev = {"startTime": (now + timedelta(hours=2)).isoformat()}
+        assert abs(B._hours_to_ko(ev, now) - 2.0) < 1e-6
+        assert B._hours_to_ko({"startTime": "kaputt"}, now) is None
