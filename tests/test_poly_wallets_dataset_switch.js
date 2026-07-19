@@ -67,13 +67,18 @@ ok('Rückwechsel auf wm funktioniert', ctx._pwDataset() === 'wm');
 ctx._pwSwitchDataset('gibtsnicht');
 ok('unbekannter Datensatz wird ignoriert (bleibt wm)', ctx._pwDataset() === 'wm');
 
-// Jeder Datensatz muss die 4 Dateien deklarieren (sonst fetcht der Tab ins Leere).
+// Jeder Datensatz braucht id/icon/label + die Poly-Kern-Dateien (prices/wallets). data/hist sind
+// die Fixture-/Odds-Quellen — die hat E-Sport bewusst NICHT (noAnchor, Poly-only), also nicht Pflicht.
 // (`const` landet nicht auf dem Global-Objekt → im Kontext auswerten statt ctx.PW_DATASETS.)
 const DS = vm.runInContext('PW_DATASETS', ctx);
-const need = ['id', 'icon', 'label', 'prices', 'wallets', 'data', 'hist'];
+const need = ['id', 'icon', 'label', 'prices', 'wallets'];
 let cfgOk = Array.isArray(DS) && DS.length >= 2;
-for (const d of (DS || [])) for (const k of need) if (!d[k]) cfgOk = false;
-ok('PW_DATASETS: jeder Eintrag hat id/icon/label + 4 Dateinamen', cfgOk,
+for (const d of (DS || [])) {
+  for (const k of need) if (!d[k]) cfgOk = false;
+  // Fußball-Datensätze (mit Anker) müssen data+hist haben; noAnchor (E-Sport) darf sie weglassen.
+  if (!d.noAnchor && (!d.data || !d.hist)) cfgOk = false;
+}
+ok('PW_DATASETS: jeder Eintrag vollständig (noAnchor darf data/hist weglassen)', cfgOk,
    'gefunden: ' + (Array.isArray(DS) ? DS.map(d => d.id).join(',') : typeof DS));
 
 // Kein Rückfall in das alte Muster: der Zustand darf NIE window.<Funktionsname> heißen.
