@@ -158,6 +158,10 @@ jobs:
         run: python poly_markout.py || true
         continue-on-error: true
 
+      - name: 🎯 MLS Geld-Genauigkeit (liegt das Geld richtig?)
+        run: python poly_money_accuracy.py || true
+        continue-on-error: true
+
       - name: 🎯 MLS-Picks generieren (Signal-Engine, mls_default)
         run: python generate_mls_picks.py || true
 
@@ -292,6 +296,7 @@ jobs:
           git add mls_poly_wallets.json 2>/dev/null || true
           git add mls_poly_wallet_ledger.json 2>/dev/null || true
           git add mls_poly_coherence.json mls_poly_settlement.json mls_poly_markout.json 2>/dev/null || true
+          git add mls_poly_money_close.json mls_poly_money_accuracy.json 2>/dev/null || true
           git add mls-poly-history.json 2>/dev/null || true
           git add mls_edge_alert_dedup.json 2>/dev/null || true
           # 13.07.2026 (MLS-Audit): wurden geschrieben, aber nie committet → Swap-Guard ohne

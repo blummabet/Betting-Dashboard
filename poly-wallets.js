@@ -89,6 +89,16 @@ function _pwDatasetTabs(){
     +'<span>'+d.icon+'</span>'+d.label+'</button>').join('')+'</div>';
 }
 
+// ── View-Umschalter (19.07.2026): Edge-Board vs. „Liegt das Geld richtig?" ────
+let _pwView='edge';
+function _pwSetView(v){ if(v===_pwView)return; _pwView=v; _pwDestroyCharts(); _pwRender(); }
+if(typeof window!=='undefined') window._pwSetView=_pwSetView;
+function _pwViewTabs(){
+  const b=(id,label)=>'<button class="pw-ds-btn'+(id===_pwView?' pw-ds-on':'')
+    +'" onclick="_pwSetView(\''+id+'\')">'+label+'</button>';
+  return '<div class="pw-ds" style="margin-top:-6px">'+b('edge','🐋 Edge & Smart-Money')+b('money','🎯 Liegt das Geld richtig?')+'</div>';
+}
+
 function initPolyWallets(){
   const panel=document.getElementById('polyWalletsPanel');
   if(!panel || _polyWalletsLoaded) return;
@@ -106,8 +116,9 @@ function initPolyWallets(){
   Promise.all([
     wmP, jf(f.prices), jf(f.wallets), jf(f.hist),
     jf(_derive('coherence')), jf(_derive('settlement')), jf(_derive('wallet_ledger')),
-  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger])=>{
-    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger};
+    jf(_derive('money_accuracy')),
+  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc])=>{
+    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc};
     _pwRender();
   }).catch(err=>{
     // 12.07.2026: Vorher gab es KEIN catch — eine Exception im Render (z.B. der
@@ -256,11 +267,17 @@ function _pwGauge(val,color,label){
 function _pwRender(){
   const panel=document.getElementById('polyWalletsPanel'); if(!panel||!_pwCache)return;
   _pwDestroyCharts();
-  const {wm,prices,wallets,hist,coherence,settlement,ledger}=_pwCache;
+  const {wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc}=_pwCache;
   const teams=_pwTeamsMap(wm), oddsMap=_pwOddsMap(wm);
   const edges=_pwBuildEdges(prices,oddsMap);
   const hasPoly=wallets&&((wallets.topPositionsAll||[]).length||(wallets.matches&&Object.keys(wallets.matches).length));
   const f=_pwFiles();
+
+  // 19.07.2026 (Lucas) — eigener Sub-View „Liegt das Geld richtig?" neben dem Edge-Board.
+  if(_pwView==='money'){
+    panel.innerHTML=_pwDatasetTabs()+_pwViewTabs()+_pwMoneyAccuracy(moneyAcc,teams);
+    return;
+  }
   if(!hasPoly&&!edges.length){
     // Liga-Auswahl AUCH im Leer-Zustand zeigen → man kann umschalten, wenn eine Liga noch nichts hat.
     panel.innerHTML=_pwDatasetTabs()
@@ -270,7 +287,7 @@ function _pwRender(){
     return;
   }
   const upd=wallets&&wallets.updatedAt?_pwAgo(wallets.updatedAt):'—';
-  let h=_pwDatasetTabs()
+  let h=_pwDatasetTabs()+_pwViewTabs()
     +'<div class="pw-head"><div><h1>🐋 Polymarket <span class="pw-accent">Edge</span> & Smart-Money</h1>'
     +'<p class="pw-sub">Wo Polymarket vs. dem scharfen Pinnacle-Anker fehlbepreist ist — bestätigt oder gevetot vom großen Geld. <b>Die Edge ist das Signal, die Whales sind das Veto.</b></p></div>'
     +'<div class="pw-stamp">'+f.icon+' '+f.label+' · Stand '+upd+'<br><span>Beträge geschätzt (Anteile × Preis)</span></div></div>';
@@ -423,6 +440,76 @@ function _pwWhaleEntryQuality(ledger){
     +'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
     +'<th>Wallet</th><th>Position</th><th>Größe</th><th>Einstieg</th>'
     +'</tr></thead><tbody>'+rows+'</tbody></table></div></section>';
+}
+
+// ── „Liegt das Geld richtig?" (19.07.2026, Lucas) ────────────────────────────
+// Empirischer Test: gewinnt die Seite mit dem meisten Geld — und ist das Geld SCHÄRFER als der
+// Preis (Brier) oder nur Rauschen, das der Preis eh enthält? Aus poly_money_accuracy.py.
+function _pwMoneyAccuracy(acc, teams){
+  const a=acc||{};
+  const intro='<div class="pw-sec-p" style="max-width:820px;margin:14px 0 18px">'
+    +'Wir kennen Preis UND Geld-Verteilung. Hier die ehrliche Frage: <b>gewinnt die Seite mit dem Geld</b> — '
+    +'und sagt das Geld <b>mehr als der Preis</b>? Der <b>Brier-Score</b> misst die Kalibrierung (niedriger = besser). '
+    +'Ist Geld deutlich niedriger als Preis, ist das große Geld schlau; sonst steckt es schon im Preis oder ist dumm. '
+    +'<i>Geld wird nah am Anpfiff eingefroren, dann gegen den Ausgang aufgelöst.</i></div>';
+
+  if(!a.n){
+    return intro+'<div class="pw-empty"><div class="pw-empty-ico">🎯</div><h2>Sammelt noch</h2>'
+      +'<p>Die Geld-Verteilung wird nah am Anpfiff eingefroren und erst nach dem Spiel aufgelöst. '
+      +'Das Urteil braucht ein paar Dutzend aufgelöste Märkte — es füllt sich über die kommenden Spieltage.</p></div>';
+  }
+
+  const V={geld_schaerfer:['🟢','#3fb950','Das Geld ist schärfer als der Preis','Das große Geld weiß mehr, als im Preis steht — es lohnt sich, ihm zu folgen.'],
+           preis_besser:['🔴','#f85149','Der Preis ist besser als das Geld','Das Geld liegt schlechter als der Preis — dummes Geld, das man faden kann.'],
+           gleichauf:['⚪','#8b949e','Geld ≈ Preis','Das Geld steckt schon im Preis — kein Zusatznutzen als Signal.']}[a.verdict]
+        ||['⏳','#8b949e','Zu wenig Daten',''];
+  const pct=v=>Math.round((v||0)*100)+'%';
+  const kpi=(lbl,val,col,sub)=>'<div class="pw-kpi"><div class="pw-kpi-b">'
+    +'<div class="pw-kpi-v" style="color:'+(col||PW_C.txt)+'">'+val+'</div>'
+    +'<div class="pw-kpi-l">'+lbl+'</div>'+(sub?'<div class="pw-kpi-s">'+sub+'</div>':'')+'</div></div>';
+
+  // Brier-Vergleichsbalken (niedriger = besser → kürzerer Balken ist gut)
+  const bmax=Math.max(a.brierMoney,a.brierPrice,0.01);
+  const bar=(lbl,val,col)=>'<div style="margin:6px 0"><div style="display:flex;justify-content:space-between;font-size:12px;color:#8b949e;margin-bottom:3px"><span>'+lbl+'</span><span style="color:'+col+';font-weight:700;font-family:ui-monospace">'+val.toFixed(3)+'</span></div>'
+    +'<div style="height:10px;background:#161b22;border-radius:6px;overflow:hidden"><i style="display:block;height:100%;width:'+Math.round(val/bmax*100)+'%;background:'+col+'"></i></div></div>';
+
+  const d=a.disagree||{n:0,moneyWon:0,priceWon:0};
+  const disagreeHtml=d.n?('<div class="pw-sec" style="margin-top:4px"><div class="pw-sec-head"><span class="pw-kicker">⚔️ Wenn Geld ≠ Preis</span>'
+    +'<span class="pw-sec-note">wer gewinnt, wenn sie uneinig sind? (der reinste Test)</span></div>'
+    +'<div style="display:flex;gap:24px;padding:4px 2px 8px;font-size:14px">'
+    +'<div><b style="color:#a78bfa;font-size:22px">'+d.moneyWon+'</b> <span style="color:#8b949e">Geld gewann</span></div>'
+    +'<div><b style="color:#5eead4;font-size:22px">'+d.priceWon+'</b> <span style="color:#8b949e">Preis gewann</span></div>'
+    +'<div><b style="color:#8b949e;font-size:22px">'+(d.n-d.moneyWon-d.priceWon)+'</b> <span style="color:#8b949e">keiner</span></div>'
+    +'</div></div>'):'';
+
+  // Match-Tabelle
+  const rows=(a.rows||[]).slice(0,25).map(r=>{
+    const seite=s=>({home:'Heim',draw:'Remis',away:'Ausw.'})[s]||s;
+    const mark=ok=>ok?'<span style="color:#3fb950">✓</span>':'<span style="color:#f85149">✗</span>';
+    return '<tr><td class="pw-cm">'+_pwEsc(r.key)+'</td>'
+      +'<td>'+seite(r.moneyFav)+' '+mark(r.moneyOK)+'</td>'
+      +'<td>'+seite(r.priceFav)+' '+mark(r.priceOK)+'</td>'
+      +'<td class="pw-cm">'+seite(r.winner)+'</td>'
+      +'<td class="pw-cn pw-mut">'+_pwUsd(r.totalUsd)+'</td></tr>';
+  }).join('');
+
+  return intro
+    +'<div style="background:linear-gradient(145deg,'+V[1]+'14,transparent);border:1px solid '+V[1]+'44;border-radius:14px;padding:18px 20px;margin-bottom:16px">'
+    +'<div style="font-size:20px;font-weight:800;color:'+V[1]+'">'+V[0]+' '+V[2]+'</div>'
+    +'<div style="font-size:13px;color:#8b949e;margin-top:4px">'+V[3]+'  ·  <span style="color:#6e7681">'+a.n+' aufgelöste Märkte</span></div></div>'
+    +'<div class="pw-kpis" style="margin-bottom:16px">'
+    +kpi('Geld-Mehrheit trifft',pct(a.moneyHitRate),'#a78bfa','Seite mit dem meisten Geld gewinnt')
+    +kpi('Preis-Favorit trifft',pct(a.priceHitRate),'#5eead4','Baseline: günstigster Preis gewinnt')
+    +'</div>'
+    +'<div class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">📏 Kalibrierung (Brier)</span>'
+    +'<span class="pw-sec-note">niedriger = besser · wer schätzt die Wahrscheinlichkeit genauer?</span></div>'
+    +bar('Geld (Verteilung)',a.brierMoney,'#a78bfa')+bar('Preis',a.brierPrice,'#5eead4')+'</div>'
+    +disagreeHtml
+    +(rows?('<div class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">Aufgelöste Märkte</span>'
+      +'<span class="pw-sec-note">Geld-Favorit vs. Preis-Favorit vs. Ausgang</span></div>'
+      +'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
+      +'<th>Markt</th><th>Geld sagt</th><th>Preis sagt</th><th>Gewinner</th><th>Volumen</th>'
+      +'</tr></thead><tbody>'+rows+'</tbody></table></div></div>'):'');
 }
 
 // ── Edge-Board ──────────────────────────────────────────────────────────────
