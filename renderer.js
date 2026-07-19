@@ -1689,10 +1689,17 @@ function _renderBayesianWeights() {
     coach_change: "Neuer Trainer",
     transfer_shift: "Schlüssel-Abgang",
   };
+  // 19.07.2026 — CLV als zweiter Lernstrom sichtbar machen: `n_clv` zeigt, wie viele stetige
+  // CLV-Beobachtungen ein Signal zusätzlich zu den Ergebnis-Beobachtungen bekommen hat. Nur die
+  // sharp_money-Familie lernt darauf (Move-Signale) — bei allen anderen bleibt die Spalte leer,
+  // und genau das ist die Aussage: Form/Ausfälle werden am Ergebnis gemessen, nicht am Markt.
+  let anyClv = false;
   const rows = signalNames.map(name => {
     const w = weights[name] || {};
     const weight = typeof w.weight === 'number' ? w.weight : 1.0;
     const n = w.n_observations || 0;
+    const nClv = w.n_clv || 0;
+    if (nClv > 0) anyClv = true;
     const wins = w.wins_when_triggered || 0;
     const hitRate = n > 0 ? Math.round((wins / n) * 100) : null;
     const wCol = weight > 1.1 ? '#3fb950' : weight < 0.9 ? '#f85149' : '#8b949e';
@@ -1700,10 +1707,14 @@ function _renderBayesianWeights() {
     const hrCell = hitRate !== null
       ? `<span style="color:${hitRate >= 55 ? '#3fb950' : hitRate >= 45 ? '#e3b341' : '#f85149'};font-weight:700;">${hitRate}%</span>`
       : `<span style="color:var(--muted);font-style:italic;">—</span>`;
+    const clvCell = nClv > 0
+      ? `<span title="zusätzliche Beobachtungen aus Closing Line Value" style="color:#a78bfa;font-weight:700;">+${nClv % 1 === 0 ? nClv : nClv.toFixed(1)}</span>`
+      : `<span style="color:var(--border);">·</span>`;
     return `<tr style="border-top:1px solid var(--border);">
       <td style="padding:8px 12px;font-size:13px;">${labels[name] || name}</td>
       <td style="padding:8px 12px;text-align:right;font-family:ui-monospace,monospace;color:${wCol};font-weight:700;">${wLabel}</td>
       <td style="padding:8px 12px;text-align:right;font-size:12px;color:var(--muted);">${n}</td>
+      <td style="padding:8px 12px;text-align:right;font-size:12px;color:#a78bfa;">${clvCell}</td>
       <td style="padding:8px 12px;text-align:right;font-size:12px;">${hrCell}</td>
     </tr>`;
   }).join('');
@@ -1722,10 +1733,14 @@ function _renderBayesianWeights() {
           <th style="padding:10px 12px;text-align:left;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;">Signal</th>
           <th style="padding:10px 12px;text-align:right;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;">Weight</th>
           <th style="padding:10px 12px;text-align:right;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;">n</th>
+          <th title="Zusätzliche Beobachtungen aus Closing Line Value — nur Sharp-Money-Signale lernen darauf" style="padding:10px 12px;text-align:right;font-size:11px;color:#a78bfa;text-transform:uppercase;letter-spacing:0.5px;">CLV</th>
           <th style="padding:10px 12px;text-align:right;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:0.5px;">Hit-Rate</th>
         </tr></thead>
         <tbody>${rows}</tbody>
       </table>
+      ${anyClv ? `<div style="padding:8px 14px;background:rgba(167,139,250,0.05);border-top:1px solid var(--border);font-size:11px;color:#a78bfa;line-height:1.5;">
+        <b>CLV-Spalte:</b> stetige Zusatz-Beobachtungen aus der Schlusslinie (schon beim Anpfiff da, kleinere Varianz).
+        Nur Sharp-Money-Signale lernen darauf — Form/Ausfälle/Druck werden bewusst am Ergebnis gemessen, nicht am Markt.</div>` : ''}
     </div>`;
 }
 

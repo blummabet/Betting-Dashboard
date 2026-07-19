@@ -3402,6 +3402,9 @@ async function loadCockpitData() {
     `${base}/wm_kill_switch.json?t=${t}`,
     `${base}/wm_poly_prices.json?t=${t}`,
     `${base}/wm2026-data.json?t=${t}`,   // für Pinnacle-Odds-Frische (Edge-Basis)
+    // 19.07.2026 — Maker-Register beider Live-Datensätze (WM läuft aus, MLS ist die Zukunft).
+    `${base}/wm_poly_resting_orders.json?t=${t}`,
+    `${base}/mls_poly_resting_orders.json?t=${t}`,
   ];
   const fallbacks = [
     'wm_auto_bets_placed.json',
@@ -3409,6 +3412,8 @@ async function loadCockpitData() {
     'wm_kill_switch.json',
     'wm_poly_prices.json',
     'wm2026-data.json',
+    'wm_poly_resting_orders.json',
+    'mls_poly_resting_orders.json',
   ];
   const results = await Promise.all(urls.map(async (u, i) => {
     try {
@@ -3421,7 +3426,53 @@ async function loadCockpitData() {
     } catch {}
     return null;
   }));
-  return { placed: results[0], balance: results[1], kill: results[2], poly: results[3], data: results[4] };
+  // Ruhende Maker-Orders beider Datensätze zusammenführen (nur die noch offenen interessieren).
+  const _resting = [];
+  for (const idx of [5, 6]) {
+    const ro = (results[idx] && results[idx].orders) || [];
+    for (const o of ro) if (o && o.status === 'resting') _resting.push(o);
+  }
+  return { placed: results[0], balance: results[1], kill: results[2], poly: results[3],
+           data: results[4], resting: _resting };
+}
+
+// ── Maker-Register (19.07.2026) ──────────────────────────────────────────────
+// Zeigt ruhende Limit-Orders, die auf einen Fill warten. Solange maker_enabled aus ist, gibt es
+// keine → dann eine ruhige Erklärzeile statt eines leeren Kastens. Sobald aktiv, sieht Lucas hier
+// live, was im Buch liegt und was der Lebenszyklus-Monitor kurz vor Anpfiff zu Taker eskaliert.
+function _ptRestingBlock(resting) {
+  const list = resting || [];
+  if (!list.length) {
+    return `<div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:12px 16px;margin-bottom:14px">
+      <div style="font-size:10px;font-weight:700;letter-spacing:.8px;color:#8b949e;text-transform:uppercase;margin-bottom:6px">🅼 Maker-Orders · ruhend</div>
+      <div style="font-size:12px;color:#8b949e;line-height:1.5">Keine ruhenden Limit-Orders. Maker-Modus spart den Spread, indem Orders im Buch warten statt zu crossen — aktiv erst mit <code style="color:#a78bfa">maker_enabled</code>. Unerfüllte Orders werden kurz vor Anpfiff automatisch zu Taker eskaliert.</div>
+    </div>`;
+  }
+  const fmtKo = iso => { const h = _polyHoursUntil(iso); return h == null ? '—' : (h < 0 ? 'angepfiffen' : h.toFixed(1) + 'h'); };
+  const rows = list.slice(0, 12).map(o => {
+    const h = _polyHoursUntil(o.kickoff);
+    const near = (h != null && h <= 1.5);   // Eskalations-Fenster
+    return `<tr style="border-top:1px solid #21262d">
+      <td style="padding:7px 12px;font-size:12px;color:#e6edf3">${(o.matchKey || '—')}</td>
+      <td style="padding:7px 12px;font-size:12px;color:#8b949e">${(o.market || '—')}</td>
+      <td style="padding:7px 12px;text-align:right;font-size:12px;color:#a78bfa;font-weight:700">${o.price != null ? Math.round(o.price * 100) + '¢' : '—'}</td>
+      <td style="padding:7px 12px;text-align:right;font-size:12px;color:${near ? '#e3b341' : '#8b949e'}">${fmtKo(o.kickoff)}${near ? ' ⚠️' : ''}</td>
+    </tr>`;
+  }).join('');
+  return `<div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;overflow:hidden;margin-bottom:14px">
+    <div style="padding:10px 16px;border-bottom:1px solid #30363d;display:flex;justify-content:space-between;align-items:center">
+      <span style="font-size:10px;font-weight:700;letter-spacing:.8px;color:#8b949e;text-transform:uppercase">🅼 Maker-Orders · ruhend</span>
+      <span style="font-size:11px;color:#a78bfa;font-weight:800">${list.length} im Buch</span>
+    </div>
+    <table style="width:100%;border-collapse:collapse">
+      <thead><tr style="background:rgba(255,255,255,.02)">
+        <th style="padding:8px 12px;text-align:left;font-size:10px;color:#8b949e;text-transform:uppercase">Spiel</th>
+        <th style="padding:8px 12px;text-align:left;font-size:10px;color:#8b949e;text-transform:uppercase">Markt</th>
+        <th style="padding:8px 12px;text-align:right;font-size:10px;color:#8b949e;text-transform:uppercase">Preis</th>
+        <th style="padding:8px 12px;text-align:right;font-size:10px;color:#8b949e;text-transform:uppercase">bis Anpfiff</th>
+      </tr></thead><tbody>${rows}</tbody>
+    </table>
+  </div>`;
 }
 
 function _polyCurrentPrice(bet, polyData) {
@@ -3695,6 +3746,8 @@ function renderTradingCockpit(data) {
       </div>
       ${positionsHtml}
     </div>
+
+    ${_ptRestingBlock(data && data.resting)}
 
     <!-- System-Health Footer -->
     <div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:12px 16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;font-size:11px">
