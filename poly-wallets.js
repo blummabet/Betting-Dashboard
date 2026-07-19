@@ -102,7 +102,10 @@ if(typeof window!=='undefined') window._pwSetView=_pwSetView;
 function _pwViewTabs(){
   const b=(id,label)=>'<button class="pw-ds-btn'+(id===_pwView?' pw-ds-on':'')
     +'" onclick="_pwSetView(\''+id+'\')">'+label+'</button>';
-  return '<div class="pw-ds" style="margin-top:-6px">'+b('edge','🐋 Edge & Smart-Money')+b('money','🎯 Liegt das Geld richtig?')+'</div>';
+  // 19.07.2026 (Lucas: „besser aufteilen") — 4 Unter-Reiter statt 9 gestapelter Sektionen.
+  return '<div class="pw-ds" style="margin-top:-6px">'
+    +b('edge','🎯 Chancen')+b('smart','💡 Smart-Money')+b('whales','🐋 Whales')
+    +b('money','⚖️ Liegt das Geld richtig?')+'</div>';
 }
 
 function initPolyWallets(){
@@ -316,23 +319,31 @@ function _pwRender(){
       : 'Wo Polymarket vs. dem scharfen Pinnacle-Anker fehlbepreist ist — bestätigt oder gevetot vom großen Geld. <b>Die Edge ist das Signal, die Whales sind das Veto.</b>')+'</p></div>'
     +'<div class="pw-stamp">'+f.icon+' '+f.label+' · Stand '+upd+'<br><span>Beträge geschätzt (Anteile × Preis)</span></div></div>';
 
-  let h=_pwDatasetTabs()+_pwViewTabs()+head;
-  h+=_pwKpiBand(edges,wallets);
-  h+=_pwSettlementBoard(settlement,teams);
-  h+=_pwCoherenceBoard(coherence);
-  h+=_pwSmartConcentration(smart,prices,teams);   // 19.07.2026 — vorher komplett ungenutzt
-  if(!noAnchor){
-    // Pinnacle-Edge-Ansichten nur mit scharfem Anker (Fußball). E-Sport überspringt sie.
-    h+=_pwScatterSection(edges);
-    h+=_pwEdgeBoard(edges,teams,wallets,hist);
+  // 19.07.2026 (Lucas: „besser aufteilen") — Sektionen auf Unter-Reiter verteilt, statt alle 9
+  // untereinander. Jede Ansicht zeigt nur ihr Thema → kurze Scroll-Achse, klare Trennung.
+  let h=_pwDatasetTabs()+_pwViewTabs()+head+_pwKpiBand(edges,wallets);
+  let drawScatter=false;
+  if(_pwView==='smart'){
+    // 💡 Smart-Money: wo liegt das Geld, wie konzentriert, welcher Fluss.
+    h+=_pwSmartConcentration(smart,prices,teams);
+    h+=_pwExitWatch(wallets,teams);
+  }else if(_pwView==='whales'){
+    // 🐋 Whales: einzelne große Wallets — Einstieg, jüngste Trades, Leaderboard.
+    h+=_pwWhaleEntryQuality(ledger);
+    h+=_pwFlowTape(wallets,teams);
+    h+=_pwLeaderboard(wallets,teams);
+  }else{
+    // 🎯 Chancen (Default): Auflösungs-Lücken + interne Fehlbepreisung + (mit Anker) Edge-Board.
+    h+=_pwSettlementBoard(settlement,teams);
+    h+=_pwCoherenceBoard(coherence);
+    if(!noAnchor){
+      h+=_pwScatterSection(edges);
+      h+=_pwEdgeBoard(edges,teams,wallets,hist);
+      drawScatter=true;
+    }
   }
-  h+=_pwWhaleEntryQuality(ledger);
-  h+=_pwExitWatch(wallets,teams);
-  h+=_pwFlowTape(wallets,teams);
-  h+=_pwLeaderboard(wallets,teams);
   panel.innerHTML=h;
-  // Charts nach DOM-Insert zeichnen (nur wo ein Edge-Scatter existiert)
-  if(!noAnchor) _pwDrawScatter(edges);
+  if(drawScatter) _pwDrawScatter(edges);
   if(_pwState.open) _pwDrawDrillChart(edges,hist);
 }
 

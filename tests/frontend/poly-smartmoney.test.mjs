@@ -73,3 +73,54 @@ test('Edge-Board: ohne Pinnacle-Totals fällt O/U auf Softbook zurück (ᴾ-Tag)
   assert.ok(ou && /ᴾ/.test(ou.ticket), 'Softbook-Fair muss als ᴾ markiert sein');
   assert.equal(ou.fairSrc, 'public');
 });
+
+// Unter-Reiter (19.07.2026, Lucas: „besser aufteilen") — jede Ansicht zeigt nur ihr Thema.
+import { JSDOM as _JSDOM } from 'jsdom';
+async function renderView(view) {
+  const files = {
+    'mls-data.json': { groups: {} },
+    'mls_poly_prices.json': { prices: { 'H-A': { homeName: 'H', awayName: 'A', hw: 0.5, dr: 0.3, aw: 0.3, vol: 50000 } } },
+    'mls_poly_wallets.json': { topPositionsAll: [{ wallet: '0xa', usd: 5000, side: 'home', pick: 'H', key: 'H-A', match: 'H – A' }],
+      bigTradesAll: [{ wallet: '0xb', side: 'home', pick: 'H', usd: 9000, price: 0.5, action: 'BUY', ts: new Date().toISOString(), match: 'H – A', key: 'H-A' }],
+      clustersAll: [], updatedAt: new Date().toISOString() },
+    'mls-odds-history.json': {},
+    'mls_poly_smartmoney.json': { matches: { 'H-A': { home: 'H', away: 'A', totalUsd: 50000, hoursToKickoff: 5,
+      outcomes: { home: { usd: 30000, share: 0.6, topHolderShare: 0.55, holders: 40 }, away: { usd: 20000, share: 0.4, topHolderShare: 0.8, holders: 30 } } } } },
+    'mls_poly_wallet_ledger.json': { updatedAt: new Date().toISOString(), positions: {
+      a: { wallet: '0xd', usd: 8000, pick: 'H', firstAvgPrice: 0.42, avgPrice: 0.5 },
+      b: { wallet: '0xe', usd: 3000, pick: 'A', firstAvgPrice: 0.6 },
+      c: { wallet: '0xf', usd: 2000, pick: 'X', firstAvgPrice: 0.5 } } },
+  };
+  const dom = new _JSDOM('<!DOCTYPE html><body><div id="polyWalletsPanel"></div></body>',
+    { url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
+  const w = dom.window;
+  w.fetch = (url) => { const u = String(url); let b = null; for (const [f, d] of Object.entries(files)) if (u.includes(f)) { b = d; break; } return Promise.resolve({ ok: b != null, json: () => Promise.resolve(b) }); };
+  w.eval(readFileSync(PW, 'utf8'));
+  w.initPolyWallets();
+  await new Promise(r => setTimeout(r, 30));
+  if (view !== 'edge') w._pwSetView(view);
+  return w.document.getElementById('polyWalletsPanel').innerHTML;
+}
+
+test('Reiter Smart-Money: nur Konzentration, kein Whale-Leaderboard', async () => {
+  const html = await renderView('smart');
+  assert.match(html, /Smart-Money-Konzentration/);
+  assert.doesNotMatch(html, /Whale-Leaderboard/);
+});
+
+test('Reiter Whales: Leaderboard, aber keine Smart-Money-Konzentration', async () => {
+  const html = await renderView('whales');
+  assert.match(html, /Whale-Leaderboard/);
+  assert.doesNotMatch(html, /Smart-Money-Konzentration/);
+});
+
+test('Reiter Chancen (Default): weder Konzentration noch Leaderboard (die sind eigene Reiter)', async () => {
+  const html = await renderView('edge');
+  assert.doesNotMatch(html, /Smart-Money-Konzentration/);
+  assert.doesNotMatch(html, /Whale-Leaderboard/);
+});
+
+test('vier Unter-Reiter existieren', async () => {
+  const html = await renderView('edge');
+  for (const t of ['🎯 Chancen', '💡 Smart-Money', '🐋 Whales', 'Liegt das Geld richtig']) assert.match(html, new RegExp(t));
+});

@@ -27,7 +27,7 @@ function mockFetch() {
   };
 }
 
-async function renderEsports() {
+async function renderEsports(view) {
   const dom = new JSDOM('<!DOCTYPE html><body><div id="polyWalletsPanel"></div></body>',
     { url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
   const { window: w } = dom;
@@ -35,6 +35,7 @@ async function renderEsports() {
   w.eval(readFileSync(PW, 'utf8'));
   w._pwSwitchDataset('esports');               // korrekt umschalten (setzt den Modul-State)
   await new Promise(r => setTimeout(r, 30));
+  if (view) w._pwSetView(view);                // Smart-Money liegt auf eigenem Unter-Reiter
   return w.document.getElementById('polyWalletsPanel').innerHTML;
 }
 
@@ -44,15 +45,19 @@ test('E-Sport ist ein eigener Datensatz-Tab', () => {
   assert.match(dom.window._pwDatasetTabs(), /E-Sport/);
 });
 
-test('E-Sport rendert Smart-Money statt Pinnacle-Edge-Board', async () => {
-  const html = await renderEsports();
-  assert.match(html, /Smart-Money-Konzentration/, 'Smart-Money muss erscheinen');
-  assert.match(html, /NAVI – FaZe/);
+test('E-Sport: kein Pinnacle-Edge-Board, aber Erklärung warum', async () => {
+  const html = await renderEsports();   // Default-Reiter „Chancen"
   assert.doesNotMatch(html, /⚡ Edge-Board/, 'ohne scharfen Anker KEIN Pinnacle-Edge-Board');
   assert.match(html, /keine Edge-vs-Pinnacle-Ansicht/, 'Erklärung fehlt, warum kein Edge-Board');
 });
 
+test('E-Sport: Smart-Money-Reiter zeigt Konzentration', async () => {
+  const html = await renderEsports('smart');
+  assert.match(html, /Smart-Money-Konzentration/, 'Smart-Money muss erscheinen');
+  assert.match(html, /NAVI – FaZe/);
+});
+
 test('E-Sport: hohe Whale-Konzentration wird markiert (80%)', async () => {
-  const html = await renderEsports();
+  const html = await renderEsports('smart');
   assert.match(html, /⚠️ 80%/);
 });

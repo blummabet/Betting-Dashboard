@@ -27,7 +27,7 @@ function mockFetch(files) {
   };
 }
 
-async function render(files) {
+async function render(files, view) {
   const dom = new JSDOM('<!DOCTYPE html><body><div id="polyWalletsPanel"></div></body>',
     { url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
   const { window: w } = dom;
@@ -41,6 +41,7 @@ async function render(files) {
   w._pwDsId = 'mls';               // MLS = Einstieg (hat Poly)
   w.initPolyWallets();
   await new Promise(r => setTimeout(r, 20));   // Promise.all auflösen lassen
+  if (view) w._pwSetView(view);    // 19.07.: Sektionen auf Unter-Reiter verteilt
   return w.document.getElementById('polyWalletsPanel').innerHTML;
 }
 
@@ -65,7 +66,7 @@ test('Whale-Einstiegsqualität rendert aus dem Ledger (firstAvgPrice)', async ()
     positions: {
       a: { wallet: '0xdef', usd: 8000, pick: 'Über 2.5', firstAvgPrice: 0.42 },
       b: { wallet: '0xghi', usd: 3000, pick: 'Heim', firstAvgPrice: 0.60 },
-      c: { wallet: '0xjkl', usd: 2000, pick: 'BTTS', firstAvgPrice: 0.50 } } } });
+      c: { wallet: '0xjkl', usd: 2000, pick: 'BTTS', firstAvgPrice: 0.50 } } } }, 'whales');
   assert.match(html, /Whale-Einstiegsqualität/);
   assert.match(html, /42¢/, 'Einstiegspreis muss erscheinen');
 });
