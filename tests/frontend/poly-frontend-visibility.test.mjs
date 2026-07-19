@@ -63,3 +63,19 @@ test('Trading-Cockpit: ruhende Order wird gelistet, Eskalations-Fenster markiert
   assert.match(html, /2 im Buch/);
   assert.match(html, /⚠️/, 'Order kurz vor Anpfiff muss markiert sein (Eskalation steht an)');
 });
+
+test('Trading-Cockpit: Markout-Verdict (trägt Making?) erscheint als Tor für maker_enabled', () => {
+  const w = win(POLYTAB);
+  const html = w._ptRestingBlock([], {
+    mls: { verdict: 'traegt_nicht', netMakerPP: -0.8 },
+    wm:  { verdict: 'traegt', netMakerPP: 1.0 },
+  });
+  assert.match(html, /Kann Making funktionieren/);
+  assert.match(html, /MLS: trägt NICHT/, 'toxischer Markout muss klar rot benannt sein');
+  assert.match(html, /erst scharfschalten, wenn das dauerhaft/, 'Gate-Hinweis fehlt');
+});
+
+test('Trading-Cockpit: ohne Markout-Daten keine Verdict-Zeile', () => {
+  const w = win(POLYTAB);
+  assert.doesNotMatch(w._ptRestingBlock([], {}), /Kann Making funktionieren/);
+});

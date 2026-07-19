@@ -74,6 +74,11 @@ jobs:
           python poly_settlement_gap.py || true
         continue-on-error: true
 
+      # Markout: misst über die Tage, ob Making trägt (Adverse Selection) — Tor für maker_enabled.
+      - name: 🅼 MLS Maker-Markout messen
+        run: python poly_markout.py || true
+        continue-on-error: true
+
       # Picks aus den frischen Odds neu generieren — MLS läuft voll nur 2×/Tag; ohne diesen
       # Schritt wären Steam-Picks bis zu 12h alt. Nutzt die bestehenden Signal-Daten (Form/xG/
       # Lineups vom letzten Volllauf) + die eben geholten Odds + die frischen Poly-Preise.
@@ -98,7 +103,7 @@ jobs:
           git add mls_pick_announce_state.json 2>/dev/null || true
           git add mls_poly_prices.json mls_poly_smartmoney.json mls_poly_wallets.json 2>/dev/null || true
           git add mls_poly_wallet_ledger.json 2>/dev/null || true
-          git add mls_poly_coherence.json mls_poly_settlement.json 2>/dev/null || true
+          git add mls_poly_coherence.json mls_poly_settlement.json mls_poly_markout.json 2>/dev/null || true
           git add mls-poly-history.json mls_edge_alert_dedup.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Änderung — nichts zu committen."; exit 0

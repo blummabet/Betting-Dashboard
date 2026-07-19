@@ -3405,6 +3405,9 @@ async function loadCockpitData() {
     // 19.07.2026 — Maker-Register beider Live-Datensätze (WM läuft aus, MLS ist die Zukunft).
     `${base}/wm_poly_resting_orders.json?t=${t}`,
     `${base}/mls_poly_resting_orders.json?t=${t}`,
+    // Markout: trägt Making, oder frisst Adverse Selection die Spread-Ersparnis?
+    `${base}/wm_poly_markout.json?t=${t}`,
+    `${base}/mls_poly_markout.json?t=${t}`,
   ];
   const fallbacks = [
     'wm_auto_bets_placed.json',
@@ -3414,6 +3417,8 @@ async function loadCockpitData() {
     'wm2026-data.json',
     'wm_poly_resting_orders.json',
     'mls_poly_resting_orders.json',
+    'wm_poly_markout.json',
+    'mls_poly_markout.json',
   ];
   const results = await Promise.all(urls.map(async (u, i) => {
     try {
@@ -3433,19 +3438,44 @@ async function loadCockpitData() {
     for (const o of ro) if (o && o.status === 'resting') _resting.push(o);
   }
   return { placed: results[0], balance: results[1], kill: results[2], poly: results[3],
-           data: results[4], resting: _resting };
+           data: results[4], resting: _resting,
+           markout: { wm: results[7], mls: results[8] } };
 }
 
 // ── Maker-Register (19.07.2026) ──────────────────────────────────────────────
 // Zeigt ruhende Limit-Orders, die auf einen Fill warten. Solange maker_enabled aus ist, gibt es
 // keine → dann eine ruhige Erklärzeile statt eines leeren Kastens. Sobald aktiv, sieht Lucas hier
 // live, was im Buch liegt und was der Lebenszyklus-Monitor kurz vor Anpfiff zu Taker eskaliert.
-function _ptRestingBlock(resting) {
+// Markout-Verdict-Zeile (19.07.2026, angestoßen von Lucas' Krypto-Markout): trägt Making, oder
+// frisst Adverse Selection die Spread-Ersparnis? Das ist das ehrliche Tor für maker_enabled.
+function _ptMarkoutLine(markout) {
+  const m = markout || {};
+  const parts = [];
+  for (const [ds, rep] of [['MLS', m.mls], ['WM', m.wm]]) {
+    if (!rep || rep.verdict == null) continue;
+    const v = rep.verdict, net = rep.netMakerPP;
+    const face = v === 'traegt' ? ['🟢', '#3fb950', 'trägt']
+      : v === 'traegt_nicht' ? ['🔴', '#f85149', 'trägt NICHT']
+      : v === 'grenzwertig' ? ['⚪', '#8b949e', 'grenzwertig']
+      : ['⏳', '#8b949e', 'zu wenig Daten'];
+    const netTxt = (net == null) ? '' : ` (netto ${net > 0 ? '+' : ''}${net}pp)`;
+    parts.push(`<span style="color:${face[1]}">${face[0]} ${ds}: ${face[2]}${netTxt}</span>`);
+  }
+  if (!parts.length) return '';
+  return `<div style="padding:8px 16px;background:rgba(167,139,250,.05);border-top:1px solid #21262d;font-size:11px;color:#8b949e;line-height:1.5">
+    <b style="color:#a78bfa">Kann Making funktionieren?</b> Markout-Test (Adverse Selection vs. Spread-Ersparnis): ${parts.join(' · ')}.
+    <span style="color:#6e7681"> Maker erst scharfschalten, wenn das dauerhaft 🟢 ist.</span></div>`;
+}
+
+function _ptRestingBlock(resting, markout) {
   const list = resting || [];
+  const markoutLine = _ptMarkoutLine(markout);
   if (!list.length) {
-    return `<div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:12px 16px;margin-bottom:14px">
-      <div style="font-size:10px;font-weight:700;letter-spacing:.8px;color:#8b949e;text-transform:uppercase;margin-bottom:6px">🅼 Maker-Orders · ruhend</div>
-      <div style="font-size:12px;color:#8b949e;line-height:1.5">Keine ruhenden Limit-Orders. Maker-Modus spart den Spread, indem Orders im Buch warten statt zu crossen — aktiv erst mit <code style="color:#a78bfa">maker_enabled</code>. Unerfüllte Orders werden kurz vor Anpfiff automatisch zu Taker eskaliert.</div>
+    return `<div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;overflow:hidden;margin-bottom:14px">
+      <div style="padding:12px 16px">
+        <div style="font-size:10px;font-weight:700;letter-spacing:.8px;color:#8b949e;text-transform:uppercase;margin-bottom:6px">🅼 Maker-Orders · ruhend</div>
+        <div style="font-size:12px;color:#8b949e;line-height:1.5">Keine ruhenden Limit-Orders. Maker-Modus spart den Spread, indem Orders im Buch warten statt zu crossen — aktiv erst mit <code style="color:#a78bfa">maker_enabled</code>. Unerfüllte Orders werden kurz vor Anpfiff automatisch zu Taker eskaliert.</div>
+      </div>${markoutLine}
     </div>`;
   }
   const fmtKo = iso => { const h = _polyHoursUntil(iso); return h == null ? '—' : (h < 0 ? 'angepfiffen' : h.toFixed(1) + 'h'); };
@@ -3747,7 +3777,7 @@ function renderTradingCockpit(data) {
       ${positionsHtml}
     </div>
 
-    ${_ptRestingBlock(data && data.resting)}
+    ${_ptRestingBlock(data && data.resting, data && data.markout)}
 
     <!-- System-Health Footer -->
     <div style="background:#0d1117;border:1px solid #30363d;border-radius:10px;padding:12px 16px;display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:14px;font-size:11px">
