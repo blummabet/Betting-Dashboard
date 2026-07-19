@@ -10,7 +10,7 @@
     "updatedAt": null,
     "oddsUpdatedAt": "2026-07-19T16:46:18.154717+00:00",
     "formUpdatedAt": "2026-07-19T16:47:25.442821+00:00",
-    "picksUpdatedAt": "2026-07-19T16:47:42.494548+00:00",
+    "picksUpdatedAt": "2026-07-19T18:39:54.213284+00:00",
     "resultsUpdatedAt": "2026-07-19T17:05:02.350490+00:00",
     "cornersUpdatedAt": "2026-07-19T16:47:25.679183+00:00",
     "xgUpdatedAt": "2026-07-19T16:47:25.679196+00:00",
@@ -34370,31 +34370,39 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 2043024.0,
-          "topTraders": 169,
-          "hoursToKickoff": 6.0,
+          "totalUsd": 4787404.0,
+          "topTraders": 237,
+          "hoursToKickoff": 2.2,
           "outcomes": {
             "home": {
-              "usd": 940684.0,
-              "topHolderShare": 0.625,
+              "usd": 2415942.0,
+              "topHolderShare": 0.793,
               "holders": 200,
-              "share": 0.46
+              "share": 0.505,
+              "cluster": 3,
+              "buyUsd": 14956.0,
+              "sellUsd": 0.0,
+              "netFlowUsd": 14956.0
             },
             "draw": {
-              "usd": 206455.0,
-              "topHolderShare": 0.683,
+              "usd": 1058504.0,
+              "topHolderShare": 0.899,
               "holders": 200,
-              "share": 0.101
+              "share": 0.221,
+              "cluster": 2,
+              "buyUsd": 12101.0,
+              "sellUsd": 0.0,
+              "netFlowUsd": 12101.0
             },
             "away": {
-              "usd": 895885.0,
-              "topHolderShare": 0.709,
+              "usd": 1312958.0,
+              "topHolderShare": 0.708,
               "holders": 200,
-              "share": 0.439,
+              "share": 0.274,
               "cluster": 1,
-              "buyUsd": 5663.0,
+              "buyUsd": 7889.0,
               "sellUsd": 0.0,
-              "netFlowUsd": 5663.0
+              "netFlowUsd": 7889.0
             }
           }
         },
@@ -34465,6 +34473,93 @@
             }
           },
           {
+            "name": "lineup_signal",
+            "score": -4.21,
+            "confidence": 0.8,
+            "evidence": "🚨 bei Heim sitzt nur auf der Bank Ferran Torres (ATT) · bei Heim sitzt nur auf der Bank Víctor Muñoz (ATT) · bei Heim fehlt Jesús Rodríguez (ATT) · bei Heim sitzt nur auf der Bank Borja Iglesias (ATT) · bei Heim fehlt Fermín (MID) · bei Auswärts sitzt nur auf der Bank Lautaro Martínez (ATT) · bei Auswärts sitzt nur auf der Bank T. Almada (MID) · bei Auswärts ist zurück E. Fernández (MID)",
+            "weight": 0.931,
+            "weighted_score": -3.14,
+            "metadata": {
+              "side": "over",
+              "affected": [
+                {
+                  "name": "Ferran Torres",
+                  "role": "ATT",
+                  "status": "benched",
+                  "importance": 0.372,
+                  "form_factor": 0.85,
+                  "team": "Heim",
+                  "team_id": "ESP"
+                },
+                {
+                  "name": "Víctor Muñoz",
+                  "role": "ATT",
+                  "status": "benched",
+                  "importance": 0.446,
+                  "form_factor": 1.05,
+                  "team": "Heim",
+                  "team_id": "ESP"
+                },
+                {
+                  "name": "Jesús Rodríguez",
+                  "role": "ATT",
+                  "status": "missing",
+                  "importance": 0.397,
+                  "form_factor": 1.0,
+                  "team": "Heim",
+                  "team_id": "ESP"
+                },
+                {
+                  "name": "Borja Iglesias",
+                  "role": "ATT",
+                  "status": "benched",
+                  "importance": 0.367,
+                  "form_factor": 0.937,
+                  "team": "Heim",
+                  "team_id": "ESP"
+                },
+                {
+                  "name": "Fermín",
+                  "role": "MID",
+                  "status": "missing",
+                  "importance": 0.405,
+                  "form_factor": 0.909,
+                  "team": "Heim",
+                  "team_id": "ESP"
+                },
+                {
+                  "name": "Lautaro Martínez",
+                  "role": "ATT",
+                  "status": "benched",
+                  "importance": 0.626,
+                  "form_factor": 1.15,
+                  "team": "Auswärts",
+                  "team_id": "ARG"
+                },
+                {
+                  "name": "T. Almada",
+                  "role": "MID",
+                  "status": "benched",
+                  "importance": 0.437,
+                  "form_factor": 0.85,
+                  "team": "Auswärts",
+                  "team_id": "ARG"
+                },
+                {
+                  "name": "E. Fernández",
+                  "role": "MID",
+                  "status": "returning",
+                  "games_missed": 1,
+                  "importance": 0.699,
+                  "team": "Auswärts",
+                  "team_id": "ARG"
+                }
+              ],
+              "mode": "full",
+              "fetchedAt": "2026-07-19T18:39:53.733311+00:00"
+            }
+          },
+          {
             "name": "chance_creation",
             "score": 3.69,
             "confidence": 0.6,
@@ -34491,14 +34586,14 @@
             }
           }
         ],
-        "signalAdjustmentPP": 0.93,
+        "signalAdjustmentPP": -0.48,
         "signalCountPos": 1,
-        "signalCountNeg": 1,
-        "signalAdjustmentPP_trade": 0.9,
+        "signalCountNeg": 2,
+        "signalAdjustmentPP_trade": -0.5,
         "signalCountPos_trade": 1,
-        "signalCountNeg_trade": 1,
-        "effectiveEdgePP": -1.1,
-        "effectiveEdgePP_trade": -1.1,
+        "signalCountNeg_trade": 2,
+        "effectiveEdgePP": -2.5,
+        "effectiveEdgePP_trade": -2.5,
         "convictionScore": 3,
         "convictionVerdict": "skip",
         "convictionLabel": null,
@@ -34509,31 +34604,39 @@
           "market": 0
         },
         "smartMoney": {
-          "totalUsd": 2043024.0,
-          "topTraders": 169,
-          "hoursToKickoff": 6.0,
+          "totalUsd": 4787404.0,
+          "topTraders": 237,
+          "hoursToKickoff": 2.2,
           "outcomes": {
             "home": {
-              "usd": 940684.0,
-              "topHolderShare": 0.625,
+              "usd": 2415942.0,
+              "topHolderShare": 0.793,
               "holders": 200,
-              "share": 0.46
+              "share": 0.505,
+              "cluster": 3,
+              "buyUsd": 14956.0,
+              "sellUsd": 0.0,
+              "netFlowUsd": 14956.0
             },
             "draw": {
-              "usd": 206455.0,
-              "topHolderShare": 0.683,
+              "usd": 1058504.0,
+              "topHolderShare": 0.899,
               "holders": 200,
-              "share": 0.101
+              "share": 0.221,
+              "cluster": 2,
+              "buyUsd": 12101.0,
+              "sellUsd": 0.0,
+              "netFlowUsd": 12101.0
             },
             "away": {
-              "usd": 895885.0,
-              "topHolderShare": 0.709,
+              "usd": 1312958.0,
+              "topHolderShare": 0.708,
               "holders": 200,
-              "share": 0.439,
+              "share": 0.274,
               "cluster": 1,
-              "buyUsd": 5663.0,
+              "buyUsd": 7889.0,
               "sellUsd": 0.0,
-              "netFlowUsd": 5663.0
+              "netFlowUsd": 7889.0
             }
           }
         },
@@ -34624,6 +34727,93 @@
             "correlation_discount_applied": 0.4
           },
           {
+            "name": "lineup_signal",
+            "score": 2.55,
+            "confidence": 0.8,
+            "evidence": "🚨 bei Heim sitzt nur auf der Bank Ferran Torres (ATT) · bei Heim sitzt nur auf der Bank Víctor Muñoz (ATT) · bei Heim fehlt Jesús Rodríguez (ATT) · bei Heim sitzt nur auf der Bank Borja Iglesias (ATT) · bei Heim fehlt Fermín (MID) · bei Auswärts sitzt nur auf der Bank Lautaro Martínez (ATT) · bei Auswärts sitzt nur auf der Bank T. Almada (MID) · bei Auswärts ist zurück E. Fernández (MID)",
+            "weight": 0.931,
+            "weighted_score": 1.9,
+            "metadata": {
+              "side": "away",
+              "affected": [
+                {
+                  "name": "Ferran Torres",
+                  "role": "ATT",
+                  "status": "benched",
+                  "importance": 0.372,
+                  "form_factor": 0.85,
+                  "team": "Heim",
+                  "team_id": "ESP"
+                },
+                {
+                  "name": "Víctor Muñoz",
+                  "role": "ATT",
+                  "status": "benched",
+                  "importance": 0.446,
+                  "form_factor": 1.05,
+                  "team": "Heim",
+                  "team_id": "ESP"
+                },
+                {
+                  "name": "Jesús Rodríguez",
+                  "role": "ATT",
+                  "status": "missing",
+                  "importance": 0.397,
+                  "form_factor": 1.0,
+                  "team": "Heim",
+                  "team_id": "ESP"
+                },
+                {
+                  "name": "Borja Iglesias",
+                  "role": "ATT",
+                  "status": "benched",
+                  "importance": 0.367,
+                  "form_factor": 0.937,
+                  "team": "Heim",
+                  "team_id": "ESP"
+                },
+                {
+                  "name": "Fermín",
+                  "role": "MID",
+                  "status": "missing",
+                  "importance": 0.405,
+                  "form_factor": 0.909,
+                  "team": "Heim",
+                  "team_id": "ESP"
+                },
+                {
+                  "name": "Lautaro Martínez",
+                  "role": "ATT",
+                  "status": "benched",
+                  "importance": 0.626,
+                  "form_factor": 1.15,
+                  "team": "Auswärts",
+                  "team_id": "ARG"
+                },
+                {
+                  "name": "T. Almada",
+                  "role": "MID",
+                  "status": "benched",
+                  "importance": 0.437,
+                  "form_factor": 0.85,
+                  "team": "Auswärts",
+                  "team_id": "ARG"
+                },
+                {
+                  "name": "E. Fernández",
+                  "role": "MID",
+                  "status": "returning",
+                  "games_missed": 1,
+                  "importance": 0.699,
+                  "team": "Auswärts",
+                  "team_id": "ARG"
+                }
+              ],
+              "mode": "full",
+              "fetchedAt": "2026-07-19T18:39:53.733311+00:00"
+            }
+          },
+          {
             "name": "chance_creation",
             "score": -1.37,
             "confidence": 0.62,
@@ -34668,47 +34858,47 @@
           },
           {
             "name": "smart_money",
-            "score": -0.73,
-            "confidence": 0.5,
-            "evidence": "💰 Auf Polymarket liegen 44% des Geldes auf Auswärts — weniger als der faire Preis hergibt (61%), und es sind echte Wale dahinter (Top-Wallets 71%).",
+            "score": -1.43,
+            "confidence": 0.6,
+            "evidence": "💰 Auf Polymarket liegen 27% des Geldes auf Auswärts — weniger als der faire Preis hergibt (61%), und es sind echte Wale dahinter (Top-Wallets 71%).",
             "weight": 1.219,
-            "weighted_score": -0.44,
+            "weighted_score": -1.05,
             "metadata": {
               "outcome": "away",
-              "share": 0.439,
-              "topHolderShare": 0.709,
+              "share": 0.274,
+              "topHolderShare": 0.708,
               "fairShare": 0.611,
-              "excessPP": -17.2,
-              "totalUsd": 2043024.0,
-              "topTraders": 169,
+              "excessPP": -33.7,
+              "totalUsd": 4787404.0,
+              "topTraders": 237,
               "cluster": 1,
               "clustered": false,
-              "netFlowUsd": 5663.0,
-              "hoursToKickoff": 6.0,
+              "netFlowUsd": 7889.0,
+              "hoursToKickoff": 2.2,
               "exitFlag": false
             }
           }
         ],
-        "signalAdjustmentPP": -0.56,
-        "signalCountPos": 1,
+        "signalAdjustmentPP": -0.08,
+        "signalCountPos": 2,
         "signalCountNeg": 4,
-        "signalAdjustmentPP_trade": 0.2,
-        "signalCountPos_trade": 1,
+        "signalAdjustmentPP_trade": 1.3,
+        "signalCountPos_trade": 2,
         "signalCountNeg_trade": 3,
-        "effectiveEdgePP": -2.6,
-        "effectiveEdgePP_trade": -1.8,
-        "convictionScore": 3,
-        "convictionVerdict": "skip",
-        "convictionLabel": null,
+        "effectiveEdgePP": -2.1,
+        "effectiveEdgePP_trade": -0.7,
+        "convictionScore": 4,
+        "convictionVerdict": "watch",
+        "convictionLabel": "👁 Beobachten",
         "convictionFamilies": {
           "sharp_money": 1,
           "model_stack": 2,
-          "context": 0,
+          "context": 1,
           "market": 0
         },
         "openingMovement": {
-          "in_pick_direction": true,
-          "move_pp": 3.42
+          "in_pick_direction": false,
+          "move_pp": 2.53
         },
         "stake": 2.0,
         "engineVersion": "v2",
@@ -34717,31 +34907,39 @@
         "nobetSince": "2026-07-16T09:59:47.959788+00:00",
         "nobetReason": "Edge weg — Linie gegen den Pick gelaufen (1.71→3.67)",
         "smartMoney": {
-          "totalUsd": 2043024.0,
-          "topTraders": 169,
-          "hoursToKickoff": 6.0,
+          "totalUsd": 4787404.0,
+          "topTraders": 237,
+          "hoursToKickoff": 2.2,
           "outcomes": {
             "home": {
-              "usd": 940684.0,
-              "topHolderShare": 0.625,
+              "usd": 2415942.0,
+              "topHolderShare": 0.793,
               "holders": 200,
-              "share": 0.46
+              "share": 0.505,
+              "cluster": 3,
+              "buyUsd": 14956.0,
+              "sellUsd": 0.0,
+              "netFlowUsd": 14956.0
             },
             "draw": {
-              "usd": 206455.0,
-              "topHolderShare": 0.683,
+              "usd": 1058504.0,
+              "topHolderShare": 0.899,
               "holders": 200,
-              "share": 0.101
+              "share": 0.221,
+              "cluster": 2,
+              "buyUsd": 12101.0,
+              "sellUsd": 0.0,
+              "netFlowUsd": 12101.0
             },
             "away": {
-              "usd": 895885.0,
-              "topHolderShare": 0.709,
+              "usd": 1312958.0,
+              "topHolderShare": 0.708,
               "holders": 200,
-              "share": 0.439,
+              "share": 0.274,
               "cluster": 1,
-              "buyUsd": 5663.0,
+              "buyUsd": 7889.0,
               "sellUsd": 0.0,
-              "netFlowUsd": 5663.0
+              "netFlowUsd": 7889.0
             }
           }
         },
