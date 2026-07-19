@@ -366,9 +366,9 @@ test('Sharp Radar: Liga-Einstieg stößt den Lazy-Load selbst an', async () => {
 test('Poly-Wallets startet auf MLS (Top-5 hat kein Polymarket)', () => {
   const src = readFileSync(new URL('../../poly-wallets.js', import.meta.url), 'utf8');
   assert.match(src, /PW_DEFAULT_DS\s*=\s*'mls'/, 'Wallet-Tab-Default ist nicht MLS');
-  // Reihenfolge = Tab-Reihenfolge: der Datensatz mit laufender Saison steht vorn.
+  // Reihenfolge = Tab-Reihenfolge: MLS + Top-5 vorn, E-Sport (19.07.) daneben, WM (Archiv) ans Ende.
   const ids = [...src.matchAll(/\{\s*id:'(\w+)'/g)].map(m => m[1]);
-  assert.deepEqual(ids.slice(0, 3), ['mls', 'liga', 'wm'], 'Tab-Reihenfolge stimmt nicht');
+  assert.deepEqual(ids.slice(0, 4), ['mls', 'liga', 'esports', 'wm'], 'Tab-Reihenfolge stimmt nicht');
 });
 
 // ── Cross-Sport-Radar (19.07.2026, Lucas: neuer Sub-Tab neben Liga/MLS) ──────────────

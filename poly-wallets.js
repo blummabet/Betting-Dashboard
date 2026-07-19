@@ -38,6 +38,12 @@ const PW_DATASETS = [
   { id:'liga', icon:'⚽', label:'Top-5',
     prices:'liga_poly_prices.json', wallets:'liga_poly_wallets.json',
     data:'liga-data.json',          hist:'liga-odds-history.json' },
+  // 19.07.2026 (Lucas) — E-Sport als eigener Menüpunkt. „Poly-only": KEIN scharfer Pinnacle-Anker
+  // (noAnchor) → kein Edge-vs-Pinnacle-Board, aber volle Smart-Money/Whale/Kohärenz-Sicht aus
+  // Polys eigenen Daten. Dateien schreibt der Mac-Runner (fetch_poly_esports.py).
+  { id:'esports', icon:'🎮', label:'E-Sport', noAnchor:true,
+    prices:'esports_poly_prices.json', wallets:'esports_poly_wallets.json',
+    data:null,                          hist:null },
   { id:'wm',   icon:'🏆', label:'WM 2026',
     prices:'wm_poly_prices.json',   wallets:'wm_poly_wallets.json',
     data:'wm2026-data.json',        hist:'wm2026-odds-history.json' },
@@ -109,10 +115,10 @@ function initPolyWallets(){
   // 19.07.2026 — Poly-Edge-Dateien aus dem Preis-Dateinamen ableiten (wm_poly_prices → wm_poly_*).
   // Fehlen sie (Liga hat kein Poly, oder Detektor lief noch nicht) → null, sauber abgefangen.
   const _derive=(suffix)=>f.prices.replace('poly_prices','poly_'+suffix);
-  const jf=(url)=>fetch(url+b,{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);
+  const jf=(url)=>url?fetch(url+b,{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null):Promise.resolve(null);
   const wmP=(typeof window!=='undefined' && window.WM2026_DATA && _pwDataset()==='wm')
     ? Promise.resolve(window.WM2026_DATA)
-    : jf(f.data);
+    : jf(f.data);   // E-Sport: f.data=null → null (kein Fixture-/Odds-Datensatz)
   Promise.all([
     wmP, jf(f.prices), jf(f.wallets), jf(f.hist),
     jf(_derive('coherence')), jf(_derive('settlement')), jf(_derive('wallet_ledger')),
@@ -301,25 +307,32 @@ function _pwRender(){
     return;
   }
   const upd=wallets&&wallets.updatedAt?_pwAgo(wallets.updatedAt):'—';
-  let h=_pwDatasetTabs()+_pwViewTabs()
-    +'<div class="pw-head"><div><h1>🐋 Polymarket <span class="pw-accent">Edge</span> & Smart-Money</h1>'
-    +'<p class="pw-sub">Wo Polymarket vs. dem scharfen Pinnacle-Anker fehlbepreist ist — bestätigt oder gevetot vom großen Geld. <b>Die Edge ist das Signal, die Whales sind das Veto.</b></p></div>'
+  const noAnchor=!!f.noAnchor;   // E-Sport: kein scharfer Pinnacle-Anker → Poly-only-Sicht
+
+  const head='<div class="pw-head"><div><h1>'+(noAnchor?'🎮 Polymarket <span class="pw-accent">E-Sport</span> — Smart-Money'
+      :'🐋 Polymarket <span class="pw-accent">Edge</span> & Smart-Money')+'</h1>'
+    +'<p class="pw-sub">'+(noAnchor
+      ? 'E-Sport hat keinen scharfen Buchmacher-Anker — deshalb <b>keine Edge-vs-Pinnacle-Ansicht</b>. Stattdessen die reine Poly-Sicht: <b>wo liegt das Geld, wie konzentriert, welche Wale, und wo widerspricht sich Poly selbst</b> (Arbitrage).'
+      : 'Wo Polymarket vs. dem scharfen Pinnacle-Anker fehlbepreist ist — bestätigt oder gevetot vom großen Geld. <b>Die Edge ist das Signal, die Whales sind das Veto.</b>')+'</p></div>'
     +'<div class="pw-stamp">'+f.icon+' '+f.label+' · Stand '+upd+'<br><span>Beträge geschätzt (Anteile × Preis)</span></div></div>';
+
+  let h=_pwDatasetTabs()+_pwViewTabs()+head;
   h+=_pwKpiBand(edges,wallets);
-  // 19.07.2026 — Poly-native Edge-Quellen VOR dem Pinnacle-Edge-Board: das sind risikoärmere,
-  // reinere Chancen (Arb / feststehende Auflösung), die keinen externen Anker brauchen.
   h+=_pwSettlementBoard(settlement,teams);
   h+=_pwCoherenceBoard(coherence);
   h+=_pwSmartConcentration(smart,prices,teams);   // 19.07.2026 — vorher komplett ungenutzt
-  h+=_pwScatterSection(edges);
-  h+=_pwEdgeBoard(edges,teams,wallets,hist);
+  if(!noAnchor){
+    // Pinnacle-Edge-Ansichten nur mit scharfem Anker (Fußball). E-Sport überspringt sie.
+    h+=_pwScatterSection(edges);
+    h+=_pwEdgeBoard(edges,teams,wallets,hist);
+  }
   h+=_pwWhaleEntryQuality(ledger);
   h+=_pwExitWatch(wallets,teams);
   h+=_pwFlowTape(wallets,teams);
   h+=_pwLeaderboard(wallets,teams);
   panel.innerHTML=h;
-  // Charts nach DOM-Insert zeichnen
-  _pwDrawScatter(edges);
+  // Charts nach DOM-Insert zeichnen (nur wo ein Edge-Scatter existiert)
+  if(!noAnchor) _pwDrawScatter(edges);
   if(_pwState.open) _pwDrawDrillChart(edges,hist);
 }
 

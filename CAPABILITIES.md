@@ -36,7 +36,7 @@ SPA `season-finish-v2.html`, Weiche `showView()` in `ui.js` (`panelMap`). `seaso
 | `sharp` | `renderer.js` `renderSharpRadar()` | Pinnacle-Linienbewegungen, Toggles: Top-5 / MLS / International / **Poly-Radar** (Cross-Sport Poly vs Pinnacle, read-only + Konvergenz-Tracking) |
 | `polytrading` | `polymarket-tab.js` `initPolyTrader()` | Auto-Trader: offene Positionen, Health, P&L |
 | `polybetting` | `polymarket-tab.js` `initPolymarket()` | Manuelles Platzieren aus Card-Picks |
-| `polywallets` | `poly-wallets.js` | **Whale Tracker**, zwei Views: „Edge & Smart-Money" (Edge=Signal, Whales=Veto + Auflösungs-Lücken + interne Fehlbepreisung + **Smart-Money-Konzentration** [Split/Halter/Whale-Konz./Fluss aus smartmoney.json] + Whale-Einstiegsqualität mit Nachkauf-Signal + Deep-Links zu Polymarket) und **„Liegt das Geld richtig?"** (Geld-Genauigkeit Brier Geld vs Preis + „🌐 Alle Poly-Ligen" nach Kategorie inkl. E-Sport). Einstieg MLS. |
+| `polywallets` | `poly-wallets.js` | **Whale Tracker**. Datensatz-Tabs: MLS / Top-5 / **🎮 E-Sport** (noAnchor, kein Pinnacle → nur Smart-Money/Whale/Kohärenz) / WM. Zwei Views: „Edge & Smart-Money" (Edge=Signal, Whales=Veto + Auflösungs-Lücken + interne Fehlbepreisung + **Smart-Money-Konzentration** [Split/Halter/Whale-Konz./Fluss] + Whale-Einstieg mit Nachkauf-Signal + Deep-Links + O/U-Leiter 1.5/2.5/3.5) und **„Liegt das Geld richtig?"** (Brier Geld vs Preis + „🌐 Alle Poly-Ligen" nach Kategorie). |
 | `analyse` | `signal-check.js` | Fremden Tipp gegen alle Signale prüfen; isoliert, gibt nie ein Verdict |
 | `intl-studio` | `tiktok-studio.js` | Manueller TikTok-Card-Generator |
 | `status` | `status-checks.js` | Ops-Health: Browser-Checks + Server-Readiness aus `{ds}_status.json` |

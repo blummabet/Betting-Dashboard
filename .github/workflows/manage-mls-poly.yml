@@ -129,6 +129,11 @@ jobs:
         run: ${{ env.POLY_PYTHON }} poly_money_broad.py
         continue-on-error: true
 
+      # E-Sport als eigener Wallets-Datensatz (Smart-Money/Whale/Kohärenz, kein Pinnacle-Anker).
+      - name: 🎮 E-Sport Poly-Daten
+        run: ${{ env.POLY_PYTHON }} fetch_poly_esports.py
+        continue-on-error: true
+
       # 19.07.2026 — Maker-Lebenszyklus: ruhende Limit-Orders, die nicht füllen, kurz vor Anpfiff
       # stornieren + als Taker crossen. No-op solange maker_enabled=false (Default).
       - name: 🅼 MLS Maker-Orders verwalten (Default AUS)
@@ -169,6 +174,7 @@ jobs:
           git add mls_poly_resting_orders.json 2>/dev/null || true
           git add poly_cross_sport.json poly_cross_sport_history.json 2>/dev/null || true
           git add poly_money_broad.json poly_money_broad_close.json 2>/dev/null || true
+          git add esports_poly_prices.json esports_poly_wallets.json esports_poly_smartmoney.json esports_poly_coherence.json 2>/dev/null || true
           git add mls-poly-history.json mls_book_health.json mls_kill_switch.json 2>/dev/null || true
           git add mls-data.json mls-odds-history.json 2>/dev/null || true
           # 13.07.2026 (MLS-Audit): resolve_wm_results SCHREIBT mls_results.json — es wurde nur nie
