@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "wm",
-    "generatedAt": "2026-07-18T16:46:05.254376+00:00",
+    "generatedAt": "2026-07-19T06:25:51.648257+00:00",
     "games": 104,
     "markets": [
       "Heimsieg",
@@ -60674,7 +60674,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 77% des Geldes auf Heim — mehr als der faire Preis hergibt (52%), und es sind echte Wale dahinter (Top-Wallets 71%).",
+              "evidence": "💰 Auf Polymarket liegen 78% des Geldes auf Heim — mehr als der faire Preis hergibt (53%), und es sind echte Wale dahinter (Top-Wallets 56%). 4 große Wallets sammeln gerade unabhängig dieselbe Seite ein.",
               "dir": "confirm"
             },
             {
@@ -60688,7 +60688,7 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) sieht Heim um 6.8pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+              "evidence": "📊 Ein zweites Modell (API-Football) sieht Heim um 7.7pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
               "dir": "contradict"
             }
           ],
@@ -60804,10 +60804,16 @@
         },
         "Auswärtssieg": {
           "tip": "England (Auswärtssieg)",
-          "headline": "0 von 4 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „England (Auswärtssieg)“ kritisch — vor allem die xG-Werte spricht dagegen.",
+          "headline": "0 von 5 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „England (Auswärtssieg)“ kritisch — vor allem die Pinnacle-Bewegung spricht dagegen.",
           "confirm": [],
           "contradict": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung",
+              "evidence": "Pinnacle hat Auswärts um -2.0pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
+              "dir": "contradict"
+            },
             {
               "name": "xg_strength",
               "label": "die xG-Werte",
@@ -60817,7 +60823,7 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 14.4pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 13.4pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
               "dir": "contradict"
             },
             {
@@ -60829,16 +60835,12 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 8% des Geldes auf Auswärts — weniger als der faire Preis hergibt (24%), und es sind echte Wale dahinter (Top-Wallets 68%).",
+              "evidence": "💰 Auf Polymarket liegen 12% des Geldes auf Auswärts — weniger als der faire Preis hergibt (23%), und es sind echte Wale dahinter (Top-Wallets 79%).",
               "dir": "contradict"
             }
           ],
           "neutral": [],
           "silent": [
-            {
-              "name": "lead_lag_bias",
-              "label": "die Pinnacle-Bewegung"
-            },
             {
               "name": "public_static_bias",
               "label": "der Public-Bias"
@@ -60942,9 +60944,9 @@
           ],
           "score": {
             "confirm": 0,
-            "contradict": 4,
+            "contradict": 5,
             "neutral": 0,
-            "decisive": 4
+            "decisive": 5
           }
         },
         "Über 2.5 Tore": {
@@ -60975,7 +60977,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 36°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — FRA temperate · ENG temperate",
+              "evidence": "🌡 Bei 34°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — FRA temperate · ENG temperate",
               "dir": "contradict"
             }
           ],
@@ -61101,7 +61103,7 @@
             {
               "name": "weather_signal",
               "label": "das Wetter",
-              "evidence": "🌡 Bei 36°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — FRA temperate · ENG temperate",
+              "evidence": "🌡 Bei 34°C zum Nachmittag-Anpfiff tun sich hitze-ungewohnte Teams schwer — FRA temperate · ENG temperate",
               "dir": "confirm"
             }
           ],
@@ -61285,7 +61287,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 38% des Geldes auf Heim — weniger als der faire Preis hergibt (42%), und es sind echte Wale dahinter (Top-Wallets 66%).",
+              "evidence": "💰 Auf Polymarket liegen 31% des Geldes auf Heim — weniger als der faire Preis hergibt (42%), und es sind echte Wale dahinter (Top-Wallets 65%).",
               "dir": "contradict"
             }
           ],
@@ -61413,7 +61415,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 45% des Geldes auf Auswärts — mehr als der faire Preis hergibt (26%), und es sind echte Wale dahinter (Top-Wallets 75%).",
+              "evidence": "💰 Auf Polymarket liegen 55% des Geldes auf Auswärts — mehr als der faire Preis hergibt (26%), und es sind echte Wale dahinter (Top-Wallets 82%).",
               "dir": "confirm"
             }
           ],
@@ -61427,7 +61429,7 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 16.2pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 16.3pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
               "dir": "contradict"
             },
             {

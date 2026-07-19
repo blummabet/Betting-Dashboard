@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "wm",
-    "generatedAt": "2026-07-18T16:46:02.613941+00:00",
+    "generatedAt": "2026-07-19T06:24:37.708380+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -1105,7 +1105,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 93,
-        "label": "Eigen 93% + Gegner 40% → 72%"
+        "label": "Eigentendenz 93%"
       },
       "ratePct": 93,
       "seq": [
@@ -1116,16 +1116,7 @@
         true,
         true
       ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "ENG",
-        "oppName": "England",
-        "atHome": true,
-        "date": "2026-07-18",
-        "oppRatePct": 40
-      },
-      "oppSupportPct": 40,
-      "matchupPct": 72
+      "xgBacked": null
     },
     {
       "teamId": "JOR",
@@ -1614,7 +1605,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 87,
-        "label": "Eigen 87% + Gegner 60% → 76%"
+        "label": "Eigentendenz 87%"
       },
       "ratePct": 87,
       "seq": [
@@ -1624,16 +1615,7 @@
         true,
         true
       ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "FRA",
-        "oppName": "Frankreich",
-        "atHome": false,
-        "date": "2026-07-18",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 76
+      "xgBacked": null
     },
     {
       "teamId": "ESP",
@@ -2142,7 +2124,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 87,
-        "label": "Eigen 87% + Gegner 60% → 76%"
+        "label": "Eigentendenz 87%"
       },
       "ratePct": 87,
       "seq": [
@@ -2155,16 +2137,7 @@
         true,
         true
       ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "FRA",
-        "oppName": "Frankreich",
-        "atHome": false,
-        "date": "2026-07-18",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 76
+      "xgBacked": null
     },
     {
       "teamId": "JOR",
@@ -2620,6 +2593,32 @@
       "xgBacked": null
     },
     {
+      "teamId": "ENG",
+      "team": "England",
+      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+      "league": "L",
+      "leagueName": "Gruppe L",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
+      "length": 4,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 67,
+        "label": "Eigentendenz 67%"
+      },
+      "ratePct": 67,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null
+    },
+    {
       "teamId": "NED",
       "team": "Niederlande",
       "flag": "🇳🇱",
@@ -2817,6 +2816,64 @@
       "xgBacked": null
     },
     {
+      "teamId": "FRA",
+      "team": "Frankreich",
+      "flag": "🇫🇷",
+      "league": "I",
+      "leagueName": "Gruppe I",
+      "type": "bttsNo",
+      "market": "Beide treffen — Nein",
+      "length": 4,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 47,
+        "label": "Eigentendenz 47%"
+      },
+      "ratePct": 47,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null
+    },
+    {
+      "teamId": "FRA",
+      "team": "Frankreich",
+      "flag": "🇫🇷",
+      "league": "I",
+      "leagueName": "Gruppe I",
+      "type": "bttsNo",
+      "market": "Beide treffen — Nein",
+      "length": 4,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 47,
+        "label": "Eigentendenz 47%"
+      },
+      "ratePct": 47,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true
+      ],
+      "xgBacked": null
+    },
+    {
       "teamId": "GER",
       "team": "Deutschland",
       "flag": "🇩🇪",
@@ -2929,41 +2986,6 @@
       "xgBacked": null
     },
     {
-      "teamId": "ENG",
-      "team": "England",
-      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-      "league": "L",
-      "leagueName": "Gruppe L",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
-      "length": 4,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 47% → 59%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "FRA",
-        "oppName": "Frankreich",
-        "atHome": false,
-        "date": "2026-07-18",
-        "oppRatePct": 47
-      },
-      "oppSupportPct": 47,
-      "matchupPct": 59
-    },
-    {
       "teamId": "COL",
       "team": "Kolumbien",
       "flag": "🇨🇴",
@@ -2991,102 +3013,6 @@
         false
       ],
       "xgBacked": true
-    },
-    {
-      "teamId": "FRA",
-      "team": "Frankreich",
-      "flag": "🇫🇷",
-      "league": "I",
-      "leagueName": "Gruppe I",
-      "type": "bttsNo",
-      "market": "Beide treffen — Nein",
-      "length": 4,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 47,
-        "label": "Eigen 47% + Gegner 67% → 55% · Linie/Signale dagegen"
-      },
-      "ratePct": 47,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "ENG",
-        "oppName": "England",
-        "atHome": true,
-        "date": "2026-07-18",
-        "oppRatePct": 33
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 55,
-      "signalInfo": {
-        "state": "contradict",
-        "count": 2,
-        "conviction": 4,
-        "names": [
-          "xg_strength",
-          "freshness_leg"
-        ],
-        "market": "Beide Teams treffen — Ja"
-      }
-    },
-    {
-      "teamId": "FRA",
-      "team": "Frankreich",
-      "flag": "🇫🇷",
-      "league": "I",
-      "leagueName": "Gruppe I",
-      "type": "bttsNo",
-      "market": "Beide treffen — Nein",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 47,
-        "label": "Eigen 47% + Gegner 67% → 55% · Linie/Signale dagegen"
-      },
-      "ratePct": 47,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "ENG",
-        "oppName": "England",
-        "atHome": true,
-        "date": "2026-07-18",
-        "oppRatePct": 33
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 55,
-      "signalInfo": {
-        "state": "contradict",
-        "count": 2,
-        "conviction": 4,
-        "names": [
-          "xg_strength",
-          "freshness_leg"
-        ],
-        "market": "Beide Teams treffen — Ja"
-      }
     },
     {
       "teamId": "AUS",
@@ -3306,104 +3232,6 @@
         true
       ],
       "xgBacked": null
-    },
-    {
-      "teamId": "ENG",
-      "team": "England",
-      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-      "league": "L",
-      "leagueName": "Gruppe L",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 53,
-        "label": "Eigen 53% + Gegner 80% → 64% · Signale bestätigen"
-      },
-      "ratePct": 53,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": false,
-      "next": {
-        "oppId": "FRA",
-        "oppName": "Frankreich",
-        "atHome": false,
-        "date": "2026-07-18",
-        "oppRatePct": 80
-      },
-      "oppSupportPct": 80,
-      "matchupPct": 64,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 3,
-        "conviction": 4,
-        "names": [
-          "form_trend",
-          "weather_signal",
-          "chance_creation",
-          "opener_move"
-        ],
-        "market": "Über 2.5 Tore"
-      }
-    },
-    {
-      "teamId": "ENG",
-      "team": "England",
-      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-      "league": "L",
-      "leagueName": "Gruppe L",
-      "type": "bttsYes",
-      "market": "Beide Teams treffen",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 33,
-        "label": "Eigen 33% + Gegner 53% → 41% · Signale bestätigen"
-      },
-      "ratePct": 33,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "FRA",
-        "oppName": "Frankreich",
-        "atHome": false,
-        "date": "2026-07-18",
-        "oppRatePct": 53
-      },
-      "oppSupportPct": 53,
-      "matchupPct": 41,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 2,
-        "conviction": 4,
-        "names": [
-          "xg_strength",
-          "freshness_leg"
-        ],
-        "market": "Beide Teams treffen — Ja"
-      }
     },
     {
       "teamId": "ESP",
@@ -4992,6 +4820,35 @@
       "xgBacked": null
     },
     {
+      "teamId": "ENG",
+      "team": "England",
+      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+      "league": "L",
+      "leagueName": "Gruppe L",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 53,
+        "label": "Eigentendenz 53%"
+      },
+      "ratePct": 53,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": false
+    },
+    {
       "teamId": "ESP",
       "team": "Spanien",
       "flag": "🇪🇸",
@@ -5429,6 +5286,35 @@
       "xgBacked": true
     },
     {
+      "teamId": "ENG",
+      "team": "England",
+      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+      "league": "L",
+      "leagueName": "Gruppe L",
+      "type": "bttsYes",
+      "market": "Beide Teams treffen",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 33,
+        "label": "Eigentendenz 33%"
+      },
+      "ratePct": 33,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null
+    },
+    {
       "teamId": "ESP",
       "team": "Spanien",
       "flag": "🇪🇸",
@@ -5487,7 +5373,7 @@
       "continuation": {
         "state": "wackelt",
         "ratePct": 20,
-        "label": "Eigen 20% + Gegner 47% → 31% · Linie/Signale dagegen"
+        "label": "Eigentendenz 20%"
       },
       "ratePct": 20,
       "seq": [
@@ -5500,28 +5386,7 @@
         false,
         false
       ],
-      "xgBacked": true,
-      "next": {
-        "oppId": "ENG",
-        "oppName": "England",
-        "atHome": true,
-        "date": "2026-07-18",
-        "oppRatePct": 53
-      },
-      "oppSupportPct": 47,
-      "matchupPct": 31,
-      "signalInfo": {
-        "state": "contradict",
-        "count": 3,
-        "conviction": 4,
-        "names": [
-          "form_trend",
-          "weather_signal",
-          "chance_creation",
-          "opener_move"
-        ],
-        "market": "Über 2.5 Tore"
-      }
+      "xgBacked": true
     },
     {
       "teamId": "GHA",
