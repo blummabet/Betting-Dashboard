@@ -22,6 +22,15 @@
   let _cardsPanelId = 'intlCardsPanel';
   let _mode         = 'wm';   // 'wm' | 'liga'
 
+  // 19.07.2026 (Lucas: „MLS-Event-Pages komplett leer") — die Match-Page-JSONs schreibt
+  // generate_wm_match_pages mit dem DATENSATZ-Prefix (mls-{id}-vs-{id}-{date}). MLS rendert aber
+  // unter _mode='liga', also baute das Frontend `liga-…` → 404 → leere Event-Page. Fixture-Gruppe
+  // 'MLS' unterscheidet MLS von den Top-5-Ligen. Top-5 unverändert (liga-), WM unverändert (wm-).
+  function _mpPrefix(fx) {
+    if (fx && (fx.groupKey === 'MLS' || fx.group === 'MLS')) return 'mls';
+    return _mode === 'liga' ? 'liga' : 'wm';
+  }
+
   // ── Module state ──────────────────────────────────────
   let _wmData         = null;
   let _polyLookup     = {};   // key: "HOME-AWAY" → poly fixture object
@@ -1683,7 +1692,7 @@
 
     // ─── ACTIONS row ──────────────────────────────────
     // (26.06.2026, Lucas) Slug dataset-bewusst: wm- bzw. liga- (Analyse-Link → matches/wm-match-v2.html).
-    const slug = `${_mode === 'liga' ? 'liga' : 'wm'}-${fx.home.toLowerCase()}-vs-${fx.away.toLowerCase()}-${fx.date}`;
+    const slug = `${_mpPrefix(fx)}-${fx.home.toLowerCase()}-vs-${fx.away.toLowerCase()}-${fx.date}`;
     if (!isPlayed && heroPick) {
       // Fußzeile (20.06.2026): Datenqualitäts-Tier (steam/full/elo) + conf RAUS — die Engine ist
       // signal-getrieben, das Tier interessiert niemanden mehr. Stattdessen drei aussagekräftige
@@ -1910,7 +1919,7 @@
     //    echte Teams, und die Event-Page existiert erst dann. Bei TBD bleibt die Card schlank.
     if (kf.bothResolved && fx.home && fx.away) {
       html += _matchStreaksHtml(fx.home, fx.away);
-      const _slug = `${_mode === 'liga' ? 'liga' : 'wm'}-${fx.home.toLowerCase()}-vs-${fx.away.toLowerCase()}-${fx.date}`;
+      const _slug = `${_mpPrefix(fx)}-${fx.home.toLowerCase()}-vs-${fx.away.toLowerCase()}-${fx.date}`;
       html += `<div class="cc-actions">
         <div class="cc-data-tier"><span class="cc-tier-pill">${isPlayed ? 'gespielt' : 'beobachten'}</span></div>
         <a class="cc-detail-btn" href="matches/wm-match-v2.html?m=${_slug}" target="_blank">↗ Analyse</a>
@@ -2459,9 +2468,8 @@
 
   function _findMatchPage(fx) {
     if (!_wmPagesLoaded) return null;
-    // Slug-Format wie in generate_wm_match_pages.py: {wm|liga}-{home_lower}-vs-{away_lower}-{date}
-    const _pfx = _mode === 'liga' ? 'liga' : 'wm';
-    const slug = `${_pfx}-${(fx.home||'').toLowerCase()}-vs-${(fx.away||'').toLowerCase()}-${fx.date}`;
+    // Slug-Format wie in generate_wm_match_pages.py: {wm|liga|mls}-{home_lower}-vs-{away_lower}-{date}
+    const slug = `${_mpPrefix(fx)}-${(fx.home||'').toLowerCase()}-vs-${(fx.away||'').toLowerCase()}-${fx.date}`;
     return _wmMatchPages[slug] || null;
   }
 
@@ -4019,6 +4027,8 @@
       setStreaksCache: (ds, d) => { _streaksCache[ds] = d; },
       fxIsPast: _fxIsPast,
       setWmData: (d) => { _wmData = d; },
+      mpPrefix: _mpPrefix,                       // 19.07.2026: MLS-Event-Page-Slug-Prefix
+      setMode: (m) => { _mode = m; },
     };
   }
 

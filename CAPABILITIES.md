@@ -205,6 +205,7 @@ Jede hat einen Guard. Wer eine ähnliche Änderung baut, prüft hier zuerst.
 7. **`is_liga()` gilt auch für MLS** (13.07.): 14 Funde, u.a. 5 Geld-Guards prüften WM-Wetten, Match-Pages überschrieben `liga-index`, Config-Merge verwarf `conviction_score` → **Liga wettete mit WM-Schwelle**.
 8. **Test-Verschmutzung** (13.07.): `COCOBET_DATASET` auf Modul-Ebene gesetzt → 13 fremde Tests rot. → `tests/conftest.py` isoliert Env + reloadet `cocobet_dataset` (Env-Reset allein reicht nicht, das Modul cached beim Import).
 9. **Stiller Telegram-Send**: leeres Secret → `.get(key, default)` gibt `""` zurück (Default greift nur bei *fehlendem* Key). → `(get() or default)`. **Gesetzt-aber-leer ≠ fehlend.**
+10. **MLS-Event-Pages komplett leer** (19.07.): MLS rendert im Frontend unter `_mode='liga'`, also baute der Renderer die Event-Page-Slugs mit Prefix `liga-…`. Die JSONs schreibt `generate_wm_match_pages` aber mit dem **Datensatz**-Prefix `mls-…` → 404 → leere Seite. Wieder die `is_liga()`-gilt-auch-für-MLS-Familie, nur im Frontend. → `_mpPrefix(fx)` leitet den Prefix pro Fixture aus der Gruppe ab (`groupKey==='MLS'` → `mls-`), Test `mls-event-page-slug.test.mjs`. Die generierten Seiten decken nur das aktuelle Fenster (≈ letzte/nächste 2 Wochen) ab — ferne/vergangene Spieltage haben bewusst keine, genau wie Liga.
 
 ---
 
