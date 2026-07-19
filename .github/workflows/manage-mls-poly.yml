@@ -115,6 +115,14 @@ jobs:
           POLY_API_PASSPHRASE:      ${{ secrets.POLY_API_PASSPHRASE }}
           AUTO_SELL_ENABLED:        ${{ secrets.MLS_AUTO_SELL_ENABLED || 'false' }}
 
+      # 19.07.2026 — Cross-Sport-Radar: Poly vs Pinnacle über mehrere Sportarten (read-only,
+      # tracking). Läuft hier, weil der Mac-Runner der einzige Poly-Zugang ist (EU-geoblockt).
+      - name: 🎯 Cross-Sport Poly-Radar (read-only)
+        run: ${{ env.POLY_PYTHON }} poly_cross_sport.py
+        continue-on-error: true
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+
       # 19.07.2026 — Maker-Lebenszyklus: ruhende Limit-Orders, die nicht füllen, kurz vor Anpfiff
       # stornieren + als Taker crossen. No-op solange maker_enabled=false (Default).
       - name: 🅼 MLS Maker-Orders verwalten (Default AUS)
@@ -153,6 +161,7 @@ jobs:
           git add mls_poly_prices.json mls_poly_balance.json mls_auto_bets_placed.json 2>/dev/null || true
           git add mls_poly_positions.json mls_position_health.json mls_position_health_alerts.json 2>/dev/null || true
           git add mls_poly_resting_orders.json 2>/dev/null || true
+          git add poly_cross_sport.json poly_cross_sport_history.json 2>/dev/null || true
           git add mls-poly-history.json mls_book_health.json mls_kill_switch.json 2>/dev/null || true
           git add mls-data.json mls-odds-history.json 2>/dev/null || true
           # 13.07.2026 (MLS-Audit): resolve_wm_results SCHREIBT mls_results.json — es wurde nur nie

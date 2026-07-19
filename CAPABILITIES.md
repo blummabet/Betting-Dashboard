@@ -33,7 +33,7 @@ SPA `season-finish-v2.html`, Weiche `showView()` in `ui.js` (`panelMap`). `seaso
 | `intl-cards` | `wm2026-renderer.js` (`_mode='wm'`) | WM-Cards inkl. Sibling-JSONs (Poly, Travel, Confidence, Pick-Changes) |
 | `intl-tracking` | `wm2026-tracking.js` | WM-Pick-Tracking, Single Source `wm2026-data.json` |
 | `*-streaks` | `renderer.js` `initStreaks()` | Serien/Streaks, quotenfrei — reines Content-Produkt |
-| `sharp` | `renderer.js` `renderSharpRadar()` | Pinnacle-Linienbewegungen, eigener Toggle je Datensatz |
+| `sharp` | `renderer.js` `renderSharpRadar()` | Pinnacle-Linienbewegungen, Toggles: Top-5 / MLS / International / **Poly-Radar** (Cross-Sport Poly vs Pinnacle, read-only + Konvergenz-Tracking) |
 | `polytrading` | `polymarket-tab.js` `initPolyTrader()` | Auto-Trader: offene Positionen, Health, P&L |
 | `polybetting` | `polymarket-tab.js` `initPolymarket()` | Manuelles Platzieren aus Card-Picks |
 | `polywallets` | `poly-wallets.js` | **Whale Tracker**: Edge=Signal, Whales=Veto + Auflösungs-Lücken + Poly-interne Fehlbepreisung + Whale-Einstiegsqualität (aus Ledger). Einstieg = MLS (WM ans Ende). |
@@ -115,6 +115,7 @@ SPA `season-finish-v2.html`, Weiche `showView()` in `ui.js` (`panelMap`). `seaso
 - `poly_coherence` — **Poly gegen sich selbst**: Underround-Arb (Ja+Nein < 1.0), O/U-Leiter-Inversionen, fette Spreads. Kein Pinnacle-Anker nötig. → `{ds}_poly_coherence.json` → Wallets-Tab. Dünn-Markt-Filter (MIN_VOL 5k) gegen Scheinarbs aus veralteten Preisen.
 - `poly_settlement_gap` — **Auflösungs-Lücke**: Spiel FT, Gewinner-Ausgang handelt noch < 0.97 (Oracle hinkt). → `{ds}_poly_settlement.json` → Wallets-Tab. Harter **Stale-Schutz**: nur werten, wenn der Preis-Snapshot NACH Anpfiff + Spieldauer liegt (sonst wäre jeder Vorspiel-Preis ein „garantierter Gewinn").
 - Beide Detektoren laufen in `fetch-{wm-data,mls-odds-dense}` + `update-mls` direkt nach dem Poly-Fetch. **Keine Ausführung, nur Analyse** — Handeln entscheidet der Mensch / gegateter Trigger.
+- `poly_cross_sport.py` — **Cross-Sport-Radar** (19.07., Sharp-Radar-Tab „Poly-Radar"): Poly vs de-viggte **Pinnacle** (nicht weiche Bücher!) über mehrere Sportarten (NBA/NFL/MLB/NHL, konfigurierbar), nur standardisierte Moneyline-Märkte (Outrights sind Regel-/Marge-Falle). Unabhängig vom Fußball-Trading. Kern: **Konvergenz-Tracking** (`poly_cross_sport_history.json`) — eine Lücke ist erst echt, wenn sie sich über die Tage schließt (Poly läuft zur Pinnacle); bleibt sie stehen = Artefakt. Reiner Kern testbar; Fetch/Matching läuft scharf nur am **Mac-Runner** (Poly EU-geoblockt), in `manage-mls-poly`. Read-only.
 
 **Content:** `compute_streaks` / `compute_player_streaks` (strikt Content, nie in Picks/Trading), `generate_daily_tiktok` (Playwright → 4 PNGs → Telegram), `wm_story_engine` + `wm_story_angles/*`, `generate_wm_ai_preview` (Haiku) bzw. `generate_wm_rule_preview` (ohne API-Key), `generate_track_record_card`, `signal_check` (isoliert, neutrale Gewichte). Telegram: `telegram_wm` (Morning + Recap, zweisprachig), `telegram_trades` (eigener Channel), `telegram_streaks`, `telegram_streak_watch`, `notify_new_picks`.
 

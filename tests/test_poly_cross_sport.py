@@ -1,0 +1,88 @@
+"""19.07.2026 — Cross-Sport-Radar: Poly vs. scharfe Pinnacle über mehrere Sportarten.
+
+Read-only Kandidaten-Radar (Lucas: „ein bisschen tracken"). Der Wert steckt NICHT im Finden einer
+Lücke, sondern im KONVERGENZ-Tracking: eine Lücke ist erst echt, wenn sie sich über die Tage
+schließt. Diese Tests fixieren beide Hälften — und die Grenzen, an denen eine Scheinlücke NICHT
+gelistet werden darf (Krypto-Lehre: Poly vs. eine Fair verliert, wenn man Artefakte für Edge hält).
+"""
+import poly_cross_sport as X
+
+
+def _poly(prob, vol=45000, ekey="lakers-celtics", okey="lakers", sport="NBA"):
+    return {"sport": sport, "event": "Lakers vs Celtics", "market": "Moneyline",
+            "outcome": "Lakers", "prob": prob, "vol": vol,
+            "eventKey": ekey, "outcomeKey": okey}
+
+
+IDX = {("lakers-celtics", "lakers"): 0.55, ("lakers-celtics", "celtics"): 0.45}
+
+
+class TestDevig:
+    def test_zwei_wege_summiert_auf_eins(self):
+        a, b = X.devig_2way(1 / 1.9, 1 / 2.1)
+        assert abs((a + b) - 1.0) < 1e-9
+
+    def test_kaputt_gibt_none(self):
+        assert X.devig_2way(0, 0) == (None, None)
+        assert X.devig_2way(None, 0.5) == (None, None)
+
+
+class TestDiscrepancies:
+    def test_grosse_luecke_wird_gefunden_mit_richtung(self):
+        d = X.compute_discrepancies([_poly(0.62)], IDX)
+        assert len(d) == 1 and d[0]["gapPP"] == 7.0
+        assert "faden" in d[0]["richtung"], "Poly zu hoch → faden"
+
+    def test_poly_zu_niedrig_ist_backen(self):
+        d = X.compute_discrepancies([_poly(0.45)], IDX)   # Poll 45 vs fair 55 = -10pp
+        assert d[0]["gapPP"] == -10.0 and "backen" in d[0]["richtung"]
+
+    def test_kleine_luecke_raus(self):
+        assert X.compute_discrepancies([_poly(0.58)], IDX) == []   # 3pp < MIN_GAP 6
+
+    def test_duenner_markt_raus(self):
+        assert X.compute_discrepancies([_poly(0.70, vol=200)], IDX) == []
+
+    def test_ohne_pinnacle_gegenstueck_nicht_bewertbar(self):
+        d = X.compute_discrepancies([_poly(0.70, okey="unbekannt")], IDX)
+        assert d == [], "ohne scharfen Anker darf nichts gelistet werden"
+
+    def test_groesste_luecke_zuerst(self):
+        d = X.compute_discrepancies([_poly(0.62), _poly(0.80, okey="lakers")], IDX)
+        # zweite hätte 25pp; da gleicher key nur einer im idx — beide gegen fair 0.55
+        assert abs(d[0]["gapPP"]) >= abs(d[-1]["gapPP"])
+
+
+class TestKonvergenz:
+    def test_erste_luecke_wird_festgehalten(self):
+        d = X.compute_discrepancies([_poly(0.62)], IDX)
+        h = X.update_history({}, d)
+        key = d[0]["id"]
+        assert h[key]["firstGapPP"] == 7.0
+
+    def test_schrumpfende_luecke_ist_positive_konvergenz(self):
+        d1 = X.compute_discrepancies([_poly(0.62)], IDX)         # 7pp
+        h = X.update_history({}, d1)
+        d2 = X.compute_discrepancies([_poly(0.58)], IDX, {"min_gap_pp": 1})  # 3pp
+        X.update_history(h, d2)
+        assert d2[0]["convergePP"] == 4.0, "7→3pp = 4pp geschlossen (Poly läuft zur Pinnacle = echt)"
+
+    def test_stehende_luecke_ist_null_konvergenz(self):
+        d1 = X.compute_discrepancies([_poly(0.62)], IDX)
+        h = X.update_history({}, d1)
+        d2 = X.compute_discrepancies([_poly(0.62)], IDX)         # unverändert
+        X.update_history(h, d2)
+        assert d2[0]["convergePP"] == 0.0, "bleibt stehen → Artefakt-Verdacht, keine Konvergenz"
+
+    def test_alte_eintraege_werden_gepruned(self):
+        from datetime import datetime, timedelta, timezone
+        alt = (datetime.now(timezone.utc) - timedelta(days=30)).isoformat()
+        h = {"NBA|x-y|z": {"firstGapPP": 8, "lastGapPP": 8, "lastSeen": alt,
+                           "firstSeen": alt, "event": "e", "outcome": "o", "sport": "NBA"}}
+        h2 = X.update_history(h, [])
+        assert "NBA|x-y|z" not in h2, "verschwundener Markt muss gepruned werden"
+
+
+def test_norm_matcht_ueber_venues():
+    assert X.norm("Los Angeles Lakers") == X.norm("los angeles lakers")
+    assert X.norm("St. Louis") == "stlouis"

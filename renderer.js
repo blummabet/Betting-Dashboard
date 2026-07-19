@@ -1980,6 +1980,7 @@ function _sharpRenderToggleHtml() {
   // am 19.07. Archiv). Der Datensatz mit laufenden Spielen steht vorn.
   return `<div id="sharp_datasetToggle" style="display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap;">`
     + btn('liga', '⚽ Top-5') + btn('mls', '🇺🇸 MLS') + btn('intl', '🌍 International')
+    + btn('crosssport', '🎯 Poly-Radar')
     + `</div>`;
 }
 
@@ -2036,6 +2037,68 @@ function _sharpSetDataset(ds) {
   renderSharpRadar();
 }
 if (typeof window !== 'undefined') window._sharpSetDataset = _sharpSetDataset;
+
+// ── Cross-Sport-Radar (19.07.2026, Lucas) ────────────────────────────────────
+// Poly vs. de-viggte Pinnacle über mehrere Sportarten — read-only Kandidaten + Konvergenz.
+// Läuft scharf nur am Mac-Runner (Poly EU-geoblockt); das Frontend liest die fertige Datei.
+let _crossSportLoading = false;
+function _loadCrossSport() {
+  if (_crossSportLoading || window.POLY_CROSS_SPORT) return;
+  _crossSportLoading = true;
+  fetch('poly_cross_sport.json?t=' + Date.now())
+    .then(r => r.ok ? r.json() : null).catch(() => null)
+    .then(j => { window.POLY_CROSS_SPORT = j || { discrepancies: [] }; _crossSportLoading = false;
+                 if (_sharpDataset === 'crosssport') renderSharpRadar(); });
+}
+
+function _renderCrossSportRadar() {
+  if (_crossSportLoading && !window.POLY_CROSS_SPORT) {
+    return `<div style="max-width:960px;margin:0 auto;padding:40px 0;text-align:center;color:var(--muted);font-size:13px;">🎯 Cross-Sport-Daten werden geladen …</div>`;
+  }
+  const rep = window.POLY_CROSS_SPORT || {};
+  const disc = (rep.discrepancies || []).slice();
+  const intro = `<div style="max-width:960px;margin:0 auto 14px;padding:10px 14px;background:rgba(167,139,250,.06);border-left:3px solid #a78bfa;font-size:12px;color:var(--muted);line-height:1.6;">
+    <b style="color:#a78bfa">Poly vs. scharfe Pinnacle</b> über mehrere Sportarten — <b>unabhängig</b> von unserem Top-5/MLS-Trading. Große Lücke = Kandidat, aber erst echt, wenn sie über die Tage <b>konvergiert</b> (Poly läuft zur Pinnacle). Bleibt sie stehen, ist sie meist ein Regel-/Marge-Artefakt. Standardisierte Märkte (Moneyline), keine Outrights. Read-only.</div>`;
+
+  if (!disc.length) {
+    return intro + `<div style="max-width:960px;margin:0 auto;padding:40px 24px;text-align:center;color:var(--muted);font-size:13px;line-height:1.6;">
+      🎯 Noch keine Lücken gelistet.<br><span style="font-size:11px;opacity:.8;">Der Radar läuft am Mac-Runner (Poly ist EU-geoblockt) und füllt sich, sobald <code>poly_cross_sport.json</code> befüllt ist. Bis dahin ist das die Vorschau.</span></div>`;
+  }
+
+  const rows = disc.slice(0, 30).map(d => {
+    const gapCol = Math.abs(d.gapPP) >= 10 ? '#f85149' : Math.abs(d.gapPP) >= 7 ? '#e3b341' : '#8b949e';
+    const conv = d.convergePP;
+    const convCell = (conv == null)
+      ? `<span style="color:var(--muted);font-style:italic;">neu</span>`
+      : conv > 0.5
+        ? `<span style="color:#3fb950;font-weight:700;" title="Lücke schließt sich — Poly läuft zur Pinnacle (echt)">▼ ${conv.toFixed(1)}pp</span>`
+        : conv < -0.5
+          ? `<span style="color:#f85149;" title="Lücke wächst — Artefakt-Verdacht">▲ ${Math.abs(conv).toFixed(1)}pp</span>`
+          : `<span style="color:var(--muted);" title="Lücke steht — Artefakt-Verdacht">→ 0</span>`;
+    return `<tr style="border-top:1px solid var(--border);">
+      <td style="padding:8px 12px;font-size:12px;color:var(--muted);">${d.sport || ''}</td>
+      <td style="padding:8px 12px;font-size:13px;">${d.event || ''} · <span style="color:var(--muted)">${d.outcome || ''}</span></td>
+      <td style="padding:8px 12px;text-align:right;font-size:12px;color:#a78bfa;">${d.polyPP}%</td>
+      <td style="padding:8px 12px;text-align:right;font-size:12px;color:#5eead4;">${d.pinnPP}%</td>
+      <td style="padding:8px 12px;text-align:right;font-weight:700;color:${gapCol};">${d.gapPP > 0 ? '+' : ''}${d.gapPP}pp</td>
+      <td style="padding:8px 12px;text-align:right;font-size:12px;">${convCell}</td>
+    </tr>`;
+  }).join('');
+
+  return intro + `<div style="max-width:960px;margin:0 auto;background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden;">
+    <table style="width:100%;border-collapse:collapse;">
+      <thead><tr style="background:rgba(255,255,255,0.02);">
+        <th style="padding:10px 12px;text-align:left;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">Sport</th>
+        <th style="padding:10px 12px;text-align:left;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">Markt</th>
+        <th style="padding:10px 12px;text-align:right;font-size:11px;color:#a78bfa;text-transform:uppercase;letter-spacing:.5px;">Poly</th>
+        <th style="padding:10px 12px;text-align:right;font-size:11px;color:#5eead4;text-transform:uppercase;letter-spacing:.5px;">Pinnacle</th>
+        <th style="padding:10px 12px;text-align:right;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">Lücke</th>
+        <th title="Schließt sich die Lücke über die Tage? ▼ = ja (echt) · → = steht (Artefakt)" style="padding:10px 12px;text-align:right;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;">Konvergenz</th>
+      </tr></thead>
+      <tbody>${rows}</tbody>
+    </table></div>`;
+}
+if (typeof window !== 'undefined') { window._renderCrossSportRadar = _renderCrossSportRadar; window._loadCrossSport = _loadCrossSport; }
 
 // (26.06.2026, Lucas: „Sharp Radar soll aktuelle Liga-Linien auch OHNE Bewegung zeigen")
 // Solange keine Linie über ≥2 Snapshots wandert (6 Wochen vor Saison = statisch), gibt es keine
@@ -2124,6 +2187,15 @@ function _sharpCleanSnaps(snaps) {
 
 function renderSharpRadar() {
   const mc = document.getElementById('mainContent');
+
+  // 19.07.2026 (Lucas) — Cross-Sport-Radar: eigener Sub-Tab neben Liga/MLS. Anderer Datentyp
+  // (Poly vs Pinnacle über mehrere Sportarten, kein Fixture-Modell) → eigener Render-Pfad,
+  // BEVOR das fixture-basierte Radar-Modell greift.
+  if (_sharpDataset === 'crosssport') {
+    if (!window.POLY_CROSS_SPORT && !_crossSportLoading) _loadCrossSport();
+    if (mc) mc.innerHTML = _sharpRenderToggleHtml() + _renderCrossSportRadar();
+    return;
+  }
 
   // (26.06.2026, Lucas: Sharp Radar Liga-Toggle) — Datensatz-Aliase. Im Default
   // ('intl') exakt das bisherige WM-Verhalten (_data=window.WM2026_DATA). Im Liga-

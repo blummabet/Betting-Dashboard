@@ -370,3 +370,37 @@ test('Poly-Wallets startet auf MLS (Top-5 hat kein Polymarket)', () => {
   const ids = [...src.matchAll(/\{\s*id:'(\w+)'/g)].map(m => m[1]);
   assert.deepEqual(ids.slice(0, 3), ['mls', 'liga', 'wm'], 'Tab-Reihenfolge stimmt nicht');
 });
+
+// ── Cross-Sport-Radar (19.07.2026, Lucas: neuer Sub-Tab neben Liga/MLS) ──────────────
+test('Sharp Radar: Poly-Radar-Toggle existiert', () => {
+  const w = loadRenderer();
+  w.LEAGUES = {};
+  assert.match(w._sharpRenderToggleHtml(), /🎯 Poly-Radar/, 'Cross-Sport-Toggle fehlt');
+});
+
+test('Cross-Sport-Radar: Lücken + Konvergenz rendern, Artefakt vs echt unterscheidbar', () => {
+  const w = loadRenderer();
+  w.POLY_CROSS_SPORT = { discrepancies: [
+    { sport: 'NBA', event: 'Lakers vs Celtics', outcome: 'Lakers', polyPP: 62, pinnPP: 55, gapPP: 7, convergePP: 4 },
+    { sport: 'NFL', event: 'Chiefs vs Bills', outcome: 'Chiefs', polyPP: 70, pinnPP: 58, gapPP: 12, convergePP: -3 },
+  ] };
+  const html = w._renderCrossSportRadar();
+  assert.match(html, /Lakers vs Celtics/);
+  assert.match(html, /\+7pp/);
+  assert.match(html, /▼ 4\.0pp/, 'schließende Lücke muss als konvergierend (echt) markiert sein');
+  assert.match(html, /▲ 3\.0pp/, 'wachsende Lücke muss als Artefakt-Verdacht markiert sein');
+});
+
+test('Cross-Sport-Radar: leerer Zustand ist eine ehrliche Vorschau, keine Fehlermeldung', () => {
+  const w = loadRenderer();
+  w.POLY_CROSS_SPORT = { discrepancies: [] };
+  const html = w._renderCrossSportRadar();
+  assert.match(html, /Noch keine Lücken/);
+  assert.match(html, /Mac-Runner/, 'erklärt, warum leer (Poly EU-geoblockt)');
+});
+
+test('Cross-Sport-Radar: Intro nennt Konvergenz als Echtheits-Test', () => {
+  const w = loadRenderer();
+  w.POLY_CROSS_SPORT = { discrepancies: [] };
+  assert.match(w._renderCrossSportRadar(), /konvergiert/i);
+});
