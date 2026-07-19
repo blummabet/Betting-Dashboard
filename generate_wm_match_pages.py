@@ -54,7 +54,14 @@ def upset_score(home_elo, away_elo):
 
 
 def devig(h, d, a):
-    """De-vig 1X2 odds to implied win probabilities (%)."""
+    """De-vig 1X2 odds to implied win probabilities (%). None bei Platzhalter-Quoten.
+
+    19.07.2026 — Platzhalter-Quoten-Gate (Lucas: „Fehler mehrfach"). Ohne den Filter landeten
+    Fake-Wahrscheinlichkeiten (Remis 1.01 → „99 %") auf den Match-Pages. odds_plausibility ist
+    die EINE Quelle."""
+    from odds_plausibility import plausible_1x2
+    if not plausible_1x2(h, d, a):
+        return None, None, None
     try:
         margin = 1/h + 1/d + 1/a
         return (

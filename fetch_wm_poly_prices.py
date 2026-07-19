@@ -67,7 +67,7 @@ def _kickoff_passed(fx):
 
 
 import cocobet_dataset as D   # 29.06.2026: dataset-aware (WM / Liga / MLS-Poly-Dry-Run)
-from odds_plausibility import plausible_1x2   # 19.07.2026: Platzhalter-Quoten (dr=1.01 …) raus
+from odds_plausibility import plausible_1x2, devig_1x2   # 19.07.2026: Platzhalter-Quoten raus
 
 BASE         = os.path.dirname(os.path.abspath(__file__))
 # Dataset-aware: wm_* | liga_* | mls_* je COCOBET_DATASET. WM-Verhalten unverändert.
@@ -831,16 +831,13 @@ def main():
         best_edge      = None
         best_edge_key  = None
 
-        # 19.07.2026 — PLATZHALTER-QUOTEN-GUARD (Lucas: Telegram-Edge-Alerts mit „Pinn 1.01 Remis").
-        # Ein Remis bei 1.01 / Auswärtssieg bei 1.04 sind keine echten Pinnacle-Quoten, sondern
-        # Platzhalter — daraus wurde eine Fake-Edge von +13-17pp gerechnet und als Alert gesendet.
-        # Dieselbe Bug-Klasse wie 13.07. (Geister-Moves): odds_plausibility ist die EINE Quelle
-        # (Remis ≥1.50, Seiten ≥1.05, Overround 1.00-1.30). Implausibel → gar keine 1X2-Edge.
-        if pinn_hw and pinn_dr and pinn_aw and pinn_hw > 1 and plausible_1x2(pinn_hw, pinn_dr, pinn_aw):
-            margin  = 1/pinn_hw + 1/pinn_dr + 1/pinn_aw
-            fair_hw = round((1/pinn_hw) / margin, 4)
-            fair_dr = round((1/pinn_dr) / margin, 4)
-            fair_aw = round((1/pinn_aw) / margin, 4)
+        # 19.07.2026 — PLATZHALTER-QUOTEN (Lucas: Telegram-Edge-Alerts mit „Pinn 1.01 Remis").
+        # Remis 1.01 / Auswärts 1.04 sind keine echten Pinnacle-Quoten → daraus wurde eine
+        # Fake-Edge +13-17pp gerechnet und gesendet. `devig_1x2` ist die EINE gegatete De-Vig:
+        # implausibel → None → gar keine 1X2-Edge (dieselbe Bug-Klasse wie 13.07.).
+        _fair = devig_1x2(pinn_hw, pinn_dr, pinn_aw)
+        if _fair:
+            fair_hw, fair_dr, fair_aw = _fair["home"], _fair["draw"], _fair["away"]
             edge_hw = round((fair_hw - p["hw"]) * 100, 1)
             edge_dr = round((fair_dr - (p["dr"] or 0)) * 100, 1) if p["dr"] else None
             edge_aw = round((fair_aw - p["aw"]) * 100, 1)

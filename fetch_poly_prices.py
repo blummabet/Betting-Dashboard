@@ -1097,7 +1097,11 @@ def update_trader_data(poly_results: dict, unique_matches: dict):
             h_en = WM_TEAM_EN.get(parts[0], parts[0])
             a_en = WM_TEAM_EN.get(parts[1], parts[1])
             hw, dr, aw = odds.get('hw'), odds.get('dr'), odds.get('aw')
-            if hw and dr and aw and hw > 1 and dr > 1 and aw > 1:
+            # 19.07.2026 — Platzhalter-Quoten-Gate (Legacy-Match-Pages): NUR echte Märkte de-viggen,
+            # sonst landet eine Fake-Fair in pick-engine.js / generate_match_pages. Eine Quelle:
+            # odds_plausibility (Remis ≥1.50, Overround 1.00-1.30). Dieselbe Bug-Klasse wie 13.07.
+            from odds_plausibility import plausible_1x2 as _plausible_1x2
+            if hw and dr and aw and _plausible_1x2(hw, dr, aw):
                 # Devig: compute Pinnacle fair odds (remove ~3-4% margin)
                 margin = 1/hw + 1/dr + 1/aw
                 wm_odds_idx[f"{h_en}|{a_en}"] = {

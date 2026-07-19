@@ -47,6 +47,25 @@ def plausible_1x2(hw, dr, aw) -> bool:
     return MIN_OVERROUND <= overround <= MAX_OVERROUND
 
 
+def devig_1x2(hw, dr, aw):
+    """De-viggte faire Wahrscheinlichkeiten {home,draw,away} — ODER None bei Platzhalter-Quoten.
+
+    19.07.2026 (Lucas: „ich hasse es, wenn Fehler mehrfach auftauchen"). Die Bug-Klasse „aus
+    Platzhalter-Quoten wird eine Fake-Fair/-Edge gerechnet" ist mehrfach an NEUEN Stellen
+    aufgetaucht (Sharp Radar, Picks, market_drift, Telegram-Edge-Alerts), weil jede Stelle die
+    De-Vig neu inline schrieb — mal mit, mal OHNE Plausibilitätsprüfung. Das ist die EINE sichere
+    De-Vig: sie gibt gar nichts zurück, wenn die Quoten kein echter Markt sind. Wer sie benutzt,
+    KANN den Fehler nicht mehr machen. Der Regression-Guard (tests/test_no_unguarded_1x2_devig.py)
+    verhindert, dass jemand wieder eine rohe De-Vig einschmuggelt."""
+    if not plausible_1x2(hw, dr, aw):
+        return None
+    hw, dr, aw = float(hw), float(dr), float(aw)
+    margin = 1.0 / hw + 1.0 / dr + 1.0 / aw
+    return {"home": round((1.0 / hw) / margin, 4),
+            "draw": round((1.0 / dr) / margin, 4),
+            "away": round((1.0 / aw) / margin, 4)}
+
+
 def snap_ok(snap) -> bool:
     """Darf dieser History-Snapshot für Move-/Drift-Rechnungen benutzt werden?
 

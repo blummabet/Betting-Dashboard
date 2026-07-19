@@ -71,8 +71,9 @@ class TestWMProfileMatches(unittest.TestCase):
         Der Telegram-Alert meldete Fake-Edges von +13-17pp aus solchen Platzhaltern. Der 1X2-
         Edge-Block MUSS über plausible_1x2 gegatet sein (dieselbe Bug-Klasse wie die Geister-Moves)."""
         src = (Path(__file__).parent.parent / "fetch_wm_poly_prices.py").read_text(encoding="utf-8")
-        self.assertIn("from odds_plausibility import plausible_1x2", src)
-        self.assertIn("plausible_1x2(pinn_hw, pinn_dr, pinn_aw)", src,
+        self.assertIn("from odds_plausibility import", src)
+        # Kanonische gegatete De-Vig statt roher Marge: implausibel → None → keine Edge.
+        self.assertIn("devig_1x2(pinn_hw, pinn_dr, pinn_aw)", src,
             "1X2-Edge-Berechnung nicht gegen Platzhalter-Quoten gegatet")
 
     def test_die_gemeldeten_platzhalter_sind_implausibel(self):
