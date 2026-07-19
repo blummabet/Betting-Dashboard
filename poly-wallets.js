@@ -118,8 +118,9 @@ function initPolyWallets(){
     jf(_derive('coherence')), jf(_derive('settlement')), jf(_derive('wallet_ledger')),
     jf(_derive('money_accuracy')),
     jf('poly_money_broad.json'),   // liga-übergreifend (global, nicht datensatz-spezifisch)
-  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad])=>{
-    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad};
+    jf(_derive('smartmoney')),     // 19.07.2026 — war ungenutzt: Konzentration/Split/Breite
+  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart])=>{
+    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart};
     _pwRender();
   }).catch(err=>{
     // 12.07.2026: Vorher gab es KEIN catch — eine Exception im Render (z.B. der
@@ -268,7 +269,7 @@ function _pwGauge(val,color,label){
 function _pwRender(){
   const panel=document.getElementById('polyWalletsPanel'); if(!panel||!_pwCache)return;
   _pwDestroyCharts();
-  const {wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad}=_pwCache;
+  const {wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart}=_pwCache;
   const teams=_pwTeamsMap(wm), oddsMap=_pwOddsMap(wm);
   const edges=_pwBuildEdges(prices,oddsMap);
   const hasPoly=wallets&&((wallets.topPositionsAll||[]).length||(wallets.matches&&Object.keys(wallets.matches).length));
@@ -298,6 +299,7 @@ function _pwRender(){
   // reinere Chancen (Arb / feststehende Auflösung), die keinen externen Anker brauchen.
   h+=_pwSettlementBoard(settlement,teams);
   h+=_pwCoherenceBoard(coherence);
+  h+=_pwSmartConcentration(smart,prices,teams);   // 19.07.2026 — vorher komplett ungenutzt
   h+=_pwScatterSection(edges);
   h+=_pwEdgeBoard(edges,teams,wallets,hist);
   h+=_pwWhaleEntryQuality(ledger);
@@ -427,11 +429,20 @@ function _pwWhaleEntryQuality(ledger){
   if(!top.length) return '';
   const rows=top.map(p=>{
     const entry=(p.firstAvgPrice*100).toFixed(0);
+    // 19.07.2026 — avgPrice war ungenutzt: aktueller Schnitt vs. erster Einstieg zeigt, ob die
+    // Wallet BILLIG rein und teuer nachgekauft hat (Overconfidence) oder günstig aufgestockt.
+    let nach='<span class="pw-mut">—</span>';
+    if(typeof p.avgPrice==='number' && Math.abs(p.avgPrice-p.firstAvgPrice)>=0.02){
+      const up=p.avgPrice>p.firstAvgPrice;
+      nach='<span style="color:'+(up?'#e3b341':'#3fb950')+'" title="'+(up?'teurer nachgekauft (Overconfidence?)':'günstig aufgestockt')+'">'
+        +(up?'▲':'▼')+' '+(p.avgPrice*100).toFixed(0)+'¢</span>';
+    }
     return '<tr>'
       +'<td><a href="'+_pwLink(p.wallet)+'" target="_blank" rel="noopener" class="pw-wl">'+_pwWallet(p.wallet)+'</a></td>'
       +'<td class="pw-cm">'+_pwEsc(p.pick||p.match||'—')+'</td>'
       +'<td class="pw-cn">'+_pwUsd(p.usd)+'</td>'
-      +'<td class="pw-cn">'+entry+'¢</td></tr>';
+      +'<td class="pw-cn">'+entry+'¢</td>'
+      +'<td class="pw-cn">'+nach+'</td></tr>';
   }).join('');
   const seit=ledger.updatedAt?_pwAgo(ledger.updatedAt):'—';
   return '<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🐋 Whale-Einstiegsqualität</span>'
@@ -440,7 +451,7 @@ function _pwWhaleEntryQuality(ledger){
     +'ursprünglich rein? Der Einstieg (nicht die Positionsgröße) trennt scharfes von dummem Geld. '
     +'<i>Track-Record (CLV/ROI je Wallet) folgt, sobald genug Auflösungen gesammelt sind · Stand '+seit+'</i></p>'
     +'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
-    +'<th>Wallet</th><th>Position</th><th>Größe</th><th>Einstieg</th>'
+    +'<th>Wallet</th><th>Position</th><th>Größe</th><th>Einstieg</th><th>jetzt Ø</th>'
     +'</tr></thead><tbody>'+rows+'</tbody></table></div></section>';
 }
 
@@ -579,6 +590,69 @@ function _pwMoneyAccuracy(acc, teams){
       +'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
       +'<th>Markt</th><th>Geld sagt</th><th>Preis sagt</th><th>Gewinner</th><th>Volumen</th>'
       +'</tr></thead><tbody>'+rows+'</tbody></table></div></div>'):'');
+}
+
+// ── Deep-Link auf den Polymarket-Markt (19.07.2026) ──────────────────────────
+// Prices tragen `slug`/`moreMktSlug` — bisher nie verlinkt. Ein modernes Dashboard springt.
+function _pwSlugMap(prices){
+  const m={}; const p=(prices&&prices.prices)||{};
+  for(const [k,e] of Object.entries(p)) if(e&&e.slug) m[k]=e.slug;
+  return m;
+}
+function _pwPolyLink(slug,label){
+  if(!slug) return '';
+  return '<a href="https://polymarket.com/event/'+encodeURIComponent(slug)+'" target="_blank" rel="noopener" '
+    +'style="color:#a78bfa;text-decoration:none;font-size:11px" title="Auf Polymarket öffnen">'+(label||'↗')+'</a>';
+}
+
+// ── Smart-Money-Konzentration (19.07.2026, war KOMPLETT ungenutzt) ───────────
+// Aus {ds}_poly_smartmoney.json: WO liegt das Geld (Split), WIE breit (Halter) und WIE konzentriert
+// (topHolderShare). Das trennt „echter Konsens der Masse" von „ein Wal drückt den Markt".
+function _pwSmartConcentration(smart,prices,teams){
+  const matches=smart&&smart.matches?Object.entries(smart.matches):[];
+  if(!matches.length) return '';
+  const slugs=_pwSlugMap(prices);
+  const OUT=[['home','#4cc2ff'],['draw','#f5c518'],['away','#ff5d5d']];
+  // Nach Geld sortiert, nur Märkte mit echtem Volumen.
+  const rows=matches
+    .filter(([_k,m])=>(m.totalUsd||0)>=2000 && m.outcomes)
+    .sort((a,b)=>(b[1].totalUsd||0)-(a[1].totalUsd||0))
+    .slice(0,14).map(([key,m])=>{
+      const oc=m.outcomes||{};
+      // Geld-Split-Balken (share je Outcome)
+      const seg=OUT.filter(([k])=>oc[k]&&oc[k].share>0).map(([k,c])=>
+        '<i style="display:inline-block;height:100%;width:'+Math.round((oc[k].share||0)*100)+'%;background:'+c+'" title="'+k+' '+Math.round((oc[k].share||0)*100)+'%"></i>').join('');
+      // Konzentration = höchste topHolderShare über die Outcomes; Breite = Summe Halter
+      const conc=Math.max(...OUT.map(([k])=>(oc[k]&&oc[k].topHolderShare)||0));
+      const holders=OUT.reduce((s,[k])=>s+((oc[k]&&oc[k].holders)||0),0);
+      const flow=OUT.reduce((s,[k])=>s+((oc[k]&&oc[k].netFlowUsd)||0),0);
+      const concBadge= conc>=0.7
+        ? '<span style="color:#f85149;font-weight:700" title="Wenige große Wallets dominieren — weiches Signal, evtl. ein Wal">⚠️ '+Math.round(conc*100)+'%</span>'
+        : conc>=0.5 ? '<span style="color:#e3b341">'+Math.round(conc*100)+'%</span>'
+        : '<span style="color:#3fb950" title="Breite Verteilung — echter Massen-Konsens">'+Math.round(conc*100)+'%</span>';
+      // Namen bevorzugt aus smartmoney (home/away), sonst aus der Teams-Map, sonst der Key.
+      let mn=(m.home&&m.away)?(m.home+' – '+m.away):key;
+      if(mn===key && teams){const [a,b]=String(key).split('-');
+        if(teams[a]&&teams[b]) mn=(teams[a].name||a)+' – '+(teams[b].name||b);}
+      const htk=(m.hoursToKickoff!=null)?(m.hoursToKickoff<0?'live':m.hoursToKickoff.toFixed(1)+'h'):'—';
+      return '<tr>'
+        +'<td class="pw-cm">'+_pwEsc(mn)+' '+_pwPolyLink(slugs[key])+'</td>'
+        +'<td style="min-width:120px"><div style="height:10px;border-radius:5px;overflow:hidden;background:#161b22;display:flex">'+seg+'</div></td>'
+        +'<td class="pw-cn pw-mut">'+_pwUsd(m.totalUsd)+'</td>'
+        +'<td class="pw-cn">'+holders+'</td>'
+        +'<td class="pw-cn">'+concBadge+'</td>'
+        +'<td class="pw-cn" style="color:'+(flow>=0?'#3fb950':'#f85149')+'">'+(flow>=0?'+':'−')+_pwUsd(Math.abs(flow)).slice(1)+'</td>'
+        +'<td class="pw-cn pw-mut">'+htk+'</td></tr>';
+    }).join('');
+  if(!rows) return '';
+  return '<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">💡 Smart-Money-Konzentration</span>'
+    +'<span class="pw-sec-note">wo liegt das Geld · wie breit (Halter) · wie konzentriert (Wale) · Fluss zum Anpfiff</span></div>'
+    +'<div class="pw-sec-p" style="margin:2px 0 10px">Der <b>Split-Balken</b> zeigt, auf welche Seite das Geld setzt. '
+    +'<b>Konzentration</b>: 🟢 breit = echter Massen-Konsens · 🔴 hoch = wenige Wale drücken den Markt (weiches Signal). '
+    +'<b>Fluss</b>: grün = Geld läuft rein, rot = raus.</div>'
+    +'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
+    +'<th>Markt</th><th>Geld-Split</th><th>Volumen</th><th>Halter</th><th>Konz.</th><th>Fluss</th><th>Anpfiff</th>'
+    +'</tr></thead><tbody>'+rows+'</tbody></table></div></section>';
 }
 
 // ── Edge-Board ──────────────────────────────────────────────────────────────
