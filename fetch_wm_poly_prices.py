@@ -67,6 +67,7 @@ def _kickoff_passed(fx):
 
 
 import cocobet_dataset as D   # 29.06.2026: dataset-aware (WM / Liga / MLS-Poly-Dry-Run)
+from odds_plausibility import plausible_1x2   # 19.07.2026: Platzhalter-Quoten (dr=1.01 …) raus
 
 BASE         = os.path.dirname(os.path.abspath(__file__))
 # Dataset-aware: wm_* | liga_* | mls_* je COCOBET_DATASET. WM-Verhalten unverändert.
@@ -830,7 +831,12 @@ def main():
         best_edge      = None
         best_edge_key  = None
 
-        if pinn_hw and pinn_dr and pinn_aw and pinn_hw > 1:
+        # 19.07.2026 — PLATZHALTER-QUOTEN-GUARD (Lucas: Telegram-Edge-Alerts mit „Pinn 1.01 Remis").
+        # Ein Remis bei 1.01 / Auswärtssieg bei 1.04 sind keine echten Pinnacle-Quoten, sondern
+        # Platzhalter — daraus wurde eine Fake-Edge von +13-17pp gerechnet und als Alert gesendet.
+        # Dieselbe Bug-Klasse wie 13.07. (Geister-Moves): odds_plausibility ist die EINE Quelle
+        # (Remis ≥1.50, Seiten ≥1.05, Overround 1.00-1.30). Implausibel → gar keine 1X2-Edge.
+        if pinn_hw and pinn_dr and pinn_aw and pinn_hw > 1 and plausible_1x2(pinn_hw, pinn_dr, pinn_aw):
             margin  = 1/pinn_hw + 1/pinn_dr + 1/pinn_aw
             fair_hw = round((1/pinn_hw) / margin, 4)
             fair_dr = round((1/pinn_dr) / margin, 4)
@@ -1283,7 +1289,9 @@ def main():
             poly_p     = fx.get(poly_field)
             poly_odds  = f"{1/poly_p:.2f}" if poly_p and poly_p > 0 else "?"
             slug       = fx.get("slug", "")
-            poly_url   = f"https://polymarket.com/sports/fifa-world-cup/{slug}" if slug else ""
+            # 19.07.2026: generischer /event/-Deep-Link (der alte /sports/fifa-world-cup/-Pfad war
+            # für MLS-Slugs schlicht falsch).
+            poly_url   = f"https://polymarket.com/event/{slug}" if slug else ""
             pinn_field = f"pinn_{best_key}"
             pinn_raw   = fx.get(pinn_field)
             pinn_str   = f" | Pinn {pinn_raw:.2f}" if pinn_raw else ""
@@ -1295,8 +1303,10 @@ def main():
                             f" | Liq ${fx.get('clobTopLiq',0):,.0f}")
             mom = fx.get("momentumScore", 0)
 
+            # 19.07.2026: Label datensatz-aware — die Alerts liefen unter „WM" auch für MLS-Spiele.
+            _ds_label = {"wm": "WM", "liga": "Liga", "mls": "MLS"}.get(D.active_dataset(), D.active_dataset().upper())
             msg = (
-                f"⚡ <b>WM Edge Alert — {signal}</b>\n"
+                f"⚡ <b>{_ds_label} Edge Alert — {signal}</b>\n"
                 f"━━━━━━━━━━━━━━━━━━━\n"
                 f"🏆 {fx.get('home')} vs {fx.get('away')}\n"
                 f"📋 Markt: <b>{market}</b>\n"

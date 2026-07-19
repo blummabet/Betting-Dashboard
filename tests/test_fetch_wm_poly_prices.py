@@ -66,6 +66,28 @@ class TestWMProfileMatches(unittest.TestCase):
         src = (Path(__file__).parent.parent / "fetch_wm_poly_prices.py").read_text(encoding="utf-8")
         self.assertNotIn("[:4]  # max 4 Alerts pro Run", src)
 
+    def test_1x2_edge_hat_plausibilitaets_guard(self):
+        """19.07.2026 — Platzhalter-Quoten (Remis 1.01 / Auswärts 1.04) dürfen KEINE Edge erzeugen.
+        Der Telegram-Alert meldete Fake-Edges von +13-17pp aus solchen Platzhaltern. Der 1X2-
+        Edge-Block MUSS über plausible_1x2 gegatet sein (dieselbe Bug-Klasse wie die Geister-Moves)."""
+        src = (Path(__file__).parent.parent / "fetch_wm_poly_prices.py").read_text(encoding="utf-8")
+        self.assertIn("from odds_plausibility import plausible_1x2", src)
+        self.assertIn("plausible_1x2(pinn_hw, pinn_dr, pinn_aw)", src,
+            "1X2-Edge-Berechnung nicht gegen Platzhalter-Quoten gegatet")
+
+    def test_die_gemeldeten_platzhalter_sind_implausibel(self):
+        """Genau die Quoten aus Lucas' Alerts müssen als implausibel erkannt werden."""
+        from odds_plausibility import plausible_1x2
+        self.assertFalse(plausible_1x2(2.0, 3.5, 1.04))   # Houston: Auswärts 1.04
+        self.assertFalse(plausible_1x2(2.0, 1.01, 3.5))   # San Jose: Remis 1.01
+        self.assertTrue(plausible_1x2(2.10, 3.40, 3.30))  # echte MLS-Quote bleibt
+
+    def test_alert_label_datensatz_aware(self):
+        """Alerts liefen unter „WM Edge Alert" auch für MLS-Spiele → Label muss aus dem Datensatz kommen."""
+        src = (Path(__file__).parent.parent / "fetch_wm_poly_prices.py").read_text(encoding="utf-8")
+        self.assertNotIn("<b>WM Edge Alert", src, "hartes WM-Label noch drin")
+        self.assertIn("_ds_label", src)
+
 
 class TestPolyMirrorNormalization(unittest.TestCase):
     """Regression: Polymarket-Spiegel (Heim/Auswärts vertauscht, SUI-CAN statt
