@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-19T16:47:46Z",
+  "generatedAt": "2026-07-19T20:41:07Z",
   "windowDays": 2,
   "upcoming": 0,
   "signalsFired": [
@@ -37,7 +37,7 @@
     "polymarket_sharp": 0,
     "steam_lag": 0,
     "pressure_index": 45,
-    "lineup_signal": 32,
+    "lineup_signal": 34,
     "apif_predictions": 12,
     "weather_signal": 28,
     "incentive_signal": 24,
@@ -70,7 +70,7 @@
   ],
   "oks": [
     "🌡️ Weather: 1 Spiele mit Forecast",
-    "🎲 Pinnacle-Odds: frischeste 0.0h alt",
+    "🎲 Pinnacle-Odds: frischeste 0.1h alt",
     "📊 APIF-Predictions: 69 Spiele",
     "📋 Lineups: kein Spiel im T-1h-Fenster (Watcher feuert näher am Anpfiff)",
     "📈 NT-xG: 48 Teams",
@@ -202,12 +202,12 @@
     },
     {
       "id": "wallet_ledger_growing",
-      "label": "Wallet-Ledger wächst (Track-Record-Basis)",
+      "label": "Wallet-Ledger wächst",
       "severity": "warn",
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "build_poly_wallet_ledger.py läuft direkt nach jedem fetch_wm_poly_smartmoney.py."
+      "note": "Kein frischer Wallet-Snapshot — nichts zu sammeln."
     },
     {
       "id": "no_ghost_picks",
@@ -481,15 +481,6 @@
       "note": "freshness_leg-Signal muss bei confirm/reverse feuern, damit der Bayesian-Loop das Gewicht lernt. Fehlt es → Signal-Engine lief vor dem Frische-Block oder Signal nicht registriert."
     },
     {
-      "id": "smartmoney_sane",
-      "label": "Smart-Money-Daten kohärent",
-      "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
-      "note": "Shares müssen ~1 summieren + totalUsd da. Sonst läuft das smart_money-Signal auf Müll. Quelle: fetch_wm_poly_smartmoney.py (data-api, Mac-Runner)."
-    },
-    {
       "id": "btts_not_templated_traded",
       "label": "BTTS-Platzhalter nicht handelbar",
       "severity": "warn",
@@ -542,15 +533,6 @@
       "nFail": 0,
       "failures": [],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
-    },
-    {
-      "id": "smartmoney_cluster_sane",
-      "label": "Smart-Money-Cluster kohärent",
-      "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
-      "note": "cluster ∈ ℕ₀, ≤ holders; buy/sell ≥ 0; netFlow = buy − sell. Sonst rechnet der Cluster-Boost/Exit-Penalty im smart_money-Signal auf Müll."
     },
     {
       "id": "card_only_not_in_trade",
