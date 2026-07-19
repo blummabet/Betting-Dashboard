@@ -51,3 +51,25 @@ test('leere/dünne Smart-Money-Daten → keine Sektion (kein leerer Kasten)', ()
 test('Deep-Link-Helfer robust bei fehlendem slug', () => {
   assert.equal(win()._pwPolyLink(null), '');
 });
+
+// O/U-Leiter komplett (19.07.2026): poly_o15/o35 waren ungenutzt → jetzt im Edge-Board.
+test('Edge-Board: O/U 1.5 + 2.5 + 3.5 mit Pinnacle-Fair (WM-Stil)', () => {
+  const w = win();
+  const prices = { prices: { 'H-A': { homeName: 'H', awayName: 'A', homeId: 'h', awayId: 'a',
+    hw: 0.5, dr: 0.3, aw: 0.3, vol: 50000,
+    poly_o15: 0.7, poly_u15: 0.3, poly_o25: 0.45, poly_u25: 0.55, poly_o35: 0.2, poly_u35: 0.8 } } };
+  const odds = { 'H-A': { hw: 2.0, dr: 3.5, aw: 3.5,
+    o15: 1.3, u15: 3.5, o25: 1.9, u25: 1.9, o35: 3.6, u35: 1.28 } };
+  const mkts = new Set(w._pwBuildEdges(prices, odds).map(e => e.mkt));
+  assert.ok(mkts.has('ou15') && mkts.has('ou') && mkts.has('ou35'), 'O/U-Leiter unvollständig');
+});
+
+test('Edge-Board: ohne Pinnacle-Totals fällt O/U auf Softbook zurück (ᴾ-Tag)', () => {
+  const w = win();
+  const prices = { prices: { 'H-A': { homeName: 'H', awayName: 'A', homeId: 'h', awayId: 'a',
+    hw: 0.5, dr: 0.3, aw: 0.3, vol: 50000, poly_o25: 0.45, poly_u25: 0.55 } } };
+  const odds = { 'H-A': { hw: 2.0, dr: 3.5, aw: 3.5, public_o25: 1.9, public_u25: 1.9 } };
+  const ou = w._pwBuildEdges(prices, odds).find(e => e.mkt === 'ou' && e.side === 'over');
+  assert.ok(ou && /ᴾ/.test(ou.ticket), 'Softbook-Fair muss als ᴾ markiert sein');
+  assert.equal(ou.fairSrc, 'public');
+});

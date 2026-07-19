@@ -177,9 +177,20 @@ function _pwBuildEdges(prices,oddsMap){
       {side:'draw',poly:m.dr,fair:pf&&pf.draw,open:openf&&openf.draw,label:'Unentschieden'},
       {side:'away',poly:m.aw,fair:pf&&pf.away,open:openf&&openf.away,label:A+' Sieg'},
     ];
-    const pou=_pwDevig2(o.o25,o.u25);
-    legs.push({side:'over',mkt:'ou',poly:m.poly_o25,fair:pou&&pou.over,label:'Über 2.5 Tore'});
-    legs.push({side:'under',mkt:'ou',poly:m.poly_u25,fair:pou&&pou.under,label:'Unter 2.5 Tore'});
+    // O/U-Leiter komplett (19.07.2026): 1.5 / 2.5 / 3.5 — die Poly-Preise poly_o15/o35 lagen
+    // ungenutzt. Fair aus Pinnacle (o.o15/o25/o35). Wo kein Pinnacle-Fair da ist (z.B. MLS ohne
+    // TheOddsAPI-totals), überspringt der leg-Guard sauber. Fallback auf Softbook-Konsens (public_*),
+    // damit die Linie auch ohne Pinnacle wenigstens gegen das Public bewertet wird.
+    const _ouLegs=(oS,uS,pO,pU,lbl,mk)=>{
+      let f=_pwDevig2(o[oS],o[uS]); let src='pinn';
+      if(!f){ f=_pwDevig2(o['public_'+oS],o['public_'+uS]); src='public'; }
+      const tag=src==='public'?' ᴾ':'';   // ᴾ = Fair aus Softbook-Konsens, nicht Pinnacle
+      legs.push({side:'over',mkt:mk,poly:m[pO],fair:f&&f.over,fairSrc:src,label:'Über '+lbl+' Tore'+tag});
+      legs.push({side:'under',mkt:mk,poly:m[pU],fair:f&&f.under,fairSrc:src,label:'Unter '+lbl+' Tore'+tag});
+    };
+    _ouLegs('o15','u15','poly_o15','poly_u15','1.5','ou15');
+    _ouLegs('o25','u25','poly_o25','poly_u25','2.5','ou');
+    _ouLegs('o35','u35','poly_o35','poly_u35','3.5','ou35');
     const pbt=_pwDevig2(o.bttsY,o.bttsN);
     legs.push({side:'bttsY',mkt:'btts',poly:m.poly_btts,fair:pbt&&pbt.over,label:'Beide treffen — Ja'});
     legs.push({side:'bttsN',mkt:'btts',poly:m.poly_btts_no,fair:pbt&&pbt.under,label:'Beide treffen — Nein'});
@@ -189,7 +200,7 @@ function _pwBuildEdges(prices,oddsMap){
       const liq=_pwLiq(m.vol);
       const fresh=(l.open!=null && (l.fair-l.open)*100>=PW_MOVE_FRESH);
       rows.push({key,match:H+' – '+A,homeId:m.homeId,awayId:m.awayId,kickoff:m.kickoff,koH:_pwHoursToKO(m.kickoff),
-        vol:m.vol,mkt:l.mkt||'1x2',side:l.side,ticket:l.label,poly:l.poly,fair:l.fair,gross,net,liq,fresh,verdict:_pwVerdict(net,liq)});
+        vol:m.vol,mkt:l.mkt||'1x2',side:l.side,ticket:l.label,poly:l.poly,fair:l.fair,fairSrc:l.fairSrc,gross,net,liq,fresh,verdict:_pwVerdict(net,liq)});
     });
   });
   rows.sort((a,b)=>b.net-a.net);
