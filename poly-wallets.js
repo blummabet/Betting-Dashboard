@@ -117,8 +117,9 @@ function initPolyWallets(){
     wmP, jf(f.prices), jf(f.wallets), jf(f.hist),
     jf(_derive('coherence')), jf(_derive('settlement')), jf(_derive('wallet_ledger')),
     jf(_derive('money_accuracy')),
-  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc])=>{
-    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc};
+    jf('poly_money_broad.json'),   // liga-übergreifend (global, nicht datensatz-spezifisch)
+  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad])=>{
+    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad};
     _pwRender();
   }).catch(err=>{
     // 12.07.2026: Vorher gab es KEIN catch — eine Exception im Render (z.B. der
@@ -267,7 +268,7 @@ function _pwGauge(val,color,label){
 function _pwRender(){
   const panel=document.getElementById('polyWalletsPanel'); if(!panel||!_pwCache)return;
   _pwDestroyCharts();
-  const {wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc}=_pwCache;
+  const {wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad}=_pwCache;
   const teams=_pwTeamsMap(wm), oddsMap=_pwOddsMap(wm);
   const edges=_pwBuildEdges(prices,oddsMap);
   const hasPoly=wallets&&((wallets.topPositionsAll||[]).length||(wallets.matches&&Object.keys(wallets.matches).length));
@@ -275,7 +276,8 @@ function _pwRender(){
 
   // 19.07.2026 (Lucas) — eigener Sub-View „Liegt das Geld richtig?" neben dem Edge-Board.
   if(_pwView==='money'){
-    panel.innerHTML=_pwDatasetTabs()+_pwViewTabs()+_pwMoneyAccuracy(moneyAcc,teams);
+    panel.innerHTML=_pwDatasetTabs()+_pwViewTabs()
+      +_pwMoneyBroad(moneyBroad)+_pwMoneyAccuracy(moneyAcc,teams);
     return;
   }
   if(!hasPoly&&!edges.length){
@@ -440,6 +442,41 @@ function _pwWhaleEntryQuality(ledger){
     +'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
     +'<th>Wallet</th><th>Position</th><th>Größe</th><th>Einstieg</th>'
     +'</tr></thead><tbody>'+rows+'</tbody></table></div></section>';
+}
+
+// ── Breit über ALLE Poly-Ligen (19.07.2026, Lucas) ───────────────────────────
+// „Wo hat die Masse mehr recht?" — alle Poly-Ligen mit Volumen ≥ Schwelle, triviale Favoriten
+// (Quote < min) raus. Aus poly_money_broad.py (Mac-Runner, Polys eigene Auflösung).
+function _pwMoneyBroad(broad){
+  const b=broad||{};
+  if(!b.n && !(b.byLeague&&b.byLeague.length)){
+    return '<div class="pw-sec" style="margin-top:6px"><div class="pw-sec-head">'
+      +'<span class="pw-kicker">🌐 Alle Poly-Ligen</span>'
+      +'<span class="pw-sec-note">liga-übergreifend · sammelt am Mac-Runner</span></div>'
+      +'<div class="pw-sec-p">Breiter Scan über alles, was Polymarket anbietet (Volumen ≥ Schwelle, '
+      +'triviale Favoriten raus). Zeigt je Liga, ob das Geld schärfer ist als der Preis. Füllt sich '
+      +'über die kommenden Tage, sobald der Runner läuft.</div></div>';
+  }
+  const V={geld_schaerfer:['🟢','#3fb950'],preis_besser:['🔴','#f85149'],gleichauf:['⚪','#8b949e']};
+  const rows=(b.byLeague||[]).map(l=>{
+    const f=V[l.verdict]||['·','#8b949e'];
+    const edge=(l.brierPrice-l.brierMoney);   // >0 = Geld schärfer
+    return '<tr><td class="pw-cm">'+_pwEsc(l.league)+'</td>'
+      +'<td class="pw-cn pw-mut">'+l.n+'</td>'
+      +'<td class="pw-cn">'+Math.round(l.moneyHitRate*100)+'%</td>'
+      +'<td class="pw-cn" style="color:#a78bfa">'+l.brierMoney.toFixed(3)+'</td>'
+      +'<td class="pw-cn" style="color:#5eead4">'+l.brierPrice.toFixed(3)+'</td>'
+      +'<td class="pw-cn" style="color:'+f[1]+';font-weight:700">'+f[0]+' '+(edge>0?'+':'')+edge.toFixed(3)+'</td></tr>';
+  }).join('');
+  const note='Volumen ≥ '+_pwUsd(b.minVolUsd||0)+' · Mindest-Quote '+(b.minOdds||'—')+' (triviale Favoriten raus) · '+(b.n||0)+' Märkte';
+  return '<div class="pw-sec" style="margin-top:6px"><div class="pw-sec-head">'
+    +'<span class="pw-kicker">🌐 Alle Poly-Ligen — wo hat die Masse mehr recht?</span>'
+    +'<span class="pw-sec-note">'+note+'</span></div>'
+    +(rows?('<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
+      +'<th>Liga</th><th>n</th><th>Geld trifft</th><th>Brier Geld</th><th>Brier Preis</th><th>Geld-Vorteil</th>'
+      +'</tr></thead><tbody>'+rows+'</tbody></table></div>')
+     :'<div class="pw-sec-p">Noch keine Liga mit genug aufgelösten Märkten (min 5). Sammelt weiter.</div>')
+    +'</div>';
 }
 
 // ── „Liegt das Geld richtig?" (19.07.2026, Lucas) ────────────────────────────

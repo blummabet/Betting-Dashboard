@@ -20,7 +20,7 @@ function mockFetch(files) {
   };
 }
 
-async function renderMoney(acc) {
+async function renderMoney(acc, broad) {
   const dom = new JSDOM('<!DOCTYPE html><body><div id="polyWalletsPanel"></div></body>',
     { url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
   const { window: w } = dom;
@@ -28,6 +28,7 @@ async function renderMoney(acc) {
     'mls-data.json': { groups: {} }, 'mls_poly_prices.json': { prices: {} },
     'mls_poly_wallets.json': baseWallets, 'mls-odds-history.json': {},
     'mls_poly_money_accuracy.json': acc,
+    'poly_money_broad.json': broad || { n: 0 },
   });
   w.eval(readFileSync(PW, 'utf8'));
   w._pwDsId = 'mls';
@@ -65,4 +66,21 @@ test('zu wenig Daten: ehrlicher Sammel-Zustand statt Fantasiezahl', async () => 
   const html = await renderMoney({ n: 0 });
   assert.match(html, /Sammelt noch/);
   assert.doesNotMatch(html, /schärfer als der Preis/);
+});
+
+test('Alle Poly-Ligen: Liga-Breakdown mit Geld-Vorteil + min-Quote-Hinweis', async () => {
+  const html = await renderMoney({ n: 0 }, {
+    n: 120, minVolUsd: 7500, minOdds: 1.35, byLeague: [
+      { league: 'NBA', n: 40, moneyHitRate: 0.62, brierMoney: 0.42, brierPrice: 0.50, verdict: 'geld_schaerfer' },
+      { league: 'EPL', n: 25, moneyHitRate: 0.50, brierMoney: 0.55, brierPrice: 0.52, verdict: 'preis_besser' },
+    ],
+  });
+  assert.match(html, /Alle Poly-Ligen/);
+  assert.match(html, /NBA/); assert.match(html, /EPL/);
+  assert.match(html, /Mindest-Quote 1\.35/, 'triviale-Favoriten-Filter muss erklärt sein');
+});
+
+test('Alle Poly-Ligen: leerer Zustand ist ein ehrlicher Sammel-Hinweis', async () => {
+  const html = await renderMoney({ n: 0 }, { n: 0 });
+  assert.match(html, /sammelt am Mac-Runner/);
 });

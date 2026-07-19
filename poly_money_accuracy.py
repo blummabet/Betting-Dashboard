@@ -100,15 +100,31 @@ def capture(smartmoney: dict, prices: dict, frozen: dict, now=None) -> dict:
     return out
 
 
-def evaluate(frozen: dict, results: dict) -> dict:
+def _verdict(bm, bp):
+    """Brier-Vergleich → Urteil. Niedriger = besser; Marge, damit Rauschen nichts auslöst."""
+    if bm < bp - 0.01:
+        return "geld_schaerfer"   # Geld sagt mehr als der Preis → echtes Signal
+    if bm > bp + 0.01:
+        return "preis_besser"     # Geld schlechter als Preis → dummes Geld, faden ok
+    return "gleichauf"            # Geld schon im Preis → kein Zusatznutzen
+
+
+def evaluate(frozen: dict, results: dict, min_odds: float = 1.0) -> dict:
     """Eingefrorene Geld-/Preis-Verteilungen gegen den Ausgang. REIN.
 
-    results: {matchKey: "home"|"draw"|"away"}  (Gewinner-Ausgang)."""
+    results:  {matchKey: "home"|"draw"|"away"}  (Gewinner-Ausgang)
+    min_odds: nur Märkte werten, deren Favorit MINDESTENS diese Quote hat (Lucas: „1.1 hat logo
+              öfter recht — nimm min 1.35"). Ein Favorit mit Quote < min_odds ist zu klar, um
+              etwas über die Klugheit der Masse auszusagen. Default 1.0 = kein Filter.
+              Zusätzlich: pro Liga aufgeschlüsselt (byLeague), wenn die Einträge ein `league`-Tag
+              tragen — „wo hat die Masse mehr recht?"."""
+    fav_prob_cap = 1.0 / max(min_odds, 1e-9)   # Favorit-Wahrscheinlichkeit darüber = zu klar
     n = 0
     money_hit = price_hit = 0
     brier_money = brier_price = 0.0
     disagree = {"n": 0, "moneyWon": 0, "priceWon": 0, "neither": 0}
     rows = []
+    by_league = {}
 
     for key, f in (frozen or {}).items():
         winner = results.get(key)
@@ -118,10 +134,15 @@ def evaluate(frozen: dict, results: dict) -> dict:
         pp = _norm3(f.get("prices") or {})
         if not mp or not pp:
             continue
+        if max(pp.values()) > fav_prob_cap:
+            continue                       # Favorit zu klar (Quote < min_odds) → nicht aussagekräftig
+
         n += 1
         onehot = {k: (1.0 if k == winner else 0.0) for k in _OUT}
-        brier_money += sum((mp[k] - onehot[k]) ** 2 for k in _OUT)
-        brier_price += sum((pp[k] - onehot[k]) ** 2 for k in _OUT)
+        bm_i = sum((mp[k] - onehot[k]) ** 2 for k in _OUT)
+        bp_i = sum((pp[k] - onehot[k]) ** 2 for k in _OUT)
+        brier_money += bm_i
+        brier_price += bp_i
 
         money_fav = max(_OUT, key=lambda k: mp[k])
         price_fav = max(_OUT, key=lambda k: pp[k])
@@ -130,36 +151,42 @@ def evaluate(frozen: dict, results: dict) -> dict:
         price_hit += p_ok
         if money_fav != price_fav:
             disagree["n"] += 1
-            if m_ok:
-                disagree["moneyWon"] += 1
-            elif p_ok:
-                disagree["priceWon"] += 1
-            else:
-                disagree["neither"] += 1
-        rows.append({"key": key, "winner": winner, "moneyFav": money_fav, "priceFav": price_fav,
+            disagree["moneyWon" if m_ok else "priceWon" if p_ok else "neither"] += 1
+
+        lg = f.get("league")
+        if lg:
+            b = by_league.setdefault(lg, {"n": 0, "moneyHit": 0, "bm": 0.0, "bp": 0.0})
+            b["n"] += 1; b["moneyHit"] += m_ok; b["bm"] += bm_i; b["bp"] += bp_i
+
+        rows.append({"key": key, "league": lg, "winner": winner,
+                     "moneyFav": money_fav, "priceFav": price_fav,
                      "moneyShare": round(mp[money_fav], 3), "priceProb": round(pp[price_fav], 3),
                      "moneyOK": m_ok, "priceOK": p_ok, "totalUsd": f.get("totalUsd")})
 
     if n == 0:
-        return {"n": 0, "verdict": "zu wenig Daten"}
+        return {"n": 0, "verdict": "zu wenig Daten", "minOdds": min_odds, "byLeague": []}
 
     bm, bp = brier_money / n, brier_price / n
-    # Niedrigerer Brier = besser kalibriert. Marge, damit Rauschen kein Urteil auslöst.
-    if bm < bp - 0.01:
-        verdict = "geld_schaerfer"       # Geld sagt mehr als der Preis → echtes Signal
-    elif bm > bp + 0.01:
-        verdict = "preis_besser"         # Geld schlechter als Preis → dummes Geld, faden ok
-    else:
-        verdict = "gleichauf"            # Geld schon im Preis → kein Zusatznutzen
+    league_rows = []
+    for lg, b in by_league.items():
+        if b["n"] < 5:
+            continue                       # zu dünn für ein Liga-Urteil
+        lbm, lbp = b["bm"] / b["n"], b["bp"] / b["n"]
+        league_rows.append({"league": lg, "n": b["n"], "moneyHitRate": round(b["moneyHit"] / b["n"], 3),
+                            "brierMoney": round(lbm, 4), "brierPrice": round(lbp, 4),
+                            "verdict": _verdict(lbm, lbp)})
+    league_rows.sort(key=lambda r: r["brierPrice"] - r["brierMoney"], reverse=True)  # wo Geld am meisten schlägt
 
     return {
         "n": n,
+        "minOdds": min_odds,
         "moneyHitRate": round(money_hit / n, 3),
         "priceHitRate": round(price_hit / n, 3),
         "brierMoney": round(bm, 4),
         "brierPrice": round(bp, 4),
         "disagree": disagree,
-        "verdict": verdict,
+        "verdict": _verdict(bm, bp),
+        "byLeague": league_rows,
         "rows": sorted(rows, key=lambda r: -(r.get("totalUsd") or 0))[:40],
     }
 
