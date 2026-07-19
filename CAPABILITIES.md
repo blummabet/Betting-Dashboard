@@ -4,7 +4,7 @@
 
 **Pflege:** Neues Feature, deaktiviertes Feature oder geschlossene Lücke → hier eine Zeile ändern. Das ist Teil des Features, nicht Nacharbeit.
 
-**Stand:** 18.07.2026
+**Stand:** 19.07.2026
 
 ---
 
@@ -36,7 +36,7 @@ SPA `season-finish-v2.html`, Weiche `showView()` in `ui.js` (`panelMap`). `seaso
 | `sharp` | `renderer.js` `renderSharpRadar()` | Pinnacle-Linienbewegungen, eigener Toggle je Datensatz |
 | `polytrading` | `polymarket-tab.js` `initPolyTrader()` | Auto-Trader: offene Positionen, Health, P&L |
 | `polybetting` | `polymarket-tab.js` `initPolymarket()` | Manuelles Platzieren aus Card-Picks |
-| `polywallets` | `poly-wallets.js` | **Whale Tracker**: Edge = Signal, Whales = Veto |
+| `polywallets` | `poly-wallets.js` | **Whale Tracker**: Edge=Signal, Whales=Veto + Auflösungs-Lücken + Poly-interne Fehlbepreisung + Whale-Einstiegsqualität (aus Ledger). Einstieg = MLS (WM ans Ende). |
 | `analyse` | `signal-check.js` | Fremden Tipp gegen alle Signale prüfen; isoliert, gibt nie ein Verdict |
 | `intl-studio` | `tiktok-studio.js` | Manueller TikTok-Card-Generator |
 | `status` | `status-checks.js` | Ops-Health: Browser-Checks + Server-Readiness aus `{ds}_status.json` |
@@ -107,6 +107,12 @@ SPA `season-finish-v2.html`, Weiche `showView()` in `ui.js` (`panelMap`). `seaso
 
 **Trading:** `auto_wm_poly_trigger` (Edge ≥4pp / Steam-Lag 3pp, MIN_VOL 10k, `ENABLED`-Flag, Wallet-Balance + Limits **datensatz-übergreifend**), `polymarket_bet` (Order via `repository_dispatch`), `manage_wm_poly_positions` (Sell-Alerts), `monitor_open_positions` (Health 0-100), `reconcile_poly_positions` (manuelle Wallet-Eingriffe → `closed_manual`), `steam_lag_monitor`, `poly_heartbeat`.
 
+**Poly-Edge ausnutzen (19.07.2026):**
+- `poly_entry.decide_entry` — **Maker statt Taker**: bei viel Zeit + breitem Spread eine ruhende Limit-Order oben aufs Gebot statt den Spread zu crossen; nah am Anpfiff / enger Spread → Taker (Fill-Sicherheit). Eingehängt in `polymarket_bet.place_market_order` (Schritt 0). ⚠️ **Default `maker_enabled=false`** — Aktivierung braucht noch den Order-Lebenszyklus (ruhende Order stornieren + als Taker nachlegen, wenn sie bis kurz vor Anpfiff nicht füllt); solange das fehlt, würde ein unerfüllter Maker-Order Kapital binden und einen Move still verpassen. Aktivierungs-Checkliste: (1) Lifecycle bauen, (2) Dispatch reicht `depth`+`kickoff` je Order mit, (3) `trade.maker_enabled=true` in `cocobet_config`.
+- `poly_coherence` — **Poly gegen sich selbst**: Underround-Arb (Ja+Nein < 1.0), O/U-Leiter-Inversionen, fette Spreads. Kein Pinnacle-Anker nötig. → `{ds}_poly_coherence.json` → Wallets-Tab. Dünn-Markt-Filter (MIN_VOL 5k) gegen Scheinarbs aus veralteten Preisen.
+- `poly_settlement_gap` — **Auflösungs-Lücke**: Spiel FT, Gewinner-Ausgang handelt noch < 0.97 (Oracle hinkt). → `{ds}_poly_settlement.json` → Wallets-Tab. Harter **Stale-Schutz**: nur werten, wenn der Preis-Snapshot NACH Anpfiff + Spieldauer liegt (sonst wäre jeder Vorspiel-Preis ein „garantierter Gewinn").
+- Beide Detektoren laufen in `fetch-{wm-data,mls-odds-dense}` + `update-mls` direkt nach dem Poly-Fetch. **Keine Ausführung, nur Analyse** — Handeln entscheidet der Mensch / gegateter Trigger.
+
 **Content:** `compute_streaks` / `compute_player_streaks` (strikt Content, nie in Picks/Trading), `generate_daily_tiktok` (Playwright → 4 PNGs → Telegram), `wm_story_engine` + `wm_story_angles/*`, `generate_wm_ai_preview` (Haiku) bzw. `generate_wm_rule_preview` (ohne API-Key), `generate_track_record_card`, `signal_check` (isoliert, neutrale Gewichte). Telegram: `telegram_wm` (Morning + Recap, zweisprachig), `telegram_trades` (eigener Channel), `telegram_streaks`, `telegram_streak_watch`, `notify_new_picks`.
 
 **Guards:** `wm_data_integrity` (~40 Checks, sichtbar als 🛡️-Panel), `pre_match_readiness`, `safe_write.preserve_nonempty`, `check_not_wiped` (harter Exit 1), `odds_plausibility` (Overround 1.00-1.30, **eine Quelle**), `validate_wm_picks`, `detect_pick_changes`, `detect_wm_sharp_moves`, `state_files_registry` (zentrale git-add-Listen).
@@ -166,6 +172,8 @@ Präfix-Muster: WM = `wm_`/`wm2026-`/kein Präfix, Liga = `liga_`/`liga-`, MLS =
 - **Poly↔Pinnacle Lead-Lag: kein Vorlauf in eine der beiden Richtungen** (18.07., `analyze_poly_pinnacle_lag.py`). Kreuzkorrelation über 25 WM-Matches, Peak sitzt bei Lag 0 (r=+0.21), alle anderen Lags ~0 — stabil über Raster 15/30/60/120min. Heißt: Polymarket taugt **nicht** als Frühwarnung vor unserem Steam-Trigger, und Pinnacle gibt uns keinen ausbeutbaren Zeitvorsprung gegenüber Poly. Deshalb gibt es kein Poly-Lead-Signal. ⚠️ Das widerspricht `steam_lag` nicht: das misst *Divergenz* (Pinnacle bewegt sich, Poly ist noch nicht nachgezogen), nicht *Vorlauf*.
 
 **Offene Lücken:**
+- **Maker-Order-Lebenszyklus fehlt** → `poly_entry` ist gebaut + getestet, aber `maker_enabled` bleibt aus, bis ruhende Orders storniert/nachgelegt werden können (siehe Aktivierungs-Checkliste in §3 Trading).
+- **Wallet-Track-Record (CLV/ROI je Wallet)** — der Ledger sammelt seit 18.07.; die Auswertung je Wallet folgt, sobald genug Auflösungen da sind. Dann `smart_money` auf bewiesene statt große Wallets umstellen.
 - **Liga-Steam-Log fehlt** — `steam_lag_log.json` ist WM-only, deshalb kein Liga-Check in `wm_data_integrity`.
 - **MLS-Lineup-Watcher fehlt** — kein Hot-Cron, `lineup_signal` bekommt für MLS nie Daten.
 - **`pre_match_readiness` ist WM-only.**

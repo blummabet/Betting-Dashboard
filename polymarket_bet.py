@@ -379,12 +379,48 @@ def gamma_find_winner_event(order: dict, mm_event: dict) -> dict | None:
 
 # ── CLOB order placement ────────────────────────────────────
 
+def _hours_to_kickoff_safe(kickoff_iso):
+    """Stunden bis Anpfiff aus ISO-Zeit. None bei fehlend/kaputt → decide_entry fällt auf Taker."""
+    if not kickoff_iso:
+        return None
+    try:
+        ko = datetime.fromisoformat(str(kickoff_iso).replace("Z", "+00:00"))
+        return (ko - datetime.now(timezone.utc)).total_seconds() / 3600
+    except Exception:
+        return None
+
+
+def _maker_intent(price_hint, best_bid=None, best_ask=None, hours_to_ko=None):
+    """19.07.2026 — Maker-Vorentscheid VOR der Market-Order (Lucas: „Poly ausnutzen, Spread sparen").
+
+    Reine Delegation an poly_entry.decide_entry. Trennt die Entscheidung (testbar, kein Netzwerk)
+    von der Ausführung. Gibt {mode, price, reason} zurück; bei mode=='maker' legt place_market_order
+    direkt eine ruhende Limit-Order statt zu crossen. Default (maker_enabled=false) → immer 'taker'
+    → das bestehende Live-Verhalten bleibt Bit für Bit gleich, bis Lucas es einschaltet."""
+    try:
+        import poly_entry
+        cfg = poly_entry.EntryConfig(
+            maker_enabled=bool(_cfg("trade", "maker_enabled", False)),
+            maker_min_hours=float(_cfg("trade", "maker_min_hours", 3.0)),
+            maker_min_spread_pp=float(_cfg("trade", "maker_min_spread_pp", 3.0)),
+        )
+        return poly_entry.decide_entry(price_hint, best_bid, best_ask, hours_to_ko, cfg)
+    except Exception as e:
+        # Entscheidungs-Logik darf einen Trade NIE kippen — im Zweifel Taker (bestehendes Verhalten).
+        return {"mode": "taker", "price": None, "reason": f"decide_entry-Fehler: {e}"}
+
+
 def place_market_order(token_id: str, amount_usdc: float, private_key: str,
-                       price_hint: float = None) -> dict:
+                       price_hint: float = None,
+                       best_bid: float = None, best_ask: float = None,
+                       hours_to_ko: float = None) -> dict:
     """
     Place a BUY order on Polymarket CLOB v2.
 
     Strategy (FOK-safe):
+      0. Maker-Vorentscheid (19.07.2026): Ist maker_enabled gesetzt UND genug Zeit UND Spread breit,
+         wird direkt eine ruhende GTC-Limit-Order oben aufs Gebot gelegt (Spread einsparen statt
+         zahlen). Default AUS → Schritt 1 wie bisher.
       1. Try create_and_post_market_order (GTC market order).
          NOTE: Polymarket's CLOB engine treats market orders as FOK internally —
          if there isn't enough liquidity at the current price the order is killed.
@@ -474,6 +510,30 @@ def place_market_order(token_id: str, amount_usdc: float, private_key: str,
         """True when the error is a FOK/fill rejection (not a creds/network problem)."""
         s = (err_str or "").lower()
         return "fok" in s or "fully filled" in s or "fill" in s
+
+    # ── STEP 0: Maker-Vorentscheid (19.07.2026) ───────────────────────────────
+    # Ist maker_enabled gesetzt UND genug Zeit UND Spread breit, legen wir eine RUHENDE Limit-Order
+    # oben aufs Gebot — Spread einsparen statt zahlen. Default (maker_enabled=false) → übersprungen,
+    # Verhalten unverändert. Nutzt denselben Post-Mechanismus wie der FOK-Fallback (create_and_post_order).
+    _intent = _maker_intent(price_hint, best_bid, best_ask, hours_to_ko)
+    if _intent.get("mode") == "maker" and _intent.get("price"):
+        mk_price = _intent["price"]
+        mk_size  = round(amount_usdc / mk_price, 4)
+        print(f"  🅼 Maker: {mk_price:.2f} × {mk_size} tokens — {_intent['reason']}")
+        try:
+            from py_clob_client_v2.clob_types import OrderArgs
+            resp0 = client.create_and_post_order(
+                order_args=OrderArgs(token_id=token_id, price=mk_price, size=mk_size, side=Side.BUY),
+                options=PartialCreateOrderOptions(tick_size="0.01"),
+            )
+            oid0, err0 = _parse_resp(resp0)
+            if oid0:
+                return {"status": "placed", "orderId": oid0, "error": None,
+                        "method": "maker_limit", "makerPrice": mk_price}
+            # Maker abgelehnt → NICHT scheitern, sondern als Taker weiter (Fill-Sicherheit).
+            print(f"  ⚠️  Maker abgelehnt ({err0}) — weiter als Taker")
+        except Exception as e:
+            print(f"  ⚠️  Maker-Order-Exception ({e}) — weiter als Taker")
 
     # ── STEP 1: Market order (fast path) ──────────────────────────────────────
     market_err = None
@@ -951,13 +1011,20 @@ def main():
             result = {"status": "dry-run", "orderId": "dry-run", "error": None}
             placed += 1
         else:
+            # 19.07.2026: Orderbuch-Tiefe + Zeit bis Anpfiff durchreichen, damit der Maker-
+            # Vorentscheid überhaupt greifen kann (sonst fiele er mangels Daten immer auf Taker
+            # zurück). Beide Felder sind optional — der Dispatch liefert sie mit, wenn der
+            # Fetcher CLOB-Tiefe erfasst hat (nur für Edge≥3pp). Fehlen sie → Taker, wie bisher.
+            _depth = order.get("depth") or {}
             result = place_market_order(
                 token_id, float(stake), private_key,
                 price_hint=float(poly_price) if poly_price else None,
+                best_bid=_depth.get("bid"), best_ask=_depth.get("ask"),
+                hours_to_ko=_hours_to_kickoff_safe(order.get("kickoff")),
             )
             if result["status"] == "placed":
                 method = result.get("method", "market")
-                label  = "Limit GTC" if method == "limit_gtc" else "Market"
+                label  = {"limit_gtc": "Limit GTC", "maker_limit": "Maker (ruht)"}.get(method, "Market")
                 print(f"  ✅ Order platziert ({label}) — ID: {result['orderId']}")
                 placed += 1
 

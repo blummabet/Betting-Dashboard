@@ -96,16 +96,18 @@ function initPolyWallets(){
   _pwInjectStyle();
   panel.innerHTML='<div class="pw-loading">🐋 Lade Polymarket-Edge, Smart-Money & Steam-Kurven…</div>';
   const f=_pwFiles(), b='?t='+Date.now();
+  // 19.07.2026 — Poly-Edge-Dateien aus dem Preis-Dateinamen ableiten (wm_poly_prices → wm_poly_*).
+  // Fehlen sie (Liga hat kein Poly, oder Detektor lief noch nicht) → null, sauber abgefangen.
+  const _derive=(suffix)=>f.prices.replace('poly_prices','poly_'+suffix);
+  const jf=(url)=>fetch(url+b,{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);
   const wmP=(typeof window!=='undefined' && window.WM2026_DATA && _pwDataset()==='wm')
     ? Promise.resolve(window.WM2026_DATA)
-    : fetch(f.data+b,{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);
+    : jf(f.data);
   Promise.all([
-    wmP,
-    fetch(f.prices+b,{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),
-    fetch(f.wallets+b,{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),
-    fetch(f.hist+b,{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null),
-  ]).then(([wm,prices,wallets,hist])=>{
-    _pwCache={wm,prices,wallets,hist};
+    wmP, jf(f.prices), jf(f.wallets), jf(f.hist),
+    jf(_derive('coherence')), jf(_derive('settlement')), jf(_derive('wallet_ledger')),
+  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger])=>{
+    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger};
     _pwRender();
   }).catch(err=>{
     // 12.07.2026: Vorher gab es KEIN catch — eine Exception im Render (z.B. der
@@ -120,6 +122,7 @@ function initPolyWallets(){
 }
 
 // ── Format ──────────────────────────────────────────────────────────────────
+function _pwEsc(s){return String(s==null?'':s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));}
 function _pwUsd(v){const n=Number(v)||0;if(n>=1e6)return '$'+(n/1e6).toFixed(2)+'M';if(n>=1e3)return '$'+(n/1e3).toFixed(n>=1e4?0:1)+'K';return '$'+Math.round(n);}
 function _pwPct(p){return (p*100).toFixed(0)+'%';}
 function _pwPP(v){return (v>=0?'+':'−')+Math.abs(v).toFixed(1)+'pp';}
@@ -253,7 +256,7 @@ function _pwGauge(val,color,label){
 function _pwRender(){
   const panel=document.getElementById('polyWalletsPanel'); if(!panel||!_pwCache)return;
   _pwDestroyCharts();
-  const {wm,prices,wallets,hist}=_pwCache;
+  const {wm,prices,wallets,hist,coherence,settlement,ledger}=_pwCache;
   const teams=_pwTeamsMap(wm), oddsMap=_pwOddsMap(wm);
   const edges=_pwBuildEdges(prices,oddsMap);
   const hasPoly=wallets&&((wallets.topPositionsAll||[]).length||(wallets.matches&&Object.keys(wallets.matches).length));
@@ -272,8 +275,13 @@ function _pwRender(){
     +'<p class="pw-sub">Wo Polymarket vs. dem scharfen Pinnacle-Anker fehlbepreist ist — bestätigt oder gevetot vom großen Geld. <b>Die Edge ist das Signal, die Whales sind das Veto.</b></p></div>'
     +'<div class="pw-stamp">'+f.icon+' '+f.label+' · Stand '+upd+'<br><span>Beträge geschätzt (Anteile × Preis)</span></div></div>';
   h+=_pwKpiBand(edges,wallets);
+  // 19.07.2026 — Poly-native Edge-Quellen VOR dem Pinnacle-Edge-Board: das sind risikoärmere,
+  // reinere Chancen (Arb / feststehende Auflösung), die keinen externen Anker brauchen.
+  h+=_pwSettlementBoard(settlement,teams);
+  h+=_pwCoherenceBoard(coherence);
   h+=_pwScatterSection(edges);
   h+=_pwEdgeBoard(edges,teams,wallets,hist);
+  h+=_pwWhaleEntryQuality(ledger);
   h+=_pwExitWatch(wallets,teams);
   h+=_pwFlowTape(wallets,teams);
   h+=_pwLeaderboard(wallets,teams);
@@ -332,6 +340,89 @@ function _pwDrawScatter(edges){
   });
   _pwCharts.push(c);
   }catch(err){}
+}
+
+// ── Auflösungs-Lücken (19.07.2026) ───────────────────────────────────────────
+// Feststehende Ergebnisse, die Poly noch unter 1.00 handelt. Risikoärmster Edge überhaupt:
+// das Spiel ist vorbei, nur der Oracle hinkt. Quelle: poly_settlement_gap.py.
+function _pwSettlementBoard(settlement,teams){
+  const gaps=(settlement&&settlement.gaps)||[];
+  if(!gaps.length) return '';
+  const rows=gaps.slice(0,8).map(g=>{
+    const pct=(g.gewinnerPreis*100).toFixed(0);
+    return '<tr>'
+      +'<td class="pw-cm">'+_pwEsc(g.match)+'</td>'
+      +'<td><span class="pw-chip">'+_pwEsc(g.markt)+'</span></td>'
+      +'<td class="pw-cn">'+_pwEsc(g.endstand)+'</td>'
+      +'<td class="pw-cn">'+pct+'¢</td>'
+      +'<td class="pw-cn pw-pos"><b>+'+g.gapPP.toFixed(1)+'pp</b></td>'
+      +'<td class="pw-cn pw-mut">'+_pwUsd(g.vol)+'</td></tr>';
+  }).join('');
+  return '<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">💰 Auflösungs-Lücken</span>'
+    +'<span class="pw-sec-note">feststehend, noch nicht 1.00</span></div>'
+    +'<p class="pw-sec-p">Das Ergebnis steht fest — der Gewinner-Ausgang handelt aber noch unter 100¢, '
+    +'weil Polymarket erst verzögert auflöst. Kaufen und bis zur Auflösung halten = planbare pp. '
+    +'<b>Rest-Risiko:</b> Oracle-Streit (selten).</p>'
+    +'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
+    +'<th>Spiel</th><th>Markt</th><th>Endstand</th><th>Preis</th><th>Lücke</th><th>Vol</th>'
+    +'</tr></thead><tbody>'+rows+'</tbody></table></div></section>';
+}
+
+// ── Poly-interne Fehlbepreisung (19.07.2026) ─────────────────────────────────
+// Poly gegen sich selbst: Underround-Arb, Leiter-Widersprüche, fette Spreads. Kein Pinnacle-Anker.
+function _pwCoherenceBoard(coherence){
+  const f=(coherence&&coherence.findings)||[];
+  if(!f.length) return '';
+  const ic={underround:'🟢',ladder_inversion:'🟠',overround:'⚪'};
+  const lbl={underround:'Arbitrage',ladder_inversion:'Widerspruch',overround:'fetter Spread'};
+  const rows=f.slice(0,10).map(b=>'<tr>'
+      +'<td class="pw-cm">'+_pwEsc(b.match)+'</td>'
+      +'<td><span class="pw-chip">'+_pwEsc(b.markt)+'</span></td>'
+      +'<td>'+(ic[b.typ]||'·')+' '+(lbl[b.typ]||b.typ)+'</td>'
+      +'<td class="pw-cn'+(b.typ==='underround'?' pw-pos':'')+'">'+(b.summe!=null?b.summe.toFixed(3):'—')+'</td>'
+      +'<td class="pw-cn"><b>'+(b.edgePP>=0?'+':'')+b.edgePP.toFixed(1)+'pp</b></td>'
+      +'</tr>').join('');
+  const n=coherence.arbCount||0;
+  return '<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🎯 Poly-interne Fehlbepreisung</span>'
+    +'<span class="pw-sec-note">'+n+' Arb'+(n===1?'':'s')+' · ohne Pinnacle-Anker</span></div>'
+    +'<p class="pw-sec-p">Polymarket hält seine eigenen Märkte nicht konsistent. '
+    +'<b>🟢 Arbitrage</b>: Ja+Nein &lt; 1.00 → beide Seiten kaufen zahlt garantiert 1.00. '
+    +'<b>🟠 Widerspruch</b>: mehr Tore teurer als weniger — eine Linie ist falsch. '
+    +'<b>⚪ Spread</b>: hier nicht als Taker rein. '
+    +'<i>Auf dünnen Märkten oft ein veralteter Preis — vor dem Handeln Tiefe prüfen.</i></p>'
+    +'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
+    +'<th>Spiel</th><th>Markt</th><th>Typ</th><th>Summe</th><th>Edge</th>'
+    +'</tr></thead><tbody>'+rows+'</tbody></table></div></section>';
+}
+
+// ── Whale-Einstiegsqualität (19.07.2026) ─────────────────────────────────────
+// Nicht „wer ist groß", sondern „wer ist zu welchem Preis eingestiegen". Aus dem Wallet-Ledger
+// (firstAvgPrice). Bis der Track-Record reift (Wochen), ist das der erste harte Qualitäts-Proxy:
+// ein Whale, der billig einkauft, ist interessanter als einer, der teuer nachkauft.
+function _pwWhaleEntryQuality(ledger){
+  const pos=ledger&&ledger.positions?Object.values(ledger.positions):[];
+  if(pos.length<3) return '';
+  // Nach Größe sortieren, Einstiegspreis zeigen. (Wallet-CLV kommt, sobald Closing je Position da ist.)
+  const top=pos.filter(p=>p.usd>=1000&&p.firstAvgPrice)
+              .sort((a,b)=>b.usd-a.usd).slice(0,8);
+  if(!top.length) return '';
+  const rows=top.map(p=>{
+    const entry=(p.firstAvgPrice*100).toFixed(0);
+    return '<tr>'
+      +'<td><a href="'+_pwLink(p.wallet)+'" target="_blank" rel="noopener" class="pw-wl">'+_pwWallet(p.wallet)+'</a></td>'
+      +'<td class="pw-cm">'+_pwEsc(p.pick||p.match||'—')+'</td>'
+      +'<td class="pw-cn">'+_pwUsd(p.usd)+'</td>'
+      +'<td class="pw-cn">'+entry+'¢</td></tr>';
+  }).join('');
+  const seit=ledger.updatedAt?_pwAgo(ledger.updatedAt):'—';
+  return '<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🐋 Whale-Einstiegsqualität</span>'
+    +'<span class="pw-sec-note">Einstiegspreis, nicht nur Größe</span></div>'
+    +'<p class="pw-sec-p">Aus dem Wallet-Ledger: zu welchem Preis sind die großen Wallets '
+    +'ursprünglich rein? Der Einstieg (nicht die Positionsgröße) trennt scharfes von dummem Geld. '
+    +'<i>Track-Record (CLV/ROI je Wallet) folgt, sobald genug Auflösungen gesammelt sind · Stand '+seit+'</i></p>'
+    +'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
+    +'<th>Wallet</th><th>Position</th><th>Größe</th><th>Einstieg</th>'
+    +'</tr></thead><tbody>'+rows+'</tbody></table></div></section>';
 }
 
 // ── Edge-Board ──────────────────────────────────────────────────────────────
@@ -500,6 +591,20 @@ function _pwInjectStyle(){
   #polyWalletsPanel .pw-kicker{font-size:12px;font-weight:800;letter-spacing:1px;text-transform:uppercase;color:#5eead4;background:rgba(94,234,212,.1);padding:4px 10px;border-radius:7px}
   #polyWalletsPanel .pw-kicker.pw-red{color:#ff8a6d;background:rgba(255,123,93,.12)}
   #polyWalletsPanel .pw-sec-note{color:#76819c;font-size:12px}
+  /* 19.07.2026 — kompakte Tabelle für die neuen Poly-Edge-Sektionen */
+  #polyWalletsPanel .pw-sec-p{color:#8b98b5;font-size:12.5px;line-height:1.6;margin:2px 0 12px}
+  #polyWalletsPanel .pw-sec-p i{color:#76819c}
+  #polyWalletsPanel .pw-tw{overflow-x:auto}
+  #polyWalletsPanel .pw-tbl{width:100%;border-collapse:collapse;font-size:13px}
+  #polyWalletsPanel .pw-tbl th{text-align:left;color:#76819c;font-weight:600;font-size:11px;text-transform:uppercase;letter-spacing:.5px;padding:6px 10px;border-bottom:1px solid rgba(255,255,255,.08)}
+  #polyWalletsPanel .pw-tbl td{padding:8px 10px;border-bottom:1px solid rgba(255,255,255,.04)}
+  #polyWalletsPanel .pw-cm{color:#e6edf3;font-weight:600}
+  #polyWalletsPanel .pw-cn{text-align:right;font-variant-numeric:tabular-nums}
+  #polyWalletsPanel .pw-mut{color:#76819c}
+  #polyWalletsPanel .pw-pos{color:#3fb950}
+  #polyWalletsPanel .pw-chip{background:rgba(94,234,212,.1);color:#5eead4;font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;white-space:nowrap}
+  #polyWalletsPanel .pw-wl{color:#a78bfa;text-decoration:none;font-family:ui-monospace,monospace;font-size:12px}
+  #polyWalletsPanel .pw-wl:hover{text-decoration:underline}
   #polyWalletsPanel .pw-chartwrap{background:linear-gradient(145deg,#111a2b,#0d1420);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:14px;height:340px}
   #polyWalletsPanel .pw-chartwrap-sm{height:180px;padding:8px}
   #polyWalletsPanel .pw-board{display:flex;flex-direction:column;gap:9px}

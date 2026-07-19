@@ -303,6 +303,12 @@ jobs:
         run: python build_poly_wallet_ledger.py
         continue-on-error: true
 
+      - name: 🎯 WM Poly-Kohärenz + Settlement-Lücken
+        run: |
+          python poly_coherence.py || true
+          python poly_settlement_gap.py || true
+        continue-on-error: true
+
       # ── Pick-Validator — NACH fetch_wm_poly_prices (FIX 16.06.2026) ──────────────
       # MUSS nach der Poly-Normalisierung laufen: E_HOMEAWAY_SWAP prüft den 1X2-Favoriten
       # gegen Polymarket. Vorher (Step ~233, vor Poly) sah er gespiegelte/veraltete poly_hw
