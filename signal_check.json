@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "wm",
-    "generatedAt": "2026-07-19T12:57:02.893968+00:00",
+    "generatedAt": "2026-07-19T16:47:28.117576+00:00",
     "games": 104,
     "markets": [
       "Heimsieg",
@@ -60660,15 +60660,9 @@
       "markets": {
         "Heimsieg": {
           "tip": "Frankreich (Heimsieg)",
-          "headline": "5 von 6 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Frankreich (Heimsieg)“ mehrheitlich — am deutlichsten die Pinnacle-Bewegung, auch wenn 1 Signal(e) dagegenhalten.",
+          "headline": "4 von 5 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Frankreich (Heimsieg)“ mehrheitlich — am deutlichsten injury, auch wenn 1 Signal(e) dagegenhalten.",
           "confirm": [
-            {
-              "name": "lead_lag_bias",
-              "label": "die Pinnacle-Bewegung",
-              "evidence": "Pinnacle hat Heim um +1.6pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
-              "dir": "confirm"
-            },
             {
               "name": "injury",
               "label": "injury",
@@ -60704,6 +60698,10 @@
           ],
           "neutral": [],
           "silent": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung"
+            },
             {
               "name": "public_static_bias",
               "label": "der Public-Bias"
@@ -60802,24 +60800,18 @@
             }
           ],
           "score": {
-            "confirm": 5,
+            "confirm": 4,
             "contradict": 1,
             "neutral": 0,
-            "decisive": 6
+            "decisive": 5
           }
         },
         "Auswärtssieg": {
           "tip": "England (Auswärtssieg)",
-          "headline": "0 von 5 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale sehen „England (Auswärtssieg)“ kritisch — vor allem die Pinnacle-Bewegung spricht dagegen.",
+          "headline": "0 von 4 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale sehen „England (Auswärtssieg)“ kritisch — vor allem injury spricht dagegen.",
           "confirm": [],
           "contradict": [
-            {
-              "name": "lead_lag_bias",
-              "label": "die Pinnacle-Bewegung",
-              "evidence": "Pinnacle hat Auswärts um -1.8pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
-              "dir": "contradict"
-            },
             {
               "name": "injury",
               "label": "injury",
@@ -60847,6 +60839,10 @@
           ],
           "neutral": [],
           "silent": [
+            {
+              "name": "lead_lag_bias",
+              "label": "die Pinnacle-Bewegung"
+            },
             {
               "name": "public_static_bias",
               "label": "der Public-Bias"
@@ -60950,9 +60946,9 @@
           ],
           "score": {
             "confirm": 0,
-            "contradict": 5,
+            "contradict": 4,
             "neutral": 0,
-            "decisive": 5
+            "decisive": 4
           }
         },
         "Über 2.5 Tore": {
@@ -61255,8 +61251,8 @@
       "markets": {
         "Heimsieg": {
           "tip": "Spanien (Heimsieg)",
-          "headline": "3 von 5 klaren Signalen bestätigen den Tipp",
-          "reason": "Unsere Signale stützen „Spanien (Heimsieg)“ mehrheitlich — am deutlichsten die xG-Werte, auch wenn 2 Signal(e) dagegenhalten.",
+          "headline": "4 von 5 klaren Signalen bestätigen den Tipp",
+          "reason": "Unsere Signale stützen „Spanien (Heimsieg)“ mehrheitlich — am deutlichsten die xG-Werte, auch wenn 1 Signal(e) dagegenhalten.",
           "confirm": [
             {
               "name": "xg_strength",
@@ -61275,6 +61271,12 @@
               "label": "die Spieler-Ratings",
               "evidence": "📋 Im Form-Rating steht Heim bei 7.18, Auswärts bei 7.06 — Vorsprung +0.12, in der Abwehr -0.09.",
               "dir": "confirm"
+            },
+            {
+              "name": "smart_money",
+              "label": "das Smart Money",
+              "evidence": "💰 Auf Polymarket liegen 46% des Geldes auf Heim — mehr als der faire Preis hergibt (42%), und es sind echte Wale dahinter (Top-Wallets 62%).",
+              "dir": "confirm"
             }
           ],
           "contradict": [
@@ -61282,12 +61284,6 @@
               "name": "form_trend",
               "label": "die Formkurve",
               "evidence": "📈 Letzte 15 Spiele: Heim trifft 2.1 pro Partie und kassiert 0.3, Auswärts 2.5 und 0.5.",
-              "dir": "contradict"
-            },
-            {
-              "name": "smart_money",
-              "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 34% des Geldes auf Heim — weniger als der faire Preis hergibt (42%), und es sind echte Wale dahinter (Top-Wallets 52%).",
               "dir": "contradict"
             }
           ],
@@ -61395,8 +61391,8 @@
             }
           ],
           "score": {
-            "confirm": 3,
-            "contradict": 2,
+            "confirm": 4,
+            "contradict": 1,
             "neutral": 0,
             "decisive": 5
           }
@@ -61415,7 +61411,7 @@
             {
               "name": "smart_money",
               "label": "das Smart Money",
-              "evidence": "💰 Auf Polymarket liegen 53% des Geldes auf Auswärts — mehr als der faire Preis hergibt (27%), und es sind echte Wale dahinter (Top-Wallets 76%).",
+              "evidence": "💰 Auf Polymarket liegen 44% des Geldes auf Auswärts — mehr als der faire Preis hergibt (26%), und es sind echte Wale dahinter (Top-Wallets 71%).",
               "dir": "confirm"
             }
           ],
@@ -61429,7 +61425,7 @@
             {
               "name": "apif_predictions",
               "label": "das externe Prognosemodell",
-              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 16.6pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+              "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 16.1pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
               "dir": "contradict"
             },
             {
