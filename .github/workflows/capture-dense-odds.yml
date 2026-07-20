@@ -10,9 +10,11 @@ name: 📸 Dense Odds Capture (Analyse)
 # 1 h2h-Batch-Call/Lauf (~2 Quota-Einheiten) → günstig.
 
 on:
-  schedule:
-    - cron: '*/30 16-23 * * *'   # Wien 18:00–01:30
-    - cron: '*/30 0-8 * * *'     # Wien 02:00–10:30 (deckt späte Abpfiffe + Post-Match ab)
+  # 20.07.2026 WM-WINTERISIERUNG: WM beendet → dichte WM-Odds-Erfassung pausiert (MLS/Liga haben
+  # eigene *-odds-dense-Workflows). Reaktivieren: einkommentieren.
+  # schedule:
+  #   - cron: '*/30 16-23 * * *'   # Wien 18:00–01:30
+  #   - cron: '*/30 0-8 * * *'     # Wien 02:00–10:30 (deckt späte Abpfiffe + Post-Match ab)
   workflow_dispatch: {}
 
 permissions:

@@ -484,15 +484,20 @@ def append_snapshot(history: dict, key: str, prices: dict, now_iso: str, post_ko
                 f[f"u{suf}"] = prices.get(f"{prefix}u{suf}")
         return f
 
+    # 20.07.2026 (MLS-Audit): Platzhalter-Quoten (hw/dr/aw ≈ 1.04/1.01/1.04, Overround ~2.9) NIE in die
+    # History schreiben. Sie sind kein echter Markt, aber die Sharp-Money-Signale (steam_lag, RLM,
+    # opener, multi_book, lead_lag) lesen die HISTORY → der Platzhalter→Echt-Sprung wird als Fake-Steam
+    # gelesen ODER vom Plausibilitäts-Guard genullt → die ganze Familie verstummt. Der frühere
+    # Ghost-Moves-Fix gatete nur odds_open; hier ist die Schreibgrenze der Zeitreihe selbst.
     hw, dr, aw = prices.get("hw"), prices.get("dr"), prices.get("aw")
-    if hw and dr and aw:
+    if hw and dr and aw and _plausible_1x2(hw, dr, aw):
         last_pinn = next((s for s in reversed(snaps) if s.get("bk") != "public"), None)
         if _snap_changed(last_pinn, hw, dr, aw):
             snaps.append({"ts": now_iso, "bk": "pinnacle", "hw": hw, "dr": dr, "aw": aw,
                           **_ou_fields("")})
             added += 1
     phw, pdr, paw = prices.get("public_hw"), prices.get("public_dr"), prices.get("public_aw")
-    if phw and pdr and paw:
+    if phw and pdr and paw and _plausible_1x2(phw, pdr, paw):
         last_pub = next((s for s in reversed(snaps) if s.get("bk") == "public"), None)
         if _snap_changed(last_pub, phw, pdr, paw):
             snaps.append({"ts": now_iso, "bk": "public", "hw": phw, "dr": pdr, "aw": paw,

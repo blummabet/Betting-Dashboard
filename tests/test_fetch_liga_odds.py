@@ -152,6 +152,27 @@ class TestSnapshot(unittest.TestCase):
         self.assertEqual(n2, 1)            # Bewegung → neuer Pinnacle-Snap
         self.assertEqual(len(h["40-50"]), 2)
 
+    def test_platzhalter_wird_nicht_in_history_geschrieben(self):
+        """20.07.2026 (MLS-Audit): Platzhalter-Quoten (1.04/1.01/1.04, Overround ~2.9) dürfen NIE in
+        die Zeitreihe — sie ersticken sonst die Sharp-Money-Signale (Ghost-Move-Klasse)."""
+        h = {}
+        n = L.append_snapshot(h, "60-70",
+                              {"hw": 1.04, "dr": 1.01, "aw": 1.04,
+                               "public_hw": 1.04, "public_dr": 1.01, "public_aw": 1.04},
+                              "2026-08-01T00:00:00Z")
+        self.assertEqual(n, 0, "implausibles 1X2 darf keinen Snapshot erzeugen")
+        self.assertEqual(h.get("60-70", []), [])
+
+    def test_echte_quote_nach_platzhalter_ist_kein_fake_steam(self):
+        """Kommt nach einem Platzhalter die erste ECHTE Quote, darf die History NUR die echte zeigen
+        (kein Platzhalter→Echt-Sprung = kein Fake-Steam)."""
+        h = {}
+        L.append_snapshot(h, "60-70", {"hw": 1.04, "dr": 1.01, "aw": 1.04}, "2026-08-01T00:00:00Z")
+        L.append_snapshot(h, "60-70", {"hw": 2.10, "dr": 3.30, "aw": 3.40}, "2026-08-02T00:00:00Z")
+        snaps = h.get("60-70", [])
+        self.assertEqual(len(snaps), 1, "nur die echte Quote steht in der History")
+        self.assertEqual(snaps[0]["hw"], 2.10)
+
 
 class TestExtractPrices(unittest.TestCase):
     def test_direct_mapping(self):

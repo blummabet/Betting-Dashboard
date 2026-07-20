@@ -165,6 +165,23 @@ def check_poly_surfaces_alive(ctx):
 
 
 @integrity_check
+def check_learning_loop_alive(ctx):
+    """20.07.2026 (MLS-Audit) — sobald Picks auflösen, MUSS der Signal-Ledger wachsen und Closing/CLV
+    ankommen. Tut es das nicht, ist der Lern-Loop still tot (CLV-für-Liga+MLS-war-tot-Klasse). Jung =
+    noch keine Resolves = grün; Resolves aber leerer Ledger/kein Closing = rot. Datensatz-aware."""
+    try:
+        import check_learning_loop_alive as LLA
+        ledger_file = D.file("wm_signal_ledger.json", "liga_signal_ledger.json").name
+        clv_file = D.file("wm_clv_summary.json", "liga_clv_summary.json").name
+        m = LLA.collect(ledger_file, clv_file)
+        fails = LLA.evaluate(m["resolved"], m["ledger_records"], m["with_closing"])
+    except Exception as e:
+        fails = [f"Guard selbst gescheitert: {e}"]
+    return _chk("learning_loop_alive", "Lern-Loop lernt (Ledger + CLV bei Resolves)", "warn", fails,
+                note="Jung/keine Resolves = ok; aufgelöste Picks ohne Ledger/Closing = tot.")
+
+
+@integrity_check
 def check_venue_resolves(ctx):
     if ctx.is_liga:
         return None   # WM-Venue-Map gilt nicht für Liga-Stadien

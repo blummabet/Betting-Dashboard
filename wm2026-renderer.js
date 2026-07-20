@@ -31,6 +31,19 @@
     return _mode === 'liga' ? 'liga' : 'wm';
   }
 
+  // (20.07.2026) Anstehende Spieltage EINER Gruppe — Kern des „MLS zeigt Spieltag 1"-Bugs:
+  // die Filterleiste darf nur Fixtures der aktiven Gruppe sehen, sonst erbt die MLS die Top-5-
+  // Spieltage (deren Saison noch nicht läuft → md 1), obwohl die MLS längst bei md 18 steht.
+  // Rein/testbar. activeGroup==='all' → gemischt (bewusst, „Alle Ligen"-Ansicht).
+  function _upcomingMdsForScope(allFx, activeGroup, todayIso) {
+    const scope = activeGroup === 'all' ? allFx : allFx.filter(fx => fx.groupKey === activeGroup);
+    const mds = [...new Set(scope
+      .filter(fx => fx.matchday != null && fx.matchday !== '')
+      .map(fx => fx.matchday))]
+      .sort((a, b) => (parseFloat(a) || 0) - (parseFloat(b) || 0) || String(a).localeCompare(String(b)));
+    return mds.filter(md => scope.some(fx => String(fx.matchday) === String(md) && fx.date >= todayIso));
+  }
+
   // ── Module state ──────────────────────────────────────
   let _wmData         = null;
   let _polyLookup     = {};   // key: "HOME-AWAY" → poly fixture object
@@ -713,11 +726,22 @@
 
     // ─── Tournament Header ────────────────────────────
     const daysUntil = Math.ceil((new Date('2026-06-11') - new Date(todayIso)) / 86400000);
+    // (20.07.2026 Winterisierung) Nach dem Finale nicht mehr „WM läuft" zeigen. Turnier beendet =
+    // alle Fixtures (Gruppen + koFixtures) aufgelöst. Sonst hing der Header ewig auf „läuft".
+    const _wmOver = daysUntil < 0 && (() => {
+      const _all = [];
+      for (const g of Object.values(_wmData.groups || {})) for (const f of (g.fixtures || [])) _all.push(f);
+      if (Array.isArray(_wmData.koFixtures)) _all.push(..._wmData.koFixtures);
+      const FINAL = new Set(['FT', 'AET', 'PEN', 'FINISHED']);
+      return _all.length > 0 && _all.every(f => FINAL.has(String((f.result || {}).status || '').toUpperCase()));
+    })();
     const countdownStr = daysUntil > 0
       ? `<span class="wm-countdown">⏳ ${daysUntil} Tage bis zum Anpfiff</span>`
       : daysUntil === 0
         ? `<span class="wm-countdown wm-countdown-live">🔴 Heute startet die WM!</span>`
-        : `<span class="wm-countdown wm-countdown-live">🔴 WM läuft</span>`;
+        : _wmOver
+          ? `<span class="wm-countdown">🏁 WM 2026 beendet</span>`
+          : `<span class="wm-countdown wm-countdown-live">🔴 WM läuft</span>`;
 
     // Quick stats for header
     const totalPicks = Object.values(picks).flat().filter(p => p.verdict === 'BET' || p.verdict === 'ABWÄGEN').length;
@@ -786,8 +810,13 @@
       // (Liga = bis zu 38 Spieltage) auf die nächsten ~3 anstehenden begrenzen +
       // „Alle Spieltage" oben. „Anstehend" = kleinste Spieltage mit Spielen ab heute;
       // gibt es keine Zukunfts-Spiele mehr, fallen wir auf die letzten 3 zurück.
+      // (20.07.2026) Spieltag-Chips NUR aus der aktiven Liga ableiten. Sonst erbt die MLS die
+      // Spieltage der Top-5 (deren Saison 2026/27 noch nicht läuft → „nächster" Spieltag = 1),
+      // obwohl die MLS längst bei md 18 steht. `allFx` ist Top-5 + MLS gemerged; bei gewählter
+      // Gruppe muss die Filterleiste auf genau diese Gruppe scopen. „Alle" bleibt gemischt.
+      const _scopeFx = _activeGroup === 'all' ? allFx : allFx.filter(fx => fx.groupKey === _activeGroup);
       const _mdSet = new Set();
-      for (const fx of allFx) {
+      for (const fx of _scopeFx) {
         if (fx.matchday != null && fx.matchday !== '') _mdSet.add(fx.matchday);
       }
       const _allMds = [..._mdSet].sort((a, b) =>
@@ -796,13 +825,12 @@
       // nächsten 2 Wochen liegt — Quoten kommen eh nur Tage vorher, also Navi nicht mit allen
       // ~38 Runden zumüllen. Nichts live (z.B. 6 Wochen vor Saisonstart) → nur nächster Spieltag.
       const _twoWeeks = new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10);
-      const _liveMd = (md) => allFx.some(fx => String(fx.matchday) === String(md) && (
+      const _liveMd = (md) => _scopeFx.some(fx => String(fx.matchday) === String(md) && (
         odds[`${fx.home}-${fx.away}`] || (fx.date >= todayIso && fx.date <= _twoWeeks)));
       // (26.06.2026 Fix „Spieltag 1 dann 20"): nur ANSTEHENDE Spieltage ab dem nächsten zeigen und
       // nie weiter als +4 — sonst reißen evtl. fehl-gematchte Odds verstreute Runden auf. Greift
       // zusätzlich zum Daten-Fix in fetch_liga_odds (pick_event_for_fixture) als Sicherheitsnetz.
-      const _upcoming = _allMds.filter(md =>
-        allFx.some(fx => String(fx.matchday) === String(md) && fx.date >= todayIso));
+      const _upcoming = _upcomingMdsForScope(allFx, _activeGroup, todayIso);
       const _firstUp = _upcoming.length ? parseFloat(_upcoming[0]) : null;
       let _shownMds = _allMds.filter(md => _liveMd(md) && (_firstUp === null
         || (parseFloat(md) >= _firstUp && parseFloat(md) - _firstUp <= 4)));
@@ -4029,6 +4057,7 @@
       setWmData: (d) => { _wmData = d; },
       mpPrefix: _mpPrefix,                       // 19.07.2026: MLS-Event-Page-Slug-Prefix
       setMode: (m) => { _mode = m; },
+      upcomingMdsForScope: _upcomingMdsForScope, // 20.07.2026: Spieltag-Chip-Scope (MLS-Bug)
     };
   }
 

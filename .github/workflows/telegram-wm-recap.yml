@@ -7,8 +7,9 @@ on:
   #    Nach-Mitternacht-UTC-Spiele auflöst (z.B. KOR-CZE, Anpfiff 02:00 UTC,
   #    Ende ~04:00). Ein Abend-Recap (21:30 UTC) würde solche Spiele verpassen.
   #  · Ein Recap statt zwei → kein Doppel-Post, weniger Lärm.
-  schedule:
-    - cron: '0 9 * * *'
+  # 20.07.2026 WM-WINTERISIERUNG: WM beendet → kein täglicher WM-Recap mehr. Reaktivieren: einkommentieren.
+  # schedule:
+  #   - cron: '0 9 * * *'
 
   workflow_dispatch:
     inputs:
