@@ -52,3 +52,26 @@ def test_wallets_nach_groesse_sortiert():
 def test_names_als_home_away():
     m = E.build([_ev()], _sm)["smartmoney"]["matches"]["cs2-navi-faze"]
     assert m["home"] == "NAVI" and m["away"] == "FaZe"
+
+
+class TestFetchEventsDiagnose:
+    """20.07.2026 — E-Sport lief seit Bau leer (0 Commits), aber STILL: man sah nie, ob die Tags
+    ziehen. _fetch_events muss je-Tag-Rohzähler liefern, damit „warum leer" sichtbar ist."""
+
+    def test_diag_zaehlt_je_tag(self):
+        fetch = lambda tag: [_ev(slug=tag + "-1")] if tag == "cs2" else []
+        events, diag = E._fetch_events(gamma_fetch=fetch)
+        assert diag["cs2"] == 1
+        assert diag["lol"] == 0 and diag["dota"] == 0
+        assert len(events) == 1
+
+    def test_dedup_ueber_tags(self):
+        # Dasselbe Event unter zwei Tags → nur einmal in events, aber in beiden diag gezählt.
+        fetch = lambda tag: [_ev(slug="same")] if tag in ("cs2", "lol") else []
+        events, diag = E._fetch_events(gamma_fetch=fetch)
+        assert len(events) == 1
+        assert diag["cs2"] == 1 and diag["lol"] == 1
+
+    def test_alles_leer_gibt_leer(self):
+        events, diag = E._fetch_events(gamma_fetch=lambda tag: [])
+        assert events == [] and sum(diag.values()) == 0
