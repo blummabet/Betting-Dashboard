@@ -6,8 +6,11 @@ name: 📈 Pinnacle Odds Refresh (dicht)
 # Pipeline-Lauf (keine Form/Lineups/Poly). Kosten: ~720 TheOddsAPI-Credits/Lauf × ~6 = ~4,3k/Tag
 # (~130k/Monat) — bei 5-Mio-Limit unkritisch. Nach 1 Woche Verbrauch prüfen, Cadence justieren.
 on:
-  schedule:
-    - cron: '0 2,6,10,14,18,22 * * *'   # füllt die Lücken zwischen fetch-wm-data (4,8,12,16,20)
+  # 20.07.2026 WM-WINTERISIERUNG: WM 2026 ist beendet (Finale 19.07.). Schedule pausiert, damit der
+  # Fetcher nicht mehr gegen ein totes Turnier läuft (TheOddsAPI hat die WM gedroppt). Reaktivieren
+  # für WM 2030 / Testläufe: die schedule-Zeile wieder einkommentieren.
+  # schedule:
+  #   - cron: '0 2,6,10,14,18,22 * * *'   # füllt die Lücken zwischen fetch-wm-data (4,8,12,16,20)
   workflow_dispatch:
 
 permissions:

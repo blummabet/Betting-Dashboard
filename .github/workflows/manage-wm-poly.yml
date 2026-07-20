@@ -15,10 +15,12 @@ on:
   # KO) weiterhin. Anpfiffe 00-04 + 16-23 UTC, Vorlauf → 14:00-04:00.
   # (Mit Cloud-Runner könnte man später wieder */15 + 20min-Close testen.)
   # + 2 Tages-Läufe fürs Housekeeping (Profit-/Age-Trigger auf lang gehaltene Positionen).
-  schedule:
-    - cron: '0,30 14-23 * * *'   # Abend-Anpfiffe (16-23 UTC) inkl. Vorlauf
-    - cron: '0,30 0-5 * * *'     # Nacht-Anpfiffe (00-04 UTC) inkl. Vorlauf
-    - cron: '0 6,10 * * *'       # Tages-Housekeeping (lang gehaltene Positionen)
+  # 20.07.2026 WM-WINTERISIERUNG: WM beendet → WM-Poly-Management pausiert (kein Trading gegen totes
+  # Turnier). MLS-Poly läuft unberührt in manage-mls-poly.yml weiter. Reaktivieren: einkommentieren.
+  # schedule:
+  #   - cron: '0,30 14-23 * * *'   # Abend-Anpfiffe (16-23 UTC) inkl. Vorlauf
+  #   - cron: '0,30 0-5 * * *'     # Nacht-Anpfiffe (00-04 UTC) inkl. Vorlauf
+  #   - cron: '0 6,10 * * *'       # Tages-Housekeeping (lang gehaltene Positionen)
 
   # Manuell auslösbar (z.B. direkt nach einer neuen Position)
   workflow_dispatch:

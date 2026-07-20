@@ -8,8 +8,10 @@ on:
   # = ~144 Requests/Run. Kosten = Märkte×Regionen: nach Senkung auf eu,uk + Entfernen
   # des redundanten `spreads` ~720 Credits/Run × 5 = ~3.600/Tag (~108K/Monat). 100K-
   # Limit am 16.06. erreicht → nächster Hebel: per-Event-Calls auf KO-nahe Spiele begrenzen.
-  schedule:
-    - cron: '0 4,8,12,16,20 * * *'
+  # 20.07.2026 WM-WINTERISIERUNG: WM beendet (Finale 19.07.) → Daten-/Odds-Refresh pausiert. Spart
+  # TheOddsAPI-Budget + stoppt Fehlalarme. Reaktivieren für WM 2030 / Testläufe: einkommentieren.
+  # schedule:
+  #   - cron: '0 4,8,12,16,20 * * *'
 
   # Manuell jederzeit auslösbar (z.B. für ersten Test)
   workflow_dispatch:

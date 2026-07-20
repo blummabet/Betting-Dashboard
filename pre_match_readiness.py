@@ -342,6 +342,12 @@ def main() -> int:
         "smart_money":        "nur bei Big-Wallet-Konzentration",
         "chance_creation":    "nur bei xG-Detailabdeckung",
         "form_rating":        "nur bei Rating-Abdeckung",
+        # 20.07.2026 — kontextabhängige/dataset-spezifische Signale: still ist ERWARTET, kein Engine-
+        # Bug. mls_travel gibt für WM/Liga per Design None (Venue-Tabelle nur MLS); die beiden anderen
+        # feuern nur bei passender Marktlage. Ohne diese Einträge warnten sie fälschlich „unerwartet still".
+        "mls_travel":         "nur MLS (Reise/Höhe/Rasen; WM/Liga → None)",
+        "game_state_openness": "nur bei offener Spielanlage (Über / BTTS-Ja)",
+        "multi_book_steam":   "nur bei Multi-Buch-Steam-Bestätigung",
     }
     for n in signal_names:
         if fire[n] > 0:

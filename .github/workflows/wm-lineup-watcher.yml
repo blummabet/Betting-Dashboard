@@ -11,9 +11,11 @@ name: 📋 WM Lineup-Watcher (T-1h Hot-Cron)
 # Nach WM: Cron lockern (alle 30 min reicht für reguläre Liga-Spielzeiten).
 
 on:
-  schedule:
-    # 09:00-23:00 UTC alle 15 min — covered alle WM-Anpfiffe inkl. Nachtspiele
-    - cron: '*/15 9-23 * * *'
+  # 20.07.2026 WM-WINTERISIERUNG: WM beendet → Lineup-Watcher pausiert (keine Aufstellungen mehr).
+  # Reaktivieren für WM 2030 / Testläufe: einkommentieren.
+  # schedule:
+  #   # 09:00-23:00 UTC alle 15 min — covered alle WM-Anpfiffe inkl. Nachtspiele
+  #   - cron: '*/15 9-23 * * *'
 
   # Manuell triggerbar für Tests
   workflow_dispatch:

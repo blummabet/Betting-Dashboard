@@ -8,9 +8,10 @@ name: 🔒 Closing-Capture (nah am Anpfiff)
 # So ist die Closing-Linie am Anpfiff ≤15 min alt statt Stunden.
 
 on:
-  schedule:
-    - cron: '*/15 14-23 * * *'   # Abend-Anpfiffe (UTC) inkl. ~90 min Vorlauf
-    - cron: '*/15 0-5 * * *'     # Nacht-Anpfiffe (UTC)
+  # 20.07.2026 WM-WINTERISIERUNG: WM beendet → Closing-Capture pausiert. Reaktivieren: einkommentieren.
+  # schedule:
+  #   - cron: '*/15 14-23 * * *'   # Abend-Anpfiffe (UTC) inkl. ~90 min Vorlauf
+  #   - cron: '*/15 0-5 * * *'     # Nacht-Anpfiffe (UTC)
   workflow_dispatch:
 
 permissions:

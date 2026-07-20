@@ -41,6 +41,27 @@ function _stParseTs(v) {
   return isNaN(d.getTime()) ? null : d;
 }
 function _stAgeH(d) { return d ? (Date.now() - d.getTime()) / 3600000 : null; }
+// 20.07.2026 WM-Winterisierung — Turnier beendet? (spiegelt cocobet_dataset.tournament_is_over).
+// Alle Fixtures (Gruppen + koFixtures) aufgelöst UND letzter Anpfiff in der Vergangenheit → dann sind
+// die Odds/Poly-Frische-Checks ERWARTET veraltet (TheOddsAPI droppt beendete Turniere), kein Fehler.
+// Universell: laufende Liga/MLS hat immer kommende Spiele → false.
+function _stTournamentOver(data) {
+  if (!data) return false;
+  const FINAL = new Set(['FT', 'AET', 'PEN', 'FINISHED']);
+  const fx = [];
+  for (const g of Object.values(data.groups || {})) for (const f of (g.fixtures || [])) fx.push(f);
+  const ko = data.koFixtures;
+  if (Array.isArray(ko)) fx.push(...ko);
+  else if (ko && typeof ko === 'object') for (const v of Object.values(ko)) Array.isArray(v) ? fx.push(...v) : fx.push(v);
+  if (!fx.length) return false;
+  const resolved = f => FINAL.has(String((f.result || {}).status || '').toUpperCase());
+  if (!fx.every(resolved)) return false;
+  let latest = '';
+  for (const f of fx) { const k = f.kickoff || f.date || ''; if (k > latest) latest = k; }
+  if (!latest) return true;
+  const t = _stParseTs(latest);
+  return t ? t.getTime() < Date.now() : true;
+}
 function _stAgo(d) {
   const h = _stAgeH(d);
   if (h === null) return '—';
@@ -316,8 +337,15 @@ async function runStatusPage(force) {
     const problems = [];
     const add = (sev, title, detail) => problems.push({ sev, title, detail });
 
+    // ── WM-Winterisierung (20.07.2026): Turnier beendet → die Frische-Checks (Odds/Poly/Balance/
+    // Stale-Edges) sind ERWARTET veraltet, TheOddsAPI droppt die WM. Ein grüner Hinweis statt roter
+    // Fehlalarme; die betroffenen Live-Checks werden übersprungen. Pick-/Konsistenz-Checks bleiben. ──
+    const wmOver = _stTournamentOver(data);
+    if (wmOver) add('info', '🏁 WM 2026 beendet — winterisiert',
+      'Alle Spiele aufgelöst (Finale 19.07.). Odds/Poly/Balance werden erwartungsgemäß nicht mehr aktualisiert und die WM-Workflows sind pausiert — die Frische-Warnungen unten entfallen daher. Kein Ausfall.');
+
     // ── Live-Check 1: Stale Edges (edge_X ≠ fair_X − poly_X) ──────────────
-    if (poly && Array.isArray(poly.allFixtures)) {
+    if (!wmOver && poly && Array.isArray(poly.allFixtures)) {
       const stale = [];
       for (const fx of poly.allFixtures) {
         for (const m of ['hw', 'dr', 'aw', 'o25', 'u25']) {
@@ -367,7 +395,7 @@ async function runStatusPage(force) {
     // (von fetch_wm_odds bei JEDEM Lauf gesetzt, auch ohne Bewegung — nicht der letzte
     // Snapshot, der bei flachen Linien ewig alt aussieht). manage holt alle 30min,
     // also ist >2h schon verdächtig, >4h = Feed/Runner hängt → KEINE frischen Trades.
-    if (oddsHist && typeof oddsHist === 'object') {
+    if (!wmOver && oddsHist && typeof oddsHist === 'object') {
       const fetchedAt = oddsHist._meta && oddsHist._meta.oddsFetchedAt;
       let ts = _stParseTs(fetchedAt);
       if (!ts) {   // Fallback (alte Daten ohne _meta): jüngster Snapshot
@@ -385,14 +413,14 @@ async function runStatusPage(force) {
     }
 
     // ── Live-Check 6: Poly-Preise-Alter (manage-Zyklus-Heartbeat) ────────
-    if (poly) {
+    if (!wmOver && poly) {
       const age = _stAgeH(_stParseTs(poly.generatedAt));
       if (age !== null && age > 4) add('error', `Poly-Preise ${age.toFixed(1)}h alt`, 'manage-wm-poly hängt (alle 30min erwartet) → kein Auto-Trading. Runner/Workflow prüfen.');
       else if (age !== null && age > 2) add('warn', `Poly-Preise ${age.toFixed(1)}h alt`, 'Älter als der 30min-Trading-Takt — manage-wm-poly beobachten.');
     }
 
     // ── Live-Check 7: Balance-Alter ──────────────────────────────────────
-    if (bal) {
+    if (!wmOver && bal) {
       const age = _stAgeH(_stParseTs(bal.updatedAt));
       if (age !== null && age > 30) add('warn', `Balance ${age.toFixed(0)}h alt`, 'wm_poly_balance veraltet → Bankroll-Caps auf altem Stand.');
     }
@@ -409,7 +437,7 @@ async function runStatusPage(force) {
     _stRenderServer(status);
     _stRenderLearning(data, ledger, weights);
     _stRenderSignals(data, status);
-    _stRenderVerdict(problems, status, valRep);
+    _stRenderVerdict(problems, status, valRep, wmOver);
     _stRenderFeeds();   // eigene Fetches (inkl. Files die oben nicht geladen wurden)
   } finally {
     _stRunning = false;
@@ -492,31 +520,36 @@ async function _runLigaStatus() {
   }
 }
 
-function _stRenderVerdict(problems, status, valRep) {
+function _stRenderVerdict(problems, status, valRep, wmOver) {
   const el = document.getElementById('st_verdict'); if (!el) return;
   const errs = problems.filter(p => p.sev === 'error').length;
   const warns = problems.filter(p => p.sev === 'warn').length;
   const srvRank = _SEV_RANK[(status && status.verdict) || 'ok'] || 0;
   const liveRank = errs ? 3 : warns ? 2 : 0;
-  const worst = Math.max(srvRank, liveRank);
+  // 20.07.2026 WM-Winterisierung: bei beendetem Turnier sind Server-Readiness + Pick-Validator
+  // eingefroren (Pipeline pausiert) → ihre Warnungen sind ERWARTET, nicht aktiv. Gesamtstatus daher
+  // nicht rot/gelb ziehen; die Zählungen bleiben informativ sichtbar, aber der Verdict ist „beendet".
+  const worst = wmOver ? 0 : Math.max(srvRank, liveRank);
   const sev = worst >= 3 ? 'error' : worst >= 2 ? 'warn' : 'ok';
   const m = _SEV_META[sev];
   const srvErr = status ? (status.errors || []).length : 0;
   const srvWarn = status ? (status.warns || []).length : 0;
   const valErr = valRep && valRep.stats ? (valRep.stats.errors || 0) : 0;
 
-  document.getElementById('st_verdictIcon').textContent = m.icon;
-  const title = sev === 'error' ? 'Es gibt Probleme — bitte prüfen'
+  document.getElementById('st_verdictIcon').textContent = wmOver ? '🏁' : m.icon;
+  const title = wmOver ? 'WM 2026 beendet — winterisiert'
+    : sev === 'error' ? 'Es gibt Probleme — bitte prüfen'
     : sev === 'warn' ? 'Läuft, mit Hinweisen' : 'Alles läuft sauber';
   document.getElementById('st_verdictTitle').textContent = title;
   document.getElementById('st_verdictTitle').style.color = m.col;
-  document.getElementById('st_verdictSub').innerHTML =
-    `Live: <b>${errs}</b> Fehler · <b>${warns}</b> Warnungen &nbsp;|&nbsp; Server-Readiness: <b>${srvErr}</b> Fehler · <b>${srvWarn}</b> Hinweise &nbsp;|&nbsp; Pick-Validator: <b>${valErr}</b> Fehler`;
+  document.getElementById('st_verdictSub').innerHTML = wmOver
+    ? `🏁 Turnier beendet — Server-Readiness (<b>${srvErr}</b>) &amp; Pick-Validator (<b>${valErr}</b>) sind eingefrorene WM-Historie, erwartbar. Live-Checks pausiert.`
+    : `Live: <b>${errs}</b> Fehler · <b>${warns}</b> Warnungen &nbsp;|&nbsp; Server-Readiness: <b>${srvErr}</b> Fehler · <b>${srvWarn}</b> Hinweise &nbsp;|&nbsp; Pick-Validator: <b>${valErr}</b> Fehler`;
   el.style.borderColor = m.col;
   el.style.background = m.bg;
   const badge = (n, s) => n > 0 ? `<div style="background:rgba(0,0,0,.25);border:1px solid ${_SEV_META[s].col};border-radius:8px;padding:6px 12px;text-align:center;min-width:54px;"><div style="font-size:18px;font-weight:800;color:${_SEV_META[s].col};">${n}</div><div style="font-size:9px;opacity:.7;text-transform:uppercase;">${_SEV_META[s].lbl}</div></div>` : '';
-  document.getElementById('st_verdictCounts').innerHTML =
-    badge(errs + srvErr + valErr, 'error') + badge(warns + srvWarn, 'warn');
+  document.getElementById('st_verdictCounts').innerHTML = wmOver ? ''
+    : badge(errs + srvErr + valErr, 'error') + badge(warns + srvWarn, 'warn');
 
   // Roter/gelber Punkt am Status-Tab in der Hauptnavi — sichtbar ohne reinzuklicken
   // navStatusDot sitzt im „Mehr"-Dropdown (Status-Eintrag); navMoreDot spiegelt ihn auf den

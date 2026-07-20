@@ -71,5 +71,55 @@ class TestDataset(unittest.TestCase):
         self.assertEqual(D.season(), 2024)
 
 
+class TestTournamentOver(unittest.TestCase):
+    """20.07.2026 WM-Winterisierung — beendetes Turnier von laufendem unterscheiden, damit die
+    Konsumenten (Odds-Fetcher, Status-Guards) nicht ewig alarmieren, wenn TheOddsAPI die WM dropt."""
+
+    def setUp(self):
+        self.D = _reload(None)
+        self.NOW = datetime(2026, 7, 20, 12, 0, tzinfo=timezone.utc)
+
+    def _fx(self, ko, status):
+        return {"kickoff": ko, "result": {"status": status}}
+
+    def test_alle_aufgeloest_und_vergangen_ist_vorbei(self):
+        data = {"groups": {"A": {"fixtures": [
+            self._fx("2026-06-11T18:00:00Z", "FT"), self._fx("2026-07-19T18:00:00Z", "FT")]}},
+            "koFixtures": [self._fx("2026-07-15T18:00:00Z", "AET")]}
+        self.assertTrue(self.D.tournament_is_over(data, now=self.NOW))
+
+    def test_ein_offenes_spiel_ist_nicht_vorbei(self):
+        data = {"groups": {"A": {"fixtures": [
+            self._fx("2026-07-19T18:00:00Z", "FT"),
+            self._fx("2026-07-22T18:00:00Z", None)]}}}   # noch nicht gespielt
+        self.assertFalse(self.D.tournament_is_over(data, now=self.NOW))
+
+    def test_ko_in_kofixtures_wird_mitgezaehlt(self):
+        # KO liegt NICHT in groups (Memory 'KO-Datenpfad') — ein offenes KO-Spiel = nicht vorbei.
+        data = {"groups": {"A": {"fixtures": [self._fx("2026-07-01T18:00:00Z", "FT")]}},
+                "koFixtures": [self._fx("2026-07-25T18:00:00Z", None)]}
+        self.assertFalse(self.D.tournament_is_over(data, now=self.NOW))
+
+    def test_alle_aufgeloest_aber_zukunft_ist_nicht_vorbei(self):
+        # theoretisch: alle 'FT', aber spätester Anpfiff in der Zukunft → Schutz gegen False-Positive.
+        data = {"groups": {"A": {"fixtures": [self._fx("2026-07-25T18:00:00Z", "FT")]}}}
+        self.assertFalse(self.D.tournament_is_over(data, now=self.NOW))
+
+    def test_leerer_datensatz_ist_nicht_vorbei(self):
+        self.assertFalse(self.D.tournament_is_over({}, now=self.NOW))
+        self.assertFalse(self.D.tournament_is_over({"groups": {}}, now=self.NOW))
+
+    def test_laufende_liga_ist_nie_vorbei(self):
+        # Universell: eine Liga mit kommenden Spielen → immer False (nur beendetes Turnier True).
+        data = {"groups": {"ENG": {"fixtures": [
+            self._fx("2026-07-18T18:00:00Z", "FT"),
+            self._fx("2026-07-27T18:00:00Z", None)]}}}
+        self.assertFalse(self.D.tournament_is_over(data, now=self.NOW))
+
+    def test_nur_datum_ohne_zeit(self):
+        data = {"groups": {"A": {"fixtures": [{"date": "2026-07-19", "result": {"status": "FT"}}]}}}
+        self.assertTrue(self.D.tournament_is_over(data, now=self.NOW))
+
+
 if __name__ == "__main__":
     unittest.main()

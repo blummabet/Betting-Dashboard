@@ -915,16 +915,29 @@ def main():
     sport_key = _find_sport_key()
 
     if not sport_key:
-        print("\n  ℹ️  WM 2026 odds not available in TheOddsAPI yet.")
-        print("      Odds typically appear 2–3 weeks before the tournament.")
         # Write back unchanged (update meta only)
         wm["_meta"]["oddsUpdatedAt"] = now_iso
         with open(WM_FILE, "w", encoding="utf-8") as f:
             json.dump(wm, f, ensure_ascii=False, indent=2)
-        # Während des Turniers ist "kein Sport-Key" ein echter Fehler (Key/Quota/
-        # API-Umbenennung), kein harmloses Pre-Tournament-Warten → alarmieren.
+
+        # 20.07.2026 (WM-Winterisierung): DREI Zustände, nicht zwei. Der alte `wm_started`-Check
+        # (irgendein Spiel ≤ heute) konnte „läuft" nicht von „vorbei" unterscheiden — nach dem
+        # Finale sind ALLE Spiele in der Vergangenheit → er alarmierte bei JEDEM Lauf ewig weiter.
+        #   · Turnier VORBEI (alle Fixtures aufgelöst) → TheOddsAPI droppt es ERWARTET → still, Exit 0.
+        #   · Turnier LÄUFT (offene Spiele, aber kein Key) → echter Fehler (Key/Quota) → Alarm, Exit 1.
+        #   · VOR dem Turnier (alles in Zukunft) → harmloses Warten → still.
         try:
-            from datetime import date as _date
+            import cocobet_dataset as _D
+            over = _D.tournament_is_over(wm)
+        except Exception:
+            over = False
+        if over:
+            print("\n  🏁  Turnier beendet — TheOddsAPI listet die WM erwartungsgemäß nicht mehr. "
+                  "Kein Alarm (Winterisierung).")
+            return
+        print("\n  ℹ️  WM 2026 odds not available in TheOddsAPI yet.")
+        print("      Odds typically appear 2–3 weeks before the tournament.")
+        try:
             wm_started = any(
                 (fx.get("date") or "")[:10] <= datetime.now(timezone.utc).strftime("%Y-%m-%d")
                 for g in wm.get("groups", {}).values() for fx in g.get("fixtures", []))
@@ -1465,6 +1478,15 @@ def main():
     # 401, Quota erschöpft) und behält still die ALTEN Odds → genau der Fall der
     # den Feed seit 08.06 eingefroren hat. NIE wieder still: laut alarmieren.
     if updated == 0 and len(all_fixtures) > 0:
+        # 20.07.2026: bei beendetem Turnier ist „0 gepreist" ERWARTET (keine offenen Märkte mehr) —
+        # kein toter Feed. Nur alarmieren, wenn das Turnier noch läuft.
+        try:
+            import cocobet_dataset as _D
+            if _D.tournament_is_over(wm):
+                print("  🏁  0 Fixtures gepreist, aber Turnier beendet — kein Alarm (Winterisierung).")
+                return
+        except Exception:
+            pass
         _tg_alert(
             "🛑 <b>Odds-Fetch hat 0 Fixtures aktualisiert</b>\n"
             f"{len(all_fixtures)} Fixtures, aber keine neue Quote geschrieben — "

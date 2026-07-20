@@ -100,3 +100,50 @@ def current_season(now: datetime | None = None) -> int:
 
 def season() -> int:
     return int(os.environ.get("LIGA_SEASON") or current_season())
+
+
+# ── Turnier-Ende (20.07.2026, WM-Winterisierung) ──────────────────────────────
+_FINAL_STATUS = {"FT", "AET", "PEN", "FINISHED"}
+
+
+def _all_fixtures(data: dict) -> list:
+    """Alle Fixtures eines Datensatzes: Gruppen-Fixtures + koFixtures. KO liegt NICHT in groups
+    (Dauer-Fehler, siehe Memory 'KO-Datenpfad') → beide Quellen zusammenführen."""
+    data = data or {}
+    out = [fx for g in (data.get("groups") or {}).values() for fx in (g.get("fixtures") or [])]
+    ko = data.get("koFixtures")
+    if isinstance(ko, list):
+        out += ko
+    elif isinstance(ko, dict):
+        for v in ko.values():
+            out += v if isinstance(v, list) else [v]
+    return out
+
+
+def tournament_is_over(data: dict, now: datetime | None = None) -> bool:
+    """True, wenn das Turnier durch ist: mind. 1 Fixture, ALLE aufgelöst (Endstand) UND der späteste
+    Anpfiff liegt in der Vergangenheit.
+
+    Universell: eine laufende Liga/MLS hat immer kommende Spiele → False; nur ein beendetes Turnier
+    (WM nach dem Finale) → True. Zweck (WM-Winterisierung 20.07.2026): Konsumenten (Odds-Fetcher,
+    Status-Guards) dürfen „kein Sport-Key / Odds veraltet" bei beendetem Turnier NICHT als Fehler
+    alarmieren — TheOddsAPI droppt beendete Turniere, das ist erwartet, kein Ausfall. EINE Quelle,
+    damit die Logik nicht über mehrere Dateien driftet."""
+    now = now or datetime.now(timezone.utc)
+    fx = _all_fixtures(data)
+    if not fx:
+        return False
+
+    def _resolved(f):
+        return str((f.get("result") or {}).get("status") or "").upper() in _FINAL_STATUS
+
+    if not all(_resolved(f) for f in fx):
+        return False
+
+    latest = max((f.get("kickoff") or f.get("date") or "" for f in fx), default="")
+    if not latest:
+        return True   # alle aufgelöst, aber kein Datum → als beendet behandeln
+    try:
+        return datetime.fromisoformat(latest.replace("Z", "+00:00")) < now
+    except Exception:
+        return latest[:10] < now.strftime("%Y-%m-%d")
