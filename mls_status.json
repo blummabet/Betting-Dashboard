@@ -1,6 +1,15 @@
 {
   "checks": [
     {
+      "id": "poly_surfaces_alive",
+      "label": "Poly-Flächen liefern (kein stiller Tod)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Cross-Sport-Radar, E-Sport, Poly-Geld breit — frisch geschrieben (leer ok, tot nicht)."
+    },
+    {
       "id": "kickoff_present",
       "label": "Kickoff-Zeit real + plausibel",
       "severity": "error",
@@ -52,21 +61,21 @@
       "ok": false,
       "nFail": 16,
       "failures": [
-        "1598-9569: Margin 2.913 unplausibel",
-        "1604-1607: Margin 2.913 unplausibel",
-        "20787-1610: Margin 2.913 unplausibel",
-        "1615-1601: Margin 2.913 unplausibel",
+        "1598-9569: Margin 2.903 unplausibel",
+        "1604-1607: Margin 2.624 unplausibel",
+        "20787-1610: Margin 2.395 unplausibel",
+        "1615-1601: Margin 2.903 unplausibel",
         "1600-16489: Margin 2.913 unplausibel",
-        "1612-1603: Margin 2.913 unplausibel",
-        "1609-1608: Margin 2.913 unplausibel",
-        "25484-1597: Margin 2.913 unplausibel",
-        "1599-1595: Margin 2.913 unplausibel",
+        "1612-1603: Margin 2.903 unplausibel",
+        "1609-1608: Margin 2.903 unplausibel",
+        "25484-1597: Margin 2.775 unplausibel",
+        "1599-1595: Margin 2.885 unplausibel",
         "1613-2242: Margin 2.913 unplausibel",
         "1614-9568: Margin 2.913 unplausibel",
         "1602-18310: Margin 2.913 unplausibel",
         "1616-1611: Margin 2.913 unplausibel",
         "1596-1605: Margin 2.913 unplausibel",
-        "1617-1606: Margin 2.913 unplausibel",
+        "1617-1606: Margin 2.885 unplausibel",
         "1607-1603: 1X2 unvollständig hw=None dr=None aw=None"
       ],
       "note": "Quelle für Modell-Baseline + Edge."
@@ -114,26 +123,10 @@
       "label": "Ausfall-Liste = aktueller Stand (kein Archiv)",
       "severity": "warn",
       "ok": false,
-      "nFail": 18,
+      "nFail": 2,
       "failures": [
-        "1596: 60 Ausfälle — unplausibel hoch",
-        "1606: 108 Ausfälle — unplausibel hoch",
-        "1597: 76 Ausfälle — unplausibel hoch",
         "1600: 72 Ausfälle — unplausibel hoch",
-        "1612: 76 Ausfälle — unplausibel hoch",
-        "25484: 107 Ausfälle — unplausibel hoch",
-        "1610: 68 Ausfälle — unplausibel hoch",
-        "16489: 68 Ausfälle — unplausibel hoch",
-        "9568: 38 Ausfälle — unplausibel hoch",
-        "1609: 62 Ausfälle — unplausibel hoch",
-        "1602: 78 Ausfälle — unplausibel hoch",
-        "18310: 39 Ausfälle — unplausibel hoch",
-        "2242: 91 Ausfälle — unplausibel hoch",
-        "1604: 90 Ausfälle — unplausibel hoch",
-        "1615: 78 Ausfälle — unplausibel hoch",
-        "1613: 59 Ausfälle — unplausibel hoch",
-        "1598: 87 Ausfälle — unplausibel hoch",
-        "1599: 93 Ausfälle — unplausibel hoch"
+        "9568: 38 Ausfälle — unplausibel hoch"
       ],
       "note": "fetch_wm_injuries dedupliziert je Spieler (jüngster gewinnt) + verwirft Einträge älter als INJURY_RECENT_DAYS."
     },
@@ -158,16 +151,16 @@
         "1605-20787: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
         "1602-18310: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
         "1613-2242: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
-        "1598-9569: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
-        "1599-1595: 3 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
-        "1604-1607: 3 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
-        "1609-1608: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "1598-9569: 2 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "1599-1595: 5 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "1604-1607: 5 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "1609-1608: 2 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
         "1614-9568: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
-        "1615-1601: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "1615-1601: 2 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
         "1600-16489: 3 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
-        "1612-1603: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
-        "20787-1610: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
-        "25484-1597: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "1612-1603: 2 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "20787-1610: 2 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "25484-1597: 2 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
         "1596-1605: 3 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert"
       ],
       "note": "Verbraucher filtern via odds_plausibility.clean_snaps; verseuchte Snaps bleiben trotzdem ein Quellen-Fehler und werden hier sichtbar."
@@ -599,5 +592,5 @@
     }
   ],
   "nFail": 8,
-  "generatedAt": "2026-07-19T20:27:10.112425+00:00"
+  "generatedAt": "2026-07-20T10:18:32.580989+00:00"
 }
