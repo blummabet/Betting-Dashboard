@@ -10,6 +10,15 @@
       "note": "Cross-Sport-Radar, E-Sport, Poly-Geld breit — frisch geschrieben (leer ok, tot nicht)."
     },
     {
+      "id": "learning_loop_alive",
+      "label": "Lern-Loop lernt (Ledger + CLV bei Resolves)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Jung/keine Resolves = ok; aufgelöste Picks ohne Ledger/Closing = tot."
+    },
+    {
       "id": "kickoff_present",
       "label": "Kickoff-Zeit real + plausibel",
       "severity": "error",
@@ -62,17 +71,17 @@
       "nFail": 16,
       "failures": [
         "1598-9569: Margin 2.903 unplausibel",
-        "1604-1607: Margin 2.624 unplausibel",
+        "1604-1607: Margin 2.710 unplausibel",
         "20787-1610: Margin 2.395 unplausibel",
         "1615-1601: Margin 2.903 unplausibel",
-        "1600-16489: Margin 2.913 unplausibel",
+        "1600-16489: Margin 2.903 unplausibel",
         "1612-1603: Margin 2.903 unplausibel",
         "1609-1608: Margin 2.903 unplausibel",
-        "25484-1597: Margin 2.775 unplausibel",
+        "25484-1597: Margin 2.448 unplausibel",
         "1599-1595: Margin 2.885 unplausibel",
         "1613-2242: Margin 2.913 unplausibel",
-        "1614-9568: Margin 2.913 unplausibel",
-        "1602-18310: Margin 2.913 unplausibel",
+        "1614-9568: Margin 2.432 unplausibel",
+        "1602-18310: Margin 2.814 unplausibel",
         "1616-1611: Margin 2.913 unplausibel",
         "1596-1605: Margin 2.913 unplausibel",
         "1617-1606: Margin 2.885 unplausibel",
@@ -149,15 +158,15 @@
         "9569-1614: 4 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
         "1616-1606: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
         "1605-20787: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
-        "1602-18310: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "1602-18310: 4 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
         "1613-2242: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
         "1598-9569: 2 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
         "1599-1595: 5 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
-        "1604-1607: 5 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "1604-1607: 7 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
         "1609-1608: 2 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
-        "1614-9568: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "1614-9568: 4 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
         "1615-1601: 2 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
-        "1600-16489: 3 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "1600-16489: 4 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
         "1612-1603: 2 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
         "20787-1610: 2 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
         "25484-1597: 2 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
@@ -592,5 +601,5 @@
     }
   ],
   "nFail": 8,
-  "generatedAt": "2026-07-20T10:18:32.580989+00:00"
+  "generatedAt": "2026-07-20T20:30:29.175534+00:00"
 }
