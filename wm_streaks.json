@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "wm",
-    "generatedAt": "2026-07-19T16:47:25.588850+00:00",
+    "generatedAt": "2026-07-19T20:40:29.424874+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -1600,6 +1600,35 @@
       "type": "scored",
       "market": "Team trifft",
       "length": 5,
+      "venue": "all",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 87,
+        "label": "Eigentendenz 87%"
+      },
+      "ratePct": 87,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": null
+    },
+    {
+      "teamId": "ENG",
+      "team": "England",
+      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+      "league": "L",
+      "leagueName": "Gruppe L",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 5,
       "venue": "A",
       "strong": true,
       "continuation": {
@@ -2107,35 +2136,6 @@
         true,
         false,
         false
-      ],
-      "xgBacked": null
-    },
-    {
-      "teamId": "ENG",
-      "team": "England",
-      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-      "league": "L",
-      "leagueName": "Gruppe L",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 4,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 87,
-        "label": "Eigentendenz 87%"
-      },
-      "ratePct": 87,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true
       ],
       "xgBacked": null
     },
@@ -2816,51 +2816,22 @@
       "xgBacked": null
     },
     {
-      "teamId": "FRA",
-      "team": "Frankreich",
-      "flag": "🇫🇷",
-      "league": "I",
-      "leagueName": "Gruppe I",
-      "type": "bttsNo",
-      "market": "Beide treffen — Nein",
+      "teamId": "ENG",
+      "team": "England",
+      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+      "league": "L",
+      "leagueName": "Gruppe L",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
       "length": 4,
       "venue": "all",
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 47,
-        "label": "Eigentendenz 47%"
+        "ratePct": 53,
+        "label": "Eigentendenz 53%"
       },
-      "ratePct": 47,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        false
-      ],
-      "xgBacked": null
-    },
-    {
-      "teamId": "FRA",
-      "team": "Frankreich",
-      "flag": "🇫🇷",
-      "league": "I",
-      "leagueName": "Gruppe I",
-      "type": "bttsNo",
-      "market": "Beide treffen — Nein",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 47,
-        "label": "Eigentendenz 47%"
-      },
-      "ratePct": 47,
+      "ratePct": 53,
       "seq": [
         true,
         true,
@@ -2868,10 +2839,10 @@
         true,
         false,
         false,
-        false,
+        true,
         true
       ],
-      "xgBacked": null
+      "xgBacked": true
     },
     {
       "teamId": "GER",
@@ -3013,6 +2984,35 @@
         false
       ],
       "xgBacked": true
+    },
+    {
+      "teamId": "ENG",
+      "team": "England",
+      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+      "league": "L",
+      "leagueName": "Gruppe L",
+      "type": "bttsYes",
+      "market": "Beide Teams treffen",
+      "length": 4,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 40,
+        "label": "Eigentendenz 40%"
+      },
+      "ratePct": 40,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        false
+      ],
+      "xgBacked": null
     },
     {
       "teamId": "AUS",
@@ -4699,7 +4699,7 @@
         "conviction": 3,
         "names": [
           "pressure_index",
-          "weather_signal",
+          "lineup_signal",
           "chance_creation"
         ],
         "market": "Über 2.5 Tore"
@@ -4822,35 +4822,6 @@
       "xgBacked": null
     },
     {
-      "teamId": "ENG",
-      "team": "England",
-      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-      "league": "L",
-      "leagueName": "Gruppe L",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 53,
-        "label": "Eigentendenz 53%"
-      },
-      "ratePct": 53,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": false
-    },
-    {
       "teamId": "ESP",
       "team": "Spanien",
       "flag": "🇪🇸",
@@ -4893,7 +4864,7 @@
         "conviction": 3,
         "names": [
           "pressure_index",
-          "weather_signal",
+          "lineup_signal",
           "chance_creation"
         ],
         "market": "Über 2.5 Tore"
@@ -5290,35 +5261,6 @@
       "xgBacked": true
     },
     {
-      "teamId": "ENG",
-      "team": "England",
-      "flag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
-      "league": "L",
-      "leagueName": "Gruppe L",
-      "type": "bttsYes",
-      "market": "Beide Teams treffen",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 33,
-        "label": "Eigentendenz 33%"
-      },
-      "ratePct": 33,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        false,
-        false
-      ],
-      "xgBacked": null
-    },
-    {
       "teamId": "ESP",
       "team": "Spanien",
       "flag": "🇪🇸",
@@ -5358,40 +5300,11 @@
         "conviction": 3,
         "names": [
           "pressure_index",
-          "weather_signal",
+          "lineup_signal",
           "chance_creation"
         ],
         "market": "Über 2.5 Tore"
       }
-    },
-    {
-      "teamId": "FRA",
-      "team": "Frankreich",
-      "flag": "🇫🇷",
-      "league": "I",
-      "leagueName": "Gruppe I",
-      "type": "under25",
-      "market": "Unter 2,5 Tore",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 20,
-        "label": "Eigentendenz 20%"
-      },
-      "ratePct": 20,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        false,
-        false
-      ],
-      "xgBacked": true
     },
     {
       "teamId": "GHA",

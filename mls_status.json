@@ -52,21 +52,21 @@
       "ok": false,
       "nFail": 16,
       "failures": [
-        "1598-9569: 1X2 unvollständig hw=None dr=None aw=None",
-        "1604-1607: 1X2 unvollständig hw=None dr=None aw=None",
-        "1616-1611: 1X2 unvollständig hw=None dr=None aw=None",
-        "20787-1610: 1X2 unvollständig hw=None dr=None aw=None",
-        "1615-1601: 1X2 unvollständig hw=None dr=None aw=None",
-        "1600-16489: 1X2 unvollständig hw=None dr=None aw=None",
-        "1612-1603: 1X2 unvollständig hw=None dr=None aw=None",
-        "1609-1608: 1X2 unvollständig hw=None dr=None aw=None",
-        "25484-1597: 1X2 unvollständig hw=None dr=None aw=None",
-        "1599-1595: 1X2 unvollständig hw=None dr=None aw=None",
-        "1596-1605: 1X2 unvollständig hw=None dr=None aw=None",
-        "1617-1606: 1X2 unvollständig hw=None dr=None aw=None",
-        "1613-2242: 1X2 unvollständig hw=None dr=None aw=None",
-        "1614-9568: 1X2 unvollständig hw=None dr=None aw=None",
-        "1602-18310: 1X2 unvollständig hw=None dr=None aw=None",
+        "1598-9569: Margin 2.913 unplausibel",
+        "1604-1607: Margin 2.913 unplausibel",
+        "20787-1610: Margin 2.913 unplausibel",
+        "1615-1601: Margin 2.913 unplausibel",
+        "1600-16489: Margin 2.913 unplausibel",
+        "1612-1603: Margin 2.913 unplausibel",
+        "1609-1608: Margin 2.913 unplausibel",
+        "25484-1597: Margin 2.913 unplausibel",
+        "1599-1595: Margin 2.913 unplausibel",
+        "1613-2242: Margin 2.913 unplausibel",
+        "1614-9568: Margin 2.913 unplausibel",
+        "1602-18310: Margin 2.913 unplausibel",
+        "1616-1611: Margin 2.913 unplausibel",
+        "1596-1605: Margin 2.913 unplausibel",
+        "1617-1606: Margin 2.913 unplausibel",
         "1607-1603: 1X2 unvollständig hw=None dr=None aw=None"
       ],
       "note": "Quelle für Modell-Baseline + Edge."
@@ -142,7 +142,7 @@
       "label": "History-Snapshots = echte Märkte (kein Platzhalter)",
       "severity": "warn",
       "ok": false,
-      "nFail": 12,
+      "nFail": 27,
       "failures": [
         "1614-1601: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
         "1607-1603: 2 Platzhalter-Snap(s), z.B. 1.17/1.01/1.17 (Overround 2.70) → Geister-Move im Radar + Fake-Steam-Alert",
@@ -155,7 +155,20 @@
         "16489-1595: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
         "9569-1614: 4 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
         "1616-1606: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
-        "1605-20787: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert"
+        "1605-20787: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "1602-18310: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "1613-2242: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "1598-9569: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "1599-1595: 3 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "1604-1607: 3 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "1609-1608: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "1614-9568: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "1615-1601: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "1600-16489: 3 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "1612-1603: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "20787-1610: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "25484-1597: 1 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert",
+        "1596-1605: 3 Platzhalter-Snap(s), z.B. 1.04/1.01/1.04 (Overround 2.91) → Geister-Move im Radar + Fake-Steam-Alert"
       ],
       "note": "Verbraucher filtern via odds_plausibility.clean_snaps; verseuchte Snaps bleiben trotzdem ein Quellen-Fehler und werden hier sichtbar."
     },
@@ -173,7 +186,7 @@
       "label": "Liga-Odds nur auf nahen Spieltagen",
       "severity": "warn",
       "ok": false,
-      "nFail": 34,
+      "nFail": 48,
       "failures": [
         "1599-1602: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
         "1609-1601: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
@@ -190,16 +203,16 @@
         "1617-1597: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
         "1600-1615: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
         "1605-20787: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
-        "1604-1601: Odds auf Spieltag 20 (Front = 7) — Hin/Rück-Fehlmatch?",
         "1598-9569: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
         "1604-1607: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
-        "1616-1611: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
         "20787-1610: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
         "1615-1601: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
         "1600-16489: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
         "1612-1603: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
         "1609-1608: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
-        "25484-1597: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?"
+        "25484-1597: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1599-1595: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1613-2242: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?"
       ],
       "note": "fetch_liga_odds.pick_event_for_fixture trennt Hin/Rück per Datum."
     },
@@ -219,7 +232,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "15/15 mit AH · 15/15 mit Public-O/U."
+      "note": "30/30 mit AH · 30/30 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -298,23 +311,8 @@
       "label": "Public-Konsens (Soft-Books) vorhanden",
       "severity": "warn",
       "ok": false,
-      "nFail": 16,
+      "nFail": 1,
       "failures": [
-        "1598-9569: kein public_hw",
-        "1604-1607: kein public_hw",
-        "1616-1611: kein public_hw",
-        "20787-1610: kein public_hw",
-        "1615-1601: kein public_hw",
-        "1600-16489: kein public_hw",
-        "1612-1603: kein public_hw",
-        "1609-1608: kein public_hw",
-        "25484-1597: kein public_hw",
-        "1599-1595: kein public_hw",
-        "1596-1605: kein public_hw",
-        "1617-1606: kein public_hw",
-        "1613-2242: kein public_hw",
-        "1614-9568: kein public_hw",
-        "1602-18310: kein public_hw",
         "1607-1603: kein public_hw"
       ],
       "note": "Ohne public_* feuert public_static_bias nicht."
@@ -324,7 +322,7 @@
       "label": "Public = Multi-Book-Konsens (nicht Einzel-Book)",
       "severity": "warn",
       "ok": false,
-      "nFail": 15,
+      "nFail": 30,
       "failures": [
         "1599-1602: public aus Einzel-Book 'williamhill' statt Konsens",
         "1609-1601: public aus Einzel-Book 'williamhill' statt Konsens",
@@ -340,7 +338,17 @@
         "1616-1606: public aus Einzel-Book 'williamhill' statt Konsens",
         "1617-1597: public aus Einzel-Book 'williamhill' statt Konsens",
         "1600-1615: public aus Einzel-Book 'williamhill' statt Konsens",
-        "1605-20787: public aus Einzel-Book 'williamhill' statt Konsens"
+        "1605-20787: public aus Einzel-Book 'williamhill' statt Konsens",
+        "1598-9569: public aus Einzel-Book 'williamhill' statt Konsens",
+        "1604-1607: public aus Einzel-Book 'williamhill' statt Konsens",
+        "20787-1610: public aus Einzel-Book 'williamhill' statt Konsens",
+        "1615-1601: public aus Einzel-Book 'williamhill' statt Konsens",
+        "1600-16489: public aus Einzel-Book 'williamhill' statt Konsens",
+        "1612-1603: public aus Einzel-Book 'williamhill' statt Konsens",
+        "1609-1608: public aus Einzel-Book 'williamhill' statt Konsens",
+        "25484-1597: public aus Einzel-Book 'williamhill' statt Konsens",
+        "1599-1595: public aus Einzel-Book 'williamhill' statt Konsens",
+        "1613-2242: public aus Einzel-Book 'williamhill' statt Konsens"
       ],
       "note": "public_static_bias soll auf Median-Konsens laufen, nicht 1 verrauschtem Soft-Book. Single-Book = fetch_wm_multibook_odds hat (noch) nicht geschrieben."
     },
@@ -591,5 +599,5 @@
     }
   ],
   "nFail": 8,
-  "generatedAt": "2026-07-19T09:11:14.154651+00:00"
+  "generatedAt": "2026-07-19T20:27:10.112425+00:00"
 }
