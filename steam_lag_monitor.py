@@ -864,7 +864,12 @@ def update_log(log: dict, signals: list[dict], team_info: dict, now_ts: str,
                 pass
 
     # ── Alte aufgelöste Signale bereinigen (> SIGNAL_TTL_DAYS) ───────────────
-    cutoff_dt = datetime.now(timezone.utc).timestamp() - SIGNAL_TTL_DAYS * 86400
+    # 20.07.2026: Cutoff aus dem ÜBERGEBENEN now_ts, NICHT der Wanduhr. Sonst ist der Cleanup
+    # nicht-deterministisch (hing an datetime.now()) — genau das ließ die Dedup-Tests „irgendwann"
+    # rot werden, sobald die Wanduhr > 30 Tage nach den fixen Test-Timestamps stand (Zeitbombe).
+    _now_dt = _parse_ts(now_ts)
+    _now_base = _now_dt.timestamp() if _now_dt else datetime.now(timezone.utc).timestamp()
+    cutoff_dt = _now_base - SIGNAL_TTL_DAYS * 86400
     before = len(log.get("signals", []))
     log["signals"] = [
         e for e in log.get("signals", [])
