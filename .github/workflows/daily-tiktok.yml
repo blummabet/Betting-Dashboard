@@ -12,9 +12,12 @@ on:
   # GitHub-Actions Cron-Skips sind real — primärer Run wurde am 07.06. übersprungen.
   # Backup-Run prüft via Anti-Double-Send-Guard in generate_daily_tiktok.py
   # (tiktok_sent.json + PNG-Existenz). Wenn primärer erfolgreich war: silent skip.
-  schedule:
-    - cron: '30 4 * * *'
-    - cron: '30 5 * * *'
+  # 20.07.2026 WM-WINTERISIERUNG: Das ist die WM-Variante (COCOBET_DATASET nicht gesetzt → Default wm).
+  # WM ist beendet → kein täglicher WM-TikTok-Lauf mehr. MLS-TikTok läuft eigenständig in update-mls.yml
+  # (Preview 19:00 / Review 07:00 UTC, COCOBET_DATASET=mls). Reaktivieren für WM 2030: einkommentieren.
+  # schedule:
+  #   - cron: '30 4 * * *'
+  #   - cron: '30 5 * * *'
 
   # Manuell auslösbar — optional anderes Datum reinpushen
   workflow_dispatch:
