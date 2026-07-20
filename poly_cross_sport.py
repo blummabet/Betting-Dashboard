@@ -56,6 +56,16 @@ def norm(s: str) -> str:
     return re.sub(r"[^a-z0-9]", "", str(s or "").lower())
 
 
+def event_key(a: str, b: str) -> str:
+    """Reihenfolge-UNABHÄNGIGER Event-Schlüssel aus zwei Team-Namen.
+
+    Kritisch fürs Cross-Venue-Matching: TheOddsAPI kennt Heim/Auswärts, Polymarket listet die zwei
+    Moneyline-Ausgänge in beliebiger Reihenfolge. Ein `f"{home}-{away}"`-Key würde bei gedrehter
+    Poly-Reihenfolge NIE matchen (genau die Klasse, die den Radar leer ließ). Sortiert normalisiert →
+    beide Seiten erzeugen denselben Key; der `outcomeKey` (Team) unterscheidet den Ausgang."""
+    return "-".join(sorted([norm(a), norm(b)]))
+
+
 def devig_2way(p_a, p_b):
     """Zwei-Wege-de-Vig: rohe implizite Wahrscheinlichkeiten → faire (Summe 1)."""
     try:
@@ -182,7 +192,7 @@ def fetch_pinnacle_index(sports, fetch=None) -> dict:
     for sk in sports:
         for ev in (fetch(sk) or []):
             home, away = ev.get("home_team"), ev.get("away_team")
-            ekey = f"{norm(home)}-{norm(away)}"
+            ekey = event_key(home, away)   # reihenfolge-unabhängig, matcht Poly egal welche Seite zuerst
             books = ev.get("bookmakers") or []
             pin = next((b for b in books if b.get("key") == "pinnacle"), None)
             if not pin:
@@ -202,21 +212,95 @@ def fetch_pinnacle_index(sports, fetch=None) -> dict:
     return index
 
 
-def fetch_poly_rows(sports) -> list:
-    """Poly-Sportmärkte normalisieren. Placeholder: Poly ist EU-geoblockt, echte Umsetzung läuft
-    am Mac-Runner (Gamma per tag_slug je Sport + Vol + Preise). Gibt hier [] zurück, damit das
-    Skript in der Cloud/Sandbox sauber no-oppt."""
-    # TODO(Runner): Gamma /events?tag_slug=<sport> je Sport, Moneyline-Outcomes → rows mit
-    # eventKey=f"{norm(home)}-{norm(away)}", outcomeKey=norm(outcome_team), prob, vol.
-    return []
+# TheOddsAPI-Sport-Key → Polymarket-Gamma-tag_slug. Beide Seiten müssen dieselben Events treffen.
+_ODDSAPI_TO_POLY_TAG = {
+    "basketball_nba":     "nba",
+    "americanfootball_nfl": "nfl",
+    "baseball_mlb":       "mlb",
+    "icehockey_nhl":      "nhl",
+    "soccer_epl":         "epl",
+    "soccer_uefa_champs_league": "ucl",
+    "tennis":             "tennis",
+}
+
+
+def _poly_tag_for(sport_key: str) -> str:
+    """Sport-Key auf Poly-Tag mappen; Fallback: letztes Segment (soccer_xyz → xyz)."""
+    return _ODDSAPI_TO_POLY_TAG.get(sport_key) or sport_key.split("_")[-1]
+
+
+def fetch_poly_rows(sports, gamma_fetch=None) -> list:
+    """Poly-Sportmärkte je Sport über Gamma holen und zu Vergleichs-Zeilen normalisieren.
+
+    Nutzt dieselbe, am Mac-Runner erprobte Fetch-Schicht wie poly_money_broad (`_gamma_events` +
+    `_outcomes`) — die produziert nachweislich Daten (u.a. ESPORTS-Märkte). Nur 2-Wege-Moneyline
+    (US-Sport): Preis = implizite Poly-Wahrscheinlichkeit, Volumen aus dem Event.
+
+    gamma_fetch(tag) → Liste roher Gamma-Events (für Tests injizierbar). Default: Runner-Gamma.
+    Gibt [] zurück, wenn Poly nicht erreichbar ist (Cloud/Sandbox EU-Geoblock) — dann no-oppt main()
+    ohne ein bestehendes gutes File zu überschreiben."""
+    if gamma_fetch is None:
+        try:
+            import poly_money_broad as _BR
+            gamma_fetch = lambda tag: _BR._gamma_events(tag, closed=False)
+        except Exception as e:
+            print(f"  ⚠️  Poly-Gamma-Schicht nicht ladbar: {e}")
+            return []
+
+    def _outcomes(ev):
+        try:
+            import poly_money_broad as _BR
+            return _BR._outcomes(ev)
+        except Exception:
+            return []
+
+    rows, seen = [], set()
+    for sk in sports:
+        tag = _poly_tag_for(sk)
+        for ev in (gamma_fetch(tag) or []):
+            try:
+                oc = _outcomes(ev)
+                if len(oc) != 2:
+                    continue                       # nur klare 2-Wege-Moneyline (Pinnacle-Seite ist 2-Wege)
+                a, b = oc[0], oc[1]
+                if a.get("price") is None or b.get("price") is None:
+                    continue
+                ek = event_key(a["label"], b["label"])
+                dedup = (sk, ek)
+                if dedup in seen:
+                    continue
+                seen.add(dedup)
+                vol = float(ev.get("volume") or 0)
+                event_name = f'{a["label"]} vs {b["label"]}'
+                for o in (a, b):
+                    rows.append({
+                        "sport": sk, "event": event_name, "market": "Moneyline",
+                        "outcome": o["label"], "prob": o["price"], "vol": vol,
+                        "eventKey": ek, "outcomeKey": norm(o["label"]),
+                    })
+            except Exception:
+                continue
+    return rows
 
 
 def main() -> int:
     sports = _sports()
     poly_rows = fetch_poly_rows(sports)
     if not poly_rows:
-        print("ℹ️  Keine Poly-Sportmärkte (läuft scharf nur am Mac-Runner) — nichts zu vergleichen")
-        # Trotzdem: bestehende Datei nicht anfassen, damit die Frontend-Anzeige stehen bleibt.
+        # Poly nicht erreichbar (Cloud/Sandbox EU-Geoblock, oder Runner-Hiccup). WICHTIG (Wipe-Klasse):
+        # ein bestehendes gutes File NICHT mit Leere überschreiben. Nur wenn noch keins existiert,
+        # einen EHRLICHEN Stub schreiben — damit das Frontend „warum leer" zeigen kann statt 404.
+        existing = _load("poly_cross_sport.json")
+        if existing.get("discrepancies"):
+            print("ℹ️  Keine frischen Poly-Rows — bestehendes Cross-Sport-File bleibt unangetastet")
+            return 0
+        (BASE / "poly_cross_sport.json").write_text(json.dumps({
+            "generatedAt": _now().isoformat(), "sports": sports, "minGapPP": MIN_GAP_PP,
+            "polyRowsSeen": 0, "discrepancies": [],
+            "emptyReason": "Keine Poly-Sportmärkte erreichbar (läuft scharf nur am Mac-Runner; "
+                           "Cloud/EU-IP ist bei Polymarket geoblockt).",
+        }, ensure_ascii=False, indent=1), encoding="utf-8")
+        print("ℹ️  Keine Poly-Sportmärkte — ehrlichen Leer-Stub geschrieben")
         return 0
     pinn = fetch_pinnacle_index(sports)
     disc = compute_discrepancies(poly_rows, pinn)
@@ -224,7 +308,7 @@ def main() -> int:
 
     (BASE / "poly_cross_sport.json").write_text(json.dumps({
         "generatedAt": _now().isoformat(), "sports": sports,
-        "minGapPP": MIN_GAP_PP, "discrepancies": disc,
+        "minGapPP": MIN_GAP_PP, "polyRowsSeen": len(poly_rows), "discrepancies": disc,
     }, ensure_ascii=False, indent=1), encoding="utf-8")
     (BASE / "poly_cross_sport_history.json").write_text(
         json.dumps(hist, ensure_ascii=False, indent=1), encoding="utf-8")

@@ -92,21 +92,44 @@ def build(events, sm_fn) -> dict:
     }
 
 
-def _fetch_events():
-    """E-Sport-Events über alle Tags (dedupliziert). Runner-only (Gamma)."""
-    seen, out = set(), []
+def _fetch_events(gamma_fetch=None):
+    """E-Sport-Events über alle Tags (dedupliziert). Runner-only (Gamma).
+
+    Gibt (events, diag) zurück. diag = {tag: rohe_Event-Zahl} — damit man SIEHT, welcher Tag zieht
+    und welcher leer bleibt, statt still auf [] zu laufen (20.07.2026, Lucas: „hasse Wiederholungs-
+    fehler"; genau die tote-Kette-Klasse). gamma_fetch(tag) injizierbar für Tests."""
+    gamma_fetch = gamma_fetch or (lambda tag: BR._gamma_events(tag, closed=False))
+    seen, out, diag = set(), [], {}
     for tag in ESPORT_TAGS:
-        for ev in BR._gamma_events(tag, closed=False):
+        raw = gamma_fetch(tag) or []
+        diag[tag] = len(raw)
+        for ev in raw:
             k = ev.get("slug") or ev.get("id")
             if k and k not in seen:
                 seen.add(k); out.append(ev)
-    return out
+    return out, diag
+
+
+def _write_status(diag, reason, built=None):
+    """Diagnose-Datei — WARUM ist E-Sport (nicht) befüllt. Der Guard und der Runner-Log lesen sie.
+    Eigenes File → überschreibt keine echten Daten (kein Wipe-Risiko)."""
+    (BASE / "esports_poly_status.json").write_text(json.dumps({
+        "updatedAt": _now(), "reason": reason, "rawEventsByTag": diag,
+        "rawEventsTotal": sum(diag.values()), "built": built,
+    }, ensure_ascii=False, indent=1), encoding="utf-8")
 
 
 def main() -> int:
-    events = _fetch_events()
+    events, diag = _fetch_events()
+    print(f"🎮 E-Sport Roh-Events je Tag: {diag} (gesamt {sum(diag.values())})")
     if not events:
-        print("ℹ️  Keine E-Sport-Events (Runner-only) — Dateien unangetastet")
+        # NICHT mehr still: Grund + je-Tag-Zähler persistieren. So sieht man, ob die Tag-Slugs falsch
+        # sind (alle 0) oder Poly gerade nichts Offenes listet — statt wochenlang rätselhaft leer.
+        reason = ("Poly nicht erreichbar / keine offenen E-Sport-Märkte zu diesem Zeitpunkt"
+                  if sum(diag.values()) == 0 else
+                  "Rohe Events vorhanden, aber keine mit sauberer 2-Wege-Moneyline über der Volumen-Schwelle")
+        _write_status(diag, reason)
+        print(f"ℹ️  Keine baubaren E-Sport-Events — Status geschrieben ({reason})")
         return 0
     try:
         from fetch_wm_poly_smartmoney import _outcome_smartmoney as sm_fn
@@ -122,7 +145,11 @@ def main() -> int:
     coh = poly_coherence.analyze(out["prices"])
     (BASE / "esports_poly_coherence.json").write_text(json.dumps(coh, ensure_ascii=False, indent=1), encoding="utf-8")
 
-    print(f"🎮 E-Sport: {len(out['prices']['prices'])} Märkte · {len(out['wallets']['topPositionsAll'])} Whale-Positionen · "
+    n_markets = len(out["prices"]["prices"])
+    _write_status(diag, "ok", built={"markets": n_markets,
+                                     "whales": len(out["wallets"]["topPositionsAll"]),
+                                     "arb": coh.get("arbCount", 0)})
+    print(f"🎮 E-Sport: {n_markets} Märkte · {len(out['wallets']['topPositionsAll'])} Whale-Positionen · "
           f"{coh.get('arbCount',0)} Arb")
     return 0
 

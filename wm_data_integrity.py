@@ -146,6 +146,25 @@ def integrity_check(fn):
 
 # ── Die Guards (je @integrity_check) ─────────────────────────────────────────
 @integrity_check
+def check_poly_surfaces_alive(ctx):
+    """20.07.2026 — die globalen Poly-Tracking-Flächen (Cross-Sport-Radar, E-Sport, Poly-Geld breit)
+    dürfen nicht STILL sterben. Zwei lagen seit Bau tot da, ohne dass ein Guard hinsah. Prüft NICHT
+    „hat Inhalt" (leer-aber-frisch ist ok), sondern „hat der Produzent kürzlich geschrieben".
+
+    Nur unter MLS (der Mac-Runner, der diese globalen Dateien erzeugt) — sonst dreifach gemeldet.
+    severity=warn: eine gestandene Tracking-Fläche ist ein Hinweis, kein Geld-Stopp."""
+    if (ctx.wm.get("_meta") or {}).get("profile") != "mls_default":
+        return None
+    try:
+        import check_poly_surfaces_alive as PSA
+        fails = PSA.evaluate(PSA.collect(), now=ctx.now)
+    except Exception as e:
+        fails = [f"Guard selbst gescheitert: {e}"]
+    return _chk("poly_surfaces_alive", "Poly-Flächen liefern (kein stiller Tod)", "warn", fails,
+                note="Cross-Sport-Radar, E-Sport, Poly-Geld breit — frisch geschrieben (leer ok, tot nicht).")
+
+
+@integrity_check
 def check_venue_resolves(ctx):
     if ctx.is_liga:
         return None   # WM-Venue-Map gilt nicht für Liga-Stadien
