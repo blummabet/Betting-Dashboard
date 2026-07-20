@@ -83,3 +83,20 @@ test('Ledger mit < 3 Positionen wird unterdrückt (zu dünn)', async () => {
     a: { wallet: '0xa', usd: 8000, firstAvgPrice: 0.42 } } } });
   assert.doesNotMatch(html, /Whale-Einstiegsqualität/);
 });
+
+test('Edge-Board: Fern-Spiel (>96h) fällt raus, imminentes bleibt (Lucas: „über 125h")', async () => {
+  const iso = (h) => new Date(Date.now() + h * 3.6e6).toISOString();
+  // Beide Spiele haben denselben (positiven) Edge; nur der Anpfiff unterscheidet sie.
+  const pinn = { hw: 2.0, dr: 3.5, aw: 3.8 };                 // devig home ≈ 0.477
+  const price = (home, away, ko) => ({ homeName: home, awayName: away,
+    hw: 0.40, dr: 0.25, aw: 0.20, vol: 10000, kickoff: ko }); // poly home 0.40 → +edge
+  const html = await render({
+    'mls-data.json': { groups: {}, odds: { 'NEARZZ-X': pinn, 'FARZZ-Y': pinn } },
+    'mls_poly_prices.json': { prices: {
+      'NEARZZ-X': price('NearzzTeam', 'X', iso(50)),    // 50h → im Fenster
+      'FARZZ-Y':  price('FarzzTeam', 'Y', iso(500)),    // 500h → raus
+    } },
+  });
+  assert.match(html, /NearzzTeam/, 'imminentes Spiel (50h) muss im Edge-Board stehen');
+  assert.doesNotMatch(html, /FarzzTeam/, 'Fern-Spiel (500h, kein Poly-Geld) darf NICHT erscheinen');
+});

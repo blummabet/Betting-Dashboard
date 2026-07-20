@@ -174,9 +174,18 @@ function _pwHoursToKO(iso){if(!iso)return null;const t=Date.parse(String(iso).re
 function _pwSideCol(s){return PW_C[s]||(s==='bttsY'?PW_C.over:s==='bttsN'?PW_C.under:PW_C.txt);}
 
 // ── Edges bauen ─────────────────────────────────────────────────────────────
+// (20.07.2026, Lucas: „über 125h — Aktualisierung?") Das Edge-Board zeigte Spiele bis zu Wochen im
+// Voraus. Polymarket listet MLS-Märkte früh, aber weit draußen liegt fast kein Geld drin (Vol ~0) →
+// der Preis ist ein Platzhalter, der „Edge" gegen Pinnacle ist Rauschen. Genauso wenig gehören schon
+// GESPIELTE Spiele rein. Deshalb: nur Spiele im Anpfiff-Fenster [jetzt-3h .. +HORIZON] ins Board.
+const PW_EDGE_HORIZON_H = 96;   // ~4 Tage — deckt den nächsten Spieltag ab, ohne leere Fern-Märkte
 function _pwBuildEdges(prices,oddsMap){
   const rows=[]; const P=(prices&&prices.prices)||{};
   Object.entries(P).forEach(([key,m])=>{
+    const _koH=_pwHoursToKO(m.kickoff);
+    // Fenster-Filter: kein Anpfiff → behalten (kein Datum, nicht ausschließen); sonst muss er im
+    // Fenster liegen. Schon angepfiffen (< -3h) oder zu weit weg (> HORIZON) → raus.
+    if(_koH!=null && (_koH < -3 || _koH > PW_EDGE_HORIZON_H)) return;
     const o=oddsMap[key]||{};
     const pf=_pwDevig1x2(o.hw,o.dr,o.aw);
     const op=o.odds_open||{}; const openf=_pwDevig1x2(op.hw,op.dr,op.aw);
@@ -694,7 +703,7 @@ function _pwSmartConcentration(smart,prices,teams){
 function _pwEdgeBoard(edges,teams,wallets,hist){
   const shown=edges.filter(e=>e.net>=PW_NOISE);
   let h='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">⚡ Edge-Board</span>'
-    +'<span class="pw-sec-note">Netto nach Spread-Haircut ('+PW_SPREAD_HAIRCUT+'pp) · Kurve = Pinnacle-Linienbewegung · Klick → Steam-Chart</span></div>';
+    +'<span class="pw-sec-note">Netto nach Spread-Haircut ('+PW_SPREAD_HAIRCUT+'pp) · nur Spiele der nächsten '+Math.round(PW_EDGE_HORIZON_H/24)+' Tage (weiter draußen liegt kein Poly-Geld) · Kurve = Pinnacle-Bewegung · Klick → Steam-Chart</span></div>';
   const list=shown.length?shown.slice(0,40):edges.slice(0,6);
   if(!shown.length) h+='<div class="pw-none">Keine handelbare Fehlbepreisung ≥'+PW_NOISE+'pp — Poly & Pinnacle liegen eng. Unten die größten Sub-Schwellen-Gaps:</div>';
   h+='<div class="pw-board">';
