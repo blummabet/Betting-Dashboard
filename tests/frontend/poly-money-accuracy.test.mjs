@@ -43,7 +43,7 @@ test('View-Tab „Liegt das Geld richtig?" existiert', async () => {
   assert.match(html, /Liegt das Geld richtig/);
 });
 
-test('Geld schärfer: grünes Urteil + Brier-Vergleich + Trefferquoten', async () => {
+test('Geld schärfer: grünes Klartext-Urteil + Trefferquoten (kein Brier-Jargon)', async () => {
   const html = await renderMoney({
     n: 40, moneyHitRate: 0.62, priceHitRate: 0.55, brierMoney: 0.42, brierPrice: 0.51,
     verdict: 'geld_schaerfer', disagree: { n: 10, moneyWon: 7, priceWon: 3 },
@@ -51,8 +51,9 @@ test('Geld schärfer: grünes Urteil + Brier-Vergleich + Trefferquoten', async (
              moneyOK: true, priceOK: false, totalUsd: 50000 }],
   });
   assert.match(html, /Das Geld ist schärfer als der Preis/);
-  assert.match(html, /62%/); assert.match(html, /55%/);
-  assert.match(html, /0\.420/); assert.match(html, /0\.510/, 'Brier-Preis-Wert fehlt');
+  assert.match(html, /62%/); assert.match(html, /55%/);        // Trefferquoten als Klartext-KPI
+  assert.doesNotMatch(html, /Brier/, 'Brier-Jargon muss raus (20.07.2026, Lucas: klar lesbar)');
+  assert.doesNotMatch(html, /Kalibrierung/);
   assert.match(html, /Geld gewann/); assert.match(html, /LA-SEA/);
 });
 
@@ -77,7 +78,9 @@ test('Alle Poly-Ligen: Liga-Breakdown mit Geld-Vorteil + min-Quote-Hinweis', asy
   });
   assert.match(html, /Alle Poly-Ligen/);
   assert.match(html, /NBA/); assert.match(html, /EPL/);
-  assert.match(html, /Mindest-Quote 1\.35/, 'triviale-Favoriten-Filter muss erklärt sein');
+  assert.match(html, /Quote ≥ 1\.35/, 'triviale-Favoriten-Filter muss erklärt sein');
+  assert.match(html, /Geld-Favorit trifft/, 'Trefferquote-Spalte muss Klartext sein');
+  assert.doesNotMatch(html, /Brier/, 'keine Brier-Spalten mehr in der Tabelle');
 });
 
 test('Alle Poly-Ligen: leerer Zustand ist ein ehrlicher Sammel-Hinweis', async () => {
@@ -96,6 +99,6 @@ test('Alle Poly-Ligen: nach Kategorie geordnet inkl. E-Sport + Highlight-Kacheln
   assert.match(html, /🎮 E-Sport/, 'E-Sport-Kategorie muss erscheinen');
   assert.match(html, /🇺🇸 US-Sport/);
   assert.match(html, /⚽ Fußball/);
-  assert.match(html, /Masse am schärfsten/, 'Highlight-Gimmick fehlt');
-  assert.match(html, /Ø Geld-Vorteil/, 'Kategorie-Subtotal fehlt');
+  assert.match(html, /Masse weiß am meisten/, 'Highlight-Kachel (Klartext) fehlt');
+  assert.match(html, /Geld schärfer|Preis besser|gleichauf/, 'Klartext-Urteil-Badge fehlt');
 });

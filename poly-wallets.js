@@ -513,7 +513,7 @@ function _pwCatOf(league){const c=PW_LEAGUE_CAT[String(league||'').toLowerCase()
 
 function _pwMoneyBroad(broad){
   const b=broad||{};
-  const V={geld_schaerfer:['🟢','#3fb950'],preis_besser:['🔴','#f85149'],gleichauf:['⚪','#8b949e']};
+  const V={geld_schaerfer:['🟢','#3fb950','Geld schärfer'],preis_besser:['🔴','#f85149','Preis besser'],gleichauf:['⚪','#8b949e','gleichauf']};
   if(!b.n && !(b.byLeague&&b.byLeague.length)){
     return '<div class="pw-sec" style="margin-top:6px"><div class="pw-sec-head">'
       +'<span class="pw-kicker">🌐 Alle Poly-Ligen</span>'
@@ -523,46 +523,63 @@ function _pwMoneyBroad(broad){
       +'Zeigt je Liga, ob das Geld schärfer ist als der Preis. Füllt sich über die kommenden Tage, sobald der Runner läuft.</div></div>';
   }
 
+  // „Vorsprung" = wie viel treffsicherer das Geld ggü. dem Preis ist (Brier-Differenz, intern).
+  // Positiv = Geld schärfer. Wir zeigen NICHT die Roh-Brier-Zahlen (Fachjargon), sondern ein
+  // Klartext-Urteil + die anschauliche Trefferquote.
   const leagues=(b.byLeague||[]).map(l=>({...l,edge:(l.brierPrice-l.brierMoney)}));
-  // Gimmick 1: schärfste + dümmste Liga (größter/kleinster Geld-Vorteil) als Highlight-Kacheln.
+
+  // Highlight-Kacheln nur, wenn es überhaupt einen NENNENSWERTEN Unterschied gibt — sonst ist
+  // „am schärfsten/dümmsten" bei quasi-gleichauf-Daten irreführend (aktuell alles ~gleichauf).
   let highlight='';
-  if(leagues.length>=2){
-    const s=leagues.slice().sort((a,b)=>b.edge-a.edge);
+  const spread=leagues.filter(l=>Math.abs(l.edge)>=0.01);
+  if(spread.length>=2){
+    const s=spread.slice().sort((a,b)=>b.edge-a.edge);
     const best=s[0], worst=s[s.length-1];
     const tile=(t,l,col)=>'<div style="flex:1;min-width:200px;background:'+col+'14;border:1px solid '+col+'44;border-radius:12px;padding:12px 14px">'
       +'<div style="font-size:11px;color:#8b949e;text-transform:uppercase;letter-spacing:.5px">'+t+'</div>'
       +'<div style="font-size:17px;font-weight:800;color:'+col+';margin-top:2px">'+_pwCatOf(l.league)[1]+' '+_pwEsc(l.league)+'</div>'
-      +'<div style="font-size:12px;color:#8b949e">Geld-Vorteil '+(l.edge>0?'+':'')+l.edge.toFixed(3)+' · '+l.n+' Märkte</div></div>';
+      +'<div style="font-size:12px;color:#8b949e">Geld trifft '+Math.round(l.moneyHitRate*100)+'% · '+l.n+' Spiele</div></div>';
     highlight='<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">'
-      +tile('🏆 Masse am schärfsten',best,'#3fb950')+tile('🃏 Masse am dümmsten',worst,'#f85149')+'</div>';
+      +tile('🏆 Masse weiß am meisten',best,'#3fb950')+tile('🃏 Masse liegt am öftesten daneben',worst,'#f85149')+'</div>';
   }
 
-  // Gimmick 2: nach Kategorie gruppieren (Ordnung) mit Subtotal je Kategorie.
+  // Nach Kategorie gruppieren (Ordnung). Trefferquote als Balken + Klartext-Urteil statt Brier-Zahlen.
   const cats={};
-  leagues.forEach(l=>{const[cat,icon]=_pwCatOf(l.league);(cats[cat]=cats[cat]||{icon,rows:[],n:0,edgeW:0}).rows.push(l);
-    cats[cat].n+=l.n; cats[cat].edgeW+=l.edge*l.n;});
+  leagues.forEach(l=>{const[cat,icon]=_pwCatOf(l.league);(cats[cat]=cats[cat]||{icon,rows:[],n:0}).rows.push(l);
+    cats[cat].n+=l.n;});
   const catOrder=['Fußball','US-Sport','E-Sport','Tennis','Sonstige'];
-  const row=l=>{const f=V[l.verdict]||['·','#8b949e'];
+  const hitBar=(pct,col)=>'<span style="display:inline-flex;align-items:center;gap:7px;justify-content:flex-end">'
+    +'<span style="width:52px;height:7px;background:#1c2333;border-radius:4px;overflow:hidden;display:inline-block">'
+    +'<i style="display:block;height:100%;width:'+pct+'%;background:'+col+'"></i></span>'
+    +'<b style="color:#e6edf3;min-width:34px;text-align:right">'+pct+'%</b></span>';
+  const row=l=>{const f=V[l.verdict]||['⚪','#8b949e','gleichauf'];
+    const hit=Math.round(l.moneyHitRate*100);
+    const hitCol=hit>=60?'#3fb950':hit>=45?'#5eead4':'#f0883e';
     return '<tr><td class="pw-cm">'+_pwEsc(l.league)+'</td><td class="pw-cn pw-mut">'+l.n+'</td>'
-      +'<td class="pw-cn">'+Math.round(l.moneyHitRate*100)+'%</td>'
-      +'<td class="pw-cn" style="color:#a78bfa">'+l.brierMoney.toFixed(3)+'</td>'
-      +'<td class="pw-cn" style="color:#5eead4">'+l.brierPrice.toFixed(3)+'</td>'
-      +'<td class="pw-cn" style="color:'+f[1]+';font-weight:700">'+f[0]+' '+(l.edge>0?'+':'')+l.edge.toFixed(3)+'</td></tr>';};
+      +'<td class="pw-cn">'+hitBar(hit,hitCol)+'</td>'
+      +'<td><span style="display:inline-block;padding:2px 9px;border-radius:20px;font-size:11.5px;font-weight:700;'
+        +'background:'+f[1]+'1a;color:'+f[1]+'">'+f[0]+' '+f[2]+'</span></td></tr>';};
   const blocks=catOrder.filter(c=>cats[c]).map(cat=>{
-    const c=cats[cat], sub=c.n>0?c.edgeW/c.n:0, subCol=sub>0.005?'#3fb950':sub<-0.005?'#f85149':'#8b949e';
-    return '<div style="margin-top:12px"><div style="display:flex;justify-content:space-between;align-items:center;padding:4px 2px">'
+    const c=cats[cat];
+    return '<div style="margin-top:14px"><div style="padding:2px 2px 6px">'
       +'<span style="font-size:13px;font-weight:800;color:#e6edf3">'+c.icon+' '+cat+'</span>'
-      +'<span style="font-size:12px;color:'+subCol+';font-weight:700">Ø Geld-Vorteil '+(sub>0?'+':'')+sub.toFixed(3)+' · '+c.n+' Märkte</span></div>'
+      +'<span style="font-size:12px;color:#76819c;margin-left:8px">'+c.n+' Spiele</span></div>'
       +'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
-      +'<th>Liga</th><th>n</th><th>Geld trifft</th><th>Brier Geld</th><th>Brier Preis</th><th>Geld-Vorteil</th>'
-      +'</tr></thead><tbody>'+c.rows.sort((a,b)=>b.edge-a.edge).map(row).join('')+'</tbody></table></div></div>';
+      +'<th>Liga</th><th style="text-align:right">Spiele</th><th style="text-align:right">Geld-Favorit trifft</th><th>Geld vs. Preis</th>'
+      +'</tr></thead><tbody>'+c.rows.sort((a,b)=>b.moneyHitRate-a.moneyHitRate).map(row).join('')+'</tbody></table></div></div>';
   }).join('');
 
-  const note='Volumen ≥ '+_pwUsd(b.minVolUsd||0)+' · Mindest-Quote '+(b.minOdds||'—')+' (triviale Favoriten raus) · '+(b.n||0)+' Märkte';
+  const legend='<div style="display:flex;gap:16px;flex-wrap:wrap;font-size:11.5px;color:#76819c;margin:2px 2px 6px">'
+    +'<span>🟢 <b style="color:#3fb950">Geld schärfer</b> — der Masse folgen</span>'
+    +'<span>⚪ <b style="color:#8b949e">gleichauf</b> — steckt schon im Preis</span>'
+    +'<span>🔴 <b style="color:#f85149">Preis besser</b> — Masse faden</span></div>';
+  const note='nur Spiele mit Volumen ≥ '+_pwUsd(b.minVolUsd||0)+' und Quote ≥ '+(b.minOdds||'—')+' (klare Favoriten fliegen raus) · '+(b.n||0)+' aufgelöste Spiele';
   return '<div class="pw-sec" style="margin-top:6px"><div class="pw-sec-head">'
-    +'<span class="pw-kicker">🌐 Alle Poly-Ligen — wo hat die Masse mehr recht?</span>'
-    +'<span class="pw-sec-note">'+note+'</span></div>'+highlight
-    +(blocks||'<div class="pw-sec-p">Noch keine Liga mit genug aufgelösten Märkten (min 5). Sammelt weiter.</div>')
+    +'<span class="pw-kicker">🌐 Alle Poly-Ligen — trifft die Seite mit dem meisten Geld?</span>'
+    +'<span class="pw-sec-note">'+note+'</span></div>'
+    +'<div class="pw-sec-p" style="margin:2px 0 10px">Für jede Liga: <b>gewinnt die Seite, auf der am meisten Geld liegt</b> — und liegt das Geld damit <b>öfter richtig als der reine Preis</b>? Grün = ja, dem großen Geld folgen lohnt.</div>'
+    +legend+highlight
+    +(blocks||'<div class="pw-sec-p">Noch keine Liga mit genug aufgelösten Spielen (min. 5). Sammelt sich über die nächsten Tage.</div>')
     +'</div>';
 }
 
@@ -572,10 +589,10 @@ function _pwMoneyBroad(broad){
 function _pwMoneyAccuracy(acc, teams){
   const a=acc||{};
   const intro='<div class="pw-sec-p" style="max-width:820px;margin:14px 0 18px">'
-    +'Wir kennen Preis UND Geld-Verteilung. Hier die ehrliche Frage: <b>gewinnt die Seite mit dem Geld</b> — '
-    +'und sagt das Geld <b>mehr als der Preis</b>? Der <b>Brier-Score</b> misst die Kalibrierung (niedriger = besser). '
-    +'Ist Geld deutlich niedriger als Preis, ist das große Geld schlau; sonst steckt es schon im Preis oder ist dumm. '
-    +'<i>Geld wird nah am Anpfiff eingefroren, dann gegen den Ausgang aufgelöst.</i></div>';
+    +'Wir kennen bei jedem Spiel den <b>Preis</b> und die <b>Geld-Verteilung</b>. Die Frage: '
+    +'<b>gewinnt die Seite, auf der am meisten Geld liegt</b> — und liegt das Geld damit <b>öfter richtig als der reine Preis</b>? '
+    +'Wenn ja, weiß das große Geld mehr, als im Preis steht, und man folgt ihm. Wenn nicht, steckt es schon im Preis oder liegt daneben. '
+    +'<i>Die Geld-Verteilung wird nah am Anpfiff eingefroren und nach dem Spiel gegen den Ausgang geprüft.</i></div>';
 
   if(!a.n){
     return intro+'<div class="pw-empty"><div class="pw-empty-ico">🎯</div><h2>Sammelt noch</h2>'
@@ -591,11 +608,6 @@ function _pwMoneyAccuracy(acc, teams){
   const kpi=(lbl,val,col,sub)=>'<div class="pw-kpi"><div class="pw-kpi-b">'
     +'<div class="pw-kpi-v" style="color:'+(col||PW_C.txt)+'">'+val+'</div>'
     +'<div class="pw-kpi-l">'+lbl+'</div>'+(sub?'<div class="pw-kpi-s">'+sub+'</div>':'')+'</div></div>';
-
-  // Brier-Vergleichsbalken (niedriger = besser → kürzerer Balken ist gut)
-  const bmax=Math.max(a.brierMoney,a.brierPrice,0.01);
-  const bar=(lbl,val,col)=>'<div style="margin:6px 0"><div style="display:flex;justify-content:space-between;font-size:12px;color:#8b949e;margin-bottom:3px"><span>'+lbl+'</span><span style="color:'+col+';font-weight:700;font-family:ui-monospace">'+val.toFixed(3)+'</span></div>'
-    +'<div style="height:10px;background:#161b22;border-radius:6px;overflow:hidden"><i style="display:block;height:100%;width:'+Math.round(val/bmax*100)+'%;background:'+col+'"></i></div></div>';
 
   const d=a.disagree||{n:0,moneyWon:0,priceWon:0};
   const disagreeHtml=d.n?('<div class="pw-sec" style="margin-top:4px"><div class="pw-sec-head"><span class="pw-kicker">⚔️ Wenn Geld ≠ Preis</span>'
@@ -622,17 +634,14 @@ function _pwMoneyAccuracy(acc, teams){
     +'<div style="font-size:20px;font-weight:800;color:'+V[1]+'">'+V[0]+' '+V[2]+'</div>'
     +'<div style="font-size:13px;color:#8b949e;margin-top:4px">'+V[3]+'  ·  <span style="color:#6e7681">'+a.n+' aufgelöste Märkte</span></div></div>'
     +'<div class="pw-kpis" style="margin-bottom:16px">'
-    +kpi('Geld-Mehrheit trifft',pct(a.moneyHitRate),'#a78bfa','Seite mit dem meisten Geld gewinnt')
-    +kpi('Preis-Favorit trifft',pct(a.priceHitRate),'#5eead4','Baseline: günstigster Preis gewinnt')
+    +kpi('Geld liegt richtig',pct(a.moneyHitRate),'#a78bfa','Seite mit dem meisten Geld gewinnt')
+    +kpi('Preis liegt richtig',pct(a.priceHitRate),'#5eead4','Vergleich: der günstigste Preis gewinnt')
     +'</div>'
-    +'<div class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">📏 Kalibrierung (Brier)</span>'
-    +'<span class="pw-sec-note">niedriger = besser · wer schätzt die Wahrscheinlichkeit genauer?</span></div>'
-    +bar('Geld (Verteilung)',a.brierMoney,'#a78bfa')+bar('Preis',a.brierPrice,'#5eead4')+'</div>'
     +disagreeHtml
-    +(rows?('<div class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">Aufgelöste Märkte</span>'
-      +'<span class="pw-sec-note">Geld-Favorit vs. Preis-Favorit vs. Ausgang</span></div>'
+    +(rows?('<div class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">Aufgelöste Spiele</span>'
+      +'<span class="pw-sec-note">worauf lag das Geld, was sagte der Preis, wer gewann — ✓ richtig, ✗ falsch</span></div>'
       +'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
-      +'<th>Markt</th><th>Geld sagt</th><th>Preis sagt</th><th>Gewinner</th><th>Volumen</th>'
+      +'<th>Spiel</th><th>Geld auf</th><th>Preis-Favorit</th><th>Gewinner</th><th style="text-align:right">Volumen</th>'
       +'</tr></thead><tbody>'+rows+'</tbody></table></div></div>'):'');
 }
 
@@ -657,9 +666,12 @@ function _pwSmartConcentration(smart,prices,teams){
   if(!matches.length) return '';
   const slugs=_pwSlugMap(prices);
   const OUT=[['home','#4cc2ff'],['draw','#f5c518'],['away','#ff5d5d']];
-  // Nach Geld sortiert, nur Märkte mit echtem Volumen.
+  // Nach Geld sortiert, nur Märkte mit echtem Volumen UND im Anpfiff-Fenster (wie das Edge-Board).
+  // Weit-entfernte Spiele (Wochen draußen) haben zwar teils Geld, gehören aber nicht in die
+  // Nah-am-Anpfiff-Sicht; ein echtes Früh-Whale-Signal bleibt im Whales-Tab sichtbar.
   const rows=matches
-    .filter(([_k,m])=>(m.totalUsd||0)>=2000 && m.outcomes)
+    .filter(([_k,m])=>(m.totalUsd||0)>=2000 && m.outcomes
+      && (m.hoursToKickoff==null || (m.hoursToKickoff>=-3 && m.hoursToKickoff<=PW_EDGE_HORIZON_H)))
     .sort((a,b)=>(b[1].totalUsd||0)-(a[1].totalUsd||0))
     .slice(0,14).map(([key,m])=>{
       const oc=m.outcomes||{};
