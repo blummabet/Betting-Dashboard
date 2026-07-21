@@ -792,6 +792,18 @@ def main():
         print(f"   Resume via GitHub Action 'Kill-Switch' → action=resume\n")
         return
 
+    # 21.07.2026 (WM-Winterisierung): Ist das Turnier beendet, sind die Pinnacle-Odds ERWARTET
+    # veraltet (fetch_wm_odds ist bewusst still gelegt) — dann NICHT traden und vor allem NICHT
+    # den Stale-Odds-Circuit-Breaker gegen ein totes Turnier feuern lassen. Der spammte sonst den
+    # Trades-Channel („STALE-ODDS-STOP … 32h alt"), egal welcher Runner den Trigger noch anstößt.
+    # Universell: eine laufende Liga/MLS ist NIE „over" → normaler Betrieb bleibt unberührt.
+    try:
+        if D.tournament_is_over(load_json(WM_DATA_FILE, {}) or {}):
+            print(f"🏁 {D.active_dataset().upper()} beendet — kein Auto-Trade, kein Stale-Alarm (winterisiert).\n")
+            return
+    except Exception:
+        pass
+
     # Sicherheitsschalter: Env-Variable hat Vorrang vor ENABLED-Konstante
     env_enabled = os.environ.get("AUTO_TRIGGER_ENABLED", "").strip().lower()
     is_enabled = ENABLED or env_enabled in ("true", "1", "yes")
