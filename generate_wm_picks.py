@@ -882,10 +882,19 @@ def _steam_card_pick(snap, pick):
         edge_pp = round(((1.0 / model_odds) * MODEL_MARGIN - (1.0 / odds) * 1.03) * 100)
 
     move = t["move_pp"]
+    move_raw = t.get("move_raw_pp")
     soft_lag = pick.get("soft_lagging")
     soft_follow = pick.get("soft_follow_pp")
     soft_confirmed = bool(pick.get("soft_confirmed"))
-    parts = [f"📉 Pinnacle {t['open']}→{t['cur']} (Sharp-Money-Drop +{move}pp)"]
+    # 21.07.2026 (Lucas, MLS Colorado): move_pp ist DRIFT-BEREINIGT. Wenn die Roh-Quote fast steht
+    # (move_raw ≈ 0), der Markt aber wegdriftete, ist +move_pp ein „Sharp-Halten" — NICHT ein
+    # Quotensturz. „2.10→2.09 (Sharp-Money-Drop +3.5pp)" las sich so, als wären die Quoten um 3.5pp
+    # gefallen. Weichen roh und bereinigt ab → ehrlich formulieren.
+    if move_raw is not None and abs(move - move_raw) >= 1.5:
+        parts = [f"📉 Pinnacle hielt {t['open']}→{t['cur']} ({move_raw:+.1f}pp roh), während der Markt "
+                 f"wegdriftete → relativ +{move}pp Sharp-Signal"]
+    else:
+        parts = [f"📉 Pinnacle {t['open']}→{t['cur']} (Sharp-Money-Drop +{move}pp)"]
     # Soft-Bestätigung: ist der Soft-Konsens dem Move gefolgt? (echte Bestätigung)
     if soft_confirmed:
         parts.append(f"✅ Soft-Konsens folgte +{soft_follow}pp (bestätigt)")
@@ -906,7 +915,7 @@ def _steam_card_pick(snap, pick):
         "result": None, "clvPP": 0.0, "dataQuality": "steam",
         "lamH": None, "lamA": None, "lamTotal": None,
         # ── Steam-Metadaten (Anzeige + CLV-Tracking) ──
-        "source": "steam", "steamMovePP": move,
+        "source": "steam", "steamMovePP": move, "steamMoveRawPP": move_raw,
         "steamOpen": t["open"], "steamCur": t["cur"],
         "softOpen": pick.get("soft_open"), "softNow": pick.get("soft_now"),
         "entryBook": pick["book"], "entryOdd": round(odds, 2),

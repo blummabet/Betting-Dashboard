@@ -2385,7 +2385,11 @@
     } else if (pick.source === 'steam' && pick.reverser) {
       modelSentence = `<em>Pinnacle ist von ${(+pick.steamOpen).toFixed(2)} auf ${(+pick.steamCur).toFixed(2)} gelaufen, aber das frische Geld dreht jetzt gegen den Pick — der Move ist überholt, wir stufen zurück.</em>`;
     } else if (pick.source === 'steam' && pick.steamMovePP) {
-      modelSentence = `<em>Pinnacle ist von ${(+pick.steamOpen).toFixed(2)} auf ${(+pick.steamCur).toFixed(2)} gefallen (+${pick.steamMovePP}pp) — der Wert steckt im Move selbst, nicht mehr im Restpreis.</em>`;
+      // Drift-Halten (Roh-Quote steht, Signal ist markt-relativ) ehrlich vom echten Quotensturz trennen.
+      const _dh = (pick.steamMoveRawPP != null && Math.abs(pick.steamMovePP - pick.steamMoveRawPP) >= 1.5);
+      modelSentence = _dh
+        ? `<em>Pinnacle hielt die Quote bei ${(+pick.steamCur).toFixed(2)}, während der restliche Markt wegdriftete — relativ zum Markt ein +${pick.steamMovePP}pp-Sharp-Signal. Der Wert steckt im Halten, nicht im Restpreis.</em>`
+        : `<em>Pinnacle ist von ${(+pick.steamOpen).toFixed(2)} auf ${(+pick.steamCur).toFixed(2)} gefallen (+${pick.steamMovePP}pp) — der Wert steckt im Move selbst, nicht mehr im Restpreis.</em>`;
     } else if (pick.modelOdds != null && pick.odds != null) {
       const epp = pick.edgePP != null ? pick.edgePP : 0;
       const tier = epp >= 12 ? 'einen massiven' : epp >= 6 ? 'einen soliden' : epp >= 3 ? 'einen kleinen' : 'kaum';
@@ -3771,13 +3775,23 @@
     let html = _freshnessStatusBadge(pick);
     // 1) Pinnacle — der Trigger, immer da. Alters-/Lag-Kontext aus sharpMoveDetails wenn vorhanden.
     const mv = pick.steamMovePP;
+    // 21.07.2026 (Lucas, MLS): steamMovePP ist DRIFT-BEREINIGT. Steht die Roh-Quote fast still
+    // (steamMoveRawPP ≈ 0), war es ein „Halten gegen den Markt", kein Quotensturz — dann ehrlich
+    // beschriften, sonst las sich „2.10→2.09 · +3.5pp" wie ein 3.5pp-Fall.
+    const mvRaw = pick.steamMoveRawPP;
+    const _driftHold = (mvRaw != null && Math.abs(mv - mvRaw) >= 1.5);
     const sm = pick.sharpMoveDetails || {};
-    let pinnMeta = 'Hier ist scharfes Geld reingelaufen — das war der Auslöser';
+    let pinnMeta = _driftHold
+      ? 'die Quote hielt, während der restliche Markt wegdriftete — relatives Sharp-Signal'
+      : 'Hier ist scharfes Geld reingelaufen — das war der Auslöser';
     if (sm.move_age_days != null) {
-      const d = sm.move_age_decay;
-      pinnMeta = (d >= 1 ? `vor ${Math.round(sm.move_age_days)} Tagen losgelaufen · noch frisch`
-                : d >= 0.5 ? `vor ${Math.round(sm.move_age_days)} Tagen losgelaufen · schon etwas abgekühlt`
-                : `vor ${Math.round(sm.move_age_days)} Tagen losgelaufen · nicht mehr taufrisch`);
+      const d = sm.move_age_decay, ageD = Math.round(sm.move_age_days);
+      // Altersbewusst: ein Move, der ≥4 Tage her ist, ist NICHT mehr „frisch" (auch wenn der
+      // Decay-Faktor hoch ist) — er ist ausgereift. Sonst stand „vor 9 Tagen losgelaufen · noch frisch".
+      pinnMeta = (ageD >= 4 ? `vor ${ageD} Tagen losgelaufen · ausgereift`
+                : d >= 1 ? `vor ${ageD} Tagen losgelaufen · noch frisch`
+                : d >= 0.5 ? `vor ${ageD} Tagen losgelaufen · schon etwas abgekühlt`
+                : `vor ${ageD} Tagen losgelaufen · nicht mehr taufrisch`);
     }
     // Frische-Split (18.06.2026): der „Move seit Eröffnung" wird ehrlich in seinen
     // LETZTEN Bewegungs-Abschnitt aufgeteilt. confirm = frisches Geld läuft weiter für uns,
@@ -3800,7 +3814,10 @@
     html += _moveBar({
       icon: '🔥', label: 'Pinnacle bewegt', cls: 'cc-pinn',
       o: pick.steamOpen, c: pick.steamCur,
-      mvText: `${mv > 0 ? '+' : ''}${mv}pp seit Eröffnung`,
+      // Bei Drift-Halten: die Roh-Quote (passt zum Balken) + der drift-relative Wert getrennt zeigen.
+      mvText: _driftHold
+        ? `${mvRaw > 0 ? '+' : ''}${(+mvRaw).toFixed(1)}pp Quote · +${mv}pp ggü. Markt`
+        : `${mv > 0 ? '+' : ''}${mv}pp seit Eröffnung`,
       meta: pinnMeta,
     });
     // Prominente Reverser-Warnung (frisches Geld läuft gegen unseren Pick)

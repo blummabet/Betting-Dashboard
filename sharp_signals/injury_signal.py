@@ -53,7 +53,7 @@ POS_DEF = {"CB", "LB", "RB", "LWB", "RWB", "DEF", "DEFENDER",
            "IV", "AV", "LV", "RV"}
 POS_MID = {"DM", "CM", "ZM", "DMF", "CDM", "CMF", "MID", "MIDFIELDER",
            "ZDM", "ZOM"}
-POS_FWD = {"ST", "CF", "FW", "FORWARD", "STRIKER"}
+POS_FWD = {"ST", "CF", "FW", "FORWARD", "STRIKER", "ATTACKER"}   # ATTACKER = API-Football-Term (MLS/Liga)
 POS_WIDE = {"LW", "RW", "AM", "CAM", "OM", "AMF", "WG"}   # AM zählen wir als FWD-Impact
 
 
@@ -81,6 +81,23 @@ def _is_starter(player: dict) -> bool:
     return True
 
 
+def _unique_players(players: list) -> list:
+    """21.07.2026 (Lucas, MLS Inter Miami: „S. Reguilon (?), S. Reguilon (?)"): derselbe Spieler
+    stand doppelt in den Injury-Daten → doppelt gezählt (Impact aufgebläht) UND doppelt gelistet.
+    Dedupe nach Spieler-Identität (id, sonst normalisierter Name). Robust, egal woher das Duplikat
+    kommt — der Fetcher kann denselben Spieler unter zwei Verletzungs-Einträgen liefern."""
+    seen, out = set(), []
+    for p in (players or []):
+        if not isinstance(p, dict):
+            continue
+        key = p.get("id") or p.get("player_id") or (p.get("name") or "").strip().lower()
+        if not key or key in seen:
+            continue
+        seen.add(key)
+        out.append(p)
+    return out
+
+
 def _team_injury_impact_pp(team_injuries: dict, thr: dict) -> tuple[float, list[str]]:
     """
     Gesamt-Penalty in pp für ein Team + Liste der Ausgefallenen für Evidence.
@@ -89,7 +106,7 @@ def _team_injury_impact_pp(team_injuries: dict, thr: dict) -> tuple[float, list[
         return 0.0, []
     impact = 0.0
     notes  = []
-    for p in team_injuries["players"]:
+    for p in _unique_players(team_injuries["players"]):
         if not isinstance(p, dict):
             continue
         pos_class = _classify_position(p.get("position") or "")
@@ -126,7 +143,7 @@ def _team_injury_offense_defense(team_injuries: dict, thr: dict) -> tuple[float,
     off_impact = 0.0
     def_impact = 0.0
     notes = []
-    for p in team_injuries["players"]:
+    for p in _unique_players(team_injuries["players"]):
         if not isinstance(p, dict):
             continue
         pos_class = _classify_position(p.get("position") or "")
