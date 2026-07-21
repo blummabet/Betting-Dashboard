@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "liga",
-    "generatedAt": "2026-07-21T08:31:21.176294+00:00",
+    "generatedAt": "2026-07-21T19:03:41.367396+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -628,7 +628,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 93,
-        "label": "Eigen 93% + Gegner 80% → 88%"
+        "label": "Eigen 93% + Gegner 73% → 85%"
       },
       "ratePct": 93,
       "seq": [
@@ -647,10 +647,10 @@
         "oppName": "Lecce",
         "atHome": true,
         "date": "2026-08-23",
-        "oppRatePct": 80
+        "oppRatePct": 73
       },
-      "oppSupportPct": 80,
-      "matchupPct": 88
+      "oppSupportPct": 73,
+      "matchupPct": 85
     },
     {
       "teamId": "94",
@@ -1008,7 +1008,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 93,
-        "label": "Eigen 93% + Gegner 80% → 88%"
+        "label": "Eigen 93% + Gegner 73% → 85%"
       },
       "ratePct": 93,
       "seq": [
@@ -1027,10 +1027,10 @@
         "oppName": "Lecce",
         "atHome": true,
         "date": "2026-08-23",
-        "oppRatePct": 80
+        "oppRatePct": 73
       },
-      "oppSupportPct": 80,
-      "matchupPct": 88
+      "oppSupportPct": 73,
+      "matchupPct": 85
     },
     {
       "teamId": "66",
@@ -1084,7 +1084,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 73,
-        "label": "Eigen 73% + Gegner 87% → 79%"
+        "label": "Eigen 73% + Gegner 93% → 81%"
       },
       "ratePct": 73,
       "seq": [
@@ -1103,10 +1103,10 @@
         "oppName": "Strasbourg",
         "atHome": true,
         "date": "2026-08-21",
-        "oppRatePct": 87
+        "oppRatePct": 93
       },
-      "oppSupportPct": 87,
-      "matchupPct": 79
+      "oppSupportPct": 93,
+      "matchupPct": 81
     },
     {
       "teamId": "85",
@@ -1160,7 +1160,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 80,
-        "label": "Eigen 80% + Gegner 33% → 61% · Signale bestätigen"
+        "label": "Eigen 80% + Gegner 33% → 61%"
       },
       "ratePct": 80,
       "seq": [
@@ -1182,18 +1182,7 @@
         "oppRatePct": 33
       },
       "oppSupportPct": 33,
-      "matchupPct": 61,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 2,
-        "conviction": 2,
-        "names": [
-          "form_trend",
-          "chance_creation",
-          "streak_momentum"
-        ],
-        "market": "Über 2.5 Tore"
-      }
+      "matchupPct": 61
     },
     {
       "teamId": "91",
@@ -3745,43 +3734,6 @@
       "matchupPct": 79
     },
     {
-      "teamId": "494",
-      "team": "Udinese",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/494.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
-      "type": "bttsNo",
-      "market": "Beide treffen — Nein",
-      "length": 6,
-      "venue": "H",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 73,
-        "label": "Eigen 73% + Gegner 53% → 65%"
-      },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "895",
-        "oppName": "Como",
-        "atHome": true,
-        "date": "2026-08-22",
-        "oppRatePct": 47
-      },
-      "oppSupportPct": 53,
-      "matchupPct": 65
-    },
-    {
       "teamId": "505",
       "team": "Inter",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/505.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -5057,7 +5009,7 @@
       "signalInfo": {
         "state": "contradict",
         "count": 3,
-        "conviction": 3,
+        "conviction": 2,
         "names": [
           "public_static_bias",
           "form_trend",
@@ -6238,6 +6190,43 @@
       "matchupPct": 81
     },
     {
+      "teamId": "185",
+      "team": "SC Paderborn 07",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/185.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "GER",
+      "leagueName": "Bundesliga",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 5,
+      "venue": "H",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 60% → 60%"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "164",
+        "oppName": "FSV Mainz 05",
+        "atHome": false,
+        "date": "2026-08-29",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 60
+    },
+    {
       "teamId": "192",
       "team": "1. FC Köln",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/192.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -6726,43 +6715,6 @@
       "matchupPct": 49
     },
     {
-      "teamId": "494",
-      "team": "Udinese",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/494.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
-      "type": "under25",
-      "market": "Unter 2,5 Tore",
-      "length": 5,
-      "venue": "H",
-      "strong": true,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 47% → 55%"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "895",
-        "oppName": "Como",
-        "atHome": true,
-        "date": "2026-08-22",
-        "oppRatePct": 53
-      },
-      "oppSupportPct": 47,
-      "matchupPct": 55
-    },
-    {
       "teamId": "496",
       "team": "Juventus",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/496.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -6985,44 +6937,6 @@
       },
       "oppSupportPct": 47,
       "matchupPct": 59
-    },
-    {
-      "teamId": "174",
-      "team": "FC Schalke 04",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/174.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "GER",
-      "leagueName": "Bundesliga",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 5,
-      "venue": "A",
-      "strong": true,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 53,
-        "label": "Eigen 53% + Gegner 60% → 56%"
-      },
-      "ratePct": 53,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "170",
-        "oppName": "FC Augsburg",
-        "atHome": false,
-        "date": "2026-08-30",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 56
     },
     {
       "teamId": "489",
@@ -7400,6 +7314,56 @@
       "matchupPct": 44
     },
     {
+      "teamId": "174",
+      "team": "FC Schalke 04",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/174.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "GER",
+      "leagueName": "Bundesliga",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 5,
+      "venue": "A",
+      "strong": true,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 53,
+        "label": "Eigen 53% + Gegner 60% → 56% · Linie/Signale dagegen"
+      },
+      "ratePct": 53,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "170",
+        "oppName": "FC Augsburg",
+        "atHome": false,
+        "date": "2026-08-30",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 56,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 2,
+        "conviction": 2,
+        "names": [
+          "form_trend",
+          "xg_strength",
+          "chance_creation",
+          "transfer_shift"
+        ],
+        "market": "Unter 2.5 Tore"
+      }
+    },
+    {
       "teamId": "110",
       "team": "Estac Troyes",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/110.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -7698,44 +7662,6 @@
       "matchupPct": 76
     },
     {
-      "teamId": "494",
-      "team": "Udinese",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/494.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
-      "type": "bttsNo",
-      "market": "Beide treffen — Nein",
-      "length": 4,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 73,
-        "label": "Eigen 73% + Gegner 53% → 65%"
-      },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "895",
-        "oppName": "Como",
-        "atHome": true,
-        "date": "2026-08-22",
-        "oppRatePct": 47
-      },
-      "oppSupportPct": 53,
-      "matchupPct": 65
-    },
-    {
       "teamId": "499",
       "team": "Atalanta",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/499.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -7787,7 +7713,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 93,
-        "label": "Eigen 93% + Gegner 80% → 88%"
+        "label": "Eigen 93% + Gegner 73% → 85%"
       },
       "ratePct": 93,
       "seq": [
@@ -7805,10 +7731,10 @@
         "oppName": "Lecce",
         "atHome": true,
         "date": "2026-08-23",
-        "oppRatePct": 80
+        "oppRatePct": 73
       },
-      "oppSupportPct": 80,
-      "matchupPct": 88
+      "oppSupportPct": 73,
+      "matchupPct": 85
     },
     {
       "teamId": "52",
@@ -8186,7 +8112,17 @@
         "oppRatePct": 40
       },
       "oppSupportPct": 60,
-      "matchupPct": 60
+      "matchupPct": 60,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 0,
+        "conviction": 2,
+        "names": [
+          "h2h_pattern",
+          "chance_creation"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "538",
@@ -8464,7 +8400,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 80,
-        "label": "Eigen 80% + Gegner 53% → 69% · Signale bestätigen"
+        "label": "Eigen 80% + Gegner 53% → 69%"
       },
       "ratePct": 80,
       "seq": [
@@ -8486,19 +8422,7 @@
         "oppRatePct": 53
       },
       "oppSupportPct": 53,
-      "matchupPct": 69,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 2,
-        "conviction": 3,
-        "names": [
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength",
-          "chance_creation"
-        ],
-        "market": "Über 2.5 Tore"
-      }
+      "matchupPct": 69
     },
     {
       "teamId": "160",
@@ -8514,7 +8438,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 80,
-        "label": "Eigen 80% + Gegner 53% → 69% · Signale bestätigen"
+        "label": "Eigen 80% + Gegner 53% → 69%"
       },
       "ratePct": 80,
       "seq": [
@@ -8534,19 +8458,7 @@
         "oppRatePct": 53
       },
       "oppSupportPct": 53,
-      "matchupPct": 69,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 2,
-        "conviction": 3,
-        "names": [
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength",
-          "chance_creation"
-        ],
-        "market": "Über 2.5 Tore"
-      }
+      "matchupPct": 69
     },
     {
       "teamId": "163",
@@ -8882,43 +8794,6 @@
       },
       "oppSupportPct": 67,
       "matchupPct": 79
-    },
-    {
-      "teamId": "185",
-      "team": "SC Paderborn 07",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/185.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "GER",
-      "leagueName": "Bundesliga",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 60% → 60%"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "164",
-        "oppName": "FSV Mainz 05",
-        "atHome": false,
-        "date": "2026-08-29",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 60
     },
     {
       "teamId": "192",
@@ -9633,22 +9508,22 @@
       "matchupPct": 67
     },
     {
-      "teamId": "494",
-      "team": "Udinese",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/494.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
+      "teamId": "111",
+      "team": "Le Havre",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/111.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
       "type": "under25",
       "market": "Unter 2,5 Tore",
       "length": 4,
-      "venue": "all",
+      "venue": "A",
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 47% → 55%"
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 20% → 48%"
       },
-      "ratePct": 60,
+      "ratePct": 67,
       "seq": [
         true,
         true,
@@ -9656,19 +9531,18 @@
         true,
         false,
         true,
-        false,
         true
       ],
       "xgBacked": null,
       "next": {
-        "oppId": "895",
-        "oppName": "Como",
+        "oppId": "91",
+        "oppName": "Monaco",
         "atHome": true,
-        "date": "2026-08-22",
-        "oppRatePct": 53
+        "date": "2026-08-23",
+        "oppRatePct": 80
       },
-      "oppSupportPct": 47,
-      "matchupPct": 55
+      "oppSupportPct": 20,
+      "matchupPct": 48
     },
     {
       "teamId": "51",
@@ -10602,54 +10476,6 @@
       "matchupPct": 57
     },
     {
-      "teamId": "111",
-      "team": "Le Havre",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/111.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "under25",
-      "market": "Unter 2,5 Tore",
-      "length": 4,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 20% → 48% · Linie/Signale dagegen"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "91",
-        "oppName": "Monaco",
-        "atHome": true,
-        "date": "2026-08-23",
-        "oppRatePct": 80
-      },
-      "oppSupportPct": 20,
-      "matchupPct": 48,
-      "signalInfo": {
-        "state": "contradict",
-        "count": 2,
-        "conviction": 2,
-        "names": [
-          "form_trend",
-          "chance_creation",
-          "streak_momentum"
-        ],
-        "market": "Über 2.5 Tore"
-      }
-    },
-    {
       "teamId": "45",
       "team": "Everton",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/45.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -10688,7 +10514,7 @@
       "signalInfo": {
         "state": "contradict",
         "count": 3,
-        "conviction": 3,
+        "conviction": 2,
         "names": [
           "public_static_bias",
           "form_trend",
@@ -12168,15 +11994,15 @@
       "flag": "<img src=\"https://media.api-sports.io/football/teams/95.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "FRA",
       "leagueName": "Ligue 1",
-      "type": "scored",
-      "market": "Team trifft",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
       "length": 3,
       "venue": "all",
       "strong": false,
       "continuation": {
         "state": "intakt",
         "ratePct": 60,
-        "label": "Eigen 60% + Gegner 73% → 65%"
+        "label": "Eigen 60% + Gegner 60% → 60%"
       },
       "ratePct": 60,
       "seq": [
@@ -12184,10 +12010,10 @@
         true,
         true,
         false,
-        true,
         false,
         true,
-        false
+        false,
+        true
       ],
       "xgBacked": null,
       "next": {
@@ -12195,10 +12021,10 @@
         "oppName": "Marseille",
         "atHome": false,
         "date": "2026-08-21",
-        "oppRatePct": 73
+        "oppRatePct": 60
       },
-      "oppSupportPct": 73,
-      "matchupPct": 65
+      "oppSupportPct": 60,
+      "matchupPct": 60
     },
     {
       "teamId": "96",
@@ -12858,7 +12684,17 @@
         "oppRatePct": 40
       },
       "oppSupportPct": 60,
-      "matchupPct": 60
+      "matchupPct": 60,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 0,
+        "conviction": 2,
+        "names": [
+          "h2h_pattern",
+          "chance_creation"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "160",
@@ -12874,7 +12710,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 80,
-        "label": "Eigen 80% + Gegner 53% → 69% · Signale bestätigen"
+        "label": "Eigen 80% + Gegner 53% → 69%"
       },
       "ratePct": 80,
       "seq": [
@@ -12896,19 +12732,7 @@
         "oppRatePct": 53
       },
       "oppSupportPct": 53,
-      "matchupPct": 69,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 2,
-        "conviction": 3,
-        "names": [
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength",
-          "chance_creation"
-        ],
-        "market": "Über 2.5 Tore"
-      }
+      "matchupPct": 69
     },
     {
       "teamId": "163",
@@ -15095,15 +14919,52 @@
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 53,
-        "label": "Eigen 53% + Gegner 47% → 51%"
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 47% → 55%"
       },
-      "ratePct": 53,
+      "ratePct": 60,
       "seq": [
         true,
         true,
         true,
         false,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "517",
+        "oppName": "Venezia",
+        "atHome": false,
+        "date": "2026-08-23",
+        "oppRatePct": 53
+      },
+      "oppSupportPct": 47,
+      "matchupPct": 55
+    },
+    {
+      "teamId": "867",
+      "team": "Lecce",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/867.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ITA",
+      "leagueName": "Serie A",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 53% → 57%"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
         false,
         true,
         false
@@ -15116,46 +14977,46 @@
         "date": "2026-08-23",
         "oppRatePct": 53
       },
-      "oppSupportPct": 47,
-      "matchupPct": 51
+      "oppSupportPct": 53,
+      "matchupPct": 57
     },
     {
-      "teamId": "95",
-      "team": "Strasbourg",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/95.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "bttsYes",
-      "market": "Beide Teams treffen",
+      "teamId": "867",
+      "team": "Lecce",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/867.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ITA",
+      "leagueName": "Serie A",
+      "type": "scored",
+      "market": "Team trifft",
       "length": 3,
-      "venue": "all",
+      "venue": "A",
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 53,
-        "label": "Eigen 53% + Gegner 47% → 51%"
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 53% → 57%"
       },
-      "ratePct": 53,
+      "ratePct": 60,
       "seq": [
         true,
         true,
         true,
         false,
-        true,
+        false,
         false,
         true,
-        false
+        true
       ],
       "xgBacked": null,
       "next": {
-        "oppId": "81",
-        "oppName": "Marseille",
+        "oppId": "517",
+        "oppName": "Venezia",
         "atHome": false,
-        "date": "2026-08-21",
-        "oppRatePct": 47
+        "date": "2026-08-23",
+        "oppRatePct": 53
       },
-      "oppSupportPct": 47,
-      "matchupPct": 51
+      "oppSupportPct": 53,
+      "matchupPct": 57
     },
     {
       "teamId": "97",
@@ -15568,82 +15429,6 @@
       },
       "oppSupportPct": 67,
       "matchupPct": 59
-    },
-    {
-      "teamId": "170",
-      "team": "FC Augsburg",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/170.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "GER",
-      "leagueName": "Bundesliga",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 53% → 57%"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "174",
-        "oppName": "FC Schalke 04",
-        "atHome": true,
-        "date": "2026-08-30",
-        "oppRatePct": 53
-      },
-      "oppSupportPct": 53,
-      "matchupPct": 57
-    },
-    {
-      "teamId": "170",
-      "team": "FC Augsburg",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/170.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "GER",
-      "leagueName": "Bundesliga",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 53% → 57%"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "174",
-        "oppName": "FC Schalke 04",
-        "atHome": true,
-        "date": "2026-08-30",
-        "oppRatePct": 53
-      },
-      "oppSupportPct": 53,
-      "matchupPct": 57
     },
     {
       "teamId": "106",
@@ -17030,6 +16815,106 @@
       },
       "oppSupportPct": 13,
       "matchupPct": 29
+    },
+    {
+      "teamId": "170",
+      "team": "FC Augsburg",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/170.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "GER",
+      "leagueName": "Bundesliga",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 53% → 57% · Linie/Signale dagegen"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "174",
+        "oppName": "FC Schalke 04",
+        "atHome": true,
+        "date": "2026-08-30",
+        "oppRatePct": 53
+      },
+      "oppSupportPct": 53,
+      "matchupPct": 57,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 2,
+        "conviction": 2,
+        "names": [
+          "form_trend",
+          "xg_strength",
+          "chance_creation",
+          "transfer_shift"
+        ],
+        "market": "Unter 2.5 Tore"
+      }
+    },
+    {
+      "teamId": "170",
+      "team": "FC Augsburg",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/170.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "GER",
+      "leagueName": "Bundesliga",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 53% → 57% · Linie/Signale dagegen"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "174",
+        "oppName": "FC Schalke 04",
+        "atHome": true,
+        "date": "2026-08-30",
+        "oppRatePct": 53
+      },
+      "oppSupportPct": 53,
+      "matchupPct": 57,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 2,
+        "conviction": 2,
+        "names": [
+          "form_trend",
+          "xg_strength",
+          "chance_creation",
+          "transfer_shift"
+        ],
+        "market": "Unter 2.5 Tore"
+      }
     },
     {
       "teamId": "503",
