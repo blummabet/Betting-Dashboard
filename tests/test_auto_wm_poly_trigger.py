@@ -194,5 +194,38 @@ class TestConfigJsonHasAllTradeKeys(unittest.TestCase):
                     f"liga_default trade-section fehlt Key '{key}'")
 
 
+class TestTournamentOverGate(unittest.TestCase):
+    """21.07.2026 — Bei beendetem Turnier (WM winterisiert) darf der Auto-Trigger NICHT den
+    Stale-Odds-Circuit-Breaker in den Trades-Channel feuern („STALE-ODDS-STOP … 32h alt"). Die
+    Odds sind erwartungsgemäß veraltet, weil fetch_wm_odds bewusst still liegt. Er muss still
+    zurückkehren — egal welcher Runner ihn noch anstößt."""
+
+    def test_beendetes_turnier_kein_stale_alarm(self):
+        import importlib
+        import unittest.mock as mock
+        import auto_wm_poly_trigger as T
+        importlib.reload(T)
+        over = {"groups": {"A": {"fixtures": [
+            {"kickoff": "2026-07-19T18:00:00Z", "result": {"status": "FT"}}]}}}
+        with mock.patch.object(T, "is_kill_switch_active", return_value=(False, "")), \
+             mock.patch.object(T, "load_json", return_value=over), \
+             mock.patch.object(T, "send_telegram") as tg, \
+             mock.patch.object(T, "newest_pinnacle_odds_age_h", return_value=99.0):
+            T.main()
+        tg.assert_not_called()   # trotz 99h „alter" Odds KEIN Alarm — Turnier ist beendet
+
+    def test_laufende_saison_gate_greift_nicht(self):
+        """Gegenprobe: läuft die Saison (offene Fixtures), darf der Gate NICHT greifen —
+        der normale Betrieb (inkl. Stale-Alarm bei echtem Feed-Ausfall) bleibt erhalten."""
+        import importlib
+        import auto_wm_poly_trigger as T
+        importlib.reload(T)
+        import cocobet_dataset as D
+        ongoing = {"groups": {"MLS": {"fixtures": [
+            {"kickoff": "2026-07-19T18:00:00Z", "result": {"status": "FT"}},
+            {"kickoff": "2026-07-27T18:00:00Z", "result": {"status": None}}]}}}
+        self.assertFalse(D.tournament_is_over(ongoing))
+
+
 if __name__ == "__main__":
     unittest.main()
