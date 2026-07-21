@@ -508,6 +508,9 @@ const PW_LEAGUE_CAT={
   epl:['Fußball','⚽'],soccer:['Fußball','⚽'],ucl:['Fußball','⚽'],mls:['Fußball','⚽'],
   esports:['E-Sport','🎮'],cs2:['E-Sport','🎮'],lol:['E-Sport','🎮'],dota:['E-Sport','🎮'],valorant:['E-Sport','🎮'],
   tennis:['Tennis','🎾'],
+  // 21.07.2026 (Lucas: „mehr Sport?") — ganzjährige Poly-Sportarten kategorisiert (statt „Sonstige").
+  ufc:['Kampfsport','🥊'],mma:['Kampfsport','🥊'],boxing:['Kampfsport','🥊'],
+  golf:['Golf','⛳'],f1:['Motorsport','🏎'],cricket:['Cricket','🏏'],
 };
 function _pwCatOf(league){const c=PW_LEAGUE_CAT[String(league||'').toLowerCase()];return c?c:['Sonstige','·'];}
 
@@ -547,7 +550,7 @@ function _pwMoneyBroad(broad){
   const cats={};
   leagues.forEach(l=>{const[cat,icon]=_pwCatOf(l.league);(cats[cat]=cats[cat]||{icon,rows:[],n:0}).rows.push(l);
     cats[cat].n+=l.n;});
-  const catOrder=['Fußball','US-Sport','E-Sport','Tennis','Sonstige'];
+  const catOrder=['Fußball','US-Sport','E-Sport','Tennis','Kampfsport','Golf','Motorsport','Cricket','Sonstige'];
   const hitBar=(pct,col)=>'<span style="display:inline-flex;align-items:center;gap:7px;justify-content:flex-end">'
     +'<span style="width:52px;height:7px;background:#1c2333;border-radius:4px;overflow:hidden;display:inline-block">'
     +'<i style="display:block;height:100%;width:'+pct+'%;background:'+col+'"></i></span>'

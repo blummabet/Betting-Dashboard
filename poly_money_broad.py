@@ -86,8 +86,13 @@ from datetime import timedelta as _td
 
 # Sport-Tags, die Poly liquide listet. Erweiterbar über cocobet_config poly.money_broad_tags.
 # 19.07.2026 (Lucas): E-Sport dazu — Poly deckt CS2/LoL/Dota/Valorant inzwischen breit ab.
+# 21.07.2026 (Lucas: „sollte da nicht mehr Sport sein?"): um die ganzjährigen/Sommer-Poly-Sportarten
+# erweitert (UFC/MMA/Boxen/Golf/F1/Cricket). Welche Tag-Slugs Poly WIRKLICH liefert, zeigt die neue
+# rawByTag-Diagnose im nächsten Lauf — tote Tags fliegen dann wieder raus. Saisonale (NBA/NFL/NHL/EPL)
+# bleiben drin und füllen sich von selbst, sobald ihre Saison startet.
 SPORT_TAGS = ["nba", "nfl", "mlb", "nhl", "epl", "soccer", "tennis", "ucl",
-              "esports", "cs2", "lol", "dota", "valorant"]
+              "esports", "cs2", "lol", "dota", "valorant",
+              "ufc", "mma", "boxing", "golf", "f1", "cricket"]
 GAMMA = "https://gamma-api.polymarket.com/events"
 HOLDERS = "https://data-api.polymarket.com/holders?market={cond}&limit=200"
 _HTTP_TIMEOUT = 12
@@ -185,11 +190,20 @@ def fetch_markets():
     min_vol, _ = _cfg()
     tags = _tags()
     markets, holder_calls = [], 0
+    raw_by_tag = {}                      # je Tag: wie viele ROH-Events kamen (offen+aufgelöst)
+    seen = set()                         # Dedup: ein Markt kann unter mehreren Tags liegen (cs2 ⊂ esports)
 
     for tag in tags:
+        open_evs = _gamma_events(tag, closed=False)
+        closed_evs = _gamma_events(tag, closed=True)
+        raw_by_tag[tag] = len(open_evs) + len(closed_evs)
+
         # 1) Offene, near-kickoff Märkte → Geld-Split einfrieren
-        for ev in _gamma_events(tag, closed=False):
+        for ev in open_evs:
             try:
+                key = ev.get("slug") or ev.get("id")
+                if (key, False) in seen:
+                    continue
                 htk = _hours_to_ko(ev, now)
                 if htk is None or not (0 < htk <= PMA.CAPTURE_WINDOW_H):
                     continue
@@ -205,7 +219,8 @@ def fetch_markets():
                     holder_calls += 1
                 if not shares:
                     continue     # ohne Geld-Split keine Aussage über „liegt das Geld richtig"
-                markets.append({"key": ev.get("slug") or ev.get("id"), "league": tag.upper(),
+                seen.add((key, False))
+                markets.append({"key": key, "league": tag.upper(),
                                 "hoursToKickoff": htk, "totalUsd": round(float(ev.get("volume") or 0)),
                                 "shares": shares, "prices": prices,
                                 "resolved": False, "resolvedPrices": {}})
@@ -213,18 +228,25 @@ def fetch_markets():
                 continue
 
         # 2) Kürzlich aufgelöste Märkte → Gewinner (settlet auf 1.00)
-        for ev in _gamma_events(tag, closed=True):
+        for ev in closed_evs:
             try:
+                key = ev.get("slug") or ev.get("id")
+                if (key, True) in seen:
+                    continue
                 oc = _outcomes(ev)
                 rp = {o["label"]: o["price"] for o in oc if o["price"] is not None}
                 if rp:
-                    markets.append({"key": ev.get("slug") or ev.get("id"), "league": tag.upper(),
+                    seen.add((key, True))
+                    markets.append({"key": key, "league": tag.upper(),
                                     "resolved": True, "resolvedPrices": rp,
                                     "hoursToKickoff": None, "totalUsd": 0, "shares": {}, "prices": {}})
             except Exception:
                 continue
 
+    live = {t: n for t, n in raw_by_tag.items() if n}
     print(f"  Gamma: {len(markets)} Markt-Zeilen über {len(tags)} Tags · {holder_calls} Holders-Calls")
+    print(f"  Roh-Events je Tag (nur >0): {live}")
+    fetch_markets.raw_by_tag = raw_by_tag   # 21.07.2026: für die Diagnose im Output
     return markets
 
 
@@ -275,6 +297,8 @@ def main() -> int:
     rep["generatedAt"] = _now().isoformat()
     rep["minVolUsd"] = min_vol
     rep["scope"] = "broad_all_leagues"
+    # 21.07.2026: welche Sport-Tags liefern überhaupt Events (statt zu raten, welche Poly hat)?
+    rep["rawByTag"] = getattr(fetch_markets, "raw_by_tag", {})
     (BASE / OUT_FILE).write_text(json.dumps(rep, ensure_ascii=False, indent=1), encoding="utf-8")
 
     print(f"=== Liegt das Geld richtig? BREIT · min Vol ${min_vol:.0f} · min Quote {min_odds} ===")

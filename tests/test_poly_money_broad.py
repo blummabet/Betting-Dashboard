@@ -122,3 +122,33 @@ class TestGammaParser:
         ev = {"startTime": (now + timedelta(hours=2)).isoformat()}
         assert abs(B._hours_to_ko(ev, now) - 2.0) < 1e-6
         assert B._hours_to_ko({"startTime": "kaputt"}, now) is None
+
+
+class TestFetchMarketsDedupUndDiagnose:
+    """21.07.2026 (Lucas: „mehr Sport?"): ein Markt kann unter mehreren Tags liegen (cs2 ⊂ esports) —
+    darf nur EINMAL zählen. rawByTag macht sichtbar, welche Sport-Tags überhaupt Events liefern."""
+
+    def _ev(self):
+        return {"slug": "cs2-navi-faze", "volume": 50000, "startTime": "2026-07-21T12:00:00Z",
+                "markets": [{"outcomes": '["NAVI","FaZe"]', "outcomePrices": '["0.6","0.4"]',
+                             "clobTokenIds": '["t0","t1"]', "conditionId": "0xabc"}]}
+
+    def test_dedup_ueber_tags_und_rawbytag(self, monkeypatch):
+        ev = self._ev()
+        monkeypatch.setattr(B, "_tags", lambda: ["esports", "cs2"])
+        monkeypatch.setattr(B, "_cfg", lambda: (7500, 1.35))
+        monkeypatch.setattr(B, "_gamma_events", lambda tag, closed: ([ev] if not closed else []))
+        monkeypatch.setattr(B, "_hours_to_ko", lambda e, now: 1.0)
+        monkeypatch.setattr(B, "_money_shares", lambda oc: {"NAVI": 30000, "FaZe": 20000})
+        markets = B.fetch_markets()
+        # derselbe Markt unter zwei Tags → nur EINE offene Zeile
+        assert sum(1 for m in markets if m["key"] == "cs2-navi-faze" and not m["resolved"]) == 1
+        # Diagnose: beide Tags haben je 1 Roh-Event gesehen
+        assert B.fetch_markets.raw_by_tag == {"esports": 1, "cs2": 1}
+
+    def test_toter_tag_ist_null(self, monkeypatch):
+        monkeypatch.setattr(B, "_tags", lambda: ["golf"])
+        monkeypatch.setattr(B, "_cfg", lambda: (7500, 1.35))
+        monkeypatch.setattr(B, "_gamma_events", lambda tag, closed: [])
+        assert B.fetch_markets() == []
+        assert B.fetch_markets.raw_by_tag == {"golf": 0}
