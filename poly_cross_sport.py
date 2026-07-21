@@ -303,17 +303,27 @@ def main() -> int:
         print("ℹ️  Keine Poly-Sportmärkte — ehrlichen Leer-Stub geschrieben")
         return 0
     pinn = fetch_pinnacle_index(sports)
+    # 21.07.2026 (Lucas: „hängt da was?") — messbar machen, ob die 188 Poly-Rows überhaupt ein
+    # Pinnacle-Gegenstück finden. „0 Diskrepanzen" ist sonst mehrdeutig: echt einig ODER das
+    # Cross-Venue-Namens-Matching verbindet nichts. matched=0 bei pinnKeys>0 → Matching kaputt.
+    matched = sum(1 for r in poly_rows
+                  if pinn.get((r.get("eventKey"), r.get("outcomeKey"))) is not None)
     disc = compute_discrepancies(poly_rows, pinn)
     hist = update_history(_load("poly_cross_sport_history.json"), disc)
 
     (BASE / "poly_cross_sport.json").write_text(json.dumps({
         "generatedAt": _now().isoformat(), "sports": sports,
-        "minGapPP": MIN_GAP_PP, "polyRowsSeen": len(poly_rows), "discrepancies": disc,
+        "minGapPP": MIN_GAP_PP, "polyRowsSeen": len(poly_rows),
+        "pinnKeys": len(pinn), "matched": matched, "discrepancies": disc,
     }, ensure_ascii=False, indent=1), encoding="utf-8")
     (BASE / "poly_cross_sport_history.json").write_text(
         json.dumps(hist, ensure_ascii=False, indent=1), encoding="utf-8")
 
-    print(f"=== Cross-Sport-Radar: {len(disc)} Lücken über {len(sports)} Sportarten ===")
+    print(f"=== Cross-Sport-Radar: {len(disc)} Lücken über {len(sports)} Sportarten "
+          f"({matched}/{len(poly_rows)} Poly-Rows mit Pinnacle gematcht, {len(pinn)} Pinn-Keys) ===")
+    if matched == 0 and len(pinn) > 0:
+        print("  ⚠️  0 Paare trotz Pinnacle-Daten — Cross-Venue-Namens-Matching prüfen "
+              "(Poly- vs. TheOddsAPI-Teamnamen weichen ab).")
     for d in disc[:15]:
         conv = d.get("convergePP")
         cs = "" if conv is None else f" · konvergiert {conv:+.1f}pp"

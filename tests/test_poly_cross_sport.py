@@ -125,6 +125,40 @@ class TestEventKeyReihenfolgeUnabhaengig:
         assert any(d["outcome"] == "Los Angeles Lakers" for d in disc)
 
 
+class TestMatchedDiagnose:
+    """21.07.2026 (Lucas: „hängt da was?") — die Ausgabe muss messbar machen, ob die Poly-Rows
+    überhaupt ein Pinnacle-Gegenstück finden. matched=0 bei pinnKeys>0 = Namens-Matching kaputt."""
+
+    def _rows(self):
+        return [
+            {"sport": "basketball_nba", "event": "A vs B", "market": "Moneyline",
+             "outcome": "A", "prob": 0.60, "vol": 50000, "eventKey": "a-b", "outcomeKey": "a"},
+            {"sport": "basketball_nba", "event": "A vs B", "market": "Moneyline",
+             "outcome": "B", "prob": 0.40, "vol": 50000, "eventKey": "a-b", "outcomeKey": "b"},
+        ]
+
+    def test_matched_und_pinnkeys_werden_geschrieben(self, tmp_path, monkeypatch):
+        import json as _j
+        monkeypatch.setattr(X, "BASE", tmp_path)
+        monkeypatch.setattr(X, "fetch_poly_rows", lambda sports: self._rows())
+        monkeypatch.setattr(X, "fetch_pinnacle_index",
+                            lambda sports: {("a-b", "a"): 0.55, ("a-b", "b"): 0.45})
+        X.main()
+        out = _j.loads((tmp_path / "poly_cross_sport.json").read_text())
+        assert out["matched"] == 2 and out["pinnKeys"] == 2
+
+    def test_kein_match_ist_sichtbar(self, tmp_path, monkeypatch):
+        # Pinnacle hat Daten, aber unter anderen Namen → matched=0 (Matching-Problem sichtbar).
+        import json as _j
+        monkeypatch.setattr(X, "BASE", tmp_path)
+        monkeypatch.setattr(X, "fetch_poly_rows", lambda sports: self._rows())
+        monkeypatch.setattr(X, "fetch_pinnacle_index",
+                            lambda sports: {("x-y", "x"): 0.55, ("x-y", "y"): 0.45})
+        X.main()
+        out = _j.loads((tmp_path / "poly_cross_sport.json").read_text())
+        assert out["matched"] == 0 and out["pinnKeys"] == 2
+
+
 class TestFetchPolyRows:
     def _ev(self, a, b, pa, pb, vol=50000):
         import json as _j
