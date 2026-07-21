@@ -327,6 +327,18 @@ def main():
         "teamsWithData":  teams_with_data,
     }
 
+    # ── Schritt 4b: Positionen aus dem Kader-Cache nachtragen (21.07.2026, Lucas) ──
+    # Der /injuries-Endpoint liefert KEINE Position → für MLS stand überall None → „(?)" + Backup-
+    # Unterschätzung. squad_cache.json (teams[apifId].starters) hat name+pos → per Nachname joinen.
+    try:
+        import injury_positions as _ip
+        _sc_path = BASE / "squad_cache.json"
+        _sc = json.loads(_sc_path.read_text(encoding="utf-8")) if _sc_path.exists() else {}
+        _n = _ip.enrich_injuries({k: v for k, v in injuries_out.items() if k != "_meta"}, _sc)
+        print(f"  🩹 {_n} Verletzten-Positionen aus dem Kader angereichert")
+    except Exception as _e:
+        print(f"  ⚠️  Positions-Anreicherung übersprungen: {_e}")
+
     # ── Schritt 5: Speichern ───────────────────────────────────────────────────
     wm["injuries"] = injuries_out
     WM_FILE.write_text(json.dumps(wm, ensure_ascii=False, indent=2), encoding="utf-8")

@@ -48,12 +48,14 @@ def _load_thresholds() -> dict:
 
 
 # Position-Klassifikation — robust gegen verschiedene Notationen
-POS_GK  = {"GK", "TW", "GOALKEEPER"}
+# 21.07.2026: die Einbuchstaben-Codes G/D/M/F (squad_cache.json-Format) waren NICHT klassifiziert →
+# jeder so getaggte Spieler landete auf UNKNOWN → „(?)" + Backup-Unterschätzung.
+POS_GK  = {"GK", "TW", "GOALKEEPER", "G"}
 POS_DEF = {"CB", "LB", "RB", "LWB", "RWB", "DEF", "DEFENDER",
-           "IV", "AV", "LV", "RV"}
+           "IV", "AV", "LV", "RV", "D"}
 POS_MID = {"DM", "CM", "ZM", "DMF", "CDM", "CMF", "MID", "MIDFIELDER",
-           "ZDM", "ZOM"}
-POS_FWD = {"ST", "CF", "FW", "FORWARD", "STRIKER", "ATTACKER"}   # ATTACKER = API-Football-Term (MLS/Liga)
+           "ZDM", "ZOM", "M"}
+POS_FWD = {"ST", "CF", "FW", "FORWARD", "STRIKER", "ATTACKER", "F"}   # ATTACKER = API-Football-Term (MLS/Liga)
 POS_WIDE = {"LW", "RW", "AM", "CAM", "OM", "AMF", "WG"}   # AM zählen wir als FWD-Impact
 
 

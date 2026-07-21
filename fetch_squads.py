@@ -55,6 +55,10 @@ LEAGUES = {
     "POL": dict(apif_id=106, total=18, rounds=34, ucl=1, el=1, uecl=1, rel_playoff=2, rel=2),
     "HUN": dict(apif_id=271, total=12, rounds=33, ucl=1, el=1, uecl=1, rel_playoff=0, rel=2),
     "CRO": dict(apif_id=210, total=10, rounds=36, ucl=1, el=1, uecl=1, rel_playoff=1, rel=1),
+    # 21.07.2026 (Lucas): MLS aufgenommen, damit die Verletzten Positionen bekommen (der
+    # /injuries-Endpoint liefert keine). Keine EU-Wettbewerbe → ucl/el/rel = 0; MLS läuft im
+    # FULL_FETCH (alle Teams), daher werden die stake-Felder ohnehin nicht ausgewertet.
+    "MLS": dict(apif_id=253, total=30, rounds=34, ucl=0, el=0, uecl=0, rel_playoff=0, rel=0),
 }
 
 # Big-5 leagues fetch ALL teams (not just stake teams) so that opponents of stake
