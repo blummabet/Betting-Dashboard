@@ -1,10 +1,10 @@
 {
- "n": 19,
+ "n": 23,
  "minOdds": 1.35,
- "moneyHitRate": 0.526,
- "priceHitRate": 0.526,
- "brierMoney": 0.4995,
- "brierPrice": 0.4995,
+ "moneyHitRate": 0.652,
+ "priceHitRate": 0.652,
+ "brierMoney": 0.4485,
+ "brierPrice": 0.4487,
  "disagree": {
   "n": 0,
   "moneyWon": 0,
@@ -13,6 +13,14 @@
  },
  "verdict": "gleichauf",
  "byLeague": [
+  {
+   "league": "MLB",
+   "n": 8,
+   "moneyHitRate": 0.75,
+   "brierMoney": 0.4656,
+   "brierPrice": 0.4664,
+   "verdict": "gleichauf"
+  },
   {
    "league": "TENNIS",
    "n": 10,
@@ -23,14 +31,74 @@
   },
   {
    "league": "ESPORTS",
-   "n": 7,
-   "moneyHitRate": 0.571,
-   "brierMoney": 0.5074,
-   "brierPrice": 0.5074,
+   "n": 5,
+   "moneyHitRate": 0.8,
+   "brierMoney": 0.3477,
+   "brierPrice": 0.3477,
    "verdict": "gleichauf"
   }
  ],
  "rows": [
+  {
+   "key": "mlb-sd-atl-2026-07-20",
+   "league": "MLB",
+   "winner": "Atlanta Braves",
+   "moneyFav": "Atlanta Braves",
+   "priceFav": "Atlanta Braves",
+   "moneyShare": 0.535,
+   "priceProb": 0.535,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 714906
+  },
+  {
+   "key": "mlb-pit-nyy-2026-07-20",
+   "league": "MLB",
+   "winner": "New York Yankees",
+   "moneyFav": "New York Yankees",
+   "priceFav": "New York Yankees",
+   "moneyShare": 0.516,
+   "priceProb": 0.515,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 517690
+  },
+  {
+   "key": "mlb-tb-tor-2026-07-20",
+   "league": "MLB",
+   "winner": "Tampa Bay Rays",
+   "moneyFav": "Toronto Blue Jays",
+   "priceFav": "Toronto Blue Jays",
+   "moneyShare": 0.615,
+   "priceProb": 0.615,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 415808
+  },
+  {
+   "key": "mlb-nym-mil-2026-07-20",
+   "league": "MLB",
+   "winner": "Milwaukee Brewers",
+   "moneyFav": "Milwaukee Brewers",
+   "priceFav": "Milwaukee Brewers",
+   "moneyShare": 0.665,
+   "priceProb": 0.665,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 376300
+  },
+  {
+   "key": "mlb-bal-bos-2026-07-20",
+   "league": "MLB",
+   "winner": "Boston Red Sox",
+   "moneyFav": "Boston Red Sox",
+   "priceFav": "Boston Red Sox",
+   "moneyShare": 0.595,
+   "priceProb": 0.595,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 372591
+  },
   {
    "key": "mlb-cws-tor-2026-07-19",
    "league": "MLB",
@@ -54,6 +122,18 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 342446
+  },
+  {
+   "key": "mlb-sf-kc-2026-07-20",
+   "league": "MLB",
+   "winner": "Kansas City Royals",
+   "moneyFav": "Kansas City Royals",
+   "priceFav": "Kansas City Royals",
+   "moneyShare": 0.538,
+   "priceProb": 0.535,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 266419
   },
   {
    "key": "atp-vukic-holmgre-2026-07-18",
@@ -80,18 +160,6 @@
    "totalUsd": 94672
   },
   {
-   "key": "lol-dnf-fox1-2026-07-20",
-   "league": "ESPORTS",
-   "winner": "DN SOOPers",
-   "moneyFav": "BNK FEARX",
-   "priceFav": "BNK FEARX",
-   "moneyShare": 0.705,
-   "priceProb": 0.705,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 65331
-  },
-  {
    "key": "cs2-fxw7-imp11-2026-07-19",
    "league": "ESPORTS",
    "winner": "Imperial",
@@ -114,18 +182,6 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 52672
-  },
-  {
-   "key": "lol-ns-kt-2026-07-20",
-   "league": "ESPORTS",
-   "winner": "Nongshim Red Force",
-   "moneyFav": "KT Rolster",
-   "priceFav": "KT Rolster",
-   "moneyShare": 0.64,
-   "priceProb": 0.64,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 42130
   },
   {
    "key": "wta-ruzic-salkova-2026-07-20",
@@ -260,7 +316,7 @@
    "totalUsd": 9389
   }
  ],
- "generatedAt": "2026-07-21T00:01:34.121512+00:00",
+ "generatedAt": "2026-07-21T02:36:57.186090+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues"
 }
