@@ -35,10 +35,13 @@ def _lastname(name: str) -> str:
 
 
 def build_position_map(squad_cache: dict, team_id) -> dict:
-    """{nachname: pos_code} aus squad_cache.json[teams][team_id].starters. Ambige Nachnamen (mehrfach
-    im Team) → auf None gesetzt (nicht raten). Fehlt das Team → leeres Dict."""
+    """{nachname: pos_code}. Bevorzugt die VOLLE `posMap` (alle Spieler inkl. Ersatz — Verletzte sind
+    oft keine Starter); Fallback auf `starters` (nur Start-11), falls eine ältere Cache-Version keine
+    posMap hat. Ambige Nachnamen → weggelassen. Fehlt das Team → leeres Dict."""
     teams = (squad_cache or {}).get("teams") or {}
     team = teams.get(str(team_id)) or teams.get(team_id) or {}
+    if isinstance(team, dict) and isinstance(team.get("posMap"), dict) and team["posMap"]:
+        return dict(team["posMap"])
     starters = team.get("starters") if isinstance(team, dict) else None
     counts, pos = {}, {}
     for p in (starters or []):

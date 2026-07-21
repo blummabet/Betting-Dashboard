@@ -252,6 +252,31 @@ def player_importance(stats: dict, pos: str) -> float:
     return round(0.50 * min_score + 0.35 * contrib + 0.15 * rating_score, 3)
 
 
+def _full_position_map(players_raw: list) -> dict:
+    """21.07.2026 (Lucas): {nachname: G/D/M/F} über ALLE Spieler (auch Ersatz/wenig Minuten), nicht
+    nur die Start-11. Für die Injury-Positions-Anreicherung — Verletzte sind oft KEINE Starter, sonst
+    matchen die meisten nicht. Nachnamen-Key teilt sich die Normalisierung mit injury_positions (eine
+    Quelle). Ambige Nachnamen (mehrfach im Team) → weggelassen (nicht raten)."""
+    try:
+        from injury_positions import _lastname as _ln
+    except Exception:
+        return {}
+    norm = {"Goalkeeper": "G", "Defender": "D", "Midfielder": "M", "Attacker": "F"}
+    counts, pos = {}, {}
+    for p in (players_raw or []):
+        player = p.get("player") or {}
+        stats_list = p.get("statistics") or []
+        stats = stats_list[0] if stats_list else {}
+        api_pos = (stats.get("games") or {}).get("position") or player.get("position")
+        pc = norm.get(api_pos)
+        ln = _ln(player.get("name"))
+        if not ln or not pc:
+            continue
+        counts[ln] = counts.get(ln, 0) + 1
+        pos[ln] = pc
+    return {ln: pc for ln, pc in pos.items() if counts[ln] == 1}
+
+
 def identify_starters(players_raw: list) -> list:
     """
     From the raw API player list, extract the top-11 starters by minutes
@@ -415,7 +440,11 @@ def main():
             resp = apif_get("standings", {"league": apif_id, "season": season})
             total_calls += 1
             if resp:
-                rows = resp[0].get("league", {}).get("standings", [[]])[0]
+                # 21.07.2026 (Lucas): NICHT nur standings[0]. Ligen mit mehreren Tabellen-Gruppen
+                # (MLS = Eastern + Western Conference) hatten sonst nur die halbe Liga (15/30 Teams).
+                # Europäische Ein-Tabellen-Ligen haben genau eine Gruppe → Verhalten unverändert.
+                _groups = resp[0].get("league", {}).get("standings", [[]]) or [[]]
+                rows = [r for grp in _groups for r in (grp or [])]
                 standings = [
                     {"pos": r["rank"], "team": r["team"]["name"],
                      "teamId": r["team"]["id"], "pts": r["points"],
@@ -461,6 +490,7 @@ def main():
                 "name":     name,
                 "leagueKey": key,
                 "starters": starters,
+                "posMap":   _full_position_map(players_raw),   # ALLE Spieler → Injury-Positionen
             }
             total_teams += 1
             top3 = ", ".join(

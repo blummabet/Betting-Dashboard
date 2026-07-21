@@ -52,6 +52,25 @@ class TestLastnameJoin:
         assert n == 1 and inj["9568"]["players"][0]["position"] == "D"
 
 
+class TestPosMapBevorzugt:
+    """21.07.2026 — der Cache hat nur die Start-11 (`starters`); Verletzte sind oft Ersatz. Die volle
+    `posMap` (alle Spieler) muss bevorzugt werden, damit auch Nicht-Starter matchen."""
+
+    def test_posmap_schlaegt_starters(self):
+        cache = {"teams": {"9568": {
+            "starters": [{"name": "Lionel Messi", "pos": "F"}],           # nur Star-Elf
+            "posMap": {"reguilon": "D", "messi": "F", "avilesbench": "M"},  # voller Kader
+        }}}
+        pm = IP.build_position_map(cache, "9568")
+        assert pm.get("reguilon") == "D", "Ersatz-Verletzter (nicht in starters) muss aus posMap kommen"
+        players = [{"name": "S. Reguilon", "position": None}]
+        assert IP.enrich_team_injuries(players, pm) == 1 and players[0]["position"] == "D"
+
+    def test_fallback_auf_starters_ohne_posmap(self):
+        cache = {"teams": {"1": {"starters": [{"name": "A. Silva", "pos": "D"}]}}}  # alte Cache-Version
+        assert IP.build_position_map(cache, "1").get("silva") == "D"
+
+
 class TestNormalisierung:
     def test_lastname_wirft_initialen(self):
         assert IP._lastname("S. Reguilon") == "reguilon"
