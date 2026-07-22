@@ -146,6 +146,9 @@ class TestMatchedDiagnose:
         X.main()
         out = _j.loads((tmp_path / "poly_cross_sport.json").read_text())
         assert out["matched"] == 2 and out["pinnKeys"] == 2
+        # je-Sport-Diagnose: zeigt welche Sportart Paare findet (22.07.2026, mehr Sport)
+        assert out["seenBySport"]["basketball_nba"] == 2
+        assert out["matchedBySport"]["basketball_nba"] == 2
 
     def test_kein_match_ist_sichtbar(self, tmp_path, monkeypatch):
         # Pinnacle hat Daten, aber unter anderen Namen → matched=0 (Matching-Problem sichtbar).
