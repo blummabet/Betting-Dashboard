@@ -2386,7 +2386,11 @@
       modelSentence = `<em>Pinnacle ist von ${(+pick.steamOpen).toFixed(2)} auf ${(+pick.steamCur).toFixed(2)} gelaufen, aber das frische Geld dreht jetzt gegen den Pick — der Move ist überholt, wir stufen zurück.</em>`;
     } else if (pick.source === 'steam' && pick.steamMovePP) {
       // Drift-Halten (Roh-Quote steht, Signal ist markt-relativ) ehrlich vom echten Quotensturz trennen.
-      const _dh = (pick.steamMoveRawPP != null && Math.abs(pick.steamMovePP - pick.steamMoveRawPP) >= 1.5);
+      // Roh-pp aus den Quoten rechnen, falls das Feld auf alten Picks fehlt.
+      let _mvRaw = pick.steamMoveRawPP;
+      if (_mvRaw == null && pick.steamOpen > 1 && pick.steamCur > 1)
+        _mvRaw = (1 / (+pick.steamCur) - 1 / (+pick.steamOpen)) * 100;
+      const _dh = (_mvRaw != null && Math.abs(pick.steamMovePP - _mvRaw) >= 1.5);
       modelSentence = _dh
         ? `<em>Pinnacle hielt die Quote bei ${(+pick.steamCur).toFixed(2)}, während der restliche Markt wegdriftete — relativ zum Markt ein +${pick.steamMovePP}pp-Sharp-Signal. Der Wert steckt im Halten, nicht im Restpreis.</em>`
         : `<em>Pinnacle ist von ${(+pick.steamOpen).toFixed(2)} auf ${(+pick.steamCur).toFixed(2)} gefallen (+${pick.steamMovePP}pp) — der Wert steckt im Move selbst, nicht mehr im Restpreis.</em>`;
@@ -3778,7 +3782,11 @@
     // 21.07.2026 (Lucas, MLS): steamMovePP ist DRIFT-BEREINIGT. Steht die Roh-Quote fast still
     // (steamMoveRawPP ≈ 0), war es ein „Halten gegen den Markt", kein Quotensturz — dann ehrlich
     // beschriften, sonst las sich „2.10→2.09 · +3.5pp" wie ein 3.5pp-Fall.
-    const mvRaw = pick.steamMoveRawPP;
+    // steamMoveRawPP fehlt auf ALTEN (vor dem Fix gebauten) Picks → dann die Roh-Bewegung aus den
+    // angezeigten Quoten selbst rechnen, damit der ehrliche „Drift-Halten"-Text auch dort greift.
+    let mvRaw = pick.steamMoveRawPP;
+    if (mvRaw == null && pick.steamOpen > 1 && pick.steamCur > 1)
+      mvRaw = (1 / (+pick.steamCur) - 1 / (+pick.steamOpen)) * 100;
     const _driftHold = (mvRaw != null && Math.abs(mv - mvRaw) >= 1.5);
     const sm = pick.sharpMoveDetails || {};
     let pinnMeta = _driftHold
