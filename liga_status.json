@@ -10,6 +10,15 @@
       "note": "Jung/keine Resolves = ok; aufgelöste Picks ohne Ledger/Closing = tot."
     },
     {
+      "id": "odds_field_plausible",
+      "label": "Odds-Feld 1X2 plausibel (kein Platzhalter-Leck)",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "EINE Quelle gegen die Platzhalter-Klasse. Schreibquelle = build_odds_entry (gate+carry). Leck hier = ein Fetcher schrieb rohes 1X2 ohne Gate."
+    },
+    {
       "id": "kickoff_present",
       "label": "Kickoff-Zeit real + plausibel",
       "severity": "error",
@@ -176,7 +185,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "48/48 mit AH · 16/48 mit Public-O/U."
+      "note": "48/48 mit AH · 17/48 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -287,7 +296,7 @@
         "517-867: public aus Einzel-Book 'marathonbet' statt Konsens",
         "523-490: public aus Einzel-Book 'marathonbet' statt Konsens",
         "529-531: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "530-535: public aus Einzel-Book 'marathonbet' statt Konsens",
+        "530-535: public aus Einzel-Book 'williamhill' statt Konsens",
         "532-543: public aus Einzel-Book 'marathonbet' statt Konsens",
         "536-728: public aus Einzel-Book 'williamhill' statt Konsens",
         "538-727: public aus Einzel-Book 'williamhill' statt Konsens"
@@ -521,5 +530,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-07-21T19:15:52.515606+00:00"
+  "generatedAt": "2026-07-22T19:03:01.427632+00:00"
 }

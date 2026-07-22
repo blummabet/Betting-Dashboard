@@ -19,6 +19,15 @@
       "note": "Jung/keine Resolves = ok; aufgelöste Picks ohne Ledger/Closing = tot."
     },
     {
+      "id": "odds_field_plausible",
+      "label": "Odds-Feld 1X2 plausibel (kein Platzhalter-Leck)",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "EINE Quelle gegen die Platzhalter-Klasse. Schreibquelle = build_odds_entry (gate+carry). Leck hier = ein Fetcher schrieb rohes 1X2 ohne Gate."
+    },
+    {
       "id": "kickoff_present",
       "label": "Kickoff-Zeit real + plausibel",
       "severity": "error",
@@ -70,21 +79,21 @@
       "ok": false,
       "nFail": 16,
       "failures": [
-        "1598-9569: Margin 2.894 unplausibel",
-        "1604-1607: Margin 2.642 unplausibel",
-        "20787-1610: Margin 2.894 unplausibel",
-        "1615-1601: Margin 2.534 unplausibel",
-        "1600-16489: Margin 2.903 unplausibel",
-        "1612-1603: Margin 2.894 unplausibel",
-        "1609-1608: Margin 2.696 unplausibel",
-        "25484-1597: Margin 2.448 unplausibel",
-        "1599-1595: Margin 2.624 unplausibel",
-        "1613-2242: Margin 2.913 unplausibel",
-        "1614-9568: Margin 1.580 unplausibel",
-        "1602-18310: Margin 2.766 unplausibel",
-        "1616-1611: Margin 2.913 unplausibel",
-        "1596-1605: Margin 2.903 unplausibel",
-        "1617-1606: Margin 2.885 unplausibel",
+        "1598-9569: 1X2 unvollständig hw=None dr=None aw=None",
+        "1604-1607: 1X2 unvollständig hw=None dr=None aw=None",
+        "20787-1610: 1X2 unvollständig hw=None dr=None aw=None",
+        "1615-1601: 1X2 unvollständig hw=None dr=None aw=None",
+        "1600-16489: 1X2 unvollständig hw=None dr=None aw=None",
+        "1612-1603: 1X2 unvollständig hw=None dr=None aw=None",
+        "1609-1608: 1X2 unvollständig hw=None dr=None aw=None",
+        "25484-1597: 1X2 unvollständig hw=None dr=None aw=None",
+        "1599-1595: 1X2 unvollständig hw=None dr=None aw=None",
+        "1613-2242: 1X2 unvollständig hw=None dr=None aw=None",
+        "1614-9568: 1X2 unvollständig hw=None dr=None aw=None",
+        "1602-18310: 1X2 unvollständig hw=None dr=None aw=None",
+        "1616-1611: 1X2 unvollständig hw=None dr=None aw=None",
+        "1596-1605: 1X2 unvollständig hw=None dr=None aw=None",
+        "1617-1606: 1X2 unvollständig hw=None dr=None aw=None",
         "1607-1603: 1X2 unvollständig hw=None dr=None aw=None"
       ],
       "note": "Quelle für Modell-Baseline + Edge."
@@ -233,7 +242,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "30/30 mit AH · 30/30 mit Public-O/U."
+      "note": "15/15 mit AH · 15/15 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -600,5 +609,5 @@
     }
   ],
   "nFail": 8,
-  "generatedAt": "2026-07-21T20:25:56.822144+00:00"
+  "generatedAt": "2026-07-22T09:30:51.804361+00:00"
 }
