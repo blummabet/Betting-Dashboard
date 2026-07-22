@@ -2831,9 +2831,15 @@ function _renderWmMarketTable() {
         const updStr = d.updatedAt
           ? ` <span style="color:#484f58;font-size:10px;font-weight:400">(${new Date(d.updatedAt).toLocaleTimeString('de-AT', {hour:'2-digit',minute:'2-digit'})})</span>`
           : '';
-        const breakdown = (d.usdc_e > 0.01)
-          ? ` <span style="color:#484f58;font-size:10px">(+$${d.usdc_e.toFixed(2)} USDC.e)</span>`
-          : '';
+        // total = Wallet-Equity (frei + Positionen). Aufschlüsselung zeigen, damit klar ist,
+        // warum die Zahl über dem freien, setzbaren Guthaben liegt (Lucas 22.07.2026).
+        const pos = Number(d.positions) || 0;
+        let breakdown = '';
+        if (pos > 0.01) {
+          breakdown = ` <span style="color:#484f58;font-size:10px">($${(Number(d.usdc)||0).toFixed(2)} frei + $${pos.toFixed(2)} in Positionen)</span>`;
+        } else if (d.usdc_e > 0.01) {
+          breakdown = ` <span style="color:#484f58;font-size:10px">(+$${d.usdc_e.toFixed(2)} USDC.e)</span>`;
+        }
         el.innerHTML = `$${total.toFixed(2)} USDC${breakdown}${updStr}`;
       })
       .catch(() => {

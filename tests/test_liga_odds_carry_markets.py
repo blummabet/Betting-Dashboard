@@ -83,7 +83,17 @@ class TestOuCarry:
 
     def test_1x2_wird_immer_frisch_gesetzt(self, F):
         """1X2 (der Sharp-Anker) kommt zuverlässig und soll NICHT getragen werden — sonst
-        würde eine tote Linie als aktuell verkauft. Nur die lückenhaften Märkte werden getragen."""
+        würde eine tote Linie als aktuell verkauft. Nur die lückenhaften Märkte werden getragen.
+        22.07.2026: frisches Tripel muss PLAUSIBEL sein (Platzhalter-Gate) — 2.50/3.30/2.80 ist ein
+        echtes Heim-Underdog-1X2 (Overround ~1.06), kein Underround-Artefakt."""
         e1 = F.build_odds_entry(_mit_ou(), {}, "2026-07-15T10:00:00Z")
-        e2 = F.build_odds_entry(_ohne_ou(hw=2.50), e1, "2026-07-15T12:00:00Z")
+        e2 = F.build_odds_entry(_ohne_ou(hw=2.50, dr=3.30, aw=2.80), e1, "2026-07-15T12:00:00Z")
         assert e2.get("hw") == 2.50, "1X2 muss der frische Wert sein, nicht der alte"
+
+    def test_implausibles_1x2_wird_nicht_frisch_uebernommen(self, F):
+        """22.07.2026 (Lucas: „fix das ein für alle mal") — ein implausibles frisches 1X2
+        (Platzhalter/Underround) darf NICHT den plausiblen alten Anker überschreiben."""
+        e1 = F.build_odds_entry(_mit_ou(), {}, "2026-07-15T10:00:00Z")
+        e2 = F.build_odds_entry(_ohne_ou(hw=1.04, dr=1.01, aw=1.04), e1, "2026-07-15T12:00:00Z")
+        assert e2.get("hw") == 1.90, "Platzhalter darf den echten Anker nicht ersetzen"
+        assert e2.get("oddsCarriedAt") == "2026-07-15T12:00:00Z"

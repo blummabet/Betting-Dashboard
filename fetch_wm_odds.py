@@ -1190,8 +1190,14 @@ def main():
             "ahA_n150", "ahA_n175", "ahA_n200", "ahA_n225",
             "cornerLine", "cOver", "cUnder",
         )
+        # 22.07.2026 (Lucas: „fix das EIN FÜR ALLE MAL") — Platzhalter-Klasse (1.04/1.04/1.04)
+        # nie roh als 1X2-Anker schreiben. Gleicher Gate+Carry wie fetch_liga_odds.build_odds_entry.
+        from odds_plausibility import plausible_1x2 as _pl1x2
+        _new_1x2_ok = bool(h2h) and _pl1x2(h2h.get("hw"), h2h.get("dr"), h2h.get("aw"))
+        _old_1x2_ok = _pl1x2(existing.get("hw"), existing.get("dr"), existing.get("aw"))
+
         odds_open = existing.get("odds_open")
-        if not odds_open and h2h:
+        if not odds_open and h2h and _new_1x2_ok:
             odds_open = {"hw": h2h["hw"], "dr": h2h["dr"], "aw": h2h["aw"]}
             for k in _OPEN_TB_KEYS:
                 if tb.get(k):
@@ -1208,13 +1214,18 @@ def main():
                 odds_open["ahLadder"] = tb["ahLadder"]
 
         new_entry = {
-            "hw":         h2h["hw"],
-            "dr":         h2h["dr"],
-            "aw":         h2h["aw"],
-            "bookmaker":  h2h["bookmaker"],
             "odds_open":  odds_open,
             "updatedAt":  now_iso,
         }
+        # 1X2-Anker gate+carry: nur plausibel schreiben; sonst letzte plausible tragen;
+        # sonst absent lassen (kein Fake-Anker) — der Struktur-Guard prüft das Feld.
+        if _new_1x2_ok:
+            new_entry["hw"], new_entry["dr"], new_entry["aw"] = h2h["hw"], h2h["dr"], h2h["aw"]
+            new_entry["bookmaker"] = h2h["bookmaker"]
+        elif _old_1x2_ok:
+            new_entry["hw"], new_entry["dr"], new_entry["aw"] = existing["hw"], existing["dr"], existing["aw"]
+            new_entry["bookmaker"] = existing.get("bookmaker")
+            new_entry["oddsCarriedAt"] = now_iso
         # Fix 08.06.2026: Public-Bookie-Quoten durchreichen.
         # _extract_h2h_odds() liefert die als public_hw/dr/aw/public_bookmaker
         # für den PublicStaticBias-Signal (Sharp vs Public-Konsens).

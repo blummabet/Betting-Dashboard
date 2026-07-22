@@ -44,6 +44,33 @@ class TestOpeningPlausibility(unittest.TestCase):
         self.assertNotIn("hw", e["odds_open"])   # nichts Plausibles → kein Müll-Freeze
 
 
+class TestCurrentOddsGate(unittest.TestCase):
+    """22.07.2026 (Lucas: „fix das ein für alle mal"). Die WIEDERKEHRENDE Platzhalter-Klasse: das
+    AKTUELLE 1X2 (hw/dr/aw im `odds`-Feld) ging bisher ROH rein → Fair/Edge/Trade rechneten gegen
+    Müll. Jetzt gate+carry an der Schreibquelle: nie ein implausibles 1X2 im odds-Feld."""
+
+    def test_plausibel_wird_geschrieben(self):
+        e = L.build_odds_entry({"hw": 2.1, "dr": 3.4, "aw": 3.3, "bookmaker": "pinnacle"}, {}, "T", hist=[])
+        self.assertEqual((e["hw"], e["dr"], e["aw"]), (2.1, 3.4, 3.3))
+
+    def test_platzhalter_wird_NICHT_geschrieben_sondern_getragen(self):
+        existing = {"hw": 2.0, "dr": 3.5, "aw": 3.6, "bookmaker": "pinnacle"}
+        e = L.build_odds_entry({"hw": 1.04, "dr": 1.01, "aw": 1.04}, existing, "T", hist=[])
+        self.assertEqual((e["hw"], e["dr"], e["aw"]), (2.0, 3.5, 3.6), "Platzhalter → letzte plausible Quote tragen")
+        self.assertEqual(e.get("oddsCarriedAt"), "T", "getragen muss markiert sein")
+
+    def test_platzhalter_ohne_historie_laesst_1x2_ABSENT(self):
+        e = L.build_odds_entry({"hw": 1.04, "dr": 1.01, "aw": 1.04}, {}, "T", hist=[])
+        self.assertIsNone(e.get("hw"), "kein Fake-Anker — 1X2 bleibt weg statt Platzhalter zu schreiben")
+        self.assertIsNone(e.get("aw"))
+
+    def test_kein_platzhalter_ueberschreibt_gute_quote(self):
+        # frische gute Quote gewinnt IMMER gegen alte
+        existing = {"hw": 5.0, "dr": 4.0, "aw": 1.6}
+        e = L.build_odds_entry({"hw": 2.1, "dr": 3.4, "aw": 3.3}, existing, "T", hist=[])
+        self.assertEqual(e["hw"], 2.1)
+
+
 class TestNameMatch(unittest.TestCase):
     def test_norm_strips_rechtsform_accents(self):
         self.assertEqual(L._norm_name("Atlético Madrid"), "atletico madrid")

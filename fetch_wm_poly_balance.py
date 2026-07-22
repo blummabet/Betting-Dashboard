@@ -26,6 +26,7 @@ import json
 import os
 import sys
 import time
+import urllib.request
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -41,12 +42,19 @@ CLOB_HOST = "https://clob.polymarket.com"
 CHAIN_ID  = 137  # Polygon
 
 
-def _save(usdc: float, usdc_e: float, address: str, error: str | None = None):
+def _save(usdc: float, usdc_e: float, address: str, error: str | None = None,
+          positions: float | None = None):
     now = datetime.now(timezone.utc).isoformat()
+    # 22.07.2026 (Lucas: „Balance passt nicht — sind 122,96, nicht 99,93"): `usdc` ist NUR das freie
+    # CLOB-Collateral (was man setzen kann). Das echte Wallet-Guthaben = frei + Wert der OFFENEN
+    # Positionen. `total` bildet jetzt das Wallet-Equity ab (= was Polymarket anzeigt); `usdc` bleibt
+    # unverändert die Sizing-Grundlage (gesperrtes Positionsgeld ist nicht setzbar).
+    pos = round(positions, 4) if positions is not None else 0.0
     out = {
-        "usdc":      round(usdc,   4),
+        "usdc":      round(usdc,   4),   # freies Collateral → Bet-Sizing
         "usdc_e":    round(usdc_e, 4),
-        "total":     round(usdc + usdc_e, 4),
+        "positions": pos,                # Marktwert der offenen Positionen
+        "total":     round(usdc + usdc_e + pos, 4),   # Wallet-Equity (Header)
         "address":   address,
         "updatedAt": now,
     }
@@ -211,6 +219,47 @@ def fetch_balance_via_clob_client(private_key: str, funder_addr: str,
     return None
 
 
+POSITIONS_URL = "https://data-api.polymarket.com/positions?user={user}&sizeThreshold=0.01"
+
+
+def fetch_positions_value(address: str) -> float | None:
+    """Marktwert aller offenen Wallet-Positionen (data-api /positions). Bevorzugt `currentValue`,
+    fällt auf size×curPrice zurück. None = API-Fehler (Aufrufer behält alte Zahl), 0.0 = keine
+    Positionen. Read-only — kein Handel."""
+    import urllib.request
+    if not address:
+        return None
+    url = POSITIONS_URL.format(user=address)
+    req = urllib.request.Request(url, headers={"User-Agent": "BetEdge/1.0", "Accept": "application/json"})
+    try:
+        with urllib.request.urlopen(req, timeout=15) as r:
+            raw = json.loads(r.read())
+    except Exception as e:
+        print(f"  ⚠️  Positions-Fetch fehlgeschlagen: {e}")
+        return None
+    rows = raw if isinstance(raw, list) else (raw.get("positions") or raw.get("data") or [])
+    total = 0.0
+    for row in rows:
+        if not isinstance(row, dict):
+            continue
+        cv = row.get("currentValue")
+        try:
+            if cv is not None:
+                total += float(cv)
+                continue
+        except (TypeError, ValueError):
+            pass
+        # Fallback: size × curPrice
+        try:
+            sz = float(row.get("size") or row.get("shares") or 0)
+            px = float(row.get("curPrice") or row.get("current_price") or 0)
+            total += sz * px
+        except (TypeError, ValueError):
+            continue
+    print(f"  📊 Offene Positionen: ${total:.2f} (in {len(rows)} Positionen)")
+    return round(total, 4)
+
+
 def main():
     now_utc = datetime.now(timezone.utc)
     print(f"💰  fetch_wm_poly_balance.py — py-clob-client-v2")
@@ -233,7 +282,8 @@ def main():
         existing = _load_existing()
         _save(existing.get("usdc", 0.0), existing.get("usdc_e", 0.0),
               funder_addr or existing.get("address", ""),
-              error=f"Missing env: {', '.join(missing)}")
+              error=f"Missing env: {', '.join(missing)}",
+              positions=existing.get("positions"))
         return
 
     balance_raw = fetch_balance_via_clob_client(
@@ -244,7 +294,8 @@ def main():
         print(f"\n⚠️   Balance-Fetch fehlgeschlagen — bestehende Balance wird behalten")
         existing = _load_existing()
         _save(existing.get("usdc", 0.0), existing.get("usdc_e", 0.0),
-              funder_addr, error="fetch_failed")
+              funder_addr, error="fetch_failed",
+              positions=existing.get("positions"))
         return
 
     # USDC hat 6 Dezimalstellen — API gibt Rohwert in kleinster Einheit zurück
@@ -252,9 +303,15 @@ def main():
     USDC_DECIMALS = 1_000_000
     balance = balance_raw / USDC_DECIMALS
 
-    out = _save(balance, 0.0, funder_addr)
+    # Wert der offenen Positionen dazu — echtes Wallet-Guthaben = frei + Positionen.
+    positions = fetch_positions_value(funder_addr)
+    if positions is None:   # API-Fehler → alten Positions-Wert behalten, nicht auf 0 fallen
+        positions = _load_existing().get("positions")
+
+    out = _save(balance, 0.0, funder_addr, positions=positions)
     print(f"\n✅  {OUT_FILE.name} geschrieben")
-    print(f"    Handelbare CLOB Balance: ${out['total']:.2f} USDC  (Rohwert: {int(balance_raw)})")
+    print(f"    Frei (setzbar): ${out['usdc']:.2f}  +  Positionen: ${out['positions']:.2f}  "
+          f"=  Wallet-Equity: ${out['total']:.2f} USDC")
 
 
 if __name__ == "__main__":

@@ -355,10 +355,23 @@ def build_odds_entry(prices: dict, existing: dict, now_iso: str, hist: list | No
         if prices.get(k) and not odds_open.get(k):
             odds_open[k] = prices[k]
     entry = {
-        "hw": prices.get("hw"), "dr": prices.get("dr"), "aw": prices.get("aw"),
-        "bookmaker": prices.get("bookmaker"),
         "odds_open": odds_open, "updatedAt": now_iso,
     }
+    # ── 22.07.2026 (Lucas, ENDGÜLTIG): 1X2 NUR schreiben wenn PLAUSIBEL ──────────────────────────
+    # Die Platzhalter-Quoten-Klasse (1.04/1.04/1.04, Overround ≫1.3) tauchte immer wieder auf, weil
+    # sie hier — an der SCHREIBQUELLE — roh ins `odds`-Feld gingen und dann jeder Verbraucher
+    # (Fair/Edge/Trade/Signal) einzeln dagegen gehärtet werden musste. Schluss damit: dasselbe
+    # gate+carry-Muster wie O/U/AH. Plausibel → schreiben. Implausibel/fehlend → letzte PLAUSIBLE
+    # Quote tragen. Nichts Plausibles → 1X2 GAR NICHT setzen (kein Fake-Anker, lieber „kein Anker").
+    _new_ok = _plausible_1x2(prices.get("hw"), prices.get("dr"), prices.get("aw"))
+    _old_ok = _plausible_1x2(existing.get("hw"), existing.get("dr"), existing.get("aw"))
+    if _new_ok:
+        entry["hw"], entry["dr"], entry["aw"] = prices["hw"], prices["dr"], prices["aw"]
+        entry["bookmaker"] = prices.get("bookmaker")
+    elif _old_ok:
+        entry["hw"], entry["dr"], entry["aw"] = existing["hw"], existing["dr"], existing["aw"]
+        entry["bookmaker"] = existing.get("bookmaker")
+        entry["oddsCarriedAt"] = now_iso   # 1X2 ist getragen, nicht frisch (Guard/Frontend sehen es)
     # ── 15.07.2026 (Lucas: „quotentechnisch was von MLS?") — O/U-QUOTEN NICHT LÖSCHEN ──
     # BEFUND: TheOddsAPI liefert `totals` für die MLS nur sporadisch (bei 14 von 16 Fetch-Zyklen
     # fehlten sie). Der Eintrag wurde bei JEDEM Lauf komplett neu gebaut und O/U nur übernommen,

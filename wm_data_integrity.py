@@ -182,6 +182,41 @@ def check_learning_loop_alive(ctx):
 
 
 @integrity_check
+def check_odds_field_plausible(ctx):
+    """22.07.2026 (Lucas: „fix das EIN FÜR ALLE MAL") — die wiederkehrende Platzhalter-Klasse
+    (1.04/1.04/1.04, dr=1.01 …) rutschte 5×+ still ins `odds`-Feld, weil jeder Writer separat
+    geprüft wurde und keiner die ANKUNFT im Feld prüfte. Fair/Edge/Steam/Trade rechnen alle gegen
+    dieses aktuelle 1X2 — ein Platzhalter dort ist ein stiller Geld-Bug. Dieser Guard ist die EINE
+    Quelle: scannt das geschriebene odds-Feld auf implausible aktuelle 1X2, egal welcher Fetcher es
+    schrieb. Jede künftige Leck-Stelle fällt hier auf, nicht erst in einem Fake-Pick.
+    severity=error: ein Platzhalter im aktiven Odds-Anker ist kein kosmetisches Problem."""
+    try:
+        from odds_plausibility import plausible_1x2 as _pl
+    except Exception as e:
+        return _chk("odds_field_plausible", "Odds-Feld 1X2 plausibel (kein Platzhalter-Leck)",
+                    "error", [f"Guard selbst gescheitert: {e}"])
+    fails = []
+    for key, snap in (ctx.odds or {}).items():
+        if not isinstance(snap, dict):
+            continue
+        hw, dr, aw = snap.get("hw"), snap.get("dr"), snap.get("aw")
+        if hw is None and dr is None and aw is None:
+            continue   # 1X2 bewusst abwesend (gate ließ nichts Plausibles durch) → korrekt, kein Leck
+        if not _pl(hw, dr, aw):
+            ov = None
+            try:
+                ov = round(sum(1.0 / x for x in (hw, dr, aw) if x), 3)
+            except Exception:
+                pass
+            fails.append(f"{key}: aktuelles 1X2 hw={hw} dr={dr} aw={aw} implausibel"
+                         + (f" (Overround {ov})" if ov else ""))
+    return _chk("odds_field_plausible", "Odds-Feld 1X2 plausibel (kein Platzhalter-Leck)",
+                "error", fails,
+                note="EINE Quelle gegen die Platzhalter-Klasse. Schreibquelle = build_odds_entry "
+                     "(gate+carry). Leck hier = ein Fetcher schrieb rohes 1X2 ohne Gate.")
+
+
+@integrity_check
 def check_venue_resolves(ctx):
     if ctx.is_liga:
         return None   # WM-Venue-Map gilt nicht für Liga-Stadien

@@ -222,6 +222,30 @@ class TestNewIntegrityGuards(unittest.TestCase):
         self.assertTrue(c["ok"])
 
 
+class TestOddsFieldPlausibleGuard(unittest.TestCase):
+    """22.07.2026 (Lucas: „fix das EIN FÜR ALLE MAL") — EINE Quelle gegen die Platzhalter-Klasse.
+    Scannt das geschriebene odds-Feld auf implausible aktuelle 1X2, egal welcher Fetcher es schrieb.
+    Absentes 1X2 (Gate ließ nichts durch) ist KORREKT, kein Leck."""
+
+    def _run(self, odds):
+        return run_checks({"groups": {}, "odds": odds}, {}, {}, {}, now=NOW,
+                          auto_bets={"bets": []}, history={})
+
+    def test_platzhalter_1x2_wird_geflaggt(self):
+        c = _result(self._run({"ENG-PAN": {"hw": 1.04, "dr": 1.01, "aw": 1.04}}), "odds_field_plausible")
+        self.assertFalse(c["ok"])
+        self.assertEqual(c["severity"], "error")
+
+    def test_plausibles_1x2_ok(self):
+        c = _result(self._run({"ENG-PAN": {"hw": 2.1, "dr": 3.4, "aw": 3.3}}), "odds_field_plausible")
+        self.assertTrue(c["ok"])
+
+    def test_abwesendes_1x2_ist_ok(self):
+        # Gate ließ nichts Plausibles durch → hw/dr/aw absent → KEIN Leck, nur O/U vorhanden.
+        c = _result(self._run({"ENG-PAN": {"o25": 1.9, "u25": 1.9}}), "odds_field_plausible")
+        self.assertTrue(c["ok"])
+
+
 class TestSignalCoverageGuard(unittest.TestCase):
     """Coverage-Guard (21.06.2026, Lucas-Sorge: 'finden die Guards stille Fehler?').
     Schlägt an, wenn ein zuletzt zuverlässig feuerndes Signal heute slatewide 0 zeigt.
