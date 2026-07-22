@@ -28,6 +28,15 @@
       "note": "EINE Quelle gegen die Platzhalter-Klasse. Schreibquelle = build_odds_entry (gate+carry). Leck hier = ein Fetcher schrieb rohes 1X2 ohne Gate."
     },
     {
+      "id": "closing_prematch",
+      "label": "Closing-Snapshot vor Anpfiff (kein In-Play-Leck)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "frozenAt nach Anpfiff = Live-Quoten. Resolver nullt den CLV; Write-Seite sollte Closing spätestens bei Anpfiff einfrieren."
+    },
+    {
       "id": "kickoff_present",
       "label": "Kickoff-Zeit real + plausibel",
       "severity": "error",
@@ -77,7 +86,7 @@
       "label": "Pinnacle-1X2 vollständig + plausibel",
       "severity": "warn",
       "ok": false,
-      "nFail": 16,
+      "nFail": 14,
       "failures": [
         "1598-9569: 1X2 unvollständig hw=None dr=None aw=None",
         "1604-1607: 1X2 unvollständig hw=None dr=None aw=None",
@@ -89,12 +98,10 @@
         "25484-1597: 1X2 unvollständig hw=None dr=None aw=None",
         "1599-1595: 1X2 unvollständig hw=None dr=None aw=None",
         "1613-2242: 1X2 unvollständig hw=None dr=None aw=None",
-        "1614-9568: 1X2 unvollständig hw=None dr=None aw=None",
         "1602-18310: 1X2 unvollständig hw=None dr=None aw=None",
         "1616-1611: 1X2 unvollständig hw=None dr=None aw=None",
         "1596-1605: 1X2 unvollständig hw=None dr=None aw=None",
-        "1617-1606: 1X2 unvollständig hw=None dr=None aw=None",
-        "1607-1603: 1X2 unvollständig hw=None dr=None aw=None"
+        "1617-1606: 1X2 unvollständig hw=None dr=None aw=None"
       ],
       "note": "Quelle für Modell-Baseline + Edge."
     },
@@ -111,11 +118,9 @@
       "id": "closing_capture_alive",
       "label": "Closing-Erfassung liefert Daten (CLV lebt)",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "5 Spiele in 14 Tagen gespielt, aber die Closing-Datei ist LEER → CLV-Kette tot. Prüfen: bekommt compute_closing ein hours_to_ko? Läuft capture-closing-*?"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "fetch_liga_odds reicht kickoff → compute_closing; capture-closing-* läuft alle 15min in den Anpfiff-Bändern."
     },
     {
@@ -140,11 +145,9 @@
       "id": "injuries_plausible",
       "label": "Ausfall-Liste = aktueller Stand (kein Archiv)",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "9568: 38 Ausfälle — unplausibel hoch"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "fetch_wm_injuries dedupliziert je Spieler (jüngster gewinnt) + verwirft Einträge älter als INJURY_RECENT_DAYS."
     },
     {
@@ -242,7 +245,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "15/15 mit AH · 15/15 mit Public-O/U."
+      "note": "16/16 mit AH · 16/16 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -320,11 +323,9 @@
       "id": "public_consensus",
       "label": "Public-Konsens (Soft-Books) vorhanden",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "1607-1603: kein public_hw"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Ohne public_* feuert public_static_bias nicht."
     },
     {
@@ -483,11 +484,9 @@
       "id": "played_games_resolved",
       "label": "Gespielte Spiele haben Endstand",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "1607-1603: Anpfiff 2026-07-17T00:30 vorbei, aber Ergebnis-Status 'leer' — Result-Fetch-Lücke?"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "fetch_wm_match_results muss FT-Endstände schreiben. Fehlt's > 5h nach Anpfiff: Team-Matching (Orientierung/Team-ID) oder API-Football-Lag prüfen."
     },
     {
@@ -608,6 +607,6 @@
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 8,
-  "generatedAt": "2026-07-22T09:30:51.804361+00:00"
+  "nFail": 4,
+  "generatedAt": "2026-07-22T20:33:29.631883+00:00"
 }
