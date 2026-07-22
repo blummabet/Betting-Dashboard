@@ -2061,8 +2061,16 @@ function _renderCrossSportRadar() {
     <b style="color:#a78bfa">Poly vs. scharfe Pinnacle</b> über mehrere Sportarten — <b>unabhängig</b> von unserem Top-5/MLS-Trading. Große Lücke = Kandidat, aber erst echt, wenn sie über die Tage <b>konvergiert</b> (Poly läuft zur Pinnacle). Bleibt sie stehen, ist sie meist ein Regel-/Marge-Artefakt. Standardisierte Märkte (Moneyline), keine Outrights. Read-only.</div>`;
 
   if (!disc.length) {
+    // 22.07.2026 (Lucas): ehrlich unterscheiden — „vergleicht, keine Lücke" (gesund) vs. „noch keine
+    // Daten" (Runner lief nicht). matched/polyRowsSeen kommen aus poly_cross_sport.json.
+    const seen = rep.polyRowsSeen || 0, matched = rep.matched || 0, pinn = rep.pinnKeys || 0;
+    if (matched > 0 || seen > 0) {
+      return intro + `<div style="max-width:960px;margin:0 auto;padding:40px 24px;text-align:center;color:var(--muted);font-size:13px;line-height:1.6;">
+        ✅ Aktuell <b>keine Lücke ≥6pp</b>.<br><span style="font-size:11px;opacity:.85;">
+        <b>${matched}</b> Märkte gegen die scharfe Pinnacle verglichen (${seen} Poly-Märkte gesehen, ${pinn} Pinnacle-Gegenstücke). Poly und Pinnacle liegen eng beieinander — auf standardisierten, liquiden Märkten der Normalfall. Eine echte Lücke erscheint hier, sobald Poly spürbar von der Pinnacle abweicht.</span></div>`;
+    }
     return intro + `<div style="max-width:960px;margin:0 auto;padding:40px 24px;text-align:center;color:var(--muted);font-size:13px;line-height:1.6;">
-      🎯 Noch keine Lücken gelistet.<br><span style="font-size:11px;opacity:.8;">Der Radar läuft am Mac-Runner (Poly ist EU-geoblockt) und füllt sich, sobald <code>poly_cross_sport.json</code> befüllt ist. Bis dahin ist das die Vorschau.</span></div>`;
+      🎯 Noch keine Daten.<br><span style="font-size:11px;opacity:.8;">Der Radar läuft am Mac-Runner (Poly ist EU-geoblockt) und füllt sich beim nächsten Lauf.</span></div>`;
   }
 
   const rows = disc.slice(0, 30).map(d => {
