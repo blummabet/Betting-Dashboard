@@ -415,3 +415,53 @@ test('Cross-Sport-Radar: Intro nennt Konvergenz als Echtheits-Test', () => {
   w.POLY_CROSS_SPORT = { discrepancies: [] };
   assert.match(w._renderCrossSportRadar(), /konvergiert/i);
 });
+
+// ── Poly Radar (eigener Menüpunkt, 22.07.2026, Lucas: „alle Poly-Sport-Märkte vereint") ──
+function _radarData() {
+  return {
+    polyRowsSeen: 60, matched: 40, pinnKeys: 40,
+    trackRecord: { tracked: 12, converged: 7 },
+    discrepancies: [
+      { id: 'soccer_mls|a|hw', sport: 'soccer_mls', event: 'Philadelphia vs NY Red Bulls',
+        outcome: 'Heim', polyPP: 62, pinnPP: 55, gapPP: 7.0, convergePP: 3.0 },
+      { id: 'basketball_nba|b|lakers', sport: 'basketball_nba', event: 'Lakers vs Celtics',
+        outcome: 'Lakers', polyPP: 62, pinnPP: 54, gapPP: 8.0, convergePP: null },
+      { id: 'boxing_boxing|c|x', sport: 'boxing_boxing', event: 'A vs B',
+        outcome: 'A', polyPP: 70, pinnPP: 60, gapPP: 10.0, convergePP: -2.0 },
+    ],
+  };
+}
+
+test('Poly Radar: exportiert Render + Filter global', () => {
+  const w = loadRenderer();
+  assert.equal(typeof w._renderPolyRadar, 'function');
+  assert.equal(typeof w._setPolyRadarCat, 'function');
+});
+
+test('Poly Radar: Track-Record-Zeile + Fußball- und US-Sport-Zeilen erscheinen', () => {
+  const w = loadRenderer();
+  w.POLY_CROSS_SPORT = _radarData();
+  const html = w._renderPolyRadar();
+  assert.match(html, /7\/12 konvergiert/, 'Track-Record muss angezeigt werden');
+  assert.match(html, /Philadelphia vs NY Red Bulls/, 'Fußball-Zeile fehlt');
+  assert.match(html, /Lakers vs Celtics/, '2-Wege-Zeile fehlt');
+  assert.match(html, /MLS/, 'Sport-Label MLS fehlt');
+});
+
+test('Poly Radar: Kategorie-Filter zeigt nur die gewählte Sportgruppe', () => {
+  const w = loadRenderer();
+  w.document.body.innerHTML = '<div id="polyRadarPanel"></div>';
+  w.POLY_CROSS_SPORT = _radarData();
+  w._setPolyRadarCat('fussball');
+  const html = w.document.getElementById('polyRadarPanel').innerHTML;
+  assert.match(html, /Philadelphia vs NY Red Bulls/, 'Fußball muss bleiben');
+  assert.ok(!/Lakers vs Celtics/.test(html), 'US-Sport muss ausgefiltert sein');
+  w._setPolyRadarCat('all');   // zurücksetzen für Folge-Tests
+});
+
+test('Poly Radar: leerer, aber verglichener Zustand ist ehrlich (keine Lücke ≠ keine Daten)', () => {
+  const w = loadRenderer();
+  w.POLY_CROSS_SPORT = { polyRowsSeen: 40, matched: 30, discrepancies: [] };
+  const html = w._renderPolyRadar();
+  assert.match(html, /keine Lücke/i, 'muss „keine Lücke" statt „keine Daten" zeigen');
+});

@@ -162,6 +162,53 @@ class TestMatchedDiagnose:
         assert out["matched"] == 0 and out["pinnKeys"] == 2
 
 
+class TestFootballUnified:
+    """22.07.2026 (Lucas: „alle Poly-Sport-Märkte an einem Ort, vereint"). Fußball ist 3-Wege und
+    wird von der Gamma-2-Wege-Schicht übersprungen — die Poly-vs-Pinnacle-Fehlbepreisung rechnen
+    wir aber pro Spiel längst. Diese Tests fixieren, dass sie in dieselbe Board-Form fließt und
+    dass Platzhalter (gegatete devig_1x2) NICHT als Fake-Fehlbepreisung durchkommen."""
+
+    def _odds(self, **extra):
+        base = {"hw": 1.70, "dr": 4.31, "aw": 4.46,
+                "poly_hw": 0.62, "poly_dr": 0.22, "poly_aw": 0.16, "poly_vol": 12000}
+        base.update(extra)
+        return {"1599-1602": base}
+
+    def test_plausibles_spiel_gibt_3_rows_und_index(self):
+        rows, idx = X.football_rows_and_index(self._odds(), "soccer_mls",
+                                              {"1599-1602": ("Philadelphia", "NY Red Bulls")})
+        assert len(rows) == 3 and len(idx) == 3
+        assert rows[0]["event"] == "Philadelphia vs NY Red Bulls"
+        assert {r["outcome"] for r in rows} == {"Heim", "Remis", "Auswärts"}
+        # Poly Heim 0.62 vs de-viggte Pinnacle-Fair (~0.57) → ~5pp Lücke, positiv (Poly zu hoch)
+        disc = X.compute_discrepancies(rows, idx, {"min_gap_pp": 1, "min_vol_usd": 0})
+        heim = next(d for d in disc if d["outcome"] == "Heim")
+        assert heim["gapPP"] > 0 and "faden" in heim["richtung"]
+
+    def test_platzhalter_1x2_wird_uebersprungen(self):
+        # 1.04/1.04/1.04 → devig_1x2 gibt None → keine Fake-Fehlbepreisung im Board.
+        rows, idx = X.football_rows_and_index(
+            {"1-2": {"hw": 1.04, "dr": 1.04, "aw": 1.04,
+                     "poly_hw": 0.6, "poly_dr": 0.2, "poly_aw": 0.2, "poly_vol": 9000}},
+            "soccer_mls")
+        assert rows == [] and idx == {}
+
+    def test_ohne_poly_preis_kein_row(self):
+        rows, idx = X.football_rows_and_index(
+            {"1-2": {"hw": 1.7, "dr": 4.3, "aw": 4.5}}, "soccer_mls")
+        assert rows == [] and idx == {}
+
+    def test_fallback_auf_ids_ohne_namen(self):
+        rows, _ = X.football_rows_and_index(self._odds(), "soccer_mls")   # keine names-Map
+        assert rows[0]["event"] == "1599 vs 1602"
+
+    def test_track_record_zaehlt_konvergenz(self):
+        hist = {"a": {"firstGapPP": 8.0, "lastGapPP": 3.0},    # 5pp geschlossen → konvergiert
+                "b": {"firstGapPP": 6.0, "lastGapPP": 6.5},    # steht/wächst → nicht
+                "c": {"firstGapPP": -9.0, "lastGapPP": -2.0}}  # Betrag geschrumpft → konvergiert
+        assert X._track_record(hist) == {"tracked": 3, "converged": 2}
+
+
 class TestFetchPolyRows:
     def _ev(self, a, b, pa, pb, vol=50000):
         import json as _j

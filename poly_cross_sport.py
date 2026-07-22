@@ -290,9 +290,95 @@ def fetch_poly_rows(sports, gamma_fetch=None) -> list:
     return rows
 
 
+# ── Fußball/MLS: 3-Wege Poly-vs-Pinnacle aus unseren Fixture-Daten ────────────
+# 22.07.2026 (Lucas: „alle Poly-Sport-Märkte an einem Ort, vereint"). Die Gamma-2-Wege-Schicht
+# überspringt Fußball bewusst (1X2 = 3-Wege). Aber Poly-vs-Pinnacle pro Spiel berechnen wir in der
+# Haupt-Pipeline längst — hier ziehen wir es OHNE Neu-Rechnung in dasselbe Board. devig_1x2 ist
+# gegatet: Platzhalter (1.04/1.04/1.04) → None → übersprungen, kein Fake-Anker landet im Radar.
+FOOTBALL_SOURCES = [   # (Fixture-Datei, Sport-Label fürs Board)
+    ("mls-data.json",  "soccer_mls"),
+    ("liga-data.json", "soccer_liga"),
+    ("wm-data.json",   "soccer_wm"),
+]
+_1X2_OUTCOMES = [("hw", "Heim"), ("dr", "Remis"), ("aw", "Auswärts")]
+
+
+def football_rows_and_index(odds: dict, sport_label: str, names: dict | None = None):
+    """Aus einem {matchKey: oddsSnap}-Dict (matchKey='homeId-awayId') Poly-Rows + de-viggten
+    Pinnacle-Index bauen — dieselbe Form wie fetch_poly_rows/fetch_pinnacle_index, damit
+    compute_discrepancies BEIDE Welten einheitlich verarbeitet. REIN + testbar.
+    Nur plausible 1X2 (devig_1x2 gated) und nur Spiele mit Poly-Preis kommen rein.
+    names: {matchKey: (homeName, awayName)} für lesbare Labels (Fallback: die IDs)."""
+    from odds_plausibility import devig_1x2
+    names = names or {}
+    rows, index = [], {}
+    for mk, snap in (odds or {}).items():
+        if not isinstance(snap, dict) or snap.get("poly_hw") is None:
+            continue                       # kein Poly-Preis → nichts zu vergleichen
+        fair = devig_1x2(snap.get("hw"), snap.get("dr"), snap.get("aw"))
+        if fair is None:
+            continue                       # Platzhalter/implausibel → übersprungen
+        fair_by = {"hw": fair["home"], "dr": fair["draw"], "aw": fair["away"]}
+        idh, _, ida = str(mk).partition("-")
+        home, away = names.get(mk, (idh, ida))
+        ek = event_key(str(home), str(away))
+        vol = float(snap.get("poly_vol") or 0)
+        for field, label in _1X2_OUTCOMES:
+            poly_p = snap.get(f"poly_{field}")
+            if poly_p is None:
+                continue
+            rows.append({"sport": sport_label, "event": f"{home} vs {away}", "market": "1X2",
+                         "outcome": label, "prob": poly_p, "vol": vol,
+                         "eventKey": ek, "outcomeKey": field})
+            index[(ek, field)] = fair_by[field]
+    return rows, index
+
+
+def _football_names(data: dict) -> dict:
+    """{'homeId-awayId': (homeName, awayName)} aus allen Fixtures (Gruppen + KO)."""
+    fxs = []
+    for gv in (data.get("groups") or {}).values():
+        if isinstance(gv, dict):
+            fxs += gv.get("fixtures", []) or []
+    fxs += data.get("koFixtures", []) or []
+    out = {}
+    for f in fxs:
+        h, a = f.get("home"), f.get("away")
+        if h is not None and a is not None:
+            out[f"{h}-{a}"] = (f.get("homeName") or h, f.get("awayName") or a)
+    return out
+
+
+def _collect_football():
+    """Fußball-Rows + Index über alle Datensätze mit Poly-Daten. Fehlende Datei = still leer."""
+    rows, index = [], {}
+    for fname, label in FOOTBALL_SOURCES:
+        data = _load(fname)
+        if not data:
+            continue
+        r, i = football_rows_and_index(data.get("odds", {}), label, _football_names(data))
+        rows += r
+        index.update(i)
+    return rows, index
+
+
+def _track_record(hist: dict):
+    """Ehrlichkeits-Kennzahl fürs Board: von allen je verfolgten Lücken — wie viele sind
+    KONVERGIERT (|erste Lücke| − |letzte Lücke| > 1pp = Poly lief zur scharfen Fair)? Das ist
+    der Beleg, ob die gemeldeten Fehlbepreisungen echt waren — und später das Verkaufsargument."""
+    tracked = len(hist or {})
+    converged = sum(1 for v in (hist or {}).values()
+                    if abs(float(v.get("firstGapPP", 0))) - abs(float(v.get("lastGapPP", 0))) > 1.0)
+    return {"tracked": tracked, "converged": converged}
+
+
 def main() -> int:
     sports = _sports()
-    poly_rows = fetch_poly_rows(sports)
+    cross_rows = fetch_poly_rows(sports)
+    # Fußball/MLS kommt aus LOKALEN Fixture-Daten (nicht Poly-Gamma) → auch verfügbar, wenn die
+    # Cross-Sport-Gamma-Schicht mal leer ist. Beide Welten fließen in dasselbe Board.
+    football_rows, football_index = _collect_football()
+    poly_rows = cross_rows + football_rows
     if not poly_rows:
         # Poly nicht erreichbar (Cloud/Sandbox EU-Geoblock, oder Runner-Hiccup). WICHTIG (Wipe-Klasse):
         # ein bestehendes gutes File NICHT mit Leere überschreiben. Nur wenn noch keins existiert,
@@ -310,6 +396,7 @@ def main() -> int:
         print("ℹ️  Keine Poly-Sportmärkte — ehrlichen Leer-Stub geschrieben")
         return 0
     pinn = fetch_pinnacle_index(sports)
+    pinn.update(football_index)   # Fußball-Fair (de-viggte Pinnacle aus unseren Daten) dazu
     # 21.07.2026 (Lucas: „hängt da was?") — messbar machen, ob die 188 Poly-Rows überhaupt ein
     # Pinnacle-Gegenstück finden. „0 Diskrepanzen" ist sonst mehrdeutig: echt einig ODER das
     # Cross-Venue-Namens-Matching verbindet nichts. matched=0 bei pinnKeys>0 → Matching kaputt.
@@ -325,10 +412,12 @@ def main() -> int:
     hist = update_history(_load("poly_cross_sport_history.json"), disc)
 
     (BASE / "poly_cross_sport.json").write_text(json.dumps({
-        "generatedAt": _now().isoformat(), "sports": sports,
+        "generatedAt": _now().isoformat(), "sports": sorted(seen_by_sport),
         "minGapPP": MIN_GAP_PP, "polyRowsSeen": len(poly_rows),
         "pinnKeys": len(pinn), "matched": matched,
+        "footballRows": len(football_rows), "crossRows": len(cross_rows),
         "seenBySport": seen_by_sport, "matchedBySport": matched_by_sport,
+        "trackRecord": _track_record(hist),
         "discrepancies": disc,
     }, ensure_ascii=False, indent=1), encoding="utf-8")
     (BASE / "poly_cross_sport_history.json").write_text(
