@@ -391,12 +391,23 @@ test('Cross-Sport-Radar: Lücken + Konvergenz rendern, Artefakt vs echt untersch
   assert.match(html, /▲ 3\.0pp/, 'wachsende Lücke muss als Artefakt-Verdacht markiert sein');
 });
 
-test('Cross-Sport-Radar: leerer Zustand ist eine ehrliche Vorschau, keine Fehlermeldung', () => {
+test('Cross-Sport-Radar: KEINE Daten → ehrliche Vorschau (Mac-Runner)', () => {
   const w = loadRenderer();
-  w.POLY_CROSS_SPORT = { discrepancies: [] };
+  w.POLY_CROSS_SPORT = { discrepancies: [] };   // nichts gesehen, nichts gematcht
   const html = w._renderCrossSportRadar();
-  assert.match(html, /Noch keine Lücken/);
+  assert.match(html, /Noch keine Daten/);
   assert.match(html, /Mac-Runner/, 'erklärt, warum leer (Poly EU-geoblockt)');
+});
+
+test('Cross-Sport-Radar: befüllt aber 0 Lücken → „vergleicht, keine Lücke" (gesund, kein Wartezustand)', () => {
+  const w = loadRenderer();
+  // 22.07.2026 (Lucas): File IST befüllt (22 gematcht), aber keine Lücke ≥6pp — das ist gesund,
+  // NICHT „wartet auf Daten". Muss die Vergleichszahlen zeigen, nicht die Mac-Runner-Vorschau.
+  w.POLY_CROSS_SPORT = { discrepancies: [], polyRowsSeen: 200, pinnKeys: 54, matched: 22 };
+  const html = w._renderCrossSportRadar();
+  assert.match(html, /keine Lücke ≥6pp/);
+  assert.match(html, /22/, 'zeigt die Anzahl verglichener Märkte');
+  assert.doesNotMatch(html, /Noch keine Daten/, 'darf NICHT als leer/wartend erscheinen');
 });
 
 test('Cross-Sport-Radar: Intro nennt Konvergenz als Echtheits-Test', () => {

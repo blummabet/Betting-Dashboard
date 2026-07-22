@@ -40,7 +40,12 @@ BASE = Path(__file__).resolve().parent
 
 # TheOddsAPI-Sport-Keys, die Poly ebenfalls liquide listet. Bewusst klein starten (Lucas:
 # „ein bisschen tracken"), erweiterbar über cocobet_config poly.cross_sport_keys.
-DEFAULT_SPORTS = ["basketball_nba", "americanfootball_nfl", "baseball_mlb", "icehockey_nhl"]
+# 22.07.2026 (Lucas): mehr Sport covern — genau DAS ist der Sinn des Radars (finden, wo Poly von der
+# scharfen Pinnacle abweicht). Die US-Majors sind hocheffizient → dort nie eine Lücke; MMA/Boxen sind
+# weniger effizient, 2-Wege (h2h) und ganzjährig → dort ist eine echte Lücke am ehesten zu finden.
+# BEWUSST KEIN Fußball hier — das handeln wir schon über Top-5/MLS; der Radar bleibt unabhängig.
+DEFAULT_SPORTS = ["basketball_nba", "americanfootball_nfl", "baseball_mlb", "icehockey_nhl",
+                  "mma_mixed_martial_arts", "boxing_boxing"]
 
 MIN_GAP_PP  = 6.0      # darunter ist die Abweichung im Rahmen von Marge/Rundung
 MIN_VOL_USD = 5_000    # dünner Poly-Markt → Preis nicht handelbar, jede Lücke ist Rauschen
@@ -221,6 +226,8 @@ _ODDSAPI_TO_POLY_TAG = {
     "soccer_epl":         "epl",
     "soccer_uefa_champs_league": "ucl",
     "tennis":             "tennis",
+    "mma_mixed_martial_arts": "mma",
+    "boxing_boxing":      "boxing",
 }
 
 
@@ -306,21 +313,31 @@ def main() -> int:
     # 21.07.2026 (Lucas: „hängt da was?") — messbar machen, ob die 188 Poly-Rows überhaupt ein
     # Pinnacle-Gegenstück finden. „0 Diskrepanzen" ist sonst mehrdeutig: echt einig ODER das
     # Cross-Venue-Namens-Matching verbindet nichts. matched=0 bei pinnKeys>0 → Matching kaputt.
-    matched = sum(1 for r in poly_rows
-                  if pinn.get((r.get("eventKey"), r.get("outcomeKey"))) is not None)
+    matched = 0
+    matched_by_sport, seen_by_sport = {}, {}   # je Sport: wie viele Poly-Rows / davon gematcht
+    for r in poly_rows:
+        sk = r.get("sport")
+        seen_by_sport[sk] = seen_by_sport.get(sk, 0) + 1
+        if pinn.get((r.get("eventKey"), r.get("outcomeKey"))) is not None:
+            matched += 1
+            matched_by_sport[sk] = matched_by_sport.get(sk, 0) + 1
     disc = compute_discrepancies(poly_rows, pinn)
     hist = update_history(_load("poly_cross_sport_history.json"), disc)
 
     (BASE / "poly_cross_sport.json").write_text(json.dumps({
         "generatedAt": _now().isoformat(), "sports": sports,
         "minGapPP": MIN_GAP_PP, "polyRowsSeen": len(poly_rows),
-        "pinnKeys": len(pinn), "matched": matched, "discrepancies": disc,
+        "pinnKeys": len(pinn), "matched": matched,
+        "seenBySport": seen_by_sport, "matchedBySport": matched_by_sport,
+        "discrepancies": disc,
     }, ensure_ascii=False, indent=1), encoding="utf-8")
     (BASE / "poly_cross_sport_history.json").write_text(
         json.dumps(hist, ensure_ascii=False, indent=1), encoding="utf-8")
 
     print(f"=== Cross-Sport-Radar: {len(disc)} Lücken über {len(sports)} Sportarten "
           f"({matched}/{len(poly_rows)} Poly-Rows mit Pinnacle gematcht, {len(pinn)} Pinn-Keys) ===")
+    print(f"  Poly-Rows je Sport: {seen_by_sport}")
+    print(f"  gematcht je Sport:  {matched_by_sport}  (0 bei vorhandenen Rows → Key/Namen prüfen)")
     if matched == 0 and len(pinn) > 0:
         print("  ⚠️  0 Paare trotz Pinnacle-Daten — Cross-Venue-Namens-Matching prüfen "
               "(Poly- vs. TheOddsAPI-Teamnamen weichen ab).")

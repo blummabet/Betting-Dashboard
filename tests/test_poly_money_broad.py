@@ -152,3 +152,22 @@ class TestFetchMarketsDedupUndDiagnose:
         monkeypatch.setattr(B, "_gamma_events", lambda tag, closed: [])
         assert B.fetch_markets() == []
         assert B.fetch_markets.raw_by_tag == {"golf": 0}
+
+    def test_holders_budget_nach_volumen(self, monkeypatch):
+        """Bei knappem Budget kriegt der VOLUMENSTÄRKSTE Markt den Geld-Split — egal welche Sportart
+        (vorher fraßen die frühen Tags in Listen-Reihenfolge das Budget)."""
+        def ev(slug, vol):
+            return {"slug": slug, "volume": vol, "startTime": "2026-07-22T12:00:00Z",
+                    "markets": [{"outcomes": '["A","B"]', "outcomePrices": '["0.6","0.4"]',
+                                 "clobTokenIds": '["t0","t1"]', "conditionId": "0x" + slug}]}
+        # mlb (früher Tag) klein, ufc (später Tag) GROSS
+        gamma = {"mlb": [ev("mlb-small", 10000)], "ufc": [ev("ufc-big", 900000)]}
+        monkeypatch.setattr(B, "_tags", lambda: ["mlb", "ufc"])
+        monkeypatch.setattr(B, "_cfg", lambda: (7500, 1.35))
+        monkeypatch.setattr(B, "_gamma_events", lambda tag, closed: (gamma.get(tag, []) if not closed else []))
+        monkeypatch.setattr(B, "_hours_to_ko", lambda e, now: 1.0)
+        monkeypatch.setattr(B, "_money_shares", lambda oc: {"A": 60, "B": 40})
+        monkeypatch.setattr(B, "MAX_HOLDER_CALLS", 1)   # nur EIN Split möglich
+        markets = B.fetch_markets()
+        keys = [m["key"] for m in markets if not m["resolved"]]
+        assert keys == ["ufc-big"], "der volumenstärkste Markt (UFC) muss den einen Split kriegen, nicht MLB"
