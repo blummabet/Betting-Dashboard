@@ -96,7 +96,7 @@ SPORT_TAGS = ["nba", "nfl", "mlb", "nhl", "epl", "soccer", "tennis", "ucl",
 GAMMA = "https://gamma-api.polymarket.com/events"
 HOLDERS = "https://data-api.polymarket.com/holders?market={cond}&limit=200"
 _HTTP_TIMEOUT = 12
-MAX_HOLDER_CALLS = 60   # Deckel gegen API-Last: nur die nächstliegenden Märkte bekommen den Geld-Split
+MAX_HOLDER_CALLS = 90   # Deckel gegen API-Last: die VOLUMENSTÄRKSTEN near-KO-Märkte bekommen den Geld-Split
 
 
 def _tags():
@@ -189,16 +189,17 @@ def fetch_markets():
     now = _now()
     min_vol, _ = _cfg()
     tags = _tags()
-    markets, holder_calls = [], 0
+    markets = []
     raw_by_tag = {}                      # je Tag: wie viele ROH-Events kamen (offen+aufgelöst)
     seen = set()                         # Dedup: ein Markt kann unter mehreren Tags liegen (cs2 ⊂ esports)
+    candidates = []                      # near-kickoff 2-Wege-Kandidaten, VOR den Holders-Calls
 
     for tag in tags:
         open_evs = _gamma_events(tag, closed=False)
         closed_evs = _gamma_events(tag, closed=True)
         raw_by_tag[tag] = len(open_evs) + len(closed_evs)
 
-        # 1) Offene, near-kickoff Märkte → Geld-Split einfrieren
+        # 1) Offene, near-kickoff Märkte SAMMELN (Holders-Call erst später, nach Volumen priorisiert)
         for ev in open_evs:
             try:
                 key = ev.get("slug") or ev.get("id")
@@ -207,27 +208,18 @@ def fetch_markets():
                 htk = _hours_to_ko(ev, now)
                 if htk is None or not (0 < htk <= PMA.CAPTURE_WINDOW_H):
                     continue
-                if float(ev.get("volume") or 0) < min_vol:
+                vol = float(ev.get("volume") or 0)
+                if vol < min_vol:
                     continue
                 oc = _outcomes(ev)
                 if len(oc) < 2:
                     continue
-                prices = {o["label"]: o["price"] for o in oc if o["price"] is not None}
-                shares = None
-                if holder_calls < MAX_HOLDER_CALLS:
-                    shares = _money_shares(oc)
-                    holder_calls += 1
-                if not shares:
-                    continue     # ohne Geld-Split keine Aussage über „liegt das Geld richtig"
                 seen.add((key, False))
-                markets.append({"key": key, "league": tag.upper(),
-                                "hoursToKickoff": htk, "totalUsd": round(float(ev.get("volume") or 0)),
-                                "shares": shares, "prices": prices,
-                                "resolved": False, "resolvedPrices": {}})
+                candidates.append((vol, key, tag, htk, oc))
             except Exception:
                 continue
 
-        # 2) Kürzlich aufgelöste Märkte → Gewinner (settlet auf 1.00)
+        # 2) Kürzlich aufgelöste Märkte → Gewinner (settlet auf 1.00) — kein Holders-Call nötig
         for ev in closed_evs:
             try:
                 key = ev.get("slug") or ev.get("id")
@@ -243,8 +235,31 @@ def fetch_markets():
             except Exception:
                 continue
 
+    # 21.07.2026 (Lucas: „mehr Sport?"): das Holders-Budget nach VOLUMEN vergeben — die größten
+    # near-kickoff-Märkte zuerst, EGAL welche Sportart. Vorher lief es in Tag-Reihenfolge → die
+    # täglichen Ligen (MLB/Tennis/Esport) fraßen die 60 Calls, ein UFC-Main-Event am Listen-Ende
+    # bekam nie einen Geld-Split. Jetzt kriegt der wertvollste Markt jeder Sportart seine Chance.
+    candidates.sort(key=lambda c: -c[0])
+    holder_calls = 0
+    for vol, key, tag, htk, oc in candidates:
+        if holder_calls >= MAX_HOLDER_CALLS:
+            break
+        try:
+            shares = _money_shares(oc)
+        except Exception:
+            shares = None
+        holder_calls += 1
+        if not shares:
+            continue     # ohne Geld-Split keine Aussage über „liegt das Geld richtig"
+        prices = {o["label"]: o["price"] for o in oc if o["price"] is not None}
+        markets.append({"key": key, "league": tag.upper(),
+                        "hoursToKickoff": htk, "totalUsd": round(vol),
+                        "shares": shares, "prices": prices,
+                        "resolved": False, "resolvedPrices": {}})
+
     live = {t: n for t, n in raw_by_tag.items() if n}
-    print(f"  Gamma: {len(markets)} Markt-Zeilen über {len(tags)} Tags · {holder_calls} Holders-Calls")
+    print(f"  Gamma: {len(markets)} Markt-Zeilen über {len(tags)} Tags · "
+          f"{len(candidates)} near-KO-Kandidaten · {holder_calls} Holders-Calls (nach Volumen)")
     print(f"  Roh-Events je Tag (nur >0): {live}")
     fetch_markets.raw_by_tag = raw_by_tag   # 21.07.2026: für die Diagnose im Output
     return markets
