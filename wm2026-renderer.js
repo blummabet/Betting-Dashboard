@@ -496,6 +496,39 @@
       // sonst würde der Liga-Tab die WM-Daten für Sharp Radar überschreiben.
       if (_mode !== 'liga') window.WM2026_DATA = _wmData;   // expose for Sharp Radar + other modules
 
+      // 25.07.2026 (Lucas: „seh nichts im Betting-Tab"): der Polymarket-Betting-Tab las bisher NUR
+      // die WM-Match-JSONs + das statische LEAGUES-Objekt — Liga/MLS (dieser Datensatz) war nie
+      // angeschlossen. Hier die gemergten Liga/MLS-Picks als flache Liste exposen, im selben Format
+      // wie WM2026_PICKS_FOR_POLY, damit der Tab sie 1:1 mit demselben Eligibilitäts-Filter zeigt.
+      if (_isLiga) {
+        try {
+          const _fxByHa = {};
+          for (const g of Object.values(_wmData.groups || {})) {
+            for (const fx of (g.fixtures || [])) _fxByHa[`${fx.home}-${fx.away}`] = fx;
+          }
+          const _nat = [];
+          for (const [pk, plist] of Object.entries(_wmData.picks || {})) {
+            if (!Array.isArray(plist)) continue;
+            const fx = _fxByHa[pk.split('-').slice(2).join('-')];   // pk = "GROUP-MD-home-away"
+            if (!fx) continue;
+            const _league = pk.split('-')[0] || 'MLS';   // Gruppe = Liga-Label (MLS, GER, …)
+            for (const p of plist) {
+              if (!['BET', 'ABWÄGEN'].includes(p.verdict)) continue;   // Feinfilter (Conviction) im Tab
+              _nat.push({
+                league: _league,
+                home: fx.homeName || String(fx.home), away: fx.awayName || String(fx.away),
+                homeId: fx.home, awayId: fx.away, date: fx.date,
+                market: p.market, odds: p.odds, modelOdds: p.modelOdds,
+                verdict: p.verdict, convictionScore: p.convictionScore,
+                edgePP: p.edgePP || 0, clvPP: p.clvPP || 0,
+                dataQuality: p.dataQuality || 'elo_only',
+              });
+            }
+          }
+          window.NATIONAL_PICKS_FOR_POLY = _nat;
+        } catch (_e) { window.NATIONAL_PICKS_FOR_POLY = []; }
+      }
+
       if (polyResp && polyResp.ok) {
         const polyRaw = await polyResp.json();
         _polyLookup = {};

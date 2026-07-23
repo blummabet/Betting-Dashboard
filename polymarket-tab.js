@@ -343,7 +343,7 @@ function _getAvailableDates() {
 // Datumsfilter). Tage ohne Picks bleiben sichtbar, aber gedimmt.
 function _polyPickCountForDate(d) {
   try {
-    return getWmPolyPicks(d).length + getPolyPicks(d).length;
+    return _collectAllPolyPicks(d).length;
   } catch (_e) { return 0; }
 }
 
@@ -352,7 +352,9 @@ function _renderPolyDateChips(activeDate) {
   // eigenen Quelle und tauchen dort nicht auf. Ohne Union verschwindet ein Tag aus der Leiste,
   // obwohl Picks darauf liegen: der Pick wäre unerreichbar. Deshalb Union über die Pick-Tage.
   const set = new Set(_getAvailableDates());
-  for (const p of (getWmPolyPicks('') || [])) {
+  // WM + Liga/MLS-Pick-Tage dazu — deren Quellen tauchen in _getAvailableDates nicht auf,
+  // sonst wäre der Pick-Tag unerreichbar (genau der MLS-Fall, 25.07.2026).
+  for (const p of [...(getWmPolyPicks('') || []), ...(getMlsLigaPolyPicks('') || [])]) {
     const [y, m, d] = String(p.date || '').split('-');
     if (y && m && d) set.add(`${d}.${m}.${y}`);
     else if (p.date && p.date.includes('.')) set.add(p.date);
@@ -392,10 +394,8 @@ function _renderPolyDateChips(activeDate) {
 
 function polyChangeDate(dateStr) {
   _polyState.dateStr  = dateStr;
-  // Merge club league picks + WM 2026 picks
-  const clubPicks = getPolyPicks(dateStr);
-  const wmPicks   = getWmPolyPicks(dateStr);
-  _polyState.picks = [...wmPicks, ...clubPicks];  // WM first
+  // Alle Quellen: WM + Liga/MLS + Club-Ligen (eine Sammelstelle, damit keine vergessen wird)
+  _polyState.picks = _collectAllPolyPicks(dateStr);
   _polyState.prices   = {};
   _polyState.selected = new Set(_polyState.picks.map(p => p.id));
   _polyRefreshStickyBar();
@@ -788,6 +788,96 @@ function getWmPolyPicks(dateStr) {
     return b.sc - a.sc;
   });
   return results;
+}
+
+// 25.07.2026 (Lucas: „seh nichts im Betting-Tab" → MLS war nie angeschlossen). Liest die von
+// wm2026-renderer.js exponierten Liga/MLS-Picks (window.NATIONAL_PICKS_FOR_POLY) und wendet
+// EXAKT denselben Eligibilitäts-Filter an wie WM (BET immer, ABWÄGEN ab Conviction 5). Gleiches
+// Entry-Format wie getWmPolyPicks, damit Render/Edge-Block unverändert funktionieren.
+const _POLY_LEAGUE_META = {
+  MLS: { flag: '🇺🇸', name: 'MLS' }, GER: { flag: '🇩🇪', name: 'Bundesliga' },
+  ENG: { flag: '🏴', name: 'Premier League' }, ESP: { flag: '🇪🇸', name: 'La Liga' },
+  ITA: { flag: '🇮🇹', name: 'Serie A' }, FRA: { flag: '🇫🇷', name: 'Ligue 1' },
+};
+function getMlsLigaPolyPicks(dateStr) {
+  const raw = (typeof window !== 'undefined' && window.NATIONAL_PICKS_FOR_POLY) || [];
+  if (!raw.length) return [];
+  const results = [];
+  for (const e of raw) {
+    const [y, m, d] = String(e.date || '').split('-');
+    const dateFmt = (y && m && d) ? `${d}.${m}.${y}` : null;
+    if (dateStr && dateFmt && dateFmt !== dateStr) continue;
+    if (!_polyPickEligible(e.verdict, e.convictionScore)) continue;
+    const polyMarket = WM_MARKET_TO_POLY[e.market];
+    if (!polyMarket) continue;
+    const meta = _POLY_LEAGUE_META[e.league] || { flag: '🏆', name: e.league || 'Liga' };
+    const clvPP = e.clvPP || 0;
+    results.push({
+      id: `${e.league}|${e.home}|${e.away}|${polyMarket}`,
+      league: e.league || 'MLS', leagueFlag: meta.flag, leagueName: meta.name,
+      home: e.home, away: e.away, homeId: e.homeId || null, awayId: e.awayId || null,
+      homeFlag: '', awayFlag: '',
+      market: polyMarket, conf: e.verdict === 'BET' ? 'high' : 'medium',
+      sc: e.edgePP || 0, odds: e.odds, modelOdds: e.modelOdds, oddsIsEst: false,
+      date: e.date, dateFmt, clvPP, dataQuality: e.dataQuality || 'elo_only',
+      verdict: e.verdict, edgePP: e.edgePP || 0, mods: [], saferAlt: null, boldAlt: null,
+      oddsOpen: null, h2h: null, isWm: false,
+      convictionScore: typeof e.convictionScore === 'number' ? e.convictionScore : null,
+    });
+  }
+  results.sort((a, b) => {
+    if (a.verdict !== b.verdict) return a.verdict === 'BET' ? -1 : 1;
+    const ca = a.convictionScore ?? -1, cb = b.convictionScore ?? -1;
+    return cb !== ca ? cb - ca : b.sc - a.sc;
+  });
+  return results;
+}
+
+// Baut NATIONAL_PICKS_FOR_POLY direkt aus mls-data.json (+ liga-data.json), unabhängig davon, ob
+// der National-Tab schon geöffnet wurde. Gleiche flache Form wie wm2026-renderer.js sie exponiert.
+async function _loadNationalPolyPicksAsync() {
+  const _build = (d, out) => {
+    if (!d || !d.groups || !d.picks) return;
+    const fxByHa = {};
+    for (const g of Object.values(d.groups)) {
+      for (const fx of (g.fixtures || [])) fxByHa[`${fx.home}-${fx.away}`] = fx;
+    }
+    for (const [pk, plist] of Object.entries(d.picks)) {
+      if (!Array.isArray(plist)) continue;
+      const fx = fxByHa[pk.split('-').slice(2).join('-')];
+      if (!fx) continue;
+      const league = pk.split('-')[0] || 'MLS';
+      for (const p of plist) {
+        if (!['BET', 'ABWÄGEN'].includes(p.verdict)) continue;
+        out.push({
+          league, home: fx.homeName || String(fx.home), away: fx.awayName || String(fx.away),
+          homeId: fx.home, awayId: fx.away, date: fx.date,
+          market: p.market, odds: p.odds, modelOdds: p.modelOdds,
+          verdict: p.verdict, convictionScore: p.convictionScore,
+          edgePP: p.edgePP || 0, clvPP: p.clvPP || 0, dataQuality: p.dataQuality || 'elo_only',
+        });
+      }
+    }
+  };
+  const out = [];
+  for (const f of ['mls-data.json', 'liga-data.json']) {
+    try {
+      const r = await fetch(f + '?t=' + Date.now());
+      if (r.ok) _build(await r.json(), out);
+    } catch (_e) { /* Datensatz optional */ }
+  }
+  window.NATIONAL_PICKS_FOR_POLY = out;
+  return out;
+}
+
+// EINE Sammelstelle für alle Betting-Tab-Pick-Quellen — verhindert, dass eine Quelle an einem
+// Aggregations-Punkt vergessen wird (genau so fiel MLS raus). WM + Liga/MLS + Club-Ligen.
+function _collectAllPolyPicks(dateStr) {
+  let wm = [], mls = [], club = [];
+  try { wm   = getWmPolyPicks(dateStr)     || []; } catch (_e) {}
+  try { mls  = getMlsLigaPolyPicks(dateStr) || []; } catch (_e) {}
+  try { club = getPolyPicks(dateStr)       || []; } catch (_e) {}
+  return [...wm, ...mls, ...club];
 }
 
 // ── 4. POLYMARKET PRICES (from server-cached JSON) ──────
@@ -4668,7 +4758,7 @@ function initPolymarket() {
   // nie gewählt → '' ; ein bewusst gewähltes '' bleibt '' (deshalb kein `||`).
   const dateStr = _polyState.dateStr == null ? '' : _polyState.dateStr;
   _polyState.dateStr  = dateStr;
-  _polyState.picks    = getPolyPicks(dateStr);
+  _polyState.picks    = _collectAllPolyPicks(dateStr);   // WM + Liga/MLS + Club (nicht nur Club)
   _polyState.prices   = {};
   _polyState.selected = new Set(_polyState.picks.map(p => p.id)); // start: all selected
 
@@ -4679,13 +4769,28 @@ function initPolymarket() {
   if (!window.WM2026_DATA && !window._wmDataCache) {
     _loadWmDataAsync().then(() => {
       if (window._wmDataCache) {
-        _polyState.picks = getPolyPicks(_polyState.dateStr || dateStr);
+        _polyState.picks = _collectAllPolyPicks(_polyState.dateStr || dateStr);
         _polyState.selected = new Set(_polyState.picks.map(p => p.id));
         const grid = document.getElementById('polyPickGrid');
         if (grid) grid.innerHTML = renderPolyPickCards();
         const stats = document.getElementById('polyStatsSection');
         if (stats) stats.innerHTML = renderPolyStats();
       }
+    });
+  }
+
+  // ── Liga/MLS-Picks async dazuladen (25.07.2026, Lucas: „seh nichts im Betting-Tab") ──────
+  // Der Tab war nie an den Liga/MLS-Datensatz angeschlossen. Damit er nicht davon abhängt, dass
+  // der National-Tab vorher geöffnet wurde, holen wir mls-data.json (+ liga-data.json) selbst und
+  // bauen NATIONAL_PICKS_FOR_POLY im selben Format wie wm2026-renderer.js.
+  if (!window.NATIONAL_PICKS_FOR_POLY) {
+    _loadNationalPolyPicksAsync().then(() => {
+      _polyState.picks = _collectAllPolyPicks(_polyState.dateStr || dateStr);
+      _polyState.selected = new Set(_polyState.picks.map(p => p.id));
+      const grid = document.getElementById('polyPickGrid');
+      if (grid) grid.innerHTML = renderPolyPickCards();
+      const chips = document.getElementById('polyDateChips');
+      if (chips) chips.outerHTML = _renderPolyDateChips(_polyState.dateStr || '');
     });
   }
 

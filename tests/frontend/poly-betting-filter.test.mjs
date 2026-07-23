@@ -119,3 +119,32 @@ test('MLS-Fixtures fließen in die Datums-Chips (POLY_LEAGUES enthält MLS)', ()
   assert.ok(dates.includes('25.07.2099'), 'MLS-Datum fehlt in den Chips — MLS nicht in POLY_LEAGUES?');
   assert.ok(!dates.includes('26.07.2099'), 'Nicht-Poly-Liga (BRA) darf nicht auftauchen');
 });
+
+// 25.07.2026 (Lucas: „seh nichts im Betting-Tab") — MLS/Liga-Picks aus NATIONAL_PICKS_FOR_POLY
+// laufen jetzt durch dieselbe Eligibilitäts-Schwelle wie WM. Schwelle bleibt (Lucas' Wahl):
+// starkes ABWÄGEN erscheint, schwaches nicht.
+test('MLS-Picks aus NATIONAL_PICKS_FOR_POLY: nur ab Conviction-Schwelle', () => {
+  const w = loadPoly();
+  w.NATIONAL_PICKS_FOR_POLY = [
+    { league: 'MLS', home: 'Inter Miami', away: 'Orlando', homeId: 1, awayId: 2, date: '2099-07-25',
+      market: 'Heimsieg', odds: 1.9, modelOdds: 1.8, verdict: 'ABWÄGEN', convictionScore: MIN_CONV + 1, edgePP: 3 },
+    { league: 'MLS', home: 'CF Montreal', away: 'Chicago', homeId: 3, awayId: 4, date: '2099-07-25',
+      market: 'Auswärtssieg', odds: 3.0, modelOdds: 2.8, verdict: 'ABWÄGEN', convictionScore: 2, edgePP: 1 },
+  ];
+  const picks = w.getMlsLigaPolyPicks('');
+  const teams = picks.map(p => p.home);
+  assert.deepEqual(teams, ['Inter Miami'], 'nur das starke ABWÄGEN (≥Schwelle) darf erscheinen');
+  assert.equal(picks[0].league, 'MLS');
+  assert.equal(picks[0].leagueFlag, '🇺🇸');
+});
+
+test('_collectAllPolyPicks bündelt WM + MLS + Club (MLS nicht mehr verloren)', () => {
+  const w = loadPoly([pick({ verdict: 'BET', market: 'Heimsieg', home: 'Brasilien', away: 'Peru' })]);
+  w.NATIONAL_PICKS_FOR_POLY = [
+    { league: 'MLS', home: 'LA Galaxy', away: 'Austin', homeId: 5, awayId: 6, date: '2099-08-01',
+      market: 'Heimsieg', odds: 1.8, modelOdds: 1.7, verdict: 'BET', convictionScore: 7, edgePP: 4 },
+  ];
+  const all = w._collectAllPolyPicks('');
+  assert.ok(all.some(p => p.home === 'LA Galaxy'), 'MLS-Pick fehlt in der Sammelstelle');
+  assert.ok(all.some(p => p.home === 'Brasilien'), 'WM-Pick fehlt in der Sammelstelle');
+});
