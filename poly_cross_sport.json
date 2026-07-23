@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-07-22T22:59:58.412367+00:00",
+ "generatedAt": "2026-07-23T00:09:24.028692+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,27 +10,84 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 304,
- "pinnKeys": 156,
- "matched": 68,
- "footballRows": 48,
- "crossRows": 256,
+ "polyRowsSeen": 308,
+ "pinnKeys": 164,
+ "matched": 76,
+ "footballRows": 54,
+ "crossRows": 254,
  "seenBySport": {
   "basketball_nba": 2,
   "americanfootball_nfl": 100,
-  "baseball_mlb": 110,
+  "baseball_mlb": 108,
   "icehockey_nhl": 2,
   "mma_mixed_martial_arts": 2,
   "boxing_boxing": 40,
-  "soccer_mls": 48
+  "soccer_mls": 54
  },
  "matchedBySport": {
-  "baseball_mlb": 20,
-  "soccer_mls": 48
+  "baseball_mlb": 22,
+  "soccer_mls": 54
  },
  "trackRecord": {
-  "tracked": 0,
+  "tracked": 4,
   "converged": 0
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_mls|chicagofire-intermiami|aw",
+   "sport": "soccer_mls",
+   "event": "Inter Miami vs Chicago Fire",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 56.5,
+   "pinnPP": 38.4,
+   "gapPP": 18.1,
+   "vol": 419523,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-07-23T00:09:24.028564+00:00"
+  },
+  {
+   "id": "baseball_mlb|losangelesdodgers-philadelphiaphillies|losangelesdodgers",
+   "sport": "baseball_mlb",
+   "event": "Los Angeles Dodgers vs Philadelphia Phillies",
+   "market": "Moneyline",
+   "outcome": "Los Angeles Dodgers",
+   "polyPP": 64.5,
+   "pinnPP": 49.7,
+   "gapPP": 14.76,
+   "vol": 857889,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-07-23T00:09:24.028564+00:00"
+  },
+  {
+   "id": "baseball_mlb|losangelesdodgers-philadelphiaphillies|philadelphiaphillies",
+   "sport": "baseball_mlb",
+   "event": "Los Angeles Dodgers vs Philadelphia Phillies",
+   "market": "Moneyline",
+   "outcome": "Philadelphia Phillies",
+   "polyPP": 35.5,
+   "pinnPP": 50.3,
+   "gapPP": -14.76,
+   "vol": 857889,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-07-23T00:09:24.028564+00:00"
+  },
+  {
+   "id": "soccer_mls|chicagofire-intermiami|hw",
+   "sport": "soccer_mls",
+   "event": "Inter Miami vs Chicago Fire",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 22.5,
+   "pinnPP": 35.5,
+   "gapPP": -13.01,
+   "vol": 419523,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-07-23T00:09:24.028564+00:00"
+  }
+ ]
 }
