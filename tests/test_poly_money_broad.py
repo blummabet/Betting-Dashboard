@@ -9,6 +9,17 @@ import poly_money_accuracy as PMA
 import poly_money_broad as B
 
 
+class TestSportTags:
+    """23.07.2026 (Lucas: „bei ‚Liegt das Geld richtig' fehlt MLS"). MLS war nicht in SPORT_TAGS →
+    wurde nie von Gamma geholt, obwohl es die aktive Fußball-Liga mit Poly-Liquidität ist. Regression-
+    Guard: die in-season Kern-Ligen MÜSSEN im Fetch-Umfang bleiben, sonst fällt eine wieder still raus."""
+
+    def test_mls_und_kern_ligen_im_fetch_umfang(self):
+        assert "mls" in B.SPORT_TAGS, "MLS fehlt → aktive Fußball-Liga wird nicht geholt"
+        for t in ("mlb", "nba", "esports", "ucl", "epl"):
+            assert t in B.SPORT_TAGS, f"Kern-Tag {t} fehlt"
+
+
 class TestMinOddsFilter:
     def _frozen(self):
         return {
@@ -138,6 +149,7 @@ class TestFetchMarketsDedupUndDiagnose:
         monkeypatch.setattr(B, "_tags", lambda: ["esports", "cs2"])
         monkeypatch.setattr(B, "_cfg", lambda: (7500, 1.35))
         monkeypatch.setattr(B, "_gamma_events", lambda tag, closed: ([ev] if not closed else []))
+        monkeypatch.setattr(B, "_gamma_top", lambda closed: [])
         monkeypatch.setattr(B, "_hours_to_ko", lambda e, now: 1.0)
         monkeypatch.setattr(B, "_money_shares", lambda oc: {"NAVI": 30000, "FaZe": 20000})
         markets = B.fetch_markets()
@@ -150,6 +162,7 @@ class TestFetchMarketsDedupUndDiagnose:
         monkeypatch.setattr(B, "_tags", lambda: ["golf"])
         monkeypatch.setattr(B, "_cfg", lambda: (7500, 1.35))
         monkeypatch.setattr(B, "_gamma_events", lambda tag, closed: [])
+        monkeypatch.setattr(B, "_gamma_top", lambda closed: [])
         assert B.fetch_markets() == []
         assert B.fetch_markets.raw_by_tag == {"golf": 0}
 
@@ -165,9 +178,65 @@ class TestFetchMarketsDedupUndDiagnose:
         monkeypatch.setattr(B, "_tags", lambda: ["mlb", "ufc"])
         monkeypatch.setattr(B, "_cfg", lambda: (7500, 1.35))
         monkeypatch.setattr(B, "_gamma_events", lambda tag, closed: (gamma.get(tag, []) if not closed else []))
+        monkeypatch.setattr(B, "_gamma_top", lambda closed: [])
         monkeypatch.setattr(B, "_hours_to_ko", lambda e, now: 1.0)
         monkeypatch.setattr(B, "_money_shares", lambda oc: {"A": 60, "B": 40})
         monkeypatch.setattr(B, "MAX_HOLDER_CALLS", 1)   # nur EIN Split möglich
         markets = B.fetch_markets()
         keys = [m["key"] for m in markets if not m["resolved"]]
         assert keys == ["ufc-big"], "der volumenstärkste Markt (UFC) muss den einen Split kriegen, nicht MLB"
+
+
+class TestVolumeSweep:
+    """23.07.2026 (Lucas: „alles nehmen wo Volumen drauf ist, egal welche Sportart"). Der tag-lose
+    Volumen-Sweep fängt Ligen ein, die KEIN kuratierter Tag abdeckt — ohne Nicht-Sport (Politik/
+    Krypto) reinzulassen (die haben keinen unmittelbaren Anpfiff → htk-Fenster wirft sie raus)."""
+
+    def _ev(self, slug, vol=50000):
+        return {"slug": slug, "volume": vol, "startTime": "2026-07-23T12:00:00Z",
+                "markets": [{"outcomes": '["A","B"]', "outcomePrices": '["0.6","0.4"]',
+                             "clobTokenIds": '["t0","t1"]', "conditionId": "0x" + slug}]}
+
+    def test_league_from_slug(self):
+        assert B._league_from_slug("mls-phi-nyr-2026-07-22") == "MLS"
+        assert B._league_from_slug("ucl-psg-rma") == "UCL"
+        assert B._league_from_slug("rugby-abc-def") == "RUGBY"
+        assert B._league_from_slug("12345") == "OTHER"
+
+    def test_sweep_findet_liga_ohne_tag(self, monkeypatch):
+        # KEIN Tag deckt „rugby" ab, aber der Volumen-Sweep liefert es → landet mit Liga=RUGBY.
+        monkeypatch.setattr(B, "_tags", lambda: ["mlb"])
+        monkeypatch.setattr(B, "_cfg", lambda: (7500, 1.35))
+        monkeypatch.setattr(B, "_gamma_events", lambda tag, closed: [])
+        monkeypatch.setattr(B, "_gamma_top",
+                            lambda closed: ([self._ev("rugby-lei-sar")] if not closed else []))
+        monkeypatch.setattr(B, "_hours_to_ko", lambda e, now: 1.0)
+        monkeypatch.setattr(B, "_money_shares", lambda oc: {"A": 60, "B": 40})
+        markets = B.fetch_markets()
+        rugby = [m for m in markets if m["key"] == "rugby-lei-sar"]
+        assert rugby and rugby[0]["league"] == "RUGBY"
+        assert B.fetch_markets.sweep_stats["sweepAdded"] == 1
+
+    def test_sweep_dedupt_gegen_tags(self, monkeypatch):
+        # Derselbe Markt aus Tag UND Sweep → nur EINE Zeile (seen-Dedup).
+        ev = self._ev("mlb-nyy-bos")
+        monkeypatch.setattr(B, "_tags", lambda: ["mlb"])
+        monkeypatch.setattr(B, "_cfg", lambda: (7500, 1.35))
+        monkeypatch.setattr(B, "_gamma_events", lambda tag, closed: ([ev] if not closed else []))
+        monkeypatch.setattr(B, "_gamma_top", lambda closed: ([ev] if not closed else []))
+        monkeypatch.setattr(B, "_hours_to_ko", lambda e, now: 1.0)
+        monkeypatch.setattr(B, "_money_shares", lambda oc: {"A": 60, "B": 40})
+        markets = B.fetch_markets()
+        assert sum(1 for m in markets if m["key"] == "mlb-nyy-bos" and not m["resolved"]) == 1
+
+    def test_sweep_wirft_nicht_sport_raus_ueber_anpfiff_fenster(self, monkeypatch):
+        # Politik-Markt: Volumen ja, aber Start liegt in der Vergangenheit → htk<0 → NICHT drin.
+        pol = self._ev("us-election-winner", vol=999999)
+        monkeypatch.setattr(B, "_tags", lambda: [])
+        monkeypatch.setattr(B, "_cfg", lambda: (7500, 1.35))
+        monkeypatch.setattr(B, "_gamma_events", lambda tag, closed: [])
+        monkeypatch.setattr(B, "_gamma_top", lambda closed: ([pol] if not closed else []))
+        monkeypatch.setattr(B, "_hours_to_ko", lambda e, now: -240.0)   # Start 10 Tage her
+        monkeypatch.setattr(B, "_money_shares", lambda oc: {"A": 60, "B": 40})
+        markets = B.fetch_markets()
+        assert not any(m["key"] == "us-election-winner" for m in markets)

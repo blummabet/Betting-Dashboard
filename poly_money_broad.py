@@ -90,7 +90,13 @@ from datetime import timedelta as _td
 # erweitert (UFC/MMA/Boxen/Golf/F1/Cricket). Welche Tag-Slugs Poly WIRKLICH liefert, zeigt die neue
 # rawByTag-Diagnose im nächsten Lauf — tote Tags fliegen dann wieder raus. Saisonale (NBA/NFL/NHL/EPL)
 # bleiben drin und füllen sich von selbst, sobald ihre Saison startet.
-SPORT_TAGS = ["nba", "nfl", "mlb", "nhl", "epl", "soccer", "tennis", "ucl",
+# 23.07.2026 (Lucas: „bei ‚Liegt das Geld richtig' viel zu wenig Fußball — MLS fehlt"). MLS war
+# NICHT gelistet → wurde gar nicht erst von Gamma geholt, obwohl es die aktive Fußball-Liga mit
+# echter Poly-Liquidität ist (Matches clearen die $7.5K-Schwelle, ~$8–13k). 3-Wege wird korrekt
+# verarbeitet (capture akzeptiert len(oc)>=2). Die europäischen Top-5 laufen im Sommer nicht; wenn
+# ihre Saison startet (August), gehören ihre Poly-Tags (la-liga, serie-a, bundesliga, ligue-1) hier
+# dazu — rawByTag im Output zeigt dann, welcher Slug echt Events liefert.
+SPORT_TAGS = ["nba", "nfl", "mlb", "nhl", "mls", "epl", "soccer", "tennis", "ucl",
               "esports", "cs2", "lol", "dota", "valorant",
               "ufc", "mma", "boxing", "golf", "f1", "cricket"]
 GAMMA = "https://gamma-api.polymarket.com/events"
@@ -131,6 +137,36 @@ def _gamma_events(tag, closed):
             break
         offset += 100
     return out
+
+
+# 23.07.2026 (Lucas: „alles nehmen wo Volumen drauf ist, egal welche Sportart"). Statt nur eine
+# hartcodierte Tag-Liste abzugrasen (die schon 2× eine ganze Liga verpasst hat — E-Sport, dann MLS):
+# tag-LOS die volumenstärksten Events holen. Der Sport-Filter passiert von selbst über das
+# Anpfiff-Fenster (0<htk<=3h) im Ingest — Politik/Krypto haben keinen unmittelbaren Anpfiff
+# (startDate liegt in der Vergangenheit → htk<0 → raus). Liga = Slug-Präfix (mls-… → MLS).
+SWEEP_PAGES = 5   # bis 500 Events je Richtung, nach Volumen sortiert
+
+
+def _gamma_top(closed):
+    """Tag-LOS die volumenstärksten Events (offen bzw. aufgelöst). Defensiv — [] bei Fehler."""
+    out, offset = [], 0
+    for _ in range(SWEEP_PAGES):
+        url = (f"{GAMMA}?limit=100&offset={offset}"
+               f"&active=true&closed={'true' if closed else 'false'}&order=volume&ascending=false")
+        page = _get(url)
+        if not isinstance(page, list) or not page:
+            break
+        out += page
+        if len(page) < 100:
+            break
+        offset += 100
+    return out
+
+
+def _league_from_slug(key):
+    """Liga-Label aus dem Event-Slug-Präfix (mls-phi-nyr-… → MLS). Fallback: OTHER."""
+    head = str(key or "").split("-", 1)[0].strip().lower()
+    return head.upper() if head and not head.isdigit() else "OTHER"
 
 
 def _hours_to_ko(ev, now):
@@ -194,20 +230,18 @@ def fetch_markets():
     seen = set()                         # Dedup: ein Markt kann unter mehreren Tags liegen (cs2 ⊂ esports)
     candidates = []                      # near-kickoff 2-Wege-Kandidaten, VOR den Holders-Calls
 
-    for tag in tags:
-        open_evs = _gamma_events(tag, closed=False)
-        closed_evs = _gamma_events(tag, closed=True)
-        raw_by_tag[tag] = len(open_evs) + len(closed_evs)
-
-        # 1) Offene, near-kickoff Märkte SAMMELN (Holders-Call erst später, nach Volumen priorisiert)
+    def _ingest(open_evs, closed_evs, league_of):
+        """Ein Fetch-Ergebnis einsammeln. `league_of(ev, key)` liefert das Liga-Label.
+        Anpfiff-Fenster (0<htk<=3h) + Volumen sind der eigentliche Sport-Filter."""
+        # 1) Offene, near-kickoff Märkte SAMMELN (Holders-Call später, nach Volumen priorisiert)
         for ev in open_evs:
             try:
                 key = ev.get("slug") or ev.get("id")
-                if (key, False) in seen:
+                if not key or (key, False) in seen:
                     continue
                 htk = _hours_to_ko(ev, now)
                 if htk is None or not (0 < htk <= PMA.CAPTURE_WINDOW_H):
-                    continue
+                    continue        # kein unmittelbarer Anpfiff → kein Sportspiel (Politik/Krypto raus)
                 vol = float(ev.get("volume") or 0)
                 if vol < min_vol:
                     continue
@@ -215,7 +249,7 @@ def fetch_markets():
                 if len(oc) < 2:
                     continue
                 seen.add((key, False))
-                candidates.append((vol, key, tag, htk, oc))
+                candidates.append((vol, key, league_of(ev, key), htk, oc))
             except Exception:
                 continue
 
@@ -223,17 +257,32 @@ def fetch_markets():
         for ev in closed_evs:
             try:
                 key = ev.get("slug") or ev.get("id")
-                if (key, True) in seen:
+                if not key or (key, True) in seen:
                     continue
                 oc = _outcomes(ev)
                 rp = {o["label"]: o["price"] for o in oc if o["price"] is not None}
                 if rp:
                     seen.add((key, True))
-                    markets.append({"key": key, "league": tag.upper(),
+                    markets.append({"key": key, "league": league_of(ev, key),
                                     "resolved": True, "resolvedPrices": rp,
                                     "hoursToKickoff": None, "totalUsd": 0, "shares": {}, "prices": {}})
             except Exception:
                 continue
+
+    # A) Kuratierte Sport-Tags (präzises Liga-Label = Tag)
+    for tag in tags:
+        open_evs = _gamma_events(tag, closed=False)
+        closed_evs = _gamma_events(tag, closed=True)
+        raw_by_tag[tag] = len(open_evs) + len(closed_evs)
+        _ingest(open_evs, closed_evs, lambda ev, key, _t=tag: _t.upper())
+
+    # B) Tag-LOSER Volumen-Sweep — fängt JEDE Sportart mit Volumen ein, auch ohne kuratierten Tag
+    # (nimmt der „Liga fehlt still"-Klasse die Grundlage). Dedup gegen A über `seen`; Liga aus Slug.
+    sweep_open = _gamma_top(closed=False)
+    sweep_closed = _gamma_top(closed=True)
+    before = len(candidates) + len(markets)
+    _ingest(sweep_open, sweep_closed, lambda ev, key: _league_from_slug(key))
+    sweep_added = (len(candidates) + len(markets)) - before
 
     # 21.07.2026 (Lucas: „mehr Sport?"): das Holders-Budget nach VOLUMEN vergeben — die größten
     # near-kickoff-Märkte zuerst, EGAL welche Sportart. Vorher lief es in Tag-Reihenfolge → die
@@ -241,7 +290,7 @@ def fetch_markets():
     # bekam nie einen Geld-Split. Jetzt kriegt der wertvollste Markt jeder Sportart seine Chance.
     candidates.sort(key=lambda c: -c[0])
     holder_calls = 0
-    for vol, key, tag, htk, oc in candidates:
+    for vol, key, league, htk, oc in candidates:
         if holder_calls >= MAX_HOLDER_CALLS:
             break
         try:
@@ -252,15 +301,20 @@ def fetch_markets():
         if not shares:
             continue     # ohne Geld-Split keine Aussage über „liegt das Geld richtig"
         prices = {o["label"]: o["price"] for o in oc if o["price"] is not None}
-        markets.append({"key": key, "league": tag.upper(),
+        markets.append({"key": key, "league": league,
                         "hoursToKickoff": htk, "totalUsd": round(vol),
                         "shares": shares, "prices": prices,
                         "resolved": False, "resolvedPrices": {}})
+    fetch_markets.sweep_stats = {"sweepOpen": len(sweep_open), "sweepClosed": len(sweep_closed),
+                                 "sweepAdded": sweep_added}
 
     live = {t: n for t, n in raw_by_tag.items() if n}
-    print(f"  Gamma: {len(markets)} Markt-Zeilen über {len(tags)} Tags · "
+    _sw = fetch_markets.sweep_stats
+    print(f"  Gamma: {len(markets)} Markt-Zeilen über {len(tags)} Tags + Volumen-Sweep · "
           f"{len(candidates)} near-KO-Kandidaten · {holder_calls} Holders-Calls (nach Volumen)")
     print(f"  Roh-Events je Tag (nur >0): {live}")
+    print(f"  Volumen-Sweep (tag-los): {_sw['sweepOpen']} offen · {_sw['sweepClosed']} aufgelöst "
+          f"· {_sw['sweepAdded']} zusätzlich gefunden (Ligen, die kein Tag abdeckte)")
     fetch_markets.raw_by_tag = raw_by_tag   # 21.07.2026: für die Diagnose im Output
     return markets
 
@@ -314,6 +368,7 @@ def main() -> int:
     rep["scope"] = "broad_all_leagues"
     # 21.07.2026: welche Sport-Tags liefern überhaupt Events (statt zu raten, welche Poly hat)?
     rep["rawByTag"] = getattr(fetch_markets, "raw_by_tag", {})
+    rep["sweepStats"] = getattr(fetch_markets, "sweep_stats", {})
     (BASE / OUT_FILE).write_text(json.dumps(rep, ensure_ascii=False, indent=1), encoding="utf-8")
 
     print(f"=== Liegt das Geld richtig? BREIT · min Vol ${min_vol:.0f} · min Quote {min_odds} ===")
