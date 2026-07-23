@@ -85,24 +85,9 @@
       "id": "odds_sane",
       "label": "Pinnacle-1X2 vollständig + plausibel",
       "severity": "warn",
-      "ok": false,
-      "nFail": 14,
-      "failures": [
-        "1598-9569: 1X2 unvollständig hw=None dr=None aw=None",
-        "1604-1607: 1X2 unvollständig hw=None dr=None aw=None",
-        "20787-1610: 1X2 unvollständig hw=None dr=None aw=None",
-        "1615-1601: 1X2 unvollständig hw=None dr=None aw=None",
-        "1600-16489: 1X2 unvollständig hw=None dr=None aw=None",
-        "1612-1603: 1X2 unvollständig hw=None dr=None aw=None",
-        "1609-1608: 1X2 unvollständig hw=None dr=None aw=None",
-        "25484-1597: 1X2 unvollständig hw=None dr=None aw=None",
-        "1599-1595: 1X2 unvollständig hw=None dr=None aw=None",
-        "1613-2242: 1X2 unvollständig hw=None dr=None aw=None",
-        "1602-18310: 1X2 unvollständig hw=None dr=None aw=None",
-        "1616-1611: 1X2 unvollständig hw=None dr=None aw=None",
-        "1596-1605: 1X2 unvollständig hw=None dr=None aw=None",
-        "1617-1606: 1X2 unvollständig hw=None dr=None aw=None"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Quelle für Modell-Baseline + Edge."
     },
     {
@@ -199,23 +184,8 @@
       "label": "Liga-Odds nur auf nahen Spieltagen",
       "severity": "warn",
       "ok": false,
-      "nFail": 48,
+      "nFail": 33,
       "failures": [
-        "1599-1602: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
-        "1609-1601: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
-        "1613-1604: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
-        "2242-1603: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
-        "9568-1607: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
-        "18310-1608: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
-        "1611-1612: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
-        "16489-1595: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
-        "9569-1614: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
-        "1610-25484: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
-        "1596-1598: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
-        "1616-1606: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
-        "1617-1597: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
-        "1600-1615: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
-        "1605-20787: Odds auf Spieltag 18 (Front = 7) — Hin/Rück-Fehlmatch?",
         "1598-9569: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
         "1604-1607: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
         "20787-1610: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
@@ -225,7 +195,22 @@
         "1609-1608: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
         "25484-1597: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
         "1599-1595: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
-        "1613-2242: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?"
+        "1613-2242: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1614-9568: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1602-18310: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1616-1611: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1596-1605: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1617-1606: Odds auf Spieltag 19 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1612-25484: Odds auf Spieltag 20 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1607-18310: Odds auf Spieltag 20 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1611-1600: Odds auf Spieltag 20 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "20787-1606: Odds auf Spieltag 20 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1610-16489: Odds auf Spieltag 20 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1605-1597: Odds auf Spieltag 20 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1617-1595: Odds auf Spieltag 20 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "9568-1613: Odds auf Spieltag 20 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1614-1609: Odds auf Spieltag 20 (Front = 7) — Hin/Rück-Fehlmatch?",
+        "1603-1616: Odds auf Spieltag 20 (Front = 7) — Hin/Rück-Fehlmatch?"
       ],
       "note": "fetch_liga_odds.pick_event_for_fixture trennt Hin/Rück per Datum."
     },
@@ -245,7 +230,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "16/16 mit AH · 16/16 mit Public-O/U."
+      "note": "15/15 mit AH · 15/15 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -333,23 +318,8 @@
       "label": "Public = Multi-Book-Konsens (nicht Einzel-Book)",
       "severity": "warn",
       "ok": false,
-      "nFail": 30,
+      "nFail": 15,
       "failures": [
-        "1599-1602: public aus Einzel-Book 'williamhill' statt Konsens",
-        "1609-1601: public aus Einzel-Book 'williamhill' statt Konsens",
-        "1613-1604: public aus Einzel-Book 'williamhill' statt Konsens",
-        "2242-1603: public aus Einzel-Book 'williamhill' statt Konsens",
-        "9568-1607: public aus Einzel-Book 'williamhill' statt Konsens",
-        "18310-1608: public aus Einzel-Book 'williamhill' statt Konsens",
-        "1611-1612: public aus Einzel-Book 'williamhill' statt Konsens",
-        "16489-1595: public aus Einzel-Book 'williamhill' statt Konsens",
-        "9569-1614: public aus Einzel-Book 'williamhill' statt Konsens",
-        "1610-25484: public aus Einzel-Book 'williamhill' statt Konsens",
-        "1596-1598: public aus Einzel-Book 'williamhill' statt Konsens",
-        "1616-1606: public aus Einzel-Book 'williamhill' statt Konsens",
-        "1617-1597: public aus Einzel-Book 'williamhill' statt Konsens",
-        "1600-1615: public aus Einzel-Book 'williamhill' statt Konsens",
-        "1605-20787: public aus Einzel-Book 'williamhill' statt Konsens",
         "1598-9569: public aus Einzel-Book 'williamhill' statt Konsens",
         "1604-1607: public aus Einzel-Book 'williamhill' statt Konsens",
         "20787-1610: public aus Einzel-Book 'williamhill' statt Konsens",
@@ -359,7 +329,12 @@
         "1609-1608: public aus Einzel-Book 'williamhill' statt Konsens",
         "25484-1597: public aus Einzel-Book 'williamhill' statt Konsens",
         "1599-1595: public aus Einzel-Book 'williamhill' statt Konsens",
-        "1613-2242: public aus Einzel-Book 'williamhill' statt Konsens"
+        "1613-2242: public aus Einzel-Book 'williamhill' statt Konsens",
+        "1614-9568: public aus Einzel-Book 'williamhill' statt Konsens",
+        "1602-18310: public aus Einzel-Book 'williamhill' statt Konsens",
+        "1616-1611: public aus Einzel-Book 'williamhill' statt Konsens",
+        "1596-1605: public aus Einzel-Book 'williamhill' statt Konsens",
+        "1617-1606: public aus Einzel-Book 'williamhill' statt Konsens"
       ],
       "note": "public_static_bias soll auf Median-Konsens laufen, nicht 1 verrauschtem Soft-Book. Single-Book = fetch_wm_multibook_odds hat (noch) nicht geschrieben."
     },
@@ -607,6 +582,6 @@
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 4,
-  "generatedAt": "2026-07-22T20:33:29.631883+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-07-23T09:31:24.338748+00:00"
 }
