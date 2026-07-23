@@ -102,3 +102,24 @@ test('Alle Poly-Ligen: nach Kategorie geordnet inkl. E-Sport + Highlight-Kacheln
   assert.match(html, /Masse weiß am meisten/, 'Highlight-Kachel (Klartext) fehlt');
   assert.match(html, /Geld schärfer|Preis besser|gleichauf/, 'Klartext-Urteil-Badge fehlt');
 });
+
+// 25.07.2026 (Lucas: „können wir das Spiel anzeigen statt der IDs?"). Die Match-Tabelle zeigte den
+// rohen Key "homeId-awayId" (2242-1603). _pwMatchLabel löst ihn über die teams-Map auf Namen auf.
+test('Match-Label: löst homeId-awayId auf Team-Namen auf', () => {
+  const dom = new JSDOM('<!DOCTYPE html><body></body>', { url: 'https://example.com/', runScripts: 'outside-only' });
+  const { window: w } = dom;
+  w.eval(readFileSync(PW, 'utf8'));
+  const teams = { '2242': { name: 'FC Cincinnati', flag: '' }, '1603': { name: 'Vancouver Whitecaps', flag: '' } };
+  const html = w._pwMatchLabel('2242-1603', teams);
+  assert.match(html, /FC Cincinnati/, 'Heim-Team-Name fehlt');
+  assert.match(html, /Vancouver Whitecaps/, 'Auswärts-Team-Name fehlt');
+  assert.ok(!/2242/.test(html), 'rohe ID darf nicht mehr erscheinen');
+});
+
+test('Match-Label: unbekannte ID fällt sicher auf den rohen Key zurück', () => {
+  const dom = new JSDOM('<!DOCTYPE html><body></body>', { url: 'https://example.com/', runScripts: 'outside-only' });
+  const { window: w } = dom;
+  w.eval(readFileSync(PW, 'utf8'));
+  const html = w._pwMatchLabel('99999-88888', {});
+  assert.match(html, /99999-88888/, 'Fallback auf Key fehlt — Zeile würde leer wirken');
+});

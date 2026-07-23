@@ -589,6 +589,22 @@ function _pwMoneyBroad(broad){
 // ── „Liegt das Geld richtig?" (19.07.2026, Lucas) ────────────────────────────
 // Empirischer Test: gewinnt die Seite mit dem meisten Geld — und ist das Geld SCHÄRFER als der
 // Preis (Brier) oder nur Rauschen, das der Preis eh enthält? Aus poly_money_accuracy.py.
+// 25.07.2026 (Lucas: „können wir das Spiel anzeigen statt der IDs?"). Der Match-Key ist
+// "homeId-awayId" (z.B. 2242-1603) — der teams-Map (aus groups[].teams) kennt die Namen. Auf
+// „Heim-Team vs Auswärts-Team" auflösen; Flag ist bereits sicheres HTML, Name wird escaped.
+// Fallback (unbekannte ID / anderes Key-Format): roher Key.
+function _pwMatchLabel(key, teams){
+  const s=String(key||''); const i=s.indexOf('-');
+  if(i>0 && teams){
+    const hid=s.slice(0,i), aid=s.slice(i+1), h=teams[hid], a=teams[aid];
+    if(h||a){
+      const nm=(t,id)=>t?((t.flag?t.flag+' ':'')+_pwEsc(t.name)):_pwEsc(id);
+      return nm(h,hid)+' <span style="color:#6e7681">vs</span> '+nm(a,aid);
+    }
+  }
+  return '<span class="pw-cm">'+_pwEsc(s)+'</span>';
+}
+
 function _pwMoneyAccuracy(acc, teams){
   const a=acc||{};
   const intro='<div class="pw-sec-p" style="max-width:820px;margin:14px 0 18px">'
@@ -625,7 +641,7 @@ function _pwMoneyAccuracy(acc, teams){
   const rows=(a.rows||[]).slice(0,25).map(r=>{
     const seite=s=>({home:'Heim',draw:'Remis',away:'Ausw.'})[s]||s;
     const mark=ok=>ok?'<span style="color:#3fb950">✓</span>':'<span style="color:#f85149">✗</span>';
-    return '<tr><td class="pw-cm">'+_pwEsc(r.key)+'</td>'
+    return '<tr><td>'+_pwMatchLabel(r.key,teams)+'</td>'
       +'<td>'+seite(r.moneyFav)+' '+mark(r.moneyOK)+'</td>'
       +'<td>'+seite(r.priceFav)+' '+mark(r.priceOK)+'</td>'
       +'<td class="pw-cm">'+seite(r.winner)+'</td>'
