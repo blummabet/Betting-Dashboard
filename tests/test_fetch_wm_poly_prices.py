@@ -48,6 +48,36 @@ class TestWMProfileMatches(unittest.TestCase):
         """DELTA_WINDOW_H bleibt 24 — reine Computation-Konstante."""
         self.assertEqual(self.mod.DELTA_WINDOW_H, 24)
 
+
+class TestAlertLiquidityGate(unittest.TestCase):
+    """25.07.2026 (Lucas: „sind die MLS-Alerts valide?"). Vier Alerts feuerten aus dünnen/Longshot-
+    Poly-Märkten (StL-Colorado $369, LAFC-Auswärts Poly 20.00) — dort ist der Poly-Preis Rauschen,
+    die „Edge" ein Artefakt. Das Gate (Volumen + Longshot-Deckel) hatte im Alert-Pfad gefehlt."""
+
+    @classmethod
+    def setUpClass(cls):
+        import fetch_wm_poly_prices as F
+        cls.F = F
+
+    def test_liquider_markt_kein_longshot_ok(self):
+        # Montreal–Miami: $6894 Vol, Heimsieg Poly 0.315 (Quote 3.17) → durch
+        fx = {"vol": 6894, "bestEdgeKey": "hw", "poly_hw": 0.315}
+        self.assertTrue(self.F.alert_market_liquid(fx, min_vol=5000, max_odds=6.0))
+
+    def test_duenner_markt_blockt(self):
+        # St. Louis–Colorado: $369 Vol → raus, egal welche Edge
+        fx = {"vol": 369, "bestEdgeKey": "aw", "poly_aw": 0.285}
+        self.assertFalse(self.F.alert_market_liquid(fx, min_vol=5000, max_odds=6.0))
+
+    def test_longshot_blockt_trotz_volumen(self):
+        # LAFC–SKC: Auswärts-Longshot Poly 0.085 (Quote ~11.8) → raus, selbst mit genug Vol
+        fx = {"vol": 9000, "bestEdgeKey": "aw", "poly_aw": 0.085}
+        self.assertFalse(self.F.alert_market_liquid(fx, min_vol=5000, max_odds=6.0))
+
+    def test_fehlender_preis_blockt(self):
+        fx = {"vol": 9000, "bestEdgeKey": "aw", "poly_aw": None}
+        self.assertFalse(self.F.alert_market_liquid(fx, min_vol=5000, max_odds=6.0))
+
     def test_uses_cfg_helper(self):
         src = (Path(__file__).parent.parent / "fetch_wm_poly_prices.py").read_text(encoding="utf-8")
         self.assertIn("from cocobet_config import CONFIG as _CFG", src)

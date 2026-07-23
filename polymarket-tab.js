@@ -23,7 +23,10 @@
 const POLY_STAKE = 5; // EUR flat stake per pick
 
 // Leagues covered on Polymarket (skip AUT, HUN, CRO, POL)
-const POLY_LEAGUES = new Set(['GER','ENG','ITA','ESP','FRA','NED','POR','TUR','GER2','ENG2','SCO']);
+// 25.07.2026 (Lucas: „Betting-Tab startet erst 31.7, aber dieses WE ist MLS-Runde"). MLS fehlte in
+// der Poly-Liga-Whitelist → MLS-Fixtures fielen aus den Datums-Chips (_getAvailableDates) und dem
+// Render. MLS hat echte Poly-Märkte und laufende Saison → gehört rein.
+const POLY_LEAGUES = new Set(['GER','ENG','ITA','ESP','FRA','NED','POR','TUR','GER2','ENG2','SCO','MLS']);
 
 // Markets we can map to Polymarket outcomes.
 // Over/Under goals: 1.5, 2.5, 3.5 (Polymarket standard lines).

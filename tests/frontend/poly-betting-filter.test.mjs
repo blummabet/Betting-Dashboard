@@ -104,3 +104,18 @@ test('Tages-Chips: „Alle" + ein Chip je Tag, mit Pick-Zähler', () => {
   assert.ok(html.includes("polyChangeDate('')"), '„Alle" setzt den Filter nicht zurück');
   assert.ok(html.includes('data-polydate="23.07.2026"'), 'Tages-Chip für 23.07. fehlt');
 });
+
+// 25.07.2026 (Lucas: „Betting-Tab startet erst 31.7, aber dieses WE ist MLS-Runde"). MLS fehlte in
+// POLY_LEAGUES → MLS-Fixtures fielen aus den Datums-Chips. Regression-Guard: MLS-Datum muss rein,
+// eine Nicht-Poly-Liga bleibt draußen. Datum weit in der Zukunft, damit es unabhängig vom CI-Datum
+// den „ab heute"-Filter passiert.
+test('MLS-Fixtures fließen in die Datums-Chips (POLY_LEAGUES enthält MLS)', () => {
+  const w = loadPoly();
+  w.LEAGUES = {
+    MLS: { fixtures: [{ date: '25.07.2099', home: 1614, away: 9568 }] },
+    BRA: { fixtures: [{ date: '26.07.2099', home: 1, away: 2 }] },   // nicht in POLY_LEAGUES
+  };
+  const dates = w._getAvailableDates();
+  assert.ok(dates.includes('25.07.2099'), 'MLS-Datum fehlt in den Chips — MLS nicht in POLY_LEAGUES?');
+  assert.ok(!dates.includes('26.07.2099'), 'Nicht-Poly-Liga (BRA) darf nicht auftauchen');
+});

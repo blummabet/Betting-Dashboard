@@ -94,6 +94,27 @@ DELTA_WINDOW_H = 24
 
 # Edge-Alerts: Minimum Edge für Telegram-Notification
 ALERT_EDGE_MIN_PP = float(_cfg("telegram", "alert_edge_min_pp", 5.0))
+# 25.07.2026 (Lucas: „sind die Alerts valide?"). NEIN, wenn sie aus einem dünnen/illiquiden Poly-
+# Markt kommen — dort ist der Poly-Preis Rauschen, kein Signal (StL-Colorado feuerte bei $369 Vol,
+# LAFC-Auswärts als Longshot bei Poly 20.00). Zwei Gates, die im Alert-Pfad fehlten, obwohl der Rest
+# der Poly-Logik sie längst hat: Mindest-Volumen + Longshot-Deckel auf der ALARMIERTEN Seite.
+ALERT_MIN_VOL_USD   = float(_cfg("telegram", "alert_min_vol_usd", 5000.0))   # dünner Markt = kein Signal
+ALERT_MAX_POLY_ODDS = float(_cfg("telegram", "alert_max_poly_odds", 6.0))    # Longshot-Preis unzuverlässig
+
+
+def alert_market_liquid(fx, min_vol=None, max_odds=None) -> bool:
+    """Ist der Poly-Markt liquide genug, dass die alarmierte Edge ein handelbares Signal ist?
+    Poly-Volumen ≥ Schwelle UND die alarmierte Seite kein Longshot (Poly-Quote ≤ Deckel).
+    REIN + testbar — dieselbe Prüfung fürs Alert-Gate (neue Edge + Steam-Lag)."""
+    mv = ALERT_MIN_VOL_USD if min_vol is None else min_vol
+    mo = ALERT_MAX_POLY_ODDS if max_odds is None else max_odds
+    if (fx.get("vol") or 0) < mv:
+        return False                          # dünner Markt → kein handelbares Signal
+    pk = fx.get("bestEdgeKey")
+    pp = fx.get(f"poly_{pk}") if pk else None
+    if not pp or pp <= 0 or (1.0 / pp) > mo:
+        return False                          # Longshot / kein Preis → Poly-Preis unzuverlässig
+    return True
 
 # Polymarket-Serie pro Datensatz (29.06.2026): WM=soccer-fifwc, MLS=soccer-mls (am 1. Live-Lauf
 # am self-hosted Runner verifizieren — Gamma ist geoblockt, aus der Sandbox nicht prüfbar).
@@ -1257,11 +1278,16 @@ def main():
             last = dedup_state.get(dedup_key)
             return bool(last) and last >= cutoff
 
+        # FIX 25.07.2026 (Lucas): Alerts nur aus LIQUIDEN Poly-Märkten (siehe alert_market_liquid) —
+        # sonst ist der Poly-Preis Rauschen und die „Edge" ein Artefakt. Gilt für neue Edges + Steam.
+        _alert_liquid = alert_market_liquid
+
         # FIX 12.06.2026: _kickoff_passed-Guard — KEINE Edge-Alerts nach Anpfiff.
         # MEX-ZAF feuerte 22:18 UTC (Spiel 19:00 UTC vorbei). Edge-Alert ist Pre-Match.
         alert_queue = [
             fx for fx in all_fixtures
             if fx.get("edgeTrend") == "new" and (fx.get("bestEdge") or 0) >= ALERT_EDGE_MIN_PP
+               and _alert_liquid(fx)
                and not _kickoff_passed(fx)
                and not _was_alerted_recently(fx)
         ]
@@ -1269,6 +1295,7 @@ def main():
             fx for fx in all_fixtures
             if fx.get("steamLag") and fx.get("edgeTrend") in ("growing",)
                and (fx.get("bestEdge") or 0) >= ALERT_EDGE_MIN_PP
+               and _alert_liquid(fx)
                and not _kickoff_passed(fx)
                and fx not in alert_queue
                and not _was_alerted_recently(fx)
