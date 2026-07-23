@@ -306,11 +306,28 @@ function _stRenderLearning(data, ledger, weights) {
       ? `Lern-Loop aktiv · ${judged} Picks bewertet · ${learned.length} Signale mit Masse`
       : 'Lern-Loop wartet auf erste Ergebnisse'}</span></div>`;
 
+  // ── Ledger-Kopfzeile (22.07.2026, Lucas: „sehe ich auf einen Blick, ob/wann zuletzt gelernt
+  // wurde"). N Einträge · letzter Eintrag vor X (jüngstes resolvedAt) · Loop grün/wartet.
+  // Steht IMMER oben — auch bevor der erste Pick auflöst (dann 0 Einträge · wartet). ──
+  let _lastRecTs = null;
+  for (const r of recs) {
+    const t = _stParseTs(r.resolvedAt);
+    if (t && (!_lastRecTs || t > _lastRecTs)) _lastRecTs = t;
+  }
+  const _lcol = loopOk ? '#3fb950' : '#e3b341';
+  const ledgerHead = `<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:12px;padding:9px 12px;background:${_lcol}12;border:1px solid ${_lcol}40;border-radius:10px;font-size:12.5px;">
+    <span style="font-weight:800;color:${_lcol};">🧾 Ledger: ${recs.length} ${recs.length === 1 ? 'Eintrag' : 'Einträge'}</span>
+    <span style="color:var(--muted);">·</span>
+    <span style="color:var(--fg);">letzter Eintrag ${_lastRecTs ? _stAgo(_lastRecTs) : '—'}</span>
+    <span style="color:var(--muted);">·</span>
+    <span style="font-weight:700;color:${_lcol};">${loopOk ? '✓ Lern-Loop grün' : '⏳ Lern-Loop wartet'}</span></div>`;
+
   if (!recs.length && !finished) {
-    el.innerHTML = '<div style="color:var(--muted);text-align:center;padding:14px;">Noch keine aufgelösten Picks — Lern-Status füllt sich nach den ersten Ergebnissen.</div>';
+    el.innerHTML = ledgerHead +
+      '<div style="color:var(--muted);text-align:center;padding:14px;">Noch keine aufgelösten Picks — Lern-Status füllt sich nach den ersten Ergebnissen.</div>';
     return;
   }
-  el.innerHTML = verdict + pills + bar +
+  el.innerHTML = ledgerHead + verdict + pills + bar +
     `<div style="margin-top:16px;">
       <div style="font-size:11px;color:var(--muted);margin-bottom:2px;"><b style="color:var(--fg);">Feuer</b>=wie oft auf der aktuellen Slate · <b style="color:var(--fg);">Hit</b>=Trefferquote · <b style="color:var(--fg);">Gewicht</b> 1.00=neutral · <b style="color:var(--fg);">Einfluss</b>=Feuer×(Gewicht−1): <span style="color:#3fb950;">grün trägt</span>, <span style="color:#f85149;">rot zieht runter</span></div>
       ${tbl}
