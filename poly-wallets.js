@@ -367,6 +367,11 @@ function _pwRender(){
   const teams=_pwTeamsMap(wm), oddsMap=_pwOddsMap(wm);
   const edges=_pwBuildEdges(prices,oddsMap);
   const hasPoly=wallets&&((wallets.topPositionsAll||[]).length||(wallets.matches&&Object.keys(wallets.matches).length));
+  // 25.07.2026 (Lucas: „ich seh a und c gar nicht"): a (Edge) + c (Wale) sind GLOBAL — sie dürfen
+  // NICHT vom datensatz-eigenen Poly-Bestand abhängen. Gibt es globale Daten, wird gerendert.
+  const hasGlobal=((_pwCache.crossSport&&(_pwCache.crossSport.discrepancies||[]).length)
+    ||(_pwCache.broadLive&&Object.keys(_pwCache.broadLive).length)
+    ||(_pwCache.moneyBroad&&_pwCache.moneyBroad.n));
   const f=_pwFiles();
 
   // 19.07.2026 (Lucas) — eigener Sub-View „Liegt das Geld richtig?" neben dem Edge-Board.
@@ -378,12 +383,11 @@ function _pwRender(){
       +_pwMoneyLive(_pwCache.broadLive)+_pwMoneyBroad(moneyBroad)+_pwMoneyAccuracy(moneyAcc,teams);
     return;
   }
-  if(!hasPoly&&!edges.length){
-    // Liga-Auswahl AUCH im Leer-Zustand zeigen → man kann umschalten, wenn eine Liga noch nichts hat.
-    panel.innerHTML=_pwDatasetTabs()
-      +'<div class="pw-empty"><div class="pw-empty-ico">🐋</div><h2>Polymarket Edge & Smart-Money</h2>'
-      +'<p>Für <b>'+f.label+'</b> noch keine Polymarket-Daten. Sobald der Runner '
-      +'<code>'+f.wallets+'</code> + <code>'+f.prices+'</code> befüllt, erscheint hier das Edge-Board.</p></div>';
+  if(!hasPoly&&!edges.length&&!hasGlobal){
+    panel.innerHTML=_pwViewTabs()
+      +'<div class="pw-empty"><div class="pw-empty-ico">🐋</div><h2>Polymarket-Intelligence</h2>'
+      +'<p>Noch keine Polymarket-Daten — sobald der Mac-Runner die globalen Dateien '
+      +'(<code>poly_money_broad</code>, <code>poly_cross_sport</code>) befüllt, erscheinen hier Edge, Geld & Wale über alle Sportarten.</p></div>';
     return;
   }
   const upd=wallets&&wallets.updatedAt?_pwAgo(wallets.updatedAt):'—';

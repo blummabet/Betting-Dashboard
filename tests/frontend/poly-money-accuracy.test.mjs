@@ -212,3 +212,30 @@ test('Globale Wale (c): größte Einzel-Wallets mit Links', () => {
   assert.match(h, /event\/mlb-a-b/, 'Markt-Link fehlt');
   assert.match(h, /Braves/, 'Seite fehlt');
 });
+
+// 25.07.2026 (Lucas: „ich seh a und c gar nicht"): der alte Leer-Riegel (kein Datensatz-Poly)
+// blockierte die GLOBALEN Sektionen. Ohne Wallet-Daten, aber MIT globalen Daten müssen a+c rendern.
+test('Global rendert auch ohne Datensatz-Poly (a in Chancen, c in Whales)', async () => {
+  const files = {
+    'mls-data.json': { groups: {} }, 'mls_poly_prices.json': { prices: {} },
+    'mls_poly_wallets.json': { topPositionsAll: [], matches: {}, updatedAt: new Date().toISOString() },
+    'poly_cross_sport.json': { matched: 40, discrepancies: [
+      { sport: 'basketball_nba', event: 'Lakers vs Celtics', outcome: 'Lakers', polyPP: 62, pinnPP: 55, gapPP: 7, richtung: 'Poly zu hoch → faden', convergePP: 3 }] },
+    'poly_money_broad_close.json': { 'mlb-a-b': { league: 'MLB', resolved: null, totalUsd: 400000,
+      shares: { Braves: 1, Padres: 1 }, whales: [{ wallet: '0xW', side: 'Braves', usd: 50000 }] } },
+    'poly_money_broad.json': { n: 0 },
+  };
+  const dom = new JSDOM('<!DOCTYPE html><body><div id="polyWalletsPanel"></div></body>',
+    { url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
+  const w = dom.window;
+  w.fetch = (url) => { const u = String(url); let b = null; for (const [f, d] of Object.entries(files)) if (u.includes(f)) { b = d; break; } return Promise.resolve({ ok: b != null, json: () => Promise.resolve(b) }); };
+  w.eval(readFileSync(PW, 'utf8'));
+  w.initPolyWallets();
+  await new Promise(r => setTimeout(r, 25));
+  w._pwSetView('edge');
+  let html = w.document.getElementById('polyWalletsPanel').innerHTML;
+  assert.match(html, /Wo Poly falscher liegt als Pinnacle/, '(a) fehlt in Chancen trotz globaler Daten');
+  w._pwSetView('whales');
+  html = w.document.getElementById('polyWalletsPanel').innerHTML;
+  assert.match(html, /Was einzelne Wale setzen/, '(c) fehlt in Whales trotz globaler Daten');
+});
