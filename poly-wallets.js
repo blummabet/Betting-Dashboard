@@ -155,8 +155,9 @@ function initPolyWallets(){
     jf('poly_money_broad.json'),   // liga-übergreifend (global, nicht datensatz-spezifisch)
     jf(_derive('smartmoney')),     // 19.07.2026 — war ungenutzt: Konzentration/Split/Breite
     jf('poly_money_broad_close.json'),  // 25.07.2026 (Lucas): kommende Märkte ALLER Sportarten → Sektion „Wo liegt das große Geld"
-  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive])=>{
-    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive};
+    jf('poly_cross_sport.json'),        // 25.07.2026 (Lucas): globale Edge Poly-vs-Pinnacle über alle Sportarten
+  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport])=>{
+    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport};
     _pwRender();
   }).catch(err=>{
     // 12.07.2026: Vorher gab es KEIN catch — eine Exception im Render (z.B. der
@@ -338,7 +339,9 @@ function _pwRender(){
   // 19.07.2026 (Lucas) — eigener Sub-View „Liegt das Geld richtig?" neben dem Edge-Board.
   if(_pwView==='money'){
     // (b) Wo liegt das große Geld (kommend, alle Sportarten) ZUERST, dann (d) Rückblick „liegt es richtig".
-    panel.innerHTML=_pwDatasetTabs()+_pwViewTabs()+_pwViewIntro('money')
+    // 25.07.2026 (Lucas: „Liga-Umschalter oben gehört weg"): der Wallets-Tab ist global über alle
+    // Sportarten — kein Datensatz-Selektor mehr. (Sport-Filter je Sektion kommt als Nächstes.)
+    panel.innerHTML=_pwViewTabs()+_pwViewIntro('money')
       +_pwMoneyLive(_pwCache.broadLive)+_pwMoneyBroad(moneyBroad)+_pwMoneyAccuracy(moneyAcc,teams);
     return;
   }
@@ -362,7 +365,7 @@ function _pwRender(){
 
   // 19.07.2026 (Lucas: „besser aufteilen") — Sektionen auf Unter-Reiter verteilt, statt alle 9
   // untereinander. Jede Ansicht zeigt nur ihr Thema → kurze Scroll-Achse, klare Trennung.
-  let h=_pwDatasetTabs()+_pwViewTabs()+_pwViewIntro(_pwView)+head+_pwKpiBand(edges,wallets);
+  let h=_pwViewTabs()+_pwViewIntro(_pwView)+head+_pwKpiBand(edges,wallets);
   let drawScatter=false;
   if(_pwView==='smart'){
     // 💡 Smart-Money: wo liegt das Geld, wie konzentriert, welcher Fluss.
@@ -374,7 +377,9 @@ function _pwRender(){
     h+=_pwFlowTape(wallets,teams);
     h+=_pwLeaderboard(wallets,teams);
   }else{
-    // 🎯 Chancen (Default): Auflösungs-Lücken + interne Fehlbepreisung + (mit Anker) Edge-Board.
+    // 🎯 Chancen (Default): (a) GLOBALE Edge über alle Sportarten ZUERST (Lucas 25.07.2026),
+    // dann die datensatz-eigenen Auflösungs-Lücken + interne Fehlbepreisung + Edge-Board.
+    h+=_pwGlobalEdge(_pwCache.crossSport);
     h+=_pwSettlementBoard(settlement,teams);
     h+=_pwCoherenceBoard(coherence);
     if(!noAnchor){
@@ -640,6 +645,47 @@ function _pwMatchLabel(key, teams){
   return '<span class="pw-cm">'+_pwEsc(s)+'</span>';
 }
 
+// 25.07.2026 (Lucas: „wo liegt Poly falsch vs Pinnacle, alle Sportarten"). Sektion (a): globale
+// Edge aus poly_cross_sport.json (Poly-% vs de-viggte Pinnacle-%). Konvergenz = das Echtheits-
+// Kriterium (Lücke schließt sich über Tage → echt; steht → Artefakt). Dieselbe Daten wie Poly-Radar.
+const _PW_SPORT_ICON={soccer:'⚽',basketball:'🏀',americanfootball:'🏈',baseball:'⚾',icehockey:'🏒',
+  mma:'🥊',boxing:'🥊',tennis:'🎾',cricket:'🏏',golf:'⛳',esports:'🎮'};
+function _pwSportIcon(sport){const s=String(sport||'').toLowerCase();
+  for(const k in _PW_SPORT_ICON) if(s.indexOf(k)>=0) return _PW_SPORT_ICON[k]; return '🎯';}
+function _pwGlobalEdge(cs){
+  const disc=(cs&&cs.discrepancies)?cs.discrepancies.slice():[];
+  const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🎯 Wo Poly falscher liegt als Pinnacle — alle Sportarten</span>'
+    +'<span class="pw-sec-note">Poly-% vs faire Pinnacle-% · Lücke = Kandidat · aber erst echt, wenn sie sich über Tage schließt (Konvergenz)</span></div>';
+  if(!disc.length){
+    const seen=(cs&&cs.matched)||0;
+    return intro+'<div class="pw-none">'+(seen>0
+      ?'Aktuell keine Lücke ≥6pp — Poly & Pinnacle liegen über alle Sportarten eng beieinander (Normalfall auf liquiden Märkten).'
+      :'Noch keine Cross-Sport-Daten (läuft am Mac-Runner, Poly ist EU-geoblockt).')+'</div></section>';
+  }
+  // konvergierende zuerst (echtes Signal), dann größte Lücke
+  disc.sort((a,b)=>{const ca=a.convergePP==null?-9:a.convergePP,cb=b.convergePP==null?-9:b.convergePP;
+    if((cb>0.5)!==(ca>0.5))return (cb>0.5?1:0)-(ca>0.5?1:0); return Math.abs(b.gapPP)-Math.abs(a.gapPP);});
+  const body=disc.slice(0,25).map(d=>{
+    const gapCol=Math.abs(d.gapPP)>=10?'#f85149':Math.abs(d.gapPP)>=7?'#e3b341':'#8b949e';
+    const conv=d.convergePP;
+    const cv=conv==null?'<span class="pw-mut" style="font-style:italic">neu</span>'
+      :conv>0.5?'<span style="color:#3fb950;font-weight:700" title="Lücke schließt sich — echt">▼ '+conv.toFixed(1)+'pp</span>'
+      :conv<-0.5?'<span style="color:#f85149" title="Lücke wächst — Artefakt-Verdacht">▲ '+Math.abs(conv).toFixed(1)+'pp</span>'
+      :'<span class="pw-mut" title="Lücke steht — Artefakt-Verdacht">→ 0</span>';
+    return '<tr>'
+      +'<td style="white-space:nowrap">'+_pwSportIcon(d.sport)+'</td>'
+      +'<td>'+_pwEsc(d.event||'')+' · <span class="pw-mut">'+_pwEsc(d.outcome||'')+'</span></td>'
+      +'<td class="pw-cn" style="color:#a78bfa">'+(d.polyPP)+'%</td>'
+      +'<td class="pw-cn" style="color:#5eead4">'+(d.pinnPP)+'%</td>'
+      +'<td class="pw-cn" style="font-weight:800;color:'+gapCol+'">'+(d.gapPP>0?'+':'')+d.gapPP+'pp</td>'
+      +'<td class="pw-cm" style="font-size:11px">'+_pwEsc(d.richtung||'')+'</td>'
+      +'<td class="pw-cn">'+cv+'</td></tr>';
+  }).join('');
+  return intro+'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
+    +'<th>Sport</th><th>Spiel · Seite</th><th>Poly</th><th>fair</th><th>Lücke</th><th>Richtung</th><th title="Schließt sich die Lücke über die Tage? ▼ = ja (echt) · → = steht (Artefakt)">Konvergenz</th>'
+    +'</tr></thead><tbody>'+body+'</tbody></table></div></section>';
+}
+
 // 25.07.2026 (Lucas: „ich will sehen wo viel Geld liegt, welche Seite, alle Sportarten inkl E-Sport
 // — zum Folgen"). Sektion (b): die eingefrorenen KOMMENDEN Märkte aus poly_money_broad_close.json
 // (resolved==null), nach Volumen sortiert. Team-Namen + Geld-Seite stehen direkt in `shares`.
@@ -651,12 +697,15 @@ function _pwMoneyLive(live){
   const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">💰 Wo liegt das große Geld — alle Sportarten</span>'
     +'<span class="pw-sec-note">kommende Spiele nach Poly-Volumen · auf welche Seite hat die Masse gesetzt · zum Folgen</span></div>';
   if(!rows.length) return intro+'<div class="pw-none">Gerade kein nennenswertes Geld auf kommenden Märkten (füllt sich nah am Anpfiff, läuft am Mac-Runner).</div></section>';
-  const body=rows.map(({m})=>{
+  const body=rows.map(({k,m})=>{
     const oc=Object.entries(m.shares||{}).map(([name,usd])=>({name,usd:Number(usd)||0}));
     const total=oc.reduce((s,o)=>s+o.usd,0)||1; oc.sort((a,b)=>b.usd-a.usd);
     const fav=oc[0], favPct=Math.round(fav.usd/total*100);
     const favPrice=(m.prices&&m.prices[fav.name]!=null)?Math.round(m.prices[fav.name]*100)+'¢':'—';
-    const match=oc.map(o=>o.name).join(' <span style="color:#6e7681">vs</span> ');
+    // Spiel-Spalte klickbar → direkt auf den Polymarket-Markt (Key ist der Event-Slug). 25.07.2026 (Lucas).
+    const matchTxt=oc.map(o=>_pwEsc(o.name)).join(' <span style="color:#6e7681">vs</span> ');
+    const match=k?('<a href="https://polymarket.com/event/'+encodeURIComponent(k)+'" target="_blank" rel="noopener" '
+      +'style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Auf Polymarket öffnen ↗">'+matchTxt+' <span style="color:#a78bfa">↗</span></a>'):matchTxt;
     const ic=_pwCatOf(m.league)[1], lg=(m.league||'').toUpperCase();
     const htk=m.hoursToKickoff!=null?(m.hoursToKickoff<0?'live':m.hoursToKickoff<1?'<1h':Math.round(m.hoursToKickoff)+'h'):'—';
     // Split-Balken (bis 3 Ausgänge)

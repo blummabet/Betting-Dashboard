@@ -157,3 +157,27 @@ test('Wo-liegt-Geld: kommende Märkte aller Sportarten mit Geld-Favorit', () => 
   assert.match(html, /ESPORTS|🎮/, 'E-Sport muss als eigene Sportart erscheinen');
   assert.ok(!/mlb-old/.test(html), 'aufgelöste Spiele gehören nicht in die „kommend"-Sicht');
 });
+
+// 25.07.2026 (Lucas: „Edge vs Pinnacle, alle Sportarten, im Wallets-Tab"). Sektion (a) aus
+// poly_cross_sport.json: Poly-% vs Pinnacle-%, Lücke, Konvergenz. Team-Namen aus `event`.
+test('Globale Edge (a): rendert Cross-Sport-Lücken mit Konvergenz', () => {
+  const dom = new JSDOM('<!DOCTYPE html><body></body>', { url: 'https://example.com/', runScripts: 'outside-only' });
+  const { window: w } = dom;
+  w.eval(readFileSync(PW, 'utf8'));
+  const cs = { matched: 40, discrepancies: [
+    { sport: 'basketball_nba', event: 'Lakers vs Celtics', outcome: 'Lakers', polyPP: 62, pinnPP: 55, gapPP: 7, richtung: 'Poly zu hoch → faden', convergePP: 3 },
+    { sport: 'soccer_mls', event: 'Philadelphia vs Seattle', outcome: 'Heim', polyPP: 40, pinnPP: 48, gapPP: -8, richtung: 'Poly zu niedrig → backen', convergePP: null },
+  ] };
+  const html = w._pwGlobalEdge(cs);
+  assert.match(html, /Lakers vs Celtics/);
+  assert.match(html, /🏀/, 'Sport-Icon (Basketball) fehlt');
+  assert.match(html, /▼ 3\.0pp/, 'Konvergenz (schließende Lücke) muss markiert sein');
+});
+
+test('Globale Edge (a): leer-aber-verglichen ist ehrlich (keine Lücke ≠ keine Daten)', () => {
+  const dom = new JSDOM('<!DOCTYPE html><body></body>', { url: 'https://example.com/', runScripts: 'outside-only' });
+  const { window: w } = dom;
+  w.eval(readFileSync(PW, 'utf8'));
+  const html = w._pwGlobalEdge({ matched: 30, discrepancies: [] });
+  assert.match(html, /keine Lücke/i);
+});
