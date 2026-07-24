@@ -412,6 +412,7 @@ function _pwRender(){
     // 🐋 Whales: (c) GLOBALE Einzel-Wale über alle Sportarten ZUERST (Lucas 25.07.2026),
     // dann die datensatz-eigenen Panels (Einstieg, jüngste Trades, Leaderboard).
     h+=_pwGlobalWhales(_pwCache.broadLive);
+    if(hasPoly) h+=_pwDsDivider(f,'Wale in deinem aktiven Bewerb');
     h+=_pwWhaleEntryQuality(ledger);
     h+=_pwFlowTape(wallets,teams);
     h+=_pwLeaderboard(wallets,teams);
@@ -419,6 +420,7 @@ function _pwRender(){
     // 🎯 Chancen (Default): (a) GLOBALE Edge über alle Sportarten ZUERST (Lucas 25.07.2026),
     // dann die datensatz-eigenen Auflösungs-Lücken + interne Fehlbepreisung + Edge-Board.
     h+=_pwGlobalEdge(_pwCache.crossSport);
+    if(hasPoly) h+=_pwDsDivider(f,'Edge in deinem aktiven Bewerb');
     h+=_pwSettlementBoard(settlement,teams);
     h+=_pwCoherenceBoard(coherence);
     if(!noAnchor){
@@ -685,6 +687,36 @@ function _pwMatchLabel(key, teams){
   return '<span class="pw-cm">'+_pwEsc(s)+'</span>';
 }
 
+// 25.07.2026 (Lucas: „ich seh nur MLS von vorher"): die Close-Datei (Geld+Wale) fror seit 19.07.
+// nichts Neues ein. Statt der beschwichtigenden „füllt sich"-Meldung ehrlich sagen, wenn der Strom
+// STEHT. _pwCloseNewestH = Stunden seit dem jüngsten eingefrorenen Markt (null = leer).
+function _pwCloseNewestH(live){
+  let newest=0;
+  for(const m of (live?Object.values(live):[])){
+    const t=(m&&m.capturedAt)?Date.parse(m.capturedAt):NaN;
+    if(!isNaN(t)&&t>newest) newest=t;
+  }
+  if(!newest) return null;
+  return (Date.now()-newest)/3.6e6;
+}
+function _pwStaleAge(h){ return Math.floor(h/24)>=1?Math.floor(h/24)+' Tagen':Math.round(h)+' h'; }
+// Warnbanner über veralteten Daten (>36h ohne neuen Freeze). Leer, wenn frisch.
+function _pwStaleBanner(live){
+  const h=_pwCloseNewestH(live);
+  if(h==null||h<=36) return '';
+  return '<div class="pw-none" style="border:1px solid #7d4b16;background:#2b1d0e;color:#e3b341;margin:6px 0">'
+    +'⚠️ <b>Datenstrom steht</b> — der zuletzt eingefrorene Markt ist <b>'+_pwStaleAge(h)+' alt</b>. '
+    +'Der Mac-Runner friert gerade keine neuen Märkte ein (Anpfiff-Fenster), Geld &amp; Wale sind daher veraltet.</div>';
+}
+
+// Trenner: alles OBERHALB ist global (alle Sportarten), alles darunter ist der aktive Datensatz
+// (z.B. MLS). 25.07.2026 (Lucas: „ich seh nur MLS von vorher") — macht die Herkunft eindeutig.
+function _pwDsDivider(f,label){
+  return '<div class="pw-dsdiv" style="margin:22px 0 6px;padding-top:14px;border-top:1px dashed #30363d;'
+    +'color:#8b949e;font-size:12px;font-weight:700;letter-spacing:.3px;text-transform:uppercase">'
+    +'↓ '+((f&&f.icon)?f.icon+' ':'')+_pwEsc(label)+' · '+_pwEsc((f&&f.label)||'aktiver Bewerb')+'</div>';
+}
+
 // 25.07.2026 (Lucas: „ich will sehen was einzelne Wale setzen, alle Sportarten"). Sektion (c):
 // die größten EINZELNEN Wallets über alle Märkte (aus poly_money_broad_close.json → whales je Markt).
 function _pwGlobalWhales(live){
@@ -700,9 +732,16 @@ function _pwGlobalWhales(live){
   const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🐋 Was einzelne Wale setzen — alle Sportarten</span>'
     +'<span class="pw-sec-note">die größten Einzel-Wallets je Markt · auf welche Seite · wie viel · Klick → Wallet bzw. Markt auf Polymarket</span></div>'
     +_pwSportFilterBar(cats);
-  if(!all.length) return intro+'<div class="pw-none">'+(_pwSportFilter==='all'
-    ?'Noch keine Wale erfasst (füllt sich nah am Anpfiff über den Mac-Runner).'
-    :'Keine '+_pwSportFilter+'-Wale gerade — Filter „Alle" zeigt wieder alles.')+'</div></section>';
+  if(!all.length){
+    if(_pwSportFilter!=='all')
+      return intro+'<div class="pw-none">Keine '+_pwSportFilter+'-Wale gerade — Filter „Alle" zeigt wieder alles.</div></section>';
+    const h=_pwCloseNewestH(live);
+    const msg=(h!=null&&h>36)
+      ? '⚠️ <b>Datenstrom steht seit '+_pwStaleAge(h)+'</b> — der Mac-Runner friert keine neuen Märkte ein, daher noch keine Wale erfasst.'
+      : 'Noch keine Wale erfasst (füllt sich nah am Anpfiff über den Mac-Runner).';
+    return intro+'<div class="pw-none"'+((h!=null&&h>36)?' style="border:1px solid #7d4b16;background:#2b1d0e;color:#e3b341"':'')+'>'+msg+'</div></section>';
+  }
+  const banner=_pwStaleBanner(live);
   const body=all.slice(0,25).map(x=>{
     const wl='<a href="https://polymarket.com/profile/'+encodeURIComponent(x.wallet)+'" target="_blank" rel="noopener" class="pw-wl" title="Wallet auf Polymarket">'+_pwWallet(x.wallet)+'</a>';
     const mk='<a href="https://polymarket.com/event/'+encodeURIComponent(x.key)+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Markt öffnen ↗">'+_pwEsc(x.match)+' <span style="color:#a78bfa">↗</span></a>';
@@ -711,7 +750,7 @@ function _pwGlobalWhales(live){
       +'<td class="pw-cm"><b style="color:#4cc2ff">'+_pwEsc(x.side)+'</b></td>'
       +'<td class="pw-cn" style="font-weight:800">'+_pwUsd(x.usd)+'</td></tr>';
   }).join('');
-  return intro+'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
+  return intro+banner+'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
     +'<th>Sport</th><th>Spiel</th><th>Wallet</th><th>setzt auf</th><th>Betrag</th>'
     +'</tr></thead><tbody>'+body+'</tbody></table></div></section>';
 }
@@ -797,7 +836,7 @@ function _pwMoneyLive(live){
       +'<td class="pw-cn pw-mut">'+_pwUsd(m.totalUsd)+'</td>'
       +'<td class="pw-cn pw-mut">'+htk+'</td></tr>';
   }).join('');
-  return intro
+  return intro+_pwStaleBanner(live)
     +'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
     +'<th>Sport</th><th>Spiel</th><th>Geld-Split</th><th>Geld liegt auf</th><th>Volumen</th><th>Anpfiff</th>'
     +'</tr></thead><tbody>'+body+'</tbody></table></div></section>';

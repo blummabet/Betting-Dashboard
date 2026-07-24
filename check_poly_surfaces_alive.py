@@ -33,10 +33,15 @@ from pathlib import Path
 BASE = Path(__file__).resolve().parent
 
 # Fläche → (Datei, Zeitstempel-Feld). Global (vom MLS-Runner erzeugt), nicht datensatz-spezifisch.
+# Feld mit '*'-Präfix = kein Top-Level-Stempel, sondern MAX über alle Einträge (dict of markets):
+# so fängt der Guard Dateien, deren Nebenstand (generatedAt) frisch ist, deren eigentlicher
+# CAPTURE aber steht. 25.07.2026 (Lucas): poly_money_broad_close fror seit 19.07. nichts ein,
+# während poly_money_broad.json (generatedAt) jeden Lauf frisch schrieb → alter Guard sah GRÜN.
 SURFACES = [
-    ("Cross-Sport-Radar", "poly_cross_sport.json",   "generatedAt"),
-    ("E-Sport",           "esports_poly_status.json", "updatedAt"),
-    ("Poly-Geld breit",   "poly_money_broad.json",   "generatedAt"),
+    ("Cross-Sport-Radar", "poly_cross_sport.json",       "generatedAt"),
+    ("E-Sport",           "esports_poly_status.json",    "updatedAt"),
+    ("Poly-Geld breit",   "poly_money_broad.json",       "generatedAt"),
+    ("Poly-Geld Freeze",  "poly_money_broad_close.json", "*capturedAt"),
 ]
 
 # manage-mls-poly läuft mind. 12:00 + 22:00–05:00 UTC → schlimmster Lücken-Abstand ~10–12h. 30h fängt
@@ -73,9 +78,25 @@ def evaluate(surfaces, now=None, stale_hours=STALE_HOURS) -> list:
     return problems
 
 
+def _newest_over_entries(d, field):
+    """MAX-Zeitstempel über die Werte eines dict-of-markets (jeder Wert hat `field`)."""
+    if not isinstance(d, dict):
+        return None
+    best = None
+    for v in d.values():
+        if not isinstance(v, dict):
+            continue
+        dt = _parse(v.get(field))
+        if dt is not None and (best is None or dt > best):
+            best = dt
+    return best.isoformat() if best else None
+
+
 def _load_ts(fname, field):
     try:
         d = json.loads((BASE / fname).read_text(encoding="utf-8"))
+        if field.startswith("*"):          # '*capturedAt' → max über alle Einträge
+            return _newest_over_entries(d, field[1:])
         return d.get(field) if isinstance(d, dict) else None
     except Exception:
         return None
