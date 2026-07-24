@@ -120,9 +120,9 @@ const _PW_VIEW_INTRO = {
   whales:['🐋 Whales — die einzelnen großen Wallets',
     'Wer ist zu welchem Preis eingestiegen, jüngste große Trades, Trefferbilanz je Wallet. „Groß\" heißt nicht automatisch „treffsicher\".',
     'Nur Wallets mit bewiesener Trefferquote als Rückenwind nehmen; die bloß-großen ohne Track-Record ignorieren.'],
-  money: ['⚖️ Liegt das Geld richtig? — Rückblick auf aufgelöste Spiele',
-    'Gewinnt die Seite mit dem meisten Geld öfter als der reine Preis? Wenn ja, weiß die Masse mehr, als im Preis steht.',
-    'Pro Liga schauen: steht 🟢 „Geld schärfer\", lohnt dort das Folgen der Masse. Steht 🔴 „Preis besser\", ist das Geld dort dumm — faden. Füllt sich langsam über die Spieltage.'],
+  money: ['💰 Das große Geld — alle Sportarten inkl. E-Sport',
+    'Oben: auf welche Seite die Masse bei KOMMENDEN Spielen gesetzt hat (zum Folgen). Unten: der Rückblick — hatte die Masse bei aufgelösten Spielen recht?',
+    'Kommenden Märkten mit klarer Geld-Mehrheit folgen — aber nur dort, wo der Rückblick unten 🟢 „Geld schärfer\" zeigt. Wo 🔴 „Preis besser\" steht, liegt die Masse daneben → faden.'],
 };
 function _pwViewIntro(view){
   const t=_PW_VIEW_INTRO[view]; if(!t) return '';
@@ -154,8 +154,9 @@ function initPolyWallets(){
     jf(_derive('money_accuracy')),
     jf('poly_money_broad.json'),   // liga-übergreifend (global, nicht datensatz-spezifisch)
     jf(_derive('smartmoney')),     // 19.07.2026 — war ungenutzt: Konzentration/Split/Breite
-  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart])=>{
-    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart};
+    jf('poly_money_broad_close.json'),  // 25.07.2026 (Lucas): kommende Märkte ALLER Sportarten → Sektion „Wo liegt das große Geld"
+  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive])=>{
+    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive};
     _pwRender();
   }).catch(err=>{
     // 12.07.2026: Vorher gab es KEIN catch — eine Exception im Render (z.B. der
@@ -336,8 +337,9 @@ function _pwRender(){
 
   // 19.07.2026 (Lucas) — eigener Sub-View „Liegt das Geld richtig?" neben dem Edge-Board.
   if(_pwView==='money'){
+    // (b) Wo liegt das große Geld (kommend, alle Sportarten) ZUERST, dann (d) Rückblick „liegt es richtig".
     panel.innerHTML=_pwDatasetTabs()+_pwViewTabs()+_pwViewIntro('money')
-      +_pwMoneyBroad(moneyBroad)+_pwMoneyAccuracy(moneyAcc,teams);
+      +_pwMoneyLive(_pwCache.broadLive)+_pwMoneyBroad(moneyBroad)+_pwMoneyAccuracy(moneyAcc,teams);
     return;
   }
   if(!hasPoly&&!edges.length){
@@ -636,6 +638,42 @@ function _pwMatchLabel(key, teams){
     }
   }
   return '<span class="pw-cm">'+_pwEsc(s)+'</span>';
+}
+
+// 25.07.2026 (Lucas: „ich will sehen wo viel Geld liegt, welche Seite, alle Sportarten inkl E-Sport
+// — zum Folgen"). Sektion (b): die eingefrorenen KOMMENDEN Märkte aus poly_money_broad_close.json
+// (resolved==null), nach Volumen sortiert. Team-Namen + Geld-Seite stehen direkt in `shares`.
+function _pwMoneyLive(live){
+  const rows=(live?Object.entries(live):[])
+    .map(([k,m])=>({k,m}))
+    .filter(x=>x.m && x.m.resolved==null && x.m.shares && (x.m.totalUsd||0)>=5000)
+    .sort((a,b)=>(b.m.totalUsd||0)-(a.m.totalUsd||0)).slice(0,30);
+  const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">💰 Wo liegt das große Geld — alle Sportarten</span>'
+    +'<span class="pw-sec-note">kommende Spiele nach Poly-Volumen · auf welche Seite hat die Masse gesetzt · zum Folgen</span></div>';
+  if(!rows.length) return intro+'<div class="pw-none">Gerade kein nennenswertes Geld auf kommenden Märkten (füllt sich nah am Anpfiff, läuft am Mac-Runner).</div></section>';
+  const body=rows.map(({m})=>{
+    const oc=Object.entries(m.shares||{}).map(([name,usd])=>({name,usd:Number(usd)||0}));
+    const total=oc.reduce((s,o)=>s+o.usd,0)||1; oc.sort((a,b)=>b.usd-a.usd);
+    const fav=oc[0], favPct=Math.round(fav.usd/total*100);
+    const favPrice=(m.prices&&m.prices[fav.name]!=null)?Math.round(m.prices[fav.name]*100)+'¢':'—';
+    const match=oc.map(o=>o.name).join(' <span style="color:#6e7681">vs</span> ');
+    const ic=_pwCatOf(m.league)[1], lg=(m.league||'').toUpperCase();
+    const htk=m.hoursToKickoff!=null?(m.hoursToKickoff<0?'live':m.hoursToKickoff<1?'<1h':Math.round(m.hoursToKickoff)+'h'):'—';
+    // Split-Balken (bis 3 Ausgänge)
+    const cols=['#4cc2ff','#f5c518','#ff5d5d'];
+    const seg=oc.slice(0,3).map((o,i)=>'<i style="display:inline-block;height:100%;width:'+Math.round(o.usd/total*100)+'%;background:'+cols[i]+'" title="'+_pwEsc(o.name)+' '+Math.round(o.usd/total*100)+'%"></i>').join('');
+    return '<tr>'
+      +'<td style="white-space:nowrap">'+ic+' <span class="pw-mut" style="font-size:11px">'+lg+'</span></td>'
+      +'<td>'+match+'</td>'
+      +'<td style="min-width:110px"><div style="height:9px;border-radius:5px;overflow:hidden;background:#161b22;display:flex">'+seg+'</div></td>'
+      +'<td class="pw-cm" style="white-space:nowrap"><b style="color:#4cc2ff">'+_pwEsc(fav.name)+'</b> '+favPct+'% <span class="pw-mut">('+favPrice+')</span></td>'
+      +'<td class="pw-cn pw-mut">'+_pwUsd(m.totalUsd)+'</td>'
+      +'<td class="pw-cn pw-mut">'+htk+'</td></tr>';
+  }).join('');
+  return intro
+    +'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
+    +'<th>Sport</th><th>Spiel</th><th>Geld-Split</th><th>Geld liegt auf</th><th>Volumen</th><th>Anpfiff</th>'
+    +'</tr></thead><tbody>'+body+'</tbody></table></div></section>';
 }
 
 function _pwMoneyAccuracy(acc, teams){

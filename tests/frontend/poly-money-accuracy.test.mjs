@@ -136,3 +136,24 @@ test('Wallets: jeder Unter-Reiter hat eine Handlungs-Box', () => {
   }
   assert.equal(w._pwViewIntro('gibtsnicht'), '', 'unbekannte View → leer');
 });
+
+// 25.07.2026 (Lucas: „wo liegt das große Geld, alle Sportarten, zum Folgen"). Sektion (b) aus
+// poly_money_broad_close.json: kommende Märkte (resolved==null) nach Volumen, mit Geld-Seite.
+test('Wo-liegt-Geld: kommende Märkte aller Sportarten mit Geld-Favorit', () => {
+  const dom = new JSDOM('<!DOCTYPE html><body></body>', { url: 'https://example.com/', runScripts: 'outside-only' });
+  const { window: w } = dom;
+  w.eval(readFileSync(PW, 'utf8'));
+  const live = {
+    'mlb-a-b-2026-08-01': { league: 'MLB', totalUsd: 400000, resolved: null, hoursToKickoff: 2,
+      shares: { 'Atlanta Braves': 220000, 'San Diego Padres': 180000 },
+      prices: { 'Atlanta Braves': 0.54, 'San Diego Padres': 0.46 } },
+    'cs2-x-y-2026-08-01': { league: 'ESPORTS', totalUsd: 20000, resolved: null, hoursToKickoff: 1,
+      shares: { 'NAVI': 15000, 'FaZe': 5000 }, prices: { 'NAVI': 0.72, 'FaZe': 0.28 } },
+    'mlb-old-2026-07-01': { league: 'MLB', totalUsd: 900000, resolved: 'home',  // aufgelöst → NICHT zeigen
+      shares: { 'X': 500000, 'Y': 400000 }, prices: { 'X': 0.55, 'Y': 0.45 } },
+  };
+  const html = w._pwMoneyLive(live);
+  assert.match(html, /Atlanta Braves/, 'Team-Name (Geld-Favorit) fehlt');
+  assert.match(html, /ESPORTS|🎮/, 'E-Sport muss als eigene Sportart erscheinen');
+  assert.ok(!/mlb-old/.test(html), 'aufgelöste Spiele gehören nicht in die „kommend"-Sicht');
+});
