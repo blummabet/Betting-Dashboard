@@ -213,6 +213,45 @@ test('Globale Wale (c): größte Einzel-Wallets mit Links', () => {
   assert.match(h, /Braves/, 'Seite fehlt');
 });
 
+// 25.07.2026 (Lucas ③): Heute-wetten-Shortlist — edge-fokussiert (echte Signale, keine bloßen
+// Favoriten), BET (mit Geld) vs FADE (dagegen), Conviction 0–10. Landing-View.
+test('③ Shortlist: Edge (Geld schlägt Preis) → BET mit Conviction; reiner Favorit → SKIP', async () => {
+  const files = {
+    'mls-data.json': { groups: {} }, 'mls_poly_prices.json': { prices: {} },
+    'mls_poly_wallets.json': { topPositionsAll: [], matches: {}, updatedAt: new Date().toISOString() },
+    'poly_money_broad_close.json': {
+      // Geld auf Braves (70%), Preis-Favorit aber Padres → uneinig; Liga „geld_schaerfer" → BET Braves
+      'mlb-a-b': { league: 'MLB', resolved: null, totalUsd: 100000,
+        shares: { 'Atlanta Braves': 70000, 'San Diego Padres': 30000 },
+        prices: { 'Atlanta Braves': 0.45, 'San Diego Padres': 0.55 } },
+      // reiner Favorit, Geld & Preis einig → kein Edge → SKIP (darf NICHT auftauchen)
+      'nba-c-d': { league: 'NBA', resolved: null, totalUsd: 100000,
+        shares: { 'Lakers': 80000, 'Celtics': 20000 }, prices: { 'Lakers': 0.80, 'Celtics': 0.20 } },
+    },
+    'poly_money_broad.json': { n: 100, byLeague: [{ league: 'MLB', verdict: 'geld_schaerfer' }] },
+  };
+  const dom = new JSDOM('<!DOCTYPE html><body><div id="polyWalletsPanel"></div></body>',
+    { url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
+  const w = dom.window;
+  w.fetch = (url) => { const u = String(url); let b = null; for (const [f, d] of Object.entries(files)) if (u.includes(f)) { b = d; break; } return Promise.resolve({ ok: b != null, json: () => Promise.resolve(b) }); };
+  w.eval(readFileSync(PW, 'utf8'));
+  w.initPolyWallets();
+  await new Promise(r => setTimeout(r, 30));
+  w._pwSetView('bet');                        // 🔥 Heute wetten (Landung bleibt vorerst 'money')
+  const html = w.document.getElementById('polyWalletsPanel').innerHTML;
+  assert.match(html, /Heute wetten/);
+  assert.match(html, /BET/); assert.match(html, /Atlanta Braves/);
+  assert.match(html, /7\/10/, 'Conviction = 4 + (Geld 1 + geld_schaerfer 2) = 7');
+  assert.ok(!/Lakers/.test(html), 'reiner Favorit ohne Edge darf nicht in der Shortlist stehen');
+});
+
+test('③ Shortlist leer → „kein Signal ist auch ein Ergebnis" (nicht wetten)', () => {
+  const dom = new JSDOM('<!DOCTYPE html><body></body>', { url: 'https://example.com/', runScripts: 'outside-only' });
+  const { window: w } = dom;
+  w.eval(readFileSync(PW, 'utf8'));
+  assert.match(w._pwShortlist({}), /Kein Signal ist auch ein Ergebnis/);
+});
+
 // 25.07.2026 (Lucas ① Momentum): „was bewegt sich gerade" — stärkster Poly-Preis-Move je Markt,
 // Steam (zieht weiter) vs Reversal (dreht), aus der globalen Preis-Zeitreihe.
 test('Momentum (①): stärkster Move je Markt, Steam vs Reversal, nach Größe sortiert', () => {

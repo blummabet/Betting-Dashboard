@@ -96,8 +96,9 @@ function _pwDatasetTabs(){
 }
 
 // ── View-Umschalter (19.07.2026): Edge-Board vs. „Liegt das Geld richtig?" ────
-// 25.07.2026 (Lucas: „nur der letzte Tab hat Filter+Inhalt"): auf dem globalen Geld-View LANDEN
-// (der immer Multi-Sport-Daten + Filter hat), nicht auf dem oft leeren Chancen-Tab.
+// 25.07.2026 (Lucas ③): 🔥 Heute wetten ist der erste, prominente Tab (der Entscheidungs-Screen),
+// aber die LANDUNG bleibt vorerst auf 💰 Großes Geld (hat heute Inhalt) — die Shortlist ist leer,
+// bis ① Steam + ② Sharp-Wallets Daten gesammelt haben. Dann → 'bet' als Default.
 let _pwView='money';
 function _pwSetView(v){ if(v===_pwView)return; _pwView=v; _pwDestroyCharts(); _pwRender(); }
 if(typeof window!=='undefined') window._pwSetView=_pwSetView;
@@ -107,7 +108,7 @@ function _pwViewTabs(){
   // 19.07.2026 (Lucas: „besser aufteilen") — 4 Unter-Reiter statt 9 gestapelter Sektionen.
   // Reihenfolge 25.07.2026: globales „Großes Geld" (immer Content+Filter) zuerst → Landing-Tab.
   return '<div class="pw-ds" style="margin-top:-6px">'
-    +b('money','💰 Großes Geld')+b('move','📈 Bewegung')+b('edge','🎯 Chancen')+b('smart','💡 Smart-Money')+b('whales','🐋 Whales')
+    +b('bet','🔥 Heute wetten')+b('money','💰 Großes Geld')+b('move','📈 Bewegung')+b('edge','🎯 Chancen')+b('smart','💡 Smart-Money')+b('whales','🐋 Whales')
     +'</div>';
 }
 
@@ -123,6 +124,9 @@ const _PW_VIEW_INTRO = {
   whales:['🐋 Whales — die einzelnen großen Wallets',
     'Wer ist zu welchem Preis eingestiegen, jüngste große Trades, Trefferbilanz je Wallet. „Groß\" heißt nicht automatisch „treffsicher\".',
     'Nur Wallets mit bewiesener Trefferquote als Rückenwind nehmen; die bloß-großen ohne Track-Record ignorieren.'],
+  bet: ['🔥 Heute wetten — die klarsten Gelegenheiten, ein Screen',
+    'Bündelt alle Signale zu einem Verdikt je Markt: BET (mit dem Geld) oder FADE (dagegen), Conviction 0–10. Zeigt nur echte Signale — bloße Favoriten ohne Edge fehlen bewusst.',
+    'Von oben nach unten abarbeiten: hohe Conviction zuerst prüfen, „Warum" lesen, selbst entscheiden. Leere Liste = heute keine klare Kante → nicht wetten.'],
   move: ['📈 Bewegung — was sich GERADE auf Poly bewegt (Steam vs Reversal)',
     'Nicht wo Geld LIEGT, sondern wohin der Poly-Preis zieht: der stärkste Move je Markt über die letzten Stunden, alle Sportarten. Steam ▲ = zieht weiter, dreht ▼ = kehrt um.',
     'Einem beschleunigenden Steam auf der scharfen Seite folgen (dein Steam-Modell); bei einem Reversal vorsichtig sein — das Geld korrigiert. Füllt sich über die nächsten Runner-Läufe.'],
@@ -405,6 +409,12 @@ function _pwRender(){
     // ① Momentum (25.07.2026): was bewegt sich GERADE — globale Poly-Preis-Zeitreihe.
     panel.innerHTML=_pwViewTabs()+_pwSportFilterBar(_pwGlobalCats())+_pwViewIntro('move')
       +_pwMomentum(_pwCache.broadHist);
+    return;
+  }
+  if(_pwView==='bet'){
+    // ③ Heute-wetten-Shortlist (25.07.2026): alle Signale → ein Verdikt je Markt.
+    panel.innerHTML=_pwViewTabs()+_pwSportFilterBar(_pwGlobalCats())+_pwViewIntro('bet')
+      +_pwShortlist(_pwCache.broadLive);
     return;
   }
   if(!hasPoly&&!edges.length&&!hasGlobal){
@@ -928,6 +938,95 @@ function _pwMoneyLive(live){
   return intro+_pwStaleBanner(live)
     +'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
     +'<th>Sport</th><th>Spiel</th><th>Geld-Split</th><th>Geld liegt auf</th><th>Volumen</th><th>Anpfiff</th>'
+    +'</tr></thead><tbody>'+body+'</tbody></table></div></section>';
+}
+
+// ③ Heute-wetten-Shortlist (25.07.2026, Lucas): EINE Liste, die alle Signale zu einer Entscheidung
+// bündelt. Edge-fokussiert — zeigt NICHT bloße Favoriten (kein Edge), sondern Märkte mit echtem
+// Signal: Steam, scharfe Wallet, oder Geld-vs-Preis-Divergenz (liga-informiert). BET = mit dem Geld,
+// FADE = gegen das Geld. Wird reicher, je mehr ①/② Daten sammeln.
+function _pwMoveFor(key){
+  const arr=_pwCache&&_pwCache.broadHist&&_pwCache.broadHist[key];
+  if(!Array.isArray(arr)||arr.length<2) return null;
+  const latest=arr[arr.length-1], base=arr[0], prev=arr[arr.length-2];
+  let best=null;
+  for(const s in (latest.p||{})){ const p1=base.p&&base.p[s], p2=latest.p[s];
+    if(typeof p1!=='number'||typeof p2!=='number') continue;
+    const move=(p2-p1)*100, step=(prev&&typeof prev.p[s]==='number')?(p2-prev.p[s])*100:move;
+    if(!best||move>best.move) best={side:s,move,step}; }
+  if(!best) return null;
+  best.steam=(best.step>0)===(best.move>0)&&Math.abs(best.step)>=0.3;
+  return best;
+}
+function _pwSharpSideFor(m){
+  const bySide={};
+  for(const wh of (m.whales||[])){ const sc=_pwWalletScore(wh.wallet);
+    if(sc&&sc.n>=PW_SHARP_MIN_N&&sc.avgClv>0) bySide[wh.side]=(bySide[wh.side]||0)+(Number(wh.usd)||0); }
+  let best=null,bmax=0; for(const s in bySide) if(bySide[s]>bmax){bmax=bySide[s];best=s;}
+  return best;
+}
+function _pwLeagueMoneyVerdict(league){
+  const bl=_pwCache&&_pwCache.moneyBroad&&_pwCache.moneyBroad.byLeague;
+  if(!Array.isArray(bl)||!league) return null;
+  const up=String(league).toUpperCase();
+  const row=bl.find(x=>String(x.league||'').toUpperCase()===up);
+  return row?row.verdict:null;
+}
+function _pwShortlistScore(key,m){
+  const oc=Object.entries(m.shares||{}).map(([s,u])=>({s,u:Number(u)||0}));
+  if(oc.length<2) return {verdict:'SKIP'};
+  const total=oc.reduce((a,b)=>a+b.u,0)||1; oc.sort((a,b)=>b.u-a.u);
+  const moneyFav=oc[0].s, moneyPct=oc[0].u/total;
+  const pr=m.prices||{}; let priceFav=null,pmax=-1;
+  for(const k in pr){ if(typeof pr[k]==='number'&&pr[k]>pmax){pmax=pr[k];priceFav=k;} }
+  const sides={}, why={};
+  const add=(side,w,reason)=>{ if(!side||!w)return; sides[side]=(sides[side]||0)+w; (why[side]=why[side]||[]).push(reason); };
+  add(moneyFav, moneyPct>=0.6?1:0.5, 'großes Geld auf '+moneyFav+' ('+Math.round(moneyPct*100)+'%)');
+  // Geld vs Preis uneinig → liga-informiert entscheiden (sofort verfügbar aus broadLive)
+  if(priceFav&&priceFav!==moneyFav){
+    const lg=_pwLeagueMoneyVerdict(m.league);
+    if(lg==='geld_schaerfer') add(moneyFav,2,'Geld schlägt Preis in '+(m.league||'').toUpperCase());
+    else if(lg==='preis_besser') add(priceFav,2,'Preis schlägt Geld in '+(m.league||'').toUpperCase());
+    else add(priceFav,1,'Geld & Preis uneinig');
+  }
+  const mv=_pwMoveFor(key);
+  if(mv&&mv.steam&&mv.move>=2) add(mv.side, mv.move>=4?3:2, 'Steam läuft rein (+'+mv.move.toFixed(1)+'pp)');
+  const sharp=_pwSharpSideFor(m);
+  if(sharp) add(sharp,3,'🔥 scharfe Wallet drin');
+  let best=null,bs=0; for(const s in sides) if(sides[s]>bs){bs=sides[s];best=s;}
+  const vol=m.totalUsd||0;
+  if(!best||bs<3||vol<15000) return {verdict:'SKIP'};
+  return {key,match:oc.map(o=>o.s).join(' vs '),verdict:(best===moneyFav?'BET':'FADE'),side:best,
+    conv:Math.min(10,Math.round(4+bs)),reasons:(why[best]||[]).slice(0,3),vol,htk:m.hoursToKickoff,league:m.league};
+}
+function _pwShortlist(live){
+  const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🔥 Heute wetten — die klarsten Gelegenheiten</span>'
+    +'<span class="pw-sec-note">nur Märkte mit echtem Signal (Steam · scharfe Wallet · Geld-vs-Preis) · BET = mit dem Geld, FADE = dagegen · Conviction 0–10 · nichts blind, das ist ein Ausgangspunkt</span></div>';
+  const all=[];
+  for(const [k,m] of Object.entries(live||{})){
+    if(!m||m.resolved!=null||!_pwSportPass(m.league)) continue;
+    const r=_pwShortlistScore(k,m);
+    if(r&&(r.verdict==='BET'||r.verdict==='FADE')) all.push(r);
+  }
+  all.sort((a,b)=>b.conv-a.conv);
+  if(!all.length) return intro+'<div class="pw-none">Aktuell keine klare Gelegenheit. Die Shortlist lebt von <b>📈 Steam</b> und <b>🐋 scharfen Wallets</b> — die sammeln sich noch über die Runner-Läufe (auf Poly ist der Preis ≈ die Geld-Verteilung, daher braucht es die dynamischen Signale). Bis dahin: schau in <b>💰 Großes Geld</b>, <b>📈 Bewegung</b> und <b>🐋 Whales</b>. <b>Kein Signal ist auch ein Ergebnis</b> — dann nicht wetten.</div></section>';
+  const body=all.slice(0,20).map(r=>{
+    const bet=r.verdict==='BET'; const vc=bet?'#3fb950':'#e3b341';
+    const badge='<span style="display:inline-block;padding:2px 9px;border-radius:12px;border:1px solid '+vc+';color:'+vc+';font-weight:800;font-size:11px">'+r.verdict+'</span>';
+    const convCol=r.conv>=8?'#3fb950':r.conv>=6?'#e3b341':'#8b949e';
+    const mk='<a href="https://polymarket.com/event/'+encodeURIComponent(r.key)+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Markt öffnen ↗">'+_pwEsc(r.match)+' <span style="color:#a78bfa">↗</span></a>';
+    const htk=r.htk!=null?(r.htk<0?'live':r.htk<1?'<1h':Math.round(r.htk)+'h'):'—';
+    return '<tr>'
+      +'<td>'+badge+'</td>'
+      +'<td style="white-space:nowrap">'+_pwSportIcon(r.league)+' '+mk+'</td>'
+      +'<td class="pw-cm"><b style="color:#4cc2ff">'+_pwEsc(r.side)+'</b></td>'
+      +'<td class="pw-cn" style="font-weight:800;color:'+convCol+'">'+r.conv+'/10</td>'
+      +'<td style="font-size:12px;color:var(--muted)">'+r.reasons.map(_pwEsc).join(' · ')+'</td>'
+      +'<td class="pw-cn pw-mut">'+_pwUsd(r.vol)+'</td>'
+      +'<td class="pw-cn pw-mut">'+htk+'</td></tr>';
+  }).join('');
+  return intro+'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
+    +'<th>Verdikt</th><th>Spiel</th><th>Empf. Seite</th><th>Conviction</th><th>Warum</th><th>Vol</th><th>Anpfiff</th>'
     +'</tr></thead><tbody>'+body+'</tbody></table></div></section>';
 }
 
