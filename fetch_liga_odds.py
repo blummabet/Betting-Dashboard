@@ -308,6 +308,7 @@ def extract_prices(event: dict, orientation: str, home_name: str, away_name: str
 
 
 from odds_plausibility import plausible_1x2 as _plausible_1x2   # 13.07.2026: EINE Quelle
+from odds_plausibility import derive_double_chance             # 25.07.2026: DC für Safer-Line
 # (08.07.2026, Lucas: Radar zeigte Fake-Drops bis -84pp.) Beim Markt-Opening liefert The Odds API
 # Platzhalter (dr=1.01, aw=1.06 …), bevor der Markt settlet. Die Regel lebt jetzt zentral in
 # odds_plausibility.py — vorher lag sie dreifach im Repo mit UNTERSCHIEDLICHEN Overround-Grenzen
@@ -372,6 +373,14 @@ def build_odds_entry(prices: dict, existing: dict, now_iso: str, hist: list | No
         entry["hw"], entry["dr"], entry["aw"] = existing["hw"], existing["dr"], existing["aw"]
         entry["bookmaker"] = existing.get("bookmaker")
         entry["oddsCarriedAt"] = now_iso   # 1X2 ist getragen, nicht frisch (Guard/Frontend sehen es)
+    # ── 25.07.2026 (Lucas: „bei Sieg-Quote >2 die sichere Linie") — Doppelte Chance ableiten ──
+    # WM holt DC per Event-Endpoint; fetch_liga_odds holt nur h2h/totals/spreads → MLS/Liga hatten
+    # NIE dc1X/dcX2, deshalb feuerte die sichere-Linien-Ableitung (Heimsieg → DC 1X) für sie nie.
+    # DC ist deterministisch aus dem (jetzt geschriebenen, plausiblen) 1X2 → hier ableiten, damit
+    # der bestehende WM-Mechanismus 1:1 auch für MLS/Liga greift. Gegatet in derive_double_chance.
+    _dc = derive_double_chance(entry.get("hw"), entry.get("dr"), entry.get("aw"))
+    if _dc:
+        entry["dc1X"], entry["dc12"], entry["dcX2"] = _dc["dc1X"], _dc["dc12"], _dc["dcX2"]
     # ── 15.07.2026 (Lucas: „quotentechnisch was von MLS?") — O/U-QUOTEN NICHT LÖSCHEN ──
     # BEFUND: TheOddsAPI liefert `totals` für die MLS nur sporadisch (bei 14 von 16 Fetch-Zyklen
     # fehlten sie). Der Eintrag wurde bei JEDEM Lauf komplett neu gebaut und O/U nur übernommen,

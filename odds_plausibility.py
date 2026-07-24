@@ -66,6 +66,24 @@ def devig_1x2(hw, dr, aw):
             "away": round((1.0 / aw) / margin, 4)}
 
 
+def derive_double_chance(hw, dr, aw):
+    """Doppelte Chance {dc1X, dc12, dcX2} aus dem 1X2 ableiten — ODER None bei Platzhaltern.
+
+    25.07.2026 (Lucas: „bei Sieg-Quote >2 nehmen wir doch die sichere Linie — war bei WM so").
+    Die sichere-Linien-Ableitung (Heimsieg → Doppelte Chance 1X) braucht DC-Quoten. WM holt DC
+    per Event-Endpoint; fetch_liga_odds (MLS/Liga) holt nur h2h/totals/spreads → DC fehlte → die
+    sichere Linie feuerte für MLS/Liga NIE. DC ist deterministisch aus dem 1X2: die Buchmacher
+    bepreisen sie genauso (implizite Wahrscheinlichkeiten der zwei Ausgänge addiert, Vig bleibt
+    proportional erhalten). Gegatet über plausible_1x2 — nie aus Platzhalter-Quoten ableiten."""
+    if not plausible_1x2(hw, dr, aw):
+        return None
+    hw, dr, aw = float(hw), float(dr), float(aw)
+    ih, idr, ia = 1.0 / hw, 1.0 / dr, 1.0 / aw
+    return {"dc1X": round(1.0 / (ih + idr), 3),   # Heim oder Remis
+            "dc12": round(1.0 / (ih + ia), 3),    # Heim oder Auswärts
+            "dcX2": round(1.0 / (idr + ia), 3)}   # Remis oder Auswärts
+
+
 def snap_ok(snap) -> bool:
     """Darf dieser History-Snapshot für Move-/Drift-Rechnungen benutzt werden?
 

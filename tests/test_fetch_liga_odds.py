@@ -71,6 +71,31 @@ class TestCurrentOddsGate(unittest.TestCase):
         self.assertEqual(e["hw"], 2.1)
 
 
+class TestDoubleChanceDerivation(unittest.TestCase):
+    """25.07.2026 (Lucas: „bei Sieg-Quote >2 die sichere Linie — war bei WM so"). Die Safer-Line
+    (Heimsieg → DC 1X) braucht DC-Quoten; fetch_liga_odds holt sie nicht → DC aus dem plausiblen
+    1X2 ableiten, damit der WM-Mechanismus auch für MLS/Liga feuert."""
+
+    def test_dc_wird_abgeleitet(self):
+        e = L.build_odds_entry({"hw": 2.32, "dr": 3.73, "aw": 2.85, "bookmaker": "pinnacle"}, {}, "T")
+        # dc1X (Heim oder Remis) = 1/(1/2.32 + 1/3.73) ≈ 1.43
+        self.assertAlmostEqual(e["dc1X"], 1.43, places=2)
+        self.assertTrue(1.0 < e["dc12"] < e["dc1X"])   # 12 ist die sicherste DC
+        self.assertIn("dcX2", e)
+
+    def test_kein_dc_aus_platzhalter(self):
+        e = L.build_odds_entry({"hw": 1.04, "dr": 1.04, "aw": 1.04}, {}, "T")
+        self.assertIsNone(e.get("dc1X"))
+        self.assertIsNone(e.get("hw"))   # 1X2 selbst auch nicht geschrieben (Gate)
+
+    def test_dc_aus_getragener_1x2(self):
+        # implausibles neues 1X2 → altes getragen → DC aus dem getragenen abgeleitet
+        existing = {"hw": 2.0, "dr": 3.5, "aw": 3.6}
+        e = L.build_odds_entry({"hw": 1.04, "dr": 1.01, "aw": 1.04}, existing, "T")
+        self.assertEqual(e["hw"], 2.0)
+        self.assertIsNotNone(e.get("dc1X"))
+
+
 class TestNameMatch(unittest.TestCase):
     def test_norm_strips_rechtsform_accents(self):
         self.assertEqual(L._norm_name("Atlético Madrid"), "atletico madrid")
