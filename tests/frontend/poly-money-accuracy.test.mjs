@@ -213,6 +213,45 @@ test('Globale Wale (c): größte Einzel-Wallets mit Links', () => {
   assert.match(h, /Braves/, 'Seite fehlt');
 });
 
+// 25.07.2026 (Lucas 🔎): Whale-Drilldown — Klick auf Wallet → Track-Record + alle Positionen.
+test('🔎 Wallet-Chip trägt 🔎 mit Drilldown-Aufruf', () => {
+  const dom = new JSDOM('<!DOCTYPE html><body></body>', { url: 'https://example.com/', runScripts: 'outside-only' });
+  const { window: w } = dom;
+  w.eval(readFileSync(PW, 'utf8'));
+  const chip = w._pwWalletChip('0xABCDEF1234567890');
+  assert.match(chip, /🔎/);
+  assert.match(chip, /_pwWhaleDrill\('0xABCDEF1234567890'\)/);
+  assert.match(chip, /profile\/0xABCDEF1234567890/, 'Profil-Link bleibt erhalten');
+});
+
+test('🔎 Drilldown-Overlay: Track-Record + offene Positionen der Wallet', async () => {
+  const files = {
+    'mls-data.json': { groups: {} }, 'mls_poly_prices.json': { prices: {} },
+    'mls_poly_wallets.json': { topPositionsAll: [], matches: {}, updatedAt: new Date().toISOString() },
+    'poly_money_broad.json': { n: 0 },
+    'poly_wallet_track.json': { scores: { '0xSHARP': { n: 6, clvSumPP: 18, wins: 4 } }, open: {
+      '0xSHARP|mlb-a-b|Braves': { wallet: '0xSHARP', key: 'mlb-a-b', side: 'Braves', league: 'MLB', firstPrice: 0.42, usd: 30000 },
+      '0xSHARP|atp-x-y|Alcaraz': { wallet: '0xSHARP', key: 'atp-x-y', side: 'Alcaraz', league: 'TENNIS', firstPrice: 0.6, usd: 12000 },
+      '0xOTHER|nba-c-d|Lakers': { wallet: '0xOTHER', key: 'nba-c-d', side: 'Lakers', league: 'NBA', firstPrice: 0.5, usd: 5000 } } },
+  };
+  const dom = new JSDOM('<!DOCTYPE html><body><div id="polyWalletsPanel"></div></body>',
+    { url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
+  const w = dom.window;
+  w.fetch = (url) => { const u = String(url); let b = null; for (const [f, d] of Object.entries(files)) if (u.includes(f)) { b = d; break; } return Promise.resolve({ ok: b != null, json: () => Promise.resolve(b) }); };
+  w.eval(readFileSync(PW, 'utf8'));
+  w.initPolyWallets();
+  await new Promise(r => setTimeout(r, 30));
+  w._pwWhaleDrill('0xSHARP');
+  const ov = w.document.getElementById('pwDrillOverlay');
+  assert.ok(ov, 'Overlay muss erscheinen');
+  const html = ov.innerHTML;
+  assert.match(html, /\+3\.0pp Ø CLV/); assert.match(html, /🔥 scharf/);
+  assert.match(html, /Braves/); assert.match(html, /Alcaraz/);   // beide Positionen
+  assert.ok(!/Lakers/.test(html), 'fremde Wallet-Position darf nicht auftauchen');
+  w._pwWhaleDrillClose();
+  assert.ok(!w.document.getElementById('pwDrillOverlay'), 'Schließen entfernt das Overlay');
+});
+
 // 25.07.2026 (Lucas 🆕): Was-ist-neu-Feed — neue Einstiege (24h) + Favoriten-Flips.
 test('🆕 Neue Einstiege: nur letzte 24h', () => {
   const dom = new JSDOM('<!DOCTYPE html><body></body>', { url: 'https://example.com/', runScripts: 'outside-only' });

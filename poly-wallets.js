@@ -794,7 +794,7 @@ function _pwGlobalWhales(live){
   }
   const banner=_pwStaleBanner(live);
   const body=all.slice(0,25).map(x=>{
-    const wl='<a href="https://polymarket.com/profile/'+encodeURIComponent(x.wallet)+'" target="_blank" rel="noopener" class="pw-wl" title="Wallet auf Polymarket">'+_pwWallet(x.wallet)+'</a>';
+    const wl=_pwWalletChip(x.wallet);
     const mk='<a href="https://polymarket.com/event/'+encodeURIComponent(x.key)+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Markt öffnen ↗">'+_pwEsc(x.match)+' <span style="color:#a78bfa">↗</span></a>';
     return '<tr><td style="white-space:nowrap">'+_pwSportIcon(x.league)+' <span class="pw-mut" style="font-size:11px">'+_pwEsc((x.league||'').toUpperCase())+'</span></td>'
       +'<td>'+mk+'</td><td>'+wl+'</td>'
@@ -825,6 +825,46 @@ function _pwSharpCell(wallet){
     +' <span class="pw-mut" style="font-size:11px">'+Math.round(sc.hit*100)+'% · n'+sc.n+'</span>'};
 }
 
+// 🔎 Whale-Drilldown (25.07.2026, Lucas): Klick auf eine Wallet → Karte mit Track-Record + allen
+// offenen Positionen über alle Sportarten (aus walletTrack.open/scores). Overlay, schließbar.
+function _pwWhaleDrillClose(){ const o=document.getElementById('pwDrillOverlay'); if(o) o.remove(); }
+function _pwWhaleDrill(wallet){
+  if(typeof document==='undefined'||!wallet) return;
+  _pwWhaleDrillClose();
+  const tr=_pwCache&&_pwCache.walletTrack, sc=_pwWalletScore(wallet);
+  const open=(tr&&tr.open)?Object.values(tr.open).filter(e=>e&&e.wallet===wallet):[];
+  open.sort((a,b)=>(b.usd||0)-(a.usd||0));
+  const totUsd=open.reduce((s,e)=>s+(e.usd||0),0);
+  const sports=[...new Set(open.map(e=>_pwSportCategory(e.league)))];
+  const trHtml=sc
+    ?('<span style="color:'+(sc.avgClv>0?'#3fb950':'#f85149')+';font-weight:800">'+(sc.avgClv>=0?'+':'')+sc.avgClv.toFixed(1)+'pp Ø CLV</span> · '+Math.round(sc.hit*100)+'% Treffer · n'+sc.n+(sc.n>=PW_SHARP_MIN_N&&sc.avgClv>0?' · <b style="color:#3fb950">🔥 scharf</b>':(sc.n>=PW_SHARP_MIN_N?' · <span class="pw-mut">unauffällig/schwach</span>':' · <span class="pw-mut">sammelt (n<'+PW_SHARP_MIN_N+')</span>')))
+    :'<span class="pw-mut">noch kein Track-Record — sammelt über aufgelöste Positionen</span>';
+  const rows=open.length?open.map(e=>'<tr>'
+    +'<td style="white-space:nowrap">'+_pwSportIcon(e.league)+' <span class="pw-mut" style="font-size:11px">'+_pwEsc((e.league||'').toUpperCase())+'</span></td>'
+    +'<td><a href="https://polymarket.com/event/'+encodeURIComponent(e.key)+'" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px dotted #6e7681;text-decoration:none">'+_pwEsc(e.key)+' <span style="color:#a78bfa">↗</span></a></td>'
+    +'<td class="pw-cm"><b style="color:#4cc2ff">'+_pwEsc(e.side)+'</b></td>'
+    +'<td class="pw-cn pw-mut">'+(e.firstPrice!=null?Math.round(e.firstPrice*100)+'¢':'—')+'</td>'
+    +'<td class="pw-cn" style="font-weight:700">'+_pwUsd(e.usd)+'</td></tr>').join('')
+    :'<tr><td colspan="5" class="pw-mut" style="padding:12px">Keine offenen Positionen erfasst (getrackt werden Märkte nah am Anpfiff).</td></tr>';
+  const o=document.createElement('div');
+  o.id='pwDrillOverlay';
+  o.style.cssText='position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;padding:20px';
+  o.addEventListener('click',ev=>{ if(ev.target===o) _pwWhaleDrillClose(); });
+  o.innerHTML='<div style="background:#0d1117;border:1px solid #30363d;border-radius:14px;max-width:720px;width:100%;max-height:85vh;overflow:auto;padding:18px 20px">'
+    +'<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><h2 style="margin:0;font-size:17px">🔎 Wallet '+_pwWallet(wallet)+'</h2>'
+    +'<button onclick="_pwWhaleDrillClose()" style="background:none;border:none;color:#8b949e;font-size:22px;cursor:pointer;line-height:1">✕</button></div>'
+    +'<div style="font-size:13px;margin-bottom:5px">Track-Record: '+trHtml+'</div>'
+    +'<div class="pw-mut" style="font-size:12px;margin-bottom:12px">'+open.length+' offene Position(en) · '+_pwUsd(totUsd)+(sports.length?' · '+_pwEsc(sports.join(', ')):'')+' · <a href="https://polymarket.com/profile/'+encodeURIComponent(wallet)+'" target="_blank" rel="noopener" style="color:#a78bfa">Profil auf Polymarket ↗</a></div>'
+    +'<div class="pw-tw"><table class="pw-tbl"><thead><tr><th>Sport</th><th>Markt</th><th>Seite</th><th>Einstieg</th><th>Einsatz</th></tr></thead><tbody>'+rows+'</tbody></table></div></div>';
+  document.body.appendChild(o);
+}
+// Wallet mit 🔎-Drilldown (Profil-Link + In-App-Karte). Wallet ist eine Hex-Adresse (quote-sicher).
+function _pwWalletChip(wallet){
+  return '<a href="https://polymarket.com/profile/'+encodeURIComponent(wallet)+'" target="_blank" rel="noopener" class="pw-wl" title="Profil auf Polymarket">'+_pwWallet(wallet)+'</a>'
+    +' <span onclick="_pwWhaleDrill(\''+wallet+'\')" title="Positionen & Track-Record ansehen" style="cursor:pointer;color:#a78bfa;font-size:12px">🔎</span>';
+}
+if(typeof window!=='undefined'){ window._pwWhaleDrill=_pwWhaleDrill; window._pwWhaleDrillClose=_pwWhaleDrillClose; }
+
 // 25.07.2026 (Lucas: „die Whale-Auflistung für ALLE Sportarten, die größten Whales halt"):
 // aggregiertes Leaderboard — je Wallet der GESAMT-Einsatz über alle kommenden Märkte (nicht pro
 // Markt wie oben). ② Schärfe-Spalte (CLV/Treffer) + 🔥 für bewiesen-scharfe Wallets.
@@ -850,7 +890,7 @@ function _pwGlobalWhaleLeaderboard(live){
     :'Keine '+_pwSportFilter+'-Wale gerade — Filter „Alle" zeigt wieder alles.')+'</div></section>';
   const body=rows.map((r,i)=>{
     const sh=_pwSharpCell(r.wallet);
-    const wl='<a href="https://polymarket.com/profile/'+encodeURIComponent(r.wallet)+'" target="_blank" rel="noopener" class="pw-wl" title="Wallet auf Polymarket">'+_pwWallet(r.wallet)+'</a>';
+    const wl=_pwWalletChip(r.wallet);
     const sports=[...r.sports].slice(0,4).map(s=>_pwSportIcon(s)).join('');
     const mk=r.top?('<a href="https://polymarket.com/event/'+encodeURIComponent(r.top.key)+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Markt öffnen ↗">'+_pwEsc(r.top.match)+' <span style="color:#a78bfa">↗</span></a>'):'—';
     return '<tr><td class="pw-cn pw-mut">'+(i+1)+'</td>'
@@ -1131,7 +1171,7 @@ function _pwWhatsNew(){
   let h='';
   if(entries.length){
     const body=entries.map(e=>{
-      const wl='<a href="https://polymarket.com/profile/'+encodeURIComponent(e.wallet)+'" target="_blank" rel="noopener" class="pw-wl">'+_pwWallet(e.wallet)+'</a>';
+      const wl=_pwWalletChip(e.wallet);
       const mk='<a href="https://polymarket.com/event/'+encodeURIComponent(e.key)+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681">'+_pwEsc(e.key)+' <span style="color:#a78bfa">↗</span></a>';
       return '<tr><td class="pw-cn pw-mut">'+ago(e.ts)+'</td>'
         +'<td style="white-space:nowrap">'+_pwSportIcon(e.league)+'</td>'
