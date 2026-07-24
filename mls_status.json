@@ -85,9 +85,11 @@
       "id": "odds_sane",
       "label": "Pinnacle-1X2 vollständig + plausibel",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "1604-1601: 1X2 unvollständig hw=None dr=None aw=None"
+      ],
       "note": "Quelle für Modell-Baseline + Edge."
     },
     {
@@ -308,9 +310,11 @@
       "id": "public_consensus",
       "label": "Public-Konsens (Soft-Books) vorhanden",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "1604-1601: kein public_hw"
+      ],
       "note": "Ohne public_* feuert public_static_bias nicht."
     },
     {
@@ -396,9 +400,14 @@
       "id": "safer_line_applied",
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 4,
+      "failures": [
+        "1602-18310 Heimsieg @2.1: sichere Linie Doppelte Chance — 1X @1.388 verfügbar (≥1.35), nicht abgeleitet",
+        "1599-1595 Heimsieg @2.1: sichere Linie Doppelte Chance — 1X @1.364 verfügbar (≥1.35), nicht abgeleitet",
+        "1604-1607 Heimsieg @2.3: sichere Linie Doppelte Chance — 1X @1.438 verfügbar (≥1.35), nicht abgeleitet",
+        "1614-9568 Heimsieg @2.9: sichere Linie Doppelte Chance — 1X @1.736 verfügbar (≥1.35), nicht abgeleitet"
+      ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
     {
@@ -582,6 +591,6 @@
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-07-23T20:21:28.721921+00:00"
+  "nFail": 6,
+  "generatedAt": "2026-07-24T09:27:43.599655+00:00"
 }
