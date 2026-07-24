@@ -29,7 +29,7 @@ test('Smart-Money-Konzentration rendert Split, Halter, Konzentration', () => {
   const html = win()._pwSmartConcentration(smart, prices, {});
   assert.match(html, /Smart-Money-Konzentration/);
   assert.match(html, /Spanien – Argentinien/);
-  assert.match(html, /Geld-Split/);
+  assert.match(html, /Geld liegt auf/);   // 25.07.2026: Spaltenkopf in Klartext (war „Geld-Split")
 });
 
 test('hohe Whale-Konzentration wird als weiches Signal markiert', () => {
@@ -102,15 +102,15 @@ async function renderView(view) {
   return w.document.getElementById('polyWalletsPanel').innerHTML;
 }
 
-test('Reiter Smart-Money: nur Konzentration, kein Whale-Leaderboard', async () => {
+test('Reiter Smart-Money: nur Konzentration, kein Leaderboard', async () => {
   const html = await renderView('smart');
   assert.match(html, /Smart-Money-Konzentration/);
-  assert.doesNotMatch(html, /Whale-Leaderboard/);
+  assert.doesNotMatch(html, /🏦 Größte Wallets/);   // 25.07.2026: „Whale-Leaderboard" → „Größte Wallets"
 });
 
 test('Reiter Whales: Leaderboard, aber keine Smart-Money-Konzentration', async () => {
   const html = await renderView('whales');
-  assert.match(html, /Whale-Leaderboard/);
+  assert.match(html, /🏦 Größte Wallets/);
   assert.doesNotMatch(html, /Smart-Money-Konzentration/);
 });
 

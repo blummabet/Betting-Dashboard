@@ -526,7 +526,9 @@ function _pwWhaleEntryQuality(ledger){
     +'ursprünglich rein? Der Einstieg (nicht die Positionsgröße) trennt scharfes von dummem Geld. '
     +'<i>Track-Record (CLV/ROI je Wallet) folgt, sobald genug Auflösungen gesammelt sind · Stand '+seit+'</i></p>'
     +'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
-    +'<th>Wallet</th><th>Position</th><th>Größe</th><th>Einstieg</th><th>jetzt Ø</th>'
+    +'<th>Wallet</th><th>Spiel/Pick</th><th>Einsatz</th>'
+    +'<th title="Preis, zu dem die Wallet zuerst eingestiegen ist — niedrig = früh/scharf">Einstieg</th>'
+    +'<th title="Aktueller Durchschnittspreis: ▲ teurer nachgekauft (Overconfidence?) · ▼ günstig aufgestockt">nachgekauft zu</th>'
     +'</tr></thead><tbody>'+rows+'</tbody></table></div></section>';
 }
 
@@ -757,7 +759,9 @@ function _pwSmartConcentration(smart,prices,teams){
     +'<b>Konzentration</b>: 🟢 breit = echter Massen-Konsens · 🔴 hoch = wenige Wale drücken den Markt (weiches Signal). '
     +'<b>Fluss</b>: grün = Geld läuft rein, rot = raus.</div>'
     +'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
-    +'<th>Markt</th><th>Geld-Split</th><th>Volumen</th><th>Halter</th><th>Konz.</th><th>Fluss</th><th>Anpfiff</th>'
+    +'<th>Spiel</th><th>Geld liegt auf</th><th>Volumen</th><th title="Anzahl Wallets — viele = breiter Konsens">Wallets</th>'
+    +'<th title="Anteil der größten Wallets: 🟢 breit gestreut = Massen-Konsens · 🔴 hoch = wenige Wale drücken">Wer drückt</th>'
+    +'<th title="Netto-Geldfluss zum Anpfiff: grün rein, rot raus">Fluss</th><th>Anpfiff</th>'
     +'</tr></thead><tbody>'+rows+'</tbody></table></div></section>';
 }
 
@@ -870,8 +874,8 @@ function _pwExitWatch(w){
 }
 function _pwFlowTape(w,teams){
   const tr=(w&&w.bigTradesAll)||[]; if(!tr.length)return '';
-  let h='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">📟 Flow-Tape</span>'
-    +'<span class="pw-sec-note">Jüngste große Trades — frische Edge oder schon gegessen?</span></div><div class="pw-tape">';
+  let h='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">📟 Jüngste große Trades</span>'
+    +'<span class="pw-sec-note">Wer hat gerade groß gekauft/verkauft — frisches Signal oder schon durchgelaufen?</span></div><div class="pw-tape">';
   tr.slice(0,25).forEach(t=>{const buy=(t.action||'').toUpperCase()==='BUY';
     h+='<div class="pw-tp-row"><span class="pw-tp-act '+(buy?'pw-buy':'pw-sell')+'">'+(buy?'KAUF':'VERK')+'</span>'
       +_pwSideFlag(teams,t.key,t.side)
@@ -883,8 +887,8 @@ function _pwFlowTape(w,teams){
 function _pwLeaderboard(w,teams){
   const pos=(w&&w.topPositionsAll)||[]; if(!pos.length)return '';
   const max=pos[0]?pos[0].usd:1;
-  let h='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🏦 Whale-Leaderboard</span>'
-    +'<span class="pw-sec-note">Größte Einzelpositionen (Discovery)</span></div><div class="pw-lb">';
+  let h='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🏦 Größte Wallets</span>'
+    +'<span class="pw-sec-note">Wer hat am meisten drin — reine Größe, noch ohne Trefferbilanz (groß ≠ treffsicher)</span></div><div class="pw-lb">';
   pos.slice(0,20).forEach((p,i)=>{const wpc=Math.max(6,(p.usd/max)*100);
     h+='<div class="pw-lb-row"><span class="pw-rank '+(i<3?'pw-rank-top':'')+'">'+(i+1)+'</span>'
       +_pwSideFlag(teams,p.key,p.side)
