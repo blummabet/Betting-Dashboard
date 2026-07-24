@@ -415,7 +415,7 @@ function _pwRender(){
 
   // 19.07.2026 (Lucas: „besser aufteilen") — Sektionen auf Unter-Reiter verteilt, statt alle 9
   // untereinander. Jede Ansicht zeigt nur ihr Thema → kurze Scroll-Achse, klare Trennung.
-  let h=_pwViewTabs()+_pwSportFilterBar(_pwGlobalCats())+_pwViewIntro(_pwView)+head+_pwKpiBand(edges,wallets);
+  let h=_pwViewTabs()+_pwSportFilterBar(_pwGlobalCats())+_pwViewIntro(_pwView)+head+_pwKpiBand();
   let drawScatter=false;
   if(_pwView==='smart'){
     // 💡 Smart-Money: wo liegt das Geld, wie konzentriert, welcher Fluss.
@@ -448,23 +448,30 @@ function _pwRender(){
 }
 
 // ── KPI-Band ────────────────────────────────────────────────────────────────
-function _pwKpiBand(edges,wallets){
-  const vol=(_pwCache.prices&&_pwCache.prices.prices)?Object.values(_pwCache.prices.prices).reduce((s,m)=>s+(m.vol||0),0):0;
-  const live=edges.filter(e=>e.net>=PW_NOISE).length;
-  const big=edges.length?edges[0].net:0;
-  const whaleCap=((wallets&&wallets.topPositionsAll)||[]).reduce((s,p)=>s+(p.usd||0),0);
-  const cl=(wallets&&wallets.clustersAll)||[]; const buy=cl.reduce((s,c)=>s+(c.buyUsd||0),0),sell=cl.reduce((s,c)=>s+(c.sellUsd||0),0);
-  const senti=(buy+sell)>0?(buy-sell)/(buy+sell):0;
+// 25.07.2026 (Lucas: „+100% kauft netto muss falsch sein — und alles nur MLS"): der Balken war
+// komplett aus dem MLS-Datensatz gerechnet und die Sentiment-Kachel degenerierte bei sell=0 zu
+// +100%. Jetzt GLOBAL über alle Sportarten (broadLive + cross_sport), filter-abhängig, und ohne
+// die kaputte Netto-Kachel. Wo noch keine Daten (Edge/Wale), ehrlich 0 / „—".
+function _pwKpiBand(){
+  const live=_pwCache&&_pwCache.broadLive;
+  const up=(live?Object.values(live):[]).filter(m=>m&&m.resolved==null&&_pwSportPass(m.league));
+  const vol=up.reduce((s,m)=>s+(m.totalUsd||0),0);
+  const cats=new Set(up.map(m=>_pwSportCategory(m.league)));
+  let whaleCap=0;
+  for(const m of up) if(Array.isArray(m.whales)) for(const wh of m.whales) whaleCap+=Number(wh.usd)||0;
+  const cs=_pwCache&&_pwCache.crossSport;
+  const disc=(((cs&&cs.discrepancies)||[])).filter(d=>_pwSportPass(d.sport));
+  const nGaps=disc.length;
+  const big=disc.reduce((mx,d)=>Math.max(mx,Math.abs(d.gapPP||0)),0);
   const card=(ic,lbl,val,sub,col)=>'<div class="pw-kpi"><div class="pw-kpi-ic">'+ic+'</div><div class="pw-kpi-b">'
     +'<div class="pw-kpi-v" style="color:'+(col||PW_C.txt)+'">'+val+'</div><div class="pw-kpi-l">'+lbl+'</div>'
     +(sub?'<div class="pw-kpi-s">'+sub+'</div>':'')+'</div></div>';
-  // 25.07.2026 (Lucas: „Zahlen schnell erkennbar"): Klartext-Labels statt „Live-Edges/THIN/Sentiment".
   return '<div class="pw-kpis">'
-    +card('💧','Poly-Volumen',_pwUsd(vol),'über '+((_pwCache.prices&&_pwCache.prices.prices)?Object.keys(_pwCache.prices.prices).length:0)+' Märkte beobachtet')
-    +card('⚡','Handelbare Chancen',String(live),'ab '+PW_NOISE+'pp Abweichung',live>0?PW_C.green:PW_C.mut)
-    +card('🎯','Größter Vorteil',_pwPP(big),big>=PW_TRADE?'handelbar':big>=PW_NOISE?'dünn — nur beobachten':'kein echter Vorteil',big>=PW_TRADE?PW_C.green:big>=PW_NOISE?PW_C.draw:PW_C.mut)
-    +card('🐋','Whale-Kapital',_pwUsd(whaleCap),'in den Top-Positionen')
-    +card(senti>=0?'📈':'📉','Großes Geld',(senti>=0?'+':'−')+Math.abs(senti*100).toFixed(0)+'%',senti>=0?'kauft netto':'verkauft netto',senti>=0?PW_C.green:PW_C.red)
+    +card('💧','Poly-Volumen',_pwUsd(vol),'auf '+up.length+' kommenden Märkten'+(_pwSportFilter==='all'?' (alle Sportarten)':''))
+    +card('🎯','Größte Lücke vs Pinnacle',big>0?_pwPP(big):'—',big>=PW_TRADE?'handelbar':big>=PW_NOISE?'dünn — nur beobachten':'aktuell keine echte Lücke',big>=PW_TRADE?PW_C.green:big>=PW_NOISE?PW_C.draw:PW_C.mut)
+    +card('⚡','Auffällige Lücken',String(nGaps),'≥6pp Poly vs Pinnacle',nGaps>0?PW_C.green:PW_C.mut)
+    +card('🐋','Whale-Kapital',whaleCap>0?_pwUsd(whaleCap):'—',whaleCap>0?'größte Einzel-Wallets':'füllt sich nah am Anpfiff')
+    +card('🎮','Sportarten',String(cats.size),'mit Geld beobachtet')
     +'</div>';
 }
 
