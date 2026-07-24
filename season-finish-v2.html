@@ -6377,10 +6377,14 @@ function prefillPickBuffer() {
     if (typeof savePicksV2 === 'function') {
       try { savePicksV2(); } catch(e) { console.warn('[Prefill] savePicksV2 error', e); }
     }
-    // If tracking tab is currently open, refresh it so user sees complete data
+    // 25.07.2026 (Lucas: „National-Tracking komplett veraltet"): das trackingV2Panel gehört
+    // jetzt dem WM-Stack-Tracking (initNationalTracking, wm2026-tracking.js) — dasselbe wie das
+    // perfekte International-Tracking. Der Prefill rief hier noch das ALTE _renderV2Tab() und
+    // überschrieb die gute Ausgabe → man sah wieder das veraltete Tracking. Jetzt refresht der
+    // Prefill das aktuelle Tracking (Cache-warm → nur re-render).
     if (document.getElementById('trackingV2Panel')?.style.display !== 'none' &&
-        typeof _renderV2Tab === 'function') {
-      _renderV2Tab();
+        typeof window.initNationalTracking === 'function') {
+      window.initNationalTracking();
     }
   }
 }
