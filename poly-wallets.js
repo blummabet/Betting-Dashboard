@@ -450,7 +450,8 @@ function _pwRender(){
     if(hasPoly) h+=_pwDsDivider(f,'Wale in deinem aktiven Bewerb');
     h+=_pwWhaleEntryQuality(ledger);
     h+=_pwFlowTape(wallets,teams);
-    h+=_pwLeaderboard(wallets,teams);
+    // 25.07.2026 (Lucas: „Kästen die nicht passen entfernen"): das datensatz-eigene „🏦 Größte
+    // Wallets"-Board ist raus — der globale 🏦-Leaderboard oben ersetzt es (sonst doppelt).
   }else{
     // 🎯 Chancen (Default): (a) GLOBALE Edge über alle Sportarten ZUERST (Lucas 25.07.2026),
     // dann die datensatz-eigenen Auflösungs-Lücken + interne Fehlbepreisung + Edge-Board.
@@ -1214,14 +1215,13 @@ function _pwSmartConcentration(smart,prices,teams){
 // ── Edge-Board ──────────────────────────────────────────────────────────────
 function _pwEdgeBoard(edges,teams,wallets,hist){
   const shown=edges.filter(e=>e.net>=PW_NOISE);
+  // 25.07.2026 (Lucas: „Kästen die nicht passen entfernen"): kein Leer-Kasten mehr — das Board
+  // erscheint NUR, wenn es echte handelbare Fehlbepreisung gibt. Die globale Edge (a) deckt sonst ab.
+  if(!shown.length) return '';
   let h='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🎯 Wo Poly günstiger ist als die faire Quote</span>'
-    +'<span class="pw-sec-note">Die pp-Zahl = wie viel Vorteil du hättest, wenn du diese Seite auf Poly nimmst statt zur fairen Pinnacle-Quote (Spread-Abzug '+PW_SPREAD_HAIRCUT+'pp schon drin). Nur Spiele der nächsten '+Math.round(PW_EDGE_HORIZON_H/24)+' Tage · Kurve = Pinnacle-Verlauf · Klick → Details</span></div>';
-  const list=shown.length?shown.slice(0,40):edges.slice(0,6);
-  if(!shown.length) h+='<div class="pw-none">Keine handelbare Fehlbepreisung ≥'+PW_NOISE+'pp — Poly & Pinnacle liegen eng. Unten die größten Sub-Schwellen-Gaps:</div>';
-  h+='<div class="pw-board">';
-  list.forEach(e=>{h+=_pwEdgeRow(e,teams,wallets,hist);});
-  h+='</div></section>';
-  return h;
+    +'<span class="pw-sec-note">Die pp-Zahl = wie viel Vorteil du hättest, wenn du diese Seite auf Poly nimmst statt zur fairen Pinnacle-Quote (Spread-Abzug '+PW_SPREAD_HAIRCUT+'pp schon drin). Nur Spiele der nächsten '+Math.round(PW_EDGE_HORIZON_H/24)+' Tage · Kurve = Pinnacle-Verlauf · Klick → Details</span></div><div class="pw-board">';
+  shown.slice(0,40).forEach(e=>{h+=_pwEdgeRow(e,teams,wallets,hist);});
+  return h+'</div></section>';
 }
 function _pwEdgeRow(e,teams,wallets,hist){
   const wc=(e.mkt==='1x2')?_pwWhaleChip(wallets,e.key,e.side):null;

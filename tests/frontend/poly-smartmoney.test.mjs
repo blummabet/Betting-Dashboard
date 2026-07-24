@@ -110,7 +110,7 @@ test('Reiter Smart-Money: nur Konzentration, kein Leaderboard', async () => {
 
 test('Reiter Whales: Leaderboard, aber keine Smart-Money-Konzentration', async () => {
   const html = await renderView('whales');
-  assert.match(html, /🏦 Größte Wallets/);
+  assert.match(html, /🏦 Größte Whales/);   // 25.07.2026: globaler Leaderboard (MLS-Board entfernt, war doppelt)
   assert.doesNotMatch(html, /Smart-Money-Konzentration/);
 });
 
