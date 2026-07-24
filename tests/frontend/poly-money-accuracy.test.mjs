@@ -213,6 +213,26 @@ test('Globale Wale (c): größte Einzel-Wallets mit Links', () => {
   assert.match(h, /Braves/, 'Seite fehlt');
 });
 
+// 25.07.2026 (Lucas: „die Whale-Auflistung für ALLE Sportarten, die größten Whales"): aggregiertes
+// Leaderboard — je Wallet der GESAMT-Einsatz über mehrere Märkte, nach Größe sortiert.
+test('Globaler Whale-Leaderboard: aggregiert je Wallet über alle Märkte/Sportarten', () => {
+  const dom = new JSDOM('<!DOCTYPE html><body></body>', { url: 'https://example.com/', runScripts: 'outside-only' });
+  const { window: w } = dom;
+  w.eval(readFileSync(PW, 'utf8'));
+  const live = {
+    'mlb-a-b': { league: 'MLB', resolved: null, totalUsd: 400000, shares: { Braves: 1, Padres: 1 },
+      whales: [{ wallet: '0xSHARP', side: 'Braves', usd: 30000 }, { wallet: '0xSMALL', side: 'Padres', usd: 2000 }] },
+    'atp-x-y': { league: 'TENNIS', resolved: null, totalUsd: 90000, shares: { Alcaraz: 1, Sinner: 1 },
+      whales: [{ wallet: '0xSHARP', side: 'Alcaraz', usd: 25000 }] },   // 0xSHARP in 2 Märkten → aggregiert
+  };
+  const h = w._pwGlobalWhaleLeaderboard(live);
+  assert.match(h, /Größte Whales — alle Sportarten/);
+  assert.match(h, /profile\/0xSHARP/, 'Top-Wallet-Link fehlt');
+  assert.match(h, /\$55K/, '0xSHARP muss $30K+$25K = $55K aggregiert zeigen');
+  // 0xSHARP (55K, 2 Märkte) muss vor 0xSMALL (2K) stehen
+  assert.ok(h.indexOf('0xSHARP') < h.indexOf('0xSMALL'), 'nach Gesamt-Einsatz sortiert');
+});
+
 // 25.07.2026 (Lucas: „ich seh a und c gar nicht"): der alte Leer-Riegel (kein Datensatz-Poly)
 // blockierte die GLOBALEN Sektionen. Ohne Wallet-Daten, aber MIT globalen Daten müssen a+c rendern.
 test('Global rendert auch ohne Datensatz-Poly (a in Chancen, c in Whales)', async () => {

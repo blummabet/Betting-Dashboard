@@ -424,7 +424,8 @@ function _pwRender(){
   }else if(_pwView==='whales'){
     // 🐋 Whales: (c) GLOBALE Einzel-Wale über alle Sportarten ZUERST (Lucas 25.07.2026),
     // dann die datensatz-eigenen Panels (Einstieg, jüngste Trades, Leaderboard).
-    h+=_pwGlobalWhales(_pwCache.broadLive);
+    h+=_pwGlobalWhaleLeaderboard(_pwCache.broadLive);   // 🏦 größte Whales ALLE Sportarten (aggregiert)
+    h+=_pwGlobalWhales(_pwCache.broadLive);              // 🐋 je Markt: wer setzt auf welche Seite
     if(hasPoly) h+=_pwDsDivider(f,'Wale in deinem aktiven Bewerb');
     h+=_pwWhaleEntryQuality(ledger);
     h+=_pwFlowTape(wallets,teams);
@@ -771,6 +772,45 @@ function _pwGlobalWhales(live){
   }).join('');
   return intro+banner+'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
     +'<th>Sport</th><th>Spiel</th><th>Wallet</th><th>setzt auf</th><th>Betrag</th>'
+    +'</tr></thead><tbody>'+body+'</tbody></table></div></section>';
+}
+
+// 25.07.2026 (Lucas: „die Whale-Auflistung für ALLE Sportarten, die größten Whales halt"):
+// aggregiertes Leaderboard — je Wallet der GESAMT-Einsatz über alle kommenden Märkte (nicht pro
+// Markt wie oben). Vorstufe zum Sharp-Wallet-Leaderboard (② CLV/ROI folgt mit Track-Record).
+function _pwGlobalWhaleLeaderboard(live){
+  const agg={};
+  for(const [k,m] of (live?Object.entries(live):[])){
+    if(!m||m.resolved!=null||!Array.isArray(m.whales)||!m.whales.length||!_pwSportPass(m.league)) continue;
+    const match=Object.keys(m.shares||{}).join(' vs ');
+    for(const wh of m.whales){
+      if(!wh||!wh.wallet) continue;
+      const usd=Number(wh.usd)||0;
+      const a=agg[wh.wallet]||(agg[wh.wallet]={usd:0,mkts:new Set(),sports:new Set(),top:null});
+      a.usd+=usd; a.mkts.add(k); if(m.league) a.sports.add(m.league);
+      if(!a.top||usd>a.top.usd) a.top={usd,match,side:wh.side,league:m.league,key:k};
+    }
+  }
+  const rows=Object.entries(agg).map(([w,a])=>({wallet:w,usd:a.usd,mkts:a.mkts,sports:a.sports,top:a.top}))
+    .sort((x,y)=>y.usd-x.usd).slice(0,25);
+  const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🏦 Größte Whales — alle Sportarten</span>'
+    +'<span class="pw-sec-note">nach Gesamt-Einsatz über alle kommenden Märkte · reine Größe (Trefferbilanz folgt mit dem Track-Record) · Klick → Wallet bzw. Markt</span></div>';
+  if(!rows.length) return intro+'<div class="pw-none">'+(_pwSportFilter==='all'
+    ?'Noch keine Wale erfasst (füllt sich nah am Anpfiff über den Mac-Runner).'
+    :'Keine '+_pwSportFilter+'-Wale gerade — Filter „Alle" zeigt wieder alles.')+'</div></section>';
+  const body=rows.map((r,i)=>{
+    const wl='<a href="https://polymarket.com/profile/'+encodeURIComponent(r.wallet)+'" target="_blank" rel="noopener" class="pw-wl" title="Wallet auf Polymarket">'+_pwWallet(r.wallet)+'</a>';
+    const sports=[...r.sports].slice(0,4).map(s=>_pwSportIcon(s)).join('');
+    const mk=r.top?('<a href="https://polymarket.com/event/'+encodeURIComponent(r.top.key)+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Markt öffnen ↗">'+_pwEsc(r.top.match)+' <span style="color:#a78bfa">↗</span></a>'):'—';
+    return '<tr><td class="pw-cn pw-mut">'+(i+1)+'</td>'
+      +'<td style="white-space:nowrap">'+wl+'</td>'
+      +'<td class="pw-cn" style="font-weight:800">'+_pwUsd(r.usd)+'</td>'
+      +'<td class="pw-cn pw-mut">'+r.mkts.size+'</td>'
+      +'<td style="white-space:nowrap">'+sports+'</td>'
+      +'<td>'+mk+' <span class="pw-mut" style="font-size:11px">('+_pwEsc(r.top?r.top.side:'')+')</span></td></tr>';
+  }).join('');
+  return intro+'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
+    +'<th>#</th><th>Wallet</th><th>Gesamt-Einsatz</th><th>Märkte</th><th>Sport</th><th>größte Position</th>'
     +'</tr></thead><tbody>'+body+'</tbody></table></div></section>';
 }
 
