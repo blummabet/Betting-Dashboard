@@ -405,7 +405,9 @@ function _pwRender(){
     h+=_pwSmartConcentration(smart,prices,teams);
     h+=_pwExitWatch(wallets,teams);
   }else if(_pwView==='whales'){
-    // 🐋 Whales: einzelne große Wallets — Einstieg, jüngste Trades, Leaderboard.
+    // 🐋 Whales: (c) GLOBALE Einzel-Wale über alle Sportarten ZUERST (Lucas 25.07.2026),
+    // dann die datensatz-eigenen Panels (Einstieg, jüngste Trades, Leaderboard).
+    h+=_pwGlobalWhales(_pwCache.broadLive);
     h+=_pwWhaleEntryQuality(ledger);
     h+=_pwFlowTape(wallets,teams);
     h+=_pwLeaderboard(wallets,teams);
@@ -677,6 +679,37 @@ function _pwMatchLabel(key, teams){
     }
   }
   return '<span class="pw-cm">'+_pwEsc(s)+'</span>';
+}
+
+// 25.07.2026 (Lucas: „ich will sehen was einzelne Wale setzen, alle Sportarten"). Sektion (c):
+// die größten EINZELNEN Wallets über alle Märkte (aus poly_money_broad_close.json → whales je Markt).
+function _pwGlobalWhales(live){
+  const entries=(live?Object.values(live):[]).filter(m=>m&&Array.isArray(m.whales)&&m.whales.length);
+  const cats=new Set(entries.map(m=>_pwSportCategory(m.league)));
+  const all=[];
+  for(const [k,m] of (live?Object.entries(live):[])){
+    if(!m||!Array.isArray(m.whales)||!m.whales.length||!_pwSportPass(m.league)) continue;
+    const match=Object.keys(m.shares||{}).join(' vs ');
+    for(const wh of m.whales) if(wh&&wh.wallet) all.push({wallet:wh.wallet,side:wh.side,usd:Number(wh.usd)||0,key:k,league:m.league,match});
+  }
+  all.sort((a,b)=>b.usd-a.usd);
+  const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🐋 Was einzelne Wale setzen — alle Sportarten</span>'
+    +'<span class="pw-sec-note">die größten Einzel-Wallets je Markt · auf welche Seite · wie viel · Klick → Wallet bzw. Markt auf Polymarket</span></div>'
+    +_pwSportFilterBar(cats);
+  if(!all.length) return intro+'<div class="pw-none">'+(_pwSportFilter==='all'
+    ?'Noch keine Wale erfasst (füllt sich nah am Anpfiff über den Mac-Runner).'
+    :'Keine '+_pwSportFilter+'-Wale gerade — Filter „Alle" zeigt wieder alles.')+'</div></section>';
+  const body=all.slice(0,25).map(x=>{
+    const wl='<a href="https://polymarket.com/profile/'+encodeURIComponent(x.wallet)+'" target="_blank" rel="noopener" class="pw-wl" title="Wallet auf Polymarket">'+_pwWallet(x.wallet)+'</a>';
+    const mk='<a href="https://polymarket.com/event/'+encodeURIComponent(x.key)+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Markt öffnen ↗">'+_pwEsc(x.match)+' <span style="color:#a78bfa">↗</span></a>';
+    return '<tr><td style="white-space:nowrap">'+_pwSportIcon(x.league)+' <span class="pw-mut" style="font-size:11px">'+_pwEsc((x.league||'').toUpperCase())+'</span></td>'
+      +'<td>'+mk+'</td><td>'+wl+'</td>'
+      +'<td class="pw-cm"><b style="color:#4cc2ff">'+_pwEsc(x.side)+'</b></td>'
+      +'<td class="pw-cn" style="font-weight:800">'+_pwUsd(x.usd)+'</td></tr>';
+  }).join('');
+  return intro+'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
+    +'<th>Sport</th><th>Spiel</th><th>Wallet</th><th>setzt auf</th><th>Betrag</th>'
+    +'</tr></thead><tbody>'+body+'</tbody></table></div></section>';
 }
 
 // 25.07.2026 (Lucas: „wo liegt Poly falsch vs Pinnacle, alle Sportarten"). Sektion (a): globale

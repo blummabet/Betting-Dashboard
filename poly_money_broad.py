@@ -202,20 +202,38 @@ def _outcomes(ev):
     return []
 
 
-def _money_shares(outcomes):
-    """Geld-Split je Ausgang aus der Holders-API (Shares × Preis = $-Wert). {label: usd} oder None."""
+WHALES_PER_MARKET = 4   # 25.07.2026 (Lucas: „was setzen einzelne Wale") — Top-N je Markt mitschreiben
+
+
+def _market_money(outcomes):
+    """Aus EINEM Holders-Fetch je Ausgang beides ableiten (quota-schonend):
+      shares = Geld-Split {label: usd} (Shares × Preis)
+      whales = die größten EINZELNEN Wallets [{wallet, side, usd}] über alle Ausgänge
+    → {"shares":…, "whales":…} oder None. 25.07.2026 (Lucas): globale Einzel-Wale (c)."""
     try:
         from fetch_wm_poly_smartmoney import _http_get, _holders_for_token
     except Exception:
         return None
-    usd = {}
+    usd, whales = {}, []
     for o in outcomes:
         if not (o.get("cond") and o.get("token") and isinstance(o.get("price"), (int, float)) and o["price"] > 0):
             continue
         data = _http_get(HOLDERS.format(cond=o["cond"]))
         holders = _holders_for_token(data, o["token"]) if data else []
-        usd[o["label"]] = sum(a for _, a in holders) * float(o["price"])
-    return usd if sum(usd.values()) > 0 else None
+        price = float(o["price"])
+        usd[o["label"]] = sum(a for _, a in holders) * price
+        for w, a in holders:
+            whales.append({"wallet": w, "side": o["label"], "usd": round(a * price)})
+    if sum(usd.values()) <= 0:
+        return None
+    whales.sort(key=lambda x: -x["usd"])
+    return {"shares": usd, "whales": whales[:WHALES_PER_MARKET]}
+
+
+def _money_shares(outcomes):
+    """Rückwärtskompatibel: nur der Geld-Split. Delegiert an _market_money."""
+    mm = _market_money(outcomes)
+    return mm["shares"] if mm else None
 
 
 def fetch_markets():
@@ -294,16 +312,17 @@ def fetch_markets():
         if holder_calls >= MAX_HOLDER_CALLS:
             break
         try:
-            shares = _money_shares(oc)
+            mm = _market_money(oc)     # 25.07.2026: EIN Fetch → Shares + Einzel-Wale
         except Exception:
-            shares = None
+            mm = None
         holder_calls += 1
-        if not shares:
+        if not mm:
             continue     # ohne Geld-Split keine Aussage über „liegt das Geld richtig"
+        shares = mm["shares"]
         prices = {o["label"]: o["price"] for o in oc if o["price"] is not None}
         markets.append({"key": key, "league": league,
                         "hoursToKickoff": htk, "totalUsd": round(vol),
-                        "shares": shares, "prices": prices,
+                        "shares": shares, "prices": prices, "whales": mm.get("whales") or [],
                         "resolved": False, "resolvedPrices": {}})
     fetch_markets.sweep_stats = {"sweepOpen": len(sweep_open), "sweepClosed": len(sweep_closed),
                                  "sweepAdded": sweep_added}
@@ -337,6 +356,7 @@ def capture(markets, frozen, now=None, min_vol=MIN_VOL_USD):
             continue
         out[key] = {"shares": m.get("shares") or {}, "prices": m.get("prices") or {},
                     "league": m.get("league"), "totalUsd": round(float(m.get("totalUsd") or 0)),
+                    "whales": m.get("whales") or [],   # 25.07.2026 (Lucas): Einzel-Wale je Markt (c)
                     "hoursToKickoff": round(htk, 2), "capturedAt": now.isoformat()}
     return out
 

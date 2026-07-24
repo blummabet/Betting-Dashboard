@@ -105,6 +105,13 @@ class TestCaptureBroad:
               "shares": {"home": 0.6, "away": 0.4}, "prices": {"home": 0.5, "away": 0.5}}]
         assert B.capture(m, {})["x"]["league"] == "EPL"
 
+    def test_wale_werden_getragen(self):
+        # 25.07.2026 (Lucas): Einzel-Wale je Markt müssen in den Frozen-Eintrag (c).
+        m = [{"key": "x", "league": "MLB", "hoursToKickoff": 1.0, "totalUsd": 20000,
+              "shares": {"A": 0.6, "B": 0.4}, "prices": {"A": 0.5, "B": 0.5},
+              "whales": [{"wallet": "0xabc", "side": "A", "usd": 5000}]}]
+        assert B.capture(m, {})["x"]["whales"][0]["wallet"] == "0xabc"
+
 
 class TestGammaParser:
     """Die reinen Parser-Helfer (ohne Netz) — Gamma-Event → Ausgänge/Anpfiff."""
@@ -151,7 +158,7 @@ class TestFetchMarketsDedupUndDiagnose:
         monkeypatch.setattr(B, "_gamma_events", lambda tag, closed: ([ev] if not closed else []))
         monkeypatch.setattr(B, "_gamma_top", lambda closed: [])
         monkeypatch.setattr(B, "_hours_to_ko", lambda e, now: 1.0)
-        monkeypatch.setattr(B, "_money_shares", lambda oc: {"NAVI": 30000, "FaZe": 20000})
+        monkeypatch.setattr(B, "_market_money", lambda oc: {"shares": {"NAVI": 30000, "FaZe": 20000}, "whales": []})
         markets = B.fetch_markets()
         # derselbe Markt unter zwei Tags → nur EINE offene Zeile
         assert sum(1 for m in markets if m["key"] == "cs2-navi-faze" and not m["resolved"]) == 1
@@ -180,7 +187,7 @@ class TestFetchMarketsDedupUndDiagnose:
         monkeypatch.setattr(B, "_gamma_events", lambda tag, closed: (gamma.get(tag, []) if not closed else []))
         monkeypatch.setattr(B, "_gamma_top", lambda closed: [])
         monkeypatch.setattr(B, "_hours_to_ko", lambda e, now: 1.0)
-        monkeypatch.setattr(B, "_money_shares", lambda oc: {"A": 60, "B": 40})
+        monkeypatch.setattr(B, "_market_money", lambda oc: {"shares": {"A": 60, "B": 40}, "whales": []})
         monkeypatch.setattr(B, "MAX_HOLDER_CALLS", 1)   # nur EIN Split möglich
         markets = B.fetch_markets()
         keys = [m["key"] for m in markets if not m["resolved"]]
@@ -211,7 +218,7 @@ class TestVolumeSweep:
         monkeypatch.setattr(B, "_gamma_top",
                             lambda closed: ([self._ev("rugby-lei-sar")] if not closed else []))
         monkeypatch.setattr(B, "_hours_to_ko", lambda e, now: 1.0)
-        monkeypatch.setattr(B, "_money_shares", lambda oc: {"A": 60, "B": 40})
+        monkeypatch.setattr(B, "_market_money", lambda oc: {"shares": {"A": 60, "B": 40}, "whales": []})
         markets = B.fetch_markets()
         rugby = [m for m in markets if m["key"] == "rugby-lei-sar"]
         assert rugby and rugby[0]["league"] == "RUGBY"
@@ -225,7 +232,7 @@ class TestVolumeSweep:
         monkeypatch.setattr(B, "_gamma_events", lambda tag, closed: ([ev] if not closed else []))
         monkeypatch.setattr(B, "_gamma_top", lambda closed: ([ev] if not closed else []))
         monkeypatch.setattr(B, "_hours_to_ko", lambda e, now: 1.0)
-        monkeypatch.setattr(B, "_money_shares", lambda oc: {"A": 60, "B": 40})
+        monkeypatch.setattr(B, "_market_money", lambda oc: {"shares": {"A": 60, "B": 40}, "whales": []})
         markets = B.fetch_markets()
         assert sum(1 for m in markets if m["key"] == "mlb-nyy-bos" and not m["resolved"]) == 1
 
@@ -237,6 +244,6 @@ class TestVolumeSweep:
         monkeypatch.setattr(B, "_gamma_events", lambda tag, closed: [])
         monkeypatch.setattr(B, "_gamma_top", lambda closed: ([pol] if not closed else []))
         monkeypatch.setattr(B, "_hours_to_ko", lambda e, now: -240.0)   # Start 10 Tage her
-        monkeypatch.setattr(B, "_money_shares", lambda oc: {"A": 60, "B": 40})
+        monkeypatch.setattr(B, "_market_money", lambda oc: {"shares": {"A": 60, "B": 40}, "whales": []})
         markets = B.fetch_markets()
         assert not any(m["key"] == "us-election-winner" for m in markets)

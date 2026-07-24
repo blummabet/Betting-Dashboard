@@ -198,3 +198,17 @@ test('Sport-Filter: Kategorien aus Liga-Label und Sport-Key', () => {
   assert.match(bar, /🎮 E-Sport/);
   assert.equal(w._pwSportFilterBar(new Set(['US-Sport'])), '', 'eine Kategorie → kein Filter');
 });
+
+// 25.07.2026 (Lucas: „was setzen einzelne Wale, alle Sportarten"). Sektion (c): größte Einzel-
+// Wallets aus den `whales` je Markt, mit Wallet- + Markt-Link.
+test('Globale Wale (c): größte Einzel-Wallets mit Links', () => {
+  const dom = new JSDOM('<!DOCTYPE html><body></body>', { url: 'https://example.com/', runScripts: 'outside-only' });
+  const { window: w } = dom;
+  w.eval(readFileSync(PW, 'utf8'));
+  const live = { 'mlb-a-b': { league: 'MLB', resolved: null, totalUsd: 400000, shares: { Braves: 1, Padres: 1 },
+    whales: [{ wallet: '0xWHALE', side: 'Braves', usd: 50000 }] } };
+  const h = w._pwGlobalWhales(live);
+  assert.match(h, /profile\/0xWHALE/, 'Wallet-Link fehlt');
+  assert.match(h, /event\/mlb-a-b/, 'Markt-Link fehlt');
+  assert.match(h, /Braves/, 'Seite fehlt');
+});
