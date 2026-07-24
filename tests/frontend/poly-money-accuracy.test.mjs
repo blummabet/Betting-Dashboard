@@ -38,9 +38,9 @@ async function renderMoney(acc, broad) {
   return w.document.getElementById('polyWalletsPanel').innerHTML;
 }
 
-test('View-Tab „Liegt das Geld richtig?" existiert', async () => {
+test('View-Tab „Großes Geld" existiert (25.07.2026: Landing-Tab, umbenannt)', async () => {
   const html = await renderMoney({ n: 0 });
-  assert.match(html, /Liegt das Geld richtig/);
+  assert.match(html, /Großes Geld/);
 });
 
 test('Geld schärfer: grünes Klartext-Urteil + Trefferquoten (kein Brier-Jargon)', async () => {

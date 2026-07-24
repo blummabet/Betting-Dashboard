@@ -98,7 +98,7 @@ async function renderView(view) {
   w.eval(readFileSync(PW, 'utf8'));
   w.initPolyWallets();
   await new Promise(r => setTimeout(r, 30));
-  if (view !== 'edge') w._pwSetView(view);
+  w._pwSetView(view);   // 25.07.2026: Default-View ist jetzt 'money' → immer explizit schalten
   return w.document.getElementById('polyWalletsPanel').innerHTML;
 }
 
@@ -122,5 +122,5 @@ test('Reiter Chancen (Default): weder Konzentration noch Leaderboard (die sind e
 
 test('vier Unter-Reiter existieren', async () => {
   const html = await renderView('edge');
-  for (const t of ['🎯 Chancen', '💡 Smart-Money', '🐋 Whales', 'Liegt das Geld richtig']) assert.match(html, new RegExp(t));
+  for (const t of ['🎯 Chancen', '💡 Smart-Money', '🐋 Whales', '💰 Großes Geld']) assert.match(html, new RegExp(t));
 });

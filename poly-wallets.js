@@ -96,16 +96,19 @@ function _pwDatasetTabs(){
 }
 
 // ── View-Umschalter (19.07.2026): Edge-Board vs. „Liegt das Geld richtig?" ────
-let _pwView='edge';
+// 25.07.2026 (Lucas: „nur der letzte Tab hat Filter+Inhalt"): auf dem globalen Geld-View LANDEN
+// (der immer Multi-Sport-Daten + Filter hat), nicht auf dem oft leeren Chancen-Tab.
+let _pwView='money';
 function _pwSetView(v){ if(v===_pwView)return; _pwView=v; _pwDestroyCharts(); _pwRender(); }
 if(typeof window!=='undefined') window._pwSetView=_pwSetView;
 function _pwViewTabs(){
   const b=(id,label)=>'<button class="pw-ds-btn'+(id===_pwView?' pw-ds-on':'')
     +'" onclick="_pwSetView(\''+id+'\')">'+label+'</button>';
   // 19.07.2026 (Lucas: „besser aufteilen") — 4 Unter-Reiter statt 9 gestapelter Sektionen.
+  // Reihenfolge 25.07.2026: globales „Großes Geld" (immer Content+Filter) zuerst → Landing-Tab.
   return '<div class="pw-ds" style="margin-top:-6px">'
-    +b('edge','🎯 Chancen')+b('smart','💡 Smart-Money')+b('whales','🐋 Whales')
-    +b('money','⚖️ Liegt das Geld richtig?')+'</div>';
+    +b('money','💰 Großes Geld')+b('edge','🎯 Chancen')+b('smart','💡 Smart-Money')+b('whales','🐋 Whales')
+    +'</div>';
 }
 
 // 25.07.2026 (Lucas: „alle Zahlen verwirrend, keine Ahnung was ich damit mache"). Pro Unter-Reiter
@@ -156,6 +159,16 @@ function _pwSportFilterBar(cats){
     +chip('all','Alle')+present.map(c=>chip(c,_PW_CAT_ICON[c]+' '+c)).join('')+'</div>';
 }
 function _pwSportPass(s){ return _pwSportFilter==='all' || _pwSportCategory(s)===_pwSportFilter; }
+// 25.07.2026 (Lucas: „Filter nur beim letzten Tab"): Kategorien aus ALLEN globalen Quellen
+// (kommendes Geld + Cross-Sport-Edge) vereinen → EINE Filterleiste oben, auf jedem Unter-Reiter.
+function _pwGlobalCats(){
+  const cats=new Set();
+  const live=_pwCache&&_pwCache.broadLive;
+  if(live) for(const m of Object.values(live)) if(m&&m.resolved==null&&m.league) cats.add(_pwSportCategory(m.league));
+  const cs=_pwCache&&_pwCache.crossSport;
+  if(cs&&Array.isArray(cs.discrepancies)) for(const d of cs.discrepancies) if(d&&d.sport) cats.add(_pwSportCategory(d.sport));
+  return cats;
+}
 
 function _pwViewIntro(view){
   const t=_PW_VIEW_INTRO[view]; if(!t) return '';
@@ -379,7 +392,7 @@ function _pwRender(){
     // (b) Wo liegt das große Geld (kommend, alle Sportarten) ZUERST, dann (d) Rückblick „liegt es richtig".
     // 25.07.2026 (Lucas: „Liga-Umschalter oben gehört weg"): der Wallets-Tab ist global über alle
     // Sportarten — kein Datensatz-Selektor mehr. (Sport-Filter je Sektion kommt als Nächstes.)
-    panel.innerHTML=_pwViewTabs()+_pwViewIntro('money')
+    panel.innerHTML=_pwViewTabs()+_pwSportFilterBar(_pwGlobalCats())+_pwViewIntro('money')
       +_pwMoneyLive(_pwCache.broadLive)+_pwMoneyBroad(moneyBroad)+_pwMoneyAccuracy(moneyAcc,teams);
     return;
   }
@@ -402,7 +415,7 @@ function _pwRender(){
 
   // 19.07.2026 (Lucas: „besser aufteilen") — Sektionen auf Unter-Reiter verteilt, statt alle 9
   // untereinander. Jede Ansicht zeigt nur ihr Thema → kurze Scroll-Achse, klare Trennung.
-  let h=_pwViewTabs()+_pwViewIntro(_pwView)+head+_pwKpiBand(edges,wallets);
+  let h=_pwViewTabs()+_pwSportFilterBar(_pwGlobalCats())+_pwViewIntro(_pwView)+head+_pwKpiBand(edges,wallets);
   let drawScatter=false;
   if(_pwView==='smart'){
     // 💡 Smart-Money: wo liegt das Geld, wie konzentriert, welcher Fluss.
@@ -730,8 +743,7 @@ function _pwGlobalWhales(live){
   }
   all.sort((a,b)=>b.usd-a.usd);
   const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🐋 Was einzelne Wale setzen — alle Sportarten</span>'
-    +'<span class="pw-sec-note">die größten Einzel-Wallets je Markt · auf welche Seite · wie viel · Klick → Wallet bzw. Markt auf Polymarket</span></div>'
-    +_pwSportFilterBar(cats);
+    +'<span class="pw-sec-note">die größten Einzel-Wallets je Markt · auf welche Seite · wie viel · Klick → Wallet bzw. Markt auf Polymarket</span></div>';
   if(!all.length){
     if(_pwSportFilter!=='all')
       return intro+'<div class="pw-none">Keine '+_pwSportFilter+'-Wale gerade — Filter „Alle" zeigt wieder alles.</div></section>';
@@ -767,8 +779,7 @@ function _pwGlobalEdge(cs){
   const cats=new Set(allDisc.map(d=>_pwSportCategory(d.sport)));
   const disc=allDisc.filter(d=>_pwSportPass(d.sport));
   const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🎯 Wo Poly falscher liegt als Pinnacle — alle Sportarten</span>'
-    +'<span class="pw-sec-note">Poly-% vs faire Pinnacle-% · Lücke = Kandidat · aber erst echt, wenn sie sich über Tage schließt (Konvergenz)</span></div>'
-    +_pwSportFilterBar(cats);
+    +'<span class="pw-sec-note">Poly-% vs faire Pinnacle-% · Lücke = Kandidat · aber erst echt, wenn sie sich über Tage schließt (Konvergenz)</span></div>';
   if(!disc.length){
     const seen=(cs&&cs.matched)||0;
     return intro+'<div class="pw-none">'+(seen>0
@@ -809,8 +820,7 @@ function _pwMoneyLive(live){
   const rows=all.filter(x=>_pwSportPass(x.m.league))
     .sort((a,b)=>(b.m.totalUsd||0)-(a.m.totalUsd||0)).slice(0,30);
   const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">💰 Wo liegt das große Geld — alle Sportarten</span>'
-    +'<span class="pw-sec-note">kommende Spiele nach Poly-Volumen · auf welche Seite hat die Masse gesetzt · zum Folgen</span></div>'
-    +_pwSportFilterBar(cats);
+    +'<span class="pw-sec-note">kommende Spiele nach Poly-Volumen · auf welche Seite hat die Masse gesetzt · zum Folgen</span></div>';
   if(!rows.length) return intro+'<div class="pw-none">'+(_pwSportFilter==='all'
     ?'Gerade kein nennenswertes Geld auf kommenden Märkten (füllt sich nah am Anpfiff, läuft am Mac-Runner).'
     :'Keine kommenden '+_pwSportFilter+'-Märkte gerade — Filter „Alle" zeigt wieder alles.')+'</div></section>';
