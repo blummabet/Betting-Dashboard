@@ -50,11 +50,35 @@ class TestEvaluate:
 
 
 class TestSurfacesKonfig:
-    def test_drei_flaechen_registriert(self):
+    def test_flaechen_registriert(self):
         namen = [s[0] for s in PSA.SURFACES]
         assert "Cross-Sport-Radar" in namen and "E-Sport" in namen and "Poly-Geld breit" in namen
+        # 25.07.2026: Close-Freeze als eigene Fläche — sonst maskiert der frische Nebenstand
+        # (poly_money_broad generatedAt) einen stehenden Capture.
+        assert "Poly-Geld Freeze" in namen
 
     def test_collect_gibt_name_ts_paare(self):
         rows = PSA.collect()
         assert all("name" in r and "ts" in r for r in rows)
         assert len(rows) == len(PSA.SURFACES)
+
+
+class TestNewestOverEntries:
+    """'*capturedAt' = MAX-Stempel über ein dict-of-markets. Fängt Dateien, deren Top-Level
+    frisch ist, deren eigentlicher Freeze aber steht (poly_money_broad_close, 25.07.2026)."""
+    def test_max_ueber_eintraege(self):
+        d = {"a": {"capturedAt": _iso(50)}, "b": {"capturedAt": _iso(3)}, "c": {"capturedAt": _iso(80)}}
+        assert PSA._newest_over_entries(d, "capturedAt") == _iso(3)   # jüngster gewinnt
+
+    def test_leeres_dict_gibt_none(self):
+        assert PSA._newest_over_entries({}, "capturedAt") is None
+
+    def test_eintraege_ohne_feld_ignoriert(self):
+        d = {"a": {"foo": 1}, "b": {"capturedAt": _iso(4)}}
+        assert PSA._newest_over_entries(d, "capturedAt") == _iso(4)
+
+    def test_alle_eintraege_alt_meldet_stehenden_freeze(self):
+        # Selbst wenn poly_money_broad.json frisch ist: sind ALLE close-Einträge alt → Freeze steht.
+        surf = [{"name": "Poly-Geld Freeze", "ts": _iso(60)}]
+        probs = PSA.evaluate(surf, now=NOW, stale_hours=30)
+        assert len(probs) == 1 and "steht" in probs[0]
