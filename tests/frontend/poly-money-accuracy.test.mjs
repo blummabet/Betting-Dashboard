@@ -269,6 +269,32 @@ test('Globaler Whale-Leaderboard: aggregiert je Wallet über alle Märkte/Sporta
   assert.ok(h.indexOf('0xSHARP') < h.indexOf('0xSMALL'), 'nach Gesamt-Einsatz sortiert');
 });
 
+// 25.07.2026 (Lucas ②): Sharp-Wallet — CLV/Treffer-Spalte + 🔥 für bewiesen-scharfe Wallets.
+test('② Sharp-Spalte: bewiesene Wallet zeigt CLV + 🔥, dünne zeigt „sammelt"', async () => {
+  const files = {
+    'mls-data.json': { groups: {} }, 'mls_poly_prices.json': { prices: {} },
+    'mls_poly_wallets.json': { topPositionsAll: [], matches: {}, updatedAt: new Date().toISOString() },
+    'poly_money_broad_close.json': {
+      'mlb-a-b': { league: 'MLB', resolved: null, totalUsd: 400000, shares: { A: 1, B: 1 },
+        whales: [{ wallet: '0xSHARP', side: 'A', usd: 50000 }, { wallet: '0xNEW', side: 'B', usd: 9000 }] } },
+    'poly_wallet_track.json': { scores: { '0xSHARP': { n: 6, clvSumPP: 18, wins: 4 }, '0xNEW': { n: 1, clvSumPP: 0.5, wins: 0 } } },
+    'poly_money_broad.json': { n: 0 },
+  };
+  const dom = new JSDOM('<!DOCTYPE html><body><div id="polyWalletsPanel"></div></body>',
+    { url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
+  const w = dom.window;
+  w.fetch = (url) => { const u = String(url); let b = null; for (const [f, d] of Object.entries(files)) if (u.includes(f)) { b = d; break; } return Promise.resolve({ ok: b != null, json: () => Promise.resolve(b) }); };
+  w.eval(readFileSync(PW, 'utf8'));
+  w.initPolyWallets();
+  await new Promise(r => setTimeout(r, 30));
+  w._pwSetView('whales');
+  const html = w.document.getElementById('polyWalletsPanel').innerHTML;
+  assert.match(html, /Schärfe \(CLV/);
+  assert.match(html, /🔥/, 'bewiesen-scharfe Wallet (n≥4, CLV>0) muss 🔥 bekommen');
+  assert.match(html, /\+3\.0pp/, 'Ø CLV = 18/6 = 3.0pp');
+  assert.match(html, /sammelt/, 'dünne Wallet (n<4) zeigt „sammelt" statt Fantasiewert');
+});
+
 // 25.07.2026 (Lucas: „ich seh a und c gar nicht"): der alte Leer-Riegel (kein Datensatz-Poly)
 // blockierte die GLOBALEN Sektionen. Ohne Wallet-Daten, aber MIT globalen Daten müssen a+c rendern.
 test('Global rendert auch ohne Datensatz-Poly (a in Chancen, c in Whales)', async () => {

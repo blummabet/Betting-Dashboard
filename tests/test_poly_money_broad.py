@@ -150,6 +150,48 @@ class TestAppendHistory:
         assert h2 == {}
 
 
+class TestWalletTrack:
+    # 25.07.2026 (Lucas ②): je Whale Einstieg merken, bei Auflösung CLV + Treffer werten.
+    from datetime import datetime, timezone, timedelta
+    T0 = datetime(2026, 7, 24, 12, 0, tzinfo=timezone.utc)
+
+    def _up(self, price, key="mlb-a-b", side="A", wallet="0xW", usd=5000):
+        return {"key": key, "league": "MLB", "resolved": False, "hoursToKickoff": 2.0,
+                "prices": {side: price, "B": round(1 - price, 4)},
+                "whales": [{"wallet": wallet, "side": side, "usd": usd}]}
+
+    def _resolved(self, winner="A", key="mlb-a-b"):
+        return {"key": key, "resolved": True,
+                "resolvedPrices": {winner: 1.0, ("B" if winner == "A" else "A"): 0.0}}
+
+    def test_einstieg_gemerkt(self):
+        t = B.update_wallet_track({}, [self._up(0.40)], now=self.T0)
+        e = t["open"]["0xW|mlb-a-b|A"]
+        assert e["firstPrice"] == 0.40 and e["lastPrice"] == 0.40
+
+    def test_clv_und_treffer_bei_aufloesung(self):
+        # Einstieg 0.40 → zog auf 0.50 (Linie geschlagen) → Seite A gewinnt
+        t = B.update_wallet_track({}, [self._up(0.40)], now=self.T0)
+        t = B.update_wallet_track(t, [self._up(0.50)], now=self.T0 + self.timedelta(hours=1))
+        t = B.update_wallet_track(t, [self._resolved("A")], now=self.T0 + self.timedelta(hours=3))
+        s = t["scores"]["0xW"]
+        assert s["n"] == 1 and abs(s["clvSumPP"] - 10.0) < 0.01 and s["wins"] == 1
+        assert "0xW|mlb-a-b|A" not in t["open"]   # gewertete Position ist geschlossen
+
+    def test_verlierer_zaehlt_treffer_nicht(self):
+        t = B.update_wallet_track({}, [self._up(0.40)], now=self.T0)
+        t = B.update_wallet_track(t, [self._resolved("B")], now=self.T0 + self.timedelta(hours=2))
+        s = t["scores"]["0xW"]
+        assert s["n"] == 1 and s["wins"] == 0
+
+    def test_prunt_verwaiste_offene_position(self):
+        t = B.update_wallet_track({}, [self._up(0.40)], now=self.T0)
+        # Markt taucht 200h später nirgends mehr auf (nie aufgelöst gesehen) → raus
+        t = B.update_wallet_track(t, [self._up(0.55, key="other")],
+                                  now=self.T0 + self.timedelta(hours=200))
+        assert "0xW|mlb-a-b|A" not in t["open"]
+
+
 class TestGammaParser:
     """Die reinen Parser-Helfer (ohne Netz) — Gamma-Event → Ausgänge/Anpfiff."""
 

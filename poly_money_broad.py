@@ -45,6 +45,10 @@ OUT_FILE    = "poly_money_broad.json"
 HIST_FILE   = "poly_money_broad_history.json"
 HIST_MAX_POINTS = 48     # je Markt ~1 Tag Punkte (Runner alle ~30 min) — reicht für kurzfristiges Steam
 HIST_KEEP_H     = 96.0   # Märkte, die 4 Tage nicht mehr gesehen wurden, fallen raus (aufgelöst/vorbei)
+# ② Sharp-Wallet-Track (25.07.2026, Lucas): je Whale den EINSTIEGSPREIS je Markt merken; bei
+# Auflösung CLV (Einstieg→Close) + Treffer werten → wer schlägt systematisch die Linie („scharf",
+# nicht bloß groß). Wie [[project_wallet_track_record]], aber GLOBAL über alle Sportarten.
+WTRACK_FILE = "poly_wallet_track.json"
 
 
 def _now():
@@ -406,6 +410,73 @@ def append_history(prev, markets, now=None, min_vol=MIN_VOL_USD,
     return out
 
 
+def update_wallet_track(prev, markets, now=None, keep_h=HIST_KEEP_H):
+    """② Sharp-Wallet-Track. REIN/testbar. Merkt je (wallet,markt,seite) den Einstiegspreis (erster
+    beobachteter Preis, als der Wal auftauchte); bei Markt-Auflösung wird die Position gewertet:
+      clvPP = (Close − Einstieg)·100   (positiv = früh billig rein, Linie geschlagen → scharf)
+      win   = Seite == Gewinner
+    Rückgabe {open, scores{wallet:{n,clvSumPP,wins,usd}}, updatedAt}. Global über alle Sportarten."""
+    now = now or _now()
+    prev = prev or {}
+    openp = {k: dict(v) for k, v in (prev.get("open") or {}).items()}
+    scores = {w: dict(s) for w, s in (prev.get("scores") or {}).items()}
+
+    # 1) offene Whale-Positionen aus KOMMENDEN Märkten erfassen/auffrischen
+    for m in markets or []:
+        if m.get("resolved"):
+            continue
+        key, prices = m.get("key"), m.get("prices") or {}
+        if not key or not prices:
+            continue
+        for wh in m.get("whales") or []:
+            w, side = wh.get("wallet"), wh.get("side")
+            price = prices.get(side)
+            if not w or side is None or not isinstance(price, (int, float)):
+                continue
+            ok = f"{w}|{key}|{side}"
+            e = openp.get(ok)
+            if e is None:
+                openp[ok] = {"wallet": w, "key": key, "side": side, "league": m.get("league"),
+                             "firstPrice": round(float(price), 4), "firstTs": now.isoformat(),
+                             "lastPrice": round(float(price), 4), "usd": round(float(wh.get("usd") or 0))}
+            else:
+                e["lastPrice"] = round(float(price), 4)
+                e["usd"] = round(float(wh.get("usd") or 0))
+                e["league"] = m.get("league")
+
+    # 2) Positionen werten, deren Markt gerade aufgelöst ist
+    winners = {m.get("key"): winner_from_prices(m.get("resolvedPrices") or {})
+               for m in (markets or []) if m.get("resolved")}
+    for ok in list(openp.keys()):
+        e = openp[ok]
+        if e["key"] not in winners:
+            continue
+        clv = (e["lastPrice"] - e["firstPrice"]) * 100
+        s = scores.setdefault(e["wallet"], {"n": 0, "clvSumPP": 0.0, "wins": 0, "usd": 0})
+        s["n"] += 1
+        s["clvSumPP"] = round(s["clvSumPP"] + clv, 2)
+        if winners[e["key"]] and e["side"] == winners[e["key"]]:
+            s["wins"] += 1
+        s["usd"] += e.get("usd") or 0
+        del openp[ok]
+
+    # 3) verwaiste offene Positionen prunen (Markt seit keep_h nicht mehr gesehen)
+    cutoff = now - timedelta(hours=keep_h)
+    seen = {m.get("key") for m in (markets or [])}
+    for ok in list(openp.keys()):
+        e = openp[ok]
+        if e["key"] in seen:
+            continue
+        try:
+            first = datetime.fromisoformat(str(e["firstTs"]).replace("Z", "+00:00"))
+        except Exception:
+            first = None
+        if not first or first < cutoff:
+            del openp[ok]
+
+    return {"open": openp, "scores": scores, "updatedAt": now.isoformat()}
+
+
 def resolutions(markets) -> dict:
     """{key: winner} aus den aufgelösten Poly-Märkten (settlet auf 1.00)."""
     out = {}
@@ -430,6 +501,10 @@ def main() -> int:
     # ① Momentum (25.07.2026): globale Preis-Zeitreihe fortschreiben (Steam/Reversal über alle Sportarten)
     hist = append_history(_load(HIST_FILE), markets, min_vol=min_vol)
     (BASE / HIST_FILE).write_text(json.dumps(hist, ensure_ascii=False, indent=1), encoding="utf-8")
+
+    # ② Sharp-Wallet-Track (25.07.2026): Einstieg→Close/Outcome je Whale werten (CLV/Treffer)
+    wtrack = update_wallet_track(_load(WTRACK_FILE), markets)
+    (BASE / WTRACK_FILE).write_text(json.dumps(wtrack, ensure_ascii=False, indent=1), encoding="utf-8")
 
     rep = PMA.evaluate(frozen, resolutions(markets), min_odds=min_odds)
     rep["generatedAt"] = _now().isoformat()
