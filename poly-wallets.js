@@ -108,7 +108,7 @@ function _pwViewTabs(){
   // 19.07.2026 (Lucas: „besser aufteilen") — 4 Unter-Reiter statt 9 gestapelter Sektionen.
   // Reihenfolge 25.07.2026: globales „Großes Geld" (immer Content+Filter) zuerst → Landing-Tab.
   return '<div class="pw-ds" style="margin-top:-6px">'
-    +b('bet','🔥 Heute wetten')+b('money','💰 Großes Geld')+b('move','📈 Bewegung')+b('edge','🎯 Chancen')+b('smart','💡 Smart-Money')+b('whales','🐋 Whales')
+    +b('bet','🔥 Heute wetten')+b('money','💰 Großes Geld')+b('move','📈 Bewegung')+b('new','🆕 Neu')+b('edge','🎯 Chancen')+b('smart','💡 Smart-Money')+b('whales','🐋 Whales')
     +'</div>';
 }
 
@@ -127,6 +127,9 @@ const _PW_VIEW_INTRO = {
   bet: ['🔥 Heute wetten — die klarsten Gelegenheiten, ein Screen',
     'Bündelt alle Signale zu einem Verdikt je Markt: BET (mit dem Geld) oder FADE (dagegen), Conviction 0–10. Zeigt nur echte Signale — bloße Favoriten ohne Edge fehlen bewusst.',
     'Von oben nach unten abarbeiten: hohe Conviction zuerst prüfen, „Warum" lesen, selbst entscheiden. Leere Liste = heute keine klare Kante → nicht wetten.'],
+  new: ['🆕 Neu — was sich seit deinem letzten Blick getan hat',
+    'Aktivitäts-Feed über alle Sportarten: neue große Whale-Einstiege (letzte 24h) und Märkte, in denen der Favorit gekippt ist. Der schnelle „was ist passiert"-Check.',
+    'Ein frischer 🔥-Einstieg oder ein Favoriten-Flip ist ein Anstoß zum Hinschauen — kein Auto-Bet. Prüf den Markt in 🔥 Heute wetten oder 📈 Bewegung nach.'],
   move: ['📈 Bewegung — was sich GERADE auf Poly bewegt (Steam vs Reversal)',
     'Nicht wo Geld LIEGT, sondern wohin der Poly-Preis zieht: der stärkste Move je Markt über die letzten Stunden, alle Sportarten. Steam ▲ = zieht weiter, dreht ▼ = kehrt um.',
     'Einem beschleunigenden Steam auf der scharfen Seite folgen (dein Steam-Modell); bei einem Reversal vorsichtig sein — das Geld korrigiert. Füllt sich über die nächsten Runner-Läufe.'],
@@ -415,6 +418,12 @@ function _pwRender(){
     // ③ Heute-wetten-Shortlist (25.07.2026): alle Signale → ein Verdikt je Markt.
     panel.innerHTML=_pwViewTabs()+_pwSportFilterBar(_pwGlobalCats())+_pwViewIntro('bet')
       +_pwShortlist(_pwCache.broadLive);
+    return;
+  }
+  if(_pwView==='new'){
+    // 🆕 Was-ist-neu-Feed (25.07.2026): neue Einstiege + Favoriten-Flips aus akkumulierten Daten.
+    panel.innerHTML=_pwViewTabs()+_pwSportFilterBar(_pwGlobalCats())+_pwViewIntro('new')
+      +_pwWhatsNew();
     return;
   }
   if(!hasPoly&&!edges.length&&!hasGlobal){
@@ -1083,6 +1092,68 @@ function _pwMomentum(hist){
   return intro+'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
     +'<th>Sport</th><th>Spiel</th><th>Seite</th><th>von→zu</th><th>Move</th><th>Signal</th><th>über</th><th>Anpfiff</th>'
     +'</tr></thead><tbody>'+body+'</tbody></table></div></section>';
+}
+
+// 🆕 Was-ist-neu (25.07.2026, Lucas): Aktivitäts-Feed aus den akkumulierten Daten — neue große
+// Einstiege (wallet_track.open, firstTs<24h) + gekippte Favoriten (broadHist: führende Seite
+// gewechselt). Geräteübergreifend, kein Browser-State. Füllt sich mit den Runner-Läufen.
+function _pwNewEntries(track, hours){
+  const open=track&&track.open; if(!open) return [];
+  const cutoff=Date.now()-hours*3.6e6, rows=[];
+  for(const e of Object.values(open)){
+    if(!e||!_pwSportPass(e.league)) continue;
+    const t=Date.parse(e.firstTs); if(isNaN(t)||t<cutoff) continue;
+    const sc=_pwWalletScore(e.wallet);
+    rows.push({wallet:e.wallet,key:e.key,side:e.side,league:e.league,price:e.firstPrice,usd:e.usd||0,ts:t,
+      sharp:!!(sc&&sc.n>=PW_SHARP_MIN_N&&sc.avgClv>0),avgClv:sc?sc.avgClv:null,n:sc?sc.n:0});
+  }
+  return rows.sort((a,b)=>b.ts-a.ts||b.usd-a.usd);
+}
+function _pwFlips(hist){
+  const lead=o=>{let s=null,m=-1;for(const k in (o.p||{}))if(typeof o.p[k]==='number'&&o.p[k]>m){m=o.p[k];s=k;}return s;};
+  const rows=[];
+  for(const [key,arr] of Object.entries(hist||{})){
+    if(!Array.isArray(arr)||arr.length<2) continue;
+    const base=arr[0], latest=arr[arr.length-1];
+    if(!_pwSportPass(latest.league||base.league)) continue;
+    const b=lead(base), l=lead(latest);
+    if(!b||!l||b===l) continue;
+    rows.push({key,from:b,to:l,league:latest.league||base.league,ts:Date.parse(latest.ts),match:Object.keys(latest.p||{}).join(' vs ')});
+  }
+  return rows.sort((a,b)=>b.ts-a.ts);
+}
+function _pwWhatsNew(){
+  const ago=t=>{const m=(Date.now()-t)/60000;return m<1?'gerade':m<60?Math.round(m)+'m':Math.round(m/60)+'h';};
+  const entries=_pwNewEntries(_pwCache&&_pwCache.walletTrack,24).slice(0,20);
+  const flips=_pwFlips(_pwCache&&_pwCache.broadHist).slice(0,15);
+  if(!entries.length&&!flips.length)
+    return '<section class="pw-sec"><div class="pw-none">Noch nichts Neues erfasst — der Feed zeigt neue große Einstiege und gekippte Favoriten, sobald ① (Preis-Zeitreihe) und ② (Wallet-Track) über die Runner-Läufe Daten haben.</div></section>';
+  let h='';
+  if(entries.length){
+    const body=entries.map(e=>{
+      const wl='<a href="https://polymarket.com/profile/'+encodeURIComponent(e.wallet)+'" target="_blank" rel="noopener" class="pw-wl">'+_pwWallet(e.wallet)+'</a>';
+      const mk='<a href="https://polymarket.com/event/'+encodeURIComponent(e.key)+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681">'+_pwEsc(e.key)+' <span style="color:#a78bfa">↗</span></a>';
+      return '<tr><td class="pw-cn pw-mut">'+ago(e.ts)+'</td>'
+        +'<td style="white-space:nowrap">'+_pwSportIcon(e.league)+'</td>'
+        +'<td>'+mk+'</td><td>'+(e.sharp?'🔥 ':'')+wl+'</td>'
+        +'<td class="pw-cm"><b style="color:#4cc2ff">'+_pwEsc(e.side)+'</b></td>'
+        +'<td class="pw-cn pw-mut">'+(e.price!=null?Math.round(e.price*100)+'¢':'—')+'</td>'
+        +'<td class="pw-cn" style="font-weight:800">'+_pwUsd(e.usd)+'</td></tr>';
+    }).join('');
+    h+='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🆕 Neue große Einstiege — letzte 24h</span>'
+      +'<span class="pw-sec-note">frisch aufgetauchte Whale-Positionen · 🔥 = bewiesen scharfe Wallet · Klick → Wallet/Markt</span></div>'
+      +'<div class="pw-tw"><table class="pw-tbl"><thead><tr><th>vor</th><th>Sport</th><th>Markt</th><th>Wallet</th><th>Seite</th><th>Einstieg</th><th>Einsatz</th></tr></thead><tbody>'+body+'</tbody></table></div></section>';
+  }
+  if(flips.length){
+    const body=flips.map(f=>'<tr><td class="pw-cn pw-mut">'+ago(f.ts)+'</td>'
+      +'<td style="white-space:nowrap">'+_pwSportIcon(f.league)+' <span class="pw-mut" style="font-size:11px">'+_pwEsc((f.league||'').toUpperCase())+'</span></td>'
+      +'<td><a href="https://polymarket.com/event/'+encodeURIComponent(f.key)+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681">'+_pwEsc(f.match)+' <span style="color:#a78bfa">↗</span></a></td>'
+      +'<td class="pw-cm"><span class="pw-mut">'+_pwEsc(f.from)+'</span> → <b style="color:#4cc2ff">'+_pwEsc(f.to)+'</b></td></tr>').join('');
+    h+='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🔀 Favorit gekippt</span>'
+      +'<span class="pw-sec-note">Märkte, in denen die führende Seite seit Beobachtungsbeginn gewechselt hat — oft ein starker Move</span></div>'
+      +'<div class="pw-tw"><table class="pw-tbl"><thead><tr><th>vor</th><th>Sport</th><th>Markt</th><th>Favorit</th></tr></thead><tbody>'+body+'</tbody></table></div></section>';
+  }
+  return h;
 }
 
 function _pwMoneyAccuracy(acc, teams){

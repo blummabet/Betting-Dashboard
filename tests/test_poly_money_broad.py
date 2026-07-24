@@ -192,6 +192,35 @@ class TestWalletTrack:
         assert "0xW|mlb-a-b|A" not in t["open"]
 
 
+class TestSharpAlert:
+    # 25.07.2026 (Lucas 🔔): NEUE Einstiege bewiesen-scharfer Wallets erkennen (prev-vs-cur).
+    SCORES = {"0xSHARP": {"n": 6, "clvSumPP": 18.0, "wins": 4},   # Ø CLV +3.0 → scharf
+              "0xDUMB": {"n": 6, "clvSumPP": -12.0, "wins": 1},   # negativer CLV → nicht
+              "0xTHIN": {"n": 2, "clvSumPP": 6.0, "wins": 2}}     # zu dünn (n<4)
+    def _cur(self, *wallets):
+        openp = {f"{w}|k{i}|A": {"wallet": w, "key": f"k{i}", "side": "A", "league": "MLB",
+                                 "firstPrice": 0.42, "usd": 8000} for i, w in enumerate(wallets)}
+        return {"open": openp, "scores": self.SCORES}
+
+    def test_neuer_scharfer_einstieg_wird_erkannt(self):
+        prev = {"open": {}, "scores": self.SCORES}
+        e = B.sharp_entries(prev, self._cur("0xSHARP"))
+        assert len(e) == 1 and e[0]["wallet"] == "0xSHARP" and e[0]["avgClv"] == 3.0
+
+    def test_bestehende_position_ist_nicht_neu(self):
+        cur = self._cur("0xSHARP")
+        assert B.sharp_entries(cur, cur) == []   # gleicher open-Satz → nichts neu
+
+    def test_dummes_und_duennes_geld_alarmiert_nicht(self):
+        prev = {"open": {}, "scores": self.SCORES}
+        assert B.sharp_entries(prev, self._cur("0xDUMB", "0xTHIN")) == []
+
+    def test_format_enthaelt_track_record(self):
+        prev = {"open": {}, "scores": self.SCORES}
+        msg = B._format_sharp_alert(B.sharp_entries(prev, self._cur("0xSHARP")))
+        assert "Sharp im Markt" in msg and "+3.0pp" in msg and "n6" in msg
+
+
 class TestGammaParser:
     """Die reinen Parser-Helfer (ohne Netz) — Gamma-Event → Ausgänge/Anpfiff."""
 

@@ -213,6 +213,55 @@ test('Globale Wale (c): größte Einzel-Wallets mit Links', () => {
   assert.match(h, /Braves/, 'Seite fehlt');
 });
 
+// 25.07.2026 (Lucas 🆕): Was-ist-neu-Feed — neue Einstiege (24h) + Favoriten-Flips.
+test('🆕 Neue Einstiege: nur letzte 24h', () => {
+  const dom = new JSDOM('<!DOCTYPE html><body></body>', { url: 'https://example.com/', runScripts: 'outside-only' });
+  const { window: w } = dom;
+  w.eval(readFileSync(PW, 'utf8'));
+  const now = Date.now();
+  const track = { open: {
+    'a|k1|A': { wallet: '0xa', key: 'k1', side: 'A', league: 'MLB', firstPrice: 0.4, usd: 9000, firstTs: new Date(now - 2 * 3.6e6).toISOString() },
+    'b|k2|B': { wallet: '0xb', key: 'k2', side: 'B', league: 'MLB', firstPrice: 0.5, usd: 5000, firstTs: new Date(now - 72 * 3.6e6).toISOString() },
+  } };
+  const e = w._pwNewEntries(track, 24);
+  assert.equal(e.length, 1); assert.equal(e[0].key, 'k1');
+});
+
+test('🔀 Flips: führende Seite gewechselt wird erkannt, stabile nicht', () => {
+  const dom = new JSDOM('<!DOCTYPE html><body></body>', { url: 'https://example.com/', runScripts: 'outside-only' });
+  const { window: w } = dom;
+  w.eval(readFileSync(PW, 'utf8'));
+  const t = (m) => new Date(Date.UTC(2026, 6, 24, 12, m)).toISOString();
+  const hist = {
+    'k': [{ ts: t(0), p: { A: 0.6, B: 0.4 }, league: 'MLB' }, { ts: t(60), p: { A: 0.45, B: 0.55 }, league: 'MLB' }],
+    'stable': [{ ts: t(0), p: { A: 0.6, B: 0.4 }, league: 'MLB' }, { ts: t(60), p: { A: 0.62, B: 0.38 }, league: 'MLB' }],
+  };
+  const f = w._pwFlips(hist);
+  assert.equal(f.length, 1); assert.equal(f[0].from, 'A'); assert.equal(f[0].to, 'B');
+});
+
+test('🆕 Feed rendert Einstiege (🔥 scharf) + Favoriten-Flips', async () => {
+  const now = Date.now();
+  const files = {
+    'mls-data.json': { groups: {} }, 'mls_poly_prices.json': { prices: {} },
+    'mls_poly_wallets.json': { topPositionsAll: [], matches: {}, updatedAt: new Date().toISOString() },
+    'poly_money_broad.json': { n: 0 },
+    'poly_wallet_track.json': { open: { 's|k1|A': { wallet: '0xSHARP', key: 'k1', side: 'A', league: 'MLB', firstPrice: 0.4, usd: 9000, firstTs: new Date(now - 3 * 3.6e6).toISOString() } }, scores: { '0xSHARP': { n: 6, clvSumPP: 18, wins: 4 } } },
+    'poly_money_broad_history.json': { 'k2': [{ ts: '2026-07-24T12:00:00Z', p: { X: 0.6, Y: 0.4 }, league: 'NBA' }, { ts: '2026-07-24T13:00:00Z', p: { X: 0.4, Y: 0.6 }, league: 'NBA' }] },
+  };
+  const dom = new JSDOM('<!DOCTYPE html><body><div id="polyWalletsPanel"></div></body>',
+    { url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
+  const w = dom.window;
+  w.fetch = (url) => { const u = String(url); let b = null; for (const [f, d] of Object.entries(files)) if (u.includes(f)) { b = d; break; } return Promise.resolve({ ok: b != null, json: () => Promise.resolve(b) }); };
+  w.eval(readFileSync(PW, 'utf8'));
+  w.initPolyWallets();
+  await new Promise(r => setTimeout(r, 30));
+  w._pwSetView('new');
+  const html = w.document.getElementById('polyWalletsPanel').innerHTML;
+  assert.match(html, /Neue große Einstiege/); assert.match(html, /🔥/, 'scharfe Wallet markiert');
+  assert.match(html, /Favorit gekippt/);
+});
+
 // 25.07.2026 (Lucas ③): Heute-wetten-Shortlist — edge-fokussiert (echte Signale, keine bloßen
 // Favoriten), BET (mit Geld) vs FADE (dagegen), Conviction 0–10. Landing-View.
 test('③ Shortlist: Edge (Geld schlägt Preis) → BET mit Conviction; reiner Favorit → SKIP', async () => {

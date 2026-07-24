@@ -477,6 +477,54 @@ def update_wallet_track(prev, markets, now=None, keep_h=HIST_KEEP_H):
     return {"open": openp, "scores": scores, "updatedAt": now.isoformat()}
 
 
+def sharp_entries(prev, cur, min_n=4):
+    """🔔 Sharp-im-Markt (25.07.2026, Lucas). REIN/testbar. NEUE offene Positionen (in cur, aber
+    NICHT in prev) von bewiesen-scharfen Wallets (Score n≥min_n & Ø CLV > 0). Prev-vs-cur-Vergleich
+    statt Zeitstempel → robust. Rückgabe absteigend nach Einsatz."""
+    prev_open = set((prev or {}).get("open") or {})
+    scores = (cur or {}).get("scores") or {}
+    out = []
+    for ok, e in ((cur or {}).get("open") or {}).items():
+        if ok in prev_open:
+            continue
+        s = scores.get(e.get("wallet"))
+        if not s or s.get("n", 0) < min_n:
+            continue
+        avg = s["clvSumPP"] / s["n"] if s["n"] else 0
+        if avg <= 0:
+            continue
+        out.append({"wallet": e["wallet"], "key": e["key"], "side": e["side"], "league": e.get("league"),
+                    "price": e.get("firstPrice"), "usd": e.get("usd") or 0, "avgClv": round(avg, 1),
+                    "hit": round(s.get("wins", 0) / s["n"], 2), "n": s["n"]})
+    out.sort(key=lambda x: -x["usd"])
+    return out
+
+
+def _format_sharp_alert(entries):
+    lines = ["🔔 <b>Sharp im Markt</b> — bewiesen scharfe Wallet(s) frisch eingestiegen:", ""]
+    for e in entries[:8]:
+        w = e["wallet"]; short = w[:6] + "…" + w[-4:]
+        lines.append(f"• {short} → <b>{e['side']}</b> @ {round((e.get('price') or 0) * 100)}¢ "
+                     f"· {(e.get('league') or '').upper()} · ~${int(e.get('usd') or 0):,}")
+        lines.append(f"   Track: Ø CLV +{e['avgClv']}pp · {round(e['hit'] * 100)}% Treffer · n{e['n']}")
+    lines += ["", "Kein Auto-Bet — nur ein Signal. Selbst prüfen."]
+    return "\n".join(lines)
+
+
+def maybe_alert_sharp(prev, cur, min_n=4) -> int:
+    """Alarm senden, wenn neue scharfe Einstiege da sind. Kür — darf den Lauf NIE kippen.
+    Nutzt telegram_trades (Silent-Guard: leerer Token → False). Rückgabe: Anzahl alarmierter Einstiege."""
+    ents = sharp_entries(prev, cur, min_n=min_n)
+    if not ents:
+        return 0
+    try:
+        import telegram_trades
+        telegram_trades.send_trades_message(_format_sharp_alert(ents))
+    except Exception as exc:
+        print("ℹ️  Sharp-Alarm übersprungen:", exc)
+    return len(ents)
+
+
 def resolutions(markets) -> dict:
     """{key: winner} aus den aufgelösten Poly-Märkten (settlet auf 1.00)."""
     out = {}
@@ -503,8 +551,13 @@ def main() -> int:
     (BASE / HIST_FILE).write_text(json.dumps(hist, ensure_ascii=False, indent=1), encoding="utf-8")
 
     # ② Sharp-Wallet-Track (25.07.2026): Einstieg→Close/Outcome je Whale werten (CLV/Treffer)
-    wtrack = update_wallet_track(_load(WTRACK_FILE), markets)
+    prev_wtrack = _load(WTRACK_FILE)
+    wtrack = update_wallet_track(prev_wtrack, markets)
     (BASE / WTRACK_FILE).write_text(json.dumps(wtrack, ensure_ascii=False, indent=1), encoding="utf-8")
+    # 🔔 Sharp-im-Markt-Alarm: neue Einstiege bewiesen-scharfer Wallets → Telegram (Kür, nie fatal)
+    n_alert = maybe_alert_sharp(prev_wtrack, wtrack)
+    if n_alert:
+        print(f"🔔 Sharp-Alarm: {n_alert} neue scharfe Einstiege gemeldet")
 
     rep = PMA.evaluate(frozen, resolutions(markets), min_odds=min_odds)
     rep["generatedAt"] = _now().isoformat()
