@@ -108,6 +108,32 @@ function _pwViewTabs(){
     +b('money','⚖️ Liegt das Geld richtig?')+'</div>';
 }
 
+// 25.07.2026 (Lucas: „alle Zahlen verwirrend, keine Ahnung was ich damit mache"). Pro Unter-Reiter
+// EINE Klartext-Box: was zeige ich, und — wichtiger — was tust DU damit. Kein Jargon, ein Satz je.
+const _PW_VIEW_INTRO = {
+  edge:  ['🎯 Chancen — wo Polymarket „falscher\" liegt als die scharfe Pinnacle',
+    'Kandidaten zum Dagegenhalten: je größer die Abweichung, desto interessanter. Aber Poly und Pinnacle sind meist im Einklang — leere/kleine Liste ist der Normalfall, kein Fehler.',
+    'Große Lücke, die die Whales BESTÄTIGEN (nicht dagegen stehen) → beobachten. Nichts blind traden — erst wenn sich die Lücke über Tage zur Pinnacle schließt, war sie echt.'],
+  smart: ['💡 Smart-Money — wo das GROSSE Geld liegt und wie konzentriert',
+    'Zeigt, auf welche Seite die dicken Wallets gesetzt haben und wie einig sie sich sind. Das ist KEIN eigenes Wett-Signal.',
+    'Nutze es als Bestätigung oder Veto für einen bestehenden Pick: steht das große Geld dahinter → Rückenwind; steht es dagegen → vorsichtig sein.'],
+  whales:['🐋 Whales — die einzelnen großen Wallets',
+    'Wer ist zu welchem Preis eingestiegen, jüngste große Trades, Trefferbilanz je Wallet. „Groß\" heißt nicht automatisch „treffsicher\".',
+    'Nur Wallets mit bewiesener Trefferquote als Rückenwind nehmen; die bloß-großen ohne Track-Record ignorieren.'],
+  money: ['⚖️ Liegt das Geld richtig? — Rückblick auf aufgelöste Spiele',
+    'Gewinnt die Seite mit dem meisten Geld öfter als der reine Preis? Wenn ja, weiß die Masse mehr, als im Preis steht.',
+    'Pro Liga schauen: steht 🟢 „Geld schärfer\", lohnt dort das Folgen der Masse. Steht 🔴 „Preis besser\", ist das Geld dort dumm — faden. Füllt sich langsam über die Spieltage.'],
+};
+function _pwViewIntro(view){
+  const t=_PW_VIEW_INTRO[view]; if(!t) return '';
+  return '<div style="max-width:1000px;margin:6px auto 14px;padding:12px 16px;'
+    +'background:rgba(94,234,212,.06);border-left:3px solid #5eead4;border-radius:0 10px 10px 0;">'
+    +'<div style="font-size:14px;font-weight:800;color:#5eead4;margin-bottom:5px;">'+t[0]+'</div>'
+    +'<div style="font-size:12.5px;color:var(--muted);line-height:1.55;margin-bottom:7px;">'+t[1]+'</div>'
+    +'<div style="font-size:12.5px;color:var(--fg);line-height:1.55;">'
+    +'<b style="color:#5eead4;">→ Was du damit tust:</b> '+t[2]+'</div></div>';
+}
+
 function initPolyWallets(){
   const panel=document.getElementById('polyWalletsPanel');
   if(!panel || _polyWalletsLoaded) return;
@@ -306,7 +332,7 @@ function _pwRender(){
 
   // 19.07.2026 (Lucas) — eigener Sub-View „Liegt das Geld richtig?" neben dem Edge-Board.
   if(_pwView==='money'){
-    panel.innerHTML=_pwDatasetTabs()+_pwViewTabs()
+    panel.innerHTML=_pwDatasetTabs()+_pwViewTabs()+_pwViewIntro('money')
       +_pwMoneyBroad(moneyBroad)+_pwMoneyAccuracy(moneyAcc,teams);
     return;
   }
@@ -330,7 +356,7 @@ function _pwRender(){
 
   // 19.07.2026 (Lucas: „besser aufteilen") — Sektionen auf Unter-Reiter verteilt, statt alle 9
   // untereinander. Jede Ansicht zeigt nur ihr Thema → kurze Scroll-Achse, klare Trennung.
-  let h=_pwDatasetTabs()+_pwViewTabs()+head+_pwKpiBand(edges,wallets);
+  let h=_pwDatasetTabs()+_pwViewTabs()+_pwViewIntro(_pwView)+head+_pwKpiBand(edges,wallets);
   let drawScatter=false;
   if(_pwView==='smart'){
     // 💡 Smart-Money: wo liegt das Geld, wie konzentriert, welcher Fluss.

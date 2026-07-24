@@ -123,3 +123,16 @@ test('Match-Label: unbekannte ID fällt sicher auf den rohen Key zurück', () =>
   const html = w._pwMatchLabel('99999-88888', {});
   assert.match(html, /99999-88888/, 'Fallback auf Key fehlt — Zeile würde leer wirken');
 });
+
+// 25.07.2026 (Lucas: „alle Zahlen verwirrend, keine Ahnung was ich damit mache"). Jeder Wallets-
+// Unter-Reiter bekommt eine Klartext-Box mit „→ Was du damit tust". Regression: alle 4 vorhanden.
+test('Wallets: jeder Unter-Reiter hat eine Handlungs-Box', () => {
+  const dom = new JSDOM('<!DOCTYPE html><body></body>', { url: 'https://example.com/', runScripts: 'outside-only' });
+  const { window: w } = dom;
+  w.eval(readFileSync(PW, 'utf8'));
+  for (const v of ['edge', 'smart', 'whales', 'money']) {
+    const h = w._pwViewIntro(v);
+    assert.match(h, /Was du damit tust/, `Handlungs-Box fehlt für ${v}`);
+  }
+  assert.equal(w._pwViewIntro('gibtsnicht'), '', 'unbekannte View → leer');
+});
