@@ -181,3 +181,20 @@ test('Globale Edge (a): leer-aber-verglichen ist ehrlich (keine Lücke ≠ keine
   const html = w._pwGlobalEdge({ matched: 30, discrepancies: [] });
   assert.match(html, /keine Lücke/i);
 });
+
+// 25.07.2026 (Lucas: „Ligen oben weg, statt dessen Sport-Filter zum Suchen"). Kategorie-Mapping
+// robust aus Liga-Label ODER Sport-Key; Filter-Leiste nur bei ≥2 Kategorien.
+test('Sport-Filter: Kategorien aus Liga-Label und Sport-Key', () => {
+  const dom = new JSDOM('<!DOCTYPE html><body></body>', { url: 'https://example.com/', runScripts: 'outside-only' });
+  const { window: w } = dom;
+  w.eval(readFileSync(PW, 'utf8'));
+  assert.equal(w._pwSportCategory('MLB'), 'US-Sport');
+  assert.equal(w._pwSportCategory('basketball_nba'), 'US-Sport');
+  assert.equal(w._pwSportCategory('soccer_mls'), 'Fußball');
+  assert.equal(w._pwSportCategory('ESPORTS'), 'E-Sport');
+  assert.equal(w._pwSportCategory('boxing'), 'Kampfsport');
+  const bar = w._pwSportFilterBar(new Set(['US-Sport', 'E-Sport', 'Fußball']));
+  assert.match(bar, /_pwSetSportFilter\('all'\)/, 'Alle-Chip fehlt');
+  assert.match(bar, /🎮 E-Sport/);
+  assert.equal(w._pwSportFilterBar(new Set(['US-Sport'])), '', 'eine Kategorie → kein Filter');
+});

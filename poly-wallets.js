@@ -124,6 +124,39 @@ const _PW_VIEW_INTRO = {
     'Oben: auf welche Seite die Masse bei KOMMENDEN Spielen gesetzt hat (zum Folgen). Unten: der Rückblick — hatte die Masse bei aufgelösten Spielen recht?',
     'Kommenden Märkten mit klarer Geld-Mehrheit folgen — aber nur dort, wo der Rückblick unten 🟢 „Geld schärfer\" zeigt. Wo 🔴 „Preis besser\" steht, liegt die Masse daneben → faden.'],
 };
+// 25.07.2026 (Lucas: „Ligen oben weg, statt dessen ein Filter je Tab damit ich besser suchen kann").
+// Globaler Sport-Filter über alle Sektionen (a/b/d). Kategorie robust aus Liga-Label ODER Sport-Key.
+let _pwSportFilter='all';
+function _pwSetSportFilter(cat){ _pwSportFilter=cat; _pwRender(); }
+if(typeof window!=='undefined') window._pwSetSportFilter=_pwSetSportFilter;
+function _pwSportCategory(s){
+  const x=String(s||'').toLowerCase();
+  if(/soccer|epl|ucl|mls|laliga|la-liga|liga|bundesliga|serie|ligue|fussball|fußball/.test(x)) return 'Fußball';
+  if(/basketball|nba|nfl|americanfootball|baseball|mlb|icehockey|hockey|nhl|wnba|ncaa/.test(x)) return 'US-Sport';
+  if(/esport|cs2|csgo|lol|dota|valorant/.test(x)) return 'E-Sport';
+  if(/tennis|wta|atp/.test(x)) return 'Tennis';
+  if(/mma|ufc|boxing|box|kampf/.test(x)) return 'Kampfsport';
+  if(/golf/.test(x)) return 'Golf';
+  if(/f1|formula|motor|nascar/.test(x)) return 'Motorsport';
+  if(/cricket/.test(x)) return 'Cricket';
+  return 'Sonstige';
+}
+const _PW_CAT_ICON={'Fußball':'⚽','US-Sport':'🏀','E-Sport':'🎮','Tennis':'🎾','Kampfsport':'🥊','Golf':'⛳','Motorsport':'🏎️','Cricket':'🏏','Sonstige':'🎯'};
+// Filter-Chip-Leiste aus den tatsächlich vorhandenen Kategorien (order fix, nur präsente zeigen).
+function _pwSportFilterBar(cats){
+  const order=['Fußball','US-Sport','E-Sport','Tennis','Kampfsport','Golf','Motorsport','Cricket','Sonstige'];
+  const present=order.filter(c=>cats.has(c));
+  if(present.length<2) return '';   // nur eine Kategorie → Filter sinnlos
+  const chip=(cat,label)=>{const on=_pwSportFilter===cat;
+    return '<button onclick="_pwSetSportFilter(\''+cat+'\')" style="padding:5px 12px;border-radius:16px;border:1px solid '
+      +(on?'#5eead4':'var(--border)')+';background:'+(on?'rgba(94,234,212,.16)':'transparent')+';color:'+(on?'#5eead4':'var(--muted)')
+      +';font-size:12px;font-weight:'+(on?700:500)+';cursor:pointer;font-family:inherit">'+label+'</button>';};
+  return '<div style="max-width:1000px;margin:0 auto 12px;display:flex;gap:7px;flex-wrap:wrap;align-items:center">'
+    +'<span class="pw-mut" style="font-size:11px;margin-right:2px">Filter:</span>'
+    +chip('all','Alle')+present.map(c=>chip(c,_PW_CAT_ICON[c]+' '+c)).join('')+'</div>';
+}
+function _pwSportPass(s){ return _pwSportFilter==='all' || _pwSportCategory(s)===_pwSportFilter; }
+
 function _pwViewIntro(view){
   const t=_PW_VIEW_INTRO[view]; if(!t) return '';
   return '<div style="max-width:1000px;margin:6px auto 14px;padding:12px 16px;'
@@ -569,7 +602,8 @@ function _pwMoneyBroad(broad){
   // „Vorsprung" = wie viel treffsicherer das Geld ggü. dem Preis ist (Brier-Differenz, intern).
   // Positiv = Geld schärfer. Wir zeigen NICHT die Roh-Brier-Zahlen (Fachjargon), sondern ein
   // Klartext-Urteil + die anschauliche Trefferquote.
-  const leagues=(b.byLeague||[]).map(l=>({...l,edge:(l.brierPrice-l.brierMoney)}));
+  // 25.07.2026: respektiert den globalen Sport-Filter (die Leiste rendert die (b)-Sektion darüber).
+  const leagues=(b.byLeague||[]).map(l=>({...l,edge:(l.brierPrice-l.brierMoney)})).filter(l=>_pwSportPass(l.league));
 
   // Highlight-Kacheln nur, wenn es überhaupt einen NENNENSWERTEN Unterschied gibt — sonst ist
   // „am schärfsten/dümmsten" bei quasi-gleichauf-Daten irreführend (aktuell alles ~gleichauf).
@@ -653,9 +687,12 @@ const _PW_SPORT_ICON={soccer:'⚽',basketball:'🏀',americanfootball:'🏈',bas
 function _pwSportIcon(sport){const s=String(sport||'').toLowerCase();
   for(const k in _PW_SPORT_ICON) if(s.indexOf(k)>=0) return _PW_SPORT_ICON[k]; return '🎯';}
 function _pwGlobalEdge(cs){
-  const disc=(cs&&cs.discrepancies)?cs.discrepancies.slice():[];
+  const allDisc=(cs&&cs.discrepancies)?cs.discrepancies.slice():[];
+  const cats=new Set(allDisc.map(d=>_pwSportCategory(d.sport)));
+  const disc=allDisc.filter(d=>_pwSportPass(d.sport));
   const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🎯 Wo Poly falscher liegt als Pinnacle — alle Sportarten</span>'
-    +'<span class="pw-sec-note">Poly-% vs faire Pinnacle-% · Lücke = Kandidat · aber erst echt, wenn sie sich über Tage schließt (Konvergenz)</span></div>';
+    +'<span class="pw-sec-note">Poly-% vs faire Pinnacle-% · Lücke = Kandidat · aber erst echt, wenn sie sich über Tage schließt (Konvergenz)</span></div>'
+    +_pwSportFilterBar(cats);
   if(!disc.length){
     const seen=(cs&&cs.matched)||0;
     return intro+'<div class="pw-none">'+(seen>0
@@ -690,13 +727,17 @@ function _pwGlobalEdge(cs){
 // — zum Folgen"). Sektion (b): die eingefrorenen KOMMENDEN Märkte aus poly_money_broad_close.json
 // (resolved==null), nach Volumen sortiert. Team-Namen + Geld-Seite stehen direkt in `shares`.
 function _pwMoneyLive(live){
-  const rows=(live?Object.entries(live):[])
-    .map(([k,m])=>({k,m}))
-    .filter(x=>x.m && x.m.resolved==null && x.m.shares && (x.m.totalUsd||0)>=5000)
+  const all=(live?Object.entries(live):[]).map(([k,m])=>({k,m}))
+    .filter(x=>x.m && x.m.resolved==null && x.m.shares && (x.m.totalUsd||0)>=5000);
+  const cats=new Set(all.map(x=>_pwSportCategory(x.m.league)));
+  const rows=all.filter(x=>_pwSportPass(x.m.league))
     .sort((a,b)=>(b.m.totalUsd||0)-(a.m.totalUsd||0)).slice(0,30);
   const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">💰 Wo liegt das große Geld — alle Sportarten</span>'
-    +'<span class="pw-sec-note">kommende Spiele nach Poly-Volumen · auf welche Seite hat die Masse gesetzt · zum Folgen</span></div>';
-  if(!rows.length) return intro+'<div class="pw-none">Gerade kein nennenswertes Geld auf kommenden Märkten (füllt sich nah am Anpfiff, läuft am Mac-Runner).</div></section>';
+    +'<span class="pw-sec-note">kommende Spiele nach Poly-Volumen · auf welche Seite hat die Masse gesetzt · zum Folgen</span></div>'
+    +_pwSportFilterBar(cats);
+  if(!rows.length) return intro+'<div class="pw-none">'+(_pwSportFilter==='all'
+    ?'Gerade kein nennenswertes Geld auf kommenden Märkten (füllt sich nah am Anpfiff, läuft am Mac-Runner).'
+    :'Keine kommenden '+_pwSportFilter+'-Märkte gerade — Filter „Alle" zeigt wieder alles.')+'</div></section>';
   const body=rows.map(({k,m})=>{
     const oc=Object.entries(m.shares||{}).map(([name,usd])=>({name,usd:Number(usd)||0}));
     const total=oc.reduce((s,o)=>s+o.usd,0)||1; oc.sort((a,b)=>b.usd-a.usd);
