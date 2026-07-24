@@ -295,9 +295,13 @@ function _pwSpark(vals,color){
 function _pwProbBar(poly,fair,col){
   const p=Math.max(0,Math.min(100,poly*100)), f=Math.max(0,Math.min(100,fair*100));
   const lo=Math.min(p,f),hi=Math.max(p,f);
+  // 25.07.2026 (Lucas: „schnell erkennbar"): die zwei Zahlen als SICHTBARE Beschriftung, nicht
+  // nur im Tooltip. Poly = was der Markt zahlt (implizit), fair = de-viggte Pinnacle-Wahrscheinlichkeit.
   return '<div class="pw-pbar"><div class="pw-pbar-gap" style="left:'+lo+'%;width:'+(hi-lo)+'%;background:'+col+'"></div>'
     +'<div class="pw-pbar-m pw-pbar-poly" style="left:'+p+'%" title="Poly '+p.toFixed(0)+'%"></div>'
-    +'<div class="pw-pbar-m pw-pbar-fair" style="left:'+f+'%;background:'+PW_C.teal+'" title="Pinnacle '+f.toFixed(0)+'%"></div></div>';
+    +'<div class="pw-pbar-m pw-pbar-fair" style="left:'+f+'%;background:'+PW_C.teal+'" title="Pinnacle '+f.toFixed(0)+'%"></div></div>'
+    +'<div style="font-size:10.5px;color:var(--muted);margin-top:3px;white-space:nowrap;">'
+    +'Poly <b style="color:#a78bfa">'+p.toFixed(0)+'%</b> · fair <b style="color:'+PW_C.teal+'">'+f.toFixed(0)+'%</b></div>';
 }
 // Donut (SVG) aus Segmenten [{v,color,label}]
 function _pwDonut(segs,center){
@@ -393,12 +397,13 @@ function _pwKpiBand(edges,wallets){
   const card=(ic,lbl,val,sub,col)=>'<div class="pw-kpi"><div class="pw-kpi-ic">'+ic+'</div><div class="pw-kpi-b">'
     +'<div class="pw-kpi-v" style="color:'+(col||PW_C.txt)+'">'+val+'</div><div class="pw-kpi-l">'+lbl+'</div>'
     +(sub?'<div class="pw-kpi-s">'+sub+'</div>':'')+'</div></div>';
+  // 25.07.2026 (Lucas: „Zahlen schnell erkennbar"): Klartext-Labels statt „Live-Edges/THIN/Sentiment".
   return '<div class="pw-kpis">'
-    +card('💧','Getracktes Volumen',_pwUsd(vol),'über '+((_pwCache.prices&&_pwCache.prices.prices)?Object.keys(_pwCache.prices.prices).length:0)+' Märkte')
-    +card('⚡','Live-Edges',String(live),'≥'+PW_NOISE+'pp handelbar',live>0?PW_C.green:PW_C.mut)
-    +card('🎯','Größte Edge',_pwPP(big),big>=PW_TRADE?'TRADE':big>=PW_NOISE?'THIN':'unter Schwelle',big>=PW_TRADE?PW_C.green:big>=PW_NOISE?PW_C.draw:PW_C.mut)
-    +card('🐋','Whale-Kapital',_pwUsd(whaleCap),'Top-Positionen')
-    +card(senti>=0?'📈':'📉','Sentiment',(senti>=0?'+':'−')+Math.abs(senti*100).toFixed(0)+'%',senti>=0?'Netto-Kauf':'Netto-Verkauf',senti>=0?PW_C.green:PW_C.red)
+    +card('💧','Poly-Volumen',_pwUsd(vol),'über '+((_pwCache.prices&&_pwCache.prices.prices)?Object.keys(_pwCache.prices.prices).length:0)+' Märkte beobachtet')
+    +card('⚡','Handelbare Chancen',String(live),'ab '+PW_NOISE+'pp Abweichung',live>0?PW_C.green:PW_C.mut)
+    +card('🎯','Größter Vorteil',_pwPP(big),big>=PW_TRADE?'handelbar':big>=PW_NOISE?'dünn — nur beobachten':'kein echter Vorteil',big>=PW_TRADE?PW_C.green:big>=PW_NOISE?PW_C.draw:PW_C.mut)
+    +card('🐋','Whale-Kapital',_pwUsd(whaleCap),'in den Top-Positionen')
+    +card(senti>=0?'📈':'📉','Großes Geld',(senti>=0?'+':'−')+Math.abs(senti*100).toFixed(0)+'%',senti>=0?'kauft netto':'verkauft netto',senti>=0?PW_C.green:PW_C.red)
     +'</div>';
 }
 
@@ -759,8 +764,8 @@ function _pwSmartConcentration(smart,prices,teams){
 // ── Edge-Board ──────────────────────────────────────────────────────────────
 function _pwEdgeBoard(edges,teams,wallets,hist){
   const shown=edges.filter(e=>e.net>=PW_NOISE);
-  let h='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">⚡ Edge-Board</span>'
-    +'<span class="pw-sec-note">Netto nach Spread-Haircut ('+PW_SPREAD_HAIRCUT+'pp) · nur Spiele der nächsten '+Math.round(PW_EDGE_HORIZON_H/24)+' Tage (weiter draußen liegt kein Poly-Geld) · Kurve = Pinnacle-Bewegung · Klick → Steam-Chart</span></div>';
+  let h='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🎯 Wo Poly günstiger ist als die faire Quote</span>'
+    +'<span class="pw-sec-note">Die pp-Zahl = wie viel Vorteil du hättest, wenn du diese Seite auf Poly nimmst statt zur fairen Pinnacle-Quote (Spread-Abzug '+PW_SPREAD_HAIRCUT+'pp schon drin). Nur Spiele der nächsten '+Math.round(PW_EDGE_HORIZON_H/24)+' Tage · Kurve = Pinnacle-Verlauf · Klick → Details</span></div>';
   const list=shown.length?shown.slice(0,40):edges.slice(0,6);
   if(!shown.length) h+='<div class="pw-none">Keine handelbare Fehlbepreisung ≥'+PW_NOISE+'pp — Poly & Pinnacle liegen eng. Unten die größten Sub-Schwellen-Gaps:</div>';
   h+='<div class="pw-board">';
