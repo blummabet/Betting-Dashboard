@@ -113,6 +113,43 @@ class TestCaptureBroad:
         assert B.capture(m, {})["x"]["whales"][0]["wallet"] == "0xabc"
 
 
+class TestAppendHistory:
+    # 25.07.2026 (Lucas ① Momentum): globale Poly-Preis-Zeitreihe je Markt fortschreiben.
+    from datetime import datetime, timezone, timedelta
+    T0 = datetime(2026, 7, 24, 12, 0, tzinfo=timezone.utc)
+
+    def _m(self, key="x", vol=20000, prices=None, resolved=False):
+        return {"key": key, "league": "MLB", "hoursToKickoff": 2.0, "totalUsd": vol,
+                "prices": prices or {"A": 0.55, "B": 0.45}, "resolved": resolved}
+
+    def test_haengt_punkt_an(self):
+        h = B.append_history({}, [self._m()], now=self.T0)
+        assert h["x"][0]["p"] == {"A": 0.55, "B": 0.45} and h["x"][0]["v"] == 20000
+
+    def test_fortschreiben_akkumuliert(self):
+        h = B.append_history({}, [self._m(prices={"A": 0.55, "B": 0.45})], now=self.T0)
+        h = B.append_history(h, [self._m(prices={"A": 0.60, "B": 0.40})],
+                             now=self.T0 + self.timedelta(minutes=30))
+        assert len(h["x"]) == 2 and h["x"][-1]["p"]["A"] == 0.60   # Bewegung sichtbar
+
+    def test_deckelt_auf_max_points(self):
+        h = {}
+        for i in range(60):
+            h = B.append_history(h, [self._m()], now=self.T0 + self.timedelta(minutes=i),
+                                 max_points=48)
+        assert len(h["x"]) == 48
+
+    def test_prunt_stale_und_skippt_resolved_und_duenn(self):
+        h = B.append_history({}, [self._m(key="alt")], now=self.T0)
+        # 'alt' nicht mehr gesehen + weit in der Zukunft → fällt raus; neuer 'x' bleibt
+        h = B.append_history(h, [self._m(key="x")], now=self.T0 + self.timedelta(hours=200))
+        assert "x" in h and "alt" not in h
+        # resolved + zu dünn werden nie erfasst
+        h2 = B.append_history({}, [self._m(key="r", resolved=True), self._m(key="d", vol=100)],
+                              now=self.T0)
+        assert h2 == {}
+
+
 class TestGammaParser:
     """Die reinen Parser-Helfer (ohne Netz) — Gamma-Event → Ausgänge/Anpfiff."""
 

@@ -28,7 +28,7 @@ from __future__ import annotations
 
 import json
 import sys
-from datetime import datetime, timezone
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import poly_money_accuracy as PMA
@@ -39,6 +39,12 @@ MIN_VOL_USD = 7_500     # „5-10k oben liegen" — Mitte
 MIN_ODDS    = 1.35      # Lucas: triviale Favoriten (≤1.35) raus
 CLOSE_FILE  = "poly_money_broad_close.json"
 OUT_FILE    = "poly_money_broad.json"
+# 25.07.2026 (Lucas ① Momentum): globale Poly-Preis-ZEITREIHE je Markt — fortgeschrieben bei jedem
+# Lauf, damit „was bewegt sich gerade" (Steam vs Reversal) über ALLE Sportarten sichtbar wird. Wie
+# damals die Wale: die Erfassung startet jetzt, die Ansicht füllt sich über die nächsten Läufe.
+HIST_FILE   = "poly_money_broad_history.json"
+HIST_MAX_POINTS = 48     # je Markt ~1 Tag Punkte (Runner alle ~30 min) — reicht für kurzfristiges Steam
+HIST_KEEP_H     = 96.0   # Märkte, die 4 Tage nicht mehr gesehen wurden, fallen raus (aufgelöst/vorbei)
 
 
 def _now():
@@ -361,6 +367,45 @@ def capture(markets, frozen, now=None, min_vol=MIN_VOL_USD):
     return out
 
 
+def append_history(prev, markets, now=None, min_vol=MIN_VOL_USD,
+                   max_points=HIST_MAX_POINTS, keep_h=HIST_KEEP_H):
+    """Globale Poly-Preis-Zeitreihe fortschreiben. REIN/testbar. je Markt eine Liste von
+    {ts, p:{label:preis}, v:volumen, htk, league}; deckelt auf max_points, prunt Märkte, die
+    seit keep_h nicht mehr gesehen wurden (aufgelöst/vorbei). 25.07.2026 (Lucas ① Momentum)."""
+    now = now or _now()
+    out = {k: list(v) for k, v in (prev or {}).items() if isinstance(v, list)}
+    seen = set()
+    for m in markets or []:
+        if m.get("resolved"):
+            continue
+        key = m.get("key")
+        prices = m.get("prices") or {}
+        if not key or not prices or float(m.get("totalUsd") or 0) < min_vol:
+            continue
+        htk = m.get("hoursToKickoff")
+        pt = {"ts": now.isoformat(),
+              "p": {k: round(float(v), 4) for k, v in prices.items() if isinstance(v, (int, float))},
+              "v": round(float(m.get("totalUsd") or 0)),
+              "htk": round(float(htk), 2) if isinstance(htk, (int, float)) else None,
+              "league": m.get("league")}
+        arr = out.get(key) or []
+        arr.append(pt)
+        out[key] = arr[-max_points:]
+        seen.add(key)
+    cutoff = now - timedelta(hours=keep_h)
+    for k in list(out.keys()):
+        if k in seen:
+            continue
+        arr = out[k]
+        try:
+            last = datetime.fromisoformat(str(arr[-1]["ts"]).replace("Z", "+00:00")) if arr else None
+        except Exception:
+            last = None
+        if not last or last < cutoff:
+            del out[k]
+    return out
+
+
 def resolutions(markets) -> dict:
     """{key: winner} aus den aufgelösten Poly-Märkten (settlet auf 1.00)."""
     out = {}
@@ -381,6 +426,10 @@ def main() -> int:
         return 0
     frozen = capture(markets, _load(CLOSE_FILE), min_vol=min_vol)
     (BASE / CLOSE_FILE).write_text(json.dumps(frozen, ensure_ascii=False, indent=1), encoding="utf-8")
+
+    # ① Momentum (25.07.2026): globale Preis-Zeitreihe fortschreiben (Steam/Reversal über alle Sportarten)
+    hist = append_history(_load(HIST_FILE), markets, min_vol=min_vol)
+    (BASE / HIST_FILE).write_text(json.dumps(hist, ensure_ascii=False, indent=1), encoding="utf-8")
 
     rep = PMA.evaluate(frozen, resolutions(markets), min_odds=min_odds)
     rep["generatedAt"] = _now().isoformat()

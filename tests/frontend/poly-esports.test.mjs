@@ -35,7 +35,7 @@ async function renderEsports(view) {
   w.eval(readFileSync(PW, 'utf8'));
   w._pwSwitchDataset('esports');               // korrekt umschalten (setzt den Modul-State)
   await new Promise(r => setTimeout(r, 30));
-  if (view) w._pwSetView(view);                // Smart-Money liegt auf eigenem Unter-Reiter
+  w._pwSetView(view || 'edge');                // 25.07.: Default-View ist jetzt 'money' → Edge-Ansicht explizit
   return w.document.getElementById('polyWalletsPanel').innerHTML;
 }
 

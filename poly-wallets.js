@@ -107,7 +107,7 @@ function _pwViewTabs(){
   // 19.07.2026 (Lucas: „besser aufteilen") — 4 Unter-Reiter statt 9 gestapelter Sektionen.
   // Reihenfolge 25.07.2026: globales „Großes Geld" (immer Content+Filter) zuerst → Landing-Tab.
   return '<div class="pw-ds" style="margin-top:-6px">'
-    +b('money','💰 Großes Geld')+b('edge','🎯 Chancen')+b('smart','💡 Smart-Money')+b('whales','🐋 Whales')
+    +b('money','💰 Großes Geld')+b('move','📈 Bewegung')+b('edge','🎯 Chancen')+b('smart','💡 Smart-Money')+b('whales','🐋 Whales')
     +'</div>';
 }
 
@@ -123,6 +123,9 @@ const _PW_VIEW_INTRO = {
   whales:['🐋 Whales — die einzelnen großen Wallets',
     'Wer ist zu welchem Preis eingestiegen, jüngste große Trades, Trefferbilanz je Wallet. „Groß\" heißt nicht automatisch „treffsicher\".',
     'Nur Wallets mit bewiesener Trefferquote als Rückenwind nehmen; die bloß-großen ohne Track-Record ignorieren.'],
+  move: ['📈 Bewegung — was sich GERADE auf Poly bewegt (Steam vs Reversal)',
+    'Nicht wo Geld LIEGT, sondern wohin der Poly-Preis zieht: der stärkste Move je Markt über die letzten Stunden, alle Sportarten. Steam ▲ = zieht weiter, dreht ▼ = kehrt um.',
+    'Einem beschleunigenden Steam auf der scharfen Seite folgen (dein Steam-Modell); bei einem Reversal vorsichtig sein — das Geld korrigiert. Füllt sich über die nächsten Runner-Läufe.'],
   money: ['💰 Das große Geld — alle Sportarten inkl. E-Sport',
     'Oben: auf welche Seite die Masse bei KOMMENDEN Spielen gesetzt hat (zum Folgen). Unten: der Rückblick — hatte die Masse bei aufgelösten Spielen recht?',
     'Kommenden Märkten mit klarer Geld-Mehrheit folgen — aber nur dort, wo der Rückblick unten 🟢 „Geld schärfer\" zeigt. Wo 🔴 „Preis besser\" steht, liegt die Masse daneben → faden.'],
@@ -202,8 +205,9 @@ function initPolyWallets(){
     jf(_derive('smartmoney')),     // 19.07.2026 — war ungenutzt: Konzentration/Split/Breite
     jf('poly_money_broad_close.json'),  // 25.07.2026 (Lucas): kommende Märkte ALLER Sportarten → Sektion „Wo liegt das große Geld"
     jf('poly_cross_sport.json'),        // 25.07.2026 (Lucas): globale Edge Poly-vs-Pinnacle über alle Sportarten
-  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport])=>{
-    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport};
+    jf('poly_money_broad_history.json'),// 25.07.2026 (Lucas ① Momentum): globale Poly-Preis-Zeitreihe je Markt
+  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist])=>{
+    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist};
     _pwRender();
   }).catch(err=>{
     // 12.07.2026: Vorher gab es KEIN catch — eine Exception im Render (z.B. der
@@ -394,6 +398,12 @@ function _pwRender(){
     // Sportarten — kein Datensatz-Selektor mehr. (Sport-Filter je Sektion kommt als Nächstes.)
     panel.innerHTML=_pwViewTabs()+_pwSportFilterBar(_pwGlobalCats())+_pwViewIntro('money')
       +_pwMoneyLive(_pwCache.broadLive)+_pwMoneyBroad(moneyBroad)+_pwMoneyAccuracy(moneyAcc,teams);
+    return;
+  }
+  if(_pwView==='move'){
+    // ① Momentum (25.07.2026): was bewegt sich GERADE — globale Poly-Preis-Zeitreihe.
+    panel.innerHTML=_pwViewTabs()+_pwSportFilterBar(_pwGlobalCats())+_pwViewIntro('move')
+      +_pwMomentum(_pwCache.broadHist);
     return;
   }
   if(!hasPoly&&!edges.length&&!hasGlobal){
@@ -896,6 +906,60 @@ function _pwMoneyLive(live){
   return intro+_pwStaleBanner(live)
     +'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
     +'<th>Sport</th><th>Spiel</th><th>Geld-Split</th><th>Geld liegt auf</th><th>Volumen</th><th>Anpfiff</th>'
+    +'</tr></thead><tbody>'+body+'</tbody></table></div></section>';
+}
+
+// ① Momentum (25.07.2026, Lucas): was bewegt sich GERADE — aus der globalen Poly-Preis-Zeitreihe
+// (poly_money_broad_history.json). Je Markt der stärkste Preis-Move einer Seite über das erfasste
+// Fenster; Steam ▲ = letzter Schritt zieht weiter, dreht ▼ = letzter Schritt kehrt um.
+function _pwMomentum(hist){
+  const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">📈 Was sich gerade bewegt — alle Sportarten</span>'
+    +'<span class="pw-sec-note">stärkster Poly-Preis-Move je Markt über die letzten Stunden · ▲ Steam (zieht weiter) vs ▼ dreht (kehrt um) · Klick → Markt</span></div>';
+  const rows=[];
+  for(const [key,arr] of Object.entries(hist||{})){
+    if(!Array.isArray(arr)||arr.length<2) continue;
+    const latest=arr[arr.length-1], base=arr[0], prev=arr[arr.length-2];
+    const league=latest.league||base.league;
+    if(!_pwSportPass(league)) continue;
+    let best=null;
+    for(const side of Object.keys(latest.p||{})){
+      const p1=base.p&&base.p[side], p2=latest.p[side];
+      if(typeof p1!=='number'||typeof p2!=='number') continue;
+      const move=(p2-p1)*100;
+      const step=(prev&&typeof prev.p[side]==='number')?(p2-prev.p[side])*100:move;
+      // die STEIGENDE Seite zeigen (wohin das Geld strömt) — größter positiver Move gewinnt.
+      if(!best||move>best.move) best={side,from:p1,to:p2,move,step};
+    }
+    if(!best||Math.abs(best.move)<1) continue;   // <1pp = Rauschen
+    const spanH=(Date.parse(latest.ts)-Date.parse(base.ts))/3.6e6;
+    rows.push({key,league,spanH,htk:latest.htk,vol:latest.v,match:Object.keys(latest.p).join(' vs '),
+      side:best.side,from:best.from,to:best.to,move:best.move,step:best.step});
+  }
+  rows.sort((a,b)=>Math.abs(b.move)-Math.abs(a.move));
+  if(!rows.length) return intro+'<div class="pw-none">'+(_pwSportFilter==='all'
+    ?'Noch keine Bewegung erfasst — die Preis-Zeitreihe füllt sich über die nächsten Runner-Läufe (min. 2 Snapshots je Markt).'
+    :'Keine '+_pwSportFilter+'-Bewegung gerade — Filter „Alle" zeigt wieder alles.')+'</div></section>';
+  const body=rows.slice(0,30).map(r=>{
+    const up=r.move>=0;
+    const mCol=Math.abs(r.move)>=5?'#f85149':Math.abs(r.move)>=3?'#e3b341':'#8b949e';
+    const cont=(r.step>0)===(r.move>0)&&Math.abs(r.step)>=0.3;
+    const tag=Math.abs(r.step)<0.3?'<span class="pw-mut">→ flach</span>'
+      :cont?'<span style="color:#3fb950;font-weight:700">▲ Steam</span>'
+      :'<span style="color:#f85149;font-weight:700">▼ dreht</span>';
+    const mk='<a href="https://polymarket.com/event/'+encodeURIComponent(r.key)+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Markt öffnen ↗">'+_pwEsc(r.match)+' <span style="color:#a78bfa">↗</span></a>';
+    const htk=r.htk!=null?(r.htk<0?'live':r.htk<1?'<1h':Math.round(r.htk)+'h'):'—';
+    return '<tr>'
+      +'<td style="white-space:nowrap">'+_pwSportIcon(r.league)+' <span class="pw-mut" style="font-size:11px">'+_pwEsc((r.league||'').toUpperCase())+'</span></td>'
+      +'<td>'+mk+'</td>'
+      +'<td class="pw-cm"><b style="color:#4cc2ff">'+_pwEsc(r.side)+'</b></td>'
+      +'<td class="pw-cn pw-mut">'+Math.round(r.from*100)+'¢→'+Math.round(r.to*100)+'¢</td>'
+      +'<td class="pw-cn" style="font-weight:800;color:'+mCol+'">'+(up?'+':'')+r.move.toFixed(1)+'pp</td>'
+      +'<td class="pw-cm">'+tag+'</td>'
+      +'<td class="pw-cn pw-mut">'+(r.spanH>=1?Math.round(r.spanH)+'h':'<1h')+'</td>'
+      +'<td class="pw-cn pw-mut">'+htk+'</td></tr>';
+  }).join('');
+  return intro+'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
+    +'<th>Sport</th><th>Spiel</th><th>Seite</th><th>von→zu</th><th>Move</th><th>Signal</th><th>über</th><th>Anpfiff</th>'
     +'</tr></thead><tbody>'+body+'</tbody></table></div></section>';
 }
 

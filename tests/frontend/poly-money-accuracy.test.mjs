@@ -213,6 +213,42 @@ test('Globale Wale (c): größte Einzel-Wallets mit Links', () => {
   assert.match(h, /Braves/, 'Seite fehlt');
 });
 
+// 25.07.2026 (Lucas ① Momentum): „was bewegt sich gerade" — stärkster Poly-Preis-Move je Markt,
+// Steam (zieht weiter) vs Reversal (dreht), aus der globalen Preis-Zeitreihe.
+test('Momentum (①): stärkster Move je Markt, Steam vs Reversal, nach Größe sortiert', () => {
+  const dom = new JSDOM('<!DOCTYPE html><body></body>', { url: 'https://example.com/', runScripts: 'outside-only' });
+  const { window: w } = dom;
+  w.eval(readFileSync(PW, 'utf8'));
+  const t = (min) => new Date(Date.UTC(2026, 6, 24, 12, min)).toISOString();
+  const hist = {
+    'mlb-a-b': [
+      { ts: t(0),  p: { Braves: 0.50, Padres: 0.50 }, v: 200000, htk: 3,   league: 'MLB' },
+      { ts: t(30), p: { Braves: 0.54, Padres: 0.46 }, v: 210000, htk: 2.5, league: 'MLB' },
+      { ts: t(60), p: { Braves: 0.58, Padres: 0.42 }, v: 220000, htk: 2,   league: 'MLB' }],   // +8pp, letzter Schritt zieht weiter → Steam
+    'atp-x-y': [
+      { ts: t(0),  p: { Alcaraz: 0.60 }, v: 80000, htk: 4,   league: 'TENNIS' },
+      { ts: t(30), p: { Alcaraz: 0.66 }, v: 85000, htk: 3.5, league: 'TENNIS' },
+      { ts: t(60), p: { Alcaraz: 0.63 }, v: 86000, htk: 3,   league: 'TENNIS' }],              // +3pp gesamt, letzter Schritt runter → dreht
+    'flat-x': [
+      { ts: t(0),  p: { A: 0.50 },    v: 90000, league: 'MLB' },
+      { ts: t(30), p: { A: 0.5005 },  v: 90000, league: 'MLB' }],                              // <1pp → Rauschen, raus
+  };
+  const h = w._pwMomentum(hist);
+  assert.match(h, /Was sich gerade bewegt/);
+  assert.match(h, /Braves/); assert.match(h, /\+8\.0pp/); assert.match(h, /▲ Steam/);
+  assert.match(h, /▼ dreht/, 'Tennis-Reversal muss als „dreht" markiert sein');
+  assert.ok(!/flat-x/.test(h), 'unter 1pp Bewegung = Rauschen, raus');
+  assert.ok(h.indexOf('Braves') < h.indexOf('Alcaraz'), 'nach |Move| sortiert (8pp vor 3pp)');
+});
+
+test('Momentum leer → ehrlicher Sammel-Hinweis (füllt sich über Läufe)', () => {
+  const dom = new JSDOM('<!DOCTYPE html><body></body>', { url: 'https://example.com/', runScripts: 'outside-only' });
+  const { window: w } = dom;
+  w.eval(readFileSync(PW, 'utf8'));
+  assert.match(w._pwMomentum({}), /füllt sich über die nächsten Runner-Läufe/);
+  assert.match(w._pwMomentum({ x: [{ ts: '2026-07-24T12:00:00Z', p: { A: 0.5 } }] }), /füllt sich/, '1 Snapshot reicht nicht für Bewegung');
+});
+
 // 25.07.2026 (Lucas: „die Whale-Auflistung für ALLE Sportarten, die größten Whales"): aggregiertes
 // Leaderboard — je Wallet der GESAMT-Einsatz über mehrere Märkte, nach Größe sortiert.
 test('Globaler Whale-Leaderboard: aggregiert je Wallet über alle Märkte/Sportarten', () => {
