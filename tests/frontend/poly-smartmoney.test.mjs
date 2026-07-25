@@ -76,7 +76,7 @@ test('Edge-Board: ohne Pinnacle-Totals fällt O/U auf Softbook zurück (ᴾ-Tag)
 
 // Unter-Reiter (19.07.2026, Lucas: „besser aufteilen") — jede Ansicht zeigt nur ihr Thema.
 import { JSDOM as _JSDOM } from 'jsdom';
-async function renderView(view) {
+async function renderView(view, filter) {
   const files = {
     'mls-data.json': { groups: {} },
     'mls_poly_prices.json': { prices: { 'H-A': { homeName: 'H', awayName: 'A', hw: 0.5, dr: 0.3, aw: 0.3, vol: 50000 } } },
@@ -98,14 +98,16 @@ async function renderView(view) {
   w.eval(readFileSync(PW, 'utf8'));
   w.initPolyWallets();
   await new Promise(r => setTimeout(r, 30));
-  w._pwSetView(view);   // 25.07.2026: Default-View ist jetzt 'money' → immer explizit schalten
+  if (filter) w._pwSetSportFilter(filter);   // 25.07.2026: Datensatz-Boards nur unter passendem Sport-Filter
+  w._pwSetView(view);
   return w.document.getElementById('polyWalletsPanel').innerHTML;
 }
 
-test('Reiter Smart-Money: nur Konzentration, kein Leaderboard', async () => {
-  const html = await renderView('smart');
+// 25.07.2026 (Lucas): Smart-Money-Tab entfernt — die MLS-Konzentration lebt jetzt im Whales-Tab,
+// aber NUR unter dem ⚽ Fußball-Filter (Datensatz-Detail). Default „Alle" bleibt rein global.
+test('Whales unter ⚽ Fußball zeigt die Datensatz-Smart-Money-Konzentration', async () => {
+  const html = await renderView('whales', 'Fußball');
   assert.match(html, /Smart-Money-Konzentration/);
-  assert.doesNotMatch(html, /🏦 Größte Wallets/);   // 25.07.2026: „Whale-Leaderboard" → „Größte Wallets"
 });
 
 test('Reiter Whales: Leaderboard, aber keine Smart-Money-Konzentration', async () => {
@@ -120,7 +122,8 @@ test('Reiter Chancen (Default): weder Konzentration noch Leaderboard (die sind e
   assert.doesNotMatch(html, /Whale-Leaderboard/);
 });
 
-test('vier Unter-Reiter existieren', async () => {
+test('Unter-Reiter existieren (Smart-Money-Tab 25.07. entfernt)', async () => {
   const html = await renderView('edge');
-  for (const t of ['🎯 Chancen', '💡 Smart-Money', '🐋 Whales', '💰 Großes Geld']) assert.match(html, new RegExp(t));
+  for (const t of ['🔥 Heute wetten', '💰 Großes Geld', '📈 Bewegung', '🆕 Neu', '🎯 Chancen', '🐋 Whales']) assert.match(html, new RegExp(t));
+  assert.doesNotMatch(html, /💡 Smart-Money/, 'Smart-Money-Tab wurde entfernt');
 });

@@ -41,7 +41,9 @@ async function render(files, view) {
   w._pwDsId = 'mls';               // MLS = Einstieg (hat Poly)
   w.initPolyWallets();
   await new Promise(r => setTimeout(r, 20));   // Promise.all auflösen lassen
-  w._pwSetView(view || 'edge');    // 25.07.: Default-View ist jetzt 'money' → für Edge-Sektionen explizit 'edge'
+  // 25.07.: Datensatz-Boards (MLS=Fußball) erscheinen nur unter dem Fußball-Filter.
+  w._pwSetSportFilter('Fußball');
+  w._pwSetView(view || 'edge');
   return w.document.getElementById('polyWalletsPanel').innerHTML;
 }
 

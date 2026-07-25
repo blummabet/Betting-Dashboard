@@ -108,7 +108,7 @@ function _pwViewTabs(){
   // 19.07.2026 (Lucas: „besser aufteilen") — 4 Unter-Reiter statt 9 gestapelter Sektionen.
   // Reihenfolge 25.07.2026: globales „Großes Geld" (immer Content+Filter) zuerst → Landing-Tab.
   return '<div class="pw-ds" style="margin-top:-6px">'
-    +b('bet','🔥 Heute wetten')+b('money','💰 Großes Geld')+b('move','📈 Bewegung')+b('new','🆕 Neu')+b('edge','🎯 Chancen')+b('smart','💡 Smart-Money')+b('whales','🐋 Whales')
+    +b('bet','🔥 Heute wetten')+b('money','💰 Großes Geld')+b('move','📈 Bewegung')+b('new','🆕 Neu')+b('edge','🎯 Chancen')+b('whales','🐋 Whales')
     +'</div>';
 }
 
@@ -398,6 +398,10 @@ function _pwRender(){
     ||(_pwCache.broadLive&&Object.keys(_pwCache.broadLive).length)
     ||(_pwCache.moneyBroad&&_pwCache.moneyBroad.n));
   const f=_pwFiles();
+  // 25.07.2026 (Lucas: „die MLS-Boards sollen für das greifen, was im Filter eingestellt ist"): das
+  // datensatz-eigene Detail (MLS = Fußball) erscheint NUR, wenn der Sport-Filter auf dessen Kategorie
+  // steht. Default „Alle" bleibt damit REIN GLOBAL — kein Random-MLS mehr in den Tabs.
+  const showDs=_pwSportFilter===(f.noAnchor?'E-Sport':'Fußball');
 
   // 19.07.2026 (Lucas) — eigener Sub-View „Liegt das Geld richtig?" neben dem Edge-Board.
   if(_pwView==='money'){
@@ -405,7 +409,8 @@ function _pwRender(){
     // 25.07.2026 (Lucas: „Liga-Umschalter oben gehört weg"): der Wallets-Tab ist global über alle
     // Sportarten — kein Datensatz-Selektor mehr. (Sport-Filter je Sektion kommt als Nächstes.)
     panel.innerHTML=_pwViewTabs()+_pwSportFilterBar(_pwGlobalCats())+_pwViewIntro('money')
-      +_pwMoneyLive(_pwCache.broadLive)+_pwMoneyBroad(moneyBroad)+_pwMoneyAccuracy(moneyAcc,teams);
+      +_pwMoneyLive(_pwCache.broadLive)+_pwMoneyBroad(moneyBroad)
+      +(showDs?_pwMoneyAccuracy(moneyAcc,teams):'');   // MLS-Rückblick nur unter ⚽ Fußball
     return;
   }
   if(_pwView==='move'){
@@ -447,31 +452,31 @@ function _pwRender(){
   // untereinander. Jede Ansicht zeigt nur ihr Thema → kurze Scroll-Achse, klare Trennung.
   let h=_pwViewTabs()+_pwSportFilterBar(_pwGlobalCats())+_pwViewIntro(_pwView)+head+_pwKpiBand();
   let drawScatter=false;
-  if(_pwView==='smart'){
-    // 💡 Smart-Money: wo liegt das Geld, wie konzentriert, welcher Fluss.
-    h+=_pwSmartConcentration(smart,prices,teams);
-    h+=_pwExitWatch(wallets,teams);
-  }else if(_pwView==='whales'){
-    // 🐋 Whales: (c) GLOBALE Einzel-Wale über alle Sportarten ZUERST (Lucas 25.07.2026),
-    // dann die datensatz-eigenen Panels (Einstieg, jüngste Trades, Leaderboard).
-    h+=_pwGlobalWhaleLeaderboard(_pwCache.broadLive);   // 🏦 größte Whales ALLE Sportarten (aggregiert)
-    h+=_pwGlobalWhales(_pwCache.broadLive);              // 🐋 je Markt: wer setzt auf welche Seite
-    if(hasPoly) h+=_pwDsDivider(f,'Wale in deinem aktiven Bewerb');
-    h+=_pwWhaleEntryQuality(ledger);
-    h+=_pwFlowTape(wallets,teams);
-    // 25.07.2026 (Lucas: „Kästen die nicht passen entfernen"): das datensatz-eigene „🏦 Größte
-    // Wallets"-Board ist raus — der globale 🏦-Leaderboard oben ersetzt es (sonst doppelt).
+  // 25.07.2026 (Lucas): Datensatz-Boards (MLS) NUR wenn der Filter auf ⚽ Fußball steht — sonst rein global.
+  if(_pwView==='whales'){
+    // 🐋 Whales: GLOBAL zuerst (aggregierter Leaderboard + Einzel-Wale je Markt).
+    h+=_pwGlobalWhaleLeaderboard(_pwCache.broadLive);
+    h+=_pwGlobalWhales(_pwCache.broadLive);
+    if(showDs&&hasPoly){
+      // Datensatz-Detail (MLS = ⚽ Fußball): Konzentration, Einstiegsqualität, jüngste Trades.
+      h+=_pwDsDivider(f,'Wale & Smart-Money in deinem aktiven Bewerb');
+      h+=_pwSmartConcentration(smart,prices,teams);
+      h+=_pwWhaleEntryQuality(ledger);
+      h+=_pwFlowTape(wallets,teams);
+      h+=_pwExitWatch(wallets,teams);
+    }
   }else{
-    // 🎯 Chancen (Default): (a) GLOBALE Edge über alle Sportarten ZUERST (Lucas 25.07.2026),
-    // dann die datensatz-eigenen Auflösungs-Lücken + interne Fehlbepreisung + Edge-Board.
+    // 🎯 Chancen: GLOBALE Edge (Poly vs Pinnacle, alle Sportarten) zuerst.
     h+=_pwGlobalEdge(_pwCache.crossSport);
-    if(hasPoly) h+=_pwDsDivider(f,'Edge in deinem aktiven Bewerb');
-    h+=_pwSettlementBoard(settlement,teams);
-    h+=_pwCoherenceBoard(coherence);
-    if(!noAnchor){
-      h+=_pwScatterSection(edges);
-      h+=_pwEdgeBoard(edges,teams,wallets,hist);
-      drawScatter=true;
+    if(showDs&&hasPoly){
+      h+=_pwDsDivider(f,'Chancen in deinem aktiven Bewerb');
+      h+=_pwSettlementBoard(settlement,teams);
+      h+=_pwCoherenceBoard(coherence);
+      if(!noAnchor){
+        h+=_pwScatterSection(edges);
+        h+=_pwEdgeBoard(edges,teams,wallets,hist);
+        drawScatter=true;
+      }
     }
   }
   panel.innerHTML=h;

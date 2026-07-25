@@ -20,7 +20,7 @@ function mockFetch(files) {
   };
 }
 
-async function renderMoney(acc, broad) {
+async function renderMoney(acc, broad, filter) {
   const dom = new JSDOM('<!DOCTYPE html><body><div id="polyWalletsPanel"></div></body>',
     { url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
   const { window: w } = dom;
@@ -34,6 +34,8 @@ async function renderMoney(acc, broad) {
   w._pwDsId = 'mls';
   w.initPolyWallets();
   await new Promise(r => setTimeout(r, 20));
+  // 25.07.: der MLS-Rückblick (money-accuracy) erscheint nur unter ⚽ Fußball; byLeague bleibt global.
+  if (filter) w._pwSetSportFilter(filter);
   w._pwSetView('money');                       // in den Geld-View schalten
   return w.document.getElementById('polyWalletsPanel').innerHTML;
 }
@@ -49,7 +51,7 @@ test('Geld schärfer: grünes Klartext-Urteil + Trefferquoten (kein Brier-Jargon
     verdict: 'geld_schaerfer', disagree: { n: 10, moneyWon: 7, priceWon: 3 },
     rows: [{ key: 'LA-SEA', winner: 'home', moneyFav: 'home', priceFav: 'away',
              moneyOK: true, priceOK: false, totalUsd: 50000 }],
-  });
+  }, undefined, 'Fußball');
   assert.match(html, /Das Geld ist schärfer als der Preis/);
   assert.match(html, /62%/); assert.match(html, /55%/);        // Trefferquoten als Klartext-KPI
   assert.doesNotMatch(html, /Brier/, 'Brier-Jargon muss raus (20.07.2026, Lucas: klar lesbar)');
@@ -59,12 +61,12 @@ test('Geld schärfer: grünes Klartext-Urteil + Trefferquoten (kein Brier-Jargon
 
 test('Preis besser: rotes Urteil (dummes Geld)', async () => {
   const html = await renderMoney({ n: 30, moneyHitRate: 0.4, priceHitRate: 0.55,
-    brierMoney: 0.6, brierPrice: 0.5, verdict: 'preis_besser', disagree: { n: 5, moneyWon: 1, priceWon: 4 }, rows: [] });
+    brierMoney: 0.6, brierPrice: 0.5, verdict: 'preis_besser', disagree: { n: 5, moneyWon: 1, priceWon: 4 }, rows: [] }, undefined, 'Fußball');
   assert.match(html, /Der Preis ist besser als das Geld/);
 });
 
 test('zu wenig Daten: ehrlicher Sammel-Zustand statt Fantasiezahl', async () => {
-  const html = await renderMoney({ n: 0 });
+  const html = await renderMoney({ n: 0 }, undefined, 'Fußball');
   assert.match(html, /Sammelt noch/);
   assert.doesNotMatch(html, /schärfer als der Preis/);
 });

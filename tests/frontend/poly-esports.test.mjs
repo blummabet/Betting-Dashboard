@@ -27,7 +27,7 @@ function mockFetch() {
   };
 }
 
-async function renderEsports(view) {
+async function renderEsports(view, filter) {
   const dom = new JSDOM('<!DOCTYPE html><body><div id="polyWalletsPanel"></div></body>',
     { url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
   const { window: w } = dom;
@@ -35,7 +35,8 @@ async function renderEsports(view) {
   w.eval(readFileSync(PW, 'utf8'));
   w._pwSwitchDataset('esports');               // korrekt umschalten (setzt den Modul-State)
   await new Promise(r => setTimeout(r, 30));
-  w._pwSetView(view || 'edge');                // 25.07.: Default-View ist jetzt 'money' → Edge-Ansicht explizit
+  if (filter) w._pwSetSportFilter(filter);     // 25.07.: Datensatz-Detail nur unter passendem Sport-Filter
+  w._pwSetView(view || 'edge');
   return w.document.getElementById('polyWalletsPanel').innerHTML;
 }
 
@@ -51,13 +52,15 @@ test('E-Sport: kein Pinnacle-Edge-Board, aber Erklärung warum', async () => {
   assert.match(html, /keine Edge-vs-Pinnacle-Ansicht/, 'Erklärung fehlt, warum kein Edge-Board');
 });
 
-test('E-Sport: Smart-Money-Reiter zeigt Konzentration', async () => {
-  const html = await renderEsports('smart');
+// 25.07.2026 (Lucas): Smart-Money-Tab entfernt — E-Sport-Konzentration lebt im Whales-Tab unter
+// dem 🎮 E-Sport-Filter (Datensatz-Detail).
+test('E-Sport: Whales-Reiter (E-Sport-Filter) zeigt Konzentration', async () => {
+  const html = await renderEsports('whales', 'E-Sport');
   assert.match(html, /Smart-Money-Konzentration/, 'Smart-Money muss erscheinen');
   assert.match(html, /NAVI – FaZe/);
 });
 
 test('E-Sport: hohe Whale-Konzentration wird markiert (80%)', async () => {
-  const html = await renderEsports('smart');
+  const html = await renderEsports('whales', 'E-Sport');
   assert.match(html, /⚠️ 80%/);
 });
