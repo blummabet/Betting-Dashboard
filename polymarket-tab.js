@@ -1202,6 +1202,13 @@ const WM_MARKET_TO_PRICE_KEY = {
   'Over 3.5 Tore':         'poly_o35',
   'Under 3.5 Tore':        'poly_u35',   // FIX 14.06.2026: DEU-CUW Under 3.5 nicht handelbar weil unmapped
   'Beide Teams treffen':   'poly_btts',
+  // 25.07.2026 (Lucas): deutsche Über/Unter-Schreibweise (MLS-Picks) als Alias — sonst O/U unmapped.
+  'Über 2.5 Tore':         'poly_o25',
+  'Unter 2.5 Tore':        'poly_u25',
+  'Über 1.5 Tore':         'poly_o15',
+  'Unter 1.5 Tore':        'poly_u15',
+  'Über 3.5 Tore':         'poly_o35',
+  'Unter 3.5 Tore':        'poly_u35',
 };
 
 function _getWmPolyPrice(pick) {
@@ -1225,6 +1232,49 @@ function _getWmPolyPrice(pick) {
     found:      true,
     price,                           // probability 0-1
     eventUrl:   `https://polymarket.com/de/sports/fifa-world-cup/${slug}`,
+    eventTitle: entry.title || `${pick.home} vs ${pick.away}`,
+    vol:        entry.vol,
+  };
+}
+
+// ── MLS Polymarket Prices (from fetch_wm_poly_prices.py → mls_poly_prices.json) ──
+// 25.07.2026 (Lucas: „die 2 Bets haben keine Quote von Poly + EDGE n.V."): der Betting-Tab matchte
+// MLS-Picks gegen polymarket_prices.json (nur EU-Klub-Ligen, kein MLS). Die MLS-Quoten liegen in
+// mls_poly_prices.json — GLEICHE Struktur wie WM (homeId-awayId, hw/dr/aw/poly_o25). Also derselbe
+// ID-Pfad wie _getWmPolyPrice, nur eigener Cache + MLS-Event-URL.
+let _mlsPolyPriceCache   = null;
+let _mlsPolyPriceMissing = false;
+async function _loadMlsPolyPriceCache() {
+  if (_mlsPolyPriceCache !== null) return;
+  try {
+    const _cbv = Math.floor(Date.now() / 3600000);
+    const res = await fetch(`mls_poly_prices.json?v=${_cbv}`, { cache: 'no-store' });
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+    _mlsPolyPriceCache = data.prices || {};
+    console.log(`[Poly] MLS prices loaded: ${Object.keys(_mlsPolyPriceCache).length} Märkte`);
+  } catch (e) {
+    console.warn('[Poly] mls_poly_prices.json not available:', e.message);
+    _mlsPolyPriceCache = {};
+    _mlsPolyPriceMissing = true;
+  }
+}
+function _getMlsPolyPrice(pick) {
+  if (!_mlsPolyPriceCache || !pick.homeId || !pick.awayId) return null;
+  const key   = `${pick.homeId}-${pick.awayId}`;
+  const entry = _mlsPolyPriceCache[key];
+  if (!entry) return { found: false, stale: true };   // kein MLS-Markt → Aufrufer fällt auf EU-Datei
+  const evUrl = entry.slug ? `https://polymarket.com/event/${entry.slug}` : 'https://polymarket.com/';
+  const mkey  = WM_MARKET_TO_PRICE_KEY[pick.market];
+  if (!mkey) return { found: false, gameFound: true, eventUrl: evUrl };  // Spiel da, Markt-Linie nicht
+  const price = entry[mkey];
+  if (price == null || price <= 0) return { found: false, gameFound: true, eventUrl: evUrl };
+  const isOuBtts = ['poly_o25','poly_u25','poly_o15','poly_u15','poly_o35','poly_u35','poly_btts'].includes(mkey);
+  const slug = isOuBtts && entry.moreMktSlug ? entry.moreMktSlug : entry.slug;
+  return {
+    found:      true,
+    price,                           // probability 0-1
+    eventUrl:   slug ? `https://polymarket.com/event/${slug}` : evUrl,
     eventTitle: entry.title || `${pick.home} vs ${pick.away}`,
     vol:        entry.vol,
   };
@@ -4912,6 +4962,7 @@ async function _fetchAllPricesAsync() {
 
   await _loadPolyPriceCache();
   await _loadWmPolyPriceCache();
+  await _loadMlsPolyPriceCache();   // 25.07.2026: MLS-Quoten aus mls_poly_prices.json
 
   // Show fetched-at timestamp if available
   let statusSuffix = '';
@@ -4924,14 +4975,17 @@ async function _fetchAllPricesAsync() {
 
   // Apply cached prices to all picks at once
   // If the JSON file doesn't exist yet, leave prices undefined (show '—') rather than graying out
-  if (!_polyPriceMissing) {
+  if (!_polyPriceMissing || !_mlsPolyPriceMissing) {   // 25.07.2026: läuft, wenn EU- ODER MLS-Quelle da ist
     for (const pick of picks) {
       if (pick.isWm) {
         // WM 2026: use wm_poly_prices.json (Gamma API prices)
         const result = _getWmPolyPrice(pick);
         _polyState.prices[pick.id] = result || { found: false, stale: _wmPolyPriceMissing };
       } else {
-        const result = _getPriceFromCache(pick);
+        // 25.07.2026 (Lucas): MLS-Picks zuerst gegen mls_poly_prices.json (ID-gekeyt); fehlt der
+        // Markt dort (result.stale = Key nicht im MLS-Cache), → europäische Klub-Liga-Datei.
+        let result = _getMlsPolyPrice(pick);
+        if (!result || result.stale) result = _getPriceFromCache(pick);
         _polyState.prices[pick.id] = result || { found: false };
       }
     }
