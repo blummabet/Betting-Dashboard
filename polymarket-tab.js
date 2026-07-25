@@ -2913,13 +2913,23 @@ function _renderWmMarketTable() {
         if (el) el.textContent = '—';
       });
 
-    // Polymarket USDC balance
-    fetch('wm_poly_balance.json?' + Date.now())
-      .then(r => r.ok ? r.json() : null)
-      .then(d => {
+    // Polymarket USDC balance — 25.07.2026 (Lucas: „falsche balance"): der Betting-Tab las FEST
+    // wm_poly_balance.json (stale seit WM-Ende 19.07.). Es ist EINE Wallet — also die FRISCHESTE
+    // der Balance-Dateien nehmen (MLS-Pipeline schreibt mls_poly_balance.json). Fehler-Dateien
+    // (error-Feld) nur, wenn keine echte existiert.
+    Promise.all([
+      fetch('mls_poly_balance.json?' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch('wm_poly_balance.json?'  + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
+    ])
+      .then(([mls, wm]) => {
         const el = document.getElementById('wmPolyBalance');
         if (!el) return;
-        const total = d?.total ?? d?.usdc;
+        const ts = x => (x && x.updatedAt) ? Date.parse(x.updatedAt) : -1;
+        const cand = [mls, wm].filter(x => x && (x.total != null || x.usdc != null));
+        const good = cand.filter(x => !x.error);
+        const d = (good.length ? good : cand).sort((a, b) => ts(b) - ts(a))[0];   // frischeste echte gewinnt
+        if (!d) { el.textContent = '—'; return; }
+        const total = d.total ?? d.usdc;
         if (total == null) { el.textContent = '—'; return; }
         const updStr = d.updatedAt
           ? ` <span style="color:#484f58;font-size:10px;font-weight:400">(${new Date(d.updatedAt).toLocaleTimeString('de-AT', {hour:'2-digit',minute:'2-digit'})})</span>`

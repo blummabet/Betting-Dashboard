@@ -286,12 +286,19 @@ def main():
               positions=existing.get("positions"))
         return
 
-    balance_raw = fetch_balance_via_clob_client(
-        private_key, funder_addr, api_key, api_secret, api_passphrase
-    )
+    # 25.07.2026 (Lucas: „falsche balance"): der Fetch warf auf dem Runner eine Exception (statt None)
+    # → main() brach VOR dem Schreiben ab → mls_poly_balance.json existierte NIE (stiller Ausfall,
+    # continue-on-error verdeckte es). Jetzt gekapselt: der Balance-Stand wird IMMER geschrieben.
+    try:
+        balance_raw = fetch_balance_via_clob_client(
+            private_key, funder_addr, api_key, api_secret, api_passphrase
+        )
+    except Exception as exc:
+        print(f"\n⚠️   Balance-Fetch warf eine Exception: {exc}")
+        balance_raw = None
 
     if balance_raw is None:
-        print(f"\n⚠️   Balance-Fetch fehlgeschlagen — bestehende Balance wird behalten")
+        print(f"\n⚠️   Balance-Fetch fehlgeschlagen — bestehende Balance wird behalten, Datei trotzdem geschrieben")
         existing = _load_existing()
         _save(existing.get("usdc", 0.0), existing.get("usdc_e", 0.0),
               funder_addr, error="fetch_failed",
@@ -304,7 +311,11 @@ def main():
     balance = balance_raw / USDC_DECIMALS
 
     # Wert der offenen Positionen dazu — echtes Wallet-Guthaben = frei + Positionen.
-    positions = fetch_positions_value(funder_addr)
+    try:
+        positions = fetch_positions_value(funder_addr)
+    except Exception as exc:
+        print(f"  ⚠️  Positions-Fetch warf eine Exception: {exc}")
+        positions = None
     if positions is None:   # API-Fehler → alten Positions-Wert behalten, nicht auf 0 fallen
         positions = _load_existing().get("positions")
 
