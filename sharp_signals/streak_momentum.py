@@ -46,6 +46,8 @@ DEFAULTS = {
         "over25": 0.5, "under25": 0.5,       # Tor-Ergebnis-Serien: varianzlastig
         "bttsYes": 0.45, "bttsNo": 0.4,      # BTTS: laut Backtest klar negativ
         "cornersOver": 1.0, "cornersUnder": 0.4,  # Ecken über persistiert, unter nicht
+        # 25.07.2026: Ergebnis-Serien mean-reverten stärker → konservativ (bis Backtest kalibriert).
+        "win": 0.4, "unbeaten": 0.45,
     },
 }
 
@@ -61,7 +63,7 @@ _SUPPORT = {
 
 # Streak-Typen, deren „Over/Ja"-Seite von einer HOHEN rohen Gegner-Rate gestützt wird.
 # (_opp_rate_pct liefert immer die Over/Ja-Rate → für Under/Nein invertieren.)
-_OVER_SIDE = {"over25", "bttsYes", "cornersOver", "scored", "cards"}
+_OVER_SIDE = {"over25", "bttsYes", "cornersOver", "scored", "cards", "win", "unbeaten"}
 
 
 def _load_cfg() -> dict:
@@ -80,6 +82,16 @@ def _load_cfg() -> dict:
 
 def _market_family_dir(market: str):
     m = (market or "").lower()
+    # 25.07.2026 (Lucas: „5 Siege in Folge sollten die 1X2 beeinflussen"): Ergebnis-Markt →
+    # team-spezifische Sieg-/Ungeschlagen-Serie (asymmetrisch: nur die gebackte Seite stützt).
+    if "doppelte chance" in m or "doppelchance" in m or "double chance" in m:
+        if "x2" in m: return ("result_dc_away", None)    # Remis o. Auswärts → Auswärts ungeschlagen
+        if "1x" in m: return ("result_dc_home", None)    # Remis o. Heim → Heim ungeschlagen
+        return (None, None)                              # 12 → beide gewinnen, kein Serien-Bezug
+    if "heimsieg" in m or "home win" in m:
+        return ("result_win_home", None)
+    if "auswärtssieg" in m or "auswartssieg" in m or "away win" in m:
+        return ("result_win_away", None)
     if "ecken" in m or "corner" in m:
         return ("corners", -1 if ("unter" in m or "under" in m) else +1)
     if "karten" in m or "card" in m:
@@ -144,6 +156,9 @@ class StreakMomentumSignal(Signal):
         idx = context.get("streaks") or {}
         if not idx:
             return None
+        # 25.07.2026 (Lucas): Ergebnis-Markt (1X2/DC) hat eine EIGENE, asymmetrische Logik.
+        if fam.startswith("result"):
+            return self._eval_result(fam, context, cfg)
         home_id, away_id = context.get("home_id"), context.get("away_id")
         sup_type, opp_type = _SUPPORT[(fam, direction)]
         persist = cfg["market_persistence"]
@@ -189,3 +204,42 @@ class StreakMomentumSignal(Signal):
                                       "n_supporting": len(parts),
                                       "n_xg_backed": n_backed, "n_unbacked": n_unbacked,
                                       "market_type": sup_type})
+
+    def _eval_result(self, fam: str, context: dict, cfg: dict) -> Optional[SignalResult]:
+        """25.07.2026 (Lucas): Ergebnis-Markt. Die GEBACKTE Seite: Sieg-Serie (1X2) bzw. Ungeschlagen-
+        Serie (Doppelchance) stützt (+); eine SIEG-Serie des GEGNERS läuft dagegen (−). Asymmetrisch —
+        anders als O/U, wo beide Teams zum Total beitragen. Konservative Persistenz (mean-revertet)."""
+        idx = context.get("streaks") or {}
+        home_id, away_id = str(context.get("home_id")), str(context.get("away_id"))
+        is_home     = fam.endswith("home")
+        is_unbeaten = "_dc_" in fam
+        backed_id, opp_id     = (home_id, away_id) if is_home else (away_id, home_id)
+        backed_pref, opp_pref = ("H", "A")         if is_home else ("A", "H")
+        b_type = "unbeaten" if is_unbeaten else "win"
+        persist = cfg["market_persistence"]
+        score, parts = 0.0, []
+        # gebackte Seite: win/unbeaten (+) · Gegner: SIEG-Serie (−)
+        for tid, pref, stype, sign in ((backed_id, backed_pref, b_type, +1),
+                                       (opp_id,   opp_pref,  "win",  -1)):
+            s = _pick_team_streak(idx.get(tid) or [], stype, pref)
+            if not s:
+                continue
+            length = s.get("length") or 0
+            rate = s.get("ratePct")
+            if length < cfg["min_length"] or rate is None or rate < cfg["min_rate_pct"]:
+                continue
+            rate_strength = max(0.0, min(1.0, (rate - 50) / 50.0))
+            oppf = _opp_factor(s, stype, cfg)
+            pmul = persist.get(stype, 0.4)
+            score += sign * min(length, 8) * cfg["per_streak"] * rate_strength * pmul * oppf
+            if sign > 0:
+                parts.append(f"{s.get('team', tid)} {length}× {s.get('market', stype)}")
+        if abs(score) < cfg["min_fire_abs"]:
+            return None
+        score = max(-cfg["max_pp"], min(cfg["max_pp"], round(score, 2)))
+        confidence = round(min(0.55, 0.35 + 0.05 * len(parts)), 2)
+        ev = ("🔥 Ergebnis-Serie stützt: " + " · ".join(parts[:2])) if (score > 0 and parts) \
+            else ("🔥 Sieg-Serie des Gegners läuft dagegen" if score < 0 else "🔥 Ergebnis-Serien neutral")
+        return SignalResult(score=score, confidence=confidence, evidence=ev,
+                            metadata={"family": "result", "market_type": b_type,
+                                      "n_supporting": len(parts)})

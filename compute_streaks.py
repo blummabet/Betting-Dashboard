@@ -80,6 +80,9 @@ FORM_MARKETS = [
     ("bttsNo",     "bttsSeq",   False, "Beide treffen — Nein", "bttsRate",       True),
     ("scored",     "scoredSeq", True,  "Team trifft",          "scoredRate",     False),
     ("cleanSheet", "csSeq",     True,  "Zu null",              "cleanSheetRate", False),
+    # 25.07.2026 (Lucas: „5 Siege in Folge sollten die 1X2 beeinflussen"): Ergebnis-Serien.
+    ("win",        "wonSeq",      True, "Sieg-Serie",           "winRate",        False),
+    ("unbeaten",   "unbeatenSeq", True, "Ungeschlagen",         "unbeatenRate",   False),
 ]
 
 
@@ -210,6 +213,10 @@ def _opp_rate_pct(key, opp_id, form, cf):
         r = oc.get("overLineRate")
     elif key == "cards":
         r = oc.get("cardOverRate")
+    elif key == "win":                         # 25.07.2026: Sieg-Serie → Gegner verliert oft (1 − ungeschlagen)
+        r = of.get("unbeatenRate"); r = (1.0 - r) if r is not None else None
+    elif key == "unbeaten":                    # ungeschlagen → Gegner gewinnt selten (1 − Siegrate)
+        r = of.get("winRate"); r = (1.0 - r) if r is not None else None
     else:
         r = None
     return round(r * 100) if r is not None else None

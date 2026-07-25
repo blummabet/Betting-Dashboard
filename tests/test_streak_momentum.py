@@ -70,5 +70,37 @@ class TestStreakMomentum(unittest.TestCase):
         self.assertEqual(SIGNAL_GROUPS.get("streak_momentum"), "form")
 
 
+class TestStreakMomentumResult(unittest.TestCase):
+    """25.07.2026 (Lucas: „5 Siege in Folge sollten die 1X2 beeinflussen"): Sieg-/Ungeschlagen-
+    Serien wirken auf den Ergebnis-Markt (asymmetrisch: nur die gebackte Seite stützt)."""
+    def setUp(self):
+        self.sig = StreakMomentumSignal()
+
+    def test_win_streak_supports_home_win(self):
+        r = self.sig.evaluate({"market": "Heimsieg"},
+                              _ctx([_streak("42", "win", 7, 90, "H")]))
+        self.assertIsNotNone(r)
+        self.assertGreater(r.score, 0)
+        self.assertLessEqual(r.score, MAX_PP)
+
+    def test_opponent_win_streak_opposes_home_win(self):
+        r = self.sig.evaluate({"market": "Heimsieg"},
+                              _ctx(away_streaks=[_streak("50", "win", 7, 90, "A")]))
+        self.assertIsNotNone(r)
+        self.assertLess(r.score, 0)
+
+    def test_unbeaten_streak_supports_double_chance_x2(self):
+        r = self.sig.evaluate({"market": "Doppelte Chance — X2"},
+                              _ctx(away_streaks=[_streak("50", "unbeaten", 8, 90, "A")]))
+        self.assertIsNotNone(r)
+        self.assertGreater(r.score, 0)
+
+    def test_goal_streak_does_not_fire_on_win_pick(self):
+        # Nur eine Tor-Serie (kein Sieg/ungeschlagen) → Ergebnis-Pfad findet nichts → feuert nicht.
+        r = self.sig.evaluate({"market": "Heimsieg"},
+                              _ctx([_streak("42", "over25", 8, 90, "H")]))
+        self.assertIsNone(r)
+
+
 if __name__ == "__main__":
     unittest.main()
