@@ -86,8 +86,22 @@
       "label": "Pinnacle-1X2 vollständig + plausibel",
       "severity": "warn",
       "ok": false,
-      "nFail": 1,
+      "nFail": 15,
       "failures": [
+        "1612-25484: 1X2 unvollständig hw=None dr=None aw=None",
+        "1607-18310: 1X2 unvollständig hw=None dr=None aw=None",
+        "1611-1600: 1X2 unvollständig hw=None dr=None aw=None",
+        "20787-1606: 1X2 unvollständig hw=None dr=None aw=None",
+        "1610-16489: 1X2 unvollständig hw=None dr=None aw=None",
+        "1605-1597: 1X2 unvollständig hw=None dr=None aw=None",
+        "1617-1595: 1X2 unvollständig hw=None dr=None aw=None",
+        "9568-1613: 1X2 unvollständig hw=None dr=None aw=None",
+        "1614-1609: 1X2 unvollständig hw=None dr=None aw=None",
+        "1603-1616: 1X2 unvollständig hw=None dr=None aw=None",
+        "1602-1598: 1X2 unvollständig hw=None dr=None aw=None",
+        "2242-1596: 1X2 unvollständig hw=None dr=None aw=None",
+        "1615-9569: 1X2 unvollständig hw=None dr=None aw=None",
+        "1599-1608: 1X2 unvollständig hw=None dr=None aw=None",
         "1604-1601: 1X2 unvollständig hw=None dr=None aw=None"
       ],
       "note": "Quelle für Modell-Baseline + Edge."
@@ -311,8 +325,22 @@
       "label": "Public-Konsens (Soft-Books) vorhanden",
       "severity": "warn",
       "ok": false,
-      "nFail": 1,
+      "nFail": 15,
       "failures": [
+        "1612-25484: kein public_hw",
+        "1607-18310: kein public_hw",
+        "1611-1600: kein public_hw",
+        "20787-1606: kein public_hw",
+        "1610-16489: kein public_hw",
+        "1605-1597: kein public_hw",
+        "1617-1595: kein public_hw",
+        "9568-1613: kein public_hw",
+        "1614-1609: kein public_hw",
+        "1603-1616: kein public_hw",
+        "1602-1598: kein public_hw",
+        "2242-1596: kein public_hw",
+        "1615-9569: kein public_hw",
+        "1599-1608: kein public_hw",
         "1604-1601: kein public_hw"
       ],
       "note": "Ohne public_* feuert public_static_bias nicht."
@@ -403,9 +431,9 @@
       "ok": false,
       "nFail": 3,
       "failures": [
-        "1602-18310 Heimsieg @2.1: sichere Linie Doppelte Chance — 1X @1.401 verfügbar (≥1.35), nicht abgeleitet",
-        "1604-1607 Heimsieg @2.3: sichere Linie Doppelte Chance — 1X @1.485 verfügbar (≥1.35), nicht abgeleitet",
-        "1614-9568 Heimsieg @2.9: sichere Linie Doppelte Chance — 1X @1.697 verfügbar (≥1.35), nicht abgeleitet"
+        "1602-18310 Heimsieg @2.1: sichere Linie Doppelte Chance — 1X @1.419 verfügbar (≥1.35), nicht abgeleitet",
+        "1604-1607 Heimsieg @2.3: sichere Linie Doppelte Chance — 1X @1.518 verfügbar (≥1.35), nicht abgeleitet",
+        "1614-9568 Heimsieg @2.9: sichere Linie Doppelte Chance — 1X @1.734 verfügbar (≥1.35), nicht abgeleitet"
       ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
@@ -591,5 +619,5 @@
     }
   ],
   "nFail": 6,
-  "generatedAt": "2026-07-24T20:28:18.292642+00:00"
+  "generatedAt": "2026-07-25T09:06:55.871457+00:00"
 }
