@@ -169,17 +169,24 @@ jobs:
         run: |
           git config user.name "CocoBet Bot"
           git config user.email "bot@cocobet.local"
-          git add mls_poly_prices.json mls_poly_balance.json mls_auto_bets_placed.json 2>/dev/null || true
-          git add mls_poly_positions.json mls_position_health.json mls_position_health_alerts.json 2>/dev/null || true
-          git add mls_poly_resting_orders.json 2>/dev/null || true
-          git add poly_cross_sport.json poly_cross_sport_history.json 2>/dev/null || true
-          git add poly_money_broad.json poly_money_broad_close.json 2>/dev/null || true
-          git add esports_poly_prices.json esports_poly_wallets.json esports_poly_smartmoney.json esports_poly_coherence.json esports_poly_status.json 2>/dev/null || true
-          git add mls-poly-history.json mls_book_health.json mls_kill_switch.json 2>/dev/null || true
-          git add mls-data.json mls-odds-history.json 2>/dev/null || true
-          # 13.07.2026 (MLS-Audit): resolve_wm_results SCHREIBT mls_results.json — es wurde nur nie
-          # committet. Damit war der Trade-P&L/CLV nach jedem Lauf weg und der Betting-Tab blieb leer.
-          git add mls_results.json mls_pick_calibration.json 2>/dev/null || true
+          # 25.07.2026 (Lucas: „falsche balance"): FATALER Bug gefunden — `git add a b c` kippt
+          # KOMPLETT (fatal pathspec, exit 128, staged NICHTS), sobald EINE Datei fehlt; mit
+          # `2>/dev/null || true` blieb das still. Deshalb wurden mls_poly_balance.json UND
+          # mls_results.json NIE committet — sie standen je neben einer Datei, die ohne Bets/
+          # Positionen gar nicht existiert (mls_auto_bets_placed.json bzw. mls_pick_calibration.json).
+          # Fix: nur EXISTIERENDE Dateien einzeln adden — eine fehlende reißt nichts mehr mit.
+          for f in \
+            mls_poly_prices.json mls_poly_balance.json mls_auto_bets_placed.json \
+            mls_poly_positions.json mls_position_health.json mls_position_health_alerts.json \
+            mls_poly_resting_orders.json \
+            poly_cross_sport.json poly_cross_sport_history.json \
+            poly_money_broad.json poly_money_broad_close.json poly_money_broad_history.json poly_wallet_track.json \
+            esports_poly_prices.json esports_poly_wallets.json esports_poly_smartmoney.json esports_poly_coherence.json esports_poly_status.json \
+            mls-poly-history.json mls_book_health.json mls_kill_switch.json \
+            mls-data.json mls-odds-history.json \
+            mls_results.json mls_pick_calibration.json; do
+            [ -f "$f" ] && git add "$f"
+          done
           if git diff --staged --quiet; then
             echo "Keine Änderungen — kein Commit."; exit 0
           fi
