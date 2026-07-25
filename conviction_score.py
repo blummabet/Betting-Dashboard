@@ -508,9 +508,16 @@ def compute_conviction_score(pick: dict, signal_output: dict,
     # Travel + Lineup (T-1h Echtzeit) + Weather + Pressure + Incentive
     # 17.06.2026 (Lucas-Audit): altitude_signal ergänzt — Venue-Höhen-Kontext (wie
     # travel/weather), feuerte aber nicht in die Conviction.
+    # 25.07.2026 (Lucas, „Kontext 0/3 bei MLS — kein Anreiz"): league_pressure +
+    # mls_travel ergänzt. Die WM-Kontext-Signale (incentive/pressure_index/weather/
+    # travel_burden/altitude) sind im mls_default-Profil deaktiviert; die MLS-Pendants,
+    # die tatsächlich feuern (league_pressure = Playoff-Druck je Conference, mls_travel
+    # = Reise/Höhe/Rasen), zählten bisher NICHT in die Conviction → Kontext blieb 0.
+    # Beide sind gegated (return None außerhalb MLS/Liga) → für WM rein additiv/neutral.
     ctx_signals_active = []
     for name in ("travel_burden", "lineup_signal", "weather_signal",
-                 "pressure_index", "incentive_signal", "altitude_signal"):
+                 "pressure_index", "incentive_signal", "altitude_signal",
+                 "league_pressure", "mls_travel"):
         if _signal_contributes(name) > 0:
             ctx_signals_active.append(name)
             evidence.append(f"Kontext: {name}")

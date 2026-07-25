@@ -92,6 +92,44 @@ class TestFamilyCaps(unittest.TestCase):
         self.assertGreaterEqual(r["score"], 7)
 
 
+class TestMlsContextFamily(unittest.TestCase):
+    """25.07.2026 (Lucas: „Kontext 0/3 bei MLS"): league_pressure + mls_travel müssen
+    in die Kontext-Familie zählen (die WM-Kontext-Signale sind im MLS-Profil aus)."""
+
+    def test_mls_travel_scores_context_point(self):
+        pick = {"market": "Heimsieg", "odds": 1.85, "modelOdds": 1.80}
+        sig_out = {"signals": [_signal("mls_travel", score=1.8, confidence=0.65)],
+                   "combined_score_pp": 1.8, "n_positive_signals": 1}
+        r = compute_conviction_score(pick, sig_out, {})
+        self.assertGreaterEqual(r["family_scores"]["context"], 1)
+        self.assertTrue(any("mls_travel" in e for e in r["evidence"]))
+
+    def test_league_pressure_scores_context_point(self):
+        pick = {"market": "Heimsieg", "odds": 1.85, "modelOdds": 1.80}
+        sig_out = {"signals": [_signal("league_pressure", score=1.2, confidence=0.6)],
+                   "combined_score_pp": 1.2, "n_positive_signals": 1}
+        r = compute_conviction_score(pick, sig_out, {})
+        self.assertGreaterEqual(r["family_scores"]["context"], 1)
+        self.assertTrue(any("league_pressure" in e for e in r["evidence"]))
+
+    def test_negative_mls_travel_no_context_point(self):
+        # Reise-Nachteil (score<0) darf keinen Conviction-Punkt geben.
+        pick = {"market": "Auswärtssieg", "odds": 2.4, "modelOdds": 2.3}
+        sig_out = {"signals": [_signal("mls_travel", score=-1.07, confidence=0.65)],
+                   "combined_score_pp": -1.07, "n_positive_signals": 0}
+        r = compute_conviction_score(pick, sig_out, {})
+        self.assertEqual(r["family_scores"]["context"], 0)
+
+    def test_context_capped_at_3(self):
+        pick = {"market": "Heimsieg", "odds": 1.85, "modelOdds": 1.80}
+        sig_out = {"signals": [
+            _signal("mls_travel"), _signal("league_pressure"), _signal("lineup_signal"),
+            _signal("travel_burden"), _signal("weather_signal"),
+        ], "combined_score_pp": 3.0, "n_positive_signals": 5}
+        r = compute_conviction_score(pick, sig_out, {})
+        self.assertLessEqual(r["family_scores"]["context"], 3)
+
+
 class TestVerdictThresholds(unittest.TestCase):
     def test_top_at_8(self):
         pick = {"market": "Heimsieg", "odds": 1.85, "modelOdds": 1.80}
