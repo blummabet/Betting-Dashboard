@@ -2,6 +2,7 @@
 """Tests für cocobet_config.py — Config-Loader + Profile-Switch."""
 import json
 import os
+import subprocess
 import sys
 import unittest
 from pathlib import Path
@@ -124,6 +125,37 @@ class TestRawJsonValid(unittest.TestCase):
         active = data["profiles"]["active"]
         self.assertIn(active, data["profiles"],
             f"Active profile '{active}' nicht in profiles definiert")
+
+
+
+class TestPlayerStatsPerProfile(unittest.TestCase):
+    """25.07.2026 (Lucas: „mit vergangenen Spielen lernen"): keyPasses + minutengewichtetes
+    Spieler-Rating kommen aus /fixtures/players und speisen chance_creation + form_rating —
+    UND deren Lern-Loop: ohne die Felder feuern beide Signale nie, sammeln nie Beobachtungen
+    und koennen nie Gewicht verdienen. Fuer MLS war nt_xg.fetch_player_stats=false → beide
+    Signale dauerhaft tot (keyPassesForAvg/ratingAvg = null fuer alle Teams).
+
+    Geprueft wird der AUFGELOESTE CFG, den aggregate_team_stats real nutzt
+    (fetch_wm_nt_xg._load_cfg ueber den Profil-Merge), nicht der JSON-Wortlaut — im Subprozess,
+    weil CFG ein Modul-Singleton ist (Import-Zeitpunkt) und ENV die Suite sonst verschmutzt.
+    liga_default bleibt bewusst aus (eigene Quota-Entscheidung, separat zu treffen)."""
+
+    def _resolved(self, profile: str) -> str:
+        repo = Path(__file__).parent.parent
+        r = subprocess.run(
+            [sys.executable, "-c",
+             "import fetch_wm_nt_xg as N; print(N.CFG['fetch_player_stats'])"],
+            cwd=repo, capture_output=True, text=True, timeout=90,
+            env={**os.environ, "COCOBET_PROFILE": profile})
+        self.assertEqual(r.returncode, 0, r.stderr[-300:])
+        return r.stdout.strip()
+
+    def test_mls_zieht_spielerstats(self):
+        self.assertEqual(self._resolved("mls_default"), "True",
+            "MLS muss /fixtures/players ziehen — sonst bleiben chance_creation + form_rating tot")
+
+    def test_wm_zieht_spielerstats(self):
+        self.assertEqual(self._resolved("wm2026"), "True")
 
 
 if __name__ == "__main__":
