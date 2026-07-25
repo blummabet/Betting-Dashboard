@@ -24,12 +24,18 @@ class TestRefetch(unittest.TestCase):
         # alter Eintrag MIT o25Seq, aber OHNE venueSeq (Heim/Auswärts-Split) → neu holen
         self.assertTrue(F.form_needs_refetch({"updatedAt": NOW, "o25Seq": [True, False]}))
 
+    def test_missing_wonseq_forces_refetch(self):
+        # o25Seq + venueSeq vorhanden, aber OHNE wonSeq (Sieg-/Ungeschlagen-Serien) → neu holen
+        self.assertTrue(F.form_needs_refetch({"updatedAt": NOW, "o25Seq": [True, False],
+                                              "venueSeq": ["H", "A"]}))
+
     def test_full_schema_and_fresh_skips(self):
         self.assertFalse(F.form_needs_refetch({"updatedAt": NOW, "o25Seq": [True, False],
-                                               "venueSeq": ["H", "A"]}))
+                                               "venueSeq": ["H", "A"], "wonSeq": [True, False]}))
 
     def test_full_schema_but_old_refetches(self):
-        self.assertTrue(F.form_needs_refetch({"updatedAt": OLD, "o25Seq": [True], "venueSeq": ["H"]}))
+        self.assertTrue(F.form_needs_refetch({"updatedAt": OLD, "o25Seq": [True], "venueSeq": ["H"],
+                                              "wonSeq": [True]}))
 
     def test_empty_refetches(self):
         self.assertTrue(F.form_needs_refetch({}))

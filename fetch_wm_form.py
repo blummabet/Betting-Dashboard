@@ -93,7 +93,7 @@ def form_needs_refetch(existing: dict) -> bool:
     """Form-Eintrag neu holen? (28.06.2026, Lucas: Serien blieben leer.)
     Zeit-stale ODER schema-stale: fehlt das o25Seq-Feld (neu für Streaks), MUSS neu geholt werden —
     sonst überspringt der 24h-Cache einen „frischen" Eintrag und schreibt die Streak-Sequenzen nie."""
-    if "venueSeq" not in (existing or {}):   # neuestes Streak-Feld → erzwingt Voll-Re-Fetch
+    if "wonSeq" not in (existing or {}):   # 25.07.2026: neuestes Streak-Feld → erzwingt Voll-Re-Fetch
         return True
     return is_stale((existing or {}).get("updatedAt"), FORM_STALE_H)
 
@@ -224,6 +224,10 @@ def _parse_results(fixtures: list, team_api_id: int) -> dict | None:
         "bttsRate":      round(sum(r["btts"]      for r in rows) / n, 3),
         "scoredRate":    round(sum(r["sc"]        for r in rows) / n, 3),
         "cleanSheetRate": round(sum(r["cs"]       for r in rows) / n, 3),
+        # 25.07.2026 (Lucas: „5 Siege in Folge sollten die 1X2 beeinflussen"): Ergebnis-Raten +
+        # -Sequenzen. Ergebnis (r["r"]) lag schon vor, wurde nur nie zu Sieg-/Ungeschlagen-Serien.
+        "winRate":       round(sum(1 for r in rows if r["r"] == "W") / n, 3),
+        "unbeatenRate":  round(sum(1 for r in rows if r["r"] != "L") / n, 3),
         # Pro-Spiel-Sequenzen (most-recent-first) für compute_streaks.py (28.06.2026, Lucas: Serien).
         # Roh-Daten lagen schon in rows, wurden bisher zu Raten verdichtet + verworfen.
         # venueSeq ('H'/'A') parallel → Heim/Auswärts-Split (adamchoi-Stil). sc/cs = trifft/zu null.
@@ -231,6 +235,8 @@ def _parse_results(fixtures: list, team_api_id: int) -> dict | None:
         "bttsSeq":       [bool(r["btts"]) for r in rows[:15]],
         "scoredSeq":     [bool(r["sc"])   for r in rows[:15]],
         "csSeq":         [bool(r["cs"])   for r in rows[:15]],
+        "wonSeq":        [r["r"] == "W"   for r in rows[:15]],   # 25.07.2026: Sieg-Serie (1X2)
+        "unbeatenSeq":   [r["r"] != "L"   for r in rows[:15]],   #             Ungeschlagen-Serie
         "venueSeq":      ["H" if r["h"] else "A" for r in rows[:15]],
         "games":         n,
         "updatedAt":     now_iso(),
