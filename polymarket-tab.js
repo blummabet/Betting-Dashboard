@@ -3551,54 +3551,49 @@ function renderAutoTraderLiveStatus() {
 // ═══════════════════════════════════════════════════════════════
 // Trading Cockpit — Live-Übersicht für Polymarket Auto-Trader
 // ═══════════════════════════════════════════════════════════════
+// 25.07.2026 (Lucas: „danach brauchen wir Ligen auch — wie am besten?"): EINE Polymarket-Wallet
+// handelt über ALLE Bewerbe → das Cockpit VEREINT sie (mls + liga …), statt pro Liga umzuschalten.
+// Neue Liga dazunehmen = EIN Eintrag hier. Kein Datei-Chirurgie mehr, kein WM-Tiefschlaf pro Tab.
+const POLY_DATASETS = ['mls', 'liga'];   // aktive Bewerbe (WM winterisiert → raus)
+
 async function loadCockpitData() {
-  // Holt vier JSON-Files parallel via raw.githubusercontent (kein CDN-Cache)
   const base = 'https://raw.githubusercontent.com/blummabet/Betting-Dashboard/main';
   const t = Date.now();
-  const urls = [
-    `${base}/wm_auto_bets_placed.json?t=${t}`,
-    `${base}/wm_poly_balance.json?t=${t}`,
-    `${base}/wm_kill_switch.json?t=${t}`,
-    `${base}/wm_poly_prices.json?t=${t}`,
-    `${base}/wm2026-data.json?t=${t}`,   // für Pinnacle-Odds-Frische (Edge-Basis)
-    // 19.07.2026 — Maker-Register beider Live-Datensätze (WM läuft aus, MLS ist die Zukunft).
-    `${base}/wm_poly_resting_orders.json?t=${t}`,
-    `${base}/mls_poly_resting_orders.json?t=${t}`,
-    // Markout: trägt Making, oder frisst Adverse Selection die Spread-Ersparnis?
-    `${base}/wm_poly_markout.json?t=${t}`,
-    `${base}/mls_poly_markout.json?t=${t}`,
-  ];
-  const fallbacks = [
-    'wm_auto_bets_placed.json',
-    'wm_poly_balance.json',
-    'wm_kill_switch.json',
-    'wm_poly_prices.json',
-    'wm2026-data.json',
-    'wm_poly_resting_orders.json',
-    'mls_poly_resting_orders.json',
-    'wm_poly_markout.json',
-    'mls_poly_markout.json',
-  ];
-  const results = await Promise.all(urls.map(async (u, i) => {
-    try {
-      const r = await fetch(u, { cache: 'no-store' });
-      if (r.ok) return r.json();
-    } catch {}
-    try {
-      const r = await fetch(fallbacks[i] + '?t=' + t, { cache: 'no-store' });
-      if (r.ok) return r.json();
-    } catch {}
+  const jf = async (name) => {   // raw.github zuerst (kein CDN-Cache), sonst lokal
+    for (const u of [`${base}/${name}?t=${t}`, `${name}?t=${t}`]) {
+      try { const r = await fetch(u, { cache: 'no-store' }); if (r.ok) return await r.json(); } catch {}
+    }
     return null;
-  }));
-  // Ruhende Maker-Orders beider Datensätze zusammenführen (nur die noch offenen interessieren).
-  const _resting = [];
-  for (const idx of [5, 6]) {
-    const ro = (results[idx] && results[idx].orders) || [];
-    for (const o of ro) if (o && o.status === 'resting') _resting.push(o);
+  };
+  const dataFile = (ds) => ds === 'mls' ? 'mls-data.json' : `${ds}-data.json`;
+  // Kern-Dateien je aktivem Bewerb holen …
+  const per = await Promise.all(POLY_DATASETS.map(async (ds) => ({
+    ds,
+    placed:  await jf(`${ds}_auto_bets_placed.json`),
+    balance: await jf(`${ds}_poly_balance.json`),
+    kill:    await jf(`${ds}_kill_switch.json`),
+    poly:    await jf(`${ds}_poly_prices.json`),
+    data:    await jf(dataFile(ds)),
+    resting: await jf(`${ds}_poly_resting_orders.json`),
+    markout: await jf(`${ds}_poly_markout.json`),
+  })));
+  // … und MERGEN (eine Wallet, ein Cockpit).
+  const ts = (x) => (x && x.updatedAt) ? Date.parse(x.updatedAt) : -1;
+  const bets = [], allFixtures = [], resting = [], markout = {};
+  let balance = null, kill = null, anyData = null, generatedAt = '';
+  for (const p of per) {
+    if (p.placed && Array.isArray(p.placed.bets)) for (const b of p.placed.bets) bets.push({ ...b, _ds: p.ds });
+    if (p.balance && p.balance.usdc != null && !p.balance.error && (!balance || ts(p.balance) > ts(balance))) balance = p.balance;
+    if (p.kill && p.kill.enabled) kill = p.kill;                       // irgendein aktiver Kill-Switch gewinnt
+    if (p.poly && Array.isArray(p.poly.allFixtures)) allFixtures.push(...p.poly.allFixtures);
+    if (p.poly && p.poly.generatedAt && !generatedAt) generatedAt = p.poly.generatedAt;
+    if (p.data && !anyData) anyData = p.data;
+    if (p.resting && Array.isArray(p.resting.orders)) for (const o of p.resting.orders) if (o && o.status === 'resting') resting.push(o);
+    if (p.markout) markout[p.ds] = p.markout;
   }
-  return { placed: results[0], balance: results[1], kill: results[2], poly: results[3],
-           data: results[4], resting: _resting,
-           markout: { wm: results[7], mls: results[8] } };
+  if (!balance) balance = per.map((p) => p.balance).find((b) => b && b.usdc != null) || null;   // sonst frischeste (auch error)
+  if (!kill)    kill    = per.map((p) => p.kill).find(Boolean) || null;
+  return { placed: { bets }, balance, kill, poly: { allFixtures, generatedAt }, data: anyData, resting, markout };
 }
 
 // ── Maker-Register (19.07.2026) ──────────────────────────────────────────────
@@ -3609,8 +3604,11 @@ async function loadCockpitData() {
 // frisst Adverse Selection die Spread-Ersparnis? Das ist das ehrliche Tor für maker_enabled.
 function _ptMarkoutLine(markout) {
   const m = markout || {};
+  const LBL = { mls: 'MLS', liga: 'Liga', wm: 'WM' };
   const parts = [];
-  for (const [ds, rep] of [['MLS', m.mls], ['WM', m.wm]]) {
+  // 25.07.2026: generisch über alle vorhandenen Bewerbe (mls, liga …) statt fest MLS+WM.
+  for (const ds of Object.keys(m)) {
+    const rep = m[ds];
     if (!rep || rep.verdict == null) continue;
     const v = rep.verdict, net = rep.netMakerPP;
     const face = v === 'traegt' ? ['🟢', '#3fb950', 'trägt']
@@ -3618,7 +3616,7 @@ function _ptMarkoutLine(markout) {
       : v === 'grenzwertig' ? ['⚪', '#8b949e', 'grenzwertig']
       : ['⏳', '#8b949e', 'zu wenig Daten'];
     const netTxt = (net == null) ? '' : ` (netto ${net > 0 ? '+' : ''}${net}pp)`;
-    parts.push(`<span style="color:${face[1]}">${face[0]} ${ds}: ${face[2]}${netTxt}</span>`);
+    parts.push(`<span style="color:${face[1]}">${face[0]} ${LBL[ds] || ds.toUpperCase()}: ${face[2]}${netTxt}</span>`);
   }
   if (!parts.length) return '';
   return `<div style="padding:8px 16px;background:rgba(167,139,250,.05);border-top:1px solid #21262d;font-size:11px;color:#8b949e;line-height:1.5">
