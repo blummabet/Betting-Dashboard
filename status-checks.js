@@ -77,9 +77,11 @@ async function _stGet(f) {
 let _stRunning = false;
 
 // (26.06.2026, Lucas: Status Liga/Intl-Toggle) — Modul-State: welcher Datensatz
-// wird im Status-Tab gezeigt. 'intl' = bestehendes WM/CL-Verhalten (Default),
+// wird im Status-Tab gezeigt. 'intl' = bestehendes WM/CL-Verhalten,
 // 'liga' = schlanke Liga-Ops-Health aus liga_status.json + liga-data.json.
-let _stDataset = 'intl';
+// 25.07.2026 (Lucas: „Lern-Status hängt seit 5 Tagen"): das war die WM-Schleife (seit WM-Ende
+// korrekt still). Default jetzt MLS (aktiver Bewerb) — MLS lernt frisch (mls_signal_ledger).
+let _stDataset = 'mls';
 
 // 13.07.2026 (MLS-Audit) — Status-Tab war zweigeteilt (International/Liga). mls_status.json wurde
 // erzeugt und committet, war im UI aber nicht erreichbar: der MLS-Gesundheitszustand (60 Guards,
