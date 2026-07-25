@@ -50,7 +50,7 @@ SPA `season-finish-v2.html`, Weiche `showView()` in `ui.js` (`panelMap`). `seaso
 
 ## 2. Signale (`sharp_signals/`)
 
-30 Module, alle in `registry.ACTIVE_SIGNALS`. **Kein global totes Signal** — Deaktivierung passiert pro Profil über `cocobet_config.json → profiles.<p>.disabled_signals`.
+31 Module, alle in `registry.ACTIVE_SIGNALS`. **Kein global totes Signal** — Deaktivierung passiert pro Profil über `cocobet_config.json → profiles.<p>.disabled_signals`.
 
 | Signal | Misst | WM | Liga | MLS |
 |---|---|:--:|:--:|:--:|
@@ -79,6 +79,7 @@ SPA `season-finish-v2.html`, Weiche `showView()` in `ui.js` (`panelMap`). `seaso
 | `league_pressure` | Titel/Europa/Abstieg bzw. MLS-Playoff je Conference | ✅ (no-op) | ✅ | ✅ |
 | `game_state_openness` | Asymmetrische Verzweiflung → Über/BTTS | ✅ | ✅ | ✅ |
 | `mls_travel` | MLS Distanz/Zeitzonen/Höhe/Kunstrasen-Composite | ✅ | ✅ | ✅ |
+| `move_following` | Pinnacle-Move-Größe + Zustands-Bestätigung; klein gedeckelt (25.07., backtest-validiert auf Top-5) | ❌ | ✅ | ❌ |
 | `travel_burden` | Langstrecke + wenig Pause + Höhenwechsel → xG-Abzug | ✅ | ❌ | ❌ |
 | `altitude_signal` | Stadionhöhe (Mexico City 2240 m ≈ −12-15 % VO2max) | ✅ | ❌ | ❌ |
 | `weather_signal` | Hitze-Penalty für Teams aus kühlen Klimazonen | ✅ | ❌ | ❌ |

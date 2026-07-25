@@ -47,6 +47,7 @@ from sharp_signals.opener_move import OpenerMoveSignal
 from sharp_signals.multi_book_steam import MultiBookSteamSignal
 from sharp_signals.game_state_openness import GameStateOpennessSignal
 from sharp_signals.mls_travel import MLSTravelSignal
+from sharp_signals.move_following import MoveFollowingSignal
 
 
 # Pro-Profil deaktivierte Signale (25.06.2026, Lucas: Liga auf WM-Stack). Manche WM-only-Signale
@@ -106,6 +107,7 @@ ACTIVE_SIGNALS: list[Signal] = [
     MultiBookSteamSignal(),     # 09.07.2026: Pinnacle+Betfair korroborieren vs Public
     GameStateOpennessSignal(),  # 09.07.2026: asymmetrische Verzweiflung → Über/BTTS
     MLSTravelSignal(),          # 09.07.2026: MLS Reise/Höhe/Turf-Bürde; nur MLS (Venue-Tabelle)
+    MoveFollowingSignal(),      # 25.07.2026: Move-Groesse + Zustands-Bestaetigung; nur liga_default (Top-5, backtest-validiert)
 ]
 
 
@@ -175,6 +177,9 @@ SIGNAL_GROUPS: dict[str, str] = {
     "reverse_line_move":  "sharp_money",
     "opener_move":        "sharp_money",
     "multi_book_steam":   "sharp_money",
+    # move_following (25.07.2026): Move-Groessen-Confirm + Zustands-Gate — basiert auf demselben
+    # Pinnacle-Move → sharp_money-Familie, Anti-Korr-Discount verhindert Doppelzaehlung.
+    "move_following":     "sharp_money",
     # game_state_openness nutzt dieselbe Tabellen-Druck-Story wie league_pressure → incentive-Familie.
     "game_state_openness": "incentive",
     # mls_travel: Spielort-/Fitness-Faktor wie travel_burden/injury/congestion → context-Familie.
