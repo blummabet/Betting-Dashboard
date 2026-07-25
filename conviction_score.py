@@ -54,6 +54,51 @@ from typing import Optional
 
 
 # ──────────────────────────────────────────────────────────────────────────
+#  Conviction-Familien — SINGLE SOURCE OF TRUTH (25.07.2026)
+# ──────────────────────────────────────────────────────────────────────────
+# Vorher waren die Familien-Mitgliedschaften als vier inline-Tupel über
+# compute_conviction_score() verstreut → ein neues Kontext-Signal musste man
+# leicht übersehen (siehe MLS-Kontext-0/3-Gap: league_pressure/mls_travel
+# feuerten, zählten aber nicht). Jetzt EIN Dict, an einer Stelle gepflegt.
+#
+# WICHTIG — bewusst NICHT identisch mit registry.SIGNAL_GROUPS:
+# Das Registry gruppiert „was misst dasselbe" (Anti-Korrelations-Discount);
+# hier gruppieren wir „Beweis-Säule" (Scoring). Deshalb liegt z.B. `injury`
+# hier im model_stack (Modell-Input), im Registry aber in context. Die
+# Divergenz ist gewollt und wird per Test überwacht (test_conviction_score:
+# TestFamilyRegistrySync), damit ein neues Registry-context/incentive-Signal
+# nicht STILL aus der Wertung fällt — es muss hier gewertet ODER in
+# CONTEXT_UNCREDITED bewusst als „(noch) nicht gewertet" dokumentiert werden.
+CONVICTION_FAMILIES: dict[str, tuple[str, ...]] = {
+    # Sharp-Money: nur Pinnacle-vs-Soft-Books (Polymarket ist Trade-Gegenseite,
+    # zählt NICHT). Opening→Current-Movement wird separat additiv behandelt.
+    "sharp_money": ("lead_lag_bias",),
+    # Modell-Stack: Form/xG/H2H/Injury/ChanceCreation/FormRating (+ Modell-Sanity separat).
+    "model_stack": ("form_trend", "xg_strength", "h2h_pattern", "injury",
+                    "chance_creation", "form_rating"),
+    # Kontext: Reise/Aufstellung/Wetter/Druck/Anreiz/Höhe + Liga/MLS-Pendants.
+    "context": ("travel_burden", "lineup_signal", "weather_signal",
+                "pressure_index", "incentive_signal", "altitude_signal",
+                "league_pressure", "mls_travel"),
+    # Markt-Konsens: Public-Bias ODER APIF-Predictions.
+    "market": ("public_static_bias", "apif_predictions"),
+}
+# Registry-context/incentive-Signale, die BEWUSST nicht in die Conviction zählen —
+# dokumentiert, damit der Sync-Test sie nicht als „vergessen" flaggt.
+# Backtest-geprüft 25.07.2026 (mls_backtest_report.json, quotenlos → Richtungs-hitRate,
+# 0.5 = Münzwurf; Referenz: xg_strength 0.633 / form_trend 0.571 / mls_travel 0.544):
+#   fixture_congestion  0.502 / n=287  → gut gepowerter NULL, kein Edge → NICHT werten
+#   game_state_openness 0.550 / n=40   → zu dünn (±15pp CI) → warten auf mehr Auflösungen
+#   coach_change        —    / n=0     → keine Richtungs-Calls → keine Basis
+#   transfer_shift      —    / n=0     → keine Richtungs-Calls → keine Basis
+# `injury` steht hier NICHT drin, weil es im model_stack gewertet wird.
+# Bei neuen Auflösungen erneut prüfen (v.a. game_state_openness).
+CONTEXT_UNCREDITED: frozenset[str] = frozenset({
+    "fixture_congestion", "coach_change", "transfer_shift", "game_state_openness",
+})
+
+
+# ──────────────────────────────────────────────────────────────────────────
 #  Config-Loader (Profile-aware, mit Defaults für Robustheit)
 # ──────────────────────────────────────────────────────────────────────────
 def _load_config() -> dict:
@@ -388,7 +433,7 @@ def compute_conviction_score(pick: dict, signal_output: dict,
     # in der Signal-Engine, zählen aber NICHT in Conviction.
     # Echte Sharp-Indikatoren: Pinnacle-Move + Softbook-Konsens-Lag (13-Book-Median).
     sharp_signals_active = []
-    for name in ("lead_lag_bias",):   # Nur Pinnacle-vs-Soft-Books
+    for name in CONVICTION_FAMILIES["sharp_money"]:   # Nur Pinnacle-vs-Soft-Books
         if _signal_contributes(name) > 0:
             sharp_signals_active.append(name)
             evidence.append(f"Sharp-Signal: {name} (Pinnacle vs Softbookies)")
@@ -484,8 +529,7 @@ def compute_conviction_score(pick: dict, signal_output: dict,
     # Pick-Anpassung, fehlten aber in der Conviction-Familie. Beide sind Modell-Signale
     # (Chancen-Volumen / Form-Rating), gehören zum model_stack.
     model_signals_active = []
-    for name in ("form_trend", "xg_strength", "h2h_pattern", "injury",
-                 "chance_creation", "form_rating"):
+    for name in CONVICTION_FAMILIES["model_stack"]:
         if _signal_contributes(name) > 0:
             model_signals_active.append(name)
             evidence.append(f"Modell: {name}")
@@ -515,9 +559,7 @@ def compute_conviction_score(pick: dict, signal_output: dict,
     # = Reise/Höhe/Rasen), zählten bisher NICHT in die Conviction → Kontext blieb 0.
     # Beide sind gegated (return None außerhalb MLS/Liga) → für WM rein additiv/neutral.
     ctx_signals_active = []
-    for name in ("travel_burden", "lineup_signal", "weather_signal",
-                 "pressure_index", "incentive_signal", "altitude_signal",
-                 "league_pressure", "mls_travel"):
+    for name in CONVICTION_FAMILIES["context"]:
         if _signal_contributes(name) > 0:
             ctx_signals_active.append(name)
             evidence.append(f"Kontext: {name}")
@@ -525,7 +567,7 @@ def compute_conviction_score(pick: dict, signal_output: dict,
 
     # ── Familie 4: Markt-Konsens (max 1) ──────────────────────────────────
     market_signals_active = []
-    for name in ("public_static_bias", "apif_predictions"):
+    for name in CONVICTION_FAMILIES["market"]:
         if _signal_contributes(name) > 0:
             market_signals_active.append(name)
             evidence.append(f"Markt-Konsens: {name}")

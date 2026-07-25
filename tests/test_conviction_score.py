@@ -130,6 +130,34 @@ class TestMlsContextFamily(unittest.TestCase):
         self.assertLessEqual(r["family_scores"]["context"], 3)
 
 
+class TestFamilyRegistrySync(unittest.TestCase):
+    """25.07.2026: SSOT-Guard. Ein neues Registry-context/incentive-Signal darf nicht
+    STILL aus der Conviction fallen (das war der MLS-Kontext-0/3-Gap). Es muss entweder
+    in einer Conviction-Familie gewertet ODER in CONTEXT_UNCREDITED dokumentiert sein."""
+
+    def test_no_context_signal_silently_dropped(self):
+        from conviction_score import CONVICTION_FAMILIES, CONTEXT_UNCREDITED
+        from sharp_signals.registry import SIGNAL_GROUPS
+        credited = {s for names in CONVICTION_FAMILIES.values() for s in names}
+        registry_context = {sig for sig, fam in SIGNAL_GROUPS.items()
+                            if fam in ("context", "incentive")}
+        unaccounted = registry_context - credited - CONTEXT_UNCREDITED
+        self.assertEqual(unaccounted, set(),
+                         f"Registry-Kontext/Anreiz-Signale ohne Conviction-Zuordnung: {unaccounted} — "
+                         f"in eine CONVICTION_FAMILIES-Familie aufnehmen oder in CONTEXT_UNCREDITED dokumentieren.")
+
+    def test_context_family_has_mls_signals(self):
+        from conviction_score import CONVICTION_FAMILIES
+        self.assertIn("league_pressure", CONVICTION_FAMILIES["context"])
+        self.assertIn("mls_travel", CONVICTION_FAMILIES["context"])
+
+    def test_uncredited_not_double_counted(self):
+        # Was als „ungewertet" markiert ist, darf nicht doch in einer Familie stehen.
+        from conviction_score import CONVICTION_FAMILIES, CONTEXT_UNCREDITED
+        credited = {s for names in CONVICTION_FAMILIES.values() for s in names}
+        self.assertEqual(credited & CONTEXT_UNCREDITED, set())
+
+
 class TestVerdictThresholds(unittest.TestCase):
     def test_top_at_8(self):
         pick = {"market": "Heimsieg", "odds": 1.85, "modelOdds": 1.80}
