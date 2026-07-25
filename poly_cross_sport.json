@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-07-25T22:53:28.388296+00:00",
+ "generatedAt": "2026-07-25T23:58:32.835541+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,27 +10,126 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 303,
- "pinnKeys": 129,
- "matched": 71,
- "footballRows": 45,
- "crossRows": 258,
+ "polyRowsSeen": 319,
+ "pinnKeys": 147,
+ "matched": 89,
+ "footballRows": 63,
+ "crossRows": 256,
  "seenBySport": {
   "basketball_nba": 2,
   "americanfootball_nfl": 100,
   "baseball_mlb": 110,
   "icehockey_nhl": 2,
   "mma_mixed_martial_arts": 2,
-  "boxing_boxing": 42,
-  "soccer_mls": 45
+  "boxing_boxing": 40,
+  "soccer_mls": 63
  },
  "matchedBySport": {
   "baseball_mlb": 26,
-  "soccer_mls": 45
+  "soccer_mls": 63
  },
  "trackRecord": {
-  "tracked": 18,
+  "tracked": 25,
   "converged": 0
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_mls|atlantaunitedfc-newenglandrevolution|hw",
+   "sport": "soccer_mls",
+   "event": "New England Revolution vs Atlanta United FC",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 62.5,
+   "pinnPP": 40.1,
+   "gapPP": 22.45,
+   "vol": 85678,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-07-25T23:58:32.835267+00:00"
+  },
+  {
+   "id": "soccer_mls|chicagofire-newyorkcityfc|hw",
+   "sport": "soccer_mls",
+   "event": "New York City FC vs Chicago Fire",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 60.5,
+   "pinnPP": 39.0,
+   "gapPP": 21.49,
+   "vol": 719092,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-07-25T23:58:32.835267+00:00"
+  },
+  {
+   "id": "soccer_mls|chicagofire-newyorkcityfc|aw",
+   "sport": "soccer_mls",
+   "event": "New York City FC vs Chicago Fire",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 17.5,
+   "pinnPP": 32.9,
+   "gapPP": -15.39,
+   "vol": 719092,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-07-25T23:58:32.835267+00:00"
+  },
+  {
+   "id": "soccer_mls|atlantaunitedfc-newenglandrevolution|aw",
+   "sport": "soccer_mls",
+   "event": "New England Revolution vs Atlanta United FC",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 16.5,
+   "pinnPP": 30.7,
+   "gapPP": -14.19,
+   "vol": 85678,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-07-25T23:58:32.835267+00:00"
+  },
+  {
+   "id": "soccer_mls|charlotte-newyorkredbulls|aw",
+   "sport": "soccer_mls",
+   "event": "New York Red Bulls vs Charlotte",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 87.5,
+   "pinnPP": 78.8,
+   "gapPP": 8.68,
+   "vol": 182835,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-07-25T23:58:32.835267+00:00"
+  },
+  {
+   "id": "soccer_mls|atlantaunitedfc-newenglandrevolution|dr",
+   "sport": "soccer_mls",
+   "event": "New England Revolution vs Atlanta United FC",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 21.5,
+   "pinnPP": 29.3,
+   "gapPP": -7.76,
+   "vol": 85678,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-07-25T23:58:32.835267+00:00"
+  },
+  {
+   "id": "soccer_mls|chicagofire-newyorkcityfc|dr",
+   "sport": "soccer_mls",
+   "event": "New York City FC vs Chicago Fire",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 21.5,
+   "pinnPP": 28.1,
+   "gapPP": -6.6,
+   "vol": 719092,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-07-25T23:58:32.835267+00:00"
+  }
+ ]
 }
