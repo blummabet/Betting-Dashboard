@@ -55,8 +55,8 @@ class GameStateOpennessSignal(Signal):
         arow = next((r for r in standings if r.get("team") == away_id), None)
         if not hrow or not arow:
             return None
-        hp, hm = team_pressure(hrow, standings, meta, rounds_left)
-        ap, am = team_pressure(arow, standings, meta, rounds_left)
+        hp, hm, _ = team_pressure(hrow, standings, meta, rounds_left)   # 25.07.2026: branch ignoriert
+        ap, am, _ = team_pressure(arow, standings, meta, rounds_left)
 
         # Asymmetrische Verzweiflung: genau EINER muss gewinnen (hoher Druck), der ANDERE ist dead.
         chaser_p = None

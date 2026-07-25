@@ -100,22 +100,26 @@ def _time_factor(rounds_left: int, rounds_total: int) -> float:
     return max(0.0, min(1.0, (0.55 - frac_left) / 0.55))
 
 
-def team_pressure(row: dict, rows: list, meta: dict, rounds_left: int) -> tuple[float, str]:
-    """Gibt (pressure 0..1, motive 'win'|'dead'|'mid') für ein Team zurück.
-    pressure = wie sehr das Team Punkte BRAUCHT × Zeit-Faktor. dead = nichts mehr zu spielen."""
+def team_pressure(row: dict, rows: list, meta: dict, rounds_left: int) -> tuple[float, str, str]:
+    """Gibt (pressure 0..1, motive 'win'|'dead'|'mid', branch) für ein Team zurück.
+    pressure = wie sehr das Team Punkte BRAUCHT × Zeit-Faktor. dead = nichts mehr zu spielen.
+    branch ∈ {title, hold, chase, releg, dead, mid} = WELCHE Tabellen-Situation den Druck erzeugt.
+    25.07.2026 (Backtest, siehe evaluate): branch trennt die STARKE Seite (title/hold = am/über dem
+    Schnitt) von der schwachen Jagd (chase/releg = unter dem Schnitt) — nur erstere darf einen
+    Sieg-Boost geben, weil „braucht Punkte" von unten ≈ „ist schwächer" (Boost war anti-prädiktiv)."""
     # 13.07.2026 (MLS): Das Playoff-Rennen läuft JE CONFERENCE. Ohne diesen Zuschnitt würde gegen
     # die Gesamttabelle gerechnet — ein Team auf Gesamtrang 18 kann in seiner Conference bequem
     # Playoff-Platz 6 sein. Erst zuschneiden, dann rechnen.
     if meta.get("conference"):
         conf_rows, conf_row = _conference_view(rows, row.get("team"))
         if not conf_rows or not conf_row:
-            return 0.0, "mid"          # keine Conference-Zuordnung → lieber schweigen als raten
+            return 0.0, "mid", "mid"   # keine Conference-Zuordnung → lieber schweigen als raten
         rows, row = conf_rows, conf_row
 
     pos = row.get("pos")
     pts = row.get("points", row.get("pts"))
     if pos is None or pts is None:
-        return 0.0, "mid"
+        return 0.0, "mid", "mid"
     total = meta["total"]
     euro_cut = meta["europe_cut"]      # Europa-Platz bzw. (MLS) Playoff-Schnitt
     has_rel = meta.get("rel", 0) > 0   # MLS: KEIN Abstieg → der Zweig darf nie greifen
@@ -124,27 +128,22 @@ def team_pressure(row: dict, rows: list, meta: dict, rounds_left: int) -> tuple[
     max_gain = rounds_left * 3
     tf = _time_factor(rounds_left, meta["rounds"])
     if max_gain <= 0 or tf <= 0:
-        return 0.0, "mid"
+        return 0.0, "mid", "mid"
 
-    # Titel/Shield vs Playoff-Jagd sprachlich trennen — die Karten-Texte lesen das.
-    top_label   = "Supporters' Shield" if meta.get("conference") else "Titel"
-    hold_label  = "Playoff-Platz halten" if meta.get("conference") else "Europa halten"
-    chase_label = "Playoff-Jagd" if meta.get("conference") else "Europa-Jagd"
-
-    # Nächste relevante Grenze + benötigte Punkte bestimmen.
+    # Nächste relevante Grenze + benötigte Punkte + Zweig bestimmen.
     needed = None
     if pos <= 2:                       # Endspurt an der Spitze
         lead_pts = _pts_at(rows, 1)
         needed = max(0, (lead_pts - pts)) if lead_pts is not None else 0
-        race = top_label
+        branch = "title"
     elif pos <= euro_cut:              # Quali-Platz halten — Druck = wie nah der erste Verfolger
         chaser = _pts_at(rows, euro_cut + 1)
         needed = max(0, max_gain - (pts - chaser)) if chaser is not None else 0
-        race = hold_label
-    elif pos <= euro_cut + chase_window:   # Quali-Platz jagen
+        branch = "hold"
+    elif pos <= euro_cut + chase_window:   # Quali-Platz jagen (von UNTER dem Schnitt)
         cut_pts = _pts_at(rows, euro_cut)
         needed = (cut_pts - pts + 1) if cut_pts is not None else None
-        race = chase_label
+        branch = "chase"
     elif has_rel and pos >= rel_start - 1:   # Abstiegskampf (Drop-Zone + ein Platz darüber)
         safe_pts = _pts_at(rows, rel_start - 1)
         if pos >= rel_start:
@@ -152,18 +151,18 @@ def team_pressure(row: dict, rows: list, meta: dict, rounds_left: int) -> tuple[
         else:                          # knapp über dem Strich → Vorsprung verteidigen
             below = _pts_at(rows, rel_start)
             needed = max(0, max_gain - (pts - below)) if below is not None else 0
-        race = "Abstiegskampf"
+        branch = "releg"
     else:
-        return 0.0, "dead"             # gesichertes Mittelfeld → nichts zu spielen
+        return 0.0, "dead", "dead"     # gesichertes Mittelfeld → nichts zu spielen
 
     if needed is None:
-        return 0.0, "mid"
+        return 0.0, "mid", "mid"
     if needed > max_gain:              # mathematisch nicht erreichbar → raus → dead
-        return 0.0, "dead"
+        return 0.0, "dead", "dead"
     if needed <= 0:                    # bereits gesichert → dead (kein Wettbewerbs-Anreiz mehr)
-        return 0.0, "dead"
+        return 0.0, "dead", "dead"
     pressure = min(1.0, needed / max_gain) * tf
-    return round(pressure, 3), ("win" if pressure > 0.12 else "mid")
+    return round(pressure, 3), ("win" if pressure > 0.12 else "mid"), branch
 
 
 class LeaguePressureSignal(Signal):
@@ -192,12 +191,22 @@ class LeaguePressureSignal(Signal):
         if not hrow or not arow:
             return None
 
-        hp, hm = team_pressure(hrow, standings, meta, rounds_left)
-        ap, am = team_pressure(arow, standings, meta, rounds_left)
+        hp, hm, hb = team_pressure(hrow, standings, meta, rounds_left)
+        ap, am, ab = team_pressure(arow, standings, meta, rounds_left)
 
         side = market_side(pick.get("market", ""))
         if side is None:
             return None
+
+        # 25.07.2026 (Backtest [[project_league_pressure_direction_bug]]): Der 'chase'-Zweig (Playoff-
+        # Jagd von UNTER dem Schnitt) ist meist das schwächere Team → „braucht Punkte von unten" ≈
+        # „ist schlechter", der alte Sieg-Boost war anti-prädiktiv (MLS-Backtest: Heimsieg 0.479 /
+        # Auswärtssieg 0.444, beide <0.5). Deshalb BOOSTEN nur noch title/hold (stark, am/über dem
+        # Schnitt) + releg (Abstiegskampf = extreme Stakes, domänen-belegt kämpferisch — und
+        # NICHT von der MLS-Evidenz betroffen, da MLS keinen Abstieg hat). Der chase-Zweig gibt
+        # keinen Sieg-Boost mehr und dämpft auch nicht als Gegner (schwacher Jäger = keine Bedrohung).
+        # Dead-Rubber→Unter bleibt unangetastet (einziger klar positiver Zweig, 0.552).
+        BOOST_BRANCHES = ("title", "hold", "releg")
 
         score = 0.0
         ev = ""
@@ -205,14 +214,18 @@ class LeaguePressureSignal(Signal):
             mine, theirs = (hp if side == "home" else ap), (ap if side == "home" else hp)
             mine_mot = hm if side == "home" else am
             theirs_mot = am if side == "home" else hm
-            # Eigener Sieg-Druck hebt, Gegner-Druck dämpft. Bonus wenn Gegner indifferent (dead).
-            if mine_mot == "win":
+            mine_branch = hb if side == "home" else ab
+            theirs_branch = ab if side == "home" else hb
+            # Eigener Sieg-Druck hebt NUR aus einem Boost-Zweig (nicht chase); Bonus wenn Gegner dead.
+            if mine_mot == "win" and mine_branch in BOOST_BRANCHES:
                 score += mine * MAX_PP
                 if theirs_mot == "dead":
                     score += 0.5
-            score -= theirs * MAX_PP * 0.6
+            # Gegner-Druck dämpft NUR wenn der Gegner aus einem Boost-Zweig kommt (echte Bedrohung).
+            if theirs_branch in BOOST_BRANCHES:
+                score -= theirs * MAX_PP * 0.6
             ev = (f"{('Heim' if side=='home' else 'Auswärts')}-Team Tabellen-Druck "
-                  f"{mine:.0%} ({mine_mot}), Gegner {theirs:.0%} ({theirs_mot})")
+                  f"{mine:.0%} ({mine_mot}/{mine_branch}), Gegner {theirs:.0%} ({theirs_mot}/{theirs_branch})")
         elif side == "under":
             if hm == "dead" and am == "dead":   # beidseitig nichts zu spielen → entspannt
                 score += MAX_PP * 0.6
@@ -230,4 +243,5 @@ class LeaguePressureSignal(Signal):
         return SignalResult(score=score, confidence=round(conf, 2), evidence=ev,
                             metadata={"homePressure": hp, "awayPressure": ap,
                                       "homeMotive": hm, "awayMotive": am,
+                                      "homeBranch": hb, "awayBranch": ab,
                                       "roundsLeft": rounds_left})

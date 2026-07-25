@@ -51,18 +51,18 @@ class TestTeamPressure(unittest.TestCase):
 
     def test_early_season_zero(self):
         # rounds_left 33 → tf 0 → kein Druck egal welcher Platz
-        p, m = team_pressure(self.rows[17], self.rows, self.meta, 33)
+        p, m, b = team_pressure(self.rows[17], self.rows, self.meta, 33)
         self.assertEqual(p, 0.0)
 
     def test_relegation_battle_late_wins(self):
         # Platz 18 (T18, 28 Pkt), 3 Runden offen → muss Punkte holen → win
-        p, m = team_pressure(self.rows[17], self.rows, self.meta, 3)
+        p, m, b = team_pressure(self.rows[17], self.rows, self.meta, 3)
         self.assertEqual(m, "win")
         self.assertGreater(p, 0.0)
 
     def test_secured_midtable_dead(self):
         # Mittelfeld gesichert (Platz 10), nichts mehr zu spielen → dead
-        p, m = team_pressure(self.rows[9], self.rows, self.meta, 3)
+        p, m, b = team_pressure(self.rows[9], self.rows, self.meta, 3)
         self.assertEqual(m, "dead")
 
 
