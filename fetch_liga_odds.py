@@ -287,10 +287,12 @@ def extract_prices(event: dict, orientation: str, home_name: str, away_name: str
         out.update({"bf_hw": bhw, "bf_dr": bdr, "bf_aw": baw})
     # ── Über/Unter (1.5/2.5/3.5) — Sharp ──
     _, t_outs = _best_book(bks, "totals")
-    out.update(_extract_ou(t_outs))
+    _, at_outs = _best_book(bks, "alternate_totals")   # 1.5/3.5 (per-Event, flag-gated)
+    out.update(_extract_ou((t_outs or []) + (at_outs or [])))
     # ── Public/Soft-Konsens O/U (public_static_bias + lead_lag auf Tor-Linien) ──
     _pt_bk, pt_outs = _best_book(bks, "totals", priority=SOFT_PRIORITY)
-    _pub_ou = _extract_ou(pt_outs, prefix="public_")
+    _, pat_outs = _best_book(bks, "alternate_totals", priority=SOFT_PRIORITY)
+    _pub_ou = _extract_ou((pt_outs or []) + (pat_outs or []), prefix="public_")
     out.update(_pub_ou)
     # ── BTTS — Sharp ──
     _, b_outs = _best_book(bks, "btts")
@@ -530,10 +532,67 @@ def append_snapshot(history: dict, key: str, prices: dict, now_iso: str, post_ko
 
 # ───────────────────────── Live-Fetch ─────────────────────────
 
+# BTTS + alternate_totals (1.5/3.5) brauchen den Per-Event-Endpoint (QUOTA-teuer: markets×regions
+# je Event). Deshalb FLAG-GATED (25.07.2026): ohne FETCH_EXTRA_MARKETS=1 kein Extra-Call, keine
+# neuen Felder → Verhalten exakt wie bisher. Fenster begrenzt die Calls auf anpfiffnahe Spiele.
+_EXTRA_MARKETS_ENABLED = os.environ.get("FETCH_EXTRA_MARKETS") == "1"
+try:
+    _EXTRA_WINDOW_H = float(os.environ.get("EXTRA_MARKETS_WINDOW_H", "96"))
+except (TypeError, ValueError):
+    _EXTRA_WINDOW_H = 96.0
+
+
+def _merge_bookmakers(base_bks: list, extra_bks: list) -> list:
+    """Extra-Markets (btts, alternate_totals) je Bookmaker in die Basis mergen — reihenfolge-
+    unabhängig, keine Markt-Duplikate. Reine Funktion (testbar)."""
+    by_key = {b.get("key"): b for b in (base_bks or []) if b.get("key")}
+    for eb in (extra_bks or []):
+        k = eb.get("key")
+        if not k:
+            continue
+        if k in by_key:
+            existing = by_key[k].setdefault("markets", [])
+            have = {m.get("key") for m in existing}
+            for m in (eb.get("markets") or []):
+                if m.get("key") not in have:
+                    existing.append(m)
+        else:
+            by_key[k] = eb
+    return list(by_key.values())
+
+
+def _fetch_event_extra(sport_key: str, event_id: str) -> list:
+    """Per-Event-Endpoint für BTTS + alternate_totals. Gibt die bookmakers-Liste oder []."""
+    import fetch_wm_odds as W
+    path = (f"/v4/sports/{sport_key}/events/{event_id}/odds?apiKey={W.ODDS_KEY}"
+            f"&regions=eu,uk&markets=btts,alternate_totals&oddsFormat=decimal")
+    data = W.odds_get(path)
+    if isinstance(data, dict):
+        return data.get("bookmakers") or []
+    return []
+
+
+def _enrich_event_markets(ev: dict, sport_key: str, fx: dict, now_iso: str) -> dict:
+    """Reichert ein Event um BTTS + alternate_totals an. Gated: FETCH_EXTRA_MARKETS=1 UND Anpfiff
+    in [0 … _EXTRA_WINDOW_H]. Ohne Flag unverändert (kein Call, keine neuen Felder)."""
+    if not _EXTRA_MARKETS_ENABLED:
+        return ev
+    htk = _hours_to_kickoff(fx.get("kickoff"), now_iso)
+    if htk is None or htk < 0 or htk > _EXTRA_WINDOW_H:
+        return ev
+    eid = ev.get("id")
+    if not eid:
+        return ev
+    extra = _fetch_event_extra(sport_key, eid)
+    if not extra:
+        return ev
+    return {**ev, "bookmakers": _merge_bookmakers(ev.get("bookmakers") or [], extra)}
+
+
 def _fetch_events(sport_key: str) -> list:
     # WICHTIG: odds_get hängt den apiKey NICHT an — der Pfad muss ?apiKey=… enthalten (wie WM).
-    # btts/double_chance brauchen den per-Event-Endpoint (/events/{id}/odds), NICHT den Batch →
-    # im Bulk-Call nur die Featured-Markets h2h,totals (1X2 + O/U). BTTS später per-Event (Phase 2).
+    # BTTS + alternate_totals laufen NICHT im Batch, sondern per-Event via _enrich_event_markets
+    # (flag-gated FETCH_EXTRA_MARKETS). Der Bulk-Call bleibt bei den Featured-Markets.
     import fetch_wm_odds as W
     # 09.07.2026: spreads (Asian Handicap) ergänzt → Liga/MLS bekommen AH-Picks wie die WM.
     path = (f"/v4/sports/{sport_key}/odds?apiKey={W.ODDS_KEY}"
@@ -602,6 +661,7 @@ def main():
             if not matched:
                 continue
             ev, orient = matched
+            ev = _enrich_event_markets(ev, sport_key, fx, now_iso)
             prices = extract_prices(ev, orient, hn, an)
             if not prices.get("hw"):
                 continue

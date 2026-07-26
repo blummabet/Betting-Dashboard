@@ -75,7 +75,7 @@ CONVICTION_FAMILIES: dict[str, tuple[str, ...]] = {
     "sharp_money": ("lead_lag_bias",),
     # Modell-Stack: Form/xG/H2H/Injury/ChanceCreation/FormRating (+ Modell-Sanity separat).
     "model_stack": ("form_trend", "xg_strength", "h2h_pattern", "injury",
-                    "chance_creation", "form_rating"),
+                    "chance_creation", "form_rating", "venue_form"),
     # Kontext: Reise/Aufstellung/Wetter/Druck/Anreiz/Höhe + Liga/MLS-Pendants.
     "context": ("travel_burden", "lineup_signal", "weather_signal",
                 "pressure_index", "incentive_signal", "altitude_signal",
