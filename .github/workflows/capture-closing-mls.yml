@@ -44,6 +44,17 @@ jobs:
           CLOSING_CAPTURE_ONLY: '1'
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
 
+      - name: 📡 MLS Sharp-Moves erkennen + Alert (nah am Anpfiff)
+        # B1 (25.07): der 15-Min-Anpfiff-Job ist das dichteste Band → Steam-Moves
+        # kurz vor Kickoff werden hier erkannt und sofort auf Telegram gealertet
+        # (Dedup verhindert Wiederholung; re-alert nur bei +2pp Progression).
+        # Nur bei imminentem Anpfiff hat der Fetch die History bewegt → sonst No-Op.
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+        run: python detect_wm_sharp_moves.py || true
+
       - name: 💾 Closing committen (nur wenn geändert)
         run: |
           git config user.name  "CocoBet Bot"
@@ -51,6 +62,7 @@ jobs:
           # mls-data.json bewusst VERWERFEN — der CLV-Resolver liest primär mls_closing_lines.json.
           git checkout -- mls-data.json 2>/dev/null || true
           git add mls_closing_lines.json mls-odds-history.json 2>/dev/null || true
+          git add mls_sharp_moves_log.json mls_sharp_dedup.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Closing-Änderung — nichts zu committen."; exit 0
           fi
