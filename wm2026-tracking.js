@@ -132,7 +132,7 @@
   }
 
   // Filter callbacks (called from inline onclick)
-  window.wmTrkSetGroup   = g  => { _grpFilter = g;  _render(); };
+  window.wmTrkSetGroup   = g  => { _grpFilter = g; _mdFilter = 'all'; _render(); };  // 26.07.: md ist pro-Liga
   window.wmTrkSetMd      = md => { _mdFilter  = md; _render(); };
   window.wmTrkSetVerdict = v  => { _vrdFilter = v;  _render(); };
   window.wmTrkSetSort    = s  => { _trkSort = s;   _render(); };
@@ -376,16 +376,21 @@
     }
     html += `</div>`;
 
-    // Matchday filter
+    // Matchday filter — (26.07.2026, Lucas) NUR bei gewählter Liga; „Alle Ligen" hat keine
+    // gemeinsame Spieltags-Achse (Top-5 md1 vs MLS md18). Chips zudem auf die aktive Liga scopen.
+    const _showMdFilter = !(_isLiga && _grpFilter === 'all');
+    if (_showMdFilter) {
     html += `<div class="wm-md-filter">`;
     html += _fBtn('Alle Spieltage', 'all', _mdFilter, `wmTrkSetMd('all')`);
     if (_isLiga) {
+      const _scopeGroups = _grpFilter === 'all'
+        ? Object.values(groups) : [groups[_grpFilter]].filter(Boolean);
       // (25.06.2026, Lucas: Liga auf WM-Stack) Spieltag-Buttons DYNAMISCH aus den
       // vorhandenen fixtures[].matchday-Werten (distinct, sortiert). Bei vielen Runden
       // auf die nächsten ~3 anstehenden begrenzen (analog Renderer). _fBtn vergleicht
       // strikt (=== val) → val als String + onclick wmTrkSetMd('<md>') (String-Filter).
       const _mdSet = new Set();
-      for (const gData of Object.values(groups)) {
+      for (const gData of _scopeGroups) {
         for (const fx of (gData.fixtures || [])) {
           if (fx.matchday != null && fx.matchday !== '') _mdSet.add(fx.matchday);
         }
@@ -397,7 +402,7 @@
       const _odds = _data.odds || {};
       const _twoWeeks = new Date(Date.now() + 14 * 86400000).toISOString().slice(0, 10);
       const _liveMd = (md) => {
-        for (const gData of Object.values(groups)) {
+        for (const gData of _scopeGroups) {
           for (const fx of (gData.fixtures || [])) {
             if (String(fx.matchday) !== String(md)) continue;
             if (_odds[`${fx.home}-${fx.away}`] || (fx.date >= todayIso && fx.date <= _twoWeeks)) return true;
@@ -408,7 +413,7 @@
       let _shownMds = _allMds.filter(_liveMd);
       if (!_shownMds.length) {
         const _next = _allMds.filter(md => {
-          for (const gData of Object.values(groups))
+          for (const gData of _scopeGroups)
             for (const fx of (gData.fixtures || []))
               if (String(fx.matchday) === String(md) && fx.date >= todayIso) return true;
           return false;
@@ -438,6 +443,7 @@
     }
     }
     html += `</div>`;
+    }
 
     // Verdict filter
     html += `<div class="wm-trk-vrd-filter">`;

@@ -615,6 +615,7 @@
   // ── Group / Matchday filters (called from inline onclick) ─
   window.wmSetGroup = function (gKey) {
     _activeGroup = gKey;
+    _activeMd = 'all';          // 26.07.2026 (Lucas): Spieltag ist pro-Liga → bei Liga-Wechsel/„Alle" zuruecksetzen
     _curatedExpanded = false;   // 28.06.2026: Liga-Wechsel → kuratierte Liste wieder eingeklappt
     _render();
   };
@@ -835,6 +836,11 @@
     html += `</div>`;
 
     // ─── Matchday Filter ─────────────────────────────
+    // (26.07.2026, Lucas) In der „Alle Ligen"-Ansicht KEINE Spieltags-Navi: „Spieltag" ist eine
+    // pro-Liga-Zahl und ergibt über Ligen an unterschiedlichen Saison-Punkten (Top-5 md1 vs MLS
+    // md18) keine gemeinsame Achse. Chips erst bei gewählter Liga. WM-Modus (else-Zweig) unverändert.
+    const _showMdFilter = !(_isLiga && _activeGroup === 'all');
+    if (_showMdFilter) {
     html += `<div class="wm-md-filter">`;
     html += `<button class="wm-md-btn${_activeMd === 'all' ? ' active' : ''}" onclick="wmSetMd('all')">Alle Spieltage</button>`;
     if (_isLiga) {
@@ -891,6 +897,7 @@
     }
     }
     html += `</div>`;
+    }
 
     // ─── Sort control ────────────────────────────────
     // (28.06.2026, Lucas) In der kuratierten Liga-Ansicht (Alle Spieltage) ist die Reihenfolge
