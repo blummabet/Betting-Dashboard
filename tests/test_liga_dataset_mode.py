@@ -75,8 +75,10 @@ class TestSignalGating(unittest.TestCase):
         # bis Polymarket Ligen listet. Sharp Radar deckt Liga-Steam (Pinn-vs-Soft) ab.
         self.assertIn("steam_lag", d)
 
-    def test_wm_disables_nothing(self):
-        self.assertEqual(self._disabled(None), set())
+    def test_wm_disables_only_top5_mls_signals(self):
+        # WM = Nationalteams + winterisiert: die Top-5-/MLS-spezifischen Signale sind bewusst aus.
+        # move_following (nur auf Top-5-Historie validiert) + venue_form (Klub-Heim/Auswaerts-Daten).
+        self.assertEqual(self._disabled(None), {"move_following", "venue_form"})
 
 
 class TestLearningLoopDataset(unittest.TestCase):
