@@ -82,8 +82,13 @@ class TestBuildCard(unittest.TestCase):
         self.assertIn("46¢", card)
         self.assertIn("⚾", card)
         self.assertIn("noch kein Track-Record", card)
-        bad = set(re.findall(r"</?([a-zA-Z0-9-]+)", card)) - {"b", "i"}
+        bad = set(re.findall(r"</?([a-zA-Z0-9-]+)", card)) - {"b", "i", "a"}
         self.assertFalse(bad, f"verbotene Tags: {bad}")
+
+    def test_wallet_is_clickable_profile_link(self):
+        card = P.build_card(_pos(9000, wallet="0xabcdef1234567890abcd"), {}, False)
+        self.assertIn('href="https://polymarket.com/profile/0xabcdef1234567890abcd"', card)
+        self.assertIn("0xabcd…abcd", card)   # Kurz-ID bleibt als Linktext
 
     def test_track_record_line(self):
         card = P.build_card(_pos(9000, wallet="0xa"), {"0xa": {"n": 9, "wins": 6}}, False)

@@ -104,6 +104,15 @@ def _wallet(w):
     s = str(w or "")
     return (s[:6] + "…" + s[-4:]) if len(s) > 12 else s
 
+def _wallet_link(w):
+    """Kurz-ID als klickbarer Link auf das öffentliche Polymarket-Profil der Wallet.
+    Als Text wäre die halbe Adresse wertlos — als Link führt sie zur ganzen Historie."""
+    full = str(w or "").strip()
+    short = _wallet(full)
+    if full.startswith("0x"):
+        return f'<a href="https://polymarket.com/profile/{full}">{short}</a>'
+    return short
+
 
 def track_record(scores: dict, wallet: str):
     """Track-Record-Text aus scores[wallet], oder None wenn zu dünn."""
@@ -130,7 +139,7 @@ def build_card(pos: dict, scores: dict, restock: bool) -> str:
         f"{sport}",
     ]
     tr = track_record(scores, pos.get("wallet"))
-    wl = _wallet(pos.get("wallet"))
+    wl = _wallet_link(pos.get("wallet"))
     lines.append("")
     lines.append(f"Wallet {wl} · {tr}" if tr else f"Wallet {wl} · <i>noch kein Track-Record</i>")
     # Preiskontext: klarer Außenseiter, gegen den der Markt steht
