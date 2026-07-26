@@ -127,3 +127,22 @@ test('Unter-Reiter existieren (Smart-Money-Tab 25.07. entfernt)', async () => {
   for (const t of ['🔥 Heute wetten', '💰 Großes Geld', '📈 Bewegung', '🆕 Neu', '🎯 Chancen', '🐋 Whales']) assert.match(html, new RegExp(t));
   assert.doesNotMatch(html, /💡 Smart-Money/, 'Smart-Money-Tab wurde entfernt');
 });
+
+// 26.07.2026 (Lucas: „No vs Yes als Spielname ist sinnlos"). _pwEventLabel: Team-Namen wenn echt,
+// sonst lesbarer Name aus dem Slug statt der generischen Ja/Nein-Ausgänge.
+test('_pwEventLabel: echte Team-Namen bleiben „A vs B"', () => {
+  const html = win()._pwEventLabel('x', ['Inter Miami CF', 'CF Montréal'], 'MLS');
+  assert.match(html, /Inter Miami CF/);
+  assert.match(html, /CF Montréal/);
+  assert.match(html, /vs/);
+});
+
+test('_pwEventLabel: Ja/Nein-Markt → Name aus Slug, kein „No vs Yes"', () => {
+  const w = win();
+  assert.equal(w._pwEventLabel('mls-mim-mia-2026-07-25', ['No', 'Yes'], 'MLS'), 'MIM MIA');
+  assert.equal(w._pwEventLabel('ucl-agf-lep-2026-07-21-exact-score', ['Yes', 'No'], 'UCL'),
+               'AGF LEP Exact Score');
+  const out = w._pwEventLabel('mlb-pit-nyy-2026-07-20-player-props', ['No', 'Yes'], 'MLB');
+  assert.doesNotMatch(out, /No|Yes/);
+  assert.match(out, /PIT NYY/);
+});

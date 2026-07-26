@@ -962,6 +962,21 @@ function _pwGlobalEdge(cs){
 // 25.07.2026 (Lucas: „ich will sehen wo viel Geld liegt, welche Seite, alle Sportarten inkl E-Sport
 // — zum Folgen"). Sektion (b): die eingefrorenen KOMMENDEN Märkte aus poly_money_broad_close.json
 // (resolved==null), nach Volumen sortiert. Team-Namen + Geld-Seite stehen direkt in `shares`.
+// 26.07.2026 (Lucas: No-vs-Yes als Spielname ist sinnlos). Team-Maerkte haben echte Namen in den
+// Ausgaengen (-> A vs B). Binaere Ja/Nein-Maerkte (Props, Einzelfragen) haetten nur Yes/No -> als
+// Spielname wertlos. Dann lesbaren Namen aus dem Slug ableiten: {liga}-{a}-{b}-{datum}[-{prop}].
+function _pwEventLabel(key, names, league){
+  const GEN=/^(yes|no|ja|nein|over|under|draw|remis)$/i;
+  const real=(names||[]).filter(n=>!GEN.test(String(n).trim()));
+  if(real.length>=2) return real.map(_pwEsc).join(' <span style="color:#6e7681">vs</span> ');
+  let str=String(key||'').replace(/-\d{4}-\d{2}-\d{2}/g,'');
+  let parts=str.split('-').filter(Boolean);
+  const lg=String(league||'').toLowerCase();
+  if(parts.length>1 && parts[0].toLowerCase()===lg) parts.shift();
+  const human=parts.map(p=>p.length<=3?p.toUpperCase():p.charAt(0).toUpperCase()+p.slice(1)).join(' ');
+  return _pwEsc(human||key||'—');
+}
+
 function _pwMoneyLive(live){
   const all=(live?Object.entries(live):[]).map(([k,m])=>({k,m}))
     .filter(x=>x.m && x.m.resolved==null && x.m.shares && (x.m.totalUsd||0)>=5000);
@@ -979,7 +994,7 @@ function _pwMoneyLive(live){
     const fav=oc[0], favPct=Math.round(fav.usd/total*100);
     const favPrice=(m.prices&&m.prices[fav.name]!=null)?Math.round(m.prices[fav.name]*100)+'¢':'—';
     // Spiel-Spalte klickbar → direkt auf den Polymarket-Markt (Key ist der Event-Slug). 25.07.2026 (Lucas).
-    const matchTxt=oc.map(o=>_pwEsc(o.name)).join(' <span style="color:#6e7681">vs</span> ');
+    const matchTxt=_pwEventLabel(k, oc.map(o=>o.name), m.league);
     const match=k?('<a href="https://polymarket.com/event/'+encodeURIComponent(k)+'" target="_blank" rel="noopener" '
       +'style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Auf Polymarket öffnen ↗">'+matchTxt+' <span style="color:#a78bfa">↗</span></a>'):matchTxt;
     const ic=_pwCatOf(m.league)[1], lg=(m.league||'').toUpperCase();
