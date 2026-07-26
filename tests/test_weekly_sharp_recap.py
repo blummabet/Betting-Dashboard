@@ -2,12 +2,9 @@
 """test_weekly_sharp_recap.py — Sharp-Radar Wochenrückblick (25.07.2026).
 Sichert die CLV-Auflösung (Entry ≤ ts / Pinnacle-Vorzug, Closing bevorzugt final),
 die gesteamte-Seite-Logik, das Neutralband, Aktivität/Hold-Rate und den Wochen-Dedup."""
-import os, sys, json, tempfile, unittest
+import sys, json, tempfile, unittest
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
-
-os.environ.setdefault("COCOBET_DATASET", "mls")
-os.environ.setdefault("COCOBET_PROFILE", "mls_default")
 
 REPO = Path(__file__).parent.parent
 sys.path.insert(0, str(REPO))
