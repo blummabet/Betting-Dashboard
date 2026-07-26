@@ -410,7 +410,7 @@ def append_history(prev, markets, now=None, min_vol=MIN_VOL_USD,
     return out
 
 
-def update_wallet_track(prev, markets, now=None, keep_h=HIST_KEEP_H):
+def update_wallet_track(prev, markets, now=None, keep_h=HIST_KEEP_H, frozen=None):
     """② Sharp-Wallet-Track. REIN/testbar. Merkt je (wallet,markt,seite) den Einstiegspreis (erster
     beobachteter Preis, als der Wal auftauchte); bei Markt-Auflösung wird die Position gewertet:
       clvPP = (Close − Einstieg)·100   (positiv = früh billig rein, Linie geschlagen → scharf)
@@ -451,7 +451,14 @@ def update_wallet_track(prev, markets, now=None, keep_h=HIST_KEEP_H):
         e = openp[ok]
         if e["key"] not in winners:
             continue
-        clv = (e["lastPrice"] - e["firstPrice"]) * 100
+        # 26.07.2026 (Lucas: „CLV misst nicht"): CLV gegen die EINGEFRORENE Closing-Linie, nicht
+        # gegen lastPrice. Der lastPrice wird vor Auflösung oft nur EINMAL gesehen (Holder-Call-Cap +
+        # Top-N-Wale-Cutoff + schnelle Märkte) → bliebe = firstPrice → CLV fälschlich 0. Der Close
+        # aus poly_money_broad_close.json ist der echte Schlusskurs. Fallback: lastPrice (Alt-Verhalten).
+        _close = ((frozen or {}).get(e["key"]) or {}).get("prices") or {}
+        _cp = _close.get(e["side"])
+        close_ref = float(_cp) if isinstance(_cp, (int, float)) else e["lastPrice"]
+        clv = (close_ref - e["firstPrice"]) * 100
         s = scores.setdefault(e["wallet"], {"n": 0, "clvSumPP": 0.0, "wins": 0, "usd": 0})
         s["n"] += 1
         s["clvSumPP"] = round(s["clvSumPP"] + clv, 2)
@@ -552,7 +559,7 @@ def main() -> int:
 
     # ② Sharp-Wallet-Track (25.07.2026): Einstieg→Close/Outcome je Whale werten (CLV/Treffer)
     prev_wtrack = _load(WTRACK_FILE)
-    wtrack = update_wallet_track(prev_wtrack, markets)
+    wtrack = update_wallet_track(prev_wtrack, markets, frozen=frozen)
     (BASE / WTRACK_FILE).write_text(json.dumps(wtrack, ensure_ascii=False, indent=1), encoding="utf-8")
     # 🔔 Sharp-im-Markt-Alarm: neue Einstiege bewiesen-scharfer Wallets → Telegram (Kür, nie fatal)
     n_alert = maybe_alert_sharp(prev_wtrack, wtrack)

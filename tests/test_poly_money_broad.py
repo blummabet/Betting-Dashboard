@@ -178,6 +178,23 @@ class TestWalletTrack:
         assert s["n"] == 1 and abs(s["clvSumPP"] - 10.0) < 0.01 and s["wins"] == 1
         assert "0xW|mlb-a-b|A" not in t["open"]   # gewertete Position ist geschlossen
 
+    def test_clv_gegen_frozen_close(self):
+        # 26.07.2026 (Lucas: „CLV misst nicht"): Position nur EINMAL gesehen (lastPrice==firstPrice) →
+        # ohne Close wäre CLV fälschlich 0. Mit eingefrorener Closing-Linie A=0.62 → CLV=(0.62-0.40)*100=22.
+        frozen = {"mlb-a-b": {"prices": {"A": 0.62, "B": 0.38}}}
+        t = B.update_wallet_track({}, [self._up(0.40)], now=self.T0)
+        t = B.update_wallet_track(t, [self._resolved("A")],
+                                  now=self.T0 + self.timedelta(hours=3), frozen=frozen)
+        s = t["scores"]["0xW"]
+        assert s["n"] == 1 and abs(s["clvSumPP"] - 22.0) < 0.01 and s["wins"] == 1
+
+    def test_ohne_close_faellt_auf_lastprice_zurueck(self):
+        # Kein frozen → Alt-Verhalten (lastPrice). Einmal gesehen → CLV 0, Treffer zählt trotzdem.
+        t = B.update_wallet_track({}, [self._up(0.40)], now=self.T0)
+        t = B.update_wallet_track(t, [self._resolved("A")], now=self.T0 + self.timedelta(hours=3))
+        s = t["scores"]["0xW"]
+        assert s["n"] == 1 and abs(s["clvSumPP"]) < 0.01 and s["wins"] == 1
+
     def test_verlierer_zaehlt_treffer_nicht(self):
         t = B.update_wallet_track({}, [self._up(0.40)], now=self.T0)
         t = B.update_wallet_track(t, [self._resolved("B")], now=self.T0 + self.timedelta(hours=2))
