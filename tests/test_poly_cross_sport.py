@@ -33,6 +33,15 @@ class TestDiscrepancies:
         assert len(d) == 1 and d[0]["gapPP"] == 7.0
         assert "faden" in d[0]["richtung"], "Poly zu hoch → faden"
 
+    def test_settled_markt_ist_kein_edge(self):
+        # 26.07.2026 (Lucas: „nur MLS?"): near-settled Poly (~100%/~0%) = entschiedenes/laufendes
+        # Spiel → trotz Riesen-|Lücke| KEIN Edge (sonst verdeckt das Artefakt echte Cross-Sport-Edges).
+        assert X.compute_discrepancies([_poly(0.999)], IDX) == []
+        assert X.compute_discrepancies([_poly(0.001)], IDX) == []
+        assert len(X.compute_discrepancies([_poly(0.62)], IDX)) == 1   # umkämpftes Band bleibt
+        # Schwelle per cfg lockerbar
+        assert len(X.compute_discrepancies([_poly(0.995)], IDX, {"settled_hi": 0.999})) == 1
+
     def test_poly_zu_niedrig_ist_backen(self):
         d = X.compute_discrepancies([_poly(0.45)], IDX)   # Poll 45 vs fair 55 = -10pp
         assert d[0]["gapPP"] == -10.0 and "backen" in d[0]["richtung"]

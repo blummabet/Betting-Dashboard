@@ -49,6 +49,11 @@ DEFAULT_SPORTS = ["basketball_nba", "americanfootball_nfl", "baseball_mlb", "ice
 
 MIN_GAP_PP  = 6.0      # darunter ist die Abweichung im Rahmen von Marge/Rundung
 MIN_VOL_USD = 5_000    # dünner Poly-Markt → Preis nicht handelbar, jede Lücke ist Rauschen
+# 26.07.2026 (Lucas: „nur MLS?"): near-settled Märkte (Poly ~100%/~0%) sind entschiedene/laufende
+# Spiele. Gegen eine stehende Pinnacle-Linie ergeben sie Riesen-Scheinlücken (+75pp) und verdecken
+# nach |Lücke|-Sortierung die ECHTEN Edges anderer Sportarten. Nur das umkämpfte Band werten.
+SETTLED_LO  = 0.02
+SETTLED_HI  = 0.98
 PRUNE_DAYS  = 21       # Historien-Einträge, die so lange nicht gesehen wurden, fallen raus
 
 
@@ -92,6 +97,8 @@ def compute_discrepancies(poly_rows, pinn_index, cfg=None) -> list:
     cfg = cfg or {}
     min_gap = cfg.get("min_gap_pp", MIN_GAP_PP)
     min_vol = cfg.get("min_vol_usd", MIN_VOL_USD)
+    lo = cfg.get("settled_lo", SETTLED_LO)
+    hi = cfg.get("settled_hi", SETTLED_HI)
     out = []
     for r in poly_rows:
         try:
@@ -99,7 +106,8 @@ def compute_discrepancies(poly_rows, pinn_index, cfg=None) -> list:
             vol = float(r.get("vol") or 0)
         except (TypeError, ValueError):
             continue
-        if not (0.0 < poly_p < 1.0) or vol < min_vol:
+        # near-settled (Poly ~100%/~0% = entschieden/laufend) raus → keine Scheinlücken
+        if not (lo < poly_p < hi) or vol < min_vol:
             continue
         fair = pinn_index.get((r.get("eventKey"), r.get("outcomeKey")))
         if fair is None:
