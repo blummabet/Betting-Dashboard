@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "liga",
-    "generatedAt": "2026-07-25T19:30:16.054391+00:00",
+    "generatedAt": "2026-07-26T08:28:06.890385+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -4462,7 +4462,8 @@
           "xg_strength",
           "chance_creation",
           "transfer_shift",
-          "streak_momentum"
+          "streak_momentum",
+          "venue_form"
         ],
         "market": "Unter 2.5 Tore"
       }
@@ -13930,7 +13931,8 @@
           "xg_strength",
           "chance_creation",
           "transfer_shift",
-          "streak_momentum"
+          "streak_momentum",
+          "venue_form"
         ],
         "market": "Unter 2.5 Tore"
       }
@@ -20445,6 +20447,55 @@
       "matchupPct": 48
     },
     {
+      "teamId": "170",
+      "team": "FC Augsburg",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/170.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "GER",
+      "leagueName": "Bundesliga",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 53,
+        "label": "Eigen 53% + Gegner 53% → 53%"
+      },
+      "ratePct": 53,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "174",
+        "oppName": "FC Schalke 04",
+        "atHome": true,
+        "date": "2026-08-30",
+        "oppRatePct": 53
+      },
+      "oppSupportPct": 53,
+      "matchupPct": 53,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 1,
+        "conviction": 1,
+        "names": [
+          "form_trend",
+          "xg_strength",
+          "transfer_shift"
+        ],
+        "market": "Unter 2.5 Tore"
+      }
+    },
+    {
       "teamId": "172",
       "team": "VfB Stuttgart",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/172.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -22503,56 +22554,6 @@
       },
       "oppSupportPct": 13,
       "matchupPct": 29
-    },
-    {
-      "teamId": "170",
-      "team": "FC Augsburg",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/170.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "GER",
-      "leagueName": "Bundesliga",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 53,
-        "label": "Eigen 53% + Gegner 53% → 53% · Linie/Signale dagegen"
-      },
-      "ratePct": 53,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "174",
-        "oppName": "FC Schalke 04",
-        "atHome": true,
-        "date": "2026-08-30",
-        "oppRatePct": 53
-      },
-      "oppSupportPct": 53,
-      "matchupPct": 53,
-      "signalInfo": {
-        "state": "contradict",
-        "count": 2,
-        "conviction": 2,
-        "names": [
-          "form_trend",
-          "xg_strength",
-          "chance_creation",
-          "transfer_shift"
-        ],
-        "market": "Unter 2.5 Tore"
-      }
     },
     {
       "teamId": "172",
