@@ -96,6 +96,13 @@
           "pick": "New York City FC Sieg"
         },
         {
+          "wallet": "0x2cdb4fc69461cfc8599ae88beb6f82a8ccfebc1f",
+          "usd": 10.0,
+          "shares": 42.0,
+          "side": "draw",
+          "pick": "Unentschieden"
+        },
+        {
           "wallet": "0x17a246c1f1d82a1ec45eae2d081faeebff9b630b",
           "usd": 7.0,
           "shares": 12.0,
@@ -150,13 +157,6 @@
           "shares": 8.0,
           "side": "draw",
           "pick": "Unentschieden"
-        },
-        {
-          "wallet": "0x17a246c1f1d82a1ec45eae2d081faeebff9b630b",
-          "usd": 2.0,
-          "shares": 12.0,
-          "side": "away",
-          "pick": "Toronto FC Sieg"
         }
       ],
       "bigTrades": []
@@ -463,18 +463,18 @@
       "away": "Vancouver Whitecaps",
       "topPositions": [
         {
-          "wallet": "0x04d5524a0a5af2eca6e39e03defc261d42fe66d8",
-          "usd": 7289.0,
-          "shares": 14577.0,
-          "side": "home",
-          "pick": "Chicago Fire Sieg"
-        },
-        {
           "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
           "usd": 7247.0,
           "shares": 21005.0,
           "side": "away",
           "pick": "Vancouver Whitecaps Sieg"
+        },
+        {
+          "wallet": "0x04d5524a0a5af2eca6e39e03defc261d42fe66d8",
+          "usd": 6268.0,
+          "shares": 14577.0,
+          "side": "home",
+          "pick": "Chicago Fire Sieg"
         },
         {
           "wallet": "0xa804390f80019699ab34a282c0df7528fba82a75",
@@ -527,22 +527,22 @@
         },
         {
           "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-          "usd": 682.0,
+          "usd": 587.0,
           "shares": 1364.0,
           "side": "home",
           "pick": "Chicago Fire Sieg"
         },
         {
-          "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
-          "usd": 526.0,
-          "shares": 1052.0,
-          "side": "home",
-          "pick": "Chicago Fire Sieg"
+          "wallet": "0xe542afd3881c4c330ba0ebbb603bb470b2ba0a37",
+          "usd": 461.0,
+          "shares": 2197.0,
+          "side": "draw",
+          "pick": "Unentschieden"
         },
         {
-          "wallet": "0x1b47e9b128e6b671edebfb2cac23dd3efc40d814",
-          "usd": 511.0,
-          "shares": 1022.0,
+          "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
+          "usd": 453.0,
+          "shares": 1052.0,
           "side": "home",
           "pick": "Chicago Fire Sieg"
         }
@@ -643,20 +643,20 @@
   },
   "topPositionsAll": [
     {
-      "wallet": "0x04d5524a0a5af2eca6e39e03defc261d42fe66d8",
-      "usd": 7289.0,
-      "shares": 14577.0,
-      "side": "home",
-      "pick": "Chicago Fire Sieg",
-      "match": "Chicago Fire – Vancouver Whitecaps",
-      "key": "1607-1603"
-    },
-    {
       "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
       "usd": 7247.0,
       "shares": 21005.0,
       "side": "away",
       "pick": "Vancouver Whitecaps Sieg",
+      "match": "Chicago Fire – Vancouver Whitecaps",
+      "key": "1607-1603"
+    },
+    {
+      "wallet": "0x04d5524a0a5af2eca6e39e03defc261d42fe66d8",
+      "usd": 6268.0,
+      "shares": 14577.0,
+      "side": "home",
+      "pick": "Chicago Fire Sieg",
       "match": "Chicago Fire – Vancouver Whitecaps",
       "key": "1607-1603"
     },
@@ -724,15 +724,6 @@
       "key": "1607-1603"
     },
     {
-      "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-      "usd": 682.0,
-      "shares": 1364.0,
-      "side": "home",
-      "pick": "Chicago Fire Sieg",
-      "match": "Chicago Fire – Vancouver Whitecaps",
-      "key": "1607-1603"
-    },
-    {
       "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
       "usd": 641.0,
       "shares": 1078.0,
@@ -751,6 +742,15 @@
       "key": "1609-1600"
     },
     {
+      "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+      "usd": 587.0,
+      "shares": 1364.0,
+      "side": "home",
+      "pick": "Chicago Fire Sieg",
+      "match": "Chicago Fire – Vancouver Whitecaps",
+      "key": "1607-1603"
+    },
+    {
       "wallet": "0x8de5f64b6466d9ebec97909f78a11762a46f9416",
       "usd": 531.0,
       "shares": 1312.0,
@@ -760,8 +760,17 @@
       "key": "1609-1600"
     },
     {
+      "wallet": "0xe542afd3881c4c330ba0ebbb603bb470b2ba0a37",
+      "usd": 461.0,
+      "shares": 2197.0,
+      "side": "draw",
+      "pick": "Unentschieden",
+      "match": "Chicago Fire – Vancouver Whitecaps",
+      "key": "1607-1603"
+    },
+    {
       "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
-      "usd": 526.0,
+      "usd": 453.0,
       "shares": 1052.0,
       "side": "home",
       "pick": "Chicago Fire Sieg",
@@ -770,19 +779,10 @@
     },
     {
       "wallet": "0x1b47e9b128e6b671edebfb2cac23dd3efc40d814",
-      "usd": 511.0,
+      "usd": 440.0,
       "shares": 1022.0,
       "side": "home",
       "pick": "Chicago Fire Sieg",
-      "match": "Chicago Fire – Vancouver Whitecaps",
-      "key": "1607-1603"
-    },
-    {
-      "wallet": "0xe542afd3881c4c330ba0ebbb603bb470b2ba0a37",
-      "usd": 450.0,
-      "shares": 2197.0,
-      "side": "draw",
-      "pick": "Unentschieden",
       "match": "Chicago Fire – Vancouver Whitecaps",
       "key": "1607-1603"
     },
@@ -869,7 +869,7 @@
     },
     {
       "wallet": "0xfbe6717a7b235417aaee2823aa5edd1a052b4a1b",
-      "usd": 176.0,
+      "usd": 180.0,
       "shares": 859.0,
       "side": "draw",
       "pick": "Unentschieden",
@@ -887,7 +887,7 @@
     },
     {
       "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
-      "usd": 144.0,
+      "usd": 148.0,
       "shares": 704.0,
       "side": "draw",
       "pick": "Unentschieden",
@@ -911,15 +911,6 @@
       "pick": "Unentschieden",
       "match": "New England Revolution – Houston Dynamo",
       "key": "1609-1600"
-    },
-    {
-      "wallet": "0x05474155c749a558ae6adb76050a748a8820fb35",
-      "usd": 107.0,
-      "shares": 520.0,
-      "side": "draw",
-      "pick": "Unentschieden",
-      "match": "Chicago Fire – Vancouver Whitecaps",
-      "key": "1607-1603"
     },
     {
       "wallet": "0x2befab845f750f5445d382df4c4d74e0d3e61e38",
@@ -947,6 +938,15 @@
       "pick": "New York City FC Sieg",
       "match": "New York City FC – Toronto FC",
       "key": "1604-1601"
+    },
+    {
+      "wallet": "0x05474155c749a558ae6adb76050a748a8820fb35",
+      "usd": 95.0,
+      "shares": 455.0,
+      "side": "draw",
+      "pick": "Unentschieden",
+      "match": "Chicago Fire – Vancouver Whitecaps",
+      "key": "1607-1603"
     },
     {
       "wallet": "0xd2b8001a3a2118932626b36151bce47c0b4b8921",
@@ -977,7 +977,7 @@
     },
     {
       "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
-      "usd": 73.0,
+      "usd": 75.0,
       "shares": 358.0,
       "side": "draw",
       "pick": "Unentschieden",
@@ -1001,15 +1001,6 @@
       "pick": "Unentschieden",
       "match": "New York City FC – Los Angeles FC",
       "key": "1604-1616"
-    },
-    {
-      "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
-      "usd": 63.0,
-      "shares": 125.0,
-      "side": "home",
-      "pick": "Chicago Fire Sieg",
-      "match": "Chicago Fire – Vancouver Whitecaps",
-      "key": "1607-1603"
     },
     {
       "wallet": "0xbe3610e783826bbb94fb036e8c0538b31ec64fab",
@@ -1039,6 +1030,15 @@
       "key": "1595-1606"
     },
     {
+      "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+      "usd": 54.0,
+      "shares": 125.0,
+      "side": "home",
+      "pick": "Chicago Fire Sieg",
+      "match": "Chicago Fire – Vancouver Whitecaps",
+      "key": "1607-1603"
+    },
+    {
       "wallet": "0x8c25b1a4f652c82a9b265841349cd274484c606e",
       "usd": 49.0,
       "shares": 104.0,
@@ -1057,15 +1057,6 @@
       "key": "1595-1606"
     },
     {
-      "wallet": "0xd6eeaf0258a989f2c258e14d5260521e00cc5513",
-      "usd": 43.0,
-      "shares": 86.0,
-      "side": "home",
-      "pick": "Chicago Fire Sieg",
-      "match": "Chicago Fire – Vancouver Whitecaps",
-      "key": "1607-1603"
-    },
-    {
       "wallet": "0xce251291481c79fd0cd348d09af3216a5c9d4e7d",
       "usd": 42.0,
       "shares": 166.0,
@@ -1073,6 +1064,15 @@
       "pick": "Unentschieden",
       "match": "New England Revolution – Houston Dynamo",
       "key": "1609-1600"
+    },
+    {
+      "wallet": "0xd6eeaf0258a989f2c258e14d5260521e00cc5513",
+      "usd": 37.0,
+      "shares": 86.0,
+      "side": "home",
+      "pick": "Chicago Fire Sieg",
+      "match": "Chicago Fire – Vancouver Whitecaps",
+      "key": "1607-1603"
     },
     {
       "wallet": "0x8c25b1a4f652c82a9b265841349cd274484c606e",
@@ -1109,15 +1109,6 @@
       "pick": "Unentschieden",
       "match": "New England Revolution – Houston Dynamo",
       "key": "1609-1600"
-    },
-    {
-      "wallet": "0x8d0c8253703b8febbe53f45d182671c5385dc90a",
-      "usd": 25.0,
-      "shares": 50.0,
-      "side": "home",
-      "pick": "Chicago Fire Sieg",
-      "match": "Chicago Fire – Vancouver Whitecaps",
-      "key": "1607-1603"
     },
     {
       "wallet": "0x0056884b9bdd3b8bb9472b4c218754ee1b2fa7f7",
@@ -1165,6 +1156,15 @@
       "key": "1595-1606"
     },
     {
+      "wallet": "0x8d0c8253703b8febbe53f45d182671c5385dc90a",
+      "usd": 22.0,
+      "shares": 50.0,
+      "side": "home",
+      "pick": "Chicago Fire Sieg",
+      "match": "Chicago Fire – Vancouver Whitecaps",
+      "key": "1607-1603"
+    },
+    {
       "wallet": "0x2b5920274740ca61745eeb077587bf5bb4ff9db6",
       "usd": 22.0,
       "shares": 48.0,
@@ -1206,9 +1206,9 @@
       "netFlowUsd": 2340.0,
       "buyUsd": 2340.0,
       "sellUsd": 0.0,
-      "hoursToKickoff": 312.3
+      "hoursToKickoff": 311.5
     }
   ],
   "emptyReason": null,
-  "updatedAt": "2026-07-26T20:13:35.612391+00:00"
+  "updatedAt": "2026-07-26T20:59:32.782502+00:00"
 }
