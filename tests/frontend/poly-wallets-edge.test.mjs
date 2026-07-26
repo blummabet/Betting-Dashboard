@@ -102,3 +102,24 @@ test('Edge-Board: Fern-Spiel (>96h) fällt raus, imminentes bleibt (Lucas: „ü
   assert.match(html, /NearzzTeam/, 'imminentes Spiel (50h) muss im Edge-Board stehen');
   assert.doesNotMatch(html, /FarzzTeam/, 'Fern-Spiel (500h, kein Poly-Geld) darf NICHT erscheinen');
 });
+
+// 26.07.2026 (Lucas: „Unterreiter ohne Inhalt aufräumen"). Der Datensatz-Detail-Divider
+// („↓ … in deinem aktiven Bewerb") wurde bisher immer emittiert — auch wenn ALLE Kind-Boards
+// leer waren → verwaiste Überschrift ohne Inhalt. Jetzt: Divider nur bei echtem Kind-Inhalt.
+test('leere Detail-Boards → KEIN verwaister Divider (Chancen)', async () => {
+  const html = await render({}, 'edge');
+  assert.doesNotMatch(html, /Chancen in deinem aktiven Bewerb/,
+    'Divider darf ohne Kind-Inhalt nicht erscheinen');
+});
+
+test('leere Detail-Boards → KEIN verwaister Divider (Whales)', async () => {
+  const html = await render({}, 'whales');
+  assert.doesNotMatch(html, /in deinem aktiven Bewerb/,
+    'Whale-Detail-Divider darf ohne Kind-Inhalt nicht erscheinen');
+});
+
+test('Divider erscheint wieder, sobald ein Detail-Board Inhalt hat', async () => {
+  const html = await render({ 'mls_poly_settlement.json': { gaps: [
+    { match: 'LA vs SEA', markt: '1X2', endstand: '2:0', gewinnerPreis: 0.94, gapPP: 6, vol: 12000 }] } }, 'edge');
+  assert.match(html, /Chancen in deinem aktiven Bewerb/, 'mit Inhalt muss der Divider da sein');
+});

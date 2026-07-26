@@ -21,6 +21,7 @@ Umgebungsvariablen:
 """
 
 import json
+from tg_safe import safe_flag
 import os
 import re
 import urllib.request
@@ -465,7 +466,7 @@ def build_morning_card(wm: dict, target_date: str, lang: str = "de") -> str | No
 
         _hn = I18N.team_name(m.get("home"), m["homeName"], lang)
         _an = I18N.team_name(m.get("away"), m["awayName"], lang)
-        lines.append(f"{m['homeFlag']} <b>{_hn}</b> vs {m['awayFlag']} <b>{_an}</b>")
+        lines.append(f"{safe_flag(m['homeFlag'])} <b>{_hn}</b> vs {safe_flag(m['awayFlag'])} <b>{_an}</b>")
         venue_str = short_venue(m["venue"])
         _uhr = " Uhr" if lang == "de" else ""
         lines.append(f"📅 {m['dispTime']}{_uhr}{' · ' + venue_str if venue_str else ''}")
@@ -689,7 +690,7 @@ def build_recap_card(wm: dict, target_date: str, lang: str = "de") -> str | None
         _hid, _aid = (_pp[-2], _pp[-1]) if len(_pp) >= 2 else ("", "")
         _hn = I18N.team_name(_hid, fix_info['homeName'], lang)
         _an = I18N.team_name(_aid, fix_info['awayName'], lang)
-        lines.append(f"{fix_info['homeFlag']} {_hn} vs {fix_info['awayFlag']} {_an}")
+        lines.append(f"{safe_flag(fix_info['homeFlag'])} {_hn} vs {safe_flag(fix_info['awayFlag'])} {_an}")
         for p, result in pick_results:
             stake = _pick_stake(p)   # BET €10 / ABWÄGEN €5
             fac = p.get("resultStakeFactor", 1.0)  # 0.5 bei AH-Viertel-Halb-Ergebnis

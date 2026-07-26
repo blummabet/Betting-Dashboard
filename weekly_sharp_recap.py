@@ -98,13 +98,13 @@ def _closing_odds(key: str, side: str, close: dict, snaps: list):
 def analyze(moves, hist, close, cutoff):
     recent = [m for m in moves if _iso(m["ts"]) >= cutoff]
     counts = {"steam": 0, "cumul": 0, "sharp": 0}
-    rows   = []          # (maxShift, name, side, shift, clv|None)
+    rows   = []          # {abs, name, side, shift, clv, e, c}
     clvs   = []
     for m in recent:
         counts[m.get("type", "sharp")] = counts.get(m.get("type", "sharp"), 0) + 1
         side, sh = _steamed_side(m)
         hn = det.team_info(json_wm, m["homeId"], m["awayId"])[1]
-        clv = None
+        clv = e = co = None
         if side:
             snaps = hist.get(m["key"]) or []
             e = _entry_odds(snaps, side, _iso(m["ts"])) if snaps else None
@@ -113,8 +113,10 @@ def analyze(moves, hist, close, cutoff):
             if ei and ci:
                 clv = (ci - ei) * 100.0
                 clvs.append(clv)
-        rows.append((abs(m.get("maxShift", 0) or 0), hn, side, m.get("maxShift", 0) or 0, clv))
-    rows.sort(key=lambda r: r[0], reverse=True)
+        mx = m.get("maxShift", 0) or 0
+        rows.append({"abs": abs(mx), "name": hn, "side": side,
+                     "shift": mx, "clv": clv, "e": e, "c": co})
+    rows.sort(key=lambda r: r["abs"], reverse=True)
     held = sum(1 for c in clvs if c > CLV_EPS)
     return {
         "n": len(recent), "counts": counts, "rows": rows,
@@ -124,21 +126,33 @@ def analyze(moves, hist, close, cutoff):
     }
 
 
+SIDE_LONG = {"hw": "Heimsieg", "dr": "Unentschieden", "aw": "Auswärtssieg"}
+
 def _clv_mark(clv: float) -> str:
     if clv > CLV_EPS:  return "✅"
     if clv < -CLV_EPS: return "❌"
     return "➖"
 
+def _verdict_words(clv):
+    """Klartext-Urteil für die freundliche Form."""
+    if clv is None:      return ("•", "noch offen")
+    if clv > CLV_EPS:    return ("✅", "bestätigt")
+    if clv < -CLV_EPS:   return ("❌", "drehte zurück")
+    return ("➖", "unverändert")
+
 
 # ── Nachricht ───────────────────────────────────────────────────────────────────
 def build_message(stats, start, end) -> str:
-    c = stats["counts"]
+    """Freundliche Form: echte Quoten statt pp, Alltagssprache, ohne Fachjargon.
+    25.07.2026 (Lucas: „so, dass es auch jemand versteht") — Zielgruppe Telegram-Gruppe."""
     L = [
-        f"📊 <b>Sharp-Radar Wochenrückblick — {DS_LABEL}</b>",
+        f"📊 <b>Sharp-Radar — die Woche in Kürze ({DS_LABEL})</b>",
         f"{_fmt_range(start, end)}",
         "",
-        f"🔔 <b>{stats['n']} Move(s)</b> erkannt "
-        f"({c.get('steam',0)} Steam · {c.get('cumul',0)} Drift · {c.get('sharp',0)} Sharp)",
+        "Wir beobachten, wo plötzlich viel Geld auf eine Seite fließt und die Quote "
+        "dadurch kippt — solche Bewegungen kommen oft von Leuten, die wissen, was sie tun.",
+        "",
+        f"🔔 <b>Diese Woche: {stats['n']} solcher Bewegungen.</b>",
     ]
 
     if stats["clv_n"]:
@@ -146,29 +160,35 @@ def build_message(stats, start, end) -> str:
         avg  = stats["clv_avg"]
         L += [
             "",
-            f"🎯 <b>CLV-Check</b> ({stats['clv_n']} mit Closing-Linie)",
-            f"Bewegung hielt bis Close: <b>{stats['clv_held']}/{stats['clv_n']} ({rate:.0f}%)</b>",
-            f"Ø CLV: <b>{avg:+.2f}pp</b>",
+            "Der Test ist simpel: Läuft die Quote bis zum Anpfiff weiter in dieselbe "
+            "Richtung? Dann lag das frühe Geld richtig — man hätte die bessere Quote "
+            "bekommen als alle, die erst kurz vor dem Spiel getippt haben.",
+            "",
+            f"✅ Das war bei <b>{stats['clv_held']} von {stats['clv_n']} Spielen</b> so "
+            f"({rate:.0f}%).",
         ]
-        # Ehrliche Einordnung — kein Overclaiming (kleine MLS-Märkte = oft Rauschen).
         if rate >= 58 and avg > 0.3:
-            L.append("→ Die gemeldeten Moves trugen diese Woche Edge. ✅")
+            L.append("Eine starke Woche — die früh erkannten Bewegungen lagen meist richtig.")
         elif rate <= 52 or avg < -0.3:
-            L.append("→ Diese Woche war der Steam eher Rauschen — vorsichtig folgen.")
+            L.append("Diese Woche eher durchwachsen — die Bewegungen waren klein und oft "
+                     "Zufall. Richtig spannend wird's mit den großen Ligen ab August.")
         else:
-            L.append("→ Gemischt: Signal vorhanden, aber dünn.")
+            L.append("Solide, aber kein klares Bild. In kleinen Märkten sind viele "
+                     "Bewegungen noch Zufall — mit den großen Ligen ab August wird's "
+                     "aussagekräftiger.")
 
-    top = [r for r in stats["rows"] if r[2]][:5]   # nur mit klarer gesteamter Seite
+    # Pushes (unverändert, |CLV|≤EPS) raus — für Laien verwirrend als „auffällige" Bewegung.
+    top = [r for r in stats["rows"] if r["side"] and r["e"] and r["c"]
+           and r["clv"] is not None and abs(r["clv"]) > CLV_EPS][:3]
     if top:
-        L += ["", "🔥 <b>Größte Moves</b>"]
-        for i, (_, name, side, shift, clv) in enumerate(top, 1):
-            tag = ""
-            if clv is not None:
-                tag = f" · CLV {clv:+.1f}pp {_clv_mark(clv)}"
-            L.append(f"{i}. {name} ({SIDE_DE.get(side, side)}) {shift:+.1f}pp{tag}")
+        L += ["", "🔥 <b>Die auffälligsten Bewegungen:</b>"]
+        for r in top:
+            mark, word = _verdict_words(r["clv"])
+            L.append(f"{mark} {r['name']} ({SIDE_LONG.get(r['side'], r['side'])}): "
+                     f"Quote {r['e']:.2f} → {r['c']:.2f} — {word}")
 
-    L += ["", "<i>CLV = Closing Line Value. „Hielt bis Close“ = die Bewegung lief weiter, "
-          "man hätte die Linie geschlagen.</i>"]
+    L += ["", "<i>Fallende Quote = mehr Geld auf diese Seite. Bleibt sie bis zum "
+          "Anpfiff unten, lag das frühe Geld richtig.</i>"]
     return "\n".join(L)
 
 

@@ -590,10 +590,24 @@ def _parse_ts(ts_str: str | None) -> datetime | None:
 
 
 # ── Telegram Card Builder ─────────────────────────────────────────────────────
+# ── Telegram-sichere Team-Darstellung ──────────────────────────────────────────
+# Klub-Datensätze (liga/mls) liefern als "flag" ein <img>-Logo fürs Dashboard.
+# Telegrams HTML-Modus erlaubt aber NUR b/i/a/code/... — <img> → HTTP 400 → Alert
+# verschwindet lautlos. Für Nicht-WM daher neutrales ⚽ statt Logo. WM = echte Emoji.
+_DS_FOOTER = {"wm": "WM 2026", "liga": "Top-5-Ligen", "mls": "MLS"}.get(
+    D.active_dataset(), D.active_dataset().upper())
+
+def _display_flag(flag: str) -> str:
+    """Telegram-sichere Flagge — delegiert an tg_safe.safe_flag (Single Source)."""
+    from tg_safe import safe_flag
+    return safe_flag(flag)
+
+
 def build_alert_card(move: dict, wm: dict) -> str:
     home_id  = move["home_id"]
     away_id  = move["away_id"]
     hf, hn, af, an = team_info(wm, home_id, away_id)
+    hf, af = _display_flag(hf), _display_flag(af)
     g_date   = match_date(wm, home_id, away_id)
     prev     = move["prev"]
     curr     = move["curr"]
@@ -682,7 +696,7 @@ def build_alert_card(move: dict, wm: dict) -> str:
     else:
         lines.append(f"\n📚 Bookmaker: {bk}")
 
-    lines.append("\n🤖 CocoBet Sharp Radar · WM 2026")
+    lines.append(f"\n🤖 CocoBet Sharp Radar · {_DS_FOOTER}")
     return "\n".join(lines)
 
 

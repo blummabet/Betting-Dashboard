@@ -15,6 +15,7 @@ recap löst sie nach Spielende auf. TikTok-safe (keine Quoten/€). Dataset-awar
 Env: TELEGRAM_TOKEN, TELEGRAM_CHAT_ID (Public), TG_STREAK_MODE=watch|recap, SKIP_TELEGRAM=true.
 """
 from __future__ import annotations
+from tg_safe import safe_flag
 
 import json
 import os
@@ -150,7 +151,7 @@ def build_watch(streaks: list, wm: dict, watched: dict, today: str) -> list:
 
 def _watch_msg(s: dict, nx: dict) -> str:
     icon = _ICON.get(s.get("type"), "🔥")
-    flag = s.get("flag") or ""
+    flag = safe_flag(s.get("flag"))
     phrase = s.get("market") or _PHRASE.get(s.get("type"), "Serie")
     lines = [f"🔥 <b>Serien-Watch</b>",
              f"{flag} <b>{s.get('team')}</b> geht mit <b>{s.get('length')}× {phrase}</b> "

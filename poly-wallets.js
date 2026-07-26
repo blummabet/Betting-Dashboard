@@ -459,24 +459,29 @@ function _pwRender(){
     h+=_pwGlobalWhales(_pwCache.broadLive);
     if(showDs&&hasPoly){
       // Datensatz-Detail (MLS = ⚽ Fußball): Konzentration, Einstiegsqualität, jüngste Trades.
-      h+=_pwDsDivider(f,'Wale & Smart-Money in deinem aktiven Bewerb');
-      h+=_pwSmartConcentration(smart,prices,teams);
-      h+=_pwWhaleEntryQuality(ledger);
-      h+=_pwFlowTape(wallets,teams);
-      h+=_pwExitWatch(wallets,teams);
+      // 26.07.2026 (Lucas: „aufräumen"): Kinder zuerst sammeln — Divider nur, wenn wirklich etwas
+      // darunter steht (sonst verwaiste Überschrift ohne Inhalt). Respektiert „keine leeren Kästen".
+      let _ds='';
+      _ds+=_pwSmartConcentration(smart,prices,teams);
+      _ds+=_pwWhaleEntryQuality(ledger);
+      _ds+=_pwFlowTape(wallets,teams);
+      _ds+=_pwExitWatch(wallets,teams);
+      if(_ds) h+=_pwDsDivider(f,'Wale & Smart-Money in deinem aktiven Bewerb')+_ds;
     }
   }else{
     // 🎯 Chancen: GLOBALE Edge (Poly vs Pinnacle, alle Sportarten) zuerst.
     h+=_pwGlobalEdge(_pwCache.crossSport);
     if(showDs&&hasPoly){
-      h+=_pwDsDivider(f,'Chancen in deinem aktiven Bewerb');
-      h+=_pwSettlementBoard(settlement,teams);
-      h+=_pwCoherenceBoard(coherence);
+      // 26.07.2026 (Lucas: „aufräumen"): Kinder erst sammeln, Divider nur bei echtem Inhalt.
+      let _ds='';
+      _ds+=_pwSettlementBoard(settlement,teams);
+      _ds+=_pwCoherenceBoard(coherence);
       if(!noAnchor){
-        h+=_pwScatterSection(edges);
-        h+=_pwEdgeBoard(edges,teams,wallets,hist);
-        drawScatter=true;
+        const _sc=_pwScatterSection(edges), _eb=_pwEdgeBoard(edges,teams,wallets,hist);
+        _ds+=_sc+_eb;
+        if(_sc||_eb) drawScatter=true;
       }
+      if(_ds) h+=_pwDsDivider(f,'Chancen in deinem aktiven Bewerb')+_ds;
     }
   }
   panel.innerHTML=h;

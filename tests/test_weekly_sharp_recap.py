@@ -114,5 +114,39 @@ class TestWeekDedup(unittest.TestCase):
             self.assertFalse(R._already_posted("2026-W31"))
 
 
+class TestVerdictWords(unittest.TestCase):
+    def test_words(self):
+        self.assertEqual(R._verdict_words(None),  ("•", "noch offen"))
+        self.assertEqual(R._verdict_words(1.0),   ("✅", "bestätigt"))
+        self.assertEqual(R._verdict_words(-1.0),  ("❌", "drehte zurück"))
+        self.assertEqual(R._verdict_words(0.0),   ("➖", "unverändert"))
+
+
+class TestBuildMessageFriendly(unittest.TestCase):
+    def test_shows_real_odds_and_verdict_no_jargon(self):
+        from datetime import datetime, timezone
+        stats = {
+            "n": 5, "counts": {"steam": 1, "cumul": 3, "sharp": 1},
+            "clv_n": 4, "clv_held": 3, "clv_hold_rate": 75.0, "clv_avg": 0.9,
+            "rows": [
+                {"abs": 4.0, "name": "Philadelphia Union", "side": "hw",
+                 "shift": 4.0, "clv": 3.4, "e": 1.93, "c": 1.81},
+                {"abs": 3.0, "name": "Houston Dynamo", "side": "aw",
+                 "shift": 3.0, "clv": -1.8, "e": 4.52, "c": 4.91},
+                {"abs": 5.0, "name": "Push FC", "side": "dr",
+                 "shift": 5.0, "clv": 0.0, "e": 3.37, "c": 3.37},
+            ],
+        }
+        msg = R.build_message(stats, datetime(2026,7,19,tzinfo=timezone.utc),
+                              datetime(2026,7,26,tzinfo=timezone.utc))
+        self.assertIn("Quote 1.93 → 1.81", msg)
+        self.assertIn("bestätigt", msg)
+        self.assertIn("3 von 4 Spielen", msg)
+        import re
+        self.assertIsNone(re.search(r"\d\s*pp", msg))   # kein „+3.4pp"-Jargon
+        self.assertNotIn("CLV", msg)
+        self.assertNotIn("Push FC", msg)
+
+
 if __name__ == "__main__":
     unittest.main()
