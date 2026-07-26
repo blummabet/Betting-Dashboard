@@ -1,0 +1,77 @@
+name: 📊 Sharp-Radar Wochenrückblick (Telegram)
+
+# 25.07.2026 (Lucas: „Eventuell am Ende der Woche ein Rückblick"). Fasst die Woche im Trades-Channel
+# zusammen: wie viele Moves erkannt, und — der eigentliche Wert — trugen sie CLV (hielt die Bewegung
+# bis zum Close?). Liest NUR committete Daten (Moves-Log + Odds-History + Closing-Linien), kein Fetch
+# → quota-neutral. Läuft Montag früh UTC: erfasst das komplette Wochenende inkl. später US-Sonntag-MLS.
+# 7-Tage-Fenster + exakt wöchentlicher Cron ⇒ aufeinanderfolgende Rückblicke partitionieren sauber
+# (kein Move doppelt, keiner verloren). Wochen-Dedup via {ds}_recap_state.json (Dispatch-/Retry-sicher).
+on:
+  schedule:
+    - cron: '0 7 * * 1'   # Montag 07:00 UTC (= 09:00 CEST) — Wochenende vollständig abgedeckt
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Wochen-Dedup umgehen (erneut posten)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+jobs:
+  recap:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - ds: liga
+            profile: liga_default
+          - ds: mls
+            profile: mls_default
+    concurrency:
+      group: weekly-recap-${{ matrix.ds }}
+      cancel-in-progress: false
+    env:
+      COCOBET_DATASET: ${{ matrix.ds }}
+      COCOBET_PROFILE: ${{ matrix.profile }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: 📦 Dependencies
+        run: pip install -r requirements.txt
+
+      - name: 📊 Wochenrückblick posten
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+          FORCE_RECAP: ${{ (github.event_name == 'workflow_dispatch' && inputs.force) && '1' || '0' }}
+        run: python weekly_sharp_recap.py
+
+      - name: 💾 Recap-State committen (nur wenn geändert)
+        run: |
+          git config user.name  "CocoBet Bot"
+          git config user.email "bot@cocobet.local"
+          git add ${{ matrix.ds }}_recap_state.json 2>/dev/null || true
+          if git diff --staged --quiet; then
+            echo "Kein State-Update — nichts zu committen."; exit 0
+          fi
+          git commit -m "📊 ${{ matrix.ds }} Wochenrückblick-State $(date -u +'%d.%m.%Y') [skip ci]"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          for attempt in 1 2 3 4 5; do
+            git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+            CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null)
+            if [ -n "$CONFLICTS" ]; then
+              echo "$CONFLICTS" | while read f; do git checkout --ours -- "$f"; git add "$f"; done
+              git diff --staged --quiet || git commit -m "🔧 auto-resolve recap-state merge"
+            fi
+            if git push 2>&1; then echo "✅ Push nach Versuch $attempt"; exit 0; fi
+            echo "⚠️ Push $attempt fehlgeschlagen — retry…"; sleep $((attempt * 3))
+          done
+          echo "❌ Push fehlgeschlagen"; exit 1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
