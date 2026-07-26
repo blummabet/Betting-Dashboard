@@ -3011,6 +3011,11 @@ function renderSharpRadar() {
     };
 
     // ── Build fixture data with total movement ──────────────────────────────
+    // (26.07.2026, Lucas) Zwei Fenster: seit Opening (snaps[0]) UND letzte 3 Tage. window._radarWin
+    // steuert, welches sortiert/gefiltert wird; beide Werte stehen pro Card (Reifung vs. echtes Steam).
+    const _RADAR_RECENT_DAYS = 3;
+    const _radarWin = window._radarWin === 'recent' ? 'recent' : 'opening';
+    const _recCutoff = Date.now() - _RADAR_RECENT_DAYS * 86400000;
     const wmFxData = [];
     for (const grp of Object.values(_wmSharpData.groups || {})) {
       for (const fx of (grp.fixtures || [])) {
@@ -3029,15 +3034,29 @@ function renderSharpRadar() {
           { key: 'u25',   label: 'U2.5' },
           { key: 'bttsY', label: 'BTTS' },
         ];
-        const shifts = {};
-        let maxAbsShift = 0;
-        for (const {key: fk, label} of fields) {
-          const s = _ppShift(first[fk], last[fk]);
-          shifts[fk] = s;
-          if (s != null && Math.abs(s) > maxAbsShift) maxAbsShift = Math.abs(s);
+        // Recent-Baseline: letzter Snapshot, der >= _RADAR_RECENT_DAYS alt ist (sonst Opening).
+        let _recBase = first;
+        for (let _i = snaps.length - 1; _i >= 0; _i--) {
+          const _t = Date.parse(snaps[_i] && snaps[_i].ts);
+          if (!isNaN(_t) && _t <= _recCutoff) { _recBase = snaps[_i]; break; }
         }
+        const openShifts = {}, recShifts = {};
+        let openMax = 0, recMax = 0;
+        for (const {key: fk} of fields) {
+          const _so = _ppShift(first[fk], last[fk]);
+          openShifts[fk] = _so;
+          if (_so != null && Math.abs(_so) > openMax) openMax = Math.abs(_so);
+          const _sr = _ppShift(_recBase[fk], last[fk]);
+          recShifts[fk] = _sr;
+          if (_sr != null && Math.abs(_sr) > recMax) recMax = Math.abs(_sr);
+        }
+        const _ot = Date.parse(first && first.ts);
+        const openAgeD = isNaN(_ot) ? null : Math.floor((Date.now() - _ot) / 86400000);
+        const shifts = _radarWin === 'recent' ? recShifts : openShifts;
+        const maxAbsShift = _radarWin === 'recent' ? recMax : openMax;
         wmFxData.push({
           key, fx, homeT, awayT, snaps, first, last, shifts, maxAbsShift,
+          openShifts, openMax, recShifts, recMax, openAgeD, radarWin: _radarWin,
           snapCount: snaps.length,
         });
       }
@@ -3060,7 +3079,15 @@ function renderSharpRadar() {
       const sparkFilterBar = `<div style="display:flex;align-items:center;gap:6px;margin-bottom:10px;flex-wrap:wrap">
         ${actCount  > 0 ? `<span style="background:rgba(248,81,73,.12);border:1px solid rgba(248,81,73,.3);border-radius:10px;padding:1px 8px;font-size:10px;font-weight:800;color:#f85149">🚨 ${actCount} ACT ≥4pp</span>` : ''}
         ${watchCount > 0 ? `<span style="background:rgba(227,179,65,.10);border:1px solid rgba(227,179,65,.25);border-radius:10px;padding:1px 8px;font-size:10px;font-weight:700;color:#e3b341">👁 ${watchCount} WATCH ≥2pp</span>` : ''}
-        <span style="font-size:10px;color:#484f58;margin-left:auto">Filter:</span>
+        <span style="font-size:10px;color:#484f58;margin-left:auto">Fenster:</span>
+        ${[['Seit Opening','opening'],['Letzte 3 Tage','recent']].map(([lbl,win]) => {
+          const active = _radarWin === win;
+          return `<button onclick="window._radarWin='${win}';renderSharpRadar()"
+            style="background:${active ? 'rgba(88,166,255,.14)' : 'rgba(255,255,255,.03)'};border:1px solid ${active ? 'rgba(88,166,255,.45)' : '#30363d'};
+                   border-radius:10px;color:${active ? '#58a6ff' : '#6e7681'};font-size:10px;font-weight:${active ? '800' : '500'};
+                   padding:3px 10px;cursor:pointer;font-family:inherit;transition:all .12s">${lbl}</button>`;
+        }).join('')}
+        <span style="font-size:10px;color:#484f58">Filter:</span>
         ${[['Alle', 0], ['≥2pp', 2], ['≥4pp', 4]].map(([lbl, thr]) => {
           const active = window._wmSparkFilter === thr;
           return `<button onclick="window._wmSparkFilter=${thr};renderSharpRadar()"
@@ -3072,7 +3099,7 @@ function renderSharpRadar() {
 
       const sparkCardsHtml = filteredSparkFx.length === 0
         ? `<div style="padding:20px;text-align:center;color:#484f58;font-size:12px">Keine Bewegung über ${window._wmSparkFilter}pp — Filter ändern um alle Spiele zu sehen</div>`
-        : filteredSparkFx.map(({key, fx, homeT, awayT, snaps, shifts, maxAbsShift, snapCount}) => {
+        : filteredSparkFx.map(({key, fx, homeT, awayT, snaps, shifts, maxAbsShift, snapCount, openMax, recMax, openAgeD, radarWin}) => {
         const [yr, mo, dy] = fx.date.split('-');
         const dateFmt = `${dy}.${mo}.${yr.slice(2)}`;
         const moveCol = _shiftCol(maxAbsShift);
@@ -3139,6 +3166,11 @@ function renderSharpRadar() {
             </div>
           </div>
           <div style="display:flex;gap:5px;flex-wrap:wrap">${chips}</div>
+          <div style="font-size:10px;color:#6e7681;margin-top:6px">${
+            radarWin === 'recent'
+              ? `📈 seit Opening: ${openMax}pp${openAgeD != null ? ` · ⏱ ${openAgeD}d alt` : ''}`
+              : `⚡ letzte ${_RADAR_RECENT_DAYS} Tage: ${recMax}pp`
+          }</div>
           ${actionBar}
         </div>`;
         }).join('');
