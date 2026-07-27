@@ -9,7 +9,7 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 import telegram_streak_watch as W
 
 
-def _streak(team="Frankreich", tid="FRA", stype="over25", length=6, state="intakt",
+def _streak(team="Frankreich", tid="FRA", stype="over25", length=12, state="intakt",
             venue="all", date="2026-07-04", opp="Paraguay", pk="KO-R16-FRA-PRY", xg=None):
     s = {"team": team, "teamId": tid, "type": stype, "market": f"{stype}", "length": length,
          "venue": venue, "continuation": {"state": state}, "flag": "🇫🇷", "xgBacked": xg}
@@ -31,7 +31,7 @@ class TestWatch(unittest.TestCase):
         self.assertEqual(W.build_watch([_streak(date="2026-07-09")], {}, {}, "2026-07-04"), [])
 
     def test_zu_kurz_uebersprungen(self):
-        self.assertEqual(W.build_watch([_streak(length=4)], {}, {}, "2026-07-04"), [])
+        self.assertEqual(W.build_watch([_streak(length=9)], {}, {}, "2026-07-04"), [])   # 9 < 10 → raus
 
     def test_nicht_intakt_uebersprungen(self):
         self.assertEqual(W.build_watch([_streak(state="wackelt")], {}, {}, "2026-07-04"), [])
