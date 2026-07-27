@@ -22,7 +22,9 @@ Ein HTML-Post je frischer Großposition in den Trades-Channel (TELEGRAM_TRADES_C
 
 ## Env
   TELEGRAM_TOKEN / TELEGRAM_TRADES_CHAT_ID   — ohne Token = Vorschau (stdout)
-  WHALE_MIN_USD        — Mindestgröße (Default 5000)
+  WHALE_MIN_USD         — Mindestgröße OHNE Track-Record (Default 25000)
+  WHALE_MIN_USD_TRACKED — Mindestgröße für SMARTE Wallets (n≥MIN_TR & ≥MIN_HITRATE) (Default 5000)
+  WHALE_MIN_HITRATE     — Mindest-Trefferquote fürs smarte Band (Default 0.5)
   WHALE_FRESH_DAYS     — nur Positionen, die zuletzt in N Tagen eröffnet/aufgestockt (Default 2)
   WHALE_MIN_TR         — ab wie vielen Auflösungen ein Track-Record gezeigt wird (Default 3)
   WHALE_MAX_ALERTS     — max Alerts je Lauf (Default 8)
@@ -43,7 +45,11 @@ LOG_FILE   = BASE / "telegram-log.json"
 TELEGRAM_TOKEN = (os.environ.get("TELEGRAM_TOKEN") or "").strip()
 CHAT_ID        = (os.environ.get("TELEGRAM_TRADES_CHAT_ID") or "").strip()
 
-MIN_USD     = float(os.environ.get("WHALE_MIN_USD")   or 5000)
+# 26.07.2026 (Lucas: „$5K ohne Record ist Rauschen"): gestaffelt. Ohne Track-Record zählt NUR
+# Größe → hohe Schwelle. Mit Record (n≥MIN_TR) ist es smart → niedrige Schwelle.
+MIN_USD_UNTRACKED = float(os.environ.get("WHALE_MIN_USD")         or 25000)
+MIN_USD_TRACKED   = float(os.environ.get("WHALE_MIN_USD_TRACKED") or 5000)
+MIN_HITRATE       = float(os.environ.get("WHALE_MIN_HITRATE")     or 0.5)   # „smart" = Record UND ≥50% Treffer
 FRESH_DAYS  = int(os.environ.get("WHALE_FRESH_DAYS")  or 2)
 MIN_TR      = int(os.environ.get("WHALE_MIN_TR")      or 3)
 MAX_ALERTS  = int(os.environ.get("WHALE_MAX_ALERTS")  or 8)
@@ -189,13 +195,19 @@ def _log_send(preview, meta):
 def select(track: dict, seen: dict, now: datetime):
     """Liefert (Liste alertwürdiger Positionen, aktualisierter seen-Store)."""
     openpos = (track or {}).get("open") or {}
+    scores  = (track or {}).get("scores") or {}
     items = openpos.items() if isinstance(openpos, dict) else []
     out = []
     for pkey, pos in items:
         if not isinstance(pos, dict):
             continue
         usd = float(pos.get("usd") or 0)
-        if usd < MIN_USD:
+        # Gestaffelte Schwelle: niedrig NUR für bewiesen ordentliche Wallets (Record UND ≥50%
+        # Treffer = smart); ein schlechter Record (z.B. 0/4) ist KEIN Freifahrtschein → hohe Schwelle.
+        _s = scores.get(pos.get("wallet"))
+        _n = (_s.get("n") or 0) if isinstance(_s, dict) else 0
+        _smart = _n >= MIN_TR and ((_s.get("wins") or 0) / _n) >= MIN_HITRATE
+        if usd < (MIN_USD_TRACKED if _smart else MIN_USD_UNTRACKED):
             continue
         # Frische: firstTs innerhalb FRESH_DAYS (kein Alt-Flut beim ersten Lauf)
         ft = _iso(pos.get("firstTs"))
@@ -226,7 +238,7 @@ def main():
     now    = datetime.now(timezone.utc)
 
     cand = select(track, seen, now)
-    print(f"  {len(cand)} alertwürdige Position(en) (≥ {_usd(MIN_USD)}, frisch/aufgestockt)")
+    print(f"  {len(cand)} alertwürdige Position(en) (≥ {_usd(MIN_USD_TRACKED)} mit / {_usd(MIN_USD_UNTRACKED)} ohne Record, frisch)")
 
     now_iso = now.strftime("%Y-%m-%dT%H:%M:%SZ")
     sent = 0

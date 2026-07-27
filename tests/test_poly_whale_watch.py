@@ -38,37 +38,58 @@ class TestTrackRecord(unittest.TestCase):
 
 
 class TestSelect(unittest.TestCase):
-    def test_below_threshold_skipped(self):
-        track = {"open": {"a": _pos(4000)}}
+    # Gestaffelt: ohne Record Schwelle $25k, mit Record (n≥3) $5k.
+    def _tracked(self, wallet="0xREC"):
+        return {"scores": {wallet: {"n": 5, "wins": 3}}}
+
+    def test_untracked_below_25k_skipped(self):
+        track = {"open": {"a": _pos(20000)}}          # groß, aber ohne Record < $25k
         self.assertEqual(P.select(track, {}, NOW), [])
 
-    def test_fresh_big_included(self):
-        track = {"open": {"a": _pos(9000)}}
+    def test_untracked_big_included(self):
+        track = {"open": {"a": _pos(30000)}}
         got = P.select(track, {}, NOW)
-        self.assertEqual(len(got), 1); self.assertFalse(got[0][2])  # kein restock
+        self.assertEqual(len(got), 1); self.assertFalse(got[0][2])
+
+    def test_tracked_wallet_lower_threshold(self):
+        # dieselbe $6k-Position: mit Record gemeldet, ohne Record verworfen
+        pos = _pos(6000, wallet="0xREC")
+        tracked = {"open": {"a": pos}}; tracked.update(self._tracked())
+        self.assertEqual(len(P.select(tracked, {}, NOW)), 1)
+        self.assertEqual(P.select({"open": {"a": _pos(6000, wallet="0xNOREC")}}, {}, NOW), [])
+
+    def test_bad_record_no_free_pass(self):
+        # 0/4 (schlechter Record) bekommt NICHT die niedrige Schwelle → $6k verworfen
+        track = {"open": {"a": _pos(6000, wallet="0xBAD")},
+                 "scores": {"0xBAD": {"n": 4, "wins": 0}}}
+        self.assertEqual(P.select(track, {}, NOW), [])
+        # aber groß genug (≥$25k) kommt es trotzdem durch (reines Größen-Signal)
+        big = {"open": {"a": _pos(30000, wallet="0xBAD")},
+               "scores": {"0xBAD": {"n": 4, "wins": 0}}}
+        self.assertEqual(len(P.select(big, {}, NOW)), 1)
 
     def test_stale_unseen_skipped(self):
-        track = {"open": {"a": _pos(9000, ageDays=5)}}   # 5 Tage alt, nie gemeldet
+        track = {"open": {"a": _pos(30000, ageDays=5)}}   # groß genug, aber 5 Tage alt
         self.assertEqual(P.select(track, {}, NOW), [])
 
     def test_already_seen_skipped(self):
-        track = {"open": {"a": _pos(9000)}}
-        seen = {"a": {"usd": 9000}}
+        track = {"open": {"a": _pos(30000)}}
+        seen = {"a": {"usd": 30000}}
         self.assertEqual(P.select(track, seen, NOW), [])
 
     def test_restock_realerts(self):
-        track = {"open": {"a": _pos(15000)}}           # von 9000 → 15000 (≥ +50%)
-        seen = {"a": {"usd": 9000}}
+        track = {"open": {"a": _pos(45000)}}           # von 27000 → 45000 (≥ +50%)
+        seen = {"a": {"usd": 27000}}
         got = P.select(track, seen, NOW)
-        self.assertEqual(len(got), 1); self.assertTrue(got[0][2])  # restock=True
+        self.assertEqual(len(got), 1); self.assertTrue(got[0][2])
 
     def test_small_topup_not_realerted(self):
-        track = {"open": {"a": _pos(10000)}}           # von 9000 → 10000 (< +50%)
-        seen = {"a": {"usd": 9000}}
+        track = {"open": {"a": _pos(30000)}}           # von 27000 → 30000 (< +50%)
+        seen = {"a": {"usd": 27000}}
         self.assertEqual(P.select(track, seen, NOW), [])
 
     def test_sorted_by_size(self):
-        track = {"open": {"a": _pos(9000, side="A"), "b": _pos(30000, side="B")}}
+        track = {"open": {"a": _pos(30000, side="A"), "b": _pos(50000, side="B")}}
         got = P.select(track, {}, NOW)
         self.assertEqual(got[0][1]["side"], "B")   # größte zuerst
 
