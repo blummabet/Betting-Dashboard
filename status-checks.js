@@ -173,7 +173,9 @@ function _stRenderLearning(data, ledger, weights) {
     const fin = ['FT', 'AET', 'PEN'].includes(String(r.status || '').toUpperCase());
     if (!fin) return;
     finished++;
-    if (r.stats && typeof r.stats.homeXg === 'number') withXg++;
+    // 27.07.2026 (Lucas): xG-Feld tolerant — WM=homeXg, Liga/MLS=xgHome (sonst zeigt MLS 0/253).
+    const _xh = r.stats && (typeof r.stats.homeXg === 'number' ? r.stats.homeXg : r.stats.xgHome);
+    if (typeof _xh === 'number') withXg++;
   };
   if (data && data.groups) for (const g of Object.values(data.groups)) for (const fx of (g.fixtures || [])) _scan(fx);
   if (data && Array.isArray(data.koFixtures)) for (const fx of data.koFixtures) _scan(fx);

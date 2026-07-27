@@ -41,7 +41,8 @@ def _team_xg_totals(wm: dict) -> dict:
         st = r.get("stats") or {}
         xt = st.get("xgTotal")
         if xt is None:
-            hx, ax = st.get("homeXg"), st.get("awayXg")
+            hx = st.get("homeXg") if st.get("homeXg") is not None else st.get("xgHome")   # WM vs Liga/MLS
+            ax = st.get("awayXg") if st.get("awayXg") is not None else st.get("xgAway")
             xt = (hx + ax) if isinstance(hx, (int, float)) and isinstance(ax, (int, float)) else None
         if xt is None:
             return

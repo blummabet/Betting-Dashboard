@@ -1006,8 +1006,10 @@ def _review_facts(stats: dict, sh: int, sa: int) -> list:
         try: return int(round(float(v)))
         except (TypeError, ValueError): return None
     f = [f"⚽ Tore {sh}:{sa}"]
-    if stats.get("homeXg") is not None and stats.get("awayXg") is not None:
-        f.append(f"📊 xG {stats['homeXg']:.1f}:{stats['awayXg']:.1f}")
+    _xh = stats.get("homeXg") if stats.get("homeXg") is not None else stats.get("xgHome")
+    _xa = stats.get("awayXg") if stats.get("awayXg") is not None else stats.get("xgAway")
+    if _xh is not None and _xa is not None:
+        f.append(f"📊 xG {_xh:.1f}:{_xa:.1f}")
     sh_, sa_ = _i(stats.get("homeShots")), _i(stats.get("awayShots"))
     if sh_ is not None and sa_ is not None:
         f.append(f"🎯 Schüsse {sh_}:{sa_}")
@@ -1046,7 +1048,8 @@ def build_match_review_cards(wm: dict, today_iso: str) -> list:
             h, a = teams.get(hid, {}), teams.get(aid, {})
             flag_h, flag_a = h.get("flag", "🏳️"), a.get("flag", "🏳️")
             name_h, name_a = h.get("name", hid), a.get("name", aid)
-            xgh, xga = stats.get("homeXg"), stats.get("awayXg")
+            xgh = stats.get("homeXg") if stats.get("homeXg") is not None else stats.get("xgHome")
+            xga = stats.get("awayXg") if stats.get("awayXg") is not None else stats.get("xgAway")
             angle = _review_angle(sh, sa, xgh, xga)
             angle_label, accent, rgb = _REVIEW_ANGLES[angle]
             recap = _review_recap(angle, name_h, sh, name_a, sa, xgh, xga)

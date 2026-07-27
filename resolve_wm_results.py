@@ -728,8 +728,11 @@ def process_verdict(market: str, result_str: str, stats: dict | None) -> dict:
     if result_str not in ("WIN", "LOSS") or not stats:
         return {}
     xg_t = stats.get("xgTotal")
-    xg_h = stats.get("homeXg")
-    xg_a = stats.get("awayXg")
+    # 27.07.2026 (Lucas: „lernt MLS wirklich?"): Feldnamen-Divergenz — WM schreibt homeXg/awayXg,
+    # Liga/MLS schreibt xgHome/xgAway. Der Grader las nur die WM-Schreibweise → für MLS immer None
+    # → 1X2/DC/AH-Picks nie bewertet → Ledger leer → Gewichte lernten nichts. Beide tolerant lesen.
+    xg_h = stats.get("homeXg"); xg_h = stats.get("xgHome") if xg_h is None else xg_h
+    xg_a = stats.get("awayXg"); xg_a = stats.get("xgAway") if xg_a is None else xg_a
     if xg_t is None:
         return {}
     m = (market or "").lower()

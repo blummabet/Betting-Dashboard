@@ -57,6 +57,18 @@ class TestProcessVerdict(unittest.TestCase):
     def test_pending_returns_empty(self):
         self.assertEqual(self.pv("Über 2.5 Tore", "PENDING", self.stats), {})
 
+    def test_mls_field_convention_xghome_graded(self):
+        # 27.07.2026 (Lucas: „lernt MLS wirklich?"): Liga/MLS schreibt xgHome/xgAway statt
+        # homeXg/awayXg. Der Grader muss beide Konventionen gleich bewerten — sonst bleibt der
+        # MLS-Ledger leer und die Gewichte lernen nichts.
+        wm  = {"xgTotal": 3.0, "homeXg": 2.4, "awayXg": 0.6}
+        mls = {"xgTotal": 3.0, "xgHome": 2.4, "xgAway": 0.6}
+        self.assertEqual(self.pv("Heimsieg", "WIN", mls).get("processVerdict"),
+                         self.pv("Heimsieg", "WIN", wm).get("processVerdict"))
+        self.assertEqual(self.pv("Heimsieg", "WIN", mls).get("processVerdict"), "JUSTIFIED")
+        # DC X2 (Auswärts/Remis) bei klarer Heim-xG → Glück
+        self.assertEqual(self.pv("Doppelte Chance — X2", "WIN", mls).get("processVerdict"), "LUCKY")
+
 
 class TestOutcomeScore(unittest.TestCase):
     """update_signal_weights._process_outcome_score — prozess-justiert + Binär-Fallback."""
