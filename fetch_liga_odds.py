@@ -16,6 +16,7 @@ from __future__ import annotations
 import json
 import os
 import re
+import statistics
 import sys
 import unicodedata
 from datetime import datetime, timezone
@@ -263,6 +264,71 @@ def _extract_ah(outs: list, home_name: str, away_name: str) -> dict:
     return res
 
 
+# ── Multi-Book-Soft-Konsens (27.07.2026, Lucas: Status „Public single-book“) ──────
+# Der alte public_* nahm nur den ERSTEN verfügbaren Soft-Book (SOFT_PRIORITY[0], z.B. bet365) —
+# 1-Book-Rauschen, deshalb feuerte public_static_bias für MLS/Liga kaum. Die WM bekam via
+# fetch_wm_multibook_odds (API-Football /odds) einen Median-Konsens; für Klub-Ligen ist das
+# unnötig: TheOddsAPI liefert je Event ohnehin viele Bücher (regions=eu,uk). Wir mitteln also
+# über ALLE weichen Bücher der bereits geholten Antwort — kein Extra-Call, keine Zweitquelle,
+# gleiche Semantik wie WM ("Konsens (N Books)"). Sharp-Anker (Pinnacle, Betfair-Exchange) raus.
+_SHARP_BOOKS = {"pinnacle", "betfair_ex_eu", "betfair_ex_uk", "betfair"}
+
+
+def _soft_bookmakers(bks: list) -> list:
+    return [b for b in (bks or []) if (b.get("key") or "").lower() not in _SHARP_BOOKS]
+
+
+def _median_odd(vals: list):
+    vals = [float(v) for v in vals if v and float(v) > 1.0]
+    return round(statistics.median(vals), 3) if vals else None
+
+
+def _market_outcomes(bk: dict, market_key: str):
+    for m in (bk.get("markets") or []):
+        if m.get("key") == market_key and m.get("outcomes"):
+            return m["outcomes"]
+    return None
+
+
+def soft_consensus(bks: list, home_name: str, away_name: str):
+    """Median-Konsens der Soft-Books für public_* (1X2 + O/U 1.5/2.5/3.5 + BTTS).
+    Gibt (pub_dict, books_1x2, n_ou_books, n_btts_books). pub_dict enthält nur
+    gesetzte public_*-Felder. Orientierungs-agnostisch (per Name gemappt), rein/testbar."""
+    acc = {k: [] for k in ("hw", "dr", "aw", "o15", "u15", "o25", "u25",
+                           "o35", "u35", "bttsY", "bttsN")}
+    books_1x2, n_ou, n_btts = [], 0, 0
+    for b in _soft_bookmakers(bks):
+        key = (b.get("key") or "").lower()
+        h2h = _market_outcomes(b, "h2h")
+        if h2h:
+            hw, dr, aw = _map_1x2(h2h, home_name, away_name)
+            if hw and dr and aw:
+                acc["hw"].append(hw); acc["dr"].append(dr); acc["aw"].append(aw)
+                books_1x2.append(key)
+        tot = (_market_outcomes(b, "totals") or []) + (_market_outcomes(b, "alternate_totals") or [])
+        if tot:
+            ou = _extract_ou(tot)
+            if ou:
+                n_ou += 1
+                for kk, vv in ou.items():
+                    if vv:
+                        acc[kk].append(vv)
+        bt_outs = _market_outcomes(b, "btts")
+        if bt_outs:
+            bt = _extract_btts(bt_outs)
+            if bt:
+                n_btts += 1
+                for kk, vv in bt.items():
+                    if vv:
+                        acc[kk].append(vv)
+    pub = {}
+    for k, vals in acc.items():
+        m = _median_odd(vals)
+        if m is not None:
+            pub[f"public_{k}"] = m
+    return pub, books_1x2, n_ou, n_btts
+
+
 def extract_prices(event: dict, orientation: str, home_name: str, away_name: str) -> dict:
     """1X2 + O/U (1.5/2.5/3.5) + BTTS + AH-Leiter aus einem Event ziehen — Sharp + Public.
     Heim/Auswärts korrekt zugeordnet (orientierungs-agnostisch)."""
@@ -273,12 +339,15 @@ def extract_prices(event: dict, orientation: str, home_name: str, away_name: str
     hw, dr, aw = _map_1x2(outs, home_name, away_name)
     if hw and dr and aw:
         out.update({"hw": hw, "dr": dr, "aw": aw, "bookmaker": bk})
-    # ── Public/Soft-Konsens 1X2 (für public_static_bias + Soft-Bestätigung) ──
-    pbk, pouts = _best_book(bks, "h2h", priority=SOFT_PRIORITY)
-    phw, pdr, paw = _map_1x2(pouts, home_name, away_name)
-    if phw and pdr and paw:
-        out.update({"public_hw": phw, "public_dr": pdr, "public_aw": paw,
-                    "public_bookmaker": pbk})
+    # ── Public/Soft-Konsens: MEDIAN über ALLE Soft-Books (27.07.2026) statt Einzel-Book ──
+    _pub, _b1x2, _nou, _nbtts = soft_consensus(bks, home_name, away_name)
+    out.update(_pub)
+    if _pub.get("public_hw"):
+        out["public_bookmaker"] = (f"Konsens ({len(_b1x2)} Books)" if len(_b1x2) >= 2
+                                   else (_b1x2[0] if _b1x2 else "Soft-Book"))
+    if any(_pub.get(f"public_{k}") for k in ("o15", "o25", "o35", "bttsY", "bttsN")):
+        _n = max(_nou, _nbtts)
+        out["public_ou_bookmaker"] = f"Konsens ({_n} Books)" if _n >= 2 else "Soft-Book"
     # ── Betfair Exchange = 2. Sharp-Anker (Preis-Cross-Check, 28.06.2026, Lucas) ──
     # Eigenständig gezogen (NICHT nur als Fallback in BOOK_PRIORITY), um Pinnacle gegenzuchecken.
     _, bfouts = _best_book(bks, "h2h", priority=["betfair_ex_eu"])
@@ -289,20 +358,9 @@ def extract_prices(event: dict, orientation: str, home_name: str, away_name: str
     _, t_outs = _best_book(bks, "totals")
     _, at_outs = _best_book(bks, "alternate_totals")   # 1.5/3.5 (per-Event, flag-gated)
     out.update(_extract_ou((t_outs or []) + (at_outs or [])))
-    # ── Public/Soft-Konsens O/U (public_static_bias + lead_lag auf Tor-Linien) ──
-    _pt_bk, pt_outs = _best_book(bks, "totals", priority=SOFT_PRIORITY)
-    _, pat_outs = _best_book(bks, "alternate_totals", priority=SOFT_PRIORITY)
-    _pub_ou = _extract_ou((pt_outs or []) + (pat_outs or []), prefix="public_")
-    out.update(_pub_ou)
     # ── BTTS — Sharp ──
     _, b_outs = _best_book(bks, "btts")
     out.update(_extract_btts(b_outs))
-    # ── Public/Soft-Konsens BTTS ──
-    _pb_bk, pb_outs = _best_book(bks, "btts", priority=SOFT_PRIORITY)
-    _pub_btts = _extract_btts(pb_outs, prefix="public_")
-    out.update(_pub_btts)
-    if _pub_ou or _pub_btts:
-        out["public_ou_bookmaker"] = _pt_bk or _pb_bk
     # ── Asian Handicap (spreads) — Sharp-Leiter + diskrete Keys ──
     _, sp_outs = _best_book(bks, "spreads")
     out.update(_extract_ah(sp_outs, home_name, away_name))

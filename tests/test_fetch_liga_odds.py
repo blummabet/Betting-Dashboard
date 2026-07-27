@@ -167,6 +167,42 @@ class TestPublicConsensus(unittest.TestCase):
         self.assertEqual(p["public_hw"], 1.70)   # public = bet365
         self.assertEqual(p["public_bookmaker"], "bet365")
 
+    def test_public_median_ueber_mehrere_books(self):
+        # pinnacle (sharp, ignoriert) + 3 Soft-Books -> Median-Konsens, nicht 1 Book.
+        ev = {"home_team": "Liverpool", "away_team": "Chelsea", "bookmakers": [
+            {"key": "pinnacle", "markets": [{"key": "h2h", "outcomes": [
+                {"name": "Liverpool", "price": 1.80}, {"name": "Draw", "price": 3.6},
+                {"name": "Chelsea", "price": 4.5}]}]},
+            {"key": "bet365", "markets": [{"key": "h2h", "outcomes": [
+                {"name": "Liverpool", "price": 1.70}, {"name": "Draw", "price": 3.7},
+                {"name": "Chelsea", "price": 5.0}]}]},
+            {"key": "williamhill", "markets": [{"key": "h2h", "outcomes": [
+                {"name": "Liverpool", "price": 1.75}, {"name": "Draw", "price": 3.8},
+                {"name": "Chelsea", "price": 5.2}]}]},
+            {"key": "unibet", "markets": [{"key": "h2h", "outcomes": [
+                {"name": "Liverpool", "price": 1.90}, {"name": "Draw", "price": 3.9},
+                {"name": "Chelsea", "price": 5.5}]}]},
+        ]}
+        p = L.extract_prices(ev, "direct", "Liverpool", "Chelsea")
+        self.assertEqual(p["public_hw"], 1.75)   # median(1.70, 1.75, 1.90)
+        self.assertEqual(p["public_dr"], 3.8)    # median(3.7, 3.8, 3.9)
+        self.assertEqual(p["public_aw"], 5.2)    # median(5.0, 5.2, 5.5)
+        self.assertEqual(p["public_bookmaker"], "Konsens (3 Books)")
+
+    def test_betfair_exchange_nicht_im_public_konsens(self):
+        # Betfair-Exchange ist Sharp-Anker -> NICHT in den Soft-Konsens.
+        ev = {"home_team": "Bayern", "away_team": "Dortmund", "bookmakers": [
+            {"key": "betfair_ex_eu", "markets": [{"key": "h2h", "outcomes": [
+                {"name": "Bayern", "price": 1.50}, {"name": "Draw", "price": 4.5},
+                {"name": "Dortmund", "price": 6.0}]}]},
+            {"key": "bet365", "markets": [{"key": "h2h", "outcomes": [
+                {"name": "Bayern", "price": 1.60}, {"name": "Draw", "price": 4.2},
+                {"name": "Dortmund", "price": 5.5}]}]},
+        ]}
+        p = L.extract_prices(ev, "direct", "Bayern", "Dortmund")
+        self.assertEqual(p["public_hw"], 1.60)          # nur bet365, betfair raus
+        self.assertEqual(p["public_bookmaker"], "bet365")  # 1 Soft-Book -> kein Konsens-Label
+
     def test_public_seeded_then_carried(self):
         pr1 = {"hw": 1.8, "dr": 3.6, "aw": 4.5, "bookmaker": "pinnacle",
                "public_hw": 1.7, "public_dr": 3.7, "public_aw": 5.0, "public_bookmaker": "bet365"}
