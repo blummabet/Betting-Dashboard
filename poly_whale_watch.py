@@ -133,6 +133,20 @@ def track_record(scores: dict, wallet: str):
     return f"bisher <b>{wins}/{n} richtig</b> ({pct}%)"
 
 
+def _wallet_line(scores: dict, wallet) -> str:
+    """Nur eine gute Bilanz wird als Zahl gezeigt (Verkaufsargument). Schwacher/kein/zu duenner
+    Record → neutral „im Aufbau", damit ein legitimer Groessen-Alert nicht durch eine 1/3-Quote
+    abgewertet wird. Die volle Historie ist ueber den Wallet-Link ohnehin einen Klick entfernt."""
+    link = _wallet_link(wallet)
+    s = scores.get(wallet) if isinstance(scores, dict) else None
+    n = (s.get("n") or 0) if isinstance(s, dict) else 0
+    if n >= MIN_TR:
+        wins = s.get("wins") or 0
+        if (wins / n) >= MIN_HITRATE:
+            return f"Wallet {link} · ✅ <b>bewiesene Wallet</b> ({wins}/{n} richtig, {round(wins/n*100)}%)"
+    return f"Wallet {link} · <i>Track-Record noch im Aufbau</i>"
+
+
 def build_card(pos: dict, scores: dict, restock: bool) -> str:
     emoji, sport = _sport(pos.get("league"))
     side  = pos.get("side") or "?"
@@ -144,10 +158,8 @@ def build_card(pos: dict, scores: dict, restock: bool) -> str:
         f"{emoji} <b>{_usd(usd)}</b> auf <b>{side}</b> @ {_cents(price)}",
         f"{sport}",
     ]
-    tr = track_record(scores, pos.get("wallet"))
-    wl = _wallet_link(pos.get("wallet"))
     lines.append("")
-    lines.append(f"Wallet {wl} · {tr}" if tr else f"Wallet {wl} · <i>noch kein Track-Record</i>")
+    lines.append(_wallet_line(scores, pos.get("wallet")))
     # Preiskontext: klarer Außenseiter, gegen den der Markt steht
     try:
         if float(price) < 0.45:

@@ -102,7 +102,7 @@ class TestBuildCard(unittest.TestCase):
         self.assertIn("Cleveland Guardians", card)
         self.assertIn("46¢", card)
         self.assertIn("⚾", card)
-        self.assertIn("noch kein Track-Record", card)
+        self.assertIn("im Aufbau", card)          # neutral statt abschreckend
         bad = set(re.findall(r"</?([a-zA-Z0-9-]+)", card)) - {"b", "i", "a"}
         self.assertFalse(bad, f"verbotene Tags: {bad}")
 
@@ -114,6 +114,17 @@ class TestBuildCard(unittest.TestCase):
     def test_track_record_line(self):
         card = P.build_card(_pos(9000, wallet="0xa"), {"0xa": {"n": 9, "wins": 6}}, False)
         self.assertIn("6/9 richtig", card); self.assertIn("67%", card)
+
+    def test_weak_record_shown_neutral(self):
+        # schwache 1/3-Bilanz NICHT als abschreckende Zahl — neutral „im Aufbau"
+        card = P.build_card(_pos(30000, wallet="0xw"), {"0xw": {"n": 3, "wins": 1}}, False)
+        self.assertIn("im Aufbau", card)
+        self.assertNotIn("33%", card)
+        self.assertNotIn("1/3", card)
+
+    def test_good_record_highlighted(self):
+        card = P.build_card(_pos(9000, wallet="0xg"), {"0xg": {"n": 6, "wins": 4}}, False)
+        self.assertIn("bewiesene Wallet", card); self.assertIn("4/6 richtig", card)
 
     def test_contrarian_hint_under_45c(self):
         self.assertIn("Außenseiter", P.build_card(_pos(9000, price=0.40), {}, False))
