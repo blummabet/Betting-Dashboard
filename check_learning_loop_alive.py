@@ -89,7 +89,7 @@ def collect(ledger_file: str, clv_file: str, data_file: str | None = None) -> di
     recs = ledger.get("records") if isinstance(ledger, dict) else None
     recs = recs if isinstance(recs, list) else []
     ledger_records = len(recs) if recs else (ledger.get("total_records", 0) or 0)
-    graded = sum(1 for r in recs if r.get("processVerdict"))
+    graded = sum(1 for r in recs if isinstance(r, dict) and r.get("processVerdict"))
     overall = (clv.get("overall") or {}) if isinstance(clv, dict) else {}
     cov = overall.get("coverage") or {}
     finished = finished_with_xg = None

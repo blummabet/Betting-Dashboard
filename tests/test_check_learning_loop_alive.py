@@ -52,9 +52,25 @@ class TestCollect:
             {"overall": {"n": 9, "coverage": {"resolved": 9, "withClosing": 4}}}))
         monkeypatch.setattr(LLA, "BASE", tmp_path)
         m = LLA.collect("l.json", "c.json")
-        assert m == {"resolved": 9, "ledger_records": 3, "with_closing": 4}
+        assert m == {"resolved": 9, "ledger_records": 3, "with_closing": 4,
+                     "graded": 0, "finished": None, "finished_with_xg": None}
 
     def test_collect_fehlende_dateien_sind_null(self, tmp_path, monkeypatch):
         monkeypatch.setattr(LLA, "BASE", tmp_path)
         m = LLA.collect("nope.json", "nada.json")
-        assert m == {"resolved": 0, "ledger_records": 0, "with_closing": 0}
+        assert m == {"resolved": 0, "ledger_records": 0, "with_closing": 0,
+                     "graded": 0, "finished": None, "finished_with_xg": None}
+
+    def test_collect_zaehlt_graded_und_xg(self, tmp_path, monkeypatch):
+        import json
+        (tmp_path / "l.json").write_text(json.dumps({"records": [
+            {"processVerdict": "JUSTIFIED"}, {"processVerdict": None}, {"x": 1}]}))
+        (tmp_path / "c.json").write_text(json.dumps(
+            {"overall": {"coverage": {"resolved": 9, "withClosing": 4}}}))
+        (tmp_path / "d.json").write_text(json.dumps({"groups": {"MLS": {"fixtures": [
+            {"result": {"status": "FT", "stats": {"xgHome": 1.1}}},   # fertig + xG (Liga-Konvention)
+            {"result": {"status": "FT", "stats": {}}},                # fertig, kein xG
+            {"result": {"status": "NS"}}]}}}))                        # nicht fertig
+        monkeypatch.setattr(LLA, "BASE", tmp_path)
+        m = LLA.collect("l.json", "c.json", "d.json")
+        assert m["graded"] == 1 and m["finished"] == 2 and m["finished_with_xg"] == 1
