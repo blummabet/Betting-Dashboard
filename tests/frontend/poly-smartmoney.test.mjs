@@ -146,3 +146,23 @@ test('_pwEventLabel: Ja/Nein-Markt → Name aus Slug, kein „No vs Yes"', () =>
   assert.doesNotMatch(out, /No|Yes/);
   assert.match(out, /PIT NYY/);
 });
+
+// 27.07.2026 (Lucas: „was kommt oder live — fertige Spiele raus"): das Momentum-Board darf keine
+// Spiele mehr zeigen, deren Anpfiff klar vorbei ist (Walkover/Alt-Spiele hingen bis 4 Tage).
+test('_pwMomentum: fertige Spiele (Anpfiff >4h vorbei) raus, Zukunft/live bleibt', () => {
+  const w = win();
+  const hrsAgo = h => new Date(Date.now() - h * 3.6e6).toISOString();
+  const hist = {
+    'future-match': [
+      { ts: hrsAgo(2),   p: { 'TeamZukunft': 0.40, 'GegnerZ': 0.60 }, v: 50000, htk: 4, league: 'soccer' },
+      { ts: hrsAgo(0.1), p: { 'TeamZukunft': 0.55, 'GegnerZ': 0.45 }, v: 50000, htk: 2, league: 'soccer' },
+    ],
+    'past-match': [
+      { ts: hrsAgo(8), p: { 'TeamVorbei': 0.40, 'GegnerV': 0.60 }, v: 50000, htk: 1, league: 'soccer' },
+      { ts: hrsAgo(6), p: { 'TeamVorbei': 0.55, 'GegnerV': 0.45 }, v: 50000, htk: 0, league: 'soccer' },
+    ],
+  };
+  const html = w._pwMomentum(hist);
+  assert.match(html, /TeamZukunft/, 'kommendes/laufendes Spiel muss bleiben');
+  assert.doesNotMatch(html, /TeamVorbei/, 'fertiges Spiel (Anpfiff >4h vorbei) darf NICHT erscheinen');
+});

@@ -348,7 +348,10 @@ test('Momentum (①): stärkster Move je Markt, Steam vs Reversal, nach Größe 
   const dom = new JSDOM('<!DOCTYPE html><body></body>', { url: 'https://example.com/', runScripts: 'outside-only' });
   const { window: w } = dom;
   w.eval(readFileSync(PW, 'utf8'));
-  const t = (min) => new Date(Date.UTC(2026, 6, 24, 12, min)).toISOString();
+  // 27.07.2026: relativ zu jetzt — der Momentum-Anpfiff-Filter (htk) verwirft sonst fixe
+  // Vergangenheits-Timestamps. Letzter Snapshot ~jetzt, htk positiv → Anpfiff in Zukunft → bleibt.
+  const _base = Date.now() - 60 * 60000;
+  const t = (min) => new Date(_base + min * 60000).toISOString();
   const hist = {
     'mlb-a-b': [
       { ts: t(0),  p: { Braves: 0.50, Padres: 0.50 }, v: 200000, htk: 3,   league: 'MLB' },

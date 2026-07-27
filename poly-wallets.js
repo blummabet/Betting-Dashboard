@@ -1117,6 +1117,13 @@ function _pwMomentum(hist){
     const latest=arr[arr.length-1], base=arr[0], prev=arr[arr.length-2];
     const league=latest.league||base.league;
     if(!_pwSportPass(league)) continue;
+    // 27.07.2026 (Lucas: „was kommt oder live — fertige Spiele raus"): echten Anpfiff aus dem
+    // letzten Snapshot rekonstruieren (ts + htk). >4h nach Anpfiff = Spiel fertig → nicht mehr
+    // „was sich GERADE bewegt". History-Retention (96h Steam-Fenster) bleibt, nur die Anzeige filtert.
+    if(latest.htk != null){
+      const koMs = Date.parse(latest.ts) + latest.htk * 3.6e6;
+      if(!isNaN(koMs) && (Date.now() - koMs) > 4 * 3.6e6) continue;
+    }
     let best=null;
     for(const side of Object.keys(latest.p||{})){
       const p1=base.p&&base.p[side], p2=latest.p[side];
