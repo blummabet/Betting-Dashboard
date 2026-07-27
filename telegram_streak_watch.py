@@ -38,7 +38,7 @@ CHAT_ID = (os.environ.get("TELEGRAM_CHAT_ID") or "-1003819239615").strip()
 MODE = (os.environ.get("TG_STREAK_MODE") or "watch").lower()
 SKIP_TELEGRAM = os.environ.get("SKIP_TELEGRAM", "").lower() == "true"
 
-WATCH_MIN_LEN = int(os.environ.get("STREAK_WATCH_MIN_LEN", "5"))   # nur starke Serien bewachen
+WATCH_MIN_LEN = int(os.environ.get("STREAK_WATCH_MIN_LEN", "10"))  # 26.07.2026 (Lucas): Public-Channel nur RICHTIG lange Serien (≥10) — 7-8 war zu viel Rauschen
 
 # Nur tor-basierte Typen (aus dem Endstand deterministisch aufzulösen). Ecken/Karten brauchen
 # Stats-Coverage → hier bewusst aus (kein unsicheres „gerissen").
