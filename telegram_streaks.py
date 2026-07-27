@@ -25,6 +25,9 @@ TOKEN = os.environ.get("TELEGRAM_TOKEN", "").strip()
 CHAT_ID = (os.environ.get("TELEGRAM_CHAT_ID") or "-1003819239615").strip()
 TOP_N = 5
 MIN_LEN = 5
+# 27.07.2026 (Lucas: „WM-Streaks obwohl vorbei" + „immer die selben"):
+STALE_DAYS = int(os.environ.get("STREAKS_STALE_DAYS") or 3)   # toter Datensatz (frozen) → kein Digest
+STATE_FILE = BASE / f"{D.prefix()}streaks_digest_state.json"  # Woche-über-Woche: nur neue/gewachsene
 
 _ICON = {"over25": "⚽", "under25": "🧱", "bttsYes": "🤝", "bttsNo": "🚫",
          "cornersOver": "🚩", "cornersUnder": "🚩", "scored": "🎯", "cleanSheet": "🛡️", "cards": "🟨"}
@@ -38,6 +41,42 @@ def _heat(s: dict) -> int:
     if si.get("state") == "confirm":
         h += si.get("count", 0) or 0
     return h
+
+
+def _stale_days(path) -> float | None:
+    """Alter der Daten in Tagen aus _meta.generatedAt (None = unbekannt/lesbar)."""
+    try:
+        m = (json.loads(Path(path).read_text(encoding="utf-8")) or {}).get("_meta") or {}
+        ga = m.get("generatedAt")
+        if not ga:
+            return None
+        from datetime import datetime, timezone
+        return (datetime.now(timezone.utc) - datetime.fromisoformat(str(ga).replace("Z", "+00:00"))).total_seconds() / 86400.0
+    except Exception:
+        return None
+
+
+def _load_state() -> dict:
+    try:
+        return json.loads(STATE_FILE.read_text(encoding="utf-8")) if STATE_FILE.exists() else {}
+    except Exception:
+        return {}
+
+
+def _save_state(state: dict) -> None:
+    try:
+        STATE_FILE.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
+    except Exception as e:
+        print(f"  ⚠️  State-Save fehlgeschlagen: {e}")
+
+
+def _skey(s: dict) -> str:  return f"{s.get('teamId')}:{s.get('type')}:{s.get('venue') or 'all'}"   # Venue-aware (all/home/away sind eigene Serien)
+def _pkey(s: dict) -> str:  return f"P:{s.get('playerId')}:{s.get('type')}"
+
+
+def _novel(items: list, state: dict, keyfn) -> list:
+    """Nur Serien, die seit dem letzten Digest NEU sind oder GEWACHSEN — sonst „nichts hat sich getan"."""
+    return [s for s in (items or []) if (s.get("length") or 0) > (state.get(keyfn(s)) or 0)]
 
 
 def build_streaks_digest(streaks: list, top_n: int = TOP_N, players: list | None = None) -> str | None:
@@ -133,15 +172,33 @@ def _read(path, key):
 
 
 def main():
-    streaks = _read(D.file("wm_streaks.json", "liga_streaks.json"), "streaks")
+    streaks_path = D.file("wm_streaks.json", "liga_streaks.json")
+    # (1) Frische-Guard: eingefrorener/toter Datensatz (z.B. WM nach Turnierende, generatedAt alt)
+    # postet NIE — sonst kommen Woche für Woche dieselben toten Serien (Lucas: „WM obwohl vorbei").
+    age = _stale_days(streaks_path)
+    if age is not None and age > STALE_DAYS:
+        print(f"ℹ️  {streaks_path.name} ist {age:.1f} Tage alt (>{STALE_DAYS}) — Datensatz eingefroren, kein Digest.")
+        return
+    streaks = _read(streaks_path, "streaks")
     players = _read(BASE / f"{D.prefix()}player_streaks.json", "players")
-    msg = build_streaks_digest(streaks, players=players)
+    # (2) Woche-über-Woche-Dedup: nur NEUE oder GEWACHSENE Serien — sonst „seit letzter Woche nichts getan".
+    state = _load_state()
+    fresh_streaks = _novel(streaks, state, _skey)
+    fresh_players = _novel(players, state, _pkey)
+    msg = build_streaks_digest(fresh_streaks, players=fresh_players)
     if not msg:
-        print("ℹ️  Keine heißen Serien — kein Digest.")
+        print("ℹ️  Keine neuen/gewachsenen Serien seit letztem Digest — kein Post.")
         return
     print(msg)
     if tg_send(msg):
         print("✅ Serien-Digest gesendet (Public).")
+        for s in fresh_streaks:
+            if s.get("teamId") is not None:
+                state[_skey(s)] = s.get("length") or 0
+        for s in fresh_players:
+            if s.get("playerId") is not None:
+                state[_pkey(s)] = s.get("length") or 0
+        _save_state(state)
 
 
 if __name__ == "__main__":

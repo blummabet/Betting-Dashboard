@@ -150,5 +150,41 @@ class TestKoMatchContexts(unittest.TestCase):
         self.assertEqual([c for c in G._iter_match_contexts(wm) if c[3].startswith("KO-")], [])
 
 
+class TestStreaksDigestDedup(unittest.TestCase):
+    """27.07.2026 (Lucas: „immer die selben" + „WM obwohl vorbei"): Frische-Guard + Woche-über-
+    Woche-Dedup im Serien-Digest."""
+    def _s(self, tid, typ, length, venue="all"):
+        return {"teamId": tid, "type": typ, "length": length, "venue": venue}
+
+    def test_key_ist_venue_aware(self):
+        self.assertNotEqual(TS._skey(self._s("A", "over25", 5, "all")),
+                            TS._skey(self._s("A", "over25", 5, "home")))
+
+    def test_novel_nichts_gewachsen_ist_leer(self):
+        streaks = [self._s("A", "over25", 12), self._s("B", "scored", 8)]
+        state = {TS._skey(x): x["length"] for x in streaks}
+        self.assertEqual(TS._novel(streaks, state, TS._skey), [])
+
+    def test_novel_nur_gewachsene(self):
+        base = [self._s("A", "over25", 12), self._s("B", "scored", 8)]
+        state = {TS._skey(x): x["length"] for x in base}
+        grown = [self._s("A", "over25", 13), self._s("B", "scored", 8)]
+        nov = TS._novel(grown, state, TS._skey)
+        self.assertEqual([x["teamId"] for x in nov], ["A"])
+
+    def test_novel_neue_serie_kommt_durch(self):
+        self.assertEqual(len(TS._novel([self._s("C", "cleanSheet", 6)], {}, TS._skey)), 1)
+
+    def test_stale_days_erkennt_eingefrorenes_meta(self):
+        import json, tempfile
+        from datetime import datetime, timezone, timedelta
+        with tempfile.NamedTemporaryFile("w", suffix=".json", delete=False, encoding="utf-8") as f:
+            old = (datetime.now(timezone.utc) - timedelta(days=10)).isoformat()
+            json.dump({"_meta": {"generatedAt": old}, "streaks": []}, f)
+            path = f.name
+        self.assertIsNotNone(TS._stale_days(path))
+        self.assertGreater(TS._stale_days(path), 9)
+
+
 if __name__ == "__main__":
     unittest.main()

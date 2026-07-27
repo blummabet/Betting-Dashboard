@@ -12,7 +12,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
 
 jobs:
   streaks-digest:
@@ -20,9 +20,9 @@ jobs:
     strategy:
       fail-fast: false      # ein Datensatz-Fehler stoppt die anderen nicht
       matrix:
+        # 27.07.2026 (Lucas: „WM-Streaks obwohl vorbei"): wm-Zweig entfernt. Zusätzlich hält der
+        # Frische-Guard in telegram_streaks.py jeden eingefrorenen Datensatz still (doppelt sicher).
         include:
-          - dataset: wm
-            profile: wm2026
           - dataset: liga
             profile: liga_default
           - dataset: mls
@@ -40,3 +40,20 @@ jobs:
         env:
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+
+      - name: 💾 Digest-State committen (Woche-über-Woche-Dedup)
+        run: |
+          git config user.name  "CocoBet Bot"
+          git config user.email "bot@cocobet.local"
+          git add ${{ matrix.dataset }}_streaks_digest_state.json 2>/dev/null || true
+          if git diff --staged --quiet; then echo "kein State-Update — nichts zu committen."; exit 0; fi
+          git commit -m "🔥 Serien-Digest-State ${{ matrix.dataset }} $(date -u +'%d.%m.%Y') [skip ci]"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          for a in 1 2 3 4 5; do
+            git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+            if git push 2>&1; then echo "✅ Push $a"; exit 0; fi
+            echo "⚠️ Push $a fehlgeschlagen — retry…"; sleep $((a * 3))
+          done
+          echo "❌ Push fehlgeschlagen"; exit 1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
