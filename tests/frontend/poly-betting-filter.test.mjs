@@ -58,8 +58,10 @@ test('ABWÄGEN nur ab hoher Conviction', () => {
 // verhält sich aber wie das alte BET-only — der Tab bliebe leer und niemand merkt warum.
 // Über alle bisher gestempelten Picks liegt das ABWÄGEN-Maximum bei 5.
 test('Schwelle ist erreichbar — kein getarntes BET-only', () => {
-  assert.ok(MIN_CONV <= 5,
-    `Conviction ${MIN_CONV} erreicht kein ABWÄGEN (Maximum real: 5) → Filter ist ein No-Op`);
+  // 27.07.2026: früher „Maximum real: 5" — überholt. MLS-ABWÄGEN erreicht real bis 7
+  // (Conviction ist vom Verdict entkoppelt). Schwelle 6 lässt die starken ABWÄGEN (6–7) durch.
+  assert.ok(MIN_CONV <= 7,
+    `Conviction ${MIN_CONV} über dem real erreichbaren ABWÄGEN-Maximum (~7) → Filter wäre ein No-Op`);
 });
 
 test('ABWÄGEN ohne Conviction-Score bleibt draußen (kein stiller Durchrutscher)', () => {
@@ -147,4 +149,47 @@ test('_collectAllPolyPicks bündelt WM + MLS + Club (MLS nicht mehr verloren)', 
   const all = w._collectAllPolyPicks('');
   assert.ok(all.some(p => p.home === 'LA Galaxy'), 'MLS-Pick fehlt in der Sammelstelle');
   assert.ok(all.some(p => p.home === 'Brasilien'), 'WM-Pick fehlt in der Sammelstelle');
+});
+
+// 27.07.2026 (Lucas: „Bet-Vorschlag ohne Card-Pick / alte Datums-Chips"): der Club-Builder
+// (_loadNationalPolyPicksAsync) listete Picks für schon gespielte Spiele — der Kickoff-Filter
+// fehlte dort (nur _extractWmPicksForDate hatte ihn).
+test('_wmKickoffPassed: Vergangenheit vorbei, Zukunft offen', () => {
+  const w = loadPoly();
+  assert.equal(w._wmKickoffPassed({ date: '2020-01-01' }), true);
+  assert.equal(w._wmKickoffPassed({ date: '2999-01-01' }), false);
+  assert.equal(w._wmKickoffPassed({ kickoff: '2020-01-01T00:00:00Z' }), true);
+});
+
+test('Club-Builder listet vergangene Spiele NICHT als Wette', async () => {
+  const w = loadPoly();
+  const data = { groups: { MLS: { fixtures: [
+    { home: 'A', away: 'B', homeName: 'Team A', awayName: 'Team B', date: '2020-01-01' },  // vergangen
+    { home: 'C', away: 'D', homeName: 'Team C', awayName: 'Team D', date: '2999-01-01' },  // Zukunft
+  ] } }, picks: {
+    'MLS-1-A-B': [{ verdict: 'BET', market: 'Heimsieg', convictionScore: 8 }],
+    'MLS-1-C-D': [{ verdict: 'BET', market: 'Heimsieg', convictionScore: 8 }],
+  } };
+  w.fetch = (u) => Promise.resolve({ ok: String(u).includes('mls-data'), json: () => Promise.resolve(data) });
+  await w._loadNationalPolyPicksAsync();
+  const teams = (w.NATIONAL_PICKS_FOR_POLY || []).map(p => p.home);
+  assert.ok(teams.includes('Team C'), 'Zukunftsspiel muss gelistet sein');
+  assert.ok(!teams.includes('Team A'), 'vergangenes Spiel darf NICHT als Wette erscheinen');
+});
+
+// 27.07.2026 (Lucas): im Betting-Tab klar sichtbar machen, ob ein Pick BET oder ABWÄGEN ist.
+test('_verdictTag zeigt BET / ABWÄGEN (echter Verdict, Fallback conf)', () => {
+  const w = loadPoly();
+  assert.match(w._verdictTag({ verdict: 'BET' }), /BET/);
+  assert.match(w._verdictTag({ verdict: 'ABWÄGEN' }), /ABWÄGEN/);
+  assert.match(w._verdictTag({ conf: 'high' }), /BET/);         // Fallback wenn verdict fehlt
+  assert.match(w._verdictTag({ conf: 'medium' }), /ABWÄGEN/);
+  assert.equal(w._verdictTag({ conf: 'low' }), '');
+});
+
+test('ABWÄGEN-Schwelle steht auf 6 (gute Conviction)', () => {
+  const w = loadPoly();
+  assert.equal(w._polyPickEligible('ABWÄGEN', 6), true);
+  assert.equal(w._polyPickEligible('ABWÄGEN', 5), false);
+  assert.equal(w._polyPickEligible('BET', 2), true);
 });

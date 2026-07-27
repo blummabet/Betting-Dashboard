@@ -540,7 +540,7 @@ async function _loadWmDataAsync() {
 // 5 = oberstes Fünftel der ABWÄGEN-Picks (34/166 ≈ 20 %). Wenn die Verteilung wandert, hier
 // nachziehen — der Test `poly-betting-filter` schlägt an, wenn die Schwelle wieder zum No-Op wird.
 const WM_POLY_BET_ONLY          = false;
-const WM_POLY_ABWAEGEN_MIN_CONV = 5;
+const WM_POLY_ABWAEGEN_MIN_CONV = 6;   // 27.07.2026 (Lucas): ABWÄGEN erst ab „gut" (6+), BET immer
 const WM_POLY_DAYS_AHEAD        = 14;   // Sichtfenster für die Tages-Chips
 
 // Gehört der Pick ins manuelle Wett-Interface?
@@ -846,6 +846,10 @@ async function _loadNationalPolyPicksAsync() {
       if (!Array.isArray(plist)) continue;
       const fx = fxByHa[pk.split('-').slice(2).join('-')];
       if (!fx) continue;
+      // 27.07.2026 (Lucas: „Bet-Vorschlag ohne Card-Pick / alte Datums-Chips"): schon gespielte
+      // Spiele NICHT mehr als Wette listen. _extractWmPicksForDate hatte den Filter, dieser
+      // Club-Builder nicht → Picks für vergangene Spiele (Philadelphia 25.07) hingen im Betting-Set.
+      if (typeof _wmKickoffPassed === 'function' && _wmKickoffPassed(fx)) continue;
       const league = pk.split('-')[0] || 'MLS';
       for (const p of plist) {
         if (!['BET', 'ABWÄGEN'].includes(p.verdict)) continue;
@@ -1374,6 +1378,19 @@ function _confBadge(conf) {
   return `<span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:${c.bg};color:${c.color};border:1px solid ${c.border};letter-spacing:.3px">${c.label}</span>`;
 }
 
+function _verdictTag(pick) {
+  // 27.07.2026 (Lucas: „im Betting-Tab sehen ob BET oder ABWÄGEN"): der ECHTE Card-Verdict
+  // (pick.verdict), Fallback über conf (high=BET, medium=ABWÄGEN). Ersetzt das kryptische HIGH/MED.
+  const v = pick.verdict || (pick.conf === 'high' ? 'BET' : pick.conf === 'medium' ? 'ABWÄGEN' : null);
+  const map = {
+    'BET':     { bg: '#3fb95022', border: '#3fb95055', color: '#3fb950', label: '✅ BET' },
+    'ABWÄGEN': { bg: '#f5c51822', border: '#f5c51855', color: '#f5c518', label: '⚖️ ABWÄGEN' },
+  };
+  const c = map[v];
+  if (!c) return '';
+  return `<span style="font-size:10px;font-weight:800;padding:2px 8px;border-radius:10px;background:${c.bg};color:${c.color};border:1px solid ${c.border};letter-spacing:.3px">${c.label}</span>`;
+}
+
 function _marketIcon(market) {
   if (!market) return '📊';
   if (market === 'Heimsieg')             return '🏠';
@@ -1568,7 +1585,7 @@ function _renderPickCard(pick) {
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">
         <span style="font-size:13px">${_marketIcon(pick.market)}</span>
         <span style="font-size:13px;font-weight:600;color:${mktColor}">${pick.market}</span>
-        ${_confBadge(pick.conf)}
+        ${_verdictTag(pick)}
       </div>
       <!-- Bet summary row -->
       <div style="background:#0d1117;border-radius:8px;padding:10px 12px;font-size:12px;color:#8b949e;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
@@ -1596,7 +1613,7 @@ function _renderPickCard(pick) {
     <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
       <span style="font-size:13px">${_marketIcon(pick.market)}</span>
       <span style="font-size:13px;font-weight:600;color:${mktColor}">${pick.market}</span>
-      ${_confBadge(pick.conf)}
+      ${_verdictTag(pick)}
     </div>
     <!-- Verdict (BET / ABWÄGEN / SKIP) — mirrors renderer.js 3-signal logic -->
     ${_verdictBlock(pick)}
@@ -2993,7 +3010,13 @@ function _renderWmMarketTable() {
         } else if (d.usdc_e > 0.01) {
           breakdown = ` <span style="color:#484f58;font-size:10px">(+$${d.usdc_e.toFixed(2)} USDC.e)</span>`;
         }
-        el.innerHTML = `$${total.toFixed(2)} USDC${breakdown}${updStr}`;
+        // 27.07.2026 (Lucas: „falsche balance" wiederkehrend): eine tote Datei (WM endete 19.07.)
+        // darf nicht still als aktuelle Zahl durchgehen. >48h alt → sichtbar als veraltet markieren,
+        // damit eine falsch wirkende Zahl sofort als „nicht frisch" erkennbar ist.
+        const _ageH = d.updatedAt ? (Date.now() - Date.parse(d.updatedAt)) / 3.6e6 : 999;
+        const staleWarn = _ageH > 48
+          ? ` <span style="color:#e3b341;font-size:10px;font-weight:700">⚠️ veraltet</span>` : '';
+        el.innerHTML = `$${total.toFixed(2)} USDC${breakdown}${updStr}${staleWarn}`;
       })
       .catch(() => {
         const el = document.getElementById('wmPolyBalance');
