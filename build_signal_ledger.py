@@ -53,7 +53,9 @@ def _build_stats_lookup(wm: dict) -> dict:
         for fx in (gd.get("fixtures") or []):
             stats = (fx.get("result") or {}).get("stats")
             if stats:
-                out[f"{g}-{fx.get('matchday')}-{fx.get('home')}-{fx.get('away')}"] = stats
+                _h, _a = fx.get("home"), fx.get("away")
+                out[f"{g}-{fx.get('matchday')}-{_h}-{_a}"] = stats
+                out.setdefault(f"{g}-{_h}-{_a}", stats)   # 27.07.2026: spieltag-agnostisch (Off-by-one-Fix)
     # 04.07.2026 (Lucas: „wurden die 1/16-Picks nachträglich als lucky/unlucky bewertet?"):
     # KO-Spiele liegen in koFixtures mit Key „KO-{round}-{home}-{away}" (wie der Pick-Key in
     # generate_wm_picks). Ohne sie fand _build_stats_lookup nie die KO-xG → das Prozess-Verdict
@@ -63,7 +65,22 @@ def _build_stats_lookup(wm: dict) -> dict:
         stats = (kf.get("result") or {}).get("stats")
         if stats and kf.get("home") and kf.get("away"):
             out[f"KO-{kf.get('round')}-{kf['home']}-{kf['away']}"] = stats
+            out.setdefault(f"KO-{kf['home']}-{kf['away']}", stats)
     return out
+
+
+def _lookup_stats(stats_lookup: dict, match_key: str):
+    """Stats zum Pick holen — exakt, sonst spieltag-agnostisch ({liga}-{home}-{away}).
+    27.07.2026 (Lucas: „lernt MLS?"): Pick-Key und Fixture-Key divergieren im Matchday
+    (Pick MLS-17-… vs Fixture MLS-16-…) → Verdict fiel für ~70% der fertigen Picks weg."""
+    s = stats_lookup.get(match_key)
+    if s is not None:
+        return s
+    parts = str(match_key).split("-")
+    if len(parts) >= 4:
+        g = "-".join(parts[:-3]); h, a = parts[-2], parts[-1]
+        return stats_lookup.get(f"{g}-{h}-{a}")
+    return None
 
 
 def _load_json(path: Path, default):
@@ -137,7 +154,7 @@ def collect_observations(wm: dict) -> list[dict]:
                 "clvPP":            p.get("clvPP"),
             }
             if _process_verdict:
-                pv = _process_verdict(market, result, stats_lookup.get(match_key))
+                pv = _process_verdict(market, result, _lookup_stats(stats_lookup, match_key))
                 if pv.get("processVerdict"):
                     rec["processVerdict"] = pv["processVerdict"]
             records.append(rec)

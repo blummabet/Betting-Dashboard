@@ -29,12 +29,17 @@ BASE = Path(__file__).resolve().parent
 MIN_RESOLVED = 8
 
 
-def evaluate(resolved: int, ledger_records: int, with_closing: int, min_resolved: int = MIN_RESOLVED) -> list:
+def evaluate(resolved: int, ledger_records: int, with_closing: int,
+             graded: int | None = None, finished: int | None = None,
+             finished_with_xg: int | None = None, min_resolved: int = MIN_RESOLVED) -> list:
     """REIN/testbar. Gibt Probleme zurück (leer = Loop gesund oder legitim jung).
 
-    resolved       : Anzahl aufgelöster Picks (haben ein Ergebnis).
-    ledger_records : Einträge im Signal-Ledger (Bayesian-Lernstrom).
-    with_closing   : aufgelöste Picks MIT erfasster Closing-Line (CLV-Zweitstrom).
+    resolved         : Anzahl aufgelöster Picks (haben ein Ergebnis).
+    ledger_records   : Einträge im Signal-Ledger (Bayesian-Lernstrom).
+    with_closing     : aufgelöste Picks MIT erfasster Closing-Line (CLV-Zweitstrom).
+    graded           : Ledger-Einträge MIT processVerdict (xG-prozess-bewertet). None = nicht geprüft.
+    finished         : fertige Spiele im Datensatz. None = nicht geprüft.
+    finished_with_xg : fertige Spiele MIT Match-xG am Fixture. None = nicht geprüft.
     """
     problems = []
     if resolved < min_resolved:
@@ -47,6 +52,19 @@ def evaluate(resolved: int, ledger_records: int, with_closing: int, min_resolved
         problems.append(
             f"{resolved} aufgelöste Picks, aber 0 mit Closing-Line — CLV-Zweitstrom tot "
             f"(Closing-Capture landet nicht; vgl. CLV-für-Liga+MLS-war-tot).")
+    # 27.07.2026 (Lucas: „lernt MLS wirklich?"): NEU — Ledger hat Einträge, aber KEINER ist
+    # prozess-bewertet. Genau der stille Bruch (xG-Feldname / Match-Key-Spieltag), der 253 fertige
+    # Spiele mit 0 Verdicts erzeugte. „ledger_records>0" hat das VERSTECKT statt gemeldet.
+    if ledger_records > 0 and graded == 0:
+        problems.append(
+            f"{ledger_records} Ledger-Einträge, aber 0 prozess-bewertet (verdient/Glück/Pech) — "
+            f"der xG-Grader erreicht den Ledger nicht (Feldname xgHome/homeXg oder Match-Key-"
+            f"Spieltag). Loop lernt nur binär statt prozess-justiert.")
+    # NEU: fertige Spiele ohne Match-xG → Post-Match-xG-Fetch landet nicht am Fixture.
+    if finished is not None and finished >= min_resolved and finished_with_xg == 0:
+        problems.append(
+            f"{finished} fertige Spiele, aber 0 mit Match-xG am Fixture — Post-Match-xG landet nicht "
+            f"(fetch_liga_match_stats / Feldname). Prozess-Bewertung unmöglich.")
     return problems
 
 
@@ -57,18 +75,45 @@ def _load(name):
         return {}
 
 
-def collect(ledger_file: str, clv_file: str) -> dict:
+def _xg_present(stats: dict) -> bool:
+    """Match-xG am Fixture? Tolerant über beide Konventionen (WM homeXg / Liga+MLS xgHome)."""
+    st = stats or {}
+    xh = st.get("homeXg") if st.get("homeXg") is not None else st.get("xgHome")
+    return isinstance(xh, (int, float))
+
+
+def collect(ledger_file: str, clv_file: str, data_file: str | None = None) -> dict:
     """Kennzahlen von Disk lesen → evaluate-Eingabe. Datei-Namen datensatz-aware übergeben."""
     ledger = _load(ledger_file)
     clv = _load(clv_file)
     recs = ledger.get("records") if isinstance(ledger, dict) else None
-    ledger_records = len(recs) if isinstance(recs, list) else (ledger.get("total_records", 0) or 0)
+    recs = recs if isinstance(recs, list) else []
+    ledger_records = len(recs) if recs else (ledger.get("total_records", 0) or 0)
+    graded = sum(1 for r in recs if r.get("processVerdict"))
     overall = (clv.get("overall") or {}) if isinstance(clv, dict) else {}
     cov = overall.get("coverage") or {}
+    finished = finished_with_xg = None
+    if data_file:
+        data = _load(data_file)
+        if isinstance(data, dict) and (data.get("groups") or data.get("koFixtures")):
+            finished = finished_with_xg = 0
+            fxs = []
+            for g in (data.get("groups") or {}).values():
+                fxs += (g.get("fixtures") or [])
+            fxs += (data.get("koFixtures") or [])
+            for fx in fxs:
+                r = fx.get("result") or {}
+                if str(r.get("status", "")).upper() in ("FT", "AET", "PEN"):
+                    finished += 1
+                    if _xg_present(r.get("stats")):
+                        finished_with_xg += 1
     return {
         "resolved": int(cov.get("resolved") or overall.get("n") or 0),
         "ledger_records": int(ledger_records or 0),
         "with_closing": int(cov.get("withClosing") or 0),
+        "graded": graded,
+        "finished": finished,
+        "finished_with_xg": finished_with_xg,
     }
 
 
@@ -76,11 +121,15 @@ def main() -> int:
     import cocobet_dataset as D
     ledger_file = D.file("wm_signal_ledger.json", "liga_signal_ledger.json").name
     clv_file = D.file("wm_clv_summary.json", "liga_clv_summary.json").name
-    m = collect(ledger_file, clv_file)
-    problems = evaluate(m["resolved"], m["ledger_records"], m["with_closing"])
+    data_file = D.data_file().name
+    m = collect(ledger_file, clv_file, data_file)
+    problems = evaluate(m["resolved"], m["ledger_records"], m["with_closing"],
+                        graded=m["graded"], finished=m["finished"],
+                        finished_with_xg=m["finished_with_xg"])
     if not problems:
         print(f"✅ Lern-Loop gesund/jung (resolved={m['resolved']}, ledger={m['ledger_records']}, "
-              f"withClosing={m['with_closing']}).")
+              f"graded={m['graded']}, withClosing={m['with_closing']}, "
+              f"xG {m['finished_with_xg']}/{m['finished']}).")
         return 0
     print("⚠️  Lern-Loop-Problem:")
     for p in problems:

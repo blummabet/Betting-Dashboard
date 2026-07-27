@@ -173,8 +173,12 @@ def check_learning_loop_alive(ctx):
         import check_learning_loop_alive as LLA
         ledger_file = D.file("wm_signal_ledger.json", "liga_signal_ledger.json").name
         clv_file = D.file("wm_clv_summary.json", "liga_clv_summary.json").name
-        m = LLA.collect(ledger_file, clv_file)
-        fails = LLA.evaluate(m["resolved"], m["ledger_records"], m["with_closing"])
+        data_file = D.data_file().name
+        m = LLA.collect(ledger_file, clv_file, data_file)
+        # 27.07.2026 (Lucas: „lernt MLS?"): jetzt auch graded (0 bewertet trotz Einträge) + xG-Coverage
+        fails = LLA.evaluate(m["resolved"], m["ledger_records"], m["with_closing"],
+                             graded=m["graded"], finished=m["finished"],
+                             finished_with_xg=m["finished_with_xg"])
     except Exception as e:
         fails = [f"Guard selbst gescheitert: {e}"]
     return _chk("learning_loop_alive", "Lern-Loop lernt (Ledger + CLV bei Resolves)", "warn", fails,
