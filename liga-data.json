@@ -23195,6 +23195,7 @@
       },
       "ahA_p150": 1.47,
       "ahH_n075": 1.88,
+      "ahA_p150": 1.47,
       "ahA_p075": 1.94,
       "ahH_n150": 2.97,
       "marketsCarriedAt": "2026-07-28T19:57:24.347238+00:00",
@@ -24104,11 +24105,11 @@
             "name": "chance_creation",
             "score": 6.0,
             "confidence": 0.72,
-            "evidence": "🎨 Zusammen kreieren beide eher wenig Chancen (6.6 aus Schlüsselpässen + Abschlüssen) — spricht für Under.",
+            "evidence": "🎨 Zusammen kreieren beide eher wenig Chancen (6.4 aus Schlüsselpässen + Abschlüssen) — spricht für Under.",
             "weight": 1.0,
             "weighted_score": 4.32,
             "metadata": {
-              "total_threat": 6.6
+              "total_threat": 6.4
             }
           },
           {
@@ -28546,35 +28547,23 @@
             "confidence": 0.75,
             "evidence": "⚔️ Aus den letzten 10 Duellen: im Schnitt 2.1 Tore (Linie 2.5) · in 30% fielen über 2.5 Tore → spricht für Über 2.5.",
             "weight": 1.0,
-            "weighted_score": -0.48,
+            "weighted_score": -1.2,
             "metadata": {
               "games": 10,
               "h2h_avg_goals": 2.1,
               "h2h_over25_rate": 0.3,
               "pick_side": "Über 2.5"
-            },
-            "correlation_discount_applied": 0.4
-          },
-          {
-            "name": "chance_creation",
-            "score": -6.0,
-            "confidence": 0.72,
-            "evidence": "🎨 Zusammen kreieren beide eher wenig Chancen (4.8 aus Schlüsselpässen + Abschlüssen) — spricht eher gegen Over.",
-            "weight": 1.0,
-            "weighted_score": -4.32,
-            "metadata": {
-              "total_threat": 4.8
             }
           }
         ],
-        "signalAdjustmentPP": -4.71,
+        "signalAdjustmentPP": -1.6,
         "signalCountPos": 0,
-        "signalCountNeg": 2,
-        "signalAdjustmentPP_trade": -4.7,
+        "signalCountNeg": 1,
+        "signalAdjustmentPP_trade": -1.6,
         "signalCountPos_trade": 0,
-        "signalCountNeg_trade": 2,
-        "effectiveEdgePP": -8.7,
-        "effectiveEdgePP_trade": -8.7,
+        "signalCountNeg_trade": 1,
+        "effectiveEdgePP": -5.6,
+        "effectiveEdgePP_trade": -5.6,
         "convictionScore": 2,
         "earlySeasonPenalty": 1.0,
         "convictionVerdict": "skip",
@@ -28668,18 +28657,18 @@
           },
           {
             "name": "xg_strength",
-            "score": 1.04,
-            "confidence": 0.65,
-            "evidence": "⚡ Form-xG (Proxy): Heim erspielt sich 2.00 Tor-Chancen (xG) und gibt 1.27 her, Auswärts 1.60 und 1.73 — macht +0.87 Unterschied.",
+            "score": 1.56,
+            "confidence": 0.73,
+            "evidence": "⚡ xG-Stärke: Heim erspielt sich 1.44 Tor-Chancen (xG) und gibt 0.96 her, Auswärts 1.41 und 1.71 — macht +0.78 Unterschied.",
             "weight": 1.219,
-            "weighted_score": 0.33,
+            "weighted_score": 0.56,
             "metadata": {
-              "home_xg_for": 2.0,
-              "home_xg_against": 1.27,
-              "away_xg_for": 1.6,
-              "away_xg_against": 1.73,
-              "relative_diff": 0.87,
-              "is_proxy": true,
+              "home_xg_for": 1.44,
+              "home_xg_against": 0.96,
+              "away_xg_for": 1.41,
+              "away_xg_against": 1.71,
+              "relative_diff": 0.78,
+              "is_proxy": false,
               "pick_side": "home"
             },
             "correlation_discount_applied": 0.4
@@ -28705,12 +28694,25 @@
             "confidence": 0.46,
             "evidence": "Ruhetage Heim 4d vs Gegner 5d — eigenes Team im Spielstau",
             "weight": 1.0,
-            "weighted_score": -0.17,
+            "weighted_score": -0.07,
             "metadata": {
               "homeRest": 4,
               "awayRest": 5,
               "homeCongestion": 0.25,
               "awayCongestion": 0.0
+            },
+            "correlation_discount_applied": 0.4
+          },
+          {
+            "name": "coach_change",
+            "score": 0.64,
+            "confidence": 0.46,
+            "evidence": "Neuer Trainer José Mourinho (27d) → Heim-Bounce",
+            "weight": 1.0,
+            "weighted_score": 0.29,
+            "metadata": {
+              "homeBounce": 0.64,
+              "awayBounce": 0.0
             }
           },
           {
@@ -28758,14 +28760,14 @@
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 1.45,
-        "signalCountPos": 6,
+        "signalAdjustmentPP": 1.53,
+        "signalCountPos": 7,
         "signalCountNeg": 1,
-        "signalAdjustmentPP_trade": 1.4,
-        "signalCountPos_trade": 6,
+        "signalAdjustmentPP_trade": 1.5,
+        "signalCountPos_trade": 7,
         "signalCountNeg_trade": 1,
-        "effectiveEdgePP": 1.4,
-        "effectiveEdgePP_trade": 1.4,
+        "effectiveEdgePP": 1.5,
+        "effectiveEdgePP_trade": 1.5,
         "convictionScore": 3,
         "earlySeasonPenalty": 1.0,
         "convictionVerdict": "watch",
@@ -29699,25 +29701,25 @@
           },
           {
             "name": "transfer_shift",
-            "score": -1.2,
+            "score": -0.48,
             "confidence": 0.55,
-            "evidence": "Schlüssel-Abgang Auswärts 4 / Gegner 0",
+            "evidence": "Schlüssel-Abgang Auswärts 4 / Gegner 1",
             "weight": 1.0,
-            "weighted_score": -0.66,
+            "weighted_score": -0.26,
             "metadata": {
-              "homeShift": 0.0,
+              "homeShift": 0.6,
               "awayShift": 1.0
             }
           }
         ],
-        "signalAdjustmentPP": -0.89,
+        "signalAdjustmentPP": -0.71,
         "signalCountPos": 0,
         "signalCountNeg": 3,
-        "signalAdjustmentPP_trade": -0.9,
+        "signalAdjustmentPP_trade": -0.7,
         "signalCountPos_trade": 0,
         "signalCountNeg_trade": 3,
-        "effectiveEdgePP": -4.9,
-        "effectiveEdgePP_trade": -4.9,
+        "effectiveEdgePP": -4.7,
+        "effectiveEdgePP_trade": -4.7,
         "convictionScore": 1,
         "earlySeasonPenalty": 1.0,
         "convictionVerdict": "skip",
@@ -50068,7 +50070,7 @@
         1540843,
         1379309
       ],
-      "updatedAt": "2026-07-28T08:36:01.445603+00:00"
+      "updatedAt": "2026-07-28T19:44:42.947407+00:00"
     },
     "1346": {
       "xgForAvg": 2.01,
@@ -50091,29 +50093,28 @@
         1387061,
         1387048
       ],
-      "updatedAt": "2026-07-28T08:36:23.841923+00:00"
+      "updatedAt": "2026-07-28T19:45:04.592374+00:00"
     },
     "64": {
-      "xgForAvg": 1.278,
-      "xgAgainstAvg": 0.807,
-      "xgGames": 4,
-      "xgSimForAvg": 1.226,
-      "xgSimAgainstAvg": 1.11,
-      "shotsInsideForAvg": 7.0,
-      "sotForAvg": 4.0,
-      "savesForAvg": 1.75,
-      "blocksForAvg": 0.5,
+      "xgForAvg": 1.097,
+      "xgAgainstAvg": 0.753,
+      "xgGames": 3,
+      "xgSimForAvg": 1.12,
+      "xgSimAgainstAvg": 1.059,
+      "shotsInsideForAvg": 6.67,
+      "sotForAvg": 3.33,
+      "savesForAvg": 2.0,
+      "blocksForAvg": 0.67,
       "keyPassesForAvg": null,
       "ratingAvg": null,
-      "games": 4,
+      "games": 3,
       "source": "apif_real",
       "fixture_ids": [
         1545715,
         1543788,
-        1543786,
-        1387093
+        1543786
       ],
-      "updatedAt": "2026-07-28T08:36:38.503022+00:00"
+      "updatedAt": "2026-07-28T19:45:18.517041+00:00"
     },
     "33": {
       "xgForAvg": 2.298,
@@ -50135,29 +50136,28 @@
         1379326,
         1379316
       ],
-      "updatedAt": "2026-07-28T08:36:57.575208+00:00"
+      "updatedAt": "2026-07-28T19:45:37.724206+00:00"
     },
     "45": {
-      "xgForAvg": 1.44,
-      "xgAgainstAvg": 1.502,
-      "xgGames": 4,
-      "xgSimForAvg": 1.428,
-      "xgSimAgainstAvg": 1.841,
-      "shotsInsideForAvg": 8.5,
-      "sotForAvg": 4.25,
-      "savesForAvg": 2.0,
-      "blocksForAvg": 3.75,
+      "xgForAvg": 1.013,
+      "xgAgainstAvg": 1.49,
+      "xgGames": 3,
+      "xgSimForAvg": 1.311,
+      "xgSimAgainstAvg": 1.81,
+      "shotsInsideForAvg": 8.0,
+      "sotForAvg": 3.67,
+      "savesForAvg": 2.33,
+      "blocksForAvg": 3.0,
       "keyPassesForAvg": null,
       "ratingAvg": null,
-      "games": 4,
+      "games": 3,
       "source": "apif_real",
       "fixture_ids": [
         1379347,
         1379334,
-        1379321,
-        1379314
+        1379321
       ],
-      "updatedAt": "2026-07-28T08:36:31.486637+00:00"
+      "updatedAt": "2026-07-28T19:45:11.522566+00:00"
     },
     "52": {
       "xgForAvg": 1.5,
@@ -50179,7 +50179,7 @@
         1379332,
         1379275
       ],
-      "updatedAt": "2026-07-28T08:36:27.658160+00:00"
+      "updatedAt": "2026-07-28T19:45:08.385117+00:00"
     },
     "57": {
       "xgForAvg": 1.842,
@@ -50203,7 +50203,7 @@
         1387057,
         1386857
       ],
-      "updatedAt": "2026-07-28T08:36:42.323222+00:00"
+      "updatedAt": "2026-07-28T19:45:22.363319+00:00"
     },
     "746": {
       "xgForAvg": 1.127,
@@ -50225,7 +50225,7 @@
         1379326,
         1379318
       ],
-      "updatedAt": "2026-07-28T08:37:09.079560+00:00"
+      "updatedAt": "2026-07-28T19:45:49.327868+00:00"
     },
     "65": {
       "xgForAvg": 1.57,
@@ -50246,7 +50246,7 @@
         1379336,
         1379325
       ],
-      "updatedAt": "2026-07-28T08:37:05.230717+00:00"
+      "updatedAt": "2026-07-28T19:45:45.413665+00:00"
     },
     "63": {
       "xgForAvg": 1.128,
@@ -50269,7 +50269,7 @@
         1379315,
         1539715
       ],
-      "updatedAt": "2026-07-28T08:36:46.121066+00:00"
+      "updatedAt": "2026-07-28T19:45:26.173358+00:00"
     },
     "55": {
       "xgForAvg": 1.397,
@@ -50293,7 +50293,7 @@
         1379305,
         1379290
       ],
-      "updatedAt": "2026-07-28T08:36:12.966798+00:00"
+      "updatedAt": "2026-07-28T19:44:53.717340+00:00"
     },
     "47": {
       "xgForAvg": 1.283,
@@ -50315,7 +50315,7 @@
         1379327,
         1379310
       ],
-      "updatedAt": "2026-07-28T08:37:12.886964+00:00"
+      "updatedAt": "2026-07-28T19:45:53.102242+00:00"
     },
     "50": {
       "xgForAvg": 1.8,
@@ -50339,7 +50339,7 @@
         1379324,
         1379314
       ],
-      "updatedAt": "2026-07-28T08:36:53.766166+00:00"
+      "updatedAt": "2026-07-28T19:45:33.842613+00:00"
     },
     "35": {
       "xgForAvg": 1.55,
@@ -50362,7 +50362,7 @@
         1379311,
         1379300
       ],
-      "updatedAt": "2026-07-28T08:36:09.156670+00:00"
+      "updatedAt": "2026-07-28T19:44:49.944166+00:00"
     },
     "51": {
       "xgForAvg": 1.828,
@@ -50385,29 +50385,28 @@
         1379317,
         1379301
       ],
-      "updatedAt": "2026-07-28T08:36:16.185002+00:00"
+      "updatedAt": "2026-07-28T19:44:56.871064+00:00"
     },
     "66": {
-      "xgForAvg": 1.855,
-      "xgAgainstAvg": 1.238,
-      "xgGames": 4,
-      "xgSimForAvg": 1.825,
-      "xgSimAgainstAvg": 1.285,
-      "shotsInsideForAvg": 9.75,
-      "sotForAvg": 6.75,
-      "savesForAvg": 2.75,
-      "blocksForAvg": 3.75,
+      "xgForAvg": 1.993,
+      "xgAgainstAvg": 1.053,
+      "xgGames": 3,
+      "xgSimForAvg": 1.807,
+      "xgSimAgainstAvg": 1.238,
+      "shotsInsideForAvg": 9.67,
+      "sotForAvg": 6.67,
+      "savesForAvg": 2.33,
+      "blocksForAvg": 3.33,
       "keyPassesForAvg": null,
       "ratingAvg": null,
-      "games": 4,
+      "games": 3,
       "source": "apif_real",
       "fixture_ids": [
         1379344,
         1544596,
-        1379330,
-        1379320
+        1379330
       ],
-      "updatedAt": "2026-07-28T08:36:05.326126+00:00"
+      "updatedAt": "2026-07-28T19:44:46.121538+00:00"
     },
     "34": {
       "xgForAvg": 1.67,
@@ -50429,7 +50428,7 @@
         1379325,
         1379317
       ],
-      "updatedAt": "2026-07-28T08:37:01.412274+00:00"
+      "updatedAt": "2026-07-28T19:45:41.536792+00:00"
     },
     "40": {
       "xgForAvg": 1.438,
@@ -50452,79 +50451,75 @@
         1379316,
         1379304
       ],
-      "updatedAt": "2026-07-28T08:36:49.947144+00:00"
+      "updatedAt": "2026-07-28T19:45:30.021081+00:00"
     },
     "36": {
-      "xgForAvg": 1.175,
-      "xgAgainstAvg": 1.353,
-      "xgGames": 6,
-      "xgSimForAvg": 1.277,
-      "xgSimAgainstAvg": 1.344,
-      "shotsInsideForAvg": 8.0,
-      "sotForAvg": 3.33,
-      "savesForAvg": 3.0,
-      "blocksForAvg": 5.33,
+      "xgForAvg": 1.275,
+      "xgAgainstAvg": 1.44,
+      "xgGames": 4,
+      "xgSimForAvg": 1.353,
+      "xgSimAgainstAvg": 1.36,
+      "shotsInsideForAvg": 8.5,
+      "sotForAvg": 3.5,
+      "savesForAvg": 3.25,
+      "blocksForAvg": 5.25,
       "keyPassesForAvg": null,
       "ratingAvg": null,
-      "games": 6,
+      "games": 4,
       "source": "apif_real",
       "fixture_ids": [
         1379342,
         1379338,
         1379322,
-        1379309,
-        1379303,
-        1379290
+        1379309
       ],
-      "updatedAt": "2026-07-28T08:36:35.305945+00:00"
+      "updatedAt": "2026-07-28T19:45:15.399555+00:00"
     },
     "49": {
-      "xgForAvg": 0.914,
-      "xgAgainstAvg": 1.37,
-      "xgGames": 5,
-      "xgSimForAvg": 0.969,
-      "xgSimAgainstAvg": 1.288,
-      "shotsInsideForAvg": 5.67,
-      "sotForAvg": 3.0,
-      "savesForAvg": 2.83,
-      "blocksForAvg": 2.83,
+      "xgForAvg": 1.042,
+      "xgAgainstAvg": 1.542,
+      "xgGames": 4,
+      "xgSimForAvg": 1.004,
+      "xgSimAgainstAvg": 1.391,
+      "shotsInsideForAvg": 5.8,
+      "sotForAvg": 3.2,
+      "savesForAvg": 2.8,
+      "blocksForAvg": 2.8,
       "keyPassesForAvg": null,
       "ratingAvg": null,
-      "games": 6,
+      "games": 5,
       "source": "apif_real",
       "fixture_ids": [
         1379346,
         1379333,
         1542889,
         1379323,
-        1379313,
-        1539715
+        1379313
       ],
-      "updatedAt": "2026-07-28T08:36:19.992528+00:00"
+      "updatedAt": "2026-07-28T19:45:00.658061+00:00"
     },
     "499": {
       "xgForAvg": 1.332,
       "xgAgainstAvg": 1.166,
       "xgGames": 5,
-      "xgSimForAvg": 1.933,
-      "xgSimAgainstAvg": 1.184,
-      "shotsInsideForAvg": 12.0,
-      "sotForAvg": 5.17,
-      "savesForAvg": 3.0,
-      "blocksForAvg": 5.33,
+      "xgSimForAvg": 1.704,
+      "xgSimAgainstAvg": 1.282,
+      "shotsInsideForAvg": 10.2,
+      "sotForAvg": 5.0,
+      "savesForAvg": 3.6,
+      "blocksForAvg": 3.6,
       "keyPassesForAvg": null,
       "ratingAvg": null,
-      "games": 6,
+      "games": 5,
       "source": "apif_real",
       "fixture_ids": [
         1378236,
         1378224,
         1378219,
         1378204,
-        1378195,
-        1522480
+        1378195
       ],
-      "updatedAt": "2026-07-28T08:39:41.939928+00:00"
+      "updatedAt": "2026-07-28T19:48:21.085057+00:00"
     },
     "500": {
       "xgForAvg": 1.117,
@@ -50545,54 +50540,52 @@
         1378224,
         1378220
       ],
-      "updatedAt": "2026-07-28T08:39:45.770476+00:00"
+      "updatedAt": "2026-07-28T19:48:24.883463+00:00"
     },
     "490": {
-      "xgForAvg": 1.64,
-      "xgAgainstAvg": 1.382,
-      "xgGames": 5,
-      "xgSimForAvg": 1.727,
-      "xgSimAgainstAvg": 1.431,
-      "shotsInsideForAvg": 10.4,
-      "sotForAvg": 5.0,
-      "savesForAvg": 3.4,
-      "blocksForAvg": 4.2,
+      "xgForAvg": 1.66,
+      "xgAgainstAvg": 1.433,
+      "xgGames": 4,
+      "xgSimForAvg": 1.853,
+      "xgSimAgainstAvg": 1.315,
+      "shotsInsideForAvg": 11.25,
+      "sotForAvg": 5.25,
+      "savesForAvg": 3.0,
+      "blocksForAvg": 4.75,
       "keyPassesForAvg": null,
       "ratingAvg": null,
-      "games": 5,
+      "games": 4,
       "source": "apif_real",
       "fixture_ids": [
         1378239,
         1378225,
         1378214,
-        1378205,
-        1378195
+        1378205
       ],
-      "updatedAt": "2026-07-28T08:39:49.597623+00:00"
+      "updatedAt": "2026-07-28T19:48:28.723499+00:00"
     },
     "895": {
       "xgForAvg": 1.788,
       "xgAgainstAvg": 0.762,
       "xgGames": 5,
-      "xgSimForAvg": 1.834,
-      "xgSimAgainstAvg": 0.935,
-      "shotsInsideForAvg": 11.17,
-      "sotForAvg": 5.17,
-      "savesForAvg": 1.83,
-      "blocksForAvg": 4.83,
+      "xgSimForAvg": 1.754,
+      "xgSimAgainstAvg": 0.679,
+      "shotsInsideForAvg": 10.8,
+      "sotForAvg": 4.8,
+      "savesForAvg": 1.4,
+      "blocksForAvg": 5.0,
       "keyPassesForAvg": null,
       "ratingAvg": null,
-      "games": 6,
+      "games": 5,
       "source": "apif_real",
       "fixture_ids": [
         1378235,
         1378226,
         1378223,
         1378206,
-        1378197,
-        1521548
+        1378197
       ],
-      "updatedAt": "2026-07-28T08:39:53.410484+00:00"
+      "updatedAt": "2026-07-28T19:48:32.503107+00:00"
     },
     "502": {
       "xgForAvg": 0.773,
@@ -50613,7 +50606,7 @@
         1378229,
         1378216
       ],
-      "updatedAt": "2026-07-28T08:39:57.235728+00:00"
+      "updatedAt": "2026-07-28T19:48:36.332361+00:00"
     },
     "512": {
       "xgForAvg": 2.075,
@@ -50635,7 +50628,7 @@
         1419950,
         1419932
       ],
-      "updatedAt": "2026-07-28T08:40:01.076739+00:00"
+      "updatedAt": "2026-07-28T19:48:40.180937+00:00"
     },
     "495": {
       "xgForAvg": 0.755,
@@ -50657,7 +50650,7 @@
         1378216,
         1378204
       ],
-      "updatedAt": "2026-07-28T08:40:04.920888+00:00"
+      "updatedAt": "2026-07-28T19:48:43.988383+00:00"
     },
     "505": {
       "xgForAvg": 1.915,
@@ -50680,7 +50673,7 @@
         1378217,
         1378208
       ],
-      "updatedAt": "2026-07-28T08:40:08.762990+00:00"
+      "updatedAt": "2026-07-28T19:48:47.805883+00:00"
     },
     "496": {
       "xgForAvg": 2.197,
@@ -50702,7 +50695,7 @@
         1378218,
         1378209
       ],
-      "updatedAt": "2026-07-28T08:40:12.614379+00:00"
+      "updatedAt": "2026-07-28T19:48:51.678216+00:00"
     },
     "487": {
       "xgForAvg": 0.808,
@@ -50725,7 +50718,7 @@
         1378217,
         1378207
       ],
-      "updatedAt": "2026-07-28T08:40:16.423923+00:00"
+      "updatedAt": "2026-07-28T19:48:55.472809+00:00"
     },
     "867": {
       "xgForAvg": 1.057,
@@ -50746,7 +50739,7 @@
         1378232,
         1378218
       ],
-      "updatedAt": "2026-07-28T08:40:20.281304+00:00"
+      "updatedAt": "2026-07-28T19:48:59.296393+00:00"
     },
     "489": {
       "xgForAvg": 1.318,
@@ -50769,7 +50762,7 @@
         1378212,
         1378199
       ],
-      "updatedAt": "2026-07-28T08:40:24.103912+00:00"
+      "updatedAt": "2026-07-28T19:49:03.201205+00:00"
     },
     "1579": {
       "xgForAvg": 0.98,
@@ -50791,7 +50784,7 @@
         1544951,
         1544949
       ],
-      "updatedAt": "2026-07-28T08:40:27.937178+00:00"
+      "updatedAt": "2026-07-28T19:49:07.041378+00:00"
     },
     "492": {
       "xgForAvg": 1.078,
@@ -50813,31 +50806,29 @@
         1378220,
         1378206
       ],
-      "updatedAt": "2026-07-28T08:40:31.883931+00:00"
+      "updatedAt": "2026-07-28T19:49:10.835126+00:00"
     },
     "523": {
-      "xgForAvg": 0.903,
-      "xgAgainstAvg": 1.872,
-      "xgGames": 6,
-      "xgSimForAvg": 0.981,
-      "xgSimAgainstAvg": 1.574,
-      "shotsInsideForAvg": 6.33,
-      "sotForAvg": 2.33,
-      "savesForAvg": 3.33,
-      "blocksForAvg": 2.83,
+      "xgForAvg": 0.638,
+      "xgAgainstAvg": 2.098,
+      "xgGames": 4,
+      "xgSimForAvg": 0.79,
+      "xgSimAgainstAvg": 1.71,
+      "shotsInsideForAvg": 5.0,
+      "sotForAvg": 2.0,
+      "savesForAvg": 3.5,
+      "blocksForAvg": 1.5,
       "keyPassesForAvg": null,
       "ratingAvg": null,
-      "games": 6,
+      "games": 4,
       "source": "apif_real",
       "fixture_ids": [
         1378241,
         1378226,
         1378221,
-        1378208,
-        1378201,
-        1378192
+        1378208
       ],
-      "updatedAt": "2026-07-28T08:40:35.695623+00:00"
+      "updatedAt": "2026-07-28T19:49:14.691823+00:00"
     },
     "497": {
       "xgForAvg": 2.314,
@@ -50860,30 +50851,28 @@
         1378211,
         1378194
       ],
-      "updatedAt": "2026-07-28T08:40:39.525559+00:00"
+      "updatedAt": "2026-07-28T19:49:18.480336+00:00"
     },
     "488": {
-      "xgForAvg": 1.526,
-      "xgAgainstAvg": 1.484,
-      "xgGames": 5,
-      "xgSimForAvg": 1.324,
-      "xgSimAgainstAvg": 1.442,
-      "shotsInsideForAvg": 8.0,
-      "sotForAvg": 3.8,
-      "savesForAvg": 2.6,
-      "blocksForAvg": 3.2,
+      "xgForAvg": 1.723,
+      "xgAgainstAvg": 1.747,
+      "xgGames": 3,
+      "xgSimForAvg": 1.45,
+      "xgSimAgainstAvg": 1.653,
+      "shotsInsideForAvg": 8.33,
+      "sotForAvg": 4.67,
+      "savesForAvg": 2.33,
+      "blocksForAvg": 2.33,
       "keyPassesForAvg": null,
       "ratingAvg": null,
-      "games": 5,
+      "games": 3,
       "source": "apif_real",
       "fixture_ids": [
         1378241,
         1378232,
-        1378222,
-        1378212,
-        1378196
+        1378222
       ],
-      "updatedAt": "2026-07-28T08:40:43.329603+00:00"
+      "updatedAt": "2026-07-28T19:49:22.255912+00:00"
     },
     "503": {
       "xgForAvg": 1.482,
@@ -50905,29 +50894,28 @@
         1378222,
         1378213
       ],
-      "updatedAt": "2026-07-28T08:40:47.148506+00:00"
+      "updatedAt": "2026-07-28T19:49:25.999176+00:00"
     },
     "494": {
-      "xgForAvg": 1.298,
-      "xgAgainstAvg": 1.127,
-      "xgGames": 4,
-      "xgSimForAvg": 1.389,
-      "xgSimAgainstAvg": 1.196,
-      "shotsInsideForAvg": 7.75,
-      "sotForAvg": 4.75,
-      "savesForAvg": 3.0,
-      "blocksForAvg": 4.0,
+      "xgForAvg": 1.063,
+      "xgAgainstAvg": 1.227,
+      "xgGames": 3,
+      "xgSimForAvg": 1.075,
+      "xgSimAgainstAvg": 1.444,
+      "shotsInsideForAvg": 6.0,
+      "sotForAvg": 3.67,
+      "savesForAvg": 3.67,
+      "blocksForAvg": 3.0,
       "keyPassesForAvg": null,
       "ratingAvg": null,
-      "games": 4,
+      "games": 3,
       "source": "apif_real",
       "fixture_ids": [
         1378240,
         1378233,
-        1378214,
-        1378213
+        1378214
       ],
-      "updatedAt": "2026-07-28T08:40:50.963060+00:00"
+      "updatedAt": "2026-07-28T19:49:29.742305+00:00"
     },
     "517": {
       "xgForAvg": 2.443,
@@ -50948,7 +50936,7 @@
         1419955,
         1419943
       ],
-      "updatedAt": "2026-07-28T08:40:54.768691+00:00"
+      "updatedAt": "2026-07-28T19:49:33.560235+00:00"
     },
     "77": {
       "xgForAvg": 1.042,
@@ -50970,54 +50958,52 @@
         1387977,
         1387968
       ],
-      "updatedAt": "2026-07-28T08:41:01.812326+00:00"
+      "updatedAt": "2026-07-28T19:49:40.698304+00:00"
     },
     "79": {
-      "xgForAvg": 1.182,
-      "xgAgainstAvg": 0.46,
-      "xgGames": 5,
-      "xgSimForAvg": 1.388,
-      "xgSimAgainstAvg": 0.759,
-      "shotsInsideForAvg": 8.2,
-      "sotForAvg": 4.2,
-      "savesForAvg": 1.8,
-      "blocksForAvg": 3.6,
+      "xgForAvg": 1.343,
+      "xgAgainstAvg": 0.528,
+      "xgGames": 4,
+      "xgSimForAvg": 1.537,
+      "xgSimAgainstAvg": 0.895,
+      "shotsInsideForAvg": 9.0,
+      "sotForAvg": 4.75,
+      "savesForAvg": 2.0,
+      "blocksForAvg": 3.5,
       "keyPassesForAvg": null,
       "ratingAvg": null,
-      "games": 5,
+      "games": 4,
       "source": "apif_real",
       "fixture_ids": [
         1387996,
         1387991,
         1387978,
-        1387974,
-        1387961
+        1387974
       ],
-      "updatedAt": "2026-07-28T08:41:24.760263+00:00"
+      "updatedAt": "2026-07-28T19:50:03.560350+00:00"
     },
     "81": {
-      "xgForAvg": 2.168,
-      "xgAgainstAvg": 1.72,
-      "xgGames": 6,
-      "xgSimForAvg": 2.145,
-      "xgSimAgainstAvg": 1.429,
-      "shotsInsideForAvg": 12.67,
-      "sotForAvg": 6.5,
-      "savesForAvg": 2.17,
-      "blocksForAvg": 3.17,
+      "xgForAvg": 1.892,
+      "xgAgainstAvg": 1.968,
+      "xgGames": 5,
+      "xgSimForAvg": 2.11,
+      "xgSimAgainstAvg": 1.58,
+      "shotsInsideForAvg": 12.8,
+      "sotForAvg": 6.0,
+      "savesForAvg": 2.4,
+      "blocksForAvg": 3.8,
       "keyPassesForAvg": null,
       "ratingAvg": null,
-      "games": 6,
+      "games": 5,
       "source": "apif_real",
       "fixture_ids": [
         1387999,
         1387988,
         1387981,
         1387973,
-        1387962,
-        1387954
+        1387962
       ],
-      "updatedAt": "2026-07-28T08:41:36.209747+00:00"
+      "updatedAt": "2026-07-28T19:50:15.198959+00:00"
     },
     "95": {
       "xgForAvg": 1.785,
@@ -51039,30 +51025,29 @@
         1387986,
         1540882
       ],
-      "updatedAt": "2026-07-28T08:41:55.280993+00:00"
+      "updatedAt": "2026-07-28T19:50:34.039960+00:00"
     },
     "84": {
-      "xgForAvg": 1.485,
-      "xgAgainstAvg": 0.845,
-      "xgGames": 2,
-      "xgSimForAvg": 1.724,
-      "xgSimAgainstAvg": 1.082,
-      "shotsInsideForAvg": 10.2,
-      "sotForAvg": 5.2,
-      "savesForAvg": 1.4,
-      "blocksForAvg": 4.0,
+      "xgForAvg": 1.64,
+      "xgAgainstAvg": 0.85,
+      "xgGames": 1,
+      "xgSimForAvg": 1.768,
+      "xgSimAgainstAvg": 1.017,
+      "shotsInsideForAvg": 10.75,
+      "sotForAvg": 5.0,
+      "savesForAvg": 1.25,
+      "blocksForAvg": 4.5,
       "keyPassesForAvg": null,
       "ratingAvg": null,
-      "games": 5,
+      "games": 4,
       "source": "apif_real",
       "fixture_ids": [
         1545409,
         1545408,
         1542551,
-        1388001,
-        1387987
+        1388001
       ],
-      "updatedAt": "2026-07-28T08:41:28.583271+00:00"
+      "updatedAt": "2026-07-28T19:50:07.524307+00:00"
     },
     "97": {
       "xgForAvg": 1.42,
@@ -51083,7 +51068,7 @@
         1387990,
         1387984
       ],
-      "updatedAt": "2026-07-28T08:41:13.306338+00:00"
+      "updatedAt": "2026-07-28T19:49:52.178125+00:00"
     },
     "85": {
       "xgForAvg": 1.42,
@@ -51107,7 +51092,7 @@
         1540844,
         1387984
       ],
-      "updatedAt": "2026-07-28T08:41:43.811254+00:00"
+      "updatedAt": "2026-07-28T19:50:22.694583+00:00"
     },
     "94": {
       "xgForAvg": 1.7,
@@ -51128,7 +51113,7 @@
         1387993,
         1387979
       ],
-      "updatedAt": "2026-07-28T08:41:51.475914+00:00"
+      "updatedAt": "2026-07-28T19:50:30.235965+00:00"
     },
     "96": {
       "xgForAvg": 1.413,
@@ -51150,13 +51135,13 @@
         1387976,
         1530105
       ],
-      "updatedAt": "2026-07-28T08:41:58.500354+00:00"
+      "updatedAt": "2026-07-28T19:50:37.264437+00:00"
     },
     "80": {
       "xgForAvg": 1.409,
       "xgAgainstAvg": 1.48,
       "games": 10,
-      "updatedAt": "2026-07-25T19:25:44.954713+00:00"
+      "updatedAt": "2026-07-28T19:40:06.168258+00:00"
     },
     "110": {
       "xgForAvg": null,
@@ -51177,30 +51162,29 @@
         1389397,
         1389395
       ],
-      "updatedAt": "2026-07-28T08:42:02.331809+00:00"
+      "updatedAt": "2026-07-28T19:50:40.977887+00:00"
     },
     "114": {
-      "xgForAvg": 1.612,
-      "xgAgainstAvg": 1.178,
-      "xgGames": 5,
-      "xgSimForAvg": 1.673,
-      "xgSimAgainstAvg": 1.186,
-      "shotsInsideForAvg": 9.6,
-      "sotForAvg": 5.4,
-      "savesForAvg": 2.4,
-      "blocksForAvg": 3.0,
+      "xgForAvg": 1.58,
+      "xgAgainstAvg": 1.22,
+      "xgGames": 4,
+      "xgSimForAvg": 1.65,
+      "xgSimAgainstAvg": 1.067,
+      "shotsInsideForAvg": 9.75,
+      "sotForAvg": 5.0,
+      "savesForAvg": 2.0,
+      "blocksForAvg": 3.5,
       "keyPassesForAvg": null,
       "ratingAvg": null,
-      "games": 5,
+      "games": 4,
       "source": "apif_real",
       "fixture_ids": [
         1388002,
         1387993,
         1387983,
-        1387974,
-        1387963
+        1387974
       ],
-      "updatedAt": "2026-07-28T08:41:40.016670+00:00"
+      "updatedAt": "2026-07-28T19:50:18.934699+00:00"
     },
     "111": {
       "xgForAvg": 1.13,
@@ -51222,7 +51206,7 @@
         1387978,
         1387970
       ],
-      "updatedAt": "2026-07-28T08:41:17.120695+00:00"
+      "updatedAt": "2026-07-28T19:49:55.952553+00:00"
     },
     "91": {
       "xgForAvg": 0.873,
@@ -51244,7 +51228,7 @@
         1387980,
         1387976
       ],
-      "updatedAt": "2026-07-28T08:41:05.660776+00:00"
+      "updatedAt": "2026-07-28T19:49:44.563438+00:00"
     },
     "116": {
       "xgForAvg": 1.743,
@@ -51266,7 +51250,7 @@
         1387952,
         1387989
       ],
-      "updatedAt": "2026-07-28T08:41:47.635862+00:00"
+      "updatedAt": "2026-07-28T19:50:26.537483+00:00"
     },
     "108": {
       "xgForAvg": 1.137,
@@ -51287,7 +51271,7 @@
         1387987,
         1387977
       ],
-      "updatedAt": "2026-07-28T08:40:57.995281+00:00"
+      "updatedAt": "2026-07-28T19:49:36.756969+00:00"
     },
     "1298": {
       "xgForAvg": null,
@@ -51308,7 +51292,7 @@
         1389398,
         1389394
       ],
-      "updatedAt": "2026-07-28T08:41:20.933374+00:00"
+      "updatedAt": "2026-07-28T19:49:59.711397+00:00"
     },
     "106": {
       "xgForAvg": 1.397,
@@ -51330,7 +51314,7 @@
         1387992,
         1387983
       ],
-      "updatedAt": "2026-07-28T08:41:09.486064+00:00"
+      "updatedAt": "2026-07-28T19:49:48.395669+00:00"
     },
     "4665": {
       "xgForAvg": 2.315,
@@ -51352,7 +51336,7 @@
         1392198,
         1392186
       ],
-      "updatedAt": "2026-07-28T08:37:51.077306+00:00"
+      "updatedAt": "2026-07-28T19:46:30.766272+00:00"
     },
     "529": {
       "xgForAvg": 1.09,
@@ -51375,7 +51359,7 @@
         1391161,
         1391155
       ],
-      "updatedAt": "2026-07-28T08:37:35.788848+00:00"
+      "updatedAt": "2026-07-28T19:46:15.484735+00:00"
     },
     "530": {
       "xgForAvg": 1.65,
@@ -51399,34 +51383,19 @@
         1540843,
         1391157
       ],
-      "updatedAt": "2026-07-28T08:37:20.522428+00:00"
+      "updatedAt": "2026-07-28T19:46:00.781823+00:00"
     },
     "531": {
       "xgForAvg": 1.108,
       "xgAgainstAvg": 1.191,
       "games": 11,
-      "updatedAt": "2026-07-25T19:14:00.586064+00:00"
+      "updatedAt": "2026-07-28T19:28:16.730419+00:00"
     },
     "532": {
-      "xgForAvg": 1.303,
-      "xgAgainstAvg": 1.277,
-      "xgGames": 3,
-      "xgSimForAvg": 1.562,
-      "xgSimAgainstAvg": 1.12,
-      "shotsInsideForAvg": 9.0,
-      "sotForAvg": 5.0,
-      "savesForAvg": 2.0,
-      "blocksForAvg": 3.67,
-      "keyPassesForAvg": null,
-      "ratingAvg": null,
-      "games": 3,
-      "source": "apif_real",
-      "fixture_ids": [
-        1391197,
-        1391186,
-        1391177
-      ],
-      "updatedAt": "2026-07-28T08:38:25.537434+00:00"
+      "xgForAvg": 1.366,
+      "xgAgainstAvg": 1.19,
+      "games": 11,
+      "updatedAt": "2026-07-28T19:28:43.908730+00:00"
     },
     "533": {
       "xgForAvg": 1.35,
@@ -51448,7 +51417,7 @@
         1391178,
         1391164
       ],
-      "updatedAt": "2026-07-28T08:38:29.353498+00:00"
+      "updatedAt": "2026-07-28T19:47:08.172810+00:00"
     },
     "535": {
       "xgForAvg": 3.38,
@@ -51471,28 +51440,13 @@
         1548053,
         1392216
       ],
-      "updatedAt": "2026-07-28T08:37:47.260346+00:00"
+      "updatedAt": "2026-07-28T19:46:26.936268+00:00"
     },
     "536": {
-      "xgForAvg": 0.797,
-      "xgAgainstAvg": 1.14,
-      "xgGames": 3,
-      "xgSimForAvg": 1.141,
-      "xgSimAgainstAvg": 1.093,
-      "shotsInsideForAvg": 6.0,
-      "sotForAvg": 4.33,
-      "savesForAvg": 1.33,
-      "blocksForAvg": 3.33,
-      "keyPassesForAvg": null,
-      "ratingAvg": null,
-      "games": 3,
-      "source": "apif_real",
-      "fixture_ids": [
-        1391191,
-        1391188,
-        1391178
-      ],
-      "updatedAt": "2026-07-26T18:53:26.658201+00:00"
+      "xgForAvg": 0.918,
+      "xgAgainstAvg": 1.191,
+      "games": 12,
+      "updatedAt": "2026-07-28T19:30:05.658928+00:00"
     },
     "538": {
       "xgForAvg": 1.012,
@@ -51514,7 +51468,7 @@
         1391171,
         1391160
       ],
-      "updatedAt": "2026-07-28T08:37:54.892869+00:00"
+      "updatedAt": "2026-07-28T19:46:34.624387+00:00"
     },
     "539": {
       "xgForAvg": 2.08,
@@ -51535,7 +51489,7 @@
         1391183,
         1391171
       ],
-      "updatedAt": "2026-07-28T08:37:43.435867+00:00"
+      "updatedAt": "2026-07-28T19:46:23.082063+00:00"
     },
     "540": {
       "xgForAvg": 1.32,
@@ -51556,31 +51510,30 @@
         1391184,
         1391172
       ],
-      "updatedAt": "2026-07-28T08:38:02.560664+00:00"
+      "updatedAt": "2026-07-28T19:46:42.292963+00:00"
     },
     "541": {
-      "xgForAvg": 1.397,
-      "xgAgainstAvg": 0.978,
-      "xgGames": 6,
-      "xgSimForAvg": 1.621,
-      "xgSimAgainstAvg": 1.386,
-      "shotsInsideForAvg": 9.5,
-      "sotForAvg": 5.0,
+      "xgForAvg": 1.438,
+      "xgAgainstAvg": 0.958,
+      "xgGames": 5,
+      "xgSimForAvg": 1.549,
+      "xgSimAgainstAvg": 1.3,
+      "shotsInsideForAvg": 9.4,
+      "sotForAvg": 4.4,
       "savesForAvg": 3.0,
-      "blocksForAvg": 3.0,
+      "blocksForAvg": 3.2,
       "keyPassesForAvg": null,
       "ratingAvg": null,
-      "games": 6,
+      "games": 5,
       "source": "apif_real",
       "fixture_ids": [
         1391196,
         1391188,
         1391176,
         1391161,
-        1391152,
-        1391131
+        1391152
       ],
-      "updatedAt": "2026-07-28T08:38:14.063054+00:00"
+      "updatedAt": "2026-07-28T19:46:53.634500+00:00"
     },
     "542": {
       "xgForAvg": 1.45,
@@ -51602,7 +51555,7 @@
         1391169,
         1391162
       ],
-      "updatedAt": "2026-07-28T08:37:28.159130+00:00"
+      "updatedAt": "2026-07-28T19:46:08.450849+00:00"
     },
     "543": {
       "xgForAvg": 1.427,
@@ -51623,7 +51576,7 @@
         1391181,
         1391170
       ],
-      "updatedAt": "2026-07-28T08:38:10.244173+00:00"
+      "updatedAt": "2026-07-28T19:46:49.890730+00:00"
     },
     "544": {
       "xgForAvg": 1.82,
@@ -51645,7 +51598,7 @@
         1396988,
         1392192
       ],
-      "updatedAt": "2026-07-28T08:37:58.709612+00:00"
+      "updatedAt": "2026-07-28T19:46:38.459622+00:00"
     },
     "546": {
       "xgForAvg": 0.633,
@@ -51666,28 +51619,13 @@
         1391182,
         1391173
       ],
-      "updatedAt": "2026-07-28T08:37:39.614949+00:00"
+      "updatedAt": "2026-07-28T19:46:19.242336+00:00"
     },
     "548": {
-      "xgForAvg": 0.96,
-      "xgAgainstAvg": 2.063,
-      "xgGames": 3,
-      "xgSimForAvg": 1.008,
-      "xgSimAgainstAvg": 1.977,
-      "shotsInsideForAvg": 6.0,
-      "sotForAvg": 3.0,
-      "savesForAvg": 4.33,
-      "blocksForAvg": 1.33,
-      "keyPassesForAvg": null,
-      "ratingAvg": null,
-      "games": 3,
-      "source": "apif_real",
-      "fixture_ids": [
-        1391192,
-        1391186,
-        1391174
-      ],
-      "updatedAt": "2026-07-28T08:38:17.865229+00:00"
+      "xgForAvg": 1.408,
+      "xgAgainstAvg": 1.71,
+      "games": 12,
+      "updatedAt": "2026-07-28T19:34:11.490861+00:00"
     },
     "727": {
       "xgForAvg": 1.214,
@@ -51710,7 +51648,7 @@
         1391163,
         1391155
       ],
-      "updatedAt": "2026-07-28T08:37:24.331385+00:00"
+      "updatedAt": "2026-07-28T19:46:04.636238+00:00"
     },
     "728": {
       "xgForAvg": 1.127,
@@ -51732,30 +51670,28 @@
         1391185,
         1391177
       ],
-      "updatedAt": "2026-07-28T08:38:06.410448+00:00"
+      "updatedAt": "2026-07-28T19:46:46.041015+00:00"
     },
     "797": {
-      "xgForAvg": 0.868,
-      "xgAgainstAvg": 1.118,
-      "xgGames": 5,
-      "xgSimForAvg": 1.15,
-      "xgSimAgainstAvg": 1.242,
-      "shotsInsideForAvg": 7.2,
-      "sotForAvg": 3.0,
-      "savesForAvg": 2.6,
-      "blocksForAvg": 2.4,
+      "xgForAvg": 0.413,
+      "xgAgainstAvg": 0.83,
+      "xgGames": 3,
+      "xgSimForAvg": 0.633,
+      "xgSimAgainstAvg": 1.214,
+      "shotsInsideForAvg": 3.67,
+      "sotForAvg": 2.0,
+      "savesForAvg": 3.0,
+      "blocksForAvg": 1.67,
       "keyPassesForAvg": null,
       "ratingAvg": null,
-      "games": 5,
+      "games": 3,
       "source": "apif_real",
       "fixture_ids": [
         1391194,
         1391182,
-        1391170,
-        1391162,
-        1391151
+        1391170
       ],
-      "updatedAt": "2026-07-28T08:37:31.983030+00:00"
+      "updatedAt": "2026-07-28T19:46:11.707085+00:00"
     },
     "157": {
       "xgForAvg": 2.155,
@@ -51778,7 +51714,7 @@
         1540844,
         1388588
       ],
-      "updatedAt": "2026-07-28T08:38:33.175568+00:00"
+      "updatedAt": "2026-07-28T19:47:11.975674+00:00"
     },
     "160": {
       "xgForAvg": 0.972,
@@ -51801,7 +51737,7 @@
         1540874,
         1388591
       ],
-      "updatedAt": "2026-07-28T08:38:56.057510+00:00"
+      "updatedAt": "2026-07-28T19:47:34.890951+00:00"
     },
     "162": {
       "xgForAvg": 0.97,
@@ -51822,7 +51758,7 @@
         1388600,
         1388595
       ],
-      "updatedAt": "2026-07-28T08:39:26.647151+00:00"
+      "updatedAt": "2026-07-28T19:48:05.627394+00:00"
     },
     "163": {
       "xgForAvg": 1.513,
@@ -51843,13 +51779,13 @@
         1388596,
         1388589
       ],
-      "updatedAt": "2026-07-28T08:39:15.174480+00:00"
+      "updatedAt": "2026-07-28T19:47:53.851923+00:00"
     },
     "164": {
       "xgForAvg": 1.864,
       "xgAgainstAvg": 1.477,
       "games": 11,
-      "updatedAt": "2026-07-25T18:53:13.441139+00:00"
+      "updatedAt": "2026-07-28T19:07:22.411544+00:00"
     },
     "165": {
       "xgForAvg": 2.135,
@@ -51871,13 +51807,13 @@
         1388589,
         1388579
       ],
-      "updatedAt": "2026-07-28T08:38:36.994190+00:00"
+      "updatedAt": "2026-07-28T19:47:15.819995+00:00"
     },
     "1660": {
-      "xgForAvg": 1.643,
-      "xgAgainstAvg": 0.865,
-      "games": 11,
-      "updatedAt": "2026-07-25T18:54:07.542609+00:00"
+      "xgForAvg": 1.713,
+      "xgAgainstAvg": 0.847,
+      "games": 10,
+      "updatedAt": "2026-07-28T19:08:16.961357+00:00"
     },
     "167": {
       "xgForAvg": 1.862,
@@ -51900,7 +51836,7 @@
         1388581,
         1388574
       ],
-      "updatedAt": "2026-07-28T08:38:48.427850+00:00"
+      "updatedAt": "2026-07-28T19:47:27.254357+00:00"
     },
     "168": {
       "xgForAvg": 2.39,
@@ -51922,28 +51858,13 @@
         1388587,
         1388580
       ],
-      "updatedAt": "2026-07-28T08:38:52.237482+00:00"
+      "updatedAt": "2026-07-28T19:47:31.065747+00:00"
     },
     "169": {
-      "xgForAvg": 1.443,
-      "xgAgainstAvg": 1.293,
-      "xgGames": 3,
-      "xgSimForAvg": 1.202,
-      "xgSimAgainstAvg": 1.499,
-      "shotsInsideForAvg": 5.67,
-      "sotForAvg": 5.33,
-      "savesForAvg": 4.0,
-      "blocksForAvg": 3.33,
-      "keyPassesForAvg": null,
-      "ratingAvg": null,
-      "games": 3,
-      "source": "apif_real",
-      "fixture_ids": [
-        1388608,
-        1388597,
-        1388590
-      ],
-      "updatedAt": "2026-07-28T08:38:59.864579+00:00"
+      "xgForAvg": 1.314,
+      "xgAgainstAvg": 1.482,
+      "games": 11,
+      "updatedAt": "2026-07-28T19:09:38.597842+00:00"
     },
     "170": {
       "xgForAvg": 1.82,
@@ -51966,7 +51887,7 @@
         1388578,
         1388569
       ],
-      "updatedAt": "2026-07-28T08:39:03.688805+00:00"
+      "updatedAt": "2026-07-28T19:47:42.566960+00:00"
     },
     "172": {
       "xgForAvg": 1.977,
@@ -51988,7 +51909,7 @@
         1388603,
         1388592
       ],
-      "updatedAt": "2026-07-28T08:38:44.620430+00:00"
+      "updatedAt": "2026-07-28T19:47:23.414287+00:00"
     },
     "173": {
       "xgForAvg": 1.26,
@@ -52009,42 +51930,41 @@
         1388602,
         1388587
       ],
-      "updatedAt": "2026-07-28T08:38:40.804888+00:00"
+      "updatedAt": "2026-07-28T19:47:19.583030+00:00"
     },
     "174": {
       "xgForAvg": 1.82,
       "xgAgainstAvg": 1.009,
       "games": 10,
-      "updatedAt": "2026-07-25T18:57:17.174088+00:00"
+      "updatedAt": "2026-07-28T19:11:27.770936+00:00"
     },
     "175": {
-      "xgForAvg": 1.266,
-      "xgAgainstAvg": 1.504,
-      "xgGames": 5,
-      "xgSimForAvg": 1.408,
-      "xgSimAgainstAvg": 1.651,
-      "shotsInsideForAvg": 8.2,
-      "sotForAvg": 4.4,
-      "savesForAvg": 4.6,
-      "blocksForAvg": 3.8,
+      "xgForAvg": 1.44,
+      "xgAgainstAvg": 1.445,
+      "xgGames": 4,
+      "xgSimForAvg": 1.478,
+      "xgSimAgainstAvg": 1.578,
+      "shotsInsideForAvg": 8.5,
+      "sotForAvg": 4.75,
+      "savesForAvg": 4.0,
+      "blocksForAvg": 4.0,
       "keyPassesForAvg": null,
       "ratingAvg": null,
-      "games": 5,
+      "games": 4,
       "source": "apif_real",
       "fixture_ids": [
         1388605,
         1388599,
         1388590,
-        1388581,
-        1388577
+        1388581
       ],
-      "updatedAt": "2026-07-28T08:39:18.997646+00:00"
+      "updatedAt": "2026-07-28T19:47:57.723849+00:00"
     },
     "182": {
       "xgForAvg": 1.442,
       "xgAgainstAvg": 1.919,
       "games": 10,
-      "updatedAt": "2026-07-25T18:58:11.269422+00:00"
+      "updatedAt": "2026-07-28T19:12:22.015997+00:00"
     },
     "185": {
       "xgForAvg": 1.777,
@@ -52067,7 +51987,7 @@
         1388909,
         1388894
       ],
-      "updatedAt": "2026-07-28T08:39:38.128248+00:00"
+      "updatedAt": "2026-07-28T19:48:17.222024+00:00"
     },
     "192": {
       "xgForAvg": 1.654,
@@ -52090,7 +52010,7 @@
         1388580,
         1388575
       ],
-      "updatedAt": "2026-07-28T08:39:22.837061+00:00"
+      "updatedAt": "2026-07-28T19:48:01.577822+00:00"
     }
   },
   "squads": {
@@ -64685,6 +64605,11 @@
   },
   "topScorers": {},
   "coachChange": {
+    "541": {
+      "name": "José Mourinho",
+      "since": "2026-07-01",
+      "daysSince": 27
+    },
     "96": {
       "name": "J. Askou",
       "since": "2026-07-01",
@@ -64829,7 +64754,7 @@
     "531": [
       {
         "name": "Urko Izeta",
-        "date": "2026-07-09"
+        "date": "2026-07-10"
       }
     ],
     "727": [
@@ -64859,7 +64784,7 @@
       },
       {
         "name": "André Silva",
-        "date": "2026-06-30"
+        "date": "2026-06-29"
       },
       {
         "name": "Rafa Mir",
@@ -65020,6 +64945,12 @@
         "date": "2026-06-29"
       }
     ],
+    "160": [
+      {
+        "name": "J. Manzambi",
+        "date": "2026-07-16"
+      }
+    ],
     "169": [
       {
         "name": "A. Kalimuendo",
@@ -65043,7 +64974,7 @@
     "164": [
       {
         "name": "D. Batz",
-        "date": "2026-06-30"
+        "date": "2026-06-29"
       },
       {
         "name": "S. Becker",
@@ -65081,6 +65012,10 @@
     "175": [
       {
         "name": "D. Downs",
+        "date": "2026-06-29"
+      },
+      {
+        "name": "P. Otele",
         "date": "2026-06-29"
       },
       {
@@ -65122,11 +65057,11 @@
         "date": "2026-06-29"
       },
       {
-        "name": "M. N&apos;Diaye",
+        "name": "E. Džeko",
         "date": "2026-06-29"
       },
       {
-        "name": "E. Džeko",
+        "name": "M. N&apos;Diaye",
         "date": "2026-06-29"
       }
     ],
@@ -65164,6 +65099,12 @@
       {
         "name": "M. Vojvoda",
         "date": "2026-07-16"
+      }
+    ],
+    "502": [
+      {
+        "name": "A. Richardson",
+        "date": "2026-07-17"
       }
     ],
     "512": [
@@ -65296,8 +65237,12 @@
         "date": "2026-07-10"
       },
       {
+        "name": "Iker Bravo",
+        "date": "2026-07-22"
+      },
+      {
         "name": "R. Sava",
-        "date": "2026-06-29"
+        "date": "2026-06-30"
       },
       {
         "name": "N. Zaniolo",
@@ -65314,6 +65259,10 @@
         "date": "2026-06-29"
       },
       {
+        "name": "D. Fila",
+        "date": "2026-07-20"
+      },
+      {
         "name": "M. Compagnon",
         "date": "2026-06-29"
       }
@@ -65326,6 +65275,10 @@
       {
         "name": "S. Mara",
         "date": "2026-06-29"
+      },
+      {
+        "name": "L. Sinayoko",
+        "date": "2026-07-19"
       }
     ],
     "77": [
@@ -65399,11 +65352,11 @@
     "80": [
       {
         "name": "Afonso Moreira",
-        "date": "2026-06-29"
+        "date": "2026-06-30"
       },
       {
         "name": "M. Satriano",
-        "date": "2026-06-29"
+        "date": "2026-06-30"
       },
       {
         "name": "A. Karabec",
@@ -65449,7 +65402,7 @@
       },
       {
         "name": "K. Haug",
-        "date": "2026-06-29"
+        "date": "2026-06-30"
       },
       {
         "name": "Emersonn",
@@ -65477,7 +65430,7 @@
   },
   "injuries": {
     "_meta": {
-      "updatedAt": "2026-07-28T08:45:04.529893+00:00",
+      "updatedAt": "2026-07-28T19:53:44.611590+00:00",
       "daysUntilWM": 0,
       "status": "live",
       "teamsWithData": 0
@@ -65520,7 +65473,7 @@
         "A"
       ],
       "overLineRate": 0.538,
-      "updatedAt": "2026-07-25T18:47:21.431049+00:00",
+      "updatedAt": "2026-07-28T19:01:26.815485+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -65590,7 +65543,7 @@
         "A"
       ],
       "overLineRate": 0.462,
-      "updatedAt": "2026-07-25T18:47:48.504196+00:00",
+      "updatedAt": "2026-07-28T19:01:54.064796+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -65658,7 +65611,7 @@
         "A"
       ],
       "overLineRate": 0.333,
-      "updatedAt": "2026-07-25T18:48:15.647216+00:00",
+      "updatedAt": "2026-07-28T19:02:21.454293+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -65726,7 +65679,7 @@
         "H"
       ],
       "overLineRate": 0.462,
-      "updatedAt": "2026-07-25T18:48:42.725552+00:00",
+      "updatedAt": "2026-07-28T19:02:48.844230+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -65761,9 +65714,9 @@
       "cardOverRate": 0.692
     },
     "114": {
-      "forAvg": 4.57,
-      "againstAvg": 6.71,
-      "games": 14,
+      "forAvg": 4.62,
+      "againstAvg": 6.69,
+      "games": 13,
       "cornerLine": 9.5,
       "cornerOverSeq": [
         false,
@@ -65778,8 +65731,7 @@
         true,
         true,
         true,
-        false,
-        true
+        false
       ],
       "cornerVenueSeq": [
         "H",
@@ -65794,11 +65746,10 @@
         "A",
         "H",
         "A",
-        "H",
-        "A"
+        "H"
       ],
-      "overLineRate": 0.857,
-      "updatedAt": "2026-07-25T18:49:09.796401+00:00",
+      "overLineRate": 0.846,
+      "updatedAt": "2026-07-28T19:03:16.252490+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -65813,8 +65764,7 @@
         false,
         true,
         true,
-        false,
-        true
+        false
       ],
       "cardVenueSeq": [
         "H",
@@ -65829,10 +65779,9 @@
         "A",
         "H",
         "A",
-        "H",
-        "A"
+        "H"
       ],
-      "cardOverRate": 0.357
+      "cardOverRate": 0.308
     },
     "116": {
       "forAvg": 7.58,
@@ -65868,7 +65817,7 @@
         "H"
       ],
       "overLineRate": 0.667,
-      "updatedAt": "2026-07-25T18:49:36.859503+00:00",
+      "updatedAt": "2026-07-28T19:03:43.569131+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -65934,7 +65883,7 @@
         "A"
       ],
       "overLineRate": 0.417,
-      "updatedAt": "2026-07-25T18:50:03.950457+00:00",
+      "updatedAt": "2026-07-28T19:04:10.909400+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -66004,7 +65953,7 @@
         "A"
       ],
       "overLineRate": 0.214,
-      "updatedAt": "2026-07-25T18:50:31.043813+00:00",
+      "updatedAt": "2026-07-28T19:04:38.344638+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -66076,7 +66025,7 @@
         "H"
       ],
       "overLineRate": 0.385,
-      "updatedAt": "2026-07-25T18:51:25.176165+00:00",
+      "updatedAt": "2026-07-28T19:05:33.087079+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -66146,7 +66095,7 @@
         "A"
       ],
       "overLineRate": 0.538,
-      "updatedAt": "2026-07-25T18:59:32.436076+00:00",
+      "updatedAt": "2026-07-28T19:13:43.840248+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -66216,7 +66165,7 @@
         "H"
       ],
       "overLineRate": 0.462,
-      "updatedAt": "2026-07-25T18:59:59.499811+00:00",
+      "updatedAt": "2026-07-28T19:14:11.083125+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -66288,7 +66237,7 @@
         "H"
       ],
       "overLineRate": 0.643,
-      "updatedAt": "2026-07-25T19:00:27.716102+00:00",
+      "updatedAt": "2026-07-28T19:14:38.440116+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -66325,9 +66274,9 @@
       "cardOverRate": 0.5
     },
     "36": {
-      "forAvg": 6.4,
-      "againstAvg": 4.87,
-      "games": 15,
+      "forAvg": 6.23,
+      "againstAvg": 5.23,
+      "games": 13,
       "cornerLine": 9.5,
       "cornerOverSeq": [
         true,
@@ -66342,9 +66291,7 @@
         true,
         true,
         true,
-        true,
-        true,
-        false
+        true
       ],
       "cornerVenueSeq": [
         "H",
@@ -66359,12 +66306,10 @@
         "H",
         "H",
         "H",
-        "A",
-        "A",
         "A"
       ],
-      "overLineRate": 0.667,
-      "updatedAt": "2026-07-25T19:00:54.835979+00:00",
+      "overLineRate": 0.692,
+      "updatedAt": "2026-07-28T19:15:05.841017+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -66379,9 +66324,7 @@
         true,
         true,
         true,
-        false,
-        false,
-        true
+        false
       ],
       "cardVenueSeq": [
         "H",
@@ -66396,16 +66339,14 @@
         "H",
         "H",
         "H",
-        "A",
-        "A",
         "A"
       ],
-      "cardOverRate": 0.6
+      "cardOverRate": 0.615
     },
     "40": {
-      "forAvg": 6.0,
-      "againstAvg": 3.67,
-      "games": 15,
+      "forAvg": 5.64,
+      "againstAvg": 3.93,
+      "games": 14,
       "cornerLine": 9.5,
       "cornerOverSeq": [
         true,
@@ -66421,7 +66362,6 @@
         true,
         false,
         false,
-        true,
         true
       ],
       "cornerVenueSeq": [
@@ -66438,11 +66378,10 @@
         "A",
         "H",
         "H",
-        "A",
         "A"
       ],
-      "overLineRate": 0.533,
-      "updatedAt": "2026-07-25T19:01:22.091286+00:00",
+      "overLineRate": 0.5,
+      "updatedAt": "2026-07-28T19:15:33.220596+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -66458,8 +66397,7 @@
         true,
         false,
         false,
-        true,
-        false
+        true
       ],
       "cardVenueSeq": [
         "H",
@@ -66475,10 +66413,9 @@
         "A",
         "H",
         "H",
-        "A",
         "A"
       ],
-      "cardOverRate": 0.533
+      "cardOverRate": 0.571
     },
     "42": {
       "forAvg": 5.53,
@@ -66520,7 +66457,7 @@
         "H"
       ],
       "overLineRate": 0.4,
-      "updatedAt": "2026-07-25T19:01:49.235767+00:00",
+      "updatedAt": "2026-07-28T19:16:00.727262+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -66594,7 +66531,7 @@
         "H"
       ],
       "overLineRate": 0.462,
-      "updatedAt": "2026-07-25T19:02:16.353309+00:00",
+      "updatedAt": "2026-07-28T19:16:27.923808+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -66629,9 +66566,9 @@
       "cardOverRate": 0.462
     },
     "47": {
-      "forAvg": 6.43,
-      "againstAvg": 4.21,
-      "games": 14,
+      "forAvg": 6.77,
+      "againstAvg": 4.15,
+      "games": 13,
       "cornerLine": 9.5,
       "cornerOverSeq": [
         true,
@@ -66646,8 +66583,7 @@
         false,
         false,
         false,
-        true,
-        false
+        true
       ],
       "cornerVenueSeq": [
         "H",
@@ -66662,11 +66598,10 @@
         "A",
         "A",
         "H",
-        "A",
-        "H"
+        "A"
       ],
-      "overLineRate": 0.571,
-      "updatedAt": "2026-07-25T19:03:10.536162+00:00",
+      "overLineRate": 0.615,
+      "updatedAt": "2026-07-28T19:17:22.299028+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -66681,8 +66616,7 @@
         false,
         true,
         true,
-        true,
-        false
+        true
       ],
       "cardVenueSeq": [
         "H",
@@ -66697,107 +66631,101 @@
         "A",
         "A",
         "H",
-        "A",
-        "H"
+        "A"
       ],
-      "cardOverRate": 0.786
+      "cardOverRate": 0.846
     },
     "487": {
-      "forAvg": 3.53,
-      "againstAvg": 4.6,
-      "games": 15,
-      "cornerLine": 9.5,
-      "cornerOverSeq": [
-        false,
-        true,
-        false,
-        false,
-        false,
-        false,
-        true,
-        true,
-        false,
-        false,
-        true,
-        false,
-        false,
-        true,
-        false
-      ],
-      "cornerVenueSeq": [
-        "H",
-        "A",
-        "H",
-        "H",
-        "A",
-        "H",
-        "A",
-        "A",
-        "H",
-        "A",
-        "H",
-        "H",
-        "H",
-        "A",
-        "A"
-      ],
-      "overLineRate": 0.333,
-      "updatedAt": "2026-07-25T19:03:37.582159+00:00",
-      "cardLine": 3.5,
-      "cardOverSeq": [
-        false,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true,
-        false,
-        true,
-        true
-      ],
-      "cardVenueSeq": [
-        "H",
-        "A",
-        "H",
-        "H",
-        "A",
-        "H",
-        "A",
-        "A",
-        "H",
-        "A",
-        "H",
-        "H",
-        "H",
-        "A",
-        "A"
-      ],
-      "cardOverRate": 0.667
-    },
-    "488": {
-      "forAvg": 4.0,
-      "againstAvg": 5.43,
+      "forAvg": 3.36,
+      "againstAvg": 4.71,
       "games": 14,
       "cornerLine": 9.5,
       "cornerOverSeq": [
         false,
         true,
-        true,
         false,
-        true,
-        true,
+        false,
         false,
         false,
         true,
         true,
         false,
+        false,
         true,
+        false,
+        false,
+        true
+      ],
+      "cornerVenueSeq": [
+        "H",
+        "A",
+        "H",
+        "H",
+        "A",
+        "H",
+        "A",
+        "A",
+        "H",
+        "A",
+        "H",
+        "H",
+        "H",
+        "A"
+      ],
+      "overLineRate": 0.357,
+      "updatedAt": "2026-07-28T19:17:49.546233+00:00",
+      "cardLine": 3.5,
+      "cardOverSeq": [
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false,
+        true
+      ],
+      "cardVenueSeq": [
+        "H",
+        "A",
+        "H",
+        "H",
+        "A",
+        "H",
+        "A",
+        "A",
+        "H",
+        "A",
+        "H",
+        "H",
+        "H",
+        "A"
+      ],
+      "cardOverRate": 0.643
+    },
+    "488": {
+      "forAvg": 3.85,
+      "againstAvg": 5.31,
+      "games": 13,
+      "cornerLine": 9.5,
+      "cornerOverSeq": [
+        false,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false,
         true,
         true
       ],
@@ -66814,11 +66742,10 @@
         "H",
         "A",
         "H",
-        "H",
-        "A"
+        "H"
       ],
-      "overLineRate": 0.643,
-      "updatedAt": "2026-07-25T19:04:04.622097+00:00",
+      "overLineRate": 0.615,
+      "updatedAt": "2026-07-28T19:18:16.894379+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -66831,7 +66758,6 @@
         false,
         false,
         false,
-        true,
         true,
         true,
         true
@@ -66849,10 +66775,9 @@
         "H",
         "A",
         "H",
-        "H",
-        "A"
+        "H"
       ],
-      "cardOverRate": 0.714
+      "cardOverRate": 0.692
     },
     "489": {
       "forAvg": 3.79,
@@ -66892,7 +66817,7 @@
         "H"
       ],
       "overLineRate": 0.286,
-      "updatedAt": "2026-07-25T19:04:31.797939+00:00",
+      "updatedAt": "2026-07-28T19:18:44.041940+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -66929,9 +66854,9 @@
       "cardOverRate": 0.643
     },
     "49": {
-      "forAvg": 5.87,
-      "againstAvg": 3.8,
-      "games": 15,
+      "forAvg": 5.71,
+      "againstAvg": 3.86,
+      "games": 14,
       "cornerLine": 9.5,
       "cornerOverSeq": [
         false,
@@ -66947,8 +66872,7 @@
         true,
         true,
         false,
-        false,
-        true
+        false
       ],
       "cornerVenueSeq": [
         "A",
@@ -66964,11 +66888,10 @@
         "A",
         "H",
         "H",
-        "A",
         "A"
       ],
-      "overLineRate": 0.533,
-      "updatedAt": "2026-07-25T19:04:58.909481+00:00",
+      "overLineRate": 0.5,
+      "updatedAt": "2026-07-28T19:19:11.270514+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -66984,8 +66907,7 @@
         false,
         false,
         true,
-        false,
-        true
+        false
       ],
       "cardVenueSeq": [
         "A",
@@ -67001,15 +66923,14 @@
         "A",
         "H",
         "H",
-        "A",
         "A"
       ],
-      "cardOverRate": 0.667
+      "cardOverRate": 0.643
     },
     "490": {
-      "forAvg": 4.57,
-      "againstAvg": 4.21,
-      "games": 14,
+      "forAvg": 4.31,
+      "againstAvg": 4.38,
+      "games": 13,
       "cornerLine": 9.5,
       "cornerOverSeq": [
         true,
@@ -67024,44 +66945,41 @@
         false,
         false,
         false,
+        false
+      ],
+      "cornerVenueSeq": [
+        "A",
+        "H",
+        "H",
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
+        "H"
+      ],
+      "overLineRate": 0.385,
+      "updatedAt": "2026-07-28T19:19:38.450325+00:00",
+      "cardLine": 3.5,
+      "cardOverSeq": [
+        true,
         false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
         true
       ],
-      "cornerVenueSeq": [
-        "A",
-        "H",
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "H"
-      ],
-      "overLineRate": 0.429,
-      "updatedAt": "2026-07-25T19:05:25.961409+00:00",
-      "cardLine": 3.5,
-      "cardOverSeq": [
-        true,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false
-      ],
       "cardVenueSeq": [
         "A",
         "H",
@@ -67075,92 +66993,87 @@
         "A",
         "H",
         "A",
-        "H",
         "H"
       ],
-      "cardOverRate": 0.429
+      "cardOverRate": 0.462
     },
     "492": {
-      "forAvg": 5.79,
-      "againstAvg": 2.79,
-      "games": 14,
-      "cornerLine": 9.5,
-      "cornerOverSeq": [
-        false,
-        false,
-        false,
-        false,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true,
-        false,
-        false,
-        false
-      ],
-      "cornerVenueSeq": [
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "H",
-        "A",
-        "A",
-        "H"
-      ],
-      "overLineRate": 0.357,
-      "updatedAt": "2026-07-25T19:05:53.044283+00:00",
-      "cardLine": 3.5,
-      "cardOverSeq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        false,
-        false,
-        true,
-        false,
-        false,
-        true,
-        false,
-        false
-      ],
-      "cardVenueSeq": [
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "H",
-        "A",
-        "A",
-        "H"
-      ],
-      "cardOverRate": 0.429
-    },
-    "494": {
-      "forAvg": 4.54,
-      "againstAvg": 4.85,
+      "forAvg": 6.08,
+      "againstAvg": 2.92,
       "games": 13,
       "cornerLine": 9.5,
       "cornerOverSeq": [
         false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false
+      ],
+      "cornerVenueSeq": [
+        "H",
+        "A",
+        "H",
+        "A",
+        "H",
+        "H",
+        "A",
+        "H",
+        "A",
+        "H",
+        "H",
+        "A",
+        "A"
+      ],
+      "overLineRate": 0.385,
+      "updatedAt": "2026-07-28T19:20:05.554166+00:00",
+      "cardLine": 3.5,
+      "cardOverSeq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        false,
+        false,
+        true,
+        false,
+        false,
+        true,
+        false
+      ],
+      "cardVenueSeq": [
+        "H",
+        "A",
+        "H",
+        "A",
+        "H",
+        "H",
+        "A",
+        "H",
+        "A",
+        "H",
+        "H",
+        "A",
+        "A"
+      ],
+      "cardOverRate": 0.462
+    },
+    "494": {
+      "forAvg": 4.33,
+      "againstAvg": 4.92,
+      "games": 12,
+      "cornerLine": 9.5,
+      "cornerOverSeq": [
+        false,
         true,
         true,
         false,
@@ -67171,8 +67084,7 @@
         false,
         false,
         true,
-        false,
-        true
+        false
       ],
       "cornerVenueSeq": [
         "A",
@@ -67186,11 +67098,10 @@
         "A",
         "H",
         "A",
-        "H",
-        "A"
+        "H"
       ],
-      "overLineRate": 0.385,
-      "updatedAt": "2026-07-25T19:06:20.116302+00:00",
+      "overLineRate": 0.333,
+      "updatedAt": "2026-07-28T19:20:32.703671+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -67204,8 +67115,7 @@
         true,
         true,
         false,
-        true,
-        false
+        true
       ],
       "cardVenueSeq": [
         "A",
@@ -67219,10 +67129,9 @@
         "A",
         "H",
         "A",
-        "H",
-        "A"
+        "H"
       ],
-      "cardOverRate": 0.538
+      "cardOverRate": 0.583
     },
     "495": {
       "forAvg": 3.62,
@@ -67260,7 +67169,7 @@
         "H"
       ],
       "overLineRate": 0.231,
-      "updatedAt": "2026-07-25T19:06:47.191394+00:00",
+      "updatedAt": "2026-07-28T19:20:59.970920+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -67295,22 +67204,92 @@
       "cardOverRate": 0.538
     },
     "496": {
-      "forAvg": 5.79,
-      "againstAvg": 3.64,
+      "forAvg": 5.85,
+      "againstAvg": 3.54,
+      "games": 13,
+      "cornerLine": 9.5,
+      "cornerOverSeq": [
+        true,
+        false,
+        false,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "cornerVenueSeq": [
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
+        "H",
+        "H",
+        "A",
+        "H",
+        "A",
+        "H"
+      ],
+      "overLineRate": 0.385,
+      "updatedAt": "2026-07-28T19:21:27.354932+00:00",
+      "cardLine": 3.5,
+      "cardOverSeq": [
+        false,
+        true,
+        false,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        false
+      ],
+      "cardVenueSeq": [
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
+        "H",
+        "H",
+        "A",
+        "H",
+        "A",
+        "H"
+      ],
+      "cardOverRate": 0.538
+    },
+    "497": {
+      "forAvg": 5.43,
+      "againstAvg": 4.36,
       "games": 14,
       "cornerLine": 9.5,
       "cornerOverSeq": [
         true,
-        false,
-        false,
         true,
         false,
         false,
         true,
         true,
+        false,
+        true,
         true,
         false,
-        false,
+        true,
         false,
         false,
         true
@@ -67322,33 +67301,33 @@
         "H",
         "A",
         "H",
-        "A",
-        "H",
         "H",
         "A",
         "H",
         "A",
+        "A",
+        "A",
         "H",
-        "A"
+        "H"
       ],
-      "overLineRate": 0.429,
-      "updatedAt": "2026-07-25T19:07:14.250768+00:00",
+      "overLineRate": 0.571,
+      "updatedAt": "2026-07-28T19:21:54.600373+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
-        false,
-        true,
-        false,
         true,
         true,
-        false,
-        true,
-        true,
-        false,
         true,
         true,
         false,
         false,
-        true
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false
       ],
       "cardVenueSeq": [
         "A",
@@ -67357,99 +67336,21 @@
         "H",
         "A",
         "H",
-        "A",
-        "H",
         "H",
         "A",
         "H",
         "A",
+        "A",
+        "A",
         "H",
-        "A"
+        "H"
       ],
       "cardOverRate": 0.571
     },
-    "497": {
-      "forAvg": 5.13,
-      "againstAvg": 4.2,
-      "games": 15,
-      "cornerLine": 9.5,
-      "cornerOverSeq": [
-        true,
-        true,
-        false,
-        false,
-        true,
-        true,
-        false,
-        true,
-        true,
-        false,
-        true,
-        false,
-        false,
-        true,
-        false
-      ],
-      "cornerVenueSeq": [
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "H",
-        "A",
-        "H",
-        "A",
-        "A",
-        "A",
-        "H",
-        "H",
-        "A"
-      ],
-      "overLineRate": 0.533,
-      "updatedAt": "2026-07-25T19:07:41.323170+00:00",
-      "cardLine": 3.5,
-      "cardOverSeq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        false
-      ],
-      "cardVenueSeq": [
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "H",
-        "A",
-        "H",
-        "A",
-        "A",
-        "A",
-        "H",
-        "H",
-        "A"
-      ],
-      "cardOverRate": 0.533
-    },
     "499": {
-      "forAvg": 5.07,
-      "againstAvg": 3.53,
-      "games": 15,
+      "forAvg": 4.79,
+      "againstAvg": 3.57,
+      "games": 14,
       "cornerLine": 9.5,
       "cornerOverSeq": [
         false,
@@ -67465,8 +67366,7 @@
         false,
         false,
         true,
-        false,
-        true
+        false
       ],
       "cornerVenueSeq": [
         "A",
@@ -67482,11 +67382,10 @@
         "A",
         "H",
         "H",
-        "A",
         "A"
       ],
-      "overLineRate": 0.333,
-      "updatedAt": "2026-07-25T19:08:08.377738+00:00",
+      "overLineRate": 0.286,
+      "updatedAt": "2026-07-28T19:22:22.046069+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -67502,8 +67401,7 @@
         true,
         true,
         false,
-        false,
-        true
+        false
       ],
       "cardVenueSeq": [
         "A",
@@ -67519,10 +67417,9 @@
         "A",
         "H",
         "H",
-        "A",
         "A"
       ],
-      "cardOverRate": 0.4
+      "cardOverRate": 0.357
     },
     "50": {
       "forAvg": 8.6,
@@ -67564,7 +67461,7 @@
         "A"
       ],
       "overLineRate": 0.8,
-      "updatedAt": "2026-07-25T19:08:35.436749+00:00",
+      "updatedAt": "2026-07-28T19:22:49.443047+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -67636,7 +67533,7 @@
         "A"
       ],
       "overLineRate": 0.25,
-      "updatedAt": "2026-07-25T19:09:02.485233+00:00",
+      "updatedAt": "2026-07-28T19:23:16.842332+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -67702,7 +67599,7 @@
         "A"
       ],
       "overLineRate": 0.25,
-      "updatedAt": "2026-07-25T19:09:29.657864+00:00",
+      "updatedAt": "2026-07-28T19:23:43.994905+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -67770,7 +67667,7 @@
         "A"
       ],
       "overLineRate": 0.462,
-      "updatedAt": "2026-07-25T19:09:56.769167+00:00",
+      "updatedAt": "2026-07-28T19:24:11.278599+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -67805,9 +67702,9 @@
       "cardOverRate": 0.385
     },
     "505": {
-      "forAvg": 5.07,
-      "againstAvg": 3.53,
-      "games": 15,
+      "forAvg": 4.71,
+      "againstAvg": 3.64,
+      "games": 14,
       "cornerLine": 9.5,
       "cornerOverSeq": [
         false,
@@ -67823,8 +67720,7 @@
         false,
         false,
         false,
-        false,
-        true
+        false
       ],
       "cornerVenueSeq": [
         "A",
@@ -67840,11 +67736,10 @@
         "A",
         "H",
         "A",
-        "A",
-        "H"
+        "A"
       ],
-      "overLineRate": 0.467,
-      "updatedAt": "2026-07-25T19:10:23.843286+00:00",
+      "overLineRate": 0.429,
+      "updatedAt": "2026-07-28T19:24:38.659977+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -67860,7 +67755,6 @@
         true,
         true,
         true,
-        false,
         false
       ],
       "cardVenueSeq": [
@@ -67877,10 +67771,9 @@
         "A",
         "H",
         "A",
-        "A",
-        "H"
+        "A"
       ],
-      "cardOverRate": 0.4
+      "cardOverRate": 0.429
     },
     "51": {
       "forAvg": 4.73,
@@ -67922,7 +67815,7 @@
         "H"
       ],
       "overLineRate": 0.667,
-      "updatedAt": "2026-07-25T19:10:50.887949+00:00",
+      "updatedAt": "2026-07-28T19:25:05.935677+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -67961,85 +67854,81 @@
       "cardOverRate": 0.533
     },
     "512": {
-      "forAvg": 7.79,
-      "againstAvg": 3.43,
-      "games": 14,
-      "cornerLine": 9.5,
-      "cornerOverSeq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        false,
-        true,
-        false,
-        true,
-        true,
-        true,
-        false,
-        true
-      ],
-      "cornerVenueSeq": [
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "H",
-        "A",
-        "H",
-        "A"
-      ],
-      "overLineRate": 0.714,
-      "updatedAt": "2026-07-25T19:11:17.938983+00:00",
-      "cardLine": 3.5,
-      "cardOverSeq": [
-        true,
-        false,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true,
-        true
-      ],
-      "cardVenueSeq": [
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "H",
-        "A",
-        "H",
-        "A"
-      ],
-      "cardOverRate": 0.786
-    },
-    "517": {
-      "forAvg": 5.08,
-      "againstAvg": 4.62,
+      "forAvg": 7.54,
+      "againstAvg": 3.54,
       "games": 13,
       "cornerLine": 9.5,
       "cornerOverSeq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false
+      ],
+      "cornerVenueSeq": [
+        "H",
+        "A",
+        "H",
+        "A",
+        "H",
+        "H",
+        "A",
+        "H",
+        "A",
+        "H",
+        "H",
+        "A",
+        "H"
+      ],
+      "overLineRate": 0.692,
+      "updatedAt": "2026-07-28T19:25:33.288960+00:00",
+      "cardLine": 3.5,
+      "cardOverSeq": [
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true
+      ],
+      "cardVenueSeq": [
+        "H",
+        "A",
+        "H",
+        "A",
+        "H",
+        "H",
+        "A",
+        "H",
+        "A",
+        "H",
+        "H",
+        "A",
+        "H"
+      ],
+      "cardOverRate": 0.769
+    },
+    "517": {
+      "forAvg": 5.0,
+      "againstAvg": 4.42,
+      "games": 12,
+      "cornerLine": 9.5,
+      "cornerOverSeq": [
         false,
         true,
         true,
@@ -68051,7 +67940,6 @@
         true,
         false,
         false,
-        true,
         true
       ],
       "cornerVenueSeq": [
@@ -68066,11 +67954,10 @@
         "A",
         "H",
         "H",
-        "A",
-        "H"
+        "A"
       ],
-      "overLineRate": 0.538,
-      "updatedAt": "2026-07-25T19:11:44.977303+00:00",
+      "overLineRate": 0.5,
+      "updatedAt": "2026-07-28T19:26:00.435740+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -68084,8 +67971,7 @@
         false,
         false,
         true,
-        false,
-        true
+        false
       ],
       "cardVenueSeq": [
         "H",
@@ -68099,10 +67985,9 @@
         "A",
         "H",
         "H",
-        "A",
-        "H"
+        "A"
       ],
-      "cardOverRate": 0.538
+      "cardOverRate": 0.5
     },
     "52": {
       "forAvg": 3.15,
@@ -68140,7 +68025,7 @@
         "H"
       ],
       "overLineRate": 0.462,
-      "updatedAt": "2026-07-25T19:12:12.071727+00:00",
+      "updatedAt": "2026-07-28T19:26:27.706014+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -68214,7 +68099,7 @@
         "A"
       ],
       "overLineRate": 0.4,
-      "updatedAt": "2026-07-25T19:12:39.389684+00:00",
+      "updatedAt": "2026-07-28T19:26:54.935753+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -68292,7 +68177,7 @@
         "A"
       ],
       "overLineRate": 0.667,
-      "updatedAt": "2026-07-25T19:20:19.765759+00:00",
+      "updatedAt": "2026-07-28T19:34:38.829606+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -68370,7 +68255,7 @@
         "A"
       ],
       "overLineRate": 0.533,
-      "updatedAt": "2026-07-25T19:20:46.835417+00:00",
+      "updatedAt": "2026-07-28T19:35:06.138168+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -68409,103 +68294,98 @@
       "cardOverRate": 0.667
     },
     "63": {
-      "forAvg": 4.4,
-      "againstAvg": 5.93,
-      "games": 15,
-      "cornerLine": 9.5,
-      "cornerOverSeq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        true,
-        false,
-        false,
-        false
-      ],
-      "cornerVenueSeq": [
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "H",
-        "H",
-        "A",
-        "A"
-      ],
-      "overLineRate": 0.6,
-      "updatedAt": "2026-07-25T19:21:14.118001+00:00",
-      "cardLine": 3.5,
-      "cardOverSeq": [
-        false,
-        false,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        false,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true
-      ],
-      "cardVenueSeq": [
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "H",
-        "H",
-        "A",
-        "A"
-      ],
-      "cardOverRate": 0.6
-    },
-    "64": {
-      "forAvg": 4.07,
+      "forAvg": 4.64,
       "againstAvg": 6.07,
       "games": 14,
       "cornerLine": 9.5,
       "cornerOverSeq": [
-        false,
         true,
-        false,
-        false,
         true,
         true,
         false,
         true,
-        false,
-        false,
-        false,
         true,
         true,
+        true,
+        false,
+        true,
+        false,
+        true,
+        false,
         false
+      ],
+      "cornerVenueSeq": [
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
+        "H",
+        "H",
+        "H",
+        "A"
+      ],
+      "overLineRate": 0.643,
+      "updatedAt": "2026-07-28T19:35:33.354820+00:00",
+      "cardLine": 3.5,
+      "cardOverSeq": [
+        false,
+        false,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "cardVenueSeq": [
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
+        "H",
+        "H",
+        "H",
+        "A"
+      ],
+      "cardOverRate": 0.571
+    },
+    "64": {
+      "forAvg": 4.0,
+      "againstAvg": 6.38,
+      "games": 13,
+      "cornerLine": 9.5,
+      "cornerOverSeq": [
+        false,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false,
+        true,
+        false,
+        false,
+        false,
+        true,
+        true
       ],
       "cornerVenueSeq": [
         "H",
@@ -68520,11 +68400,10 @@
         "A",
         "H",
         "A",
-        "A",
-        "H"
+        "A"
       ],
-      "overLineRate": 0.429,
-      "updatedAt": "2026-07-25T19:21:41.175009+00:00",
+      "overLineRate": 0.462,
+      "updatedAt": "2026-07-28T19:36:00.641492+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -68537,7 +68416,6 @@
         true,
         false,
         false,
-        true,
         true,
         true,
         true
@@ -68555,15 +68433,14 @@
         "A",
         "H",
         "A",
-        "A",
-        "H"
+        "A"
       ],
-      "cardOverRate": 0.643
+      "cardOverRate": 0.615
     },
     "65": {
-      "forAvg": 4.46,
-      "againstAvg": 5.15,
-      "games": 13,
+      "forAvg": 4.42,
+      "againstAvg": 5.25,
+      "games": 12,
       "cornerLine": 9.5,
       "cornerOverSeq": [
         false,
@@ -68577,8 +68454,7 @@
         false,
         true,
         false,
-        true,
-        false
+        true
       ],
       "cornerVenueSeq": [
         "H",
@@ -68592,11 +68468,10 @@
         "H",
         "H",
         "A",
-        "A",
-        "H"
+        "A"
       ],
-      "overLineRate": 0.385,
-      "updatedAt": "2026-07-25T19:22:08.237551+00:00",
+      "overLineRate": 0.417,
+      "updatedAt": "2026-07-28T19:36:28.183394+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -68610,8 +68485,7 @@
         true,
         true,
         false,
-        false,
-        true
+        false
       ],
       "cardVenueSeq": [
         "H",
@@ -68625,15 +68499,14 @@
         "H",
         "H",
         "A",
-        "A",
-        "H"
+        "A"
       ],
-      "cardOverRate": 0.385
+      "cardOverRate": 0.333
     },
     "66": {
-      "forAvg": 5.15,
-      "againstAvg": 4.62,
-      "games": 13,
+      "forAvg": 5.08,
+      "againstAvg": 4.5,
+      "games": 12,
       "cornerLine": 9.5,
       "cornerOverSeq": [
         true,
@@ -68647,8 +68520,7 @@
         false,
         false,
         true,
-        false,
-        true
+        false
       ],
       "cornerVenueSeq": [
         "A",
@@ -68661,118 +68533,111 @@
         "A",
         "H",
         "H",
+        "A",
+        "A"
+      ],
+      "overLineRate": 0.5,
+      "updatedAt": "2026-07-28T19:36:55.557875+00:00",
+      "cardLine": 3.5,
+      "cardOverSeq": [
+        false,
+        true,
+        true,
+        false,
+        false,
+        true,
+        false,
+        true,
+        true,
+        false,
+        true,
+        false
+      ],
+      "cardVenueSeq": [
+        "A",
+        "A",
+        "H",
+        "A",
+        "H",
+        "H",
+        "A",
+        "A",
+        "H",
+        "H",
+        "A",
+        "A"
+      ],
+      "cardOverRate": 0.5
+    },
+    "746": {
+      "forAvg": 4.54,
+      "againstAvg": 5.46,
+      "games": 13,
+      "cornerLine": 9.5,
+      "cornerOverSeq": [
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "cornerVenueSeq": [
+        "H",
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
         "A",
         "A",
         "H"
       ],
       "overLineRate": 0.538,
-      "updatedAt": "2026-07-25T19:22:35.308215+00:00",
+      "updatedAt": "2026-07-28T19:38:17.583870+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
+        true,
         false,
+        false,
+        true,
+        true,
+        true,
         true,
         true,
         false,
         false,
         true,
-        false,
         true,
-        true,
-        false,
-        true,
-        false,
         false
       ],
       "cardVenueSeq": [
-        "A",
-        "A",
         "H",
         "A",
         "H",
-        "H",
-        "A",
         "A",
         "H",
+        "A",
         "H",
+        "A",
+        "H",
+        "A",
         "A",
         "A",
         "H"
       ],
-      "cardOverRate": 0.462
-    },
-    "746": {
-      "forAvg": 4.57,
-      "againstAvg": 5.43,
-      "games": 14,
-      "cornerLine": 9.5,
-      "cornerOverSeq": [
-        false,
-        false,
-        true,
-        false,
-        false,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "cornerVenueSeq": [
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "A",
-        "A",
-        "H",
-        "A"
-      ],
-      "overLineRate": 0.571,
-      "updatedAt": "2026-07-25T19:23:56.643146+00:00",
-      "cardLine": 3.5,
-      "cardOverSeq": [
-        true,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true,
-        false,
-        true
-      ],
-      "cardVenueSeq": [
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "A",
-        "A",
-        "H",
-        "A"
-      ],
-      "cardOverRate": 0.643
+      "cardOverRate": 0.615
     },
     "77": {
       "forAvg": 3.31,
@@ -68810,7 +68675,7 @@
         "A"
       ],
       "overLineRate": 0.385,
-      "updatedAt": "2026-07-25T19:24:23.726375+00:00",
+      "updatedAt": "2026-07-28T19:38:44.718987+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -68845,9 +68710,9 @@
       "cardOverRate": 0.385
     },
     "79": {
-      "forAvg": 4.5,
-      "againstAvg": 3.57,
-      "games": 14,
+      "forAvg": 4.31,
+      "againstAvg": 3.77,
+      "games": 13,
       "cornerLine": 9.5,
       "cornerOverSeq": [
         false,
@@ -68859,7 +68724,6 @@
         false,
         true,
         true,
-        false,
         false,
         false,
         false,
@@ -68878,11 +68742,10 @@
         "A",
         "H",
         "H",
-        "H",
-        "A"
+        "H"
       ],
-      "overLineRate": 0.286,
-      "updatedAt": "2026-07-25T19:24:50.798405+00:00",
+      "overLineRate": 0.308,
+      "updatedAt": "2026-07-28T19:39:11.914337+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -68896,7 +68759,6 @@
         false,
         true,
         false,
-        true,
         true,
         true
       ],
@@ -68913,10 +68775,9 @@
         "A",
         "H",
         "H",
-        "H",
-        "A"
+        "H"
       ],
-      "cardOverRate": 0.786
+      "cardOverRate": 0.769
     },
     "80": {
       "forAvg": 6.2,
@@ -68948,7 +68809,7 @@
         "A"
       ],
       "overLineRate": 0.6,
-      "updatedAt": "2026-07-25T19:25:44.954683+00:00",
+      "updatedAt": "2026-07-28T19:40:06.168232+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -68977,9 +68838,9 @@
       "cardOverRate": 0.7
     },
     "81": {
-      "forAvg": 5.13,
-      "againstAvg": 3.6,
-      "games": 15,
+      "forAvg": 5.36,
+      "againstAvg": 3.64,
+      "games": 14,
       "cornerLine": 9.5,
       "cornerOverSeq": [
         true,
@@ -68995,7 +68856,6 @@
         false,
         false,
         true,
-        false,
         false
       ],
       "cornerVenueSeq": [
@@ -69012,11 +68872,10 @@
         "H",
         "A",
         "H",
-        "A",
-        "H"
+        "A"
       ],
-      "overLineRate": 0.4,
-      "updatedAt": "2026-07-25T19:26:12.046679+00:00",
+      "overLineRate": 0.429,
+      "updatedAt": "2026-07-28T19:40:33.340494+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -69025,7 +68884,6 @@
         true,
         false,
         false,
-        true,
         true,
         true,
         true,
@@ -69049,15 +68907,14 @@
         "H",
         "A",
         "H",
-        "A",
-        "H"
+        "A"
       ],
-      "cardOverRate": 0.867
+      "cardOverRate": 0.857
     },
     "84": {
-      "forAvg": 5.71,
-      "againstAvg": 5.29,
-      "games": 14,
+      "forAvg": 5.62,
+      "againstAvg": 5.62,
+      "games": 13,
       "cornerLine": 9.5,
       "cornerOverSeq": [
         true,
@@ -69072,8 +68929,7 @@
         false,
         true,
         false,
-        true,
-        false
+        true
       ],
       "cornerVenueSeq": [
         "H",
@@ -69088,11 +68944,10 @@
         "H",
         "A",
         "H",
-        "A",
-        "H"
+        "A"
       ],
-      "overLineRate": 0.643,
-      "updatedAt": "2026-07-25T19:26:39.094248+00:00",
+      "overLineRate": 0.692,
+      "updatedAt": "2026-07-28T19:41:00.544297+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -69107,8 +68962,7 @@
         false,
         false,
         false,
-        true,
-        false
+        true
       ],
       "cardVenueSeq": [
         "H",
@@ -69123,10 +68977,9 @@
         "H",
         "A",
         "H",
-        "A",
-        "H"
+        "A"
       ],
-      "cardOverRate": 0.429
+      "cardOverRate": 0.462
     },
     "85": {
       "forAvg": 5.67,
@@ -69168,7 +69021,7 @@
         "H"
       ],
       "overLineRate": 0.4,
-      "updatedAt": "2026-07-25T19:27:06.330676+00:00",
+      "updatedAt": "2026-07-28T19:41:27.941130+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -69240,7 +69093,7 @@
         "A"
       ],
       "overLineRate": 0.333,
-      "updatedAt": "2026-07-25T19:27:33.385770+00:00",
+      "updatedAt": "2026-07-28T19:41:55.239575+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -69273,89 +69126,85 @@
       "cardOverRate": 0.5
     },
     "895": {
-      "forAvg": 5.33,
-      "againstAvg": 3.27,
-      "games": 15,
-      "cornerLine": 9.5,
-      "cornerOverSeq": [
-        false,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false,
-        false
-      ],
-      "cornerVenueSeq": [
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "A",
-        "A",
-        "H",
-        "A",
-        "H",
-        "H",
-        "A",
-        "H",
-        "H",
-        "A"
-      ],
-      "overLineRate": 0.267,
-      "updatedAt": "2026-07-25T19:28:00.434765+00:00",
-      "cardLine": 3.5,
-      "cardOverSeq": [
-        true,
-        false,
-        false,
-        false,
-        true,
-        false,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        false,
-        false,
-        false
-      ],
-      "cardVenueSeq": [
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "A",
-        "A",
-        "H",
-        "A",
-        "H",
-        "H",
-        "A",
-        "H",
-        "H",
-        "A"
-      ],
-      "cardOverRate": 0.467
-    },
-    "91": {
-      "forAvg": 4.86,
-      "againstAvg": 4.93,
+      "forAvg": 5.57,
+      "againstAvg": 3.0,
       "games": 14,
       "cornerLine": 9.5,
       "cornerOverSeq": [
+        false,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "cornerVenueSeq": [
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
+        "A",
+        "A",
+        "H",
+        "A",
+        "H",
+        "H",
+        "A",
+        "H",
+        "H"
+      ],
+      "overLineRate": 0.286,
+      "updatedAt": "2026-07-28T19:42:22.455081+00:00",
+      "cardLine": 3.5,
+      "cardOverSeq": [
+        true,
+        false,
+        false,
+        false,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        false
+      ],
+      "cardVenueSeq": [
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
+        "A",
+        "A",
+        "H",
+        "A",
+        "H",
+        "H",
+        "A",
+        "H",
+        "H"
+      ],
+      "cardOverRate": 0.5
+    },
+    "91": {
+      "forAvg": 5.15,
+      "againstAvg": 4.69,
+      "games": 13,
+      "cornerLine": 9.5,
+      "cornerOverSeq": [
         true,
         false,
         true,
@@ -69368,7 +69217,6 @@
         true,
         false,
         true,
-        false,
         false
       ],
       "cornerVenueSeq": [
@@ -69384,11 +69232,10 @@
         "A",
         "H",
         "A",
-        "A",
-        "H"
+        "A"
       ],
-      "overLineRate": 0.5,
-      "updatedAt": "2026-07-25T19:28:27.503817+00:00",
+      "overLineRate": 0.538,
+      "updatedAt": "2026-07-28T19:42:49.672490+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -69403,8 +69250,7 @@
         true,
         false,
         true,
-        true,
-        false
+        true
       ],
       "cardVenueSeq": [
         "A",
@@ -69419,10 +69265,9 @@
         "A",
         "H",
         "A",
-        "A",
-        "H"
+        "A"
       ],
-      "cardOverRate": 0.571
+      "cardOverRate": 0.615
     },
     "94": {
       "forAvg": 6.83,
@@ -69458,7 +69303,7 @@
         "A"
       ],
       "overLineRate": 0.667,
-      "updatedAt": "2026-07-25T19:28:54.568318+00:00",
+      "updatedAt": "2026-07-28T19:43:16.862017+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -69526,7 +69371,7 @@
         "A"
       ],
       "overLineRate": 0.615,
-      "updatedAt": "2026-07-25T19:29:21.638139+00:00",
+      "updatedAt": "2026-07-28T19:43:44.227241+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -69598,7 +69443,7 @@
         "A"
       ],
       "overLineRate": 0.357,
-      "updatedAt": "2026-07-25T19:29:48.732748+00:00",
+      "updatedAt": "2026-07-28T19:44:11.438338+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -69635,9 +69480,9 @@
       "cardOverRate": 0.643
     },
     "97": {
-      "forAvg": 3.92,
-      "againstAvg": 5.54,
-      "games": 13,
+      "forAvg": 4.0,
+      "againstAvg": 5.83,
+      "games": 12,
       "cornerLine": 9.5,
       "cornerOverSeq": [
         false,
@@ -69651,8 +69496,7 @@
         true,
         false,
         true,
-        true,
-        false
+        true
       ],
       "cornerVenueSeq": [
         "H",
@@ -69666,11 +69510,10 @@
         "H",
         "A",
         "H",
-        "A",
-        "H"
+        "A"
       ],
-      "overLineRate": 0.615,
-      "updatedAt": "2026-07-25T19:30:15.909129+00:00",
+      "overLineRate": 0.667,
+      "updatedAt": "2026-07-28T19:44:38.729364+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -69684,8 +69527,7 @@
         true,
         true,
         true,
-        true,
-        false
+        true
       ],
       "cardVenueSeq": [
         "H",
@@ -69699,10 +69541,9 @@
         "H",
         "A",
         "H",
-        "A",
-        "H"
+        "A"
       ],
-      "cardOverRate": 0.538
+      "cardOverRate": 0.583
     },
     "4665": {
       "forAvg": 5.46,
@@ -69740,7 +69581,7 @@
         "A"
       ],
       "overLineRate": 0.462,
-      "updatedAt": "2026-07-25T19:02:43.416024+00:00",
+      "updatedAt": "2026-07-28T19:16:55.093618+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -69812,7 +69653,7 @@
         "H"
       ],
       "overLineRate": 0.571,
-      "updatedAt": "2026-07-25T19:13:06.477041+00:00",
+      "updatedAt": "2026-07-28T19:27:22.162703+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -69888,7 +69729,7 @@
         "A"
       ],
       "overLineRate": 0.533,
-      "updatedAt": "2026-07-25T19:13:33.538531+00:00",
+      "updatedAt": "2026-07-28T19:27:49.401057+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -69958,7 +69799,7 @@
         "A"
       ],
       "overLineRate": 0.545,
-      "updatedAt": "2026-07-25T19:14:00.586036+00:00",
+      "updatedAt": "2026-07-28T19:28:16.730390+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -69989,9 +69830,9 @@
       "cardOverRate": 0.545
     },
     "532": {
-      "forAvg": 5.23,
-      "againstAvg": 4.54,
-      "games": 13,
+      "forAvg": 4.82,
+      "againstAvg": 4.82,
+      "games": 11,
       "cornerLine": 9.5,
       "cornerOverSeq": [
         true,
@@ -70004,9 +69845,7 @@
         true,
         false,
         false,
-        true,
-        true,
-        false
+        true
       ],
       "cornerVenueSeq": [
         "H",
@@ -70019,12 +69858,10 @@
         "A",
         "H",
         "A",
-        "A",
-        "H",
-        "H"
+        "A"
       ],
-      "overLineRate": 0.462,
-      "updatedAt": "2026-07-25T19:14:27.672122+00:00",
+      "overLineRate": 0.455,
+      "updatedAt": "2026-07-28T19:28:43.908701+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -70037,8 +69874,6 @@
         false,
         true,
         false,
-        true,
-        true,
         true
       ],
       "cardVenueSeq": [
@@ -70052,11 +69887,9 @@
         "A",
         "H",
         "A",
-        "A",
-        "H",
-        "H"
+        "A"
       ],
-      "cardOverRate": 0.692
+      "cardOverRate": 0.636
     },
     "533": {
       "forAvg": 4.38,
@@ -70094,7 +69927,7 @@
         "A"
       ],
       "overLineRate": 0.615,
-      "updatedAt": "2026-07-25T19:14:54.727326+00:00",
+      "updatedAt": "2026-07-28T19:29:11.112789+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -70129,159 +69962,13 @@
       "cardOverRate": 0.385
     },
     "535": {
-      "forAvg": 5.4,
-      "againstAvg": 4.53,
-      "games": 15,
-      "cornerLine": 9.5,
-      "cornerOverSeq": [
-        true,
-        false,
-        false,
-        false,
-        false,
-        true,
-        false,
-        true,
-        false,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true
-      ],
-      "cornerVenueSeq": [
-        "A",
-        "H",
-        "H",
-        "A",
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "A",
-        "H"
-      ],
-      "overLineRate": 0.467,
-      "updatedAt": "2026-07-25T19:15:21.866959+00:00",
-      "cardLine": 3.5,
-      "cardOverSeq": [
-        true,
-        false,
-        false,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        false
-      ],
-      "cardVenueSeq": [
-        "A",
-        "H",
-        "H",
-        "A",
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "A",
-        "H"
-      ],
-      "cardOverRate": 0.6
-    },
-    "536": {
-      "forAvg": 4.38,
-      "againstAvg": 4.08,
-      "games": 13,
-      "cornerLine": 9.5,
-      "cornerOverSeq": [
-        false,
-        false,
-        true,
-        true,
-        false,
-        false,
-        false,
-        true,
-        true,
-        false,
-        false,
-        false,
-        false
-      ],
-      "cornerVenueSeq": [
-        "A",
-        "H",
-        "A",
-        "H",
-        "H",
-        "A",
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "A"
-      ],
-      "overLineRate": 0.308,
-      "updatedAt": "2026-07-25T19:15:48.938729+00:00",
-      "cardLine": 3.5,
-      "cardOverSeq": [
-        false,
-        true,
-        false,
-        true,
-        false,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true
-      ],
-      "cardVenueSeq": [
-        "A",
-        "H",
-        "A",
-        "H",
-        "H",
-        "A",
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "A"
-      ],
-      "cardOverRate": 0.615
-    },
-    "538": {
-      "forAvg": 3.14,
-      "againstAvg": 3.86,
+      "forAvg": 5.14,
+      "againstAvg": 4.5,
       "games": 14,
       "cornerLine": 9.5,
       "cornerOverSeq": [
+        true,
+        false,
         false,
         false,
         false,
@@ -70289,6 +69976,143 @@
         false,
         true,
         false,
+        false,
+        false,
+        true,
+        true,
+        true
+      ],
+      "cornerVenueSeq": [
+        "A",
+        "H",
+        "H",
+        "A",
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
+        "A"
+      ],
+      "overLineRate": 0.429,
+      "updatedAt": "2026-07-28T19:29:38.331019+00:00",
+      "cardLine": 3.5,
+      "cardOverSeq": [
+        true,
+        false,
+        false,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "cardVenueSeq": [
+        "A",
+        "H",
+        "H",
+        "A",
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
+        "A"
+      ],
+      "cardOverRate": 0.643
+    },
+    "536": {
+      "forAvg": 4.5,
+      "againstAvg": 4.08,
+      "games": 12,
+      "cornerLine": 9.5,
+      "cornerOverSeq": [
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        false
+      ],
+      "cornerVenueSeq": [
+        "A",
+        "H",
+        "A",
+        "H",
+        "H",
+        "A",
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
+        "H"
+      ],
+      "overLineRate": 0.333,
+      "updatedAt": "2026-07-28T19:30:05.658899+00:00",
+      "cardLine": 3.5,
+      "cardOverSeq": [
+        false,
+        true,
+        false,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ],
+      "cardVenueSeq": [
+        "A",
+        "H",
+        "A",
+        "H",
+        "H",
+        "A",
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
+        "H"
+      ],
+      "cardOverRate": 0.583
+    },
+    "538": {
+      "forAvg": 3.08,
+      "againstAvg": 3.92,
+      "games": 13,
+      "cornerLine": 9.5,
+      "cornerOverSeq": [
+        false,
+        false,
+        false,
+        true,
+        false,
+        true,
         false,
         false,
         false,
@@ -70310,11 +70134,10 @@
         "A",
         "A",
         "H",
-        "A",
         "A"
       ],
-      "overLineRate": 0.143,
-      "updatedAt": "2026-07-25T19:16:16.112173+00:00",
+      "overLineRate": 0.154,
+      "updatedAt": "2026-07-28T19:30:33.045612+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -70327,7 +70150,6 @@
         true,
         false,
         false,
-        true,
         true,
         true,
         true
@@ -70345,15 +70167,14 @@
         "A",
         "A",
         "H",
-        "A",
         "A"
       ],
-      "cardOverRate": 0.5
+      "cardOverRate": 0.462
     },
     "539": {
-      "forAvg": 5.77,
-      "againstAvg": 4.62,
-      "games": 13,
+      "forAvg": 5.42,
+      "againstAvg": 4.5,
+      "games": 12,
       "cornerLine": 9.5,
       "cornerOverSeq": [
         true,
@@ -70367,8 +70188,7 @@
         true,
         false,
         true,
-        false,
-        true
+        false
       ],
       "cornerVenueSeq": [
         "A",
@@ -70382,18 +70202,16 @@
         "A",
         "H",
         "A",
-        "H",
         "H"
       ],
-      "overLineRate": 0.615,
-      "updatedAt": "2026-07-25T19:16:43.186000+00:00",
+      "overLineRate": 0.583,
+      "updatedAt": "2026-07-28T19:31:00.402971+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
         true,
         false,
         false,
-        true,
         true,
         true,
         true,
@@ -70415,10 +70233,9 @@
         "A",
         "H",
         "A",
-        "H",
         "H"
       ],
-      "cardOverRate": 0.769
+      "cardOverRate": 0.75
     },
     "540": {
       "forAvg": 5.58,
@@ -70454,7 +70271,7 @@
         "H"
       ],
       "overLineRate": 0.667,
-      "updatedAt": "2026-07-25T19:17:10.260475+00:00",
+      "updatedAt": "2026-07-28T19:31:28.036847+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -70487,9 +70304,9 @@
       "cardOverRate": 0.833
     },
     "541": {
-      "forAvg": 5.27,
-      "againstAvg": 5.53,
-      "games": 15,
+      "forAvg": 5.57,
+      "againstAvg": 5.21,
+      "games": 14,
       "cornerLine": 9.5,
       "cornerOverSeq": [
         false,
@@ -70505,8 +70322,7 @@
         true,
         false,
         true,
-        false,
-        true
+        false
       ],
       "cornerVenueSeq": [
         "H",
@@ -70522,11 +70338,10 @@
         "A",
         "H",
         "A",
-        "H",
         "H"
       ],
-      "overLineRate": 0.667,
-      "updatedAt": "2026-07-25T19:17:37.297656+00:00",
+      "overLineRate": 0.643,
+      "updatedAt": "2026-07-28T19:31:55.195326+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -70542,8 +70357,7 @@
         true,
         true,
         true,
-        true,
-        false
+        true
       ],
       "cardVenueSeq": [
         "H",
@@ -70559,10 +70373,9 @@
         "A",
         "H",
         "A",
-        "H",
         "H"
       ],
-      "cardOverRate": 0.6
+      "cardOverRate": 0.643
     },
     "542": {
       "forAvg": 5.08,
@@ -70600,7 +70413,7 @@
         "A"
       ],
       "overLineRate": 0.692,
-      "updatedAt": "2026-07-25T19:18:04.353549+00:00",
+      "updatedAt": "2026-07-28T19:32:22.502438+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -70635,23 +70448,89 @@
       "cardOverRate": 0.769
     },
     "543": {
-      "forAvg": 4.15,
-      "againstAvg": 4.08,
+      "forAvg": 4.17,
+      "againstAvg": 4.33,
+      "games": 12,
+      "cornerLine": 9.5,
+      "cornerOverSeq": [
+        true,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "cornerVenueSeq": [
+        "H",
+        "A",
+        "H",
+        "A",
+        "H",
+        "H",
+        "A",
+        "H",
+        "A",
+        "A",
+        "H",
+        "A"
+      ],
+      "overLineRate": 0.333,
+      "updatedAt": "2026-07-28T19:32:49.680101+00:00",
+      "cardLine": 3.5,
+      "cardOverSeq": [
+        false,
+        false,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "cardVenueSeq": [
+        "H",
+        "A",
+        "H",
+        "A",
+        "H",
+        "H",
+        "A",
+        "H",
+        "A",
+        "A",
+        "H",
+        "A"
+      ],
+      "cardOverRate": 0.583
+    },
+    "544": {
+      "forAvg": 5.62,
+      "againstAvg": 4.85,
       "games": 13,
       "cornerLine": 9.5,
       "cornerOverSeq": [
-        true,
-        true,
         false,
         false,
         false,
         true,
-        false,
-        false,
-        false,
-        false,
+        true,
+        true,
         false,
         true,
+        true,
+        true,
+        true,
+        false,
         false
       ],
       "cornerVenueSeq": [
@@ -70660,89 +70539,17 @@
         "H",
         "A",
         "H",
-        "H",
         "A",
         "H",
         "A",
-        "A",
+        "H",
         "H",
         "A",
-        "H"
+        "H",
+        "A"
       ],
-      "overLineRate": 0.308,
-      "updatedAt": "2026-07-25T19:18:31.435016+00:00",
-      "cardLine": 3.5,
-      "cardOverSeq": [
-        false,
-        false,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true
-      ],
-      "cardVenueSeq": [
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "H",
-        "A",
-        "H",
-        "A",
-        "A",
-        "H",
-        "A",
-        "H"
-      ],
-      "cardOverRate": 0.615
-    },
-    "544": {
-      "forAvg": 5.93,
-      "againstAvg": 4.79,
-      "games": 14,
-      "cornerLine": 9.5,
-      "cornerOverSeq": [
-        false,
-        false,
-        false,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true
-      ],
-      "cornerVenueSeq": [
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "H",
-        "H",
-        "A",
-        "H",
-        "A",
-        "H"
-      ],
-      "overLineRate": 0.571,
-      "updatedAt": "2026-07-25T19:18:58.508264+00:00",
+      "overLineRate": 0.538,
+      "updatedAt": "2026-07-28T19:33:16.922805+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -70757,8 +70564,7 @@
         false,
         true,
         true,
-        true,
-        false
+        true
       ],
       "cardVenueSeq": [
         "H",
@@ -70773,10 +70579,9 @@
         "H",
         "A",
         "H",
-        "A",
-        "H"
+        "A"
       ],
-      "cardOverRate": 0.786
+      "cardOverRate": 0.846
     },
     "546": {
       "forAvg": 4.0,
@@ -70812,7 +70617,7 @@
         "H"
       ],
       "overLineRate": 0.417,
-      "updatedAt": "2026-07-25T19:19:25.608452+00:00",
+      "updatedAt": "2026-07-28T19:33:44.104764+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -70878,7 +70683,7 @@
         "A"
       ],
       "overLineRate": 0.25,
-      "updatedAt": "2026-07-25T19:19:52.694154+00:00",
+      "updatedAt": "2026-07-28T19:34:11.490831+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -70948,7 +70753,7 @@
         "H"
       ],
       "overLineRate": 0.357,
-      "updatedAt": "2026-07-25T19:23:02.351992+00:00",
+      "updatedAt": "2026-07-28T19:37:22.956242+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -70985,116 +70790,110 @@
       "cardOverRate": 0.643
     },
     "728": {
-      "forAvg": 4.29,
-      "againstAvg": 5.57,
-      "games": 14,
-      "cornerLine": 9.5,
-      "cornerOverSeq": [
-        false,
-        true,
-        true,
-        false,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true
-      ],
-      "cornerVenueSeq": [
-        "A",
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "A",
-        "H",
-        "H",
-        "H",
-        "A",
-        "A",
-        "H",
-        "H"
-      ],
-      "overLineRate": 0.643,
-      "updatedAt": "2026-07-25T19:23:29.413040+00:00",
-      "cardLine": 3.5,
-      "cardOverSeq": [
-        true,
-        true,
-        false,
-        false,
-        false,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "cardVenueSeq": [
-        "A",
-        "A",
-        "H",
-        "A",
-        "H",
-        "A",
-        "A",
-        "H",
-        "H",
-        "H",
-        "A",
-        "A",
-        "H",
-        "H"
-      ],
-      "cardOverRate": 0.786
-    },
-    "797": {
-      "forAvg": 4.08,
-      "againstAvg": 4.31,
+      "forAvg": 3.92,
+      "againstAvg": 5.69,
       "games": 13,
       "cornerLine": 9.5,
       "cornerOverSeq": [
         false,
-        false,
-        false,
+        true,
         true,
         false,
-        false,
-        true,
         true,
         true,
         false,
         false,
+        true,
+        true,
+        true,
         true,
         false
       ],
       "cornerVenueSeq": [
         "A",
-        "H",
         "A",
         "H",
         "A",
+        "H",
+        "A",
         "A",
         "H",
         "H",
-        "A",
         "H",
         "A",
         "A",
         "H"
       ],
-      "overLineRate": 0.385,
-      "updatedAt": "2026-07-25T19:25:17.864500+00:00",
+      "overLineRate": 0.615,
+      "updatedAt": "2026-07-28T19:37:50.226893+00:00",
+      "cardLine": 3.5,
+      "cardOverSeq": [
+        true,
+        true,
+        false,
+        false,
+        false,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "cardVenueSeq": [
+        "A",
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
+        "A",
+        "H",
+        "H",
+        "H",
+        "A",
+        "A",
+        "H"
+      ],
+      "cardOverRate": 0.769
+    },
+    "797": {
+      "forAvg": 4.17,
+      "againstAvg": 4.58,
+      "games": 12,
+      "cornerLine": 9.5,
+      "cornerOverSeq": [
+        false,
+        false,
+        false,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ],
+      "cornerVenueSeq": [
+        "A",
+        "H",
+        "A",
+        "H",
+        "A",
+        "A",
+        "H",
+        "H",
+        "A",
+        "H",
+        "A",
+        "A"
+      ],
+      "overLineRate": 0.417,
+      "updatedAt": "2026-07-28T19:39:39.132985+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -71108,8 +70907,7 @@
         true,
         true,
         true,
-        false,
-        true
+        false
       ],
       "cardVenueSeq": [
         "A",
@@ -71123,10 +70921,9 @@
         "A",
         "H",
         "A",
-        "A",
-        "H"
+        "A"
       ],
-      "cardOverRate": 0.692
+      "cardOverRate": 0.667
     },
     "157": {
       "forAvg": 6.57,
@@ -71166,7 +70963,7 @@
         "H"
       ],
       "overLineRate": 0.571,
-      "updatedAt": "2026-07-25T18:50:58.111919+00:00",
+      "updatedAt": "2026-07-28T19:05:05.735581+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -71240,7 +71037,7 @@
         "H"
       ],
       "overLineRate": 0.214,
-      "updatedAt": "2026-07-25T18:51:52.236937+00:00",
+      "updatedAt": "2026-07-28T19:06:00.392005+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -71310,7 +71107,7 @@
         "A"
       ],
       "overLineRate": 0.583,
-      "updatedAt": "2026-07-25T18:52:19.314977+00:00",
+      "updatedAt": "2026-07-28T19:06:27.642972+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -71374,7 +71171,7 @@
         "H"
       ],
       "overLineRate": 0.273,
-      "updatedAt": "2026-07-25T18:52:46.395962+00:00",
+      "updatedAt": "2026-07-28T19:06:55.132053+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -71436,7 +71233,7 @@
         "H"
       ],
       "overLineRate": 0.455,
-      "updatedAt": "2026-07-25T18:53:13.441110+00:00",
+      "updatedAt": "2026-07-28T19:07:22.411514+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -71502,7 +71299,7 @@
         "A"
       ],
       "overLineRate": 0.308,
-      "updatedAt": "2026-07-25T18:53:40.490578+00:00",
+      "updatedAt": "2026-07-28T19:07:49.635881+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -71537,9 +71334,9 @@
       "cardOverRate": 0.462
     },
     "1660": {
-      "forAvg": 6.09,
-      "againstAvg": 3.73,
-      "games": 11,
+      "forAvg": 6.0,
+      "againstAvg": 3.6,
+      "games": 10,
       "cornerLine": 9.5,
       "cornerOverSeq": [
         false,
@@ -71551,7 +71348,6 @@
         true,
         true,
         false,
-        true,
         true
       ],
       "cornerVenueSeq": [
@@ -71564,11 +71360,10 @@
         "A",
         "H",
         "A",
-        "H",
-        "A"
+        "H"
       ],
-      "overLineRate": 0.545,
-      "updatedAt": "2026-07-25T18:54:07.542581+00:00",
+      "overLineRate": 0.5,
+      "updatedAt": "2026-07-28T19:08:16.961329+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -71580,8 +71375,7 @@
         true,
         false,
         false,
-        false,
-        true
+        false
       ],
       "cardVenueSeq": [
         "H",
@@ -71593,10 +71387,9 @@
         "A",
         "H",
         "A",
-        "H",
-        "A"
+        "H"
       ],
-      "cardOverRate": 0.455
+      "cardOverRate": 0.4
     },
     "167": {
       "forAvg": 7.15,
@@ -71634,7 +71427,7 @@
         "H"
       ],
       "overLineRate": 0.615,
-      "updatedAt": "2026-07-25T18:54:34.701747+00:00",
+      "updatedAt": "2026-07-28T19:08:44.100301+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -71704,7 +71497,7 @@
         "A"
       ],
       "overLineRate": 0.615,
-      "updatedAt": "2026-07-25T18:55:01.805793+00:00",
+      "updatedAt": "2026-07-28T19:09:11.370563+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -71739,9 +71532,9 @@
       "cardOverRate": 0.462
     },
     "169": {
-      "forAvg": 5.25,
-      "againstAvg": 5.58,
-      "games": 12,
+      "forAvg": 5.55,
+      "againstAvg": 5.36,
+      "games": 11,
       "cornerLine": 9.5,
       "cornerOverSeq": [
         true,
@@ -71753,7 +71546,6 @@
         false,
         false,
         false,
-        true,
         true,
         true
       ],
@@ -71768,11 +71560,10 @@
         "A",
         "H",
         "A",
-        "H",
-        "A"
+        "H"
       ],
-      "overLineRate": 0.667,
-      "updatedAt": "2026-07-25T18:55:28.868424+00:00",
+      "overLineRate": 0.636,
+      "updatedAt": "2026-07-28T19:09:38.597812+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -71784,7 +71575,6 @@
         false,
         false,
         true,
-        false,
         false,
         false
       ],
@@ -71799,10 +71589,9 @@
         "A",
         "H",
         "A",
-        "H",
-        "A"
+        "H"
       ],
-      "cardOverRate": 0.25
+      "cardOverRate": 0.273
     },
     "170": {
       "forAvg": 4.93,
@@ -71842,7 +71631,7 @@
         "A"
       ],
       "overLineRate": 0.714,
-      "updatedAt": "2026-07-25T18:55:55.968662+00:00",
+      "updatedAt": "2026-07-28T19:10:05.882224+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -71914,7 +71703,7 @@
         "A"
       ],
       "overLineRate": 0.615,
-      "updatedAt": "2026-07-25T18:56:23.049520+00:00",
+      "updatedAt": "2026-07-28T19:10:33.065982+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -71982,7 +71771,7 @@
         "H"
       ],
       "overLineRate": 0.583,
-      "updatedAt": "2026-07-25T18:56:50.104137+00:00",
+      "updatedAt": "2026-07-28T19:11:00.523627+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -72044,7 +71833,7 @@
         "H"
       ],
       "overLineRate": 0.4,
-      "updatedAt": "2026-07-25T18:57:17.174059+00:00",
+      "updatedAt": "2026-07-28T19:11:27.770906+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -72073,9 +71862,9 @@
       "cardOverRate": 0.5
     },
     "175": {
-      "forAvg": 3.43,
-      "againstAvg": 7.07,
-      "games": 14,
+      "forAvg": 3.23,
+      "againstAvg": 7.38,
+      "games": 13,
       "cornerLine": 9.5,
       "cornerOverSeq": [
         true,
@@ -72090,7 +71879,6 @@
         true,
         false,
         true,
-        false,
         false
       ],
       "cornerVenueSeq": [
@@ -72106,11 +71894,10 @@
         "A",
         "H",
         "H",
-        "A",
-        "H"
+        "A"
       ],
-      "overLineRate": 0.643,
-      "updatedAt": "2026-07-25T18:57:44.211511+00:00",
+      "overLineRate": 0.692,
+      "updatedAt": "2026-07-28T19:11:54.768838+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -72125,8 +71912,7 @@
         true,
         false,
         true,
-        true,
-        false
+        true
       ],
       "cardVenueSeq": [
         "A",
@@ -72141,10 +71927,9 @@
         "A",
         "H",
         "H",
-        "A",
-        "H"
+        "A"
       ],
-      "cardOverRate": 0.714
+      "cardOverRate": 0.769
     },
     "182": {
       "forAvg": 4.5,
@@ -72176,7 +71961,7 @@
         "H"
       ],
       "overLineRate": 0.5,
-      "updatedAt": "2026-07-25T18:58:11.269393+00:00",
+      "updatedAt": "2026-07-28T19:12:22.015969+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -72242,7 +72027,7 @@
         "A"
       ],
       "overLineRate": 0.286,
-      "updatedAt": "2026-07-25T18:58:38.314738+00:00",
+      "updatedAt": "2026-07-28T19:12:49.311061+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
@@ -72316,7 +72101,7 @@
         "H"
       ],
       "overLineRate": 0.5,
-      "updatedAt": "2026-07-25T18:59:05.365090+00:00",
+      "updatedAt": "2026-07-28T19:13:16.600594+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
