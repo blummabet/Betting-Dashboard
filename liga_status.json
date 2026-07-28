@@ -162,12 +162,12 @@
     },
     {
       "id": "liga_odds_round_sane",
-      "label": "Liga-Odds nur auf nahen Spieltagen",
+      "label": "Liga/MLS-Odds nur auf nahen Terminen (≤45 Tage)",
       "severity": "warn",
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "fetch_liga_odds.pick_event_for_fixture trennt Hin/Rück per Datum."
+      "note": "fetch_liga_odds.pick_event_for_fixture trennt Hin/Rück per Datum; dieser Backstop misst den Kalender-Abstand (runden-agnostisch → MLS-tauglich)."
     },
     {
       "id": "data_not_wiped",
@@ -185,7 +185,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "48/48 mit AH · 35/48 mit Public-O/U."
+      "note": "48/48 mit AH · 48/48 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -272,35 +272,9 @@
       "id": "public_is_multibook",
       "label": "Public = Multi-Book-Konsens (nicht Einzel-Book)",
       "severity": "warn",
-      "ok": false,
-      "nFail": 48,
-      "failures": [
-        "42-1346: public aus Einzel-Book 'williamhill' statt Konsens",
-        "64-33: public aus Einzel-Book 'williamhill' statt Konsens",
-        "45-52: public aus Einzel-Book 'williamhill' statt Konsens",
-        "57-746: public aus Einzel-Book 'williamhill' statt Konsens",
-        "65-63: public aus Einzel-Book 'williamhill' statt Konsens",
-        "55-47: public aus Einzel-Book 'williamhill' statt Konsens",
-        "50-35: public aus Einzel-Book 'williamhill' statt Konsens",
-        "51-66: public aus Einzel-Book 'williamhill' statt Konsens",
-        "34-40: public aus Einzel-Book 'williamhill' statt Konsens",
-        "36-49: public aus Einzel-Book 'williamhill' statt Konsens",
-        "494-895: public aus Einzel-Book 'williamhill' statt Konsens",
-        "495-492: public aus Einzel-Book 'williamhill' statt Konsens",
-        "497-502: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "499-488: public aus Einzel-Book 'williamhill' statt Konsens",
-        "500-487: public aus Einzel-Book 'williamhill' statt Konsens",
-        "503-489: public aus Einzel-Book 'williamhill' statt Konsens",
-        "505-1579: public aus Einzel-Book 'williamhill' statt Konsens",
-        "512-496: public aus Einzel-Book 'williamhill' statt Konsens",
-        "517-867: public aus Einzel-Book 'williamhill' statt Konsens",
-        "523-490: public aus Einzel-Book 'williamhill' statt Konsens",
-        "529-531: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "530-535: public aus Einzel-Book 'williamhill' statt Konsens",
-        "532-543: public aus Einzel-Book 'marathonbet' statt Konsens",
-        "536-728: public aus Einzel-Book 'williamhill' statt Konsens",
-        "538-727: public aus Einzel-Book 'williamhill' statt Konsens"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "public_static_bias soll auf Median-Konsens laufen, nicht 1 verrauschtem Soft-Book. Single-Book = fetch_wm_multibook_odds hat (noch) nicht geschrieben."
     },
     {
@@ -553,6 +527,6 @@
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-07-27T19:18:45.449215+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-07-28T08:47:30.521471+00:00"
 }
