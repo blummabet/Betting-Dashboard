@@ -37,7 +37,7 @@ const _ALL_PANELS = [
   'mainContent', 'trackingV2Panel', 'resultsPanel',
   'intlCardsPanel', 'intlTrackingPanel', 'intlWm2026Panel', 'intlTelegramPanel',
   'tiktokStudioPanel', 'streaksPanel',
-  'polymarketPanel', 'polyTraderPanel', 'polyWalletsPanel', 'polyRadarPanel',
+  'polymarketPanel', 'polyTraderPanel', 'polyWalletsPanel', 'polyRadarPanel', 'betfairRadarPanel',
   'heartPanel', 'statusPanel', 'signalCheckPanel',
 ];
 
@@ -75,6 +75,7 @@ function showView(view) {
     'polybetting':       'polymarketPanel',
     'polywallets':       'polyWalletsPanel',
     'polyradar':         'polyRadarPanel',
+    'betfair':           'betfairRadarPanel',
     'analyse':           'signalCheckPanel',
     'heart':             'heartPanel',
     'status':            'statusPanel',
@@ -125,6 +126,7 @@ function showView(view) {
     'polybetting': 'navPolymarket',
     'polywallets': 'navPolyWallets',
     'polyradar':   'navPolyRadar',
+    'betfair':     'navBetfair',
   };
   const activeNavId = topNavMap[_activeSection];
   if (activeNavId) {
@@ -177,6 +179,11 @@ function showView(view) {
   if (view === 'polyradar') {
     const p = document.getElementById('polyRadarPanel');
     if (p && typeof window._renderPolyRadar === 'function') p.innerHTML = window._renderPolyRadar();
+  }
+  if (view === 'betfair') {
+    if (typeof window._bfLoad === 'function') window._bfLoad();
+    const p = document.getElementById('betfairRadarPanel');
+    if (p && typeof window._renderBetfairRadar === 'function') p.innerHTML = window._renderBetfairRadar();
   }
   if (view === 'analyse'      && typeof initSignalCheck === 'function') initSignalCheck();
   // (25.06.2026, Lucas: Liga auf WM-Stack) National-Views laufen jetzt auf dem

@@ -2143,6 +2143,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   <button class="top-nav-btn" id="navPolyTrader" onclick="showView('polytrading')" style="color:#00d4a1">📈 Polymarket Trading</button>
   <button class="top-nav-btn" id="navPolymarket" onclick="showView('polybetting')" style="color:#a78bfa">🟣 Polymarket Betting</button>
   <button class="top-nav-btn" id="navPolyWallets" onclick="showView('polywallets')" style="color:#5eead4">🐋 Polymarket Wallets</button>
+  <button class="top-nav-btn" id="navBetfair" onclick="showView('betfair')" style="color:#ffb80c">🟡 Betfair Radar</button>
   <button class="top-nav-btn" id="navPolyRadar" onclick="showView('polyradar')" style="color:#c4b5fd">🎯 Poly Radar</button>
   <!-- „Mehr ▾"-Dropdown (28.06.2026, Lucas): Nebensektionen + Content-Tools gebündelt -->
   <div class="top-nav-more" id="topNavMore">
@@ -4725,6 +4726,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
 <!-- Poly Radar: vereintes Poly-vs-Pinnacle-Board über alle Sportarten (22.07.2026, Lucas) -->
 <div id="polyRadarPanel" style="display:none;max-width:1100px;margin:0 auto;padding:20px 16px 100px;"></div>
+<div id="betfairRadarPanel" style="display:none;max-width:1180px;margin:0 auto;padding:20px 16px 100px;"></div>
 <div id="signalCheckPanel" style="display:none;max-width:1100px;margin:0 auto;padding:20px 16px 100px;"></div>
 <div id="polyTraderPanel" style="display:none;max-width:1100px;margin:0 auto;padding:20px 16px 100px;"></div>
 
@@ -4887,7 +4889,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   var scripts = [
     "pick-engine.js", "pick-verdict.js", "_pick_helpers.js", "validator.js",
     "renderer.js", "share.js", "ui.js", "status-checks.js", "polymarket-tab.js",
-    "poly-wallets.js", "signal-check.js",
+    "poly-wallets.js", "betfair-radar.js", "signal-check.js",
     "results-v2.js", "wm2026-renderer.js", "wm2026-tracking.js", "tiktok-studio.js"
   ];
   for (var i = 0; i < scripts.length; i++) {
