@@ -1010,34 +1010,54 @@ def check_ko_settlement_ninety_min(ctx):
 
 @integrity_check
 def check_liga_odds_round_sane(ctx):
-    """NEU 26.06.2026 (Bug „Spieltag 1 dann 20"): Liga-Odds dürfen nur auf den nächsten
-    anstehenden Spieltagen liegen. match_event_to_fixture akzeptiert 'swapped' → ein
-    Hinrunden-Event matchte sonst das Rückspiel-Fixture (gleiche Teams, ferne Runde) → Odds
-    auf der falschen Runde, Cards-Navi zeigte „1 dann 20". Fix in fetch_liga_odds
-    (pick_event_for_fixture, Datum-Nähe) — dieser Guard fängt eine Regression. Flaggt jeden
-    Odds-Key, dessen ungespieltes Fixture > 4 Runden hinter dem Front-Spieltag liegt."""
+    """26.06.2026 (Bug „Spieltag 1 dann 20"): Odds dürfen nicht auf einem Fixture landen, das
+    Monate entfernt ist — ein Hinrunden-Event matchte sonst das Rückspiel (gleiche Teams, ferne
+    Runde). Der eigentliche Fix sitzt in fetch_liga_odds.pick_event_for_fixture (±4-Tage-
+    Datumsnähe); dieser Guard ist der Backstop gegen eine Regression.
+
+    27.07.2026 — von RUNDEN- auf DATUMS-basiert (Lucas, Status „Spieltag-Mismatch"). Der alte
+    Check maß den Abstand in Spieltag-NUMMERN (md − Front > 4). Das gilt nur für kalender-synchrone
+    Ligen (Bundesliga & Co.: Runde N läuft überall dieselbe Woche). Die MLS nummeriert Runden NICHT
+    synchron — ein Aug-1-Spiel ist „Runde 18", ein Aug-15-Spiel „Runde 19", ein verlegtes
+    Frühjahrsspiel trägt „Runde 3", obwohl es zeitlich nah liegt. Folge: 32 korrekt (per Datum)
+    zugeordnete MLS-Odds wurden gelb, obwohl nichts falsch war. Das Signal für einen Fehlmatch ist
+    der KALENDER-Abstand, nicht die Rundennummer — der trennt legitime Vorab-Preisung (~2-3 Wochen)
+    sauber vom Rückspiel-Fehlmatch (Monate)."""
     if not ctx.is_liga:
         return None
-    md_by_key, played = {}, set()
+    from datetime import date
+
+    def _fx_date(fx):
+        raw = (fx.get("date") or str(fx.get("kickoff") or ""))[:10]
+        try:
+            return date.fromisoformat(raw)
+        except (ValueError, TypeError):
+            return None
+
+    dt_by_key, played = {}, set()
     for _g, fx in ctx.fixtures:
         k = ctx.mk(fx)
-        md_by_key[k] = fx.get("matchday")
+        dt_by_key[k] = _fx_date(fx)
         if (fx.get("result") or {}).get("status") in ("FT", "AET", "PEN"):
             played.add(k)
-    odds_mds = [md_by_key[k] for k in ctx.odds
-                if k in md_by_key and k not in played and isinstance(md_by_key[k], (int, float))]
-    if not odds_mds:
-        return None   # keine ungespielten Odds → nichts zu prüfen
-    m0 = min(odds_mds)
+    # Nur Keys mit ECHTEN 1X2-Odds datums-prüfen — leere poly-only-Shells (kein hw) sind keine
+    # „Odds auf Runde X" und dürfen weder den Front verschieben noch geflaggt werden.
+    priced = [k for k, o in ctx.odds.items()
+              if k not in played and o.get("hw") and dt_by_key.get(k) is not None]
+    dates = [dt_by_key[k] for k in priced]
+    if not dates:
+        return None   # keine datierten, bepreisten, ungespielten Odds → nichts zu prüfen
+    front = min(dates)
+    MAX_DAYS = 45   # legit Vorab-Preisung ~2-3 Wochen; ein Rückspiel-Fehlmatch liegt Monate entfernt.
     fails = []
-    for k in ctx.odds:
-        if k in played:
-            continue
-        md = md_by_key.get(k)
-        if isinstance(md, (int, float)) and md - m0 > 4:
-            fails.append(f"{k}: Odds auf Spieltag {md} (Front = {m0}) — Hin/Rück-Fehlmatch?")
-    return _chk("liga_odds_round_sane", "Liga-Odds nur auf nahen Spieltagen", "warn", fails,
-                "fetch_liga_odds.pick_event_for_fixture trennt Hin/Rück per Datum.")
+    for k in priced:
+        gap = (dt_by_key[k] - front).days
+        if gap > MAX_DAYS:
+            fails.append(f"{k}: Odds auf {dt_by_key[k].isoformat()} — {gap} Tage nach Front "
+                         f"{front.isoformat()} (Hin/Rück-Fehlmatch?)")
+    return _chk("liga_odds_round_sane", "Liga/MLS-Odds nur auf nahen Terminen (≤45 Tage)", "warn",
+                fails, "fetch_liga_odds.pick_event_for_fixture trennt Hin/Rück per Datum; dieser "
+                "Backstop misst den Kalender-Abstand (runden-agnostisch → MLS-tauglich).")
 
 
 @integrity_check
