@@ -108,13 +108,16 @@ function _pwViewTabs(){
   // 19.07.2026 (Lucas: „besser aufteilen") — 4 Unter-Reiter statt 9 gestapelter Sektionen.
   // Reihenfolge 25.07.2026: globales „Großes Geld" (immer Content+Filter) zuerst → Landing-Tab.
   return '<div class="pw-ds" style="margin-top:-6px">'
-    +b('bet','🔥 Heute wetten')+b('money','💰 Großes Geld')+b('move','📈 Bewegung')+b('new','🆕 Neu')+b('edge','🎯 Chancen')+b('whales','🐋 Whales')
+    +b('bet','🔥 Heute wetten')+b('xsport','⚖️ Poly vs Sharp')+b('money','💰 Großes Geld')+b('move','📈 Bewegung')+b('new','🆕 Neu')+b('edge','🎯 Chancen')+b('whales','🐋 Whales')
     +'</div>';
 }
 
 // 25.07.2026 (Lucas: „alle Zahlen verwirrend, keine Ahnung was ich damit mache"). Pro Unter-Reiter
 // EINE Klartext-Box: was zeige ich, und — wichtiger — was tust DU damit. Kein Jargon, ein Satz je.
 const _PW_VIEW_INTRO = {
+  xsport: ['⚖️ Poly vs Sharp — wo Polymarket messbar neben der scharfen Pinnacle liegt',
+    'Das einzige echte Preis-Signal hier: Poly-% gegen die faire Pinnacle-% über ALLE Sportarten. Eine Lücke ist ein Kandidat, kein Auftrag.',
+    'Erst wenn sich die Lücke über die Tage zur Pinnacle SCHLIESST (Konvergenz ▼), war sie echt — kein Settlement-Artefakt. Sonst Finger weg.'],
   edge:  ['🎯 Chancen — wo Polymarket „falscher\" liegt als die scharfe Pinnacle',
     'Kandidaten zum Dagegenhalten: je größer die Abweichung, desto interessanter. Aber Poly und Pinnacle sind meist im Einklang — leere/kleine Liste ist der Normalfall, kein Fehler.',
     'Große Lücke, die die Whales BESTÄTIGEN (nicht dagegen stehen) → beobachten. Nichts blind traden — erst wenn sich die Lücke über Tage zur Pinnacle schließt, war sie echt.'],
@@ -257,6 +260,20 @@ function _pwDevig2(o,u){if(!(o>1&&u>1))return null;const a=1/o,b=1/u,s=a+b;retur
 function _pwLiq(vol){const v=Number(vol)||0;if(v>=100000)return{tier:'deep',icon:'🌊',label:'tiefer Markt',ok:true};if(v>=15000)return{tier:'mid',icon:'💧',label:'mittel',ok:true};return{tier:'low',icon:'·',label:'dünn',ok:false};}
 function _pwVerdict(net,liq){if(!liq.ok&&net<PW_TRADE+1)return{v:'THIN',cls:'thin'};if(net>=PW_TRADE)return{v:'TRADE',cls:'trade'};if(net>=PW_NOISE)return{v:'THIN',cls:'thin'};return{v:'NOISE',cls:'noise'};}
 function _pwHoursToKO(iso){if(!iso)return null;const t=Date.parse(String(iso).replace(' ','T'));if(isNaN(t))return null;return (t-Date.now())/3.6e6;}
+
+// 28.07.2026 (Lucas: „Boyer/Tomic steht IMMER noch da"): hoursToKickoff in der Broad-Close-Datei ist
+// auf den Freeze-Zeitpunkt (capturedAt) eingefroren. Steht der Runner (Spiel gelaufen/Walkover, Markt
+// nie resolved), bleibt htk für immer bei z.B. 0.97 → das Spiel zeigt ewig „<1h" und feuert weiter
+// Steam-Verdikte in „Heute wetten" / „Chancen" / „Großes Geld". Echten Rest bis Anpfiff aus capturedAt
+// rekonstruieren — dieselbe Idee wie der Momentum-Filter (ts+htk), nur für die Close-Märkte.
+function _pwRealHtk(m){
+  if(!m||m.hoursToKickoff==null) return null;
+  const cap=m.capturedAt?Date.parse(m.capturedAt):NaN;
+  if(isNaN(cap)) return m.hoursToKickoff;   // kein Freeze-Stempel → roher Wert (best effort)
+  return m.hoursToKickoff - (Date.now()-cap)/3.6e6;
+}
+const PW_STALE_AFTER_KO_H = 4;   // >4h nach rekonstruiertem Anpfiff = Spiel fertig (wie Momentum-Board)
+function _pwKoStale(m){ const r=_pwRealHtk(m); return r!=null && r < -PW_STALE_AFTER_KO_H; }
 function _pwSideCol(s){return PW_C[s]||(s==='bttsY'?PW_C.over:s==='bttsN'?PW_C.under:PW_C.txt);}
 
 // ── Edges bauen ─────────────────────────────────────────────────────────────
@@ -425,6 +442,13 @@ function _pwRender(){
       +_pwShortlist(_pwCache.broadLive);
     return;
   }
+  if(_pwView==='xsport'){
+    // ⚖️ Poly vs Sharp (28.07.2026, Lucas: eigener Tab): die globale Cross-Sport-Edge Poly
+    // vs de-viggte Pinnacle — das einzige echte Preis-Signal. Konvergenz = Echtheits-Gate.
+    panel.innerHTML=_pwViewTabs()+_pwSportFilterBar(_pwGlobalCats())+_pwViewIntro('xsport')
+      +_pwGlobalEdge(_pwCache.crossSport);
+    return;
+  }
   if(_pwView==='new'){
     // 🆕 Was-ist-neu-Feed (25.07.2026): neue Einstiege + Favoriten-Flips aus akkumulierten Daten.
     panel.innerHTML=_pwViewTabs()+_pwSportFilterBar(_pwGlobalCats())+_pwViewIntro('new')
@@ -469,11 +493,10 @@ function _pwRender(){
       if(_ds) h+=_pwDsDivider(f,'Wale & Smart-Money in deinem aktiven Bewerb')+_ds;
     }
   }else{
-    // 🎯 Chancen: GLOBALE Edge (Poly vs Pinnacle, alle Sportarten) zuerst.
-    h+=_pwGlobalEdge(_pwCache.crossSport);
+    // 🎯 Chancen: Deep-Detail des aktiven Bewerbs (Settlement, Kohärenz, Pinnacle-Edges). Die
+    // GLOBALE Cross-Sport-Edge (Poly vs Pinnacle) hat seit 28.07.2026 den eigenen Tab ⚖️ Poly vs Sharp.
+    let _ds='';
     if(showDs&&hasPoly){
-      // 26.07.2026 (Lucas: „aufräumen"): Kinder erst sammeln, Divider nur bei echtem Inhalt.
-      let _ds='';
       _ds+=_pwSettlementBoard(settlement,teams);
       _ds+=_pwCoherenceBoard(coherence);
       if(!noAnchor){
@@ -481,8 +504,9 @@ function _pwRender(){
         _ds+=_sc+_eb;
         if(_sc||_eb) drawScatter=true;
       }
-      if(_ds) h+=_pwDsDivider(f,'Chancen in deinem aktiven Bewerb')+_ds;
     }
+    if(_ds) h+=_pwDsDivider(f,'Chancen in deinem aktiven Bewerb')+_ds;
+    else h+='<div class="pw-none">Die globale <b>Poly-vs-Pinnacle-Edge</b> liegt jetzt im Tab <b>⚖️ Poly vs Sharp</b>. Hier erscheint das Deep-Detail deines aktiven Bewerbs (Settlement, Kohärenz, Pinnacle-Edges) — sichtbar unter dem ⚽ Fußball-Filter.</div>';
   }
   panel.innerHTML=h;
   if(drawScatter) _pwDrawScatter(edges);
@@ -979,7 +1003,7 @@ function _pwEventLabel(key, names, league){
 
 function _pwMoneyLive(live){
   const all=(live?Object.entries(live):[]).map(([k,m])=>({k,m}))
-    .filter(x=>x.m && x.m.resolved==null && x.m.shares && (x.m.totalUsd||0)>=5000);
+    .filter(x=>x.m && x.m.resolved==null && x.m.shares && (x.m.totalUsd||0)>=5000 && !_pwKoStale(x.m));
   const cats=new Set(all.map(x=>_pwSportCategory(x.m.league)));
   const rows=all.filter(x=>_pwSportPass(x.m.league))
     .sort((a,b)=>(b.m.totalUsd||0)-(a.m.totalUsd||0)).slice(0,30);
@@ -998,7 +1022,7 @@ function _pwMoneyLive(live){
     const match=k?('<a href="https://polymarket.com/event/'+encodeURIComponent(k)+'" target="_blank" rel="noopener" '
       +'style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Auf Polymarket öffnen ↗">'+matchTxt+' <span style="color:#a78bfa">↗</span></a>'):matchTxt;
     const ic=_pwCatOf(m.league)[1], lg=(m.league||'').toUpperCase();
-    const htk=m.hoursToKickoff!=null?(m.hoursToKickoff<0?'live':m.hoursToKickoff<1?'<1h':Math.round(m.hoursToKickoff)+'h'):'—';
+    const _rh=_pwRealHtk(m); const htk=_rh!=null?(_rh<0?'live':_rh<1?'<1h':Math.round(_rh)+'h'):'—';
     // Split-Balken (bis 3 Ausgänge)
     const cols=['#4cc2ff','#f5c518','#ff5d5d'];
     const seg=oc.slice(0,3).map((o,i)=>'<i style="display:inline-block;height:100%;width:'+Math.round(o.usd/total*100)+'%;background:'+cols[i]+'" title="'+_pwEsc(o.name)+' '+Math.round(o.usd/total*100)+'%"></i>').join('');
@@ -1072,14 +1096,14 @@ function _pwShortlistScore(key,m){
   const vol=m.totalUsd||0;
   if(!best||bs<3||vol<15000) return {verdict:'SKIP'};
   return {key,match:oc.map(o=>o.s).join(' vs '),verdict:(best===moneyFav?'BET':'FADE'),side:best,
-    conv:Math.min(10,Math.round(4+bs)),reasons:(why[best]||[]).slice(0,3),vol,htk:m.hoursToKickoff,league:m.league};
+    conv:Math.min(10,Math.round(4+bs)),reasons:(why[best]||[]).slice(0,3),vol,htk:_pwRealHtk(m),league:m.league};
 }
 function _pwShortlist(live){
   const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🔥 Heute wetten — die klarsten Gelegenheiten</span>'
     +'<span class="pw-sec-note">nur Märkte mit echtem Signal (Steam · scharfe Wallet · Geld-vs-Preis) · BET = mit dem Geld, FADE = dagegen · Conviction 0–10 · nichts blind, das ist ein Ausgangspunkt</span></div>';
   const all=[];
   for(const [k,m] of Object.entries(live||{})){
-    if(!m||m.resolved!=null||!_pwSportPass(m.league)) continue;
+    if(!m||m.resolved!=null||!_pwSportPass(m.league)||_pwKoStale(m)) continue;
     const r=_pwShortlistScore(k,m);
     if(r&&(r.verdict==='BET'||r.verdict==='FADE')) all.push(r);
   }
@@ -1313,7 +1337,7 @@ function _pwSmartConcentration(smart,prices,teams){
   // Nah-am-Anpfiff-Sicht; ein echtes Früh-Whale-Signal bleibt im Whales-Tab sichtbar.
   const rows=matches
     .filter(([_k,m])=>(m.totalUsd||0)>=2000 && m.outcomes
-      && (m.hoursToKickoff==null || (m.hoursToKickoff>=-3 && m.hoursToKickoff<=PW_EDGE_HORIZON_H)))
+      && (_pwRealHtk(m)==null || (_pwRealHtk(m)>=-3 && _pwRealHtk(m)<=PW_EDGE_HORIZON_H)))
     .sort((a,b)=>(b[1].totalUsd||0)-(a[1].totalUsd||0))
     .slice(0,14).map(([key,m])=>{
       const oc=m.outcomes||{};
@@ -1332,7 +1356,7 @@ function _pwSmartConcentration(smart,prices,teams){
       let mn=(m.home&&m.away)?(m.home+' – '+m.away):key;
       if(mn===key && teams){const [a,b]=String(key).split('-');
         if(teams[a]&&teams[b]) mn=(teams[a].name||a)+' – '+(teams[b].name||b);}
-      const htk=(m.hoursToKickoff!=null)?(m.hoursToKickoff<0?'live':m.hoursToKickoff.toFixed(1)+'h'):'—';
+      const _rh=_pwRealHtk(m); const htk=(_rh!=null)?(_rh<0?'live':_rh.toFixed(1)+'h'):'—';
       return '<tr>'
         +'<td class="pw-cm">'+_pwEsc(mn)+' '+_pwPolyLink(slugs[key])+'</td>'
         +'<td style="min-width:120px"><div style="height:10px;border-radius:5px;overflow:hidden;background:#161b22;display:flex">'+seg+'</div></td>'

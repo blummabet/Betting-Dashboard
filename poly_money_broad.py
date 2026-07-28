@@ -27,6 +27,7 @@ Helfer (`winner_from_prices`, Aggregation via `evaluate`) sind ohne Netz geteste
 from __future__ import annotations
 
 import json
+import os
 import sys
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
@@ -113,6 +114,12 @@ GAMMA = "https://gamma-api.polymarket.com/events"
 HOLDERS = "https://data-api.polymarket.com/holders?market={cond}&limit=200"
 _HTTP_TIMEOUT = 12
 MAX_HOLDER_CALLS = 90   # Deckel gegen API-Last: die VOLUMENSTÄRKSTEN near-KO-Märkte bekommen den Geld-Split
+# 28.07.2026 (Lucas: „CLV misst 0"): der Whale-EINSTIEGSPREIS. /holders liefert nur AKTUELLE Shares →
+# firstPrice ≈ Close ≈ CLV 0 (strukturell, 67/71 Positionen). Der ECHTE Ø-Einstieg steht in /positions
+# (avgPrice je asset). Damit wird CLV = Close − echter Einstieg endlich messbar. Gedeckelt + abschaltbar.
+POSITIONS = "https://data-api.polymarket.com/positions?user={user}&sizeThreshold=1&limit=500"
+MAX_POSITION_CALLS = int(os.environ.get("POLY_MAX_POSITION_CALLS") or 150)
+FETCH_AVGPRICE = (os.environ.get("POLY_FETCH_AVGPRICE") or "1") == "1"
 
 
 def _tags():
@@ -246,6 +253,42 @@ def _money_shares(outcomes):
     return mm["shares"] if mm else None
 
 
+def _avg_from_positions(data, token):
+    """Poly /positions-Antwort → Ø-Einstiegspreis (avgPrice) der Position auf `token` (asset).
+    None, wenn nicht gefunden oder außerhalb (0,1). REIN/testbar."""
+    for p in (data or []):
+        if not isinstance(p, dict):
+            continue
+        if str(p.get("asset") or p.get("token") or p.get("tokenId") or "") == str(token):
+            ap = p.get("avgPrice", p.get("avg_price"))
+            try:
+                ap = float(ap)
+            except (TypeError, ValueError):
+                return None
+            return round(ap, 4) if 0 < ap < 1 else None
+    return None
+
+
+def _enrich_whales_avg(whales, label_token, cache, get, budget):
+    """Top-Whales um ihren ECHTEN Ø-Einstieg (avgPrice aus /positions) anreichern → wh['avgPrice'].
+    cache {wallet: positions-data} (je Wallet EIN Call, marktübergreifend); budget=[rest_calls]
+    (Mutable-Counter, deckelt die Calls je Lauf). get(url)->data. REIN/testbar (get injizierbar)."""
+    for wh in (whales or []):
+        tok = label_token.get(wh.get("side"))
+        w = wh.get("wallet")
+        if not tok or not w:
+            continue
+        if w not in cache:
+            if budget[0] <= 0:
+                continue
+            budget[0] -= 1
+            cache[w] = get(POSITIONS.format(user=w)) or []
+        ap = _avg_from_positions(cache[w], tok)
+        if ap is not None:
+            wh["avgPrice"] = ap
+    return whales
+
+
 def fetch_markets():
     """Alle Poly-Sportmärkte über die Sport-Tags. Real, defensiv, gedeckelt. Rückgabeformat siehe
     capture()/resolutions(): {key, league, hoursToKickoff, totalUsd, shares, prices,
@@ -318,6 +361,15 @@ def fetch_markets():
     # bekam nie einen Geld-Split. Jetzt kriegt der wertvollste Markt jeder Sportart seine Chance.
     candidates.sort(key=lambda c: -c[0])
     holder_calls = 0
+    # Ø-Einstieg-Anreicherung (CLV-Fix): eine /positions-Abfrage je Wallet, marktübergreifend gecacht,
+    # hart gedeckelt. Fällt der Import/Fetch aus, läuft alles wie bisher weiter (nur ohne avgPrice).
+    _pos_cache, _pos_budget = {}, [MAX_POSITION_CALLS]
+    _avg_get = None
+    if FETCH_AVGPRICE:
+        try:
+            from fetch_wm_poly_smartmoney import _http_get as _avg_get
+        except Exception:
+            _avg_get = None
     for vol, key, league, htk, oc in candidates:
         if holder_calls >= MAX_HOLDER_CALLS:
             break
@@ -330,9 +382,16 @@ def fetch_markets():
             continue     # ohne Geld-Split keine Aussage über „liegt das Geld richtig"
         shares = mm["shares"]
         prices = {o["label"]: o["price"] for o in oc if o["price"] is not None}
+        _whales = mm.get("whales") or []
+        if _avg_get and _whales:
+            try:
+                _enrich_whales_avg(_whales, {o["label"]: o.get("token") for o in oc if o.get("token")},
+                                   _pos_cache, _avg_get, _pos_budget)
+            except Exception:
+                pass
         markets.append({"key": key, "league": league,
                         "hoursToKickoff": htk, "totalUsd": round(vol),
-                        "shares": shares, "prices": prices, "whales": mm.get("whales") or [],
+                        "shares": shares, "prices": prices, "whales": _whales,
                         "resolved": False, "resolvedPrices": {}})
     fetch_markets.sweep_stats = {"sweepOpen": len(sweep_open), "sweepClosed": len(sweep_closed),
                                  "sweepAdded": sweep_added}
@@ -434,15 +493,21 @@ def update_wallet_track(prev, markets, now=None, keep_h=HIST_KEEP_H, frozen=None
             if not w or side is None or not isinstance(price, (int, float)):
                 continue
             ok = f"{w}|{key}|{side}"
+            _avg = wh.get("avgPrice")
+            _avg = round(float(_avg), 4) if isinstance(_avg, (int, float)) and 0 < _avg < 1 else None
             e = openp.get(ok)
             if e is None:
                 openp[ok] = {"wallet": w, "key": key, "side": side, "league": m.get("league"),
                              "firstPrice": round(float(price), 4), "firstTs": now.isoformat(),
                              "lastPrice": round(float(price), 4), "usd": round(float(wh.get("usd") or 0))}
+                if _avg is not None:
+                    openp[ok]["entryPrice"] = _avg
             else:
                 e["lastPrice"] = round(float(price), 4)
                 e["usd"] = round(float(wh.get("usd") or 0))
                 e["league"] = m.get("league")
+                if _avg is not None:
+                    e["entryPrice"] = _avg   # Ø-Einstieg mitziehen (Wal stockt evtl. auf)
 
     # 2) Positionen werten, deren Markt gerade aufgelöst ist
     winners = {m.get("key"): winner_from_prices(m.get("resolvedPrices") or {})
@@ -458,7 +523,12 @@ def update_wallet_track(prev, markets, now=None, keep_h=HIST_KEEP_H, frozen=None
         _close = ((frozen or {}).get(e["key"]) or {}).get("prices") or {}
         _cp = _close.get(e["side"])
         close_ref = float(_cp) if isinstance(_cp, (int, float)) else e["lastPrice"]
-        clv = (close_ref - e["firstPrice"]) * 100
+        # Einstiegsanker: der ECHTE Ø-Einstieg (entryPrice aus /positions avgPrice), sonst der erste
+        # gesehene Preis (Alt-Verhalten, strukturell ~0 — s. 28.07.2026-Fix). CLV = Close − Einstieg.
+        entry = e.get("entryPrice")
+        if entry is None:
+            entry = e["firstPrice"]
+        clv = (close_ref - entry) * 100
         s = scores.setdefault(e["wallet"], {"n": 0, "clvSumPP": 0.0, "wins": 0, "usd": 0})
         s["n"] += 1
         s["clvSumPP"] = round(s["clvSumPP"] + clv, 2)

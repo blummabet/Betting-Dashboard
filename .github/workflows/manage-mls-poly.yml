@@ -144,6 +144,15 @@ jobs:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
+      # 28.07.2026 (Lucas: cross sport als telegram alert). Nach poly_cross_sport.py → alertet
+      # KONVERGIERENDE Poly-vs-Pinnacle-Luecken in den Trades-Channel. Dedup via poly_cross_sport_seen.json.
+      - name: Cross-Sport-Edge-Alert (Poly vs Pinnacle)
+        run: ${{ env.POLY_PYTHON }} poly_cross_sport_watch.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
       # E-Sport als eigener Wallets-Datensatz (Smart-Money/Whale/Kohärenz, kein Pinnacle-Anker).
       - name: 🎮 E-Sport Poly-Daten
         run: ${{ env.POLY_PYTHON }} fetch_poly_esports.py

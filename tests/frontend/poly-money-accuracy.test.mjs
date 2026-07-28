@@ -446,9 +446,9 @@ test('Global rendert auch ohne Datensatz-Poly (a in Chancen, c in Whales)', asyn
   w.eval(readFileSync(PW, 'utf8'));
   w.initPolyWallets();
   await new Promise(r => setTimeout(r, 25));
-  w._pwSetView('edge');
+  w._pwSetView('xsport');   // 28.07.2026: die globale Cross-Sport-Edge (a) hat jetzt den eigenen Tab
   let html = w.document.getElementById('polyWalletsPanel').innerHTML;
-  assert.match(html, /Wo Poly falscher liegt als Pinnacle/, '(a) fehlt in Chancen trotz globaler Daten');
+  assert.match(html, /Wo Poly falscher liegt als Pinnacle/, '(a) fehlt im Tab Poly vs Sharp trotz globaler Daten');
   w._pwSetView('whales');
   html = w.document.getElementById('polyWalletsPanel').innerHTML;
   assert.match(html, /Was einzelne Wale setzen/, '(c) fehlt in Whales trotz globaler Daten');
