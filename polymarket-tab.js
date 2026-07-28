@@ -803,7 +803,18 @@ function getMlsLigaPolyPicks(dateStr) {
   const raw = (typeof window !== 'undefined' && window.NATIONAL_PICKS_FOR_POLY) || [];
   if (!raw.length) return [];
   const results = [];
+  // 28.07.2026 (Lucas: „25.07-Pick + kein Poly + kein Edge"): NATIONAL_PICKS_FOR_POLY wird von
+  // wm2026-renderer.js OHNE Played-Filter befüllt → schon GESPIELTE Spiele (Philadelphia 25.07)
+  // blieben Picks und haben keinen Poly-Markt mehr → „n.v.". Am Konsumenten inline filtern (kein
+  // externer-Funktions-Guard, der bei Ladereihenfolge still abschaltet).
+  const _nowMs = Date.now();
+  const _played = (e) => {
+    if (e.kickoff) { const k = Date.parse(e.kickoff); if (!isNaN(k)) return k <= _nowMs; }
+    if (e.date)    { const k = Date.parse(`${e.date}T23:59:00Z`); if (!isNaN(k)) return k <= _nowMs; }
+    return false;
+  };
   for (const e of raw) {
+    if (_played(e)) continue;
     const [y, m, d] = String(e.date || '').split('-');
     const dateFmt = (y && m && d) ? `${d}.${m}.${y}` : null;
     if (dateStr && dateFmt && dateFmt !== dateStr) continue;
@@ -4045,12 +4056,14 @@ async function _loadPolyStatsData() {
     // _polyStatsHtml lokal aus res.bets gerechnet → simples Concat reicht, keine Summary-Mathe.
     const bets = [], placedBets = [];
     let bal = null, summary = null;
+    const _balTs = x => (x && x.updatedAt) ? (Date.parse(x.updatedAt) || -1) : -1;
     for (const p of per) {
       if (p.res && Array.isArray(p.res.bets)) bets.push(...p.res.bets);
       if (p.res && p.res.summary && !summary) summary = p.res.summary;
       if (p.placed && Array.isArray(p.placed.bets)) placedBets.push(...p.placed.bets);
-      // Balance = dieselbe Polymarket-Wallet über alle Datensätze → erste vorhandene nehmen.
-      if (!bal && p.bal) bal = p.bal;
+      // 28.07.2026 (Lucas: „falsche balance", 2. Pfad): die WM-Datei ist seit 19.07. tot und stand
+      // ZUERST in der Liste → die FRISCHESTE nach updatedAt nehmen, nicht die erste.
+      if (p.bal && _balTs(p.bal) > _balTs(bal)) bal = p.bal;
     }
     _polyStatsCache = { res: { bets, summary }, placed: { bets: placedBets }, bal };
     const el = document.getElementById('polyStatsSection');
