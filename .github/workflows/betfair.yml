@@ -1,0 +1,47 @@
+name: 🟡 Betfair Radar (Betwatch)
+
+# Betwatch ist EU-erreichbar → läuft direkt in GitHub Actions (kein Mac-Runner nötig, anders als Poly).
+# Holt Betfair-Odds + Volumina, schreibt betfair_prices.json + betfair_history.json. [skip ci] am
+# Commit, damit keine Workflow-Kaskade entsteht; der Pages-Deploy zieht es über seinen */15-Schedule.
+on:
+  schedule:
+    - cron: '*/15 * * * *'   # alle 15 Min — Frequenz hier tunen (Rate-Limit beachten)
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: betfair
+  cancel-in-progress: false
+
+jobs:
+  fetch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: 🟡 Betfair/Betwatch fetchen
+        run: python fetch_betfair_betwatch.py
+        continue-on-error: true
+        env:
+          BETWATCH_KEY: ${{ secrets.BETWATCH_KEY }}
+          # optional tunebar: BETWATCH_MAX_DETAIL / BETWATCH_WINDOW_H
+
+      - name: 💾 Committen (nur bei Änderung)
+        run: |
+          git config user.name "cocobet-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add betfair_prices.json betfair_history.json 2>/dev/null || true
+          if git diff --cached --quiet; then
+            echo "keine Änderung — nichts zu committen"
+          else
+            git commit -m "🟡 Betfair Radar Update $(date -u '+%Y-%m-%d %H:%M UTC') [skip ci]"
+            git push
+          fi
