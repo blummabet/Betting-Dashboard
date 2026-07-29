@@ -70,6 +70,7 @@ function boot() {
   const dom = new JSDOM('<!DOCTYPE html><body><div id="betfairRadarPanel"></div></body>',
     { url: 'https://x.com/', runScripts: 'outside-only' });
   const w = dom.window;
+  w._bfNoAutoRefresh = true;   // Auto-Refresh-Timer in Tests aus (sonst hängt die Event-Loop)
   w.eval(readFileSync(new URL('betfair-radar.js', ROOT), 'utf8'));
   const prices = fixture();
   w._bfState.data = prices;
@@ -247,4 +248,46 @@ test('Confidence-Badge am Markt in der Liste, wenn Track-Record belastbar', () =
   const html = w._renderBetfairRadar();   // Live-View: Kairat (UEFA, Match Odds) trägt das Badge
   assert.match(html, /🎯/);
   assert.match(html, /🎯 60% · \+10%/);
+});
+
+
+test('_bfRefresh lädt frische Daten nach & behält offene Cards/Filter (Fix „Daten 2h alt")', async () => {
+  // Regressions-Guard: der Radar lud früher NUR einmal (_bfLoad-Guard) und pollte nie nach →
+  // im offenen Tab wuchs das Daten-Alter unbegrenzt und der Stale-Banner feuerte trotz frischem
+  // Server. _bfRefresh muss data/hist/track ersetzen, ohne View/Filter/aufgeklappte Cards zu resetten.
+  const dom = new JSDOM('<!DOCTYPE html><body><div id="betfairRadarPanel"></div></body>',
+    { url: 'https://x.com/', runScripts: 'outside-only' });
+  const w = dom.window;
+  w._bfNoAutoRefresh = true;   // Auto-Refresh-Timer in Tests aus (sonst hängt die Event-Loop)
+  w.eval(readFileSync(new URL('betfair-radar.js', ROOT), 'utf8'));
+
+  const oldData = fixture(); oldData._meta.generatedAt = iso(-2 * 3600e3);   // 2h alter Erststand
+  w._bfState.data = oldData; w._bfState.hist = histFixture(); w._bfState.loading = false;
+  w._bfState.league = 'all'; w._bfState.tab = 'all'; w._bfState.date = 'all';
+  w._bfState.cardOpen = { 1: true };                                         // Nutzer hat Karte offen
+
+  const fresh = fixture(); fresh._meta.generatedAt = iso(0);                  // Server liefert frisch
+  w.fetch = (u) => Promise.resolve({ ok: true, json: () => Promise.resolve(
+    String(u).indexOf('betfair_prices') >= 0 ? fresh :
+    String(u).indexOf('betfair_history') >= 0 ? histFixture() : null) });
+
+  await w._bfRefresh();
+  assert.equal(w._bfState.data._meta.generatedAt, fresh._meta.generatedAt, 'Daten wurden ersetzt');
+  assert.notEqual(w._bfState.data._meta.generatedAt, oldData._meta.generatedAt, 'nicht mehr der alte Stand');
+  assert.equal(w._bfState.cardOpen[1], true, 'offene Karte bleibt offen');
+  assert.equal(w._bfState.league, 'all', 'Filter bleibt erhalten');
+});
+
+test('_bfRefresh no-op wenn Panel unsichtbar (kein unnötiger Fetch)', async () => {
+  const dom = new JSDOM('<!DOCTYPE html><body><div id="betfairRadarPanel" style="display:none"></div></body>',
+    { url: 'https://x.com/', runScripts: 'outside-only' });
+  const w = dom.window;
+  w._bfNoAutoRefresh = true;   // Auto-Refresh-Timer in Tests aus (sonst hängt die Event-Loop)
+  w.eval(readFileSync(new URL('betfair-radar.js', ROOT), 'utf8'));
+  w._bfState.data = fixture(); w._bfState.loading = false;
+  let fetched = false;
+  w.fetch = () => { fetched = true; return Promise.resolve({ ok: true, json: () => Promise.resolve(null) }); };
+  const r = w._bfRefresh();
+  if (r && r.then) await r;
+  assert.equal(fetched, false, 'kein Fetch, wenn Radar-Panel ausgeblendet');
 });

@@ -54,14 +54,17 @@
   var MIN_CONF_N = 20;   // ab so vielen abgerechneten Spielen gilt eine Liga×Markt-Quote als „belastbar"
   window._bfState = _bf;
 
-  function _bfLoad() {
-    if (_bf.data || _bf.loading) return;
-    _bf.loading = true;
-    Promise.all([
+  function _bfFetch3() {
+    return Promise.all([
       fetch('betfair_prices.json?t=' + Date.now()).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
       fetch('betfair_history.json?t=' + Date.now()).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
       fetch('betfair_track_record.json?t=' + Date.now()).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
-    ]).then(function (a) {
+    ]);
+  }
+  function _bfLoad() {
+    if (_bf.data || _bf.loading) return;
+    _bf.loading = true;
+    _bfFetch3().then(function (a) {
       _bf.data = a[0] || { matches: [] }; _bf.hist = a[1] || {}; _bf.track = a[2] || null;
       _bf.loading = false; _bf.cardOpen = {};
       var p = document.getElementById('betfairRadarPanel');
@@ -69,6 +72,36 @@
     });
   }
   window._bfLoad = _bfLoad;
+
+  // Auto-Refresh (29.07.2026, Lucas: „Daten sind 2h alt" bei offenem Tab). Der Radar lud die
+  // Daten NUR EINMAL (_bfLoad-Guard) und pollte nie nach → in einem länger offenen Tab wuchs
+  // genAgeMin() unbegrenzt und der Stale-Banner feuerte, obwohl der Server frische Daten hatte.
+  // Fix: alle 5 Min + beim Zurückkehren zum Tab frisch nachladen — OHNE die offene UI zu resetten
+  // (View/Liga/Tab/Datum + aufgeklappte Cards bleiben; nur data/hist/track werden ersetzt).
+  function _bfRefresh() {
+    if (_bf.loading) return;
+    var p = document.getElementById('betfairRadarPanel');
+    if (!p || p.style.display === 'none') return;   // nur nachladen, wenn der Radar sichtbar ist
+    _bf.loading = true;
+    return _bfFetch3().then(function (a) {
+      if (a[0]) _bf.data = a[0];
+      if (a[1]) _bf.hist = a[1];
+      if (a[2] != null) _bf.track = a[2];
+      _bf.loading = false;
+      var pp = document.getElementById('betfairRadarPanel');
+      if (pp && pp.style.display !== 'none') pp.innerHTML = renderBetfairRadar();
+    });
+  }
+  window._bfRefresh = _bfRefresh;
+  // _bfNoAutoRefresh: Test-Flag (Timer würde sonst die jsdom-Event-Loop offenhalten). unref()
+  // hält den Timer im echten Browser aktiv, lässt aber node bei Tests sauber beenden.
+  if (typeof window !== 'undefined' && !window._bfAutoRefreshSet && !window._bfNoAutoRefresh) {
+    window._bfAutoRefreshSet = true;
+    var _bfTimer = setInterval(_bfRefresh, 5 * 60000);
+    if (_bfTimer && typeof _bfTimer.unref === 'function') _bfTimer.unref();
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) _bfRefresh(); });
+    window.addEventListener('focus', _bfRefresh);
+  }
 
   // ── Helpers ─────────────────────────────────────────────────────────────────
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]; }); }
