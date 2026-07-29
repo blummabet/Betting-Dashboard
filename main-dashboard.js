@@ -133,6 +133,51 @@
     '</div>';
   }
 
+  var _SIDE = { home: 'Heim', away: 'Ausw.' };
+  var _SRC  = { pinnacle: 'Pinnacle', betfair: 'Betfair', poly: 'Poly', soft: 'Soft' };
+  function consensusRows() {
+    var out = [];
+    allFixtures().forEach(function (f) {
+      (f.picks || []).forEach(function (p) { if (p.consensus && p.consensus.kind) out.push({ f: f, p: p, c: p.consensus }); });
+    });
+    return out;
+  }
+  function _mdHero(A) {
+    var head = '<div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap;">' +
+      '<span style="font-size:19px;">⚖️</span><span style="font-weight:800;font-size:15px;color:var(--text);">Triple-Konsens</span>' +
+      '<span style="font-size:11px;color:var(--muted);">wo <b style="color:' + A.teal + '">Pinnacle</b> · <b style="color:#a7c7ff">Betfair</b> · <b style="color:' + A.purp + '">Poly</b> · <b>Soft</b> einig sind — und wo einer ausschert</span></div>';
+    var wrap = function (inner) {
+      return '<section style="grid-column:1/-1;background:linear-gradient(135deg,rgba(76,194,255,.08),rgba(167,139,250,.06));border:1px solid rgba(76,194,255,.28);border-radius:14px;padding:15px 17px;">' + head + inner + '</section>';
+    };
+    var rows = consensusRows();
+    if (!rows.length) {
+      return wrap('<div style="font-size:12.5px;color:var(--muted);margin-top:8px;line-height:1.55;max-width:760px;">Füllt sich beim nächsten Pick-Lauf: dann stehen hier die Spiele, wo sich die Quellen einig sind (hohe Konfidenz, größer setzen) und wo eine ausschert (Value-Kandidat). Poly deckt aktuell MLS/WM ab, Top-5 zeigt „3/4".</div>');
+    }
+    var kon = rows.filter(function (x) { return x.c.kind === 'konsens'; }).sort(function (a, b) { return a.c.spreadPP - b.c.spreadPP; }).slice(0, 3);
+    var div = rows.filter(function (x) { return x.c.kind === 'divergenz'; }).sort(function (a, b) { return b.c.outlierGapPP - a.c.outlierGapPP; }).slice(0, 3);
+    var teams = function (f) { return esc(team(f.home)) + ' <span style="color:var(--muted);font-weight:400">v</span> ' + esc(team(f.away)); };
+    var konRow = function (x) {
+      var c = x.c;
+      return '<div style="padding:6px 0;border-top:1px solid var(--border);font-size:12.5px;">' +
+        '<div style="color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + teams(x.f) + ' · <b>' + _SIDE[c.side] + '</b></div>' +
+        '<div style="font-size:11px;color:var(--muted);margin-top:1px;"><b style="color:' + A.green + '">' + c.n + '/4 einig</b> · Ø ' + c.medianPP + '% · Spanne ' + c.spreadPP + 'pp</div></div>';
+    };
+    var divRow = function (x) {
+      var c = x.c, o = c.outlier, ov = (c.sources[o] != null ? Math.round(c.sources[o] * 100) : '?');
+      return '<div style="padding:6px 0;border-top:1px solid var(--border);font-size:12.5px;">' +
+        '<div style="color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">' + teams(x.f) + ' · <b>' + _SIDE[c.side] + '</b></div>' +
+        '<div style="font-size:11px;color:var(--muted);margin-top:1px;"><b style="color:' + A.gold + '">' + (_SRC[o] || o) + ' schert aus</b>: ' + ov + '% vs Ø ' + c.medianPP + '% (' + c.outlierGapPP + 'pp)</div></div>';
+    };
+    var col = function (title, tint, list, rowFn, emptyTxt) {
+      return '<div style="flex:1;min-width:240px;">' +
+        '<div style="font-size:11px;font-weight:800;letter-spacing:.03em;color:' + tint + ';text-transform:uppercase;margin:10px 0 2px;">' + title + '</div>' +
+        (list.length ? list.map(rowFn).join('') : '<div style="font-size:11.5px;color:var(--muted);padding:6px 0;">' + emptyTxt + '</div>') + '</div>';
+    };
+    return wrap('<div style="display:flex;gap:20px;flex-wrap:wrap;margin-top:4px;">' +
+      col('✅ Einig — hohe Konfidenz', A.green, kon, konRow, 'gerade keine enge Übereinstimmung') +
+      col('⚡ Ausreißer — Value-Kandidat', A.gold, div, divRow, 'gerade kein klarer Ausreißer') +
+      '</div>');
+  }
   function _mdRender() {
     var p = document.getElementById('mainDashPanel');
     if (!p) return;
@@ -140,13 +185,7 @@
     var A = { gold: '#ffb80c', teal: '#2dd4bf', purp: '#a78bfa', blue: '#4cc2ff', green: '#3fb950', red: '#f85149' };
 
     // Triple-Hero (Platzhalter, kommt als eigene Kachel)
-    var hero = '<section style="grid-column:1/-1;background:linear-gradient(135deg,rgba(76,194,255,.08),rgba(167,139,250,.06));border:1px solid rgba(76,194,255,.28);border-radius:14px;padding:15px 17px;">' +
-      '<div style="display:flex;align-items:center;gap:9px;flex-wrap:wrap;">' +
-        '<span style="font-size:19px;">⚖️</span>' +
-        '<span style="font-weight:800;font-size:15px;color:var(--text);">Triple-Konsens</span>' +
-        '<span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;background:rgba(255,184,12,.14);color:' + A.gold + ';">in Arbeit</span>' +
-      '</div>' +
-      '<div style="font-size:12.5px;color:var(--muted);margin-top:6px;line-height:1.55;max-width:760px;">Wo <b style="color:' + A.teal + '">Pinnacle</b>, <b style="color:#a7c7ff">Betfair</b>, <b style="color:' + A.purp + '">Polymarket</b> und die <b>Softbooks</b> einer Meinung sind (hohe Konfidenz) — und wo einer ausschert (Value-Kandidat). Kommt als nächste Kachel hier oben.</div></section>';
+    var hero = _mdHero(A);
 
     // Cards
     var c = bestCards();
