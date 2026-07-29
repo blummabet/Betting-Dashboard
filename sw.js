@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v23';   // 29.07.2026: Betfair-Politur (Alert-Filter/fett, Kopf folgt Markt-Filter, Steam-pp-Fix)
+const VERSION = 'cocobet-v24';   // 29.07.2026: Live-Status harter 2.5h-Cut (beendete Spiele nicht mehr live)
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

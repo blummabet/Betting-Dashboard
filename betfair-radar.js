@@ -147,24 +147,20 @@
   // sonst „veraltet"-Alarm bei ganz normalem Betrieb.
   var FRESH_LIVE_MIN = 30;   // bis hierher gilt Live-Status als vertrauenswürdig
   var STALE_WARN_MIN = 75;   // GitHub-Schedule ist stark jittery (~15–100min) → erst ab ~5 verpassten Läufen warnen
-  var LIVE_WINDOW_H = 3.2;   // bis ~3,2h nach Anpfiff gilt ein Spiel als laufend (danach vermutlich vorbei)
+  var LIVE_MAX_H = 2.5;   // ein Fußballspiel dauert ~2h (inkl. Nachspielzeit); danach ist es vorbei
   function _kickMs(m) { var k = m.kickoff ? Date.parse(m.kickoff) : NaN; return isNaN(k) ? null : k; }
-  // Live-Status robust + stabil (29.07.2026, Lucas-Bug „war live, dann wieder pre"): Betwatch liefert
-  // liveInfo.time nur lückenhaft (v.a. Friendlies) und die Anpfiff-Zeit springt. Darum: live = nicht
-  // beendet UND (Live-Uhr da ODER Anpfiff vorbei & im 3,2h-Fenster), Daten nicht zu alt. Hysterese:
-  // einmal live gesehen → bleibt live (bis beendet/Fenster vorbei), damit ein Zeit-Glitch das Spiel
-  // nicht zurück auf „pre" wirft. EINE Quelle für Pill + Zähler + Datums-Gruppierung.
+  // Live-Status (29.07.2026, Fix „längst beendete Spiele wurden live gezeigt"): HARTER Cut — beendet
+  // ODER mehr als LIVE_MAX_H nach Anpfiff → vorbei, egal ob der Feed noch eine Uhr sendet (stale). Sonst
+  // ist die Betwatch-Live-Uhr das verlässlichste Live-Signal; ohne Uhr zählt das Anpfiff-Fenster
+  // (Anpfiff .. +2,5h). Keine Hysterese mehr (die hielt beendete Spiele fälschlich live). EINE Quelle.
   function isLive(m) {
     var li = m.liveInfo || {};
     if (li.finished) return false;
     if (genAgeMin() > STALE_WARN_MIN) return false;
-    if (!_bf._liveSeen) _bf._liveSeen = {};
-    var id = String(m.matchId), k = _kickMs(m), now = Date.now();
-    var kicked = (k != null) && (now - k) >= -60000;                 // Anpfiff vorbei (60s Toleranz)
-    var withinWindow = (k != null) && (now - k) < LIVE_WINDOW_H * 3.6e6;
-    if (li.time != null || (kicked && withinWindow)) { _bf._liveSeen[id] = now; return true; }
-    if (_bf._liveSeen[id] && (now - _bf._liveSeen[id]) < LIVE_WINDOW_H * 3.6e6) return true;   // Hysterese
-    return false;
+    var k = _kickMs(m), now = Date.now(), age = (k != null) ? (now - k) : null;
+    if (age != null && age > LIVE_MAX_H * 3.6e6) return false;               // klar vorbei
+    if (li.time != null) return true;                                       // Betwatch-Live-Uhr → live
+    return age != null && age >= -60000 && age <= LIVE_MAX_H * 3.6e6;       // ohne Uhr: Anpfiff-Fenster
   }
   window._bfIsLive = isLive;   // Test-Hook
   function isStale(m) {

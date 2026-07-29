@@ -429,35 +429,33 @@ function liveMatch(id, kickoffH, liveInfo){
 }
 
 test('Live: Anpfiff vorbei ohne Betwatch-Uhr zählt trotzdem als live', () => {
-  const { w } = boot(); w._bfState._liveSeen = {};
+  const { w } = boot();
   assert.equal(w._bfIsLive(liveMatch(501, -0.5, {})), true, 'angepfiffen + kein finished → live');
 });
 
 test('Live: beendet gewinnt immer', () => {
-  const { w } = boot(); w._bfState._liveSeen = {};
+  const { w } = boot();
   assert.equal(w._bfIsLive(liveMatch(502, -0.5, { finished: true, time: "80'" })), false);
 });
 
-test('Live: lange nach Anpfiff (außerhalb 3,2h-Fenster) → nicht mehr live', () => {
-  const { w } = boot(); w._bfState._liveSeen = {};
+test('Live: lange nach Anpfiff (> 2,5h) → nicht mehr live', () => {
+  const { w } = boot();
   assert.equal(w._bfIsLive(liveMatch(503, -5, {})), false);
 });
 
-test('Live-Hysterese: einmal live gesehen → Anpfiff-Zeit-Glitch wirft es nicht zurück auf pre', () => {
-  const { w } = boot(); w._bfState._liveSeen = {};
-  const m = liveMatch(504, -0.5, {});
-  assert.equal(w._bfIsLive(m), true);        // gesehen
-  m.kickoff = ko(2);                          // Betwatch verstellt Anpfiff in die Zukunft
-  assert.equal(w._bfIsLive(m), true, 'bleibt live dank Hysterese');
+test('Live: längst beendetes Spiel (Anpfiff > 2,5h her) ist NICHT live — auch mit Rest-Uhr', () => {
+  const { w } = boot();
+  // Betwatch sendet noch eine Uhr (90'), aber Anpfiff war vor 3h → harter Cut, nicht live
+  assert.equal(w._bfIsLive(liveMatch(504, -3, { time: 90 })), false);
 });
 
 test('Live: Betwatch-Uhr vorhanden → live (auch wenn Anpfiff-Zeit noch Zukunft behauptet)', () => {
-  const { w } = boot(); w._bfState._liveSeen = {};
+  const { w } = boot();
   assert.equal(w._bfIsLive(liveMatch(505, 1, { time: "12'" })), true);
 });
 
 test('Live-Pill ohne Minute rendert sauber „LIVE" (kein null), Zähler ≥1', () => {
-  const { w, prices } = boot(); w._bfState._liveSeen = {};
+  const { w, prices } = boot();
   prices.matches[0].kickoff = ko(-0.5); prices.matches[0].liveInfo = {};   // angepfiffen, keine Uhr
   const html = w._renderBetfairRadar();
   assert.match(html, /LIVE/);

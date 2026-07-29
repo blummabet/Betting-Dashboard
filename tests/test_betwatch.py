@@ -98,6 +98,21 @@ def test_select_ids_live_zuerst_dann_fenster_dann_cap():
     assert len(B.select_ids(parsed, now=T0, window_h=999, cap=1)) == 1
 
 
+def test_select_ids_top5_prioritized_beyond_standard_window():
+    # T0 = 28.07. 20:00. Standard 26h, Prio 72h. Top-5 in ~46h (außerhalb 26h, innerhalb 72h) → drin;
+    # obskure Liga in ~46h (außerhalb 26h, nicht-prio) → draußen.
+    evs = [
+        {"match_id": 501, "teams": {"v1": "Bayern", "v2": "Dortmund"}, "league": "German Bundesliga",
+         "country": "DE", "kickoff": "2026-07-30T18:00:00Z", "live_info": {}},
+        {"match_id": 502, "teams": {"v1": "A", "v2": "B"}, "league": "Icelandic 2 Deild",
+         "country": "IS", "kickoff": "2026-07-30T18:00:00Z", "live_info": {}},
+    ]
+    parsed = B.parse_events(evs)
+    ids = B.select_ids(parsed, now=T0, window_h=26, prio_window_h=72, cap=150)
+    assert 501 in ids, "Top-5 im 72h-Prio-Fenster wird erfasst"
+    assert 502 not in ids, "Nicht-Prio-Liga außerhalb 26h bleibt draußen"
+
+
 def test_history_anhaengen_und_prunen():
     s = B.build_snapshot(EVENT_DETAIL, now=T0)
     h = B.append_history({}, s, now=T0)

@@ -35,6 +35,7 @@ nur main() ruft die API. Defensiv: bei Fetch-Fehler NIE gute Daten überschreibe
 """
 import json
 import os
+import re
 import urllib.request
 import urllib.error
 from datetime import datetime, timezone, timedelta
@@ -48,6 +49,12 @@ KEY = (os.environ.get("BETWATCH_KEY") or "").strip()
 HTTP_TIMEOUT = 20
 MAX_DETAIL = int(os.environ.get("BETWATCH_MAX_DETAIL") or 150)
 WINDOW_H = float(os.environ.get("BETWATCH_WINDOW_H") or 26)
+# Top-5 + MLS mit LÄNGEREM Vorlauf erfassen (72h statt 26h), sonst tauchen sie erst ~1 Tag vor
+# Anpfiff auf — für Signale/Triple zu spät (29.07.2026, Lucas). Betwatch-Namen sind land-präfixiert
+# ("German Bundesliga" …). Modest gehalten: 3 Tage, keine 2 Wochen.
+PRIORITY_WINDOW_H = float(os.environ.get("BETWATCH_PRIO_WINDOW_H") or 72)
+PRIORITY_RX = re.compile(r"(german bundesliga|english premier league|spanish la ?liga|italian serie a|"
+                         r"french ligue 1|major league soccer|\bmls\b)", re.I)
 HIST_KEEP_H = 72
 HIST_MAX_POINTS = 80
 # Für den „frisches Geld"-Zufluss im Dashboard: je Snapshot das Markt-Volumen der Dashboard-Märkte
@@ -133,11 +140,13 @@ def build_snapshot(ev, now=None):
     }
 
 
-def select_ids(parsed, now=None, window_h=WINDOW_H, cap=MAX_DETAIL):
-    """Welche Matches bekommen einen (teuren) Detail-Call: alle LIVE (haben HT-Märkte + In-Play-
-    Volumen) zuerst, dann Prematch mit Anpfiff im Fenster. Gedeckelt. REIN/testbar."""
+def select_ids(parsed, now=None, window_h=WINDOW_H, cap=MAX_DETAIL, prio_window_h=PRIORITY_WINDOW_H):
+    """Welche Matches bekommen einen (teuren) Detail-Call: alle LIVE zuerst, dann Top-5/MLS im WEITEN
+    Fenster (prio_window_h, ~3 Tage), dann alle anderen im Standard-Fenster (window_h, 26h). So werden
+    die Signal-Ligen früh erfasst, ohne den Cap mit obskuren Ligen zu fluten. Gedeckelt. REIN/testbar."""
     now = now or _now()
     horizon = now + timedelta(hours=window_h)
+    prio_horizon = now + timedelta(hours=prio_window_h)
 
     def _ko(e):
         try:
@@ -146,15 +155,21 @@ def select_ids(parsed, now=None, window_h=WINDOW_H, cap=MAX_DETAIL):
             return None
 
     live = [e for e in parsed if e.get("live")]
-    pre = []
+    prio, pre = [], []
     for e in parsed:
         if e.get("live"):
             continue
         k = _ko(e)
-        if k is not None and now <= k <= horizon:
+        if k is None:
+            continue
+        if PRIORITY_RX.search(str(e.get("league") or "")) and now <= k <= prio_horizon:
+            prio.append((k, e))
+        elif now <= k <= horizon:
             pre.append((k, e))
+    prio.sort(key=lambda x: x[0])
     pre.sort(key=lambda x: x[0])
-    ordered = [e["matchId"] for e in live] + [e["matchId"] for _, e in pre]
+    ordered = ([e["matchId"] for e in live] + [e["matchId"] for _, e in prio]
+               + [e["matchId"] for _, e in pre])
     # dedup, Reihenfolge erhalten
     seen, out = set(), []
     for mid in ordered:
