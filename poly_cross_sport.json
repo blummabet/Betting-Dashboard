@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-07-29T05:52:05.104550+00:00",
+ "generatedAt": "2026-07-29T14:25:54.341026+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,42 +10,57 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 268,
- "pinnKeys": 162,
- "matched": 84,
- "footballRows": 60,
- "crossRows": 208,
+ "polyRowsSeen": 265,
+ "pinnKeys": 153,
+ "matched": 75,
+ "footballRows": 45,
+ "crossRows": 220,
+ "footballSkippedStale": 11,
  "seenBySport": {
   "basketball_nba": 2,
   "americanfootball_nfl": 100,
-  "baseball_mlb": 98,
+  "baseball_mlb": 110,
   "icehockey_nhl": 2,
   "mma_mixed_martial_arts": 2,
   "boxing_boxing": 4,
-  "soccer_mls": 60
+  "soccer_mls": 45
  },
  "matchedBySport": {
-  "baseball_mlb": 24,
-  "soccer_mls": 60
+  "baseball_mlb": 30,
+  "soccer_mls": 45
  },
  "trackRecord": {
-  "tracked": 42,
+  "tracked": 44,
   "converged": 1
  },
  "discrepancies": [
   {
-   "id": "soccer_mls|houstondynamo-newenglandrevolution|hw",
-   "sport": "soccer_mls",
-   "event": "New England Revolution vs Houston Dynamo",
-   "market": "1X2",
-   "outcome": "Heim",
-   "polyPP": 51.0,
-   "pinnPP": 40.0,
-   "gapPP": 10.98,
-   "vol": 105763,
+   "id": "baseball_mlb|atlantabraves-newyorkmets|atlantabraves",
+   "sport": "baseball_mlb",
+   "event": "Atlanta Braves vs New York Mets",
+   "market": "Moneyline",
+   "outcome": "Atlanta Braves",
+   "polyPP": 50.5,
+   "pinnPP": 58.0,
+   "gapPP": -7.46,
+   "vol": 41728,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-07-29T14:25:54.340842+00:00"
+  },
+  {
+   "id": "baseball_mlb|atlantabraves-newyorkmets|newyorkmets",
+   "sport": "baseball_mlb",
+   "event": "Atlanta Braves vs New York Mets",
+   "market": "Moneyline",
+   "outcome": "New York Mets",
+   "polyPP": 49.5,
+   "pinnPP": 42.0,
+   "gapPP": 7.46,
+   "vol": 41728,
    "richtung": "Poly zu hoch → faden",
-   "convergePP": 1.48,
-   "firstSeen": "2026-07-27T22:58:49.098682+00:00"
+   "convergePP": 0.0,
+   "firstSeen": "2026-07-29T14:25:54.340842+00:00"
   }
  ]
 }
