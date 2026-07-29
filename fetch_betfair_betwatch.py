@@ -104,17 +104,18 @@ def build_snapshot(ev, now=None):
     for m in (ev.get("markets") or []):
         if not isinstance(m, dict) or not m.get("name"):
             continue
-        av = m.get("average_volume")
-        if isinstance(av, (int, float)):
-            total_vol += av
-        # Runner als geordnete Liste MIT Einzel-Volumen (für die Geld-Verteilung im Dashboard).
-        markets[m["name"]] = {
-            "vol": av,
-            "runners": [
-                {"name": r.get("name"), "odd": r.get("odd"), "vol": r.get("volume")}
-                for r in (m.get("runners") or []) if isinstance(r, dict) and r.get("name")
-            ],
-        }
+        # Runner als geordnete Liste MIT Einzel-Volumen (das ECHTE gematchte Geld je Ausgang —
+        # wie in Betwatchs Money-Ansicht).
+        runners = [
+            {"name": r.get("name"), "odd": r.get("odd"), "vol": r.get("volume")}
+            for r in (m.get("runners") or []) if isinstance(r, dict) and r.get("name")
+        ]
+        # Markt-Geld = SUMME der Runner-Volumina. NICHT average_volume — das ist eine andere,
+        # viel größere Kennzahl (33–1261× je Markt) und passt nie zur Ausgangs-Verteilung (29.07.2026,
+        # Lucas: „24K oben, aber 10€ je Ausgang?"). Verifiziert an echten Betwatch-Antworten.
+        rsum = sum((r["vol"] or 0) for r in runners if isinstance(r.get("vol"), (int, float)))
+        total_vol += rsum
+        markets[m["name"]] = {"vol": round(rsum, 2), "runners": runners}
     mo = markets.get("Match Odds")
     hw = dr = aw = vol1x2 = fair = None
     if mo:

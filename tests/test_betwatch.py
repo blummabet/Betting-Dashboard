@@ -26,20 +26,26 @@ EVENT_DETAIL = {
     "match_id": 35785202, "teams": {"v1": "Augsburg", "v2": "Schalke 04"},
     "league_id": 59, "league": "German Bundesliga", "country": "DE",
     "kickoff": "2026-08-30T15:30:00Z", "live_info": {},
+    # Markt-Geld = Summe der Runner-Volumina (average_volume ist bewusst „falsch groß" gelassen,
+    # damit der Test fixiert, dass es NICHT benutzt wird).
     "markets": [
         {"market_id": 1, "name": "Match Odds", "average_volume": 1102159, "runners": [
-            {"runner_id": 1, "name": "Augsburg", "odd": 2.0, "volume": 3.38},
-            {"runner_id": 2, "name": "The Draw", "odd": 3.5, "volume": 199},
-            {"runner_id": 3, "name": "Schalke 04", "odd": 4.0, "volume": 12}]},
+            {"runner_id": 1, "name": "Augsburg", "odd": 2.0, "volume": 8000},
+            {"runner_id": 2, "name": "The Draw", "odd": 3.5, "volume": 1500},
+            {"runner_id": 3, "name": "Schalke 04", "odd": 4.0, "volume": 2500}]},   # Σ = 12000
         {"market_id": 2, "name": "Over/Under 2.5 Goals", "average_volume": 244387, "runners": [
-            {"name": "Under 2.5 Goals", "odd": 2.1, "volume": 90000},
-            {"name": "Over 2.5 Goals", "odd": 1.8, "volume": 154387}]},
-        {"market_id": 3, "name": "First Half Goals 1.5", "average_volume": 5000, "runners": [
-            {"name": "Under 1.5 Goals", "odd": 1.7}, {"name": "Over 1.5 Goals", "odd": 2.2}]},
-        {"market_id": 4, "name": "Half Time", "average_volume": 8000, "runners": [
-            {"name": "Augsburg", "odd": 2.6}, {"name": "The Draw", "odd": 2.1}, {"name": "Schalke 04", "odd": 4.5}]},
-        {"market_id": 5, "name": "Both teams to Score?", "average_volume": 11451, "runners": [
-            {"name": "Yes", "odd": 1.9}, {"name": "No", "odd": 2.0}]},
+            {"name": "Under 2.5 Goals", "odd": 2.1, "volume": 1500},
+            {"name": "Over 2.5 Goals", "odd": 1.8, "volume": 3000}]},               # Σ = 4500
+        {"market_id": 3, "name": "First Half Goals 1.5", "average_volume": 999999, "runners": [
+            {"name": "Under 1.5 Goals", "odd": 1.7, "volume": 1200},
+            {"name": "Over 1.5 Goals", "odd": 2.2, "volume": 800}]},                # Σ = 2000
+        {"market_id": 4, "name": "Half Time", "average_volume": 777777, "runners": [
+            {"name": "Augsburg", "odd": 2.6, "volume": 4000},
+            {"name": "The Draw", "odd": 2.1, "volume": 2000},
+            {"name": "Schalke 04", "odd": 4.5, "volume": 2000}]},                   # Σ = 8000
+        {"market_id": 5, "name": "Both teams to Score?", "average_volume": 555555, "runners": [
+            {"name": "Yes", "odd": 1.9, "volume": 6000},
+            {"name": "No", "odd": 2.0, "volume": 5000}]},                           # Σ = 11000
     ],
 }
 
@@ -62,22 +68,24 @@ def test_devig_1x2():
 def test_build_snapshot_haelt_alle_maerkte_inkl_HT():
     s = B.build_snapshot(EVENT_DETAIL, now=T0)
     assert s["matchId"] == 35785202 and s["league"] == "German Bundesliga" and s["leagueId"] == 59
-    assert s["mo"]["hw"] == 2.0 and s["mo"]["aw"] == 4.0 and s["mo"]["vol"] == 1102159
+    # Markt-Geld = SUMME der Runner-Volumina, NICHT average_volume (29.07.2026)
+    assert s["mo"]["hw"] == 2.0 and s["mo"]["aw"] == 4.0 and s["mo"]["vol"] == 12000
     assert s["mo"]["fair"] and s["mo"]["fair"]["home"] > s["mo"]["fair"]["away"]
     # HT-Märkte müssen erhalten bleiben (Produkt B)
     assert "Half Time" in s["markets"]
     assert "First Half Goals 1.5" in s["markets"]
-    assert s["markets"]["Half Time"]["vol"] == 8000
-    # Runner sind jetzt eine geordnete Liste MIT Einzel-Volumen (Geld-Verteilung fürs Dashboard)
+    assert s["markets"]["Half Time"]["vol"] == 8000            # 4000+2000+2000, nicht average_volume
+    assert s["markets"]["Over/Under 2.5 Goals"]["vol"] == 4500  # 1500+3000
+    # Runner sind eine geordnete Liste MIT Einzel-Volumen (Geld-Verteilung fürs Dashboard)
     ou = s["markets"]["Over/Under 2.5 Goals"]["runners"]
     assert isinstance(ou, list)
     over = next(r for r in ou if r["name"] == "Over 2.5 Goals")
-    assert over["odd"] == 1.8 and over["vol"] == 154387
+    assert over["odd"] == 1.8 and over["vol"] == 3000
     mo_r = s["markets"]["Match Odds"]["runners"]
     assert {r["name"] for r in mo_r} == {"Augsburg", "The Draw", "Schalke 04"}
-    assert next(r for r in mo_r if r["name"] == "Augsburg")["vol"] == 3.38
-    # Gesamt-Volumen = Summe aller Markt-Volumina (Money-Indikator)
-    assert s["totalVol"] == 1102159 + 244387 + 5000 + 8000 + 11451
+    assert next(r for r in mo_r if r["name"] == "Augsburg")["vol"] == 8000
+    # Gesamt-Volumen = Summe aller Markt-Volumina (= Summe aller Runner)
+    assert s["totalVol"] == 12000 + 4500 + 2000 + 8000 + 11000
 
 
 def test_select_ids_live_zuerst_dann_fenster_dann_cap():
@@ -97,7 +105,7 @@ def test_history_anhaengen_und_prunen():
     h = B.append_history(h, s, now=T0 + timedelta(hours=1))
     assert len(h["35785202"]) == 2
     # mkv: Markt-Volumina je Snapshot (für „frisches Geld"-Zufluss)
-    assert h["35785202"][-1]["mkv"]["Match Odds"] == 1102159
+    assert h["35785202"][-1]["mkv"]["Match Odds"] == 12000    # Runner-Summe, nicht average_volume
     assert h["35785202"][-1]["mkv"]["Half Time"] == 8000
     # nur die letzten 2 Punkte tragen mkv (Platzspar-Trim)
     h = B.append_history(h, s, now=T0 + timedelta(hours=2))

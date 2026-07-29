@@ -72,8 +72,10 @@
   function eur(v) { return (+v || 0) * EURFX; }
   function fmtE(v) { var n = eur(v); if (n >= 1e6) return '€' + (n / 1e6).toFixed(2) + 'M'; if (n >= 1e3) return '€' + (n / 1e3).toFixed(n >= 1e5 ? 0 : 1).replace('.0', '') + 'K'; return '€' + Math.round(n); }
   function mkOf(m, id) { return (m.markets || {})[id] || null; }
-  function mvolG(m, id) { var mk = mkOf(m, id); return mk && typeof mk.vol === 'number' ? mk.vol : 0; }
-  function totalG(m) { return (m.totalVol || 0); }
+  // Geld = Summe der Runner-Volumina (das echte Matched-Geld). NICHT mk.vol/totalVol aus alten
+  // Daten (die trugen average_volume — eine andere, viel größere Kennzahl). So stimmt Kopf = Summe.
+  function mvolG(m, id) { var mk = mkOf(m, id); return mk ? distTotal(mk) : 0; }
+  function totalG(m) { var s = 0, mm = m.markets || {}; for (var k in mm) s += distTotal(mm[k]); return s; }
   function runnersOf(mk) { var r = mk && mk.runners; return Array.isArray(r) ? r : []; }
   function distTotal(mk) { return runnersOf(mk).reduce(function (a, r) { return a + (+r.vol || 0); }, 0); }
   function leadRunner(mk) { return runnersOf(mk).reduce(function (a, r) { return (!a || (+r.vol || 0) > (+a.vol || 0)) ? r : a; }, null); }
