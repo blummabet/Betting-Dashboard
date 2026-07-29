@@ -23,9 +23,9 @@ test('PWA-Tags + Navi-Markup (Bottom-Nav, Sheet, Web-Dropdown) im HTML vorhanden
   // Web „Mehr"-Dropdown mit 4 Einträgen (Heart/Status/TikTok/Analyse) — Analyse=Signal-Check-Tab (06.07.2026)
   assert.ok(d.getElementById('navMore'), 'Web-Mehr-Button fehlt');
   assert.equal(d.querySelectorAll('#topMoreMenu .tm-item').length, 4, '4 Dropdown-Einträge erwartet');
-  // Mobile Bottom-Nav (5 Tabs) + Sheet (6: Poly×2, TikTok, Heart, Status, Analyse — Poly Radar lebt jetzt im Wallet)
+  // Mobile Bottom-Nav (5 Tabs) + Sheet (7: Betfair, Poly×2, TikTok, Heart, Status, Analyse)
   assert.equal(d.querySelectorAll('.bottom-nav .bn-btn').length, 5, '5 Bottom-Tabs erwartet');
-  assert.equal(d.querySelectorAll('.more-sheet .ms-btn').length, 6, '6 Sheet-Einträge erwartet');
+  assert.equal(d.querySelectorAll('.more-sheet .ms-btn').length, 7, '7 Sheet-Einträge erwartet (inkl. Betfair)');
   // Telegram Control liegt jetzt als ausklappbarer Abschnitt im Status-Tab, nicht mehr im Menü
   assert.ok(d.getElementById('st_telegram'), 'Telegram-Details im Status-Tab fehlt');
   assert.equal(d.querySelectorAll('[data-view="intl-telegram"]').length, 0, 'Kein Telegram-Menüeintrag mehr');

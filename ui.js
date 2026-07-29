@@ -135,7 +135,7 @@ function showView(view) {
   // ── „Mehr"-Menü (28.06.2026, Lucas): Heart/Status/Telegram/TikTok gebündelt ──
   // Desktop = Dropdown (#navMore + .top-more-menu), Mobile = Bottom-Sheet (.more-sheet).
   // Telegram/TikTok haben Section 'intl' → über die volle View (_activeView) matchen.
-  const MORE_SECS  = ['polybetting', 'polywallets', 'heart', 'status', 'analyse'];
+  const MORE_SECS  = ['betfair', 'polybetting', 'polywallets', 'heart', 'status', 'analyse'];
   const MORE_VIEWS = ['intl-studio'];   // Telegram lebt jetzt im Status-Tab (28.06.2026)
   const isMore = MORE_SECS.includes(_activeSection) || MORE_VIEWS.includes(_activeView);
 
