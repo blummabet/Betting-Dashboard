@@ -1181,6 +1181,7 @@
     topscorer_momentum:  ['🎯', 'Top-Torjäger'],
     coach_change:        ['🔁', 'Neuer Trainer'],
     transfer_shift:      ['🔄', 'Transfer-Abgang'],
+    betfair_money:       ['💷', 'Betfair-Geld'],
   };
 
   // Engine-Signal-Grid (pos/neg/silent Kacheln) — gemeinsamer Renderer für Gruppen- + KO-Cards.
@@ -1477,6 +1478,8 @@
         const stripHtml = _buildOddsStrip(heroPick, fxOdds, fx);
         if (stripHtml) html += stripHtml;
       }
+      // 💷 Betfair-Geld-Verteilung (unter Pinnacle/Soft-Block), sobald das Signal feuert.
+      html += _betfairMoneyBlock(heroPick);
     } else if (isPlayed && fx.result && fx.result.home_score != null && fx.result.away_score != null
                && ['FT','AET','PEN'].includes((fx.result.status || 'FT').toUpperCase())) {
       // FIX 12.06.2026: Felder heißen home_score/away_score (nicht .home/.away).
@@ -3814,6 +3817,57 @@
     </div>`;
   }
 
+  // 💷 Betfair-Geld-Block (29.07.2026, Lucas) — die GELD-VERTEILUNG aus dem betfair_money-Signal:
+  // wieviel % des gematchten Geldes auf der Pick-Seite liegt vs. fairer Anteil (Betfair-Quoten
+  // de-viggt), + €-Volumen + Track-Record-Hinweis (Liga×Markt solide/fadet). Liest heroPick.signals
+  // (die Engine-Signalliste, mit metadata) — kein separates Pick-Feld nötig. Rendert für ALLE Picks
+  // (Steam wie Modell), sobald das Signal gefeuert hat (Top-5 + MLS mit Namens-Match).
+  const _BF_TOK_LABEL = { H:'Heim', D:'Remis', A:'Auswärts', OVER:'Über', UNDER:'Unter', YES:'BTTS Ja', NO:'BTTS Nein' };
+  function _betfairMoneyBlock(pick) {
+    const sig = (pick && Array.isArray(pick.signals))
+      ? pick.signals.find(s => s && s.name === 'betfair_money') : null;
+    const md = sig && sig.metadata;
+    if (!md || md.money_share == null || md.fair_share == null) return '';
+    const moneyPct = Math.round(md.money_share * 100);
+    const fairPct  = Math.round(md.fair_share  * 100);
+    const label    = _BF_TOK_LABEL[md.token] || md.token || '';
+    const score    = +sig.score || 0;
+    const edgePp   = (md.edge_pp != null) ? +md.edge_pp : (moneyPct - fairPct);
+    const kEur     = (md.total_eur != null) ? Math.round(md.total_eur / 1000) : null;
+
+    // Haltung: stützt (grün) / gefadet trotz Geld (rot) / dünn = Geld gegen Pick (gelb).
+    let word, color;
+    if (edgePp > 0 && score < 0) { word = 'warnt trotz Geld auf'; color = '#f85149'; }
+    else if (score > 0)          { word = 'stützt';               color = '#3fb950'; }
+    else                         { word = 'dünn auf';             color = '#e3b341'; }
+
+    // Track-Record-Hinweis (Liga×Markt) aus der Signal-Metadata (nur ab n≥15 belastbar).
+    let track = '';
+    const roi = md.track_roi, trN = md.track_n;
+    if (roi != null && trN != null && trN >= 15) {
+      const roiPct = (roi >= 0 ? '+' : '') + Math.round(roi * 100) + '%';
+      if (roi <= -0.10)     track = ` · <span style="color:#f85149">⚠️ Liga×Markt fadet (ROI ${roiPct}, n${trN})</span>`;
+      else if (roi >= 0.05) track = ` · <span style="color:#3fb950">✅ Liga×Markt solide (ROI ${roiPct}, n${trN})</span>`;
+    }
+
+    const edgeStr = `${edgePp >= 0 ? '+' : ''}${Math.round(edgePp)}pp ggü. fair`;
+    const meta    = `${kEur != null ? `€${kEur}k gematcht im Markt` : 'im Markt gematcht'}${track}`;
+    const wMoney  = Math.max(0, Math.min(100, moneyPct));
+    const wFair   = Math.max(0, Math.min(100, fairPct));
+    return `<div class="cc-sharp-box cc-betfair">
+      <div class="cc-sm-head">💷 <strong>Betfair-Geld ${word} ${label}</strong> <span style="color:${color};font-weight:600">${edgeStr}</span></div>
+      <div class="cc-bf-bar-row">
+        <span class="cc-bf-pct" style="color:${color}">${moneyPct}%</span>
+        <div class="cc-bf-bar">
+          <div class="cc-bf-fill" style="width:${wMoney}%;background:${color}"></div>
+          <div class="cc-bf-fair" style="left:${wFair}%" title="fairer Anteil ${fairPct}%"></div>
+        </div>
+        <span class="cc-bf-fairlbl">fair ${fairPct}%</span>
+      </div>
+      <div class="cc-sm-meta">${meta}</div>
+    </div>`;
+  }
+
   function _steamMoveGraph(pick) {
     if (!pick || pick.source !== 'steam') return '';
     let html = _freshnessStatusBadge(pick);
@@ -4112,6 +4166,7 @@
   if (typeof window !== 'undefined') {
     window.__wmCardTest = {
       engineSignalGridHtml: _engineSignalGridHtml,
+      betfairMoneyBlock: _betfairMoneyBlock,      // 29.07.2026: 💷 Betfair-Geld-Verteilungsblock
       buildKoCard: _buildKoCard,
       buildCard: _buildCard,
       sharpConsensus: _sharpConsensus,

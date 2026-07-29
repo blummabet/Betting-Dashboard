@@ -1692,6 +1692,18 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .cc-sharp-box.cc-soft .cc-sm-head strong{color:#22c55e;}
 .cc-sharp-box.cc-soft .cc-sm-bar-fill{background:linear-gradient(90deg,#16a34a,#4ade80);}
 
+/* 💷 Betfair-Geld-Variante (29.07.2026, Lucas) — eigene Identität (blaue Box), Verteilungsbalken:
+   Füllung = Geld-Anteil auf der Pick-Seite (Farbe = Haltung), gelber Marker = fairer Anteil. */
+.cc-sharp-box.cc-betfair{background:rgba(56,139,253,0.06);border-color:rgba(56,139,253,0.22);}
+.cc-sharp-box.cc-betfair .cc-sm-head{color:#a7c7ff;}
+.cc-sharp-box.cc-betfair .cc-sm-head strong{color:#79b8ff;}
+.cc-bf-bar-row{display:flex;align-items:center;gap:8px;margin:6px 0 4px;font-size:11px;color:var(--muted);}
+.cc-bf-pct{font-family:'JetBrains Mono','SF Mono',Menlo,monospace;font-weight:600;min-width:34px;}
+.cc-bf-bar{flex:1;height:6px;background:rgba(255,255,255,0.08);border-radius:3px;position:relative;overflow:visible;}
+.cc-bf-fill{position:absolute;left:0;top:0;height:100%;border-radius:3px;opacity:0.85;}
+.cc-bf-fair{position:absolute;top:-2px;width:2px;height:10px;background:#e3b341;border-radius:1px;box-shadow:0 0 0 1px rgba(0,0,0,0.35);}
+.cc-bf-fairlbl{font-family:'JetBrains Mono','SF Mono',Menlo,monospace;font-size:11px;color:var(--muted);white-space:nowrap;}
+
 /* Conviction-Bar mit 8+-Zielmarker */
 .cc-conv-bar{margin-top:8px;height:6px;background:rgba(255,255,255,0.08);border-radius:3px;position:relative;overflow:visible;}
 .cc-conv-fill{height:100%;background:linear-gradient(90deg,#ffb02e,#00d4a1);border-radius:3px;transition:width 0.4s;}
