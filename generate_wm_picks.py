@@ -870,16 +870,27 @@ def _steam_model_odds(snap, market):
     return None
 
 
+def _steam_edge_pp(model_odds, entry_odds):
+    """Ehrlicher Steam-Pick-Edge in pp. model_odds = de-viggte Pinnacle-Fair der Pick-Seite
+    (aus _steam_model_odds), entry_odds = TATSAECHLICH gespielte Quote. Break-Even ist
+    1/entry_odds — da wird nichts de-viggt, das ist der Preis den du zahlst. 25.07.2026: das
+    fruehere x1.03 auf der Markt-Seite war unbegruendet (ueberzog jeden Edge ~3%) und erzeugte
+    fuer AH einen Phantom-Sockel; der Docstring versprach dort 'Edge ~0, ehrlich'. model_odds=None
+    (AH: keine saubere Fair-Linie) -> Edge ehrlich 0."""
+    if not model_odds or not entry_odds or model_odds <= 1.0 or entry_odds <= 1.0:
+        return 0
+    return round(((1.0 / model_odds) * MODEL_MARGIN - (1.0 / entry_odds)) * 100)
+
+
 def _steam_card_pick(snap, pick):
     """Ein steam_engine-Pick → Card-Dict im Standard-Format (Signal/Conviction-Stufe
     hängt danach signals/convictionScore an)."""
     t = pick["trigger"]
     market = pick["market"]
     odds = float(pick["entry_odd"])
-    model_odds = _steam_model_odds(snap, market) or odds
-    edge_pp = 0
-    if model_odds > 1.0 and odds > 1.0:
-        edge_pp = round(((1.0 / model_odds) * MODEL_MARGIN - (1.0 / odds) * 1.03) * 100)
+    _mo = _steam_model_odds(snap, market)
+    model_odds = _mo or odds
+    edge_pp = _steam_edge_pp(_mo, odds)   # AH (_mo=None) -> ehrlich 0; sonst p - 1/odds
 
     move = t["move_pp"]
     move_raw = t.get("move_raw_pp")
@@ -1110,10 +1121,9 @@ def _derive_safer_steam_line(card, snap):
     # Lucas-Regel: sichere Linie nur nehmen wenn Quote ≥ 1.35 UND echt niedriger als Original.
     if safe_odds < SAFE_LINE_MIN_ODDS or safe_odds >= orig_odds:
         return card
-    safe_model = _steam_model_odds(snap, safe_label) or safe_odds
-    edge_pp = 0
-    if safe_model > 1.0 and safe_odds > 1.0:
-        edge_pp = round(((1.0 / safe_model) * MODEL_MARGIN - (1.0 / safe_odds) * 1.03) * 100)
+    _sm = _steam_model_odds(snap, safe_label)
+    safe_model = _sm or safe_odds
+    edge_pp = _steam_edge_pp(_sm, safe_odds)
     # Original-Linie als These behalten, sichere Linie wird die Wette.
     card["safeThesisMarket"] = orig_market
     card["safeThesisOdds"]   = round(float(orig_odds), 2)
@@ -1168,10 +1178,9 @@ def _derive_reverser_counter(parent, snap, move_pp):
     if not (isinstance(odds, (int, float)) and odds >= SAFE_LINE_MIN_ODDS):
         return None
     odds = round(float(odds), 2)
-    model = _steam_model_odds(snap, label) or odds
-    edge_pp = 0
-    if model > 1.0 and odds > 1.0:
-        edge_pp = round(((1.0 / model) * MODEL_MARGIN - (1.0 / odds) * 1.03) * 100)
+    _m = _steam_model_odds(snap, label)
+    model = _m or odds
+    edge_pp = _steam_edge_pp(_m, odds)
     return {
         "market": label, "odds": odds, "modelOdds": round(model, 3),
         "conf": "medium", "verdict": "ABWÄGEN",
@@ -1761,8 +1770,7 @@ def main():
             print(f"  ⚠️  Polymarket-Snapshot nicht ladbar: {e}")
 
     # Betfair-Geld-Snapshot (29.07.2026): Betwatch-Matched-€ je Ausgang → betfair_money-Signal.
-    # Per Team-Namen gematcht (event_key = reihenfolge-unabhängig, normalisiert). Kein Match → Signal
-    # feuert einfach nicht. betfair_prices.json ist dataset-agnostisch (alle Fußball-Ligen).
+    # Per Team-Namen gematcht (event_key, reihenfolge-unabhängig/normalisiert). Kein Match → kein Signal.
     betfair_snapshots = {}
     _bf_ekey = None
     try:
