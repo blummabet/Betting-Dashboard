@@ -48,6 +48,7 @@ from sharp_signals.multi_book_steam import MultiBookSteamSignal
 from sharp_signals.game_state_openness import GameStateOpennessSignal
 from sharp_signals.mls_travel import MLSTravelSignal
 from sharp_signals.betfair_money import BetfairMoneySignal
+from sharp_signals.betfair_coherence import BetfairCoherenceSignal
 from sharp_signals.move_following import MoveFollowingSignal
 from sharp_signals.venue_form import VenueFormSignal
 
@@ -112,6 +113,7 @@ ACTIVE_SIGNALS: list[Signal] = [
     MoveFollowingSignal(),      # 25.07.2026: Move-Groesse + Zustands-Bestaetigung; nur liga_default (Top-5, backtest-validiert)
     VenueFormSignal(),          # 25.07.2026: Heim/Auswaerts-Split + Zuletzt-Ueber-Rate; liga+mls (Ortsform aus venueSeq)
     BetfairMoneySignal(),       # 29.07.2026: Betfair-Exchange-GELD je Ausgang (Betwatch) + Track-Record
+    BetfairCoherenceSignal(),   # 29.07.2026: Markt-KOHÄRENZ (Poisson-λ-Fit, Ü/U+BTTS vs Modell); v5-Idee
 ]
 
 
@@ -182,6 +184,7 @@ SIGNAL_GROUPS: dict[str, str] = {
     "opener_move":        "sharp_money",
     "multi_book_steam":   "sharp_money",
     "betfair_money":      "sharp_money",   # Exchange-GELD-Verteilung, Anti-Korr mit Quoten-Steam
+    "betfair_coherence":  "market_coherence",  # Preis-Kohärenz (Poisson) — eigene Familie, unabh. vom Geld
     # move_following (25.07.2026): Move-Groessen-Confirm + Zustands-Gate — basiert auf demselben
     # Pinnacle-Move → sharp_money-Familie, Anti-Korr-Discount verhindert Doppelzaehlung.
     "move_following":     "sharp_money",

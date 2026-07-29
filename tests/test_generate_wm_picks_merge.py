@@ -105,7 +105,7 @@ class TestRegistryAndConfigConsistency(unittest.TestCase):
 
 
 class TestSignalRegistryActive(unittest.TestCase):
-    """sharp_signals/registry.py muss alle 33 Signale + UNIQUE-Group enthalten."""
+    """sharp_signals/registry.py muss alle 34 Signale + UNIQUE-Group enthalten."""
 
     def test_all_signals_active(self):
         from sharp_signals.registry import ACTIVE_SIGNALS
@@ -119,12 +119,12 @@ class TestSignalRegistryActive(unittest.TestCase):
             "league_pressure", "fixture_congestion", "topscorer_momentum",
             "coach_change", "transfer_shift", "streak_momentum",
             "reverse_line_move", "opener_move", "multi_book_steam", "game_state_openness",
-            "mls_travel", "move_following", "venue_form", "betfair_money",
+            "mls_travel", "move_following", "venue_form", "betfair_money", "betfair_coherence",
         }
         self.assertEqual(set(names), expected,
                          f"Signal-Set abweichend. fehlt: {expected - set(names)}, "
                          f"extra: {set(names) - expected}")
-        self.assertEqual(len(ACTIVE_SIGNALS), 33)
+        self.assertEqual(len(ACTIVE_SIGNALS), 34)
 
     def test_lineup_and_apif_are_unique(self):
         from sharp_signals.registry import SIGNAL_GROUPS

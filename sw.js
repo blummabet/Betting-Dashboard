@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v15';   // 29.07.2026: Betfair-Radar Kohärenz-Engine (Pills + Deep-Dive-Drawer, v5-Port)
+const VERSION = 'cocobet-v16';   // 29.07.2026: betfair_coherence Engine-Signal (Bayes-Panel-Label)
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
