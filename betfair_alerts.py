@@ -25,6 +25,7 @@ from telegram_trades import send_trades_message
 
 HT_MIN_EUR     = 7000.0
 HT_MIN_SHARE   = 0.85     # ... und davon min. dieser Anteil auf EINEN Ausgang (einseitig)
+MIN_LEAD_ODD   = 1.15     # Geld auf einen fast sicheren Favoriten (Quote < 1.15, führt schon) = sinnlos → kein Push
 FRESH_TOP_EUR  = 20000.0
 FRESH_REST_EUR = 10000.0
 DEDUP_FACTOR   = 1.5
@@ -106,6 +107,9 @@ def ht_alert(m):
     lead_share = (lead.get("vol") or 0.0) / total
     if lead_share < HT_MIN_SHARE:          # ≥85 % auf einer Seite, sonst nur Liquidität → kein Push
         return None
+    lo = lead.get("odd")
+    if isinstance(lo, (int, float)) and lo < MIN_LEAD_ODD:   # 85 % auf einem ~1.0-Favoriten = keine Info
+        return None
     home, away = m.get("home"), m.get("away")
 
     def share(test):
@@ -126,13 +130,13 @@ def _market_lead(m, name):
     """Führender Ausgang + Anteil des Marktes aus den aktuellen Preisen."""
     mk = (m.get("markets") or {}).get(name)
     if not mk:
-        return None, None
+        return None, None, None
     rs = mk.get("runners") or []
     tot = sum((r.get("vol") or 0.0) for r in rs)
     if tot <= 0 or not rs:
-        return None, None
+        return None, None, None
     top = max(rs, key=lambda r: (r.get("vol") or 0.0))
-    return top.get("name"), (top.get("vol") or 0.0) / tot
+    return top.get("name"), (top.get("vol") or 0.0) / tot, top.get("odd")
 
 
 def fresh_alert(m, hist):
@@ -152,11 +156,13 @@ def fresh_alert(m, hist):
     if not best or best[1] < thr:
         return None
     market_name, inflow, mkt_total = best
-    lead_name, lead_share = _market_lead(m, market_name)
+    lead_name, lead_share, lead_odd = _market_lead(m, market_name)
+    if isinstance(lead_odd, (int, float)) and lead_odd < MIN_LEAD_ODD:   # Geld auf ~1.0-Favoriten = sinnlos
+        return None
     return {"scenario": "fresh", "matchId": str(m.get("matchId")), "value": mkt_total,
             "home": m.get("home"), "away": m.get("away"), "league": m.get("league"), "flag": _flag(m),
             "market": market_name, "inflow": inflow, "total": mkt_total, "tier": tier_of(m),
-            "leadName": lead_name, "leadShare": lead_share}
+            "leadName": lead_name, "leadShare": lead_share, "leadOdd": lead_odd}
 
 
 def should_send(seen: dict, key: str, value: float) -> bool:
@@ -182,9 +188,11 @@ def build_message(a) -> str:
                                             _esc(a["away"]), pct(a["as_"])))
     tl = "Top-Liga" if a["tier"] == "top" else "Rest-Liga"
     msg = ("🟡 <b>Betfair · Frisches Geld</b> · %s\n" % tl + head
-           + "💶 <b>%s</b>: +%s frisch → jetzt %s" % (_esc(_short_mk(a["market"])), _euro(a["inflow"]), _euro(a["total"])))
+           + "💶 <b>%s</b>: +<b>%s</b> frisch → jetzt <b>%s</b>"
+             % (_esc(_short_mk(a["market"])), _euro(a["inflow"]), _euro(a["total"])))
     if a.get("leadName"):
-        msg += "\nführt: %s (%.0f%%)" % (_esc(a["leadName"]), (a.get("leadShare") or 0.0) * 100)
+        odd = (" @%.2f" % a["leadOdd"]) if isinstance(a.get("leadOdd"), (int, float)) else ""
+        msg += "\nführt: %s (%.0f%%)%s" % (_esc(a["leadName"]), (a.get("leadShare") or 0.0) * 100, odd)
     return msg
 
 

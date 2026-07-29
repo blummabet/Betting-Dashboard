@@ -474,3 +474,25 @@ test('Card-Kopf zeigt den größten Markt, nicht die Summe aller Märkte', () =>
   assert.match(seg, /€17\.5K/, 'Kopf = Match Odds (größter Markt)');
   assert.doesNotMatch(seg, /€19\.6K/, 'NICHT die Summe aller Märkte');
 });
+
+
+test('Card-Kopf folgt dem Markt-Filter (gefilterter Markt statt größtem)', () => {
+  const { w } = boot();
+  w._bfState.market = 'First Half Goals 0.5';   // Kairat: HT Ü0.5 €2.1K statt Match Odds €17.5K
+  const html = w._renderBetfairRadar();
+  const i = html.indexOf('id="bfg-1"'); const seg = html.slice(i, i + 2600);
+  assert.match(seg, /€2\.1K/, 'Kopf = gefilterter Markt (HT Ü0.5)');
+  assert.doesNotMatch(seg, /€17\.5K/, 'nicht mehr der größte Markt (Match Odds)');
+  assert.match(seg, /HT Ü0\.5/, 'Label = gefilterter Markt');
+});
+
+
+test('Steam-pp ist implied-prob-basiert & begrenzt (kein 16279pp bei Live-Drift)', () => {
+  const { w } = boot();
+  // Favorit driftet live raus (hw 1.01 → 165), Gegenseite kommt rein (aw 30 → 1.05)
+  w._bfState.hist = { '601': [ { mo: { hw: 1.01, dr: 20, aw: 30 } }, { mo: { hw: 165, dr: 5, aw: 1.05 } } ] };
+  const mv = w._bfMoveOf({ matchId: 601 });
+  assert.ok(mv, 'Move erkannt');
+  assert.ok(Math.abs(mv.pp) <= 100, 'pp begrenzt (implied-prob), war ' + mv.pp);
+  assert.ok(Math.abs(mv.pp) > 50, 'großer, aber realistischer Move');
+});

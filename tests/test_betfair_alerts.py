@@ -141,3 +141,50 @@ class TestCollect(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
+
+class TestFavoriteFilter(unittest.TestCase):
+    def test_ht_skips_near_lock_favorite(self):
+        # 100% auf einem Ausgang, aber Quote 1.05 (fuehrt schon) -> sinnlos, kein Push
+        m = match(markets=mk("Half Time", [
+            {"name": "Alpha", "odd": 1.05, "vol": 9000},
+            {"name": "The Draw", "odd": 15, "vol": 0}, {"name": "Beta", "odd": 30, "vol": 0}]))
+        self.assertIsNone(BA.ht_alert(m))
+
+    def test_ht_fires_when_lead_odd_ok(self):
+        m = match(markets=mk("Half Time", [
+            {"name": "Alpha", "odd": 1.8, "vol": 9000},
+            {"name": "The Draw", "odd": 3, "vol": 500}, {"name": "Beta", "odd": 6, "vol": 500}]))
+        self.assertIsNotNone(BA.ht_alert(m))
+
+    def test_fresh_skips_near_lock_favorite(self):
+        # Zufluss auf 1X2, aber Fuehrender @1.03 -> sinnlos
+        m = match(mid=7, league="German Bundesliga",
+                  markets=mk("Match Odds", [{"name": "Alpha", "odd": 1.03, "vol": 90000}, {"name": "Beta", "odd": 40, "vol": 2000}]))
+        hist = {"7": [{"mkv": {"Match Odds": 20000}}, {"mkv": {"Match Odds": 92000}}]}   # +72k
+        self.assertIsNone(BA.fresh_alert(m, hist))
+
+    def test_fresh_fires_when_lead_odd_ok(self):
+        m = match(mid=7, league="German Bundesliga",
+                  markets=mk("Match Odds", [{"name": "Alpha", "odd": 1.6, "vol": 60000}, {"name": "Beta", "odd": 3.2, "vol": 30000}]))
+        a = BA.fresh_alert(m, {"7": [{"mkv": {"Match Odds": 60000}}, {"mkv": {"Match Odds": 90000}}]})
+        self.assertIsNotNone(a)
+        self.assertAlmostEqual(a["leadOdd"], 1.6)
+
+
+class TestBoldMoney(unittest.TestCase):
+    def test_fresh_money_is_bold(self):
+        m = match(mid=7, league="German Bundesliga",
+                  markets=mk("Match Odds", [{"name": "Alpha", "odd": 1.8, "vol": 45000}]))
+        a = BA.fresh_alert(m, {"7": [{"mkv": {"Match Odds": 10000}}, {"mkv": {"Match Odds": 45000}}]})
+        msg = BA.build_message(a)
+        self.assertIn("+<b>", msg)          # Zufluss fett
+        self.assertIn("jetzt <b>", msg)     # Markt-Volumen fett
+        self.assertIn("@1.80", msg)         # Quote sichtbar
+
+    def test_ht_money_is_bold(self):
+        m = match(markets=mk("Half Time", [{"name": "Alpha", "odd": 1.9, "vol": 8000},
+                                           {"name": "The Draw", "odd": 3, "vol": 500},
+                                           {"name": "Beta", "odd": 5, "vol": 500}]))
+        msg = BA.build_message(BA.ht_alert(m))
+        self.assertRegex(msg, r"HZ-1X2: <b>€")   # gematchtes Geld fett

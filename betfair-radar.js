@@ -117,6 +117,9 @@
   // Geld des GRÖSSTEN einzelnen (getrackten) Marktes — die aussagekräftige Zahl fürs Spiel,
   // NICHT die Summe aller Märkte (die blähte den Kopf auf: €279K statt der 137K auf 1X2).
   function topMktVol(m) { var best = 0; for (var i = 0; i < MK.length; i++) { var v = mvolG(m, MK[i].id); if (v > best) best = v; } return best; }
+  // Bei aktivem Markt-Filter zeigt der Kopf den GEFILTERTEN Markt, sonst den größten (Lucas 29.07.).
+  function cardMoney(m) { if (_bf.market !== 'all') { var v = mvolG(m, _bf.market); if (v > 0) return v; } return topMktVol(m); }
+  function cardMoneyLbl(m) { if (_bf.market !== 'all' && mvolG(m, _bf.market) > 0) { return MK_ID[_bf.market] ? MK_ID[_bf.market].label : shortMk(_bf.market); } return 'größter Markt'; }
   function runnersOf(mk) { var r = mk && mk.runners; return Array.isArray(r) ? r : []; }
   function distTotal(mk) { return runnersOf(mk).reduce(function (a, r) { return a + (+r.vol || 0); }, 0); }
   function leadRunner(mk) { return runnersOf(mk).reduce(function (a, r) { return (!a || (+r.vol || 0) > (+a.vol || 0)) ? r : a; }, null); }
@@ -402,12 +405,13 @@
     ['hw', 'dr', 'aw'].forEach(function (k) {
       var a = f[k], b = l[k];
       if (typeof a === 'number' && typeof b === 'number' && a > 1 && b > 1) {
-        var pp = (a - b) / a * 100;
-        if (!best || Math.abs(pp) > Math.abs(best.pp)) best = { side: k, pp: pp };
+        var pp = (1 / b - 1 / a) * 100;   // Implied-Prob-Differenz in pp (bounded ±100) — NICHT relative
+        if (!best || Math.abs(pp) > Math.abs(best.pp)) best = { side: k, pp: pp };     // Quotenänderung, die bei Live-Drift explodiert (16279pp-Bug, Lucas 29.07.)
       }
     });
     return best && Math.abs(best.pp) >= 1.5 ? best : null;
   }
+  window._bfMoveOf = moveOf;   // Test-Hook
   function dirPill(m) {
     var mv = moveOf(m); if (!mv) return '';
     var backed = mv.pp > 0, col = backed ? C.back : C.lay;
@@ -501,7 +505,7 @@
     return '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:7px;padding-left:18px">' + p.join('') + '</div>';
   }
   function matchCard(m, maxTot) {
-    var barW = Math.max(4, Math.round(topMktVol(m) / (maxTot || 1) * 100));
+    var barW = Math.max(4, Math.round(cardMoney(m) / (maxTot || 1) * 100));
     var mks = presentMarkets(m), open = _bf.cardOpen[m.matchId] === true;
     var comp = mks[0];
     if (_bf.market !== 'all') {                        // Markt-Filter: komprimierte Karte auf den gewählten Markt fokussieren
@@ -526,8 +530,8 @@
           '</div>' + cohPillsRow(m) +
         '</div>' +
         '<div style="text-align:right;min-width:120px">' +
-          '<div style="font-size:20px;font-weight:900;color:' + C.vol + '">' + fmtE(topMktVol(m)) + '</div>' +
-          '<div style="font-size:10px;color:' + C.dim + '">größter Markt</div>' +
+          '<div style="font-size:20px;font-weight:900;color:' + C.vol + '">' + fmtE(cardMoney(m)) + '</div>' +
+          '<div style="font-size:10px;color:' + C.dim + '">' + esc(cardMoneyLbl(m)) + '</div>' +
           '<div style="height:5px;border-radius:3px;background:#0b0f14;overflow:hidden;margin-top:4px"><i style="display:block;height:100%;width:' + barW + '%;background:linear-gradient(90deg,' + C.vol + ',#14b8a6)"></i></div>' +
         '</div>' +
       '</div>' + inner +
@@ -539,7 +543,7 @@
 
   function section(matches, title, accent, sub) {
     if (!matches.length) return '';
-    var maxTot = matches.reduce(function (a, m) { return Math.max(a, topMktVol(m)); }, 1);
+    var maxTot = matches.reduce(function (a, m) { return Math.max(a, cardMoney(m)); }, 1);
     return '<div style="margin:6px 0 20px">' +
       '<div style="display:flex;align-items:baseline;gap:10px;margin:0 0 10px;padding-bottom:7px;border-bottom:2px solid ' + accent + '33">' +
         '<h2 style="margin:0;font-size:16px;color:' + accent + '">' + title + '</h2>' +
@@ -701,7 +705,7 @@
     var sumG = function (a) { return a.reduce(function (s, m) { return s + totalG(m); }, 0); };
     var live = all.filter(isLive).length;
     var steam = null;
-    all.forEach(function (m) { var mv = moveOf(m); if (mv && (!steam || Math.abs(mv.pp) > Math.abs(steam.mv.pp))) steam = { m: m, mv: mv }; });
+    all.forEach(function (m) { if (isLive(m)) return; var mv = moveOf(m); if (mv && (!steam || Math.abs(mv.pp) > Math.abs(steam.mv.pp))) steam = { m: m, mv: mv }; });
     var htBest = null;
     all.forEach(function (m) { var hv = ['Half Time', 'First Half Goals 0.5', 'First Half Goals 1.5'].reduce(function (a, id) { return Math.max(a, mvolG(m, id)); }, 0); if (!htBest || hv > htBest.v) htBest = { m: m, v: hv }; });
     return '<div style="display:flex;gap:9px;flex-wrap:wrap;margin:12px 0 6px">' +
@@ -765,7 +769,7 @@
     if (_bf.onlyLive) q = q.filter(function (m) { return isLive(m); });
     if (_bf.market !== 'all') q = q.filter(function (m) { return mvolG(m, _bf.market) > 0; });
 
-    var sortV = function (a, b) { return topMktVol(b) - topMktVol(a); };
+    var sortV = function (a, b) { return cardMoney(b) - cardMoney(a); };
     var groups = {
       top: q.filter(function (m) { return tierOf(m) === 'top'; }).sort(sortV),
       intl: q.filter(function (m) { return tierOf(m) === 'intl'; }).sort(sortV),
