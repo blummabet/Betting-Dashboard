@@ -332,3 +332,89 @@ test('Nur-Live-Toggle ist in der Leiste', () => {
   assert.match(html, /Nur Live/);
   assert.match(html, /_bfToggleLive/);
 });
+
+
+/* ── Kohärenz-Engine (v5-Port) ─────────────────────────────────────────── */
+function ouLadder(over, vol){                     // {n:pOver} → Ü/U-Märkte ohne Vig
+  const mk={};
+  for(const n in over){ const p=over[n];
+    mk['Over/Under '+n+' Goals']={ vol:(vol||8000), runners:[
+      { name:'Over '+n+' Goals',  odd:+(1/p).toFixed(3),     vol:(vol||8000)/2 },
+      { name:'Under '+n+' Goals', odd:+(1/(1-p)).toFixed(3), vol:(vol||8000)/2 }]};
+  }
+  return mk;
+}
+function cohBoot(match){
+  const dom = new JSDOM('<!DOCTYPE html><body><div id="betfairRadarPanel"></div></body>',{url:'https://x.com/',runScripts:'outside-only'});
+  const w = dom.window; w._bfNoAutoRefresh = true;
+  w.eval(readFileSync(new URL('betfair-radar.js', ROOT),'utf8'));
+  w._bfState.data = { _meta:{ generatedAt: iso(0) }, matches:[match] };
+  w._bfState.hist = {}; w._bfState._cohCache = {}; w._bfState._mixBase = null;
+  return w;
+}
+
+test('fitLambda rekonstruiert λ aus einer sauberen Ü/U-Leiter', () => {
+  const m = { matchId:99, home:'Alpha', away:'Beta', league:'Test', country:'International', kickoff:ko(9), liveInfo:{}, totalVol:60000,
+    mo:{ hw:2.4, dr:3.4, aw:3.0, fair:{ home:0.40, draw:0.28, away:0.32 } },
+    markets: ouLadder({0.5:0.9093, 1.5:0.6916, 2.5:0.4303, 3.5:0.2213}) };
+  const w = cohBoot(m);
+  const co = w._bfCoherence(m);
+  assert.ok(co.fit, 'λ gefittet');
+  assert.ok(co.fit.l >= 2.2 && co.fit.l <= 2.6, 'λ ≈ 2.4, war '+co.fit.l);
+  assert.equal(co.checks.filter(c=>c.hard).length, 0, 'saubere Leiter → keine harten Widersprüche');
+});
+
+test('Kohärenz: harte Leiter-Monotonie-Verletzung wird erkannt', () => {
+  const m = { matchId:99, home:'Alpha', away:'Beta', league:'Test', country:'International', kickoff:ko(9), liveInfo:{}, totalVol:60000,
+    mo:{ hw:2.4, dr:3.4, aw:3.0, fair:{ home:0.40, draw:0.28, away:0.32 } },
+    markets: ouLadder({0.5:0.60, 1.5:0.75, 2.5:0.40}) };   // Ü1.5 > Ü0.5 = unmöglich
+  const co = cohBoot(m)._bfCoherence(m);
+  const hard = co.checks.filter(c=>c.hard && c.k==='Leiter-Monotonie');
+  assert.ok(hard.length >= 1, 'harte Monotonie-Verletzung gefunden');
+});
+
+test('Kohärenz: Draw-no-Bet-Widerspruch zu 1X2 (hart)', () => {
+  const mk = ouLadder({0.5:0.9093, 1.5:0.6916, 2.5:0.4303, 3.5:0.2213});
+  mk['Draw no Bet'] = { vol:6000, runners:[{ name:'Alpha', odd:2.5, vol:3000 }, { name:'Beta', odd:1.667, vol:3000 }] }; // DNB-Heim ≈ 40%
+  const m = { matchId:99, home:'Alpha', away:'Beta', league:'Test', country:'International', kickoff:ko(9), liveInfo:{}, totalVol:60000,
+    mo:{ hw:2.0, dr:3.6, aw:3.4, fair:{ home:0.50, draw:0.20, away:0.30 } },  // impliziert DNB-Heim 0.5/0.8=62.5%
+    markets: mk };
+  const co = cohBoot(m)._bfCoherence(m);
+  const dnb = co.checks.filter(c=>c.k==='Draw no Bet');
+  assert.ok(dnb.length===1 && dnb[0].hard, 'DNB-Widerspruch als hart erkannt');
+  assert.ok(Math.abs(dnb[0].dev) > 15, 'große Abweichung, war '+dnb[0].dev);
+});
+
+test('cohFlow klassifiziert steam / absorb / air', () => {
+  const base = { matchId:99, home:'Alpha', away:'Beta', league:'Test', country:'International', kickoff:ko(9), liveInfo:{}, totalVol:2000, markets:{} };
+  const w = cohBoot(base);
+  const t0=iso(-2*3600e3), t1=iso(0);
+  w._bfState.hist = { '99':[ {ts:t0,totalVol:1000,mo:{hw:2.0,dr:3.5,aw:4.0}}, {ts:t1,totalVol:1500,mo:{hw:1.6,dr:3.5,aw:4.0}} ] };
+  assert.equal(w._bfCohFlow(base).kind, 'steam', 'Preis+Geld = steam');
+  w._bfState.hist = { '99':[ {ts:t0,totalVol:1000,mo:{hw:2.00,dr:3.5,aw:4.0}}, {ts:t1,totalVol:1700,mo:{hw:1.99,dr:3.5,aw:4.0}} ] };
+  assert.equal(w._bfCohFlow(base).kind, 'absorb', 'Geld ohne Preis = absorb');
+  w._bfState.hist = { '99':[ {ts:t0,totalVol:1000,mo:{hw:2.0,dr:3.5,aw:4.0}}, {ts:t1,totalVol:1050,mo:{hw:1.6,dr:3.5,aw:4.0}} ] };
+  assert.equal(w._bfCohFlow(base).kind, 'air', 'Preis ohne Geld = air');
+});
+
+test('Drawer öffnet, zeigt Kohärenz-Sektionen und schließt wieder', () => {
+  const m = { matchId:77, home:'Alpha', away:'Beta', league:'Test', country:'International', kickoff:ko(9), liveInfo:{}, totalVol:60000,
+    mo:{ hw:2.4, dr:3.4, aw:3.0, fair:{ home:0.40, draw:0.28, away:0.32 } },
+    markets: ouLadder({0.5:0.9093, 1.5:0.6916, 2.5:0.4303, 3.5:0.2213}) };
+  const w = cohBoot(m);
+  w._bfDrawer(77);
+  const dr = w.document.getElementById('bfdDrawer');
+  assert.ok(dr && dr.classList.contains('on'), 'Drawer offen');
+  const html = w.document.getElementById('bfdIn').innerHTML;
+  assert.match(html, /Konsens-Kurve/);
+  assert.match(html, /Kohärenz-Prüfung/);
+  assert.match(html, /Geld je Markt/);
+  w._bfCloseDrawer();
+  assert.ok(!dr.classList.contains('on'), 'Drawer geschlossen');
+});
+
+test('Card zeigt den Kohärenz-Deep-Dive-Button', () => {
+  const { html } = render();
+  assert.match(html, /Kohärenz-Deep-Dive/);
+  assert.match(html, /_bfDrawer\(/);
+});

@@ -1704,6 +1704,32 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 .cc-bf-fair{position:absolute;top:-2px;width:2px;height:10px;background:#e3b341;border-radius:1px;box-shadow:0 0 0 1px rgba(0,0,0,0.35);}
 .cc-bf-fairlbl{font-family:'JetBrains Mono','SF Mono',Menlo,monospace;font-size:11px;color:var(--muted);white-space:nowrap;}
 
+/* 🔬 Betfair Kohärenz Deep-Dive Drawer (29.07.2026, Lucas v5) — bfd-* namespaced, mobil (Vollbreite) */
+.bfd-scrim{position:fixed;inset:0;background:rgba(4,6,10,.72);-webkit-backdrop-filter:blur(3px);backdrop-filter:blur(3px);z-index:9998;display:none}
+.bfd-scrim.on{display:block}
+.bfd-drawer{position:fixed;top:0;right:0;bottom:0;width:min(720px,100%);z-index:9999;background:#0d1117;border-left:1px solid #2E3A4D;overflow-y:auto;-webkit-overflow-scrolling:touch;transform:translateX(102%);transition:transform .26s cubic-bezier(.2,.8,.3,1)}
+.bfd-drawer.on{transform:none}
+.bfd-hd{position:sticky;top:0;background:rgba(13,17,23,.96);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border-bottom:1px solid #30363d;padding:16px 20px;z-index:2}
+.bfd-close{position:absolute;top:13px;right:14px;background:#1c2330;border:1px solid #2E3A4D;color:#8b949e;border-radius:7px;width:34px;height:34px;cursor:pointer;font-size:15px}
+.bfd-body{padding:16px 20px 64px}
+.bfd-card{border:1px solid #30363d;border-radius:11px;background:#161b22;padding:13px 15px;margin-bottom:12px}
+.bfd-card h3{font-size:12px;letter-spacing:.08em;text-transform:uppercase;margin:0 0 3px;color:#ffb80c}
+.bfd-card .sub{font-size:11.5px;color:#8b949e;margin:0 0 11px;line-height:1.45}
+.bfd-kv{display:flex;gap:18px;flex-wrap:wrap;margin-bottom:12px}
+.bfd-curve{display:flex;align-items:flex-end;gap:5px;height:130px;margin:6px 0 26px}
+.bfd-cb{flex:1;position:relative;display:flex;flex-direction:column;justify-content:flex-end;height:100%}
+.bfd-mk{background:linear-gradient(180deg,#4cc2ff,rgba(76,194,255,.3));border-radius:2px 2px 0 0}
+.bfd-md{position:absolute;left:12%;right:12%;height:2px;background:#ffb80c;border-radius:2px}
+.bfd-lb{position:absolute;bottom:-17px;left:0;right:0;text-align:center;font-family:'JetBrains Mono',monospace;font-size:9.5px;color:#6e7681}
+.bfd-ck{width:100%;border-collapse:collapse;font-size:12px}
+.bfd-ck th{text-align:left;font-size:9.5px;letter-spacing:.09em;text-transform:uppercase;color:#6e7681;font-weight:600;padding:0 8px 7px 0;border-bottom:1px solid #30363d}
+.bfd-ck td{padding:8px 8px 8px 0;border-bottom:1px solid #30363d;vertical-align:middle;font-variant-numeric:tabular-nums}
+.bfd-tag{font-size:9px;font-weight:800;letter-spacing:.06em;padding:2px 6px;border-radius:4px;text-transform:uppercase}
+.bfd-legend{display:flex;gap:14px;flex-wrap:wrap;font-size:10.5px;color:#8b949e;margin-top:20px}
+.bfd-sw{display:inline-block;width:10px;height:10px;border-radius:2px;vertical-align:-1px;margin-right:5px}
+.bfd-gap{border:1px solid rgba(255,184,12,.25);background:rgba(255,184,12,.05);border-radius:9px;padding:10px 13px;font-size:11.5px;color:#ffb80c;margin-bottom:12px}
+@media(max-width:760px){.bfd-body{padding:14px 15px 54px}.bfd-kv{gap:13px}}
+
 /* Conviction-Bar mit 8+-Zielmarker */
 .cc-conv-bar{margin-top:8px;height:6px;background:rgba(255,255,255,0.08);border-radius:3px;position:relative;overflow:visible;}
 .cc-conv-fill{height:100%;background:linear-gradient(90deg,#ffb02e,#00d4a1);border-radius:3px;transition:width 0.4s;}

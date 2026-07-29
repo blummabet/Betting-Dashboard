@@ -66,6 +66,7 @@
     _bf.loading = true;
     _bfFetch3().then(function (a) {
       _bf.data = a[0] || { matches: [] }; _bf.hist = a[1] || {}; _bf.track = a[2] || null;
+      _bf._cohCache = {}; _bf._mixBase = null;
       _bf.loading = false; _bf.cardOpen = {};
       var p = document.getElementById('betfairRadarPanel');
       if (p && p.style.display !== 'none') p.innerHTML = renderBetfairRadar();
@@ -87,6 +88,7 @@
       if (a[0]) _bf.data = a[0];
       if (a[1]) _bf.hist = a[1];
       if (a[2] != null) _bf.track = a[2];
+      _bf._cohCache = {}; _bf._mixBase = null;
       _bf.loading = false;
       var pp = document.getElementById('betfairRadarPanel');
       if (pp && pp.style.display !== 'none') pp.innerHTML = renderBetfairRadar();
@@ -162,6 +164,200 @@
     var d = new Date(key + 'T12:00:00');
     return d.toLocaleDateString('de-AT', { weekday: 'short', day: '2-digit', month: '2-digit' });
   }
+  // ═══ Kohärenz-Engine (portiert aus Lucas' v5-Prototyp, 29.07.2026) ═══════════════════════
+  // Nicht nur WO das Geld liegt, sondern WO der Markt sich selbst widerspricht. Fittet ein
+  // Poisson-λ an die Ü/U-Leiter + Supremacy an die de-viggten 1X2-Fairs, leitet BTTS/HZ ab und
+  // prüft jeden gehandelten Preis gegen das, was die übrigen Märkte desselben Spiels implizieren.
+  // hart = reine Arithmetik (echter Widerspruch) · weich = Modellabweichung (Poisson-Annahme).
+  var OU_LADDER = [0.5, 1.5, 2.5, 3.5, 4.5, 5.5, 6.5, 7.5, 8.5];
+  var HT_SHARE = 0.45;                                  // ~45 % der Tore fallen in HZ1 (Richtwert)
+  function _cpct(p) { return (p * 100).toFixed(1) + '%'; }
+  function _cpp(d) { return (d >= 0 ? '+' : '−') + Math.abs(d).toFixed(1); }
+  function devig2(a, b) { if (!(a > 1) || !(b > 1)) return null; var ia = 1 / a, ib = 1 / b; return ia / (ia + ib); }
+  function pois(k, l) { var p = Math.exp(-l); for (var i = 1; i <= k; i++) p *= l / i; return p; }
+  function poisOver(n, l) { var cum = 0; for (var k = 0; k <= Math.floor(n); k++) cum += pois(k, l); return 1 - cum; }
+  function fitLambda(rungs) {
+    var ks = Object.keys(rungs).map(Number); if (ks.length < 2) return null;
+    var best = null;
+    for (var l = 0.20; l <= 6.60; l += 0.01) {
+      var e = 0; for (var i = 0; i < ks.length; i++) { var d = poisOver(ks[i], l) - rungs[ks[i]]; e += d * d; }
+      if (!best || e < best.e) best = { l: +l.toFixed(2), e: e, rmse: Math.sqrt(e / ks.length) };
+    }
+    return best;
+  }
+  function cohOutcome(lh, la, N) {
+    N = N || 12; var h = 0, d = 0, a = 0, ph = [], pa = [], i, j;
+    for (i = 0; i <= N; i++) { ph[i] = pois(i, lh); pa[i] = pois(i, la); }
+    for (i = 0; i <= N; i++) for (j = 0; j <= N; j++) { var p = ph[i] * pa[j]; if (i > j) h += p; else if (i === j) d += p; else a += p; }
+    return { h: h, d: d, a: a };
+  }
+  function fitSupremacy(lam, fair) {
+    if (!lam || !fair) return null; var best = null;
+    for (var sp = -3.2; sp <= 3.2; sp += 0.02) {
+      var lh = (lam + sp) / 2, la = (lam - sp) / 2; if (lh <= 0.01 || la <= 0.01) continue;
+      var o = cohOutcome(lh, la); var e = Math.pow(o.h - fair.home, 2) + Math.pow(o.a - fair.away, 2);
+      if (!best || e < best.e) best = { s: +sp.toFixed(2), lh: lh, la: la, e: e, o: o };
+    }
+    return best;
+  }
+  function bttsP(lh, la) { return (1 - Math.exp(-lh)) * (1 - Math.exp(-la)); }
+  function cohRunner(m, id, test) {
+    var x = mkOf(m, id); if (!x) return null; var rs = runnersOf(x);
+    for (var i = 0; i < rs.length; i++) { if (test(String(rs[i].name || ''))) return rs[i]; }
+    return null;
+  }
+  function ouRungs(m) {
+    var out = {};
+    for (var i = 0; i < OU_LADDER.length; i++) {
+      var n = OU_LADDER[i], id = 'Over/Under ' + n + ' Goals';
+      var o = cohRunner(m, id, function (s) { return s.indexOf('Over') === 0; });
+      var u = cohRunner(m, id, function (s) { return s.indexOf('Under') === 0; });
+      var p = devig2(o && o.odd, u && u.odd); if (p != null) out[n] = p;
+    }
+    return out;
+  }
+  function htRungs(m) {
+    var out = {}, lines = [0.5, 1.5, 2.5];
+    for (var i = 0; i < lines.length; i++) {
+      var n = lines[i], id = 'First Half Goals ' + n;
+      var o = cohRunner(m, id, function (s) { return s.indexOf('Over') === 0; });
+      var u = cohRunner(m, id, function (s) { return s.indexOf('Under') === 0; });
+      var p = devig2(o && o.odd, u && u.odd); if (p != null) out[n] = p;
+    }
+    return out;
+  }
+  function liqW(vol) { vol = +vol || 0; if (vol < 750) return 0; return Math.min(1, Math.log10(vol / 750) / 1.6); }
+  function coherence(m) {
+    var checks = [];
+    var fair = (m.mo || {}).fair || null;
+    var rungs = ouRungs(m);
+    var fit = fitLambda(rungs);
+    var sup = fit ? fitSupremacy(fit.l, fair) : null;
+    var ks = Object.keys(rungs).map(Number).sort(function (a, b) { return a - b; });
+    // 1 — Leiter-Monotonie: P(Ü0.5) ≥ P(Ü1.5) ≥ …  (hart)
+    for (var i = 0; i < ks.length - 1; i++) {
+      var dd = (rungs[ks[i + 1]] - rungs[ks[i]]) * 100;
+      if (dd > 0.4) checks.push({ k: 'Leiter-Monotonie', mkt: 'Ü' + ks[i + 1] + ' > Ü' + ks[i],
+        market: rungs[ks[i + 1]], model: rungs[ks[i]], dev: dd, hard: true, vol: mvolG(m, 'Over/Under ' + ks[i + 1] + ' Goals'),
+        why: 'Mehr Tore können nie wahrscheinlicher sein als weniger. Reiner Widerspruch.' });
+    }
+    // 2 — Draw no Bet vs. 1X2 (harte Identität)
+    var dh = cohRunner(m, 'Draw no Bet', function (s) { return s === String(m.home); });
+    var da = cohRunner(m, 'Draw no Bet', function (s) { return s === String(m.away); });
+    var dnb = devig2(dh && dh.odd, da && da.odd);
+    if (dnb != null && fair) {
+      var impl = fair.home / (fair.home + fair.away);
+      checks.push({ k: 'Draw no Bet', mkt: 'DNB ' + m.home, market: dnb, model: impl, dev: (dnb - impl) * 100,
+        hard: true, vol: mvolG(m, 'Draw no Bet'),
+        why: 'DNB ist reine Algebra aus 1X2: p(H)/(p(H)+p(A)). Jede Abweichung ist ein echter Preisfehler zwischen zwei Märkten.' });
+    }
+    // 3 — Ü/U-Sprossen vs. gefittete Poisson-Kurve (weich)
+    if (fit && ks.length >= 3) {
+      for (var a = 0; a < ks.length; a++) {
+        var n = ks[a], model = poisOver(n, fit.l), d3 = (rungs[n] - model) * 100;
+        if (Math.abs(d3) >= 2.5) checks.push({ k: 'Tor-Kurve', mkt: 'Ü' + n, market: rungs[n], model: model, dev: d3,
+          hard: false, vol: mvolG(m, 'Over/Under ' + n + ' Goals'),
+          why: 'Diese Sprosse liegt neben der Kurve, die die anderen Sprossen desselben Marktes aufspannen.' });
+      }
+    }
+    // 4 — BTTS vs. doppelt-Poisson aus λ + Supremacy (weich)
+    var by = cohRunner(m, 'Both teams to Score?', function (s) { return /^yes/i.test(s); });
+    var bn = cohRunner(m, 'Both teams to Score?', function (s) { return /^no/i.test(s); });
+    var btts = devig2(by && by.odd, bn && bn.odd);
+    if (btts != null && sup) {
+      var mb = bttsP(sup.lh, sup.la);
+      checks.push({ k: 'BTTS', mkt: 'Beide treffen', market: btts, model: mb, dev: (btts - mb) * 100,
+        hard: false, vol: mvolG(m, 'Both teams to Score?'),
+        why: 'Aus Torerwartung und Supremacy folgt eine BTTS-Quote. Große Lücken heißen: der Markt erwartet eine schiefere Torverteilung als 1X2 + Ü/U zulassen.' });
+    }
+    // 5 — Halbzeit-Märkte vs. FT-Torerwartung (weich)
+    var hr = htRungs(m);
+    if (fit) { var hk = Object.keys(hr).map(Number);
+      for (var b = 0; b < hk.length; b++) {
+        var hn = hk[b], hm = poisOver(hn, fit.l * HT_SHARE), d5 = (hr[hn] - hm) * 100;
+        if (Math.abs(d5) >= 3) checks.push({ k: 'Halbzeit', mkt: 'HZ1 Ü' + hn, market: hr[hn], model: hm, dev: d5,
+          hard: false, vol: mvolG(m, 'First Half Goals ' + hn),
+          why: 'HZ1 trägt im Schnitt ~45 % der Tore. Weicht die Halbzeit stark ab, hat jemand eine Meinung zum Spielverlauf, nicht nur zum Ergebnis.' });
+      }
+    }
+    for (var c = 0; c < checks.length; c++) checks[c].w = liqW(checks[c].vol);
+    checks.sort(function (x, y) { return (y.hard * y.w - x.hard * x.w) || (Math.abs(y.dev) * y.w - Math.abs(x.dev) * x.w); });
+    return { checks: checks, fit: fit, sup: sup, rungs: rungs, fair: fair, btts: btts, dnb: dnb, ht: hr };
+  }
+  // Geldfluss aus der History → steam / absorb / air.
+  function cohFlow(m) {
+    var h = (_bf.hist || {})[String(m.matchId)];
+    if (!Array.isArray(h) || h.length < 2) return null;
+    var f = h[0], l = h[h.length - 1];
+    var mins = (Date.parse(l.ts) - Date.parse(f.ts)) / 6e4;
+    if (!(mins > 0)) return null;
+    var fv = (f.totalVol != null ? f.totalVol : ((f.mo || {}).vol || 0));
+    var lv = (l.totalVol != null ? l.totalVol : ((l.mo || {}).vol || 0));
+    var dv = lv - fv, rate = dv / (mins / 60), move = 0, side = null;
+    ['hw', 'dr', 'aw'].forEach(function (k) {
+      var a = (f.mo || {})[k], b = (l.mo || {})[k];
+      if (a > 1 && b > 1) { var d = (a - b) / a * 100; if (Math.abs(d) > Math.abs(move)) { move = d; side = k; } }
+    });
+    var growth = fv > 0 ? dv / fv : 0, kind = 'ruhig';
+    if (Math.abs(move) >= 3 && growth >= 0.35) kind = 'steam';
+    else if (Math.abs(move) < 1.2 && growth >= 0.60) kind = 'absorb';
+    else if (Math.abs(move) >= 3 && growth < 0.15) kind = 'air';
+    return { rate: rate, dv: dv, mins: mins, move: move, side: side, growth: growth, kind: kind, snaps: h.length,
+      sideName: side === 'hw' ? m.home : side === 'aw' ? m.away : side === 'dr' ? 'Remis' : null };
+  }
+  // Markt-Mix-Anomalie: Verteilung ggü. Median-Baseline über alle Spiele.
+  function mixBaseline(matches) {
+    var acc = {};
+    for (var i = 0; i < matches.length; i++) {
+      var mks = matches[i].markets || {}, tot = 0, k;
+      for (k in mks) tot += distTotal(mks[k]);
+      if (tot < 5000) continue;
+      for (k in mks) { (acc[k] = acc[k] || []).push(distTotal(mks[k]) / tot); }
+    }
+    var med = {};
+    for (var kk in acc) { var arr = acc[kk].sort(function (x, y) { return x - y; }); med[kk] = arr[Math.floor(arr.length / 2)]; }
+    return med;
+  }
+  function mixAnomaly(m, base) {
+    var mks = m.markets || {}, tot = 0, k;
+    for (k in mks) tot += distTotal(mks[k]);
+    if (tot < 5000) return null;
+    var best = null;
+    for (k in mks) {
+      var vol = distTotal(mks[k]), share = vol / tot, b = base[k];
+      if (!b || b < 0.004 || share < 0.08 || vol < 5000) continue;
+      var ratio = share / b;
+      if (!best || ratio > best.ratio) best = { market: k, share: share, base: b, ratio: ratio, vol: vol };
+    }
+    return (best && best.ratio >= 1.8) ? best : null;
+  }
+  function cohScore(m, base) {
+    var co = coherence(m), fl = cohFlow(m), mx = mixAnomaly(m, base), s = 0, i;
+    var hard = co.checks.filter(function (c) { return c.hard && Math.abs(c.dev) >= 0.8 && c.w >= 0.15; });
+    var soft = co.checks.filter(function (c) { return !c.hard && Math.abs(c.dev) >= 2.5 && c.w >= 0.15; });
+    for (i = 0; i < hard.length; i++) s += Math.min(30, 9 + Math.abs(hard[i].dev) * 3.2) * hard[i].w;
+    for (i = 0; i < soft.length; i++) s += Math.min(20, Math.abs(soft[i].dev) * 2.2) * soft[i].w;
+    if (fl) { if (fl.kind === 'steam') s += 17; else if (fl.kind === 'absorb') s += 13; else if (fl.kind === 'air') s += 6; }
+    if (mx) s += Math.min(14, (mx.ratio - 1.8) * 9 + 5);
+    if (isLive(m)) s += 5;
+    var tv = totalG(m) || m.totalVol || 0;
+    s *= 0.72 + 0.28 * Math.min(1, Math.log10(Math.max(1, tv)) / 6.2);
+    return { s: Math.round(Math.min(99, s)), co: co, fl: fl, mx: mx, hard: hard, soft: soft };
+  }
+  // Memoisierung: Kohärenz hängt nur an den Preisen, nicht an Filtern → Cache bis Reload.
+  function cohOf(m) {
+    var id = String(m.matchId);
+    if (!_bf._cohCache) _bf._cohCache = {};
+    if (_bf._cohCache[id]) return _bf._cohCache[id];
+    if (!_bf._mixBase) _bf._mixBase = mixBaseline((_bf.data && _bf.data.matches) || []);
+    var r = cohScore(m, _bf._mixBase);
+    _bf._cohCache[id] = r; return r;
+  }
+  window._bfCoherence = coherence;   // Test-Hook
+  window._bfCohScore = cohScore;
+  window._bfCohFlow = cohFlow;
+  window._bfMixAnomaly = mixAnomaly;
+
   function dateBar(matches) {
     var keys = {}; matches.forEach(function (m) { var k = matchDateKey(m); if (k) keys[k] = (keys[k] || 0) + 1; });
     var ks = Object.keys(keys).sort();
@@ -261,6 +457,26 @@
       .sort(function (a, b) { return b.v - a.v; });
   }
 
+  function shortMk(k) {
+    return String(k).replace('Over/Under', 'Ü/U').replace(' Goals', '').replace('Both teams to Score?', 'BTTS')
+      .replace('Match Odds', '1X2').replace('First Half', 'HZ1').replace('Half Time/Full Time', 'HZ/EZ')
+      .replace('Half Time', 'HZ1 1X2').replace('Correct Score', 'Exakt').replace('Draw no Bet', 'DNB');
+  }
+  function cohPill(txt, color, bg) {
+    return '<span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:10.5px;font-weight:700;background:' + bg + ';color:' + color + '">' + txt + '</span>';
+  }
+  function cohPillsRow(m) {
+    var r = cohOf(m), p = [];
+    if (isLive(m) && m.liveInfo) p.push(cohPill('● LIVE ' + (m.liveInfo.time || '') + "'", C.live, 'rgba(248,81,73,.15)'));
+    if (r.hard.length) p.push(cohPill('⚠ ' + r.hard.length + ' harte Abweichung' + (r.hard.length > 1 ? 'en' : ''), C.lay, 'rgba(248,81,73,.14)'));
+    if (r.soft.length) p.push(cohPill(r.soft.length + ' Modell-Lücke' + (r.soft.length > 1 ? 'n' : ''), C.gold, 'rgba(255,184,12,.13)'));
+    if (r.fl && r.fl.kind === 'steam') p.push(cohPill('↯ Steam ' + _cpp(r.fl.move) + 'pp' + (r.fl.sideName ? ' · ' + esc(String(r.fl.sideName).slice(0, 14)) : ''), C.vol, 'rgba(45,212,191,.13)'));
+    if (r.fl && r.fl.kind === 'absorb') p.push(cohPill('▤ Absorption · ' + fmtE(r.fl.dv) + ' ohne Preis', C.purp, 'rgba(167,139,250,.14)'));
+    if (r.fl && r.fl.kind === 'air') p.push(cohPill('◌ Preis ohne Geld', C.mut, 'rgba(139,148,158,.14)'));
+    if (r.mx) p.push(cohPill(esc(shortMk(r.mx.market)) + ' ' + r.mx.ratio.toFixed(1) + '× über Norm', C.blue, 'rgba(76,194,255,.13)'));
+    if (!p.length) return '';
+    return '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:7px;padding-left:18px">' + p.join('') + '</div>';
+  }
   function matchCard(m, maxTot) {
     var barW = Math.max(4, Math.round(totalG(m) / (maxTot || 1) * 100));
     var mks = presentMarkets(m), open = _bf.cardOpen[m.matchId] === true;
@@ -284,7 +500,7 @@
           '</div>' +
           '<div style="display:flex;align-items:center;gap:10px;margin-top:4px;flex-wrap:wrap;padding-left:18px">' +
             '<span style="font-size:11px;color:' + C.mut + '">' + esc(String(m.league).slice(0, 44)) + '</span>' + koPill(m) + dirPill(m) +
-          '</div>' +
+          '</div>' + cohPillsRow(m) +
         '</div>' +
         '<div style="text-align:right;min-width:120px">' +
           '<div style="font-size:20px;font-weight:900;color:' + C.vol + '">' + fmtE(totalG(m)) + '</div>' +
@@ -292,6 +508,9 @@
           '<div style="height:5px;border-radius:3px;background:#0b0f14;overflow:hidden;margin-top:4px"><i style="display:block;height:100%;width:' + barW + '%;background:linear-gradient(90deg,' + C.vol + ',#14b8a6)"></i></div>' +
         '</div>' +
       '</div>' + inner +
+      '<div style="margin-top:9px;padding-top:9px;border-top:1px solid ' + C.bd + ';display:flex;justify-content:flex-end">' +
+        '<button onclick="event.stopPropagation();_bfDrawer(\'' + esc(m.matchId) + '\')" style="padding:5px 11px;border:1px solid ' + C.bd + ';border-radius:8px;background:transparent;color:' + C.blue + ';font-size:11px;font-weight:700;cursor:pointer">🔬 Kohärenz-Deep-Dive</button>' +
+      '</div>' +
     '</div>';
   }
 
@@ -561,6 +780,133 @@
     return out;
   }
   window._renderBetfairRadar = renderBetfairRadar;
+
+  // ═══ Kohärenz-Deep-Dive-Drawer (Singleton am body → überlebt Panel-Rerender), mobil ═══════
+  function _bfEnsureDrawer() {
+    if (document.getElementById('bfdDrawer')) return;
+    var sc = document.createElement('div'); sc.id = 'bfdScrim'; sc.className = 'bfd-scrim'; sc.onclick = _bfCloseDrawer;
+    var dr = document.createElement('aside'); dr.id = 'bfdDrawer'; dr.className = 'bfd-drawer'; dr.setAttribute('aria-hidden', 'true');
+    dr.innerHTML = '<div id="bfdIn"></div>';
+    document.body.appendChild(sc); document.body.appendChild(dr);
+    if (!window._bfdEscBound) { window._bfdEscBound = true; document.addEventListener('keydown', function (e) { if (e.key === 'Escape') _bfCloseDrawer(); }); }
+  }
+  function _bfDrawer(id) {
+    var ms = (_bf.data && _bf.data.matches) || [], m = null;
+    for (var i = 0; i < ms.length; i++) { if (String(ms[i].matchId) === String(id)) { m = ms[i]; break; } }
+    if (!m) return;
+    _bfEnsureDrawer();
+    document.getElementById('bfdIn').innerHTML = drawerHTML(m);
+    var dr = document.getElementById('bfdDrawer'), sc = document.getElementById('bfdScrim');
+    dr.classList.add('on'); dr.setAttribute('aria-hidden', 'false'); sc.classList.add('on');
+    document.body.style.overflow = 'hidden'; dr.scrollTop = 0;
+  }
+  function _bfCloseDrawer() {
+    var dr = document.getElementById('bfdDrawer'), sc = document.getElementById('bfdScrim');
+    if (dr) { dr.classList.remove('on'); dr.setAttribute('aria-hidden', 'true'); }
+    if (sc) sc.classList.remove('on');
+    document.body.style.overflow = '';
+  }
+  window._bfDrawer = _bfDrawer; window._bfCloseDrawer = _bfCloseDrawer;
+  function _kvi(v, l, c) {
+    return '<div style="min-width:66px"><b style="display:block;font-family:\'JetBrains Mono\',monospace;font-size:19px;font-weight:800;letter-spacing:-.02em;color:' + (c || C.ink) + '">' + v + '</b>' +
+      '<span style="font-size:9.5px;color:' + C.dim + ';text-transform:uppercase;letter-spacing:.1em">' + l + '</span></div>';
+  }
+  function marketExact(rungs, k) { var a = k === 0 ? 1 : rungs[k - 0.5], b = rungs[k + 0.5]; if (a == null || b == null) return null; return Math.max(0, a - b); }
+  function cohFlowText(fl) {
+    if (fl.kind === 'steam') return 'Preis bewegt sich und Umsatz beschleunigt gleichzeitig — die Bewegung ist mit Geld unterlegt.';
+    if (fl.kind === 'absorb') return 'Viel Geld gematcht, Preis praktisch unverändert: jemand nimmt die Gegenseite in Größe. Die interessanteste Konstellation — eine Meinung mit Kapital, nicht bloß Nachfrage.';
+    if (fl.kind === 'air') return 'Der Preis wandert, ohne dass nennenswert Geld durchläuft — dünnes Buch, keine Konviktion. Solche Bewegungen kehren häufig zurück.';
+    return 'Unauffällig: weder ungewöhnlicher Zufluss noch nennenswerte Preisbewegung.';
+  }
+  function drawerHTML(m) {
+    var r = cohOf(m), co = r.co, fit = co.fit, sup = co.sup, i;
+    var kick = isLive(m) ? 'live' : (m.kickoff ? new Date(m.kickoff).toLocaleString('de-AT') : '—');
+    var h = '<div class="bfd-hd"><button class="bfd-close" onclick="_bfCloseDrawer()" aria-label="Schließen">✕</button>' +
+      '<div style="font-size:11px;color:' + C.mut + '">' + flag(m.country, m.league) + ' ' + esc(String(m.league).slice(0, 48)) + ' · ' + esc(kick) + '</div>' +
+      '<div style="font-size:22px;font-weight:800;letter-spacing:-.01em;color:' + C.ink + ';margin-top:3px">' + esc(m.home) + ' <span style="color:' + C.dim + '">v</span> ' + esc(m.away) + '</div>' +
+      (cohPillsRow(m) || '') + '</div><div class="bfd-body">';
+
+    // Kennzahlen
+    h += '<div class="bfd-kv">' +
+      _kvi(fmtE(totalG(m)), 'gematcht', C.vol) +
+      _kvi(String(r.s), 'Auffälligkeit', r.s >= 45 ? C.gold : C.ink) +
+      (fit ? _kvi(fit.l.toFixed(2), 'λ Tore', C.blue) : '') +
+      (sup ? _kvi((sup.s > 0 ? '+' : '') + sup.s.toFixed(2), 'Supremacy', C.purp) : '') +
+      (sup ? _kvi(sup.lh.toFixed(2) + ' / ' + sup.la.toFixed(2), 'λ Heim / Gast', C.ink) : '') +
+      '</div>';
+
+    // Konsens-Kurve
+    if (fit && Object.keys(co.rungs).length >= 3) {
+      var dist = []; for (var k = 0; k <= 6; k++) { var mkt = marketExact(co.rungs, k), model = pois(k, fit.l); dist.push({ k: k, model: model, market: mkt != null ? mkt : model, filled: mkt == null }); }
+      var mx = 0; dist.forEach(function (d) { mx = Math.max(mx, d.model, d.market || 0); }); if (mx <= 0) mx = 1;
+      var gaps = dist.filter(function (d) { return d.filled; }).length;
+      h += '<div class="bfd-card"><h3>Konsens-Kurve</h3>' +
+        '<p class="sub">Was die Ü/U-Leiter über die Tor-Verteilung sagt (Balken) gegen die am besten passende Poisson-Kurve (Linie). RMSE ' + (fit.rmse * 100).toFixed(2) + ' pp über ' + Object.keys(co.rungs).length + ' Sprossen.</p>' +
+        '<div class="bfd-curve">' + dist.map(function (d) {
+          var mh = (d.market != null ? d.market / mx * 100 : 0), dh = d.model / mx * 100;
+          return '<div class="bfd-cb"><div class="bfd-mk" style="height:' + mh.toFixed(1) + '%' + (d.filled ? ';opacity:.28;background:repeating-linear-gradient(45deg,#4cc2ff,#4cc2ff 3px,transparent 3px,transparent 6px)' : '') + '"></div>' +
+            '<div class="bfd-md" style="bottom:' + dh.toFixed(1) + '%"></div><div class="bfd-lb">' + (d.k === 6 ? '6+' : d.k) + '</div></div>';
+        }).join('') + '</div>' +
+        '<div class="bfd-legend"><span><i class="bfd-sw" style="background:#4cc2ff"></i>Markt (aus Ü/U-Differenzen)</span>' +
+        '<span><i class="bfd-sw" style="background:#ffb80c"></i>Poisson-Fit λ=' + fit.l.toFixed(2) + '</span>' +
+        (gaps ? '<span style="color:' + C.dim + '">schraffiert = Sprosse nicht bepreist, aus dem Modell ergänzt (' + gaps + ')</span>' : '') + '</div></div>';
+    } else {
+      h += '<div class="bfd-gap"><b style="color:' + C.ink + '">Kurve nicht rekonstruierbar.</b> Weniger als drei bepreiste Ü/U-Sprossen für dieses Spiel.</div>';
+    }
+
+    // Kohärenz-Tabelle
+    if (co.checks.length) {
+      h += '<div class="bfd-card"><h3>Kohärenz-Prüfung</h3>' +
+        '<p class="sub">Jede Zeile vergleicht einen gehandelten Preis mit dem, was die übrigen Märkte desselben Spiels implizieren. <span style="color:' + C.lay + '">Hart</span> = reine Algebra, kein Modell.</p>' +
+        '<table class="bfd-ck"><thead><tr><th>Prüfung</th><th>Markt</th><th>Implizit</th><th>Δ</th><th>Geld</th><th></th></tr></thead><tbody>' +
+        co.checks.slice(0, 10).map(function (c) {
+          return '<tr title="' + esc(c.why) + '" style="opacity:' + (0.42 + 0.58 * c.w).toFixed(2) + '">' +
+            '<td>' + esc(c.mkt) + '<div style="font-size:10px;color:' + C.dim + '">' + esc(c.k) + '</div></td>' +
+            '<td>' + _cpct(c.market) + '</td><td style="color:' + C.mut + '">' + _cpct(c.model) + '</td>' +
+            '<td style="color:' + (c.hard ? C.lay : (Math.abs(c.dev) >= 4 ? C.gold : C.mut)) + ';font-weight:700">' + _cpp(c.dev) + '</td>' +
+            '<td style="color:' + (c.w >= 0.5 ? C.vol : C.dim) + '">' + fmtE(c.vol) + '</td>' +
+            '<td><span class="bfd-tag" style="background:' + (c.hard ? 'rgba(248,81,73,.16)' : 'rgba(255,184,12,.14)') + ';color:' + (c.hard ? C.lay : C.gold) + '">' + (c.hard ? 'hart' : 'modell') + '</span></td></tr>';
+        }).join('') + '</tbody></table>' +
+        '<p style="font-size:10.5px;color:' + C.dim + ';margin:9px 0 0">Blasse Zeilen = zu wenig gematchtes Geld, um ernst genommen zu werden — sie fließen nicht in den Score.</p></div>';
+    } else {
+      h += '<div class="bfd-card"><h3>Kohärenz-Prüfung</h3><p class="sub" style="margin:0">Keine prüfbare Abweichung — sauber bepreist oder Quoten fehlen.</p></div>';
+    }
+
+    // Geldfluss
+    var fl = r.fl;
+    h += '<div class="bfd-card"><h3>Geldfluss</h3>';
+    if (fl) {
+      h += '<p class="sub">' + fl.snaps + ' Snapshots über ' + (fl.mins / 60).toFixed(1) + ' h.</p><div class="bfd-kv">' +
+        _kvi(fmtE(fl.rate) + '/h', 'Zuflussrate', C.vol) +
+        _kvi('+' + (fl.growth * 100).toFixed(0) + '%', 'Umsatz-Wachstum', C.ink) +
+        _kvi(_cpp(fl.move) + ' pp', 'stärkste 1X2-Bewegung', fl.move > 0 ? C.back : C.lay) +
+        (fl.sideName ? _kvi(esc(String(fl.sideName).slice(0, 16)), 'betroffener Ausgang', C.mut) : '') +
+        '</div><p style="font-size:12px;color:' + C.mut + ';margin:0">' + cohFlowText(fl) + '</p>';
+    } else {
+      h += '<p class="sub" style="margin:0">Weniger als zwei Snapshots in der History — keine Aussage möglich.</p>';
+    }
+    h += '</div>';
+
+    // Geld je Markt (mit Median-Marker)
+    var base = _bf._mixBase || {};
+    var mks = Object.keys(m.markets || {}).map(function (kk) { return { k: kk, v: distTotal((m.markets || {})[kk]) }; })
+      .filter(function (x) { return x.v > 0; }).sort(function (a, b) { return b.v - a.v; }).slice(0, 12);
+    h += '<div class="bfd-card"><h3>Geld je Markt</h3><p class="sub">Anteil am gematchten Gesamtvolumen. Graue Linie = Median über alle Spiele; rechts davon heißt: hier wird auf etwas Bestimmtes gesetzt.</p>' +
+      mks.map(function (x) {
+        var share = x.v / (totalG(m) || 1) * 100, b = (base[x.k] || 0) * 100, hot = b > 0.4 && share / b >= 1.6;
+        return '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;font-size:12px">' +
+          '<span style="width:118px;color:' + (hot ? C.blue : C.mut) + '">' + esc(shortMk(x.k)) + '</span>' +
+          '<span style="flex:1;height:7px;border-radius:4px;background:#0A0E14;overflow:hidden;position:relative">' +
+            '<i style="display:block;height:100%;width:' + Math.min(100, share).toFixed(1) + '%;background:' + (hot ? C.blue : C.vol) + ';opacity:' + (hot ? 1 : .55) + '"></i>' +
+            (b > 0 ? '<i style="position:absolute;top:-2px;bottom:-2px;left:' + Math.min(100, b).toFixed(1) + '%;width:1px;background:' + C.dim + '"></i>' : '') +
+          '</span>' +
+          '<span style="width:50px;text-align:right;font-weight:700;font-family:\'JetBrains Mono\',monospace">' + share.toFixed(1) + '%</span>' +
+          '<span style="width:60px;text-align:right;color:' + C.dim + ';font-family:\'JetBrains Mono\',monospace">' + fmtE(x.v) + '</span></div>';
+      }).join('') + '</div>';
+
+    return h + '</div>';
+  }
+  window._bfDrawerHTML = drawerHTML;   // Test-Hook
 
   function rerender() { var p = document.getElementById('betfairRadarPanel'); if (p) p.innerHTML = renderBetfairRadar(); }
   window._bfSetView = function (v) { _bf.view = v; rerender(); };
