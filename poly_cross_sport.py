@@ -310,19 +310,68 @@ FOOTBALL_SOURCES = [   # (Fixture-Datei, Sport-Label fürs Board)
 ]
 _1X2_OUTCOMES = [("hw", "Heim"), ("dr", "Remis"), ("aw", "Auswärts")]
 
+# 29.07.2026 (Lucas: verschobenes MLS-Spiel warf eine Scheinlücke + Telegram-Alert). Postponte/
+# angepfiffene/beendete Spiele haben auf Polymarket erratische, illiquide Preise; gegen eine
+# stehende/veraltete Pinnacle-Linie ergibt das ein Artefakt, kein Edge. Unsere Fixture-Daten kennen
+# keinen „postponed"-Status, ABER: ein echter Pre-Match-Vergleich ist nur sinnvoll, solange der
+# Anpfiff in der Zukunft und nicht zu weit weg liegt (weit entfernte Poly-Märkte sind dünn und
+# mismatch-anfällig — genau dort landen verschobene/falsch gematchte Märkte). Darum: nur Spiele im
+# Pre-Match-Fenster in den Cross-Sport-Radar lassen.
+CROSS_HORIZON_DAYS = 7.0      # Anpfiff höchstens so weit weg (Default; via cocobet_config änderbar)
+CROSS_GRACE_H      = 3.0      # Anpfiff darf nicht mehr als so lange vergangen sein
 
-def football_rows_and_index(odds: dict, sport_label: str, names: dict | None = None):
+
+def prematch_ok(kickoff, has_result, now=None, horizon_days=CROSS_HORIZON_DAYS, grace_h=CROSS_GRACE_H):
+    """True nur für einen echten Pre-Match-Vergleich (REIN/testbar). Filtert Artefakte:
+    beendet (has_result), kein/kaputter Anpfiff, Anpfiff schon >grace_h vergangen (angepfiffen/
+    verschoben-in-die-Vergangenheit/stale), oder Anpfiff >horizon_days entfernt (dünner Poly-Markt)."""
+    if has_result:
+        return False
+    if not kickoff:
+        return False
+    try:
+        kt = datetime.fromisoformat(str(kickoff).replace("Z", "+00:00"))
+    except (ValueError, TypeError):
+        return False
+    if kt.tzinfo is None:
+        kt = kt.replace(tzinfo=timezone.utc)
+    now = now or _now()
+    if kt < now - timedelta(hours=grace_h):
+        return False
+    if kt > now + timedelta(days=horizon_days):
+        return False
+    return True
+
+
+def _cross_horizon_days() -> float:
+    try:
+        raw = json.loads((BASE / "cocobet_config.json").read_text(encoding="utf-8"))
+        v = raw.get("poly", {}).get("cross_sport_horizon_days")
+        return float(v) if v else CROSS_HORIZON_DAYS
+    except Exception:
+        return CROSS_HORIZON_DAYS
+
+
+def football_rows_and_index(odds: dict, sport_label: str, names: dict | None = None,
+                            meta: dict | None = None, now=None, horizon_days=CROSS_HORIZON_DAYS):
     """Aus einem {matchKey: oddsSnap}-Dict (matchKey='homeId-awayId') Poly-Rows + de-viggten
     Pinnacle-Index bauen — dieselbe Form wie fetch_poly_rows/fetch_pinnacle_index, damit
     compute_discrepancies BEIDE Welten einheitlich verarbeitet. REIN + testbar.
     Nur plausible 1X2 (devig_1x2 gated) und nur Spiele mit Poly-Preis kommen rein.
-    names: {matchKey: (homeName, awayName)} für lesbare Labels (Fallback: die IDs)."""
+    names: {matchKey: (homeName, awayName)} für lesbare Labels (Fallback: die IDs).
+    meta:  {matchKey: {"kickoff": iso, "hasResult": bool}} — wenn gesetzt, fliegen nicht-Pre-Match-
+           Spiele (verschoben/live/beendet/zu weit weg) raus (prematch_ok, Artefakt-Schutz)."""
     from odds_plausibility import devig_1x2
     names = names or {}
+    meta = meta or {}
+    now = now or _now()
     rows, index = [], {}
     for mk, snap in (odds or {}).items():
         if not isinstance(snap, dict) or snap.get("poly_hw") is None:
             continue                       # kein Poly-Preis → nichts zu vergleichen
+        mm = meta.get(mk)
+        if mm is not None and not prematch_ok(mm.get("kickoff"), mm.get("hasResult"), now, horizon_days):
+            continue                       # postponed/live/beendet/zu weit weg → kein Vergleich
         fair = devig_1x2(snap.get("hw"), snap.get("dr"), snap.get("aw"))
         if fair is None:
             continue                       # Platzhalter/implausibel → übersprungen
@@ -342,32 +391,59 @@ def football_rows_and_index(odds: dict, sport_label: str, names: dict | None = N
     return rows, index
 
 
-def _football_names(data: dict) -> dict:
-    """{'homeId-awayId': (homeName, awayName)} aus allen Fixtures (Gruppen + KO)."""
+def _football_fixtures(data: dict) -> list:
+    """Alle Fixtures (Gruppen + KO) eines Datensatzes."""
     fxs = []
     for gv in (data.get("groups") or {}).values():
         if isinstance(gv, dict):
             fxs += gv.get("fixtures", []) or []
     fxs += data.get("koFixtures", []) or []
+    return fxs
+
+
+def _football_names(data: dict) -> dict:
+    """{'homeId-awayId': (homeName, awayName)} aus allen Fixtures (Gruppen + KO)."""
     out = {}
-    for f in fxs:
+    for f in _football_fixtures(data):
         h, a = f.get("home"), f.get("away")
         if h is not None and a is not None:
             out[f"{h}-{a}"] = (f.get("homeName") or h, f.get("awayName") or a)
     return out
 
 
-def _collect_football():
-    """Fußball-Rows + Index über alle Datensätze mit Poly-Daten. Fehlende Datei = still leer."""
-    rows, index = [], {}
+def _football_meta(data: dict) -> dict:
+    """{'homeId-awayId': {'kickoff': iso, 'hasResult': bool}} für den Pre-Match-Filter."""
+    out = {}
+    for f in _football_fixtures(data):
+        h, a = f.get("home"), f.get("away")
+        if h is not None and a is not None:
+            out[f"{h}-{a}"] = {"kickoff": f.get("kickoff"), "hasResult": bool(f.get("result"))}
+    return out
+
+
+def _collect_football(now=None, horizon_days=None):
+    """Fußball-Rows + Index über alle Datensätze mit Poly-Daten. Fehlende Datei = still leer.
+    Filtert nicht-Pre-Match-Spiele (verschoben/live/beendet/zu weit weg) und zählt, wie viele —
+    kein stiller Cap. Gibt (rows, index, skipped) zurück."""
+    now = now or _now()
+    horizon = horizon_days if horizon_days is not None else _cross_horizon_days()
+    rows, index, skipped = [], {}, 0
     for fname, label in FOOTBALL_SOURCES:
         data = _load(fname)
         if not data:
             continue
-        r, i = football_rows_and_index(data.get("odds", {}), label, _football_names(data))
+        meta = _football_meta(data)
+        r, i = football_rows_and_index(data.get("odds", {}), label, _football_names(data),
+                                       meta=meta, now=now, horizon_days=horizon)
         rows += r
         index.update(i)
-    return rows, index
+        # Transparenz: wie viele Spiele mit Poly-Preis als nicht-Pre-Match rausgefiltert wurden
+        for mk, snap in (data.get("odds") or {}).items():
+            if isinstance(snap, dict) and snap.get("poly_hw") is not None:
+                mm = meta.get(mk)
+                if mm is not None and not prematch_ok(mm.get("kickoff"), mm.get("hasResult"), now, horizon):
+                    skipped += 1
+    return rows, index, skipped
 
 
 def _track_record(hist: dict):
@@ -385,7 +461,7 @@ def main() -> int:
     cross_rows = fetch_poly_rows(sports)
     # Fußball/MLS kommt aus LOKALEN Fixture-Daten (nicht Poly-Gamma) → auch verfügbar, wenn die
     # Cross-Sport-Gamma-Schicht mal leer ist. Beide Welten fließen in dasselbe Board.
-    football_rows, football_index = _collect_football()
+    football_rows, football_index, football_skipped = _collect_football()
     poly_rows = cross_rows + football_rows
     if not poly_rows:
         # Poly nicht erreichbar (Cloud/Sandbox EU-Geoblock, oder Runner-Hiccup). WICHTIG (Wipe-Klasse):
@@ -424,6 +500,7 @@ def main() -> int:
         "minGapPP": MIN_GAP_PP, "polyRowsSeen": len(poly_rows),
         "pinnKeys": len(pinn), "matched": matched,
         "footballRows": len(football_rows), "crossRows": len(cross_rows),
+        "footballSkippedStale": football_skipped,   # verschoben/live/beendet/zu weit weg rausgefiltert
         "seenBySport": seen_by_sport, "matchedBySport": matched_by_sport,
         "trackRecord": _track_record(hist),
         "discrepancies": disc,

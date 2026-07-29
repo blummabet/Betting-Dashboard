@@ -254,3 +254,54 @@ class TestFetchPolyRows:
 
     def test_leerer_fetch_ist_leer(self):
         assert X.fetch_poly_rows(["baseball_mlb"], gamma_fetch=lambda tag: []) == []
+
+
+# ── Pre-Match-Filter (29.07.2026, Lucas: verschobenes MLS-Spiel warf Scheinlücke + Telegram) ──
+from datetime import datetime as _dt, timezone as _tz, timedelta as _td
+
+
+class TestPrematchFilter:
+    NOW = _dt(2026, 7, 29, 12, 0, tzinfo=_tz.utc)
+
+    def test_prematch_ok_fenster(self):
+        n = self.NOW
+        assert X.prematch_ok((n + _td(days=2)).isoformat(), False, now=n) is True    # echtes Pre-Match
+        assert X.prematch_ok((n + _td(days=10)).isoformat(), False, now=n) is False  # zu weit weg
+        assert X.prematch_ok((n - _td(hours=5)).isoformat(), False, now=n) is False   # schon vergangen/stale
+        assert X.prematch_ok((n + _td(days=2)).isoformat(), True, now=n) is False      # beendet (result)
+        assert X.prematch_ok(None, False, now=n) is False
+        assert X.prematch_ok("kaputt", False, now=n) is False
+
+    def test_prematch_ok_naiver_zeitstempel_als_utc(self):
+        n = self.NOW
+        assert X.prematch_ok("2026-07-31T00:00:00", False, now=n) is True
+
+    def _snap(self):
+        return {"hw": 1.70, "dr": 4.31, "aw": 4.46,
+                "poly_hw": 0.62, "poly_dr": 0.22, "poly_aw": 0.16, "poly_vol": 12000}
+
+    def test_verschobenes_spiel_wird_gefiltert(self):
+        # Reales Muster: Revolution–Dynamo, Anpfiff 10 Tage weg, kein Ergebnis → Artefakt, raus.
+        n = self.NOW
+        odds = {"1609-1600": self._snap()}
+        names = {"1609-1600": ("New England Revolution", "Houston Dynamo")}
+        meta_far = {"1609-1600": {"kickoff": (n + _td(days=10)).isoformat(), "hasResult": False}}
+        rows, idx = X.football_rows_and_index(odds, "soccer_mls", names, meta=meta_far, now=n)
+        assert rows == [] and idx == {}, "verschoben/zu weit weg darf NICHT ins Board"
+        # Gleiches Spiel in 2 Tagen → echtes Pre-Match, bleibt drin.
+        meta_near = {"1609-1600": {"kickoff": (n + _td(days=2)).isoformat(), "hasResult": False}}
+        rows2, idx2 = X.football_rows_and_index(odds, "soccer_mls", names, meta=meta_near, now=n)
+        assert len(rows2) == 3 and len(idx2) == 3
+
+    def test_beendetes_spiel_wird_gefiltert(self):
+        n = self.NOW
+        odds = {"1-2": self._snap()}
+        meta = {"1-2": {"kickoff": (n + _td(days=1)).isoformat(), "hasResult": True}}
+        rows, idx = X.football_rows_and_index(odds, "soccer_mls", None, meta=meta, now=n)
+        assert rows == [] and idx == {}
+
+    def test_ohne_meta_rueckwaertskompatibel(self):
+        # Alt-Aufrufer ohne meta → kein Filter, Verhalten wie bisher.
+        odds = {"1609-1600": self._snap()}
+        rows, idx = X.football_rows_and_index(odds, "soccer_mls")
+        assert len(rows) == 3 and len(idx) == 3
