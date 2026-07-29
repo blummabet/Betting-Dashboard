@@ -5,7 +5,8 @@ betfair_alerts.py — Telegram-Pushes (Trades-Channel) für Betfair-Signale (29.
 Testweise, 2 Szenarien (erweiterbar, sobald wir mehr gelernt haben):
   1. Halbzeit-1X2-Geld: der „Half Time"-Markt (HZ 1X2) hat ≥ HT_MIN_EUR gematcht UND
      davon liegen ≥ HT_MIN_SHARE (85 %) auf EINEM Ausgang (sonst kein Signal, nur Liquidität).
-  2. Frisches Geld: Zufluss seit dem letzten Snapshot ≥ Schwelle (Top-Liga 20K / Rest 10K).
+  2. Frisches Geld: Zufluss auf dem GRÖSSTEN Zufluss-Markt (aus mkv) ≥ Schwelle (Top 20K / Rest 10K)
+     — pro Markt, NICHT Spiel-Gesamt (sonst spiegelt die Zahl alle Märkte statt des einen Marktes).
 
 Anti-Spam (Lucas: „einmal, dann nur bei deutlicher Steigerung"): pro Spiel+Szenario wird der
 Wert beim letzten Push in betfair_alerts_seen.json gemerkt; erneut gepusht wird erst, wenn der
@@ -121,33 +122,41 @@ def ht_alert(m):
             "leadShare": lead_share, "leadOdd": lead.get("odd")}
 
 
+def _market_lead(m, name):
+    """Führender Ausgang + Anteil des Marktes aus den aktuellen Preisen."""
+    mk = (m.get("markets") or {}).get(name)
+    if not mk:
+        return None, None
+    rs = mk.get("runners") or []
+    tot = sum((r.get("vol") or 0.0) for r in rs)
+    if tot <= 0 or not rs:
+        return None, None
+    top = max(rs, key=lambda r: (r.get("vol") or 0.0))
+    return top.get("name"), (top.get("vol") or 0.0) / tot
+
+
 def fresh_alert(m, hist):
-    """Szenario 2: Zufluss seit letztem Snapshot ≥ tier-Schwelle."""
+    """Szenario 2: Zufluss auf dem GRÖSSTEN Zufluss-Markt (aus mkv) ≥ tier-Schwelle — pro Markt."""
     pts = (hist or {}).get(str(m.get("matchId")))
     if not isinstance(pts, list) or len(pts) < 2:
         return None
-    fv, lv = pts[-2].get("totalVol"), pts[-1].get("totalVol")
-    if fv is None or lv is None:
-        return None
-    inflow = lv - fv
+    pmk, lmk = pts[-2].get("mkv"), pts[-1].get("mkv")
+    if not isinstance(pmk, dict) or not isinstance(lmk, dict):
+        return None   # ohne per-Markt-History (mkv) kein per-Markt-Signal — irreführende Gesamt-Zahl vermeiden
     thr = FRESH_TOP_EUR if tier_of(m) == "top" else FRESH_REST_EUR
-    if inflow < thr:
+    best = None                                   # (Marktname, Zufluss, aktuelles Markt-Volumen)
+    for name, lv in lmk.items():
+        inflow = (lv or 0.0) - (pmk.get(name) or 0.0)
+        if best is None or inflow > best[1]:
+            best = (name, inflow, lv or 0.0)
+    if not best or best[1] < thr:
         return None
-    best = None
-    for name, mk in (m.get("markets") or {}).items():
-        v = _vol(mk)
-        if best is None or v > best[1]:
-            best = (name, v, mk)
-    lead = ""
-    if best and best[1] > 0:
-        rs = best[2].get("runners") or []
-        top_r = max(rs, key=lambda r: (r.get("vol") or 0), default=None)
-        if top_r:
-            lead = "%s → %s (%.0f%%)" % (_short_mk(best[0]), top_r.get("name"),
-                                         (top_r.get("vol") or 0) / best[1] * 100)
-    return {"scenario": "fresh", "matchId": str(m.get("matchId")), "value": lv,
-            "home": m.get("home"), "away": m.get("away"), "league": m.get("league"),
-            "flag": _flag(m), "inflow": inflow, "total": lv, "tier": tier_of(m), "lead": lead}
+    market_name, inflow, mkt_total = best
+    lead_name, lead_share = _market_lead(m, market_name)
+    return {"scenario": "fresh", "matchId": str(m.get("matchId")), "value": mkt_total,
+            "home": m.get("home"), "away": m.get("away"), "league": m.get("league"), "flag": _flag(m),
+            "market": market_name, "inflow": inflow, "total": mkt_total, "tier": tier_of(m),
+            "leadName": lead_name, "leadShare": lead_share}
 
 
 def should_send(seen: dict, key: str, value: float) -> bool:
@@ -173,9 +182,9 @@ def build_message(a) -> str:
                                             _esc(a["away"]), pct(a["as_"])))
     tl = "Top-Liga" if a["tier"] == "top" else "Rest-Liga"
     msg = ("🟡 <b>Betfair · Frisches Geld</b> · %s\n" % tl + head
-           + "💶 <b>+%s</b> seit letztem Update (jetzt %s)" % (_euro(a["inflow"]), _euro(a["total"])))
-    if a["lead"]:
-        msg += "\nmeistes Geld: %s" % _esc(a["lead"])
+           + "💶 <b>%s</b>: +%s frisch → jetzt %s" % (_esc(_short_mk(a["market"])), _euro(a["inflow"]), _euro(a["total"])))
+    if a.get("leadName"):
+        msg += "\nführt: %s (%.0f%%)" % (_esc(a["leadName"]), (a.get("leadShare") or 0.0) * 100)
     return msg
 
 
