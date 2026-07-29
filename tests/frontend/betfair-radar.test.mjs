@@ -121,6 +121,12 @@ test('Drei Ebenen — International/UEFA-Sektion + Tier-Logik', () => {
   assert.strictEqual(w._bfTier({ league: 'UEFA Champions League Qualifiers', country: 'International' }), 'intl');
   assert.strictEqual(w._bfTier({ league: 'German Bundesliga', country: 'DE' }), 'top');
   assert.strictEqual(w._bfTier({ league: 'Bulgarian First League', country: 'BG' }), 'rest');
+  // KEINE Fehl-Einordnung in Top5 (Regex war zu locker): Land-qualifiziert + keine Freundschafts-Turniere
+  assert.strictEqual(w._bfTier({ league: 'Brazilian Serie A', country: 'BR' }), 'rest', 'Brasilien ≠ Top5');
+  assert.strictEqual(w._bfTier({ league: 'Bhutan Premier League', country: 'BT' }), 'rest', 'Bhutan ≠ Top5');
+  assert.strictEqual(w._bfTier({ league: 'English Premier League Summer Series', country: 'GB' }), 'rest', 'Sommer-Friendly ≠ Top5');
+  assert.strictEqual(w._bfTier({ league: 'Italian Serie A', country: 'IT' }), 'top');
+  assert.strictEqual(w._bfTier({ league: 'USA MLS', country: 'US' }), 'top');
 });
 
 test('Geld-Verteilung: Balken + %/€ je Ausgang (aufgeklappt)', () => {

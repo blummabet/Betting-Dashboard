@@ -36,10 +36,15 @@
   function segCols(n) { return n >= 3 ? [C.vol, C.dim, C.purp] : [C.vol, C.blue]; }
 
   var UEFA_RX = /(champions league|europa league|europa conference|conference league|uefa)/i;
-  var TOP5_RX = /(bundesliga|premier league|la ?liga|serie a|ligue 1|\bmls\b|major league soccer)/i;
+  // Top 5 + MLS: LAND-qualifizierte Namen verlangen, sonst schnappt „premier league"/„serie a" auch
+  // Bhutan/Libanon/Brasilien. Und Freundschafts-/Sommer-/Jugend-Turniere ausschließen (z.B.
+  // „English Premier League Summer Series" ist ein Vorbereitungsturnier, keine Liga).
+  var TOP5_RX = /(german bundesliga|english premier league|spanish la ?liga|italian serie a|french ligue 1|\bmls\b|major league soccer)/i;
+  var TOP5_NEG = /(summer series|friendl|reserve|women|u1[0-9]\b|youth|amateur|\bii\b|\bb\b team)/i;
+  function isTop5(league) { var l = String(league || ''); return TOP5_RX.test(l) && !TOP5_NEG.test(l); }
   function isIntlCountry(cc) { return /^(int|international|eu|europe)$/i.test(String(cc || '')); }
   function tierOf(m) {
-    if (TOP5_RX.test(String(m.league || ''))) return 'top';
+    if (isTop5(m.league)) return 'top';
     if (UEFA_RX.test(String(m.league || '')) || isIntlCountry(m.country)) return 'intl';
     return 'rest';
   }
@@ -92,7 +97,11 @@
     if (!g) return 9999;
     var t = Date.parse(g); return isNaN(t) ? 9999 : (Date.now() - t) / 60000;
   }
-  function isLive(m) { var li = m.liveInfo || {}; if (li.time == null || li.finished) return false; return genAgeMin() <= 25; }
+  // GitHub-Actions-Schedule ist jittery (~8–30 Min statt exakt 15) → Schwellen locker halten,
+  // sonst „veraltet"-Alarm bei ganz normalem Betrieb.
+  var FRESH_LIVE_MIN = 30;   // bis hierher gilt Live-Status als vertrauenswürdig
+  var STALE_WARN_MIN = 45;   // erst ab hier „Daten veraltet"-Banner (≈ 3 verpasste Läufe)
+  function isLive(m) { var li = m.liveInfo || {}; if (li.time == null || li.finished) return false; return genAgeMin() <= FRESH_LIVE_MIN; }
   function isStale(m) {
     if (isLive(m)) return false;
     if (!m.kickoff) return false;
@@ -352,8 +361,10 @@
       rest: q.filter(function (m) { return tierOf(m) === 'rest'; }).sort(sortV),
     };
 
-    var stale = genAgeMin() > 30
-      ? '<div style="margin:8px 0;padding:9px 13px;border:1px solid #7d4b16;background:#2b1d0e;color:' + C.amber + ';border-radius:10px;font-size:12px">⚠️ <b>Daten sind ' + (genAgeMin() > 1440 ? Math.round(genAgeMin() / 1440) + ' Tage' : Math.round(genAgeMin() / 60) + 'h') + ' alt</b> — der Fetcher (GitHub Actions, alle 15 Min) hat noch nicht frisch geschrieben. Live-Status ist ausgeblendet.</div>'
+    var age = genAgeMin();
+    var ageTxt = age > 1440 ? Math.round(age / 1440) + ' Tage' : age >= 90 ? Math.round(age / 60) + 'h' : Math.round(age) + ' Min';
+    var stale = age > STALE_WARN_MIN
+      ? '<div style="margin:8px 0;padding:9px 13px;border:1px solid #7d4b16;background:#2b1d0e;color:' + C.amber + ';border-radius:10px;font-size:12px">⚠️ <b>Daten sind ' + ageTxt + ' alt</b> — der Fetcher (GitHub Actions) hat länger nicht frisch geschrieben. Live-Status ist ausgeblendet.</div>'
       : '';
 
     if (!qAll.length) {

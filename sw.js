@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v6';   // 29.07.2026: Betfair Radar v4 (EU-Flaggen, eingeklappte Karten, Hotspot-Ausgang, € roh, 3 Ebenen) → SW-Bump
+const VERSION = 'cocobet-v7';   // 29.07.2026: Betfair Liga-Filter präzise + Freshness-Schwellen → SW-Bump
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
