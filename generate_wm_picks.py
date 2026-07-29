@@ -2115,6 +2115,15 @@ def main():
                         p.pop("pickTriggerReason", None)
                         p.pop("modelHallucinationWarning", None)
                     sig_out = evaluate_signals(p, sig_ctx)
+                    # Triple/Konsens (29.07.2026): 1X2 über Pinnacle/Betfair/Poly/Soft. Rein
+                    # additiv (try/except) → beeinflusst weder Signale noch Verdict.
+                    try:
+                        from cross_source_consensus import build_consensus as _bcons
+                        _cons = _bcons(p, sig_ctx)
+                        if _cons:
+                            p["consensus"] = _cons
+                    except Exception:
+                        pass
                     # Conviction-Score läuft AUCH wenn signals=[] (Modell-Sanity + Sharp-Move
                     # können unabhängig Punkte geben — Fix 09.06.2026)
                     if sig_out["signals"]:

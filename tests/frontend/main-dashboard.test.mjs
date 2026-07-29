@@ -57,3 +57,23 @@ test('leere Daten → freundliche Leer-Hinweise, kein Crash', () => {
   assert.match(html, /Beste Cards/);
   assert.match(html, /Keine|nichts|Kein/i);
 });
+
+
+test('Triple-Hero zeigt Konsens (einig) und Divergenz (Ausreißer)', () => {
+  const w = load();
+  w._mdState.data = {
+    liga: { groups: { g: { fixtures: [
+      { home:'Bayern', away:'Dortmund', league:'Bundesliga', picks:[
+        { market:'Heimsieg', verdict:'BET', consensus:{ side:'home', n:4, spreadPP:3.0, medianPP:58, kind:'konsens',
+          sources:{pinnacle:0.58,betfair:0.585,poly:0.60,soft:0.575}, outlier:null, outlierGapPP:2.0 } } ] },
+      { home:'Leipzig', away:'Koeln', league:'Bundesliga', picks:[
+        { market:'Auswärtssieg', verdict:'ABWÄGEN', consensus:{ side:'away', n:4, spreadPP:14, medianPP:40, kind:'divergenz',
+          sources:{pinnacle:0.40,betfair:0.41,poly:0.28,soft:0.42}, outlier:'poly', outlierGapPP:12 } } ] } ] } } },
+    mls:null, ligaStreaks:null, mlsStreaks:null, betfair:null, whales:null,
+  };
+  w._renderMainDash();
+  const html = w.document.getElementById('mainDashPanel').innerHTML;
+  assert.match(html, /Triple-Konsens/);
+  assert.match(html, /Einig/);           assert.match(html, /4\/4 einig/);   assert.match(html, /Bayern/);
+  assert.match(html, /Ausreißer/);       assert.match(html, /Poly schert aus/); assert.match(html, /Leipzig/);
+});

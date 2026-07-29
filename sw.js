@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v21';   // 29.07.2026: Betfair-Kopf = größter Markt (statt Summe aller Märkte)
+const VERSION = 'cocobet-v22';   // 29.07.2026: Triple/Konsens-Hero im Dashboard (Pinnacle/Betfair/Poly/Soft)
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
