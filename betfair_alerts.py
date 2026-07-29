@@ -3,7 +3,8 @@
 betfair_alerts.py — Telegram-Pushes (Trades-Channel) für Betfair-Signale (29.07.2026, Lucas).
 
 Testweise, 2 Szenarien (erweiterbar, sobald wir mehr gelernt haben):
-  1. Halbzeit-1X2-Geld: der „Half Time"-Markt (HZ 1X2) hat ≥ HT_MIN_EUR gematcht.
+  1. Halbzeit-1X2-Geld: der „Half Time"-Markt (HZ 1X2) hat ≥ HT_MIN_EUR gematcht UND
+     davon liegen ≥ HT_MIN_SHARE (85 %) auf EINEM Ausgang (sonst kein Signal, nur Liquidität).
   2. Frisches Geld: Zufluss seit dem letzten Snapshot ≥ Schwelle (Top-Liga 20K / Rest 10K).
 
 Anti-Spam (Lucas: „einmal, dann nur bei deutlicher Steigerung"): pro Spiel+Szenario wird der
@@ -22,6 +23,7 @@ import html
 from telegram_trades import send_trades_message
 
 HT_MIN_EUR     = 7000.0
+HT_MIN_SHARE   = 0.85     # ... und davon min. dieser Anteil auf EINEN Ausgang (einseitig)
 FRESH_TOP_EUR  = 20000.0
 FRESH_REST_EUR = 10000.0
 DEDUP_FACTOR   = 1.5
@@ -77,27 +79,46 @@ def _short_mk(k) -> str:
             .replace("Draw no Bet", "DNB"))
 
 
+def _ht_label(name, home, away):
+    n = str(name or "")
+    if n == "The Draw":
+        return "Remis (X)"
+    if n == home:
+        return "%s (Heim)" % home
+    if n == away:
+        return "%s (Ausw.)" % away
+    return n
+
+
 def ht_alert(m):
-    """Szenario 1: Half-Time-1X2-Markt ≥ HT_MIN_EUR."""
+    """Szenario 1: Half-Time-1X2-Markt ≥ HT_MIN_EUR UND ≥ HT_MIN_SHARE auf einem Ausgang (einseitig)."""
     mk = (m.get("markets") or {}).get("Half Time")
     if not mk:
         return None
     total = _vol(mk)
-    if total < HT_MIN_EUR:
+    if total < HT_MIN_EUR or total <= 0:
+        return None
+    runners = mk.get("runners") or []
+    lead = max(runners, key=lambda r: (r.get("vol") or 0.0), default=None)
+    if not lead:
+        return None
+    lead_share = (lead.get("vol") or 0.0) / total
+    if lead_share < HT_MIN_SHARE:          # ≥85 % auf einer Seite, sonst nur Liquidität → kein Push
         return None
     home, away = m.get("home"), m.get("away")
-    runners = mk.get("runners") or []
 
     def share(test):
         for r in runners:
             if test(str(r.get("name") or "")):
-                return (r.get("vol") or 0.0) / total if total else None
+                return (r.get("vol") or 0.0) / total
         return None
 
     return {"scenario": "ht", "matchId": str(m.get("matchId")), "value": total,
             "home": home, "away": away, "league": m.get("league"), "flag": _flag(m),
             "total": total, "hs": share(lambda s: s == home),
-            "ds": share(lambda s: s == "The Draw"), "as_": share(lambda s: s == away)}
+            "ds": share(lambda s: s == "The Draw"), "as_": share(lambda s: s == away),
+            "leadName": lead.get("name"), "leadLabel": _ht_label(lead.get("name"), home, away),
+            "leadShare": lead_share, "leadOdd": lead.get("odd")}
 
 
 def fresh_alert(m, hist):
@@ -144,8 +165,10 @@ def build_message(a) -> str:
             % (a["flag"], _esc(a["home"]), _esc(a["away"]), _esc(str(a["league"])[:48])))
     if a["scenario"] == "ht":
         pct = lambda x: "—" if x is None else "%.0f%%" % (x * 100)
-        return ("🟡 <b>Betfair · Halbzeit-Geld</b>\n" + head
-                + "💷 HZ-1X2: <b>%s</b> gematcht\n" % _euro(a["total"])
+        odd = (" @%.2f" % a["leadOdd"]) if isinstance(a.get("leadOdd"), (int, float)) else ""
+        return ("🟡 <b>Betfair · Halbzeit-Geld (einseitig)</b>\n" + head
+                + "💷 HZ-1X2: <b>%s</b> gematcht · <b>%.0f%%</b> auf %s%s\n"
+                  % (_euro(a["total"]), a["leadShare"] * 100, _esc(a["leadLabel"]), odd)
                 + "%s %s · X %s · %s %s" % (_esc(a["home"]), pct(a["hs"]), pct(a["ds"]),
                                             _esc(a["away"]), pct(a["as_"])))
     tl = "Top-Liga" if a["tier"] == "top" else "Rest-Liga"

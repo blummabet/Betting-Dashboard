@@ -33,17 +33,23 @@ class TestHtAlert(unittest.TestCase):
             {"name": "The Draw", "odd": 2.2, "vol": dv},
             {"name": "Beta", "odd": 3.4, "vol": av}])
 
-    def test_fires_at_threshold(self):
-        m = match(markets=self._ht_market(4000, 2000, 2000))  # 8000 ≥ 7000
+    def test_fires_when_onesided(self):
+        # 8000 ≥ 7000 UND 88% auf Alpha (≥85%)
+        m = match(markets=self._ht_market(7000, 500, 500))
         a = BA.ht_alert(m)
         self.assertIsNotNone(a)
         self.assertEqual(a["scenario"], "ht")
         self.assertAlmostEqual(a["total"], 8000)
-        self.assertAlmostEqual(a["hs"], 0.5)
+        self.assertEqual(a["leadName"], "Alpha")
+        self.assertGreaterEqual(a["leadShare"], 0.85)
+
+    def test_balanced_market_none(self):
+        # 8000 ≥ 7000, aber breit verteilt (max 50%) → kein Signal
+        self.assertIsNone(BA.ht_alert(match(markets=self._ht_market(4000, 2000, 2000))))
 
     def test_below_threshold_none(self):
-        m = match(markets=self._ht_market(2000, 1000, 1000))  # 4000 < 7000
-        self.assertIsNone(BA.ht_alert(m))
+        # einseitig (100%), aber nur 4000 < 7000
+        self.assertIsNone(BA.ht_alert(match(markets=self._ht_market(4000, 0, 0))))
 
     def test_no_ht_market_none(self):
         self.assertIsNone(BA.ht_alert(match(markets=mk("Match Odds", [{"name": "Alpha", "odd": 2, "vol": 9000}]))))
@@ -86,13 +92,14 @@ class TestDedup(unittest.TestCase):
 
 class TestMessage(unittest.TestCase):
     def test_ht_message(self):
-        m = match(markets=mk("Half Time", [{"name": "Alpha", "odd": 2, "vol": 5000},
-                                           {"name": "The Draw", "odd": 3, "vol": 1500},
-                                           {"name": "Beta", "odd": 4, "vol": 1500}]))
+        m = match(markets=mk("Half Time", [{"name": "Alpha", "odd": 2, "vol": 8000},
+                                           {"name": "The Draw", "odd": 3, "vol": 500},
+                                           {"name": "Beta", "odd": 4, "vol": 500}]))
         msg = BA.build_message(BA.ht_alert(m))
         self.assertIn("Halbzeit-Geld", msg)
         self.assertIn("HZ-1X2", msg)
-        self.assertIn("Alpha", msg)
+        self.assertIn("auf Alpha", msg)   # dominanter Ausgang genannt
+        self.assertIn("%", msg)
 
     def test_fresh_message(self):
         m = match(mid=7, league="German Bundesliga",
