@@ -191,27 +191,53 @@ def prune_history(hist, now=None, keep_h=HIST_KEEP_H):
 
 
 # ── network (nur main) ────────────────────────────────────────────────────────
+# Cloudflare weist Requests ohne echten User-Agent teils mit 403 ab → Browser-Header mitschicken.
+_BASE_HEADERS = {
+    "Accept": "application/json, text/html;q=0.9,*/*;q=0.8",
+    "Accept-Language": "de-AT,de;q=0.9,en;q=0.8",
+    "User-Agent": ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                   "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"),
+}
+# Auth-Varianten in Reihenfolge probieren; die erste, die 200 liefert, wird gemerkt + geloggt.
+_AUTH_ORDER = ["query", "token", "apikey", "bearer"]
+_AUTH = {"mode": None}
+
+
+def _build_req(path, mode):
+    headers = dict(_BASE_HEADERS)
+    url = API_BASE + path
+    if mode == "query":
+        sep = "&" if "?" in path else "?"
+        url = f"{url}{sep}key={KEY}"
+    elif mode == "token":
+        headers["Authorization"] = f"Token {KEY}"
+    elif mode == "apikey":
+        headers["X-API-Key"] = KEY
+    elif mode == "bearer":
+        headers["Authorization"] = f"Bearer {KEY}"
+    return urllib.request.Request(url, headers=headers)
+
+
 def _get(path):
-    # Betwatch authentifiziert über ?key=<KEY> (Query-Param), NICHT über einen Authorization-Header
-    # (Header-Token → HTTP 403). Verifiziert an der echten API 29.07.2026.
-    sep = "&" if "?" in path else "?"
-    url = f"{API_BASE}{path}{sep}key={KEY}"
-    # Browser-ähnliche Header: Betwatch/Cloudflare kann Requests ohne echten User-Agent mit 403 abweisen.
-    req = urllib.request.Request(url, headers={
-        "Accept": "application/json, text/html;q=0.9,*/*;q=0.8",
-        "Accept-Language": "de-AT,de;q=0.9,en;q=0.8",
-        "User-Agent": ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
-                       "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"),
-    })
-    try:
-        with urllib.request.urlopen(req, timeout=HTTP_TIMEOUT) as r:
-            return json.loads(r.read().decode("utf-8"))
-    except urllib.error.HTTPError as e:
-        print(f"  ⚠️  Betwatch HTTP {e.code} bei {path[:48]}")
-        return None
-    except Exception as e:
-        print(f"  ⚠️  Betwatch Fehler bei {path[:48]}: {e}")
-        return None
+    modes = [_AUTH["mode"]] if _AUTH["mode"] else _AUTH_ORDER
+    last_code = None
+    for mode in modes:
+        try:
+            with urllib.request.urlopen(_build_req(path, mode), timeout=HTTP_TIMEOUT) as r:
+                data = json.loads(r.read().decode("utf-8"))
+                if _AUTH["mode"] != mode:
+                    _AUTH["mode"] = mode
+                    print(f"  🔑 Auth-Methode akzeptiert: {mode}")
+                return data
+        except urllib.error.HTTPError as e:
+            last_code = e.code
+            continue   # nächste Auth-Variante probieren
+        except Exception as e:
+            print(f"  ⚠️  Betwatch Fehler bei {path[:48]}: {e}")
+            return None
+    print(f"  ⚠️  Betwatch HTTP {last_code} bei {path[:48]} — alle Auth-Methoden abgelehnt "
+          f"(Key falsch/abgelaufen?)")
+    return None
 
 
 def _load(p):
