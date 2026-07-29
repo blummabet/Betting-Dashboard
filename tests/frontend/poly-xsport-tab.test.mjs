@@ -14,9 +14,9 @@ function win() {
   return w;
 }
 
-test('eigener Tab "Poly vs Sharp" steht in der Tab-Leiste', () => {
+test('eigener Tab "Poly-Radar" (Poly vs Sharp) steht in der Tab-Leiste', () => {
   const html = win()._pwViewTabs();
-  assert.match(html, /Poly vs Sharp/);
+  assert.match(html, /🎯 Poly-Radar/);
   assert.match(html, /_pwSetView\('xsport'\)/);
 });
 

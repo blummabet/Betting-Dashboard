@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v16';   // 29.07.2026: betfair_coherence Engine-Signal (Bayes-Panel-Label)
+const VERSION = 'cocobet-v17';   // 29.07.2026: Poly-Radar in Wallet konsolidiert (Menüpunkt + Sharp-Tab entfernt)
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

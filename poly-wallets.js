@@ -108,14 +108,14 @@ function _pwViewTabs(){
   // 19.07.2026 (Lucas: „besser aufteilen") — 4 Unter-Reiter statt 9 gestapelter Sektionen.
   // Reihenfolge 25.07.2026: globales „Großes Geld" (immer Content+Filter) zuerst → Landing-Tab.
   return '<div class="pw-ds" style="margin-top:-6px">'
-    +b('bet','🔥 Heute wetten')+b('xsport','⚖️ Poly vs Sharp')+b('money','💰 Großes Geld')+b('move','📈 Bewegung')+b('new','🆕 Neu')+b('edge','🎯 Chancen')+b('whales','🐋 Whales')
+    +b('bet','🔥 Heute wetten')+b('xsport','🎯 Poly-Radar')+b('money','💰 Großes Geld')+b('move','📈 Bewegung')+b('new','🆕 Neu')+b('edge','🎯 Chancen')+b('whales','🐋 Whales')
     +'</div>';
 }
 
 // 25.07.2026 (Lucas: „alle Zahlen verwirrend, keine Ahnung was ich damit mache"). Pro Unter-Reiter
 // EINE Klartext-Box: was zeige ich, und — wichtiger — was tust DU damit. Kein Jargon, ein Satz je.
 const _PW_VIEW_INTRO = {
-  xsport: ['⚖️ Poly vs Sharp — wo Polymarket messbar neben der scharfen Pinnacle liegt',
+  xsport: ['🎯 Poly-Radar — Poly vs Sharp: wo Polymarket messbar neben der scharfen Pinnacle liegt (alle Sportarten)',
     'Das einzige echte Preis-Signal hier: Poly-% gegen die faire Pinnacle-% über ALLE Sportarten. Eine Lücke ist ein Kandidat, kein Auftrag.',
     'Erst wenn sich die Lücke über die Tage zur Pinnacle SCHLIESST (Konvergenz ▼), war sie echt — kein Settlement-Artefakt. Sonst Finger weg.'],
   edge:  ['🎯 Chancen — wo Polymarket „falscher\" liegt als die scharfe Pinnacle',
