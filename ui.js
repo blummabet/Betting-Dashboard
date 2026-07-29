@@ -30,11 +30,11 @@
 let _activeSection = 'national';
 // Track the full active view (28.06.2026) — nötig fürs „Mehr"-Menü (Heart/Status/Telegram/TikTok),
 // weil intl-telegram/intl-studio dieselbe Section 'intl' haben.
-let _activeView = 'national-cards';
+let _activeView = 'home';
 
 // All panel IDs — hidden when switching views
 const _ALL_PANELS = [
-  'mainContent', 'trackingV2Panel', 'resultsPanel',
+  'mainDashPanel', 'mainContent', 'trackingV2Panel', 'resultsPanel',
   'intlCardsPanel', 'intlTrackingPanel', 'intlWm2026Panel', 'intlTelegramPanel',
   'tiktokStudioPanel', 'streaksPanel',
   'polymarketPanel', 'polyTraderPanel', 'polyWalletsPanel', 'betfairRadarPanel',
@@ -62,6 +62,7 @@ function showView(view) {
 
   // ── Show correct panel ───────────────────────────────
   const panelMap = {
+    'home':              'mainDashPanel',
     'national-cards':    'mainContent',
     'national-tracking': 'trackingV2Panel',
     'national-streaks':  'streaksPanel',
@@ -118,6 +119,7 @@ function showView(view) {
     if (el) el.classList.remove('active');
   });
   const topNavMap = {
+    'home':        'navHome',
     'national':    'navNational',
     'intl':        'navIntl',
     'sharp':       'navSharp',
@@ -184,6 +186,7 @@ function showView(view) {
   // bewährten WM-Renderer/Tracking (liest liga-data.json) statt statischem
   // renderer.js-Output bzw. initResultsV2.
   if ((view === 'national-streaks' || view === 'intl-streaks') && typeof initStreaks === 'function') initStreaks(_activeSection);
+  if (view === 'home'              && typeof window._mdLoad        === 'function') window._mdLoad();
   if (view === 'national-cards'    && typeof initNationalCards    === 'function') initNationalCards();
   if (view === 'national-tracking' && typeof initNationalTracking === 'function') initNationalTracking();
   if (view === 'intl-cards'        && typeof initIntlCards     === 'function') initIntlCards();

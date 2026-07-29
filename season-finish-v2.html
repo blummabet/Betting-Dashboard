@@ -2175,7 +2175,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     <div class="logo-fallback" style="display:none">🐕</div>
     <span class="lt">CocoBet</span>
   </div>
-  <button class="top-nav-btn active" id="navNational" onclick="showView('national-cards')">🇪🇺 National</button>
+  <button class="top-nav-btn active" id="navHome" onclick="showView('home')">🏠 Übersicht</button>
+  <button class="top-nav-btn" id="navNational" onclick="showView('national-cards')">🇪🇺 National</button>
   <button class="top-nav-btn" id="navIntl" onclick="showView('intl-cards')">🌍 International</button>
   <button class="top-nav-btn" id="navSharp" onclick="showView('sharp')">📡 Sharp Radar</button>
   <button class="top-nav-btn" id="navPolyTrader" onclick="showView('polytrading')" style="color:#00d4a1">📈 Polymarket Trading</button>
@@ -2220,6 +2221,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   <button class="league-btn" data-league="SUI"><span class="lf">🇨🇭</span><span>Swiss SL</span><span class="lr">…</span></button>
 </div>
 
+<!-- MAIN-Dashboard „Übersicht" (Einstieg) -->
+<div id="mainDashPanel" style="max-width:1200px;margin:0 auto;padding:16px 16px 100px;"></div>
 <div class="container" id="mainContent"></div>
 
 <!-- Serien/Streaks (28.06.2026) — Content-Sektion, dataset-aware (Liga/WM), keine Quoten -->
@@ -2227,8 +2230,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 
 <!-- ── Mobile Bottom-Nav (28.06.2026) — nur ≤768px sichtbar; spiegelt showView() ── -->
 <nav class="bottom-nav" id="bottomNav">
+  <button class="bn-btn" data-sec="home"        onclick="showView('home')"><span class="bn-ic">🏠</span><span class="bn-lbl">Übersicht</span></button>
   <button class="bn-btn" data-sec="national"    onclick="showView('national-cards')"><span class="bn-ic">🇪🇺</span><span class="bn-lbl">National</span></button>
-  <button class="bn-btn" data-sec="intl"        onclick="showView('intl-cards')"><span class="bn-ic">🌍</span><span class="bn-lbl">Intl</span></button>
   <button class="bn-btn" data-sec="sharp"       onclick="showView('sharp')"><span class="bn-ic">📡</span><span class="bn-lbl">Sharp</span></button>
   <button class="bn-btn" data-sec="polytrading" onclick="showView('polytrading')"><span class="bn-ic">📈</span><span class="bn-lbl">Trading</span></button>
   <button class="bn-btn" id="bnMore"            onclick="toggleMoreSheet()"><span class="bn-ic">⋯</span><span class="bn-lbl">Mehr</span></button>
@@ -2237,6 +2240,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   <div class="more-sheet-panel">
     <div class="more-sheet-grip"></div>
     <button class="ms-btn" data-sec="betfair"      onclick="showView('betfair');toggleMoreSheet()">🟡 Betfair Radar</button>
+    <button class="ms-btn" data-sec="intl"         onclick="showView('intl-cards');toggleMoreSheet()">🌍 International</button>
     <button class="ms-btn" data-sec="polybetting"  onclick="showView('polybetting');toggleMoreSheet()">🟣 Polymarket Betting</button>
     <button class="ms-btn" data-sec="polywallets"  onclick="showView('polywallets');toggleMoreSheet()">🐋 Polymarket Wallets</button>
     <button class="ms-btn" data-view="analyse"     onclick="showView('analyse');toggleMoreSheet()">📊 Analyse</button>
@@ -4925,7 +4929,8 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     "pick-engine.js", "pick-verdict.js", "_pick_helpers.js", "validator.js",
     "renderer.js", "share.js", "ui.js", "status-checks.js", "polymarket-tab.js",
     "poly-wallets.js", "betfair-radar.js", "signal-check.js",
-    "results-v2.js", "wm2026-renderer.js", "wm2026-tracking.js", "tiktok-studio.js"
+    "results-v2.js", "wm2026-renderer.js", "wm2026-tracking.js", "tiktok-studio.js",
+    "main-dashboard.js"
   ];
   for (var i = 0; i < scripts.length; i++) {
     document.write('<scr' + 'ipt src="' + scripts[i] + '?v=' + v + '"></scr' + 'ipt>');
@@ -10232,6 +10237,12 @@ function renderTgLog(log) {
   _hideOldNav();
   if (document.readyState === 'complete') setTimeout(go, 300);
   else window.addEventListener('load', () => setTimeout(go, 300));
+})();
+
+(function _bootHome() {   // MAIN-Dashboard ist der Einstieg (statt National)
+  const go = () => { if (typeof showView === 'function') showView('home'); };
+  if (document.readyState === 'complete') setTimeout(go, 60);
+  else window.addEventListener('load', () => setTimeout(go, 60));
 })();
 
 // Status-Health beim Laden einmal rechnen, damit der Warn-Punkt am Status-Tab

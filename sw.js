@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v18';   // 29.07.2026: Betfair im Mobile-Mehr-Sheet sichtbar
+const VERSION = 'cocobet-v19';   // 29.07.2026: MAIN-Dashboard „Übersicht" als Einstieg
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
@@ -18,7 +18,7 @@ const SHELL = [
   './season-finish-v2.html',
   './pick-engine.js', './pick-verdict.js', './_pick_helpers.js', './validator.js',
   './renderer.js', './share.js', './ui.js', './status-checks.js', './polymarket-tab.js',
-  './poly-wallets.js', './betfair-radar.js', './results-v2.js', './wm2026-renderer.js', './wm2026-tracking.js',
+  './poly-wallets.js', './betfair-radar.js', './main-dashboard.js', './results-v2.js', './wm2026-renderer.js', './wm2026-tracking.js',
   './tiktok-studio.js', './tiktok-studio.css',
   './cocobet-logo.png',
   './icons/icon-180.png', './icons/icon-192.png', './icons/icon-512.png', './icons/icon-512-maskable.png',
