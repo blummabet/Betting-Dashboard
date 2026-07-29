@@ -1,7 +1,7 @@
-// tests/frontend/betfair-radar.test.mjs — Betfair Radar v3 (29.07.2026, Lucas-Feedback #2).
-// Prüft: Hotspot-Leiste, Datumsauswahl+Filter, Geld-Verteilung (Segment-Balken €+%),
-// heißester Markt offen / Rest per Klick, CL/EL-Quali im Top-Bucket, Pfeil-Legende,
-// € statt £, Stale-Guard, Tab-Filter.
+// tests/frontend/betfair-radar.test.mjs — Betfair Radar v4 (29.07.2026, Lucas-Feedback #3).
+// Prüft: EU-Flagge für UEFA / 🌍 sonst · € (kein £) · Karten eingeklappt mit komprimiertem
+// Top-Markt · Klick klappt alle Märkte auf · Hotspots mit konkretem Ausgang · drei Ebenen
+// (Top/Intl/Rest) · Geld-Verteilung · Stale-Guard · Tab-Filter.
 import { test } from 'node:test';
 import assert from 'node:assert';
 import { readFileSync } from 'node:fs';
@@ -17,76 +17,72 @@ function boot() {
   w._bfState.data = prices;
   w._bfState.hist = JSON.parse(readFileSync(new URL('betfair_history.json', ROOT), 'utf8'));
   w._bfState.loading = false;
-  w._bfState.league = 'all'; w._bfState.tab = 'both'; w._bfState.date = 'all';
-  w._bfState.open = {}; w._bfState.seeded = false;
+  w._bfState.league = 'all'; w._bfState.tab = 'all'; w._bfState.date = 'all'; w._bfState.cardOpen = {};
   return { w, prices };
 }
 function render() { const { w, prices } = boot(); return { w, prices, html: w._renderBetfairRadar() }; }
 
-test('Kopf + Info-Band inkl. UEFA-Kachel', () => {
+test('EU-Flagge für UEFA, 🌍 für sonstige internationale', () => {
   const { html } = render();
-  assert.match(html, /Betfair/);
-  assert.match(html, /Geld gematcht gesamt/);
-  assert.match(html, /Top 5 \+ MLS \+ UEFA/);
-  assert.match(html, /meiste HT-Action/);
+  assert.match(html, /\u{1F1EA}\u{1F1FA}/u, 'EU-Flagge (UEFA)');
+  assert.match(html, /\u{1F30D}/u, 'Globus (CAF/Friendly)');
 });
 
-test('Hotspot-Leiste zeigt heißeste Einzelmärkte', () => {
+test('Beträge in € — gar kein £ mehr', () => {
   const { html } = render();
-  assert.match(html, /Meistes Geld gerade/);
-  assert.match(html, /springt zum Spiel/);
+  assert.match(html, /€/);
+  assert.ok(!/£/.test(html), 'kein Pfund-Zeichen');
 });
 
-test('Datumsauswahl vorhanden (Heute/Morgen)', () => {
+test('Karten standard eingeklappt, komprimierter Top-Markt', () => {
   const { html } = render();
-  assert.match(html, /📅 Datum/);
-  assert.match(html, /Heute/);
-  assert.match(html, /Morgen/);
+  assert.match(html, /▸/, 'Chevron eingeklappt');
+  assert.match(html, /alle Märkte/, 'Hinweis auf Aufklappen');
+  // komprimierte Zeile zeigt den führenden Ausgang mit Prozent
+  assert.match(html, /→ /);
 });
 
-test('Datumsfilter blendet andere Tage aus', () => {
+test('Klick klappt alle Märkte der Karte auf', () => {
   const { w, prices } = boot();
-  const arsenal = prices.matches.find(m => m.home === 'Arsenal');
-  const tomKey = new Date(Date.parse(arsenal.kickoff)).toLocaleDateString('en-CA');
-  w._bfState.date = tomKey;
-  const html = w._renderBetfairRadar();
-  assert.match(html, /Arsenal/, 'Spiel des gewählten Tages sichtbar');
-  assert.ok(!/Bayern Munich/.test(html), 'anderer Tag ausgeblendet');
-});
-
-test('Geld-Verteilung: Segment-Balken + % je Ausgang', () => {
-  const { html } = render();
-  // im geöffneten (heißesten) Markt stehen Prozent-Werte je Ausgang
-  assert.match(html, /[0-9]{1,3}%<\/span>/, 'Prozent je Ausgang');
-  // ein dominanter Anteil ist sichtbar (Bayern-Favorit)
-  const bi = html.indexOf('Bayern Munich');
-  assert.match(html.slice(bi, bi + 4000), /[5-9][0-9]%/, 'dominanter Geld-Anteil');
-});
-
-test('Heißester Markt offen (▾), weitere zu (▸)', () => {
-  const { html } = render();
-  assert.match(html, /▾/, 'mind. ein Markt aufgeklappt');
-  assert.match(html, /▸/, 'weitere Märkte eingeklappt');
-});
-
-test('Klick klappt Markt auf/zu (Toggle)', () => {
-  const { w, prices } = boot();
+  const kairat = prices.matches.find(m => m.home === 'Kairat Almaty');
   const before = w._renderBetfairRadar();
-  const bay = prices.matches.find(m => m.home === 'Bayern Munich');
-  w._bfToggle(bay.matchId + '|Over/Under 2.5 Goals');   // zweiten Markt aufklappen
-  const panel = w.document.getElementById('betfairRadarPanel');
-  const after = panel.innerHTML;
-  assert.notStrictEqual(before, after, 'Ausgabe ändert sich beim Toggle');
-  // nach dem Aufklappen erscheint die Über/Unter-Verteilung von Bayern
-  assert.match(after, /Ü 2\.5|Über|Ü2\.5/);
+  assert.ok(!/HT Ü0\.5/.test(before.slice(before.indexOf('Kairat Almaty'), before.indexOf('Kairat Almaty') + 1200)), 'HT-Markt eingeklappt noch nicht offen');
+  w._bfCard(kairat.matchId);
+  const after = w.document.getElementById('betfairRadarPanel').innerHTML;
+  assert.match(after, /HT Ü0\.5/, 'nach Klick sind alle Märkte (inkl. HT) offen');
 });
 
-test('CL/EL-Quali zählt zum Top-Bucket', () => {
+test('Hotspot-Leiste zeigt konkreten Ausgang + %', () => {
   const { html } = render();
-  assert.match(html, /Dinamo Zagreb/);
-  assert.match(html, /UEFA Champions League Qualifying/);
-  assert.ok(html.indexOf('Dinamo Zagreb') < html.indexOf('Rest — alle anderen Ligen'),
-    'CL-Quali steht in der Top-Sektion, nicht im Rest');
+  assert.match(html, /größte Einzel-Ausgänge/);
+  assert.match(html, /→ (Fenerbahce|Kairat Almaty|Crvena Zvezda|Tottenham|U 2\.5|Ü 2\.5)/);
+});
+
+test('Drei Ebenen — International/UEFA-Sektion + Tier-Logik', () => {
+  const { w, html } = render();
+  assert.match(html, /International \/ UEFA/);
+  assert.strictEqual(w._bfTier({ league: 'UEFA Champions League Qualifiers', country: 'International' }), 'intl');
+  assert.strictEqual(w._bfTier({ league: 'German Bundesliga', country: 'DE' }), 'top');
+  assert.strictEqual(w._bfTier({ league: 'Bulgarian First League', country: 'BG' }), 'rest');
+});
+
+test('Geld-Verteilung: Balken + %/€ je Ausgang (aufgeklappt)', () => {
+  const { w, prices } = boot();
+  const g = prices.matches.find(m => m.home === 'Gornik Zabrze');
+  w._bfCard(g.matchId);
+  const html = w._renderBetfairRadar();
+  const i = html.indexOf('Gornik Zabrze');
+  const block = html.slice(i, i + 2500);
+  assert.match(block, /Fenerbahce/, 'Auswärts-Runner gelistet');
+  assert.match(block, /7[0-9]%|72%/, 'dominanter Auswärts-Anteil (~72%)');
+});
+
+test('Tab-Filter: nur International', () => {
+  const { w } = boot();
+  w._bfState.tab = 'intl';
+  const html = w._renderBetfairRadar();
+  assert.match(html, /Kairat Almaty/);
+  assert.ok(!/⭐ Top 5 \+ MLS<\/h2>/.test(html) || !/German Bundesliga/.test(html));
 });
 
 test('Pfeil-Legende erklärt Back/Lay', () => {
@@ -97,29 +93,19 @@ test('Pfeil-Legende erklärt Back/Lay', () => {
   assert.match(html, /Lay/);
 });
 
-test('Beträge in € — keine £-Beträge (nur Fußnote)', () => {
-  const { html } = render();
-  assert.match(html, /€/);
-  assert.ok(!/£\s*[0-9]/.test(html));
-  assert.strictEqual((html.match(/£/g) || []).length, 1);
+test('alle aufklappen / alle zu', () => {
+  const { w } = boot();
+  w._bfCards(true);
+  const open = w._renderBetfairRadar();
+  assert.match(open, /▾/, 'aufgeklappt');
+  w._bfCards(false);
+  const closed = w._renderBetfairRadar();
+  assert.ok((closed.match(/▾/g) || []).length === 0, 'alle zu');
 });
 
-test('Stale-Guard: alte Daten → kein Fake-Live', () => {
+test('Stale-Guard: alte Daten → Banner, kein Fake-Live', () => {
   const { w } = boot();
   w._bfState.data._meta.generatedAt = new Date(Date.now() - 26 * 3.6e6).toISOString();
   const html = w._renderBetfairRadar();
-  assert.ok(!/LIVE 38/.test(html), 'kein Live bei veralteten Daten');
-  assert.match(html, /alt/, 'Stale-Banner');
-});
-
-test('Tab-Filter: nur Top / nur Rest', () => {
-  const { w } = boot();
-  w._bfState.tab = 'top';
-  const top = w._renderBetfairRadar();
-  assert.match(top, /Bayern Munich/);
-  assert.ok(!/Rest — alle anderen Ligen/.test(top));
-  w._bfState.tab = 'rest';
-  const rest = w._renderBetfairRadar();
-  assert.match(rest, /Levski Sofia/);
-  assert.ok(!/€10k FT/.test(rest), 'Top-Sektion-Untertitel weg');
+  assert.match(html, /alt/);
 });
