@@ -464,3 +464,13 @@ test('Live-Pill ohne Minute rendert sauber „LIVE" (kein null), Zähler ≥1', 
   assert.doesNotMatch(html, /LIVE\s*null/);
   assert.doesNotMatch(html, /null'/);
 });
+
+
+test('Card-Kopf zeigt den größten Markt, nicht die Summe aller Märkte', () => {
+  const { w } = boot();
+  const html = w._renderBetfairRadar();
+  assert.match(html, /größter Markt/, 'Label „größter Markt" statt „gematchtes Geld"');
+  const i = html.indexOf('id="bfg-1"'); const seg = html.slice(i, i + 2600);   // Kairat-Card
+  assert.match(seg, /€17\.5K/, 'Kopf = Match Odds (größter Markt)');
+  assert.doesNotMatch(seg, /€19\.6K/, 'NICHT die Summe aller Märkte');
+});

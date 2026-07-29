@@ -56,27 +56,44 @@ class TestHtAlert(unittest.TestCase):
 
 
 class TestFreshAlert(unittest.TestCase):
-    def test_top_needs_20k(self):
+    def test_top_needs_20k_per_market(self):
         m = match(mid=7, league="German Bundesliga",
                   markets=mk("Match Odds", [{"name": "Alpha", "odd": 2, "vol": 30000}, {"name": "Beta", "odd": 2, "vol": 10000}]))
-        hist = {"7": [{"totalVol": 20000}, {"totalVol": 45000}]}   # +25k
+        hist = {"7": [{"mkv": {"Match Odds": 20000}}, {"mkv": {"Match Odds": 45000}}]}   # +25k auf 1X2
         a = BA.fresh_alert(m, hist)
         self.assertIsNotNone(a)
         self.assertEqual(a["tier"], "top")
+        self.assertEqual(a["market"], "Match Odds")
         self.assertAlmostEqual(a["inflow"], 25000)
-        self.assertIn("1X2", a["lead"])
+        self.assertAlmostEqual(a["total"], 45000)     # Markt-Volumen, NICHT Spiel-Gesamt
+        self.assertEqual(a["leadName"], "Alpha")
 
     def test_top_below_20k_none(self):
         m = match(mid=7, league="German Bundesliga", markets={})
-        self.assertIsNone(BA.fresh_alert(m, {"7": [{"totalVol": 20000}, {"totalVol": 35000}]}))  # +15k < 20k
+        self.assertIsNone(BA.fresh_alert(m, {"7": [{"mkv": {"Match Odds": 20000}}, {"mkv": {"Match Odds": 35000}}]}))  # +15k
 
-    def test_rest_needs_10k(self):
+    def test_biggest_inflow_market_wins(self):
+        # 1X2 +5k, aber Ü/U 2.5 +12k → der groessere Zufluss-Markt gewinnt (Rest-Liga, Schwelle 10k)
+        m = match(mid=8, league="Chinese League 2",
+                  markets=mk("Over/Under 2.5 Goals", [{"name": "Over 2.5 Goals", "odd": 2, "vol": 22000}, {"name": "Under 2.5 Goals", "odd": 2, "vol": 3000}]))
+        hist = {"8": [{"mkv": {"Match Odds": 40000, "Over/Under 2.5 Goals": 10000}},
+                      {"mkv": {"Match Odds": 45000, "Over/Under 2.5 Goals": 22000}}]}
+        a = BA.fresh_alert(m, hist)
+        self.assertIsNotNone(a)
+        self.assertEqual(a["market"], "Over/Under 2.5 Goals")
+        self.assertAlmostEqual(a["inflow"], 12000)
+
+    def test_rest_below_10k_none(self):
         m = match(mid=8, league="Chinese League 2", markets={})
-        self.assertIsNotNone(BA.fresh_alert(m, {"8": [{"totalVol": 5000}, {"totalVol": 16000}]}))   # +11k ≥ 10k
-        self.assertIsNone(BA.fresh_alert(m, {"8": [{"totalVol": 5000}, {"totalVol": 13000}]}))       # +8k < 10k
+        self.assertIsNone(BA.fresh_alert(m, {"8": [{"mkv": {"Match Odds": 5000}}, {"mkv": {"Match Odds": 13000}}]}))  # +8k
+
+    def test_no_mkv_none(self):
+        # ohne per-Markt-History (nur totalVol) kein Signal — irrefuehrende Gesamt-Zahl vermeiden
+        self.assertIsNone(BA.fresh_alert(match(mid=9, league="Chinese League 2"),
+                                         {"9": [{"totalVol": 5000}, {"totalVol": 30000}]}))
 
     def test_needs_two_points(self):
-        self.assertIsNone(BA.fresh_alert(match(mid=8, league="Chinese League 2"), {"8": [{"totalVol": 5000}]}))
+        self.assertIsNone(BA.fresh_alert(match(mid=8, league="Chinese League 2"), {"8": [{"mkv": {"Match Odds": 5000}}]}))
 
 
 class TestDedup(unittest.TestCase):
@@ -103,19 +120,21 @@ class TestMessage(unittest.TestCase):
 
     def test_fresh_message(self):
         m = match(mid=7, league="German Bundesliga",
-                  markets=mk("Match Odds", [{"name": "Alpha", "odd": 2, "vol": 30000}]))
-        a = BA.fresh_alert(m, {"7": [{"totalVol": 10000}, {"totalVol": 45000}]})
+                  markets=mk("Match Odds", [{"name": "Alpha", "odd": 2, "vol": 45000}]))
+        a = BA.fresh_alert(m, {"7": [{"mkv": {"Match Odds": 10000}}, {"mkv": {"Match Odds": 45000}}]})
         msg = BA.build_message(a)
         self.assertIn("Frisches Geld", msg)
         self.assertIn("Top-Liga", msg)
-        self.assertIn("seit letztem Update", msg)
+        self.assertIn("1X2", msg)          # Markt genannt
+        self.assertIn("frisch", msg)
+        self.assertIn("Alpha", msg)        # fuehrender Ausgang
 
 
 class TestCollect(unittest.TestCase):
     def test_collects_both(self):
         m = match(mid=9, league="Chinese League 2", markets=mk("Half Time",
                   [{"name": "Alpha", "odd": 2, "vol": 8000}]))
-        alerts = BA.collect_alerts({"matches": [m]}, {"9": [{"totalVol": 1000}, {"totalVol": 20000}]})
+        alerts = BA.collect_alerts({"matches": [m]}, {"9": [{"mkv": {"Half Time": 1000}}, {"mkv": {"Half Time": 20000}}]})
         kinds = sorted(a["scenario"] for a in alerts)
         self.assertEqual(kinds, ["fresh", "ht"])
 

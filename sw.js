@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v20';   // 29.07.2026: Betfair Live-Status robust (Anpfiff-Fallback + Hysterese)
+const VERSION = 'cocobet-v21';   // 29.07.2026: Betfair-Kopf = größter Markt (statt Summe aller Märkte)
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
