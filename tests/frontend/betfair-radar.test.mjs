@@ -198,3 +198,53 @@ test('Frisches Geld: ohne 2. Snapshot → ehrlicher „sammelt Daten"-Zustand', 
   assert.match(html, /Frisches Geld/);
   assert.match(html, /sammelt Daten/);
 });
+
+test('View-Toggle Live-Radar / Trefferquoten vorhanden', () => {
+  const { html } = render();
+  assert.match(html, /🔴 Live-Radar/);
+  assert.match(html, /📊 Trefferquoten/);
+});
+
+test('Trefferquoten-Board leer → ehrlicher „sammelt Daten"-Zustand', () => {
+  const { w } = boot();
+  w._bfState.view = 'record';
+  w._bfState.track = { n: 0, byLeagueMarket: {} };
+  const html = w._renderBetfairRadar();
+  assert.match(html, /Sammelt Daten/);
+  assert.ok(!/<table/.test(html), 'keine Tabelle ohne Daten');
+});
+
+test('Trefferquoten-Board mit Daten: Liga×Markt + Trefferquote + ROI', () => {
+  const { w } = boot();
+  w._bfState.view = 'record';
+  w._bfState.track = {
+    generatedAt: iso(0), n: 48,
+    byLeagueMarket: {
+      'Ecuador Serie A|Half Time': {
+        n: 40, wins: 27, hitRate: 0.68, roi: 0.14,
+        nConc: 25, hitRateConc: 0.72, roiConc: 0.2, nInflow: 12, hitRateInflow: 0.75, roiInflow: 0.3,
+      },
+    },
+  };
+  const html = w._renderBetfairRadar();
+  assert.match(html, /<table/);
+  assert.match(html, /Ecuador Serie A/);
+  assert.match(html, /HT 1X2/);         // Half Time → Label
+  assert.match(html, /68%/);            // Trefferquote
+  assert.match(html, /\+14%/);          // ROI
+  assert.match(html, /72%/);            // Konzentrations-Trefferquote
+});
+
+test('Confidence-Badge am Markt in der Liste, wenn Track-Record belastbar', () => {
+  const { w } = boot();
+  w._bfState.track = {
+    n: 30, byLeagueMarket: {
+      'UEFA Champions League Qualifiers|Match Odds': {
+        n: 30, wins: 18, hitRate: 0.6, roi: 0.1, nConc: 20, hitRateConc: 0.65, roiConc: 0.12, nInflow: 0, hitRateInflow: null, roiInflow: null,
+      },
+    },
+  };
+  const html = w._renderBetfairRadar();   // Live-View: Kairat (UEFA, Match Odds) trägt das Badge
+  assert.match(html, /🎯/);
+  assert.match(html, /🎯 60% · \+10%/);
+});
