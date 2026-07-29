@@ -50,7 +50,7 @@
   }
   window._bfTier = tierOf;
 
-  var _bf = { data: null, hist: null, track: null, loading: false, view: 'live', league: 'all', tab: 'all', date: 'all', cardOpen: {} };
+  var _bf = { data: null, hist: null, track: null, loading: false, view: 'live', league: 'all', tab: 'all', date: 'all', onlyLive: false, market: 'all', cardOpen: {} };
   var MIN_CONF_N = 20;   // ab so vielen abgerechneten Spielen gilt eine Liga×Markt-Quote als „belastbar"
   window._bfState = _bf;
 
@@ -264,9 +264,15 @@
   function matchCard(m, maxTot) {
     var barW = Math.max(4, Math.round(totalG(m) / (maxTot || 1) * 100));
     var mks = presentMarkets(m), open = _bf.cardOpen[m.matchId] === true;
-    var inner = mks.length
-      ? (open ? mks.map(function (x) { return marketBlock(m, x.mm); }).join('') : topLine(m, mks[0]))
-      : '<div style="margin-top:8px;color:' + C.dim + ';font-size:11px">— noch kein nennenswertes Geld je Markt —</div>';
+    var comp = mks[0];
+    if (_bf.market !== 'all') {                        // Markt-Filter: komprimierte Karte auf den gewählten Markt fokussieren
+      var _mmF = MK_ID[_bf.market], _mkF = _mmF && mkOf(m, _mmF.id);
+      if (_mkF && distTotal(_mkF) > 0) comp = { mm: _mmF, v: mvolG(m, _mmF.id) };
+    }
+    var _noMoney = '<div style="margin-top:8px;color:' + C.dim + ';font-size:11px">— noch kein nennenswertes Geld je Markt —</div>';
+    var inner = open
+      ? (mks.length ? mks.map(function (x) { return marketBlock(m, x.mm); }).join('') : _noMoney)
+      : (comp ? topLine(m, comp) : _noMoney);
     var chev = open ? '▾' : '▸';
     return '<div id="bfg-' + esc(m.matchId) + '" style="background:' + C.card + ';border:1px solid ' + (open ? C.gold + '55' : C.bd) + ';border-radius:14px;padding:13px 15px;margin-bottom:10px">' +
       '<div onclick="_bfCard(\'' + esc(m.matchId) + '\')" style="cursor:pointer;display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap">' +
@@ -471,11 +477,19 @@
     var lgs = Object.keys(by).sort(function (a, b) { return by[b] - by[a]; });
     var opts = '<option value="all">Alle Ligen</option>' + lgs.map(function (l) { return '<option value="' + esc(l) + '"' + (_bf.league === l ? ' selected' : '') + '>' + esc(l) + ' · ' + fmtE(by[l]) + '</option>'; }).join('');
     var seg = function (id, lbl) { var on = _bf.tab === id; return '<button onclick="_bfSetTab(\'' + id + '\')" style="padding:6px 12px;border:1px solid ' + (on ? C.gold : C.bd) + ';background:' + (on ? 'rgba(255,184,12,.12)' : 'transparent') + ';color:' + (on ? C.gold : C.mut) + ';font-size:12px;font-weight:700;cursor:pointer">' + lbl + '</button>'; };
+    var mByMkt = {}; MK.forEach(function (mm) { mByMkt[mm.id] = 0; });
+    all.forEach(function (m) { MK.forEach(function (mm) { mByMkt[mm.id] += mvolG(m, mm.id); }); });
+    var mopts = '<option value="all">Alle Märkte</option>' + MK.filter(function (mm) { return eur(mByMkt[mm.id]) > 0; })
+      .map(function (mm) { return '<option value="' + esc(mm.id) + '"' + (_bf.market === mm.id ? ' selected' : '') + '>' + esc(mm.label) + ' · ' + fmtE(mByMkt[mm.id]) + '</option>'; }).join('');
+    var liveN = all.filter(isLive).length;
+    var liveBtn = '<button onclick="_bfToggleLive()" title="nur laufende Spiele" style="padding:6px 12px;border:1px solid ' + (_bf.onlyLive ? C.live : C.bd) + ';border-radius:8px;background:' + (_bf.onlyLive ? 'rgba(248,81,73,.14)' : 'transparent') + ';color:' + (_bf.onlyLive ? C.live : C.mut) + ';font-size:12px;font-weight:700;cursor:pointer">🔴 Nur Live' + (liveN ? ' <span style="color:' + C.dim + ';font-weight:600">' + liveN + '</span>' : '') + '</button>';
     return '<div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:12px">' +
       '<div style="display:inline-flex;border-radius:9px;overflow:hidden;border:1px solid ' + C.bd + '">' + seg('all', 'Alle') + seg('top', '⭐ Top5+MLS') + seg('intl', '🇪🇺 Int./UEFA') + seg('rest', '🌍 Rest') + '</div>' +
+      liveBtn +
       '<span style="flex:1"></span>' +
       '<button onclick="_bfCards(true)" style="padding:6px 10px;border:1px solid ' + C.bd + ';border-radius:8px;background:transparent;color:' + C.mut + ';font-size:11px;cursor:pointer">alle aufklappen</button>' +
       '<button onclick="_bfCards(false)" style="padding:6px 10px;border:1px solid ' + C.bd + ';border-radius:8px;background:transparent;color:' + C.mut + ';font-size:11px;cursor:pointer">alle zu</button>' +
+      '<select onchange="_bfSetMarket(this.value)" title="nach Markt filtern" style="padding:6px 10px;border-radius:9px;border:1px solid ' + C.bd + ';background:' + C.card + ';color:' + C.ink + ';font-size:12px;max-width:190px">' + mopts + '</select>' +
       '<select onchange="_bfSetLeague(this.value)" style="padding:6px 10px;border-radius:9px;border:1px solid ' + C.bd + ';background:' + C.card + ';color:' + C.ink + ';font-size:12px;max-width:230px">' + opts + '</select>' +
       '</div>';
   }
@@ -506,6 +520,8 @@
     var q = qAll.slice();
     if (_bf.league !== 'all') q = q.filter(function (m) { return m.league === _bf.league; });
     if (_bf.date !== 'all') q = q.filter(function (m) { return isLive(m) || matchDateKey(m) === _bf.date; });
+    if (_bf.onlyLive) q = q.filter(function (m) { return isLive(m); });
+    if (_bf.market !== 'all') q = q.filter(function (m) { return mvolG(m, _bf.market) > 0; });
 
     var sortV = function (a, b) { return totalG(b) - totalG(a); };
     var groups = {
@@ -530,6 +546,8 @@
     var flowBase = fresh.slice();
     if (_bf.league !== 'all') flowBase = flowBase.filter(function (m) { return m.league === _bf.league; });
     if (_bf.date !== 'all') flowBase = flowBase.filter(function (m) { return isLive(m) || matchDateKey(m) === _bf.date; });
+    if (_bf.onlyLive) flowBase = flowBase.filter(function (m) { return isLive(m); });
+    if (_bf.market !== 'all') flowBase = flowBase.filter(function (m) { return mvolG(m, _bf.market) > 0; });
 
     var out = head + viewToggle() + infoBand(groups) + hotspotStrip(q) + flowStrip(flowBase) + dateBar(qAll) + controlBar(qAll) + legend() + stale;
     var t = _bf.tab;
@@ -537,7 +555,7 @@
     if (t === 'all' || t === 'intl') out += section(groups.intl, '🇪🇺 International / UEFA', C.blue, '≥ €3k FT · €1k HT');
     if (t === 'all' || t === 'rest') out += section(groups.rest, '🌍 Rest — andere Ligen', C.purp, '≥ €5k FT · €1,5k HT');
     if (!groups.top.length && !groups.intl.length && !groups.rest.length) {
-      out += '<div style="padding:34px;text-align:center;color:' + C.mut + ';font-size:13px;background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:14px">Kein Spiel für diesen Filter. Datum/Liga/Reiter anpassen.</div>';
+      out += '<div style="padding:34px;text-align:center;color:' + C.mut + ';font-size:13px;background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:14px">Kein Spiel für diesen Filter. Datum/Liga/Markt/Live/Reiter anpassen.</div>';
     }
     out += '<div style="text-align:center;color:' + C.dim + ';font-size:11px;margin-top:6px">Stand ' + (_bf.data._meta && _bf.data._meta.generatedAt ? new Date(_bf.data._meta.generatedAt).toLocaleString('de-AT') : '—') + ' · Beträge in € (Betwatch)</div>';
     return out;
@@ -549,6 +567,8 @@
   window._bfSetLeague = function (v) { _bf.league = v; rerender(); };
   window._bfSetTab = function (v) { _bf.tab = v; rerender(); };
   window._bfSetDate = function (v) { _bf.date = v; rerender(); };
+  window._bfSetMarket = function (v) { _bf.market = v; rerender(); };
+  window._bfToggleLive = function () { _bf.onlyLive = !_bf.onlyLive; rerender(); };
   window._bfCard = function (mid) { _bf.cardOpen[mid] = !_bf.cardOpen[mid]; rerender(); };
   window._bfCards = function (open) { (_bf.data && _bf.data.matches || []).forEach(function (m) { _bf.cardOpen[m.matchId] = !!open; }); rerender(); };
   window._bfJump = function (mid) { _bf.cardOpen[mid] = true; rerender(); var el = document.getElementById('bfg-' + mid); if (el && el.scrollIntoView) el.scrollIntoView({ behavior: 'smooth', block: 'center' }); };

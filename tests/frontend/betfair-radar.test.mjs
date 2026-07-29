@@ -291,3 +291,44 @@ test('_bfRefresh no-op wenn Panel unsichtbar (kein unnötiger Fetch)', async () 
   if (r && r.then) await r;
   assert.equal(fetched, false, 'kein Fetch, wenn Radar-Panel ausgeblendet');
 });
+
+
+test('Markt-Filter: nur Spiele mit Geld auf dem gewählten Markt', () => {
+  const { w } = boot();
+  w._bfState.market = 'Match Odds';
+  const html = w._renderBetfairRadar();
+  assert.match(html, /Kairat Almaty/);                      // hat Match Odds
+  assert.ok(!/Atletico Madrid/.test(html), 'Atletico (nur O/U 2.5) ohne Match Odds ausgefiltert');
+});
+
+test('Markt-Filter fokussiert die komprimierte Karte auf den gewählten Markt', () => {
+  const { w } = boot();
+  w._bfState.market = 'First Half Goals 0.5';               // sonst zeigt Kairat komprimiert 1X2 (Top-Geld)
+  const html = w._renderBetfairRadar();
+  const cardStart = html.indexOf('id="bfg-1"');            // die Karte selbst (nicht die Hotspot-Leiste oben)
+  const seg = html.slice(cardStart, cardStart + 2600);
+  assert.match(seg, /Kairat Almaty/);
+  assert.match(seg, /HT Ü0\.5/, 'komprimierte Karte zeigt den gefilterten HT-Markt statt 1X2');
+  assert.ok(!/1X2 → /.test(seg), 'komprimiert nicht mehr 1X2 (Top-Geld), sondern der gefilterte HT-Markt');
+});
+
+test('Markt-Dropdown listet nur Märkte mit Geld', () => {
+  const { html } = render();
+  assert.match(html, /Alle Märkte/);
+  assert.match(html, /_bfSetMarket/);
+});
+
+test('Nur-Live-Filter: nur laufende Spiele', () => {
+  const { w, prices } = boot();
+  prices.matches.find(m => m.home === 'Kairat Almaty').liveInfo = { time: "55'" };  // live setzen
+  w._bfState.onlyLive = true;
+  const html = w._renderBetfairRadar();
+  assert.match(html, /Kairat Almaty/);
+  assert.ok(!/Gornik Zabrze/.test(html), 'nicht-live Spiel ausgefiltert');
+});
+
+test('Nur-Live-Toggle ist in der Leiste', () => {
+  const { html } = render();
+  assert.match(html, /Nur Live/);
+  assert.match(html, /_bfToggleLive/);
+});
