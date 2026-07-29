@@ -1,9 +1,10 @@
 name: 🟡 Betfair Radar (Betwatch)
 
 # Betwatch blockt GitHubs US-Runner (HTTP 403) → läuft wie die Poly-Fetcher auf dem
-# Mac-Runner ([self-hosted, macOS], Österreich-IP). Holt Betfair-Odds + Volumina, schreibt
-# betfair_prices.json + betfair_history.json. [skip ci] am Commit gegen Workflow-Kaskade;
-# der Pages-Deploy zieht es über seinen */15-Schedule.
+# Mac-Runner ([self-hosted, macOS], Österreich-IP). Auth via Token-Header (auf dem Mac-Runner
+# akzeptiert). Holt Betfair-Odds + Volumina, schreibt betfair_prices.json + betfair_history.json.
+# Push mit Pull-Retry (wie manage-mls-poly.yml): das Repo wird ständig bebot-pusht → ein nackter
+# `git push` scheitert non-fast-forward. Darum vor jedem Push pullen (-X ours) und bis zu 5x retry.
 on:
   schedule:
     - cron: '*/15 * * * *'
@@ -40,14 +41,24 @@ jobs:
           BETWATCH_KEY: ${{ secrets.BETWATCH_KEY }}
           # optional tunebar: BETWATCH_MAX_DETAIL / BETWATCH_WINDOW_H
 
-      - name: 💾 Committen (nur bei Änderung)
+      - name: 💾 Committen + Push (Pull-Retry, wie die Poly-Workflows)
         run: |
           git config user.name "cocobet-bot"
           git config user.email "bot@users.noreply.github.com"
           git add betfair_prices.json betfair_history.json 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "keine Änderung — nichts zu committen"
-          else
-            git commit -m "🟡 Betfair Radar Update $(date -u '+%Y-%m-%d %H:%M UTC') [skip ci]"
-            git push
+            exit 0
           fi
+          git commit -m "🟡 Betfair Radar Update $(date -u '+%Y-%m-%d %H:%M UTC') [skip ci]"
+          for attempt in 1 2 3 4 5; do
+            git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+            CONFLICTS=$(git diff --name-only --diff-filter=U)
+            if [ -n "$CONFLICTS" ]; then
+              echo "$CONFLICTS" | while read f; do git checkout --ours -- "$f"; git add "$f"; done
+              git diff --staged --quiet || git commit -m "🔧 auto-resolve merge [skip ci]"
+            fi
+            if git push 2>&1; then echo "✅ Push nach Versuch $attempt"; exit 0; fi
+            echo "Push-Versuch $attempt fehlgeschlagen — retry…"; sleep 3
+          done
+          echo "❌ Push nach 5 Versuchen fehlgeschlagen"; exit 1
