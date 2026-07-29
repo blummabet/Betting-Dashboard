@@ -1,4 +1,6 @@
 // tests/frontend/betfair-radar.test.mjs — Betfair Radar v4 (29.07.2026, Lucas-Feedback #3).
+// WICHTIG: nutzt eine INLINE-Fixture, NICHT die Live-betfair_prices.json — sonst brechen die Tests,
+// sobald der echte Fetcher andere Zahlen schreibt (genau das ist am 29.07. passiert).
 // Prüft: EU-Flagge für UEFA / 🌍 sonst · € (kein £) · Karten eingeklappt mit komprimiertem
 // Top-Markt · Klick klappt alle Märkte auf · Hotspots mit konkretem Ausgang · drei Ebenen
 // (Top/Intl/Rest) · Geld-Verteilung · Stale-Guard · Tab-Filter.
@@ -8,14 +10,70 @@ import { readFileSync } from 'node:fs';
 import { JSDOM } from 'jsdom';
 
 const ROOT = new URL('../../', import.meta.url);
+
+function iso(msFromNow = 0) { return new Date(Date.now() + msFromNow).toISOString(); }
+function ko(hours) { return iso(hours * 3600e3); }
+
+// Kontrollierte Fixture (Beträge in €). Deckt UEFA + Friendly + CAF, Verteilung, HT-Markt, Direction.
+function fixture() {
+  return {
+    _meta: { generatedAt: iso(0), n: 4, live: 0, currency: 'EUR', source: 'test-fixture' },
+    matches: [
+      { matchId: 1, home: 'Kairat Almaty', away: 'Omonia', league: 'UEFA Champions League Qualifiers',
+        country: 'International', kickoff: ko(9), liveInfo: {}, totalVol: 19569,
+        markets: {
+          'Match Odds': { vol: 17469, runners: [
+            { name: 'Kairat Almaty', odd: 2.32, vol: 13009 },
+            { name: 'The Draw', odd: 3.5, vol: 2952 },
+            { name: 'Omonia', odd: 3.65, vol: 1508 }] },
+          'First Half Goals 0.5': { vol: 2100, runners: [
+            { name: 'Over 0.5 Goals', odd: 1.3, vol: 1260 },
+            { name: 'Under 0.5 Goals', odd: 3.6, vol: 840 }] },
+        } },
+      { matchId: 4, home: 'Gornik Zabrze', away: 'Fenerbahce', league: 'UEFA Champions League Qualifiers',
+        country: 'International', kickoff: ko(9), liveInfo: {}, totalVol: 10808,
+        markets: {
+          'Match Odds': { vol: 9408, runners: [
+            { name: 'Gornik Zabrze', odd: 7.0, vol: 1393 },
+            { name: 'The Draw', odd: 4.5, vol: 1268 },
+            { name: 'Fenerbahce', odd: 1.57, vol: 6747 }] },   // 6747/9408 = 72 % (Auswärts dominant)
+          'First Half Goals 0.5': { vol: 1400, runners: [
+            { name: 'Over 0.5 Goals', odd: 1.28, vol: 900 },
+            { name: 'Under 0.5 Goals', odd: 3.8, vol: 500 }] },
+        } },
+      { matchId: 7, home: 'Atletico Madrid', away: 'Getafe', league: 'Elite Friendlies',
+        country: 'International', kickoff: ko(9), liveInfo: {}, totalVol: 14707,
+        markets: {
+          'Over/Under 2.5 Goals': { vol: 14707, runners: [
+            { name: 'Under 2.5 Goals', odd: 2.08, vol: 13965 },
+            { name: 'Over 2.5 Goals', odd: 1.92, vol: 742 }] },
+        } },
+      { matchId: 9, home: 'Cameroon (W)', away: 'Mali (W)', league: 'CAF Ladies Africa Nations Cup',
+        country: 'International', kickoff: ko(12), liveInfo: {}, totalVol: 4055,
+        markets: {
+          'Over/Under 2.5 Goals': { vol: 4055, runners: [
+            { name: 'Under 2.5 Goals', odd: 1.74, vol: 3933 },
+            { name: 'Over 2.5 Goals', odd: 2.36, vol: 122 }] },
+        } },
+    ],
+  };
+}
+function histFixture() {
+  return {
+    '4': [{ ts: iso(-2 * 3600e3), mo: { hw: 6.5, dr: 4.4, aw: 1.72, vol: 6000 } },
+          { ts: iso(0), mo: { hw: 7.0, dr: 4.5, aw: 1.57, vol: 9408 } }],  // Auswärts verkürzt → gebackt
+    _meta: { updatedAt: iso(0) },
+  };
+}
+
 function boot() {
   const dom = new JSDOM('<!DOCTYPE html><body><div id="betfairRadarPanel"></div></body>',
     { url: 'https://x.com/', runScripts: 'outside-only' });
   const w = dom.window;
   w.eval(readFileSync(new URL('betfair-radar.js', ROOT), 'utf8'));
-  const prices = JSON.parse(readFileSync(new URL('betfair_prices.json', ROOT), 'utf8'));
+  const prices = fixture();
   w._bfState.data = prices;
-  w._bfState.hist = JSON.parse(readFileSync(new URL('betfair_history.json', ROOT), 'utf8'));
+  w._bfState.hist = histFixture();
   w._bfState.loading = false;
   w._bfState.league = 'all'; w._bfState.tab = 'all'; w._bfState.date = 'all'; w._bfState.cardOpen = {};
   return { w, prices };
@@ -38,7 +96,6 @@ test('Karten standard eingeklappt, komprimierter Top-Markt', () => {
   const { html } = render();
   assert.match(html, /▸/, 'Chevron eingeklappt');
   assert.match(html, /alle Märkte/, 'Hinweis auf Aufklappen');
-  // komprimierte Zeile zeigt den führenden Ausgang mit Prozent
   assert.match(html, /→ /);
 });
 
@@ -55,7 +112,7 @@ test('Klick klappt alle Märkte der Karte auf', () => {
 test('Hotspot-Leiste zeigt konkreten Ausgang + %', () => {
   const { html } = render();
   assert.match(html, /größte Einzel-Ausgänge/);
-  assert.match(html, /→ (Fenerbahce|Kairat Almaty|Crvena Zvezda|Tottenham|U 2\.5|Ü 2\.5)/);
+  assert.match(html, /→ (Fenerbahce|Kairat Almaty|U 2\.5|Ü 2\.5)/);
 });
 
 test('Drei Ebenen — International/UEFA-Sektion + Tier-Logik', () => {
@@ -74,7 +131,7 @@ test('Geld-Verteilung: Balken + %/€ je Ausgang (aufgeklappt)', () => {
   const i = html.indexOf('Gornik Zabrze');
   const block = html.slice(i, i + 2500);
   assert.match(block, /Fenerbahce/, 'Auswärts-Runner gelistet');
-  assert.match(block, /7[0-9]%|72%/, 'dominanter Auswärts-Anteil (~72%)');
+  assert.match(block, /72%/, 'dominanter Auswärts-Anteil (6747/9408 = 72%)');
 });
 
 test('Tab-Filter: nur International', () => {
