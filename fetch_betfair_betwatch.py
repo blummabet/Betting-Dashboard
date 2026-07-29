@@ -196,7 +196,13 @@ def _get(path):
     # (Header-Token → HTTP 403). Verifiziert an der echten API 29.07.2026.
     sep = "&" if "?" in path else "?"
     url = f"{API_BASE}{path}{sep}key={KEY}"
-    req = urllib.request.Request(url, headers={"Accept": "application/json"})
+    # Browser-ähnliche Header: Betwatch/Cloudflare kann Requests ohne echten User-Agent mit 403 abweisen.
+    req = urllib.request.Request(url, headers={
+        "Accept": "application/json, text/html;q=0.9,*/*;q=0.8",
+        "Accept-Language": "de-AT,de;q=0.9,en;q=0.8",
+        "User-Agent": ("Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) "
+                       "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Safari/537.36"),
+    })
     try:
         with urllib.request.urlopen(req, timeout=HTTP_TIMEOUT) as r:
             return json.loads(r.read().decode("utf-8"))
