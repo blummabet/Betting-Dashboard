@@ -197,6 +197,7 @@ def _reason(tip: str, confirm: list, contradict: list, market: str) -> str:
 
 # Menschliche Labels je Signal (für die Card/den Text)
 _SIGNAL_LABELS = {
+    "betfair_money": "das Betfair-Geld", "multi_book_steam": "der Sharp-Buch-Steam",
     "form_trend": "die Formkurve", "form_rating": "die Spieler-Ratings",
     "xg_strength": "die xG-Werte", "chance_creation": "die Chancenqualität",
     "travel_burden": "die Reisebelastung", "altitude_signal": "die Höhenlage",

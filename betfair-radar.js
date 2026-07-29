@@ -105,7 +105,7 @@
   // GitHub-Actions-Schedule ist jittery (~8–30 Min statt exakt 15) → Schwellen locker halten,
   // sonst „veraltet"-Alarm bei ganz normalem Betrieb.
   var FRESH_LIVE_MIN = 30;   // bis hierher gilt Live-Status als vertrauenswürdig
-  var STALE_WARN_MIN = 45;   // erst ab hier „Daten veraltet"-Banner (≈ 3 verpasste Läufe)
+  var STALE_WARN_MIN = 75;   // GitHub-Schedule ist stark jittery (~15–100min) → erst ab ~5 verpassten Läufen warnen
   function isLive(m) { var li = m.liveInfo || {}; if (li.time == null || li.finished) return false; return genAgeMin() <= FRESH_LIVE_MIN; }
   function isStale(m) {
     if (isLive(m)) return false;

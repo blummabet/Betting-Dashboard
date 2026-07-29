@@ -1658,12 +1658,12 @@ function _renderBayesianWeights() {
     "lead_lag_bias", "public_static_bias", "injury", "form_trend", "h2h_pattern",
     "xg_strength", "chance_creation", "form_rating", "freshness_leg", "lineup_signal",
     "apif_predictions", "league_pressure", "fixture_congestion", "topscorer_momentum",
-    "coach_change", "transfer_shift",
+    "coach_change", "transfer_shift", "betfair_money",
   ] : [
     "lead_lag_bias", "public_static_bias", "travel_burden", "injury",
     "form_trend", "h2h_pattern", "xg_strength", "polymarket_sharp",
     "steam_lag", "pressure_index", "lineup_signal", "apif_predictions",
-    "weather_signal", "incentive_signal",
+    "weather_signal", "incentive_signal", "betfair_money",
   ];
   const labels = {
     lead_lag_bias: "Sharp-Move (Pinn vs Soft)",
@@ -1688,6 +1688,7 @@ function _renderBayesianWeights() {
     topscorer_momentum: "Top-Torjäger",
     coach_change: "Neuer Trainer",
     transfer_shift: "Schlüssel-Abgang",
+    betfair_money: "Betfair-Geld",
   };
   // 19.07.2026 — CLV als zweiter Lernstrom sichtbar machen: `n_clv` zeigt, wie viele stetige
   // CLV-Beobachtungen ein Signal zusätzlich zu den Ergebnis-Beobachtungen bekommen hat. Nur die
