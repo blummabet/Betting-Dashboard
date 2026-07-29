@@ -101,15 +101,18 @@ def build_snapshot(ev, now=None):
         av = m.get("average_volume")
         if isinstance(av, (int, float)):
             total_vol += av
+        # Runner als geordnete Liste MIT Einzel-Volumen (für die Geld-Verteilung im Dashboard).
         markets[m["name"]] = {
             "vol": av,
-            "runners": {r.get("name"): r.get("odd")
-                        for r in (m.get("runners") or []) if isinstance(r, dict) and r.get("name")},
+            "runners": [
+                {"name": r.get("name"), "odd": r.get("odd"), "vol": r.get("volume")}
+                for r in (m.get("runners") or []) if isinstance(r, dict) and r.get("name")
+            ],
         }
     mo = markets.get("Match Odds")
     hw = dr = aw = vol1x2 = fair = None
     if mo:
-        rr = mo["runners"]
+        rr = {x["name"]: x["odd"] for x in mo["runners"]}   # name→odd für 1X2-Ableitung
         vol1x2 = mo["vol"]
         hw, dr, aw = rr.get(home), rr.get("The Draw"), rr.get(away)
         fair = devig_1x2(hw, dr, aw)

@@ -32,7 +32,8 @@ EVENT_DETAIL = {
             {"runner_id": 2, "name": "The Draw", "odd": 3.5, "volume": 199},
             {"runner_id": 3, "name": "Schalke 04", "odd": 4.0, "volume": 12}]},
         {"market_id": 2, "name": "Over/Under 2.5 Goals", "average_volume": 244387, "runners": [
-            {"name": "Under 2.5 Goals", "odd": 2.1}, {"name": "Over 2.5 Goals", "odd": 1.8}]},
+            {"name": "Under 2.5 Goals", "odd": 2.1, "volume": 90000},
+            {"name": "Over 2.5 Goals", "odd": 1.8, "volume": 154387}]},
         {"market_id": 3, "name": "First Half Goals 1.5", "average_volume": 5000, "runners": [
             {"name": "Under 1.5 Goals", "odd": 1.7}, {"name": "Over 1.5 Goals", "odd": 2.2}]},
         {"market_id": 4, "name": "Half Time", "average_volume": 8000, "runners": [
@@ -67,7 +68,14 @@ def test_build_snapshot_haelt_alle_maerkte_inkl_HT():
     assert "Half Time" in s["markets"]
     assert "First Half Goals 1.5" in s["markets"]
     assert s["markets"]["Half Time"]["vol"] == 8000
-    assert s["markets"]["Over/Under 2.5 Goals"]["runners"]["Over 2.5 Goals"] == 1.8
+    # Runner sind jetzt eine geordnete Liste MIT Einzel-Volumen (Geld-Verteilung fürs Dashboard)
+    ou = s["markets"]["Over/Under 2.5 Goals"]["runners"]
+    assert isinstance(ou, list)
+    over = next(r for r in ou if r["name"] == "Over 2.5 Goals")
+    assert over["odd"] == 1.8 and over["vol"] == 154387
+    mo_r = s["markets"]["Match Odds"]["runners"]
+    assert {r["name"] for r in mo_r} == {"Augsburg", "The Draw", "Schalke 04"}
+    assert next(r for r in mo_r if r["name"] == "Augsburg")["vol"] == 3.38
     # Gesamt-Volumen = Summe aller Markt-Volumina (Money-Indikator)
     assert s["totalVol"] == 1102159 + 244387 + 5000 + 8000 + 11451
 
