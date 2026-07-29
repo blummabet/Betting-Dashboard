@@ -10,8 +10,8 @@ Zwei Produkte hängen dran:
   B) Alle anderen Ligen (HT-Fokus): wo liegt das Geld / auffällige einseitige Bewegungen +
      Liga-Profitabilitäts-Backtest.
 
-## API (Django REST, Token-Auth) — an echten Antworten verifiziert 28.07.2026
-  Header:  Authorization: Token {BETWATCH_KEY}
+## API (Django REST) — an echten Antworten verifiziert 29.07.2026
+  Auth:    ?key={BETWATCH_KEY}  (Query-Param! Authorization-Header → HTTP 403)
   Base:    https://betwatch.fr/api/v1
   GET /football/events            → [{match_id, teams{v1,v2}, league, country, kickoff, live_info}]
   GET /football/event/{match_id}  → {..., league_id, markets:[{market_id, name, average_volume,
@@ -192,8 +192,11 @@ def prune_history(hist, now=None, keep_h=HIST_KEEP_H):
 
 # ── network (nur main) ────────────────────────────────────────────────────────
 def _get(path):
-    req = urllib.request.Request(API_BASE + path,
-                                 headers={"Authorization": f"Token {KEY}", "Accept": "application/json"})
+    # Betwatch authentifiziert über ?key=<KEY> (Query-Param), NICHT über einen Authorization-Header
+    # (Header-Token → HTTP 403). Verifiziert an der echten API 29.07.2026.
+    sep = "&" if "?" in path else "?"
+    url = f"{API_BASE}{path}{sep}key={KEY}"
+    req = urllib.request.Request(url, headers={"Accept": "application/json"})
     try:
         with urllib.request.urlopen(req, timeout=HTTP_TIMEOUT) as r:
             return json.loads(r.read().decode("utf-8"))
