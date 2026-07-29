@@ -289,6 +289,58 @@
       '<div style="display:flex;gap:8px;flex-wrap:wrap">' + chips + '</div></div>';
   }
 
+  // ── Frisches Geld: Zufluss seit dem letzten Update (aus der History-Delta je Markt) ──────────
+  var FLOW_MIN_EUR = 2000;     // €-Zufluss erst ab so viel zeigen
+  var SURGE_MIN_BASE = 1000;   // % Surge nur wenn Basis ≥ so viel € (sonst Rauschen)
+  var SURGE_MIN_DELTA = 500;   // und Zuwachs ≥ so viel €
+  var SURGE_MIN_PCT = 25;      // und ≥ so viel % Sprung
+  function flowItems(base) {
+    var H = _bf.hist || {}, out = [];
+    base.forEach(function (m) {
+      var h = H[String(m.matchId)];
+      if (!Array.isArray(h) || h.length < 2) return;
+      var a = h[h.length - 2], b = h[h.length - 1];
+      if (a && b && a.mkv && b.mkv) {                 // pro Markt (sobald mkv-History da ist)
+        MK.forEach(function (mm) {
+          var cv = +b.mkv[mm.id] || 0; if (cv <= 0) return;
+          var pv = +a.mkv[mm.id] || 0, d = cv - pv;
+          if (d <= 0) return;
+          out.push({ m: m, mm: mm, prev: pv, curr: cv, delta: d, pct: pv > 0 ? d / pv * 100 : 999 });
+        });
+      } else if (a && b) {                            // Fallback: Match-Ebene (alte History ohne mkv)
+        var cv2 = +b.totalVol || 0, pv2 = +a.totalVol || 0, d2 = cv2 - pv2;
+        if (d2 > 0) out.push({ m: m, mm: null, prev: pv2, curr: cv2, delta: d2, pct: pv2 > 0 ? d2 / pv2 * 100 : 999 });
+      }
+    });
+    return out;
+  }
+  function flowChip(x, mode) {
+    var lbl = x.mm ? x.mm.label : 'gesamt', ht = x.mm && x.mm.grp === 'HT';
+    var right = mode === 'eur' ? ('+' + fmtE(x.delta)) : ('+' + Math.round(x.pct) + '%' + (x.pct >= 200 ? ' 🚨' : ''));
+    var sub = mode === 'eur' ? ('jetzt ' + fmtE(x.curr)) : (fmtE(x.prev) + '→' + fmtE(x.curr));
+    return '<button onclick="_bfJump(\'' + esc(x.m.matchId) + '\')" style="display:flex;flex-direction:column;gap:1px;padding:7px 11px;border-radius:10px;border:1px solid rgba(63,185,80,.35);background:rgba(63,185,80,.06);cursor:pointer;text-align:left;min-width:150px">' +
+      '<span style="font-size:11px;color:' + C.mut + ';font-weight:700">' + flag(x.m.country, x.m.league) + ' ' + esc(String(x.m.home).slice(0, 11)) + '–' + esc(String(x.m.away).slice(0, 11)) + '</span>' +
+      '<span style="font-size:12px;color:' + C.ink + ';font-weight:800">' + (ht ? '<span style="color:' + C.purp + '">' + lbl + '</span>' : lbl) + ' <span style="color:' + C.back + '">▲ ' + right + '</span></span>' +
+      '<span style="font-size:10px;color:' + C.dim + '">' + sub + '</span></button>';
+  }
+  function flowRow(label, items, mode) {
+    if (!items.length) return '';
+    return '<div style="margin-bottom:8px"><div style="font-size:11px;color:' + C.back + ';font-weight:700;margin-bottom:6px">' + label + '</div>' +
+      '<div style="display:flex;gap:8px;flex-wrap:wrap">' + items.map(function (x) { return flowChip(x, mode); }).join('') + '</div></div>';
+  }
+  function flowStrip(base) {
+    var items = flowItems(base);
+    var eurItems = items.filter(function (x) { return eur(x.delta) >= FLOW_MIN_EUR; })
+      .sort(function (a, b) { return b.delta - a.delta; }).slice(0, 6);
+    var surge = items.filter(function (x) { return eur(x.prev) >= SURGE_MIN_BASE && eur(x.delta) >= SURGE_MIN_DELTA && x.pct >= SURGE_MIN_PCT && x.pct < 900; })
+      .sort(function (a, b) { return b.pct - a.pct; }).slice(0, 6);
+    var head = '<div style="font-size:12px;color:' + C.back + ';font-weight:800;margin-bottom:8px">💸 Frisches Geld — wo seit dem letzten Update Kohle reinkam <span style="color:' + C.dim + ';font-weight:600">(kann woanders liegen als oben · Klick springt zum Spiel)</span></div>';
+    var body = (!eurItems.length && !surge.length)
+      ? '<div style="font-size:11px;color:' + C.dim + '">sammelt Daten — der Zufluss braucht zwei Fetches (~15–30 Min), dann siehst du hier, auf welchen Markt gerade Geld fließt.</div>'
+      : flowRow('📈 Größter €-Zufluss', eurItems, 'eur') + flowRow('⚡ Stärkster Sprung (%)', surge, 'pct');
+    return '<div style="background:linear-gradient(180deg,rgba(63,185,80,.07),transparent);border:1px solid rgba(63,185,80,.25);border-radius:14px;padding:11px 13px;margin:0 0 14px">' + head + body + '</div>';
+  }
+
   // ── Info-Band ────────────────────────────────────────────────────────────────
   function tile(ic, val, lbl, sub, col) {
     return '<div style="flex:1;min-width:135px;background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:12px;padding:12px 14px">' +
@@ -372,7 +424,13 @@
         'Top: €10k FT/€5k HT · Int./UEFA: €3k/€1k · Rest: €5k/€1,5k). Sobald irgendwo genug Geld liegt, erscheint es hier.</div>';
     }
 
-    var out = head + infoBand(groups) + hotspotStrip(q) + dateBar(qAll) + controlBar(qAll) + legend() + stale;
+    // „Frisches Geld" scannt ALLE frischen Spiele (auch unter der Geld-Schwelle) im aktuellen
+    // Liga/Datum-Filter — der Zufluss kann auf einem Spiel liegen, das oben (noch) nicht auftaucht.
+    var flowBase = fresh.slice();
+    if (_bf.league !== 'all') flowBase = flowBase.filter(function (m) { return m.league === _bf.league; });
+    if (_bf.date !== 'all') flowBase = flowBase.filter(function (m) { return isLive(m) || matchDateKey(m) === _bf.date; });
+
+    var out = head + infoBand(groups) + hotspotStrip(q) + flowStrip(flowBase) + dateBar(qAll) + controlBar(qAll) + legend() + stale;
     var t = _bf.tab;
     if (t === 'all' || t === 'top') out += section(groups.top, '⭐ Top 5 + MLS', C.gold, '≥ €10k FT · €5k HT');
     if (t === 'all' || t === 'intl') out += section(groups.intl, '🇪🇺 International / UEFA', C.blue, '≥ €3k FT · €1k HT');

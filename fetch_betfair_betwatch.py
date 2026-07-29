@@ -50,6 +50,12 @@ MAX_DETAIL = int(os.environ.get("BETWATCH_MAX_DETAIL") or 150)
 WINDOW_H = float(os.environ.get("BETWATCH_WINDOW_H") or 26)
 HIST_KEEP_H = 72
 HIST_MAX_POINTS = 80
+# Für den „frisches Geld"-Zufluss im Dashboard: je Snapshot das Markt-Volumen der Dashboard-Märkte
+# mitschreiben (mkv). Nur diese 7 (kompakt) — und nur auf den letzten 2 History-Punkten behalten
+# (Delta = letzter minus vorletzter), damit die History nicht aufbläht.
+TRACKED_MARKETS = ["Match Odds", "Over/Under 2.5 Goals", "Over/Under 3.5 Goals",
+                   "Both teams to Score?", "Half Time", "First Half Goals 0.5", "First Half Goals 1.5"]
+MKV_KEEP_POINTS = 2
 
 
 def _now():
@@ -165,12 +171,23 @@ def append_history(hist, snap, now=None, keep_h=HIST_KEEP_H, max_points=HIST_MAX
     mid = str(snap.get("matchId"))
     if mid in ("None", ""):
         return hist
+    # Markt-Volumina der Dashboard-Märkte (für „frisches Geld"-Zufluss).
+    mkv = {}
+    for name in TRACKED_MARKETS:
+        mk = (snap.get("markets") or {}).get(name)
+        if isinstance(mk, dict) and isinstance(mk.get("vol"), (int, float)):
+            mkv[name] = mk["vol"]
     pt = {"ts": now.isoformat(), "totalVol": snap.get("totalVol"),
           "mo": {k: (snap.get("mo") or {}).get(k) for k in ("hw", "dr", "aw", "vol")},
-          "kickoff": snap.get("kickoff")}
+          "kickoff": snap.get("kickoff"), "mkv": mkv}
     arr = list(hist.get(mid) or [])
     arr.append(pt)
-    hist[mid] = arr[-max_points:]
+    arr = arr[-max_points:]
+    # mkv nur auf den letzten MKV_KEEP_POINTS Punkten behalten (Platz sparen — Delta braucht nur 2).
+    for p in arr[:-MKV_KEEP_POINTS]:
+        if isinstance(p, dict):
+            p.pop("mkv", None)
+    hist[mid] = arr
     return hist
 
 

@@ -96,6 +96,13 @@ def test_history_anhaengen_und_prunen():
     assert h["35785202"][0]["totalVol"] == s["totalVol"]
     h = B.append_history(h, s, now=T0 + timedelta(hours=1))
     assert len(h["35785202"]) == 2
+    # mkv: Markt-Volumina je Snapshot (für „frisches Geld"-Zufluss)
+    assert h["35785202"][-1]["mkv"]["Match Odds"] == 1102159
+    assert h["35785202"][-1]["mkv"]["Half Time"] == 8000
+    # nur die letzten 2 Punkte tragen mkv (Platzspar-Trim)
+    h = B.append_history(h, s, now=T0 + timedelta(hours=2))
+    assert "mkv" not in h["35785202"][0]
+    assert "mkv" in h["35785202"][-1] and "mkv" in h["35785202"][-2]
     # alter Eintrag (100h) wird geprunt
     old = {"35785202": [{"ts": (T0 - timedelta(hours=100)).isoformat(), "totalVol": 1}]}
     assert "35785202" not in B.prune_history(old, now=T0)

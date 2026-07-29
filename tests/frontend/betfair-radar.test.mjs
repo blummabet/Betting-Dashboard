@@ -172,3 +172,29 @@ test('Stale-Guard: alte Daten → Banner, kein Fake-Live', () => {
   const html = w._renderBetfairRadar();
   assert.match(html, /alt/);
 });
+
+test('Frisches Geld: €-Zufluss + % Surge aus mkv-History-Delta', () => {
+  const { w } = boot();
+  w._bfState.hist = {
+    '1': [
+      { ts: iso(-15 * 60e3), mkv: { 'Match Odds': 10000, 'First Half Goals 0.5': 1200 } },
+      { ts: iso(0), mkv: { 'Match Odds': 15000, 'First Half Goals 0.5': 4800 } },  // +5K bzw. +300%
+    ],
+  };
+  const html = w._renderBetfairRadar();
+  assert.match(html, /Frisches Geld/);
+  assert.match(html, /Größter €-Zufluss/);
+  assert.match(html, /Stärkster Sprung/);
+  assert.ok(html.includes('▲ +€5K'), '€-Zufluss Match Odds +€5K');
+  assert.match(html, /HT Ü0\.5/);
+  assert.ok(html.includes('+300%'), 'Surge +300%');
+  assert.match(html, /🚨/, 'großer Sprung markiert');
+});
+
+test('Frisches Geld: ohne 2. Snapshot → ehrlicher „sammelt Daten"-Zustand', () => {
+  const { w } = boot();
+  w._bfState.hist = {};   // keine History → kein Delta
+  const html = w._renderBetfairRadar();
+  assert.match(html, /Frisches Geld/);
+  assert.match(html, /sammelt Daten/);
+});
