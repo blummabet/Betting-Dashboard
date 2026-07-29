@@ -37,14 +37,14 @@ const _ALL_PANELS = [
   'mainContent', 'trackingV2Panel', 'resultsPanel',
   'intlCardsPanel', 'intlTrackingPanel', 'intlWm2026Panel', 'intlTelegramPanel',
   'tiktokStudioPanel', 'streaksPanel',
-  'polymarketPanel', 'polyTraderPanel', 'polyWalletsPanel', 'polyRadarPanel', 'betfairRadarPanel',
+  'polymarketPanel', 'polyTraderPanel', 'polyWalletsPanel', 'betfairRadarPanel',
   'heartPanel', 'statusPanel', 'signalCheckPanel',
 ];
 
 // Top-nav button IDs (Heart/Status seit 28.06.2026 im „Mehr"-Dropdown, nicht mehr hier)
 const _TOP_NAV_IDS = [
   'navNational', 'navIntl', 'navSharp',
-  'navPolyTrader', 'navPolymarket', 'navPolyWallets', 'navPolyRadar',
+  'navPolyTrader', 'navPolymarket', 'navPolyWallets',
 ];
 
 function showView(view) {
@@ -74,7 +74,6 @@ function showView(view) {
     'polytrading':       'polyTraderPanel',
     'polybetting':       'polymarketPanel',
     'polywallets':       'polyWalletsPanel',
-    'polyradar':         'polyRadarPanel',
     'betfair':           'betfairRadarPanel',
     'analyse':           'signalCheckPanel',
     'heart':             'heartPanel',
@@ -125,7 +124,6 @@ function showView(view) {
     'polytrading': 'navPolyTrader',
     'polybetting': 'navPolymarket',
     'polywallets': 'navPolyWallets',
-    'polyradar':   'navPolyRadar',
     'betfair':     'navBetfair',
   };
   const activeNavId = topNavMap[_activeSection];
@@ -137,7 +135,7 @@ function showView(view) {
   // ── „Mehr"-Menü (28.06.2026, Lucas): Heart/Status/Telegram/TikTok gebündelt ──
   // Desktop = Dropdown (#navMore + .top-more-menu), Mobile = Bottom-Sheet (.more-sheet).
   // Telegram/TikTok haben Section 'intl' → über die volle View (_activeView) matchen.
-  const MORE_SECS  = ['polybetting', 'polywallets', 'polyradar', 'heart', 'status', 'analyse'];
+  const MORE_SECS  = ['polybetting', 'polywallets', 'heart', 'status', 'analyse'];
   const MORE_VIEWS = ['intl-studio'];   // Telegram lebt jetzt im Status-Tab (28.06.2026)
   const isMore = MORE_SECS.includes(_activeSection) || MORE_VIEWS.includes(_activeView);
 
@@ -176,10 +174,6 @@ function showView(view) {
   if (view === 'polybetting')       initPolymarket();
   if (view === 'polytrading')       initPolyTrader();
   if (view === 'polywallets'  && typeof initPolyWallets === 'function') initPolyWallets();
-  if (view === 'polyradar') {
-    const p = document.getElementById('polyRadarPanel');
-    if (p && typeof window._renderPolyRadar === 'function') p.innerHTML = window._renderPolyRadar();
-  }
   if (view === 'betfair') {
     if (typeof window._bfLoad === 'function') window._bfLoad();
     const p = document.getElementById('betfairRadarPanel');
