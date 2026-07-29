@@ -141,7 +141,26 @@
   // sonst „veraltet"-Alarm bei ganz normalem Betrieb.
   var FRESH_LIVE_MIN = 30;   // bis hierher gilt Live-Status als vertrauenswürdig
   var STALE_WARN_MIN = 75;   // GitHub-Schedule ist stark jittery (~15–100min) → erst ab ~5 verpassten Läufen warnen
-  function isLive(m) { var li = m.liveInfo || {}; if (li.time == null || li.finished) return false; return genAgeMin() <= FRESH_LIVE_MIN; }
+  var LIVE_WINDOW_H = 3.2;   // bis ~3,2h nach Anpfiff gilt ein Spiel als laufend (danach vermutlich vorbei)
+  function _kickMs(m) { var k = m.kickoff ? Date.parse(m.kickoff) : NaN; return isNaN(k) ? null : k; }
+  // Live-Status robust + stabil (29.07.2026, Lucas-Bug „war live, dann wieder pre"): Betwatch liefert
+  // liveInfo.time nur lückenhaft (v.a. Friendlies) und die Anpfiff-Zeit springt. Darum: live = nicht
+  // beendet UND (Live-Uhr da ODER Anpfiff vorbei & im 3,2h-Fenster), Daten nicht zu alt. Hysterese:
+  // einmal live gesehen → bleibt live (bis beendet/Fenster vorbei), damit ein Zeit-Glitch das Spiel
+  // nicht zurück auf „pre" wirft. EINE Quelle für Pill + Zähler + Datums-Gruppierung.
+  function isLive(m) {
+    var li = m.liveInfo || {};
+    if (li.finished) return false;
+    if (genAgeMin() > STALE_WARN_MIN) return false;
+    if (!_bf._liveSeen) _bf._liveSeen = {};
+    var id = String(m.matchId), k = _kickMs(m), now = Date.now();
+    var kicked = (k != null) && (now - k) >= -60000;                 // Anpfiff vorbei (60s Toleranz)
+    var withinWindow = (k != null) && (now - k) < LIVE_WINDOW_H * 3.6e6;
+    if (li.time != null || (kicked && withinWindow)) { _bf._liveSeen[id] = now; return true; }
+    if (_bf._liveSeen[id] && (now - _bf._liveSeen[id]) < LIVE_WINDOW_H * 3.6e6) return true;   // Hysterese
+    return false;
+  }
+  window._bfIsLive = isLive;   // Test-Hook
   function isStale(m) {
     if (isLive(m)) return false;
     if (!m.kickoff) return false;
@@ -396,8 +415,9 @@
   }
   function koPill(m) {
     if (isLive(m)) {
-      var li = m.liveInfo, sc = (li.goal_v1 != null) ? (li.goal_v1 + ':' + li.goal_v2) : '';
-      return '<span style="display:inline-flex;gap:4px;align-items:center;padding:2px 8px;border-radius:20px;background:rgba(248,81,73,.15);color:' + C.live + ';font-size:11px;font-weight:800"><span style="width:6px;height:6px;border-radius:50%;background:' + C.live + '"></span>LIVE ' + li.time + "'" + (sc ? ' · ' + sc : '') + '</span>';
+      var li = m.liveInfo || {}, sc = (li.goal_v1 != null && li.goal_v2 != null) ? (li.goal_v1 + ':' + li.goal_v2) : '';
+      var mn = (li.time != null) ? (' ' + li.time + "'") : '';
+      return '<span style="display:inline-flex;gap:4px;align-items:center;padding:2px 8px;border-radius:20px;background:rgba(248,81,73,.15);color:' + C.live + ';font-size:11px;font-weight:800"><span style="width:6px;height:6px;border-radius:50%;background:' + C.live + '"></span>LIVE' + mn + (sc ? ' · ' + sc : '') + '</span>';
     }
     if (!m.kickoff) return '';
     var d = new Date(m.kickoff), h = (d.getTime() - Date.now()) / 3.6e6;
@@ -467,7 +487,7 @@
   }
   function cohPillsRow(m) {
     var r = cohOf(m), p = [];
-    if (isLive(m) && m.liveInfo) p.push(cohPill('● LIVE ' + (m.liveInfo.time || '') + "'", C.live, 'rgba(248,81,73,.15)'));
+    if (isLive(m)) { var _li = m.liveInfo || {}; p.push(cohPill('● LIVE' + (_li.time != null ? ' ' + _li.time + "'" : ''), C.live, 'rgba(248,81,73,.15)')); }
     if (r.hard.length) p.push(cohPill('⚠ ' + r.hard.length + ' harte Abweichung' + (r.hard.length > 1 ? 'en' : ''), C.lay, 'rgba(248,81,73,.14)'));
     if (r.soft.length) p.push(cohPill(r.soft.length + ' Modell-Lücke' + (r.soft.length > 1 ? 'n' : ''), C.gold, 'rgba(255,184,12,.13)'));
     if (r.fl && r.fl.kind === 'steam') p.push(cohPill('↯ Steam ' + _cpp(r.fl.move) + 'pp' + (r.fl.sideName ? ' · ' + esc(String(r.fl.sideName).slice(0, 14)) : ''), C.vol, 'rgba(45,212,191,.13)'));
