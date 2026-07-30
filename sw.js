@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v24';   // 29.07.2026: Live-Status harter 2.5h-Cut (beendete Spiele nicht mehr live)
+const VERSION = 'cocobet-v25';   // 29.07.2026: Übersicht Command-Center Redesign (KPI-Leiste, Triple-Hero mit Zustimmungsbalken, Mini-Viz-Kacheln)
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
