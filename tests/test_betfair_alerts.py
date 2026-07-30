@@ -8,7 +8,8 @@ def mk(name, runners):
     return {name: {"runners": runners}}
 
 
-def match(mid=1, home="Alpha", away="Beta", league="Test", country="International", markets=None):
+def match(mid=1, home="Alpha", away="Beta", league="Test", country="DE", markets=None):
+    # Default: Rest-Tier (league „Test", Land DE) → HZ-Schwelle 5000, frisches Geld 20000.
     return {"matchId": mid, "home": home, "away": away, "league": league,
             "country": country, "markets": markets or {}}
 
@@ -18,74 +19,94 @@ class TestTier(unittest.TestCase):
         self.assertEqual(BA.tier_of({"league": "German Bundesliga"}), "top")
         self.assertEqual(BA.tier_of({"league": "Major League Soccer"}), "top")
 
-    def test_uefa_and_others_are_rest(self):
-        self.assertEqual(BA.tier_of({"league": "UEFA Champions League Qualifiers"}), "rest")
-        self.assertEqual(BA.tier_of({"league": "Chinese League 2"}), "rest")
+    def test_international_is_top(self):
+        # Lucas 30.07.2026: internationale Bewerbe (UEFA / Länderspiele) verhalten sich wie Top.
+        self.assertEqual(BA.tier_of({"league": "UEFA Champions League Qualifiers"}), "top")
+        self.assertEqual(BA.tier_of({"league": "Friendly", "country": "International"}), "top")
+
+    def test_others_are_rest(self):
+        self.assertEqual(BA.tier_of({"league": "Chinese League 2", "country": "CN"}), "rest")
 
     def test_summer_series_not_top(self):
         self.assertEqual(BA.tier_of({"league": "English Premier League Summer Series"}), "rest")
 
 
 class TestHtAlert(unittest.TestCase):
-    def _ht_market(self, hv, dv, av):
-        return mk("Half Time", [
+    def _ht_market(self, hv, dv, av, name="Half Time"):
+        return mk(name, [
             {"name": "Alpha", "odd": 2.1, "vol": hv},
             {"name": "The Draw", "odd": 2.2, "vol": dv},
             {"name": "Beta", "odd": 3.4, "vol": av}])
 
     def test_fires_when_onesided(self):
-        # 8000 ≥ 7000 UND 88% auf Alpha (≥85%)
-        m = match(markets=self._ht_market(7000, 500, 500))
+        # Rest-Tier: 6000 ≥ 5000 UND ~83–100% auf Alpha (≥85% mit 5500/6000)
+        m = match(markets=self._ht_market(5500, 250, 250))
         a = BA.ht_alert(m)
         self.assertIsNotNone(a)
         self.assertEqual(a["scenario"], "ht")
-        self.assertAlmostEqual(a["total"], 8000)
+        self.assertAlmostEqual(a["total"], 6000)
         self.assertEqual(a["leadName"], "Alpha")
         self.assertGreaterEqual(a["leadShare"], 0.85)
 
     def test_balanced_market_none(self):
-        # 8000 ≥ 7000, aber breit verteilt (max 50%) → kein Signal
-        self.assertIsNone(BA.ht_alert(match(markets=self._ht_market(4000, 2000, 2000))))
+        # 6000 ≥ 5000, aber breit verteilt (max 50%) → kein Signal
+        self.assertIsNone(BA.ht_alert(match(markets=self._ht_market(3000, 1500, 1500))))
 
     def test_below_threshold_none(self):
-        # einseitig (100%), aber nur 4000 < 7000
+        # einseitig (100%), aber nur 4000 < 5000 (Rest)
         self.assertIsNone(BA.ht_alert(match(markets=self._ht_market(4000, 0, 0))))
+
+    def test_top_tier_needs_10k(self):
+        # Top-Liga: 8000 < 10000 → nichts; 11000 ≥ 10000 → feuert
+        self.assertIsNone(BA.ht_alert(match(league="German Bundesliga", markets=self._ht_market(8000, 0, 0))))
+        self.assertIsNotNone(BA.ht_alert(match(league="German Bundesliga", markets=self._ht_market(11000, 0, 0))))
+
+    def test_over15_first_half_counts(self):
+        # „egal ob over 1,5 oder 12x HT": Über/Unter 1,5 erste HZ zählt genauso.
+        m = match(markets=mk("First Half Goals 1.5", [
+            {"name": "Over 1.5 Goals", "odd": 1.9, "vol": 5500},
+            {"name": "Under 1.5 Goals", "odd": 2.0, "vol": 300}]))
+        a = BA.ht_alert(m)
+        self.assertIsNotNone(a)
+        self.assertEqual(a["market"], "First Half Goals 1.5")
+        self.assertFalse(a["isX2"])
+        self.assertEqual(a["mktLabel"], "HZ Ü/U 1.5")
 
     def test_no_ht_market_none(self):
         self.assertIsNone(BA.ht_alert(match(markets=mk("Match Odds", [{"name": "Alpha", "odd": 2, "vol": 9000}]))))
 
 
 class TestFreshAlert(unittest.TestCase):
-    def test_top_needs_20k_per_market(self):
+    def test_top_needs_30k_per_market(self):
         m = match(mid=7, league="German Bundesliga",
-                  markets=mk("Match Odds", [{"name": "Alpha", "odd": 2, "vol": 30000}, {"name": "Beta", "odd": 2, "vol": 10000}]))
-        hist = {"7": [{"mkv": {"Match Odds": 20000}}, {"mkv": {"Match Odds": 45000}}]}   # +25k auf 1X2
+                  markets=mk("Match Odds", [{"name": "Alpha", "odd": 2, "vol": 40000}, {"name": "Beta", "odd": 2, "vol": 12000}]))
+        hist = {"7": [{"mkv": {"Match Odds": 20000}}, {"mkv": {"Match Odds": 52000}}]}   # +32k auf 1X2 (≥30k)
         a = BA.fresh_alert(m, hist)
         self.assertIsNotNone(a)
         self.assertEqual(a["tier"], "top")
         self.assertEqual(a["market"], "Match Odds")
-        self.assertAlmostEqual(a["inflow"], 25000)
-        self.assertAlmostEqual(a["total"], 45000)     # Markt-Volumen, NICHT Spiel-Gesamt
+        self.assertAlmostEqual(a["inflow"], 32000)
+        self.assertAlmostEqual(a["total"], 52000)     # Markt-Volumen, NICHT Spiel-Gesamt
         self.assertEqual(a["leadName"], "Alpha")
 
-    def test_top_below_20k_none(self):
+    def test_top_below_30k_none(self):
         m = match(mid=7, league="German Bundesliga", markets={})
-        self.assertIsNone(BA.fresh_alert(m, {"7": [{"mkv": {"Match Odds": 20000}}, {"mkv": {"Match Odds": 35000}}]}))  # +15k
+        self.assertIsNone(BA.fresh_alert(m, {"7": [{"mkv": {"Match Odds": 20000}}, {"mkv": {"Match Odds": 45000}}]}))  # +25k < 30k
 
     def test_biggest_inflow_market_wins(self):
-        # 1X2 +5k, aber Ü/U 2.5 +12k → der groessere Zufluss-Markt gewinnt (Rest-Liga, Schwelle 10k)
-        m = match(mid=8, league="Chinese League 2",
-                  markets=mk("Over/Under 2.5 Goals", [{"name": "Over 2.5 Goals", "odd": 2, "vol": 22000}, {"name": "Under 2.5 Goals", "odd": 2, "vol": 3000}]))
+        # 1X2 +7k, aber Ü/U 2.5 +25k → der groessere Zufluss-Markt gewinnt (Rest-Liga, Schwelle 20k)
+        m = match(mid=8, league="Chinese League 2", country="CN",
+                  markets=mk("Over/Under 2.5 Goals", [{"name": "Over 2.5 Goals", "odd": 2, "vol": 32000}, {"name": "Under 2.5 Goals", "odd": 2, "vol": 3000}]))
         hist = {"8": [{"mkv": {"Match Odds": 40000, "Over/Under 2.5 Goals": 10000}},
-                      {"mkv": {"Match Odds": 45000, "Over/Under 2.5 Goals": 22000}}]}
+                      {"mkv": {"Match Odds": 47000, "Over/Under 2.5 Goals": 35000}}]}
         a = BA.fresh_alert(m, hist)
         self.assertIsNotNone(a)
         self.assertEqual(a["market"], "Over/Under 2.5 Goals")
-        self.assertAlmostEqual(a["inflow"], 12000)
+        self.assertAlmostEqual(a["inflow"], 25000)
 
-    def test_rest_below_10k_none(self):
-        m = match(mid=8, league="Chinese League 2", markets={})
-        self.assertIsNone(BA.fresh_alert(m, {"8": [{"mkv": {"Match Odds": 5000}}, {"mkv": {"Match Odds": 13000}}]}))  # +8k
+    def test_rest_below_20k_none(self):
+        m = match(mid=8, league="Chinese League 2", country="CN", markets={})
+        self.assertIsNone(BA.fresh_alert(m, {"8": [{"mkv": {"Match Odds": 5000}}, {"mkv": {"Match Odds": 20000}}]}))  # +15k < 20k
 
     def test_no_mkv_none(self):
         # ohne per-Markt-History (nur totalVol) kein Signal — irrefuehrende Gesamt-Zahl vermeiden
@@ -132,9 +153,9 @@ class TestMessage(unittest.TestCase):
 
 class TestCollect(unittest.TestCase):
     def test_collects_both(self):
-        m = match(mid=9, league="Chinese League 2", markets=mk("Half Time",
+        m = match(mid=9, league="Chinese League 2", country="CN", markets=mk("Half Time",
                   [{"name": "Alpha", "odd": 2, "vol": 8000}]))
-        alerts = BA.collect_alerts({"matches": [m]}, {"9": [{"mkv": {"Half Time": 1000}}, {"mkv": {"Half Time": 20000}}]})
+        alerts = BA.collect_alerts({"matches": [m]}, {"9": [{"mkv": {"Half Time": 1000}}, {"mkv": {"Half Time": 22000}}]})
         kinds = sorted(a["scenario"] for a in alerts)
         self.assertEqual(kinds, ["fresh", "ht"])
 

@@ -3,9 +3,10 @@
 betfair_alerts.py — Telegram-Pushes (Trades-Channel) für Betfair-Signale (29.07.2026, Lucas).
 
 Testweise, 2 Szenarien (erweiterbar, sobald wir mehr gelernt haben):
-  1. Halbzeit-1X2-Geld: der „Half Time"-Markt (HZ 1X2) hat ≥ HT_MIN_EUR gematcht UND
-     davon liegen ≥ HT_MIN_SHARE (85 %) auf EINEM Ausgang (sonst kein Signal, nur Liquidität).
-  2. Frisches Geld: Zufluss auf dem GRÖSSTEN Zufluss-Markt (aus mkv) ≥ Schwelle (Top 20K / Rest 10K)
+  1. Halbzeit-Geld (30.07.2026 tier-aware, egal ob HZ-1X2 ODER Über/Unter 1,5 erste HZ): ein HZ-Markt
+     hat ≥ Schwelle gematcht (Top/Int. 10K · Rest 5K) UND davon liegen ≥ HT_MIN_SHARE (85 %) auf EINEM
+     Ausgang (sonst kein Signal, nur Liquidität). Es zählt der HZ-Markt mit dem meisten Geld.
+  2. Frisches Geld: Zufluss auf dem GRÖSSTEN Zufluss-Markt (aus mkv) ≥ Schwelle (Top 30K / Rest 20K)
      — pro Markt, NICHT Spiel-Gesamt (sonst spiegelt die Zahl alle Märkte statt des einen Marktes).
 
 Anti-Spam (Lucas: „einmal, dann nur bei deutlicher Steigerung"): pro Spiel+Szenario wird der
@@ -23,13 +24,16 @@ import html
 
 from telegram_trades import send_trades_message
 
-HT_MIN_EUR     = 7000.0
+HT_TOP_EUR     = 10000.0  # Halbzeit-Geld-Schwelle Top-Liga + International (Lucas 30.07.2026)
+HT_REST_EUR    = 5000.0   # ... und Rest-Ligen
 HT_MIN_SHARE   = 0.85     # ... und davon min. dieser Anteil auf EINEN Ausgang (einseitig)
 MIN_LEAD_ODD   = 1.15     # Geld auf einen fast sicheren Favoriten (Quote < 1.15, führt schon) = sinnlos → kein Push
-FRESH_TOP_EUR  = 20000.0
-FRESH_REST_EUR = 10000.0
+FRESH_TOP_EUR  = 30000.0  # frisches Geld Top-Liga
+FRESH_REST_EUR = 20000.0  # ... und Rest-Ligen
 DEDUP_FACTOR   = 1.5
 SEEN_FILE      = "betfair_alerts_seen.json"
+HT_MARKETS     = ("Half Time", "First Half Goals 1.5")   # HZ-1X2 ODER Über/Unter 1,5 erste Halbzeit
+HT_LABEL       = {"Half Time": "HZ-1X2", "First Half Goals 1.5": "HZ Ü/U 1.5", "First Half Goals 0.5": "HZ Ü/U 0.5"}
 
 UEFA_RX  = re.compile(r"(champions league|europa league|europa conference|conference league|uefa)", re.I)
 TOP5_RX  = re.compile(r"(german bundesliga|english premier league|spanish la ?liga|italian serie a|french ligue 1|\bmls\b|major league soccer)", re.I)
@@ -41,9 +45,18 @@ def is_top5(league) -> bool:
     return bool(TOP5_RX.search(l)) and not TOP5_NEG.search(l)
 
 
+def _is_intl_country(cc) -> bool:
+    return bool(re.match(r"^(int|international|eu|europe)$", str(cc or ""), re.I))
+
+
 def tier_of(m) -> str:
-    # Top-Liga = Top-5 + MLS (20K-Schwelle). Alles andere inkl. UEFA = Rest (10K). (Lucas-Vorgabe.)
-    return "top" if is_top5(m.get("league")) else "rest"
+    # Top-Tier = Top-5 + MLS UND internationale Bewerbe (UEFA/Länderspiele) — Lucas 30.07.2026:
+    # „internationale Bewerbe verhalten sich wie Top". Alles andere = Rest.
+    if is_top5(m.get("league")):
+        return "top"
+    if UEFA_RX.search(str(m.get("league") or "")) or _is_intl_country(m.get("country")):
+        return "top"
+    return "rest"
 
 
 def _vol(mk) -> float:
@@ -92,13 +105,17 @@ def _ht_label(name, home, away):
     return n
 
 
-def ht_alert(m):
-    """Szenario 1: Half-Time-1X2-Markt ≥ HT_MIN_EUR UND ≥ HT_MIN_SHARE auf einem Ausgang (einseitig)."""
-    mk = (m.get("markets") or {}).get("Half Time")
+def _ht_thr(m) -> float:
+    return HT_TOP_EUR if tier_of(m) == "top" else HT_REST_EUR
+
+
+def _ht_one(m, market_name):
+    """Ein einzelner HZ-Markt (HZ-1X2 oder Über/Unter 1,5 HZ1): ≥ tier-Schwelle UND ≥85 % einseitig."""
+    mk = (m.get("markets") or {}).get(market_name)
     if not mk:
         return None
     total = _vol(mk)
-    if total < HT_MIN_EUR or total <= 0:
+    if total <= 0 or total < _ht_thr(m):
         return None
     runners = mk.get("runners") or []
     lead = max(runners, key=lambda r: (r.get("vol") or 0.0), default=None)
@@ -111,6 +128,7 @@ def ht_alert(m):
     if isinstance(lo, (int, float)) and lo < MIN_LEAD_ODD:   # 85 % auf einem ~1.0-Favoriten = keine Info
         return None
     home, away = m.get("home"), m.get("away")
+    is_x2 = market_name == "Half Time"
 
     def share(test):
         for r in runners:
@@ -120,10 +138,21 @@ def ht_alert(m):
 
     return {"scenario": "ht", "matchId": str(m.get("matchId")), "value": total,
             "home": home, "away": away, "league": m.get("league"), "flag": _flag(m),
+            "market": market_name, "mktLabel": HT_LABEL.get(market_name, _short_mk(market_name)), "isX2": is_x2,
             "total": total, "hs": share(lambda s: s == home),
             "ds": share(lambda s: s == "The Draw"), "as_": share(lambda s: s == away),
             "leadName": lead.get("name"), "leadLabel": _ht_label(lead.get("name"), home, away),
             "leadShare": lead_share, "leadOdd": lead.get("odd")}
+
+
+def ht_alert(m):
+    """Szenario 1: bester HZ-Markt (HZ-1X2 ODER Über/Unter 1,5 erste HZ) über tier-Schwelle + einseitig."""
+    best = None
+    for name in HT_MARKETS:
+        a = _ht_one(m, name)
+        if a and (best is None or a["total"] > best["total"]):
+            best = a
+    return best
 
 
 def _market_lead(m, name):
@@ -179,13 +208,16 @@ def build_message(a) -> str:
     head = ("%s <b>%s</b> v <b>%s</b>\n<i>%s</i>\n"
             % (a["flag"], _esc(a["home"]), _esc(a["away"]), _esc(str(a["league"])[:48])))
     if a["scenario"] == "ht":
-        pct = lambda x: "—" if x is None else "%.0f%%" % (x * 100)
         odd = (" @%.2f" % a["leadOdd"]) if isinstance(a.get("leadOdd"), (int, float)) else ""
-        return ("🟡 <b>Betfair · Halbzeit-Geld (einseitig)</b>\n" + head
-                + "💷 HZ-1X2: <b>%s</b> gematcht · <b>%.0f%%</b> auf %s%s\n"
-                  % (_euro(a["total"]), a["leadShare"] * 100, _esc(a["leadLabel"]), odd)
-                + "%s %s · X %s · %s %s" % (_esc(a["home"]), pct(a["hs"]), pct(a["ds"]),
-                                            _esc(a["away"]), pct(a["as_"])))
+        lbl = a.get("mktLabel") or "HZ"
+        msg = ("🟡 <b>Betfair · Halbzeit-Geld (einseitig)</b>\n" + head
+               + "💷 %s: <b>%s</b> gematcht · <b>%.0f%%</b> auf %s%s"
+                 % (_esc(lbl), _euro(a["total"]), a["leadShare"] * 100, _esc(a["leadLabel"]), odd))
+        if a.get("isX2"):
+            pct = lambda x: "—" if x is None else "%.0f%%" % (x * 100)
+            msg += ("\n%s %s · X %s · %s %s" % (_esc(a["home"]), pct(a["hs"]), pct(a["ds"]),
+                                                _esc(a["away"]), pct(a["as_"])))
+        return msg
     tl = "Top-Liga" if a["tier"] == "top" else "Rest-Liga"
     msg = ("🟡 <b>Betfair · Frisches Geld</b> · %s\n" % tl + head
            + "💶 <b>%s</b>: +<b>%s</b> frisch → jetzt <b>%s</b>"
