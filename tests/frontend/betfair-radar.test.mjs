@@ -186,8 +186,8 @@ test('Frisches Geld: €-Zufluss + % Surge aus mkv-History-Delta', () => {
   };
   const html = w._renderBetfairRadar();
   assert.match(html, /Frisches Geld/);
-  assert.match(html, /Größter €-Zufluss/);
-  assert.match(html, /Stärkster Sprung/);
+  assert.match(html, /Größte Zuflüsse/);
+  assert.match(html, /Größte Sprünge/);
   assert.ok(html.includes('▲ +€5K'), '€-Zufluss Match Odds +€5K');
   assert.match(html, /HT Ü0\.5/);
   assert.ok(html.includes('+300%'), 'Surge +300%');

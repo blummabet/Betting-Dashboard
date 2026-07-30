@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v32';   // 30.07.2026: Betfair-Radar Frische-Chip im Kopf (aktualisiert vor X · naechster ~in Y)
+const VERSION = 'cocobet-v33';   // 30.07.2026: Frisches-Geld zeigt die Seite (Ausgang+Anteil+Quote), groessere Chips + entwirrter Kopf
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
