@@ -23,8 +23,11 @@
   ];
   var MK_ID = {}; MK.forEach(function (m) { MK_ID[m.id] = m; });
 
-  // Schwellen je Ebene (€). Internationale/UEFA-Quali sind weniger liquide → niedriger.
-  var THR = { top: { FT: 10000, HT: 5000 }, intl: { FT: 3000, HT: 1000 }, rest: { FT: 5000, HT: 1500 } };
+  // Schwellen je Ebene (€) — Lucas 30.07.2026. FT = größter „Full-Time"-Markt, HT = größter Halbzeit-
+  // Markt (HT-1X2 ODER Über 1,5/0,5 erste HZ). Spiel erscheint, sobald FT- ODER HT-Schwelle erreicht.
+  // International (UEFA/Länder) verhält sich wie Top (Lucas: „internationale Bewerbe bleiben, wie Top").
+  var THR = { top: { FT: 20000, HT: 10000 }, intl: { FT: 20000, HT: 10000 }, rest: { FT: 15000, HT: 5000 } };
+  window._bfTHR = THR;   // Test-Hook: Rendering-Tests pinnen eigene Schwellen (produktiv unverändert)
   var CHIP_FLOOR = 500;
 
   var C = {
@@ -780,7 +783,7 @@
 
     if (!qAll.length) {
       return head + stale + '<div style="margin-top:14px;padding:40px 24px;text-align:center;color:' + C.mut + ';font-size:13px;line-height:1.6;background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:14px">Aktuell kein Spiel über der Geld-Schwelle (' +
-        'Top: €10k FT/€5k HT · Int./UEFA: €3k/€1k · Rest: €5k/€1,5k). Sobald irgendwo genug Geld liegt, erscheint es hier.</div>';
+        'Top: €20k FT/€10k HT · Int./UEFA: €20k/€10k · Rest: €15k/€5k). Sobald irgendwo genug Geld liegt, erscheint es hier.</div>';
     }
 
     // „Frisches Geld" scannt ALLE frischen Spiele (auch unter der Geld-Schwelle) im aktuellen
@@ -793,9 +796,9 @@
 
     var out = head + viewToggle() + infoBand(groups) + hotspotStrip(q) + flowStrip(flowBase) + dateBar(qAll) + controlBar(qAll) + legend() + stale;
     var t = _bf.tab;
-    if (t === 'all' || t === 'top') out += section(groups.top, '⭐ Top 5 + MLS', C.gold, '≥ €10k FT · €5k HT');
-    if (t === 'all' || t === 'intl') out += section(groups.intl, '🇪🇺 International / UEFA', C.blue, '≥ €3k FT · €1k HT');
-    if (t === 'all' || t === 'rest') out += section(groups.rest, '🌍 Rest — andere Ligen', C.purp, '≥ €5k FT · €1,5k HT');
+    if (t === 'all' || t === 'top') out += section(groups.top, '⭐ Top 5 + MLS', C.gold, '≥ €20k FT · €10k HT');
+    if (t === 'all' || t === 'intl') out += section(groups.intl, '🇪🇺 International / UEFA', C.blue, '≥ €20k FT · €10k HT');
+    if (t === 'all' || t === 'rest') out += section(groups.rest, '🌍 Rest — andere Ligen', C.purp, '≥ €15k FT · €5k HT');
     if (!groups.top.length && !groups.intl.length && !groups.rest.length) {
       out += '<div style="padding:34px;text-align:center;color:' + C.mut + ';font-size:13px;background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:14px">Kein Spiel für diesen Filter. Datum/Liga/Markt/Live/Reiter anpassen.</div>';
     }

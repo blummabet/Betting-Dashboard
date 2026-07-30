@@ -76,6 +76,8 @@ function boot() {
   w._bfState.data = prices;
   w._bfState.hist = histFixture();
   w._bfState.loading = false;
+  // Rendering-Tests gegen stabile Schwellen pinnen (produktive Betfair-Schwellen sind Config):
+  if (w._bfTHR) { w._bfTHR.top = { FT: 10000, HT: 5000 }; w._bfTHR.intl = { FT: 3000, HT: 1000 }; w._bfTHR.rest = { FT: 5000, HT: 1500 }; }
   w._bfState.league = 'all'; w._bfState.tab = 'all'; w._bfState.date = 'all'; w._bfState.cardOpen = {};
   return { w, prices };
 }

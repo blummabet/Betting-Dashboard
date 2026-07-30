@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v25';   // 29.07.2026: Übersicht Command-Center Redesign (KPI-Leiste, Triple-Hero mit Zustimmungsbalken, Mini-Viz-Kacheln)
+const VERSION = 'cocobet-v26';   // 30.07.2026: Übersicht-Redesign + Länderflaggen/5 Einträge + Betfair-Schwellen (Radar Top/Int 20k·10k, Rest 15k·5k)
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
