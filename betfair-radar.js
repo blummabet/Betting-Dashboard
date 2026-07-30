@@ -54,7 +54,7 @@
   }
   window._bfTier = tierOf;
 
-  var _bf = { data: null, hist: null, track: null, loading: false, view: 'live', league: 'all', tab: 'all', date: 'all', onlyLive: false, market: 'all', cardOpen: {} };
+  var _bf = { data: null, hist: null, track: null, loading: false, view: 'live', league: 'all', tab: 'all', date: 'all', onlyLive: false, market: 'all', cardOpen: {}, trackBy: 'league' };
   var MIN_CONF_N = 20;   // ab so vielen abgerechneten Spielen gilt eine Liga×Markt-Quote als „belastbar"
   window._bfState = _bf;
 
@@ -79,7 +79,7 @@
     _bf.loading = true;
     _bfFetch3().then(function (a) {
       _bf.data = a[0] || { matches: [] }; _bf.hist = a[1] || {}; _bf.track = a[2] || null;
-      _bf._cohCache = {}; _bf._mixBase = null;
+      _bf._cohCache = {}; _bf._mixBase = null; _bf._normBase = null;
       _bf.loading = false; _bf.cardOpen = {};
       var p = document.getElementById('betfairRadarPanel');
       if (p && p.style.display !== 'none') p.innerHTML = renderBetfairRadar();
@@ -101,7 +101,7 @@
       if (a[0]) _bf.data = a[0];
       if (a[1]) _bf.hist = a[1];
       if (a[2] != null) _bf.track = a[2];
-      _bf._cohCache = {}; _bf._mixBase = null;
+      _bf._cohCache = {}; _bf._mixBase = null; _bf._normBase = null;
       _bf.loading = false;
       var pp = document.getElementById('betfairRadarPanel');
       if (pp && pp.style.display !== 'none') pp.innerHTML = renderBetfairRadar();
@@ -392,6 +392,57 @@
   window._bfCohFlow = cohFlow;
   window._bfMixAnomaly = mixAnomaly;
 
+  // ── ×-Norm: liegt auf DIESEM Spiel überverhältnismäßig viel Geld? ───────────────
+  // Idee (Lucas 30.07.): nicht die absolute €-Summe zählt, sondern das VERHÄLTNIS zum
+  // Üblichen für die gleiche Spielphase. Live zieht generell mehr Geld — also vergleichen
+  // wir live-mit-live und vor-Anpfiff-mit-vor-Anpfiff: Stage-Median über ALLE aktuellen
+  // Spiele (quer über die Ligen) = sofort nutzbarer Querschnitts-Fallback. Die gelernte
+  // Liga-Basis (betfair_track_record) kommt als zweite Schicht später obendrauf.
+  // Über ~1,6× Median = auffällig (Bernstein), über ~2,6× = stark (rot umrandet).
+  var NORM_AMBER = 1.6, NORM_RED = 2.6, NORM_MIN_PEERS = 4, NORM_MIN_EUR = 3000;
+  function _stageOf(m) {
+    if (isLive(m)) {
+      var li = m.liveInfo || {}, t = li.time;
+      if (li.is_ht) return 'l2';
+      if (typeof t === 'number') return t > 45 ? 'l2' : 'l1';
+      var k = _kickMs(m); return (k != null && (Date.now() - k) > 45 * 60000) ? 'l2' : 'l1';
+    }
+    var k2 = _kickMs(m); if (k2 == null) return 'p0';
+    return (k2 - Date.now()) <= 3 * 3.6e6 ? 'p1' : 'p0';   // p1 = letzte 3h vor Anpfiff, p0 = früher
+  }
+  // Stage → { med: Median-€ auf dem ganzen Spiel, n: Anzahl Vergleichsspiele }. Memoisiert bis Reload,
+  // wird an denselben Stellen wie _mixBase geleert. Nur Spiele ab NORM_MIN_EUR zählen (Kleckerbeträge
+  // würden den Median nach unten ziehen und harmlose Spiele „über Norm" aussehen lassen).
+  function _normBase() {
+    if (_bf._normBase) return _bf._normBase;
+    var ms = (_bf.data && _bf.data.matches) || [], acc = {}, i;
+    for (i = 0; i < ms.length; i++) {
+      var tot = eur(totalG(ms[i])); if (tot < NORM_MIN_EUR) continue;
+      var st = _stageOf(ms[i]); (acc[st] = acc[st] || []).push(tot);
+    }
+    var base = {};
+    for (var s in acc) { var arr = acc[s].sort(function (a, b) { return a - b; }); base[s] = { med: arr[Math.floor(arr.length / 2)], n: arr.length }; }
+    _bf._normBase = base; return base;
+  }
+  // Verhältnis Spiel-Geld ÷ Stage-Median. null, wenn zu wenige Vergleichsspiele (Median instabil)
+  // oder das Spiel selbst zu klein ist (dann ist „×3" nur Rauschen auf Kleckerbeträgen).
+  function _normRatio(m) {
+    var tot = eur(totalG(m)); if (tot < NORM_MIN_EUR) return null;
+    var b = _normBase()[_stageOf(m)];
+    if (!b || b.n < NORM_MIN_PEERS || !b.med) return null;
+    return tot / b.med;
+  }
+  function _normLvl(m) { var r = _normRatio(m); return r == null ? 0 : (r >= NORM_RED ? 2 : r >= NORM_AMBER ? 1 : 0); }
+  function _normCls(m) { var l = _normLvl(m); return l === 2 ? ' bfb-over2' : l === 1 ? ' bfb-over' : ''; }
+  function _normBadge(m) {
+    var r = _normRatio(m); if (r == null || r < NORM_AMBER) return '';
+    var red = r >= NORM_RED, col = red ? C.live : C.gold;
+    return '<span class="bfb-norm" style="color:' + col + ';border-color:' + col + '" title="' + (red ? 'weit über' : 'über') + ' dem üblichen Geld für diese Spielphase (Median aller vergleichbaren Spiele)">×' + r.toFixed(1) + ' Norm</span>';
+  }
+  function _normLine(m) { var b = _normBadge(m); return b ? '<br>' + b : ''; }
+  window._bfNormRatio = _normRatio;   // Test-Hook
+  window._bfStageOf = _stageOf;
+
   function dateBar(matches) {
     var keys = {}; matches.forEach(function (m) { var k = matchDateKey(m); if (k) keys[k] = (keys[k] || 0) + 1; });
     var ks = Object.keys(keys).sort();
@@ -580,11 +631,11 @@
     var mx = Math.max.apply(null, hs.map(function (x) { return x.v; })) || 1;
     var rows = hs.map(function (x) {
       var ht = x.mm.grp === 'HT', w = Math.max(5, x.v / mx * 100);
-      return '<div class="bfb-row" onclick="_bfJump(\'' + esc(x.m.matchId) + '\')">' +
+      return '<div class="bfb-row' + _normCls(x.m) + '" onclick="_bfJump(\'' + esc(x.m.matchId) + '\')">' +
         '<div class="bfb-lbl"><div class="bfb-g">' + flag(x.m.country, x.m.league) + ' ' + esc(String(x.m.home).slice(0, 13)) + ' – ' + esc(String(x.m.away).slice(0, 13)) + '</div>' +
         '<div class="bfb-o"><span class="bfb-mk' + (ht ? ' ht' : '') + '">' + esc(x.mm.label) + ' →</span> ' + esc(rLabel(x.lead.name, x.m)) + '</div></div>' +
         '<div class="bfb-bar"><i style="width:' + w + '%;background:' + C.vol + '"></i></div>' +
-        '<div class="bfb-meta"><span class="bfb-v" style="color:' + C.vol + '">' + fmtE(x.v) + '</span><br><span class="bfb-s">' + x.pct.toFixed(0) + '%</span> <span class="bfb-odd">@' + fO(x.lead.odd) + '</span></div></div>';
+        '<div class="bfb-meta"><span class="bfb-v" style="color:' + C.vol + '">' + fmtE(x.v) + '</span><br><span class="bfb-s">' + x.pct.toFixed(0) + '%</span> <span class="bfb-odd">@' + fO(x.lead.odd) + '</span>' + _normLine(x.m) + '</div></div>';
     }).join('');
     return '<div style="background:linear-gradient(180deg,rgba(255,184,12,.06),transparent);border:1px solid ' + C.bd + ';border-radius:14px;padding:11px 13px;margin:12px 0 14px">' +
       '<div style="font-size:12px;color:' + C.gold + ';font-weight:800;margin-bottom:10px">🔥 Wo das Geld genau liegt — größte Einzel-Ausgänge <span style="color:' + C.dim + ';font-weight:600">· Balkenlänge = € gematcht · Klick springt zum Spiel</span></div>' +
@@ -641,10 +692,10 @@
       bar = '<div class="bfb-bar"><i style="width:' + w + '%;background:' + C.back + '"></i></div>';
       meta = '<span class="bfb-v" style="color:' + C.back + '">▲ +' + Math.round(x.pct) + '%' + (x.pct >= 200 ? ' 🚨' : '') + '</span><br><span class="bfb-odd">' + fmtE(x.prev) + '→' + fmtE(x.curr) + '</span>';
     }
-    return '<div class="bfb-row" onclick="_bfJump(\'' + esc(x.m.matchId) + '\')">' +
+    return '<div class="bfb-row' + _normCls(x.m) + '" onclick="_bfJump(\'' + esc(x.m.matchId) + '\')">' +
       '<div class="bfb-lbl"><div class="bfb-g">' + flag(x.m.country, x.m.league) + ' ' + esc(String(x.m.home).slice(0, 13)) + ' – ' + esc(String(x.m.away).slice(0, 13)) + '</div>' +
       '<div class="bfb-o">' + lblLine + '</div></div>' + bar +
-      '<div class="bfb-meta">' + meta + '</div></div>';
+      '<div class="bfb-meta">' + meta + _normLine(x.m) + '</div></div>';
   }
   function _flowBars(label, items, mode) {
     if (!items.length) return '';
@@ -690,22 +741,26 @@
   }
 
   function renderTrackBoard() {
-    var t = _bf.track, head = viewToggle() +
-      '<div style="font-size:11px;color:' + C.mut + ';margin-bottom:12px;line-height:1.5">Verlässlichkeit je <b style="color:' + C.ink + '">Liga × Markt</b>: wie oft der Geld-Favorit eintrifft (Trefferquote) und ob es zu den Quoten Gewinn gebracht hätte (ROI). Getrennt nach <b>Konzentration</b> (Geld-Favorit ≥65%) und <b>Zufluss</b> (frisches Geld). n = abgerechnete Spiele — erst ab n≈' + MIN_CONF_N + ' belastbar.</div>';
+    var t = _bf.track, isTeam = _bf.trackBy === 'team';
+    var byBtn = function (id, lbl) { var on = _bf.trackBy === id; return '<button onclick="_bfSetTrackBy(\'' + id + '\')" style="padding:5px 12px;border:1px solid ' + (on ? C.gold : C.bd) + ';background:' + (on ? 'rgba(255,184,12,.12)' : 'transparent') + ';color:' + (on ? C.gold : C.mut) + ';font-size:11.5px;font-weight:700;cursor:pointer">' + lbl + '</button>'; };
+    var byToggle = '<div style="display:inline-flex;border-radius:8px;overflow:hidden;border:1px solid ' + C.bd + ';margin:0 0 10px">' + byBtn('league', '🏆 nach Liga') + byBtn('team', '👥 nach Team') + '</div>';
+    var head = viewToggle() + '<br>' + byToggle +
+      '<div style="font-size:11px;color:' + C.mut + ';margin-bottom:12px;line-height:1.5">Verlässlichkeit je <b style="color:' + C.ink + '">' + (isTeam ? 'Team' : 'Liga') + ' × Markt</b>: wie oft der Geld-Favorit eintrifft (Trefferquote) und ob es zu den Quoten Gewinn gebracht hätte (ROI). Getrennt nach <b>Konzentration</b> (Geld-Favorit ≥65%) und <b>Zufluss</b> (frisches Geld). n = abgerechnete Spiele — erst ab n≈' + MIN_CONF_N + ' belastbar.</div>';
     if (!t || !t.byLeagueMarket || !t.n) {
       return head + '<div style="padding:34px 22px;text-align:center;color:' + C.mut + ';font-size:13px;line-height:1.7;background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:14px">📊 <b>Sammelt Daten.</b><br>Der Track-Record füllt sich, sobald Spiele abgeschlossen sind und abgerechnet werden (der Fetcher merkt sich je Spiel den Geld-Favorit und rechnet nach Abpfiff ab). Nach ein paar Tagen stehen hier die Ligen × Märkte mit hoher Trefferquote — z.B. „Ecuador × HT-Sieg 68% · +14% ROI".</div>';
     }
-    var rows = Object.keys(t.byLeagueMarket).map(function (k) {
-      var i = k.lastIndexOf('|'), lg = k.slice(0, i), mid = k.slice(i + 1), v = t.byLeagueMarket[k];
+    var src = (isTeam ? t.byTeamMarket : t.byLeagueMarket) || {}, CAP = isTeam ? 60 : 500;
+    var all = Object.keys(src).map(function (k) {
+      var i = k.lastIndexOf('|'), lg = k.slice(0, i), mid = k.slice(i + 1), v = src[k];
       return { lg: lg, mid: mid, label: MK_ID[mid] ? MK_ID[mid].label : mid, v: v };
     }).filter(function (r) { return r.v.n >= 1; }).sort(function (a, b) {
-      // belastbare (n≥MIN) zuerst, dann nach ROI, dann n
       var as = a.v.n >= MIN_CONF_N ? 1 : 0, bs = b.v.n >= MIN_CONF_N ? 1 : 0;
       if (as !== bs) return bs - as;
       return (b.v.roi || -9) - (a.v.roi || -9);
     });
+    var total = all.length, rows = all.slice(0, CAP);
     var th = function (s, w) { return '<th style="text-align:' + (w ? 'right' : 'left') + ';padding:6px 8px;font-size:10.5px;color:' + C.dim + ';font-weight:700;white-space:nowrap">' + s + '</th>'; };
-    var head2 = '<tr>' + th('Liga') + th('Markt') + th('Spiele', 1) + th('Trefferquote', 1) + th('ROI', 1) + th('Konz. (n)', 1) + th('Zufluss (n)', 1) + '</tr>';
+    var head2 = '<tr>' + th(isTeam ? 'Team' : 'Liga') + th('Markt') + th('Spiele', 1) + th('Trefferquote', 1) + th('ROI', 1) + th('Konz. (n)', 1) + th('Zufluss (n)', 1) + '</tr>';
     var body = rows.map(function (r) {
       var v = r.v, solid = v.n >= MIN_CONF_N, ht = MK_ID[r.mid] && MK_ID[r.mid].grp === 'HT';
       var td = function (s, col) { return '<td style="text-align:right;padding:6px 8px;font-size:12px;font-weight:700;color:' + (col || C.ink) + '">' + s + '</td>'; };
@@ -719,9 +774,9 @@
         td(v.hitRateInflow != null ? _pctTxt(v.hitRateInflow) + ' <span style="color:' + C.dim + ';font-weight:600">' + v.nInflow + '</span>' : '—', v.hitRateInflow != null ? C.ink : C.dim) +
         '</tr>';
     }).join('');
-    return head + '<div style="font-size:11px;color:' + C.dim + ';margin-bottom:8px">' + t.n + ' abgerechnete Signale · ' + rows.length + ' Liga×Markt-Kombinationen · Stand ' + (t.generatedAt ? new Date(t.generatedAt).toLocaleString('de-AT') : '—') + '</div>' +
+    return head + '<div style="font-size:11px;color:' + C.dim + ';margin-bottom:8px">' + t.n + ' abgerechnete Signale · ' + total + ' ' + (isTeam ? 'Team' : 'Liga') + '×Markt-Kombinationen' + (total > CAP ? ' · Top ' + CAP + ' gezeigt' : '') + ' · Stand ' + (t.generatedAt ? new Date(t.generatedAt).toLocaleString('de-AT') : '—') + '</div>' +
       '<div style="overflow-x:auto;background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:14px"><table style="width:100%;border-collapse:collapse;min-width:560px"><thead>' + head2 + '</thead><tbody>' + body + '</tbody></table></div>' +
-      '<div style="font-size:10.5px;color:' + C.dim + ';margin-top:8px">Blasse Zeilen: Stichprobe noch zu klein (n&lt;' + MIN_CONF_N + '). Team-Ebene folgt.</div>';
+      '<div style="font-size:10.5px;color:' + C.dim + ';margin-top:8px">Blasse Zeilen: Stichprobe noch zu klein (n&lt;' + MIN_CONF_N + ').' + (isTeam ? ' Team-Ebene: früh, viele Buckets mit n=1.' : '') + '</div>';
   }
 
   // ── Info-Band ────────────────────────────────────────────────────────────────
@@ -817,7 +872,10 @@
       '.bfb-odd{font-size:10px;color:#6e7681;}',
       '.bfb-leg{display:flex;gap:14px;font-size:10.5px;color:#8b949e;margin:0 0 9px;}',
       '.bfb-leg i{display:inline-block;width:18px;height:8px;border-radius:4px;vertical-align:1px;margin-right:5px;}',
-      '.bfb-sub{font-size:11px;color:#3fb950;font-weight:700;margin:9px 0 6px;}'
+      '.bfb-sub{font-size:11px;color:#3fb950;font-weight:700;margin:9px 0 6px;}',
+      '.bfb-norm{display:inline-block;font-size:9.5px;font-weight:800;padding:0 5px;margin-left:6px;border:1px solid;border-radius:6px;letter-spacing:.2px;vertical-align:middle;line-height:15px;}',
+      '.bfb-over{box-shadow:inset 0 0 0 1px rgba(255,184,12,.5);background:rgba(255,184,12,.05);padding-left:8px;padding-right:8px;}',
+      '.bfb-over2{box-shadow:inset 0 0 0 1px rgba(248,81,73,.6);background:rgba(248,81,73,.06);padding-left:8px;padding-right:8px;}'
     ].join('');
     var st = document.createElement('style'); st.id = 'bfb-css'; st.textContent = css;
     (document.head || document.documentElement).appendChild(st);
@@ -1012,6 +1070,7 @@
 
   function rerender() { var p = document.getElementById('betfairRadarPanel'); if (p) p.innerHTML = renderBetfairRadar(); }
   window._bfSetView = function (v) { _bf.view = v; rerender(); };
+  window._bfSetTrackBy = function (v) { _bf.trackBy = v; rerender(); };
   window._bfSetLeague = function (v) { _bf.league = v; rerender(); };
   window._bfSetTab = function (v) { _bf.tab = v; rerender(); };
   window._bfSetDate = function (v) { _bf.date = v; rerender(); };

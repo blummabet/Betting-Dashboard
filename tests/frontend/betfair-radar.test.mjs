@@ -238,6 +238,23 @@ test('Trefferquoten-Board mit Daten: Liga×Markt + Trefferquote + ROI', () => {
   assert.match(html, /72%/);            // Konzentrations-Trefferquote
 });
 
+test('Trefferquoten: Umschalter „nach Team" zeigt Team×Markt', () => {
+  const { w } = boot();
+  w._bfState.view = 'record';
+  w._bfState.track = {
+    generatedAt: iso(0), n: 48,
+    byLeagueMarket: { 'Ecuador Serie A|Match Odds': { n: 40, wins: 27, hitRate: 0.68, roi: 0.14, nConc: 25, hitRateConc: 0.72, roiConc: 0.2, nInflow: 0, hitRateInflow: null, roiInflow: null } },
+    byTeamMarket: { 'LDU Quito|Match Odds': { n: 22, wins: 15, hitRate: 0.68, roi: 0.12, nConc: 14, hitRateConc: 0.71, roiConc: 0.18, nInflow: 0, hitRateInflow: null, roiInflow: null } },
+  };
+  let html = w._renderBetfairRadar();
+  assert.match(html, /nach Liga/); assert.match(html, /nach Team/);
+  assert.match(html, /Ecuador Serie A/); assert.doesNotMatch(html, /LDU Quito/);
+  w._bfSetTrackBy('team');
+  html = w.document.getElementById('betfairRadarPanel').innerHTML;
+  assert.match(html, /Team×Markt/); assert.match(html, /LDU Quito/);
+  assert.doesNotMatch(html, /Ecuador Serie A/);
+});
+
 test('Confidence-Badge am Markt in der Liste, wenn Track-Record belastbar', () => {
   const { w } = boot();
   w._bfState.track = {
@@ -495,4 +512,31 @@ test('Steam-pp ist implied-prob-basiert & begrenzt (kein 16279pp bei Live-Drift)
   assert.ok(mv, 'Move erkannt');
   assert.ok(Math.abs(mv.pp) <= 100, 'pp begrenzt (implied-prob), war ' + mv.pp);
   assert.ok(Math.abs(mv.pp) > 50, 'großer, aber realistischer Move');
+});
+
+
+test('×-Norm: überverhältnismäßig viel Geld wird erkannt & markiert (Stage-Median)', () => {
+  const { w } = boot();
+  const mk = (v) => ({ 'Match Odds': { runners: [ { name: 'H', vol: v * 0.6, odd: 2.0 }, { name: 'A', vol: v * 0.4, odd: 2.2 } ] } });
+  const mm = (id, v) => ({ matchId: id, home: 'H' + id, away: 'A' + id, league: 'Testliga', country: 'AT', kickoff: '2031-01-01T20:00:00Z', liveInfo: {}, markets: mk(v) });
+  // 5 normale (~10K) + 1 großes (40K) Spiel, alle weit vor Anpfiff (Stage p0)
+  w._bfState.data = { matches: [ mm(1, 10000), mm(2, 10000), mm(3, 10000), mm(4, 10000), mm(5, 10000), mm(6, 40000) ] };
+  w._bfState._normBase = null; w._bfState._cohCache = {};
+  assert.strictEqual(w._bfStageOf(w._bfState.data.matches[0]), 'p0', 'weit vor Anpfiff = p0');
+  const rBig = w._bfNormRatio(w._bfState.data.matches[5]);
+  const rNorm = w._bfNormRatio(w._bfState.data.matches[0]);
+  assert.ok(rBig >= 3.5 && rBig <= 4.5, 'großes Spiel ~4× Median, war ' + rBig);
+  assert.ok(rNorm >= 0.9 && rNorm <= 1.1, 'normales Spiel ~1× Median, war ' + rNorm);
+  const html = w._renderBetfairRadar();
+  assert.match(html, /bfb-norm/, '×-Norm-Badge wird gerendert');
+  assert.match(html, /bfb-over2/, 'starkes Über-Norm-Spiel rot umrandet');
+});
+
+test('×-Norm: zu wenige Vergleichsspiele → kein Ratio (Median instabil)', () => {
+  const { w } = boot();
+  const mk = (v) => ({ 'Match Odds': { runners: [ { name: 'H', vol: v, odd: 2.0 } ] } });
+  const mm = (id, v) => ({ matchId: id, home: 'H' + id, away: 'A' + id, league: 'L', country: 'AT', kickoff: '2031-01-01T20:00:00Z', liveInfo: {}, markets: mk(v) });
+  w._bfState.data = { matches: [ mm(1, 10000), mm(2, 90000) ] };   // nur 2 Spiele in der Stage
+  w._bfState._normBase = null; w._bfState._cohCache = {};
+  assert.strictEqual(w._bfNormRatio(w._bfState.data.matches[1]), null, 'unter NORM_MIN_PEERS → null');
 });
