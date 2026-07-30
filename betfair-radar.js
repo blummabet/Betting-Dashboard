@@ -422,8 +422,7 @@
   function koPill(m) {
     if (isLive(m)) {
       var li = m.liveInfo || {}, sc = (li.goal_v1 != null && li.goal_v2 != null) ? (li.goal_v1 + ':' + li.goal_v2) : '';
-      var mn = (li.time != null) ? (' ' + li.time + "'") : '';
-      return '<span style="display:inline-flex;gap:4px;align-items:center;padding:2px 8px;border-radius:20px;background:rgba(248,81,73,.15);color:' + C.live + ';font-size:11px;font-weight:800"><span style="width:6px;height:6px;border-radius:50%;background:' + C.live + '"></span>LIVE' + mn + (sc ? ' · ' + sc : '') + '</span>';
+      return '<span style="display:inline-flex;gap:4px;align-items:center;padding:2px 8px;border-radius:20px;background:rgba(248,81,73,.15);color:' + C.live + ';font-size:11px;font-weight:800"><span style="width:6px;height:6px;border-radius:50%;background:' + C.live + '"></span>LIVE' + (sc ? ' · ' + sc : '') + '</span>';
     }
     if (!m.kickoff) return '';
     var d = new Date(m.kickoff), h = (d.getTime() - Date.now()) / 3.6e6;
@@ -493,7 +492,7 @@
   }
   function cohPillsRow(m) {
     var r = cohOf(m), p = [];
-    if (isLive(m)) { var _li = m.liveInfo || {}; p.push(cohPill('● LIVE' + (_li.time != null ? ' ' + _li.time + "'" : ''), C.live, 'rgba(248,81,73,.15)')); }
+    if (isLive(m)) { p.push(cohPill('● LIVE', C.live, 'rgba(248,81,73,.15)')); }
     if (r.hard.length) p.push(cohPill('⚠ ' + r.hard.length + ' harte Abweichung' + (r.hard.length > 1 ? 'en' : ''), C.lay, 'rgba(248,81,73,.14)'));
     if (r.soft.length) p.push(cohPill(r.soft.length + ' Modell-Lücke' + (r.soft.length > 1 ? 'n' : ''), C.gold, 'rgba(255,184,12,.13)'));
     if (r.fl && r.fl.kind === 'steam') p.push(cohPill('↯ Steam ' + _cpp(r.fl.move) + 'pp' + (r.fl.sideName ? ' · ' + esc(String(r.fl.sideName).slice(0, 14)) : ''), C.vol, 'rgba(45,212,191,.13)'));
@@ -777,8 +776,10 @@
 
     var age = genAgeMin();
     var ageTxt = age > 1440 ? Math.round(age / 1440) + ' Tage' : age >= 90 ? Math.round(age / 60) + 'h' : Math.round(age) + ' Min';
-    var stale = age > STALE_WARN_MIN
-      ? '<div style="margin:8px 0;padding:9px 13px;border:1px solid #7d4b16;background:#2b1d0e;color:' + C.amber + ';border-radius:10px;font-size:12px">⚠️ <b>Daten sind ' + ageTxt + ' alt</b> — der Fetcher (GitHub Actions) hat länger nicht frisch geschrieben. Live-Status ist ausgeblendet.</div>'
+    var stale = age > 35
+      ? '<div style="margin:8px 0;padding:10px 13px;border:1px solid #7d2b2b;background:#2b0e0e;color:#f2a6a6;border-radius:10px;font-size:12.5px">⚠️ <b>Daten ' + ageTxt + ' alt</b> — die Geldflüsse unten sind NICHT aktuell (Fetcher hängt). Live-Zahlen erst handeln, wenn frisch.</div>'
+      : age > 15
+      ? '<div style="margin:8px 0;padding:8px 13px;border:1px solid #7d4b16;background:#2b1d0e;color:' + C.amber + ';border-radius:10px;font-size:12px">🕒 <b>Daten ' + ageTxt + ' alt</b> — Geldflüsse spiegeln diesen Stand, nicht jetzt.</div>'
       : '';
 
     if (!qAll.length) {
@@ -802,7 +803,8 @@
     if (!groups.top.length && !groups.intl.length && !groups.rest.length) {
       out += '<div style="padding:34px;text-align:center;color:' + C.mut + ';font-size:13px;background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:14px">Kein Spiel für diesen Filter. Datum/Liga/Markt/Live/Reiter anpassen.</div>';
     }
-    out += '<div style="text-align:center;color:' + C.dim + ';font-size:11px;margin-top:6px">Stand ' + (_bf.data._meta && _bf.data._meta.generatedAt ? new Date(_bf.data._meta.generatedAt).toLocaleString('de-AT') : '—') + ' · Beträge in € (Betwatch)</div>';
+    var _fc = age > 35 ? '#f2a6a6' : age > 15 ? C.amber : C.dim;
+    out += '<div style="text-align:center;color:' + _fc + ';font-size:11px;margin-top:6px">Stand ' + (_bf.data._meta && _bf.data._meta.generatedAt ? new Date(_bf.data._meta.generatedAt).toLocaleString('de-AT') : '—') + ' · vor ' + ageTxt + ' · Beträge in € (Betwatch)</div>';
     return out;
   }
   window._renderBetfairRadar = renderBetfairRadar;

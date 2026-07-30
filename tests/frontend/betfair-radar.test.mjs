@@ -456,7 +456,7 @@ test('Live: Betwatch-Uhr vorhanden → live (auch wenn Anpfiff-Zeit noch Zukunft
   assert.equal(w._bfIsLive(liveMatch(505, 1, { time: "12'" })), true);
 });
 
-test('Live-Pill ohne Minute rendert sauber „LIVE" (kein null), Zähler ≥1', () => {
+test('Live-Pill rendert sauber „LIVE" (kein null, keine Minute)', () => {
   const { w, prices } = boot();
   prices.matches[0].kickoff = ko(-0.5); prices.matches[0].liveInfo = {};   // angepfiffen, keine Uhr
   const html = w._renderBetfairRadar();
