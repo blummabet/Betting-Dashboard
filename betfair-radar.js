@@ -29,6 +29,7 @@
   var THR = { top: { FT: 20000, HT: 10000 }, intl: { FT: 20000, HT: 10000 }, rest: { FT: 15000, HT: 5000 } };
   window._bfTHR = THR;   // Test-Hook: Rendering-Tests pinnen eigene Schwellen (produktiv unverändert)
   var CHIP_FLOOR = 500;
+  var MIN_ODD_SHOW = 1.30;   // Ausgänge, auf denen das Geld unter dieser Quote liegt (fast sichere Favoriten / Parken), gar nicht zeigen — Hotspot + Frisches Geld (wie Push-Floor)
 
   var C = {
     bg: '#0d1117', card: '#161b22', raised: '#1c2330', bd: '#30363d',
@@ -566,6 +567,7 @@
       MK.forEach(function (mm) {
         var mk = mkOf(m, mm.id); if (!mk || distTotal(mk) <= 0) return;
         var lead = leadRunner(mk); if (!lead) return;
+        if (typeof lead.odd === 'number' && lead.odd < MIN_ODD_SHOW) return;   // Geld auf ~Lock-Favorit = keine Info
         var v = eur(lead.vol); if (v < CHIP_FLOOR) return;
         hs.push({ m: m, mm: mm, lead: lead, v: v, pct: (+lead.vol || 0) / (distTotal(mk) || 1) * 100 });
       });
@@ -593,6 +595,11 @@
   var SURGE_MIN_BASE = 1000;   // % Surge nur wenn Basis ≥ so viel € (sonst Rauschen)
   var SURGE_MIN_DELTA = 500;   // und Zuwachs ≥ so viel €
   var SURGE_MIN_PCT = 25;      // und ≥ so viel % Sprung
+  function _leadOddOk(m, mm) {
+    if (!mm) return true;                                  // Match-Ebene-Fallback: keine Seite bekannt -> nicht filtern
+    var mk = mkOf(m, mm.id), lead = mk ? leadRunner(mk) : null;
+    return !(lead && typeof lead.odd === 'number' && lead.odd < MIN_ODD_SHOW);
+  }
   function flowItems(base) {
     var H = _bf.hist || {}, out = [];
     base.forEach(function (m) {
@@ -637,9 +644,9 @@
   }
   function flowStrip(base) {
     var items = flowItems(base);
-    var eurItems = items.filter(function (x) { return eur(x.delta) >= FLOW_MIN_EUR; })
+    var eurItems = items.filter(function (x) { return eur(x.delta) >= FLOW_MIN_EUR && _leadOddOk(x.m, x.mm); })
       .sort(function (a, b) { return b.delta - a.delta; }).slice(0, 6);
-    var surge = items.filter(function (x) { return eur(x.prev) >= SURGE_MIN_BASE && eur(x.delta) >= SURGE_MIN_DELTA && x.pct >= SURGE_MIN_PCT && x.pct < 900; })
+    var surge = items.filter(function (x) { return eur(x.prev) >= SURGE_MIN_BASE && eur(x.delta) >= SURGE_MIN_DELTA && x.pct >= SURGE_MIN_PCT && x.pct < 900 && _leadOddOk(x.m, x.mm); })
       .sort(function (a, b) { return b.pct - a.pct; }).slice(0, 6);
     var head = '<div style="font-size:12px;color:' + C.back + ';font-weight:800;margin-bottom:8px">💸 Frisches Geld — was seit dem letzten Lauf reinfloss &amp; auf welche Seite <span style="color:' + C.dim + ';font-weight:600">(Klick springt zum Spiel)</span></div>';
     var body = (!eurItems.length && !surge.length)
