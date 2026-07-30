@@ -58,11 +58,20 @@
   window._bfState = _bf;
 
   function _bfFetch3() {
-    return Promise.all([
-      fetch('betfair_prices.json?t=' + Date.now()).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
-      fetch('betfair_history.json?t=' + Date.now()).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
-      fetch('betfair_track_record.json?t=' + Date.now()).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
-    ]);
+    // raw.github ZUERST → spiegelt den Commit sofort, also so frisch wie der Telegram-Push (der Push
+    // feuert beim Fetch, VOR dem Pages-Deploy). Sonst lokal (Pages/Offline-Cache). Schließt die
+    // Push↔Radar-Lücke: der Radar wartet nicht mehr auf den separaten, trägen Pages-Deploy-Schedule.
+    var base = 'https://raw.githubusercontent.com/blummabet/Betting-Dashboard/main';
+    var t = Date.now();
+    var jf = function (name) {
+      return fetch(base + '/' + name + '?t=' + t, { cache: 'no-store' })
+        .then(function (r) { if (r.ok) return r.json(); throw 0; })
+        .catch(function () {
+          return fetch(name + '?t=' + t, { cache: 'no-store' })
+            .then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
+        });
+    };
+    return Promise.all([jf('betfair_prices.json'), jf('betfair_history.json'), jf('betfair_track_record.json')]);
   }
   function _bfLoad() {
     if (_bf.data || _bf.loading) return;

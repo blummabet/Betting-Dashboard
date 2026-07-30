@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v27';   // 30.07.2026: Betfair-Radar Live ehrlich (Minute raus, Daten-Alter prominent ab 15/35 Min)
+const VERSION = 'cocobet-v28';   // 30.07.2026: Radar zieht Betfair-Daten von raw.github (commit-frisch) → Push und Radar konsistent
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
