@@ -187,6 +187,7 @@ jobs:
           python build_signal_ledger.py --write || true
           python update_signal_weights.py || true
           python compute_pick_calibration.py --write || true   # 27.07.2026 (Lucas): Kalibrierung auch für MLS/Liga (lief nur WM)
+          python build_dashboard_pulse.py || true   # 30.07.2026 (Lucas): Übersicht-Puls (letzte 30 Picks · CLV/Trefferquote)
 
       - name: 🛡️ MLS Guard-Batterie (mls_status.json)
         run: python wm_data_integrity.py || true
@@ -277,6 +278,7 @@ jobs:
           git add mls_pick_calibration.json 2>/dev/null || true
           git add mls_signal_weights.json 2>/dev/null || true
           git add mls_clv_summary.json 2>/dev/null || true
+          git add dashboard_pulse.json 2>/dev/null || true
           git add mls_streaks.json 2>/dev/null || true
           git add mls_status.json 2>/dev/null || true
           git add mls_sharp_moves_log.json 2>/dev/null || true

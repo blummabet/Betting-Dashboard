@@ -31,7 +31,8 @@ MIN_RESOLVED = 8
 
 def evaluate(resolved: int, ledger_records: int, with_closing: int,
              graded: int | None = None, finished: int | None = None,
-             finished_with_xg: int | None = None, min_resolved: int = MIN_RESOLVED) -> list:
+             finished_with_xg: int | None = None, resolved_after_update: int | None = None,
+             min_resolved: int = MIN_RESOLVED) -> list:
     """REIN/testbar. Gibt Probleme zurück (leer = Loop gesund oder legitim jung).
 
     resolved         : Anzahl aufgelöster Picks (haben ein Ergebnis).
@@ -55,6 +56,12 @@ def evaluate(resolved: int, ledger_records: int, with_closing: int,
     # 27.07.2026 (Lucas: „lernt MLS wirklich?"): NEU — Ledger hat Einträge, aber KEINER ist
     # prozess-bewertet. Genau der stille Bruch (xG-Feldname / Match-Key-Spieltag), der 253 fertige
     # Spiele mit 0 Verdicts erzeugte. „ledger_records>0" hat das VERSTECKT statt gemeldet.
+    # 30.07.2026 (Audit): Frische — nicht-leerer, aber EINGEFRORENER Ledger. Feuert nur, wenn
+    # aufgelöste BET-Picks NACH dem letzten Ledger-Update liegen (off-season/jung → 0 → still).
+    if resolved_after_update is not None and resolved_after_update > 0 and ledger_records > 0:
+        problems.append(
+            f"{resolved_after_update} aufgelöste BET-Picks NACH dem letzten Ledger-Update — der Ledger "
+            f"wächst nicht mehr (Lern-Loop eingefroren, obwohl neue Resolves anliegen).")
     if ledger_records > 0 and graded == 0:
         problems.append(
             f"{ledger_records} Ledger-Einträge, aber 0 prozess-bewertet (verdient/Glück/Pech) — "
@@ -82,6 +89,25 @@ def _xg_present(stats: dict) -> bool:
     return isinstance(xh, (int, float))
 
 
+def _parse_dt(v):
+    if not v:
+        return None
+    from datetime import datetime
+    try:
+        return datetime.fromisoformat(str(v).replace("Z", "+00:00"))
+    except Exception:
+        return None
+
+
+def _fx_date(fx):
+    r = fx.get("result") or {}
+    for v in (fx.get("date"), fx.get("kickoff"), fx.get("utcDate"), fx.get("matchDate"),
+              r.get("date"), r.get("finishedAt")):
+        if v:
+            return v
+    return None
+
+
 def collect(ledger_file: str, clv_file: str, data_file: str | None = None) -> dict:
     """Kennzahlen von Disk lesen → evaluate-Eingabe. Datei-Namen datensatz-aware übergeben."""
     ledger = _load(ledger_file)
@@ -93,6 +119,10 @@ def collect(ledger_file: str, clv_file: str, data_file: str | None = None) -> di
     overall = (clv.get("overall") or {}) if isinstance(clv, dict) else {}
     cov = overall.get("coverage") or {}
     finished = finished_with_xg = None
+    resolved_after_update = None
+    _ra = [r.get("resolvedAt") for r in recs if isinstance(r, dict) and r.get("resolvedAt")]
+    _meta = ledger.get("_meta") if isinstance(ledger, dict) else None
+    _cut = _parse_dt(max(_ra) if _ra else (_meta.get("updated_at") if isinstance(_meta, dict) else None))
     if data_file:
         data = _load(data_file)
         if isinstance(data, dict) and (data.get("groups") or data.get("koFixtures")):
@@ -101,12 +131,22 @@ def collect(ledger_file: str, clv_file: str, data_file: str | None = None) -> di
             for g in (data.get("groups") or {}).values():
                 fxs += (g.get("fixtures") or [])
             fxs += (data.get("koFixtures") or [])
+            _dated = 0
             for fx in fxs:
                 r = fx.get("result") or {}
-                if str(r.get("status", "")).upper() in ("FT", "AET", "PEN"):
+                done = str(r.get("status", "")).upper() in ("FT", "AET", "PEN")
+                if done:
                     finished += 1
                     if _xg_present(r.get("stats")):
                         finished_with_xg += 1
+                if done and _cut is not None:
+                    fd = _parse_dt(_fx_date(fx))
+                    if fd is not None:
+                        _dated += 1
+                        if any(str(p.get("verdict")) == "BET" for p in (fx.get("picks") or [])) and fd > _cut:
+                            resolved_after_update = (resolved_after_update or 0) + 1
+            if _cut is not None and _dated > 0 and resolved_after_update is None:
+                resolved_after_update = 0   # datierbar, aber nichts hinter dem Ledger → grün
     return {
         "resolved": int(cov.get("resolved") or overall.get("n") or 0),
         "ledger_records": int(ledger_records or 0),
@@ -114,6 +154,7 @@ def collect(ledger_file: str, clv_file: str, data_file: str | None = None) -> di
         "graded": graded,
         "finished": finished,
         "finished_with_xg": finished_with_xg,
+        "resolved_after_update": resolved_after_update,
     }
 
 
@@ -125,7 +166,8 @@ def main() -> int:
     m = collect(ledger_file, clv_file, data_file)
     problems = evaluate(m["resolved"], m["ledger_records"], m["with_closing"],
                         graded=m["graded"], finished=m["finished"],
-                        finished_with_xg=m["finished_with_xg"])
+                        finished_with_xg=m["finished_with_xg"],
+                        resolved_after_update=m["resolved_after_update"])
     if not problems:
         print(f"✅ Lern-Loop gesund/jung (resolved={m['resolved']}, ledger={m['ledger_records']}, "
               f"graded={m['graded']}, withClosing={m['with_closing']}, "

@@ -31,6 +31,21 @@ class TestEvaluate:
     def test_bewertete_eintraege_sind_still(self):
         assert LLA.evaluate(resolved=20, ledger_records=10, with_closing=5, graded=6) == []
 
+    def test_resolves_nach_ledger_update_ist_eingefroren(self):
+        # 30.07.2026 (Audit): nicht-leerer, aber eingefrorener Ledger — neue Resolves kommen nicht an.
+        probs = LLA.evaluate(resolved=20, ledger_records=30, with_closing=15, graded=10,
+                             resolved_after_update=5)
+        assert any("wächst nicht mehr" in p for p in probs)
+
+    def test_keine_resolves_nach_update_still(self):
+        assert LLA.evaluate(resolved=20, ledger_records=30, with_closing=15, graded=10,
+                            resolved_after_update=0) == []
+
+    def test_freshness_none_bleibt_inaktiv(self):
+        # Datum nicht bestimmbar → Check aus, kein Fehlalarm.
+        assert LLA.evaluate(resolved=20, ledger_records=30, with_closing=15, graded=10,
+                            resolved_after_update=None) == []
+
     def test_fertige_spiele_ohne_xg_ist_tot(self):
         probs = LLA.evaluate(resolved=20, ledger_records=10, with_closing=5,
                              graded=4, finished=100, finished_with_xg=0)
@@ -53,13 +68,15 @@ class TestCollect:
         monkeypatch.setattr(LLA, "BASE", tmp_path)
         m = LLA.collect("l.json", "c.json")
         assert m == {"resolved": 9, "ledger_records": 3, "with_closing": 4,
-                     "graded": 0, "finished": None, "finished_with_xg": None}
+                     "graded": 0, "finished": None, "finished_with_xg": None,
+                     "resolved_after_update": None}
 
     def test_collect_fehlende_dateien_sind_null(self, tmp_path, monkeypatch):
         monkeypatch.setattr(LLA, "BASE", tmp_path)
         m = LLA.collect("nope.json", "nada.json")
         assert m == {"resolved": 0, "ledger_records": 0, "with_closing": 0,
-                     "graded": 0, "finished": None, "finished_with_xg": None}
+                     "graded": 0, "finished": None, "finished_with_xg": None,
+                     "resolved_after_update": None}
 
     def test_collect_zaehlt_graded_und_xg(self, tmp_path, monkeypatch):
         import json
@@ -74,3 +91,17 @@ class TestCollect:
         monkeypatch.setattr(LLA, "BASE", tmp_path)
         m = LLA.collect("l.json", "c.json", "d.json")
         assert m["graded"] == 1 and m["finished"] == 2 and m["finished_with_xg"] == 1
+
+    def test_collect_frische_resolves_nach_ledger_update(self, tmp_path, monkeypatch):
+        import json
+        # Ledger zuletzt am 01.06. ingestiert; danach ein fertiges BET-Spiel am 01.07. → hinterher.
+        (tmp_path / "l.json").write_text(json.dumps({"_meta": {"updated_at": "2026-06-01T00:00:00Z"},
+            "records": [{"resolvedAt": "2026-06-01T00:00:00Z"}]}))
+        (tmp_path / "c.json").write_text(json.dumps({"overall": {"coverage": {"resolved": 9, "withClosing": 4}}}))
+        (tmp_path / "d.json").write_text(json.dumps({"groups": {"L": {"fixtures": [
+            {"date": "2026-07-01T00:00:00Z", "result": {"status": "FT"}, "picks": [{"verdict": "BET"}]},
+            {"date": "2026-05-01T00:00:00Z", "result": {"status": "FT"}, "picks": [{"verdict": "BET"}]},
+            {"date": "2026-07-02T00:00:00Z", "result": {"status": "FT"}, "picks": [{"verdict": "BEOBACHTEN"}]}]}}}))
+        monkeypatch.setattr(LLA, "BASE", tmp_path)
+        m = LLA.collect("l.json", "c.json", "d.json")
+        assert m["resolved_after_update"] == 1   # nur das BET-Spiel vom 01.07. zählt

@@ -1182,6 +1182,7 @@
     coach_change:        ['🔁', 'Neuer Trainer'],
     transfer_shift:      ['🔄', 'Transfer-Abgang'],
     betfair_money:       ['💷', 'Betfair-Geld'],
+    betfair_coherence:   ['🧩', 'Kohärenz'],
   };
 
   // Engine-Signal-Grid (pos/neg/silent Kacheln) — gemeinsamer Renderer für Gruppen- + KO-Cards.

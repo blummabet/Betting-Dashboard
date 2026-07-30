@@ -146,7 +146,29 @@
       '.md-pip.off{background:var(--mln2);}',
       '.md-fl{display:inline-block;margin-right:5px;font-size:13px;line-height:1;vertical-align:-1px;}',
       '.md-empty{color:var(--mi3);font-size:12px;padding:12px 2px 10px;line-height:1.5;}',
-      '.md-foot{text-align:center;color:var(--mi3);font-size:11px;margin-top:16px;padding-bottom:2px;}'
+      '.md-foot{text-align:center;color:var(--mi3);font-size:11px;margin-top:16px;padding-bottom:2px;}',
+      '.md-pulse{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--m1);border:1px solid var(--mln);border-radius:14px;padding:12px 15px;margin-top:14px;}',
+      '.md-pulse-h{display:flex;align-items:center;gap:7px;font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--mi3);}',
+      '.md-pulse-ms{display:flex;align-items:center;gap:18px;flex-wrap:wrap;flex:1;min-width:0;}',
+      '.md-pulse-m{display:flex;flex-direction:column;gap:2px;}',
+      '.md-pulse-v{font-family:"JetBrains Mono","SF Mono",Menlo,monospace;font-size:19px;font-weight:800;line-height:1;letter-spacing:-.02em;}',
+      '.md-pulse-l{font-size:10px;color:var(--mi3);font-weight:600;white-space:nowrap;}',
+      '.md-spk{position:relative;display:flex;align-items:stretch;gap:1px;height:34px;margin-left:auto;}',
+      '.md-spk-mid{position:absolute;left:0;right:0;top:50%;height:1px;background:var(--mln2);}',
+      '.md-spk-col{position:relative;width:3px;}',
+      '.md-spk-b{position:absolute;left:0;width:100%;border-radius:1.5px;min-height:1px;}',
+      '.md-jetzt{background:radial-gradient(120% 140% at 100% 0%,rgba(217,89,38,.10),transparent 55%),var(--m1);border:1px solid rgba(217,89,38,.3);border-radius:14px;padding:13px 15px 8px;margin-top:12px;}',
+      '.md-jz-h{display:flex;align-items:center;gap:8px;margin-bottom:2px;}',
+      '.md-jz-t{font-weight:800;font-size:13.5px;color:var(--mi);}',
+      '.md-jz-s{font-size:11px;color:var(--mi2);}',
+      '.md-jz-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--mln);}',
+      '.md-jz-row:first-of-type{border-top:0;}',
+      '.md-jz-main{min-width:0;flex:1;}',
+      '.md-jz-tm{font-size:13px;font-weight:600;color:var(--mi);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+      '.md-jz-sub{font-size:11px;color:var(--mi2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+      '.md-jz-ko{font-family:"JetBrains Mono",monospace;font-size:12px;font-weight:800;color:var(--bf);white-space:nowrap;}',
+      '.md-jz-mv{font-family:"JetBrains Mono",monospace;font-size:12px;font-weight:800;white-space:nowrap;text-align:right;min-width:52px;}',
+      '.md-badge{display:inline-block;font-size:9.5px;font-weight:800;padding:1px 6px;border-radius:5px;margin-left:6px;vertical-align:1px;}'
     ].join('');
     var st = document.createElement('style');
     st.id = 'mdash-css'; st.textContent = css;
@@ -154,10 +176,17 @@
   }
 
   function _mdFetch() {
-    var b = '?t=' + Date.now();
-    var jf = function (u) { return fetch(u + b, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }); };
+    var t = Date.now();
+    var base = 'https://raw.githubusercontent.com/blummabet/Betting-Dashboard/main';
+    // raw.github ZUERST → commit-frisch (spiegelt den Fetcher-Commit sofort, ohne auf den trägen
+    // Pages-Deploy zu warten), sonst lokal (Pages/Offline-Cache). Gleiche Logik wie im Betfair-Radar.
+    var jf = function (u) {
+      return fetch(base + '/' + u + '?t=' + t, { cache: 'no-store' })
+        .then(function (r) { if (r.ok) return r.json(); throw 0; })
+        .catch(function () { return fetch(u + '?t=' + t, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }); });
+    };
     return Promise.all([jf('liga-data.json'), jf('mls-data.json'), jf('liga_streaks.json'),
-      jf('mls_streaks.json'), jf('betfair_prices.json'), jf('poly_money_broad_close.json')]);
+      jf('mls_streaks.json'), jf('betfair_prices.json'), jf('poly_money_broad_close.json'), jf('dashboard_pulse.json')]);
   }
   function _mdLoad(force) {
     if (_md.loading) return;
@@ -167,7 +196,7 @@
     var p = document.getElementById('mainDashPanel');
     if (p && !_md.data) { p.classList.add('mdash'); p.innerHTML = _head() + '<div class="md-empty" style="text-align:center;padding:52px 0;">⏳ Übersicht wird geladen …</div>'; }
     _mdFetch().then(function (a) {
-      _md.data = { liga: a[0], mls: a[1], ligaStreaks: a[2], mlsStreaks: a[3], betfair: a[4], whales: a[5] };
+      _md.data = { liga: a[0], mls: a[1], ligaStreaks: a[2], mlsStreaks: a[3], betfair: a[4], whales: a[5], pulse: a[6] };
       _md.loading = false; _mdRender();
     });
   }
@@ -440,8 +469,69 @@
       tile('📡', 'Sharp-Radar', A.blue, 'rgba(57,135,229,.14)', 'rgba(57,135,229,.32)', 'sharp', 'Radar', shBody, 200) +
       '</div>';
 
-    p.innerHTML = _head() + _kpis() + _mdHero() + grid +
+    p.innerHTML = _head() + _mdPulse() + _mdJetzt() + _kpis() + _mdHero() + grid +
       '<div class="md-foot">Kuratierter Überblick · tippe „alle →" für den vollen Bereich</div>';
+  }
+  // ── Puls: letzte 30 abgerechnete Picks (CLV / Trefferquote) ──────────────────
+  function _spark(series) {
+    if (!series || !series.length) return '';
+    var mx = 1, i; for (i = 0; i < series.length; i++) mx = Math.max(mx, Math.abs(+series[i] || 0));
+    var cols = series.map(function (v) {
+      v = +v || 0; var h = Math.min(50, Math.abs(v) / mx * 50), pos = v >= 0;
+      return '<div class="md-spk-col"><span class="md-spk-b" style="height:' + h + '%;' + (pos ? 'bottom:50%' : 'top:50%') + ';background:' + (pos ? A.good : A.red) + ';"></span></div>';
+    }).join('');
+    return '<div class="md-spk" title="CLV je Pick (alt→neu) · gruen schlaegt die Close"><div class="md-spk-mid"></div>' + cols + '</div>';
+  }
+  function _mdPulse() {
+    var d = _md.data.pulse;
+    if (!d || !d.n) return '<section class="md-pulse md-rise"><div class="md-pulse-h">📈 Puls</div>' +
+      '<div class="md-pulse-l">Noch keine abgerechneten Picks — füllt sich, sobald die ersten Cards resolven.</div></section>';
+    var clv = d.avgClvPP, clvCol = (clv == null) ? 'var(--mi2)' : clv > 0 ? A.good : clv < 0 ? A.red : 'var(--mi2)';
+    var clvTxt = (clv == null) ? '—' : (clv > 0 ? '+' : '') + clv.toFixed(1) + 'pp';
+    var beat = d.pctBeatClose, beatCol = beat == null ? 'var(--mi)' : beat >= 50 ? A.good : beat >= 33 ? A.gold : A.red;
+    var win = d.winPct;
+    var metric = function (v, l, c) { return '<div class="md-pulse-m"><span class="md-pulse-v" style="color:' + (c || 'var(--mi)') + '">' + v + '</span><span class="md-pulse-l">' + l + '</span></div>'; };
+    return '<section class="md-pulse md-rise">' +
+      '<div class="md-pulse-h" title="Closing Line Value: schlagen deine Picks die Schlussquote? Der beste Fruehindikator fuer echte Kante.">📈 Puls · letzte ' + d.n + '</div>' +
+      '<div class="md-pulse-ms">' +
+        metric(clvTxt, 'Ø CLV', clvCol) +
+        metric((beat == null ? '—' : Math.round(beat) + '%'), 'schlägt Close', beatCol) +
+        metric((win == null ? '—' : Math.round(win) + '%'), 'Treffer · ' + (d.wins || 0) + '–' + (d.losses || 0), 'var(--mi)') +
+      '</div>' + _spark(d.series) + '</section>';
+  }
+  // ── „Jetzt": Spiele mit Anpfiff <= 3h und Live-Signal (BET / Poly-Lag); CLV-Cue = steamMovePP ──
+  function jetztRows() {
+    var now = Date.now(), horizon = now + 3 * 3600e3, out = [];
+    allFixtures().forEach(function (f) {
+      var ks = f.kickoff ? Date.parse(String(f.kickoff).replace('Z', '+00:00')) : NaN;
+      if (isNaN(ks) || ks < now - 6 * 60000 || ks > horizon) return;
+      (f.picks || []).forEach(function (p) {
+        var bet = p.verdict === 'BET';
+        var lag = (p.signals || []).some(function (s) { return s && s.name === 'steam_lag' && (+s.score || 0) > 0; });
+        if (bet || lag) out.push({ f: f, p: p, k: ks, bet: bet, lag: lag });
+      });
+    });
+    out.sort(function (a, b) { return a.k - b.k; });
+    return out.slice(0, 6);
+  }
+  function _mdJetzt() {
+    var rows = jetztRows();
+    if (!rows.length) return '';
+    var now = Date.now();
+    var body = rows.map(function (x) {
+      var f = x.f, p = x.p, min = Math.max(0, Math.round((x.k - now) / 60000));
+      var ko = min < 60 ? min + 'm' : Math.floor(min / 60) + 'h' + (min % 60 ? ' ' + (min % 60) + 'm' : '');
+      var mv = p.steamMovePP != null ? +p.steamMovePP : null;
+      var mvHtml = mv == null ? '' : '<span class="md-jz-mv" style="color:' + (mv > 0 ? A.good : mv < 0 ? A.red : 'var(--mi2)') + '" title="Linie seit Pick — gruen: Markt zieht mit">' + (mv > 0 ? '+' : '') + mv.toFixed(1) + 'pp</span>';
+      var badges = (x.bet ? '<span class="md-badge" style="background:rgba(46,160,67,.16);color:' + A.good + '">BET' + (p.convictionScore ? ' ' + p.convictionScore : '') + '</span>' : '') +
+        (x.lag ? '<span class="md-badge" style="background:rgba(57,135,229,.16);color:' + A.blue + '">⚡ Poly-Lag</span>' : '');
+      return '<div class="md-jz-row"><div class="md-jz-main">' +
+        '<div class="md-jz-tm">' + fl(fxFlag(f)) + esc(team(f.home)) + ' <span style="color:var(--mi3);font-weight:400">v</span> ' + esc(team(f.away)) + badges + '</div>' +
+        '<div class="md-jz-sub">' + esc(short(p.market)) + (p.odds != null ? ' · @' + (+p.odds).toFixed(2) : '') + (fxLeague(f) ? ' · ' + esc(String(fxLeague(f)).slice(0, 18)) : '') + '</div>' +
+        '</div><span class="md-jz-ko">⏱ ' + ko + '</span>' + mvHtml + '</div>';
+    }).join('');
+    return '<section class="md-jetzt md-rise"><div class="md-jz-h"><span style="font-size:16px">⚡</span>' +
+      '<span class="md-jz-t">Jetzt</span><span class="md-jz-s">Anpfiff in ≤ 3 h mit Live-Signal</span></div>' + body + '</section>';
   }
   window._renderMainDash = _mdRender;
   window._mdState = _md;   // Test-Hook

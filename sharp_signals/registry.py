@@ -178,6 +178,7 @@ SIGNAL_GROUPS: dict[str, str] = {
     "lead_lag_bias":      "sharp_money",
     "steam_lag":          "sharp_money",
     "polymarket_sharp":   "sharp_money",
+    "smart_money":        "sharp_money",   # Poly-Holder-Geld, korreliert mit polymarket_sharp → Anti-Korr-Discount (30.07.2026 Audit)
     # Neue Mikrostruktur-Signale (09.07.2026) — alle basieren auf Pinnacle-Linienbewegung / Sharp-vs-
     # Public → sharp_money-Familie, Anti-Korr-Discount verhindert Mehrfachzählung desselben Moves.
     "reverse_line_move":  "sharp_money",

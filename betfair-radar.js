@@ -329,7 +329,7 @@
     var dv = lv - fv, rate = dv / (mins / 60), move = 0, side = null;
     ['hw', 'dr', 'aw'].forEach(function (k) {
       var a = (f.mo || {})[k], b = (l.mo || {})[k];
-      if (a > 1 && b > 1) { var d = (a - b) / a * 100; if (Math.abs(d) > Math.abs(move)) { move = d; side = k; } }
+      if (a > 1 && b > 1) { var d = (1 / b - 1 / a) * 100; if (Math.abs(d) > Math.abs(move)) { move = d; side = k; } }   // Implied-Prob-pp (bounded ±100), nicht relative Quote
     });
     var growth = fv > 0 ? dv / fv : 0, kind = 'ruhig';
     if (Math.abs(move) >= 3 && growth >= 0.35) kind = 'steam';
