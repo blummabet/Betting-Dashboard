@@ -614,13 +614,21 @@
     return out;
   }
   function flowChip(x, mode) {
-    var lbl = x.mm ? x.mm.label : 'gesamt', ht = x.mm && x.mm.grp === 'HT';
-    var right = mode === 'eur' ? ('+' + fmtE(x.delta)) : ('+' + Math.round(x.pct) + '%' + (x.pct >= 200 ? ' 🚨' : ''));
-    var sub = mode === 'eur' ? ('jetzt ' + fmtE(x.curr)) : (fmtE(x.prev) + '→' + fmtE(x.curr));
-    return '<button onclick="_bfJump(\'' + esc(x.m.matchId) + '\')" style="display:flex;flex-direction:column;gap:1px;padding:7px 11px;border-radius:10px;border:1px solid rgba(63,185,80,.35);background:rgba(63,185,80,.06);cursor:pointer;text-align:left;min-width:150px">' +
-      '<span style="font-size:11px;color:' + C.mut + ';font-weight:700">' + flag(x.m.country, x.m.league) + ' ' + esc(String(x.m.home).slice(0, 11)) + '–' + esc(String(x.m.away).slice(0, 11)) + '</span>' +
-      '<span style="font-size:12px;color:' + C.ink + ';font-weight:800">' + (ht ? '<span style="color:' + C.purp + '">' + lbl + '</span>' : lbl) + ' <span style="color:' + C.back + '">▲ ' + right + '</span></span>' +
-      '<span style="font-size:10px;color:' + C.dim + '">' + sub + '</span></button>';
+    var ht = x.mm && x.mm.grp === 'HT', lbl = x.mm ? x.mm.label : 'gesamt';
+    var mk = x.mm ? mkOf(x.m, x.mm.id) : null, lead = mk ? leadRunner(mk) : null, tot = mk ? (distTotal(mk) || 1) : 1;
+    var side = lead ? esc(rLabel(lead.name, x.m)) : '';
+    var share = lead ? Math.round((+lead.vol || 0) / tot * 100) : null;
+    var oddT = lead && lead.odd ? '@' + fO(lead.odd) : '';
+    var big = mode === 'eur' ? ('+' + fmtE(x.delta)) : ('+' + Math.round(x.pct) + '%' + (x.pct >= 200 ? ' 🚨' : ''));
+    var ctx = mode === 'eur' ? ('jetzt ' + fmtE(x.curr)) : (fmtE(x.prev) + ' → ' + fmtE(x.curr));
+    var mkT = ht ? '<span style="color:' + C.purp + '">' + lbl + '</span>' : '<span style="color:' + C.dim + '">' + lbl + '</span>';
+    var sideLine = side
+      ? mkT + ' → <b>' + side + '</b>' + (share != null ? ' <span style="color:' + C.gold + '">' + share + '%</span>' : '') + (oddT ? ' <span style="color:' + C.dim + ';font-size:10.5px">' + oddT + '</span>' : '')
+      : '<b>' + lbl + '</b>';
+    return '<button onclick="_bfJump(\'' + esc(x.m.matchId) + '\')" style="display:flex;flex-direction:column;gap:3px;padding:10px 13px;border-radius:12px;border:1px solid rgba(63,185,80,.35);background:rgba(63,185,80,.06);cursor:pointer;text-align:left;flex:1 1 200px;min-width:190px;max-width:280px">' +
+      '<span style="font-size:11px;color:' + C.mut + ';font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + flag(x.m.country, x.m.league) + ' ' + esc(String(x.m.home).slice(0, 13)) + ' – ' + esc(String(x.m.away).slice(0, 13)) + '</span>' +
+      '<span style="font-size:13.5px;color:' + C.ink + ';font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + sideLine + '</span>' +
+      '<span style="font-size:14.5px;color:' + C.back + ';font-weight:900">▲ ' + big + ' <span style="font-size:11px;color:' + C.dim + ';font-weight:600">· ' + ctx + '</span></span></button>';
   }
   function flowRow(label, items, mode) {
     if (!items.length) return '';
@@ -633,10 +641,10 @@
       .sort(function (a, b) { return b.delta - a.delta; }).slice(0, 6);
     var surge = items.filter(function (x) { return eur(x.prev) >= SURGE_MIN_BASE && eur(x.delta) >= SURGE_MIN_DELTA && x.pct >= SURGE_MIN_PCT && x.pct < 900; })
       .sort(function (a, b) { return b.pct - a.pct; }).slice(0, 6);
-    var head = '<div style="font-size:12px;color:' + C.back + ';font-weight:800;margin-bottom:8px">💸 Frisches Geld — wo seit dem letzten Update Kohle reinkam <span style="color:' + C.dim + ';font-weight:600">(kann woanders liegen als oben · Klick springt zum Spiel)</span></div>';
+    var head = '<div style="font-size:12px;color:' + C.back + ';font-weight:800;margin-bottom:8px">💸 Frisches Geld — was seit dem letzten Lauf reinfloss &amp; auf welche Seite <span style="color:' + C.dim + ';font-weight:600">(Klick springt zum Spiel)</span></div>';
     var body = (!eurItems.length && !surge.length)
       ? '<div style="font-size:11px;color:' + C.dim + '">sammelt Daten — der Zufluss braucht zwei Fetches (~15–30 Min), dann siehst du hier, auf welchen Markt gerade Geld fließt.</div>'
-      : flowRow('📈 Größter €-Zufluss', eurItems, 'eur') + flowRow('⚡ Stärkster Sprung (%)', surge, 'pct');
+      : flowRow('📈 Größte Zuflüsse (€) — wohin die Kohle floss', eurItems, 'eur') + flowRow('⚡ Größte Sprünge (%)', surge, 'pct');
     return '<div style="background:linear-gradient(180deg,rgba(63,185,80,.07),transparent);border:1px solid rgba(63,185,80,.25);border-radius:14px;padding:11px 13px;margin:0 0 14px">' + head + body + '</div>';
   }
 
