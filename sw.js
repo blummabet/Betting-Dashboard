@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v34';   // 30.07.2026: Radar-Quotenfloor 1.30 (Hotspot + Frisches Geld) — Geld auf Lock-Favoriten @1.0x ausgeblendet
+const VERSION = 'cocobet-v35';   // 30.07.2026: Hotspot + Frisches Geld als Balken-Charts (2-spaltig responsiv, gestapelt schon-da/frisch)
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
