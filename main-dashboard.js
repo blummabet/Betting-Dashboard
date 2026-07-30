@@ -27,6 +27,17 @@
       .replace('Half Time', 'HZ1').replace('Correct Score', 'Exakt').replace('Draw no Bet', 'DNB');
   }
   function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
+  function _ageMin(obj) {
+    var g = obj && obj._meta && obj._meta.generatedAt;
+    if (!g) return null;
+    var t = Date.parse(g); return isNaN(t) ? null : Math.max(0, (Date.now() - t) / 60000);
+  }
+  function _ageStr(obj) {
+    var m = _ageMin(obj); if (m == null) return '';
+    var col = m > 35 ? '#f2a6a6' : m > 15 ? 'var(--gold)' : 'var(--mi3)';
+    var txt = m >= 90 ? Math.round(m / 60) + 'h' : Math.round(m) + ' Min';
+    return '<div style="text-align:right;font-size:10px;color:' + col + ';padding:6px 0 2px">Stand vor ' + txt + '</div>';
+  }
 
   // ── Länderflaggen ─────────────────────────────────────────────────────────────
   // Quellen liefern Land unterschiedlich: Betfair `country` = ISO-2 ("EC","GB"),
@@ -439,6 +450,7 @@
       return rowEl(teamsOf(m), eur(b.vol), A.bf,
         esc(short(b.name)) + ' → ' + esc(b.lead.name) + ' · ' + pct + '%', meter(pct, A.bf));
     }).join('') : empty('Kein großes Betfair-Geld.');
+    bfBody += _ageStr(_md.data.betfair);
 
     // Whales — USD-Balken (relativ zum größten)
     var wh = bestWhales();
@@ -516,7 +528,9 @@
   }
   function _mdJetzt() {
     var rows = jetztRows();
-    if (!rows.length) return '';
+    if (!rows.length) return '<section class="md-jetzt md-rise" style="border-color:var(--mln);background:var(--m1);padding-bottom:13px">' +
+      '<div class="md-jz-h"><span style="font-size:16px;opacity:.55">⚡</span><span class="md-jz-t" style="color:var(--mi2)">Jetzt</span>' +
+      '<span class="md-jz-s">kein Spiel in den nächsten 3 h mit Live-Signal — meldet sich automatisch, sobald eins ansteht.</span></div></section>';
     var now = Date.now();
     var body = rows.map(function (x) {
       var f = x.f, p = x.p, min = Math.max(0, Math.round((x.k - now) / 60000));

@@ -758,10 +758,22 @@
   }
 
   // ── Haupt-Render ────────────────────────────────────────────────────────────
+  function _freshChip() {
+    // Oben sichtbar: wann zuletzt aktualisiert + grobe Schätzung fürs nächste (~15-Min-Kadenz → auch
+    // wann ~der nächste Push kommt). Grün frisch, amber ab 15, rot ab 35, „überfällig" wenn der Lauf hängt.
+    var g = _bf.data && _bf.data._meta && _bf.data._meta.generatedAt;
+    if (!g) return '';
+    var a = genAgeMin();
+    var at = a >= 90 ? Math.round(a / 60) + 'h' : Math.round(a) + ' Min';
+    var col = a > 35 ? '#f2a6a6' : a > 15 ? C.amber : C.back;
+    var nx = a <= 15 ? 'nächster ~in ' + Math.max(1, Math.round(15 - a)) + ' Min'
+           : a <= 40 ? 'nächster überfällig' : 'Fetcher hängt';
+    return '<span style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:' + col + ';background:rgba(255,255,255,.03);border:1px solid ' + C.bd + ';border-radius:20px;padding:3px 11px" title="Fetcher läuft ~alle 15 Min; der Trades-Push feuert beim Lauf">🕐 vor ' + at + ' <span style="color:' + C.dim + ';font-weight:600">· ' + nx + '</span></span>';
+  }
   function renderBetfairRadar() {
     var head = '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap">' +
       '<h1 style="margin:0;font-size:24px;color:' + C.ink + '">🟡 Betfair <span style="color:' + C.gold + '">Radar</span></h1>' +
-      '<span style="font-size:11px;color:' + C.mut + '">wo echtes Exchange-Geld liegt · wie es sich verteilt · via Betwatch</span></div>';
+      '<span style="font-size:11px;color:' + C.mut + '">wo echtes Exchange-Geld liegt · wie es sich verteilt · via Betwatch</span>' + _freshChip() + '</div>';
 
     if (!_bf.data) { _bfLoad(); return head + '<div style="padding:50px;text-align:center;color:' + C.mut + '">⏳ Betfair-Daten werden geladen …</div>'; }
 

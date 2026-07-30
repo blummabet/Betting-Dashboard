@@ -27,7 +27,7 @@ from telegram_trades import send_trades_message
 HT_TOP_EUR     = 10000.0  # Halbzeit-Geld-Schwelle Top-Liga + International (Lucas 30.07.2026)
 HT_REST_EUR    = 5000.0   # ... und Rest-Ligen
 HT_MIN_SHARE   = 0.85     # ... und davon min. dieser Anteil auf EINEN Ausgang (einseitig)
-MIN_LEAD_ODD   = 1.15     # Geld auf einen fast sicheren Favoriten (Quote < 1.15, führt schon) = sinnlos → kein Push
+MIN_LEAD_ODD   = 1.30     # Geld auf einen Favoriten mit Quote < 1.30 (führt schon, wenig Value) = kein Push (Lucas 30.07.2026, vorher 1.15)
 FRESH_TOP_EUR  = 30000.0  # frisches Geld Top-Liga
 FRESH_REST_EUR = 20000.0  # ... und Rest-Ligen
 DEDUP_FACTOR   = 1.5

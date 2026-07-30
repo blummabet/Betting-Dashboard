@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v30';   // 30.07.2026: Uebersicht Puls (CLV/Trefferquote letzte 30) + Jetzt-Band (Anpfiff <=3h mit Live-Signal)
+const VERSION = 'cocobet-v32';   // 30.07.2026: Betfair-Radar Frische-Chip im Kopf (aktualisiert vor X · naechster ~in Y)
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
