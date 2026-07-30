@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-07-29T22:58:00.348036+00:00",
+ "generatedAt": "2026-07-30T00:03:41.687131+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,16 +10,16 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 261,
+ "polyRowsSeen": 253,
  "pinnKeys": 155,
  "matched": 71,
  "footballRows": 45,
- "crossRows": 216,
+ "crossRows": 208,
  "footballSkippedStale": 11,
  "seenBySport": {
   "basketball_nba": 2,
   "americanfootball_nfl": 100,
-  "baseball_mlb": 106,
+  "baseball_mlb": 98,
   "icehockey_nhl": 2,
   "mma_mixed_martial_arts": 2,
   "boxing_boxing": 4,
@@ -30,8 +30,37 @@
   "soccer_mls": 45
  },
  "trackRecord": {
-  "tracked": 44,
+  "tracked": 46,
   "converged": 1
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|cincinnatireds-clevelandguardians|clevelandguardians",
+   "sport": "baseball_mlb",
+   "event": "Cleveland Guardians vs Cincinnati Reds",
+   "market": "Moneyline",
+   "outcome": "Cleveland Guardians",
+   "polyPP": 50.5,
+   "pinnPP": 65.0,
+   "gapPP": -14.5,
+   "vol": 740175,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-07-30T00:03:41.686899+00:00"
+  },
+  {
+   "id": "baseball_mlb|cincinnatireds-clevelandguardians|cincinnatireds",
+   "sport": "baseball_mlb",
+   "event": "Cleveland Guardians vs Cincinnati Reds",
+   "market": "Moneyline",
+   "outcome": "Cincinnati Reds",
+   "polyPP": 49.5,
+   "pinnPP": 35.0,
+   "gapPP": 14.5,
+   "vol": 740175,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-07-30T00:03:41.686899+00:00"
+  }
+ ]
 }
