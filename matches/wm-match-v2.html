@@ -166,6 +166,24 @@ svg.arc{width:100%;display:block}
 .sm-meta b{color:var(--text)}
 .sm-edge{font-size:12px;color:var(--sub);margin-top:10px;line-height:1.5;padding:10px 12px;border-radius:10px;background:rgba(167,139,250,.08);border:1px solid rgba(167,139,250,.3)}
 .sm-edge b{color:#c4b5fd}
+.cons-head{font-size:12.5px;color:var(--text);padding:11px 13px;border:1px solid var(--line2);border-left-width:3px;border-radius:10px;margin-top:14px;line-height:1.5}
+.cons-head b{font-weight:700}
+.cons-row{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.cons-chip{flex:1;min-width:110px;display:flex;flex-direction:column;gap:3px;padding:9px 11px;border:1px solid var(--line);border-radius:11px;background:var(--card2);opacity:.55}
+.cons-chip.on{opacity:1;border-color:var(--line2)}
+.cons-chip .cc-src{font-size:9px;letter-spacing:1.4px;text-transform:uppercase;color:var(--faint);font-weight:700}
+.cons-chip .cc-tok{font-size:13px;font-weight:700;color:var(--text)}
+.bf-rows{margin-top:10px;display:flex;flex-direction:column;gap:2px}
+.bf-row{display:grid;grid-template-columns:1fr auto auto auto;gap:10px;align-items:center;font-size:11.5px;padding:6px 2px;border-bottom:1px solid var(--line)}
+.bf-row .bf-t{color:var(--text);font-weight:600}
+.bf-row .bf-v{color:var(--sub)}
+.bf-row .bf-f{color:var(--faint)}
+.bf-row .bf-d{font-weight:700;text-align:right;min-width:46px}
+.bf-norm{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:99px;margin-left:6px;vertical-align:middle}
+.bf-norm.amber{background:rgba(227,179,65,.15);color:#e3b341;border:1px solid rgba(227,179,65,.4)}
+.bf-norm.red{background:rgba(255,93,93,.15);color:#ff5d5d;border:1px solid rgba(255,93,93,.4)}
+.bf-ou{font-size:11.5px;color:var(--sub);margin-top:11px}
+.bf-ou b{color:var(--text)}
 
 /* Story */
 .story-prose{font-size:14.5px;line-height:1.8;color:#bac4dd;margin-top:14px}
@@ -296,8 +314,10 @@ svg.arc{width:100%;display:block}
 
 <section class="chap" id="c-markt">
   <div class="chap-h"><span class="ct disp">Die Märkte</span></div>
-  <div class="chap-h"><span class="cs">Pinnacle (Sharp-Anker) und die Soft-Books seit Eröffnung — plus wo das große Geld auf Polymarket liegt.</span></div>
+  <div class="chap-h"><span class="cs">Pinnacle, Soft-Books, die Betfair-Börse und das Polymarket-Geld — wo alle stehen und wo das große Geld liegt.</span></div>
+  <div id="consensus-box"></div>
   <div class="viz-card"><div id="odds-box"></div></div>
+  <div class="viz-card" id="betfair-card"><div id="betfair-box"></div></div>
   <div class="viz-card" id="poly-card"><div id="poly-box"></div></div>
 </section>
 
@@ -347,6 +367,8 @@ svg.arc{width:100%;display:block}
 const css=v=>getComputedStyle(document.documentElement).getPropertyValue(v).trim();
 const reduced=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const $=id=>document.getElementById(id);
+const TOKLBL={home:'Heim',draw:'Remis',away:'Auswärts'};
+const tokTeam=(P,t)=>t==='home'?P.home:(t==='away'?P.away:'Remis');
 
 // Signal-Name → kurzes Label fürs UI
 const SIG_LABEL={
@@ -426,7 +448,7 @@ function render(P){
   const p=heroPick(P);
   renderVerdict(P,p);
   renderPulse(p); renderSignalBoard(p); renderConviction(p);
-  renderOdds(P); renderPoly(P); renderStory(P); renderForm(P);
+  renderConsensus(P); renderOdds(P); renderBetfair(P); renderPoly(P); renderStory(P); renderForm(P);
   renderStreaks(P);
   renderTape(P,p); renderLineup(P,p);
   renderDuell(P); renderGruppe(P);
@@ -659,11 +681,56 @@ function renderPoly(P){
   const p=heroPick(P),sig=((p&&p.signals)||[]).find(s=>s&&s.name==='smart_money');
   if(sig&&sig.metadata&&sig.metadata.excessPP!=null){const m=sig.metadata,sl={home:'Heim',draw:'Unentschieden',away:'Auswärts'}[m.outcome]||m.outcome;
     edge=`<div class="sm-edge">Auf <b>${sl}</b> liegen ${Math.round((m.share||0)*100)}% des großen Geldes — fair wären ${Math.round((m.fairShare||0)*100)}% (${m.excessPP>0?'+':''}${m.excessPP}pp ${m.excessPP>0?'mehr als der Markt rechtfertigt':'darunter'}).</div>`;}
+  const lead=[['home',h],['draw',d],['away',a]].sort((x,y)=>y[1]-x[1])[0][0];
+  const lo=o[lead]||{};
+  const conc=(lo.holders)?`<div class="sm-edge" style="background:rgba(124,181,255,.06);border-color:rgba(124,181,255,.25)">🎯 Konzentration: Auf <b>${TOKLBL[lead]}</b> liegen ${Math.round((lo.share||0)*100)}% des Wallet-Geldes bei ${lo.holders} Wallet${lo.holders===1?'':'s'}${lo.topHolderShare!=null?` — die größte hält ${Math.round(lo.topHolderShare*100)}%`:''}.</div>`:'';
   box.innerHTML=`<div class="chap-h" style="margin-bottom:4px"><span class="cs">💰 <b style="color:#c4b5fd">Smart Money</b> — wo die großen Wallets liegen</span></div>
     <div class="smbar"><div class="seg h" data-w="${h}">${h>=12?h+'%':''}</div><div class="seg d" data-w="${d}">${d>=12?d+'%':''}</div><div class="seg a" data-w="${a}">${a>=12?a+'%':''}</div></div>
-    <div class="sm-meta"><span>${usd} verfolgt · ${sm.topTraders||0} Wallets &gt;$1k</span><span>Heim ${h}% · X ${d}% · Ausw. ${a}%</span></div>${edge}
+    <div class="sm-meta"><span>${usd} verfolgt · ${sm.topTraders||0} Wallets &gt;$1k</span><span>Heim ${h}% · X ${d}% · Ausw. ${a}%</span></div>${edge}${conc}
     <p class="viz-foot">Verfolgt wird das offene Interesse der größten Wallets je Ausgang — nicht das Gesamtvolumen (das ist höher).</p>`;
   obs(box,()=>box.querySelectorAll('.smbar .seg').forEach(s=>s.style.width=s.dataset.w+'%'));
+}
+
+// ── Markt-Konsens (Pinnacle / Soft / Betfair / Polymarket) ──
+function renderConsensus(P){
+  const c=P.consensus,box=$('consensus-box');
+  if(!c||!c.sources||c.sources.length<2){ box.style.display='none'; return; }
+  const col=c.agree?'var(--pos)':(c.nAgree>=c.n-1?'#e3b341':'var(--sub)');
+  const chips=c.sources.map(s=>`<div class="cons-chip ${s.token===c.modal?'on':''}"><span class="cc-src">${s.name}</span><span class="cc-tok">${tokTeam(P,s.token)}</span></div>`).join('');
+  const kind=c.n>=4?'Quad':(c.n===3?'Triple':'Doppel');
+  const head=c.agree
+    ? `✅ <b style="color:var(--pos)">${kind}-Konsens</b> — alle ${c.n} sehen <b>${tokTeam(P,c.modal)}</b> vorne`
+    : `⚖️ <b>${c.nAgree}/${c.n}</b> sehen <b>${tokTeam(P,c.modal)}</b> — die Bücher sind uneinig`;
+  box.innerHTML=`<div class="cons-head" style="border-left-color:${col}">${head}</div><div class="cons-row">${chips}</div>
+    <p class="viz-foot">Wo Pinnacle, die Soft-Books, die Betfair-Börse und das Polymarket-Geld den Favoriten sehen. Alle einig = starkes Signal; uneinig = Vorsicht oder Value.</p>`;
+}
+
+// ── Betfair-Börse (gematchtes Geld je Ausgang) ──
+function renderBetfair(P){
+  const b=P.betfair,card=$('betfair-card');
+  if(!b||!b.mo||!b.mo.shares){ card.style.display='none'; return; }
+  const sh=b.mo.shares,fair=b.mo.fair||{},box=$('betfair-box');
+  const money=t=>(sh[t]&&sh[t].share!=null)?Math.round(sh[t].share*100):0;
+  const fairp=t=>(fair[t]!=null)?Math.round(fair[t]*100):null;
+  const h=money('home'),d=money('draw'),a=money('away');
+  const bar=`<div class="smbar"><div class="seg h" data-w="${h}">${h>=12?h+'%':''}</div><div class="seg d" data-w="${d}">${d>=12?d+'%':''}</div><div class="seg a" data-w="${a}">${a>=12?a+'%':''}</div></div>`;
+  const rows=['home','draw','away'].map(t=>{
+    if(sh[t]==null)return '';
+    const m=money(t),f=fairp(t),diff=(f!=null)?m-f:null;
+    const dc=diff==null?'var(--sub)':(diff>=8?'var(--pos)':(diff<=-8?'var(--neg)':'var(--sub)'));
+    return `<div class="bf-row"><span class="bf-t">${tokTeam(P,t)}</span><span class="bf-v">${m}% Geld</span><span class="bf-f">fair ${f==null?'–':f+'%'}</span><span class="bf-d" style="color:${dc}">${diff==null?'':(diff>0?'+':'')+diff+'pp'}</span></div>`;
+  }).join('');
+  let norm='';
+  if(b.normLvl>=1){const red=b.normLvl>=2;norm=`<span class="bf-norm ${red?'red':'amber'}">${red?'🔴':'🟠'} ${b.normRatio}× Normalvolumen</span>`;}
+  const heavy=b.heavy?`<div class="sm-edge" style="background:rgba(45,212,126,.08);border-color:rgba(45,212,126,.3)">💷 Das Geld lehnt auf <b style="color:var(--pos)">${tokTeam(P,b.heavy.token)}</b>: ${b.heavy.moneyPct}% des gematchten Geldes bei nur ${b.heavy.fairPct}% fair (+${b.heavy.edgePP}pp).</div>`:'';
+  const eur=v=>v>=1e6?'€'+(v/1e6).toFixed(1)+'M':(v>=1e3?'€'+Math.round(v/1e3)+'k':'€'+v);
+  let ou='';
+  if(b.ou25&&b.ou25.shares){const ov=b.ou25.shares.over,un=b.ou25.shares.under;
+    if(ov||un)ou=`<div class="bf-ou">Über/Unter 2.5: <b>${Math.round(((ov&&ov.share)||0)*100)}%</b> auf Über · <b>${Math.round(((un&&un.share)||0)*100)}%</b> auf Unter</div>`;}
+  box.innerHTML=`<div class="chap-h" style="margin-bottom:4px"><span class="cs">💷 <b style="color:#7ad4ff">Betfair-Börse</b> — wie sich das gematchte Geld verteilt${norm}</span></div>
+    ${bar}<div class="bf-rows">${rows}</div>${heavy}${ou}
+    <p class="viz-foot">Gematchtes Volumen auf der Betfair-Börse (${eur(b.totalEur)} gesamt). „Geld vs. fair" zeigt, wo mehr liegt als die Quote hergibt — die Spur des großen Geldes. ×-Norm vergleicht das Volumen mit dem Normalspiel dieser Phase.</p>`;
+  obs(box,()=>box.querySelectorAll('.smbar .seg').forEach(x=>x.style.width=x.dataset.w+'%'));
 }
 
 // ── Story ──

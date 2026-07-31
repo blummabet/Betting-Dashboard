@@ -11,7 +11,7 @@ Run: python3 generate_wm_match_pages.py
 
 import json
 import os
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, timezone
 
 BASE = os.path.dirname(os.path.abspath(__file__))
 DATA_DIR = os.path.join(BASE, "matches", "data")
@@ -376,7 +376,180 @@ def _streaks_for_match(home_id, away_id):
     return out or None
 
 
-def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, ai_previews=None, poly_lookup=None):
+# ── Betfair-Exchange-Geld + Markt-Konsens (31.07.2026, Lucas: „Event-Pages mit Betfair/Poly füllen") ──
+# Gebacken zur Generierzeit (wie Pinnacle/Soft/Poly auf der Page), per event_key gematcht — dieselbe
+# Normalisierung wie das betfair_money-Signal in generate_wm_picks. „Nur zeitnahe Spiele": der Block
+# entsteht NUR, wenn betfair_prices.json ein Match liefert (→ bei Vorsaison-Spielen ohne Börse = None).
+BF_NORM_AMBER, BF_NORM_RED = 1.6, 2.6        # ×-Norm-Schwellen — identisch zum Radar
+BF_NORM_MIN_PEERS, BF_NORM_MIN_EUR = 4, 3000
+
+def _bf_event_key(a, b):
+    try:
+        from poly_cross_sport import event_key
+        return event_key(a, b)
+    except Exception:
+        return "-".join(sorted([(a or "").strip().lower(), (b or "").strip().lower()]))
+
+def _bf_market_total(m):
+    """Summe der Runner-Volumina über ALLE Märkte — identisch zu totalG() im Radar."""
+    s = 0.0
+    for mk in (m.get("markets") or {}).values():
+        for r in (mk.get("runners") or []):
+            s += float(r.get("vol") or 0)
+    return s
+
+def _bf_stage(m, now_ms):
+    """Pre-Match-Bucket wie _stageOf im Radar: p1 = letzte 3h vor Anpfiff, p0 = früher. Live/fertig → None."""
+    li = m.get("liveInfo") or {}
+    if li.get("finished"):
+        return None
+    ko = m.get("kickoff")
+    try:
+        from datetime import datetime as _dt
+        k = _dt.fromisoformat(str(ko).replace("Z", "+00:00")).timestamp() * 1000 if ko else None
+    except Exception:
+        k = None
+    if k is None:
+        return "p0"
+    if k <= now_ms:                       # Anpfiff vorbei → live, nicht bepagen
+        return None
+    return "p1" if (k - now_ms) <= 3 * 3.6e6 else "p0"
+
+def load_betfair():
+    """{event_key: match} + ×-Norm-Basis {stage: sortierte Totals}. Einmal in main() laden."""
+    import os as _os
+    f = _os.path.join(BASE, "matches", "..", "betfair_prices.json") if False else _os.path.join(BASE, "betfair_prices.json")
+    if not _os.path.exists(f):
+        return {}, {}
+    try:
+        raw = json.load(open(f, encoding="utf-8"))
+    except Exception as e:
+        print(f"  ⚠️  Betfair-Preise nicht ladbar: {e}")
+        return {}, {}
+    now_ms = (datetime.utcnow() - datetime(1970, 1, 1)).total_seconds() * 1000
+    snaps, base = {}, {}
+    for m in (raw.get("matches") or []):
+        h, a = m.get("home"), m.get("away")
+        if h and a:
+            snaps[_bf_event_key(h, a)] = m
+        st = _bf_stage(m, now_ms)
+        tot = _bf_market_total(m)
+        if st and tot >= BF_NORM_MIN_EUR:
+            base.setdefault(st, []).append(tot)
+    for st in base:
+        base[st].sort()
+    print(f"  Betfair-Geld: {len(snaps)} Matches geladen (×-Norm-Basis: {{ {', '.join(f'{k}:{len(v)}' for k,v in base.items())} }})")
+    return snaps, base
+
+def _median(xs):
+    n = len(xs)
+    if not n:
+        return None
+    xs = sorted(xs)
+    return xs[n // 2] if n % 2 else (xs[n // 2 - 1] + xs[n // 2]) / 2
+
+def _bf_market_shares(m, market_name, runner_map):
+    """runner_map: {token: [mögliche Runner-Namen]} → {token: {vol, share, odd}} + total."""
+    mk = (m.get("markets") or {}).get(market_name) or {}
+    runners = mk.get("runners") or []
+    tot = sum(float(r.get("vol") or 0) for r in runners) or 0.0
+    out = {}
+    for tok, names in runner_map.items():
+        rr = next((r for r in runners if r.get("name") in names), None)
+        if rr:
+            v = float(rr.get("vol") or 0)
+            out[tok] = {"vol": round(v), "share": round(v / tot, 4) if tot else None, "odd": rr.get("odd")}
+    return (out or None), round(tot)
+
+def build_betfair_block(home_name, away_name, snaps, norm_base):
+    if not snaps:
+        return None
+    m = snaps.get(_bf_event_key(home_name, away_name))
+    if not m:
+        return None
+    now_ms = (datetime.utcnow() - datetime(1970, 1, 1)).total_seconds() * 1000
+    total = _bf_market_total(m)
+    if total < 5000:          # Kleckervolumen → Verteilung ist Rauschen, kein Block
+        return None
+    # 1X2-Geld (Match Odds) — Runner heißen wie die Betfair-Teams bzw. „The Draw".
+    mo_market = "Match Odds"
+    mo_runmap = {"home": [m.get("home")], "draw": ["The Draw", "Draw"], "away": [m.get("away")]}
+    mo_shares, mo_total = _bf_market_shares(m, mo_market, mo_runmap)
+    mo = m.get("mo") or {}
+    fair = mo.get("fair") or {}
+    # O/U 2.5
+    ou = m.get("markets", {}).get("Over/Under 2.5 Goals")
+    ou_out, ou_total = (None, 0)
+    if ou:
+        ou_out, ou_total = _bf_market_shares(m, "Over/Under 2.5 Goals",
+                                             {"over": ["Over 2.5 Goals"], "under": ["Under 2.5 Goals"]})
+    # ×-Norm
+    st = _bf_stage(m, now_ms)
+    ratio, lvl = None, 0
+    if st and total >= BF_NORM_MIN_EUR:
+        peers = (norm_base or {}).get(st) or []
+        if len(peers) >= BF_NORM_MIN_PEERS:
+            med = _median(peers)
+            if med:
+                ratio = round(total / med, 2)
+                lvl = 2 if ratio >= BF_NORM_RED else (1 if ratio >= BF_NORM_AMBER else 0)
+    # „Heavy money" Seite: wo Geld-Anteil den fairen Anteil am stärksten übersteigt
+    heavy = None
+    if mo_shares and fair and (mo_total or 0) >= 3000:
+        best_pp = 0
+        for tok in ("home", "draw", "away"):
+            sh = (mo_shares.get(tok) or {}).get("share")
+            fr = fair.get(tok)
+            if sh is not None and fr is not None:
+                pp = (sh - fr) * 100
+                if pp > best_pp:
+                    best_pp, heavy = pp, {"token": tok, "moneyPct": round(sh * 100), "fairPct": round(fr * 100), "edgePP": round(pp)}
+    return {
+        "totalEur": round(total),
+        "kickoff": m.get("kickoff"),
+        "capturedAt": m.get("capturedAt") or (m.get("_meta") or {}).get("generatedAt"),
+        "normRatio": ratio, "normLvl": lvl,
+        "mo": {"shares": mo_shares, "fair": {k: (round(v, 4) if isinstance(v, (int, float)) else v) for k, v in fair.items()},
+               "odds": {"home": mo.get("hw"), "draw": mo.get("dr"), "away": mo.get("aw")}, "totalEur": mo_total},
+        "ou25": ({"shares": ou_out, "totalEur": ou_total} if ou_out else None),
+        "heavy": heavy,
+    }
+
+def _fav_token(oh, od, oa):
+    """Favorit = niedrigste Dezimalquote. Gibt 'home'|'draw'|'away' oder None."""
+    cand = [(oh, "home"), (od, "draw"), (oa, "away")]
+    cand = [(o, t) for o, t in cand if isinstance(o, (int, float)) and o > 1]
+    if not cand:
+        return None
+    return min(cand)[1]
+
+def build_consensus(pinn, soft, smart, betfair):
+    """Ein Streifen: welche Seite sehen Pinnacle / Soft / Betfair / Polymarket? Konsens = alle einig."""
+    src = []
+    if pinn:
+        t = _fav_token(pinn.get("nowH"), pinn.get("nowD"), pinn.get("nowA"))
+        if t: src.append({"name": "Pinnacle", "token": t})
+    if soft:
+        t = _fav_token(soft.get("nowH"), soft.get("nowD"), soft.get("nowA"))
+        if t: src.append({"name": "Soft-Books", "token": t})
+    if betfair and betfair.get("mo", {}).get("odds"):
+        o = betfair["mo"]["odds"]
+        t = _fav_token(o.get("home"), o.get("draw"), o.get("away"))
+        if t: src.append({"name": "Betfair", "token": t})
+    if smart and smart.get("outcomes"):
+        oc = smart["outcomes"]
+        best = max(((k, (v or {}).get("share") or 0) for k, v in oc.items()), key=lambda x: x[1], default=(None, 0))
+        if best[0] and best[1] > 0:
+            src.append({"name": "Polymarket", "token": best[0]})
+    if len(src) < 2:
+        return None
+    toks = [s["token"] for s in src]
+    modal = max(set(toks), key=toks.count)
+    agree = len(set(toks)) == 1
+    return {"sources": src, "modal": modal, "agree": agree, "n": len(src), "nAgree": toks.count(modal)}
+
+
+def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, ai_previews=None, poly_lookup=None, betfair_snaps=None, betfair_norm=None):
     home_id = fixture["home"]
     away_id = fixture["away"]
     home_team = team_lookup[home_id]
@@ -443,18 +616,26 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
     home_xg_d  = xg_stats.get(home_id)
     away_xg_d  = xg_stats.get(away_id)
 
-    if home_xg_d and away_xg_d and home_xg_d.get("games", 0) >= 3 and away_xg_d.get("games", 0) >= 3:
+    # (31.07.2026) games>=3 reicht nicht: ein Vorsaison-Team kann Spiele UND xgForAvg=None haben
+    # (kein API-xG erhoben) → None-Arithmetik crashte build_payload. Erst jetzt sichtbar, weil die
+    # Vorsaison-Fixtures neu bepaged werden. _xg_ok verlangt numerische Mittelwerte.
+    def _xg_ok(d):
+        return bool(d) and (d.get("games", 0) or 0) >= 3 \
+               and isinstance(d.get("xgForAvg"), (int, float)) \
+               and isinstance(d.get("xgAgainstAvg"), (int, float))
+
+    if _xg_ok(home_xg_d) and _xg_ok(away_xg_d):
         # Blend: (home_attack + away_defence) / 2 — same logic as Poisson but with real xG rates
         xg_home = round((home_xg_d["xgForAvg"] + away_xg_d["xgAgainstAvg"]) / 2, 2)
         xg_away = round((away_xg_d["xgForAvg"] + home_xg_d["xgAgainstAvg"]) / 2, 2)
         xg_source = "api_football"
-    elif home_xg_d and home_xg_d.get("games", 0) >= 3:
+    elif _xg_ok(home_xg_d):
         # Only home xG available — mix with Poisson for away
         _, xg_away_fb = poisson_xg(home_form, away_form, home_elo, away_elo, home_id in CO_HOSTS)
         xg_home = round(home_xg_d["xgForAvg"], 2)
         xg_away = xg_away_fb
         xg_source = "partial"
-    elif away_xg_d and away_xg_d.get("games", 0) >= 3:
+    elif _xg_ok(away_xg_d):
         # Only away xG available — mix with Poisson for home
         xg_home_fb, _ = poisson_xg(home_form, away_form, home_elo, away_elo, home_id in CO_HOSTS)
         xg_home = xg_home_fb
@@ -555,6 +736,10 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
     # Smart-Money (Polymarket-Wallet-Verteilung) für dieses Spiel
     smart_money = _smartmoney_all().get(odds_key)
 
+    # Betfair-Exchange-Geld + Markt-Konsens (31.07.2026) — nur wenn die Börse das Spiel führt.
+    betfair_block = build_betfair_block(home_team["name"], away_team["name"], betfair_snaps or {}, betfair_norm or {})
+    consensus_block = build_consensus(pinn_odds, soft_odds, smart_money, betfair_block)
+
     # Group teams + fixtures (for group table / context)
     group_teams = group_data.get("teams", [])
     group_fixtures = group_data.get("fixtures", [])
@@ -620,6 +805,8 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
         "pinnOdds":      pinn_odds,
         "softOdds":      soft_odds,
         "smartMoney":    smart_money,
+        "betfair":       betfair_block,
+        "consensus":     consensus_block,
         "playerProps":   player_props_out,
         # Data sections
         "picks":         picks_raw,
@@ -664,10 +851,35 @@ def main():
     generated = 0
     slugs = []
 
-    # Liga: nur „live" Spiele bepagen (Quoten da ODER ≤2 Wochen) — sonst 1066 statt ~40 Seiten.
+    # Betfair-Exchange-Snapshot (31.07.2026): einmal laden → Event-Pages backen Geld-Verteilung + ×-Norm.
+    _bf_snaps, _bf_norm = load_betfair()
+
+    # Liga: nur „live" Spiele bepagen — sonst 1066 statt ~40 Seiten. „Live" =
+    #   Quoten da  ODER  ≤2 Wochen  ODER  in den nächsten MATCH_PAGE_MDS Spieltagen der
+    #   eigenen Gruppe. Die Matchday-Klausel deckt die Vorsaison ab: Top-5 startet >14 Tage
+    #   entfernt, die Karten zeigen aber schon MD1–2 → ohne sie 404 auf jeder Vorsaison-
+    #   Event-Page (31.07.2026, Lucas: „Event-Pages der Cards funktionieren nicht mehr").
+    MATCH_PAGE_MDS = 3
     _odds = wm.get("odds") or {}
     _two_weeks = (datetime.utcnow().date() + timedelta(days=14)).isoformat()
     _today = datetime.utcnow().date().isoformat()
+
+    def _mdnum(m):
+        try:
+            return float(m)
+        except Exception:
+            return 9999.0
+
+    # {(home,away,date)} der Fixtures in den nächsten MATCH_PAGE_MDS Spieltagen JE Gruppe —
+    # exakt das, was die Karten verlinken. Bounded (~Ligen × MDs × Spiele), keine 1000+-Explosion.
+    _card_keys = set()
+    for _g in wm["groups"].values():
+        _up = [f for f in _g.get("fixtures", [])
+               if (f.get("date") or "")[:10] >= _today and f.get("matchday") not in (None, "")]
+        _mds = sorted({f.get("matchday") for f in _up}, key=_mdnum)[:MATCH_PAGE_MDS]
+        for f in _up:
+            if f.get("matchday") in _mds:
+                _card_keys.add((f.get("home"), f.get("away"), (f.get("date") or "")[:10]))
 
     for group_id, group_data in wm["groups"].items():
         for fixture in group_data.get("fixtures", []):
@@ -677,14 +889,16 @@ def main():
                 continue
             if _IS_LIGA:
                 _d = (fixture.get("date") or "")[:10]
-                _live = (f"{home_id}-{away_id}" in _odds) or (_today <= _d <= _two_weeks)
+                _live = ((f"{home_id}-{away_id}" in _odds)
+                         or (_today <= _d <= _two_weeks)
+                         or ((home_id, away_id, _d) in _card_keys))
                 if not _live:
                     continue
             if home_id not in team_lookup or away_id not in team_lookup:
                 print(f"  SKIP: unknown team {home_id} or {away_id}")
                 continue
 
-            slug, payload = build_payload(group_id, group_data, fixture, team_lookup, wm, history, ai_previews, poly_lookup)
+            slug, payload = build_payload(group_id, group_data, fixture, team_lookup, wm, history, ai_previews, poly_lookup, _bf_snaps, _bf_norm)
             out_path = os.path.join(DATA_DIR, f"{slug}.json")
             with open(out_path, "w", encoding="utf-8") as f:
                 json.dump(payload, f, ensure_ascii=False, separators=(",", ":"))
@@ -705,7 +919,7 @@ def main():
                 print(f"  SKIP KO: unknown team {home_id} or {away_id}")
                 continue
             slug, payload = build_payload("KO", _ko_group, fixture, team_lookup, wm,
-                                          history, ai_previews, poly_lookup)
+                                          history, ai_previews, poly_lookup, _bf_snaps, _bf_norm)
             out_path = os.path.join(DATA_DIR, f"{slug}.json")
             with open(out_path, "w", encoding="utf-8") as f:
                 json.dump(payload, f, ensure_ascii=False, separators=(",", ":"))
