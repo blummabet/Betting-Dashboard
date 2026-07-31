@@ -919,9 +919,10 @@
         'Top: €20k FT/€10k HT · Int./UEFA: €20k/€10k · Rest: €15k/€5k). Sobald irgendwo genug Geld liegt, erscheint es hier.</div>';
     }
 
-    // „Frisches Geld" scannt ALLE frischen Spiele (auch unter der Geld-Schwelle) im aktuellen
-    // Liga/Datum-Filter — der Zufluss kann auf einem Spiel liegen, das oben (noch) nicht auftaucht.
-    var flowBase = fresh.slice();
+    // „Frisches Geld" nutzt dieselbe Tier-Schwelle wie Hotspots + Karten (31.07.2026, Lucas: „gleicher
+    // Schwellwert wie unten") — sonst schwemmten Klein-Ligen (Indian Calcutta, Timor) über den reinen
+    // Zufluss-Floor rein. Basis = qualifizierte Spiele (qAll), dann derselbe Liga/Datum/Live/Markt-Filter.
+    var flowBase = qAll.slice();
     if (_bf.league !== 'all') flowBase = flowBase.filter(function (m) { return m.league === _bf.league; });
     if (_bf.date !== 'all') flowBase = flowBase.filter(function (m) { return isLive(m) || matchDateKey(m) === _bf.date; });
     if (_bf.onlyLive) flowBase = flowBase.filter(function (m) { return isLive(m); });
