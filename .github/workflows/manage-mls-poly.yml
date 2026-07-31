@@ -115,49 +115,10 @@ jobs:
           POLY_API_PASSPHRASE:      ${{ secrets.POLY_API_PASSPHRASE }}
           AUTO_SELL_ENABLED:        ${{ secrets.MLS_AUTO_SELL_ENABLED || 'false' }}
 
-      # 19.07.2026 — Cross-Sport-Radar: Poly vs Pinnacle über mehrere Sportarten (read-only,
-      # tracking). Läuft hier, weil der Mac-Runner der einzige Poly-Zugang ist (EU-geoblockt).
-      - name: 🎯 Cross-Sport Poly-Radar (read-only)
-        run: ${{ env.POLY_PYTHON }} poly_cross_sport.py
-        continue-on-error: true
-        env:
-          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
-
-      # Breit über ALLE Poly-Ligen: liegt das Geld richtig? (Volumen + Mindest-Quote gefiltert,
-      # Polys eigene Auflösung). Read-only, Mac-Runner (Poly EU-geoblockt).
-      - name: 🌐 Poly-Geld breit (alle Ligen)
-        # 26.07.2026 (Lucas): Telegram-Secrets ergänzt → maybe_alert_sharp kann den „🎯 scharfe
-        # Wallet"-Alert (sharp_entries: n≥4 & positive CLV) in den Trades-Channel senden.
-        run: ${{ env.POLY_PYTHON }} poly_money_broad.py
-        continue-on-error: true
-        env:
-          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
-
-      # 26.07.2026 (Lucas: Poly-Whale-Watch, alle Sportarten, Trades-Channel zum Testen).
-      # Direkt nach poly_money_broad.py (schreibt poly_wallet_track.json) → alertet neue
-      # Großpositionen einzelner Wallets in den Trades-Channel. Dedup via poly_whale_seen.json.
-      - name: 🐋 Poly Whale-Watch (Trades-Channel + öffentlicher Whale-Push)
-        run: ${{ env.POLY_PYTHON }} poly_whale_watch.py
-        continue-on-error: true
-        env:
-          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
-          TELEGRAM_CHAT_ID:        ${{ secrets.TELEGRAM_CHAT_ID }}
-
-      # 28.07.2026 (Lucas: cross sport als telegram alert). Nach poly_cross_sport.py → alertet
-      # KONVERGIERENDE Poly-vs-Pinnacle-Luecken in den Trades-Channel. Dedup via poly_cross_sport_seen.json.
-      - name: Cross-Sport-Edge-Alert (Poly vs Pinnacle)
-        run: ${{ env.POLY_PYTHON }} poly_cross_sport_watch.py
-        continue-on-error: true
-        env:
-          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
-          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
-
-      # E-Sport als eigener Wallets-Datensatz (Smart-Money/Whale/Kohärenz, kein Pinnacle-Anker).
-      - name: 🎮 E-Sport Poly-Daten
-        run: ${{ env.POLY_PYTHON }} fetch_poly_esports.py
-        continue-on-error: true
+      # 31.07.2026 (Lucas): der globale Poly-Scan (Money-Broad · Cross-Sport · Whale-Watch · E-Sport)
+      # läuft jetzt entkoppelt + HÄUFIG in poly-global-scan.yml (alle 30 Min, ganztags) — sonst wurden
+      # tagsüber angepfiffene Fußball-/E-Sport-Märkte nie im 3h-Fenster erfasst. Hier NICHT mehr, sonst
+      # doppelter Scan/Alert. Dieser Workflow bleibt rein MLS-Trading.
 
       # 19.07.2026 — Maker-Lebenszyklus: ruhende Limit-Orders, die nicht füllen, kurz vor Anpfiff
       # stornieren + als Taker crossen. No-op solange maker_enabled=false (Default).

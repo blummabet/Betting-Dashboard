@@ -1194,7 +1194,7 @@ function _pwMoneyLive(live){
     .sort((a,b)=>(b.m.totalUsd||0)-(a.m.totalUsd||0)).slice(0,30);
   const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">💰 Wo liegt das große Geld — alle Sportarten</span>'
     +'<span class="pw-sec-note">kommende Spiele nach Poly-Volumen · auf welche Seite hat die Masse gesetzt · zum Folgen</span></div>';
-  if(!rows.length) return intro+'<div class="pw-none">'+(_pwSportFilter==='all'
+  if(!rows.length) return intro+'<div class="pw-none">'+_pwStaleMsg(_pwSportFilter==='all'
     ?'Gerade kein nennenswertes Geld auf kommenden Märkten (füllt sich nah am Anpfiff, läuft am Mac-Runner).'
     :'Keine kommenden '+_pwSportFilter+'-Märkte gerade — Filter „Alle" zeigt wieder alles.')+'</div></section>';
   const body=rows.map(({k,m})=>{
@@ -1348,7 +1348,7 @@ function _pwMomentum(hist){
       side:best.side,from:best.from,to:best.to,move:best.move,step:best.step});
   }
   rows.sort((a,b)=>Math.abs(b.move)-Math.abs(a.move));
-  if(!rows.length) return intro+'<div class="pw-none">'+(_pwSportFilter==='all'
+  if(!rows.length) return intro+'<div class="pw-none">'+_pwStaleMsg(_pwSportFilter==='all'
     ?'Noch keine Bewegung erfasst — die Preis-Zeitreihe füllt sich über die nächsten Runner-Läufe (min. 2 Snapshots je Markt).'
     :'Keine '+_pwSportFilter+'-Bewegung gerade — Filter „Alle" zeigt wieder alles.')+'</div></section>';
   const body=rows.slice(0,30).map(r=>{
@@ -1378,17 +1378,35 @@ function _pwMomentum(hist){
 // 🆕 Was-ist-neu (25.07.2026, Lucas): Aktivitäts-Feed aus den akkumulierten Daten — neue große
 // Einstiege (wallet_track.open, firstTs<24h) + gekippte Favoriten (broadHist: führende Seite
 // gewechselt). Geräteübergreifend, kein Browser-State. Füllt sich mit den Runner-Läufen.
+// Poly-Datenalter (aus dem globalen Money-Scan). Der Scan läuft in Wellen (MLS-Zeiten + Mittag) →
+// tagsüber sind die Snapshots oft Stunden alt und die erfassten Märkte schon angepfiffen. Damit die
+// Money/Bewegung/Neu-Views nicht stumm leer bleiben, sagen wir ehrlich, dass die Daten alt sind.
+function _pwPolyAgeH(){
+  const g=_pwCache&&_pwCache.moneyBroad&&_pwCache.moneyBroad.generatedAt;
+  const t=g?Date.parse(g):NaN; return isNaN(t)?null:(Date.now()-t)/3.6e6;
+}
+function _pwStaleMsg(base){
+  const a=_pwPolyAgeH();
+  if(a!=null && a>2){
+    const at=a<1?Math.round(a*60)+' Min':a.toFixed(1)+' h';
+    return '⏳ <b>Poly-Daten sind '+at+' alt.</b> Der globale Geld-Scan läuft in Wellen (rund um die MLS-Zeiten ~22–06 UTC + Mittag) — tagsüber sind mehrstündige Lücken normal, dann sind die erfassten Märkte schon angepfiffen. Beim nächsten Lauf erscheinen wieder frische kommende Spiele.';
+  }
+  return base;
+}
+const PW_NEW_MIN_USD = 5000;   // „Neu": Dust + Politik-Mini-Positionen raus (Lucas 31.07.2026: „$33-Einstiege wertlos")
 function _pwNewEntries(track, hours){
   const open=track&&track.open; if(!open) return [];
   const cutoff=Date.now()-hours*3.6e6, rows=[];
   for(const e of Object.values(open)){
     if(!e||!_pwSportPass(e.league)) continue;
+    if(_pwSportCategory(e.league)==='Sonstige') continue;      // Politik/Krypto (GREATER/ELON …) raus
+    if((Number(e.usd)||0) < PW_NEW_MIN_USD) continue;          // Kleckerbeträge raus — „GROSSE Einstiege"
     const t=Date.parse(e.firstTs); if(isNaN(t)||t<cutoff) continue;
     const sc=_pwWalletScore(e.wallet);
     rows.push({wallet:e.wallet,key:e.key,side:e.side,league:e.league,price:e.firstPrice,usd:e.usd||0,ts:t,
       sharp:!!(sc&&sc.n>=PW_SHARP_MIN_N&&sc.avgClv>0),avgClv:sc?sc.avgClv:null,n:sc?sc.n:0});
   }
-  return rows.sort((a,b)=>b.ts-a.ts||b.usd-a.usd);
+  return rows.sort((a,b)=>b.usd-a.usd||b.ts-a.ts);            // größte zuerst
 }
 function _pwFlips(hist){
   const lead=o=>{let s=null,m=-1;for(const k in (o.p||{}))if(typeof o.p[k]==='number'&&o.p[k]>m){m=o.p[k];s=k;}return s;};
@@ -1408,7 +1426,7 @@ function _pwWhatsNew(){
   const entries=_pwNewEntries(_pwCache&&_pwCache.walletTrack,24).slice(0,20);
   const flips=_pwFlips(_pwCache&&_pwCache.broadHist).slice(0,15);
   if(!entries.length&&!flips.length)
-    return '<section class="pw-sec"><div class="pw-none">Noch nichts Neues erfasst — der Feed zeigt neue große Einstiege und gekippte Favoriten, sobald ① (Preis-Zeitreihe) und ② (Wallet-Track) über die Runner-Läufe Daten haben.</div></section>';
+    return '<section class="pw-sec"><div class="pw-none">'+_pwStaleMsg('Noch nichts Neues erfasst — der Feed zeigt neue große Einstiege (ab '+_pwUsd(PW_NEW_MIN_USD)+') und gekippte Favoriten, sobald die Runner-Läufe Daten liefern.')+'</div></section>';
   let h='';
   if(entries.length){
     const body=entries.map(e=>{

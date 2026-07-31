@@ -1,0 +1,99 @@
+name: 🐋 Poly Global-Scan (alle Sportarten, häufig)
+
+# 31.07.2026 (Lucas): der globale Polymarket-Scan (Money-Broad, Cross-Sport, Whale-Watch) war an den
+# MLS-Handelszyklus gekoppelt (manage-mls-poly: nur 22–06 UTC + Mittag). Der Scan erfasst aber nur
+# Märkte im 3h-Anpfiff-Fenster — d.h. jedes Fußball-/E-Sport-Spiel, das TAGSÜBER angepfiffen wird,
+# war nie im Fenster eines Laufs → nie erfasst (Poly liefert 800 Soccer-Events, wir sahen 2).
+# Fix: eigener, HÄUFIGER Workflow rund um die Uhr, entkoppelt vom MLS-Trading. Read-only Tracking.
+# Läuft self-hosted auf dem Mac (Polymarket geoblockt Rechenzentrums-IPs → nur Wohn-IP).
+on:
+  schedule:
+    - cron: '15,45 * * * *'    # alle 30 Min, ganztags — versetzt zu den :00/:30 MLS-Läufen
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: poly-global-scan
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: [self-hosted, macOS]
+    steps:
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python einrichten (Mac)
+        run: |
+          PYTHON=""
+          for PY in /opt/homebrew/bin/python3.13 /opt/homebrew/bin/python3.12 /opt/homebrew/bin/python3.11 /usr/local/bin/python3.13 /usr/local/bin/python3.12 /usr/local/bin/python3.11 /usr/bin/python3; do
+            if "$PY" --version >/dev/null 2>&1; then PYTHON="$PY"; break; fi
+          done
+          if [ -z "$PYTHON" ]; then echo "❌ Kein Python gefunden"; exit 1; fi
+          echo "✅ $PYTHON ($($PYTHON --version))"
+          echo "POLY_PYTHON=$PYTHON" >> $GITHUB_ENV
+          $PYTHON -m pip install --break-system-packages requests --quiet 2>/dev/null || true
+
+      - name: 🎯 Cross-Sport Poly-Radar (Poly vs Pinnacle, read-only)
+        run: ${{ env.POLY_PYTHON }} poly_cross_sport.py
+        continue-on-error: true
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+
+      - name: 🌐 Poly-Geld breit (ALLE Ligen/Sportarten)
+        run: ${{ env.POLY_PYTHON }} poly_money_broad.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
+      - name: 🐋 Poly Whale-Watch (Trades-Channel + öffentlicher Whale-Push)
+        run: ${{ env.POLY_PYTHON }} poly_whale_watch.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+          TELEGRAM_CHAT_ID:        ${{ secrets.TELEGRAM_CHAT_ID }}
+
+      - name: ⚖️ Cross-Sport-Edge-Alert (Poly vs Pinnacle, konvergierend)
+        run: ${{ env.POLY_PYTHON }} poly_cross_sport_watch.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
+      - name: 🎮 E-Sport Poly-Daten (eigener Wallets-Datensatz)
+        run: ${{ env.POLY_PYTHON }} fetch_poly_esports.py
+        continue-on-error: true
+
+      - name: 💾 Poly-Global-Dateien committen
+        run: |
+          git config user.name "CocoBet Bot"
+          git config user.email "bot@cocobet.local"
+          for f in \
+            poly_money_broad.json poly_money_broad_close.json poly_money_broad_history.json poly_wallet_track.json \
+            poly_cross_sport.json poly_cross_sport_history.json poly_cross_sport_seen.json \
+            poly_whale_seen.json poly_whale_public_seen.json \
+            esports_poly_prices.json esports_poly_wallets.json esports_poly_smartmoney.json esports_poly_coherence.json esports_poly_status.json; do
+            [ -f "$f" ] && git add "$f"
+          done
+          if git diff --staged --quiet; then
+            echo "Keine Änderungen — kein Commit."; exit 0
+          fi
+          git commit -m "🐋 Poly Global-Scan $(date -u +'%d.%m.%Y %H:%M') UTC [skip ci]"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          for attempt in 1 2 3 4 5; do
+            git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+            CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null)
+            if [ -n "$CONFLICTS" ]; then
+              echo "$CONFLICTS" | while read f; do git checkout --ours -- "$f"; git add "$f"; done
+              git diff --staged --quiet || git commit -m "🔧 auto-resolve merge conflicts"
+            fi
+            if git push 2>&1; then echo "✅ Push nach Versuch $attempt"; exit 0; fi
+            echo "⚠️ Push $attempt fehlgeschlagen — retry…"; sleep $((attempt * 3))
+          done
+          echo "❌ Push fehlgeschlagen"; exit 1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

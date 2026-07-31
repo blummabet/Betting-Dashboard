@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v43';   // 31.07.2026: Radar-Labels Ue/U -> O/U (besser lesbar) + Push-Bilanz-Reiter + Public-Pushs
+const VERSION = 'cocobet-v44';   // 31.07.2026: Poly-Wallets Neu-View (Sport+Groessen-Floor) + ehrliche Stale-Meldung bei Grosses Geld/Bewegung
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
