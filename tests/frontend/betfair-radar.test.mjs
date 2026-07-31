@@ -560,3 +560,30 @@ test('Frisches Geld respektiert dieselbe Tier-Schwelle wie Hotspots (kein Klein-
   assert.match(html, /Gross H/, 'qualifiziertes Groß-Spiel erscheint');
   assert.doesNotMatch(html, /Klein H/, 'Klein-Spiel unter Schwelle taucht NICHT mehr auf (Frisches Geld gegated)');
 });
+
+
+test('Push-Bilanz-Reiter: rendert Trefferquote/ROI aus betfair_public_record', () => {
+  const { w } = boot();
+  w._bfState.pubrec = {
+    n: 12, wins: 7, hitRate: 0.5833, roi: 0.083, avgOdd: 1.92, pending: 3,
+    byScenario: { fresh: { n: 8, wins: 5, hitRate: 0.625, roi: 0.12, avgOdd: 2.0 },
+                  ht: { n: 4, wins: 2, hitRate: 0.5, roi: 0.0, avgOdd: 1.7 } },
+    byMarket: { 'Over/Under 3.5 Goals': { n: 5, wins: 3, hitRate: 0.6, roi: 0.15, avgOdd: 2.1 } },
+    recent: [{ home: 'Gremio', away: 'Bolivar', league: 'L', market: 'First Half Goals 1.5', leadName: 'Under 1.5 Goals', leadOdd: 1.53, won: true }],
+  };
+  w._bfState.view = 'push';
+  const html = w._renderBetfairRadar();
+  assert.match(html, /Push-Bilanz/);
+  assert.match(html, /58%/, 'Trefferquote');
+  assert.match(html, /7\/12/, 'wins/n');
+  assert.match(html, /Moneyflow/); assert.match(html, /Halftime/);
+  assert.match(html, /Gremio/, 'recent list');
+});
+
+test('Push-Bilanz-Reiter: leerer Record → sammelt-noch-Hinweis', () => {
+  const { w } = boot();
+  w._bfState.pubrec = null;
+  w._bfState.view = 'push';
+  const html = w._renderBetfairRadar();
+  assert.match(html, /Push-Bilanz sammelt noch/);
+});

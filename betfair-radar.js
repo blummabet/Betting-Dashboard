@@ -72,13 +72,13 @@
             .then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
         });
     };
-    return Promise.all([jf('betfair_prices.json'), jf('betfair_history.json'), jf('betfair_track_record.json')]);
+    return Promise.all([jf('betfair_prices.json'), jf('betfair_history.json'), jf('betfair_track_record.json'), jf('betfair_public_record.json')]);
   }
   function _bfLoad() {
     if (_bf.data || _bf.loading) return;
     _bf.loading = true;
     _bfFetch3().then(function (a) {
-      _bf.data = a[0] || { matches: [] }; _bf.hist = a[1] || {}; _bf.track = a[2] || null;
+      _bf.data = a[0] || { matches: [] }; _bf.hist = a[1] || {}; _bf.track = a[2] || null; _bf.pubrec = a[3] || null;
       _bf._cohCache = {}; _bf._mixBase = null; _bf._normBase = null;
       _bf.loading = false; _bf.cardOpen = {};
       var p = document.getElementById('betfairRadarPanel');
@@ -101,6 +101,7 @@
       if (a[0]) _bf.data = a[0];
       if (a[1]) _bf.hist = a[1];
       if (a[2] != null) _bf.track = a[2];
+      if (a[3] != null) _bf.pubrec = a[3];
       _bf._cohCache = {}; _bf._mixBase = null; _bf._normBase = null;
       _bf.loading = false;
       var pp = document.getElementById('betfairRadarPanel');
@@ -737,7 +738,7 @@
 
   function viewToggle() {
     var b = function (id, lbl) { var on = _bf.view === id; return '<button onclick="_bfSetView(\'' + id + '\')" style="padding:6px 13px;border:1px solid ' + (on ? C.gold : C.bd) + ';background:' + (on ? 'rgba(255,184,12,.12)' : 'transparent') + ';color:' + (on ? C.gold : C.mut) + ';font-size:12px;font-weight:700;cursor:pointer">' + lbl + '</button>'; };
-    return '<div style="display:inline-flex;border-radius:9px;overflow:hidden;border:1px solid ' + C.bd + ';margin:6px 0 12px">' + b('live', '🔴 Live-Radar') + b('record', '📊 Trefferquoten') + '</div>';
+    return '<div style="display:inline-flex;border-radius:9px;overflow:hidden;border:1px solid ' + C.bd + ';margin:6px 0 12px">' + b('live', '🔴 Live-Radar') + b('record', '📊 Trefferquoten') + b('push', '📈 Push-Bilanz') + '</div>';
   }
 
   function renderTrackBoard() {
@@ -880,6 +881,36 @@
     var st = document.createElement('style'); st.id = 'bfb-css'; st.textContent = css;
     (document.head || document.documentElement).appendChild(st);
   }
+  // 📈 Push-Bilanz: Trefferquote/ROI der ÖFFENTLICHEN Moneyflow/Halftime-Pushs (31.07.2026, Lucas:
+  // „schaffst du die Public-Pushs zu tracken?"). Daten aus betfair_public_record.json (Mac-Runner
+  // rechnet jeden gesendeten Push gegen den End-/Halbzeitstand ab). Bewertet: lag das Geld richtig?
+  function _pct(x) { return (x == null) ? '—' : Math.round(x * 100) + '%'; }
+  function _roi(x) { return (x == null) ? '—' : (x >= 0 ? '+' : '') + (x * 100).toFixed(1) + '%'; }
+  function renderPushBoard() {
+    var r = _bf.pubrec;
+    if (!r || !r.n) {
+      return viewToggle() + '<div style="background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:14px;padding:30px 24px;text-align:center;color:' + C.mut + ';line-height:1.7;font-size:13px">' +
+        '<div style="font-size:15px;font-weight:800;color:' + C.ink + ';margin-bottom:8px">📈 Push-Bilanz sammelt noch</div>' +
+        'Hier wird ausgewertet, ob das Geld, dem die öffentlichen <b>Moneyflow</b>- und <b>Halftime</b>-Pushs gefolgt sind, recht hatte — die gefolgte Seite gegen den End-/Halbzeitstand. Sobald die ersten Pushs aufgelöst sind, stehen hier Trefferquote &amp; ROI' + ((r && r.pending) ? ' (aktuell ' + r.pending + ' offen)' : '') + '.</div>';
+    }
+    var roiCol = (r.roi >= 0) ? C.back : C.lay;
+    var kpi = function (lbl, val, col, sub) { return '<div style="flex:1;min-width:120px;background:' + C.raised + ';border:1px solid ' + C.bd + ';border-radius:12px;padding:13px 15px"><div style="font-size:11px;color:' + C.mut + ';text-transform:uppercase;letter-spacing:.4px;margin-bottom:5px">' + lbl + '</div><div style="font-size:22px;font-weight:900;color:' + (col || C.ink) + '">' + val + '</div><div style="font-size:10px;color:' + C.dim + '">' + (sub || '') + '</div></div>'; };
+    var band = '<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">' +
+      kpi('Trefferquote', _pct(r.hitRate), C.gold, r.wins + '/' + r.n + ' Signale') +
+      kpi('ROI', _roi(r.roi), roiCol, '1 Einheit/Signal') +
+      kpi('Ø Quote', r.avgOdd ? ('@' + (+r.avgOdd).toFixed(2)) : '—', C.ink, 'gefolgte Seite') +
+      kpi('offen', r.pending || 0, C.mut, 'noch nicht aufgelöst') + '</div>';
+    var scnRow = function (key, lbl) { var s = (r.byScenario || {})[key]; if (!s) return ''; return '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid ' + C.bd + ';font-size:13px"><span style="font-weight:700">' + lbl + '</span><span style="text-align:right"><b style="color:' + C.gold + '">' + _pct(s.hitRate) + '</b> · <b style="color:' + (s.roi >= 0 ? C.back : C.lay) + '">' + _roi(s.roi) + '</b> ROI <span style="color:' + C.dim + '">' + s.wins + '/' + s.n + ' · Ø@' + (s.avgOdd || '—') + '</span></span></div>'; };
+    var scn = '<div style="background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:12px;padding:12px 15px;margin-bottom:14px"><div style="font-size:12px;color:' + C.mut + ';font-weight:700;margin-bottom:2px">nach Signal-Typ</div>' + scnRow('fresh', '💶 Moneyflow (frisches Geld)') + scnRow('ht', '💷 Halftime (einseitig)') + '</div>';
+    var mkKeys = Object.keys(r.byMarket || {});
+    var mkRows = mkKeys.map(function (k) { var s = r.byMarket[k]; return '<tr><td style="padding:5px 8px">' + esc(shortMk(k)) + '</td><td style="text-align:right;padding:5px 8px;color:' + C.gold + '">' + _pct(s.hitRate) + '</td><td style="text-align:right;padding:5px 8px;color:' + (s.roi >= 0 ? C.back : C.lay) + '">' + _roi(s.roi) + '</td><td style="text-align:right;padding:5px 8px;color:' + C.dim + '">' + s.wins + '/' + s.n + '</td></tr>'; }).join('');
+    var mkt = mkRows ? '<div style="background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:12px;padding:12px 15px;margin-bottom:14px"><div style="font-size:12px;color:' + C.mut + ';font-weight:700;margin-bottom:6px">nach Markt</div><table style="width:100%;border-collapse:collapse;font-size:12.5px"><thead><tr style="color:' + C.mut + ';font-size:11px"><th style="text-align:left;padding:4px 8px">Markt</th><th style="text-align:right;padding:4px 8px">Treffer</th><th style="text-align:right;padding:4px 8px">ROI</th><th style="text-align:right;padding:4px 8px">n</th></tr></thead><tbody>' + mkRows + '</tbody></table></div>' : '';
+    var recRows = (r.recent || []).map(function (e) { return '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:6px 0;border-bottom:1px solid ' + C.bd + ';font-size:12.5px"><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">' + (e.won ? '✅' : '❌') + ' <b>' + esc(String(e.home).slice(0, 12)) + '</b> – ' + esc(String(e.away).slice(0, 12)) + ' <span style="color:' + C.dim + '">· ' + esc(shortMk(e.market)) + ' → ' + esc(e.leadName) + '</span></span><span style="color:' + C.dim + ';white-space:nowrap">@' + (e.leadOdd ? (+e.leadOdd).toFixed(2) : '—') + '</span></div>'; }).join('');
+    var rec = recRows ? '<div style="background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:12px;padding:12px 15px"><div style="font-size:12px;color:' + C.mut + ';font-weight:700;margin-bottom:2px">zuletzt aufgelöst</div>' + recRows + '</div>' : '';
+    var intro = '<div style="font-size:11.5px;color:' + C.mut + ';margin:6px 0 12px;line-height:1.5">Wertet aus, ob das Geld, dem die öffentlichen Pushs gefolgt sind, recht hatte — die <b style="color:' + C.ink + '">gefolgte Seite</b> (die mit dem Geld) gegen den End-/Halbzeitstand. 1 Einheit Einsatz je Signal · ROI zu den gemeldeten Quoten.</div>';
+    return viewToggle() + intro + band + scn + mkt + rec;
+  }
+
   function renderBetfairRadar() {
     _bfbCss();
     var head = '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap">' +
@@ -889,6 +920,7 @@
     if (!_bf.data) { _bfLoad(); return head + '<div style="padding:50px;text-align:center;color:' + C.mut + '">⏳ Betfair-Daten werden geladen …</div>'; }
 
     if (_bf.view === 'record') return head + renderTrackBoard();
+    if (_bf.view === 'push') return head + renderPushBoard();
 
     var fresh = (_bf.data.matches || []).filter(function (m) { return !isStale(m); });
     var qAll = fresh.filter(qualifies);

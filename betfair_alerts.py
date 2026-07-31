@@ -22,6 +22,7 @@ import os
 import re
 import html
 import urllib.request
+from datetime import datetime, timezone
 
 from telegram_trades import send_trades_message
 
@@ -38,6 +39,7 @@ PUB_HT_REST    = 15000.0
 PUB_FRESH_TOP  = 100000.0
 PUB_FRESH_REST = 30000.0
 PUB_SEEN_FILE  = "betfair_public_seen.json"
+PUB_LEDGER_FILE = "betfair_public_ledger.json"   # gesendete Public-Pushs fürs Tracking/Auswerten
 DEDUP_FACTOR   = 1.5
 SEEN_FILE      = "betfair_alerts_seen.json"
 HT_MARKETS     = ("Half Time", "First Half Goals 1.5")   # HZ-1X2 ODER Über/Unter 1,5 erste Halbzeit
@@ -273,6 +275,30 @@ def _tg_public(text) -> bool:
         return False
 
 
+def _log_public_push(a) -> None:
+    """Jeden GESENDETEN Public-Push in betfair_public_ledger.json festhalten → betfair_public_eval.py
+    rechnet ihn später gegen den Endstand ab. Ein Eintrag je Spiel+Szenario+Markt (kein Doppelzählen)."""
+    try:
+        led = json.load(open(PUB_LEDGER_FILE, encoding="utf-8"))
+        if not isinstance(led, list):
+            led = []
+    except Exception:
+        led = []
+    k = "%s:%s:%s" % (a.get("scenario"), a.get("matchId"), a.get("market"))
+    if any(e.get("k") == k for e in led):
+        return
+    led.append({"k": k, "matchId": a.get("matchId"), "scenario": a.get("scenario"),
+                "market": a.get("market"), "league": a.get("league"),
+                "home": a.get("home"), "away": a.get("away"),
+                "leadName": a.get("leadName"), "leadOdd": a.get("leadOdd"),
+                "value": a.get("value"), "sentAt": datetime.now(timezone.utc).isoformat(),
+                "status": "pending", "htScore": None})
+    try:
+        json.dump(led[-800:], open(PUB_LEDGER_FILE, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
+    except Exception as e:
+        print("Public-Ledger-Schreibfehler:", e)
+
+
 def collect_alerts(prices: dict, hist: dict, ht_top=HT_TOP_EUR, ht_rest=HT_REST_EUR,
                    fresh_top=FRESH_TOP_EUR, fresh_rest=FRESH_REST_EUR) -> list:
     out = []
@@ -329,6 +355,7 @@ def main():
             if _tg_public(build_public_message(a)):
                 pub_seen[key] = a["value"]
                 pub_sent += 1
+                _log_public_push(a)   # fürs Tracking/Auswerten (betfair_public_eval.py)
     try:
         json.dump(pub_seen, open(PUB_SEEN_FILE, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
     except Exception as e:

@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v41';   // 31.07.2026: Frisches Geld nutzt dieselbe Tier-Schwelle wie Hotspots/Karten + Wallet-P&L-Ranking (Backend user-pnl-api)
+const VERSION = 'cocobet-v42';   // 31.07.2026: Betfair Public-Moneyflow/Whale public + Push-Bilanz-Reiter (Treffer/ROI der oeffentlichen Pushs)
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
