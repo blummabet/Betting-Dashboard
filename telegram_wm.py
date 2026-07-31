@@ -254,7 +254,9 @@ def bilanz_footer(wm: dict, lang: str = "de") -> str:
     staked = 0.0
     for pick_list in picks_all.values():
         for p in pick_list:
-            if not _is_posted(p):
+            # (31.07.2026, Lucas) Public-Track-Record wertet NUR BET. Abwägen wird im Push angezeigt,
+            # zählt aber nicht in die öffentliche Bilanz (auf dem Dashboard bleibt es voll getrackt).
+            if not _is_posted(p) or p.get("verdict") != "BET":
                 continue
             r = _norm_result(p.get("result"))
             stake = _pick_stake(p)
@@ -687,7 +689,7 @@ def build_recap_card(wm: dict, target_date: str, lang: str = "de") -> str | None
     for pick_key, fix_info in fix_lookup.items():
         fix_picks = all_picks.get(pick_key, [])
         pick_results = [(p, _norm_result(p.get("result"))) for p in fix_picks
-                        if _is_posted(p) and p.get("result")]
+                        if _is_posted(p) and p.get("verdict") == "BET" and p.get("result")]
         if not pick_results:
             continue
         had_any = True
