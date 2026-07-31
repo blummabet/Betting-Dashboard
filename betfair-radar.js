@@ -876,7 +876,7 @@
       '.bfb-sub{font-size:11px;color:#3fb950;font-weight:700;margin:9px 0 6px;}',
       '.bfb-norm{display:inline-block;font-size:9.5px;font-weight:800;padding:0 5px;margin-left:6px;border:1px solid;border-radius:6px;letter-spacing:.2px;vertical-align:middle;line-height:15px;}',
       '.bfb-over{box-shadow:inset 0 0 0 1px rgba(255,184,12,.5);background:rgba(255,184,12,.05);padding-left:8px;padding-right:8px;}',
-      '.bfb-over2{box-shadow:inset 0 0 0 1px rgba(248,81,73,.6);background:rgba(248,81,73,.06);padding-left:8px;padding-right:8px;}'
+      '.bfb-over2{box-shadow:inset 0 0 0 1px rgba(255,184,12,.5);background:rgba(255,184,12,.05);padding-left:8px;padding-right:8px;}'  /* 31.07.2026 Lucas: keine rote Umrandung fuer x-Norm (Rot = nur Live). Amber wie bfb-over; das rote xN-Norm-Badge traegt die Intensitaet. */
     ].join('');
     var st = document.createElement('style'); st.id = 'bfb-css'; st.textContent = css;
     (document.head || document.documentElement).appendChild(st);

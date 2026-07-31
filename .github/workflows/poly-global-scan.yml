@@ -82,7 +82,7 @@ jobs:
           if git diff --staged --quiet; then
             echo "Keine Änderungen — kein Commit."; exit 0
           fi
-          git commit -m "🐋 Poly Global-Scan $(date -u +'%d.%m.%Y %H:%M') UTC [skip ci]"
+          git commit -m "🐋 Poly Global-Scan $(date -u +'%d.%m.%Y %H:%M') UTC"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           for attempt in 1 2 3 4 5; do
             git pull origin main --no-rebase -X ours --autostash 2>&1 || true
