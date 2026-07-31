@@ -441,6 +441,21 @@
     return '<span class="bfb-norm" style="color:' + col + ';border-color:' + col + '" title="' + (red ? 'weit über' : 'über') + ' dem üblichen Geld für diese Spielphase (Median aller vergleichbaren Spiele)">×' + r.toFixed(1) + ' Norm</span>';
   }
   function _normLine(m) { var b = _normBadge(m); return b ? '<br>' + b : ''; }
+  // (31.07.2026, Lucas) Live-Hervorhebung in den Streifen: Rot = NUR Live (×-Norm ist amber).
+  // Live hat Vorrang vor der ×-Norm-Umrandung; das ×N-Norm-Badge bleibt zusätzlich sichtbar.
+  function _liveBadge(m) {
+    if (!isLive(m)) return '';
+    var li = m.liveInfo || {}, sc = (li.goal_v1 != null && li.goal_v2 != null) ? (li.goal_v1 + ':' + li.goal_v2) : '';
+    var t = (li.time != null) ? (' ' + li.time + "'") : '';
+    return '<span class="bfb-liveb">● LIVE' + (sc ? ' ' + sc : '') + t + '</span>';
+  }
+  function _rowHl(m) { return isLive(m) ? ' bfb-live' : _normCls(m); }
+  function _hlLine(m) {
+    var parts = [];
+    var lv = _liveBadge(m); if (lv) parts.push(lv);
+    var nb = _normBadge(m); if (nb) parts.push(nb);
+    return parts.length ? '<br>' + parts.join(' ') : '';
+  }
   window._bfNormRatio = _normRatio;   // Test-Hook
   window._bfStageOf = _stageOf;
 
@@ -632,11 +647,11 @@
     var mx = Math.max.apply(null, hs.map(function (x) { return x.v; })) || 1;
     var rows = hs.map(function (x) {
       var ht = x.mm.grp === 'HT', w = Math.max(5, x.v / mx * 100);
-      return '<div class="bfb-row' + _normCls(x.m) + '" onclick="_bfJump(\'' + esc(x.m.matchId) + '\')">' +
+      return '<div class="bfb-row' + _rowHl(x.m) + '" onclick="_bfJump(\'' + esc(x.m.matchId) + '\')">' +
         '<div class="bfb-lbl"><div class="bfb-g">' + flag(x.m.country, x.m.league) + ' ' + esc(String(x.m.home).slice(0, 13)) + ' – ' + esc(String(x.m.away).slice(0, 13)) + '</div>' +
         '<div class="bfb-o"><span class="bfb-mk' + (ht ? ' ht' : '') + '">' + esc(x.mm.label) + ' →</span> ' + esc(rLabel(x.lead.name, x.m)) + '</div></div>' +
         '<div class="bfb-bar"><i style="width:' + w + '%;background:' + C.vol + '"></i></div>' +
-        '<div class="bfb-meta"><span class="bfb-v" style="color:' + C.vol + '">' + fmtE(x.v) + '</span><br><span class="bfb-s">' + x.pct.toFixed(0) + '%</span> <span class="bfb-odd">@' + fO(x.lead.odd) + '</span>' + _normLine(x.m) + '</div></div>';
+        '<div class="bfb-meta"><span class="bfb-v" style="color:' + C.vol + '">' + fmtE(x.v) + '</span><br><span class="bfb-s">' + x.pct.toFixed(0) + '%</span> <span class="bfb-odd">@' + fO(x.lead.odd) + '</span>' + _hlLine(x.m) + '</div></div>';
     }).join('');
     return '<div style="background:linear-gradient(180deg,rgba(255,184,12,.06),transparent);border:1px solid ' + C.bd + ';border-radius:14px;padding:11px 13px;margin:12px 0 14px">' +
       '<div style="font-size:12px;color:' + C.gold + ';font-weight:800;margin-bottom:10px">🔥 Wo das Geld genau liegt — größte Einzel-Ausgänge <span style="color:' + C.dim + ';font-weight:600">· Balkenlänge = € gematcht · Klick springt zum Spiel</span></div>' +
@@ -693,10 +708,10 @@
       bar = '<div class="bfb-bar"><i style="width:' + w + '%;background:' + C.back + '"></i></div>';
       meta = '<span class="bfb-v" style="color:' + C.back + '">▲ +' + Math.round(x.pct) + '%' + (x.pct >= 200 ? ' 🚨' : '') + '</span><br><span class="bfb-odd">' + fmtE(x.prev) + '→' + fmtE(x.curr) + '</span>';
     }
-    return '<div class="bfb-row' + _normCls(x.m) + '" onclick="_bfJump(\'' + esc(x.m.matchId) + '\')">' +
+    return '<div class="bfb-row' + _rowHl(x.m) + '" onclick="_bfJump(\'' + esc(x.m.matchId) + '\')">' +
       '<div class="bfb-lbl"><div class="bfb-g">' + flag(x.m.country, x.m.league) + ' ' + esc(String(x.m.home).slice(0, 13)) + ' – ' + esc(String(x.m.away).slice(0, 13)) + '</div>' +
       '<div class="bfb-o">' + lblLine + '</div></div>' + bar +
-      '<div class="bfb-meta">' + meta + _normLine(x.m) + '</div></div>';
+      '<div class="bfb-meta">' + meta + _hlLine(x.m) + '</div></div>';
   }
   function _flowBars(label, items, mode) {
     if (!items.length) return '';
@@ -876,7 +891,9 @@
       '.bfb-sub{font-size:11px;color:#3fb950;font-weight:700;margin:9px 0 6px;}',
       '.bfb-norm{display:inline-block;font-size:9.5px;font-weight:800;padding:0 5px;margin-left:6px;border:1px solid;border-radius:6px;letter-spacing:.2px;vertical-align:middle;line-height:15px;}',
       '.bfb-over{box-shadow:inset 0 0 0 1px rgba(255,184,12,.5);background:rgba(255,184,12,.05);padding-left:8px;padding-right:8px;}',
-      '.bfb-over2{box-shadow:inset 0 0 0 1px rgba(255,184,12,.5);background:rgba(255,184,12,.05);padding-left:8px;padding-right:8px;}'  /* 31.07.2026 Lucas: keine rote Umrandung fuer x-Norm (Rot = nur Live). Amber wie bfb-over; das rote xN-Norm-Badge traegt die Intensitaet. */
+      '.bfb-over2{box-shadow:inset 0 0 0 1px rgba(255,184,12,.5);background:rgba(255,184,12,.05);padding-left:8px;padding-right:8px;}'  /* 31.07.2026 Lucas: keine rote Umrandung fuer x-Norm (Rot = nur Live). Amber wie bfb-over; das rote xN-Norm-Badge traegt die Intensitaet. */,
+      '.bfb-live{box-shadow:inset 0 0 0 1.5px rgba(248,81,73,.75);background:rgba(248,81,73,.07);padding-left:8px;padding-right:8px;}',
+      '.bfb-liveb{display:inline-block;font-size:9.5px;font-weight:800;padding:0 5px;margin-left:6px;border:1px solid rgba(248,81,73,.75);color:#f85149;border-radius:6px;letter-spacing:.2px;vertical-align:middle;line-height:15px;}'
     ].join('');
     var st = document.createElement('style'); st.id = 'bfb-css'; st.textContent = css;
     (document.head || document.documentElement).appendChild(st);
