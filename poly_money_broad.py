@@ -118,6 +118,10 @@ MAX_HOLDER_CALLS = 90   # Deckel gegen API-Last: die VOLUMENSTÄRKSTEN near-KO-M
 # firstPrice ≈ Close ≈ CLV 0 (strukturell, 67/71 Positionen). Der ECHTE Ø-Einstieg steht in /positions
 # (avgPrice je asset). Damit wird CLV = Close − echter Einstieg endlich messbar. Gedeckelt + abschaltbar.
 POSITIONS = "https://data-api.polymarket.com/positions?user={user}&sizeThreshold=1&limit=500"
+# 31.07.2026 (Lucas): echte Lebenszeit-P&L je Wallet (kumuliert, inkl. geschlossener Positionen) →
+# damit die „schärfste Wallets"-Rangliste nach TATSÄCHLICHEM Gewinn geht, nicht nur nach CLV-Timing.
+# Antwort: Liste {t,p}; letzter p = aktuelle Gesamt-Bilanz in USD (verifiziert gegen das Poly-Profil).
+PNL_API = "https://user-pnl-api.polymarket.com/user-pnl?user_address={user}&interval=all&fidelity=1d"
 MAX_POSITION_CALLS = int(os.environ.get("POLY_MAX_POSITION_CALLS") or 150)
 FETCH_AVGPRICE = (os.environ.get("POLY_FETCH_AVGPRICE") or "1") == "1"
 
@@ -267,6 +271,40 @@ def _avg_from_positions(data, token):
                 return None
             return round(ap, 4) if 0 < ap < 1 else None
     return None
+
+
+def _lifetime_pnl(data):
+    """user-pnl-Antwort (Liste {t,p} kumulierte P&L) → letzter p = Lebenszeit-P&L (USD, kann negativ).
+    None wenn leer/unlesbar. REIN/testbar."""
+    if not isinstance(data, list) or not data:
+        return None
+    last = data[-1]
+    if not isinstance(last, dict):
+        return None
+    try:
+        return round(float(last.get("p")), 2)
+    except (TypeError, ValueError):
+        return None
+
+
+def enrich_wallet_pnl(scores, get, budget, min_n=5):
+    """Lebenszeit-P&L je bewertetem Wallet nachziehen → scores[w]['pnl'] (USD). Priorisiert Wallets mit
+    der meisten getrackten Historie, hart per budget[0] (Mutable-Counter) gedeckelt. Wer nicht drankommt,
+    behält seinen vorherigen pnl (aus prev — update_wallet_track kopiert prev-scores). REIN/testbar."""
+    if not isinstance(scores, dict):
+        return 0
+    cand = sorted((w for w, sc in scores.items() if isinstance(sc, dict) and (sc.get("n") or 0) >= min_n),
+                  key=lambda w: -(scores[w].get("n") or 0))
+    n = 0
+    for w in cand:
+        if budget[0] <= 0:
+            break
+        budget[0] -= 1
+        pnl = _lifetime_pnl(get(PNL_API.format(user=w)))
+        if pnl is not None:
+            scores[w]["pnl"] = pnl
+            n += 1
+    return n
 
 
 def _enrich_whales_avg(whales, label_token, cache, get, budget):
@@ -630,6 +668,16 @@ def main() -> int:
     # ② Sharp-Wallet-Track (25.07.2026): Einstieg→Close/Outcome je Whale werten (CLV/Treffer)
     prev_wtrack = _load(WTRACK_FILE)
     wtrack = update_wallet_track(prev_wtrack, markets, frozen=frozen)
+    # 💰 Echte Lebenszeit-P&L je bewertetem Wallet nachziehen (user-pnl-api) — macht die „schärfste
+    # Wallets"-Rangliste nach TATSÄCHLICHEM Gewinn möglich. Gedeckelt (POLY_PNL_MAX, Default 60),
+    # defensiv gekapselt: fällt der Call/Endpoint aus, bleibt alles wie bisher (nur ohne pnl-Feld).
+    try:
+        _pnl_budget = [int(os.environ.get("POLY_PNL_MAX") or 60)]
+        _n_pnl = enrich_wallet_pnl(wtrack.get("scores") or {}, _get, _pnl_budget, min_n=5)
+        if _n_pnl:
+            print(f"\U0001f4b0 Lifetime-P&L aktualisiert: {_n_pnl} Wallets")
+    except Exception as _e:
+        print(f"  P&L-Enrich uebersprungen (nicht fatal): {_e}")
     (BASE / WTRACK_FILE).write_text(json.dumps(wtrack, ensure_ascii=False, indent=1), encoding="utf-8")
     # 🔔 Sharp-im-Markt-Alarm: neue Einstiege bewiesen-scharfer Wallets → Telegram (Kür, nie fatal)
     n_alert = maybe_alert_sharp(prev_wtrack, wtrack)
