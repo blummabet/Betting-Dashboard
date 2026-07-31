@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v39';   // 31.07.2026: Status-Tab neu — Ueberblick + eigene Betfair/Polymarket-Reiter, WM ins Archiv
+const VERSION = 'cocobet-v40';   // 31.07.2026: Polymarket Whales — Schaerfste-Wallets-Rangliste (Kombi-Score CLV+Treffer) + Status-Poly-Frische zeitplan-bewusst
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

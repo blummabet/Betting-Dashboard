@@ -125,7 +125,7 @@ const _PW_VIEW_INTRO = {
     'Zeigt, auf welche Seite die dicken Wallets gesetzt haben und wie einig sie sich sind. Das ist KEIN eigenes Wett-Signal.',
     'Nutze es als Bestätigung oder Veto für einen bestehenden Pick: steht das große Geld dahinter → Rückenwind; steht es dagegen → vorsichtig sein.'],
   whales:['🐋 Whales — die einzelnen großen Wallets',
-    'Wer ist zu welchem Preis eingestiegen, jüngste große Trades, Trefferbilanz je Wallet. „Groß\" heißt nicht automatisch „treffsicher\".',
+    'Ganz oben die 🥇 Rangliste der schärfsten Wallets nach Track-Record (Kombi-Score aus CLV + Treffer); darunter: wer ist zu welchem Preis eingestiegen, jüngste große Trades, Trefferbilanz je Wallet. „Groß\" heißt nicht automatisch „treffsicher\".',
     'Nur Wallets mit bewiesener Trefferquote als Rückenwind nehmen; die bloß-großen ohne Track-Record ignorieren.'],
   bet: ['🔥 Heute wetten — die klarsten Gelegenheiten, ein Screen',
     'Bündelt alle Signale zu einem Verdikt je Markt: BET (mit dem Geld) oder FADE (dagegen), Conviction 0–10. Zeigt nur echte Signale — bloße Favoriten ohne Edge fehlen bewusst.',
@@ -479,7 +479,8 @@ function _pwRender(){
   let drawScatter=false;
   // 25.07.2026 (Lucas): Datensatz-Boards (MLS) NUR wenn der Filter auf ⚽ Fußball steht — sonst rein global.
   if(_pwView==='whales'){
-    // 🐋 Whales: GLOBAL zuerst (aggregierter Leaderboard + Einzel-Wale je Markt).
+    // 🐋 Whales: Schärfste-Rangliste (Track-Record) ZUERST, dann größte nach Einsatz, dann Einzel-Wale.
+    h+=_pwSharpRanking();
     h+=_pwGlobalWhaleLeaderboard(_pwCache.broadLive);
     h+=_pwGlobalWhales(_pwCache.broadLive);
     if(showDs&&hasPoly){
@@ -903,6 +904,62 @@ if(typeof window!=='undefined'){ window._pwWhaleDrill=_pwWhaleDrill; window._pwW
 // 25.07.2026 (Lucas: „die Whale-Auflistung für ALLE Sportarten, die größten Whales halt"):
 // aggregiertes Leaderboard — je Wallet der GESAMT-Einsatz über alle kommenden Märkte (nicht pro
 // Markt wie oben). ② Schärfe-Spalte (CLV/Treffer) + 🔥 für bewiesen-scharfe Wallets.
+// ── 🥇 Schärfste Wallets — Rangliste nach Track-Record (31.07.2026, Lucas: „bei den Whale-Wallets
+// fehlt ein Ranking — nur große, keine guten"). Rankt ALLE bewerteten Wallets (poly_wallet_track.
+// scores), auch ohne aktuelle Position, nach einem Kombi-Score: Ø CLV + Trefferquote, konfidenz-
+// gewichtet nach Stichprobe (mehr n → mehr Vertrauen). Beantwortet „wem folgen", nicht „wer setzt viel".
+const PW_RANK_MIN_N = 5;      // ab so vielen aufgelösten Wetten in die Rangliste
+const PW_RANK_K = 6;          // Shrinkage: kleine Stichproben werden zur Neutralität gezogen
+const PW_RANK_HITW = 6;       // Gewicht der Trefferquote (ggü. CLV) im Kombi-Score
+function _pwWalletKombi(sc) {
+  const raw = sc.avgClv + (sc.hit - 0.5) * PW_RANK_HITW;   // CLV + Treffer-über-50% ; neutral = 0
+  return raw * (sc.n / (sc.n + PW_RANK_K));                // konfidenz-gewichten: wenig n -> Richtung 0
+}
+function _pwOpenByWallet() {
+  const op = _pwCache && _pwCache.walletTrack && _pwCache.walletTrack.open, map = {};
+  if (op && typeof op === 'object') for (const k in op) { const p = op[k]; if (!p || !p.wallet) continue; (map[p.wallet] = map[p.wallet] || []).push(p); }
+  for (const w in map) map[w].sort((a, b) => (Number(b.usd) || 0) - (Number(a.usd) || 0));
+  return map;
+}
+function _pwSharpRanking() {
+  const scores = _pwCache && _pwCache.walletTrack && _pwCache.walletTrack.scores;
+  const intro = '<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🥇 Schärfste Wallets — Rangliste nach Track-Record</span>'
+    + '<span class="pw-sec-note">Kombi-Score = Ø CLV (Einstieg schlägt Close) + Trefferquote, konfidenz-gewichtet nach Stichprobe · ab n≥' + PW_RANK_MIN_N + ' aufgelöste Wetten · über alle Sportarten (Filter-unabhängig) · 🔥 = positiver CLV</span></div>';
+  if (!scores) return intro + '<div class="pw-none">Noch keine bewerteten Wallets — <code>poly_wallet_track.json</code> sammelt CLV/Treffer je Wallet über die aufgelösten Spiele.</div></section>';
+  const openMap = _pwOpenByWallet();
+  const rows = Object.entries(scores).map(function (e) {
+    const w = e[0], v = e[1];
+    if (!v || !v.n || v.n < PW_RANK_MIN_N) return null;
+    const sc = { wallet: w, n: v.n, avgClv: (v.clvSumPP || 0) / v.n, hit: (v.wins || 0) / v.n, usd: Number(v.usd) || 0 };
+    sc.score = _pwWalletKombi(sc);
+    return sc;
+  }).filter(Boolean).sort(function (a, b) { return b.score - a.score; }).slice(0, 20);
+  if (!rows.length) return intro + '<div class="pw-none">Noch keine Wallet mit genug Historie (min. ' + PW_RANK_MIN_N + ' aufgelöste Wetten). Sammelt sich über die nächsten Tage.</div></section>';
+  const body = rows.map(function (r, i) {
+    const proven = r.avgClv > 0;
+    const scol = r.score > 0 ? '#3fb950' : '#f85149';
+    const clvCol = r.avgClv >= 0 ? '#3fb950' : '#f85149';
+    const opens = openMap[r.wallet] || [], op = opens[0];
+    let now = '<span class="pw-mut" style="font-size:11px">— keine offene Position</span>';
+    if (op) {
+      now = _pwSportIcon(op.league) + ' <a href="https://polymarket.com/event/' + encodeURIComponent(op.key) + '" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Markt oeffnen"><b>' + _pwEsc(op.side) + '</b></a> <span class="pw-mut" style="font-size:11px">' + _pwUsd(op.usd) + (opens.length > 1 ? ' · +' + (opens.length - 1) : '') + '</span>';
+    }
+    const medal = i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1);
+    return '<tr><td class="pw-cn" style="font-weight:800">' + medal + '</td>'
+      + '<td style="white-space:nowrap">' + (proven ? '🔥 ' : '') + _pwWalletChip(r.wallet) + '</td>'
+      + '<td class="pw-cn" style="font-weight:900;color:' + scol + '">' + (r.score >= 0 ? '+' : '') + r.score.toFixed(1) + '</td>'
+      + '<td class="pw-cn" style="color:' + clvCol + ';font-weight:700">' + (r.avgClv >= 0 ? '+' : '') + r.avgClv.toFixed(1) + 'pp</td>'
+      + '<td class="pw-cn">' + Math.round(r.hit * 100) + '%</td>'
+      + '<td class="pw-cn pw-mut">' + r.n + '</td>'
+      + '<td class="pw-cn pw-mut">' + _pwUsd(r.usd) + '</td>'
+      + '<td>' + now + '</td></tr>';
+  }).join('');
+  return intro + '<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
+    + '<th>#</th><th>Wallet</th><th>Score</th><th>Ø CLV</th><th>Treffer</th><th>n</th><th>Einsatz</th><th>setzt gerade auf</th>'
+    + '</tr></thead><tbody>' + body + '</tbody></table></div></section>';
+}
+if (typeof window !== 'undefined') window._pwSharpRanking = _pwSharpRanking;
+
 function _pwGlobalWhaleLeaderboard(live){
   const agg={};
   for(const [k,m] of (live?Object.entries(live):[])){
