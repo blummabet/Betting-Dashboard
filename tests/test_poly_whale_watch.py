@@ -136,3 +136,55 @@ class TestBuildCard(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestPublicWhale(unittest.TestCase):
+    """31.07.2026 (Lucas) — öffentlicher Whale-Watch: kuratiert (riesig ab $100K / bewährt ab $25K),
+    nur Sport + sinnvoller Preis, Wallet-Qualität annotiert."""
+
+    def test_pub_quality_filter(self):
+        self.assertTrue(P._pub_ok(_pos(50000, league="TENNIS", price=0.60)))
+        self.assertFalse(P._pub_ok(_pos(50000, league="Greater Manchester", price=0.60)))  # Politik → 🎯
+        self.assertFalse(P._pub_ok(_pos(50000, league="TENNIS", price=1.00)))              # quasi-settled
+        self.assertFalse(P._pub_ok(_pos(50000, league="TENNIS", price=0.01)))              # Dust
+
+    def test_public_bands(self):
+        track = {
+            "open": {
+                "k1": _pos(30000, side="A", wallet="0xSHARP"),   # bewährt, $30K ≥ 25K → PASS
+                "k2": _pos(30000, side="B", wallet="0xUNK"),     # unbekannt, $30K < 100K → SKIP
+                "k3": _pos(120000, side="C", wallet="0xUNK2"),   # riesig, $120K ≥ 100K → PASS
+            },
+            "scores": {"0xSHARP": {"n": 6, "wins": 4, "clvSumPP": 12}},
+        }
+        cand = P.select(track, {}, NOW, P.PUB_MIN_USD_UNTRACKED, P.PUB_MIN_USD_TRACKED,
+                        P.PUB_MIN_TR, P.PUB_MIN_HITRATE)
+        keys = {c[0] for c in cand}
+        self.assertIn("k1", keys)
+        self.assertNotIn("k2", keys)
+        self.assertIn("k3", keys)
+
+    def test_public_card_proven(self):
+        broad = {"k-Flamengo": {"shares": {"Flamengo": 100, "Palmeiras": 50}}}
+        pos = _pos(150000, league="soccer_brasileirao", side="Flamengo", price=0.62, wallet="0xS")
+        scores = {"0xS": {"n": 20, "wins": 14, "clvSumPP": 64}}   # 70%, Ø CLV +3.2pp
+        msg = P.build_public_card(pos, scores, False, broad)
+        self.assertIn("Polymarket Whale", msg)
+        self.assertIn("Flamengo v Palmeiras", msg)      # Paarung aus broad
+        self.assertIn("$150K", msg)
+        self.assertIn("62¢", msg)
+        self.assertIn("bewiesen scharf", msg)
+        self.assertIn("14/20 richtig (70%, +3.2pp CLV)", msg)
+
+    def test_public_card_pnl_when_present(self):
+        pos = _pos(150000, league="TENNIS", side="Sinner", price=0.55, wallet="0xP")
+        scores = {"0xP": {"n": 12, "wins": 8, "clvSumPP": 24, "pnl": 120000}}
+        msg = P.build_public_card(pos, scores, False, {})
+        self.assertIn("+$120", msg)   # Lifetime-P&L, sobald der Runner sie zieht
+        self.assertIn("lifetime", msg)
+
+    def test_public_card_unproven_neutral(self):
+        pos = _pos(120000, league="NBA", side="Celtics", price=0.58, wallet="0xNEW")
+        msg = P.build_public_card(pos, {}, False, {})
+        self.assertIn("Track-Record noch im Aufbau", msg)
+        self.assertNotIn("bewiesen scharf", msg)

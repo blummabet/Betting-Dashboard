@@ -137,12 +137,13 @@ jobs:
       # 26.07.2026 (Lucas: Poly-Whale-Watch, alle Sportarten, Trades-Channel zum Testen).
       # Direkt nach poly_money_broad.py (schreibt poly_wallet_track.json) → alertet neue
       # Großpositionen einzelner Wallets in den Trades-Channel. Dedup via poly_whale_seen.json.
-      - name: 🐋 Poly Whale-Watch (Alert neue Großpositionen)
+      - name: 🐋 Poly Whale-Watch (Trades-Channel + öffentlicher Whale-Push)
         run: ${{ env.POLY_PYTHON }} poly_whale_watch.py
         continue-on-error: true
         env:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+          TELEGRAM_CHAT_ID:        ${{ secrets.TELEGRAM_CHAT_ID }}
 
       # 28.07.2026 (Lucas: cross sport als telegram alert). Nach poly_cross_sport.py → alertet
       # KONVERGIERENDE Poly-vs-Pinnacle-Luecken in den Trades-Channel. Dedup via poly_cross_sport_seen.json.
@@ -205,7 +206,7 @@ jobs:
             mls_poly_resting_orders.json \
             poly_cross_sport.json poly_cross_sport_history.json \
             poly_money_broad.json poly_money_broad_close.json poly_money_broad_history.json poly_wallet_track.json \
-            poly_whale_seen.json \
+            poly_whale_seen.json poly_whale_public_seen.json \
             esports_poly_prices.json esports_poly_wallets.json esports_poly_smartmoney.json esports_poly_coherence.json esports_poly_status.json \
             mls-poly-history.json mls_book_health.json mls_kill_switch.json \
             mls-data.json mls-odds-history.json \
