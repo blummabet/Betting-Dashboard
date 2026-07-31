@@ -220,7 +220,7 @@ def build_message(a) -> str:
     if a["scenario"] == "ht":
         odd = (" @%.2f" % a["leadOdd"]) if isinstance(a.get("leadOdd"), (int, float)) else ""
         lbl = a.get("mktLabel") or "HZ"
-        msg = ("🟡 <b>Betfair · Halbzeit-Geld (einseitig)</b>\n" + head
+        msg = ("🔵 <b>Betfair · Halbzeit-Geld (einseitig)</b>\n" + head   # 31.07.2026 (Lucas): blaue Kugel fuer HZ = schneller erkennbar; Frisches Geld bleibt gelb
                + "💷 %s: <b>%s</b> gematcht · <b>%.0f%%</b> auf %s%s"
                  % (_esc(lbl), _euro(a["total"]), a["leadShare"] * 100, _esc(a["leadLabel"]), odd))
         if a.get("isX2"):
