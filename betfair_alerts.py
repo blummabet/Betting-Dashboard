@@ -245,7 +245,7 @@ def build_public_message(a) -> str:
              % (a["flag"], _esc(a["home"]), _esc(a["away"]), _esc(str(a["league"])[:60])))
     if a["scenario"] == "ht":
         odd = (" @%.2f" % a["leadOdd"]) if isinstance(a.get("leadOdd"), (int, float)) else ""
-        return ("🟡 <b>Betfair Halftime Flow</b>\n\n" + teams + "\n\n"
+        return ("🔵 <b>Betfair Halftime Flow</b>\n\n" + teams + "\n\n"   # 31.07.2026 (Lucas): HZ blau auch im Public
                 + "💷 <b>%s</b>: <b>%s</b> gematcht\n\n" % (_esc(_short_mk(a["market"])), _euro(a["total"]))
                 + "Check: <b>%s</b> (%.0f%%)%s" % (_esc(a["leadLabel"]), a["leadShare"] * 100, odd))
     odd = (" @%.2f" % a["leadOdd"]) if isinstance(a.get("leadOdd"), (int, float)) else ""
