@@ -40,6 +40,8 @@ import telegram_i18n as I18N  # noqa: E402  (04.07.2026, Lucas: DE+EN Public-Pic
 
 # Public-Sprachen: erst DE, dann EN (beide in denselben Channel). Via env override-bar.
 TG_LANGS = [s.strip() for s in os.environ.get("TG_LANGS", "de,en").split(",") if s.strip()]
+# (31.07.2026, Lucas) Öffentliche Bilanz erst ab belastbarer Stichprobe zeigen (sonst -24% aus 8 Picks im Public).
+RECORD_MIN_N = int(os.environ.get("RECORD_MIN_N") or 20)
 WM_FILE        = str(D.data_file())
 LOG_FILE       = str(D.file("telegram-log.json", "liga-telegram-log.json"))
 
@@ -269,14 +271,15 @@ def bilanz_footer(wm: dict, lang: str = "de") -> str:
                 push += 1
                 staked += stake
     total = w + l + push
-    if total == 0:
-        return "📈 WM-Bilanz: Picks ab dem ersten Spieltag" if lang == "de" \
-            else "📈 WC record: from matchday one"
+    # (31.07.2026, Lucas) Bilanz im Public erst ab belastbarer Stichprobe — ein -24% aus 8 Picks
+    # untergräbt genau das Vertrauen, das der Channel aufbauen soll. Unter der Schwelle: keine Zeile.
+    if total < RECORD_MIN_N:
+        return ""
     roi = (pnl / staked * 100) if staked > 0 else 0
     pnl_str = f"+€{pnl:.2f}" if pnl >= 0 else f"-€{abs(pnl):.2f}"
     roi_str = f"+{roi:.1f}%" if roi >= 0 else f"{roi:.1f}%"
     # EN lässt das €-P&L weg (Währung passt für internationales Publikum nicht — ROI reicht).
-    return I18N.L[lang]["record"].format(w=w, l=l, p=push, roi=roi_str, pnl=pnl_str)
+    return I18N.L[lang]["record"].format(rec=I18N.comp_record(lang), w=w, l=l, p=push, roi=roi_str, pnl=pnl_str)
 
 
 # ── Morning Card ───────────────────────────────────────────────────────────────
@@ -439,7 +442,7 @@ def build_morning_card(wm: dict, target_date: str, lang: str = "de") -> str | No
         and not p.get("trackingExcluded")
     )
     _np = T["morning_n_plural"] if len(matches_today) != 1 else ""
-    lines = [T["morning_head"].format(n=len(matches_today), p=_np)]
+    lines = [T["morning_head"].format(n=len(matches_today), p=_np, comp=I18N.comp(lang))]
     if bet_count > 0:
         lines.append(T["bets_line"].format(n=bet_count, p=("s" if bet_count != 1 else "")))
     else:
@@ -459,7 +462,7 @@ def build_morning_card(wm: dict, target_date: str, lang: str = "de") -> str | No
         if m.get("isKO"):
             lines.append(f"━━ 🏆 {I18N.round_label(m.get('roundLabel', 'K.O.-Runde'), lang)} ━━")
         else:
-            lines.append(T["group_head"].format(g=m['group'], md=m['matchday']))
+            lines.append(T["group_head"].format(g=I18N.group_label(m['group'], lang), md=m['matchday']))
 
         if us >= 6:
             lines.append(f"{upset_label(us, lang)}")   # ohne Elo-Gap-Zahl (21.06.2026, Lucas)
@@ -624,7 +627,9 @@ def build_morning_card(wm: dict, target_date: str, lang: str = "de") -> str | No
         lines.append("")  # Leerzeile zwischen Spielen
 
     # Footer
-    lines.append(bilanz_footer(wm, lang))
+    _bf = bilanz_footer(wm, lang)
+    if _bf:
+        lines.append(_bf)
     lines.append(T["footer"])
 
     return "\n".join(lines)
@@ -675,7 +680,7 @@ def build_recap_card(wm: dict, target_date: str, lang: str = "de") -> str | None
     if not fix_lookup:
         return None
 
-    lines = [T["recap_head"].format(date=target_date)]
+    lines = [T["recap_head"].format(date=target_date, comp=I18N.comp(lang))]
     day_pnl = 0.0
     had_any = False
 
@@ -711,8 +716,10 @@ def build_recap_card(wm: dict, target_date: str, lang: str = "de") -> str | None
 
     pnl_str = f"+€{day_pnl:.2f}" if day_pnl >= 0 else f"-€{abs(day_pnl):.2f}"
     lines.append(T["recap_today"].format(pnl=pnl_str))
-    lines.append(bilanz_footer(wm, lang))
-    lines.append(T["recap_footer"])
+    _bf = bilanz_footer(wm, lang)
+    if _bf:
+        lines.append(_bf)
+    lines.append(T["recap_footer"].format(comp=I18N.comp(lang)))
 
     return "\n".join(lines)
 

@@ -8,6 +8,7 @@ zweisprachig, indem es lang='de'|'en' durchreicht. lang='de' bleibt 1:1 wie bish
 Pick-Daten und werden hier für EN übersetzt (sonst Denglisch)."""
 from __future__ import annotations
 import re
+import cocobet_dataset as _D  # 31.07.2026 (Lucas): Push dataset-aware (WM/MLS/Liga statt hart WM)
 
 # ── National-Team-Namen (FIFA-Code → Englisch). Fallback = deutscher Name (z.B. Vereine). ──
 EN_TEAM = {
@@ -71,11 +72,11 @@ def round_label(de_label: str, lang: str = "de") -> str:
 # ── Fixe Strings ──
 L = {
     "de": {
-        "morning_head":  "🌍 <b>WM 2026 — Heute · {n} Spiel{p}</b>",
+        "morning_head":  "🌍 <b>{comp} — Heute · {n} Spiel{p}</b>",
         "morning_n_plural": "e",
         "bets_line":     "🟢 <b>{n} BET{p}</b> — Engine und Signale überzeugt\n",
         "no_bet":        "👀 Heute kein BET — die Engine wartet auf den richtigen Moment\n",
-        "group_head":    "━━ Gruppe {g} · Spieltag {md} ━━",
+        "group_head":    "━━ {g} · Spieltag {md} ━━",
         "no_edge":       "🔇 Kein Pick mit ausreichend Edge",
         "bet":           "BET",
         "lean":          "Abwägen:",
@@ -87,18 +88,18 @@ L = {
         "pinn_for":      "stützt Pick", "pinn_against": "gegen Pick",
         "pinn_fresh":    " (frisch)", "pinn_old": " (älter)", "pinn_line": "   🔥 Pinnacle {dir}{age}",
         "footer":        "\n🤖 CocoBet · datengetriebenes Pick-Modell mit 19 Signalen",
-        "recap_head":    "📊 <b>WM 2026 Recap — {date}</b>\n",
+        "recap_head":    "📊 <b>{comp} Recap — {date}</b>\n",
         "recap_today":   "💰 Heutiger Tag: {pnl}",
         "recap_push":    "Push",
-        "recap_footer":  "\n🤖 CocoBet WM 2026",
-        "record":        "📈 WM-Bilanz: {w}W-{l}L-{p}P | ROI: {roi} | P&L: {pnl}",
+        "recap_footer":  "\n🤖 CocoBet {comp}",
+        "record":        "📈 {rec}: {w}W-{l}L-{p}P | ROI: {roi} | P&L: {pnl}",
     },
     "en": {
-        "morning_head":  "🌍 <b>World Cup 2026 — Today · {n} game{p}</b>",
+        "morning_head":  "🌍 <b>{comp} — Today · {n} game{p}</b>",
         "morning_n_plural": "s",
         "bets_line":     "🟢 <b>{n} BET{p}</b> — engine and signals convinced\n",
         "no_bet":        "👀 No BET today — the engine is waiting for the right spot\n",
-        "group_head":    "━━ Group {g} · Matchday {md} ━━",
+        "group_head":    "━━ {g} · Matchday {md} ━━",
         "no_edge":       "🔇 No pick with enough edge",
         "bet":           "BET",
         "lean":          "Lean:",
@@ -110,13 +111,43 @@ L = {
         "pinn_for":      "backs the pick", "pinn_against": "against the pick",
         "pinn_fresh":    " (fresh)", "pinn_old": " (older)", "pinn_line": "   🔥 Pinnacle {dir}{age}",
         "footer":        "\n🤖 CocoBet · data-driven pick model, 19 signals",
-        "recap_head":    "📊 <b>World Cup 2026 Recap — {date}</b>\n",
+        "recap_head":    "📊 <b>{comp} Recap — {date}</b>\n",
         "recap_today":   "💰 Today: {pnl}",
         "recap_push":    "Push",
-        "recap_footer":  "\n🤖 CocoBet World Cup 2026",
-        "record":        "📈 WC record: {w}W-{l}L-{p}P · ROI {roi}",
+        "recap_footer":  "\n🤖 CocoBet {comp}",
+        "record":        "📈 {rec}: {w}W-{l}L-{p}P · ROI {roi}",
     },
 }
+
+# ── Dataset-aware Wettbewerbs-Label (31.07.2026, Lucas: „das ist MLS, nicht WM") ──
+_COMP = {
+    "de": {"wm": "WM 2026", "mls": "MLS", "liga": "Top-5-Ligen"},
+    "en": {"wm": "World Cup 2026", "mls": "MLS", "liga": "Top 5 Leagues"},
+}
+_COMP_REC = {
+    "de": {"wm": "WM-Bilanz", "mls": "MLS-Bilanz", "liga": "Liga-Bilanz"},
+    "en": {"wm": "WC record", "mls": "MLS record", "liga": "League record"},
+}
+_GROUP_REAL = {"wm": True}   # nur die WM hat echte Gruppen; Klub-Ligen (mls/liga) nicht
+
+
+def comp(lang: str = "de") -> str:
+    ds = _D.active_dataset()
+    m = _COMP.get(lang, _COMP["en"])
+    return m.get(ds, m["wm"])
+
+
+def comp_record(lang: str = "de") -> str:
+    ds = _D.active_dataset()
+    m = _COMP_REC.get(lang, _COMP_REC["en"])
+    return m.get(ds, m["wm"])
+
+
+def group_label(g, lang: str = "de") -> str:
+    """WM: „Gruppe A". Klub-Ligen: nur der Name (z.B. „MLS") — „Gruppe MLS" ergab keinen Sinn."""
+    if _GROUP_REAL.get(_D.active_dataset()):
+        return ("Gruppe " if lang == "de" else "Group ") + str(g)
+    return str(g)
 
 _SIG_NARRATIVE_EN = {
     "weather_signal": "🌡 weather helps", "travel_burden": "✈ travel hurts opponent",
