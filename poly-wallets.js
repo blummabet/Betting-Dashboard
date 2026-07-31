@@ -426,6 +426,7 @@ function _pwRender(){
     // 25.07.2026 (Lucas: „Liga-Umschalter oben gehört weg"): der Wallets-Tab ist global über alle
     // Sportarten — kein Datensatz-Selektor mehr. (Sport-Filter je Sektion kommt als Nächstes.)
     panel.innerHTML=_pwViewTabs()+_pwSportFilterBar(_pwGlobalCats())+_pwViewIntro('money')
+      +_pwOverNorm(_pwCache.broadLive,_pwCache.broadHist)
       +_pwMoneyLive(_pwCache.broadLive)+_pwMoneyBroad(moneyBroad)
       +(showDs?_pwMoneyAccuracy(moneyAcc,teams):'');   // MLS-Rückblick nur unter ⚽ Fußball
     return;
@@ -1000,6 +1001,94 @@ function _pwEventLabel(key, names, league){
   const human=parts.map(p=>p.length<=3?p.toUpperCase():p.charAt(0).toUpperCase()+p.slice(1)).join(' ');
   return _pwEsc(human||key||'—');
 }
+
+// ── ×-Norm (30.07.2026, Lucas): überverhältnismäßig viel Geld erkennen ─────────────
+// Wie beim Betfair-Radar, aber Poly-gerecht: (1) Gesamt-Volumen und (2) frischer Zufluss
+// werden je Spiel gegen den Median VERGLEICHBARER Spiele gemessen — gebucketet nach
+// Sportart × Phase (live / ≤3h vor Anpfiff / früher). Cross-Sport-Vergleich wäre unfair
+// (MLB-Markt ≫ Nischen-Esport), darum die Sportart mit im Bucket. Ab ×1.6 auffällig, ab ×2.6 stark.
+var PW_NORM_AMBER = 1.6, PW_NORM_RED = 2.6, PW_NORM_MIN_PEERS = 4, PW_NORM_MIN_USD = 5000, PW_NORM_MIN_INFLOW = 1000;
+function _pwNormStage(m){ var h=_pwRealHtk(m); if(h==null) return 'pre'; if(h<0) return 'live'; if(h<=3) return 'soon'; return 'pre'; }
+function _pwNormKey(m){ return _pwSportCategory(m.league)+'|'+_pwNormStage(m); }
+// Frischer Zufluss = Δ Gesamt-Volumen zwischen den letzten zwei History-Punkten (Poly-Volumen
+// wächst nur, also ist Δ≥0 „neu dazugekommenes Geld"). null, wenn <2 Punkte vorliegen.
+function _pwInflow(key,hist){ var a=hist&&hist[key]; if(!Array.isArray(a)||a.length<2) return null; var v2=Number(a[a.length-1].v), v1=Number(a[a.length-2].v); if(!isFinite(v2)||!isFinite(v1)) return null; var d=v2-v1; return d>0?d:0; }
+function _pwMedianBy(items,keyFn,valFn){ var acc={}; items.forEach(function(it){ var k=keyFn(it); (acc[k]=acc[k]||[]).push(valFn(it)); }); var out={}; for(var k in acc){ var arr=acc[k].slice().sort(function(a,b){return a-b;}); out[k]={med:arr[Math.floor(arr.length/2)],n:arr.length}; } return out; }
+function _pwNormCss(){
+  if(typeof document==='undefined'||document.getElementById('pwn-css'))return;
+  var css=[
+   '#polyWalletsPanel .pwn-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(440px,1fr));gap:4px 20px;margin:4px 0 12px;}',
+   '@media(max-width:820px){#polyWalletsPanel .pwn-grid{grid-template-columns:1fr;}}',
+   '#polyWalletsPanel .pwn-sub{font-size:12px;font-weight:800;color:#e6edf3;margin:10px 0 4px;}',
+   '#polyWalletsPanel .pwn-note{font-weight:600;color:#6e7681;font-size:10.5px;}',
+   '#polyWalletsPanel .pwn-none{font-size:11.5px;color:#6e7681;margin:2px 0 8px;}',
+   '#polyWalletsPanel .pwn-row{position:relative;padding:7px 11px;border-radius:9px;overflow:hidden;background:#0f141b;}',
+   '#polyWalletsPanel .pwn-over{box-shadow:inset 0 0 0 1px rgba(245,197,24,.42);}',
+   '#polyWalletsPanel .pwn-over2{box-shadow:inset 0 0 0 1px rgba(248,81,73,.58);}',
+   '#polyWalletsPanel .pwn-fill{position:absolute;left:0;top:0;bottom:0;border-radius:9px;}',
+   '#polyWalletsPanel .pwn-in{position:relative;display:flex;justify-content:space-between;align-items:center;gap:12px;}',
+   '#polyWalletsPanel .pwn-l{min-width:0;}',
+   '#polyWalletsPanel .pwn-g{font-size:12.5px;font-weight:700;color:#e6edf3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+   '#polyWalletsPanel .pwn-lg{color:#8b949e;font-size:10.5px;font-weight:700;}',
+   '#polyWalletsPanel .pwn-a{color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681;}',
+   '#polyWalletsPanel .pwn-side{font-size:10.5px;color:#8b949e;margin-top:1px;}',
+   '#polyWalletsPanel .pwn-r{text-align:right;white-space:nowrap;flex:0 0 auto;}',
+   '#polyWalletsPanel .pwn-v{display:block;font-size:12.5px;font-weight:900;color:#e6edf3;font-family:ui-monospace,"JetBrains Mono",Menlo,monospace;}',
+   '#polyWalletsPanel .pwn-badge{display:inline-block;font-size:9.5px;font-weight:800;padding:0 5px;margin-top:2px;border:1px solid;border-radius:6px;line-height:15px;}'
+  ].join('');
+  var st=document.createElement('style'); st.id='pwn-css'; st.textContent=css; (document.head||document.documentElement).appendChild(st);
+}
+function _pwNormRow(it,mx,mode){
+  var m=it.m;
+  var oc=Object.entries(m.shares||{}).map(function(e){return {n:e[0],u:Number(e[1])||0};}).sort(function(a,b){return b.u-a.u;});
+  var tot=oc.reduce(function(s,o){return s+o.u;},0)||1, fav=oc[0]||{n:'—',u:0}, favPct=Math.round(fav.u/tot*100);
+  var ic=_pwCatOf(m.league)[1], lg=(m.league||'').toUpperCase();
+  var name=_pwEventLabel(it.k,oc.map(function(o){return o.n;}),m.league);
+  var link=it.k?('https://polymarket.com/event/'+encodeURIComponent(it.k)):null;
+  var nameHtml=link?('<a href="'+link+'" target="_blank" rel="noopener" class="pwn-a">'+name+' ↗</a>'):name;
+  var red=it.ratio>=PW_NORM_RED, col=red?'#f85149':'#f5c518';
+  var w=Math.max(6,it.val/mx*100);
+  var val=mode==='inf'?('▲ +'+_pwUsd(it.val)):_pwUsd(it.val);
+  var badge='<span class="pwn-badge" style="color:'+col+';border-color:'+col+'">×'+it.ratio.toFixed(1)+' Norm</span>';
+  return '<div class="pwn-row '+(red?'pwn-over2':'pwn-over')+'"><i class="pwn-fill" style="width:'+w+'%;background:'+(red?'rgba(248,81,73,.16)':'rgba(245,197,24,.14)')+'"></i>'
+    +'<div class="pwn-in"><div class="pwn-l"><div class="pwn-g">'+ic+' <span class="pwn-lg">'+lg+'</span> · '+nameHtml+'</div>'
+    +'<div class="pwn-side">Geld auf <b style="color:#4cc2ff">'+_pwEsc(fav.n)+'</b> '+favPct+'%</div></div>'
+    +'<div class="pwn-r"><span class="pwn-v">'+val+'</span>'+badge+'</div></div></div>';
+}
+function _pwNormBlock(title,note,items,mode){
+  if(!items.length) return '<div class="pwn-sub">'+title+'</div><div class="pwn-none">sammelt noch — braucht ≥'+PW_NORM_MIN_PEERS+' vergleichbare Spiele je Sportart×Phase'+(mode==='inf'?' und zwei Läufe für den Zufluss':'')+'.</div>';
+  var mx=Math.max.apply(null,items.map(function(it){return it.val;}))||1;
+  return '<div class="pwn-sub">'+title+' <span class="pwn-note">'+note+'</span></div><div class="pwn-grid">'+items.map(function(it){return _pwNormRow(it,mx,mode);}).join('')+'</div>';
+}
+// Beide Blickwinkel: Gesamt-Volumen (steht auf dem Markt) und frischer Zufluss (kam gerade rein).
+function _pwOverNorm(live,hist){
+  if(!live||!Object.keys(live).length) return '';
+  var cand=Object.entries(live).map(function(e){return {k:e[0],m:e[1]};})
+    .filter(function(x){return x.m&&x.m.resolved==null&&(x.m.totalUsd||0)>=PW_NORM_MIN_USD&&!_pwKoStale(x.m)&&_pwSportPass(x.m.league);});
+  if(!cand.length) return '';
+  var over=function(items,valFn,floor){
+    var base=_pwMedianBy(items,function(it){return _pwNormKey(it.m);},function(it){return it.val;});
+    return items.map(function(it){var b=base[_pwNormKey(it.m)];var r=(b&&b.n>=PW_NORM_MIN_PEERS&&b.med)?it.val/b.med:null;it.ratio=r;return it;})
+      .filter(function(it){return it.ratio!=null&&it.ratio>=PW_NORM_AMBER;}).sort(function(a,b){return b.ratio-a.ratio;}).slice(0,8);
+  };
+  var totItems=cand.map(function(x){return {k:x.k,m:x.m,val:x.m.totalUsd||0};});
+  var totOver=over(totItems);
+  var infItems=cand.map(function(x){var d=_pwInflow(x.k,hist);return (d!=null&&d>=PW_NORM_MIN_INFLOW)?{k:x.k,m:x.m,val:d}:null;}).filter(Boolean);
+  var infOver=over(infItems);
+  if(!totOver.length&&!infOver.length){
+    return '<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">⚖️ ×-Norm — überverhältnismäßig viel Geld</span>'
+      +'<span class="pw-sec-note">Median je Sportart × Spielphase</span></div>'
+      +'<div class="pw-sec-p">Gerade liegt kein Markt auffällig über seiner Norm — alles im üblichen Rahmen für Sportart &amp; Phase. Meldet sich, sobald irgendwo verhältnismäßig viel Geld draufkommt.</div></section>';
+  }
+  _pwNormCss();
+  return '<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">⚖️ ×-Norm — wo überverhältnismäßig viel Geld liegt</span>'
+    +'<span class="pw-sec-note">jedes Spiel gegen den Median gleicher <b>Sportart × Phase</b> (live/≤3h/vorab) · ab ×1.6 auffällig, ab ×2.6 stark</span></div>'
+    +'<div class="pw-sec-p" style="margin:2px 0 10px">Nicht wer absolut am meisten hat, sondern wer <b>mehr als üblich</b> für seine Situation zieht. Zwei Blickwinkel: das <b>Gesamt-Volumen</b> auf dem Markt und der <b>frische Zufluss</b> seit dem letzten Lauf.</div>'
+    +_pwNormBlock('💰 Gesamt-Volumen über Norm','Gesamt-$ auf dem Markt ÷ Median',totOver,'tot')
+    +_pwNormBlock('💸 Zufluss über Norm','frisches $ seit letztem Lauf ÷ Median',infOver,'inf')
+    +'</section>';
+}
+if(typeof window!=='undefined'){ window._pwOverNorm=_pwOverNorm; window._pwNormStage=_pwNormStage; window._pwInflow=_pwInflow; }
 
 function _pwMoneyLive(live){
   const all=(live?Object.entries(live):[]).map(([k,m])=>({k,m}))

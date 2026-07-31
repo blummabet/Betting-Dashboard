@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v37';   // 30.07.2026: ×-Norm — Spiele mit überverhältnismäßig viel Geld (Stage-Median) in den Balken markiert (Bernstein/rot umrandet)
+const VERSION = 'cocobet-v38';   // 30.07.2026: Polymarket x-Norm (Gesamt-Volumen und Zufluss ueber Sportart-Phase-Median) im Geld-Reiter markiert
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
