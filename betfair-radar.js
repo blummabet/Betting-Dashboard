@@ -14,12 +14,12 @@
 
   var MK = [
     { id: 'Match Odds',           label: '1X2',     kind: '1x2', grp: 'FT' },
-    { id: 'Over/Under 2.5 Goals', label: 'Ü/U 2.5', kind: 'ou',  grp: 'FT' },
-    { id: 'Over/Under 3.5 Goals', label: 'Ü/U 3.5', kind: 'ou',  grp: 'FT' },
+    { id: 'Over/Under 2.5 Goals', label: 'O/U 2.5', kind: 'ou',  grp: 'FT' },
+    { id: 'Over/Under 3.5 Goals', label: 'O/U 3.5', kind: 'ou',  grp: 'FT' },
     { id: 'Both teams to Score?', label: 'BTTS',    kind: 'yn',  grp: 'FT' },
     { id: 'Half Time',            label: 'HT 1X2',  kind: '1x2', grp: 'HT' },
-    { id: 'First Half Goals 0.5', label: 'HT Ü0.5', kind: 'ou',  grp: 'HT' },
-    { id: 'First Half Goals 1.5', label: 'HT Ü1.5', kind: 'ou',  grp: 'HT' },
+    { id: 'First Half Goals 0.5', label: 'HT O/U 0.5', kind: 'ou',  grp: 'HT' },
+    { id: 'First Half Goals 1.5', label: 'HT O/U 1.5', kind: 'ou',  grp: 'HT' },
   ];
   var MK_ID = {}; MK.forEach(function (m) { MK_ID[m.id] = m; });
 
@@ -142,7 +142,7 @@
     if (name === m.home) return String(m.home);
     if (name === m.away) return String(m.away);
     if (name === 'The Draw') return 'Remis';
-    return String(name).replace('Over', 'Ü').replace('Under', 'U').replace(' Goals', '').replace('Yes', 'Ja').replace('No', 'Nein');
+    return String(name).replace('Over', 'O').replace('Under', 'U').replace(' Goals', '').replace('Yes', 'Ja').replace('No', 'Nein');
   }
   function flag(cc, league) {
     if (UEFA_RX.test(String(league || ''))) return '🇪🇺';       // UEFA-Bewerbe → EU
@@ -272,7 +272,7 @@
     // 1 — Leiter-Monotonie: P(Ü0.5) ≥ P(Ü1.5) ≥ …  (hart)
     for (var i = 0; i < ks.length - 1; i++) {
       var dd = (rungs[ks[i + 1]] - rungs[ks[i]]) * 100;
-      if (dd > 0.4) checks.push({ k: 'Leiter-Monotonie', mkt: 'Ü' + ks[i + 1] + ' > Ü' + ks[i],
+      if (dd > 0.4) checks.push({ k: 'Leiter-Monotonie', mkt: 'O' + ks[i + 1] + ' > O' + ks[i],
         market: rungs[ks[i + 1]], model: rungs[ks[i]], dev: dd, hard: true, vol: mvolG(m, 'Over/Under ' + ks[i + 1] + ' Goals'),
         why: 'Mehr Tore können nie wahrscheinlicher sein als weniger. Reiner Widerspruch.' });
     }
@@ -290,7 +290,7 @@
     if (fit && ks.length >= 3) {
       for (var a = 0; a < ks.length; a++) {
         var n = ks[a], model = poisOver(n, fit.l), d3 = (rungs[n] - model) * 100;
-        if (Math.abs(d3) >= 2.5) checks.push({ k: 'Tor-Kurve', mkt: 'Ü' + n, market: rungs[n], model: model, dev: d3,
+        if (Math.abs(d3) >= 2.5) checks.push({ k: 'Tor-Kurve', mkt: 'O' + n, market: rungs[n], model: model, dev: d3,
           hard: false, vol: mvolG(m, 'Over/Under ' + n + ' Goals'),
           why: 'Diese Sprosse liegt neben der Kurve, die die anderen Sprossen desselben Marktes aufspannen.' });
       }
@@ -303,14 +303,14 @@
       var mb = bttsP(sup.lh, sup.la);
       checks.push({ k: 'BTTS', mkt: 'Beide treffen', market: btts, model: mb, dev: (btts - mb) * 100,
         hard: false, vol: mvolG(m, 'Both teams to Score?'),
-        why: 'Aus Torerwartung und Supremacy folgt eine BTTS-Quote. Große Lücken heißen: der Markt erwartet eine schiefere Torverteilung als 1X2 + Ü/U zulassen.' });
+        why: 'Aus Torerwartung und Supremacy folgt eine BTTS-Quote. Große Lücken heißen: der Markt erwartet eine schiefere Torverteilung als 1X2 + O/U zulassen.' });
     }
     // 5 — Halbzeit-Märkte vs. FT-Torerwartung (weich)
     var hr = htRungs(m);
     if (fit) { var hk = Object.keys(hr).map(Number);
       for (var b = 0; b < hk.length; b++) {
         var hn = hk[b], hm = poisOver(hn, fit.l * HT_SHARE), d5 = (hr[hn] - hm) * 100;
-        if (Math.abs(d5) >= 3) checks.push({ k: 'Halbzeit', mkt: 'HZ1 Ü' + hn, market: hr[hn], model: hm, dev: d5,
+        if (Math.abs(d5) >= 3) checks.push({ k: 'Halbzeit', mkt: 'HZ1 O' + hn, market: hr[hn], model: hm, dev: d5,
           hard: false, vol: mvolG(m, 'First Half Goals ' + hn),
           why: 'HZ1 trägt im Schnitt ~45 % der Tore. Weicht die Halbzeit stark ab, hat jemand eine Meinung zum Spielverlauf, nicht nur zum Ergebnis.' });
       }
@@ -545,7 +545,7 @@
   }
 
   function shortMk(k) {
-    return String(k).replace('Over/Under', 'Ü/U').replace(' Goals', '').replace('Both teams to Score?', 'BTTS')
+    return String(k).replace('Over/Under', 'O/U').replace(' Goals', '').replace('Both teams to Score?', 'BTTS')
       .replace('Match Odds', '1X2').replace('First Half', 'HZ1').replace('Half Time/Full Time', 'HZ/EZ')
       .replace('Half Time', 'HZ1 1X2').replace('Correct Score', 'Exakt').replace('Draw no Bet', 'DNB');
   }
@@ -1034,17 +1034,17 @@
       var mx = 0; dist.forEach(function (d) { mx = Math.max(mx, d.model, d.market || 0); }); if (mx <= 0) mx = 1;
       var gaps = dist.filter(function (d) { return d.filled; }).length;
       h += '<div class="bfd-card"><h3>Konsens-Kurve</h3>' +
-        '<p class="sub">Was die Ü/U-Leiter über die Tor-Verteilung sagt (Balken) gegen die am besten passende Poisson-Kurve (Linie). RMSE ' + (fit.rmse * 100).toFixed(2) + ' pp über ' + Object.keys(co.rungs).length + ' Sprossen.</p>' +
+        '<p class="sub">Was die O/U-Leiter über die Tor-Verteilung sagt (Balken) gegen die am besten passende Poisson-Kurve (Linie). RMSE ' + (fit.rmse * 100).toFixed(2) + ' pp über ' + Object.keys(co.rungs).length + ' Sprossen.</p>' +
         '<div class="bfd-curve">' + dist.map(function (d) {
           var mh = (d.market != null ? d.market / mx * 100 : 0), dh = d.model / mx * 100;
           return '<div class="bfd-cb"><div class="bfd-mk" style="height:' + mh.toFixed(1) + '%' + (d.filled ? ';opacity:.28;background:repeating-linear-gradient(45deg,#4cc2ff,#4cc2ff 3px,transparent 3px,transparent 6px)' : '') + '"></div>' +
             '<div class="bfd-md" style="bottom:' + dh.toFixed(1) + '%"></div><div class="bfd-lb">' + (d.k === 6 ? '6+' : d.k) + '</div></div>';
         }).join('') + '</div>' +
-        '<div class="bfd-legend"><span><i class="bfd-sw" style="background:#4cc2ff"></i>Markt (aus Ü/U-Differenzen)</span>' +
+        '<div class="bfd-legend"><span><i class="bfd-sw" style="background:#4cc2ff"></i>Markt (aus O/U-Differenzen)</span>' +
         '<span><i class="bfd-sw" style="background:#ffb80c"></i>Poisson-Fit λ=' + fit.l.toFixed(2) + '</span>' +
         (gaps ? '<span style="color:' + C.dim + '">schraffiert = Sprosse nicht bepreist, aus dem Modell ergänzt (' + gaps + ')</span>' : '') + '</div></div>';
     } else {
-      h += '<div class="bfd-gap"><b style="color:' + C.ink + '">Kurve nicht rekonstruierbar.</b> Weniger als drei bepreiste Ü/U-Sprossen für dieses Spiel.</div>';
+      h += '<div class="bfd-gap"><b style="color:' + C.ink + '">Kurve nicht rekonstruierbar.</b> Weniger als drei bepreiste O/U-Sprossen für dieses Spiel.</div>';
     }
 
     // Kohärenz-Tabelle

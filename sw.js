@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v42';   // 31.07.2026: Betfair Public-Moneyflow/Whale public + Push-Bilanz-Reiter (Treffer/ROI der oeffentlichen Pushs)
+const VERSION = 'cocobet-v43';   // 31.07.2026: Radar-Labels Ue/U -> O/U (besser lesbar) + Push-Bilanz-Reiter + Public-Pushs
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

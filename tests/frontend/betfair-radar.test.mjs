@@ -106,16 +106,16 @@ test('Klick klappt alle Märkte der Karte auf', () => {
   const { w, prices } = boot();
   const kairat = prices.matches.find(m => m.home === 'Kairat Almaty');
   const before = w._renderBetfairRadar();
-  assert.ok(!/HT Ü0\.5/.test(before.slice(before.indexOf('Kairat Almaty'), before.indexOf('Kairat Almaty') + 1200)), 'HT-Markt eingeklappt noch nicht offen');
+  assert.ok(!/HT O\/U 0\.5/.test(before.slice(before.indexOf('Kairat Almaty'), before.indexOf('Kairat Almaty') + 1200)), 'HT-Markt eingeklappt noch nicht offen');
   w._bfCard(kairat.matchId);
   const after = w.document.getElementById('betfairRadarPanel').innerHTML;
-  assert.match(after, /HT Ü0\.5/, 'nach Klick sind alle Märkte (inkl. HT) offen');
+  assert.match(after, /HT O\/U 0\.5/, 'nach Klick sind alle Märkte (inkl. HT) offen');
 });
 
 test('Hotspot-Leiste zeigt konkreten Ausgang + %', () => {
   const { html } = render();
   assert.match(html, /größte Einzel-Ausgänge/);
-  assert.match(html, /→ (Fenerbahce|Kairat Almaty|U 2\.5|Ü 2\.5)/);
+  assert.match(html, /→ (Fenerbahce|Kairat Almaty|U 2\.5|O 2\.5)/);
 });
 
 test('Drei Ebenen — International/UEFA-Sektion + Tier-Logik', () => {
@@ -189,7 +189,7 @@ test('Frisches Geld: €-Zufluss + % Surge aus mkv-History-Delta', () => {
   assert.match(html, /Größte Zuflüsse/);
   assert.match(html, /Größte Sprünge/);
   assert.ok(html.includes('▲ +€5K'), '€-Zufluss Match Odds +€5K');
-  assert.match(html, /HT Ü0\.5/);
+  assert.match(html, /HT O\/U 0\.5/);
   assert.ok(html.includes('+300%'), 'Surge +300%');
   assert.match(html, /🚨/, 'großer Sprung markiert');
 });
@@ -327,7 +327,7 @@ test('Markt-Filter fokussiert die komprimierte Karte auf den gewählten Markt', 
   const cardStart = html.indexOf('id="bfg-1"');            // die Karte selbst (nicht die Hotspot-Leiste oben)
   const seg = html.slice(cardStart, cardStart + 2600);
   assert.match(seg, /Kairat Almaty/);
-  assert.match(seg, /HT Ü0\.5/, 'komprimierte Karte zeigt den gefilterten HT-Markt statt 1X2');
+  assert.match(seg, /HT O\/U 0\.5/, 'komprimierte Karte zeigt den gefilterten HT-Markt statt 1X2');
   assert.ok(!/1X2 → /.test(seg), 'komprimiert nicht mehr 1X2 (Top-Geld), sondern der gefilterte HT-Markt');
 });
 
@@ -495,12 +495,12 @@ test('Card-Kopf zeigt den größten Markt, nicht die Summe aller Märkte', () =>
 
 test('Card-Kopf folgt dem Markt-Filter (gefilterter Markt statt größtem)', () => {
   const { w } = boot();
-  w._bfState.market = 'First Half Goals 0.5';   // Kairat: HT Ü0.5 €2.1K statt Match Odds €17.5K
+  w._bfState.market = 'First Half Goals 0.5';   // Kairat: HT O/U 0.5 €2.1K statt Match Odds €17.5K
   const html = w._renderBetfairRadar();
   const i = html.indexOf('id="bfg-1"'); const seg = html.slice(i, i + 2600);
-  assert.match(seg, /€2\.1K/, 'Kopf = gefilterter Markt (HT Ü0.5)');
+  assert.match(seg, /€2\.1K/, 'Kopf = gefilterter Markt (HT O/U 0.5)');
   assert.doesNotMatch(seg, /€17\.5K/, 'nicht mehr der größte Markt (Match Odds)');
-  assert.match(seg, /HT Ü0\.5/, 'Label = gefilterter Markt');
+  assert.match(seg, /HT O\/U 0\.5/, 'Label = gefilterter Markt');
 });
 
 
