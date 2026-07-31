@@ -21,6 +21,7 @@ import json
 import os
 import re
 import html
+import urllib.request
 
 from telegram_trades import send_trades_message
 
@@ -30,10 +31,17 @@ HT_MIN_SHARE   = 0.85     # ... und davon min. dieser Anteil auf EINEN Ausgang (
 MIN_LEAD_ODD   = 1.30     # Geld auf einen Favoriten mit Quote < 1.30 (führt schon, wenig Value) = kein Push (Lucas 30.07.2026, vorher 1.15)
 FRESH_TOP_EUR  = 30000.0  # frisches Geld Top-Liga
 FRESH_REST_EUR = 20000.0  # ... und Rest-Ligen
+# 31.07.2026 (Lucas) — kuratierte, HÖHERE Schwellen für den ÖFFENTLICHEN Channel (nur die wirklich
+# dicken Bewegungen public, kein Spam). Halbzeit: Top 50K / Rest 15K gematcht. Frisch: Top 100K / Rest 30K.
+PUB_HT_TOP     = 50000.0
+PUB_HT_REST    = 15000.0
+PUB_FRESH_TOP  = 100000.0
+PUB_FRESH_REST = 30000.0
+PUB_SEEN_FILE  = "betfair_public_seen.json"
 DEDUP_FACTOR   = 1.5
 SEEN_FILE      = "betfair_alerts_seen.json"
 HT_MARKETS     = ("Half Time", "First Half Goals 1.5")   # HZ-1X2 ODER Über/Unter 1,5 erste Halbzeit
-HT_LABEL       = {"Half Time": "HZ-1X2", "First Half Goals 1.5": "HZ Ü/U 1.5", "First Half Goals 0.5": "HZ Ü/U 0.5"}
+HT_LABEL       = {"Half Time": "HZ 1X2", "First Half Goals 1.5": "HZ Over/Under 1.5", "First Half Goals 0.5": "HZ Over/Under 0.5"}
 
 UEFA_RX  = re.compile(r"(champions league|europa league|europa conference|conference league|uefa)", re.I)
 TOP5_RX  = re.compile(r"(german bundesliga|english premier league|spanish la ?liga|italian serie a|french ligue 1|\bmls\b|major league soccer)", re.I)
@@ -87,11 +95,10 @@ def _flag(m) -> str:
 
 
 def _short_mk(k) -> str:
-    return (str(k).replace("Over/Under", "Ü/U").replace(" Goals", "")
+    return (str(k).replace("First Half Goals", "HZ Over/Under").replace(" Goals", "")
             .replace("Both teams to Score?", "BTTS").replace("Match Odds", "1X2")
-            .replace("First Half", "HZ1").replace("Half Time/Full Time", "HZ/EZ")
-            .replace("Half Time", "HZ1 1X2").replace("Correct Score", "Exakt")
-            .replace("Draw no Bet", "DNB"))
+            .replace("Half Time/Full Time", "HZ/EZ").replace("Half Time", "HZ 1X2")
+            .replace("Correct Score", "Exakt").replace("Draw no Bet", "DNB"))
 
 
 def _ht_label(name, home, away):
@@ -109,13 +116,14 @@ def _ht_thr(m) -> float:
     return HT_TOP_EUR if tier_of(m) == "top" else HT_REST_EUR
 
 
-def _ht_one(m, market_name):
+def _ht_one(m, market_name, top_thr=HT_TOP_EUR, rest_thr=HT_REST_EUR):
     """Ein einzelner HZ-Markt (HZ-1X2 oder Über/Unter 1,5 HZ1): ≥ tier-Schwelle UND ≥85 % einseitig."""
     mk = (m.get("markets") or {}).get(market_name)
     if not mk:
         return None
     total = _vol(mk)
-    if total <= 0 or total < _ht_thr(m):
+    thr = top_thr if tier_of(m) == "top" else rest_thr
+    if total <= 0 or total < thr:
         return None
     runners = mk.get("runners") or []
     lead = max(runners, key=lambda r: (r.get("vol") or 0.0), default=None)
@@ -145,11 +153,11 @@ def _ht_one(m, market_name):
             "leadShare": lead_share, "leadOdd": lead.get("odd")}
 
 
-def ht_alert(m):
+def ht_alert(m, top_thr=HT_TOP_EUR, rest_thr=HT_REST_EUR):
     """Szenario 1: bester HZ-Markt (HZ-1X2 ODER Über/Unter 1,5 erste HZ) über tier-Schwelle + einseitig."""
     best = None
     for name in HT_MARKETS:
-        a = _ht_one(m, name)
+        a = _ht_one(m, name, top_thr, rest_thr)
         if a and (best is None or a["total"] > best["total"]):
             best = a
     return best
@@ -168,7 +176,7 @@ def _market_lead(m, name):
     return top.get("name"), (top.get("vol") or 0.0) / tot, top.get("odd")
 
 
-def fresh_alert(m, hist):
+def fresh_alert(m, hist, top_thr=FRESH_TOP_EUR, rest_thr=FRESH_REST_EUR):
     """Szenario 2: Zufluss auf dem GRÖSSTEN Zufluss-Markt (aus mkv) ≥ tier-Schwelle — pro Markt."""
     pts = (hist or {}).get(str(m.get("matchId")))
     if not isinstance(pts, list) or len(pts) < 2:
@@ -176,7 +184,7 @@ def fresh_alert(m, hist):
     pmk, lmk = pts[-2].get("mkv"), pts[-1].get("mkv")
     if not isinstance(pmk, dict) or not isinstance(lmk, dict):
         return None   # ohne per-Markt-History (mkv) kein per-Markt-Signal — irreführende Gesamt-Zahl vermeiden
-    thr = FRESH_TOP_EUR if tier_of(m) == "top" else FRESH_REST_EUR
+    thr = top_thr if tier_of(m) == "top" else rest_thr
     best = None                                   # (Marktname, Zufluss, aktuelles Markt-Volumen)
     for name, lv in lmk.items():
         inflow = (lv or 0.0) - (pmk.get(name) or 0.0)
@@ -228,13 +236,51 @@ def build_message(a) -> str:
     return msg
 
 
-def collect_alerts(prices: dict, hist: dict) -> list:
+def build_public_message(a) -> str:
+    """Öffentliches Format (31.07.2026, Lucas): „Betfair Moneyflow" / „Halftime Flow", Over/Under
+    ausgeschrieben, Leerzeilen, fett, „Check:" statt „führt:". Kein Tier-Suffix, keine Kleckerbeträge."""
+    teams = ("%s <b>%s</b> v <b>%s</b>\n<i>%s</i>"
+             % (a["flag"], _esc(a["home"]), _esc(a["away"]), _esc(str(a["league"])[:60])))
+    if a["scenario"] == "ht":
+        odd = (" @%.2f" % a["leadOdd"]) if isinstance(a.get("leadOdd"), (int, float)) else ""
+        return ("🟡 <b>Betfair Halftime Flow</b>\n\n" + teams + "\n\n"
+                + "💷 <b>%s</b>: <b>%s</b> gematcht\n\n" % (_esc(_short_mk(a["market"])), _euro(a["total"]))
+                + "Check: <b>%s</b> (%.0f%%)%s" % (_esc(a["leadLabel"]), a["leadShare"] * 100, odd))
+    odd = (" @%.2f" % a["leadOdd"]) if isinstance(a.get("leadOdd"), (int, float)) else ""
+    lead = a.get("leadName") or "—"
+    return ("🟡 <b>Betfair Moneyflow</b>\n\n" + teams + "\n\n"
+            + "💶 <b>%s</b>: +<b>%s</b> frisch → jetzt <b>%s</b>\n\n"
+              % (_esc(_short_mk(a["market"])), _euro(a["inflow"]), _euro(a["total"]))
+            + "Check: <b>%s</b> (%.0f%%)%s" % (_esc(lead), (a.get("leadShare") or 0.0) * 100, odd))
+
+
+def _tg_public(text) -> bool:
+    """An den ÖFFENTLICHEN CocoBet-Channel (TELEGRAM_CHAT_ID). Ohne Token/Chat → Vorschau (kein Send)."""
+    token = (os.environ.get("TELEGRAM_TOKEN") or "").strip()
+    chat = (os.environ.get("TELEGRAM_CHAT_ID") or "").strip()
+    if not token or not chat:
+        print("PUBLIC-Vorschau (kein TOKEN/CHAT_ID):\n" + text + "\n")
+        return False
+    body = json.dumps({"chat_id": chat, "text": text, "parse_mode": "HTML",
+                       "disable_web_page_preview": True}).encode("utf-8")
+    req = urllib.request.Request("https://api.telegram.org/bot%s/sendMessage" % token,
+                                 data=body, headers={"Content-Type": "application/json"})
+    try:
+        with urllib.request.urlopen(req, timeout=15) as r:
+            return json.loads(r.read()).get("ok", False)
+    except Exception as e:
+        print("Public-Send-Fehler:", e)
+        return False
+
+
+def collect_alerts(prices: dict, hist: dict, ht_top=HT_TOP_EUR, ht_rest=HT_REST_EUR,
+                   fresh_top=FRESH_TOP_EUR, fresh_rest=FRESH_REST_EUR) -> list:
     out = []
     for m in (prices.get("matches") or []):
-        a = ht_alert(m)
+        a = ht_alert(m, ht_top, ht_rest)
         if a:
             out.append(a)
-        f = fresh_alert(m, hist)
+        f = fresh_alert(m, hist, fresh_top, fresh_rest)
         if f:
             out.append(f)
     return out
@@ -268,6 +314,26 @@ def main():
     except Exception as e:
         print("konnte Seen-State nicht schreiben:", e)
     print("Betfair-Alerts: %d Kandidaten, %d gesendet" % (len(alerts), sent))
+
+    # 🟡 Öffentlicher Moneyflow (kuratierte, höhere Schwellen) → CocoBet-Community-Channel.
+    # Eigener Dedup-State, damit die höhere Public-Schwelle unabhängig vom Trades-Channel greift.
+    try:
+        pub_seen = json.load(open(PUB_SEEN_FILE, encoding="utf-8"))
+    except Exception:
+        pub_seen = {}
+    pub_alerts = collect_alerts(prices, hist, PUB_HT_TOP, PUB_HT_REST, PUB_FRESH_TOP, PUB_FRESH_REST)
+    pub_sent = 0
+    for a in pub_alerts:
+        key = a["scenario"] + ":" + a["matchId"]
+        if should_send(pub_seen, key, a["value"]):
+            if _tg_public(build_public_message(a)):
+                pub_seen[key] = a["value"]
+                pub_sent += 1
+    try:
+        json.dump(pub_seen, open(PUB_SEEN_FILE, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
+    except Exception as e:
+        print("konnte Public-Seen nicht schreiben:", e)
+    print("Betfair Public-Moneyflow: %d Kandidaten, %d gesendet" % (len(pub_alerts), pub_sent))
 
 
 if __name__ == "__main__":

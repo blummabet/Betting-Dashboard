@@ -70,7 +70,7 @@ class TestHtAlert(unittest.TestCase):
         self.assertIsNotNone(a)
         self.assertEqual(a["market"], "First Half Goals 1.5")
         self.assertFalse(a["isX2"])
-        self.assertEqual(a["mktLabel"], "HZ Ü/U 1.5")
+        self.assertEqual(a["mktLabel"], "HZ Over/Under 1.5")
 
     def test_no_ht_market_none(self):
         self.assertIsNone(BA.ht_alert(match(markets=mk("Match Odds", [{"name": "Alpha", "odd": 2, "vol": 9000}]))))
@@ -135,7 +135,7 @@ class TestMessage(unittest.TestCase):
                                            {"name": "Beta", "odd": 4, "vol": 500}]))
         msg = BA.build_message(BA.ht_alert(m))
         self.assertIn("Halbzeit-Geld", msg)
-        self.assertIn("HZ-1X2", msg)
+        self.assertIn("HZ 1X2", msg)
         self.assertIn("auf Alpha", msg)   # dominanter Ausgang genannt
         self.assertIn("%", msg)
 
@@ -208,4 +208,48 @@ class TestBoldMoney(unittest.TestCase):
                                            {"name": "The Draw", "odd": 3, "vol": 500},
                                            {"name": "Beta", "odd": 5, "vol": 500}]))
         msg = BA.build_message(BA.ht_alert(m))
-        self.assertRegex(msg, r"HZ-1X2: <b>€")   # gematchtes Geld fett
+        self.assertRegex(msg, r"HZ 1X2: <b>€")   # gematchtes Geld fett
+
+
+class TestPublicMoneyflow(unittest.TestCase):
+    """31.07.2026 (Lucas) — öffentlicher Channel: kuratierte höhere Schwellen (Fresh Top100K/Rest30K,
+    HZ Top50K/Rest15K), Format „Betfair Moneyflow"/„Halftime Flow", Over/Under ausgeschrieben, „Check:"."""
+
+    def test_public_fresh_thresholds(self):
+        # Rest-Liga: +€25K < 30K Public-Schwelle → kein Public-Alert (privat wäre es einer)
+        hist = {"7": [{"mkv": {"Match Odds": 10000}}, {"mkv": {"Match Odds": 35000}}]}  # +25K
+        m = match(mid=7, markets=mk("Match Odds", [{"name": "Alpha", "odd": 2.0, "vol": 35000}]))
+        self.assertIsNone(BA.fresh_alert(m, hist, BA.PUB_FRESH_TOP, BA.PUB_FRESH_REST))
+        # +€32K ≥ 30K → Public-Alert
+        hist2 = {"7": [{"mkv": {"Match Odds": 10000}}, {"mkv": {"Match Odds": 42000}}]}  # +32K
+        self.assertIsNotNone(BA.fresh_alert(m, hist2, BA.PUB_FRESH_TOP, BA.PUB_FRESH_REST))
+
+    def test_public_ht_thresholds(self):
+        # Rest-Liga HZ: €12K < 15K Public-Schwelle → kein Alert; €16K ≥ 15K → Alert (einseitig)
+        m_lo = match(markets=mk("Half Time", [{"name": "Alpha", "odd": 1.5, "vol": 12000}, {"name": "The Draw", "odd": 6, "vol": 500}, {"name": "Beta", "odd": 8, "vol": 500}]))
+        self.assertIsNone(BA.ht_alert(m_lo, BA.PUB_HT_TOP, BA.PUB_HT_REST))
+        m_hi = match(markets=mk("Half Time", [{"name": "Alpha", "odd": 1.5, "vol": 16000}, {"name": "The Draw", "odd": 6, "vol": 500}, {"name": "Beta", "odd": 8, "vol": 500}]))
+        self.assertIsNotNone(BA.ht_alert(m_hi, BA.PUB_HT_TOP, BA.PUB_HT_REST))
+
+    def test_public_fresh_format(self):
+        a = {"scenario": "fresh", "matchId": "1", "flag": "🇵🇾", "home": "San Lorenzo",
+             "away": "Guarani", "league": "Paraguayan Reserves", "market": "Over/Under 3.5 Goals",
+             "inflow": 27900, "total": 28600, "tier": "rest", "leadName": "Over 3.5 Goals",
+             "leadShare": 0.74, "leadOdd": 2.0}
+        msg = BA.build_public_message(a)
+        self.assertIn("🟡 <b>Betfair Moneyflow</b>", msg)
+        self.assertIn("Over/Under 3.5", msg)          # ausgeschrieben, nicht „Ü/U"
+        self.assertNotIn("Ü/U", msg)
+        self.assertIn("+<b>€27.9K</b> frisch → jetzt <b>€28.6K</b>", msg)
+        self.assertIn("Check: <b>Over 3.5 Goals</b> (74%) @2.00", msg)
+        self.assertNotIn("führt", msg)
+
+    def test_public_ht_format(self):
+        a = {"scenario": "ht", "matchId": "2", "flag": "🌍", "home": "Gremio", "away": "Bolivar",
+             "league": "CONMEBOL Copa Sudamericana", "market": "First Half Goals 1.5", "total": 89400,
+             "leadLabel": "Under 1.5 Goals", "leadShare": 0.86, "leadOdd": 1.53}
+        msg = BA.build_public_message(a)
+        self.assertIn("🟡 <b>Betfair Halftime Flow</b>", msg)
+        self.assertIn("HZ Over/Under 1.5", msg)
+        self.assertIn("<b>€89.4K</b> gematcht", msg)
+        self.assertIn("Check: <b>Under 1.5 Goals</b> (86%) @1.53", msg)
