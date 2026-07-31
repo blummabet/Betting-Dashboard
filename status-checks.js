@@ -932,15 +932,23 @@ const _BF_FEEDS = [
   { file: 'betfair_track_record.json', icon: '🎯', label: 'Track-Record', ts: 'generatedAt', warnH: 12, errH: 48, crit: false, note: 'seltener neu gebaut' },
   { file: 'dashboard_pulse.json', icon: '📉', label: 'CLV-Pulse', ts: null, crit: false },
 ];
-const _POLY_FEEDS = [
-  { file: 'poly_money_broad.json', icon: '💰', label: 'Money-Broad', ts: 'generatedAt', warnH: 1, errH: 4, crit: true, note: 'globaler Geld-Scan' },
-  { file: 'poly_money_broad_close.json', icon: '📋', label: 'Kommende Märkte', ts: null, crit: false, note: 'eingefrorene Märkte' },
-  { file: 'poly_money_broad_history.json', icon: '🕰️', label: 'Geld-History', ts: '_newestSnap', warnH: 2, errH: 8, crit: false },
-  { file: 'poly_cross_sport.json', icon: '⚖️', label: 'Cross-Sport-Edge', ts: 'generatedAt', warnH: 2, errH: 8, crit: false },
-  { file: 'poly_wallet_track.json', icon: '🐋', label: 'Wallet-Track (CLV)', ts: 'updatedAt', warnH: 6, errH: 24, crit: false },
-  { file: 'poly_trader_data.json', icon: '👤', label: 'Trader-Data', ts: null, crit: false },
-  { file: 'mls_poly_prices.json', icon: '⚽', label: 'MLS-Poly-Preise', ts: 'generatedAt', warnH: 8, errH: 24, crit: false },
-];
+// Poly-Global läuft NUR im MLS-Fenster (manage-mls-poly.yml: 22–06 UTC alle 30 min + 12 UTC
+// Housekeeping) — tagsüber sind mehrstündige Lücken PER DESIGN. Darum zeitplan-bewusste Frische:
+// im Fenster eng (Soll 30 min), sonst weit — sonst falscher Gelb-Alarm bei völlig normalem Stand.
+function _stPolyActive() { const h = new Date().getUTCHours(); return h >= 22 || h < 6; }
+function _stPolyThr() { return _stPolyActive() ? { warnH: 2, errH: 5 } : { warnH: 12, errH: 24 }; }
+function _stPolyFeeds() {
+  const t = _stPolyThr();
+  return [
+    { file: 'poly_money_broad.json', icon: '💰', label: 'Money-Broad', ts: 'generatedAt', warnH: t.warnH, errH: t.errH, crit: true, note: 'MLS-Fenster ~22–06 UTC · tagsüber Lücken normal' },
+    { file: 'poly_money_broad_close.json', icon: '📋', label: 'Kommende Märkte', ts: null, crit: false, note: 'eingefrorene Märkte' },
+    { file: 'poly_money_broad_history.json', icon: '🕰️', label: 'Geld-History', ts: '_newestSnap', warnH: t.warnH, errH: t.errH, crit: false },
+    { file: 'poly_cross_sport.json', icon: '⚖️', label: 'Cross-Sport-Edge', ts: 'generatedAt', warnH: t.warnH, errH: t.errH, crit: false },
+    { file: 'poly_wallet_track.json', icon: '🐋', label: 'Wallet-Track (CLV)', ts: 'updatedAt', warnH: 12, errH: 24, crit: false },
+    { file: 'poly_trader_data.json', icon: '👤', label: 'Trader-Data', ts: null, crit: false },
+    { file: 'mls_poly_prices.json', icon: '⚽', label: 'MLS-Poly-Preise', ts: 'generatedAt', warnH: 12, errH: 24, crit: false },
+  ];
+}
 
 async function _stRenderBetfairStatus() {
   const dyn = _stDynEl(); if (!dyn) return;
@@ -989,10 +997,12 @@ async function _stRenderPolyStatus() {
     _stGet('poly_cross_sport.json'), _stGet('poly_wallet_track.json'), _stGet('poly_trader_data.json'),
   ]);
   const ts = _stParseTs(broad && broad.generatedAt), age = _stAgeH(ts);
-  let vIco = '✅', vT = 'Polymarket frisch', vS = 'Der globale Geld-Scan läuft.', vC = _ST_G;
+  const pt = _stPolyThr();
+  let vIco = '✅', vT = 'Polymarket frisch', vC = _ST_G;
+  let vS = _stPolyActive() ? 'Der globale Geld-Scan läuft (MLS-Fenster, 30-min-Takt).' : 'Aktuell — tagsüber läuft der Scan nur zum Housekeeping, größere Lücken sind normal.';
   if (age === null) { vIco = '⚠️'; vT = 'Keine Poly-Daten'; vS = 'poly_money_broad.json fehlt/ohne Zeitstempel — Mac-Runner prüfen.'; vC = _ST_R; }
-  else if (age > 4) { vIco = '🔴'; vT = `Poly ${age.toFixed(1)}h alt`; vS = 'Mac-Runner schläft/offline → Wallet & Money veralten.'; vC = _ST_R; }
-  else if (age > 1) { vIco = '🟡'; vT = `Poly ${age.toFixed(1)}h alt`; vS = 'Älter als der ~15–30-min-Takt — Runner beobachten.'; vC = _ST_A; }
+  else if (age > pt.errH) { vIco = '🔴'; vT = `Poly ${age.toFixed(1)}h alt`; vS = 'Auch fürs MLS-Fenster zu alt → Mac-Runner schläft/offline. MacBook/Runner prüfen.'; vC = _ST_R; }
+  else if (age > pt.warnH) { vIco = '🟡'; vT = `Poly ${age.toFixed(1)}h alt`; vS = _stPolyActive() ? 'Im aktiven MLS-Fenster überfällig (Soll 30 min) — Runner beobachten.' : 'Leicht überfällig — der nächste Lauf kommt im MLS-Fenster (~22 UTC).'; vC = _ST_A; }
   const nMk = broad && broad.n != null ? broad.n : '—';
   const nLg = broad && Array.isArray(broad.byLeague) ? broad.byLeague.length : '—';
   const nClose = close && typeof close === 'object' ? Object.keys(close).length : '—';
@@ -1014,7 +1024,7 @@ async function _stRenderPolyStatus() {
   dyn.innerHTML = _stHead('🐋', 'Polymarket — Status', 'Globaler Geld-Scan · Cross-Sport-Edge · Wallets/Smart-Money')
     + _stBanner(vIco, vT, vS, vC)
     + _stCard('📊 Health', null, health)
-    + _stCard('📁 Feed-Frische', 'aus dem Datenstand selbst', await _stFreshGrid(_POLY_FEEDS))
+    + _stCard('📁 Feed-Frische', 'aus dem Datenstand selbst · Poly läuft in Wellen zu MLS-Zeiten', await _stFreshGrid(_stPolyFeeds()))
     + _stCard('🧠 Smart-Money-Lernen', 'Wallet-Schärfe (CLV/Treffer) & Sharp-Discovery', learn);
 }
 
@@ -1030,9 +1040,10 @@ async function _stRenderOverview() {
     return { col, html: `<div onclick="_stJump('${ds}')" style="cursor:pointer;background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:15px 16px;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;"><span style="font-size:14px;font-weight:800">${icon} ${label}</span><span style="font-size:13px">${dot}</span></div><div style="font-size:16px;font-weight:700;color:${col};margin-bottom:2px;">${age === null ? 'keine Daten' : _stAgo(ts)}</div><div style="font-size:11px;color:var(--muted)">${line}</div></div>` };
   };
   const bfMeta = (bf && bf._meta) || {};
+  const pt = _stPolyThr();
   const cards = [
     sys('🟡', 'Betfair', 'betfair', _stParseTs(bfMeta.generatedAt), 1, 3, `${bfMeta.n != null ? bfMeta.n : '—'} Spiele · ${bfMeta.live != null ? bfMeta.live : '—'} live`),
-    sys('🐋', 'Polymarket', 'poly', _stParseTs(pb && pb.generatedAt), 1, 4, pb && pb.n != null ? `${pb.n} Märkte global` : 'globaler Geld-Scan'),
+    sys('🐋', 'Polymarket', 'poly', _stParseTs(pb && pb.generatedAt), pt.warnH, pt.errH, pb && pb.n != null ? `${pb.n} Märkte global` : 'globaler Geld-Scan'),
     sys('⚽', 'Top-5', 'liga', _stParseTs(liga && liga._meta && liga._meta.dataUpdatedAt), 14, 30, 'Liga-Pipeline 2×/Tag'),
     sys('🇺🇸', 'MLS', 'mls', _stParseTs(mls && mls._meta && mls._meta.dataUpdatedAt), 14, 30, 'MLS-Pipeline 2×/Tag'),
   ];
@@ -1041,7 +1052,7 @@ async function _stRenderOverview() {
   if (anyRed) { vIco = '🔴'; vT = 'Ein System hängt'; vS = 'Mindestens ein Live-System ist überfällig — unten ansehen.'; vC = _ST_R; }
   else if (anyAmber) { vIco = '🟡'; vT = 'Meist frisch, eins überfällig'; vS = 'Ein System ist leicht über der Soll-Frische.'; vC = _ST_A; }
   const wmCard = `<div onclick="_stJump('intl')" style="cursor:pointer;background:var(--card2);border:1px dashed var(--border);border-radius:12px;padding:15px 16px;opacity:.6;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;"><span style="font-size:14px;font-weight:800">📦 WM 2026</span><span style="font-size:11px;color:var(--muted)">Archiv</span></div><div style="font-size:13px;color:var(--muted)">beendet · winterisiert</div></div>`;
-  const allFeeds = [..._BF_FEEDS, ..._POLY_FEEDS,
+  const allFeeds = [..._BF_FEEDS, ..._stPolyFeeds(),
     { file: 'liga-data.json', icon: '⚽', label: 'Top-5 Daten', ts: '_meta.dataUpdatedAt', warnH: 14, errH: 30, crit: false },
     { file: 'mls-data.json', icon: '🇺🇸', label: 'MLS Daten', ts: '_meta.dataUpdatedAt', warnH: 14, errH: 30, crit: false }];
   dyn.innerHTML = _stHead('🩺', 'Status — alle Live-Systeme', 'Was läuft, was hängt — Betfair · Polymarket · Top-5 · MLS auf einen Blick')

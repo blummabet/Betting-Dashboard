@@ -60,6 +60,20 @@ test('Polymarket-View: Health & Smart-Money-Zähler rendern', async () => {
   assert.match(h, /Cross-Sport-Edges/); assert.match(h, /Wallets bewertet/); assert.match(h, />2</);
 });
 
+test('Poly: 3h alt ist NIE roter Alarm (tagsüber sind Lücken by design)', async () => {
+  const w = load({ 'poly_money_broad.json': { generatedAt: hoursAgo(3), n: 100, byLeague: [1] } });
+  await w._stRenderPolyStatus();
+  const h = w.document.getElementById('st_dynamic').innerHTML;
+  assert.doesNotMatch(h, /Auch fürs MLS-Fenster zu alt/, '3h darf nicht rot sein');
+});
+
+test('Poly: 30h alt IST rot (auch fürs MLS-Fenster tot)', async () => {
+  const w = load({ 'poly_money_broad.json': { generatedAt: hoursAgo(30), n: 100, byLeague: [1] } });
+  await w._stRenderPolyStatus();
+  const h = w.document.getElementById('st_dynamic').innerHTML;
+  assert.match(h, /Auch fürs MLS-Fenster zu alt/, '30h → roter Alarm');
+});
+
 test('Überblick: alle Systeme + WM-Archiv-Karte + Feed-Frische', async () => {
   const w = load({
     'betfair_prices.json': { _meta: { generatedAt: now(), n: 150, live: 1 } },
