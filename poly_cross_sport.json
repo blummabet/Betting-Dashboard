@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-07-30T14:23:22.284503+00:00",
+ "generatedAt": "2026-07-31T02:45:06.411956+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,28 +10,57 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 249,
- "pinnKeys": 149,
- "matched": 65,
+ "polyRowsSeen": 243,
+ "pinnKeys": 137,
+ "matched": 73,
  "footballRows": 45,
- "crossRows": 204,
+ "crossRows": 198,
  "footballSkippedStale": 11,
  "seenBySport": {
   "basketball_nba": 2,
   "americanfootball_nfl": 102,
-  "baseball_mlb": 92,
+  "baseball_mlb": 86,
   "icehockey_nhl": 2,
   "mma_mixed_martial_arts": 2,
   "boxing_boxing": 4,
   "soccer_mls": 45
  },
  "matchedBySport": {
-  "baseball_mlb": 20,
+  "baseball_mlb": 28,
   "soccer_mls": 45
  },
  "trackRecord": {
-  "tracked": 46,
+  "tracked": 48,
   "converged": 1
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|athletics-bostonredsox|bostonredsox",
+   "sport": "baseball_mlb",
+   "event": "Boston Red Sox vs Athletics",
+   "market": "Moneyline",
+   "outcome": "Boston Red Sox",
+   "polyPP": 24.5,
+   "pinnPP": 49.7,
+   "gapPP": -25.24,
+   "vol": 172808,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-07-31T02:45:06.411710+00:00"
+  },
+  {
+   "id": "baseball_mlb|athletics-bostonredsox|athletics",
+   "sport": "baseball_mlb",
+   "event": "Boston Red Sox vs Athletics",
+   "market": "Moneyline",
+   "outcome": "Athletics",
+   "polyPP": 75.5,
+   "pinnPP": 50.3,
+   "gapPP": 25.24,
+   "vol": 172808,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-07-31T02:45:06.411710+00:00"
+  }
+ ]
 }
