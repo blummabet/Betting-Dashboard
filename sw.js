@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v38';   // 30.07.2026: Polymarket x-Norm (Gesamt-Volumen und Zufluss ueber Sportart-Phase-Median) im Geld-Reiter markiert
+const VERSION = 'cocobet-v39';   // 31.07.2026: Status-Tab neu — Ueberblick + eigene Betfair/Polymarket-Reiter, WM ins Archiv
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

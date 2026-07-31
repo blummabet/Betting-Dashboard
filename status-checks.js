@@ -81,15 +81,18 @@ let _stRunning = false;
 // 'liga' = schlanke Liga-Ops-Health aus liga_status.json + liga-data.json.
 // 25.07.2026 (Lucas: „Lern-Status hängt seit 5 Tagen"): das war die WM-Schleife (seit WM-Ende
 // korrekt still). Default jetzt MLS (aktiver Bewerb) — MLS lernt frisch (mls_signal_ledger).
-let _stDataset = 'mls';
+let _stDataset = 'overview';
 
 // 13.07.2026 (MLS-Audit) — Status-Tab war zweigeteilt (International/Liga). mls_status.json wurde
 // erzeugt und committet, war im UI aber nicht erreichbar: der MLS-Gesundheitszustand (60 Guards,
 // Lern-Loop) war unsichtbar. Neue Liga = EINE Zeile hier.
 const ST_DATASETS = [
-  { id: 'intl', label: '🌍 International' },
-  { id: 'liga', label: '⚽ Top-5' },
-  { id: 'mls',  label: '🇺🇸 MLS' },
+  { id: 'overview', label: '🩺 Überblick' },
+  { id: 'betfair',  label: '🟡 Betfair' },
+  { id: 'poly',     label: '🐋 Polymarket' },
+  { id: 'liga',     label: '⚽ Top-5' },
+  { id: 'mls',      label: '🇺🇸 MLS' },
+  { id: 'intl',     label: '📦 WM (Archiv)' },
 ];
 // Dateien je Datensatz. 'intl' läuft über den eigenen WM-Pfad (Poly/Kill-Switch/Auto-Bets).
 function ST_FILES(ds) {
@@ -343,6 +346,14 @@ async function runStatusPage(force) {
   _stRunning = true;
   try {
     _stRenderToggle();   // (26.06.2026, Lucas: Status Liga/Intl-Toggle)
+
+    // 31.07.2026 (Lucas: „Status-Tab ist voll WM, Betfair/Poly fehlen"): eigene Live-System-Views.
+    // Überblick + Betfair + Poly rendern in einen eigenen Container (st_dynamic); die Legacy-WM/Liga-
+    // Karten werden dafür ausgeblendet. Liga/MLS/WM nutzen weiter das bestehende Karten-Gerüst.
+    if (_stDataset === 'overview') { _stShowDynamic(true); await _stRenderOverview();  return; }
+    if (_stDataset === 'betfair')  { _stShowDynamic(true); await _stRenderBetfairStatus(); return; }
+    if (_stDataset === 'poly')     { _stShowDynamic(true); await _stRenderPolyStatus(); return; }
+    _stShowDynamic(false);   // zurück aufs Legacy-Gerüst
 
     // (26.06.2026, Lucas: Status Liga/Intl-Toggle) — früher Liga-Abzweig.
     // WM/Intl-Flow darunter bleibt komplett unverändert.
@@ -841,4 +852,208 @@ async function _stRenderFeeds() {
       <div style="font-size:10px;color:var(--muted);">${f.file} · ${sub}</div>
     </div>`;
   }).join('');
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════
+// Live-System-Status (31.07.2026, Lucas: „Status-Tab ist voll WM, Betfair/Poly fehlen").
+// Überblick + eigene Detail-Reiter für Betfair & globales Polymarket, in einen eigenen
+// Container (st_dynamic) gerendert; die Legacy-WM/Liga-Karten werden dafür ausgeblendet.
+// ═══════════════════════════════════════════════════════════════════════════════
+const _ST_G = '#3fb950', _ST_A = '#e3b341', _ST_R = '#f85149', _ST_MUT = '#6e7681';
+
+function _stDynEl() {
+  const panel = document.getElementById('statusPanel'); if (!panel) return null;
+  let dyn = document.getElementById('st_dynamic');
+  if (!dyn) {
+    dyn = document.createElement('div'); dyn.id = 'st_dynamic';
+    const toggle = document.getElementById('st_datasetToggle');
+    panel.insertBefore(dyn, toggle ? toggle.nextSibling : panel.firstChild);
+  }
+  return dyn;
+}
+// on=true: neue View zeigen (Legacy-Karten aus), on=false: zurück aufs Legacy-Gerüst.
+function _stShowDynamic(on) {
+  const panel = document.getElementById('statusPanel'); if (!panel) return;
+  const dyn = _stDynEl(), toggle = document.getElementById('st_datasetToggle');
+  for (const ch of Array.from(panel.children)) {
+    if (ch === toggle || ch === dyn) continue;
+    ch.style.display = on ? 'none' : '';
+  }
+  if (dyn) dyn.style.display = on ? '' : 'none';
+}
+
+// ── kleine UI-Bausteine (App-Stil: var(--card)/--card2/--border/--muted/--text) ──
+function _stHead(icon, title, sub) {
+  return `<div style="display:flex;align-items:center;gap:12px;margin-bottom:20px;flex-wrap:wrap;"><div><div style="font-size:20px;font-weight:700;margin-bottom:4px;">${icon} ${title}</div><div style="font-size:13px;color:var(--muted);">${sub}</div></div><button onclick="runStatusPage(true)" style="margin-left:auto;background:var(--card2);border:1px solid var(--border);color:var(--text);border-radius:8px;padding:9px 16px;font-size:13px;font-weight:600;cursor:pointer;font-family:inherit;">🔄 Neu prüfen</button></div>`;
+}
+function _stBanner(icon, title, sub, col) {
+  return `<div style="border-radius:14px;padding:18px 20px;margin-bottom:18px;border:1px solid ${col};background:var(--card);display:flex;align-items:center;gap:14px;"><div style="font-size:30px;line-height:1">${icon}</div><div style="min-width:0"><div style="font-size:16px;font-weight:800">${title}</div><div style="font-size:12.5px;color:var(--muted);margin-top:3px">${sub}</div></div></div>`;
+}
+function _stCard(title, sub, inner) {
+  return `<div style="background:var(--card);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:18px;"><div style="font-size:14px;font-weight:700;margin-bottom:${sub ? '4px' : '14px'};">${title}</div>${sub ? `<div style="font-size:11px;color:var(--muted);margin-bottom:14px;">${sub}</div>` : ''}${inner}</div>`;
+}
+function _stGridWrap(cards, min) {
+  return `<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(${min || 220}px,1fr));gap:12px;">${cards.join('')}</div>`;
+}
+function _stStat(label, val, col, sub) {
+  return `<div style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:13px 15px;"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;">${label}</div><div style="font-size:18px;font-weight:800;color:${col || 'var(--text)'};margin-bottom:2px;">${val}</div><div style="font-size:10px;color:var(--muted);">${sub || ''}</div></div>`;
+}
+// ── Frische-Auswertung (unterstützt verschachtelte TS-Pfade wie _meta.generatedAt) ──
+function _stTsGet(d, path) {
+  if (!d || typeof d !== 'object') return null;
+  if (path === '_newestSnap') {
+    let ts = null;
+    for (const arr of Object.values(d)) if (Array.isArray(arr) && arr.length) { const t = _stParseTs(arr[arr.length - 1] && arr[arr.length - 1].ts); if (t && (!ts || t > ts)) ts = t; }
+    return ts;
+  }
+  let cur = d;
+  for (const seg of String(path).split('.')) { if (cur && typeof cur === 'object' && seg in cur) cur = cur[seg]; else return null; }
+  return _stParseTs(cur);
+}
+function _stFreshCardHtml(cfg, d) {
+  let col, val, sub;
+  if (d === null) { col = cfg.crit ? _ST_R : _ST_MUT; val = cfg.crit ? 'FEHLT' : 'nicht da'; sub = cfg.crit ? 'kritisch — Fetch prüfen' : (cfg.note || 'optional'); }
+  else if (!cfg.ts) { col = _ST_G; val = 'vorhanden'; sub = cfg.note || 'kein Zeitstempel'; }
+  else {
+    const ts = _stTsGet(d, cfg.ts), age = _stAgeH(ts);
+    if (age === null) { col = _ST_MUT; val = '—'; sub = 'kein Zeitstempel'; }
+    else { col = age > cfg.errH ? _ST_R : age > cfg.warnH ? _ST_A : _ST_G; val = _stAgo(ts); sub = cfg.note || ('Soll < ' + cfg.warnH + 'h'); }
+  }
+  return `<div style="background:var(--card2);border:1px solid var(--border);border-radius:10px;padding:13px 15px;"><div style="font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.4px;margin-bottom:6px;">${cfg.icon} ${cfg.label}</div><div style="font-size:15px;font-weight:700;color:${col};margin-bottom:3px;">${val}</div><div style="font-size:10px;color:var(--muted);">${cfg.file} · ${sub}</div></div>`;
+}
+async function _stFreshGrid(cfgs) {
+  const ds = await Promise.all(cfgs.map(c => _stGet(c.file)));
+  return _stGridWrap(cfgs.map((c, i) => _stFreshCardHtml(c, ds[i])));
+}
+
+const _BF_FEEDS = [
+  { file: 'betfair_prices.json', icon: '🟡', label: 'Radar-Preise', ts: '_meta.generatedAt', warnH: 1, errH: 3, crit: true, note: 'Mac-Runner ~alle 15–20 min' },
+  { file: 'betfair_history.json', icon: '🕰️', label: 'Preis-History', ts: '_meta.updatedAt', warnH: 1, errH: 3, crit: false },
+  { file: 'betfair_track_record.json', icon: '🎯', label: 'Track-Record', ts: 'generatedAt', warnH: 12, errH: 48, crit: false, note: 'seltener neu gebaut' },
+  { file: 'dashboard_pulse.json', icon: '📉', label: 'CLV-Pulse', ts: null, crit: false },
+];
+const _POLY_FEEDS = [
+  { file: 'poly_money_broad.json', icon: '💰', label: 'Money-Broad', ts: 'generatedAt', warnH: 1, errH: 4, crit: true, note: 'globaler Geld-Scan' },
+  { file: 'poly_money_broad_close.json', icon: '📋', label: 'Kommende Märkte', ts: null, crit: false, note: 'eingefrorene Märkte' },
+  { file: 'poly_money_broad_history.json', icon: '🕰️', label: 'Geld-History', ts: '_newestSnap', warnH: 2, errH: 8, crit: false },
+  { file: 'poly_cross_sport.json', icon: '⚖️', label: 'Cross-Sport-Edge', ts: 'generatedAt', warnH: 2, errH: 8, crit: false },
+  { file: 'poly_wallet_track.json', icon: '🐋', label: 'Wallet-Track (CLV)', ts: 'updatedAt', warnH: 6, errH: 24, crit: false },
+  { file: 'poly_trader_data.json', icon: '👤', label: 'Trader-Data', ts: null, crit: false },
+  { file: 'mls_poly_prices.json', icon: '⚽', label: 'MLS-Poly-Preise', ts: 'generatedAt', warnH: 8, errH: 24, crit: false },
+];
+
+async function _stRenderBetfairStatus() {
+  const dyn = _stDynEl(); if (!dyn) return;
+  const [prices, track, wLiga, wMls, wWm] = await Promise.all([
+    _stGet('betfair_prices.json'), _stGet('betfair_track_record.json'),
+    _stGet('liga_signal_weights.json'), _stGet('mls_signal_weights.json'), _stGet('signal_weights.json'),
+  ]);
+  const meta = (prices && prices._meta) || {};
+  const ts = _stParseTs(meta.generatedAt), age = _stAgeH(ts);
+  let vIco = '✅', vT = 'Betfair-Radar frisch', vS = 'Der Mac-Runner liefert, die Daten sind aktuell.', vC = _ST_G;
+  if (age === null) { vIco = '⚠️'; vT = 'Keine Betfair-Daten'; vS = 'betfair_prices.json fehlt/ohne Zeitstempel — Fetcher prüfen.'; vC = _ST_R; }
+  else if (age > 3) { vIco = '🔴'; vT = `Radar ${age.toFixed(1)}h alt`; vS = 'Mac-Runner schläft/offline → Radar & Telegram-Push veralten. MacBook/Runner prüfen.'; vC = _ST_R; }
+  else if (age > 1) { vIco = '🟡'; vT = `Radar ${age.toFixed(1)}h alt`; vS = 'Älter als der ~15-min-Takt — Runner beobachten.'; vC = _ST_A; }
+  const n = meta.n != null ? meta.n : '—', live = meta.live != null ? meta.live : '—';
+  const health = _stGridWrap([
+    _stStat('Spiele getrackt', n, 'var(--text)', 'im letzten Lauf'),
+    _stStat('davon live', live, (typeof live === 'number' && live > 0) ? _ST_G : _ST_MUT, 'mit Live-Uhr'),
+    _stStat('Daten-Alter', age === null ? '—' : _stAgo(ts), age === null ? _ST_MUT : age > 3 ? _ST_R : age > 1 ? _ST_A : _ST_G, '_meta.generatedAt'),
+  ], 180);
+  const bl = track && track.byLeagueMarket ? Object.keys(track.byLeagueMarket).length : 0;
+  const bt = track && track.byTeamMarket ? Object.keys(track.byTeamMarket).length : 0;
+  const resolved = track && track.n != null ? track.n : 0;
+  const nBigL = track && track.byLeagueMarket ? Object.values(track.byLeagueMarket).filter(x => (x.n || 0) >= 20).length : 0;
+  const trackGrid = _stGridWrap([
+    _stStat('Liga × Markt', bl, bl ? 'var(--text)' : _ST_MUT, 'Trefferquoten-Zellen'),
+    _stStat('Team × Markt', bt, bt ? 'var(--text)' : _ST_MUT, 'Team-Ebene'),
+    _stStat('belastbar (n≥20)', nBigL, nBigL ? _ST_G : _ST_A, `von ${bl} · Rest sammelt`),
+    _stStat('aufgelöste Spiele', resolved, 'var(--text)', 'Basis der Quoten'),
+  ], 180);
+  const bfObs = w => { if (!w) return null; const m = w.betfair_money || {}, c = w.betfair_coherence || {}; return { obs: (m.n_observations || 0) + (c.n_observations || 0) }; };
+  const dsW = [['Top-5', wLiga], ['MLS', wMls], ['WM (Archiv)', wWm]];
+  const learnRows = dsW.map(([lbl, w]) => { const o = bfObs(w); if (!o) return ''; const on = o.obs > 0; return `<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border);font-size:12.5px;"><span>${lbl}</span><span style="color:${on ? _ST_G : _ST_MUT}">${on ? o.obs + ' Beobachtungen' : '0 — wartet auf resolved Picks'}</span></div>`; }).join('');
+  const learn = `<div style="font-size:11px;color:var(--muted);margin-bottom:12px;">Die Betfair-Signale <b>betfair_money</b> &amp; <b>betfair_coherence</b> sind im Bayesian-Lernloop registriert (Gewicht 1.00 = neutral). Sie justieren sich, sobald Betfair-getriebene Picks aufgelöst sind.</div>${learnRows}`;
+  dyn.innerHTML = _stHead('🟡', 'Betfair-Radar — Status', 'Exchange-Geld-Radar · Mac-Runner · Lernloop · Track-Record')
+    + _stBanner(vIco, vT, vS, vC)
+    + _stCard('📊 Health', null, health)
+    + _stCard('📁 Feed-Frische', 'aus dem Datenstand selbst', await _stFreshGrid(_BF_FEEDS))
+    + _stCard('🎯 Track-Record-Abdeckung', 'wächst mit jedem aufgelösten Spiel', trackGrid)
+    + _stCard('🧠 Lernloop (Betfair-Signale)', null, learn);
+}
+
+async function _stRenderPolyStatus() {
+  const dyn = _stDynEl(); if (!dyn) return;
+  const [broad, close, cross, wtrack, trader] = await Promise.all([
+    _stGet('poly_money_broad.json'), _stGet('poly_money_broad_close.json'),
+    _stGet('poly_cross_sport.json'), _stGet('poly_wallet_track.json'), _stGet('poly_trader_data.json'),
+  ]);
+  const ts = _stParseTs(broad && broad.generatedAt), age = _stAgeH(ts);
+  let vIco = '✅', vT = 'Polymarket frisch', vS = 'Der globale Geld-Scan läuft.', vC = _ST_G;
+  if (age === null) { vIco = '⚠️'; vT = 'Keine Poly-Daten'; vS = 'poly_money_broad.json fehlt/ohne Zeitstempel — Mac-Runner prüfen.'; vC = _ST_R; }
+  else if (age > 4) { vIco = '🔴'; vT = `Poly ${age.toFixed(1)}h alt`; vS = 'Mac-Runner schläft/offline → Wallet & Money veralten.'; vC = _ST_R; }
+  else if (age > 1) { vIco = '🟡'; vT = `Poly ${age.toFixed(1)}h alt`; vS = 'Älter als der ~15–30-min-Takt — Runner beobachten.'; vC = _ST_A; }
+  const nMk = broad && broad.n != null ? broad.n : '—';
+  const nLg = broad && Array.isArray(broad.byLeague) ? broad.byLeague.length : '—';
+  const nClose = close && typeof close === 'object' ? Object.keys(close).length : '—';
+  const nDisc = cross && Array.isArray(cross.discrepancies) ? cross.discrepancies.length : '—';
+  const nWallet = wtrack && wtrack.scores ? Object.keys(wtrack.scores).length : 0;
+  const nOpen = wtrack && Array.isArray(wtrack.open) ? wtrack.open.length : (wtrack && wtrack.open ? Object.keys(wtrack.open).length : 0);
+  const nCand = trader && Array.isArray(trader.candidates) ? trader.candidates.length : 0;
+  const health = _stGridWrap([
+    _stStat('Märkte (Money)', nMk, 'var(--text)', 'im globalen Scan'),
+    _stStat('Ligen/Sportarten', nLg, 'var(--text)', 'mit Geld-Verdikt'),
+    _stStat('Kommende Märkte', nClose, 'var(--text)', 'für ×-Norm & Money'),
+    _stStat('Cross-Sport-Edges', nDisc, (typeof nDisc === 'number' && nDisc > 0) ? _ST_G : _ST_MUT, 'Poly vs Pinnacle'),
+  ], 180);
+  const learn = _stGridWrap([
+    _stStat('Wallets bewertet', nWallet, nWallet ? _ST_G : _ST_MUT, 'CLV + Trefferquote'),
+    _stStat('offene Positionen', nOpen, 'var(--text)', 'im Wallet-Ledger'),
+    _stStat('Trader-Kandidaten', nCand, 'var(--text)', 'Sharp-Discovery'),
+  ], 180);
+  dyn.innerHTML = _stHead('🐋', 'Polymarket — Status', 'Globaler Geld-Scan · Cross-Sport-Edge · Wallets/Smart-Money')
+    + _stBanner(vIco, vT, vS, vC)
+    + _stCard('📊 Health', null, health)
+    + _stCard('📁 Feed-Frische', 'aus dem Datenstand selbst', await _stFreshGrid(_POLY_FEEDS))
+    + _stCard('🧠 Smart-Money-Lernen', 'Wallet-Schärfe (CLV/Treffer) & Sharp-Discovery', learn);
+}
+
+async function _stRenderOverview() {
+  const dyn = _stDynEl(); if (!dyn) return;
+  const [bf, pb, liga, mls] = await Promise.all([
+    _stGet('betfair_prices.json'), _stGet('poly_money_broad.json'), _stGet('liga-data.json'), _stGet('mls-data.json'),
+  ]);
+  const sys = (icon, label, ds, ts, warnH, errH, line) => {
+    const age = _stAgeH(ts);
+    const col = age === null ? _ST_MUT : age > errH ? _ST_R : age > warnH ? _ST_A : _ST_G;
+    const dot = age === null ? '○' : age > errH ? '🔴' : age > warnH ? '🟡' : '🟢';
+    return { col, html: `<div onclick="_stJump('${ds}')" style="cursor:pointer;background:var(--card2);border:1px solid var(--border);border-radius:12px;padding:15px 16px;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;"><span style="font-size:14px;font-weight:800">${icon} ${label}</span><span style="font-size:13px">${dot}</span></div><div style="font-size:16px;font-weight:700;color:${col};margin-bottom:2px;">${age === null ? 'keine Daten' : _stAgo(ts)}</div><div style="font-size:11px;color:var(--muted)">${line}</div></div>` };
+  };
+  const bfMeta = (bf && bf._meta) || {};
+  const cards = [
+    sys('🟡', 'Betfair', 'betfair', _stParseTs(bfMeta.generatedAt), 1, 3, `${bfMeta.n != null ? bfMeta.n : '—'} Spiele · ${bfMeta.live != null ? bfMeta.live : '—'} live`),
+    sys('🐋', 'Polymarket', 'poly', _stParseTs(pb && pb.generatedAt), 1, 4, pb && pb.n != null ? `${pb.n} Märkte global` : 'globaler Geld-Scan'),
+    sys('⚽', 'Top-5', 'liga', _stParseTs(liga && liga._meta && liga._meta.dataUpdatedAt), 14, 30, 'Liga-Pipeline 2×/Tag'),
+    sys('🇺🇸', 'MLS', 'mls', _stParseTs(mls && mls._meta && mls._meta.dataUpdatedAt), 14, 30, 'MLS-Pipeline 2×/Tag'),
+  ];
+  const anyRed = cards.some(c => c.col === _ST_R), anyAmber = cards.some(c => c.col === _ST_A);
+  let vIco = '✅', vT = 'Alle Live-Systeme frisch', vS = 'Betfair, Polymarket, Top-5 und MLS liefern aktuell.', vC = _ST_G;
+  if (anyRed) { vIco = '🔴'; vT = 'Ein System hängt'; vS = 'Mindestens ein Live-System ist überfällig — unten ansehen.'; vC = _ST_R; }
+  else if (anyAmber) { vIco = '🟡'; vT = 'Meist frisch, eins überfällig'; vS = 'Ein System ist leicht über der Soll-Frische.'; vC = _ST_A; }
+  const wmCard = `<div onclick="_stJump('intl')" style="cursor:pointer;background:var(--card2);border:1px dashed var(--border);border-radius:12px;padding:15px 16px;opacity:.6;"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px;"><span style="font-size:14px;font-weight:800">📦 WM 2026</span><span style="font-size:11px;color:var(--muted)">Archiv</span></div><div style="font-size:13px;color:var(--muted)">beendet · winterisiert</div></div>`;
+  const allFeeds = [..._BF_FEEDS, ..._POLY_FEEDS,
+    { file: 'liga-data.json', icon: '⚽', label: 'Top-5 Daten', ts: '_meta.dataUpdatedAt', warnH: 14, errH: 30, crit: false },
+    { file: 'mls-data.json', icon: '🇺🇸', label: 'MLS Daten', ts: '_meta.dataUpdatedAt', warnH: 14, errH: 30, crit: false }];
+  dyn.innerHTML = _stHead('🩺', 'Status — alle Live-Systeme', 'Was läuft, was hängt — Betfair · Polymarket · Top-5 · MLS auf einen Blick')
+    + _stBanner(vIco, vT, vS, vC)
+    + _stCard('🗂️ Systeme', 'Klick öffnet den Detail-Reiter', _stGridWrap([...cards.map(c => c.html), wmCard], 200))
+    + _stCard('📁 Feed-Frische — alle Systeme', 'aus dem Datenstand selbst · grün = im Soll · gelb = überfällig · rot = tot/fehlt', await _stFreshGrid(allFeeds));
+}
+function _stJump(ds) { _stDataset = ds; runStatusPage(true); }
+if (typeof window !== 'undefined') {
+  window._stJump = _stJump;
+  window._stRenderOverview = _stRenderOverview;
+  window._stRenderBetfairStatus = _stRenderBetfairStatus;
+  window._stRenderPolyStatus = _stRenderPolyStatus;
+  window._stShowDynamic = _stShowDynamic;
 }
