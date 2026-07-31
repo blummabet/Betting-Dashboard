@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "liga",
-    "generatedAt": "2026-07-31T08:51:54.104601+00:00",
+    "generatedAt": "2026-07-31T19:09:10.967507+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -2186,7 +2186,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 71,
-        "label": "Eigen 71% + Gegner 64% → 68%"
+        "label": "Eigen 71% + Gegner 60% → 67%"
       },
       "ratePct": 71,
       "seq": [
@@ -2205,10 +2205,10 @@
         "oppName": "FSV Mainz 05",
         "atHome": false,
         "date": "2026-08-29",
-        "oppRatePct": 64
+        "oppRatePct": 60
       },
-      "oppSupportPct": 64,
-      "matchupPct": 68
+      "oppSupportPct": 60,
+      "matchupPct": 67
     },
     {
       "teamId": "517",
@@ -2848,43 +2848,6 @@
       },
       "oppSupportPct": 60,
       "matchupPct": 84
-    },
-    {
-      "teamId": "52",
-      "team": "Crystal Palace",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/52.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 7,
-      "venue": "A",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 87,
-        "label": "Eigen 87% + Gegner 60% → 76%"
-      },
-      "ratePct": 87,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "45",
-        "oppName": "Everton",
-        "atHome": false,
-        "date": "2026-08-22",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 76
     },
     {
       "teamId": "64",
@@ -4132,10 +4095,10 @@
       "strong": true,
       "continuation": {
         "state": "intakt",
-        "ratePct": 69,
-        "label": "Eigen 69% + Gegner 71% → 70%"
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 71% → 69%"
       },
-      "ratePct": 69,
+      "ratePct": 67,
       "seq": [
         true,
         true,
@@ -4155,7 +4118,7 @@
         "oppRatePct": 71
       },
       "oppSupportPct": 71,
-      "matchupPct": 70
+      "matchupPct": 69
     },
     {
       "teamId": "185",
@@ -4171,7 +4134,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 71,
-        "label": "Eigen 71% + Gegner 54% → 64%"
+        "label": "Eigen 71% + Gegner 50% → 63%"
       },
       "ratePct": 71,
       "seq": [
@@ -4190,10 +4153,10 @@
         "oppName": "FSV Mainz 05",
         "atHome": false,
         "date": "2026-08-29",
-        "oppRatePct": 46
+        "oppRatePct": 50
       },
-      "oppSupportPct": 54,
-      "matchupPct": 64
+      "oppSupportPct": 50,
+      "matchupPct": 63
     },
     {
       "teamId": "42",
@@ -4346,6 +4309,57 @@
       },
       "oppSupportPct": 38,
       "matchupPct": 57
+    },
+    {
+      "teamId": "52",
+      "team": "Crystal Palace",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/52.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 7,
+      "venue": "A",
+      "strong": true,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 87,
+        "label": "Eigen 87% + Gegner 60% → 76% · Linie/Signale dagegen"
+      },
+      "ratePct": 87,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "45",
+        "oppName": "Everton",
+        "atHome": false,
+        "date": "2026-08-22",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 76,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 2,
+        "conviction": 2,
+        "names": [
+          "form_trend",
+          "xg_strength",
+          "chance_creation",
+          "transfer_shift",
+          "streak_momentum",
+          "venue_form"
+        ],
+        "market": "Unter 2.5 Tore"
+      }
     },
     {
       "teamId": "110",
@@ -5850,7 +5864,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 85,
-        "label": "Eigen 85% + Gegner 33% → 64%"
+        "label": "Eigen 85% + Gegner 36% → 65%"
       },
       "ratePct": 85,
       "seq": [
@@ -5867,10 +5881,10 @@
         "oppName": "Estac Troyes",
         "atHome": false,
         "date": "2026-08-22",
-        "oppRatePct": 33
+        "oppRatePct": 36
       },
-      "oppSupportPct": 33,
-      "matchupPct": 64
+      "oppSupportPct": 36,
+      "matchupPct": 65
     },
     {
       "teamId": "49",
@@ -6144,7 +6158,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 71,
-        "label": "Eigen 71% + Gegner 54% → 64%"
+        "label": "Eigen 71% + Gegner 50% → 63%"
       },
       "ratePct": 71,
       "seq": [
@@ -6163,10 +6177,10 @@
         "oppName": "FSV Mainz 05",
         "atHome": false,
         "date": "2026-08-29",
-        "oppRatePct": 46
+        "oppRatePct": 50
       },
-      "oppSupportPct": 54,
-      "matchupPct": 64
+      "oppSupportPct": 50,
+      "matchupPct": 63
     },
     {
       "teamId": "110",
@@ -6368,10 +6382,10 @@
       "strong": true,
       "continuation": {
         "state": "neutral",
-        "ratePct": 62,
-        "label": "Eigen 62% + Gegner 43% → 54%"
+        "ratePct": 58,
+        "label": "Eigen 58% + Gegner 43% → 52%"
       },
-      "ratePct": 62,
+      "ratePct": 58,
       "seq": [
         true,
         true,
@@ -6391,7 +6405,7 @@
         "oppRatePct": 43
       },
       "oppSupportPct": 43,
-      "matchupPct": 54
+      "matchupPct": 52
     },
     {
       "teamId": "63",
@@ -6480,7 +6494,7 @@
       "continuation": {
         "state": "neutral",
         "ratePct": 69,
-        "label": "Eigen 69% + Gegner 31% → 54%"
+        "label": "Eigen 69% + Gegner 33% → 55%"
       },
       "ratePct": 69,
       "seq": [
@@ -6498,10 +6512,10 @@
         "oppName": "Borussia Dortmund",
         "atHome": false,
         "date": "2026-08-29",
-        "oppRatePct": 31
+        "oppRatePct": 33
       },
-      "oppSupportPct": 31,
-      "matchupPct": 54
+      "oppSupportPct": 33,
+      "matchupPct": 55
     },
     {
       "teamId": "111",
@@ -8550,10 +8564,10 @@
       "strong": true,
       "continuation": {
         "state": "intakt",
-        "ratePct": 50,
-        "label": "Eigen 50% + Gegner 77% → 61%"
+        "ratePct": 55,
+        "label": "Eigen 55% + Gegner 77% → 64%"
       },
-      "ratePct": 50,
+      "ratePct": 55,
       "seq": [
         true,
         true,
@@ -8570,7 +8584,7 @@
         "oppRatePct": 77
       },
       "oppSupportPct": 77,
-      "matchupPct": 61
+      "matchupPct": 64
     },
     {
       "teamId": "40",
@@ -9357,41 +9371,6 @@
       "matchupPct": 53
     },
     {
-      "teamId": "110",
-      "team": "Estac Troyes",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/110.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 5,
-      "venue": "H",
-      "strong": true,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 15% → 46%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "114",
-        "oppName": "Paris FC",
-        "atHome": true,
-        "date": "2026-08-22",
-        "oppRatePct": 85
-      },
-      "oppSupportPct": 15,
-      "matchupPct": 46
-    },
-    {
       "teamId": "489",
       "team": "AC Milan",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/489.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -9589,10 +9568,10 @@
       "strong": true,
       "continuation": {
         "state": "neutral",
-        "ratePct": 69,
-        "label": "Eigen 69% + Gegner 31% → 54%"
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 31% → 53%"
       },
-      "ratePct": 69,
+      "ratePct": 67,
       "seq": [
         true,
         true,
@@ -9612,7 +9591,7 @@
         "oppRatePct": 69
       },
       "oppSupportPct": 31,
-      "matchupPct": 54
+      "matchupPct": 53
     },
     {
       "teamId": "168",
@@ -9852,6 +9831,41 @@
       "matchupPct": 45
     },
     {
+      "teamId": "110",
+      "team": "Estac Troyes",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/110.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 5,
+      "venue": "H",
+      "strong": true,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 64,
+        "label": "Eigen 64% + Gegner 15% → 44%"
+      },
+      "ratePct": 64,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "114",
+        "oppName": "Paris FC",
+        "atHome": true,
+        "date": "2026-08-22",
+        "oppRatePct": 85
+      },
+      "oppSupportPct": 15,
+      "matchupPct": 44
+    },
+    {
       "teamId": "505",
       "team": "Inter",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/505.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -9865,7 +9879,7 @@
       "continuation": {
         "state": "wackelt",
         "ratePct": 43,
-        "label": "Eigen 43% + Gegner 38% → 41%"
+        "label": "Eigen 43% + Gegner 33% → 39%"
       },
       "ratePct": 43,
       "seq": [
@@ -9882,10 +9896,10 @@
         "oppName": "Monza",
         "atHome": true,
         "date": "2026-08-22",
-        "oppRatePct": 38
+        "oppRatePct": 33
       },
-      "oppSupportPct": 38,
-      "matchupPct": 41
+      "oppSupportPct": 33,
+      "matchupPct": 39
     },
     {
       "teamId": "108",
@@ -10258,42 +10272,6 @@
         "oppRatePct": 47
       },
       "oppSupportPct": 47,
-      "matchupPct": 71
-    },
-    {
-      "teamId": "45",
-      "team": "Everton",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/45.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 87% → 71%"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "52",
-        "oppName": "Crystal Palace",
-        "atHome": true,
-        "date": "2026-08-22",
-        "oppRatePct": 87
-      },
-      "oppSupportPct": 87,
       "matchupPct": 71
     },
     {
@@ -12072,17 +12050,16 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 69,
-        "label": "Eigen 69% + Gegner 62% → 66%"
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 62% → 65%"
       },
-      "ratePct": 69,
+      "ratePct": 67,
       "seq": [
         true,
         true,
         true,
         true,
-        false,
-        true
+        false
       ],
       "xgBacked": null,
       "next": {
@@ -12093,7 +12070,7 @@
         "oppRatePct": 62
       },
       "oppSupportPct": 62,
-      "matchupPct": 66
+      "matchupPct": 65
     },
     {
       "teamId": "1346",
@@ -12849,18 +12826,17 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 69,
-        "label": "Eigen 69% + Gegner 71% → 70%"
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 71% → 69%"
       },
-      "ratePct": 69,
+      "ratePct": 67,
       "seq": [
         true,
         true,
         true,
         true,
         false,
-        false,
-        true
+        false
       ],
       "xgBacked": null,
       "next": {
@@ -12871,7 +12847,7 @@
         "oppRatePct": 71
       },
       "oppSupportPct": 71,
-      "matchupPct": 70
+      "matchupPct": 69
     },
     {
       "teamId": "175",
@@ -12887,7 +12863,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 77,
-        "label": "Eigen 77% + Gegner 46% → 65%"
+        "label": "Eigen 77% + Gegner 42% → 63%"
       },
       "ratePct": 77,
       "seq": [
@@ -12904,10 +12880,10 @@
         "oppName": "Borussia Dortmund",
         "atHome": false,
         "date": "2026-08-29",
-        "oppRatePct": 46
+        "oppRatePct": 42
       },
-      "oppSupportPct": 46,
-      "matchupPct": 65
+      "oppSupportPct": 42,
+      "matchupPct": 63
     },
     {
       "teamId": "185",
@@ -12923,7 +12899,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 71,
-        "label": "Eigen 71% + Gegner 64% → 68%"
+        "label": "Eigen 71% + Gegner 60% → 67%"
       },
       "ratePct": 71,
       "seq": [
@@ -12942,10 +12918,10 @@
         "oppName": "FSV Mainz 05",
         "atHome": false,
         "date": "2026-08-29",
-        "oppRatePct": 64
+        "oppRatePct": 60
       },
-      "oppSupportPct": 64,
-      "matchupPct": 68
+      "oppSupportPct": 60,
+      "matchupPct": 67
     },
     {
       "teamId": "111",
@@ -14306,17 +14282,16 @@
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 69,
-        "label": "Eigen 69% + Gegner 31% → 54%"
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 31% → 53%"
       },
-      "ratePct": 69,
+      "ratePct": 67,
       "seq": [
         true,
         true,
         true,
         true,
         false,
-        true,
         true
       ],
       "xgBacked": null,
@@ -14328,7 +14303,7 @@
         "oppRatePct": 69
       },
       "oppSupportPct": 31,
-      "matchupPct": 54
+      "matchupPct": 53
     },
     {
       "teamId": "33",
@@ -14443,6 +14418,56 @@
       },
       "oppSupportPct": 7,
       "matchupPct": 39
+    },
+    {
+      "teamId": "45",
+      "team": "Everton",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/45.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 4,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 87% → 71% · Linie/Signale dagegen"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "52",
+        "oppName": "Crystal Palace",
+        "atHome": true,
+        "date": "2026-08-22",
+        "oppRatePct": 87
+      },
+      "oppSupportPct": 87,
+      "matchupPct": 71,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 2,
+        "conviction": 2,
+        "names": [
+          "form_trend",
+          "xg_strength",
+          "chance_creation",
+          "transfer_shift",
+          "streak_momentum",
+          "venue_form"
+        ],
+        "market": "Unter 2.5 Tore"
+      }
     },
     {
       "teamId": "64",
@@ -15644,44 +15669,6 @@
       },
       "oppSupportPct": 53,
       "matchupPct": 65
-    },
-    {
-      "teamId": "52",
-      "team": "Crystal Palace",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/52.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 87,
-        "label": "Eigen 87% + Gegner 60% → 76%"
-      },
-      "ratePct": 87,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "45",
-        "oppName": "Everton",
-        "atHome": false,
-        "date": "2026-08-22",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 76
     },
     {
       "teamId": "523",
@@ -17756,6 +17743,44 @@
       "matchupPct": 63
     },
     {
+      "teamId": "505",
+      "team": "Inter",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/505.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ITA",
+      "leagueName": "Serie A",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 57,
+        "label": "Eigen 57% + Gegner 67% → 61%"
+      },
+      "ratePct": 57,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "1579",
+        "oppName": "Monza",
+        "atHome": true,
+        "date": "2026-08-22",
+        "oppRatePct": 33
+      },
+      "oppSupportPct": 67,
+      "matchupPct": 61
+    },
+    {
       "teamId": "512",
       "team": "Frosinone",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/512.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -18030,7 +18055,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 62,
-        "label": "Eigen 62% + Gegner 69% → 65%"
+        "label": "Eigen 62% + Gegner 67% → 64%"
       },
       "ratePct": 62,
       "seq": [
@@ -18046,10 +18071,10 @@
         "oppName": "Le Havre",
         "atHome": false,
         "date": "2026-08-23",
-        "oppRatePct": 69
+        "oppRatePct": 67
       },
-      "oppSupportPct": 69,
-      "matchupPct": 65
+      "oppSupportPct": 67,
+      "matchupPct": 64
     },
     {
       "teamId": "96",
@@ -18358,10 +18383,10 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 69,
-        "label": "Eigen 69% + Gegner 71% → 70%"
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 71% → 69%"
       },
-      "ratePct": 69,
+      "ratePct": 67,
       "seq": [
         true,
         true,
@@ -18379,7 +18404,7 @@
         "oppRatePct": 71
       },
       "oppSupportPct": 71,
-      "matchupPct": 70
+      "matchupPct": 69
     },
     {
       "teamId": "172",
@@ -20410,18 +20435,17 @@
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 62,
-        "label": "Eigen 62% + Gegner 43% → 54%"
+        "ratePct": 58,
+        "label": "Eigen 58% + Gegner 43% → 52%"
       },
-      "ratePct": 62,
+      "ratePct": 58,
       "seq": [
         true,
         true,
         true,
         false,
         false,
-        false,
-        true
+        false
       ],
       "xgBacked": null,
       "next": {
@@ -20432,7 +20456,7 @@
         "oppRatePct": 43
       },
       "oppSupportPct": 43,
-      "matchupPct": 54
+      "matchupPct": 52
     },
     {
       "teamId": "1579",
@@ -20447,10 +20471,10 @@
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 62,
-        "label": "Eigen 62% + Gegner 43% → 54%"
+        "ratePct": 58,
+        "label": "Eigen 58% + Gegner 43% → 52%"
       },
-      "ratePct": 62,
+      "ratePct": 58,
       "seq": [
         true,
         true,
@@ -20468,7 +20492,7 @@
         "oppRatePct": 43
       },
       "oppSupportPct": 43,
-      "matchupPct": 54
+      "matchupPct": 52
     },
     {
       "teamId": "488",
@@ -20582,44 +20606,6 @@
       },
       "oppSupportPct": 54,
       "matchupPct": 49
-    },
-    {
-      "teamId": "505",
-      "team": "Inter",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/505.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 3,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 57,
-        "label": "Eigen 57% + Gegner 62% → 59%"
-      },
-      "ratePct": 57,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "1579",
-        "oppName": "Monza",
-        "atHome": true,
-        "date": "2026-08-22",
-        "oppRatePct": 38
-      },
-      "oppSupportPct": 62,
-      "matchupPct": 59
     },
     {
       "teamId": "512",
@@ -21652,6 +21638,58 @@
       "matchupPct": 43
     },
     {
+      "teamId": "52",
+      "team": "Crystal Palace",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/52.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 87,
+        "label": "Eigen 87% + Gegner 60% → 76% · Linie/Signale dagegen"
+      },
+      "ratePct": 87,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "45",
+        "oppName": "Everton",
+        "atHome": false,
+        "date": "2026-08-22",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 76,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 2,
+        "conviction": 2,
+        "names": [
+          "form_trend",
+          "xg_strength",
+          "chance_creation",
+          "transfer_shift",
+          "streak_momentum",
+          "venue_form"
+        ],
+        "market": "Unter 2.5 Tore"
+      }
+    },
+    {
       "teamId": "63",
       "team": "Leeds",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/63.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -22104,10 +22142,9 @@
       "matchupPct": 56,
       "signalInfo": {
         "state": "contradict",
-        "count": 3,
+        "count": 2,
         "conviction": 3,
         "names": [
-          "lead_lag_bias",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
