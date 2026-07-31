@@ -540,3 +540,23 @@ test('×-Norm: zu wenige Vergleichsspiele → kein Ratio (Median instabil)', () 
   w._bfState._normBase = null; w._bfState._cohCache = {};
   assert.strictEqual(w._bfNormRatio(w._bfState.data.matches[1]), null, 'unter NORM_MIN_PEERS → null');
 });
+
+
+test('Frisches Geld respektiert dieselbe Tier-Schwelle wie Hotspots (kein Klein-Liga-Zufluss)', () => {
+  const { w } = boot();
+  // Ein qualifiziertes Groß-Spiel + ein Klein-Spiel unter der Schwelle — beide mit frischem Zufluss.
+  w._bfState.data = { matches: [
+    { matchId: 900, home: 'Gross H', away: 'Gross A', league: 'Testliga', country: 'AT', kickoff: '2031-01-01T20:00:00Z', liveInfo: {},
+      markets: { 'Over/Under 2.5 Goals': { runners: [ { name: 'Under 2.5', vol: 12000, odd: 1.8 }, { name: 'Over 2.5', vol: 8000, odd: 2.1 } ] } } },
+    { matchId: 901, home: 'Klein H', away: 'Klein A', league: 'Testliga', country: 'AT', kickoff: '2031-01-01T20:00:00Z', liveInfo: {},
+      markets: { 'Over/Under 2.5 Goals': { runners: [ { name: 'Under 2.5', vol: 1800, odd: 1.7 }, { name: 'Over 2.5', vol: 1200, odd: 2.2 } ] } } },
+  ] };
+  w._bfState.hist = {
+    '900': [ { mkv: { 'Over/Under 2.5 Goals': 12000 } }, { mkv: { 'Over/Under 2.5 Goals': 20000 } } ],  // +€8K
+    '901': [ { mkv: { 'Over/Under 2.5 Goals': 800 } },   { mkv: { 'Over/Under 2.5 Goals': 3000 } } ],    // +€2,2K, aber Spiel unter Schwelle
+  };
+  w._bfState._cohCache = {}; w._bfState._mixBase = null; w._bfState._normBase = null;
+  const html = w._renderBetfairRadar();
+  assert.match(html, /Gross H/, 'qualifiziertes Groß-Spiel erscheint');
+  assert.doesNotMatch(html, /Klein H/, 'Klein-Spiel unter Schwelle taucht NICHT mehr auf (Frisches Geld gegated)');
+});
