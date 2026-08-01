@@ -43,7 +43,7 @@ function computeVerdict(pick) {
   // ≥7pp → green (BET signal); 0–6pp → yellow (neutral); <0pp → orange/red (fade).
   let modSig = 0, modEmoji = '⬜', modTxt = '—';
   if (pick.modelOdds != null && oddsNum != null) {
-    const _ep = Math.round((1 / pick.modelOdds - (1 / oddsNum) * 1.03) * 100);
+    const _ep = Math.round((1 / pick.modelOdds - (1 / oddsNum) / 1.05) * 100);   // 31.07.2026 Lucas-Audit: Devig teilt (Ueberrunde ~1.05), vorher *1.03 = falschrum (wie schon im Steam-Pfad korrigiert)
     if      (_ep >= 7)  { modSig =  1; modEmoji = '🟢'; modTxt = `+${_ep}pp`; }
     else if (_ep >= 0)  { modSig =  0; modEmoji = '🟡'; modTxt = `+${_ep}pp`; }
     else if (_ep >= -4) { modSig = -1; modEmoji = '🟠'; modTxt = `${_ep}pp`;  }
