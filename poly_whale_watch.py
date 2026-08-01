@@ -47,7 +47,7 @@ CHAT_ID        = (os.environ.get("TELEGRAM_TRADES_CHAT_ID") or "").strip()
 
 # 26.07.2026 (Lucas: „$5K ohne Record ist Rauschen"): gestaffelt. Ohne Track-Record zählt NUR
 # Größe → hohe Schwelle. Mit Record (n≥MIN_TR) ist es smart → niedrige Schwelle.
-MIN_USD_UNTRACKED = float(os.environ.get("WHALE_MIN_USD")         or 25000)
+MIN_USD_UNTRACKED = float(os.environ.get("WHALE_MIN_USD")         or 50000)   # 01.08.2026 (Lucas): rauf von 25K — ohne Record ist Kleinvieh nur Rauschen
 MIN_USD_TRACKED   = float(os.environ.get("WHALE_MIN_USD_TRACKED") or 5000)
 MIN_HITRATE       = float(os.environ.get("WHALE_MIN_HITRATE")     or 0.5)   # „smart" = Record UND ≥50% Treffer
 FRESH_DAYS  = int(os.environ.get("WHALE_FRESH_DAYS")  or 2)
@@ -162,26 +162,33 @@ def _esc(x) -> str:
     return html.escape(str(x if x is not None else ""))
 
 
-def build_card(pos: dict, scores: dict, restock: bool) -> str:
+def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None) -> str:
+    """Trades-Push (01.08.2026, Lucas: „entscheidungsreif") — Matchup, Anpfiff, Einstieg→Jetzt-Preis,
+    Wallet-Qualität, Markt-Link. Ein Push = eine fertige Wett-Entscheidung."""
     emoji, sport = _sport(pos.get("league"))
     side  = pos.get("side") or "?"
-    price = pos.get("firstPrice")
+    key   = pos.get("key")
     usd   = pos.get("usd") or 0
-    header = "🐋 <b>Whale stockt auf</b>" if restock else "🐋 <b>Großer Whale-Einstieg</b>"
-    lines = [
-        header,
-        f"{emoji} <b>{_usd(usd)}</b> auf <b>{side}</b> @ {_cents(price)}",
-        f"{sport}",
-    ]
-    lines.append("")
-    lines.append(_wallet_line(scores, pos.get("wallet")))
-    # Preiskontext: klarer Außenseiter, gegen den der Markt steht
+    matchup = _matchup(key, broad)
+    ko      = _kickoff_txt(key, broad)
+    header  = "🐋 <b>Whale stockt auf</b>" if restock else "🐋 <b>Großer Whale-Einstieg</b>"
+    lines = ["%s · %s %s" % (header, emoji, _esc(sport))]
+    l2 = _esc(matchup) if matchup else "<b>%s</b>" % _esc(side)
+    if ko:
+        l2 += " · %s" % ko
+    lines.append(l2)
+    lines.append("💰 <b>%s</b> auf <b>%s</b>" % (_usd(usd), _esc(side)))
+    pm = _price_move(pos)
+    if pm:
+        lines.append(pm)
     try:
-        if float(price) < 0.45:
-            lines.append("💡 Unter 50¢ = der Markt sieht die Seite als Außenseiter — die Wallet hält dagegen.")
+        if float(pos.get("firstPrice")) < 0.45:
+            lines.append("💡 Außenseiter-Seite — die Wallet hält gegen den Markt")
     except Exception:
         pass
-    lines.append("\n🤖 CocoBet Whale-Watch")
+    lines.append(_wallet_line(scores, pos.get("wallet")))
+    if key:
+        lines.append('<a href="https://polymarket.com/event/%s">→ Markt öffnen ↗</a>' % _esc(key))
     return "\n".join(lines)
 
 
@@ -266,6 +273,33 @@ def _matchup(key, broad):
     return " v ".join(names[:2]) if len(names) >= 2 else None
 
 
+def _kickoff_txt(key, broad):
+    """„Anpfiff in Xh/Min/d" aus poly_money_broad_close (hoursToKickoff). None wenn unbekannt/vorbei."""
+    m = (broad or {}).get(key) if isinstance(broad, dict) else None
+    h = (m or {}).get("hoursToKickoff") if isinstance(m, dict) else None
+    if not isinstance(h, (int, float)) or h < 0:
+        return None
+    if h < 1:
+        return "Anpfiff in %d Min" % round(h * 60)
+    if h < 48:
+        return ("Anpfiff in %.1fh" % h).replace(".0h", "h")
+    return "Anpfiff in %dd" % round(h / 24)
+
+
+def _price_move(pos):
+    """Einstieg → jetzt (entryPrice/firstPrice → lastPrice). Zeigt, ob der Preis noch handelbar ist."""
+    entry = pos.get("entryPrice")
+    if not isinstance(entry, (int, float)):
+        entry = pos.get("firstPrice")
+    now = pos.get("lastPrice")
+    if not isinstance(entry, (int, float)):
+        return None
+    if not isinstance(now, (int, float)) or abs(now - entry) < 0.005:
+        return "Einstieg %s" % _cents(entry)   # nur Einstieg, wenn kein/gleicher Jetzt-Preis
+    arrow = "↗" if now > entry else "↘"
+    return "Einstieg %s → jetzt %s %s" % (_cents(entry), _cents(now), arrow)
+
+
 def _pub_wallet_line(scores: dict, wallet) -> str:
     """Public: nur ein BEWÄHRTES Wallet kriegt die „🔥 scharf"-Zeile (Record n≥PUB_MIN_TR & ≥Treffer),
     inkl. Ø CLV und — sobald der Runner die echte P&L zieht — der Lifetime-Bilanz. Sonst neutral."""
@@ -339,13 +373,16 @@ def main():
     seen   = _load(SEEN_FILE, {})
     now    = datetime.now(timezone.utc)
 
-    cand = select(track, seen, now)
-    print(f"  {len(cand)} alertwürdige Position(en) (≥ {_usd(MIN_USD_TRACKED)} mit / {_usd(MIN_USD_UNTRACKED)} ohne Record, frisch)")
+    broad = _load(BROAD_FILE, {})   # Matchup/Anpfiff/Preis-Kontext für die Trades-Cards
+    # (01.08.2026, Lucas: 1a) Trades-Channel bekommt denselben Sanity-Filter wie Public:
+    # nur Sport + Preis 3–97¢ → kein @100¢-schon-entschieden, kein Politik/Krypto-Müll.
+    cand = [c for c in select(track, seen, now) if _pub_ok(c[1])]
+    print(f"  {len(cand)} alertwürdige Position(en) (Sport + 3–97¢, ≥ {_usd(MIN_USD_TRACKED)} mit / {_usd(MIN_USD_UNTRACKED)} ohne Record, frisch)")
 
     now_iso = now.strftime("%Y-%m-%dT%H:%M:%SZ")
     sent = 0
     for pkey, pos, restock in cand[:MAX_ALERTS]:
-        card = build_card(pos, scores, restock)
+        card = build_card(pos, scores, restock, broad)
         if tg_send(card):
             sent += 1
             seen[pkey] = {"usd": float(pos.get("usd") or 0), "ts": now_iso}
@@ -355,7 +392,6 @@ def main():
     print(f"  ✅  {sent} Whale-Alert(s) (Trades) gesendet.")
 
     # 🐋 Öffentlicher Whale-Watch: kuratiert (riesig ab $100K ODER bewährt ab $25K), eigener Dedup.
-    broad    = _load(BROAD_FILE, {})
     pub_seen = _load(PUB_SEEN_FILE, {})
     pub_cand = select(track, pub_seen, now, PUB_MIN_USD_UNTRACKED, PUB_MIN_USD_TRACKED,
                       PUB_MIN_TR, PUB_MIN_HITRATE)

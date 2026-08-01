@@ -38,7 +38,7 @@ class TestTrackRecord(unittest.TestCase):
 
 
 class TestSelect(unittest.TestCase):
-    # Gestaffelt: ohne Record Schwelle $25k, mit Record (n≥3) $5k.
+    # Gestaffelt: ohne Record Schwelle $50k, mit Record (n≥3) $5k.
     def _tracked(self, wallet="0xREC"):
         return {"scores": {wallet: {"n": 5, "wins": 3}}}
 
@@ -47,7 +47,7 @@ class TestSelect(unittest.TestCase):
         self.assertEqual(P.select(track, {}, NOW), [])
 
     def test_untracked_big_included(self):
-        track = {"open": {"a": _pos(30000)}}
+        track = {"open": {"a": _pos(60000)}}
         got = P.select(track, {}, NOW)
         self.assertEqual(len(got), 1); self.assertFalse(got[0][2])
 
@@ -64,7 +64,7 @@ class TestSelect(unittest.TestCase):
                  "scores": {"0xBAD": {"n": 4, "wins": 0}}}
         self.assertEqual(P.select(track, {}, NOW), [])
         # aber groß genug (≥$25k) kommt es trotzdem durch (reines Größen-Signal)
-        big = {"open": {"a": _pos(30000, wallet="0xBAD")},
+        big = {"open": {"a": _pos(60000, wallet="0xBAD")},
                "scores": {"0xBAD": {"n": 4, "wins": 0}}}
         self.assertEqual(len(P.select(big, {}, NOW)), 1)
 
@@ -78,8 +78,8 @@ class TestSelect(unittest.TestCase):
         self.assertEqual(P.select(track, seen, NOW), [])
 
     def test_restock_realerts(self):
-        track = {"open": {"a": _pos(45000)}}           # von 27000 → 45000 (≥ +50%)
-        seen = {"a": {"usd": 27000}}
+        track = {"open": {"a": _pos(65000)}}           # von 40000 → 65000 (≥ +50%, ≥ $50k)
+        seen = {"a": {"usd": 40000}}
         got = P.select(track, seen, NOW)
         self.assertEqual(len(got), 1); self.assertTrue(got[0][2])
 
