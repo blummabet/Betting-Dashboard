@@ -131,6 +131,31 @@ def test_history_anhaengen_und_prunen():
     assert "35785202" not in B.prune_history(old, now=T0)
 
 
+def test_dedup_matchups_keeps_volume_winner():
+    """Betwatch-Doppel-Listing (ein Spiel, zwei matchIds) → nur der Volumen-Sieger bleibt."""
+    snaps = [
+        {"matchId": "1", "home": "FC Cincinnati", "away": "San Jose",
+         "kickoff": "2026-08-01T23:30:00Z", "totalVol": 29120},
+        {"matchId": "2", "home": "FC Cincinnati", "away": "San Jose",
+         "kickoff": "2026-08-01T23:30:00Z", "totalVol": 0},
+        {"matchId": "3", "home": "Real Madrid", "away": "Fiorentina",
+         "kickoff": "2026-08-01T20:00:00Z", "totalVol": 298000},
+    ]
+    out = B.dedup_matchups(snaps)
+    assert len(out) == 2
+    assert out[0]["matchId"] == "1"          # Volumen-Sieger behalten
+    assert [o["matchId"] for o in out] == ["1", "3"]  # Reihenfolge erhalten
+
+
+def test_dedup_matchups_rematch_not_merged():
+    """Gleiche Paarung an VERSCHIEDENEN Tagen (Rückspiel) darf NICHT zusammengeführt werden."""
+    snaps = [
+        {"matchId": "a", "home": "X", "away": "Y", "kickoff": "2026-08-01T20:00:00Z", "totalVol": 10},
+        {"matchId": "b", "home": "X", "away": "Y", "kickoff": "2026-08-08T20:00:00Z", "totalVol": 20},
+    ]
+    assert len(B.dedup_matchups(snaps)) == 2
+
+
 if __name__ == "__main__":
     import types
     fns = [v for k, v in dict(globals()).items()

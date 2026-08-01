@@ -140,6 +140,25 @@ def build_snapshot(ev, now=None):
     }
 
 
+def dedup_matchups(snaps):
+    """Betwatch listet ein Spiel gelegentlich unter ZWEI matchIds (Doppel-Event) → dieselbe Karte
+    erscheint doppelt im Radar (01.08.2026, Lucas). select_ids dedupt nur per matchId, nicht per
+    Paarung. Hier: pro (Heim, Auswaerts, Anpfiff-Tag) nur den Eintrag mit dem MEISTEN Volumen behalten
+    (das Doppel-Listing hat i.d.R. eine leere Zweit-Karte). Reihenfolge bleibt (erstes Auftreten)."""
+    best, order = {}, []
+    for s in snaps:
+        key = ((s.get("home") or "").strip().lower(),
+               (s.get("away") or "").strip().lower(),
+               (s.get("kickoff") or "")[:10])
+        cur = best.get(key)
+        if cur is None:
+            best[key] = s
+            order.append(key)
+        elif (s.get("totalVol") or 0) > (cur.get("totalVol") or 0):
+            best[key] = s
+    return [best[k] for k in order]
+
+
 def select_ids(parsed, now=None, window_h=WINDOW_H, cap=MAX_DETAIL, prio_window_h=PRIORITY_WINDOW_H):
     """Welche Matches bekommen einen (teuren) Detail-Call: alle LIVE zuerst, dann Top-5/MLS im WEITEN
     Fenster (prio_window_h, ~3 Tage), dann alle anderen im Standard-Fenster (window_h, 26h). So werden
@@ -309,6 +328,7 @@ def main():
         snaps.append(snap)
         hist = append_history(hist, snap, now=now)
 
+    snaps = dedup_matchups(snaps)   # Doppel-Listings (zwei matchIds, ein Spiel) zusammenführen
     if not snaps:
         print("  ⚠️  Keine Snapshots gebaut — bestehende Preise bleiben (kein Wipe).")
         return 1
