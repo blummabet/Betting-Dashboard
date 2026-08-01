@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "mls",
-    "generatedAt": "2026-08-01T09:06:48.457726+00:00",
+    "generatedAt": "2026-08-01T20:24:53.036432+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -121,6 +121,44 @@
       "matchupPct": 85
     },
     {
+      "teamId": "1613",
+      "team": "Columbus Crew",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1613.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 10,
+      "venue": "H",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 93,
+        "label": "Eigen 93% + Gegner 73% → 85%"
+      },
+      "ratePct": 93,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "9568",
+        "oppName": "Inter Miami",
+        "atHome": false,
+        "date": "2026-08-01",
+        "oppRatePct": 73
+      },
+      "oppSupportPct": 73,
+      "matchupPct": 85
+    },
+    {
       "teamId": "1601",
       "team": "Toronto FC",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1601.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -128,7 +166,7 @@
       "leagueName": "Major League Soccer",
       "type": "bttsYes",
       "market": "Beide Teams treffen",
-      "length": 10,
+      "length": 9,
       "venue": "H",
       "strong": true,
       "continuation": {
@@ -166,7 +204,7 @@
       "leagueName": "Major League Soccer",
       "type": "scored",
       "market": "Team trifft",
-      "length": 10,
+      "length": 9,
       "venue": "H",
       "strong": true,
       "continuation": {
@@ -195,44 +233,6 @@
       },
       "oppSupportPct": 73,
       "matchupPct": 81
-    },
-    {
-      "teamId": "1613",
-      "team": "Columbus Crew",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1613.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 10,
-      "venue": "H",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 93,
-        "label": "Eigen 93% + Gegner 73% → 85%"
-      },
-      "ratePct": 93,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "9568",
-        "oppName": "Inter Miami",
-        "atHome": false,
-        "date": "2026-08-01",
-        "oppRatePct": 73
-      },
-      "oppSupportPct": 73,
-      "matchupPct": 85
     },
     {
       "teamId": "1606",
@@ -2925,6 +2925,82 @@
       "matchupPct": 39
     },
     {
+      "teamId": "1604",
+      "team": "New York City FC",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1604.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "bttsYes",
+      "market": "Beide Teams treffen",
+      "length": 4,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 73% → 65%"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "1599",
+        "oppName": "Philadelphia Union",
+        "atHome": true,
+        "date": "2026-08-16",
+        "oppRatePct": 73
+      },
+      "oppSupportPct": 73,
+      "matchupPct": 65
+    },
+    {
+      "teamId": "1604",
+      "team": "New York City FC",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1604.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 4,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 73,
+        "label": "Eigen 73% + Gegner 80% → 76%"
+      },
+      "ratePct": 73,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "1599",
+        "oppName": "Philadelphia Union",
+        "atHome": true,
+        "date": "2026-08-16",
+        "oppRatePct": 80
+      },
+      "oppSupportPct": 80,
+      "matchupPct": 76
+    },
+    {
       "teamId": "1606",
       "team": "Real Salt Lake",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1606.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -3566,6 +3642,44 @@
       },
       "oppSupportPct": 43,
       "matchupPct": 63
+    },
+    {
+      "teamId": "1604",
+      "team": "New York City FC",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1604.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 4,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 75,
+        "label": "Eigen 75% + Gegner 60% → 69%"
+      },
+      "ratePct": 75,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "1599",
+        "oppName": "Philadelphia Union",
+        "atHome": true,
+        "date": "2026-08-16",
+        "oppRatePct": 40
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 69
     },
     {
       "teamId": "1610",
@@ -4470,48 +4584,10 @@
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1604.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "MLS",
       "leagueName": "Major League Soccer",
-      "type": "bttsYes",
-      "market": "Beide Teams treffen",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 73% → 65%"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "1599",
-        "oppName": "Philadelphia Union",
-        "atHome": true,
-        "date": "2026-08-16",
-        "oppRatePct": 73
-      },
-      "oppSupportPct": 73,
-      "matchupPct": 65
-    },
-    {
-      "teamId": "1604",
-      "team": "New York City FC",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1604.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
       "type": "scored",
       "market": "Team trifft",
       "length": 3,
-      "venue": "all",
+      "venue": "H",
       "strong": false,
       "continuation": {
         "state": "intakt",
@@ -4525,7 +4601,79 @@
         true,
         false,
         true,
+        true
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "1599",
+        "oppName": "Philadelphia Union",
+        "atHome": true,
+        "date": "2026-08-16",
+        "oppRatePct": 80
+      },
+      "oppSupportPct": 80,
+      "matchupPct": 76
+    },
+    {
+      "teamId": "1604",
+      "team": "New York City FC",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1604.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "unbeaten",
+      "market": "Ungeschlagen",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 80% → 68%"
+      },
+      "ratePct": 60,
+      "seq": [
         true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "1599",
+        "oppName": "Philadelphia Union",
+        "atHome": true,
+        "date": "2026-08-16",
+        "oppRatePct": 80
+      },
+      "oppSupportPct": 80,
+      "matchupPct": 68
+    },
+    {
+      "teamId": "1604",
+      "team": "New York City FC",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1604.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "unbeaten",
+      "market": "Ungeschlagen",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 80% → 68%"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
         true,
         false
       ],
@@ -4538,7 +4686,7 @@
         "oppRatePct": 80
       },
       "oppSupportPct": 80,
-      "matchupPct": 76
+      "matchupPct": 68
     },
     {
       "teamId": "1606",
@@ -5360,103 +5508,30 @@
       "matchupPct": 63
     },
     {
-      "teamId": "1601",
-      "team": "Toronto FC",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1601.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 79,
-        "label": "Eigen 79% + Gegner 50% → 67%"
-      },
-      "ratePct": 79,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "1609",
-        "oppName": "New England Revolution",
-        "atHome": true,
-        "date": "2026-08-15",
-        "oppRatePct": 50
-      },
-      "oppSupportPct": 50,
-      "matchupPct": 67
-    },
-    {
-      "teamId": "1601",
-      "team": "Toronto FC",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1601.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
-      "length": 3,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 79,
-        "label": "Eigen 79% + Gegner 50% → 67%"
-      },
-      "ratePct": 79,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "1609",
-        "oppName": "New England Revolution",
-        "atHome": true,
-        "date": "2026-08-15",
-        "oppRatePct": 50
-      },
-      "oppSupportPct": 50,
-      "matchupPct": 67
-    },
-    {
       "teamId": "1604",
       "team": "New York City FC",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1604.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "MLS",
       "leagueName": "Major League Soccer",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
+      "type": "cards",
+      "market": "Über 3,5 Karten",
       "length": 3,
       "venue": "all",
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 75,
-        "label": "Eigen 75% + Gegner 60% → 69%"
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 53% → 61%"
       },
-      "ratePct": 75,
+      "ratePct": 67,
       "seq": [
         true,
         true,
         true,
         false,
         true,
-        false,
         true,
+        false,
         true
       ],
       "xgBacked": null,
@@ -5465,10 +5540,10 @@
         "oppName": "Philadelphia Union",
         "atHome": true,
         "date": "2026-08-16",
-        "oppRatePct": 40
+        "oppRatePct": 53
       },
-      "oppSupportPct": 60,
-      "matchupPct": 69
+      "oppSupportPct": 53,
+      "matchupPct": 61
     },
     {
       "teamId": "1607",
@@ -5730,44 +5805,6 @@
       },
       "oppSupportPct": 64,
       "matchupPct": 69
-    },
-    {
-      "teamId": "1604",
-      "team": "New York City FC",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1604.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 53,
-        "label": "Eigen 53% + Gegner 60% → 56%"
-      },
-      "ratePct": 53,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "1599",
-        "oppName": "Philadelphia Union",
-        "atHome": true,
-        "date": "2026-08-16",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 56
     },
     {
       "teamId": "1614",
