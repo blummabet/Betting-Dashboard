@@ -249,7 +249,7 @@ class TestPublicMoneyflow(unittest.TestCase):
              "league": "CONMEBOL Copa Sudamericana", "market": "First Half Goals 1.5", "total": 89400,
              "leadLabel": "Under 1.5 Goals", "leadShare": 0.86, "leadOdd": 1.53}
         msg = BA.build_public_message(a)
-        self.assertIn("🟡 <b>Betfair Halftime Flow</b>", msg)
+        self.assertIn("🔵 <b>Betfair Halftime Flow</b>", msg)
         self.assertIn("HZ Over/Under 1.5", msg)
         self.assertIn("<b>€89.4K</b> gematcht", msg)
         self.assertIn("Check: <b>Under 1.5 Goals</b> (86%) @1.53", msg)

@@ -417,6 +417,36 @@
     return out + '</div>';
   }
 
+  // ── 🔥 Heute spielenswert (01.08.2026, Lucas) — verdichtet die Poly-Wallet-Signale (Geld · Steam ·
+  //    scharfe Wallets · Pinnacle) zu 2–3 konkreten Plays. Nutzt den Scorer aus poly-wallets.js.
+  function _mdPlayRow(r) {
+    var bet = r.verdict === 'BET', vcol = bet ? A.good : A.gold;
+    var badge = '<span style="display:inline-block;padding:1px 7px;border-radius:10px;border:1px solid ' + vcol + ';color:' + vcol + ';font-weight:800;font-size:10px;margin-right:6px">' + r.verdict + '</span>';
+    var icon = (typeof _pwSportIcon === 'function') ? _pwSportIcon(r.league) + ' ' : '';
+    var htk = (r.htk == null) ? '' : (r.htk < 0 ? 'live' : r.htk < 1 ? '<1h' : Math.round(r.htk) + 'h');
+    var link = 'https://polymarket.com/event/' + encodeURIComponent(r.key || '');
+    var main = badge + icon + esc(String(r.match).slice(0, 42)) + ' <span style="color:var(--mi3)">→</span> <b style="color:#4cc2ff">' + esc(r.side) + '</b>';
+    var convCol = r.conv >= 8 ? A.good : r.conv >= 6 ? A.gold : 'var(--mi2)';
+    var sub = (r.reasons || []).slice(0, 2).map(esc).join(' · ') + (htk ? ' · Anpfiff ' + htk : '');
+    var extra = '<div style="margin-top:5px"><a href="' + link + '" target="_blank" rel="noopener" style="font-size:11px;color:var(--mi2);text-decoration:none;border-bottom:1px dotted var(--mln2)">Markt öffnen ↗</a></div>';
+    return rowEl(main, r.conv + '/10', convCol, sub, extra);
+  }
+  function _mdPlaysHtml(plays) {
+    var body = (plays && plays.length)
+      ? plays.map(_mdPlayRow).join('')
+      : empty('Keine klaren Plays gerade — kein Signal ist auch ein Ergebnis. Sobald Geld, Steam und scharfe Wallets sich einig sind, steht hier was.');
+    return tile('🔥', 'Heute spielenswert', A.red, 'rgba(229,83,75,.14)', 'rgba(229,83,75,.32)', 'polywallets', 'alle Plays', body, 10);
+  }
+  function _mdFillPlays() {
+    var box = document.getElementById('md-plays'); if (!box) return;
+    if (typeof _pwEnsurePlaysData !== 'function' || typeof _pwTopPlays !== 'function') { box.style.display = 'none'; return; }
+    _pwEnsurePlaysData(function () {
+      var b2 = document.getElementById('md-plays'); if (!b2) return;
+      var plays = []; try { plays = _pwTopPlays(3, null, false) || []; } catch (e) { plays = []; }
+      b2.innerHTML = _mdPlaysHtml(plays);
+    });
+  }
+
   function _mdRender() {
     var p = document.getElementById('mainDashPanel');
     if (!p) return;
@@ -481,8 +511,10 @@
       tile('📡', 'Sharp-Radar', A.blue, 'rgba(57,135,229,.14)', 'rgba(57,135,229,.32)', 'sharp', 'Radar', shBody, 200) +
       '</div>';
 
-    p.innerHTML = _head() + _mdPulse() + _mdJetzt() + _kpis() + _mdHero() + grid +
+    p.innerHTML = _head() + _mdPulse() + _mdJetzt() + _kpis()
+      + '<div id="md-plays"></div>' + _mdHero() + grid +
       '<div class="md-foot">Kuratierter Überblick · tippe „alle →" für den vollen Bereich</div>';
+    _mdFillPlays();
   }
   // ── Puls: letzte 30 abgerechnete Picks (CLV / Trefferquote) ──────────────────
   function _spark(series) {
