@@ -36,7 +36,7 @@ class TestTelegramKO(unittest.TestCase):
         self.assertIn("Kanada", card)
 
     def test_recap_includes_ko(self):
-        wm = _wm({"market": "Unter 2.5 Tore", "verdict": "ABWÄGEN", "odds": 1.65,
+        wm = _wm({"market": "Unter 2.5 Tore", "verdict": "BET", "odds": 1.65,
                   "convictionScore": 6, "result": "WIN"})
         card = T.build_recap_card(wm, TODAY)
         self.assertIsNotNone(card, "KO-Pick mit Ergebnis sollte im Recap sein")
