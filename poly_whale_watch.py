@@ -336,11 +336,22 @@ def build_public_card(pos: dict, scores: dict, restock: bool, broad: dict) -> st
     side = pos.get("side") or "?"
     key = pos.get("key")
     matchup = _matchup(key, broad)
+    ko = _kickoff_txt(key, broad)   # 01.08.2026 (Lucas): Anpfiff + Preis-Bewegung auch im Public
     header = "🐋 <b>Polymarket Whale — stockt auf</b>" if restock else "🐋 <b>Polymarket Whale</b>"
     top = "%s <b>%s</b>" % (emoji, _esc(matchup)) if matchup else "%s <b>%s</b>" % (emoji, _esc(side))
+    if ko:
+        top += " · %s" % ko
     lines = [header, "", top, "<i>%s</i>" % _esc(sport), "",
-             "💰 <b>%s</b> auf <b>%s</b> @ %s" % (_usd(pos.get("usd") or 0), _esc(side), _cents(pos.get("firstPrice"))),
-             _pub_wallet_line(scores, pos.get("wallet"))]
+             "💰 <b>%s</b> auf <b>%s</b>" % (_usd(pos.get("usd") or 0), _esc(side))]
+    pm = _price_move(pos)
+    if pm:
+        lines.append(pm)
+    try:
+        if float(pos.get("firstPrice")) < 0.45:
+            lines.append("💡 Außenseiter-Seite — die Wallet hält gegen den Markt")
+    except Exception:
+        pass
+    lines.append(_pub_wallet_line(scores, pos.get("wallet")))
     if key:
         lines.append('\n<a href="https://polymarket.com/event/%s">Markt ansehen ↗</a>' % _esc(key))
     return "\n".join(lines)
