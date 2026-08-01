@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-07-31T20:28:23Z",
-    "total_records": 10
+    "updated_at": "2026-08-01T09:08:41Z",
+    "total_records": 11
   },
   "records": [
     {
@@ -231,6 +231,49 @@
       "lateEntry": true,
       "engineVersion": "v1",
       "clvPP": -2.76,
+      "processVerdict": "UNLUCKY"
+    },
+    {
+      "key": "MLS-18-1604-1601|Heimsieg",
+      "matchKey": "MLS-18-1604-1601",
+      "market": "Heimsieg",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 1.97
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 1.0
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.09
+        },
+        {
+          "name": "chance_creation",
+          "score": -1.66
+        },
+        {
+          "name": "form_rating",
+          "score": 1.83
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 1.2
+        },
+        {
+          "name": "opener_move",
+          "score": 0.99
+        }
+      ],
+      "resolvedAt": "2026-08-01T09:08:40Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -4.88,
       "processVerdict": "UNLUCKY"
     },
     {
