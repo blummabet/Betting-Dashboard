@@ -845,6 +845,7 @@ function _pwGlobalWhales(live){
 // ② Sharp-Wallet (25.07.2026, Lucas): CLV/Treffer je Wallet aus poly_wallet_track.json — trennt
 // „scharf" (schlägt die Linie) von „bloß groß". Ab PW_SHARP_MIN_N aufgelösten Positionen bewertbar.
 const PW_SHARP_MIN_N=4;
+const PW_MONEY_MAJ=0.60;   // (01.08.2026, Lucas) „großes Geld" erst ab echter Mehrheit — 50–55% ist Münzwurf, kein Signal
 function _pwWalletScore(wallet){
   const s=_pwCache&&_pwCache.walletTrack&&_pwCache.walletTrack.scores;
   const e=s&&s[wallet];
@@ -1272,6 +1273,40 @@ function _pwTopPlays(limit, live, useSportPass){
   return limit?all.slice(0,limit):all;
 }
 
+// (01.08.2026, Lucas) PUBLIC-KANDIDAT „Top-Play" — hart gegatet, NUR Vorschau (sendet nicht).
+// Nur was wir öffentlich vertreten würden: Conviction≥9 + bewiesene Wallet (n≥8 & ≥55% Treffer)
+// + echte Geld-Mehrheit ≥60% + Sport. Sport-Filter der View wird ignoriert (public = alle Sportarten).
+function _pwPublicTopPlays(){
+  return _pwTopPlays(0,false,false).filter(r=>
+    r.conv>=9 && r.moneyPct>=0.60 && r.sharp && r.sharp.n>=8 && r.sharp.hit>=0.55);
+}
+
+// (01.08.2026, Lucas) PUBLIC-KANDIDAT „Whale-Watch" — repliziert das Public-Gate von poly_whale_watch.py
+// auf walletTrack.open, NUR Vorschau. Schwelle: untracked ≥$100K / tracked ≥$25K + Sport + Preis 3–97¢.
+const PW_WHALE_PUB_UNTRACKED=100000, PW_WHALE_PUB_TRACKED=25000;
+function _pwWhalePublicCandidates(){
+  const wt=_pwCache&&_pwCache.walletTrack; const op=wt&&wt.open, sc=(wt&&wt.scores)||{};
+  if(!op) return [];
+  const opens=Array.isArray(op)?op:Object.values(op);
+  const out=[];
+  for(const pos of opens){
+    if(!pos) continue;
+    if(_pwSportCategory(pos.league)==='Sonstige') continue;   // nur Sport
+    const usd=Number(pos.usd)||0; if(usd<=0) continue;
+    const price=Number(pos.lastPrice!=null?pos.lastPrice:pos.entryPrice);
+    if(!(price>=0.03 && price<=0.97)) continue;               // kein fast-sicher, kein Staub
+    const raw=sc[pos.wallet]; const tracked=!!(raw&&raw.n&&raw.n>=PW_SHARP_MIN_N);
+    const thr=tracked?PW_WHALE_PUB_TRACKED:PW_WHALE_PUB_UNTRACKED;
+    if(usd<thr) continue;
+    const hit=raw&&raw.n?(raw.wins||0)/raw.n:null, clv=raw&&raw.n?raw.clvSumPP/raw.n:null;
+    out.push({wallet:pos.wallet,key:pos.key,side:pos.side,league:pos.league,usd,price,
+              entryPrice:Number(pos.entryPrice),tracked,n:raw?raw.n:0,hit,clv,
+              match:_pwMatchLabel(pos.key)});
+  }
+  out.sort((a,b)=>b.usd-a.usd);
+  return out;
+}
+
 // Schlanker Loader für die Übersicht-Box: lädt nur die Dateien, die der Scorer braucht, und
 // füllt _pwCache NUR wo noch nichts drin ist (der volle Poly-Tab-Loader überschreibt später sauber).
 let _pwPlaysLoadedTs=0;
@@ -1313,6 +1348,31 @@ function _pwSharpSideForKey(key){
   return best;
 }
 
+// Wallet-QUALITÄT je Schlüssel (01.08.2026, Lucas „Trefferquote mit rein"): statt flach „scharfe Wallet drin"
+// die Seite mit dem stärksten bewiesenen Geld zurückgeben PLUS deren aggregierte Bilanz (n/Treffer/CLV/P&L,
+// usd-gewichtet). Erlaubt eine qualitätsskalierte Gewichtung + eine ehrliche „Warum"-Zeile mit Record.
+function _pwSharpInfoForKey(key){
+  const wt=_pwCache&&_pwCache.walletTrack; const op=wt&&wt.open, sc=wt&&wt.scores;
+  if(!op||!sc||!key) return null;
+  const opens=Array.isArray(op)?op:Object.values(op);
+  const bySide={};  // side -> {usd, n, wins, pnl, clvUsd, count}
+  for(const pos of opens){
+    if(!pos||pos.key!==key) continue;
+    const usd=Number(pos.usd)||0; if(usd<=0) continue;
+    const raw=sc[pos.wallet]; if(!raw||!raw.n||raw.n<PW_SHARP_MIN_N) continue;
+    const avgClv=raw.clvSumPP/raw.n, hit=(raw.wins||0)/raw.n;
+    if(!(avgClv>0 || hit>=0.5)) continue;           // bewährt: schlägt Linie ODER gewinnt
+    const b=bySide[pos.side]||(bySide[pos.side]={usd:0,n:0,wins:0,pnl:0,clvUsd:0,count:0});
+    b.usd+=usd; b.n+=raw.n; b.wins+=(raw.wins||0); b.pnl+=(Number(raw.pnl)||0);
+    b.clvUsd+=avgClv*usd; b.count++;
+  }
+  let side=null,smax=0; for(const sd in bySide) if(bySide[sd].usd>smax){smax=bySide[sd].usd;side=sd;}
+  if(!side) return null;
+  const b=bySide[side];
+  return {side, usd:b.usd, n:b.n, wins:b.wins, hit:b.n?b.wins/b.n:0,
+          clv:b.usd?b.clvUsd/b.usd:0, pnl:b.pnl, count:b.count};
+}
+
 // Pinnacle-Kante für einen Markt aus poly_cross_sport.discrepancies (01.08.2026, Lucas).
 // disc: {outcome, gapPP, richtung}. gap<0 = Poly zu niedrig → diese Seite backen (Value).
 // gap>0 = Poly zu hoch → Gegenseite. Match über den Ausgangsnamen (normalisiert).
@@ -1341,7 +1401,7 @@ function _pwShortlistScore(key,m){
   for(const k in pr){ if(typeof pr[k]==='number'&&pr[k]>pmax){pmax=pr[k];priceFav=k;} }
   const sides={}, why={};
   const add=(side,w,reason)=>{ if(!side||!w)return; sides[side]=(sides[side]||0)+w; (why[side]=why[side]||[]).push(reason); };
-  add(moneyFav, moneyPct>=0.6?1:0.5, 'großes Geld auf '+moneyFav+' ('+Math.round(moneyPct*100)+'%)');
+  if(moneyPct>=PW_MONEY_MAJ) add(moneyFav, moneyPct>=0.70?1.5:1, 'großes Geld auf '+moneyFav+' ('+Math.round(moneyPct*100)+'%)');
   // Geld vs Preis uneinig → liga-informiert entscheiden (sofort verfügbar aus broadLive)
   if(priceFav&&priceFav!==moneyFav){
     const lg=_pwLeagueMoneyVerdict(m.league);
@@ -1351,8 +1411,17 @@ function _pwShortlistScore(key,m){
   }
   const mv=_pwMoveFor(key);
   if(mv&&mv.steam&&mv.move>=2) add(mv.side, mv.move>=4?3:2, 'Steam läuft rein (+'+mv.move.toFixed(1)+'pp)');
-  const sharp=_pwSharpSideForKey(key) || _pwSharpSideFor(m);
-  if(sharp) add(sharp,3,'🔥 scharfe Wallet drin');
+  const sh=_pwSharpInfoForKey(key);
+  if(sh){
+    // Qualitätsskalierte Gewichtung: Basis 2,5; +0,5 bei ≥60% Treffer, +0,5 bei ≥70%, +0,5 wenn lifetime P&L>0.
+    let w=2.5; if(sh.hit>=0.6)w+=0.5; if(sh.hit>=0.7)w+=0.5; if(sh.pnl>0)w+=0.5;
+    const pnlTxt=Math.abs(sh.pnl)>=1000?((sh.pnl>=0?'+$':'-$')+Math.round(Math.abs(sh.pnl)/1000)+'K')
+      :((sh.pnl>=0?'+$':'-$')+Math.round(Math.abs(sh.pnl)));
+    add(sh.side,w,'🔥 scharfe Wallet ('+sh.wins+'/'+sh.n+', '+Math.round(sh.hit*100)+'% · '+pnlTxt+')');
+  } else {
+    const sharp=_pwSharpSideForKey(key) || _pwSharpSideFor(m);
+    if(sharp) add(sharp,2.5,'🔥 scharfe Wallet drin');
+  }
   // (01.08.2026, Lucas) Pinnacle-Kante einweben: de-viggte Pinnacle vs Poly-Preis. Konsens hebt
   // Conviction, deutliche Fehlbewertung = eigener Value-Play. Feuert nur wenn crossSport-Daten da.
   const pe=_pwPinnEdgeFor(m,oc);
@@ -1365,7 +1434,8 @@ function _pwShortlistScore(key,m){
   const vol=m.totalUsd||0;
   if(!best||bs<3||vol<15000) return {verdict:'SKIP'};
   return {key,match:oc.map(o=>o.s).join(' vs '),verdict:(best===moneyFav?'BET':'FADE'),side:best,
-    conv:Math.min(10,Math.round(4+bs)),reasons:(why[best]||[]).slice(0,3),vol,htk:_pwRealHtk(m),league:m.league};
+    conv:Math.min(10,Math.round(4+bs)),reasons:(why[best]||[]).slice(0,3),vol,htk:_pwRealHtk(m),league:m.league,
+    moneyPct,sharp:(sh&&sh.side===best)?sh:null};
 }
 function _pwShortlist(live){
   const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🔥 Heute wetten — die klarsten Gelegenheiten</span>'

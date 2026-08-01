@@ -158,6 +158,7 @@
       '.md-fl{display:inline-block;margin-right:5px;font-size:13px;line-height:1;vertical-align:-1px;}',
       '.md-empty{color:var(--mi3);font-size:12px;padding:12px 2px 10px;line-height:1.5;}',
       '.md-foot{text-align:center;color:var(--mi3);font-size:11px;margin-top:16px;padding-bottom:2px;}',
+      '.md-preview-h{margin:22px 0 2px;font-weight:800;font-size:13px;color:var(--mi);border-top:1px dashed var(--mln2);padding-top:16px;}',
       '.md-pulse{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--m1);border:1px solid var(--mln);border-radius:14px;padding:12px 15px;margin-top:14px;}',
       '.md-pulse-h{display:flex;align-items:center;gap:7px;font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--mi3);}',
       '.md-pulse-ms{display:flex;align-items:center;gap:18px;flex-wrap:wrap;flex:1;min-width:0;}',
@@ -447,6 +448,50 @@
     });
   }
 
+  // ── 🧪 Public-Kandidaten (Vorschau — sendet NICHT) (01.08.2026, Lucas). Zwei Logiken parallel,
+  //    ein paar Tage beobachten, bevor irgendwas in den Channel geht: (A) „Top-Play" hart gegatet
+  //    (Conv≥9 + bewiesene Wallet + echte Mehrheit), (B) „Whale-Watch" (Schwellen wie im Public-Push).
+  function _mdPubTopRow(r) {
+    var vcol = r.verdict === 'BET' ? A.good : A.gold;
+    var badge = '<span style="display:inline-block;padding:1px 7px;border-radius:10px;border:1px solid ' + vcol + ';color:' + vcol + ';font-weight:800;font-size:10px;margin-right:6px">' + r.verdict + '</span>';
+    var icon = (typeof _pwSportIcon === 'function') ? _pwSportIcon(r.league) + ' ' : '';
+    var main = badge + icon + esc(String(r.match).slice(0, 40)) + ' <span style="color:var(--mi3)">→</span> <b style="color:#4cc2ff">' + esc(r.side) + '</b>';
+    var sh = r.sharp || {};
+    var rec = sh.n ? (sh.wins + '/' + sh.n + ' · ' + Math.round((sh.hit || 0) * 100) + '%') : '';
+    var sub = 'Geld ' + Math.round((r.moneyPct || 0) * 100) + '%' + (rec ? ' · Wallet ' + rec : '');
+    return rowEl(main, r.conv + '/10', A.good, sub, '');
+  }
+  function _mdWhalePubRow(w) {
+    var icon = (typeof _pwSportIcon === 'function') ? _pwSportIcon(w.league) + ' ' : '';
+    var tag = w.tracked
+      ? '<span style="color:' + A.good + ';font-weight:800;font-size:10px">✓ tracked</span>'
+      : '<span style="color:var(--mi2);font-weight:700;font-size:10px">untracked</span>';
+    var main = icon + esc(String(w.match).replace(/<[^>]*>/g, '').slice(0, 40)) + ' <span style="color:var(--mi3)">→</span> <b style="color:#4cc2ff">' + esc(w.side) + '</b>';
+    var rec = (w.tracked && w.n) ? ' · n' + w.n + ' · ' + Math.round((w.hit || 0) * 100) + '%' : '';
+    var sub = tag + ' · ' + Math.round(w.price * 100) + '¢' + rec;
+    return rowEl(main, usd(w.usd), A.poly, sub, '');
+  }
+  function _mdFillPubPreview() {
+    var box = document.getElementById('md-pubprev'); if (!box) return;
+    if (typeof _pwEnsurePlaysData !== 'function' || typeof _pwPublicTopPlays !== 'function' || typeof _pwWhalePublicCandidates !== 'function') { box.style.display = 'none'; return; }
+    _pwEnsurePlaysData(function () {
+      var b2 = document.getElementById('md-pubprev'); if (!b2) return;
+      var tops = [], whales = [];
+      try { tops = _pwPublicTopPlays() || []; } catch (e) { tops = []; }
+      try { whales = _pwWhalePublicCandidates() || []; } catch (e) { whales = []; }
+      var topBody = tops.length ? tops.slice(0, 5).map(_mdPubTopRow).join('')
+        : empty('Kein Top-Play über der Schwelle — Conv≥9, bewiesene Wallet (n≥8, ≥55%), Geld-Mehrheit ≥60%. Das ist der Normalfall.');
+      var whBody = whales.length ? whales.slice(0, 5).map(_mdWhalePubRow).join('')
+        : empty('Keine Whale-Position über der Public-Schwelle (untracked ≥$100K / tracked ≥$25K).');
+      b2.innerHTML =
+        '<div class="md-preview-h">🧪 Public-Kandidaten <span style="font-weight:600;color:var(--mi2)">— Vorschau, sendet nicht · ein paar Tage beobachten</span></div>' +
+        '<div class="md-grid">' +
+          tile('🎯', 'Top-Play (hart gegatet)', A.good, 'rgba(46,160,67,.14)', 'rgba(46,160,67,.32)', 'polywallets', 'Wallets', topBody, 10) +
+          tile('🐋', 'Whale-Watch (Public-Schwelle)', A.poly, 'rgba(25,158,112,.14)', 'rgba(25,158,112,.32)', 'polywallets', 'Wallets', whBody, 40) +
+        '</div>';
+    });
+  }
+
   function _mdRender() {
     var p = document.getElementById('mainDashPanel');
     if (!p) return;
@@ -512,9 +557,10 @@
       '</div>';
 
     p.innerHTML = _head() + _mdPulse() + _mdJetzt() + _kpis()
-      + '<div id="md-plays"></div>' + _mdHero() + grid +
+      + '<div id="md-plays"></div>' + _mdHero() + grid + '<div id="md-pubprev"></div>' +
       '<div class="md-foot">Kuratierter Überblick · tippe „alle →" für den vollen Bereich</div>';
     _mdFillPlays();
+    _mdFillPubPreview();
   }
   // ── Puls: letzte 30 abgerechnete Picks (CLV / Trefferquote) ──────────────────
   function _spark(series) {

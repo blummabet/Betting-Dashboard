@@ -77,3 +77,51 @@ test('Triple-Hero zeigt Konsens (einig) und Divergenz (Ausreißer)', () => {
   assert.match(html, /Einig/);           assert.match(html, /4\/4 einig/);   assert.match(html, /Bayern/);
   assert.match(html, /Ausreißer/);       assert.match(html, /Poly schert aus/); assert.match(html, /Leipzig/);
 });
+
+
+// 01.08.2026 (Lucas): Public-Kandidaten-Vorschau-Boxen in der Übersicht — laden poly-wallets.js
+// in dasselbe Window, damit _pwPublicTopPlays / _pwWhalePublicCandidates da sind. Sendet nichts.
+const PWMOD = new URL('../../poly-wallets.js', import.meta.url);
+function loadBoth(files) {
+  const dom = new JSDOM('<!DOCTYPE html><body><div id="mainDashPanel"></div></body>', { url: 'https://x.com/', runScripts: 'outside-only', pretendToBeVisual: true });
+  const w = dom.window;
+  w.fetch = (url) => { const u = String(url); let b = null;
+    for (const [f, d] of Object.entries(files)) if (u.includes(f)) { b = d; break; }
+    return Promise.resolve({ ok: b != null, json: () => Promise.resolve(b) }); };
+  w.eval(readFileSync(PWMOD, 'utf8'));   // poly-Globals zuerst
+  w.eval(readFileSync(MOD, 'utf8'));     // dann Übersicht
+  return w;
+}
+const iso = new Date().toISOString();
+const PREV_FILES = {
+  'poly_money_broad_close.json': {
+    'mlb-braves-padres': { league: 'MLB', resolved: null, totalUsd: 100000, hoursToKickoff: 3, capturedAt: iso,
+      shares: { 'Atlanta Braves': 65000, 'San Diego Padres': 35000 }, prices: { 'Atlanta Braves': 0.62, 'San Diego Padres': 0.38 } },
+    'nba-lakers-celtics': { league: 'NBA', resolved: null, totalUsd: 100000, hoursToKickoff: 3, capturedAt: iso,
+      shares: { 'Lakers': 55000, 'Celtics': 45000 }, prices: { 'Lakers': 0.55, 'Celtics': 0.45 } },
+  },
+  'poly_money_broad_history.json': {},
+  'poly_money_broad.json': { n: 100, byLeague: [] },
+  'poly_wallet_track.json': { updatedAt: iso,
+    scores: { '0xSHARP': { n: 10, clvSumPP: 20, wins: 7, usd: 40000, pnl: 150000 } },
+    open: [
+      { wallet: '0xSHARP', key: 'mlb-braves-padres', side: 'Atlanta Braves', league: 'MLB', usd: 40000, entryPrice: 0.55, lastPrice: 0.62 },
+      { wallet: '0xWHALE', key: 'nba-lakers-celtics', side: 'Lakers', league: 'NBA', usd: 120000, entryPrice: 0.50, lastPrice: 0.55 },
+    ] },
+  'poly_cross_sport.json': { discrepancies: [] },
+};
+
+test('Übersicht: Public-Kandidaten-Vorschau-Boxen rendern (sendet nicht)', async () => {
+  const w = loadBoth(PREV_FILES);
+  w._mdState.data = { liga: null, mls: null, ligaStreaks: null, mlsStreaks: null, betfair: null, whales: null };
+  await new Promise((res) => w._pwEnsurePlaysData(res));   // lexischen Cache vorfüllen → Box-Fill ist synchron
+  w._renderMainDash();
+  await new Promise(r => setTimeout(r, 40));
+  const html = w.document.getElementById('mainDashPanel').innerHTML;
+  assert.match(html, /Public-Kandidaten/);
+  assert.match(html, /sendet nicht/);
+  assert.match(html, /Top-Play \(hart gegatet\)/);
+  assert.match(html, /Whale-Watch \(Public-Schwelle\)/);
+  assert.match(html, /Atlanta Braves/, 'Top-Play-Kandidat sichtbar');
+  assert.match(html, /Lakers/, 'Whale-Kandidat sichtbar');
+});

@@ -331,7 +331,7 @@ test('③ Shortlist: Edge (Geld schlägt Preis) → BET mit Conviction; reiner F
   const html = w.document.getElementById('polyWalletsPanel').innerHTML;
   assert.match(html, /Heute wetten/);
   assert.match(html, /BET/); assert.match(html, /Atlanta Braves/);
-  assert.match(html, /7\/10/, 'Conviction = 4 + (Geld 1 + geld_schaerfer 2) = 7');
+  assert.match(html, /8\/10/, 'Conviction = 4 + (Geld 1,5 @70% + geld_schaerfer 2) = 7,5 → 8');
   assert.ok(!/Lakers/.test(html), 'reiner Favorit ohne Edge darf nicht in der Shortlist stehen');
 });
 
