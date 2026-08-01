@@ -1256,6 +1256,82 @@ function _pwLeagueMoneyVerdict(league){
   const row=bl.find(x=>String(x.league||'').toUpperCase()===up);
   return row?row.verdict:null;
 }
+// (01.08.2026, Lucas) Wiederverwendbare Play-Rangliste — Kern für „🔥 Heute wetten" UND die
+// Übersicht-Box. limit=0 → alle. useSportPass steuert den Sport-Filter (Übersicht: aus).
+function _pwTopPlays(limit, live, useSportPass){
+  live = live || (_pwCache && _pwCache.broadLive) || {};
+  const all=[];
+  for(const [k,m] of Object.entries(live)){
+    if(!m||m.resolved!=null||_pwKoStale(m)) continue;
+    if(_pwSportCategory(m.league)==='Sonstige') continue;   // kein Politik/Krypto/Sonstiges in die Play-Liste
+    if(useSportPass && !_pwSportPass(m.league)) continue;
+    const r=_pwShortlistScore(k,m);
+    if(r&&(r.verdict==='BET'||r.verdict==='FADE')) all.push(r);
+  }
+  all.sort((a,b)=>b.conv-a.conv);
+  return limit?all.slice(0,limit):all;
+}
+
+// Schlanker Loader für die Übersicht-Box: lädt nur die Dateien, die der Scorer braucht, und
+// füllt _pwCache NUR wo noch nichts drin ist (der volle Poly-Tab-Loader überschreibt später sauber).
+let _pwPlaysLoadedTs=0;
+function _pwEnsurePlaysData(cb){
+  if(_pwCache && _pwCache.broadLive){ cb&&cb(); return; }
+  if(_pwPlaysLoadedTs && (Date.now()-_pwPlaysLoadedTs)<120000 && _pwCache && _pwCache.broadLive){ cb&&cb(); return; }
+  const b='?t='+Date.now();
+  const jf=u=>fetch(u+b,{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);
+  Promise.all([jf('poly_money_broad_close.json'),jf('poly_money_broad_history.json'),
+               jf('poly_money_broad.json'),jf('poly_wallet_track.json'),jf('poly_cross_sport.json')])
+   .then(([broadLive,broadHist,moneyBroad,walletTrack,crossSport])=>{
+     if(!_pwCache) _pwCache={};
+     if(!_pwCache.broadLive)  _pwCache.broadLive=broadLive;
+     if(!_pwCache.broadHist)  _pwCache.broadHist=broadHist;
+     if(!_pwCache.moneyBroad) _pwCache.moneyBroad=moneyBroad;
+     if(!_pwCache.walletTrack)_pwCache.walletTrack=walletTrack;
+     if(!_pwCache.crossSport) _pwCache.crossSport=crossSport;
+     _pwPlaysLoadedTs=Date.now();
+     cb&&cb();
+   }).catch(()=>{ cb&&cb(); });
+}
+
+// Sharp-Seite eines Markts aus poly_wallet_track.open (01.08.2026, Lucas) — DIE Brücke zwischen
+// „hunderte Wallet-Daten" und „was wetten": nur BEWÄHRTE Wallets (n≥Schwelle, CLV+ ODER ≥50% Treffer)
+// mit AKTUELL offener Position; die Seite mit dem meisten scharfen Geld gewinnt. broadLive-Märkte
+// tragen kein .whales-Feld → ohne diesen Key-Join würde das Sharp-Signal nie feuern.
+function _pwSharpSideForKey(key){
+  const wt=_pwCache&&_pwCache.walletTrack; const op=wt&&wt.open; if(!op||!key) return null;
+  const opens=Array.isArray(op)?op:Object.values(op);
+  const bySide={};
+  for(const pos of opens){
+    if(!pos||pos.key!==key) continue;
+    const usd=Number(pos.usd)||0; if(usd<=0) continue;
+    const sc=_pwWalletScore(pos.wallet); if(!sc||sc.n<PW_SHARP_MIN_N) continue;
+    if(!(sc.avgClv>0 || sc.hit>=0.5)) continue;     // bewährt: schlägt Linie ODER gewinnt
+    bySide[pos.side]=(bySide[pos.side]||0)+usd;
+  }
+  let best=null,bmax=0; for(const sd in bySide) if(bySide[sd]>bmax){bmax=bySide[sd];best=sd;}
+  return best;
+}
+
+// Pinnacle-Kante für einen Markt aus poly_cross_sport.discrepancies (01.08.2026, Lucas).
+// disc: {outcome, gapPP, richtung}. gap<0 = Poly zu niedrig → diese Seite backen (Value).
+// gap>0 = Poly zu hoch → Gegenseite. Match über den Ausgangsnamen (normalisiert).
+function _pwPinnEdgeFor(m, oc){
+  const cs=_pwCache&&_pwCache.crossSport; const disc=(cs&&cs.discrepancies)||[];
+  if(!disc.length||!oc||!oc.length) return null;
+  const norm=x=>String(x==null?'':x).trim().toLowerCase();
+  const names=oc.map(o=>o.s);
+  let bestHit=null;
+  for(const d of disc){
+    const idx=names.findIndex(n=>norm(n)===norm(d.outcome));
+    if(idx<0) continue;
+    if(!bestHit||Math.abs(d.gapPP)>Math.abs(bestHit.gapPP)) bestHit={d,idx};
+  }
+  if(!bestHit) return null;
+  const d=bestHit.d, side=names[bestHit.idx], other=names.find(n=>n!==side)||null;
+  return {side, other, gapPP:d.gapPP, back:d.gapPP<0};
+}
+
 function _pwShortlistScore(key,m){
   const oc=Object.entries(m.shares||{}).map(([s,u])=>({s,u:Number(u)||0}));
   if(oc.length<2) return {verdict:'SKIP'};
@@ -1275,8 +1351,16 @@ function _pwShortlistScore(key,m){
   }
   const mv=_pwMoveFor(key);
   if(mv&&mv.steam&&mv.move>=2) add(mv.side, mv.move>=4?3:2, 'Steam läuft rein (+'+mv.move.toFixed(1)+'pp)');
-  const sharp=_pwSharpSideFor(m);
+  const sharp=_pwSharpSideForKey(key) || _pwSharpSideFor(m);
   if(sharp) add(sharp,3,'🔥 scharfe Wallet drin');
+  // (01.08.2026, Lucas) Pinnacle-Kante einweben: de-viggte Pinnacle vs Poly-Preis. Konsens hebt
+  // Conviction, deutliche Fehlbewertung = eigener Value-Play. Feuert nur wenn crossSport-Daten da.
+  const pe=_pwPinnEdgeFor(m,oc);
+  if(pe){
+    const w=Math.abs(pe.gapPP)>=8?2:1;
+    if(pe.back) add(pe.side,w,'Pinnacle: Poly '+Math.abs(pe.gapPP).toFixed(0)+'pp zu billig → Value');
+    else if(pe.other) add(pe.other,w,'Pinnacle: Poly '+Math.abs(pe.gapPP).toFixed(0)+'pp zu teuer auf '+pe.side);
+  }
   let best=null,bs=0; for(const s in sides) if(sides[s]>bs){bs=sides[s];best=s;}
   const vol=m.totalUsd||0;
   if(!best||bs<3||vol<15000) return {verdict:'SKIP'};
@@ -1286,13 +1370,7 @@ function _pwShortlistScore(key,m){
 function _pwShortlist(live){
   const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🔥 Heute wetten — die klarsten Gelegenheiten</span>'
     +'<span class="pw-sec-note">nur Märkte mit echtem Signal (Steam · scharfe Wallet · Geld-vs-Preis) · BET = mit dem Geld, FADE = dagegen · Conviction 0–10 · nichts blind, das ist ein Ausgangspunkt</span></div>';
-  const all=[];
-  for(const [k,m] of Object.entries(live||{})){
-    if(!m||m.resolved!=null||!_pwSportPass(m.league)||_pwKoStale(m)) continue;
-    const r=_pwShortlistScore(k,m);
-    if(r&&(r.verdict==='BET'||r.verdict==='FADE')) all.push(r);
-  }
-  all.sort((a,b)=>b.conv-a.conv);
+  const all=_pwTopPlays(0, live, true);   // 0 = alle · sportPass-Filter an (View hat Sport-Filter)
   if(!all.length) return intro+'<div class="pw-none">Aktuell keine klare Gelegenheit. Die Shortlist lebt von <b>📈 Steam</b> und <b>🐋 scharfen Wallets</b> — die sammeln sich noch über die Runner-Läufe (auf Poly ist der Preis ≈ die Geld-Verteilung, daher braucht es die dynamischen Signale). Bis dahin: schau in <b>💰 Großes Geld</b>, <b>📈 Bewegung</b> und <b>🐋 Whales</b>. <b>Kein Signal ist auch ein Ergebnis</b> — dann nicht wetten.</div></section>';
   const body=all.slice(0,20).map(r=>{
     const bet=r.verdict==='BET'; const vc=bet?'#3fb950':'#e3b341';
