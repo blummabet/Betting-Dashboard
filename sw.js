@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v45';   // 01.08.2026: Shortlist Wallet-Qualitaets-Gewichtung + Public-Kandidaten Vorschau-Boxen (Uebersicht, sendet nicht)
+const VERSION = 'cocobet-v46';   // 01.08.2026: Betfair-Radar lesbarer — LIVE ohne Stand/Minute, Hotspot-Balken = Anteil, Zufluss-Balken = Groesse relativ zum groessten, groessere Sekundaerschrift
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

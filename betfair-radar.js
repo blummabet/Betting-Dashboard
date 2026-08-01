@@ -445,9 +445,8 @@
   // Live hat Vorrang vor der ×-Norm-Umrandung; das ×N-Norm-Badge bleibt zusätzlich sichtbar.
   function _liveBadge(m) {
     if (!isLive(m)) return '';
-    var li = m.liveInfo || {}, sc = (li.goal_v1 != null && li.goal_v2 != null) ? (li.goal_v1 + ':' + li.goal_v2) : '';
-    var t = (li.time != null) ? (' ' + li.time + "'") : '';
-    return '<span class="bfb-liveb">● LIVE' + (sc ? ' ' + sc : '') + t + '</span>';
+    // (01.08.2026, Lucas) nur "● LIVE" — Spielstand/Minute war zeitlich unzuverlässig, daher weglassen.
+    return '<span class="bfb-liveb">● LIVE</span>';
   }
   function _rowHl(m) { return isLive(m) ? ' bfb-live' : _normCls(m); }
   function _hlLine(m) {
@@ -646,7 +645,7 @@
     var hs = hotspots(matches); if (!hs.length) return '';
     var mx = Math.max.apply(null, hs.map(function (x) { return x.v; })) || 1;
     var rows = hs.map(function (x) {
-      var ht = x.mm.grp === 'HT', w = Math.max(5, x.v / mx * 100);
+      var ht = x.mm.grp === 'HT', w = Math.max(6, Math.round(Math.min(100, x.pct)));   // Fill = Anteil des Geldes auf diesen Ausgang (nicht €/max → keine Nub-Optik)
       return '<div class="bfb-row' + _rowHl(x.m) + '" onclick="_bfJump(\'' + esc(x.m.matchId) + '\')">' +
         '<div class="bfb-lbl"><div class="bfb-g">' + flag(x.m.country, x.m.league) + ' ' + esc(String(x.m.home).slice(0, 13)) + ' – ' + esc(String(x.m.away).slice(0, 13)) + '</div>' +
         '<div class="bfb-o"><span class="bfb-mk' + (ht ? ' ht' : '') + '">' + esc(x.mm.label) + ' →</span> ' + esc(rLabel(x.lead.name, x.m)) + '</div></div>' +
@@ -654,7 +653,7 @@
         '<div class="bfb-meta"><span class="bfb-v" style="color:' + C.vol + '">' + fmtE(x.v) + '</span><br><span class="bfb-s">' + x.pct.toFixed(0) + '%</span> <span class="bfb-odd">@' + fO(x.lead.odd) + '</span>' + _hlLine(x.m) + '</div></div>';
     }).join('');
     return '<div style="background:linear-gradient(180deg,rgba(255,184,12,.06),transparent);border:1px solid ' + C.bd + ';border-radius:14px;padding:11px 13px;margin:12px 0 14px">' +
-      '<div style="font-size:12px;color:' + C.gold + ';font-weight:800;margin-bottom:10px">🔥 Wo das Geld genau liegt — größte Einzel-Ausgänge <span style="color:' + C.dim + ';font-weight:600">· Balkenlänge = € gematcht · Klick springt zum Spiel</span></div>' +
+      '<div style="font-size:12px;color:' + C.gold + ';font-weight:800;margin-bottom:10px">🔥 Wo das Geld genau liegt — größte Einzel-Ausgänge <span style="color:' + C.dim + ';font-weight:600">· Balken = Anteil des Geldes auf den Ausgang · Klick springt zum Spiel</span></div>' +
       '<div class="bfb-grid">' + rows + '</div></div>';
   }
 
@@ -700,11 +699,11 @@
     var lblLine = '<span class="bfb-mk' + (ht ? ' ht' : '') + '">' + esc(lbl) + (side ? ' →' : '') + '</span>' + (side ? ' ' + side : '');
     var bar, meta;
     if (mode === 'eur') {
-      var wall = Math.max(5, x.curr / mx * 100), wf = x.delta / x.curr * wall, wb = wall - wf;
-      bar = '<div class="bfb-bar"><i class="bfb-base" style="width:' + wb + '%"></i><i class="bfb-fresh" style="left:calc(' + wb + '% + 2px);width:calc(' + wf + '% - 2px)"></i></div>';
+      var w = Math.max(6, Math.round(Math.min(100, x.delta / mx * 100)));   // Balken = Zufluss relativ zum größten Zufluss (grün, eine Farbe)
+      bar = '<div class="bfb-bar"><i style="width:' + w + '%;background:' + C.back + '"></i></div>';
       meta = '<span class="bfb-v" style="color:' + C.back + '">▲ +' + fmtE(x.delta) + '</span><br><span class="bfb-odd">jetzt ' + fmtE(x.curr) + '</span>' + (ld ? ' <span class="bfb-s">' + ld.share + '%</span>' : '');
     } else {
-      var w = Math.max(5, Math.min(100, x.pct / 300 * 100));
+      var w = Math.max(6, Math.round(Math.min(100, x.pct / 300 * 100)));
       bar = '<div class="bfb-bar"><i style="width:' + w + '%;background:' + C.back + '"></i></div>';
       meta = '<span class="bfb-v" style="color:' + C.back + '">▲ +' + Math.round(x.pct) + '%' + (x.pct >= 200 ? ' 🚨' : '') + '</span><br><span class="bfb-odd">' + fmtE(x.prev) + '→' + fmtE(x.curr) + '</span>';
     }
@@ -715,7 +714,7 @@
   }
   function _flowBars(label, items, mode) {
     if (!items.length) return '';
-    var mx = mode === 'eur' ? (Math.max.apply(null, items.map(function (x) { return x.curr; })) || 1) : 1;
+    var mx = mode === 'eur' ? (Math.max.apply(null, items.map(function (x) { return x.delta; })) || 1) : 1;
     return '<div class="bfb-sub">' + label + '</div><div class="bfb-grid">' + items.map(function (x) { return _flowBar(x, mode, mx); }).join('') + '</div>';
   }
   function flowStrip(base) {
@@ -725,10 +724,9 @@
     var surge = items.filter(function (x) { return eur(x.prev) >= SURGE_MIN_BASE && eur(x.delta) >= SURGE_MIN_DELTA && x.pct >= SURGE_MIN_PCT && x.pct < 900 && _leadOddOk(x.m, x.mm); })
       .sort(function (a, b) { return b.pct - a.pct; }).slice(0, 6);
     var head = '<div style="font-size:12px;color:' + C.back + ';font-weight:800;margin-bottom:8px">💸 Frisches Geld — was seit dem letzten Lauf reinfloss &amp; auf welche Seite <span style="color:' + C.dim + ';font-weight:600">(Klick springt zum Spiel)</span></div>';
-    var leg = eurItems.length ? '<div class="bfb-leg"><span><i style="background:rgba(45,212,191,.28)"></i>schon da</span><span><i style="background:' + C.back + '"></i>frisch reingekommen</span></div>' : '';
     var body = (!eurItems.length && !surge.length)
       ? '<div style="font-size:11px;color:' + C.dim + '">sammelt Daten — der Zufluss braucht zwei Fetches (~15–30 Min), dann siehst du hier, auf welchen Markt gerade Geld fließt.</div>'
-      : leg + _flowBars('📈 Größte Zuflüsse (€) — wohin die Kohle floss', eurItems, 'eur') + _flowBars('⚡ Größte Sprünge (%)', surge, 'pct');
+      : _flowBars('📈 Größte Zuflüsse (€) — Balken = Zufluss relativ zum größten', eurItems, 'eur') + _flowBars('⚡ Größte Sprünge (%) — Balken = Sprung-Höhe', surge, 'pct');
     return '<div style="background:linear-gradient(180deg,rgba(63,185,80,.07),transparent);border:1px solid rgba(63,185,80,.25);border-radius:14px;padding:11px 13px;margin:0 0 14px">' + head + body + '</div>';
   }
 
@@ -874,18 +872,18 @@
       '.bfb-row{display:grid;grid-template-columns:150px 1fr auto;align-items:center;gap:10px;padding:6px 0;cursor:pointer;border-radius:8px;}',
       '.bfb-row:hover{background:rgba(255,255,255,.025);}',
       '.bfb-lbl{min-width:0;}',
-      '.bfb-g{font-size:10.5px;color:#8b949e;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
-      '.bfb-o{font-size:12.5px;color:#e6edf3;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;}',
-      '.bfb-mk{color:#6e7681;font-weight:600;font-size:10.5px;}',
+      '.bfb-g{font-size:11.5px;color:#9aa4b1;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+      '.bfb-o{font-size:13.5px;color:#e6edf3;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px;}',
+      '.bfb-mk{color:#8b949e;font-weight:600;font-size:11.5px;}',
       '.bfb-mk.ht{color:#a78bfa;}',
       '.bfb-bar{position:relative;height:13px;background:#212a36;border-radius:7px;overflow:hidden;}',
       '.bfb-bar>i{position:absolute;left:0;top:0;bottom:0;border-radius:7px;}',
       '.bfb-base{background:rgba(45,212,191,.28);}',
       '.bfb-fresh{background:#3fb950;border-radius:7px;}',
       '.bfb-meta{text-align:right;white-space:nowrap;font-family:\"JetBrains Mono\",\"SF Mono\",Menlo,monospace;}',
-      '.bfb-v{font-size:12.5px;font-weight:900;}',
-      '.bfb-s{font-size:10.5px;color:#ffb80c;}',
-      '.bfb-odd{font-size:10px;color:#6e7681;}',
+      '.bfb-v{font-size:14px;font-weight:900;}',
+      '.bfb-s{font-size:12px;font-weight:700;color:#ffb80c;}',
+      '.bfb-odd{font-size:12px;color:#9aa4b1;}',
       '.bfb-leg{display:flex;gap:14px;font-size:10.5px;color:#8b949e;margin:0 0 9px;}',
       '.bfb-leg i{display:inline-block;width:18px;height:8px;border-radius:4px;vertical-align:1px;margin-right:5px;}',
       '.bfb-sub{font-size:11px;color:#3fb950;font-weight:700;margin:9px 0 6px;}',
