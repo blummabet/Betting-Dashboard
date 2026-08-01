@@ -68,6 +68,9 @@ DRAW_MIN       = 0.10
 
 # Margin auf Modellquoten (~4% = zwischen Pinnacle 3% und Softbook)
 MODEL_MARGIN   = 0.96
+# (31.07.2026, Lucas-Audit) Markt-De-Vig: Pinnacle-1X2-Überrunde gemessen 1.04–1.06 → durch ~1.05 TEILEN
+# (vorher *1.03 = falschrum, blähte die Marktwahrscheinlichkeit auf → Edge systematisch zu klein).
+MARKET_VIG     = 1.05
 
 # Co-Gastgeber Heimvorteil (WM-spezifisch — neutrales Gelände, aber Heimkurve)
 CO_HOSTS       = {"MEX", "USA", "CAN"}
@@ -511,7 +514,7 @@ def compute_verdict(model_odds: float | None, market_odds: float | None,
         # → 1/model_odds = p / MODEL_MARGIN → * MODEL_MARGIN gibt rohes p zurück
         # Markt: * 1.03 ≈ devig für Pinnacle (~3% Vig)
         model_prob  = (1.0 / model_odds) * MODEL_MARGIN
-        market_prob = (1.0 / market_odds) * 1.03
+        market_prob = (1.0 / market_odds) / MARKET_VIG
         edge_pp = round((model_prob - market_prob) * 100)
         if   edge_pp >= 7:  mod_sig =  1
         elif edge_pp >= 0:  mod_sig =  0
