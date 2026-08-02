@@ -38,6 +38,12 @@ BASE = Path(__file__).resolve().parent
 
 MIN_VOL_USD = 7_500     # „5-10k oben liegen" — Mitte
 MIN_ODDS    = 1.35      # Lucas: triviale Favoriten (≤1.35) raus
+# 02.08.2026 (Lucas, streng): „Sharp im Markt" hatte nur n≥4 & CLV>0 — dadurch wurden Wallets mit
+# +0,05pp CLV und sogar bestätigte Millionen-Verlierer (−$4,3 Mio) als „bewiesen scharf" gepusht.
+# Jetzt: Close SPÜRBAR geschlagen (Ø CLV ≥ Schwelle) UND Trefferquote ≥ Schwelle UND kein bestätigter
+# Verlierer (Lifetime-P&L bekannt & < 0). Konsistent mit dem _is_smart-Gate im Whale-Channel.
+SHARP_MIN_CLV = float(os.environ.get("SHARP_MIN_CLV") or 1.5)   # Ø CLV pp — Linie real geschlagen
+SHARP_MIN_HIT = float(os.environ.get("SHARP_MIN_HIT") or 0.5)   # Mindest-Trefferquote
 CLOSE_FILE  = "poly_money_broad_close.json"
 OUT_FILE    = "poly_money_broad.json"
 # 25.07.2026 (Lucas ① Momentum): globale Poly-Preis-ZEITREIHE je Markt — fortgeschrieben bei jedem
@@ -675,14 +681,21 @@ def sharp_entries(prev, cur, min_n=4):
         if ok in prev_open:
             continue
         s = scores.get(e.get("wallet"))
-        if not s or s.get("n", 0) < min_n:
+        n = (s or {}).get("n", 0)
+        if not s or n < min_n:
             continue
-        avg = s["clvSumPP"] / s["n"] if s["n"] else 0
-        if avg <= 0:
+        avg = s["clvSumPP"] / n if n else 0
+        hit = s.get("wins", 0) / n if n else 0
+        pnl = s.get("pnl")
+        if avg < SHARP_MIN_CLV:                       # Close nicht spürbar geschlagen → kein Beweis
+            continue
+        if hit < SHARP_MIN_HIT:                       # zu wenige Treffer
+            continue
+        if isinstance(pnl, (int, float)) and pnl < 0:  # bestätigter Verlierer → NICHT "scharf"
             continue
         out.append({"wallet": e["wallet"], "key": e["key"], "side": e["side"], "league": e.get("league"),
                     "price": e.get("firstPrice"), "usd": e.get("usd") or 0, "avgClv": round(avg, 1),
-                    "hit": round(s.get("wins", 0) / s["n"], 2), "n": s["n"]})
+                    "hit": round(hit, 2), "n": n})
     out.sort(key=lambda x: -x["usd"])
     return out
 

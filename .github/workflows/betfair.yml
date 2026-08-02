@@ -47,7 +47,6 @@ jobs:
       - name: 🧭 Übersicht-Sidecar (Steam + frischer Zufluss, leicht für den ersten Menüpunkt)
         run: ${{ env.BETFAIR_PY }} build_betfair_overview.py
         continue-on-error: true
-        continue-on-error: true
 
       - name: 📣 Betfair-Alerts (Trades-Channel + öffentlicher Moneyflow)
         run: ${{ env.BETFAIR_PY }} betfair_alerts.py

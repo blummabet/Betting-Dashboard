@@ -222,9 +222,12 @@ class TestWalletTrack:
 
 class TestSharpAlert:
     # 25.07.2026 (Lucas 🔔): NEUE Einstiege bewiesen-scharfer Wallets erkennen (prev-vs-cur).
-    SCORES = {"0xSHARP": {"n": 6, "clvSumPP": 18.0, "wins": 4},   # Ø CLV +3.0 → scharf
-              "0xDUMB": {"n": 6, "clvSumPP": -12.0, "wins": 1},   # negativer CLV → nicht
-              "0xTHIN": {"n": 2, "clvSumPP": 6.0, "wins": 2}}     # zu dünn (n<4)
+    SCORES = {"0xSHARP": {"n": 6, "clvSumPP": 18.0, "wins": 4},     # Ø CLV +3.0 · 67% → scharf
+              "0xDUMB": {"n": 6, "clvSumPP": -12.0, "wins": 1},     # negativer CLV → nicht
+              "0xTHIN": {"n": 2, "clvSumPP": 6.0, "wins": 2},       # zu dünn (n<4)
+              "0xLOWCLV": {"n": 15, "clvSumPP": 7.5, "wins": 9},    # 02.08.: Ø CLV +0.5 < 1.5 → nicht
+              "0xLOWHIT": {"n": 10, "clvSumPP": 20.0, "wins": 4},   # 02.08.: 40% Treffer < 50% → nicht
+              "0xLOSER": {"n": 15, "clvSumPP": 30.0, "wins": 9, "pnl": -500000}}  # 02.08.: bestätigter Verlierer → nicht
     def _cur(self, *wallets):
         openp = {f"{w}|k{i}|A": {"wallet": w, "key": f"k{i}", "side": "A", "league": "MLB",
                                  "firstPrice": 0.42, "usd": 8000} for i, w in enumerate(wallets)}
@@ -247,6 +250,19 @@ class TestSharpAlert:
         prev = {"open": {}, "scores": self.SCORES}
         msg = B._format_sharp_alert(B.sharp_entries(prev, self._cur("0xSHARP")))
         assert "Sharp im Markt" in msg and "+3.0pp" in msg and "n6" in msg
+
+    def test_clv_unter_schwelle_alarmiert_nicht(self):   # 02.08.2026 (Lucas): CLV +0.5pp schlägt den Close nicht
+        prev = {"open": {}, "scores": self.SCORES}
+        assert B.sharp_entries(prev, self._cur("0xLOWCLV")) == []
+
+    def test_niedrige_trefferquote_alarmiert_nicht(self):   # 02.08.2026: 40% < 50%
+        prev = {"open": {}, "scores": self.SCORES}
+        assert B.sharp_entries(prev, self._cur("0xLOWHIT")) == []
+
+    def test_bestaetigter_verlierer_ist_nicht_scharf(self):   # 02.08.2026: das $4,3-Mio-Leck
+        prev = {"open": {}, "scores": self.SCORES}
+        # gute CLV (+2.0) & Treffer (60%), aber Lifetime-P&L < 0 → raus
+        assert B.sharp_entries(prev, self._cur("0xLOSER")) == []
 
 
 class TestGammaParser:
