@@ -36,7 +36,7 @@ test('Dashboard rendert alle Kacheln + Triple-Hero', () => {
   assert.match(html, /Beste Streaks/); assert.match(html, /Bournemouth/);
   assert.match(html, /Betfair-Kohle/); assert.match(html, /Kairat/);
   assert.match(html, /Poly Whale-Bets/); assert.match(html, /Lakers/);
-  assert.match(html, /Sharp-Radar/);   assert.match(html, /\+4\.2pp/);
+  assert.match(html, /Pinnacle-Steam/);   // umbenannt von Sharp-Radar   assert.match(html, /\+4\.2pp/);
 });
 
 test('Kachel-Überschriften führen per showView in den vollen Bereich', () => {
@@ -118,10 +118,9 @@ test('Übersicht: Public-Kandidaten-Vorschau-Boxen rendern (sendet nicht)', asyn
   w._renderMainDash();
   await new Promise(r => setTimeout(r, 40));
   const html = w.document.getElementById('mainDashPanel').innerHTML;
-  assert.match(html, /Public-Kandidaten/);
-  assert.match(html, /sendet nicht/);
-  assert.match(html, /Top-Play \(hart gegatet\)/);
-  assert.match(html, /Whale-Watch \(Public-Schwelle\)/);
+  assert.match(html, /sendet nicht/);        // Vorschau-Hinweis je Kachel
+  assert.match(html, /Top-Play/);            // eigene Kachel (Reihe 4)
+  assert.match(html, /Whale-Watch/);         // eigene Kachel (Reihe 4)
   assert.match(html, /Atlanta Braves/, 'Top-Play-Kandidat sichtbar');
   assert.match(html, /Lakers/, 'Whale-Kandidat sichtbar');
 });

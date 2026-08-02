@@ -133,7 +133,9 @@
       '.md-agree-dot.out{top:2px;width:13px;height:13px;box-shadow:0 0 0 2px var(--m1),0 0 0 4px rgba(201,133,0,.35);}',
       '.md-agree-sc{position:absolute;top:0;font-family:"JetBrains Mono",monospace;font-size:9px;color:var(--mi3);transform:translateX(-50%);}',
       /* tiles */
-      '.md-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(304px,1fr));gap:12px;margin-top:14px;}',
+      '.md-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px;}',
+      '.md-cell{display:contents;}',
+      '@media(max-width:760px){.md-grid{grid-template-columns:1fr;}}',
       '.md-tile{background:var(--m1);border:1px solid var(--mln);border-radius:14px;padding:13px 15px 6px;display:flex;flex-direction:column;min-width:0;transition:border-color .16s,transform .16s;}',
       '.md-tile:hover{border-color:var(--mln2);transform:translateY(-2px);}',
       '.md-tile-h{display:flex;align-items:center;gap:9px;margin-bottom:4px;}',
@@ -510,10 +512,10 @@
     return tile('🔥', 'Heute spielenswert', A.red, 'rgba(229,83,75,.14)', 'rgba(229,83,75,.32)', 'polywallets', 'alle Plays', body, 10);
   }
   function _mdFillPlays() {
-    var box = document.getElementById('md-plays'); if (!box) return;
-    if (typeof _pwEnsurePlaysData !== 'function' || typeof _pwTopPlays !== 'function') { box.style.display = 'none'; return; }
+    var box = document.getElementById('md-cell-play'); if (!box) return;
+    if (typeof _pwEnsurePlaysData !== 'function' || typeof _pwTopPlays !== 'function') return;   // Skelett bleibt
     _pwEnsurePlaysData(function () {
-      var b2 = document.getElementById('md-plays'); if (!b2) return;
+      var b2 = document.getElementById('md-cell-play'); if (!b2) return;
       var plays = []; try { plays = _pwTopPlays(3, null, false) || []; } catch (e) { plays = []; }
       b2.innerHTML = _mdPlaysHtml(plays);
     });
@@ -543,24 +545,56 @@
     return rowEl(main, usd(w.usd), A.poly, sub, '');
   }
   function _mdFillPubPreview() {
-    var box = document.getElementById('md-pubprev'); if (!box) return;
-    if (typeof _pwEnsurePlaysData !== 'function' || typeof _pwPublicTopPlays !== 'function' || typeof _pwWhalePublicCandidates !== 'function') { box.style.display = 'none'; return; }
+    var cTop = document.getElementById('md-cell-top'), cWh = document.getElementById('md-cell-whale');
+    if (!cTop && !cWh) return;
+    if (typeof _pwEnsurePlaysData !== 'function' || typeof _pwPublicTopPlays !== 'function' || typeof _pwWhalePublicCandidates !== 'function') return;   // Skelett bleibt
     _pwEnsurePlaysData(function () {
-      var b2 = document.getElementById('md-pubprev'); if (!b2) return;
+      var t = document.getElementById('md-cell-top'), w = document.getElementById('md-cell-whale');
       var tops = [], whales = [];
       try { tops = _pwPublicTopPlays() || []; } catch (e) { tops = []; }
       try { whales = _pwWhalePublicCandidates() || []; } catch (e) { whales = []; }
-      var topBody = tops.length ? tops.slice(0, 5).map(_mdPubTopRow).join('')
-        : empty('Kein Top-Play über der Schwelle — Conv≥9, bewiesene Wallet (n≥8, ≥55%), Geld-Mehrheit ≥60%. Das ist der Normalfall.');
-      var whBody = whales.length ? whales.slice(0, 5).map(_mdWhalePubRow).join('')
-        : empty('Keine Whale-Position über der Public-Schwelle (untracked ≥$100K / tracked ≥$25K).');
-      b2.innerHTML =
-        '<div class="md-preview-h">🧪 Public-Kandidaten <span style="font-weight:600;color:var(--mi2)">— Vorschau, sendet nicht · ein paar Tage beobachten</span></div>' +
-        '<div class="md-grid">' +
-          tile('🎯', 'Top-Play (hart gegatet)', A.good, 'rgba(46,160,67,.14)', 'rgba(46,160,67,.32)', 'polywallets', 'Wallets', topBody, 10) +
-          tile('🐋', 'Whale-Watch (Public-Schwelle)', A.poly, 'rgba(25,158,112,.14)', 'rgba(25,158,112,.32)', 'polywallets', 'Wallets', whBody, 40) +
-        '</div>';
+      var note = '<div style="font-size:10px;color:var(--mi3);margin:-2px 0 8px">🧪 Vorschau — sendet nicht · ein paar Tage beobachten</div>';
+      var topBody = note + (tops.length ? tops.slice(0, 5).map(_mdPubTopRow).join('')
+        : empty('Kein Top-Play über der Schwelle — Conv≥9, bewiesene Wallet (n≥8, ≥55%), Geld-Mehrheit ≥60%. Normalfall.'));
+      var whBody = note + (whales.length ? whales.slice(0, 5).map(_mdWhalePubRow).join('')
+        : empty('Keine Whale-Position über der Public-Schwelle (untracked ≥$100K / tracked ≥$25K).'));
+      if (t) t.innerHTML = tile('🎯', 'Top-Play', A.good, 'rgba(46,160,67,.14)', 'rgba(46,160,67,.32)', 'polywallets', 'Wallets', topBody, 0);
+      if (w) w.innerHTML = tile('🐋', 'Whale-Watch', A.poly, 'rgba(25,158,112,.14)', 'rgba(25,158,112,.32)', 'polywallets', 'Wallets', whBody, 0);
     });
+  }
+
+  // ── 🕐 Betfair HT (02.08.2026, Lucas): wo das Geld auf den HALBZEIT-Märkten liegt — HT 1X2,
+  // HT O/U 0.5, HT O/U 1.5. Kleinere Schwelle als Voll-Zeit (HT-Märkte tragen weniger Geld). Client-
+  // seitig aus den geladenen Betfair-Preisen, gerankt nach Konzentration (€ × Anteil) wie „Kohle".
+  var _HT_MK = { 'Half Time': 'HT 1X2', 'First Half Goals 0.5': 'HT O/U 0.5', 'First Half Goals 1.5': 'HT O/U 1.5' };
+  var _HT_FLOOR = 1000;
+  function _mdBfHt() {
+    var ms = (_md.data.betfair && _md.data.betfair.matches) || [], rows = [];
+    ms.forEach(function (m) {
+      var best = null, mk = m.markets || {};
+      for (var name in _HT_MK) {
+        var market = mk[name]; if (!market) continue;
+        var rs = market.runners || [], tot = 0, i;
+        for (i = 0; i < rs.length; i++) tot += (+rs[i].vol || 0);
+        if (tot <= 0) continue;
+        var lead = rs.reduce(function (a, r) { return (!a || (+r.vol || 0) > (+a.vol || 0)) ? r : a; }, null);
+        if (!lead) continue;
+        var share = (+lead.vol || 0) / tot, sc = (+lead.vol || 0) * share;
+        if (!best || sc > best.sc) best = { name: name, lead: lead, share: share, vol: +lead.vol || 0, sc: sc };
+      }
+      if (best && best.vol >= _HT_FLOOR) rows.push({ m: m, b: best });
+    });
+    rows.sort(function (a, b) { return b.b.sc - a.b.sc; });
+    return rows.slice(0, 5);
+  }
+  function _mdBfHtBody() {
+    var rows = _mdBfHt();
+    if (!rows.length) return empty('Kein nennenswertes HT-Geld gerade (Schwelle \u20ac1K).');
+    return rows.map(function (x) {
+      var m = x.m, b = x.b, pct = Math.round(b.share * 100);
+      return rowEl(_bfTeams(m), eur(b.vol), A.bf,
+        (_HT_MK[b.name] || b.name) + ' \u2192 ' + esc(b.lead.name) + ' \u00b7 ' + pct + '%', meter(pct, A.bf));
+    }).join('') + _ageStr(_md.data.betfair);
   }
 
   function _mdRender() {
@@ -620,18 +654,25 @@
     }).join('') : empty('Keine Steam-Moves.');
 
     var grid = '<div class="md-grid">' +
+      // Reihe 1 — unsere Picks
       tile('🎯', 'Beste Cards', A.good, 'rgba(46,160,67,.14)', 'rgba(46,160,67,.32)', 'national-cards', 'alle Cards', cardsBody, 40) +
-      tile('🔥', 'Beste Streaks', A.gold, 'rgba(201,133,0,.14)', 'rgba(201,133,0,.32)', 'national-streaks', 'alle Serien', streaksBody, 80) +
-      tile('💷', 'Betfair-Kohle', A.bf, 'rgba(217,89,38,.14)', 'rgba(217,89,38,.32)', 'betfair', 'Radar', bfBody, 120) +
-      tile('⚡', 'Sharpe Bewegungen', A.bf, 'rgba(217,89,38,.14)', 'rgba(217,89,38,.32)', 'betfair', 'Radar', _mdBfSteamBody(), 130) +
+      tile('🔥', 'Beste Streaks', A.gold, 'rgba(201,133,0,.14)', 'rgba(201,133,0,.32)', 'national-streaks', 'alle Serien', streaksBody, 60) +
+      '<div id="md-cell-play" class="md-cell">' + tile('🔥', 'Heute spielenswert', A.red, 'rgba(229,83,75,.14)', 'rgba(229,83,75,.32)', 'polywallets', 'alle Plays', empty('lädt …'), 80) + '</div>' +
+      // Reihe 2 — Betfair-Geld
+      tile('💷', 'Betfair-Kohle', A.bf, 'rgba(217,89,38,.14)', 'rgba(217,89,38,.32)', 'betfair', 'Radar', bfBody, 90) +
+      tile('💸', 'Frisches Geld', A.good, 'rgba(46,160,67,.14)', 'rgba(46,160,67,.32)', 'betfair', 'Radar', _mdBfFlowBody(), 100) +
+      tile('🕐', 'Betfair HT', A.bf, 'rgba(217,89,38,.14)', 'rgba(217,89,38,.32)', 'betfair', 'Radar', _mdBfHtBody(), 110) +
+      // Reihe 3 — Linienbewegung & Fehlbepreisung
+      tile('⚡', 'Betfair-Steam', A.bf, 'rgba(217,89,38,.14)', 'rgba(217,89,38,.32)', 'betfair', 'Radar', _mdBfSteamBody(), 130) +
       tile('⚖️', 'Größte Fehlbepreisung', A.red, 'rgba(229,83,75,.14)', 'rgba(229,83,75,.32)', 'betfair', 'Radar', _mdBfMispricedBody(), 140) +
-      tile('💸', 'Frisches Geld', A.good, 'rgba(46,160,67,.14)', 'rgba(46,160,67,.32)', 'betfair', 'Radar', _mdBfFlowBody(), 150) +
+      tile('📡', 'Pinnacle-Steam', A.blue, 'rgba(57,135,229,.14)', 'rgba(57,135,229,.32)', 'sharp', 'Radar', shBody, 150) +
+      // Reihe 4 — Poly
       tile('🐋', 'Poly Whale-Bets', A.poly, 'rgba(25,158,112,.14)', 'rgba(25,158,112,.32)', 'polywallets', 'Wallets', whBody, 160) +
-      tile('📡', 'Sharp-Radar', A.blue, 'rgba(57,135,229,.14)', 'rgba(57,135,229,.32)', 'sharp', 'Radar', shBody, 200) +
+      '<div id="md-cell-top" class="md-cell">' + tile('🎯', 'Top-Play', A.good, 'rgba(46,160,67,.14)', 'rgba(46,160,67,.32)', 'polywallets', 'Wallets', empty('lädt …'), 170) + '</div>' +
+      '<div id="md-cell-whale" class="md-cell">' + tile('🐋', 'Whale-Watch', A.poly, 'rgba(25,158,112,.14)', 'rgba(25,158,112,.32)', 'polywallets', 'Wallets', empty('lädt …'), 180) + '</div>' +
       '</div>';
 
-    p.innerHTML = _head() + _mdPulse() + _mdJetzt() + _kpis()
-      + '<div id="md-plays"></div>' + _mdHero() + grid + '<div id="md-pubprev"></div>' +
+    p.innerHTML = _head() + _mdPulse() + _mdJetzt() + _kpis() + _mdHero() + grid +
       '<div class="md-foot">Kuratierter Überblick · tippe „alle →" für den vollen Bereich</div>';
     _mdFillPlays();
     _mdFillPubPreview();

@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v50';   // 02.08.2026: Betfair-Radar entruempelt — keine rote Live-Umrandung (Rot nur im LIVE-Badge), xNorm-Badge Gold->Orange statt Rot, oberer Block nur klare Mehrheiten (Fuehrung >=60%, Fast-Gleichstaende raus)
+const VERSION = 'cocobet-v51';   // 02.08.2026: Uebersicht als 4x3-Raster (Cards/Streaks/Spielenswert · Betfair-Kohle/Frisches Geld/Betfair-HT · Betfair-Steam/Fehlbepreisung/Pinnacle-Steam · Whale-Bets/Top-Play/Whale-Watch); neue Betfair-HT-Kachel (HT 1X2 + HT O/U); Steam-Kacheln umbenannt
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

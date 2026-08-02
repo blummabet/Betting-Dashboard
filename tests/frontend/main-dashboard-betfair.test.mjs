@@ -37,7 +37,7 @@ test('Steam- und Frisches-Geld-Kachel rendern aus dem Sidecar', () => {
   const w = load(); seed(w);
   w._renderMainDash();
   const h = w.document.getElementById('mainDashPanel').innerHTML;
-  assert.match(h, /Sharpe Bewegungen/); assert.match(h, /Genk/); assert.match(h, /-8\.8pp/); assert.match(h, /Quote steigt/);
+  assert.match(h, /Betfair-Steam/); assert.match(h, /Genk/); assert.match(h, /-8\.8pp/); assert.match(h, /Quote steigt/);
   assert.match(h, /Frisches Geld/); assert.match(h, /Brondby/); assert.match(h, /€61\.?9?K|€62K/);
 });
 
@@ -68,6 +68,39 @@ test('leerer Sidecar → freundliche „sammelt"-Hinweise, kein Crash', () => {
   const w = load(); seed(w, { bfOverview: { steam: [], flow: [] } });
   w._renderMainDash();
   const h = w.document.getElementById('mainDashPanel').innerHTML;
-  assert.match(h, /Sharpe Bewegungen/); assert.match(h, /Frisches Geld/);
+  assert.match(h, /Betfair-Steam/); assert.match(h, /Frisches Geld/);
   assert.match(h, /sammelt/i);
+});
+
+test('Betfair HT: Halbzeit-Markt-Geld (HT O/U) wird als eigene Kachel gezeigt', () => {
+  const w = load();
+  w._mdState.data = {
+    liga: null, mls: null, ligaStreaks: null, mlsStreaks: null, whales: null, bfOverview: { steam: [], flow: [] },
+    betfair: { matches: [
+      { matchId: 5, home: 'Sturm', away: 'Rapid', country: 'AT', league: 'Bundesliga',
+        markets: { 'First Half Goals 0.5': { runners: [
+          { name: 'Under 0.5 Goals', odd: 3.6, vol: 8000 }, { name: 'Over 0.5 Goals', odd: 1.3, vol: 2000 } ] } } },
+    ] },
+  };
+  w._renderMainDash();
+  const h = w.document.getElementById('mainDashPanel').innerHTML;
+  assert.match(h, /Betfair HT/, 'eigene HT-Kachel');
+  assert.match(h, /HT O\/U 0\.5/, 'HT-Markt-Label');
+  assert.match(h, /Sturm/);
+});
+
+test('Betfair HT: unter der HT-Schwelle (< 1K) -> freundlicher Leer-Hinweis', () => {
+  const w = load();
+  w._mdState.data = {
+    liga: null, mls: null, ligaStreaks: null, mlsStreaks: null, whales: null, bfOverview: { steam: [], flow: [] },
+    betfair: { matches: [
+      { matchId: 6, home: 'Klein', away: 'Winzig', country: 'AT', league: 'X',
+        markets: { 'First Half Goals 0.5': { runners: [
+          { name: 'Under 0.5 Goals', odd: 3.6, vol: 400 }, { name: 'Over 0.5 Goals', odd: 1.3, vol: 200 } ] } } },
+    ] },
+  };
+  w._renderMainDash();
+  const h = w.document.getElementById('mainDashPanel').innerHTML;
+  assert.match(h, /Betfair HT/);
+  assert.match(h, /Kein nennenswertes HT-Geld/);
 });
