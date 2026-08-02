@@ -51,7 +51,7 @@ MIN_USD_UNTRACKED = float(os.environ.get("WHALE_MIN_USD")         or 50000)   # 
 MIN_USD_TRACKED   = float(os.environ.get("WHALE_MIN_USD_TRACKED") or 5000)
 MIN_HITRATE       = float(os.environ.get("WHALE_MIN_HITRATE")     or 0.5)   # „smart" = Record UND ≥50% Treffer
 FRESH_DAYS  = int(os.environ.get("WHALE_FRESH_DAYS")  or 2)
-MIN_TR      = int(os.environ.get("WHALE_MIN_TR")      or 3)
+MIN_TR      = int(os.environ.get("WHALE_MIN_TR")      or 8)   # 02.08.2026 (Lucas): rauf von 3 — 2/3 ist kein Beweis
 MAX_ALERTS  = int(os.environ.get("WHALE_MAX_ALERTS")  or 8)
 RESTOCK_MULT = 1.5   # erneuter Alert erst bei ≥ +50% Größe
 
@@ -60,7 +60,7 @@ RESTOCK_MULT = 1.5   # erneuter Alert erst bei ≥ +50% Größe
 # Dedup-State + Poly-Matchup aus poly_money_broad_close.json, damit der Post die Paarung zeigt.
 PUB_MIN_USD_UNTRACKED = float(os.environ.get("WHALE_PUB_MIN_USD")         or 100000)
 PUB_MIN_USD_TRACKED   = float(os.environ.get("WHALE_PUB_MIN_USD_TRACKED") or 25000)
-PUB_MIN_TR            = int(os.environ.get("WHALE_PUB_MIN_TR")            or 5)
+PUB_MIN_TR            = int(os.environ.get("WHALE_PUB_MIN_TR")            or 8)   # 02.08.2026 (Lucas): "bewiesen" konsistent ab n>=8
 PUB_MIN_HITRATE       = float(os.environ.get("WHALE_PUB_MIN_HITRATE")     or 0.5)
 
 
@@ -81,6 +81,16 @@ def _is_smart(s, min_tr=MIN_TR, min_hitrate=MIN_HITRATE):
     if isinstance(pnl, (int, float)) and pnl < 0:
         return False
     return True
+
+
+def _is_confirmed_loser(s) -> bool:
+    """02.08.2026 (Lucas: „ganz rausfiltern"): eine Wallet mit BEKANNTEM Lifetime-P&L < 0 ist ein
+    nachgewiesener Verlierer und wird gar nicht mehr gepusht — auch nicht als großer Whale. Unbekannter
+    P&L bleibt drin (nur nachweisliche Verlierer fliegen)."""
+    if not isinstance(s, dict):
+        return False
+    pnl = s.get("pnl")
+    return isinstance(pnl, (int, float)) and pnl < 0
 PUB_CHAT   = (os.environ.get("TELEGRAM_CHAT_ID") or "").strip()
 PUB_SEEN_FILE = BASE / "poly_whale_public_seen.json"
 BROAD_FILE    = BASE / "poly_money_broad_close.json"
@@ -261,6 +271,8 @@ def select(track: dict, seen: dict, now: datetime,
         # smart); ein schlechter Record (z.B. 0/4) ist KEIN Freifahrtschein → hohe Schwelle.
         _s = scores.get(pos.get("wallet"))
         _n = (_s.get("n") or 0) if isinstance(_s, dict) else 0
+        if _is_confirmed_loser(_s):
+            continue          # 02.08.2026 (Lucas): bekannter Netto-Verlierer → gar nicht pushen, auch nicht als großer Whale
         _smart = _is_smart(_s, min_tr, min_hitrate)   # inkl. „kein bestätigter Verlierer"
         if usd < (min_tracked if _smart else min_untracked):
             continue

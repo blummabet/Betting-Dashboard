@@ -30,17 +30,17 @@ class TestTrackRecord(unittest.TestCase):
         self.assertIsNone(P.track_record({"0xa": {"n": 2, "wins": 2}}, "0xa"))
 
     def test_shows_hitrate(self):
-        tr = P.track_record({"0xa": {"n": 5, "wins": 3}}, "0xa")
-        self.assertIn("3/5", tr); self.assertIn("60%", tr)
+        tr = P.track_record({"0xa": {"n": 9, "wins": 6}}, "0xa")
+        self.assertIn("6/9", tr); self.assertIn("67%", tr)
 
     def test_unknown_wallet(self):
         self.assertIsNone(P.track_record({}, "0xzz"))
 
 
 class TestSelect(unittest.TestCase):
-    # Gestaffelt: ohne Record Schwelle $50k, mit Record (n≥3) $5k.
+    # Gestaffelt: ohne Record Schwelle $50k, mit Record (n≥8, 02.08.) $5k.
     def _tracked(self, wallet="0xREC"):
-        return {"scores": {wallet: {"n": 5, "wins": 3}}}
+        return {"scores": {wallet: {"n": 9, "wins": 6}}}
 
     def test_untracked_below_25k_skipped(self):
         track = {"open": {"a": _pos(20000)}}          # groß, aber ohne Record < $25k
@@ -123,8 +123,8 @@ class TestBuildCard(unittest.TestCase):
         self.assertNotIn("1/3", card)
 
     def test_good_record_highlighted(self):
-        card = P.build_card(_pos(9000, wallet="0xg"), {"0xg": {"n": 6, "wins": 4}}, False)
-        self.assertIn("bewiesene Wallet", card); self.assertIn("4/6 richtig", card)
+        card = P.build_card(_pos(9000, wallet="0xg"), {"0xg": {"n": 9, "wins": 6}}, False)
+        self.assertIn("bewiesene Wallet", card); self.assertIn("6/9 richtig", card)
 
     def test_contrarian_hint_under_45c(self):
         self.assertIn("Außenseiter", P.build_card(_pos(9000, price=0.40), {}, False))
@@ -155,7 +155,7 @@ class TestPublicWhale(unittest.TestCase):
                 "k2": _pos(30000, side="B", wallet="0xUNK"),     # unbekannt, $30K < 100K → SKIP
                 "k3": _pos(120000, side="C", wallet="0xUNK2"),   # riesig, $120K ≥ 100K → PASS
             },
-            "scores": {"0xSHARP": {"n": 6, "wins": 4, "clvSumPP": 12}},
+            "scores": {"0xSHARP": {"n": 9, "wins": 6, "clvSumPP": 18}},
         }
         cand = P.select(track, {}, NOW, P.PUB_MIN_USD_UNTRACKED, P.PUB_MIN_USD_TRACKED,
                         P.PUB_MIN_TR, P.PUB_MIN_HITRATE)
@@ -196,21 +196,18 @@ class TestConfirmedLoserGate(unittest.TestCase):
     Band; unbekannter P&L bleibt drin (Verhalten wie bisher)."""
 
     def test_is_smart_predicate(self):
-        self.assertTrue(P._is_smart({"n": 5, "wins": 3}))                      # Record, kein pnl → smart
-        self.assertTrue(P._is_smart({"n": 5, "wins": 3, "pnl": 1200}))         # profitabel → smart
-        self.assertFalse(P._is_smart({"n": 5, "wins": 3, "pnl": -25576}))      # bestätigter Verlierer → NICHT
-        self.assertFalse(P._is_smart({"n": 2, "wins": 2, "pnl": 500}))         # zu dünn (n<3)
-        self.assertFalse(P._is_smart({"n": 5, "wins": 1}))                     # <50% Treffer
+        self.assertTrue(P._is_smart({"n": 9, "wins": 6}))                      # Record (n≥8), kein pnl → smart
+        self.assertTrue(P._is_smart({"n": 9, "wins": 6, "pnl": 1200}))         # profitabel → smart
+        self.assertFalse(P._is_smart({"n": 9, "wins": 6, "pnl": -25576}))      # bestätigter Verlierer → NICHT
+        self.assertFalse(P._is_smart({"n": 5, "wins": 3}))                     # zu dünn (n<8, 02.08.)
+        self.assertFalse(P._is_smart({"n": 2, "wins": 2, "pnl": 500}))         # zu dünn (n<8)
+        self.assertFalse(P._is_smart({"n": 9, "wins": 3}))                     # <50% Treffer
 
-    def test_confirmed_loser_loses_low_threshold(self):
-        # 55% Treffer, aber −$25.576 lifetime: $6k wird NICHT mehr gemeldet (wie eine unbekannte Wallet)…
-        loser = {"open": {"a": _pos(6000, wallet="0xLOSS")},
-                 "scores": {"0xLOSS": {"n": 31, "wins": 17, "pnl": -25576}}}
-        self.assertEqual(P.select(loser, {}, NOW), [])
-        # …aber ab der hohen Untracked-Schwelle ($60k) darf er weiter durch.
-        big = {"open": {"a": _pos(60000, wallet="0xLOSS")},
-               "scores": {"0xLOSS": {"n": 31, "wins": 17, "pnl": -25576}}}
-        self.assertEqual(len(P.select(big, {}, NOW)), 1)
+    def test_confirmed_loser_filtered_entirely(self):
+        # 02.08.2026 (Lucas: „ganz rausfiltern"): −$25.576 lifetime → weder als $6k noch als $60k-Whale.
+        sc = {"0xLOSS": {"n": 31, "wins": 17, "pnl": -25576}}
+        self.assertEqual(P.select({"open": {"a": _pos(6000, wallet="0xLOSS")}, "scores": sc}, {}, NOW), [])
+        self.assertEqual(P.select({"open": {"a": _pos(60000, wallet="0xLOSS")}, "scores": sc}, {}, NOW), [])
 
     def test_profitable_and_unknown_still_smart(self):
         prof = {"open": {"a": _pos(6000, wallet="0xWIN")},
