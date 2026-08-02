@@ -1,24 +1,24 @@
 {
- "n": 246,
+ "n": 261,
  "minOdds": 1.35,
- "moneyHitRate": 0.63,
- "priceHitRate": 0.63,
- "brierMoney": 0.4593,
- "brierPrice": 0.4593,
+ "moneyHitRate": 0.628,
+ "priceHitRate": 0.632,
+ "brierMoney": 0.4609,
+ "brierPrice": 0.4609,
  "disagree": {
-  "n": 0,
+  "n": 1,
   "moneyWon": 0,
-  "priceWon": 0,
+  "priceWon": 1,
   "neither": 0
  },
  "verdict": "gleichauf",
  "byLeague": [
   {
    "league": "MLB",
-   "n": 67,
-   "moneyHitRate": 0.612,
-   "brierMoney": 0.4832,
-   "brierPrice": 0.4834,
+   "n": 75,
+   "moneyHitRate": 0.613,
+   "brierMoney": 0.4876,
+   "brierPrice": 0.4878,
    "verdict": "gleichauf"
   },
   {
@@ -27,6 +27,14 @@
    "moneyHitRate": 0.581,
    "brierMoney": 0.4616,
    "brierPrice": 0.4617,
+   "verdict": "gleichauf"
+  },
+  {
+   "league": "ESPORTS",
+   "n": 97,
+   "moneyHitRate": 0.649,
+   "brierMoney": 0.4435,
+   "brierPrice": 0.4435,
    "verdict": "gleichauf"
   },
   {
@@ -39,10 +47,10 @@
   },
   {
    "league": "TENNIS",
-   "n": 30,
-   "moneyHitRate": 0.633,
-   "brierMoney": 0.4923,
-   "brierPrice": 0.4923,
+   "n": 34,
+   "moneyHitRate": 0.588,
+   "brierMoney": 0.4955,
+   "brierPrice": 0.4955,
    "verdict": "gleichauf"
   },
   {
@@ -51,14 +59,6 @@
    "moneyHitRate": 0.625,
    "brierMoney": 0.4546,
    "brierPrice": 0.4546,
-   "verdict": "gleichauf"
-  },
-  {
-   "league": "ESPORTS",
-   "n": 94,
-   "moneyHitRate": 0.638,
-   "brierMoney": 0.4468,
-   "brierPrice": 0.4467,
    "verdict": "gleichauf"
   }
  ],
@@ -364,6 +364,18 @@
    "totalUsd": 302068
   },
   {
+   "key": "mlb-stl-tor-2026-08-02",
+   "league": "MLB",
+   "winner": "St. Louis Cardinals",
+   "moneyFav": "Toronto Blue Jays",
+   "priceFav": "Toronto Blue Jays",
+   "moneyShare": 0.555,
+   "priceProb": 0.555,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 289166
+  },
+  {
    "key": "mlb-bos-oak-2026-07-28",
    "league": "MLB",
    "winner": "Athletics",
@@ -386,6 +398,18 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 266796
+  },
+  {
+   "key": "mlb-tex-hou-2026-08-02",
+   "league": "MLB",
+   "winner": "Houston Astros",
+   "moneyFav": "Houston Astros",
+   "priceFav": "Houston Astros",
+   "moneyShare": 0.555,
+   "priceProb": 0.555,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 261896
   },
   {
    "key": "mlb-bos-oak-2026-07-27",
@@ -472,6 +496,18 @@
    "totalUsd": 230619
   },
   {
+   "key": "mlb-pit-cin-2026-08-02",
+   "league": "MLB",
+   "winner": "Cincinnati Reds",
+   "moneyFav": "Cincinnati Reds",
+   "priceFav": "Cincinnati Reds",
+   "moneyShare": 0.555,
+   "priceProb": 0.555,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 229638
+  },
+  {
    "key": "mlb-chc-stl-2026-07-27",
    "league": "MLB",
    "winner": "Chicago Cubs",
@@ -506,56 +542,20 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 201432
-  },
-  {
-   "key": "mlb-cle-cin-2026-07-28",
-   "league": "MLB",
-   "winner": "Cincinnati Reds",
-   "moneyFav": "Cleveland Guardians",
-   "priceFav": "Cleveland Guardians",
-   "moneyShare": 0.575,
-   "priceProb": 0.575,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 195118
-  },
-  {
-   "key": "mlb-tex-hou-2026-07-31",
-   "league": "MLB",
-   "winner": "Houston Astros",
-   "moneyFav": "Houston Astros",
-   "priceFav": "Houston Astros",
-   "moneyShare": 0.535,
-   "priceProb": 0.535,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 193835
-  },
-  {
-   "key": "mlb-tex-tb-2026-07-30",
-   "league": "MLB",
-   "winner": "Tampa Bay Rays",
-   "moneyFav": "Tampa Bay Rays",
-   "priceFav": "Tampa Bay Rays",
-   "moneyShare": 0.605,
-   "priceProb": 0.605,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 186823
   }
  ],
- "generatedAt": "2026-08-02T21:10:29.521536+00:00",
+ "generatedAt": "2026-08-02T22:10:15.737121+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 421,
   "nfl": 567,
-  "mlb": 582,
+  "mlb": 564,
   "nhl": 404,
   "mls": 444,
   "epl": 405,
   "soccer": 800,
-  "tennis": 590,
+  "tennis": 589,
   "ucl": 534,
   "esports": 800,
   "cs2": 418,
@@ -567,7 +567,7 @@
   "boxing": 216,
   "golf": 261,
   "f1": 325,
-  "cricket": 682
+  "cricket": 673
  },
  "sweepStats": {
   "sweepOpen": 500,
