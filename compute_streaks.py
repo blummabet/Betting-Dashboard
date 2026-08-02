@@ -194,7 +194,7 @@ def _next_fixtures(wm):
         _consider(home, away, d, _ko or (d + "T00:00:00Z"), pkey)
 
     for v in nf.values():
-        v.pop("_ko", None)
+        v["kickoff"] = v.pop("_ko", None)   # echten Anpfiff durchreichen (Serien-Watch gated darauf)
     return nf
 
 
@@ -308,7 +308,7 @@ def build_streaks(wm: dict) -> dict:
             if nf:
                 opp_pct = _opp_rate_pct(key, nf["oppId"], form, cf)
                 s["next"] = {"oppId": nf["oppId"], "oppName": nf["oppName"], "atHome": nf["atHome"],
-                             "date": nf["date"], "oppRatePct": opp_pct}
+                             "date": nf["date"], "kickoff": nf.get("kickoff"), "oppRatePct": opp_pct}
                 # Stufe 1 — lebendiger Status: Eigentendenz × nächster Gegner (29.06.2026, Lucas).
                 mcont, opp_support_pct, matchup_pct = _matchup_continuation(cont, opp_pct, target_false, length)
                 s["continuation"] = mcont
