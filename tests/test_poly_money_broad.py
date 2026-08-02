@@ -5,8 +5,19 @@ Zwei neue Stellschrauben gegenüber der Datensatz-Version:
   · Liga-Aufschlüsselung (wo hat die Masse mehr recht?).
 Plus: Auflösung über Polys EIGENE Settlement (kein externer Ergebnis-Feed nötig).
 """
+import pytest
 import poly_money_accuracy as PMA
 import poly_money_broad as B
+
+
+@pytest.fixture(autouse=True)
+def _no_slug_backfill(monkeypatch):
+    # 02.08.2026: der Slug-Backfill (backfill_resolutions_by_slug) liest das echte Close-File und
+    # macht Netz-Lookups — beides gehoert nicht in diese fetch_markets-Unit-Tests (er hat seinen
+    # eigenen Test in test_poly_resolution_backfill.py). Neutralisieren -> die Tests pruefen reines
+    # Tag/Sweep-Verhalten und bleiben deterministisch (sonst zieht der Backfill echte Auflösungen
+    # rein und "toter Tag" ist nicht mehr []).
+    monkeypatch.setattr(B, "backfill_resolutions_by_slug", lambda *a, **k: [])
 
 
 class TestSportTags:
