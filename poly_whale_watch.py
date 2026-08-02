@@ -62,6 +62,25 @@ PUB_MIN_USD_UNTRACKED = float(os.environ.get("WHALE_PUB_MIN_USD")         or 100
 PUB_MIN_USD_TRACKED   = float(os.environ.get("WHALE_PUB_MIN_USD_TRACKED") or 25000)
 PUB_MIN_TR            = int(os.environ.get("WHALE_PUB_MIN_TR")            or 5)
 PUB_MIN_HITRATE       = float(os.environ.get("WHALE_PUB_MIN_HITRATE")     or 0.5)
+
+
+def _is_smart(s, min_tr=MIN_TR, min_hitrate=MIN_HITRATE):
+    """„Bewiesen ordentliche" Wallet fürs niedrige Schwellen-Band UND das „bewiesen"-Label.
+    Record (n≥min_tr) UND ≥min_hitrate Treffer — plus (02.08.2026, Lucas, konservativ): ein
+    BESTÄTIGTER Verlierer (Lifetime-P&L bekannt UND < 0) zählt NICHT als smart. Eine hohe Trefferquote
+    bei Millionen-Verlust (gibt es real: 88% Treffer, −$7 Mio) ist kein Schärfe-Beweis. Unbekannter
+    P&L bleibt drin → Verhalten wie bisher, nur nachweisliche Verlierer fliegen raus."""
+    if not isinstance(s, dict):
+        return False
+    n = s.get("n") or 0
+    if n < min_tr:
+        return False
+    if (s.get("wins") or 0) / n < min_hitrate:
+        return False
+    pnl = s.get("pnl")
+    if isinstance(pnl, (int, float)) and pnl < 0:
+        return False
+    return True
 PUB_CHAT   = (os.environ.get("TELEGRAM_CHAT_ID") or "").strip()
 PUB_SEEN_FILE = BASE / "poly_whale_public_seen.json"
 BROAD_FILE    = BASE / "poly_money_broad_close.json"
@@ -151,10 +170,9 @@ def _wallet_line(scores: dict, wallet) -> str:
     link = _wallet_link(wallet)
     s = scores.get(wallet) if isinstance(scores, dict) else None
     n = (s.get("n") or 0) if isinstance(s, dict) else 0
-    if n >= MIN_TR:
+    if _is_smart(s):
         wins = s.get("wins") or 0
-        if (wins / n) >= MIN_HITRATE:
-            return f"Wallet {link} · ✅ <b>bewiesene Wallet</b> ({wins}/{n} richtig, {round(wins/n*100)}%)"
+        return f"Wallet {link} · ✅ <b>bewiesene Wallet</b> ({wins}/{n} richtig, {round(wins/n*100)}%)"
     return f"Wallet {link} · <i>Track-Record noch im Aufbau</i>"
 
 
@@ -243,7 +261,7 @@ def select(track: dict, seen: dict, now: datetime,
         # smart); ein schlechter Record (z.B. 0/4) ist KEIN Freifahrtschein → hohe Schwelle.
         _s = scores.get(pos.get("wallet"))
         _n = (_s.get("n") or 0) if isinstance(_s, dict) else 0
-        _smart = _n >= min_tr and ((_s.get("wins") or 0) / _n) >= min_hitrate
+        _smart = _is_smart(_s, min_tr, min_hitrate)   # inkl. „kein bestätigter Verlierer"
         if usd < (min_tracked if _smart else min_untracked):
             continue
         # Frische: firstTs innerhalb FRESH_DAYS (kein Alt-Flut beim ersten Lauf)
@@ -305,7 +323,7 @@ def _pub_wallet_line(scores: dict, wallet) -> str:
     inkl. Ø CLV und — sobald der Runner die echte P&L zieht — der Lifetime-Bilanz. Sonst neutral."""
     s = scores.get(wallet) if isinstance(scores, dict) else None
     n = (s.get("n") or 0) if isinstance(s, dict) else 0
-    if n >= PUB_MIN_TR and ((s.get("wins") or 0) / n) >= PUB_MIN_HITRATE:
+    if _is_smart(s, PUB_MIN_TR, PUB_MIN_HITRATE):
         wins = s.get("wins") or 0
         clv = (s.get("clvSumPP") or 0) / n
         clvtxt = ", %s%.1fpp CLV" % ("+" if clv >= 0 else "", clv)

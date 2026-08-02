@@ -188,3 +188,43 @@ class TestPublicWhale(unittest.TestCase):
         msg = P.build_public_card(pos, {}, False, {})
         self.assertIn("Track-Record noch im Aufbau", msg)
         self.assertNotIn("bewiesen scharf", msg)
+
+
+class TestConfirmedLoserGate(unittest.TestCase):
+    """02.08.2026 (Lucas): eine hohe Trefferquote bei bestätigtem Lifetime-Verlust ist kein Schärfe-
+    Beweis (real: 88% Treffer, −$7 Mio). Konservativ: nur bekannt-negativer P&L fliegt aus dem smarten
+    Band; unbekannter P&L bleibt drin (Verhalten wie bisher)."""
+
+    def test_is_smart_predicate(self):
+        self.assertTrue(P._is_smart({"n": 5, "wins": 3}))                      # Record, kein pnl → smart
+        self.assertTrue(P._is_smart({"n": 5, "wins": 3, "pnl": 1200}))         # profitabel → smart
+        self.assertFalse(P._is_smart({"n": 5, "wins": 3, "pnl": -25576}))      # bestätigter Verlierer → NICHT
+        self.assertFalse(P._is_smart({"n": 2, "wins": 2, "pnl": 500}))         # zu dünn (n<3)
+        self.assertFalse(P._is_smart({"n": 5, "wins": 1}))                     # <50% Treffer
+
+    def test_confirmed_loser_loses_low_threshold(self):
+        # 55% Treffer, aber −$25.576 lifetime: $6k wird NICHT mehr gemeldet (wie eine unbekannte Wallet)…
+        loser = {"open": {"a": _pos(6000, wallet="0xLOSS")},
+                 "scores": {"0xLOSS": {"n": 31, "wins": 17, "pnl": -25576}}}
+        self.assertEqual(P.select(loser, {}, NOW), [])
+        # …aber ab der hohen Untracked-Schwelle ($60k) darf er weiter durch.
+        big = {"open": {"a": _pos(60000, wallet="0xLOSS")},
+               "scores": {"0xLOSS": {"n": 31, "wins": 17, "pnl": -25576}}}
+        self.assertEqual(len(P.select(big, {}, NOW)), 1)
+
+    def test_profitable_and_unknown_still_smart(self):
+        prof = {"open": {"a": _pos(6000, wallet="0xWIN")},
+                "scores": {"0xWIN": {"n": 8, "wins": 5, "pnl": 4200}}}
+        self.assertEqual(len(P.select(prof, {}, NOW)), 1)                       # profitabel → niedrige Schwelle
+        unk = {"open": {"a": _pos(6000, wallet="0xUNK")},
+               "scores": {"0xUNK": {"n": 8, "wins": 5}}}                        # pnl unbekannt → bleibt smart
+        self.assertEqual(len(P.select(unk, {}, NOW)), 1)
+
+    def test_label_not_bewiesen_for_loser(self):
+        sc = {"0xLOSS": {"n": 31, "wins": 17, "pnl": -25576}}
+        self.assertNotIn("bewiesene", P._wallet_line(sc, "0xLOSS"))            # Trades-Label ehrlich
+        self.assertNotIn("bewiesen scharf", P._pub_wallet_line(sc, "0xLOSS"))  # Public-Label ehrlich
+
+
+if __name__ == "__main__":
+    unittest.main()
