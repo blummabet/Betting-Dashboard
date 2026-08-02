@@ -50,6 +50,31 @@ HIST_KEEP_H     = 96.0   # Märkte, die 4 Tage nicht mehr gesehen wurden, fallen
 # Auflösung CLV (Einstieg→Close) + Treffer werten → wer schlägt systematisch die Linie („scharf",
 # nicht bloß groß). Wie [[project_wallet_track_record]], aber GLOBAL über alle Sportarten.
 WTRACK_FILE = "poly_wallet_track.json"
+RESOLUTIONS_FILE = "poly_resolutions.json"   # 02.08.2026 (Lucas): rollierende {key:{winner,ts}} für den
+RESOLUTIONS_KEEP_DAYS = 14                    # Shortlist-Paper-Tracker — abrechnen ohne Re-Fetch.
+
+
+def update_resolutions(prev, markets, now=None, keep_days=RESOLUTIONS_KEEP_DAYS):
+    """Aufgelöste Märkte dieses Laufs in eine rollierende {key:{winner,ts}} mergen; alte prunen.
+    REIN/testbar. Der Shortlist-Tracker liest das statt selbst Poly abzufragen."""
+    now = now or _now()
+    out = {k: dict(v) for k, v in (prev or {}).items() if isinstance(v, dict)}
+    for key, winner in resolutions(markets).items():
+        if not key or not winner:
+            continue
+        if key not in out:                       # erste Auflösung gewinnt (Zeitstempel = zuerst gesehen)
+            out[key] = {"winner": winner, "ts": now.isoformat()}
+        else:
+            out[key]["winner"] = winner
+    cutoff = now - timedelta(days=keep_days)
+    for k in list(out.keys()):
+        try:
+            ts = datetime.fromisoformat(str(out[k].get("ts", "")).replace("Z", "+00:00"))
+        except Exception:
+            ts = None
+        if not ts or ts < cutoff:
+            del out[k]
+    return out
 
 
 def _now():
@@ -680,6 +705,12 @@ def main() -> int:
         print(f"  P&L-Enrich uebersprungen (nicht fatal): {_e}")
     (BASE / WTRACK_FILE).write_text(json.dumps(wtrack, ensure_ascii=False, indent=1), encoding="utf-8")
     # 🔔 Sharp-im-Markt-Alarm: neue Einstiege bewiesen-scharfer Wallets → Telegram (Kür, nie fatal)
+    # 📒 Rollierende Auflösungen (02.08.2026, Lucas) für den Shortlist-Paper-Tracker mitschreiben.
+    try:
+        _res = update_resolutions(_load(RESOLUTIONS_FILE), markets)
+        (BASE / RESOLUTIONS_FILE).write_text(json.dumps(_res, ensure_ascii=False, indent=1), encoding="utf-8")
+    except Exception as _e:
+        print(f"  Resolutions-Update uebersprungen (nicht fatal): {_e}")
     n_alert = maybe_alert_sharp(prev_wtrack, wtrack)
     if n_alert:
         print(f"🔔 Sharp-Alarm: {n_alert} neue scharfe Einstiege gemeldet")

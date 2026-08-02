@@ -108,7 +108,7 @@ function _pwViewTabs(){
   // 19.07.2026 (Lucas: „besser aufteilen") — 4 Unter-Reiter statt 9 gestapelter Sektionen.
   // Reihenfolge 25.07.2026: globales „Großes Geld" (immer Content+Filter) zuerst → Landing-Tab.
   return '<div class="pw-ds" style="margin-top:-6px">'
-    +b('bet','🔥 Heute wetten')+b('xsport','🎯 Poly-Radar')+b('money','💰 Großes Geld')+b('move','📈 Bewegung')+b('new','🆕 Neu')+b('edge','🎯 Chancen')+b('whales','🐋 Whales')
+    +b('bet','🔥 Heute wetten')+b('track','📊 Track-Record')+b('xsport','🎯 Poly-Radar')+b('money','💰 Großes Geld')+b('move','📈 Bewegung')+b('new','🆕 Neu')+b('edge','🎯 Chancen')+b('whales','🐋 Whales')
     +'</div>';
 }
 
@@ -130,6 +130,9 @@ const _PW_VIEW_INTRO = {
   bet: ['🔥 Heute wetten — die klarsten Gelegenheiten, ein Screen',
     'Bündelt alle Signale zu einem Verdikt je Markt: BET (mit dem Geld) oder FADE (dagegen), Conviction 0–10. Zeigt nur echte Signale — bloße Favoriten ohne Edge fehlen bewusst.',
     'Von oben nach unten abarbeiten: hohe Conviction zuerst prüfen, „Warum" lesen, selbst entscheiden. Leere Liste = heute keine klare Kante → nicht wetten.'],
+  track: ['📊 Track-Record — wie gut „Heute wetten" WIRKLICH performt (Paper)',
+    'Jeder Global-Scan schreibt die exakten Shortlist-Empfehlungen mit (fixer Einsatz $10 zum Einstiegspreis) und rechnet bei Auflösung ab: Trefferquote, ROI, Ø CLV. Zwei Sichten: ganze Shortlist und die harten Public-Kandidaten. Es wird NICHTS gesetzt — reines Mitschreiben.',
+    'Auf die Conviction-Tabelle schauen: erst wenn eine Stufe über genug Spiele klar im Plus ist (ROI + CLV), lohnt das echte Nachspielen (Auto-Bet) — vorher nur beobachten.'],
   new: ['🆕 Neu — was sich seit deinem letzten Blick getan hat',
     'Aktivitäts-Feed über alle Sportarten: neue große Whale-Einstiege (letzte 24h) und Märkte, in denen der Favorit gekippt ist. Der schnelle „was ist passiert"-Check.',
     'Ein frischer 🔥-Einstieg oder ein Favoriten-Flip ist ein Anstoß zum Hinschauen — kein Auto-Bet. Prüf den Markt in 🔥 Heute wetten oder 📈 Bewegung nach.'],
@@ -217,8 +220,9 @@ function initPolyWallets(){
     jf('poly_cross_sport.json'),        // 25.07.2026 (Lucas): globale Edge Poly-vs-Pinnacle über alle Sportarten
     jf('poly_money_broad_history.json'),// 25.07.2026 (Lucas ① Momentum): globale Poly-Preis-Zeitreihe je Markt
     jf('poly_wallet_track.json'),       // 25.07.2026 (Lucas ② Sharp): CLV/Treffer je Wallet (Einstieg→Close)
-  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack])=>{
-    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack};
+    jf('poly_shortlist_track.json'),    // 02.08.2026 (Lucas): Paper-Track-Record der „Heute wetten"-Plays
+  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack])=>{
+    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack};
     _pwRender();
   }).catch(err=>{
     // 12.07.2026: Vorher gab es KEIN catch — eine Exception im Render (z.B. der
@@ -441,6 +445,11 @@ function _pwRender(){
     // ③ Heute-wetten-Shortlist (25.07.2026): alle Signale → ein Verdikt je Markt.
     panel.innerHTML=_pwViewTabs()+_pwSportFilterBar(_pwGlobalCats())+_pwViewIntro('bet')
       +_pwShortlist(_pwCache.broadLive);
+    return;
+  }
+  if(_pwView==='track'){
+    // 📊 Paper-Track-Record der Shortlist (02.08.2026, Lucas): sehen, ob „Heute wetten" performt.
+    panel.innerHTML=_pwViewTabs()+_pwViewIntro('track')+_pwTrackRecord(_pwCache.shortlistTrack);
     return;
   }
   if(_pwView==='xsport'){
@@ -1435,8 +1444,99 @@ function _pwShortlistScore(key,m){
   if(!best||bs<3||vol<15000) return {verdict:'SKIP'};
   return {key,match:oc.map(o=>o.s).join(' vs '),verdict:(best===moneyFav?'BET':'FADE'),side:best,
     conv:Math.min(10,Math.round(4+bs)),reasons:(why[best]||[]).slice(0,3),vol,htk:_pwRealHtk(m),league:m.league,
-    moneyPct,sharp:(sh&&sh.side===best)?sh:null};
+    moneyPct,sharp:(sh&&sh.side===best)?sh:null,price:(typeof pr[best]==='number'?pr[best]:null)};
 }
+// 📊 Paper-Track-Record der „Heute wetten"-Shortlist (02.08.2026, Lucas). Liest poly_shortlist_track.json
+// (open/settled/agg), zeigt: KPIs je Sicht (ganze Shortlist + Public), Conviction-Tabelle (die
+// Entscheidungshilfe fürs spätere Auto-Bet), offene Plays, letzte abgerechnete. Setzt/sendet NICHTS.
+const _PW_TRACK_MIN_N = 20;   // ab so vielen abgerechneten Plays gilt eine Sicht/Stufe als belastbar
+function _pwtPct(x){ return (x==null?'—':(Math.round(x*1000)/10)+'%'); }
+function _pwtSig(x){ return (x>=0?'+':'')+x; }
+function _pwtUsd(x){ const v=Math.round(x); return (v>=0?'+$':'-$')+Math.abs(v); }
+function _pwTrackKpis(a, label, hint){
+  const thin = a.n < _PW_TRACK_MIN_N;
+  const roiCol = a.n? (a.roi>0?'#3fb950':a.roi<0?'#f85149':'#8b949e') : '#8b949e';
+  const clvCol = a.n? (a.clvAvg>0?'#3fb950':a.clvAvg<0?'#f85149':'#8b949e') : '#8b949e';
+  const card=(lbl,val,col,sub)=>'<div style="flex:1;min-width:120px;background:#0f1626;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px 14px">'
+    +'<div style="font-size:10.5px;color:#8b949e;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">'+lbl+'</div>'
+    +'<div style="font-size:21px;font-weight:900;color:'+(col||'#e6edf3')+'">'+val+'</div>'
+    +(sub?'<div style="font-size:10px;color:#6e7681;margin-top:1px">'+sub+'</div>':'')+'</div>';
+  const badge = thin ? '<span style="font-size:10.5px;color:#e3b341;font-weight:700;margin-left:8px">· sammelt noch (n&lt;'+_PW_TRACK_MIN_N+')</span>' : '';
+  return '<div style="margin:2px 0 16px">'
+    +'<div style="font-size:13px;font-weight:800;color:#e6edf3;margin-bottom:8px">'+label+badge
+      +(hint?'<span style="font-size:11px;color:#6e7681;font-weight:600;margin-left:6px">'+hint+'</span>':'')+'</div>'
+    +'<div style="display:flex;gap:9px;flex-wrap:wrap">'
+      +card('abgerechnet', a.n, '#e6edf3', a.wins+' Treffer')
+      +card('Trefferquote', a.n?_pwtPct(a.hit):'—', a.n?(a.hit>=0.5?'#3fb950':'#f85149'):'#8b949e')
+      +card('ROI', a.n?_pwtSig(Math.round(a.roi*1000)/10)+'%':'—', roiCol, 'fixer Einsatz $'+ (a.stake&&a.n?Math.round(a.stake/a.n):10))
+      +card('Netto P&amp;L', a.n?_pwtUsd(a.pnl):'—', roiCol, 'Einsatz $'+Math.round(a.stake||0))
+      +card('Ø CLV', a.n?_pwtSig(a.clvAvg)+'pp':'—', clvCol, 'Einstieg→Schluss')
+    +'</div></div>';
+}
+function _pwTrackConvTable(byConv){
+  const rows=Object.keys(byConv||{}).map(k=>({c:+k, a:byConv[k]})).sort((x,y)=>y.c-x.c);
+  if(!rows.length) return '';
+  const body=rows.map(r=>{
+    const a=r.a, roiCol=a.roi>0?'#3fb950':a.roi<0?'#f85149':'#8b949e', clvCol=a.clvAvg>0?'#3fb950':a.clvAvg<0?'#f85149':'#8b949e';
+    const thin=a.n<8?' style="opacity:.6"':'';
+    return '<tr'+thin+'><td class="pw-cn" style="font-weight:800;color:#4cc2ff">'+r.c+'/10</td>'
+      +'<td class="pw-cn">'+a.n+'</td>'
+      +'<td class="pw-cn" style="color:'+(a.hit>=0.5?'#3fb950':'#f85149')+'">'+_pwtPct(a.hit)+'</td>'
+      +'<td class="pw-cn" style="font-weight:800;color:'+roiCol+'">'+_pwtSig(Math.round(a.roi*1000)/10)+'%</td>'
+      +'<td class="pw-cn" style="color:'+clvCol+'">'+_pwtSig(a.clvAvg)+'pp</td>'
+      +'<td class="pw-cn pw-mut">'+_pwtUsd(a.pnl)+'</td></tr>';
+  }).join('');
+  return '<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🎯 Nach Conviction — wo lohnt sich das echte Setzen?</span>'
+    +'<span class="pw-sec-note">Je höher die Conviction, desto besser sollte ROI &amp; CLV sein. Erst wenn eine Stufe über genug Spiele (n≥8, klar &gt;0) im Plus ist, ist sie ein Auto-Bet-Kandidat. Blasse Zeilen = noch zu wenige.</span></div>'
+    +'<div class="pw-tw"><table class="pw-tbl"><thead><tr><th>Conviction</th><th>n</th><th>Treffer</th><th>ROI</th><th>Ø CLV</th><th>P&amp;L</th></tr></thead><tbody>'+body+'</tbody></table></div></section>';
+}
+function _pwTrackSettled(settled){
+  const rows=(settled||[]).slice(-15).reverse();
+  if(!rows.length) return '';
+  const body=rows.map(r=>{
+    const win=r.result==='win', rc=win?'#3fb950':'#f85149';
+    const vc=r.verdict==='BET'?'#3fb950':'#e3b341';
+    const pnlCol=(+r.pnl||0)>=0?'#3fb950':'#f85149';
+    return '<tr>'
+      +'<td>'+_pwSportIcon(r.league)+' <span class="pw-cm">'+_pwEsc(String(r.key||'').slice(0,26))+'</span></td>'
+      +'<td class="pw-cm"><b style="color:#4cc2ff">'+_pwEsc(r.side)+'</b></td>'
+      +'<td><span style="color:'+vc+';font-weight:700;font-size:11px">'+_pwEsc(r.verdict||'')+'</span>'+(r.public?' <span title="Public-Kandidat" style="color:#a78bfa">◆</span>':'')+'</td>'
+      +'<td class="pw-cn">'+(r.conv!=null?r.conv+'/10':'—')+'</td>'
+      +'<td class="pw-cn pw-mut">'+(r.entryPrice!=null?Math.round(r.entryPrice*100)+'¢':'—')+'</td>'
+      +'<td class="pw-cn" style="font-weight:800;color:'+rc+'">'+(win?'✓':'✗')+'</td>'
+      +'<td class="pw-cn" style="color:'+pnlCol+'">'+_pwtUsd(r.pnl)+'</td>'
+      +'<td class="pw-cn pw-mut">'+_pwtSig(r.clvPP)+'pp</td></tr>';
+  }).join('');
+  return '<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🧾 Letzte abgerechnete Plays</span>'
+    +'<span class="pw-sec-note">◆ = war Public-Kandidat · ✓/✗ = Markt getroffen · P&amp;L bei fixem $-Einsatz · CLV = Einstieg→Schluss</span></div>'
+    +'<div class="pw-tw"><table class="pw-tbl"><thead><tr><th>Markt</th><th>Seite</th><th>Verdikt</th><th>Conv</th><th>Einstieg</th><th>Erg.</th><th>P&amp;L</th><th>CLV</th></tr></thead><tbody>'+body+'</tbody></table></div></section>';
+}
+function _pwTrackOpen(open){
+  const arr=Object.values(open||{}).sort((a,b)=>(b.conv||0)-(a.conv||0));
+  if(!arr.length) return '';
+  const head='<div style="font-size:12px;color:#8b949e;margin:14px 0 6px"><b style="color:#e6edf3">'+arr.length+' offene Plays</b> — laufen noch, werden bei Markt-Auflösung abgerechnet</div>';
+  const body=arr.slice(0,12).map(e=>'<span style="display:inline-block;margin:0 6px 6px 0;padding:4px 9px;border-radius:14px;background:#0f1626;border:1px solid rgba(255,255,255,.08);font-size:11.5px">'
+    +_pwSportIcon(e.league)+' <b style="color:#4cc2ff">'+_pwEsc(String(e.side).slice(0,16))+'</b> '
+    +'<span class="pw-mut">'+(e.verdict||'')+' · '+(e.conv!=null?e.conv+'/10':'')+' · '+(e.entryPrice!=null?Math.round(e.entryPrice*100)+'¢':'')+'</span>'
+    +(e.public?' <span style="color:#a78bfa">◆</span>':'')+'</span>').join('');
+  return head+'<div style="margin-bottom:6px">'+body+'</div>';
+}
+function _pwTrackRecord(track){
+  const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">📊 Track-Record — „Heute wetten" als Paper-Trade</span>'
+    +'<span class="pw-sec-note">Jeder Scan schreibt die exakten Shortlist-Empfehlungen mit (fixer Einsatz, Einstieg = Snapshot-Preis) und rechnet bei Auflösung ab. <b>Es wird nichts gesetzt</b> — nur mitgeschrieben, damit wir sehen, ob sich echtes Nachspielen lohnt.</span></div>';
+  if(!track || (!(track.settled||[]).length && !Object.keys(track.open||{}).length)){
+    return intro+'<div class="pw-none">Noch keine Daten. Der Tracker läuft mit jedem Global-Scan (~alle 30 Min): er öffnet die aktuellen „Heute wetten"-Plays als Paper-Positionen und rechnet sie bei Markt-Auflösung ab. Nach den ersten aufgelösten Spielen steht hier Trefferquote, ROI und CLV — <b>getrennt für die ganze Shortlist und die Public-Kandidaten</b>.</div></section>';
+  }
+  const agg=track.agg||{all:{n:0},public:{n:0},byConv:{}};
+  const upd=track.updatedAt?('<div class="pw-mut" style="font-size:11px;margin:2px 0 10px">Stand '+_pwEsc(String(track.updatedAt).slice(0,16).replace('T',' '))+' · fixer Einsatz $'+Math.round(track.stake||10)+' je Play</div>'):'';
+  return intro+upd
+    +_pwTrackKpis(agg.all||{n:0}, '🟢 Ganze Shortlist', '(alle Plays, jede Conviction)')
+    +_pwTrackKpis(agg.public||{n:0}, '◆ Public-Kandidaten', '(hart gegated: Conv≥9 + bewiesene Wallet + Mehrheit)')
+    +_pwTrackConvTable(agg.byConv)
+    +_pwTrackOpen(track.open)
+    +_pwTrackSettled(track.settled);
+}
+
 function _pwShortlist(live){
   const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🔥 Heute wetten — die klarsten Gelegenheiten</span>'
     +'<span class="pw-sec-note">nur Märkte mit echtem Signal (Steam · scharfe Wallet · Geld-vs-Preis) · BET = mit dem Geld, FADE = dagegen · Conviction 0–10 · nichts blind, das ist ein Ausgangspunkt</span></div>';

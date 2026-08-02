@@ -36,6 +36,10 @@ jobs:
           echo "POLY_PYTHON=$PYTHON" >> $GITHUB_ENV
           $PYTHON -m pip install --break-system-packages requests --quiet 2>/dev/null || true
 
+      - name: 🟢 Node/jsdom bereitstellen (für Shortlist-Emitter)
+        run: npm ci --no-audit --no-fund 2>/dev/null || npm install jsdom --no-audit --no-fund 2>/dev/null || true
+        continue-on-error: true
+
       - name: 🎯 Cross-Sport Poly-Radar (Poly vs Pinnacle, read-only)
         run: ${{ env.POLY_PYTHON }} poly_cross_sport.py
         continue-on-error: true
@@ -48,6 +52,10 @@ jobs:
         env:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
+      - name: 📈 Shortlist Paper-Track (Heute-wetten Track-Record, read-only)
+        run: ${{ env.POLY_PYTHON }} poly_shortlist_track.py
+        continue-on-error: true
 
       - name: 🐋 Poly Whale-Watch (Trades-Channel + öffentlicher Whale-Push)
         run: ${{ env.POLY_PYTHON }} poly_whale_watch.py
@@ -74,6 +82,7 @@ jobs:
           git config user.email "bot@cocobet.local"
           for f in \
             poly_money_broad.json poly_money_broad_close.json poly_money_broad_history.json poly_wallet_track.json \
+            poly_resolutions.json poly_shortlist_track.json \
             poly_cross_sport.json poly_cross_sport_history.json poly_cross_sport_seen.json \
             poly_whale_seen.json poly_whale_public_seen.json \
             esports_poly_prices.json esports_poly_wallets.json esports_poly_smartmoney.json esports_poly_coherence.json esports_poly_status.json; do
