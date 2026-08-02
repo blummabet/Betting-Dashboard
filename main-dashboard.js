@@ -141,6 +141,9 @@
       '.md-donut{position:relative;flex:0 0 auto;width:42px;height:42px;}',
       '.md-donut .n{position:absolute;inset:0;display:grid;place-items:center;font-weight:800;font-size:13px;}',
       '.md-live{display:inline-block;font-size:8.5px;font-weight:800;color:var(--red);border:1px solid rgba(229,83,75,.55);border-radius:6px;padding:0 5px;margin-left:6px;vertical-align:middle;letter-spacing:.3px;line-height:14px;}',
+      '.md-polylink{color:inherit;text-decoration:none;border-bottom:1px dotted var(--mln2);transition:border-color .15s;}',
+      '.md-polylink:hover{border-bottom-color:var(--poly);}',
+      '.md-ext{color:#a78bfa;font-size:.82em;}',
       '.md-wdot{flex:0 0 auto;width:22px;height:22px;border-radius:7px;display:grid;place-items:center;font-size:12px;background:rgba(229,83,75,.13);color:var(--red);}',
       '.md-tile{background:var(--m1);border:1px solid var(--mln);border-radius:14px;padding:13px 15px 6px;display:flex;flex-direction:column;min-width:0;transition:border-color .16s,transform .16s;}',
       '.md-tile:hover{border-color:var(--mln2);transform:translateY(-2px);}',
@@ -349,7 +352,7 @@
     for (var k in w) {
       var mk = w[k];
       if (mk && Array.isArray(mk.whales)) mk.whales.forEach(function (wh) {
-        all.push({ usd: +wh.usd || 0, side: wh.side, league: mk.league, hrs: mk.hoursToKickoff });
+        all.push({ usd: +wh.usd || 0, side: wh.side, league: mk.league, hrs: mk.hoursToKickoff, key: k, wallet: wh.wallet });
       });
     }
     all.sort(function (a, b) { return b.usd - a.usd; });
@@ -491,6 +494,13 @@
   function _mdDonut(pct, color) { return '<div class="md-donut">' + _mdArc((+pct || 0) / 100, color, 42, 6) + '<div class="n">' + Math.round(+pct || 0) + '%</div></div>'; }
   function _mdConvCol(conv) { return conv >= 9 ? A.good : conv >= 8 ? '#2dd4bf' : A.gold; }
   var _MD_LIVE = '<span class="md-live">\u25cf LIVE</span>';
+  // Übersicht → Polymarket-Markt verlinken (wie im Wallet-Reiter): wrappt das Match-Label,
+  // öffnet die jeweilige Ereignis-Seite im neuen Tab. Ohne Slug bleibt der Text unverlinkt.
+  function _mdPolyUrl(key) { return key ? 'https://polymarket.com/event/' + encodeURIComponent(key) : ''; }
+  function _mdPolyLink(key, inner) {
+    var u = _mdPolyUrl(key);
+    return u ? '<a href="' + u + '" target="_blank" rel="noopener" class="md-polylink" title="Markt auf Polymarket \u2197">' + inner + ' <span class="md-ext">\u2197</span></a>' : inner;
+  }
   function _mdBfLive(m) { return (typeof window._bfIsLive === 'function' && window._bfIsLive(m)) ? _MD_LIVE : ''; }
   function _mdBfLiveById(id) {
     var ms = (_md.data.betfair && _md.data.betfair.matches) || [];
@@ -536,7 +546,7 @@
     var icon = (typeof _pwSportIcon === 'function') ? _pwSportIcon(r.league) + ' ' : '';
     var live = (r.htk != null && r.htk < 0) ? _MD_LIVE : '';
     var htk = (r.htk == null || r.htk < 0) ? '' : (r.htk < 1 ? '<1h' : Math.round(r.htk) + 'h');
-    var main = badge + icon + esc(String(r.match).slice(0, 38)) + ' <span style="color:var(--mi3)">→</span> <b style="color:#4cc2ff">' + esc(r.side) + '</b>' + live;
+    var main = badge + icon + _mdPolyLink(r.key, esc(String(r.match).slice(0, 38)) + ' <span style="color:var(--mi3)">→</span> <b style="color:#4cc2ff">' + esc(r.side) + '</b>') + live;
     var sub = (r.reasons || []).slice(0, 2).map(esc).join(' · ') + (htk ? ' · Anpfiff ' + htk : '');
     return _mdRingRow(main, sub, conv, _mdConvCol(conv));
   }
@@ -564,7 +574,7 @@
     var badge = '<span style="display:inline-block;padding:1px 7px;border-radius:10px;border:1px solid ' + vcol + ';color:' + vcol + ';font-weight:800;font-size:10px;margin-right:6px">' + r.verdict + '</span>';
     var icon = (typeof _pwSportIcon === 'function') ? _pwSportIcon(r.league) + ' ' : '';
     var live = (r.htk != null && r.htk < 0) ? _MD_LIVE : '';
-    var main = badge + icon + esc(String(r.match).slice(0, 38)) + ' <span style="color:var(--mi3)">→</span> <b style="color:#4cc2ff">' + esc(r.side) + '</b>' + live;
+    var main = badge + icon + _mdPolyLink(r.key, esc(String(r.match).slice(0, 38)) + ' <span style="color:var(--mi3)">→</span> <b style="color:#4cc2ff">' + esc(r.side) + '</b>') + live;
     var sh = r.sharp || {};
     var rec = sh.n ? (sh.wins + '/' + sh.n + ' · ' + Math.round((sh.hit || 0) * 100) + '%') : '';
     var sub = 'Geld ' + Math.round((r.moneyPct || 0) * 100) + '%' + (rec ? ' · Wallet ' + rec : '');
@@ -576,7 +586,7 @@
       ? '<span style="color:' + A.good + ';font-weight:800;font-size:10px">✓ tracked</span>'
       : '<span style="color:var(--mi2);font-weight:700;font-size:10px">untracked</span>';
     var live = (w.htk != null && w.htk < 0) ? _MD_LIVE : '';
-    var main = icon + esc(String(w.match).replace(/<[^>]*>/g, '').slice(0, 38)) + ' <span style="color:var(--mi3)">→</span> <b style="color:#4cc2ff">' + esc(w.side) + '</b>' + live;
+    var main = icon + _mdPolyLink(w.key, esc(String(w.match).replace(/<[^>]*>/g, '').slice(0, 38)) + ' <span style="color:var(--mi3)">→</span> <b style="color:#4cc2ff">' + esc(w.side) + '</b>') + live;
     var sub = tag + ' · ' + Math.round(w.price * 100) + '¢' + ((w.tracked && w.n) ? ' · n' + w.n : '');
     var hit = (w.tracked && w.n) ? Math.round((w.hit || 0) * 100) : null;
     return hit != null
@@ -675,7 +685,7 @@
     var whBody = wh.length ? wh.map(function (w) {
       var live = (w.hrs != null && w.hrs < 0) ? _MD_LIVE : '';
       var hrs = (w.hrs != null && w.hrs >= 0) ? (w.hrs < 1 ? '<1h' : Math.round(w.hrs) + 'h') : '';
-      return rowEl(fl(_flagFrom(w.country, w.league, w.league)) + esc(w.side || '?') + live, usd(w.usd), A.poly,
+      return rowEl(fl(_flagFrom(w.country, w.league, w.league)) + _mdPolyLink(w.key, esc(w.side || '?')) + live, usd(w.usd), A.poly,
         esc(String(w.league || '')) + (hrs ? ' · in ' + hrs : ''), meter(whMax ? (w.usd / whMax) * 100 : 0, A.poly));
     }).join('') : empty('Keine Whale-Bets.');
 

@@ -39,6 +39,10 @@ MODE = (os.environ.get("TG_STREAK_MODE") or "watch").lower()
 SKIP_TELEGRAM = os.environ.get("SKIP_TELEGRAM", "").lower() == "true"
 
 WATCH_MIN_LEN = int(os.environ.get("STREAK_WATCH_MIN_LEN", "10"))  # 26.07.2026 (Lucas): Public-Channel nur RICHTIG lange Serien (≥10) — 7-8 war zu viel Rauschen
+# 02.08.2026 (Lucas: „Spiele waren heute Nacht"): Vorlauf-Fenster statt zeitzonen-blindem `date == today`.
+# Nur ansagen, wenn der Anpfiff noch WATCH_LEAD_MIN..WATCH_HORIZON_H entfernt ist (echter Zeitpunkt, nicht Datum).
+WATCH_LEAD_MIN  = int(os.environ.get("STREAK_WATCH_LEAD_MIN", "30"))      # min. Vorlauf: noch spielbar
+WATCH_HORIZON_H = float(os.environ.get("STREAK_WATCH_HORIZON_H", "18"))   # max. Vorlauf: nur die kommende Nacht, nicht Tage voraus
 
 # Nur tor-basierte Typen (aus dem Endstand deterministisch aufzulösen). Ecken/Karten brauchen
 # Stats-Coverage → hier bewusst aus (kein unsicheres „gerissen").
@@ -119,9 +123,24 @@ def streak_held(stype: str, team_id: str, fx: dict) -> bool | None:
 
 
 # ── MODE=watch ────────────────────────────────────────────────────────────────
-def build_watch(streaks: list, wm: dict, watched: dict, today: str) -> list:
-    """Zu bewachende Serien: all-venue, intakt, ≥WATCH_MIN_LEN, nächstes Spiel HEUTE, tor-basiert,
-    noch nicht bewacht. Returns [(key, entry, message)]."""
+def _parse_ko(v):
+    """ISO-Anpfiff → aware UTC-datetime; None wenn leer/unparsbar."""
+    if not v:
+        return None
+    try:
+        dt = datetime.fromisoformat(str(v).strip().replace("Z", "+00:00"))
+        return dt.replace(tzinfo=timezone.utc) if dt.tzinfo is None else dt.astimezone(timezone.utc)
+    except Exception:
+        return None
+
+def build_watch(streaks: list, wm: dict, watched: dict, today: str, now=None) -> list:
+    """Zu bewachende Serien: all-venue, intakt, ≥WATCH_MIN_LEN, tor-basiert, noch nicht bewacht —
+    und (NEU 02.08.2026, Lucas) deren ANPFIFF noch bevorsteht (WATCH_LEAD_MIN..WATCH_HORIZON_H).
+    Der alte `date == today`-Filter war zeitzonen-blind: MLS-Spiele stoßen nachts an (UTC-früh),
+    tragen aber das UTC-Datum von HEUTE → der 19:00-UTC-Lauf feuerte ~20 h NACH Abpfiff. Jetzt
+    zählt der echte Anpfiff-Zeitpunkt (fixt auch die Spät-Spiele, deren UTC-Datum morgen ist).
+    Returns [(key, entry, message)]."""
+    now = now or datetime.now(timezone.utc)
     out = []
     for s in streaks or []:
         if (s.get("venue") or "all") != "all":
@@ -135,16 +154,22 @@ def build_watch(streaks: list, wm: dict, watched: dict, today: str) -> list:
             continue
         nx = s.get("next") or {}
         gdate = str(nx.get("date") or "")[:10]
-        if gdate != today:
-            continue   # nur Spiele HEUTE
+        ko = _parse_ko(nx.get("kickoff"))
+        if ko is None:
+            continue   # ohne echten Anpfiff-Zeitstempel NICHT bewachen (lieber still als falsch)
+        mins = (ko - now).total_seconds() / 60.0
+        if mins < WATCH_LEAD_MIN:
+            continue   # Anpfiff vorbei/zu knapp → nicht mehr spielbar (der „heute Nacht"-Bug)
+        if mins > WATCH_HORIZON_H * 60:
+            continue   # noch zu weit weg → erst näher am Spiel ansagen
         key = f"{s.get('teamId')}:{stype}:{gdate}"
         if key in watched:
             continue
         entry = {"teamId": str(s.get("teamId")), "team": s.get("team"), "type": stype,
                  "length": s.get("length"), "market": s.get("market"),
                  "pickKey": nx.get("pickKey"), "oppName": nx.get("oppName"),
-                 "date": gdate, "xgBacked": s.get("xgBacked"),
-                 "postedAt": datetime.now(timezone.utc).isoformat()}
+                 "date": gdate, "kickoff": nx.get("kickoff"), "xgBacked": s.get("xgBacked"),
+                 "postedAt": now.isoformat()}
         out.append((key, entry, _watch_msg(s, nx)))
     return out
 

@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v52';   // 02.08.2026: Uebersicht-Kacheln kriegen eigene Formen — Anteil→Donut (Kohle/HT), Score→Ring (Cards/Spielenswert/Top-Play), Bewegung→Diverging (Steam), Menge→Balken, Zaehler→Pips/Warn-Flags; LIVE-Badge bei laufenden Spielen
+const VERSION = 'cocobet-v53';   // 02.08.2026: Poly-Kacheln der Uebersicht (Whale-Bets, Top-Play, Whale-Watch, Heute spielenswert) verlinken aufs jeweilige Polymarket-Event — wie im Wallet-Reiter
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
