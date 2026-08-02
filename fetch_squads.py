@@ -28,6 +28,15 @@ import sys
 import time
 import http.client
 from datetime import datetime, timezone
+import os as _os_season   # (02.08.2026, Lucas) Saison-Rollover-Fix
+
+
+def _current_season(dt=None):
+    dt = dt or datetime.now(timezone.utc)
+    return dt.year if dt.month >= 6 else dt.year - 1   # ab Juni = kommende Saison (wie build_liga_data)
+
+
+SEASON = int(_os_season.environ.get("APISPORTS_SEASON") or 0) or _current_season()
 from pathlib import Path
 
 # ── Shared config — must stay in sync with update_dashboard.py ────────────────
@@ -172,13 +181,15 @@ def has_stake_label(team: dict, standings: list, cfg: dict) -> bool:
 
 # ── Player stats fetch ────────────────────────────────────────────────────────
 
-def fetch_team_players(team_id: int, season: int = 2025) -> list:
+def fetch_team_players(team_id: int, season: int = None) -> list:
     """
     Fetch all players for a team with full pagination.
     Returns a flat list of raw API player objects.
     """
+    if season is None:
+        season = SEASON
     all_players = []
-    for s in [season, season + 1]:
+    for s in [season, season - 1]:   # aktuelle Saison zuerst, Vorsaison als Fallback
         page = 1
         while True:
             data = apif_get_full("players", {"team": team_id, "season": s, "page": page})
@@ -423,7 +434,7 @@ def main():
 
     cache = {
         "generated": now.strftime("%Y-%m-%dT%H:%M:%SZ"),
-        "season":    2025,
+        "season":    SEASON,
         "teams":     {},
     }
 
@@ -436,7 +447,7 @@ def main():
 
         # ── 1. Fetch standings to identify stake teams ──────────────────────
         standings = []
-        for season in [2025, 2026]:
+        for season in [SEASON, SEASON - 1]:
             resp = apif_get("standings", {"league": apif_id, "season": season})
             total_calls += 1
             if resp:
