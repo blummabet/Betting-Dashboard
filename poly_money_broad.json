@@ -1,14 +1,14 @@
 {
- "n": 218,
+ "n": 246,
  "minOdds": 1.35,
- "moneyHitRate": 0.647,
- "priceHitRate": 0.647,
- "brierMoney": 0.4503,
- "brierPrice": 0.4504,
+ "moneyHitRate": 0.642,
+ "priceHitRate": 0.646,
+ "brierMoney": 0.4481,
+ "brierPrice": 0.4481,
  "disagree": {
-  "n": 0,
+  "n": 1,
   "moneyWon": 0,
-  "priceWon": 0,
+  "priceWon": 1,
   "neither": 0
  },
  "verdict": "gleichauf",
@@ -19,6 +19,14 @@
    "moneyHitRate": 0.606,
    "brierMoney": 0.4842,
    "brierPrice": 0.4844,
+   "verdict": "gleichauf"
+  },
+  {
+   "league": "ESPORTS",
+   "n": 89,
+   "moneyHitRate": 0.697,
+   "brierMoney": 0.4138,
+   "brierPrice": 0.4138,
    "verdict": "gleichauf"
   },
   {
@@ -39,10 +47,10 @@
   },
   {
    "league": "TENNIS",
-   "n": 23,
-   "moneyHitRate": 0.609,
-   "brierMoney": 0.5082,
-   "brierPrice": 0.5082,
+   "n": 35,
+   "moneyHitRate": 0.6,
+   "brierMoney": 0.4833,
+   "brierPrice": 0.4833,
    "verdict": "gleichauf"
   },
   {
@@ -51,14 +59,6 @@
    "moneyHitRate": 0.625,
    "brierMoney": 0.4546,
    "brierPrice": 0.4546,
-   "verdict": "gleichauf"
-  },
-  {
-   "league": "ESPORTS",
-   "n": 73,
-   "moneyHitRate": 0.712,
-   "brierMoney": 0.4109,
-   "brierPrice": 0.4108,
    "verdict": "gleichauf"
   }
  ],
@@ -400,6 +400,18 @@
    "totalUsd": 243950
   },
   {
+   "key": "lol-ns-fox1-2026-08-01",
+   "league": "ESPORTS",
+   "winner": "Nongshim Red Force",
+   "moneyFav": "BNK FEARX",
+   "priceFav": "BNK FEARX",
+   "moneyShare": 0.545,
+   "priceProb": 0.545,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 243742
+  },
+  {
    "key": "mlb-mil-laa-2026-07-31",
    "league": "MLB",
    "winner": "Milwaukee Brewers",
@@ -434,6 +446,18 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 230619
+  },
+  {
+   "key": "lol-dnf-fox1-2026-07-30",
+   "league": "ESPORTS",
+   "winner": "BNK FEARX",
+   "moneyFav": "BNK FEARX",
+   "priceFav": "BNK FEARX",
+   "moneyShare": 0.695,
+   "priceProb": 0.695,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 227325
   },
   {
    "key": "mlb-chc-stl-2026-07-27",
@@ -496,6 +520,18 @@
    "totalUsd": 186823
   },
   {
+   "key": "lol-gen-t1-2026-07-31",
+   "league": "ESPORTS",
+   "winner": "T1",
+   "moneyFav": "Gen.G",
+   "priceFav": "Gen.G",
+   "moneyShare": 0.605,
+   "priceProb": 0.605,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 186230
+  },
+  {
    "key": "mlb-mia-nym-2026-07-31",
    "league": "MLB",
    "winner": "Miami Marlins",
@@ -506,45 +542,9 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 175946
-  },
-  {
-   "key": "mlb-bos-lad-2026-07-31",
-   "league": "MLB",
-   "winner": "Boston Red Sox",
-   "moneyFav": "Los Angeles Dodgers",
-   "priceFav": "Los Angeles Dodgers",
-   "moneyShare": 0.555,
-   "priceProb": 0.555,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 174086
-  },
-  {
-   "key": "lol-vks-fur-2026-08-01",
-   "league": "ESPORTS",
-   "winner": "Vivo Keyd Stars",
-   "moneyFav": "FURIA Esports",
-   "priceFav": "FURIA Esports",
-   "moneyShare": 0.535,
-   "priceProb": 0.535,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 167258
-  },
-  {
-   "key": "mlb-pit-cin-2026-07-31",
-   "league": "MLB",
-   "winner": "Cincinnati Reds",
-   "moneyFav": "Pittsburgh Pirates",
-   "priceFav": "Pittsburgh Pirates",
-   "moneyShare": 0.535,
-   "priceProb": 0.535,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 166045
   }
  ],
- "generatedAt": "2026-08-02T12:15:24.681725+00:00",
+ "generatedAt": "2026-08-02T13:59:22.063003+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -552,22 +552,22 @@
   "nfl": 567,
   "mlb": 583,
   "nhl": 404,
-  "mls": 447,
+  "mls": 446,
   "epl": 405,
   "soccer": 800,
-  "tennis": 620,
+  "tennis": 614,
   "ucl": 534,
   "esports": 800,
   "cs2": 418,
   "lol": 411,
   "dota": 9,
-  "valorant": 435,
+  "valorant": 434,
   "ufc": 445,
   "mma": 45,
   "boxing": 216,
   "golf": 261,
   "f1": 325,
-  "cricket": 663
+  "cricket": 662
  },
  "sweepStats": {
   "sweepOpen": 500,
