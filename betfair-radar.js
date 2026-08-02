@@ -437,7 +437,7 @@
   function _normCls(m) { var l = _normLvl(m); return l === 2 ? ' bfb-over2' : l === 1 ? ' bfb-over' : ''; }
   function _normBadge(m) {
     var r = _normRatio(m); if (r == null || r < NORM_AMBER) return '';
-    var red = r >= NORM_RED, col = red ? C.live : C.gold;
+    var red = r >= NORM_RED, col = red ? '#f0883e' : C.gold;   // 02.08.2026 (Lucas): Gold->Orange zweistufig statt Rot (Rot = nur Live)
     return '<span class="bfb-norm" style="color:' + col + ';border-color:' + col + '" title="' + (red ? 'weit über' : 'über') + ' dem üblichen Geld für diese Spielphase (Median aller vergleichbaren Spiele)">×' + r.toFixed(1) + ' Norm</span>';
   }
   function _normLine(m) { var b = _normBadge(m); return b ? '<br>' + b : ''; }
@@ -448,7 +448,7 @@
     // (01.08.2026, Lucas) nur "● LIVE" — Spielstand/Minute war zeitlich unzuverlässig, daher weglassen.
     return '<span class="bfb-liveb">● LIVE</span>';
   }
-  function _rowHl(m) { return isLive(m) ? ' bfb-live' : _normCls(m); }
+  function _rowHl(m) { return _normCls(m); }   // 02.08.2026 (Lucas): keine rote Live-Umrandung mehr; Rot nur im LIVE-Badge, Ueber-Norm traegt amber.
   function _hlLine(m) {
     var parts = [];
     var lv = _liveBadge(m); if (lv) parts.push(lv);
@@ -627,6 +627,7 @@
   }
 
   // ── Hotspot-Leiste: konkreter Ausgang mit dem meisten Geld ──────────────────
+  var HOTSPOT_MIN_SHARE = 60;   // (Lucas 02.08.) oberer Block nur mit klarer Mehrheit
   function hotspots(matches) {
     var hs = [];
     matches.forEach(function (m) {
@@ -635,7 +636,9 @@
         var lead = leadRunner(mk); if (!lead) return;
         if (typeof lead.odd === 'number' && lead.odd < MIN_ODD_SHOW) return;   // Geld auf ~Lock-Favorit = keine Info
         var v = eur(lead.vol); if (v < CHIP_FLOOR) return;
-        hs.push({ m: m, mm: mm, lead: lead, v: v, pct: (+lead.vol || 0) / (distTotal(mk) || 1) * 100 });
+        var pct = (+lead.vol || 0) / (distTotal(mk) || 1) * 100;
+        if (pct < HOTSPOT_MIN_SHARE) return;   // 02.08.2026 (Lucas): Fast-Gleichstand raus - der Block zeigt WO das Geld liegt, nicht grosse liquide Spiele. < 60% Konzentration ist kein Signal (gehoert zu Frisches Geld).
+        hs.push({ m: m, mm: mm, lead: lead, v: v, pct: pct });
       });
     });
     hs.sort(function (a, b) { return b.v - a.v; });
@@ -653,7 +656,7 @@
         '<div class="bfb-meta"><span class="bfb-v" style="color:' + C.vol + '">' + fmtE(x.v) + '</span><br><span class="bfb-s">' + x.pct.toFixed(0) + '%</span> <span class="bfb-odd">@' + fO(x.lead.odd) + '</span>' + _hlLine(x.m) + '</div></div>';
     }).join('');
     return '<div style="background:linear-gradient(180deg,rgba(255,184,12,.06),transparent);border:1px solid ' + C.bd + ';border-radius:14px;padding:11px 13px;margin:12px 0 14px">' +
-      '<div style="font-size:12px;color:' + C.gold + ';font-weight:800;margin-bottom:10px">🔥 Wo das Geld genau liegt — größte Einzel-Ausgänge <span style="color:' + C.dim + ';font-weight:600">· Balken = Anteil des Geldes auf den Ausgang · Klick springt zum Spiel</span></div>' +
+      '<div style="font-size:12px;color:' + C.gold + ';font-weight:800;margin-bottom:10px">🔥 Wo das Geld genau liegt — größte Einzel-Ausgänge <span style="color:' + C.dim + ';font-weight:600">· Balken = Anteil des Geldes auf den Ausgang · nur klare Mehrheiten (≥60%) · Klick springt zum Spiel</span></div>' +
       '<div class="bfb-grid">' + rows + '</div></div>';
   }
 

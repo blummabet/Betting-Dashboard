@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v49';   // 02.08.2026: Uebersicht bekommt drei Betfair-Kacheln — Sharpe Bewegungen (Vor-Anpfiff-Steam) + Groesste Fehlbepreisung (Kohaerenz, client-seitig) + Frisches Geld; Sidecar betfair_overview.json haelt den ersten Menuepunkt leicht
+const VERSION = 'cocobet-v50';   // 02.08.2026: Betfair-Radar entruempelt — keine rote Live-Umrandung (Rot nur im LIVE-Badge), xNorm-Badge Gold->Orange statt Rot, oberer Block nur klare Mehrheiten (Fuehrung >=60%, Fast-Gleichstaende raus)
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

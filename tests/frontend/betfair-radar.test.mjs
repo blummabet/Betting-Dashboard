@@ -592,17 +592,17 @@ test('Push-Bilanz-Reiter: leerer Record → sammelt-noch-Hinweis', () => {
 test('Hotspot-Balken = Anteil des Geldes auf den Ausgang (nicht €/max) — 01.08.2026 Lucas', () => {
   const { w } = boot();
   const mo = (h, a) => ({ 'Match Odds': { runners: [ { name: 'H', vol: h, odd: 2.0 }, { name: 'A', vol: a, odd: 2.2 } ] } });
-  // Groß: 70% Anteil, €42K Lead. Klein: 55% Anteil, €11K Lead.
-  // Alt (€/max): Groß=100, Klein=26. Neu (Anteil): Groß=70, Klein=55.
+  // Groß: 70% Anteil, €42K Lead. Klein: 62% Anteil, €12K Lead (≥60%, sonst vom Coinflip-Filter gedroppt).
+  // Alt (€/max): Groß=100, Klein=~29. Neu (Anteil): Groß=70, Klein=62.
   w._bfState.data = { matches: [
     { matchId: 10, home: 'Gross H', away: 'Gross A', league: 'Testliga', country: 'AT', kickoff: '2031-01-01T20:00:00Z', liveInfo: {}, markets: mo(42000, 18000) },
-    { matchId: 11, home: 'Klein H', away: 'Klein A', league: 'Testliga', country: 'AT', kickoff: '2031-01-01T20:00:00Z', liveInfo: {}, markets: mo(11000, 9000) },
+    { matchId: 11, home: 'Klein H', away: 'Klein A', league: 'Testliga', country: 'AT', kickoff: '2031-01-01T20:00:00Z', liveInfo: {}, markets: mo(12400, 7600) },
   ] };
   w._bfState._normBase = null; w._bfState._cohCache = {}; w._bfState._mixBase = null;
   const html = w._renderBetfairRadar();
   assert.match(html, /Gross H/); assert.match(html, /Klein H/);
   assert.match(html, /width:70%/, 'Groß-Balken = 70% Anteil (nicht 100)');
-  assert.match(html, /width:55%/, 'Klein-Balken = 55% Anteil (nicht 26)');  // gerundet
+  assert.match(html, /width:62%/, 'Klein-Balken = 62% Anteil (nicht €/max)');  // gerundet
 });
 
 test('LIVE-Badge trägt keinen Spielstand/keine Minute mehr (01.08.2026 Lucas)', () => {
