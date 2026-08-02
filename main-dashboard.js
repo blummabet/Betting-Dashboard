@@ -198,7 +198,8 @@
         .catch(function () { return fetch(u + '?t=' + t, { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }); });
     };
     return Promise.all([jf('liga-data.json'), jf('mls-data.json'), jf('liga_streaks.json'),
-      jf('mls_streaks.json'), jf('betfair_prices.json'), jf('poly_money_broad_close.json'), jf('dashboard_pulse.json')]);
+      jf('mls_streaks.json'), jf('betfair_prices.json'), jf('poly_money_broad_close.json'), jf('dashboard_pulse.json'),
+      jf('betfair_overview.json')]);
   }
   function _mdLoad(force) {
     if (_md.loading) return;
@@ -208,7 +209,7 @@
     var p = document.getElementById('mainDashPanel');
     if (p && !_md.data) { p.classList.add('mdash'); p.innerHTML = _head() + '<div class="md-empty" style="text-align:center;padding:52px 0;">⏳ Übersicht wird geladen …</div>'; }
     _mdFetch().then(function (a) {
-      _md.data = { liga: a[0], mls: a[1], ligaStreaks: a[2], mlsStreaks: a[3], betfair: a[4], whales: a[5], pulse: a[6] };
+      _md.data = { liga: a[0], mls: a[1], ligaStreaks: a[2], mlsStreaks: a[3], betfair: a[4], whales: a[5], pulse: a[6], bfOverview: a[7] };
       _md.loading = false; _mdRender();
     });
   }
@@ -266,6 +267,76 @@
     return rows;
   }
   function bestBetfair() { return allBetfair().slice(0, 5); }
+  // ── Übersicht-Betfair-Kacheln (02.08.2026, Lucas): Steam + Frisches Geld aus dem leichten
+  // Sidecar (betfair_overview.json), Fehlbepreisung client-seitig über die echte Radar-Engine
+  // (window._bfCoherence) — kein Poisson-Nachbau, kein Drift. Gemeinsamer Team-Label-Helfer:
+  function _bfTeams(x) {
+    return fl(_flagFrom(x.country, x.league, x.league)) + esc(String(x.home)) +
+      ' <span style="color:var(--mi3);font-weight:400">v</span> ' + esc(String(x.away));
+  }
+  // ⚡ Sharpe Bewegungen: Vor-Anpfiff-Quotenbewegung (pp). +pp = Quote fällt = Geld drauf, −pp = driftet.
+  function _mdBfSteamBody() {
+    var items = ((_md.data.bfOverview || {}).steam) || [];
+    if (!items.length) return empty('Keine Vor-Anpfiff-Bewegung — sammelt (2 Snapshots nötig).');
+    var mx = items.reduce(function (a, x) { return Math.max(a, Math.abs(+x.pp || 0)); }, 1);
+    return items.map(function (x) {
+      var mv = +x.pp || 0, backed = mv > 0, col = backed ? A.good : A.red, w = mx ? Math.abs(mv) / mx * 50 : 0;
+      var divb = '<div class="md-div"><div class="md-div-mid"></div><i style="' + (backed ? 'left:50%;' : 'right:50%;') + 'width:' + w + '%;background:' + col + ';"></i></div>';
+      return rowEl(_bfTeams(x), (mv > 0 ? '+' : '') + mv.toFixed(1) + 'pp', col,
+        '→ ' + esc(x.sideName || '') + ' · ' + (backed ? 'Quote fällt' : 'Quote steigt') + (x.odd != null ? ' · @' + (+x.odd).toFixed(2) : ''), divb);
+    }).join('') + _ageStr(_md.data.betfair);
+  }
+  // ⚖️ Größte Fehlbepreisung: harte Modell-Abweichungen je Spiel (nur vor Anpfiff), Radar-Engine.
+  var _MISP_MIN_VOL = 10000;   // Kohärenz nur für liquide Spiele: spart Rechenzeit (≈6ms/Spiel) UND
+                               // hebt das Signal — bei €500-Spielen ist „Fehlbepreisung" ohnehin Rauschen.
+  function _bfTopVol(m) {
+    var best = 0, mk = m.markets || {};
+    for (var k in mk) { var rs = mk[k].runners || [], t = 0, i; for (i = 0; i < rs.length; i++) t += (+rs[i].vol || 0); if (t > best) best = t; }
+    return best;
+  }
+  function _mdBfMispriced() {
+    if (typeof window._bfCoherence !== 'function') return null;
+    var ms = (_md.data.betfair && _md.data.betfair.matches) || [];
+    if (_md._bfMispSrc === ms && _md._bfMisp) return _md._bfMisp;   // Memo: einmal pro Daten-Load, nicht je Render
+    var out = [];
+    var liveFn = (typeof window._bfIsLive === 'function') ? window._bfIsLive : function () { return false; };
+    ms.forEach(function (m) {
+      if (liveFn(m) || _bfTopVol(m) < _MISP_MIN_VOL) return;   // vor Anpfiff & liquide
+      var co; try { co = window._bfCoherence(m); } catch (e) { return; }
+      var checks = (co && co.checks) || [];
+      var hard = checks.filter(function (c) { return c.hard && Math.abs(c.dev) >= 0.8 && (c.w == null || c.w >= 0.15); });
+      if (!hard.length) return;
+      var top = hard.reduce(function (a, c) { return (!a || Math.abs(c.dev) > Math.abs(a.dev)) ? c : a; }, null);
+      var score = hard.reduce(function (sc, c) { return sc + Math.abs(c.dev) * (c.w == null ? 1 : c.w); }, 0);
+      out.push({ m: m, nHard: hard.length, top: top, score: score });
+    });
+    out.sort(function (a, b) { return b.score - a.score; });
+    _md._bfMispSrc = ms; _md._bfMisp = out.slice(0, 5);
+    return _md._bfMisp;
+  }
+  function _mdBfMispricedBody() {
+    var rows = _mdBfMispriced();
+    if (rows == null) return empty('Radar-Engine lädt noch …');
+    if (!rows.length) return empty('Keine harte Fehlbepreisung — Markt & Modell im Lot.');
+    var mx = rows[0].score || 1;
+    return rows.map(function (r) {
+      var t = r.top || {};
+      return rowEl(_bfTeams(r.m), '⚠ ' + r.nHard, A.red,
+        esc(String(t.k || 'Abweichung')) + (t.mkt ? ' · ' + esc(String(t.mkt).slice(0, 26)) : ''),
+        meter(Math.min(100, r.score / mx * 100), A.red));
+    }).join('') + _ageStr(_md.data.betfair);
+  }
+  // 💸 Frisches Geld: größter Zufluss (€) je Spiel seit dem letzten Snapshot.
+  function _mdBfFlowBody() {
+    var items = ((_md.data.bfOverview || {}).flow) || [];
+    if (!items.length) return empty('Kein frischer Zufluss ≥ €2K — sammelt (2 Snapshots nötig).');
+    var mx = items.reduce(function (a, x) { return Math.max(a, +x.deltaEur || 0); }, 1);
+    return items.map(function (x) {
+      return rowEl(_bfTeams(x), '+' + eur(x.deltaEur), A.good,
+        '→ ' + esc(x.sideName || '') + ' · jetzt ' + eur(x.nowEur) + (x.odd != null ? ' @' + (+x.odd).toFixed(2) : ''),
+        meter(mx ? (+x.deltaEur / mx * 100) : 0, A.good));
+    }).join('') + _ageStr(_md.data.betfair);
+  }
   function allWhales() {
     var w = _md.data.whales || {}, all = [];
     for (var k in w) {
@@ -552,6 +623,9 @@
       tile('🎯', 'Beste Cards', A.good, 'rgba(46,160,67,.14)', 'rgba(46,160,67,.32)', 'national-cards', 'alle Cards', cardsBody, 40) +
       tile('🔥', 'Beste Streaks', A.gold, 'rgba(201,133,0,.14)', 'rgba(201,133,0,.32)', 'national-streaks', 'alle Serien', streaksBody, 80) +
       tile('💷', 'Betfair-Kohle', A.bf, 'rgba(217,89,38,.14)', 'rgba(217,89,38,.32)', 'betfair', 'Radar', bfBody, 120) +
+      tile('⚡', 'Sharpe Bewegungen', A.bf, 'rgba(217,89,38,.14)', 'rgba(217,89,38,.32)', 'betfair', 'Radar', _mdBfSteamBody(), 130) +
+      tile('⚖️', 'Größte Fehlbepreisung', A.red, 'rgba(229,83,75,.14)', 'rgba(229,83,75,.32)', 'betfair', 'Radar', _mdBfMispricedBody(), 140) +
+      tile('💸', 'Frisches Geld', A.good, 'rgba(46,160,67,.14)', 'rgba(46,160,67,.32)', 'betfair', 'Radar', _mdBfFlowBody(), 150) +
       tile('🐋', 'Poly Whale-Bets', A.poly, 'rgba(25,158,112,.14)', 'rgba(25,158,112,.32)', 'polywallets', 'Wallets', whBody, 160) +
       tile('📡', 'Sharp-Radar', A.blue, 'rgba(57,135,229,.14)', 'rgba(57,135,229,.32)', 'sharp', 'Radar', shBody, 200) +
       '</div>';

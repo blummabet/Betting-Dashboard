@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v48';   // 02.08.2026: Poly-Ausgabe-Integritaet — poly_data_integrity.py schreibt poly_status.json, Status-Seite haengt es unter Polymarket ein (Close-Feed frisch, Settlement lebt, Tracker schreibt, bewiesene Wallets profitabel, Keys matchen Aufloesungen)
+const VERSION = 'cocobet-v49';   // 02.08.2026: Uebersicht bekommt drei Betfair-Kacheln — Sharpe Bewegungen (Vor-Anpfiff-Steam) + Groesste Fehlbepreisung (Kohaerenz, client-seitig) + Frisches Geld; Sidecar betfair_overview.json haelt den ersten Menuepunkt leicht
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
