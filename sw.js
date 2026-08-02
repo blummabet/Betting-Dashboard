@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v47';   // 02.08.2026: Poly Paper-Track-Record — neuer Tab „Track-Record", Shortlist-Empfehlungen mitschreiben + bei Aufloesung abrechnen (ROI/CLV/Conviction), sendet/setzt nichts
+const VERSION = 'cocobet-v48';   // 02.08.2026: Poly-Ausgabe-Integritaet — poly_data_integrity.py schreibt poly_status.json, Status-Seite haengt es unter Polymarket ein (Close-Feed frisch, Settlement lebt, Tracker schreibt, bewiesene Wallets profitabel, Keys matchen Aufloesungen)
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

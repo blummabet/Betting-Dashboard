@@ -946,6 +946,7 @@ function _stPolyFeeds() {
     { file: 'poly_cross_sport.json', icon: '⚖️', label: 'Cross-Sport-Edge', ts: 'generatedAt', warnH: t.warnH, errH: t.errH, crit: false },
     { file: 'poly_wallet_track.json', icon: '🐋', label: 'Wallet-Track (CLV)', ts: 'updatedAt', warnH: 12, errH: 24, crit: false },
     { file: 'poly_trader_data.json', icon: '👤', label: 'Trader-Data', ts: null, crit: false },
+    { file: 'poly_status.json', icon: '🛡️', label: 'Integritäts-Report', ts: 'generatedAt', warnH: t.warnH, errH: t.errH, crit: false, note: 'Ausgabe-Checks je Scan' },
     { file: 'mls_poly_prices.json', icon: '⚽', label: 'MLS-Poly-Preise', ts: 'generatedAt', warnH: 12, errH: 24, crit: false },
   ];
 }
@@ -990,11 +991,47 @@ async function _stRenderBetfairStatus() {
     + _stCard('🧠 Lernloop (Betfair-Signale)', null, learn);
 }
 
+// 🛡️ Wiederverwendbarer Checks-Renderer (02.08.2026, Lucas): rendert eine {checks:[…]}-Batterie
+// (wm_status.json / poly_status.json) als 🔴/🟡/✅-Zeilen — Fehler zuerst. Gibt einen HTML-String
+// zurück (für _stCard), im Gegensatz zum DOM-schreibenden _stRenderIntegrity.
+function _stChecksHtml(checks, emptyMsg) {
+  if (!Array.isArray(checks) || !checks.length) {
+    return `<div style="color:var(--muted);text-align:center;padding:14px;">${emptyMsg || 'Noch keine Integritäts-Checks — kommt mit dem nächsten Scan-Lauf.'}</div>`;
+  }
+  const rank = c => c.ok ? 0 : (c.severity === 'error' ? 3 : 2);
+  const sorted = [...checks].sort((a, b) => rank(b) - rank(a) || ((b.nFail || 0) - (a.nFail || 0)));
+  return sorted.map(c => {
+    const m = c.ok ? _SEV_META.ok : (c.severity === 'error' ? _SEV_META.error : _SEV_META.warn);
+    const fails = (c.failures || []);
+    const body = c.ok
+      ? `<span style="color:#3fb950;font-size:11px;">sauber</span>`
+      : `<span style="color:${m.col};font-size:11px;font-weight:700;">${c.nFail} Fehler</span>`;
+    const detail = (!c.ok && fails.length) ? `
+      <details style="margin-top:6px;">
+        <summary style="cursor:pointer;font-size:10px;color:var(--muted);">Details zeigen (${fails.length})</summary>
+        <div style="margin-top:6px;display:flex;flex-direction:column;gap:3px;">
+          ${fails.map(f => `<div style="font-size:11px;color:var(--text);font-family:monospace;word-break:break-word;">· ${f}</div>`).join('')}
+        </div>
+      </details>` : '';
+    return `<div style="background:${m.bg};border:1px solid ${m.bd};border-radius:9px;padding:10px 13px;margin-bottom:8px;">
+      <div style="display:flex;align-items:center;gap:9px;">
+        <span style="font-size:14px;">${m.icon}</span>
+        <div style="flex:1;min-width:0;">
+          <div style="font-weight:700;font-size:12.5px;color:var(--text);">${c.label}</div>
+          <div style="font-size:10.5px;color:var(--muted);">${c.note || ''}</div>
+        </div>
+        ${body}
+      </div>${detail}
+    </div>`;
+  }).join('');
+}
+
 async function _stRenderPolyStatus() {
   const dyn = _stDynEl(); if (!dyn) return;
-  const [broad, close, cross, wtrack, trader] = await Promise.all([
+  const [broad, close, cross, wtrack, trader, pstatus] = await Promise.all([
     _stGet('poly_money_broad.json'), _stGet('poly_money_broad_close.json'),
     _stGet('poly_cross_sport.json'), _stGet('poly_wallet_track.json'), _stGet('poly_trader_data.json'),
+    _stGet('poly_status.json'),
   ]);
   const ts = _stParseTs(broad && broad.generatedAt), age = _stAgeH(ts);
   const pt = _stPolyThr();
@@ -1003,6 +1040,13 @@ async function _stRenderPolyStatus() {
   if (age === null) { vIco = '⚠️'; vT = 'Keine Poly-Daten'; vS = 'poly_money_broad.json fehlt/ohne Zeitstempel — Mac-Runner prüfen.'; vC = _ST_R; }
   else if (age > pt.errH) { vIco = '🔴'; vT = `Poly ${age.toFixed(1)}h alt`; vS = 'Auch fürs MLS-Fenster zu alt → Mac-Runner schläft/offline. MacBook/Runner prüfen.'; vC = _ST_R; }
   else if (age > pt.warnH) { vIco = '🟡'; vT = `Poly ${age.toFixed(1)}h alt`; vS = _stPolyActive() ? 'Im aktiven MLS-Fenster überfällig (Soll 30 min) — Runner beobachten.' : 'Leicht überfällig — der nächste Lauf kommt im MLS-Fenster (~22 UTC).'; vC = _ST_A; }
+  // 02.08.2026 (Lucas' Skepsis): Ausgabe-Integrität in die Kopf-Ampel falten — ein stiller Bug
+  // (toter Emitter, eingefrorenes Settlement) soll GANZ OBEN rot/gelb sein, nicht nur weit unten.
+  const _pChecks = (pstatus && Array.isArray(pstatus.checks)) ? pstatus.checks : [];
+  const _pErr = _pChecks.filter(c => !c.ok && c.severity === 'error').length;
+  const _pWarn = _pChecks.filter(c => !c.ok && c.severity !== 'error').length;
+  if (_pErr > 0) { vIco = '🔴'; vT = `${_pErr} Integritäts-Fehler`; vS = 'Ein Ausgabe-Check schlägt an — die Poly-Maschine tut ihren Job nicht (Details in „Daten-Integrität").'; vC = _ST_R; }
+  else if (_pWarn > 0 && vC === _ST_G) { vIco = '🟡'; vT = `${_pWarn} Integritäts-Warnung${_pWarn > 1 ? 'en' : ''}`; vS = 'Feeds frisch, aber ein Ausgabe-Check warnt (Details in „Daten-Integrität").'; vC = _ST_A; }
   const nMk = broad && broad.n != null ? broad.n : '—';
   const nLg = broad && Array.isArray(broad.byLeague) ? broad.byLeague.length : '—';
   const nClose = close && typeof close === 'object' ? Object.keys(close).length : '—';
@@ -1024,6 +1068,7 @@ async function _stRenderPolyStatus() {
   dyn.innerHTML = _stHead('🐋', 'Polymarket — Status', 'Globaler Geld-Scan · Cross-Sport-Edge · Wallets/Smart-Money')
     + _stBanner(vIco, vT, vS, vC)
     + _stCard('📊 Health', null, health)
+    + _stCard('🛡️ Daten-Integrität', 'Prüft nicht ob Zahlen schön sind, sondern ob die Poly-Maschine ihren Job tut — kommt frisches Geld rein, wird abgerechnet, schreibt der Paper-Tracker, sind „bewiesene\u201c Wallets wirklich im Plus, matchen unsere Keys die Auflösungen?', _stChecksHtml(_pChecks, 'poly_status.json noch nicht erzeugt — läuft mit dem nächsten Global-Scan (poly_data_integrity.py).'))
     + _stCard('📁 Feed-Frische', 'aus dem Datenstand selbst · Poly läuft in Wellen zu MLS-Zeiten', await _stFreshGrid(_stPolyFeeds()))
     + _stCard('🧠 Smart-Money-Lernen', 'Wallet-Schärfe (CLV/Treffer) & Sharp-Discovery', learn);
 }
@@ -1066,5 +1111,6 @@ if (typeof window !== 'undefined') {
   window._stRenderOverview = _stRenderOverview;
   window._stRenderBetfairStatus = _stRenderBetfairStatus;
   window._stRenderPolyStatus = _stRenderPolyStatus;
+  window._stChecksHtml = _stChecksHtml;
   window._stShowDynamic = _stShowDynamic;
 }

@@ -1,0 +1,90 @@
+{
+  "checks": [
+    {
+      "id": "close_feed_fresh",
+      "label": "Close-Feed frisch (frisches Geld kommt rein)",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Jüngster erfasster Markt. Scan alle 30 Min — steht der Feed, sind Preise/CLV/Volumen alt."
+    },
+    {
+      "id": "resolutions_fresh",
+      "label": "Auflösungs-Feed lebt (Märkte werden abgerechnet)",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Jüngste Markt-Auflösung. Friert er ein, bleiben alle Positionen ewig offen."
+    },
+    {
+      "id": "wallet_track_fresh",
+      "label": "Wallet-Lernen frisch",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Grundlage der 'bewiesene Wallet'-Pushes — veraltet = Pushes auf alten Bilanzen."
+    },
+    {
+      "id": "shortlist_tracker_writes",
+      "label": "Shortlist-Paper-Tracker schreibt",
+      "severity": "error",
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "Tracker 4.8 h alt, Scan-Feed nur 1.8 h → Emitter liefert seit 2.9 h nichts (still tot?)"
+      ],
+      "note": "Der Emitter (node/jsdom) kann still ausfallen. Hinkt der Tracker dem frischen Scan nach, schreibt er nicht — die Auto-Bet-Entscheidung liefe auf Blindflug."
+    },
+    {
+      "id": "settlement_alive",
+      "label": "Settlement lebt (keine ewig offenen Positionen)",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
+    },
+    {
+      "id": "resolutions_match_open_keys",
+      "label": "Auflösungen matchen unsere Keys",
+      "severity": "warn",
+      "ok": false,
+      "nFail": 3,
+      "failures": [
+        "ESPORTS: nur 94/225 fällige Märkte aufgelöst (42%)",
+        "TENNIS: nur 26/163 fällige Märkte aufgelöst (16%)",
+        "MLB: nur 67/127 fällige Märkte aufgelöst (53%)"
+      ],
+      "note": "Fällige Märkte je Liga, die ihre Auflösung finden. < 60% = Settlement läuft ins Leere (Slug-Mismatch), Trefferquoten dieser Liga sind unvollständig."
+    },
+    {
+      "id": "proven_wallets_profitable",
+      "label": "'Bewiesene' Wallets wirklich profitabel",
+      "severity": "warn",
+      "ok": false,
+      "nFail": 5,
+      "failures": [
+        "18/48 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (38%) — Trefferquote allein trügt",
+        "   0x84cfffc3f1… n=16 Treffer 62% P&L $-7,497,400",
+        "   0xe9076a87c5… n=8 Treffer 88% P&L $-7,350,746",
+        "   0xc3c3b3ef30… n=13 Treffer 85% P&L $-3,773,188",
+        "   0xa0f21e6d35… n=7 Treffer 57% P&L $-2,674,480"
+      ],
+      "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
+    },
+    {
+      "id": "accuracy_backtest_fresh",
+      "label": "Genauigkeits-Backtest frisch & belastbar",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "poly_money_broad muss frisch sein und n groß genug, sonst ist 'folgt dem Geld' Zufall."
+    }
+  ],
+  "nFail": 3,
+  "generatedAt": "2026-08-02T14:04:08.881521+00:00"
+}

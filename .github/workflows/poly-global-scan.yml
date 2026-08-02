@@ -76,13 +76,17 @@ jobs:
         run: ${{ env.POLY_PYTHON }} fetch_poly_esports.py
         continue-on-error: true
 
+      - name: 🛡️ Poly-Daten-Integrität (Ausgabe-Checks → poly_status.json)
+        run: ${{ env.POLY_PYTHON }} poly_data_integrity.py
+        continue-on-error: true
+
       - name: 💾 Poly-Global-Dateien committen
         run: |
           git config user.name "CocoBet Bot"
           git config user.email "bot@cocobet.local"
           for f in \
             poly_money_broad.json poly_money_broad_close.json poly_money_broad_history.json poly_wallet_track.json \
-            poly_resolutions.json poly_shortlist_track.json \
+            poly_resolutions.json poly_shortlist_track.json poly_status.json \
             poly_cross_sport.json poly_cross_sport_history.json poly_cross_sport_seen.json \
             poly_whale_seen.json poly_whale_public_seen.json \
             esports_poly_prices.json esports_poly_wallets.json esports_poly_smartmoney.json esports_poly_coherence.json esports_poly_status.json; do
