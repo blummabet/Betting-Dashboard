@@ -136,6 +136,12 @@
       '.md-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px;}',
       '.md-cell{display:contents;}',
       '@media(max-width:760px){.md-grid{grid-template-columns:1fr;}}',
+      '.md-ring{position:relative;flex:0 0 auto;width:44px;height:44px;}',
+      '.md-ring .n{position:absolute;inset:0;display:grid;place-items:center;font-weight:900;font-size:18px;}',
+      '.md-donut{position:relative;flex:0 0 auto;width:42px;height:42px;}',
+      '.md-donut .n{position:absolute;inset:0;display:grid;place-items:center;font-weight:800;font-size:13px;}',
+      '.md-live{display:inline-block;font-size:8.5px;font-weight:800;color:var(--red);border:1px solid rgba(229,83,75,.55);border-radius:6px;padding:0 5px;margin-left:6px;vertical-align:middle;letter-spacing:.3px;line-height:14px;}',
+      '.md-wdot{flex:0 0 auto;width:22px;height:22px;border-radius:7px;display:grid;place-items:center;font-size:12px;background:rgba(229,83,75,.13);color:var(--red);}',
       '.md-tile{background:var(--m1);border:1px solid var(--mln);border-radius:14px;padding:13px 15px 6px;display:flex;flex-direction:column;min-width:0;transition:border-color .16s,transform .16s;}',
       '.md-tile:hover{border-color:var(--mln2);transform:translateY(-2px);}',
       '.md-tile-h{display:flex;align-items:center;gap:9px;margin-bottom:4px;}',
@@ -323,9 +329,8 @@
     var mx = rows[0].score || 1;
     return rows.map(function (r) {
       var t = r.top || {};
-      return rowEl(_bfTeams(r.m), '⚠ ' + r.nHard, A.red,
-        esc(String(t.k || 'Abweichung')) + (t.mkt ? ' · ' + esc(String(t.mkt).slice(0, 26)) : ''),
-        meter(Math.min(100, r.score / mx * 100), A.red));
+      return _mdWarnRow(_bfTeams(r.m) + _mdBfLive(r.m),
+        esc(String(t.k || 'Abweichung')) + (t.mkt ? ' · ' + esc(String(t.mkt).slice(0, 26)) : ''), r.nHard);
     }).join('') + _ageStr(_md.data.betfair);
   }
   // 💸 Frisches Geld: größter Zufluss (€) je Spiel seit dem letzten Snapshot.
@@ -334,7 +339,7 @@
     if (!items.length) return empty('Kein frischer Zufluss ≥ €2K — sammelt (2 Snapshots nötig).');
     var mx = items.reduce(function (a, x) { return Math.max(a, +x.deltaEur || 0); }, 1);
     return items.map(function (x) {
-      return rowEl(_bfTeams(x), '+' + eur(x.deltaEur), A.good,
+      return rowEl(_bfTeams(x) + _mdBfLiveById(x.matchId), '+' + eur(x.deltaEur), A.good,
         '→ ' + esc(x.sideName || '') + ' · jetzt ' + eur(x.nowEur) + (x.odd != null ? ' @' + (+x.odd).toFixed(2) : ''),
         meter(mx ? (+x.deltaEur / mx * 100) : 0, A.good));
     }).join('') + _ageStr(_md.data.betfair);
@@ -473,6 +478,38 @@
         '<span class="md-tile-t">' + title + '</span>' + more + '</div>' + bodyHtml + '</section>';
   }
   function empty(txt) { return '<div class="md-empty">' + (txt || 'Aktuell nichts.') + '</div>'; }
+  // ── Form-Sprachen für die Übersicht (02.08.2026, Lucas): Anteil→Donut, Score→Ring, Alert→Warn,
+  //    Live→Badge. Donut/Ring als Inline-SVG-Bogen; Zeilen nutzen die bestehende .md-r-Flexzeile. ──
+  function _mdArc(pct, color, size, sw) {
+    var r = (size - sw) / 2, cx = size / 2, circ = 2 * Math.PI * r;
+    var on = Math.max(0, Math.min(1, pct)) * circ;
+    return '<svg width="' + size + '" height="' + size + '" viewBox="0 0 ' + size + ' ' + size + '" style="transform:rotate(-90deg)">'
+      + '<circle cx="' + cx + '" cy="' + cx + '" r="' + r + '" fill="none" stroke="var(--mln)" stroke-width="' + sw + '"/>'
+      + '<circle cx="' + cx + '" cy="' + cx + '" r="' + r + '" fill="none" stroke="' + color + '" stroke-width="' + sw + '" stroke-linecap="round" stroke-dasharray="' + on + ' ' + (circ - on) + '"/></svg>';
+  }
+  function _mdRing(conv, color) { return '<div class="md-ring">' + _mdArc((+conv || 0) / 10, color, 44, 5) + '<div class="n" style="color:' + color + '">' + (+conv || 0) + '</div></div>'; }
+  function _mdDonut(pct, color) { return '<div class="md-donut">' + _mdArc((+pct || 0) / 100, color, 42, 6) + '<div class="n">' + Math.round(+pct || 0) + '%</div></div>'; }
+  function _mdConvCol(conv) { return conv >= 9 ? A.good : conv >= 8 ? '#2dd4bf' : A.gold; }
+  var _MD_LIVE = '<span class="md-live">\u25cf LIVE</span>';
+  function _mdBfLive(m) { return (typeof window._bfIsLive === 'function' && window._bfIsLive(m)) ? _MD_LIVE : ''; }
+  function _mdBfLiveById(id) {
+    var ms = (_md.data.betfair && _md.data.betfair.matches) || [];
+    for (var i = 0; i < ms.length; i++) if (String(ms[i].matchId) === String(id)) return _mdBfLive(ms[i]);
+    return '';
+  }
+  function _mdRingRow(main, sub, conv, color) {
+    return '<div class="md-r">' + _mdRing(conv, color) + '<div class="md-r-main"><div class="md-r-t">' + main + '</div>'
+      + (sub ? '<div class="md-r-s">' + sub + '</div>' : '') + '</div></div>';
+  }
+  function _mdDonutRow(main, sub, val, valcol, pct, dcol) {
+    return '<div class="md-r">' + _mdDonut(pct, dcol) + '<div class="md-r-main"><div class="md-r-t">' + main + '</div>'
+      + (sub ? '<div class="md-r-s">' + sub + '</div>' : '') + '</div>'
+      + (val ? '<div class="md-r-v" style="color:' + valcol + '">' + val + '</div>' : '') + '</div>';
+  }
+  function _mdWarnRow(main, sub, count) {
+    return '<div class="md-r"><span class="md-wdot">\u26a0</span><div class="md-r-main"><div class="md-r-t">' + main + '</div>'
+      + (sub ? '<div class="md-r-s">' + sub + '</div>' : '') + '</div><div class="md-r-v" style="color:var(--red)">' + (count || 1) + '</div></div>';
+  }
   function rowEl(main, val, valColor, sub, extra) {
     return '<div class="md-r"><div class="md-r-main">' +
       '<div class="md-r-t">' + main + '</div>' +
@@ -494,16 +531,14 @@
   // ── 🔥 Heute spielenswert (01.08.2026, Lucas) — verdichtet die Poly-Wallet-Signale (Geld · Steam ·
   //    scharfe Wallets · Pinnacle) zu 2–3 konkreten Plays. Nutzt den Scorer aus poly-wallets.js.
   function _mdPlayRow(r) {
-    var bet = r.verdict === 'BET', vcol = bet ? A.good : A.gold;
+    var vcol = r.verdict === 'BET' ? A.good : A.gold, conv = +r.conv || 0;
     var badge = '<span style="display:inline-block;padding:1px 7px;border-radius:10px;border:1px solid ' + vcol + ';color:' + vcol + ';font-weight:800;font-size:10px;margin-right:6px">' + r.verdict + '</span>';
     var icon = (typeof _pwSportIcon === 'function') ? _pwSportIcon(r.league) + ' ' : '';
-    var htk = (r.htk == null) ? '' : (r.htk < 0 ? 'live' : r.htk < 1 ? '<1h' : Math.round(r.htk) + 'h');
-    var link = 'https://polymarket.com/event/' + encodeURIComponent(r.key || '');
-    var main = badge + icon + esc(String(r.match).slice(0, 42)) + ' <span style="color:var(--mi3)">→</span> <b style="color:#4cc2ff">' + esc(r.side) + '</b>';
-    var convCol = r.conv >= 8 ? A.good : r.conv >= 6 ? A.gold : 'var(--mi2)';
+    var live = (r.htk != null && r.htk < 0) ? _MD_LIVE : '';
+    var htk = (r.htk == null || r.htk < 0) ? '' : (r.htk < 1 ? '<1h' : Math.round(r.htk) + 'h');
+    var main = badge + icon + esc(String(r.match).slice(0, 38)) + ' <span style="color:var(--mi3)">→</span> <b style="color:#4cc2ff">' + esc(r.side) + '</b>' + live;
     var sub = (r.reasons || []).slice(0, 2).map(esc).join(' · ') + (htk ? ' · Anpfiff ' + htk : '');
-    var extra = '<div style="margin-top:5px"><a href="' + link + '" target="_blank" rel="noopener" style="font-size:11px;color:var(--mi2);text-decoration:none;border-bottom:1px dotted var(--mln2)">Markt öffnen ↗</a></div>';
-    return rowEl(main, r.conv + '/10', convCol, sub, extra);
+    return _mdRingRow(main, sub, conv, _mdConvCol(conv));
   }
   function _mdPlaysHtml(plays) {
     var body = (plays && plays.length)
@@ -525,24 +560,28 @@
   //    ein paar Tage beobachten, bevor irgendwas in den Channel geht: (A) „Top-Play" hart gegatet
   //    (Conv≥9 + bewiesene Wallet + echte Mehrheit), (B) „Whale-Watch" (Schwellen wie im Public-Push).
   function _mdPubTopRow(r) {
-    var vcol = r.verdict === 'BET' ? A.good : A.gold;
+    var vcol = r.verdict === 'BET' ? A.good : A.gold, conv = +r.conv || 0;
     var badge = '<span style="display:inline-block;padding:1px 7px;border-radius:10px;border:1px solid ' + vcol + ';color:' + vcol + ';font-weight:800;font-size:10px;margin-right:6px">' + r.verdict + '</span>';
     var icon = (typeof _pwSportIcon === 'function') ? _pwSportIcon(r.league) + ' ' : '';
-    var main = badge + icon + esc(String(r.match).slice(0, 40)) + ' <span style="color:var(--mi3)">→</span> <b style="color:#4cc2ff">' + esc(r.side) + '</b>';
+    var live = (r.htk != null && r.htk < 0) ? _MD_LIVE : '';
+    var main = badge + icon + esc(String(r.match).slice(0, 38)) + ' <span style="color:var(--mi3)">→</span> <b style="color:#4cc2ff">' + esc(r.side) + '</b>' + live;
     var sh = r.sharp || {};
     var rec = sh.n ? (sh.wins + '/' + sh.n + ' · ' + Math.round((sh.hit || 0) * 100) + '%') : '';
     var sub = 'Geld ' + Math.round((r.moneyPct || 0) * 100) + '%' + (rec ? ' · Wallet ' + rec : '');
-    return rowEl(main, r.conv + '/10', A.good, sub, '');
+    return _mdRingRow(main, sub, conv, _mdConvCol(conv));
   }
   function _mdWhalePubRow(w) {
     var icon = (typeof _pwSportIcon === 'function') ? _pwSportIcon(w.league) + ' ' : '';
     var tag = w.tracked
       ? '<span style="color:' + A.good + ';font-weight:800;font-size:10px">✓ tracked</span>'
       : '<span style="color:var(--mi2);font-weight:700;font-size:10px">untracked</span>';
-    var main = icon + esc(String(w.match).replace(/<[^>]*>/g, '').slice(0, 40)) + ' <span style="color:var(--mi3)">→</span> <b style="color:#4cc2ff">' + esc(w.side) + '</b>';
-    var rec = (w.tracked && w.n) ? ' · n' + w.n + ' · ' + Math.round((w.hit || 0) * 100) + '%' : '';
-    var sub = tag + ' · ' + Math.round(w.price * 100) + '¢' + rec;
-    return rowEl(main, usd(w.usd), A.poly, sub, '');
+    var live = (w.htk != null && w.htk < 0) ? _MD_LIVE : '';
+    var main = icon + esc(String(w.match).replace(/<[^>]*>/g, '').slice(0, 38)) + ' <span style="color:var(--mi3)">→</span> <b style="color:#4cc2ff">' + esc(w.side) + '</b>' + live;
+    var sub = tag + ' · ' + Math.round(w.price * 100) + '¢' + ((w.tracked && w.n) ? ' · n' + w.n : '');
+    var hit = (w.tracked && w.n) ? Math.round((w.hit || 0) * 100) : null;
+    return hit != null
+      ? _mdDonutRow(main, sub, usd(w.usd), A.poly, hit, hit >= 55 ? A.poly : '#8b949e')
+      : rowEl(main, usd(w.usd), A.poly, sub, '');
   }
   function _mdFillPubPreview() {
     var cTop = document.getElementById('md-cell-top'), cWh = document.getElementById('md-cell-whale');
@@ -592,8 +631,7 @@
     if (!rows.length) return empty('Kein nennenswertes HT-Geld gerade (Schwelle \u20ac1K).');
     return rows.map(function (x) {
       var m = x.m, b = x.b, pct = Math.round(b.share * 100);
-      return rowEl(_bfTeams(m), eur(b.vol), A.bf,
-        (_HT_MK[b.name] || b.name) + ' \u2192 ' + esc(b.lead.name) + ' \u00b7 ' + pct + '%', meter(pct, A.bf));
+      return _mdDonutRow(_bfTeams(m) + _mdBfLive(m), (_HT_MK[b.name] || b.name) + ' \u2192 ' + esc(b.lead.name), eur(b.vol), A.bf, pct, A.bf);
     }).join('') + _ageStr(_md.data.betfair);
   }
 
@@ -608,10 +646,10 @@
     // Cards — Conviction-Meter
     var c = bestCards();
     var cardsBody = c.length ? c.map(function (x) {
-      var f = x.f, p2 = x.p;
-      var val = x.conv ? x.conv + '/10' : (p2.odds != null ? '@' + (+p2.odds).toFixed(2) : '');
+      var f = x.f, p2 = x.p, conv = +x.conv || 0;
       var sub = esc(short(p2.market)) + (fxLeague(f) ? ' · ' + esc(String(fxLeague(f)).slice(0, 20)) : '') + (p2.edgePP != null ? ' · +' + Math.round(+p2.edgePP) + 'pp' : '');
-      return rowEl(teamsOf(f), val, A.good, sub, x.conv ? meter(x.conv * 10, A.good) : '');
+      return conv ? _mdRingRow(teamsOf(f), sub, conv, _mdConvCol(conv))
+        : rowEl(teamsOf(f), (p2.odds != null ? '@' + (+p2.odds).toFixed(2) : ''), A.good, sub, '');
     }).join('') : empty('Keine BET-Cards gerade.');
 
     // Streaks — Pips (Länge)
@@ -627,8 +665,7 @@
     var bf = bestBetfair();
     var bfBody = bf.length ? bf.map(function (x) {
       var m = x.m, b = x.b, pct = Math.round(b.share * 100);
-      return rowEl(teamsOf(m), eur(b.vol), A.bf,
-        esc(short(b.name)) + ' → ' + esc(b.lead.name) + ' · ' + pct + '%', meter(pct, A.bf));
+      return _mdDonutRow(teamsOf(m) + _mdBfLive(m), esc(short(b.name)) + ' → ' + esc(b.lead.name), eur(b.vol), A.bf, pct, A.bf);
     }).join('') : empty('Kein großes Betfair-Geld.');
     bfBody += _ageStr(_md.data.betfair);
 
@@ -636,8 +673,9 @@
     var wh = bestWhales();
     var whMax = wh.length ? wh[0].usd : 1;
     var whBody = wh.length ? wh.map(function (w) {
+      var live = (w.hrs != null && w.hrs < 0) ? _MD_LIVE : '';
       var hrs = (w.hrs != null && w.hrs >= 0) ? (w.hrs < 1 ? '<1h' : Math.round(w.hrs) + 'h') : '';
-      return rowEl(fl(_flagFrom(w.country, w.league, w.league)) + esc(w.side || '?'), usd(w.usd), A.poly,
+      return rowEl(fl(_flagFrom(w.country, w.league, w.league)) + esc(w.side || '?') + live, usd(w.usd), A.poly,
         esc(String(w.league || '')) + (hrs ? ' · in ' + hrs : ''), meter(whMax ? (w.usd / whMax) * 100 : 0, A.poly));
     }).join('') : empty('Keine Whale-Bets.');
 

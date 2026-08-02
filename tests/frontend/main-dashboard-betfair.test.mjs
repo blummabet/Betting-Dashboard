@@ -59,8 +59,8 @@ test('Fehlbepreisung mit (gestubbter) Radar-Engine → ⚠ N + Spiel, nur vor An
   w._renderMainDash();
   const h = w.document.getElementById('mainDashPanel').innerHTML;
   assert.match(h, /Größte Fehlbepreisung/);
-  assert.match(h, /⚠ 2/);
-  assert.match(h, /Draw no Bet/);
+  assert.match(h, /md-wdot/, 'Warn-Flag-Form (Symbol + Zähler)');   // ⚠ im Symbol, Zahl separat
+  assert.match(h, /Draw no Bet/, 'stärkste Abweichung zuerst');
   assert.match(h, /Genk/);
 });
 
