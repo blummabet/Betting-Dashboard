@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-08-01T20:30:51Z",
-    "total_records": 11
+    "updated_at": "2026-08-02T09:11:47Z",
+    "total_records": 15
   },
   "records": [
     {
@@ -234,6 +234,88 @@
       "processVerdict": "UNLUCKY"
     },
     {
+      "key": "MLS-18-1602-1598|Doppelte Chance — X2",
+      "matchKey": "MLS-18-1602-1598",
+      "market": "Doppelte Chance — X2",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 2.03
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 0.75
+        },
+        {
+          "name": "transfer_shift",
+          "score": -0.72
+        },
+        {
+          "name": "opener_move",
+          "score": 0.48
+        },
+        {
+          "name": "venue_form",
+          "score": 1.0
+        }
+      ],
+      "resolvedAt": "2026-08-02T09:11:39Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 0.97,
+      "processVerdict": "DESERVED_LOSS"
+    },
+    {
+      "key": "MLS-18-1603-1616|Doppelte Chance — X2",
+      "matchKey": "MLS-18-1603-1616",
+      "market": "Doppelte Chance — X2",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "injury",
+          "score": 1.1
+        },
+        {
+          "name": "form_trend",
+          "score": -1.3
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 0.8
+        },
+        {
+          "name": "form_rating",
+          "score": 3.45
+        },
+        {
+          "name": "freshness_leg",
+          "score": 2.0
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 0.47
+        },
+        {
+          "name": "transfer_shift",
+          "score": -0.72
+        },
+        {
+          "name": "mls_travel",
+          "score": -0.63
+        }
+      ],
+      "resolvedAt": "2026-08-02T09:11:39Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -4.81,
+      "processVerdict": "LUCKY"
+    },
+    {
       "key": "MLS-18-1604-1601|Heimsieg",
       "matchKey": "MLS-18-1604-1601",
       "market": "Heimsieg",
@@ -275,6 +357,41 @@
       "engineVersion": "v1",
       "clvPP": -4.88,
       "processVerdict": "UNLUCKY"
+    },
+    {
+      "key": "MLS-18-1607-18310|Heimsieg",
+      "matchKey": "MLS-18-1607-18310",
+      "market": "Heimsieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "injury",
+          "score": -2.3
+        },
+        {
+          "name": "form_rating",
+          "score": -2.06
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 0.8
+        },
+        {
+          "name": "opener_move",
+          "score": 0.97
+        },
+        {
+          "name": "venue_form",
+          "score": 1.5
+        }
+      ],
+      "resolvedAt": "2026-08-02T09:11:39Z",
+      "source": "steam",
+      "convictionScore": 3,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -2.52,
+      "processVerdict": "JUSTIFIED"
     },
     {
       "key": "MLS-18-1609-1601|Auswärtssieg",
@@ -349,6 +466,49 @@
       "engineVersion": "v1",
       "clvPP": 1.05,
       "processVerdict": "LUCKY"
+    },
+    {
+      "key": "MLS-18-1617-1595|Doppelte Chance — 1X",
+      "matchKey": "MLS-18-1617-1595",
+      "market": "Doppelte Chance — 1X",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 0.8
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.08
+        },
+        {
+          "name": "chance_creation",
+          "score": 2.66
+        },
+        {
+          "name": "form_rating",
+          "score": 2.59
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 0.86
+        },
+        {
+          "name": "venue_form",
+          "score": 1.71
+        },
+        {
+          "name": "betfair_money",
+          "score": 4.0
+        }
+      ],
+      "resolvedAt": "2026-08-02T09:11:39Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -0.7,
+      "processVerdict": "JUSTIFIED"
     },
     {
       "key": "MLS-18-1617-1597|Auswärtssieg",
