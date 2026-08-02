@@ -34,26 +34,50 @@ const API_HOST  = 'v3.football.api-sports.io';
 const ODDS_API_KEY  = process.env.ODDS_API_KEY || '16154a94ee84482dcd5a4af88d521d73';
 const ODDS_API_HOST = 'api.the-odds-api.com';
 
+// ── Saison-Bestimmung (Fix 02.08.2026, Lucas: „0 Fixtures im August"): season war hart auf 2025
+// verdrahtet. Die Saison 2025/26 endete im Mai 2026 → Termine ab Juli 2026 gehören zur Saison 2026
+// (2026/27), also lieferte /fixtures für ALLE Ligen 0 Spiele. Europäische Ligen: Saison-Jahreszahl =
+// Startjahr; ab Juli zählt das laufende Kalenderjahr, davor das Vorjahr. Per APISPORTS_SEASON überschreibbar.
+function seasonForDate(d = new Date()) {
+  const y = d.getUTCFullYear();
+  return (d.getUTCMonth() + 1) >= 7 ? y : y - 1;   // Jul–Dez → laufendes Jahr, Jan–Jun → Vorjahr
+}
+const SEASON      = parseInt(process.env.APISPORTS_SEASON, 10) || seasonForDate();
+const SEASON_PREV = SEASON - 1;
+
 // Nur diese Ligen fetchen — verhindert 7000+ Spiele pro Tag weltweit
 // api-football League IDs: https://www.api-football.com/documentation-v3#tag/Leagues
-const LEAGUE_IDS = {
+// Alle je unterstützten Ligen — Namen bleiben ERHALTEN, damit Re-Aktivieren nur eine Zeile ist.
+const ALL_LEAGUE_IDS = {
   39:  'Premier League',
   78:  'Bundesliga',
   135: 'Serie A',
   140: 'La Liga',
   61:  'Ligue 1',
+  // ── geparkt (letzte Saison aktiv, aktuell NICHT in den Cards) ──────────────
   218: 'Austrian Bundesliga',
   88:  'Eredivisie',
   94:  'Primeira Liga',
   179: 'Scottish Premiership',
   203: 'Süper Lig',
-  // Neue Ligen (Saison-Ende April/Mai)
   144: 'Jupiler Pro League',
   106: 'Ekstraklasa',
   271: 'NB I',
   210: 'HNL',
   207: 'Super League (Switzerland)',
 };
+
+// (02.08.2026, Lucas) Produkt-Fokus = Top-5, deckungsgleich mit den Cards (cocobet_dataset.LIGA_LEAGUES
+// → liga-data.json). Die 10 geparkten Ligen oben werden NICHT gefetcht (sparte sonst ~2/3 der API-Calls
+// für Daten, die in keiner Card landen). EINE Liga wieder aufnehmen: ihre ID hier ergänzen — der Name
+// steht oben schon bereit. Als ECHTE Card braucht sie zusätzlich einen Eintrag in cocobet_dataset.
+// Ad-hoc überschreibbar: PREMATCH_LEAGUES="39,78,140".
+const ACTIVE_LEAGUE_IDS = (process.env.PREMATCH_LEAGUES
+  ? process.env.PREMATCH_LEAGUES.split(',').map(x => parseInt(x.trim(), 10)).filter(Boolean)
+  : [39, 78, 135, 140, 61]);
+const LEAGUE_IDS = Object.fromEntries(
+  ACTIVE_LEAGUE_IDS.filter(id => ALL_LEAGUE_IDS[id]).map(id => [id, ALL_LEAGUE_IDS[id]])
+);
 
 // Team name aliases: API-Football short names → The Odds API full names.
 // Used in matchOddsEvent to prevent misses when naming conventions differ.
@@ -599,23 +623,28 @@ async function fetchTeamBookings(teamId) {
   if (!teamId) return [];
   const cached = _bookingsCache[teamId];
   if (cached && Date.now() - cached.ts < BOOKINGS_TTL) return cached.data;
-  try {
-    // Fetch page 1 (and page 2 if needed) of player stats for this team
-    const data = await apiFetch(`/players?team=${teamId}&season=2025`);
+  // Kartenträchtige Spieler je Saison holen; findet die laufende Saison noch keine (Saisonstart, noch
+  // keine Gelben), auf die Vorsaison zurückfallen — sonst wäre die Buchungs-Historie leer. (02.08.2026, Lucas)
+  const _fetchSeason = async (season) => {
+    const data = await apiFetch(`/players?team=${teamId}&season=${season}`);
     const total = data.paging?.total || 1;
     let entries = data.response || [];
     if (total >= 2) {
       await sleep(200);
-      const data2 = await apiFetch(`/players?team=${teamId}&season=2025&page=2`);
+      const data2 = await apiFetch(`/players?team=${teamId}&season=${season}&page=2`);
       entries = entries.concat(data2.response || []);
     }
-    const players = entries
+    return entries
       .map(e => ({
         id:      e.player?.id || null,
         name:    e.player?.name || '?',
         yellows: e.statistics?.[0]?.cards?.yellow || 0,
       }))
       .filter(p => p.yellows > 0);
+  };
+  try {
+    let players = await _fetchSeason(SEASON);
+    if (!players.length) { await sleep(200); players = await _fetchSeason(SEASON_PREV); }
     _bookingsCache[teamId] = { ts: Date.now(), data: players };
     return players;
   } catch(e) { return []; }
@@ -704,12 +733,12 @@ async function fetchRefereeStats(refName) {
       return null;
     }
 
-    // Aggregate across seasons 2024 + 2025 (covers current + previous season)
+    // Aggregat über laufende + Vorsaison (SEASON, SEASON_PREV) — rollt automatisch mit. (02.08.2026)
     let totalCards = 0, totalYellow = 0, totalGames = 0;
     for (const ref of refs) {
       for (const stat of (ref.statistics || [])) {
         const season = stat.league?.season;
-        if (season !== 2024 && season !== 2025) continue;
+        if (season !== SEASON && season !== SEASON_PREV) continue;
         const games   = stat.games?.played || 0;
         const yellows = stat.cards?.yellow || 0;
         const reds    = (stat.cards?.red || 0) + (stat.cards?.yellowred || 0);
@@ -761,22 +790,26 @@ async function fetchTeamCardProfile(teamId, leagueId) {
   const key = `${teamId}-${leagueId}`;
   const cached = _teamCardsCache[key];
   if (cached && Date.now() - cached.ts < TEAM_CARDS_TTL) return cached.data;
-  try {
-    const data = await apiFetch(`/teams/statistics?team=${teamId}&season=2025&league=${leagueId}`);
+  // Aktuelle Saison zuerst; hat sie noch keine Spiele (Saisonstart), auf die Vorsaison zurückfallen —
+  // sonst wäre die Karten-Baseline zum Saisonauftakt leer. (Fix 02.08.2026, Lucas)
+  const _profile = async (season) => {
+    const data = await apiFetch(`/teams/statistics?team=${teamId}&season=${season}&league=${leagueId}`);
     const resp = data.response;
-    if (!resp) { _teamCardsCache[key] = { ts: Date.now(), data: null }; return null; }
-    const games = resp.fixtures?.played?.total || 0;
-    if (!games) { _teamCardsCache[key] = { ts: Date.now(), data: null }; return null; }
-    // Sum all time-interval totals for yellow and red cards
+    const games = resp?.fixtures?.played?.total || 0;
+    if (!resp || !games) return null;
     const _sumCards = (obj) => Object.values(obj || {}).reduce((s, v) => s + (v?.total || 0), 0);
     const totalYellow = _sumCards(resp.cards?.yellow);
     const totalRed    = _sumCards(resp.cards?.red);
-    const result = {
+    return {
       teamId,
       avgCards:  Math.round((totalYellow + totalRed) / games * 100) / 100,
       avgYellow: Math.round(totalYellow / games * 100) / 100,
-      games,
+      games, season,
     };
+  };
+  try {
+    let result = await _profile(SEASON);
+    if (!result) { await sleep(200); result = await _profile(SEASON_PREV); }
     _teamCardsCache[key] = { ts: Date.now(), data: result };
     return result;
   } catch(e) { return null; }
@@ -1035,7 +1068,7 @@ async function fetchAllPrematchData() {
   for (const [leagueId, leagueName] of Object.entries(LEAGUE_IDS)) {
     try {
       const data = await apiFetch(
-        `/fixtures?league=${leagueId}&season=2025&from=${dateFrom}&to=${dateTo}&timezone=Europe%2FVienna`
+        `/fixtures?league=${leagueId}&season=${SEASON}&from=${dateFrom}&to=${dateTo}&timezone=Europe%2FVienna`
       );
       const fxs = data.response || [];
       if (data.errors && Object.keys(data.errors).length > 0) {
@@ -1309,7 +1342,7 @@ async function fetchAllPrematchData() {
   const upcoming = fixtures.filter(d => !d.isFinished && d.fixtureId);
 
   // ── Step 4.5: Team Card Profiles (72h disk cache, 1 call per unique team) ──
-  // Fetches /teams/statistics for each team (season 2025) to get per-team avgCards.
+  // Fetches /teams/statistics for each team (aktuelle Saison, Fallback Vorsaison) to get per-team avgCards.
   // Used in getBettingPicks() to improve expected-cards estimate alongside refAvg.
   // Formula in JS: expectedCards = homeCardProfile.avgCards + awayCardProfile.avgCards
   // Only fetches stale entries — typical run costs ~30–40 calls (teams not yet cached).

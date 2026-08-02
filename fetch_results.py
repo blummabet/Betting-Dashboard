@@ -19,6 +19,16 @@ import urllib.error
 from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
+
+# ── Saison-Rollover (Fix 02.08.2026, Lucas): [2025, 2026] war hart verdrahtet. Aktuelle Saison zuerst
+# (ab Juli = laufendes Jahr), Vorsaison als Fallback — rollt automatisch mit. Per APISPORTS_SEASON überschreibbar.
+def _current_season(dt=None):
+    dt = dt or datetime.utcnow()
+    return dt.year if dt.month >= 7 else dt.year - 1
+
+
+SEASON = int(os.environ.get("APISPORTS_SEASON") or 0) or _current_season()
+
 # ── Config ────────────────────────────────────────────────────────────────────
 
 BASE      = Path(__file__).parent
@@ -140,9 +150,9 @@ def main():
             time.sleep(1.2)  # ≤1 req/sec — safely within API-Football rate limit
             total_calls += 1
 
-            # Try season=2025 first, fall back to season=2026 if empty
+            # Aktuelle Saison zuerst, Vorsaison als Fallback (rollt automatisch mit)
             fixtures_raw = []
-            for season in [2025, 2026]:
+            for season in [SEASON, SEASON - 1]:
                 data = api_get("fixtures", {
                     "date":     date,
                     "league":   league_id,

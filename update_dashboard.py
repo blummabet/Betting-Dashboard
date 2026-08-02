@@ -15,6 +15,17 @@ import http.client
 from datetime import datetime, timedelta
 from pathlib import Path
 
+
+# ── Saison-Rollover (Fix 02.08.2026, Lucas): season war hart auf 2025 verdrahtet. Europäische Ligen:
+# Saison-Jahr = Startjahr; ab Juli das laufende Kalenderjahr. Aktuelle Saison zuerst, Vorsaison als
+# Fallback (Saisonauftakt hat noch keine Spiele). Per APISPORTS_SEASON überschreibbar.
+def _current_season(dt=None):
+    dt = dt or datetime.utcnow()
+    return dt.year if dt.month >= 7 else dt.year - 1
+
+
+SEASON = int(os.environ.get("APISPORTS_SEASON") or 0) or _current_season()
+
 # ── Config ────────────────────────────────────────────────────────────────────
 
 SCRIPT_DIR = os.path.dirname(os.path.abspath(__file__))
@@ -136,12 +147,15 @@ def german_date(dt=None):
 
 # ── Historical data ───────────────────────────────────────────────────────────
 
-def fetch_team_form(team_id, season=2025):
-    """Fetch last 10 finished games → form string + metrics (API-Football)."""
+def fetch_team_form(team_id, season=None):
+    """Fetch last 10 finished games → form string + metrics (API-Football).
+    Aktuelle Saison zuerst; hat sie noch keine Spiele (Saisonauftakt), auf die Vorsaison zurückfallen —
+    sonst blieb die Form dauerhaft auf der Vorsaison hängen (season=2025 lieferte immer Daten)."""
+    if season is None:
+        season = SEASON
     resp = apif_get("fixtures", {"team": team_id, "season": season, "last": 10})
     if not resp:
-        # Try season fallback
-        resp = apif_get("fixtures", {"team": team_id, "season": season + 1, "last": 10})
+        resp = apif_get("fixtures", {"team": team_id, "season": season - 1, "last": 10})
     if not resp:
         return None
 
@@ -185,7 +199,7 @@ def fetch_team_form(team_id, season=2025):
     }
 
 
-def fetch_team_injuries(team_id, season=2025):
+def fetch_team_injuries(team_id, season=None):
     """Fetch current injury/suspension list for a team.
 
     Primary source: API-Football /injuries (uses same team IDs as standings).
@@ -200,8 +214,10 @@ def fetch_team_injuries(team_id, season=2025):
     # ── Primary: API-Football /injuries ──────────────────────────────────────
     # Uses the same team IDs returned by /standings — no ID mismatch.
     if APIF_KEY:
+        if season is None:
+            season = SEASON
         raw = []
-        for s in [season, season + 1]:
+        for s in [season, season - 1]:
             resp = apif_get("injuries", {"team": team_id, "season": s})
             if resp:
                 raw = resp
@@ -1374,7 +1390,7 @@ def fetch_league(key, cfg, squad_cache=None, xg_cache=None):
 
     # ── Standings ────────────────────────────────────────────────────────────
     standings = []
-    for season in [2025, 2026]:
+    for season in [SEASON, SEASON - 1]:
         resp = apif_get("standings", {"league": apif_id, "season": season})
         if resp:
             rows = resp[0].get("league", {}).get("standings", [[]])[0]
@@ -1402,7 +1418,7 @@ def fetch_league(key, cfg, squad_cache=None, xg_cache=None):
     date_to   = (today + timedelta(days=14)).strftime("%Y-%m-%d")
 
     fixtures_raw = []
-    for season in [2025, 2026]:
+    for season in [SEASON, SEASON - 1]:
         resp = apif_get("fixtures", {
             "league":   apif_id,
             "season":   season,
