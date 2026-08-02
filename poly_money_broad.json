@@ -1,24 +1,40 @@
 {
- "n": 180,
+ "n": 203,
  "minOdds": 1.35,
- "moneyHitRate": 0.639,
- "priceHitRate": 0.639,
- "brierMoney": 0.4539,
- "brierPrice": 0.4539,
+ "moneyHitRate": 0.65,
+ "priceHitRate": 0.655,
+ "brierMoney": 0.4469,
+ "brierPrice": 0.4469,
  "disagree": {
-  "n": 0,
+  "n": 1,
   "moneyWon": 0,
-  "priceWon": 0,
+  "priceWon": 1,
   "neither": 0
  },
  "verdict": "gleichauf",
  "byLeague": [
   {
+   "league": "MLB",
+   "n": 64,
+   "moneyHitRate": 0.594,
+   "brierMoney": 0.4864,
+   "brierPrice": 0.4866,
+   "verdict": "gleichauf"
+  },
+  {
    "league": "MLS",
-   "n": 17,
-   "moneyHitRate": 0.471,
-   "brierMoney": 0.4997,
-   "brierPrice": 0.4998,
+   "n": 27,
+   "moneyHitRate": 0.556,
+   "brierMoney": 0.4584,
+   "brierPrice": 0.4585,
+   "verdict": "gleichauf"
+  },
+  {
+   "league": "ESPORTS",
+   "n": 68,
+   "moneyHitRate": 0.735,
+   "brierMoney": 0.402,
+   "brierPrice": 0.402,
    "verdict": "gleichauf"
   },
   {
@@ -30,19 +46,11 @@
    "verdict": "gleichauf"
   },
   {
-   "league": "MLB",
-   "n": 56,
-   "moneyHitRate": 0.589,
-   "brierMoney": 0.4894,
-   "brierPrice": 0.4894,
-   "verdict": "gleichauf"
-  },
-  {
    "league": "TENNIS",
-   "n": 19,
-   "moneyHitRate": 0.579,
-   "brierMoney": 0.5336,
-   "brierPrice": 0.5336,
+   "n": 21,
+   "moneyHitRate": 0.619,
+   "brierMoney": 0.5052,
+   "brierPrice": 0.5052,
    "verdict": "gleichauf"
   },
   {
@@ -51,14 +59,6 @@
    "moneyHitRate": 0.625,
    "brierMoney": 0.4546,
    "brierPrice": 0.4546,
-   "verdict": "gleichauf"
-  },
-  {
-   "league": "ESPORTS",
-   "n": 65,
-   "moneyHitRate": 0.723,
-   "brierMoney": 0.4061,
-   "brierPrice": 0.406,
    "verdict": "gleichauf"
   }
  ],
@@ -184,6 +184,18 @@
    "totalUsd": 484219
   },
   {
+   "key": "mlb-bos-lad-2026-08-01",
+   "league": "MLB",
+   "winner": "Boston Red Sox",
+   "moneyFav": "Los Angeles Dodgers",
+   "priceFav": "Los Angeles Dodgers",
+   "moneyShare": 0.625,
+   "priceProb": 0.625,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 475314
+  },
+  {
    "key": "mlb-phi-bal-2026-07-31",
    "league": "MLB",
    "winner": "Baltimore Orioles",
@@ -206,6 +218,18 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 364072
+  },
+  {
+   "key": "mlb-min-sea-2026-08-01",
+   "league": "MLB",
+   "winner": "Seattle Mariners",
+   "moneyFav": "Seattle Mariners",
+   "priceFav": "Seattle Mariners",
+   "moneyShare": 0.605,
+   "priceProb": 0.605,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 340054
   },
   {
    "key": "mlb-wsh-atl-2026-07-30",
@@ -388,6 +412,18 @@
    "totalUsd": 233983
   },
   {
+   "key": "mlb-cws-tb-2026-08-01",
+   "league": "MLB",
+   "winner": "Tampa Bay Rays",
+   "moneyFav": "Tampa Bay Rays",
+   "priceFav": "Tampa Bay Rays",
+   "moneyShare": 0.605,
+   "priceProb": 0.605,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 230619
+  },
+  {
    "key": "mlb-chc-stl-2026-07-27",
    "league": "MLB",
    "winner": "Chicago Cubs",
@@ -496,72 +532,36 @@
    "totalUsd": 166045
   },
   {
-   "key": "mlb-nyy-cws-2026-07-28",
-   "league": "MLB",
-   "winner": "New York Yankees",
-   "moneyFav": "New York Yankees",
-   "priceFav": "New York Yankees",
-   "moneyShare": 0.525,
-   "priceProb": 0.525,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 161979
-  },
-  {
-   "key": "mlb-stl-tor-2026-07-31",
-   "league": "MLB",
-   "winner": "Toronto Blue Jays",
-   "moneyFav": "Toronto Blue Jays",
-   "priceFav": "Toronto Blue Jays",
-   "moneyShare": 0.635,
-   "priceProb": 0.635,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 159977
-  },
-  {
-   "key": "val-eg2-mibr-2026-07-31",
-   "league": "ESPORTS",
-   "winner": "MIBR",
-   "moneyFav": "MIBR",
-   "priceFav": "MIBR",
-   "moneyShare": 0.715,
-   "priceProb": 0.715,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 154213
-  },
-  {
-   "key": "mlb-chc-stl-2026-07-29",
-   "league": "MLB",
-   "winner": "St. Louis Cardinals",
-   "moneyFav": "St. Louis Cardinals",
-   "priceFav": "St. Louis Cardinals",
-   "moneyShare": 0.505,
-   "priceProb": 0.505,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 153150
+   "key": "mls-mia-clb-2026-08-01",
+   "league": "MLS",
+   "winner": "No",
+   "moneyFav": "Yes",
+   "priceFav": "Yes",
+   "moneyShare": 0.605,
+   "priceProb": 0.605,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 164257
   }
  ],
- "generatedAt": "2026-08-02T00:11:48.390724+00:00",
+ "generatedAt": "2026-08-02T03:52:08.894427+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 421,
   "nfl": 568,
-  "mlb": 605,
+  "mlb": 585,
   "nhl": 404,
-  "mls": 530,
+  "mls": 481,
   "epl": 405,
   "soccer": 800,
-  "tennis": 558,
+  "tennis": 550,
   "ucl": 534,
   "esports": 800,
   "cs2": 418,
   "lol": 411,
   "dota": 9,
-  "valorant": 435,
+  "valorant": 434,
   "ufc": 446,
   "mma": 45,
   "boxing": 216,
