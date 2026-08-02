@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-02T18:42:45.358200+00:00",
+ "generatedAt": "2026-08-02T19:54:41.439486+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -11,8 +11,8 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 229,
- "pinnKeys": 85,
- "matched": 31,
+ "pinnKeys": 81,
+ "matched": 25,
  "footballRows": 3,
  "crossRows": 226,
  "footballSkippedStale": 10,
@@ -26,12 +26,97 @@
   "soccer_mls": 3
  },
  "matchedBySport": {
-  "baseball_mlb": 28,
+  "baseball_mlb": 22,
   "soccer_mls": 3
  },
  "trackRecord": {
-  "tracked": 48,
+  "tracked": 54,
   "converged": 1
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|stlouiscardinals-torontobluejays|stlouiscardinals",
+   "sport": "baseball_mlb",
+   "event": "St. Louis Cardinals vs Toronto Blue Jays",
+   "market": "Moneyline",
+   "outcome": "St. Louis Cardinals",
+   "polyPP": 83.5,
+   "pinnPP": 44.4,
+   "gapPP": 39.08,
+   "vol": 681464,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-02T19:54:41.439212+00:00"
+  },
+  {
+   "id": "baseball_mlb|stlouiscardinals-torontobluejays|torontobluejays",
+   "sport": "baseball_mlb",
+   "event": "St. Louis Cardinals vs Toronto Blue Jays",
+   "market": "Moneyline",
+   "outcome": "Toronto Blue Jays",
+   "polyPP": 16.5,
+   "pinnPP": 55.6,
+   "gapPP": -39.08,
+   "vol": 681464,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-02T19:54:41.439212+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagocubs-newyorkyankees|newyorkyankees",
+   "sport": "baseball_mlb",
+   "event": "New York Yankees vs Chicago Cubs",
+   "market": "Moneyline",
+   "outcome": "New York Yankees",
+   "polyPP": 51.5,
+   "pinnPP": 70.0,
+   "gapPP": -18.54,
+   "vol": 339676,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-02T19:54:41.439212+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagocubs-newyorkyankees|chicagocubs",
+   "sport": "baseball_mlb",
+   "event": "New York Yankees vs Chicago Cubs",
+   "market": "Moneyline",
+   "outcome": "Chicago Cubs",
+   "polyPP": 48.5,
+   "pinnPP": 30.0,
+   "gapPP": 18.54,
+   "vol": 339676,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-02T19:54:41.439212+00:00"
+  },
+  {
+   "id": "baseball_mlb|coloradorockies-kansascityroyals|kansascityroyals",
+   "sport": "baseball_mlb",
+   "event": "Kansas City Royals vs Colorado Rockies",
+   "market": "Moneyline",
+   "outcome": "Kansas City Royals",
+   "polyPP": 49.5,
+   "pinnPP": 39.3,
+   "gapPP": 10.15,
+   "vol": 262587,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-02T19:54:41.439212+00:00"
+  },
+  {
+   "id": "baseball_mlb|coloradorockies-kansascityroyals|coloradorockies",
+   "sport": "baseball_mlb",
+   "event": "Kansas City Royals vs Colorado Rockies",
+   "market": "Moneyline",
+   "outcome": "Colorado Rockies",
+   "polyPP": 50.5,
+   "pinnPP": 60.7,
+   "gapPP": -10.15,
+   "vol": 262587,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-02T19:54:41.439212+00:00"
+  }
+ ]
 }
