@@ -352,6 +352,42 @@ def _enrich_whales_avg(whales, label_token, cache, get, budget):
     return whales
 
 
+RESOLVE_LOOKUP_MAX = int(os.environ.get("POLY_RESOLVE_LOOKUP_MAX") or 60)
+
+
+def backfill_resolutions_by_slug(prev_close, seen_keys, get=_get, cap=RESOLVE_LOOKUP_MAX):
+    """(02.08.2026, Lucas) Settlement-Key-Fix an der Wurzel: Der Key IST der rohe Event-Slug, und dieselbe
+    Partie kann unter mehreren Slugs laufen (kuratierter Kurz-Slug offen, voller Event-Slug bei Auflösung)
+    → die Auflösung landete unter einem ANDEREN Key als die offene Position → Wallet-/Shortlist-Track
+    rechnete v.a. Esports nie ab. Fix: getrackte Märkte (waren in prev broad_close offen), die im aktuellen
+    Lauf NICHT mehr auftauchen (= angepfiffen/vorbei), GEZIELT per EIGENEM Slug nachschlagen und, wenn
+    aufgelöst, als resolved-Zeile unter DEMSELBEN Key zurückgeben. So matcht die Auflösung garantiert die
+    offene Position. REIN/testbar (get injizierbar), defensiv (nie werfen), gedeckelt (cap Calls/Lauf)."""
+    out = []
+    if not isinstance(prev_close, dict):
+        return out
+    # broad_close wächst über die Zeit → Budget den ZULETZT erfassten (gerade angepfiffenen) Märkten
+    # geben, nicht uralten hängengebliebenen Keys. Sort: neuestes capturedAt zuerst.
+    cand = [(k, str(v.get("capturedAt") or "")) for k, v in prev_close.items()
+            if isinstance(v, dict) and not v.get("resolved") and k not in seen_keys]
+    cand.sort(key=lambda kv: kv[1], reverse=True)
+    for key, _cap_ts in cand[:cap]:
+        try:
+            page = get(f"{GAMMA}?slug={key}&closed=true")
+            ev = page[0] if isinstance(page, list) and page else None
+            if not isinstance(ev, dict):
+                continue
+            oc = _outcomes(ev)
+            rp = {o["label"]: o["price"] for o in oc if o.get("price") is not None}
+            if rp and winner_from_prices(rp):   # nur eindeutig aufgelöst (ein Preis ~1.00)
+                out.append({"key": key, "league": _league_from_slug(key),
+                            "resolved": True, "resolvedPrices": rp,
+                            "hoursToKickoff": None, "totalUsd": 0, "shares": {}, "prices": {}})
+        except Exception:
+            continue
+    return out
+
+
 def fetch_markets():
     """Alle Poly-Sportmärkte über die Sport-Tags. Real, defensiv, gedeckelt. Rückgabeformat siehe
     capture()/resolutions(): {key, league, hoursToKickoff, totalUsd, shares, prices,
@@ -466,6 +502,17 @@ def fetch_markets():
     print(f"  Roh-Events je Tag (nur >0): {live}")
     print(f"  Volumen-Sweep (tag-los): {_sw['sweepOpen']} offen · {_sw['sweepClosed']} aufgelöst "
           f"· {_sw['sweepAdded']} zusätzlich gefunden (Ligen, die kein Tag abdeckte)")
+    # (02.08.2026, Lucas) Getrackte, aber verschwundene Märkte GEZIELT per eigenem Slug auflösen —
+    # die Auflösung landet damit unter DEMSELBEN Key wie die offene Position (fixt den Settlement-
+    # Key-Mismatch, v.a. Esports). Additiv/defensiv: schlägt es fehl, bleibt alles wie bisher.
+    try:
+        _seen_open = {c[1] for c in candidates} | {m.get("key") for m in markets}
+        _bf = backfill_resolutions_by_slug(_load(CLOSE_FILE), _seen_open)
+        if _bf:
+            markets += _bf
+            print(f"  \U0001f501 {len(_bf)} getrackte Markt-Auflösung(en) per Slug nachgezogen (Key-Match)")
+    except Exception as _e:
+        print(f"  Resolution-Backfill übersprungen (nicht fatal): {_e}")
     fetch_markets.raw_by_tag = raw_by_tag   # 21.07.2026: für die Diagnose im Output
     return markets
 
