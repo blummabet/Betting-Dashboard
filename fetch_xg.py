@@ -29,6 +29,11 @@ import sys
 import time
 import http.client
 from datetime import datetime, timezone
+
+
+def _current_season(dt=None):   # (02.08.2026, Lucas) Saison-Rollover-Fix
+    dt = dt or datetime.now(timezone.utc)
+    return dt.year if dt.month >= 6 else dt.year - 1
 from pathlib import Path
 
 BASE       = Path(__file__).parent
@@ -181,7 +186,7 @@ def main():
         squad_cache = json.load(f)
 
     teams = squad_cache.get("teams", {})
-    season = squad_cache.get("season", 2025)
+    season = squad_cache.get("season") or _current_season()   # aus Squad-Cache (jetzt dynamisch gestempelt), sonst laufende Saison
 
     # Load existing cache to allow incremental updates
     existing: dict = {}

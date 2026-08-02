@@ -39,11 +39,16 @@ except ImportError:
     import requests
 
 # ── Config ─────────────────────────────────────────────────────────────────────
-SEASON = 2025   # 2025-26 season (understat uses start year)
+def _current_season(dt=None):   # (02.08.2026, Lucas) Saison-Rollover-Fix: war hart 2025
+    dt = dt or datetime.datetime.now(datetime.timezone.utc)
+    return dt.year if dt.month >= 6 else dt.year - 1   # ab Juni = kommende Saison (understat: Startjahr)
+
 
 import http.client
 import os
 import time as _time
+
+SEASON = int(os.environ.get("APISPORTS_SEASON") or 0) or _current_season()
 
 # ── HTTP headers for external requests (ClubElo) ──────────────────────────────
 HEADERS = {"User-Agent": "Mozilla/5.0 (compatible; BettingDashboard/1.0)"}
@@ -123,7 +128,7 @@ def apif_get(endpoint: str, params: dict) -> list:
         _time.sleep(APIF_DELAY)
 
 
-def fetch_league_stats(league_id: int, season: int = 2025) -> tuple[dict, dict]:
+def fetch_league_stats(league_id: int, season: int = SEASON) -> tuple[dict, dict]:
     """
     Fetch all finished fixtures for a league season, compute per-team
     home/away win rates and goals/game averages (used as xG proxy).
@@ -250,7 +255,7 @@ def fetch_league_stats(league_id: int, season: int = 2025) -> tuple[dict, dict]:
     return result, team_ids, fixture_info
 
 
-def fetch_team_season_stats_extra(team_id: int, league_id: int, season: int = 2025) -> dict:
+def fetch_team_season_stats_extra(team_id: int, league_id: int, season: int = SEASON) -> dict:
     """
     Fetch teams/statistics for a single team → extract:
       - lineups[0].formation  (most-used formation this season)
