@@ -40,10 +40,14 @@ const ODDS_API_HOST = 'api.the-odds-api.com';
 // Startjahr; ab Juli zählt das laufende Kalenderjahr, davor das Vorjahr. Per APISPORTS_SEASON überschreibbar.
 function seasonForDate(d = new Date()) {
   const y = d.getUTCFullYear();
-  return (d.getUTCMonth() + 1) >= 7 ? y : y - 1;   // Jul–Dez → laufendes Jahr, Jan–Jun → Vorjahr
+  return (d.getUTCMonth() + 1) >= 6 ? y : y - 1;   // ab Juni = kommende Saison (wie build_liga_data), sonst Vorjahr
 }
 const SEASON      = parseInt(process.env.APISPORTS_SEASON, 10) || seasonForDate();
 const SEASON_PREV = SEASON - 1;
+
+// (02.08.2026, Lucas) unterscheidet „0 Fixtures weil API/Quota kaputt" (echter Fehler → exit 1) von
+// „0 Fixtures weil im Fenster nichts angesetzt ist" (Vorsaison/Länderspiel-Lücke → exit 0, alte Daten halten).
+let _fetchHadApiError = false;
 
 // Nur diese Ligen fetchen — verhindert 7000+ Spiele pro Tag weltweit
 // api-football League IDs: https://www.api-football.com/documentation-v3#tag/Leagues
@@ -1044,6 +1048,7 @@ async function fetchAllPrematchData() {
       // Quota erschöpft → sofort abbrechen, prematch-data.json NICHT überschreiben
       if (errStr.toLowerCase().includes('limit') || errStr.toLowerCase().includes('quota')) {
         console.error('[Server] ❌ Tages-Quota erschöpft — Fetch wird abgebrochen. Alter Stand bleibt erhalten.');
+        _fetchHadApiError = true;
         return [];
       }
     }
@@ -1073,6 +1078,7 @@ async function fetchAllPrematchData() {
       const fxs = data.response || [];
       if (data.errors && Object.keys(data.errors).length > 0) {
         console.warn(`  [Step1] ${leagueName} API-FEHLER: ${JSON.stringify(data.errors)} ← wahrscheinlich Quota erschöpft`);
+        _fetchHadApiError = true;
       }
       console.log(`  [Step1] ${leagueName} (${leagueId}): ${fxs.length} Spiele`);
       for (const fx of fxs) {
@@ -1773,18 +1779,19 @@ if (WRITE_MODE) {
       // Heuristik: aktuelle Date in Juni/Juli (Mid-Summer) → Sommerpause = Exit 0 mit Warning.
       // Sonst (Sept-Mai = Saison läuft) → Exit 1, ist echtes Problem.
       if (fixtures.length === 0) {
-        const month = new Date().getUTCMonth() + 1;   // 1-12
-        const isSummerBreak = (month >= 6 && month <= 7);
-        if (isSummerBreak) {
-          console.warn('\n⚠️  0 Fixtures — Sommerpause (Jun-Jul) in europäischen Top-Ligen.');
-          console.warn('   prematch-data.json bleibt unverändert. Saison startet ~August.');
-          console.warn('   Kein Workflow-Fail — das ist erwartet.');
-          process.exit(0);   // Soft-Exit, GitHub Actions zeigt grün
+        // (02.08.2026, Lucas) Nicht mehr nach Monat raten: entscheidend ist, OB die API sauber war.
+        // Sauberer Leerlauf (kein Fehler) = im 7-Tage-Fenster ist nichts angesetzt (Vorsaison, z.B. Top-5
+        // starten Mitte/Ende August, oder Länderspielpause) → alte Daten halten, GRÜN. Nur bei echtem
+        // API-/Quota-Fehler ist es ein Problem → ROT.
+        if (_fetchHadApiError) {
+          console.error('\n❌ 0 Fixtures + API-/Quota-Fehler — prematch-data.json wird NICHT überschrieben.');
+          console.error('   Alter Stand bleibt erhalten. Prüfe Step1-Logs / Quota (api-sports.io → "My Account").');
+          process.exit(1);
         }
-        console.error('\n❌ 0 Fixtures zurückgegeben — prematch-data.json wird NICHT überschrieben.');
-        console.error('   Alter Stand bleibt erhalten. Prüfe Step1-Logs oben auf API-Fehler/Quota.');
-        console.error('   Falls APISPORTS_KEY erschöpft: api-sports.io Dashboard → "My Account" → Quota-Status.');
-        process.exit(1);
+        console.warn('\n⚠️  0 Fixtures im 7-Tage-Fenster — API war fehlerfrei, es ist schlicht nichts angesetzt.');
+        console.warn('   Grund: Vorsaison-/Länderspiel-Lücke (Top-5 starten ~15.–28.08.). Alte Daten bleiben.');
+        console.warn('   Kein Workflow-Fail — das ist erwartet.');
+        process.exit(0);   // Soft-Exit, GitHub Actions zeigt grün
       }
 
       // ── Preserve odds_open + odds_closing from previous run ─────────────

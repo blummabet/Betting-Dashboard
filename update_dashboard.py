@@ -21,7 +21,7 @@ from pathlib import Path
 # Fallback (Saisonauftakt hat noch keine Spiele). Per APISPORTS_SEASON überschreibbar.
 def _current_season(dt=None):
     dt = dt or datetime.utcnow()
-    return dt.year if dt.month >= 7 else dt.year - 1
+    return dt.year if dt.month >= 6 else dt.year - 1   # ab Juni = kommende Saison (wie build_liga_data)
 
 
 SEASON = int(os.environ.get("APISPORTS_SEASON") or 0) or _current_season()
