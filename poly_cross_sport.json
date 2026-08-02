@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-02T22:09:16.354918+00:00",
+ "generatedAt": "2026-08-02T23:09:40.924239+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,28 +10,57 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 211,
- "pinnKeys": 73,
- "matched": 17,
+ "polyRowsSeen": 209,
+ "pinnKeys": 75,
+ "matched": 19,
  "footballRows": 3,
- "crossRows": 208,
+ "crossRows": 206,
  "footballSkippedStale": 10,
  "seenBySport": {
   "basketball_nba": 2,
   "americanfootball_nfl": 104,
-  "baseball_mlb": 94,
+  "baseball_mlb": 92,
   "icehockey_nhl": 2,
   "mma_mixed_martial_arts": 2,
   "boxing_boxing": 4,
   "soccer_mls": 3
  },
  "matchedBySport": {
-  "baseball_mlb": 14,
+  "baseball_mlb": 16,
   "soccer_mls": 3
  },
  "trackRecord": {
-  "tracked": 54,
+  "tracked": 56,
   "converged": 1
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|sandiegopadres-sanfranciscogiants|sanfranciscogiants",
+   "sport": "baseball_mlb",
+   "event": "San Francisco Giants vs San Diego Padres",
+   "market": "Moneyline",
+   "outcome": "San Francisco Giants",
+   "polyPP": 4.5,
+   "pinnPP": 10.9,
+   "gapPP": -6.4,
+   "vol": 1060768,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-02T23:09:40.923951+00:00"
+  },
+  {
+   "id": "baseball_mlb|sandiegopadres-sanfranciscogiants|sandiegopadres",
+   "sport": "baseball_mlb",
+   "event": "San Francisco Giants vs San Diego Padres",
+   "market": "Moneyline",
+   "outcome": "San Diego Padres",
+   "polyPP": 95.5,
+   "pinnPP": 89.1,
+   "gapPP": 6.4,
+   "vol": 1060768,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-02T23:09:40.923951+00:00"
+  }
+ ]
 }
