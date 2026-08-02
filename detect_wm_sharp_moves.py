@@ -67,6 +67,7 @@ ALERT_PP         = _cfg("telegram", "alert_edge_min_pp",         5)
 ALERT_PP_BIG     = _cfg("telegram", "alert_steam_pp",            10)
 CUMUL_PP         = _cfg("telegram", "alert_cumul_pp",            8)
 SNAP_WINDOW_DAYS = _cfg("telegram", "snap_window_days",          14)
+MIN_MOVE_GAP_MIN = _cfg("telegram", "min_move_gap_min",         20)   # 02.08.2026 (Lucas): prev muss ≥ so viele Min älter als curr sein — sonst „Geister-Steam" aus zwei (fast) gleichzeitigen Erst-Captures eines gerade aufgetauchten Spiels
 MAX_ALERTS       = _cfg("telegram", "max_sharp_alerts_per_run",  6)
 
 
@@ -440,8 +441,19 @@ def analyze_moves(history: dict, wm: dict, poly_edges: dict) -> list[dict]:
             # Fall back to last 2 available
             recent_snaps = snaps[-2:]
 
-        prev = recent_snaps[-2]
         curr = recent_snaps[-1]
+        # (02.08.2026, Lucas) „Geister-Steam"-Fix: prev = jüngster Snapshot, der WIRKLICH früher ist
+        # (≥ MIN_MOVE_GAP_MIN). Zwei (fast) gleichzeitige Erst-Captures eines gerade aufgetauchten Spiels
+        # (gleicher ts, nur andere Buch-Linie) sind KEIN Zeit-Move → dann kein Alert. Vorher: blind [-2].
+        _curr_ts = _parse_ts(curr.get("ts", ""))
+        prev = None
+        for _s in reversed(recent_snaps[:-1]):
+            _sts = _parse_ts(_s.get("ts", ""))
+            if _curr_ts and _sts and (_curr_ts - _sts) >= timedelta(minutes=MIN_MOVE_GAP_MIN):
+                prev = _s
+                break
+        if prev is None:
+            continue   # nur (nahezu) gleichzeitige Captures → kein echter Move, kein Geister-Alert
 
         # ── Modus 1: Snapshot-zu-Snapshot (1X2 + O/U + BTTS + Corner) ──────
         hw_shift   = pp_shift(prev.get("hw"),    curr.get("hw"))

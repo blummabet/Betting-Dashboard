@@ -179,6 +179,19 @@ class TestRadarPinnacleStreamOnly(unittest.TestCase):
         self.assertEqual(m["curr"].get("bk"), "pinnacle")
         self.assertEqual(m["prev"].get("bk"), "pinnacle")
 
+    def test_same_timestamp_captures_no_ghost_move(self):
+        # 02.08.2026 (Lucas): gerade aufgetauchtes Spiel — zwei (fast) gleichzeitige Erst-Captures mit
+        # großer Quoten-Differenz. Das ist KEIN Zeit-Move → darf keinen 🔥-Steam auslösen (Geister-Fix).
+        from datetime import datetime, timezone
+        t = datetime.now(timezone.utc).isoformat()
+        hist = {"AAA-BBB": [
+            {"ts": t, "hw": 2.0, "dr": 3.85, "aw": 6.0, "bk": "pinnacle"},
+            {"ts": t, "hw": 2.0, "dr": 2.74, "aw": 3.30, "bk": "pinnacle"},
+        ]}
+        moves = self.D.analyze_moves(hist, self._wm(), {})
+        self.assertEqual([m for m in moves if m["key"] == "AAA-BBB"], [],
+                         "gleichzeitige Erst-Captures dürfen keinen Geister-Steam auslösen")
+
 
 class TestKoGamesHandled(unittest.TestCase):
     """30.06.2026 (Lucas: „🏳 CIV vs 🏳 NOR"-Steam-Alert für ein beendetes KO-Spiel): team_info/
