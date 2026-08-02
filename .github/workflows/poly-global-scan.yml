@@ -24,6 +24,10 @@ jobs:
     steps:
       - name: 📥 Repo auschecken
         uses: actions/checkout@v4
+        with:
+          clean: false   # 02.08.2026: node_modules NICHT wegräumen — sonst muss jsdom jeden Lauf neu
+                         # installiert werden (npm ci löscht node_modules zuerst); ein Netz-Aussetzer
+                         # auf der Wohn-IP ließ dann den Shortlist-Emitter still ausfallen (poly_status 🔴).
 
       - name: 🐍 Python einrichten (Mac)
         run: |
@@ -37,7 +41,17 @@ jobs:
           $PYTHON -m pip install --break-system-packages requests --quiet 2>/dev/null || true
 
       - name: 🟢 Node/jsdom bereitstellen (für Shortlist-Emitter)
-        run: npm ci --no-audit --no-fund 2>/dev/null || npm install jsdom --no-audit --no-fund 2>/dev/null || true
+        # Idempotent: ist jsdom schon da (persistiertes node_modules dank clean:false), NICHTS tun —
+        # npm ci würde node_modules löschen und alles neu ziehen (fragil bei Netz-Aussetzern). Nur wenn
+        # jsdom fehlt, installieren. Am Ende hart verifizieren, damit ein echter Ausfall im Log sichtbar ist.
+        run: |
+          if node -e "require.resolve('jsdom')" 2>/dev/null; then
+            echo "✅ jsdom bereits vorhanden — kein Install nötig."
+          else
+            echo "ℹ️ jsdom fehlt — installiere…"
+            npm ci --no-audit --no-fund 2>/dev/null || npm install jsdom@^24 --no-audit --no-fund 2>/dev/null || true
+          fi
+          node -e "require.resolve('jsdom')" 2>/dev/null && echo "✅ jsdom auflösbar" || echo "⚠️ jsdom weiterhin fehlend — Shortlist-Emitter wird aussetzen (poly_status meldet es)."
         continue-on-error: true
 
       - name: 🎯 Cross-Sport Poly-Radar (Poly vs Pinnacle, read-only)
