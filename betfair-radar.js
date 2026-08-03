@@ -488,6 +488,7 @@
   }
   window._bfMoveOf = moveOf;   // Test-Hook
   function dirPill(m) {
+    if (isLive(m)) return '';   // 03.08.2026 (Lucas): live bewegt der Spielstand die Quote, kein Wettsignal
     var mv = moveOf(m); if (!mv) return '';
     var backed = mv.pp > 0, col = backed ? C.back : C.lay;
     var side = mv.side === 'hw' ? m.home : mv.side === 'aw' ? m.away : 'Remis';
@@ -566,15 +567,23 @@
   function cohPill(txt, color, bg) {
     return '<span style="display:inline-flex;align-items:center;gap:4px;padding:2px 8px;border-radius:20px;font-size:10.5px;font-weight:700;background:' + bg + ';color:' + color + '">' + txt + '</span>';
   }
-  function cohPillsRow(m) {
-    var r = cohOf(m), p = [];
-    if (isLive(m)) { p.push(cohPill('● LIVE', C.live, 'rgba(248,81,73,.15)')); }
-    if (r.hard.length) p.push(cohPill('⚠ ' + r.hard.length + ' harte Abweichung' + (r.hard.length > 1 ? 'en' : ''), C.lay, 'rgba(248,81,73,.14)'));
-    if (r.soft.length) p.push(cohPill(r.soft.length + ' Modell-Lücke' + (r.soft.length > 1 ? 'n' : ''), C.gold, 'rgba(255,184,12,.13)'));
-    if (r.fl && r.fl.kind === 'steam') p.push(cohPill('↯ Steam ' + _cpp(r.fl.move) + 'pp' + (r.fl.sideName ? ' · ' + esc(String(r.fl.sideName).slice(0, 14)) : ''), C.vol, 'rgba(45,212,191,.13)'));
-    if (r.fl && r.fl.kind === 'absorb') p.push(cohPill('▤ Absorption · ' + fmtE(r.fl.dv) + ' ohne Preis', C.purp, 'rgba(167,139,250,.14)'));
-    if (r.fl && r.fl.kind === 'air') p.push(cohPill('◌ Preis ohne Geld', C.mut, 'rgba(139,148,158,.14)'));
-    if (r.mx) p.push(cohPill(esc(shortMk(r.mx.market)) + ' ' + r.mx.ratio.toFixed(1) + '× über Norm', C.blue, 'rgba(76,194,255,.13)'));
+  // (03.08.2026, Lucas: „zu viele Badges, live irreführend“) — die KARTE trägt nur noch das Auf-einen-
+  // Blick-Signal: Steam, und NUR vor Anpfiff (live bewegt der Spielstand die Quote, kein Wettsignal).
+  // LIVE steht schon oben im koPill. Der Kohärenz-Kram (harte Abweichung, Modell-Lücken, Absorption,
+  // Preis-ohne-Geld, Markt×über-Norm) wandert in den Deep-Dive (full=true) — dorthin gehört Analyse.
+  function cohPillsRow(m, full) {
+    var r = cohOf(m), p = [], live = isLive(m);
+    if (full) {
+      if (live) p.push(cohPill('● LIVE', C.live, 'rgba(248,81,73,.15)'));
+      if (r.hard.length) p.push(cohPill('⚠ ' + r.hard.length + ' harte Abweichung' + (r.hard.length > 1 ? 'en' : ''), C.lay, 'rgba(248,81,73,.14)'));
+      if (r.soft.length) p.push(cohPill(r.soft.length + ' Modell-Lücke' + (r.soft.length > 1 ? 'n' : ''), C.gold, 'rgba(255,184,12,.13)'));
+      if (r.fl && r.fl.kind === 'steam') p.push(cohPill('↯ Steam ' + _cpp(r.fl.move) + 'pp' + (r.fl.sideName ? ' · ' + esc(String(r.fl.sideName).slice(0, 14)) : ''), C.vol, 'rgba(45,212,191,.13)'));
+      if (r.fl && r.fl.kind === 'absorb') p.push(cohPill('▤ Absorption · ' + fmtE(r.fl.dv) + ' ohne Preis', C.purp, 'rgba(167,139,250,.14)'));
+      if (r.fl && r.fl.kind === 'air') p.push(cohPill('◌ Preis ohne Geld', C.mut, 'rgba(139,148,158,.14)'));
+      if (r.mx) p.push(cohPill(esc(shortMk(r.mx.market)) + ' ' + r.mx.ratio.toFixed(1) + '× über Norm', C.blue, 'rgba(76,194,255,.13)'));
+    } else if (!live && r.fl && r.fl.kind === 'steam') {
+      p.push(cohPill('↯ Steam ' + _cpp(r.fl.move) + 'pp' + (r.fl.sideName ? ' · ' + esc(String(r.fl.sideName).slice(0, 14)) : ''), C.vol, 'rgba(45,212,191,.13)'));
+    }
     if (!p.length) return '';
     return '<div style="display:flex;gap:6px;flex-wrap:wrap;margin-top:7px;padding-left:18px">' + p.join('') + '</div>';
   }
@@ -894,7 +903,13 @@
       '.bfb-over{box-shadow:inset 0 0 0 1px rgba(255,184,12,.5);background:rgba(255,184,12,.05);padding-left:8px;padding-right:8px;}',
       '.bfb-over2{box-shadow:inset 0 0 0 1px rgba(255,184,12,.5);background:rgba(255,184,12,.05);padding-left:8px;padding-right:8px;}'  /* 31.07.2026 Lucas: keine rote Umrandung fuer x-Norm (Rot = nur Live). Amber wie bfb-over; das rote xN-Norm-Badge traegt die Intensitaet. */,
       '.bfb-live{box-shadow:inset 0 0 0 1.5px rgba(248,81,73,.75);background:rgba(248,81,73,.07);padding-left:8px;padding-right:8px;}',
-      '.bfb-liveb{display:inline-block;font-size:9.5px;font-weight:800;padding:0 5px;margin-left:6px;border:1px solid rgba(248,81,73,.75);color:#f85149;border-radius:6px;letter-spacing:.2px;vertical-align:middle;line-height:15px;}'
+      '.bfb-liveb{display:inline-block;font-size:9.5px;font-weight:800;padding:0 5px;margin-left:6px;border:1px solid rgba(248,81,73,.75);color:#f85149;border-radius:6px;letter-spacing:.2px;vertical-align:middle;line-height:15px;}',
+      /* 03.08.2026 (Lucas): am iPhone saß der Deep-Dive-Schließen-Button unter der Notch/Statusleiste → nicht tippbar. Safe-Area + Mindestabstand. */
+      '@media(max-width:760px){',
+      '.bfd-hd{padding-top:max(48px,calc(env(safe-area-inset-top,0px) + 16px)) !important;}',
+      '.bfd-close{top:max(44px,calc(env(safe-area-inset-top,0px) + 13px)) !important;width:40px;height:40px;font-size:17px;}',
+      '.bfd-body{padding-bottom:calc(env(safe-area-inset-bottom,0px) + 16px);}',
+      '}'
     ].join('');
     var st = document.createElement('style'); st.id = 'bfb-css'; st.textContent = css;
     (document.head || document.documentElement).appendChild(st);
@@ -1035,7 +1050,7 @@
     var h = '<div class="bfd-hd"><button class="bfd-close" onclick="_bfCloseDrawer()" aria-label="Schließen">✕</button>' +
       '<div style="font-size:11px;color:' + C.mut + '">' + flag(m.country, m.league) + ' ' + esc(String(m.league).slice(0, 48)) + ' · ' + esc(kick) + '</div>' +
       '<div style="font-size:22px;font-weight:800;letter-spacing:-.01em;color:' + C.ink + ';margin-top:3px">' + esc(m.home) + ' <span style="color:' + C.dim + '">v</span> ' + esc(m.away) + '</div>' +
-      (cohPillsRow(m) || '') + '</div><div class="bfd-body">';
+      (cohPillsRow(m, true) || '') + '</div><div class="bfd-body">';
 
     // Kennzahlen
     h += '<div class="bfd-kv">' +
