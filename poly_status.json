@@ -31,11 +31,9 @@
       "id": "shortlist_tracker_writes",
       "label": "Shortlist-Paper-Tracker schreibt",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "Tracker 13.8 h alt, Scan-Feed nur 0.0 h → Emitter liefert seit 13.7 h nichts (still tot?)"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Der Emitter (node/jsdom) kann still ausfallen. Hinkt der Tracker dem frischen Scan nach, schreibt er nicht — die Auto-Bet-Entscheidung liefe auf Blindflug."
     },
     {
@@ -54,9 +52,9 @@
       "ok": false,
       "nFail": 3,
       "failures": [
-        "ESPORTS: nur 136/250 fällige Märkte aufgelöst (54%)",
-        "TENNIS: nur 54/182 fällige Märkte aufgelöst (30%)",
-        "MLB: nur 81/142 fällige Märkte aufgelöst (57%)"
+        "ESPORTS: nur 141/253 fällige Märkte aufgelöst (56%)",
+        "TENNIS: nur 54/187 fällige Märkte aufgelöst (29%)",
+        "MLB: nur 81/143 fällige Märkte aufgelöst (57%)"
       ],
       "note": "Fällige Märkte je Liga, die ihre Auflösung finden. < 60% = Settlement läuft ins Leere (Slug-Mismatch), Trefferquoten dieser Liga sind unvollständig."
     },
@@ -68,10 +66,10 @@
       "nFail": 6,
       "failures": [
         "16/46 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (35%) — Trefferquote allein trügt",
-        "   0x84cfffc3f1… n=16 Treffer 62% P&L $-7,495,986",
-        "   0xe9076a87c5… n=13 Treffer 77% P&L $-7,320,628",
-        "   0xc3c3b3ef30… n=14 Treffer 79% P&L $-3,795,422",
-        "   0xa0f21e6d35… n=8 Treffer 50% P&L $-2,688,717",
+        "   0x84cfffc3f1… n=16 Treffer 62% P&L $-7,493,904",
+        "   0xe9076a87c5… n=13 Treffer 77% P&L $-7,321,672",
+        "   0xc3c3b3ef30… n=14 Treffer 79% P&L $-3,788,923",
+        "   0xa0f21e6d35… n=8 Treffer 50% P&L $-2,699,872",
         "62/108 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
@@ -86,6 +84,6 @@
       "note": "poly_money_broad muss frisch sein und n groß genug, sonst ist 'folgt dem Geld' Zufall."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-08-03T03:54:58.316788+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-08-03T07:46:07.866304+00:00"
 }
