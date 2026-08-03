@@ -52,3 +52,43 @@ test('ohne Slug bleibt die Zeile unverlinkt (kein leeres <a>)', () => {
   assert.ok(!/event\/undefined/.test(h), 'kein event/undefined-Link');
   assert.ok(!/href="https:\/\/polymarket\.com\/event\/"/.test(h), 'kein leerer Event-Link');
 })
+// 03.08.2026 (Lucas: „Spiele waren in der Nacht — unnötig in der Übersicht"): die Poly-Whale-Bets-
+// Kachel filtert jetzt schon angepfiffene/aufgelöste Spiele (rekonstruierter Anpfiff aus capturedAt+
+// hoursToKickoff, >4h danach = durch) — wie der Wallet-Reiter. Gleiche Quelle, gleiche Gate.
+function seedWhales(w, whales) {
+  w._mdState.data = {
+    liga: null, mls: null, ligaStreaks: null, mlsStreaks: null, betfair: { matches: [] }, pulse: null,
+    whales,
+  };
+}
+const capNow = () => new Date().toISOString();
+
+test('Poly Whale-Bets: MLB-Nachtspiel (>4h nach Anpfiff) raus, kommendes bleibt', () => {
+  const w = load();
+  seedWhales(w, {
+    'mlb-bos-lad-2026-08-02': { league: 'MLB', country: 'US', capturedAt: capNow(), hoursToKickoff: -8,
+                               whales: [{ wallet: '0xA', side: 'Boston Red Sox', usd: 302000 }] },   // durch
+    'atp-live-2026-08-03':    { league: 'TENNIS', country: 'US', capturedAt: capNow(), hoursToKickoff: 2,
+                               whales: [{ wallet: '0xB', side: 'Alcaraz', usd: 9000 }] },             // in 2h
+  });
+  w._renderMainDash();
+  const h = w.document.getElementById('mainDashPanel').innerHTML;
+  const seg = (h.split('Poly Whale-Bets')[1] || '').split('id="md-cell-top"')[0];
+  assert.ok(!/mlb-bos-lad|Red Sox/.test(seg), 'durchgelaufenes MLB-Nachtspiel NICHT in der Kachel');
+  assert.match(seg, /atp-live-2026-08-03|Alcaraz/, 'kommendes Spiel bleibt');
+});
+
+test('Poly Whale-Bets: aufgelöster Markt (resolved) raus', () => {
+  const w = load();
+  seedWhales(w, {
+    'mlb-res-2026-08-02': { league: 'MLB', capturedAt: capNow(), hoursToKickoff: 1, resolved: 'X',
+                            whales: [{ wallet: '0xA', side: 'ResSide', usd: 80000 }] },
+    'atp-ok-2026-08-03':  { league: 'TENNIS', capturedAt: capNow(), hoursToKickoff: 2,
+                            whales: [{ wallet: '0xB', side: 'OkSide', usd: 9000 }] },
+  });
+  w._renderMainDash();
+  const h = w.document.getElementById('mainDashPanel').innerHTML;
+  const seg = (h.split('Poly Whale-Bets')[1] || '').split('id="md-cell-top"')[0];
+  assert.ok(!/ResSide/.test(seg), 'aufgelöster Markt NICHT in der Kachel');
+  assert.match(seg, /OkSide/, 'offener Markt bleibt');
+});

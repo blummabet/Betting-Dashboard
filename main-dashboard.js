@@ -347,12 +347,24 @@
         meter(mx ? (+x.deltaEur / mx * 100) : 0, A.good));
     }).join('') + _ageStr(_md.data.betfair);
   }
+  // 03.08.2026 (Lucas: „Spiele waren in der Nacht“): echten Anpfiff aus dem Freeze rekonstruieren
+  // (capturedAt + hoursToKickoff) statt des eingefrorenen htk. So zeigt die Kachel korrekt live/Zeit
+  // und schon durchgelaufene Spiele (>4h nach Anpfiff) sowie aufgelöste Märkte fliegen raus — wie im
+  // Wallet-Reiter (_pwKoStale). Ohne diese Gate standen $300K-MLB-Nachtspiele als „in <1h“ oben.
+  function _mdRealHtk(mk) {
+    if (!mk || mk.hoursToKickoff == null) return null;
+    var cap = mk.capturedAt ? Date.parse(mk.capturedAt) : NaN;
+    return isNaN(cap) ? mk.hoursToKickoff : (mk.hoursToKickoff - (Date.now() - cap) / 3.6e6);
+  }
   function allWhales() {
     var w = _md.data.whales || {}, all = [];
     for (var k in w) {
       var mk = w[k];
-      if (mk && Array.isArray(mk.whales)) mk.whales.forEach(function (wh) {
-        all.push({ usd: +wh.usd || 0, side: wh.side, league: mk.league, hrs: mk.hoursToKickoff, key: k, wallet: wh.wallet });
+      if (!mk || mk.resolved != null || !Array.isArray(mk.whales)) continue;   // aufgelöst → raus
+      var rh = _mdRealHtk(mk);
+      if (rh != null && rh < -4) continue;                                     // >4h nach Anpfiff = durch
+      mk.whales.forEach(function (wh) {
+        all.push({ usd: +wh.usd || 0, side: wh.side, league: mk.league, hrs: rh, key: k, wallet: wh.wallet });
       });
     }
     all.sort(function (a, b) { return b.usd - a.usd; });

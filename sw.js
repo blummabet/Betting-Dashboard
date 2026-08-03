@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v55';   // 03.08.2026: Poly-Wallet-Audit — Anpfiff-Gate auch für „einzelne Wale", Whale-Leaderboard, KPI-Band, Favorit-Flips; + Status-Check „Live-Feed frei von Geister-Märkten"
+const VERSION = 'cocobet-v56';   // 03.08.2026: Übersicht-Kachel „Poly Whale-Bets" kriegt dasselbe Anpfiff-Gate — schon durchgelaufene (Nacht-)Spiele fliegen raus (zeigte $300K-MLB als „in <1h")
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
