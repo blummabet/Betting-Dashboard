@@ -52,8 +52,8 @@
       "ok": false,
       "nFail": 3,
       "failures": [
-        "ESPORTS: nur 141/254 fällige Märkte aufgelöst (56%)",
-        "TENNIS: nur 54/187 fällige Märkte aufgelöst (29%)",
+        "ESPORTS: nur 148/261 fällige Märkte aufgelöst (57%)",
+        "TENNIS: nur 54/181 fällige Märkte aufgelöst (30%)",
         "MLB: nur 82/143 fällige Märkte aufgelöst (57%)"
       ],
       "note": "Fällige Märkte je Liga, die ihre Auflösung finden. < 60% = Settlement läuft ins Leere (Slug-Mismatch), Trefferquoten dieser Liga sind unvollständig."
@@ -66,10 +66,10 @@
       "nFail": 6,
       "failures": [
         "17/47 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (36%) — Trefferquote allein trügt",
-        "   0x84cfffc3f1… n=16 Treffer 62% P&L $-7,493,681",
-        "   0xe9076a87c5… n=13 Treffer 77% P&L $-7,327,518",
-        "   0xc3c3b3ef30… n=14 Treffer 79% P&L $-3,790,196",
-        "   0xa0f21e6d35… n=8 Treffer 50% P&L $-2,699,618",
+        "   0x84cfffc3f1… n=16 Treffer 62% P&L $-7,493,763",
+        "   0xe9076a87c5… n=13 Treffer 77% P&L $-7,334,981",
+        "   0xc3c3b3ef30… n=14 Treffer 79% P&L $-3,790,095",
+        "   0xa0f21e6d35… n=8 Treffer 50% P&L $-2,706,092",
         "62/109 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
@@ -82,8 +82,19 @@
       "nFail": 0,
       "failures": [],
       "note": "poly_money_broad muss frisch sein und n groß genug, sonst ist 'folgt dem Geld' Zufall."
+    },
+    {
+      "id": "stale_live_markets",
+      "label": "Live-Feed frei von Geister-Märkten",
+      "severity": "warn",
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "536/566 'live' Geld-Märkte sind schon >6h nach Anpfiff (95%) — $15,419,754 Whale-Geld auf fertigen Spielen"
+      ],
+      "note": "Der Close-Feed setzt kein resolved-Flag; fertige Spiele bleiben 'live'. Alle Views filtern jetzt auf den rekonstruierten Anpfiff — dieser Check misst den Geister-Anteil im Roh-Feed (steigt er, prunt/löst der Feed nicht mehr auf; jede ungegatete View zeigt dann fertige Spiele)."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-08-03T11:00:41.439106+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-08-03T16:41:43.661731+00:00"
 }
