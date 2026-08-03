@@ -167,8 +167,12 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE):
 def main() -> int:
     emit = load_emit()
     if emit is None:
-        print("ℹ️  Kein Emitter-Output — Track-File unangetastet.")
-        return 0
+        # Emitter ist umgebungs-flaky (node_modules/jsdom im CI weggewischt). FRÜHER hing die
+        # ganze Abrechnung daran (früher return) → aufgelöste Plays blieben ewig „offen", obwohl
+        # poly_resolutions.json den Sieger längst kennt. Abrechnung braucht den Emitter NICHT:
+        # ohne Emit einfach keine NEUEN Plays öffnen, offene aber weiter abrechnen. (02.08.2026, Lucas)
+        print("ℹ️  Kein Emitter-Output — keine neuen Plays, aber offene werden weiter abgerechnet.")
+        emit = {"plays": []}
     close = _load(CLOSE_FILE)
     resolutions = _load(RES_FILE)
     prev = _load(TRACK_FILE)

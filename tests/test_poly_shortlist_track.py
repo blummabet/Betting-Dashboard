@@ -85,3 +85,40 @@ def test_rolling_resolutions_merge_and_prune():
     assert out["new-key"]["winner"] == "A"   # neue Auflösung übernommen
     assert "keep-key" in out                  # 2 Tage alt → bleibt
     assert "stale-key" not in out             # 20 Tage alt → geprunt
+
+
+# ── 02.08.2026 (Lucas: „mmn sind da schon einige vorbei"): der flaky node-Emitter darf die
+#    Abrechnung NICHT blockieren. Früher: emit is None → main() return 0 → aufgelöste Plays blieben
+#    „offen", obwohl poly_resolutions.json den Sieger kennt. Jetzt: ohne Emit keine NEUEN Plays,
+#    aber offene werden weiter abgerechnet. ────────────────────────────────────────────────────
+def test_main_settles_open_plays_even_when_emitter_dead(tmp_path, monkeypatch):
+    import json as _json
+    # Vorstand: ein offener Play, dessen Markt bereits aufgelöst ist.
+    prev = {"open": {"lol-a-b|Team A": {"key": "lol-a-b", "side": "Team A", "verdict": "BET",
+            "conv": 9, "league": "LoL", "entryPrice": 0.60, "lastPrice": 0.60,
+            "public": False, "stake": 10.0, "firstTs": NOW.isoformat()}}, "settled": []}
+    (tmp_path / "poly_shortlist_track.json").write_text(_json.dumps(prev), encoding="utf-8")
+    (tmp_path / "poly_resolutions.json").write_text(
+        _json.dumps({"lol-a-b": {"winner": "Team A", "ts": NOW.isoformat()}}), encoding="utf-8")
+    (tmp_path / "poly_money_broad_close.json").write_text("{}", encoding="utf-8")
+
+    monkeypatch.setattr(st, "BASE", tmp_path)          # I/O in den Temp-Ordner umlenken
+    monkeypatch.setattr(st, "load_emit", lambda: None)  # Emitter „tot"
+
+    rc = st.main()
+    assert rc == 0
+    out = _json.loads((tmp_path / "poly_shortlist_track.json").read_text(encoding="utf-8"))
+    assert not out["open"], "offener Play muss trotz totem Emitter abgerechnet sein"
+    assert len(out["settled"]) == 1 and out["settled"][0]["result"] == "win"
+
+
+def test_main_dead_emitter_opens_no_new_play(tmp_path, monkeypatch):
+    import json as _json
+    (tmp_path / "poly_shortlist_track.json").write_text('{"open":{},"settled":[]}', encoding="utf-8")
+    (tmp_path / "poly_resolutions.json").write_text("{}", encoding="utf-8")
+    (tmp_path / "poly_money_broad_close.json").write_text("{}", encoding="utf-8")
+    monkeypatch.setattr(st, "BASE", tmp_path)
+    monkeypatch.setattr(st, "load_emit", lambda: None)
+    st.main()
+    out = _json.loads((tmp_path / "poly_shortlist_track.json").read_text(encoding="utf-8"))
+    assert out["open"] == {} and out["settled"] == []   # nichts geöffnet, kein Crash
