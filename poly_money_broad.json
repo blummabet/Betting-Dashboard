@@ -1,32 +1,40 @@
 {
- "n": 271,
+ "n": 268,
  "minOdds": 1.35,
- "moneyHitRate": 0.635,
- "priceHitRate": 0.635,
- "brierMoney": 0.4568,
- "brierPrice": 0.4568,
+ "moneyHitRate": 0.631,
+ "priceHitRate": 0.634,
+ "brierMoney": 0.4591,
+ "brierPrice": 0.4591,
  "disagree": {
-  "n": 0,
+  "n": 1,
   "moneyWon": 0,
-  "priceWon": 0,
+  "priceWon": 1,
   "neither": 0
  },
  "verdict": "gleichauf",
  "byLeague": [
   {
    "league": "MLB",
-   "n": 72,
-   "moneyHitRate": 0.625,
-   "brierMoney": 0.4836,
-   "brierPrice": 0.4837,
+   "n": 73,
+   "moneyHitRate": 0.616,
+   "brierMoney": 0.4873,
+   "brierPrice": 0.4875,
+   "verdict": "gleichauf"
+  },
+  {
+   "league": "TENNIS",
+   "n": 36,
+   "moneyHitRate": 0.583,
+   "brierMoney": 0.4908,
+   "brierPrice": 0.4909,
    "verdict": "gleichauf"
   },
   {
    "league": "ESPORTS",
-   "n": 107,
-   "moneyHitRate": 0.664,
-   "brierMoney": 0.4373,
-   "brierPrice": 0.4373,
+   "n": 104,
+   "moneyHitRate": 0.663,
+   "brierMoney": 0.4383,
+   "brierPrice": 0.4383,
    "verdict": "gleichauf"
   },
   {
@@ -46,14 +54,6 @@
    "verdict": "gleichauf"
   },
   {
-   "league": "TENNIS",
-   "n": 37,
-   "moneyHitRate": 0.595,
-   "brierMoney": 0.4856,
-   "brierPrice": 0.4856,
-   "verdict": "gleichauf"
-  },
-  {
    "league": "UFC",
    "n": 8,
    "moneyHitRate": 0.625,
@@ -63,6 +63,18 @@
   }
  ],
  "rows": [
+  {
+   "key": "mlb-bos-lad-2026-08-02",
+   "league": "MLB",
+   "winner": "Boston Red Sox",
+   "moneyFav": "Los Angeles Dodgers",
+   "priceFav": "Los Angeles Dodgers",
+   "moneyShare": 0.615,
+   "priceProb": 0.615,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 998653
+  },
   {
    "key": "mlb-sf-sd-2026-07-30",
    "league": "MLB",
@@ -460,18 +472,6 @@
    "totalUsd": 229638
   },
   {
-   "key": "lol-dnf-fox1-2026-07-30",
-   "league": "ESPORTS",
-   "winner": "BNK FEARX",
-   "moneyFav": "BNK FEARX",
-   "priceFav": "BNK FEARX",
-   "moneyShare": 0.695,
-   "priceProb": 0.695,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 227325
-  },
-  {
    "key": "mls-nyc-tor-2026-07-31",
    "league": "MLS",
    "winner": "No",
@@ -544,18 +544,18 @@
    "totalUsd": 186823
   }
  ],
- "generatedAt": "2026-08-03T07:45:34.042591+00:00",
+ "generatedAt": "2026-08-03T11:00:20.724222+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 421,
   "nfl": 567,
-  "mlb": 558,
+  "mlb": 556,
   "nhl": 404,
   "mls": 432,
   "epl": 405,
   "soccer": 800,
-  "tennis": 598,
+  "tennis": 703,
   "ucl": 534,
   "esports": 800,
   "cs2": 418,
