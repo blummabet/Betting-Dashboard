@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v57';   // 03.08.2026: Betfair-Radar entrümpelt — Karte trägt nur noch Steam/Geld→ (nur pre-match, live irreführend), Kohärenz-Badges in den Deep-Dive; + Deep-Dive-Schließen-Button am iPhone per Safe-Area fixbar
+const VERSION = 'cocobet-v58';   // 03.08.2026: Kohärenz-Deep-Dive führt mit Verdikt (härteste Fehlbepreisung → Back/Lay, oder „nichts Handelbares"), Live-Warnung, Konsens-Kurve ans Ende
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

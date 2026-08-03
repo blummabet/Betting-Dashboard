@@ -1044,6 +1044,40 @@
     if (fl.kind === 'air') return 'Der Preis wandert, ohne dass nennenswert Geld durchläuft — dünnes Buch, keine Konviktion. Solche Bewegungen kehren häufig zurück.';
     return 'Unauffällig: weder ungewöhnlicher Zufluss noch nennenswerte Preisbewegung.';
   }
+  // (03.08.2026, Lucas) Verdikt zuerst: die Deep-Dive-Seite diagnostizierte viel, entschied nichts.
+  // Diese Box übersetzt die HARTEN Kohärenz-Abweichungen (reine Algebra zwischen zwei Märkten) in
+  // einen Satz: welche Seite ist fehlbepreist, Richtung, Größe. Nur mit echtem Geld (w≥VERDICT_MIN_W
+  // ≈ €2.7K gematcht). Live keine Value-Aussage (Teilmärkte desynchronisieren).
+  var VERDICT_MIN_W = 0.35;
+  function _bfHardEdge(c) {
+    if (c.k === 'Leiter-Monotonie') {
+      return '<b>' + esc(c.mkt) + '</b> — reiner Widerspruch (mehr Tore teurer als weniger). Einer der beiden Preise ist falsch.';
+    }
+    var d = c.dev, ref = ' <span style="color:' + C.dim + '">(Markt ' + _cpct(c.market) + ' vs. faire ' + _cpct(c.model) + ')</span>';
+    if (d < 0) return '<b>' + esc(c.mkt) + '</b> ist ' + Math.abs(d).toFixed(1) + 'pp <b style="color:' + C.back + '">unterbewertet</b> \u2192 Back ' + esc(c.mkt) + ref;
+    return '<b>' + esc(c.mkt) + '</b> ist ' + d.toFixed(1) + 'pp <b style="color:' + C.lay + '">überbewertet</b> \u2192 Lay ' + esc(c.mkt) + ' (bzw. Gegenseite backen)' + ref;
+  }
+  function _bfVerdict(r, m) {
+    var card = function (accent, bg, title, body) {
+      return '<div class="bfd-card" style="border-left:3px solid ' + accent + ';background:' + bg + '"><h3 style="margin-top:0">' + title + '</h3>' + body + '</div>';
+    };
+    if (isLive(m)) {
+      return card(C.lay, 'rgba(248,81,73,.06)', '\u26a0 Live — mit Vorsicht',
+        '<p class="sub" style="margin:0">Live desynchronisieren die Teilmärkte (1X2, O/U, BTTS aktualisieren unterschiedlich schnell) und die Quotenbewegung folgt dem Spielstand, nicht dem Geld. Die Abweichungen unten sind daher <b>kein verlässliches Value-Signal</b> — belastbar erst vor Anpfiff.</p>');
+    }
+    var hard = (r.hard || []).filter(function (c) { return c.w >= VERDICT_MIN_W; })
+      .sort(function (a, b) { return Math.abs(b.dev) * b.w - Math.abs(a.dev) * a.w; });
+    if (!hard.length) {
+      var why = (r.hard && r.hard.length) ? 'die harten Abweichungen liegen auf zu dünnen Märkten (kein verlässliches Geld dahinter)' : 'die Märkte sind untereinander sauber bepreist';
+      var add = (r.fl && r.fl.kind === 'steam') ? ' — der Zug kommt aus dem Geldfluss (Steam), nicht aus einer Fehlbepreisung' : '';
+      return card(C.mut, 'transparent', '\u26aa Nichts klar Handelbares',
+        '<p class="sub" style="margin:0">' + why + '. Auffälligkeit ' + r.s + '/99' + add + '.</p>');
+    }
+    var more = hard.length > 1 ? '<p style="font-size:11px;color:' + C.dim + ';margin:8px 0 0">+' + (hard.length - 1) + ' weitere harte Abweichung' + (hard.length - 1 > 1 ? 'en' : '') + ' mit Geld dahinter (siehe Tabelle).</p>' : '';
+    return card(C.gold, 'rgba(255,184,12,.06)', '\ud83d\udfe2 Handelbar — härteste Fehlbepreisung',
+      '<p style="font-size:13px;color:' + C.ink + ';margin:0 0 2px;line-height:1.5">' + _bfHardEdge(hard[0]) + '</p>' +
+      '<p class="sub" style="margin:6px 0 0">' + fmtE(hard[0].vol) + ' auf diesem Markt gematcht. \u201eHart\u201c = reine Algebra zwischen zwei Märkten, kein Modell — der sicherste Value-Typ.</p>' + more);
+  }
   function drawerHTML(m) {
     var r = cohOf(m), co = r.co, fit = co.fit, sup = co.sup, i;
     var kick = isLive(m) ? 'live' : (m.kickoff ? new Date(m.kickoff).toLocaleString('de-AT') : '—');
@@ -1051,6 +1085,9 @@
       '<div style="font-size:11px;color:' + C.mut + '">' + flag(m.country, m.league) + ' ' + esc(String(m.league).slice(0, 48)) + ' · ' + esc(kick) + '</div>' +
       '<div style="font-size:22px;font-weight:800;letter-spacing:-.01em;color:' + C.ink + ';margin-top:3px">' + esc(m.home) + ' <span style="color:' + C.dim + '">v</span> ' + esc(m.away) + '</div>' +
       (cohPillsRow(m, true) || '') + '</div><div class="bfd-body">';
+
+    // Verdikt zuerst — was heißt das? (03.08.2026, Lucas)
+    h += _bfVerdict(r, m);
 
     // Kennzahlen
     h += '<div class="bfd-kv">' +
@@ -1061,12 +1098,13 @@
       (sup ? _kvi(sup.lh.toFixed(2) + ' / ' + sup.la.toFixed(2), 'λ Heim / Gast', C.ink) : '') +
       '</div>';
 
-    // Konsens-Kurve
+    // Konsens-Kurve (03.08.2026, Lucas: ans Ende — Beleg, kein Handlungssignal)
+    var curveHtml = '';
     if (fit && Object.keys(co.rungs).length >= 3) {
       var dist = []; for (var k = 0; k <= 6; k++) { var mkt = marketExact(co.rungs, k), model = pois(k, fit.l); dist.push({ k: k, model: model, market: mkt != null ? mkt : model, filled: mkt == null }); }
       var mx = 0; dist.forEach(function (d) { mx = Math.max(mx, d.model, d.market || 0); }); if (mx <= 0) mx = 1;
       var gaps = dist.filter(function (d) { return d.filled; }).length;
-      h += '<div class="bfd-card"><h3>Konsens-Kurve</h3>' +
+      curveHtml += '<div class="bfd-card"><h3>Konsens-Kurve</h3>' +
         '<p class="sub">Was die O/U-Leiter über die Tor-Verteilung sagt (Balken) gegen die am besten passende Poisson-Kurve (Linie). RMSE ' + (fit.rmse * 100).toFixed(2) + ' pp über ' + Object.keys(co.rungs).length + ' Sprossen.</p>' +
         '<div class="bfd-curve">' + dist.map(function (d) {
           var mh = (d.market != null ? d.market / mx * 100 : 0), dh = d.model / mx * 100;
@@ -1077,7 +1115,7 @@
         '<span><i class="bfd-sw" style="background:#ffb80c"></i>Poisson-Fit λ=' + fit.l.toFixed(2) + '</span>' +
         (gaps ? '<span style="color:' + C.dim + '">schraffiert = Sprosse nicht bepreist, aus dem Modell ergänzt (' + gaps + ')</span>' : '') + '</div></div>';
     } else {
-      h += '<div class="bfd-gap"><b style="color:' + C.ink + '">Kurve nicht rekonstruierbar.</b> Weniger als drei bepreiste O/U-Sprossen für dieses Spiel.</div>';
+      curveHtml += '<div class="bfd-gap"><b style="color:' + C.ink + '">Kurve nicht rekonstruierbar.</b> Weniger als drei bepreiste O/U-Sprossen für dieses Spiel.</div>';
     }
 
     // Kohärenz-Tabelle
@@ -1130,8 +1168,10 @@
           '<span style="width:60px;text-align:right;color:' + C.dim + ';font-family:\'JetBrains Mono\',monospace">' + fmtE(x.v) + '</span></div>';
       }).join('') + '</div>';
 
+    h += curveHtml;   // Konsens-Kurve zuletzt (Beleg)
     return h + '</div>';
   }
+  window._bfVerdict = _bfVerdict; window._bfHardEdge = _bfHardEdge;   // Test-Hooks
   window._bfDrawerHTML = drawerHTML;   // Test-Hook
 
   function rerender() { var p = document.getElementById('betfairRadarPanel'); if (p) p.innerHTML = renderBetfairRadar(); }
