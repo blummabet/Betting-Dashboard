@@ -179,3 +179,36 @@ def test_run_checks_shape_and_all_ids_present():
         assert want in ids or want.replace("bel","ble") in ids
     for c in res:
         assert set(("id", "label", "severity", "ok", "nFail", "failures", "note")) <= set(c)
+
+
+# ── 03.08.2026 (Lucas: „schau alles an … in der Status-View aufnehmen"): Geister-Märkte-Check —
+#    fertige Spiele, die der Feed noch als live (resolved==null) mit Whale-Geld führt. Das ist die
+#    Klasse Bug, die an mehreren Views auftauchte (Neu, einzelne Wale). ────────────────────────────
+def _mkt(htk, usd=9000, resolved=None):
+    return {"league": "MLB", "capturedAt": iso(NOW), "hoursToKickoff": htk,
+            "resolved": resolved, "whales": [{"wallet": "0xW", "side": "A", "usd": usd}]}
+
+
+def test_stale_live_markets_green_when_all_upcoming():
+    close = {f"mlb-up-{i}": _mkt(2) for i in range(25)}   # alle in 2h → keine Geister
+    assert pdi.check_stale_live_markets(pdi.PolyCtx(now=NOW, close=close))["ok"]
+
+
+def test_stale_live_markets_fires_when_feed_full_of_ghosts():
+    close = {f"mlb-done-{i}": _mkt(-10) for i in range(25)}   # alle 10h nach Anpfiff, resolved==null
+    c = pdi.check_stale_live_markets(pdi.PolyCtx(now=NOW, close=close))
+    assert not c["ok"] and c["severity"] == "warn"
+    assert "nach Anpfiff" in c["failures"][0] and "25/25" in c["failures"][0]
+
+
+def test_stale_live_markets_ignores_resolved_and_moneyless():
+    close = {}
+    close.update({f"res-{i}": _mkt(-10, resolved="A") for i in range(25)})     # aufgelöst → zählt nicht als live
+    close.update({f"nomoney-{i}": {"league": "MLB", "capturedAt": iso(NOW),    # kein Whale-Geld → egal
+                                    "hoursToKickoff": -10, "resolved": None, "whales": []} for i in range(25)})
+    assert pdi.check_stale_live_markets(pdi.PolyCtx(now=NOW, close=close))["ok"]
+
+
+def test_stale_live_markets_small_sample_stays_green():
+    close = {f"mlb-done-{i}": _mkt(-10) for i in range(5)}   # < GHOST_MIN_N → nicht bewerten
+    assert pdi.check_stale_live_markets(pdi.PolyCtx(now=NOW, close=close))["ok"]

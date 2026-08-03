@@ -531,7 +531,7 @@ function _pwRender(){
 // die kaputte Netto-Kachel. Wo noch keine Daten (Edge/Wale), ehrlich 0 / „—".
 function _pwKpiBand(){
   const live=_pwCache&&_pwCache.broadLive;
-  const up=(live?Object.values(live):[]).filter(m=>m&&m.resolved==null&&_pwSportPass(m.league));
+  const up=(live?Object.values(live):[]).filter(m=>m&&m.resolved==null&&!_pwKoStale(m)&&_pwSportPass(m.league));   // 03.08.2026 (Lucas): fertige Spiele nicht ins "kommend"-KPI
   const vol=up.reduce((s,m)=>s+(m.totalUsd||0),0);
   const cats=new Set(up.map(m=>_pwSportCategory(m.league)));
   let whaleCap=0;
@@ -822,6 +822,7 @@ function _pwGlobalWhales(live){
   const all=[];
   for(const [k,m] of (live?Object.entries(live):[])){
     if(!m||!Array.isArray(m.whales)||!m.whales.length||!_pwSportPass(m.league)) continue;
+    if(m.resolved!=null||_pwKoStale(m)) continue;   // 03.08.2026 (Lucas): schon angepfiffene/aufgeloeste Spiele raus
     const match=Object.keys(m.shares||{}).join(' vs ');
     for(const wh of m.whales) if(wh&&wh.wallet) all.push({wallet:wh.wallet,side:wh.side,usd:Number(wh.usd)||0,key:k,league:m.league,match});
   }
@@ -1012,7 +1013,7 @@ if (typeof window !== 'undefined') window._pwSharpRanking = _pwSharpRanking;
 function _pwGlobalWhaleLeaderboard(live){
   const agg={};
   for(const [k,m] of (live?Object.entries(live):[])){
-    if(!m||m.resolved!=null||!Array.isArray(m.whales)||!m.whales.length||!_pwSportPass(m.league)) continue;
+    if(!m||m.resolved!=null||_pwKoStale(m)||!Array.isArray(m.whales)||!m.whales.length||!_pwSportPass(m.league)) continue;   // 03.08.2026 (Lucas): + Anpfiff-Gate
     const match=Object.keys(m.shares||{}).join(' vs ');
     for(const wh of m.whales){
       if(!wh||!wh.wallet) continue;
@@ -1642,7 +1643,21 @@ function _pwStaleMsg(base){
   return base;
 }
 const PW_NEW_MIN_USD = 5000;   // „Neu": Dust + Politik-Mini-Positionen raus (Lucas 31.07.2026: „$33-Einstiege wertlos")
-function _pwNewEntries(track, hours){
+// 03.08.2026 (Lucas: „Neu ist nicht aktuell"): der Feed zeigte GROSSE Einstiege nach firstTs (<24h),
+// aber ohne Anpfiff-Gate — $300K auf ein MLB-Spiel von GESTERN stand oben als „neu", längst durch.
+// Fix: schon angepfiffene/durchgelaufene Spiele raus (rekonstruierter Anpfiff via broadLive-Freeze,
+// >4h danach = fertig; Fallback = Datum aus dem Key < heute UTC, falls der Markt nicht mehr im Freeze ist).
+function _pwKeyDatePast(key){
+  const m=/(\d{4}-\d{2}-\d{2})/.exec(String(key||''));
+  return !!m && m[1] < new Date().toISOString().slice(0,10);
+}
+function _pwEntryOver(e, live){
+  const m = live && live[e.key];
+  if(m) return _pwKoStale(m);        // echter Anpfiff (capturedAt+hoursToKickoff)
+  return _pwKeyDatePast(e.key);      // kein Markt mehr im Freeze → Datum aus dem Key
+}
+function _pwNewEntries(track, hours, live){
+  live = live || (_pwCache && _pwCache.broadLive) || {};
   const open=track&&track.open; if(!open) return [];
   const cutoff=Date.now()-hours*3.6e6, rows=[];
   for(const e of Object.values(open)){
@@ -1650,6 +1665,7 @@ function _pwNewEntries(track, hours){
     if(_pwSportCategory(e.league)==='Sonstige') continue;      // Politik/Krypto (GREATER/ELON …) raus
     if((Number(e.usd)||0) < PW_NEW_MIN_USD) continue;          // Kleckerbeträge raus — „GROSSE Einstiege"
     const t=Date.parse(e.firstTs); if(isNaN(t)||t<cutoff) continue;
+    if(_pwEntryOver(e, live)) continue;                        // schon angepfiffen/durch → nicht „neu"
     const sc=_pwWalletScore(e.wallet);
     rows.push({wallet:e.wallet,key:e.key,side:e.side,league:e.league,price:e.firstPrice,usd:e.usd||0,ts:t,
       sharp:!!(sc&&sc.n>=PW_SHARP_MIN_N&&sc.avgClv>0),avgClv:sc?sc.avgClv:null,n:sc?sc.n:0});
@@ -1663,6 +1679,8 @@ function _pwFlips(hist){
     if(!Array.isArray(arr)||arr.length<2) continue;
     const base=arr[0], latest=arr[arr.length-1];
     if(!_pwSportPass(latest.league||base.league)) continue;
+    if(latest.htk!=null){ const koMs=Date.parse(latest.ts)+latest.htk*3.6e6;   // 03.08.2026 (Lucas): fertige Spiele raus
+      if(!isNaN(koMs)&&(Date.now()-koMs)>4*3.6e6) continue; }
     const b=lead(base), l=lead(latest);
     if(!b||!l||b===l) continue;
     rows.push({key,from:b,to:l,league:latest.league||base.league,ts:Date.parse(latest.ts),match:Object.keys(latest.p||{}).join(' vs ')});
@@ -1671,7 +1689,7 @@ function _pwFlips(hist){
 }
 function _pwWhatsNew(){
   const ago=t=>{const m=(Date.now()-t)/60000;return m<1?'gerade':m<60?Math.round(m)+'m':Math.round(m/60)+'h';};
-  const entries=_pwNewEntries(_pwCache&&_pwCache.walletTrack,24).slice(0,20);
+  const entries=_pwNewEntries(_pwCache&&_pwCache.walletTrack,24,_pwCache&&_pwCache.broadLive).slice(0,20);
   const flips=_pwFlips(_pwCache&&_pwCache.broadHist).slice(0,15);
   if(!entries.length&&!flips.length)
     return '<section class="pw-sec"><div class="pw-none">'+_pwStaleMsg('Noch nichts Neues erfasst — der Feed zeigt neue große Einstiege (ab '+_pwUsd(PW_NEW_MIN_USD)+') und gekippte Favoriten, sobald die Runner-Läufe Daten liefern.')+'</div></section>';

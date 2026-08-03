@@ -54,6 +54,8 @@ FRESH_ERR_H      = float(os.environ.get("POLY_FRESH_ERR_H")    or 12)   # > 12 h
 LAG_WARN_H       = float(os.environ.get("POLY_LAG_WARN_H")     or 2.5)  # Tracker darf Scan so weit nachlaufen
 KICKOFF_GRACE_H  = float(os.environ.get("POLY_KICKOFF_GRACE_H")or 6)    # ab so vielen h nach Anpfiff „sollte aufgelöst sein"
 STALE_OPEN_DAYS  = float(os.environ.get("POLY_STALE_OPEN_DAYS")or 3)    # offene Paper-Position älter → hängt
+GHOST_SHARE_FLOOR = float(os.environ.get("POLY_GHOST_SHARE_FLOOR")or 0.5) # >so viel der Live-Geld-Märkte schon durch = Feed voller Geister
+GHOST_MIN_N      = int(os.environ.get("POLY_GHOST_MIN_N")     or 20)    # erst ab so vielen Geld-Märkten bewerten
 OVERLAP_FLOOR    = float(os.environ.get("POLY_OVERLAP_FLOOR")  or 0.60) # Auflösungs-Trefferquote je Liga
 OVERLAP_MIN_N    = int(os.environ.get("POLY_OVERLAP_MIN_N")    or 8)    # Liga erst ab so vielen fälligen Keys bewerten
 PROVEN_MIN_TR    = int(os.environ.get("POLY_PROVEN_MIN_TR")    or 3)    # = poly_whale_watch MIN_TR
@@ -330,6 +332,40 @@ def check_accuracy_backtest_fresh(ctx):
         sev = "error"
     return _chk("accuracy_backtest_fresh", "Genauigkeits-Backtest frisch & belastbar", sev, fails,
                 "poly_money_broad muss frisch sein und n groß genug, sonst ist 'folgt dem Geld' Zufall.")
+
+
+@poly_check
+def check_stale_live_markets(ctx):
+    """„Schon vorbei, aber steht noch als live“ — genau die Klasse Bug, die Lucas an mehreren Views
+    fand (Neu, einzelne Wale). Der Close-Feed setzt KEIN resolved-Flag → fertige Spiele bleiben
+    ‚live’. Jede View, die nicht auf den Anpfiff filtert, zeigt dann Geister. Gemessen: von den
+    Märkten, die der Feed als live führt (resolved==null) UND auf denen Whale-Geld liegt, wie viele
+    sind in Wahrheit längst angepfiffen (> Karenz nach rekonstruiertem Anpfiff)? Hoher Anteil = die
+    Views MÜSSEN auf Anpfiff filtern (tun sie seit 03.08.2026)."""
+    money = 0; ghost = 0; ghost_usd = 0.0
+    for k, v in ctx.close.items():
+        if not isinstance(v, dict) or v.get("resolved") is not None:
+            continue
+        whales = v.get("whales") or []
+        if not whales:
+            continue
+        money += 1
+        cap = _parse_ts(v.get("capturedAt")); htk = v.get("hoursToKickoff")
+        if cap is None or not isinstance(htk, (int, float)):
+            continue
+        ko = cap + timedelta(hours=htk)
+        if (ctx.now - ko).total_seconds() / 3600.0 > KICKOFF_GRACE_H:
+            ghost += 1
+            ghost_usd += sum(float(w.get("usd") or 0) for w in whales if isinstance(w, dict))
+    share = ghost / money if money else 0.0
+    fails = []
+    if money >= GHOST_MIN_N and share > GHOST_SHARE_FLOOR:
+        fails.append(f"{ghost}/{money} 'live' Geld-Märkte sind schon >{KICKOFF_GRACE_H:.0f}h nach "
+                     f"Anpfiff ({share*100:.0f}%) — ${ghost_usd:,.0f} Whale-Geld auf fertigen Spielen")
+    return _chk("stale_live_markets", "Live-Feed frei von Geister-Märkten", "warn", fails,
+                "Der Close-Feed setzt kein resolved-Flag; fertige Spiele bleiben 'live'. Alle Views filtern "
+                "jetzt auf den rekonstruierten Anpfiff — dieser Check misst den Geister-Anteil im Roh-Feed "
+                "(steigt er, prunt/löst der Feed nicht mehr auf; jede ungegatete View zeigt dann fertige Spiele).")
 
 
 # ── Ausführung ────────────────────────────────────────────────────────────────

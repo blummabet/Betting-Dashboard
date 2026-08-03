@@ -3,39 +3,43 @@
     {
       "id": "close_feed_fresh",
       "label": "Close-Feed frisch (frisches Geld kommt rein)",
-      "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "severity": "warn",
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "Close-Feed: jüngster Stand vor 4.6 h (> 3 h erwartet) · 684 Märkte im File"
+      ],
       "note": "Jüngster erfasster Markt. Scan alle 30 Min — steht der Feed, sind Preise/CLV/Volumen alt."
     },
     {
       "id": "resolutions_fresh",
       "label": "Auflösungs-Feed lebt (Märkte werden abgerechnet)",
-      "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "severity": "warn",
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "Auflösungs-Feed: jüngster Stand vor 4.6 h (> 3 h erwartet) · 7553 Auflösungen gesamt"
+      ],
       "note": "Jüngste Markt-Auflösung. Friert er ein, bleiben alle Positionen ewig offen."
     },
     {
       "id": "wallet_track_fresh",
       "label": "Wallet-Lernen frisch",
-      "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "severity": "warn",
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "Wallet-Track: jüngster Stand vor 4.6 h (> 3 h erwartet) · 610 Wallets bewertet"
+      ],
       "note": "Grundlage der 'bewiesene Wallet'-Pushes — veraltet = Pushes auf alten Bilanzen."
     },
     {
       "id": "shortlist_tracker_writes",
       "label": "Shortlist-Paper-Tracker schreibt",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "Tracker 13.8 h alt, Scan-Feed nur 0.0 h → Emitter liefert seit 13.7 h nichts (still tot?)"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Der Emitter (node/jsdom) kann still ausfallen. Hinkt der Tracker dem frischen Scan nach, schreibt er nicht — die Auto-Bet-Entscheidung liefe auf Blindflug."
     },
     {
@@ -54,9 +58,9 @@
       "ok": false,
       "nFail": 3,
       "failures": [
-        "ESPORTS: nur 136/250 fällige Märkte aufgelöst (54%)",
-        "TENNIS: nur 54/182 fällige Märkte aufgelöst (30%)",
-        "MLB: nur 81/142 fällige Märkte aufgelöst (57%)"
+        "ESPORTS: nur 138/253 fällige Märkte aufgelöst (55%)",
+        "TENNIS: nur 54/187 fällige Märkte aufgelöst (29%)",
+        "MLB: nur 81/143 fällige Märkte aufgelöst (57%)"
       ],
       "note": "Fällige Märkte je Liga, die ihre Auflösung finden. < 60% = Settlement läuft ins Leere (Slug-Mismatch), Trefferquoten dieser Liga sind unvollständig."
     },
@@ -79,13 +83,26 @@
     {
       "id": "accuracy_backtest_fresh",
       "label": "Genauigkeits-Backtest frisch & belastbar",
-      "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "severity": "warn",
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "Backtest: jüngster Stand vor 4.6 h (> 3 h erwartet)"
+      ],
       "note": "poly_money_broad muss frisch sein und n groß genug, sonst ist 'folgt dem Geld' Zufall."
+    },
+    {
+      "id": "stale_live_markets",
+      "label": "Live-Feed frei von Geister-Märkten",
+      "severity": "warn",
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "534/535 'live' Geld-Märkte sind schon >6h nach Anpfiff (100%) — $15,550,418 Whale-Geld auf fertigen Spielen"
+      ],
+      "note": "Der Close-Feed setzt kein resolved-Flag; fertige Spiele bleiben 'live'. Alle Views filtern jetzt auf den rekonstruierten Anpfiff — dieser Check misst den Geister-Anteil im Roh-Feed (steigt er, prunt/löst der Feed nicht mehr auf; jede ungegatete View zeigt dann fertige Spiele)."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-08-03T03:54:58.316788+00:00"
+  "nFail": 7,
+  "generatedAt": "2026-08-03T08:30:53.472315+00:00"
 }

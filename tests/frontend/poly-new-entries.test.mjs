@@ -11,7 +11,7 @@ function mockFetch(files) {
     for (const [frag, data] of Object.entries(files)) if (u.includes(frag)) { body = data; break; }
     return Promise.resolve({ ok: body != null, json: () => Promise.resolve(body) }); };
 }
-async function renderNew(walletTrack) {
+async function renderNew(walletTrack, close) {
   const dom = new JSDOM('<!DOCTYPE html><body><div id="polyWalletsPanel"></div></body>',
     { url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
   const { window: w } = dom;
@@ -19,7 +19,7 @@ async function renderNew(walletTrack) {
     'mls-data.json': { groups: {} }, 'mls_poly_prices.json': { prices: {} },
     'mls_poly_wallets.json': { topPositionsAll: [{ wallet: '0xabc', usd: 5000, side: 'h', pick: 'H', key: 'H-A', match: 'H vs A' }], updatedAt: new Date().toISOString() },
     'poly_money_broad.json': { n: 5, generatedAt: new Date().toISOString(), byLeague: [1] },
-    'poly_money_broad_close.json': { x: {} },
+    'poly_money_broad_close.json': close || { x: {} },
     'poly_wallet_track.json': walletTrack,
   });
   w.eval(readFileSync(PW, 'utf8'));
@@ -45,4 +45,32 @@ test('Neu: nur echte Sportarten ≥$5K, nach Größe — kein Dust/Politik', asy
   assert.doesNotMatch(seg, /esports-t1|\bT1\b/, 'Dust ($33) NICHT gelistet');
   // nach Größe: Sinner ($30K) vor Dodgers ($12K)
   assert.ok(seg.indexOf('Sinner') < seg.indexOf('Dodgers'), 'nach Einsatz sortiert (größte zuerst)');
+});
+
+// 03.08.2026 (Lucas: „Neu ist nicht aktuell"): der Feed zeigte $300K-Einstiege auf GESTRIGE Spiele.
+// Fix: Anpfiff-Gate — schon angepfiffene/durchgelaufene Spiele (rekonstruierter Anpfiff aus dem
+// broadLive-Freeze, >4h nach KO = durch) fliegen raus; kommende bleiben.
+test('Neu: durchgelaufene Spiele raus, kommende bleiben (Anpfiff-Gate)', async () => {
+  const cap = new Date().toISOString();
+  const close = {
+    'mlb-over-2026-08-02':  { capturedAt: cap, hoursToKickoff: -8 },   // vor 8h angepfiffen → durch
+    'mlb-comng-2026-08-02': { capturedAt: cap, hoursToKickoff: 3 },    // in 3h → noch aktuell
+  };
+  const track = { updatedAt: new Date().toISOString(), scores: {}, open: {
+    a: { wallet: '0xA', key: 'mlb-over-2026-08-02',  side: 'Overside', league: 'MLB', firstPrice: 0.6, firstTs: iso(6), usd: 40000 },
+    b: { wallet: '0xB', key: 'mlb-comng-2026-08-02', side: 'Comingside', league: 'MLB', firstPrice: 0.6, firstTs: iso(2), usd: 20000 },
+  } };
+  const h = await renderNew(track, close);
+  const seg = (h.split('Neue große Einstiege')[1] || '').split('Favorit gekippt')[0];
+  assert.doesNotMatch(seg, /mlb-over-2026|Overside/, 'durchgelaufenes Spiel ($40K, 8h nach KO) NICHT gelistet');
+  assert.match(seg, /mlb-comng-2026|Comingside/, 'kommendes Spiel (in 3h) bleibt gelistet');
+});
+
+test('Neu: kein Freeze mehr im broadLive → Datum aus dem Key < heute filtert', async () => {
+  const track = { updatedAt: new Date().toISOString(), scores: {}, open: {
+    a: { wallet: '0xA', key: 'mlb-yesterday-2000-01-01', side: 'Alt', league: 'MLB', firstPrice: 0.6, firstTs: iso(5), usd: 30000 },
+  } };
+  const h = await renderNew(track, { z: {} });   // Markt nicht (mehr) im Freeze
+  const seg = (h.split('Neue große Einstiege')[1] || '').split('Favorit gekippt')[0];
+  assert.doesNotMatch(seg, /mlb-yesterday|Alt</, 'Spiel mit Key-Datum in der Vergangenheit fliegt raus');
 });
