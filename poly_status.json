@@ -34,7 +34,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "Tracker 9.0 h alt, Scan-Feed nur 0.0 h → Emitter liefert seit 9.0 h nichts (still tot?)"
+        "Tracker 10.0 h alt, Scan-Feed nur 1.0 h → Emitter liefert seit 9.0 h nichts (still tot?)"
       ],
       "note": "Der Emitter (node/jsdom) kann still ausfallen. Hinkt der Tracker dem frischen Scan nach, schreibt er nicht — die Auto-Bet-Entscheidung liefe auf Blindflug."
     },
@@ -54,9 +54,9 @@
       "ok": false,
       "nFail": 3,
       "failures": [
-        "ESPORTS: nur 131/242 fällige Märkte aufgelöst (54%)",
-        "TENNIS: nur 49/174 fällige Märkte aufgelöst (28%)",
-        "MLB: nur 67/127 fällige Märkte aufgelöst (53%)"
+        "ESPORTS: nur 134/247 fällige Märkte aufgelöst (54%)",
+        "TENNIS: nur 52/177 fällige Märkte aufgelöst (29%)",
+        "MLB: nur 74/135 fällige Märkte aufgelöst (55%)"
       ],
       "note": "Fällige Märkte je Liga, die ihre Auflösung finden. < 60% = Settlement läuft ins Leere (Slug-Mismatch), Trefferquoten dieser Liga sind unvollständig."
     },
@@ -67,12 +67,12 @@
       "ok": false,
       "nFail": 6,
       "failures": [
-        "15/45 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (33%) — Trefferquote allein trügt",
-        "   0x84cfffc3f1… n=16 Treffer 62% P&L $-7,492,564",
-        "   0xe9076a87c5… n=13 Treffer 77% P&L $-7,312,758",
-        "   0xc3c3b3ef30… n=14 Treffer 79% P&L $-3,799,684",
-        "   0xa0f21e6d35… n=8 Treffer 50% P&L $-2,676,332",
-        "60/105 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
+        "16/47 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (34%) — Trefferquote allein trügt",
+        "   0x84cfffc3f1… n=16 Treffer 62% P&L $-7,495,038",
+        "   0xe9076a87c5… n=13 Treffer 77% P&L $-7,314,646",
+        "   0xc3c3b3ef30… n=14 Treffer 79% P&L $-3,804,238",
+        "   0xa0f21e6d35… n=8 Treffer 50% P&L $-2,682,320",
+        "62/109 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
     },
@@ -87,5 +87,5 @@
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-08-02T23:10:55.936359+00:00"
+  "generatedAt": "2026-08-03T00:12:33.922119+00:00"
 }
