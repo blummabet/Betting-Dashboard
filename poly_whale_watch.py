@@ -24,7 +24,8 @@ Ein HTML-Post je frischer Großposition in den Trades-Channel (TELEGRAM_TRADES_C
   TELEGRAM_TOKEN / TELEGRAM_TRADES_CHAT_ID   — ohne Token = Vorschau (stdout)
   WHALE_MIN_USD         — Mindestgröße OHNE Track-Record (Default 25000)
   WHALE_MIN_USD_TRACKED — Mindestgröße für SMARTE Wallets (n≥MIN_TR & ≥MIN_HITRATE) (Default 5000)
-  WHALE_MIN_HITRATE     — Mindest-Trefferquote fürs smarte Band (Default 0.5)
+  WHALE_SIG_Z           — Signifikanz-Schärfe fürs smarte Band: Wilson-Untergrenze der Quote muss
+                          > 50% (kein Münzwurf). 1.645 = 95% einseitig (Default), 1.2816 = 90% (mehr Alerts)
   WHALE_FRESH_DAYS     — nur Positionen, die zuletzt in N Tagen eröffnet/aufgestockt (Default 2)
   WHALE_MIN_TR         — ab wie vielen Auflösungen ein Track-Record gezeigt wird (Default 3)
   WHALE_MAX_ALERTS     — max Alerts je Lauf (Default 8)
@@ -33,7 +34,7 @@ Ein HTML-Post je frischer Großposition in den Trades-Channel (TELEGRAM_TRADES_C
 poly_whale_seen.json {posKey → {usd, ts}}: je Position EINMAL alerten; erneut nur, wenn die
 Wallet signifikant aufstockt (≥ +50% USD) — dann als „aufgestockt".
 """
-import json, os, urllib.request, urllib.error, html
+import json, math, os, urllib.request, urllib.error, html
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -64,6 +65,26 @@ PUB_MIN_TR            = int(os.environ.get("WHALE_PUB_MIN_TR")            or 8) 
 PUB_MIN_HITRATE       = float(os.environ.get("WHALE_PUB_MIN_HITRATE")     or 0.5)
 
 
+# 03.08.2026 (Lucas: „50% ist Münzwurf, kein Beweis"): „bewiesen" heißt jetzt STATISTISCH über
+# Münzwurf — die Wilson-Untergrenze der Trefferquote muss > 50% liegen, nicht bloß die rohe Quote
+# ≥ 50%. Passt sich an die Stichprobe an: 24/47 (51%) reicht nicht, 6/11 (55%) erst recht nicht.
+SIG_Z = float(os.environ.get("WHALE_SIG_Z") or 1.645)  # 1.645 = 95% EINSEITIG („signifikant über 50%“); 1.2816 = 90% (mehr Alerts), 1.96 = strenger
+
+def _wilson_lb(wins, n, z=SIG_Z):
+    """Untere Wilson-Grenze der Trefferquote (robuster als roh bei kleinem n)."""
+    if not n:
+        return 0.0
+    p = (wins or 0) / n
+    d = 1 + z * z / n
+    centre = (p + z * z / (2 * n)) / d
+    margin = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / d
+    return centre - margin
+
+def _beats_coinflip(wins, n, z=SIG_Z):
+    """Ist die Trefferquote SIGNIFIKANT über 50% (kein Münzwurf)? Wilson-Untergrenze > 0.5."""
+    return bool(n) and _wilson_lb(wins, n, z) > 0.5
+
+
 def _is_smart(s, min_tr=MIN_TR, min_hitrate=MIN_HITRATE):
     """„Bewiesen ordentliche" Wallet fürs niedrige Schwellen-Band UND das „bewiesen"-Label.
     Record (n≥min_tr) UND ≥min_hitrate Treffer — plus (02.08.2026, Lucas, konservativ): ein
@@ -75,7 +96,7 @@ def _is_smart(s, min_tr=MIN_TR, min_hitrate=MIN_HITRATE):
     n = s.get("n") or 0
     if n < min_tr:
         return False
-    if (s.get("wins") or 0) / n < min_hitrate:
+    if not _beats_coinflip(s.get("wins") or 0, n):   # signifikant >50%, nicht bloß roh ≥50%
         return False
     pnl = s.get("pnl")
     if isinstance(pnl, (int, float)) and pnl < 0:
