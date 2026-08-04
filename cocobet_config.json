@@ -377,8 +377,8 @@
       "engine_version": "v1",
       "description": "Liga-Saison Default — moderater, ohne Pre-Tournament-Phase",
       "poly": {
-        "_comment": "04.08.2026 (Lucas: La Liga scharf schalten): La Liga laeuft — wie MLS — ueber einen TAG statt series_slug. Aus der URL polymarket.com/de/sports/laliga/… → tag_slug 'laliga'. Ohne diesen Block fiele fetch_wm_poly_prices auf series_slug=soccer-fifwc (WM!) zurueck und matchte 0 La-Liga-Fixtures. Am 1. Live-Lauf gegen die Gamma-API verifizieren.",
-        "tag_slug": "laliga",
+        "_comment": "04.08.2026 (Lucas): Polymarkets neue Sport-Ligen laufen ueber numerische series_id, NICHT tag_slug (tag_slug=laliga -> 0 Events). Im Browser gegen gamma /sports verifiziert: EPL 10188, La Liga 10193, Bundesliga 10194, Ligue1 10195, SerieA 10203. Aktuell nur La Liga live (30 Events, inkl. lal-ala-get-2026-08-15), Rest 0 -> schadet nicht, greift automatisch sobald Polymarket sie listet.",
+        "series_id": "10188,10193,10194,10195,10203",
         "smartmoney_min_usd": 100
       },
       "disabled_signals": [

@@ -134,8 +134,19 @@ POLY_TAG_SLUG = _cfg("poly", "tag_slug", "")
 # nur nie im BATCH an: series_slug=…&limit=100&active=true ohne `closed=false`/Sortierung liefert bei
 # 100+ Events (die Serie läuft seit März) die ÄLTESTEN 100 (Gruppenphase) → die neuesten KO-Events
 # werden abgeschnitten. Fix: closed=false (nur offene Spiele) + newest-first + mehr Headroom.
-_GAMMA_FILTER = (f"tag_slug={POLY_TAG_SLUG}" if POLY_TAG_SLUG
-                 else f"series_slug={POLY_SERIES_SLUG}")
+# 04.08.2026 (Lucas, La-Liga-Trading): Polymarkets NEUE Sport-Ligen (LaLiga-Partnerschaft) laufen
+# NICHT ueber tag_slug/series_slug (Namen), sondern ueber eine numerische series_id. Im Browser
+# gegen gamma /sports verifiziert: La Liga = 10193 -> /events?series_id=10193 liefert die 30 Spiele
+# (tag_slug=laliga -> 0). Profile koennen series_id setzen (komma-separiert fuer mehrere Ligen);
+# das schlaegt tag_slug/series_slug. Mehrere IDs -> mehrere series_id=-Parameter (Gamma merged sie).
+POLY_SERIES_ID = str(_cfg("poly", "series_id", "") or "").strip()
+if POLY_SERIES_ID:
+    _ids = [x.strip() for x in POLY_SERIES_ID.split(",") if x.strip()]
+    _GAMMA_FILTER = "&".join(f"series_id={i}" for i in _ids)
+elif POLY_TAG_SLUG:
+    _GAMMA_FILTER = f"tag_slug={POLY_TAG_SLUG}"
+else:
+    _GAMMA_FILTER = f"series_slug={POLY_SERIES_SLUG}"
 # 18.07.2026 (Lucas: „MLS-Trading muss laufen") — 🔴 DER FALSCHE SPIELTAG KAM AN.
 # `order=startDate&ascending=false` sortiert nach dem ERSTELLUNGSDATUM des Marktes, nicht nach dem
 # Anpfiff. Und die Gamma-API deckelt bei **100 Events pro Request** — `limit=300` wird ignoriert.
@@ -311,7 +322,16 @@ def _build_name_map_from_data() -> dict:
     return m
 
 # Aktive Name→ID-Map: WM = hartkodierte Ländermap, sonst dynamisch aus dem Datensatz.
-_ACTIVE_NAME_MAP = _build_name_map_from_data() if D.is_liga() else POLY_NAME_TO_ID
+# 04.08.2026 (Lucas, La-Liga-Live): Polymarket nennt einige Klubs laenger als API-Football, sodass
+# _names_match mehrdeutig wird oder leer laeuft. Exakte Poly->ID-Aliase (im Browser gegen gamma
+# /events?series_id=10193 verifiziert), greifen VOR dem Fuzzy-Match. Bei neuen Ligen ggf. erweitern.
+_POLY_NAME_ALIASES = {
+    "RCD Espanyol de Barcelona": "540",   # Espanyol (nicht Barcelona 529 - "Barcelona" im Namen kollidiert)
+    "Real Racing Club":          "4665",  # Racing Santander (kein Token-Overlap mit "Racing Santander")
+}
+_ACTIVE_NAME_MAP = (_build_name_map_from_data() if D.is_liga() else dict(POLY_NAME_TO_ID))
+if D.is_liga():
+    _ACTIVE_NAME_MAP.update(_POLY_NAME_ALIASES)
 
 
 def resolve_team_id(name: str) -> str | None:
