@@ -52,9 +52,9 @@
       "ok": false,
       "nFail": 3,
       "failures": [
-        "ESPORTS: nur 159/272 fällige Märkte aufgelöst (58%)",
-        "TENNIS: nur 77/200 fällige Märkte aufgelöst (38%)",
-        "MLB: nur 82/143 fällige Märkte aufgelöst (57%)"
+        "ESPORTS: nur 161/274 fällige Märkte aufgelöst (59%)",
+        "TENNIS: nur 85/207 fällige Märkte aufgelöst (41%)",
+        "MLB: nur 88/150 fällige Märkte aufgelöst (59%)"
       ],
       "note": "Fällige Märkte je Liga, die ihre Auflösung finden. < 60% = Settlement läuft ins Leere (Slug-Mismatch), Trefferquoten dieser Liga sind unvollständig."
     },
@@ -65,12 +65,12 @@
       "ok": false,
       "nFail": 6,
       "failures": [
-        "16/49 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (33%) — Trefferquote allein trügt",
-        "   0x84cfffc3f1… n=16 Treffer 62% P&L $-7,498,100",
-        "   0xe9076a87c5… n=13 Treffer 77% P&L $-7,344,920",
-        "   0xc3c3b3ef30… n=18 Treffer 72% P&L $-3,800,156",
-        "   0xa0f21e6d35… n=9 Treffer 56% P&L $-2,721,660",
-        "68/117 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
+        "17/49 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (35%) — Trefferquote allein trügt",
+        "   0x84cfffc3f1… n=16 Treffer 62% P&L $-7,498,510",
+        "   0xe9076a87c5… n=13 Treffer 77% P&L $-7,345,943",
+        "   0xc3c3b3ef30… n=18 Treffer 72% P&L $-3,798,901",
+        "   0xa0f21e6d35… n=9 Treffer 56% P&L $-2,712,213",
+        "67/116 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
     },
@@ -90,11 +90,11 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "567/587 'live' Geld-Märkte sind schon >6h nach Anpfiff (97%) — $15,932,149 Whale-Geld auf fertigen Spielen"
+        "583/593 'live' Geld-Märkte sind schon >6h nach Anpfiff (98%) — $16,728,024 Whale-Geld auf fertigen Spielen"
       ],
       "note": "Der Close-Feed setzt kein resolved-Flag; fertige Spiele bleiben 'live'. Alle Views filtern jetzt auf den rekonstruierten Anpfiff — dieser Check misst den Geister-Anteil im Roh-Feed (steigt er, prunt/löst der Feed nicht mehr auf; jede ungegatete View zeigt dann fertige Spiele)."
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-08-04T04:30:33.965077+00:00"
+  "generatedAt": "2026-08-04T07:23:36.344483+00:00"
 }
