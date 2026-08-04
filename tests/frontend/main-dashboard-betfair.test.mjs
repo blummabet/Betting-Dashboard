@@ -104,3 +104,17 @@ test('Betfair HT: unter der HT-Schwelle (< 1K) -> freundlicher Leer-Hinweis', ()
   assert.match(h, /Betfair HT/);
   assert.match(h, /Kein nennenswertes HT-Geld/);
 });
+
+// 04.08.2026 (Lucas: „Frisches Geld @1.01 ist sinnfrei"): Zuflüsse auf Quasi-Lock-Quoten (< 1.30,
+// meist live/entschieden) sind kein Signal und fliegen aus der Frisches-Geld-Kachel — normale Quoten bleiben.
+test('Frisches Geld: @1.01-Zufluss fliegt raus, normale Quote bleibt', () => {
+  const w = load();
+  seed(w, { bfOverview: { generatedAt: new Date().toISOString(), steam: [], flow: [
+    { matchId: 91, home: 'LockHeim', away: 'LockGast', country: 'DE', league: 'X', deltaEur: 90000, nowEur: 190000, sideName: 'LockHeim', odd: 1.01 },
+    { matchId: 92, home: 'RealHeim', away: 'RealGast', country: 'DE', league: 'X', deltaEur: 30000, nowEur: 60000, sideName: 'RealHeim', odd: 2.10 },
+  ] } });
+  w._renderMainDash();
+  const h = w.document.getElementById('mainDashPanel').innerHTML;
+  assert.match(h, /RealHeim/, 'normaler Zufluss bleibt');
+  assert.ok(!/LockHeim/.test(h), '@1.01-Zufluss (Quasi-Lock) ist gefiltert');
+});

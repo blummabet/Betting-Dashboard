@@ -26,6 +26,7 @@ OUT = "betfair_overview.json"
 
 MOVE_MIN_PP = 1.5      # = Radar moveOf: schwächere Bewegungen ignorieren
 FLOW_MIN_EUR = 2000    # = Radar FLOW_MIN_EUR: Zufluss erst ab so viel zeigen
+FLOW_MIN_ODD = 1.30    # (Lucas 04.08.) Geld auf Quasi-Lock (@<1.30, oft live/entschieden) = kein Signal
 TOP_STEAM = 5
 TOP_FLOW = 5
 KICKOFF_GRACE_S = 60   # winzige Toleranz, damit ein Spiel exakt bei Anpfiff nicht flackert
@@ -143,6 +144,9 @@ def flow_list(prices, hist, top=TOP_FLOW):
         if d < FLOW_MIN_EUR:
             continue
         mkt, lead = _biggest_market(m)
+        _odd = _num((lead or {}).get("odd"))
+        if _odd is not None and _odd < FLOW_MIN_ODD:
+            continue   # Zufluss auf Quasi-Lock-Ausgang → kein handelbares Signal (04.08.2026, Lucas)
         row = _base(m)
         row.update({"deltaEur": round(d), "nowEur": round(_num(b.get("totalVol")) or 0),
                     "market": mkt, "sideName": (lead or {}).get("name"),

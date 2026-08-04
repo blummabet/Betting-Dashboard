@@ -62,6 +62,22 @@ class TestScan(unittest.TestCase):
         self.assertEqual(len(store["games"]["k"]["snaps"]), S.MAX_SNAPS)
         self.assertEqual(store["games"]["k"]["snaps"][-1]["ts"], "neu")
 
+
+    def test_multi_key_merge(self):
+        # UCL/UEL: mehrere Odds-Keys (Haupt + Quali) -> beide abfragen, Events mergen.
+        def ev(home, away, hw, dr, aw):
+            return {"home_team": home, "away_team": away, "commence_time": "2026-08-04T15:00:00Z",
+                    "bookmakers": [{"key": "pinnacle", "markets": [{"key": "h2h", "outcomes": [
+                        {"name": home, "price": hw}, {"name": "Draw", "price": dr}, {"name": away, "price": aw}]}]}]}
+        calls = []
+        def og(path):
+            calls.append(path)
+            return [ev("Ajax", "PSV", 2.0, 3.5, 4.0)] if "/main/" in path else [ev("Roma", "Lazio", 2.2, 3.3, 3.4)]
+        out = S.fetch_pinn_games(["main", "quali"], odds_get=og)
+        self.assertEqual(len(calls), 2)                       # beide Keys abgefragt
+        homes = {g["home"] for g in out}
+        self.assertEqual(homes, {"Ajax", "Roma"})            # Events aus beiden gemerged
+
     def test_devig(self):
         self.assertIsNone(S._devig_1x2(1.0, 3.0, 3.0))     # implausibel
         self.assertIsNone(S._devig_1x2(None, 3, 3))

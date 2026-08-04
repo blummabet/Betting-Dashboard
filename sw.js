@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v63';   // 04.08.2026: Live-Badge auf der Uebersicht (Kohle/Frisches Geld/HT) feuert jetzt auch ohne geoeffneten Radar-Tab — isLive() bekommt die Daten-Frische der Uebersicht durchgereicht statt aus dem leeren _bfState zu lesen
+const VERSION = 'cocobet-v64';   // 04.08.2026: Uebersicht 'Frisches Geld' filtert Zufluesse auf Quasi-Lock-Quoten (@<1.30, oft live/entschieden) raus — @1.01-Rauschen weg
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
