@@ -1,10 +1,10 @@
 {
- "n": 299,
+ "n": 285,
  "minOdds": 1.35,
- "moneyHitRate": 0.625,
- "priceHitRate": 0.629,
- "brierMoney": 0.4643,
- "brierPrice": 0.4644,
+ "moneyHitRate": 0.639,
+ "priceHitRate": 0.642,
+ "brierMoney": 0.4604,
+ "brierPrice": 0.4605,
  "disagree": {
   "n": 1,
   "moneyWon": 0,
@@ -13,6 +13,14 @@
  },
  "verdict": "gleichauf",
  "byLeague": [
+  {
+   "league": "UCL",
+   "n": 14,
+   "moneyHitRate": 0.643,
+   "brierMoney": 0.4381,
+   "brierPrice": 0.4382,
+   "verdict": "gleichauf"
+  },
   {
    "league": "MLB",
    "n": 78,
@@ -23,18 +31,10 @@
   },
   {
    "league": "ESPORTS",
-   "n": 112,
-   "moneyHitRate": 0.67,
-   "brierMoney": 0.4354,
-   "brierPrice": 0.4354,
-   "verdict": "gleichauf"
-  },
-  {
-   "league": "UCL",
-   "n": 13,
-   "moneyHitRate": 0.692,
-   "brierMoney": 0.3976,
-   "brierPrice": 0.3976,
+   "n": 101,
+   "moneyHitRate": 0.703,
+   "brierMoney": 0.4248,
+   "brierPrice": 0.4248,
    "verdict": "gleichauf"
   },
   {
@@ -55,10 +55,10 @@
   },
   {
    "league": "TENNIS",
-   "n": 53,
-   "moneyHitRate": 0.585,
-   "brierMoney": 0.5047,
-   "brierPrice": 0.5046,
+   "n": 49,
+   "moneyHitRate": 0.612,
+   "brierMoney": 0.4904,
+   "brierPrice": 0.4904,
    "verdict": "gleichauf"
   }
  ],
@@ -388,18 +388,6 @@
    "totalUsd": 317118
   },
   {
-   "key": "lol-kt-hle1-2026-08-02",
-   "league": "ESPORTS",
-   "winner": "KT Rolster",
-   "moneyFav": "Hanwha Life Esports",
-   "priceFav": "Hanwha Life Esports",
-   "moneyShare": 0.705,
-   "priceProb": 0.705,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 316904
-  },
-  {
    "key": "val-sen-loud-2026-07-25",
    "league": "ESPORTS",
    "winner": "Sentinels",
@@ -496,18 +484,6 @@
    "totalUsd": 243950
   },
   {
-   "key": "lol-ns-fox1-2026-08-01",
-   "league": "ESPORTS",
-   "winner": "Nongshim Red Force",
-   "moneyFav": "BNK FEARX",
-   "priceFav": "BNK FEARX",
-   "moneyShare": 0.545,
-   "priceProb": 0.545,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 243742
-  },
-  {
    "key": "mlb-mil-laa-2026-07-31",
    "league": "MLB",
    "winner": "Milwaukee Brewers",
@@ -542,20 +518,44 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 229638
+  },
+  {
+   "key": "mlb-tor-hou-2026-08-03",
+   "league": "MLB",
+   "winner": "Toronto Blue Jays",
+   "moneyFav": "Houston Astros",
+   "priceFav": "Houston Astros",
+   "moneyShare": 0.565,
+   "priceProb": 0.565,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 213331
+  },
+  {
+   "key": "dota2-liquid-vg-2026-08-03",
+   "league": "ESPORTS",
+   "winner": "Team Liquid",
+   "moneyFav": "Team Liquid",
+   "priceFav": "Team Liquid",
+   "moneyShare": 0.705,
+   "priceProb": 0.705,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 209637
   }
  ],
- "generatedAt": "2026-08-04T15:12:55.539866+00:00",
+ "generatedAt": "2026-08-04T18:51:52.800380+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 421,
   "nfl": 581,
-  "mlb": 594,
+  "mlb": 604,
   "nhl": 404,
-  "mls": 537,
+  "mls": 536,
   "epl": 405,
   "soccer": 800,
-  "tennis": 789,
+  "tennis": 757,
   "ucl": 531,
   "laliga": 0,
   "bundesliga": 401,
@@ -563,7 +563,7 @@
   "ligue-1": 404,
   "esports": 800,
   "cs2": 418,
-  "lol": 411,
+  "lol": 414,
   "dota": 9,
   "valorant": 448,
   "ufc": 454,
@@ -571,11 +571,11 @@
   "boxing": 216,
   "golf": 267,
   "f1": 325,
-  "cricket": 639
+  "cricket": 667
  },
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 472
+  "sweepAdded": 473
  }
 }
