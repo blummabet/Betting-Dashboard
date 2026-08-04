@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v62';   // 04.08.2026: Betfair-Radar oberer Block 'groesste Einzel-Ausgaenge' mit eigener 2K-EUR-Untergrenze (Kruemel wie 920-EUR-Seitenmaerkte bei Lock-Spielen raus); Kartendetail bleibt bei 500
+const VERSION = 'cocobet-v63';   // 04.08.2026: Live-Badge auf der Uebersicht (Kohle/Frisches Geld/HT) feuert jetzt auch ohne geoeffneten Radar-Tab — isLive() bekommt die Daten-Frische der Uebersicht durchgereicht statt aus dem leeren _bfState zu lesen
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

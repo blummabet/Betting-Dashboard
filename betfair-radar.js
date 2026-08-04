@@ -167,10 +167,14 @@
   // ODER mehr als LIVE_MAX_H nach Anpfiff → vorbei, egal ob der Feed noch eine Uhr sendet (stale). Sonst
   // ist die Betwatch-Live-Uhr das verlässlichste Live-Signal; ohne Uhr zählt das Anpfiff-Fenster
   // (Anpfiff .. +2,5h). Keine Hysterese mehr (die hielt beendete Spiele fälschlich live). EINE Quelle.
-  function isLive(m) {
+  function isLive(m, _ageMinOverride) {
     var li = m.liveInfo || {};
     if (li.finished) return false;
-    if (genAgeMin() > STALE_WARN_MIN) return false;
+    // 04.08.2026 (Lucas: „Uebersicht zeigt kein Live-Badge“): die Stale-Sperre las die Frische aus
+    // _bfState (Radar-Speicher) — auf der Uebersicht leer → genAgeMin()=9999 → ALLES „nicht live“.
+    // Aufrufer aus anderem Kontext (main-dashboard) reichen ihre eigene Daten-Frische als Override rein.
+    var _ageMin = (typeof _ageMinOverride === 'number') ? _ageMinOverride : genAgeMin();
+    if (_ageMin > STALE_WARN_MIN) return false;
     var k = _kickMs(m), now = Date.now(), age = (k != null) ? (now - k) : null;
     if (age != null && age > LIVE_MAX_H * 3.6e6) return false;               // klar vorbei
     if (li.time != null) return true;                                       // Betwatch-Live-Uhr → live

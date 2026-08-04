@@ -517,8 +517,15 @@
     var u = _mdPolyUrl(key);
     return u ? '<a href="' + u + '" target="_blank" rel="noopener" class="md-polylink" title="Markt auf Polymarket \u2197">' + inner + ' <span class="md-ext">\u2197</span></a>' : inner;
   }
-  function _mdBfLive(m) { return (typeof window._bfIsLive === 'function' && window._bfIsLive(m)) ? _MD_LIVE : ''; }
-  function _mdBfLiveById(id) {
+  // 04.08.2026 (Lucas): eigene Daten-Frische an die Radar-Live-Pruefung durchreichen. Sonst liest
+  // isLive() die Frische aus _bfState (nur nach Radar-Tab gefuellt) — auf der Uebersicht leer,
+  // also feuerte das Badge nie, obwohl Spiele real live waren.
+  function _mdBfGenAge() {
+    var g = _md.data.betfair && _md.data.betfair._meta && _md.data.betfair._meta.generatedAt;
+    if (!g) return 9999;
+    var t = Date.parse(g); return isNaN(t) ? 9999 : (Date.now() - t) / 60000;
+  }
+  function _mdBfLive(m) { return (typeof window._bfIsLive === 'function' && window._bfIsLive(m, _mdBfGenAge())) ? _MD_LIVE : ''; }  function _mdBfLiveById(id) {
     var ms = (_md.data.betfair && _md.data.betfair.matches) || [];
     for (var i = 0; i < ms.length; i++) if (String(ms[i].matchId) === String(id)) return _mdBfLive(ms[i]);
     return '';

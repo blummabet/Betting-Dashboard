@@ -1,0 +1,50 @@
+name: 📊 Pinnacle × Poly Lag-Scanner
+# 04.08.2026 (Lucas): Messphase — alle aktiven Ligen gegen Pinnacle snapshotten, damit
+# poly_pinnacle_stats.py (Phase 2) den Round-Trip-Backtest rechnen kann (Einstieg auf Polys
+# nachhinkendem Preis bei Pinnacle-Move, Ausstieg bei Konvergenz). Reines Messen, keine Trades.
+# Nach der Auswertung (1–2 Wochen) einfach deaktivieren. Takt/Kosten frei justierbar.
+on:
+  schedule:
+    - cron: '*/30 * * * *'   # alle 30 Min — Lag messen braucht dichte Snapshots
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: pinnacle-poly-scan
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+          cache: 'pip'
+
+      - name: 📦 Dependencies installieren
+        run: pip install -r requirements.txt
+
+      - name: 📊 Pinnacle × Poly Snapshot (alle aktiven Ligen)
+        env:
+          ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+        run: python poly_pinnacle_scan.py
+
+      - name: 💾 Snapshot committen
+        if: always()
+        run: |
+          git config user.name  "CocoBet Bot"
+          git config user.email "bot@cocobet.local"
+          git add pinnacle_poly_scan.json 2>/dev/null || true
+          git diff --staged --quiet || git commit -m "pinnacle×poly: Snapshot [skip ci]"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git pull --rebase --autostash origin main || true
+          git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
