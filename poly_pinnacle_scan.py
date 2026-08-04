@@ -24,8 +24,8 @@ from datetime import datetime, timezone
 # ── Liga-Register: Poly-series_id ↔ The-Odds-API sport_key. Poly-IDs im Browser gegen gamma /sports
 #    verifiziert (04.08.2026). Top-5 sind vorsaisonal leer → schaden nicht (Poly-Call liefert 0, dann skip).
 LEAGUES = [
-    {"name": "Champions League",  "poly": "10204", "odds": "soccer_uefa_champs_league"},
-    {"name": "Europa League",     "poly": "10209", "odds": "soccer_uefa_europa_league"},
+    {"name": "Champions League",  "poly": "10204", "odds": ["soccer_uefa_champs_league", "soccer_uefa_champs_league_qualification"]},
+    {"name": "Europa League",     "poly": "10209", "odds": ["soccer_uefa_europa_league", "soccer_uefa_europa_league_qualification"]},
     {"name": "La Liga",           "poly": "10193", "odds": "soccer_spain_la_liga"},
     {"name": "Eredivisie",        "poly": "10286", "odds": "soccer_netherlands_eredivisie"},
     {"name": "Primeira Liga",     "poly": "10330", "odds": "soccer_portugal_primeira_liga"},
@@ -138,10 +138,15 @@ def fetch_pinn_games(sport_key, odds_get=None):
     else:
         key = os.environ.get("ODDS_API_KEY", "TESTKEY")
     from fetch_liga_odds import _best_book, _map_1x2, BOOK_PRIORITY
-    path = (f"/v4/sports/{sport_key}/odds?apiKey={key}"
-            f"&regions=eu,uk&markets=h2h&oddsFormat=decimal")
-    evs = odds_get(path)
-    if not isinstance(evs, list):
+    keys = sport_key if isinstance(sport_key, list) else [sport_key]
+    evs = []
+    for sk in keys:
+        path = (f"/v4/sports/{sk}/odds?apiKey={key}"
+                f"&regions=eu,uk&markets=h2h&oddsFormat=decimal")
+        d = odds_get(path)
+        if isinstance(d, list):
+            evs.extend(d)
+    if not evs:
         return []
     out = []
     for e in evs:

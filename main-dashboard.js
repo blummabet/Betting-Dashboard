@@ -338,7 +338,12 @@
   }
   // 💸 Frisches Geld: größter Zufluss (€) je Spiel seit dem letzten Snapshot.
   function _mdBfFlowBody() {
-    var items = ((_md.data.bfOverview || {}).flow) || [];
+    // 04.08.2026 (Lucas: "@1.01 ist sinnfrei"): Geld auf Quasi-Lock-Quoten (< 1.30, meist live/
+    // entschieden) ist kein Zufluss-Signal - raus, wie im Radar (MIN_ODD_SHOW). Fehlende Quote -> drin.
+    var FLOW_MIN_ODD = 1.30;
+    var items = (((_md.data.bfOverview || {}).flow) || []).filter(function (x) {
+      return !(x.odd != null && +x.odd < FLOW_MIN_ODD);
+    });
     if (!items.length) return empty('Kein frischer Zufluss ≥ €2K — sammelt (2 Snapshots nötig).');
     var mx = items.reduce(function (a, x) { return Math.max(a, +x.deltaEur || 0); }, 1);
     return items.map(function (x) {
