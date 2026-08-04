@@ -139,6 +139,7 @@ from datetime import timedelta as _td
 # ihre Saison startet (August), gehören ihre Poly-Tags (la-liga, serie-a, bundesliga, ligue-1) hier
 # dazu — rawByTag im Output zeigt dann, welcher Slug echt Events liefert.
 SPORT_TAGS = ["nba", "nfl", "mlb", "nhl", "mls", "epl", "soccer", "tennis", "ucl",
+              "laliga", "bundesliga", "serie-a", "ligue-1",   # 03.08.2026 (Lucas): Poly listet Top-Ligen einzeln (/sports/laliga/…), nicht (nur) unter "soccer"
               "esports", "cs2", "lol", "dota", "valorant",
               "ufc", "mma", "boxing", "golf", "f1", "cricket"]
 GAMMA = "https://gamma-api.polymarket.com/events"
@@ -215,10 +216,15 @@ def _gamma_top(closed):
     return out
 
 
+# Poly-Slug-Präfixe, die NICHT gleich dem Frontend-Liga-Label sind (03.08.2026, Lucas: La-Liga-
+# Slug ist "lal-ala-get-…" → ohne Mapping „LAL" → Sonstige → aus allen Poly-Views gefiltert).
+_SLUG_LEAGUE_ALIAS = {"lal": "LALIGA"}
 def _league_from_slug(key):
     """Liga-Label aus dem Event-Slug-Präfix (mls-phi-nyr-… → MLS). Fallback: OTHER."""
     head = str(key or "").split("-", 1)[0].strip().lower()
-    return head.upper() if head and not head.isdigit() else "OTHER"
+    if not head or head.isdigit():
+        return "OTHER"
+    return _SLUG_LEAGUE_ALIAS.get(head, head.upper())
 
 
 def _hours_to_ko(ev, now):

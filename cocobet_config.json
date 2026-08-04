@@ -376,6 +376,11 @@
     "liga_default": {
       "engine_version": "v1",
       "description": "Liga-Saison Default — moderater, ohne Pre-Tournament-Phase",
+      "poly": {
+        "_comment": "04.08.2026 (Lucas: La Liga scharf schalten): La Liga laeuft — wie MLS — ueber einen TAG statt series_slug. Aus der URL polymarket.com/de/sports/laliga/… → tag_slug 'laliga'. Ohne diesen Block fiele fetch_wm_poly_prices auf series_slug=soccer-fifwc (WM!) zurueck und matchte 0 La-Liga-Fixtures. Am 1. Live-Lauf gegen die Gamma-API verifizieren.",
+        "tag_slug": "laliga",
+        "smartmoney_min_usd": 100
+      },
       "disabled_signals": [
         "incentive_signal",
         "altitude_signal",

@@ -71,3 +71,17 @@ test('Regression: dominante Fixture-Spiele (72–97%) bleiben sichtbar', () => {
   const block = hotspotBlock(w._renderBetfairRadar());
   assert.match(block, /FavHome/); assert.match(block, /BigFav/);
 });
+
+// 04.08.2026 (Lucas: „Dinamo zeigt €920-Seitenmarkt, FT-Markt mit ~30K fehlt"). Bei Lock-Spielen
+// (FT-Favorit @<1.30 → ausgeblendet) blieb nur ein winziger Seitenmarkt übrig und stand neben
+// €24K-Positionen. Der obere „größte Einzel-Ausgänge"-Block hat jetzt eine eigene €-Untergrenze
+// (HOTSPOT_MIN_EUR = 2K); Krümel < 2K fallen raus, die Kartendetails bleiben bei €500.
+test('Hotspot-Block: klarer Lean < 2K fällt raus, ≥ 2K bleibt', () => {
+  const w = boot([
+    m1x2(1, 'CrumbLean', 'X', 1200, 250, 250, 2.0),   // 71% klar, aber nur €1.2K → raus
+    m1x2(2, 'RealLean',  'Y', 2600, 500, 500, 2.0),   // 72% + €2.6K → bleibt
+  ]);
+  const block = hotspotBlock(w._renderBetfairRadar());
+  assert.match(block, /RealLean/, 'Lean mit ≥2K bleibt im Block');
+  assert.ok(!/CrumbLean/.test(block), 'Krümel-Lean (<2K) fliegt aus dem oberen Block');
+});

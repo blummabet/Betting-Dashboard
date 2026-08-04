@@ -637,6 +637,7 @@
 
   // ── Hotspot-Leiste: konkreter Ausgang mit dem meisten Geld ──────────────────
   var HOTSPOT_MIN_SHARE = 60;   // (Lucas 02.08.) oberer Block nur mit klarer Mehrheit
+  var HOTSPOT_MIN_EUR = 2000;   // (Lucas 04.08.) 'groesste' Einzel-Ausgaenge: Kruemel (<2K) raus. Bei Lock-Spielen (FT-Fav @<1.30 ausgeblendet) tauchte sonst ein 920-EUR-Seitenmarkt neben 24K-Positionen auf = Rausch-Liquiditaet. Nur dieser Block; Kartendetail bleibt bei CHIP_FLOOR.
   function hotspots(matches) {
     var hs = [];
     matches.forEach(function (m) {
@@ -644,7 +645,7 @@
         var mk = mkOf(m, mm.id); if (!mk || distTotal(mk) <= 0) return;
         var lead = leadRunner(mk); if (!lead) return;
         if (typeof lead.odd === 'number' && lead.odd < MIN_ODD_SHOW) return;   // Geld auf ~Lock-Favorit = keine Info
-        var v = eur(lead.vol); if (v < CHIP_FLOOR) return;
+        var v = eur(lead.vol); if (v < HOTSPOT_MIN_EUR) return;
         var pct = (+lead.vol || 0) / (distTotal(mk) || 1) * 100;
         if (pct < HOTSPOT_MIN_SHARE) return;   // 02.08.2026 (Lucas): Fast-Gleichstand raus - der Block zeigt WO das Geld liegt, nicht grosse liquide Spiele. < 60% Konzentration ist kein Signal (gehoert zu Frisches Geld).
         hs.push({ m: m, mm: mm, lead: lead, v: v, pct: pct });
@@ -665,7 +666,7 @@
         '<div class="bfb-meta"><span class="bfb-v" style="color:' + C.vol + '">' + fmtE(x.v) + '</span><br><span class="bfb-s">' + x.pct.toFixed(0) + '%</span> <span class="bfb-odd">@' + fO(x.lead.odd) + '</span>' + _hlLine(x.m) + '</div></div>';
     }).join('');
     return '<div style="background:linear-gradient(180deg,rgba(255,184,12,.06),transparent);border:1px solid ' + C.bd + ';border-radius:14px;padding:11px 13px;margin:12px 0 14px">' +
-      '<div style="font-size:12px;color:' + C.gold + ';font-weight:800;margin-bottom:10px">🔥 Wo das Geld genau liegt — größte Einzel-Ausgänge <span style="color:' + C.dim + ';font-weight:600">· Balken = Anteil des Geldes auf den Ausgang · nur klare Mehrheiten (≥60%) · Klick springt zum Spiel</span></div>' +
+      '<div style="font-size:12px;color:' + C.gold + ';font-weight:800;margin-bottom:10px">🔥 Wo das Geld genau liegt — größte Einzel-Ausgänge <span style="color:' + C.dim + ';font-weight:600">· Balken = Anteil des Geldes auf den Ausgang · nur klare Mehrheiten (≥60%) · ab 2K € · Klick springt zum Spiel</span></div>' +
       '<div class="bfb-grid">' + rows + '</div></div>';
   }
 

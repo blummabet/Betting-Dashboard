@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v58';   // 03.08.2026: Kohärenz-Deep-Dive führt mit Verdikt (härteste Fehlbepreisung → Back/Lay, oder „nichts Handelbares"), Live-Warnung, Konsens-Kurve ans Ende
+const VERSION = 'cocobet-v62';   // 04.08.2026: Betfair-Radar oberer Block 'groesste Einzel-Ausgaenge' mit eigener 2K-EUR-Untergrenze (Kruemel wie 920-EUR-Seitenmaerkte bei Lock-Spielen raus); Kartendetail bleibt bei 500
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

@@ -117,6 +117,25 @@ jobs:
       - name: 📡 Liga Sharp-Moves erkennen (Radar)
         run: python detect_wm_sharp_moves.py || true
 
+      # ── Polymarket Preise + Steam-Lag (04.08.2026, Lucas: La Liga „gleich scharf schalten“) ──
+      # Pini-Move → Poly zieht verzögert nach. fetch_wm_poly_prices ist dataset-aware
+      # (liga-data.json → liga_poly_prices.json + liga-poly-history.json), steam_lag_monitor
+      # rechnet Pini-vs-Poly-Edges und pusht Trade-Signale in den TRADES-Channel. Beide
+      # continue-on-error (Poly kann geoblockt sein / erste Läufe ohne Match).
+      - name: 💹 Liga Polymarket Preise + Edge Alerts
+        run: python fetch_wm_poly_prices.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
+      - name: 🔥 Liga Steam Lag Monitor — Signale loggen + Sell Alerts
+        run: python steam_lag_monitor.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
       # 25.06.2026 (Lucas: „Navi da, keine Cards"): Pick-/Resolve-Schritte dürfen den Commit der
       # Daten NICHT blockieren. Wenn einer crasht, liegen Teams+Fixtures+Quoten trotzdem in
       # liga-data.json → Cards erscheinen. Darum `|| true` + Commit mit `if: always()`.
@@ -253,6 +272,10 @@ jobs:
           git add liga_tiktok_sent.json liga-telegram-log.json 2>/dev/null || true
           git add liga_pick_announce_state.json 2>/dev/null || true
           git add liga_streak_watch.json 2>/dev/null || true
+          git add liga_poly_prices.json 2>/dev/null || true          # Poly-Preise (Trading-Lag)
+          git add liga-poly-history.json 2>/dev/null || true         # Poly-Preis-Historie
+          git add liga_steam_lag_log.json 2>/dev/null || true        # Steam-Lag Signal-Log
+          git add liga_steam_lag_sell_dedup.json 2>/dev/null || true # Sell-Alert Dedup
           git diff --staged --quiet || git commit -m "liga: Daten + Quoten + Picks + Resolve + Lernen [skip ci]"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           # Remote kann sich zwischenzeitlich bewegt haben (paralleler Workflow) → rebasen, dann push.

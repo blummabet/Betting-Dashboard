@@ -22,7 +22,7 @@ function seed(w) {
     mlsStreaks: null,
     betfair: { matches: [ { home: 'Kairat', away: 'Omonia', markets: { 'Match Odds': { runners: [
       { name: 'Kairat', odd: 1.5, vol: 12000 }, { name: 'Omonia', odd: 3.0, vol: 1000 } ] } } } ] },
-    whales: { m1: { league: 'NBA', totalUsd: 8000, hoursToKickoff: 3, whales: [ { wallet: '0x', side: 'Lakers', usd: 8000 } ] } },
+    whales: { m1: { league: 'NBA', totalUsd: 12000, hoursToKickoff: 3, whales: [ { wallet: '0x', side: 'Lakers', usd: 12000 } ] } },  // >= $10K-Whale-Schwelle
   };
 }
 
