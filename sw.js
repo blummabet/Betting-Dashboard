@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v65';   // 04.08.2026: neuer Tab 'Pinnacle x Poly' (Lag-Messung) unter Polymarket Wallets
+const VERSION = 'cocobet-v66';   // 04.08.2026: Triple-Konsens-Text — Poly deckt jetzt La Liga (4/4 statt 3/4)
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
