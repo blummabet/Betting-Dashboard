@@ -1,26 +1,18 @@
 {
- "n": 303,
+ "n": 306,
  "minOdds": 1.35,
- "moneyHitRate": 0.637,
- "priceHitRate": 0.637,
- "brierMoney": 0.4627,
- "brierPrice": 0.4628,
+ "moneyHitRate": 0.631,
+ "priceHitRate": 0.634,
+ "brierMoney": 0.4654,
+ "brierPrice": 0.4654,
  "disagree": {
-  "n": 0,
+  "n": 1,
   "moneyWon": 0,
-  "priceWon": 0,
+  "priceWon": 1,
   "neither": 0
  },
  "verdict": "gleichauf",
  "byLeague": [
-  {
-   "league": "UCL",
-   "n": 19,
-   "moneyHitRate": 0.684,
-   "brierMoney": 0.4386,
-   "brierPrice": 0.4387,
-   "verdict": "gleichauf"
-  },
   {
    "league": "MLB",
    "n": 78,
@@ -31,10 +23,18 @@
   },
   {
    "league": "ESPORTS",
-   "n": 108,
-   "moneyHitRate": 0.704,
-   "brierMoney": 0.4286,
-   "brierPrice": 0.4286,
+   "n": 107,
+   "moneyHitRate": 0.701,
+   "brierMoney": 0.4275,
+   "brierPrice": 0.4275,
+   "verdict": "gleichauf"
+  },
+  {
+   "league": "UCL",
+   "n": 21,
+   "moneyHitRate": 0.667,
+   "brierMoney": 0.4541,
+   "brierPrice": 0.4541,
    "verdict": "gleichauf"
   },
   {
@@ -55,10 +55,10 @@
   },
   {
    "league": "TENNIS",
-   "n": 55,
-   "moneyHitRate": 0.582,
-   "brierMoney": 0.499,
-   "brierPrice": 0.499,
+   "n": 57,
+   "moneyHitRate": 0.561,
+   "brierMoney": 0.5085,
+   "brierPrice": 0.5084,
    "verdict": "gleichauf"
   }
  ],
@@ -388,18 +388,6 @@
    "totalUsd": 317118
   },
   {
-   "key": "lol-kt-hle1-2026-08-02",
-   "league": "ESPORTS",
-   "winner": "KT Rolster",
-   "moneyFav": "Hanwha Life Esports",
-   "priceFav": "Hanwha Life Esports",
-   "moneyShare": 0.705,
-   "priceProb": 0.705,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 316904
-  },
-  {
    "key": "val-sen-loud-2026-07-25",
    "league": "ESPORTS",
    "winner": "Sentinels",
@@ -542,21 +530,33 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 213331
+  },
+  {
+   "key": "dota2-liquid-vg-2026-08-03",
+   "league": "ESPORTS",
+   "winner": "Team Liquid",
+   "moneyFav": "Team Liquid",
+   "priceFav": "Team Liquid",
+   "moneyShare": 0.705,
+   "priceProb": 0.705,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 209637
   }
  ],
- "generatedAt": "2026-08-04T20:43:07.265787+00:00",
+ "generatedAt": "2026-08-04T21:57:09.406063+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 421,
   "nfl": 581,
-  "mlb": 607,
+  "mlb": 609,
   "nhl": 404,
   "mls": 536,
   "epl": 405,
   "soccer": 800,
-  "tennis": 727,
-  "ucl": 499,
+  "tennis": 696,
+  "ucl": 494,
   "laliga": 0,
   "bundesliga": 401,
   "serie-a": 37,
@@ -576,6 +576,6 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 474
+  "sweepAdded": 478
  }
 }
