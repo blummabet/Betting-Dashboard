@@ -69,7 +69,7 @@ test('Poly Whale-Bets: MLB-Nachtspiel (>4h nach Anpfiff) raus, kommendes bleibt'
     'mlb-bos-lad-2026-08-02': { league: 'MLB', country: 'US', capturedAt: capNow(), hoursToKickoff: -8,
                                whales: [{ wallet: '0xA', side: 'Boston Red Sox', usd: 302000 }] },   // durch
     'atp-live-2026-08-03':    { league: 'TENNIS', country: 'US', capturedAt: capNow(), hoursToKickoff: 2,
-                               whales: [{ wallet: '0xB', side: 'Alcaraz', usd: 9000 }] },             // in 2h
+                               whales: [{ wallet: '0xB', side: 'Alcaraz', usd: 12000 }] },            // in 2h, > $10K-Schwelle
   });
   w._renderMainDash();
   const h = w.document.getElementById('mainDashPanel').innerHTML;
@@ -84,11 +84,41 @@ test('Poly Whale-Bets: aufgelöster Markt (resolved) raus', () => {
     'mlb-res-2026-08-02': { league: 'MLB', capturedAt: capNow(), hoursToKickoff: 1, resolved: 'X',
                             whales: [{ wallet: '0xA', side: 'ResSide', usd: 80000 }] },
     'atp-ok-2026-08-03':  { league: 'TENNIS', capturedAt: capNow(), hoursToKickoff: 2,
-                            whales: [{ wallet: '0xB', side: 'OkSide', usd: 9000 }] },
+                            whales: [{ wallet: '0xB', side: 'OkSide', usd: 12000 }] },
   });
   w._renderMainDash();
   const h = w.document.getElementById('mainDashPanel').innerHTML;
   const seg = (h.split('Poly Whale-Bets')[1] || '').split('id="md-cell-top"')[0];
   assert.ok(!/ResSide/.test(seg), 'aufgelöster Markt NICHT in der Kachel');
   assert.match(seg, /OkSide/, 'offener Markt bleibt');
+});
+
+// 03.08.2026 (Lucas: „Einsätze sehr low?"): die Kachel zählt erst ab $10K als Whale — sonst zeigt
+// ein ruhiger Slate $821-„Whales". Kleinvieh raus, ehrlicher Leer-Zustand.
+test('Poly Whale-Bets: Positionen unter $10K fliegen raus (kein Kleinvieh)', () => {
+  const w = load();
+  seedWhales(w, {
+    'atp-small-2026-08-03': { league: 'TENNIS', capturedAt: capNow(), hoursToKickoff: 2,
+                              whales: [{ wallet: '0xA', side: 'Kleinfisch', usd: 3300 }] },   // < $10K
+    'atp-big-2026-08-03':   { league: 'TENNIS', capturedAt: capNow(), hoursToKickoff: 2,
+                              whales: [{ wallet: '0xB', side: 'Grosswal', usd: 15000 }] },    // >= $10K
+  });
+  w._renderMainDash();
+  const h = w.document.getElementById('mainDashPanel').innerHTML;
+  const seg = (h.split('Poly Whale-Bets')[1] || '').split('id="md-cell-top"')[0];
+  assert.ok(!/Kleinfisch|3\.3K|3300/.test(seg), 'Sub-$10K-Position NICHT als Whale gelistet');
+  assert.match(seg, /Grosswal/, '$15K-Whale bleibt');
+});
+
+test('Poly Whale-Bets: nur Kleinvieh → ehrlicher Leer-Zustand', () => {
+  const w = load();
+  seedWhales(w, {
+    'atp-tiny-2026-08-03': { league: 'TENNIS', capturedAt: capNow(), hoursToKickoff: 2,
+                             whales: [{ wallet: '0xA', side: 'Winzig', usd: 821 }] },
+  });
+  w._renderMainDash();
+  const h = w.document.getElementById('mainDashPanel').innerHTML;
+  const seg = (h.split('Poly Whale-Bets')[1] || '').split('id="md-cell-top"')[0];
+  assert.ok(!/Winzig|821/.test(seg), 'keine Klein-Position gelistet');
+  assert.match(seg, /ruhiger Slate|keine großen/i, 'ehrlicher Leer-Zustand');
 });

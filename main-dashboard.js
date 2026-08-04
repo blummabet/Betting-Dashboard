@@ -356,6 +356,9 @@
     var cap = mk.capturedAt ? Date.parse(mk.capturedAt) : NaN;
     return isNaN(cap) ? mk.hoursToKickoff : (mk.hoursToKickoff - (Date.now() - cap) / 3.6e6);
   }
+  // 03.08.2026 (Lucas: „Einsätze sehr low?“): der Feed nennt schon ~$1.5K eine „Whale"-Position (Median).
+  // Für die Übersicht-Kachel zählt erst ab MD_WHALE_MIN_USD als Whale — sonst zeigt ein ruhiger Slate $821.
+  var MD_WHALE_MIN_USD = 10000;
   function allWhales() {
     var w = _md.data.whales || {}, all = [];
     for (var k in w) {
@@ -364,6 +367,7 @@
       var rh = _mdRealHtk(mk);
       if (rh != null && rh < -4) continue;                                     // >4h nach Anpfiff = durch
       mk.whales.forEach(function (wh) {
+        if ((+wh.usd || 0) < MD_WHALE_MIN_USD) return;   // kein Kleinvieh als „Whale"
         all.push({ usd: +wh.usd || 0, side: wh.side, league: mk.league, hrs: rh, key: k, wallet: wh.wallet });
       });
     }
@@ -699,7 +703,7 @@
       var hrs = (w.hrs != null && w.hrs >= 0) ? (w.hrs < 1 ? '<1h' : Math.round(w.hrs) + 'h') : '';
       return rowEl(fl(_flagFrom(w.country, w.league, w.league)) + _mdPolyLink(w.key, esc(w.side || '?')) + live, usd(w.usd), A.poly,
         esc(String(w.league || '')) + (hrs ? ' · in ' + hrs : ''), meter(whMax ? (w.usd / whMax) * 100 : 0, A.poly));
-    }).join('') : empty('Keine Whale-Bets.');
+    }).join('') : empty('Keine großen Whale-Bets gerade (ab ' + usd(MD_WHALE_MIN_USD) + ') — ruhiger Slate.');
 
     // Sharp — Divergenzbalken (Steam-Richtung)
     var sh = bestSharp();

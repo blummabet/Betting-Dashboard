@@ -399,3 +399,17 @@ class TestVolumeSweep:
         monkeypatch.setattr(B, "_market_money", lambda oc: {"shares": {"A": 60, "B": 40}, "whales": []})
         markets = B.fetch_markets()
         assert not any(m["key"] == "us-election-winner" for m in markets)
+
+
+# 03.08.2026 (Lucas: „Poly hat nun La Liga", Slug „lal-ala-get-…"): der Slug-Präfix „lal" muss auf
+# LALIGA gemappt werden (sonst „LAL" → Sonstige → aus den Views gefiltert); Tag muss im Scan sein.
+def test_laliga_slug_prefix_maps_to_LALIGA():
+    import poly_money_broad as M
+    assert M._league_from_slug("lal-ala-get-2026-08-15") == "LALIGA"
+    assert M._league_from_slug("mlb-cws-tor-2026-07-19") == "MLB"   # unverändert
+    assert M._league_from_slug("2026-xx") == "OTHER"                # Ziffern-Head bleibt OTHER
+
+
+def test_laliga_tag_in_scan():
+    import poly_money_broad as M
+    assert "laliga" in M.SPORT_TAGS

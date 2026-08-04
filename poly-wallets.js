@@ -150,7 +150,7 @@ function _pwSetSportFilter(cat){ _pwSportFilter=cat; _pwRender(); }
 if(typeof window!=='undefined') window._pwSetSportFilter=_pwSetSportFilter;
 function _pwSportCategory(s){
   const x=String(s||'').toLowerCase();
-  if(/soccer|epl|ucl|mls|laliga|la-liga|liga|bundesliga|serie|ligue|fussball|fußball/.test(x)) return 'Fußball';
+  if(/soccer|epl|ucl|mls|laliga|la-liga|liga|bundesliga|serie|ligue|fussball|fußball|\blal\b/.test(x)) return 'Fußball';   // \blal\b: Poly-Slug-Präfix für La Liga (lal-ala-get-…)
   if(/basketball|nba|nfl|americanfootball|baseball|mlb|icehockey|hockey|nhl|wnba|ncaa/.test(x)) return 'US-Sport';
   if(/esport|cs2|csgo|lol|dota|valorant/.test(x)) return 'E-Sport';
   if(/tennis|wta|atp/.test(x)) return 'Tennis';
@@ -690,7 +690,14 @@ const PW_LEAGUE_CAT={
   ufc:['Kampfsport','🥊'],mma:['Kampfsport','🥊'],boxing:['Kampfsport','🥊'],
   golf:['Golf','⛳'],f1:['Motorsport','🏎'],cricket:['Cricket','🏏'],
 };
-function _pwCatOf(league){const c=PW_LEAGUE_CAT[String(league||'').toLowerCase()];return c?c:['Sonstige','·'];}
+function _pwCatOf(league){
+  const c=PW_LEAGUE_CAT[String(league||'').toLowerCase()];
+  if(c) return c;
+  // 03.08.2026 (Lucas: „Poly hat nun La Liga“): Regex-Fallback statt exaktem Key — laliga/bundesliga/
+  // serie/ligue (und künftige Ligen) landen so korrekt in ⚽ Fußball statt „Sonstige“.
+  const cat=_pwSportCategory(league);
+  return cat!=='Sonstige' ? [cat, _PW_CAT_ICON[cat]||'·'] : ['Sonstige','·'];
+}
 
 function _pwMoneyBroad(broad){
   const b=broad||{};
