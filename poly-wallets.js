@@ -108,7 +108,7 @@ function _pwViewTabs(){
   // 19.07.2026 (Lucas: „besser aufteilen") — 4 Unter-Reiter statt 9 gestapelter Sektionen.
   // Reihenfolge 25.07.2026: globales „Großes Geld" (immer Content+Filter) zuerst → Landing-Tab.
   return '<div class="pw-ds" style="margin-top:-6px">'
-    +b('bet','🔥 Heute wetten')+b('track','📊 Track-Record')+b('xsport','🎯 Poly-Radar')+b('money','💰 Großes Geld')+b('move','📈 Bewegung')+b('new','🆕 Neu')+b('edge','🎯 Chancen')+b('whales','🐋 Whales')
+    +b('bet','🔥 Heute wetten')+b('track','📊 Track-Record')+b('xsport','🎯 Poly-Radar')+b('money','💰 Großes Geld')+b('move','📈 Bewegung')+b('new','🆕 Neu')+b('edge','🎯 Chancen')+b('whales','🐋 Whales')+b('pinnpoly','📊 Pinni×Poly')
     +'</div>';
 }
 
@@ -407,7 +407,14 @@ function _pwGauge(val,color,label){
 
 // ═══════════════════════════════ RENDER ════════════════════════════════════
 function _pwRender(){
-  const panel=document.getElementById('polyWalletsPanel'); if(!panel||!_pwCache)return;
+  const panel=document.getElementById('polyWalletsPanel'); if(!panel)return;
+  if(_pwView==='pinnpoly'){   // 04.08.2026 (Lucas): Pinnacle×Poly als Sub-Tab der Wallets
+    _pwDestroyCharts();
+    panel.innerHTML=_pwViewTabs()+'<div id="pinnPolyPanel" style="margin-top:12px"></div>';
+    if(typeof window.initPinnPoly==='function') window.initPinnPoly();
+    return;
+  }
+  if(!_pwCache)return;
   _pwDestroyCharts();
   const {wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart}=_pwCache;
   const teams=_pwTeamsMap(wm), oddsMap=_pwOddsMap(wm);
