@@ -1,25 +1,7 @@
 {
- "updatedAt": "2026-08-04T07:23:14.627035+00:00",
+ "updatedAt": "2026-08-04T10:19:47.327462+00:00",
  "stake": 10.0,
- "open": {
-  "atp-vukic-altmaie-2026-08-02|Aleksandar Vukic": {
-   "key": "atp-vukic-altmaie-2026-08-02",
-   "side": "Aleksandar Vukic",
-   "verdict": "BET",
-   "conv": 7,
-   "league": "TENNIS",
-   "entryPrice": 0.585,
-   "firstTs": "2026-08-02T14:09:58.287106+00:00",
-   "lastPrice": 0.585,
-   "lastTs": "2026-08-04T07:23:14.627035+00:00",
-   "htkAtEntry": 2.351431111111111,
-   "public": false,
-   "reasons": [
-    "🔥 scharfe Wallet (23/46, 50% · +$2045K)"
-   ],
-   "stake": 10.0
-  }
- },
+ "open": {},
  "settled": [
   {
    "key": "val-var-drx1-2026-08-02",
@@ -290,17 +272,35 @@
    "firstTs": "2026-08-02T14:09:58.287106+00:00",
    "settledTs": "2026-08-04T01:07:49.166400+00:00",
    "resolvedTs": "2026-08-04T01:07:49.000546+00:00"
+  },
+  {
+   "key": "atp-vukic-altmaie-2026-08-02",
+   "side": "Aleksandar Vukic",
+   "verdict": "BET",
+   "conv": 7,
+   "league": "TENNIS",
+   "entryPrice": 0.585,
+   "closePrice": 0.585,
+   "result": "loss",
+   "winner": "Daniel Altmaier",
+   "pnl": -10.0,
+   "clvPP": 0.0,
+   "stake": 10.0,
+   "public": false,
+   "firstTs": "2026-08-02T14:09:58.287106+00:00",
+   "settledTs": "2026-08-04T10:19:47.327462+00:00",
+   "resolvedTs": "2026-08-04T10:19:46.909184+00:00"
   }
  ],
  "agg": {
   "all": {
-   "n": 15,
+   "n": 16,
    "wins": 10,
-   "hit": 0.6667,
-   "pnl": 23.04,
-   "stake": 150.0,
-   "roi": 0.1536,
-   "clvAvg": 0.53
+   "hit": 0.625,
+   "pnl": 13.04,
+   "stake": 160.0,
+   "roi": 0.0815,
+   "clvAvg": 0.5
   },
   "public": {
    "n": 5,
@@ -313,12 +313,12 @@
   },
   "byConv": {
    "7": {
-    "n": 4,
+    "n": 5,
     "wins": 4,
-    "hit": 1.0,
-    "pnl": 34.15,
-    "stake": 40.0,
-    "roi": 0.8538,
+    "hit": 0.8,
+    "pnl": 24.15,
+    "stake": 50.0,
+    "roi": 0.483,
     "clvAvg": 0.0
    },
    "8": {
@@ -351,13 +351,13 @@
   },
   "byVerdict": {
    "BET": {
-    "n": 13,
+    "n": 14,
     "wins": 8,
-    "hit": 0.6154,
-    "pnl": -8.56,
-    "stake": 130.0,
-    "roi": -0.0658,
-    "clvAvg": 0.62
+    "hit": 0.5714,
+    "pnl": -18.56,
+    "stake": 140.0,
+    "roi": -0.1326,
+    "clvAvg": 0.57
    },
    "FADE": {
     "n": 2,
