@@ -1,10 +1,10 @@
 {
- "n": 306,
+ "n": 297,
  "minOdds": 1.35,
- "moneyHitRate": 0.637,
- "priceHitRate": 0.637,
- "brierMoney": 0.4617,
- "brierPrice": 0.4618,
+ "moneyHitRate": 0.633,
+ "priceHitRate": 0.633,
+ "brierMoney": 0.4628,
+ "brierPrice": 0.4629,
  "disagree": {
   "n": 0,
   "moneyWon": 0,
@@ -14,19 +14,11 @@
  "verdict": "gleichauf",
  "byLeague": [
   {
-   "league": "MLB",
-   "n": 70,
-   "moneyHitRate": 0.643,
-   "brierMoney": 0.4711,
-   "brierPrice": 0.4712,
-   "verdict": "gleichauf"
-  },
-  {
    "league": "ESPORTS",
-   "n": 107,
-   "moneyHitRate": 0.692,
-   "brierMoney": 0.4315,
-   "brierPrice": 0.4315,
+   "n": 103,
+   "moneyHitRate": 0.67,
+   "brierMoney": 0.437,
+   "brierPrice": 0.437,
    "verdict": "gleichauf"
   },
   {
@@ -46,6 +38,14 @@
    "verdict": "gleichauf"
   },
   {
+   "league": "MLB",
+   "n": 73,
+   "moneyHitRate": 0.616,
+   "brierMoney": 0.4801,
+   "brierPrice": 0.4801,
+   "verdict": "gleichauf"
+  },
+  {
    "league": "UFC",
    "n": 8,
    "moneyHitRate": 0.625,
@@ -55,10 +55,10 @@
   },
   {
    "league": "TENNIS",
-   "n": 64,
-   "moneyHitRate": 0.547,
-   "brierMoney": 0.5143,
-   "brierPrice": 0.5142,
+   "n": 56,
+   "moneyHitRate": 0.589,
+   "brierMoney": 0.5032,
+   "brierPrice": 0.5031,
    "verdict": "gleichauf"
   }
  ],
@@ -172,6 +172,18 @@
    "totalUsd": 553615
   },
   {
+   "key": "mlb-det-sea-2026-08-04",
+   "league": "MLB",
+   "winner": "Detroit Tigers",
+   "moneyFav": "Seattle Mariners",
+   "priceFav": "Seattle Mariners",
+   "moneyShare": 0.535,
+   "priceProb": 0.535,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 552187
+  },
+  {
    "key": "atp-zheng-kecmano-2026-08-02",
    "league": "TENNIS",
    "winner": "Miomir Kecmanovic",
@@ -206,6 +218,18 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 501793
+  },
+  {
+   "key": "mlb-lad-chc-2026-08-04",
+   "league": "MLB",
+   "winner": "Chicago Cubs",
+   "moneyFav": "Los Angeles Dodgers",
+   "priceFav": "Los Angeles Dodgers",
+   "moneyShare": 0.645,
+   "priceProb": 0.645,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 489438
   },
   {
    "key": "mlb-sea-lad-2026-07-30",
@@ -496,6 +520,18 @@
    "totalUsd": 239355
   },
   {
+   "key": "mlb-min-kc-2026-08-04",
+   "league": "MLB",
+   "winner": "Kansas City Royals",
+   "moneyFav": "Minnesota Twins",
+   "priceFav": "Minnesota Twins",
+   "moneyShare": 0.575,
+   "priceProb": 0.575,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 233850
+  },
+  {
    "key": "mlb-cws-tb-2026-08-01",
    "league": "MLB",
    "winner": "Tampa Bay Rays",
@@ -506,56 +542,20 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 230619
-  },
-  {
-   "key": "mlb-pit-cin-2026-08-02",
-   "league": "MLB",
-   "winner": "Cincinnati Reds",
-   "moneyFav": "Cincinnati Reds",
-   "priceFav": "Cincinnati Reds",
-   "moneyShare": 0.555,
-   "priceProb": 0.555,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 229638
-  },
-  {
-   "key": "mlb-tor-hou-2026-08-03",
-   "league": "MLB",
-   "winner": "Toronto Blue Jays",
-   "moneyFav": "Houston Astros",
-   "priceFav": "Houston Astros",
-   "moneyShare": 0.565,
-   "priceProb": 0.565,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 213331
-  },
-  {
-   "key": "dota2-liquid-vg-2026-08-03",
-   "league": "ESPORTS",
-   "winner": "Team Liquid",
-   "moneyFav": "Team Liquid",
-   "priceFav": "Team Liquid",
-   "moneyShare": 0.705,
-   "priceProb": 0.705,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 209637
   }
  ],
- "generatedAt": "2026-08-05T07:24:34.415663+00:00",
+ "generatedAt": "2026-08-05T12:27:48.750187+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 421,
-  "nfl": 581,
-  "mlb": 582,
+  "nfl": 582,
+  "mlb": 578,
   "nhl": 404,
   "mls": 536,
   "epl": 405,
   "soccer": 800,
-  "tennis": 800,
+  "tennis": 793,
   "ucl": 489,
   "laliga": 0,
   "bundesliga": 401,
