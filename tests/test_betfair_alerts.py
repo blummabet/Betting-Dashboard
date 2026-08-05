@@ -240,8 +240,13 @@ class TestPublicMoneyflow(unittest.TestCase):
         self.assertIn("🟡 <b>Betfair Moneyflow</b>", msg)
         self.assertIn("Over/Under 3.5", msg)          # ausgeschrieben, nicht „Ü/U"
         self.assertNotIn("Ü/U", msg)
-        self.assertIn("+<b>€27.9K</b> frisch → jetzt <b>€28.6K</b>", msg)
-        self.assertIn("Check: <b>Over 3.5 Goals</b> (74%) @2.00", msg)
+        # 05.08.2026 (Lucas): neues Format — Zufluss-Anteil am Markt + Geld-Leiste + Quote
+        self.assertIn("+<b>€27.9K</b> → Markt <b>€28.6K</b>", msg)
+        self.assertIn("(98% frisch)", msg)            # 27.9/28.6
+        self.assertIn("📊 <b>Over 3.5 Goals</b>", msg)
+        self.assertIn("74% @2.00", msg)
+        self.assertRegex(msg, r"[▓]+[░]*")            # visuelle Geld-Leiste
+        self.assertNotIn("Check:", msg)
         self.assertNotIn("führt", msg)
 
     def test_public_ht_format(self):
@@ -252,4 +257,54 @@ class TestPublicMoneyflow(unittest.TestCase):
         self.assertIn("🔵 <b>Betfair Halftime Flow</b>", msg)
         self.assertIn("HZ Over/Under 1.5", msg)
         self.assertIn("<b>€89.4K</b> gematcht", msg)
-        self.assertIn("Check: <b>Under 1.5 Goals</b> (86%) @1.53", msg)
+        self.assertIn("📊 <b>Under 1.5 Goals</b>", msg)
+        self.assertIn("86% @1.53", msg)
+        self.assertNotIn("Check:", msg)
+
+    def test_public_live_badge_kein_score_keine_minute(self):
+        # 05.08.2026 (Lucas: Spielstand zu riskant bei 15-Min-Scan): Status nur Zustand, KEIN
+        # Score/keine Minute; laufende Spiele bekommen die 🔴-LIVE-Kopfzeile.
+        base = {"scenario": "fresh", "matchId": "9", "flag": "🇮🇹", "home": "Napoli", "away": "Osasuna",
+                "league": "Serie A", "market": "Match Odds", "inflow": 40000, "total": 100000,
+                "tier": "top", "leadName": "Osasuna", "leadShare": 0.62, "leadOdd": 2.4}
+        live = dict(base); live["live"] = {"time": 34, "is_ht": False, "finished": False, "goal_v1": 1, "goal_v2": 0}
+        m = BA.build_public_message(live)
+        self.assertIn("🔴 <b>LIVE</b>", m)      # LIVE-Badge in der Kopfzeile
+        self.assertIn("⚽ läuft", m)
+        self.assertNotIn("34", m)               # keine Minute
+        self.assertNotIn("1:0", m)              # kein Spielstand
+        # Halbzeit: Badge + „Halbzeit", aber kein Score
+        ht = dict(base); ht["live"] = {"is_ht": True, "finished": False, "goal_v1": 0, "goal_v2": 3}
+        h = BA.build_public_message(ht)
+        self.assertIn("🔴 <b>LIVE</b>", h)
+        self.assertIn("⏸ Halbzeit", h)
+        self.assertNotIn("0:3", h)
+        # Vor Anpfiff: kein LIVE-Badge, Countdown bleibt
+        from datetime import datetime, timezone, timedelta
+        pre = dict(base); pre["kickoff"] = (datetime.now(timezone.utc) + timedelta(hours=2)).isoformat().replace("+00:00", "Z")
+        pre["live"] = {"time": 0, "is_ht": False, "finished": False}
+        pm = BA.build_public_message(pre)
+        self.assertNotIn("LIVE", pm)
+        self.assertIn("Anpfiff in", pm)
+
+    def test_money_on_leader_suppressed(self):
+        # 05.08.2026 (Lucas: „1:0 fuehrt und Kohle kommt = eher wertlos"): Geld auf die bereits
+        # fuehrende Mannschaft -> reaktiv, kein Push. Geld auf den Rueckstand -> feuert weiter.
+        from datetime import datetime, timezone, timedelta
+        ko = (datetime.now(timezone.utc) - timedelta(minutes=30)).isoformat().replace("+00:00", "Z")
+        def mk(vol_home, vol_away):
+            return {"matchId": "1", "home": "Napoli", "away": "Osasuna", "league": "Serie A", "country": "IT",
+                    "kickoff": ko, "liveInfo": {"time": 34, "goal_v1": 1, "goal_v2": 0, "finished": False, "is_ht": False},
+                    "markets": {"Match Odds": {"runners": [
+                        {"name": "Napoli", "odd": 1.5, "vol": vol_home},
+                        {"name": "Osasuna", "odd": 6.0, "vol": vol_away},
+                        {"name": "The Draw", "odd": 4.0, "vol": 10000}]}}}
+        hist = {"1": [{"mkv": {"Match Odds": 10000}}, {"mkv": {"Match Odds": 120000}}]}
+        # Geld auf Napoli (fuehrt 1:0) -> unterdrueckt
+        self.assertIsNone(BA.fresh_alert(mk(90000, 10000), hist))
+        # Geld auf Osasuna (liegt zurueck) -> feuert
+        r = BA.fresh_alert(mk(10000, 90000), hist)
+        self.assertIsNotNone(r); self.assertEqual(r["leadName"], "Osasuna")
+        # Gleichstand -> kein Fuehrungs-Filter (feuert)
+        m_lvl = mk(90000, 10000); m_lvl["liveInfo"]["goal_v2"] = 1
+        self.assertIsNotNone(BA.fresh_alert(m_lvl, hist))

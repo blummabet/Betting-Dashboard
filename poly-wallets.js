@@ -1416,6 +1416,27 @@ function _pwPinnEdgeFor(m, oc){
   return {side, other, gapPP:d.gapPP, back:d.gapPP<0};
 }
 
+// 05.08.2026 (Lucas: bei Yes/No sieht man nicht WELCHES Spiel): bei generischen Ausgaengen
+// (Yes/No, Over/Under, Draw) sagt der Ausgang nichts ueber das Match -> Spiel aus dem Key ableiten.
+function _pwPrettyKey(key){
+  const s=String(key||'');
+  const m=s.match(/^(.*?)-(\d{4}-\d{2}-\d{2})(?:-(.+))?$/);
+  if(m){
+    const base=m[1].replace(/[-_]+/g,' ').trim();
+    const suf=(m[3]||'').replace(/[-_]+/g,' ').trim();
+    return suf ? base+' · '+suf : base;
+  }
+  return s.replace(/[-_]+/g,' ').trim();
+}
+const _PW_GENERIC_OUTCOME=/^(yes|no|over|under|the draw|draw|tie|remis|ja|nein)$/i;
+function _pwPlayLabel(key,oc){
+  const names=(oc||[]).map(o=>String(o.s||'').trim()).filter(Boolean);
+  if(names.length && names.every(n=>_PW_GENERIC_OUTCOME.test(n))){
+    const p=_pwPrettyKey(key);
+    if(p) return p;
+  }
+  return names.join(' vs ');
+}
 function _pwShortlistScore(key,m){
   const oc=Object.entries(m.shares||{}).map(([s,u])=>({s,u:Number(u)||0}));
   if(oc.length<2) return {verdict:'SKIP'};
@@ -1459,7 +1480,7 @@ function _pwShortlistScore(key,m){
   let best=null,bs=0; for(const s in sides) if(sides[s]>bs){bs=sides[s];best=s;}
   const vol=m.totalUsd||0;
   if(!best||bs<3||vol<15000) return {verdict:'SKIP'};
-  return {key,match:oc.map(o=>o.s).join(' vs '),verdict:(best===moneyFav?'BET':'FADE'),side:best,
+  return {key,match:_pwPlayLabel(key,oc),verdict:(best===moneyFav?'BET':'FADE'),side:best,
     conv:Math.min(10,Math.round(4+bs)),reasons:(why[best]||[]).slice(0,3),signals:[...new Set(tags[best]||[])],vol,htk:_pwRealHtk(m),league:m.league,
     moneyPct,sharp:(sh&&sh.side===best)?sh:null,price:(typeof pr[best]==='number'?pr[best]:null)};
 }

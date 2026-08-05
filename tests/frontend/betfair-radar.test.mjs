@@ -639,3 +639,25 @@ test('LIVE-Badge trägt keinen Spielstand/keine Minute mehr (01.08.2026 Lucas)',
   assert.doesNotMatch(html, /LIVE 0:0/, '...aber Spielstand wird NICHT gezeigt');
   assert.doesNotMatch(html, /LIVE[^<]*65/, '...und die Minute auch nicht');
 });
+
+// 05.08.2026 (Lucas: „1:0 fuehrt und Kohle kommt = reaktiv, wertlos"): Geld auf die bereits fuehrende
+// Mannschaft wird im Radar (Frisches Geld + Hotspots) abgefangen. Bei Gleichstand greift der Filter nicht.
+test('Radar: reaktives Geld auf den Fuehrenden fliegt aus Frisches Geld', () => {
+  const renderWith = (g1, g2) => {
+    const { w } = boot();
+    w._bfState.data = { _meta: { generatedAt: iso(0) }, matches: [{
+      matchId: 99, home: 'Alpha', away: 'Beta', league: 'Test', country: 'GB', kickoff: ko(-0.5),
+      liveInfo: { goal_v1: g1, goal_v2: g2, time: 34, finished: false },
+      markets: { 'Match Odds': { vol: 20000, runners: [
+        { name: 'Alpha', odd: 1.6, vol: 16000 }, { name: 'Beta', odd: 5.0, vol: 2000 }, { name: 'The Draw', odd: 4.0, vol: 2000 } ] } },
+    }] };
+    w._bfState.hist = { '99': [
+      { ts: iso(-15 * 60e3), mkv: { 'Match Odds': 5000 } },
+      { ts: iso(0), mkv: { 'Match Odds': 20000 } } ] };   // +€15K Zufluss, Lead = Alpha
+    return w._renderBetfairRadar();
+  };
+  // Alpha (Heim) fuehrt 1:0, Geld auf Alpha -> KEIN Frisches-Geld-Eintrag (reaktiv)
+  assert.ok(!/▲ \+/.test(renderWith(1, 0)), 'reaktives Geld auf den Fuehrenden gefiltert');
+  // Gleichstand 1:1 -> Zufluss bleibt sichtbar
+  assert.match(renderWith(1, 1), /▲ \+/, 'bei Gleichstand bleibt der Zufluss');
+});

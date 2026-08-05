@@ -139,6 +139,8 @@ def _ht_one(m, market_name, top_thr=HT_TOP_EUR, rest_thr=HT_REST_EUR):
     lo = lead.get("odd")
     if isinstance(lo, (int, float)) and lo < MIN_LEAD_ODD:   # 85 % auf einem ~1.0-Favoriten = keine Info
         return None
+    if _money_on_leader(m, lead.get("name")):   # 05.08.2026 (Lucas): Geld auf die fuehrende Mannschaft -> reaktiv
+        return None
     home, away = m.get("home"), m.get("away")
     is_x2 = market_name == "Half Time"
 
@@ -151,6 +153,7 @@ def _ht_one(m, market_name, top_thr=HT_TOP_EUR, rest_thr=HT_REST_EUR):
     return {"scenario": "ht", "matchId": str(m.get("matchId")), "value": total,
             "home": home, "away": away, "league": m.get("league"), "flag": _flag(m),
             "market": market_name, "mktLabel": HT_LABEL.get(market_name, _short_mk(market_name)), "isX2": is_x2,
+            "kickoff": m.get("kickoff"), "live": m.get("liveInfo") or {},
             "total": total, "hs": share(lambda s: s == home),
             "ds": share(lambda s: s == "The Draw"), "as_": share(lambda s: s == away),
             "leadName": lead.get("name"), "leadLabel": _ht_label(lead.get("name"), home, away),
@@ -200,9 +203,12 @@ def fresh_alert(m, hist, top_thr=FRESH_TOP_EUR, rest_thr=FRESH_REST_EUR):
     lead_name, lead_share, lead_odd = _market_lead(m, market_name)
     if isinstance(lead_odd, (int, float)) and lead_odd < MIN_LEAD_ODD:   # Geld auf ~1.0-Favoriten = sinnlos
         return None
+    if _money_on_leader(m, lead_name):   # 05.08.2026 (Lucas): Geld auf die bereits fuehrende Mannschaft -> reaktiv
+        return None
     return {"scenario": "fresh", "matchId": str(m.get("matchId")), "value": mkt_total,
             "home": m.get("home"), "away": m.get("away"), "league": m.get("league"), "flag": _flag(m),
             "market": market_name, "inflow": inflow, "total": mkt_total, "tier": tier_of(m),
+            "kickoff": m.get("kickoff"), "live": m.get("liveInfo") or {},
             "leadName": lead_name, "leadShare": lead_share, "leadOdd": lead_odd}
 
 
@@ -240,22 +246,95 @@ def build_message(a) -> str:
     return msg
 
 
+def _bar(share, width=10):
+    """Visuelle Geld-Leiste (Telegram-tauglich): gefuellt/leer je Anteil. share in [0,1]."""
+    try:
+        val = max(0.0, min(1.0, float(share or 0.0)))
+    except (TypeError, ValueError):
+        val = 0.0
+    fill = int(round(val * width))
+    return "▓" * fill + "░" * (width - fill)
+
+
+def _flow_status(a) -> str:
+    """Anpfiff-/Live-Status. KEIN Spielstand und KEINE exakte Minute — die waeren bei 15-Min-Scans
+    oft veraltet (Lucas: „zu riskant, hatten wir schon beim Radar"). Nur der Zustand."""
+    li = a.get("live") or {}
+    if li.get("finished"):
+        return "🏁 beendet"
+    if li.get("is_ht"):
+        return "⏸ Halbzeit"
+    t = li.get("time")
+    if isinstance(t, (int, float)) and t > 0:
+        return "⚽ läuft"
+    ko = a.get("kickoff")
+    if ko:
+        try:
+            k = datetime.fromisoformat(str(ko).replace("Z", "+00:00"))
+            mins = (k - datetime.now(timezone.utc)).total_seconds() / 60.0
+            if mins >= 90:
+                return "⏱ Anpfiff in %.1fh" % (mins / 60.0)
+            if mins >= 1:
+                return "⏱ Anpfiff in %d Min" % int(round(mins))
+            if mins > -5:
+                return "⏱ Anpfiff jetzt"
+            return "⚽ läuft"   # Anpfiff vorbei, keine Minute -> laufend
+        except Exception:
+            pass
+    return ""
+
+
+def _is_live(a) -> bool:
+    """In-Play (fuer die 🔴-LIVE-Kopfzeile): laeuft oder Halbzeit."""
+    return _flow_status(a) in ("⚽ läuft", "⏸ Halbzeit")
+
+
+def _leader_team(m):
+    """Aktuell fuehrende Mannschaft aus dem Live-Stand (None bei Gleichstand/keinem Stand)."""
+    li = m.get("liveInfo") or {}
+    g1, g2 = li.get("goal_v1"), li.get("goal_v2")
+    if not (isinstance(g1, int) and isinstance(g2, int)) or g1 == g2:
+        return None
+    return m.get("home") if g1 > g2 else m.get("away")
+
+
+def _money_on_leader(m, lead_name) -> bool:
+    """Reaktives Geld: die Seite mit dem meisten Geld IST die bereits fuehrende Mannschaft
+    (Lucas: „1:0 fuehrt und Kohle kommt = eher wertlos"). Greift nur, wenn der Ausgang eine
+    Mannschaft ist (Ueber/Unter, BTTS matchen den Team-Namen nicht -> nicht betroffen)."""
+    ldr = _leader_team(m)
+    return bool(ldr) and bool(lead_name) and str(lead_name) == str(ldr)
+
+
 def build_public_message(a) -> str:
-    """Öffentliches Format (31.07.2026, Lucas): „Betfair Moneyflow" / „Halftime Flow", Over/Under
-    ausgeschrieben, Leerzeilen, fett, „Check:" statt „führt:". Kein Tier-Suffix, keine Kleckerbeträge."""
-    teams = ("%s <b>%s</b> v <b>%s</b>\n<i>%s</i>"
-             % (a["flag"], _esc(a["home"]), _esc(a["away"]), _esc(str(a["league"])[:60])))
-    if a["scenario"] == "ht":
-        odd = (" @%.2f" % a["leadOdd"]) if isinstance(a.get("leadOdd"), (int, float)) else ""
-        return ("🔵 <b>Betfair Halftime Flow</b>\n\n" + teams + "\n\n"   # 31.07.2026 (Lucas): HZ blau auch im Public
-                + "💷 <b>%s</b>: <b>%s</b> gematcht\n\n" % (_esc(_short_mk(a["market"])), _euro(a["total"]))
-                + "Check: <b>%s</b> (%.0f%%)%s" % (_esc(a["leadLabel"]), a["leadShare"] * 100, odd))
+    """Oeffentliches Format (05.08.2026, Lucas: schoener + informativer): Anpfiff/Live-Status +
+    Spielstand, Zufluss-Anteil am Markt, visuelle Geld-Leiste, Quote. Telegram-HTML (b/i, Unicode)."""
+    league = _esc(str(a.get("league") or "")[:60])
+    status = _flow_status(a)
+    status_line = ("\n" + status) if status else ""
+    teams = ("%s <b>%s</b> v <b>%s</b>\n🏆 <i>%s</i>%s"
+             % (a["flag"], _esc(a["home"]), _esc(a["away"]), league, status_line))
     odd = (" @%.2f" % a["leadOdd"]) if isinstance(a.get("leadOdd"), (int, float)) else ""
+
+    live_badge = "🔴 <b>LIVE</b> · " if _is_live(a) else ""
+    if a["scenario"] == "ht":
+        share = a.get("leadShare") or 0.0
+        return (live_badge + "🔵 <b>Betfair Halftime Flow</b>\n\n" + teams + "\n\n"
+                + "💷 <b>%s</b> — Halbzeit-Geld\n<b>%s</b> gematcht\n\n"
+                  % (_esc(_short_mk(a["market"])), _euro(a["total"]))
+                + "📊 <b>%s</b>  %s %.0f%%%s"
+                  % (_esc(a["leadLabel"]), _bar(share), share * 100, odd))
+
+    share = a.get("leadShare") or 0.0
+    total = a.get("total") or 0.0
+    inflow = a.get("inflow") or 0.0
+    pct = (" (%.0f%% frisch)" % (inflow / total * 100)) if total else ""
     lead = a.get("leadName") or "—"
-    return ("🟡 <b>Betfair Moneyflow</b>\n\n" + teams + "\n\n"
-            + "💶 <b>%s</b>: +<b>%s</b> frisch → jetzt <b>%s</b>\n\n"
-              % (_esc(_short_mk(a["market"])), _euro(a["inflow"]), _euro(a["total"]))
-            + "Check: <b>%s</b> (%.0f%%)%s" % (_esc(lead), (a.get("leadShare") or 0.0) * 100, odd))
+    return (live_badge + "🟡 <b>Betfair Moneyflow</b>\n\n" + teams + "\n\n"
+            + "💶 <b>%s</b> — frischer Zufluss\n+<b>%s</b> → Markt <b>%s</b>%s\n\n"
+              % (_esc(_short_mk(a["market"])), _euro(inflow), _euro(total), pct)
+            + "📊 <b>%s</b>  %s %.0f%%%s"
+              % (_esc(lead), _bar(share), share * 100, odd))
 
 
 def _tg_public(text) -> bool:

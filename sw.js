@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v73';   // 05.08.2026: Betfair-Trefferquoten — Gesamt-Bilanz (war die Kohle erfolgreich?) + ROI je Markt ueber alle Ligen
+const VERSION = 'cocobet-v75';   // 05.08.2026: Betfair-Radar — Geld auf die bereits fuehrende Mannschaft (reaktiv) in Hotspots + Frisches Geld abgefangen
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

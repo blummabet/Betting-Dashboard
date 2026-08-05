@@ -73,6 +73,16 @@ def _side_name(side, m):
     return m.get("home") if side == "hw" else m.get("away") if side == "aw" else "Remis"
 
 
+def _leader_team(m):
+    """Aktuell fuehrende Mannschaft aus dem Live-Stand (None bei Gleichstand/keinem Stand). 05.08.2026
+    (Lucas: „1:0 fuehrt und Kohle kommt = reaktiv, wertlos")."""
+    li = m.get("liveInfo") or {}
+    g1, g2 = li.get("goal_v1"), li.get("goal_v2")
+    if not (isinstance(g1, int) and isinstance(g2, int)) or g1 == g2:
+        return None
+    return m.get("home") if g1 > g2 else m.get("away")
+
+
 def _lead(mk):
     runners = (mk or {}).get("runners") or []
     best = None
@@ -147,6 +157,10 @@ def flow_list(prices, hist, top=TOP_FLOW):
         _odd = _num((lead or {}).get("odd"))
         if _odd is not None and _odd < FLOW_MIN_ODD:
             continue   # Zufluss auf Quasi-Lock-Ausgang → kein handelbares Signal (04.08.2026, Lucas)
+        _side = (lead or {}).get("name")
+        _ldr = _leader_team(m)
+        if _ldr and _side and str(_side) == str(_ldr):
+            continue   # Geld auf die bereits fuehrende Mannschaft → reaktiv (05.08.2026, Lucas)
         row = _base(m)
         row.update({"deltaEur": round(d), "nowEur": round(_num(b.get("totalVol")) or 0),
                     "market": mkt, "sideName": (lead or {}).get("name"),

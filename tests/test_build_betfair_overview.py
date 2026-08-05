@@ -101,6 +101,28 @@ def test_flow_list_ranks_by_inflow_and_filters_small():
     assert out[0]["sideName"] == "Brondby"   # Lead des größten Marktes
 
 
+def test_flow_list_suppresses_money_on_leader():
+    # 05.08.2026 (Lucas: „1:0 fuehrt und Kohle kommt = reaktiv, wertlos"): Geld auf die bereits
+    # fuehrende Mannschaft raus; Gleichstand + Geld auf den Rueckstand bleiben.
+    hist = {"1": [{"totalVol": 100000}, {"totalVol": 200000}]}   # +100K
+    ko = iso(NOW - timedelta(minutes=30))
+    # Heim (Napoli) fuehrt 1:0, Lead-Runner = Napoli (vol 9000 > 1000) -> reaktiv -> raus
+    lead = _match(1, "Napoli", "Osasuna", ko, {"hw": 1.5, "aw": 6.0},
+                  live={"time": 34, "goal_v1": 1, "goal_v2": 0, "finished": False})
+    assert bo.flow_list({"matches": [lead]}, hist) == []
+    # Gleichstand 1:1 -> Filter greift nicht
+    lvl = _match(1, "Napoli", "Osasuna", ko, {"hw": 1.5, "aw": 6.0},
+                 live={"time": 34, "goal_v1": 1, "goal_v2": 1, "finished": False})
+    assert len(bo.flow_list({"matches": [lvl]}, hist)) == 1
+    # Heim fuehrt, aber Geld auf AUSWAERTS (Rueckstand) -> bleibt (Aufholjagd)
+    trail = _match(1, "Napoli", "Osasuna", ko, {"hw": 1.5, "aw": 6.0},
+                   live={"time": 34, "goal_v1": 1, "goal_v2": 0, "finished": False})
+    trail["markets"]["Match Odds"]["runners"] = [{"name": "Napoli", "odd": 1.5, "vol": 1000},
+                                                 {"name": "Osasuna", "odd": 6.0, "vol": 9000}]
+    r = bo.flow_list({"matches": [trail]}, hist)
+    assert len(r) == 1 and r[0]["sideName"] == "Osasuna"
+
+
 def test_build_shape():
     prices = {"matches": [_match(1, "A", "B", iso(NOW + timedelta(hours=1)), {"hw": 2.0, "aw": 3.0})]}
     hist = {"1": [{"mo": {"hw": 4.0, "aw": 3.0}, "totalVol": 1000},
