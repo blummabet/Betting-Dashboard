@@ -259,7 +259,7 @@ def build_public_message(a) -> str:
 def _tg_public(text) -> bool:
     """An den ÖFFENTLICHEN CocoBet-Channel (TELEGRAM_CHAT_ID). Ohne Token/Chat → Vorschau (kein Send)."""
     token = (os.environ.get("TELEGRAM_TOKEN") or "").strip()
-    chat = (os.environ.get("TELEGRAM_CHAT_ID") or "").strip()
+    chat = (os.environ.get("TELEGRAM_CHAT_ID") or "-1003819239615").strip()   # 04.08.2026 (Lucas): Public-Channel-Fallback wie telegram_wm.py — TELEGRAM_CHAT_ID ist NICHT als Secret gesetzt; ohne Fallback lief der Public-Pfad still im Vorschau-Modus (nie gesendet).
     if not token or not chat:
         print("PUBLIC-Vorschau (kein TOKEN/CHAT_ID):\n" + text + "\n")
         return False

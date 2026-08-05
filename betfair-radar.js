@@ -949,6 +949,27 @@
     return viewToggle() + intro + band + scn + mkt + rec;
   }
 
+  // 04.08.2026 (Lucas): Push-Schwellen-Referenz (Trades + Public), unten auf der Radar-Seite.
+  // Spiegelt betfair_alerts.py (FRESH_*/HT_*/PUB_*) — bei Aenderung der Schwellen dort HIER mitziehen.
+  function _pushThr() {
+    var col = function (title, accent, ft, fr, ht, hr) {
+      return '<div style="flex:1;min-width:210px;background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:10px;padding:11px 13px">' +
+        '<div style="font-weight:800;color:' + accent + ';font-size:13px;margin-bottom:7px">' + title + '</div>' +
+        '<div style="font-size:12px;color:' + C.mut + ';line-height:1.7">' +
+          '\uD83D\uDCB6 <b style="color:' + C.ink + '">Frisches Geld</b> \u2014 Top/Intl <b style="color:' + accent + '">\u20AC' + ft + 'K</b> \u00B7 Rest <b style="color:' + accent + '">\u20AC' + fr + 'K</b><br>' +
+          '\uD83D\uDD50 <b style="color:' + C.ink + '">Halbzeit</b> \u2014 Top/Intl <b style="color:' + accent + '">\u20AC' + ht + 'K</b> \u00B7 Rest <b style="color:' + accent + '">\u20AC' + hr + 'K</b>' +
+        '</div></div>';
+    };
+    return '<div style="background:' + C.raised + ';border:1px solid ' + C.bd + ';border-radius:14px;padding:13px 15px;margin:16px 0 8px">' +
+      '<div style="font-size:13px;font-weight:800;color:' + C.ink + '">\uD83D\uDCE3 Push-Schwellen \u2014 wann was in welchen Channel geht</div>' +
+      '<div style="font-size:11px;color:' + C.dim + ';margin:2px 0 11px">gematchtes Geld je Markt \u00B7 \u201eTop/Intl\u201c = Top-5 + MLS + UEFA-Wettbewerbe \u00B7 \u201eRest\u201c = alle anderen</div>' +
+      '<div style="display:flex;gap:9px;flex-wrap:wrap">' +
+        col('\uD83D\uDD12 Trades (privat)', C.blue, 30, 20, 10, 5) +
+        col('\uD83D\uDCE3 Public (CocoBet-Channel)', C.gold, 100, 30, 50, 15) +
+      '</div>' +
+      '<div style="font-size:11px;color:' + C.mut + ';margin-top:10px;line-height:1.6"><b style="color:' + C.dim + '">Gates (beide Channels):</b> Halbzeit nur einseitig (\u226585% auf einen Ausgang) \u00B7 f\u00FChrende Quote \u2265 1.30 (kein Geld auf Quasi-Locks) \u00B7 Re-Push erst bei +50% Volumen</div>' +
+      '</div>';
+  }
   function renderBetfairRadar() {
     _bfbCss();
     var head = '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap">' +
@@ -986,7 +1007,7 @@
 
     if (!qAll.length) {
       return head + stale + '<div style="margin-top:14px;padding:40px 24px;text-align:center;color:' + C.mut + ';font-size:13px;line-height:1.6;background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:14px">Aktuell kein Spiel über der Geld-Schwelle (' +
-        'Top: €20k FT/€10k HT · Int./UEFA: €20k/€10k · Rest: €15k/€5k). Sobald irgendwo genug Geld liegt, erscheint es hier.</div>';
+        'Top: €20k FT/€10k HT · Int./UEFA: €20k/€10k · Rest: €15k/€5k). Sobald irgendwo genug Geld liegt, erscheint es hier.</div>' + _pushThr();
     }
 
     // „Frisches Geld" nutzt dieselbe Tier-Schwelle wie Hotspots + Karten (31.07.2026, Lucas: „gleicher
@@ -1006,6 +1027,7 @@
     if (!groups.top.length && !groups.intl.length && !groups.rest.length) {
       out += '<div style="padding:34px;text-align:center;color:' + C.mut + ';font-size:13px;background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:14px">Kein Spiel für diesen Filter. Datum/Liga/Markt/Live/Reiter anpassen.</div>';
     }
+    out += _pushThr();
     var _fc = age > 35 ? '#f2a6a6' : age > 15 ? C.amber : C.dim;
     out += '<div style="text-align:center;color:' + _fc + ';font-size:11px;margin-top:6px">Stand ' + (_bf.data._meta && _bf.data._meta.generatedAt ? new Date(_bf.data._meta.generatedAt).toLocaleString('de-AT') : '—') + ' · vor ' + ageTxt + ' · Beträge in € (Betwatch)</div>';
     return out;
