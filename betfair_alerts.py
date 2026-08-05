@@ -38,6 +38,8 @@ PUB_HT_TOP     = 50000.0
 PUB_HT_REST    = 15000.0
 PUB_FRESH_TOP  = 100000.0
 PUB_FRESH_REST = 30000.0
+PUB_FRESH_MIN_SHARE = 0.70   # (Lucas 05.08.2026) NUR Public: frisches Geld muss >=70% auf EINER Seite
+                             # konzentriert sein (nicht bloss Volumen). Trades sieht weiter alles.
 PUB_SEEN_FILE  = "betfair_public_seen.json"
 PUB_LEDGER_FILE = "betfair_public_ledger.json"   # gesendete Public-Pushs fürs Tracking/Auswerten
 DEDUP_FACTOR   = 1.5
@@ -348,6 +350,11 @@ def main():
     except Exception:
         pub_seen = {}
     pub_alerts = collect_alerts(prices, hist, PUB_HT_TOP, PUB_HT_REST, PUB_FRESH_TOP, PUB_FRESH_REST)
+    # (Lucas 05.08.2026) Public-Kuratierung: frisches Geld nur pushen, wenn es klar einseitig ist
+    # (>=PUB_FRESH_MIN_SHARE auf einer Seite) — reines Volumen ohne Richtung raus. HT hat schon sein
+    # 85%-Gate; Trades bleibt ungefiltert (obskure Ligen bewusst drin — dort oft Sharp Money).
+    pub_alerts = [a for a in pub_alerts
+                  if a.get("scenario") != "fresh" or (a.get("leadShare") or 0.0) >= PUB_FRESH_MIN_SHARE]
     pub_sent = 0
     for a in pub_alerts:
         key = a["scenario"] + ":" + a["matchId"]
