@@ -44,7 +44,13 @@ jobs:
           git add pinnacle_poly_scan.json 2>/dev/null || true
           git diff --staged --quiet || git commit -m "pinnacle×poly: Snapshot [skip ci]"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          git pull --rebase --autostash origin main || true
-          git push
+          # Push-Retry (04.08.2026, Lucas): parallele Workflows (Liga/WM/…) pushen oft gleichzeitig
+          # auf main → origin bewegt sich zwischen pull --rebase und push → "fetch first". Darum in
+          # einer Schleife rebasen+pushen bis es klappt (max 6 Versuche, wachsender Backoff).
+          for i in 1 2 3 4 5 6; do
+            git pull --rebase --autostash origin main || true
+            if git push; then echo "push ok (Versuch $i)"; break; fi
+            echo "push abgewiesen (Versuch $i) — neu rebasen …"; sleep $((i * 3))
+          done
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
