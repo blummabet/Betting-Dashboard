@@ -87,6 +87,8 @@ test('Betfair HT: Halbzeit-Markt-Geld (HT O/U) wird als eigene Kachel gezeigt', 
   assert.match(h, /Betfair HT/, 'eigene HT-Kachel');
   assert.match(h, /HT O\/U 0\.5/, 'HT-Markt-Label');
   assert.match(h, /Sturm/);
+  // 05.08.2026 (Lucas): Führungsquote in der HT-Kachel (Under 0.5 @3.60), damit die Kachel eindeutig ist.
+  assert.match(h, /@3\.60/, 'Führungsquote im HT-Kachel-Label');
 });
 
 test('Betfair HT: unter der HT-Schwelle (< 1K) -> freundlicher Leer-Hinweis', () => {

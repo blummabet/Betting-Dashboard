@@ -713,7 +713,10 @@
   function _flowBar(x, mode, mx) {
     var ht = x.mm && x.mm.grp === 'HT', lbl = x.mm ? x.mm.label : 'gesamt', ld = _flowLead(x);
     var side = ld ? esc(ld.name) : '';
-    var lblLine = '<span class="bfb-mk' + (ht ? ' ht' : '') + '">' + esc(lbl) + (side ? ' →' : '') + '</span>' + (side ? ' ' + side : '');
+    // 05.08.2026 (Lucas): Quote ins Flow-Label. Ohne sie war unklar, ob das Live-Geld bei @1.74
+    // (echtes Signal) oder @1.06 (Quasi-Lock nach Tor) reinkam. ld.odd = fO(lead.odd) -> '2.34' oder '-'.
+    var oddTxt = (ld && ld.odd && ld.odd !== '–') ? ' <span class="bfb-odd">@' + ld.odd + '</span>' : '';
+    var lblLine = '<span class="bfb-mk' + (ht ? ' ht' : '') + '">' + esc(lbl) + (side ? ' →' : '') + '</span>' + (side ? ' ' + side : '') + oddTxt;
     var bar, meta;
     if (mode === 'eur') {
       var w = Math.max(6, Math.round(Math.min(100, x.delta / mx * 100)));   // Balken = Zufluss relativ zum größten Zufluss (grün, eine Farbe)

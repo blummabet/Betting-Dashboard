@@ -192,6 +192,8 @@ test('Frisches Geld: €-Zufluss + % Surge aus mkv-History-Delta', () => {
   assert.match(html, /HT O\/U 0\.5/);
   assert.ok(html.includes('+300%'), 'Surge +300%');
   assert.match(html, /🚨/, 'großer Sprung markiert');
+  // 05.08.2026 (Lucas): Führungsquote muss im Flow-Label stehen (@1.74 vs @1.06 sonst nicht erkennbar).
+  assert.match(html, /@2\.32/, 'Führungsquote (Kairat @2.32) im Frisches-Geld-Label');
 });
 
 test('Frisches Geld: ohne 2. Snapshot → ehrlicher „sammelt Daten"-Zustand', () => {

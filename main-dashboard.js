@@ -669,7 +669,8 @@
     if (!rows.length) return empty('Kein nennenswertes HT-Geld gerade (Schwelle \u20ac1K).');
     return rows.map(function (x) {
       var m = x.m, b = x.b, pct = Math.round(b.share * 100);
-      return _mdDonutRow(_bfTeams(m) + _mdBfLive(m), (_HT_MK[b.name] || b.name) + ' \u2192 ' + esc(b.lead.name), eur(b.vol), A.bf, pct, A.bf);
+      var od = (b.lead && b.lead.odd != null && +b.lead.odd > 1) ? ' <span style="color:var(--mi3)">@' + (+b.lead.odd).toFixed(2) + '</span>' : '';
+      return _mdDonutRow(_bfTeams(m) + _mdBfLive(m), (_HT_MK[b.name] || b.name) + ' \u2192 ' + esc(b.lead.name) + od, eur(b.vol), A.bf, pct, A.bf);
     }).join('') + _ageStr(_md.data.betfair);
   }
 
@@ -703,7 +704,9 @@
     var bf = bestBetfair();
     var bfBody = bf.length ? bf.map(function (x) {
       var m = x.m, b = x.b, pct = Math.round(b.share * 100);
-      return _mdDonutRow(teamsOf(m) + _mdBfLive(m), esc(short(b.name)) + ' → ' + esc(b.lead.name), eur(b.vol), A.bf, pct, A.bf);
+      // 05.08.2026 (Lucas): Führungsquote dazu, dann ist die Kachel immer eindeutig (@1.74 vs @1.06).
+      var od = (b.lead && b.lead.odd != null && +b.lead.odd > 1) ? ' <span style="color:var(--mi3)">@' + (+b.lead.odd).toFixed(2) + '</span>' : '';
+      return _mdDonutRow(teamsOf(m) + _mdBfLive(m), esc(short(b.name)) + ' → ' + esc(b.lead.name) + od, eur(b.vol), A.bf, pct, A.bf);
     }).join('') : empty('Kein großes Betfair-Geld.');
     bfBody += _ageStr(_md.data.betfair);
 
