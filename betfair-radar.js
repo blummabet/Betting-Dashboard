@@ -642,6 +642,20 @@
   // ── Hotspot-Leiste: konkreter Ausgang mit dem meisten Geld ──────────────────
   var HOTSPOT_MIN_SHARE = 60;   // (Lucas 02.08.) oberer Block nur mit klarer Mehrheit
   var HOTSPOT_MIN_EUR = 2000;   // (Lucas 04.08.) 'groesste' Einzel-Ausgaenge: Kruemel (<2K) raus. Bei Lock-Spielen (FT-Fav @<1.30 ausgeblendet) tauchte sonst ein 920-EUR-Seitenmarkt neben 24K-Positionen auf = Rausch-Liquiditaet. Nur dieser Block; Kartendetail bleibt bei CHIP_FLOOR.
+  // 05.08.2026 (Lucas: 1:0 fuehrt und Kohle kommt = reaktiv, wertlos): Geld auf die bereits
+  // fuehrende Mannschaft ist kein handelbares Signal — im Radar (Hotspots + Frisches Geld) abfangen.
+  function _leaderTeam(m) {
+    var li = m.liveInfo || {}, g1 = li.goal_v1, g2 = li.goal_v2;
+    if (typeof g1 !== 'number' || typeof g2 !== 'number' || g1 === g2) return null;
+    return g1 > g2 ? m.home : m.away;
+  }
+  function _moneyOnLeaderMk(m, mm) {
+    if (!mm) return false;                       // Match-Ebene: keine Seite bekannt -> nicht filtern
+    var mk = mkOf(m, mm.id), lead = mk ? leadRunner(mk) : null;
+    if (!lead) return false;
+    var ldr = _leaderTeam(m);
+    return !!(ldr && lead.name != null && String(lead.name) === String(ldr));
+  }
   function hotspots(matches) {
     var hs = [];
     matches.forEach(function (m) {
@@ -649,6 +663,8 @@
         var mk = mkOf(m, mm.id); if (!mk || distTotal(mk) <= 0) return;
         var lead = leadRunner(mk); if (!lead) return;
         if (typeof lead.odd === 'number' && lead.odd < MIN_ODD_SHOW) return;   // Geld auf ~Lock-Favorit = keine Info
+        var _ldr = _leaderTeam(m);
+        if (_ldr && lead.name != null && String(lead.name) === String(_ldr)) return;   // Geld auf Fuehrenden = reaktiv (05.08.2026, Lucas)
         var v = eur(lead.vol); if (v < HOTSPOT_MIN_EUR) return;
         var pct = (+lead.vol || 0) / (distTotal(mk) || 1) * 100;
         if (pct < HOTSPOT_MIN_SHARE) return;   // 02.08.2026 (Lucas): Fast-Gleichstand raus - der Block zeigt WO das Geld liegt, nicht grosse liquide Spiele. < 60% Konzentration ist kein Signal (gehoert zu Frisches Geld).
@@ -739,9 +755,9 @@
   }
   function flowStrip(base) {
     var items = flowItems(base);
-    var eurItems = items.filter(function (x) { return eur(x.delta) >= FLOW_MIN_EUR && _leadOddOk(x.m, x.mm); })
+    var eurItems = items.filter(function (x) { return eur(x.delta) >= FLOW_MIN_EUR && _leadOddOk(x.m, x.mm) && !_moneyOnLeaderMk(x.m, x.mm); })
       .sort(function (a, b) { return b.delta - a.delta; }).slice(0, 6);
-    var surge = items.filter(function (x) { return eur(x.prev) >= SURGE_MIN_BASE && eur(x.delta) >= SURGE_MIN_DELTA && x.pct >= SURGE_MIN_PCT && x.pct < 900 && _leadOddOk(x.m, x.mm); })
+    var surge = items.filter(function (x) { return eur(x.prev) >= SURGE_MIN_BASE && eur(x.delta) >= SURGE_MIN_DELTA && x.pct >= SURGE_MIN_PCT && x.pct < 900 && _leadOddOk(x.m, x.mm) && !_moneyOnLeaderMk(x.m, x.mm); })
       .sort(function (a, b) { return b.pct - a.pct; }).slice(0, 6);
     var head = '<div style="font-size:12px;color:' + C.back + ';font-weight:800;margin-bottom:8px">💸 Frisches Geld — was seit dem letzten Lauf reinfloss &amp; auf welche Seite <span style="color:' + C.dim + ';font-weight:600">(Klick springt zum Spiel)</span></div>';
     var body = (!eurItems.length && !surge.length)
