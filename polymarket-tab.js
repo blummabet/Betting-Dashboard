@@ -26,7 +26,12 @@ const POLY_STAKE = 5; // EUR flat stake per pick
 // 25.07.2026 (Lucas: „Betting-Tab startet erst 31.7, aber dieses WE ist MLS-Runde"). MLS fehlte in
 // der Poly-Liga-Whitelist → MLS-Fixtures fielen aus den Datums-Chips (_getAvailableDates) und dem
 // Render. MLS hat echte Poly-Märkte und laufende Saison → gehört rein.
-const POLY_LEAGUES = new Set(['GER','ENG','ITA','ESP','FRA','NED','POR','TUR','GER2','ENG2','SCO','MLS']);
+// 05.08.2026 (Lucas: "nur die top 5 + MLS, wo wir echte Pick-Signale haben"): der Club-Liga-Pick-Bereich
+// (getPolyPicks) rechnete live Picks fuer JEDE hier gelistete Liga aus den Odds-API-Quoten. Als
+// Eredivisie (NED) + Primeira Liga (POR) in Saison gingen, fluteten sie den Poly-Betting-Tab mit BET,
+// obwohl wir sie NICHT kuratieren (kein liga-data-/Poly-Preis-Pipeline). Beschraenkt auf die Ligen mit
+// vollem Signal-Pipeline: top-5 + MLS. NED/POR/TUR/GER2/ENG2/SCO raus.
+const POLY_LEAGUES = new Set(['GER','ENG','ITA','ESP','FRA','MLS']);
 
 // Markets we can map to Polymarket outcomes.
 // Over/Under goals: 1.5, 2.5, 3.5 (Polymarket standard lines).
@@ -427,6 +432,10 @@ function getPolyPicks(dateStr) {
     if (!POLY_LEAGUES.has(lk)) continue;
     for (const fx of (lg.fixtures || [])) {
       if (dateStr && fx.date !== dateStr) continue;   // 18.07.: null = alle Tage
+      // 05.08.2026 (Lucas): der Club-Pfad hatte als EINZIGER keinen Anpfiff-Filter — in "Alle Tage"
+      // standen schon gespielte Spiele als BET. Gleicher Guard wie WM/MLS/Liga (faellt bei fehlendem
+      // kickoff sauber auf fx.date zurueck, sonst no-op).
+      if (typeof _wmKickoffPassed === 'function' && _wmKickoffPassed(fx)) continue;
 
       const rawOdds = (typeof findOdds === 'function')
         ? findOdds(fx.leagueKey || lk, fx.home, fx.away)

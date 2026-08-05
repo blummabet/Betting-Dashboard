@@ -193,3 +193,16 @@ test('ABWÄGEN-Schwelle steht auf 6 (gute Conviction)', () => {
   assert.equal(w._polyPickEligible('ABWÄGEN', 5), false);
   assert.equal(w._polyPickEligible('BET', 2), true);
 });
+
+// 05.08.2026 (Lucas: „nur die top 5 + MLS, wo wir echte Pick-Signale haben"): der Club-Liga-Pick-
+// Bereich zeigte live gerechnete Picks fuer JEDE POLY_LEAGUES-Liga. Als Eredivisie/Primeira in Saison
+// gingen, fluteten sie den Tab mit BET. POLY_LEAGUES ist jetzt auf die kuratierten Ligen beschraenkt.
+test('POLY_LEAGUES = nur top-5 + MLS (Eredivisie/Primeira/2.Ligen raus)', () => {
+  const src = readFileSync(POLY, 'utf8');
+  const m = src.match(/const POLY_LEAGUES = new Set\(\[([^\]]*)\]\)/);
+  assert.ok(m, 'POLY_LEAGUES-Set gefunden');
+  const set = new Set(m[1].split(',').map(x => x.trim().replace(/['"]/g, '')).filter(Boolean));
+  for (const lk of ['GER', 'ENG', 'ITA', 'ESP', 'FRA', 'MLS']) assert.ok(set.has(lk), lk + ' muss drin sein');
+  for (const lk of ['NED', 'POR', 'TUR', 'GER2', 'ENG2', 'SCO']) assert.ok(!set.has(lk), lk + ' darf NICHT mehr drin sein');
+  assert.equal(set.size, 6, 'genau 6 Ligen (top-5 + MLS)');
+});
