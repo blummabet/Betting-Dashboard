@@ -52,7 +52,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "TENNIS: nur 130/250 fällige Märkte aufgelöst (52%)"
+        "TENNIS: nur 131/251 fällige Märkte aufgelöst (52%)"
       ],
       "note": "Fällige Märkte je Liga, die ihre Auflösung finden. < 60% = Settlement läuft ins Leere (Slug-Mismatch), Trefferquoten dieser Liga sind unvollständig."
     },
@@ -64,10 +64,10 @@
       "nFail": 6,
       "failures": [
         "14/50 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (28%) — Trefferquote allein trügt",
-        "   0x84cfffc3f1… n=16 Treffer 62% P&L $-7,498,445",
-        "   0xe9076a87c5… n=14 Treffer 71% P&L $-7,351,030",
-        "   0xc3c3b3ef30… n=27 Treffer 67% P&L $-3,776,406",
-        "   0xa0f21e6d35… n=11 Treffer 64% P&L $-2,713,808",
+        "   0x84cfffc3f1… n=16 Treffer 62% P&L $-7,498,088",
+        "   0xe9076a87c5… n=14 Treffer 71% P&L $-7,377,963",
+        "   0xc3c3b3ef30… n=27 Treffer 67% P&L $-3,776,506",
+        "   0xa0f21e6d35… n=11 Treffer 64% P&L $-2,708,543",
         "80/130 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
@@ -88,11 +88,11 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "699/746 'live' Geld-Märkte sind schon >6h nach Anpfiff (94%) — $20,429,632 Whale-Geld auf fertigen Spielen"
+        "702/757 'live' Geld-Märkte sind schon >6h nach Anpfiff (93%) — $20,433,930 Whale-Geld auf fertigen Spielen"
       ],
       "note": "Der Close-Feed setzt kein resolved-Flag; fertige Spiele bleiben 'live'. Alle Views filtern jetzt auf den rekonstruierten Anpfiff — dieser Check misst den Geister-Anteil im Roh-Feed (steigt er, prunt/löst der Feed nicht mehr auf; jede ungegatete View zeigt dann fertige Spiele)."
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-08-05T15:03:36.492957+00:00"
+  "generatedAt": "2026-08-05T16:53:52.526083+00:00"
 }
