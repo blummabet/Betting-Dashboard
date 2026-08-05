@@ -42,6 +42,7 @@ const out = {
   generatedAt: new Date().toISOString(),
   plays: plays.map(p => ({
     key: p.key, side: p.side, verdict: p.verdict, conv: p.conv,
+    match: p.match || null,
     league: p.league || null, htk: (p.htk == null ? null : p.htk),
     moneyPct: (p.moneyPct == null ? null : p.moneyPct),
     price: (typeof p.price === 'number' ? p.price : null),

@@ -71,6 +71,13 @@ jobs:
         run: ${{ env.POLY_PYTHON }} poly_shortlist_track.py
         continue-on-error: true
 
+      - name: 🔥 Heute-spielenswert → Trades-Channel (Top-Plays der Shortlist)
+        run: ${{ env.POLY_PYTHON }} push_shortlist_trades.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
       - name: 🐋 Poly Whale-Watch (Trades-Channel + öffentlicher Whale-Push)
         run: ${{ env.POLY_PYTHON }} poly_whale_watch.py
         continue-on-error: true
@@ -103,6 +110,7 @@ jobs:
             poly_resolutions.json poly_shortlist_track.json poly_status.json \
             poly_cross_sport.json poly_cross_sport_history.json poly_cross_sport_seen.json \
             poly_whale_seen.json poly_whale_public_seen.json \
+            shortlist_push_seen.json \
             esports_poly_prices.json esports_poly_wallets.json esports_poly_smartmoney.json esports_poly_coherence.json esports_poly_status.json; do
             [ -f "$f" ] && git add "$f"
           done
