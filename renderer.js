@@ -2393,7 +2393,7 @@ function renderSharpRadar() {
     })
     .slice(0, 20);
 
-  const moversHtml = movers.length ? movers.map(({m, lk, L, mvRows, maxMov, kicked, openTs, oddsClosing, conviction}) => {
+  const _moverRow = ({m, lk, L, mvRows, maxMov, kicked, openTs, oddsClosing, conviction}) => {
     const maxColor  = _mvColor(maxMov);
     const dateLabel = _fmtDate(m.date);
     const timeLabel = m.time ? ` · ${m.time}` : '';
@@ -2463,7 +2463,15 @@ function renderSharpRadar() {
       </div>
       <div style="display:flex;gap:5px;flex-wrap:wrap;">${rowHtml}</div>
     ${wrapEnd}`;
-  }).join('') : `<div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">Noch keine signifikante Linienbewegung diese Woche (≥3pp) — Opening-Snapshots werden täglich geladen.</div>`;
+  };
+  // 05.08.2026 (Lucas): bereits gespielte Spiele nicht mehr mitten in die Liste. Kommende oben,
+  // gespielte (Opening→Closing, nicht mehr wettbar) in einen eingeklappten Block ganz unten.
+  const _mvUp = movers.filter(x => !x.kicked);
+  const _mvPlayed = movers.filter(x => x.kicked);
+  const moversHtml = !movers.length
+    ? `<div style="padding:24px;text-align:center;color:var(--muted);font-size:13px;">Noch keine signifikante Linienbewegung diese Woche (≥3pp) — Opening-Snapshots werden täglich geladen.</div>`
+    : (_mvUp.map(_moverRow).join('') || `<div style="padding:16px;text-align:center;color:var(--muted);font-size:12px;">Aktuell keine kommenden Spiele mit ≥3pp Bewegung.</div>`)
+      + (_mvPlayed.length ? `<details style="margin-top:10px;"><summary style="cursor:pointer;color:#8b949e;font-size:12px;padding:9px 12px;background:var(--card);border:1px solid var(--border);border-radius:10px;">🔒 ${_mvPlayed.length} bereits gespielte Spiele — Opening→Closing (zum Aus-/Einklappen tippen)</summary><div style="margin-top:8px;">${_mvPlayed.map(_moverRow).join('')}</div></details>` : '');
 
   // ── Hero: „Größte Mover" Top-5 (28.06.2026, abgeschaut bei SteamWatch) ────
   // Scanbare Headline ganz oben: gebackte Seite + Quoten-Move % + Open→Jetzt. Rein nach
