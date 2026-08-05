@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-05T18:48:21.588246+00:00",
+ "generatedAt": "2026-08-05T20:38:45.038414+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -11,8 +11,8 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 273,
- "pinnKeys": 141,
- "matched": 33,
+ "pinnKeys": 139,
+ "matched": 31,
  "footballRows": 3,
  "crossRows": 270,
  "footballSkippedStale": 30,
@@ -26,12 +26,41 @@
   "soccer_mls": 3
  },
  "matchedBySport": {
-  "baseball_mlb": 30,
+  "baseball_mlb": 28,
   "soccer_mls": 3
  },
  "trackRecord": {
-  "tracked": 58,
+  "tracked": 60,
   "converged": 1
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|houstonastros-torontobluejays|torontobluejays",
+   "sport": "baseball_mlb",
+   "event": "Toronto Blue Jays vs Houston Astros",
+   "market": "Moneyline",
+   "outcome": "Toronto Blue Jays",
+   "polyPP": 44.5,
+   "pinnPP": 37.0,
+   "gapPP": 7.45,
+   "vol": 1004834,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-05T20:38:45.038171+00:00"
+  },
+  {
+   "id": "baseball_mlb|houstonastros-torontobluejays|houstonastros",
+   "sport": "baseball_mlb",
+   "event": "Toronto Blue Jays vs Houston Astros",
+   "market": "Moneyline",
+   "outcome": "Houston Astros",
+   "polyPP": 55.5,
+   "pinnPP": 63.0,
+   "gapPP": -7.45,
+   "vol": 1004834,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-05T20:38:45.038171+00:00"
+  }
+ ]
 }
