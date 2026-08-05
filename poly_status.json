@@ -50,10 +50,9 @@
       "label": "Auflösungen matchen unsere Keys",
       "severity": "warn",
       "ok": false,
-      "nFail": 2,
+      "nFail": 1,
       "failures": [
-        "TENNIS: nur 122/242 fällige Märkte aufgelöst (50%)",
-        "MLB: nur 90/151 fällige Märkte aufgelöst (60%)"
+        "TENNIS: nur 128/248 fällige Märkte aufgelöst (52%)"
       ],
       "note": "Fällige Märkte je Liga, die ihre Auflösung finden. < 60% = Settlement läuft ins Leere (Slug-Mismatch), Trefferquoten dieser Liga sind unvollständig."
     },
@@ -65,11 +64,11 @@
       "nFail": 6,
       "failures": [
         "14/51 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (27%) — Trefferquote allein trügt",
-        "   0x84cfffc3f1… n=16 Treffer 62% P&L $-7,498,060",
-        "   0xe9076a87c5… n=14 Treffer 71% P&L $-7,343,802",
-        "   0xc3c3b3ef30… n=27 Treffer 67% P&L $-3,777,016",
-        "   0xa0f21e6d35… n=10 Treffer 60% P&L $-2,716,070",
-        "77/128 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
+        "   0x84cfffc3f1… n=16 Treffer 62% P&L $-7,498,599",
+        "   0xe9076a87c5… n=14 Treffer 71% P&L $-7,340,702",
+        "   0xc3c3b3ef30… n=27 Treffer 67% P&L $-3,774,020",
+        "   0xa0f21e6d35… n=10 Treffer 60% P&L $-2,714,690",
+        "78/129 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
     },
@@ -89,11 +88,11 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "665/692 'live' Geld-Märkte sind schon >6h nach Anpfiff (96%) — $17,880,977 Whale-Geld auf fertigen Spielen"
+        "688/701 'live' Geld-Märkte sind schon >6h nach Anpfiff (98%) — $20,062,199 Whale-Geld auf fertigen Spielen"
       ],
       "note": "Der Close-Feed setzt kein resolved-Flag; fertige Spiele bleiben 'live'. Alle Views filtern jetzt auf den rekonstruierten Anpfiff — dieser Check misst den Geister-Anteil im Roh-Feed (steigt er, prunt/löst der Feed nicht mehr auf; jede ungegatete View zeigt dann fertige Spiele)."
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-08-05T04:29:42.516355+00:00"
+  "generatedAt": "2026-08-05T07:24:57.004905+00:00"
 }
