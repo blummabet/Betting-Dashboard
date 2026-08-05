@@ -34,6 +34,8 @@ const TRACK = {
     byConv: { '9': { n: 1, wins: 1, hit: 1, pnl: 6.13, stake: 10, roi: 0.613, clvAvg: 6 },
               '7': { n: 1, wins: 0, hit: 0, pnl: -10, stake: 10, roi: -1, clvAvg: -5 } },
     byVerdict: {},
+    bySignal: { sharp: { n: 2, wins: 2, hit: 1, pnl: 12, stake: 20, roi: 0.6, clvAvg: 3 },
+                steam: { n: 1, wins: 0, hit: 0, pnl: -10, stake: 10, roi: -1, clvAvg: -2 } },
   },
 };
 
@@ -68,4 +70,16 @@ test('Leerer Track → freundlicher „sammelt noch"-Hinweis, kein Crash', async
   const html = w.document.getElementById('polyWalletsPanel').innerHTML;
   assert.match(html, /Track-Record/);
   assert.match(html, /Noch keine Daten|sammelt/i);
+});
+
+
+test('Signal-Attribution: Tabelle je Ausloeser-Signal (Treffer/ROI/CLV)', async () => {
+  const w = boot(TRACK); w.initPolyWallets();
+  await new Promise(r => setTimeout(r, 40));
+  w._pwSetView('track');
+  const html = w.document.getElementById('polyWalletsPanel').innerHTML;
+  assert.match(html, /Welches Signal trägt die Kante/);
+  assert.match(html, /Scharfe Wallet/);
+  assert.match(html, /Steam/);
+  assert.match(html, /\+60%/, 'Sharp-ROI 0.6 dargestellt');
 });

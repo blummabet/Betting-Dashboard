@@ -1423,42 +1423,44 @@ function _pwShortlistScore(key,m){
   const moneyFav=oc[0].s, moneyPct=oc[0].u/total;
   const pr=m.prices||{}; let priceFav=null,pmax=-1;
   for(const k in pr){ if(typeof pr[k]==='number'&&pr[k]>pmax){pmax=pr[k];priceFav=k;} }
-  const sides={}, why={};
-  const add=(side,w,reason)=>{ if(!side||!w)return; sides[side]=(sides[side]||0)+w; (why[side]=why[side]||[]).push(reason); };
-  if(moneyPct>=PW_MONEY_MAJ) add(moneyFav, moneyPct>=0.70?1.5:1, 'großes Geld auf '+moneyFav+' ('+Math.round(moneyPct*100)+'%)');
+  const sides={}, why={}, tags={};
+  // 05.08.2026 (Lucas): jedes Signal traegt einen strukturierten Tag (nicht nur Freitext), damit der
+  // Paper-Tracker spaeter je Signal Trefferquote/ROI/CLV zeigen kann (welches Signal traegt die Kante).
+  const add=(side,w,reason,tag)=>{ if(!side||!w)return; sides[side]=(sides[side]||0)+w; (why[side]=why[side]||[]).push(reason); if(tag)(tags[side]=tags[side]||[]).push(tag); };
+  if(moneyPct>=PW_MONEY_MAJ) add(moneyFav, moneyPct>=0.70?1.5:1, 'großes Geld auf '+moneyFav+' ('+Math.round(moneyPct*100)+'%)', 'money');
   // Geld vs Preis uneinig → liga-informiert entscheiden (sofort verfügbar aus broadLive)
   if(priceFav&&priceFav!==moneyFav){
     const lg=_pwLeagueMoneyVerdict(m.league);
-    if(lg==='geld_schaerfer') add(moneyFav,2,'Geld schlägt Preis in '+(m.league||'').toUpperCase());
-    else if(lg==='preis_besser') add(priceFav,2,'Preis schlägt Geld in '+(m.league||'').toUpperCase());
-    else add(priceFav,1,'Geld & Preis uneinig');
+    if(lg==='geld_schaerfer') add(moneyFav,2,'Geld schlägt Preis in '+(m.league||'').toUpperCase(),'gvp');
+    else if(lg==='preis_besser') add(priceFav,2,'Preis schlägt Geld in '+(m.league||'').toUpperCase(),'gvp');
+    else add(priceFav,1,'Geld & Preis uneinig','gvp');
   }
   const mv=_pwMoveFor(key);
-  if(mv&&mv.steam&&mv.move>=2) add(mv.side, mv.move>=4?3:2, 'Steam läuft rein (+'+mv.move.toFixed(1)+'pp)');
+  if(mv&&mv.steam&&mv.move>=2) add(mv.side, mv.move>=4?3:2, 'Steam läuft rein (+'+mv.move.toFixed(1)+'pp)', 'steam');
   const sh=_pwSharpInfoForKey(key);
   if(sh){
     // Qualitätsskalierte Gewichtung: Basis 2,5; +0,5 bei ≥60% Treffer, +0,5 bei ≥70%, +0,5 wenn lifetime P&L>0.
     let w=2.5; if(sh.hit>=0.6)w+=0.5; if(sh.hit>=0.7)w+=0.5; if(sh.pnl>0)w+=0.5;
     const pnlTxt=Math.abs(sh.pnl)>=1000?((sh.pnl>=0?'+$':'-$')+Math.round(Math.abs(sh.pnl)/1000)+'K')
       :((sh.pnl>=0?'+$':'-$')+Math.round(Math.abs(sh.pnl)));
-    add(sh.side,w,'🔥 scharfe Wallet ('+sh.wins+'/'+sh.n+', '+Math.round(sh.hit*100)+'% · '+pnlTxt+')');
+    add(sh.side,w,'🔥 scharfe Wallet ('+sh.wins+'/'+sh.n+', '+Math.round(sh.hit*100)+'% · '+pnlTxt+')', 'sharp');
   } else {
     const sharp=_pwSharpSideForKey(key) || _pwSharpSideFor(m);
-    if(sharp) add(sharp,2.5,'🔥 scharfe Wallet drin');
+    if(sharp) add(sharp,2.5,'🔥 scharfe Wallet drin', 'sharp');
   }
   // (01.08.2026, Lucas) Pinnacle-Kante einweben: de-viggte Pinnacle vs Poly-Preis. Konsens hebt
   // Conviction, deutliche Fehlbewertung = eigener Value-Play. Feuert nur wenn crossSport-Daten da.
   const pe=_pwPinnEdgeFor(m,oc);
   if(pe){
     const w=Math.abs(pe.gapPP)>=8?2:1;
-    if(pe.back) add(pe.side,w,'Pinnacle: Poly '+Math.abs(pe.gapPP).toFixed(0)+'pp zu billig → Value');
-    else if(pe.other) add(pe.other,w,'Pinnacle: Poly '+Math.abs(pe.gapPP).toFixed(0)+'pp zu teuer auf '+pe.side);
+    if(pe.back) add(pe.side,w,'Pinnacle: Poly '+Math.abs(pe.gapPP).toFixed(0)+'pp zu billig → Value','pinn');
+    else if(pe.other) add(pe.other,w,'Pinnacle: Poly '+Math.abs(pe.gapPP).toFixed(0)+'pp zu teuer auf '+pe.side,'pinn');
   }
   let best=null,bs=0; for(const s in sides) if(sides[s]>bs){bs=sides[s];best=s;}
   const vol=m.totalUsd||0;
   if(!best||bs<3||vol<15000) return {verdict:'SKIP'};
   return {key,match:oc.map(o=>o.s).join(' vs '),verdict:(best===moneyFav?'BET':'FADE'),side:best,
-    conv:Math.min(10,Math.round(4+bs)),reasons:(why[best]||[]).slice(0,3),vol,htk:_pwRealHtk(m),league:m.league,
+    conv:Math.min(10,Math.round(4+bs)),reasons:(why[best]||[]).slice(0,3),signals:[...new Set(tags[best]||[])],vol,htk:_pwRealHtk(m),league:m.league,
     moneyPct,sharp:(sh&&sh.side===best)?sh:null,price:(typeof pr[best]==='number'?pr[best]:null)};
 }
 // 📊 Paper-Track-Record der „Heute wetten"-Shortlist (02.08.2026, Lucas). Liest poly_shortlist_track.json
@@ -1536,6 +1538,27 @@ function _pwTrackOpen(open){
     +(e.public?' <span style="color:#a78bfa">◆</span>':'')+'</span>').join('');
   return head+'<div style="margin-bottom:6px">'+body+'</div>';
 }
+const _PW_SIG_LABEL={sharp:'🔥 Scharfe Wallet',steam:'📈 Steam',money:'💰 Geld-Mehrheit',gvp:'⚖️ Geld vs Preis',pinn:'🎯 Pinnacle-Value'};
+// 05.08.2026 (Lucas): welches Signal traegt die Kante? Trefferquote/ROI/CLV je Ausloeser-Signal.
+// Ein Play kann mehrere Signale haben (zaehlt dann in mehreren Zeilen) - so wird sichtbar, welches
+// Signal wirklich Geld bringt und welches Ballast ist. Fuellt sich mit neu abgerechneten Plays.
+function _pwTrackSignalTable(bySig){
+  const rows=Object.keys(bySig||{}).map(k=>({k,a:bySig[k]})).filter(r=>r.a&&r.a.n).sort((x,y)=>y.a.n-x.a.n);
+  if(!rows.length) return '';
+  const body=rows.map(r=>{
+    const a=r.a, roiCol=a.roi>0?'#3fb950':a.roi<0?'#f85149':'#8b949e', clvCol=a.clvAvg>0?'#3fb950':a.clvAvg<0?'#f85149':'#8b949e';
+    const thin=a.n<8?' style="opacity:.6"':'';
+    return '<tr'+thin+'><td class="pw-cm" style="font-weight:700">'+(_PW_SIG_LABEL[r.k]||_pwEsc(r.k))+'</td>'
+      +'<td class="pw-cn">'+a.n+'</td>'
+      +'<td class="pw-cn" style="color:'+(a.hit>=0.5?'#3fb950':'#f85149')+'">'+_pwtPct(a.hit)+'</td>'
+      +'<td class="pw-cn" style="font-weight:800;color:'+roiCol+'">'+_pwtSig(Math.round(a.roi*1000)/10)+'%</td>'
+      +'<td class="pw-cn" style="color:'+clvCol+'">'+_pwtSig(a.clvAvg)+'pp</td>'
+      +'<td class="pw-cn pw-mut">'+_pwtUsd(a.pnl)+'</td></tr>';
+  }).join('');
+  return '<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🧭 Welches Signal trägt die Kante?</span>'
+    +'<span class="pw-sec-note">Trefferquote/ROI/CLV je Auslöser-Signal. Ein Play kann mehrere Signale haben (zählt dann in mehreren Zeilen). Blasse Zeilen = noch zu wenige (n&lt;8).</span></div>'
+    +'<div class="pw-tw"><table class="pw-tbl"><thead><tr><th>Signal</th><th>n</th><th>Treffer</th><th>ROI</th><th>Ø CLV</th><th>P&amp;L</th></tr></thead><tbody>'+body+'</tbody></table></div></section>';
+}
 function _pwTrackRecord(track){
   const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">📊 Track-Record — „Heute wetten" als Paper-Trade</span>'
     +'<span class="pw-sec-note">Jeder Scan schreibt die exakten Shortlist-Empfehlungen mit (fixer Einsatz, Einstieg = Snapshot-Preis) und rechnet bei Auflösung ab. <b>Es wird nichts gesetzt</b> — nur mitgeschrieben, damit wir sehen, ob sich echtes Nachspielen lohnt.</span></div>';
@@ -1548,6 +1571,7 @@ function _pwTrackRecord(track){
     +_pwTrackKpis(agg.all||{n:0}, '🟢 Ganze Shortlist', '(alle Plays, jede Conviction)')
     +_pwTrackKpis(agg.public||{n:0}, '◆ Public-Kandidaten', '(hart gegated: Conv≥9 + bewiesene Wallet + Mehrheit)')
     +_pwTrackConvTable(agg.byConv)
+    +_pwTrackSignalTable(agg.bySignal)
     +_pwTrackOpen(track.open)
     +_pwTrackSettled(track.settled);
 }
@@ -1557,23 +1581,28 @@ function _pwShortlist(live){
     +'<span class="pw-sec-note">nur Märkte mit echtem Signal (Steam · scharfe Wallet · Geld-vs-Preis) · BET = mit dem Geld, FADE = dagegen · Conviction 0–10 · nichts blind, das ist ein Ausgangspunkt</span></div>';
   const all=_pwTopPlays(0, live, true);   // 0 = alle · sportPass-Filter an (View hat Sport-Filter)
   if(!all.length) return intro+'<div class="pw-none">Aktuell keine klare Gelegenheit. Die Shortlist lebt von <b>📈 Steam</b> und <b>🐋 scharfen Wallets</b> — die sammeln sich noch über die Runner-Läufe (auf Poly ist der Preis ≈ die Geld-Verteilung, daher braucht es die dynamischen Signale). Bis dahin: schau in <b>💰 Großes Geld</b>, <b>📈 Bewegung</b> und <b>🐋 Whales</b>. <b>Kein Signal ist auch ein Ergebnis</b> — dann nicht wetten.</div></section>';
-  const body=all.slice(0,20).map(r=>{
-    const bet=r.verdict==='BET'; const vc=bet?'#3fb950':'#e3b341';
+  // 05.08.2026 (Lucas: entscheidungsreifer): Einstiegspreis + Spielraum je Zeile, staerkster Play (Index 0,
+  // nach Conviction sortiert) mit ⭐ + Highlight. eng = >=85¢ kaum Raum · Auß. = <=35¢ Aussenseiter-Seite.
+  const body=all.slice(0,20).map((r,ix)=>{
+    const bet=r.verdict==='BET'; const vc=bet?'#3fb950':'#e3b341'; const top=ix===0;
     const badge='<span style="display:inline-block;padding:2px 9px;border-radius:12px;border:1px solid '+vc+';color:'+vc+';font-weight:800;font-size:11px">'+r.verdict+'</span>';
     const convCol=r.conv>=8?'#3fb950':r.conv>=6?'#e3b341':'#8b949e';
     const mk='<a href="https://polymarket.com/event/'+encodeURIComponent(r.key)+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Markt öffnen ↗">'+_pwEsc(r.match)+' <span style="color:#a78bfa">↗</span></a>';
     const htk=r.htk!=null?(r.htk<0?'live':r.htk<1?'<1h':Math.round(r.htk)+'h'):'—';
-    return '<tr>'
-      +'<td>'+badge+'</td>'
+    const price=(r.price!=null)?Math.round(r.price*100)+'¢':'—';
+    const room=(r.price!=null)?(r.price>=0.85?' <span style="color:#e3b341;font-size:9.5px">eng</span>':r.price<=0.35?' <span style="color:#a78bfa;font-size:9.5px">Auß.</span>':''):'';
+    return '<tr'+(top?' style="background:rgba(63,185,80,.07)"':'')+'>'
+      +'<td>'+(top?'<span title="stärkster Play">⭐</span> ':'')+badge+'</td>'
       +'<td style="white-space:nowrap">'+_pwSportIcon(r.league)+' '+mk+'</td>'
       +'<td class="pw-cm"><b style="color:#4cc2ff">'+_pwEsc(r.side)+'</b></td>'
+      +'<td class="pw-cn pw-mut" style="white-space:nowrap">'+price+room+'</td>'
       +'<td class="pw-cn" style="font-weight:800;color:'+convCol+'">'+r.conv+'/10</td>'
       +'<td style="font-size:12px;color:var(--muted)">'+r.reasons.map(_pwEsc).join(' · ')+'</td>'
       +'<td class="pw-cn pw-mut">'+_pwUsd(r.vol)+'</td>'
       +'<td class="pw-cn pw-mut">'+htk+'</td></tr>';
   }).join('');
   return intro+'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
-    +'<th>Verdikt</th><th>Spiel</th><th>Empf. Seite</th><th>Conviction</th><th>Warum</th><th>Vol</th><th>Anpfiff</th>'
+    +'<th>Verdikt</th><th>Spiel</th><th>Empf. Seite</th><th>Einstieg</th><th>Conviction</th><th>Warum</th><th>Vol</th><th>Anpfiff</th>'
     +'</tr></thead><tbody>'+body+'</tbody></table></div></section>';
 }
 

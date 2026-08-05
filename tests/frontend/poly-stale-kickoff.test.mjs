@@ -54,6 +54,17 @@ test('_pwShortlist blendet fertige (stale-kickoff) Spiele aus, frische bleiben',
   assert.ok(!html.includes('atp-stale-boyer'), 'stale-kickoff-Markt darf NICHT erscheinen');
 });
 
+test('_pwShortlist zeigt Einstiegspreis-Spalte + hebt staerksten Play hervor', () => {
+  const dom = new JSDOM('<!DOCTYPE html><body></body>', { url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
+  const w = dom.window;
+  const cache = { broadHist: { 'atp-fresh-x': steamHist() }, moneyBroad: {} };
+  w.eval(readFileSync(PW, 'utf8') + '\n_pwCache = ' + JSON.stringify(cache) + ';');
+  const html = w._pwShortlist({ 'atp-fresh-x': mkt(0, 2) });   // Preis A=0.5 -> 50c, einziger Play -> Top
+  assert.match(html, /<th>Einstieg<\/th>/, 'Einstieg-Spalte im Kopf');
+  assert.match(html, /50¢/, 'Einstiegspreis der empfohlenen Seite');
+  assert.match(html, /⭐/, 'staerkster Play markiert');
+});
+
 test('_pwMoneyLive filtert stale-kickoff ebenfalls raus', () => {
   const w = win();
   const live = {

@@ -249,5 +249,42 @@ class TestConfirmedLoserGate(unittest.TestCase):
         self.assertNotIn("bewiesen scharf", P._pub_wallet_line(sc, "0xLOSS"))  # Public-Label ehrlich
 
 
+class TestSharpMerge(unittest.TestCase):
+    """05.08.2026 (Lucas: die alte 'Sharp im Markt'-Liste war wertlos - 56%-Tennis 6x gespammt).
+    Der bewiesen-scharfe FRISCHE Einstieg wird jetzt hier mitgezogen: Klein-aber-scharf-Band unter
+    dem Smart-Boden (nur mit sharp_floor), aber nur solange handelbar; strenges _is_smart-Gate
+    (56%-Wallet fliegt); je Wallet nur eine Karte; Badge sagt warum die Karte kommt."""
+    SMART = {"0xREC": {"n": 9, "wins": 8}}          # 89% -> signifikant smart
+    NOTSMART = {"0xTN": {"n": 18, "wins": 10}}      # 56% -> NICHT smart (Wilson)
+
+    def test_klein_aber_scharf_nur_mit_sharp_floor(self):
+        t = {"open": {"a": _pos(2500, wallet="0xREC")}, "scores": self.SMART}
+        self.assertEqual(P.select(t, {}, NOW), [])                                  # $2.5K < Smart-Boden $5K
+        self.assertEqual(len(P.select(t, {}, NOW, sharp_floor=P.MIN_USD_SHARP)), 1) # Band greift
+
+    def test_56prozent_wallet_ist_nicht_scharf(self):
+        t = {"open": {"a": _pos(2500, wallet="0xTN")}, "scores": self.NOTSMART}
+        self.assertEqual(P.select(t, {}, NOW, sharp_floor=P.MIN_USD_SHARP), [])     # genau der alte Muell
+
+    def test_handelbarkeits_gate(self):
+        run = _pos(2500, wallet="0xREC"); run["lastPrice"] = 0.74                   # 60c -> 74c gelaufen
+        self.assertEqual(P.select({"open": {"a": run}, "scores": self.SMART}, {}, NOW,
+                                   sharp_floor=P.MIN_USD_SHARP), [])                 # Zug weg -> raus
+        chp = _pos(2500, wallet="0xREC"); chp["lastPrice"] = 0.57                   # guenstiger
+        self.assertEqual(len(P.select({"open": {"a": chp}, "scores": self.SMART}, {}, NOW,
+                                      sharp_floor=P.MIN_USD_SHARP)), 1)
+
+    def test_dedup_je_wallet(self):
+        cand = [("k1", _pos(9000, side="A"), False), ("k2", _pos(8000, side="B"), False),
+                ("k3", _pos(7000, side="C"), False)]
+        kept, extras = P._dedup_by_wallet(cand, 1)
+        self.assertEqual(len(kept), 1); self.assertEqual(extras.get("k1"), 2)
+
+    def test_badges(self):
+        self.assertIn("bewiesen scharf", P.build_card(_pos(60000, wallet="0xREC"), self.SMART, False))   # Wal+Feuer
+        self.assertIn("Scharfe Wallet frisch drin", P.build_card(_pos(2500, wallet="0xREC"), self.SMART, False))
+        self.assertIn("weitere Position", P.build_card(_pos(60000, wallet="0xREC"), self.SMART, False, extra=3))
+
+
 if __name__ == "__main__":
     unittest.main()

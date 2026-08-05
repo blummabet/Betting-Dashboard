@@ -93,8 +93,19 @@ def aggregate(settled):
         rows = [r for r in settled if r.get("verdict") == v]
         if rows:
             by_verdict[v] = _agg_one(rows)
+    # 05.08.2026 (Lucas): Attribution je Ausloeser-Signal (welches Signal traegt die Kante?). Ein Play
+    # kann mehrere Signale haben und zaehlt dann in mehreren Buckets (bewusste Ueberlappung).
+    by_signal = {}
+    _sig_universe = set()
+    for r in settled:
+        for tg in (r.get("signals") or []):
+            _sig_universe.add(tg)
+    for tg in sorted(_sig_universe):
+        rows = [r for r in settled if tg in (r.get("signals") or [])]
+        if rows:
+            by_signal[tg] = _agg_one(rows)
     return {"all": _agg_one(allr), "public": _agg_one(pub),
-            "byConv": by_conv, "byVerdict": by_verdict}
+            "byConv": by_conv, "byVerdict": by_verdict, "bySignal": by_signal}
 
 
 def update_track(prev, emit, close, resolutions, now=None, stake=STAKE):
@@ -125,7 +136,7 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE):
             "entryPrice": round(float(price), 4), "firstTs": now.isoformat(),
             "lastPrice": round(float(price), 4), "lastTs": now.isoformat(),
             "htkAtEntry": pl.get("htk"), "public": bool(pl.get("public")),
-            "reasons": (pl.get("reasons") or [])[:3], "stake": stake,
+            "reasons": (pl.get("reasons") or [])[:3], "signals": list(pl.get("signals") or []), "stake": stake,
         }
 
     # 2) lastPrice aller offenen Plays aus dem Close-File nachziehen (beste Schluss-Referenz für CLV)
@@ -154,7 +165,7 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE):
             "entryPrice": round(entry, 4), "closePrice": round(close_ref, 4),
             "result": "win" if win else "loss", "winner": winner,
             "pnl": round(pnl, 2), "clvPP": clv, "stake": st,
-            "public": bool(e.get("public")), "firstTs": e.get("firstTs"),
+            "public": bool(e.get("public")), "signals": list(e.get("signals") or []), "firstTs": e.get("firstTs"),
             "settledTs": now.isoformat(), "resolvedTs": (r or {}).get("ts"),
         })
         del open_[ok]

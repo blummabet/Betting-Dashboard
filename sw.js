@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v70';   // 05.08.2026: Quote im Betfair-Flow (Radar) + Übersicht Kohle/HT — Führungsquote immer sichtbar
+const VERSION = 'cocobet-v71';   // 05.08.2026: Heute-wetten — Einstiegspreis+Spielraum je Zeile, Top-Play-Highlight, Signal-Attribution im Track-Record
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

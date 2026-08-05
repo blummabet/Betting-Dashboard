@@ -122,3 +122,21 @@ def test_main_dead_emitter_opens_no_new_play(tmp_path, monkeypatch):
     st.main()
     out = _json.loads((tmp_path / "poly_shortlist_track.json").read_text(encoding="utf-8"))
     assert out["open"] == {} and out["settled"] == []   # nichts geöffnet, kein Crash
+
+
+def test_signal_attribution_bysignal():
+    # 05.08.2026 (Lucas): jedes Signal wird getaggt, durch die Abrechnung getragen und je Signal
+    # aggregiert. Ein Play mit mehreren Signalen zaehlt in mehreren Buckets (bewusste Ueberlappung).
+    e = _emit([{"key": "mlb-a-b", "side": "Team A", "verdict": "BET", "conv": 9, "league": "MLB",
+                "price": 0.60, "public": False, "reasons": ["x"], "signals": ["sharp", "steam"]}])
+    t = st.update_track({}, e, {}, {}, now=NOW)
+    assert t["open"]["mlb-a-b|Team A"]["signals"] == ["sharp", "steam"]
+    prev = {"open": {"mlb-a-b|Team A": {"key": "mlb-a-b", "side": "Team A", "verdict": "BET",
+            "conv": 9, "league": "MLB", "entryPrice": 0.60, "lastPrice": 0.66, "public": False,
+            "stake": 10.0, "firstTs": NOW.isoformat(), "signals": ["sharp", "steam"]}}}
+    res = {"mlb-a-b": {"winner": "Team A", "ts": NOW.isoformat()}}
+    t2 = st.update_track(prev, _emit([]), {}, res, now=NOW)
+    assert t2["settled"][0]["signals"] == ["sharp", "steam"]
+    bs = t2["agg"]["bySignal"]
+    assert bs["sharp"]["n"] == 1 and bs["steam"]["n"] == 1 and bs["sharp"]["wins"] == 1
+    assert "gvp" not in bs

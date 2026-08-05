@@ -723,6 +723,13 @@ def maybe_alert_sharp(prev, cur, min_n=4) -> int:
     ents = sharp_entries(prev, cur, min_n=min_n)
     if not ents:
         return 0
+    # 05.08.2026 (Lucas): der bewiesen-scharfe frische Einstieg wird jetzt vom Whale-Watcher als volle
+    # Karte (Paarung/Anpfiff/Preis/Link, strenges Wilson-Gate) mitgezogen - diese Textliste war redundant
+    # + ein zweiter Push. Standard AUS; SHARP_LIST_PUSH=1 reaktiviert die alte Liste.
+    if (os.environ.get("SHARP_LIST_PUSH") or "").strip().lower() not in ("1", "true", "yes", "on"):
+        print("ℹ️  Sharp-Liste deaktiviert (Whale-Watcher uebernimmt scharfe Einstiege) -",
+              len(ents), "Einstieg(e) nicht als Liste gepusht")
+        return 0
     try:
         import telegram_trades
         telegram_trades.send_trades_message(_format_sharp_alert(ents))

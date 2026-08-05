@@ -46,6 +46,7 @@ const out = {
     moneyPct: (p.moneyPct == null ? null : p.moneyPct),
     price: (typeof p.price === 'number' ? p.price : null),
     reasons: p.reasons || [],
+    signals: p.signals || [],
     sharpN: (p.sharp && p.sharp.n) || 0,
     sharpHit: (p.sharp && typeof p.sharp.hit === 'number') ? p.sharp.hit : null,
     public: publicKeys.includes(p.key + '|' + p.side),

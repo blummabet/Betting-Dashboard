@@ -56,6 +56,15 @@ MIN_TR      = int(os.environ.get("WHALE_MIN_TR")      or 8)   # 02.08.2026 (Luca
 MAX_ALERTS  = int(os.environ.get("WHALE_MAX_ALERTS")  or 8)
 RESTOCK_MULT = 1.5   # erneuter Alert erst bei ≥ +50% Größe
 
+# 05.08.2026 (Lucas): die alte Sharp-Textliste (poly_money_broad) nutzte ein SCHWAECHERES scharf-Gate
+# (roh >=50% Treffer, n>=4) und spammte 56%-Tennis-Wallets 6x. Sie wird abgeschaltet; der bewiesen-
+# scharfe FRISCHE Einstieg wird jetzt HIER als volle Karte mitgezogen, mit dem strengen _is_smart-Gate
+# (n>=8, Wilson>50%, kein Verlierer). Klein-aber-scharf darf unter die Whale-Geldschwelle, ABER nur
+# solange der Preis noch nahe am Einstieg (handelbar) steht.
+MIN_USD_SHARP       = float(os.environ.get("WHALE_MIN_USD_SHARP") or 2000)          # Klein-aber-scharf-Boden (nur Trades)
+TRADEABLE_MAX_CENTS = float(os.environ.get("WHALE_TRADEABLE_MAX_CENTS") or 0.06)    # Einstieg->jetzt max +6c teurer, sonst Zug weg
+MAX_PER_WALLET      = int(os.environ.get("WHALE_MAX_PER_WALLET") or 1)              # je Wallet max Karten/Lauf (6x-Spam killen)
+
 # 31.07.2026 (Lucas) — ÖFFENTLICHER Whale-Watch (CocoBet-Community): kuratiert, zwei Bänder —
 # „riesig" ab $100K (jedes Wallet) ODER „bewährt" ab $25K (Record n≥5 & ≥50% Treffer). Eigener
 # Dedup-State + Poly-Matchup aus poly_money_broad_close.json, damit der Post die Paarung zeigt.
@@ -211,7 +220,7 @@ def _esc(x) -> str:
     return html.escape(str(x if x is not None else ""))
 
 
-def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None) -> str:
+def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None, extra: int = 0) -> str:
     """Trades-Push (01.08.2026, Lucas: „entscheidungsreif") — Matchup, Anpfiff, Einstieg→Jetzt-Preis,
     Wallet-Qualität, Markt-Link. Ein Push = eine fertige Wett-Entscheidung."""
     emoji, sport = _sport(pos.get("league"))
@@ -220,7 +229,20 @@ def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None) -> st
     usd   = pos.get("usd") or 0
     matchup = _matchup(key, broad)
     ko      = _kickoff_txt(key, broad)
-    header  = "🐋 <b>Whale stockt auf</b>" if restock else "🐋 <b>Großer Whale-Einstieg</b>"
+    # 05.08.2026 (Lucas): Badge sagt WARUM die Karte kommt - Wal=grosses Geld, Feuer=bewiesen scharf,
+    # beides=staerkstes Signal. Ein kleiner scharfer Einstieg ist kein 'Grosser' Einstieg.
+    _sm  = _is_smart(scores.get(pos.get("wallet")) if isinstance(scores, dict) else None)
+    _big = (pos.get("usd") or 0) >= MIN_USD_UNTRACKED
+    if restock:
+        header = "🐋🔥 <b>Whale stockt auf · scharf</b>" if _sm else "🐋 <b>Whale stockt auf</b>"
+    elif _big and _sm:
+        header = "🐋🔥 <b>Großer Einstieg · bewiesen scharf</b>"
+    elif _big:
+        header = "🐋 <b>Großer Whale-Einstieg</b>"
+    elif _sm:
+        header = "🔥 <b>Scharfe Wallet frisch drin</b>"
+    else:
+        header = "🐋 <b>Großer Whale-Einstieg</b>"
     lines = ["%s · %s %s" % (header, emoji, _esc(sport))]
     l2 = _esc(matchup) if matchup else "<b>%s</b>" % _esc(side)
     if ko:
@@ -238,6 +260,8 @@ def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None) -> st
     lines.append(_wallet_line(scores, pos.get("wallet")))
     if key:
         lines.append('<a href="https://polymarket.com/event/%s">→ Markt öffnen ↗</a>' % _esc(key))
+    if extra and extra > 0:
+        lines.append("➕ <i>+%d weitere Position(en) dieser Wallet</i>" % extra)
     return "\n".join(lines)
 
 
@@ -275,9 +299,40 @@ def _log_send(preview, meta):
 
 
 # ── Auswahl ─────────────────────────────────────────────────────────────────────
+def _still_tradeable(pos, max_up=None):
+    """Kann man dem Einstieg noch folgen? Nur wenn der Preis seither nicht deutlich TEURER wurde.
+    firstPrice->lastPrice: gestiegen = du zahlst mehr = weniger Edge. > max_up teurer = Zug weg.
+    Fehlender lastPrice -> als handelbar behandeln."""
+    if max_up is None:
+        max_up = TRADEABLE_MAX_CENTS
+    try:
+        fp = float(pos.get("firstPrice"))
+    except Exception:
+        return True
+    lp = pos.get("lastPrice")
+    if not isinstance(lp, (int, float)):
+        return True
+    return (lp - fp) <= max_up
+
+def _dedup_by_wallet(cand, max_per=1):
+    """6x-Spam killen: je Wallet hoechstens max_per Karten/Lauf (die groessten, da vor-sortiert).
+    Rueckgabe: (gekuerzte Liste, {behaltener posKey -> Anzahl unterdrueckter weiterer Positionen})."""
+    kept, counts, first_key, extras = [], {}, {}, {}
+    for pkey, pos, restock in cand:
+        w = pos.get("wallet")
+        c = counts.get(w, 0)
+        if c < max_per:
+            kept.append((pkey, pos, restock)); counts[w] = c + 1; first_key[w] = pkey
+        else:
+            fk = first_key.get(w)
+            if fk is not None:
+                extras[fk] = extras.get(fk, 0) + 1
+    return kept, extras
+
+
 def select(track: dict, seen: dict, now: datetime,
            min_untracked=MIN_USD_UNTRACKED, min_tracked=MIN_USD_TRACKED,
-           min_tr=MIN_TR, min_hitrate=MIN_HITRATE):
+           min_tr=MIN_TR, min_hitrate=MIN_HITRATE, sharp_floor=None):
     """Liefert Liste alertwürdiger Positionen. Schwellen/Record-Gate parametrisierbar (Public nutzt
     höhere Werte). REIN/testbar."""
     openpos = (track or {}).get("open") or {}
@@ -295,7 +350,13 @@ def select(track: dict, seen: dict, now: datetime,
         if _is_confirmed_loser(_s):
             continue          # 02.08.2026 (Lucas): bekannter Netto-Verlierer → gar nicht pushen, auch nicht als großer Whale
         _smart = _is_smart(_s, min_tr, min_hitrate)   # inkl. „kein bestätigter Verlierer"
-        if usd < (min_tracked if _smart else min_untracked):
+        _floor = min_tracked if _smart else min_untracked
+        # 05.08.2026 (Lucas): Klein-aber-scharf-Band (nur Trades, sharp_floor gesetzt) - bewiesen
+        # scharfe Wallet darf UNTER den Smart-Boden, aber nur wenn der Einstieg noch handelbar ist.
+        if usd < _floor:
+            if not (sharp_floor is not None and _smart and usd >= sharp_floor):
+                continue
+        if sharp_floor is not None and _smart and not _still_tradeable(pos):
             continue
         # Frische: firstTs innerhalb FRESH_DAYS (kein Alt-Flut beim ersten Lauf)
         ft = _iso(pos.get("firstTs"))
@@ -438,13 +499,14 @@ def main():
     broad = _load(BROAD_FILE, {})   # Matchup/Anpfiff/Preis-Kontext für die Trades-Cards
     # (01.08.2026, Lucas: 1a) Trades-Channel bekommt denselben Sanity-Filter wie Public:
     # nur Sport + Preis 3–97¢ → kein @100¢-schon-entschieden, kein Politik/Krypto-Müll.
-    cand = [c for c in select(track, seen, now) if _pub_ok(c[1])]
+    cand = [c for c in select(track, seen, now, sharp_floor=MIN_USD_SHARP) if _pub_ok(c[1])]
+    cand, _extra = _dedup_by_wallet(cand, MAX_PER_WALLET)   # je Wallet max MAX_PER_WALLET Karten/Lauf
     print(f"  {len(cand)} alertwürdige Position(en) (Sport + 3–97¢, ≥ {_usd(MIN_USD_TRACKED)} mit / {_usd(MIN_USD_UNTRACKED)} ohne Record, frisch)")
 
     now_iso = now.strftime("%Y-%m-%dT%H:%M:%SZ")
     sent = 0
     for pkey, pos, restock in cand[:MAX_ALERTS]:
-        card = build_card(pos, scores, restock, broad)
+        card = build_card(pos, scores, restock, broad, extra=_extra.get(pkey, 0))
         if tg_send(card):
             sent += 1
             seen[pkey] = {"usd": float(pos.get("usd") or 0), "ts": now_iso}
