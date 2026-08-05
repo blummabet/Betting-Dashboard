@@ -126,6 +126,11 @@ def test_aggregate_trefferquote_und_roi_split():
     assert lm["nConc"] == 2 and lm["nInflow"] == 1 and lm["hitRateInflow"] == 1.0
     # Team-Ebene: Barcelona SC × Half Time
     assert rec["byTeamMarket"]["Barcelona SC|Half Time"]["n"] == 1
+    # 05.08.2026 (Lucas): globales Roll-up (die Kernzahl) + je Markt ueber alle Ligen
+    g = rec["global"]
+    assert g["n"] == 2 and g["wins"] == 1 and g["hitRate"] == 0.5 and abs(g["roi"] - 0.2) < 1e-9
+    assert g["nConc"] == 2 and g["nInflow"] == 1 and g["hitRateInflow"] == 1.0
+    assert rec["byMarket"]["Half Time"]["n"] == 2 and abs(rec["byMarket"]["Half Time"]["roi"] - 0.2) < 1e-9
 
 
 def test_voller_flow_ecuador_ht():

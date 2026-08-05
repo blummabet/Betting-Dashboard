@@ -240,6 +240,29 @@ test('Trefferquoten-Board mit Daten: Liga×Markt + Trefferquote + ROI', () => {
   assert.match(html, /72%/);            // Konzentrations-Trefferquote
 });
 
+// 05.08.2026 (Lucas: „wissen wir ueberhaupt, ob die Kohle erfolgreich war?"): Gesamt-Bilanz-Kopf.
+test('Trefferquoten-Kopf: Gesamt-Bilanz (war die Kohle erfolgreich?) + ROI je Markt', () => {
+  const { w } = boot();
+  w._bfState.view = 'record';
+  w._bfState.track = {
+    generatedAt: iso(0), n: 682,
+    global: { n: 682, wins: 346, hitRate: 0.51, roi: -0.026,
+              nConc: 501, hitRateConc: 0.52, roiConc: -0.026,
+              nInflow: 19, hitRateInflow: 0.53, roiInflow: 0.029 },
+    byMarket: {
+      'Match Odds': { n: 117, wins: 65, hitRate: 0.56, roi: 0.221 },
+      'Over/Under 3.5 Goals': { n: 105, wins: 53, hitRate: 0.51, roi: -0.205 },
+    },
+    byLeagueMarket: { 'X|Match Odds': { n: 117, wins: 65, hitRate: 0.56, roi: 0.221, nConc: 100, hitRateConc: 0.55, roiConc: 0.2, nInflow: 0 } },
+  };
+  const html = w._renderBetfairRadar();
+  assert.match(html, /War die Kohle erfolgreich/);
+  assert.match(html, /682/);                 // Gesamt-Signale
+  assert.match(html, /zahlt sich NICHT aus/); // Verdikt bei negativem Gesamt-ROI
+  assert.match(html, /Wo trägt das Geld/);   // byMarket-Tabelle
+  assert.match(html, /\+22%/);               // Match Odds ROI (die eigentliche Kante)
+});
+
 test('Trefferquoten: Umschalter „nach Team" zeigt Team×Markt', () => {
   const { w } = boot();
   w._bfState.view = 'record';

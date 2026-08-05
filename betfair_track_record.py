@@ -270,8 +270,17 @@ def _fin(b):
 def aggregate(results, now=None):
     """Ledger → {byLeagueMarket, byTeamMarket} mit Trefferquote + ROI, je gesamt/konz/zufluss. REIN."""
     now = now or _now()
-    lm, tm = {}, {}
+    lm, tm, bm = {}, {}, {}
+    # 05.08.2026 (Lucas: "wissen wir ueberhaupt, ob die Kohle erfolgreich war?"): bisher gab es nur
+    # Liga x Markt (451 winzige Buckets) -> pro Bucket sagt es fast nichts. Jetzt ZUSAETZLICH ein
+    # globales Roll-up (die Kernzahl: zahlt sich Geld-folgen ueberhaupt aus?) UND je Markt ueber ALLE
+    # Ligen (da steckt die eigentliche Kante: z.B. Match Odds profitabel, Tormaerkte nicht).
+    g = _bucket()
     for r in (results or []):
+        _add(g, r)
+        mkk = r.get("market")
+        if mkk:
+            bm.setdefault(mkk, _bucket()); _add(bm[mkk], r)
         lk = "%s|%s" % (r.get("league"), r.get("market"))
         lm.setdefault(lk, _bucket()); _add(lm[lk], r)
         for team in (r.get("home"), r.get("away")):
@@ -281,6 +290,7 @@ def aggregate(results, now=None):
             tm.setdefault(tk, _bucket()); _add(tm[tk], r)
     return {"generatedAt": now.isoformat(), "n": len(results or []),
             "concThreshold": CONC_THRESHOLD, "inflowMinEur": INFLOW_MIN_EUR,
+            "global": _fin(g), "byMarket": {k: _fin(v) for k, v in bm.items()},
             "byLeagueMarket": {k: _fin(v) for k, v in lm.items()},
             "byTeamMarket": {k: _fin(v) for k, v in tm.items()}}
 

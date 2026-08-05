@@ -774,6 +774,57 @@
     return '<div style="display:inline-flex;border-radius:9px;overflow:hidden;border:1px solid ' + C.bd + ';margin:6px 0 12px">' + b('live', '🔴 Live-Radar') + b('record', '📊 Trefferquoten') + b('push', '📈 Push-Bilanz') + '</div>';
   }
 
+  // 05.08.2026 (Lucas: wissen wir, ob die Kohle erfolgreich war?): DIE Gesamt-Bilanz. Bisher gab es
+  // nur Liga×Markt-Buckets (je winzig → sagt einzeln nichts). Diese Kopfzeile rollt ALLE abgerechneten
+  // Signale auf: hat das Geld-folgen überhaupt Gewinn gebracht — und in WELCHEM Markt steckt die Kante.
+  function trackHeadline(t) {
+    var g = t && t.global; if (!g || !g.n) return '';
+    var kpi = function (lbl, val, col, sub) {
+      return '<div style="flex:1;min-width:118px;background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:12px;padding:11px 13px">'
+        + '<div style="font-size:10px;color:' + C.dim + ';text-transform:uppercase;letter-spacing:.4px">' + lbl + '</div>'
+        + '<div style="font-size:21px;font-weight:900;color:' + (col || C.ink) + ';margin-top:3px">' + val + '</div>'
+        + (sub ? '<div style="font-size:9.5px;color:' + C.dim + ';margin-top:1px">' + sub + '</div>' : '') + '</div>';
+    };
+    var kpis = '<div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:10px">'
+      + kpi('Signale', g.n, C.ink, g.wins + ' getroffen')
+      + kpi('Trefferquote', _pctTxt(g.hitRate), g.hitRate != null && g.hitRate >= 0.5 ? C.back : C.lay)
+      + kpi('ROI — Geld backen', _roiTxt(g.roi), _roiCol(g.roi), 'zu den Quoten')
+      + kpi('Konzentration ≥65%', _roiTxt(g.roiConc), _roiCol(g.roiConc), _pctTxt(g.hitRateConc) + ' · n' + g.nConc)
+      + kpi('Zufluss', _roiTxt(g.roiInflow), _roiCol(g.roiInflow), _pctTxt(g.hitRateInflow) + ' · n' + g.nInflow)
+      + '</div>';
+    var verdict = (g.roi != null && g.roi > 0.02)
+      ? '✅ Dem Geld-Favorit blind zu folgen war insgesamt profitabel (ROI ' + _roiTxt(g.roi) + ').'
+      : (g.roi != null && g.roi < -0.02)
+        ? '⚠️ Dem Geld-Favorit BLIND über alle Märkte zu folgen zahlt sich NICHT aus (ROI ' + _roiTxt(g.roi) + '). Die Kante steckt in einzelnen Märkten — siehe unten.'
+        : '➖ Über alles etwa Nullsumme (ROI ' + _roiTxt(g.roi) + ') — die Kante steckt in einzelnen Märkten, nicht im blinden Folgen.';
+    var bm = t.byMarket || {};
+    var mrows = Object.keys(bm).map(function (k) { return { mk: k, v: bm[k] }; })
+      .filter(function (r) { return r.v.n >= 5; })
+      .sort(function (a, b) { return (b.v.roi == null ? -9 : b.v.roi) - (a.v.roi == null ? -9 : a.v.roi); });
+    var mkTable = '';
+    if (mrows.length) {
+      var tr = mrows.map(function (r) {
+        var v = r.v, lbl = (MK_ID[r.mk] ? MK_ID[r.mk].label : r.mk), solid = v.n >= MIN_CONF_N;
+        return '<tr style="border-top:1px solid ' + C.bd + ';opacity:' + (solid ? 1 : 0.6) + '">'
+          + '<td style="padding:5px 8px;font-size:12px;color:' + C.ink + '">' + esc(lbl) + '</td>'
+          + '<td style="text-align:right;padding:5px 8px;font-size:12px;color:' + C.mut + '">' + v.n + '</td>'
+          + '<td style="text-align:right;padding:5px 8px;font-size:12px;font-weight:700;color:' + C.ink + '">' + _pctTxt(v.hitRate) + '</td>'
+          + '<td style="text-align:right;padding:5px 8px;font-size:12px;font-weight:800;color:' + _roiCol(v.roi) + '">' + _roiTxt(v.roi) + '</td></tr>';
+      }).join('');
+      mkTable = '<div style="font-size:11px;color:' + C.mut + ';margin:2px 0 6px"><b style="color:' + C.ink + '">Wo trägt das Geld? — je Markt über ALLE Ligen</b> (das ist die eigentliche Antwort)</div>'
+        + '<div style="overflow-x:auto;background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:12px"><table style="width:100%;border-collapse:collapse;min-width:340px"><thead><tr>'
+        + '<th style="text-align:left;padding:6px 8px;font-size:10.5px;color:' + C.dim + '">Markt</th>'
+        + '<th style="text-align:right;padding:6px 8px;font-size:10.5px;color:' + C.dim + '">Spiele</th>'
+        + '<th style="text-align:right;padding:6px 8px;font-size:10.5px;color:' + C.dim + '">Treffer</th>'
+        + '<th style="text-align:right;padding:6px 8px;font-size:10.5px;color:' + C.dim + '">ROI</th></tr></thead><tbody>' + tr + '</tbody></table></div>';
+    }
+    return '<div style="background:linear-gradient(180deg,rgba(255,184,12,.06),transparent);border:1px solid ' + C.bd + ';border-radius:14px;padding:12px 13px;margin:0 0 14px">'
+      + '<div style="font-size:13px;font-weight:800;color:' + C.ink + ';margin-bottom:9px">🎯 War die Kohle erfolgreich? — Gesamt-Bilanz über alle abgerechneten Signale</div>'
+      + kpis
+      + '<div style="font-size:11.5px;color:' + C.mut + ';line-height:1.5;margin-bottom:12px">' + verdict + '</div>'
+      + mkTable + '</div>';
+  }
+
   function renderTrackBoard() {
     var t = _bf.track, isTeam = _bf.trackBy === 'team';
     var byBtn = function (id, lbl) { var on = _bf.trackBy === id; return '<button onclick="_bfSetTrackBy(\'' + id + '\')" style="padding:5px 12px;border:1px solid ' + (on ? C.gold : C.bd) + ';background:' + (on ? 'rgba(255,184,12,.12)' : 'transparent') + ';color:' + (on ? C.gold : C.mut) + ';font-size:11.5px;font-weight:700;cursor:pointer">' + lbl + '</button>'; };
@@ -808,7 +859,7 @@
         td(v.hitRateInflow != null ? _pctTxt(v.hitRateInflow) + ' <span style="color:' + C.dim + ';font-weight:600">' + v.nInflow + '</span>' : '—', v.hitRateInflow != null ? C.ink : C.dim) +
         '</tr>';
     }).join('');
-    return head + '<div style="font-size:11px;color:' + C.dim + ';margin-bottom:8px">' + t.n + ' abgerechnete Signale · ' + total + ' ' + (isTeam ? 'Team' : 'Liga') + '×Markt-Kombinationen' + (total > CAP ? ' · Top ' + CAP + ' gezeigt' : '') + ' · Stand ' + (t.generatedAt ? new Date(t.generatedAt).toLocaleString('de-AT') : '—') + '</div>' +
+    return head + trackHeadline(t) + '<div style="font-size:11px;color:' + C.dim + ';margin-bottom:8px">' + t.n + ' abgerechnete Signale · ' + total + ' ' + (isTeam ? 'Team' : 'Liga') + '×Markt-Kombinationen' + (total > CAP ? ' · Top ' + CAP + ' gezeigt' : '') + ' · Stand ' + (t.generatedAt ? new Date(t.generatedAt).toLocaleString('de-AT') : '—') + '</div>' +
       '<div style="overflow-x:auto;background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:14px"><table style="width:100%;border-collapse:collapse;min-width:560px"><thead>' + head2 + '</thead><tbody>' + body + '</tbody></table></div>' +
       '<div style="font-size:10.5px;color:' + C.dim + ';margin-top:8px">Blasse Zeilen: Stichprobe noch zu klein (n&lt;' + MIN_CONF_N + ').' + (isTeam ? ' Team-Ebene: früh, viele Buckets mit n=1.' : '') + '</div>';
   }
