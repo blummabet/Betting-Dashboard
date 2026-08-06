@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import subprocess
 import sys
 from datetime import datetime, timezone
@@ -41,6 +42,19 @@ def _load(name):
         return {}
 
 
+def _node_bin():
+    """node robust finden. 06.08.2026 (Lucas: node nicht gefunden): der self-hosted
+    Mac-Runner hat node NICHT immer auf dem PATH des Steps (Homebrew unter /opt/homebrew/bin). Erst
+    $NODE_BIN, dann PATH, dann bekannte Absolut-Pfade — so laeuft der Emitter unabhaengig vom PATH."""
+    cand = os.environ.get("NODE_BIN") or shutil.which("node")
+    if cand:
+        return cand
+    for c in ("/opt/homebrew/bin/node", "/usr/local/bin/node", "/usr/bin/node"):
+        if os.path.exists(c):
+            return c
+    return "node"
+
+
 def load_emit():
     """Emitter-Output holen. Test/Offline: $SHORTLIST_EMIT_JSON = Pfad zu fertigem JSON.
     Sonst: node-Emitter laufen lassen (lädt die echte poly-wallets.js-Engine). None bei Fehler."""
@@ -52,7 +66,7 @@ def load_emit():
             print(f"  Emit-Override nicht lesbar: {e}")
             return None
     try:
-        out = subprocess.run(["node", str(BASE / EMITTER)], cwd=str(BASE),
+        out = subprocess.run([_node_bin(), str(BASE / EMITTER)], cwd=str(BASE),
                              capture_output=True, text=True, timeout=120)
         if out.returncode != 0:
             print(f"  Emitter-Fehler (rc={out.returncode}): {out.stderr.strip()[:400]}")

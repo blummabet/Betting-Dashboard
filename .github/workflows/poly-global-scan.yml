@@ -45,13 +45,24 @@ jobs:
         # npm ci würde node_modules löschen und alles neu ziehen (fragil bei Netz-Aussetzern). Nur wenn
         # jsdom fehlt, installieren. Am Ende hart verifizieren, damit ein echter Ausfall im Log sichtbar ist.
         run: |
-          if node -e "require.resolve('jsdom')" 2>/dev/null; then
+          # 06.08.2026 (Lucas: node wurde nicht gefunden): der Runner hat /opt/homebrew/bin
+          # NICHT auf dem PATH (wie bei Python) -> bare `node`/`npm` scheitern. node absolut aufloesen
+          # und als NODE_BIN fuer die Python-Steps exportieren (der Emitter nutzt es dann direkt).
+          NODE=""
+          for N in /opt/homebrew/bin/node /usr/local/bin/node /usr/bin/node; do
+            if "$N" --version >/dev/null 2>&1; then NODE="$N"; break; fi
+          done
+          if [ -z "$NODE" ]; then echo "⚠️ Kein node gefunden — Shortlist-Emitter wird aussetzen."; exit 0; fi
+          echo "✅ node: $NODE ($($NODE --version))"
+          echo "NODE_BIN=$NODE" >> $GITHUB_ENV
+          NPM="$(dirname "$NODE")/npm"
+          if "$NODE" -e "require.resolve('jsdom')" 2>/dev/null; then
             echo "✅ jsdom bereits vorhanden — kein Install nötig."
           else
             echo "ℹ️ jsdom fehlt — installiere…"
-            npm ci --no-audit --no-fund 2>/dev/null || npm install jsdom@^24 --no-audit --no-fund 2>/dev/null || true
+            "$NPM" install jsdom@^24 --no-audit --no-fund 2>/dev/null || true
           fi
-          node -e "require.resolve('jsdom')" 2>/dev/null && echo "✅ jsdom auflösbar" || echo "⚠️ jsdom weiterhin fehlend — Shortlist-Emitter wird aussetzen (poly_status meldet es)."
+          "$NODE" -e "require.resolve('jsdom')" 2>/dev/null && echo "✅ jsdom auflösbar" || echo "⚠️ jsdom weiterhin fehlend — Shortlist-Emitter wird aussetzen (poly_status meldet es)."
         continue-on-error: true
 
       - name: 🎯 Cross-Sport Poly-Radar (Poly vs Pinnacle, read-only)
