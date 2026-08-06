@@ -1,18 +1,26 @@
 {
- "n": 329,
+ "n": 337,
  "minOdds": 1.35,
- "moneyHitRate": 0.632,
- "priceHitRate": 0.632,
- "brierMoney": 0.4571,
- "brierPrice": 0.4572,
+ "moneyHitRate": 0.641,
+ "priceHitRate": 0.644,
+ "brierMoney": 0.4554,
+ "brierPrice": 0.4555,
  "disagree": {
-  "n": 0,
+  "n": 1,
   "moneyWon": 0,
-  "priceWon": 0,
+  "priceWon": 1,
   "neither": 0
  },
  "verdict": "gleichauf",
  "byLeague": [
+  {
+   "league": "MLB",
+   "n": 82,
+   "moneyHitRate": 0.622,
+   "brierMoney": 0.4856,
+   "brierPrice": 0.4858,
+   "verdict": "gleichauf"
+  },
   {
    "league": "UCL",
    "n": 24,
@@ -22,11 +30,11 @@
    "verdict": "gleichauf"
   },
   {
-   "league": "MLB",
-   "n": 81,
-   "moneyHitRate": 0.63,
-   "brierMoney": 0.4838,
-   "brierPrice": 0.4839,
+   "league": "ESPORTS",
+   "n": 128,
+   "moneyHitRate": 0.695,
+   "brierMoney": 0.4255,
+   "brierPrice": 0.4255,
    "verdict": "gleichauf"
   },
   {
@@ -47,18 +55,10 @@
   },
   {
    "league": "TENNIS",
-   "n": 60,
-   "moneyHitRate": 0.533,
-   "brierMoney": 0.4936,
-   "brierPrice": 0.4936,
-   "verdict": "gleichauf"
-  },
-  {
-   "league": "ESPORTS",
-   "n": 120,
-   "moneyHitRate": 0.675,
-   "brierMoney": 0.4282,
-   "brierPrice": 0.4281,
+   "n": 59,
+   "moneyHitRate": 0.542,
+   "brierMoney": 0.4912,
+   "brierPrice": 0.4912,
    "verdict": "gleichauf"
   }
  ],
@@ -242,6 +242,18 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 449891
+  },
+  {
+   "key": "mlb-sd-ari-2026-08-05",
+   "league": "MLB",
+   "winner": "Arizona Diamondbacks",
+   "moneyFav": "San Diego Padres",
+   "priceFav": "San Diego Padres",
+   "moneyShare": 0.565,
+   "priceProb": 0.565,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 432687
   },
   {
    "key": "mlb-sf-sd-2026-08-02",
@@ -530,33 +542,21 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 233850
-  },
-  {
-   "key": "mlb-cws-tb-2026-08-01",
-   "league": "MLB",
-   "winner": "Tampa Bay Rays",
-   "moneyFav": "Tampa Bay Rays",
-   "priceFav": "Tampa Bay Rays",
-   "moneyShare": 0.605,
-   "priceProb": 0.605,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 230619
   }
  ],
- "generatedAt": "2026-08-06T04:30:31.840683+00:00",
+ "generatedAt": "2026-08-06T10:18:25.568008+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 421,
   "nfl": 582,
-  "mlb": 564,
+  "mlb": 566,
   "nhl": 404,
   "mls": 536,
   "epl": 404,
   "soccer": 800,
-  "tennis": 730,
-  "ucl": 475,
+  "tennis": 705,
+  "ucl": 474,
   "laliga": 0,
   "bundesliga": 401,
   "serie-a": 37,
@@ -566,7 +566,7 @@
   "lol": 414,
   "dota": 9,
   "valorant": 447,
-  "ufc": 459,
+  "ufc": 458,
   "mma": 46,
   "boxing": 224,
   "golf": 271,
