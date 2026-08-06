@@ -874,7 +874,7 @@ function _pwWalletScore(wallet){
   const s=_pwCache&&_pwCache.walletTrack&&_pwCache.walletTrack.scores;
   const e=s&&s[wallet];
   if(!e||!e.n) return null;
-  return {n:e.n, avgClv:e.clvSumPP/e.n, hit:(e.wins||0)/e.n};
+  return {n:e.n, avgClv:e.clvSumPP/e.n, hit:(e.wins||0)/e.n, pnl:Number(e.pnl)||0};
 }
 function _pwSharpCell(wallet){
   const sc=_pwWalletScore(wallet);
@@ -1270,7 +1270,7 @@ function _pwMoveFor(key){
 function _pwSharpSideFor(m){
   const bySide={};
   for(const wh of (m.whales||[])){ const sc=_pwWalletScore(wh.wallet);
-    if(sc&&sc.n>=PW_SHARP_MIN_N&&sc.avgClv>0) bySide[wh.side]=(bySide[wh.side]||0)+(Number(wh.usd)||0); }
+    if(sc&&sc.n>=PW_SHARP_MIN_N&&sc.avgClv>0&&(sc.pnl||0)>=0) bySide[wh.side]=(bySide[wh.side]||0)+(Number(wh.usd)||0); }
   let best=null,bmax=0; for(const s in bySide) if(bySide[s]>bmax){bmax=bySide[s];best=s;}
   return best;
 }
@@ -1365,7 +1365,7 @@ function _pwSharpSideForKey(key){
     if(!pos||pos.key!==key) continue;
     const usd=Number(pos.usd)||0; if(usd<=0) continue;
     const sc=_pwWalletScore(pos.wallet); if(!sc||sc.n<PW_SHARP_MIN_N) continue;
-    if(!(sc.avgClv>0 || sc.hit>=0.5)) continue;     // bewährt: schlägt Linie ODER gewinnt
+    if(!(sc.avgClv>0 || sc.hit>=0.5) || (sc.pnl||0)<0) continue;     // bewährt: schlägt Linie ODER gewinnt
     bySide[pos.side]=(bySide[pos.side]||0)+usd;
   }
   let best=null,bmax=0; for(const sd in bySide) if(bySide[sd]>bmax){bmax=bySide[sd];best=sd;}
@@ -1385,7 +1385,7 @@ function _pwSharpInfoForKey(key){
     const usd=Number(pos.usd)||0; if(usd<=0) continue;
     const raw=sc[pos.wallet]; if(!raw||!raw.n||raw.n<PW_SHARP_MIN_N) continue;
     const avgClv=raw.clvSumPP/raw.n, hit=(raw.wins||0)/raw.n;
-    if(!(avgClv>0 || hit>=0.5)) continue;           // bewährt: schlägt Linie ODER gewinnt
+    if(!(avgClv>0 || hit>=0.5) || (Number(raw.pnl)||0)<0) continue;   // 06.08.2026 (Lucas): kein "scharf" bei Minus-PnL           // bewährt: schlägt Linie ODER gewinnt
     const b=bySide[pos.side]||(bySide[pos.side]={usd:0,n:0,wins:0,pnl:0,clvUsd:0,count:0});
     b.usd+=usd; b.n+=raw.n; b.wins+=(raw.wins||0); b.pnl+=(Number(raw.pnl)||0);
     b.clvUsd+=avgClv*usd; b.count++;

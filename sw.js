@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v76';   // 06.08.2026: Uebersicht Betfair-HT — Quasi-Lock-Quoten (<1.30) + fertige Spiele rausgefiltert (haengen-bleiber weg)
+const VERSION = 'cocobet-v77';   // 06.08.2026: Shortlist/Heute-wetten — "scharfe Wallet"-Label nur noch bei lifetime PnL>=0 (Minus-Wallets nicht mehr als scharf getarnt)
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
