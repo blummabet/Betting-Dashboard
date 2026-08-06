@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-06T15:00:04.635195+00:00",
+ "generatedAt": "2026-08-06T17:40:50.566551+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -11,7 +11,7 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 261,
- "pinnKeys": 101,
+ "pinnKeys": 143,
  "matched": 25,
  "footballRows": 3,
  "crossRows": 258,
@@ -30,8 +30,37 @@
   "soccer_mls": 3
  },
  "trackRecord": {
-  "tracked": 60,
+  "tracked": 62,
   "converged": 1
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|athletics-cincinnatireds|athletics",
+   "sport": "baseball_mlb",
+   "event": "Athletics vs Cincinnati Reds",
+   "market": "Moneyline",
+   "outcome": "Athletics",
+   "polyPP": 36.5,
+   "pinnPP": 47.9,
+   "gapPP": -11.41,
+   "vol": 376275,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-06T17:40:50.566406+00:00"
+  },
+  {
+   "id": "baseball_mlb|athletics-cincinnatireds|cincinnatireds",
+   "sport": "baseball_mlb",
+   "event": "Athletics vs Cincinnati Reds",
+   "market": "Moneyline",
+   "outcome": "Cincinnati Reds",
+   "polyPP": 63.5,
+   "pinnPP": 52.1,
+   "gapPP": 11.41,
+   "vol": 376275,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-06T17:40:50.566406+00:00"
+  }
+ ]
 }
