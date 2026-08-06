@@ -645,9 +645,19 @@
   // seitig aus den geladenen Betfair-Preisen, gerankt nach Konzentration (€ × Anteil) wie „Kohle".
   var _HT_MK = { 'Half Time': 'HT 1X2', 'First Half Goals 0.5': 'HT O/U 0.5', 'First Half Goals 1.5': 'HT O/U 1.5' };
   var _HT_FLOOR = 1000;
+  var _HT_MIN_ODD = 1.30;   // 06.08.2026 (Lucas): Geld auf HT-Quasi-Lock (@<1.30 = HT-Ergebnis entschieden) ist kein Signal — „The Draw @1.02" raus.
+  function _mdBfHtStale(m) {
+    // 06.08.2026 (Lucas: „haengt seit Stunden"): fertige/lange-vorbei Spiele raus. finished ODER
+    // Anpfiff > 3.5h her (Spiel durch, HT laengst entschieden). Ohne Kickoff/Live-Info -> nicht stale.
+    var li = m.liveInfo || {};
+    if (li.finished) return true;
+    var ko = m.kickoff ? Date.parse(m.kickoff) : NaN;
+    return !isNaN(ko) && (Date.now() - ko) > 3.5 * 3.6e6;
+  }
   function _mdBfHt() {
     var ms = (_md.data.betfair && _md.data.betfair.matches) || [], rows = [];
     ms.forEach(function (m) {
+      if (_mdBfHtStale(m)) return;   // durchgelaufene Spiele nicht mehr zeigen
       var best = null, mk = m.markets || {};
       for (var name in _HT_MK) {
         var market = mk[name]; if (!market) continue;
@@ -656,6 +666,7 @@
         if (tot <= 0) continue;
         var lead = rs.reduce(function (a, r) { return (!a || (+r.vol || 0) > (+a.vol || 0)) ? r : a; }, null);
         if (!lead) continue;
+        if (typeof lead.odd === 'number' && lead.odd < _HT_MIN_ODD) continue;   // HT-Quasi-Lock -> kein Signal
         var share = (+lead.vol || 0) / tot, sc = (+lead.vol || 0) * share;
         if (!best || sc > best.sc) best = { name: name, lead: lead, share: share, vol: +lead.vol || 0, sc: sc };
       }
