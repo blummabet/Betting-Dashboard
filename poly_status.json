@@ -43,7 +43,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "mlb-tor-chc-2026-06-21: seit 46.7 Tagen offen — keine Auflösung gefunden"
+        "mlb-tor-chc-2026-06-21: seit 46.8 Tagen offen — keine Auflösung gefunden"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -64,10 +64,10 @@
       "nFail": 6,
       "failures": [
         "15/51 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (29%) — Trefferquote allein trügt",
-        "   0x84cfffc3f1… n=16 Treffer 62% P&L $-7,501,936",
-        "   0xe9076a87c5… n=17 Treffer 71% P&L $-7,410,610",
-        "   0xc3c3b3ef30… n=39 Treffer 72% P&L $-3,736,838",
-        "   0xa0f21e6d35… n=13 Treffer 62% P&L $-2,709,427",
+        "   0x84cfffc3f1… n=16 Treffer 62% P&L $-7,501,898",
+        "   0xe9076a87c5… n=17 Treffer 71% P&L $-7,405,171",
+        "   0xc3c3b3ef30… n=39 Treffer 72% P&L $-3,744,065",
+        "   0xa0f21e6d35… n=13 Treffer 62% P&L $-2,710,766",
         "89/140 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
@@ -88,11 +88,11 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "386/430 'live' Geld-Märkte sind schon >6h nach Anpfiff (90%) — $12,622,613 Whale-Geld auf fertigen Spielen"
+        "378/423 'live' Geld-Märkte sind schon >6h nach Anpfiff (89%) — $11,642,836 Whale-Geld auf fertigen Spielen"
       ],
       "note": "Der Close-Feed setzt kein resolved-Flag; fertige Spiele bleiben 'live'. Alle Views filtern jetzt auf den rekonstruierten Anpfiff — dieser Check misst den Geister-Anteil im Roh-Feed (steigt er, prunt/löst der Feed nicht mehr auf; jede ungegatete View zeigt dann fertige Spiele)."
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-08-06T17:42:44.867374+00:00"
+  "generatedAt": "2026-08-06T18:41:48.567842+00:00"
 }
