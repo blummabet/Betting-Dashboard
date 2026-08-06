@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import json
 import os
+import glob
 import shutil
 import subprocess
 import sys
@@ -52,6 +53,10 @@ def _node_bin():
     for c in ("/opt/homebrew/bin/node", "/usr/local/bin/node", "/usr/bin/node"):
         if os.path.exists(c):
             return c
+    # nvm: versionierter Pfad ~/.nvm/versions/node/vX.Y.Z/bin/node (06.08.2026, Lucas: node nicht an Standard-Pfaden)
+    nvm = sorted(glob.glob(os.path.expanduser("~/.nvm/versions/node/*/bin/node")))
+    if nvm:
+        return nvm[-1]
     return "node"
 
 

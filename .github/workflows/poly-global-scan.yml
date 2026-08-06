@@ -42,13 +42,15 @@ jobs:
           $PYTHON -m pip install --break-system-packages requests --quiet 2>/dev/null || true
 
       - name: 🟢 Node bereitstellen (Shortlist-Emitter) — haenge-sicher
+        shell: bash -l {0}   # Login-Shell sourced das Profil (nvm/Homebrew-PATH) -> `command -v node` findet node auch bei nvm.
         # 06.08.2026 (Lucas): node absolut aufloesen (Runner hat /opt/homebrew/bin nicht auf PATH, wie
         # bei Python) und als NODE_BIN exportieren (der Emitter nutzt es). KEIN npm-install im Scan —
         # das haengt auf der Wohn-IP und blockte via concurrency alle Laeufe. jsdom ist ueber clean:false
         # persistiert; fehlt es mal, meldet der Emitter das (poly_status), Install macht man einmalig manuell.
         run: |
+          NVM_NODE="$(ls -t "$HOME"/.nvm/versions/node/*/bin/node 2>/dev/null | head -1)"
           NODE=""
-          for N in "$(command -v node 2>/dev/null)" /opt/homebrew/bin/node /usr/local/bin/node /usr/bin/node; do
+          for N in "$(command -v node 2>/dev/null)" "$NVM_NODE" /opt/homebrew/bin/node /usr/local/bin/node /usr/bin/node; do
             [ -n "$N" ] && "$N" --version >/dev/null 2>&1 && { NODE="$N"; break; }
           done
           if [ -z "$NODE" ]; then echo "⚠️ Kein node gefunden — Emitter setzt aus."; exit 0; fi
