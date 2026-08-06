@@ -72,6 +72,7 @@ PUB_MIN_USD_UNTRACKED = float(os.environ.get("WHALE_PUB_MIN_USD")         or 100
 PUB_MIN_USD_TRACKED   = float(os.environ.get("WHALE_PUB_MIN_USD_TRACKED") or 25000)
 PUB_MIN_TR            = int(os.environ.get("WHALE_PUB_MIN_TR")            or 8)   # 02.08.2026 (Lucas): "bewiesen" konsistent ab n>=8
 PUB_MIN_HITRATE       = float(os.environ.get("WHALE_PUB_MIN_HITRATE")     or 0.5)
+PUB_MIN_USD_NOREC     = float(os.environ.get("WHALE_PUB_MIN_USD_NOREC")   or 150000)   # 06.08.2026 (Lucas: Feed straffen): Wallet OHNE belastbaren Record (n<PUB_MIN_TR) nur ab so viel $
 
 
 # 03.08.2026 (Lucas: „50% ist Münzwurf, kein Beweis"): „bewiesen" heißt jetzt STATISTISCH über
@@ -213,6 +214,11 @@ def _wallet_line(scores: dict, wallet) -> str:
     if _is_smart(s):
         wins = s.get("wins") or 0
         return f"Wallet {link} · ✅ <b>bewiesene Wallet</b> ({wins}/{n} richtig, {round(wins/n*100)}%)"
+    # 06.08.2026 (Lucas: gleiche Loesung wie Public): rohe Bilanz ab n>=MIN_TR neutral zeigen, statt sie
+    # hinter „im Aufbau" zu verstecken. Nur wirklich duenn (n<MIN_TR) oder Verlierer bleibt „im Aufbau".
+    if isinstance(s, dict) and n >= MIN_TR and not _is_confirmed_loser(s):
+        wins = s.get("wins") or 0
+        return f"Wallet {link} · 📊 <b>Bilanz</b> {wins}/{n} ({round(wins/n*100)}%)"
     return f"Wallet {link} · <i>Track-Record noch im Aufbau</i>"
 
 
@@ -426,6 +432,15 @@ def _pub_wallet_line(scores: dict, wallet) -> str:
         if isinstance(pnl, (int, float)):
             extra = " · %s%s lifetime" % ("+" if pnl >= 0 else "−", _usd(abs(pnl)))
         return "🔥 <b>bewiesen scharf</b> — %d/%d richtig (%d%%%s)%s" % (wins, n, round(wins / n * 100), clvtxt, extra)
+    # 06.08.2026 (Lucas: „frueher stand der Track-Record oefter"): die strenge „bewiesen"-Huerde
+    # (Wilson>50% + kein Verlierer) versteckte bei 81 von 89 Wallets mit echtem Record die Bilanz.
+    # Ab n>=PUB_MIN_TR jetzt die rohe Bilanz als NEUTRALE Zeile zeigen (kein „scharf"-Versprechen),
+    # damit man selbst urteilen kann. „im Aufbau" nur noch bei wirklich duennem Record (n<PUB_MIN_TR).
+    if isinstance(s, dict) and n >= PUB_MIN_TR and not _is_confirmed_loser(s):
+        wins = s.get("wins") or 0
+        clv = (s.get("clvSumPP") or 0) / n
+        clvtxt = " · %s%.1fpp CLV" % ("+" if clv >= 0 else "", clv)
+        return "📊 <b>Bilanz</b>: %d/%d · %d%%%s" % (wins, n, round(wins / n * 100), clvtxt)
     return "👀 <i>großes Wallet · Track-Record noch im Aufbau</i>"
 
 
@@ -487,6 +502,17 @@ def _tg_public(text: str) -> bool:
         return False
 
 
+def _pub_keep(pos, scores):
+    """Feed straffen (06.08.2026, Lucas): ein grosses Wallet OHNE belastbaren Record (n<PUB_MIN_TR)
+    kommt nur bei sehr grossem Einsatz (>= PUB_MIN_USD_NOREC) in den Public-Feed. Wallets MIT Record
+    (n>=PUB_MIN_TR, inkl. der bewiesenen) bleiben bei ihren normalen Schwellen. REIN/testbar."""
+    s = scores.get(pos.get("wallet")) if isinstance(scores, dict) else None
+    n = (s.get("n") or 0) if isinstance(s, dict) else 0
+    if n >= PUB_MIN_TR:
+        return True
+    return (float(pos.get("usd") or 0) >= PUB_MIN_USD_NOREC)
+
+
 def main():
     print("=== poly_whale_watch.py ===")
     track = _load(TRACK_FILE, {})
@@ -520,6 +546,7 @@ def main():
     pub_cand = select(track, pub_seen, now, PUB_MIN_USD_UNTRACKED, PUB_MIN_USD_TRACKED,
                       PUB_MIN_TR, PUB_MIN_HITRATE)
     pub_cand = [c for c in pub_cand if _pub_ok(c[1])]   # nur Sport + sinnvoller Preis (Public)
+    pub_cand = [c for c in pub_cand if _pub_keep(c[1], scores)]   # 06.08.2026 (Lucas): Feed straffen — grosse Wallets ohne Record nur ab PUB_MIN_USD_NOREC
     pub_sent = 0
     for pkey, pos, restock in pub_cand[:MAX_ALERTS]:
         if _tg_public(build_public_card(pos, scores, restock, broad)):
