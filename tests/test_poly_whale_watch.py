@@ -138,11 +138,13 @@ class TestBuildCard(unittest.TestCase):
         self.assertIn('href="https://polymarket.com/profile/0xabcdef1234567890abcd"', card)
         self.assertIn("0xabcd…abcd", card)   # Kurz-ID bleibt als Linktext
 
-    def test_coinflip_record_shown_neutral(self):
-        # 03.08.2026: 24/47 (51%) ist kein Beweis → NICHT als „bewiesen", sondern „im Aufbau"
+    def test_coinflip_record_shown_as_neutral_bilanz(self):
+        # 06.08.2026 (Lucas: „frueher stand der Track-Record oefter"): 24/47 (51%) ist kein Beweis,
+        # wird aber ab n>=MIN_TR als NEUTRALE Bilanz gezeigt (nicht „bewiesen", nicht mehr versteckt).
         card = P.build_card(_pos(9000, wallet="0xc"), {"0xc": {"n": 47, "wins": 24}}, False)
-        self.assertIn("im Aufbau", card)
+        self.assertIn("Bilanz", card); self.assertIn("24/47", card); self.assertIn("51%", card)
         self.assertNotIn("bewiesene Wallet", card)
+        self.assertNotIn("im Aufbau", card)
 
     def test_weak_record_shown_neutral(self):
         # schwache 1/3-Bilanz NICHT als abschreckende Zahl — neutral „im Aufbau"
@@ -284,6 +286,35 @@ class TestSharpMerge(unittest.TestCase):
         self.assertIn("bewiesen scharf", P.build_card(_pos(60000, wallet="0xREC"), self.SMART, False))   # Wal+Feuer
         self.assertIn("Scharfe Wallet frisch drin", P.build_card(_pos(2500, wallet="0xREC"), self.SMART, False))
         self.assertIn("weitere Position", P.build_card(_pos(60000, wallet="0xREC"), self.SMART, False, extra=3))
+
+
+class TestPublicRecordAndTighten(unittest.TestCase):
+    """06.08.2026 (Lucas: „frueher stand der Track-Record oefter" + „Feed straffen"): Wallets mit
+    belastbarem Record (n>=8) zeigen die rohe Bilanz als neutrale Zeile (nicht nur die bewiesenen);
+    grosse Wallets OHNE Record kommen nur ab PUB_MIN_USD_NOREC in den Public-Feed."""
+
+    def test_bilanz_zeile_fuer_record_nicht_nur_bewiesen(self):
+        # bewiesen (8/9, signifikant) -> die scharf-Zeile
+        self.assertIn("bewiesen scharf", P._pub_wallet_line({"w": {"n": 9, "wins": 8, "clvSumPP": 18}}, "w"))
+        # Record n>=8 aber NICHT signifikant (52%) -> neutrale Bilanz statt „im Aufbau"
+        line = P._pub_wallet_line({"w": {"n": 83, "wins": 43, "clvSumPP": 25}}, "w")
+        self.assertIn("Bilanz", line); self.assertIn("43/83", line); self.assertIn("52%", line)
+        self.assertNotIn("bewiesen scharf", line)
+        self.assertNotIn("im Aufbau", line)
+
+    def test_duenner_record_bleibt_im_aufbau(self):
+        self.assertIn("im Aufbau", P._pub_wallet_line({"w": {"n": 4, "wins": 3}}, "w"))
+
+    def test_bestaetigter_verlierer_keine_schmeichel_bilanz(self):
+        # 24/31 = 77% aber Netto-Verlierer -> KEINE flotte Bilanz-Zeile (Guard)
+        line = P._pub_wallet_line({"0xLOSS": {"n": 31, "wins": 24, "pnl": -25576}}, "0xLOSS")
+        self.assertNotIn("77%", line); self.assertIn("im Aufbau", line)
+
+    def test_pub_keep_grosse_wallet_ohne_record_nur_ab_schwelle(self):
+        sc = {"rec": {"n": 30, "wins": 16}, "new": {"n": 3, "wins": 2}}
+        self.assertTrue(P._pub_keep({"wallet": "rec", "usd": 60000}, sc))    # Record -> immer
+        self.assertFalse(P._pub_keep({"wallet": "new", "usd": 115000}, sc))  # kein Record, < NOREC -> raus
+        self.assertTrue(P._pub_keep({"wallet": "new", "usd": P.PUB_MIN_USD_NOREC}, sc))  # riesig -> rein
 
 
 if __name__ == "__main__":

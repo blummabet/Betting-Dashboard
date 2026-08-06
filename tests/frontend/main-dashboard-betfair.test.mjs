@@ -107,6 +107,45 @@ test('Betfair HT: unter der HT-Schwelle (< 1K) -> freundlicher Leer-Hinweis', ()
   assert.match(h, /Kein nennenswertes HT-Geld/);
 });
 
+// 06.08.2026 (Lucas: „The Draw @1.02 haengt seit Stunden"): HT-Kachel — Quasi-Lock-Quoten (<1.30 =
+// HT-Ergebnis entschieden) UND fertige/lange-vorbei Spiele raus.
+test('Betfair HT: Quasi-Lock-Quote (@1.02) fliegt raus', () => {
+  const w = load();
+  w._mdState.data = {
+    liga: null, mls: null, ligaStreaks: null, mlsStreaks: null, whales: null, bfOverview: { steam: [], flow: [] },
+    betfair: { matches: [
+      { matchId: 7, home: 'Los Angeles FC', away: 'Guadalajara', country: 'US', league: 'MLS',
+        markets: { 'Half Time': { runners: [
+          { name: 'The Draw', odd: 1.02, vol: 1200 }, { name: 'Los Angeles FC', odd: 20, vol: 600 }, { name: 'Guadalajara', odd: 30, vol: 400 } ] } } },
+    ] },
+  };
+  w._renderMainDash();
+  const h = w.document.getElementById('mainDashPanel').innerHTML;
+  assert.ok(!/Los Angeles FC/.test(h), 'HT-Quasi-Lock @1.02 darf NICHT in der HT-Kachel stehen');
+  assert.match(h, /Kein nennenswertes HT-Geld/);
+});
+
+test('Betfair HT: fertiges Spiel (finished / Anpfiff lange her) wird nicht mehr gezeigt', () => {
+  const w = load();
+  const oldKo = new Date(Date.now() - 5 * 3.6e6).toISOString();   // vor 5h angepfiffen -> durch
+  w._mdState.data = {
+    liga: null, mls: null, ligaStreaks: null, mlsStreaks: null, whales: null, bfOverview: { steam: [], flow: [] },
+    betfair: { matches: [
+      { matchId: 8, home: 'Zzhomeqq', away: 'Zzawayqq', country: 'AT', league: 'X', kickoff: oldKo,
+        markets: { 'First Half Goals 0.5': { runners: [
+          { name: 'Under 0.5 Goals', odd: 3.6, vol: 1500 }, { name: 'Over 0.5 Goals', odd: 1.4, vol: 500 } ] } } },
+      { matchId: 9, home: 'Zzfinqq', away: 'Zzendqq', country: 'AT', league: 'X', liveInfo: { finished: true },
+        markets: { 'Half Time': { runners: [
+          { name: 'Zzfinqq', odd: 1.8, vol: 1500 }, { name: 'The Draw', odd: 3.5, vol: 500 } ] } } },
+    ] },
+  };
+  w._renderMainDash();
+  const h = w.document.getElementById('mainDashPanel').innerHTML;
+  assert.ok(!/Zzhomeqq/.test(h), 'Spiel mit Anpfiff vor 5h raus');
+  assert.ok(!/Zzfinqq/.test(h), 'finished-Spiel raus');
+  assert.match(h, /Kein nennenswertes HT-Geld/);
+});
+
 // 04.08.2026 (Lucas: „Frisches Geld @1.01 ist sinnfrei"): Zuflüsse auf Quasi-Lock-Quoten (< 1.30,
 // meist live/entschieden) sind kein Signal und fliegen aus der Frisches-Geld-Kachel — normale Quoten bleiben.
 test('Frisches Geld: @1.01-Zufluss fliegt raus, normale Quote bleibt', () => {
