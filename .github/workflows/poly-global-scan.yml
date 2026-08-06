@@ -56,7 +56,13 @@ jobs:
           if [ -z "$NODE" ]; then echo "⚠️ Kein node gefunden — Emitter setzt aus."; exit 0; fi
           echo "NODE_BIN=$NODE" >> $GITHUB_ENV
           echo "✅ node: $NODE ($($NODE --version))"
-          "$NODE" -e "require.resolve('jsdom')" 2>/dev/null && echo "✅ jsdom auflösbar" || echo "⚠️ jsdom fehlt — einmalig manuell installieren (npm install jsdom@^24)."
+          if "$NODE" -e "require.resolve('jsdom')" 2>/dev/null; then
+            echo "✅ jsdom vorhanden"
+          else
+            echo "ℹ️ jsdom fehlt — installiere (Step-Timeout 5 Min + Job-Timeout schuetzen vor Haenger)…"
+            "$(dirname "$NODE")/npm" install jsdom@^24 --no-audit --no-fund 2>/dev/null || echo "⚠️ jsdom-Install fehlgeschlagen — Emitter setzt aus (poly_status meldet es)."
+            "$NODE" -e "require.resolve('jsdom')" 2>/dev/null && echo "✅ jsdom jetzt da" || true
+          fi
         continue-on-error: true
         timeout-minutes: 5
 
