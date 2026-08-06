@@ -21,6 +21,7 @@ concurrency:
 jobs:
   scan:
     runs-on: [self-hosted, macOS]
+    timeout-minutes: 25   # 06.08.2026 (Lucas): OHNE Timeout blockiert EIN haengender Lauf via concurrency ALLE folgenden Scans (war „eingefroren seit 04:30"). Timeout < 30-Min-Takt -> selbstheilend.
     steps:
       - name: 📥 Repo auschecken
         uses: actions/checkout@v4
@@ -40,30 +41,24 @@ jobs:
           echo "POLY_PYTHON=$PYTHON" >> $GITHUB_ENV
           $PYTHON -m pip install --break-system-packages requests --quiet 2>/dev/null || true
 
-      - name: 🟢 Node/jsdom bereitstellen (für Shortlist-Emitter)
-        # Idempotent: ist jsdom schon da (persistiertes node_modules dank clean:false), NICHTS tun —
-        # npm ci würde node_modules löschen und alles neu ziehen (fragil bei Netz-Aussetzern). Nur wenn
-        # jsdom fehlt, installieren. Am Ende hart verifizieren, damit ein echter Ausfall im Log sichtbar ist.
+      - name: 🟢 Node bereitstellen (Shortlist-Emitter) — haenge-sicher
+        shell: bash -l {0}   # Login-Shell sourced das Profil (nvm/Homebrew-PATH) -> `command -v node` findet node auch bei nvm.
+        # 06.08.2026 (Lucas): node absolut aufloesen (Runner hat /opt/homebrew/bin nicht auf PATH, wie
+        # bei Python) und als NODE_BIN exportieren (der Emitter nutzt es). KEIN npm-install im Scan —
+        # das haengt auf der Wohn-IP und blockte via concurrency alle Laeufe. jsdom ist ueber clean:false
+        # persistiert; fehlt es mal, meldet der Emitter das (poly_status), Install macht man einmalig manuell.
         run: |
-          # 06.08.2026 (Lucas: node wurde nicht gefunden): der Runner hat /opt/homebrew/bin
-          # NICHT auf dem PATH (wie bei Python) -> bare `node`/`npm` scheitern. node absolut aufloesen
-          # und als NODE_BIN fuer die Python-Steps exportieren (der Emitter nutzt es dann direkt).
+          NVM_NODE="$(ls -t "$HOME"/.nvm/versions/node/*/bin/node 2>/dev/null | head -1)"
           NODE=""
-          for N in /opt/homebrew/bin/node /usr/local/bin/node /usr/bin/node; do
-            if "$N" --version >/dev/null 2>&1; then NODE="$N"; break; fi
+          for N in "$(command -v node 2>/dev/null)" "$NVM_NODE" /opt/homebrew/bin/node /usr/local/bin/node /usr/bin/node; do
+            [ -n "$N" ] && "$N" --version >/dev/null 2>&1 && { NODE="$N"; break; }
           done
-          if [ -z "$NODE" ]; then echo "⚠️ Kein node gefunden — Shortlist-Emitter wird aussetzen."; exit 0; fi
-          echo "✅ node: $NODE ($($NODE --version))"
+          if [ -z "$NODE" ]; then echo "⚠️ Kein node gefunden — Emitter setzt aus."; exit 0; fi
           echo "NODE_BIN=$NODE" >> $GITHUB_ENV
-          NPM="$(dirname "$NODE")/npm"
-          if "$NODE" -e "require.resolve('jsdom')" 2>/dev/null; then
-            echo "✅ jsdom bereits vorhanden — kein Install nötig."
-          else
-            echo "ℹ️ jsdom fehlt — installiere…"
-            "$NPM" install jsdom@^24 --no-audit --no-fund 2>/dev/null || true
-          fi
-          "$NODE" -e "require.resolve('jsdom')" 2>/dev/null && echo "✅ jsdom auflösbar" || echo "⚠️ jsdom weiterhin fehlend — Shortlist-Emitter wird aussetzen (poly_status meldet es)."
+          echo "✅ node: $NODE ($($NODE --version))"
+          "$NODE" -e "require.resolve('jsdom')" 2>/dev/null && echo "✅ jsdom auflösbar" || echo "⚠️ jsdom fehlt — einmalig manuell installieren (npm install jsdom@^24)."
         continue-on-error: true
+        timeout-minutes: 5
 
       - name: 🎯 Cross-Sport Poly-Radar (Poly vs Pinnacle, read-only)
         run: ${{ env.POLY_PYTHON }} poly_cross_sport.py
