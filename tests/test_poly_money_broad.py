@@ -124,6 +124,53 @@ class TestCaptureBroad:
         assert B.capture(m, {})["x"]["whales"][0]["wallet"] == "0xabc"
 
 
+
+class TestGhostPrune:
+    # 06.08.2026 (Lucas): der Close-Feed prunte nie -> fertige Spiele blieben ewig 'live' (Geister-
+    # Maerkte, ~$23M Whale-Geld auf toten Spielen). capture() wirft unaufgeloeste Maerkte >GHOST_GRACE_H
+    # nach Anpfiff raus; aufgeloeste Snapshots bleiben.
+    from datetime import datetime, timezone, timedelta
+    NOW = datetime(2026, 8, 6, 12, 0, tzinfo=timezone.utc)
+
+    def _e(self, cap_dt, htk, resolved=False, usd=20000):
+        e = {"shares": {"A": 0.6, "B": 0.4}, "prices": {"A": 0.5, "B": 0.5},
+             "league": "CS2", "totalUsd": usd, "whales": [{"wallet": "0xg", "side": "A", "usd": usd}],
+             "hoursToKickoff": htk, "capturedAt": cap_dt.isoformat()}
+        if resolved:
+            e["resolved"] = True
+        return e
+
+    def test_geist_wird_geprunt(self):
+        td = self.timedelta
+        frozen = {"ghost": self._e(self.NOW - td(hours=10), 1.0),   # ko 9h in Vergangenheit -> raus
+                  "fresh": self._e(self.NOW - td(hours=2), 1.0),    # ko 1h in Vergangenheit -> bleibt
+                  "done":  self._e(self.NOW - td(hours=20), 1.0, resolved=True),  # aufgeloest -> bleibt
+                  "future": self._e(self.NOW - td(hours=0.5), 2.0)} # Anpfiff in Zukunft -> bleibt
+        out = B.capture([], frozen, now=self.NOW, min_vol=7500)
+        assert "ghost" not in out
+        assert "fresh" in out and "done" in out and "future" in out
+
+    def test_gerade_abrechnender_markt_bleibt(self):
+        # ein >6h alter, unaufgeloester Snapshot, dessen Markt aber JETZT resolved reinkommt -> bleibt
+        # (Wallet-Track braucht den frozen-Close als CLV-Referenz fuer die Abrechnung dieses Laufs).
+        td = self.timedelta
+        frozen = {"settling": self._e(self.NOW - td(hours=10), 1.0)}
+        markets = [{"key": "settling", "resolved": True, "resolvedPrices": {"A": 1.0, "B": 0.0}}]
+        out = B.capture(markets, frozen, now=self.NOW, min_vol=7500)
+        assert "settling" in out
+
+    def test_grace_override(self):
+        td = self.timedelta
+        frozen = {"g": self._e(self.NOW - td(hours=10), 1.0)}
+        assert "g" in B.capture([], frozen, now=self.NOW, min_vol=7500, grace_h=100)
+        assert "g" not in B.capture([], frozen, now=self.NOW, min_vol=7500, grace_h=6)
+
+    def test_unparsebar_bleibt_konservativ(self):
+        frozen = {"weird": {"shares": {}, "prices": {}, "league": "X", "totalUsd": 20000,
+                            "hoursToKickoff": None, "capturedAt": "nonsense"}}
+        assert "weird" in B.capture([], frozen, now=self.NOW, min_vol=7500)
+
+
 class TestAppendHistory:
     # 25.07.2026 (Lucas ① Momentum): globale Poly-Preis-Zeitreihe je Markt fortschreiben.
     from datetime import datetime, timezone, timedelta

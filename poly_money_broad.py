@@ -58,6 +58,12 @@ HIST_KEEP_H     = 96.0   # Märkte, die 4 Tage nicht mehr gesehen wurden, fallen
 WTRACK_FILE = "poly_wallet_track.json"
 RESOLUTIONS_FILE = "poly_resolutions.json"   # 02.08.2026 (Lucas): rollierende {key:{winner,ts}} für den
 RESOLUTIONS_KEEP_DAYS = 14                    # Shortlist-Paper-Tracker — abrechnen ohne Re-Fetch.
+# 06.08.2026 (Lucas, Geister-Maerkte): der Close-Feed setzte kein resolved-Flag und prunte nie ->
+# fertige Spiele blieben ewig 'live' (796/815 Maerkte >6h nach Anpfiff, ~$23M Whale-Geld auf toten
+# Spielen). Jetzt wirft capture() unaufgeloeste Maerkte raus, sobald sie GHOST_GRACE_H nach Anpfiff
+# sind -- GLEICHE Schwelle wie die Integrity-Pruefung (POLY_KICKOFF_GRACE_H), damit der Feed die eine
+# saubere Quelle fuer alle Views ist. Aufgeloeste Snapshots bleiben (fuer die Treffer-Auswertung).
+GHOST_GRACE_H = float(os.environ.get("POLY_KICKOFF_GRACE_H") or 6)
 
 
 def update_resolutions(prev, markets, now=None, keep_days=RESOLUTIONS_KEEP_DAYS):
@@ -529,7 +535,7 @@ def fetch_markets():
     return markets
 
 
-def capture(markets, frozen, now=None, min_vol=MIN_VOL_USD):
+def capture(markets, frozen, now=None, min_vol=MIN_VOL_USD, grace_h=GHOST_GRACE_H):
     """Nah am Anpfiff einfrieren (Geld-Verteilung + Preis + Liga). REIN, testbar."""
     now = now or _now()
     out = dict(frozen or {})
@@ -549,6 +555,25 @@ def capture(markets, frozen, now=None, min_vol=MIN_VOL_USD):
                     "league": m.get("league"), "totalUsd": round(float(m.get("totalUsd") or 0)),
                     "whales": m.get("whales") or [],   # 25.07.2026 (Lucas): Einzel-Wale je Markt (c)
                     "hoursToKickoff": round(htk, 2), "capturedAt": now.isoformat()}
+    # 06.08.2026 (Lucas): Geister-Maerkte prunen. ko = capturedAt + hoursToKickoff; liegt der mehr als
+    # grace_h in der Vergangenheit UND ist der Markt nicht resolved -> raus. Aufgeloeste Snapshots bleiben
+    # (Treffer-Auswertung); ebenso Maerkte, die GERADE in diesem Lauf abrechnen (deren frozen-Close braucht
+    # der Wallet-Track als CLV-Referenz). Nicht parsebare Zeit/htk bleibt konservativ drin.
+    resolving = {m.get("key") for m in (markets or []) if m.get("resolved")}
+    for key in list(out.keys()):
+        e = out.get(key)
+        if not isinstance(e, dict) or e.get("resolved") or key in resolving:
+            continue
+        htk_e = e.get("hoursToKickoff")
+        if not isinstance(htk_e, (int, float)):
+            continue
+        try:
+            ct = datetime.fromisoformat(str(e.get("capturedAt")).replace("Z", "+00:00"))
+            past_h = (now - (ct + timedelta(hours=float(htk_e)))).total_seconds() / 3600.0
+        except (TypeError, ValueError):
+            continue
+        if past_h > grace_h:
+            del out[key]
     return out
 
 
