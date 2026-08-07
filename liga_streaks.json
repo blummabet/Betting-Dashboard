@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "liga",
-    "generatedAt": "2026-08-06T22:49:31.894729+00:00",
+    "generatedAt": "2026-08-07T07:19:03.242695+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -22059,6 +22059,123 @@
       "matchupPct": 49
     },
     {
+      "teamId": "77",
+      "team": "Angers",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/77.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 47,
+        "label": "Eigen 47% + Gegner 47% → 47%"
+      },
+      "ratePct": 47,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "79",
+        "oppName": "Lille",
+        "atHome": true,
+        "date": "2026-08-23",
+        "kickoff": "2026-08-23T13:00:00+00:00",
+        "oppRatePct": 47
+      },
+      "oppSupportPct": 47,
+      "matchupPct": 47
+    },
+    {
+      "teamId": "77",
+      "team": "Angers",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/77.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 47,
+        "label": "Eigen 47% + Gegner 47% → 47%"
+      },
+      "ratePct": 47,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "79",
+        "oppName": "Lille",
+        "atHome": true,
+        "date": "2026-08-23",
+        "kickoff": "2026-08-23T13:00:00+00:00",
+        "oppRatePct": 47
+      },
+      "oppSupportPct": 47,
+      "matchupPct": 47
+    },
+    {
+      "teamId": "79",
+      "team": "Lille",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/79.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 47,
+        "label": "Eigen 47% + Gegner 47% → 47%"
+      },
+      "ratePct": 47,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "next": {
+        "oppId": "77",
+        "oppName": "Angers",
+        "atHome": false,
+        "date": "2026-08-23",
+        "kickoff": "2026-08-23T13:00:00+00:00",
+        "oppRatePct": 47
+      },
+      "oppSupportPct": 47,
+      "matchupPct": 47
+    },
+    {
       "teamId": "80",
       "team": "Lyon",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/80.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -24060,162 +24177,6 @@
       },
       "oppSupportPct": 20,
       "matchupPct": 36
-    },
-    {
-      "teamId": "77",
-      "team": "Angers",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/77.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 47,
-        "label": "Eigen 47% + Gegner 47% → 47% · Linie/Signale dagegen"
-      },
-      "ratePct": 47,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "79",
-        "oppName": "Lille",
-        "atHome": true,
-        "date": "2026-08-23",
-        "kickoff": "2026-08-23T13:00:00+00:00",
-        "oppRatePct": 47
-      },
-      "oppSupportPct": 47,
-      "matchupPct": 47,
-      "signalInfo": {
-        "state": "contradict",
-        "count": 4,
-        "conviction": 3,
-        "names": [
-          "public_static_bias",
-          "h2h_pattern",
-          "chance_creation",
-          "transfer_shift",
-          "reverse_line_move"
-        ],
-        "market": "Unter 2.5 Tore"
-      }
-    },
-    {
-      "teamId": "77",
-      "team": "Angers",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/77.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 47,
-        "label": "Eigen 47% + Gegner 47% → 47% · Linie/Signale dagegen"
-      },
-      "ratePct": 47,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "79",
-        "oppName": "Lille",
-        "atHome": true,
-        "date": "2026-08-23",
-        "kickoff": "2026-08-23T13:00:00+00:00",
-        "oppRatePct": 47
-      },
-      "oppSupportPct": 47,
-      "matchupPct": 47,
-      "signalInfo": {
-        "state": "contradict",
-        "count": 4,
-        "conviction": 3,
-        "names": [
-          "public_static_bias",
-          "h2h_pattern",
-          "chance_creation",
-          "transfer_shift",
-          "reverse_line_move"
-        ],
-        "market": "Unter 2.5 Tore"
-      }
-    },
-    {
-      "teamId": "79",
-      "team": "Lille",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/79.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 47,
-        "label": "Eigen 47% + Gegner 47% → 47% · Linie/Signale dagegen"
-      },
-      "ratePct": 47,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "next": {
-        "oppId": "77",
-        "oppName": "Angers",
-        "atHome": false,
-        "date": "2026-08-23",
-        "kickoff": "2026-08-23T13:00:00+00:00",
-        "oppRatePct": 47
-      },
-      "oppSupportPct": 47,
-      "matchupPct": 47,
-      "signalInfo": {
-        "state": "contradict",
-        "count": 4,
-        "conviction": 3,
-        "names": [
-          "public_static_bias",
-          "h2h_pattern",
-          "chance_creation",
-          "transfer_shift",
-          "reverse_line_move"
-        ],
-        "market": "Unter 2.5 Tore"
-      }
     },
     {
       "teamId": "867",
