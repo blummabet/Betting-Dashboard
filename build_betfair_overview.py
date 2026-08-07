@@ -149,11 +149,24 @@ def flow_list(prices, hist, top=TOP_FLOW):
         arr = hist.get(mid)
         if not isinstance(arr, list) or len(arr) < 2:
             continue
-        a, b = arr[-2], arr[-1]
-        d = (_num(b.get("totalVol")) or 0) - (_num(a.get("totalVol")) or 0)
-        if d < FLOW_MIN_EUR:
+        # 07.08.2026 (Lucas: "16K kamen nie auf Over 2.5 rein"): Zufluss PRO MARKT aus den mkv-Deltas
+        # der History, nicht mehr das GESAMT-Matchvolumen mit dem groessten Einzelmarkt beschriftet.
+        # So wird das Geld dem Markt zugeschrieben, der es WIRKLICH bekam; ohne Baseline in BEIDEN
+        # Snaps kein Zufluss (kein Neu-Markt-/In-Play-Streuungs-Artefakt).
+        mkv_a = (arr[-2] or {}).get("mkv") or {}
+        mkv_b = (arr[-1] or {}).get("mkv") or {}
+        best_name, best_d, best_now = None, 0.0, 0.0
+        for _mname, _vb in mkv_b.items():
+            _va = mkv_a.get(_mname)
+            if not isinstance(_va, (int, float)) or not isinstance(_vb, (int, float)):
+                continue
+            _dm = _vb - _va
+            if _dm > best_d:
+                best_d, best_name, best_now = _dm, _mname, _vb
+        if best_name is None or best_d < FLOW_MIN_EUR:
             continue
-        mkt, lead = _biggest_market(m)
+        mkt = best_name
+        lead = _lead((m.get("markets") or {}).get(best_name))
         _odd = _num((lead or {}).get("odd"))
         if _odd is not None and _odd < FLOW_MIN_ODD:
             continue   # Zufluss auf Quasi-Lock-Ausgang → kein handelbares Signal (04.08.2026, Lucas)
@@ -162,7 +175,7 @@ def flow_list(prices, hist, top=TOP_FLOW):
         if _ldr and _side and str(_side) == str(_ldr):
             continue   # Geld auf die bereits fuehrende Mannschaft → reaktiv (05.08.2026, Lucas)
         row = _base(m)
-        row.update({"deltaEur": round(d), "nowEur": round(_num(b.get("totalVol")) or 0),
+        row.update({"deltaEur": round(best_d), "nowEur": round(best_now),
                     "market": mkt, "sideName": (lead or {}).get("name"),
                     "odd": _num((lead or {}).get("odd"))})
         out.append(row)

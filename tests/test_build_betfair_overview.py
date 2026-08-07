@@ -92,8 +92,8 @@ def test_flow_list_ranks_by_inflow_and_filters_small():
         _match(2, "Small", "Game", iso(NOW + timedelta(hours=1)), {"hw": 2.0, "aw": 2.0}),
     ]}
     hist = {
-        "1": [{"totalVol": 100000}, {"totalVol": 161989}],   # +61989
-        "2": [{"totalVol": 10000}, {"totalVol": 11000}],     # +1000 < 2000 -> raus
+        "1": [{"mkv": {"Match Odds": 100000}}, {"mkv": {"Match Odds": 161989}}],   # +61989 auf Match Odds
+        "2": [{"mkv": {"Match Odds": 10000}}, {"mkv": {"Match Odds": 11000}}],     # +1000 < 2000 -> raus
     }
     out = bo.flow_list(prices, hist)
     assert len(out) == 1 and out[0]["home"] == "Brondby"
@@ -104,7 +104,7 @@ def test_flow_list_ranks_by_inflow_and_filters_small():
 def test_flow_list_suppresses_money_on_leader():
     # 05.08.2026 (Lucas: „1:0 fuehrt und Kohle kommt = reaktiv, wertlos"): Geld auf die bereits
     # fuehrende Mannschaft raus; Gleichstand + Geld auf den Rueckstand bleiben.
-    hist = {"1": [{"totalVol": 100000}, {"totalVol": 200000}]}   # +100K
+    hist = {"1": [{"mkv": {"Match Odds": 100000}}, {"mkv": {"Match Odds": 200000}}]}   # +100K auf Match Odds
     ko = iso(NOW - timedelta(minutes=30))
     # Heim (Napoli) fuehrt 1:0, Lead-Runner = Napoli (vol 9000 > 1000) -> reaktiv -> raus
     lead = _match(1, "Napoli", "Osasuna", ko, {"hw": 1.5, "aw": 6.0},
@@ -125,8 +125,8 @@ def test_flow_list_suppresses_money_on_leader():
 
 def test_build_shape():
     prices = {"matches": [_match(1, "A", "B", iso(NOW + timedelta(hours=1)), {"hw": 2.0, "aw": 3.0})]}
-    hist = {"1": [{"mo": {"hw": 4.0, "aw": 3.0}, "totalVol": 1000},
-                  {"mo": {"hw": 2.0, "aw": 3.0}, "totalVol": 9000}]}
+    hist = {"1": [{"mo": {"hw": 4.0, "aw": 3.0}, "mkv": {"Match Odds": 1000}},
+                  {"mo": {"hw": 2.0, "aw": 3.0}, "mkv": {"Match Odds": 9000}}]}
     d = bo.build(prices, hist, NOW)
     assert set(("_meta", "generatedAt", "steam", "flow")) <= set(d)
     assert d["steam"] and d["flow"]   # beide Signale feuern
