@@ -173,6 +173,8 @@
       '.md-pulse{display:flex;flex-direction:column;align-items:stretch;gap:9px;background:var(--m1);border:1px solid var(--mln);border-radius:14px;padding:12px 15px;margin-top:14px;}',
       '.md-pulse-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}',
       '.md-pulse-tag{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;color:var(--mi2);min-width:120px;}',
+      '.md-pulse-strip{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap;border-top:1px solid var(--mln);padding-top:8px;margin-top:1px;font-size:11px;color:var(--mi2);}',
+      '.md-pulse-live{color:var(--mi3);font-weight:700;white-space:nowrap;}',
       '.md-pulse-h{display:flex;align-items:center;gap:7px;font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--mi3);}',
       '.md-pulse-ms{display:flex;align-items:center;gap:18px;flex-wrap:wrap;flex:1;min-width:0;}',
       '.md-pulse-m{display:flex;flex-direction:column;gap:2px;}',
@@ -814,9 +816,20 @@
         (pl.openN ? metric(pl.openN, 'offen', 'var(--mi3)') : '') +
         '</div></div>';
     }
+    var strip = '';
+    var st = d.strip;
+    if (st) {
+      var SIGN = { money: 'Geld-Mehrheit', sharp: 'scharfe Wallet', steam: 'Steam', gvp: 'Geld-vs-Preis', pinn: 'Pinnacle' };
+      var parts = [];
+      if (st.bestConv) parts.push('⭐ Setzen: <b style="color:' + A.good + '">' + st.bestConv.key + '/10</b> +' + st.bestConv.roiPct + '% (n' + st.bestConv.n + ')');
+      if (st.bestSignal) parts.push('Signal <b>' + (SIGN[st.bestSignal.key] || st.bestSignal.key) + '</b> +' + st.bestSignal.roiPct + '% (n' + st.bestSignal.n + ')');
+      var live = st.inflight || {};
+      var liveTxt = 'Live: 🎯 ' + (live.cards || 0) + ' · 💷 ' + (live.betfair || 0) + ' · 🎮 ' + (live.poly || 0);
+      strip = '<div class="md-pulse-strip"><span>' + (parts.join(' · ') || 'Wo Setzen lohnt: sammelt noch (n<8 je Stufe)') + '</span><span class="md-pulse-live">' + liveTxt + '</span></div>';
+    }
     return '<section class="md-pulse md-rise">' +
       '<div class="md-pulse-h" title="Cards nach CLV (Nordstern) · Betfair-Signale nach Treffer/ROI · Poly „Heute wetten“ Paper-Trade">📈 Puls</div>' +
-      rows + '</section>';
+      rows + strip + '</section>';
   }
   // ── „Jetzt": Spiele mit Anpfiff <= 3h und Live-Signal (BET / Poly-Lag); CLV-Cue = steamMovePP ──
   function jetztRows() {

@@ -53,13 +53,48 @@ def _poly_pulse(track=None) -> dict | None:
             "openN": len((d or {}).get("open") or {})}
 
 
+STRIP_MIN_N = 8   # ab so vielen Plays gilt eine Conviction-Stufe / ein Signal als belastbar (Auto-Bet-Kandidat)
+
+
+def _best_bucket(buckets) -> dict | None:
+    """Stufe/Signal mit dem hoechsten ROI, der >0 ist und >= STRIP_MIN_N Plays hat. REIN/testbar."""
+    best = None
+    for name, b in (buckets or {}).items():
+        if not isinstance(b, dict):
+            continue
+        n, roi = b.get("n") or 0, b.get("roi")
+        if n >= STRIP_MIN_N and isinstance(roi, (int, float)) and roi > 0 and (best is None or roi > best[1]):
+            best = (name, roi, n)
+    return {"key": best[0], "roiPct": round(100.0 * best[1], 1), "n": best[2]} if best else None
+
+
+def _strip(track=None, bf_ledger=None, cards_open=0) -> dict:
+    """Leiste unter dem Puls: wo lohnt sich Setzen (beste Stufe/Signal) + was laeuft gerade."""
+    t = track if track is not None else _load("poly_shortlist_track.json")
+    bl = bf_ledger if bf_ledger is not None else _load("betfair_public_ledger.json")
+    a = (t or {}).get("agg") or {}
+    return {
+        "bestConv": _best_bucket(a.get("byConv")),
+        "bestSignal": _best_bucket(a.get("bySignal")),
+        "inflight": {
+            "poly": len((t or {}).get("open") or {}),
+            "betfair": sum(1 for x in (bl or []) if isinstance(x, dict) and x.get("status") == "pending"),
+            "cards": cards_open,
+        },
+    }
+
+
 def build() -> dict:
-    recs = []
+    recs, cards_open = [], 0
     for lf in LEDGERS:
         d = _load(lf)
         for r in (d.get("records") or []) if isinstance(d, dict) else []:
-            if isinstance(r, dict) and r.get("resolvedAt"):
+            if not isinstance(r, dict):
+                continue
+            if r.get("resolvedAt"):
                 recs.append(r)
+            else:
+                cards_open += 1
     recs.sort(key=lambda r: str(r.get("resolvedAt")), reverse=True)
     last = recs[:N]
     last_chrono = list(reversed(last))                    # alt→neu für die Sparkline
@@ -80,6 +115,7 @@ def build() -> dict:
         "newest": (last[0].get("resolvedAt") if last else None),
         "betfair": _betfair_pulse(),   # 07.08.2026 (Lucas): Betfair-Tracking mit in den Puls
         "poly": _poly_pulse(),         # 07.08.2026 (Lucas): Poly „Heute wetten" mit in den Puls
+        "strip": _strip(cards_open=cards_open),   # 07.08.2026 (Lucas): wo lohnt Setzen + was laeuft
     }
 
 

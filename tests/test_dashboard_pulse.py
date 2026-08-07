@@ -26,3 +26,15 @@ def test_poly_pulse_aus_agg_all():
 def test_poly_pulse_leer_ist_none():
     assert bp._poly_pulse({}) is None
     assert bp._poly_pulse({"agg": {"all": {"n": 0}}}) is None
+
+
+def test_best_bucket_haelt_schwelle_und_waehlt_hoechsten_roi():
+    buckets = {"7": {"n": 17, "roi": 0.05}, "8": {"n": 11, "roi": 0.107}, "9": {"n": 15, "roi": 0.20},
+               "10": {"n": 2, "roi": 0.9}}   # n<8 -> ignoriert trotz 90% ROI
+    out = bp._best_bucket(buckets)
+    assert out == {"key": "9", "roiPct": 20.0, "n": 15}
+
+
+def test_best_bucket_none_wenn_alles_negativ_oder_zu_klein():
+    assert bp._best_bucket({"7": {"n": 17, "roi": -0.05}, "10": {"n": 2, "roi": 0.5}}) is None
+    assert bp._best_bucket({}) is None
