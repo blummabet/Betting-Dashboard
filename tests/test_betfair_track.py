@@ -133,6 +133,64 @@ def test_aggregate_trefferquote_und_roi_split():
     assert rec["byMarket"]["Half Time"]["n"] == 2 and abs(rec["byMarket"]["Half Time"]["roi"] - 0.2) < 1e-9
 
 
+def test_capture_schreibt_letzten_livestand():
+    st = T.capture({"matches": [_prematch()]}, HIST, {}, now=NOW)
+    st = T.capture({"matches": [_live(t=88, is_ht=False, gv=(2, 1))]}, HIST, st, now=NOW + timedelta(hours=5))
+    last = st["pending"]["1"]["last"]
+    assert last["score"] == [2, 1] and last["min"] == 88
+
+
+def test_settle_finished_schreibt_matchid_ft_ht_via():
+    st = T.capture({"matches": [_prematch()]}, HIST, {}, now=NOW)
+    st = T.capture({"matches": [_live(gv=(1, 0))]}, HIST, st, now=NOW + timedelta(hours=4))
+    st, res = T.settle({"matches": [_finished(gv=(2, 1))]}, st, [], now=NOW + timedelta(hours=6))
+    row = {r["market"]: r for r in res}["Match Odds"]
+    assert row["matchId"] == "1" and row["ft"] == [2, 1] and row["ht"] == [1, 0] and row["via"] == "finished"
+
+
+def test_vanish_settle_spiel_faellt_spaet_aus_feed():
+    """Spiel zuletzt spaet (88') live gesehen, verschwindet ohne je 'finished' → mit letztem Stand ab."""
+    st = T.capture({"matches": [_prematch()]}, HIST, {}, now=NOW)
+    st = T.capture({"matches": [_live(t=45, is_ht=True, gv=(1, 0))]}, HIST, st, now=NOW + timedelta(hours=4))
+    seen = NOW + timedelta(hours=5)
+    st = T.capture({"matches": [_live(t=88, is_ht=False, gv=(2, 1))]}, HIST, st, now=seen)
+    # Feed OHNE das Spiel, 30 Min nach letztem Live-Stand → Verschwinde-Settle greift
+    st, res = T.settle({"matches": []}, st, [], now=seen + timedelta(minutes=30))
+    assert "1" not in st["pending"]
+    mk = {r["market"]: r for r in res}
+    assert mk["Match Odds"]["win"] is True and mk["Match Odds"]["via"] == "vanish"
+    assert mk["Match Odds"]["ft"] == [2, 1] and mk["Match Odds"]["matchId"] == "1"
+    assert mk["Half Time"]["win"] is True                    # HT 1:0 → Heim (aus eingefangenem htScore)
+
+
+def test_vanish_wartet_bei_frischem_ausfall():
+    """Erst 10 Min weg → noch NICHT abrechnen (koennte ein kurzer Feed-Aussetzer sein)."""
+    st = T.capture({"matches": [_prematch()]}, HIST, {}, now=NOW)
+    seen = NOW + timedelta(hours=5)
+    st = T.capture({"matches": [_live(t=88, is_ht=False, gv=(2, 1))]}, HIST, st, now=seen)
+    st, res = T.settle({"matches": []}, st, [], now=seen + timedelta(minutes=10))
+    assert "1" in st["pending"] and res == []
+
+
+def test_vanish_nicht_bei_fruehem_ausfall():
+    """Zuletzt nur bei 60' gesehen → zu unsicher (spaetes Tor moeglich) → NICHT schaetzen."""
+    st = T.capture({"matches": [_prematch()]}, HIST, {}, now=NOW)
+    seen = NOW + timedelta(hours=5)
+    st = T.capture({"matches": [_live(t=60, is_ht=False, gv=(2, 1))]}, HIST, st, now=seen)
+    st, res = T.settle({"matches": []}, st, [], now=seen + timedelta(minutes=40))
+    assert "1" in st["pending"] and res == []
+
+
+def test_vanish_nicht_solange_im_feed():
+    """Spiel noch im Feed (nur noch nicht finished) → Verschwinde-Settle greift NICHT."""
+    st = T.capture({"matches": [_prematch()]}, HIST, {}, now=NOW)
+    seen = NOW + timedelta(hours=5)
+    st = T.capture({"matches": [_live(t=88, is_ht=False, gv=(2, 1))]}, HIST, st, now=seen)
+    still = _live(t=90, is_ht=False, gv=(2, 1))               # noch im Feed, nicht finished
+    st, res = T.settle({"matches": [still]}, st, [], now=seen + timedelta(minutes=30))
+    assert "1" in st["pending"] and res == []
+
+
 def test_voller_flow_ecuador_ht():
     """Ende-zu-Ende: vor Anpfiff → live HT → finished → aggregiert."""
     st, res = {}, []

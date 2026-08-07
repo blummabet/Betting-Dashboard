@@ -56,6 +56,44 @@ class TestCaptureHt(unittest.TestCase):
         self.assertEqual(led[0]["htScore"], [1, 0])
 
 
+class TestSettleFromTrack(unittest.TestCase):
+    """07.08.2026: Push-Bilanz erbt die Abrechnungen des breiten Track-Records (auch Verschwinde-Settle)."""
+
+    def test_erbt_finished_vom_track(self):
+        led = [_p("500", "Match Odds", "TeamH", 1.8, home="TeamH", away="TeamA")]
+        tr = [{"matchId": "500", "market": "Match Odds", "ft": [2, 0], "ht": None}]
+        E.settle_from_track(led, tr, NOW)
+        self.assertEqual(led[0]["status"], "won")
+        self.assertEqual(led[0]["via"], "track")
+        self.assertAlmostEqual(led[0]["profit"], 0.8)
+
+    def test_erbt_auch_ohne_eigenen_feed(self):
+        # Feed hier LEER — der Push wird trotzdem ueber den Track abgerechnet, danach laesst
+        # der eigene Feed-Pfad den bereits gesettelten in Ruhe.
+        led = [_p("501", "Over/Under 2.5 Goals", "Under 2.5 Goals", 1.5)]
+        tr = [{"matchId": "501", "market": "Over/Under 2.5 Goals", "ft": [1, 0], "ht": None, "via": "vanish"}]
+        E.settle_from_track(led, tr, NOW)
+        E.settle(led, {"matches": []}, NOW)
+        self.assertEqual(led[0]["status"], "won")            # 1 Tor < 2.5 → UNDER trifft
+
+    def test_ht_markt_ohne_ht_stand_bleibt_pending(self):
+        led = [_p("502", "Half Time", "A", 2.0, scn="ht")]
+        tr = [{"matchId": "502", "market": "Half Time", "ft": [2, 0], "ht": None}]
+        E.settle_from_track(led, tr, NOW)
+        self.assertEqual(led[0]["status"], "pending")        # nicht abrechenbar → spaeter Feed/TTL
+
+    def test_kein_track_treffer_bleibt_pending(self):
+        led = [_p("503", "Match Odds", "TeamH", 1.8, home="TeamH", away="TeamA")]
+        E.settle_from_track(led, [], NOW)
+        self.assertEqual(led[0]["status"], "pending")
+
+    def test_alte_track_zeile_ohne_ft_ht_ignoriert(self):
+        led = [_p("504", "Match Odds", "TeamH", 1.8, home="TeamH", away="TeamA")]
+        tr = [{"matchId": "504", "market": "Match Odds"}]    # alte Zeile ohne ft/ht → ignorieren
+        E.settle_from_track(led, tr, NOW)
+        self.assertEqual(led[0]["status"], "pending")
+
+
 class TestSummarize(unittest.TestCase):
     def test_hitrate_roi_and_splits(self):
         led = [

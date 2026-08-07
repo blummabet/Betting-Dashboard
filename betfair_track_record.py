@@ -38,6 +38,13 @@ INFLOW_MIN_EUR = 2000     # Markt gilt als „frischer Zufluss" ab so viel € D
 RESULTS_KEEP = 8000       # Ledger-Kappung
 PENDING_TTL_H = 60        # pending ohne Settlement nach so vielen h nach Anpfiff verwerfen
 
+# 07.08.2026 (Lucas: „Push-Bilanz komplett wertlos"): der Feed zeigt „finished" nur kurz/unzuverlaessig
+# — ~35% der Spiele fallen aus dem Feed BEVOR ein 15-Min-Lauf sie als „finished" erwischt und bleiben
+# ewig pending. Zweiter Settle-Pfad: faellt ein Spiel aus dem Feed, das wir zuletzt SPAET (>= 85') live
+# gesehen haben, dann rechnen wir es mit diesem letzten Live-Stand ab (kein finished-Blitz noetig).
+VANISH_MIN_MINUTE = 85    # nur abrechnen, wenn wir das Spiel zuletzt so spaet live gesehen haben
+VANISH_GRACE_MIN = 25     # und es seither so lange weg ist (schuetzt vor kurzem Feed-Aussetzer)
+
 # marketId → Typ. Genau die 7 Dashboard-Märkte.
 MARKETS = {
     "Match Odds": "1x2",
@@ -169,6 +176,10 @@ def capture(prices, history, state, now=None):
             if (li.get("is_ht") or (isinstance(tt, (int, float)) and 43 <= tt <= 60)) \
                     and pending[mid].get("htScore") is None and li.get("goal_v1") is not None:
                 pending[mid]["htScore"] = [li.get("goal_v1"), li.get("goal_v2")]
+            # 07.08.2026: zuletzt gesehenen Live-Stand mitschreiben (fuer den Verschwinde-Settle).
+            if li.get("goal_v1") is not None:
+                pending[mid]["last"] = {"score": [li.get("goal_v1"), li.get("goal_v2")],
+                                        "min": tt, "seenAt": now.isoformat()}
         # Signale nur VOR Anpfiff aktualisieren
         if _is_prematch(m, now):
             home, away = m.get("home"), m.get("away")
@@ -191,7 +202,8 @@ def capture(prices, history, state, now=None):
             if sigs:
                 pending[mid] = {"league": m.get("league"), "home": home, "away": away,
                                 "country": m.get("country"), "kickoff": m.get("kickoff"),
-                                "signals": sigs, "htScore": (pending.get(mid) or {}).get("htScore")}
+                                "signals": sigs, "htScore": (pending.get(mid) or {}).get("htScore"),
+                                "last": (pending.get(mid) or {}).get("last")}
     state["pending"] = pending
     return state
 
@@ -202,6 +214,22 @@ def settle(prices, state, results, now=None):
     state = dict(state or {})
     pending = dict(state.get("pending") or {})
     results = list(results or [])
+
+    def _grade_pending(mid, pend, ft, ht, via):
+        """Ein pending-Spiel gegen ft/ht abrechnen und ins Ledger schreiben. Entfernt pending."""
+        for mkid, sig in (pend.get("signals") or {}).items():
+            win, ok = grade(sig["fav"], mkid, ft, ht)
+            if not ok:
+                continue
+            results.append({"league": pend.get("league"), "market": mkid,
+                            "home": pend.get("home"), "away": pend.get("away"), "country": pend.get("country"),
+                            "fav": sig["fav"], "odd": sig["odd"],
+                            "conc": bool(sig.get("conc")), "inflow": bool(sig.get("inflow")),
+                            "win": bool(win), "settledAt": now.isoformat(),
+                            "matchId": mid, "ft": ft, "ht": ht, "via": via})
+        pending.pop(mid, None)
+
+    # 1) Feed zeigt „finished" → sauber abrechnen (der exakte Endstand).
     for m in (prices.get("matches") or []):
         li = m.get("liveInfo") or {}
         if not li.get("finished"):
@@ -212,16 +240,28 @@ def settle(prices, state, results, now=None):
             continue
         ft = [li.get("goal_v1"), li.get("goal_v2")] if li.get("goal_v1") is not None else None
         ht = pend.get("htScore")
-        for mkid, sig in (pend.get("signals") or {}).items():
-            win, ok = grade(sig["fav"], mkid, ft, ht)
-            if not ok:
-                continue
-            results.append({"league": pend.get("league"), "market": mkid,
-                            "home": pend.get("home"), "away": pend.get("away"), "country": pend.get("country"),
-                            "fav": sig["fav"], "odd": sig["odd"],
-                            "conc": bool(sig.get("conc")), "inflow": bool(sig.get("inflow")),
-                            "win": bool(win), "settledAt": now.isoformat()})
-        pending.pop(mid, None)
+        _grade_pending(mid, pend, ft, ht, "finished")
+
+    # 2) Verschwinde-Settle (07.08.2026): Spiel ist aus dem Feed, „finished" wurde NIE erwischt —
+    #    aber wir haben es zuletzt spaet (>= VANISH_MIN_MINUTE) live gesehen und es ist seit
+    #    >= VANISH_GRACE_MIN weg. Dann mit dem letzten Live-Stand abrechnen (naeherungsweise Endstand).
+    feed_ids = {str(m.get("matchId")) for m in (prices.get("matches") or [])}
+    for mid in list(pending.keys()):
+        if mid in feed_ids:
+            continue                      # noch im Feed → Pfad 1 kuemmert sich
+        pend = pending[mid]
+        last = pend.get("last") or {}
+        score, mn = last.get("score"), last.get("min")
+        if score is None or not isinstance(mn, (int, float)) or mn < VANISH_MIN_MINUTE:
+            continue                      # nie spaet genug live gesehen → nicht schaetzen (→ TTL)
+        try:
+            seen = datetime.fromisoformat(str(last.get("seenAt")).replace("Z", "+00:00"))
+        except (ValueError, TypeError):
+            seen = None
+        if seen is None or seen > now - timedelta(minutes=VANISH_GRACE_MIN):
+            continue                      # zu frisch → koennte kurzer Feed-Aussetzer sein, warten
+        _grade_pending(mid, pend, list(score), pend.get("htScore"), "vanish")
+
     # zu alte pending (nie „finished" gesehen) verwerfen
     cutoff = now - timedelta(hours=PENDING_TTL_H)
     for mid in list(pending.keys()):

@@ -21,6 +21,7 @@ from betfair_track_record import fav_token, winning_token, grade, MARKETS
 BASE = Path(__file__).resolve().parent
 LEDGER_FILE = BASE / "betfair_public_ledger.json"
 RECORD_FILE = BASE / "betfair_public_record.json"
+TRACK_RESULTS_FILE = BASE / "betfair_track_results.json"   # der breite Track (~65% Fangquote + Verschwinde-Settle)
 PENDING_TTL_H = 72          # nie „finished" gesehen nach 3 Tagen → als nicht abrechenbar verwerfen
 LEDGER_KEEP = 800
 
@@ -54,6 +55,49 @@ def capture_ht(ledger, prices, now=None):
         at_ht = li.get("is_ht") or (isinstance(tt, (int, float)) and 43 <= tt <= 60)
         if at_ht and li.get("goal_v1") is not None and not li.get("finished"):
             e["htScore"] = [li.get("goal_v1"), li.get("goal_v2")]
+    return ledger
+
+
+def _settle_entry(e, ft, ht, now, via):
+    """Einen Push gegen ft/ht abrechnen (setzt status/profit/ftScore). True, wenn abgerechnet."""
+    fav = fav_token(e.get("market"), e.get("leadName"), e.get("home"), e.get("away"))
+    win, ok = grade(fav, e.get("market"), ft, ht)
+    if not ok:
+        return False
+    odd = e.get("leadOdd")
+    e["settledAt"] = now.isoformat()
+    e["ftScore"] = ft
+    e["status"] = "won" if win else "lost"
+    e["profit"] = (float(odd) - 1.0) if (win and isinstance(odd, (int, float))) else (-1.0 if not win else 0.0)
+    e["via"] = via
+    return True
+
+
+def _track_index(track_results):
+    """(matchId, market) → Zeile des breiten Tracks mit realem Endstand (ft/ht). Neuere gewinnen."""
+    idx = {}
+    for r in (track_results or []):
+        mid, mk = r.get("matchId"), r.get("market")
+        if mid is None or mk is None or (r.get("ft") is None and r.get("ht") is None):
+            continue
+        idx[(str(mid), mk)] = r
+    return idx
+
+
+def settle_from_track(ledger, track_results, now=None):
+    """07.08.2026 (Lucas: „wie kann die Trefferquote klappen aber die Push-Bilanz nicht"): die Push-
+    Bilanz erbt die Abrechnungen des breiten Track-Records. Sobald der breite Track ein Spiel abgerechnet
+    hat — per „finished" ODER per Verschwinde-Settle — rechnen wir den passenden Push mit dessen realem
+    End-/HT-Stand ab, egal ob DIESER Feed je „finished" gezeigt hat. Laeuft im selben betfair.yml-Lauf
+    NACH betfair_track_record.py, liest also die frisch geschriebenen Ergebnisse. REIN."""
+    now = now or _now()
+    idx = _track_index(track_results)
+    for e in ledger:
+        if e.get("status") != "pending":
+            continue
+        row = idx.get((str(e.get("matchId")), e.get("market")))
+        if row:
+            _settle_entry(e, row.get("ft"), row.get("ht"), now, "track")
     return ledger
 
 
@@ -133,6 +177,12 @@ def main():
         ledger = []
     prices = _load(BASE / "betfair_prices.json", {})
     ledger = capture_ht(ledger, prices)
+    # 07.08.2026: zuerst die Abrechnungen des breiten Tracks erben (realer Endstand, auch fuer Spiele,
+    # die DIESER Feed nie als „finished" gesehen hat), dann der eigene Feed-Pfad + TTL-Verfall.
+    track_results = _load(TRACK_RESULTS_FILE, [])
+    if not isinstance(track_results, list):
+        track_results = []
+    ledger = settle_from_track(ledger, track_results)
     ledger = settle(ledger, prices)
     # abgeschlossene/verworfene lange behalten fürs Ledger, aber deckeln
     ledger = ledger[-LEDGER_KEEP:]
