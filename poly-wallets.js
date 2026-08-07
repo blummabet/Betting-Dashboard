@@ -1215,6 +1215,29 @@ function _pwOverNorm(live,hist){
     +'</section>';
 }
 if(typeof window!=='undefined'){ window._pwOverNorm=_pwOverNorm; window._pwNormStage=_pwNormStage; window._pwInflow=_pwInflow; }
+// 07.08.2026 (Lucas): „Volumen ueber Norm" auch auf der Uebersicht (statt Whale-Watch). Liefert die
+// Top-Zeilen als DATEN (Rendering macht main-dashboard im Uebersichts-Stil). Reine Leseschicht, gleiche
+// Quelle/Logik wie der Grosses-Geld-Tab (_pwOverNorm), nur Gesamt-Volumen (kein Zufluss).
+function _pwOverNormTop(limit){
+  var live=_pwCache&&_pwCache.broadLive; if(!live) return [];
+  var cand=Object.entries(live).map(function(e){return {k:e[0],m:e[1]};})
+    .filter(function(x){return x.m&&x.m.resolved==null&&(x.m.totalUsd||0)>=PW_NORM_MIN_USD&&!_pwKoStale(x.m)&&_pwSportPass(x.m.league);})
+    .map(function(x){return {k:x.k,m:x.m,val:x.m.totalUsd||0};});
+  if(!cand.length) return [];
+  var base=_pwMedianBy(cand,function(it){return _pwNormKey(it.m);},function(it){return it.val;});
+  return cand.map(function(it){var b=base[_pwNormKey(it.m)];it.ratio=(b&&b.n>=PW_NORM_MIN_PEERS&&b.med)?it.val/b.med:null;return it;})
+    .filter(function(it){return it.ratio!=null&&it.ratio>=PW_NORM_AMBER;})
+    .sort(function(a,b){return b.ratio-a.ratio;}).slice(0,limit||5)
+    .map(function(it){
+      var m=it.m||{};
+      var oc=Object.entries(m.shares||{}).map(function(e){return {n:e[0],u:Number(e[1])||0};}).sort(function(a,b){return b.u-a.u;});
+      var tot=oc.reduce(function(su,o){return su+o.u;},0)||1, fav=oc[0]||{n:'-',u:0};
+      return {key:it.k, league:m.league, name:_pwEventLabel(it.k,oc.map(function(o){return o.n;}),m.league),
+              fav:fav.n, favPct:Math.round(fav.u/tot*100), usd:m.totalUsd||0, ratio:it.ratio,
+              url: it.k?('https://polymarket.com/event/'+encodeURIComponent(it.k)):null};
+    });
+}
+if(typeof window!=='undefined') window._pwOverNormTop=_pwOverNormTop;
 
 function _pwMoneyLive(live){
   const all=(live?Object.entries(live):[]).map(([k,m])=>({k,m}))

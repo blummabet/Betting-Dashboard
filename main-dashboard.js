@@ -626,22 +626,37 @@
       ? _mdDonutRow(main, sub, usd(w.usd), A.poly, hit, hit >= 55 ? A.poly : '#8b949e')
       : rowEl(main, usd(w.usd), A.poly, sub, '');
   }
+  var _MD_SPORT_ICO = { ESPORTS: '🎮', TENNIS: '🎾', MLB: '⚾', NBA: '🏀', WNBA: '🏀', NFL: '🏈', NHL: '🏒', MMA: '🥊', UFC: '🥊', GOLF: '⛳', SOCCER: '⚽', MLS: '⚽', CRICKET: '🏏' };
+  function _mdSportIco(lg) { var k = String(lg || '').toUpperCase(); return _MD_SPORT_ICO[k] || (k.indexOf('SOCCER') === 0 ? '⚽' : '🎯'); }
+  // 💰 Volumen über Norm (aus dem Großes-Geld-Tab): welche Märkte ziehen verhältnismäßig — Gesamt-$ ÷
+  // Median gleicher Sportart×Phase. ×1.6 auffällig, ×2.6 stark. Ersetzt Whale-Watch (07.08.2026, Lucas).
+  function _mdOverNormBody(rows) {
+    if (!rows || !rows.length) return empty('Kein Markt auffällig über seiner Norm — alles im üblichen Rahmen für Sportart & Phase.');
+    var mx = rows.reduce(function (a, r) { return Math.max(a, +r.ratio || 0); }, 1);
+    return rows.map(function (r) {
+      var col = r.ratio >= 2.6 ? A.red : A.gold;
+      var label = _mdSportIco(r.league) + ' ' + (r.url
+        ? '<a href="' + r.url + '" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">' + r.name + ' ↗</a>'
+        : r.name);
+      var sub = 'Geld auf ' + esc(r.fav) + ' ' + r.favPct + '% · ' + usd(r.usd);
+      return rowEl(label, '×' + (+r.ratio).toFixed(1), col, sub, meter(mx ? (r.ratio / mx * 100) : 0, col));
+    }).join('');
+  }
   function _mdFillPubPreview() {
     var cTop = document.getElementById('md-cell-top'), cWh = document.getElementById('md-cell-whale');
     if (!cTop && !cWh) return;
-    if (typeof _pwEnsurePlaysData !== 'function' || typeof _pwPublicTopPlays !== 'function' || typeof _pwWhalePublicCandidates !== 'function') return;   // Skelett bleibt
+    if (typeof _pwEnsurePlaysData !== 'function' || typeof _pwPublicTopPlays !== 'function' || typeof _pwOverNormTop !== 'function') return;   // Skelett bleibt
     _pwEnsurePlaysData(function () {
       var t = document.getElementById('md-cell-top'), w = document.getElementById('md-cell-whale');
-      var tops = [], whales = [];
+      var tops = [], over = [];
       try { tops = _pwPublicTopPlays() || []; } catch (e) { tops = []; }
-      try { whales = _pwWhalePublicCandidates() || []; } catch (e) { whales = []; }
+      try { over = _pwOverNormTop(5) || []; } catch (e) { over = []; }
       var note = '<div style="font-size:10px;color:var(--mi3);margin:-2px 0 8px">🧪 Vorschau — sendet nicht · ein paar Tage beobachten</div>';
       var topBody = note + (tops.length ? tops.slice(0, 5).map(_mdPubTopRow).join('')
         : empty('Kein Top-Play über der Schwelle — Conv≥9, bewiesene Wallet (n≥8, ≥55%), Geld-Mehrheit ≥60%. Normalfall.'));
-      var whBody = note + (whales.length ? whales.slice(0, 5).map(_mdWhalePubRow).join('')
-        : empty('Keine Whale-Position über der Public-Schwelle (untracked ≥$100K / tracked ≥$25K).'));
+      var overBody = _mdOverNormBody(over);
       if (t) t.innerHTML = tile('🎯', 'Top-Play', A.good, 'rgba(46,160,67,.14)', 'rgba(46,160,67,.32)', 'polywallets', 'Wallets', topBody, 0);
-      if (w) w.innerHTML = tile('🐋', 'Whale-Watch', A.poly, 'rgba(25,158,112,.14)', 'rgba(25,158,112,.32)', 'polywallets', 'Wallets', whBody, 0);
+      if (w) w.innerHTML = tile('💰', 'Volumen über Norm', A.poly, 'rgba(25,158,112,.14)', 'rgba(25,158,112,.32)', 'polywallets', 'Wallets', overBody, 0);
     });
   }
 
@@ -764,7 +779,7 @@
       // Reihe 4 — Poly
       tile('🐋', 'Poly Whale-Bets', A.poly, 'rgba(25,158,112,.14)', 'rgba(25,158,112,.32)', 'polywallets', 'Wallets', whBody, 160) +
       '<div id="md-cell-top" class="md-cell">' + tile('🎯', 'Top-Play', A.good, 'rgba(46,160,67,.14)', 'rgba(46,160,67,.32)', 'polywallets', 'Wallets', empty('lädt …'), 170) + '</div>' +
-      '<div id="md-cell-whale" class="md-cell">' + tile('🐋', 'Whale-Watch', A.poly, 'rgba(25,158,112,.14)', 'rgba(25,158,112,.32)', 'polywallets', 'Wallets', empty('lädt …'), 180) + '</div>' +
+      '<div id="md-cell-whale" class="md-cell">' + tile('💰', 'Volumen über Norm', A.poly, 'rgba(25,158,112,.14)', 'rgba(25,158,112,.32)', 'polywallets', 'Wallets', empty('lädt …'), 180) + '</div>' +
       '</div>';
 
     p.innerHTML = _head() + _mdPulse() + _mdJetzt() + _kpis() + _mdHero() + grid +
