@@ -77,4 +77,29 @@ jobs:
 
       - name: 🚀 Auf GitHub Pages deployen
         id: deployment
+        continue-on-error: true
         uses: actions/deploy-pages@v4
+
+      # 06.08.2026 (Lucas: "solang immer alles geht"): der Pages-Backend erlaubt nur EIN aktives
+      # Deployment. Kollidiert unser Deploy mit einem noch finalisierenden (anderer Trigger), failt der
+      # CREATE-Call mit 400 "in progress deployment". Statt rot zu werden: bis zu 3 Versuche mit Pause --
+      # bis dahin ist das blockierende Deployment i.d.R. fertig. Erst der letzte Versuch failt hart.
+      - name: "⏳ Warten & 2. Versuch (nur wenn 1 failte)"
+        if: steps.deployment.outcome == 'failure'
+        run: sleep 60
+
+      - name: "🚀 Deploy (Versuch 2)"
+        id: deployment2
+        if: steps.deployment.outcome == 'failure'
+        continue-on-error: true
+        uses: actions/deploy-pages@v4
+
+      - name: "⏳ Warten & 3. Versuch (nur wenn 2 failte)"
+        if: steps.deployment.outcome == 'failure' && steps.deployment2.outcome == 'failure'
+        run: sleep 90
+
+      - name: "🚀 Deploy (Versuch 3 -- final, failt hart)"
+        id: deployment3
+        if: steps.deployment.outcome == 'failure' && steps.deployment2.outcome == 'failure'
+        uses: actions/deploy-pages@v4
+
