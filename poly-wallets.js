@@ -869,6 +869,11 @@ function _pwGlobalWhales(live){
 // ② Sharp-Wallet (25.07.2026, Lucas): CLV/Treffer je Wallet aus poly_wallet_track.json — trennt
 // „scharf" (schlägt die Linie) von „bloß groß". Ab PW_SHARP_MIN_N aufgelösten Positionen bewertbar.
 const PW_SHARP_MIN_N=4;
+const PW_SHARP_MIN_HIT=0.5;   // 07.08.2026 (Lucas): Treffer-Floor — BEIDE Achsen muessen stimmen, nicht CLV ODER Treffer
+const PW_SHARP_MIN_USD=250;   // 07.08.2026 (Lucas): $2-6-Positionen sind kein Signal — raus aus der Liste
+function _pwIsSharpScore(sc){  // scharf = genug Historie UND gewinnt UND schlaegt die Linie nicht negativ UND profitabel
+  return !!sc && sc.n>=PW_SHARP_MIN_N && (sc.hit||0)>=PW_SHARP_MIN_HIT && (sc.avgClv||0)>=0 && (sc.pnl||0)>0;
+}
 const PW_MONEY_MAJ=0.60;   // (01.08.2026, Lucas) „großes Geld" erst ab echter Mehrheit — 50–55% ist Münzwurf, kein Signal
 function _pwWalletScore(wallet){
   const s=_pwCache&&_pwCache.walletTrack&&_pwCache.walletTrack.scores;
@@ -1270,7 +1275,7 @@ function _pwMoveFor(key){
 function _pwSharpSideFor(m){
   const bySide={};
   for(const wh of (m.whales||[])){ const sc=_pwWalletScore(wh.wallet);
-    if(sc&&sc.n>=PW_SHARP_MIN_N&&sc.avgClv>0&&(sc.pnl||0)>=0) bySide[wh.side]=(bySide[wh.side]||0)+(Number(wh.usd)||0); }
+    if(_pwIsSharpScore(sc)&&(Number(wh.usd)||0)>=PW_SHARP_MIN_USD) bySide[wh.side]=(bySide[wh.side]||0)+(Number(wh.usd)||0); }
   let best=null,bmax=0; for(const s in bySide) if(bySide[s]>bmax){bmax=bySide[s];best=s;}
   return best;
 }
@@ -1363,9 +1368,9 @@ function _pwSharpSideForKey(key){
   const bySide={};
   for(const pos of opens){
     if(!pos||pos.key!==key) continue;
-    const usd=Number(pos.usd)||0; if(usd<=0) continue;
+    const usd=Number(pos.usd)||0; if(usd<PW_SHARP_MIN_USD) continue;   // 07.08.2026 (Lucas): Mini-Einsaetze ($2-6) raus
     const sc=_pwWalletScore(pos.wallet); if(!sc||sc.n<PW_SHARP_MIN_N) continue;
-    if(!(sc.avgClv>0 || sc.hit>=0.5) || (sc.pnl||0)<0) continue;     // bewährt: schlägt Linie ODER gewinnt
+    if(!_pwIsSharpScore(sc)) continue;   // 07.08.2026 (Lucas): beide Achsen streng     // bewährt: schlägt Linie ODER gewinnt
     bySide[pos.side]=(bySide[pos.side]||0)+usd;
   }
   let best=null,bmax=0; for(const sd in bySide) if(bySide[sd]>bmax){bmax=bySide[sd];best=sd;}
@@ -1382,10 +1387,10 @@ function _pwSharpInfoForKey(key){
   const bySide={};  // side -> {usd, n, wins, pnl, clvUsd, count}
   for(const pos of opens){
     if(!pos||pos.key!==key) continue;
-    const usd=Number(pos.usd)||0; if(usd<=0) continue;
+    const usd=Number(pos.usd)||0; if(usd<PW_SHARP_MIN_USD) continue;   // 07.08.2026 (Lucas): Mini-Einsaetze ($2-6) raus
     const raw=sc[pos.wallet]; if(!raw||!raw.n||raw.n<PW_SHARP_MIN_N) continue;
     const avgClv=raw.clvSumPP/raw.n, hit=(raw.wins||0)/raw.n;
-    if(!(avgClv>0 || hit>=0.5) || (Number(raw.pnl)||0)<0) continue;   // 06.08.2026 (Lucas): kein "scharf" bei Minus-PnL           // bewährt: schlägt Linie ODER gewinnt
+    if(!_pwIsSharpScore({n:raw.n,avgClv:avgClv,hit:hit,pnl:Number(raw.pnl)||0})) continue;   // 07.08.2026 (Lucas): beide Achsen streng   // 06.08.2026 (Lucas): kein "scharf" bei Minus-PnL           // bewährt: schlägt Linie ODER gewinnt
     const b=bySide[pos.side]||(bySide[pos.side]={usd:0,n:0,wins:0,pnl:0,clvUsd:0,count:0});
     b.usd+=usd; b.n+=raw.n; b.wins+=(raw.wins||0); b.pnl+=(Number(raw.pnl)||0);
     b.clvUsd+=avgClv*usd; b.count++;
