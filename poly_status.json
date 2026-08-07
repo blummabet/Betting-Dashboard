@@ -63,12 +63,12 @@
       "ok": false,
       "nFail": 6,
       "failures": [
-        "15/54 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (28%) — Trefferquote allein trügt",
-        "   0x84cfffc3f1… n=16 Treffer 62% P&L $-7,505,405",
-        "   0xe9076a87c5… n=17 Treffer 71% P&L $-7,452,140",
+        "15/53 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (28%) — Trefferquote allein trügt",
+        "   0x84cfffc3f1… n=16 Treffer 62% P&L $-7,505,362",
+        "   0xe9076a87c5… n=17 Treffer 71% P&L $-7,457,573",
         "   0xc3c3b3ef30… n=40 Treffer 70% P&L $-3,774,246",
-        "   0xa0f21e6d35… n=13 Treffer 62% P&L $-2,695,255",
-        "95/149 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
+        "   0xa0f21e6d35… n=13 Treffer 62% P&L $-2,696,574",
+        "95/148 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
     },
@@ -88,11 +88,11 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "374/404 'live' Geld-Märkte sind schon >6h nach Anpfiff (93%) — $11,080,299 Whale-Geld auf fertigen Spielen"
+        "371/399 'live' Geld-Märkte sind schon >6h nach Anpfiff (93%) — $11,060,875 Whale-Geld auf fertigen Spielen"
       ],
       "note": "Der Close-Feed setzt kein resolved-Flag; fertige Spiele bleiben 'live'. Alle Views filtern jetzt auf den rekonstruierten Anpfiff — dieser Check misst den Geister-Anteil im Roh-Feed (steigt er, prunt/löst der Feed nicht mehr auf; jede ungegatete View zeigt dann fertige Spiele)."
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-08-07T16:10:27.481334+00:00"
+  "generatedAt": "2026-08-07T17:07:38.481239+00:00"
 }
