@@ -262,6 +262,7 @@
   function allBetfair() {
     var ms = (_md.data.betfair && _md.data.betfair.matches) || [], rows = [];
     ms.forEach(function (m) {
+      if (_mdBfStale(m)) return;   // 07.08.2026: fertige/vorbei Spiele raus (hoechstes Volumen -> klebten oben in der Kohle-Kachel)
       var best = null, mk = m.markets || {};
       for (var name in mk) {
         var rs = mk[name].runners || [];
@@ -312,7 +313,7 @@
     var out = [];
     var liveFn = (typeof window._bfIsLive === 'function') ? window._bfIsLive : function () { return false; };
     ms.forEach(function (m) {
-      if (liveFn(m) || _bfTopVol(m) < _MISP_MIN_VOL) return;   // vor Anpfiff & liquide
+      if (_mdBfStale(m) || liveFn(m) || _bfTopVol(m) < _MISP_MIN_VOL) return;   // vor Anpfiff & liquide, fertige Spiele raus
       var co; try { co = window._bfCoherence(m); } catch (e) { return; }
       var checks = (co && co.checks) || [];
       var hard = checks.filter(function (c) { return c.hard && Math.abs(c.dev) >= 0.8 && (c.w == null || c.w >= 0.15); });
@@ -646,7 +647,7 @@
   var _HT_MK = { 'Half Time': 'HT 1X2', 'First Half Goals 0.5': 'HT O/U 0.5', 'First Half Goals 1.5': 'HT O/U 1.5' };
   var _HT_FLOOR = 1000;
   var _HT_MIN_ODD = 1.30;   // 06.08.2026 (Lucas): Geld auf HT-Quasi-Lock (@<1.30 = HT-Ergebnis entschieden) ist kein Signal — „The Draw @1.02" raus.
-  function _mdBfHtStale(m) {
+  function _mdBfStale(m) {
     // 06.08.2026 (Lucas: „haengt seit Stunden"): fertige/lange-vorbei Spiele raus. finished ODER
     // Anpfiff > 3.5h her (Spiel durch, HT laengst entschieden). Ohne Kickoff/Live-Info -> nicht stale.
     var li = m.liveInfo || {};
@@ -657,7 +658,7 @@
   function _mdBfHt() {
     var ms = (_md.data.betfair && _md.data.betfair.matches) || [], rows = [];
     ms.forEach(function (m) {
-      if (_mdBfHtStale(m)) return;   // durchgelaufene Spiele nicht mehr zeigen
+      if (_mdBfStale(m)) return;   // durchgelaufene Spiele nicht mehr zeigen
       var best = null, mk = m.markets || {};
       for (var name in _HT_MK) {
         var market = mk[name]; if (!market) continue;
