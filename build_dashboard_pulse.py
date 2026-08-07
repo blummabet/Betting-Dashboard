@@ -27,6 +27,32 @@ def _load(name):
         return {}
 
 
+def _betfair_pulse(rec=None) -> dict | None:
+    """Betfair-Geld-Signal-Bilanz (betfair_track_record.py → global). Win/Loss + ROI, KEIN CLV
+    (Betfair-Track speichert kein Closing je Signal). Zeigt die Gesamt-Trefferquote/ROI aller
+    abgerechneten Betfair-Signale."""
+    g = ((rec if rec is not None else _load("betfair_track_record.json")) or {}).get("global") or {}
+    if not g.get("n"):
+        return None
+    return {"n": g.get("n"),
+            "hitPct": round(100.0 * (g.get("hitRate") or 0), 1),
+            "roiPct": round(100.0 * (g.get("roi") or 0), 1)}
+
+
+def _poly_pulse(track=None) -> dict | None:
+    """Poly „Heute wetten"-Paper-Trade (poly_shortlist_track.py → agg.all). n/Treffer/ROI/Ø CLV
+    der ganzen Shortlist + Zahl der offenen Plays."""
+    d = track if track is not None else _load("poly_shortlist_track.json")
+    a = ((d or {}).get("agg") or {}).get("all") or {}
+    if not a.get("n"):
+        return None
+    return {"n": a.get("n"),
+            "hitPct": round(100.0 * (a.get("hit") or 0), 1),
+            "roiPct": round(100.0 * (a.get("roi") or 0), 1),
+            "clvAvg": a.get("clvAvg"),
+            "openN": len((d or {}).get("open") or {})}
+
+
 def build() -> dict:
     recs = []
     for lf in LEDGERS:
@@ -52,13 +78,16 @@ def build() -> dict:
         "series": [round(c, 2) for c in clvs],
         "oldest": (last_chrono[0].get("resolvedAt") if last_chrono else None),
         "newest": (last[0].get("resolvedAt") if last else None),
+        "betfair": _betfair_pulse(),   # 07.08.2026 (Lucas): Betfair-Tracking mit in den Puls
+        "poly": _poly_pulse(),         # 07.08.2026 (Lucas): Poly „Heute wetten" mit in den Puls
     }
 
 
 def main():
     out = build()
     (BASE / "dashboard_pulse.json").write_text(json.dumps(out, ensure_ascii=False, indent=0), encoding="utf-8")
-    print("dashboard_pulse.json:", {k: out[k] for k in ("n", "avgClvPP", "pctBeatClose", "winPct")})
+    print("dashboard_pulse.json:", {k: out[k] for k in ("n", "avgClvPP", "pctBeatClose", "winPct")},
+          "| betfair", out.get("betfair"), "| poly", out.get("poly"))
 
 
 if __name__ == "__main__":

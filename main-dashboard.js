@@ -170,7 +170,9 @@
       '.md-empty{color:var(--mi3);font-size:12px;padding:12px 2px 10px;line-height:1.5;}',
       '.md-foot{text-align:center;color:var(--mi3);font-size:11px;margin-top:16px;padding-bottom:2px;}',
       '.md-preview-h{margin:22px 0 2px;font-weight:800;font-size:13px;color:var(--mi);border-top:1px dashed var(--mln2);padding-top:16px;}',
-      '.md-pulse{display:flex;align-items:center;gap:16px;flex-wrap:wrap;background:var(--m1);border:1px solid var(--mln);border-radius:14px;padding:12px 15px;margin-top:14px;}',
+      '.md-pulse{display:flex;flex-direction:column;align-items:stretch;gap:9px;background:var(--m1);border:1px solid var(--mln);border-radius:14px;padding:12px 15px;margin-top:14px;}',
+      '.md-pulse-row{display:flex;align-items:center;gap:14px;flex-wrap:wrap;}',
+      '.md-pulse-tag{display:flex;align-items:center;gap:6px;font-size:11px;font-weight:800;color:var(--mi2);min-width:120px;}',
       '.md-pulse-h{display:flex;align-items:center;gap:7px;font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;color:var(--mi3);}',
       '.md-pulse-ms{display:flex;align-items:center;gap:18px;flex-wrap:wrap;flex:1;min-width:0;}',
       '.md-pulse-m{display:flex;flex-direction:column;gap:2px;}',
@@ -779,21 +781,42 @@
     return '<div class="md-spk" title="CLV je Pick (alt→neu) · gruen schlaegt die Close"><div class="md-spk-mid"></div>' + cols + '</div>';
   }
   function _mdPulse() {
-    var d = _md.data.pulse;
-    if (!d || !d.n) return '<section class="md-pulse md-rise"><div class="md-pulse-h">📈 Puls</div>' +
-      '<div class="md-pulse-l">Noch keine abgerechneten Picks — füllt sich, sobald die ersten Cards resolven.</div></section>';
-    var clv = d.avgClvPP, clvCol = (clv == null) ? 'var(--mi2)' : clv > 0 ? A.good : clv < 0 ? A.red : 'var(--mi2)';
-    var clvTxt = (clv == null) ? '—' : (clv > 0 ? '+' : '') + clv.toFixed(1) + 'pp';
-    var beat = d.pctBeatClose, beatCol = beat == null ? 'var(--mi)' : beat >= 50 ? A.good : beat >= 33 ? A.gold : A.red;
-    var win = d.winPct;
+    var d = _md.data.pulse || {};
+    var hasCards = !!d.n, bf = d.betfair, pl = d.poly;
+    if (!hasCards && !(bf && bf.n) && !(pl && pl.n)) return '<section class="md-pulse md-rise"><div class="md-pulse-h">📈 Puls</div>' +
+      '<div class="md-pulse-l">Noch keine abgerechneten Picks/Plays — füllt sich, sobald die ersten resolven.</div></section>';
     var metric = function (v, l, c) { return '<div class="md-pulse-m"><span class="md-pulse-v" style="color:' + (c || 'var(--mi)') + '">' + v + '</span><span class="md-pulse-l">' + l + '</span></div>'; };
-    return '<section class="md-pulse md-rise">' +
-      '<div class="md-pulse-h" title="Closing Line Value: schlagen deine Picks die Schlussquote? Der beste Fruehindikator fuer echte Kante.">📈 Puls · letzte ' + d.n + '</div>' +
-      '<div class="md-pulse-ms">' +
-        metric(clvTxt, 'Ø CLV', clvCol) +
+    var pct = function (v) { return v == null ? '—' : Math.round(v) + '%'; };
+    var roiTxt = function (v) { return v == null ? '—' : (v > 0 ? '+' : '') + (+v).toFixed(1) + '%'; };
+    var col0 = function (v) { return v == null ? 'var(--mi2)' : v > 0 ? A.good : v < 0 ? A.red : 'var(--mi2)'; };
+    var clvCell = function (v) { return metric(v == null ? '—' : (v > 0 ? '+' : '') + (+v).toFixed(2) + 'pp', 'Ø CLV', col0(v)); };
+    var rows = '';
+    if (hasCards) {
+      var clv = d.avgClvPP, clvTxt = (clv == null) ? '—' : (clv > 0 ? '+' : '') + clv.toFixed(1) + 'pp';
+      var beat = d.pctBeatClose, beatCol = beat == null ? 'var(--mi)' : beat >= 50 ? A.good : beat >= 33 ? A.gold : A.red;
+      rows += '<div class="md-pulse-row"><span class="md-pulse-tag">🎯 Cards · ' + d.n + '</span><div class="md-pulse-ms">' +
+        metric(clvTxt, 'Ø CLV', col0(clv)) +
         metric((beat == null ? '—' : Math.round(beat) + '%'), 'schlägt Close', beatCol) +
-        metric((win == null ? '—' : Math.round(win) + '%'), 'Treffer · ' + (d.wins || 0) + '–' + (d.losses || 0), 'var(--mi)') +
-      '</div>' + _spark(d.series) + '</section>';
+        metric((d.winPct == null ? '—' : Math.round(d.winPct) + '%'), 'Treffer · ' + (d.wins || 0) + '–' + (d.losses || 0), 'var(--mi)') +
+        '</div>' + _spark(d.series) + '</div>';
+    }
+    if (bf && bf.n) {
+      rows += '<div class="md-pulse-row"><span class="md-pulse-tag">💷 Betfair · ' + bf.n + '</span><div class="md-pulse-ms">' +
+        metric(pct(bf.hitPct), 'Treffer', bf.hitPct >= 50 ? A.good : 'var(--mi)') +
+        metric(roiTxt(bf.roiPct), 'ROI', col0(bf.roiPct)) +
+        '</div></div>';
+    }
+    if (pl && pl.n) {
+      rows += '<div class="md-pulse-row"><span class="md-pulse-tag">🎮 Poly (Heute) · ' + pl.n + '</span><div class="md-pulse-ms">' +
+        metric(pct(pl.hitPct), 'Treffer', pl.hitPct >= 50 ? A.good : 'var(--mi)') +
+        metric(roiTxt(pl.roiPct), 'ROI', col0(pl.roiPct)) +
+        clvCell(pl.clvAvg) +
+        (pl.openN ? metric(pl.openN, 'offen', 'var(--mi3)') : '') +
+        '</div></div>';
+    }
+    return '<section class="md-pulse md-rise">' +
+      '<div class="md-pulse-h" title="Cards nach CLV (Nordstern) · Betfair-Signale nach Treffer/ROI · Poly „Heute wetten“ Paper-Trade">📈 Puls</div>' +
+      rows + '</section>';
   }
   // ── „Jetzt": Spiele mit Anpfiff <= 3h und Live-Signal (BET / Poly-Lag); CLV-Cue = steamMovePP ──
   function jetztRows() {
