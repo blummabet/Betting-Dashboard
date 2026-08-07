@@ -268,7 +268,8 @@ def _extract_ah(outs: list, home_name: str, away_name: str) -> dict:
 # Der alte public_* nahm nur den ERSTEN verfügbaren Soft-Book (SOFT_PRIORITY[0], z.B. bet365) —
 # 1-Book-Rauschen, deshalb feuerte public_static_bias für MLS/Liga kaum. Die WM bekam via
 # fetch_wm_multibook_odds (API-Football /odds) einen Median-Konsens; für Klub-Ligen ist das
-# unnötig: TheOddsAPI liefert je Event ohnehin viele Bücher (regions=eu,uk). Wir mitteln also
+# unnötig: TheOddsAPI liefert je Event ohnehin viele Bücher (regions=eu,uk,us — 07.08.2026 Lucas:
+# us-Bücher dazu für mehr Soft-Konsens-Tiefe auf den Kernligen). Wir mitteln also
 # über ALLE weichen Bücher der bereits geholten Antwort — kein Extra-Call, keine Zweitquelle,
 # gleiche Semantik wie WM ("Konsens (N Books)"). Sharp-Anker (Pinnacle, Betfair-Exchange) raus.
 _SHARP_BOOKS = {"pinnacle", "betfair_ex_eu", "betfair_ex_uk", "betfair"}
@@ -623,7 +624,7 @@ def _fetch_event_extra(sport_key: str, event_id: str) -> list:
     """Per-Event-Endpoint für BTTS + alternate_totals. Gibt die bookmakers-Liste oder []."""
     import fetch_wm_odds as W
     path = (f"/v4/sports/{sport_key}/events/{event_id}/odds?apiKey={W.ODDS_KEY}"
-            f"&regions=eu,uk&markets=btts,alternate_totals&oddsFormat=decimal")
+            f"&regions=eu,uk,us&markets=btts,alternate_totals&oddsFormat=decimal")
     data = W.odds_get(path)
     if isinstance(data, dict):
         return data.get("bookmakers") or []
@@ -654,7 +655,7 @@ def _fetch_events(sport_key: str) -> list:
     import fetch_wm_odds as W
     # 09.07.2026: spreads (Asian Handicap) ergänzt → Liga/MLS bekommen AH-Picks wie die WM.
     path = (f"/v4/sports/{sport_key}/odds?apiKey={W.ODDS_KEY}"
-            f"&regions=eu,uk&markets=h2h,totals,spreads&oddsFormat=decimal")
+            f"&regions=eu,uk,us&markets=h2h,totals,spreads&oddsFormat=decimal")
     data = W.odds_get(path)
     return data if isinstance(data, list) else []
 
