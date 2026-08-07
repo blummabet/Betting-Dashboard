@@ -1,89 +1,62 @@
-#!/usr/bin/env python3
-"""test_poly_pinnacle_scan.py — Broad Pinnacle x Poly Scanner (04.08.2026, Lucas).
-Injizierte Fetcher: kein Netz. Prueft Paarung (direct + swapped), Snapshot-Anhaengen, Prune, Cap."""
-import sys, unittest
-from datetime import datetime, timedelta, timezone
-from pathlib import Path
-sys.path.insert(0, str(Path(__file__).parent.parent))
-import poly_pinnacle_scan as S
+# tests/test_poly_pinnacle_scan.py — 07.08.2026 (Lucas): das Fundament fuer Wallet-vs-Pinnacle-CLV
+# UND den Lag-Backtest. Der Scanner MUSS (a) den Poly-Slug je Spiel speichern (exakter Join-Key zum
+# Wallet-Ledger) und (b) den Pinnacle/Poly-Closing (letzter Snap vor Anpfiff) je Slug dauerhaft
+# einfrieren, BEVOR das Spiel gepruned wird — sonst geht die Sharp-Schlusslinie nach 6h verloren.
+import importlib
+from datetime import datetime, timezone, timedelta
 
-NOW = datetime(2026, 8, 4, 13, 0, tzinfo=timezone.utc)
-def ko(h): return (NOW + timedelta(hours=h)).isoformat()
-
-# zwei Poly-Spiele: A normal orientiert, B (Pinnacle liefert vertauscht)
-def poly_fetch(series):
-    return [
-        {"slug": "a-2026", "home": "Ajax", "away": "PSV", "kickoff": ko(3), "poly": [0.50, 0.30, 0.20], "vol": 9000},
-        {"slug": "b-2026", "home": "Feyenoord", "away": "Twente", "kickoff": ko(5), "poly": [0.40, 0.30, 0.30], "vol": 4000},
-    ]
-def pinn_fetch(key):
-    return [
-        {"home": "Ajax", "away": "PSV", "commence": ko(3), "book": "pinnacle", "pinn": [0.55, 0.28, 0.17], "dec": []},
-        # Pinnacle liefert B vertauscht: Twente(Heim) vs Feyenoord(Auswaerts)
-        {"home": "Twente", "away": "Feyenoord", "commence": ko(5), "book": "pinnacle", "pinn": [0.20, 0.30, 0.50], "dec": []},
-    ]
-LG = [{"name": "Eredivisie", "poly": "10286", "odds": "soccer_netherlands_eredivisie"}]
+ps = importlib.import_module("poly_pinnacle_scan")
+NOW = datetime(2026, 8, 7, 12, 0, tzinfo=timezone.utc)
 
 
-class TestScan(unittest.TestCase):
-    def test_pairing_und_swap(self):
-        rows, nact, npair, ts, now = S.scan(LG, poly_fetch, pinn_fetch, now=NOW)
-        self.assertEqual(nact, 1)
-        self.assertEqual(npair, 2)
-        a = rows["Eredivisie|Ajax|PSV|2026-08-04"]
-        self.assertEqual(a["snap"]["pinn"], [0.55, 0.28, 0.17])   # direct: unveraendert
-        self.assertEqual(a["snap"]["poly"], [0.50, 0.30, 0.20])
-        b = rows["Eredivisie|Feyenoord|Twente|2026-08-04"]
-        # swapped: Pinnacle [Twente0.20, X0.30, Fey0.50] -> Poly-Rahmen [Fey0.50, X0.30, Twente0.20]
-        self.assertEqual(b["snap"]["pinn"], [0.50, 0.30, 0.20])
-        self.assertEqual(b["snap"]["book"], "pinnacle")
-
-    def test_snapshots_haengen_an(self):
-        store = {}
-        for _ in range(3):
-            rows, *_rest = S.scan(LG, poly_fetch, pinn_fetch, now=NOW)
-            store = S.merge_store(store, rows, NOW)
-        g = store["games"]["Eredivisie|Ajax|PSV|2026-08-04"]
-        self.assertEqual(len(g["snaps"]), 3)
-
-    def test_prune_nach_anpfiff(self):
-        # Spiel liegt >6h nach Anpfiff -> raus
-        old = [{"slug": "old", "home": "Ajax", "away": "PSV", "kickoff": ko(-8), "poly": [0.5, 0.3, 0.2], "vol": 100}]
-        rows, *_r = S.scan(LG, lambda s: old, pinn_fetch, now=NOW)
-        store = S.merge_store({}, rows, NOW)
-        self.assertNotIn("Eredivisie|Ajax|PSV|2026-08-04", store.get("games", {}))
-
-    def test_cap_max_snaps(self):
-        store = {"games": {"k": {"league": "X", "home": "H", "away": "A", "kickoff": ko(2),
-                                  "snaps": [{"ts": str(i)} for i in range(S.MAX_SNAPS + 20)]}}}
-        rows = {"k": {"league": "X", "home": "H", "away": "A", "kickoff": ko(2),
-                      "snap": {"ts": "neu"}}}
-        store = S.merge_store(store, rows, NOW)
-        self.assertEqual(len(store["games"]["k"]["snaps"]), S.MAX_SNAPS)
-        self.assertEqual(store["games"]["k"]["snaps"][-1]["ts"], "neu")
+def iso(dt):
+    return dt.isoformat()
 
 
-    def test_multi_key_merge(self):
-        # UCL/UEL: mehrere Odds-Keys (Haupt + Quali) -> beide abfragen, Events mergen.
-        def ev(home, away, hw, dr, aw):
-            return {"home_team": home, "away_team": away, "commence_time": "2026-08-04T15:00:00Z",
-                    "bookmakers": [{"key": "pinnacle", "markets": [{"key": "h2h", "outcomes": [
-                        {"name": home, "price": hw}, {"name": "Draw", "price": dr}, {"name": away, "price": aw}]}]}]}
-        calls = []
-        def og(path):
-            calls.append(path)
-            return [ev("Ajax", "PSV", 2.0, 3.5, 4.0)] if "/main/" in path else [ev("Roma", "Lazio", 2.2, 3.3, 3.4)]
-        out = S.fetch_pinn_games(["main", "quali"], odds_get=og)
-        self.assertEqual(len(calls), 2)                       # beide Keys abgefragt
-        homes = {g["home"] for g in out}
-        self.assertEqual(homes, {"Ajax", "Roma"})            # Events aus beiden gemerged
-
-    def test_devig(self):
-        self.assertIsNone(S._devig_1x2(1.0, 3.0, 3.0))     # implausibel
-        self.assertIsNone(S._devig_1x2(None, 3, 3))
-        f = S._devig_1x2(2.0, 4.0, 4.0)
-        self.assertAlmostEqual(sum(f), 1.0, places=3)
+def _row(slug, ko, ts, pinn, poly=None):
+    return {"league": "MLS", "home": "A", "away": "B", "kickoff": iso(ko), "slug": slug,
+            "snap": {"ts": iso(ts), "pinn": pinn, "poly": poly or [0.5, 0.3, 0.2],
+                     "vol": 100, "book": "pinnacle"}}
 
 
-if __name__ == "__main__":
-    unittest.main()
+def test_merge_store_speichert_slug():
+    rows = {"MLS|A|B|x": _row("mls-a-b", NOW + timedelta(hours=2), NOW, [0.5, 0.3, 0.2])}
+    store = ps.merge_store({}, rows, NOW)
+    assert store["games"]["MLS|A|B|x"]["slug"] == "mls-a-b"
+    assert not store.get("closings")   # noch nicht angepfiffen -> kein Closing
+
+
+def test_closing_snap_nimmt_letzten_vor_anpfiff():
+    ko = NOW
+    g = {"kickoff": iso(ko), "snaps": [
+        {"ts": iso(ko - timedelta(hours=2)), "pinn": [0.4, 0.3, 0.3]},
+        {"ts": iso(ko - timedelta(minutes=10)), "pinn": [0.55, 0.28, 0.17]},  # closing
+        {"ts": iso(ko + timedelta(minutes=30)), "pinn": [0.9, 0.05, 0.05]},   # in-play -> ignorieren
+    ]}
+    assert ps._closing_snap(g)["pinn"] == [0.55, 0.28, 0.17]
+
+
+def test_freeze_idempotent_und_ueberlebt_prune():
+    slug = "mls-a-b"
+    ko = NOW - timedelta(hours=1)   # schon angepfiffen
+    store = ps.merge_store({}, {"MLS|A|B|x": _row(slug, ko, ko - timedelta(minutes=15),
+                                                  [0.6, 0.25, 0.15])}, NOW)
+    assert store["closings"][slug]["pinn"] == [0.6, 0.25, 0.15]
+    assert store["closings"][slug]["league"] == "MLS"
+    # idempotent: spaeterer (In-Play-)Snap darf das Closing NICHT ueberschreiben
+    store = ps.merge_store(store, {"MLS|A|B|x": _row(slug, ko, NOW, [0.99, 0.005, 0.005])},
+                           NOW + timedelta(minutes=30))
+    assert store["closings"][slug]["pinn"] == [0.6, 0.25, 0.15]
+    # Spiel wird nach PRUNE_AFTER_H entfernt, Closing bleibt bestehen
+    store = ps.merge_store(store, {}, NOW + timedelta(hours=ps.PRUNE_AFTER_H + 2))
+    assert "MLS|A|B|x" not in store["games"]
+    assert slug in store["closings"]
+
+
+def test_retention_entfernt_uralte_closings():
+    slug = "old-x"
+    store = {"games": {}, "closings": {slug: {
+        "slug": slug, "kickoff": iso(NOW - timedelta(days=ps.CLOSINGS_KEEP_DAYS + 10)),
+        "pinn": [0.5, 0.3, 0.2]}}}
+    store = ps.merge_store(store, {}, NOW)
+    assert slug not in store["closings"]

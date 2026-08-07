@@ -199,6 +199,62 @@ def _kick_age_h(kickoff, now):
     return (now - k).total_seconds() / 3600.0
 
 
+CLOSINGS_KEEP_DAYS = 240   # Closings sind der bleibende Wert; nur uralte raus, sonst waechst es unbegrenzt
+
+
+def _closing_snap(g):
+    """Letzter Snapshot VOR/bei Anpfiff = Closing-Referenz (die Sharp-Linie am Ende). None ohne Snaps."""
+    snaps = g.get("snaps") or []
+    if not snaps:
+        return None
+    try:
+        k = datetime.fromisoformat(str(g.get("kickoff")).replace("Z", "+00:00"))
+        if k.tzinfo is None:
+            k = k.replace(tzinfo=timezone.utc)
+    except (ValueError, TypeError):
+        return snaps[-1]
+    pre = []
+    for sn in snaps:
+        try:
+            t = datetime.fromisoformat(str(sn.get("ts")).replace("Z", "+00:00"))
+        except (ValueError, TypeError):
+            continue
+        if t <= k:
+            pre.append(sn)
+    return pre[-1] if pre else snaps[0]
+
+
+def _freeze_closings(store, now):
+    """Je Spiel den Pinnacle/Poly-Closing (letzter Snap vor Anpfiff) dauerhaft nach `closings`
+    (Schluessel = Poly-Slug) einfrieren, SOBALD es angepfiffen ist — bevor merge_store es prunt.
+    Idempotent: ein einmal gefrorener Slug wird NIE ueberschrieben (die Sharp-Closing-Linie steht fest).
+    CLV-Referenz fuer Wallet-vs-Pinnacle UND den Lag-Backtest."""
+    games = store.get("games", {})
+    closings = store.setdefault("closings", {})
+    for g in games.values():
+        slug = g.get("slug")
+        if not slug or slug in closings:
+            continue
+        age = _kick_age_h(g.get("kickoff"), now)
+        if age is None or age < 0:    # noch nicht angepfiffen -> Closing steht noch aus
+            continue
+        snap = _closing_snap(g)
+        if not snap or not snap.get("pinn"):
+            continue
+        closings[slug] = {
+            "slug": slug, "league": g.get("league"), "home": g.get("home"),
+            "away": g.get("away"), "kickoff": g.get("kickoff"),
+            "pinn": snap.get("pinn"), "poly": snap.get("poly"),
+            "book": snap.get("book"), "closingTs": snap.get("ts"),
+            "frozenAt": now.isoformat(),
+        }
+    for slug in list(closings.keys()):    # Retention: nur uralte raus
+        age = _kick_age_h(closings[slug].get("kickoff"), now)
+        if age is not None and age > CLOSINGS_KEEP_DAYS * 24:
+            del closings[slug]
+    return store
+
+
 def scan(leagues=None, poly_fetch=fetch_poly_games, pinn_fetch=fetch_pinn_games, now=None):
     """Ein Durchlauf: liefert {gameKey: snap-row}. now/Fetcher injizierbar für Tests."""
     now = now or datetime.now(timezone.utc)
@@ -218,7 +274,7 @@ def scan(leagues=None, poly_fetch=fetch_poly_games, pinn_fetch=fetch_pinn_games,
             key = f"{lg['name']}|{g['home']}|{g['away']}|{str(g['kickoff'])[:10]}"
             rows[key] = {
                 "league": lg["name"], "home": g["home"], "away": g["away"],
-                "kickoff": g["kickoff"],
+                "kickoff": g["kickoff"], "slug": g.get("slug"),
                 "snap": {"ts": ts, "pinn": pr["pinn_frame"], "poly": g["poly"],
                          "vol": g["vol"], "book": pr["book"]},
             }
@@ -234,13 +290,17 @@ def merge_store(store, rows, now):
     for key, r in rows.items():
         g = games.get(key)
         if not g:
-            g = {k: r[k] for k in ("league", "home", "away", "kickoff")}
+            g = {k: r[k] for k in ("league", "home", "away", "kickoff", "slug")}
             g["snaps"] = []
             games[key] = g
         g["kickoff"] = r["kickoff"] or g.get("kickoff")
+        if not g.get("slug") and r.get("slug"):
+            g["slug"] = r["slug"]   # Backfill fuer Spiele aus der Zeit vor dem Slug-Feld
         g["snaps"].append(r["snap"])
         if len(g["snaps"]) > MAX_SNAPS:
             g["snaps"] = g["snaps"][-MAX_SNAPS:]
+    # Vor dem Prune: Closings dauerhaft einfrieren (sonst gehen die Sharp-Schlusslinien verloren).
+    _freeze_closings(store, now)
     # Prune: Spiele deutlich nach Anpfiff raus (Serie abgeschlossen; Backtest liest sie vorher aus)
     for key in list(games.keys()):
         age = _kick_age_h(games[key].get("kickoff"), now)
@@ -259,7 +319,8 @@ def main():
     rows, n_active, n_pairs, ts, now = scan()
     store = merge_store(store, rows, now)
     store["_meta"] = {"generatedAt": ts, "leaguesActive": n_active, "pairsThisRun": n_pairs,
-                      "gamesTracked": len(store.get("games", {}))}
+                      "gamesTracked": len(store.get("games", {})),
+                      "closingsStored": len(store.get("closings", {}))}
     with open(STORE_FILE, "w", encoding="utf-8") as f:
         json.dump(store, f, ensure_ascii=False, separators=(",", ":"))
     print(f"  → {n_active} aktive Ligen · {n_pairs} Paarungen · "
