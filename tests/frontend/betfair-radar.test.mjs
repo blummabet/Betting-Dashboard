@@ -656,8 +656,12 @@ test('Radar: reaktives Geld auf den Fuehrenden fliegt aus Frisches Geld', () => 
       { ts: iso(0), mkv: { 'Match Odds': 20000 } } ] };   // +€15K Zufluss, Lead = Alpha
     return w._renderBetfairRadar();
   };
-  // Alpha (Heim) fuehrt 1:0, Geld auf Alpha -> KEIN Frisches-Geld-Eintrag (reaktiv)
-  assert.ok(!/▲ \+/.test(renderWith(1, 0)), 'reaktives Geld auf den Fuehrenden gefiltert');
-  // Gleichstand 1:1 -> Zufluss bleibt sichtbar
-  assert.match(renderWith(1, 1), /▲ \+/, 'bei Gleichstand bleibt der Zufluss');
+  // 08.08.2026 (Lucas): Geld auf den Fuehrenden fliegt NICHT mehr raus — es bleibt drin und wird
+  // als „▶ führt" markiert (zusammen mit Back/driftet-Badge das eigentliche Signal).
+  const lead = renderWith(1, 0);   // Alpha fuehrt 1:0, Geld auf Alpha
+  assert.match(lead, /▲ \+/, 'Fuehrungs-Geld bleibt im Frisches-Geld-Block sichtbar');
+  assert.match(lead, /führt/, 'und ist als „führt" markiert');
+  const level = renderWith(1, 1);  // Gleichstand -> kein Fuehrer
+  assert.match(level, /▲ \+/, 'bei Gleichstand bleibt der Zufluss');
+  assert.ok(!/führt/.test(level), 'ohne Fuehrer kein „führt"-Marker');
 });

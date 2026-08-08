@@ -151,6 +151,15 @@
     return '';
   }
   window._bfDirBadge = dirBadge;   // Test-Hook
+  // 08.08.2026 (Lucas): Geld auf die aktuell FÜHRENDE Mannschaft nicht mehr rauswerfen, sondern
+  // markieren — zusammen mit dem Back/driftet-Badge ist „führt + Back ✓" ein starkes Folge-Signal,
+  // „führt + driftet" dagegen verdächtig. _leaderTeam ist weiter unten (function-hoisted).
+  function fuehrtTag(m, runnerName) {
+    var ldr = _leaderTeam(m);
+    if (!ldr || runnerName == null || String(runnerName) !== String(ldr)) return '';
+    return ' <span title="Geld auf die aktuell führende Mannschaft — folgt der Führung. Mit „Back ✓" bestätigt die Quote das (starkes Signal), mit „driftet" wird die Führung eher gelayt." style="font-size:9px;font-weight:800;color:#8b949e;border:1px solid rgba(139,148,150,.45);border-radius:4px;padding:0 4px">▶ führt</span>';
+  }
+  window._bfFuehrtTag = fuehrtTag;   // Test-Hook
   function rLabel(name, m) {
     if (name === m.home) return String(m.home);
     if (name === m.away) return String(m.away);
@@ -566,6 +575,7 @@
       '<span style="flex:1;max-width:160px">' + distBar(mk, true) + '</span>' +
       '<span style="font-size:13px;font-weight:800;color:' + C.vol + '">' + fmtE(mvolG(m, x.mm.id)) + '</span>' +
       dirBadge(m, x.mm.id, lead) +
+      fuehrtTag(m, lead && lead.name) +
       confBadge(m.league, x.mm.id) +
       '<span style="font-size:11px;color:' + C.dim + '">▸ alle Märkte</span>' +
     '</div>';
@@ -677,8 +687,7 @@
         var mk = mkOf(m, mm.id); if (!mk || distTotal(mk) <= 0) return;
         var lead = leadRunner(mk); if (!lead) return;
         if (typeof lead.odd === 'number' && lead.odd < MIN_ODD_SHOW) return;   // Geld auf ~Lock-Favorit = keine Info
-        var _ldr = _leaderTeam(m);
-        if (_ldr && lead.name != null && String(lead.name) === String(_ldr)) return;   // Geld auf Fuehrenden = reaktiv (05.08.2026, Lucas)
+        // 08.08.2026 (Lucas): Geld auf den Fuehrenden NICHT mehr rauswerfen — mit „▶ fuehrt" markiert + Back/driftet-Badge ist es ein echtes Signal.
         var v = eur(lead.vol); if (v < HOTSPOT_MIN_EUR) return;
         var pct = (+lead.vol || 0) / (distTotal(mk) || 1) * 100;
         if (pct < HOTSPOT_MIN_SHARE) return;   // 02.08.2026 (Lucas): Fast-Gleichstand raus - der Block zeigt WO das Geld liegt, nicht grosse liquide Spiele. < 60% Konzentration ist kein Signal (gehoert zu Frisches Geld).
@@ -697,7 +706,7 @@
         '<div class="bfb-lbl"><div class="bfb-g">' + flag(x.m.country, x.m.league) + ' ' + esc(String(x.m.home).slice(0, 13)) + ' – ' + esc(String(x.m.away).slice(0, 13)) + '</div>' +
         '<div class="bfb-o"><span class="bfb-mk' + (ht ? ' ht' : '') + '">' + esc(x.mm.label) + ' →</span> ' + esc(rLabel(x.lead.name, x.m)) + '</div></div>' +
         '<div class="bfb-bar"><i style="width:' + w + '%;background:' + C.vol + '"></i></div>' +
-        '<div class="bfb-meta"><span class="bfb-v" style="color:' + C.vol + '">' + fmtE(x.v) + '</span><br><span class="bfb-s">' + x.pct.toFixed(0) + '%</span> <span class="bfb-odd">@' + fO(x.lead.odd) + '</span>' + dirBadge(x.m, x.mm.id, x.lead) + _hlLine(x.m) + '</div></div>';
+        '<div class="bfb-meta"><span class="bfb-v" style="color:' + C.vol + '">' + fmtE(x.v) + '</span><br><span class="bfb-s">' + x.pct.toFixed(0) + '%</span> <span class="bfb-odd">@' + fO(x.lead.odd) + '</span>' + dirBadge(x.m, x.mm.id, x.lead) + fuehrtTag(x.m, x.lead && x.lead.name) + _hlLine(x.m) + '</div></div>';
     }).join('');
     return '<div style="background:linear-gradient(180deg,rgba(255,184,12,.06),transparent);border:1px solid ' + C.bd + ';border-radius:14px;padding:11px 13px;margin:12px 0 14px">' +
       '<div style="font-size:12px;color:' + C.gold + ';font-weight:800;margin-bottom:10px">🔥 Wo das Geld genau liegt — größte Einzel-Ausgänge <span style="color:' + C.dim + ';font-weight:600">· Balken = Anteil des Geldes auf den Ausgang · nur klare Mehrheiten (≥60%) · ab 2K € · Klick springt zum Spiel</span></div>' +
@@ -761,7 +770,7 @@
     return '<div class="bfb-row' + _rowHl(x.m) + '" onclick="_bfJump(\'' + esc(x.m.matchId) + '\')">' +
       '<div class="bfb-lbl"><div class="bfb-g">' + flag(x.m.country, x.m.league) + ' ' + esc(String(x.m.home).slice(0, 13)) + ' – ' + esc(String(x.m.away).slice(0, 13)) + '</div>' +
       '<div class="bfb-o">' + lblLine + '</div></div>' + bar +
-      '<div class="bfb-meta">' + meta + dirBadge(x.m, x.mm && x.mm.id, rawLead) + _hlLine(x.m) + '</div></div>';
+      '<div class="bfb-meta">' + meta + dirBadge(x.m, x.mm && x.mm.id, rawLead) + fuehrtTag(x.m, rawLead && rawLead.name) + _hlLine(x.m) + '</div></div>';
   }
   function _flowBars(label, items, mode) {
     if (!items.length) return '';
@@ -770,9 +779,9 @@
   }
   function flowStrip(base) {
     var items = flowItems(base);
-    var eurItems = items.filter(function (x) { return eur(x.delta) >= FLOW_MIN_EUR && _leadOddOk(x.m, x.mm) && !_moneyOnLeaderMk(x.m, x.mm); })
+    var eurItems = items.filter(function (x) { return eur(x.delta) >= FLOW_MIN_EUR && _leadOddOk(x.m, x.mm); })   // 08.08.2026 (Lucas): Fuehrungs-Geld nicht mehr filtern, stattdessen „▶ fuehrt" markieren
       .sort(function (a, b) { return b.delta - a.delta; }).slice(0, 6);
-    var surge = items.filter(function (x) { return eur(x.prev) >= SURGE_MIN_BASE && eur(x.delta) >= SURGE_MIN_DELTA && x.pct >= SURGE_MIN_PCT && x.pct < 900 && _leadOddOk(x.m, x.mm) && !_moneyOnLeaderMk(x.m, x.mm); })
+    var surge = items.filter(function (x) { return eur(x.prev) >= SURGE_MIN_BASE && eur(x.delta) >= SURGE_MIN_DELTA && x.pct >= SURGE_MIN_PCT && x.pct < 900 && _leadOddOk(x.m, x.mm); })
       .sort(function (a, b) { return b.pct - a.pct; }).slice(0, 6);
     var head = '<div style="font-size:12px;color:' + C.back + ';font-weight:800;margin-bottom:8px">💸 Frisches Geld — was seit dem letzten Lauf reinfloss &amp; auf welche Seite <span style="color:' + C.dim + ';font-weight:600">(Klick springt zum Spiel)</span></div>';
     var body = (!eurItems.length && !surge.length)

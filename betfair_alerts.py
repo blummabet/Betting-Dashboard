@@ -33,6 +33,11 @@ except Exception:   # Modul optional
         return None
 
 DIRECTION_FILE = "betfair_direction.json"   # 08.08.2026 (Lucas): Back/Lay-Richtung je Runner
+JUMP_REL = 0.40   # 08.08.2026 (Lucas, Viking-Fall 1.23->3.60 nach 1:1): springt die Quote zwischen zwei
+                  # Scans um >= 40%, ist das fast sicher ein Spielereignis (Tor/Karte), KEIN Order-Flow.
+                  # Ueber so einen Sprung ist die Back/Lay-Lesart nicht gueltig (der Sprung ist mechanisch,
+                  # nicht von Backern/Layern) -> Richtung "unklar" statt eines falschen Back-/Lay-Urteils.
+                  # Gilt in BEIDE Richtungen: ein Tor kann die Quote auch crashen und ein falsches "Back" faken.
 
 HT_TOP_EUR     = 10000.0  # Halbzeit-Geld-Schwelle Top-Liga + International (Lucas 30.07.2026)
 HT_REST_EUR    = 5000.0   # ... und Rest-Ligen
@@ -48,6 +53,11 @@ PUB_FRESH_TOP  = 100000.0
 PUB_FRESH_REST = 30000.0
 PUB_FRESH_MIN_SHARE = 0.70   # (Lucas 05.08.2026) NUR Public: frisches Geld muss >=70% auf EINER Seite
                              # konzentriert sein (nicht bloss Volumen). Trades sieht weiter alles.
+LEAD_PUSH_FACTOR = 1.75   # 08.08.2026 (Lucas): „Team fuehrt"-Geld flutet an starken Spieltagen (Sa-Nachmittag)
+                          # den Push. Extra-Huerde NUR fuer Fuehrungs-Geld — es geht erst durch, wenn der Einsatz
+                          # das LEAD_PUSH_FACTOR-Fache der normalen tier-Schwelle erreicht (skaliert pro Kanal:
+                          # Trades an seinen, Public an seinen Schwellen). So faellt das reaktive Mitlaufen mit
+                          # der Fuehrung raus, nur wirklich dicke Fuehrungs-Bewegungen bleiben. Back-Gate gilt weiter.
 PUB_SEEN_FILE  = "betfair_public_seen.json"
 PUB_LEDGER_FILE = "betfair_public_ledger.json"   # gesendete Public-Pushs fürs Tracking/Auswerten
 DEDUP_FACTOR   = 1.5
@@ -147,8 +157,9 @@ def _ht_one(m, market_name, top_thr=HT_TOP_EUR, rest_thr=HT_REST_EUR):
     lo = lead.get("odd")
     if isinstance(lo, (int, float)) and lo < MIN_LEAD_ODD:   # 85 % auf einem ~1.0-Favoriten = keine Info
         return None
-    if _money_on_leader(m, lead.get("name")):   # 05.08.2026 (Lucas): Geld auf die fuehrende Mannschaft -> reaktiv
-        return None
+    # 08.08.2026 (Lucas): Geld auf den Fuehrenden NICHT mehr hart raus. Als Flag mitfuehren; in main()
+    # nur pushen, wenn die Quote es bestaetigt (leadDir == "in" / Back). Sonst reaktiv/hohl -> raus.
+    on_leader = _money_on_leader(m, lead.get("name"))
     home, away = m.get("home"), m.get("away")
     is_x2 = market_name == "Half Time"
 
@@ -165,7 +176,7 @@ def _ht_one(m, market_name, top_thr=HT_TOP_EUR, rest_thr=HT_REST_EUR):
             "total": total, "hs": share(lambda s: s == home),
             "ds": share(lambda s: s == "The Draw"), "as_": share(lambda s: s == away),
             "leadName": lead.get("name"), "leadLabel": _ht_label(lead.get("name"), home, away),
-            "leadShare": lead_share, "leadOdd": lead.get("odd")}
+            "leadShare": lead_share, "leadOdd": lead.get("odd"), "tier": tier_of(m), "onLeader": on_leader}
 
 
 def ht_alert(m, top_thr=HT_TOP_EUR, rest_thr=HT_REST_EUR):
@@ -211,27 +222,83 @@ def fresh_alert(m, hist, top_thr=FRESH_TOP_EUR, rest_thr=FRESH_REST_EUR):
     lead_name, lead_share, lead_odd = _market_lead(m, market_name)
     if isinstance(lead_odd, (int, float)) and lead_odd < MIN_LEAD_ODD:   # Geld auf ~1.0-Favoriten = sinnlos
         return None
-    if _money_on_leader(m, lead_name):   # 05.08.2026 (Lucas): Geld auf die bereits fuehrende Mannschaft -> reaktiv
-        return None
+    on_leader = _money_on_leader(m, lead_name)   # 08.08.2026 (Lucas): s.o. — Flag statt hartem Raus, in main() per Back gegated
     return {"scenario": "fresh", "matchId": str(m.get("matchId")), "value": mkt_total,
             "home": m.get("home"), "away": m.get("away"), "league": m.get("league"), "flag": _flag(m),
             "market": market_name, "inflow": inflow, "total": mkt_total, "tier": tier_of(m),
             "kickoff": m.get("kickoff"), "live": m.get("liveInfo") or {},
-            "leadName": lead_name, "leadShare": lead_share, "leadOdd": lead_odd}
+            "leadName": lead_name, "leadShare": lead_share, "leadOdd": lead_odd, "onLeader": on_leader}
+
+
+def _dir_event_jump(a) -> bool:
+    """08.08.2026 (Lucas): Sprang die Favoriten-Quote zwischen den beiden verglichenen Scans um >= JUMP_REL,
+    ist das ein Spielereignis (Tor/Karte), kein Order-Flow -> die Back/Lay-Lesart ist ungueltig."""
+    prev, odd = a.get("leadPrev"), a.get("leadOdd")
+    try:
+        if prev and odd:
+            return abs(float(odd) - float(prev)) / float(prev) >= JUMP_REL
+    except (TypeError, ValueError, ZeroDivisionError):
+        pass
+    return False
 
 
 def _dir_line(a) -> str:
     """08.08.2026 (Lucas: „ist es Back oder Lay?"): Quotenbewegung des Favoriten. Matched-Volumen sagt
     nicht, ob gebackt oder gelayt wurde — die Quote schon. Kuerzer = echter Back-Rueckhalt, driftet =
-    nur Volumen ohne Richtung. Nur zeigen, wenn eindeutig (in/out)."""
+    nur Volumen ohne Richtung. Nur zeigen, wenn eindeutig (in/out).
+    08.08.2026: Springt die Quote extrem (Tor/Karte, siehe _dir_event_jump), ist die Richtung nicht
+    lesbar -> ehrlich „neu gepreist, Richtung unklar" statt eines falschen Back-/Lay-Urteils."""
     d = a.get("leadDir")
     if d not in ("in", "out"):
         return ""
+    if _dir_event_jump(a):
+        return "\n⚠️ Quote nach Spielereignis neu gepreist — Richtung unklar"
     prev, odd = a.get("leadPrev"), a.get("leadOdd")
     move = (" (%.2f → %.2f)" % (prev, odd)) if isinstance(prev, (int, float)) and isinstance(odd, (int, float)) else ""
     if d == "in":
         return "\n✅ Quote bestätigt — Back%s" % move
     return "\n⚠️ Quote driftet — kein Back-Rückhalt%s" % move
+
+
+def _fuehrt_line(a) -> str:
+    """08.08.2026 (Lucas): Geld auf die aktuell FÜHRENDE Mannschaft. Kommt nur durch, wenn die Quote es
+    bestaetigt (Back) — dann folgt das Geld dem Sieger MIT Preis-Rueckhalt = starkes Signal, nicht reaktiv."""
+    return "\n▶ <b>führt</b> — Geld folgt der Führung" if a.get("onLeader") else ""
+
+
+def _lead_magnitude(a) -> float:
+    """Signal-Groesse, an der die Fuehrungs-Extra-Schwelle misst: HZ = gematchtes Geld auf dem HZ-Markt,
+    Fresh = frischer Zufluss auf dem Markt."""
+    if a.get("scenario") == "ht":
+        return float(a.get("total") or 0.0)
+    return float(a.get("inflow") or 0.0)
+
+
+def _lead_base_thr(a, ht_top, ht_rest, fresh_top, fresh_rest) -> float:
+    """Die normale tier-Schwelle des jeweiligen Szenarios/Kanals — Basis fuer die Fuehrungs-Extra-Huerde."""
+    top = (a.get("tier") == "top")
+    if a.get("scenario") == "ht":
+        return ht_top if top else ht_rest
+    return fresh_top if top else fresh_rest
+
+
+def _leader_gate(alerts, ht_top=HT_TOP_EUR, ht_rest=HT_REST_EUR,
+                 fresh_top=FRESH_TOP_EUR, fresh_rest=FRESH_REST_EUR):
+    """08.08.2026 (Lucas): Geld auf den Fuehrenden nur pushen, wenn (1) die Quote es bestaetigt (Back =
+    leadDir 'in') UND (2) der Einsatz die Fuehrungs-Extra-Schwelle erreicht (LEAD_PUSH_FACTOR x normale
+    tier-Schwelle). Sonst -> reaktives/kleines Mitlaufen mit der Fuehrung, faellt raus, damit der Kanal an
+    starken Spieltagen nicht geflutet wird. Nicht-Fuehrer voellig unberuehrt (normale Schwelle gilt schon)."""
+    out = []
+    for a in (alerts or []):
+        if not a.get("onLeader"):
+            out.append(a)
+            continue
+        if a.get("leadDir") != "in" or _dir_event_jump(a):
+            continue   # kein Back ODER Back-Lesart durch Spielereignis (Tor/Karte) kontaminiert -> raus
+        if _lead_magnitude(a) < _lead_base_thr(a, ht_top, ht_rest, fresh_top, fresh_rest) * LEAD_PUSH_FACTOR:
+            continue   # Back, aber zu klein -> Fuehrungs-Geld erst ab Extra-Schwelle in den Push
+        out.append(a)
+    return out
 
 
 def attach_direction(alerts, direction) -> list:
@@ -266,7 +333,7 @@ def build_message(a) -> str:
             pct = lambda x: "—" if x is None else "%.0f%%" % (x * 100)
             msg += ("\n%s %s · X %s · %s %s" % (_esc(a["home"]), pct(a["hs"]), pct(a["ds"]),
                                                 _esc(a["away"]), pct(a["as_"])))
-        return msg + _dir_line(a)
+        return msg + _fuehrt_line(a) + _dir_line(a)
     tl = "Top-Liga" if a["tier"] == "top" else "Rest-Liga"
     msg = ("🟡 <b>Betfair · Frisches Geld</b> · %s\n" % tl + head
            + "💶 <b>%s</b>: +<b>%s</b> frisch → jetzt <b>%s</b>"
@@ -274,7 +341,7 @@ def build_message(a) -> str:
     if a.get("leadName"):
         odd = (" @%.2f" % a["leadOdd"]) if isinstance(a.get("leadOdd"), (int, float)) else ""
         msg += "\nführt: %s (%.0f%%)%s" % (_esc(a["leadName"]), (a.get("leadShare") or 0.0) * 100, odd)
-    return msg + _dir_line(a)
+    return msg + _fuehrt_line(a) + _dir_line(a)
 
 
 def _bar(share, width=10):
@@ -355,7 +422,7 @@ def build_public_message(a) -> str:
                   % (_esc(_short_mk(a["market"])), _euro(a["total"]))
                 + "📊 <b>%s</b>  %s %.0f%%%s"
                   % (_esc(a["leadLabel"]), _bar(share), share * 100, odd)
-                + _dir_line(a))
+                + _fuehrt_line(a) + _dir_line(a))
 
     share = a.get("leadShare") or 0.0
     total = a.get("total") or 0.0
@@ -367,7 +434,7 @@ def build_public_message(a) -> str:
               % (_esc(_short_mk(a["market"])), _euro(inflow), _euro(total), pct)
             + "📊 <b>%s</b>  %s %.0f%%%s"
               % (_esc(lead), _bar(share), share * 100, odd)
-            + _dir_line(a))
+            + _fuehrt_line(a) + _dir_line(a))
 
 
 def _tg_public(text) -> bool:
@@ -448,7 +515,7 @@ def main():
     except Exception:
         direction = {}
 
-    alerts = attach_direction(collect_alerts(prices, hist), direction)
+    alerts = _leader_gate(attach_direction(collect_alerts(prices, hist), direction))
     sent = 0
     for a in alerts:
         key = a["scenario"] + ":" + a["matchId"]
@@ -468,8 +535,9 @@ def main():
         pub_seen = json.load(open(PUB_SEEN_FILE, encoding="utf-8"))
     except Exception:
         pub_seen = {}
-    pub_alerts = attach_direction(
-        collect_alerts(prices, hist, PUB_HT_TOP, PUB_HT_REST, PUB_FRESH_TOP, PUB_FRESH_REST), direction)
+    pub_alerts = _leader_gate(attach_direction(
+        collect_alerts(prices, hist, PUB_HT_TOP, PUB_HT_REST, PUB_FRESH_TOP, PUB_FRESH_REST), direction),
+        PUB_HT_TOP, PUB_HT_REST, PUB_FRESH_TOP, PUB_FRESH_REST)
     # (Lucas 05.08.2026) Public-Kuratierung: frisches Geld nur pushen, wenn es klar einseitig ist
     # (>=PUB_FRESH_MIN_SHARE auf einer Seite) — reines Volumen ohne Richtung raus. HT hat schon sein
     # 85%-Gate; Trades bleibt ungefiltert (obskure Ligen bewusst drin — dort oft Sharp Money).
