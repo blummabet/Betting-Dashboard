@@ -274,6 +274,7 @@
         if (tot <= 0) continue;
         var lead = rs.reduce(function (a, r) { return (!a || (+r.vol || 0) > (+a.vol || 0)) ? r : a; }, null);
         if (!lead) continue;
+        if (typeof lead.odd === 'number' && lead.odd < 1.30) continue;   // 08.08.2026 (Lucas): Quasi-Lock (@<1.30, oft live/entschieden) = reaktiv, kein Signal — wie HT/Frisches Geld/Alerts
         var share = (+lead.vol || 0) / tot, sc = (+lead.vol || 0) * share;
         if (!best || sc > best.sc) best = { name: name, lead: lead, share: share, vol: +lead.vol || 0, tot: tot, sc: sc };
       }
@@ -326,7 +327,7 @@
     var out = [];
     var liveFn = (typeof window._bfIsLive === 'function') ? window._bfIsLive : function () { return false; };
     ms.forEach(function (m) {
-      if (_mdBfStale(m) || liveFn(m) || _bfTopVol(m) < _MISP_MIN_VOL) return;   // vor Anpfiff & liquide, fertige Spiele raus
+      if (_mdBfStale(m) || liveFn(m, _mdBfGenAge()) || _bfTopVol(m) < _MISP_MIN_VOL) return;   // 08.08.2026 (Lucas): _mdBfGenAge()-Override wie beim LIVE-Badge — sonst haelt _bfIsLive auf der Uebersicht ALLES fuer nicht-live (genAgeMin liest leeren _bfState) -> Live-Spiele leakten in die Fehlbepreisung
       var co; try { co = window._bfCoherence(m); } catch (e) { return; }
       var checks = (co && co.checks) || [];
       var hard = checks.filter(function (c) { return c.hard && Math.abs(c.dev) >= 0.8 && (c.w == null || c.w >= 0.15); });
@@ -734,7 +735,7 @@
     // Streaks — Pips (Länge)
     var st = bestStreaks();
     var streaksBody = st.length ? st.map(function (s) {
-      var sub = esc(String(s.leagueName || '')) + (s.continuation && s.continuation.state ? ' · ' + esc(s.continuation.state) : '') + (s.continuation && s.continuation.ratePct != null ? ' · ' + s.continuation.ratePct + '%' : '');
+      var sub = esc(String(s.leagueName || '')) + (s.continuation && s.continuation.state ? ' · ' + esc(s.continuation.state) : '') + (s.continuation && s.continuation.ratePct != null ? ' · Grundrate ' + s.continuation.ratePct + '%' : '');   // 08.08.2026 (Lucas): „Grundrate" statt bloss „100%" — es ist die Eigentendenz (Basisrate), KEINE Fortsetzungs-Wahrscheinlichkeit
       var len = +s.length || 0;
       return rowEl(fl(_flagFrom(s.country, s.league, s.leagueName)) + esc(team(s.team)) + ' <span style="color:var(--mi3);font-weight:400">·</span> ' + esc(s.market || s.type || ''),
         len + '×', A.gold, sub, pips(Math.min(len, 10), 10));
