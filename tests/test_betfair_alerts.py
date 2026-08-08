@@ -287,9 +287,9 @@ class TestPublicMoneyflow(unittest.TestCase):
         self.assertNotIn("LIVE", pm)
         self.assertIn("Anpfiff in", pm)
 
-    def test_money_on_leader_suppressed(self):
-        # 05.08.2026 (Lucas: „1:0 fuehrt und Kohle kommt = eher wertlos"): Geld auf die bereits
-        # fuehrende Mannschaft -> reaktiv, kein Push. Geld auf den Rueckstand -> feuert weiter.
+    def test_money_on_leader_flagged_not_suppressed(self):
+        # 08.08.2026 (Lucas): Geld auf den Fuehrenden wird NICHT mehr hart unterdrueckt, sondern als
+        # onLeader markiert. Das Back-Gate (_leader_gate) entscheidet danach anhand der Quote.
         from datetime import datetime, timezone, timedelta
         ko = (datetime.now(timezone.utc) - timedelta(minutes=30)).isoformat().replace("+00:00", "Z")
         def mk(vol_home, vol_away):
@@ -300,14 +300,53 @@ class TestPublicMoneyflow(unittest.TestCase):
                         {"name": "Osasuna", "odd": 6.0, "vol": vol_away},
                         {"name": "The Draw", "odd": 4.0, "vol": 10000}]}}}
         hist = {"1": [{"mkv": {"Match Odds": 10000}}, {"mkv": {"Match Odds": 120000}}]}
-        # Geld auf Napoli (fuehrt 1:0) -> unterdrueckt
-        self.assertIsNone(BA.fresh_alert(mk(90000, 10000), hist))
-        # Geld auf Osasuna (liegt zurueck) -> feuert
-        r = BA.fresh_alert(mk(10000, 90000), hist)
-        self.assertIsNotNone(r); self.assertEqual(r["leadName"], "Osasuna")
-        # Gleichstand -> kein Fuehrungs-Filter (feuert)
-        m_lvl = mk(90000, 10000); m_lvl["liveInfo"]["goal_v2"] = 1
-        self.assertIsNotNone(BA.fresh_alert(m_lvl, hist))
+        a = BA.fresh_alert(mk(90000, 10000), hist)     # Geld auf Napoli (fuehrt 1:0) -> markiert, nicht raus
+        self.assertIsNotNone(a); self.assertTrue(a["onLeader"])
+        a2 = BA.fresh_alert(mk(10000, 90000), hist)    # Geld auf Osasuna (Rueckstand)
+        self.assertIsNotNone(a2); self.assertEqual(a2["leadName"], "Osasuna"); self.assertFalse(a2["onLeader"])
+        m_lvl = mk(90000, 10000); m_lvl["liveInfo"]["goal_v2"] = 1   # Gleichstand -> kein Fuehrer
+        self.assertFalse(BA.fresh_alert(m_lvl, hist)["onLeader"])
+
+    def test_leader_gate_needs_back(self):
+        # Fuehrungs-Geld nur durch, wenn die Quote bestaetigt (leadDir 'in'/Back). Sonst raus.
+        big = {"scenario": "fresh", "tier": "rest", "inflow": 99000}   # weit ueber Extra-Schwelle
+        self.assertEqual(BA._leader_gate([dict(big, onLeader=True, leadDir="out")]), [])  # driftet -> raus
+        self.assertEqual(len(BA._leader_gate([dict(big, onLeader=True, leadDir="in")])), 1)  # Back+gross -> bleibt
+        self.assertEqual(len(BA._leader_gate([dict(big, onLeader=True)])), 0)             # keine Richtung -> raus
+        self.assertEqual(len(BA._leader_gate([{"onLeader": False, "leadDir": "out"}])), 1)  # Nicht-Fuehrer unberuehrt
+
+    def test_leader_gate_extra_threshold(self):
+        # 08.08.2026 (Lucas): Fuehrungs-Geld braucht EXTRA-Schwelle (LEAD_PUSH_FACTOR x tier-Schwelle),
+        # sonst flutet Mitlauf-Geld an starken Spieltagen den Push. Nicht-Fuehrer bleibt bei Normal-Schwelle.
+        base = BA.FRESH_REST_EUR                       # 20K Trades-Rest
+        lo = {"scenario": "fresh", "tier": "rest", "onLeader": True, "leadDir": "in",
+              "inflow": base * 1.2}                    # Back, aber nur knapp ueber Normal -> Fuehrung raus
+        hi = dict(lo, inflow=base * BA.LEAD_PUSH_FACTOR + 1)   # ueber Extra-Schwelle -> bleibt
+        self.assertEqual(BA._leader_gate([lo]), [])
+        self.assertEqual(len(BA._leader_gate([hi])), 1)
+        # Public: eigene (hoehere) Schwellen fliessen in den Gate ein
+        self.assertEqual(BA._leader_gate([dict(lo, tier="top", inflow=BA.PUB_FRESH_TOP * 1.2)],
+                                         BA.PUB_HT_TOP, BA.PUB_HT_REST, BA.PUB_FRESH_TOP, BA.PUB_FRESH_REST), [])
+        self.assertEqual(len(BA._leader_gate([dict(lo, tier="top", inflow=BA.PUB_FRESH_TOP * BA.LEAD_PUSH_FACTOR + 1)],
+                                             BA.PUB_HT_TOP, BA.PUB_HT_REST, BA.PUB_FRESH_TOP, BA.PUB_FRESH_REST)), 1)
+        # HZ misst am gematchten Gesamt (total), nicht am Zufluss
+        htlo = {"scenario": "ht", "tier": "rest", "onLeader": True, "leadDir": "in", "total": BA.HT_REST_EUR * 1.2}
+        hthi = dict(htlo, total=BA.HT_REST_EUR * BA.LEAD_PUSH_FACTOR + 1)
+        self.assertEqual(BA._leader_gate([htlo]), [])
+        self.assertEqual(len(BA._leader_gate([hthi])), 1)
+
+    def test_leader_gate_ignores_event_jump_back(self):
+        # 08.08.2026 (Lucas): Fuehrungs-Geld mit 'in', aber die Quote sprang durch ein Tor -> Back-Lesart
+        # kontaminiert -> raus (auch wenn Einsatz die Extra-Schwelle klar reisst).
+        a = {"scenario": "fresh", "tier": "rest", "onLeader": True, "leadDir": "in",
+             "inflow": BA.FRESH_REST_EUR * 5, "leadPrev": 2.0, "leadOdd": 1.2}
+        self.assertEqual(BA._leader_gate([a]), [])
+        a2 = dict(a, leadPrev=1.24, leadOdd=1.20)   # kleiner, echter Move -> dasselbe Geld geht durch
+        self.assertEqual(len(BA._leader_gate([a2])), 1)
+
+    def test_fuehrt_line(self):
+        self.assertIn("führt", BA._fuehrt_line({"onLeader": True}))
+        self.assertEqual(BA._fuehrt_line({}), "")
 
 
 class TestDirection(unittest.TestCase):
@@ -322,6 +361,16 @@ class TestDirection(unittest.TestCase):
     def test_dir_line_flat_or_missing_empty(self):
         self.assertEqual(BA._dir_line({"leadDir": "flat"}), "")
         self.assertEqual(BA._dir_line({}), "")
+
+    def test_dir_line_event_jump_suppresses_verdict(self):
+        # 08.08.2026 (Lucas, Viking 1.23->3.60 nach 1:1): grosser Sprung = Spielereignis, kein Flow.
+        drift = BA._dir_line({"leadDir": "out", "leadPrev": 1.23, "leadOdd": 3.60})   # Gegentor -> Quote raus
+        self.assertIn("neu gepreist", drift); self.assertNotIn("kein Back-Rückhalt", drift)
+        shorten = BA._dir_line({"leadDir": "in", "leadPrev": 2.00, "leadOdd": 1.20})  # eigenes Tor -> Quote crasht
+        self.assertIn("neu gepreist", shorten); self.assertNotIn("Back", shorten)     # kein falsches „Back"
+        # kleiner, echter Move bleibt eindeutig lesbar
+        self.assertIn("Back", BA._dir_line({"leadDir": "in", "leadPrev": 2.10, "leadOdd": 2.00}))
+        self.assertIn("driftet", BA._dir_line({"leadDir": "out", "leadPrev": 2.00, "leadOdd": 2.20}))
 
     def test_attach_direction_joins(self):
         alerts = [{"matchId": "1", "market": "Match Odds", "leadName": "Napoli"}]
