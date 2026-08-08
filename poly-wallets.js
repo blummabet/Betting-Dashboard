@@ -1295,6 +1295,22 @@ function _pwMoveFor(key){
   best.steam=(best.step>0)===(best.move>0)&&Math.abs(best.step)>=0.3;
   return best;
 }
+// 07.08.2026 (Lucas: „wenn der Poly-Preis nach dem Alert gegen uns dreht, muss der Tick raus"): Umkehr-
+// Erkennung rein aus Poly-Preisen (kein neuer Anbieter noetig). Wie weit ist die EMPFOHLENE Seite von
+// ihrem Hoch im Fenster zurueckgefallen? Der Markt ist das schnellste Signal — dreht er hart gegen unser
+// (oft traeges) Geld-Signal, entwerten wir den Play: erst warnen, bei starker Umkehr ganz raus.
+const PW_ADVERSE_WARN_PP = 6;    // ab so viel pp Rueckfall vom Hoch: Warn-Badge + Conviction runter
+const PW_ADVERSE_KILL_PP = 12;   // ab so viel pp: Play raus aus Box + Uebersicht (verdict SKIP)
+const PW_ADVERSE_MAX_CUR = 0.70; // nur werten, wenn die Seite nicht mehr klar fuehrt (<=70%) — ein Dip beim Favoriten ist kein Dreh
+function _pwAdverseFor(key, side){
+  const arr=_pwCache&&_pwCache.broadHist&&_pwCache.broadHist[key];
+  if(!Array.isArray(arr)||arr.length<2||!side) return null;
+  let peak=-1, cur=null;
+  for(const s of arr){ const p=s&&s.p&&s.p[side];
+    if(typeof p==='number'){ if(p>peak)peak=p; cur=p; } }
+  if(cur==null||peak<0) return null;
+  return {fromPeak:(peak-cur)*100, cur, peak};
+}
 function _pwSharpSideFor(m){
   const bySide={};
   for(const wh of (m.whales||[])){ const sc=_pwWalletScore(wh.wallet);
@@ -1508,8 +1524,21 @@ function _pwShortlistScore(key,m){
   let best=null,bs=0; for(const s in sides) if(sides[s]>bs){bs=sides[s];best=s;}
   const vol=m.totalUsd||0;
   if(!best||bs<3||vol<15000) return {verdict:'SKIP'};
+  let conv=Math.min(10,Math.round(4+bs));
+  let reasons=(why[best]||[]).slice(0,3);
+  const sigs=[...new Set(tags[best]||[])];
+  let turned=false;
+  // 07.08.2026 Umkehr-Sperre: Preis der empfohlenen Seite hart vom Hoch zurueck → warnen bzw. raus.
+  const adv=_pwAdverseFor(key,best);
+  if(adv && adv.cur<=PW_ADVERSE_MAX_CUR && adv.fromPeak>=PW_ADVERSE_WARN_PP){
+    if(adv.fromPeak>=PW_ADVERSE_KILL_PP) return {verdict:'SKIP',turned:true};   // Markt gedreht → raus aus Box + Uebersicht
+    turned=true;
+    reasons=['⚠️ Markt gedreht — Preis '+adv.fromPeak.toFixed(0)+'pp gegen uns'].concat(reasons).slice(0,3);
+    sigs.push('turned');
+    conv=Math.max(1,conv-3);   // stark abwerten → rutscht ans Ende der Liste
+  }
   return {key,match:_pwPlayLabel(key,oc),verdict:(best===moneyFav?'BET':'FADE'),side:best,
-    conv:Math.min(10,Math.round(4+bs)),reasons:(why[best]||[]).slice(0,3),signals:[...new Set(tags[best]||[])],vol,htk:_pwRealHtk(m),league:m.league,
+    conv,reasons,signals:sigs,vol,htk:_pwRealHtk(m),league:m.league,turned,
     moneyPct,sharp:(sh&&sh.side===best)?sh:null,price:(typeof pr[best]==='number'?pr[best]:null)};
 }
 // 📊 Paper-Track-Record der „Heute wetten"-Shortlist (02.08.2026, Lucas). Liest poly_shortlist_track.json

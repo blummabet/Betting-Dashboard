@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v80';   // 07.08.2026: Uebersicht Whale-Watch -> Volumen ueber Norm
+const VERSION = 'cocobet-v81';   // 07.08.2026: Umkehr-Sperre — Play raus/gewarnt wenn Poly-Preis gegen uns dreht
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

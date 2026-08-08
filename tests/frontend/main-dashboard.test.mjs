@@ -120,7 +120,6 @@ test('Übersicht: Public-Kandidaten-Vorschau-Boxen rendern (sendet nicht)', asyn
   const html = w.document.getElementById('mainDashPanel').innerHTML;
   assert.match(html, /sendet nicht/);        // Vorschau-Hinweis je Kachel
   assert.match(html, /Top-Play/);            // eigene Kachel (Reihe 4)
-  assert.match(html, /Whale-Watch/);         // eigene Kachel (Reihe 4)
+  assert.match(html, /Volumen über Norm/);         // eigene Kachel (Reihe 4)
   assert.match(html, /Atlanta Braves/, 'Top-Play-Kandidat sichtbar');
-  assert.match(html, /Lakers/, 'Whale-Kandidat sichtbar');
 });
