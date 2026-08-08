@@ -138,7 +138,7 @@
   function runnersOf(mk) { var r = mk && mk.runners; return Array.isArray(r) ? r : []; }
   function distTotal(mk) { return runnersOf(mk).reduce(function (a, r) { return a + (+r.vol || 0); }, 0); }
   function leadRunner(mk) { return runnersOf(mk).reduce(function (a, r) { return (!a || (+r.vol || 0) > (+a.vol || 0)) ? r : a; }, null); }
-  function fO(o) { return (typeof o === 'number' && o > 1) ? o.toFixed(2) : '–'; }
+  function fO(o) { return (typeof o === 'number' && o > 1) ? (o >= 20 ? String(Math.round(o)) : o.toFixed(2)) : '–'; }   // 08.08.2026 (Lucas): hohe Quoten ohne sinnlose „.00" (@23 statt @23.00, @800 statt @800.00)
   // 08.08.2026 (Lucas: „Back oder Lay?"): Richtung aus betfair_direction.json (Quote kuerzer=Back, driftet=Lay).
   function dirOf(m, marketId, runnerName) {
     try { return (((( _bf.dir || {})[String(m.matchId)] || {})[marketId] || {})[runnerName]) || null; } catch (e) { return null; }
@@ -792,7 +792,7 @@
   // Kleine Confidence-Chip an einem Markt in der Spielliste (nur wenn belastbare Stichprobe da).
   function confBadge(league, marketId) {
     var v = trackFor(league, marketId);
-    if (!v || !v.n || v.n < 6) return '';
+    if (!v || !v.n || v.n < 12) return '';   // 08.08.2026 (Lucas): n<12 ist statistisch fast nichts (3/6 ist Zufall) — nicht als Badge zeigen, sonst klebt dieselbe Mini-Zahl auf 20 Karten derselben Liga. Ab n=12 gedimmt, ab MIN_CONF_N solid.
     var solid = v.n >= MIN_CONF_N, col = _roiCol(v.roi);
     var tip = 'Track-Record ' + league + ' · ' + (MK_ID[marketId] ? MK_ID[marketId].label : marketId) +
       ': ' + _pctTxt(v.hitRate) + ' Trefferquote · ROI ' + _roiTxt(v.roi) + ' · n=' + v.n +

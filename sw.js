@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v87';   // 08.08.2026: Streaks Grundrate-ohne-Serie/reine-Serie · HT-Hochquoten raus · Volumen-über-Norm ~50%-Label · Sharp-Gate schärfer
+const VERSION = 'cocobet-v88';   // 08.08.2026: Radar — Track-Badge erst ab n12 (Mini-Sample-Rauschen raus) · hohe Quoten ohne .00
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
