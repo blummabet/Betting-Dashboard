@@ -20,7 +20,8 @@ function seed(w) {
   w._pwEnsurePlaysData = (cb) => cb && cb();
   w._pwTopPlays = () => [{ key: 'nba-lal-bos-2026-07-25', match: 'Lakers vs Celtics', side: 'Lakers', verdict: 'BET', conv: 9, reasons: ['Steam'], htk: 3, league: 'NBA' }];
   w._pwPublicTopPlays = () => [{ key: 'atp-alc-sin-2026-07-25', match: 'Alcaraz vs Sinner', side: 'Alcaraz', verdict: 'BET', conv: 10, moneyPct: 0.7, sharp: { n: 12, wins: 8, hit: 0.66 }, htk: 1, league: 'ATP' }];
-  w._pwWhalePublicCandidates = () => [{ wallet: '0xdead', key: 'lol-t1-geng-2026-07-25', side: 'T1', league: 'LoL', usd: 150000, price: 0.6, tracked: true, n: 20, hit: 0.7 }];
+  // 08.08.2026: „Whale-Watch"-Kachel ist seit v80 „Volumen über Norm" (_pwOverNormTop). Stub liefert die url.
+  w._pwOverNormTop = () => [{ key: 'lol-t1-geng-2026-07-25', league: 'LoL', name: 'T1 vs GenG', fav: 'T1', favPct: 66, usd: 150000, ratio: 3.2, url: 'https://polymarket.com/event/lol-t1-geng-2026-07-25' }];
   w._mdState.data = {
     liga: null, mls: null, ligaStreaks: null, mlsStreaks: null, betfair: { matches: [] }, pulse: null,
     // poly_money_broad_close.json-Form: Top-Level-Key IST der Event-Slug
@@ -32,11 +33,11 @@ test('alle vier Poly-Kacheln verlinken aufs jeweilige polymarket.com/event/<slug
   const w = load(); seed(w);
   w._renderMainDash();
   const h = w.document.getElementById('mainDashPanel').innerHTML;
-  // Poly Whale-Bets (aus dem close-Sidecar), Heute spielenswert, Top-Play, Whale-Watch
+  // Poly Whale-Bets (aus dem close-Sidecar), Heute spielenswert, Top-Play, Volumen über Norm
   assert.match(h, /href="https:\/\/polymarket\.com\/event\/mlb-cws-tor-2026-07-19"/, 'Whale-Bets → Event');
   assert.match(h, /href="https:\/\/polymarket\.com\/event\/nba-lal-bos-2026-07-25"/, 'Heute spielenswert → Event');
   assert.match(h, /href="https:\/\/polymarket\.com\/event\/atp-alc-sin-2026-07-25"/, 'Top-Play → Event');
-  assert.match(h, /href="https:\/\/polymarket\.com\/event\/lol-t1-geng-2026-07-25"/, 'Whale-Watch → Event');
+  assert.match(h, /href="https:\/\/polymarket\.com\/event\/lol-t1-geng-2026-07-25"/, 'Volumen über Norm → Event');
   // neuer Tab + noopener wie im Wallet-Reiter, plus ↗-Cue
   assert.match(h, /target="_blank" rel="noopener" class="md-polylink"/);
   assert.match(h, /md-ext">↗/);
