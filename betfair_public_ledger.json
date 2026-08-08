@@ -101,7 +101,7 @@
 "leadOdd": 1.42,
 "value": 503254.53,
 "sentAt": "2026-08-05T19:49:16.561860+00:00",
-"status": "pending",
+"status": "expired",
 "htScore": null
 },
 {
@@ -741,11 +741,18 @@
 "leadOdd": 1.91,
 "value": 431198.69,
 "sentAt": "2026-08-08T18:47:07.269795+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": [
 0,
 1
-]
+],
+"settledAt": "2026-08-08T19:55:59.654735+00:00",
+"ftScore": [
+2,
+2
+],
+"profit": -1.0,
+"via": "track"
 },
 {
 "k": "fresh:35871939:Match Odds",
@@ -761,5 +768,23 @@
 "sentAt": "2026-08-08T19:35:32.173632+00:00",
 "status": "pending",
 "htScore": null
+},
+{
+"k": "fresh:35904664:Match Odds",
+"matchId": "35904664",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Colombian Primera A",
+"home": "Santa Fe",
+"away": "Boyaca Chico",
+"leadName": "Santa Fe",
+"leadOdd": 1.34,
+"value": 55619.93,
+"sentAt": "2026-08-08T19:55:59.527603+00:00",
+"status": "pending",
+"htScore": [
+0,
+0
+]
 }
 ]
