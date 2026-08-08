@@ -760,8 +760,8 @@
     }
     return '<div class="bfb-row' + _rowHl(x.m) + '" onclick="_bfJump(\'' + esc(x.m.matchId) + '\')">' +
       '<div class="bfb-lbl"><div class="bfb-g">' + flag(x.m.country, x.m.league) + ' ' + esc(String(x.m.home).slice(0, 13)) + ' – ' + esc(String(x.m.away).slice(0, 13)) + '</div>' +
-      '<div class="bfb-o">' + lblLine + dirBadge(x.m, x.mm && x.mm.id, rawLead) + '</div></div>' + bar +
-      '<div class="bfb-meta">' + meta + _hlLine(x.m) + '</div></div>';
+      '<div class="bfb-o">' + lblLine + '</div></div>' + bar +
+      '<div class="bfb-meta">' + meta + dirBadge(x.m, x.mm && x.mm.id, rawLead) + _hlLine(x.m) + '</div></div>';
   }
   function _flowBars(label, items, mode) {
     if (!items.length) return '';
