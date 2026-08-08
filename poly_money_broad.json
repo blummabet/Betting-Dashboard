@@ -1,24 +1,24 @@
 {
- "n": 335,
+ "n": 336,
  "minOdds": 1.35,
- "moneyHitRate": 0.642,
- "priceHitRate": 0.645,
- "brierMoney": 0.4688,
- "brierPrice": 0.46,
+ "moneyHitRate": 0.64,
+ "priceHitRate": 0.646,
+ "brierMoney": 0.4698,
+ "brierPrice": 0.461,
  "disagree": {
-  "n": 1,
+  "n": 2,
   "moneyWon": 0,
-  "priceWon": 1,
+  "priceWon": 2,
   "neither": 0
  },
  "verdict": "gleichauf",
  "byLeague": [
   {
    "league": "TENNIS",
-   "n": 43,
-   "moneyHitRate": 0.581,
-   "brierMoney": 0.4746,
-   "brierPrice": 0.479,
+   "n": 42,
+   "moneyHitRate": 0.595,
+   "brierMoney": 0.4616,
+   "brierPrice": 0.466,
    "verdict": "gleichauf"
   },
   {
@@ -27,6 +27,14 @@
    "moneyHitRate": 0.708,
    "brierMoney": 0.4384,
    "brierPrice": 0.4385,
+   "verdict": "gleichauf"
+  },
+  {
+   "league": "ESPORTS",
+   "n": 133,
+   "moneyHitRate": 0.677,
+   "brierMoney": 0.4428,
+   "brierPrice": 0.4428,
    "verdict": "gleichauf"
   },
   {
@@ -39,26 +47,18 @@
   },
   {
    "league": "UFC",
-   "n": 9,
-   "moneyHitRate": 0.667,
-   "brierMoney": 0.4305,
-   "brierPrice": 0.4305,
-   "verdict": "gleichauf"
-  },
-  {
-   "league": "ESPORTS",
-   "n": 134,
-   "moneyHitRate": 0.679,
-   "brierMoney": 0.4419,
-   "brierPrice": 0.4418,
+   "n": 11,
+   "moneyHitRate": 0.636,
+   "brierMoney": 0.4572,
+   "brierPrice": 0.4572,
    "verdict": "gleichauf"
   },
   {
    "league": "MLB",
-   "n": 88,
-   "moneyHitRate": 0.602,
-   "brierMoney": 0.5253,
-   "brierPrice": 0.4894,
+   "n": 89,
+   "moneyHitRate": 0.596,
+   "brierMoney": 0.5306,
+   "brierPrice": 0.4951,
    "verdict": "preis_besser"
   }
  ],
@@ -86,6 +86,18 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 998653
+  },
+  {
+   "key": "mlb-oak-bos-2026-08-08",
+   "league": "MLB",
+   "winner": "Athletics",
+   "moneyFav": "Boston Red Sox",
+   "priceFav": "Boston Red Sox",
+   "moneyShare": 0.705,
+   "priceProb": 0.705,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 771290
   },
   {
    "key": "mls-mim-mia-2026-07-25",
@@ -530,29 +542,17 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 235567
-  },
-  {
-   "key": "mlb-min-kc-2026-08-04",
-   "league": "MLB",
-   "winner": "Kansas City Royals",
-   "moneyFav": "Minnesota Twins",
-   "priceFav": "Minnesota Twins",
-   "moneyShare": 0.575,
-   "priceProb": 0.575,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 233850
   }
  ],
- "generatedAt": "2026-08-08T23:12:50.863134+00:00",
+ "generatedAt": "2026-08-08T23:44:58.130257+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 422,
   "nfl": 590,
-  "mlb": 595,
+  "mlb": 593,
   "nhl": 404,
-  "mls": 641,
+  "mls": 639,
   "epl": 410,
   "soccer": 800,
   "tennis": 488,
@@ -566,16 +566,16 @@
   "lol": 417,
   "dota": 9,
   "valorant": 434,
-  "ufc": 465,
+  "ufc": 463,
   "mma": 46,
   "boxing": 224,
   "golf": 281,
   "f1": 333,
-  "cricket": 596
+  "cricket": 591
  },
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 475
+  "sweepAdded": 477
  }
 }
