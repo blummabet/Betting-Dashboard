@@ -3223,6 +3223,99 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
     </div>
   </details>
 
+  <!-- ════════════════ 4b. BETFAIR ════════════════ -->
+  <details class="heart-collapse">
+    <summary>
+      <span class="heart-collapse-icon">🟡</span>
+      <span class="heart-collapse-title">Betfair Moneyflow-Radar — komplettes System</span>
+      <span class="heart-collapse-meta">Betwatch · Mac-Runner · alle 15 Min</span>
+    </summary>
+    <div class="heart-collapse-body">
+      <p style="font-size:11.5px;color:var(--muted);line-height:1.6;margin-bottom:4px;">
+        Wir tracken das Exchange-Geld auf 7 Märkten je Spiel — nicht um blind zu folgen, sondern um zu
+        lernen, <strong style="color:var(--text);">welche Ligen &amp; Märkte wirklich tragen, wenn man dem Geld folgt</strong>.
+        Alles read-only gegenüber Betfair; wir lesen nur den Betwatch-Feed.
+      </p>
+
+      <div class="h2-sub-label">Bausteine</div>
+      <div class="h2-feature-grid">
+        <div class="h2-feature">
+          <div class="h2-feature-head"><span class="h2-feature-icon">📡</span><div class="h2-feature-title">Datenquelle (Betwatch-Feed)</div></div>
+          <div class="h2-feature-desc">
+            <code>fetch_betfair_betwatch.py</code> → <code>betfair_prices.json</code> (jeder Runner mit Einzel-Volumen + Quote + liveInfo) und <code>betfair_history.json</code> (Volumen/Quoten-Verlauf). Läuft auf dem <strong>self-hosted Mac-Runner (Österreich-IP)</strong>, weil Betwatch GitHubs US-Runner mit HTTP 403 blockt. 7 Märkte: Match Odds, Halbzeit-1X2, Über/Unter 2.5 &amp; 3.5, BTTS, 1. Halbzeit Über/Unter 0.5 &amp; 1.5.
+          </div>
+        </div>
+        <div class="h2-feature">
+          <div class="h2-feature-head"><span class="h2-feature-icon">🧭</span><div class="h2-feature-title">Richtungs-Signal Back/Lay <span style="color:var(--accent);font-size:9px;font-weight:800">NEU</span></div></div>
+          <div class="h2-feature-desc">
+            <code>betfair_direction.py</code> → <code>betfair_direction.json</code>. <strong>Blinder Fleck:</strong> Matched-Volumen sagt nicht, ob das Geld als Back oder Lay reinkam — der Volumen-Favorit ist oft nur der kurze Preis-Favorit. Die Richtung steckt in der Quotenbewegung: <strong style="color:#3fb950;">kürzer = gebackt</strong>, <strong style="color:#e3b341;">driftet = gelayt/kein Rückhalt</strong>. Ein Signal, überall gelesen (Track, Push, Radar). Deckt alle Märkte + live (die alte 1X2-Pille nur Match Odds pre-match).
+          </div>
+        </div>
+        <div class="h2-feature">
+          <div class="h2-feature-head"><span class="h2-feature-icon">📊</span><div class="h2-feature-title">Track-Record / Backtest</div></div>
+          <div class="h2-feature-desc">
+            <code>betfair_track_record.py</code> → <code>betfair_track_state.json</code> (pending), <code>_results.json</code> (Ledger), <code>_record.json</code> (Aggregat). Folgt man dem Geld-Favoriten je Markt: <strong>Trefferquote + ROI</strong> global, je Markt, je Liga×Markt, je Team×Markt. Splits: Konzentration (≥65% des Marktgeldes), Zufluss (≥€2K frisch), <strong style="color:var(--accent);font-size:9px;font-weight:800">NEU</strong> Back vs. Drift.
+          </div>
+        </div>
+        <div class="h2-feature">
+          <div class="h2-feature-head"><span class="h2-feature-icon">🎯</span><div class="h2-feature-title">Verschwinde-Settle <span style="color:var(--accent);font-size:9px;font-weight:800">NEU</span></div></div>
+          <div class="h2-feature-desc">
+            Der Feed zeigt „finished" nur kurz — ~35% der Spiele fielen raus, bevor ein 15-Min-Lauf sie erwischte, und blieben ewig pending. Fix: fällt ein Spiel aus dem Feed, das wir zuletzt spät (≥85') live gesehen haben, rechnen wir mit dem letzten Live-Stand ab (<code>via:"vanish"</code>). Steigert die Fangquote deutlich.
+          </div>
+        </div>
+        <div class="h2-feature">
+          <div class="h2-feature-head"><span class="h2-feature-icon">⚖️</span><div class="h2-feature-title">Draw-Geld-Tracker <span style="color:var(--accent);font-size:9px;font-weight:800">NEU</span></div></div>
+          <div class="h2-feature-desc">
+            <code>betfair_draw_tracker.py</code> → <code>betfair_draw_*.json</code>. Trackt gezielt hohe X-Einsätze auf dem 1X2-Markt: Pre-Match-Draw-Anteil, In-Play-Zuflüsse <strong>während Gleichstand</strong> (Trader-Trade-Out-Verdacht) und ob X am Ende kam. Beantwortet: kommt X bei „viel Draw-Geld" öfter oder seltener als die Quote impliziert?
+          </div>
+        </div>
+        <div class="h2-feature">
+          <div class="h2-feature-head"><span class="h2-feature-icon">🧾</span><div class="h2-feature-title">Übersicht-Sidecar</div></div>
+          <div class="h2-feature-desc">
+            <code>build_betfair_overview.py</code> → <code>betfair_overview.json</code>. Leichte Vorberechnung von Vor-Anpfiff-Steam + frischem Zufluss (pro Markt aus mkv-Deltas) für die Übersichts-Kacheln, damit der erste Menüpunkt schnell bleibt.
+          </div>
+        </div>
+        <div class="h2-feature">
+          <div class="h2-feature-head"><span class="h2-feature-icon">📣</span><div class="h2-feature-title">Telegram-Alerts</div></div>
+          <div class="h2-feature-desc">
+            <code>betfair_alerts.py</code>. Zwei Szenarien: <strong>Halbzeit-Geld</strong> (ein HZ-Markt ≥ Schwelle &amp; ≥85% einseitig) und <strong>Frisches Geld</strong> (größter Zufluss-Markt aus mkv). Zwei Channels: Trades (ungefiltert, obskure Ligen bewusst drin) / Public (höhere Schwellen, ≥70% einseitig). Reaktiv-Filter: Geld auf die bereits führende Mannschaft → kein Push. <strong style="color:var(--accent);font-size:9px;font-weight:800">NEU</strong> Richtungs-Zeile „✅ Quote bestätigt — Back" / „⚠️ Quote driftet".
+          </div>
+        </div>
+        <div class="h2-feature">
+          <div class="h2-feature-head"><span class="h2-feature-icon">📈</span><div class="h2-feature-title">Public-Push-Auswertung</div></div>
+          <div class="h2-feature-desc">
+            <code>betfair_public_eval.py</code> → <code>betfair_public_record.json</code>. Rechnet jeden gesendeten Public-Push gegen den Endstand ab (Treffer/ROI je Szenario/Markt). <strong style="color:var(--accent);font-size:9px;font-weight:800">NEU</strong> erbt die Abrechnungen des breiten Tracks (piggyback) + Verschwinde-Settle → keine ewig-offenen Pushs mehr.
+          </div>
+        </div>
+        <div class="h2-feature">
+          <div class="h2-feature-head"><span class="h2-feature-icon">🖥️</span><div class="h2-feature-title">Radar-UI</div></div>
+          <div class="h2-feature-desc">
+            <code>betfair-radar.js</code>. Geld-Hotspots („wo das Geld genau liegt"), Verteilungsbalken je Markt, Fehlbepreisung via Pinnacle-Kohärenz, Steam-Pille (1X2-Quotenbewegung), <strong style="color:var(--accent);font-size:9px;font-weight:800">NEU</strong> Back/Lay-Badge (grün „Back ✓" / amber „driftet", alle Märkte + live), Track-Record-Ansicht, Stale-Guard, EU-/Länder-Flaggen, Tier-Filter (Top / International / Rest).
+          </div>
+        </div>
+      </div>
+
+      <div class="h2-sub-label">Pipeline (<code>betfair.yml</code> · Mac-Runner · alle 15 Min)</div>
+      <table class="h2-sched">
+        <thead><tr><th>#</th><th>Script</th><th>Ausgabe</th></tr></thead>
+        <tbody>
+          <tr><td>1</td><td><code>fetch_betfair_betwatch.py</code></td><td>betfair_prices.json · betfair_history.json</td></tr>
+          <tr><td>2</td><td><code>betfair_direction.py</code> <strong style="color:var(--accent)">NEU</strong></td><td>betfair_direction.json (Back/Lay je Runner)</td></tr>
+          <tr><td>3</td><td><code>betfair_track_record.py</code></td><td>track_state · track_results · track_record</td></tr>
+          <tr><td>4</td><td><code>betfair_draw_tracker.py</code> <strong style="color:var(--accent)">NEU</strong></td><td>betfair_draw_state · _results · _record</td></tr>
+          <tr><td>5</td><td><code>build_betfair_overview.py</code></td><td>betfair_overview.json</td></tr>
+          <tr><td>6</td><td><code>betfair_alerts.py</code></td><td>Telegram (Trades + Public) · public_ledger</td></tr>
+          <tr><td>7</td><td><code>betfair_public_eval.py</code></td><td>betfair_public_record.json</td></tr>
+          <tr><td>→</td><td>Commit + Push (Pull-Retry, cocobet-bot)</td><td>alle betfair_*.json ins Repo</td></tr>
+        </tbody>
+      </table>
+
+      <p style="font-size:11px;color:var(--muted);margin-top:14px;line-height:1.6;">
+        <strong style="color:var(--text);">Kernidee:</strong> das reine Matched-Volumen ist nur der Rohstoff — erst die <strong>Richtung</strong> (Quote kürzer/driftet) macht daraus ein echtes Signal, und erst der <strong>Track-Record je Liga×Markt</strong> sagt, wo sich das Folgen wirklich auszahlt. Beides sammelt sich über Wochen zu einer belastbaren Statistik.
+      </p>
+    </div>
+  </details>
+
   <!-- ════════════════ 5. SHARP ════════════════ -->
   <details class="heart-collapse">
     <summary>

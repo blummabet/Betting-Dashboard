@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v82';   // 08.08.2026: Betfair Richtungs-Signal (Back/Lay) — Badge im Radar, Zeile im Push
+const VERSION = 'cocobet-v83';   // 08.08.2026: Heart-Tab — kompletter Betfair-Doku-Abschnitt
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
