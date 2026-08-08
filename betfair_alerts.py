@@ -256,7 +256,7 @@ def _dir_line(a) -> str:
     prev, odd = a.get("leadPrev"), a.get("leadOdd")
     move = (" (%.2f → %.2f)" % (prev, odd)) if isinstance(prev, (int, float)) and isinstance(odd, (int, float)) else ""
     if d == "in":
-        return "\n✅ Quote bestätigt — Back%s" % move
+        return "\n📈 Quote bestätigt — Back%s" % move   # 08.08.2026 (Lucas): NICHT ✅ — das nutzt er selbst zum Auswerten im Channel
     return "\n⚠️ Quote driftet — kein Back-Rückhalt%s" % move
 
 
