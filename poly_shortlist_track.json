@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-08-08T05:10:09.597598+00:00",
+ "updatedAt": "2026-08-08T05:56:38.480009+00:00",
  "stake": 10.0,
  "open": {
   "lol-we-al-2026-08-06|Anyone's Legend": {
@@ -194,48 +194,6 @@
    ],
    "stake": 10.0
   },
-  "mlb-oak-bos-2026-08-07|Boston Red Sox": {
-   "key": "mlb-oak-bos-2026-08-07",
-   "side": "Boston Red Sox",
-   "verdict": "BET",
-   "conv": 9,
-   "league": "MLB",
-   "entryPrice": 0.715,
-   "firstTs": "2026-08-07T20:58:24.907897+00:00",
-   "lastPrice": 0.715,
-   "lastTs": "2026-08-08T05:10:09.597598+00:00",
-   "htkAtEntry": 2.2073633333333333,
-   "public": true,
-   "reasons": [
-    "großes Geld auf Boston Red Sox (72%)",
-    "🔥 scharfe Wallet (11/16, 69% · +$278K)"
-   ],
-   "signals": [
-    "money",
-    "sharp"
-   ],
-   "stake": 10.0
-  },
-  "mlb-atl-nyy-2026-08-07|Atlanta Braves": {
-   "key": "mlb-atl-nyy-2026-08-07",
-   "side": "Atlanta Braves",
-   "verdict": "FADE",
-   "conv": 8,
-   "league": "MLB",
-   "entryPrice": 0.455,
-   "firstTs": "2026-08-07T20:58:24.907897+00:00",
-   "lastPrice": 0.455,
-   "lastTs": "2026-08-08T03:58:31.644145+00:00",
-   "htkAtEntry": 2.1273630555555556,
-   "public": false,
-   "reasons": [
-    "🔥 scharfe Wallet (11/16, 69% · +$278K)"
-   ],
-   "signals": [
-    "sharp"
-   ],
-   "stake": 10.0
-  },
   "lol-fur-lll-2026-08-07|LOUD": {
    "key": "lol-fur-lll-2026-08-07",
    "side": "LOUD",
@@ -265,34 +223,12 @@
    "entryPrice": 0.655,
    "firstTs": "2026-08-07T21:55:45.384234+00:00",
    "lastPrice": 0.655,
-   "lastTs": "2026-08-08T05:10:09.597598+00:00",
+   "lastTs": "2026-08-08T05:56:38.480009+00:00",
    "htkAtEntry": 2.087521111111111,
    "public": true,
    "reasons": [
     "großes Geld auf Maryville University (66%)",
     "🔥 scharfe Wallet (19/23, 83% · +$35K)"
-   ],
-   "signals": [
-    "money",
-    "sharp"
-   ],
-   "stake": 10.0
-  },
-  "mlb-col-stl-2026-08-07|St. Louis Cardinals": {
-   "key": "mlb-col-stl-2026-08-07",
-   "side": "St. Louis Cardinals",
-   "verdict": "BET",
-   "conv": 8,
-   "league": "MLB",
-   "entryPrice": 0.615,
-   "firstTs": "2026-08-07T21:55:45.384234+00:00",
-   "lastPrice": 0.605,
-   "lastTs": "2026-08-08T05:10:09.597598+00:00",
-   "htkAtEntry": 2.337521111111111,
-   "public": false,
-   "reasons": [
-    "großes Geld auf St. Louis Cardinals (61%)",
-    "🔥 scharfe Wallet (55/101, 54% · +$2800K)"
    ],
    "signals": [
     "money",
@@ -309,7 +245,7 @@
    "entryPrice": 0.475,
    "firstTs": "2026-08-07T22:55:45.438065+00:00",
    "lastPrice": 0.475,
-   "lastTs": "2026-08-08T05:10:09.597598+00:00",
+   "lastTs": "2026-08-08T05:56:38.480009+00:00",
    "htkAtEntry": 2.8364963888888886,
    "public": false,
    "reasons": [
@@ -329,7 +265,7 @@
    "entryPrice": 0.485,
    "firstTs": "2026-08-08T05:10:09.597598+00:00",
    "lastPrice": 0.485,
-   "lastTs": "2026-08-08T05:10:09.597598+00:00",
+   "lastTs": "2026-08-08T05:56:38.480009+00:00",
    "htkAtEntry": 2.8421716666666668,
    "public": false,
    "reasons": [
@@ -1961,25 +1897,90 @@
    "firstTs": "2026-08-07T22:55:45.438065+00:00",
    "settledTs": "2026-08-08T05:10:09.597598+00:00",
    "resolvedTs": "2026-08-08T05:10:08.992284+00:00"
+  },
+  {
+   "key": "mlb-oak-bos-2026-08-07",
+   "side": "Boston Red Sox",
+   "verdict": "BET",
+   "conv": 9,
+   "league": "MLB",
+   "entryPrice": 0.715,
+   "closePrice": 0.715,
+   "result": "win",
+   "winner": "Boston Red Sox",
+   "pnl": 3.99,
+   "clvPP": 0.0,
+   "stake": 10.0,
+   "public": true,
+   "signals": [
+    "money",
+    "sharp"
+   ],
+   "firstTs": "2026-08-07T20:58:24.907897+00:00",
+   "settledTs": "2026-08-08T05:56:38.480009+00:00",
+   "resolvedTs": "2026-08-08T05:56:37.847467+00:00"
+  },
+  {
+   "key": "mlb-atl-nyy-2026-08-07",
+   "side": "Atlanta Braves",
+   "verdict": "FADE",
+   "conv": 8,
+   "league": "MLB",
+   "entryPrice": 0.455,
+   "closePrice": 0.455,
+   "result": "loss",
+   "winner": "New York Yankees",
+   "pnl": -10.0,
+   "clvPP": 0.0,
+   "stake": 10.0,
+   "public": false,
+   "signals": [
+    "sharp"
+   ],
+   "firstTs": "2026-08-07T20:58:24.907897+00:00",
+   "settledTs": "2026-08-08T05:56:38.480009+00:00",
+   "resolvedTs": "2026-08-08T05:56:37.847467+00:00"
+  },
+  {
+   "key": "mlb-col-stl-2026-08-07",
+   "side": "St. Louis Cardinals",
+   "verdict": "BET",
+   "conv": 8,
+   "league": "MLB",
+   "entryPrice": 0.615,
+   "closePrice": 0.605,
+   "result": "win",
+   "winner": "St. Louis Cardinals",
+   "pnl": 6.26,
+   "clvPP": -1.0,
+   "stake": 10.0,
+   "public": false,
+   "signals": [
+    "money",
+    "sharp"
+   ],
+   "firstTs": "2026-08-07T21:55:45.384234+00:00",
+   "settledTs": "2026-08-08T05:56:38.480009+00:00",
+   "resolvedTs": "2026-08-08T05:56:37.847467+00:00"
   }
  ],
  "agg": {
   "all": {
-   "n": 78,
-   "wins": 39,
-   "hit": 0.5,
-   "pnl": -104.82,
-   "stake": 780.0,
-   "roi": -0.1344,
-   "clvAvg": 0.09
+   "n": 81,
+   "wins": 41,
+   "hit": 0.5062,
+   "pnl": -104.57,
+   "stake": 810.0,
+   "roi": -0.1291,
+   "clvAvg": 0.07
   },
   "public": {
-   "n": 16,
-   "wins": 11,
-   "hit": 0.6875,
-   "pnl": -4.69,
-   "stake": 160.0,
-   "roi": -0.0293,
+   "n": 17,
+   "wins": 12,
+   "hit": 0.7059,
+   "pnl": -0.7,
+   "stake": 170.0,
+   "roi": -0.0041,
    "clvAvg": 0.12
   },
   "byConv": {
@@ -1993,21 +1994,21 @@
     "clvAvg": -0.25
    },
    "8": {
-    "n": 21,
-    "wins": 10,
-    "hit": 0.4762,
-    "pnl": -16.37,
-    "stake": 210.0,
-    "roi": -0.078,
-    "clvAvg": 0.24
+    "n": 23,
+    "wins": 11,
+    "hit": 0.4783,
+    "pnl": -20.11,
+    "stake": 230.0,
+    "roi": -0.0874,
+    "clvAvg": 0.17
    },
    "9": {
-    "n": 25,
-    "wins": 17,
-    "hit": 0.68,
-    "pnl": -15.44,
-    "stake": 250.0,
-    "roi": -0.0618,
+    "n": 26,
+    "wins": 18,
+    "hit": 0.6923,
+    "pnl": -11.45,
+    "stake": 260.0,
+    "roi": -0.044,
     "clvAvg": 0.08
    },
    "10": {
@@ -2022,42 +2023,42 @@
   },
   "byVerdict": {
    "BET": {
-    "n": 56,
-    "wins": 33,
-    "hit": 0.5893,
-    "pnl": -56.23,
-    "stake": 560.0,
-    "roi": -0.1004,
-    "clvAvg": 0.12
+    "n": 58,
+    "wins": 35,
+    "hit": 0.6034,
+    "pnl": -45.98,
+    "stake": 580.0,
+    "roi": -0.0793,
+    "clvAvg": 0.1
    },
    "FADE": {
-    "n": 22,
+    "n": 23,
     "wins": 6,
-    "hit": 0.2727,
-    "pnl": -48.59,
-    "stake": 220.0,
-    "roi": -0.2209,
+    "hit": 0.2609,
+    "pnl": -58.59,
+    "stake": 230.0,
+    "roi": -0.2547,
     "clvAvg": 0.0
    }
   },
   "bySignal": {
    "money": {
-    "n": 28,
-    "wins": 19,
-    "hit": 0.6786,
-    "pnl": -10.31,
-    "stake": 280.0,
-    "roi": -0.0368,
-    "clvAvg": -0.04
+    "n": 30,
+    "wins": 21,
+    "hit": 0.7,
+    "pnl": -0.06,
+    "stake": 300.0,
+    "roi": -0.0002,
+    "clvAvg": -0.07
    },
    "sharp": {
-    "n": 59,
-    "wins": 27,
-    "hit": 0.4576,
-    "pnl": -138.74,
-    "stake": 590.0,
-    "roi": -0.2352,
-    "clvAvg": -0.02
+    "n": 62,
+    "wins": 29,
+    "hit": 0.4677,
+    "pnl": -138.49,
+    "stake": 620.0,
+    "roi": -0.2234,
+    "clvAvg": -0.03
    },
    "steam": {
     "n": 5,
