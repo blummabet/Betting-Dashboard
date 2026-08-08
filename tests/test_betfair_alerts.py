@@ -308,3 +308,36 @@ class TestPublicMoneyflow(unittest.TestCase):
         # Gleichstand -> kein Fuehrungs-Filter (feuert)
         m_lvl = mk(90000, 10000); m_lvl["liveInfo"]["goal_v2"] = 1
         self.assertIsNotNone(BA.fresh_alert(m_lvl, hist))
+
+
+class TestDirection(unittest.TestCase):
+    # 08.08.2026 (Lucas: „Back oder Lay?"): Quotenbewegung des Favoriten in den Push.
+    def test_dir_line_back(self):
+        line = BA._dir_line({"leadDir": "in", "leadPrev": 2.10, "leadOdd": 2.00})
+        self.assertIn("Back", line); self.assertIn("2.10", line); self.assertIn("2.00", line)
+
+    def test_dir_line_drift(self):
+        self.assertIn("driftet", BA._dir_line({"leadDir": "out", "leadPrev": 2.00, "leadOdd": 2.20}))
+
+    def test_dir_line_flat_or_missing_empty(self):
+        self.assertEqual(BA._dir_line({"leadDir": "flat"}), "")
+        self.assertEqual(BA._dir_line({}), "")
+
+    def test_attach_direction_joins(self):
+        alerts = [{"matchId": "1", "market": "Match Odds", "leadName": "Napoli"}]
+        direction = {"1": {"Match Odds": {"Napoli": {"dir": "in", "prev": 1.9, "odd": 1.8}}}}
+        BA.attach_direction(alerts, direction)
+        self.assertEqual(alerts[0]["leadDir"], "in")
+        self.assertEqual(alerts[0]["leadPrev"], 1.9)
+
+    def test_message_appends_back_line(self):
+        a = {"scenario": "fresh", "matchId": "9", "flag": "🇮🇹", "home": "Napoli", "away": "Osasuna",
+             "league": "Serie A", "market": "Match Odds", "inflow": 40000, "total": 100000,
+             "tier": "top", "leadName": "Osasuna", "leadShare": 0.62, "leadOdd": 2.4,
+             "leadDir": "in", "leadPrev": 2.55}
+        self.assertIn("Back", BA.build_message(a))
+        self.assertIn("Back", BA.build_public_message(a))
+
+
+if __name__ == "__main__":
+    unittest.main()

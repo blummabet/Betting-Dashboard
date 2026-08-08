@@ -191,6 +191,24 @@ def test_vanish_nicht_solange_im_feed():
     assert "1" in st["pending"] and res == []
 
 
+def test_direction_flows_through_and_splits():
+    # 08.08.2026 (Lucas): Back/Lay-Richtung des Geld-Favoriten mitschreiben + Backtest danach splitten.
+    direction = {"1": {"Match Odds": {HOME: {"dir": "in", "prev": 2.1, "odd": 2.0}}}}
+    st = T.capture({"matches": [_prematch()]}, HIST, {}, now=NOW, direction=direction)
+    assert st["pending"]["1"]["signals"]["Match Odds"]["dir"] == "in"
+    st, res = T.settle({"matches": [_finished(gv=(2, 1))]}, st, [], now=NOW + timedelta(hours=6))
+    mo = {r["market"]: r for r in res}["Match Odds"]
+    assert mo["dir"] == "in"
+    rec = T.aggregate(res, now=NOW)
+    bm = rec["byMarket"]["Match Odds"]           # Heim gewann + war 'in' → Back-Bucket
+    assert bm["nBack"] == 1 and bm["hitRateBack"] == 1.0 and bm["nDrift"] == 0
+
+
+def test_ohne_direction_bleibt_dir_none():
+    st = T.capture({"matches": [_prematch()]}, HIST, {}, now=NOW)   # kein direction-Arg
+    assert st["pending"]["1"]["signals"]["Match Odds"].get("dir") is None
+
+
 def test_voller_flow_ecuador_ht():
     """Ende-zu-Ende: vor Anpfiff → live HT → finished → aggregiert."""
     st, res = {}, []

@@ -72,13 +72,13 @@
             .then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
         });
     };
-    return Promise.all([jf('betfair_prices.json'), jf('betfair_history.json'), jf('betfair_track_record.json'), jf('betfair_public_record.json')]);
+    return Promise.all([jf('betfair_prices.json'), jf('betfair_history.json'), jf('betfair_track_record.json'), jf('betfair_public_record.json'), jf('betfair_direction.json')]);
   }
   function _bfLoad() {
     if (_bf.data || _bf.loading) return;
     _bf.loading = true;
     _bfFetch3().then(function (a) {
-      _bf.data = a[0] || { matches: [] }; _bf.hist = a[1] || {}; _bf.track = a[2] || null; _bf.pubrec = a[3] || null;
+      _bf.data = a[0] || { matches: [] }; _bf.hist = a[1] || {}; _bf.track = a[2] || null; _bf.pubrec = a[3] || null; _bf.dir = a[4] || {};
       _bf._cohCache = {}; _bf._mixBase = null; _bf._normBase = null;
       _bf.loading = false; _bf.cardOpen = {};
       var p = document.getElementById('betfairRadarPanel');
@@ -102,6 +102,7 @@
       if (a[1]) _bf.hist = a[1];
       if (a[2] != null) _bf.track = a[2];
       if (a[3] != null) _bf.pubrec = a[3];
+      if (a[4] != null) _bf.dir = a[4];
       _bf._cohCache = {}; _bf._mixBase = null; _bf._normBase = null;
       _bf.loading = false;
       var pp = document.getElementById('betfairRadarPanel');
@@ -138,6 +139,18 @@
   function distTotal(mk) { return runnersOf(mk).reduce(function (a, r) { return a + (+r.vol || 0); }, 0); }
   function leadRunner(mk) { return runnersOf(mk).reduce(function (a, r) { return (!a || (+r.vol || 0) > (+a.vol || 0)) ? r : a; }, null); }
   function fO(o) { return (typeof o === 'number' && o > 1) ? o.toFixed(2) : '–'; }
+  // 08.08.2026 (Lucas: „Back oder Lay?"): Richtung aus betfair_direction.json (Quote kuerzer=Back, driftet=Lay).
+  function dirOf(m, marketId, runnerName) {
+    try { return (((( _bf.dir || {})[String(m.matchId)] || {})[marketId] || {})[runnerName]) || null; } catch (e) { return null; }
+  }
+  function dirBadge(m, marketId, runner) {
+    if (!runner) return '';
+    var e = dirOf(m, marketId, runner.name); if (!e) return '';
+    if (e.dir === 'in') return ' <span title="Quote kürzer → Geld kommt als Back" style="font-size:9.5px;font-weight:800;color:#3fb950;border:1px solid rgba(63,185,80,.45);border-radius:4px;padding:0 4px">Back ✓</span>';
+    if (e.dir === 'out') return ' <span title="Quote driftet raus → kein echter Back-Rückhalt" style="font-size:9.5px;font-weight:800;color:#e3b341;border:1px solid rgba(227,179,65,.45);border-radius:4px;padding:0 4px">driftet</span>';
+    return '';
+  }
+  window._bfDirBadge = dirBadge;   // Test-Hook
   function rLabel(name, m) {
     if (name === m.home) return String(m.home);
     if (name === m.away) return String(m.away);
@@ -552,6 +565,7 @@
       '<span style="font-size:12px;font-weight:900;color:' + C.gold + '">' + pct.toFixed(0) + '%</span>' +
       '<span style="flex:1;max-width:160px">' + distBar(mk, true) + '</span>' +
       '<span style="font-size:13px;font-weight:800;color:' + C.vol + '">' + fmtE(mvolG(m, x.mm.id)) + '</span>' +
+      dirBadge(m, x.mm.id, lead) +
       confBadge(m.league, x.mm.id) +
       '<span style="font-size:11px;color:' + C.dim + '">▸ alle Märkte</span>' +
     '</div>';
@@ -683,7 +697,7 @@
         '<div class="bfb-lbl"><div class="bfb-g">' + flag(x.m.country, x.m.league) + ' ' + esc(String(x.m.home).slice(0, 13)) + ' – ' + esc(String(x.m.away).slice(0, 13)) + '</div>' +
         '<div class="bfb-o"><span class="bfb-mk' + (ht ? ' ht' : '') + '">' + esc(x.mm.label) + ' →</span> ' + esc(rLabel(x.lead.name, x.m)) + '</div></div>' +
         '<div class="bfb-bar"><i style="width:' + w + '%;background:' + C.vol + '"></i></div>' +
-        '<div class="bfb-meta"><span class="bfb-v" style="color:' + C.vol + '">' + fmtE(x.v) + '</span><br><span class="bfb-s">' + x.pct.toFixed(0) + '%</span> <span class="bfb-odd">@' + fO(x.lead.odd) + '</span>' + _hlLine(x.m) + '</div></div>';
+        '<div class="bfb-meta"><span class="bfb-v" style="color:' + C.vol + '">' + fmtE(x.v) + '</span><br><span class="bfb-s">' + x.pct.toFixed(0) + '%</span> <span class="bfb-odd">@' + fO(x.lead.odd) + '</span>' + dirBadge(x.m, x.mm.id, x.lead) + _hlLine(x.m) + '</div></div>';
     }).join('');
     return '<div style="background:linear-gradient(180deg,rgba(255,184,12,.06),transparent);border:1px solid ' + C.bd + ';border-radius:14px;padding:11px 13px;margin:12px 0 14px">' +
       '<div style="font-size:12px;color:' + C.gold + ';font-weight:800;margin-bottom:10px">🔥 Wo das Geld genau liegt — größte Einzel-Ausgänge <span style="color:' + C.dim + ';font-weight:600">· Balken = Anteil des Geldes auf den Ausgang · nur klare Mehrheiten (≥60%) · ab 2K € · Klick springt zum Spiel</span></div>' +

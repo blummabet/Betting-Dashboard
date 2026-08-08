@@ -26,6 +26,14 @@ from datetime import datetime, timezone
 
 from telegram_trades import send_trades_message
 
+try:
+    from betfair_direction import look as _dir_look
+except Exception:   # Modul optional
+    def _dir_look(direction, matchId, market, runner):
+        return None
+
+DIRECTION_FILE = "betfair_direction.json"   # 08.08.2026 (Lucas): Back/Lay-Richtung je Runner
+
 HT_TOP_EUR     = 10000.0  # Halbzeit-Geld-Schwelle Top-Liga + International (Lucas 30.07.2026)
 HT_REST_EUR    = 5000.0   # ... und Rest-Ligen
 HT_MIN_SHARE   = 0.85     # ... und davon min. dieser Anteil auf EINEN Ausgang (einseitig)
@@ -212,6 +220,29 @@ def fresh_alert(m, hist, top_thr=FRESH_TOP_EUR, rest_thr=FRESH_REST_EUR):
             "leadName": lead_name, "leadShare": lead_share, "leadOdd": lead_odd}
 
 
+def _dir_line(a) -> str:
+    """08.08.2026 (Lucas: „ist es Back oder Lay?"): Quotenbewegung des Favoriten. Matched-Volumen sagt
+    nicht, ob gebackt oder gelayt wurde — die Quote schon. Kuerzer = echter Back-Rueckhalt, driftet =
+    nur Volumen ohne Richtung. Nur zeigen, wenn eindeutig (in/out)."""
+    d = a.get("leadDir")
+    if d not in ("in", "out"):
+        return ""
+    prev, odd = a.get("leadPrev"), a.get("leadOdd")
+    move = (" (%.2f → %.2f)" % (prev, odd)) if isinstance(prev, (int, float)) and isinstance(odd, (int, float)) else ""
+    if d == "in":
+        return "\n✅ Quote bestätigt — Back%s" % move
+    return "\n⚠️ Quote driftet — kein Back-Rückhalt%s" % move
+
+
+def attach_direction(alerts, direction) -> list:
+    """Jedem Alert die Richtung des Favoriten-Runners anhaengen (Join ueber matchId/market/leadName)."""
+    for a in (alerts or []):
+        e = _dir_look(direction, a.get("matchId"), a.get("market"), a.get("leadName")) if direction else None
+        if e:
+            a["leadDir"], a["leadPrev"] = e.get("dir"), e.get("prev")
+    return alerts
+
+
 def should_send(seen: dict, key: str, value: float) -> bool:
     prev = seen.get(key)
     if prev is None:
@@ -235,7 +266,7 @@ def build_message(a) -> str:
             pct = lambda x: "—" if x is None else "%.0f%%" % (x * 100)
             msg += ("\n%s %s · X %s · %s %s" % (_esc(a["home"]), pct(a["hs"]), pct(a["ds"]),
                                                 _esc(a["away"]), pct(a["as_"])))
-        return msg
+        return msg + _dir_line(a)
     tl = "Top-Liga" if a["tier"] == "top" else "Rest-Liga"
     msg = ("🟡 <b>Betfair · Frisches Geld</b> · %s\n" % tl + head
            + "💶 <b>%s</b>: +<b>%s</b> frisch → jetzt <b>%s</b>"
@@ -243,7 +274,7 @@ def build_message(a) -> str:
     if a.get("leadName"):
         odd = (" @%.2f" % a["leadOdd"]) if isinstance(a.get("leadOdd"), (int, float)) else ""
         msg += "\nführt: %s (%.0f%%)%s" % (_esc(a["leadName"]), (a.get("leadShare") or 0.0) * 100, odd)
-    return msg
+    return msg + _dir_line(a)
 
 
 def _bar(share, width=10):
@@ -323,7 +354,8 @@ def build_public_message(a) -> str:
                 + "💷 <b>%s</b> — Halbzeit-Geld\n<b>%s</b> gematcht\n\n"
                   % (_esc(_short_mk(a["market"])), _euro(a["total"]))
                 + "📊 <b>%s</b>  %s %.0f%%%s"
-                  % (_esc(a["leadLabel"]), _bar(share), share * 100, odd))
+                  % (_esc(a["leadLabel"]), _bar(share), share * 100, odd)
+                + _dir_line(a))
 
     share = a.get("leadShare") or 0.0
     total = a.get("total") or 0.0
@@ -334,7 +366,8 @@ def build_public_message(a) -> str:
             + "💶 <b>%s</b> — frischer Zufluss\n+<b>%s</b> → Markt <b>%s</b>%s\n\n"
               % (_esc(_short_mk(a["market"])), _euro(inflow), _euro(total), pct)
             + "📊 <b>%s</b>  %s %.0f%%%s"
-              % (_esc(lead), _bar(share), share * 100, odd))
+              % (_esc(lead), _bar(share), share * 100, odd)
+            + _dir_line(a))
 
 
 def _tg_public(text) -> bool:
@@ -408,7 +441,14 @@ def main():
     except Exception:
         seen = {}
 
-    alerts = collect_alerts(prices, hist)
+    try:
+        direction = json.load(open(DIRECTION_FILE, encoding="utf-8"))
+        if not isinstance(direction, dict):
+            direction = {}
+    except Exception:
+        direction = {}
+
+    alerts = attach_direction(collect_alerts(prices, hist), direction)
     sent = 0
     for a in alerts:
         key = a["scenario"] + ":" + a["matchId"]
@@ -428,7 +468,8 @@ def main():
         pub_seen = json.load(open(PUB_SEEN_FILE, encoding="utf-8"))
     except Exception:
         pub_seen = {}
-    pub_alerts = collect_alerts(prices, hist, PUB_HT_TOP, PUB_HT_REST, PUB_FRESH_TOP, PUB_FRESH_REST)
+    pub_alerts = attach_direction(
+        collect_alerts(prices, hist, PUB_HT_TOP, PUB_HT_REST, PUB_FRESH_TOP, PUB_FRESH_REST), direction)
     # (Lucas 05.08.2026) Public-Kuratierung: frisches Geld nur pushen, wenn es klar einseitig ist
     # (>=PUB_FRESH_MIN_SHARE auf einer Seite) — reines Volumen ohne Richtung raus. HT hat schon sein
     # 85%-Gate; Trades bleibt ungefiltert (obskure Ligen bewusst drin — dort oft Sharp Money).

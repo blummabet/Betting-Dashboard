@@ -32,6 +32,13 @@ HISTORY_FILE = BASE / "betfair_history.json"
 STATE_FILE = BASE / "betfair_track_state.json"
 RESULTS_FILE = BASE / "betfair_track_results.json"
 RECORD_FILE = BASE / "betfair_track_record.json"
+DIRECTION_FILE = BASE / "betfair_direction.json"   # 08.08.2026 (Lucas): Back/Lay-Richtung je Runner
+
+try:
+    from betfair_direction import look as _dir_look
+except Exception:   # Modul optional — ohne bleibt dir einfach None
+    def _dir_look(direction, matchId, market, runner):
+        return None
 
 CONC_THRESHOLD = 0.65     # Geld-Favorit gilt als „konzentriert" ab so viel Marktanteil
 INFLOW_MIN_EUR = 2000     # Markt gilt als „frischer Zufluss" ab so viel € Delta (prices sind €)
@@ -160,7 +167,7 @@ def _is_prematch(m, now):
 
 
 # ── capture / settle / aggregate ──────────────────────────────────────────────
-def capture(prices, history, state, now=None):
+def capture(prices, history, state, now=None, direction=None):
     """Vor-Anpfiff-Signale je Markt festhalten (Closing = letzter Lauf) + HT-Stand live einfangen. REIN."""
     now = now or _now()
     state = dict(state or {})
@@ -196,9 +203,11 @@ def capture(prices, history, state, now=None):
                 if fav is None:
                     continue
                 share = (lead.get("vol") or 0) / tot
+                d = _dir_look(direction, mid, mkid, lead.get("name")) if direction else None
                 sigs[mkid] = {"fav": fav, "share": round(share, 3), "odd": lead.get("odd"),
                               "conc": share >= CONC_THRESHOLD,
-                              "inflow": _inflow_eur(history, mid, mkid) >= INFLOW_MIN_EUR}
+                              "inflow": _inflow_eur(history, mid, mkid) >= INFLOW_MIN_EUR,
+                              "dir": (d or {}).get("dir")}   # 'in'=gebackt (Quote kuerzer) · 'out'=gedriftet
             if sigs:
                 pending[mid] = {"league": m.get("league"), "home": home, "away": away,
                                 "country": m.get("country"), "kickoff": m.get("kickoff"),
@@ -226,7 +235,7 @@ def settle(prices, state, results, now=None):
                             "fav": sig["fav"], "odd": sig["odd"],
                             "conc": bool(sig.get("conc")), "inflow": bool(sig.get("inflow")),
                             "win": bool(win), "settledAt": now.isoformat(),
-                            "matchId": mid, "ft": ft, "ht": ht, "via": via})
+                            "matchId": mid, "ft": ft, "ht": ht, "via": via, "dir": sig.get("dir")})
         pending.pop(mid, None)
 
     # 1) Feed zeigt „finished" → sauber abrechnen (der exakte Endstand).
@@ -278,7 +287,10 @@ def settle(prices, state, results, now=None):
 def _bucket():
     return {"n": 0, "wins": 0, "roiSum": 0.0,
             "nConc": 0, "winsConc": 0, "roiConc": 0.0,
-            "nInflow": 0, "winsInflow": 0, "roiInflow": 0.0}
+            "nInflow": 0, "winsInflow": 0, "roiInflow": 0.0,
+            # 08.08.2026 (Lucas): Richtung — kam das Geld als Back (Quote kuerzer) oder driftete es?
+            "nBack": 0, "winsBack": 0, "roiBack": 0.0,
+            "nDrift": 0, "winsDrift": 0, "roiDrift": 0.0}
 
 
 def _add(b, r):
@@ -294,6 +306,11 @@ def _add(b, r):
         b["nConc"] += 1; b["winsConc"] += 1 if r.get("win") else 0; b["roiConc"] += profit
     if r.get("inflow"):
         b["nInflow"] += 1; b["winsInflow"] += 1 if r.get("win") else 0; b["roiInflow"] += profit
+    d = r.get("dir")
+    if d == "in":
+        b["nBack"] += 1; b["winsBack"] += 1 if r.get("win") else 0; b["roiBack"] += profit
+    elif d == "out":
+        b["nDrift"] += 1; b["winsDrift"] += 1 if r.get("win") else 0; b["roiDrift"] += profit
 
 
 def _fin(b):
@@ -304,7 +321,11 @@ def _fin(b):
             "nConc": b["nConc"], "hitRateConc": rate(b["winsConc"], b["nConc"]),
             "roiConc": round(b["roiConc"] / b["nConc"], 4) if b["nConc"] else None,
             "nInflow": b["nInflow"], "hitRateInflow": rate(b["winsInflow"], b["nInflow"]),
-            "roiInflow": round(b["roiInflow"] / b["nInflow"], 4) if b["nInflow"] else None}
+            "roiInflow": round(b["roiInflow"] / b["nInflow"], 4) if b["nInflow"] else None,
+            "nBack": b["nBack"], "hitRateBack": rate(b["winsBack"], b["nBack"]),
+            "roiBack": round(b["roiBack"] / b["nBack"], 4) if b["nBack"] else None,
+            "nDrift": b["nDrift"], "hitRateDrift": rate(b["winsDrift"], b["nDrift"]),
+            "roiDrift": round(b["roiDrift"] / b["nDrift"], 4) if b["nDrift"] else None}
 
 
 def aggregate(results, now=None):
@@ -356,10 +377,11 @@ def main():
     history = _load(HISTORY_FILE, {})
     state = _load(STATE_FILE, {})
     results = _load(RESULTS_FILE, [])
+    direction = _load(DIRECTION_FILE, {})
     if not isinstance(results, list):
         results = []
     now = _now()
-    state = capture(prices, history, state, now=now)
+    state = capture(prices, history, state, now=now, direction=direction if isinstance(direction, dict) else {})
     state, results = settle(prices, state, results, now=now)
     record = aggregate(results, now=now)
     _write(STATE_FILE, state)

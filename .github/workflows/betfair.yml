@@ -41,6 +41,10 @@ jobs:
           BETWATCH_KEY: ${{ secrets.BETWATCH_KEY }}
           # optional tunebar: BETWATCH_MAX_DETAIL / BETWATCH_WINDOW_H
 
+      - name: Betfair-Richtung (Back/Lay je Runner aus der Quotenbewegung)
+        run: ${{ env.BETFAIR_PY }} betfair_direction.py
+        continue-on-error: true
+
       - name: 📊 Track-Record aktualisieren (Trefferquote je Liga×Markt)
         run: ${{ env.BETFAIR_PY }} betfair_track_record.py
 
@@ -68,7 +72,7 @@ jobs:
         run: |
           git config user.name "cocobet-bot"
           git config user.email "bot@users.noreply.github.com"
-          git add betfair_prices.json betfair_history.json betfair_overview.json betfair_track_state.json betfair_track_results.json betfair_track_record.json betfair_draw_state.json betfair_draw_results.json betfair_draw_record.json betfair_alerts_seen.json betfair_public_seen.json betfair_public_ledger.json betfair_public_record.json 2>/dev/null || true
+          git add betfair_prices.json betfair_history.json betfair_overview.json betfair_track_state.json betfair_track_results.json betfair_track_record.json betfair_direction.json betfair_draw_state.json betfair_draw_results.json betfair_draw_record.json betfair_alerts_seen.json betfair_public_seen.json betfair_public_ledger.json betfair_public_record.json 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "keine Änderung — nichts zu committen"
             exit 0

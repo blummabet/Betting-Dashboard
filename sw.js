@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v81';   // 07.08.2026: Umkehr-Sperre — Play raus/gewarnt wenn Poly-Preis gegen uns dreht
+const VERSION = 'cocobet-v82';   // 08.08.2026: Betfair Richtungs-Signal (Back/Lay) — Badge im Radar, Zeile im Push
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
