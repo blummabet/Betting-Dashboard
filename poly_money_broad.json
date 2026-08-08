@@ -1,24 +1,24 @@
 {
- "n": 311,
+ "n": 317,
  "minOdds": 1.35,
- "moneyHitRate": 0.653,
- "priceHitRate": 0.653,
- "brierMoney": 0.4558,
- "brierPrice": 0.4558,
+ "moneyHitRate": 0.647,
+ "priceHitRate": 0.65,
+ "brierMoney": 0.4632,
+ "brierPrice": 0.4592,
  "disagree": {
-  "n": 0,
+  "n": 1,
   "moneyWon": 0,
-  "priceWon": 0,
+  "priceWon": 1,
   "neither": 0
  },
  "verdict": "gleichauf",
  "byLeague": [
   {
-   "league": "MLB",
-   "n": 79,
-   "moneyHitRate": 0.633,
-   "brierMoney": 0.4881,
-   "brierPrice": 0.4882,
+   "league": "TENNIS",
+   "n": 37,
+   "moneyHitRate": 0.595,
+   "brierMoney": 0.4663,
+   "brierPrice": 0.4713,
    "verdict": "gleichauf"
   },
   {
@@ -31,10 +31,10 @@
   },
   {
    "league": "ESPORTS",
-   "n": 129,
-   "moneyHitRate": 0.69,
-   "brierMoney": 0.4333,
-   "brierPrice": 0.4333,
+   "n": 130,
+   "moneyHitRate": 0.685,
+   "brierMoney": 0.4377,
+   "brierPrice": 0.4377,
    "verdict": "gleichauf"
   },
   {
@@ -54,12 +54,12 @@
    "verdict": "gleichauf"
   },
   {
-   "league": "TENNIS",
-   "n": 36,
-   "moneyHitRate": 0.583,
-   "brierMoney": 0.4792,
-   "brierPrice": 0.4792,
-   "verdict": "gleichauf"
+   "league": "MLB",
+   "n": 82,
+   "moneyHitRate": 0.61,
+   "brierMoney": 0.5143,
+   "brierPrice": 0.4965,
+   "verdict": "preis_besser"
   }
  ],
  "rows": [
@@ -400,6 +400,18 @@
    "totalUsd": 289166
   },
   {
+   "key": "mlb-lad-ari-2026-08-07",
+   "league": "MLB",
+   "winner": "Arizona Diamondbacks",
+   "moneyFav": "Los Angeles Dodgers",
+   "priceFav": "Los Angeles Dodgers",
+   "moneyShare": 0.615,
+   "priceProb": 0.615,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 287190
+  },
+  {
    "key": "mls-nyc-chi-2026-07-25",
    "league": "MLS",
    "winner": "Yes",
@@ -410,6 +422,18 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 266796
+  },
+  {
+   "key": "mlb-tor-phi-2026-08-07",
+   "league": "MLB",
+   "winner": "Toronto Blue Jays",
+   "moneyFav": "Philadelphia Phillies",
+   "priceFav": "Philadelphia Phillies",
+   "moneyShare": 0.655,
+   "priceProb": 0.655,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 266177
   },
   {
    "key": "mlb-tex-hou-2026-08-02",
@@ -518,49 +542,25 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 222032
-  },
-  {
-   "key": "atp-tien-monfils-2026-08-05",
-   "league": "TENNIS",
-   "winner": "Learner Tien",
-   "moneyFav": "Learner Tien",
-   "priceFav": "Learner Tien",
-   "moneyShare": 0.725,
-   "priceProb": 0.725,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 219971
-  },
-  {
-   "key": "mlb-pit-mil-2026-08-05",
-   "league": "MLB",
-   "winner": "Milwaukee Brewers",
-   "moneyFav": "Milwaukee Brewers",
-   "priceFav": "Milwaukee Brewers",
-   "moneyShare": 0.545,
-   "priceProb": 0.545,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 218583
   }
  ],
- "generatedAt": "2026-08-08T03:58:31.059764+00:00",
+ "generatedAt": "2026-08-08T05:10:09.046675+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 422,
   "nfl": 590,
-  "mlb": 588,
+  "mlb": 581,
   "nhl": 404,
   "mls": 641,
-  "epl": 403,
+  "epl": 410,
   "soccer": 800,
-  "tennis": 523,
+  "tennis": 536,
   "ucl": 480,
   "laliga": 0,
   "bundesliga": 401,
   "serie-a": 37,
-  "ligue-1": 404,
+  "ligue-1": 411,
   "esports": 800,
   "cs2": 420,
   "lol": 417,
@@ -571,7 +571,7 @@
   "boxing": 224,
   "golf": 274,
   "f1": 325,
-  "cricket": 644
+  "cricket": 643
  },
  "sweepStats": {
   "sweepOpen": 500,
