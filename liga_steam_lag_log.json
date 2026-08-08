@@ -50,12 +50,19 @@
           "polyPrice": 0.25,
           "pinnFair": 0.2778,
           "steamLag": false
+        },
+        {
+          "ts": "2026-08-08T18:32:44Z",
+          "edgePp": 4.3,
+          "polyPrice": 0.235,
+          "pinnFair": 0.2778,
+          "steamLag": false
         }
       ],
-      "currentEdgePp": 2.8,
-      "currentPolyPrice": 0.25,
-      "edgeVelocityPPH": -0.039,
-      "convergencePct": 41.7,
+      "currentEdgePp": 4.3,
+      "currentPolyPrice": 0.235,
+      "edgeVelocityPPH": 0.139,
+      "convergencePct": 10.4,
       "convergenceTs": null,
       "convergenceHours": null,
       "status": "OPEN",
@@ -90,10 +97,58 @@
           "polyPrice": 0.27,
           "pinnFair": 0.3198,
           "steamLag": false
+        },
+        {
+          "ts": "2026-08-08T18:32:44Z",
+          "edgePp": -1.1,
+          "polyPrice": 0.275,
+          "pinnFair": 0.2641,
+          "steamLag": true
         }
       ],
-      "currentEdgePp": 5.0,
-      "currentPolyPrice": 0.27,
+      "currentEdgePp": -1.1,
+      "currentPolyPrice": 0.275,
+      "edgeVelocityPPH": null,
+      "convergencePct": 100.0,
+      "convergenceTs": null,
+      "convergenceHours": null,
+      "status": "OPEN",
+      "outcome": null,
+      "pendingConvergenceConfirm": true
+    },
+    {
+      "id": "543-548_dr",
+      "matchKey": "543-548",
+      "homeId": "543",
+      "awayId": "548",
+      "home": "Real Betis Balompié",
+      "away": "Real Sociedad de Fútbol",
+      "homeFlag": "🏳",
+      "awayFlag": "🏳",
+      "matchDate": "2026-08-21",
+      "market": "dr",
+      "marketLabel": "Unentschieden",
+      "signalTs": "2026-08-08T18:32:44Z",
+      "entryEdgePp": 2.4,
+      "entryPolyPrice": 0.29,
+      "entryPinnFair": 0.3142,
+      "entryVol": 0,
+      "steamLagAtSignal": true,
+      "pinnMoveAtSignal": 4.2,
+      "edgeTrendAtSignal": "new",
+      "highConfidence": false,
+      "entryTier": "track",
+      "snapshots": [
+        {
+          "ts": "2026-08-08T18:32:44Z",
+          "edgePp": 2.4,
+          "polyPrice": 0.29,
+          "pinnFair": 0.3142,
+          "steamLag": true
+        }
+      ],
+      "currentEdgePp": 2.4,
+      "currentPolyPrice": 0.29,
       "edgeVelocityPPH": null,
       "convergencePct": 0.0,
       "convergenceTs": null,
@@ -102,7 +157,7 @@
       "outcome": null
     }
   ],
-  "updatedAt": "2026-08-08T07:43:39Z",
-  "runCount": 12,
+  "updatedAt": "2026-08-08T18:32:44Z",
+  "runCount": 13,
   "lastError": "no_poly_prices"
 }

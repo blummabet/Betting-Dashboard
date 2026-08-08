@@ -29,7 +29,7 @@
 "leadOdd": 1.31,
 "value": 375107.46,
 "sentAt": "2026-08-05T17:49:03.630972+00:00",
-"status": "pending",
+"status": "expired",
 "htScore": [
 1,
 0
@@ -47,7 +47,7 @@
 "leadOdd": 1.73,
 "value": 236410.82,
 "sentAt": "2026-08-05T18:51:23.863880+00:00",
-"status": "pending",
+"status": "expired",
 "htScore": [
 0,
 0
@@ -65,7 +65,7 @@
 "leadOdd": 1.67,
 "value": 349212.1,
 "sentAt": "2026-08-05T19:19:13.129810+00:00",
-"status": "pending",
+"status": "expired",
 "htScore": [
 1,
 1
@@ -83,7 +83,7 @@
 "leadOdd": 1.71,
 "value": 42108.86,
 "sentAt": "2026-08-05T19:34:15.600113+00:00",
-"status": "pending",
+"status": "expired",
 "htScore": [
 0,
 1
@@ -101,7 +101,7 @@
 "leadOdd": 1.42,
 "value": 503254.53,
 "sentAt": "2026-08-05T19:49:16.561860+00:00",
-"status": "pending",
+"status": "expired",
 "htScore": null
 },
 {
@@ -648,11 +648,18 @@
 "leadOdd": 4.1,
 "value": 64928.23,
 "sentAt": "2026-08-08T15:55:38.541999+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": [
 3,
 1
-]
+],
+"settledAt": "2026-08-08T17:40:45.088502+00:00",
+"ftScore": [
+3,
+2
+],
+"profit": -1.0,
+"via": "track"
 },
 {
 "k": "fresh:35892334:Match Odds",
@@ -666,6 +673,178 @@
 "leadOdd": 2.1,
 "value": 89311.08,
 "sentAt": "2026-08-08T16:25:40.271122+00:00",
+"status": "lost",
+"htScore": [
+0,
+1
+],
+"settledAt": "2026-08-08T17:55:47.187441+00:00",
+"ftScore": [
+0,
+1
+],
+"profit": -1.0,
+"via": "track"
+},
+{
+"k": "fresh:35762418:Match Odds",
+"matchId": "35762418",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "English Football League Cup",
+"home": "Colchester",
+"away": "Southampton",
+"leadName": "Southampton",
+"leadOdd": 1.59,
+"value": 127663.61,
+"sentAt": "2026-08-08T17:10:43.931132+00:00",
+"status": "won",
+"htScore": [
+0,
+0
+],
+"settledAt": "2026-08-08T18:25:50.315283+00:00",
+"ftScore": [
+0,
+2
+],
+"profit": 0.5900000000000001,
+"via": "track"
+},
+{
+"k": "fresh:35896175:Match Odds",
+"matchId": "35896175",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Swiss Super League",
+"home": "Servette",
+"away": "Grasshoppers Zurich",
+"leadName": "The Draw",
+"leadOdd": 4.4,
+"value": 47723.59,
+"sentAt": "2026-08-08T18:40:51.527407+00:00",
+"status": "lost",
+"htScore": [
+1,
+1
+],
+"settledAt": "2026-08-08T20:56:02.951059+00:00",
+"ftScore": [
+2,
+1
+],
+"profit": -1.0,
+"via": "track"
+},
+{
+"k": "fresh:35792534:Match Odds",
+"matchId": "35792534",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Dutch Eredivisie",
+"home": "PSV",
+"away": "Fortuna Sittard",
+"leadName": "PSV",
+"leadOdd": 1.91,
+"value": 431198.69,
+"sentAt": "2026-08-08T18:47:07.269795+00:00",
+"status": "lost",
+"htScore": [
+0,
+1
+],
+"settledAt": "2026-08-08T19:55:59.654735+00:00",
+"ftScore": [
+2,
+2
+],
+"profit": -1.0,
+"via": "track"
+},
+{
+"k": "fresh:35871939:Match Odds",
+"matchId": "35871939",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Portuguese Primeira Liga",
+"home": "Club Football Estrela",
+"away": "Sporting Lisbon",
+"leadName": "Sporting Lisbon",
+"leadOdd": 1.32,
+"value": 235786.86,
+"sentAt": "2026-08-08T19:35:32.173632+00:00",
+"status": "lost",
+"htScore": [
+0,
+0
+],
+"settledAt": "2026-08-08T21:26:09.724959+00:00",
+"ftScore": [
+2,
+2
+],
+"profit": -1.0,
+"via": "track"
+},
+{
+"k": "fresh:35904664:Match Odds",
+"matchId": "35904664",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Colombian Primera A",
+"home": "Santa Fe",
+"away": "Boyaca Chico",
+"leadName": "Santa Fe",
+"leadOdd": 1.34,
+"value": 55619.93,
+"sentAt": "2026-08-08T19:55:59.527603+00:00",
+"status": "won",
+"htScore": [
+0,
+0
+],
+"settledAt": "2026-08-08T21:26:09.724959+00:00",
+"ftScore": [
+2,
+0
+],
+"profit": 0.3400000000000001,
+"via": "track"
+},
+{
+"k": "fresh:35795212:Over/Under 2.5 Goals",
+"matchId": "35795212",
+"scenario": "fresh",
+"market": "Over/Under 2.5 Goals",
+"league": "Dutch Eredivisie",
+"home": "AZ Alkmaar",
+"away": "ADO Den Haag",
+"leadName": "Under 2.5 Goals",
+"leadOdd": 1.57,
+"value": 84490.65,
+"sentAt": "2026-08-08T20:41:01.475651+00:00",
+"status": "won",
+"htScore": null,
+"settledAt": "2026-08-08T21:26:09.724959+00:00",
+"ftScore": [
+2,
+0
+],
+"profit": 0.5700000000000001,
+"via": "track"
+},
+{
+"k": "ht:35872787:First Half Goals 1.5",
+"matchId": "35872787",
+"scenario": "ht",
+"market": "First Half Goals 1.5",
+"league": "Brazilian Serie A",
+"home": "Remo",
+"away": "Atletico MG",
+"leadName": "Under 1.5 Goals",
+"leadOdd": 1.7,
+"value": 25943.059999999998,
+"sentAt": "2026-08-08T21:56:09.327287+00:00",
 "status": "pending",
 "htScore": null
 }
