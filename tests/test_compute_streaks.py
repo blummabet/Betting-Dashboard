@@ -77,6 +77,27 @@ class TestStreaks(unittest.TestCase):
         self.assertTrue(any(s["type"] == "scored" and s["market"] == "Team trifft" for s in out["streaks"]))
         self.assertTrue(any(s["type"] == "cleanSheet" for s in out["streaks"]))
 
+    def test_prior_from_pre_streak_games(self):
+        # 08.08.2026 (Lucas): 4er-Over-Serie, davor 8× Unter → Grundrate OHNE Serie = 0% → wackelt (statt
+        # tautologische Roh-Rate). basis = "prior", weil genug Vorlauf da ist.
+        wm = _wm({"42": {"o25Seq": [True, True, True, True] + [False] * 8, "over25Rate": 0.7, "bttsRate": 0.4}})
+        out = S.build_streaks(wm)
+        over = next(s for s in out["streaks"] if s["type"] == "over25" and s["venue"] == "all")
+        self.assertEqual(over["length"], 4)
+        self.assertEqual(over["basis"], "prior")
+        self.assertEqual(over["preN"], 8)
+        self.assertEqual(over["continuation"]["ratePct"], 0)          # Vorlauf 0/8 Über
+        self.assertEqual(over["continuation"]["state"], "wackelt")
+
+    def test_pure_streak_flagged_when_no_prelude(self):
+        # Serie füllt das ganze Fenster → keine unabhängige Basis → basis "pure" (Fallback Roh-Rate).
+        wm = _wm({"42": {"o25Seq": [True] * 15, "over25Rate": 1.0, "bttsRate": 0.4}})
+        out = S.build_streaks(wm)
+        over = next(s for s in out["streaks"] if s["type"] == "over25" and s["venue"] == "all")
+        self.assertEqual(over["length"], 15)
+        self.assertEqual(over["basis"], "pure")
+        self.assertEqual(over["preN"], 0)
+
     def test_card_streak_from_cornersform(self):
         wm = _wm({})
         wm["cornersForm"] = {"42": {"cardLine": 3.5, "cardOverRate": 0.6,

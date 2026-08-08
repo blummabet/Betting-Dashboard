@@ -122,6 +122,24 @@ def _continuation(rate, target_is_false: bool, length: int) -> dict:
     return {"state": _state(underlying, length), "ratePct": pct, "label": f"Eigentendenz {pct}%"}
 
 
+# 08.08.2026 (Lucas: „Streaks vernünftig bewerten"): das Form-Fenster ist genau 15 Spiele — eine 15er-
+# Serie füllt es KOMPLETT, dann ist die „Grundrate" = die Serie selbst = tautologische 100 %. Für eine
+# ehrliche Bewertung nehmen wir die Rate der Serien-Richtung in den Spielen VOR der Serie (Regression zur
+# Mitte): „wie oft macht das Team das normalerweise, wenn es NICHT gerade auf diesem Lauf ist". Reicht der
+# Vorlauf nicht (Serie füllt das Fenster), gibt es keine unabhängige Basis → ehrlich als „reine Serie"
+# markieren statt eine Fake-Zahl zu zeigen.
+MIN_PRE_GAMES = 5   # so viele Spiele vor der Serie nötig für eine belastbare unabhängige Grundrate
+
+
+def _pre_streak_rate(fseq, target, length):
+    """(rate|None, preN): Grundrate der Serien-Richtung in den Spielen VOR der Serie. None = zu wenig Vorlauf."""
+    pre = [x for x in fseq[length:] if x is not None]
+    if len(pre) < MIN_PRE_GAMES:
+        return None, len(pre)
+    hits = sum(1 for x in pre if bool(x) == target)
+    return hits / len(pre), len(pre)
+
+
 def _matchup_continuation(cont: dict, opp_pct, target_is_false: bool, length: int) -> tuple:
     """Status aus Eigentendenz + Gegner-Stütze. opp_pct = Roh-Gegnermetrik (%, aus _opp_rate_pct).
     Gibt (continuation_dict, oppSupportPct, matchupPct) zurück. Ohne Gegnerdaten = Eigentendenz pur."""
@@ -291,7 +309,10 @@ def build_streaks(wm: dict) -> dict:
             length = _lead_run(fseq, target)
             if length < MIN_LEN:
                 continue
-            cont = _continuation(rate, target_false, length)
+            # Grundrate OHNE die Serie (echte Basis); wenn kein Vorlauf: Fallback Roh-Rate + Flag „reine Serie".
+            base, pre_n = _pre_streak_rate(fseq, target, length)
+            has_prior = base is not None
+            cont = _continuation(base, False, length) if has_prior else _continuation(rate, target_false, length)
             # seqViz: letzte ~8 Spiele dieser Richtung als Punkte (True=Treffer), most-recent-first.
             # Führende True = die aktuelle Serie, das erste False zeigt, wo sie begann.
             seq_viz = [bool(x) == target for x in fseq[:8]]
@@ -303,6 +324,7 @@ def build_streaks(wm: dict) -> dict:
                 "type": key, "market": market, "length": length, "venue": venue,
                 "strong": length >= STRONG_LEN, "continuation": cont,
                 "ratePct": cont["ratePct"], "seq": seq_viz, "xgBacked": xgb,
+                "basis": "prior" if has_prior else "pure", "preN": pre_n,
             }
             nf = next_fx.get(str(tid))
             if nf:

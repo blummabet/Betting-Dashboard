@@ -869,10 +869,13 @@ function _pwGlobalWhales(live){
 // ② Sharp-Wallet (25.07.2026, Lucas): CLV/Treffer je Wallet aus poly_wallet_track.json — trennt
 // „scharf" (schlägt die Linie) von „bloß groß". Ab PW_SHARP_MIN_N aufgelösten Positionen bewertbar.
 const PW_SHARP_MIN_N=4;
-const PW_SHARP_MIN_HIT=0.5;   // 07.08.2026 (Lucas): Treffer-Floor — BEIDE Achsen muessen stimmen, nicht CLV ODER Treffer
-const PW_SHARP_MIN_USD=250;   // 07.08.2026 (Lucas): $2-6-Positionen sind kein Signal — raus aus der Liste
-function _pwIsSharpScore(sc){  // scharf = genug Historie UND gewinnt UND schlaegt die Linie nicht negativ UND profitabel
-  return !!sc && sc.n>=PW_SHARP_MIN_N && (sc.hit||0)>=PW_SHARP_MIN_HIT && (sc.avgClv||0)>=0 && (sc.pnl||0)>0;
+const PW_SHARP_MIN_HIT=0.5;    // 07.08.2026 (Lucas): Treffer-Floor — BEIDE Achsen muessen stimmen, nicht CLV ODER Treffer
+const PW_SHARP_CLEAR_HIT=0.55; // 08.08.2026 (Lucas: „52% ist Muenzwurf"): ab hier klar ueber Zufall -> zaehlt allein
+const PW_SHARP_STRONG_CLV=1.0; // ... bei marginalem Treffer (0.50-0.55) nur scharf, wenn die Linie DEUTLICH geschlagen wird (>=1pp Ø CLV)
+const PW_SHARP_MIN_USD=250;    // 07.08.2026 (Lucas): $2-6-Positionen sind kein Signal — raus aus der Liste
+function _pwIsSharpScore(sc){  // scharf = genug Historie UND profitabel UND schlaegt die Linie UND (klar >Muenzwurf ODER deutliche Kante)
+  if(!(!!sc && sc.n>=PW_SHARP_MIN_N && (sc.hit||0)>=PW_SHARP_MIN_HIT && (sc.avgClv||0)>=0 && (sc.pnl||0)>0)) return false;
+  return (sc.hit||0)>=PW_SHARP_CLEAR_HIT || (sc.avgClv||0)>=PW_SHARP_STRONG_CLV;
 }
 const PW_MONEY_MAJ=0.60;   // (01.08.2026, Lucas) „großes Geld" erst ab echter Mehrheit — 50–55% ist Münzwurf, kein Signal
 function _pwWalletScore(wallet){

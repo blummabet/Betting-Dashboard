@@ -648,7 +648,9 @@
       var label = _mdSportIco(r.league) + ' ' + (r.url
         ? '<a href="' + r.url + '" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">' + r.name + ' ↗</a>'
         : r.name);
-      var sub = 'Geld auf ' + esc(r.fav) + ' ' + r.favPct + '% · ' + usd(r.usd);
+      // 08.08.2026 (Lucas): bei ~50/50 ist „Geld auf X" sinnlos (könnte genauso die Gegenseite sein) — dann neutral labeln.
+      var _side = (r.favPct != null && r.favPct >= 55) ? ('Geld auf ' + esc(r.fav) + ' ' + r.favPct + '%') : ('kein klarer Favorit · ' + (r.favPct != null ? r.favPct + '%' : '~50/50'));
+      var sub = _side + ' · ' + usd(r.usd);
       return rowEl(label, '×' + (+r.ratio).toFixed(1), col, sub, meter(mx ? (r.ratio / mx * 100) : 0, col));
     }).join('');
   }
@@ -676,6 +678,7 @@
   var _HT_MK = { 'Half Time': 'HT 1X2', 'First Half Goals 0.5': 'HT O/U 0.5', 'First Half Goals 1.5': 'HT O/U 1.5' };
   var _HT_FLOOR = 1000;
   var _HT_MIN_ODD = 1.30;   // 06.08.2026 (Lucas): Geld auf HT-Quasi-Lock (@<1.30 = HT-Ergebnis entschieden) ist kein Signal — „The Draw @1.02" raus.
+  var _HT_MAX_ODD = 6.0;    // 08.08.2026 (Lucas): und die andere Seite — Geld auf einen fast toten Ausgang (@>6, z.B. „Over 0.5 @11" bei 0:0 kurz vor HZ) ist Lay-/Rausch-Geld, kein Back-Signal.
   function _mdBfStale(m) {
     // 06.08.2026 (Lucas: „haengt seit Stunden"): fertige/lange-vorbei Spiele raus. finished ODER
     // Anpfiff > 3.5h her (Spiel durch, HT laengst entschieden). Ohne Kickoff/Live-Info -> nicht stale.
@@ -696,7 +699,7 @@
         if (tot <= 0) continue;
         var lead = rs.reduce(function (a, r) { return (!a || (+r.vol || 0) > (+a.vol || 0)) ? r : a; }, null);
         if (!lead) continue;
-        if (typeof lead.odd === 'number' && lead.odd < _HT_MIN_ODD) continue;   // HT-Quasi-Lock -> kein Signal
+        if (typeof lead.odd === 'number' && (lead.odd < _HT_MIN_ODD || lead.odd > _HT_MAX_ODD)) continue;   // HT-Quasi-Lock ODER fast toter Ausgang -> kein Signal
         var share = (+lead.vol || 0) / tot, sc = (+lead.vol || 0) * share;
         if (!best || sc > best.sc) best = { name: name, lead: lead, share: share, vol: +lead.vol || 0, sc: sc };
       }
@@ -735,7 +738,10 @@
     // Streaks — Pips (Länge)
     var st = bestStreaks();
     var streaksBody = st.length ? st.map(function (s) {
-      var sub = esc(String(s.leagueName || '')) + (s.continuation && s.continuation.state ? ' · ' + esc(s.continuation.state) : '') + (s.continuation && s.continuation.ratePct != null ? ' · Grundrate ' + s.continuation.ratePct + '%' : '');   // 08.08.2026 (Lucas): „Grundrate" statt bloss „100%" — es ist die Eigentendenz (Basisrate), KEINE Fortsetzungs-Wahrscheinlichkeit
+      // 08.08.2026 (Lucas: „vernünftig bewerten"): „Grundrate X%" = Rate der Serien-Richtung VOR der Serie
+      // (echte Basis). „reine Serie" = Serie füllt das 15-Spiele-Fenster → keine unabhängige Basis (kein Fake-100%).
+      var _bq = (s.basis === 'pure') ? ' · reine Serie' : ((s.continuation && s.continuation.ratePct != null) ? ' · Grundrate ' + s.continuation.ratePct + '%' : '');
+      var sub = esc(String(s.leagueName || '')) + (s.continuation && s.continuation.state ? ' · ' + esc(s.continuation.state) : '') + _bq;
       var len = +s.length || 0;
       return rowEl(fl(_flagFrom(s.country, s.league, s.leagueName)) + esc(team(s.team)) + ' <span style="color:var(--mi3);font-weight:400">·</span> ' + esc(s.market || s.type || ''),
         len + '×', A.gold, sub, pips(Math.min(len, 10), 10));

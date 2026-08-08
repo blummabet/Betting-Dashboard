@@ -35,6 +35,14 @@ test('zu wenig Historie raus (n<4)', () => {
 test('PnL=0 reicht nicht (muss >0 sein)', () => {
   assert.equal(load()._pwIsSharpScore({ n: 8, hit: 0.7, avgClv: 0.5, pnl: 0 }), false);
 });
-test('genau an der Schwelle zählt (hit .5, clv 0, pnl 1)', () => {
-  assert.equal(load()._pwIsSharpScore({ n: 4, hit: 0.5, avgClv: 0, pnl: 1 }), true);
+// 08.08.2026 (Lucas: „die 52%-Wallet ist Münzwurf"): marginaler Treffer (0.50-0.55) zählt nur noch mit
+// DEUTLICHER Kante (Ø CLV >= 1pp). Reines Münzwurf-Trefferbild ohne klare CLV fliegt raus.
+test('marginaler Treffer 52% mit schwacher CLV zählt NICHT (Münzwurf raus)', () => {
+  assert.equal(load()._pwIsSharpScore({ n: 52, hit: 0.52, avgClv: 0.3, pnl: 495000 }), false);
+});
+test('marginaler Treffer 52% ABER deutliche Kante (CLV>=1pp) zählt', () => {
+  assert.equal(load()._pwIsSharpScore({ n: 52, hit: 0.52, avgClv: 1.4, pnl: 495000 }), true);
+});
+test('klar über Münzwurf (>=55% Treffer) zählt auch mit knapper CLV', () => {
+  assert.equal(load()._pwIsSharpScore({ n: 20, hit: 0.6, avgClv: 0.2, pnl: 5000 }), true);
 });

@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v86';   // 08.08.2026: Kohle-Quotenfilter (@<1.30 raus) · Fehlbepreisung Live-Leak gefixt · Streaks „Grundrate"
+const VERSION = 'cocobet-v87';   // 08.08.2026: Streaks Grundrate-ohne-Serie/reine-Serie · HT-Hochquoten raus · Volumen-über-Norm ~50%-Label · Sharp-Gate schärfer
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
