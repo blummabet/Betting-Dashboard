@@ -214,7 +214,7 @@
     };
     return Promise.all([jf('liga-data.json'), jf('mls-data.json'), jf('liga_streaks.json'),
       jf('mls_streaks.json'), jf('betfair_prices.json'), jf('poly_money_broad_close.json'), jf('dashboard_pulse.json'),
-      jf('betfair_overview.json')]);
+      jf('betfair_overview.json'), jf('betfair_direction.json')]);
   }
   function _mdLoad(force) {
     if (_md.loading) return;
@@ -224,7 +224,7 @@
     var p = document.getElementById('mainDashPanel');
     if (p && !_md.data) { p.classList.add('mdash'); p.innerHTML = _head() + '<div class="md-empty" style="text-align:center;padding:52px 0;">⏳ Übersicht wird geladen …</div>'; }
     _mdFetch().then(function (a) {
-      _md.data = { liga: a[0], mls: a[1], ligaStreaks: a[2], mlsStreaks: a[3], betfair: a[4], whales: a[5], pulse: a[6], bfOverview: a[7] };
+      _md.data = { liga: a[0], mls: a[1], ligaStreaks: a[2], mlsStreaks: a[3], betfair: a[4], whales: a[5], pulse: a[6], bfOverview: a[7], bfDir: a[8] };
       _md.loading = false; _mdRender();
     });
   }
@@ -290,6 +290,15 @@
     return fl(_flagFrom(x.country, x.league, x.league)) + esc(String(x.home)) +
       ' <span style="color:var(--mi3);font-weight:400">v</span> ' + esc(String(x.away));
   }
+  // 08.08.2026 (Lucas): Back/Lay-Richtung auch in den Übersicht-Kacheln — aus betfair_direction.json.
+  function _mdDirOf(matchId, market, runner) {
+    try { return ((((_md.data.bfDir || {})[String(matchId)] || {})[market] || {})[runner] || {}).dir || null; } catch (e) { return null; }
+  }
+  function _mdDirBadge(dir) {
+    if (dir === 'in') return ' <span title="Quote kürzer → Geld kommt als Back" style="font-size:9px;font-weight:800;color:#3fb950;border:1px solid rgba(63,185,80,.45);border-radius:4px;padding:0 3px">Back ✓</span>';
+    if (dir === 'out') return ' <span title="Quote driftet raus → kein echter Back-Rückhalt" style="font-size:9px;font-weight:800;color:#e3b341;border:1px solid rgba(227,179,65,.45);border-radius:4px;padding:0 3px">driftet</span>';
+    return '';
+  }
   // ⚡ Sharpe Bewegungen: Vor-Anpfiff-Quotenbewegung (pp). +pp = Quote fällt = Geld drauf, −pp = driftet.
   function _mdBfSteamBody() {
     var items = ((_md.data.bfOverview || {}).steam) || [];
@@ -353,7 +362,7 @@
     var mx = items.reduce(function (a, x) { return Math.max(a, +x.deltaEur || 0); }, 1);
     return items.map(function (x) {
       return rowEl(_bfTeams(x) + _mdBfLiveById(x.matchId), '+' + eur(x.deltaEur), A.good,
-        '→ ' + esc(x.sideName || '') + ' · jetzt ' + eur(x.nowEur) + (x.odd != null ? ' @' + (+x.odd).toFixed(2) : ''),
+        '→ ' + esc(x.sideName || '') + _mdDirBadge(x.dir) + ' · jetzt ' + eur(x.nowEur) + (x.odd != null ? ' @' + (+x.odd).toFixed(2) : ''),
         meter(mx ? (+x.deltaEur / mx * 100) : 0, A.good));
     }).join('') + _ageStr(_md.data.betfair);
   }
@@ -701,7 +710,7 @@
     return rows.map(function (x) {
       var m = x.m, b = x.b, pct = Math.round(b.share * 100);
       var od = (b.lead && b.lead.odd != null && +b.lead.odd > 1) ? ' <span style="color:var(--mi3)">@' + (+b.lead.odd).toFixed(2) + '</span>' : '';
-      return _mdDonutRow(_bfTeams(m) + _mdBfLive(m), (_HT_MK[b.name] || b.name) + ' \u2192 ' + esc(b.lead.name) + od, eur(b.vol), A.bf, pct, A.bf);
+      return _mdDonutRow(_bfTeams(m) + _mdBfLive(m), (_HT_MK[b.name] || b.name) + ' \u2192 ' + esc(b.lead.name) + od + _mdDirBadge(_mdDirOf(m.matchId, b.name, b.lead.name)), eur(b.vol), A.bf, pct, A.bf);
     }).join('') + _ageStr(_md.data.betfair);
   }
 
@@ -737,7 +746,7 @@
       var m = x.m, b = x.b, pct = Math.round(b.share * 100);
       // 05.08.2026 (Lucas): Führungsquote dazu, dann ist die Kachel immer eindeutig (@1.74 vs @1.06).
       var od = (b.lead && b.lead.odd != null && +b.lead.odd > 1) ? ' <span style="color:var(--mi3)">@' + (+b.lead.odd).toFixed(2) + '</span>' : '';
-      return _mdDonutRow(teamsOf(m) + _mdBfLive(m), esc(short(b.name)) + ' → ' + esc(b.lead.name) + od, eur(b.vol), A.bf, pct, A.bf);
+      return _mdDonutRow(teamsOf(m) + _mdBfLive(m), esc(short(b.name)) + ' → ' + esc(b.lead.name) + od + _mdDirBadge(_mdDirOf(m.matchId, b.name, b.lead.name)), eur(b.vol), A.bf, pct, A.bf);
     }).join('') : empty('Kein großes Betfair-Geld.');
     bfBody += _ageStr(_md.data.betfair);
 

@@ -123,6 +123,16 @@ def test_flow_list_suppresses_money_on_leader():
     assert len(r) == 1 and r[0]["sideName"] == "Osasuna"
 
 
+def test_flow_list_attaches_direction():
+    # 08.08.2026 (Lucas): Back/Lay-Richtung des Zufluss-Runners aus betfair_direction.json durchreichen.
+    prices = {"matches": [_match(1, "Brondby", "Viborg", iso(NOW + timedelta(hours=1)), {"hw": 2.2, "aw": 3.0})]}
+    hist = {"1": [{"mkv": {"Match Odds": 100000}}, {"mkv": {"Match Odds": 161989}}]}
+    direction = {"1": {"Match Odds": {"Brondby": {"dir": "in", "prev": 2.4, "odd": 2.2}}}}
+    out = bo.flow_list(prices, hist, direction=direction)
+    assert out[0]["dir"] == "in"
+    assert bo.flow_list(prices, hist)[0]["dir"] is None   # ohne direction -> kein Badge
+
+
 def test_build_shape():
     prices = {"matches": [_match(1, "A", "B", iso(NOW + timedelta(hours=1)), {"hw": 2.0, "aw": 3.0})]}
     hist = {"1": [{"mo": {"hw": 4.0, "aw": 3.0}, "mkv": {"Match Odds": 1000}},

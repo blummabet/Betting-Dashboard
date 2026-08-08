@@ -22,7 +22,14 @@ from pathlib import Path
 BASE = Path(__file__).resolve().parent
 PRICES = "betfair_prices.json"
 HIST = "betfair_history.json"
+DIRECTION = "betfair_direction.json"   # 08.08.2026 (Lucas): Back/Lay je Runner
 OUT = "betfair_overview.json"
+
+try:
+    from betfair_direction import look as _dir_look
+except Exception:
+    def _dir_look(direction, matchId, market, runner):
+        return None
 
 MOVE_MIN_PP = 1.5      # = Radar moveOf: schwächere Bewegungen ignorieren
 FLOW_MIN_EUR = 2000    # = Radar FLOW_MIN_EUR: Zufluss erst ab so viel zeigen
@@ -142,7 +149,7 @@ def steam_list(prices, hist, now, top=TOP_STEAM):
     return out[:top]
 
 
-def flow_list(prices, hist, top=TOP_FLOW):
+def flow_list(prices, hist, top=TOP_FLOW, direction=None):
     out = []
     by_id = {str(m.get("matchId")): m for m in (prices.get("matches") or [])}
     for mid, m in by_id.items():
@@ -175,22 +182,24 @@ def flow_list(prices, hist, top=TOP_FLOW):
         if _ldr and _side and str(_side) == str(_ldr):
             continue   # Geld auf die bereits fuehrende Mannschaft → reaktiv (05.08.2026, Lucas)
         row = _base(m)
+        _d = _dir_look(direction, m.get("matchId"), mkt, _side) if direction else None
         row.update({"deltaEur": round(best_d), "nowEur": round(best_now),
                     "market": mkt, "sideName": (lead or {}).get("name"),
-                    "odd": _num((lead or {}).get("odd"))})
+                    "odd": _num((lead or {}).get("odd")),
+                    "dir": (_d or {}).get("dir")})   # 'in'=Back (Quote kuerzer) · 'out'=driftet
         out.append(row)
     out.sort(key=lambda r: r["deltaEur"], reverse=True)
     return out[:top]
 
 
-def build(prices, hist, now):
+def build(prices, hist, now, direction=None):
     return {
         "_meta": {"description": "Übersicht-Sidecar: Vor-Anpfiff-Steam + frischer Zufluss (leicht, "
                                  "damit der erste Menüpunkt schnell bleibt). Fehlbepreisung rechnet "
                                  "die Übersicht client-seitig über _bfCoherence."},
         "generatedAt": now.isoformat(),
         "steam": steam_list(prices, hist, now),
-        "flow": flow_list(prices, hist),
+        "flow": flow_list(prices, hist, direction=direction),
     }
 
 
@@ -199,7 +208,9 @@ def main() -> int:
     if not isinstance(prices, dict) or not isinstance(hist, dict):
         print("ℹ️  betfair_prices/history fehlen — Übersicht-Sidecar übersprungen.")
         return 0
-    data = build(prices, hist, datetime.now(timezone.utc))
+    direction = _load(DIRECTION)
+    data = build(prices, hist, datetime.now(timezone.utc),
+                 direction=direction if isinstance(direction, dict) else {})
     (BASE / OUT).write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
     print(f"📊 {OUT}: {len(data['steam'])} Steam · {len(data['flow'])} Zuflüsse geschrieben.")
     return 0

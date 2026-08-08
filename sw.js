@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v83';   // 08.08.2026: Heart-Tab — kompletter Betfair-Doku-Abschnitt
+const VERSION = 'cocobet-v84';   // 08.08.2026: Back/Lay-Labels in Radar (Wo das Geld/Frisches Geld) + Übersicht-Kacheln
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

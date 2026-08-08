@@ -742,6 +742,7 @@
   }
   function _flowBar(x, mode, mx) {
     var ht = x.mm && x.mm.grp === 'HT', lbl = x.mm ? x.mm.label : 'gesamt', ld = _flowLead(x);
+    var _fmk = mkOf(x.m, x.mm && x.mm.id), rawLead = _fmk ? leadRunner(_fmk) : null;   // roher Runner fuer Back/Lay-Join
     var side = ld ? esc(ld.name) : '';
     // 05.08.2026 (Lucas): Quote ins Flow-Label. Ohne sie war unklar, ob das Live-Geld bei @1.74
     // (echtes Signal) oder @1.06 (Quasi-Lock nach Tor) reinkam. ld.odd = fO(lead.odd) -> '2.34' oder '-'.
@@ -759,7 +760,7 @@
     }
     return '<div class="bfb-row' + _rowHl(x.m) + '" onclick="_bfJump(\'' + esc(x.m.matchId) + '\')">' +
       '<div class="bfb-lbl"><div class="bfb-g">' + flag(x.m.country, x.m.league) + ' ' + esc(String(x.m.home).slice(0, 13)) + ' – ' + esc(String(x.m.away).slice(0, 13)) + '</div>' +
-      '<div class="bfb-o">' + lblLine + '</div></div>' + bar +
+      '<div class="bfb-o">' + lblLine + dirBadge(x.m, x.mm && x.mm.id, rawLead) + '</div></div>' + bar +
       '<div class="bfb-meta">' + meta + _hlLine(x.m) + '</div></div>';
   }
   function _flowBars(label, items, mode) {
