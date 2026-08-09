@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v92';   // 09.08.2026: Radar-Uhr zurück auf 15 Min (GitHub drosselt */10) · Public-Frisch-Gate 70→80%
+const VERSION = 'cocobet-v93';   // 09.08.2026: Poly deckt alle Top-5 (Text-Refresh Triple-Konsens) — Fetch war schon vorverdrahtet
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

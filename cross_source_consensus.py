@@ -6,7 +6,7 @@ Ausscheren einer Quelle (Divergenz) = Value-Kandidat (jemand ist falsch bepreist
 Quellen je Ausgang (de-viggte Wahrscheinlichkeit, 0..1):
   · Pinnacle — fair_* aus poly_snapshot, sonst de-viggt aus dem odds_snapshot (hw/dr/aw)
   · Betfair  — betfair_snapshot.mo.fair (home/away)
-  · Poly     — poly_snapshot.poly_* (wo Poly deckt: MLS/WM + La Liga; weitere Top-5 sobald gelistet)
+  · Poly     — poly_snapshot.poly_* (wo Poly deckt: MLS/WM + alle Top-5-Ligen, series_id-basiert; 09.08.2026 gelistet)
   · Soft     — 1/softNow des Picks (roh implied — die eine Quelle, die wir je Ausgang haben)
 
 v1: nur 1X2 Heim/Auswärts (dort haben ALLE Quellen denselben Ausgang). Ü/U/BTTS später.
