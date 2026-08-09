@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-09T17:46:27.648132+00:00",
+ "generatedAt": "2026-08-09T18:59:42.809150+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -12,8 +12,8 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 297,
- "pinnKeys": 129,
- "matched": 75,
+ "pinnKeys": 123,
+ "matched": 69,
  "footballRows": 45,
  "crossRows": 252,
  "footballSkippedStale": 64,
@@ -28,42 +28,126 @@
   "soccer_liga": 12
  },
  "matchedBySport": {
-  "baseball_mlb": 30,
+  "baseball_mlb": 24,
   "soccer_mls": 33,
   "soccer_liga": 12
  },
  "trackRecord": {
-  "tracked": 72,
-  "converged": 1
+  "tracked": 78,
+  "converged": 3
  },
  "discrepancies": [
   {
-   "id": "baseball_mlb|newyorkmets-pittsburghpirates|newyorkmets",
+   "id": "baseball_mlb|athletics-bostonredsox|athletics",
    "sport": "baseball_mlb",
-   "event": "New York Mets vs Pittsburgh Pirates",
+   "event": "Athletics vs Boston Red Sox",
    "market": "Moneyline",
-   "outcome": "New York Mets",
-   "polyPP": 61.5,
-   "pinnPP": 42.6,
-   "gapPP": 18.86,
-   "vol": 272934,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": 0.0,
-   "firstSeen": "2026-08-09T17:46:27.647895+00:00"
+   "outcome": "Athletics",
+   "polyPP": 27.5,
+   "pinnPP": 45.4,
+   "gapPP": -17.86,
+   "vol": 467920,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 7.38,
+   "firstSeen": "2026-07-31T02:45:06.411710+00:00"
   },
   {
-   "id": "baseball_mlb|newyorkmets-pittsburghpirates|pittsburghpirates",
+   "id": "baseball_mlb|athletics-bostonredsox|bostonredsox",
    "sport": "baseball_mlb",
-   "event": "New York Mets vs Pittsburgh Pirates",
+   "event": "Athletics vs Boston Red Sox",
    "market": "Moneyline",
-   "outcome": "Pittsburgh Pirates",
-   "polyPP": 38.5,
-   "pinnPP": 57.4,
-   "gapPP": -18.86,
-   "vol": 272934,
+   "outcome": "Boston Red Sox",
+   "polyPP": 72.5,
+   "pinnPP": 54.6,
+   "gapPP": 17.86,
+   "vol": 467920,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 7.38,
+   "firstSeen": "2026-07-31T02:45:06.411710+00:00"
+  },
+  {
+   "id": "baseball_mlb|atlantabraves-newyorkyankees|atlantabraves",
+   "sport": "baseball_mlb",
+   "event": "Atlanta Braves vs New York Yankees",
+   "market": "Moneyline",
+   "outcome": "Atlanta Braves",
+   "polyPP": 42.5,
+   "pinnPP": 49.5,
+   "gapPP": -6.98,
+   "vol": 686886,
    "richtung": "Poly zu niedrig → backen",
    "convergePP": 0.0,
-   "firstSeen": "2026-08-09T17:46:27.647895+00:00"
+   "firstSeen": "2026-08-09T18:59:42.808774+00:00"
+  },
+  {
+   "id": "baseball_mlb|atlantabraves-newyorkyankees|newyorkyankees",
+   "sport": "baseball_mlb",
+   "event": "Atlanta Braves vs New York Yankees",
+   "market": "Moneyline",
+   "outcome": "New York Yankees",
+   "polyPP": 57.5,
+   "pinnPP": 50.5,
+   "gapPP": 6.98,
+   "vol": 686886,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-09T18:59:42.808774+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagowhitesox-clevelandguardians|clevelandguardians",
+   "sport": "baseball_mlb",
+   "event": "Cleveland Guardians vs Chicago White Sox",
+   "market": "Moneyline",
+   "outcome": "Cleveland Guardians",
+   "polyPP": 66.5,
+   "pinnPP": 60.1,
+   "gapPP": 6.45,
+   "vol": 318929,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-09T18:59:42.808774+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagowhitesox-clevelandguardians|chicagowhitesox",
+   "sport": "baseball_mlb",
+   "event": "Cleveland Guardians vs Chicago White Sox",
+   "market": "Moneyline",
+   "outcome": "Chicago White Sox",
+   "polyPP": 33.5,
+   "pinnPP": 39.9,
+   "gapPP": -6.45,
+   "vol": 318929,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-09T18:59:42.808774+00:00"
+  },
+  {
+   "id": "baseball_mlb|losangelesangels-miamimarlins|losangelesangels",
+   "sport": "baseball_mlb",
+   "event": "Los Angeles Angels vs Miami Marlins",
+   "market": "Moneyline",
+   "outcome": "Los Angeles Angels",
+   "polyPP": 16.5,
+   "pinnPP": 22.8,
+   "gapPP": -6.34,
+   "vol": 350244,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-09T18:59:42.808774+00:00"
+  },
+  {
+   "id": "baseball_mlb|losangelesangels-miamimarlins|miamimarlins",
+   "sport": "baseball_mlb",
+   "event": "Los Angeles Angels vs Miami Marlins",
+   "market": "Moneyline",
+   "outcome": "Miami Marlins",
+   "polyPP": 83.5,
+   "pinnPP": 77.2,
+   "gapPP": 6.34,
+   "vol": 350244,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-09T18:59:42.808774+00:00"
   }
  ]
 }

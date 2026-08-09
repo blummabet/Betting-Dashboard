@@ -43,11 +43,11 @@
       "ok": false,
       "nFail": 5,
       "failures": [
-        "lol-we-al-2026-08-06: seit 3.7 Tagen offen — keine Auflösung gefunden",
-        "lol-ig1-nip-2026-08-06: seit 3.7 Tagen offen — keine Auflösung gefunden",
-        "lol-bgt-su-2026-08-06: seit 3.7 Tagen offen — keine Auflösung gefunden",
-        "liv-2026-new-york-individual-winner: seit 3.1 Tagen offen — keine Auflösung gefunden",
-        "mlb-tor-chc-2026-06-21: seit 49.7 Tagen offen — keine Auflösung gefunden"
+        "lol-we-al-2026-08-06: seit 3.8 Tagen offen — keine Auflösung gefunden",
+        "lol-ig1-nip-2026-08-06: seit 3.8 Tagen offen — keine Auflösung gefunden",
+        "lol-bgt-su-2026-08-06: seit 3.8 Tagen offen — keine Auflösung gefunden",
+        "liv-2026-new-york-individual-winner: seit 3.2 Tagen offen — keine Auflösung gefunden",
+        "mlb-tor-chc-2026-06-21: seit 49.8 Tagen offen — keine Auflösung gefunden"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -67,12 +67,12 @@
       "ok": false,
       "nFail": 6,
       "failures": [
-        "15/55 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (27%) — Trefferquote allein trügt",
-        "   0x84cfffc3f1… n=17 Treffer 59% P&L $-7,642,554",
-        "   0xe9076a87c5… n=19 Treffer 68% P&L $-7,551,976",
-        "   0x224a89dbe0… n=30 Treffer 50% P&L $-3,864,626",
-        "   0xc3c3b3ef30… n=56 Treffer 66% P&L $-3,768,686",
-        "126/181 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
+        "15/54 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (28%) — Trefferquote allein trügt",
+        "   0x84cfffc3f1… n=17 Treffer 59% P&L $-7,642,308",
+        "   0xe9076a87c5… n=19 Treffer 68% P&L $-7,557,812",
+        "   0x224a89dbe0… n=30 Treffer 50% P&L $-3,879,350",
+        "   0xc3c3b3ef30… n=56 Treffer 66% P&L $-3,769,180",
+        "126/180 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
     },
@@ -92,11 +92,11 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "433/465 'live' Geld-Märkte sind schon >6h nach Anpfiff (93%) — $12,419,266 Whale-Geld auf fertigen Spielen"
+        "424/454 'live' Geld-Märkte sind schon >6h nach Anpfiff (93%) — $12,291,623 Whale-Geld auf fertigen Spielen"
       ],
       "note": "Der Close-Feed setzt kein resolved-Flag; fertige Spiele bleiben 'live'. Alle Views filtern jetzt auf den rekonstruierten Anpfiff — dieser Check misst den Geister-Anteil im Roh-Feed (steigt er, prunt/löst der Feed nicht mehr auf; jede ungegatete View zeigt dann fertige Spiele)."
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-08-09T17:48:03.332884+00:00"
+  "generatedAt": "2026-08-09T19:01:33.492611+00:00"
 }
