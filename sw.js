@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v89';   // 08.08.2026: Radar+Push — Fuehrungs-Geld nicht mehr raus, „führt"-Marker (Push nur mit Back)
+const VERSION = 'cocobet-v90';   // 08.08.2026: Betfair-Kadenz 15 → 10 Min — Radar-Statuszeile („nächster ~in") mitgezogen
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

@@ -179,10 +179,10 @@
     if (!g) return 9999;
     var t = Date.parse(g); return isNaN(t) ? 9999 : (Date.now() - t) / 60000;
   }
-  // GitHub-Actions-Schedule ist jittery (~8–30 Min statt exakt 15) → Schwellen locker halten,
+  // GitHub-Actions-Schedule ist jittery (~8–30 Min statt exakt 10) → Schwellen locker halten,
   // sonst „veraltet"-Alarm bei ganz normalem Betrieb.
   var FRESH_LIVE_MIN = 30;   // bis hierher gilt Live-Status als vertrauenswürdig
-  var STALE_WARN_MIN = 75;   // GitHub-Schedule ist stark jittery (~15–100min) → erst ab ~5 verpassten Läufen warnen
+  var STALE_WARN_MIN = 75;   // absolute Vertrauensgrenze fürs Live-Alter (cadence-unabhängig) → erst ab ~1h Funkstille warnen
   var LIVE_MAX_H = 2.5;   // ein Fußballspiel dauert ~2h (inkl. Nachspielzeit); danach ist es vorbei
   function _kickMs(m) { var k = m.kickoff ? Date.parse(m.kickoff) : NaN; return isNaN(k) ? null : k; }
   // Live-Status (29.07.2026, Fix „längst beendete Spiele wurden live gezeigt"): HARTER Cut — beendet
@@ -964,16 +964,17 @@
 
   // ── Haupt-Render ────────────────────────────────────────────────────────────
   function _freshChip() {
-    // Oben sichtbar: wann zuletzt aktualisiert + grobe Schätzung fürs nächste (~15-Min-Kadenz → auch
-    // wann ~der nächste Push kommt). Grün frisch, amber ab 15, rot ab 35, „überfällig" wenn der Lauf hängt.
+    // Oben sichtbar: wann zuletzt aktualisiert + grobe Schätzung fürs nächste (CAD_MIN-Kadenz → auch
+    // wann ~der nächste Push kommt). Grün frisch, amber ab 1 verpasstem Lauf, rot ab ~2.5, dann „überfällig"/„hängt".
     var g = _bf.data && _bf.data._meta && _bf.data._meta.generatedAt;
     if (!g) return '';
+    var CAD_MIN = 10;   // Fetch-Kadenz in Minuten — muss zur betfair.yml-cron (*/10) passen; 08.08.2026 (Lucas): 15 → 10
     var a = genAgeMin();
     var at = a >= 90 ? Math.round(a / 60) + 'h' : Math.round(a) + ' Min';
-    var col = a > 35 ? '#f2a6a6' : a > 15 ? C.amber : C.back;
-    var nx = a <= 15 ? 'nächster ~in ' + Math.max(1, Math.round(15 - a)) + ' Min'
-           : a <= 40 ? 'nächster überfällig' : 'Fetcher hängt';
-    return '<span style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:' + col + ';background:rgba(255,255,255,.03);border:1px solid ' + C.bd + ';border-radius:20px;padding:3px 11px" title="Fetcher läuft ~alle 15 Min; der Trades-Push feuert beim Lauf">🕐 vor ' + at + ' <span style="color:' + C.dim + ';font-weight:600">· ' + nx + '</span></span>';
+    var col = a > CAD_MIN * 2.5 ? '#f2a6a6' : a > CAD_MIN ? C.amber : C.back;
+    var nx = a <= CAD_MIN ? 'nächster ~in ' + Math.max(1, Math.round(CAD_MIN - a)) + ' Min'
+           : a <= CAD_MIN * 4 ? 'nächster überfällig' : 'Fetcher hängt';
+    return '<span style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;font-size:11.5px;font-weight:700;color:' + col + ';background:rgba(255,255,255,.03);border:1px solid ' + C.bd + ';border-radius:20px;padding:3px 11px" title="Fetcher läuft ~alle ' + CAD_MIN + ' Min; der Trades-Push feuert beim Lauf">🕐 vor ' + at + ' <span style="color:' + C.dim + ';font-weight:600">· ' + nx + '</span></span>';
   }
   function _bfbCss() {
     if (typeof document === 'undefined' || document.getElementById('bfb-css')) return;
