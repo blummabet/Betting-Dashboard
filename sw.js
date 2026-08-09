@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v97';   // 09.08.2026: Status→Übersicht — Telegram-Sektion (alle Push-Arten + Schwellen, Trades/Public)
+const VERSION = 'cocobet-v98';   // 09.08.2026: Konsens-Tab Sub-Menü-Fix + Radar-Schwelle · Trades-Frisch-Push im Public-Format + Zweitmeinung
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

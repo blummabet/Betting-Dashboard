@@ -31,8 +31,15 @@ ODDS_KEY       = os.environ.get("ODDS_API_KEY") or "16154a94ee84482dcd5a4af88d52
 ODDS_BASE      = "https://api.the-odds-api.com/v4"
 REGIONS        = "eu,uk,us"     # Pinnacle liegt in eu; Soft-Books ueber uk/us breiter erfasst
 HIST_KEEP      = 8              # letzte n Snapshots je Spiel behalten
-MIN_VOL        = 10000.0        # nur Spiele mit >= 10K gematchtem 1X2-Geld (wo wirklich Bewegung ist)
 MATCH_MIN      = 0.60          # Namens-Match-Schwelle (beide Teams muessen teilen)
+# 09.08.2026 (Lucas): EXAKT dieselben Spiele wie die Betfair-Radar-Liste (betfair-radar.js qualifies()):
+# tier-basiert — groesster FT-Markt >= 20K (Top/Int) / 15K (Rest) ODER groesster HT-Markt >= 10K / 5K.
+# Betwatch liefert schon EUR (EURFX=1), distTotal = Summe der Runner-Vols.
+_MK_FT = ("Match Odds", "Over/Under 2.5 Goals", "Over/Under 3.5 Goals", "Both teams to Score?")
+_MK_HT = ("Half Time", "First Half Goals 0.5", "First Half Goals 1.5")
+_TOP5_RX  = re.compile(r"(german bundesliga|english premier league|spanish la ?liga|italian serie a|french ligue 1|\bmls\b|major league soccer)", re.I)
+_TOP5_NEG = re.compile(r"(summer series|friendl|reserve|women|u1[0-9]\b|youth|amateur)", re.I)
+_UEFA_RX  = re.compile(r"(champions league|europa league|europa conference|conference league|uefa)", re.I)
 
 # ── Betfair-Liga-Name -> the-odds-api sport_key ──────────────────────────────
 # Aus dem 09.08.2026-Abgleich (Betfair-Feed × the-odds-api /sports). Nur wo eine aktive Odds-Liga
@@ -232,6 +239,29 @@ def match_event(m, evs):
 
 
 # ── Betfair-Geld-Seite + Richtung ────────────────────────────────────────────
+def _is_top_tier(m) -> bool:
+    lg = str(m.get("league") or "")
+    if _TOP5_RX.search(lg) and not _TOP5_NEG.search(lg):
+        return True
+    cc = str(m.get("country") or "")
+    return bool(_UEFA_RX.search(lg)) or bool(re.match(r"^(int|international|eu|europe)$", cc, re.I))
+
+
+def qualifies_radar(m) -> bool:
+    """EXAKT die Radar-Listen-Schwelle (betfair-radar.js qualifies): groesster FT-Markt >= tier-Schwelle
+    ODER groesster HT-Markt >= tier-Schwelle. So zeigt der Konsens genau dieselben Spiele wie die Liste."""
+    mk = m.get("markets") or {}
+
+    def vol(name):
+        return sum((r.get("vol") or 0.0) for r in ((mk.get(name) or {}).get("runners") or []))
+
+    top = _is_top_tier(m)
+    ft_thr, ht_thr = (20000.0, 10000.0) if top else (15000.0, 5000.0)
+    ft_max = max([vol(n) for n in _MK_FT] or [0.0])
+    ht_max = max([vol(n) for n in _MK_HT] or [0.0])
+    return ft_max >= ft_thr or ht_max >= ht_thr
+
+
 def money_side(m):
     """Seite mit dem meisten gematchten 1X2-Geld: {side home/draw/away, name, share, odd, totVol}."""
     mk = (m.get("markets") or {}).get("Match Odds")
@@ -351,12 +381,9 @@ def main():
     if not isinstance(hist, dict):
         hist = {}
 
-    # nur Spiele mit echtem 1X2-Geld ansehen (wo Bewegung ist)
-    def has_money(m):
-        ms = money_side(m)
-        return ms and (ms.get("totVol") or 0) >= MIN_VOL
-
-    live_pool = [m for m in matches if has_money(m)]
+    # EXAKT die Spiele der Betfair-Radar-Liste (qualifies_radar), fertige raus.
+    live_pool = [m for m in matches
+                 if not (m.get("liveInfo") or {}).get("finished") and qualifies_radar(m)]
 
     # welche Odds-Ligen brauchen wir (nur die, die auch im Feed liegen)?
     need = {}
@@ -398,7 +425,7 @@ def main():
            "leaguesCovered": sorted(set(LEAGUE_ODDS_KEY.values())), "games": games}
     _dump(OUT_FILE, out)
     _dump(HIST_FILE, new_hist)
-    print("Betfair-Konsens: %d Spiele (>= %dK Geld), %d mit Odds-Anker" % (len(games), int(MIN_VOL / 1000), covered))
+    print("Betfair-Konsens: %d Spiele (Radar-Schwelle), %d mit Odds-Anker" % (len(games), covered))
 
 
 if __name__ == "__main__":

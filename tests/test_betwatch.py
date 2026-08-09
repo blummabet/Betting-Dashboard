@@ -131,6 +131,19 @@ def test_history_anhaengen_und_prunen():
     assert "35785202" not in B.prune_history(old, now=T0)
 
 
+def test_history_speichert_live_minute():
+    """09.08.2026 (Lucas): Live-Minute (liveInfo.time) im History-Punkt → Zufluss-Fenster als Spielminuten."""
+    live_ev = dict(EVENT_DETAIL)
+    live_ev["live_info"] = {"time": 63, "is_ht": False, "finished": False}
+    s = B.build_snapshot(live_ev, now=T0)
+    h = B.append_history({}, s, now=T0)
+    assert h["35785202"][-1]["min"] == 63
+    # Vor-Anpfiff (leeres live_info) → min ist None, nicht KeyError
+    s0 = B.build_snapshot(EVENT_DETAIL, now=T0)
+    h0 = B.append_history({}, s0, now=T0)
+    assert h0["35785202"][-1]["min"] is None
+
+
 def test_dedup_matchups_keeps_volume_winner():
     """Betwatch-Doppel-Listing (ein Spiel, zwei matchIds) → nur der Volumen-Sieger bleibt."""
     snaps = [

@@ -117,6 +117,103 @@ class TestFreshAlert(unittest.TestCase):
         self.assertIsNone(BA.fresh_alert(match(mid=8, league="Chinese League 2"), {"8": [{"mkv": {"Match Odds": 5000}}]}))
 
 
+class TestFreshWindow(unittest.TestCase):
+    """09.08.2026 (Lucas): Zufluss-Fenster ehrlich zeigen — Dauer (Var 1) bzw. Spielminuten-Spanne (Var 2)."""
+    def _alert(self, p_prev, p_last, live=None):
+        m = match(mid=7, league="German Bundesliga",
+                  markets=mk("Match Odds", [{"name": "Alpha", "odd": 2, "vol": 45000}]))
+        if live is not None:
+            m["liveInfo"] = live
+        return BA.fresh_alert(m, {"7": [p_prev, p_last]})
+
+    def test_window_min_from_timestamps(self):
+        a = self._alert({"mkv": {"Match Odds": 10000}, "ts": "2026-08-09T20:00:00+00:00"},
+                        {"mkv": {"Match Odds": 45000}, "ts": "2026-08-09T20:14:00+00:00"})
+        self.assertEqual(a["windowMin"], 14)
+        self.assertIn("letzte ~14 Min", BA._window_txt(a))
+
+    def test_match_minute_span_preferred(self):
+        a = self._alert({"mkv": {"Match Odds": 10000}, "ts": "2026-08-09T20:00:00+00:00", "min": 55},
+                        {"mkv": {"Match Odds": 45000}, "ts": "2026-08-09T20:12:00+00:00", "min": 66})
+        self.assertEqual(a["fromMin"], 55)
+        self.assertEqual(a["toMin"], 66)
+        self.assertIn("55'→66' (11 Min)", BA._window_txt(a))
+
+    def test_to_min_falls_back_to_live_info(self):
+        # Letzter Punkt ohne min -> aktuelle Live-Minute des Matches
+        a = self._alert({"mkv": {"Match Odds": 10000}, "ts": "2026-08-09T20:00:00+00:00", "min": 40},
+                        {"mkv": {"Match Odds": 45000}, "ts": "2026-08-09T20:06:00+00:00"},
+                        live={"time": 46, "finished": False})
+        self.assertEqual(a["toMin"], 46)
+        self.assertIn("40'→46' (6 Min)", BA._window_txt(a))
+
+    def test_no_time_data_empty(self):
+        a = self._alert({"mkv": {"Match Odds": 10000}}, {"mkv": {"Match Odds": 45000}})
+        self.assertIsNone(a["windowMin"])
+        self.assertEqual(BA._window_txt(a), "")
+
+    def test_window_text_in_public_message(self):
+        a = self._alert({"mkv": {"Match Odds": 10000}, "ts": "2026-08-09T20:00:00+00:00", "min": 55},
+                        {"mkv": {"Match Odds": 45000}, "ts": "2026-08-09T20:12:00+00:00", "min": 66})
+        self.assertIn("55'→66'", BA.build_public_message(a))
+
+
+class TestLeadOddTxt(unittest.TestCase):
+    """09.08.2026 (Lucas, Braga): nach Quotensprung (Tor) NICHT die neu gepreiste Quote als Geld-Quote zeigen."""
+    def test_normal_shows_current_odd(self):
+        self.assertEqual(BA._lead_odd_txt({"leadOdd": 1.85}), " @1.85")
+
+    def test_event_jump_shows_pre_jump_odd(self):
+        s = BA._lead_odd_txt({"leadOdd": 42.0, "leadPrev": 1.05})   # 2:1 -> 2:2, Quote springt
+        self.assertIn("@~1.05", s)
+        self.assertNotIn("42.00", s)      # die neu gepreiste 42.00 taucht NICHT als Geld-Quote auf
+
+    def test_small_move_still_current(self):
+        # Drift < 40% ist kein Ereignis -> aktuelle Quote bleibt
+        self.assertEqual(BA._lead_odd_txt({"leadOdd": 1.85, "leadPrev": 1.80}), " @1.85")
+
+    def test_no_odd_empty(self):
+        self.assertEqual(BA._lead_odd_txt({}), "")
+
+    def test_jump_reflected_in_public_message(self):
+        m = match(mid=7, league="German Bundesliga",
+                  markets=mk("Match Odds", [{"name": "Braga", "odd": 42.0, "vol": 45000},
+                                            {"name": "Moreirense", "odd": 1.05, "vol": 5000}]))
+        a = BA.fresh_alert(m, {"7": [{"mkv": {"Match Odds": 10000}}, {"mkv": {"Match Odds": 45000}}]})
+        a["leadPrev"] = 1.05          # Quote vor dem Ausgleich (Geld lief dort rein)
+        msg = BA.build_public_message(a)
+        self.assertIn("Geld lief @~1.05 rein", msg)
+        self.assertNotIn("@42.00", msg)
+
+
+class TestSubthresholdJump(unittest.TestCase):
+    """09.08.2026 (Lucas, Braga): Geld, das VOR einem Quotensprung unter der Mindest-Quote reinlief,
+    gehoert gar nicht gepusht — der Sprung laesst es nur ueber der Schwelle aussehen."""
+    def _a(self, **kw):
+        base = {"scenario": "fresh", "matchId": "7", "value": 50000, "leadOdd": 42.0, "leadPrev": 1.05}
+        base.update(kw)
+        return base
+
+    def test_jump_below_threshold_dropped(self):
+        # Geld lief @1.05 (< 1.30) rein, dann 2:2 -> Quote 42.00. Raus.
+        self.assertEqual(BA._drop_subthreshold_jump([self._a()]), [])
+
+    def test_jump_above_threshold_kept(self):
+        # Favorit traf -> Quote crashte 2.5 -> 1.4 (Sprung), Geld lief aber @2.5 (>= 1.30) rein: bleibt.
+        a = self._a(leadOdd=1.4, leadPrev=2.5)
+        self.assertEqual(len(BA._drop_subthreshold_jump([a])), 1)
+
+    def test_no_jump_kept(self):
+        # Kein Sprung (Drift < 40%) -> unberuehrt (aktuelle Quote war die Geld-Quote, schon fresh_alart-gefiltert)
+        a = self._a(leadOdd=1.85, leadPrev=1.80)
+        self.assertEqual(len(BA._drop_subthreshold_jump([a])), 1)
+
+    def test_no_prev_kept(self):
+        # Ohne Vor-Quote ist kein Sprung erkennbar -> nicht droppen
+        a = self._a(leadPrev=None)
+        self.assertEqual(len(BA._drop_subthreshold_jump([a])), 1)
+
+
 class TestDedup(unittest.TestCase):
     def test_first_time_sends(self):
         self.assertTrue(BA.should_send({}, "ht:1", 8000))
@@ -404,6 +501,29 @@ class TestDirection(unittest.TestCase):
              "leadDir": "in", "leadPrev": 2.55}
         self.assertIn("Back", BA.build_message(a))
         self.assertIn("Back", BA.build_public_message(a))
+
+
+class TestConsensusBlock(unittest.TestCase):
+    # 09.08.2026 (Lucas): Zweitmeinung (Pinnacle/Soft/Poly) am Trades-Frisch-Push.
+    def test_block_formats_sources_and_verdict(self):
+        cidx = {"9": {"matchId": "9", "moneySide": "home", "moneyName": "Napoli",
+                      "pinnOdd": 1.62, "pinnMovePP": 2.0, "softOdd": 1.58, "softN": 6,
+                      "poly": {"odd": 1.70, "vol": 40000}, "verdict": "konsens"}}
+        b = BA._consensus_block({"matchId": "9"}, cidx)
+        self.assertIn("Pinnacle @1.62", b)
+        self.assertIn("▲2.0pp", b)
+        self.assertIn("Soft @1.58×6", b)
+        self.assertIn("Poly @1.70", b)
+        self.assertIn("$40K", b)
+        self.assertIn("Konsens", b)
+        self.assertIn("Napoli", b)
+
+    def test_block_uneinig_and_empty(self):
+        cidx = {"9": {"matchId": "9", "moneyName": "Napoli", "pinnOdd": 3.4, "verdict": "uneinig"}}
+        self.assertIn("uneinig", BA._consensus_block({"matchId": "9"}, cidx))
+        # kein Anker / kein Eintrag -> leer
+        self.assertEqual(BA._consensus_block({"matchId": "9"}, {"9": {"verdict": "no_anchor"}}), "")
+        self.assertEqual(BA._consensus_block({"matchId": "9"}, {}), "")
 
 
 if __name__ == "__main__":

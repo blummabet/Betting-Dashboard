@@ -214,7 +214,8 @@ def append_history(hist, snap, now=None, keep_h=HIST_KEEP_H, max_points=HIST_MAX
             mkv[name] = mk["vol"]
     pt = {"ts": now.isoformat(), "totalVol": snap.get("totalVol"),
           "mo": {k: (snap.get("mo") or {}).get(k) for k in ("hw", "dr", "aw", "vol")},
-          "kickoff": snap.get("kickoff"), "mkv": mkv}
+          "kickoff": snap.get("kickoff"), "mkv": mkv,
+          "min": (snap.get("liveInfo") or {}).get("time")}
     arr = list(hist.get(mid) or [])
     arr.append(pt)
     arr = arr[-max_points:]

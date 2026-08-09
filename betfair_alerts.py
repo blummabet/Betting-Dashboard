@@ -33,6 +33,7 @@ except Exception:   # Modul optional
         return None
 
 DIRECTION_FILE = "betfair_direction.json"   # 08.08.2026 (Lucas): Back/Lay-Richtung je Runner
+CONSENSUS_FILE = "betfair_consensus.json"   # 09.08.2026 (Lucas): Zweitmeinung (Pinnacle/Soft/Poly) an den Trades-Frisch-Push
 JUMP_REL = 0.40   # 08.08.2026 (Lucas, Viking-Fall 1.23->3.60 nach 1:1): springt die Quote zwischen zwei
                   # Scans um >= 40%, ist das fast sicher ein Spielereignis (Tor/Karte), KEIN Order-Flow.
                   # Ueber so einen Sprung ist die Back/Lay-Lesart nicht gueltig (der Sprung ist mechanisch,
@@ -104,6 +105,33 @@ def _euro(v) -> str:
 
 def _esc(s) -> str:
     return html.escape(str(s if s is not None else ""))
+
+
+def _minutes_between(ts_a, ts_b):
+    """09.08.2026 (Lucas): Dauer zwischen zwei History-Zeitstempeln in Minuten (gerundet). None wenn unlesbar."""
+    try:
+        a = datetime.fromisoformat(str(ts_a).replace("Z", "+00:00"))
+        b = datetime.fromisoformat(str(ts_b).replace("Z", "+00:00"))
+        d = (b - a).total_seconds() / 60.0
+        return round(d) if d >= 0 else None
+    except (TypeError, ValueError):
+        return None
+
+
+def _window_txt(a) -> str:
+    """09.08.2026 (Lucas: „€/Min unschön — lieber genaue Zeit"): der Zufluss stammt aus dem Fenster
+    zwischen den letzten zwei Scans. Variante 2 (Spielminuten-Spanne) wenn beide Live-Minuten da sind,
+    sonst Variante 1 (Fenster-Dauer in Minuten). Nichts, wenn beides fehlt."""
+    fm, tm = a.get("fromMin"), a.get("toMin")
+    if isinstance(fm, (int, float)) and isinstance(tm, (int, float)) and tm >= fm and (fm > 0 or tm > 0):
+        span = int(round(tm - fm))
+        if span > 0:
+            return " · %d'→%d' (%d Min)" % (int(fm), int(tm), span)
+        return " · bei %d'" % int(tm)
+    wm = a.get("windowMin")
+    if isinstance(wm, (int, float)) and wm > 0:
+        return " · letzte ~%d Min" % int(round(wm))
+    return ""
 
 
 def _flag(m) -> str:
@@ -225,11 +253,17 @@ def fresh_alert(m, hist, top_thr=FRESH_TOP_EUR, rest_thr=FRESH_REST_EUR):
     if isinstance(lead_odd, (int, float)) and lead_odd < MIN_LEAD_ODD:   # Geld auf ~1.0-Favoriten = sinnlos
         return None
     on_leader = _money_on_leader(m, lead_name)   # 08.08.2026 (Lucas): s.o. — Flag statt hartem Raus, in main() per Back gegated
+    window_min = _minutes_between(pts[-2].get("ts"), pts[-1].get("ts"))   # 09.08.2026 (Lucas): Fenster-Dauer (ehrlich, statt €/Min)
+    from_min = pts[-2].get("min")
+    to_min = pts[-1].get("min")
+    if to_min is None:
+        to_min = (m.get("liveInfo") or {}).get("time")
     return {"scenario": "fresh", "matchId": str(m.get("matchId")), "value": mkt_total,
             "home": m.get("home"), "away": m.get("away"), "league": m.get("league"), "flag": _flag(m),
             "market": market_name, "inflow": inflow, "total": mkt_total, "tier": tier_of(m),
             "kickoff": m.get("kickoff"), "live": m.get("liveInfo") or {},
-            "leadName": lead_name, "leadShare": lead_share, "leadOdd": lead_odd, "onLeader": on_leader}
+            "leadName": lead_name, "leadShare": lead_share, "leadOdd": lead_odd, "onLeader": on_leader,
+            "windowMin": window_min, "fromMin": from_min, "toMin": to_min}
 
 
 def _dir_event_jump(a) -> bool:
@@ -305,6 +339,22 @@ def _leader_gate(alerts, ht_top=HT_TOP_EUR, ht_rest=HT_REST_EUR,
     return out
 
 
+def _drop_subthreshold_jump(alerts):
+    """09.08.2026 (Lucas, Braga 2:1->2:2 in der Nachspielzeit): sprang die Quote durch ein Spielereignis
+    (Tor/Karte, _dir_event_jump), lief das Geld zur Quote DAVOR rein (leadPrev), nicht zur neu gepreisten.
+    Lag die Vor-Ereignis-Quote UNTER MIN_LEAD_ODD, war es Geld auf einen ~1.0-fast-sicheren Fuehrenden =
+    sinnlos — ohne den Sprung haette die Push nie ueber der Schwelle gestanden und gehoert gar nicht raus.
+    (Ohne Sprung filtert fresh_alert das schon, dort ist die aktuelle Quote = die Geld-Quote.)
+    Greift nur, wo wir die Vor-Quote wirklich haben (sonst ist kein Sprung erkennbar)."""
+    out = []
+    for a in (alerts or []):
+        prev = a.get("leadPrev")
+        if _dir_event_jump(a) and isinstance(prev, (int, float)) and prev < MIN_LEAD_ODD:
+            continue
+        out.append(a)
+    return out
+
+
 def attach_direction(alerts, direction) -> list:
     """Jedem Alert die Richtung des Favoriten-Runners anhaengen (Join ueber matchId/market/leadName)."""
     for a in (alerts or []):
@@ -324,11 +374,74 @@ def should_send(seen: dict, key: str, value: float) -> bool:
         return True
 
 
+def _consensus_index() -> dict:
+    """betfair_consensus.json (vom Runner, betfair_consensus.py, laeuft VOR alerts) -> {matchId: game}."""
+    try:
+        d = json.load(open(CONSENSUS_FILE, encoding="utf-8"))
+        return {str(g.get("matchId")): g for g in (d.get("games") or []) if g.get("matchId") is not None}
+    except Exception:
+        return {}
+
+
+def _usd(v) -> str:
+    try:
+        v = float(v)
+    except (TypeError, ValueError):
+        return ""
+    if v >= 1e6: return "$%.1fM" % (v / 1e6)
+    if v >= 1e3: return "$%.0fK" % (v / 1e3)
+    return "$%d" % round(v)
+
+
+def _consensus_block(a, cidx) -> str:
+    """09.08.2026 (Lucas): Zweitmeinung ans Trades-Frisch-Signal — Pinnacle/Soft/Poly-Quoten fuer die
+    Geld-Seite + Verdikt (aus betfair_consensus.py). Leer, wenn kein Odds-Anker fuer das Spiel da ist."""
+    g = (cidx or {}).get(str(a.get("matchId")))
+    if not g or g.get("verdict") == "no_anchor":
+        return ""
+    parts = []
+    if isinstance(g.get("pinnOdd"), (int, float)):
+        mv = g.get("pinnMovePP")
+        mvtxt = (" %s%.1fpp" % ("▲" if mv > 0 else "▼", abs(mv))) if isinstance(mv, (int, float)) and abs(mv) >= 0.1 else ""
+        parts.append("Pinnacle @%.2f%s" % (g["pinnOdd"], mvtxt))
+    if isinstance(g.get("softOdd"), (int, float)):
+        n = g.get("softN") or 0
+        parts.append("Soft @%.2f%s" % (g["softOdd"], ("×%d" % n) if n else ""))
+    poly = g.get("poly") or {}
+    if isinstance(poly.get("odd"), (int, float)):
+        parts.append("Poly @%.2f %s" % (poly["odd"], _usd(poly.get("vol"))))
+    if not parts:
+        return ""
+    verd = {"konsens": "✅ Konsens — alle sehen dieselbe Seite vorn",
+            "teil": "➖ teils einig",
+            "uneinig": "⚠️ uneinig — Buchmacher sehen die andere Seite vorn"}.get(g.get("verdict"), "")
+    side = g.get("moneyName") or ""
+    head = "\n\n🧭 <b>Zweitmeinung</b>" + ((" · 1X2 " + _esc(side)) if side else "")
+    return head + "\n" + " · ".join(parts) + (("\n" + verd) if verd else "")
+
+
+def _lead_odd_txt(a) -> str:
+    """09.08.2026 (Lucas, Braga-Fall): Quote hinter dem Fuehrer. Normalfall: aktuelle Quote. Ist die
+    Quote aber durch ein Spielereignis gesprungen (Tor/Karte, _dir_event_jump), war die JETZIGE Quote
+    NICHT die, zu der das Geld lief — das lief bei der Quote DAVOR rein (leadPrev). Dann diese Vor-
+    Ereignis-Quote zeigen statt der irrefuehrenden, neu gepreisten. (116k liefen unter ~1.1 bei 2:1-
+    Fuehrung rein, dann 2:2 in der Nachspielzeit -> 42.00 — @42.00 waere komplett irrefuehrend.)"""
+    odd = a.get("leadOdd")
+    if not isinstance(odd, (int, float)):
+        return ""
+    if _dir_event_jump(a):
+        prev = a.get("leadPrev")
+        if isinstance(prev, (int, float)) and prev > 0:
+            return " · Geld lief @~%.2f rein" % prev
+        return ""   # keine irrefuehrende, neu gepreiste Quote zeigen
+    return " @%.2f" % odd
+
+
 def build_message(a) -> str:
     head = ("%s <b>%s</b> v <b>%s</b>\n<i>%s</i>\n"
             % (a["flag"], _esc(a["home"]), _esc(a["away"]), _esc(str(a["league"])[:48])))
     if a["scenario"] == "ht":
-        odd = (" @%.2f" % a["leadOdd"]) if isinstance(a.get("leadOdd"), (int, float)) else ""
+        odd = _lead_odd_txt(a)
         lbl = a.get("mktLabel") or "HZ"
         msg = ("🔵 <b>Betfair · Halbzeit-Geld (einseitig)</b>\n" + head   # 31.07.2026 (Lucas): blaue Kugel fuer HZ = schneller erkennbar; Frisches Geld bleibt gelb
                + "💷 %s: <b>%s</b> gematcht · <b>%.0f%%</b> auf %s%s"
@@ -343,7 +456,7 @@ def build_message(a) -> str:
            + "💶 <b>%s</b>: +<b>%s</b> frisch → jetzt <b>%s</b>"
              % (_esc(_short_mk(a["market"])), _euro(a["inflow"]), _euro(a["total"])))
     if a.get("leadName"):
-        odd = (" @%.2f" % a["leadOdd"]) if isinstance(a.get("leadOdd"), (int, float)) else ""
+        odd = _lead_odd_txt(a)
         msg += "\nführt: %s (%.0f%%)%s" % (_esc(a["leadName"]), (a.get("leadShare") or 0.0) * 100, odd)
     return msg + _fuehrt_line(a) + _dir_line(a)
 
@@ -416,7 +529,7 @@ def build_public_message(a) -> str:
     status_line = ("\n" + status) if status else ""
     teams = ("%s <b>%s</b> v <b>%s</b>\n🏆 <i>%s</i>%s"
              % (a["flag"], _esc(a["home"]), _esc(a["away"]), league, status_line))
-    odd = (" @%.2f" % a["leadOdd"]) if isinstance(a.get("leadOdd"), (int, float)) else ""
+    odd = _lead_odd_txt(a)
 
     live_badge = "🔴 <b>LIVE</b> · " if _is_live(a) else ""
     if a["scenario"] == "ht":
@@ -434,8 +547,8 @@ def build_public_message(a) -> str:
     pct = (" (%.0f%% frisch)" % (inflow / total * 100)) if total else ""
     lead = a.get("leadName") or "—"
     return (live_badge + "🟡 <b>Betfair Moneyflow</b>\n\n" + teams + "\n\n"
-            + "💶 <b>%s</b> — frischer Zufluss\n+<b>%s</b> → Markt <b>%s</b>%s\n\n"
-              % (_esc(_short_mk(a["market"])), _euro(inflow), _euro(total), pct)
+            + "💶 <b>%s</b> — frischer Zufluss%s\n+<b>%s</b> → Markt <b>%s</b>%s\n\n"
+              % (_esc(_short_mk(a["market"])), _window_txt(a), _euro(inflow), _euro(total), pct)
             + "📊 <b>%s</b>  %s %.0f%%%s"
               % (_esc(lead), _bar(share), share * 100, odd)
             + _fuehrt_line(a) + _dir_line(a))
@@ -519,12 +632,18 @@ def main():
     except Exception:
         direction = {}
 
-    alerts = _leader_gate(attach_direction(collect_alerts(prices, hist), direction))
+    cidx = _consensus_index()   # 09.08.2026 (Lucas): Zweitmeinung an den Trades-Frisch-Push
+    # 09.08.2026 (Lucas): Nach Quotensprung (Tor) lief das Geld zur Quote DAVOR — lag die unter der
+    # Mindest-Quote, gehoert die Push gar nicht raus (auch Trades). _drop_subthreshold_jump filtert das.
+    alerts = _drop_subthreshold_jump(_leader_gate(attach_direction(collect_alerts(prices, hist), direction)))
     sent = 0
     for a in alerts:
         key = a["scenario"] + ":" + a["matchId"]
         if should_send(seen, key, a["value"]):
-            if send_trades_message(build_message(a)):
+            # 09.08.2026 (Lucas): Trades-„Frisches Geld" jetzt im Public-Format (Geld-Leiste + %, auch <80%)
+            # PLUS die Zweitmeinung der anderen Quellen. HT bleibt beim kompakten Format.
+            msg = (build_public_message(a) + _consensus_block(a, cidx)) if a["scenario"] == "fresh" else build_message(a)
+            if send_trades_message(msg):
                 seen[key] = a["value"]     # nur bei Erfolg merken (Preview/Fehler → nächster Lauf retry)
                 sent += 1
     try:

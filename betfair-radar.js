@@ -1083,9 +1083,9 @@
     var cx = _bf.consensus;
     var intro = '<div style="max-width:900px;margin:2px 0 14px;padding:12px 15px;background:rgba(94,234,212,.06);border-left:3px solid ' + C.vol + ';border-radius:0 10px 10px 0">' +
       '<div style="font-size:15px;font-weight:800;color:' + C.vol + ';margin-bottom:4px">🧭 Zweitmeinung — sagen die Buchmacher dasselbe?</div>' +
-      '<div style="font-size:12.5px;color:' + C.mut + ';line-height:1.5">Zu jedem Betfair-Geld-Signal (ab €10K auf 1X2) der Gegencheck: Wohin zeigt <b>Pinnacle</b> (schärfster Buchmacher, de-viggt) und wohin die <b>Soft-Books</b>? Zieht Pinnacle die Quote auf dieselbe Seite wie das Betfair-Geld — und bewegt sie sich gerade dorthin (▲pp) — ist das Signal bestätigt. Rührt sich nichts oder zeigt der Markt die andere Seite, ist Vorsicht angesagt. <b>Rein zum Beobachten, kein Push.</b></div></div>';
+      '<div style="font-size:12.5px;color:' + C.mut + ';line-height:1.5">Zu jedem Spiel aus der Radar-Liste (dieselbe Schwelle) der Gegencheck: Wohin zeigt <b>Pinnacle</b> (schärfster Buchmacher, de-viggt), die <b>Soft-Books</b> und — wo vorhanden — <b>Poly</b>? Zieht Pinnacle die Quote auf dieselbe Seite wie das Betfair-Geld — und bewegt sie sich gerade dorthin (▲pp) — ist das Signal bestätigt. Rührt sich nichts oder zeigt der Markt die andere Seite, ist Vorsicht angesagt. Bestätigte Fälle testen wir aktuell im Trades-Push.</div></div>';
     if (!cx || !cx.games || !cx.games.length) {
-      return intro + '<div style="padding:40px;text-align:center;color:' + C.mut + '">⏳ Sammelt — nach dem nächsten Betfair-Lauf stehen hier die Spiele mit Zweitmeinung (läuft am Mac-Runner).</div>';
+      return viewToggle() + intro + '<div style="padding:40px;text-align:center;color:' + C.mut + '">⏳ Sammelt — nach dem nächsten Betfair-Lauf stehen hier die Spiele mit Zweitmeinung (läuft am Mac-Runner).</div>';
     }
     var withA = cx.games.filter(function (g) { return g.verdict !== 'no_anchor'; });
     var noA = cx.games.filter(function (g) { return g.verdict === 'no_anchor'; });
@@ -1130,7 +1130,7 @@
     var noABlock = noA.length
       ? '<div style="margin-top:14px"><div style="font-size:12px;color:' + C.mut + ';font-weight:700;margin-bottom:6px">Ohne Anker — kein scharfer Buchmarkt für die Liga (' + noA.length + ')</div><div style="overflow-x:auto;background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:12px;opacity:.7"><table style="width:100%;border-collapse:collapse;min-width:640px;font-size:12.5px">' + head2 + '<tbody>' + noA.map(row).join('') + '</tbody></table></div></div>'
       : '';
-    return intro + stamp + tbl + noABlock;
+    return viewToggle() + intro + stamp + tbl + noABlock;
   }
 
   function renderBetfairRadar() {

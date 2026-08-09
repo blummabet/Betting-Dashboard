@@ -209,5 +209,27 @@ class TestPoly(unittest.TestCase):
         self.assertIsNone(p["odd"])
 
 
+class TestQualifiesRadar(unittest.TestCase):
+    def _ft(self, vol, league="Bosnian Premier League"):
+        return bf_match(league=league, runners=[
+            {"name": "Borac Banja Luka", "odd": 2.0, "vol": vol},
+            {"name": "The Draw", "odd": 3.0, "vol": 0},
+            {"name": "Fk Velez Mostar", "odd": 3.5, "vol": 0}])
+
+    def test_rest_ft_threshold_15k(self):
+        self.assertTrue(BC.qualifies_radar(self._ft(16000)))    # >= 15K Rest
+        self.assertFalse(BC.qualifies_radar(self._ft(9000)))    # < 15K
+
+    def test_top_tier_needs_20k(self):
+        # Serie A = Top-5 -> 20K noetig; 16K reicht NICHT
+        self.assertFalse(BC.qualifies_radar(self._ft(16000, league="Italian Serie A")))
+        self.assertTrue(BC.qualifies_radar(self._ft(21000, league="Italian Serie A")))
+
+    def test_ht_market_qualifies(self):
+        m = self._ft(3000)                                      # FT zu dünn
+        m["markets"]["Half Time"] = {"runners": [{"name": "Over 0.5", "odd": 1.5, "vol": 6000}]}
+        self.assertTrue(BC.qualifies_radar(m))                  # HT >= 5K Rest
+
+
 if __name__ == "__main__":
     unittest.main()
