@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v96';   // 09.08.2026: Betfair-Konsens-Tab — echte Quoten (Pinnacle/Soft) + Poly-Odd & Volumen dazu
+const VERSION = 'cocobet-v97';   // 09.08.2026: Status→Übersicht — Telegram-Sektion (alle Push-Arten + Schwellen, Trades/Public)
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

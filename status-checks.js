@@ -851,7 +851,46 @@ async function _stRenderFeeds() {
       <div style="font-size:15px;font-weight:700;color:${col};margin-bottom:3px;">${val}</div>
       <div style="font-size:10px;color:var(--muted);">${f.file} · ${sub}</div>
     </div>`;
-  }).join('');
+  }).join('') + _stTelegramHtml();
+}
+
+// 📣 Telegram-Übersicht (09.08.2026, Lucas): zentrale Referenz ALLER aktiven Pushs + Schwellen, je
+// Kanal. Werte spiegeln die .py-Konstanten (betfair_alerts · poly_cross_sport_watch · poly_whale_watch ·
+// push_shortlist_trades · steam_lag_monitor · telegram_streak_watch) — bei Schwellen-Änderung hier mitziehen.
+function _stTelegramHtml() {
+  const pr = (icon, name, thr) =>
+    `<div style="padding:8px 0;border-top:1px solid var(--border);">
+       <div style="font-size:12.5px;font-weight:700;color:var(--text);">${icon} ${name}</div>
+       <div style="font-size:11px;color:var(--muted);line-height:1.45;margin-top:2px;">${thr}</div>
+     </div>`;
+  const card = (accent, title, subtitle, rows) =>
+    `<div style="flex:1;min-width:280px;background:var(--card2);border:1px solid var(--border);border-top:3px solid ${accent};border-radius:12px;padding:14px 16px;">
+       <div style="font-size:14px;font-weight:800;color:${accent};">${title}</div>
+       <div style="font-size:11px;color:var(--muted);margin:2px 0 2px;">${subtitle}</div>
+       ${rows}
+     </div>`;
+  const trades = card('#ffb80c', '🔧 Trades', 'privater Werkstatt-Kanal — niedrigere Latte, mehr Signale zum Beobachten', [
+    pr('🟡', 'Betfair — Frisches Geld', 'Zufluss ≥ Top 30K / Rest 20K je Markt · Quote ≥1.30 · Führungs-Geld nur mit Back-Bestätigung (1,75× Schwelle) · Anti-Spam ×1,5'),
+    pr('🔵', 'Betfair — Halbzeit-Geld', 'ein HZ-Markt ≥ Top/Int 10K / Rest 5K gematcht · ≥85% auf einer Seite'),
+    pr('🎯', 'Heute spielenswert', 'Shortlist-Plays mit Conviction ≥8 · BET/FADE · Preis ≤92¢ · max 6 (Re-Push nur bei höherer Conviction)'),
+    pr('⚖️', 'Cross-Sport-Edge', 'Poly vs. faire Pinnacle ≥7pp · Konvergenz ≥1pp (Lücke schließt sich) · Vol ≥$20K · je Markt eine Seite'),
+    pr('🐋', 'Whale-Watch', 'frische Wallet: bewiesen-scharf ≥$5K (n≥8, ≥50%) · klein-aber-scharf ≥$2K (n≥8, Wilson>50%) · sonst ≥$50K'),
+    pr('⚡', 'Steam-Lag', 'Pinnacle bewegt, Poly hinkt nach — Entry-Edge ≥2pp (Auto-Trade ab 5pp)'),
+  ].join(''));
+  const pub = card('#3fb950', '📣 Public', 'CocoBet-Community — kuratiert, nur die wirklich dicken Signale', [
+    pr('🟡', 'Betfair Moneyflow', 'frischer Zufluss ≥ Top 100K / Rest 30K · ≥80% auf einer Seite · Führung nur mit Back · Post-Tor (Richtung unklar) raus'),
+    pr('🔵', 'Betfair Halftime Flow', 'HZ-Markt ≥ Top 50K / Rest 15K · ≥85% einseitig'),
+    pr('🐋', 'Polymarket Whale', 'bewiesen-scharf ≥$25K (n≥8, ≥50%) · untracked ≥$100K · ohne Record ≥$150K'),
+    pr('🔥', 'Streaks-Watch', 'lange Serien ≥10 Spiele, intakt, tor-basiert · Vorlauf 30 Min–18h'),
+  ].join(''));
+  return `<div style="grid-column:1/-1;margin-top:18px;">
+    <div style="font-size:13px;font-weight:800;color:var(--text);margin-bottom:2px;">📣 Telegram-Pushs — was geht an welchen Kanal</div>
+    <div style="font-size:11px;color:var(--muted);margin-bottom:10px;">Alle aktiven Push-Arten inkl. Schwellen · Stand 09.08.2026 · zentrale Referenz</div>
+    <div style="display:flex;gap:12px;flex-wrap:wrap;align-items:flex-start;">${trades}${pub}</div>
+    <div style="font-size:10.5px;color:var(--muted);margin-top:10px;line-height:1.5;">
+      Nicht abgebildet (periodisch/Inhalt, keine Live-Wettsignale): Wochen-Rückblick + Pick-Changes-Digest (Trades) · Streak-Recap (Public) · WM-Pushs pausiert (Turnier beendet).
+    </div>
+  </div>`;
 }
 
 // ═══════════════════════════════════════════════════════════════════════════════
