@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "mls",
-    "generatedAt": "2026-08-08T19:33:00.137662+00:00",
+    "generatedAt": "2026-08-09T07:55:57.393985+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -61,7 +61,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 100,
-        "label": "Eigen 100% + Gegner 80% → 92%"
+        "label": "Eigen 100% + Gegner 87% → 95%"
       },
       "ratePct": 100,
       "seq": [
@@ -83,10 +83,10 @@
         "atHome": false,
         "date": "2026-08-15",
         "kickoff": "2026-08-15T23:30:00+00:00",
-        "oppRatePct": 80
+        "oppRatePct": 87
       },
-      "oppSupportPct": 80,
-      "matchupPct": 92
+      "oppSupportPct": 87,
+      "matchupPct": 95
     },
     {
       "teamId": "9568",
@@ -137,15 +137,15 @@
       "leagueName": "Major League Soccer",
       "type": "scored",
       "market": "Team trifft",
-      "length": 10,
+      "length": 11,
       "venue": "all",
       "strong": true,
       "continuation": {
         "state": "intakt",
-        "ratePct": 80,
-        "label": "Eigen 80% + Gegner 80% → 80%"
+        "ratePct": 93,
+        "label": "Eigen 93% + Gegner 80% → 88%"
       },
-      "ratePct": 80,
+      "ratePct": 93,
       "seq": [
         true,
         true,
@@ -157,8 +157,8 @@
         true
       ],
       "xgBacked": null,
-      "basis": "prior",
-      "preN": 5,
+      "basis": "pure",
+      "preN": 4,
       "next": {
         "oppId": "1612",
         "oppName": "Minnesota United FC",
@@ -168,7 +168,7 @@
         "oppRatePct": 80
       },
       "oppSupportPct": 80,
-      "matchupPct": 80
+      "matchupPct": 88
     },
     {
       "teamId": "1613",
@@ -178,13 +178,13 @@
       "leagueName": "Major League Soccer",
       "type": "scored",
       "market": "Team trifft",
-      "length": 10,
+      "length": 11,
       "venue": "H",
       "strong": true,
       "continuation": {
         "state": "intakt",
         "ratePct": 93,
-        "label": "Eigen 93% + Gegner 73% → 85%"
+        "label": "Eigen 93% + Gegner 67% → 83%"
       },
       "ratePct": 93,
       "seq": [
@@ -206,60 +206,19 @@
         "atHome": false,
         "date": "2026-08-15",
         "kickoff": "2026-08-15T23:30:00+00:00",
-        "oppRatePct": 73
-      },
-      "oppSupportPct": 73,
-      "matchupPct": 85
-    },
-    {
-      "teamId": "2242",
-      "team": "FC Cincinnati",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/2242.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 10,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 67% → 63%"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 5,
-      "next": {
-        "oppId": "1598",
-        "oppName": "Orlando City SC",
-        "atHome": false,
-        "date": "2026-08-15",
-        "kickoff": "2026-08-15T23:30:00+00:00",
         "oppRatePct": 67
       },
       "oppSupportPct": 67,
-      "matchupPct": 63
+      "matchupPct": 83
     },
     {
-      "teamId": "2242",
-      "team": "FC Cincinnati",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/2242.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "1613",
+      "team": "Columbus Crew",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1613.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "MLS",
       "leagueName": "Major League Soccer",
-      "type": "bttsYes",
-      "market": "Beide Teams treffen",
+      "type": "scored",
+      "market": "Team trifft",
       "length": 10,
       "venue": "all",
       "strong": true,
@@ -283,8 +242,8 @@
       "basis": "prior",
       "preN": 5,
       "next": {
-        "oppId": "1598",
-        "oppName": "Orlando City SC",
+        "oppId": "18310",
+        "oppName": "Charlotte",
         "atHome": false,
         "date": "2026-08-15",
         "kickoff": "2026-08-15T23:30:00+00:00",
@@ -292,6 +251,88 @@
       },
       "oppSupportPct": 67,
       "matchupPct": 75
+    },
+    {
+      "teamId": "1616",
+      "team": "Los Angeles FC",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1616.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 10,
+      "venue": "all",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 87% → 71%"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 5,
+      "next": {
+        "oppId": "25484",
+        "oppName": "San Diego",
+        "atHome": true,
+        "date": "2026-08-16",
+        "kickoff": "2026-08-16T02:30:00+00:00",
+        "oppRatePct": 87
+      },
+      "oppSupportPct": 87,
+      "matchupPct": 71
+    },
+    {
+      "teamId": "9568",
+      "team": "Inter Miami",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/9568.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 10,
+      "venue": "H",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 100,
+        "label": "Eigen 100% + Gegner 60% → 84%"
+      },
+      "ratePct": 100,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 0,
+      "next": {
+        "oppId": "9569",
+        "oppName": "Nashville SC",
+        "atHome": false,
+        "date": "2026-08-16",
+        "kickoff": "2026-08-16T00:30:00+00:00",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 84
     },
     {
       "teamId": "1615",
@@ -335,6 +376,47 @@
       "matchupPct": 41
     },
     {
+      "teamId": "1598",
+      "team": "Orlando City SC",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1598.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 9,
+      "venue": "all",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 87% → 75%"
+      },
+      "ratePct": 67,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 6,
+      "next": {
+        "oppId": "2242",
+        "oppName": "FC Cincinnati",
+        "atHome": true,
+        "date": "2026-08-15",
+        "kickoff": "2026-08-15T23:30:00+00:00",
+        "oppRatePct": 87
+      },
+      "oppSupportPct": 87,
+      "matchupPct": 75
+    },
+    {
       "teamId": "1601",
       "team": "Toronto FC",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1601.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -348,7 +430,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 87,
-        "label": "Eigen 87% + Gegner 60% → 76%"
+        "label": "Eigen 87% + Gegner 53% → 73%"
       },
       "ratePct": 87,
       "seq": [
@@ -370,10 +452,10 @@
         "atHome": true,
         "date": "2026-08-15",
         "kickoff": "2026-08-15T23:30:00+00:00",
-        "oppRatePct": 60
+        "oppRatePct": 53
       },
-      "oppSupportPct": 60,
-      "matchupPct": 76
+      "oppSupportPct": 53,
+      "matchupPct": 73
     },
     {
       "teamId": "1601",
@@ -458,91 +540,9 @@
       "matchupPct": 97
     },
     {
-      "teamId": "1613",
-      "team": "Columbus Crew",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1613.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 9,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 83,
-        "label": "Eigen 83% + Gegner 73% → 79%"
-      },
-      "ratePct": 83,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 6,
-      "next": {
-        "oppId": "18310",
-        "oppName": "Charlotte",
-        "atHome": false,
-        "date": "2026-08-15",
-        "kickoff": "2026-08-15T23:30:00+00:00",
-        "oppRatePct": 73
-      },
-      "oppSupportPct": 73,
-      "matchupPct": 79
-    },
-    {
-      "teamId": "1616",
-      "team": "Los Angeles FC",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1616.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 9,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 87% → 75%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 6,
-      "next": {
-        "oppId": "25484",
-        "oppName": "San Diego",
-        "atHome": true,
-        "date": "2026-08-16",
-        "kickoff": "2026-08-16T02:30:00+00:00",
-        "oppRatePct": 87
-      },
-      "oppSupportPct": 87,
-      "matchupPct": 75
-    },
-    {
-      "teamId": "9568",
-      "team": "Inter Miami",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/9568.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "2242",
+      "team": "FC Cincinnati",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/2242.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "MLS",
       "leagueName": "Major League Soccer",
       "type": "scored",
@@ -553,7 +553,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 100,
-        "label": "Eigen 100% + Gegner 60% → 84%"
+        "label": "Eigen 100% + Gegner 87% → 95%"
       },
       "ratePct": 100,
       "seq": [
@@ -570,20 +570,20 @@
       "basis": "pure",
       "preN": 0,
       "next": {
-        "oppId": "9569",
-        "oppName": "Nashville SC",
+        "oppId": "1598",
+        "oppName": "Orlando City SC",
         "atHome": false,
-        "date": "2026-08-16",
-        "kickoff": "2026-08-16T00:30:00+00:00",
-        "oppRatePct": 60
+        "date": "2026-08-15",
+        "kickoff": "2026-08-15T23:30:00+00:00",
+        "oppRatePct": 87
       },
-      "oppSupportPct": 60,
-      "matchupPct": 84
+      "oppSupportPct": 87,
+      "matchupPct": 95
     },
     {
-      "teamId": "1598",
-      "team": "Orlando City SC",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1598.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "1600",
+      "team": "Houston Dynamo",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1600.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "MLS",
       "leagueName": "Major League Soccer",
       "type": "scored",
@@ -594,7 +594,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 71,
-        "label": "Eigen 71% + Gegner 93% → 80%"
+        "label": "Eigen 71% + Gegner 80% → 75%"
       },
       "ratePct": 71,
       "seq": [
@@ -611,15 +611,15 @@
       "basis": "prior",
       "preN": 7,
       "next": {
-        "oppId": "2242",
-        "oppName": "FC Cincinnati",
+        "oppId": "1605",
+        "oppName": "Los Angeles Galaxy",
         "atHome": true,
-        "date": "2026-08-15",
-        "kickoff": "2026-08-15T23:30:00+00:00",
-        "oppRatePct": 93
+        "date": "2026-08-16",
+        "kickoff": "2026-08-16T00:30:00+00:00",
+        "oppRatePct": 80
       },
-      "oppSupportPct": 93,
-      "matchupPct": 80
+      "oppSupportPct": 80,
+      "matchupPct": 75
     },
     {
       "teamId": "1600",
@@ -629,6 +629,88 @@
       "leagueName": "Major League Soccer",
       "type": "scored",
       "market": "Team trifft",
+      "length": 8,
+      "venue": "H",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 87,
+        "label": "Eigen 87% + Gegner 80% → 84%"
+      },
+      "ratePct": 87,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 0,
+      "next": {
+        "oppId": "1605",
+        "oppName": "Los Angeles Galaxy",
+        "atHome": true,
+        "date": "2026-08-16",
+        "kickoff": "2026-08-16T00:30:00+00:00",
+        "oppRatePct": 80
+      },
+      "oppSupportPct": 80,
+      "matchupPct": 84
+    },
+    {
+      "teamId": "1600",
+      "team": "Houston Dynamo",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1600.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "unbeaten",
+      "market": "Ungeschlagen",
+      "length": 8,
+      "venue": "all",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 71,
+        "label": "Eigen 71% + Gegner 73% → 72%"
+      },
+      "ratePct": 71,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 7,
+      "next": {
+        "oppId": "1605",
+        "oppName": "Los Angeles Galaxy",
+        "atHome": true,
+        "date": "2026-08-16",
+        "kickoff": "2026-08-16T00:30:00+00:00",
+        "oppRatePct": 73
+      },
+      "oppSupportPct": 73,
+      "matchupPct": 72
+    },
+    {
+      "teamId": "1600",
+      "team": "Houston Dynamo",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1600.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "unbeaten",
+      "market": "Ungeschlagen",
       "length": 8,
       "venue": "H",
       "strong": true,
@@ -652,56 +734,15 @@
       "basis": "pure",
       "preN": 0,
       "next": {
-        "oppId": "1609",
-        "oppName": "New England Revolution",
-        "atHome": false,
-        "date": "2026-08-08",
-        "kickoff": "2026-08-08T20:30:00+00:00",
+        "oppId": "1605",
+        "oppName": "Los Angeles Galaxy",
+        "atHome": true,
+        "date": "2026-08-16",
+        "kickoff": "2026-08-16T00:30:00+00:00",
         "oppRatePct": 73
       },
       "oppSupportPct": 73,
       "matchupPct": 81
-    },
-    {
-      "teamId": "1600",
-      "team": "Houston Dynamo",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1600.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "unbeaten",
-      "market": "Ungeschlagen",
-      "length": 8,
-      "venue": "H",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 80,
-        "label": "Eigen 80% + Gegner 47% → 67%"
-      },
-      "ratePct": 80,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 0,
-      "next": {
-        "oppId": "1609",
-        "oppName": "New England Revolution",
-        "atHome": false,
-        "date": "2026-08-08",
-        "kickoff": "2026-08-08T20:30:00+00:00",
-        "oppRatePct": 47
-      },
-      "oppSupportPct": 47,
-      "matchupPct": 67
     },
     {
       "teamId": "1611",
@@ -827,47 +868,6 @@
       "matchupPct": 89
     },
     {
-      "teamId": "2242",
-      "team": "FC Cincinnati",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/2242.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 8,
-      "venue": "H",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 100,
-        "label": "Eigen 100% + Gegner 80% → 92%"
-      },
-      "ratePct": 100,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 0,
-      "next": {
-        "oppId": "1598",
-        "oppName": "Orlando City SC",
-        "atHome": false,
-        "date": "2026-08-15",
-        "kickoff": "2026-08-15T23:30:00+00:00",
-        "oppRatePct": 80
-      },
-      "oppSupportPct": 80,
-      "matchupPct": 92
-    },
-    {
       "teamId": "25484",
       "team": "San Diego",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/25484.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -881,7 +881,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 80,
-        "label": "Eigen 80% + Gegner 60% → 72%"
+        "label": "Eigen 80% + Gegner 53% → 69%"
       },
       "ratePct": 80,
       "seq": [
@@ -903,51 +903,10 @@
         "atHome": false,
         "date": "2026-08-16",
         "kickoff": "2026-08-16T02:30:00+00:00",
-        "oppRatePct": 60
+        "oppRatePct": 53
       },
-      "oppSupportPct": 60,
-      "matchupPct": 72
-    },
-    {
-      "teamId": "9568",
-      "team": "Inter Miami",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/9568.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "unbeaten",
-      "market": "Ungeschlagen",
-      "length": 8,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 86,
-        "label": "Eigen 86% + Gegner 47% → 70%"
-      },
-      "ratePct": 86,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 7,
-      "next": {
-        "oppId": "9569",
-        "oppName": "Nashville SC",
-        "atHome": false,
-        "date": "2026-08-16",
-        "kickoff": "2026-08-16T00:30:00+00:00",
-        "oppRatePct": 47
-      },
-      "oppSupportPct": 47,
-      "matchupPct": 70
+      "oppSupportPct": 53,
+      "matchupPct": 69
     },
     {
       "teamId": "1610",
@@ -1032,47 +991,6 @@
       "matchupPct": 58
     },
     {
-      "teamId": "1600",
-      "team": "Houston Dynamo",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1600.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 7,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 75,
-        "label": "Eigen 75% + Gegner 73% → 74%"
-      },
-      "ratePct": 75,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 8,
-      "next": {
-        "oppId": "1609",
-        "oppName": "New England Revolution",
-        "atHome": false,
-        "date": "2026-08-08",
-        "kickoff": "2026-08-08T20:30:00+00:00",
-        "oppRatePct": 73
-      },
-      "oppSupportPct": 73,
-      "matchupPct": 74
-    },
-    {
       "teamId": "1606",
       "team": "Real Salt Lake",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1606.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -1085,10 +1003,10 @@
       "strong": true,
       "continuation": {
         "state": "intakt",
-        "ratePct": 80,
-        "label": "Eigen 80% + Gegner 67% → 75%"
+        "ratePct": 73,
+        "label": "Eigen 73% + Gegner 67% → 71%"
       },
-      "ratePct": 80,
+      "ratePct": 73,
       "seq": [
         true,
         true,
@@ -1110,7 +1028,7 @@
         "oppRatePct": 67
       },
       "oppSupportPct": 67,
-      "matchupPct": 75
+      "matchupPct": 71
     },
     {
       "teamId": "1606",
@@ -1166,7 +1084,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 80,
-        "label": "Eigen 80% + Gegner 87% → 83%"
+        "label": "Eigen 80% + Gegner 80% → 80%"
       },
       "ratePct": 80,
       "seq": [
@@ -1187,10 +1105,51 @@
         "atHome": false,
         "date": "2026-08-16",
         "kickoff": "2026-08-16T01:30:00+00:00",
+        "oppRatePct": 80
+      },
+      "oppSupportPct": 80,
+      "matchupPct": 80
+    },
+    {
+      "teamId": "1616",
+      "team": "Los Angeles FC",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1616.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "unbeaten",
+      "market": "Ungeschlagen",
+      "length": 7,
+      "venue": "all",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 50,
+        "label": "Eigen 50% + Gegner 87% → 65%"
+      },
+      "ratePct": 50,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 8,
+      "next": {
+        "oppId": "25484",
+        "oppName": "San Diego",
+        "atHome": true,
+        "date": "2026-08-16",
+        "kickoff": "2026-08-16T02:30:00+00:00",
         "oppRatePct": 87
       },
       "oppSupportPct": 87,
-      "matchupPct": 83
+      "matchupPct": 65
     },
     {
       "teamId": "1617",
@@ -1234,6 +1193,47 @@
       "matchupPct": 73
     },
     {
+      "teamId": "18310",
+      "team": "Charlotte",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/18310.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 7,
+      "venue": "all",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 62,
+        "label": "Eigen 62% + Gegner 80% → 69%"
+      },
+      "ratePct": 62,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 8,
+      "next": {
+        "oppId": "1613",
+        "oppName": "Columbus Crew",
+        "atHome": true,
+        "date": "2026-08-15",
+        "kickoff": "2026-08-15T23:30:00+00:00",
+        "oppRatePct": 80
+      },
+      "oppSupportPct": 80,
+      "matchupPct": 69
+    },
+    {
       "teamId": "20787",
       "team": "St. Louis City",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/20787.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -1272,127 +1272,6 @@
       },
       "oppSupportPct": 93,
       "matchupPct": 93
-    },
-    {
-      "teamId": "2242",
-      "team": "FC Cincinnati",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/2242.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "bttsYes",
-      "market": "Beide Teams treffen",
-      "length": 7,
-      "venue": "A",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 93,
-        "label": "Eigen 93% + Gegner 67% → 83%"
-      },
-      "ratePct": 93,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 0,
-      "next": {
-        "oppId": "1598",
-        "oppName": "Orlando City SC",
-        "atHome": false,
-        "date": "2026-08-15",
-        "kickoff": "2026-08-15T23:30:00+00:00",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 83
-    },
-    {
-      "teamId": "2242",
-      "team": "FC Cincinnati",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/2242.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 7,
-      "venue": "A",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 100,
-        "label": "Eigen 100% + Gegner 80% → 92%"
-      },
-      "ratePct": 100,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 0,
-      "next": {
-        "oppId": "1598",
-        "oppName": "Orlando City SC",
-        "atHome": false,
-        "date": "2026-08-15",
-        "kickoff": "2026-08-15T23:30:00+00:00",
-        "oppRatePct": 80
-      },
-      "oppSupportPct": 80,
-      "matchupPct": 92
-    },
-    {
-      "teamId": "1600",
-      "team": "Houston Dynamo",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1600.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "unbeaten",
-      "market": "Ungeschlagen",
-      "length": 7,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 62,
-        "label": "Eigen 62% + Gegner 47% → 56%"
-      },
-      "ratePct": 62,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 8,
-      "next": {
-        "oppId": "1609",
-        "oppName": "New England Revolution",
-        "atHome": false,
-        "date": "2026-08-08",
-        "kickoff": "2026-08-08T20:30:00+00:00",
-        "oppRatePct": 47
-      },
-      "oppSupportPct": 47,
-      "matchupPct": 56
     },
     {
       "teamId": "1615",
@@ -1436,6 +1315,46 @@
       "matchupPct": 44
     },
     {
+      "teamId": "1598",
+      "team": "Orlando City SC",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1598.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 6,
+      "venue": "H",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 87,
+        "label": "Eigen 87% + Gegner 87% → 87%"
+      },
+      "ratePct": 87,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 1,
+      "next": {
+        "oppId": "2242",
+        "oppName": "FC Cincinnati",
+        "atHome": true,
+        "date": "2026-08-15",
+        "kickoff": "2026-08-15T23:30:00+00:00",
+        "oppRatePct": 87
+      },
+      "oppSupportPct": 87,
+      "matchupPct": 87
+    },
+    {
       "teamId": "1605",
       "team": "Los Angeles Galaxy",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1605.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -1449,7 +1368,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 73,
-        "label": "Eigen 73% + Gegner 53% → 65%"
+        "label": "Eigen 73% + Gegner 47% → 63%"
       },
       "ratePct": 73,
       "seq": [
@@ -1469,51 +1388,10 @@
         "atHome": false,
         "date": "2026-08-16",
         "kickoff": "2026-08-16T00:30:00+00:00",
-        "oppRatePct": 53
+        "oppRatePct": 47
       },
-      "oppSupportPct": 53,
-      "matchupPct": 65
-    },
-    {
-      "teamId": "1606",
-      "team": "Real Salt Lake",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1606.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "bttsYes",
-      "market": "Beide Teams treffen",
-      "length": 6,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 67% → 67%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 9,
-      "next": {
-        "oppId": "1612",
-        "oppName": "Minnesota United FC",
-        "atHome": true,
-        "date": "2026-08-16",
-        "kickoff": "2026-08-16T01:30:00+00:00",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 67
+      "oppSupportPct": 47,
+      "matchupPct": 63
     },
     {
       "teamId": "1607",
@@ -1658,12 +1536,11 @@
         true,
         true,
         true,
-        false,
-        true
+        false
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 2,
+      "preN": 1,
       "next": {
         "oppId": "25484",
         "oppName": "San Diego",
@@ -1674,47 +1551,6 @@
       },
       "oppSupportPct": 87,
       "matchupPct": 87
-    },
-    {
-      "teamId": "1616",
-      "team": "Los Angeles FC",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1616.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "unbeaten",
-      "market": "Ungeschlagen",
-      "length": 6,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 44,
-        "label": "Eigen 44% + Gegner 87% → 61%"
-      },
-      "ratePct": 44,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 9,
-      "next": {
-        "oppId": "25484",
-        "oppName": "San Diego",
-        "atHome": true,
-        "date": "2026-08-16",
-        "kickoff": "2026-08-16T02:30:00+00:00",
-        "oppRatePct": 87
-      },
-      "oppSupportPct": 87,
-      "matchupPct": 61
     },
     {
       "teamId": "1617",
@@ -1840,88 +1676,6 @@
       "matchupPct": 67
     },
     {
-      "teamId": "18310",
-      "team": "Charlotte",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/18310.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 6,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 80% → 72%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 9,
-      "next": {
-        "oppId": "1613",
-        "oppName": "Columbus Crew",
-        "atHome": true,
-        "date": "2026-08-15",
-        "kickoff": "2026-08-15T23:30:00+00:00",
-        "oppRatePct": 80
-      },
-      "oppSupportPct": 80,
-      "matchupPct": 72
-    },
-    {
-      "teamId": "2242",
-      "team": "FC Cincinnati",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/2242.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 6,
-      "venue": "H",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 87,
-        "label": "Eigen 87% + Gegner 67% → 79%"
-      },
-      "ratePct": 87,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 2,
-      "next": {
-        "oppId": "1598",
-        "oppName": "Orlando City SC",
-        "atHome": false,
-        "date": "2026-08-15",
-        "kickoff": "2026-08-15T23:30:00+00:00",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 79
-    },
-    {
       "teamId": "2242",
       "team": "FC Cincinnati",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/2242.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -1930,42 +1684,40 @@
       "type": "bttsYes",
       "market": "Beide Teams treffen",
       "length": 6,
-      "venue": "H",
+      "venue": "A",
       "strong": true,
       "continuation": {
         "state": "intakt",
-        "ratePct": 93,
-        "label": "Eigen 93% + Gegner 67% → 83%"
+        "ratePct": 87,
+        "label": "Eigen 87% + Gegner 73% → 81%"
       },
-      "ratePct": 93,
+      "ratePct": 87,
       "seq": [
         true,
         true,
         true,
         true,
         true,
-        true,
-        false,
         true
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 2,
+      "preN": 0,
       "next": {
         "oppId": "1598",
         "oppName": "Orlando City SC",
         "atHome": false,
         "date": "2026-08-15",
         "kickoff": "2026-08-15T23:30:00+00:00",
-        "oppRatePct": 67
+        "oppRatePct": 73
       },
-      "oppSupportPct": 67,
-      "matchupPct": 83
+      "oppSupportPct": 73,
+      "matchupPct": 81
     },
     {
-      "teamId": "9568",
-      "team": "Inter Miami",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/9568.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "2242",
+      "team": "FC Cincinnati",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/2242.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "MLS",
       "leagueName": "Major League Soccer",
       "type": "scored",
@@ -1976,7 +1728,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 100,
-        "label": "Eigen 100% + Gegner 60% → 84%"
+        "label": "Eigen 100% + Gegner 87% → 95%"
       },
       "ratePct": 100,
       "seq": [
@@ -1991,54 +1743,56 @@
       "basis": "pure",
       "preN": 0,
       "next": {
-        "oppId": "9569",
-        "oppName": "Nashville SC",
+        "oppId": "1598",
+        "oppName": "Orlando City SC",
         "atHome": false,
-        "date": "2026-08-16",
-        "kickoff": "2026-08-16T00:30:00+00:00",
-        "oppRatePct": 60
+        "date": "2026-08-15",
+        "kickoff": "2026-08-15T23:30:00+00:00",
+        "oppRatePct": 87
       },
-      "oppSupportPct": 60,
-      "matchupPct": 84
+      "oppSupportPct": 87,
+      "matchupPct": 95
     },
     {
-      "teamId": "9568",
-      "team": "Inter Miami",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/9568.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "2242",
+      "team": "FC Cincinnati",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/2242.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "MLS",
       "leagueName": "Major League Soccer",
       "type": "unbeaten",
       "market": "Ungeschlagen",
       "length": 6,
-      "venue": "A",
+      "venue": "H",
       "strong": true,
       "continuation": {
         "state": "intakt",
-        "ratePct": 93,
-        "label": "Eigen 93% + Gegner 47% → 75%"
+        "ratePct": 87,
+        "label": "Eigen 87% + Gegner 47% → 71%"
       },
-      "ratePct": 93,
+      "ratePct": 87,
       "seq": [
         true,
         true,
         true,
         true,
         true,
+        true,
+        false,
         true
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 0,
+      "preN": 3,
       "next": {
-        "oppId": "9569",
-        "oppName": "Nashville SC",
+        "oppId": "1598",
+        "oppName": "Orlando City SC",
         "atHome": false,
-        "date": "2026-08-16",
-        "kickoff": "2026-08-16T00:30:00+00:00",
+        "date": "2026-08-15",
+        "kickoff": "2026-08-15T23:30:00+00:00",
         "oppRatePct": 47
       },
       "oppSupportPct": 47,
-      "matchupPct": 75
+      "matchupPct": 71
     },
     {
       "teamId": "20787",
@@ -2121,43 +1875,86 @@
       "matchupPct": 53
     },
     {
-      "teamId": "9568",
-      "team": "Inter Miami",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/9568.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "1613",
+      "team": "Columbus Crew",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1613.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "MLS",
       "leagueName": "Major League Soccer",
-      "type": "win",
-      "market": "Sieg-Serie",
+      "type": "bttsYes",
+      "market": "Beide Teams treffen",
       "length": 6,
-      "venue": "A",
+      "venue": "all",
       "strong": true,
       "continuation": {
         "state": "neutral",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 27% → 51%"
+        "ratePct": 56,
+        "label": "Eigen 56% + Gegner 47% → 52%"
       },
-      "ratePct": 67,
+      "ratePct": 56,
       "seq": [
         true,
         true,
         true,
         true,
         true,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 9,
+      "next": {
+        "oppId": "18310",
+        "oppName": "Charlotte",
+        "atHome": false,
+        "date": "2026-08-15",
+        "kickoff": "2026-08-15T23:30:00+00:00",
+        "oppRatePct": 47
+      },
+      "oppSupportPct": 47,
+      "matchupPct": 52
+    },
+    {
+      "teamId": "2242",
+      "team": "FC Cincinnati",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/2242.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "win",
+      "market": "Sieg-Serie",
+      "length": 6,
+      "venue": "H",
+      "strong": true,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 53,
+        "label": "Eigen 53% + Gegner 40% → 48%"
+      },
+      "ratePct": 53,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
         true
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 0,
+      "preN": 3,
       "next": {
-        "oppId": "9569",
-        "oppName": "Nashville SC",
+        "oppId": "1598",
+        "oppName": "Orlando City SC",
         "atHome": false,
-        "date": "2026-08-16",
-        "kickoff": "2026-08-16T00:30:00+00:00",
-        "oppRatePct": 27
+        "date": "2026-08-15",
+        "kickoff": "2026-08-15T23:30:00+00:00",
+        "oppRatePct": 40
       },
-      "oppSupportPct": 27,
-      "matchupPct": 51
+      "oppSupportPct": 40,
+      "matchupPct": 48
     },
     {
       "teamId": "1606",
@@ -2240,84 +2037,6 @@
       "matchupPct": 52
     },
     {
-      "teamId": "1598",
-      "team": "Orlando City SC",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1598.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 5,
-      "venue": "H",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 87,
-        "label": "Eigen 87% + Gegner 93% → 89%"
-      },
-      "ratePct": 87,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 1,
-      "next": {
-        "oppId": "2242",
-        "oppName": "FC Cincinnati",
-        "atHome": true,
-        "date": "2026-08-15",
-        "kickoff": "2026-08-15T23:30:00+00:00",
-        "oppRatePct": 93
-      },
-      "oppSupportPct": 93,
-      "matchupPct": 89
-    },
-    {
-      "teamId": "1598",
-      "team": "Orlando City SC",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1598.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "unbeaten",
-      "market": "Ungeschlagen",
-      "length": 5,
-      "venue": "H",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 53% → 61%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 1,
-      "next": {
-        "oppId": "2242",
-        "oppName": "FC Cincinnati",
-        "atHome": true,
-        "date": "2026-08-15",
-        "kickoff": "2026-08-15T23:30:00+00:00",
-        "oppRatePct": 53
-      },
-      "oppSupportPct": 53,
-      "matchupPct": 61
-    },
-    {
       "teamId": "1604",
       "team": "New York City FC",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1604.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -2357,6 +2076,88 @@
       },
       "oppSupportPct": 80,
       "matchupPct": 74
+    },
+    {
+      "teamId": "1606",
+      "team": "Real Salt Lake",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1606.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 5,
+      "venue": "H",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 93,
+        "label": "Eigen 93% + Gegner 80% → 88%"
+      },
+      "ratePct": 93,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 3,
+      "next": {
+        "oppId": "1612",
+        "oppName": "Minnesota United FC",
+        "atHome": true,
+        "date": "2026-08-16",
+        "kickoff": "2026-08-16T01:30:00+00:00",
+        "oppRatePct": 80
+      },
+      "oppSupportPct": 80,
+      "matchupPct": 88
+    },
+    {
+      "teamId": "1606",
+      "team": "Real Salt Lake",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1606.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "unbeaten",
+      "market": "Ungeschlagen",
+      "length": 5,
+      "venue": "H",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 67% → 67%"
+      },
+      "ratePct": 67,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 3,
+      "next": {
+        "oppId": "1612",
+        "oppName": "Minnesota United FC",
+        "atHome": true,
+        "date": "2026-08-16",
+        "kickoff": "2026-08-16T01:30:00+00:00",
+        "oppRatePct": 67
+      },
+      "oppSupportPct": 67,
+      "matchupPct": 67
     },
     {
       "teamId": "1610",
@@ -2482,6 +2283,47 @@
       "matchupPct": 72
     },
     {
+      "teamId": "1616",
+      "team": "Los Angeles FC",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1616.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 5,
+      "venue": "A",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 87,
+        "label": "Eigen 87% + Gegner 87% → 87%"
+      },
+      "ratePct": 87,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 3,
+      "next": {
+        "oppId": "25484",
+        "oppName": "San Diego",
+        "atHome": true,
+        "date": "2026-08-16",
+        "kickoff": "2026-08-16T02:30:00+00:00",
+        "oppRatePct": 87
+      },
+      "oppSupportPct": 87,
+      "matchupPct": 87
+    },
+    {
       "teamId": "1617",
       "team": "Portland Timbers",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1617.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -2521,6 +2363,47 @@
       },
       "oppSupportPct": 67,
       "matchupPct": 71
+    },
+    {
+      "teamId": "18310",
+      "team": "Charlotte",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/18310.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 5,
+      "venue": "H",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 80,
+        "label": "Eigen 80% + Gegner 80% → 80%"
+      },
+      "ratePct": 80,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 4,
+      "next": {
+        "oppId": "1613",
+        "oppName": "Columbus Crew",
+        "atHome": true,
+        "date": "2026-08-15",
+        "kickoff": "2026-08-15T23:30:00+00:00",
+        "oppRatePct": 80
+      },
+      "oppSupportPct": 80,
+      "matchupPct": 80
     },
     {
       "teamId": "20787",
@@ -2575,48 +2458,47 @@
       "strong": true,
       "continuation": {
         "state": "intakt",
-        "ratePct": 87,
-        "label": "Eigen 87% + Gegner 67% → 79%"
+        "ratePct": 80,
+        "label": "Eigen 80% + Gegner 73% → 77%"
       },
-      "ratePct": 87,
+      "ratePct": 80,
       "seq": [
         true,
         true,
         true,
         true,
         true,
-        false,
-        true
+        false
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 2,
+      "preN": 1,
       "next": {
         "oppId": "1598",
         "oppName": "Orlando City SC",
         "atHome": false,
         "date": "2026-08-15",
         "kickoff": "2026-08-15T23:30:00+00:00",
-        "oppRatePct": 67
+        "oppRatePct": 73
       },
-      "oppSupportPct": 67,
-      "matchupPct": 79
+      "oppSupportPct": 73,
+      "matchupPct": 77
     },
     {
-      "teamId": "2242",
-      "team": "FC Cincinnati",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/2242.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "9568",
+      "team": "Inter Miami",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/9568.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "MLS",
       "leagueName": "Major League Soccer",
-      "type": "unbeaten",
-      "market": "Ungeschlagen",
+      "type": "bttsYes",
+      "market": "Beide Teams treffen",
       "length": 5,
       "venue": "H",
       "strong": true,
       "continuation": {
         "state": "intakt",
         "ratePct": 80,
-        "label": "Eigen 80% + Gegner 40% → 64%"
+        "label": "Eigen 80% + Gegner 33% → 61%"
       },
       "ratePct": 80,
       "seq": [
@@ -2630,18 +2512,56 @@
         true
       ],
       "xgBacked": null,
-      "basis": "pure",
-      "preN": 3,
+      "basis": "prior",
+      "preN": 5,
       "next": {
-        "oppId": "1598",
-        "oppName": "Orlando City SC",
+        "oppId": "9569",
+        "oppName": "Nashville SC",
         "atHome": false,
-        "date": "2026-08-15",
-        "kickoff": "2026-08-15T23:30:00+00:00",
-        "oppRatePct": 40
+        "date": "2026-08-16",
+        "kickoff": "2026-08-16T00:30:00+00:00",
+        "oppRatePct": 33
       },
-      "oppSupportPct": 40,
-      "matchupPct": 64
+      "oppSupportPct": 33,
+      "matchupPct": 61
+    },
+    {
+      "teamId": "9568",
+      "team": "Inter Miami",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/9568.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 5,
+      "venue": "A",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 100,
+        "label": "Eigen 100% + Gegner 60% → 84%"
+      },
+      "ratePct": 100,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 0,
+      "next": {
+        "oppId": "9569",
+        "oppName": "Nashville SC",
+        "atHome": false,
+        "date": "2026-08-16",
+        "kickoff": "2026-08-16T00:30:00+00:00",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 84
     },
     {
       "teamId": "9568",
@@ -2652,27 +2572,24 @@
       "type": "unbeaten",
       "market": "Ungeschlagen",
       "length": 5,
-      "venue": "H",
+      "venue": "A",
       "strong": true,
       "continuation": {
         "state": "intakt",
-        "ratePct": 93,
-        "label": "Eigen 93% + Gegner 47% → 75%"
+        "ratePct": 87,
+        "label": "Eigen 87% + Gegner 47% → 71%"
       },
-      "ratePct": 93,
+      "ratePct": 87,
       "seq": [
         true,
         true,
         true,
         true,
-        true,
-        false,
-        true,
         true
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 4,
+      "preN": 0,
       "next": {
         "oppId": "9569",
         "oppName": "Nashville SC",
@@ -2682,7 +2599,7 @@
         "oppRatePct": 47
       },
       "oppSupportPct": 47,
-      "matchupPct": 75
+      "matchupPct": 71
     },
     {
       "teamId": "1596",
@@ -2736,7 +2653,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 71,
-        "label": "Eigen 71% + Gegner 57% → 65%"
+        "label": "Eigen 71% + Gegner 62% → 67%"
       },
       "ratePct": 71,
       "seq": [
@@ -2753,15 +2670,15 @@
       "basis": "prior",
       "preN": 7,
       "next": {
-        "oppId": "1609",
-        "oppName": "New England Revolution",
-        "atHome": false,
-        "date": "2026-08-08",
-        "kickoff": "2026-08-08T20:30:00+00:00",
-        "oppRatePct": 57
+        "oppId": "1605",
+        "oppName": "Los Angeles Galaxy",
+        "atHome": true,
+        "date": "2026-08-16",
+        "kickoff": "2026-08-16T00:30:00+00:00",
+        "oppRatePct": 62
       },
-      "oppSupportPct": 57,
-      "matchupPct": 65
+      "oppSupportPct": 62,
+      "matchupPct": 67
     },
     {
       "teamId": "1600",
@@ -2777,7 +2694,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 83,
-        "label": "Eigen 83% + Gegner 57% → 73%"
+        "label": "Eigen 83% + Gegner 62% → 75%"
       },
       "ratePct": 83,
       "seq": [
@@ -2791,15 +2708,15 @@
       "basis": "pure",
       "preN": 0,
       "next": {
-        "oppId": "1609",
-        "oppName": "New England Revolution",
-        "atHome": false,
-        "date": "2026-08-08",
-        "kickoff": "2026-08-08T20:30:00+00:00",
-        "oppRatePct": 57
+        "oppId": "1605",
+        "oppName": "Los Angeles Galaxy",
+        "atHome": true,
+        "date": "2026-08-16",
+        "kickoff": "2026-08-16T00:30:00+00:00",
+        "oppRatePct": 62
       },
-      "oppSupportPct": 57,
-      "matchupPct": 73
+      "oppSupportPct": 62,
+      "matchupPct": 75
     },
     {
       "teamId": "1604",
@@ -2925,17 +2842,58 @@
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1613.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "MLS",
       "leagueName": "Major League Soccer",
-      "type": "bttsYes",
-      "market": "Beide Teams treffen",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
       "length": 5,
       "venue": "all",
       "strong": true,
       "continuation": {
         "state": "neutral",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 53% → 57%"
+        "ratePct": 50,
+        "label": "Eigen 50% + Gegner 60% → 54%"
       },
-      "ratePct": 60,
+      "ratePct": 50,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 10,
+      "next": {
+        "oppId": "18310",
+        "oppName": "Charlotte",
+        "atHome": false,
+        "date": "2026-08-15",
+        "kickoff": "2026-08-15T23:30:00+00:00",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 54
+    },
+    {
+      "teamId": "1613",
+      "team": "Columbus Crew",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1613.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "bttsYes",
+      "market": "Beide Teams treffen",
+      "length": 5,
+      "venue": "H",
+      "strong": true,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 50,
+        "label": "Eigen 50% + Gegner 47% → 49%"
+      },
+      "ratePct": 50,
       "seq": [
         true,
         true,
@@ -2948,17 +2906,17 @@
       ],
       "xgBacked": null,
       "basis": "prior",
-      "preN": 10,
+      "preN": 6,
       "next": {
         "oppId": "18310",
         "oppName": "Charlotte",
         "atHome": false,
         "date": "2026-08-15",
         "kickoff": "2026-08-15T23:30:00+00:00",
-        "oppRatePct": 53
+        "oppRatePct": 47
       },
-      "oppSupportPct": 53,
-      "matchupPct": 57
+      "oppSupportPct": 47,
+      "matchupPct": 49
     },
     {
       "teamId": "1617",
@@ -3002,22 +2960,22 @@
       "matchupPct": 46
     },
     {
-      "teamId": "2242",
-      "team": "FC Cincinnati",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/2242.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "18310",
+      "team": "Charlotte",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/18310.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "MLS",
       "leagueName": "Major League Soccer",
-      "type": "win",
-      "market": "Sieg-Serie",
+      "type": "unbeaten",
+      "market": "Ungeschlagen",
       "length": 5,
       "venue": "H",
       "strong": true,
       "continuation": {
-        "state": "wackelt",
-        "ratePct": 47,
-        "label": "Eigen 47% + Gegner 33% → 41%"
+        "state": "neutral",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 47% → 55%"
       },
-      "ratePct": 47,
+      "ratePct": 60,
       "seq": [
         true,
         true,
@@ -3030,17 +2988,178 @@
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 3,
+      "preN": 4,
       "next": {
-        "oppId": "1598",
-        "oppName": "Orlando City SC",
+        "oppId": "1613",
+        "oppName": "Columbus Crew",
+        "atHome": true,
+        "date": "2026-08-15",
+        "kickoff": "2026-08-15T23:30:00+00:00",
+        "oppRatePct": 47
+      },
+      "oppSupportPct": 47,
+      "matchupPct": 55
+    },
+    {
+      "teamId": "9568",
+      "team": "Inter Miami",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/9568.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 5,
+      "venue": "H",
+      "strong": true,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 40% → 52%"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 5,
+      "next": {
+        "oppId": "9569",
+        "oppName": "Nashville SC",
+        "atHome": false,
+        "date": "2026-08-16",
+        "kickoff": "2026-08-16T00:30:00+00:00",
+        "oppRatePct": 40
+      },
+      "oppSupportPct": 40,
+      "matchupPct": 52
+    },
+    {
+      "teamId": "9568",
+      "team": "Inter Miami",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/9568.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "win",
+      "market": "Sieg-Serie",
+      "length": 5,
+      "venue": "A",
+      "strong": true,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 27% → 47%"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 0,
+      "next": {
+        "oppId": "9569",
+        "oppName": "Nashville SC",
+        "atHome": false,
+        "date": "2026-08-16",
+        "kickoff": "2026-08-16T00:30:00+00:00",
+        "oppRatePct": 27
+      },
+      "oppSupportPct": 27,
+      "matchupPct": 47
+    },
+    {
+      "teamId": "1609",
+      "team": "New England Revolution",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1609.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
+      "length": 5,
+      "venue": "H",
+      "strong": true,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 50,
+        "label": "Eigen 50% + Gegner 71% → 58%"
+      },
+      "ratePct": 50,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 4,
+      "next": {
+        "oppId": "1601",
+        "oppName": "Toronto FC",
         "atHome": false,
         "date": "2026-08-15",
         "kickoff": "2026-08-15T23:30:00+00:00",
-        "oppRatePct": 33
+        "oppRatePct": 71
       },
-      "oppSupportPct": 33,
-      "matchupPct": 41
+      "oppSupportPct": 71,
+      "matchupPct": 58
+    },
+    {
+      "teamId": "1606",
+      "team": "Real Salt Lake",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1606.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "win",
+      "market": "Sieg-Serie",
+      "length": 5,
+      "venue": "H",
+      "strong": true,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 47,
+        "label": "Eigen 47% + Gegner 40% → 44%"
+      },
+      "ratePct": 47,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 3,
+      "next": {
+        "oppId": "1612",
+        "oppName": "Minnesota United FC",
+        "atHome": true,
+        "date": "2026-08-16",
+        "kickoff": "2026-08-16T01:30:00+00:00",
+        "oppRatePct": 40
+      },
+      "oppSupportPct": 40,
+      "matchupPct": 44
     },
     {
       "teamId": "1605",
@@ -3084,47 +3203,6 @@
       "matchupPct": 25
     },
     {
-      "teamId": "1609",
-      "team": "New England Revolution",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1609.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
-      "length": 5,
-      "venue": "H",
-      "strong": true,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 50,
-        "label": "Eigen 50% + Gegner 25% → 40%"
-      },
-      "ratePct": 50,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 4,
-      "next": {
-        "oppId": "1600",
-        "oppName": "Houston Dynamo",
-        "atHome": true,
-        "date": "2026-08-08",
-        "kickoff": "2026-08-08T20:30:00+00:00",
-        "oppRatePct": 25
-      },
-      "oppSupportPct": 25,
-      "matchupPct": 40
-    },
-    {
       "teamId": "1598",
       "team": "Orlando City SC",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1598.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -3137,10 +3215,10 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 87% → 71%"
+        "ratePct": 73,
+        "label": "Eigen 73% + Gegner 80% → 76%"
       },
-      "ratePct": 60,
+      "ratePct": 73,
       "seq": [
         true,
         true,
@@ -3152,18 +3230,18 @@
         true
       ],
       "xgBacked": null,
-      "basis": "prior",
-      "preN": 5,
+      "basis": "pure",
+      "preN": 4,
       "next": {
         "oppId": "2242",
         "oppName": "FC Cincinnati",
         "atHome": true,
         "date": "2026-08-15",
         "kickoff": "2026-08-15T23:30:00+00:00",
-        "oppRatePct": 87
+        "oppRatePct": 80
       },
-      "oppSupportPct": 87,
-      "matchupPct": 71
+      "oppSupportPct": 80,
+      "matchupPct": 76
     },
     {
       "teamId": "1598",
@@ -3178,10 +3256,10 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 80,
-        "label": "Eigen 80% + Gegner 93% → 85%"
+        "ratePct": 87,
+        "label": "Eigen 87% + Gegner 87% → 87%"
       },
-      "ratePct": 80,
+      "ratePct": 87,
       "seq": [
         true,
         true,
@@ -3193,18 +3271,18 @@
         true
       ],
       "xgBacked": null,
-      "basis": "prior",
-      "preN": 5,
+      "basis": "pure",
+      "preN": 4,
       "next": {
         "oppId": "2242",
         "oppName": "FC Cincinnati",
         "atHome": true,
         "date": "2026-08-15",
         "kickoff": "2026-08-15T23:30:00+00:00",
-        "oppRatePct": 93
+        "oppRatePct": 87
       },
-      "oppSupportPct": 93,
-      "matchupPct": 85
+      "oppSupportPct": 87,
+      "matchupPct": 87
     },
     {
       "teamId": "1599",
@@ -3373,24 +3451,24 @@
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1606.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "MLS",
       "leagueName": "Major League Soccer",
-      "type": "scored",
-      "market": "Team trifft",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
       "length": 4,
       "venue": "H",
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 93,
-        "label": "Eigen 93% + Gegner 80% → 88%"
+        "ratePct": 73,
+        "label": "Eigen 73% + Gegner 53% → 65%"
       },
-      "ratePct": 93,
+      "ratePct": 73,
       "seq": [
         true,
         true,
         true,
         true,
         false,
-        true,
+        false,
         true,
         true
       ],
@@ -3403,51 +3481,10 @@
         "atHome": true,
         "date": "2026-08-16",
         "kickoff": "2026-08-16T01:30:00+00:00",
-        "oppRatePct": 80
+        "oppRatePct": 53
       },
-      "oppSupportPct": 80,
-      "matchupPct": 88
-    },
-    {
-      "teamId": "1606",
-      "team": "Real Salt Lake",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1606.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "unbeaten",
-      "market": "Ungeschlagen",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 67% → 67%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 4,
-      "next": {
-        "oppId": "1612",
-        "oppName": "Minnesota United FC",
-        "atHome": true,
-        "date": "2026-08-16",
-        "kickoff": "2026-08-16T01:30:00+00:00",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 67
+      "oppSupportPct": 53,
+      "matchupPct": 65
     },
     {
       "teamId": "1612",
@@ -3503,7 +3540,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 67,
-        "label": "Eigen 67% + Gegner 80% → 72%"
+        "label": "Eigen 67% + Gegner 73% → 69%"
       },
       "ratePct": 67,
       "seq": [
@@ -3524,10 +3561,10 @@
         "atHome": false,
         "date": "2026-08-16",
         "kickoff": "2026-08-16T01:30:00+00:00",
-        "oppRatePct": 80
+        "oppRatePct": 73
       },
-      "oppSupportPct": 80,
-      "matchupPct": 72
+      "oppSupportPct": 73,
+      "matchupPct": 69
     },
     {
       "teamId": "1615",
@@ -3616,17 +3653,17 @@
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1616.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "MLS",
       "leagueName": "Major League Soccer",
-      "type": "scored",
-      "market": "Team trifft",
+      "type": "unbeaten",
+      "market": "Ungeschlagen",
       "length": 4,
-      "venue": "A",
+      "venue": "H",
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 87,
-        "label": "Eigen 87% + Gegner 87% → 87%"
+        "ratePct": 73,
+        "label": "Eigen 73% + Gegner 87% → 79%"
       },
-      "ratePct": 87,
+      "ratePct": 73,
       "seq": [
         true,
         true,
@@ -3648,130 +3685,7 @@
         "oppRatePct": 87
       },
       "oppSupportPct": 87,
-      "matchupPct": 87
-    },
-    {
-      "teamId": "1616",
-      "team": "Los Angeles FC",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1616.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "unbeaten",
-      "market": "Ungeschlagen",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 87% → 75%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 4,
-      "next": {
-        "oppId": "25484",
-        "oppName": "San Diego",
-        "atHome": true,
-        "date": "2026-08-16",
-        "kickoff": "2026-08-16T02:30:00+00:00",
-        "oppRatePct": 87
-      },
-      "oppSupportPct": 87,
-      "matchupPct": 75
-    },
-    {
-      "teamId": "18310",
-      "team": "Charlotte",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/18310.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 80% → 68%"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 5,
-      "next": {
-        "oppId": "1613",
-        "oppName": "Columbus Crew",
-        "atHome": true,
-        "date": "2026-08-15",
-        "kickoff": "2026-08-15T23:30:00+00:00",
-        "oppRatePct": 80
-      },
-      "oppSupportPct": 80,
-      "matchupPct": 68
-    },
-    {
-      "teamId": "9568",
-      "team": "Inter Miami",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/9568.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "bttsYes",
-      "market": "Beide Teams treffen",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 80,
-        "label": "Eigen 80% + Gegner 33% → 61%"
-      },
-      "ratePct": 80,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 5,
-      "next": {
-        "oppId": "9569",
-        "oppName": "Nashville SC",
-        "atHome": false,
-        "date": "2026-08-16",
-        "kickoff": "2026-08-16T00:30:00+00:00",
-        "oppRatePct": 33
-      },
-      "oppSupportPct": 33,
-      "matchupPct": 61
+      "matchupPct": 79
     },
     {
       "teamId": "1596",
@@ -4102,14 +4016,14 @@
       "type": "over25",
       "market": "Über 2,5 Tore",
       "length": 4,
-      "venue": "all",
+      "venue": "H",
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 55,
-        "label": "Eigen 55% + Gegner 67% → 60%"
+        "ratePct": 43,
+        "label": "Eigen 43% + Gegner 60% → 50%"
       },
-      "ratePct": 55,
+      "ratePct": 43,
       "seq": [
         true,
         true,
@@ -4118,7 +4032,48 @@
         false,
         false,
         false,
-        false
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 7,
+      "next": {
+        "oppId": "18310",
+        "oppName": "Charlotte",
+        "atHome": false,
+        "date": "2026-08-15",
+        "kickoff": "2026-08-15T23:30:00+00:00",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 50
+    },
+    {
+      "teamId": "1613",
+      "team": "Columbus Crew",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1613.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "unbeaten",
+      "market": "Ungeschlagen",
+      "length": 4,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 64,
+        "label": "Eigen 64% + Gegner 53% → 60%"
+      },
+      "ratePct": 64,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true
       ],
       "xgBacked": null,
       "basis": "prior",
@@ -4129,51 +4084,10 @@
         "atHome": false,
         "date": "2026-08-15",
         "kickoff": "2026-08-15T23:30:00+00:00",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 60
-    },
-    {
-      "teamId": "1613",
-      "team": "Columbus Crew",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1613.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "bttsYes",
-      "market": "Beide Teams treffen",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 50,
-        "label": "Eigen 50% + Gegner 53% → 51%"
-      },
-      "ratePct": 50,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 6,
-      "next": {
-        "oppId": "18310",
-        "oppName": "Charlotte",
-        "atHome": false,
-        "date": "2026-08-15",
-        "kickoff": "2026-08-15T23:30:00+00:00",
         "oppRatePct": 53
       },
       "oppSupportPct": 53,
-      "matchupPct": 51
+      "matchupPct": 60
     },
     {
       "teamId": "1616",
@@ -4188,10 +4102,10 @@
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 47,
-        "label": "Eigen 47% + Gegner 53% → 49%"
+        "ratePct": 53,
+        "label": "Eigen 53% + Gegner 53% → 53%"
       },
-      "ratePct": 47,
+      "ratePct": 53,
       "seq": [
         true,
         true,
@@ -4199,12 +4113,11 @@
         true,
         false,
         true,
-        false,
         false
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 4,
+      "preN": 3,
       "next": {
         "oppId": "25484",
         "oppName": "San Diego",
@@ -4214,7 +4127,7 @@
         "oppRatePct": 53
       },
       "oppSupportPct": 53,
-      "matchupPct": 49
+      "matchupPct": 53
     },
     {
       "teamId": "1617",
@@ -4271,7 +4184,7 @@
       "continuation": {
         "state": "neutral",
         "ratePct": 60,
-        "label": "Eigen 60% + Gegner 40% → 52%"
+        "label": "Eigen 60% + Gegner 47% → 55%"
       },
       "ratePct": 60,
       "seq": [
@@ -4293,92 +4206,10 @@
         "atHome": true,
         "date": "2026-08-17",
         "kickoff": "2026-08-17T00:30:00+00:00",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 40,
-      "matchupPct": 52
-    },
-    {
-      "teamId": "18310",
-      "team": "Charlotte",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/18310.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "unbeaten",
-      "market": "Ungeschlagen",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 40,
-        "label": "Eigen 40% + Gegner 53% → 45%"
-      },
-      "ratePct": 40,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 5,
-      "next": {
-        "oppId": "1613",
-        "oppName": "Columbus Crew",
-        "atHome": true,
-        "date": "2026-08-15",
-        "kickoff": "2026-08-15T23:30:00+00:00",
         "oppRatePct": 53
       },
-      "oppSupportPct": 53,
-      "matchupPct": 45
-    },
-    {
-      "teamId": "9568",
-      "team": "Inter Miami",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/9568.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 40% → 52%"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 5,
-      "next": {
-        "oppId": "9569",
-        "oppName": "Nashville SC",
-        "atHome": false,
-        "date": "2026-08-16",
-        "kickoff": "2026-08-16T00:30:00+00:00",
-        "oppRatePct": 40
-      },
-      "oppSupportPct": 40,
-      "matchupPct": 52
+      "oppSupportPct": 47,
+      "matchupPct": 55
     },
     {
       "teamId": "1602",
@@ -4542,45 +4373,86 @@
       "matchupPct": 48
     },
     {
-      "teamId": "1606",
-      "team": "Real Salt Lake",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1606.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "1597",
+      "team": "FC Dallas",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1597.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "MLS",
       "leagueName": "Major League Soccer",
-      "type": "win",
-      "market": "Sieg-Serie",
+      "type": "under25",
+      "market": "Unter 2,5 Tore",
       "length": 4,
-      "venue": "H",
+      "venue": "all",
       "strong": false,
       "continuation": {
         "state": "wackelt",
-        "ratePct": 47,
-        "label": "Eigen 47% + Gegner 40% → 44%"
+        "ratePct": 27,
+        "label": "Eigen 27% + Gegner 33% → 29%"
       },
-      "ratePct": 47,
+      "ratePct": 27,
       "seq": [
         true,
         true,
         true,
         true,
         false,
-        true,
-        true,
-        true
+        false,
+        false,
+        false
       ],
       "xgBacked": null,
-      "basis": "pure",
-      "preN": 4,
+      "basis": "prior",
+      "preN": 11,
       "next": {
-        "oppId": "1612",
-        "oppName": "Minnesota United FC",
-        "atHome": true,
-        "date": "2026-08-16",
-        "kickoff": "2026-08-16T01:30:00+00:00",
+        "oppId": "16489",
+        "oppName": "Austin",
+        "atHome": false,
+        "date": "2026-08-17",
+        "kickoff": "2026-08-17T00:30:00+00:00",
+        "oppRatePct": 67
+      },
+      "oppSupportPct": 33,
+      "matchupPct": 29
+    },
+    {
+      "teamId": "1597",
+      "team": "FC Dallas",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1597.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "bttsNo",
+      "market": "Beide treffen — Nein",
+      "length": 4,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 27,
+        "label": "Eigen 27% + Gegner 60% → 40%"
+      },
+      "ratePct": 27,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 11,
+      "next": {
+        "oppId": "16489",
+        "oppName": "Austin",
+        "atHome": false,
+        "date": "2026-08-17",
+        "kickoff": "2026-08-17T00:30:00+00:00",
         "oppRatePct": 40
       },
-      "oppSupportPct": 40,
-      "matchupPct": 44
+      "oppSupportPct": 60,
+      "matchupPct": 40
     },
     {
       "teamId": "1610",
@@ -4727,12 +4599,11 @@
         true,
         false,
         true,
-        true,
         true
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 4,
+      "preN": 3,
       "next": {
         "oppId": "16489",
         "oppName": "Austin",
@@ -4743,6 +4614,209 @@
       },
       "oppSupportPct": 73,
       "matchupPct": 77
+    },
+    {
+      "teamId": "1597",
+      "team": "FC Dallas",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1597.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "unbeaten",
+      "market": "Ungeschlagen",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 67% → 67%"
+      },
+      "ratePct": 67,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 12,
+      "next": {
+        "oppId": "16489",
+        "oppName": "Austin",
+        "atHome": false,
+        "date": "2026-08-17",
+        "kickoff": "2026-08-17T00:30:00+00:00",
+        "oppRatePct": 67
+      },
+      "oppSupportPct": 67,
+      "matchupPct": 67
+    },
+    {
+      "teamId": "1598",
+      "team": "Orlando City SC",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1598.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 80% → 72%"
+      },
+      "ratePct": 67,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 12,
+      "next": {
+        "oppId": "2242",
+        "oppName": "FC Cincinnati",
+        "atHome": true,
+        "date": "2026-08-15",
+        "kickoff": "2026-08-15T23:30:00+00:00",
+        "oppRatePct": 80
+      },
+      "oppSupportPct": 80,
+      "matchupPct": 72
+    },
+    {
+      "teamId": "1598",
+      "team": "Orlando City SC",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1598.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "bttsYes",
+      "market": "Beide Teams treffen",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 87% → 75%"
+      },
+      "ratePct": 67,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 12,
+      "next": {
+        "oppId": "2242",
+        "oppName": "FC Cincinnati",
+        "atHome": true,
+        "date": "2026-08-15",
+        "kickoff": "2026-08-15T23:30:00+00:00",
+        "oppRatePct": 87
+      },
+      "oppSupportPct": 87,
+      "matchupPct": 75
+    },
+    {
+      "teamId": "1600",
+      "team": "Houston Dynamo",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1600.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 87,
+        "label": "Eigen 87% + Gegner 80% → 84%"
+      },
+      "ratePct": 87,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 4,
+      "next": {
+        "oppId": "1605",
+        "oppName": "Los Angeles Galaxy",
+        "atHome": true,
+        "date": "2026-08-16",
+        "kickoff": "2026-08-16T00:30:00+00:00",
+        "oppRatePct": 80
+      },
+      "oppSupportPct": 80,
+      "matchupPct": 84
+    },
+    {
+      "teamId": "1600",
+      "team": "Houston Dynamo",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1600.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "unbeaten",
+      "market": "Ungeschlagen",
+      "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 87,
+        "label": "Eigen 87% + Gegner 73% → 81%"
+      },
+      "ratePct": 87,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 4,
+      "next": {
+        "oppId": "1605",
+        "oppName": "Los Angeles Galaxy",
+        "atHome": true,
+        "date": "2026-08-16",
+        "kickoff": "2026-08-16T00:30:00+00:00",
+        "oppRatePct": 73
+      },
+      "oppSupportPct": 73,
+      "matchupPct": 81
     },
     {
       "teamId": "1602",
@@ -5191,29 +5265,28 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 73,
-        "label": "Eigen 73% + Gegner 53% → 65%"
+        "label": "Eigen 73% + Gegner 47% → 63%"
       },
       "ratePct": 73,
       "seq": [
         true,
         true,
         true,
-        false,
-        true
+        false
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 2,
+      "preN": 1,
       "next": {
         "oppId": "18310",
         "oppName": "Charlotte",
         "atHome": false,
         "date": "2026-08-15",
         "kickoff": "2026-08-15T23:30:00+00:00",
-        "oppRatePct": 53
+        "oppRatePct": 47
       },
-      "oppSupportPct": 53,
-      "matchupPct": 65
+      "oppSupportPct": 47,
+      "matchupPct": 63
     },
     {
       "teamId": "1613",
@@ -5229,29 +5302,69 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 93,
-        "label": "Eigen 93% + Gegner 73% → 85%"
+        "label": "Eigen 93% + Gegner 67% → 83%"
       },
       "ratePct": 93,
       "seq": [
         true,
         true,
         true,
-        false,
-        true
+        false
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 2,
+      "preN": 1,
       "next": {
         "oppId": "18310",
         "oppName": "Charlotte",
         "atHome": false,
         "date": "2026-08-15",
         "kickoff": "2026-08-15T23:30:00+00:00",
-        "oppRatePct": 73
+        "oppRatePct": 67
       },
-      "oppSupportPct": 73,
-      "matchupPct": 85
+      "oppSupportPct": 67,
+      "matchupPct": 83
+    },
+    {
+      "teamId": "1613",
+      "team": "Columbus Crew",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1613.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "unbeaten",
+      "market": "Ungeschlagen",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 75,
+        "label": "Eigen 75% + Gegner 53% → 66%"
+      },
+      "ratePct": 75,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 8,
+      "next": {
+        "oppId": "18310",
+        "oppName": "Charlotte",
+        "atHome": false,
+        "date": "2026-08-15",
+        "kickoff": "2026-08-15T23:30:00+00:00",
+        "oppRatePct": 53
+      },
+      "oppSupportPct": 53,
+      "matchupPct": 66
     },
     {
       "teamId": "1615",
@@ -5306,10 +5419,10 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 67% → 63%"
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 67% → 67%"
       },
-      "ratePct": 60,
+      "ratePct": 67,
       "seq": [
         true,
         true,
@@ -5317,12 +5430,11 @@
         false,
         true,
         true,
-        false,
-        true
+        false
       ],
       "xgBacked": null,
-      "basis": "prior",
-      "preN": 5,
+      "basis": "pure",
+      "preN": 4,
       "next": {
         "oppId": "25484",
         "oppName": "San Diego",
@@ -5332,7 +5444,7 @@
         "oppRatePct": 67
       },
       "oppSupportPct": 67,
-      "matchupPct": 63
+      "matchupPct": 67
     },
     {
       "teamId": "16489",
@@ -5348,7 +5460,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 67,
-        "label": "Eigen 67% + Gegner 73% → 69%"
+        "label": "Eigen 67% + Gegner 67% → 67%"
       },
       "ratePct": 67,
       "seq": [
@@ -5369,10 +5481,10 @@
         "atHome": true,
         "date": "2026-08-17",
         "kickoff": "2026-08-17T00:30:00+00:00",
-        "oppRatePct": 73
+        "oppRatePct": 67
       },
-      "oppSupportPct": 73,
-      "matchupPct": 69
+      "oppSupportPct": 67,
+      "matchupPct": 67
     },
     {
       "teamId": "20787",
@@ -5457,6 +5569,47 @@
       "matchupPct": 60
     },
     {
+      "teamId": "2242",
+      "team": "FC Cincinnati",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/2242.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "unbeaten",
+      "market": "Ungeschlagen",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 83,
+        "label": "Eigen 83% + Gegner 47% → 69%"
+      },
+      "ratePct": 83,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 12,
+      "next": {
+        "oppId": "1598",
+        "oppName": "Orlando City SC",
+        "atHome": false,
+        "date": "2026-08-15",
+        "kickoff": "2026-08-15T23:30:00+00:00",
+        "oppRatePct": 47
+      },
+      "oppSupportPct": 47,
+      "matchupPct": 69
+    },
+    {
       "teamId": "25484",
       "team": "San Diego",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/25484.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -5470,7 +5623,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 75,
-        "label": "Eigen 75% + Gegner 60% → 69%"
+        "label": "Eigen 75% + Gegner 53% → 66%"
       },
       "ratePct": 75,
       "seq": [
@@ -5492,10 +5645,10 @@
         "atHome": false,
         "date": "2026-08-16",
         "kickoff": "2026-08-16T02:30:00+00:00",
-        "oppRatePct": 60
+        "oppRatePct": 53
       },
-      "oppSupportPct": 60,
-      "matchupPct": 69
+      "oppSupportPct": 53,
+      "matchupPct": 66
     },
     {
       "teamId": "1597",
@@ -5546,53 +5699,12 @@
       "type": "cornersUnder",
       "market": "Unter 9,5 Ecken",
       "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 50% → 60%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 9,
-      "next": {
-        "oppId": "1609",
-        "oppName": "New England Revolution",
-        "atHome": false,
-        "date": "2026-08-08",
-        "kickoff": "2026-08-08T20:30:00+00:00",
-        "oppRatePct": 50
-      },
-      "oppSupportPct": 50,
-      "matchupPct": 60
-    },
-    {
-      "teamId": "1600",
-      "team": "Houston Dynamo",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1600.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 3,
       "venue": "H",
       "strong": false,
       "continuation": {
         "state": "intakt",
         "ratePct": 75,
-        "label": "Eigen 75% + Gegner 50% → 65%"
+        "label": "Eigen 75% + Gegner 46% → 63%"
       },
       "ratePct": 75,
       "seq": [
@@ -5606,15 +5718,15 @@
       "basis": "pure",
       "preN": 2,
       "next": {
-        "oppId": "1609",
-        "oppName": "New England Revolution",
-        "atHome": false,
-        "date": "2026-08-08",
-        "kickoff": "2026-08-08T20:30:00+00:00",
-        "oppRatePct": 50
+        "oppId": "1605",
+        "oppName": "Los Angeles Galaxy",
+        "atHome": true,
+        "date": "2026-08-16",
+        "kickoff": "2026-08-16T00:30:00+00:00",
+        "oppRatePct": 54
       },
-      "oppSupportPct": 50,
-      "matchupPct": 65
+      "oppSupportPct": 46,
+      "matchupPct": 63
     },
     {
       "teamId": "1604",
@@ -5698,44 +5810,6 @@
       "matchupPct": 63
     },
     {
-      "teamId": "1609",
-      "team": "New England Revolution",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1609.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 3,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 50,
-        "label": "Eigen 50% + Gegner 75% → 60%"
-      },
-      "ratePct": 50,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 2,
-      "next": {
-        "oppId": "1600",
-        "oppName": "Houston Dynamo",
-        "atHome": true,
-        "date": "2026-08-08",
-        "kickoff": "2026-08-08T20:30:00+00:00",
-        "oppRatePct": 25
-      },
-      "oppSupportPct": 75,
-      "matchupPct": 60
-    },
-    {
       "teamId": "20787",
       "team": "St. Louis City",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/20787.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -5816,20 +5890,20 @@
       "matchupPct": 78
     },
     {
-      "teamId": "1606",
-      "team": "Real Salt Lake",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1606.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "1600",
+      "team": "Houston Dynamo",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1600.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "MLS",
       "leagueName": "Major League Soccer",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
+      "type": "under25",
+      "market": "Unter 2,5 Tore",
       "length": 3,
-      "venue": "H",
+      "venue": "A",
       "strong": false,
       "continuation": {
         "state": "neutral",
         "ratePct": 60,
-        "label": "Eigen 60% + Gegner 53% → 57%"
+        "label": "Eigen 60% + Gegner 40% → 52%"
       },
       "ratePct": 60,
       "seq": [
@@ -5839,22 +5913,103 @@
         false,
         false,
         true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 4,
+      "next": {
+        "oppId": "1605",
+        "oppName": "Los Angeles Galaxy",
+        "atHome": true,
+        "date": "2026-08-16",
+        "kickoff": "2026-08-16T00:30:00+00:00",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 40,
+      "matchupPct": 52
+    },
+    {
+      "teamId": "1600",
+      "team": "Houston Dynamo",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1600.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "bttsNo",
+      "market": "Beide treffen — Nein",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 58,
+        "label": "Eigen 58% + Gegner 40% → 51%"
+      },
+      "ratePct": 58,
+      "seq": [
         true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        false,
         true
       ],
       "xgBacked": null,
       "basis": "prior",
-      "preN": 5,
+      "preN": 12,
       "next": {
-        "oppId": "1612",
-        "oppName": "Minnesota United FC",
+        "oppId": "1605",
+        "oppName": "Los Angeles Galaxy",
         "atHome": true,
         "date": "2026-08-16",
-        "kickoff": "2026-08-16T01:30:00+00:00",
-        "oppRatePct": 53
+        "kickoff": "2026-08-16T00:30:00+00:00",
+        "oppRatePct": 60
       },
-      "oppSupportPct": 53,
-      "matchupPct": 57
+      "oppSupportPct": 40,
+      "matchupPct": 51
+    },
+    {
+      "teamId": "1600",
+      "team": "Houston Dynamo",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1600.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "win",
+      "market": "Sieg-Serie",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 40% → 56%"
+      },
+      "ratePct": 67,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 12,
+      "next": {
+        "oppId": "1605",
+        "oppName": "Los Angeles Galaxy",
+        "atHome": true,
+        "date": "2026-08-16",
+        "kickoff": "2026-08-16T00:30:00+00:00",
+        "oppRatePct": 40
+      },
+      "oppSupportPct": 40,
+      "matchupPct": 56
     },
     {
       "teamId": "1607",
@@ -5980,88 +6135,6 @@
       "matchupPct": 52
     },
     {
-      "teamId": "1609",
-      "team": "New England Revolution",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1609.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "unbeaten",
-      "market": "Ungeschlagen",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 33% → 53%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 12,
-      "next": {
-        "oppId": "1600",
-        "oppName": "Houston Dynamo",
-        "atHome": true,
-        "date": "2026-08-08",
-        "kickoff": "2026-08-08T20:30:00+00:00",
-        "oppRatePct": 33
-      },
-      "oppSupportPct": 33,
-      "matchupPct": 53
-    },
-    {
-      "teamId": "1609",
-      "team": "New England Revolution",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1609.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "unbeaten",
-      "market": "Ungeschlagen",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 71,
-        "label": "Eigen 71% + Gegner 33% → 56%"
-      },
-      "ratePct": 71,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 7,
-      "next": {
-        "oppId": "1600",
-        "oppName": "Houston Dynamo",
-        "atHome": true,
-        "date": "2026-08-08",
-        "kickoff": "2026-08-08T20:30:00+00:00",
-        "oppRatePct": 33
-      },
-      "oppSupportPct": 33,
-      "matchupPct": 56
-    },
-    {
       "teamId": "1610",
       "team": "Colorado Rapids",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1610.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -6108,80 +6181,80 @@
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1613.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "MLS",
       "leagueName": "Major League Soccer",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
+      "type": "win",
+      "market": "Sieg-Serie",
       "length": 3,
       "venue": "H",
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 43,
-        "label": "Eigen 43% + Gegner 67% → 53%"
+        "ratePct": 62,
+        "label": "Eigen 62% + Gegner 40% → 53%"
       },
-      "ratePct": 43,
+      "ratePct": 62,
       "seq": [
         true,
         true,
         true,
         false,
         false,
-        false,
         true,
-        true
+        true,
+        false
       ],
       "xgBacked": null,
       "basis": "prior",
-      "preN": 7,
+      "preN": 8,
       "next": {
         "oppId": "18310",
         "oppName": "Charlotte",
         "atHome": false,
         "date": "2026-08-15",
         "kickoff": "2026-08-15T23:30:00+00:00",
-        "oppRatePct": 67
+        "oppRatePct": 40
       },
-      "oppSupportPct": 67,
+      "oppSupportPct": 40,
       "matchupPct": 53
     },
     {
-      "teamId": "1613",
-      "team": "Columbus Crew",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1613.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "1616",
+      "team": "Los Angeles FC",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1616.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "MLS",
       "leagueName": "Major League Soccer",
       "type": "unbeaten",
       "market": "Ungeschlagen",
       "length": 3,
-      "venue": "all",
+      "venue": "A",
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 58,
-        "label": "Eigen 58% + Gegner 60% → 59%"
+        "ratePct": 40,
+        "label": "Eigen 40% + Gegner 87% → 59%"
       },
-      "ratePct": 58,
+      "ratePct": 40,
       "seq": [
         true,
         true,
         true,
         false,
-        true,
-        true,
+        false,
+        false,
         true,
         true
       ],
       "xgBacked": null,
       "basis": "prior",
-      "preN": 12,
+      "preN": 5,
       "next": {
-        "oppId": "18310",
-        "oppName": "Charlotte",
-        "atHome": false,
-        "date": "2026-08-15",
-        "kickoff": "2026-08-15T23:30:00+00:00",
-        "oppRatePct": 60
+        "oppId": "25484",
+        "oppName": "San Diego",
+        "atHome": true,
+        "date": "2026-08-16",
+        "kickoff": "2026-08-16T02:30:00+00:00",
+        "oppRatePct": 87
       },
-      "oppSupportPct": 60,
+      "oppSupportPct": 87,
       "matchupPct": 59
     },
     {
@@ -6198,7 +6271,7 @@
       "continuation": {
         "state": "neutral",
         "ratePct": 50,
-        "label": "Eigen 50% + Gegner 40% → 46%"
+        "label": "Eigen 50% + Gegner 47% → 49%"
       },
       "ratePct": 50,
       "seq": [
@@ -6220,10 +6293,10 @@
         "atHome": true,
         "date": "2026-08-17",
         "kickoff": "2026-08-17T00:30:00+00:00",
-        "oppRatePct": 60
+        "oppRatePct": 53
       },
-      "oppSupportPct": 40,
-      "matchupPct": 46
+      "oppSupportPct": 47,
+      "matchupPct": 49
     },
     {
       "teamId": "16489",
@@ -6264,6 +6337,88 @@
       },
       "oppSupportPct": 53,
       "matchupPct": 49
+    },
+    {
+      "teamId": "9568",
+      "team": "Inter Miami",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/9568.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 40% → 56%"
+      },
+      "ratePct": 67,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 12,
+      "next": {
+        "oppId": "9569",
+        "oppName": "Nashville SC",
+        "atHome": false,
+        "date": "2026-08-16",
+        "kickoff": "2026-08-16T00:30:00+00:00",
+        "oppRatePct": 40
+      },
+      "oppSupportPct": 40,
+      "matchupPct": 56
+    },
+    {
+      "teamId": "9568",
+      "team": "Inter Miami",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/9568.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "bttsYes",
+      "market": "Beide Teams treffen",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 75,
+        "label": "Eigen 75% + Gegner 33% → 58%"
+      },
+      "ratePct": 75,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 12,
+      "next": {
+        "oppId": "9569",
+        "oppName": "Nashville SC",
+        "atHome": false,
+        "date": "2026-08-16",
+        "kickoff": "2026-08-16T00:30:00+00:00",
+        "oppRatePct": 33
+      },
+      "oppSupportPct": 33,
+      "matchupPct": 58
     },
     {
       "teamId": "1597",
@@ -6345,6 +6500,47 @@
       },
       "oppSupportPct": 46,
       "matchupPct": 48
+    },
+    {
+      "teamId": "1600",
+      "team": "Houston Dynamo",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1600.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 46% → 59%"
+      },
+      "ratePct": 67,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 9,
+      "next": {
+        "oppId": "1605",
+        "oppName": "Los Angeles Galaxy",
+        "atHome": true,
+        "date": "2026-08-16",
+        "kickoff": "2026-08-16T00:30:00+00:00",
+        "oppRatePct": 54
+      },
+      "oppSupportPct": 46,
+      "matchupPct": 59
     },
     {
       "teamId": "1608",
@@ -6595,14 +6791,14 @@
       "type": "under25",
       "market": "Unter 2,5 Tore",
       "length": 3,
-      "venue": "all",
+      "venue": "A",
       "strong": false,
       "continuation": {
         "state": "wackelt",
-        "ratePct": 25,
-        "label": "Eigen 25% + Gegner 33% → 28%"
+        "ratePct": 17,
+        "label": "Eigen 17% + Gegner 33% → 23%"
       },
-      "ratePct": 25,
+      "ratePct": 17,
       "seq": [
         true,
         true,
@@ -6610,12 +6806,12 @@
         false,
         false,
         false,
-        false,
+        true,
         false
       ],
       "xgBacked": null,
       "basis": "prior",
-      "preN": 12,
+      "preN": 6,
       "next": {
         "oppId": "16489",
         "oppName": "Austin",
@@ -6625,7 +6821,7 @@
         "oppRatePct": 67
       },
       "oppSupportPct": 33,
-      "matchupPct": 28
+      "matchupPct": 23
     },
     {
       "teamId": "1597",
@@ -6636,14 +6832,55 @@
       "type": "bttsNo",
       "market": "Beide treffen — Nein",
       "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 33,
+        "label": "Eigen 33% + Gegner 60% → 44%"
+      },
+      "ratePct": 33,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 6,
+      "next": {
+        "oppId": "16489",
+        "oppName": "Austin",
+        "atHome": false,
+        "date": "2026-08-17",
+        "kickoff": "2026-08-17T00:30:00+00:00",
+        "oppRatePct": 40
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 44
+    },
+    {
+      "teamId": "1597",
+      "team": "FC Dallas",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1597.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "cleanSheet",
+      "market": "Zu null",
+      "length": 3,
       "venue": "all",
       "strong": false,
       "continuation": {
         "state": "wackelt",
-        "ratePct": 25,
-        "label": "Eigen 25% + Gegner 60% → 39%"
+        "ratePct": 17,
+        "label": "Eigen 17% + Gegner 33% → 23%"
       },
-      "ratePct": 25,
+      "ratePct": 17,
       "seq": [
         true,
         true,
@@ -6663,10 +6900,10 @@
         "atHome": false,
         "date": "2026-08-17",
         "kickoff": "2026-08-17T00:30:00+00:00",
-        "oppRatePct": 40
+        "oppRatePct": 33
       },
-      "oppSupportPct": 60,
-      "matchupPct": 39
+      "oppSupportPct": 33,
+      "matchupPct": 23
     },
     {
       "teamId": "1599",
@@ -6709,20 +6946,20 @@
       "matchupPct": 29
     },
     {
-      "teamId": "1603",
-      "team": "Vancouver Whitecaps",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1603.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "1600",
+      "team": "Houston Dynamo",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1600.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "MLS",
       "leagueName": "Major League Soccer",
-      "type": "under25",
-      "market": "Unter 2,5 Tore",
+      "type": "cleanSheet",
+      "market": "Zu null",
       "length": 3,
       "venue": "all",
       "strong": false,
       "continuation": {
         "state": "wackelt",
         "ratePct": 42,
-        "label": "Eigen 42% + Gegner 47% → 44%"
+        "label": "Eigen 42% + Gegner 27% → 36%"
       },
       "ratePct": 42,
       "seq": [
@@ -6730,8 +6967,8 @@
         true,
         true,
         false,
-        true,
         false,
+        true,
         false,
         true
       ],
@@ -6739,15 +6976,15 @@
       "basis": "prior",
       "preN": 12,
       "next": {
-        "oppId": "1595",
-        "oppName": "Seattle Sounders",
-        "atHome": false,
-        "date": "2026-08-17",
-        "kickoff": "2026-08-17T02:30:00+00:00",
-        "oppRatePct": 53
+        "oppId": "1605",
+        "oppName": "Los Angeles Galaxy",
+        "atHome": true,
+        "date": "2026-08-16",
+        "kickoff": "2026-08-16T00:30:00+00:00",
+        "oppRatePct": 27
       },
-      "oppSupportPct": 47,
-      "matchupPct": 44
+      "oppSupportPct": 27,
+      "matchupPct": 36
     },
     {
       "teamId": "1607",
@@ -6954,6 +7191,47 @@
       "matchupPct": 31
     },
     {
+      "teamId": "2242",
+      "team": "FC Cincinnati",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/2242.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "win",
+      "market": "Sieg-Serie",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 42,
+        "label": "Eigen 42% + Gegner 40% → 41%"
+      },
+      "ratePct": 42,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 12,
+      "next": {
+        "oppId": "1598",
+        "oppName": "Orlando City SC",
+        "atHome": false,
+        "date": "2026-08-15",
+        "kickoff": "2026-08-15T23:30:00+00:00",
+        "oppRatePct": 40
+      },
+      "oppSupportPct": 40,
+      "matchupPct": 41
+    },
+    {
       "teamId": "9569",
       "team": "Nashville SC",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/9569.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -7156,6 +7434,44 @@
       },
       "oppSupportPct": 54,
       "matchupPct": 34
+    },
+    {
+      "teamId": "1609",
+      "team": "New England Revolution",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1609.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 50,
+        "label": "Eigen 50% + Gegner 29% → 42%"
+      },
+      "ratePct": 50,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 2,
+      "next": {
+        "oppId": "1601",
+        "oppName": "Toronto FC",
+        "atHome": false,
+        "date": "2026-08-15",
+        "kickoff": "2026-08-15T23:30:00+00:00",
+        "oppRatePct": 71
+      },
+      "oppSupportPct": 29,
+      "matchupPct": 42
     },
     {
       "teamId": "1615",
