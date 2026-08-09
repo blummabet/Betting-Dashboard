@@ -358,9 +358,27 @@ class TestDirection(unittest.TestCase):
     def test_dir_line_drift(self):
         self.assertIn("driftet", BA._dir_line({"leadDir": "out", "leadPrev": 2.00, "leadOdd": 2.20}))
 
+    def test_dir_line_drift_live_vs_prematch(self):
+        # 09.08.2026 (Lucas): in-play driftet die Quote mit der Zeit -> kein 'kein Back'-Urteil.
+        live = {"leadDir": "out", "leadPrev": 2.08, "leadOdd": 2.62,
+                "live": {"time": 65, "finished": False, "is_ht": False}}
+        lm = BA._dir_line(live)
+        self.assertIn("im Spiel normal", lm)
+        self.assertNotIn("kein Back", lm)
+        pre = {"leadDir": "out", "leadPrev": 2.08, "leadOdd": 2.30}
+        self.assertIn("kein Back", BA._dir_line(pre))
+
     def test_dir_line_flat_or_missing_empty(self):
         self.assertEqual(BA._dir_line({"leadDir": "flat"}), "")
         self.assertEqual(BA._dir_line({}), "")
+
+    def test_dir_event_jump_predicate(self):
+        # 09.08.2026 (Lucas): dieses Prädikat gatet jetzt AUCH den Public-Kanal (Post-Tor raus).
+        self.assertTrue(BA._dir_event_jump({"leadPrev": 1.23, "leadOdd": 3.60}))    # +193% = Gegentor
+        self.assertTrue(BA._dir_event_jump({"leadPrev": 2.00, "leadOdd": 1.15}))    # -42% = eigenes Tor (Crash)
+        self.assertFalse(BA._dir_event_jump({"leadPrev": 2.10, "leadOdd": 2.00}))   # kleiner echter Move
+        self.assertFalse(BA._dir_event_jump({"leadOdd": 2.0}))                      # kein prev -> nicht bewertbar
+        self.assertFalse(BA._dir_event_jump({}))
 
     def test_dir_line_event_jump_suppresses_verdict(self):
         # 08.08.2026 (Lucas, Viking 1.23->3.60 nach 1:1): grosser Sprung = Spielereignis, kein Flow.

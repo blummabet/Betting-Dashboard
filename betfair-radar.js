@@ -968,7 +968,7 @@
     // wann ~der nächste Push kommt). Grün frisch, amber ab 1 verpasstem Lauf, rot ab ~2.5, dann „überfällig"/„hängt".
     var g = _bf.data && _bf.data._meta && _bf.data._meta.generatedAt;
     if (!g) return '';
-    var CAD_MIN = 10;   // Fetch-Kadenz in Minuten — muss zur betfair.yml-cron (*/10) passen; 08.08.2026 (Lucas): 15 → 10
+    var CAD_MIN = 15;   // Anzeige-Kadenz in Minuten. Cron steht auf */10, ABER GitHubs Schedule drosselt kurze Intervalle → real ~15 Min. Statuszeile spiegelt die Realitaet (Lucas 09.08.2026: „wieder auf 15").
     var a = genAgeMin();
     var at = a >= 90 ? Math.round(a / 60) + 'h' : Math.round(a) + ' Min';
     var col = a > CAD_MIN * 2.5 ? '#f2a6a6' : a > CAD_MIN ? C.amber : C.back;

@@ -51,8 +51,10 @@ PUB_HT_TOP     = 50000.0
 PUB_HT_REST    = 15000.0
 PUB_FRESH_TOP  = 100000.0
 PUB_FRESH_REST = 30000.0
-PUB_FRESH_MIN_SHARE = 0.70   # (Lucas 05.08.2026) NUR Public: frisches Geld muss >=70% auf EINER Seite
-                             # konzentriert sein (nicht bloss Volumen). Trades sieht weiter alles.
+PUB_FRESH_MIN_SHARE = 0.80   # (Lucas 05.08.2026, verschaerft 09.08.2026: 0.70 -> 0.80) NUR Public: frisches Geld
+                             # muss >=80% auf EINER Seite konzentriert sein. 70-79% ist bei mehrdeutigen/
+                             # frisch-repricten Maerkten (z.B. nach Tor) zu gewagt fuer den oeffentlichen Kanal.
+                             # Trades sieht weiter alles.
 LEAD_PUSH_FACTOR = 1.75   # 08.08.2026 (Lucas): „Team fuehrt"-Geld flutet an starken Spieltagen (Sa-Nachmittag)
                           # den Push. Extra-Huerde NUR fuer Fuehrungs-Geld — es geht erst durch, wenn der Einsatz
                           # das LEAD_PUSH_FACTOR-Fache der normalen tier-Schwelle erreicht (skaliert pro Kanal:
@@ -257,6 +259,8 @@ def _dir_line(a) -> str:
     move = (" (%.2f → %.2f)" % (prev, odd)) if isinstance(prev, (int, float)) and isinstance(odd, (int, float)) else ""
     if d == "in":
         return "\n📈 Quote bestätigt — Back%s" % move   # 08.08.2026 (Lucas): NICHT ✅ — das nutzt er selbst zum Auswerten im Channel
+    if _is_live(a):   # 09.08.2026 (Lucas): in-play driftet die Quote von allein mit der Zeit (kein Tor -> Sieg-Quote steigt), egal ob jemand layt -> KEIN falsches 'kein Back'-Urteil; vor Anpfiff bleibt es (da bewegt nur Geld die Quote)
+        return "\n⏳ Quote driftet%s — im Spiel normal (Zeit läuft)" % move
     return "\n⚠️ Quote driftet — kein Back-Rückhalt%s" % move
 
 
@@ -543,6 +547,11 @@ def main():
     # 85%-Gate; Trades bleibt ungefiltert (obskure Ligen bewusst drin — dort oft Sharp Money).
     pub_alerts = [a for a in pub_alerts
                   if a.get("scenario") != "fresh" or (a.get("leadShare") or 0.0) >= PUB_FRESH_MIN_SHARE]
+    # (Lucas 09.08.2026) NUR Public: nach einem Spielereignis (Tor/Karte) neu bepreiste Maerkte raus.
+    # Wenn die Quote gerade durch ein Tor gesprungen ist (_dir_event_jump), ist die Richtung unklar und
+    # der Push reaktiv/gewagt - nichts fuer den oeffentlichen Kanal. Trades sieht ihn weiter (mit Richtung-
+    # unklar-Hinweis). Greift nur, wenn wir die Richtung tatsaechlich haben (sonst ist kein Sprung erkennbar).
+    pub_alerts = [a for a in pub_alerts if not _dir_event_jump(a)]
     pub_sent = 0
     for a in pub_alerts:
         key = a["scenario"] + ":" + a["matchId"]
