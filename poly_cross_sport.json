@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-09T16:53:02.198763+00:00",
+ "generatedAt": "2026-08-09T17:46:27.648132+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -11,12 +11,12 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 294,
- "pinnKeys": 126,
- "matched": 72,
- "footballRows": 42,
+ "polyRowsSeen": 297,
+ "pinnKeys": 129,
+ "matched": 75,
+ "footballRows": 45,
  "crossRows": 252,
- "footballSkippedStale": 65,
+ "footballSkippedStale": 64,
  "seenBySport": {
   "basketball_nba": 2,
   "americanfootball_nfl": 132,
@@ -25,16 +25,45 @@
   "mma_mixed_martial_arts": 2,
   "boxing_boxing": 4,
   "soccer_mls": 33,
-  "soccer_liga": 9
+  "soccer_liga": 12
  },
  "matchedBySport": {
   "baseball_mlb": 30,
   "soccer_mls": 33,
-  "soccer_liga": 9
+  "soccer_liga": 12
  },
  "trackRecord": {
-  "tracked": 70,
+  "tracked": 72,
   "converged": 1
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|newyorkmets-pittsburghpirates|newyorkmets",
+   "sport": "baseball_mlb",
+   "event": "New York Mets vs Pittsburgh Pirates",
+   "market": "Moneyline",
+   "outcome": "New York Mets",
+   "polyPP": 61.5,
+   "pinnPP": 42.6,
+   "gapPP": 18.86,
+   "vol": 272934,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-09T17:46:27.647895+00:00"
+  },
+  {
+   "id": "baseball_mlb|newyorkmets-pittsburghpirates|pittsburghpirates",
+   "sport": "baseball_mlb",
+   "event": "New York Mets vs Pittsburgh Pirates",
+   "market": "Moneyline",
+   "outcome": "Pittsburgh Pirates",
+   "polyPP": 38.5,
+   "pinnPP": 57.4,
+   "gapPP": -18.86,
+   "vol": 272934,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-09T17:46:27.647895+00:00"
+  }
+ ]
 }
