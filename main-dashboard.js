@@ -264,6 +264,7 @@
   }
   function bestStreaks() { return allStreaks().slice(0, 5); }
   function allBetfair() {
+    var BF_LEAD_MAX_ODD = 15;   // 09.08.2026 (Lucas): Longshot-Deckel — @>15 = live abgestuerzter Aussenseiter (Hannover @100, St Pauli @80), Geld darauf ist Lay/reaktiv, kein Kohle-Signal. Gegenstueck zum <1.30-Filter, wie der HT-Deckel.
     var ms = (_md.data.betfair && _md.data.betfair.matches) || [], rows = [];
     ms.forEach(function (m) {
       if (_mdBfStale(m)) return;   // 07.08.2026: fertige/vorbei Spiele raus (hoechstes Volumen -> klebten oben in der Kohle-Kachel)
@@ -274,7 +275,7 @@
         if (tot <= 0) continue;
         var lead = rs.reduce(function (a, r) { return (!a || (+r.vol || 0) > (+a.vol || 0)) ? r : a; }, null);
         if (!lead) continue;
-        if (typeof lead.odd === 'number' && lead.odd < 1.30) continue;   // 08.08.2026 (Lucas): Quasi-Lock (@<1.30, oft live/entschieden) = reaktiv, kein Signal — wie HT/Frisches Geld/Alerts
+        if (typeof lead.odd === 'number' && (lead.odd < 1.30 || lead.odd > BF_LEAD_MAX_ODD)) continue;   // 08.08.2026 (Lucas): Quasi-Lock (@<1.30) ODER Longshot (@>15, live abgestuerzt = Lay/reaktiv) = kein Signal — wie HT/Frisches Geld/Alerts
         var share = (+lead.vol || 0) / tot, sc = (+lead.vol || 0) * share;
         if (!best || sc > best.sc) best = { name: name, lead: lead, share: share, vol: +lead.vol || 0, tot: tot, sc: sc };
       }
@@ -355,9 +356,9 @@
   function _mdBfFlowBody() {
     // 04.08.2026 (Lucas: "@1.01 ist sinnfrei"): Geld auf Quasi-Lock-Quoten (< 1.30, meist live/
     // entschieden) ist kein Zufluss-Signal - raus, wie im Radar (MIN_ODD_SHOW). Fehlende Quote -> drin.
-    var FLOW_MIN_ODD = 1.30;
+    var FLOW_MIN_ODD = 1.30, FLOW_MAX_ODD = 15;   // 09.08.2026 (Lucas): auch oben deckeln — Zufluss auf @>15-Longshot (live abgestuerzt) ist reaktiv/Lay, kein Signal
     var items = (((_md.data.bfOverview || {}).flow) || []).filter(function (x) {
-      return !(x.odd != null && +x.odd < FLOW_MIN_ODD);
+      return !(x.odd != null && (+x.odd < FLOW_MIN_ODD || +x.odd > FLOW_MAX_ODD));
     });
     if (!items.length) return empty('Kein frischer Zufluss ≥ €2K — sammelt (2 Snapshots nötig).');
     var mx = items.reduce(function (a, x) { return Math.max(a, +x.deltaEur || 0); }, 1);
@@ -881,7 +882,7 @@
     var rows = jetztRows();
     if (!rows.length) return '<section class="md-jetzt md-rise" style="border-color:var(--mln);background:var(--m1);padding-bottom:13px">' +
       '<div class="md-jz-h"><span style="font-size:16px;opacity:.55">⚡</span><span class="md-jz-t" style="color:var(--mi2)">Jetzt</span>' +
-      '<span class="md-jz-s">kein Spiel in den nächsten 3 h mit Live-Signal — meldet sich automatisch, sobald eins ansteht.</span></div></section>';
+      '<span class="md-jz-s">kein Spiel mit Anpfiff in den nächsten 3 h & BET/Poly-Signal — meldet sich automatisch, sobald eins ansteht.</span></div></section>';
     var now = Date.now();
     var body = rows.map(function (x) {
       var f = x.f, p = x.p, min = Math.max(0, Math.round((x.k - now) / 60000));
@@ -896,7 +897,7 @@
         '</div><span class="md-jz-ko">⏱ ' + ko + '</span>' + mvHtml + '</div>';
     }).join('');
     return '<section class="md-jetzt md-rise"><div class="md-jz-h"><span style="font-size:16px">⚡</span>' +
-      '<span class="md-jz-t">Jetzt</span><span class="md-jz-s">Anpfiff in ≤ 3 h mit Live-Signal</span></div>' + body + '</section>';
+      '<span class="md-jz-t">Jetzt</span><span class="md-jz-s">Anpfiff in ≤ 3 h mit BET/Poly-Signal</span></div>' + body + '</section>';
   }
   window._renderMainDash = _mdRender;
   window._mdState = _md;   // Test-Hook

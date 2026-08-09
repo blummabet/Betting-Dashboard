@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v90';   // 08.08.2026: Betfair-Kadenz 15 → 10 Min — Radar-Statuszeile („nächster ~in") mitgezogen
+const VERSION = 'cocobet-v91';   // 09.08.2026: Übersicht — Longshot-Deckel (@>15) für Kohle+Frisches Geld, „Jetzt"-Wording (BET/Poly statt „Live")
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
