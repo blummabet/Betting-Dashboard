@@ -72,13 +72,13 @@
             .then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
         });
     };
-    return Promise.all([jf('betfair_prices.json'), jf('betfair_history.json'), jf('betfair_track_record.json'), jf('betfair_public_record.json'), jf('betfair_direction.json')]);
+    return Promise.all([jf('betfair_prices.json'), jf('betfair_history.json'), jf('betfair_track_record.json'), jf('betfair_public_record.json'), jf('betfair_direction.json'), jf('betfair_consensus.json')]);
   }
   function _bfLoad() {
     if (_bf.data || _bf.loading) return;
     _bf.loading = true;
     _bfFetch3().then(function (a) {
-      _bf.data = a[0] || { matches: [] }; _bf.hist = a[1] || {}; _bf.track = a[2] || null; _bf.pubrec = a[3] || null; _bf.dir = a[4] || {};
+      _bf.data = a[0] || { matches: [] }; _bf.hist = a[1] || {}; _bf.track = a[2] || null; _bf.pubrec = a[3] || null; _bf.dir = a[4] || {}; _bf.consensus = a[5] || null;
       _bf._cohCache = {}; _bf._mixBase = null; _bf._normBase = null;
       _bf.loading = false; _bf.cardOpen = {};
       var p = document.getElementById('betfairRadarPanel');
@@ -103,6 +103,7 @@
       if (a[2] != null) _bf.track = a[2];
       if (a[3] != null) _bf.pubrec = a[3];
       if (a[4] != null) _bf.dir = a[4];
+      if (a[5] != null) _bf.consensus = a[5];
       _bf._cohCache = {}; _bf._mixBase = null; _bf._normBase = null;
       _bf.loading = false;
       var pp = document.getElementById('betfairRadarPanel');
@@ -811,7 +812,7 @@
 
   function viewToggle() {
     var b = function (id, lbl) { var on = _bf.view === id; return '<button onclick="_bfSetView(\'' + id + '\')" style="padding:6px 13px;border:1px solid ' + (on ? C.gold : C.bd) + ';background:' + (on ? 'rgba(255,184,12,.12)' : 'transparent') + ';color:' + (on ? C.gold : C.mut) + ';font-size:12px;font-weight:700;cursor:pointer">' + lbl + '</button>'; };
-    return '<div style="display:inline-flex;border-radius:9px;overflow:hidden;border:1px solid ' + C.bd + ';margin:6px 0 12px">' + b('live', '🔴 Live-Radar') + b('record', '📊 Trefferquoten') + b('push', '📈 Push-Bilanz') + '</div>';
+    return '<div style="display:inline-flex;border-radius:9px;overflow:hidden;border:1px solid ' + C.bd + ';margin:6px 0 12px">' + b('live', '🔴 Live-Radar') + b('record', '📊 Trefferquoten') + b('push', '📈 Push-Bilanz') + b('consensus', '🧭 Konsens') + '</div>';
   }
 
   // 05.08.2026 (Lucas: wissen wir, ob die Kohle erfolgreich war?): DIE Gesamt-Bilanz. Bisher gab es
@@ -1065,6 +1066,73 @@
       '<div style="font-size:11px;color:' + C.mut + ';margin-top:10px;line-height:1.6"><b style="color:' + C.dim + '">Gates (beide Channels):</b> Halbzeit nur einseitig (\u226585% auf einen Ausgang) \u00B7 f\u00FChrende Quote \u2265 1.30 (kein Geld auf Quasi-Locks) \u00B7 Re-Push erst bei +50% Volumen</div>' +
       '</div>';
   }
+  // 🧭 Konsens-Tab (09.08.2026, Lucas): Zweitmeinung zu jedem Betfair-Geld-Signal — was sagen Pinnacle
+  // + Soft-Books? Rein lesend aus betfair_consensus.json (Mac-Runner, betfair_consensus.py). KEIN Push.
+  function _bfConsAge(cx) {
+    var g = cx && cx.generatedAt; if (!g) return '—';
+    var t = Date.parse(g); if (isNaN(t)) return '—';
+    var a = Math.round((Date.now() - t) / 60000);
+    return a < 1 ? 'gerade' : a < 90 ? ('vor ' + a + ' Min') : ('vor ' + Math.round(a / 60) + 'h');
+  }
+  function _bfConsFlag(cc) {
+    cc = String(cc || '').toUpperCase();
+    if (/^[A-Z]{2}$/.test(cc)) { try { return String.fromCodePoint(0x1F1E6 + cc.charCodeAt(0) - 65) + String.fromCodePoint(0x1F1E6 + cc.charCodeAt(1) - 65); } catch (e) {} }
+    return '🌍';
+  }
+  function renderConsensusBoard() {
+    var cx = _bf.consensus;
+    var intro = '<div style="max-width:900px;margin:2px 0 14px;padding:12px 15px;background:rgba(94,234,212,.06);border-left:3px solid ' + C.vol + ';border-radius:0 10px 10px 0">' +
+      '<div style="font-size:15px;font-weight:800;color:' + C.vol + ';margin-bottom:4px">🧭 Zweitmeinung — sagen die Buchmacher dasselbe?</div>' +
+      '<div style="font-size:12.5px;color:' + C.mut + ';line-height:1.5">Zu jedem Betfair-Geld-Signal (ab €10K auf 1X2) der Gegencheck: Wohin zeigt <b>Pinnacle</b> (schärfster Buchmacher, de-viggt) und wohin die <b>Soft-Books</b>? Zieht Pinnacle die Quote auf dieselbe Seite wie das Betfair-Geld — und bewegt sie sich gerade dorthin (▲pp) — ist das Signal bestätigt. Rührt sich nichts oder zeigt der Markt die andere Seite, ist Vorsicht angesagt. <b>Rein zum Beobachten, kein Push.</b></div></div>';
+    if (!cx || !cx.games || !cx.games.length) {
+      return intro + '<div style="padding:40px;text-align:center;color:' + C.mut + '">⏳ Sammelt — nach dem nächsten Betfair-Lauf stehen hier die Spiele mit Zweitmeinung (läuft am Mac-Runner).</div>';
+    }
+    var withA = cx.games.filter(function (g) { return g.verdict !== 'no_anchor'; });
+    var noA = cx.games.filter(function (g) { return g.verdict === 'no_anchor'; });
+    var vbadge = function (v) {
+      var map = { konsens: ['✓ Konsens', C.back, 'rgba(63,185,80,.12)'], teil: ['~ teils', C.amber, 'rgba(227,179,65,.12)'], uneinig: ['✗ uneinig', C.lay, 'rgba(248,81,73,.12)'], no_anchor: ['— kein Anker', C.dim, 'transparent'] };
+      var x = map[v] || map.no_anchor;
+      return '<span style="display:inline-block;padding:2px 8px;border-radius:12px;font-size:10.5px;font-weight:800;color:' + x[1] + ';background:' + x[2] + ';border:1px solid ' + x[1] + '55">' + x[0] + '</span>';
+    };
+    var pct = function (p) { return p == null ? '' : ' <span style="color:' + C.dim + ';font-size:10px">' + Math.round(p * 100) + '%</span>'; };
+    var oddTxt = function (o) { return o == null ? '<span style="color:' + C.dim + '">—</span>' : '@' + (+o).toFixed(2); };
+    var usd = function (v) { if (v == null) return ''; v = +v; return v >= 1000 ? '$' + (v / 1000).toFixed(v >= 10000 ? 0 : 1) + 'K' : '$' + Math.round(v); };
+    var dirTag = function (d) { if (d === 'in') return ' <span style="color:' + C.back + ';font-weight:800;font-size:10px">Back ✓</span>'; if (d === 'out') return ' <span style="color:' + C.amber + ';font-weight:800;font-size:10px">driftet</span>'; return ''; };
+    var moveTag = function (pp) { if (pp == null) return ''; var up = pp > 0; return ' <span style="color:' + (up ? C.back : C.lay) + ';font-size:10px;font-weight:700" title="Pinnacle-Bewegung auf die Geld-Seite seit letztem Lauf">' + (up ? '▲' : '▼') + Math.abs(pp).toFixed(1) + 'pp</span>'; };
+    var polyCell = function (p) {
+      if (!p) return '<span style="color:' + C.dim + '">—</span>';
+      var bits = [];
+      if (p.odd != null) bits.push('@' + (+p.odd).toFixed(2));
+      if (p.vol) bits.push('<span style="color:' + C.dim + ';font-size:10px">' + usd(p.vol) + (p.sharePct != null ? ' · ' + p.sharePct + '%' : '') + '</span>');
+      return bits.length ? bits.join(' ') : '<span style="color:' + C.dim + '">—</span>';
+    };
+    var row = function (g) {
+      var side = g.moneySide;
+      var live = g.live ? ' <span style="color:' + C.live + ';font-weight:800;font-size:10px">● LIVE</span>' : '';
+      return '<tr style="border-top:1px solid ' + C.bd + '">' +
+        '<td style="padding:7px 8px">' + _bfConsFlag(g.country) + ' <b style="color:' + C.ink + '">' + esc(g.home) + '</b> <span style="color:' + C.dim + '">v</span> <b style="color:' + C.ink + '">' + esc(g.away) + '</b>' + live + '<div style="font-size:10px;color:' + C.dim + '">' + esc(g.league || '') + '</div></td>' +
+        '<td style="padding:7px 8px;white-space:nowrap"><b style="color:' + C.gold + '">' + esc(g.moneyName || '') + '</b> ' + (g.moneySharePct != null ? g.moneySharePct + '%' : '') + (g.moneyOdd ? ' @' + (+g.moneyOdd).toFixed(2) : '') + dirTag(g.moneyDir) + '</td>' +
+        '<td style="padding:7px 8px;text-align:right;white-space:nowrap;color:' + C.ink + '">' + oddTxt(g.pinnOdd) + (g.pinn ? pct(g.pinn[side]) : '') + moveTag(g.pinnMovePP) + '</td>' +
+        '<td style="padding:7px 8px;text-align:right;white-space:nowrap;color:' + C.ink + '">' + oddTxt(g.softOdd) + (g.softN ? ' <span style="color:' + C.dim + ';font-size:9.5px">×' + g.softN + '</span>' : '') + '</td>' +
+        '<td style="padding:7px 8px;text-align:right;white-space:nowrap;color:' + C.ink + '">' + polyCell(g.poly) + '</td>' +
+        '<td style="padding:7px 8px;text-align:center">' + vbadge(g.verdict) + '</td></tr>';
+    };
+    var head2 = '<thead><tr style="color:' + C.mut + ';font-size:10.5px;text-transform:uppercase;letter-spacing:.3px">' +
+      '<th style="text-align:left;padding:6px 8px">Spiel</th><th style="text-align:left;padding:6px 8px">Betfair-Geld</th>' +
+      '<th style="text-align:right;padding:6px 8px" title="Pinnacle-Quote für die Betfair-Geld-Seite (+ de-viggte Wahrscheinlichkeit, + Bewegung)">Pinnacle</th>' +
+      '<th style="text-align:right;padding:6px 8px" title="Ø Soft-Book-Quote für die Geld-Seite (×n = Anzahl Bücher)">Soft</th>' +
+      '<th style="text-align:right;padding:6px 8px" title="Polymarket-Quote + Volumen + Geld-Anteil für die Geld-Seite">Poly</th>' +
+      '<th style="text-align:center;padding:6px 8px">Verdikt</th></tr></thead>';
+    var stamp = '<div style="font-size:11px;color:' + C.dim + ';margin:0 0 8px">' + cx.covered + ' mit Anker · ' + (cx.count - cx.covered) + ' ohne · Stand ' + _bfConsAge(cx) + '</div>';
+    var tbl = withA.length
+      ? '<div style="overflow-x:auto;background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:12px"><table style="width:100%;border-collapse:collapse;min-width:640px;font-size:12.5px">' + head2 + '<tbody>' + withA.map(row).join('') + '</tbody></table></div>'
+      : '<div style="padding:24px;text-align:center;color:' + C.mut + '">Aktuell kein Betfair-Signal in einer gecoverten Liga — sobald z.B. Brasilien/Portugal spielt, erscheint hier die Zweitmeinung.</div>';
+    var noABlock = noA.length
+      ? '<div style="margin-top:14px"><div style="font-size:12px;color:' + C.mut + ';font-weight:700;margin-bottom:6px">Ohne Anker — kein scharfer Buchmarkt für die Liga (' + noA.length + ')</div><div style="overflow-x:auto;background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:12px;opacity:.7"><table style="width:100%;border-collapse:collapse;min-width:640px;font-size:12.5px">' + head2 + '<tbody>' + noA.map(row).join('') + '</tbody></table></div></div>'
+      : '';
+    return intro + stamp + tbl + noABlock;
+  }
+
   function renderBetfairRadar() {
     _bfbCss();
     var head = '<div style="display:flex;align-items:center;gap:10px;margin-bottom:6px;flex-wrap:wrap">' +
@@ -1075,6 +1143,7 @@
 
     if (_bf.view === 'record') return head + renderTrackBoard();
     if (_bf.view === 'push') return head + renderPushBoard();
+    if (_bf.view === 'consensus') return head + renderConsensusBoard();
 
     var fresh = (_bf.data.matches || []).filter(function (m) { return !isStale(m); });
     var qAll = fresh.filter(qualifies);
