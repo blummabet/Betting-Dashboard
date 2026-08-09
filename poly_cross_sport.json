@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-09T00:03:42.436862+00:00",
+ "generatedAt": "2026-08-09T02:27:28.134592+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -11,12 +11,12 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 289,
- "pinnKeys": 113,
- "matched": 47,
- "footballRows": 21,
+ "polyRowsSeen": 301,
+ "pinnKeys": 111,
+ "matched": 55,
+ "footballRows": 33,
  "crossRows": 268,
- "footballSkippedStale": 44,
+ "footballSkippedStale": 40,
  "seenBySport": {
   "basketball_nba": 2,
   "americanfootball_nfl": 132,
@@ -24,17 +24,46 @@
   "icehockey_nhl": 2,
   "mma_mixed_martial_arts": 2,
   "boxing_boxing": 20,
-  "soccer_mls": 15,
+  "soccer_mls": 27,
   "soccer_liga": 6
  },
  "matchedBySport": {
-  "baseball_mlb": 26,
-  "soccer_mls": 15,
+  "baseball_mlb": 22,
+  "soccer_mls": 27,
   "soccer_liga": 6
  },
  "trackRecord": {
-  "tracked": 68,
+  "tracked": 70,
   "converged": 1
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|seattlemariners-tampabayrays|tampabayrays",
+   "sport": "baseball_mlb",
+   "event": "Tampa Bay Rays vs Seattle Mariners",
+   "market": "Moneyline",
+   "outcome": "Tampa Bay Rays",
+   "polyPP": 48.5,
+   "pinnPP": 42.5,
+   "gapPP": 6.04,
+   "vol": 9198,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-09T02:27:28.134428+00:00"
+  },
+  {
+   "id": "baseball_mlb|seattlemariners-tampabayrays|seattlemariners",
+   "sport": "baseball_mlb",
+   "event": "Tampa Bay Rays vs Seattle Mariners",
+   "market": "Moneyline",
+   "outcome": "Seattle Mariners",
+   "polyPP": 51.5,
+   "pinnPP": 57.5,
+   "gapPP": -6.04,
+   "vol": 9198,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-09T02:27:28.134428+00:00"
+  }
+ ]
 }
