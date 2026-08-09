@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-08-09T05:18:34.112842+00:00",
+ "updatedAt": "2026-08-09T06:29:17.473533+00:00",
  "stake": 10.0,
  "open": {
   "lol-we-al-2026-08-06|Anyone's Legend": {
@@ -201,7 +201,7 @@
    "entryPrice": 0.685,
    "firstTs": "2026-08-08T08:59:43.584650+00:00",
    "lastPrice": 0.685,
-   "lastTs": "2026-08-09T05:18:34.112842+00:00",
+   "lastTs": "2026-08-09T06:29:17.473533+00:00",
    "htkAtEntry": 0.018020555555555557,
    "public": false,
    "reasons": [
@@ -231,28 +231,6 @@
    ],
    "signals": [
     "steam"
-   ],
-   "stake": 10.0
-  },
-  "mlb-lad-ari-2026-08-08|Los Angeles Dodgers": {
-   "key": "mlb-lad-ari-2026-08-08",
-   "side": "Los Angeles Dodgers",
-   "verdict": "BET",
-   "conv": 9,
-   "league": "MLB",
-   "entryPrice": 0.645,
-   "firstTs": "2026-08-08T21:45:42.577646+00:00",
-   "lastPrice": 0.645,
-   "lastTs": "2026-08-09T05:18:34.112842+00:00",
-   "htkAtEntry": 2.4265280555555555,
-   "public": true,
-   "reasons": [
-    "großes Geld auf Los Angeles Dodgers (65%)",
-    "🔥 scharfe Wallet (14/20, 70% · +$274K)"
-   ],
-   "signals": [
-    "money",
-    "sharp"
    ],
    "stake": 10.0
   }
@@ -2389,26 +2367,48 @@
    "firstTs": "2026-08-08T17:46:14.437430+00:00",
    "settledTs": "2026-08-09T05:18:34.112842+00:00",
    "resolvedTs": "2026-08-09T05:18:33.516295+00:00"
+  },
+  {
+   "key": "mlb-lad-ari-2026-08-08",
+   "side": "Los Angeles Dodgers",
+   "verdict": "BET",
+   "conv": 9,
+   "league": "MLB",
+   "entryPrice": 0.645,
+   "closePrice": 0.645,
+   "result": "win",
+   "winner": "Los Angeles Dodgers",
+   "pnl": 5.5,
+   "clvPP": 0.0,
+   "stake": 10.0,
+   "public": true,
+   "signals": [
+    "money",
+    "sharp"
+   ],
+   "firstTs": "2026-08-08T21:45:42.577646+00:00",
+   "settledTs": "2026-08-09T06:29:17.473533+00:00",
+   "resolvedTs": "2026-08-09T06:29:16.847540+00:00"
   }
  ],
  "agg": {
   "all": {
-   "n": 102,
-   "wins": 48,
-   "hit": 0.4706,
-   "pnl": -205.17,
-   "stake": 1020.0,
-   "roi": -0.2011,
+   "n": 103,
+   "wins": 49,
+   "hit": 0.4757,
+   "pnl": -199.67,
+   "stake": 1030.0,
+   "roi": -0.1939,
    "clvAvg": 0.05
   },
   "public": {
-   "n": 17,
-   "wins": 12,
-   "hit": 0.7059,
-   "pnl": -0.7,
-   "stake": 170.0,
-   "roi": -0.0041,
-   "clvAvg": 0.12
+   "n": 18,
+   "wins": 13,
+   "hit": 0.7222,
+   "pnl": 4.8,
+   "stake": 180.0,
+   "roi": 0.0267,
+   "clvAvg": 0.11
   },
   "byConv": {
    "7": {
@@ -2430,12 +2430,12 @@
     "clvAvg": 0.08
    },
    "9": {
-    "n": 28,
-    "wins": 20,
-    "hit": 0.7143,
-    "pnl": -6.79,
-    "stake": 280.0,
-    "roi": -0.0243,
+    "n": 29,
+    "wins": 21,
+    "hit": 0.7241,
+    "pnl": -1.29,
+    "stake": 290.0,
+    "roi": -0.0044,
     "clvAvg": 0.07
    },
    "10": {
@@ -2450,12 +2450,12 @@
   },
   "byVerdict": {
    "BET": {
-    "n": 70,
-    "wins": 41,
-    "hit": 0.5857,
-    "pnl": -77.63,
-    "stake": 700.0,
-    "roi": -0.1109,
+    "n": 71,
+    "wins": 42,
+    "hit": 0.5915,
+    "pnl": -72.13,
+    "stake": 710.0,
+    "roi": -0.1016,
     "clvAvg": 0.02
    },
    "FADE": {
@@ -2470,21 +2470,21 @@
   },
   "bySignal": {
    "money": {
-    "n": 36,
-    "wins": 26,
-    "hit": 0.7222,
-    "pnl": 10.27,
-    "stake": 360.0,
-    "roi": 0.0285,
+    "n": 37,
+    "wins": 27,
+    "hit": 0.7297,
+    "pnl": 15.77,
+    "stake": 370.0,
+    "roi": 0.0426,
     "clvAvg": -0.12
    },
    "sharp": {
-    "n": 78,
-    "wins": 32,
-    "hit": 0.4103,
-    "pnl": -244.82,
-    "stake": 780.0,
-    "roi": -0.3139,
+    "n": 79,
+    "wins": 33,
+    "hit": 0.4177,
+    "pnl": -239.32,
+    "stake": 790.0,
+    "roi": -0.3029,
     "clvAvg": 0.01
    },
    "steam": {
