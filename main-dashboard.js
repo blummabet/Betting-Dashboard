@@ -484,7 +484,7 @@
     var rows = consensusRows();
     if (!rows.length) {
       return '<section class="md-hero md-rise">' + top +
-        '<div class="md-empty" style="max-width:780px;margin-top:12px;">Füllt sich beim nächsten Pick-Lauf: dann stehen hier die Spiele, wo sich die Quellen einig sind (hohe Konfidenz, größer setzen) und wo eine ausschert (Value-Kandidat). Poly deckt jetzt auch La Liga ab (weitere Top-5 folgen, sobald Polymarket sie listet) — Spiele ohne Poly-Markt zeigen „3/4".</div></section>';
+        '<div class="md-empty" style="max-width:780px;margin-top:12px;">Füllt sich beim nächsten Pick-Lauf: dann stehen hier die Spiele, wo sich die Quellen einig sind (hohe Konfidenz, größer setzen) und wo eine ausschert (Value-Kandidat). Poly deckt jetzt alle Top-5-Ligen ab (Premier League, La Liga, Serie A, Ligue 1, Bundesliga) — Spiele ohne Poly-Markt zeigen „3/4".</div></section>';
     }
     var kon = rows.filter(function (x) { return x.c.kind === 'konsens'; }).sort(function (a, b) { return a.c.spreadPP - b.c.spreadPP; }).slice(0, 5);
     var div = rows.filter(function (x) { return x.c.kind === 'divergenz'; }).sort(function (a, b) { return b.c.outlierGapPP - a.c.outlierGapPP; }).slice(0, 5);
