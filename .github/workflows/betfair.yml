@@ -7,7 +7,7 @@ name: 🟡 Betfair Radar (Betwatch)
 # `git push` scheitert non-fast-forward. Darum vor jedem Push pullen (-X ours) und bis zu 5x retry.
 on:
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '*/10 * * * *'
   workflow_dispatch:
 
 permissions:
