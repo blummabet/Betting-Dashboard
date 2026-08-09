@@ -65,6 +65,23 @@ def test_dedup_erneuter_alert_bei_weiterer_konvergenz():
     assert len(out) == 1
 
 
+def test_zwei_seiten_werden_zu_einer_zusammengelegt():
+    # 09.08.2026 (Lucas): ein Markt liefert beide Ausgänge — Back- UND Fade-Seite. Muss zu EINEM
+    # Push kollabieren: die Back-Seite (Poly zu niedrig) bleibt, die Gegenseite wird impliziter Fade.
+    back = _edge(id="g|a", outcome="Athletics", polyPP=27.5, pinnPP=45.4, gapPP=-17.9,
+                 richtung="Poly zu niedrig → backen", convergePP=7.4,
+                 event="Athletics vs Boston", market="ML")
+    fade = _edge(id="g|b", outcome="Boston Red Sox", polyPP=72.5, pinnPP=54.6, gapPP=17.9,
+                 richtung="Poly zu hoch → faden", convergePP=7.4,
+                 event="Athletics vs Boston", market="ML")
+    out = X.select(_data(back, fade), {}, NOW)
+    assert len(out) == 1, [o["outcome"] for o in out]
+    assert out[0]["outcome"] == "Athletics"              # Back-Seite (Value-Kauf) bleibt
+    assert out[0].get("_counter") == "Boston Red Sox"    # Gegenseite als impliziter Fade vermerkt
+    card = X.build_card(out[0])
+    assert "impliziter Fade" in card and "Boston Red Sox" in card
+
+
 def test_build_card_zeigt_kernfakten():
     card = X.build_card(_edge())
     for frag in ("Cross-Sport-Edge", "A vs B", "Heim", "Poly", "Pinnacle", "+10.0pp",

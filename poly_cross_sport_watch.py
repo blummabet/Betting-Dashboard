@@ -112,6 +112,8 @@ def build_card(d: dict) -> str:
         f"Poly <b>{d.get('polyPP')}%</b> vs faire Pinnacle <b>{d.get('pinnPP')}%</b>",
         f"Lücke <b>{gap_txt}pp</b> → {d.get('richtung') or ''}",
     ]
+    if d.get("_counter"):
+        lines.append(f"⇄ Gegenseite <b>{d['_counter']}</b> ist entsprechend zu hoch — impliziter Fade")
     if isinstance(conv, (int, float)):
         lines.append(f"✅ <b>Lücke schließt sich</b>: −{conv:.1f}pp seit erster Sichtung "
                      f"(läuft zur Pinnacle → echt, kein Artefakt)")
@@ -158,6 +160,27 @@ def _log_send(preview, meta):
 
 
 # ── Auswahl ─────────────────────────────────────────────────────────────────────
+def _dedupe_sides(elig):
+    """09.08.2026 (Lucas): Zwei-Wege-Doppel zusammenlegen. Ein Markt liefert pro Ausgang eine
+    Diskrepanz — „Athletics zu niedrig → backen" UND „Boston zu hoch → faden" sind DIESELBE Wette,
+    zweimal. Je (event, market) nur EINE Seite pushen: die Back-Seite (gap<0 = Poly unterbewertet =
+    Value-Kauf). Die Gegenseite wird als impliziter Fade am Eintrag vermerkt (_counter)."""
+    groups = {}
+    for d in elig:
+        groups.setdefault((d.get("event"), d.get("market")), []).append(d)
+    out = []
+    for ds in groups.values():
+        backs = [d for d in ds if isinstance(d.get("gapPP"), (int, float)) and d["gapPP"] < 0]
+        keep = min(backs, key=lambda d: d["gapPP"]) if backs else max(ds, key=lambda d: d.get("convergePP") or 0)
+        others = [d.get("outcome") for d in ds if d is not keep and d.get("outcome")]
+        if others:
+            keep = dict(keep)
+            keep["_counter"] = others[0]
+        out.append(keep)
+    out.sort(key=lambda d: (-(d.get("convergePP") or 0), -abs(d.get("gapPP") or 0)))
+    return out
+
+
 def select(data: dict, seen: dict, now: datetime):
     """Liefert die Liste alertwürdiger Cross-Sport-Edges. REIN/testbar.
 
@@ -189,8 +212,7 @@ def select(data: dict, seen: dict, now: datetime):
             if isinstance(prev_conv, (int, float)) and (conv - prev_conv) < RECONVERGE:
                 continue                  # schon gemeldet, nicht wesentlich weiter geschlossen
         out.append(d)
-    out.sort(key=lambda d: (-(d.get("convergePP") or 0), -abs(d.get("gapPP") or 0)))
-    return out
+    return _dedupe_sides(out)   # 09.08.2026 (Lucas): Zwei-Wege-Doppel je Markt auf eine (Back-)Seite legen
 
 
 def main():
