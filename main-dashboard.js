@@ -612,7 +612,7 @@
 
   // ── 🧪 Public-Kandidaten (Vorschau — sendet NICHT) (01.08.2026, Lucas). Zwei Logiken parallel,
   //    ein paar Tage beobachten, bevor irgendwas in den Channel geht: (A) „Top-Play" hart gegatet
-  //    (Conv≥9 + bewiesene Wallet + echte Mehrheit), (B) „Whale-Watch" (Schwellen wie im Public-Push).
+  //    (Conv≥7 + bewiesene Wallet + echte Mehrheit), (B) „Whale-Watch" (Schwellen wie im Public-Push).
   function _mdPubTopRow(r) {
     var vcol = r.verdict === 'BET' ? A.good : A.gold, conv = +r.conv || 0;
     var badge = '<span style="display:inline-block;padding:1px 7px;border-radius:10px;border:1px solid ' + vcol + ';color:' + vcol + ';font-weight:800;font-size:10px;margin-right:6px">' + r.verdict + '</span>';
@@ -666,7 +666,7 @@
       try { over = _pwOverNormTop(5) || []; } catch (e) { over = []; }
       var note = '<div style="font-size:10px;color:var(--mi3);margin:-2px 0 8px">🧪 Vorschau — sendet nicht · ein paar Tage beobachten</div>';
       var topBody = note + (tops.length ? tops.slice(0, 5).map(_mdPubTopRow).join('')
-        : empty('Kein Top-Play über der Schwelle — Conv≥9, bewiesene Wallet (n≥8, ≥55%), Geld-Mehrheit ≥60%. Normalfall.'));
+        : empty('Kein Top-Play über der Schwelle — Conv≥7, bewiesene Wallet (n≥8, ≥55%), Geld-Mehrheit ≥60%. Normalfall.'));
       var overBody = _mdOverNormBody(over);
       if (t) t.innerHTML = tile('🎯', 'Top-Play', A.good, 'rgba(46,160,67,.14)', 'rgba(46,160,67,.32)', 'polywallets', 'Wallets', topBody, 0);
       if (w) w.innerHTML = tile('💰', 'Volumen über Norm', A.poly, 'rgba(25,158,112,.14)', 'rgba(25,158,112,.32)', 'polywallets', 'Wallets', overBody, 0);

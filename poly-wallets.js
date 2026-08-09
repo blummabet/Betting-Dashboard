@@ -487,7 +487,7 @@ function _pwRender(){
     +'<p class="pw-sub">'+(noAnchor
       ? 'E-Sport hat keinen scharfen Buchmacher-Anker — deshalb <b>keine Edge-vs-Pinnacle-Ansicht</b>. Stattdessen die reine Poly-Sicht: <b>wo liegt das Geld, wie konzentriert, welche Wale, und wo widerspricht sich Poly selbst</b> (Arbitrage).'
       : 'Wo Polymarket vs. dem scharfen Pinnacle-Anker fehlbepreist ist — bestätigt oder gevetot vom großen Geld. <b>Die Edge ist das Signal, die Whales sind das Veto.</b>')+'</p></div>'
-    +'<div class="pw-stamp">'+f.icon+' '+f.label+' · Stand '+upd+'<br><span>Beträge geschätzt (Anteile × Preis)</span></div></div>';
+    +'<div class="pw-stamp">🌐 Alle Sportarten · Stand '+upd+'<br><span>Beträge geschätzt (Anteile × Preis)</span></div></div>';   // 09.08.2026 (Lucas): NICHT das Datensatz-Flag (🇺🇸 MLS) — Whale/Geld-Sicht ist global über alle Sportarten, der Datensatz betrifft nur den Pinnacle-Anker der Edge-Sektion
 
   // 19.07.2026 (Lucas: „besser aufteilen") — Sektionen auf Unter-Reiter verteilt, statt alle 9
   // untereinander. Jede Ansicht zeigt nur ihr Thema → kurze Scroll-Achse, klare Trennung.
@@ -943,6 +943,12 @@ if(typeof window!=='undefined'){ window._pwWhaleDrill=_pwWhaleDrill; window._pwW
 // gewichtet nach Stichprobe (mehr n → mehr Vertrauen). Beantwortet „wem folgen", nicht „wer setzt viel".
 const PW_RANK_MIN_N = 12;      // CLV-Interim: hoch gaten, sonst adeln Zufalls-Stichproben (n=9) Verlierer
 const PW_RANK_MIN_N_PNL = 8;   // sobald echte Poly-P&L da ist, reicht weniger getrackte Historie
+// 09.08.2026 (Lucas): „Schärfste" darf nicht bloß „größter Gewinner" heißen. Wer bei genug getrackter
+// Stichprobe den Close NICHT schlägt (Ø CLV<0) oder klar unter Münzwurf trifft, fliegt aus der Rangliste —
+// egal wie hoch die Lifetime-P&L (die kommt oft aus Größe/Varianz/Krypto, nicht aus Sport-Schärfe).
+const PW_RANK_FLOOR_N = 8;      // ab so vielen getrackten Wetten greift der Schärfe-Floor
+const PW_RANK_FLOOR_CLV = 0;    // Ø CLV muss ≥ 0 sein (Einstieg schlägt Close)
+const PW_RANK_FLOOR_HIT = 0.45; // und Trefferquote ≥ 45 %
 const PW_RANK_K = 6;           // Shrinkage: kleine Stichproben werden zur Neutralität gezogen
 const PW_RANK_HITW = 6;        // Gewicht der Trefferquote (ggü. CLV) im Kombi-Score
 function _pwWalletKombi(sc) {
@@ -986,9 +992,14 @@ function _pwRankByPnl(scores, openMap, kick) {
   const rows = Object.keys(scores).map(function (w) {
     const v = scores[w]; if (!v || typeof v.pnl !== 'number' || (v.n || 0) < PW_RANK_MIN_N_PNL) return null;
     return { wallet: w, pnl: v.pnl, n: v.n || 0, avgClv: v.n ? (v.clvSumPP || 0) / v.n : 0, hit: v.n ? (v.wins || 0) / v.n : 0, usd: Number(v.usd) || 0 };
-  }).filter(Boolean).sort(function (a, b) { return b.pnl - a.pnl; }).slice(0, 20);
+  }).filter(Boolean)
+    // 09.08.2026 (Lucas): Schärfe-Floor — wer genug getrackt ist (n≥FLOOR_N) und den Close NICHT schlägt
+    // (Ø CLV<0) oder klar unter Münzwurf trifft (Treffer<45 %), gehört nicht in die „Schärfste"-Liste,
+    // egal wie hoch die Lifetime-P&L. Zu dünn getrackte (n<FLOOR_N) bleiben (können wir noch nicht beurteilen).
+    .filter(function (r) { return r.n < PW_RANK_FLOOR_N || (r.avgClv >= PW_RANK_FLOOR_CLV && r.hit >= PW_RANK_FLOOR_HIT); })
+    .sort(function (a, b) { return b.pnl - a.pnl; }).slice(0, 20);
   const intro = '<section class="pw-sec"><div class="pw-sec-head">' + kick
-    + '<span class="pw-sec-note">nach <b>echter Poly-Gesamt-Bilanz</b> (data-api /positions) · Ø CLV / Treffer / n = unsere getrackte Stichprobe als Nebenwert · 🔥 = profitabel</span></div>';
+    + '<span class="pw-sec-note">Wallets, die den Close schlagen (Ø CLV ≥ 0 &amp; Treffer ≥ 45 % bei genug n), sortiert nach <b>echter Poly-Gesamt-Bilanz</b> (data-api /positions) · 🔥 = profitabel</span></div>';
   if (!rows.length) return intro + '<div class="pw-none">Noch keine Wallet mit P&amp;L-Historie erfasst.</div></section>';
   const body = rows.map(function (r, i) {
     const pcol = r.pnl >= 0 ? '#3fb950' : '#f85149', clvCol = r.avgClv >= 0 ? '#3fb950' : '#f85149';
@@ -1345,11 +1356,11 @@ function _pwTopPlays(limit, live, useSportPass){
 }
 
 // (01.08.2026, Lucas) PUBLIC-KANDIDAT „Top-Play" — hart gegatet, NUR Vorschau (sendet nicht).
-// Nur was wir öffentlich vertreten würden: Conviction≥9 + bewiesene Wallet (n≥8 & ≥55% Treffer)
+// Nur was wir öffentlich vertreten würden: Conviction≥7 (Skala neu, = altes ≥9) + bewiesene Wallet (n≥8 & ≥55% Treffer)
 // + echte Geld-Mehrheit ≥60% + Sport. Sport-Filter der View wird ignoriert (public = alle Sportarten).
 function _pwPublicTopPlays(){
   return _pwTopPlays(0,false,false).filter(r=>
-    r.conv>=9 && r.moneyPct>=0.60 && r.sharp && r.sharp.n>=8 && r.sharp.hit>=0.55);
+    r.conv>=7 && r.moneyPct>=0.60 && r.sharp && r.sharp.n>=8 && r.sharp.hit>=0.55);   // 09.08.2026: ≥7 nach Basis-4→2-Umstellung = gleiche effektive Stärke wie vorher ≥9
 }
 
 // (01.08.2026, Lucas) PUBLIC-KANDIDAT „Whale-Watch" — repliziert das Public-Gate von poly_whale_watch.py
@@ -1509,6 +1520,9 @@ function _pwShortlistScore(key,m){
   if(sh){
     // Qualitätsskalierte Gewichtung: Basis 2,5; +0,5 bei ≥60% Treffer, +0,5 bei ≥70%, +0,5 wenn lifetime P&L>0.
     let w=2.5; if(sh.hit>=0.6)w+=0.5; if(sh.hit>=0.7)w+=0.5; if(sh.pnl>0)w+=0.5;
+    // 09.08.2026 (Lucas): nach Stichprobe skalieren — n=8 darf nicht wie n=30 zählen. Konfidenzfaktor
+    // 0,7..1,0 (voll ab ~n=12), damit dünne Stichproben weniger ins Gewicht ziehen.
+    w *= Math.min(1, 0.7 + (sh.n||0)/40);
     const pnlTxt=Math.abs(sh.pnl)>=1000?((sh.pnl>=0?'+$':'-$')+Math.round(Math.abs(sh.pnl)/1000)+'K')
       :((sh.pnl>=0?'+$':'-$')+Math.round(Math.abs(sh.pnl)));
     add(sh.side,w,'🔥 scharfe Wallet ('+sh.wins+'/'+sh.n+', '+Math.round(sh.hit*100)+'% · '+pnlTxt+')', 'sharp');
@@ -1527,7 +1541,7 @@ function _pwShortlistScore(key,m){
   let best=null,bs=0; for(const s in sides) if(sides[s]>bs){bs=sides[s];best=s;}
   const vol=m.totalUsd||0;
   if(!best||bs<3||vol<15000) return {verdict:'SKIP'};
-  let conv=Math.min(10,Math.round(4+bs));
+  let conv=Math.min(10,Math.round(2+bs));   // 09.08.2026 (Lucas): Basis 4→2 — ein Einzelsignal ist nicht mehr schon 7-8/10; Skala spreizt ~5-10 (Public-Gate unten von ≥9 auf ≥7 mitgezogen, gleiche effektive Stärke)
   let reasons=(why[best]||[]).slice(0,3);
   const sigs=[...new Set(tags[best]||[])];
   let turned=false;
@@ -1650,7 +1664,7 @@ function _pwTrackRecord(track){
   const upd=track.updatedAt?('<div class="pw-mut" style="font-size:11px;margin:2px 0 10px">Stand '+_pwEsc(String(track.updatedAt).slice(0,16).replace('T',' '))+' · fixer Einsatz $'+Math.round(track.stake||10)+' je Play</div>'):'';
   return intro+upd
     +_pwTrackKpis(agg.all||{n:0}, '🟢 Ganze Shortlist', '(alle Plays, jede Conviction)')
-    +_pwTrackKpis(agg.public||{n:0}, '◆ Public-Kandidaten', '(hart gegated: Conv≥9 + bewiesene Wallet + Mehrheit)')
+    +_pwTrackKpis(agg.public||{n:0}, '◆ Public-Kandidaten', '(hart gegated: Conv≥7 + bewiesene Wallet + Mehrheit)')
     +_pwTrackConvTable(agg.byConv)
     +_pwTrackSignalTable(agg.bySignal)
     +_pwTrackOpen(track.open)
