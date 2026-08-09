@@ -84,8 +84,8 @@ test('#69 Sharp-Qualität: bewiesene Wallet hebt Conviction + Warum zeigt Record
     const r = w._pwShortlistScore('mlb-braves-padres', BROAD['mlb-braves-padres']);
     assert.strictEqual(r.verdict, 'BET');
     assert.strictEqual(r.side, 'Atlanta Braves');
-    // Geld 1 (65%) + Sharp 4 (Basis2,5 +0,5@≥60 +0,5@≥70 +0,5 P&L>0) → conv = round(4+5) = 9
-    assert.ok(r.conv >= 9, 'Conviction ≥9 durch Qualitäts-Sharp, war: ' + r.conv);
+    // Geld 1 (65%) + Sharp 4 × Konfidenz(0,95 @n=10) = 3,8 → bs 4,8 → conv = round(2+4,8) = 7 (Basis neu 2)
+    assert.ok(r.conv >= 7, 'Conviction ≥7 durch Qualitäts-Sharp, war: ' + r.conv);
     assert.ok(r.reasons.some(x => /scharfe Wallet \(7\/10, 70% · \+\$150K\)/.test(x)),
       'Warum zeigt den Wallet-Record: ' + JSON.stringify(r.reasons));
     assert.ok(r.sharp && r.sharp.n === 10, 'Sharp-Record am Play angehängt');
@@ -98,7 +98,7 @@ test('#70 Public Top-Play: erfüllt harte Gates → Kandidat', async () => {
     assert.ok(tops.length >= 1, 'mindestens ein Top-Play-Kandidat');
     const t = tops[0];
     assert.strictEqual(t.side, 'Atlanta Braves');
-    assert.ok(t.conv >= 9 && t.moneyPct >= 0.60 && t.sharp.n >= 8 && t.sharp.hit >= 0.55,
+    assert.ok(t.conv >= 7 && t.moneyPct >= 0.60 && t.sharp.n >= 8 && t.sharp.hit >= 0.55,
       'alle Gates erfüllt');
   });
 });
