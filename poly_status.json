@@ -43,10 +43,10 @@
       "ok": false,
       "nFail": 4,
       "failures": [
-        "lol-we-al-2026-08-06: seit 3.4 Tagen offen — keine Auflösung gefunden",
-        "lol-ig1-nip-2026-08-06: seit 3.4 Tagen offen — keine Auflösung gefunden",
-        "lol-bgt-su-2026-08-06: seit 3.4 Tagen offen — keine Auflösung gefunden",
-        "mlb-tor-chc-2026-06-21: seit 49.4 Tagen offen — keine Auflösung gefunden"
+        "lol-we-al-2026-08-06: seit 3.5 Tagen offen — keine Auflösung gefunden",
+        "lol-ig1-nip-2026-08-06: seit 3.5 Tagen offen — keine Auflösung gefunden",
+        "lol-bgt-su-2026-08-06: seit 3.5 Tagen offen — keine Auflösung gefunden",
+        "mlb-tor-chc-2026-06-21: seit 49.5 Tagen offen — keine Auflösung gefunden"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -67,7 +67,7 @@
       "nFail": 6,
       "failures": [
         "15/54 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (28%) — Trefferquote allein trügt",
-        "   0x84cfffc3f1… n=17 Treffer 59% P&L $-7,645,815",
+        "   0x84cfffc3f1… n=17 Treffer 59% P&L $-7,645,750",
         "   0xe9076a87c5… n=18 Treffer 67% P&L $-7,541,838",
         "   0x224a89dbe0… n=30 Treffer 50% P&L $-3,863,308",
         "   0xc3c3b3ef30… n=56 Treffer 66% P&L $-3,776,716",
@@ -91,11 +91,11 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "415/445 'live' Geld-Märkte sind schon >6h nach Anpfiff (93%) — $13,040,800 Whale-Geld auf fertigen Spielen"
+        "411/442 'live' Geld-Märkte sind schon >6h nach Anpfiff (93%) — $12,390,793 Whale-Geld auf fertigen Spielen"
       ],
       "note": "Der Close-Feed setzt kein resolved-Flag; fertige Spiele bleiben 'live'. Alle Views filtern jetzt auf den rekonstruierten Anpfiff — dieser Check misst den Geister-Anteil im Roh-Feed (steigt er, prunt/löst der Feed nicht mehr auf; jede ungegatete View zeigt dann fertige Spiele)."
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-08-09T10:16:57.995124+00:00"
+  "generatedAt": "2026-08-09T11:07:45.836266+00:00"
 }
