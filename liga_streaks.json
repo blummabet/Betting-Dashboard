@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "liga",
-    "generatedAt": "2026-08-08T18:21:10.129635+00:00",
+    "generatedAt": "2026-08-09T07:00:17.416252+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -15307,21 +15307,20 @@
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 45% → 54%"
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 45% → 58%"
       },
-      "ratePct": 60,
+      "ratePct": 67,
       "seq": [
         true,
         true,
         true,
         true,
-        false,
         false
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 2,
+      "preN": 1,
       "next": {
         "oppId": "106",
         "oppName": "Stade Brestois 29",
@@ -15331,7 +15330,7 @@
         "oppRatePct": 55
       },
       "oppSupportPct": 45,
-      "matchupPct": 54
+      "matchupPct": 58
     },
     {
       "teamId": "492",
@@ -16474,6 +16473,7 @@
         "names": [
           "form_trend",
           "h2h_pattern",
+          "xg_strength",
           "transfer_shift"
         ],
         "market": "Unter 2.5 Tore"
@@ -22969,7 +22969,7 @@
       "continuation": {
         "state": "neutral",
         "ratePct": 55,
-        "label": "Eigen 55% + Gegner 40% → 49%"
+        "label": "Eigen 55% + Gegner 33% → 46%"
       },
       "ratePct": 55,
       "seq": [
@@ -22989,10 +22989,10 @@
         "atHome": false,
         "date": "2026-08-22",
         "kickoff": "2026-08-22T18:45:00+00:00",
-        "oppRatePct": 40
+        "oppRatePct": 33
       },
-      "oppSupportPct": 40,
-      "matchupPct": 49
+      "oppSupportPct": 33,
+      "matchupPct": 46
     },
     {
       "teamId": "106",
@@ -23008,7 +23008,7 @@
       "continuation": {
         "state": "neutral",
         "ratePct": 45,
-        "label": "Eigen 45% + Gegner 60% → 51%"
+        "label": "Eigen 45% + Gegner 67% → 54%"
       },
       "ratePct": 45,
       "seq": [
@@ -23027,10 +23027,51 @@
         "atHome": false,
         "date": "2026-08-22",
         "kickoff": "2026-08-22T18:45:00+00:00",
-        "oppRatePct": 40
+        "oppRatePct": 33
       },
-      "oppSupportPct": 60,
-      "matchupPct": 51
+      "oppSupportPct": 67,
+      "matchupPct": 54
+    },
+    {
+      "teamId": "1298",
+      "team": "Le Mans",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1298.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 50,
+        "label": "Eigen 50% + Gegner 45% → 48%"
+      },
+      "ratePct": 50,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 6,
+      "next": {
+        "oppId": "106",
+        "oppName": "Stade Brestois 29",
+        "atHome": true,
+        "date": "2026-08-22",
+        "kickoff": "2026-08-22T18:45:00+00:00",
+        "oppRatePct": 55
+      },
+      "oppSupportPct": 45,
+      "matchupPct": 48
     },
     {
       "teamId": "1579",
@@ -25482,47 +25523,6 @@
       },
       "oppSupportPct": 33,
       "matchupPct": 33
-    },
-    {
-      "teamId": "1298",
-      "team": "Le Mans",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1298.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 43,
-        "label": "Eigen 43% + Gegner 45% → 44%"
-      },
-      "ratePct": 43,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 7,
-      "next": {
-        "oppId": "106",
-        "oppName": "Stade Brestois 29",
-        "atHome": true,
-        "date": "2026-08-22",
-        "kickoff": "2026-08-22T18:45:00+00:00",
-        "oppRatePct": 55
-      },
-      "oppSupportPct": 45,
-      "matchupPct": 44
     },
     {
       "teamId": "503",
