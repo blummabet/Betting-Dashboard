@@ -121,34 +121,9 @@
       "id": "history_snaps_plausible",
       "label": "History-Snapshots = echte Märkte (kein Platzhalter)",
       "severity": "warn",
-      "ok": false,
-      "nFail": 24,
-      "failures": [
-        "497-502: 1 Platzhalter-Snap(s), z.B. 1.42/1.06/1.35 (Overround 2.39) → Geister-Move im Radar + Fake-Steam-Alert",
-        "499-488: 11 Platzhalter-Snap(s), z.B. 1.56/3.15/1.09 (Overround 1.88) → Geister-Move im Radar + Fake-Steam-Alert",
-        "500-487: 1 Platzhalter-Snap(s), z.B. 1.44/1.07/1.49 (Overround 2.30) → Geister-Move im Radar + Fake-Steam-Alert",
-        "503-489: 11 Platzhalter-Snap(s), z.B. 1.49/2.7/1.79 (Overround 1.60) → Geister-Move im Radar + Fake-Steam-Alert",
-        "530-535: 6 Platzhalter-Snap(s), z.B. 1.26/4.9/1.06 (Overround 1.94) → Geister-Move im Radar + Fake-Steam-Alert",
-        "540-539: 2 Platzhalter-Snap(s), z.B. 1.96/3.4/1.09 (Overround 1.72) → Geister-Move im Radar + Fake-Steam-Alert",
-        "544-797: 3 Platzhalter-Snap(s), z.B. 1.48/1.09/1.53 (Overround 2.25) → Geister-Move im Radar + Fake-Steam-Alert",
-        "160-162: 3 Platzhalter-Snap(s), z.B. 1.32/1.01/1.32 (Overround 2.51) → Geister-Move im Radar + Fake-Steam-Alert",
-        "164-185: 3 Platzhalter-Snap(s), z.B. 1.23/1.01/1.23 (Overround 2.62) → Geister-Move im Radar + Fake-Steam-Alert",
-        "165-175: 1 Platzhalter-Snap(s), z.B. 1.31/1.01/1.17 (Overround 2.61) → Geister-Move im Radar + Fake-Steam-Alert",
-        "1660-168: 2 Platzhalter-Snap(s), z.B. 1.18/1.01/1.44 (Overround 2.53) → Geister-Move im Radar + Fake-Steam-Alert",
-        "170-174: 8 Platzhalter-Snap(s), z.B. 1.3/1.01/1.3 (Overround 2.53) → Geister-Move im Radar + Fake-Steam-Alert",
-        "173-163: 4 Platzhalter-Snap(s), z.B. 1.48/1.01/1.2 (Overround 2.50) → Geister-Move im Radar + Fake-Steam-Alert",
-        "182-169: 2 Platzhalter-Snap(s), z.B. 1.34/1.01/1.34 (Overround 2.48) → Geister-Move im Radar + Fake-Steam-Alert",
-        "192-167: 2 Platzhalter-Snap(s), z.B. 1.3/1.01/1.3 (Overround 2.53) → Geister-Move im Radar + Fake-Steam-Alert",
-        "110-114: 2 Platzhalter-Snap(s), z.B. 1.01/1.02/1.01 (Overround 2.96) → Geister-Move im Radar + Fake-Steam-Alert",
-        "111-91: 3 Platzhalter-Snap(s), z.B. 1.02/1.02/1.02 (Overround 2.94) → Geister-Move im Radar + Fake-Steam-Alert",
-        "116-108: 3 Platzhalter-Snap(s), z.B. 1.02/1.02/1.02 (Overround 2.94) → Geister-Move im Radar + Fake-Steam-Alert",
-        "1298-106: 2 Platzhalter-Snap(s), z.B. 1.18/1.02/1.18 (Overround 2.68) → Geister-Move im Radar + Fake-Steam-Alert",
-        "77-79: 17 Platzhalter-Snap(s), z.B. 1.02/1.02/1.02 (Overround 2.94) → Geister-Move im Radar + Fake-Steam-Alert",
-        "81-95: 5 Platzhalter-Snap(s), z.B. 1.02/1.02/1.02 (Overround 2.94) → Geister-Move im Radar + Fake-Steam-Alert",
-        "84-97: 2 Platzhalter-Snap(s), z.B. 1.19/1.02/1.19 (Overround 2.66) → Geister-Move im Radar + Fake-Steam-Alert",
-        "85-94: 10 Platzhalter-Snap(s), z.B. 1.02/1.02/1.02 (Overround 2.94) → Geister-Move im Radar + Fake-Steam-Alert",
-        "96-80: 2 Platzhalter-Snap(s), z.B. 1.02/1.02/1.02 (Overround 2.94) → Geister-Move im Radar + Fake-Steam-Alert"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Verbraucher filtern via odds_plausibility.clean_snaps; verseuchte Snaps bleiben trotzdem ein Quellen-Fehler und werden hier sichtbar."
     },
     {
@@ -352,15 +327,15 @@
         "503-489 Heimsieg @4.55: sichere Linie Doppelte Chance — 1X @2.017 verfügbar (≥1.35), nicht abgeleitet",
         "523-490 Auswärtssieg @2.93: sichere Linie Doppelte Chance — X2 @1.477 verfügbar (≥1.35), nicht abgeleitet",
         "84-97 Heimsieg @2.15: sichere Linie Doppelte Chance — 1X @1.352 verfügbar (≥1.35), nicht abgeleitet",
-        "532-543 Auswärtssieg @2.71: sichere Linie Doppelte Chance — X2 @1.473 verfügbar (≥1.35), nicht abgeleitet",
-        "536-728 Heimsieg @2.2: sichere Linie Doppelte Chance — 1X @1.359 verfügbar (≥1.35), nicht abgeleitet",
+        "532-543 Auswärtssieg @2.71: sichere Linie Doppelte Chance — X2 @1.476 verfügbar (≥1.35), nicht abgeleitet",
+        "536-728 Heimsieg @2.2: sichere Linie Doppelte Chance — 1X @1.357 verfügbar (≥1.35), nicht abgeleitet",
         "544-797 Auswärtssieg @3.36: sichere Linie Doppelte Chance — X2 @1.583 verfügbar (≥1.35), nicht abgeleitet",
         "160-162 Auswärtssieg @3.5: sichere Linie Doppelte Chance — X2 @1.81 verfügbar (≥1.35), nicht abgeleitet",
         "164-185 Auswärtssieg @4.85: sichere Linie Doppelte Chance — X2 @2.152 verfügbar (≥1.35), nicht abgeleitet",
         "1660-168 Heimsieg @5.45: sichere Linie Doppelte Chance — 1X @2.43 verfügbar (≥1.35), nicht abgeleitet",
         "173-163 Auswärtssieg @5.6: sichere Linie Doppelte Chance — X2 @2.478 verfügbar (≥1.35), nicht abgeleitet",
         "182-169 Heimsieg @2.42: sichere Linie Doppelte Chance — 1X @1.45 verfügbar (≥1.35), nicht abgeleitet",
-        "192-167 Heimsieg @2.89: sichere Linie Doppelte Chance — 1X @1.632 verfügbar (≥1.35), nicht abgeleitet"
+        "192-167 Heimsieg @2.89: sichere Linie Doppelte Chance — 1X @1.645 verfügbar (≥1.35), nicht abgeleitet"
       ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
@@ -527,6 +502,6 @@
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-08-10T08:01:31.316381+00:00"
+  "nFail": 1,
+  "generatedAt": "2026-08-10T18:53:44.956732+00:00"
 }
