@@ -992,8 +992,8 @@ function _stPolyFeeds() {
 
 async function _stRenderBetfairStatus() {
   const dyn = _stDynEl(); if (!dyn) return;
-  const [prices, track, wLiga, wMls, wWm] = await Promise.all([
-    _stGet('betfair_prices.json'), _stGet('betfair_track_record.json'),
+  const [prices, track, bstatus, wLiga, wMls, wWm] = await Promise.all([
+    _stGet('betfair_prices.json'), _stGet('betfair_track_record.json'), _stGet('betfair_status.json'),
     _stGet('liga_signal_weights.json'), _stGet('mls_signal_weights.json'), _stGet('signal_weights.json'),
   ]);
   const meta = (prices && prices._meta) || {};
@@ -1002,6 +1002,13 @@ async function _stRenderBetfairStatus() {
   if (age === null) { vIco = '⚠️'; vT = 'Keine Betfair-Daten'; vS = 'betfair_prices.json fehlt/ohne Zeitstempel — Fetcher prüfen.'; vC = _ST_R; }
   else if (age > 3) { vIco = '🔴'; vT = `Radar ${age.toFixed(1)}h alt`; vS = 'Mac-Runner schläft/offline → Radar & Telegram-Push veralten. MacBook/Runner prüfen.'; vC = _ST_R; }
   else if (age > 1) { vIco = '🟡'; vT = `Radar ${age.toFixed(1)}h alt`; vS = 'Älter als der ~15-min-Takt — Runner beobachten.'; vC = _ST_A; }
+  // 10.08.2026 (Lucas): Ausgabe-Integrität (betfair_data_integrity.py) in die Kopf-Ampel falten — ein
+  // stiller Bug (tote Vor-Quote → Braga-Push, kaputtes mkv-Delta) gehört GANZ OBEN, nicht nur weit unten.
+  const _bChecks = (bstatus && Array.isArray(bstatus.checks)) ? bstatus.checks : [];
+  const _bErr = _bChecks.filter(c => !c.ok && c.severity === 'error').length;
+  const _bWarn = _bChecks.filter(c => !c.ok && c.severity !== 'error').length;
+  if (_bErr > 0) { vIco = '🔴'; vT = `${_bErr} Integritäts-Fehler`; vS = 'Ein Ausgabe-Check schlägt an — die Betfair-Maschine tut ihren Job nicht (Details in „Daten-Integrität").'; vC = _ST_R; }
+  else if (_bWarn > 0 && vC === _ST_G) { vIco = '🟡'; vT = `${_bWarn} Integritäts-Warnung${_bWarn > 1 ? 'en' : ''}`; vS = 'Feeds frisch, aber ein Ausgabe-Check warnt (Details in „Daten-Integrität").'; vC = _ST_A; }
   const n = meta.n != null ? meta.n : '—', live = meta.live != null ? meta.live : '—';
   const health = _stGridWrap([
     _stStat('Spiele getrackt', n, 'var(--text)', 'im letzten Lauf'),
@@ -1025,6 +1032,7 @@ async function _stRenderBetfairStatus() {
   dyn.innerHTML = _stHead('🟡', 'Betfair-Radar — Status', 'Exchange-Geld-Radar · Mac-Runner · Lernloop · Track-Record')
     + _stBanner(vIco, vT, vS, vC)
     + _stCard('📊 Health', null, health)
+    + _stCard('🛡️ Daten-Integrität', 'Prüft nicht ob Zahlen schön sind, sondern ob die Betfair-Maschine ihren Job tut — Roh-Feed lebt, Frisch-Geld-Delta (mkv) da, Vor-Quote fürs Sprung-/Sub-Schwellen-Gate vorhanden, Konsens findet Anker, Track-Record rechnet ab.', _stChecksHtml(_bChecks, 'betfair_status.json noch nicht erzeugt — läuft mit dem nächsten Radar-Lauf (betfair_data_integrity.py).'))
     + _stCard('📁 Feed-Frische', 'aus dem Datenstand selbst', await _stFreshGrid(_BF_FEEDS))
     + _stCard('🎯 Track-Record-Abdeckung', 'wächst mit jedem aufgelösten Spiel', trackGrid)
     + _stCard('🧠 Lernloop (Betfair-Signale)', null, learn);

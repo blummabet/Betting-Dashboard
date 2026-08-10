@@ -74,11 +74,15 @@ jobs:
         run: ${{ env.BETFAIR_PY }} betfair_public_eval.py
         continue-on-error: true
 
+      - name: Daten-Integritaet (Guard-Batterie, rein lesend)
+        run: ${{ env.BETFAIR_PY }} betfair_data_integrity.py
+        continue-on-error: true
+
       - name: 💾 Committen + Push (Pull-Retry, wie die Poly-Workflows)
         run: |
           git config user.name "cocobet-bot"
           git config user.email "bot@users.noreply.github.com"
-          git add betfair_prices.json betfair_history.json betfair_overview.json betfair_track_state.json betfair_track_results.json betfair_track_record.json betfair_direction.json betfair_draw_state.json betfair_draw_results.json betfair_draw_record.json betfair_alerts_seen.json betfair_public_seen.json betfair_public_ledger.json betfair_public_record.json betfair_consensus.json betfair_consensus_history.json 2>/dev/null || true
+          git add betfair_prices.json betfair_history.json betfair_overview.json betfair_track_state.json betfair_track_results.json betfair_track_record.json betfair_direction.json betfair_draw_state.json betfair_draw_results.json betfair_draw_record.json betfair_alerts_seen.json betfair_public_seen.json betfair_public_ledger.json betfair_public_record.json betfair_consensus.json betfair_consensus_history.json betfair_status.json 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "keine Änderung — nichts zu committen"
             exit 0

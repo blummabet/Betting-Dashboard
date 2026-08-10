@@ -1506,7 +1506,9 @@ function _pwShortlistScore(key,m){
   // 05.08.2026 (Lucas): jedes Signal traegt einen strukturierten Tag (nicht nur Freitext), damit der
   // Paper-Tracker spaeter je Signal Trefferquote/ROI/CLV zeigen kann (welches Signal traegt die Kante).
   const add=(side,w,reason,tag)=>{ if(!side||!w)return; sides[side]=(sides[side]||0)+w; (why[side]=why[side]||[]).push(reason); if(tag)(tags[side]=tags[side]||[]).push(tag); };
-  if(moneyPct>=PW_MONEY_MAJ) add(moneyFav, moneyPct>=0.70?1.5:1, 'großes Geld auf '+moneyFav+' ('+Math.round(moneyPct*100)+'%)', 'money');
+  // 10.08.2026 (Lucas): Spiel-Einsatz (Markt-Volumen) direkt an die Geld-Mehrheit hängen → man sieht sofort,
+  // worauf sich die % beziehen. total = Summe der Outcome-Shares = m.totalUsd (die "Vol"-Spalte).
+  if(moneyPct>=PW_MONEY_MAJ) add(moneyFav, moneyPct>=0.70?1.5:1, 'großes Geld auf '+moneyFav+' ('+Math.round(moneyPct*100)+'%) → '+_pwUsd(m.totalUsd||total), 'money');
   // Geld vs Preis uneinig → liga-informiert entscheiden (sofort verfügbar aus broadLive)
   if(priceFav&&priceFav!==moneyFav){
     const lg=_pwLeagueMoneyVerdict(m.league);
@@ -1523,8 +1525,9 @@ function _pwShortlistScore(key,m){
     // 09.08.2026 (Lucas): nach Stichprobe skalieren — n=8 darf nicht wie n=30 zählen. Konfidenzfaktor
     // 0,7..1,0 (voll ab ~n=12), damit dünne Stichproben weniger ins Gewicht ziehen.
     w *= Math.min(1, 0.7 + (sh.n||0)/40);
-    const pnlTxt=Math.abs(sh.pnl)>=1000?((sh.pnl>=0?'+$':'-$')+Math.round(Math.abs(sh.pnl)/1000)+'K')
-      :((sh.pnl>=0?'+$':'-$')+Math.round(Math.abs(sh.pnl)));
+    // 10.08.2026 (Lucas): Lebenszeit-P&L der Wallet über _pwUsd formatieren → rollt ab 1M sauber auf "M"
+    // (z.B. +$3.44M statt des hässlichen "3440K"). _pwUsd trägt das '$', Vorzeichen kommt davor.
+    const pnlTxt=(sh.pnl>=0?'+':'-')+_pwUsd(Math.abs(sh.pnl));
     add(sh.side,w,'🔥 scharfe Wallet ('+sh.wins+'/'+sh.n+', '+Math.round(sh.hit*100)+'% · '+pnlTxt+')', 'sharp');
   } else {
     const sharp=_pwSharpSideForKey(key) || _pwSharpSideFor(m);

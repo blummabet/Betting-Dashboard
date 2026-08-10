@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v98';   // 09.08.2026: Konsens-Tab Sub-Menü-Fix + Radar-Schwelle · Trades-Frisch-Push im Public-Format + Zweitmeinung
+const VERSION = 'cocobet-v100';   // 10.08.2026: Shortlist-Reason — Wallet-P&L auf "M" (via _pwUsd) + Spiel-Einsatz an der Geld-Mehrheit
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

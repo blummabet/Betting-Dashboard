@@ -1,0 +1,131 @@
+{
+  "checks": [
+    {
+      "id": "prices_fresh",
+      "label": "Roh-Feed frisch (Betwatch-Fetch laeuft)",
+      "severity": "warn",
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "Roh-Feed: juengster Stand vor 3.0 h (> 0.8 h erwartet) · 89 Spiele im File"
+      ],
+      "note": "Juengster erfasster Snapshot. Radar-Scan ~alle 15 Min — steht er, ist ALLES darunter alt."
+    },
+    {
+      "id": "feed_populated",
+      "label": "Feed hat echte Spiele + Volumen",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "200 mit leerer/volumenloser Liste ist ein stiller Totalausfall — reine Datei-Frische sieht ihn nicht."
+    },
+    {
+      "id": "history_mkv_present",
+      "label": "Frisch-Geld-Basis (mkv-Delta) vorhanden",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "mkv (per-Markt-Volumen) auf den letzten 2 History-Punkten ist die einzige Quelle des Zufluss-Deltas. Fehlt es, sendet der Frisch-Push fuer das Spiel nichts."
+    },
+    {
+      "id": "live_minute_sane",
+      "label": "Live-Minute plausibel (Zufluss-Fenster)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Feld 'min' speist die Spielminuten-Spanne der Frisch-Push. Korrupte Werte verfaelschen sie, fehlende degradieren still auf die Zeit-Dauer."
+    },
+    {
+      "id": "direction_covers_money",
+      "label": "Richtung/Vor-Quote deckt Geld-Spiele (Braga-Schutz)",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "leadPrev aus betfair_direction.json traegt die Sprung-Erkennung UND den Sub-Schwellen-Filter. Ohne Vor-Quote koennen beide die Post-Tor-Push nicht mehr abfangen."
+    },
+    {
+      "id": "direction_present",
+      "label": "Richtungs-Datei lebt",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "betfair_direction.json ist die Referenz fuer Back/Lay UND die Vor-Quote. Leer / ueberall prev=null bedeutet: der Direction-Schritt schreibt nicht mehr sauber fort."
+    },
+    {
+      "id": "consensus_fresh",
+      "label": "Konsens frisch (Zweitmeinung wird gebaut)",
+      "severity": "warn",
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "Konsens: juengster Stand vor 3.0 h (> 1.5 h erwartet) · 0 Spiele, 0 mit Anker"
+      ],
+      "note": "betfair_consensus.json speist die Zweitmeinung der Trades-Frisch-Push. Steht generatedAt, ist die Zweitmeinung alt."
+    },
+    {
+      "id": "consensus_anchor_coverage",
+      "label": "Konsens findet Odds-Anker",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Keine Konsens-Spiele zu bewerten (kein Feed / kein Geld) — kein Urteil."
+    },
+    {
+      "id": "track_record_fresh",
+      "label": "Track-Record frisch (wird abgerechnet)",
+      "severity": "warn",
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "Track-Record: juengster Stand vor 3.0 h (> 1.5 h erwartet) · n=5428 abgerechnet"
+      ],
+      "note": "betfair_track_record.json aggregiert die abgerechneten Signale. Steht es, wird die Radar-Bilanz nicht mehr aktualisiert."
+    },
+    {
+      "id": "track_record_grading_sane",
+      "label": "Track-Record-Abrechnung plausibel",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Einzel-Ergebnisse muessen ein win-Bool, eine moegliche Quote und ein fav-Token haben; die Gesamtquote muss in einem plausiblen Band liegen — sonst rechnet das Grading falsch ab."
+    },
+    {
+      "id": "no_stuck_pending",
+      "label": "Settlement/Prune lebt (kein Ueber-TTL-Stau)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "pending-Spiele mit Anpfiff > 72 h her (ueber TTL 72 h). Bis 60 h ist pending normal; darueber haette settle() prunen muessen — der Lauf hakt."
+    },
+    {
+      "id": "odds_and_shape_sane",
+      "label": "Geld-Spiele sauber (kein Geist, Quoten moeglich)",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Jedes signaltreibende Spiel braucht matchId/Teams/Anpfiff und moegliche Quoten. Korruptes Roh-Datum vergiftet Direction, Consensus, Track-Record und Alerts zugleich."
+    },
+    {
+      "id": "public_eval_alive",
+      "label": "Public-Push-Auswertung lebt",
+      "severity": "warn",
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "Public-Auswertung: juengster Stand vor 3.0 h (> 1.5 h erwartet)"
+      ],
+      "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
+    }
+  ],
+  "nFail": 4,
+  "generatedAt": "2026-08-10T07:42:48.827007+00:00"
+}
