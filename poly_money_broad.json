@@ -1,24 +1,24 @@
 {
- "n": 367,
+ "n": 368,
  "minOdds": 1.35,
- "moneyHitRate": 0.627,
- "priceHitRate": 0.635,
- "brierMoney": 0.466,
- "brierPrice": 0.4579,
+ "moneyHitRate": 0.633,
+ "priceHitRate": 0.639,
+ "brierMoney": 0.4642,
+ "brierPrice": 0.4561,
  "disagree": {
-  "n": 3,
+  "n": 2,
   "moneyWon": 0,
-  "priceWon": 3,
+  "priceWon": 2,
   "neither": 0
  },
  "verdict": "gleichauf",
  "byLeague": [
   {
    "league": "TENNIS",
-   "n": 52,
-   "moneyHitRate": 0.654,
-   "brierMoney": 0.4361,
-   "brierPrice": 0.4396,
+   "n": 54,
+   "moneyHitRate": 0.667,
+   "brierMoney": 0.4296,
+   "brierPrice": 0.433,
    "verdict": "gleichauf"
   },
   {
@@ -27,14 +27,6 @@
    "moneyHitRate": 0.708,
    "brierMoney": 0.4384,
    "brierPrice": 0.4385,
-   "verdict": "gleichauf"
-  },
-  {
-   "league": "ESPORTS",
-   "n": 158,
-   "moneyHitRate": 0.652,
-   "brierMoney": 0.4459,
-   "brierPrice": 0.4459,
    "verdict": "gleichauf"
   },
   {
@@ -54,11 +46,19 @@
    "verdict": "gleichauf"
   },
   {
+   "league": "ESPORTS",
+   "n": 161,
+   "moneyHitRate": 0.652,
+   "brierMoney": 0.446,
+   "brierPrice": 0.4459,
+   "verdict": "gleichauf"
+  },
+  {
    "league": "MLB",
-   "n": 82,
-   "moneyHitRate": 0.524,
-   "brierMoney": 0.544,
-   "brierPrice": 0.5054,
+   "n": 78,
+   "moneyHitRate": 0.538,
+   "brierMoney": 0.5454,
+   "brierPrice": 0.5049,
    "verdict": "preis_besser"
   }
  ],
@@ -98,6 +98,18 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 699893
+  },
+  {
+   "key": "lol-hle1-gen-2026-08-10",
+   "league": "ESPORTS",
+   "winner": "Gen.G",
+   "moneyFav": "Gen.G",
+   "priceFav": "Gen.G",
+   "moneyShare": 0.565,
+   "priceProb": 0.565,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 659625
   },
   {
    "key": "lol-jdg-edg-2026-08-07",
@@ -352,18 +364,6 @@
    "totalUsd": 325035
   },
   {
-   "key": "mlb-lad-chc-2026-08-03",
-   "league": "MLB",
-   "winner": "Chicago Cubs",
-   "moneyFav": "Los Angeles Dodgers",
-   "priceFav": "Los Angeles Dodgers",
-   "moneyShare": 0.535,
-   "priceProb": 0.535,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 323146
-  },
-  {
    "key": "mlb-chc-kc-2026-08-09",
    "league": "MLB",
    "winner": "Chicago Cubs",
@@ -544,38 +544,38 @@
    "totalUsd": 260597
   }
  ],
- "generatedAt": "2026-08-10T04:54:39.088570+00:00",
+ "generatedAt": "2026-08-10T12:33:13.284853+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 422,
-  "nfl": 590,
+  "nfl": 604,
   "mlb": 564,
   "nhl": 404,
   "mls": 727,
-  "epl": 463,
+  "epl": 466,
   "soccer": 800,
-  "tennis": 534,
-  "ucl": 483,
+  "tennis": 529,
+  "ucl": 484,
   "laliga": 0,
   "bundesliga": 401,
   "serie-a": 37,
-  "ligue-1": 464,
+  "ligue-1": 467,
   "esports": 800,
   "cs2": 420,
   "lol": 417,
   "dota": 9,
-  "valorant": 438,
+  "valorant": 441,
   "ufc": 457,
   "mma": 46,
   "boxing": 224,
   "golf": 281,
   "f1": 333,
-  "cricket": 562
+  "cricket": 558
  },
  "sweepStats": {
   "sweepOpen": 500,
-  "sweepClosed": 500,
-  "sweepAdded": 475
+  "sweepClosed": 400,
+  "sweepAdded": 386
  }
 }
