@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "liga",
-    "generatedAt": "2026-08-09T18:23:20.488679+00:00",
+    "generatedAt": "2026-08-10T07:50:45.911920+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -2713,47 +2713,6 @@
       "matchupPct": 61
     },
     {
-      "teamId": "1346",
-      "team": "Coventry",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1346.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 8,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 50,
-        "label": "Eigen 50% + Gegner 69% → 58%"
-      },
-      "ratePct": 50,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 6,
-      "next": {
-        "oppId": "42",
-        "oppName": "Arsenal",
-        "atHome": false,
-        "date": "2026-08-21",
-        "kickoff": "2026-08-21T19:00:00+00:00",
-        "oppRatePct": 31
-      },
-      "oppSupportPct": 69,
-      "matchupPct": 58
-    },
-    {
       "teamId": "163",
       "team": "Borussia Mönchengladbach",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/163.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -2875,6 +2834,47 @@
       },
       "oppSupportPct": 53,
       "matchupPct": 47
+    },
+    {
+      "teamId": "1346",
+      "team": "Coventry",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1346.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 8,
+      "venue": "all",
+      "strong": true,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 40,
+        "label": "Eigen 40% + Gegner 69% → 52%"
+      },
+      "ratePct": 40,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 5,
+      "next": {
+        "oppId": "42",
+        "oppName": "Arsenal",
+        "atHome": false,
+        "date": "2026-08-21",
+        "kickoff": "2026-08-21T19:00:00+00:00",
+        "oppRatePct": 31
+      },
+      "oppSupportPct": 69,
+      "matchupPct": 52
     },
     {
       "teamId": "1298",
@@ -4279,7 +4279,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 77,
-        "label": "Eigen 77% + Gegner 44% → 64%"
+        "label": "Eigen 77% + Gegner 50% → 66%"
       },
       "ratePct": 77,
       "seq": [
@@ -4300,10 +4300,10 @@
         "atHome": false,
         "date": "2026-08-29",
         "kickoff": "2026-08-29T13:30:00+00:00",
-        "oppRatePct": 56
+        "oppRatePct": 50
       },
-      "oppSupportPct": 44,
-      "matchupPct": 64
+      "oppSupportPct": 50,
+      "matchupPct": 66
     },
     {
       "teamId": "185",
@@ -4319,7 +4319,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 69,
-        "label": "Eigen 69% + Gegner 67% → 68%"
+        "label": "Eigen 69% + Gegner 62% → 66%"
       },
       "ratePct": 69,
       "seq": [
@@ -4340,10 +4340,10 @@
         "atHome": false,
         "date": "2026-08-29",
         "kickoff": "2026-08-29T13:30:00+00:00",
-        "oppRatePct": 67
+        "oppRatePct": 62
       },
-      "oppSupportPct": 67,
-      "matchupPct": 68
+      "oppSupportPct": 62,
+      "matchupPct": 66
     },
     {
       "teamId": "517",
@@ -4562,7 +4562,7 @@
       "continuation": {
         "state": "neutral",
         "ratePct": 33,
-        "label": "Eigen 33% + Gegner 79% → 51%"
+        "label": "Eigen 33% + Gegner 77% → 51%"
       },
       "ratePct": 33,
       "seq": [
@@ -4584,9 +4584,9 @@
         "atHome": true,
         "date": "2026-08-21",
         "kickoff": "2026-08-21T19:00:00+00:00",
-        "oppRatePct": 21
+        "oppRatePct": 23
       },
-      "oppSupportPct": 79,
+      "oppSupportPct": 77,
       "matchupPct": 51
     },
     {
@@ -6529,45 +6529,6 @@
       "matchupPct": 88
     },
     {
-      "teamId": "114",
-      "team": "Paris FC",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/114.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
-      "length": 6,
-      "venue": "A",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 92,
-        "label": "Eigen 92% + Gegner 40% → 71%"
-      },
-      "ratePct": 92,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 0,
-      "next": {
-        "oppId": "110",
-        "oppName": "Estac Troyes",
-        "atHome": false,
-        "date": "2026-08-22",
-        "kickoff": "2026-08-22T18:45:00+00:00",
-        "oppRatePct": 40
-      },
-      "oppSupportPct": 40,
-      "matchupPct": 71
-    },
-    {
       "teamId": "36",
       "team": "Fulham",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/36.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -6681,6 +6642,45 @@
         "atHome": false,
         "date": "2026-08-22",
         "kickoff": "2026-08-22T14:00:00+00:00",
+        "oppRatePct": 40
+      },
+      "oppSupportPct": 40,
+      "matchupPct": 61
+    },
+    {
+      "teamId": "175",
+      "team": "Hamburger SV",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/175.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "GER",
+      "leagueName": "Bundesliga",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
+      "length": 6,
+      "venue": "A",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 75,
+        "label": "Eigen 75% + Gegner 40% → 61%"
+      },
+      "ratePct": 75,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 0,
+      "next": {
+        "oppId": "165",
+        "oppName": "Borussia Dortmund",
+        "atHome": false,
+        "date": "2026-08-29",
+        "kickoff": "2026-08-29T16:30:00+00:00",
         "oppRatePct": 40
       },
       "oppSupportPct": 40,
@@ -7132,45 +7132,6 @@
       "matchupPct": 45
     },
     {
-      "teamId": "175",
-      "team": "Hamburger SV",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/175.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "GER",
-      "leagueName": "Bundesliga",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
-      "length": 6,
-      "venue": "A",
-      "strong": true,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 75,
-        "label": "Eigen 75% + Gegner 36% → 59%"
-      },
-      "ratePct": 75,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 0,
-      "next": {
-        "oppId": "165",
-        "oppName": "Borussia Dortmund",
-        "atHome": false,
-        "date": "2026-08-29",
-        "kickoff": "2026-08-29T16:30:00+00:00",
-        "oppRatePct": 36
-      },
-      "oppSupportPct": 36,
-      "matchupPct": 59
-    },
-    {
       "teamId": "185",
       "team": "SC Paderborn 07",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/185.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -7184,7 +7145,7 @@
       "continuation": {
         "state": "neutral",
         "ratePct": 57,
-        "label": "Eigen 57% + Gegner 44% → 52%"
+        "label": "Eigen 57% + Gegner 50% → 54%"
       },
       "ratePct": 57,
       "seq": [
@@ -7206,10 +7167,10 @@
         "atHome": false,
         "date": "2026-08-29",
         "kickoff": "2026-08-29T13:30:00+00:00",
-        "oppRatePct": 56
+        "oppRatePct": 50
       },
-      "oppSupportPct": 44,
-      "matchupPct": 52
+      "oppSupportPct": 50,
+      "matchupPct": 54
     },
     {
       "teamId": "1579",
@@ -7224,10 +7185,10 @@
       "strong": true,
       "continuation": {
         "state": "wackelt",
-        "ratePct": 17,
-        "label": "Eigen 17% + Gegner 46% → 29%"
+        "ratePct": 20,
+        "label": "Eigen 20% + Gegner 46% → 30%"
       },
-      "ratePct": 17,
+      "ratePct": 20,
       "seq": [
         true,
         true,
@@ -7240,7 +7201,7 @@
       ],
       "xgBacked": null,
       "basis": "prior",
-      "preN": 6,
+      "preN": 5,
       "next": {
         "oppId": "505",
         "oppName": "Inter",
@@ -7250,7 +7211,7 @@
         "oppRatePct": 46
       },
       "oppSupportPct": 46,
-      "matchupPct": 29
+      "matchupPct": 30
     },
     {
       "teamId": "108",
@@ -9808,6 +9769,44 @@
       "matchupPct": 63
     },
     {
+      "teamId": "114",
+      "team": "Paris FC",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/114.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
+      "length": 5,
+      "venue": "A",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 91,
+        "label": "Eigen 91% + Gegner 40% → 71%"
+      },
+      "ratePct": 91,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 0,
+      "next": {
+        "oppId": "110",
+        "oppName": "Estac Troyes",
+        "atHome": false,
+        "date": "2026-08-22",
+        "kickoff": "2026-08-22T18:45:00+00:00",
+        "oppRatePct": 40
+      },
+      "oppSupportPct": 40,
+      "matchupPct": 71
+    },
+    {
       "teamId": "47",
       "team": "Tottenham",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/47.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -10287,7 +10286,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 73,
-        "label": "Eigen 73% + Gegner 44% → 61%"
+        "label": "Eigen 73% + Gegner 50% → 64%"
       },
       "ratePct": 73,
       "seq": [
@@ -10307,10 +10306,10 @@
         "atHome": false,
         "date": "2026-08-29",
         "kickoff": "2026-08-29T13:30:00+00:00",
-        "oppRatePct": 44
+        "oppRatePct": 50
       },
-      "oppSupportPct": 44,
-      "matchupPct": 61
+      "oppSupportPct": 50,
+      "matchupPct": 64
     },
     {
       "teamId": "490",
@@ -11354,7 +11353,7 @@
       "continuation": {
         "state": "wackelt",
         "ratePct": 46,
-        "label": "Eigen 46% + Gegner 33% → 41%"
+        "label": "Eigen 46% + Gegner 36% → 42%"
       },
       "ratePct": 46,
       "seq": [
@@ -11374,10 +11373,10 @@
         "atHome": true,
         "date": "2026-08-22",
         "kickoff": "2026-08-22T16:30:00+00:00",
-        "oppRatePct": 33
+        "oppRatePct": 36
       },
-      "oppSupportPct": 33,
-      "matchupPct": 41
+      "oppSupportPct": 36,
+      "matchupPct": 42
     },
     {
       "teamId": "529",
@@ -11433,10 +11432,10 @@
       "strong": true,
       "continuation": {
         "state": "wackelt",
-        "ratePct": 33,
-        "label": "Eigen 33% + Gegner 25% → 30%"
+        "ratePct": 20,
+        "label": "Eigen 20% + Gegner 25% → 22%"
       },
-      "ratePct": 33,
+      "ratePct": 20,
       "seq": [
         true,
         true,
@@ -11449,7 +11448,7 @@
       ],
       "xgBacked": null,
       "basis": "prior",
-      "preN": 6,
+      "preN": 5,
       "next": {
         "oppId": "175",
         "oppName": "Hamburger SV",
@@ -11459,7 +11458,7 @@
         "oppRatePct": 75
       },
       "oppSupportPct": 25,
-      "matchupPct": 30
+      "matchupPct": 22
     },
     {
       "teamId": "116",
@@ -13534,20 +13533,19 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 64,
-        "label": "Eigen 64% + Gegner 55% → 60%"
+        "ratePct": 70,
+        "label": "Eigen 70% + Gegner 55% → 64%"
       },
-      "ratePct": 64,
+      "ratePct": 70,
       "seq": [
         true,
         true,
         true,
-        true,
-        false
+        true
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 1,
+      "preN": 0,
       "next": {
         "oppId": "91",
         "oppName": "Monaco",
@@ -13557,7 +13555,7 @@
         "oppRatePct": 55
       },
       "oppSupportPct": 55,
-      "matchupPct": 60
+      "matchupPct": 64
     },
     {
       "teamId": "116",
@@ -13572,10 +13570,10 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 50,
-        "label": "Eigen 50% + Gegner 75% → 60%"
+        "ratePct": 56,
+        "label": "Eigen 56% + Gegner 73% → 63%"
       },
-      "ratePct": 50,
+      "ratePct": 56,
       "seq": [
         true,
         true,
@@ -13591,9 +13589,47 @@
         "atHome": true,
         "date": "2026-08-22",
         "kickoff": "2026-08-22T15:15:00+00:00",
-        "oppRatePct": 75
+        "oppRatePct": 73
       },
-      "oppSupportPct": 75,
+      "oppSupportPct": 73,
+      "matchupPct": 63
+    },
+    {
+      "teamId": "1298",
+      "team": "Le Mans",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1298.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 4,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 50% → 60%"
+      },
+      "ratePct": 67,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 1,
+      "next": {
+        "oppId": "106",
+        "oppName": "Stade Brestois 29",
+        "atHome": true,
+        "date": "2026-08-22",
+        "kickoff": "2026-08-22T18:45:00+00:00",
+        "oppRatePct": 50
+      },
+      "oppSupportPct": 50,
       "matchupPct": 60
     },
     {
@@ -13609,10 +13645,10 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 79,
-        "label": "Eigen 79% + Gegner 69% → 75%"
+        "ratePct": 77,
+        "label": "Eigen 77% + Gegner 69% → 74%"
       },
-      "ratePct": 79,
+      "ratePct": 77,
       "seq": [
         true,
         true,
@@ -13634,7 +13670,7 @@
         "oppRatePct": 31
       },
       "oppSupportPct": 69,
-      "matchupPct": 75
+      "matchupPct": 74
     },
     {
       "teamId": "1346",
@@ -13649,22 +13685,21 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 79,
-        "label": "Eigen 79% + Gegner 69% → 75%"
+        "ratePct": 77,
+        "label": "Eigen 77% + Gegner 69% → 74%"
       },
-      "ratePct": 79,
+      "ratePct": 77,
       "seq": [
         true,
         true,
         true,
         true,
         false,
-        false,
-        true
+        false
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 3,
+      "preN": 2,
       "next": {
         "oppId": "42",
         "oppName": "Arsenal",
@@ -13674,7 +13709,7 @@
         "oppRatePct": 31
       },
       "oppSupportPct": 69,
-      "matchupPct": 75
+      "matchupPct": 74
     },
     {
       "teamId": "34",
@@ -13729,7 +13764,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 69,
-        "label": "Eigen 69% + Gegner 79% → 73%"
+        "label": "Eigen 69% + Gegner 77% → 72%"
       },
       "ratePct": 69,
       "seq": [
@@ -13750,10 +13785,10 @@
         "atHome": true,
         "date": "2026-08-21",
         "kickoff": "2026-08-21T19:00:00+00:00",
-        "oppRatePct": 21
+        "oppRatePct": 23
       },
-      "oppSupportPct": 79,
-      "matchupPct": 73
+      "oppSupportPct": 77,
+      "matchupPct": 72
     },
     {
       "teamId": "47",
@@ -14300,45 +14335,6 @@
       "matchupPct": 62
     },
     {
-      "teamId": "160",
-      "team": "SC Freiburg",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/160.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "GER",
-      "leagueName": "Bundesliga",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 4,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 79,
-        "label": "Eigen 79% + Gegner 36% → 62%"
-      },
-      "ratePct": 79,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 2,
-      "next": {
-        "oppId": "162",
-        "oppName": "Werder Bremen",
-        "atHome": true,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T13:30:00+00:00",
-        "oppRatePct": 64
-      },
-      "oppSupportPct": 36,
-      "matchupPct": 62
-    },
-    {
       "teamId": "167",
       "team": "1899 Hoffenheim",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/167.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -14378,45 +14374,43 @@
       "matchupPct": 66
     },
     {
-      "teamId": "185",
-      "team": "SC Paderborn 07",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/185.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "175",
+      "team": "Hamburger SV",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/175.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "GER",
       "leagueName": "Bundesliga",
       "type": "cards",
       "market": "Über 3,5 Karten",
       "length": 4,
-      "venue": "all",
+      "venue": "H",
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 56,
-        "label": "Eigen 56% + Gegner 67% → 60%"
+        "ratePct": 75,
+        "label": "Eigen 75% + Gegner 40% → 61%"
       },
-      "ratePct": 56,
+      "ratePct": 75,
       "seq": [
         true,
         true,
         true,
         true,
         false,
-        true,
-        false,
         true
       ],
       "xgBacked": null,
-      "basis": "prior",
-      "preN": 9,
+      "basis": "pure",
+      "preN": 2,
       "next": {
-        "oppId": "164",
-        "oppName": "FSV Mainz 05",
+        "oppId": "165",
+        "oppName": "Borussia Dortmund",
         "atHome": false,
         "date": "2026-08-29",
-        "kickoff": "2026-08-29T13:30:00+00:00",
-        "oppRatePct": 67
+        "kickoff": "2026-08-29T16:30:00+00:00",
+        "oppRatePct": 40
       },
-      "oppSupportPct": 67,
-      "matchupPct": 60
+      "oppSupportPct": 40,
+      "matchupPct": 61
     },
     {
       "teamId": "108",
@@ -15676,44 +15670,6 @@
       "matchupPct": 57
     },
     {
-      "teamId": "1298",
-      "team": "Le Mans",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1298.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 4,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 45% → 58%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 1,
-      "next": {
-        "oppId": "106",
-        "oppName": "Stade Brestois 29",
-        "atHome": true,
-        "date": "2026-08-22",
-        "kickoff": "2026-08-22T18:45:00+00:00",
-        "oppRatePct": 55
-      },
-      "oppSupportPct": 45,
-      "matchupPct": 58
-    },
-    {
       "teamId": "492",
       "team": "Napoli",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/492.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -16112,6 +16068,45 @@
       "matchupPct": 52
     },
     {
+      "teamId": "160",
+      "team": "SC Freiburg",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/160.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "GER",
+      "leagueName": "Bundesliga",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 4,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 77,
+        "label": "Eigen 77% + Gegner 30% → 58%"
+      },
+      "ratePct": 77,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 2,
+      "next": {
+        "oppId": "162",
+        "oppName": "Werder Bremen",
+        "atHome": true,
+        "date": "2026-08-30",
+        "kickoff": "2026-08-30T13:30:00+00:00",
+        "oppRatePct": 70
+      },
+      "oppSupportPct": 30,
+      "matchupPct": 58
+    },
+    {
       "teamId": "162",
       "team": "Werder Bremen",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/162.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -16124,10 +16119,10 @@
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 64,
-        "label": "Eigen 64% + Gegner 21% → 47%"
+        "ratePct": 70,
+        "label": "Eigen 70% + Gegner 23% → 51%"
       },
-      "ratePct": 64,
+      "ratePct": 70,
       "seq": [
         true,
         true,
@@ -16144,10 +16139,10 @@
         "atHome": false,
         "date": "2026-08-30",
         "kickoff": "2026-08-30T13:30:00+00:00",
-        "oppRatePct": 21
+        "oppRatePct": 23
       },
-      "oppSupportPct": 21,
-      "matchupPct": 47
+      "oppSupportPct": 23,
+      "matchupPct": 51
     },
     {
       "teamId": "163",
@@ -16238,10 +16233,10 @@
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 64,
-        "label": "Eigen 64% + Gegner 25% → 48%"
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 25% → 46%"
       },
-      "ratePct": 64,
+      "ratePct": 60,
       "seq": [
         true,
         true,
@@ -16261,46 +16256,48 @@
         "oppRatePct": 75
       },
       "oppSupportPct": 25,
-      "matchupPct": 48
+      "matchupPct": 46
     },
     {
-      "teamId": "175",
-      "team": "Hamburger SV",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/175.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "185",
+      "team": "SC Paderborn 07",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/185.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "GER",
       "leagueName": "Bundesliga",
       "type": "cards",
       "market": "Über 3,5 Karten",
       "length": 4,
-      "venue": "H",
+      "venue": "all",
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 75,
-        "label": "Eigen 75% + Gegner 36% → 59%"
+        "ratePct": 56,
+        "label": "Eigen 56% + Gegner 62% → 58%"
       },
-      "ratePct": 75,
+      "ratePct": 56,
       "seq": [
         true,
         true,
         true,
         true,
         false,
+        true,
+        false,
         true
       ],
       "xgBacked": null,
-      "basis": "pure",
-      "preN": 2,
+      "basis": "prior",
+      "preN": 9,
       "next": {
-        "oppId": "165",
-        "oppName": "Borussia Dortmund",
+        "oppId": "164",
+        "oppName": "FSV Mainz 05",
         "atHome": false,
         "date": "2026-08-29",
-        "kickoff": "2026-08-29T16:30:00+00:00",
-        "oppRatePct": 36
+        "kickoff": "2026-08-29T13:30:00+00:00",
+        "oppRatePct": 62
       },
-      "oppSupportPct": 36,
-      "matchupPct": 59
+      "oppSupportPct": 62,
+      "matchupPct": 58
     },
     {
       "teamId": "42",
@@ -17121,7 +17118,7 @@
       "continuation": {
         "state": "wackelt",
         "ratePct": 60,
-        "label": "Eigen 60% + Gegner 8% → 39%"
+        "label": "Eigen 60% + Gegner 9% → 40%"
       },
       "ratePct": 60,
       "seq": [
@@ -17139,10 +17136,10 @@
         "atHome": true,
         "date": "2026-08-22",
         "kickoff": "2026-08-22T18:45:00+00:00",
-        "oppRatePct": 92
+        "oppRatePct": 91
       },
-      "oppSupportPct": 8,
-      "matchupPct": 39
+      "oppSupportPct": 9,
+      "matchupPct": 40
     },
     {
       "teamId": "488",
@@ -20565,7 +20562,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 69,
-        "label": "Eigen 69% + Gegner 79% → 73%"
+        "label": "Eigen 69% + Gegner 77% → 72%"
       },
       "ratePct": 69,
       "seq": [
@@ -20585,10 +20582,10 @@
         "atHome": true,
         "date": "2026-08-21",
         "kickoff": "2026-08-21T19:00:00+00:00",
-        "oppRatePct": 21
+        "oppRatePct": 23
       },
-      "oppSupportPct": 79,
-      "matchupPct": 73
+      "oppSupportPct": 77,
+      "matchupPct": 72
     },
     {
       "teamId": "47",
@@ -20944,6 +20941,44 @@
       "matchupPct": 66
     },
     {
+      "teamId": "91",
+      "team": "Monaco",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/91.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
+      "type": "cards",
+      "market": "Über 3,5 Karten",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 55,
+        "label": "Eigen 55% + Gegner 70% → 61%"
+      },
+      "ratePct": 55,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 2,
+      "next": {
+        "oppId": "111",
+        "oppName": "Le Havre",
+        "atHome": false,
+        "date": "2026-08-23",
+        "kickoff": "2026-08-23T15:15:00+00:00",
+        "oppRatePct": 70
+      },
+      "oppSupportPct": 70,
+      "matchupPct": 61
+    },
+    {
       "teamId": "97",
       "team": "Lorient",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/97.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -21251,44 +21286,6 @@
       },
       "oppSupportPct": 62,
       "matchupPct": 61
-    },
-    {
-      "teamId": "172",
-      "team": "VfB Stuttgart",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/172.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "GER",
-      "leagueName": "Bundesliga",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 64,
-        "label": "Eigen 64% + Gegner 54% → 60%"
-      },
-      "ratePct": 64,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 2,
-      "next": {
-        "oppId": "157",
-        "oppName": "Bayern München",
-        "atHome": false,
-        "date": "2026-08-28",
-        "kickoff": "2026-08-28T18:30:00+00:00",
-        "oppRatePct": 54
-      },
-      "oppSupportPct": 54,
-      "matchupPct": 60
     },
     {
       "teamId": "106",
@@ -23253,45 +23250,6 @@
       "flag": "<img src=\"https://media.api-sports.io/football/teams/106.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "FRA",
       "leagueName": "Ligue 1",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
-      "length": 3,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 55,
-        "label": "Eigen 55% + Gegner 33% → 46%"
-      },
-      "ratePct": 55,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 3,
-      "next": {
-        "oppId": "1298",
-        "oppName": "Le Mans",
-        "atHome": false,
-        "date": "2026-08-22",
-        "kickoff": "2026-08-22T18:45:00+00:00",
-        "oppRatePct": 33
-      },
-      "oppSupportPct": 33,
-      "matchupPct": 46
-    },
-    {
-      "teamId": "106",
-      "team": "Stade Brestois 29",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/106.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
       "type": "cornersUnder",
       "market": "Unter 9,5 Ecken",
       "length": 3,
@@ -23299,10 +23257,10 @@
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 45,
-        "label": "Eigen 45% + Gegner 67% → 54%"
+        "ratePct": 50,
+        "label": "Eigen 50% + Gegner 67% → 57%"
       },
-      "ratePct": 45,
+      "ratePct": 50,
       "seq": [
         true,
         true,
@@ -23322,7 +23280,7 @@
         "oppRatePct": 33
       },
       "oppSupportPct": 67,
-      "matchupPct": 54
+      "matchupPct": 57
     },
     {
       "teamId": "1298",
@@ -23338,7 +23296,7 @@
       "continuation": {
         "state": "neutral",
         "ratePct": 50,
-        "label": "Eigen 50% + Gegner 45% → 48%"
+        "label": "Eigen 50% + Gegner 50% → 50%"
       },
       "ratePct": 50,
       "seq": [
@@ -23360,10 +23318,10 @@
         "atHome": true,
         "date": "2026-08-22",
         "kickoff": "2026-08-22T18:45:00+00:00",
-        "oppRatePct": 55
+        "oppRatePct": 50
       },
-      "oppSupportPct": 45,
-      "matchupPct": 48
+      "oppSupportPct": 50,
+      "matchupPct": 50
     },
     {
       "teamId": "1579",
@@ -23378,10 +23336,10 @@
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 58,
-        "label": "Eigen 58% + Gegner 46% → 53%"
+        "ratePct": 64,
+        "label": "Eigen 64% + Gegner 46% → 57%"
       },
-      "ratePct": 58,
+      "ratePct": 64,
       "seq": [
         true,
         true,
@@ -23402,7 +23360,7 @@
         "oppRatePct": 46
       },
       "oppSupportPct": 46,
-      "matchupPct": 53
+      "matchupPct": 57
     },
     {
       "teamId": "1579",
@@ -23417,21 +23375,20 @@
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 58,
-        "label": "Eigen 58% + Gegner 46% → 53%"
+        "ratePct": 64,
+        "label": "Eigen 64% + Gegner 46% → 57%"
       },
-      "ratePct": 58,
+      "ratePct": 64,
       "seq": [
         true,
         true,
         true,
         false,
-        true,
-        false
+        true
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 3,
+      "preN": 2,
       "next": {
         "oppId": "505",
         "oppName": "Inter",
@@ -23441,7 +23398,7 @@
         "oppRatePct": 46
       },
       "oppSupportPct": 46,
-      "matchupPct": 53
+      "matchupPct": 57
     },
     {
       "teamId": "488",
@@ -23576,7 +23533,7 @@
       "continuation": {
         "state": "neutral",
         "ratePct": 54,
-        "label": "Eigen 54% + Gegner 67% → 59%"
+        "label": "Eigen 54% + Gegner 64% → 58%"
       },
       "ratePct": 54,
       "seq": [
@@ -23597,10 +23554,10 @@
         "atHome": true,
         "date": "2026-08-22",
         "kickoff": "2026-08-22T16:30:00+00:00",
-        "oppRatePct": 33
+        "oppRatePct": 36
       },
-      "oppSupportPct": 67,
-      "matchupPct": 59
+      "oppSupportPct": 64,
+      "matchupPct": 58
     },
     {
       "teamId": "512",
@@ -23845,44 +23802,6 @@
       "matchupPct": 55
     },
     {
-      "teamId": "91",
-      "team": "Monaco",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/91.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "cards",
-      "market": "Über 3,5 Karten",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 55,
-        "label": "Eigen 55% + Gegner 64% → 59%"
-      },
-      "ratePct": 55,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 2,
-      "next": {
-        "oppId": "111",
-        "oppName": "Le Havre",
-        "atHome": false,
-        "date": "2026-08-23",
-        "kickoff": "2026-08-23T15:15:00+00:00",
-        "oppRatePct": 64
-      },
-      "oppSupportPct": 64,
-      "matchupPct": 59
-    },
-    {
       "teamId": "96",
       "team": "Toulouse",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/96.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -24057,10 +23976,10 @@
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 73,
-        "label": "Eigen 73% + Gegner 36% → 58%"
+        "ratePct": 70,
+        "label": "Eigen 70% + Gegner 30% → 54%"
       },
-      "ratePct": 73,
+      "ratePct": 70,
       "seq": [
         true,
         true,
@@ -24073,17 +23992,17 @@
       ],
       "xgBacked": null,
       "basis": "prior",
-      "preN": 11,
+      "preN": 10,
       "next": {
         "oppId": "162",
         "oppName": "Werder Bremen",
         "atHome": true,
         "date": "2026-08-30",
         "kickoff": "2026-08-30T13:30:00+00:00",
-        "oppRatePct": 64
+        "oppRatePct": 70
       },
-      "oppSupportPct": 36,
-      "matchupPct": 58
+      "oppSupportPct": 30,
+      "matchupPct": 54
     },
     {
       "teamId": "168",
@@ -24099,7 +24018,7 @@
       "continuation": {
         "state": "neutral",
         "ratePct": 62,
-        "label": "Eigen 62% + Gegner 44% → 55%"
+        "label": "Eigen 62% + Gegner 50% → 57%"
       },
       "ratePct": 62,
       "seq": [
@@ -24121,10 +24040,48 @@
         "atHome": false,
         "date": "2026-08-29",
         "kickoff": "2026-08-29T13:30:00+00:00",
-        "oppRatePct": 44
+        "oppRatePct": 50
       },
-      "oppSupportPct": 44,
-      "matchupPct": 55
+      "oppSupportPct": 50,
+      "matchupPct": 57
+    },
+    {
+      "teamId": "172",
+      "team": "VfB Stuttgart",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/172.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "GER",
+      "leagueName": "Bundesliga",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 64,
+        "label": "Eigen 64% + Gegner 50% → 58%"
+      },
+      "ratePct": 64,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 2,
+      "next": {
+        "oppId": "157",
+        "oppName": "Bayern München",
+        "atHome": false,
+        "date": "2026-08-28",
+        "kickoff": "2026-08-28T18:30:00+00:00",
+        "oppRatePct": 50
+      },
+      "oppSupportPct": 50,
+      "matchupPct": 58
     },
     {
       "teamId": "106",
@@ -25558,6 +25515,44 @@
       "matchupPct": 33
     },
     {
+      "teamId": "106",
+      "team": "Stade Brestois 29",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/106.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
+      "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 50,
+        "label": "Eigen 50% + Gegner 33% → 43%"
+      },
+      "ratePct": 50,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 2,
+      "next": {
+        "oppId": "1298",
+        "oppName": "Le Mans",
+        "atHome": false,
+        "date": "2026-08-22",
+        "kickoff": "2026-08-22T18:45:00+00:00",
+        "oppRatePct": 33
+      },
+      "oppSupportPct": 33,
+      "matchupPct": 43
+    },
+    {
       "teamId": "503",
       "team": "Torino",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/503.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -25849,22 +25844,21 @@
       "strong": false,
       "continuation": {
         "state": "wackelt",
-        "ratePct": 46,
-        "label": "Eigen 46% + Gegner 36% → 42%"
+        "ratePct": 50,
+        "label": "Eigen 50% + Gegner 36% → 44%"
       },
-      "ratePct": 46,
+      "ratePct": 50,
       "seq": [
         true,
         true,
         true,
         false,
         true,
-        false,
         false
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 4,
+      "preN": 3,
       "next": {
         "oppId": "172",
         "oppName": "VfB Stuttgart",
@@ -25874,7 +25868,7 @@
         "oppRatePct": 64
       },
       "oppSupportPct": 36,
-      "matchupPct": 42
+      "matchupPct": 44
     },
     {
       "teamId": "1660",
@@ -25889,10 +25883,10 @@
       "strong": false,
       "continuation": {
         "state": "wackelt",
-        "ratePct": 33,
-        "label": "Eigen 33% + Gegner 27% → 31%"
+        "ratePct": 20,
+        "label": "Eigen 20% + Gegner 27% → 23%"
       },
-      "ratePct": 33,
+      "ratePct": 20,
       "seq": [
         true,
         true,
@@ -25905,7 +25899,7 @@
       ],
       "xgBacked": null,
       "basis": "prior",
-      "preN": 6,
+      "preN": 5,
       "next": {
         "oppId": "168",
         "oppName": "Bayer Leverkusen",
@@ -25915,7 +25909,7 @@
         "oppRatePct": 73
       },
       "oppSupportPct": 27,
-      "matchupPct": 31
+      "matchupPct": 23
     },
     {
       "teamId": "1660",
@@ -25930,10 +25924,10 @@
       "strong": false,
       "continuation": {
         "state": "wackelt",
-        "ratePct": 56,
-        "label": "Eigen 56% + Gegner 27% → 44%"
+        "ratePct": 50,
+        "label": "Eigen 50% + Gegner 27% → 41%"
       },
-      "ratePct": 56,
+      "ratePct": 50,
       "seq": [
         true,
         true,
@@ -25953,7 +25947,7 @@
         "oppRatePct": 73
       },
       "oppSupportPct": 27,
-      "matchupPct": 44
+      "matchupPct": 41
     }
   ]
 }
