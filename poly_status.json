@@ -40,17 +40,9 @@
       "id": "settlement_alive",
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
-      "ok": false,
-      "nFail": 7,
-      "failures": [
-        "lol-we-al-2026-08-06: seit 4.5 Tagen offen — keine Auflösung gefunden",
-        "lol-ig1-nip-2026-08-06: seit 4.5 Tagen offen — keine Auflösung gefunden",
-        "lol-bgt-su-2026-08-06: seit 4.5 Tagen offen — keine Auflösung gefunden",
-        "mlb-tor-chc-2026-06-21: seit 50.5 Tagen offen — keine Auflösung gefunden",
-        "lol-we-tt-2026-08-07: seit 3.5 Tagen offen — keine Auflösung gefunden",
-        "lol-we-tt-2026-08-07: seit 3.5 Tagen offen — keine Auflösung gefunden",
-        "lol-mvu-cont-2026-08-07: seit 3.5 Tagen offen — keine Auflösung gefunden"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
     {
@@ -89,11 +81,11 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "438/457 'live' Geld-Märkte sind schon >6h nach Anpfiff (96%) — $11,331,396 Whale-Geld auf fertigen Spielen"
+        "438/458 'live' Geld-Märkte sind schon >6h nach Anpfiff (96%) — $11,169,677 Whale-Geld auf fertigen Spielen"
       ],
       "note": "Der Close-Feed setzt kein resolved-Flag; fertige Spiele bleiben 'live'. Alle Views filtern jetzt auf den rekonstruierten Anpfiff — dieser Check misst den Geister-Anteil im Roh-Feed (steigt er, prunt/löst der Feed nicht mehr auf; jede ungegatete View zeigt dann fertige Spiele)."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-08-10T12:33:38.423460+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-08-10T14:07:45.543055+00:00"
 }
