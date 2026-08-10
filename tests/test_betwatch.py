@@ -144,6 +144,19 @@ def test_history_speichert_live_minute():
     assert h0["35785202"][-1]["min"] is None
 
 
+def test_history_speichert_score_und_karten():
+    """10.08.2026 (Lucas): echter Spielstand + rote Karten im History-Punkt → praezise Ereignis-Erkennung."""
+    ev = dict(EVENT_DETAIL)
+    ev["live_info"] = {"time": 70, "goal_v1": 2, "goal_v2": 1, "red_v1": 0, "red_v2": 1, "finished": False}
+    h = B.append_history({}, B.build_snapshot(ev, now=T0), now=T0)
+    p = h["35785202"][-1]
+    assert p["sc"] == [2, 1]
+    assert p["rc"] == [0, 1]
+    # Vor-Anpfiff / kein Score → sc und rc None (kein KeyError)
+    h0 = B.append_history({}, B.build_snapshot(EVENT_DETAIL, now=T0), now=T0)
+    assert h0["35785202"][-1]["sc"] is None and h0["35785202"][-1]["rc"] is None
+
+
 def test_dedup_matchups_keeps_volume_winner():
     """Betwatch-Doppel-Listing (ein Spiel, zwei matchIds) → nur der Volumen-Sieger bleibt."""
     snaps = [

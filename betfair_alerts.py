@@ -258,17 +258,35 @@ def fresh_alert(m, hist, top_thr=FRESH_TOP_EUR, rest_thr=FRESH_REST_EUR):
     to_min = pts[-1].get("min")
     if to_min is None:
         to_min = (m.get("liveInfo") or {}).get("time")
+    event_win = _event_in_window(pts[-2], pts[-1])   # 10.08.2026 (Lucas): fiel ein Tor/Karte INS Delta-Fenster?
     return {"scenario": "fresh", "matchId": str(m.get("matchId")), "value": mkt_total,
             "home": m.get("home"), "away": m.get("away"), "league": m.get("league"), "flag": _flag(m),
             "market": market_name, "inflow": inflow, "total": mkt_total, "tier": tier_of(m),
             "kickoff": m.get("kickoff"), "live": m.get("liveInfo") or {},
             "leadName": lead_name, "leadShare": lead_share, "leadOdd": lead_odd, "onLeader": on_leader,
-            "windowMin": window_min, "fromMin": from_min, "toMin": to_min}
+            "windowMin": window_min, "fromMin": from_min, "toMin": to_min, "eventInWindow": event_win}
+
+
+def _event_in_window(p_prev, p_last) -> bool:
+    """10.08.2026 (Lucas): Aenderte sich der ECHTE Spielstand ODER die roten Karten zwischen den beiden
+    Scans, die den Zufluss-Delta bilden? Dann fiel ein Spielereignis (Tor/Karte) INS Fenster — die Quote/
+    Richtung ist kontaminiert. Praezise Variante zum geratenen Quotensprung (Betwatch liefert sc/rc live)."""
+    if not isinstance(p_prev, dict) or not isinstance(p_last, dict):
+        return False
+    for key in ("sc", "rc"):
+        a, b = p_prev.get(key), p_last.get(key)
+        if isinstance(a, list) and isinstance(b, list) and a != b:
+            return True
+    return False
 
 
 def _dir_event_jump(a) -> bool:
-    """08.08.2026 (Lucas): Sprang die Favoriten-Quote zwischen den beiden verglichenen Scans um >= JUMP_REL,
-    ist das ein Spielereignis (Tor/Karte), kein Order-Flow -> die Back/Lay-Lesart ist ungueltig."""
+    """08.08.2026 (Lucas): Spielereignis (Tor/Karte) zwischen den beiden verglichenen Scans -> die Quote
+    ist mechanisch neu gepreist, die Back/Lay-Lesart ungueltig. 10.08.2026: PRAEZISE, wenn wir den echten
+    Score im Fenster haben (eventInWindow); sonst Fallback auf die 40%-Quotensprung-Heuristik (Alt-Daten /
+    HZ-Szenario ohne Delta-Fenster)."""
+    if a.get("eventInWindow"):
+        return True
     prev, odd = a.get("leadPrev"), a.get("leadOdd")
     try:
         if prev and odd:

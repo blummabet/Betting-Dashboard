@@ -477,6 +477,20 @@ class TestDirection(unittest.TestCase):
         self.assertFalse(BA._dir_event_jump({"leadOdd": 2.0}))                      # kein prev -> nicht bewertbar
         self.assertFalse(BA._dir_event_jump({}))
 
+    def test_event_in_window_precise(self):
+        # 10.08.2026 (Lucas): echter Score/Karten-Wechsel im Delta-Fenster = praezises Ereignis
+        self.assertTrue(BA._event_in_window({"sc": [2, 1]}, {"sc": [2, 2]}))    # Ausgleich gefallen
+        self.assertTrue(BA._event_in_window({"rc": [0, 0]}, {"rc": [0, 1]}))    # rote Karte
+        self.assertFalse(BA._event_in_window({"sc": [1, 1]}, {"sc": [1, 1]}))   # nichts passiert
+        self.assertFalse(BA._event_in_window({"sc": None}, {"sc": [1, 0]}))     # unvollstaendig -> nicht bewertbar
+
+    def test_dir_event_jump_precise_beats_odds_heuristic(self):
+        # Score aenderte sich im Fenster → Ereignis, AUCH wenn die Quote nur klein sprang (Heuristik haette's verpasst)
+        a = {"leadPrev": 2.10, "leadOdd": 2.00, "eventInWindow": True}
+        self.assertTrue(BA._dir_event_jump(a))
+        # ohne eventInWindow bliebe derselbe kleine Move unauffaellig
+        self.assertFalse(BA._dir_event_jump({"leadPrev": 2.10, "leadOdd": 2.00}))
+
     def test_dir_line_event_jump_suppresses_verdict(self):
         # 08.08.2026 (Lucas, Viking 1.23->3.60 nach 1:1): grosser Sprung = Spielereignis, kein Flow.
         drift = BA._dir_line({"leadDir": "out", "leadPrev": 1.23, "leadOdd": 3.60})   # Gegentor -> Quote raus

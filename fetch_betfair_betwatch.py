@@ -212,10 +212,17 @@ def append_history(hist, snap, now=None, keep_h=HIST_KEEP_H, max_points=HIST_MAX
         mk = (snap.get("markets") or {}).get(name)
         if isinstance(mk, dict) and isinstance(mk.get("vol"), (int, float)):
             mkv[name] = mk["vol"]
+    li = snap.get("liveInfo") or {}
+    # 10.08.2026 (Lucas): echten Spielstand + rote Karten mitschreiben. Damit erkennt der Push ein
+    # Spielereignis im Zufluss-Fenster EXAKT (Score/Karten aenderten sich zwischen zwei Scans) statt es
+    # aus einem 40%-Quotensprung zu RATEN (Braga-Fall). goal_v1/goal_v2/red_v1/red_v2 liefert Betwatch live.
+    sc = [li.get("goal_v1"), li.get("goal_v2")] if li.get("goal_v1") is not None else None
+    rc = ([li.get("red_v1") or 0, li.get("red_v2") or 0]
+          if (li.get("red_v1") is not None or li.get("red_v2") is not None) else None)
     pt = {"ts": now.isoformat(), "totalVol": snap.get("totalVol"),
           "mo": {k: (snap.get("mo") or {}).get(k) for k in ("hw", "dr", "aw", "vol")},
           "kickoff": snap.get("kickoff"), "mkv": mkv,
-          "min": (snap.get("liveInfo") or {}).get("time")}
+          "min": li.get("time"), "sc": sc, "rc": rc}
     arr = list(hist.get(mid) or [])
     arr.append(pt)
     arr = arr[-max_points:]
