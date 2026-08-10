@@ -3,12 +3,10 @@
     {
       "id": "prices_fresh",
       "label": "Roh-Feed frisch (Betwatch-Fetch laeuft)",
-      "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "Roh-Feed: juengster Stand vor 3.0 h (> 0.8 h erwartet) · 89 Spiele im File"
-      ],
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Juengster erfasster Snapshot. Radar-Scan ~alle 15 Min — steht er, ist ALLES darunter alt."
     },
     {
@@ -59,12 +57,10 @@
     {
       "id": "consensus_fresh",
       "label": "Konsens frisch (Zweitmeinung wird gebaut)",
-      "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "Konsens: juengster Stand vor 3.0 h (> 1.5 h erwartet) · 0 Spiele, 0 mit Anker"
-      ],
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "betfair_consensus.json speist die Zweitmeinung der Trades-Frisch-Push. Steht generatedAt, ist die Zweitmeinung alt."
     },
     {
@@ -74,17 +70,15 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Keine Konsens-Spiele zu bewerten (kein Feed / kein Geld) — kein Urteil."
+      "note": "Anker = Pinnacle/Soft-Quote gematcht. Durchgehend 0 trotz laufender Spiele = API-Key tot oder Namens-Matching kaputt (Zweitmeinung waere leer)."
     },
     {
       "id": "track_record_fresh",
       "label": "Track-Record frisch (wird abgerechnet)",
-      "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "Track-Record: juengster Stand vor 3.0 h (> 1.5 h erwartet) · n=5428 abgerechnet"
-      ],
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "betfair_track_record.json aggregiert die abgerechneten Signale. Steht es, wird die Radar-Bilanz nicht mehr aktualisiert."
     },
     {
@@ -118,14 +112,12 @@
       "id": "public_eval_alive",
       "label": "Public-Push-Auswertung lebt",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "Public-Auswertung: juengster Stand vor 3.0 h (> 1.5 h erwartet)"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 4,
-  "generatedAt": "2026-08-10T07:42:48.827007+00:00"
+  "nFail": 0,
+  "generatedAt": "2026-08-10T12:59:36.136194+00:00"
 }
