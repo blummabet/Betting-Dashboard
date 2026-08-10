@@ -591,9 +591,23 @@ def _tg_public(text) -> bool:
         return False
 
 
-def _log_public_push(a) -> None:
+def _consensus_for_push(a, cidx) -> dict:
+    """10.08.2026 (Lucas): kompakter Konsens-Verdikt (Pinnacle/Soft/Poly-Zweitmeinung) fuers Push-Ledger.
+    Damit kann betfair_public_eval spaeter auswerten, ob konsens-BESTAETIGTE Pushs besser laufen als
+    uneinige. None, wenn zu dem Spiel kein Konsens-Eintrag existiert."""
+    g = (cidx or {}).get(str(a.get("matchId"))) if isinstance(cidx, dict) else None
+    if not g:
+        return None
+    v = g.get("verdict")
+    if v in (None, "no_anchor"):
+        return {"verdict": "no_anchor", "agree": None}
+    return {"verdict": v, "agree": bool(g.get("agree"))}
+
+
+def _log_public_push(a, cidx=None) -> None:
     """Jeden GESENDETEN Public-Push in betfair_public_ledger.json festhalten → betfair_public_eval.py
-    rechnet ihn später gegen den Endstand ab. Ein Eintrag je Spiel+Szenario+Markt (kein Doppelzählen)."""
+    rechnet ihn später gegen den Endstand ab. Ein Eintrag je Spiel+Szenario+Markt (kein Doppelzählen).
+    10.08.2026: Konsens-Zweitmeinung mitloggen (fuer die Konsens-Auswertung)."""
     try:
         led = json.load(open(PUB_LEDGER_FILE, encoding="utf-8"))
         if not isinstance(led, list):
@@ -608,7 +622,7 @@ def _log_public_push(a) -> None:
                 "home": a.get("home"), "away": a.get("away"),
                 "leadName": a.get("leadName"), "leadOdd": a.get("leadOdd"),
                 "value": a.get("value"), "sentAt": datetime.now(timezone.utc).isoformat(),
-                "status": "pending", "htScore": None})
+                "status": "pending", "htScore": None, "consensus": _consensus_for_push(a, cidx)})
     try:
         json.dump(led[-800:], open(PUB_LEDGER_FILE, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
     except Exception as e:
@@ -696,7 +710,7 @@ def main():
             if _tg_public(build_public_message(a)):
                 pub_seen[key] = a["value"]
                 pub_sent += 1
-                _log_public_push(a)   # fürs Tracking/Auswerten (betfair_public_eval.py)
+                _log_public_push(a, cidx)   # fürs Tracking/Auswerten (+ Konsens-Zweitmeinung)
     try:
         json.dump(pub_seen, open(PUB_SEEN_FILE, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
     except Exception as e:

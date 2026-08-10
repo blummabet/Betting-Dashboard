@@ -539,6 +539,16 @@ class TestConsensusBlock(unittest.TestCase):
         self.assertEqual(BA._consensus_block({"matchId": "9"}, {"9": {"verdict": "no_anchor"}}), "")
         self.assertEqual(BA._consensus_block({"matchId": "9"}, {}), "")
 
+    def test_consensus_for_push_records_verdict(self):
+        # 10.08.2026 (Lucas): kompakter Verdikt fuers Ledger → spaetere Konsens-Auswertung
+        cidx = {"1": {"verdict": "konsens", "agree": True}, "2": {"verdict": "uneinig", "agree": False},
+                "3": {"verdict": "no_anchor"}}
+        self.assertEqual(BA._consensus_for_push({"matchId": "1"}, cidx), {"verdict": "konsens", "agree": True})
+        self.assertFalse(BA._consensus_for_push({"matchId": "2"}, cidx)["agree"])
+        self.assertEqual(BA._consensus_for_push({"matchId": "3"}, cidx), {"verdict": "no_anchor", "agree": None})
+        self.assertIsNone(BA._consensus_for_push({"matchId": "99"}, cidx))   # kein Eintrag
+        self.assertIsNone(BA._consensus_for_push({"matchId": "1"}, None))
+
 
 if __name__ == "__main__":
     unittest.main()
