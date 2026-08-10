@@ -291,5 +291,27 @@ class TestBuildEntry(unittest.TestCase):
         self.assertEqual(e2["hw"], 1.7)                 # aktuelle Quote neu
 
 
+class TestScrubHistory(unittest.TestCase):
+    """10.08.2026 (Lucas): Selbstheilung — Altlast-Platzhalter-Snaps aus der bestehenden History werfen."""
+    def test_scrubs_placeholders_keeps_real_and_partial(self):
+        h = {"_meta": {"oddsFetchedAt": "x"},
+             "77-79": [
+                 {"ts": "t1", "bk": "pinnacle", "hw": 1.02, "dr": 1.02, "aw": 1.02},   # Platzhalter (Overround ~2.9)
+                 {"ts": "t2", "bk": "pinnacle", "hw": 1.42, "dr": 1.06, "aw": 1.35},   # Platzhalter (dr < 1.05)
+                 {"ts": "t3", "bk": "pinnacle", "hw": 1.9, "dr": 3.5, "aw": 4.2},      # echt
+                 {"ts": "t4", "bk": "public", "o25": 1.9, "u25": 1.9},                 # Teil-Snap (kein 1X2) → bleibt
+             ]}
+        removed = L.scrub_history(h)
+        self.assertEqual(removed, 2)
+        snaps = h["77-79"]
+        self.assertEqual(len(snaps), 2)                       # echt + Teil-Snap bleiben
+        self.assertEqual(snaps[0]["ts"], "t3")                # Reihenfolge erhalten, echtes Opening zuerst
+        self.assertIn("_meta", h)                             # _meta unangetastet
+
+    def test_clean_history_unchanged(self):
+        h = {"40-50": [{"ts": "t1", "bk": "pinnacle", "hw": 1.9, "dr": 3.5, "aw": 4.2}]}
+        self.assertEqual(L.scrub_history(h), 0)
+
+
 if __name__ == "__main__":
     unittest.main()

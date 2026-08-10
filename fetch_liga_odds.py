@@ -370,6 +370,7 @@ def extract_prices(event: dict, orientation: str, home_name: str, away_name: str
 
 from odds_plausibility import plausible_1x2 as _plausible_1x2   # 13.07.2026: EINE Quelle
 from odds_plausibility import derive_double_chance             # 25.07.2026: DC für Safer-Line
+from odds_plausibility import clean_snaps as _clean_snaps      # 10.08.2026: Selbstheilung Alt-Platzhalter
 # (08.07.2026, Lucas: Radar zeigte Fake-Drops bis -84pp.) Beim Markt-Opening liefert The Odds API
 # Platzhalter (dr=1.01, aw=1.06 …), bevor der Markt settlet. Die Regel lebt jetzt zentral in
 # odds_plausibility.py — vorher lag sie dreifach im Repo mit UNTERSCHIEDLICHEN Overround-Grenzen
@@ -589,6 +590,22 @@ def append_snapshot(history: dict, key: str, prices: dict, now_iso: str, post_ko
     return added
 
 
+def scrub_history(history: dict) -> int:
+    """10.08.2026 (Lucas): Altlast-Platzhalter-Snaps aus der bestehenden History werfen und Anzahl
+    entfernter Snaps zurückgeben. Selbstheilung: das Write-Gate (append_snapshot) verhindert NEUE
+    Platzhalter, aber vor dem Gate (20.07) geschriebene blieben liegen und triggern Geister-Moves +
+    Fake-Steam. clean_snaps = dieselbe Plausibilitätsgrenze. _meta bleibt unangetastet. REIN/testbar."""
+    removed = 0
+    for hk, snaps in list((history or {}).items()):
+        if hk == "_meta" or not isinstance(snaps, list):
+            continue
+        clean = _clean_snaps(snaps)
+        if len(clean) != len(snaps):
+            removed += len(snaps) - len(clean)
+            history[hk] = clean
+    return removed
+
+
 # ───────────────────────── Live-Fetch ─────────────────────────
 
 # BTTS + alternate_totals (1.5/3.5) brauchen den Per-Event-Endpoint (QUOTA-teuer: markets×regions
@@ -755,6 +772,11 @@ def main():
     wm.setdefault("_meta", {})["oddsUpdatedAt"] = now_iso
     with open(LIGA_FILE, "w", encoding="utf-8") as f:
         json.dump(wm, f, ensure_ascii=False, indent=2)
+    # 10.08.2026 (Lucas): Selbstheilung — Altlast-Platzhalter-Snaps (vor dem Write-Gate 20.07 geschrieben)
+    # aus der bestehenden History scrubben (append_snapshot verhindert NEUE, alte blieben liegen).
+    scrubbed = scrub_history(history)
+    if scrubbed:
+        print(f"  🧼 {scrubbed} Altlast-Platzhalter-Snap(s) aus der History gescrubbt.")
     history.setdefault("_meta", {})["oddsFetchedAt"] = now_iso
     with open(LIGA_HISTORY, "w", encoding="utf-8") as f:
         json.dump(history, f, ensure_ascii=False, indent=2)

@@ -140,3 +140,50 @@ def test_signal_attribution_bysignal():
     bs = t2["agg"]["bySignal"]
     assert bs["sharp"]["n"] == 1 and bs["steam"]["n"] == 1 and bs["sharp"]["wins"] == 1
     assert "gvp" not in bs
+
+
+# ── Stale-Cleanup (10.08.2026, Lucas): unauflösbare Plays verfallen lassen ─────────────────────
+def _old_open(key, side, days, first=None):
+    ts = (NOW - timedelta(days=days)).isoformat()
+    return {f"{key}|{side}": {"key": key, "side": side, "verdict": "BET", "conv": 8,
+            "league": "ESPORTS", "entryPrice": 0.60, "lastPrice": 0.60, "public": False,
+            "stake": 10.0, "firstTs": ts}}
+
+
+def test_expire_untracked_stale_play():
+    # nicht im close-file (poly_money_broad trackt es nicht) + älter als UNTRACKED_TTL_D + keine Auflösung
+    prev = {"open": _old_open("lol-we-al-2026-08-06", "Anyone's Legend", st.UNTRACKED_TTL_D + 1)}
+    t = st.update_track(prev, _emit([]), {}, {}, now=NOW)
+    assert not t["open"], "unauflösbarer Play hätte verfallen müssen"
+    assert t["expired"] == 1
+    assert not t["settled"], "verfallener Play darf NICHT als win/loss zählen"
+    assert t["agg"]["all"]["n"] == 0
+
+
+def test_keep_tracked_recent_play():
+    # im close-file (getrackt) → langer Backstop, bleibt offen obwohl > UNTRACKED_TTL_D
+    key = "cs2-sf2-ef1-2026-08-08"
+    prev = {"open": _old_open(key, "Eternal Fire", st.UNTRACKED_TTL_D + 1)}
+    close = {key: {"prices": {"Eternal Fire": 0.58}}}
+    t = st.update_track(prev, _emit([]), close, {}, now=NOW)
+    assert f"{key}|Eternal Fire" in t["open"], "getrackter Play darf nicht früh verfallen"
+    assert t["expired"] == 0
+
+
+def test_expire_backstop_for_tracked_but_ancient():
+    # getrackt, aber älter als STALE_TTL_D → Backstop greift trotzdem
+    key = "cs2-old-old-2026-01-01"
+    prev = {"open": _old_open(key, "Team X", st.STALE_TTL_D + 1)}
+    close = {key: {"prices": {"Team X": 0.5}}}
+    t = st.update_track(prev, _emit([]), close, {}, now=NOW)
+    assert not t["open"] and t["expired"] == 1
+
+
+def test_resolution_still_wins_over_expiry():
+    # hat eine Auflösung → wird abgerechnet, NICHT verfallen (auch wenn alt)
+    key = "mlb-a-b"
+    prev = {"open": _old_open(key, "Team A", st.UNTRACKED_TTL_D + 5)}
+    res = {key: {"winner": "Team A", "ts": NOW.isoformat()}}
+    t = st.update_track(prev, _emit([]), {}, res, now=NOW)
+    assert not t["open"] and t["expired"] == 0
+    assert t["settled"][0]["result"] == "win"

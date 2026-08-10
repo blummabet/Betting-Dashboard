@@ -30,10 +30,26 @@ EMITTER = "scripts/emit_shortlist.mjs"
 
 STAKE = float(os.environ.get("SHORTLIST_STAKE") or 10.0)   # fixer Einsatz je Play (USD-Notional)
 SETTLED_KEEP = 500                                          # abgerechnete Plays behalten (rollierend)
+# 10.08.2026 (Lucas): Stale-Cleanup gegen ewig offene Plays. Ein Play, dessen Markt poly_money_broad
+# gar nicht trackt (nicht im close-file), bekommt NIE eine Auflösung → nach kurzer Frist verfallen
+# lassen. Getrackte-aber-ewig-unaufgelöste erst nach langem Backstop. KEIN Fake-Ergebnis.
+UNTRACKED_TTL_D = float(os.environ.get("SHORTLIST_UNTRACKED_TTL_D") or 2)    # nicht getrackt → nie auflösbar
+STALE_TTL_D     = float(os.environ.get("SHORTLIST_STALE_TTL_D") or 14)       # getrackt, aber hängt → Backstop
 
 
 def _now():
     return datetime.now(timezone.utc)
+
+
+def _age_days(ts, now):
+    """Alter eines ISO-Zeitstempels in Tagen; None wenn unlesbar."""
+    try:
+        t = datetime.fromisoformat(str(ts).replace("Z", "+00:00"))
+        if t.tzinfo is None:
+            t = t.replace(tzinfo=timezone.utc)
+        return (now - t).total_seconds() / 86400.0
+    except (ValueError, TypeError):
+        return None
 
 
 def _load(name):
@@ -189,8 +205,23 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE):
         })
         del open_[ok]
 
+    # 4) Stale-Cleanup: unauflösbare Plays verfallen lassen statt ewig offen halten (10.08.2026, Lucas).
+    #    Nicht getrackt (nicht im close-file, poly_money_broad sieht den Markt nicht) → bekommt nie eine
+    #    Auflösung, kurze Frist. Getrackt-aber-ewig-offen → langer Backstop. KEIN Fake-Ergebnis: verfallene
+    #    Plays zählen NICHT als win/loss, sie werden nur aus open entfernt (raus aus der Integritäts-Warnung).
+    n_expired = 0
+    for ok in list(open_.keys()):
+        e = open_[ok]
+        age = _age_days(e.get("firstTs"), now)
+        if age is None:
+            continue
+        tracked = isinstance(close, dict) and e.get("key") in close
+        if age > (STALE_TTL_D if tracked else UNTRACKED_TTL_D):
+            del open_[ok]
+            n_expired += 1
+
     settled = settled[-SETTLED_KEEP:]
-    return {"updatedAt": now.isoformat(), "stake": stake,
+    return {"updatedAt": now.isoformat(), "stake": stake, "expired": n_expired,
             "open": open_, "settled": settled, "agg": aggregate(settled)}
 
 
@@ -212,7 +243,7 @@ def main() -> int:
     a = track["agg"]["all"]
     print(f"📈 Shortlist-Paper-Track: {len(track['open'])} offen · {a['n']} abgerechnet · "
           f"Treffer {a['hit']*100:.0f}% · ROI {a['roi']*100:+.1f}% · Ø CLV {a['clvAvg']:+.1f}pp "
-          f"(Public: {track['agg']['public']['n']})")
+          f"(Public: {track['agg']['public']['n']}) · {track.get('expired', 0)} verfallen (unauflösbar)")
     return 0
 
 

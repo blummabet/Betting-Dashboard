@@ -779,7 +779,13 @@ def main() -> int:
     min_vol, min_odds = _cfg()
     markets = fetch_markets()
     if not markets:
-        print("ℹ️  Keine Poly-Märkte (läuft scharf nur am Mac-Runner) — Dateien unangetastet")
+        # 10.08.2026 (Lucas): FRÜHER hier ganz abgebrochen — auf Leer-Läufen (Fetch scheitert: Quota/429/
+        # Timeout) lief der Geister-Prune NIE, und der Close-Feed wuchs auf ~96% fertige Spiele (Integritäts-
+        # Warnung „Geister-Märkte"). Jetzt auch OHNE frischen Fetch prunen: capture([], frozen) fügt nichts
+        # hinzu, wirft nur die Märkte raus, die > GHOST_GRACE_H nach Anpfiff und unaufgelöst sind.
+        frozen = capture([], _load(CLOSE_FILE))
+        (BASE / CLOSE_FILE).write_text(json.dumps(frozen, ensure_ascii=False, indent=1), encoding="utf-8")
+        print(f"ℹ️  Keine Poly-Märkte — Close-Feed nur von Geistern gepruned ({len(frozen)} bleiben).")
         return 0
     frozen = capture(markets, _load(CLOSE_FILE), min_vol=min_vol)
     (BASE / CLOSE_FILE).write_text(json.dumps(frozen, ensure_ascii=False, indent=1), encoding="utf-8")
