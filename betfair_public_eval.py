@@ -16,7 +16,12 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 # Grading aus dem bestehenden Track-Record wiederverwenden (kein Duplikat).
-from betfair_track_record import fav_token, winning_token, grade, MARKETS
+from betfair_track_record import fav_token, winning_token, grade, MARKETS, RESULTS_MIN_H
+
+try:
+    from fetch_betfair_betwatch import fetch_results as _fetch_results   # 10.08.2026 (Lucas): autoritative Endstaende
+except Exception:   # Modul/Netz optional — ohne bleibt die finished/expire-Logik unveraendert
+    _fetch_results = None
 
 BASE = Path(__file__).resolve().parent
 LEDGER_FILE = BASE / "betfair_public_ledger.json"
@@ -101,8 +106,31 @@ def settle_from_track(ledger, track_results, now=None):
     return ledger
 
 
-def settle(ledger, prices, now=None):
-    """Fertige Spiele abrechnen. Setzt status won/lost/void + profit (1 Einheit Einsatz). REIN."""
+def _grade_ledger_entry(e, ft, ht, now):
+    """Einen pending-Push gegen den Endstand abrechnen (status won/lost/void + profit setzen). REIN."""
+    fav = fav_token(e.get("market"), e.get("leadName"), e.get("home"), e.get("away"))
+    win, ok = grade(fav, e.get("market"), ft, ht)
+    e["settledAt"] = now.isoformat()
+    e["ftScore"] = ft
+    if not ok:
+        e["status"] = "void"          # nicht abrechenbar (z.B. HT-Markt ohne HT-Stand)
+        return
+    odd = e.get("leadOdd")
+    e["status"] = "won" if win else "lost"
+    e["profit"] = (float(odd) - 1.0) if (win and isinstance(odd, (int, float))) else (-1.0 if not win else 0.0)
+
+
+def _sent_before(e, cutoff):
+    try:
+        st = datetime.fromisoformat(str(e.get("sentAt")).replace("Z", "+00:00"))
+    except (ValueError, TypeError):
+        return False
+    return st < cutoff
+
+
+def settle(ledger, prices, now=None, results_fetch=None):
+    """Fertige Spiele abrechnen. Setzt status won/lost/void + profit (1 Einheit Einsatz). REIN
+    (results_fetch injizierbar; None = Endpoint-Pfad aus, weiter testbar)."""
     now = now or _now()
     idx = _by_id(prices)
     for e in ledger:
@@ -116,24 +144,28 @@ def settle(ledger, prices, now=None):
                 ht = e.get("htScore")
                 if ht is None and li.get("goal_v1") is not None and (li.get("is_ht")):
                     ht = [li.get("goal_v1"), li.get("goal_v2")]
-                fav = fav_token(e.get("market"), e.get("leadName"), e.get("home"), e.get("away"))
-                win, ok = grade(fav, e.get("market"), ft, ht)
-                e["settledAt"] = now.isoformat()
-                e["ftScore"] = ft
-                if not ok:
-                    e["status"] = "void"          # nicht abrechenbar (z.B. HT-Markt ohne HT-Stand)
-                    continue
-                odd = e.get("leadOdd")
-                e["status"] = "won" if win else "lost"
-                e["profit"] = (float(odd) - 1.0) if (win and isinstance(odd, (int, float))) else (-1.0 if not win else 0.0)
+                _grade_ledger_entry(e, ft, ht, now)
                 continue
         # nie „finished" gesehen & zu alt → verwerfen (Spiel aus dem Feed gefallen)
-        try:
-            st = datetime.fromisoformat(str(e.get("sentAt")).replace("Z", "+00:00"))
-        except (ValueError, TypeError):
-            st = None
-        if st is not None and st < now - timedelta(hours=PENDING_TTL_H):
+        if _sent_before(e, now - timedelta(hours=PENDING_TTL_H)):
             e["status"] = "expired"
+
+    # 10.08.2026 (Lucas): AUTORITATIVER Endstand fuer Rest-Pending (analog track_record). Pushs, deren Spiel
+    # weder im Feed „finished" war noch verfallen ist (aus dem Feed gefallen), ueber POST /football/results
+    # abrechnen (bis 30 Tage). Additiv: nur laengst gesendete (> RESULTS_MIN_H), nur bei „finished" + Score.
+    if results_fetch is not None:
+        rescue = now - timedelta(hours=RESULTS_MIN_H)
+        ids = [str(e.get("matchId")) for e in ledger
+               if e.get("status") == "pending" and _sent_before(e, rescue)]
+        if ids:
+            res = results_fetch(ids) or {}
+            for e in ledger:
+                if e.get("status") != "pending":
+                    continue
+                r = res.get(str(e.get("matchId"))) if isinstance(res, dict) else None
+                if not isinstance(r, dict) or not r.get("finished") or r.get("goal_v1") is None:
+                    continue
+                _grade_ledger_entry(e, [r.get("goal_v1"), r.get("goal_v2")], e.get("htScore"), now)
     return ledger
 
 
@@ -183,7 +215,7 @@ def main():
     if not isinstance(track_results, list):
         track_results = []
     ledger = settle_from_track(ledger, track_results)
-    ledger = settle(ledger, prices)
+    ledger = settle(ledger, prices, results_fetch=_fetch_results)
     # abgeschlossene/verworfene lange behalten fürs Ledger, aber deckeln
     ledger = ledger[-LEDGER_KEEP:]
     record = summarize(ledger)

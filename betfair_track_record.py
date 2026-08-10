@@ -40,10 +40,16 @@ except Exception:   # Modul optional — ohne bleibt dir einfach None
     def _dir_look(direction, matchId, market, runner):
         return None
 
+try:
+    from fetch_betfair_betwatch import fetch_results as _fetch_results   # 10.08.2026 (Lucas): autoritative Endstaende
+except Exception:   # Modul/Netz optional — ohne bleibt die finished/vanish-Logik unveraendert
+    _fetch_results = None
+
 CONC_THRESHOLD = 0.65     # Geld-Favorit gilt als „konzentriert" ab so viel Marktanteil
 INFLOW_MIN_EUR = 2000     # Markt gilt als „frischer Zufluss" ab so viel € Delta (prices sind €)
 RESULTS_KEEP = 8000       # Ledger-Kappung
 PENDING_TTL_H = 60        # pending ohne Settlement nach so vielen h nach Anpfiff verwerfen
+RESULTS_MIN_H = 3.0       # Anpfiff so lange her → Spiel sicher vorbei → autoritatives Ergebnis (POST /results) abfragbar
 
 # 07.08.2026 (Lucas: „Push-Bilanz komplett wertlos"): der Feed zeigt „finished" nur kurz/unzuverlaessig
 # — ~35% der Spiele fallen aus dem Feed BEVOR ein 15-Min-Lauf sie als „finished" erwischt und bleiben
@@ -217,8 +223,9 @@ def capture(prices, history, state, now=None, direction=None):
     return state
 
 
-def settle(prices, state, results, now=None):
-    """Fertige Spiele abrechnen → results-Ledger. Entfernt settled + zu alte pending. REIN."""
+def settle(prices, state, results, now=None, results_fetch=None):
+    """Fertige Spiele abrechnen → results-Ledger. Entfernt settled + zu alte pending. REIN (results_fetch
+    injizierbar; None = Endpoint-Pfad aus, weiter testbar)."""
     now = now or _now()
     state = dict(state or {})
     pending = dict(state.get("pending") or {})
@@ -270,6 +277,28 @@ def settle(prices, state, results, now=None):
         if seen is None or seen > now - timedelta(minutes=VANISH_GRACE_MIN):
             continue                      # zu frisch → koennte kurzer Feed-Aussetzer sein, warten
         _grade_pending(mid, pend, list(score), pend.get("htScore"), "vanish")
+
+    # 3) 10.08.2026 (Lucas): AUTORITATIVER Endstand fuer den Rest. Spiele, die weder „finished" noch
+    #    Verschwinde-Settle erwischt hat (aus dem Feed gefallen bevor >= VANISH_MIN_MINUTE, ~35%), holen
+    #    wir ueber POST /football/results (bis 30 Tage). Additiv: nur laengst gespielte (Anpfiff > RESULTS_MIN_H)
+    #    noch-pending, nur wenn der Endpoint „finished" + Score liefert. Fehler/kein Fetcher → alte TTL-Logik.
+    if results_fetch is not None and pending:
+        stale = []
+        for mid in list(pending.keys()):
+            try:
+                kt = datetime.fromisoformat(str(pending[mid].get("kickoff")).replace("Z", "+00:00"))
+            except (ValueError, TypeError):
+                kt = None
+            if kt is not None and kt < now - timedelta(hours=RESULTS_MIN_H):
+                stale.append(mid)
+        if stale:
+            res = results_fetch(stale) or {}
+            for mid in stale:
+                r = res.get(str(mid)) if isinstance(res, dict) else None
+                if not isinstance(r, dict) or not r.get("finished") or r.get("goal_v1") is None:
+                    continue
+                _grade_pending(mid, pending[mid], [r.get("goal_v1"), r.get("goal_v2")],
+                               pending[mid].get("htScore"), "results")
 
     # zu alte pending (nie „finished" gesehen) verwerfen
     cutoff = now - timedelta(hours=PENDING_TTL_H)
@@ -382,7 +411,7 @@ def main():
         results = []
     now = _now()
     state = capture(prices, history, state, now=now, direction=direction if isinstance(direction, dict) else {})
-    state, results = settle(prices, state, results, now=now)
+    state, results = settle(prices, state, results, now=now, results_fetch=_fetch_results)
     record = aggregate(results, now=now)
     _write(STATE_FILE, state)
     _write(RESULTS_FILE, results)

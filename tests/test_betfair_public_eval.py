@@ -47,6 +47,20 @@ class TestSettle(unittest.TestCase):
         E.settle(led, {"matches": []}, late)
         self.assertEqual(led[0]["status"], "expired")
 
+    def test_results_endpoint_rescues_orphan(self):
+        # 10.08.2026 (Lucas): Push, dessen Spiel aus dem Feed fiel → ueber POST /results autoritativ abrechnen.
+        led = [_p("300", "Match Odds", "TeamH", 2.0, home="TeamH", away="TeamA")]
+        fake = lambda ids: {"300": {"goal_v1": 2, "goal_v2": 0, "finished": True}}
+        E.settle(led, {"matches": []}, NOW, results_fetch=fake)   # leerer Feed, Fetcher liefert 2:0
+        self.assertEqual(led[0]["status"], "won")                # Heim gewinnt
+        self.assertAlmostEqual(led[0]["profit"], 1.0)
+
+    def test_results_endpoint_ignores_unfinished(self):
+        led = [_p("301", "Match Odds", "TeamH", 2.0, home="TeamH", away="TeamA")]
+        fake = lambda ids: {"301": {"goal_v1": 1, "goal_v2": 0, "finished": False}}
+        E.settle(led, {"matches": []}, NOW, results_fetch=fake)
+        self.assertEqual(led[0]["status"], "pending")            # laeuft noch → nicht abrechnen
+
 
 class TestCaptureHt(unittest.TestCase):
     def test_captures_halftime_score(self):

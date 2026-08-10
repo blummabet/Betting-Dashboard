@@ -157,6 +157,14 @@ def test_history_speichert_score_und_karten():
     assert h0["35785202"][-1]["sc"] is None and h0["35785202"][-1]["rc"] is None
 
 
+def test_fetch_results_guards():
+    """10.08.2026 (Lucas): der Ergebnis-Endpoint-Helfer ist defensiv — ohne IDs / ohne KEY leeres Dict,
+    damit die Aufrufer (track_record/public_eval) auf die bestehende finished/vanish-Logik zurueckfallen."""
+    assert B.fetch_results([]) == {}            # keine IDs
+    assert B.fetch_results(["abc"]) == {}       # keine numerischen IDs
+    assert B.fetch_results([1, 2, 3]) == {}     # KEY im Testlauf leer → kein Netz-Call
+
+
 def test_dedup_matchups_keeps_volume_winner():
     """Betwatch-Doppel-Listing (ein Spiel, zwei matchIds) → nur der Volumen-Sieger bleibt."""
     snaps = [

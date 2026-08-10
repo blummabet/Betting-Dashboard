@@ -300,6 +300,59 @@ def _get(path):
     return None
 
 
+RESULTS_MAX = int(os.environ.get("BETWATCH_RESULTS_MAX") or 200)   # Batch-Deckel je Ergebnis-Abfrage
+
+
+def _build_post_req(path, mode, body: bytes):
+    headers = dict(_BASE_HEADERS)
+    headers["Content-Type"] = "application/json"
+    url = API_BASE + path
+    if mode == "query":
+        sep = "&" if "?" in path else "?"
+        url = f"{url}{sep}key={KEY}"
+    elif mode == "token":
+        headers["Authorization"] = f"Token {KEY}"
+    elif mode == "apikey":
+        headers["X-API-Key"] = KEY
+    elif mode == "bearer":
+        headers["Authorization"] = f"Bearer {KEY}"
+    return urllib.request.Request(url, headers=headers, data=body, method="POST")
+
+
+def fetch_results(match_ids):
+    """10.08.2026 (Lucas): POST /football/results — AUTORITATIVE Endstaende (bis 30 Tage nach Spielende)
+    fuer eine Liste Event-IDs. Fuellt das Loch der finished/vanish-Abrechnung: Spiele, die aus dem Feed
+    fielen bevor wir „finished"/spaeten Live-Stand sahen. Gibt {str(matchId): {goal_v1, goal_v2, finished,
+    red_v1, red_v2, ...}}. Netz NUR hier; ohne KEY / bei Fehler leeres Dict → Aufrufer nutzt die alte Logik."""
+    ids = []
+    for x in (match_ids or []):
+        try:
+            ids.append(int(x))
+        except (TypeError, ValueError):
+            continue
+    ids = ids[:RESULTS_MAX]
+    if not ids or not KEY:
+        return {}
+    body = json.dumps({"eventIds": ids}).encode("utf-8")
+    modes = [_AUTH["mode"]] if _AUTH["mode"] else _AUTH_ORDER
+    last_code = None
+    for mode in modes:
+        try:
+            with urllib.request.urlopen(_build_post_req("/football/results", mode, body), timeout=HTTP_TIMEOUT) as r:
+                data = json.loads(r.read().decode("utf-8"))
+                if _AUTH["mode"] != mode:
+                    _AUTH["mode"] = mode
+                return {str(k): v for k, v in data.items() if isinstance(v, dict)} if isinstance(data, dict) else {}
+        except urllib.error.HTTPError as e:
+            last_code = e.code
+            continue
+        except Exception as e:
+            print(f"  ⚠️  Betwatch results Fehler: {e}")
+            return {}
+    print(f"  ⚠️  Betwatch results HTTP {last_code} — alle Auth-Methoden abgelehnt")
+    return {}
+
+
 def _load(p):
     try:
         return json.loads(p.read_text(encoding="utf-8"))

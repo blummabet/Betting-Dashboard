@@ -110,6 +110,35 @@ def test_settle_ht_ohne_ht_stand_wird_nicht_gewertet():
     assert "Half Time" not in markets                        # ungraded ohne HT-Stand
 
 
+def test_settle_results_endpoint_rechnet_verwaiste_ab():
+    # 10.08.2026 (Lucas): Spiel aufgenommen, dann aus dem Feed gefallen (weder „finished" noch spaet-live
+    # gesehen) → ueber den injizierten Ergebnis-Endpoint autoritativ abrechnen.
+    st = T.capture({"matches": [_prematch(mid=1)]}, HIST, {}, now=NOW)
+    assert "1" in st["pending"]
+    later = NOW + timedelta(hours=8)                          # Anpfiff (NOW+3h) laengst vorbei
+    fake = lambda ids: {"1": {"goal_v1": 2, "goal_v2": 1, "finished": True}}
+    st2, res = T.settle({"matches": []}, st, [], now=later, results_fetch=fake)
+    assert "1" not in st2["pending"]                          # via Endpoint abgerechnet
+    mkts = {r["market"]: r for r in res}
+    assert mkts["Match Odds"]["via"] == "results"
+    assert mkts["Match Odds"]["win"] is True                  # 2:1 → Heim
+
+
+def test_settle_ohne_fetcher_bleibt_pending():
+    # Ohne results_fetch (None) bleibt das verwaiste Spiel pending — kein Fake-Ergebnis.
+    st = T.capture({"matches": [_prematch(mid=1)]}, HIST, {}, now=NOW)
+    st2, res = T.settle({"matches": []}, st, [], now=NOW + timedelta(hours=8))
+    assert "1" in st2["pending"] and not res
+
+
+def test_settle_results_ignoriert_unfertige():
+    # Endpoint meldet „nicht finished" → NICHT abrechnen (Spiel laeuft noch / kein Ergebnis).
+    st = T.capture({"matches": [_prematch(mid=1)]}, HIST, {}, now=NOW)
+    fake = lambda ids: {"1": {"goal_v1": 1, "goal_v2": 1, "finished": False}}
+    st2, res = T.settle({"matches": []}, st, [], now=NOW + timedelta(hours=8), results_fetch=fake)
+    assert "1" in st2["pending"] and not res
+
+
 def test_aggregate_trefferquote_und_roi_split():
     results = [
         {"league": "Ecuador Serie A", "market": "Half Time", "home": HOME, "away": AWAY,
