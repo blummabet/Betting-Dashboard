@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v100';   // 10.08.2026: Shortlist-Reason — Wallet-P&L auf "M" (via _pwUsd) + Spiel-Einsatz an der Geld-Mehrheit
+const VERSION = 'cocobet-v101';   // 10.08.2026: Pinnacle-Poly-Backtest — Hygiene-Gate (vol>0 + Favoriten-Einigkeit) killt Datenmüll (leere Bücher/Fehlmatches)
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

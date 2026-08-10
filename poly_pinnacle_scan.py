@@ -77,6 +77,34 @@ def _devig_1x2(hw, dr, aw):
     return (round(ih / m, 4), round(idr / m, 4), round(ia / m, 4))
 
 
+# ── Hygiene-Gate (10.08.2026, Lucas) ─────────────────────────────────────────────────────────
+# Der Round-Trip-Backtest fraß zu 96% Datenmüll: 95% der Einstiegs-Trigger lagen auf LEEREN
+# Poly-Büchern (vol=0 → Seed-Preis, kein Markt), der Rest auf Fehlmatches/kaputtem De-vig
+# (Elche-Barça: Pinnacle sah Barça auswärts bei 29% — unmöglich; Betis: Remis-Wkt 14%). Beide
+# Klassen haben dieselbe Signatur: Poly und Pinnacle sind sich nicht mal einig, WER Favorit ist.
+VOL_MIN = float(os.environ.get("PP_VOL_MIN") or 50)   # Poly-Markt unter so viel gematchtem Volumen = kein echter Preis
+
+
+def _snap_valid(pinn, poly, vol):
+    """Ein Snapshot zählt nur, wenn (1) das Poly-Buch echtes Volumen hat, (2) der Pinnacle-Fair
+    sauber ist (3 Wkt, Summe ~1), (3) Poly UND Pinnacle sich einig sind, wer Favorit ist. Sonst
+    ist es fast sicher ein leeres Buch, ein Fehlmatch oder ein kaputtes De-vig — kein echter Edge."""
+    try:
+        if (vol or 0) <= VOL_MIN:
+            return False
+        if not pinn or not poly or len(pinn) != 3 or len(poly) != 3:
+            return False
+        if any(x is None for x in pinn) or any(x is None for x in poly):
+            return False
+        if not (0.95 <= sum(pinn) <= 1.05):
+            return False
+        if pinn.index(max(pinn)) != poly.index(max(poly)):
+            return False
+        return True
+    except (TypeError, ValueError, AttributeError):
+        return False
+
+
 # ── Polymarket: Basis-Moneyline je Liga (roster-frei) ───────────────────────────────────────────
 def fetch_poly_games(series_id, http=_http_json):
     out, seen = [], set()
@@ -271,6 +299,9 @@ def scan(leagues=None, poly_fetch=fetch_poly_games, pinn_fetch=fetch_pinn_games,
             continue
         for pr in pair_games(pg, xg):
             g = pr["poly"]
+            # 10.08.2026 (Lucas): Datenmüll gar nicht erst mitschreiben (leeres Buch / Fehlmatch / kaputtes De-vig).
+            if not _snap_valid(pr["pinn_frame"], g["poly"], g["vol"]):
+                continue
             key = f"{lg['name']}|{g['home']}|{g['away']}|{str(g['kickoff'])[:10]}"
             rows[key] = {
                 "league": lg["name"], "home": g["home"], "away": g["away"],

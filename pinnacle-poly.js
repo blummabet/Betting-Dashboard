@@ -13,6 +13,21 @@
   var EXIT_EDGE  = 1.0;   // pp: darunter gilt Poly als konvergiert → Ausstieg
   var MOVE_MIN   = 1.5;   // pp: Pinnacle-Bewegung (Wkt steigt = Quote fällt), die den Einstieg triggert
   var MIN_SNAPS_BT = 4;   // ab so vielen Snapshots/Spiel ist der Backtest überhaupt aussagekräftig
+  var VOL_MIN = 50;       // Poly-Buch unter so viel Volumen = kein echter Preis (Hygiene-Gate 10.08.2026)
+
+  // 10.08.2026 (Lucas): Hygiene-Gate gegen Backtest-Datenmüll — spiegelt _snap_valid in
+  // poly_pinnacle_scan.py. Reinigt SOFORT auch die bereits gesammelten Snapshots: nur zählen,
+  // wenn (1) echtes Poly-Volumen, (2) sauberer Pinnacle-Fair (Summe ~1), (3) Poly & Pinnacle
+  // einig, wer Favorit ist. 96% der alten „Edges" waren leere Bücher oder Fehlmatches.
+  function _argmax3(a) { return a[0] >= a[1] ? (a[0] >= a[2] ? 0 : 2) : (a[1] >= a[2] ? 1 : 2); }
+  function _validSnap(s) {
+    if (!s || !s.pinn || !s.poly || s.pinn.length !== 3 || s.poly.length !== 3) return false;
+    if ((s.vol || 0) <= VOL_MIN) return false;
+    for (var i = 0; i < 3; i++) { if (s.pinn[i] == null || s.poly[i] == null) return false; }
+    var sum = s.pinn[0] + s.pinn[1] + s.pinn[2];
+    if (sum < 0.95 || sum > 1.05) return false;
+    return _argmax3(s.pinn) === _argmax3(s.poly);
+  }
 
   var C = {
     card: '#161b22', bd: '#21262d', ink: '#e6edf3', mut: '#9aa5b1', dim: '#6b7684',
@@ -98,7 +113,7 @@
     var totalSnaps = 0;
     Object.keys(games).forEach(function (k) {
       var g = games[k];
-      var snaps = g.snaps || [];
+      var snaps = (g.snaps || []).filter(_validSnap);   // 10.08.2026 (Lucas): nur saubere Snapshots in Edge/Backtest
       totalSnaps += snaps.length;
       var cur = _curEdge(snaps);
       var trips = _backtest(snaps);
