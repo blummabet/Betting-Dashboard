@@ -61,6 +61,21 @@ class TestSettle(unittest.TestCase):
         E.settle(led, {"matches": []}, NOW, results_fetch=fake)
         self.assertEqual(led[0]["status"], "pending")            # laeuft noch → nicht abrechnen
 
+    def test_consensus_split(self):
+        # 10.08.2026 (Lucas): Split nach Konsens-Zweitmeinung — agree vs uneinig getrennt ausgewertet.
+        led = [
+            {**_p("400", "Match Odds", "TeamH", 2.0, home="TeamH", away="TeamA"),
+             "consensus": {"verdict": "konsens", "agree": True}},
+            {**_p("401", "Match Odds", "TeamH", 2.0, home="TeamH", away="TeamA"),
+             "consensus": {"verdict": "uneinig", "agree": False}},
+        ]
+        E.settle(led, {"matches": [_fin("400", 2, 0), _fin("401", 0, 1)]}, NOW)  # 400 Heim gewinnt, 401 verliert
+        rec = E.summarize(led, NOW)
+        self.assertEqual(rec["consensusSplit"]["agree"]["wins"], 1)
+        self.assertEqual(rec["consensusSplit"]["disagree"]["wins"], 0)
+        self.assertIn("konsens", rec["byConsensus"])
+        self.assertIn("uneinig", rec["byConsensus"])
+
 
 class TestCaptureHt(unittest.TestCase):
     def test_captures_halftime_score(self):

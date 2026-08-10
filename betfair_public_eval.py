@@ -192,6 +192,24 @@ def summarize(ledger, now=None):
     for mk in sorted({e.get("market") for e in res if e.get("market")}):
         by_mkt[mk] = agg([e for e in res if e.get("market") == mk])
 
+    # 10.08.2026 (Lucas): Split nach Konsens-Zweitmeinung — laufen konsens-BESTAETIGTE Pushs besser als
+    # uneinige? Der eigentliche ROI-Hebel: wenn ja, filtert der Konsens die edge-losen Pushs raus.
+    def _cv(e):
+        c = e.get("consensus")
+        return c.get("verdict") if isinstance(c, dict) else None
+    by_cons = {}
+    for v in ("konsens", "teil", "uneinig", "no_anchor"):
+        rows = [e for e in res if _cv(e) == v]
+        if rows:
+            by_cons[v] = agg(rows)
+    cons_split = {}
+    agree_rows = [e for e in res if _cv(e) in ("konsens", "teil")]     # Buchmacher bestaetigen die Geld-Seite
+    disagree_rows = [e for e in res if _cv(e) == "uneinig"]            # Buchmacher sehen die andere Seite vorn
+    if agree_rows:
+        cons_split["agree"] = agg(agree_rows)
+    if disagree_rows:
+        cons_split["disagree"] = agg(disagree_rows)
+
     recent = [{"home": e.get("home"), "away": e.get("away"), "league": e.get("league"),
                "market": e.get("market"), "leadName": e.get("leadName"), "leadOdd": e.get("leadOdd"),
                "won": e.get("status") == "won", "settledAt": e.get("settledAt")}
@@ -199,7 +217,8 @@ def summarize(ledger, now=None):
 
     out = agg(res)
     out.update({"generatedAt": now.isoformat(), "pending": pend,
-                "byScenario": by_scn, "byMarket": by_mkt, "recent": recent})
+                "byScenario": by_scn, "byMarket": by_mkt,
+                "byConsensus": by_cons, "consensusSplit": cons_split, "recent": recent})
     return out
 
 
@@ -226,6 +245,11 @@ def main():
         print("Schreibfehler:", e)
     print("Public-Eval: %d abgerechnet (%s%% Treffer, ROI %s) · %d offen"
           % (record["n"], round((record["hitRate"] or 0) * 100), record["roi"], record["pending"]))
+    cs = record.get("consensusSplit") or {}
+    if cs:
+        print("  🧭 Konsens-Split: " + " · ".join(
+            "%s n=%d Treffer %s%% ROI %s" % (k, cs[k]["n"], round((cs[k]["hitRate"] or 0) * 100), cs[k]["roi"])
+            for k in ("agree", "disagree") if k in cs))
 
 
 if __name__ == "__main__":
