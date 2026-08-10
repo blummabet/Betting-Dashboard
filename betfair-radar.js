@@ -523,10 +523,26 @@
     var tip = backed ? 'Quote fällt = auf diesen Ausgang wird gesetzt (Back). ' : 'Quote steigt = Ausgang wird schwächer, Geld dagegen (Lay). ';
     return '<span title="' + esc(tip) + Math.abs(mv.pp).toFixed(1) + 'pp seit erstem Snapshot" style="display:inline-flex;gap:4px;align-items:center;padding:2px 9px;border-radius:20px;background:' + (backed ? 'rgba(63,185,80,.14)' : 'rgba(248,81,73,.14)') + ';color:' + col + ';font-size:11px;font-weight:800">' + (backed ? '▼' : '▲') + ' ' + esc(txt) + ' <span style="opacity:.7">' + (backed ? 'Quote fällt' : 'Quote steigt') + '</span></span>';
   }
+  function liveMinTxt(m) {
+    // 10.08.2026 (Lucas): Live-Minute im Radar — aber EHRLICH. Der Feed ist ~alle 15 Min, die gespeicherte
+    // Minute also „alt". Wir rechnen den Scan-Verzug (genAgeMin) drauf → ~Jetzt-Stand, mit „~" markiert.
+    // Halbzeit separat (Verzug draufrechnen waere dann falsch). Score selbst ist exakt (echte Tor-Zahl).
+    var li = m.liveInfo || {};
+    if (li.is_ht) return 'HZ';
+    var t = li.time;
+    if (typeof t !== 'number' || t <= 0) return '';
+    var lag = genAgeMin();
+    return '~' + Math.min(130, t + (lag > 0 && lag < 30 ? Math.round(lag) : 0)) + "'";
+  }
   function koPill(m) {
     if (isLive(m)) {
-      var li = m.liveInfo || {}, sc = (li.goal_v1 != null && li.goal_v2 != null) ? (li.goal_v1 + ':' + li.goal_v2) : '';
-      return '<span style="display:inline-flex;gap:4px;align-items:center;padding:2px 8px;border-radius:20px;background:rgba(248,81,73,.15);color:' + C.live + ';font-size:11px;font-weight:800"><span style="width:6px;height:6px;border-radius:50%;background:' + C.live + '"></span>LIVE' + (sc ? ' · ' + sc : '') + '</span>';
+      var li = m.liveInfo || {};
+      var sc = (li.goal_v1 != null && li.goal_v2 != null) ? (li.goal_v1 + ':' + li.goal_v2) : '';
+      var mn = liveMinTxt(m);
+      var rc = ((li.red_v1 || 0) + (li.red_v2 || 0)) > 0 ? ' 🟥' : '';
+      var lag = Math.round(genAgeMin());
+      var ttl = 'Live-Stand vom letzten Scan' + (lag > 0 && lag < 300 ? ' (vor ' + lag + ' Min)' : '');
+      return '<span title="' + ttl + '" style="display:inline-flex;gap:4px;align-items:center;padding:2px 8px;border-radius:20px;background:rgba(248,81,73,.15);color:' + C.live + ';font-size:11px;font-weight:800"><span style="width:6px;height:6px;border-radius:50%;background:' + C.live + '"></span>LIVE' + (sc ? ' · ' + sc : '') + (mn ? ' · ' + mn : '') + rc + '</span>';
     }
     if (!m.kickoff) return '';
     var d = new Date(m.kickoff), h = (d.getTime() - Date.now()) / 3.6e6;
