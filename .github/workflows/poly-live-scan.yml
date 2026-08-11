@@ -41,11 +41,18 @@ jobs:
         run: ${{ env.POLY_PYTHON }} poly_money_broad.py --live-only
         continue-on-error: true
 
+      - name: ⚡ Live-Einstiegs-Alerts (nur Trades-Channel, Test)
+        run: ${{ env.POLY_PYTHON }} poly_live_watch.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
       - name: 💾 Live-Dateien committen
         run: |
           git config user.name "CocoBet Bot"
           git config user.email "bot@cocobet.local"
-          for f in poly_money_broad_live.json poly_money_broad_live_history.json; do
+          for f in poly_money_broad_live.json poly_money_broad_live_history.json poly_live_watch_seen.json; do
             [ -f "$f" ] && git add "$f"
           done
           if git diff --staged --quiet; then

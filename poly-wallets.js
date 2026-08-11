@@ -1341,16 +1341,22 @@ function _pwLiveCard(x){
   const inflow=(x.inflow!=null && x.inflow>0)?'<span style="color:#a78bfa;font-weight:700">+'+_pwUsd(x.inflow)+' seit letztem Scan</span>':'';
   const liveBadge='<span style="font-size:9px;font-weight:800;color:#f85149;border:1px solid rgba(248,81,73,.5);border-radius:5px;padding:0 5px;margin-left:6px">● LIVE</span>';
   const pre=_pwPregameWhales(k);
-  const wh=(m.whales||[]).slice().sort((a,b)=>(Number(b.usd)||0)-(Number(a.usd)||0)).map(w=>{
-    if(!w||!w.wallet) return '';
-    const isNew=!pre.has(String(w.wallet).toLowerCase());
-    const tag=isNew?'<span title="im Live-Top-4, vor Anpfiff NICHT drin — also live eingestiegen" style="font-size:9px;font-weight:800;color:#f85149;border:1px solid rgba(248,81,73,.5);border-radius:5px;padding:0 4px;margin-left:6px">🔴 live rein</span>':'';
+  const _wc=w=>{ if(!w||!w.wallet) return null; const sc=_pwWalletScore(w.wallet); return {isNew:!pre.has(String(w.wallet).toLowerCase()), sc, sharp:_pwIsSharpScore(sc)}; };
+  const wh=(m.whales||[]).slice().map(w=>({w,c:_wc(w)})).filter(o=>o.c)
+    .sort((a,b)=>((b.c.sharp&&b.c.isNew?1:0)-(a.c.sharp&&a.c.isNew?1:0)) || ((b.c.sharp?1:0)-(a.c.sharp?1:0)) || (Number(b.w.usd)||0)-(Number(a.w.usd)||0))
+    .map(({w,c})=>{
+    const sharpLive=c.sharp&&c.isNew;
+    const trk=(c.sc&&c.sc.n>=4)?' <span style="color:'+(c.sc.avgClv>0?'#3fb950':'#f85149')+';font-weight:700;font-size:11px">'+(c.sc.avgClv>=0?'+':'')+c.sc.avgClv.toFixed(1)+'pp</span> <span class="pw-mut" style="font-size:10.5px">'+Math.round(c.sc.hit*100)+'% · n'+c.sc.n+'</span>':'';
+    let tag='';
+    if(sharpLive) tag='<span title="bewiesen scharfe Wallet, live eingestiegen (vor Anpfiff nicht im Top-4)" style="font-size:9px;font-weight:800;color:#3fb950;border:1px solid rgba(63,185,80,.55);border-radius:5px;padding:0 4px;margin-left:6px">🔥 scharf live rein</span>';
+    else if(c.sharp) tag='<span title="bewiesen scharfe Wallet (Track-Record)" style="font-size:9px;font-weight:800;color:#3fb950;border:1px solid rgba(63,185,80,.45);border-radius:5px;padding:0 4px;margin-left:6px">🔥 scharf</span>';
+    else if(c.isNew) tag='<span title="im Live-Top-4, vor Anpfiff NICHT drin — live eingestiegen" style="font-size:9px;font-weight:800;color:#f85149;border:1px solid rgba(248,81,73,.5);border-radius:5px;padding:0 4px;margin-left:6px">🔴 live rein</span>';
     const avg=(w.avgPrice!=null && isFinite(w.avgPrice))?' @'+Math.round(w.avgPrice*100)+'¢':'';
-    return '<div style="display:flex;align-items:center;gap:8px;font-size:12px;padding:3px 0">'
+    return '<div style="display:flex;align-items:center;gap:8px;font-size:12px;padding:3px 0'+(sharpLive?';background:rgba(63,185,80,.07);border-radius:6px;padding-left:6px;padding-right:6px':'')+'">'
       +'<a href="'+_pwLink(w.wallet)+'" target="_blank" rel="noopener" class="pw-wl" style="color:#a78bfa">'+_pwWallet(w.wallet)+'</a>'
-      +'<span style="color:var(--muted)">auf</span> <b style="color:#4cc2ff">'+_pwEsc(w.side||'—')+'</b>'
+      +'<span style="color:var(--muted)">auf</span> <b style="color:#4cc2ff">'+_pwEsc(w.side||'—')+'</b>'+trk
       +'<span style="margin-left:auto;font-weight:800">'+_pwUsd(w.usd)+avg+'</span>'+tag+'</div>';
-  }).filter(Boolean).join('');
+  }).join('');
   return '<div style="background:var(--card,#161b22);border:1px solid #21262d;border-radius:12px;padding:12px 14px;margin-bottom:10px">'
     +'<div style="font-size:13.5px;font-weight:700;margin-bottom:7px">'+ic+' '+match+liveBadge+'</div>'
     +'<div style="height:9px;border-radius:5px;overflow:hidden;background:#0d1117;display:flex;margin-bottom:6px">'+seg+'</div>'
@@ -1366,13 +1372,17 @@ function _pwLiveWhales(){
   let rows=(live?Object.entries(live):[]).map(e=>({k:e[0],m:e[1]}))
     .filter(x=>x.m && x.m.shares && (x.m.totalUsd||0)>=5000 && _pwSportPass(x.m.league));
   if(!rows.length) return intro+'<div class="pw-none">Gerade keine laufenden Märkte mit nennenswertem Geld. Die Live-Erfassung läuft am Mac-Runner (alle ~5 Min) — sobald Esport/Tennis/… live ist und Geld drauf liegt, steht hier was.</div></section>';
-  rows.forEach(x=>{ x.inflow=_pwLiveInflow(x.k); x.vol=x.m.totalUsd||0; });
-  rows.sort((a,b)=>(b.inflow||0)-(a.inflow||0) || b.vol-a.vol);
+  rows.forEach(x=>{ x.inflow=_pwLiveInflow(x.k); x.vol=x.m.totalUsd||0;
+    const pre=_pwPregameWhales(x.k); let sl=0,nw=0;
+    (x.m.whales||[]).forEach(w=>{ if(!w||!w.wallet) return; const isNew=!pre.has(String(w.wallet).toLowerCase()); if(isNew){ nw++; if(_pwIsSharpScore(_pwWalletScore(w.wallet))) sl++; } });
+    x.sharpLiveN=sl; x.newN=nw; });
+  rows.sort((a,b)=>((b.sharpLiveN>0?1:0)-(a.sharpLiveN>0?1:0)) || (b.inflow||0)-(a.inflow||0) || b.vol-a.vol);
   const totVol=rows.reduce((s,x)=>s+x.vol,0);
-  let nNew=0; rows.forEach(x=>{ const pre=_pwPregameWhales(x.k); (x.m.whales||[]).forEach(w=>{ if(w&&w.wallet&&!pre.has(String(w.wallet).toLowerCase())) nNew++; }); });
+  const nNew=rows.reduce((s,x)=>s+x.newN,0), nSharp=rows.reduce((s,x)=>s+x.sharpLiveN,0);
   const kpi='<div style="display:flex;gap:10px;flex-wrap:wrap;margin:4px 0 12px">'
     +_pwLiveKpi(String(rows.length),'laufende Märkte','#4cc2ff')
     +_pwLiveKpi(_pwUsd(totVol),'Volumen live','#199e70')
+    +_pwLiveKpi(String(nSharp),'scharf live rein','#3fb950')
     +_pwLiveKpi(String(nNew),'Wallets live rein','#f85149')+'</div>';
   const ages=rows.map(x=>_pwLiveAge(x.m)).filter(a=>a!=null);
   const maxAge=ages.length?Math.round(Math.max.apply(null,ages)):null;

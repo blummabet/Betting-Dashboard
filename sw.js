@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v104';   // 11.08.2026 (Lucas Stufe 2): Poly-Wallets Sub-Tab '⚡ LIVE' — Geld & Whales auf laufenden Spielen
+const VERSION = 'cocobet-v105';   // 11.08.2026 (Lucas Stufe 2.1): LIVE — scharfe Wallets hervorgehoben + Live-Einstiegs-Alerts (Trades-Channel)
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
