@@ -1211,7 +1211,7 @@
 "leadOdd": 1.53,
 "value": 192626.96,
 "sentAt": "2026-08-10T19:15:19.608384+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": [
 0,
 0
@@ -1219,7 +1219,14 @@
 "consensus": {
 "verdict": "konsens",
 "agree": true
-}
+},
+"settledAt": "2026-08-10T21:15:28.259001+00:00",
+"ftScore": [
+0,
+0
+],
+"profit": -1.0,
+"via": "track"
 },
 {
 "k": "fresh:35891337:Over/Under 2.5 Goals",
@@ -1248,6 +1255,109 @@
 2
 ],
 "profit": 0.32000000000000006,
+"via": "track"
+},
+{
+"k": "fresh:35881498:Over/Under 2.5 Goals",
+"matchId": "35881498",
+"scenario": "fresh",
+"market": "Over/Under 2.5 Goals",
+"league": "Argentinian Primera Division",
+"home": "Banfield",
+"away": "Belgrano",
+"leadName": "Under 2.5 Goals",
+"leadOdd": 1.55,
+"value": 204068.83,
+"sentAt": "2026-08-10T23:45:44.493833+00:00",
+"status": "pending",
+"htScore": null,
+"consensus": {
+"verdict": "konsens",
+"agree": true
+}
+},
+{
+"k": "ht:35896985:Half Time",
+"matchId": "35896985",
+"scenario": "ht",
+"market": "Half Time",
+"league": "Ecuadorian Serie A",
+"home": "Deportivo Cuenca",
+"away": "Manta FC",
+"leadName": "Deportivo Cuenca",
+"leadOdd": 2.12,
+"value": 23606.27,
+"sentAt": "2026-08-11T00:02:25.220914+00:00",
+"status": "lost",
+"htScore": [
+1,
+1
+],
+"consensus": {
+"verdict": "no_anchor",
+"agree": null
+},
+"settledAt": "2026-08-11T02:00:54.910876+00:00",
+"ftScore": [
+1,
+2
+],
+"profit": -1.0,
+"via": "track"
+},
+{
+"k": "fresh:35885555:Match Odds",
+"matchId": "35885555",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Argentinian Primera Division",
+"home": "Union Santa Fe",
+"away": "Central Cordoba (SdE)",
+"leadName": "Union Santa Fe",
+"leadOdd": 1.75,
+"value": 35554.03,
+"sentAt": "2026-08-11T00:30:47.875069+00:00",
+"status": "lost",
+"htScore": [
+1,
+0
+],
+"consensus": {
+"verdict": "konsens",
+"agree": true
+},
+"settledAt": "2026-08-11T02:31:03.159977+00:00",
+"ftScore": [
+1,
+2
+],
+"profit": -1.0,
+"via": "track"
+},
+{
+"k": "fresh:35885555:Over/Under 3.5 Goals",
+"matchId": "35885555",
+"scenario": "fresh",
+"market": "Over/Under 3.5 Goals",
+"league": "Argentinian Primera Division",
+"home": "Union Santa Fe",
+"away": "Central Cordoba (SdE)",
+"leadName": "Under 3.5 Goals",
+"leadOdd": 1.38,
+"value": 248507.49,
+"sentAt": "2026-08-11T02:00:54.777636+00:00",
+"status": "won",
+"htScore": null,
+"consensus": {
+"verdict": "uneinig",
+"agree": false
+},
+"settledAt": "2026-08-11T02:31:03.159977+00:00",
+"ftScore": [
+1,
+2
+],
+"profit": 0.3799999999999999,
 "via": "track"
 }
 ]

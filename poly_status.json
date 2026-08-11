@@ -40,9 +40,11 @@
       "id": "settlement_alive",
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "cs2-sf2-ef1-2026-08-08: seit 3.2 Tagen offen — keine Auflösung gefunden"
+      ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
     {
@@ -61,7 +63,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "132/186 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
+        "139/196 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
     },
@@ -81,11 +83,11 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "446/468 'live' Geld-Märkte sind schon >6h nach Anpfiff (95%) — $11,252,791 Whale-Geld auf fertigen Spielen"
+        "439/458 'live' Geld-Märkte sind schon >6h nach Anpfiff (96%) — $11,243,094 Whale-Geld auf fertigen Spielen"
       ],
       "note": "Der Close-Feed setzt kein resolved-Flag; fertige Spiele bleiben 'live'. Alle Views filtern jetzt auf den rekonstruierten Anpfiff — dieser Check misst den Geister-Anteil im Roh-Feed (steigt er, prunt/löst der Feed nicht mehr auf; jede ungegatete View zeigt dann fertige Spiele)."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-08-10T20:23:44.658760+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-08-11T05:23:18.135395+00:00"
 }
