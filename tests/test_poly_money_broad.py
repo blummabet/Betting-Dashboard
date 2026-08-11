@@ -8,6 +8,7 @@ Plus: Auflösung über Polys EIGENE Settlement (kein externer Ergebnis-Feed nöt
 import pytest
 import poly_money_accuracy as PMA
 import poly_money_broad as B
+from datetime import datetime, timezone, timedelta
 
 
 @pytest.fixture(autouse=True)
@@ -460,3 +461,68 @@ def test_laliga_slug_prefix_maps_to_LALIGA():
 def test_laliga_tag_in_scan():
     import poly_money_broad as M
     assert "laliga" in M.SPORT_TAGS
+
+
+# ── 11.08.2026 (Lucas, Stufe 1 Live-Erfassung) ──────────────────────────────────────────────────
+_LNOW = datetime(2026, 8, 11, 12, 0, tzinfo=timezone.utc)
+
+
+class TestCaptureClass:
+    """Zeit-bis-Anpfiff -> pre / live / None. Grenzen des Erfassungsfensters."""
+
+    def test_pre_fenster(self):
+        assert B._capture_class(2.0) == "pre"
+        assert B._capture_class(0.01) == "pre"
+        assert B._capture_class(B.PMA.CAPTURE_WINDOW_H) == "pre"     # obere Grenze inklusiv
+
+    def test_live_tail(self):
+        assert B._capture_class(0.0) == "live"                       # Anpfiff selbst = live
+        assert B._capture_class(-0.5) == "live"
+        assert B._capture_class(-B.LIVE_TAIL_H + 0.01) == "live"     # kurz vor Tail-Ende
+
+    def test_ausserhalb(self):
+        assert B._capture_class(B.PMA.CAPTURE_WINDOW_H + 0.5) is None   # zu frueh
+        assert B._capture_class(-B.LIVE_TAIL_H - 0.01) is None          # zu lange vorbei
+        assert B._capture_class(None) is None
+        assert B._capture_class("x") is None
+
+
+class TestCaptureLive:
+    """Eigener Live-Speicher: erfassen, KEIN Freeze (immer neuester Stand), resolved/min_vol raus, prunen."""
+
+    def _mkt(self, key="g1", htk=-0.5, vol=20000, resolved=False):
+        return {"key": key, "league": "ESPORTS", "hoursToKickoff": htk, "totalUsd": vol,
+                "shares": {"A": vol * 0.3, "B": vol * 0.7}, "prices": {"A": 0.3, "B": 0.7},
+                "whales": [{"wallet": "0x1", "side": "B", "usd": 1200}],
+                "resolved": resolved, "live": htk <= 0}
+
+    def test_live_wird_erfasst(self):
+        out = B.capture_live([self._mkt()], {}, now=_LNOW)
+        assert "g1" in out and out["g1"]["prices"]["B"] == 0.7
+        assert out["g1"]["live"] is True and out["g1"]["capturedAt"]
+        assert out["g1"]["whales"][0]["wallet"] == "0x1"
+
+    def test_kein_freeze_immer_neuester_stand(self):
+        # anders als capture(): Live ueberschreibt IMMER mit dem aktuellen Stand
+        prev = B.capture_live([self._mkt(vol=20000)], {}, now=_LNOW)
+        m2 = self._mkt(vol=55000); m2["prices"] = {"A": 0.2, "B": 0.8}
+        out = B.capture_live([m2], prev, now=_LNOW + timedelta(minutes=15))
+        assert out["g1"]["totalUsd"] == 55000 and out["g1"]["prices"]["B"] == 0.8
+
+    def test_resolved_raus(self):
+        assert B.capture_live([self._mkt(resolved=True)], {}, now=_LNOW) == {}
+
+    def test_min_vol_raus(self):
+        assert B.capture_live([self._mkt(vol=5000)], {}, now=_LNOW, min_vol=7500) == {}
+
+    def test_alte_eintraege_geprunt(self):
+        alt = {"gz": {"shares": {}, "prices": {},
+                      "capturedAt": (_LNOW - timedelta(hours=B.LIVE_KEEP_H + 1)).isoformat()}}
+        out = B.capture_live([self._mkt()], alt, now=_LNOW)
+        assert "gz" not in out and "g1" in out          # veralteter Eintrag raus, frischer bleibt
+
+    def test_frischer_alteintrag_bleibt(self):
+        frisch = {"gz": {"shares": {}, "prices": {},
+                         "capturedAt": (_LNOW - timedelta(hours=1)).isoformat()}}
+        out = B.capture_live([self._mkt()], frisch, now=_LNOW)
+        assert "gz" in out                              # < keep_h -> bleibt, auch wenn diesen Lauf nicht gesehen

@@ -16,7 +16,7 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 # Grading aus dem bestehenden Track-Record wiederverwenden (kein Duplikat).
-from betfair_track_record import fav_token, winning_token, grade, MARKETS, RESULTS_MIN_H
+from betfair_track_record import fav_token, winning_token, grade, MARKETS, RESULTS_MIN_H, CORRECTION_WINDOW_H
 
 try:
     from fetch_betfair_betwatch import fetch_results as _fetch_results   # 10.08.2026 (Lucas): autoritative Endstaende
@@ -128,6 +128,55 @@ def _sent_before(e, cutoff):
     return st < cutoff
 
 
+def _after(iso, cutoff):
+    """True, wenn Zeitstempel iso NACH cutoff liegt (robust gegen fehlende/kaputte Werte)."""
+    try:
+        return datetime.fromisoformat(str(iso).replace("Z", "+00:00")) > cutoff
+    except (ValueError, TypeError):
+        return False
+
+
+def verify_settled(ledger, now=None, results_fetch=None):
+    """11.08.2026 (Lucas, Plymouth-Fall): Der Live-Goal-Feed kann fuer ein Spiel komplett auf 0:0 haengen
+    (Plymouth gewann 2:0 -> faelschlich 'lost'). POST /results ist der autoritative Endstand (bis 30 Tage).
+    Kuerzlich (per finished/vanish/track) abgerechnete Pushs dagegen pruefen; weicht der Endstand ab, den
+    Push nach dem echten Ergebnis neu abrechnen (status/profit/ftScore, via='results-fix'). Jede gepruefte
+    Zeile wird als resChk markiert, damit nicht jeder Lauf neu fetcht. REIN (results_fetch injizierbar)."""
+    now = now or _now()
+    if results_fetch is None or not ledger:
+        return ledger
+    recent = now - timedelta(hours=CORRECTION_WINDOW_H)
+    todo = [e for e in ledger
+            if e.get("status") in ("won", "lost")
+            and e.get("via") not in ("results", "results-fix")
+            and not e.get("resChk")
+            and _after(e.get("settledAt"), recent)]
+    ids = sorted({str(e.get("matchId")) for e in todo if e.get("matchId")})
+    if not ids:
+        return ledger
+    res = results_fetch(ids) or {}
+    for e in todo:
+        r = res.get(str(e.get("matchId"))) if isinstance(res, dict) else None
+        if not isinstance(r, dict) or not r.get("finished") or r.get("goal_v1") is None:
+            continue                       # /results kennt das Spiel (noch) nicht -> naechster Lauf erneut
+        ft = [r.get("goal_v1"), r.get("goal_v2")]
+        fav = fav_token(e.get("market"), e.get("leadName"), e.get("home"), e.get("away"))
+        win, ok = grade(fav, e.get("market"), ft, e.get("htScore"))
+        if not ok:
+            e["resChk"] = True             # nicht abrechenbar -> nicht endlos neu holen
+            continue
+        new_status = "won" if win else "lost"
+        if new_status != e.get("status") or ft != e.get("ftScore"):
+            odd = e.get("leadOdd")
+            e["status"] = new_status
+            e["ftScore"] = ft
+            e["profit"] = (float(odd) - 1.0) if (win and isinstance(odd, (int, float))) else (0.0 if win else -1.0)
+            e["via"] = "results-fix"
+            e["settledAt"] = now.isoformat()
+        e["resChk"] = True
+    return ledger
+
+
 def settle(ledger, prices, now=None, results_fetch=None):
     """Fertige Spiele abrechnen. Setzt status won/lost/void + profit (1 Einheit Einsatz). REIN
     (results_fetch injizierbar; None = Endpoint-Pfad aus, weiter testbar)."""
@@ -235,6 +284,7 @@ def main():
         track_results = []
     ledger = settle_from_track(ledger, track_results)
     ledger = settle(ledger, prices, results_fetch=_fetch_results)
+    ledger = verify_settled(ledger, results_fetch=_fetch_results)   # 11.08.2026: autoritative Nachkontrolle (Plymouth-Fall)
     # abgeschlossene/verworfene lange behalten fürs Ledger, aber deckeln
     ledger = ledger[-LEDGER_KEEP:]
     record = summarize(ledger)

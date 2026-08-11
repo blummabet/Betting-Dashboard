@@ -249,6 +249,68 @@ def test_voller_flow_ecuador_ht():
     assert ht["n"] == 1 and ht["hitRate"] == 1.0            # HT-Sieg-Signal ging auf
 
 
+# ── 11.08.2026 (Lucas, Plymouth-Fall): autoritative Nachkontrolle gegen POST /results ────────────────
+def _row(mid, win, ft, via="finished", odd=1.53, market="Match Odds", ht=None, settledAt=None, resChk=None):
+    r = {"league": "English Football League Cup", "market": market, "home": "Plymouth", "away": "Exeter",
+         "country": "GB", "fav": "H", "odd": odd, "conc": False, "inflow": False, "win": win,
+         "settledAt": (settledAt or (NOW - timedelta(hours=1)).isoformat()),
+         "matchId": str(mid), "ft": ft, "ht": ht, "via": via, "dir": "in"}
+    if resChk is not None:
+        r["resChk"] = resChk
+    return r
+
+
+def _boom(ids):
+    raise AssertionError("results_fetch darf hier nicht aufgerufen werden")
+
+
+def test_verify_flips_stuck_live_score():
+    res = [_row(700, False, [0, 0])]                          # Live-Feed hing 0:0 -> faelschlich loss
+    fake = lambda ids: {"700": {"goal_v1": 2, "goal_v2": 0, "finished": True}}
+    out = T.verify_settled(res, now=NOW, results_fetch=fake)
+    assert out[0]["win"] is True and out[0]["ft"] == [2, 0]  # /results 2:0 -> Heim gewinnt
+    assert out[0]["via"] == "results-fix" and out[0]["resChk"] is True
+
+
+def test_verify_fix_heilt_auch_die_stats():
+    # nach der Korrektur muss die Aggregation die Zeile als Sieg zaehlen (Lern-Stats heilen mit)
+    res = T.verify_settled([_row(700, False, [0, 0])], now=NOW,
+                           results_fetch=lambda ids: {"700": {"goal_v1": 2, "goal_v2": 0, "finished": True}})
+    rec = T.aggregate(res, now=NOW)
+    assert rec["byTeamMarket"]["Plymouth|Match Odds"]["wins"] == 1
+    assert rec["global"]["wins"] == 1
+
+
+def test_verify_confirms_correct_without_change():
+    res = [_row(701, True, [2, 0])]
+    out = T.verify_settled(res, now=NOW, results_fetch=lambda ids: {"701": {"goal_v1": 2, "goal_v2": 0, "finished": True}})
+    assert out[0]["win"] is True and out[0]["via"] == "finished"   # unveraendert
+    assert out[0]["resChk"] is True                          # aber geprueft
+
+
+def test_verify_unknown_result_retries():
+    res = [_row(702, False, [0, 0])]
+    out = T.verify_settled(res, now=NOW, results_fetch=lambda ids: {})   # /results kennt Spiel nicht
+    assert out[0]["win"] is False and "resChk" not in out[0]   # unveraendert, NICHT markiert -> spaeter erneut
+
+
+def test_verify_skips_authoritative_and_checked():
+    res = [_row(703, False, [0, 0], via="results"), _row(704, False, [0, 0], resChk=True)]
+    out = T.verify_settled(res, now=NOW, results_fetch=_boom)   # darf gar nicht fetchen
+    assert out[0]["win"] is False and out[1]["win"] is False
+
+
+def test_verify_outside_window_skipped():
+    old = (NOW - timedelta(hours=40)).isoformat()             # > CORRECTION_WINDOW_H
+    out = T.verify_settled([_row(705, False, [0, 0], settledAt=old)], now=NOW, results_fetch=_boom)
+    assert out[0]["win"] is False
+
+
+def test_verify_no_fetcher_is_noop():
+    out = T.verify_settled([_row(706, False, [0, 0])], now=NOW, results_fetch=None)
+    assert out[0]["win"] is False
+
+
 if __name__ == "__main__":
     import types
     fns = [v for k, v in dict(globals()).items()

@@ -142,5 +142,68 @@ class TestSummarize(unittest.TestCase):
         self.assertEqual(r["byScenario"]["ht"]["wins"], 1)
 
 
+def _settled(mid, market, lead, odd, status, ft, via="track", home="Plymouth", away="Exeter",
+             settledAt="2026-07-31T21:00:00+00:00", ht=None, profit=None, resChk=None):
+    e = {"k": mid, "matchId": mid, "scenario": "fresh", "market": market, "league": "L",
+         "home": home, "away": away, "leadName": lead, "leadOdd": odd, "value": 30000,
+         "sentAt": "2026-07-31T05:00:00+00:00", "status": status, "htScore": ht,
+         "settledAt": settledAt, "ftScore": ft, "via": via}
+    if profit is not None:
+        e["profit"] = profit
+    if resChk is not None:
+        e["resChk"] = resChk
+    return e
+
+
+def _boom(ids):
+    raise AssertionError("results_fetch darf hier nicht aufgerufen werden")
+
+
+class TestVerifySettled(unittest.TestCase):
+    # 11.08.2026 (Lucas, Plymouth-Fall): Live-Goal-Feed hing auf 0:0 -> faelschlich 'lost'; /results ist die Wahrheit.
+    def test_flips_stuck_live_score(self):
+        led = [_settled("500", "Match Odds", "Plymouth", 1.53, "lost", [0, 0])]
+        fake = lambda ids: {"500": {"goal_v1": 2, "goal_v2": 0, "finished": True}}
+        E.verify_settled(led, NOW, results_fetch=fake)
+        self.assertEqual(led[0]["status"], "won")
+        self.assertAlmostEqual(led[0]["profit"], 0.53)
+        self.assertEqual(led[0]["ftScore"], [2, 0])
+        self.assertEqual(led[0]["via"], "results-fix")
+        self.assertTrue(led[0]["resChk"])
+
+    def test_confirms_correct_without_change(self):
+        led = [_settled("501", "Match Odds", "Plymouth", 1.53, "won", [2, 0], profit=0.53)]
+        fake = lambda ids: {"501": {"goal_v1": 2, "goal_v2": 0, "finished": True}}
+        E.verify_settled(led, NOW, results_fetch=fake)
+        self.assertEqual(led[0]["status"], "won")
+        self.assertEqual(led[0]["via"], "track")          # unveraendert, weil Ergebnis uebereinstimmt
+        self.assertAlmostEqual(led[0]["profit"], 0.53)
+        self.assertTrue(led[0]["resChk"])                 # aber als geprueft markiert
+
+    def test_unknown_result_leaves_entry_and_retries(self):
+        led = [_settled("503", "Match Odds", "Plymouth", 1.53, "lost", [0, 0])]
+        E.verify_settled(led, NOW, results_fetch=lambda ids: {})   # /results kennt Spiel nicht
+        self.assertEqual(led[0]["status"], "lost")        # unveraendert
+        self.assertNotIn("resChk", led[0])                # NICHT markiert -> naechster Lauf erneut
+
+    def test_skips_authoritative_and_checked(self):
+        led = [_settled("504", "Match Odds", "Plymouth", 1.53, "lost", [0, 0], via="results"),
+               _settled("505", "Match Odds", "Plymouth", 1.53, "lost", [0, 0], resChk=True)]
+        E.verify_settled(led, NOW, results_fetch=_boom)   # darf gar nicht fetchen
+        self.assertEqual(led[0]["status"], "lost")
+        self.assertEqual(led[1]["status"], "lost")
+
+    def test_outside_window_skipped(self):
+        led = [_settled("506", "Match Odds", "Plymouth", 1.53, "lost", [0, 0],
+                        settledAt="2026-07-29T00:00:00+00:00")]   # ~70h vor NOW > 30h
+        E.verify_settled(led, NOW, results_fetch=_boom)
+        self.assertEqual(led[0]["status"], "lost")
+
+    def test_no_fetcher_is_noop(self):
+        led = [_settled("507", "Match Odds", "Plymouth", 1.53, "lost", [0, 0])]
+        E.verify_settled(led, NOW, results_fetch=None)
+        self.assertEqual(led[0]["status"], "lost")
+
+
 if __name__ == "__main__":
     unittest.main()

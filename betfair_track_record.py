@@ -50,6 +50,8 @@ INFLOW_MIN_EUR = 2000     # Markt gilt als „frischer Zufluss" ab so viel € D
 RESULTS_KEEP = 8000       # Ledger-Kappung
 PENDING_TTL_H = 60        # pending ohne Settlement nach so vielen h nach Anpfiff verwerfen
 RESULTS_MIN_H = 3.0       # Anpfiff so lange her → Spiel sicher vorbei → autoritatives Ergebnis (POST /results) abfragbar
+CORRECTION_WINDOW_H = 30  # so lange nach dem Settle darf /results eine per Live-Feed abgerechnete Zeile noch
+                          # korrigieren (Live-Goal-Feed kann fuer ein Spiel auf 0:0 haengen, Plymouth-Fall)
 
 # 07.08.2026 (Lucas: „Push-Bilanz komplett wertlos"): der Feed zeigt „finished" nur kurz/unzuverlaessig
 # — ~35% der Spiele fallen aus dem Feed BEVOR ein 15-Min-Lauf sie als „finished" erwischt und bleiben
@@ -313,6 +315,51 @@ def settle(prices, state, results, now=None, results_fetch=None):
     return state, results[-RESULTS_KEEP:]
 
 
+def _after(iso, cutoff):
+    """True, wenn Zeitstempel iso NACH cutoff liegt (robust gegen fehlende/kaputte Werte)."""
+    try:
+        return datetime.fromisoformat(str(iso).replace("Z", "+00:00")) > cutoff
+    except (ValueError, TypeError):
+        return False
+
+
+def verify_settled(results, now=None, results_fetch=None):
+    """11.08.2026 (Lucas, Plymouth-Fall): Der Live-Goal-Feed kann fuer ein einzelnes Spiel komplett auf
+    0:0 haengen (Plymouth gewann 2:0 -> faelschlich 'lost'). POST /results ist der autoritative Endstand
+    (bis 30 Tage). Kuerzlich per Live-Feed (finished/vanish) abgerechnete Zeilen dagegen pruefen; weicht
+    der Endstand ab, win/ft korrigieren (via='results-fix'). Jede gepruefte Zeile wird als resChk markiert,
+    damit nicht jeder Lauf neu fetcht. Da byTeamMarket/byLeagueMarket jedes Mal frisch aus dem Ledger
+    aggregiert werden, heilt eine korrigierte Zeile automatisch auch die Lern-Stats. REIN (results_fetch
+    injizierbar; None = aus)."""
+    now = now or _now()
+    if results_fetch is None or not results:
+        return results
+    recent = now - timedelta(hours=CORRECTION_WINDOW_H)
+    todo = [r for r in results
+            if isinstance(r, dict) and not r.get("resChk")
+            and r.get("via") in ("finished", "vanish")
+            and _after(r.get("settledAt"), recent)]
+    ids = sorted({str(r.get("matchId")) for r in todo if r.get("matchId")})
+    if not ids:
+        return results
+    res = results_fetch(ids) or {}
+    for r in todo:
+        rr = res.get(str(r.get("matchId"))) if isinstance(res, dict) else None
+        if not isinstance(rr, dict) or not rr.get("finished") or rr.get("goal_v1") is None:
+            continue                       # /results kennt das Spiel (noch) nicht -> naechster Lauf erneut
+        ft = [rr.get("goal_v1"), rr.get("goal_v2")]
+        win, ok = grade(r.get("fav"), r.get("market"), ft, r.get("ht"))
+        if not ok:
+            r["resChk"] = True             # nicht abrechenbar (z.B. HT ohne HT-Stand) -> nicht endlos neu holen
+            continue
+        if bool(win) != bool(r.get("win")) or ft != r.get("ft"):
+            r["ft"] = ft
+            r["win"] = bool(win)
+            r["via"] = "results-fix"
+        r["resChk"] = True
+    return results
+
+
 def _bucket():
     return {"n": 0, "wins": 0, "roiSum": 0.0,
             "nConc": 0, "winsConc": 0, "roiConc": 0.0,
@@ -412,6 +459,7 @@ def main():
     now = _now()
     state = capture(prices, history, state, now=now, direction=direction if isinstance(direction, dict) else {})
     state, results = settle(prices, state, results, now=now, results_fetch=_fetch_results)
+    results = verify_settled(results, now=now, results_fetch=_fetch_results)
     record = aggregate(results, now=now)
     _write(STATE_FILE, state)
     _write(RESULTS_FILE, results)

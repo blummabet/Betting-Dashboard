@@ -14,7 +14,7 @@
   var A = {
     pinn: '#3987e5', bf: '#d95926', poly: '#199e70', soft: '#c98500',
     good: '#2ea043', gold: '#c98500', blue: '#3987e5', aqua: '#199e70',
-    red: '#e5534b', ink: '#f0f4f8', ink2: '#9aa4b1', ink3: '#6b7480'
+    red: '#e5534b', money: '#e8843a', flow: '#a78bfa', ink: '#f0f4f8', ink2: '#9aa4b1', ink3: '#6b7480'
   };
 
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, function (c) { return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]; }); }
@@ -160,6 +160,17 @@
       /* mini bars */
       '.md-meter{position:relative;height:5px;border-radius:3px;background:var(--mln);margin-top:6px;overflow:hidden;}',
       '.md-meter i{position:absolute;left:0;top:0;bottom:0;border-radius:3px;}',
+      '.md-r-top{align-items:flex-start;}',
+      '.md-r-top .md-ring{margin-top:1px;}',
+      '.md-sig{display:flex;gap:9px;margin-top:9px;}',
+      '.md-sig-c{flex:1;min-width:0;}',
+      '.md-sig-off{opacity:.5;}',
+      '.md-sig-h{display:flex;justify-content:space-between;align-items:baseline;gap:5px;}',
+      '.md-sig-l{font-size:8.5px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--mi3);white-space:nowrap;}',
+      '.md-sig-v{font-family:"JetBrains Mono","SF Mono",Menlo,monospace;font-size:11.5px;font-weight:800;white-space:nowrap;}',
+      '.md-sig-bar{position:relative;height:4px;border-radius:3px;background:var(--mln);margin-top:4px;overflow:hidden;}',
+      '.md-sig-bar i{position:absolute;left:0;top:0;bottom:0;border-radius:3px;}',
+      '.md-sig-sub{font-size:9px;color:var(--mi3);margin-top:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
       '.md-div{position:relative;height:6px;margin-top:6px;}',
       '.md-div-mid{position:absolute;left:50%;top:-1px;bottom:-1px;width:1px;background:var(--mln2);}',
       '.md-div i{position:absolute;top:0;bottom:0;border-radius:3px;}',
@@ -584,19 +595,50 @@
 
   // ── 🔥 Heute spielenswert (01.08.2026, Lucas) — verdichtet die Poly-Wallet-Signale (Geld · Steam ·
   //    scharfe Wallets · Pinnacle) zu 2–3 konkreten Plays. Nutzt den Scorer aus poly-wallets.js.
-  function _mdPlayRow(r) {
+  function _mdPlayInflow(r) {
+    try {
+      if (typeof _pwInflow === 'function' && typeof _pwCache !== 'undefined' && _pwCache && _pwCache.broadHist)
+        return +_pwInflow(r.key, _pwCache.broadHist) || 0;
+    } catch (e) {}
+    return 0;
+  }
+  function _mdSigCell(label, val, col, barPct, sub) {
+    return '<div class="md-sig-c"><div class="md-sig-h"><span class="md-sig-l">' + label + '</span>'
+      + '<span class="md-sig-v" style="color:' + col + '">' + val + '</span></div>'
+      + '<div class="md-sig-bar"><i style="width:' + clamp(barPct, 0, 100) + '%;background:' + col + '"></i></div>'
+      + '<div class="md-sig-sub">' + sub + '</div></div>';
+  }
+  function _mdSigMuted(label, sub) {
+    return '<div class="md-sig-c md-sig-off"><div class="md-sig-h"><span class="md-sig-l">' + label + '</span>'
+      + '<span class="md-sig-v" style="color:var(--mi3)">–</span></div>'
+      + '<div class="md-sig-bar"></div><div class="md-sig-sub">' + sub + '</div></div>';
+  }
+  function _mdSigStrip(r, maxInf) {
+    var mp = Math.round((+r.moneyPct || 0) * 100), vol = +r.vol || 0, sh = r.sharp, inf = _mdPlayInflow(r);
+    var c1 = _mdSigCell('Geld', mp + '%', A.money, mp, vol ? usd(vol) + ' Vol' : '—');
+    var c2 = (sh && sh.n)
+      ? _mdSigCell('Wallets', Math.round(sh.hit * 100) + '%', A.blue, Math.round(sh.hit * 100), sh.wins + ' von ' + sh.n)
+      : _mdSigMuted('Wallets', 'keine');
+    var c3 = (inf > 0)
+      ? _mdSigCell('Zufluss', '+' + usd(inf), A.flow, maxInf ? (inf / maxInf * 100) : 0, 'seit Lauf')
+      : _mdSigMuted('Zufluss', '—');
+    return '<div class="md-sig">' + c1 + c2 + c3 + '</div>';
+  }
+  function _mdPlayRow(r, maxInf) {
     var vcol = r.verdict === 'BET' ? A.good : A.gold, conv = +r.conv || 0;
     var badge = '<span style="display:inline-block;padding:1px 7px;border-radius:10px;border:1px solid ' + vcol + ';color:' + vcol + ';font-weight:800;font-size:10px;margin-right:6px">' + r.verdict + '</span>';
     var icon = (typeof _pwSportIcon === 'function') ? _pwSportIcon(r.league) + ' ' : '';
     var live = (r.htk != null && r.htk < 0) ? _MD_LIVE : '';
     var htk = (r.htk == null || r.htk < 0) ? '' : (r.htk < 1 ? '<1h' : Math.round(r.htk) + 'h');
-    var main = badge + icon + _mdPolyLink(r.key, esc(String(r.match).slice(0, 38)) + ' <span style="color:var(--mi3)">→</span> <b style="color:#4cc2ff">' + esc(r.side) + '</b>') + live;
-    var sub = (r.reasons || []).slice(0, 2).map(esc).join(' · ') + (htk ? ' · Anpfiff ' + htk : '');
-    return _mdRingRow(main, sub, conv, _mdConvCol(conv));
+    var main = badge + icon + _mdPolyLink(r.key, esc(String(r.match).slice(0, 38)) + ' <span style="color:var(--mi3)">→</span> <b style="color:#4cc2ff">' + esc(r.side) + '</b>') + live
+      + (htk ? ' <span style="font-size:10px;color:var(--mi3)">· Anpfiff ' + htk + '</span>' : '');
+    return '<div class="md-r md-r-top">' + _mdRing(conv, _mdConvCol(conv))
+      + '<div class="md-r-main"><div class="md-r-t">' + main + '</div>' + _mdSigStrip(r, maxInf) + '</div></div>';
   }
   function _mdPlaysHtml(plays) {
+    var maxInf = (plays && plays.length) ? plays.reduce(function (a, p) { return Math.max(a, _mdPlayInflow(p)); }, 1) : 1;
     var body = (plays && plays.length)
-      ? plays.map(_mdPlayRow).join('')
+      ? plays.map(function (p) { return _mdPlayRow(p, maxInf); }).join('')
       : empty('Keine klaren Plays gerade — kein Signal ist auch ein Ergebnis. Sobald Geld, Steam und scharfe Wallets sich einig sind, steht hier was.');
     return tile('🔥', 'Heute spielenswert', A.red, 'rgba(229,83,75,.14)', 'rgba(229,83,75,.32)', 'polywallets', 'alle Plays', body, 10);
   }

@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v102';   // 10.08.2026: Betfair-Radar — Live-Score + geschätzte Minute (Scan-Verzug, "~") + Rote-Karten-Indikator im koPill
+const VERSION = 'cocobet-v103';   // 11.08.2026 (Lucas): Heute-spielenswert — 3-Signal-Streifen je Play (Geld/Volumen · scharfe Wallets · Zufluss)
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

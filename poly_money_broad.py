@@ -65,6 +65,17 @@ RESOLUTIONS_KEEP_DAYS = 14                    # Shortlist-Paper-Tracker — abre
 # saubere Quelle fuer alle Views ist. Aufgeloeste Snapshots bleiben (fuer die Treffer-Auswertung).
 GHOST_GRACE_H = float(os.environ.get("POLY_KICKOFF_GRACE_H") or 6)
 
+# 11.08.2026 (Lucas, Stufe 1 Live-Erfassung): Maerkte auch NACH Anpfiff weiter abgreifen -> eigener
+# Live-Speicher, GETRENNT vom Vor-Spiel-Freeze (der bleibt die Auswertungs-Basis). Kostet nur mehr
+# Calls auf die FREIE Poly-API (kein Geld); der Live-Deckel ist additiv, damit Pre nie verdraengt wird.
+LIVE_FILE             = "poly_money_broad_live.json"
+LIVE_HIST_FILE        = "poly_money_broad_live_history.json"
+LIVE_TAIL_H           = float(os.environ.get("POLY_LIVE_TAIL_H") or 3.0)            # so lange NACH Anpfiff weiter erfassen
+MAX_HOLDER_CALLS_LIVE = int(os.environ.get("POLY_MAX_HOLDER_CALLS_LIVE") or 40)     # eigener Live-Deckel (additiv zu MAX_HOLDER_CALLS)
+LIVE_KEEP_H           = float(os.environ.get("POLY_LIVE_KEEP_H") or 6.0)            # Live-Eintrag prunen, wenn X h nicht mehr gesehen
+LIVE_HIST_MAX_POINTS  = 24                                                          # Live-Historie: Spiele sind kurz -> weniger Punkte
+LIVE_HIST_KEEP_H      = 12.0
+
 
 def update_resolutions(prev, markets, now=None, keep_days=RESOLUTIONS_KEEP_DAYS):
     """Aufgelöste Märkte dieses Laufs in eine rollierende {key:{winner,ts}} mergen; alte prunen.
@@ -240,6 +251,20 @@ def _hours_to_ko(ev, now):
         return (t - now).total_seconds() / 3600
     except Exception:
         return None
+
+
+def _capture_class(htk):
+    """Klassifiziert nach Zeit-bis-Anpfiff: 'pre' (0<htk<=Fenster), 'live' (Anpfiff bis LIVE_TAIL_H
+    danach), sonst None (zu frueh / lange vorbei / kein Anpfiff). REIN/testbar. 11.08.2026 (Lucas Stufe 1)."""
+    try:
+        h = float(htk)
+    except (TypeError, ValueError):
+        return None
+    if 0 < h <= PMA.CAPTURE_WINDOW_H:
+        return "pre"
+    if -LIVE_TAIL_H < h <= 0:
+        return "live"
+    return None
 
 
 def _outcomes(ev):
@@ -428,7 +453,8 @@ def fetch_markets():
                 if not key or (key, False) in seen:
                     continue
                 htk = _hours_to_ko(ev, now)
-                if htk is None or not (0 < htk <= PMA.CAPTURE_WINDOW_H):
+                cls = _capture_class(htk)
+                if cls is None:
                     continue        # kein unmittelbarer Anpfiff → kein Sportspiel (Politik/Krypto raus)
                 vol = float(ev.get("volume") or 0)
                 if vol < min_vol:
@@ -437,7 +463,7 @@ def fetch_markets():
                 if len(oc) < 2:
                     continue
                 seen.add((key, False))
-                candidates.append((vol, key, league_of(ev, key), htk, oc))
+                candidates.append((vol, key, league_of(ev, key), htk, oc, cls == "live"))
             except Exception:
                 continue
 
@@ -478,6 +504,7 @@ def fetch_markets():
     # bekam nie einen Geld-Split. Jetzt kriegt der wertvollste Markt jeder Sportart seine Chance.
     candidates.sort(key=lambda c: -c[0])
     holder_calls = 0
+    live_calls = 0     # 11.08.2026 (Lucas Stufe 1): eigener Live-Deckel, additiv zu pre
     # Ø-Einstieg-Anreicherung (CLV-Fix): eine /positions-Abfrage je Wallet, marktübergreifend gecacht,
     # hart gedeckelt. Fällt der Import/Fetch aus, läuft alles wie bisher weiter (nur ohne avgPrice).
     _pos_cache, _pos_budget = {}, [MAX_POSITION_CALLS]
@@ -487,14 +514,22 @@ def fetch_markets():
             from fetch_wm_poly_smartmoney import _http_get as _avg_get
         except Exception:
             _avg_get = None
-    for vol, key, league, htk, oc in candidates:
-        if holder_calls >= MAX_HOLDER_CALLS:
+    for vol, key, league, htk, oc, is_live in candidates:
+        if is_live:
+            if live_calls >= MAX_HOLDER_CALLS_LIVE:
+                continue
+        elif holder_calls >= MAX_HOLDER_CALLS:
+            continue
+        if holder_calls >= MAX_HOLDER_CALLS and live_calls >= MAX_HOLDER_CALLS_LIVE:
             break
         try:
             mm = _market_money(oc)     # 25.07.2026: EIN Fetch → Shares + Einzel-Wale
         except Exception:
             mm = None
-        holder_calls += 1
+        if is_live:
+            live_calls += 1
+        else:
+            holder_calls += 1
         if not mm:
             continue     # ohne Geld-Split keine Aussage über „liegt das Geld richtig"
         shares = mm["shares"]
@@ -509,6 +544,7 @@ def fetch_markets():
         markets.append({"key": key, "league": league,
                         "hoursToKickoff": htk, "totalUsd": round(vol),
                         "shares": shares, "prices": prices, "whales": _whales,
+                        "live": is_live,
                         "resolved": False, "resolvedPrices": {}})
     fetch_markets.sweep_stats = {"sweepOpen": len(sweep_open), "sweepClosed": len(sweep_closed),
                                  "sweepAdded": sweep_added}
@@ -574,6 +610,41 @@ def capture(markets, frozen, now=None, min_vol=MIN_VOL_USD, grace_h=GHOST_GRACE_
             continue
         if past_h > grace_h:
             del out[key]
+    return out
+
+
+def capture_live(markets, prev, now=None, min_vol=MIN_VOL_USD, keep_h=LIVE_KEEP_H):
+    """Live-Snapshot-Speicher fuer LAUFENDE Maerkte. REIN/testbar. Anders als capture(): KEIN Einfrieren
+    -- ein Live-Markt bewegt sich, also immer der jeweils AKTUELLE Stand (shares/prices/whales). Prunt
+    Eintraege, die seit keep_h nicht mehr gesehen wurden (Spiel vorbei/aufgeloest). Getrennt vom Vor-
+    Spiel-Freeze in capture(), damit die Auswertungs-Basis unangetastet bleibt. 11.08.2026 (Lucas Stufe 1)."""
+    now = now or _now()
+    out = {k: dict(v) for k, v in (prev or {}).items() if isinstance(v, dict)}
+    seen = set()
+    for m in markets or []:
+        if m.get("resolved"):
+            continue
+        key = m.get("key")
+        if not key or float(m.get("totalUsd") or 0) < min_vol:
+            continue
+        htk = m.get("hoursToKickoff")
+        out[key] = {"shares": m.get("shares") or {}, "prices": m.get("prices") or {},
+                    "whales": m.get("whales") or [], "league": m.get("league"),
+                    "totalUsd": round(float(m.get("totalUsd") or 0)),
+                    "hoursToKickoff": round(float(htk), 2) if isinstance(htk, (int, float)) else None,
+                    "capturedAt": now.isoformat(), "live": True}
+        seen.add(key)
+    cutoff = now - timedelta(hours=keep_h)
+    for k in list(out.keys()):
+        if k in seen:
+            continue
+        e = out.get(k)
+        try:
+            last = datetime.fromisoformat(str(e.get("capturedAt")).replace("Z", "+00:00")) if isinstance(e, dict) else None
+        except (TypeError, ValueError):
+            last = None
+        if not last or last < cutoff:
+            del out[k]
     return out
 
 
@@ -785,18 +856,31 @@ def main() -> int:
         # hinzu, wirft nur die Märkte raus, die > GHOST_GRACE_H nach Anpfiff und unaufgelöst sind.
         frozen = capture([], _load(CLOSE_FILE))
         (BASE / CLOSE_FILE).write_text(json.dumps(frozen, ensure_ascii=False, indent=1), encoding="utf-8")
+        live_store = capture_live([], _load(LIVE_FILE))   # Live-Speicher auch auf Leer-Laeufen prunen
+        (BASE / LIVE_FILE).write_text(json.dumps(live_store, ensure_ascii=False, indent=1), encoding="utf-8")
         print(f"ℹ️  Keine Poly-Märkte — Close-Feed nur von Geistern gepruned ({len(frozen)} bleiben).")
         return 0
-    frozen = capture(markets, _load(CLOSE_FILE), min_vol=min_vol)
+    pre  = [m for m in markets if not m.get("live")]   # Vor-Spiel + aufgeloest: bestehende Pipeline unveraendert
+    live = [m for m in markets if m.get("live")]        # 11.08.2026 (Lucas Stufe 1): laufende Spiele, eigener Datenpfad
+    frozen = capture(pre, _load(CLOSE_FILE), min_vol=min_vol)
     (BASE / CLOSE_FILE).write_text(json.dumps(frozen, ensure_ascii=False, indent=1), encoding="utf-8")
 
     # ① Momentum (25.07.2026): globale Preis-Zeitreihe fortschreiben (Steam/Reversal über alle Sportarten)
-    hist = append_history(_load(HIST_FILE), markets, min_vol=min_vol)
+    # Live-Datenpfad (11.08.2026, Lucas Stufe 1): laufende Maerkte in EIGENEN Speicher, getrennt vom
+    # Vor-Spiel-Freeze oben. capture_live friert NICHT ein (Live bewegt sich) -> immer der aktuelle Stand.
+    live_store = capture_live(live, _load(LIVE_FILE), min_vol=min_vol)
+    (BASE / LIVE_FILE).write_text(json.dumps(live_store, ensure_ascii=False, indent=1), encoding="utf-8")
+    live_hist = append_history(_load(LIVE_HIST_FILE), live, min_vol=min_vol,
+                               max_points=LIVE_HIST_MAX_POINTS, keep_h=LIVE_HIST_KEEP_H)
+    (BASE / LIVE_HIST_FILE).write_text(json.dumps(live_hist, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"[LIVE] {len(live_store)} laufende Maerkte erfasst (Tail {LIVE_TAIL_H}h, Deckel {MAX_HOLDER_CALLS_LIVE})")
+
+    hist = append_history(_load(HIST_FILE), pre, min_vol=min_vol)
     (BASE / HIST_FILE).write_text(json.dumps(hist, ensure_ascii=False, indent=1), encoding="utf-8")
 
     # ② Sharp-Wallet-Track (25.07.2026): Einstieg→Close/Outcome je Whale werten (CLV/Treffer)
     prev_wtrack = _load(WTRACK_FILE)
-    wtrack = update_wallet_track(prev_wtrack, markets, frozen=frozen)
+    wtrack = update_wallet_track(prev_wtrack, pre, frozen=frozen)
     # 💰 Echte Lebenszeit-P&L je bewertetem Wallet nachziehen (user-pnl-api) — macht die „schärfste
     # Wallets"-Rangliste nach TATSÄCHLICHEM Gewinn möglich. Gedeckelt (POLY_PNL_MAX, Default 60),
     # defensiv gekapselt: fällt der Call/Endpoint aus, bleibt alles wie bisher (nur ohne pnl-Feld).
@@ -811,7 +895,7 @@ def main() -> int:
     # 🔔 Sharp-im-Markt-Alarm: neue Einstiege bewiesen-scharfer Wallets → Telegram (Kür, nie fatal)
     # 📒 Rollierende Auflösungen (02.08.2026, Lucas) für den Shortlist-Paper-Tracker mitschreiben.
     try:
-        _res = update_resolutions(_load(RESOLUTIONS_FILE), markets)
+        _res = update_resolutions(_load(RESOLUTIONS_FILE), pre)
         (BASE / RESOLUTIONS_FILE).write_text(json.dumps(_res, ensure_ascii=False, indent=1), encoding="utf-8")
     except Exception as _e:
         print(f"  Resolutions-Update uebersprungen (nicht fatal): {_e}")
@@ -819,7 +903,7 @@ def main() -> int:
     if n_alert:
         print(f"🔔 Sharp-Alarm: {n_alert} neue scharfe Einstiege gemeldet")
 
-    rep = PMA.evaluate(frozen, resolutions(markets), min_odds=min_odds)
+    rep = PMA.evaluate(frozen, resolutions(pre), min_odds=min_odds)
     rep["generatedAt"] = _now().isoformat()
     rep["minVolUsd"] = min_vol
     rep["scope"] = "broad_all_leagues"
