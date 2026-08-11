@@ -554,7 +554,7 @@ def fetch_markets(live_only=False):
     live = {t: n for t, n in raw_by_tag.items() if n}
     _sw = fetch_markets.sweep_stats
     print(f"  Gamma: {len(markets)} Markt-Zeilen über {len(tags)} Tags + Volumen-Sweep · "
-          f"{len(candidates)} near-KO-Kandidaten · {holder_calls} Holders-Calls (nach Volumen)")
+          f"{len(candidates)} near-KO-Kandidaten · {holder_calls} Pre- + {live_calls} Live-Holders-Calls (nach Volumen)")
     print(f"  Roh-Events je Tag (nur >0): {live}")
     print(f"  Volumen-Sweep (tag-los): {_sw['sweepOpen']} offen · {_sw['sweepClosed']} aufgelöst "
           f"· {_sw['sweepAdded']} zusätzlich gefunden (Ligen, die kein Tag abdeckte)")

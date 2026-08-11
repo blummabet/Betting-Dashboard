@@ -108,13 +108,16 @@ function _pwViewTabs(){
   // 19.07.2026 (Lucas: „besser aufteilen") — 4 Unter-Reiter statt 9 gestapelter Sektionen.
   // Reihenfolge 25.07.2026: globales „Großes Geld" (immer Content+Filter) zuerst → Landing-Tab.
   return '<div class="pw-ds" style="margin-top:-6px">'
-    +b('bet','🔥 Heute wetten')+b('track','📊 Track-Record')+b('xsport','🎯 Poly-Radar')+b('money','💰 Großes Geld')+b('move','📈 Bewegung')+b('new','🆕 Neu')+b('edge','🎯 Chancen')+b('whales','🐋 Whales')+b('pinnpoly','📊 Pinni×Poly')
+    +b('bet','🔥 Heute wetten')+b('track','📊 Track-Record')+b('xsport','🎯 Poly-Radar')+b('money','💰 Großes Geld')+b('live','⚡ LIVE')+b('move','📈 Bewegung')+b('new','🆕 Neu')+b('edge','🎯 Chancen')+b('whales','🐋 Whales')+b('pinnpoly','📊 Pinni×Poly')
     +'</div>';
 }
 
 // 25.07.2026 (Lucas: „alle Zahlen verwirrend, keine Ahnung was ich damit mache"). Pro Unter-Reiter
 // EINE Klartext-Box: was zeige ich, und — wichtiger — was tust DU damit. Kein Jargon, ein Satz je.
 const _PW_VIEW_INTRO = {
+  live: ['⚡ LIVE — Geld & Wallets auf laufenden Spielen',
+    'Nur In-Play-Märkte (Esport/Tennis/…). Wo fließt GERADE Geld rein, welche Whales steigen JETZT ein — markiert die, die vor Anpfiff nicht im Top-4 waren (live rein).',
+    'Mitschauen, was daherkommt: großer frischer Zufluss + eine live einsteigende Wallet ist das Signal, das man vor Anpfiff nicht sieht. Noch roh (Stufe 2 v1) — kein Auto-Signal, erstmal beobachten.'],
   xsport: ['🎯 Poly-Radar — Poly vs Sharp: wo Polymarket messbar neben der scharfen Pinnacle liegt (alle Sportarten)',
     'Das einzige echte Preis-Signal hier: Poly-% gegen die faire Pinnacle-% über ALLE Sportarten. Eine Lücke ist ein Kandidat, kein Auftrag.',
     'Erst wenn sich die Lücke über die Tage zur Pinnacle SCHLIESST (Konvergenz ▼), war sie echt — kein Settlement-Artefakt. Sonst Finger weg.'],
@@ -221,8 +224,10 @@ function initPolyWallets(){
     jf('poly_money_broad_history.json'),// 25.07.2026 (Lucas ① Momentum): globale Poly-Preis-Zeitreihe je Markt
     jf('poly_wallet_track.json'),       // 25.07.2026 (Lucas ② Sharp): CLV/Treffer je Wallet (Einstieg→Close)
     jf('poly_shortlist_track.json'),    // 02.08.2026 (Lucas): Paper-Track-Record der „Heute wetten"-Plays
-  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack])=>{
-    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack};
+    jf('poly_money_broad_live.json'),        // 11.08.2026 (Lucas Stufe 2): laufende Maerkte (Live-Erfassung, alle ~5 Min)
+    jf('poly_money_broad_live_history.json'),
+  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist])=>{
+    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist};
     _pwRender();
   }).catch(err=>{
     // 12.07.2026: Vorher gab es KEIN catch — eine Exception im Render (z.B. der
@@ -440,6 +445,10 @@ function _pwRender(){
       +_pwOverNorm(_pwCache.broadLive,_pwCache.broadHist)
       +_pwMoneyLive(_pwCache.broadLive)+_pwMoneyBroad(moneyBroad)
       +(showDs?_pwMoneyAccuracy(moneyAcc,teams):'');   // MLS-Rückblick nur unter ⚽ Fußball
+    return;
+  }
+  if(_pwView==='live'){
+    panel.innerHTML=_pwViewTabs()+_pwSportFilterBar(_pwGlobalCats())+_pwViewIntro('live')+_pwLiveWhales();
     return;
   }
   if(_pwView==='move'){
@@ -1296,6 +1305,82 @@ function _pwMoneyLive(live){
 // bündelt. Edge-fokussiert — zeigt NICHT bloße Favoriten (kein Edge), sondern Märkte mit echtem
 // Signal: Steam, scharfe Wallet, oder Geld-vs-Preis-Divergenz (liga-informiert). BET = mit dem Geld,
 // FADE = gegen das Geld. Wird reicher, je mehr ①/② Daten sammeln.
+// ── ⚡ LIVE (11.08.2026, Lucas Stufe 2): Geld & Whales auf LAUFENDEN Spielen. Quelle: poly_money_broad_live.json
+// (der leichte Live-Scan, alle ~5 Min). Zeigt frischen Zufluss + Whales, die JETZT reingehen, und markiert
+// Wallets, die im Live-Top-4 auftauchen, aber vor Anpfiff NICHT drin waren (= live eingestiegen = das Signal).
+function _pwLiveInflow(key){
+  const a=_pwCache&&_pwCache.broadLiveHist&&_pwCache.broadLiveHist[key];
+  if(!Array.isArray(a)||a.length<2) return null;
+  const v2=Number(a[a.length-1].v), v1=Number(a[a.length-2].v);
+  if(!isFinite(v2)||!isFinite(v1)) return null;
+  const d=v2-v1; return d>0?d:0;
+}
+function _pwPregameWhales(key){
+  const c=_pwCache&&_pwCache.broadLive&&_pwCache.broadLive[key];
+  const set=new Set();
+  if(c&&Array.isArray(c.whales)) c.whales.forEach(w=>{ if(w&&w.wallet) set.add(String(w.wallet).toLowerCase()); });
+  return set;
+}
+function _pwLiveAge(m){ const c=m&&m.capturedAt?Date.parse(m.capturedAt):NaN; return isNaN(c)?null:Math.max(0,(Date.now()-c)/60000); }
+function _pwLiveKpi(v,l,c){
+  return '<div style="flex:1;min-width:120px;background:var(--card,#161b22);border:1px solid #21262d;border-radius:10px;padding:9px 12px">'
+    +'<div style="font-size:19px;font-weight:800;color:'+c+'">'+v+'</div>'
+    +'<div style="font-size:10.5px;color:var(--muted);text-transform:uppercase;letter-spacing:.03em">'+l+'</div></div>';
+}
+function _pwLiveCard(x){
+  const k=x.k, m=x.m;
+  const oc=Object.entries(m.shares||{}).map(([name,usd])=>({name,usd:Number(usd)||0}));
+  const tot=oc.reduce((s,o)=>s+o.usd,0)||1; oc.sort((a,b)=>b.usd-a.usd);
+  const fav=oc[0]||{name:'—',usd:0}, favPct=Math.round(fav.usd/tot*100);
+  const favPrice=(m.prices&&m.prices[fav.name]!=null)?Math.round(m.prices[fav.name]*100)+'¢':'—';
+  const cols=['#4cc2ff','#f5c518','#ff5d5d'];
+  const seg=oc.slice(0,3).map((o,i)=>'<i style="display:inline-block;height:100%;width:'+Math.round(o.usd/tot*100)+'%;background:'+cols[i]+'" title="'+_pwEsc(o.name)+' '+Math.round(o.usd/tot*100)+'%"></i>').join('');
+  const ic=_pwCatOf(m.league)[1];
+  const label=_pwEventLabel(k, oc.map(o=>o.name), m.league);
+  const match='<a href="https://polymarket.com/event/'+encodeURIComponent(k)+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681">'+label+' <span style="color:#a78bfa">↗</span></a>';
+  const inflow=(x.inflow!=null && x.inflow>0)?'<span style="color:#a78bfa;font-weight:700">+'+_pwUsd(x.inflow)+' seit letztem Scan</span>':'';
+  const liveBadge='<span style="font-size:9px;font-weight:800;color:#f85149;border:1px solid rgba(248,81,73,.5);border-radius:5px;padding:0 5px;margin-left:6px">● LIVE</span>';
+  const pre=_pwPregameWhales(k);
+  const wh=(m.whales||[]).slice().sort((a,b)=>(Number(b.usd)||0)-(Number(a.usd)||0)).map(w=>{
+    if(!w||!w.wallet) return '';
+    const isNew=!pre.has(String(w.wallet).toLowerCase());
+    const tag=isNew?'<span title="im Live-Top-4, vor Anpfiff NICHT drin — also live eingestiegen" style="font-size:9px;font-weight:800;color:#f85149;border:1px solid rgba(248,81,73,.5);border-radius:5px;padding:0 4px;margin-left:6px">🔴 live rein</span>':'';
+    const avg=(w.avgPrice!=null && isFinite(w.avgPrice))?' @'+Math.round(w.avgPrice*100)+'¢':'';
+    return '<div style="display:flex;align-items:center;gap:8px;font-size:12px;padding:3px 0">'
+      +'<a href="'+_pwLink(w.wallet)+'" target="_blank" rel="noopener" class="pw-wl" style="color:#a78bfa">'+_pwWallet(w.wallet)+'</a>'
+      +'<span style="color:var(--muted)">auf</span> <b style="color:#4cc2ff">'+_pwEsc(w.side||'—')+'</b>'
+      +'<span style="margin-left:auto;font-weight:800">'+_pwUsd(w.usd)+avg+'</span>'+tag+'</div>';
+  }).filter(Boolean).join('');
+  return '<div style="background:var(--card,#161b22);border:1px solid #21262d;border-radius:12px;padding:12px 14px;margin-bottom:10px">'
+    +'<div style="font-size:13.5px;font-weight:700;margin-bottom:7px">'+ic+' '+match+liveBadge+'</div>'
+    +'<div style="height:9px;border-radius:5px;overflow:hidden;background:#0d1117;display:flex;margin-bottom:6px">'+seg+'</div>'
+    +'<div style="font-size:12px;color:var(--muted);margin-bottom:'+(wh?'9px':'0')+'">Geld auf <b style="color:#4cc2ff">'+_pwEsc(fav.name)+'</b> '+favPct+'% <span style="color:#6e7681">('+favPrice+')</span> · '+_pwUsd(m.totalUsd)+(inflow?' · '+inflow:'')+'</div>'
+    +(wh?'<div style="border-top:1px solid #21262d;padding-top:7px">'+wh+'</div>':'')
+    +'</div>';
+}
+function _pwLiveWhales(){
+  const live=_pwCache&&_pwCache.broadLiveNow;
+  const intro='<section class="pw-sec"><div class="pw-sec-head">'
+    +'<span class="pw-kicker">⚡ LIVE — Geld & Wallets auf laufenden Spielen</span>'
+    +'<span class="pw-sec-note">nur In-Play-Märkte · frischer Zufluss + Whales, die JETZT reingehen · alle ~5 Min</span></div>';
+  let rows=(live?Object.entries(live):[]).map(e=>({k:e[0],m:e[1]}))
+    .filter(x=>x.m && x.m.shares && (x.m.totalUsd||0)>=5000 && _pwSportPass(x.m.league));
+  if(!rows.length) return intro+'<div class="pw-none">Gerade keine laufenden Märkte mit nennenswertem Geld. Die Live-Erfassung läuft am Mac-Runner (alle ~5 Min) — sobald Esport/Tennis/… live ist und Geld drauf liegt, steht hier was.</div></section>';
+  rows.forEach(x=>{ x.inflow=_pwLiveInflow(x.k); x.vol=x.m.totalUsd||0; });
+  rows.sort((a,b)=>(b.inflow||0)-(a.inflow||0) || b.vol-a.vol);
+  const totVol=rows.reduce((s,x)=>s+x.vol,0);
+  let nNew=0; rows.forEach(x=>{ const pre=_pwPregameWhales(x.k); (x.m.whales||[]).forEach(w=>{ if(w&&w.wallet&&!pre.has(String(w.wallet).toLowerCase())) nNew++; }); });
+  const kpi='<div style="display:flex;gap:10px;flex-wrap:wrap;margin:4px 0 12px">'
+    +_pwLiveKpi(String(rows.length),'laufende Märkte','#4cc2ff')
+    +_pwLiveKpi(_pwUsd(totVol),'Volumen live','#199e70')
+    +_pwLiveKpi(String(nNew),'Wallets live rein','#f85149')+'</div>';
+  const ages=rows.map(x=>_pwLiveAge(x.m)).filter(a=>a!=null);
+  const maxAge=ages.length?Math.round(Math.max.apply(null,ages)):null;
+  const fresh=maxAge!=null?('<div style="font-size:11px;color:'+(maxAge>20?'#f2a6a6':'var(--muted)')+';margin:-6px 0 12px">Live-Stand vor '+(maxAge<1?'<1':maxAge)+' Min'+(maxAge>20?' — der Live-Scan lief länger nicht (GitHub-Takt)':'')+'</div>'):'';
+  const body=rows.slice(0,30).map(_pwLiveCard).join('');
+  return intro+kpi+fresh+body+'</section>';
+}
+
 function _pwMoveFor(key){
   const arr=_pwCache&&_pwCache.broadHist&&_pwCache.broadHist[key];
   if(!Array.isArray(arr)||arr.length<2) return null;
