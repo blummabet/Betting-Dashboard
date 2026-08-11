@@ -431,7 +431,7 @@ def backfill_resolutions_by_slug(prev_close, seen_keys, get=_get, cap=RESOLVE_LO
     return out
 
 
-def fetch_markets():
+def fetch_markets(live_only=False):
     """Alle Poly-Sportmärkte über die Sport-Tags. Real, defensiv, gedeckelt. Rückgabeformat siehe
     capture()/resolutions(): {key, league, hoursToKickoff, totalUsd, shares, prices,
     resolved, resolvedPrices}. Bei jedem Fehler wird der Markt übersprungen, nie geworfen."""
@@ -455,7 +455,9 @@ def fetch_markets():
                 htk = _hours_to_ko(ev, now)
                 cls = _capture_class(htk)
                 if cls is None:
-                    continue        # kein unmittelbarer Anpfiff → kein Sportspiel (Politik/Krypto raus)
+                    continue        # ausserhalb Fenster
+                if live_only and cls != "live":
+                    continue        # Live-only Schnell-Lauf: Vor-Spiel-Maerkte ueberspringen        # kein unmittelbarer Anpfiff → kein Sportspiel (Politik/Krypto raus)
                 vol = float(ev.get("volume") or 0)
                 if vol < min_vol:
                     continue
@@ -468,7 +470,7 @@ def fetch_markets():
                 continue
 
         # 2) Kürzlich aufgelöste Märkte → Gewinner (settlet auf 1.00) — kein Holders-Call nötig
-        for ev in closed_evs:
+        for ev in (() if live_only else closed_evs):
             try:
                 key = ev.get("slug") or ev.get("id")
                 if not key or (key, True) in seen:
@@ -509,7 +511,7 @@ def fetch_markets():
     # hart gedeckelt. Fällt der Import/Fetch aus, läuft alles wie bisher weiter (nur ohne avgPrice).
     _pos_cache, _pos_budget = {}, [MAX_POSITION_CALLS]
     _avg_get = None
-    if FETCH_AVGPRICE:
+    if FETCH_AVGPRICE and not live_only:
         try:
             from fetch_wm_poly_smartmoney import _http_get as _avg_get
         except Exception:
@@ -846,6 +848,22 @@ def resolutions(markets) -> dict:
     return out
 
 
+def main_live() -> int:
+    """Live-only Schnell-Lauf (11.08.2026, Lucas Stufe 1/A): NUR die Live-Erfassung -- laufende Maerkte
+    holen, capture_live, Live-History. Ueberspringt den schweren Vor-Spiel-Teil (Wallet-P&L, Eval, Cross-
+    Sport, jsdom); laeuft in Sekunden statt Minuten -> eng taktbar, ohne den Runner zu blockieren."""
+    min_vol, _ = _cfg()
+    markets = fetch_markets(live_only=True)
+    live = [m for m in markets if m.get("live")]
+    live_store = capture_live(live, _load(LIVE_FILE), min_vol=min_vol)
+    (BASE / LIVE_FILE).write_text(json.dumps(live_store, ensure_ascii=False, indent=1), encoding="utf-8")
+    live_hist = append_history(_load(LIVE_HIST_FILE), live, min_vol=min_vol,
+                               max_points=LIVE_HIST_MAX_POINTS, keep_h=LIVE_HIST_KEEP_H)
+    (BASE / LIVE_HIST_FILE).write_text(json.dumps(live_hist, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"[LIVE-only] {len(live_store)} laufende Maerkte erfasst (Tail {LIVE_TAIL_H}h, Deckel {MAX_HOLDER_CALLS_LIVE})")
+    return 0
+
+
 def main() -> int:
     min_vol, min_odds = _cfg()
     markets = fetch_markets()
@@ -921,4 +939,4 @@ def main() -> int:
 
 
 if __name__ == "__main__":
-    sys.exit(main())
+    sys.exit(main_live() if "--live-only" in sys.argv else main())

@@ -1,0 +1,68 @@
+name: ⚡ Poly Live-Scan (nur laufende Spiele, schnell)
+
+# 11.08.2026 (Lucas, Stufe 1/A): schlanker LIVE-only Lauf. Greift NUR Maerkte im Live-Fenster ab
+# (Anpfiff bis LIVE_TAIL_H danach) und schreibt poly_money_broad_live(.history).json. Ueberspringt den
+# schweren Vor-Spiel-Teil des Global-Scans (Wallet-P&L, Eval, Cross-Sport, jsdom) -> laeuft in Sekunden
+# und blockiert den EINEN Mac-Runner nicht. Poly ist geoblockt (Rechenzentrums-IP) -> nur self-hosted.
+on:
+  schedule:
+    - cron: '*/5 * * * *'   # alle 5 Min — laufende Spiele bewegen sich schnell; der Lauf ist billig
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: poly-live-scan
+  cancel-in-progress: false
+
+jobs:
+  live:
+    runs-on: [self-hosted, macOS]
+    timeout-minutes: 6   # kurzer Lauf; Timeout < Takt -> selbstheilend bei Netz-Haenger
+    steps:
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+        with:
+          clean: false
+
+      - name: 🐍 Python einrichten (Mac)
+        run: |
+          PYTHON=""
+          for PY in /opt/homebrew/bin/python3.13 /opt/homebrew/bin/python3.12 /opt/homebrew/bin/python3.11 /usr/local/bin/python3.13 /usr/local/bin/python3.12 /usr/local/bin/python3.11 /usr/bin/python3; do
+            if "$PY" --version >/dev/null 2>&1; then PYTHON="$PY"; break; fi
+          done
+          if [ -z "$PYTHON" ]; then echo "Kein Python gefunden"; exit 1; fi
+          echo "$PYTHON ($($PYTHON --version))"
+          echo "POLY_PYTHON=$PYTHON" >> $GITHUB_ENV
+          $PYTHON -m pip install --break-system-packages requests --quiet 2>/dev/null || true
+
+      - name: ⚡ Poly Live-Erfassung (nur laufende Spiele)
+        run: ${{ env.POLY_PYTHON }} poly_money_broad.py --live-only
+        continue-on-error: true
+
+      - name: 💾 Live-Dateien committen
+        run: |
+          git config user.name "CocoBet Bot"
+          git config user.email "bot@cocobet.local"
+          for f in poly_money_broad_live.json poly_money_broad_live_history.json; do
+            [ -f "$f" ] && git add "$f"
+          done
+          if git diff --staged --quiet; then
+            echo "Keine Aenderungen — kein Commit."; exit 0
+          fi
+          git commit -m "⚡ Poly Live-Scan $(date -u +'%d.%m.%Y %H:%M') UTC"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          for attempt in 1 2 3 4 5; do
+            git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+            CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null)
+            if [ -n "$CONFLICTS" ]; then
+              echo "$CONFLICTS" | while read f; do git checkout --ours -- "$f"; git add "$f"; done
+              git diff --staged --quiet || git commit -m "auto-resolve merge conflicts"
+            fi
+            if git push 2>&1; then echo "Push nach Versuch $attempt"; exit 0; fi
+            echo "Push $attempt fehlgeschlagen — retry…"; sleep $((attempt * 3))
+          done
+          echo "Push fehlgeschlagen"; exit 1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

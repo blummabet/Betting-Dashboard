@@ -8,7 +8,7 @@ name: 🐋 Poly Global-Scan (alle Sportarten, häufig)
 # Läuft self-hosted auf dem Mac (Polymarket geoblockt Rechenzentrums-IPs → nur Wohn-IP).
 on:
   schedule:
-    - cron: '*/15 * * * *'     # 11.08.2026 (Lucas Stufe 1): alle 15 Min fuer frische Live-Erfassung (vorher 15,45 = 30 Min)
+    - cron: '15,45 * * * *'   # 30 Min: der schwere Voll-Scan bleibt selten; die FRISCHE Live-Erfassung macht der leichte poly-live-scan (*/5)
   workflow_dispatch:
 
 permissions:
