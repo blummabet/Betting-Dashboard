@@ -8,15 +8,18 @@ SCORES = {
     "0xsharp": {"n": 20, "clvSumPP": 40, "wins": 13, "pnl": 5000},   # avgClv 2.0 / 65% / pnl+ -> scharf
     "0xweak":  {"n": 15, "clvSumPP": -10, "wins": 6, "pnl": -2000},  # negativ -> nicht scharf
     "0xthin":  {"n": 2, "clvSumPP": 10, "wins": 2, "pnl": 100},      # zu wenig Historie -> nicht scharf
+    "0xsharpdec": {"n": 30, "clvSumPP": 60, "wins": 20, "pnl": 8000},  # scharf, aber Ausgang @100
 }
 
 
 def _live():
-    return {"lol-a-b": {"league": "esports", "prices": {"A": 0.6, "B": 0.4}, "whales": [
-        {"wallet": "0xsharp", "side": "A", "usd": 800},     # scharf, klein -> Alarm
+    return {"lol-a-b": {"league": "esports", "prices": {"A": 0.6, "B": 0.4, "DEC": 1.0}, "whales": [
+        {"wallet": "0xsharp", "side": "A", "usd": 800},     # scharf, kompetitiv -> Alarm
         {"wallet": "0xweak", "side": "B", "usd": 3000},     # schwach, klein -> kein Alarm
-        {"wallet": "0xbig", "side": "A", "usd": 15000},     # kein Score, gross -> Alarm
+        {"wallet": "0xbig", "side": "A", "usd": 30000},     # kein Score, gross (>25K), kompetitiv -> Alarm
         {"wallet": "0xpre", "side": "B", "usd": 20000},     # pre-game drin -> kein Alarm
+        {"wallet": "0xdec", "side": "DEC", "usd": 40000},   # gross ABER @100 (entschieden) -> kein Alarm
+        {"wallet": "0xsharpdec", "side": "DEC", "usd": 5000},  # scharf ABER @100 -> auch kein Alarm
     ]}}
 
 
@@ -59,6 +62,20 @@ class TestFindAlerts:
         al = W.find_alerts(_live(), CLOSE, SCORES, set(), NOW)
         by = {a["wallet"]: a for a in al}
         assert by["0xsharp"]["sharp"] is True and by["0xbig"]["sharp"] is False
+
+    def test_entschiedener_ausgang_raus(self):
+        # @100 = Spiel praktisch durch -> Settlement, KEIN Signal (auch fuer scharfe Wallets)
+        al = W.find_alerts(_live(), CLOSE, SCORES, set(), NOW)
+        w = {a["wallet"] for a in al}
+        assert "0xdec" not in w and "0xsharpdec" not in w
+
+    def test_big_schwelle_25k(self):
+        # 15K wuerde bei alter 10K-Schwelle feuern, bei 25K nicht mehr; 30K feuert
+        al = W.find_alerts({"m": {"league": "tennis", "prices": {"X": 0.5, "Y": 0.5},
+            "whales": [{"wallet": "0xw15", "side": "X", "usd": 15000},
+                       {"wallet": "0xw30", "side": "Y", "usd": 30000}]}}, {}, {}, set(), NOW)
+        w = {a["wallet"] for a in al}
+        assert "0xw15" not in w and "0xw30" in w
 
     def test_dedup(self):
         al = W.find_alerts(_live(), CLOSE, SCORES, {"lol-a-b|0xsharp"}, NOW)

@@ -20,7 +20,9 @@ CLOSE_FILE  = BASE / "poly_money_broad_close.json"
 WTRACK_FILE = BASE / "poly_wallet_track.json"
 SEEN_FILE   = BASE / "poly_live_watch_seen.json"
 
-LIVE_BIG_USD = float(os.environ.get("POLY_LIVE_BIG_USD") or 10000)   # gross genug fuer Alarm auch OHNE Track-Record
+LIVE_BIG_USD  = float(os.environ.get("POLY_LIVE_BIG_USD") or 25000)    # gross genug fuer Alarm auch OHNE Track-Record
+LIVE_MAX_PRICE = float(os.environ.get("POLY_LIVE_MAX_PRICE") or 0.90)   # >= entschieden -> Settlement, kein Signal (Lucas: '@100 = Spiel durch')
+LIVE_MIN_PRICE = float(os.environ.get("POLY_LIVE_MIN_PRICE") or 0.10)   # <= toter Ausgang -> Lay/Rausch
 SEEN_TTL_H   = float(os.environ.get("POLY_LIVE_SEEN_TTL_H") or 12)   # gemeldete Wallet+Markt so lange nicht erneut
 # Sharp-Definition — identisch zum Frontend: genug Historie UND profitabel UND schlaegt die Linie UND
 # (klar ueber Muenzwurf ODER deutliche Kante).
@@ -81,6 +83,9 @@ def find_alerts(live, close, scores, seen, now=None):
             wal = str(w["wallet"])
             if wal.lower() in pre:
                 continue                              # schon vor Anpfiff drin -> kein Live-Einstieg
+            price = (m.get("prices") or {}).get(w.get("side"))
+            if not isinstance(price, (int, float)) or price < LIVE_MIN_PRICE or price > LIVE_MAX_PRICE:
+                continue                              # entschieden/tot (z.B. @100) -> Settlement, kein Signal (gilt auch fuer scharfe)
             usd = float(w.get("usd") or 0)
             sc = _score(scores, wal)
             sharp = is_sharp(sc)
