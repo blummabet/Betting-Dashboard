@@ -29,6 +29,12 @@ HIST_FILE      = "betfair_consensus_history.json"   # Pinnacle-Prob-Snapshots je
 OUT_FILE       = "betfair_consensus.json"
 MONEYMAP_FILE  = "money_map.json"          # 11.08.2026 (Lucas): Money-Map-Feed (Bubble-Cards)
 MMLEDGER_FILE  = "money_map_ledger.json"   # Konsens-Signale mitschreiben -> Tracking (ab Tag 1)
+MMRECORD_FILE  = "money_map_record.json"   # Trefferquote je Verdikt-Typ (Tracking-Tab)
+MM_RESULTS_MIN_H = 3.0                      # Anpfiff so lange her -> Spiel sicher vorbei -> abrechenbar
+try:
+    from fetch_betfair_betwatch import fetch_results as _fetch_results  # autoritative Endstaende (Runner)
+except Exception:
+    _fetch_results = None
 ODDS_KEY       = os.environ.get("ODDS_API_KEY") or "16154a94ee84482dcd5a4af88d521d73"   # leerer Secret-String -> App-Key
 ODDS_BASE      = "https://api.the-odds-api.com/v4"
 REGIONS        = "eu,uk,us"     # Pinnacle liegt in eu; Soft-Books ueber uk/us breiter erfasst
@@ -385,6 +391,86 @@ def update_mm_ledger(prev, rows, now=None, keep=2000):
     return list(led.values())[-keep:]
 
 
+def _winner_1x2(g1, g2):
+    """1X2-Gewinner aus dem Endstand [heim, ausw] -> home/draw/away oder None."""
+    if not isinstance(g1, int) or not isinstance(g2, int):
+        return None
+    return "home" if g1 > g2 else "away" if g2 > g1 else "draw"
+
+
+def settle_mm_ledger(ledger, results_fetch=None, now=None, min_h=None):
+    """11.08.2026 (Lucas Money-Map Tracking): pending-Konsens-Eintraege gegen den echten Endstand
+    abrechnen (Betfair-Results-Endpoint). Gewann die Betfair-Geld-Seite (moneySide) -> status won/lost;
+    zusaetzlich pinnWin (gewann Pinnacles Favorit). REIN/testbar (results_fetch injizierbar)."""
+    from datetime import timedelta
+    now = now or datetime.now(timezone.utc)
+    min_h = MM_RESULTS_MIN_H if min_h is None else min_h
+    ledger = [dict(e) for e in (ledger or []) if isinstance(e, dict)]
+    if results_fetch is None:
+        return ledger
+    cutoff = now - timedelta(hours=min_h)
+    stale = []
+    for e in ledger:
+        if e.get("status") != "pending":
+            continue
+        try:
+            kt = datetime.fromisoformat(str(e.get("kickoff")).replace("Z", "+00:00"))
+        except (ValueError, TypeError):
+            kt = None
+        if kt is not None and kt < cutoff:
+            stale.append(str(e.get("matchId")))
+    if not stale:
+        return ledger
+    res = results_fetch(stale) or {}
+    for e in ledger:
+        if e.get("status") != "pending":
+            continue
+        r = res.get(str(e.get("matchId"))) if isinstance(res, dict) else None
+        if not isinstance(r, dict) or not r.get("finished") or r.get("goal_v1") is None:
+            continue
+        w = _winner_1x2(r.get("goal_v1"), r.get("goal_v2"))
+        if w is None:
+            continue
+        e["ftScore"] = [r.get("goal_v1"), r.get("goal_v2")]
+        e["winner"] = w
+        e["moneyWin"] = (e.get("moneySide") == w)
+        if e.get("pinnFav"):
+            e["pinnWin"] = (e.get("pinnFav") == w)
+        e["status"] = "won" if e["moneyWin"] else "lost"
+        e["settledAt"] = now.isoformat()
+    return ledger
+
+
+def mm_summary(ledger, now=None):
+    """Trefferquote je Verdikt-Typ (folgt man der Betfair-Geld-Seite): schlaegt Konsens die uneinigen
+    Faelle? Plus Pinnacle-Favoriten-Quote zum Vergleich. REIN/testbar."""
+    buckets = {}
+    gn = gw = 0
+    for e in (ledger or []):
+        if not isinstance(e, dict) or e.get("status") not in ("won", "lost"):
+            continue
+        v = e.get("verdict") or "?"
+        b = buckets.setdefault(v, {"n": 0, "wins": 0, "pinnN": 0, "pinnWins": 0})
+        b["n"] += 1
+        b["wins"] += 1 if e.get("moneyWin") else 0
+        if e.get("pinnWin") is not None:
+            b["pinnN"] += 1
+            b["pinnWins"] += 1 if e.get("pinnWin") else 0
+        gn += 1
+        gw += 1 if e.get("moneyWin") else 0
+
+    def _fin(b):
+        return {"n": b["n"], "wins": b["wins"],
+                "hitRate": round(b["wins"] / b["n"], 4) if b["n"] else None,
+                "pinnN": b["pinnN"],
+                "pinnHitRate": round(b["pinnWins"] / b["pinnN"], 4) if b["pinnN"] else None}
+
+    return {"generatedAt": now or _now_iso(),
+            "byVerdict": {k: _fin(v) for k, v in buckets.items()},
+            "global": {"n": gn, "wins": gw, "hitRate": round(gw / gn, 4) if gn else None},
+            "pending": sum(1 for e in (ledger or []) if isinstance(e, dict) and e.get("status") == "pending")}
+
+
 def build_game(m, ev, prev, direction, poly=None) -> dict:
     """Ein Spiel: Betfair-Geld-Seite + (falls Anker) Pinnacle/Soft-Probs+Quoten, Poly-Odd+Volumen,
     Bewegung, Verdikt. REIN (Netz passiert vorher)."""
@@ -485,6 +571,13 @@ def main():
                     if isinstance(v, dict) and v.get("prices")
                     and not any(x in str(k) for x in ("-more-markets", "-exact-score", "-total", "-spread"))
                     and len(v.get("prices")) <= 4] if isinstance(poly_raw, dict) else []
+    # Stufe 4 (Live): fuer laufende Spiele die LIVE-Poly-Blase (poly_money_broad_live.json).
+    # Additiv — nur die Money-Map nutzt sie; der Betfair-Radar (games) bleibt auf dem Close-Freeze.
+    poly_live_raw = _load("poly_money_broad_live.json", {})
+    poly_live_entries = [v for k, v in poly_live_raw.items()
+                    if isinstance(v, dict) and v.get("prices")
+                    and not any(x in str(k) for x in ("-more-markets", "-exact-score", "-total", "-spread"))
+                    and len(v.get("prices")) <= 4] if isinstance(poly_live_raw, dict) else []
 
     now = _now_iso()
     games, new_hist, mm_rows = [], {}, []
@@ -497,7 +590,13 @@ def main():
         prev = prevlist[-1] if prevlist else None
         g = build_game(m, ev, prev, direction, poly)
         games.append(g)
-        mm_rows.append(money_map_row(g, poly_fav(m, poly_entries)))
+        # Money-Map: LIVE-Spiele mit eigener Live-Poly-Blase (falls Live-Markt vorhanden), sonst Close.
+        li = m.get("liveInfo") or {}
+        use_live = bool(li.get("time")) and not li.get("finished") \
+                   and _best_poly_entry(m, poly_live_entries) is not None
+        mm_pool = poly_live_entries if use_live else poly_entries
+        mm_g = build_game(m, ev, prev, direction, match_poly(m, money_side(m), mm_pool)) if use_live else g
+        mm_rows.append(money_map_row(mm_g, poly_fav(m, mm_pool)))
         snap = {"ts": now}
         if ev and ev.get("pinn"):
             snap["pinn"] = [round(x, 4) for x in ev["pinn"]]
@@ -514,7 +613,9 @@ def main():
     mm_rows.sort(key=lambda r: (r.get("verdict") != "no_anchor", (r.get("betfair") or {}).get("eur") or 0), reverse=True)
     _dump(MONEYMAP_FILE, {"generatedAt": now, "count": len(mm_rows), "rows": mm_rows})
     mm_led = update_mm_ledger(_load(MMLEDGER_FILE, []), mm_rows, now=now)
+    mm_led = settle_mm_ledger(mm_led, results_fetch=_fetch_results)   # abrechnen gegen Endstand
     _dump(MMLEDGER_FILE, mm_led)
+    _dump(MMRECORD_FILE, mm_summary(mm_led))
     print("Money-Map: %d Zeilen -> %d im Ledger" % (len(mm_rows), len(mm_led)))
     print("Betfair-Konsens: %d Spiele (Radar-Schwelle), %d mit Odds-Anker" % (len(games), covered))
 

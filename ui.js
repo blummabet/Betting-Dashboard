@@ -37,7 +37,7 @@ const _ALL_PANELS = [
   'mainDashPanel', 'mainContent', 'trackingV2Panel', 'resultsPanel',
   'intlCardsPanel', 'intlTrackingPanel', 'intlWm2026Panel', 'intlTelegramPanel',
   'tiktokStudioPanel', 'streaksPanel',
-  'polymarketPanel', 'polyTraderPanel', 'polyWalletsPanel', 'betfairRadarPanel',
+  'polymarketPanel', 'polyTraderPanel', 'polyWalletsPanel', 'betfairRadarPanel', 'moneyMapPanel',
   'heartPanel', 'statusPanel', 'signalCheckPanel',
 ];
 
@@ -76,6 +76,7 @@ function showView(view) {
     'polybetting':       'polymarketPanel',
     'polywallets':       'polyWalletsPanel',
     'betfair':           'betfairRadarPanel',
+    'moneymap':          'moneyMapPanel',
     'analyse':           'signalCheckPanel',
     'heart':             'heartPanel',
     'status':            'statusPanel',
@@ -127,6 +128,7 @@ function showView(view) {
     'polybetting': 'navPolymarket',
     'polywallets': 'navPolyWallets',
     'betfair':     'navBetfair',
+    'moneymap':    'navMoneyMap',
   };
   const activeNavId = topNavMap[_activeSection];
   if (activeNavId) {
@@ -181,6 +183,7 @@ function showView(view) {
     const p = document.getElementById('betfairRadarPanel');
     if (p && typeof window._renderBetfairRadar === 'function') p.innerHTML = window._renderBetfairRadar();
   }
+  if (view === 'moneymap'     && typeof initMoneyMap === 'function') initMoneyMap();
   if (view === 'analyse'      && typeof initSignalCheck === 'function') initSignalCheck();
   // (25.06.2026, Lucas: Liga auf WM-Stack) National-Views laufen jetzt auf dem
   // bewährten WM-Renderer/Tracking (liest liga-data.json) statt statischem

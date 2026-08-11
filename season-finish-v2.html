@@ -2183,6 +2183,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   <button class="top-nav-btn" id="navPolymarket" onclick="showView('polybetting')" style="color:#a78bfa">🟣 Polymarket Betting</button>
   <button class="top-nav-btn" id="navPolyWallets" onclick="showView('polywallets')" style="color:#5eead4">🐋 Polymarket Wallets</button>
   <button class="top-nav-btn" id="navBetfair" onclick="showView('betfair')" style="color:#ffb80c">🟡 Betfair Radar</button>
+  <button class="top-nav-btn" id="navMoneyMap" onclick="showView('moneymap')" style="color:#eab938">🔗 Money Map</button>
   <!-- „Mehr ▾"-Dropdown (28.06.2026, Lucas): Nebensektionen + Content-Tools gebündelt -->
   <div class="top-nav-more" id="topNavMore">
     <button class="top-nav-btn" id="navMore" onclick="toggleTopMore(event)">⋯ Mehr<span class="tnm-caret">▾</span><span id="navMoreDot" style="display:none;width:8px;height:8px;border-radius:50%;background:#f85149;margin-left:6px;vertical-align:middle;box-shadow:0 0 6px rgba(248,81,73,.8);"></span></button>
@@ -4859,6 +4860,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 <div id="polyWalletsPanel" style="display:none;max-width:1100px;margin:0 auto;padding:20px 16px 100px;"></div>
 
 <div id="betfairRadarPanel" style="display:none;max-width:1180px;margin:0 auto;padding:20px 16px 100px;"></div>
+<div id="moneyMapPanel" style="display:none;max-width:1180px;margin:0 auto;padding:20px 16px 100px;"></div>
 <div id="signalCheckPanel" style="display:none;max-width:1100px;margin:0 auto;padding:20px 16px 100px;"></div>
 <div id="polyTraderPanel" style="display:none;max-width:1100px;margin:0 auto;padding:20px 16px 100px;"></div>
 
@@ -5021,7 +5023,7 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   var scripts = [
     "pick-engine.js", "pick-verdict.js", "_pick_helpers.js", "validator.js",
     "renderer.js", "share.js", "ui.js", "status-checks.js", "polymarket-tab.js",
-    "poly-wallets.js", "betfair-radar.js", "pinnacle-poly.js", "signal-check.js",
+    "poly-wallets.js", "money-map.js", "betfair-radar.js", "pinnacle-poly.js", "signal-check.js",
     "results-v2.js", "wm2026-renderer.js", "wm2026-tracking.js", "tiktok-studio.js",
     "main-dashboard.js"
   ];

@@ -6,6 +6,7 @@ import unittest
 
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import betfair_consensus as BC
+from datetime import datetime, timezone, timedelta
 
 
 def bf_match(mid="1", home="Borac Banja Luka", away="Fk Velez Mostar",
@@ -335,6 +336,43 @@ class TestMoneyMap(unittest.TestCase):
         prev = [{"matchId": "1", "status": "won", "verdict": "konsens", "firstSeen": "x"}]
         led = BC.update_mm_ledger(prev, [BC.money_map_row(self._g(), pf)], now="t2")
         self.assertEqual(led[0]["status"], "won")     # abgerechnete nicht ueberschreiben
+
+
+class TestMoneyMapSettle(unittest.TestCase):
+    """11.08.2026 (Lucas Money-Map Tracking): Abrechnung gegen Endstand + Trefferquote je Verdikt."""
+    NOW = datetime(2026, 8, 11, 20, 0, tzinfo=timezone.utc)
+
+    def _led(self):
+        ko = (self.NOW - timedelta(hours=4)).isoformat()
+        return [
+            {"matchId": "1", "kickoff": ko, "verdict": "konsens", "moneySide": "home", "pinnFav": "home", "status": "pending"},
+            {"matchId": "2", "kickoff": ko, "verdict": "uneinig", "moneySide": "away", "pinnFav": "home", "status": "pending"},
+            {"matchId": "3", "kickoff": (self.NOW - timedelta(hours=1)).isoformat(), "verdict": "konsens", "moneySide": "home", "status": "pending"},
+        ]
+
+    def _fake(self, ids):
+        return {"1": {"goal_v1": 2, "goal_v2": 0, "finished": True},
+                "2": {"goal_v1": 1, "goal_v2": 0, "finished": True}}
+
+    def test_settle_won_lost(self):
+        out = {e["matchId"]: e for e in BC.settle_mm_ledger(self._led(), results_fetch=self._fake, now=self.NOW)}
+        self.assertEqual(out["1"]["status"], "won")
+        self.assertTrue(out["1"]["moneyWin"])
+        self.assertEqual(out["2"]["status"], "lost")     # Geld auf Auswaerts, Heim gewann
+        self.assertTrue(out["2"]["pinnWin"])             # Pinnacle-Favorit (Heim) lag richtig
+        self.assertEqual(out["3"]["status"], "pending")  # zu frisch
+
+    def test_ohne_fetcher_noop(self):
+        self.assertEqual(BC.settle_mm_ledger(self._led(), results_fetch=None, now=self.NOW)[0]["status"], "pending")
+
+    def test_summary_je_verdict(self):
+        out = BC.settle_mm_ledger(self._led(), results_fetch=self._fake, now=self.NOW)
+        rec = BC.mm_summary(out)
+        self.assertEqual(rec["byVerdict"]["konsens"]["hitRate"], 1.0)
+        self.assertEqual(rec["byVerdict"]["uneinig"]["hitRate"], 0.0)
+        self.assertEqual(rec["byVerdict"]["uneinig"]["pinnHitRate"], 1.0)
+        self.assertEqual(rec["global"]["n"], 2)
+        self.assertEqual(rec["pending"], 1)
 
 if __name__ == "__main__":
     unittest.main()
