@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "liga",
-    "generatedAt": "2026-08-11T07:47:04.262389+00:00",
+    "generatedAt": "2026-08-11T18:45:12.322425+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -1688,47 +1688,6 @@
       "matchupPct": 71
     },
     {
-      "teamId": "496",
-      "team": "Juventus",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/496.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
-      "type": "unbeaten",
-      "market": "Ungeschlagen",
-      "length": 8,
-      "venue": "A",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 87,
-        "label": "Eigen 87% + Gegner 33% → 65%"
-      },
-      "ratePct": 87,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 0,
-      "next": {
-        "oppId": "512",
-        "oppName": "Frosinone",
-        "atHome": false,
-        "date": "2026-08-23",
-        "kickoff": "2026-08-23T16:30:00+00:00",
-        "oppRatePct": 33
-      },
-      "oppSupportPct": 33,
-      "matchupPct": 65
-    },
-    {
       "teamId": "50",
       "team": "Manchester City",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/50.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -3035,6 +2994,46 @@
       },
       "oppSupportPct": 73,
       "matchupPct": 81
+    },
+    {
+      "teamId": "496",
+      "team": "Juventus",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/496.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ITA",
+      "leagueName": "Serie A",
+      "type": "unbeaten",
+      "market": "Ungeschlagen",
+      "length": 7,
+      "venue": "A",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 87,
+        "label": "Eigen 87% + Gegner 33% → 65%"
+      },
+      "ratePct": 87,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 0,
+      "next": {
+        "oppId": "512",
+        "oppName": "Frosinone",
+        "atHome": false,
+        "date": "2026-08-23",
+        "kickoff": "2026-08-23T16:30:00+00:00",
+        "oppRatePct": 33
+      },
+      "oppSupportPct": 33,
+      "matchupPct": 65
     },
     {
       "teamId": "50",
@@ -7578,6 +7577,57 @@
       "matchupPct": 75
     },
     {
+      "teamId": "34",
+      "team": "Newcastle",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/34.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 5,
+      "venue": "H",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 60% → 60%"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 1,
+      "next": {
+        "oppId": "40",
+        "oppName": "Liverpool",
+        "atHome": true,
+        "date": "2026-08-23",
+        "kickoff": "2026-08-23T15:30:00+00:00",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 60,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 1,
+        "conviction": 1,
+        "names": [
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "transfer_shift"
+        ],
+        "market": "Unter 2.5 Tore"
+      }
+    },
+    {
       "teamId": "45",
       "team": "Everton",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/45.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -7817,6 +7867,47 @@
       },
       "oppSupportPct": 60,
       "matchupPct": 60
+    },
+    {
+      "teamId": "496",
+      "team": "Juventus",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/496.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ITA",
+      "leagueName": "Serie A",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 5,
+      "venue": "all",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 70,
+        "label": "Eigen 70% + Gegner 53% → 63%"
+      },
+      "ratePct": 70,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 10,
+      "next": {
+        "oppId": "512",
+        "oppName": "Frosinone",
+        "atHome": false,
+        "date": "2026-08-23",
+        "kickoff": "2026-08-23T16:30:00+00:00",
+        "oppRatePct": 53
+      },
+      "oppSupportPct": 53,
+      "matchupPct": 63
     },
     {
       "teamId": "497",
@@ -10360,58 +10451,6 @@
       "matchupPct": 56
     },
     {
-      "teamId": "535",
-      "team": "Malaga",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/535.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 5,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 50,
-        "label": "Eigen 50% + Gegner 60% → 54%"
-      },
-      "ratePct": 50,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 10,
-      "next": {
-        "oppId": "530",
-        "oppName": "Atletico Madrid",
-        "atHome": false,
-        "date": "2026-08-19",
-        "kickoff": "2026-08-19T19:00:00+00:00",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 54,
-      "signalInfo": {
-        "state": "contradict",
-        "count": 1,
-        "conviction": 2,
-        "names": [
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength"
-        ],
-        "market": "Unter 2.5 Tore"
-      }
-    },
-    {
       "teamId": "728",
       "team": "Rayo Vallecano",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/728.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -10733,58 +10772,6 @@
       "matchupPct": 53
     },
     {
-      "teamId": "34",
-      "team": "Newcastle",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/34.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 5,
-      "venue": "H",
-      "strong": true,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 60% → 60% · Linie/Signale dagegen"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 1,
-      "next": {
-        "oppId": "40",
-        "oppName": "Liverpool",
-        "atHome": true,
-        "date": "2026-08-23",
-        "kickoff": "2026-08-23T15:30:00+00:00",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 60,
-      "signalInfo": {
-        "state": "contradict",
-        "count": 2,
-        "conviction": 2,
-        "names": [
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength",
-          "chance_creation",
-          "transfer_shift"
-        ],
-        "market": "Unter 2.5 Tore"
-      }
-    },
-    {
       "teamId": "517",
       "team": "Venezia",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/517.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -10865,6 +10852,60 @@
       },
       "oppSupportPct": 47,
       "matchupPct": 37
+    },
+    {
+      "teamId": "535",
+      "team": "Malaga",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/535.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 5,
+      "venue": "all",
+      "strong": true,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 50,
+        "label": "Eigen 50% + Gegner 60% → 54% · Linie/Signale dagegen"
+      },
+      "ratePct": 50,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 10,
+      "next": {
+        "oppId": "530",
+        "oppName": "Atletico Madrid",
+        "atHome": false,
+        "date": "2026-08-19",
+        "kickoff": "2026-08-19T19:00:00+00:00",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 54,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 2,
+        "conviction": 2,
+        "names": [
+          "public_static_bias",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "reverse_line_move"
+        ],
+        "market": "Unter 2.5 Tore"
+      }
     },
     {
       "teamId": "162",
@@ -11560,47 +11601,6 @@
       },
       "oppSupportPct": 67,
       "matchupPct": 75
-    },
-    {
-      "teamId": "496",
-      "team": "Juventus",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/496.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 4,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 73,
-        "label": "Eigen 73% + Gegner 53% → 65%"
-      },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 11,
-      "next": {
-        "oppId": "512",
-        "oppName": "Frosinone",
-        "atHome": false,
-        "date": "2026-08-23",
-        "kickoff": "2026-08-23T16:30:00+00:00",
-        "oppRatePct": 53
-      },
-      "oppSupportPct": 53,
-      "matchupPct": 65
     },
     {
       "teamId": "499",
@@ -15005,110 +15005,6 @@
       "flag": "<img src=\"https://media.api-sports.io/football/teams/530.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ESP",
       "leagueName": "La Liga",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 4,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 45,
-        "label": "Eigen 45% + Gegner 67% → 54%"
-      },
-      "ratePct": 45,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 11,
-      "next": {
-        "oppId": "535",
-        "oppName": "Malaga",
-        "atHome": true,
-        "date": "2026-08-19",
-        "kickoff": "2026-08-19T19:00:00+00:00",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 54,
-      "signalInfo": {
-        "state": "contradict",
-        "count": 1,
-        "conviction": 2,
-        "names": [
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength"
-        ],
-        "market": "Unter 2.5 Tore"
-      }
-    },
-    {
-      "teamId": "530",
-      "team": "Atletico Madrid",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/530.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 4,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 40,
-        "label": "Eigen 40% + Gegner 67% → 51%"
-      },
-      "ratePct": 40,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 5,
-      "next": {
-        "oppId": "535",
-        "oppName": "Malaga",
-        "atHome": true,
-        "date": "2026-08-19",
-        "kickoff": "2026-08-19T19:00:00+00:00",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 51,
-      "signalInfo": {
-        "state": "contradict",
-        "count": 1,
-        "conviction": 2,
-        "names": [
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength"
-        ],
-        "market": "Unter 2.5 Tore"
-      }
-    },
-    {
-      "teamId": "530",
-      "team": "Atletico Madrid",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/530.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
       "type": "bttsYes",
       "market": "Beide Teams treffen",
       "length": 4,
@@ -16494,6 +16390,114 @@
       "matchupPct": 38
     },
     {
+      "teamId": "530",
+      "team": "Atletico Madrid",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/530.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 4,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 45,
+        "label": "Eigen 45% + Gegner 67% → 54% · Linie/Signale dagegen"
+      },
+      "ratePct": 45,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 11,
+      "next": {
+        "oppId": "535",
+        "oppName": "Malaga",
+        "atHome": true,
+        "date": "2026-08-19",
+        "kickoff": "2026-08-19T19:00:00+00:00",
+        "oppRatePct": 67
+      },
+      "oppSupportPct": 67,
+      "matchupPct": 54,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 2,
+        "conviction": 2,
+        "names": [
+          "public_static_bias",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "reverse_line_move"
+        ],
+        "market": "Unter 2.5 Tore"
+      }
+    },
+    {
+      "teamId": "530",
+      "team": "Atletico Madrid",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/530.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 4,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 40,
+        "label": "Eigen 40% + Gegner 67% → 51% · Linie/Signale dagegen"
+      },
+      "ratePct": 40,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 5,
+      "next": {
+        "oppId": "535",
+        "oppName": "Malaga",
+        "atHome": true,
+        "date": "2026-08-19",
+        "kickoff": "2026-08-19T19:00:00+00:00",
+        "oppRatePct": 67
+      },
+      "oppSupportPct": 67,
+      "matchupPct": 51,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 2,
+        "conviction": 2,
+        "names": [
+          "public_static_bias",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "reverse_line_move"
+        ],
+        "market": "Unter 2.5 Tore"
+      }
+    },
+    {
       "teamId": "533",
       "team": "Villarreal",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/533.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -17545,12 +17549,11 @@
       "matchupPct": 44,
       "signalInfo": {
         "state": "confirm",
-        "count": 3,
+        "count": 2,
         "conviction": 3,
         "names": [
           "form_trend",
-          "h2h_pattern",
-          "xg_strength"
+          "h2h_pattern"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -17925,6 +17928,57 @@
       "flag": "<img src=\"https://media.api-sports.io/football/teams/40.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ENG",
       "leagueName": "Premier League",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 60% → 60%"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 3,
+      "next": {
+        "oppId": "34",
+        "oppName": "Newcastle",
+        "atHome": false,
+        "date": "2026-08-23",
+        "kickoff": "2026-08-23T15:30:00+00:00",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 60,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 1,
+        "conviction": 1,
+        "names": [
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "transfer_shift"
+        ],
+        "market": "Unter 2.5 Tore"
+      }
+    },
+    {
+      "teamId": "40",
+      "team": "Liverpool",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/40.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
       "type": "bttsYes",
       "market": "Beide Teams treffen",
       "length": 3,
@@ -18169,10 +18223,10 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 80,
-        "label": "Eigen 80% + Gegner 40% → 64%"
+        "ratePct": 87,
+        "label": "Eigen 87% + Gegner 40% → 68%"
       },
-      "ratePct": 80,
+      "ratePct": 87,
       "seq": [
         true,
         true,
@@ -18180,12 +18234,11 @@
         false,
         true,
         true,
-        true,
         true
       ],
       "xgBacked": null,
-      "basis": "prior",
-      "preN": 5,
+      "basis": "pure",
+      "preN": 4,
       "next": {
         "oppId": "512",
         "oppName": "Frosinone",
@@ -18195,7 +18248,7 @@
         "oppRatePct": 60
       },
       "oppSupportPct": 40,
-      "matchupPct": 64
+      "matchupPct": 68
     },
     {
       "teamId": "496",
@@ -18210,8 +18263,48 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
+        "ratePct": 73,
+        "label": "Eigen 73% + Gegner 47% → 63%"
+      },
+      "ratePct": 73,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 4,
+      "next": {
+        "oppId": "512",
+        "oppName": "Frosinone",
+        "atHome": false,
+        "date": "2026-08-23",
+        "kickoff": "2026-08-23T16:30:00+00:00",
+        "oppRatePct": 53
+      },
+      "oppSupportPct": 47,
+      "matchupPct": 63
+    },
+    {
+      "teamId": "496",
+      "team": "Juventus",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/496.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ITA",
+      "leagueName": "Serie A",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
         "ratePct": 80,
-        "label": "Eigen 80% + Gegner 47% → 67%"
+        "label": "Eigen 80% + Gegner 53% → 69%"
       },
       "ratePct": 80,
       "seq": [
@@ -18235,8 +18328,8 @@
         "kickoff": "2026-08-23T16:30:00+00:00",
         "oppRatePct": 53
       },
-      "oppSupportPct": 47,
-      "matchupPct": 67
+      "oppSupportPct": 53,
+      "matchupPct": 69
     },
     {
       "teamId": "50",
@@ -21591,47 +21684,6 @@
       "matchupPct": 46
     },
     {
-      "teamId": "496",
-      "team": "Juventus",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/496.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
-      "type": "cleanSheet",
-      "market": "Zu null",
-      "length": 3,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 80,
-        "label": "Eigen 80% + Gegner 0% → 48%"
-      },
-      "ratePct": 80,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 5,
-      "next": {
-        "oppId": "512",
-        "oppName": "Frosinone",
-        "atHome": false,
-        "date": "2026-08-23",
-        "kickoff": "2026-08-23T16:30:00+00:00",
-        "oppRatePct": 0
-      },
-      "oppSupportPct": 0,
-      "matchupPct": 48
-    },
-    {
       "teamId": "499",
       "team": "Atalanta",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/499.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -22195,58 +22247,6 @@
       },
       "oppSupportPct": 40,
       "matchupPct": 46
-    },
-    {
-      "teamId": "535",
-      "team": "Malaga",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/535.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 40,
-        "label": "Eigen 40% + Gegner 60% → 48%"
-      },
-      "ratePct": 40,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 5,
-      "next": {
-        "oppId": "530",
-        "oppName": "Atletico Madrid",
-        "atHome": false,
-        "date": "2026-08-19",
-        "kickoff": "2026-08-19T19:00:00+00:00",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 48,
-      "signalInfo": {
-        "state": "contradict",
-        "count": 1,
-        "conviction": 2,
-        "names": [
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength"
-        ],
-        "market": "Unter 2.5 Tore"
-      }
     },
     {
       "teamId": "536",
@@ -23951,58 +23951,6 @@
       "matchupPct": 39
     },
     {
-      "teamId": "40",
-      "team": "Liverpool",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/40.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 60% → 60% · Linie/Signale dagegen"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 3,
-      "next": {
-        "oppId": "34",
-        "oppName": "Newcastle",
-        "atHome": false,
-        "date": "2026-08-23",
-        "kickoff": "2026-08-23T15:30:00+00:00",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 60,
-      "signalInfo": {
-        "state": "contradict",
-        "count": 2,
-        "conviction": 2,
-        "names": [
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength",
-          "chance_creation",
-          "transfer_shift"
-        ],
-        "market": "Unter 2.5 Tore"
-      }
-    },
-    {
       "teamId": "42",
       "team": "Arsenal",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/42.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -24119,6 +24067,46 @@
       },
       "oppSupportPct": 33,
       "matchupPct": 41
+    },
+    {
+      "teamId": "496",
+      "team": "Juventus",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/496.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ITA",
+      "leagueName": "Serie A",
+      "type": "cleanSheet",
+      "market": "Zu null",
+      "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 0% → 40%"
+      },
+      "ratePct": 67,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 4,
+      "next": {
+        "oppId": "512",
+        "oppName": "Frosinone",
+        "atHome": false,
+        "date": "2026-08-23",
+        "kickoff": "2026-08-23T16:30:00+00:00",
+        "oppRatePct": 0
+      },
+      "oppSupportPct": 0,
+      "matchupPct": 40
     },
     {
       "teamId": "503",
@@ -24651,6 +24639,60 @@
       },
       "oppSupportPct": 40,
       "matchupPct": 40
+    },
+    {
+      "teamId": "535",
+      "team": "Malaga",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/535.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 40,
+        "label": "Eigen 40% + Gegner 60% → 48% · Linie/Signale dagegen"
+      },
+      "ratePct": 40,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 5,
+      "next": {
+        "oppId": "530",
+        "oppName": "Atletico Madrid",
+        "atHome": false,
+        "date": "2026-08-19",
+        "kickoff": "2026-08-19T19:00:00+00:00",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 48,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 2,
+        "conviction": 2,
+        "names": [
+          "public_static_bias",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "reverse_line_move"
+        ],
+        "market": "Unter 2.5 Tore"
+      }
     },
     {
       "teamId": "546",
