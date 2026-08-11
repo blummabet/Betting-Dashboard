@@ -1488,23 +1488,66 @@ function _pwWhalePublicCandidates(){
 // füllt _pwCache NUR wo noch nichts drin ist (der volle Poly-Tab-Loader überschreibt später sauber).
 let _pwPlaysLoadedTs=0;
 function _pwEnsurePlaysData(cb){
-  if(_pwCache && _pwCache.broadLive){ cb&&cb(); return; }
-  if(_pwPlaysLoadedTs && (Date.now()-_pwPlaysLoadedTs)<120000 && _pwCache && _pwCache.broadLive){ cb&&cb(); return; }
+  // 11.08.2026 (Lucas): Live-Dateien mitladen, damit die Uebersicht das Live-Poly-Element ohne den
+  // vollen Poly-Tab-Load bekommt. Guard verlangt jetzt AUCH broadLiveNow.
+  const _ready=()=> _pwCache && _pwCache.broadLive && _pwCache.broadLiveNow;
+  if(_ready()){ cb&&cb(); return; }
+  if(_pwPlaysLoadedTs && (Date.now()-_pwPlaysLoadedTs)<120000 && _ready()){ cb&&cb(); return; }
   const b='?t='+Date.now();
   const jf=u=>fetch(u+b,{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);
   Promise.all([jf('poly_money_broad_close.json'),jf('poly_money_broad_history.json'),
-               jf('poly_money_broad.json'),jf('poly_wallet_track.json'),jf('poly_cross_sport.json')])
-   .then(([broadLive,broadHist,moneyBroad,walletTrack,crossSport])=>{
+               jf('poly_money_broad.json'),jf('poly_wallet_track.json'),jf('poly_cross_sport.json'),
+               jf('poly_money_broad_live.json'),jf('poly_money_broad_live_history.json')])
+   .then(([broadLive,broadHist,moneyBroad,walletTrack,crossSport,broadLiveNow,broadLiveHist])=>{
      if(!_pwCache) _pwCache={};
-     if(!_pwCache.broadLive)  _pwCache.broadLive=broadLive;
-     if(!_pwCache.broadHist)  _pwCache.broadHist=broadHist;
-     if(!_pwCache.moneyBroad) _pwCache.moneyBroad=moneyBroad;
-     if(!_pwCache.walletTrack)_pwCache.walletTrack=walletTrack;
-     if(!_pwCache.crossSport) _pwCache.crossSport=crossSport;
+     if(!_pwCache.broadLive)     _pwCache.broadLive=broadLive;
+     if(!_pwCache.broadHist)     _pwCache.broadHist=broadHist;
+     if(!_pwCache.moneyBroad)    _pwCache.moneyBroad=moneyBroad;
+     if(!_pwCache.walletTrack)   _pwCache.walletTrack=walletTrack;
+     if(!_pwCache.crossSport)    _pwCache.crossSport=crossSport;
+     if(!_pwCache.broadLiveNow)  _pwCache.broadLiveNow=broadLiveNow;
+     if(!_pwCache.broadLiveHist) _pwCache.broadLiveHist=broadLiveHist;
      _pwPlaysLoadedTs=Date.now();
      cb&&cb();
    }).catch(()=>{ cb&&cb(); });
 }
+
+// ── Uebersicht-Feeder (11.08.2026, Lucas): Top-N Live-Whales + Top-N Live-Zufluss fuer das
+//    Vollbreiten-Element auf der Startseite. Nutzen dieselbe Sharp-Logik/Labels wie der Live-Tab.
+function _pwLiveTopWhales(n){
+  const live=_pwCache&&_pwCache.broadLiveNow; if(!live) return [];
+  const out=[];
+  Object.entries(live).forEach(([k,m])=>{
+    if(!m||!m.shares||(Number(m.totalUsd)||0)<5000||!_pwSportPass(m.league)) return;
+    const pre=_pwPregameWhales(k);
+    const label=_pwEventLabel(k,Object.keys(m.shares||{}),m.league);
+    (m.whales||[]).forEach(w=>{
+      if(!w||!w.wallet) return;
+      const sc=_pwWalletScore(w.wallet), sharp=_pwIsSharpScore(sc), isNew=!pre.has(String(w.wallet).toLowerCase());
+      out.push({key:k,label:label,league:m.league,side:w.side||'—',usd:Number(w.usd)||0,wallet:w.wallet,
+                sharp:sharp,isNew:isNew,sharpLive:sharp&&isNew,avgPrice:w.avgPrice,
+                sc:(sc&&sc.n>=4)?{avgClv:sc.avgClv,hit:sc.hit,n:sc.n}:null});
+    });
+  });
+  out.sort((a,b)=>((b.sharpLive?1:0)-(a.sharpLive?1:0))||((b.sharp?1:0)-(a.sharp?1:0))||(b.usd-a.usd));
+  return out.slice(0,n||5);
+}
+function _pwLiveTopInflow(n){
+  const live=_pwCache&&_pwCache.broadLiveNow; if(!live) return [];
+  const rows=Object.entries(live).map(e=>({k:e[0],m:e[1]}))
+    .filter(x=>x.m&&x.m.shares&&(Number(x.m.totalUsd)||0)>=5000&&_pwSportPass(x.m.league));
+  rows.forEach(x=>{ x.inflow=_pwLiveInflow(x.k)||0; });
+  const out=rows.filter(x=>x.inflow>0);
+  out.sort((a,b)=>(b.inflow-a.inflow)||((Number(b.m.totalUsd)||0)-(Number(a.m.totalUsd)||0)));
+  return out.slice(0,n||5).map(x=>{
+    const oc=Object.entries(x.m.shares||{}).map(e=>({name:e[0],usd:Number(e[1])||0})).sort((a,b)=>b.usd-a.usd);
+    const tot=oc.reduce((s,o)=>s+o.usd,0)||1, fav=oc[0]||{name:'—',usd:0};
+    return {key:x.k,label:_pwEventLabel(x.k,oc.map(o=>o.name),x.m.league),league:x.m.league,
+            inflow:x.inflow,totalUsd:Number(x.m.totalUsd)||0,favName:fav.name,favPct:Math.round(fav.usd/tot*100),
+            favPrice:(x.m.prices&&x.m.prices[fav.name]!=null)?Math.round(x.m.prices[fav.name]*100):null};
+  });
+}
+if(typeof window!=='undefined'){ window._pwLiveTopWhales=_pwLiveTopWhales; window._pwLiveTopInflow=_pwLiveTopInflow; }
 
 // Sharp-Seite eines Markts aus poly_wallet_track.open (01.08.2026, Lucas) — DIE Brücke zwischen
 // „hunderte Wallet-Daten" und „was wetten": nur BEWÄHRTE Wallets (n≥Schwelle, CLV+ ODER ≥50% Treffer)

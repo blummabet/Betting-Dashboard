@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v106';   // 11.08.2026 (Lucas Stufe 3): Money Map Tab — Triple-Konsens Bubble-Cards (Betfair/Poly/Pinnacle) + Tracking
+const VERSION = 'cocobet-v107';   // 11.08.2026 (Lucas): Übersicht — Money-Map-Puls-Zeile + Money-Map-Vollbreiten-Streifen (Top 10) + Polymarket-LIVE-Element (Top-5 Whales/Zufluss)
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

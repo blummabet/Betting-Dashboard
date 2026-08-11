@@ -141,4 +141,6 @@
     Promise.all([jf('money_map.json'),jf('money_map_record.json')]).then(function(res){ _mm.map=res[0]; _mm.rec=res[1]; _mmRender(); });
   }
   if(typeof window!=='undefined') window.initMoneyMap=initMoneyMap;
+  if(typeof window!=='undefined'){ window._mmCardHtml=_mmCard; window._mmEnsureStyle=_mmStyle; }
+
 })();

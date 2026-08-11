@@ -56,6 +56,24 @@ def _poly_pulse(track=None) -> dict | None:
 STRIP_MIN_N = 8   # ab so vielen Plays gilt eine Conviction-Stufe / ein Signal als belastbar (Auto-Bet-Kandidat)
 
 
+def _moneymap_pulse(rec=None) -> dict | None:
+    """Money-Map-Konsens-Bilanz (betfair_consensus.py -> money_map_record.json). Folgt man der
+    Betfair-Geld-Seite: globale Trefferquote + Konsens-Trefferquote (nur 3/3-einige Faelle) + offen.
+    Additiv, faellt sauber auf None, solange nichts abgerechnet ist. 11.08.2026 (Lucas)."""
+    d = rec if rec is not None else _load("money_map_record.json")
+    if not isinstance(d, dict):
+        return None
+    g = d.get("global") or {}
+    if not g.get("n"):
+        return None
+    kon = (d.get("byVerdict") or {}).get("konsens") or {}
+    return {"n": g.get("n"),
+            "hitPct": round(100.0 * (g.get("hitRate") or 0), 1),
+            "konHitPct": (round(100.0 * kon["hitRate"], 1) if kon.get("hitRate") is not None else None),
+            "konN": kon.get("n") or 0,
+            "openN": d.get("pending") or 0}
+
+
 def _best_bucket(buckets) -> dict | None:
     """Stufe/Signal mit dem hoechsten ROI, der >0 ist und >= STRIP_MIN_N Plays hat. REIN/testbar."""
     best = None
@@ -115,6 +133,7 @@ def build() -> dict:
         "newest": (last[0].get("resolvedAt") if last else None),
         "betfair": _betfair_pulse(),   # 07.08.2026 (Lucas): Betfair-Tracking mit in den Puls
         "poly": _poly_pulse(),         # 07.08.2026 (Lucas): Poly „Heute wetten" mit in den Puls
+        "moneymap": _moneymap_pulse(),  # 11.08.2026 (Lucas): Money-Map-Konsens mit in den Puls
         "strip": _strip(cards_open=cards_open),   # 07.08.2026 (Lucas): wo lohnt Setzen + was laeuft
     }
 

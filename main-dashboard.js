@@ -135,6 +135,16 @@
       /* tiles */
       '.md-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px;}',
       '.md-cell{display:contents;}',
+      // Vollbreiten-Elemente (Money Map, Polymarket LIVE) — spannen alle 3 Spalten (11.08.2026, Lucas)
+      '.md-wide{grid-column:1/-1;}',
+      '.md-mm-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(340px,1fr));gap:12px;margin-top:2px;}',
+      '@media(max-width:760px){.md-mm-grid{grid-template-columns:1fr;}}',
+      '.md-lv-cols{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin-top:2px;}',
+      '@media(max-width:760px){.md-lv-cols{grid-template-columns:1fr;gap:8px;}}',
+      '.md-lv-col{min-width:0;}',
+      '.md-lv-sub{display:flex;align-items:center;gap:7px;font-size:11px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:var(--mi3);margin:2px 0 6px;}',
+      '.md-lv-tags{display:flex;justify-content:flex-end;margin-top:2px;}',
+      '.md-lv-tag{font-size:9px;font-weight:800;border:1px solid;border-radius:5px;padding:0 5px;}',
       '@media(max-width:760px){.md-grid{grid-template-columns:1fr;}}',
       '.md-ring{position:relative;flex:0 0 auto;width:44px;height:44px;}',
       '.md-ring .n{position:absolute;inset:0;display:grid;place-items:center;font-weight:900;font-size:18px;}',
@@ -225,7 +235,7 @@
     };
     return Promise.all([jf('liga-data.json'), jf('mls-data.json'), jf('liga_streaks.json'),
       jf('mls_streaks.json'), jf('betfair_prices.json'), jf('poly_money_broad_close.json'), jf('dashboard_pulse.json'),
-      jf('betfair_overview.json'), jf('betfair_direction.json')]);
+      jf('betfair_overview.json'), jf('betfair_direction.json'), jf('money_map.json')]);
   }
   function _mdLoad(force) {
     if (_md.loading) return;
@@ -235,7 +245,7 @@
     var p = document.getElementById('mainDashPanel');
     if (p && !_md.data) { p.classList.add('mdash'); p.innerHTML = _head() + '<div class="md-empty" style="text-align:center;padding:52px 0;">⏳ Übersicht wird geladen …</div>'; }
     _mdFetch().then(function (a) {
-      _md.data = { liga: a[0], mls: a[1], ligaStreaks: a[2], mlsStreaks: a[3], betfair: a[4], whales: a[5], pulse: a[6], bfOverview: a[7], bfDir: a[8] };
+      _md.data = { liga: a[0], mls: a[1], ligaStreaks: a[2], mlsStreaks: a[3], betfair: a[4], whales: a[5], pulse: a[6], bfOverview: a[7], bfDir: a[8], moneyMap: a[9] };
       _md.loading = false; _mdRender();
     });
   }
@@ -761,6 +771,83 @@
     }).join('') + _ageStr(_md.data.betfair);
   }
 
+  // ── ⚡ Polymarket LIVE (11.08.2026, Lucas): Vollbreiten-Element unter den Poly-Kacheln. Zwei Listen —
+  //    Top-5 Live-Whales (wer JETZT groß reingeht, scharfe zuerst) + Top-5 Live-Zufluss (wo seit dem
+  //    letzten Scan das meiste frische Geld reinkam). Daten via _pwLiveTopWhales/_pwLiveTopInflow.
+  function _mdLiveWhaleRow(w) {
+    var live = _MD_LIVE;
+    var tag = w.sharpLive ? '<span class="md-lv-tag" style="color:' + A.good + ';border-color:rgba(46,160,67,.55)">🔥 scharf live</span>'
+      : w.sharp ? '<span class="md-lv-tag" style="color:' + A.good + ';border-color:rgba(46,160,67,.4)">🔥 scharf</span>'
+      : w.isNew ? '<span class="md-lv-tag" style="color:' + A.red + ';border-color:rgba(229,83,75,.5)">🔴 live rein</span>' : '';
+    var rec = w.sc ? ' <span style="color:' + (w.sc.avgClv > 0 ? A.good : A.red) + ';font-weight:700">' + (w.sc.avgClv >= 0 ? '+' : '') + w.sc.avgClv.toFixed(1) + 'pp</span> <span style="color:var(--mi3)">' + Math.round(w.sc.hit * 100) + '%·n' + w.sc.n + '</span>' : '';
+    var avg = (w.avgPrice != null && isFinite(w.avgPrice)) ? ' @' + Math.round(w.avgPrice * 100) + '¢' : '';
+    var main = _mdSportIco(w.league) + ' ' + _mdPolyLink(w.key, '<b style="color:#4cc2ff">' + esc(String(w.side).slice(0, 22)) + '</b>') + live;
+    var sub = esc(String(w.label).replace(/<[^>]*>/g, '').slice(0, 40)) + rec;
+    return rowEl(main, usd(w.usd) + avg, A.poly, sub, tag ? '<div class="md-lv-tags">' + tag + '</div>' : '');
+  }
+  function _mdLiveInflowRow(r, mx) {
+    var side = (r.favPct != null && r.favPct >= 55) ? ('Geld auf ' + esc(String(r.favName).slice(0, 18)) + ' ' + r.favPct + '%' + (r.favPrice != null ? ' · ' + r.favPrice + '¢' : '')) : ('~offen · ' + (r.favPct != null ? r.favPct + '%' : ''));
+    var main = _mdSportIco(r.league) + ' ' + _mdPolyLink(r.key, esc(String(r.label).replace(/<[^>]*>/g, '').slice(0, 34))) + _MD_LIVE;
+    var sub = side + ' · ' + usd(r.totalUsd) + ' gesamt';
+    return rowEl(main, '+' + usd(r.inflow), A.flow, sub, meter(mx ? (r.inflow / mx * 100) : 0, A.flow));
+  }
+  function _mdLiveHtml(whales, inflow) {
+    var head = '<div class="md-tile-h"><span class="md-tile-ic" style="--tb:rgba(248,81,73,.14);--tbr:rgba(248,81,73,.4);">⚡</span>' +
+      '<span class="md-tile-t">Polymarket LIVE</span>' +
+      '<span style="font-size:10px;color:var(--mi3);font-weight:600;margin-left:8px">laufende Spiele · alle ~5 Min</span>' +
+      '<button class="md-more" style="--ta:' + A.poly + ';" onclick="showView(\'polywallets\')">LIVE →</button></div>';
+    if ((!whales || !whales.length) && (!inflow || !inflow.length)) {
+      return '<section class="md-tile md-rise md-wide" style="animation-delay:190ms;">' + head +
+        empty('Gerade keine laufenden Märkte mit nennenswertem Geld — sobald live Volumen reinkommt (Esport/Tennis/…), steht hier was.') + '</section>';
+    }
+    var mxIn = (inflow && inflow.length) ? inflow.reduce(function (a, r) { return Math.max(a, +r.inflow || 0); }, 1) : 1;
+    var colW = (whales && whales.length) ? whales.map(_mdLiveWhaleRow).join('') : empty('Keine großen Live-Whale-Einstiege gerade.');
+    var colI = (inflow && inflow.length) ? inflow.map(function (r) { return _mdLiveInflowRow(r, mxIn); }).join('') : empty('Kein frischer Live-Zufluss messbar (braucht ≥2 Scans).');
+    var sub = function (icon, t) { return '<div class="md-lv-sub"><span>' + icon + '</span>' + t + '</div>'; };
+    var body = '<div class="md-lv-cols">' +
+      '<div class="md-lv-col">' + sub('🐋', 'Top-5 Live-Whales') + colW + '</div>' +
+      '<div class="md-lv-col">' + sub('💨', 'Top-5 Live-Zufluss') + colI + '</div>' +
+      '</div>';
+    return '<section class="md-tile md-rise md-wide" style="animation-delay:190ms;">' + head + body + '</section>';
+  }
+  function _mdLiveWidePlaceholder() {
+    return '<section class="md-tile md-rise md-wide" style="animation-delay:190ms;">' +
+      '<div class="md-tile-h"><span class="md-tile-ic" style="--tb:rgba(248,81,73,.14);--tbr:rgba(248,81,73,.4);">⚡</span>' +
+      '<span class="md-tile-t">Polymarket LIVE</span></div>' + empty('lädt …') + '</section>';
+  }
+  function _mdFillLive() {
+    var box = document.getElementById('md-cell-live'); if (!box) return;
+    if (typeof _pwEnsurePlaysData !== 'function' || typeof _pwLiveTopWhales !== 'function') return;   // Skelett bleibt
+    _pwEnsurePlaysData(function () {
+      var b = document.getElementById('md-cell-live'); if (!b) return;
+      var whales = [], inflow = [];
+      try { whales = _pwLiveTopWhales(5) || []; } catch (e) { whales = []; }
+      try { inflow = _pwLiveTopInflow(5) || []; } catch (e) { inflow = []; }
+      b.innerHTML = _mdLiveHtml(whales, inflow);
+    });
+  }
+
+  // ── 🔗 Money Map (11.08.2026, Lucas): Vollbreiten-Streifen — Top-10-Fußballspiele mit den
+  //    Betfair- + Poly-Geld-Bubbles + Pinnacle-Linie. Rendert die IDENTISCHEN Cards wie der Tab
+  //    (window._mmCardHtml aus money-map.js). Reine Anzeige aus money_map.json.
+  function _mdMoneyMapWide() {
+    var mm = _md.data.moneyMap, rows = (mm && mm.rows) || [];
+    rows = rows.filter(function (r) { return r && r.verdict && r.verdict !== 'no_anchor' && (r.betfair || r.poly); }).slice(0, 10);
+    var head = '<div class="md-tile-h"><span class="md-tile-ic" style="--tb:rgba(234,185,56,.14);--tbr:rgba(234,185,56,.32);">🔗</span>' +
+      '<span class="md-tile-t">Money Map</span>' +
+      '<button class="md-more" style="--ta:' + A.gold + ';" onclick="showView(\'moneymap\')">Map →</button></div>';
+    var body;
+    if (!rows.length) {
+      body = empty(mm ? 'Gerade kein Fußballspiel mit genug Geld auf Betfair oder Poly.' : 'Füllt sich beim nächsten Betfair-Lauf: Betfair- + Poly-Geld je Spiel, Pinnacle als scharfe Linie.');
+    } else if (typeof window._mmCardHtml === 'function') {
+      if (typeof window._mmEnsureStyle === 'function') window._mmEnsureStyle();
+      body = '<div class="md-mm-grid">' + rows.map(function (r) { try { return window._mmCardHtml(r); } catch (e) { return ''; } }).join('') + '</div>';
+    } else {
+      body = empty('Money-Map-Ansicht lädt …');
+    }
+    return '<section class="md-tile md-rise md-wide" style="animation-delay:120ms;">' + head + body + '</section>';
+  }
+
   function _mdRender() {
     var p = document.getElementById('mainDashPanel');
     if (!p) return;
@@ -835,16 +922,21 @@
       tile('⚡', 'Betfair-Steam', A.bf, 'rgba(217,89,38,.14)', 'rgba(217,89,38,.32)', 'betfair', 'Radar', _mdBfSteamBody(), 130) +
       tile('⚖️', 'Größte Fehlbepreisung', A.red, 'rgba(229,83,75,.14)', 'rgba(229,83,75,.32)', 'betfair', 'Radar', _mdBfMispricedBody(), 140) +
       tile('📡', 'Pinnacle-Steam', A.blue, 'rgba(57,135,229,.14)', 'rgba(57,135,229,.32)', 'sharp', 'Radar', shBody, 150) +
+      // Reihe 3.5 — Money Map (Vollbreite): Betfair + Poly + Pinnacle je Fußballspiel
+      _mdMoneyMapWide() +
       // Reihe 4 — Poly
       tile('🐋', 'Poly Whale-Bets', A.poly, 'rgba(25,158,112,.14)', 'rgba(25,158,112,.32)', 'polywallets', 'Wallets', whBody, 160) +
       '<div id="md-cell-top" class="md-cell">' + tile('🎯', 'Top-Play', A.good, 'rgba(46,160,67,.14)', 'rgba(46,160,67,.32)', 'polywallets', 'Wallets', empty('lädt …'), 170) + '</div>' +
       '<div id="md-cell-whale" class="md-cell">' + tile('💰', 'Volumen über Norm', A.poly, 'rgba(25,158,112,.14)', 'rgba(25,158,112,.32)', 'polywallets', 'Wallets', empty('lädt …'), 180) + '</div>' +
+      // Reihe 4.5 — Polymarket LIVE (Vollbreite): laufende Wallets + frischer Zufluss
+      '<div id="md-cell-live" class="md-cell">' + _mdLiveWidePlaceholder() + '</div>' +
       '</div>';
 
     p.innerHTML = _head() + _mdPulse() + _mdJetzt() + _kpis() + _mdHero() + grid +
       '<div class="md-foot">Kuratierter Überblick · tippe „alle →" für den vollen Bereich</div>';
     _mdFillPlays();
     _mdFillPubPreview();
+    _mdFillLive();
   }
   // ── Puls: letzte 30 abgerechnete Picks (CLV / Trefferquote) ──────────────────
   function _spark(series) {
@@ -858,8 +950,8 @@
   }
   function _mdPulse() {
     var d = _md.data.pulse || {};
-    var hasCards = !!d.n, bf = d.betfair, pl = d.poly;
-    if (!hasCards && !(bf && bf.n) && !(pl && pl.n)) return '<section class="md-pulse md-rise"><div class="md-pulse-h">📈 Puls</div>' +
+    var hasCards = !!d.n, bf = d.betfair, pl = d.poly, ml0 = d.moneymap;
+    if (!hasCards && !(bf && bf.n) && !(pl && pl.n) && !(ml0 && ml0.n)) return '<section class="md-pulse md-rise"><div class="md-pulse-h">📈 Puls</div>' +
       '<div class="md-pulse-l">Noch keine abgerechneten Picks/Plays — füllt sich, sobald die ersten resolven.</div></section>';
     var metric = function (v, l, c) { return '<div class="md-pulse-m"><span class="md-pulse-v" style="color:' + (c || 'var(--mi)') + '">' + v + '</span><span class="md-pulse-l">' + l + '</span></div>'; };
     var pct = function (v) { return v == null ? '—' : Math.round(v) + '%'; };
@@ -888,6 +980,14 @@
         metric(roiTxt(pl.roiPct), 'ROI', col0(pl.roiPct)) +
         clvCell(pl.clvAvg) +
         (pl.openN ? metric(pl.openN, 'offen', 'var(--mi3)') : '') +
+        '</div></div>';
+    }
+    var ml = d.moneymap;
+    if (ml && ml.n) {
+      rows += '<div class="md-pulse-row"><span class="md-pulse-tag">🔗 Money Map · ' + ml.n + '</span><div class="md-pulse-ms">' +
+        metric(pct(ml.hitPct), 'Geld trifft', ml.hitPct >= 50 ? A.good : 'var(--mi)') +
+        metric((ml.konHitPct == null ? '—' : Math.round(ml.konHitPct) + '%'), 'Konsens · n' + (ml.konN || 0), ml.konHitPct == null ? 'var(--mi2)' : ml.konHitPct >= 50 ? A.good : 'var(--mi)') +
+        (ml.openN ? metric(ml.openN, 'offen', 'var(--mi3)') : '') +
         '</div></div>';
     }
     var strip = '';
