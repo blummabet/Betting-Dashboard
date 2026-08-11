@@ -1288,7 +1288,7 @@
 "leadOdd": 2.12,
 "value": 23606.27,
 "sentAt": "2026-08-11T00:02:25.220914+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": [
 1,
 1
@@ -1296,7 +1296,14 @@
 "consensus": {
 "verdict": "no_anchor",
 "agree": null
-}
+},
+"settledAt": "2026-08-11T02:00:54.910876+00:00",
+"ftScore": [
+1,
+2
+],
+"profit": -1.0,
+"via": "track"
 },
 {
 "k": "fresh:35885555:Match Odds",
@@ -1318,6 +1325,25 @@
 "consensus": {
 "verdict": "konsens",
 "agree": true
+}
+},
+{
+"k": "fresh:35885555:Over/Under 3.5 Goals",
+"matchId": "35885555",
+"scenario": "fresh",
+"market": "Over/Under 3.5 Goals",
+"league": "Argentinian Primera Division",
+"home": "Union Santa Fe",
+"away": "Central Cordoba (SdE)",
+"leadName": "Under 3.5 Goals",
+"leadOdd": 1.38,
+"value": 248507.49,
+"sentAt": "2026-08-11T02:00:54.777636+00:00",
+"status": "pending",
+"htScore": null,
+"consensus": {
+"verdict": "uneinig",
+"agree": false
 }
 }
 ]
