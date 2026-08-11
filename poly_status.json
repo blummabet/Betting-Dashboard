@@ -43,7 +43,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "cs2-sf2-ef1-2026-08-08: seit 3.2 Tagen offen — keine Auflösung gefunden"
+        "cs2-sf2-ef1-2026-08-08: seit 3.3 Tagen offen — keine Auflösung gefunden"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -61,9 +61,14 @@
       "label": "'Bewiesene' Wallets wirklich profitabel",
       "severity": "warn",
       "ok": false,
-      "nFail": 1,
+      "nFail": 6,
       "failures": [
-        "139/196 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
+        "15/59 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (25%) — Trefferquote allein trügt",
+        "   0x84cfffc3f1… n=17 Treffer 59% P&L $-7,649,256",
+        "   0xe9076a87c5… n=19 Treffer 68% P&L $-7,554,624",
+        "   0x224a89dbe0… n=34 Treffer 53% P&L $-3,992,328",
+        "   0xc3c3b3ef30… n=65 Treffer 66% P&L $-3,799,895",
+        "140/199 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
     },
@@ -83,11 +88,11 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "439/458 'live' Geld-Märkte sind schon >6h nach Anpfiff (96%) — $11,243,094 Whale-Geld auf fertigen Spielen"
+        "444/457 'live' Geld-Märkte sind schon >6h nach Anpfiff (97%) — $11,628,736 Whale-Geld auf fertigen Spielen"
       ],
       "note": "Der Close-Feed setzt kein resolved-Flag; fertige Spiele bleiben 'live'. Alle Views filtern jetzt auf den rekonstruierten Anpfiff — dieser Check misst den Geister-Anteil im Roh-Feed (steigt er, prunt/löst der Feed nicht mehr auf; jede ungegatete View zeigt dann fertige Spiele)."
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-08-11T05:23:18.135395+00:00"
+  "generatedAt": "2026-08-11T06:36:28.156733+00:00"
 }
