@@ -539,6 +539,31 @@ class TestConsensusBlock(unittest.TestCase):
         self.assertEqual(BA._consensus_block({"matchId": "9"}, {"9": {"verdict": "no_anchor"}}), "")
         self.assertEqual(BA._consensus_block({"matchId": "9"}, {}), "")
 
+    def test_block_live_shows_caveat_not_hard_verdict(self):
+        # 11.08.2026 (Lucas): live sind die 1X2-Quoten teils vom Vorspiel (Pinnacle eingefroren, Soft
+        # live) -> kein hartes "uneinig", sondern ehrlicher Live-Hinweis; auch keine (stale) pp-Bewegung.
+        cidx = {"9": {"matchId": "9", "moneyName": "Central Cordoba", "live": True,
+                      "pinnOdd": 9.35, "pinnMovePP": 68.6, "softOdd": 11.0, "softN": 23,
+                      "verdict": "uneinig"}}
+        b = BA._consensus_block({"matchId": "9"}, cidx)
+        self.assertIn("Pinnacle @9.35", b)         # Zahlen bleiben sichtbar
+        self.assertIn("Soft @11.00", b)
+        self.assertIn("Live", b)                   # ehrlicher Hinweis
+        self.assertIn("Vorspiel", b)
+        self.assertNotIn("uneinig", b)             # KEIN hartes Vorspiel-Verdikt
+        self.assertNotIn("Buchmacher sehen", b)
+        self.assertNotIn("pp", b)                  # keine (stale) Pinnacle-Bewegung
+
+    def test_block_prematch_keeps_hard_verdict(self):
+        # Gegenprobe: ohne live-Flag (Vorspiel) bleibt alles beim Alten (Verdikt + Bewegung).
+        cidx = {"9": {"matchId": "9", "moneyName": "Napoli", "live": False,
+                      "pinnOdd": 1.62, "pinnMovePP": 2.0, "softOdd": 1.58, "softN": 6,
+                      "verdict": "konsens"}}
+        b = BA._consensus_block({"matchId": "9"}, cidx)
+        self.assertIn("Konsens", b)
+        self.assertIn("2.0pp", b)
+        self.assertNotIn("Vorspiel", b)
+
     def test_consensus_for_push_records_verdict(self):
         # 10.08.2026 (Lucas): kompakter Verdikt fuers Ledger → spaetere Konsens-Auswertung
         cidx = {"1": {"verdict": "konsens", "agree": True}, "2": {"verdict": "uneinig", "agree": False},

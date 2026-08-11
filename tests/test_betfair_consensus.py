@@ -231,5 +231,53 @@ class TestQualifiesRadar(unittest.TestCase):
         self.assertTrue(BC.qualifies_radar(m))                  # HT >= 5K Rest
 
 
+class TestSoftMedian(unittest.TestCase):
+    """11.08.2026 (Lucas, Union-Santa-Fe-Fall): Die angezeigte Soft-Quote wird als MEDIAN der rohen
+    Buch-Quoten gebildet, nicht als arithmetischer Schnitt. Bei einem Aussenseiter zieht ein einzelnes
+    Buch mit einer irren (live-traegen) Quote den Mittelwert massiv hoch (11 -> 34); der Median bleibt
+    stabil."""
+
+    def _ev_with_outlier(self):
+        # Heim klarer Favorit; Auswaerts grosser Aussenseiter. 3 normale + 2 Ausreisser-Soft-Buecher.
+        def bk(key, ph, pd, pa):
+            return {"key": key, "markets": [{"key": "h2h", "outcomes": [
+                {"name": "Union Santa Fe", "price": ph},
+                {"name": "Central Cordoba", "price": pa},
+                {"name": "Draw", "price": pd}]}]}
+        books = [bk("pinnacle", 1.30, 5.0, 9.35),
+                 bk("bet365",   1.31, 5.1, 10.0),
+                 bk("williamhill", 1.30, 5.0, 11.0),
+                 bk("unibet",   1.32, 5.2, 9.5),
+                 bk("book_stale1", 1.05, 20.0, 150.0),   # live-traege / ausgeduennt
+                 bk("book_stale2", 1.04, 22.0, 225.0)]
+        return {"home_team": "Union Santa Fe", "away_team": "Central Cordoba",
+                "commence_time": "2026-08-11T00:00:00Z", "bookmakers": books}
+
+    def test_median_helper(self):
+        self.assertIsNone(BC._median([]))
+        self.assertEqual(BC._median([5]), 5)
+        self.assertEqual(BC._median([9.5, 10, 11, 150, 225]), 11)   # ungerade -> mittleres
+        self.assertEqual(BC._median([10, 11, 150, 225]), 80.5)      # gerade -> Schnitt der beiden mittleren
+
+    def test_soft_odd_is_median_not_mean(self):
+        pe = BC.parse_event(self._ev_with_outlier())
+        away = pe["softOdds"][2]                       # 5 Soft-Buecher: [10,11,9.5,150,225]
+        mean = (10 + 11 + 9.5 + 150 + 225) / 5.0       # ~81.1 -> vom Ausreisser verzerrt
+        self.assertAlmostEqual(away, 11.0, places=6)   # Median haelt stand
+        self.assertLess(away, 20.0)
+        self.assertLess(away, mean / 3)                # deutlich unter dem verzerrten Mittelwert
+
+    def test_two_books_median_equals_mean(self):
+        # Sanity: bei genau 2 Buechern ist Median == Mittelwert (keine Verhaltensaenderung fuer Alt-Tests).
+        def bk(key, pa):
+            return {"key": key, "markets": [{"key": "h2h", "outcomes": [
+                {"name": "A", "price": 1.6}, {"name": "B", "price": pa}, {"name": "Draw", "price": 3.8}]}]}
+        ev = {"home_team": "A", "away_team": "B", "commence_time": "x",
+              "bookmakers": [bk("pinnacle", 5.0), bk("bet365", 6.0), bk("unibet", 4.0)]}
+        pe = BC.parse_event(ev)
+        # 2 Soft (bet365 6.0, unibet 4.0) -> Median = 5.0 = Mittelwert
+        self.assertAlmostEqual(pe["softOdds"][2], 5.0, places=6)
+
+
 if __name__ == "__main__":
     unittest.main()

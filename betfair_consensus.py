@@ -120,6 +120,16 @@ def _name_score(a, b) -> float:
     return len(inter) / max(len(A), len(B))
 
 
+def _median(xs):
+    """Ausreisser-fester Konsens: Median einer Zahlenliste (leere/ungueltige Liste -> None)."""
+    ys = sorted(v for v in xs if isinstance(v, (int, float)))
+    n = len(ys)
+    if n == 0:
+        return None
+    mid = n // 2
+    return ys[mid] if n % 2 else (ys[mid - 1] + ys[mid]) / 2.0
+
+
 def _devig3(h, d, a):
     """Drei-Weg-Quoten (dezimal) -> de-viggte Wahrscheinlichkeiten [heim, remis, auswaerts]."""
     try:
@@ -159,7 +169,10 @@ def parse_event(ev) -> dict:
             soft_p.append(probs)
             soft_o.append(odds)
     soft = [sum(x[i] for x in soft_p) / len(soft_p) for i in range(3)] if soft_p else None
-    soft_odds = [sum(x[i] for x in soft_o) / len(soft_o) for i in range(3)] if soft_o else None
+    # 11.08.2026 (Lucas): Median statt Mittelwert der rohen Dezimalquoten -- bei Aussenseitern zieht ein
+    # einzelnes Buch mit irrer (oft live-traeger) Quote den arithmetischen Schnitt hoch und laesst die
+    # Anzeige von Scan zu Scan springen (11 -> 34). Der Median ist ausreisser-fest.
+    soft_odds = [_median([x[i] for x in soft_o]) for i in range(3)] if soft_o else None
     return {"home": home, "away": away, "commence": ev.get("commence_time"),
             "pinn": pinn, "soft": soft, "pinnOdds": pinn_odds, "softOdds": soft_odds, "nSoft": len(soft_p)}
 

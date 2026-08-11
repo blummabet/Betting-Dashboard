@@ -417,10 +417,11 @@ def _consensus_block(a, cidx) -> str:
     g = (cidx or {}).get(str(a.get("matchId")))
     if not g or g.get("verdict") == "no_anchor":
         return ""
+    live = bool(g.get("live"))
     parts = []
     if isinstance(g.get("pinnOdd"), (int, float)):
         mv = g.get("pinnMovePP")
-        mvtxt = (" %s%.1fpp" % ("▲" if mv > 0 else "▼", abs(mv))) if isinstance(mv, (int, float)) and abs(mv) >= 0.1 else ""
+        mvtxt = (" %s%.1fpp" % ("▲" if mv > 0 else "▼", abs(mv))) if (not live and isinstance(mv, (int, float)) and abs(mv) >= 0.1) else ""
         parts.append("Pinnacle @%.2f%s" % (g["pinnOdd"], mvtxt))
     if isinstance(g.get("softOdd"), (int, float)):
         n = g.get("softN") or 0
@@ -433,6 +434,8 @@ def _consensus_block(a, cidx) -> str:
     verd = {"konsens": "✅ Konsens — alle sehen dieselbe Seite vorn",
             "teil": "➖ teils einig",
             "uneinig": "⚠️ uneinig — Buchmacher sehen die andere Seite vorn"}.get(g.get("verdict"), "")
+    if live:
+        verd = "\u2139\ufe0f Live \u2014 Quoten teils vom Vorspiel, nur grobe Orientierung"
     side = g.get("moneyName") or ""
     head = "\n\n🧭 <b>Zweitmeinung</b>" + ((" · 1X2 " + _esc(side)) if side else "")
     return head + "\n" + " · ".join(parts) + (("\n" + verd) if verd else "")
