@@ -27,6 +27,8 @@ PRICES_FILE    = "betfair_prices.json"
 DIRECTION_FILE = "betfair_direction.json"
 HIST_FILE      = "betfair_consensus_history.json"   # Pinnacle-Prob-Snapshots je Spiel (fuer die Bewegung)
 OUT_FILE       = "betfair_consensus.json"
+MONEYMAP_FILE  = "money_map.json"          # 11.08.2026 (Lucas): Money-Map-Feed (Bubble-Cards)
+MMLEDGER_FILE  = "money_map_ledger.json"   # Konsens-Signale mitschreiben -> Tracking (ab Tag 1)
 ODDS_KEY       = os.environ.get("ODDS_API_KEY") or "16154a94ee84482dcd5a4af88d521d73"   # leerer Secret-String -> App-Key
 ODDS_BASE      = "https://api.the-odds-api.com/v4"
 REGIONS        = "eu,uk,us"     # Pinnacle liegt in eu; Soft-Books ueber uk/us breiter erfasst
@@ -202,9 +204,8 @@ def _poly_key_for(name, keys):
     return best
 
 
-def match_poly(m, ms, poly_entries):
-    """Poly-Markt zum Betfair-Spiel: {vol, odd (fuer die Geld-Seite, None wenn Poly die Seite nicht hat),
-    sharePct}. None wenn Poly den Markt nicht hat. Beide Teams muessen matchen."""
+def _best_poly_entry(m, poly_entries):
+    """Bester Poly-Eintrag zum Betfair-Spiel -> (pe, hk, ak) oder None. Beide Teams muessen matchen."""
     home, away = m.get("home"), m.get("away")
     best, bsc = None, 0.99
     for pe in poly_entries:
@@ -214,6 +215,13 @@ def match_poly(m, ms, poly_entries):
             sc = _name_score(home, hk) + _name_score(away, ak)
             if sc > bsc:
                 best, bsc = (pe, hk, ak), sc
+    return best
+
+
+def match_poly(m, ms, poly_entries):
+    """Poly-Markt zum Betfair-Spiel: {vol, odd (fuer die Geld-Seite, None wenn Poly die Seite nicht hat),
+    sharePct}. None wenn Poly den Markt nicht hat. Beide Teams muessen matchen."""
+    best = _best_poly_entry(m, poly_entries)
     if not best:
         return None
     pe, hk, ak = best
@@ -312,6 +320,69 @@ def _fav(probs):
 
 def _r(x):
     return round(float(x), 4) if isinstance(x, (int, float)) else None
+
+
+def poly_fav(m, poly_entries):
+    """11.08.2026 (Lucas Money-Map): Polys EIGENE Geld-Favoriten-Seite (nicht die Betfair-Seite -> fuer
+    Divergenz-Erkennung): {side, name, sharePct, usd} oder None. REIN/testbar."""
+    best = _best_poly_entry(m, poly_entries)
+    if not best:
+        return None
+    pe, hk, ak = best
+    prices, shares = pe.get("prices") or {}, pe.get("shares") or {}
+    dk = next((k for k in prices if str(k).lower() in ("draw", "the draw", "tie")), None)
+    tot = sum(v for v in shares.values() if isinstance(v, (int, float))) or 0
+    cand = [("home", hk), ("away", ak)] + ([("draw", dk)] if dk else [])
+    bside, bsh, bname = None, -1, None
+    for side, key in cand:
+        sh = shares.get(key) if key else None
+        if isinstance(sh, (int, float)) and sh > bsh:
+            bside, bsh, bname = side, sh, key
+    if bside is None or tot <= 0:
+        return None
+    return {"side": bside, "name": bname, "sharePct": round(bsh / tot * 100), "usd": round(pe.get("totalUsd") or 0)}
+
+
+def money_map_row(g, pf):
+    """11.08.2026 (Lucas Money-Map): build_game-Output g + poly_fav pf -> bubble-fertige Zeile.
+    Betfair-Geld (EUR) + Poly-Geld (USD, eigene Seite) + Pinnacle-Probs + Verdikt + nSources. REIN/testbar."""
+    bf_side = g.get("moneySide")
+    pinn = g.get("pinn")
+    row = {"matchId": g.get("matchId"), "home": g.get("home"), "away": g.get("away"),
+           "league": g.get("league"), "live": g.get("live"), "kickoff": g.get("kickoff"),
+           "verdict": g.get("verdict"),
+           "betfair": ({"side": bf_side, "name": g.get("moneyName"),
+                        "sharePct": g.get("moneySharePct"), "eur": g.get("totVol")} if bf_side else None),
+           "poly": ({"side": pf["side"], "name": pf["name"], "sharePct": pf["sharePct"], "usd": pf["usd"]}
+                    if pf else None),
+           "pinn": ({"fav": pinn.get("fav"), "home": pinn.get("home"), "draw": pinn.get("draw"),
+                     "away": pinn.get("away")} if pinn else None)}
+    row["nSources"] = sum(1 for x in (row["betfair"], row["poly"], row["pinn"]) if x)
+    return row
+
+
+def update_mm_ledger(prev, rows, now=None, keep=2000):
+    """11.08.2026 (Lucas Money-Map Tracking): Konsens-Signale mitschreiben (upsert je matchId, solange
+    pending) -> Basis fuers spaetere Settlement (gewann die Konsens-Seite?). REIN/testbar."""
+    now = now or _now_iso()
+    led = {}
+    for e in (prev or []):
+        if isinstance(e, dict) and e.get("matchId"):
+            led[e["matchId"]] = dict(e)
+    for r in rows or []:
+        mid = r.get("matchId")
+        if not mid or r.get("verdict") in (None, "no_anchor"):
+            continue
+        e = led.get(mid)
+        if e and e.get("status") not in (None, "pending"):
+            continue                              # schon abgerechnet -> nicht ueberschreiben
+        bf, pinn, poly = r.get("betfair") or {}, r.get("pinn") or {}, r.get("poly") or {}
+        led[mid] = {"matchId": mid, "home": r.get("home"), "away": r.get("away"), "league": r.get("league"),
+                    "kickoff": r.get("kickoff"), "verdict": r.get("verdict"), "nSources": r.get("nSources"),
+                    "moneySide": bf.get("side"), "moneyName": bf.get("name"),
+                    "pinnFav": pinn.get("fav"), "polySide": poly.get("side"),
+                    "firstSeen": (e or {}).get("firstSeen") or now, "updatedAt": now, "status": "pending"}
+    return list(led.values())[-keep:]
 
 
 def build_game(m, ev, prev, direction, poly=None) -> dict:
@@ -416,7 +487,7 @@ def main():
                     and len(v.get("prices")) <= 4] if isinstance(poly_raw, dict) else []
 
     now = _now_iso()
-    games, new_hist = [], {}
+    games, new_hist, mm_rows = [], {}, []
     for m in live_pool:
         mid = str(m.get("matchId"))
         k = LEAGUE_ODDS_KEY.get(m.get("league"))
@@ -426,6 +497,7 @@ def main():
         prev = prevlist[-1] if prevlist else None
         g = build_game(m, ev, prev, direction, poly)
         games.append(g)
+        mm_rows.append(money_map_row(g, poly_fav(m, poly_entries)))
         snap = {"ts": now}
         if ev and ev.get("pinn"):
             snap["pinn"] = [round(x, 4) for x in ev["pinn"]]
@@ -438,6 +510,12 @@ def main():
            "leaguesCovered": sorted(set(LEAGUE_ODDS_KEY.values())), "games": games}
     _dump(OUT_FILE, out)
     _dump(HIST_FILE, new_hist)
+    # Money-Map (11.08.2026, Lucas): bubble-fertiger Feed + Konsens-Ledger fuers Tracking. Additiv.
+    mm_rows.sort(key=lambda r: (r.get("verdict") != "no_anchor", (r.get("betfair") or {}).get("eur") or 0), reverse=True)
+    _dump(MONEYMAP_FILE, {"generatedAt": now, "count": len(mm_rows), "rows": mm_rows})
+    mm_led = update_mm_ledger(_load(MMLEDGER_FILE, []), mm_rows, now=now)
+    _dump(MMLEDGER_FILE, mm_led)
+    print("Money-Map: %d Zeilen -> %d im Ledger" % (len(mm_rows), len(mm_led)))
     print("Betfair-Konsens: %d Spiele (Radar-Schwelle), %d mit Odds-Anker" % (len(games), covered))
 
 

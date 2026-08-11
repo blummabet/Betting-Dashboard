@@ -279,5 +279,62 @@ class TestSoftMedian(unittest.TestCase):
         self.assertAlmostEqual(pe["softOdds"][2], 5.0, places=6)
 
 
+
+class TestMoneyMap(unittest.TestCase):
+    """11.08.2026 (Lucas Money-Map): Poly-eigene-Seite, Bubble-Zeile, Konsens-Ledger."""
+
+    def _poly(self):
+        return [{"prices": {"Bochum": 0.35, "Union Berlin": 0.5, "Draw": 0.15},
+                 "shares": {"Bochum": 20000, "Union Berlin": 66000, "Draw": 14000}, "totalUsd": 100000}]
+
+    def test_poly_fav_eigene_seite(self):
+        pf = BC.poly_fav({"home": "Bochum", "away": "Union Berlin"}, self._poly())
+        self.assertEqual(pf["side"], "away")          # Union fuehrt bei Poly
+        self.assertEqual(pf["sharePct"], 66)
+        self.assertEqual(pf["usd"], 100000)
+
+    def test_poly_fav_kein_match(self):
+        self.assertIsNone(BC.poly_fav({"home": "X", "away": "Y"}, self._poly()))
+
+    def _g(self, **kw):
+        g = {"matchId": "1", "home": "Bochum", "away": "Union Berlin", "league": "Bundesliga",
+             "live": False, "kickoff": "t", "moneySide": "away", "moneyName": "Union Berlin",
+             "moneySharePct": 71, "totVol": 82000,
+             "pinn": {"home": 0.26, "draw": 0.24, "away": 0.50, "fav": "away"}, "verdict": "konsens"}
+        g.update(kw)
+        return g
+
+    def test_money_map_row_dreiquellen(self):
+        pf = BC.poly_fav({"home": "Bochum", "away": "Union Berlin"}, self._poly())
+        row = BC.money_map_row(self._g(), pf)
+        self.assertEqual(row["betfair"]["eur"], 82000)
+        self.assertEqual(row["poly"]["usd"], 100000)
+        self.assertEqual(row["pinn"]["fav"], "away")
+        self.assertEqual(row["nSources"], 3)
+
+    def test_money_map_row_ohne_poly(self):
+        row = BC.money_map_row(self._g(), None)
+        self.assertIsNone(row["poly"])
+        self.assertEqual(row["nSources"], 2)
+
+    def test_ledger_upsert_pending(self):
+        pf = BC.poly_fav({"home": "Bochum", "away": "Union Berlin"}, self._poly())
+        led = BC.update_mm_ledger([], [BC.money_map_row(self._g(), pf)], now="2026-08-11T12:00:00+00:00")
+        self.assertEqual(len(led), 1)
+        self.assertEqual(led[0]["status"], "pending")
+        self.assertEqual(led[0]["moneySide"], "away")
+        self.assertEqual(led[0]["polySide"], "away")
+        self.assertEqual(led[0]["pinnFav"], "away")
+
+    def test_ledger_no_anchor_nicht_geloggt(self):
+        row = BC.money_map_row(self._g(verdict="no_anchor", pinn=None), None)
+        self.assertEqual(BC.update_mm_ledger([], [row], now="t"), [])
+
+    def test_ledger_settled_bleibt(self):
+        pf = BC.poly_fav({"home": "Bochum", "away": "Union Berlin"}, self._poly())
+        prev = [{"matchId": "1", "status": "won", "verdict": "konsens", "firstSeen": "x"}]
+        led = BC.update_mm_ledger(prev, [BC.money_map_row(self._g(), pf)], now="t2")
+        self.assertEqual(led[0]["status"], "won")     # abgerechnete nicht ueberschreiben
+
 if __name__ == "__main__":
     unittest.main()
