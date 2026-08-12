@@ -216,7 +216,30 @@
       '.md-jz-sub{font-size:11px;color:var(--mi2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
       '.md-jz-ko{font-family:"JetBrains Mono",monospace;font-size:12px;font-weight:800;color:var(--bf);white-space:nowrap;}',
       '.md-jz-mv{font-family:"JetBrains Mono",monospace;font-size:12px;font-weight:800;white-space:nowrap;text-align:right;min-width:52px;}',
-      '.md-badge{display:inline-block;font-size:9.5px;font-weight:800;padding:1px 6px;border-radius:5px;margin-left:6px;vertical-align:1px;}'
+      '.md-badge{display:inline-block;font-size:9.5px;font-weight:800;padding:1px 6px;border-radius:5px;margin-left:6px;vertical-align:1px;}',
+      '.mpc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}',
+      '@media(max-width:760px){.mpc-grid{grid-template-columns:repeat(2,1fr);}}',
+      '.mpc{position:relative;overflow:hidden;text-align:left;font:inherit;color:var(--mi);cursor:pointer;background:var(--m2);border:1px solid var(--mln);border-radius:12px;padding:11px 12px 10px;display:block;transition:transform .15s,border-color .15s;}',
+      '.mpc:hover{transform:translateY(-2px);border-color:var(--ac);}',
+      '.mpc::before{content:\"\";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--ac,var(--mi3));}',
+      '.mpc-h{display:flex;align-items:center;gap:6px;font-size:11.5px;font-weight:800;color:var(--mi);}',
+      '.mpc-h b{margin-left:auto;font-family:\"JetBrains Mono\",monospace;font-size:10px;font-weight:700;color:var(--mi3);}',
+      '.mpc-big{font-family:\"JetBrains Mono\",monospace;font-size:24px;font-weight:800;line-height:1;letter-spacing:-.03em;margin:10px 0 3px;color:var(--mi);}',
+      '.mpc-soft{font-size:15px;color:var(--mi3);padding:5px 0 3px;}',
+      '.mpc-cap{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:var(--mi3);}',
+      '.mpc-subs{display:flex;gap:12px;margin-top:9px;flex-wrap:wrap;}',
+      '.mpc-sub{display:flex;flex-direction:column;gap:2px;}',
+      '.mpc-sub b{font-family:\"JetBrains Mono\",monospace;font-size:12.5px;font-weight:800;line-height:1;}',
+      '.mpc-sub i{font-size:9px;color:var(--mi3);font-style:normal;}',
+      '.mpc-meter{position:relative;height:6px;border-radius:4px;background:var(--mln);margin-top:10px;overflow:hidden;}',
+      '.mpc-meter>i{position:absolute;left:0;top:0;bottom:0;border-radius:4px;}',
+      '.mpc-meter>span{position:absolute;left:50%;top:-1px;bottom:-1px;width:1px;background:var(--mi3);opacity:.5;}',
+      '.mpc-split{display:flex;gap:2px;height:8px;border-radius:4px;overflow:hidden;margin-top:10px;}',
+      '.mpc-split>i{border-radius:2px;}',
+      '.mpc-hint{margin-left:auto;font-size:9.5px;font-weight:600;letter-spacing:0;text-transform:none;color:var(--mi3);}',
+      '.md-kpi{cursor:pointer;text-align:left;font:inherit;color:var(--mi);width:100%;display:block;transition:transform .15s,border-color .15s;}',
+      '.md-kpi:hover{transform:translateY(-2px);border-color:var(--kc);}',
+      '.md-kpi-top{display:flex;align-items:center;gap:5px;font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--mi2);margin-bottom:9px;}'
     ].join('');
     var st = document.createElement('style');
     st.id = 'mdash-css'; st.textContent = css;
@@ -447,19 +470,27 @@
       (hint ? '<div class="md-kpi-h">' + hint + '</div>' : '') + '</div>';
   }
   function _kpis() {
-    var bets = betPicks(), streaks = allStreaks(), bf = allBetfair(), wh = allWhales();
-    var bfSum = bf.reduce(function (a, x) { return a + x.b.vol; }, 0);
+    var d = _md.data.pulse || {}, pl = d.poly || {};
+    var bets = betPicks();
+    var mmRows = (_md.data.moneyMap && _md.data.moneyMap.rows) || [];
+    var kon = mmRows.filter(function (r) { return r.verdict === 'konsens'; }).length;
+    var st = (_md.data.bfOverview && _md.data.bfOverview.steam) || [];
+    var fl = (_md.data.bfOverview && _md.data.bfOverview.flow) || [];
+    var bigPp = st.reduce(function (m, x) { var q = +x.pp || 0; return Math.abs(q) > Math.abs(m) ? q : m; }, 0);
     var topConv = bets.length ? (bets[0].conv || 0) : 0;
-    var topStreak = streaks.length ? (streaks[0].length || 0) : 0;
-    var topWhale = wh.length ? wh[0].usd : 0;
+    var K = function (val, top, label, hint, color, view) {
+      return '<button class="md-kpi" style="--kc:' + color + '" onclick="showView(\'' + view + '\')">' +
+        '<div class="md-kpi-top">' + top + '</div><div class="md-kpi-v">' + val + '</div>' +
+        '<div class="md-kpi-l">' + label + '</div>' + (hint ? '<div class="md-kpi-h">' + hint + '</div>' : '') + '</button>';
+    };
     return '<div class="md-kpis md-rise">' +
-      kpi(bets.length, 'BET-Cards', bets.length ? 'Top ' + topConv + '/10 Conviction' : 'keine offen', A.good) +
-      kpi(streaks.length, 'Aktive Serien', streaks.length ? 'längste ' + topStreak + '×' : 'keine ≥4', A.gold) +
-      kpi(bf.length ? eur(bfSum) : '—', 'Betfair heiß', bf.length ? bf.length + ' Märkte mit Zug' : 'ruhig', A.bf) +
-      kpi(wh.length, 'Whale-Bets', wh.length ? 'größte ' + usd(topWhale) : 'keine', A.poly) +
+      K(bets.length, '🎯 BET-Cards', bets.length ? 'Top ' + topConv + '/10' : 'keine offen', bets.length ? 'Conviction-Setz-Kandidaten' : 'Conviction ≥ Schwelle · sammelt', A.blue, 'national-cards') +
+      K((pl.openN || 0), '🔥 Heiße Spiele Poly', 'Top-Plays offen', 'Heute Spielenswert ' + (pl.hitPct == null ? '—' : Math.round(pl.hitPct) + '%') + (pl.n ? ' (' + pl.n + ')' : ''), A.poly, 'polywallets') +
+      K(st.length, '💷 Betfair heiß', st.length ? 'Märkte mit Zug' : 'ruhig', st.length ? 'größter ' + (bigPp > 0 ? '+' : '') + bigPp.toFixed(1) + 'pp' + (fl.length ? ' · +' + fl.length + ' Zufluss' : '') : '—', A.bf, 'betfair') +
+      K(mmRows.length, '🔗 Money Map', mmRows.length ? 'Spiele im Bild' : 'ruhig', kon + ' Konsens · BF × Poly × Pinn', A.flow, 'moneymap') +
       '</div>';
   }
-
+  
   var _SIDE = { home: 'Heim', away: 'Ausw.' };
   var _SRC = { pinnacle: 'Pinnacle', betfair: 'Betfair', poly: 'Poly', soft: 'Soft' };
   var _SRC_ORDER = ['pinnacle', 'betfair', 'poly', 'soft'];
@@ -953,61 +984,59 @@
   }
   function _mdPulse() {
     var d = _md.data.pulse || {};
-    var hasCards = !!d.n, bf = d.betfair, pl = d.poly, ml0 = d.moneymap;
-    if (!hasCards && !(bf && bf.n) && !(pl && pl.n) && !(ml0 && ml0.n)) return '<section class="md-pulse md-rise"><div class="md-pulse-h">📈 Puls</div>' +
-      '<div class="md-pulse-l">Noch keine abgerechneten Picks/Plays — füllt sich, sobald die ersten resolven.</div></section>';
-    var metric = function (v, l, c) { return '<div class="md-pulse-m"><span class="md-pulse-v" style="color:' + (c || 'var(--mi)') + '">' + v + '</span><span class="md-pulse-l">' + l + '</span></div>'; };
-    var pct = function (v) { return v == null ? '—' : Math.round(v) + '%'; };
-    var roiTxt = function (v) { return v == null ? '—' : (v > 0 ? '+' : '') + (+v).toFixed(1) + '%'; };
-    var col0 = function (v) { return v == null ? 'var(--mi2)' : v > 0 ? A.good : v < 0 ? A.red : 'var(--mi2)'; };
-    var clvCell = function (v) { return metric(v == null ? '—' : (v > 0 ? '+' : '') + (+v).toFixed(2) + 'pp', 'Ø CLV', col0(v)); };
-    var rows = '';
-    if (hasCards) {
-      var clv = d.avgClvPP, clvTxt = (clv == null) ? '—' : (clv > 0 ? '+' : '') + clv.toFixed(1) + 'pp';
-      var beat = d.pctBeatClose, beatCol = beat == null ? 'var(--mi)' : beat >= 50 ? A.good : beat >= 33 ? A.gold : A.red;
-      rows += '<div class="md-pulse-row"><span class="md-pulse-tag">🎯 Cards · ' + d.n + '</span><div class="md-pulse-ms">' +
-        metric(clvTxt, 'Ø CLV', col0(clv)) +
-        metric((beat == null ? '—' : Math.round(beat) + '%'), 'schlägt Close', beatCol) +
-        metric((d.winPct == null ? '—' : Math.round(d.winPct) + '%'), 'Treffer · ' + (d.wins || 0) + '–' + (d.losses || 0), 'var(--mi)') +
-        '</div>' + _spark(d.series) + '</div>';
+    var mmRows = (_md.data.moneyMap && _md.data.moneyMap.rows) || [];
+    var bf = d.betfair, pl = d.poly, ml = d.moneymap;
+    if (!d.n && !(bf && bf.n) && !(pl && pl.n) && !mmRows.length) return '<section class="md-pulse md-rise"><div class="md-pulse-h">📈 Puls</div>' +
+      '<div class="md-pulse-l" style="color:var(--mi2)">Noch keine abgerechneten Picks/Plays — füllt sich, sobald die ersten resolven.</div></section>';
+    var col0 = function (v) { return v == null ? 'var(--mi3)' : v > 0 ? A.good : v < 0 ? A.red : 'var(--mi2)'; };
+    var sub = function (v, l, c) { return '<span class="mpc-sub"><b style="color:' + (c || 'var(--mi)') + '">' + v + '</b><i>' + l + '</i></span>'; };
+    var meter = function (x, c) { x = Math.max(0, Math.min(100, +x || 0)); return '<div class="mpc-meter"><span></span><i style="width:' + x + '%;background:' + c + '"></i></div>'; };
+    var cards = [];
+    if (d.n) {
+      var clv = d.avgClvPP, clvTxt = clv == null ? '—' : (clv > 0 ? '+' : '') + (+clv).toFixed(1) + 'pp', beat = d.pctBeatClose;
+      cards.push('<button class="mpc" style="--ac:' + A.blue + '" onclick="showView(\'national-cards\')" title="→ Betting-Cards">' +
+        '<span class="mpc-h">🎯 Cards<b>n' + d.n + '</b></span>' +
+        '<div class="mpc-big" style="color:' + col0(clv) + '">' + clvTxt + '</div><div class="mpc-cap">Ø CLV</div>' +
+        _spark(d.series) +
+        '<div class="mpc-subs">' + sub(beat == null ? '—' : Math.round(beat) + '%', 'schlägt Close', beat == null ? 'var(--mi3)' : beat >= 50 ? A.good : beat >= 33 ? A.gold : A.red) +
+        sub(d.winPct == null ? '—' : Math.round(d.winPct) + '%', 'Treffer ' + (d.wins || 0) + '–' + (d.losses || 0), 'var(--mi)') + '</div></button>');
     }
     if (bf && bf.n) {
-      rows += '<div class="md-pulse-row"><span class="md-pulse-tag">💷 Betfair · ' + bf.n + '</span><div class="md-pulse-ms">' +
-        metric(pct(bf.hitPct), 'Treffer', bf.hitPct >= 50 ? A.good : 'var(--mi)') +
-        metric(roiTxt(bf.roiPct), 'ROI', col0(bf.roiPct)) +
-        '</div></div>';
+      cards.push('<button class="mpc" style="--ac:' + A.bf + '" onclick="showView(\'betfair\')" title="→ Betfair Radar">' +
+        '<span class="mpc-h">💷 Betfair<b>n' + bf.n + '</b></span>' +
+        '<div class="mpc-big">' + (bf.hitPct == null ? '—' : (+bf.hitPct).toFixed(1) + '%') + '</div><div class="mpc-cap">Treffer · Geld-Seite</div>' +
+        meter(bf.hitPct, A.good) +
+        '<div class="mpc-subs">' + sub(bf.roiPct == null ? '—' : (bf.roiPct > 0 ? '+' : '') + (+bf.roiPct).toFixed(1) + '%', 'ROI', col0(bf.roiPct)) + '</div></button>');
     }
     if (pl && pl.n) {
-      rows += '<div class="md-pulse-row"><span class="md-pulse-tag">🎮 Poly (Public) · ' + pl.n + '</span><div class="md-pulse-ms">' +
-        metric(pct(pl.hitPct), 'Treffer', pl.hitPct >= 50 ? A.good : 'var(--mi)') +
-        metric(roiTxt(pl.roiPct), 'ROI', col0(pl.roiPct)) +
-        clvCell(pl.clvAvg) +
-        (pl.openN ? metric(pl.openN, 'offen', 'var(--mi3)') : '') +
-        '</div></div>';
+      cards.push('<button class="mpc" style="--ac:' + A.poly + '" onclick="showView(\'polywallets\')" title="→ Polymarket · Heute wetten">' +
+        '<span class="mpc-h">🎮 Poly Public<b>n' + pl.n + '</b></span>' +
+        '<div class="mpc-big" style="color:' + (pl.hitPct >= 50 ? A.good : 'var(--mi)') + '">' + (pl.hitPct == null ? '—' : Math.round(pl.hitPct) + '%') + '</div><div class="mpc-cap">Treffer · hart gegatet</div>' +
+        meter(pl.hitPct, A.good) +
+        '<div class="mpc-subs">' + sub(pl.roiPct == null ? '—' : (pl.roiPct > 0 ? '+' : '') + (+pl.roiPct).toFixed(1) + '%', 'ROI', col0(pl.roiPct)) +
+        (pl.openN ? sub(pl.openN, 'offen', 'var(--mi2)') : '') + '</div></button>');
     }
-    var ml = d.moneymap;
-    if (ml && ml.n) {
-      rows += '<div class="md-pulse-row"><span class="md-pulse-tag">🔗 Money Map · ' + ml.n + '</span><div class="md-pulse-ms">' +
-        metric(pct(ml.hitPct), 'Geld trifft', ml.hitPct >= 50 ? A.good : 'var(--mi)') +
-        metric((ml.konHitPct == null ? '—' : Math.round(ml.konHitPct) + '%'), 'Konsens · n' + (ml.konN || 0), ml.konHitPct == null ? 'var(--mi2)' : ml.konHitPct >= 50 ? A.good : 'var(--mi)') +
-        (ml.openN ? metric(ml.openN, 'offen', 'var(--mi3)') : '') +
-        '</div></div>';
-    }
-    var strip = '';
-    var st = d.strip;
-    if (st) {
-      var SIGN = { money: 'Geld-Mehrheit', sharp: 'scharfe Wallet', steam: 'Steam', gvp: 'Geld-vs-Preis', pinn: 'Pinnacle' };
-      var parts = [];
-      if (st.bestConv) parts.push('⭐ Setzen: <b style="color:' + A.good + '">' + st.bestConv.key + '/10</b> +' + st.bestConv.roiPct + '% (n' + st.bestConv.n + ')');
-      if (st.bestSignal) parts.push('Signal <b>' + (SIGN[st.bestSignal.key] || st.bestSignal.key) + '</b> +' + st.bestSignal.roiPct + '% (n' + st.bestSignal.n + ')');
-      var live = st.inflight || {};
-      var liveTxt = 'Live: 🎯 ' + (live.cards || 0) + ' · 💷 ' + (live.betfair || 0) + ' · 🎮 ' + (live.poly || 0);
-      strip = '<div class="md-pulse-strip"><span>' + (parts.join(' · ') || 'Wo Setzen lohnt: sammelt noch (n<8 je Stufe)') + '</span><span class="md-pulse-live">' + liveTxt + '</span></div>';
+    if ((ml && ml.n) || mmRows.length) {
+      var kon = mmRows.filter(function (r) { return r.verdict === 'konsens'; }).length;
+      var une = mmRows.filter(function (r) { return r.verdict === 'uneinig' || r.verdict === 'teil'; }).length;
+      var na = mmRows.length - kon - une, inner;
+      if (ml && ml.n) {
+        inner = '<div class="mpc-big" style="color:' + (ml.hitPct >= 50 ? A.good : 'var(--mi)') + '">' + Math.round(ml.hitPct) + '%</div><div class="mpc-cap">Geld trifft</div>' +
+          '<div class="mpc-subs">' + sub(ml.konHitPct == null ? '—' : Math.round(ml.konHitPct) + '%', 'Konsens n' + (ml.konN || 0), ml.konHitPct == null ? 'var(--mi3)' : ml.konHitPct >= 50 ? A.good : 'var(--mi)') +
+          (ml.openN ? sub(ml.openN, 'offen', 'var(--mi2)') : '') + '</div>';
+      } else {
+        inner = '<div class="mpc-big mpc-soft">sammelt …</div><div class="mpc-cap">0 abgerechnet</div>' +
+          '<div class="mpc-split"><i style="flex:' + (kon || .01) + ';background:' + A.good + '"></i><i style="flex:' + (une || .01) + ';background:' + A.gold + '"></i><i style="flex:' + (na || .01) + ';background:var(--mln2)"></i></div>' +
+          '<div class="mpc-subs">' + sub(kon, 'Konsens', A.good) + sub(une, 'uneinig', A.gold) + (na ? sub(na, 'kein Anker', 'var(--mi3)') : '') + '</div>';
+      }
+      cards.push('<button class="mpc" style="--ac:' + A.flow + '" onclick="showView(\'moneymap\')" title="→ Money Map">' +
+        '<span class="mpc-h">🔗 Money Map<b>' + mmRows.length + '</b></span>' + inner + '</button>');
     }
     return '<section class="md-pulse md-rise">' +
-      '<div class="md-pulse-h" title="Cards nach CLV (Nordstern) · Betfair-Signale nach Treffer/ROI · Poly Public-Kandidaten (hart gegated) Paper-Trade">📈 Puls</div>' +
-      rows + strip + '</section>';
+      '<div class="md-pulse-h">📈 Puls<span class="mpc-hint">letzte abgerechnete · Klick → Bereich</span></div>' +
+      '<div class="mpc-grid">' + cards.join('') + '</div></section>';
   }
+  
   // ── „Jetzt": Spiele mit Anpfiff <= 3h und Live-Signal (BET / Poly-Lag); CLV-Cue = steamMovePP ──
   function jetztRows() {
     var now = Date.now(), horizon = now + 3 * 3600e3, out = [];
@@ -1024,26 +1053,49 @@
     return out.slice(0, 6);
   }
   function _mdJetzt() {
-    var rows = jetztRows();
-    if (!rows.length) return '<section class="md-jetzt md-rise" style="border-color:var(--mln);background:var(--m1);padding-bottom:13px">' +
-      '<div class="md-jz-h"><span style="font-size:16px;opacity:.55">⚡</span><span class="md-jz-t" style="color:var(--mi2)">Jetzt</span>' +
-      '<span class="md-jz-s">kein Spiel mit Anpfiff in den nächsten 3 h & BET/Poly-Signal — meldet sich automatisch, sobald eins ansteht.</span></div></section>';
-    var now = Date.now();
-    var body = rows.map(function (x) {
-      var f = x.f, p = x.p, min = Math.max(0, Math.round((x.k - now) / 60000));
-      var ko = min < 60 ? min + 'm' : Math.floor(min / 60) + 'h' + (min % 60 ? ' ' + (min % 60) + 'm' : '');
-      var mv = p.steamMovePP != null ? +p.steamMovePP : null;
-      var mvHtml = mv == null ? '' : '<span class="md-jz-mv" style="color:' + (mv > 0 ? A.good : mv < 0 ? A.red : 'var(--mi2)') + '" title="Linie seit Pick — gruen: Markt zieht mit">' + (mv > 0 ? '+' : '') + mv.toFixed(1) + 'pp</span>';
-      var badges = (x.bet ? '<span class="md-badge" style="background:rgba(46,160,67,.16);color:' + A.good + '">BET' + (p.convictionScore ? ' ' + p.convictionScore : '') + '</span>' : '') +
+    var now = Date.now(), soon = now + 12 * 3600e3, floor = now - 30 * 60000, items = [], seen = {};
+    var add = function (id, k, tm, sb, badges, mv) {
+      if (isNaN(k) || k < floor || k > soon || (id && seen[id])) return; if (id) seen[id] = 1;
+      items.push({ k: k, tm: tm, sb: sb, badges: badges, mv: mv || '' });
+    };
+    var vsp = ' <span style="color:var(--mi3);font-weight:400">v</span> ';
+    var mmRows = (_md.data.moneyMap && _md.data.moneyMap.rows) || [];
+    mmRows.forEach(function (r) {
+      var k = r.kickoff ? Date.parse(String(r.kickoff).replace('Z', '+00:00')) : NaN;
+      var V = { konsens: ['🔗 Konsens', A.good, 'rgba(46,160,67,.16)'], teil: ['🔗 Teil-Konsens', A.gold, 'rgba(201,133,0,.16)'], uneinig: ['🔗 uneinig', A.gold, 'rgba(201,133,0,.16)'], no_anchor: ['🔗 kein Anker', A.flow, 'rgba(167,139,250,.16)'] }[r.verdict] || ['🔗 Money Map', A.flow, 'rgba(167,139,250,.16)'];
+      var b = (r.live ? '<span class="md-badge" style="background:rgba(229,83,75,.16);color:' + A.red + '">● LIVE</span>' : '') +
+        '<span class="md-badge" style="background:' + V[2] + ';color:' + V[1] + '">' + V[0] + '</span>';
+      add('m' + (r.matchId || (team(r.home) + team(r.away))), k, esc(team(r.home)) + vsp + esc(team(r.away)), esc(String(r.league || '').slice(0, 30)), b);
+    });
+    var st = (_md.data.bfOverview && _md.data.bfOverview.steam) || [];
+    st.forEach(function (x) {
+      var k = x.kickoff ? Date.parse(String(x.kickoff).replace('Z', '+00:00')) : NaN, pp = +x.pp || 0;
+      var mv = '<span class="md-jz-mv" style="color:' + (pp < 0 ? A.good : A.red) + '">' + (pp > 0 ? '+' : '') + pp.toFixed(1) + 'pp</span>';
+      add('b' + (x.matchId || (team(x.home) + team(x.away))), k, esc(team(x.home)) + vsp + esc(team(x.away)),
+        'Geld auf ' + esc(short(x.sideName || '')) + (x.odd ? ' · @' + (+x.odd).toFixed(2) : ''),
+        '<span class="md-badge" style="background:rgba(217,89,38,.16);color:' + A.bf + '">💷 Steam</span>', mv);
+    });
+    jetztRows().forEach(function (x) {
+      var b = (x.bet ? '<span class="md-badge" style="background:rgba(46,160,67,.16);color:' + A.good + '">BET' + (x.p.convictionScore ? ' ' + x.p.convictionScore : '') + '</span>' : '') +
         (x.lag ? '<span class="md-badge" style="background:rgba(57,135,229,.16);color:' + A.blue + '">⚡ Poly-Lag</span>' : '');
-      return '<div class="md-jz-row"><div class="md-jz-main">' +
-        '<div class="md-jz-tm">' + fl(fxFlag(f)) + esc(team(f.home)) + ' <span style="color:var(--mi3);font-weight:400">v</span> ' + esc(team(f.away)) + badges + '</div>' +
-        '<div class="md-jz-sub">' + esc(short(p.market)) + (p.odds != null ? ' · @' + (+p.odds).toFixed(2) : '') + (fxLeague(f) ? ' · ' + esc(String(fxLeague(f)).slice(0, 18)) : '') + '</div>' +
-        '</div><span class="md-jz-ko">⏱ ' + ko + '</span>' + mvHtml + '</div>';
+      add('s' + (x.f.matchId || (team(x.f.home) + team(x.f.away))), x.k, esc(team(x.f.home)) + vsp + esc(team(x.f.away)),
+        esc(short(x.p.market)) + (x.p.odds != null ? ' · @' + (+x.p.odds).toFixed(2) : ''), b);
+    });
+    items.sort(function (a, b) { return a.k - b.k; });
+    items = items.slice(0, 6);
+    if (!items.length) return '<section class="md-jetzt md-rise" style="border-color:var(--mln);background:var(--m1);padding-bottom:13px">' +
+      '<div class="md-jz-h"><span style="font-size:16px;opacity:.55">⚡</span><span class="md-jz-t" style="color:var(--mi2)">Jetzt &amp; gleich</span>' +
+      '<span class="md-jz-s">gerade kein Spiel mit Signal in den nächsten Stunden — meldet sich automatisch.</span></div></section>';
+    var body = items.map(function (x) {
+      var min = Math.max(0, Math.round((x.k - now) / 60000));
+      var ko = min < 60 ? min + 'm' : Math.floor(min / 60) + 'h' + (min % 60 ? ' ' + (min % 60) + 'm' : '');
+      return '<div class="md-jz-row"><div class="md-jz-main"><div class="md-jz-tm">' + x.tm + x.badges + '</div>' +
+        '<div class="md-jz-sub">' + x.sb + '</div></div><span class="md-jz-ko">⏱ ' + ko + '</span>' + x.mv + '</div>';
     }).join('');
     return '<section class="md-jetzt md-rise"><div class="md-jz-h"><span style="font-size:16px">⚡</span>' +
-      '<span class="md-jz-t">Jetzt</span><span class="md-jz-s">Anpfiff in ≤ 3 h mit BET/Poly-Signal</span></div>' + body + '</section>';
+      '<span class="md-jz-t">Jetzt &amp; gleich</span><span class="md-jz-s">Anpfiff bald · Money-Map · Betfair-Steam · BET/Poly-Signal</span></div>' + body + '</section>';
   }
+  
   window._renderMainDash = _mdRender;
   window._mdState = _md;   // Test-Hook
 })();
