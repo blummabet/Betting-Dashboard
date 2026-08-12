@@ -1,15 +1,15 @@
 {
  "n": 303,
  "minOdds": 1.35,
- "moneyHitRate": 0.611,
- "priceHitRate": 0.617,
- "brierMoney": 0.4743,
- "brierPrice": 0.4638,
+ "moneyHitRate": 0.594,
+ "priceHitRate": 0.601,
+ "brierMoney": 0.487,
+ "brierPrice": 0.4739,
  "disagree": {
-  "n": 2,
+  "n": 4,
   "moneyWon": 0,
   "priceWon": 2,
-  "neither": 0
+  "neither": 2
  },
  "verdict": "preis_besser",
  "byLeague": [
@@ -47,26 +47,34 @@
   },
   {
    "league": "TENNIS",
-   "n": 38,
-   "moneyHitRate": 0.763,
-   "brierMoney": 0.4185,
-   "brierPrice": 0.4185,
+   "n": 32,
+   "moneyHitRate": 0.719,
+   "brierMoney": 0.4489,
+   "brierPrice": 0.4489,
    "verdict": "gleichauf"
   },
   {
    "league": "ESPORTS",
    "n": 146,
    "moneyHitRate": 0.603,
-   "brierMoney": 0.4591,
-   "brierPrice": 0.459,
+   "brierMoney": 0.4609,
+   "brierPrice": 0.4608,
    "verdict": "gleichauf"
   },
   {
    "league": "MLB",
-   "n": 72,
-   "moneyHitRate": 0.5,
-   "brierMoney": 0.5505,
-   "brierPrice": 0.5065,
+   "n": 73,
+   "moneyHitRate": 0.493,
+   "brierMoney": 0.553,
+   "brierPrice": 0.5096,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "SOCCER",
+   "n": 5,
+   "moneyHitRate": 0.2,
+   "brierMoney": 0.879,
+   "brierPrice": 0.7183,
    "verdict": "preis_besser"
   }
  ],
@@ -82,18 +90,6 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 1953379
-  },
-  {
-   "key": "wta-shnaide-swiatek-2026-08-11",
-   "league": "TENNIS",
-   "winner": "Iga Swiatek",
-   "moneyFav": "Iga Swiatek",
-   "priceFav": "Iga Swiatek",
-   "moneyShare": 0.725,
-   "priceProb": 0.725,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 1622956
   },
   {
    "key": "mlb-oak-bos-2026-08-08",
@@ -550,20 +546,32 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 220024
+  },
+  {
+   "key": "mlb-cle-cws-2026-08-09",
+   "league": "MLB",
+   "winner": "Chicago White Sox",
+   "moneyFav": "Cleveland Guardians",
+   "priceFav": "Cleveland Guardians",
+   "moneyShare": 0.545,
+   "priceProb": 0.545,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 219080
   }
  ],
- "generatedAt": "2026-08-12T19:51:18.740982+00:00",
+ "generatedAt": "2026-08-12T21:08:10.871484+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 420,
   "nfl": 800,
-  "mlb": 588,
+  "mlb": 585,
   "nhl": 403,
   "mls": 736,
   "epl": 474,
   "soccer": 800,
-  "tennis": 639,
+  "tennis": 630,
   "ucl": 472,
   "laliga": 0,
   "bundesliga": 401,
@@ -584,6 +592,6 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 425
+  "sweepAdded": 426
  }
 }
