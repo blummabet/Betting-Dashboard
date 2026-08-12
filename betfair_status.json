@@ -67,11 +67,9 @@
       "id": "consensus_anchor_coverage",
       "label": "Konsens findet Odds-Anker",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "0 von 6 Konsens-Spielen mit Odds-Anker — the-odds-api-Key tot oder Namens-Match gebrochen?"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Anker = Pinnacle/Soft-Quote gematcht. Durchgehend 0 trotz laufender Spiele = API-Key tot oder Namens-Matching kaputt (Zweitmeinung waere leer)."
     },
     {
@@ -120,6 +118,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 1,
-  "generatedAt": "2026-08-12T02:18:32.359602+00:00"
+  "nFail": 0,
+  "generatedAt": "2026-08-12T02:33:32.857191+00:00"
 }
