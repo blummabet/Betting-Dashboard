@@ -85,9 +85,18 @@
       "id": "odds_sane",
       "label": "Pinnacle-1X2 vollständig + plausibel",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 8,
+      "failures": [
+        "1602-9569: 1X2 unvollständig hw=None dr=None aw=None",
+        "1613-1614: 1X2 unvollständig hw=None dr=None aw=None",
+        "1615-1609: 1X2 unvollständig hw=None dr=None aw=None",
+        "1611-20787: 1X2 unvollständig hw=None dr=None aw=None",
+        "1612-1608: 1X2 unvollständig hw=None dr=None aw=None",
+        "1595-16489: 1X2 unvollständig hw=None dr=None aw=None",
+        "1606-1597: 1X2 unvollständig hw=None dr=None aw=None",
+        "1617-25484: 1X2 unvollständig hw=None dr=None aw=None"
+      ],
       "note": "Quelle für Modell-Baseline + Edge."
     },
     {
@@ -518,6 +527,6 @@
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-08-11T20:05:24.502111+00:00"
+  "nFail": 4,
+  "generatedAt": "2026-08-12T08:21:14.212821+00:00"
 }
