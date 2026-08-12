@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-12T17:15:22.639146+00:00",
+ "generatedAt": "2026-08-12T18:37:12.949904+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -27,8 +27,37 @@
   "soccer_liga": 15
  },
  "trackRecord": {
-  "tracked": 90,
+  "tracked": 92,
   "converged": 3
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|baltimoreorioles-minnesotatwins|baltimoreorioles",
+   "sport": "baseball_mlb",
+   "event": "Baltimore Orioles vs Minnesota Twins",
+   "market": "Moneyline",
+   "outcome": "Baltimore Orioles",
+   "polyPP": 77.5,
+   "pinnPP": 52.5,
+   "gapPP": 25.02,
+   "vol": 628406,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-12T18:37:12.949740+00:00"
+  },
+  {
+   "id": "baseball_mlb|baltimoreorioles-minnesotatwins|minnesotatwins",
+   "sport": "baseball_mlb",
+   "event": "Baltimore Orioles vs Minnesota Twins",
+   "market": "Moneyline",
+   "outcome": "Minnesota Twins",
+   "polyPP": 22.5,
+   "pinnPP": 47.5,
+   "gapPP": -25.02,
+   "vol": 628406,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-12T18:37:12.949740+00:00"
+  }
+ ]
 }
