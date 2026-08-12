@@ -40,17 +40,20 @@ def _betfair_pulse(rec=None) -> dict | None:
 
 
 def _poly_pulse(track=None) -> dict | None:
-    """Poly „Heute wetten"-Paper-Trade (poly_shortlist_track.py → agg.all). n/Treffer/ROI/Ø CLV
-    der ganzen Shortlist + Zahl der offenen Plays."""
+    """Poly Public-Kandidaten (poly_shortlist_track.py → agg.public). 12.08.2026 (Lucas): der Puls zeigt
+    jetzt die HART GEGATETEN Public-Kandidaten (Conv≥7 + bewiesene Wallet + Mehrheit) statt der ganzen
+    Shortlist — das ist die Stufe, die wir wirklich senden wuerden. n/Treffer/ROI/Ø CLV + offene Public-Plays."""
     d = track if track is not None else _load("poly_shortlist_track.json")
-    a = ((d or {}).get("agg") or {}).get("all") or {}
+    a = ((d or {}).get("agg") or {}).get("public") or {}
     if not a.get("n"):
         return None
+    open_public = sum(1 for e in ((d or {}).get("open") or {}).values()
+                      if isinstance(e, dict) and e.get("public"))
     return {"n": a.get("n"),
             "hitPct": round(100.0 * (a.get("hit") or 0), 1),
             "roiPct": round(100.0 * (a.get("roi") or 0), 1),
             "clvAvg": a.get("clvAvg"),
-            "openN": len((d or {}).get("open") or {})}
+            "openN": open_public}
 
 
 STRIP_MIN_N = 8   # ab so vielen Plays gilt eine Conviction-Stufe / ein Signal als belastbar (Auto-Bet-Kandidat)

@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v111';   // 12.08.2026 (Lucas): Live-Whales — Mindest-Summe $10K + Dedup je Markt (keine $475-Einträge, kein 4x dasselbe Spiel)
+const VERSION = 'cocobet-v112';   // 12.08.2026 (Lucas): Puls Poly-Zeile zeigt jetzt Public-Kandidaten (agg.public) statt ganzer Shortlist
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

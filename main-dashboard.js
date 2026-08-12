@@ -978,7 +978,7 @@
         '</div></div>';
     }
     if (pl && pl.n) {
-      rows += '<div class="md-pulse-row"><span class="md-pulse-tag">🎮 Poly (Heute) · ' + pl.n + '</span><div class="md-pulse-ms">' +
+      rows += '<div class="md-pulse-row"><span class="md-pulse-tag">🎮 Poly (Public) · ' + pl.n + '</span><div class="md-pulse-ms">' +
         metric(pct(pl.hitPct), 'Treffer', pl.hitPct >= 50 ? A.good : 'var(--mi)') +
         metric(roiTxt(pl.roiPct), 'ROI', col0(pl.roiPct)) +
         clvCell(pl.clvAvg) +
@@ -1005,7 +1005,7 @@
       strip = '<div class="md-pulse-strip"><span>' + (parts.join(' · ') || 'Wo Setzen lohnt: sammelt noch (n<8 je Stufe)') + '</span><span class="md-pulse-live">' + liveTxt + '</span></div>';
     }
     return '<section class="md-pulse md-rise">' +
-      '<div class="md-pulse-h" title="Cards nach CLV (Nordstern) · Betfair-Signale nach Treffer/ROI · Poly „Heute wetten“ Paper-Trade">📈 Puls</div>' +
+      '<div class="md-pulse-h" title="Cards nach CLV (Nordstern) · Betfair-Signale nach Treffer/ROI · Poly Public-Kandidaten (hart gegated) Paper-Trade">📈 Puls</div>' +
       rows + strip + '</section>';
   }
   // ── „Jetzt": Spiele mit Anpfiff <= 3h und Live-Signal (BET / Poly-Lag); CLV-Cue = steamMovePP ──
