@@ -97,3 +97,32 @@ class TestFormat:
              "prices": {"A": 0.66, "B": 0.34}}
         msg = W.format_alert(a)
         assert "LIVE-Einstieg" in msg and "scharf" in msg and "polymarket.com/event/lol-a-b" in msg and "@66" in msg
+
+
+class TestContestedLive:
+    """12.08.2026 (Lucas): umkaempfte Spiele (Gross-Geld auf beiden offenen Seiten) -> gar kein Live-Signal."""
+
+    def _m(self, faze_usd, bb_usd):
+        return {"league": "esports", "prices": {"FaZe": 0.84, "BetBoom": 0.30},
+                "whales": [{"wallet": "0xa", "side": "FaZe", "usd": faze_usd},
+                           {"wallet": "0xb", "side": "BetBoom", "usd": bb_usd}]}
+
+    def test_beide_seiten_gross_umkaempft(self):
+        m = self._m(170000, 32000)
+        assert W._contested(m) is True
+        assert W.find_alerts({"cs2-bb-faze": m}, {}, {}, set(), NOW) == []   # gar nichts gesendet
+
+    def test_einseitig_nicht_umkaempft(self):
+        m = self._m(170000, 8000)   # Gegenseite < 25K
+        assert W._contested(m) is False
+        al = W.find_alerts({"cs2-bb-faze": m}, {}, {}, set(), NOW)
+        assert "0xa" in {a["wallet"] for a in al}   # die grosse einseitige kommt durch
+
+    def test_entschiedene_seite_zaehlt_nicht(self):
+        m = {"league": "esports", "prices": {"A": 0.6, "DEC": 1.0},
+             "whales": [{"wallet": "0xa", "side": "A", "usd": 30000},
+                        {"wallet": "0xd", "side": "DEC", "usd": 40000}]}
+        assert W._contested(m) is False   # DEC @100 ist Abwicklung, keine Contest-Seite
+
+    def test_normale_fixture_nicht_umkaempft(self):
+        assert W._contested(_live()["lol-a-b"]) is False   # nur A hat >=25K bei gueltigem Preis

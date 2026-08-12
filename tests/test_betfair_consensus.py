@@ -424,5 +424,32 @@ class TestMoneyMapSettle(unittest.TestCase):
         self.assertEqual(rec["global"]["n"], 2)
         self.assertEqual(rec["pending"], 1)
 
+class TestMmMoneyGate(unittest.TestCase):
+    """12.08.2026 (Lucas): Money-Map nur mit echtem Vergleich — Betfair+Poly, oder eine Quelle >= 150K.
+    Pinnacle zaehlt nicht (nur Odds-Anker)."""
+
+    def _row(self, eur=None, usd=None):
+        return {"betfair": ({"eur": eur} if eur is not None else None),
+                "poly": ({"usd": usd} if usd is not None else None)}
+
+    def test_beide_quellen_rein(self):
+        self.assertTrue(BC._mm_money_ok(self._row(eur=21000, usd=36000)))   # Monterrey: klein, aber 2 Quellen
+
+    def test_eine_quelle_klein_raus(self):
+        self.assertFalse(BC._mm_money_ok(self._row(eur=18000)))             # Brann U19: nur Betfair, <150K
+
+    def test_eine_quelle_gross_rein(self):
+        self.assertTrue(BC._mm_money_ok(self._row(eur=418000)))            # Paris: nur Betfair, Marquee
+        self.assertTrue(BC._mm_money_ok(self._row(usd=200000)))            # nur Poly, aber gross
+
+    def test_gar_kein_geld_raus(self):
+        self.assertFalse(BC._mm_money_ok(self._row()))
+
+    def test_pinnacle_zaehlt_nicht(self):
+        # Row mit Pinnacle-Anker aber nur kleinem Betfair, kein Poly -> raus (Pinnacle ist keine Geldquelle)
+        r = self._row(eur=18000); r["pinn"] = {"fav": "home", "home": 0.6, "draw": 0.25, "away": 0.15}
+        self.assertFalse(BC._mm_money_ok(r))
+
+
 if __name__ == "__main__":
     unittest.main()

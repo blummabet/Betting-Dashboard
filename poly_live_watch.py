@@ -24,6 +24,7 @@ LIVE_BIG_USD  = float(os.environ.get("POLY_LIVE_BIG_USD") or 25000)    # gross g
 SHARP_MIN_USD = float(os.environ.get("POLY_LIVE_SHARP_MIN_USD") or 5000)  # 12.08.2026 (Lucas): auch scharfe Wallets brauchen eine Mindest-Summe -- ein $370-Einstieg ist kein Signal
 LIVE_MAX_PRICE = float(os.environ.get("POLY_LIVE_MAX_PRICE") or 0.90)   # >= entschieden -> Settlement, kein Signal (Lucas: '@100 = Spiel durch')
 LIVE_MIN_PRICE = float(os.environ.get("POLY_LIVE_MIN_PRICE") or 0.10)   # <= toter Ausgang -> Lay/Rausch
+LIVE_CONTEST_MIN_USD = float(os.environ.get("POLY_LIVE_CONTEST_MIN_USD") or 25000)  # 12.08.2026 (Lucas): ab so viel je Seite = umkaempft -> gar kein Live-Signal (Gegenseiten-Krieg)
 SEEN_TTL_H   = float(os.environ.get("POLY_LIVE_SEEN_TTL_H") or 12)   # gemeldete Wallet+Markt so lange nicht erneut
 # Sharp-Definition — identisch zum Frontend: genug Historie UND profitabel UND schlaegt die Linie UND
 # (klar ueber Muenzwurf ODER deutliche Kante).
@@ -70,6 +71,28 @@ def _pregame_wallets(close, key):
             if isinstance(w, dict) and w.get("wallet")}
 
 
+def _contested(m, min_usd=LIVE_CONTEST_MIN_USD):
+    """12.08.2026 (Lucas): „Gegenseiten-Krieg" live — hat der Markt Einstiege (>= min_usd) auf MEHR
+    ALS EINER (noch offenen) Seite, ist er umkaempft und taugt NICHT als Live-Signal (zwei
+    widerspruechliche Alerts zum selben Spiel). Dann wird fuer das Spiel gar nichts gesendet; nur klar
+    einseitige Live-Einstiege kommen durch. Entschiedene/tote Seiten (@100/@0) zaehlen NICHT als
+    Contest-Seite (das ist Abwicklung, kein Gegengeld). REIN/testbar."""
+    if not isinstance(m, dict):
+        return False
+    prices = m.get("prices") or {}
+    big_sides = set()
+    for w in (m.get("whales") or []):
+        if not isinstance(w, dict):
+            continue
+        side = w.get("side")
+        pr = prices.get(side)
+        if not isinstance(pr, (int, float)) or pr < LIVE_MIN_PRICE or pr > LIVE_MAX_PRICE:
+            continue                              # entschiedene/tote Seite -> kein echtes Gegengeld
+        if side and float(w.get("usd") or 0) >= min_usd:
+            big_sides.add(side)
+    return len(big_sides) >= 2
+
+
 def find_alerts(live, close, scores, seen, now=None):
     """REIN/testbar. Neue Live-Einstiege (scharf ODER >= LIVE_BIG_USD), die vor Anpfiff nicht im Top-4
     waren und noch nicht in `seen` (Menge von sig). -> Liste alert-dicts, nach $ absteigend."""
@@ -77,6 +100,8 @@ def find_alerts(live, close, scores, seen, now=None):
     for key, m in (live or {}).items():
         if not isinstance(m, dict):
             continue
+        if _contested(m):
+            continue                              # umkaempft: Gross-Geld auf beiden Seiten -> gar kein Live-Signal (Lucas 12.08.2026)
         pre = _pregame_wallets(close, key)
         for w in (m.get("whales") or []):
             if not isinstance(w, dict) or not w.get("wallet"):

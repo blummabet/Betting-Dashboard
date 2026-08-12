@@ -340,5 +340,29 @@ class TestClvGate(unittest.TestCase):
         self.assertIn("pp CLV", line)                # Skill-Metrik sichtbar im Trades-Badge
 
 
+class TestContestedMarket(unittest.TestCase):
+    """12.08.2026 (Lucas): umkaempfte Spiele (Gross-Geld auf beiden Seiten) fliegen aus dem Public."""
+
+    BROAD = {
+        "cs2-fal2-k271": {"whales": [
+            {"side": "Team Falcons", "usd": 415853}, {"side": "K27", "usd": 203675},
+            {"side": "Team Falcons", "usd": 42911}]},
+        "einseitig": {"whales": [
+            {"side": "A", "usd": 300000}, {"side": "B", "usd": 8000}]},
+        "leer": {"whales": []},
+    }
+
+    def test_beide_seiten_gross_ist_umkaempft(self):
+        self.assertTrue(P._contested_market("cs2-fal2-k271", self.BROAD))
+
+    def test_einseitig_nicht_umkaempft(self):
+        self.assertFalse(P._contested_market("einseitig", self.BROAD))   # nur eine Seite >= 100K
+
+    def test_leer_oder_unbekannt_nicht_umkaempft(self):
+        self.assertFalse(P._contested_market("leer", self.BROAD))
+        self.assertFalse(P._contested_market("gibtsnicht", self.BROAD))
+        self.assertFalse(P._contested_market("x", None))
+
+
 if __name__ == "__main__":
     unittest.main()

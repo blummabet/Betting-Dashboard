@@ -73,6 +73,7 @@ PUB_MIN_USD_TRACKED   = float(os.environ.get("WHALE_PUB_MIN_USD_TRACKED") or 250
 PUB_MIN_TR            = int(os.environ.get("WHALE_PUB_MIN_TR")            or 8)   # 02.08.2026 (Lucas): "bewiesen" konsistent ab n>=8
 PUB_MIN_HITRATE       = float(os.environ.get("WHALE_PUB_MIN_HITRATE")     or 0.5)
 PUB_MIN_USD_NOREC     = float(os.environ.get("WHALE_PUB_MIN_USD_NOREC")   or 150000)   # 06.08.2026 (Lucas: Feed straffen): Wallet OHNE belastbaren Record (n<PUB_MIN_TR) nur ab so viel $
+CONTEST_MIN_USD       = float(os.environ.get("WHALE_CONTEST_MIN_USD")     or 100000)   # 12.08.2026 (Lucas): Public — Gross-Einstiege ab so viel auf ZWEI Seiten = umkaempft -> gar nicht posten
 
 
 # 03.08.2026 (Lucas: „50% ist Münzwurf, kein Beweis"): „bewiesen" heißt jetzt STATISTISCH über
@@ -519,6 +520,21 @@ def _pub_keep(pos, scores):
     return (float(pos.get("usd") or 0) >= PUB_MIN_USD_NOREC)
 
 
+def _contested_market(key, broad, min_usd=CONTEST_MIN_USD):
+    """12.08.2026 (Lucas): „Gegenseiten-Krieg" — hat EIN Markt Gross-Einstiege (>= min_usd) auf MEHR
+    ALS EINER Seite, ist er umkaempft und taugt NICHT als Public-Whale-Signal (zwei widerspruechliche
+    Posts zum selben Spiel). Prueft die echte Markt-Geldverteilung (broad = poly_money_broad_close),
+    faengt so auch die Gegenseite, die erst in einem spaeteren Scan gross wurde. REIN/testbar."""
+    m = (broad or {}).get(key) if isinstance(broad, dict) else None
+    if not isinstance(m, dict):
+        return False
+    big_sides = set()
+    for w in (m.get("whales") or []):
+        if isinstance(w, dict) and float(w.get("usd") or 0) >= min_usd and w.get("side"):
+            big_sides.add(w.get("side"))
+    return len(big_sides) >= 2
+
+
 def main():
     print("=== poly_whale_watch.py ===")
     track = _load(TRACK_FILE, {})
@@ -553,6 +569,10 @@ def main():
                       PUB_MIN_TR, PUB_MIN_HITRATE)
     pub_cand = [c for c in pub_cand if _pub_ok(c[1])]   # nur Sport + sinnvoller Preis (Public)
     pub_cand = [c for c in pub_cand if _pub_keep(c[1], scores)]   # 06.08.2026 (Lucas): Feed straffen — grosse Wallets ohne Record nur ab PUB_MIN_USD_NOREC
+    _pre_contest = len(pub_cand)
+    pub_cand = [c for c in pub_cand if not _contested_market(c[1].get("key"), broad)]   # 12.08.2026 (Lucas): Gegenseiten-Krieg raus — umkaempfte Spiele gar nicht posten
+    if _pre_contest != len(pub_cand):
+        print(f"  \U0001f91d {_pre_contest - len(pub_cand)} umkaempfte(s) Spiel(e) unterdrueckt (Gross-Geld auf beiden Seiten)")
     pub_sent = 0
     for pkey, pos, restock in pub_cand[:MAX_ALERTS]:
         if _tg_public(build_public_card(pos, scores, restock, broad)):

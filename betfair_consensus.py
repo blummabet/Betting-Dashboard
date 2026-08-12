@@ -31,6 +31,7 @@ MONEYMAP_FILE  = "money_map.json"          # 11.08.2026 (Lucas): Money-Map-Feed 
 MMLEDGER_FILE  = "money_map_ledger.json"   # Konsens-Signale mitschreiben -> Tracking (ab Tag 1)
 MMRECORD_FILE  = "money_map_record.json"   # Trefferquote je Verdikt-Typ (Tracking-Tab)
 MM_RESULTS_MIN_H = 3.0                      # Anpfiff so lange her -> Spiel sicher vorbei -> abrechenbar
+MM_SINGLE_MIN    = float(os.environ.get("MM_SINGLE_MIN_USD") or 150000)   # 12.08.2026 (Lucas): nur EINE Geldquelle (Betfair ODER Poly) -> braucht so viel Geld, sonst raus. Betfair+Poly = immer rein. Pinnacle zaehlt NICHT (nur Odds-Anker).
 try:
     from fetch_betfair_betwatch import fetch_results as _fetch_results  # autoritative Endstaende (Runner)
 except Exception:
@@ -401,6 +402,22 @@ def money_map_row(g, pf):
     return row
 
 
+def _mm_money_ok(row, single_min=MM_SINGLE_MIN):
+    """12.08.2026 (Lucas): die Money-Map ist ein VERGLEICH -> sie braucht echtes Geld auf zwei
+    Seiten. Geldquellen sind nur Betfair (EUR) + Poly (USD); Pinnacle ist bloss der Odds-Anker,
+    zaehlt hier NICHT. Regel: Betfair UND Poly -> immer rein. Nur eine Quelle -> nur wenn >= single_min
+    (Marquee-Spiel wie ein UEFA-Super-Cup). Gar kein Geld -> raus. Killt duenne Einzelquellen-Spiele
+    (U19/Minnows), ohne gute Divergenz-Faelle mit kleinem Betfair aber echtem Poly zu opfern. REIN."""
+    bf = float((row.get("betfair") or {}).get("eur") or 0)
+    pl = float((row.get("poly") or {}).get("usd") or 0)
+    n_money = (1 if bf > 0 else 0) + (1 if pl > 0 else 0)
+    if n_money >= 2:
+        return True
+    if n_money == 1:
+        return max(bf, pl) >= single_min
+    return False
+
+
 def update_mm_ledger(prev, rows, now=None, keep=2000):
     """11.08.2026 (Lucas Money-Map Tracking): Konsens-Signale mitschreiben (upsert je matchId, solange
     pending) -> Basis fuers spaetere Settlement (gewann die Konsens-Seite?). REIN/testbar."""
@@ -655,6 +672,7 @@ def main():
     _dump(OUT_FILE, out)
     _dump(HIST_FILE, new_hist)
     # Money-Map (11.08.2026, Lucas): bubble-fertiger Feed + Konsens-Ledger fuers Tracking. Additiv.
+    mm_rows = [r for r in mm_rows if _mm_money_ok(r)]   # 12.08.2026 (Lucas): min. 2 Geldquellen (Betfair+Poly) ODER eine Quelle >= MM_SINGLE_MIN
     mm_rows.sort(key=lambda r: (r.get("verdict") != "no_anchor", (r.get("betfair") or {}).get("eur") or 0), reverse=True)
     _dump(MONEYMAP_FILE, {"generatedAt": now, "count": len(mm_rows), "rows": mm_rows})
     mm_led = update_mm_ledger(_load(MMLEDGER_FILE, []), mm_rows, now=now)
