@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v113';   // 12.08.2026 (Lucas): Live-Zufluss Mindest $10K + Sharp-Live-Alerts Mindest $5K (kein $370/$472-Rauschen)
+const VERSION = 'cocobet-v114';   // 12.08.2026 (Lucas): Schwellenwerte-Karte im Status-Überblick + Money-Map liest gruppierte Yes/No-Soccer-Märkte (Paris etc.)
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

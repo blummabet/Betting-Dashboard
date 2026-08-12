@@ -1150,7 +1150,55 @@ async function _stRenderOverview() {
   dyn.innerHTML = _stHead('🩺', 'Status — alle Live-Systeme', 'Was läuft, was hängt — Betfair · Polymarket · Top-5 · MLS auf einen Blick')
     + _stBanner(vIco, vT, vS, vC)
     + _stCard('🗂️ Systeme', 'Klick öffnet den Detail-Reiter', _stGridWrap([...cards.map(c => c.html), wmCard], 200))
-    + _stCard('📁 Feed-Frische — alle Systeme', 'aus dem Datenstand selbst · grün = im Soll · gelb = überfällig · rot = tot/fehlt', await _stFreshGrid(allFeeds));
+    + _stCard('📁 Feed-Frische — alle Systeme', 'aus dem Datenstand selbst · grün = im Soll · gelb = überfällig · rot = tot/fehlt', await _stFreshGrid(allFeeds))
+    + _stThresholdsCard();
+}
+function _stThrRows(rows) {
+  return '<table style="width:100%;border-collapse:collapse;font-size:12px">' + rows.map(function (r) {
+    return '<tr><td style="padding:4px 8px;border-bottom:1px solid var(--border);font-family:monospace">' + r[0] +
+      '</td><td style="padding:4px 8px;border-bottom:1px solid var(--border);text-align:right;font-weight:700;white-space:nowrap">' + r[1] +
+      '</td><td style="padding:4px 8px;border-bottom:1px solid var(--border);color:var(--muted)">' + r[2] + '</td></tr>';
+  }).join('') + '</table>';
+}
+function _stThresholdsCard() {
+  var grp = function (t, rows) { return '<div style="font-size:12.5px;font-weight:800;margin:16px 0 6px">' + t + '</div>' + _stThrRows(rows); };
+  var html =
+      grp('Poly — Live-Alerts (poly_live_watch.py)', [
+        ['LIVE_BIG_USD', '$25.000', 'Alarm auch ohne Track-Record'],
+        ['SHARP_MIN_USD', '$5.000', 'scharfe Wallet braucht Mindest-Summe'],
+        ['LIVE_MAX_PRICE / MIN', '0.90 / 0.10', 'entschieden/tot → kein Signal'],
+        ['SEEN_TTL_H', '12 h', 'Wallet+Markt so lange nicht erneut'],
+      ])
+    + grp('Poly — Erfassung (poly_money_broad.py)', [
+        ['MIN_VOL_USD', '$7.500', 'Markt ab so viel Volumen'],
+        ['MIN_ODDS', '1.35', 'triviale Favoriten raus'],
+        ['CAPTURE_WINDOW_H', '3 h', 'Close-Freeze so nah am Anpfiff'],
+        ['LIVE_TAIL_H / KEEP_H', '3 h / 6 h', 'nach Anpfiff weiter / prunen'],
+        ['UPCOMING_WINDOW_H', '48 h', 'Money-Map: Poly bis so weit vor Anpfiff'],
+        ['MAX_HOLDER_CALLS (Pre/Live)', '90 / 40', 'Geld-Split-Budget'],
+      ])
+    + grp('Poly — Frontend (poly-wallets.js)', [
+        ['PW_LIVE_WHALE_MIN_USD', '$10.000', 'Live-Whales Mindest-Summe'],
+        ['PW_LIVE_INFLOW_MIN_USD', '$10.000', 'Live-Zufluss Mindest'],
+        ['PW_LIVE_DECIDED_PRICE', '0.95', 'Live-Markt entschieden → raus'],
+        ['PW_STALE_AFTER_KO_H', '4 h', 'Spiel fertig → raus'],
+        ['PW_MONEY_MAJ', '60%', 'großes Geld ab echter Mehrheit'],
+        ['PW_NEW_MIN_USD', '$5.000', 'Neu-Einstiege ab so viel'],
+      ])
+    + grp('Betfair — Push/Alerts (betfair_alerts.py)', [
+        ['FRESH_TOP / REST', '30k / 20k €', 'frisches Geld Top/Rest'],
+        ['HT_TOP / REST', '10k / 5k €', 'Halbzeit-Geld Top/Rest'],
+        ['PUB_FRESH_TOP / REST', '100k / 30k €', 'Public-Channel frisch'],
+        ['MIN_LEAD_ODD', '1.30', 'Geld auf Fav <1.30 = kein Push'],
+      ])
+    + grp('Betfair — Track/Consensus + Übersicht', [
+        ['CONC_THRESHOLD', '65%', 'Geld-Favorit konzentriert'],
+        ['INFLOW_MIN_EUR', '2.000 €', 'frischer Zufluss ab Delta'],
+        ['MATCH_MIN', '0.60', 'Namens-Match-Schwelle'],
+        ['MD_WHALE_MIN_USD', '$10.000', 'Übersicht-Whale-Kachel'],
+        ['_HT_MIN/MAX_ODD', '1.30 / 6.0', 'HT-Lock / toter Ausgang raus'],
+      ]);
+  return _stCard('🎚️ Schwellenwerte — alle Stellschrauben', 'Referenz · Details + env-Overrides in THRESHOLDS.md · Frontend-Änderung braucht sw.js-Bump', html);
 }
 function _stJump(ds) { _stDataset = ds; runStatusPage(true); }
 if (typeof window !== 'undefined') {

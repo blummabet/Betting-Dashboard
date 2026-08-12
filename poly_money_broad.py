@@ -36,8 +36,8 @@ import poly_money_accuracy as PMA
 
 BASE = Path(__file__).resolve().parent
 
-MIN_VOL_USD = 7_500     # „5-10k oben liegen" — Mitte
-MIN_ODDS    = 1.35      # Lucas: triviale Favoriten (≤1.35) raus
+MIN_VOL_USD = float(os.environ.get("POLY_MIN_VOL_USD") or 7500)     # „5-10k oben liegen" — Mitte
+MIN_ODDS    = float(os.environ.get("POLY_MIN_ODDS") or 1.35)      # Lucas: triviale Favoriten (≤1.35) raus
 # 02.08.2026 (Lucas, streng): „Sharp im Markt" hatte nur n≥4 & CLV>0 — dadurch wurden Wallets mit
 # +0,05pp CLV und sogar bestätigte Millionen-Verlierer (−$4,3 Mio) als „bewiesen scharf" gepusht.
 # Jetzt: Close SPÜRBAR geschlagen (Ø CLV ≥ Schwelle) UND Trefferquote ≥ Schwelle UND kein bestätigter
@@ -277,27 +277,58 @@ def _capture_class(htk):
 
 
 def _outcomes(ev):
-    """Moneyline-Markt eines Events generisch parsen → [{label, price, cond, token}].
-    Nimmt den ersten Markt mit ≥2 Ausgängen und Preisen (US-Sport = 2-Wege, Fußball = 3-Wege)."""
-    for m in (ev.get("markets") or []):
+    """Moneyline-Ausgaenge eines Events → [{label, price, cond, token}]. ZWEI Poly-Strukturen:
+    (1) EIN Markt mit Team-Ausgaengen (US-Sport, viele Soccer): outcomes = [Team1, (Draw,) Team2].
+    (2) Gruppierte Ja/Nein-Maerkte (12.08.2026, Lucas: UEFA Super Cup u.v.a.): je Ausgang EIN Markt
+        „Gewinnt X?" Yes/No, der Ausgangs-Name steht im groupItemTitle, die Wahrscheinlichkeit ist der
+        Ja-Preis. Ohne (2) fielen solche Spiele als „Yes/No" durch → nie gegen Teamnamen matchbar
+        (poly:null in der Money-Map). REIN."""
+    markets = ev.get("markets") or []
+    # (1) echter Multi-Ausgang-Markt — reine Ja/Nein-Maerkte hier ueberspringen
+    for m in markets:
         try:
             names = _json.loads(m.get("outcomes", "[]") or "[]")
             prices = _json.loads(m.get("outcomePrices", "[]") or "[]")
             tokens = _json.loads(m.get("clobTokenIds", "[]") or "[]")
         except Exception:
             continue
+        if len(names) < 2 or len(prices) != len(names):
+            continue
+        if {str(n).strip().lower() for n in names} == {"yes", "no"}:
+            continue     # reiner Ja/Nein-Markt → evtl. Struktur (2), hier nicht
         cond = m.get("conditionId")
-        if len(names) >= 2 and len(prices) == len(names):
-            rows = []
-            for i, nm in enumerate(names):
-                try:
-                    p = float(prices[i])
-                except (TypeError, ValueError, IndexError):
-                    p = None
-                rows.append({"label": str(nm), "price": p, "cond": cond,
-                             "token": tokens[i] if i < len(tokens) else None})
-            return rows
-    return []
+        rows = []
+        for i, nm in enumerate(names):
+            try:
+                p = float(prices[i])
+            except (TypeError, ValueError, IndexError):
+                p = None
+            rows.append({"label": str(nm), "price": p, "cond": cond,
+                         "token": tokens[i] if i < len(tokens) else None})
+        return rows
+    # (2) gruppierte Ja/Nein-Maerkte: groupItemTitle = Ausgang, Ja-Preis = Wahrscheinlichkeit
+    rows = []
+    for m in markets:
+        title = m.get("groupItemTitle")
+        if not title:
+            continue
+        try:
+            names = _json.loads(m.get("outcomes", "[]") or "[]")
+            prices = _json.loads(m.get("outcomePrices", "[]") or "[]")
+            tokens = _json.loads(m.get("clobTokenIds", "[]") or "[]")
+        except Exception:
+            continue
+        low = [str(n).strip().lower() for n in names]
+        if "yes" not in low:
+            continue
+        yi = low.index("yes")
+        try:
+            p = float(prices[yi])
+        except (TypeError, ValueError, IndexError):
+            p = None
+        rows.append({"label": str(title), "price": p, "cond": m.get("conditionId"),
+                     "token": tokens[yi] if yi < len(tokens) else None})
+    return rows if len(rows) >= 2 else []
 
 
 WHALES_PER_MARKET = 4   # 25.07.2026 (Lucas: „was setzen einzelne Wale") — Top-N je Markt mitschreiben

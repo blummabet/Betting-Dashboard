@@ -65,8 +65,8 @@
 
 | Konstante | Wert | env | Zweck |
 |---|---|---|---|
-| `MIN_VOL_USD` | 7.500 $ | — | Markt erst ab so viel Volumen erfassen |
-| `MIN_ODDS` | 1.35 | — | triviale Favoriten (≤1.35) raus |
+| `MIN_VOL_USD` | 7.500 $ | `POLY_MIN_VOL_USD` | Markt erst ab so viel Volumen erfassen |
+| `MIN_ODDS` | 1.35 | `POLY_MIN_ODDS` | triviale Favoriten (≤1.35) raus |
 | `MAX_HOLDER_CALLS` | 90 | — | Deckel Geld-Split-Calls (Pre), nach Volumen priorisiert |
 | `MAX_HOLDER_CALLS_LIVE` | 40 | `POLY_MAX_HOLDER_CALLS_LIVE` | eigener Live-Deckel (additiv) |
 | `CAPTURE_WINDOW_H` | 3.0 h | — | Geld-Verteilung nur so nah am Anpfiff einfrieren (Close-Freeze) |
