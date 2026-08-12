@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-12T22:03:10.183155+00:00",
+ "generatedAt": "2026-08-12T23:02:14.853757+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -8,27 +8,84 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 329,
- "pinnKeys": 173,
- "matched": 87,
+ "polyRowsSeen": 321,
+ "pinnKeys": 171,
+ "matched": 85,
  "footballRows": 63,
- "crossRows": 266,
+ "crossRows": 258,
  "footballSkippedStale": 76,
  "seenBySport": {
   "americanfootball_nfl": 160,
-  "baseball_mlb": 104,
+  "baseball_mlb": 96,
   "boxing_boxing": 2,
   "soccer_mls": 45,
   "soccer_liga": 18
  },
  "matchedBySport": {
-  "baseball_mlb": 24,
+  "baseball_mlb": 22,
   "soccer_mls": 45,
   "soccer_liga": 18
  },
  "trackRecord": {
-  "tracked": 92,
+  "tracked": 96,
   "converged": 3
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|milwaukeebrewers-sandiegopadres|milwaukeebrewers",
+   "sport": "baseball_mlb",
+   "event": "Milwaukee Brewers vs San Diego Padres",
+   "market": "Moneyline",
+   "outcome": "Milwaukee Brewers",
+   "polyPP": 52.5,
+   "pinnPP": 75.6,
+   "gapPP": -23.08,
+   "vol": 1086369,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-12T23:02:14.853448+00:00"
+  },
+  {
+   "id": "baseball_mlb|milwaukeebrewers-sandiegopadres|sandiegopadres",
+   "sport": "baseball_mlb",
+   "event": "Milwaukee Brewers vs San Diego Padres",
+   "market": "Moneyline",
+   "outcome": "San Diego Padres",
+   "polyPP": 47.5,
+   "pinnPP": 24.4,
+   "gapPP": 23.08,
+   "vol": 1086369,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-12T23:02:14.853448+00:00"
+  },
+  {
+   "id": "baseball_mlb|clevelandguardians-detroittigers|clevelandguardians",
+   "sport": "baseball_mlb",
+   "event": "Cleveland Guardians vs Detroit Tigers",
+   "market": "Moneyline",
+   "outcome": "Cleveland Guardians",
+   "polyPP": 66.5,
+   "pinnPP": 51.9,
+   "gapPP": 14.58,
+   "vol": 230233,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-12T23:02:14.853448+00:00"
+  },
+  {
+   "id": "baseball_mlb|clevelandguardians-detroittigers|detroittigers",
+   "sport": "baseball_mlb",
+   "event": "Cleveland Guardians vs Detroit Tigers",
+   "market": "Moneyline",
+   "outcome": "Detroit Tigers",
+   "polyPP": 33.5,
+   "pinnPP": 48.1,
+   "gapPP": -14.58,
+   "vol": 230233,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-12T23:02:14.853448+00:00"
+  }
+ ]
 }
