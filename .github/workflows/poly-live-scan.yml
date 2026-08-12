@@ -2,11 +2,17 @@ name: ⚡ Poly Live-Scan (nur laufende Spiele, schnell)
 
 # 11.08.2026 (Lucas, Stufe 1/A): schlanker LIVE-only Lauf. Greift NUR Maerkte im Live-Fenster ab
 # (Anpfiff bis LIVE_TAIL_H danach) und schreibt poly_money_broad_live(.history).json. Ueberspringt den
-# schweren Vor-Spiel-Teil des Global-Scans (Wallet-P&L, Eval, Cross-Sport, jsdom) -> laeuft in Sekunden
-# und blockiert den EINEN Mac-Runner nicht. Poly ist geoblockt (Rechenzentrums-IP) -> nur self-hosted.
+# schweren Vor-Spiel-Teil des Global-Scans. Poly ist geoblockt (Rechenzentrums-IP) -> nur self-hosted.
+#
+# 12.08.2026 (Lucas): GitHubs Cron DROSSELT hochfrequente Schedules (*/5 lief real ~stuendlich statt
+# alle 5 Min — Scheduler-Throttling, KEIN Runner-Problem, kein Cron-Tuning hilft). Loesung: stuendlich
+# starten (das haelt GitHub zuverlaessig) und INTERN alle 15 Min scannen, gut eine Stunde lang. Der Job
+# belegt durchgehend EINEN self-hosted Runner -> dafuer der 2. Mac-Runner; Betfair laeuft auf dem anderen.
+# So bekommen wir garantierte 15-Min-Taktung an GitHubs Scheduler vorbei. cancel-in-progress sorgt dafuer,
+# dass der naechste stuendliche Start den noch laufenden Loop nahtlos ersetzt (kein Ueberlappen, keine Luecke).
 on:
   schedule:
-    - cron: '*/5 * * * *'   # alle 5 Min — laufende Spiele bewegen sich schnell; der Lauf ist billig
+    - cron: '9 * * * *'   # stuendlich (zuverlaessig); der Job loopt intern alle 15 Min
   workflow_dispatch:
 
 permissions:
@@ -14,12 +20,12 @@ permissions:
 
 concurrency:
   group: poly-live-scan
-  cancel-in-progress: false
+  cancel-in-progress: true   # neuer stuendlicher Start ersetzt den noch laufenden Loop -> nahtlos, kein Ueberlappen
 
 jobs:
   live:
     runs-on: [self-hosted, macOS]
-    timeout-minutes: 6   # kurzer Lauf; Timeout < Takt -> selbstheilend bei Netz-Haenger
+    timeout-minutes: 72   # Backstop; der Loop beendet sich nach ~70 Min selbst (oder wird vom naechsten Start ersetzt)
     steps:
       - name: 📥 Repo auschecken
         uses: actions/checkout@v4
@@ -37,39 +43,63 @@ jobs:
           echo "POLY_PYTHON=$PYTHON" >> $GITHUB_ENV
           $PYTHON -m pip install --break-system-packages requests --quiet 2>/dev/null || true
 
-      - name: ⚡ Poly Live-Erfassung (nur laufende Spiele)
-        run: ${{ env.POLY_PYTHON }} poly_money_broad.py --live-only
-        continue-on-error: true
-
-      - name: ⚡ Live-Einstiegs-Alerts (nur Trades-Channel, Test)
-        run: ${{ env.POLY_PYTHON }} poly_live_watch.py
-        continue-on-error: true
+      - name: ⚡ Live-Scan-Loop (alle 15 Min, gut eine Stunde lang)
         env:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
-
-      - name: 💾 Live-Dateien committen
+          GITHUB_TOKEN:            ${{ secrets.GITHUB_TOKEN }}
         run: |
+          set +e
           git config user.name "CocoBet Bot"
           git config user.email "bot@cocobet.local"
-          for f in poly_money_broad_live.json poly_money_broad_live_history.json poly_live_watch_seen.json; do
-            [ -f "$f" ] && git add "$f"
-          done
-          if git diff --staged --quiet; then
-            echo "Keine Aenderungen — kein Commit."; exit 0
-          fi
-          git commit -m "⚡ Poly Live-Scan $(date -u +'%d.%m.%Y %H:%M') UTC"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
-          for attempt in 1 2 3 4 5; do
+          # nach einem evtl. abgebrochenen Vorgaenger-Loop sauber aufsetzen
+          git merge --abort 2>/dev/null || true
+          git rebase --abort 2>/dev/null || true
+
+          INTERVAL=$((15 * 60))     # 15-Min-Takt (wie Betfair)
+          RUN_FOR=$((70 * 60))      # gut ueber die Stunde laufen -> auch ein leicht verspaeteter Trigger ueberbrueckt (kein Gap); der naechste Start ersetzt den Loop
+          END=$(( $(date +%s) + RUN_FOR ))
+          ITER=0
+
+          run_once () {
+            ITER=$((ITER + 1))
+            echo "──── Iteration $ITER · $(date -u +'%H:%M:%S') UTC ────"
             git pull origin main --no-rebase -X ours --autostash 2>&1 || true
-            CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null)
-            if [ -n "$CONFLICTS" ]; then
-              echo "$CONFLICTS" | while read f; do git checkout --ours -- "$f"; git add "$f"; done
-              git diff --staged --quiet || git commit -m "auto-resolve merge conflicts"
+            "${POLY_PYTHON}" poly_money_broad.py --live-only || echo "  ⚠️ live-only Fehler (Loop laeuft weiter)"
+            "${POLY_PYTHON}" poly_live_watch.py           || echo "  ⚠️ live-watch Fehler (Loop laeuft weiter)"
+            for f in poly_money_broad_live.json poly_money_broad_live_history.json poly_live_watch_seen.json; do
+              [ -f "$f" ] && git add "$f"
+            done
+            if git diff --staged --quiet; then
+              echo "  Keine Aenderungen — kein Commit."
+              return 0
             fi
-            if git push 2>&1; then echo "Push nach Versuch $attempt"; exit 0; fi
-            echo "Push $attempt fehlgeschlagen — retry…"; sleep $((attempt * 3))
+            git commit -m "⚡ Poly Live-Scan $(date -u +'%d.%m.%Y %H:%M') UTC" || return 0
+            for attempt in 1 2 3 4 5; do
+              git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+              CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null)
+              if [ -n "$CONFLICTS" ]; then
+                echo "$CONFLICTS" | while read cf; do git checkout --ours -- "$cf"; git add "$cf"; done
+                git diff --staged --quiet || git commit -m "auto-resolve merge conflicts"
+              fi
+              if git push 2>&1; then echo "  Push OK (Versuch $attempt)"; return 0; fi
+              echo "  Push $attempt fehlgeschlagen — retry…"; sleep $((attempt * 3))
+            done
+            echo "  Push nach 5 Versuchen fehlgeschlagen — naechste Iteration versucht es erneut."
+          }
+
+          while :; do
+            START=$(date +%s)
+            run_once
+            NOW=$(date +%s)
+            [ "$NOW" -ge "$END" ] && break
+            ELAPSED=$((NOW - START))
+            SLEEP=$((INTERVAL - ELAPSED))
+            [ "$SLEEP" -lt 5 ] && SLEEP=5
+            REMAIN=$((END - NOW))
+            [ "$SLEEP" -gt "$REMAIN" ] && break
+            echo "  … schlafe ${SLEEP}s bis zum naechsten Scan"
+            sleep "$SLEEP"
           done
-          echo "Push fehlgeschlagen"; exit 1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          echo "Loop beendet nach $ITER Iterationen — naechster stuendlicher Trigger uebernimmt."
