@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v114';   // 12.08.2026 (Lucas): Schwellenwerte-Karte im Status-Überblick + Money-Map liest gruppierte Yes/No-Soccer-Märkte (Paris etc.)
+const VERSION = 'cocobet-v116';   // 12.08.2026 (Lucas): Live-Whales zeigen jetzt auch den Preis (@¢), wie der Live-Zufluss
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

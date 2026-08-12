@@ -226,8 +226,9 @@ function initPolyWallets(){
     jf('poly_shortlist_track.json'),    // 02.08.2026 (Lucas): Paper-Track-Record der „Heute wetten"-Plays
     jf('poly_money_broad_live.json'),        // 11.08.2026 (Lucas Stufe 2): laufende Maerkte (Live-Erfassung, alle ~5 Min)
     jf('poly_money_broad_live_history.json'),
-  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist])=>{
-    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist};
+    jf('poly_live_signal_track.json'),       // 12.08.2026 (Lucas): Live-Signal Forward-CLV Track-Record
+  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack])=>{
+    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack};
     _pwRender();
   }).catch(err=>{
     // 12.07.2026: Vorher gab es KEIN catch — eine Exception im Render (z.B. der
@@ -465,7 +466,7 @@ function _pwRender(){
   }
   if(_pwView==='track'){
     // 📊 Paper-Track-Record der Shortlist (02.08.2026, Lucas): sehen, ob „Heute wetten" performt.
-    panel.innerHTML=_pwViewTabs()+_pwViewIntro('track')+_pwTrackRecord(_pwCache.shortlistTrack);
+    panel.innerHTML=_pwViewTabs()+_pwViewIntro('track')+_pwTrackRecord(_pwCache.shortlistTrack)+_pwLiveSignalTrack(_pwCache.liveSigTrack);
     return;
   }
   if(_pwView==='xsport'){
@@ -1317,6 +1318,44 @@ function _pwLiveDecided(m){
   let mx=0; for(const k in m.prices){ const v=Number(m.prices[k]); if(isFinite(v)&&v>mx) mx=v; }
   return mx>=PW_LIVE_DECIDED_PRICE;
 }
+// ⚡ Live-Signal Track-Record (12.08.2026, Lucas Stufe 1): Forward-CLV je Kriterien-Bucket aus
+// poly_live_signal_track.json. Misst, gatet noch nicht — zeigt, welche Kriterien wirklich tragen.
+function _pwLiveSignalTrack(d){
+  var rec = d && d.record;
+  var intro='<section class="pw-sec" style="margin-top:20px"><div class="pw-sec-head">'
+    +'<span class="pw-kicker">⚡ Live-Signale — Forward-CLV Track-Record</span>'
+    +'<span class="pw-sec-note">Misst (gatet noch nicht): jeder Live-Whale-Einstieg wird über die Preis-Zeitreihe nachgezogen. <b>Forward-CLV = Preisbewegung NACH dem Einstieg</b> — &gt;0 heißt, das Geld hat den Preis geführt. Nach ein paar Tagen zeigt sich je Kriterium, was trägt.</span></div>';
+  if(!rec || !rec.buckets || !rec.settled){
+    return intro+'<div class="pw-none">Noch keine abgerechneten Live-Signale — sammelt sich, sobald der Live-Scan läuft und Spiele durch sind. (Offen gerade: '+((rec&&rec.open)||0)+')</div></section>';
+  }
+  var b=rec.buckets;
+  var clvCol=function(v){return v==null?'var(--muted)':v>0?'#3fb950':v<0?'#f85149':'var(--muted)';};
+  var pctv=function(v){return v==null?'—':Math.round(v*100)+'%';};
+  var clvv=function(v){return v==null?'—':(v>0?'+':'')+(+v).toFixed(1)+'pp';};
+  var row=function(label,x,hint){ if(!x||!x.n) return '';
+    return '<tr><td style="padding:6px 10px;border-bottom:1px solid #21262d">'+label+(hint?' <span class="pw-mut" style="font-size:10.5px">'+hint+'</span>':'')+'</td>'
+      +'<td style="padding:6px 10px;text-align:right;border-bottom:1px solid #21262d;font-variant-numeric:tabular-nums">'+x.n+'</td>'
+      +'<td style="padding:6px 10px;text-align:right;border-bottom:1px solid #21262d;font-weight:800;color:'+clvCol(x.avgClv)+'">'+clvv(x.avgClv)+'</td>'
+      +'<td style="padding:6px 10px;text-align:right;border-bottom:1px solid #21262d">'+pctv(x.posRate)+'</td>'
+      +'<td style="padding:6px 10px;text-align:right;border-bottom:1px solid #21262d;color:var(--muted)">'+clvv(x.avgClv30)+'</td></tr>';
+  };
+  var head='<tr style="color:var(--muted);font-size:11px"><th style="text-align:left;padding:6px 10px">Kriterium</th><th style="text-align:right;padding:6px 10px">n</th><th style="text-align:right;padding:6px 10px">Ø Fwd-CLV</th><th style="text-align:right;padding:6px 10px">% positiv</th><th style="text-align:right;padding:6px 10px">Ø @30min</th></tr>';
+  var bs=b.bySize||{};
+  var body=row('<b>Alle</b>',b.alle)
+    +row('🔥 scharfe Wallet',b.sharp)
+    +row('🎯 Value-Zone',b.valueZone,'25–75¢')
+    +row('🏦 reifer Markt',b.mature,'≥$50K')
+    +row('✅ nicht-chasing',b.notChasing)
+    +row('🔴 chasing',b.chasing,'Nachlauf')
+    +row('$25k+',bs['25k+'])+row('$10–25k',bs['10-25k'])+row('$5–10k',bs['5-10k'])+row('$2–5k',bs['2-5k']);
+  var kpi='<div style="display:flex;gap:10px;flex-wrap:wrap;margin:4px 0 12px">'
+    +_pwLiveKpi(String(rec.settled),'abgerechnet','#4cc2ff')
+    +_pwLiveKpi(String(rec.open||0),'offen','#a78bfa')
+    +_pwLiveKpi(clvv(b.alle&&b.alle.avgClv),'Ø Forward-CLV',clvCol(b.alle&&b.alle.avgClv))+'</div>';
+  return intro+kpi
+    +'<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12.5px"><thead>'+head+'</thead><tbody>'+body+'</tbody></table></div>'
+    +'<div style="font-size:11px;color:var(--muted);margin-top:10px">Stufe 1 — misst nur. Sobald ein Bucket klar positives Ø CLV mit genug n zeigt, wird das Kriterium zum Filter. „Ø @30min" = Preisbewegung 30 Min nach Einstieg.</div></section>';
+}
 function _pwLiveInflow(key){
   const a=_pwCache&&_pwCache.broadLiveHist&&_pwCache.broadLiveHist[key];
   if(!Array.isArray(a)||a.length<2) return null;
@@ -1546,8 +1585,9 @@ function _pwLiveTopWhales(n){
       const usd=Number(w.usd)||0;
       if(usd < PW_LIVE_WHALE_MIN_USD) return;   // nur echte Betraege
       const sc=_pwWalletScore(w.wallet), sharp=_pwIsSharpScore(sc), isNew=!pre.has(String(w.wallet).toLowerCase());
+      const _sp=(m.prices&&m.prices[w.side]!=null&&isFinite(Number(m.prices[w.side])))?Math.round(Number(m.prices[w.side])*100):null;
       const e={key:k,label:label,league:m.league,side:w.side||'—',usd:usd,wallet:w.wallet,
-               sharp:sharp,isNew:isNew,sharpLive:sharp&&isNew,avgPrice:w.avgPrice,
+               sharp:sharp,isNew:isNew,sharpLive:sharp&&isNew,avgPrice:w.avgPrice,price:_sp,
                sc:(sc&&sc.n>=4)?{avgClv:sc.avgClv,hit:sc.hit,n:sc.n}:null};
       const cur=byMarket[k];
       if(!cur || e.usd>cur.usd) byMarket[k]=e;   // je Markt nur den groessten

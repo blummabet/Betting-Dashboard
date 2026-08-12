@@ -780,7 +780,7 @@
       : w.sharp ? '<span class="md-lv-tag" style="color:' + A.good + ';border-color:rgba(46,160,67,.4)">🔥 scharf</span>'
       : w.isNew ? '<span class="md-lv-tag" style="color:' + A.red + ';border-color:rgba(229,83,75,.5)">🔴 live rein</span>' : '';
     var rec = w.sc ? ' <span style="color:' + (w.sc.avgClv > 0 ? A.good : A.red) + ';font-weight:700">' + (w.sc.avgClv >= 0 ? '+' : '') + w.sc.avgClv.toFixed(1) + 'pp</span> <span style="color:var(--mi3)">' + Math.round(w.sc.hit * 100) + '%·n' + w.sc.n + '</span>' : '';
-    var avg = (w.avgPrice != null && isFinite(w.avgPrice)) ? ' @' + Math.round(w.avgPrice * 100) + '¢' : '';
+    var avg = (w.price != null) ? ' @' + w.price + '¢' : ((w.avgPrice != null && isFinite(w.avgPrice)) ? ' @' + Math.round(w.avgPrice * 100) + '¢' : '');
     var main = _mdSportIco(w.league) + ' ' + _mdPolyLink(w.key, '<b style="color:#4cc2ff">' + esc(String(w.side).slice(0, 22)) + '</b>') + live;
     var sub = esc(String(w.label).replace(/<[^>]*>/g, '').slice(0, 40)) + rec;
     return rowEl(main, usd(w.usd) + avg, A.poly, sub, tag ? '<div class="md-lv-tags">' + tag + '</div>' : '');
