@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v108';   // 11.08.2026 (Lucas): entschiedene Live-Märkte (Fav ≥95¢) raus aus Live-Whales/Zufluss (Übersicht + Poly-Wallets-LIVE)
+const VERSION = 'cocobet-v109';   // 12.08.2026 (Lucas): Live-Listen filtern durchgelaufene/veraltete Spiele (realHtk<-4h) raus — kein 13h-alter Snapshot mehr als LIVE + Stale-Hinweis
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

@@ -1379,8 +1379,15 @@ function _pwLiveWhales(){
     +'<span class="pw-kicker">⚡ LIVE — Geld & Wallets auf laufenden Spielen</span>'
     +'<span class="pw-sec-note">nur In-Play-Märkte · frischer Zufluss + Whales, die JETZT reingehen · alle ~5 Min</span></div>';
   let rows=(live?Object.entries(live):[]).map(e=>({k:e[0],m:e[1]}))
-    .filter(x=>x.m && x.m.shares && (x.m.totalUsd||0)>=5000 && _pwSportPass(x.m.league) && !_pwLiveDecided(x.m));
-  if(!rows.length) return intro+'<div class="pw-none">Gerade keine laufenden Märkte mit nennenswertem Geld. Die Live-Erfassung läuft am Mac-Runner (alle ~5 Min) — sobald Esport/Tennis/… live ist und Geld drauf liegt, steht hier was.</div></section>';
+    .filter(x=>x.m && x.m.shares && (x.m.totalUsd||0)>=5000 && _pwSportPass(x.m.league) && !_pwLiveDecided(x.m) && !_pwKoStale(x.m));
+  if(!rows.length){
+    const _sm=_pwLiveStaleMin(), _had=live&&Object.keys(live).length;
+    const _stale=(_sm!=null&&_sm>20&&_had);
+    const _msg=_stale
+      ? 'Kein <b>frischer</b> Live-Stand — letzte Erfassung vor '+(_sm>=120?Math.round(_sm/60)+' h':_sm+' Min')+'. Die erfassten Spiele sind durch; der Live-Scan (Mac-Runner, alle ~5 Min) lief zuletzt nicht. Sobald er wieder läuft, stehen hier laufende Spiele.'
+      : 'Gerade keine laufenden Märkte mit nennenswertem Geld. Die Live-Erfassung läuft am Mac-Runner (alle ~5 Min) — sobald Esport/Tennis/… live ist und Geld drauf liegt, steht hier was.';
+    return intro+'<div class="pw-none"'+(_stale?' style="border:1px solid #7d4b16;background:#2b1d0e;color:#e3b341"':'')+'>'+_msg+'</div></section>';
+  }
   rows.forEach(x=>{ x.inflow=_pwLiveInflow(x.k); x.vol=x.m.totalUsd||0;
     const pre=_pwPregameWhales(x.k); let sl=0,nw=0;
     (x.m.whales||[]).forEach(w=>{ if(!w||!w.wallet) return; const isNew=!pre.has(String(w.wallet).toLowerCase()); if(isNew){ nw++; if(_pwIsSharpScore(_pwWalletScore(w.wallet))) sl++; } });
@@ -1527,7 +1534,7 @@ function _pwLiveTopWhales(n){
   const live=_pwCache&&_pwCache.broadLiveNow; if(!live) return [];
   const out=[];
   Object.entries(live).forEach(([k,m])=>{
-    if(!m||!m.shares||(Number(m.totalUsd)||0)<5000||!_pwSportPass(m.league)||_pwLiveDecided(m)) return;
+    if(!m||!m.shares||(Number(m.totalUsd)||0)<5000||!_pwSportPass(m.league)||_pwLiveDecided(m)||_pwKoStale(m)) return;
     const pre=_pwPregameWhales(k);
     const label=_pwEventLabel(k,Object.keys(m.shares||{}),m.league);
     (m.whales||[]).forEach(w=>{
@@ -1544,7 +1551,7 @@ function _pwLiveTopWhales(n){
 function _pwLiveTopInflow(n){
   const live=_pwCache&&_pwCache.broadLiveNow; if(!live) return [];
   const rows=Object.entries(live).map(e=>({k:e[0],m:e[1]}))
-    .filter(x=>x.m&&x.m.shares&&(Number(x.m.totalUsd)||0)>=5000&&_pwSportPass(x.m.league)&&!_pwLiveDecided(x.m));
+    .filter(x=>x.m&&x.m.shares&&(Number(x.m.totalUsd)||0)>=5000&&_pwSportPass(x.m.league)&&!_pwLiveDecided(x.m)&&!_pwKoStale(x.m));
   rows.forEach(x=>{ x.inflow=_pwLiveInflow(x.k)||0; });
   const out=rows.filter(x=>x.inflow>0);
   out.sort((a,b)=>(b.inflow-a.inflow)||((Number(b.m.totalUsd)||0)-(Number(a.m.totalUsd)||0)));
@@ -1556,7 +1563,14 @@ function _pwLiveTopInflow(n){
             favPrice:(x.m.prices&&x.m.prices[fav.name]!=null)?Math.round(x.m.prices[fav.name]*100):null};
   });
 }
-if(typeof window!=='undefined'){ window._pwLiveTopWhales=_pwLiveTopWhales; window._pwLiveTopInflow=_pwLiveTopInflow; }
+function _pwLiveStaleMin(){
+  const live=_pwCache&&_pwCache.broadLiveNow; if(!live) return null;
+  let newest=null;
+  for(const k in live){ const c=live[k]&&live[k].capturedAt?Date.parse(live[k].capturedAt):NaN;
+    if(!isNaN(c)&&(newest==null||c>newest)) newest=c; }
+  return newest==null?null:Math.max(0,Math.round((Date.now()-newest)/60000));
+}
+if(typeof window!=='undefined'){ window._pwLiveTopWhales=_pwLiveTopWhales; window._pwLiveTopInflow=_pwLiveTopInflow; window._pwLiveStaleMin=_pwLiveStaleMin; }
 
 // Sharp-Seite eines Markts aus poly_wallet_track.open (01.08.2026, Lucas) — DIE Brücke zwischen
 // „hunderte Wallet-Daten" und „was wetten": nur BEWÄHRTE Wallets (n≥Schwelle, CLV+ ODER ≥50% Treffer)

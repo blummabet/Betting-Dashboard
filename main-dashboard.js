@@ -797,8 +797,11 @@
       '<span style="font-size:10px;color:var(--mi3);font-weight:600;margin-left:8px">laufende Spiele · alle ~5 Min</span>' +
       '<button class="md-more" style="--ta:' + A.poly + ';" onclick="showView(\'polywallets\')">LIVE →</button></div>';
     if ((!whales || !whales.length) && (!inflow || !inflow.length)) {
-      return '<section class="md-tile md-rise md-wide" style="animation-delay:190ms;">' + head +
-        empty('Gerade keine laufenden Märkte mit nennenswertem Geld — sobald live Volumen reinkommt (Esport/Tennis/…), steht hier was.') + '</section>';
+      var sm = (typeof _pwLiveStaleMin === 'function') ? _pwLiveStaleMin() : null;
+      var msg = (sm != null && sm > 20)
+        ? 'Kein frischer Live-Stand — letzte Erfassung vor ' + (sm >= 120 ? Math.round(sm / 60) + ' h' : sm + ' Min') + '. Die erfassten Spiele sind durch; der Live-Scan (Mac-Runner) lief zuletzt nicht.'
+        : 'Gerade keine laufenden Märkte mit nennenswertem Geld — sobald live Volumen reinkommt (Esport/Tennis/…), steht hier was.';
+      return '<section class="md-tile md-rise md-wide" style="animation-delay:190ms;">' + head + empty(msg) + '</section>';
     }
     var mxIn = (inflow && inflow.length) ? inflow.reduce(function (a, r) { return Math.max(a, +r.inflow || 0); }, 1) : 1;
     var colW = (whales && whales.length) ? whales.map(_mdLiveWhaleRow).join('') : empty('Keine großen Live-Whale-Einstiege gerade.');

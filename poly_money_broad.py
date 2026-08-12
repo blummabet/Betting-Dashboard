@@ -853,7 +853,15 @@ def main_live() -> int:
     holen, capture_live, Live-History. Ueberspringt den schweren Vor-Spiel-Teil (Wallet-P&L, Eval, Cross-
     Sport, jsdom); laeuft in Sekunden statt Minuten -> eng taktbar, ohne den Runner zu blockieren."""
     min_vol, _ = _cfg()
-    markets = fetch_markets(live_only=True)
+    # 12.08.2026 (Lucas): Poly-Fetch kann am Runner scheitern (Geoblock/Rate-Limit). Frueher crashte
+    # main_live dann VOR dem Schreiben -> die Live-Datei fror auf dem letzten Stand ein (Spiele standen
+    # 13h spaeter noch als "live"). Jetzt: bei Fetch-Fehler leer weiterlaufen -> capture_live prunt die
+    # alten Eintraege (>LIVE_KEEP_H) raus, die Datei wird ehrlich leer statt eingefroren.
+    try:
+        markets = fetch_markets(live_only=True)
+    except Exception as e:
+        print(f"[LIVE-only] fetch_markets fehlgeschlagen ({e!r}) -> nur pruning, kein Freeze auf altem Stand")
+        markets = []
     live = [m for m in markets if m.get("live")]
     live_store = capture_live(live, _load(LIVE_FILE), min_vol=min_vol)
     (BASE / LIVE_FILE).write_text(json.dumps(live_store, ensure_ascii=False, indent=1), encoding="utf-8")
