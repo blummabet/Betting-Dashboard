@@ -131,6 +131,7 @@ jobs:
           fi
           git commit -m "🐋 Poly Global-Scan $(date -u +'%d.%m.%Y %H:%M') UTC"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git config --local credential.helper "" 2>/dev/null || true   # headless-Runner: macOS-Keychain gesperrt (-25308) -> Helper aus, Auth laeuft ueber Token-in-URL
           for attempt in 1 2 3 4 5; do
             git pull origin main --no-rebase -X ours --autostash 2>&1 || true
             CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null)

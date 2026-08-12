@@ -53,6 +53,7 @@ jobs:
           git config user.name "CocoBet Bot"
           git config user.email "bot@cocobet.local"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git config --local credential.helper "" 2>/dev/null || true   # headless-Runner: macOS-Keychain gesperrt (-25308) -> Helper aus, Auth laeuft ueber Token-in-URL
           # nach einem evtl. abgebrochenen Vorgaenger-Loop sauber aufsetzen
           git merge --abort 2>/dev/null || true
           git rebase --abort 2>/dev/null || true
