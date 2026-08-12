@@ -1533,6 +1533,7 @@ function _pwEnsurePlaysData(cb){
 // 12.08.2026 (Lucas): "allein die Betraege" — ein $475-Einstieg ist kein Whale. Boden wie die Pre-Game-
 // Whale-Kachel ($10K), und je Markt nur EIN Eintrag (kein 4x dasselbe Spiel), sortiert nach Groesse.
 const PW_LIVE_WHALE_MIN_USD = 10000;
+const PW_LIVE_INFLOW_MIN_USD = 10000;   // 12.08.2026 (Lucas): +$472 Zufluss ist kein Signal -> nur nennenswerte frische Bewegung
 function _pwLiveTopWhales(n){
   const live=_pwCache&&_pwCache.broadLiveNow; if(!live) return [];
   const byMarket={};   // Dedup: je Markt der groesste Whale
@@ -1561,7 +1562,7 @@ function _pwLiveTopInflow(n){
   const rows=Object.entries(live).map(e=>({k:e[0],m:e[1]}))
     .filter(x=>x.m&&x.m.shares&&(Number(x.m.totalUsd)||0)>=5000&&_pwSportPass(x.m.league)&&!_pwLiveDecided(x.m)&&!_pwKoStale(x.m));
   rows.forEach(x=>{ x.inflow=_pwLiveInflow(x.k)||0; });
-  const out=rows.filter(x=>x.inflow>0);
+  const out=rows.filter(x=>x.inflow>=PW_LIVE_INFLOW_MIN_USD);   // nur nennenswerter Zufluss (kein +$472-Rauschen)
   out.sort((a,b)=>(b.inflow-a.inflow)||((Number(b.m.totalUsd)||0)-(Number(a.m.totalUsd)||0)));
   return out.slice(0,n||5).map(x=>{
     const oc=Object.entries(x.m.shares||{}).map(e=>({name:e[0],usd:Number(e[1])||0})).sort((a,b)=>b.usd-a.usd);

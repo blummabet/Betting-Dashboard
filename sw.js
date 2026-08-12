@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v112';   // 12.08.2026 (Lucas): Puls Poly-Zeile zeigt jetzt Public-Kandidaten (agg.public) statt ganzer Shortlist
+const VERSION = 'cocobet-v113';   // 12.08.2026 (Lucas): Live-Zufluss Mindest $10K + Sharp-Live-Alerts Mindest $5K (kein $370/$472-Rauschen)
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

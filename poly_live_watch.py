@@ -21,6 +21,7 @@ WTRACK_FILE = BASE / "poly_wallet_track.json"
 SEEN_FILE   = BASE / "poly_live_watch_seen.json"
 
 LIVE_BIG_USD  = float(os.environ.get("POLY_LIVE_BIG_USD") or 25000)    # gross genug fuer Alarm auch OHNE Track-Record
+SHARP_MIN_USD = float(os.environ.get("POLY_LIVE_SHARP_MIN_USD") or 5000)  # 12.08.2026 (Lucas): auch scharfe Wallets brauchen eine Mindest-Summe -- ein $370-Einstieg ist kein Signal
 LIVE_MAX_PRICE = float(os.environ.get("POLY_LIVE_MAX_PRICE") or 0.90)   # >= entschieden -> Settlement, kein Signal (Lucas: '@100 = Spiel durch')
 LIVE_MIN_PRICE = float(os.environ.get("POLY_LIVE_MIN_PRICE") or 0.10)   # <= toter Ausgang -> Lay/Rausch
 SEEN_TTL_H   = float(os.environ.get("POLY_LIVE_SEEN_TTL_H") or 12)   # gemeldete Wallet+Markt so lange nicht erneut
@@ -89,7 +90,7 @@ def find_alerts(live, close, scores, seen, now=None):
             usd = float(w.get("usd") or 0)
             sc = _score(scores, wal)
             sharp = is_sharp(sc)
-            if not (sharp or usd >= LIVE_BIG_USD):
+            if not ((sharp and usd >= SHARP_MIN_USD) or usd >= LIVE_BIG_USD):
                 continue
             sig = "%s|%s" % (key, wal.lower())
             if sig in seen:
