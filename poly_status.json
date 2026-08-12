@@ -43,7 +43,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "cs2-sf2-ef1-2026-08-08: seit 4.0 Tagen offen — keine Auflösung gefunden"
+        "cs2-sf2-ef1-2026-08-08: seit 4.1 Tagen offen — keine Auflösung gefunden"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -63,12 +63,12 @@
       "ok": false,
       "nFail": 6,
       "failures": [
-        "16/60 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (27%) — Trefferquote allein trügt",
-        "   0x84cfffc3f1… n=17 Treffer 59% P&L $-7,651,018",
-        "   0xe9076a87c5… n=22 Treffer 68% P&L $-7,547,940",
-        "   0x224a89dbe0… n=34 Treffer 53% P&L $-3,989,860",
-        "   0xc3c3b3ef30… n=68 Treffer 66% P&L $-3,803,923",
-        "152/212 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
+        "15/58 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (26%) — Trefferquote allein trügt",
+        "   0x84cfffc3f1… n=18 Treffer 56% P&L $-7,646,666",
+        "   0xe9076a87c5… n=22 Treffer 68% P&L $-7,538,593",
+        "   0x224a89dbe0… n=34 Treffer 53% P&L $-4,005,696",
+        "   0xc3c3b3ef30… n=73 Treffer 64% P&L $-3,815,167",
+        "156/214 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
     },
@@ -88,11 +88,11 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "457/505 'live' Geld-Märkte sind schon >6h nach Anpfiff (90%) — $11,066,948 Whale-Geld auf fertigen Spielen"
+        "457/497 'live' Geld-Märkte sind schon >6h nach Anpfiff (92%) — $10,628,136 Whale-Geld auf fertigen Spielen"
       ],
       "note": "Der Close-Feed setzt kein resolved-Flag; fertige Spiele bleiben 'live'. Alle Views filtern jetzt auf den rekonstruierten Anpfiff — dieser Check misst den Geister-Anteil im Roh-Feed (steigt er, prunt/löst der Feed nicht mehr auf; jede ungegatete View zeigt dann fertige Spiele)."
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-08-12T00:44:40.233682+00:00"
+  "generatedAt": "2026-08-12T03:14:49.267163+00:00"
 }
