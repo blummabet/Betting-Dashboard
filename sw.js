@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v110';   // 12.08.2026 (Lucas): Money Map — Poly-Blase auch weit vor Anpfiff (upcoming-Erfassung Preis+Vol) + Namens-Matching Paris St-G↔Saint-Germain
+const VERSION = 'cocobet-v111';   // 12.08.2026 (Lucas): Live-Whales — Mindest-Summe $10K + Dedup je Markt (keine $475-Einträge, kein 4x dasselbe Spiel)
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

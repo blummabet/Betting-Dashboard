@@ -1530,22 +1530,30 @@ function _pwEnsurePlaysData(cb){
 
 // ── Uebersicht-Feeder (11.08.2026, Lucas): Top-N Live-Whales + Top-N Live-Zufluss fuer das
 //    Vollbreiten-Element auf der Startseite. Nutzen dieselbe Sharp-Logik/Labels wie der Live-Tab.
+// 12.08.2026 (Lucas): "allein die Betraege" — ein $475-Einstieg ist kein Whale. Boden wie die Pre-Game-
+// Whale-Kachel ($10K), und je Markt nur EIN Eintrag (kein 4x dasselbe Spiel), sortiert nach Groesse.
+const PW_LIVE_WHALE_MIN_USD = 10000;
 function _pwLiveTopWhales(n){
   const live=_pwCache&&_pwCache.broadLiveNow; if(!live) return [];
-  const out=[];
+  const byMarket={};   // Dedup: je Markt der groesste Whale
   Object.entries(live).forEach(([k,m])=>{
     if(!m||!m.shares||(Number(m.totalUsd)||0)<5000||!_pwSportPass(m.league)||_pwLiveDecided(m)||_pwKoStale(m)) return;
     const pre=_pwPregameWhales(k);
     const label=_pwEventLabel(k,Object.keys(m.shares||{}),m.league);
     (m.whales||[]).forEach(w=>{
       if(!w||!w.wallet) return;
+      const usd=Number(w.usd)||0;
+      if(usd < PW_LIVE_WHALE_MIN_USD) return;   // nur echte Betraege
       const sc=_pwWalletScore(w.wallet), sharp=_pwIsSharpScore(sc), isNew=!pre.has(String(w.wallet).toLowerCase());
-      out.push({key:k,label:label,league:m.league,side:w.side||'—',usd:Number(w.usd)||0,wallet:w.wallet,
-                sharp:sharp,isNew:isNew,sharpLive:sharp&&isNew,avgPrice:w.avgPrice,
-                sc:(sc&&sc.n>=4)?{avgClv:sc.avgClv,hit:sc.hit,n:sc.n}:null});
+      const e={key:k,label:label,league:m.league,side:w.side||'—',usd:usd,wallet:w.wallet,
+               sharp:sharp,isNew:isNew,sharpLive:sharp&&isNew,avgPrice:w.avgPrice,
+               sc:(sc&&sc.n>=4)?{avgClv:sc.avgClv,hit:sc.hit,n:sc.n}:null};
+      const cur=byMarket[k];
+      if(!cur || e.usd>cur.usd) byMarket[k]=e;   // je Markt nur den groessten
     });
   });
-  out.sort((a,b)=>((b.sharpLive?1:0)-(a.sharpLive?1:0))||((b.sharp?1:0)-(a.sharp?1:0))||(b.usd-a.usd));
+  const out=Object.values(byMarket);
+  out.sort((a,b)=>(b.usd-a.usd));   // groesstes Live-Geld zuerst
   return out.slice(0,n||5);
 }
 function _pwLiveTopInflow(n){
