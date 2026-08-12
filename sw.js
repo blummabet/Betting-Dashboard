@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v117';   // 12.08.2026 (Lucas): Puls-Redesign — Metrik-Karten (klickbar -> Bereich) + Money-Map-Zeile, „Jetzt & gleich" mit Inhalt, neue Kacheln (Heiße Spiele Poly / Betfair-Zug)
+const VERSION = 'cocobet-v118';   // 12.08.2026 (Lucas): Betfair-CLV-Tracking (vs Close + vs Pinnacle) im Tracking-Tab
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

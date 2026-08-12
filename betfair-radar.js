@@ -813,6 +813,8 @@
     return t.byLeagueMarket[String(league) + '|' + String(marketId)] || null;
   }
   function _pctTxt(x) { return x == null ? '—' : Math.round(x * 100) + '%'; }
+  function _clvTxt(x) { return x == null ? '—' : (x > 0 ? '+' : '') + (+x).toFixed(1) + 'pp'; }
+  function _clvCol(x) { return x == null ? C.dim : x > 0 ? C.back : x < 0 ? C.lay : C.mut; }
   function _roiTxt(x) { return x == null ? '—' : (x >= 0 ? '+' : '') + Math.round(x * 100) + '%'; }
   function _roiCol(x) { return x == null ? C.dim : x > 0.05 ? C.back : x < -0.08 ? C.lay : C.mut; }
   // Kleine Confidence-Chip an einem Markt in der Spielliste (nur wenn belastbare Stichprobe da).
@@ -848,6 +850,8 @@
       + kpi('ROI — Geld backen', _roiTxt(g.roi), _roiCol(g.roi), 'zu den Quoten')
       + kpi('Konzentration ≥65%', _roiTxt(g.roiConc), _roiCol(g.roiConc), _pctTxt(g.hitRateConc) + ' · n' + g.nConc)
       + kpi('Zufluss', _roiTxt(g.roiInflow), _roiCol(g.roiInflow), _pctTxt(g.hitRateInflow) + ' · n' + g.nInflow)
+      + kpi('CLV vs Betfair-Close', _clvTxt(g.avgClvBf), _clvCol(g.avgClvBf), g.nClvBf ? (_pctTxt(g.pctBeatBf) + ' schlagen Close · n' + g.nClvBf) : 'sammelt …')
+      + kpi('CLV vs Pinnacle', _clvTxt(g.avgClvPinn), _clvCol(g.avgClvPinn), g.nClvPinn ? (_pctTxt(g.pctBeatPinn) + ' · n' + g.nClvPinn) : 'nur abgedeckte Ligen')
       + '</div>';
     var verdict = (g.roi != null && g.roi > 0.02)
       ? '✅ Dem Geld-Favorit blind zu folgen war insgesamt profitabel (ROI ' + _roiTxt(g.roi) + ').'
@@ -1049,7 +1053,9 @@
       kpi('Trefferquote', _pct(r.hitRate), C.gold, r.wins + '/' + r.n + ' Signale') +
       kpi('ROI', _roi(r.roi), roiCol, '1 Einheit/Signal') +
       kpi('Ø Quote', r.avgOdd ? ('@' + (+r.avgOdd).toFixed(2)) : '—', C.ink, 'gefolgte Seite') +
-      kpi('offen', r.pending || 0, C.mut, 'noch nicht aufgelöst') + '</div>';
+      kpi('offen', r.pending || 0, C.mut, 'noch nicht aufgelöst') +
+      kpi('CLV vs Betfair-Close', _clvTxt(r.avgClvBf), _clvCol(r.avgClvBf), r.nClvBf ? (_pct(r.pctBeatBf) + ' schlagen Close · n' + r.nClvBf) : 'sammelt …') +
+      kpi('CLV vs Pinnacle', _clvTxt(r.avgClvPinn), _clvCol(r.avgClvPinn), r.nClvPinn ? (_pct(r.pctBeatPinn) + ' · n' + r.nClvPinn) : 'nur abgedeckte Ligen') + '</div>';
     var scnRow = function (key, lbl) { var s = (r.byScenario || {})[key]; if (!s) return ''; return '<div style="display:flex;justify-content:space-between;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid ' + C.bd + ';font-size:13px"><span style="font-weight:700">' + lbl + '</span><span style="text-align:right"><b style="color:' + C.gold + '">' + _pct(s.hitRate) + '</b> · <b style="color:' + (s.roi >= 0 ? C.back : C.lay) + '">' + _roi(s.roi) + '</b> ROI <span style="color:' + C.dim + '">' + s.wins + '/' + s.n + ' · Ø@' + (s.avgOdd || '—') + '</span></span></div>'; };
     var scn = '<div style="background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:12px;padding:12px 15px;margin-bottom:14px"><div style="font-size:12px;color:' + C.mut + ';font-weight:700;margin-bottom:2px">nach Signal-Typ</div>' + scnRow('fresh', '💶 Moneyflow (frisches Geld)') + scnRow('ht', '💷 Halftime (einseitig)') + '</div>';
     var mkKeys = Object.keys(r.byMarket || {});

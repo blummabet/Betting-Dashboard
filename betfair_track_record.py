@@ -31,6 +31,7 @@ PRICES_FILE = BASE / "betfair_prices.json"
 HISTORY_FILE = BASE / "betfair_history.json"
 STATE_FILE = BASE / "betfair_track_state.json"
 RESULTS_FILE = BASE / "betfair_track_results.json"
+CONSENSUS_FILE = BASE / "betfair_consensus.json"   # 12.08.2026 (Lucas): Pinnacle-Odd fuer CLV-vs-Pinnacle
 RECORD_FILE = BASE / "betfair_track_record.json"
 DIRECTION_FILE = BASE / "betfair_direction.json"   # 08.08.2026 (Lucas): Back/Lay-Richtung je Runner
 
@@ -175,7 +176,7 @@ def _is_prematch(m, now):
 
 
 # ── capture / settle / aggregate ──────────────────────────────────────────────
-def capture(prices, history, state, now=None, direction=None):
+def capture(prices, history, state, now=None, direction=None, consensus=None):
     """Vor-Anpfiff-Signale je Markt festhalten (Closing = letzter Lauf) + HT-Stand live einfangen. REIN."""
     now = now or _now()
     state = dict(state or {})
@@ -212,7 +213,15 @@ def capture(prices, history, state, now=None, direction=None):
                     continue
                 share = (lead.get("vol") or 0) / tot
                 d = _dir_look(direction, mid, mkid, lead.get("name")) if direction else None
+                _prev = ((pending.get(mid) or {}).get("signals") or {}).get(mkid) or {}
+                _pinn = None
+                if mkid == "Match Odds" and isinstance(consensus, dict):
+                    _cg = consensus.get(mid) or {}
+                    if isinstance(_cg.get("pinnOdd"), (int, float)):
+                        _pinn = _cg["pinnOdd"]
                 sigs[mkid] = {"fav": fav, "share": round(share, 3), "odd": lead.get("odd"),
+                              "entryOdd": _prev.get("entryOdd", lead.get("odd")),
+                              "pinnClose": (_pinn if _pinn is not None else _prev.get("pinnClose")),
                               "conc": share >= CONC_THRESHOLD,
                               "inflow": _inflow_eur(history, mid, mkid) >= INFLOW_MIN_EUR,
                               "dir": (d or {}).get("dir")}   # 'in'=gebackt (Quote kuerzer) · 'out'=gedriftet
@@ -239,9 +248,12 @@ def settle(prices, state, results, now=None, results_fetch=None):
             win, ok = grade(sig["fav"], mkid, ft, ht)
             if not ok:
                 continue
+            _e = sig.get("entryOdd", sig.get("odd"))
             results.append({"league": pend.get("league"), "market": mkid,
                             "home": pend.get("home"), "away": pend.get("away"), "country": pend.get("country"),
-                            "fav": sig["fav"], "odd": sig["odd"],
+                            "fav": sig["fav"], "odd": sig["odd"], "entryOdd": _e,
+                            "pinnClose": sig.get("pinnClose"),
+                            "clvBf": _clv_pp(_e, sig.get("odd")), "clvPinn": _clv_pp(_e, sig.get("pinnClose")),
                             "conc": bool(sig.get("conc")), "inflow": bool(sig.get("inflow")),
                             "win": bool(win), "settledAt": now.isoformat(),
                             "matchId": mid, "ft": ft, "ht": ht, "via": via, "dir": sig.get("dir")})
@@ -360,13 +372,28 @@ def verify_settled(results, now=None, results_fetch=None):
     return results
 
 
+def _clv_pp(entry, close):
+    """CLV in Prozentpunkten: implizite Wahrscheinlichkeit(Close) minus (Einstieg). >0 = die Linie zog
+    NACH unserem Einstieg auf unsere Seite (wir haben die spaetere/schaerfere Quote geschlagen = Value).
+    None, wenn eine Quote fehlt/ungueltig. REIN/testbar. 12.08.2026 (Lucas: CLV auch fuer Betfair)."""
+    try:
+        e, c = float(entry), float(close)
+        if e > 1 and c > 1:
+            return round((1.0 / c - 1.0 / e) * 100.0, 2)
+    except (TypeError, ValueError):
+        pass
+    return None
+
+
 def _bucket():
     return {"n": 0, "wins": 0, "roiSum": 0.0,
             "nConc": 0, "winsConc": 0, "roiConc": 0.0,
             "nInflow": 0, "winsInflow": 0, "roiInflow": 0.0,
             # 08.08.2026 (Lucas): Richtung — kam das Geld als Back (Quote kuerzer) oder driftete es?
             "nBack": 0, "winsBack": 0, "roiBack": 0.0,
-            "nDrift": 0, "winsDrift": 0, "roiDrift": 0.0}
+            "nDrift": 0, "winsDrift": 0, "roiDrift": 0.0,
+            "nClvBf": 0, "clvBfSum": 0.0, "beatBf": 0,
+            "nClvPinn": 0, "clvPinnSum": 0.0, "beatPinn": 0}
 
 
 def _add(b, r):
@@ -387,6 +414,12 @@ def _add(b, r):
         b["nBack"] += 1; b["winsBack"] += 1 if r.get("win") else 0; b["roiBack"] += profit
     elif d == "out":
         b["nDrift"] += 1; b["winsDrift"] += 1 if r.get("win") else 0; b["roiDrift"] += profit
+    cb = r.get("clvBf")
+    if isinstance(cb, (int, float)):
+        b["nClvBf"] += 1; b["clvBfSum"] += cb; b["beatBf"] += 1 if cb > 0 else 0
+    cp = r.get("clvPinn")
+    if isinstance(cp, (int, float)):
+        b["nClvPinn"] += 1; b["clvPinnSum"] += cp; b["beatPinn"] += 1 if cp > 0 else 0
 
 
 def _fin(b):
@@ -401,7 +434,11 @@ def _fin(b):
             "nBack": b["nBack"], "hitRateBack": rate(b["winsBack"], b["nBack"]),
             "roiBack": round(b["roiBack"] / b["nBack"], 4) if b["nBack"] else None,
             "nDrift": b["nDrift"], "hitRateDrift": rate(b["winsDrift"], b["nDrift"]),
-            "roiDrift": round(b["roiDrift"] / b["nDrift"], 4) if b["nDrift"] else None}
+            "roiDrift": round(b["roiDrift"] / b["nDrift"], 4) if b["nDrift"] else None,
+            "nClvBf": b["nClvBf"], "avgClvBf": round(b["clvBfSum"] / b["nClvBf"], 2) if b["nClvBf"] else None,
+            "pctBeatBf": rate(b["beatBf"], b["nClvBf"]),
+            "nClvPinn": b["nClvPinn"], "avgClvPinn": round(b["clvPinnSum"] / b["nClvPinn"], 2) if b["nClvPinn"] else None,
+            "pctBeatPinn": rate(b["beatPinn"], b["nClvPinn"])}
 
 
 def aggregate(results, now=None):
@@ -457,7 +494,9 @@ def main():
     if not isinstance(results, list):
         results = []
     now = _now()
-    state = capture(prices, history, state, now=now, direction=direction if isinstance(direction, dict) else {})
+    _cons_raw = _load(CONSENSUS_FILE, {})
+    _cons = {str(g.get("matchId")): g for g in (_cons_raw.get("games") or []) if isinstance(g, dict)} if isinstance(_cons_raw, dict) else {}
+    state = capture(prices, history, state, now=now, direction=direction if isinstance(direction, dict) else {}, consensus=_cons)
     state, results = settle(prices, state, results, now=now, results_fetch=_fetch_results)
     results = verify_settled(results, now=now, results_fetch=_fetch_results)
     record = aggregate(results, now=now)

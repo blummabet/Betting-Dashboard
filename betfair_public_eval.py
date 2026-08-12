@@ -16,7 +16,7 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 # Grading aus dem bestehenden Track-Record wiederverwenden (kein Duplikat).
-from betfair_track_record import fav_token, winning_token, grade, MARKETS, RESULTS_MIN_H, CORRECTION_WINDOW_H
+from betfair_track_record import fav_token, winning_token, grade, MARKETS, RESULTS_MIN_H, CORRECTION_WINDOW_H, _clv_pp
 
 try:
     from fetch_betfair_betwatch import fetch_results as _fetch_results   # 10.08.2026 (Lucas): autoritative Endstaende
@@ -102,6 +102,8 @@ def settle_from_track(ledger, track_results, now=None):
             continue
         row = idx.get((str(e.get("matchId")), e.get("market")))
         if row:
+            e["clvBf"] = _clv_pp(e.get("leadOdd"), row.get("odd"))       # 12.08.2026 (Lucas): Push-CLV vs Betfair-Close
+            e["clvPinn"] = _clv_pp(e.get("leadOdd"), row.get("pinnClose"))  # + vs Pinnacle-Close (nur abgedeckte Ligen)
             _settle_entry(e, row.get("ft"), row.get("ht"), now, "track")
     return ledger
 
@@ -266,10 +268,16 @@ def summarize(ledger, now=None):
         wins = sum(1 for e in rows if e.get("status") == "won")
         profit = sum(float(e.get("profit") or 0) for e in rows)
         odds = [float(e["leadOdd"]) for e in rows if isinstance(e.get("leadOdd"), (int, float))]
+        clvb = [e["clvBf"] for e in rows if isinstance(e.get("clvBf"), (int, float))]
+        clvp = [e["clvPinn"] for e in rows if isinstance(e.get("clvPinn"), (int, float))]
         return {"n": n, "wins": wins,
                 "hitRate": round(wins / n, 4) if n else None,
                 "roi": round(profit / n, 4) if n else None,
-                "avgOdd": round(sum(odds) / len(odds), 2) if odds else None}
+                "avgOdd": round(sum(odds) / len(odds), 2) if odds else None,
+                "nClvBf": len(clvb), "avgClvBf": round(sum(clvb) / len(clvb), 2) if clvb else None,
+                "pctBeatBf": round(sum(1 for x in clvb if x > 0) / len(clvb), 3) if clvb else None,
+                "nClvPinn": len(clvp), "avgClvPinn": round(sum(clvp) / len(clvp), 2) if clvp else None,
+                "pctBeatPinn": round(sum(1 for x in clvp if x > 0) / len(clvp), 3) if clvp else None}
 
     by_scn, by_mkt = {}, {}
     for scn in ("fresh", "ht"):
