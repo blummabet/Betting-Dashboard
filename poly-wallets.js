@@ -1308,6 +1308,15 @@ function _pwMoneyLive(live){
 // ── ⚡ LIVE (11.08.2026, Lucas Stufe 2): Geld & Whales auf LAUFENDEN Spielen. Quelle: poly_money_broad_live.json
 // (der leichte Live-Scan, alle ~5 Min). Zeigt frischen Zufluss + Whales, die JETZT reingehen, und markiert
 // Wallets, die im Live-Top-4 auftauchen, aber vor Anpfiff NICHT drin waren (= live eingestiegen = das Signal).
+// 11.08.2026 (Lucas): entschiedene Live-Maerkte raus — steht der Favorit bei >=95c, ist das Spiel
+// quasi durch (der 100c-Fall). Live-Geld darauf ist nur noch Abwicklung, kein Signal. Gleiche
+// „durch-das-Spiel"-Logik wie die Alert-Preisschwelle. Greift in beiden Live-Listen + im Live-Tab.
+const PW_LIVE_DECIDED_PRICE=0.95;
+function _pwLiveDecided(m){
+  if(!m||!m.prices) return false;
+  let mx=0; for(const k in m.prices){ const v=Number(m.prices[k]); if(isFinite(v)&&v>mx) mx=v; }
+  return mx>=PW_LIVE_DECIDED_PRICE;
+}
 function _pwLiveInflow(key){
   const a=_pwCache&&_pwCache.broadLiveHist&&_pwCache.broadLiveHist[key];
   if(!Array.isArray(a)||a.length<2) return null;
@@ -1370,7 +1379,7 @@ function _pwLiveWhales(){
     +'<span class="pw-kicker">⚡ LIVE — Geld & Wallets auf laufenden Spielen</span>'
     +'<span class="pw-sec-note">nur In-Play-Märkte · frischer Zufluss + Whales, die JETZT reingehen · alle ~5 Min</span></div>';
   let rows=(live?Object.entries(live):[]).map(e=>({k:e[0],m:e[1]}))
-    .filter(x=>x.m && x.m.shares && (x.m.totalUsd||0)>=5000 && _pwSportPass(x.m.league));
+    .filter(x=>x.m && x.m.shares && (x.m.totalUsd||0)>=5000 && _pwSportPass(x.m.league) && !_pwLiveDecided(x.m));
   if(!rows.length) return intro+'<div class="pw-none">Gerade keine laufenden Märkte mit nennenswertem Geld. Die Live-Erfassung läuft am Mac-Runner (alle ~5 Min) — sobald Esport/Tennis/… live ist und Geld drauf liegt, steht hier was.</div></section>';
   rows.forEach(x=>{ x.inflow=_pwLiveInflow(x.k); x.vol=x.m.totalUsd||0;
     const pre=_pwPregameWhales(x.k); let sl=0,nw=0;
@@ -1518,7 +1527,7 @@ function _pwLiveTopWhales(n){
   const live=_pwCache&&_pwCache.broadLiveNow; if(!live) return [];
   const out=[];
   Object.entries(live).forEach(([k,m])=>{
-    if(!m||!m.shares||(Number(m.totalUsd)||0)<5000||!_pwSportPass(m.league)) return;
+    if(!m||!m.shares||(Number(m.totalUsd)||0)<5000||!_pwSportPass(m.league)||_pwLiveDecided(m)) return;
     const pre=_pwPregameWhales(k);
     const label=_pwEventLabel(k,Object.keys(m.shares||{}),m.league);
     (m.whales||[]).forEach(w=>{
@@ -1535,7 +1544,7 @@ function _pwLiveTopWhales(n){
 function _pwLiveTopInflow(n){
   const live=_pwCache&&_pwCache.broadLiveNow; if(!live) return [];
   const rows=Object.entries(live).map(e=>({k:e[0],m:e[1]}))
-    .filter(x=>x.m&&x.m.shares&&(Number(x.m.totalUsd)||0)>=5000&&_pwSportPass(x.m.league));
+    .filter(x=>x.m&&x.m.shares&&(Number(x.m.totalUsd)||0)>=5000&&_pwSportPass(x.m.league)&&!_pwLiveDecided(x.m));
   rows.forEach(x=>{ x.inflow=_pwLiveInflow(x.k)||0; });
   const out=rows.filter(x=>x.inflow>0);
   out.sort((a,b)=>(b.inflow-a.inflow)||((Number(b.m.totalUsd)||0)-(Number(a.m.totalUsd)||0)));

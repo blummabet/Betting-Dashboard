@@ -218,6 +218,44 @@ def settle(ledger, prices, now=None, results_fetch=None):
     return ledger
 
 
+MANUAL_RESULTS_FILE = BASE / "manual_results.json"
+
+
+def apply_manual_results(ledger, manual, now=None):
+    """11.08.2026 (Lucas, Plymouth-Fall): Menschlich bestaetigte Endstaende fuer Spiele, die in KEINER
+    Ergebnisquelle stehen (EFL-Cup u.ae. — weder Betwatch /results noch API-Football) und aus dem
+    Live-Feed verschwanden (vanish@0:0 -> faelschlich 'lost'). manual_results.json: {matchId: {ft:[h,a],
+    ht?:[h,a], note?}}. Ueberschreibt AUCH bereits abgerechnete Zeilen — der gepinnte Endstand schlaegt
+    Feed/Vanish. Laeuft als LETZTER Schritt, also gewinnt er auch gegen ein erneutes settle_from_track.
+    via='manual', resChk=True. REIN."""
+    now = now or _now()
+    if not isinstance(manual, dict) or not manual:
+        return ledger
+    for e in ledger:
+        if not isinstance(e, dict):
+            continue
+        m = manual.get(str(e.get("matchId")))
+        if not isinstance(m, dict):
+            continue
+        ft = m.get("ft")
+        if not (isinstance(ft, list) and len(ft) == 2):
+            continue
+        ht = e.get("htScore") if e.get("htScore") is not None else m.get("ht")
+        fav = fav_token(e.get("market"), e.get("leadName"), e.get("home"), e.get("away"))
+        win, ok = grade(fav, e.get("market"), ft, ht)
+        if not ok:
+            continue
+        odd = e.get("leadOdd")
+        e["status"] = "won" if win else "lost"
+        e["ftScore"] = ft
+        e["profit"] = (float(odd) - 1.0) if (win and isinstance(odd, (int, float))) else (0.0 if win else -1.0)
+        e["via"] = "manual"
+        e["resChk"] = True
+        if not e.get("settledAt"):
+            e["settledAt"] = now.isoformat()
+    return ledger
+
+
 def summarize(ledger, now=None):
     now = now or _now()
     res = [e for e in ledger if e.get("status") in ("won", "lost")]
@@ -285,6 +323,9 @@ def main():
     ledger = settle_from_track(ledger, track_results)
     ledger = settle(ledger, prices, results_fetch=_fetch_results)
     ledger = verify_settled(ledger, results_fetch=_fetch_results)   # 11.08.2026: autoritative Nachkontrolle (Plymouth-Fall)
+    # 11.08.2026 (Lucas): LETZTER Schritt — manuell gepinnte Endstaende (Spiele in keiner Ergebnisquelle,
+    # z.B. EFL-Cup, aus dem Feed verschwunden). Schlaegt Feed/Vanish auch bei bereits abgerechneten Zeilen.
+    ledger = apply_manual_results(ledger, _load(MANUAL_RESULTS_FILE, {}))
     # abgeschlossene/verworfene lange behalten fürs Ledger, aber deckeln
     ledger = ledger[-LEDGER_KEEP:]
     record = summarize(ledger)

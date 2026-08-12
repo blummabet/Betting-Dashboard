@@ -205,5 +205,40 @@ class TestVerifySettled(unittest.TestCase):
         self.assertEqual(led[0]["status"], "lost")
 
 
+
+class TestManualResults(unittest.TestCase):
+    """11.08.2026 (Lucas, Plymouth): manuell gepinnter Endstand ueberschreibt auch bereits (falsch)
+    abgerechnete Zeilen und schlaegt Feed/Vanish."""
+    def test_flips_wrong_lost_to_won(self):
+        led = [_p("777", "Match Odds", "TeamH", 1.53, home="TeamH", away="TeamA")]
+        led[0].update({"status": "lost", "ftScore": [0, 0], "via": "track", "profit": -1.0})
+        E.apply_manual_results(led, {"777": {"ft": [2, 0]}}, NOW)
+        self.assertEqual(led[0]["status"], "won")
+        self.assertEqual(led[0]["ftScore"], [2, 0])
+        self.assertEqual(led[0]["via"], "manual")
+        self.assertTrue(led[0]["resChk"])
+        self.assertAlmostEqual(led[0]["profit"], 0.53)
+
+    def test_flips_win_to_loss_when_pinned_says_so(self):
+        led = [_p("778", "Match Odds", "TeamH", 2.0, home="TeamH", away="TeamA")]
+        led[0].update({"status": "won", "ftScore": [1, 0], "via": "finished", "profit": 1.0})
+        E.apply_manual_results(led, {"778": {"ft": [0, 1]}}, NOW)   # in Wahrheit Auswaertssieg
+        self.assertEqual(led[0]["status"], "lost")
+        self.assertAlmostEqual(led[0]["profit"], -1.0)
+
+    def test_ignores_unknown_and_malformed(self):
+        led = [_p("779", "Match Odds", "TeamH", 1.8, home="TeamH", away="TeamA")]
+        led[0].update({"status": "lost", "ftScore": [0, 0], "via": "track"})
+        E.apply_manual_results(led, {"999": {"ft": [3, 0]}}, NOW)          # andere matchId
+        E.apply_manual_results(led, {"779": {"ft": "2:0"}}, NOW)           # kaputtes ft
+        self.assertEqual(led[0]["status"], "lost")
+
+    def test_empty_manual_is_noop(self):
+        led = [_p("780", "Match Odds", "TeamH", 1.8, home="TeamH", away="TeamA")]
+        led[0].update({"status": "lost", "ftScore": [0, 0]})
+        E.apply_manual_results(led, {}, NOW)
+        self.assertEqual(led[0]["status"], "lost")
+
+
 if __name__ == "__main__":
     unittest.main()
