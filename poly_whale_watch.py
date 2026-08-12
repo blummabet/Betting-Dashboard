@@ -108,6 +108,11 @@ def _is_smart(s, min_tr=MIN_TR, min_hitrate=MIN_HITRATE):
         return False
     if not _beats_coinflip(s.get("wins") or 0, n):   # signifikant >50%, nicht bloß roh ≥50%
         return False
+    # 12.08.2026 (Lucas): CLV-Gate. Eine hohe Trefferquote OHNE positiven CLV ist Glueck, kein Edge —
+    # reale Tennis-Wallet 7/9 (78%) aber Ø CLV negativ, lebenslang -70K. „Bewiesen" heisst: schlaegt
+    # AUCH die Linie (Ø CLV >= 0), nicht nur die Quote. clvSumPP fehlt -> 0 (neutral, bleibt drin).
+    if ((s.get("clvSumPP") or 0) / n) < 0:
+        return False
     pnl = s.get("pnl")
     if isinstance(pnl, (int, float)) and pnl < 0:
         return False
@@ -213,7 +218,8 @@ def _wallet_line(scores: dict, wallet) -> str:
     n = (s.get("n") or 0) if isinstance(s, dict) else 0
     if _is_smart(s):
         wins = s.get("wins") or 0
-        return f"Wallet {link} · ✅ <b>bewiesene Wallet</b> ({wins}/{n} richtig, {round(wins/n*100)}%)"
+        _clv = (s.get("clvSumPP") or 0) / n
+        return f"Wallet {link} · ✅ <b>bewiesene Wallet</b> ({wins}/{n} richtig, {round(wins/n*100)}% · {_clv:+.1f}pp CLV)"
     # 06.08.2026 (Lucas: gleiche Loesung wie Public): rohe Bilanz ab n>=MIN_TR neutral zeigen, statt sie
     # hinter „im Aufbau" zu verstecken. Nur wirklich duenn (n<MIN_TR) oder Verlierer bleibt „im Aufbau".
     if isinstance(s, dict) and n >= MIN_TR and not _is_confirmed_loser(s):

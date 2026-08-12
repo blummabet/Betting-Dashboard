@@ -317,5 +317,28 @@ class TestPublicRecordAndTighten(unittest.TestCase):
         self.assertTrue(P._pub_keep({"wallet": "new", "usd": P.PUB_MIN_USD_NOREC}, sc))  # riesig -> rein
 
 
+class TestClvGate(unittest.TestCase):
+    """12.08.2026 (Lucas): hohe Trefferquote OHNE positiven CLV = Glueck, kein Edge. Die reale
+    Tennis-Wallet (7/9 = 78% aber Ø CLV negativ, lebenslang -70K) darf NICHT 'bewiesen' sein."""
+
+    def test_negative_clv_not_smart(self):
+        self.assertFalse(P._is_smart({"n": 9, "wins": 7, "clvSumPP": -0.59}))   # reale Tennis-Wallet
+        self.assertFalse(P._is_smart({"n": 20, "wins": 15, "clvSumPP": -5}))    # gute Quote, neg CLV
+
+    def test_nonneg_clv_bleibt_smart(self):
+        self.assertTrue(P._is_smart({"n": 20, "wins": 15, "clvSumPP": 40}))     # 75% + pos CLV
+        self.assertTrue(P._is_smart({"n": 9, "wins": 8}))                        # CLV fehlt -> 0 -> bleibt smart
+
+    def test_negative_clv_label_nicht_bewiesen(self):
+        line = P._wallet_line({"0xT": {"n": 9, "wins": 7, "clvSumPP": -0.59}}, "0xT")
+        self.assertNotIn("bewiesene Wallet", line)   # kein Schmeichel-Label
+        self.assertIn("Bilanz", line)                # faellt auf neutrale Bilanz
+
+    def test_bewiesen_label_zeigt_clv(self):
+        line = P._wallet_line({"0xA": {"n": 20, "wins": 15, "clvSumPP": 40}}, "0xA")
+        self.assertIn("bewiesene Wallet", line)
+        self.assertIn("pp CLV", line)                # Skill-Metrik sichtbar im Trades-Badge
+
+
 if __name__ == "__main__":
     unittest.main()
