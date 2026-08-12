@@ -341,6 +341,33 @@ class TestMoneyMap(unittest.TestCase):
         self.assertEqual(row["verdict"], "no_anchor")
         self.assertEqual(row["nSources"], 1)
 
+    def _entry(self, prices, **kw):
+        d = {"src": "upcoming", "totalUsd": 50000, "prices": prices, "shares": {}}
+        d.update(kw); return d
+
+    def test_poly_fav_aus_preis_wenn_keine_shares(self):
+        # upcoming-Erfassung: keine Shares -> Favorit aus dem Preis (Poly-Preis = Wahrscheinlichkeit)
+        m = {"home": "Paris St-G", "away": "Aston Villa"}
+        e = self._entry({"Paris St-G": 0.60, "Aston Villa": 0.28, "Draw": 0.12})
+        pf = BC.poly_fav(m, [e])
+        self.assertEqual(pf["side"], "home")
+        self.assertEqual(pf["sharePct"], 60)
+        self.assertEqual(pf["usd"], 50000)
+        self.assertEqual(pf["src"], "upcoming")
+
+    def test_matching_abkuerzung_paris(self):
+        # Betfair "Paris St-G" vs Poly "Paris Saint-Germain": eine Seite exakt (Villa), andere abgeleitet
+        m = {"home": "Paris St-G", "away": "Aston Villa"}
+        e = self._entry({"Paris Saint-Germain": 0.60, "Aston Villa": 0.40})
+        self.assertIsNotNone(BC._best_poly_entry(m, [e]))
+        self.assertIsNotNone(BC.poly_fav(m, [e]))
+
+    def test_matching_kein_falsch_match(self):
+        # nur Villa gleich, Gegner voellig anders (kein geteiltes Token) -> KEIN Match
+        m = {"home": "Paris St-G", "away": "Aston Villa"}
+        e = self._entry({"Aston Villa": 0.5, "Chelsea": 0.5})
+        self.assertIsNone(BC._best_poly_entry(m, [e]))
+
     def test_ledger_upsert_pending(self):
         pf = BC.poly_fav({"home": "Bochum", "away": "Union Berlin"}, self._poly())
         led = BC.update_mm_ledger([], [BC.money_map_row(self._g(), pf)], now="2026-08-11T12:00:00+00:00")

@@ -46,6 +46,7 @@
 '.mm-bub{position:absolute;transform:translate(-50%,-50%);border-radius:50%;display:grid;place-items:center;font-size:10px;font-weight:800;color:#0a0e14;box-shadow:0 4px 14px -4px rgba(0,0,0,.7);border:2px solid rgba(255,255,255,.16);z-index:2}',
 '.mm-bub.mm-bf{background:radial-gradient(circle at 35% 30%,#f6d477,#eab938)}',
 '.mm-bub.mm-poly{background:radial-gradient(circle at 35% 30%,#54cf9a,#22a06b);color:#04140d}',
+'.mm-bub.mm-poly-est{border-style:dashed;border-color:rgba(84,207,154,.7);opacity:.9}',
 '.mm-foot{display:flex;align-items:center;gap:8px;margin-top:10px;padding-top:11px;border-top:1px solid #242c38}',
 '.mm-verd{font-size:12.5px;font-weight:800}.mm-verd.k{color:#4ade80}.mm-verd.d{color:#e3b341}.mm-verd.p{color:#9aa4b1}',
 '.mm-vsub{font-size:11.5px;color:#6b7480}',
@@ -77,14 +78,14 @@
     if(bf&&poly&&bfPos!=null&&pPos!=null&&Math.abs(bfPos-pPos)<8) bub+='<div class="mm-col" style="left:'+((bfPos+pPos)/2)+'%"></div>';
     if(pn&&pnPos!=null){ var pf=pn.fav, pp=Math.round((+pn[pf]||0)*100); bub+='<div class="mm-pinn" style="left:'+pnPos+'%"><span class="mm-pl">Pinnacle '+pp+'%</span><i></i><div class="mm-d"></div></div>'; }
     if(bf&&bfPos!=null){ var d=_dia(bf.eur); bub+='<div class="mm-bub mm-bf" style="left:'+bfPos+'%;top:56px;width:'+d+'px;height:'+d+'px">'+_eur(bf.eur)+'</div>'; }
-    if(poly&&pPos!=null){ var d2=_dia(poly.usd); bub+='<div class="mm-bub mm-poly" style="left:'+pPos+'%;top:96px;width:'+d2+'px;height:'+d2+'px">'+_usd(poly.usd)+'</div>'; }
+    if(poly&&pPos!=null){ var d2=_dia(poly.usd); var _est=(poly.src==='upcoming')?' mm-poly-est':''; bub+='<div class="mm-bub mm-poly'+_est+'" title="'+((poly.src==='upcoming')?'Poly-Preis (vor Anpfiff, keine Geld-Verteilung)':'Poly-Geld')+'" style="left:'+pPos+'%;top:96px;width:'+d2+'px;height:'+d2+'px">'+_usd(poly.usd)+'</div>'; }
     var vtxt=kon?'✅ Konsens':(div?'⚠️ Divergenz':(r.verdict==='teil'?'➖ teils einig':'—'));
     var vsub=kon?('einig auf '+_esc((bf&&bf.name)||'')):(div?'Geld & scharfe Linie uneinig':'');
     return '<div class="mm-card'+(kon?' mm-kon':(div?' mm-div':''))+'">'
       +'<div class="mm-ch"><span>⚽</span><span class="mm-t">'+_esc(r.home)+' <span class="mm-vs">vs</span> '+_esc(r.away)+'</span>'+live+'<span class="mm-lg">'+_esc(r.league||'')+'</span></div>'
       +'<div class="mm-axis"><div class="mm-ends"><span>'+_esc(r.home)+'</span><span>'+_esc(r.away)+'</span></div>'
         +'<div class="mm-lane mm-lbf"></div><div class="mm-ll mm-lbf">Betfair</div>'
-        +'<div class="mm-lane mm-lpoly"></div><div class="mm-ll mm-lpoly"'+(poly?'':' style="opacity:.4"')+'>Poly'+(poly?'':' · kein Markt')+'</div>'
+        +'<div class="mm-lane mm-lpoly"></div><div class="mm-ll mm-lpoly"'+(poly?'':' style="opacity:.4"')+'>Poly'+(poly?(poly.src==='upcoming'?' · früh':''):' · kein Markt')+'</div>'
         +bub+'</div>'
       +'<div class="mm-foot"><span class="mm-verd '+(kon?'k':(div?'d':'p'))+'">'+vtxt+'</span><span class="mm-vsub">'+vsub+'</span><span class="mm-src">'+(r.nSources||0)+' / 3</span></div>'
       +'</div>';

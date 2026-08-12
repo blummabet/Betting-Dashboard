@@ -217,6 +217,20 @@ def _best_poly_entry(m, poly_entries):
     for pe in poly_entries:
         keys = list((pe.get("prices") or {}).keys())
         hk, ak = _poly_key_for(home, keys), _poly_key_for(away, keys)
+        # 12.08.2026 (Lucas): eine Seite matcht stark, die andere ist bei Poly anders abgekuerzt
+        # (Betfair "Paris St-G" vs Poly "Paris Saint-Germain" -> nur 0.33, unter der 0.49-Schwelle).
+        # Bei genau 2 Team-Ausgaengen die fehlende Seite als den Gegner ableiten -- aber nur, wenn sie
+        # mindestens EIN Token teilt (schuetzt vor Falsch-Paarung, wenn nur ein Team zufaellig gleich heisst).
+        team_keys = [k for k in keys if str(k).lower() not in _POLY_NON_TEAM]
+        if len(team_keys) == 2:
+            if hk and not ak:
+                cand = next((k for k in team_keys if k != hk), None)
+                if cand and _name_score(away, cand) > 0:
+                    ak = cand
+            elif ak and not hk:
+                cand = next((k for k in team_keys if k != ak), None)
+                if cand and _name_score(home, cand) > 0:
+                    hk = cand
         if hk and ak and hk != ak:
             sc = _name_score(home, hk) + _name_score(away, ak)
             if sc > bsc:
@@ -337,16 +351,29 @@ def poly_fav(m, poly_entries):
     pe, hk, ak = best
     prices, shares = pe.get("prices") or {}, pe.get("shares") or {}
     dk = next((k for k in prices if str(k).lower() in ("draw", "the draw", "tie")), None)
-    tot = sum(v for v in shares.values() if isinstance(v, (int, float))) or 0
     cand = [("home", hk), ("away", ak)] + ([("draw", dk)] if dk else [])
-    bside, bsh, bname = None, -1, None
+    tot = sum(v for v in shares.values() if isinstance(v, (int, float))) or 0
+    if tot > 0:
+        bside, bsh, bname = None, -1, None
+        for side, key in cand:
+            sh = shares.get(key) if key else None
+            if isinstance(sh, (int, float)) and sh > bsh:
+                bside, bsh, bname = side, sh, key
+        if bside is None:
+            return None
+        return {"side": bside, "name": bname, "sharePct": round(bsh / tot * 100),
+                "usd": round(pe.get("totalUsd") or 0), "src": pe.get("src") or "close"}
+    # 12.08.2026 (Lucas Money-Map): keine Shares (upcoming-Erfassung, weit vor Anpfiff) -> Favorit aus dem
+    # PREIS (auf Poly = geldgewichtete Wahrscheinlichkeit). sharePct = Preis*100, usd = Markt-Volumen.
+    bside, bp, bname = None, -1.0, None
     for side, key in cand:
-        sh = shares.get(key) if key else None
-        if isinstance(sh, (int, float)) and sh > bsh:
-            bside, bsh, bname = side, sh, key
-    if bside is None or tot <= 0:
+        p = prices.get(key) if key else None
+        if isinstance(p, (int, float)) and p > bp:
+            bside, bp, bname = side, p, key
+    if bside is None or bp <= 0:
         return None
-    return {"side": bside, "name": bname, "sharePct": round(bsh / tot * 100), "usd": round(pe.get("totalUsd") or 0)}
+    return {"side": bside, "name": bname, "sharePct": round(bp * 100),
+            "usd": round(pe.get("totalUsd") or 0), "src": pe.get("src") or "upcoming"}
 
 
 def money_map_row(g, pf):
@@ -359,7 +386,8 @@ def money_map_row(g, pf):
            "verdict": g.get("verdict"),
            "betfair": ({"side": bf_side, "name": g.get("moneyName"),
                         "sharePct": g.get("moneySharePct"), "eur": g.get("totVol")} if bf_side else None),
-           "poly": ({"side": pf["side"], "name": pf["name"], "sharePct": pf["sharePct"], "usd": pf["usd"]}
+           "poly": ({"side": pf["side"], "name": pf["name"], "sharePct": pf["sharePct"], "usd": pf["usd"],
+                     "src": pf.get("src")}
                     if pf else None),
            "pinn": ({"fav": pinn.get("fav"), "home": pinn.get("home"), "draw": pinn.get("draw"),
                      "away": pinn.get("away")} if pinn else None)}
@@ -573,17 +601,24 @@ def main():
     # Poly (globaler Broad-Scan, committet vom Poly-Workflow): nur Basis-Moneylines (kein
     # more-markets/exact-score/total), damit wir die Team-Preise + Volumen matchen koennen.
     poly_raw = _load("poly_money_broad_close.json", {})
-    poly_entries = [v for k, v in poly_raw.items()
+    poly_entries = [dict(v, src="close") for k, v in poly_raw.items()
                     if isinstance(v, dict) and v.get("prices")
                     and not any(x in str(k) for x in ("-more-markets", "-exact-score", "-total", "-spread"))
                     and len(v.get("prices")) <= 4] if isinstance(poly_raw, dict) else []
     # Stufe 4 (Live): fuer laufende Spiele die LIVE-Poly-Blase (poly_money_broad_live.json).
     # Additiv — nur die Money-Map nutzt sie; der Betfair-Radar (games) bleibt auf dem Close-Freeze.
     poly_live_raw = _load("poly_money_broad_live.json", {})
-    poly_live_entries = [v for k, v in poly_live_raw.items()
+    poly_live_entries = [dict(v, src="live") for k, v in poly_live_raw.items()
                     if isinstance(v, dict) and v.get("prices")
                     and not any(x in str(k) for x in ("-more-markets", "-exact-score", "-total", "-spread"))
                     and len(v.get("prices")) <= 4] if isinstance(poly_live_raw, dict) else []
+    # Money-Map (12.08.2026, Lucas): breitere "upcoming"-Erfassung (nur Preis+Vol, kein Holder-Call) ->
+    # Poly-Blase auch fuer Spiele weit vor Anpfiff (Super Cup/Pokal), wenn close/live den Markt noch nicht hat.
+    poly_upcoming_raw = _load("poly_money_upcoming.json", {})
+    poly_upcoming_entries = [dict(v, src="upcoming") for k, v in poly_upcoming_raw.items()
+                    if isinstance(v, dict) and v.get("prices")
+                    and not any(x in str(k) for x in ("-more-markets", "-exact-score", "-total", "-spread"))
+                    and len(v.get("prices")) <= 4] if isinstance(poly_upcoming_raw, dict) else []
 
     now = _now_iso()
     games, new_hist, mm_rows = [], {}, []
@@ -596,12 +631,16 @@ def main():
         prev = prevlist[-1] if prevlist else None
         g = build_game(m, ev, prev, direction, poly)
         games.append(g)
-        # Money-Map: LIVE-Spiele mit eigener Live-Poly-Blase (falls Live-Markt vorhanden), sonst Close.
+        # Money-Map Poly-Pool (12.08.2026, Lucas): live (laufend) > close (<=3h, mit Shares) >
+        # upcoming (weit draussen, nur Preis+Vol). So erscheint die Poly-Blase auch lange vor Anpfiff.
         li = m.get("liveInfo") or {}
-        use_live = bool(li.get("time")) and not li.get("finished") \
-                   and _best_poly_entry(m, poly_live_entries) is not None
-        mm_pool = poly_live_entries if use_live else poly_entries
-        mm_g = build_game(m, ev, prev, direction, match_poly(m, money_side(m), mm_pool)) if use_live else g
+        is_live = bool(li.get("time")) and not li.get("finished")
+        if is_live and _best_poly_entry(m, poly_live_entries) is not None:
+            mm_pool, mm_g = poly_live_entries, build_game(m, ev, prev, direction, match_poly(m, money_side(m), poly_live_entries))
+        elif _best_poly_entry(m, poly_entries) is not None:
+            mm_pool, mm_g = poly_entries, g
+        else:
+            mm_pool, mm_g = poly_upcoming_entries, g   # Verdikt bleibt no_anchor; money_map_row leitet Konsens aus Betfair vs Poly ab
         mm_rows.append(money_map_row(mm_g, poly_fav(m, mm_pool)))
         snap = {"ts": now}
         if ev and ev.get("pinn"):

@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v109';   // 12.08.2026 (Lucas): Live-Listen filtern durchgelaufene/veraltete Spiele (realHtk<-4h) raus — kein 13h-alter Snapshot mehr als LIVE + Stale-Hinweis
+const VERSION = 'cocobet-v110';   // 12.08.2026 (Lucas): Money Map — Poly-Blase auch weit vor Anpfiff (upcoming-Erfassung Preis+Vol) + Namens-Matching Paris St-G↔Saint-Germain
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

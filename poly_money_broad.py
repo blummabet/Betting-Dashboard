@@ -76,6 +76,15 @@ LIVE_KEEP_H           = float(os.environ.get("POLY_LIVE_KEEP_H") or 6.0)        
 LIVE_HIST_MAX_POINTS  = 24                                                          # Live-Historie: Spiele sind kurz -> weniger Punkte
 LIVE_HIST_KEEP_H      = 12.0
 
+# 12.08.2026 (Lucas, Money-Map): breitere "upcoming"-Erfassung fuer die Money Map. Poly listet marquee-
+# Spiele (Super Cup, Pokal) frueh mit echtem Geld, aber die Geld-Erfassung oben greift erst <=3h vor
+# Anpfiff (Holder-Budget). Preis + Volumen stehen aber schon in den Basis-Event-Daten des Sweeps ->
+# GRATIS. Diese Datei haelt je Sport-Markt bis UPCOMING_WINDOW_H nur {league, htk, totalUsd, prices}
+# (KEIN Holder-Call, KEINE Shares/Whales) -> die Money Map zeigt die Poly-Blase (Seite via Preis) auch
+# weit vor Anpfiff. Getrennt vom Close-Freeze (der bleibt die Auswertungs-Basis).
+UPCOMING_FILE         = "poly_money_upcoming.json"
+UPCOMING_WINDOW_H     = float(os.environ.get("POLY_UPCOMING_WINDOW_H") or 48.0)
+
 
 def update_resolutions(prev, markets, now=None, keep_days=RESOLUTIONS_KEEP_DAYS):
     """Aufgelöste Märkte dieses Laufs in eine rollierende {key:{winner,ts}} mergen; alte prunen.
@@ -442,6 +451,7 @@ def fetch_markets(live_only=False):
     raw_by_tag = {}                      # je Tag: wie viele ROH-Events kamen (offen+aufgelöst)
     seen = set()                         # Dedup: ein Markt kann unter mehreren Tags liegen (cs2 ⊂ esports)
     candidates = []                      # near-kickoff 2-Wege-Kandidaten, VOR den Holders-Calls
+    upcoming = {}                        # money-map: weiter draussen liegende Sport-Maerkte, NUR Preis+Vol (kein Holder-Call)
 
     def _ingest(open_evs, closed_evs, league_of):
         """Ein Fetch-Ergebnis einsammeln. `league_of(ev, key)` liefert das Liga-Label.
@@ -455,7 +465,18 @@ def fetch_markets(live_only=False):
                 htk = _hours_to_ko(ev, now)
                 cls = _capture_class(htk)
                 if cls is None:
-                    continue        # ausserhalb Fenster
+                    # Money-Map (12.08.2026, Lucas): Sport-Markt weiter draussen (bis UPCOMING_WINDOW_H)
+                    # GRATIS mit Preis+Vol mitnehmen -> Poly-Blase auch 12h vor Anpfiff, ohne Holder-Budget.
+                    if not live_only and isinstance(htk, (int, float)) and 0 < htk <= UPCOMING_WINDOW_H:
+                        uvol = float(ev.get("volume") or 0)
+                        if uvol >= min_vol:
+                            uoc = _outcomes(ev)
+                            if len(uoc) >= 2:
+                                uprices = {o["label"]: o["price"] for o in uoc if o["price"] is not None}
+                                if uprices and (key not in upcoming or uvol > upcoming[key]["totalUsd"]):
+                                    upcoming[key] = {"league": league_of(ev, key), "hoursToKickoff": round(htk, 2),
+                                                     "totalUsd": round(uvol), "prices": uprices}
+                    continue        # ausserhalb Erfassungs-(Holder-)Fenster
                 if live_only and cls != "live":
                     continue        # Live-only Schnell-Lauf: Vor-Spiel-Maerkte ueberspringen        # kein unmittelbarer Anpfiff → kein Sportspiel (Politik/Krypto raus)
                 vol = float(ev.get("volume") or 0)
@@ -550,6 +571,7 @@ def fetch_markets(live_only=False):
                         "resolved": False, "resolvedPrices": {}})
     fetch_markets.sweep_stats = {"sweepOpen": len(sweep_open), "sweepClosed": len(sweep_closed),
                                  "sweepAdded": sweep_added}
+    fetch_markets.upcoming = upcoming
 
     live = {t: n for t, n in raw_by_tag.items() if n}
     _sw = fetch_markets.sweep_stats
@@ -848,6 +870,28 @@ def resolutions(markets) -> dict:
     return out
 
 
+def prune_upcoming(prev, fresh, now=None, window_h=UPCOMING_WINDOW_H):
+    """Money-Map (12.08.2026, Lucas): frische upcoming-Erfassung ueber die alte legen + Vergangenes prunen.
+    Prunt Eintraege, deren rekonstruierter Anpfiff schon vorbei ist (dann greift ohnehin close/live) oder
+    deren capturedAt aelter als window_h ist (Fetch fiel lange aus). REIN/testbar."""
+    now = now or _now()
+    out = {k: dict(v) for k, v in (prev or {}).items() if isinstance(v, dict)}
+    for k, v in (fresh or {}).items():
+        e = dict(v); e["capturedAt"] = now.isoformat(); out[k] = e
+    cutoff = now - timedelta(hours=window_h)
+    for k in list(out.keys()):
+        e = out[k]
+        try:
+            cap = datetime.fromisoformat(str(e.get("capturedAt")).replace("Z", "+00:00"))
+        except (TypeError, ValueError):
+            cap = None
+        htk = e.get("hoursToKickoff")
+        real_htk = (htk - (now - cap).total_seconds() / 3600.0) if (cap and isinstance(htk, (int, float))) else None
+        if cap is None or cap < cutoff or (real_htk is not None and real_htk <= 0):
+            del out[k]
+    return out
+
+
 def main_live() -> int:
     """Live-only Schnell-Lauf (11.08.2026, Lucas Stufe 1/A): NUR die Live-Erfassung -- laufende Maerkte
     holen, capture_live, Live-History. Ueberspringt den schweren Vor-Spiel-Teil (Wallet-P&L, Eval, Cross-
@@ -884,6 +928,8 @@ def main() -> int:
         (BASE / CLOSE_FILE).write_text(json.dumps(frozen, ensure_ascii=False, indent=1), encoding="utf-8")
         live_store = capture_live([], _load(LIVE_FILE))   # Live-Speicher auch auf Leer-Laeufen prunen
         (BASE / LIVE_FILE).write_text(json.dumps(live_store, ensure_ascii=False, indent=1), encoding="utf-8")
+        _upc = prune_upcoming(_load(UPCOMING_FILE), {})   # Money-Map: nur Vergangenes prunen (kein frischer Fetch)
+        (BASE / UPCOMING_FILE).write_text(json.dumps(_upc, ensure_ascii=False, indent=1), encoding="utf-8")
         print(f"ℹ️  Keine Poly-Märkte — Close-Feed nur von Geistern gepruned ({len(frozen)} bleiben).")
         return 0
     pre  = [m for m in markets if not m.get("live")]   # Vor-Spiel + aufgeloest: bestehende Pipeline unveraendert
@@ -937,6 +983,11 @@ def main() -> int:
     rep["rawByTag"] = getattr(fetch_markets, "raw_by_tag", {})
     rep["sweepStats"] = getattr(fetch_markets, "sweep_stats", {})
     (BASE / OUT_FILE).write_text(json.dumps(rep, ensure_ascii=False, indent=1), encoding="utf-8")
+
+    # Money-Map (12.08.2026, Lucas): breitere upcoming-Erfassung schreiben (Preis+Vol, kein Holder-Call)
+    _upc = prune_upcoming(_load(UPCOMING_FILE), getattr(fetch_markets, "upcoming", {}) or {})
+    (BASE / UPCOMING_FILE).write_text(json.dumps(_upc, ensure_ascii=False, indent=1), encoding="utf-8")
+    print(f"[UPCOMING] {len(_upc)} Maerkte fuer die Money-Map (Preis+Vol, <={UPCOMING_WINDOW_H:.0f}h, kein Holder-Call)")
 
     print(f"=== Liegt das Geld richtig? BREIT · min Vol ${min_vol:.0f} · min Quote {min_odds} ===")
     print(f"Eingefroren {len(frozen)} · aufgelöst {rep['n']}")
