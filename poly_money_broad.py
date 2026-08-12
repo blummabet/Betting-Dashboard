@@ -202,12 +202,22 @@ def _get(url):
         return None
 
 
-def _gamma_events(tag, closed):
-    """Offene (near-kickoff) bzw. geschlossene (aufgelöste) Events eines Sport-Tags."""
+def _gamma_events(tag, closed, now=None):
+    """Events eines Sport-Tags. OFFEN: nach ANPFIFF-Nähe sortiert (endDate aufsteigend ab jetzt
+    minus Live-Puffer) statt nach Listing-Datum — 12.08.2026 (Lucas Money-Map): order=startDate&desc
+    verpasste Spiele, die vor Wochen gelistet wurden aber HEUTE spielen (UEFA Super Cup: gelistet
+    30.07., Anpfiff 12.08. → fiel hinter den 400er-Tag-Deckel, nie erfasst → Money-Map ohne Poly).
+    endDate ~ Spielzeit → die nächsten Spiele stehen vorn, der 400er-Deckel greift die richtigen ab.
+    GESCHLOSSEN: unverändert (order=startDate&desc = zuletzt gelistete/aufgelöste zuerst)."""
     out, offset = [], 0
+    if closed:
+        qorder = "&order=startDate&ascending=false"
+    else:
+        floor = (now or _now()) - timedelta(hours=LIVE_KEEP_H)
+        qorder = "&order=endDate&ascending=true&end_date_min=" + floor.strftime("%Y-%m-%dT%H:%M:%SZ")
     for _ in range(4):   # bis 400 Events je Tag
         url = (f"{GAMMA}?tag_slug={tag}&limit=100&offset={offset}"
-               f"&active=true&closed={'true' if closed else 'false'}&order=startDate&ascending=false")
+               f"&active=true&closed={'true' if closed else 'false'}{qorder}")
         page = _get(url)
         if not isinstance(page, list) or not page:
             break
@@ -539,7 +549,7 @@ def fetch_markets(live_only=False):
 
     # A) Kuratierte Sport-Tags (präzises Liga-Label = Tag)
     for tag in tags:
-        open_evs = _gamma_events(tag, closed=False)
+        open_evs = _gamma_events(tag, closed=False, now=now)
         closed_evs = _gamma_events(tag, closed=True)
         raw_by_tag[tag] = len(open_evs) + len(closed_evs)
         _ingest(open_evs, closed_evs, lambda ev, key, _t=tag: _t.upper())
