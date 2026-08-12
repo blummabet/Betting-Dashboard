@@ -10,7 +10,7 @@ Link format     → matches/match.html?m={slug}
 Run: python generate_match_pages.py
 """
 
-import json, os, re, math
+import json, os, re, math, unicodedata
 from datetime import datetime
 
 BASE = os.path.dirname(os.path.abspath(__file__))
@@ -29,6 +29,91 @@ poly_raw    = load("polymarket_prices.json") or {}
 
 fixtures_list = prematch.get("fixtures", [])
 poly_matches  = poly_raw.get("matches", {})
+
+# ── Geld-Module (Event-Page, 12.08.2026 Lucas): Betfair-Detail + Poly-Detail + Money-Map je Spiel.
+#    Rein additiv; fehlt fuer ein Spiel eine Quelle -> Sektion = None -> das Modul faellt in der Vorlage weg.
+_MONEY_MAP  = load("money_map.json") or {}
+_BF_PRICES  = (load("betfair_prices.json") or {}).get("matches") or []
+_POLY_CLOSE = load("poly_money_broad_close.json") or {}
+_POLY_UPC   = load("poly_money_upcoming.json") or {}
+_MNOISE = {"fc","cf","sc","sd","cd","ac","afc","club","the","los","if","sk","ss","ssc","deportivo","real","atletico"}
+
+def _mnorm(x):
+    x = unicodedata.normalize("NFKD", str(x or "")).encode("ascii", "ignore").decode()
+    x = re.sub(r"[^a-z0-9 ]", " ", x.lower())
+    return set(t for t in x.split() if len(t) > 2 and t not in _MNOISE and not t.isdigit())
+
+def _mscore(a, b):
+    A, B = _mnorm(a), _mnorm(b)
+    if not A or not B:
+        return 0.0
+    inter = A & B
+    return len(inter) / max(len(A), len(B)) if inter else 0.0
+
+def _teams_match(h, a, rh, ra, thr=0.5):
+    return _mscore(h, rh) >= thr and _mscore(a, ra) >= thr
+
+def _money_map_section(home, away):
+    best, bs = None, 0.0
+    for r in (_MONEY_MAP.get("rows") or []):
+        if isinstance(r, dict) and _teams_match(home, away, r.get("home"), r.get("away")):
+            sc = _mscore(home, r.get("home")) + _mscore(away, r.get("away"))
+            if sc > bs:
+                bs, best = sc, r
+    if not best:
+        return None
+    return {"verdict": best.get("verdict"), "betfair": best.get("betfair"),
+            "poly": best.get("poly"), "pinn": best.get("pinn")}
+
+def _bf_detail_for(home, away):
+    best, bs = None, 0.0
+    for m in _BF_PRICES:
+        if isinstance(m, dict) and _teams_match(home, away, m.get("home"), m.get("away")):
+            sc = _mscore(home, m.get("home")) + _mscore(away, m.get("away"))
+            if sc > bs:
+                bs, best = sc, m
+    if not best:
+        return None
+    mk = best.get("markets") or {}
+    runners = [{"name": r.get("name"), "eur": round(r.get("vol") or 0), "odd": r.get("odd")}
+               for r in ((mk.get("Match Odds") or {}).get("runners") or [])]
+    runners = [r for r in runners if r["eur"] > 0]
+    if not runners:
+        return None
+    mkts = []
+    for name, mm in mk.items():
+        v = sum((r.get("vol") or 0) for r in (mm.get("runners") or []))
+        if v > 0:
+            mkts.append({"name": name, "eur": round(v)})
+    mkts.sort(key=lambda z: -z["eur"])
+    return {"runners": runners, "markets": mkts[:6]}
+
+def _poly_detail_for(home, away):
+    def _cand(src, tag):
+        best, bs, btag = None, 0.0, None
+        for k, v in (src or {}).items():
+            if not isinstance(v, dict) or not v.get("prices"):
+                continue
+            labels = list(v["prices"].keys())
+            sh = max((_mscore(home, l) for l in labels), default=0.0)
+            sa = max((_mscore(away, l) for l in labels), default=0.0)
+            if sh >= 0.5 and sa >= 0.5 and (sh + sa) > bs:
+                bs, best, btag = sh + sa, v, tag
+        return best, btag
+    v, tag = _cand(_POLY_CLOSE, "close")
+    if not v:
+        v, tag = _cand(_POLY_UPC, "upcoming")
+    if not v:
+        return None
+    prices = v.get("prices") or {}
+    shares = v.get("shares") or {}
+    outs = [{"name": lbl, "pct": round(float(pr) * 100), "usd": round(shares.get(lbl) or 0)}
+            for lbl, pr in prices.items()]
+    whales = [{"wallet": w.get("wallet"), "side": w.get("side"), "usd": round(w.get("usd") or 0)}
+              for w in (v.get("whales") or []) if float(w.get("usd") or 0) >= 1000][:5]
+    return {"outcomes": outs, "totalUsd": round(v.get("totalUsd") or 0),
+            "whales": whales, "hasShares": any(o["usd"] for o in outs), "src": tag}
+
 
 prematch_idx = {}
 for fix in fixtures_list:
@@ -328,6 +413,9 @@ def build_payload(entry, pmatch, hs, as_, poly):
         "prediction":pred,
         "injuries":injuries,
         "poly":poly_out,
+        "moneyMap":_money_map_section(home, away),
+        "betfairMoney":_bf_detail_for(home, away),
+        "polyFlow":_poly_detail_for(home, away),
         "generatedAt":datetime.utcnow().strftime("%d.%m.%Y %H:%M UTC"),
     }
 

@@ -220,6 +220,52 @@ a{color:var(--accent);text-decoration:none}
   .pred-comp-grid{grid-template-columns:1fr}
   .poly-grid{grid-template-columns:repeat(2,1fr)}
 }
+
+/* ── Geld-Module (12.08.2026, Lucas): Money Map + Betfair + Polymarket ── */
+.emod{background:var(--card);border:1px solid var(--border);border-radius:14px;padding:15px 16px 16px;margin:14px 0;position:relative;overflow:hidden}
+.emod::before{content:"";position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--ea,var(--muted))}
+.mm-mod{--ea:#a78bfa}.bf-mod{--ea:#d95926}.pf-mod{--ea:#00d4a1}
+.emod-h{display:flex;align-items:center;gap:8px;font-weight:800;font-size:15px;color:var(--text)}
+.emod-badge{margin-left:auto;font-size:10px;font-weight:800;letter-spacing:.03em;padding:3px 9px;border-radius:6px}
+.emod-sub{font-size:11.5px;color:var(--muted);margin:4px 0 14px}
+.mm-scale{display:flex;justify-content:space-between;font-size:9.5px;color:var(--muted);font-weight:700;text-transform:uppercase;letter-spacing:.04em;padding:0 2px 4px;gap:6px}
+.mm-scale span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:40%}
+.mm-scale span:nth-child(2){max-width:22%;text-align:center}
+.mm-lane{display:flex;align-items:center;gap:8px;margin:6px 0}
+.mm-ll{width:58px;font-size:10px;font-weight:800;flex:none}
+.mm-trk{position:relative;flex:1;height:32px;border-radius:8px;background:linear-gradient(90deg,rgba(0,212,161,.07),rgba(107,122,141,.05) 50%,rgba(248,81,73,.07))}
+.mm-mid{position:absolute;left:50%;top:0;bottom:0;width:1px;background:var(--border2)}
+.mm-bub{position:absolute;top:50%;transform:translate(-50%,-50%);border-radius:50%;min-width:30px;height:30px;display:flex;align-items:center;justify-content:center;font-family:'JetBrains Mono',ui-monospace,monospace;font-size:9.5px;font-weight:800;color:#06120c;padding:0 3px}
+.mm-pinn{position:absolute;top:50%;transform:translate(-50%,-50%);font-size:9.5px;font-weight:800;color:#58a6ff;background:#0f1419;border:1px solid #58a6ff55;border-radius:5px;padding:2px 6px;white-space:nowrap}
+.mm-none{position:absolute;left:10px;top:50%;transform:translateY(-50%);font-size:10.5px;color:var(--muted);font-style:italic}
+.bf-dist{display:flex;height:16px;border-radius:5px;overflow:hidden;gap:2px;margin:2px 0 10px}
+.bf-dist i{display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:800;min-width:20px}
+.bf-row{display:flex;align-items:center;gap:9px;padding:5px 0;font-size:12.5px;border-top:1px solid var(--border)}
+.bf-row:first-of-type{border-top:none}
+.bf-row .nm{flex:1;color:var(--text);font-weight:600}
+.bf-row .val{font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:800}
+.bf-row .od{font-family:'JetBrains Mono',ui-monospace,monospace;color:var(--muted);font-size:11px;min-width:46px;text-align:right}
+.bf-mkh{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin:14px 0 8px}
+.bf-mkg{display:grid;grid-template-columns:1fr 1fr;gap:8px 16px}
+.bf-mk{display:flex;flex-direction:column;gap:4px}
+.bf-mk-t{display:flex;justify-content:space-between;font-size:11px;color:var(--muted2)}
+.bf-mk-t .v{font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:800;color:var(--text)}
+.bf-mk-bar{height:4px;border-radius:3px;background:var(--card3);overflow:hidden}
+.bf-mk-bar i{display:block;height:100%;background:#d95926;border-radius:3px}
+.pf-probs{display:flex;flex-direction:column;gap:9px;margin:2px 0 12px}
+.pf-pr{display:flex;align-items:center;gap:10px}
+.pf-pr .pn{width:130px;font-size:12px;font-weight:600;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pf-pr .pbar{flex:1;height:20px;border-radius:5px;background:var(--card3);overflow:hidden}
+.pf-pr .pbar i{display:block;height:100%;border-radius:5px}
+.pf-pr .pv{width:42px;text-align:right;font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:800;font-size:12.5px}
+.pf-call{display:flex;gap:9px;align-items:flex-start;background:rgba(0,212,161,.08);border:1px solid rgba(0,212,161,.22);border-radius:10px;padding:10px 12px;margin:12px 0;font-size:12px;line-height:1.45;color:var(--text)}
+.pf-wh{margin-top:12px;padding-top:12px;border-top:1px solid var(--border)}
+.pf-wh-h{font-size:10.5px;font-weight:800;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);margin-bottom:6px}
+.pf-wr{display:flex;align-items:center;gap:9px;padding:5px 0;font-size:12px}
+.pf-wr .addr{font-family:'JetBrains Mono',ui-monospace,monospace;color:#00d4a1;font-size:11px}
+.pf-wr .side{flex:1;color:var(--muted2)}
+.pf-wr .amt{font-family:'JetBrains Mono',ui-monospace,monospace;font-weight:800}
+.pf-hint{font-size:11px;color:var(--muted);font-style:italic;margin-top:8px;line-height:1.4}
 </style>
 </head>
 <body>
@@ -669,6 +715,67 @@ function renderPoly(D) {
 }
 
 // ── Bootstrap ──────────────────────────────────────────────────────────────
+function _evEsc(x){return String(x==null?'':x).replace(/[&<>"']/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c];});}
+function _evShort(w){w=String(w||'');return w.length>12?w.slice(0,6)+'…'+w.slice(-4):w;}
+var _EV_MKT={'Match Odds':'1X2','Correct Score':'Exakt','Both teams to Score?':'Beide treffen','To Lift The Trophy':'Pokal-Sieger','Over/Under 2.5 Goals':'Über/Unter 2.5','Over/Under 1.5 Goals':'Über/Unter 1.5','Over/Under 0.5 Goals':'Über/Unter 0.5','Over/Under 3.5 Goals':'Über/Unter 3.5','First Half Goals 0.5':'HZ1 Ü/U 0.5','First Half Goals 1.5':'HZ1 Ü/U 1.5','First Half Goals 2.5':'HZ1 Ü/U 2.5'};
+function _evMkt(n){return _EV_MKT[n]||n;}
+function _evEur(v){return '€'+(v>=1000?Math.round(v/1000)+'K':Math.round(v));}
+function _evUsd(v){return '$'+(v>=1000?Math.round(v/1000)+'K':Math.round(v));}
+function _evPolyName(s){return String(s).replace(/^Draw \(.*\)$/,'Unentschieden').replace(/^Draw$/,'Unentschieden');}
+
+function renderMoneyMap(D){
+  var m=D.moneyMap; if(!m) return '';
+  var V=({konsens:['KONSENS','#3fb950'],teil:['TEIL-KONSENS','#e3b341'],uneinig:['UNEINIG','#e3b341'],no_anchor:['KEIN ANKER','#a78bfa']})[m.verdict]||['MONEY MAP','#a78bfa'];
+  var pos=function(side,share){if(!side||side==='draw')return 50;var d=side==='away'?1:-1;return Math.max(9,Math.min(91,50+d*((+share||33)-33)*0.9));};
+  var bf=m.betfair,pl=m.poly,pn=m.pinn;
+  var lane=function(label,color,inner){return '<div class="mm-lane"><span class="mm-ll" style="color:'+color+'">'+label+'</span><div class="mm-trk"><span class="mm-mid"></span>'+inner+'</div></div>';};
+  var bfIn=bf?('<span class="mm-bub" style="left:'+pos(bf.side,bf.sharePct)+'%;background:radial-gradient(circle at 35% 30%,#f0864f,#d95926)">'+_evEur(bf.eur)+'</span>'):'<span class="mm-none">kein Betfair-Geld</span>';
+  var plIn=pl?('<span class="mm-bub" style="left:'+pos(pl.side,pl.sharePct)+'%;background:radial-gradient(circle at 35% 30%,#54cf9a,#00d4a1)">'+_evUsd(pl.usd)+'</span>'):'<span class="mm-none">kein Poly-Geld</span>';
+  var pnIn='<span class="mm-none">kein Anker — nicht in den 22 Odds-Ligen</span>';
+  if(pn&&pn.fav){var pp=Math.round((+pn[pn.fav]||0)*100);pnIn='<span class="mm-pinn" style="left:'+pos(pn.fav,pp)+'%">Pinnacle '+pp+'%</span>';}
+  var vt=({konsens:'Betfair und Poly auf derselben Seite.',teil:'Teilweise einig.',uneinig:'Betfair und Poly uneinig — Geld läuft gegeneinander.',no_anchor:'Kein Pinnacle-Anker; Urteil aus Betfair vs Poly abgeleitet.'})[m.verdict]||'';
+  return '<div class="emod mm-mod"><div class="emod-h">🔗 Money Map <span class="emod-badge" style="background:'+V[1]+'22;color:'+V[1]+'">'+V[0]+'</span></div>'
+    +'<div class="emod-sub">Wo liegt das Geld — und zieht die scharfe Linie mit? Blase = Geldmenge, Position = bespielte Seite.</div>'
+    +'<div class="mm-scale"><span>'+_evEsc(D.meta.home)+'</span><span>Remis</span><span>'+_evEsc(D.meta.away)+'</span></div>'
+    +lane('Betfair','#d95926',bfIn)+lane('Poly','#00d4a1',plIn)+lane('Pinnacle','#58a6ff',pnIn)
+    +(vt?'<div class="pf-hint" style="margin-top:10px">'+vt+'</div>':'')+'</div>';
+}
+
+function renderBetfairMoney(D){
+  var b=D.betfairMoney; if(!b||!b.runners||!b.runners.length) return '';
+  var tot=b.runners.reduce(function(a,r){return a+(r.eur||0);},0)||1;
+  var cols=['#d95926','#8a6d5a','#5a4a42'];
+  var dist=b.runners.map(function(r,i){return '<i style="width:'+Math.max(3,r.eur/tot*100)+'%;background:'+cols[Math.min(i,2)]+';color:'+(i===0?'#06120c':'#e8edf3')+'">'+Math.round(r.eur/tot*100)+'%</i>';}).join('');
+  var rows=b.runners.map(function(r){return '<div class="bf-row"><span class="nm">'+_evEsc(r.name)+'</span><span class="val" style="color:#d95926">'+_evEur(r.eur)+'</span><span class="od">@'+(+r.odd).toFixed(2)+'</span></div>';}).join('');
+  var mx=(b.markets&&b.markets[0]&&b.markets[0].eur)||1;
+  var mkts=(b.markets||[]).map(function(mk){return '<div class="bf-mk"><div class="bf-mk-t"><span>'+_evEsc(_evMkt(mk.name))+'</span><span class="v">'+_evEur(mk.eur)+'</span></div><div class="bf-mk-bar"><i style="width:'+Math.max(2,mk.eur/mx*100)+'%"></i></div></div>';}).join('');
+  return '<div class="emod bf-mod"><div class="emod-h">💷 Betfair <span class="emod-badge" style="background:#d9592622;color:#d95926">'+_evEur(tot)+' Match-Odds</span></div>'
+    +'<div class="emod-sub">Geldverteilung auf dem größten Markt + wo über die Wettarten das Geld sitzt.</div>'
+    +'<div class="bf-dist">'+dist+'</div>'+rows
+    +(mkts?'<div class="bf-mkh">Geld je Wettart</div><div class="bf-mkg">'+mkts+'</div>':'')+'</div>';
+}
+
+function renderPolyFlow(D){
+  var p=D.polyFlow; if(!p||!p.outcomes||!p.outcomes.length) return '';
+  var probs=p.outcomes.map(function(o,i){return '<div class="pf-pr"><span class="pn">'+_evEsc(_evPolyName(o.name))+'</span><span class="pbar"><i style="width:'+o.pct+'%;background:'+(i===0?'#00d4a1':'#6b7a8d')+'"></i></span><span class="pv">'+o.pct+'%</span></div>';}).join('');
+  var callout='';
+  if(p.hasShares){
+    var totM=p.outcomes.reduce(function(a,o){return a+(o.usd||0);},0)||1;
+    var top=p.outcomes.slice().sort(function(a,b){return (b.usd||0)-(a.usd||0);})[0];
+    var topPct=Math.round((top.usd||0)/totM*100);
+    callout='<div class="pf-call">💡 <span><b style="color:#00d4a1">'+topPct+'% des Halter-Geldes</b> ('+_evUsd(top.usd)+') auf <b>'+_evEsc(_evPolyName(top.name))+'</b> — der Preis sagt '+top.pct+'%.'+(topPct>top.pct+15?' Geld einseitiger als der Preis.':'')+'</span></div>';
+  }
+  var whales='';
+  if(p.whales&&p.whales.length){
+    whales='<div class="pf-wh"><div class="pf-wh-h">🐋 Größte Wallets</div>'+p.whales.map(function(w){return '<div class="pf-wr"><span class="addr">'+_evShort(w.wallet)+'</span><span class="side">→ '+_evEsc(_evPolyName(w.side))+'</span><span class="amt" style="color:#00d4a1">'+_evUsd(w.usd)+'</span></div>';}).join('')+'</div>';
+  } else if(p.src==='upcoming'){
+    whales='<div class="pf-hint">Whale-Verteilung erscheint näher am Anpfiff (Close-Erfassung).</div>';
+  }
+  return '<div class="emod pf-mod"><div class="emod-h">🎮 Polymarket <span class="emod-badge" style="background:#00d4a122;color:#00d4a1">'+_evUsd(p.totalUsd)+' Volumen</span></div>'
+    +'<div class="emod-sub">Implizite Wahrscheinlichkeit, Geld-Split der Halter und die größten Wallets.</div>'
+    +'<div class="pf-probs">'+probs+'</div>'+callout+whales+'</div>';
+}
+
 async function init() {
   const slug = new URLSearchParams(location.search).get('m');
   if (!slug) {
@@ -711,6 +818,9 @@ ${renderH2H(D)}
 ${renderPrediction(D)}
 ${renderInjuries(D)}
 ${renderPoly(D)}
+${renderMoneyMap(D)}
+${renderBetfairMoney(D)}
+${renderPolyFlow(D)}
 <div class="page-footer">
   Generiert: ${D.generatedAt} · <a href="../betting-dashboard.html">← Zurück zum Dashboard</a>
 </div>
