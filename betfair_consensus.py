@@ -363,6 +363,12 @@ def money_map_row(g, pf):
                     if pf else None),
            "pinn": ({"fav": pinn.get("fav"), "home": pinn.get("home"), "draw": pinn.get("draw"),
                      "away": pinn.get("away")} if pinn else None)}
+    # Money-Map-Verdikt auch OHNE Pinnacle/Soft-Anker (11.08.2026, Lucas): die Map lebt vom Geld,
+    # Pinnacle ist nur Anker. Fehlt der Anker (z.B. UEFA Super Cup / Pokal - nicht in den 22 Odds-Ligen),
+    # aber Betfair UND Poly liegen vor, dann Konsens/Divergenz aus Betfair-Seite vs Poly-Seite ableiten
+    # (2/3, "ehrlich"). Nur Betfair allein bleibt no_anchor (nichts zum Vergleichen).
+    if row["verdict"] == "no_anchor" and row["betfair"] and row["poly"]:
+        row["verdict"] = "konsens" if row["betfair"]["side"] == row["poly"]["side"] else "uneinig"
     row["nSources"] = sum(1 for x in (row["betfair"], row["poly"], row["pinn"]) if x)
     return row
 

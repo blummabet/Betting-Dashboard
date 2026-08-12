@@ -318,6 +318,29 @@ class TestMoneyMap(unittest.TestCase):
         self.assertIsNone(row["poly"])
         self.assertEqual(row["nSources"], 2)
 
+    def test_verdikt_ohne_anker_betfair_poly_einig(self):
+        # UEFA Super Cup / Pokal: kein Pinnacle-Anker -> build_game liefert no_anchor. Liegen Betfair
+        # UND Poly vor und sind einig -> Money-Map wertet es als Konsens (2/3), sonst faellt es aus der
+        # Uebersicht (die no_anchor filtert). Genau der Paris-Villa-Fall.
+        g = self._g(verdict="no_anchor", pinn=None, moneySide="home", moneyName="Bochum")
+        pf = {"side": "home", "name": "Bochum", "sharePct": 55, "usd": 50000}
+        row = BC.money_map_row(g, pf)
+        self.assertEqual(row["verdict"], "konsens")
+        self.assertEqual(row["nSources"], 2)
+        self.assertIsNone(row["pinn"])
+
+    def test_verdikt_ohne_anker_betfair_poly_uneinig(self):
+        g = self._g(verdict="no_anchor", pinn=None, moneySide="home", moneyName="Bochum")
+        pf = {"side": "away", "name": "Union Berlin", "sharePct": 52, "usd": 50000}
+        row = BC.money_map_row(g, pf)
+        self.assertEqual(row["verdict"], "uneinig")
+
+    def test_verdikt_ohne_anker_nur_betfair_bleibt_no_anchor(self):
+        g = self._g(verdict="no_anchor", pinn=None)
+        row = BC.money_map_row(g, None)   # keine Poly -> nichts zu vergleichen
+        self.assertEqual(row["verdict"], "no_anchor")
+        self.assertEqual(row["nSources"], 1)
+
     def test_ledger_upsert_pending(self):
         pf = BC.poly_fav({"home": "Bochum", "away": "Union Berlin"}, self._poly())
         led = BC.update_mm_ledger([], [BC.money_map_row(self._g(), pf)], now="2026-08-11T12:00:00+00:00")
