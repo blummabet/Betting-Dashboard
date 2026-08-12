@@ -549,7 +549,7 @@ def fetch_markets(live_only=False):
 
     # A) Kuratierte Sport-Tags (präzises Liga-Label = Tag)
     for tag in tags:
-        open_evs = _gamma_events(tag, closed=False, now=now)
+        open_evs = _gamma_events(tag, closed=False)
         closed_evs = _gamma_events(tag, closed=True)
         raw_by_tag[tag] = len(open_evs) + len(closed_evs)
         _ingest(open_evs, closed_evs, lambda ev, key, _t=tag: _t.upper())

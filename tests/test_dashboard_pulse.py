@@ -16,16 +16,18 @@ def test_betfair_pulse_leer_ist_none():
     assert bp._betfair_pulse({"global": {"n": 0}}) is None
 
 
-def test_poly_pulse_aus_agg_all():
-    track = {"agg": {"all": {"n": 45, "hit": 0.6222, "roi": 0.0615, "clvAvg": 0.11}},
-             "open": {"a": 1, "b": 2}}
+def test_poly_pulse_aus_agg_public():
+    # 12.08.2026 (Lucas): der Puls zeigt die HART GEGATETEN Public-Kandidaten (agg.public),
+    # openN zaehlt nur offene Plays mit public=True.
+    track = {"agg": {"public": {"n": 40, "hit": 0.75, "roi": 0.026, "clvAvg": 0.03}},
+             "open": {"a": {"public": True}, "b": {"public": True}, "c": {"public": False}}}
     out = bp._poly_pulse(track)
-    assert out == {"n": 45, "hitPct": 62.2, "roiPct": 6.2, "clvAvg": 0.11, "openN": 2}
+    assert out == {"n": 40, "hitPct": 75.0, "roiPct": 2.6, "clvAvg": 0.03, "openN": 2}
 
 
 def test_poly_pulse_leer_ist_none():
     assert bp._poly_pulse({}) is None
-    assert bp._poly_pulse({"agg": {"all": {"n": 0}}}) is None
+    assert bp._poly_pulse({"agg": {"public": {"n": 0}}}) is None
 
 
 def test_best_bucket_haelt_schwelle_und_waehlt_hoechsten_roi():

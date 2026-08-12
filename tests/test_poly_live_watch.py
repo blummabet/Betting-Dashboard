@@ -14,7 +14,7 @@ SCORES = {
 
 def _live():
     return {"lol-a-b": {"league": "esports", "prices": {"A": 0.6, "B": 0.4, "DEC": 1.0}, "whales": [
-        {"wallet": "0xsharp", "side": "A", "usd": 800},     # scharf, kompetitiv -> Alarm
+        {"wallet": "0xsharp", "side": "A", "usd": 8000},    # scharf + ueber SHARP_MIN_USD (5000) -> Alarm
         {"wallet": "0xweak", "side": "B", "usd": 3000},     # schwach, klein -> kein Alarm
         {"wallet": "0xbig", "side": "A", "usd": 30000},     # kein Score, gross (>25K), kompetitiv -> Alarm
         {"wallet": "0xpre", "side": "B", "usd": 20000},     # pre-game drin -> kein Alarm
