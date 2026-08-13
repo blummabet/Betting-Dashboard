@@ -1,15 +1,15 @@
 {
- "n": 330,
+ "n": 339,
  "minOdds": 1.35,
- "moneyHitRate": 0.594,
- "priceHitRate": 0.603,
- "brierMoney": 0.4902,
- "brierPrice": 0.4743,
+ "moneyHitRate": 0.593,
+ "priceHitRate": 0.605,
+ "brierMoney": 0.5021,
+ "brierPrice": 0.4764,
  "disagree": {
-  "n": 6,
+  "n": 9,
   "moneyWon": 0,
-  "priceWon": 3,
-  "neither": 3
+  "priceWon": 4,
+  "neither": 5
  },
  "verdict": "preis_besser",
  "byLeague": [
@@ -19,6 +19,14 @@
    "moneyHitRate": 0.8,
    "brierMoney": 0.4149,
    "brierPrice": 0.415,
+   "verdict": "gleichauf"
+  },
+  {
+   "league": "ESPORTS",
+   "n": 150,
+   "moneyHitRate": 0.613,
+   "brierMoney": 0.4533,
+   "brierPrice": 0.4533,
    "verdict": "gleichauf"
   },
   {
@@ -47,34 +55,26 @@
   },
   {
    "league": "TENNIS",
-   "n": 33,
-   "moneyHitRate": 0.697,
-   "brierMoney": 0.4578,
-   "brierPrice": 0.4578,
-   "verdict": "gleichauf"
-  },
-  {
-   "league": "ESPORTS",
-   "n": 151,
-   "moneyHitRate": 0.609,
-   "brierMoney": 0.4554,
-   "brierPrice": 0.4553,
+   "n": 30,
+   "moneyHitRate": 0.733,
+   "brierMoney": 0.4302,
+   "brierPrice": 0.4302,
    "verdict": "gleichauf"
   },
   {
    "league": "MLB",
-   "n": 81,
-   "moneyHitRate": 0.519,
-   "brierMoney": 0.5399,
-   "brierPrice": 0.5008,
+   "n": 84,
+   "moneyHitRate": 0.524,
+   "brierMoney": 0.5369,
+   "brierPrice": 0.4992,
    "verdict": "preis_besser"
   },
   {
    "league": "SOCCER",
-   "n": 18,
-   "moneyHitRate": 0.389,
-   "brierMoney": 0.7229,
-   "brierPrice": 0.6093,
+   "n": 28,
+   "moneyHitRate": 0.393,
+   "brierMoney": 0.8236,
+   "brierPrice": 0.6258,
    "verdict": "preis_besser"
   }
  ],
@@ -126,6 +126,18 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 771290
+  },
+  {
+   "key": "lec-mon-nas-2026-08-12",
+   "league": "SOCCER",
+   "winner": "CF Monterrey",
+   "moneyFav": "CF Monterrey",
+   "priceFav": "CF Monterrey",
+   "moneyShare": 0.939,
+   "priceProb": 0.497,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 677051
   },
   {
    "key": "lol-hle1-gen-2026-08-10",
@@ -546,42 +558,30 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 262007
-  },
-  {
-   "key": "mlb-min-mil-2026-08-09",
-   "league": "MLB",
-   "winner": "Milwaukee Brewers",
-   "moneyFav": "Milwaukee Brewers",
-   "priceFav": "Milwaukee Brewers",
-   "moneyShare": 0.715,
-   "priceProb": 0.715,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 260597
   }
  ],
- "generatedAt": "2026-08-13T02:49:59.787011+00:00",
+ "generatedAt": "2026-08-13T05:07:05.771374+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 420,
   "nfl": 800,
-  "mlb": 561,
+  "mlb": 558,
   "nhl": 403,
   "mls": 736,
   "epl": 474,
   "soccer": 800,
-  "tennis": 609,
+  "tennis": 596,
   "ucl": 472,
   "laliga": 0,
   "bundesliga": 401,
   "serie-a": 37,
   "ligue-1": 467,
-  "esports": 628,
+  "esports": 645,
   "cs2": 404,
   "lol": 373,
   "dota": 9,
-  "valorant": 425,
+  "valorant": 423,
   "ufc": 459,
   "mma": 46,
   "boxing": 224,
@@ -592,6 +592,6 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 427
+  "sweepAdded": 425
  }
 }
