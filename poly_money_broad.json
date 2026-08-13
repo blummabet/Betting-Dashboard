@@ -1,15 +1,15 @@
 {
- "n": 339,
+ "n": 343,
  "minOdds": 1.35,
- "moneyHitRate": 0.593,
- "priceHitRate": 0.605,
- "brierMoney": 0.5021,
- "brierPrice": 0.4764,
+ "moneyHitRate": 0.592,
+ "priceHitRate": 0.601,
+ "brierMoney": 0.501,
+ "brierPrice": 0.4759,
  "disagree": {
   "n": 9,
   "moneyWon": 0,
-  "priceWon": 4,
-  "neither": 5
+  "priceWon": 3,
+  "neither": 6
  },
  "verdict": "preis_besser",
  "byLeague": [
@@ -19,14 +19,6 @@
    "moneyHitRate": 0.8,
    "brierMoney": 0.4149,
    "brierPrice": 0.415,
-   "verdict": "gleichauf"
-  },
-  {
-   "league": "ESPORTS",
-   "n": 150,
-   "moneyHitRate": 0.613,
-   "brierMoney": 0.4533,
-   "brierPrice": 0.4533,
    "verdict": "gleichauf"
   },
   {
@@ -55,26 +47,34 @@
   },
   {
    "league": "TENNIS",
-   "n": 30,
-   "moneyHitRate": 0.733,
-   "brierMoney": 0.4302,
-   "brierPrice": 0.4302,
+   "n": 31,
+   "moneyHitRate": 0.742,
+   "brierMoney": 0.4279,
+   "brierPrice": 0.4279,
+   "verdict": "gleichauf"
+  },
+  {
+   "league": "ESPORTS",
+   "n": 149,
+   "moneyHitRate": 0.611,
+   "brierMoney": 0.4533,
+   "brierPrice": 0.4532,
    "verdict": "gleichauf"
   },
   {
    "league": "MLB",
-   "n": 84,
-   "moneyHitRate": 0.524,
-   "brierMoney": 0.5369,
-   "brierPrice": 0.4992,
+   "n": 86,
+   "moneyHitRate": 0.512,
+   "brierMoney": 0.5388,
+   "brierPrice": 0.502,
    "verdict": "preis_besser"
   },
   {
    "league": "SOCCER",
-   "n": 28,
-   "moneyHitRate": 0.393,
-   "brierMoney": 0.8236,
-   "brierPrice": 0.6258,
+   "n": 30,
+   "moneyHitRate": 0.433,
+   "brierMoney": 0.7853,
+   "brierPrice": 0.6046,
    "verdict": "preis_besser"
   }
  ],
@@ -306,6 +306,18 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 391408
+  },
+  {
+   "key": "wta-gauff-rybakin-2026-08-12",
+   "league": "TENNIS",
+   "winner": "Elena Rybakina",
+   "moneyFav": "Coco Gauff",
+   "priceFav": "Coco Gauff",
+   "moneyShare": 0.575,
+   "priceProb": 0.575,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 390054
   },
   {
    "key": "mlb-tor-phi-2026-08-08",
@@ -546,38 +558,26 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 266177
-  },
-  {
-   "key": "mlb-sea-nyy-2026-08-11",
-   "league": "MLB",
-   "winner": "New York Yankees",
-   "moneyFav": "New York Yankees",
-   "priceFav": "New York Yankees",
-   "moneyShare": 0.555,
-   "priceProb": 0.555,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 262007
   }
  ],
- "generatedAt": "2026-08-13T05:07:05.771374+00:00",
+ "generatedAt": "2026-08-13T06:47:19.054309+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 420,
   "nfl": 800,
-  "mlb": 558,
+  "mlb": 555,
   "nhl": 403,
   "mls": 736,
   "epl": 474,
   "soccer": 800,
-  "tennis": 596,
+  "tennis": 670,
   "ucl": 472,
   "laliga": 0,
   "bundesliga": 401,
   "serie-a": 37,
   "ligue-1": 467,
-  "esports": 645,
+  "esports": 647,
   "cs2": 404,
   "lol": 373,
   "dota": 9,
@@ -587,7 +587,7 @@
   "boxing": 224,
   "golf": 301,
   "f1": 334,
-  "cricket": 484
+  "cricket": 480
  },
  "sweepStats": {
   "sweepOpen": 500,
