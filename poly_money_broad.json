@@ -1,15 +1,15 @@
 {
- "n": 313,
+ "n": 319,
  "minOdds": 1.35,
- "moneyHitRate": 0.601,
- "priceHitRate": 0.607,
- "brierMoney": 0.4844,
- "brierPrice": 0.4706,
+ "moneyHitRate": 0.596,
+ "priceHitRate": 0.608,
+ "brierMoney": 0.4858,
+ "brierPrice": 0.4715,
  "disagree": {
-  "n": 4,
+  "n": 7,
   "moneyWon": 0,
-  "priceWon": 2,
-  "neither": 2
+  "priceWon": 4,
+  "neither": 3
  },
  "verdict": "preis_besser",
  "byLeague": [
@@ -55,10 +55,10 @@
   },
   {
    "league": "ESPORTS",
-   "n": 150,
-   "moneyHitRate": 0.613,
-   "brierMoney": 0.4549,
-   "brierPrice": 0.4548,
+   "n": 151,
+   "moneyHitRate": 0.609,
+   "brierMoney": 0.4554,
+   "brierPrice": 0.4553,
    "verdict": "gleichauf"
   },
   {
@@ -71,14 +71,26 @@
   },
   {
    "league": "SOCCER",
-   "n": 9,
-   "moneyHitRate": 0.444,
-   "brierMoney": 0.7311,
-   "brierPrice": 0.606,
+   "n": 14,
+   "moneyHitRate": 0.429,
+   "brierMoney": 0.6725,
+   "brierPrice": 0.573,
    "verdict": "preis_besser"
   }
  ],
  "rows": [
+  {
+   "key": "usc-psg-av-2026-08-12",
+   "league": "SOCCER",
+   "winner": "Paris Saint-Germain",
+   "moneyFav": "Paris Saint-Germain",
+   "priceFav": "Paris Saint-Germain",
+   "moneyShare": 0.953,
+   "priceProb": 0.592,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 2084730
+  },
   {
    "key": "atp-jodar-fils-2026-08-11",
    "league": "TENNIS",
@@ -524,6 +536,18 @@
    "totalUsd": 240485
   },
   {
+   "key": "usc-psg-av-2026-08-12-exact-score",
+   "league": "SOCCER",
+   "winner": "Paris Saint-Germain 2 - 1 Aston Villa",
+   "moneyFav": "Paris Saint-Germain 0 - 0 Aston Villa",
+   "priceFav": "Any Other Score",
+   "moneyShare": 0.287,
+   "priceProb": 0.154,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 239416
+  },
+  {
    "key": "mlb-nym-pit-2026-08-09",
    "league": "MLB",
    "winner": "New York Mets",
@@ -534,50 +558,26 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 236445
-  },
-  {
-   "key": "atp-darderi-nakashi-2026-08-11",
-   "league": "TENNIS",
-   "winner": "Brandon Nakashima",
-   "moneyFav": "Brandon Nakashima",
-   "priceFav": "Brandon Nakashima",
-   "moneyShare": 0.695,
-   "priceProb": 0.695,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 236352
-  },
-  {
-   "key": "mlb-hou-sd-2026-08-08",
-   "league": "MLB",
-   "winner": "San Diego Padres",
-   "moneyFav": "San Diego Padres",
-   "priceFav": "San Diego Padres",
-   "moneyShare": 0.525,
-   "priceProb": 0.525,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 236242
   }
  ],
- "generatedAt": "2026-08-12T23:05:02.885167+00:00",
+ "generatedAt": "2026-08-13T00:00:05.527126+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 420,
   "nfl": 800,
-  "mlb": 574,
+  "mlb": 573,
   "nhl": 403,
   "mls": 736,
   "epl": 474,
   "soccer": 800,
-  "tennis": 628,
+  "tennis": 626,
   "ucl": 472,
   "laliga": 0,
   "bundesliga": 401,
   "serie-a": 37,
   "ligue-1": 467,
-  "esports": 632,
+  "esports": 629,
   "cs2": 404,
   "lol": 373,
   "dota": 9,
@@ -587,7 +587,7 @@
   "boxing": 224,
   "golf": 301,
   "f1": 334,
-  "cricket": 489
+  "cricket": 484
  },
  "sweepStats": {
   "sweepOpen": 500,
