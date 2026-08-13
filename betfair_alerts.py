@@ -632,6 +632,23 @@ def _log_public_push(a, cidx=None) -> None:
         print("Public-Ledger-Schreibfehler:", e)
 
 
+# 13.08.2026 (Lucas-Audit): dem In-Play-Draw-Geld zur bereits kollabierten X-Quote hinterherlaufen
+# verliert nachweislich (-31..-79% ROI, betfair_draw_tracker). Pre-Match-Draw (~3.5) ist ~break-even.
+DRAW_INPLAY_CHASE_MAX_ODD = 2.2   # In-Play-Draw-Push nur, wenn die X-Quote NOCH nicht darunter kollabiert ist
+
+
+def _draw_inplay_chase(a) -> bool:
+    """True = In-Play-Moneyflow auf die Draw-Seite (Match Odds) mit schon kurzer X-Quote -> der
+    verlustreiche Nachlauf. Nur diesen Fall raus; Pre-Match-Draw und Nicht-Draw bleiben. REIN/testbar."""
+    if str(a.get("leadName") or "") != "The Draw" or a.get("market") != "Match Odds":
+        return False
+    li = a.get("live") or {}
+    if li.get("time") is None or li.get("finished"):
+        return False   # nicht in-play
+    od = a.get("leadOdd")
+    return isinstance(od, (int, float)) and od < DRAW_INPLAY_CHASE_MAX_ODD
+
+
 def collect_alerts(prices: dict, hist: dict, ht_top=HT_TOP_EUR, ht_rest=HT_REST_EUR,
                    fresh_top=FRESH_TOP_EUR, fresh_rest=FRESH_REST_EUR) -> list:
     out = []
@@ -706,6 +723,9 @@ def main():
     # der Push reaktiv/gewagt - nichts fuer den oeffentlichen Kanal. Trades sieht ihn weiter (mit Richtung-
     # unklar-Hinweis). Greift nur, wenn wir die Richtung tatsaechlich haben (sonst ist kein Sprung erkennbar).
     pub_alerts = [a for a in pub_alerts if not _dir_event_jump(a)]
+    # (Lucas 13.08.2026, Audit) NUR Public: In-Play-Draw-Nachlauf zur kollabierten X-Quote raus -
+    # backen verliert dort real (-31..-79% ROI). Pre-Match-Draw und andere Seiten bleiben; Trades sieht es weiter.
+    pub_alerts = [a for a in pub_alerts if not _draw_inplay_chase(a)]
     pub_sent = 0
     for a in pub_alerts:
         key = a["scenario"] + ":" + a["matchId"]

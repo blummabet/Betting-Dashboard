@@ -107,8 +107,33 @@ def collect(surfaces=SURFACES) -> list:
     return [{"name": name, "ts": _load_ts(fname, field)} for name, fname, field in surfaces]
 
 
+# 13.08.2026 (Lucas-Audit): Freshness allein sieht nicht, dass {ds}_poly_wallets.json zwar frisch ist,
+# aber bigTradesAll dauerhaft leer bleibt (60 Positionen, 0 Trades) -> Flow-Tape/Ledger-Trades kommen nie
+# an. Separater, nicht-blockierender Check auf genau dieses Muster.
+WALLET_FILES = ["mls_poly_wallets.json", "liga_poly_wallets.json", "esports_poly_wallets.json", "wm_poly_wallets.json"]
+MIN_POS_FOR_TRADES_WARN = 10
+
+
+def check_wallet_trades(files=WALLET_FILES) -> list:
+    """Positionen gefuellt, aber bigTradesAll leer = die Trade-/Nachkauf-Achse kommt nicht an
+    (Producer schreibt sie nicht). Non-blocking. Liest Disk, sonst rein."""
+    out = []
+    for fn in files:
+        try:
+            d = json.loads((BASE / fn).read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if not isinstance(d, dict):
+            continue
+        npos = len(d.get("topPositionsAll") or [])
+        ntr = len(d.get("bigTradesAll") or [])
+        if npos >= MIN_POS_FOR_TRADES_WARN and ntr == 0:
+            out.append("%s: %d Positionen, aber 0 grosse Trades - Flow-Tape/Ledger-Trades kommen nicht an (Producer pruefen)" % (fn, npos))
+    return out
+
+
 def main() -> int:
-    problems = evaluate(collect())
+    problems = evaluate(collect()) + check_wallet_trades()
     if not problems:
         print("✅ Alle Poly-Flächen leben (frisch geschrieben, auch wenn evtl. leer).")
         return 0

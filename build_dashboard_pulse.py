@@ -128,6 +128,7 @@ def build() -> dict:
     win = round(100.0 * wins / graded, 1) if graded else None
     return {
         "_meta": {"description": "Übersicht-Puls: letzte %d abgerechnete Picks (CLV/Trefferquote)." % N,
+                  "generatedAt": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
                   "updated_at": dt.datetime.now(dt.timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")},
         "n": len(last), "nClv": len(clvs), "nGraded": graded,
         "avgClvPP": avg, "pctBeatClose": beat, "winPct": win, "wins": wins, "losses": losses,

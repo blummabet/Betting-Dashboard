@@ -898,7 +898,7 @@ function _pwSharpCell(wallet){
   const sc=_pwWalletScore(wallet);
   if(!sc||sc.n<PW_SHARP_MIN_N)
     return {proven:false, html:'<span class="pw-mut" style="font-size:11px">· sammelt'+(sc?' (n'+sc.n+')':'')+'</span>'};
-  const proven=sc.avgClv>0;
+  const proven=_pwIsSharpScore(sc);   // 13.08.2026 (Lucas-Audit): strenges Gate (beide Achsen + PnL), nicht nur CLV>0
   const col=proven?'#3fb950':'#f85149';
   return {proven, html:'<span style="color:'+col+';font-weight:700">'+(sc.avgClv>=0?'+':'')+sc.avgClv.toFixed(1)+'pp</span>'
     +' <span class="pw-mut" style="font-size:11px">'+Math.round(sc.hit*100)+'% · n'+sc.n+'</span>'};
@@ -916,7 +916,7 @@ function _pwWhaleDrill(wallet){
   const totUsd=open.reduce((s,e)=>s+(e.usd||0),0);
   const sports=[...new Set(open.map(e=>_pwSportCategory(e.league)))];
   const trHtml=sc
-    ?('<span style="color:'+(sc.avgClv>0?'#3fb950':'#f85149')+';font-weight:800">'+(sc.avgClv>=0?'+':'')+sc.avgClv.toFixed(1)+'pp Ø CLV</span> · '+Math.round(sc.hit*100)+'% Treffer · n'+sc.n+(sc.n>=PW_SHARP_MIN_N&&sc.avgClv>0?' · <b style="color:#3fb950">🔥 scharf</b>':(sc.n>=PW_SHARP_MIN_N?' · <span class="pw-mut">unauffällig/schwach</span>':' · <span class="pw-mut">sammelt (n<'+PW_SHARP_MIN_N+')</span>')))
+    ?('<span style="color:'+(sc.avgClv>0?'#3fb950':'#f85149')+';font-weight:800">'+(sc.avgClv>=0?'+':'')+sc.avgClv.toFixed(1)+'pp Ø CLV</span> · '+Math.round(sc.hit*100)+'% Treffer · n'+sc.n+(_pwIsSharpScore(sc)?' · <b style="color:#3fb950">🔥 scharf</b>':(sc.n>=PW_SHARP_MIN_N?' · <span class="pw-mut">unauffällig/schwach</span>':' · <span class="pw-mut">sammelt (n<'+PW_SHARP_MIN_N+')</span>')))
     :'<span class="pw-mut">noch kein Track-Record — sammelt über aufgelöste Positionen</span>';
   const rows=open.length?open.map(e=>'<tr>'
     +'<td style="white-space:nowrap">'+_pwSportIcon(e.league)+' <span class="pw-mut" style="font-size:11px">'+_pwEsc((e.league||'').toUpperCase())+'</span></td>'
@@ -1029,7 +1029,7 @@ function _pwRankByPnl(scores, openMap, kick) {
 function _pwRankByClv(scores, openMap, kick) {
   const rows = Object.keys(scores).map(function (w) {
     const v = scores[w]; if (!v || !v.n || v.n < PW_RANK_MIN_N) return null;
-    const sc = { wallet: w, n: v.n, avgClv: (v.clvSumPP || 0) / v.n, hit: (v.wins || 0) / v.n, usd: Number(v.usd) || 0 };
+    const sc = { wallet: w, n: v.n, avgClv: (v.clvSumPP || 0) / v.n, hit: (v.wins || 0) / v.n, pnl: Number(v.pnl) || 0, usd: Number(v.usd) || 0 };
     sc.score = _pwWalletKombi(sc); return sc;
   }).filter(Boolean).sort(function (a, b) { return b.score - a.score; }).slice(0, 20);
   const intro = '<section class="pw-sec"><div class="pw-sec-head">' + kick
@@ -1037,7 +1037,7 @@ function _pwRankByClv(scores, openMap, kick) {
     + '<div class="pw-sec-p" style="background:rgba(227,179,65,.08);border:1px solid rgba(227,179,65,.3);border-radius:9px;padding:9px 12px;margin:2px 0 12px"><b style="color:#e3b341">⚠️ Vorläufig — misst Timing (CLV), nicht Gewinn.</b> Diese Zahlen kommen nur aus den <i>wenigen großen Wetten, die wir mitbekommen haben</i> (nicht die Poly-Gesamt-Bilanz). Ein Wallet kann hier oben stehen und auf Polymarket trotzdem tief im Minus sein. Die Rangliste nach <b>echter P&amp;L</b> kommt, sobald der Runner sie mitzieht.</div>';
   if (!rows.length) return intro + '<div class="pw-none">Noch keine Wallet mit genug getrackter Historie (min. ' + PW_RANK_MIN_N + ' Wetten). Sammelt sich über die nächsten Tage.</div></section>';
   const body = rows.map(function (r, i) {
-    const proven = r.avgClv > 0, scol = r.score > 0 ? '#3fb950' : '#f85149', clvCol = r.avgClv >= 0 ? '#3fb950' : '#f85149';
+    const proven = _pwIsSharpScore(r), scol = r.score > 0 ? '#3fb950' : '#f85149', clvCol = r.avgClv >= 0 ? '#3fb950' : '#f85149';   // 13.08.2026 (Lucas-Audit): 🔥 nur bei echtem Sharp-Gate
     return '<tr><td class="pw-cn" style="font-weight:800">' + _pwMedal(i) + '</td>'
       + '<td style="white-space:nowrap">' + (proven ? '🔥 ' : '') + _pwWalletChip(r.wallet) + '</td>'
       + '<td class="pw-cn" style="font-weight:900;color:' + scol + '">' + (r.score >= 0 ? '+' : '') + r.score.toFixed(1) + '</td>'
@@ -2019,7 +2019,7 @@ function _pwNewEntries(track, hours, live){
     if(_pwEntryOver(e, live)) continue;                        // schon angepfiffen/durch → nicht „neu"
     const sc=_pwWalletScore(e.wallet);
     rows.push({wallet:e.wallet,key:e.key,side:e.side,league:e.league,price:e.firstPrice,usd:e.usd||0,ts:t,
-      sharp:!!(sc&&sc.n>=PW_SHARP_MIN_N&&sc.avgClv>0),avgClv:sc?sc.avgClv:null,n:sc?sc.n:0});
+      sharp:_pwIsSharpScore(sc),avgClv:sc?sc.avgClv:null,n:sc?sc.n:0});   // 13.08.2026 (Lucas-Audit): strenges Gate
   }
   return rows.sort((a,b)=>b.usd-a.usd||b.ts-a.ts);            // größte zuerst
 }
@@ -2306,7 +2306,14 @@ function _pwExitWatch(w){
   h+='</div></section>'; return h;
 }
 function _pwFlowTape(w,teams){
-  const tr=(w&&w.bigTradesAll)||[]; if(!tr.length)return '';
+  const tr=(w&&w.bigTradesAll)||[];
+  if(!tr.length){
+    const _np=(w&&w.topPositionsAll&&w.topPositionsAll.length)||0;
+    if(!_np) return '';   // 13.08.2026 (Lucas-Audit): Flaeche noch nicht gefuellt -> stumm
+    return '<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">📟 Jüngste große Trades</span>'
+      +'<span class="pw-sec-note">Positionen erfasst, aber keine großen Einzel-Trades im Feed — der Runner schreibt die Trade-Achse aktuell nicht mit.</span></div>'
+      +'<div class="pw-none">Keine großen Trades erfasst.</div></section>';
+  }
   let h='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">📟 Jüngste große Trades</span>'
     +'<span class="pw-sec-note">Wer hat gerade groß gekauft/verkauft — frisches Signal oder schon durchgelaufen?</span></div><div class="pw-tape">';
   tr.slice(0,25).forEach(t=>{const buy=(t.action||'').toUpperCase()==='BUY';

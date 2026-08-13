@@ -211,14 +211,37 @@ def _outcome_smartmoney(condition: str, yes_token: str, price):
             "holders": len(holders), "_big": big, "_wallets": top_wallets}
 
 
-def _big_trades(condition, pick_label, side, price):
+_TRADE_STATS = {"calls": 0, "raw": 0, "kept": 0}   # 13.08.2026 (Lucas-Audit): /trades-Endpoint-Diagnose
+
+
+def _cfg_big_trade_usd() -> float:
+    """13.08.2026 (Lucas-Audit): ab welchem $-Wert ein Einzel-Trade in den "grosse Trades"-Feed kommt.
+    WM sind Millionen-Maerkte (Default 2000); frisch gelistete MLS/Liga-Maerkte haben real nur $0-7000
+    -> $2000-Einzeltrades gibt es dort quasi nie -> Flow-Tape blieb leer. Ohne expliziten Profil-Wert
+    daher fuer Nicht-WM auf $500. Override: profiles.<p>.poly.big_trade_usd."""
+    try:
+        raw = json.loads((BASE / "cocobet_config.json").read_text(encoding="utf-8"))
+        active = os.environ.get("COCOBET_PROFILE") or raw["profiles"].get("active", "wm2026")
+        prof = raw["profiles"][active].get("poly", {})
+        if "big_trade_usd" in prof:
+            return float(prof["big_trade_usd"])
+        return float(BIG_TRADE_USD) if active == "wm2026" else 500.0
+    except Exception:
+        return float(BIG_TRADE_USD)
+
+
+def _big_trades(condition, pick_label, side, price, min_usd=None):
     """Große jüngste Trades (≥ BIG_TRADE_USD) auf einen Outcome-Markt → Liste.
     /trades liefert je Trade {proxyWallet, side BUY/SELL, size, price, timestamp}.
     Defensiv geparst (blind gebaut — Polymarket geoblockt). Leere Liste bei Fehlern."""
     if not condition:
         return []
+    if min_usd is None:
+        min_usd = BIG_TRADE_USD
     data = _http_get(TRADES_URL.format(cond=condition))
     rows = data if isinstance(data, list) else (data.get("trades") if isinstance(data, dict) else None)
+    _TRADE_STATS["calls"] += 1
+    _TRADE_STATS["raw"] += len(rows or [])
     out = []
     for t in (rows or []):
         if not isinstance(t, dict):
@@ -233,7 +256,7 @@ def _big_trades(condition, pick_label, side, price):
         except (TypeError, ValueError):
             continue
         usd = sz * pr
-        if not w or usd < BIG_TRADE_USD:
+        if not w or usd < min_usd:
             continue
         # Unix-Sekunden → ISO falls nötig
         ts_iso = ts
@@ -242,6 +265,7 @@ def _big_trades(condition, pick_label, side, price):
                 ts_iso = datetime.fromtimestamp(int(ts), timezone.utc).isoformat()
         except Exception:
             ts_iso = None
+        _TRADE_STATS["kept"] += 1
         out.append({"wallet": w, "side": side, "pick": pick_label,
                     "usd": round(usd, 0), "price": round(pr, 3),
                     "action": "BUY" if action.startswith("B") else ("SELL" if action.startswith("S") else action),
@@ -266,6 +290,7 @@ def main():
     n_low_vol = 0                  # API lieferte, aber offenes Interesse < Anzeige-Schwelle
     low_vol_examples: list[str] = []
     min_write_usd = _cfg_min_write_usd()
+    big_trade_usd = _cfg_big_trade_usd()
     print(f"  Anzeige-Schwelle: offenes Interesse ≥ ${min_write_usd:,.0f} je Spiel")
     for fx in fixtures:
         key = fx.get("key")
@@ -297,7 +322,7 @@ def main():
             for w in wallets:
                 positions.append({"wallet": w["wallet"], "usd": w["usd"], "shares": w["shares"],
                                   "side": side, "pick": pick_label[side]})
-            trades.extend(_big_trades(cond, pick_label[side], side, price))
+            trades.extend(_big_trades(cond, pick_label[side], side, price, big_trade_usd))
         if not outcomes or total < min_write_usd:
             # 12.07.2026: NICHT mehr stumm verwerfen — sonst sieht man im Log nur „0 Spiele"
             # und weiß nicht, ob die API tot war oder ob schlicht kein Geld im Markt liegt.
@@ -400,6 +425,9 @@ def main():
           f"({n_skip_ko} gelaufen übersprungen) → {OUT_FILE.name}")
     print(f"🐋 Wallet-Dashboard: {len(all_positions)} Positionen, {len(all_trades)} große Trades, "
           f"{len(all_clusters)} Cluster → {WALLETS_FILE.name}")
+    _warn = "  ⚠️ /trades liefert 0 Roh-Trades trotz Calls — Endpoint/Geoblock pruefen!" if (_TRADE_STATS["calls"] and _TRADE_STATS["raw"] == 0) else ""
+    print(f"📟 /trades-Diagnose: {_TRADE_STATS['calls']} Calls · {_TRADE_STATS['raw']} Roh-Trades · "
+          f"{_TRADE_STATS['kept']} ≥ ${big_trade_usd:,.0f}{_warn}")
 
 
 if __name__ == "__main__":

@@ -367,7 +367,17 @@ def check_consensus_anchor_coverage(ctx):
     if not isinstance(covered, int):
         covered = sum(1 for g in games if isinstance(g, dict) and g.get("verdict") != "no_anchor")
     # nur relevant, wenn genug Spiele in gecoverten Ligen ueberhaupt einen Anker haben KOENNTEN:
-    anchorable = [g for g in games if isinstance(g, dict) and g.get("league")]
+    # 13.08.2026 (Lucas-Audit): nur Ligen, die ueberhaupt einen Odds-Anker haben KOENNEN (in
+    # LEAGUE_ODDS_KEY gemappt) zaehlen. Vorher zaehlte JEDE Liga -> in Sommer-/Friendly-Fenstern
+    # (Super Cup, Leagues Cup, U19) permanenter Fehlalarm, der einen echten Key-Tod verdeckt haette.
+    try:
+        from betfair_consensus import LEAGUE_ODDS_KEY as _LOK
+    except Exception:
+        _LOK = {}
+    if _LOK:
+        anchorable = [g for g in games if isinstance(g, dict) and g.get("league") in _LOK]
+    else:
+        anchorable = [g for g in games if isinstance(g, dict) and g.get("league")]
     fails = []
     if len(anchorable) >= COVER_MIN_N and covered == 0:
         fails.append(f"0 von {len(games)} Konsens-Spielen mit Odds-Anker — the-odds-api-Key tot "

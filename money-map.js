@@ -69,9 +69,10 @@
   function _posShare(side,sharePct){ if(side==='draw'||side==null)return 50; var d=(side==='away')?1:-1; return _clamp(50+d*((+sharePct||33)-33)*0.9,7,93); }
   function _posPinn(pn){ if(!pn)return null; var h=+pn.home||0,a=+pn.away||0; return _clamp(50+(a-h)*90,7,93); }
 
+  function _mmAgeH(){ var g=_mm.map&&_mm.map.generatedAt; if(!g) return null; var t=Date.parse(g); return isNaN(t)?null:Math.max(0,(Date.now()-t)/3.6e6); }
   function _mmCard(r){
     var bf=r.betfair,poly=r.poly,pn=r.pinn;
-    var kon=r.verdict==='konsens',div=r.verdict==='uneinig';
+    var kon=r.verdict==='konsens',div=r.verdict==='uneinig',strong=!!r.mmStrong,konS=kon&&strong,divS=div&&strong;
     var live=r.live?'<span class="mm-pill mm-live">● Live</span>':'<span class="mm-pill mm-pre">Pre</span>';
     var bfPos=bf?_posShare(bf.side,bf.sharePct):null, pPos=poly?_posShare(poly.side,poly.sharePct):null, pnPos=_posPinn(pn);
     var bub='';
@@ -79,15 +80,15 @@
     if(pn&&pnPos!=null){ var pf=pn.fav, pp=Math.round((+pn[pf]||0)*100); bub+='<div class="mm-pinn" style="left:'+pnPos+'%"><span class="mm-pl">Pinnacle '+pp+'%</span><i></i><div class="mm-d"></div></div>'; }
     if(bf&&bfPos!=null){ var d=_dia(bf.eur); bub+='<div class="mm-bub mm-bf" style="left:'+bfPos+'%;top:56px;width:'+d+'px;height:'+d+'px">'+_eur(bf.eur)+'</div>'; }
     if(poly&&pPos!=null){ var d2=_dia(poly.usd); var _est=(poly.src==='upcoming')?' mm-poly-est':''; bub+='<div class="mm-bub mm-poly'+_est+'" title="'+((poly.src==='upcoming')?'Poly-Preis (vor Anpfiff, keine Geld-Verteilung)':'Poly-Geld')+'" style="left:'+pPos+'%;top:96px;width:'+d2+'px;height:'+d2+'px">'+_usd(poly.usd)+'</div>'; }
-    var vtxt=kon?'✅ Konsens':(div?'⚠️ Divergenz':(r.verdict==='teil'?'➖ teils einig':'—'));
-    var vsub=kon?('einig auf '+_esc((bf&&bf.name)||'')):(div?'Geld & scharfe Linie uneinig':'');
-    return '<div class="mm-card'+(kon?' mm-kon':(div?' mm-div':''))+'">'
+    var vtxt=kon?(strong?'✅ Konsens':'✅ knapp einig'):(div?(strong?'⚠️ Divergenz':'◽ knapp — Münzwurf'):(r.verdict==='teil'?'➖ teils einig':'—'));
+    var vsub=kon?(strong?('einig auf '+_esc((bf&&bf.name)||'')):'beide knapp — schwaches Signal'):(divS?'Geld & scharfe Linie klar uneinig':(div?'beide nahe 50/50 — kein klares Signal':''));
+    return '<div class="mm-card'+(konS?' mm-kon':(divS?' mm-div':''))+'">'
       +'<div class="mm-ch"><span>⚽</span><span class="mm-t">'+_esc(r.home)+' <span class="mm-vs">vs</span> '+_esc(r.away)+'</span>'+live+'<span class="mm-lg">'+_esc(r.league||'')+'</span></div>'
       +'<div class="mm-axis"><div class="mm-ends"><span>'+_esc(r.home)+'</span><span>'+_esc(r.away)+'</span></div>'
         +'<div class="mm-lane mm-lbf"></div><div class="mm-ll mm-lbf">Betfair</div>'
         +'<div class="mm-lane mm-lpoly"></div><div class="mm-ll mm-lpoly"'+(poly?'':' style="opacity:.4"')+'>Poly'+(poly?(poly.src==='upcoming'?' · früh':''):' · kein Markt')+'</div>'
         +bub+'</div>'
-      +'<div class="mm-foot"><span class="mm-verd '+(kon?'k':(div?'d':'p'))+'">'+vtxt+'</span><span class="mm-vsub">'+vsub+'</span><span class="mm-src">'+(r.nSources||0)+' / 3</span></div>'
+      +'<div class="mm-foot"><span class="mm-verd '+(konS?'k':(divS?'d':'p'))+'">'+vtxt+'</span><span class="mm-vsub">'+vsub+'</span><span class="mm-src">'+(r.nSources||0)+' / 3</span></div>'
       +'</div>';
   }
 
@@ -127,7 +128,9 @@
         :'<div class="mm-empty">'+(_mmFilter==='live'?'Gerade kein Live-Spiel mit Geld.':_mmFilter==='pre'?'Gerade kein Vor-Spiel mit Geld.':'Gerade kein Fußballspiel mit genug Geld. Füllt sich, sobald auf Betfair oder Poly Volumen aufläuft.')+'</div>';
       body=filt+grid;
     }
-    p.innerHTML=head+nav+body;
+    var _ageH=_mmAgeH(), _stale=(_ageH!=null&&_ageH>3);
+    var banner=_stale?'<div style="background:rgba(201,133,0,.12);border:1px solid rgba(201,133,0,.4);color:#e3b341;border-radius:9px;padding:9px 12px;margin:0 0 12px;font-size:12.5px">⚠️ Daten veraltet — Stand vor '+(_ageH>=24?Math.round(_ageH/24)+' Tg':Math.round(_ageH)+'h')+'. Der Runner steht evtl.; „● Live“ kann beendete Spiele zeigen.</div>':'';
+    p.innerHTML=head+nav+banner+body;
   }
   function _mmSet(v){ if(v===_mmView) return; _mmView=v; _mmRender(); }
   function _mmSetF(f){ if(f===_mmFilter) return; _mmFilter=f; _mmRender(); }

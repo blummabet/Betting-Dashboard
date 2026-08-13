@@ -214,14 +214,28 @@ def capture(prices, history, state, now=None, direction=None, consensus=None):
                 share = (lead.get("vol") or 0) / tot
                 d = _dir_look(direction, mid, mkid, lead.get("name")) if direction else None
                 _prev = ((pending.get(mid) or {}).get("signals") or {}).get(mkid) or {}
+                # 13.08.2026 (Lucas-Audit): bei Favoritenwechsel (z.B. O/U Over->Under, enges 1X2)
+                # NICHT die alte entryOdd/pinnClose/pinnFair weitertragen -> sonst CLV auf falscher Seite.
+                if _prev.get("fav") != fav:
+                    _prev = {}
                 _pinn = None
+                _pinnFair = None
                 if mkid == "Match Odds" and isinstance(consensus, dict):
                     _cg = consensus.get(mid) or {}
                     if isinstance(_cg.get("pinnOdd"), (int, float)):
                         _pinn = _cg["pinnOdd"]
+                    # 13.08.2026 (Lucas-Audit): CLV-vs-Pinnacle gegen die DE-VIGGTE Fair-Wahrscheinlichkeit
+                    # der Geld-Seite (nicht die rohe Quote inkl. Vig - die war ~2-3pp positiv verzerrt).
+                    _pd = _cg.get("pinn") if isinstance(_cg.get("pinn"), dict) else None
+                    if _pd:
+                        _pside = {"H": "home", "D": "draw", "A": "away"}.get(fav)
+                        _pf = _pd.get(_pside) if _pside else None
+                        if isinstance(_pf, (int, float)) and 0.0 < _pf < 1.0:
+                            _pinnFair = _pf
                 sigs[mkid] = {"fav": fav, "share": round(share, 3), "odd": lead.get("odd"),
                               "entryOdd": _prev.get("entryOdd", lead.get("odd")),
                               "pinnClose": (_pinn if _pinn is not None else _prev.get("pinnClose")),
+                              "pinnFair": (_pinnFair if _pinnFair is not None else _prev.get("pinnFair")),
                               "conc": share >= CONC_THRESHOLD,
                               "inflow": _inflow_eur(history, mid, mkid) >= INFLOW_MIN_EUR,
                               "dir": (d or {}).get("dir")}   # 'in'=gebackt (Quote kuerzer) · 'out'=gedriftet
@@ -252,8 +266,8 @@ def settle(prices, state, results, now=None, results_fetch=None):
             results.append({"league": pend.get("league"), "market": mkid,
                             "home": pend.get("home"), "away": pend.get("away"), "country": pend.get("country"),
                             "fav": sig["fav"], "odd": sig["odd"], "entryOdd": _e,
-                            "pinnClose": sig.get("pinnClose"),
-                            "clvBf": _clv_pp(_e, sig.get("odd")), "clvPinn": _clv_pp(_e, sig.get("pinnClose")),
+                            "pinnClose": sig.get("pinnClose"), "pinnFair": sig.get("pinnFair"),
+                            "clvBf": _clv_pp(_e, sig.get("odd")), "clvPinn": _clv_pp_fair(_e, sig.get("pinnFair")),
                             "conc": bool(sig.get("conc")), "inflow": bool(sig.get("inflow")),
                             "win": bool(win), "settledAt": now.isoformat(),
                             "matchId": mid, "ft": ft, "ht": ht, "via": via, "dir": sig.get("dir")})
@@ -385,6 +399,19 @@ def _clv_pp(entry, close):
     return None
 
 
+def _clv_pp_fair(entry, fair_prob):
+    """CLV vs de-viggter Pinnacle-Fairwahrscheinlichkeit: fairProb - 1/entry (in pp). >0 = Pinnacle sieht
+    unsere Seite wahrscheinlicher als unsere Einstiegsquote impliziert = Value. Vig-frei (13.08.2026,
+    Lucas-Audit: vorher lief CLV-vs-Pinnacle gegen die ROHE Quote inkl. Marge -> systematisch gruen). REIN."""
+    try:
+        e, p = float(entry), float(fair_prob)
+        if e > 1 and 0.0 < p < 1.0:
+            return round((p - 1.0 / e) * 100.0, 2)
+    except (TypeError, ValueError):
+        pass
+    return None
+
+
 def _bucket():
     return {"n": 0, "wins": 0, "roiSum": 0.0,
             "nConc": 0, "winsConc": 0, "roiConc": 0.0,
@@ -418,7 +445,9 @@ def _add(b, r):
     if isinstance(cb, (int, float)):
         b["nClvBf"] += 1; b["clvBfSum"] += cb; b["beatBf"] += 1 if cb > 0 else 0
     cp = r.get("clvPinn")
-    if isinstance(cp, (int, float)):
+    # 13.08.2026 (Lucas-Audit): nur NEU (de-viggt) gerechnete Zeilen zaehlen - Alt-Zeilen ohne
+    # pinnFair trugen den rohen Vig-Bias und faerbten den Schnitt kuenstlich gruen.
+    if isinstance(cp, (int, float)) and r.get("pinnFair") is not None:
         b["nClvPinn"] += 1; b["clvPinnSum"] += cp; b["beatPinn"] += 1 if cp > 0 else 0
 
 

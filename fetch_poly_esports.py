@@ -37,11 +37,11 @@ def _now():
     return datetime.now(timezone.utc).isoformat()
 
 
-def build(events, sm_fn) -> dict:
+def build(events, sm_fn, trades_fn=None) -> dict:
     """Gamma-Events → {prices, smartmoney, wallets}. REIN (sm_fn injiziert = Holders-Geld-Split).
 
     sm_fn(cond, token, price) → {usd, topHolderShare, holders, _wallets:[{wallet,usd,shares}]} | None"""
-    prices, sm_matches, top_pos = {}, {}, []
+    prices, sm_matches, top_pos, all_trades = {}, {}, [], []
 
     for ev in events or []:
         try:
@@ -69,6 +69,11 @@ def build(events, sm_fn) -> dict:
                                          "shares": w.get("shares"), "side": side,
                                          "pick": (home if side == "home" else away),
                                          "match": home + " – " + away, "key": key})
+                # 13.08.2026 (Lucas-Audit): grosse Trades WIRKLICH holen (war hartkodiert []).
+                if trades_fn:
+                    _pick = home if side == "home" else away
+                    for t in (trades_fn(o.get("cond"), _pick, side, o.get("price")) or []):
+                        all_trades.append({**t, "match": home + " – " + away, "key": key})
             if total <= 0:
                 continue
             for side in outs:                # share erst mit Gesamtsumme
@@ -84,10 +89,11 @@ def build(events, sm_fn) -> dict:
             continue
 
     top_pos.sort(key=lambda p: -(p.get("usd") or 0))
+    all_trades.sort(key=lambda t: (t.get("ts") or ""), reverse=True)
     return {
         "prices":     {"prices": prices, "generatedAt": _now()},
         "smartmoney": {"matches": sm_matches, "updatedAt": _now()},
-        "wallets":    {"topPositionsAll": top_pos[:60], "bigTradesAll": [], "clustersAll": [],
+        "wallets":    {"topPositionsAll": top_pos[:60], "bigTradesAll": all_trades[:60], "clustersAll": [],
                        "emptyReason": None, "updatedAt": _now()},
     }
 
@@ -132,12 +138,12 @@ def main() -> int:
         print(f"ℹ️  Keine baubaren E-Sport-Events — Status geschrieben ({reason})")
         return 0
     try:
-        from fetch_wm_poly_smartmoney import _outcome_smartmoney as sm_fn
+        from fetch_wm_poly_smartmoney import _outcome_smartmoney as sm_fn, _big_trades as trades_fn
     except Exception as e:
         print(f"❌ smartmoney-Helper nicht ladbar: {e}")
         return 1
 
-    out = build(events, sm_fn)
+    out = build(events, sm_fn, trades_fn)
     (BASE / "esports_poly_prices.json").write_text(json.dumps(out["prices"], ensure_ascii=False, indent=1), encoding="utf-8")
     (BASE / "esports_poly_smartmoney.json").write_text(json.dumps(out["smartmoney"], ensure_ascii=False, indent=1), encoding="utf-8")
     (BASE / "esports_poly_wallets.json").write_text(json.dumps(out["wallets"], ensure_ascii=False, indent=1), encoding="utf-8")
@@ -148,6 +154,7 @@ def main() -> int:
     n_markets = len(out["prices"]["prices"])
     _write_status(diag, "ok", built={"markets": n_markets,
                                      "whales": len(out["wallets"]["topPositionsAll"]),
+                                     "trades": len(out["wallets"]["bigTradesAll"]),
                                      "arb": coh.get("arbCount", 0)})
     print(f"🎮 E-Sport: {n_markets} Märkte · {len(out['wallets']['topPositionsAll'])} Whale-Positionen · "
           f"{coh.get('arbCount',0)} Arb")
