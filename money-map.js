@@ -96,18 +96,59 @@
     if(!rec||!rec.byVerdict||!Object.keys(rec.byVerdict).length)
       return '<div class="mm-empty">Noch keine abgerechneten Fälle. Das Tracking füllt sich, sobald Konsens-Spiele fertig sind.</div>';
     var lab={konsens:'✅ Konsens',teil:'➖ teils einig',uneinig:'⚠️ Divergenz'};
+    var P=function(x){return x!=null?Math.round(x*100)+'%':'—';};
+    var C=function(x){return x!=null?(x>=0.55?'#3fb950':x<0.45?'#f85149':'#e3b341'):'#8b949e';};
     var rows=['konsens','teil','uneinig'].filter(function(k){return rec.byVerdict[k];}).map(function(k){
       var b=rec.byVerdict[k];
-      var hr=b.hitRate!=null?Math.round(b.hitRate*100)+'%':'—';
-      var ph=b.pinnHitRate!=null?Math.round(b.pinnHitRate*100)+'%':'—';
-      var col=b.hitRate!=null?(b.hitRate>=0.55?'#3fb950':b.hitRate<0.45?'#f85149':'#e3b341'):'#8b949e';
       return '<tr><td>'+lab[k]+'</td><td class="mm-cn">'+b.n+'</td>'
-        +'<td class="mm-cn" style="color:'+col+';font-weight:800">'+hr+'</td><td class="mm-cn mm-mut">'+ph+'</td></tr>';
+        +'<td class="mm-cn" style="color:'+C(b.hitRate)+';font-weight:800">'+P(b.hitRate)+'</td>'
+        +'<td class="mm-cn" style="color:'+C(b.polyHitRate)+'">'+P(b.polyHitRate)+(b.polyN?' <span class="mm-mut" style="font-size:10px">n'+b.polyN+'</span>':'')+'</td>'
+        +'<td class="mm-cn mm-mut">'+P(b.pinnHitRate)+'</td></tr>';
     }).join('');
+    var dv=rec.divergence||{}, duel='';
+    if(dv.n){
+      var lead=(dv.betfairRate!=null&&dv.polyRate!=null)?(dv.betfairRate>dv.polyRate?'💷 Betfair-Geld':dv.polyRate>dv.betfairRate?'🔵 Poly':'Gleichstand'):null;
+      duel='<div style="background:linear-gradient(180deg,#171e28,#141a23);border:1px solid #263041;border-radius:12px;padding:13px 15px;margin:0 0 16px">'
+        +'<div style="font-size:12.5px;color:#c9d3e0;margin-bottom:10px">⚔️ <b>Bei Divergenz</b> — wer trifft, wenn Betfair-Geld &amp; Poly sich <b>uneinig</b> sind? <span class="mm-mut">('+dv.n+' Fälle)</span></div>'
+        +'<div style="display:flex;gap:26px;align-items:baseline">'
+        +'<div><div class="mm-mut" style="font-size:11px">💷 Betfair-Geld</div><div style="font-size:21px;font-weight:800;color:'+C(dv.betfairRate)+'">'+P(dv.betfairRate)+' <span class="mm-mut" style="font-size:11px;font-weight:600">'+(dv.betfairWins||0)+'/'+(dv.n||0)+'</span></div></div>'
+        +'<div><div class="mm-mut" style="font-size:11px">🔵 Poly</div><div style="font-size:21px;font-weight:800;color:'+C(dv.polyRate)+'">'+P(dv.polyRate)+' <span class="mm-mut" style="font-size:11px;font-weight:600">'+(dv.polyWins||0)+'/'+(dv.polyN||0)+'</span></div></div>'
+        +'</div>'
+        +(lead&&lead!=='Gleichstand'?'<div style="font-size:11.5px;color:#8a95ad;margin-top:9px">→ <b style="color:#c9d3e0">'+lead+'</b> liegt bei Divergenz vorn'+(dv.n<8?' · <span style="color:#e3b341">noch kleine Stichprobe</span>':'')+'</div>':'')
+        +'</div>';
+    }
+    var lgs=rec.byLeague||{}, lgK=Object.keys(lgs).slice(0,12);
+    var lgRows=lgK.map(function(lg){var L=lgs[lg];
+      return '<tr><td>'+_esc(lg)+'</td><td class="mm-cn">'+L.n+'</td><td class="mm-cn" style="color:'+C(L.hitRate)+';font-weight:700">'+P(L.hitRate)+'</td></tr>';}).join('');
+    var lgSec=lgRows?('<div style="font-size:12px;font-weight:700;color:#9aa4b1;margin:20px 0 8px">🏆 Nach Liga <span class="mm-mut" style="font-weight:400">— folgt man dem Betfair-Geld</span></div>'
+      +'<table class="mm-tbl"><thead><tr><th>Liga</th><th class="mm-cn">n</th><th class="mm-cn">Geld trifft</th></tr></thead><tbody>'+lgRows+'</tbody></table>'):'';
+    var bs=rec.byStrength||{}, bsSec='';
+    if((bs.strong&&bs.strong.n)||(bs.weak&&bs.weak.n)){
+      var srow=function(lab,o){return (o&&o.n)?'<tr><td>'+lab+'</td><td class="mm-cn">'+o.n+'</td><td class="mm-cn" style="color:'+C(o.hitRate)+';font-weight:700">'+P(o.hitRate)+'</td></tr>':'';};
+      bsSec='<div style="font-size:12px;font-weight:700;color:#9aa4b1;margin:20px 0 8px">💪 Signal-Stärke <span class="mm-mut" style="font-weight:400">— beide Geld-Seiten ≥ 55 % = stark</span></div>'
+        +'<table class="mm-tbl"><thead><tr><th>Stärke</th><th class="mm-cn">n</th><th class="mm-cn">Geld trifft</th></tr></thead><tbody>'
+        +srow('🔥 Stark',bs.strong)+srow('· Schwach',bs.weak)+'</tbody></table>';
+    }
+    var gms=(rec.recent||[]).slice(0,25).map(function(e){
+      var vb=e.verdict==='konsens'?'✅':e.verdict==='uneinig'?'⚠️':'➖';
+      var sc=(e.ftScore&&e.ftScore.length===2)?e.ftScore[0]+':'+e.ftScore[1]:'';
+      var res=e.moneyWin?'<span style="color:#3fb950">✓</span>':'<span style="color:#f85149">✗</span>';
+      var duelTag='';
+      if(e.verdict==='uneinig')
+        duelTag=(e.moneyWin?'<b style="color:#3fb950">Betfair ✓</b>':e.polyWin?'<b style="color:#58a6ff">Poly ✓</b>':'<span class="mm-mut">beide daneben</span>');
+      return '<div style="display:flex;align-items:baseline;gap:8px;padding:7px 2px;border-bottom:1px solid #1b2430;font-size:12.5px">'
+        +'<span>'+vb+'</span><span style="flex:1;color:#c9d3e0">'+_esc((e.home||'')+' – '+(e.away||''))+'</span>'
+        +'<span class="mm-mut" style="font-size:11px">'+_esc(e.moneyName||e.moneySide||'')+'</span>'
+        +'<span style="min-width:46px;text-align:right">'+res+' '+sc+'</span></div>'
+        +(duelTag?'<div style="font-size:11px;margin:-2px 0 5px 24px">'+duelTag+'</div>':'');
+    }).join('');
+    var gmSec=gms?('<div style="font-size:12px;font-weight:700;color:#9aa4b1;margin:20px 0 8px">🕐 Letzte Spiele <span class="mm-mut" style="font-weight:400">('+(rec.recent||[]).length+')</span></div><div>'+gms+'</div>'):'';
     var g=rec.global||{};
-    return '<div class="mm-trk-intro">Folgt man der <b>Betfair-Geld-Seite</b>: schlägt <b>Konsens</b> (alle einig) die <b>uneinigen</b> Fälle? Die Pinnacle-Spalte zeigt die Trefferquote, wenn man stattdessen dem scharfen Favoriten folgt.</div>'
-      +'<table class="mm-tbl"><thead><tr><th>Verdikt</th><th class="mm-cn">n</th><th class="mm-cn">Geld trifft</th><th class="mm-cn">Pinnacle trifft</th></tr></thead><tbody>'+rows+'</tbody></table>'
-      +'<div class="mm-trk-foot">Gesamt: '+(g.n||0)+' abgerechnet · '+(rec.pending||0)+' offen</div>';
+    return '<div class="mm-trk-intro">Folgt man der <b>Betfair-Geld-Seite</b>: schlägt <b>Konsens</b> die uneinigen Fälle? <b>Poly</b> = Trefferquote der Poly-Seite, <b>Pinn</b> = die des scharfen Favoriten (wo ein Odds-Anker da ist).</div>'
+      +duel
+      +'<table class="mm-tbl"><thead><tr><th>Verdikt</th><th class="mm-cn">n</th><th class="mm-cn">Geld</th><th class="mm-cn">Poly</th><th class="mm-cn">Pinn</th></tr></thead><tbody>'+rows+'</tbody></table>'
+      +bsSec+lgSec+gmSec
+      +'<div class="mm-trk-foot">Gesamt: '+(g.n||0)+' abgerechnet · '+(rec.pending||0)+' offen · Poly-Seite = die von Polymarket favorisierte Seite</div>';
   }
 
   function _mmRender(){

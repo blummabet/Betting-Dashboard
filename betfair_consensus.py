@@ -80,6 +80,11 @@ LEAGUE_ODDS_KEY = {
     "Italian Serie A":              "soccer_italy_serie_a",
     "French Ligue 1":               "soccer_france_ligue_one",
     "Major League Soccer":          "soccer_usa_mls",
+    # 13.08.2026 (Lucas): internationale Klub-Wettbewerbe (im Feed aktiv). Falscher/fehlender Key schadet
+    # nicht (dann bleibt der Anker leer). UEFA-Gruppenphase kann hier genauso ergaenzt werden, sobald die
+    # Betfair-Ligastrings feststehen (soccer_uefa_champs_league / _europa_league / _europa_conference_league).
+    "CONMEBOL Copa Libertadores":   "soccer_conmebol_copa_libertadores",
+    "CONMEBOL Copa Sudamericana":   "soccer_conmebol_copa_sudamericana",
 }
 
 
@@ -468,7 +473,7 @@ def update_mm_ledger(prev, rows, now=None, keep=2000):
         led[mid] = {"matchId": mid, "home": r.get("home"), "away": r.get("away"), "league": r.get("league"),
                     "kickoff": r.get("kickoff"), "verdict": r.get("verdict"), "nSources": r.get("nSources"),
                     "moneySide": bf.get("side"), "moneyName": bf.get("name"),
-                    "pinnFav": pinn.get("fav"), "polySide": poly.get("side"),
+                    "pinnFav": pinn.get("fav"), "polySide": poly.get("side"), "mmStrong": r.get("mmStrong"),
                     "firstSeen": (e or {}).get("firstSeen") or now, "updatedAt": now, "status": "pending"}
     return list(led.values())[-keep:]
 
@@ -513,6 +518,8 @@ def settle_mm_ledger(ledger, results_fetch=None, now=None, min_h=None, prices=No
         e["ftScore"] = [g1, g2]
         e["winner"] = w
         e["moneyWin"] = (e.get("moneySide") == w)
+        if e.get("polySide"):
+            e["polyWin"] = (e.get("polySide") == w)
         if e.get("pinnFav"):
             e["pinnWin"] = (e.get("pinnFav") == w)
         e["status"] = "won" if e["moneyWin"] else "lost"
@@ -552,33 +559,74 @@ def settle_mm_ledger(ledger, results_fetch=None, now=None, min_h=None, prices=No
     return ledger
 
 
-def mm_summary(ledger, now=None):
-    """Trefferquote je Verdikt-Typ (folgt man der Betfair-Geld-Seite): schlaegt Konsens die uneinigen
-    Faelle? Plus Pinnacle-Favoriten-Quote zum Vergleich. REIN/testbar."""
-    buckets = {}
+def mm_summary(ledger, now=None, recent_keep=40):
+    """13.08.2026 (Lucas: mehr Tracking): Trefferquote je Verdikt (folgt man der Betfair-Geld-Seite) PLUS
+    Poly-Quote (folgt man der Poly-Seite) und Pinnacle-Favorit; je Liga; Divergenz-Duell (Betfair vs Poly
+    wenn uneinig, wer trifft oefter?); und die letzten abgerechneten Spiele. Poly/Duell werden direkt aus
+    polySide vs Endstand berechnet -> funktioniert auch fuer schon abgerechnete Alt-Zeilen. REIN/testbar."""
+    buckets, leagues, strength = {}, {}, {}
     gn = gw = 0
-    for e in (ledger or []):
-        if not isinstance(e, dict) or e.get("status") not in ("won", "lost"):
-            continue
+    settled = [e for e in (ledger or []) if isinstance(e, dict) and e.get("status") in ("won", "lost")]
+    for e in settled:
+        w = e.get("winner")
         v = e.get("verdict") or "?"
-        b = buckets.setdefault(v, {"n": 0, "wins": 0, "pinnN": 0, "pinnWins": 0})
+        b = buckets.setdefault(v, {"n": 0, "wins": 0, "polyN": 0, "polyWins": 0, "pinnN": 0, "pinnWins": 0})
         b["n"] += 1
         b["wins"] += 1 if e.get("moneyWin") else 0
+        ps = e.get("polySide")
+        if ps and w:
+            b["polyN"] += 1
+            b["polyWins"] += 1 if ps == w else 0
         if e.get("pinnWin") is not None:
             b["pinnN"] += 1
             b["pinnWins"] += 1 if e.get("pinnWin") else 0
+        L = leagues.setdefault(e.get("league") or "?", {"n": 0, "wins": 0})
+        L["n"] += 1
+        L["wins"] += 1 if e.get("moneyWin") else 0
+        st = e.get("mmStrong")
+        if st is not None:
+            SB = strength.setdefault(bool(st), {"n": 0, "wins": 0})
+            SB["n"] += 1
+            SB["wins"] += 1 if e.get("moneyWin") else 0
         gn += 1
         gw += 1 if e.get("moneyWin") else 0
 
+    def _rate(x, n):
+        return round(x / n, 4) if n else None
+
     def _fin(b):
-        return {"n": b["n"], "wins": b["wins"],
-                "hitRate": round(b["wins"] / b["n"], 4) if b["n"] else None,
-                "pinnN": b["pinnN"],
-                "pinnHitRate": round(b["pinnWins"] / b["pinnN"], 4) if b["pinnN"] else None}
+        return {"n": b["n"], "wins": b["wins"], "hitRate": _rate(b["wins"], b["n"]),
+                "polyN": b["polyN"], "polyWins": b["polyWins"], "polyHitRate": _rate(b["polyWins"], b["polyN"]),
+                "pinnN": b["pinnN"], "pinnHitRate": _rate(b["pinnWins"], b["pinnN"])}
+
+    def _sfin(s):
+        return {"n": s["n"], "wins": s["wins"], "hitRate": _rate(s["wins"], s["n"])} if s else None
+
+    dv = buckets.get("uneinig") or {"n": 0, "wins": 0, "polyN": 0, "polyWins": 0}
+    divergence = {"n": dv["n"], "betfairWins": dv["wins"], "betfairRate": _rate(dv["wins"], dv["n"]),
+                  "polyN": dv["polyN"], "polyWins": dv["polyWins"], "polyRate": _rate(dv["polyWins"], dv["polyN"])}
+
+    by_league = dict(sorted(
+        ((lg, {"n": L["n"], "wins": L["wins"], "hitRate": _rate(L["wins"], L["n"])}) for lg, L in leagues.items()),
+        key=lambda kv: (-kv[1]["n"], kv[0])))
+
+    def _slim(e):
+        ps, w = e.get("polySide"), e.get("winner")
+        return {"matchId": e.get("matchId"), "home": e.get("home"), "away": e.get("away"),
+                "league": e.get("league"), "verdict": e.get("verdict"),
+                "moneySide": e.get("moneySide"), "moneyName": e.get("moneyName"),
+                "polySide": ps, "winner": w, "moneyWin": e.get("moneyWin"),
+                "polyWin": ((ps == w) if (ps and w) else None),
+                "ftScore": e.get("ftScore"), "kickoff": e.get("kickoff"), "settledAt": e.get("settledAt")}
+    recent = [_slim(e) for e in sorted(settled, key=lambda e: (e.get("settledAt") or e.get("kickoff") or ""), reverse=True)[:recent_keep]]
 
     return {"generatedAt": now or _now_iso(),
             "byVerdict": {k: _fin(v) for k, v in buckets.items()},
-            "global": {"n": gn, "wins": gw, "hitRate": round(gw / gn, 4) if gn else None},
+            "byLeague": by_league,
+            "byStrength": {"strong": _sfin(strength.get(True)), "weak": _sfin(strength.get(False))},
+            "divergence": divergence,
+            "recent": recent,
+            "global": {"n": gn, "wins": gw, "hitRate": _rate(gw, gn)},
             "pending": sum(1 for e in (ledger or []) if isinstance(e, dict) and e.get("status") == "pending")}
 
 
