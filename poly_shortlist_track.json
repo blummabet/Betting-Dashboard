@@ -1,7 +1,7 @@
 {
- "updatedAt": "2026-08-13T06:47:19.667591+00:00",
+ "updatedAt": "2026-08-13T08:45:13.725487+00:00",
  "stake": 10.0,
- "expired": 1,
+ "expired": 0,
  "open": {
   "cs2-sf2-ef1-2026-08-08|Eternal Fire": {
    "key": "cs2-sf2-ef1-2026-08-08",
@@ -12,7 +12,7 @@
    "entryPrice": 0.685,
    "firstTs": "2026-08-08T08:59:43.584650+00:00",
    "lastPrice": 0.685,
-   "lastTs": "2026-08-13T06:47:19.667591+00:00",
+   "lastTs": "2026-08-13T08:45:13.725487+00:00",
    "htkAtEntry": 0.018020555555555557,
    "public": false,
    "reasons": [
@@ -235,26 +235,6 @@
    ],
    "stake": 10.0
   },
-  "lec-laf-que-2026-08-12-more-markets|Los Angeles FC": {
-   "key": "lec-laf-que-2026-08-12-more-markets",
-   "side": "Los Angeles FC",
-   "verdict": "BET",
-   "conv": 6,
-   "league": "SOCCER",
-   "entryPrice": 0.545,
-   "firstTs": "2026-08-13T00:00:06.369648+00:00",
-   "lastPrice": 0.545,
-   "lastTs": "2026-08-13T06:47:19.667591+00:00",
-   "htkAtEntry": 2.5275144444444444,
-   "public": false,
-   "reasons": [
-    "🔥 scharfe Wallet (26/40, 65% · +$104K)"
-   ],
-   "signals": [
-    "sharp"
-   ],
-   "stake": 10.0
-  },
   "lol-genga-drxc-2026-08-13|Kiwoom DRX Challengers": {
    "key": "lol-genga-drxc-2026-08-13",
    "side": "Kiwoom DRX Challengers",
@@ -264,7 +244,7 @@
    "entryPrice": 0.765,
    "firstTs": "2026-08-13T02:50:00.613850+00:00",
    "lastPrice": 0.765,
-   "lastTs": "2026-08-13T06:47:19.667591+00:00",
+   "lastTs": "2026-08-13T08:45:13.725487+00:00",
    "htkAtEntry": 2.1992908333333334,
    "public": true,
    "reasons": [
@@ -273,6 +253,26 @@
    ],
    "signals": [
     "money",
+    "sharp"
+   ],
+   "stake": 10.0
+  },
+  "lol-gen-hle1-2026-08-13|Gen.G": {
+   "key": "lol-gen-hle1-2026-08-13",
+   "side": "Gen.G",
+   "verdict": "BET",
+   "conv": 6,
+   "league": "ESPORTS",
+   "entryPrice": 0.555,
+   "firstTs": "2026-08-13T08:45:13.725487+00:00",
+   "lastPrice": 0.555,
+   "lastTs": "2026-08-13T08:45:13.725487+00:00",
+   "htkAtEntry": 1.2567058333333334,
+   "public": false,
+   "reasons": [
+    "🔥 scharfe Wallet (20/29, 69% · +$46K)"
+   ],
+   "signals": [
     "sharp"
    ],
    "stake": 10.0
@@ -5251,16 +5251,37 @@
    "firstTs": "2026-08-13T02:50:00.613850+00:00",
    "settledTs": "2026-08-13T06:47:19.667591+00:00",
    "resolvedTs": "2026-08-13T06:47:18.988246+00:00"
+  },
+  {
+   "key": "lec-laf-que-2026-08-12-more-markets",
+   "side": "Los Angeles FC",
+   "verdict": "BET",
+   "conv": 6,
+   "league": "SOCCER",
+   "entryPrice": 0.545,
+   "closePrice": 0.545,
+   "result": "loss",
+   "winner": "Querétaro FC",
+   "pnl": -10.0,
+   "clvPP": 0.0,
+   "stake": 10.0,
+   "public": false,
+   "signals": [
+    "sharp"
+   ],
+   "firstTs": "2026-08-13T00:00:06.369648+00:00",
+   "settledTs": "2026-08-13T08:45:13.725487+00:00",
+   "resolvedTs": "2026-08-13T08:45:13.066478+00:00"
   }
  ],
  "agg": {
   "all": {
-   "n": 234,
+   "n": 235,
    "wins": 123,
-   "hit": 0.5256,
-   "pnl": -215.92,
-   "stake": 2340.0,
-   "roi": -0.0923,
+   "hit": 0.5234,
+   "pnl": -225.92,
+   "stake": 2350.0,
+   "roi": -0.0961,
    "clvAvg": -0.0
   },
   "public": {
@@ -5292,12 +5313,12 @@
     "clvAvg": -0.07
    },
    "6": {
-    "n": 52,
+    "n": 53,
     "wins": 30,
-    "hit": 0.5769,
-    "pnl": 45.39,
-    "stake": 520.0,
-    "roi": 0.0873,
+    "hit": 0.566,
+    "pnl": 35.39,
+    "stake": 530.0,
+    "roi": 0.0668,
     "clvAvg": -0.14
    },
    "7": {
@@ -5339,12 +5360,12 @@
   },
   "byVerdict": {
    "BET": {
-    "n": 161,
+    "n": 162,
     "wins": 104,
-    "hit": 0.646,
-    "pnl": -8.34,
-    "stake": 1610.0,
-    "roi": -0.0052,
+    "hit": 0.642,
+    "pnl": -18.34,
+    "stake": 1620.0,
+    "roi": -0.0113,
     "clvAvg": 0.0
    },
    "FADE": {
@@ -5377,12 +5398,12 @@
     "clvAvg": 0.0
    },
    "sharp": {
-    "n": 180,
+    "n": 181,
     "wins": 92,
-    "hit": 0.5111,
-    "pnl": -187.2,
-    "stake": 1800.0,
-    "roi": -0.104,
+    "hit": 0.5083,
+    "pnl": -197.2,
+    "stake": 1810.0,
+    "roi": -0.109,
     "clvAvg": 0.01
    },
    "steam": {
