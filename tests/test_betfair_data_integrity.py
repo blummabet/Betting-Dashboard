@@ -165,7 +165,9 @@ class TestConsensusAnchorCoverage(unittest.TestCase):
         self.assertTrue(BI.check_consensus_anchor_coverage(c)["ok"])
 
     def test_zero_anchors_warn(self):
-        games = [{"league": "X", "verdict": "no_anchor"} for _ in range(6)]
+        from betfair_consensus import LEAGUE_ODDS_KEY
+        lg = next(iter(LEAGUE_ODDS_KEY))   # 13.08.2026 (Lucas-Audit): echte gemappte Liga - nur die
+        games = [{"league": lg, "verdict": "no_anchor"} for _ in range(6)]   # zaehlt als anchorable
         c = ctx(consensus={"games": games, "covered": 0})
         r = BI.check_consensus_anchor_coverage(c)
         self.assertFalse(r["ok"]); self.assertEqual(r["severity"], "warn")
