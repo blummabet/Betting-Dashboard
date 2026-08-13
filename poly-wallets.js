@@ -1499,7 +1499,7 @@ function _pwTopPlays(limit, live, useSportPass){
     if(_pwSportCategory(m.league)==='Sonstige') continue;   // kein Politik/Krypto/Sonstiges in die Play-Liste
     if(useSportPass && !_pwSportPass(m.league)) continue;
     const r=_pwShortlistScore(k,m);
-    if(r&&(r.verdict==='BET'||r.verdict==='FADE')) all.push(r);
+    if(r&&r.verdict==='BET') all.push(r);   // 13.08.2026 (Lucas): FADE raus aus Public-Plays (-28% ROI, 26% hit) — nur BET wird promotet; FADE bleibt nur als Verdikt in der Detailtabelle
   }
   all.sort((a,b)=>b.conv-a.conv);
   return limit?all.slice(0,limit):all;

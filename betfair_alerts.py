@@ -730,7 +730,9 @@ def main():
     for a in pub_alerts:
         key = a["scenario"] + ":" + a["matchId"]
         if should_send(pub_seen, key, a["value"]):
-            if _tg_public(build_public_message(a)):
+            # 13.08.2026 (Lucas): Zweitmeinung (Pinnacle/Soft/Poly) auch im Public — wie im Trades-Push (nur fresh).
+            pub_msg = build_public_message(a) + (_consensus_block(a, cidx) if a["scenario"] == "fresh" else "")
+            if _tg_public(pub_msg):
                 pub_seen[key] = a["value"]
                 pub_sent += 1
                 _log_public_push(a, cidx)   # fürs Tracking/Auswerten (+ Konsens-Zweitmeinung)

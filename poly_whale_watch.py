@@ -395,7 +395,13 @@ def _matchup(key, broad):
     m = (broad or {}).get(key) if isinstance(broad, dict) else None
     sh = (m or {}).get("shares") if isinstance(m, dict) else None
     names = list(sh.keys()) if isinstance(sh, dict) else []
-    return " v ".join(names[:2]) if len(names) >= 2 else None
+    # 13.08.2026 (Lucas): Draw-Ausgang (z.B. "Draw (A vs. B)") ist KEIN Team -> rausfiltern, sonst
+    # entsteht "A v Draw (A vs. B)". Bei 3-Weg bleiben so die zwei echten Teams stehen.
+    _draw = ("draw", "the draw", "unentschieden")
+    teams = [n for n in names if not str(n).strip().lower().startswith(_draw)]
+    if len(teams) < 2:
+        teams = names   # 2-Weg / Prop ohne klares Draw-Label -> unveraendert
+    return " v ".join(teams[:2]) if len(teams) >= 2 else None
 
 
 def _kickoff_txt(key, broad):
@@ -510,14 +516,12 @@ def _tg_public(text: str) -> bool:
 
 
 def _pub_keep(pos, scores):
-    """Feed straffen (06.08.2026, Lucas): ein grosses Wallet OHNE belastbaren Record (n<PUB_MIN_TR)
-    kommt nur bei sehr grossem Einsatz (>= PUB_MIN_USD_NOREC) in den Public-Feed. Wallets MIT Record
-    (n>=PUB_MIN_TR, inkl. der bewiesenen) bleiben bei ihren normalen Schwellen. REIN/testbar."""
+    """13.08.2026 (Lucas): Public NUR bewiesen scharfe Wallets — Record n>=PUB_MIN_TR, >=PUB_MIN_HITRATE
+    Treffer, kein bestaetigter Verlierer (_is_smart). Grosse-aber-unbewiesene Wallets (frueher ab
+    PUB_MIN_USD_NOREC ohne Record) bleiben jetzt im Trades-Channel — empirisch zeigen unvalidierte
+    Grosswallets keine Edge (sharp-CLV -1.1pp ueber 1094 Signale). REIN/testbar."""
     s = scores.get(pos.get("wallet")) if isinstance(scores, dict) else None
-    n = (s.get("n") or 0) if isinstance(s, dict) else 0
-    if n >= PUB_MIN_TR:
-        return True
-    return (float(pos.get("usd") or 0) >= PUB_MIN_USD_NOREC)
+    return _is_smart(s, PUB_MIN_TR, PUB_MIN_HITRATE)
 
 
 def _contested_market(key, broad, min_usd=CONTEST_MIN_USD):

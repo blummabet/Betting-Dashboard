@@ -310,11 +310,15 @@ class TestPublicRecordAndTighten(unittest.TestCase):
         line = P._pub_wallet_line({"0xLOSS": {"n": 31, "wins": 24, "pnl": -25576}}, "0xLOSS")
         self.assertNotIn("77%", line); self.assertIn("im Aufbau", line)
 
-    def test_pub_keep_grosse_wallet_ohne_record_nur_ab_schwelle(self):
-        sc = {"rec": {"n": 30, "wins": 16}, "new": {"n": 3, "wins": 2}}
-        self.assertTrue(P._pub_keep({"wallet": "rec", "usd": 60000}, sc))    # Record -> immer
-        self.assertFalse(P._pub_keep({"wallet": "new", "usd": 115000}, sc))  # kein Record, < NOREC -> raus
-        self.assertTrue(P._pub_keep({"wallet": "new", "usd": P.PUB_MIN_USD_NOREC}, sc))  # riesig -> rein
+    def test_pub_keep_nur_bewiesen_scharf(self):
+        # 13.08.2026 (Lucas): Public NUR bewiesen scharf — Record allein reicht NICHT mehr, Groesse
+        # ohne Beweis auch nicht. Grosse-aber-unbewiesene Wallets bleiben im Trades-Channel.
+        sc = {"sharp": {"n": 20, "wins": 15, "clvSumPP": 40},   # 75% + pos CLV -> bewiesen scharf
+              "flat":  {"n": 30, "wins": 16},                    # 53% n=30 -> nicht signifikant
+              "new":   {"n": 3, "wins": 2}}                      # zu duenn
+        self.assertTrue(P._pub_keep({"wallet": "sharp", "usd": 26000}, sc))   # bewiesen -> rein
+        self.assertFalse(P._pub_keep({"wallet": "flat", "usd": 60000}, sc))   # Record aber nicht scharf -> raus
+        self.assertFalse(P._pub_keep({"wallet": "new", "usd": P.PUB_MIN_USD_NOREC}, sc))  # unbewiesen egal wie gross -> raus
 
 
 class TestClvGate(unittest.TestCase):
