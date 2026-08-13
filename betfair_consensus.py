@@ -32,6 +32,7 @@ MMLEDGER_FILE  = "money_map_ledger.json"   # Konsens-Signale mitschreiben -> Tra
 MMRECORD_FILE  = "money_map_record.json"   # Trefferquote je Verdikt-Typ (Tracking-Tab)
 MM_RESULTS_MIN_H = 3.0                      # Anpfiff so lange her -> Spiel sicher vorbei -> abrechenbar
 MM_SINGLE_MIN    = float(os.environ.get("MM_SINGLE_MIN_USD") or 150000)   # 12.08.2026 (Lucas): nur EINE Geldquelle (Betfair ODER Poly) -> braucht so viel Geld, sonst raus. Betfair+Poly = immer rein. Pinnacle zaehlt NICHT (nur Odds-Anker).
+MM_STRONG_PCT    = float(os.environ.get("MM_STRONG_PCT") or 55)   # 13.08.2026 (Lucas-Audit): "starke" Konsens/Divergenz erst, wenn BEIDE Geld-Seiten >= so viel % Mehrheit haben (54/46 = Muenzwurf).
 try:
     from fetch_betfair_betwatch import fetch_results as _fetch_results  # autoritative Endstaende (Runner)
 except Exception:
@@ -111,11 +112,22 @@ _NOISE = {
 }
 
 
+# 13.08.2026 (Lucas-Audit): Abkuerzungs-Aliasse — Betfair kuerzt Klubs anders ab als Poly ("Man Utd"
+# <-> "Manchester United", "Wolves" <-> "Wolverhampton"). Ohne diese Expansion teilen sie 0 Tokens und
+# der ganze Poly-Eintrag fiel still raus. NUR eindeutige, KEINE unterscheidenden Tokens (united/city bleiben
+# getrennt, weil sie separat gemappt/erhalten werden).
+_ALIAS = {
+    "utd": "united", "man": "manchester", "wolves": "wolverhampton",
+    "spurs": "tottenham", "sheff": "sheffield", "nottm": "nottingham",
+    "wba": "westbrom", "qpr": "queensparkrangers",
+}
+
+
 def _norm(s) -> list:
     """Team-Name -> Liste signifikanter Tokens (klein, akzentfrei, ohne Rausch-Tokens/Zahlen)."""
     s = unicodedata.normalize("NFKD", str(s or "")).encode("ascii", "ignore").decode()
     s = re.sub(r"[^a-z0-9 ]", " ", s.lower())
-    return [t for t in s.split() if t and t not in _NOISE and not t.isdigit()]
+    return [_ALIAS.get(t, t) for t in s.split() if t and t not in _NOISE and not t.isdigit()]
 
 
 def _name_score(a, b) -> float:
@@ -377,6 +389,20 @@ def poly_fav(m, poly_entries):
             "usd": round(pe.get("totalUsd") or 0), "src": pe.get("src") or "upcoming"}
 
 
+def _poly_has_any_overlap(m, pools) -> bool:
+    """13.08.2026 (Lucas-Audit): Liegt im Poly-Pool ueberhaupt ein Kandidat, der mit Heim ODER Auswaerts
+    mind. ein Token teilt? Fuer den Namens-Match-Miss-Zaehler: Betfair-Geld da, poly=None, aber ein
+    plausibler Poly-Markt existiert -> wahrscheinlich eine (Rest-)Abkuerzungs-Luecke. REIN."""
+    home, away = m.get("home"), m.get("away")
+    for pe in (pools or []):
+        for k in ((pe.get("prices") or {}).keys()):
+            if str(k).lower() in _POLY_NON_TEAM:
+                continue
+            if _name_score(home, k) > 0 or _name_score(away, k) > 0:
+                return True
+    return False
+
+
 def money_map_row(g, pf):
     """11.08.2026 (Lucas Money-Map): build_game-Output g + poly_fav pf -> bubble-fertige Zeile.
     Betfair-Geld (EUR) + Poly-Geld (USD, eigene Seite) + Pinnacle-Probs + Verdikt + nSources. REIN/testbar."""
@@ -398,6 +424,11 @@ def money_map_row(g, pf):
     # (2/3, "ehrlich"). Nur Betfair allein bleibt no_anchor (nichts zum Vergleichen).
     if row["verdict"] == "no_anchor" and row["betfair"] and row["poly"]:
         row["verdict"] = "konsens" if row["betfair"]["side"] == row["poly"]["side"] else "uneinig"
+    # 13.08.2026 (Lucas-Audit): Magnitude. "stark" nur, wenn BEIDE Geld-Seiten eine klare Mehrheit
+    # (>= MM_STRONG_PCT) zeigen -> das Frontend daempft schwache 54/46-Faelle (kein Signal).
+    _bfm = (row.get("betfair") or {}).get("sharePct") or 0
+    _plm = (row.get("poly") or {}).get("sharePct") or 0
+    row["mmStrong"] = bool(row.get("betfair") and row.get("poly") and _bfm >= MM_STRONG_PCT and _plm >= MM_STRONG_PCT)
     row["nSources"] = sum(1 for x in (row["betfair"], row["poly"], row["pinn"]) if x)
     return row
 
@@ -638,7 +669,7 @@ def main():
                     and len(v.get("prices")) <= 4] if isinstance(poly_upcoming_raw, dict) else []
 
     now = _now_iso()
-    games, new_hist, mm_rows = [], {}, []
+    games, new_hist, mm_rows, mm_name_misses = [], {}, [], []
     for m in live_pool:
         mid = str(m.get("matchId"))
         k = LEAGUE_ODDS_KEY.get(m.get("league"))
@@ -658,7 +689,12 @@ def main():
             mm_pool, mm_g = poly_entries, g
         else:
             mm_pool, mm_g = poly_upcoming_entries, g   # Verdikt bleibt no_anchor; money_map_row leitet Konsens aus Betfair vs Poly ab
-        mm_rows.append(money_map_row(mm_g, poly_fav(m, mm_pool)))
+        _mmr = money_map_row(mm_g, poly_fav(m, mm_pool))
+        mm_rows.append(_mmr)
+        # 13.08.2026 (Lucas-Audit): Namens-Match-Miss zaehlen - Betfair-Geld da, Poly=None, aber im
+        # Pool liegt ein Kandidat mit Token-Overlap (wahrscheinlich Abkuerzungs-Luecke).
+        if _mmr.get("betfair") and not _mmr.get("poly") and _poly_has_any_overlap(m, mm_pool):
+            mm_name_misses.append({"matchId": mid, "home": m.get("home"), "away": m.get("away"), "league": m.get("league")})
         snap = {"ts": now}
         if ev and ev.get("pinn"):
             snap["pinn"] = [round(x, 4) for x in ev["pinn"]]
@@ -674,7 +710,11 @@ def main():
     # Money-Map (11.08.2026, Lucas): bubble-fertiger Feed + Konsens-Ledger fuers Tracking. Additiv.
     mm_rows = [r for r in mm_rows if _mm_money_ok(r)]   # 12.08.2026 (Lucas): min. 2 Geldquellen (Betfair+Poly) ODER eine Quelle >= MM_SINGLE_MIN
     mm_rows.sort(key=lambda r: (r.get("verdict") != "no_anchor", (r.get("betfair") or {}).get("eur") or 0), reverse=True)
-    _dump(MONEYMAP_FILE, {"generatedAt": now, "count": len(mm_rows), "rows": mm_rows})
+    _dump(MONEYMAP_FILE, {"generatedAt": now, "count": len(mm_rows), "rows": mm_rows,
+                          "nameMatchMisses": len(mm_name_misses), "nameMatchMissList": mm_name_misses[:20]})
+    if mm_name_misses:
+        print("WARN Money-Map Namens-Match-Miss: %d Spiele mit Betfair-Geld aber poly=None trotz Poly-Kandidat (%s ...)"
+              % (len(mm_name_misses), ", ".join("%s-%s" % (x["home"], x["away"]) for x in mm_name_misses[:3])))
     mm_led = update_mm_ledger(_load(MMLEDGER_FILE, []), mm_rows, now=now)
     mm_led = settle_mm_ledger(mm_led, results_fetch=_fetch_results)   # abrechnen gegen Endstand
     _dump(MMLEDGER_FILE, mm_led)

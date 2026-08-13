@@ -124,16 +124,32 @@ def _check_match(key: str, e: dict) -> list[dict]:
     return out
 
 
+COH_STALE_HOURS = 6.0   # 13.08.2026 (Lucas-Audit): Preise aelter -> "Arbs" sind veraltet, nicht handelbar
+
+
+def _prices_age_h(prices):
+    """Alter der Preis-Datei in Stunden (aus generatedAt). None wenn unbekannt/unparsebar."""
+    try:
+        dt = datetime.fromisoformat(str(prices.get("generatedAt")).replace("Z", "+00:00"))
+        return (datetime.now(timezone.utc) - dt).total_seconds() / 3600.0
+    except Exception:
+        return None
+
+
 def analyze(prices: dict) -> dict:
+    age = _prices_age_h(prices)
+    stale = age is not None and age > COH_STALE_HOURS
     befunde = []
-    for key, e in (prices.get("prices") or {}).items():
-        befunde.extend(_check_match(key, e))
+    if not stale:
+        for key, e in (prices.get("prices") or {}).items():
+            befunde.extend(_check_match(key, e))
     # Härteste zuerst: Arb vor Widerspruch vor Warnung, dann nach Edge-Größe.
     rang = {"underround": 0, "ladder_inversion": 1, "overround": 2}
     befunde.sort(key=lambda b: (rang.get(b["typ"], 9), -(b.get("edgePP") or 0)))
     return {
         "dataset": D.active_dataset(),
         "generatedAt": datetime.now(timezone.utc).isoformat(),
+        "stale": stale, "pricesAgeH": (round(age, 1) if age is not None else None),
         "arbCount":   sum(1 for b in befunde if b["typ"] == "underround"),
         "inversions": sum(1 for b in befunde if b["typ"] == "ladder_inversion"),
         "warnings":   sum(1 for b in befunde if b["typ"] == "overround"),

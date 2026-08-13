@@ -223,14 +223,17 @@ def _is_notable(r):
         or (r.get("preInflowEur") or 0) >= NOTABLE_INFLOW_EUR
 
 
-def _agg(rows):
+def _agg(rows, odd_key="drawOdd"):
+    # 13.08.2026 (Lucas-Audit): ROI zur PASSENDEN Quote. Pre-Match-Buckets -> Pre-Match-Draw-Quote;
+    # In-Play-Buckets -> die IN-PLAY-Einstiegsquote (firstLevelOdd), weil die Pre-Match-X-Quote beim
+    # Gleichstand laengst kollabiert ist (vorher lief der In-Play-ROI gegen die Pre-Match-Quote ->
+    # +83% war ein Anzeige-Artefakt). Nur Zeilen mit dieser Quote fliessen in den ROI.
     n = len(rows)
     came = sum(1 for r in rows if r.get("drawCame"))
-    # ROI: X backen zur Pre-Match-Draw-Quote
     prof, priced = 0.0, 0
     imp = 0.0
     for r in rows:
-        od = r.get("drawOdd")
+        od = r.get(odd_key)
         if isinstance(od, (int, float)) and od > 1:
             priced += 1
             imp += 1.0 / od
@@ -238,7 +241,8 @@ def _agg(rows):
     return {"n": n, "drawCame": came,
             "drawRate": round(came / n, 4) if n else None,
             "impliedRate": round(imp / priced, 4) if priced else None,
-            "backRoi": round(prof / priced, 4) if priced else None}
+            "backRoi": round(prof / priced, 4) if priced else None,
+            "nPriced": priced, "oddBasis": odd_key}
 
 
 def aggregate(results, now=None):
@@ -272,9 +276,12 @@ def aggregate(results, now=None):
             "notable": _agg(notable),                # "hohe Einsaetze aufs X"
             "drawLeader": _agg([r for r in notable if r.get("drawLeader")]),
             "byShareBand": by_share,
-            "inplayLevelMoneyHigh": _agg(hi_level),  # viel In-Play-Draw-Geld bei Gleichstand
-            "inplayLevelMoneyLow": _agg(lo_level),
-            "inplayOddTightened": _agg(tightened)}   # Draw-Quote in-play gefallen (Aufbau, dann raus?)
+            # 13.08.2026 (Lucas-Audit): realistische In-Play-Einstiegsquote (lastDrawOddInplay), denn wer
+            # dem In-Play-Level-Geld FOLGT, kauft zur dann-aktuellen (kollabierten) Quote, nicht zur Pre-Match-
+            # oder Erst-Gleichstand-Quote. Die backbare Pre-Match-Kante steckt in notable/byShareBand (drawOdd).
+            "inplayLevelMoneyHigh": _agg(hi_level, "lastDrawOddInplay"),  # viel In-Play-Draw-Geld bei Gleichstand
+            "inplayLevelMoneyLow": _agg(lo_level, "lastDrawOddInplay"),
+            "inplayOddTightened": _agg(tightened, "lastDrawOddInplay")}   # Draw-Quote in-play gefallen (Aufbau, dann raus?)
 
 
 # -- I/O (main) ------------------------------------------------------------------

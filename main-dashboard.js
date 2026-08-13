@@ -28,7 +28,7 @@
   }
   function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
   function _ageMin(obj) {
-    var g = obj && obj._meta && obj._meta.generatedAt;
+    var g = obj && obj._meta && (obj._meta.generatedAt || obj._meta.updated_at);
     if (!g) return null;
     var t = Date.parse(g); return isNaN(t) ? null : Math.max(0, (Date.now() - t) / 60000);
   }
@@ -1034,7 +1034,27 @@
     }
     return '<section class="md-pulse md-rise">' +
       '<div class="md-pulse-h">📈 Puls<span class="mpc-hint">letzte abgerechnete · Klick → Bereich</span></div>' +
-      '<div class="mpc-grid">' + cards.join('') + '</div></section>';
+      '<div class="mpc-grid">' + cards.join('') + '</div>' + _mdStrip(d) + _ageStr(d) + '</section>';
+  }
+  // 13.08.2026 (Lucas-Audit): „Jetzt spielen"-Leiste — wo lohnt Setzen (beste Conviction-Stufe/Signal
+  // nach ROI) + was gerade laeuft. Daten lagen schon in dashboard_pulse.json (strip), wurden aber nie
+  // gerendert. CSS .md-pulse-strip existierte bereits.
+  function _mdStrip(d) {
+    var s = d && d.strip; if (!s) return '';
+    var it = function (lab, val, sub) {
+      return '<span style="display:inline-flex;gap:5px;align-items:baseline"><b style="color:var(--mi3);font-weight:600">' + lab + '</b>' + val + (sub ? ' <i style="color:var(--mi3);font-style:normal">' + sub + '</i>' : '') + '</span>';
+    };
+    var roi = function (b) { return '<b style="color:' + (b.roiPct > 0 ? A.good : b.roiPct < 0 ? A.red : 'var(--mi2)') + '">' + (b.roiPct > 0 ? '+' : '') + (+b.roiPct).toFixed(1) + '% ROI</b>'; };
+    var parts = [];
+    if (s.bestConv) parts.push(it('Beste Stufe', 'Conv ' + esc(s.bestConv.key) + ' · ' + roi(s.bestConv), 'n' + s.bestConv.n));
+    if (s.bestSignal) parts.push(it('Bestes Signal', esc(s.bestSignal.key) + ' · ' + roi(s.bestSignal), 'n' + s.bestSignal.n));
+    var inf = s.inflight || {}, live = [];
+    if (inf.poly) live.push(inf.poly + ' Poly');
+    if (inf.betfair) live.push(inf.betfair + ' Betfair');
+    if (inf.cards) live.push(inf.cards + ' Cards');
+    if (live.length) parts.push(it('Läuft', esc(live.join(' · '))));
+    if (!parts.length) return '';
+    return '<div class="md-pulse-strip" title="Wo sich Setzen historisch auszahlt + was gerade offen ist">' + parts.join('') + '</div>';
   }
   
   // ── „Jetzt": Spiele mit Anpfiff <= 3h und Live-Signal (BET / Poly-Lag); CLV-Cue = steamMovePP ──
