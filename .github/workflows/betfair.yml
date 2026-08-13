@@ -48,6 +48,7 @@ jobs:
       - name: Betfair-Konsens (Zweitmeinung Pinnacle/Soft, rein lesend, kein Push)
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          BETWATCH_KEY: ${{ secrets.BETWATCH_KEY }}   # 13.08.2026 (Lucas): Money-Map-Ledger gegen /football/results abrechnen
         run: ${{ env.BETFAIR_PY }} betfair_consensus.py
         continue-on-error: true
 
