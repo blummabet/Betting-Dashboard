@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "liga",
-    "generatedAt": "2026-08-13T07:29:26.691408+00:00",
+    "generatedAt": "2026-08-13T18:50:59.711973+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -2590,6 +2590,47 @@
       "matchupPct": 69
     },
     {
+      "teamId": "163",
+      "team": "Borussia Mönchengladbach",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/163.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "GER",
+      "leagueName": "Bundesliga",
+      "type": "cards",
+      "market": "Über 3,5 Karten",
+      "length": 8,
+      "venue": "all",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 89,
+        "label": "Eigen 89% + Gegner 20% → 61%"
+      },
+      "ratePct": 89,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 1,
+      "next": {
+        "oppId": "173",
+        "oppName": "RB Leipzig",
+        "atHome": false,
+        "date": "2026-08-29",
+        "kickoff": "2026-08-29T13:30:00+00:00",
+        "oppRatePct": 20
+      },
+      "oppSupportPct": 20,
+      "matchupPct": 61
+    },
+    {
       "teamId": "169",
       "team": "Eintracht Frankfurt",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/169.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -2629,47 +2670,6 @@
       },
       "oppSupportPct": 73,
       "matchupPct": 55
-    },
-    {
-      "teamId": "163",
-      "team": "Borussia Mönchengladbach",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/163.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "GER",
-      "leagueName": "Bundesliga",
-      "type": "cards",
-      "market": "Über 3,5 Karten",
-      "length": 8,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 80,
-        "label": "Eigen 80% + Gegner 20% → 56%"
-      },
-      "ratePct": 80,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 2,
-      "next": {
-        "oppId": "173",
-        "oppName": "RB Leipzig",
-        "atHome": false,
-        "date": "2026-08-29",
-        "kickoff": "2026-08-29T13:30:00+00:00",
-        "oppRatePct": 20
-      },
-      "oppSupportPct": 20,
-      "matchupPct": 56
     },
     {
       "teamId": "502",
@@ -4796,57 +4796,6 @@
       },
       "oppSupportPct": 60,
       "matchupPct": 72
-    },
-    {
-      "teamId": "34",
-      "team": "Newcastle",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/34.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 6,
-      "venue": "H",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 60% → 64%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 0,
-      "next": {
-        "oppId": "40",
-        "oppName": "Liverpool",
-        "atHome": true,
-        "date": "2026-08-23",
-        "kickoff": "2026-08-23T15:30:00+00:00",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 64,
-      "signalInfo": {
-        "state": "contradict",
-        "count": 1,
-        "conviction": 1,
-        "names": [
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength",
-          "transfer_shift"
-        ],
-        "market": "Unter 2.5 Tore"
-      }
     },
     {
       "teamId": "34",
@@ -7259,6 +7208,59 @@
       },
       "oppSupportPct": 40,
       "matchupPct": 60
+    },
+    {
+      "teamId": "34",
+      "team": "Newcastle",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/34.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 6,
+      "venue": "H",
+      "strong": true,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 60% → 64% · Linie/Signale dagegen"
+      },
+      "ratePct": 67,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 0,
+      "next": {
+        "oppId": "40",
+        "oppName": "Liverpool",
+        "atHome": true,
+        "date": "2026-08-23",
+        "kickoff": "2026-08-23T15:30:00+00:00",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 64,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 2,
+        "conviction": 1,
+        "names": [
+          "public_static_bias",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "transfer_shift",
+          "reverse_line_move"
+        ],
+        "market": "Unter 2.5 Tore"
+      }
     },
     {
       "teamId": "487",
@@ -14414,6 +14416,81 @@
       "matchupPct": 66
     },
     {
+      "teamId": "163",
+      "team": "Borussia Mönchengladbach",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/163.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "GER",
+      "leagueName": "Bundesliga",
+      "type": "cards",
+      "market": "Über 3,5 Karten",
+      "length": 4,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 89,
+        "label": "Eigen 89% + Gegner 20% → 61%"
+      },
+      "ratePct": 89,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 1,
+      "next": {
+        "oppId": "173",
+        "oppName": "RB Leipzig",
+        "atHome": false,
+        "date": "2026-08-29",
+        "kickoff": "2026-08-29T13:30:00+00:00",
+        "oppRatePct": 20
+      },
+      "oppSupportPct": 20,
+      "matchupPct": 61
+    },
+    {
+      "teamId": "163",
+      "team": "Borussia Mönchengladbach",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/163.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "GER",
+      "leagueName": "Bundesliga",
+      "type": "cards",
+      "market": "Über 3,5 Karten",
+      "length": 4,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 89,
+        "label": "Eigen 89% + Gegner 20% → 61%"
+      },
+      "ratePct": 89,
+      "seq": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 0,
+      "next": {
+        "oppId": "173",
+        "oppName": "RB Leipzig",
+        "atHome": false,
+        "date": "2026-08-29",
+        "kickoff": "2026-08-29T13:30:00+00:00",
+        "oppRatePct": 20
+      },
+      "oppSupportPct": 20,
+      "matchupPct": 61
+    },
+    {
       "teamId": "167",
       "team": "1899 Hoffenheim",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/167.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -16155,82 +16232,6 @@
       },
       "oppSupportPct": 23,
       "matchupPct": 51
-    },
-    {
-      "teamId": "163",
-      "team": "Borussia Mönchengladbach",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/163.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "GER",
-      "leagueName": "Bundesliga",
-      "type": "cards",
-      "market": "Über 3,5 Karten",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 80,
-        "label": "Eigen 80% + Gegner 20% → 56%"
-      },
-      "ratePct": 80,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 1,
-      "next": {
-        "oppId": "173",
-        "oppName": "RB Leipzig",
-        "atHome": false,
-        "date": "2026-08-29",
-        "kickoff": "2026-08-29T13:30:00+00:00",
-        "oppRatePct": 20
-      },
-      "oppSupportPct": 20,
-      "matchupPct": 56
-    },
-    {
-      "teamId": "163",
-      "team": "Borussia Mönchengladbach",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/163.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "GER",
-      "leagueName": "Bundesliga",
-      "type": "cards",
-      "market": "Über 3,5 Karten",
-      "length": 4,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 80,
-        "label": "Eigen 80% + Gegner 20% → 56%"
-      },
-      "ratePct": 80,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 1,
-      "next": {
-        "oppId": "173",
-        "oppName": "RB Leipzig",
-        "atHome": false,
-        "date": "2026-08-29",
-        "kickoff": "2026-08-29T13:30:00+00:00",
-        "oppRatePct": 20
-      },
-      "oppSupportPct": 20,
-      "matchupPct": 56
     },
     {
       "teamId": "165",
@@ -18080,57 +18081,6 @@
       },
       "oppSupportPct": 80,
       "matchupPct": 60
-    },
-    {
-      "teamId": "40",
-      "team": "Liverpool",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/40.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 67% → 63%"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 3,
-      "next": {
-        "oppId": "34",
-        "oppName": "Newcastle",
-        "atHome": false,
-        "date": "2026-08-23",
-        "kickoff": "2026-08-23T15:30:00+00:00",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 63,
-      "signalInfo": {
-        "state": "contradict",
-        "count": 1,
-        "conviction": 1,
-        "names": [
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength",
-          "transfer_shift"
-        ],
-        "market": "Unter 2.5 Tore"
-      }
     },
     {
       "teamId": "40",
@@ -21592,59 +21542,6 @@
       "flag": "<img src=\"https://media.api-sports.io/football/teams/34.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ENG",
       "leagueName": "Premier League",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 58,
-        "label": "Eigen 58% + Gegner 60% → 59%"
-      },
-      "ratePct": 58,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 12,
-      "next": {
-        "oppId": "40",
-        "oppName": "Liverpool",
-        "atHome": true,
-        "date": "2026-08-23",
-        "kickoff": "2026-08-23T15:30:00+00:00",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 59,
-      "signalInfo": {
-        "state": "contradict",
-        "count": 1,
-        "conviction": 1,
-        "names": [
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength",
-          "transfer_shift"
-        ],
-        "market": "Unter 2.5 Tore"
-      }
-    },
-    {
-      "teamId": "34",
-      "team": "Newcastle",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/34.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
       "type": "bttsYes",
       "market": "Beide Teams treffen",
       "length": 3,
@@ -24163,6 +24060,61 @@
       "matchupPct": 33
     },
     {
+      "teamId": "34",
+      "team": "Newcastle",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/34.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 58,
+        "label": "Eigen 58% + Gegner 60% → 59% · Linie/Signale dagegen"
+      },
+      "ratePct": 58,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 12,
+      "next": {
+        "oppId": "40",
+        "oppName": "Liverpool",
+        "atHome": true,
+        "date": "2026-08-23",
+        "kickoff": "2026-08-23T15:30:00+00:00",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 59,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 2,
+        "conviction": 1,
+        "names": [
+          "public_static_bias",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "transfer_shift",
+          "reverse_line_move"
+        ],
+        "market": "Unter 2.5 Tore"
+      }
+    },
+    {
       "teamId": "36",
       "team": "Fulham",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/36.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -24242,6 +24194,59 @@
       },
       "oppSupportPct": 47,
       "matchupPct": 39
+    },
+    {
+      "teamId": "40",
+      "team": "Liverpool",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/40.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 67% → 63% · Linie/Signale dagegen"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 3,
+      "next": {
+        "oppId": "34",
+        "oppName": "Newcastle",
+        "atHome": false,
+        "date": "2026-08-23",
+        "kickoff": "2026-08-23T15:30:00+00:00",
+        "oppRatePct": 67
+      },
+      "oppSupportPct": 67,
+      "matchupPct": 63,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 2,
+        "conviction": 1,
+        "names": [
+          "public_static_bias",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "transfer_shift",
+          "reverse_line_move"
+        ],
+        "market": "Unter 2.5 Tore"
+      }
     },
     {
       "teamId": "42",
