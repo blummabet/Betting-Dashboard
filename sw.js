@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v123';   // 13.08.2026 (Lucas): Flow-Tape-Revert (Guard macht Sichtbarkeit) + Top-Wetten-Box
+const VERSION = 'cocobet-v124';   // 13.08.2026 (Lucas): Top-Wetten-Box +Poly-Public +Divergenz-only · Steam-Artefakt-Cap · KPI-Anker-ehrlich
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
