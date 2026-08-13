@@ -21,6 +21,11 @@ jobs:
   fetch:
     runs-on: [self-hosted, macOS]
     timeout-minutes: 8
+    env:
+      # 13.08.2026 (Lucas): BETWATCH_KEY job-weit -> die autoritative /results-Korrektur (verify_settled in
+      # betfair_track_record + betfair_public_eval + Money-Map-Settle in betfair_consensus) kann laufen.
+      # Ohne Key blieben per Live-Feed falsch abgerechnete Picks stehen (z.B. Palmeiras 1:0 statt 1:1 -> won).
+      BETWATCH_KEY: ${{ secrets.BETWATCH_KEY }}
     steps:
       - name: 📥 Repo auschecken
         uses: actions/checkout@v4
