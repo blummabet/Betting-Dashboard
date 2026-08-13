@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v121';   // 13.08.2026 (Lucas-Audit): Money-Map Stale-Badge · Anchor-Coverage-Fehlalarm · Coherence-Zeit-Guard · entryOdd-Flip
+const VERSION = 'cocobet-v122';   // 13.08.2026 (Lucas): Übersicht "Top-Wetten jetzt" — unified Ranking über alle Flächen
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
