@@ -231,7 +231,7 @@ test('🔎 Drilldown-Overlay: Track-Record + offene Positionen der Wallet', asyn
     'mls-data.json': { groups: {} }, 'mls_poly_prices.json': { prices: {} },
     'mls_poly_wallets.json': { topPositionsAll: [], matches: {}, updatedAt: new Date().toISOString() },
     'poly_money_broad.json': { n: 0 },
-    'poly_wallet_track.json': { scores: { '0xSHARP': { n: 6, clvSumPP: 18, wins: 4 } }, open: {
+    'poly_wallet_track.json': { scores: { '0xSHARP': { n: 6, clvSumPP: 18, wins: 4, pnl: 500 } }, open: {
       '0xSHARP|mlb-a-b|Braves': { wallet: '0xSHARP', key: 'mlb-a-b', side: 'Braves', league: 'MLB', firstPrice: 0.42, usd: 30000 },
       '0xSHARP|atp-x-y|Alcaraz': { wallet: '0xSHARP', key: 'atp-x-y', side: 'Alcaraz', league: 'TENNIS', firstPrice: 0.6, usd: 12000 },
       '0xOTHER|nba-c-d|Lakers': { wallet: '0xOTHER', key: 'nba-c-d', side: 'Lakers', league: 'NBA', firstPrice: 0.5, usd: 5000 } } },

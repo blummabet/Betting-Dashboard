@@ -2306,14 +2306,7 @@ function _pwExitWatch(w){
   h+='</div></section>'; return h;
 }
 function _pwFlowTape(w,teams){
-  const tr=(w&&w.bigTradesAll)||[];
-  if(!tr.length){
-    const _np=(w&&w.topPositionsAll&&w.topPositionsAll.length)||0;
-    if(!_np) return '';   // 13.08.2026 (Lucas-Audit): Flaeche noch nicht gefuellt -> stumm
-    return '<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">📟 Jüngste große Trades</span>'
-      +'<span class="pw-sec-note">Positionen erfasst, aber keine großen Einzel-Trades im Feed — der Runner schreibt die Trade-Achse aktuell nicht mit.</span></div>'
-      +'<div class="pw-none">Keine großen Trades erfasst.</div></section>';
-  }
+  const tr=(w&&w.bigTradesAll)||[]; if(!tr.length)return '';   // 13.08.2026: leer -> stumm; Sichtbarkeit via check_wallet_trades-Guard (Status-Panel)
   let h='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">📟 Jüngste große Trades</span>'
     +'<span class="pw-sec-note">Wer hat gerade groß gekauft/verkauft — frisches Signal oder schon durchgelaufen?</span></div><div class="pw-tape">';
   tr.slice(0,25).forEach(t=>{const buy=(t.action||'').toUpperCase()==='BUY';

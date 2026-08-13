@@ -168,7 +168,7 @@ class TestFetcherClustersAll(unittest.TestCase):
         def fake_sm(cond, tok, price):
             return {"usd": 100000.0, "topHolderShare": 0.5, "holders": 100, "_big": 3, "_wallets": []}
 
-        def fake_trades(cond, pick_label, side, price):
+        def fake_trades(cond, pick_label, side, price, min_usd=None):
             if side == "home":   # 3 unabhängige BUY-Wallets → Cluster 3
                 return [{"wallet": w, "side": "home", "action": "BUY", "usd": 3000,
                          "ts": fut, "pick": pick_label} for w in ("0xa", "0xb", "0xc")]
