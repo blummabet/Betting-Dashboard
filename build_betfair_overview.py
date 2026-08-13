@@ -32,6 +32,7 @@ except Exception:
         return None
 
 MOVE_MIN_PP = 1.5      # = Radar moveOf: schwächere Bewegungen ignorieren
+MAX_MOVE_PP = 25.0     # 13.08.2026 (Lucas): darueber = Platzhalter-/Opening-Quoten-Artefakt (z.B. 1.05->7.60 = -73pp), kein echtes Steam
 FLOW_MIN_EUR = 2000    # = Radar FLOW_MIN_EUR: Zufluss erst ab so viel zeigen
 FLOW_MIN_ODD = 1.30    # (Lucas 04.08.) Geld auf Quasi-Lock (@<1.30, oft live/entschieden) = kein Signal
 TOP_STEAM = 5
@@ -71,7 +72,7 @@ def implied_move(first_mo, last_mo):
             pp = (1 / b - 1 / a) * 100
             if best is None or abs(pp) > abs(best[1]):
                 best = (k, pp)
-    if best and abs(best[1]) >= MOVE_MIN_PP:
+    if best and MOVE_MIN_PP <= abs(best[1]) <= MAX_MOVE_PP:
         return {"side": best[0], "pp": round(best[1], 1)}
     return None
 

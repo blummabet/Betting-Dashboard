@@ -347,7 +347,7 @@
   }
   // ⚡ Sharpe Bewegungen: Vor-Anpfiff-Quotenbewegung (pp). +pp = Quote fällt = Geld drauf, −pp = driftet.
   function _mdBfSteamBody() {
-    var items = ((_md.data.bfOverview || {}).steam) || [];
+    var items = (((_md.data.bfOverview || {}).steam) || []).filter(function (x) { return Math.abs(+x.pp || 0) <= 25; });   // 13.08.2026 (Lucas): >25pp = Platzhalter-/Opening-Artefakt (z.B. -73pp) raus
     if (!items.length) return empty('Keine Vor-Anpfiff-Bewegung — sammelt (2 Snapshots nötig).');
     var mx = items.reduce(function (a, x) { return Math.max(a, Math.abs(+x.pp || 0)); }, 1);
     return items.map(function (x) {
@@ -474,7 +474,8 @@
     var bets = betPicks();
     var mmRows = (_md.data.moneyMap && _md.data.moneyMap.rows) || [];
     var kon = mmRows.filter(function (r) { return r.verdict === 'konsens'; }).length;
-    var st = (_md.data.bfOverview && _md.data.bfOverview.steam) || [];
+    var mmAnch = mmRows.filter(function (r) { return r.pinn; }).length;   // 13.08.2026 (Lucas): echter Pinnacle-Anker vorhanden?
+    var st = ((_md.data.bfOverview && _md.data.bfOverview.steam) || []).filter(function (x) { return Math.abs(+x.pp || 0) <= 25; });   // Artefakt-Moves raus
     var fl = (_md.data.bfOverview && _md.data.bfOverview.flow) || [];
     var bigPp = st.reduce(function (m, x) { var q = +x.pp || 0; return Math.abs(q) > Math.abs(m) ? q : m; }, 0);
     var topConv = bets.length ? (bets[0].conv || 0) : 0;
@@ -487,7 +488,7 @@
       K(bets.length, '🎯 BET-Cards', bets.length ? 'Top ' + topConv + '/10' : 'keine offen', bets.length ? 'Conviction-Setz-Kandidaten' : 'Conviction ≥ Schwelle · sammelt', A.blue, 'national-cards') +
       K((pl.openN || 0), '🔥 Heiße Spiele Poly', 'Top-Plays offen', 'Heute Spielenswert ' + (pl.hitPct == null ? '—' : Math.round(pl.hitPct) + '%') + (pl.n ? ' (' + pl.n + ')' : ''), A.poly, 'polywallets') +
       K(st.length, '💷 Betfair heiß', st.length ? 'Märkte mit Zug' : 'ruhig', st.length ? 'größter ' + (bigPp > 0 ? '+' : '') + bigPp.toFixed(1) + 'pp' + (fl.length ? ' · +' + fl.length + ' Zufluss' : '') : '—', A.bf, 'betfair') +
-      K(mmRows.length, '🔗 Money Map', mmRows.length ? 'Spiele im Bild' : 'ruhig', kon + ' Konsens · BF × Poly × Pinn', A.flow, 'moneymap') +
+      K(mmRows.length, '🔗 Money Map', mmRows.length ? 'Spiele im Bild' : 'ruhig', kon + ' Konsens · ' + (mmAnch ? 'BF × Poly × Pinn' : 'BF + Poly (kein Anker)'), A.flow, 'moneymap') +
       '</div>';
   }
   
@@ -971,6 +972,7 @@
     _mdFillPlays();
     _mdFillPubPreview();
     _mdFillLive();
+    _mdFillJetzt();
   }
   // ── Puls: letzte 30 abgerechnete Picks (CLV / Trefferquote) ──────────────────
   function _spark(series) {
@@ -1075,7 +1077,7 @@
   // 13.08.2026 (Lucas): EINE unified "Top-Wetten jetzt"-Box — das Beste ueber ALLE Flaechen
   // (Engine-Cards, Poly-Lag, Betfair-Steam, Money-Map), gerankt nach einem gemeinsamen Signal-Score
   // statt chronologisch. Exoten bleiben drin, aber markiert + heruntergestuft. Artefakt-Moves raus.
-  function _mdJetzt() {
+  function _mdJetzt(polyPlays) {
     var now = Date.now(), soon = now + 12 * 3600e3, floor = now - 30 * 60000;
     var vsp = ' <span style="color:var(--mi3);font-weight:400">v</span> ';
     var MAJOR = /premier league|la liga|laliga|bundesliga|serie a|ligue 1|eredivisie|primeira liga|championship|major league soccer|\bmls\b|liga mx|s(u|ü)per lig|champions league|europa league|conference league/i;
@@ -1103,7 +1105,21 @@
         put(o);
       });
     });
-    // 2) Betfair-Steam — geld-getrieben; plausibel gefiltert, Richtung ehrlich beschriftet
+    // 2) Poly-Public-Plays ("Heute spielenswert") — empirisch die staerkste Flaeche (74% Treffer, +ROI).
+    //    Async nachgereicht via _mdFillJetzt. Live (in-play) bleibt drin — Poly ist in-play spielbar.
+    (polyPlays || []).forEach(function (r) {
+      if (r.verdict !== 'BET' && r.verdict !== 'ABWÄGEN') return;
+      var htk = (r.htk == null) ? null : +r.htk, live = (htk != null && htk < 0);
+      var k = (htk == null || live) ? now : now + htk * 3600e3;
+      if (htk != null && !live && k > soon) return;
+      var conv = +r.conv || 0, mp = Math.round((+r.moneyPct || 0) * 100);
+      var ico = (typeof _pwSportIcon === 'function') ? _pwSportIcon(r.league) + ' ' : '';
+      put({ id: 'p' + (r.key || (r.match || '')), k: k, live: live, exotic: false, odd: null,
+        label: esc(String(r.match || '').slice(0, 36)) + ' <span style="color:var(--mi3)">→</span> <b style="color:#4cc2ff">' + esc(r.side || '') + '</b>',
+        score: (r.verdict === 'BET' ? 60 + conv * 3.5 : 48 + conv * 2), bc: A.poly, badge: ico + 'Poly ' + r.verdict,
+        why: mp + '% Geld' + ((r.sharp && r.sharp.n) ? ' · Wallets ' + Math.round(r.sharp.hit * 100) + '% (n' + r.sharp.n + ')' : '') + (r.vol ? ' · ' + usd(r.vol) : '') });
+    });
+    // 3) Betfair-Steam — geld-getrieben; plausibel gefiltert, Richtung ehrlich beschriftet
     ((_md.data.bfOverview && _md.data.bfOverview.steam) || []).forEach(function (x) {
       var pp = +x.pp || 0, app = Math.abs(pp);
       if (app < 1.5 || app > 25) return;           // <1.5 kein Signal · >25pp = Platzhalter-Artefakt
@@ -1114,38 +1130,50 @@
         why: moneyIn ? ('Geld auf ' + short(x.sideName || '') + ' · Quote zieht ' + pp.toFixed(1) + 'pp')
                      : (short(x.sideName || '') + ' driftet ' + pp.toFixed(1) + 'pp → Geld auf Gegenseite') });
     });
-    // 3) Money-Map — nur STARKE (mmStrong; Fallback fuer alte Daten), actionable
+    // 4) Money-Map — NUR echte Divergenz (starke Fehlbepreisung). Trivial-Favoriten-Konsens ist kein
+    //    Edge (Geld auf den Favoriten, WEIL er Favorit ist) -> raus aus der Box (bleibt im Money-Map-Tab).
     ((_md.data.moneyMap && _md.data.moneyMap.rows) || []).forEach(function (r) {
+      if (r.verdict !== 'uneinig') return;
       var strong = r.mmStrong;
       if (strong === undefined) { var bs = (r.betfair && r.betfair.sharePct) || 0, ps = (r.poly && r.poly.sharePct) || 0; strong = bs >= 55 && ps >= 55; }
       if (!strong) return;
-      var ex = !r.pinn, bf = r.betfair && r.betfair.name, pl = r.poly && r.poly.name, o;
-      if (r.verdict === 'uneinig') o = { score: 44, why: 'Divergenz · Betfair-Geld auf ' + short(bf || '') + ', Poly auf ' + short(pl || '') };
-      else if (r.verdict === 'konsens') o = { score: 39, why: 'Großes Geld auf ' + short(bf || '') + (r.pinn ? ' · Anker bestätigt' : '') };
-      else return;
-      o.id = 'm' + mid(r.home, r.away, r.matchId); o.k = r.kickoff ? Date.parse(String(r.kickoff).replace('Z', '+00:00')) : NaN;
-      o.home = r.home; o.away = r.away; o.league = r.league; o.odd = null; o.exotic = ex; o.badge = '🔗 Money Map'; o.bc = A.flow; o.live = r.live;
-      put(o);
+      var ex = !r.pinn, bf = r.betfair && r.betfair.name, pl = r.poly && r.poly.name;
+      put({ id: 'm' + mid(r.home, r.away, r.matchId), k: r.kickoff ? Date.parse(String(r.kickoff).replace('Z', '+00:00')) : NaN,
+        home: r.home, away: r.away, league: r.league, odd: null, exotic: ex, live: r.live,
+        score: 44, badge: '🔗 Divergenz', bc: A.flow,
+        why: 'Betfair-Geld auf ' + short(bf || '') + ', Poly auf ' + short(pl || '') + ' — Fehlbepreisung' });
     });
     var items = Object.keys(cand).map(function (id) { return cand[id]; })
       .sort(function (a, b) { return b.score - a.score || a.k - b.k; }).slice(0, 5);
-    if (!items.length) return '<section class="md-jetzt md-rise" style="border-color:var(--mln);background:var(--m1);padding-bottom:13px">' +
+    if (!items.length) return '<section id="mdJetztBox" class="md-jetzt md-rise" style="border-color:var(--mln);background:var(--m1);padding-bottom:13px">' +
       '<div class="md-jz-h"><span style="font-size:16px;opacity:.55">🎯</span><span class="md-jz-t" style="color:var(--mi2)">Top-Wetten jetzt</span>' +
       '<span class="md-jz-s">gerade kein spielbares Signal in den nächsten Stunden — meldet sich automatisch.</span></div></section>';
     var body = items.map(function (x, i) {
       var min = Math.max(0, Math.round((x.k - now) / 60000));
-      var ko = min < 60 ? min + 'm' : Math.floor(min / 60) + 'h' + (min % 60 ? ' ' + (min % 60) + 'm' : '');
+      var ko = x.live ? 'live' : (min < 60 ? min + 'm' : Math.floor(min / 60) + 'h' + (min % 60 ? ' ' + (min % 60) + 'm' : ''));
       var live = x.live ? '<span class="md-badge" style="background:rgba(229,83,75,.16);color:' + A.red + '">● LIVE</span>' : '';
       var chip = x.exotic ? '<span class="md-badge" style="background:rgba(201,133,0,.14);color:' + A.gold + '" title="dünner/exotischer Markt — Signal weniger verlässlich">dünn</span>' : '';
       var oddTxt = x.odd != null ? ' · @' + (+x.odd).toFixed(2) : '';
+      var teams = x.label || (esc(team(x.home)) + vsp + esc(team(x.away)));
       return '<div class="md-jz-row"><div class="md-jz-main"><div class="md-jz-tm">' +
         '<span style="color:var(--mi3);font-weight:800;font-size:11px;margin-right:3px">' + (i + 1) + '</span>' +
-        esc(team(x.home)) + vsp + esc(team(x.away)) +
+        teams +
         '<span class="md-badge" style="background:rgba(120,130,150,.14);color:' + x.bc + '">' + x.badge + '</span>' + live + chip +
         '</div><div class="md-jz-sub">' + esc(x.why) + oddTxt + '</div></div><span class="md-jz-ko">⏱ ' + ko + '</span></div>';
     }).join('');
-    return '<section class="md-jetzt md-rise"><div class="md-jz-h"><span style="font-size:16px">🎯</span>' +
+    return '<section id="mdJetztBox" class="md-jetzt md-rise"><div class="md-jz-h"><span style="font-size:16px">🎯</span>' +
       '<span class="md-jz-t">Top-Wetten jetzt</span><span class="md-jz-s">das Beste aus Cards · Poly · Betfair · Money-Map — nach Signal-Stärke</span></div>' + body + '</section>';
+  }
+  // 13.08.2026 (Lucas): Poly-Public-Plays sind erst async da → Box nach dem Laden mit ihnen neu ranken
+  // (ersetzt die synchrone Version ohne Poly). So landen Andres Andrade & Co. korrekt oben.
+  function _mdFillJetzt() {
+    if (typeof document === 'undefined') return;
+    if (typeof _pwEnsurePlaysData !== 'function' || typeof _pwTopPlays !== 'function') return;
+    _pwEnsurePlaysData(function () {
+      var el = document.getElementById('mdJetztBox'); if (!el) return;
+      var plays = []; try { plays = _pwTopPlays(8, null, false) || []; } catch (e) { plays = []; }
+      el.outerHTML = _mdJetzt(plays);
+    });
   }
   
   window._renderMainDash = _mdRender;
