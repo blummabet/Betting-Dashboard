@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-13T20:23:55.948225+00:00",
+ "generatedAt": "2026-08-13T21:29:14.193719+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,8 +9,8 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 336,
- "pinnKeys": 188,
- "matched": 98,
+ "pinnKeys": 182,
+ "matched": 92,
  "footballRows": 84,
  "crossRows": 252,
  "footballSkippedStale": 61,
@@ -22,7 +22,7 @@
   "soccer_liga": 18
  },
  "matchedBySport": {
-  "baseball_mlb": 14,
+  "baseball_mlb": 8,
   "soccer_mls": 66,
   "soccer_liga": 18
  },
@@ -30,5 +30,34 @@
   "tracked": 88,
   "converged": 3
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|chicagocubs-washingtonnationals|chicagocubs",
+   "sport": "baseball_mlb",
+   "event": "Chicago Cubs vs Washington Nationals",
+   "market": "Moneyline",
+   "outcome": "Chicago Cubs",
+   "polyPP": 3.5,
+   "pinnPP": 36.7,
+   "gapPP": -33.21,
+   "vol": 740307,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -13.63,
+   "firstSeen": "2026-08-12T23:58:22.993783+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagocubs-washingtonnationals|washingtonnationals",
+   "sport": "baseball_mlb",
+   "event": "Chicago Cubs vs Washington Nationals",
+   "market": "Moneyline",
+   "outcome": "Washington Nationals",
+   "polyPP": 96.5,
+   "pinnPP": 63.3,
+   "gapPP": 33.21,
+   "vol": 740307,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -13.63,
+   "firstSeen": "2026-08-12T23:58:22.993783+00:00"
+  }
+ ]
 }
