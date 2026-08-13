@@ -1,15 +1,15 @@
 {
- "n": 303,
+ "n": 347,
  "minOdds": 1.35,
- "moneyHitRate": 0.611,
- "priceHitRate": 0.617,
- "brierMoney": 0.4743,
- "brierPrice": 0.4638,
+ "moneyHitRate": 0.594,
+ "priceHitRate": 0.605,
+ "brierMoney": 0.4989,
+ "brierPrice": 0.4752,
  "disagree": {
-  "n": 2,
+  "n": 10,
   "moneyWon": 0,
-  "priceWon": 2,
-  "neither": 0
+  "priceWon": 4,
+  "neither": 6
  },
  "verdict": "preis_besser",
  "byLeague": [
@@ -47,30 +47,50 @@
   },
   {
    "league": "TENNIS",
-   "n": 38,
-   "moneyHitRate": 0.763,
-   "brierMoney": 0.4185,
-   "brierPrice": 0.4185,
+   "n": 30,
+   "moneyHitRate": 0.767,
+   "brierMoney": 0.4263,
+   "brierPrice": 0.4263,
    "verdict": "gleichauf"
   },
   {
    "league": "ESPORTS",
-   "n": 146,
-   "moneyHitRate": 0.603,
-   "brierMoney": 0.4591,
-   "brierPrice": 0.459,
+   "n": 150,
+   "moneyHitRate": 0.607,
+   "brierMoney": 0.4544,
+   "brierPrice": 0.4543,
    "verdict": "gleichauf"
   },
   {
    "league": "MLB",
-   "n": 72,
-   "moneyHitRate": 0.5,
-   "brierMoney": 0.5505,
-   "brierPrice": 0.5065,
+   "n": 87,
+   "moneyHitRate": 0.517,
+   "brierMoney": 0.5352,
+   "brierPrice": 0.4988,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "SOCCER",
+   "n": 33,
+   "moneyHitRate": 0.455,
+   "brierMoney": 0.7418,
+   "brierPrice": 0.588,
    "verdict": "preis_besser"
   }
  ],
  "rows": [
+  {
+   "key": "usc-psg-av-2026-08-12",
+   "league": "SOCCER",
+   "winner": "Paris Saint-Germain",
+   "moneyFav": "Paris Saint-Germain",
+   "priceFav": "Paris Saint-Germain",
+   "moneyShare": 0.953,
+   "priceProb": 0.592,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 2084730
+  },
   {
    "key": "atp-jodar-fils-2026-08-11",
    "league": "TENNIS",
@@ -84,16 +104,16 @@
    "totalUsd": 1953379
   },
   {
-   "key": "wta-shnaide-swiatek-2026-08-11",
-   "league": "TENNIS",
-   "winner": "Iga Swiatek",
-   "moneyFav": "Iga Swiatek",
-   "priceFav": "Iga Swiatek",
+   "key": "cs2-vit-100t-2026-08-12",
+   "league": "ESPORTS",
+   "winner": "Vitality",
+   "moneyFav": "Vitality",
+   "priceFav": "Vitality",
    "moneyShare": 0.725,
    "priceProb": 0.725,
    "moneyOK": true,
    "priceOK": true,
-   "totalUsd": 1622956
+   "totalUsd": 971937
   },
   {
    "key": "mlb-oak-bos-2026-08-08",
@@ -106,6 +126,18 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 771290
+  },
+  {
+   "key": "lec-mon-nas-2026-08-12",
+   "league": "SOCCER",
+   "winner": "CF Monterrey",
+   "moneyFav": "CF Monterrey",
+   "priceFav": "CF Monterrey",
+   "moneyShare": 0.939,
+   "priceProb": 0.497,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 677051
   },
   {
    "key": "lol-hle1-gen-2026-08-10",
@@ -168,6 +200,18 @@
    "totalUsd": 524253
   },
   {
+   "key": "atp-tien-shelton-2026-08-12",
+   "league": "TENNIS",
+   "winner": "Ben Shelton",
+   "moneyFav": "Ben Shelton",
+   "priceFav": "Ben Shelton",
+   "moneyShare": 0.655,
+   "priceProb": 0.655,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 523449
+  },
+  {
    "key": "mlb-bal-min-2026-08-10",
    "league": "MLB",
    "winner": "Minnesota Twins",
@@ -180,6 +224,18 @@
    "totalUsd": 518876
   },
   {
+   "key": "mlb-sea-nyy-2026-08-12",
+   "league": "MLB",
+   "winner": "New York Yankees",
+   "moneyFav": "New York Yankees",
+   "priceFav": "New York Yankees",
+   "moneyShare": 0.555,
+   "priceProb": 0.555,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 514491
+  },
+  {
    "key": "mlb-oak-bos-2026-08-07",
    "league": "MLB",
    "winner": "Boston Red Sox",
@@ -190,6 +246,18 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 501549
+  },
+  {
+   "key": "mlb-mil-sd-2026-08-12",
+   "league": "MLB",
+   "winner": "San Diego Padres",
+   "moneyFav": "Milwaukee Brewers",
+   "priceFav": "Milwaukee Brewers",
+   "moneyShare": 0.515,
+   "priceProb": 0.515,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 496429
   },
   {
    "key": "mlb-cle-cws-2026-08-08",
@@ -238,6 +306,18 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 391408
+  },
+  {
+   "key": "wta-gauff-rybakin-2026-08-12",
+   "league": "TENNIS",
+   "winner": "Elena Rybakina",
+   "moneyFav": "Coco Gauff",
+   "priceFav": "Coco Gauff",
+   "moneyShare": 0.575,
+   "priceProb": 0.575,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 390054
   },
   {
    "key": "mlb-tor-phi-2026-08-08",
@@ -324,6 +404,18 @@
    "totalUsd": 344738
   },
   {
+   "key": "atp-jodar-nakashi-2026-08-12",
+   "league": "TENNIS",
+   "winner": "Brandon Nakashima",
+   "moneyFav": "Rafael Jodar",
+   "priceFav": "Rafael Jodar",
+   "moneyShare": 0.685,
+   "priceProb": 0.685,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 342374
+  },
+  {
    "key": "mlb-min-mil-2026-08-07",
    "league": "MLB",
    "winner": "Minnesota Twins",
@@ -348,6 +440,18 @@
    "totalUsd": 322395
   },
   {
+   "key": "usc-psg-av-2026-08-12-more-markets",
+   "league": "SOCCER",
+   "winner": "Aston Villa",
+   "moneyFav": "Aston Villa",
+   "priceFav": "Aston Villa",
+   "moneyShare": 0.645,
+   "priceProb": 0.645,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 321898
+  },
+  {
    "key": "val-sen-loud-2026-07-25",
    "league": "ESPORTS",
    "winner": "Sentinels",
@@ -370,6 +474,18 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 312537
+  },
+  {
+   "key": "cs2-9z-pain-2026-08-12",
+   "league": "ESPORTS",
+   "winner": "9z",
+   "moneyFav": "9z",
+   "priceFav": "9z",
+   "moneyShare": 0.619,
+   "priceProb": 0.62,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 294924
   },
   {
    "key": "mlb-lad-ari-2026-08-07",
@@ -442,144 +558,36 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 266177
-  },
-  {
-   "key": "mlb-sea-nyy-2026-08-11",
-   "league": "MLB",
-   "winner": "New York Yankees",
-   "moneyFav": "New York Yankees",
-   "priceFav": "New York Yankees",
-   "moneyShare": 0.555,
-   "priceProb": 0.555,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 262007
-  },
-  {
-   "key": "mlb-min-mil-2026-08-09",
-   "league": "MLB",
-   "winner": "Milwaukee Brewers",
-   "moneyFav": "Milwaukee Brewers",
-   "priceFav": "Milwaukee Brewers",
-   "moneyShare": 0.715,
-   "priceProb": 0.715,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 260597
-  },
-  {
-   "key": "cs2-bb3-faze-2026-08-12",
-   "league": "ESPORTS",
-   "winner": "FaZe",
-   "moneyFav": "FaZe",
-   "priceFav": "FaZe",
-   "moneyShare": 0.525,
-   "priceProb": 0.525,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 240968
-  },
-  {
-   "key": "mlb-nym-atl-2026-08-10",
-   "league": "MLB",
-   "winner": "New York Mets",
-   "moneyFav": "Atlanta Braves",
-   "priceFav": "Atlanta Braves",
-   "moneyShare": 0.565,
-   "priceProb": 0.565,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 240485
-  },
-  {
-   "key": "mlb-nym-pit-2026-08-09",
-   "league": "MLB",
-   "winner": "New York Mets",
-   "moneyFav": "Pittsburgh Pirates",
-   "priceFav": "Pittsburgh Pirates",
-   "moneyShare": 0.575,
-   "priceProb": 0.575,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 236445
-  },
-  {
-   "key": "atp-darderi-nakashi-2026-08-11",
-   "league": "TENNIS",
-   "winner": "Brandon Nakashima",
-   "moneyFav": "Brandon Nakashima",
-   "priceFav": "Brandon Nakashima",
-   "moneyShare": 0.695,
-   "priceProb": 0.695,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 236352
-  },
-  {
-   "key": "mlb-hou-sd-2026-08-08",
-   "league": "MLB",
-   "winner": "San Diego Padres",
-   "moneyFav": "San Diego Padres",
-   "priceFav": "San Diego Padres",
-   "moneyShare": 0.525,
-   "priceProb": 0.525,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 236242
-  },
-  {
-   "key": "cs2-mgc-mglz-2026-08-12",
-   "league": "ESPORTS",
-   "winner": "TheMongolz",
-   "moneyFav": "TheMongolz",
-   "priceFav": "TheMongolz",
-   "moneyShare": 0.555,
-   "priceProb": 0.555,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 225989
-  },
-  {
-   "key": "mlb-lad-ari-2026-08-09",
-   "league": "MLB",
-   "winner": "Arizona Diamondbacks",
-   "moneyFav": "Los Angeles Dodgers",
-   "priceFav": "Los Angeles Dodgers",
-   "moneyShare": 0.555,
-   "priceProb": 0.555,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 220024
   }
  ],
- "generatedAt": "2026-08-12T19:51:18.740982+00:00",
+ "generatedAt": "2026-08-13T11:13:32.646625+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 420,
   "nfl": 800,
-  "mlb": 588,
+  "mlb": 553,
   "nhl": 403,
   "mls": 736,
   "epl": 474,
   "soccer": 800,
-  "tennis": 639,
+  "tennis": 607,
   "ucl": 472,
   "laliga": 0,
   "bundesliga": 401,
   "serie-a": 37,
   "ligue-1": 467,
-  "esports": 643,
+  "esports": 654,
   "cs2": 404,
   "lol": 373,
   "dota": 9,
-  "valorant": 428,
-  "ufc": 454,
+  "valorant": 423,
+  "ufc": 458,
   "mma": 46,
   "boxing": 224,
   "golf": 301,
   "f1": 334,
-  "cricket": 492
+  "cricket": 484
  },
  "sweepStats": {
   "sweepOpen": 500,

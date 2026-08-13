@@ -1,5 +1,5 @@
 {
-  "ts": 1786561249404,
+  "ts": 1786618122423,
   "fixtures": [
     {
       "fixtureId": 1570333,
@@ -13,33 +13,117 @@
       "date": "2026-08-15",
       "time": "19:30",
       "injuries": {
-        "home": [],
-        "away": []
+        "home": [
+          {
+            "player": "F. Garces",
+            "position": "D",
+            "type": "Missing Fixture",
+            "reason": "Suspended"
+          },
+          {
+            "player": "T. Mendes",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Knee Injury"
+          },
+          {
+            "player": "L. Boye",
+            "position": "M",
+            "type": "Questionable",
+            "reason": "Muscle Injury"
+          },
+          {
+            "player": "C. Protesoni",
+            "position": "M",
+            "type": "Questionable",
+            "reason": "Injury"
+          }
+        ],
+        "away": [
+          {
+            "player": "Juanmi",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Injury"
+          },
+          {
+            "player": "C. Uche",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Knee Injury"
+          }
+        ]
       },
       "injurySummary": {
         "home": {
           "goalkeeper": 0,
-          "defense": 0,
-          "midfield": 0,
+          "defense": 1,
+          "midfield": 1,
           "attack": 0,
-          "confirmed": 0,
-          "questionable": 0,
-          "total": 0,
-          "notes": [],
-          "_raw": [],
-          "impactScore": 0
+          "confirmed": 2,
+          "questionable": 2,
+          "total": 4,
+          "notes": [
+            "F. Garces (Gesperrt/Verletzt — Suspended)",
+            "T. Mendes (Gesperrt/Verletzt — Knee Injury)",
+            "L. Boye (Fraglich — Muscle Injury)",
+            "C. Protesoni (Fraglich — Injury)"
+          ],
+          "_raw": [
+            {
+              "player": "F. Garces",
+              "position": "D",
+              "type": "Missing Fixture",
+              "reason": "Suspended"
+            },
+            {
+              "player": "T. Mendes",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Knee Injury"
+            },
+            {
+              "player": "L. Boye",
+              "position": "M",
+              "type": "Questionable",
+              "reason": "Muscle Injury"
+            },
+            {
+              "player": "C. Protesoni",
+              "position": "M",
+              "type": "Questionable",
+              "reason": "Injury"
+            }
+          ],
+          "impactScore": 1.4
         },
         "away": {
           "goalkeeper": 0,
           "defense": 0,
-          "midfield": 0,
+          "midfield": 2,
           "attack": 0,
-          "confirmed": 0,
+          "confirmed": 2,
           "questionable": 0,
-          "total": 0,
-          "notes": [],
-          "_raw": [],
-          "impactScore": 0
+          "total": 2,
+          "notes": [
+            "Juanmi (Gesperrt/Verletzt — Injury)",
+            "C. Uche (Gesperrt/Verletzt — Knee Injury)"
+          ],
+          "_raw": [
+            {
+              "player": "Juanmi",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Injury"
+            },
+            {
+              "player": "C. Uche",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Knee Injury"
+            }
+          ],
+          "impactScore": 0.6
         }
       },
       "bookings": {
@@ -47,29 +131,12 @@
         "home": [],
         "away": []
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 1,
-        "draws": 5,
-        "awayWins": 4,
-        "lastMeetingYear": 2026,
-        "avgGoals": 1.5,
-        "over25Rate": 0.1,
-        "over35Rate": 0.1,
-        "bttsRate": 0.3,
-        "lastResults": [
-          "L",
-          "D",
-          "L",
-          "L",
-          "W"
-        ]
-      },
+      "h2h": null,
       "isFinished": false,
       "odds": {
         "hw_fair": 2.48,
-        "dr_fair": 2.97,
-        "aw_fair": 3.84,
+        "dr_fair": 2.96,
+        "aw_fair": 3.87,
         "_cn": 37,
         "dc1X_bkr": 1.35,
         "dcX2_bkr": 1.68,
@@ -78,14 +145,14 @@
         "u25_fair": 1.45,
         "o25_cn": 3,
         "pinn_hw": 2.37,
-        "pinn_dr": 2.83,
+        "pinn_dr": 2.82,
         "pinn_aw": 3.89,
         "pinn_hw_fair": 2.45,
-        "pinn_dr_fair": 2.92,
+        "pinn_dr_fair": 2.91,
         "pinn_aw_fair": 4.02,
         "hw": 2.37,
         "aw": 3.89,
-        "dr": 2.83,
+        "dr": 2.82,
         "ah_h_point": -0.25,
         "ah_h": 1.97,
         "ah_home_lines": [
@@ -95,7 +162,7 @@
           },
           {
             "pt": -1.25,
-            "price": 4.92
+            "price": 4.93
           },
           {
             "pt": -1,
@@ -163,13 +230,13 @@
           },
           {
             "pt": -0.75,
-            "price": 5.29
+            "price": 5.3
           }
         ],
         "ao_lines": [
           {
             "pt": 1.75,
-            "price": 1.96
+            "price": 1.97
           },
           {
             "pt": 1,
@@ -185,39 +252,39 @@
           },
           {
             "pt": 2,
-            "price": 2.44
+            "price": 2.45
           },
           {
             "pt": 2.25,
-            "price": 2.89
+            "price": 2.9
           },
           {
             "pt": 2.5,
-            "price": 3.32
+            "price": 3.33
           },
           {
             "pt": 2.75,
-            "price": 4.2
+            "price": 4.21
           }
         ],
         "o15": 1.71,
-        "o25": 3.32,
+        "o25": 3.33,
         "au_lines": [
           {
             "pt": 1.75,
-            "price": 1.93
+            "price": 1.92
           },
           {
             "pt": 1,
-            "price": 4.17
+            "price": 4.15
           },
           {
             "pt": 1.25,
-            "price": 2.78
+            "price": 2.77
           },
           {
             "pt": 1.5,
-            "price": 2.23
+            "price": 2.22
           },
           {
             "pt": 2,
@@ -225,7 +292,7 @@
           },
           {
             "pt": 2.25,
-            "price": 1.44
+            "price": 1.43
           },
           {
             "pt": 2.5,
@@ -236,7 +303,7 @@
             "price": 1.23
           }
         ],
-        "u15": 2.23,
+        "u15": 2.22,
         "u25": 1.34,
         "co95": 1.95,
         "co85": 1.56,
@@ -244,11 +311,11 @@
         "cu95": 1.88,
         "cu85": 2.36,
         "cu105": 1.52,
-        "bttsY": 2.53,
-        "bttsN": 1.56,
+        "bttsY": 2.54,
+        "bttsN": 1.55,
         "ht_bttsY": 7.59,
         "ht_bttsN": 1.1,
-        "ht_hw": 3.29,
+        "ht_hw": 3.3,
         "ht_aw": 5.02,
         "ht_dr": 1.85
       },
@@ -299,7 +366,7 @@
       "odds_open_ts": "2026-08-08T03:26:24.471Z",
       "odds_closing": {
         "pinn_hw_fair": 2.45,
-        "pinn_dr_fair": 2.92,
+        "pinn_dr_fair": 2.91,
         "pinn_aw_fair": 4.02
       }
     },
@@ -490,50 +557,50 @@
       "isFinished": false,
       "odds": {
         "hw_fair": 1.35,
-        "dr_fair": 5.78,
+        "dr_fair": 5.8,
         "aw_fair": 11.34,
         "_cn": 32,
         "dc1X_bkr": 1.1,
-        "dcX2_bkr": 3.83,
+        "dcX2_bkr": 3.84,
         "dc12_bkr": 1.21,
-        "o25_fair": 1.78,
-        "u25_fair": 2.28,
-        "o25_cn": 10,
+        "o25_fair": 1.79,
+        "u25_fair": 2.27,
+        "o25_cn": 11,
         "pinn_hw": 1.3,
-        "pinn_dr": 5.72,
-        "pinn_aw": 9.98,
+        "pinn_dr": 5.7,
+        "pinn_aw": 9.95,
         "pinn_hw_fair": 1.36,
-        "pinn_dr_fair": 5.97,
-        "pinn_aw_fair": 10.42,
+        "pinn_dr_fair": 5.96,
+        "pinn_aw_fair": 10.4,
         "hw": 1.3,
-        "aw": 9.98,
-        "dr": 5.72,
+        "aw": 9.95,
+        "dr": 5.7,
         "ah_h_point": -1.5,
-        "ah_h": 1.91,
+        "ah_h": 1.92,
         "ah_home_lines": [
           {
             "pt": -1.5,
-            "price": 1.91
+            "price": 1.92
           },
           {
             "pt": -2.5,
-            "price": 3.3
+            "price": 3.31
           },
           {
             "pt": -2.25,
-            "price": 2.95
+            "price": 2.96
           },
           {
             "pt": -2,
-            "price": 2.6
+            "price": 2.62
           },
           {
             "pt": -1.75,
-            "price": 2.16
+            "price": 2.17
           },
           {
             "pt": -1.25,
-            "price": 1.67
+            "price": 1.68
           },
           {
             "pt": -1,
@@ -557,11 +624,11 @@
           },
           {
             "pt": 2.5,
-            "price": 1.36
+            "price": 1.35
           },
           {
             "pt": 2.25,
-            "price": 1.43
+            "price": 1.42
           },
           {
             "pt": 2,
@@ -569,33 +636,33 @@
           },
           {
             "pt": 1.75,
-            "price": 1.75
+            "price": 1.74
           },
           {
             "pt": 1.25,
-            "price": 2.28
+            "price": 2.27
           },
           {
             "pt": 1,
-            "price": 2.9
+            "price": 2.88
           },
           {
             "pt": 0.75,
-            "price": 3.32
+            "price": 3.31
           },
           {
             "pt": 0.5,
-            "price": 3.75
+            "price": 3.74
           }
         ],
         "ao_lines": [
           {
             "pt": 2.75,
-            "price": 1.95
+            "price": 1.96
           },
           {
             "pt": 1.75,
-            "price": 1.27
+            "price": 1.28
           },
           {
             "pt": 2,
@@ -603,7 +670,7 @@
           },
           {
             "pt": 2.25,
-            "price": 1.54
+            "price": 1.55
           },
           {
             "pt": 2.5,
@@ -611,19 +678,19 @@
           },
           {
             "pt": 3,
-            "price": 2.29
+            "price": 2.3
           },
           {
             "pt": 3.25,
-            "price": 2.62
+            "price": 2.63
           },
           {
             "pt": 3.5,
-            "price": 2.93
+            "price": 2.94
           },
           {
             "pt": 3.75,
-            "price": 3.57
+            "price": 3.59
           },
           {
             "pt": 1.5,
@@ -631,27 +698,27 @@
           }
         ],
         "o25": 1.74,
-        "o35": 2.93,
+        "o35": 2.94,
         "au_lines": [
           {
             "pt": 2.75,
-            "price": 1.92
+            "price": 1.91
           },
           {
             "pt": 1.75,
-            "price": 3.67
+            "price": 3.65
           },
           {
             "pt": 2,
-            "price": 3.25
+            "price": 3.23
           },
           {
             "pt": 2.25,
-            "price": 2.54
+            "price": 2.52
           },
           {
             "pt": 2.5,
-            "price": 2.15
+            "price": 2.14
           },
           {
             "pt": 3,
@@ -663,25 +730,39 @@
           },
           {
             "pt": 3.5,
-            "price": 1.41
+            "price": 1.4
           },
           {
             "pt": 3.75,
-            "price": 1.29
+            "price": 1.28
           },
           {
             "pt": 1.5,
             "price": 3.8
           }
         ],
-        "u25": 2.15,
-        "u35": 1.41,
+        "u25": 2.14,
+        "u35": 1.4,
+        "bttsY": 2.36,
+        "bttsN": 1.61,
+        "ht_bttsY": 6.17,
+        "ht_bttsN": 1.13,
         "ht_dr": 1.78,
-        "ht_aw": 9.35,
-        "bttsY": 2.25,
-        "bttsN": 1.62,
+        "ht_aw": 9.34,
         "o15": 1.25,
-        "u15": 3.8
+        "u15": 3.8,
+        "co65": 1.8,
+        "co75": 1.33,
+        "co85": 1.57,
+        "co95": 1.73,
+        "co105": 2.43,
+        "co115": 3.15,
+        "cu65": 1.91,
+        "cu75": 2.95,
+        "cu85": 2.23,
+        "cu95": 2,
+        "cu105": 1.48,
+        "cu115": 1.3
       },
       "apiPrediction": {
         "underOver": null,
@@ -723,8 +804,8 @@
       "odds_open_ts": "2026-08-12T04:09:06.386Z",
       "odds_closing": {
         "pinn_hw_fair": 1.36,
-        "pinn_dr_fair": 5.97,
-        "pinn_aw_fair": 10.42
+        "pinn_dr_fair": 5.96,
+        "pinn_aw_fair": 10.4
       }
     },
     {
@@ -773,34 +854,51 @@
         "home": [],
         "away": []
       },
-      "h2h": null,
+      "h2h": {
+        "games": 10,
+        "homeWins": 4,
+        "draws": 2,
+        "awayWins": 4,
+        "lastMeetingYear": 2026,
+        "avgGoals": 2.4,
+        "over25Rate": 0.5,
+        "over35Rate": 0.2,
+        "bttsRate": 0.4,
+        "lastResults": [
+          "L",
+          "W",
+          "W",
+          "L",
+          "W"
+        ]
+      },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.13,
-        "dr_fair": 3.58,
-        "aw_fair": 3.99,
-        "_cn": 38,
-        "dc1X_bkr": 1.33,
-        "dcX2_bkr": 1.89,
+        "hw_fair": 2.14,
+        "dr_fair": 3.59,
+        "aw_fair": 3.93,
+        "_cn": 8,
+        "dc1X_bkr": 1.34,
+        "dcX2_bkr": 1.88,
         "dc12_bkr": 1.39,
-        "o25_fair": 2.23,
-        "u25_fair": 1.82,
-        "o25_cn": 15,
-        "pinn_hw": 2.09,
-        "pinn_dr": 3.49,
-        "pinn_aw": 3.71,
-        "pinn_hw_fair": 2.16,
-        "pinn_dr_fair": 3.61,
-        "pinn_aw_fair": 3.84,
-        "aw": 3.71,
-        "hw": 2.09,
-        "dr": 3.49,
+        "o25_fair": 2.25,
+        "u25_fair": 1.8,
+        "o25_cn": 4,
+        "pinn_hw": 2.06,
+        "pinn_dr": 3.5,
+        "pinn_aw": 3.79,
+        "pinn_hw_fair": 2.13,
+        "pinn_dr_fair": 3.62,
+        "pinn_aw_fair": 3.92,
+        "aw": 3.79,
+        "hw": 2.06,
+        "dr": 3.5,
         "ah_a_point": 0.5,
-        "ah_a": 1.83,
+        "ah_a": 1.85,
         "ah_away_lines": [
           {
             "pt": 0.5,
-            "price": 1.83
+            "price": 1.85
           },
           {
             "pt": 1.5,
@@ -812,67 +910,67 @@
           },
           {
             "pt": 1,
-            "price": 1.39
+            "price": 1.41
           },
           {
             "pt": 0.75,
-            "price": 1.61
+            "price": 1.62
           },
           {
             "pt": 0.25,
-            "price": 2.11
+            "price": 2.14
           },
           {
             "pt": 0,
-            "price": 2.7
+            "price": 2.76
           },
           {
             "pt": -0.25,
-            "price": 3.19
+            "price": 3.26
           },
           {
             "pt": -0.5,
-            "price": 3.68
+            "price": 3.76
           }
         ],
         "ah_h_point": -0.5,
-        "ah_h": 2.1,
+        "ah_h": 2.07,
         "ah_home_lines": [
           {
             "pt": -0.5,
-            "price": 2.1
+            "price": 2.07
           },
           {
             "pt": -1.5,
-            "price": 4.08
+            "price": 4.01
           },
           {
             "pt": -1.25,
-            "price": 3.63
+            "price": 3.56
           },
           {
             "pt": -1,
-            "price": 3.18
+            "price": 3.12
           },
           {
             "pt": -0.75,
-            "price": 2.46
+            "price": 2.42
           },
           {
             "pt": -0.25,
-            "price": 1.8
+            "price": 1.78
           },
           {
             "pt": 0,
-            "price": 1.51
+            "price": 1.49
           },
           {
             "pt": 0.25,
-            "price": 1.38
+            "price": 1.37
           },
           {
             "pt": 0.5,
-            "price": 1.31
+            "price": 1.3
           }
         ],
         "ao_lines": [
@@ -882,7 +980,7 @@
           },
           {
             "pt": 1.25,
-            "price": 1.23
+            "price": 1.22
           },
           {
             "pt": 1.5,
@@ -894,7 +992,7 @@
           },
           {
             "pt": 2,
-            "price": 1.64
+            "price": 1.63
           },
           {
             "pt": 2.5,
@@ -902,15 +1000,15 @@
           },
           {
             "pt": 2.75,
-            "price": 2.61
+            "price": 2.6
           },
           {
             "pt": 3,
-            "price": 3.29
+            "price": 3.27
           },
           {
             "pt": 3.25,
-            "price": 3.68
+            "price": 3.66
           }
         ],
         "o15": 1.37,
@@ -922,23 +1020,23 @@
           },
           {
             "pt": 1.25,
-            "price": 4.22
+            "price": 4.23
           },
           {
             "pt": 1.5,
-            "price": 3.15
+            "price": 3.16
           },
           {
             "pt": 1.75,
-            "price": 2.77
+            "price": 2.78
           },
           {
             "pt": 2,
-            "price": 2.36
+            "price": 2.37
           },
           {
             "pt": 2.5,
-            "price": 1.7
+            "price": 1.71
           },
           {
             "pt": 2.75,
@@ -950,11 +1048,11 @@
           },
           {
             "pt": 3.25,
-            "price": 1.28
+            "price": 1.29
           }
         ],
-        "u15": 3.15,
-        "u25": 1.7,
+        "u15": 3.16,
+        "u25": 1.71,
         "co85": 1.74,
         "co95": 2.2,
         "cu85": 2.09,
@@ -963,7 +1061,7 @@
         "bttsN": 1.85,
         "ht_bttsY": 5.46,
         "ht_bttsN": 1.16,
-        "ht_dr": 4.54
+        "ht_dr": 4.62
       },
       "apiPrediction": {
         "underOver": null,
@@ -1011,9 +1109,9 @@
       },
       "odds_open_ts": "2026-08-09T03:43:45.779Z",
       "odds_closing": {
-        "pinn_hw_fair": 2.16,
-        "pinn_dr_fair": 3.61,
-        "pinn_aw_fair": 3.84
+        "pinn_hw_fair": 2.13,
+        "pinn_dr_fair": 3.62,
+        "pinn_aw_fair": 3.92
       }
     },
     {
@@ -1060,7 +1158,26 @@
       "bookings": {
         "threshold": 5,
         "home": [],
-        "away": []
+        "away": [
+          {
+            "id": 47013,
+            "name": "Rafa Mir",
+            "yellows": 4,
+            "threshold": 5,
+            "position": null,
+            "atThreshold": false,
+            "oneAway": true
+          },
+          {
+            "id": 47378,
+            "name": "Bigas",
+            "yellows": 4,
+            "threshold": 5,
+            "position": "D",
+            "atThreshold": false,
+            "oneAway": true
+          }
+        ]
       },
       "h2h": {
         "games": 8,
@@ -1082,71 +1199,71 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.53,
-        "dr_fair": 3.2,
-        "aw_fair": 3.41,
-        "_cn": 34,
+        "hw_fair": 2.52,
+        "dr_fair": 3.19,
+        "aw_fair": 3.45,
+        "_cn": 33,
         "dc1X_bkr": 1.41,
-        "dcX2_bkr": 1.65,
-        "dc12_bkr": 1.45,
+        "dcX2_bkr": 1.66,
+        "dc12_bkr": 1.46,
         "o25_fair": 2.46,
         "u25_fair": 1.69,
         "o25_cn": 11,
-        "pinn_hw": 2.43,
+        "pinn_hw": 2.44,
         "pinn_dr": 2.96,
-        "pinn_aw": 3.52,
-        "pinn_hw_fair": 2.51,
+        "pinn_aw": 3.5,
+        "pinn_hw_fair": 2.52,
         "pinn_dr_fair": 3.06,
-        "pinn_aw_fair": 3.64,
-        "hw": 2.43,
-        "aw": 3.52,
+        "pinn_aw_fair": 3.62,
+        "hw": 2.44,
+        "aw": 3.5,
         "dr": 2.96,
         "ah_h_point": -0.25,
-        "ah_h": 2.04,
+        "ah_h": 2.05,
         "ah_home_lines": [
           {
             "pt": -0.25,
-            "price": 2.04
+            "price": 2.05
           },
           {
             "pt": -1.25,
-            "price": 4.68
+            "price": 4.71
           },
           {
             "pt": -1,
-            "price": 4.13
+            "price": 4.16
           },
           {
             "pt": -0.75,
-            "price": 2.97
+            "price": 2.98
           },
           {
             "pt": -0.5,
-            "price": 2.43
+            "price": 2.44
           },
           {
             "pt": 0,
-            "price": 1.64
+            "price": 1.65
           },
           {
             "pt": 0.25,
-            "price": 1.44
+            "price": 1.45
           },
           {
             "pt": 0.5,
-            "price": 1.33
+            "price": 1.34
           },
           {
             "pt": 0.75,
-            "price": 1.22
+            "price": 1.23
           }
         ],
         "ah_a_point": 0.25,
-        "ah_a": 1.87,
+        "ah_a": 1.86,
         "ah_away_lines": [
           {
             "pt": 0.25,
-            "price": 1.87
+            "price": 1.86
           },
           {
             "pt": 1.25,
@@ -1158,27 +1275,27 @@
           },
           {
             "pt": 0.75,
-            "price": 1.44
+            "price": 1.43
           },
           {
             "pt": 0.5,
-            "price": 1.62
+            "price": 1.61
           },
           {
             "pt": 0,
-            "price": 2.39
+            "price": 2.37
           },
           {
             "pt": -0.25,
-            "price": 2.95
+            "price": 2.93
           },
           {
             "pt": -0.5,
-            "price": 3.49
+            "price": 3.47
           },
           {
             "pt": -0.75,
-            "price": 4.6
+            "price": 4.57
           }
         ],
         "ao_lines": [
@@ -1204,7 +1321,7 @@
           },
           {
             "pt": 2.5,
-            "price": 2.41
+            "price": 2.42
           },
           {
             "pt": 2.75,
@@ -1216,15 +1333,15 @@
           },
           {
             "pt": 3.25,
-            "price": 4.08
+            "price": 4.09
           }
         ],
         "o15": 1.41,
-        "o25": 2.41,
+        "o25": 2.42,
         "au_lines": [
           {
             "pt": 2.25,
-            "price": 1.82
+            "price": 1.81
           },
           {
             "pt": 1.25,
@@ -1265,17 +1382,17 @@
         "bttsN": 1.9,
         "ht_bttsY": 5.73,
         "ht_bttsN": 1.15,
-        "ht_dr": 3.09,
-        "ht_aw": 4.16,
+        "ht_dr": 3.14,
+        "ht_aw": 4.19,
         "co65": 1.26,
         "co75": 1.48,
-        "co85": 1.82,
+        "co85": 1.73,
         "co95": 2.35,
         "co105": 3.1,
         "co115": 4.2,
         "cu65": 3.35,
         "cu75": 2.43,
-        "cu85": 1.86,
+        "cu85": 2,
         "cu95": 1.52,
         "cu105": 1.3,
         "cu115": 1.17
@@ -1319,9 +1436,9 @@
       },
       "odds_open_ts": "2026-08-10T03:56:39.552Z",
       "odds_closing": {
-        "pinn_hw_fair": 2.51,
+        "pinn_hw_fair": 2.52,
         "pinn_dr_fair": 3.06,
-        "pinn_aw_fair": 3.64
+        "pinn_aw_fair": 3.62
       }
     },
     {
@@ -1418,15 +1535,15 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.17,
-        "dr_fair": 3.46,
-        "aw_fair": 4.01,
-        "_cn": 38,
-        "dc1X_bkr": 1.33,
-        "dcX2_bkr": 1.86,
+        "hw_fair": 2.2,
+        "dr_fair": 3.44,
+        "aw_fair": 3.92,
+        "_cn": 37,
+        "dc1X_bkr": 1.34,
+        "dcX2_bkr": 1.83,
         "dc12_bkr": 1.41,
-        "o25_fair": 2.33,
-        "u25_fair": 1.75,
+        "o25_fair": 2.35,
+        "u25_fair": 1.74,
         "o25_cn": 14,
         "pinn_hw": 2.14,
         "pinn_dr": 3.3,
@@ -1704,7 +1821,17 @@
       "bookings": {
         "threshold": 5,
         "home": [],
-        "away": []
+        "away": [
+          {
+            "id": 311773,
+            "name": "S. Mouriño",
+            "yellows": 10,
+            "threshold": 5,
+            "position": "D",
+            "atThreshold": true,
+            "oneAway": false
+          }
+        ]
       },
       "h2h": {
         "games": 5,
@@ -1726,25 +1853,25 @@
       },
       "isFinished": false,
       "odds": {
-        "hw_fair": 3.25,
-        "dr_fair": 3.69,
-        "aw_fair": 2.37,
-        "_cn": 38,
+        "hw_fair": 3.26,
+        "dr_fair": 3.67,
+        "aw_fair": 2.38,
+        "_cn": 37,
         "dc1X_bkr": 1.73,
         "dcX2_bkr": 1.44,
         "dc12_bkr": 1.37,
-        "o25_fair": 1.91,
+        "o25_fair": 1.92,
         "u25_fair": 2.09,
         "o25_cn": 15,
         "pinn_hw": 3.19,
-        "pinn_dr": 3.55,
+        "pinn_dr": 3.56,
         "pinn_aw": 2.28,
         "pinn_hw_fair": 3.3,
-        "pinn_dr_fair": 3.67,
+        "pinn_dr_fair": 3.68,
         "pinn_aw_fair": 2.36,
         "hw": 3.19,
         "aw": 2.28,
-        "dr": 3.55,
+        "dr": 3.56,
         "ah_h_point": 0.25,
         "ah_h": 1.93,
         "ah_home_lines": [
@@ -1762,11 +1889,11 @@
           },
           {
             "pt": -0.25,
-            "price": 2.75
+            "price": 2.76
           },
           {
             "pt": 0,
-            "price": 2.33
+            "price": 2.34
           },
           {
             "pt": 0.5,
@@ -1806,7 +1933,7 @@
           },
           {
             "pt": 0,
-            "price": 1.67
+            "price": 1.66
           },
           {
             "pt": -0.5,
@@ -1814,21 +1941,21 @@
           },
           {
             "pt": -0.75,
-            "price": 2.71
+            "price": 2.7
           },
           {
             "pt": -1,
-            "price": 3.53
+            "price": 3.52
           },
           {
             "pt": -1.25,
-            "price": 3.99
+            "price": 3.98
           }
         ],
         "ao_lines": [
           {
             "pt": 2.75,
-            "price": 2.06
+            "price": 2.05
           },
           {
             "pt": 1.75,
@@ -1840,59 +1967,59 @@
           },
           {
             "pt": 2.25,
-            "price": 1.6
+            "price": 1.59
           },
           {
             "pt": 2.5,
-            "price": 1.83
+            "price": 1.82
           },
           {
             "pt": 3,
-            "price": 2.43
+            "price": 2.42
           },
           {
             "pt": 3.25,
-            "price": 2.76
+            "price": 2.74
           },
           {
             "pt": 3.5,
-            "price": 3.06
+            "price": 3.05
           },
           {
             "pt": 3.75,
-            "price": 3.72
+            "price": 3.7
           },
           {
             "pt": 1.5,
             "price": 1.25
           }
         ],
-        "o25": 1.83,
-        "o35": 3.06,
+        "o25": 1.82,
+        "o35": 3.05,
         "au_lines": [
           {
             "pt": 2.75,
-            "price": 1.84
+            "price": 1.85
           },
           {
             "pt": 1.75,
-            "price": 3.64
+            "price": 3.66
           },
           {
             "pt": 2,
-            "price": 3.17
+            "price": 3.18
           },
           {
             "pt": 2.25,
-            "price": 2.43
+            "price": 2.44
           },
           {
             "pt": 2.5,
-            "price": 2.05
+            "price": 2.06
           },
           {
             "pt": 3,
-            "price": 1.6
+            "price": 1.61
           },
           {
             "pt": 3.25,
@@ -1911,7 +2038,7 @@
             "price": 3.6
           }
         ],
-        "u25": 2.05,
+        "u25": 2.06,
         "u35": 1.39,
         "bttsY": 1.67,
         "bttsN": 2.28,
@@ -1921,16 +2048,16 @@
         "ht_aw": 2.94,
         "o15": 1.25,
         "u15": 3.6,
-        "co65": 1.18,
-        "co75": 1.35,
-        "co85": 1.62,
-        "co95": 2.02,
-        "co105": 2.63,
+        "co65": 1.19,
+        "co75": 1.36,
+        "co85": 1.63,
+        "co95": 1.8,
+        "co105": 2.65,
         "co115": 3.5,
         "cu65": 4,
         "cu75": 2.85,
-        "cu85": 2.14,
-        "cu95": 1.68,
+        "cu85": 2.12,
+        "cu95": 1.91,
         "cu105": 1.41,
         "cu115": 1.24
       },
@@ -1975,7 +2102,7 @@
       "odds_open_ts": "2026-08-09T03:43:45.779Z",
       "odds_closing": {
         "pinn_hw_fair": 3.3,
-        "pinn_dr_fair": 3.67,
+        "pinn_dr_fair": 3.68,
         "pinn_aw_fair": 2.36
       }
     },
@@ -1991,8 +2118,34 @@
       "date": "2026-08-15",
       "time": "21:30",
       "injuries": {
-        "home": [],
-        "away": []
+        "home": [
+          {
+            "player": "A. Gonzalez",
+            "position": "M",
+            "type": "Questionable",
+            "reason": "Muscle Injury"
+          },
+          {
+            "player": "P. Mercado",
+            "position": "M",
+            "type": "Questionable",
+            "reason": "Knee Injury"
+          }
+        ],
+        "away": [
+          {
+            "player": "Luiz Felipe",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Hamstring Injury"
+          },
+          {
+            "player": "D. Mendez",
+            "position": "M",
+            "type": "Missing Fixture",
+            "reason": "Knee Injury"
+          }
+        ]
       },
       "injurySummary": {
         "home": {
@@ -2001,23 +2154,55 @@
           "midfield": 0,
           "attack": 0,
           "confirmed": 0,
-          "questionable": 0,
-          "total": 0,
-          "notes": [],
-          "_raw": [],
-          "impactScore": 0
+          "questionable": 2,
+          "total": 2,
+          "notes": [
+            "A. Gonzalez (Fraglich — Muscle Injury)",
+            "P. Mercado (Fraglich — Knee Injury)"
+          ],
+          "_raw": [
+            {
+              "player": "A. Gonzalez",
+              "position": "M",
+              "type": "Questionable",
+              "reason": "Muscle Injury"
+            },
+            {
+              "player": "P. Mercado",
+              "position": "M",
+              "type": "Questionable",
+              "reason": "Knee Injury"
+            }
+          ],
+          "impactScore": 0.5
         },
         "away": {
           "goalkeeper": 0,
           "defense": 0,
-          "midfield": 0,
+          "midfield": 2,
           "attack": 0,
-          "confirmed": 0,
+          "confirmed": 2,
           "questionable": 0,
-          "total": 0,
-          "notes": [],
-          "_raw": [],
-          "impactScore": 0
+          "total": 2,
+          "notes": [
+            "Luiz Felipe (Gesperrt/Verletzt — Hamstring Injury)",
+            "D. Mendez (Gesperrt/Verletzt — Knee Injury)"
+          ],
+          "_raw": [
+            {
+              "player": "Luiz Felipe",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Hamstring Injury"
+            },
+            {
+              "player": "D. Mendez",
+              "position": "M",
+              "type": "Missing Fixture",
+              "reason": "Knee Injury"
+            }
+          ],
+          "impactScore": 0.6
         }
       },
       "bookings": {
@@ -2044,45 +2229,28 @@
         ],
         "away": []
       },
-      "h2h": {
-        "games": 10,
-        "homeWins": 4,
-        "draws": 5,
-        "awayWins": 1,
-        "lastMeetingYear": 2026,
-        "avgGoals": 2.1,
-        "over25Rate": 0.3,
-        "over35Rate": 0.1,
-        "bttsRate": 0.6,
-        "lastResults": [
-          "D",
-          "W",
-          "D",
-          "W",
-          "W"
-        ]
-      },
+      "h2h": null,
       "isFinished": false,
       "odds": {
-        "hw_fair": 2.42,
-        "dr_fair": 3.36,
-        "aw_fair": 3.45,
-        "_cn": 38,
-        "dc1X_bkr": 1.41,
-        "dcX2_bkr": 1.7,
-        "dc12_bkr": 1.42,
-        "o25_fair": 2.35,
-        "u25_fair": 1.74,
+        "hw_fair": 2.41,
+        "dr_fair": 3.34,
+        "aw_fair": 3.5,
+        "_cn": 37,
+        "dc1X_bkr": 1.4,
+        "dcX2_bkr": 1.71,
+        "dc12_bkr": 1.43,
+        "o25_fair": 2.36,
+        "u25_fair": 1.73,
         "o25_cn": 13,
         "pinn_hw": 2.34,
-        "pinn_dr": 3.28,
+        "pinn_dr": 3.29,
         "pinn_aw": 3.32,
         "pinn_hw_fair": 2.42,
-        "pinn_dr_fair": 3.39,
+        "pinn_dr_fair": 3.4,
         "pinn_aw_fair": 3.43,
         "aw": 3.32,
         "hw": 2.34,
-        "dr": 3.28,
+        "dr": 3.29,
         "ah_a_point": 0.25,
         "ah_a": 1.9,
         "ah_away_lines": [
@@ -2112,7 +2280,7 @@
           },
           {
             "pt": -0.25,
-            "price": 2.83
+            "price": 2.84
           },
           {
             "pt": -0.5,
@@ -2120,23 +2288,23 @@
           },
           {
             "pt": -0.75,
-            "price": 4.28
+            "price": 4.29
           }
         ],
         "ah_h_point": -0.25,
-        "ah_h": 2.01,
+        "ah_h": 2,
         "ah_home_lines": [
           {
             "pt": -0.25,
-            "price": 2.01
+            "price": 2
           },
           {
             "pt": -1.25,
-            "price": 4.4
+            "price": 4.39
           },
           {
             "pt": -1,
-            "price": 3.87
+            "price": 3.86
           },
           {
             "pt": -0.75,
@@ -2156,7 +2324,7 @@
           },
           {
             "pt": 0.5,
-            "price": 1.37
+            "price": 1.36
           },
           {
             "pt": 0.75,
@@ -2182,7 +2350,7 @@
           },
           {
             "pt": 2,
-            "price": 1.69
+            "price": 1.68
           },
           {
             "pt": 2.5,
@@ -2303,9 +2471,174 @@
       "odds_open_ts": "2026-08-08T03:26:24.471Z",
       "odds_closing": {
         "pinn_hw_fair": 2.42,
-        "pinn_dr_fair": 3.39,
+        "pinn_dr_fair": 3.4,
         "pinn_aw_fair": 3.43
       }
+    },
+    {
+      "fixtureId": 1570351,
+      "leagueId": 140,
+      "homeTeamName": "Rayo Vallecano",
+      "awayTeamName": "Alaves",
+      "homeTeamId": 728,
+      "awayTeamId": 542,
+      "referee": null,
+      "refereeStats": null,
+      "date": "2026-08-20",
+      "time": "21:00",
+      "injuries": {
+        "home": [],
+        "away": []
+      },
+      "injurySummary": {
+        "home": {
+          "goalkeeper": 0,
+          "defense": 0,
+          "midfield": 0,
+          "attack": 0,
+          "confirmed": 0,
+          "questionable": 0,
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
+        },
+        "away": {
+          "goalkeeper": 0,
+          "defense": 0,
+          "midfield": 0,
+          "attack": 0,
+          "confirmed": 0,
+          "questionable": 0,
+          "total": 0,
+          "notes": [],
+          "_raw": [],
+          "impactScore": 0
+        }
+      },
+      "bookings": {
+        "threshold": 5,
+        "home": [],
+        "away": []
+      },
+      "h2h": {
+        "games": 10,
+        "homeWins": 7,
+        "draws": 0,
+        "awayWins": 3,
+        "lastMeetingYear": 2026,
+        "avgGoals": 1.6,
+        "over25Rate": 0.1,
+        "over35Rate": 0,
+        "bttsRate": 0.1,
+        "lastResults": [
+          "W",
+          "L",
+          "W",
+          "W",
+          "W"
+        ]
+      },
+      "isFinished": false,
+      "odds": {
+        "hw_fair": 2.18,
+        "dr_fair": 3.33,
+        "aw_fair": 4.16,
+        "_cn": 19,
+        "dc1X_bkr": 1.32,
+        "dcX2_bkr": 1.85,
+        "dc12_bkr": 1.43,
+        "o25_fair": 2.83,
+        "u25_fair": 1.55,
+        "o25_cn": 3,
+        "aw": 1.4,
+        "hw": 2.1,
+        "dr": 3,
+        "o15": 1.5,
+        "u15": 2.38,
+        "ah_a_point": 0,
+        "ah_a": 3.1,
+        "ah_away_lines": [
+          {
+            "pt": 0,
+            "price": 3.1
+          }
+        ],
+        "ah_h_point": 0,
+        "ah_h": 1.44,
+        "ah_home_lines": [
+          {
+            "pt": 0,
+            "price": 1.44
+          }
+        ],
+        "o25": 2.62,
+        "u25": 1.44,
+        "bttsY": 2.2,
+        "bttsN": 1.62,
+        "ao_lines": [
+          {
+            "pt": 1.5,
+            "price": 1.55
+          },
+          {
+            "pt": 2.5,
+            "price": 2.62
+          }
+        ],
+        "au_lines": [
+          {
+            "pt": 1.5,
+            "price": 2.4
+          },
+          {
+            "pt": 2.5,
+            "price": 1.44
+          }
+        ]
+      },
+      "apiPrediction": {
+        "underOver": null,
+        "pctHome": 50,
+        "pctDraw": 50,
+        "pctAway": 0,
+        "poissonHome": 0,
+        "poissonDraw": null,
+        "poissonAway": 0,
+        "compForm": {
+          "home": 0,
+          "away": 0
+        },
+        "compAtt": {
+          "home": 0,
+          "away": 0
+        },
+        "compDef": {
+          "home": 0,
+          "away": 0
+        },
+        "compGoals": {
+          "home": 67,
+          "away": 33
+        }
+      },
+      "homeCardProfile": {
+        "teamId": 728,
+        "avgCards": 2.97,
+        "avgYellow": 2.74,
+        "games": 38,
+        "season": 2025
+      },
+      "awayCardProfile": {
+        "teamId": 542,
+        "avgCards": 2.66,
+        "avgYellow": 2.53,
+        "games": 38,
+        "season": 2025
+      },
+      "odds_open": {},
+      "odds_open_ts": "2026-08-13T04:13:16.718Z",
+      "odds_closing": {}
     }
   ]
 }
