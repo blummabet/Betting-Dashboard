@@ -480,46 +480,75 @@ def _winner_1x2(g1, g2):
     return "home" if g1 > g2 else "away" if g2 > g1 else "draw"
 
 
-def settle_mm_ledger(ledger, results_fetch=None, now=None, min_h=None):
+def _feed_finished_map(prices):
+    """13.08.2026 (Lucas): matchId -> [goal_v1, goal_v2] fuer im Live-Feed als 'finished' markierte Spiele.
+    Autoritativer Endstand aus betfair_prices.json — DIESELBE Quelle, aus der der Track-Record abrechnet.
+    Kein Netz. Greift, solange das Spiel noch im Betwatch-Fenster (~26h) steht."""
+    out = {}
+    for m in ((prices or {}).get("matches") or []):
+        if not isinstance(m, dict):
+            continue
+        li = m.get("liveInfo") or {}
+        if li.get("finished") and li.get("goal_v1") is not None and li.get("goal_v2") is not None:
+            out[str(m.get("matchId"))] = [li.get("goal_v1"), li.get("goal_v2")]
+    return out
+
+
+def settle_mm_ledger(ledger, results_fetch=None, now=None, min_h=None, prices=None):
     """11.08.2026 (Lucas Money-Map Tracking): pending-Konsens-Eintraege gegen den echten Endstand
-    abrechnen (Betfair-Results-Endpoint). Gewann die Betfair-Geld-Seite (moneySide) -> status won/lost;
-    zusaetzlich pinnWin (gewann Pinnacles Favorit). REIN/testbar (results_fetch injizierbar)."""
+    abrechnen. Gewann die Betfair-Geld-Seite (moneySide) -> status won/lost; zusaetzlich pinnWin.
+    13.08.2026 (Lucas "tracking funktioniert nicht"): ZWEI Quellen wie der Track-Record —
+      1) Live-Feed 'finished' (betfair_prices.json, KEIN Netz) — greift, solange das Spiel im Fenster ist.
+      2) fetch_results (autoritativer Endpoint) fuer aus dem Feed gefallene Spiele (braucht BETWATCH_KEY).
+    Vorher lief NUR (2); ohne Key im Konsens-Step blieb jeder Eintrag fuer immer pending. REIN/testbar."""
     from datetime import timedelta
     now = now or datetime.now(timezone.utc)
     min_h = MM_RESULTS_MIN_H if min_h is None else min_h
     ledger = [dict(e) for e in (ledger or []) if isinstance(e, dict)]
-    if results_fetch is None:
-        return ledger
-    cutoff = now - timedelta(hours=min_h)
-    stale = []
-    for e in ledger:
-        if e.get("status") != "pending":
-            continue
-        try:
-            kt = datetime.fromisoformat(str(e.get("kickoff")).replace("Z", "+00:00"))
-        except (ValueError, TypeError):
-            kt = None
-        if kt is not None and kt < cutoff:
-            stale.append(str(e.get("matchId")))
-    if not stale:
-        return ledger
-    res = results_fetch(stale) or {}
-    for e in ledger:
-        if e.get("status") != "pending":
-            continue
-        r = res.get(str(e.get("matchId"))) if isinstance(res, dict) else None
-        if not isinstance(r, dict) or not r.get("finished") or r.get("goal_v1") is None:
-            continue
-        w = _winner_1x2(r.get("goal_v1"), r.get("goal_v2"))
+
+    def _apply(e, g1, g2):
+        w = _winner_1x2(g1, g2)
         if w is None:
-            continue
-        e["ftScore"] = [r.get("goal_v1"), r.get("goal_v2")]
+            return
+        e["ftScore"] = [g1, g2]
         e["winner"] = w
         e["moneyWin"] = (e.get("moneySide") == w)
         if e.get("pinnFav"):
             e["pinnWin"] = (e.get("pinnFav") == w)
         e["status"] = "won" if e["moneyWin"] else "lost"
         e["settledAt"] = now.isoformat()
+
+    # 1) Endstand aus dem Live-Feed (kein Netz) — bewaehrter Track-Record-Pfad.
+    feed = _feed_finished_map(prices)
+    for e in ledger:
+        if e.get("status") != "pending":
+            continue
+        sc = feed.get(str(e.get("matchId")))
+        if sc and sc[0] is not None and sc[1] is not None:
+            _apply(e, sc[0], sc[1])
+
+    # 2) Autoritativer Endpoint fuer den Rest (aus dem Feed gefallen). Braucht BETWATCH_KEY im Job.
+    if results_fetch is not None:
+        cutoff = now - timedelta(hours=min_h)
+        stale = []
+        for e in ledger:
+            if e.get("status") != "pending":
+                continue
+            try:
+                kt = datetime.fromisoformat(str(e.get("kickoff")).replace("Z", "+00:00"))
+            except (ValueError, TypeError):
+                kt = None
+            if kt is not None and kt < cutoff:
+                stale.append(str(e.get("matchId")))
+        if stale:
+            res = results_fetch(stale) or {}
+            for e in ledger:
+                if e.get("status") != "pending":
+                    continue
+                r = res.get(str(e.get("matchId"))) if isinstance(res, dict) else None
+                if not isinstance(r, dict) or not r.get("finished") or r.get("goal_v1") is None:
+                    continue
+                _apply(e, r.get("goal_v1"), r.get("goal_v2"))
     return ledger
 
 
@@ -716,10 +745,13 @@ def main():
         print("WARN Money-Map Namens-Match-Miss: %d Spiele mit Betfair-Geld aber poly=None trotz Poly-Kandidat (%s ...)"
               % (len(mm_name_misses), ", ".join("%s-%s" % (x["home"], x["away"]) for x in mm_name_misses[:3])))
     mm_led = update_mm_ledger(_load(MMLEDGER_FILE, []), mm_rows, now=now)
-    mm_led = settle_mm_ledger(mm_led, results_fetch=_fetch_results)   # abrechnen gegen Endstand
+    # 13.08.2026 (Lucas): Feed (betfair_prices.json) MIT reingeben -> abrechnen ohne Netz; _fetch_results als Backfill.
+    mm_led = settle_mm_ledger(mm_led, results_fetch=_fetch_results, prices=prices)   # abrechnen gegen Endstand
     _dump(MMLEDGER_FILE, mm_led)
     _dump(MMRECORD_FILE, mm_summary(mm_led))
-    print("Money-Map: %d Zeilen -> %d im Ledger" % (len(mm_rows), len(mm_led)))
+    _mm_done = sum(1 for e in mm_led if isinstance(e, dict) and e.get("status") in ("won", "lost"))
+    _mm_open = sum(1 for e in mm_led if isinstance(e, dict) and e.get("status") == "pending")
+    print("Money-Map: %d Zeilen -> %d im Ledger (%d abgerechnet, %d offen)" % (len(mm_rows), len(mm_led), _mm_done, _mm_open))
     print("Betfair-Konsens: %d Spiele (Radar-Schwelle), %d mit Odds-Anker" % (len(games), covered))
 
 
