@@ -85,6 +85,14 @@ LEAGUE_ODDS_KEY = {
     # Betfair-Ligastrings feststehen (soccer_uefa_champs_league / _europa_league / _europa_conference_league).
     "CONMEBOL Copa Libertadores":   "soccer_conmebol_copa_libertadores",
     "CONMEBOL Copa Sudamericana":   "soccer_conmebol_copa_sudamericana",
+    # 14.08.2026 (Lucas): grosse Ligen, die Betfair global zeigt, aber uns fehlten. TheOddsAPI-Keys
+    # gegen die-odds-api-Doku verifiziert; Betfair-Strings aus dem echten Feed. In Saison ab ~August.
+    "Turkish Super League":         "soccer_turkey_super_league",
+    "Dutch Eredivisie":             "soccer_netherlands_eredivisie",
+    "English Sky Bet Championship": "soccer_efl_champ",
+    "German Bundesliga 2":          "soccer_germany_bundesliga2",
+    "Swedish Allsvenskan":          "soccer_sweden_allsvenskan",
+    "Saudi Professional League":    "soccer_saudi_arabia_pro_league",
 }
 
 
