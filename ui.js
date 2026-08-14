@@ -43,8 +43,9 @@ const _ALL_PANELS = [
 
 // Top-nav button IDs (Heart/Status seit 28.06.2026 im „Mehr"-Dropdown, nicht mehr hier)
 const _TOP_NAV_IDS = [
-  'navNational', 'navIntl', 'navSharp',
-  'navPolyTrader', 'navPolymarket', 'navPolyWallets',
+  // 14.08.2026 (Lucas): Primär-Nav = Übersicht/National/Poly-Betting/Poly-Wallets/Betfair/Money-Map.
+  // Intl/Sharp/Poly-Trading sind ins „Mehr"-Menü gewandert (dort als tm-item via data-view aktiv).
+  'navHome', 'navNational', 'navPolymarket', 'navPolyWallets', 'navBetfair', 'navMoneyMap',
 ];
 
 function showView(view) {
@@ -122,9 +123,6 @@ function showView(view) {
   const topNavMap = {
     'home':        'navHome',
     'national':    'navNational',
-    'intl':        'navIntl',
-    'sharp':       'navSharp',
-    'polytrading': 'navPolyTrader',
     'polybetting': 'navPolymarket',
     'polywallets': 'navPolyWallets',
     'betfair':     'navBetfair',
@@ -139,14 +137,13 @@ function showView(view) {
   // ── „Mehr"-Menü (28.06.2026, Lucas): Heart/Status/Telegram/TikTok gebündelt ──
   // Desktop = Dropdown (#navMore + .top-more-menu), Mobile = Bottom-Sheet (.more-sheet).
   // Telegram/TikTok haben Section 'intl' → über die volle View (_activeView) matchen.
-  const MORE_SECS  = ['betfair', 'polybetting', 'polywallets', 'heart', 'status', 'analyse'];
+  const MORE_SECS  = ['intl', 'polytrading', 'sharp', 'heart', 'status', 'analyse'];   // 14.08.2026 (Lucas): Intl/Sharp/Poly-Trading ins Mehr
   const MORE_VIEWS = ['intl-studio'];   // Telegram lebt jetzt im Status-Tab (28.06.2026)
   const isMore = MORE_SECS.includes(_activeSection) || MORE_VIEWS.includes(_activeView);
 
   // Desktop: „Mehr"-Button aktiv nur für seine eigenen Einträge (Poly bleibt eigene Top-Buttons).
   const navMore = document.getElementById('navMore');
-  if (navMore) navMore.classList.toggle('active',
-    ['heart', 'status', 'analyse'].includes(_activeView) || MORE_VIEWS.includes(_activeView));
+  if (navMore) navMore.classList.toggle('active', isMore);   // 14.08.2026 (Lucas): alle Mehr-Einträge markieren
   document.querySelectorAll('.top-more-menu .tm-item').forEach(b => {
     b.classList.toggle('active', b.getAttribute('data-view') === _activeView);
   });

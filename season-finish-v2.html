@@ -348,10 +348,10 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   .bn-btn{
     flex:1 1 0; background:none; border:none; color:var(--muted); cursor:pointer;
     display:flex; flex-direction:column; align-items:center; gap:2px;
-    padding:7px 2px 6px; font-size:10px; font-weight:600; letter-spacing:.01em;
+    padding:7px 1px 6px; font-size:9px; font-weight:600; letter-spacing:0;
     -webkit-tap-highlight-color:transparent;
   }
-  .bn-btn .bn-ic{font-size:20px; line-height:1;}
+  .bn-btn .bn-ic{font-size:18px; line-height:1;}
   .bn-btn.active{color:var(--accent);}
   .bn-btn.active .bn-ic{transform:translateY(-1px);}
 
@@ -2177,9 +2177,6 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   </div>
   <button class="top-nav-btn active" id="navHome" onclick="showView('home')">🏠 Übersicht</button>
   <button class="top-nav-btn" id="navNational" onclick="showView('national-cards')">🇪🇺 National</button>
-  <button class="top-nav-btn" id="navIntl" onclick="showView('intl-cards')">🌍 International</button>
-  <button class="top-nav-btn" id="navSharp" onclick="showView('sharp')">📡 Sharp Radar</button>
-  <button class="top-nav-btn" id="navPolyTrader" onclick="showView('polytrading')" style="color:#00d4a1">📈 Polymarket Trading</button>
   <button class="top-nav-btn" id="navPolymarket" onclick="showView('polybetting')" style="color:#a78bfa">🟣 Polymarket Betting</button>
   <button class="top-nav-btn" id="navPolyWallets" onclick="showView('polywallets')" style="color:#5eead4">🐋 Polymarket Wallets</button>
   <button class="top-nav-btn" id="navBetfair" onclick="showView('betfair')" style="color:#ffb80c">🟡 Betfair Radar</button>
@@ -2188,6 +2185,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
   <div class="top-nav-more" id="topNavMore">
     <button class="top-nav-btn" id="navMore" onclick="toggleTopMore(event)">⋯ Mehr<span class="tnm-caret">▾</span><span id="navMoreDot" style="display:none;width:8px;height:8px;border-radius:50%;background:#f85149;margin-left:6px;vertical-align:middle;box-shadow:0 0 6px rgba(248,81,73,.8);"></span></button>
     <div class="top-more-menu" id="topMoreMenu">
+      <button class="tm-item" data-view="intl-cards"    onclick="showView('intl-cards');closeTopMore()">🌍 International</button>
+      <button class="tm-item" data-view="polytrading"   onclick="showView('polytrading');closeTopMore()" style="color:#00d4a1">📈 Polymarket Trading</button>
+      <button class="tm-item" data-view="sharp"         onclick="showView('sharp');closeTopMore()">📡 Sharp Radar</button>
       <button class="tm-item" data-view="heart"         onclick="showView('heart');closeTopMore()">❤️ Heart</button>
       <button class="tm-item" data-view="status"        onclick="showView('status');closeTopMore()">🔧 Status<span id="navStatusDot" style="display:none;width:8px;height:8px;border-radius:50%;background:#f85149;margin-left:6px;vertical-align:middle;box-shadow:0 0 6px rgba(248,81,73,.8);"></span></button>
       <button class="tm-item" data-view="intl-studio"   onclick="showView('intl-studio');closeTopMore()">🎬 TikTok Studio</button>
@@ -2233,21 +2233,22 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 <nav class="bottom-nav" id="bottomNav">
   <button class="bn-btn" data-sec="home"        onclick="showView('home')"><span class="bn-ic">🏠</span><span class="bn-lbl">Übersicht</span></button>
   <button class="bn-btn" data-sec="national"    onclick="showView('national-cards')"><span class="bn-ic">🇪🇺</span><span class="bn-lbl">National</span></button>
-  <button class="bn-btn" data-sec="sharp"       onclick="showView('sharp')"><span class="bn-ic">📡</span><span class="bn-lbl">Sharp</span></button>
-  <button class="bn-btn" data-sec="polytrading" onclick="showView('polytrading')"><span class="bn-ic">📈</span><span class="bn-lbl">Trading</span></button>
+  <button class="bn-btn" data-sec="polybetting" onclick="showView('polybetting')"><span class="bn-ic">🟣</span><span class="bn-lbl">Betting</span></button>
+  <button class="bn-btn" data-sec="polywallets" onclick="showView('polywallets')"><span class="bn-ic">🐋</span><span class="bn-lbl">Wallets</span></button>
+  <button class="bn-btn" data-sec="betfair"     onclick="showView('betfair')"><span class="bn-ic">🟡</span><span class="bn-lbl">Betfair</span></button>
+  <button class="bn-btn" data-sec="moneymap"    onclick="showView('moneymap')"><span class="bn-ic">🔗</span><span class="bn-lbl">Money</span></button>
   <button class="bn-btn" id="bnMore"            onclick="toggleMoreSheet()"><span class="bn-ic">⋯</span><span class="bn-lbl">Mehr</span></button>
 </nav>
 <div class="more-sheet" id="moreSheet" onclick="if(event.target===this)toggleMoreSheet()">
   <div class="more-sheet-panel">
     <div class="more-sheet-grip"></div>
-    <button class="ms-btn" data-sec="betfair"      onclick="showView('betfair');toggleMoreSheet()">🟡 Betfair Radar</button>
     <button class="ms-btn" data-sec="intl"         onclick="showView('intl-cards');toggleMoreSheet()">🌍 International</button>
-    <button class="ms-btn" data-sec="polybetting"  onclick="showView('polybetting');toggleMoreSheet()">🟣 Polymarket Betting</button>
-    <button class="ms-btn" data-sec="polywallets"  onclick="showView('polywallets');toggleMoreSheet()">🐋 Polymarket Wallets</button>
-    <button class="ms-btn" data-view="analyse"     onclick="showView('analyse');toggleMoreSheet()">📊 Analyse</button>
-    <button class="ms-btn" data-view="intl-studio"   onclick="showView('intl-studio');toggleMoreSheet()">🎬 TikTok Studio</button>
+    <button class="ms-btn" data-sec="polytrading"  onclick="showView('polytrading');toggleMoreSheet()">📈 Polymarket Trading</button>
+    <button class="ms-btn" data-sec="sharp"        onclick="showView('sharp');toggleMoreSheet()">📡 Sharp Radar</button>
     <button class="ms-btn" data-sec="heart"        onclick="showView('heart');toggleMoreSheet()">❤️ Heart</button>
     <button class="ms-btn" data-sec="status"       onclick="showView('status');toggleMoreSheet()">🔧 Status</button>
+    <button class="ms-btn" data-view="intl-studio" onclick="showView('intl-studio');toggleMoreSheet()">🎬 TikTok Studio</button>
+    <button class="ms-btn" data-view="analyse"     onclick="showView('analyse');toggleMoreSheet()">📊 Analyse</button>
   </div>
 </div>
 

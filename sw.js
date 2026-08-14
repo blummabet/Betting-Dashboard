@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v134';   // 13.08.2026 (Lucas): Money-Map Signal-Stärke (mmStrong) · Pinnacle-Anker fuer Copa Libertadores/Sudamericana   // 13.08.2026 (Lucas): Money-Map Tracking v2 — Divergenz-Duell (Betfair vs Poly) · Poly-Spalte · Nach-Liga · Letzte-Spiele   // 13.08.2026 (Lucas): Public-Zweitmeinung (Pinn/Soft/Poly) · Public-Whales nur bewiesen scharf · FADE raus aus Public-Plays · PSG-Matchup-Fix
+const VERSION = 'cocobet-v135';   // 13.08.2026 (Lucas): Money-Map Signal-Stärke (mmStrong) · Pinnacle-Anker fuer Copa Libertadores/Sudamericana   // 13.08.2026 (Lucas): Money-Map Tracking v2 — Divergenz-Duell (Betfair vs Poly) · Poly-Spalte · Nach-Liga · Letzte-Spiele   // 13.08.2026 (Lucas): Public-Zweitmeinung (Pinn/Soft/Poly) · Public-Whales nur bewiesen scharf · FADE raus aus Public-Plays · PSG-Matchup-Fix
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
