@@ -155,8 +155,10 @@ class PublicStaticBiasSignal(Signal):
         if abs_diff < self._t["min_bias_pp"]: return None
         if abs_diff > self._t["max_credible_pp"]: return None
 
-        # Direction: Public überbettet (diff > 0) → contrarian Pick = positiv
-        direction = 1.0 if diff_pp > 0 else -1.0
+        # 13.08.2026 (Lucas-Fix): FADE THE PUBLIC — richtig herum (s. _eval_1x2). Overbet des gepickten
+        # Outcomes (diff > 0) = öffentlich aufgeblasene Seite = Gegenwind (NEGATIV); Underbet (diff < 0) =
+        # von der Masse liegengelassener Value, den Pinnacle höher sieht (POSITIV).
+        direction = -1.0 if diff_pp > 0 else 1.0
         extra = (abs_diff - self._t["min_bias_pp"]) * self._t["magnitude_scale"]
         score = direction * (self._t["base_score_pp"] + extra)
         confidence = min(0.80, 0.40 + abs_diff * 0.04)
@@ -166,13 +168,12 @@ class PublicStaticBiasSignal(Signal):
                     "o35": "Über 3.5", "u35": "Unter 3.5",
                     "bttsY": "BTTS Ja", "bttsN": "BTTS Nein"}[key]
         public_bk = snap.get("public_ou_bookmaker", "Public")
-        direction_str = "über-bettet" if diff_pp > 0 else "unter-bettet"
         if diff_pp > 0:
-            evidence = (f"Die breite Masse ({public_bk}) hat {oc_label} um {abs_diff:.1f}pp "
-                        f"überbewertet (vs Pinnacle) — wir halten bewusst dagegen.")
+            evidence = (f"Die breite Masse ({public_bk}) hat {oc_label} um {abs_diff:.1f}pp überbewertet "
+                        f"(vs Pinnacle) — der Pick sitzt auf der Publikums-Seite (Gegenwind).")
         else:
-            evidence = (f"Die breite Masse ({public_bk}) lässt {oc_label} um {abs_diff:.1f}pp "
-                        f"links liegen (vs Pinnacle) — kein Publikums-Hebel hier.")
+            evidence = (f"Die breite Masse ({public_bk}) unterschätzt {oc_label} um {abs_diff:.1f}pp "
+                        f"(Pinnacle höher) — wir nehmen den Value gegen die Masse.")
 
         return SignalResult(
             score=round(score, 2), confidence=round(confidence, 2), evidence=evidence,
@@ -201,9 +202,12 @@ class PublicStaticBiasSignal(Signal):
         if abs_diff > self._t["max_credible_pp"]:
             return None  # wahrscheinlich Daten-Anomalie
 
-        # Direction: wenn Public überbettet (diff > 0), reitet ein Pick auf
-        # diesem Outcome GEGEN den Public-Konsens → positives Signal
-        direction = 1.0 if diff_pp > 0 else -1.0
+        # 13.08.2026 (Lucas-Fix): FADE THE PUBLIC — richtig herum. Überbettet die Masse den GEPICKTEN
+        # Outcome (diff > 0), sitzt der Pick AUF der öffentlich aufgeblasenen Seite -> Gegenwind, NEGATIV.
+        # Unterbettet die Masse ihn (diff < 0), lässt sie dort Value liegen, die Pinnacle höher sieht ->
+        # wir nehmen sie -> POSITIV. (Vorher invertiert: Heim-Pick bei Public-Overbet-Heim bekam +Score,
+        # obwohl das die verlierende Publikums-Seite ist — genau das, was der Docstring fade-en will.)
+        direction = -1.0 if diff_pp > 0 else 1.0
 
         # Magnitude: Base + linear über min_bias_pp
         extra = (abs_diff - self._t["min_bias_pp"]) * self._t["magnitude_scale"]
@@ -214,13 +218,12 @@ class PublicStaticBiasSignal(Signal):
 
         oc_label = {"hw": "Heim", "dr": "X", "aw": "Auswärts"}[outcome]
         public_bk = snap.get("public_bookmaker", "Public")
-        direction_str = "über-bettet" if diff_pp > 0 else "unter-bettet"
         if diff_pp > 0:
-            evidence = (f"Die breite Masse ({public_bk}) hat {oc_label} um {abs_diff:.1f}pp "
-                        f"überbewertet (vs Pinnacle) — wir halten bewusst dagegen.")
+            evidence = (f"Die breite Masse ({public_bk}) hat {oc_label} um {abs_diff:.1f}pp überbewertet "
+                        f"(vs Pinnacle) — der Pick sitzt auf der Publikums-Seite (Gegenwind).")
         else:
-            evidence = (f"Die breite Masse ({public_bk}) lässt {oc_label} um {abs_diff:.1f}pp "
-                        f"links liegen (vs Pinnacle) — kein Publikums-Hebel hier.")
+            evidence = (f"Die breite Masse ({public_bk}) unterschätzt {oc_label} um {abs_diff:.1f}pp "
+                        f"(Pinnacle höher) — wir nehmen den Value gegen die Masse.")
 
         return SignalResult(
             score=round(score, 2),

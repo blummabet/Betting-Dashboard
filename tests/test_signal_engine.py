@@ -140,31 +140,33 @@ class TestPublicStaticBias(unittest.TestCase):
                 "public_bookmaker": "bet365"}
         self.assertIsNone(self._evaluate("Heimsieg", snap))
 
-    def test_positive_score_when_public_overbets_picked_outcome(self):
+    def test_negative_score_when_public_overbets_picked_outcome(self):
         """
-        Public hat Heim auf 1.65 (60.6%), Pinnacle auf 1.91 (52.4%).
-        Public überbettet Heim um ~8pp → Pick auf Heim ist contrarian → positiv.
+        13.08.2026 (Lucas-Fix, fade-the-public richtig herum): Public Heim 60.6%, Pinnacle 52.4%.
+        Public ueberbettet Heim ~8pp -> ein Pick AUF Heim sitzt auf der oeffentlich aufgeblasenen
+        Seite -> NEGATIV. (Vorher faelschlich als positiv/contrarian gewertet.)
         """
         snap = {"hw": 1.91, "dr": 3.47, "aw": 4.46,
                 "public_hw": 1.65, "public_dr": 3.80, "public_aw": 5.50,
                 "public_bookmaker": "bet365"}
         result = self._evaluate("Heimsieg", snap)
         self.assertIsNotNone(result)
-        self.assertGreater(result.score, 0)
+        self.assertLess(result.score, 0)
         self.assertIn("überbewertet", result.evidence)
         self.assertIn("bet365", result.evidence)
 
-    def test_negative_score_when_public_underbets_picked_outcome(self):
+    def test_positive_score_when_public_underbets_picked_outcome(self):
         """
-        Public hat Heim auf 2.20 (45%), Pinnacle auf 1.91 (52%).
-        Public unter-bettet Heim → Pick auf Heim folgt Public → kein Edge → negativ.
+        13.08.2026 (Lucas-Fix): Public Heim 45%, Pinnacle 52%. Public unterschaetzt Heim -> dort liegt
+        der Value, den Pinnacle hoeher sieht -> Pick auf Heim nimmt ihn gegen die Masse -> POSITIV.
+        (Vorher faelschlich als negativ gewertet.)
         """
         snap = {"hw": 1.91, "dr": 3.47, "aw": 4.46,
                 "public_hw": 2.20, "public_dr": 3.30, "public_aw": 3.80,
                 "public_bookmaker": "bet365"}
         result = self._evaluate("Heimsieg", snap)
         self.assertIsNotNone(result)
-        self.assertLess(result.score, 0)
+        self.assertGreater(result.score, 0)
 
 
 class TestTravelBurden(unittest.TestCase):

@@ -104,6 +104,23 @@ STEAM_CONFIRM_PP = _cfg("edge", "steam_confirm_pp",      5.0)
 # WM lockerer als Liga (weniger Spiele) — Liga-Profil setzt steam_bet_threshold höher.
 MAX_STEAM_PICKS_PER_CARD = _cfg("conviction_score", "max_steam_picks_per_card", 3)
 STEAM_BET_THRESHOLD      = _cfg("conviction_score", "steam_bet_threshold",      6)
+# 13.08.2026 (Lucas): kaputte Soft-Opening-Odds (z.B. 1.18->5.00 = -64.7pp) sind Datenmüll, kein Move.
+MAX_SOFT_MOVE_PP      = float(_cfg("conviction_score", "max_soft_move_pp", 30.0))
+# 13.08.2026 (Lucas): Ausgabe-Floor — unter dieser Conviction ODER bei negativem Engine-Netto kein gestakter Pick.
+PICK_CONVICTION_FLOOR = int(_cfg("conviction_score", "pick_conviction_floor", 4))
+
+
+def _san_soft_open(soft_open, soft_now):
+    """Soft-Opening nur behalten, wenn die implizite Bewegung plausibel ist (|pp| <= MAX_SOFT_MOVE_PP).
+    Ein Opening, das einen absurden Move erzeugt (kaputte Quote), wird verworfen -> kein Geister-Move."""
+    try:
+        o, c = float(soft_open), float(soft_now)
+        if o <= 1.0 or c <= 1.0:
+            return None
+        shift = abs((1.0 / c - 1.0 / o) * 100.0)
+        return soft_open if shift <= MAX_SOFT_MOVE_PP else None
+    except (TypeError, ValueError, ZeroDivisionError):
+        return soft_open
 # Season-Opener-Dämpfung (01.07.2026, Lucas): die ersten Liga-Spieltage laufen auf cross-season Form/
 # H2H/xG. Die bleiben VOLL gewichtet (tragen echtes Signal) — aber die Gesamt-Conviction bekommt eine
 # kleine Vorsicht (−1), solange die Datenbasis dünn ist. Nur Liga/MLS (is_liga), nur MD ≤ N. Verhindert
@@ -931,7 +948,7 @@ def _steam_card_pick(snap, pick):
         # ── Steam-Metadaten (Anzeige + CLV-Tracking) ──
         "source": "steam", "steamMovePP": move, "steamMoveRawPP": move_raw,
         "steamOpen": t["open"], "steamCur": t["cur"],
-        "softOpen": pick.get("soft_open"), "softNow": pick.get("soft_now"),
+        "softOpen": _san_soft_open(pick.get("soft_open"), pick.get("soft_now")), "softNow": pick.get("soft_now"),
         "entryBook": pick["book"], "entryOdd": round(odds, 2),
         "lateEntry": bool(pick.get("lateEntry")), "steamDerived": bool(pick.get("derived")),
         "softConfirmed": soft_confirmed, "softFollowPP": soft_follow,
@@ -2242,6 +2259,21 @@ def main():
                             p["sharpMoveDetails"] = conv["sharp_move"]
                         if conv.get("opening_movement"):
                             p["openingMovement"] = conv["opening_movement"]
+
+                        # 13.08.2026 (Lucas): Ausgabe-Floor — ein gestakter Pick braucht Substanz.
+                        # Conviction < FLOOR ODER negatives Engine-Netto -> KEIN gestakter Pick, sondern
+                        # NOBET (gesehen, kein Value). Hält 1-3/10- und Minus-Netto-Picks aus dem Feed.
+                        _net_pp = float(sig_out.get("combined_score_pp") or 0.0)
+                        if (p.get("verdict") in ("BET", "ABWÄGEN")
+                                and (p["convictionScore"] < PICK_CONVICTION_FLOOR or _net_pp < 0)):
+                            p["origVerdict"] = p.get("verdict")
+                            p["origOdds"]    = p.get("odds")
+                            p["verdict"]     = "NOBET"
+                            p["result"]      = None
+                            p["nobetReason"] = (("Conviction %d/10 < %d — zu dünn"
+                                                 % (p["convictionScore"], PICK_CONVICTION_FLOOR))
+                                                if p["convictionScore"] < PICK_CONVICTION_FLOOR
+                                                else "Engine-Netto %.1fpp negativ — Modell gegen den Pick" % _net_pp)
 
                         # Steam-Picks reifen via Conviction zu BET. WM-Schwelle niedriger
                         # als Liga (weniger Spiele) — STEAM_BET_THRESHOLD aus Config-Profil.
