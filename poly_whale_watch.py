@@ -362,6 +362,12 @@ def select(track: dict, seen: dict, now: datetime,
         _n = (_s.get("n") or 0) if isinstance(_s, dict) else 0
         if _is_confirmed_loser(_s):
             continue          # 02.08.2026 (Lucas): bekannter Netto-Verlierer → gar nicht pushen, auch nicht als großer Whale
+        # 13.08.2026 (Lucas): belegt unterdurchschnittliche Wallet (belastbarer Record n>=min_tr, aber
+        # < 50% Treffer) NICHT als reine Groessen-Karte pushen - Groesse ohne Koennen ist kein Signal
+        # (eher Anti-Edge). "bewiesen scharf" (>=50%) und echte Unbekannte (n<min_tr) bleiben unberuehrt.
+        _hit = ((_s.get("wins") or 0) / _n) if (_n and isinstance(_s, dict)) else None
+        if _n >= min_tr and _hit is not None and _hit < 0.50:
+            continue
         _smart = _is_smart(_s, min_tr, min_hitrate)   # inkl. „kein bestätigter Verlierer"
         _floor = min_tracked if _smart else min_untracked
         # 05.08.2026 (Lucas): Klein-aber-scharf-Band (nur Trades, sharp_floor gesetzt) - bewiesen

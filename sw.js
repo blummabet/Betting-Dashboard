@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v127';   // 13.08.2026 (Lucas): Money-Map Signal-Stärke (mmStrong) · Pinnacle-Anker fuer Copa Libertadores/Sudamericana   // 13.08.2026 (Lucas): Money-Map Tracking v2 — Divergenz-Duell (Betfair vs Poly) · Poly-Spalte · Nach-Liga · Letzte-Spiele   // 13.08.2026 (Lucas): Public-Zweitmeinung (Pinn/Soft/Poly) · Public-Whales nur bewiesen scharf · FADE raus aus Public-Plays · PSG-Matchup-Fix
+const VERSION = 'cocobet-v128';   // 13.08.2026 (Lucas): Money-Map Signal-Stärke (mmStrong) · Pinnacle-Anker fuer Copa Libertadores/Sudamericana   // 13.08.2026 (Lucas): Money-Map Tracking v2 — Divergenz-Duell (Betfair vs Poly) · Poly-Spalte · Nach-Liga · Letzte-Spiele   // 13.08.2026 (Lucas): Public-Zweitmeinung (Pinn/Soft/Poly) · Public-Whales nur bewiesen scharf · FADE raus aus Public-Plays · PSG-Matchup-Fix
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
@@ -63,7 +63,7 @@ self.addEventListener('fetch', (e) => {
   // Navigation: frische Seite online, Hülle offline.
   if (req.mode === 'navigate') {
     e.respondWith(
-      fetch(req)
+      fetch(req, { cache: 'reload' })
         .then((res) => {
           const copy = res.clone();
           caches.open(VERSION).then((c) => c.put('./season-finish-v2.html', copy));
@@ -77,7 +77,7 @@ self.addEventListener('fetch', (e) => {
   // App-Code (JS/CSS): network-first → online IMMER der frische Code, Cache nur als Offline-Fallback.
   if (url.pathname.endsWith('.js') || url.pathname.endsWith('.css')) {
     e.respondWith(
-      fetch(req)
+      fetch(req, { cache: 'reload' })
         .then((res) => {
           if (res && res.status === 200) {
             const copy = res.clone();
