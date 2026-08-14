@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-14T00:43:56.864077+00:00",
+ "generatedAt": "2026-08-14T03:14:54.503909+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,8 +9,8 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 324,
- "pinnKeys": 194,
- "matched": 104,
+ "pinnKeys": 200,
+ "matched": 108,
  "footballRows": 84,
  "crossRows": 240,
  "footballSkippedStale": 61,
@@ -22,13 +22,42 @@
   "soccer_liga": 18
  },
  "matchedBySport": {
-  "baseball_mlb": 20,
+  "baseball_mlb": 24,
   "soccer_mls": 66,
   "soccer_liga": 18
  },
  "trackRecord": {
-  "tracked": 88,
+  "tracked": 90,
   "converged": 3
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|losangelesdodgers-milwaukeebrewers|milwaukeebrewers",
+   "sport": "baseball_mlb",
+   "event": "Milwaukee Brewers vs Los Angeles Dodgers",
+   "market": "Moneyline",
+   "outcome": "Milwaukee Brewers",
+   "polyPP": 66.0,
+   "pinnPP": 38.0,
+   "gapPP": 27.99,
+   "vol": 530805,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-14T03:14:54.503709+00:00"
+  },
+  {
+   "id": "baseball_mlb|losangelesdodgers-milwaukeebrewers|losangelesdodgers",
+   "sport": "baseball_mlb",
+   "event": "Milwaukee Brewers vs Los Angeles Dodgers",
+   "market": "Moneyline",
+   "outcome": "Los Angeles Dodgers",
+   "polyPP": 34.0,
+   "pinnPP": 62.0,
+   "gapPP": -27.99,
+   "vol": 530805,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-14T03:14:54.503709+00:00"
+  }
+ ]
 }
