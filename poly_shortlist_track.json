@@ -1,7 +1,7 @@
 {
- "updatedAt": "2026-08-14T06:44:34.177494+00:00",
+ "updatedAt": "2026-08-14T08:05:01.911023+00:00",
  "stake": 10.0,
- "expired": 1,
+ "expired": 0,
  "open": {
   "cs2-sf2-ef1-2026-08-08|Eternal Fire": {
    "key": "cs2-sf2-ef1-2026-08-08",
@@ -12,7 +12,7 @@
    "entryPrice": 0.685,
    "firstTs": "2026-08-08T08:59:43.584650+00:00",
    "lastPrice": 0.685,
-   "lastTs": "2026-08-14T06:44:34.177494+00:00",
+   "lastTs": "2026-08-14T08:05:01.911023+00:00",
    "htkAtEntry": 0.018020555555555557,
    "public": false,
    "reasons": [
@@ -235,28 +235,6 @@
    ],
    "stake": 10.0
   },
-  "dota2-ty-liquid-2026-08-13|Team Yandex": {
-   "key": "dota2-ty-liquid-2026-08-13",
-   "side": "Team Yandex",
-   "verdict": "BET",
-   "conv": 5,
-   "league": "ESPORTS",
-   "entryPrice": 0.615,
-   "firstTs": "2026-08-14T00:49:07.890573+00:00",
-   "lastPrice": 0.615,
-   "lastTs": "2026-08-14T06:44:34.177494+00:00",
-   "htkAtEntry": 1.2109466666666666,
-   "public": false,
-   "reasons": [
-    "großes Geld auf Team Yandex (62%) → $45K",
-    "Steam läuft rein (+2.0pp)"
-   ],
-   "signals": [
-    "money",
-    "steam"
-   ],
-   "stake": 10.0
-  },
   "lol-foxy-bro1-2026-08-14|BNK FearX Youth": {
    "key": "lol-foxy-bro1-2026-08-14",
    "side": "BNK FearX Youth",
@@ -266,13 +244,35 @@
    "entryPrice": 0.595,
    "firstTs": "2026-08-14T03:17:38.535268+00:00",
    "lastPrice": 0.595,
-   "lastTs": "2026-08-14T06:44:34.177494+00:00",
+   "lastTs": "2026-08-14T08:05:01.911023+00:00",
    "htkAtEntry": 1.7308252777777777,
    "public": false,
    "reasons": [
     "🔥 scharfe Wallet (46/73, 63% · +$73K)"
    ],
    "signals": [
+    "sharp"
+   ],
+   "stake": 10.0
+  },
+  "jap-fct1-rey-2026-08-14|Kashiwa Reysol": {
+   "key": "jap-fct1-rey-2026-08-14",
+   "side": "Kashiwa Reysol",
+   "verdict": "BET",
+   "conv": 7,
+   "league": "SOCCER",
+   "entryPrice": 0.515,
+   "firstTs": "2026-08-14T08:05:01.911023+00:00",
+   "lastPrice": 0.515,
+   "lastTs": "2026-08-14T08:05:01.911023+00:00",
+   "htkAtEntry": 1.9384158333333332,
+   "public": true,
+   "reasons": [
+    "großes Geld auf Kashiwa Reysol (82%) → $25K",
+    "🔥 scharfe Wallet (31/50, 62% · +$103K)"
+   ],
+   "signals": [
+    "money",
     "sharp"
    ],
    "stake": 10.0
@@ -6076,16 +6076,38 @@
    "firstTs": "2026-08-14T00:49:07.890573+00:00",
    "settledTs": "2026-08-14T06:44:34.177494+00:00",
    "resolvedTs": "2026-08-14T06:44:33.491615+00:00"
+  },
+  {
+   "key": "dota2-ty-liquid-2026-08-13",
+   "side": "Team Yandex",
+   "verdict": "BET",
+   "conv": 5,
+   "league": "ESPORTS",
+   "entryPrice": 0.615,
+   "closePrice": 0.615,
+   "result": "win",
+   "winner": "Team Yandex",
+   "pnl": 6.26,
+   "clvPP": 0.0,
+   "stake": 10.0,
+   "public": false,
+   "signals": [
+    "money",
+    "steam"
+   ],
+   "firstTs": "2026-08-14T00:49:07.890573+00:00",
+   "settledTs": "2026-08-14T08:05:01.911023+00:00",
+   "resolvedTs": "2026-08-14T08:05:01.244006+00:00"
   }
  ],
  "agg": {
   "all": {
-   "n": 272,
-   "wins": 145,
-   "hit": 0.5331,
-   "pnl": -181.76,
-   "stake": 2720.0,
-   "roi": -0.0668,
+   "n": 273,
+   "wins": 146,
+   "hit": 0.5348,
+   "pnl": -175.5,
+   "stake": 2730.0,
+   "roi": -0.0643,
    "clvAvg": -0.08
   },
   "public": {
@@ -6108,12 +6130,12 @@
     "clvAvg": 0.0
    },
    "5": {
-    "n": 33,
-    "wins": 11,
-    "hit": 0.3333,
-    "pnl": -103.97,
-    "stake": 330.0,
-    "roi": -0.3151,
+    "n": 34,
+    "wins": 12,
+    "hit": 0.3529,
+    "pnl": -97.71,
+    "stake": 340.0,
+    "roi": -0.2874,
     "clvAvg": 0.03
    },
    "6": {
@@ -6164,12 +6186,12 @@
   },
   "byVerdict": {
    "BET": {
-    "n": 194,
-    "wins": 123,
-    "hit": 0.634,
-    "pnl": -25.07,
-    "stake": 1940.0,
-    "roi": -0.0129,
+    "n": 195,
+    "wins": 124,
+    "hit": 0.6359,
+    "pnl": -18.81,
+    "stake": 1950.0,
+    "roi": -0.0096,
     "clvAvg": -0.15
    },
    "FADE": {
@@ -6184,12 +6206,12 @@
   },
   "bySignal": {
    "money": {
-    "n": 118,
-    "wins": 84,
-    "hit": 0.7119,
-    "pnl": 32.08,
-    "stake": 1180.0,
-    "roi": 0.0272,
+    "n": 119,
+    "wins": 85,
+    "hit": 0.7143,
+    "pnl": 38.34,
+    "stake": 1190.0,
+    "roi": 0.0322,
     "clvAvg": -0.35
    },
    "pinn": {
@@ -6211,12 +6233,12 @@
     "clvAvg": -0.11
    },
    "steam": {
-    "n": 60,
-    "wins": 33,
-    "hit": 0.55,
-    "pnl": -61.37,
-    "stake": 600.0,
-    "roi": -0.1023,
+    "n": 61,
+    "wins": 34,
+    "hit": 0.5574,
+    "pnl": -55.11,
+    "stake": 610.0,
+    "roi": -0.0903,
     "clvAvg": 0.05
    },
    "turned": {
