@@ -10353,7 +10353,13 @@ function renderTgLog(log) {
 <script>
 if ('serviceWorker' in navigator) {
   window.addEventListener('load', function () {
-    navigator.serviceWorker.register('sw.js').catch(function (e) { console.warn('SW-Registrierung fehlgeschlagen', e); });
+    navigator.serviceWorker.register('sw.js', { updateViaCache: 'none' }).then(function (reg) {
+      if (reg && reg.update) { try { reg.update(); } catch (e) {} }   // 13.08.2026 (Lucas): auf neuen SW pruefen
+      var hadController = !!navigator.serviceWorker.controller, reloaded = false;
+      navigator.serviceWorker.addEventListener('controllerchange', function () {
+        if (!hadController || reloaded) return; reloaded = true; window.location.reload();   // neuer SW -> einmal frisch laden
+      });
+    }).catch(function (e) { console.warn('SW-Registrierung fehlgeschlagen', e); });
   });
 }
 </script>

@@ -370,3 +370,22 @@ class TestContestedMarket(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestSelectSubBreakeven(unittest.TestCase):
+    """13.08.2026 (Lucas): grosse Wallet mit belastbarem, aber unterdurchschnittlichem Record (<50% Treffer)
+    loest keine reine Groessen-Karte mehr aus - auch nicht Trades. Unbekannte + bewiesen scharfe bleiben."""
+
+    def test_belegte_sub50_raus_unbekannt_und_scharf_bleiben(self):
+        from datetime import datetime, timezone
+        now = datetime(2026, 8, 13, tzinfo=timezone.utc)
+        track = {"open": {
+            "loser|k1|home":   {"wallet": "loser",   "key": "k1", "side": "home", "usd": 90000, "firstTs": now.isoformat()},
+            "unknown|k2|home": {"wallet": "unknown", "key": "k2", "side": "home", "usd": 90000, "firstTs": now.isoformat()},
+            "sharp|k3|home":   {"wallet": "sharp",   "key": "k3", "side": "home", "usd": 6000,  "firstTs": now.isoformat()}},
+            "scores": {"loser": {"n": 34, "wins": 16}, "unknown": {"n": 2, "wins": 1},
+                       "sharp": {"n": 61, "wins": 40, "clvSumPP": 85}}}
+        picks = {p[0] for p in P.select(track, {}, now, sharp_floor=P.MIN_USD_SHARP)}
+        self.assertNotIn("loser|k1|home", picks)
+        self.assertIn("unknown|k2|home", picks)
+        self.assertIn("sharp|k3|home", picks)
