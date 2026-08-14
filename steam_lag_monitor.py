@@ -944,6 +944,19 @@ def main():
 
     now_ts = datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
 
+    # 14.08.2026 (Lucas): WINTERISIERUNG — ist das Turnier des aktiven Datensatzes beendet (WM nach
+    # dem Finale), lauf NICHT weiter. Sonst schreibt der Heartbeat-Zweig unten (bei fehlenden Poly-
+    # Preisen) nur ein leeres Log neu -> staendiger Leer-Commit (runCount hoch, signals []). Laufende
+    # Ligen (liga/mls) haben kommende Spiele -> tournament_is_over=False -> voellig unberuehrt.
+    try:
+        _win_data = json.loads(Path(str(D.file("wm2026-data.json", "liga-data.json")))
+                               .read_text(encoding="utf-8"))
+    except Exception:
+        _win_data = {}
+    if D.tournament_is_over(_win_data):
+        print("  \U0001F3C1 Turnier beendet (winterisiert) — kein Steam-Lag-Lauf, kein Log-Update, kein Commit.")
+        return
+
     # 1. Frische Poly-Preise holen (Gamma API → Fallback: wm_poly_prices.json)
     print("📡 Fetche Polymarket-Preise…")
     fresh_poly = fetch_fresh_poly()

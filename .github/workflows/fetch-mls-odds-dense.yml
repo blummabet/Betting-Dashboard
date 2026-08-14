@@ -100,6 +100,8 @@ jobs:
         run: |
           git config user.name  "CocoBet Bot"
           git config user.email "bot@cocobet.local"
+          python build_dashboard_pulse.py || true   # 14.08.2026 (Lucas): Puls oefter frisch (gegen "Stand vor 3h")
+          git add dashboard_pulse.json 2>/dev/null || true
           git add mls-data.json 2>/dev/null || true
           git add mls-odds-history.json 2>/dev/null || true
           git add mls_closing_lines.json 2>/dev/null || true

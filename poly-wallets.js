@@ -282,8 +282,14 @@ function _pwRealHtk(m){
   if(isNaN(cap)) return m.hoursToKickoff;   // kein Freeze-Stempel → roher Wert (best effort)
   return m.hoursToKickoff - (Date.now()-cap)/3.6e6;
 }
-const PW_STALE_AFTER_KO_H = 4;   // >4h nach rekonstruiertem Anpfiff = Spiel fertig (wie Momentum-Board)
-function _pwKoStale(m){ const r=_pwRealHtk(m); return r!=null && r < -PW_STALE_AFTER_KO_H; }
+const PW_STALE_AFTER_KO_H = 4;   // Default (eSport/Tennis/Cricket: lange Serien laufen legitim 3-4h)
+// 14.08.2026 (Lucas): Fussball ist nach ~2h durch — nicht 4h als "live" haengen lassen. Poly loest
+// obskure Ligen (China/Japan Unterhaus) spaet auf, der Markt bleibt offen -> der Scan faengt das
+// fertige Spiel weiter als live ein. Sportabhaengiger Cutoff loest genau das, ohne den eSport-Live-
+// Tab zu beschneiden.
+const PW_STALE_AFTER_KO_H_FOOTBALL = 2.5;
+function _pwStaleCutoff(m){ return _pwSportCategory(m&&m.league)==='Fußball' ? PW_STALE_AFTER_KO_H_FOOTBALL : PW_STALE_AFTER_KO_H; }
+function _pwKoStale(m){ const r=_pwRealHtk(m); return r!=null && r < -_pwStaleCutoff(m); }
 function _pwSideCol(s){return PW_C[s]||(s==='bttsY'?PW_C.over:s==='bttsN'?PW_C.under:PW_C.txt);}
 
 // ── Edges bauen ─────────────────────────────────────────────────────────────
