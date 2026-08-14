@@ -445,6 +445,13 @@ def _consensus_block(a, cidx) -> str:
     g = (cidx or {}).get(str(a.get("matchId")))
     if not g or g.get("verdict") == "no_anchor":
         return ""
+    # 14.08.2026 (Lucas): Konsens ist 1X2 (Gesamtsieger). Bei fremdem Geld-Markt (Über/Unter, BTTS, HZ) ist
+    # das ein ANDERER Markt -> keine Zweitmeinung zur Wette, weglassen. Und LIVE sind die Konsens-Quoten teils
+    # vom Vorspiel (stale, near-lock nach Toren) -> nur pre-match zeigen.
+    if a.get("market") != "Match Odds":
+        return ""
+    if bool(g.get("live")) or _is_live(a):
+        return ""
     live = bool(g.get("live"))
     parts = []
     if isinstance(g.get("pinnOdd"), (int, float)):
@@ -570,7 +577,7 @@ def _money_on_leader(m, lead_name) -> bool:
     return bool(ldr) and bool(lead_name) and str(lead_name) == str(ldr)
 
 
-def build_public_message(a) -> str:
+def build_public_message(a, trades=False) -> str:
     """Oeffentliches Format (05.08.2026, Lucas: schoener + informativer): Anpfiff/Live-Status +
     Spielstand, Zufluss-Anteil am Markt, visuelle Geld-Leiste, Quote. Telegram-HTML (b/i, Unicode)."""
     league = _esc(str(a.get("league") or "")[:60])
@@ -588,7 +595,7 @@ def build_public_message(a) -> str:
                   % (_esc(_short_mk(a["market"])), _euro(a["total"]))
                 + "📊 <b>%s</b>  %s %.0f%%%s"
                   % (_esc(a["leadLabel"]), _bar(share), share * 100, odd)
-                + _fuehrt_line(a) + _dir_line(a))
+                + _fuehrt_line(a) + _dir_line(a, ou_fade=trades))
 
     share = a.get("leadShare") or 0.0
     total = a.get("total") or 0.0
@@ -600,7 +607,7 @@ def build_public_message(a) -> str:
               % (_esc(_short_mk(a["market"])), _window_txt(a), _euro(inflow), _euro(total), pct)
             + "📊 <b>%s</b>  %s %.0f%%%s"
               % (_esc(lead), _bar(share), share * 100, odd)
-            + _fuehrt_line(a) + _dir_line(a))
+            + _fuehrt_line(a) + _dir_line(a, ou_fade=trades) + (_draw_inplay_note(a) if trades else ""))
 
 
 def _tg_public(text) -> bool:
@@ -736,13 +743,16 @@ def main():
     # 09.08.2026 (Lucas): Nach Quotensprung (Tor) lief das Geld zur Quote DAVOR — lag die unter der
     # Mindest-Quote, gehoert die Push gar nicht raus (auch Trades). _drop_subthreshold_jump filtert das.
     alerts = _drop_subthreshold_jump(_leader_gate(attach_direction(collect_alerts(prices, hist), direction)))
+    # 14.08.2026 (Lucas): kollabiertes In-Play-Remis (X<2.2) auch aus TRADES raus — eh wertlos
+    # (-31..-79% ROI). Bisher nur Public gefiltert. Andere Draws (>2.2) + Nicht-Draws bleiben (mit Warn-Note).
+    alerts = [a for a in alerts if not _draw_inplay_chase(a)]
     sent = 0
     for a in alerts:
         key = a["scenario"] + ":" + a["matchId"]
         if should_send(seen, key, a["value"]):
             # 09.08.2026 (Lucas): Trades-„Frisches Geld" jetzt im Public-Format (Geld-Leiste + %, auch <80%)
             # PLUS die Zweitmeinung der anderen Quellen. HT bleibt beim kompakten Format.
-            msg = (build_public_message(a) + _consensus_block(a, cidx)) if a["scenario"] == "fresh" else build_message(a)
+            msg = (build_public_message(a, trades=True) + _consensus_block(a, cidx)) if a["scenario"] == "fresh" else build_message(a)
             if send_trades_message(msg):
                 seen[key] = a["value"]     # nur bei Erfolg merken (Preview/Fehler → nächster Lauf retry)
                 sent += 1
