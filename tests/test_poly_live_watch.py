@@ -103,7 +103,7 @@ class TestContestedLive:
     """12.08.2026 (Lucas): umkaempfte Spiele (Gross-Geld auf beiden offenen Seiten) -> gar kein Live-Signal."""
 
     def _m(self, faze_usd, bb_usd):
-        return {"league": "esports", "prices": {"FaZe": 0.84, "BetBoom": 0.30},
+        return {"league": "esports", "prices": {"FaZe": 0.70, "BetBoom": 0.30},   # 14.08.2026: unter 77¢-Deckel
                 "whales": [{"wallet": "0xa", "side": "FaZe", "usd": faze_usd},
                            {"wallet": "0xb", "side": "BetBoom", "usd": bb_usd}]}
 
@@ -126,3 +126,18 @@ class TestContestedLive:
 
     def test_normale_fixture_nicht_umkaempft(self):
         assert W._contested(_live()["lol-a-b"]) is False   # nur A hat >=25K bei gueltigem Preis
+
+
+class TestPriceCeiling77:
+    """14.08.2026 (Lucas): Live-Einstiege ueber 77¢ (Quote < 1.30) = eingepreiste Fuehrung/kurzer
+    Favorit -> reaktiv, raus. Gilt auch fuer eSport (Al-Ettifaq @84¢-Fall)."""
+    def _m(self, price):
+        return {"league": "esports", "prices": {"A": price, "B": round(1 - price, 2)},
+                "whales": [{"wallet": "0xbig", "side": "A", "usd": 60000}]}
+
+    def test_ueber_77_gefiltert(self):
+        assert W.find_alerts({"k": self._m(0.84)}, {}, {}, set(), NOW) == []   # Quote ~1.19
+
+    def test_unter_77_kommt_durch(self):
+        al = W.find_alerts({"k": self._m(0.70)}, {}, {}, set(), NOW)           # Quote ~1.43
+        assert "0xbig" in {a["wallet"] for a in al}
