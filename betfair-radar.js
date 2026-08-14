@@ -679,7 +679,7 @@
     var el = document.getElementById('bfrcat-' + key);
     var ch = document.getElementById('bfrchev-' + key);
     if (el) el.style.display = now ? 'none' : 'block';
-    if (ch) ch.textContent = now ? '\u25B8' : '\u25BE';   // ▸ / ▾
+    if (ch) ch.textContent = now ? '\u203A' : '\u2304';   // ▸ / ▾
   };
 
   function section(matches, title, accent, sub) {
@@ -690,7 +690,7 @@
     var collapsed = !!window._bfrCollapsed[key];
     return '<div style="margin:6px 0 20px">' +
       '<div onclick="_bfrToggleCat(\'' + key + '\')" title="Ein-/Ausklappen" style="display:flex;align-items:baseline;gap:10px;margin:0 0 10px;padding-bottom:7px;border-bottom:2px solid ' + accent + '33;cursor:pointer;user-select:none">' +
-        '<span id="bfrchev-' + key + '" style="font-size:12px;color:' + accent + '">' + (collapsed ? '\u25B8' : '\u25BE') + '</span>' +
+        '<span id="bfrchev-' + key + '" style="font-size:12px;color:' + accent + '">' + (collapsed ? '\u203A' : '\u2304') + '</span>' +
         '<h2 style="margin:0;font-size:16px;color:' + accent + '">' + title + '</h2>' +
         '<span style="font-size:11px;color:' + C.dim + '">' + sub + '</span>' +
         '<span style="margin-left:auto;font-size:12px;color:' + C.mut + '">' + matches.length + ' Spiel' + (matches.length === 1 ? '' : 'e') + '</span>' +
