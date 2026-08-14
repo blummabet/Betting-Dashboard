@@ -12,39 +12,42 @@
     "matchScore": 7.5,
     "picks": [
       {
-        "market": "Heimsieg",
-        "marketKey": "homeWin",
-        "icon": "🏠",
+        "market": "Doppelte Chance: X2",
+        "marketKey": "dcX2",
+        "icon": "🎯",
         "conf": "low",
-        "sc": 0.529,
-        "odds": null,
-        "modelOdds": 3.4,
+        "sc": 0.365,
+        "odds": 5.42,
+        "modelOdds": 5.37,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Arsenal kämpft um den Titel — ein Heimsieg ist Pflicht. Gewinnt 41% der Heimspiele und erzielt Ø 1.8 Tore/Spiel. Der Druck erhöht die Intensität.<br>📊 Elo bestätigt: Elo 2064 vs 1662 (Δ+402)",
+        "reason": "Coventry zeigt starke Auswärtsform (55% Auswärtssieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Coventry geht der Einsatz verloren.",
         "mods": [
-          "<span class=\"mod-chip mod-inj\">🟠 Arsenal 2.8 (Ang1/Abw1)</span>"
+          "<span class=\"mod-chip mod-inj\">🔴 Coventry 4.8 (Ang1/Abw1/MF2)</span>"
         ],
         "saferAlt": null,
         "boldAlt": null
       },
       {
-        "market": "Over 2.5 Tore",
-        "marketKey": "over25",
+        "market": "Beide Teams treffen",
+        "marketKey": "btts",
         "icon": "⚽",
         "conf": "low",
-        "sc": 0.66,
-        "odds": null,
-        "modelOdds": 1.69,
-        "value": null,
+        "sc": 0.309,
+        "odds": 2.4,
+        "modelOdds": 1.78,
+        "value": "hot",
         "oddsIsEst": false,
-        "reason": "Arsenal erzielt Ø 1.8 Tore/Spiel, Coventry Ø 1.2 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Arsenal Ø 2.1, Coventry Ø 0.5). Das Modell erwartet 3.0 Tore: mindestens 3 Treffer sind gut möglich.<br>⚽ Arsenal: V. Gyökeres 14G+1A · Coventry: H. Wright 17G+1A",
+        "reason": "Arsenal (Ø 1.8 Tore/Spiel) und Coventry (Ø 1.2) treffen beide regelmäßig — beide Defensiven sind anfällig und lassen Gegentore zu. Beide Teams werden voraussichtlich treffen.<br>⚽ Arsenal: V. Gyökeres 14G+1A · Coventry: H. Wright 17G+1A",
         "mods": [
           "<span class=\"mod-chip mod-inj\">🟠 Arsenal 2.8 (Ang1/Abw1)</span>",
           "<span class=\"mod-chip mod-inj\">🔴 Coventry 4.8 (Ang1/Abw1/MF2)</span>",
           "<span class=\"mod-chip\" style=\"background:#0d1a2d;color:#79c0ff;border:1px solid #1d4e7a\">📉 Arsenal -10% xG · Coventry -18% xG · Arsenal +7% xGA · Coventry +7% xGA</span>"
         ],
-        "saferAlt": null,
+        "saferAlt": {
+          "market": "Over 1.5 Tore",
+          "estOdds": 1.54
+        },
         "boldAlt": null
       },
       {
@@ -415,10 +418,10 @@
         "conf": "low",
         "sc": 1.002,
         "odds": null,
-        "modelOdds": 3.73,
+        "modelOdds": 3.85,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Brighton ist in Topform (zuletzt 2 Siege) und gewinnt 93% seiner Heimspiele. Das Angriffsspiel (Ø 3.4 Tore/Spiel) trifft auf eine anfällige Aston Villa-Abwehr (kassiert Ø 2.1 Tore/Spiel). · H2H: 2H/6U/10A (18 Duelle)",
+        "reason": "Brighton ist in Topform (zuletzt 2 Siege) und gewinnt 93% seiner Heimspiele. Das Angriffsspiel (Ø 3.4 Tore/Spiel) trifft auf eine anfällige Aston Villa-Abwehr (kassiert Ø 1.8 Tore/Spiel). · H2H: 2H/6U/10A (18 Duelle)",
         "mods": [
           "<span class=\"mod-chip mod-inj\">🟡 Brighton 1.0 (MF1)</span>"
         ],
@@ -432,14 +435,12 @@
         "conf": "low",
         "sc": 0.82,
         "odds": null,
-        "modelOdds": 1.4,
+        "modelOdds": 1.43,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Brighton erzielt Ø 3.4 Tore/Spiel, Aston Villa Ø 2.1 — beide Defensiven sind anfällig und lassen viele Gegentore zu. Das Modell erwartet 4.5 Tore insgesamt: ein Torfestival mit 4+ Treffern ist klar möglich. Historisch Ø 2.94 Tore/Duell.<br>⚽ Brighton: D. Welbeck 13G+1A · Villa: O. Watkins 16G+3A",
+        "reason": "Brighton erzielt Ø 3.4 Tore/Spiel, Aston Villa Ø 2.2 — beide Defensiven sind anfällig und lassen viele Gegentore zu. Das Modell erwartet 4.5 Tore insgesamt: ein Torfestival mit 4+ Treffern ist klar möglich. Historisch Ø 2.94 Tore/Duell.<br>⚽ Brighton: D. Welbeck 13G+1A",
         "mods": [
-          "<span class=\"mod-chip mod-inj\">🟡 Brighton 1.0 (MF1)</span>",
-          "<span class=\"mod-chip mod-inj\">🔴 Aston Villa 4.7 (TW1/Abw1/MF1)</span>",
-          "<span class=\"mod-chip\" style=\"background:#0d1a2d;color:#79c0ff;border:1px solid #1d4e7a\">📉 Aston Villa +16% xGA</span>"
+          "<span class=\"mod-chip mod-inj\">🟡 Brighton 1.0 (MF1)</span>"
         ],
         "saferAlt": null,
         "boldAlt": null
@@ -451,10 +452,10 @@
         "conf": "low",
         "sc": 0.85,
         "odds": null,
-        "modelOdds": 1.15,
+        "modelOdds": 1.16,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Brighton (Ø 3.4 Tore/Spiel) und Aston Villa (Ø 2.1) spielen beide offensiv — ein Treffer schon in der ersten Halbzeit ist sehr wahrscheinlich.",
+        "reason": "Brighton (Ø 3.4 Tore/Spiel) und Aston Villa (Ø 2.2) spielen beide offensiv — ein Treffer schon in der ersten Halbzeit ist sehr wahrscheinlich.",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -584,6 +585,138 @@
         "value": null,
         "oddsIsEst": false,
         "reason": "Fulham (Ø 1.1 Tore/Spiel) und Chelsea (Ø 2.6) spielen beide offensiv — ein Treffer schon in der ersten Halbzeit ist sehr wahrscheinlich.",
+        "mods": [],
+        "saferAlt": null,
+        "boldAlt": null
+      }
+    ]
+  },
+  {
+    "league": "ENG",
+    "leagueName": "Premier League",
+    "leagueFlag": "🏴󠁧󠁢󠁥󠁮󠁧󠁿",
+    "roundsLeft": 38,
+    "home": "Crystal Palace",
+    "away": "Manchester City",
+    "date": "28.08.2026",
+    "dateIso": "2026-08-28",
+    "eventId": 1557381,
+    "matchScore": 6.2,
+    "picks": [
+      {
+        "market": "Heimsieg",
+        "marketKey": "homeWin",
+        "icon": "🏠",
+        "conf": "low",
+        "sc": 0.681,
+        "odds": null,
+        "modelOdds": 4.46,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Crystal Palace ist in Topform (zuletzt 2 Siege) und gewinnt 67% seiner Heimspiele. Das Angriffsspiel (Ø 1.5 Tore/Spiel) trifft auf eine anfällige Manchester City-Abwehr (kassiert Ø 1.2 Tore/Spiel). · H2H: 3H/5U/12A (20 Duelle)",
+        "mods": [
+          "<span class=\"mod-chip mod-inj\">🟡 Crystal Palace 1.6 (Ang1)</span>"
+        ],
+        "saferAlt": null,
+        "boldAlt": null
+      },
+      {
+        "market": "Over 2.5 Tore",
+        "marketKey": "over25",
+        "icon": "⚽",
+        "conf": "low",
+        "sc": 0.81,
+        "odds": null,
+        "modelOdds": 1.52,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Crystal Palace erzielt Ø 1.5 Tore/Spiel, Manchester City Ø 1.8 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Crystal Palace Ø 1.5, Manchester City Ø 1.2). Das Modell erwartet 3.3 Tore: mindestens 3 Treffer sind gut möglich.<br>⚽ Palace: J. Mateta 12G · City: E. Haaland 27G+8A",
+        "mods": [
+          "<span class=\"mod-chip mod-inj\">🟡 Crystal Palace 1.6 (Ang1)</span>",
+          "<span class=\"mod-chip mod-inj\">🔴 Manchester City 4.4 (Abw2/MF2)</span>",
+          "<span class=\"mod-chip\" style=\"background:#0d1a2d;color:#79c0ff;border:1px solid #1d4e7a\">📉 Crystal Palace -10% xG · Manchester City -8% xG · Manchester City +14% xGA</span>",
+          "<span class=\"mod-chip mod-fat\">😴 Manchester City 5T Pause (-6% xG)</span>",
+          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Manchester City Abstieg quasi sicher (-8% xG)</span>"
+        ],
+        "saferAlt": null,
+        "boldAlt": null
+      },
+      {
+        "market": "Über 10.5 Ecken",
+        "marketKey": "corners_over:10.5",
+        "icon": "🚩",
+        "conf": "medium",
+        "sc": 0.64,
+        "odds": 1.72,
+        "modelOdds": 2.44,
+        "value": null,
+        "oddsIsEst": true,
+        "reason": "Beide Teams spielen offensiv — ca. 11 Ecken werden in diesem Spiel erwartet.",
+        "mods": [],
+        "saferAlt": null,
+        "boldAlt": null
+      }
+    ]
+  },
+  {
+    "league": "GER",
+    "leagueName": "Bundesliga",
+    "leagueFlag": "🇩🇪",
+    "roundsLeft": 34,
+    "home": "Bayern München",
+    "away": "VfB Stuttgart",
+    "date": "28.08.2026",
+    "dateIso": "2026-08-28",
+    "eventId": 1575140,
+    "matchScore": 7.5,
+    "picks": [
+      {
+        "market": "Heimsieg",
+        "marketKey": "homeWin",
+        "icon": "🏠",
+        "conf": "low",
+        "sc": 1.471,
+        "odds": null,
+        "modelOdds": 1.74,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Bayern München ist in Topform (zuletzt 2 Siege) und gewinnt 89% seiner Heimspiele. Das Angriffsspiel (Ø 2.5 Tore/Spiel) trifft auf eine anfällige VfB Stuttgart-Abwehr (kassiert Ø 1.1 Tore/Spiel). · H2H: 16H/2U/2A (20 Duelle)",
+        "mods": [
+          "<span class=\"mod-chip mod-inj\">🟡 Bayern München 1.2 (Abw1)</span>"
+        ],
+        "saferAlt": null,
+        "boldAlt": null
+      },
+      {
+        "market": "Over 2.5 Tore",
+        "marketKey": "over25",
+        "icon": "⚽",
+        "conf": "low",
+        "sc": 0.83,
+        "odds": null,
+        "modelOdds": 1.09,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Bayern München erzielt Ø 2.5 Tore/Spiel, VfB Stuttgart Ø 4.7 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Bayern München Ø 1.1, VfB Stuttgart Ø 1.1). Das Modell erwartet 4.6 Tore: mindestens 3 Treffer sind gut möglich.<br>⚽ München: H. Kane 36G+5A · Stuttgart: D. Undav 19G+7A",
+        "mods": [
+          "<span class=\"mod-chip mod-inj\">🟡 Bayern München 1.2 (Abw1)</span>",
+          "<span class=\"mod-chip mod-inj\">🟠 VfB Stuttgart 2.5 (TW1)</span>",
+          "<span class=\"mod-chip\" style=\"background:#0d1a2d;color:#79c0ff;border:1px solid #1d4e7a\">📉 Bayern München +7% xGA · VfB Stuttgart +9% xGA</span>"
+        ],
+        "saferAlt": null,
+        "boldAlt": null
+      },
+      {
+        "market": "1. HZ: Over 0.5 Tore",
+        "marketKey": "ht_over05",
+        "icon": "⏱️",
+        "conf": "low",
+        "sc": 0.85,
+        "odds": null,
+        "modelOdds": 1.14,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Bayern München (Ø 2.5 Tore/Spiel) und VfB Stuttgart (Ø 4.7) spielen beide offensiv — ein Treffer schon in der ersten Halbzeit ist sehr wahrscheinlich.",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -1209,6 +1342,75 @@
     ]
   },
   {
+    "league": "ITA",
+    "leagueName": "Serie A",
+    "leagueFlag": "🇮🇹",
+    "roundsLeft": 38,
+    "home": "AC Milan",
+    "away": "Venezia",
+    "date": "28.08.2026",
+    "dateIso": "2026-08-28",
+    "eventId": 1550097,
+    "matchScore": 7.5,
+    "picks": [
+      {
+        "market": "Doppelte Chance: 1X",
+        "marketKey": "dc1X",
+        "icon": "🎯",
+        "conf": "low",
+        "sc": 0.228,
+        "odds": null,
+        "modelOdds": 3.04,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "AC Milan ist Favorit (28% Heimsieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von AC Milan geht der Einsatz verloren.",
+        "mods": [
+          "<span class=\"mod-chip mod-inj\">🟠 AC Milan 2.5 (TW1)</span>",
+          "<span class=\"mod-chip mod-fat\">😴 AC Milan 5T Pause (-4% xG)</span>"
+        ],
+        "saferAlt": null,
+        "boldAlt": null
+      },
+      {
+        "market": "Over 3.5 Tore",
+        "marketKey": "over35",
+        "icon": "🔥",
+        "conf": "low",
+        "sc": 0.748,
+        "odds": null,
+        "modelOdds": 1.74,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "AC Milan erzielt Ø 1.0 Tore/Spiel, Venezia Ø 3.5 — beide Defensiven sind anfällig und lassen viele Gegentore zu. Das Modell erwartet 4.3 Tore insgesamt: ein Torfestival mit 4+ Treffern ist klar möglich.<br>⚽ Milan: S. Chukwueze 6G+5A · Venezia: J. Yeboah 10G+9A",
+        "mods": [
+          "<span class=\"mod-chip mod-inj\">🟠 AC Milan 2.5 (TW1)</span>",
+          "<span class=\"mod-chip mod-inj\">🟡 Venezia 1.2 (Abw1)</span>",
+          "<span class=\"mod-chip\" style=\"background:#0d1a2d;color:#79c0ff;border:1px solid #1d4e7a\">📉 AC Milan +9% xGA · Venezia +7% xGA</span>",
+          "<span class=\"mod-chip mod-fat\">😴 AC Milan 5T Pause (-4% xG)</span>",
+          "<span class=\"mod-chip mod-fat\">😴 Venezia 5T Pause (-6% xG)</span>",
+          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Venezia Abstieg quasi sicher (-8% xG)</span>"
+        ],
+        "saferAlt": null,
+        "boldAlt": null
+      },
+      {
+        "market": "1. HZ: Over 0.5 Tore",
+        "marketKey": "ht_over05",
+        "icon": "⏱️",
+        "conf": "low",
+        "sc": 0.85,
+        "odds": null,
+        "modelOdds": 1.17,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "AC Milan (Ø 1.0 Tore/Spiel) und Venezia (Ø 3.5) spielen beide offensiv — ein Treffer schon in der ersten Halbzeit ist sehr wahrscheinlich.",
+        "mods": [],
+        "saferAlt": null,
+        "boldAlt": null
+      }
+    ]
+  },
+  {
     "league": "ESP",
     "leagueName": "La Liga",
     "leagueFlag": "🇪🇸",
@@ -1241,13 +1443,13 @@
         "market": "Under 2.5 Tore",
         "marketKey": "under25",
         "icon": "🛡️",
-        "conf": "medium",
-        "sc": 0.63,
+        "conf": "high",
+        "sc": 0.79,
         "odds": 1.34,
-        "modelOdds": 1.35,
+        "modelOdds": 1.23,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Das Modell erwartet nur 2.0 Tore insgesamt — Alaves (Ø 1.4 Tore/Spiel) und Getafe (Ø 0.8) sind beide offensiv zu schwach für viele Treffer.<br>🛡️ Alaves: Sivera (TW) · Getafe: David Soria (TW · 7.2 Rtg)",
+        "reason": "Das Modell erwartet nur 2.0 Tore insgesamt — Alaves (Ø 1.4 Tore/Spiel) und Getafe (Ø 0.8) sind beide offensiv zu schwach für viele Treffer. Historisch 90% der 10 Duelle unter 2.5 Tore (Ø 1.5 Tore/Spiel).<br>🛡️ Alaves: Sivera (TW) · Getafe: David Soria (TW · 7.2 Rtg)",
         "mods": [
           "<span class=\"mod-chip mod-inj\">🟡 Alaves 1.6 (Ang1)</span>",
           "<span class=\"mod-chip\" style=\"background:#0d1a2d;color:#79c0ff;border:1px solid #1d4e7a\">📉 Alaves -10% xG</span>"
@@ -1352,9 +1554,9 @@
         "marketKey": "awayWin",
         "icon": "✈️",
         "conf": "low",
-        "sc": 0.75,
-        "odds": 2.28,
-        "modelOdds": 2.21,
+        "sc": 0.743,
+        "odds": 2.21,
+        "modelOdds": 2.16,
         "value": null,
         "oddsIsEst": false,
         "reason": "Villarreal ist in Topform (zuletzt 2 Siege) und gewinnt 60% seiner Auswärtsspiele. Das Angriffsspiel (Ø 1.7 Tore/Spiel) trifft auf eine anfällige Racing Santander-Abwehr (kassiert Ø 1.8 Tore/Spiel). · H2H: 2H/2U/1A (5 Duelle)",
@@ -1363,7 +1565,7 @@
         ],
         "saferAlt": {
           "market": "AH -0.25 Auswärts",
-          "estOdds": 2
+          "estOdds": 1.95
         },
         "boldAlt": null
       },
@@ -1371,13 +1573,13 @@
         "market": "Over 2.25 Tore",
         "marketKey": "over_2_25_tore",
         "icon": "⚽",
-        "conf": "medium",
-        "sc": 0.48,
+        "conf": "low",
+        "sc": 0.44,
         "odds": 1.59,
         "modelOdds": 1.56,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Racing Santander erzielt Ø 1.0 Tore/Spiel, Villarreal Ø 1.7 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Racing Santander Ø 1.8, Villarreal Ø 1.1). Das Modell erwartet 2.8 Tore: mit 2.8 erwarteten Toren ist die Marke von 2.5 Toren erreichbar.<br>⚽ Santander: Andrés Martín 23G+9A · Villarreal: G. Mikautadze 13G+6A",
+        "reason": "Racing Santander erzielt Ø 1.0 Tore/Spiel, Villarreal Ø 1.7 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Racing Santander Ø 1.8, Villarreal Ø 1.1). Das Modell erwartet 2.8 Tore: mit 2.8 erwarteten Toren ist die Marke von 2.5 Toren erreichbar. Historisch 40% der 5 Duelle über 2.5 Tore (Ø 2.4 Tore/Spiel).<br>⚽ Santander: Andrés Martín 23G+9A · Villarreal: G. Mikautadze 13G+6A",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -1409,102 +1611,56 @@
     "date": "16.08.2026",
     "dateIso": "2026-08-16",
     "eventId": 1570338,
-    "matchScore": 7.1,
+    "matchScore": 6.9,
     "picks": [
       {
-        "market": "Doppelte Chance: X2",
-        "marketKey": "dcX2",
+        "market": "Doppelte Chance: 1X",
+        "marketKey": "dc1X",
         "icon": "🎯",
         "conf": "medium",
-        "sc": 0.445,
-        "odds": 1.83,
-        "modelOdds": 1.83,
+        "sc": 0.45,
+        "odds": 1.34,
+        "modelOdds": 1.34,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Levante zeigt starke Auswärtsform (55% Auswärtssieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Levante geht der Einsatz verloren.",
-        "mods": [
-          "<span class=\"mod-chip mod-inj\">🟠 Levante 3.0 (MF3)</span>"
-        ],
-        "saferAlt": null,
-        "boldAlt": null
-      },
-      {
-        "market": "Over 2 Tore",
-        "marketKey": "over_2_tore",
-        "icon": "⚽",
-        "conf": "high",
-        "sc": 0.67,
-        "odds": 1.68,
-        "modelOdds": 1.69,
-        "value": null,
-        "oddsIsEst": false,
-        "reason": "Espanyol erzielt Ø 2.2 Tore/Spiel, Levante Ø 1.3 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Espanyol Ø 1.6, Levante Ø 1.0). Das Modell erwartet 3.1 Tore: mindestens 3 Treffer sind gut möglich.<br>⚽ Espanyol: Roberto Fernández 7G+3A · Levante: Iván Romero 7G+1A",
+        "reason": "Espanyol ist Favorit (61% Heimsieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Espanyol geht der Einsatz verloren.",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
       },
       {
-        "market": "Über 10.5 Ecken",
-        "marketKey": "corners_over:10.5",
+        "market": "Beide Teams treffen",
+        "marketKey": "btts",
+        "icon": "⚽",
+        "conf": "high",
+        "sc": 0.76,
+        "odds": 2.01,
+        "modelOdds": 1.47,
+        "value": "hot",
+        "oddsIsEst": false,
+        "reason": "Espanyol (Ø 2.3 Tore/Spiel) und Levante (Ø 1.3) treffen beide regelmäßig — beide Defensiven sind anfällig und lassen Gegentore zu. Beide Teams werden voraussichtlich treffen. Historisch 70% der 10 Duelle mit Toren auf beiden Seiten.<br>⚽ Espanyol: Roberto Fernández 7G+3A · Levante: Iván Romero 7G+1A",
+        "mods": [
+          "<span class=\"mod-chip mod-inj\">🟠 Levante 3.0 (MF3)</span>",
+          "<span class=\"mod-chip\" style=\"background:#0d1a2d;color:#79c0ff;border:1px solid #1d4e7a\">📉 Levante -12% xG</span>"
+        ],
+        "saferAlt": {
+          "market": "Over 1.5 Tore",
+          "estOdds": 1.37
+        },
+        "boldAlt": null
+      },
+      {
+        "market": "Über 11.5 Ecken",
+        "marketKey": "corners_over:11.5",
         "icon": "🚩",
-        "conf": "low",
+        "conf": "high",
         "sc": 0.8,
-        "odds": 2.2,
-        "modelOdds": 1.99,
+        "odds": 1.73,
+        "modelOdds": 2.6,
         "value": null,
         "oddsIsEst": false,
         "reason": "Beide Teams spielen offensiv — ca. 12 Ecken werden in diesem Spiel erwartet.",
         "mods": [],
-        "saferAlt": null,
-        "boldAlt": null
-      }
-    ]
-  },
-  {
-    "league": "ESP",
-    "leagueName": "La Liga",
-    "leagueFlag": "🇪🇸",
-    "roundsLeft": 38,
-    "home": "Celta Vigo",
-    "away": "Osasuna",
-    "date": "16.08.2026",
-    "dateIso": "2026-08-16",
-    "eventId": 1570336,
-    "matchScore": 7.4,
-    "picks": [
-      {
-        "market": "Heimsieg",
-        "marketKey": "homeWin",
-        "icon": "🏠",
-        "conf": "low",
-        "sc": 0.525,
-        "odds": null,
-        "modelOdds": 2.58,
-        "value": null,
-        "oddsIsEst": false,
-        "reason": "Celta Vigo gewinnt 72% seiner Heimspiele und erzielt dabei Ø 1.8 Tore/Spiel. Der Gegner kassiert Ø 1.2 Tore/Spiel. · H2H: 4H/2U/4A (10 Duelle)",
-        "mods": [
-          "<span class=\"mod-chip mod-inj\">🔴 Celta Vigo 4.0 (Ang1/Abw2)</span>"
-        ],
-        "saferAlt": null,
-        "boldAlt": null
-      },
-      {
-        "market": "Over 2.5 Tore",
-        "marketKey": "over25",
-        "icon": "⚽",
-        "conf": "low",
-        "sc": 0.62,
-        "odds": null,
-        "modelOdds": 2,
-        "value": null,
-        "oddsIsEst": false,
-        "reason": "Celta Vigo erzielt Ø 1.8 Tore/Spiel, Osasuna Ø 1.2 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Celta Vigo Ø 1.4, Osasuna Ø 1.2). Das Modell erwartet 2.9 Tore: mindestens 3 Treffer sind gut möglich. Historisch 50% der 10 Duelle über 2.5 Tore (Ø 2.4 Tore/Spiel).<br>⚽ Vigo: Borja Iglesias 14G+2A · Osasuna: A. Budimir 17G",
-        "mods": [
-          "<span class=\"mod-chip mod-inj\">🔴 Celta Vigo 4.0 (Ang1/Abw2)</span>",
-          "<span class=\"mod-chip mod-inj\">🟠 Osasuna 2.6 (Ang1/MF1)</span>",
-          "<span class=\"mod-chip\" style=\"background:#0d1a2d;color:#79c0ff;border:1px solid #1d4e7a\">📉 Celta Vigo -10% xG · Osasuna -14% xG · Celta Vigo +14% xGA</span>"
-        ],
         "saferAlt": null,
         "boldAlt": null
       }
@@ -1549,7 +1705,7 @@
         "modelOdds": 1.44,
         "value": "value",
         "oddsIsEst": false,
-        "reason": "Das Modell erwartet nur 2.1 Tore insgesamt — Deportivo La Coruna (Ø 0.8 Tore/Spiel) und Elche (Ø 1.4) sind beide offensiv zu schwach für viele Treffer.<br>🛡️ Coruna: Miguel Loureiro (VER) · Elche: D. Affengruber (VER)",
+        "reason": "Das Modell erwartet nur 2.1 Tore insgesamt — Deportivo La Coruna (Ø 0.8 Tore/Spiel) und Elche (Ø 1.4) sind beide offensiv zu schwach für viele Treffer. Historisch 50% der 8 Duelle unter 2.5 Tore (Ø 2.3 Tore/Spiel).<br>🛡️ Coruna: Miguel Loureiro (VER) · Elche: D. Affengruber (VER)",
         "mods": [
           "<span class=\"mod-chip mod-inj\">🟠 Elche 2.6 (Ang1/MF1)</span>",
           "<span class=\"mod-chip\" style=\"background:#0d1a2d;color:#79c0ff;border:1px solid #1d4e7a\">📉 Elche -14% xG</span>"
@@ -1592,11 +1748,11 @@
         "icon": "🔥",
         "conf": "high",
         "sc": 0.82,
-        "odds": 1.94,
+        "odds": 1.95,
         "modelOdds": 1.4,
         "value": "hot",
         "oddsIsEst": false,
-        "reason": "Atletico Madrid erzielt Ø 2.0 Tore/Spiel, Malaga Ø 2.4 — beide Defensiven sind anfällig und lassen viele Gegentore zu. Das Modell erwartet 4.3 Tore insgesamt: ein Torfestival mit 4+ Treffern ist klar möglich. Historisch Ø 2.3 Tore/Duell.<br>⚽ Malaga: Chupe 24G+5A",
+        "reason": "Atletico Madrid erzielt Ø 2.0 Tore/Spiel, Malaga Ø 2.4 — beide Defensiven sind anfällig und lassen viele Gegentore zu. Das Modell erwartet 4.3 Tore insgesamt: ein Torfestival mit 4+ Treffern ist klar möglich. Historisch Ø 2.19 Tore/Duell.<br>⚽ Malaga: Chupe 24G+5A",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -1636,8 +1792,8 @@
         "icon": "🎯",
         "conf": "medium",
         "sc": 0.265,
-        "odds": 1.81,
-        "modelOdds": 1.72,
+        "odds": 1.82,
+        "modelOdds": 1.77,
         "value": null,
         "oddsIsEst": false,
         "reason": "Alaves zeigt starke Auswärtsform (55% Auswärtssieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Alaves geht der Einsatz verloren.",
@@ -1653,12 +1809,12 @@
         "marketKey": "over25",
         "icon": "⚽",
         "conf": "low",
-        "sc": 0.46,
+        "sc": 0.3,
         "odds": 2.62,
-        "modelOdds": 2.29,
+        "modelOdds": 3.08,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Rayo Vallecano erzielt Ø 1.2 Tore/Spiel, Alaves Ø 1.3 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Rayo Vallecano Ø 2.2, Alaves Ø 0.5). Das Modell erwartet 2.7 Tore: mit 2.7 erwarteten Toren ist die Marke von 2.5 Toren erreichbar.<br>⚽ Vallecano: Jorge de Frutos 10G+1A · Alaves: Toni Martínez 14G+3A",
+        "reason": "Rayo Vallecano erzielt Ø 1.2 Tore/Spiel, Alaves Ø 1.3 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Rayo Vallecano Ø 2.2, Alaves Ø 0.5). Das Modell erwartet 2.7 Tore: mit 2.7 erwarteten Toren ist die Marke von 2.5 Toren erreichbar. Historisch 10% der 10 Duelle über 2.5 Tore (Ø 1.6 Tore/Spiel).<br>⚽ Vallecano: Jorge de Frutos 10G+1A · Alaves: Toni Martínez 14G+3A",
         "mods": [
           "<span class=\"mod-chip mod-inj\">🟡 Alaves 1.6 (Ang1)</span>",
           "<span class=\"mod-chip\" style=\"background:#0d1a2d;color:#79c0ff;border:1px solid #1d4e7a\">📉 Alaves -10% xG</span>",
@@ -1690,30 +1846,33 @@
         "marketKey": "homeWin",
         "icon": "🏠",
         "conf": "low",
-        "sc": 0.91,
-        "odds": null,
-        "modelOdds": 2.53,
+        "sc": 0.879,
+        "odds": 2.05,
+        "modelOdds": 2.19,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Real Sociedad ist auswärts unter Abstiegsdruck — das wirkt sich oft negativ auf die Leistung aus. Real Betis gewinnt 86% seiner Heimspiele und kann diesen Vorteil nutzen. · H2H: 7H/6U/6A (19 Duelle)",
+        "reason": "Real Sociedad ist auswärts unter Abstiegsdruck — das wirkt sich oft negativ auf die Leistung aus. Real Betis gewinnt 86% seiner Heimspiele und kann diesen Vorteil nutzen. · H2H: 3H/4U/3A (10 Duelle)",
         "mods": [
           "<span class=\"mod-chip mod-inj\">🟡 Real Betis 1.0 (MF1)</span>",
           "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Real Betis Abstieg quasi sicher (-8% xG)</span>"
         ],
-        "saferAlt": null,
+        "saferAlt": {
+          "market": "AH -0.25 Heim",
+          "estOdds": 1.95
+        },
         "boldAlt": null
       },
       {
-        "market": "Over 2.5 Tore",
-        "marketKey": "over25",
+        "market": "Beide Teams treffen",
+        "marketKey": "btts",
         "icon": "⚽",
         "conf": "low",
-        "sc": 0.68,
-        "odds": null,
-        "modelOdds": 2.05,
+        "sc": 0.78,
+        "odds": 1.85,
+        "modelOdds": 2.26,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Real Betis erzielt Ø 1.6 Tore/Spiel, Real Sociedad Ø 1.3 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Real Betis Ø 0.7, Real Sociedad Ø 1.6). Das Modell erwartet 2.8 Tore: mit 2.8 erwarteten Toren ist die Marke von 2.5 Toren erreichbar.<br>⚽ Betis: A. Ezzalzouli 10G+8A · Sociedad: Mikel Oyarzabal 15G+4A",
+        "reason": "Real Betis (Ø 1.6 Tore/Spiel) und Real Sociedad (Ø 1.3) treffen beide regelmäßig — beide Defensiven sind anfällig und lassen Gegentore zu. Beide Teams werden voraussichtlich treffen. Historisch 20% der 10 Duelle mit Toren auf beiden Seiten.<br>⚽ Betis: A. Ezzalzouli 10G+8A · Sociedad: Mikel Oyarzabal 15G+4A",
         "mods": [
           "<span class=\"mod-chip mod-inj\">🟡 Real Betis 1.0 (MF1)</span>",
           "<span class=\"mod-chip mod-inj\">🟡 Real Sociedad 1.0 (MF1)</span>",
@@ -1857,10 +2016,10 @@
         "conf": "low",
         "sc": 1.308,
         "odds": null,
-        "modelOdds": 1.53,
+        "modelOdds": 1.54,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Real Madrid ist in Topform (zuletzt 2 Siege) und gewinnt 69% seiner Auswärtsspiele. Das Angriffsspiel (Ø 2.0 Tore/Spiel) trifft auf eine anfällige Espanyol-Abwehr (kassiert Ø 1.6 Tore/Spiel). · H2H: 3H/0U/17A (20 Duelle)<br>📊 Elo bestätigt: Elo 1630 vs 1923 (Δ-293)",
+        "reason": "Real Madrid ist in Topform (zuletzt 2 Siege) und gewinnt 69% seiner Auswärtsspiele. Das Angriffsspiel (Ø 2.0 Tore/Spiel) trifft auf eine anfällige Espanyol-Abwehr (kassiert Ø 1.5 Tore/Spiel). · H2H: 3H/0U/17A (20 Duelle)<br>📊 Elo bestätigt: Elo 1630 vs 1923 (Δ-293)",
         "mods": [
           "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Real Madrid Abstieg quasi sicher (-8% xG)</span>"
         ],
@@ -1877,10 +2036,8 @@
         "modelOdds": 1.45,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Espanyol erzielt Ø 2.2 Tore/Spiel, Real Madrid Ø 2.0 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Espanyol Ø 1.6, Real Madrid Ø 1.1). Das Modell erwartet 3.5 Tore: mindestens 3 Treffer sind gut möglich.<br>⚽ Espanyol: Roberto Fernández 7G+3A",
+        "reason": "Espanyol erzielt Ø 2.3 Tore/Spiel, Real Madrid Ø 2.0 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Espanyol Ø 1.5, Real Madrid Ø 1.1). Das Modell erwartet 3.5 Tore: mindestens 3 Treffer sind gut möglich.<br>⚽ Espanyol: Roberto Fernández 7G+3A",
         "mods": [
-          "<span class=\"mod-chip mod-inj\">🟠 Espanyol 2.2 (Abw1/MF1)</span>",
-          "<span class=\"mod-chip\" style=\"background:#0d1a2d;color:#79c0ff;border:1px solid #1d4e7a\">📉 Espanyol +7% xGA</span>",
           "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Real Madrid Abstieg quasi sicher (-8% xG)</span>"
         ],
         "saferAlt": null,
@@ -1896,7 +2053,7 @@
         "modelOdds": 1.27,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Espanyol (Ø 2.2 Tore/Spiel) und Real Madrid (Ø 2.0) spielen beide offensiv — ein Treffer schon in der ersten Halbzeit ist sehr wahrscheinlich.",
+        "reason": "Espanyol (Ø 2.3 Tore/Spiel) und Real Madrid (Ø 2.0) spielen beide offensiv — ein Treffer schon in der ersten Halbzeit ist sehr wahrscheinlich.",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -2335,6 +2492,59 @@
     "leagueName": "La Liga",
     "leagueFlag": "🇪🇸",
     "roundsLeft": 38,
+    "home": "Celta Vigo",
+    "away": "Osasuna",
+    "date": "27.08.2026",
+    "dateIso": "2026-08-27",
+    "eventId": 1570336,
+    "matchScore": 7.4,
+    "picks": [
+      {
+        "market": "Heimsieg",
+        "marketKey": "homeWin",
+        "icon": "🏠",
+        "conf": "low",
+        "sc": 0.504,
+        "odds": null,
+        "modelOdds": 2.48,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Celta Vigo gewinnt 72% seiner Heimspiele und erzielt dabei Ø 1.7 Tore/Spiel. Der Gegner kassiert Ø 1.3 Tore/Spiel. · H2H: 8H/5U/7A (20 Duelle)",
+        "mods": [
+          "<span class=\"mod-chip mod-inj\">🔴 Celta Vigo 4.0 (Ang1/Abw2)</span>",
+          "<span class=\"mod-chip mod-fat\">😴 Celta Vigo 5T Pause (-4% xG)</span>"
+        ],
+        "saferAlt": null,
+        "boldAlt": null
+      },
+      {
+        "market": "Over 2.5 Tore",
+        "marketKey": "over25",
+        "icon": "⚽",
+        "conf": "low",
+        "sc": 0.62,
+        "odds": null,
+        "modelOdds": 2.09,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Celta Vigo erzielt Ø 1.7 Tore/Spiel, Osasuna Ø 0.9 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Celta Vigo Ø 1.4, Osasuna Ø 1.3). Das Modell erwartet 2.9 Tore: mindestens 3 Treffer sind gut möglich.<br>⚽ Vigo: Borja Iglesias 14G+2A · Osasuna: A. Budimir 17G",
+        "mods": [
+          "<span class=\"mod-chip mod-inj\">🔴 Celta Vigo 4.0 (Ang1/Abw2)</span>",
+          "<span class=\"mod-chip mod-inj\">🟠 Osasuna 2.6 (Ang1/MF1)</span>",
+          "<span class=\"mod-chip\" style=\"background:#0d1a2d;color:#79c0ff;border:1px solid #1d4e7a\">📉 Celta Vigo -10% xG · Osasuna -14% xG · Celta Vigo +14% xGA</span>",
+          "<span class=\"mod-chip mod-fat\">😴 Celta Vigo 5T Pause (-4% xG)</span>",
+          "<span class=\"mod-chip mod-fat\">😴 Osasuna 3T Pause (-22% xG)</span>"
+        ],
+        "saferAlt": null,
+        "boldAlt": null
+      }
+    ]
+  },
+  {
+    "league": "ESP",
+    "leagueName": "La Liga",
+    "leagueFlag": "🇪🇸",
+    "roundsLeft": 38,
     "home": "Barcelona",
     "away": "Athletic Club",
     "date": "27.08.2026",
@@ -2395,6 +2605,105 @@
     ]
   },
   {
+    "league": "ESP",
+    "leagueName": "La Liga",
+    "leagueFlag": "🇪🇸",
+    "roundsLeft": 38,
+    "home": "Racing Santander",
+    "away": "Elche",
+    "date": "28.08.2026",
+    "dateIso": "2026-08-28",
+    "eventId": 1570359,
+    "matchScore": 6.9,
+    "picks": [
+      {
+        "market": "Doppelte Chance: X2",
+        "marketKey": "dcX2",
+        "icon": "🎯",
+        "conf": "low",
+        "sc": 0.307,
+        "odds": null,
+        "modelOdds": 1.36,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Elche zeigt starke Auswärtsform (49% Auswärtssieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Elche geht der Einsatz verloren.",
+        "mods": [
+          "<span class=\"mod-chip mod-inj\">🟠 Elche 2.6 (Ang1/MF1)</span>",
+          "<span class=\"mod-chip mod-fat\">😴 Elche 5T Pause (-6% xG)</span>"
+        ],
+        "saferAlt": null,
+        "boldAlt": null
+      },
+      {
+        "market": "Over 2.5 Tore",
+        "marketKey": "over25",
+        "icon": "⚽",
+        "conf": "low",
+        "sc": 0.66,
+        "odds": null,
+        "modelOdds": 2.02,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Racing Santander erzielt Ø 1.0 Tore/Spiel, Elche Ø 1.3 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Racing Santander Ø 1.8, Elche Ø 1.2). Das Modell erwartet 2.8 Tore: mindestens 3 Treffer sind gut möglich.<br>⚽ Santander: Andrés Martín 23G+9A · Elche: Á. Rodríguez 7G+5A",
+        "mods": [
+          "<span class=\"mod-chip mod-inj\">🟠 Elche 2.6 (Ang1/MF1)</span>",
+          "<span class=\"mod-chip\" style=\"background:#0d1a2d;color:#79c0ff;border:1px solid #1d4e7a\">📉 Elche -14% xG</span>",
+          "<span class=\"mod-chip mod-fat\">😴 Racing Santander 5T Pause (-4% xG)</span>",
+          "<span class=\"mod-chip mod-fat\">😴 Elche 5T Pause (-6% xG)</span>"
+        ],
+        "saferAlt": null,
+        "boldAlt": null
+      }
+    ]
+  },
+  {
+    "league": "ESP",
+    "leagueName": "La Liga",
+    "leagueFlag": "🇪🇸",
+    "roundsLeft": 38,
+    "home": "Alaves",
+    "away": "Villarreal",
+    "date": "28.08.2026",
+    "dateIso": "2026-08-28",
+    "eventId": 1570353,
+    "matchScore": 7.5,
+    "picks": [
+      {
+        "market": "Auswärtssieg",
+        "marketKey": "awayWin",
+        "icon": "✈️",
+        "conf": "low",
+        "sc": 0.989,
+        "odds": null,
+        "modelOdds": 2.79,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Villarreal ist in Topform (zuletzt 2 Siege) und gewinnt 60% seiner Auswärtsspiele. Das Angriffsspiel (Ø 1.6 Tore/Spiel) trifft auf eine anfällige Alaves-Abwehr (kassiert Ø 0.5 Tore/Spiel). · H2H: 8H/3U/7A (18 Duelle)",
+        "mods": [
+          "<span class=\"mod-chip mod-fat\">😴 Villarreal 5T Pause (-6% xG)</span>",
+          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Villarreal Abstieg quasi sicher (-8% xG)</span>"
+        ],
+        "saferAlt": null,
+        "boldAlt": null
+      },
+      {
+        "market": "1. HZ: Under 0.5 Tore",
+        "marketKey": "1_hz_under_0_5_tore",
+        "icon": "⏱️",
+        "conf": "low",
+        "sc": 0.12,
+        "odds": null,
+        "modelOdds": 2.74,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Taktisch vorsichtiger Spielbeginn erwartet — beide Teams tasten sich ab. Das Modell erwartet insgesamt nur 2.4 Tore: ein torloser Start in die erste Halbzeit ist gut möglich.",
+        "mods": [],
+        "saferAlt": null,
+        "boldAlt": null
+      }
+    ]
+  },
+  {
     "league": "FRA",
     "leagueName": "Ligue 1",
     "leagueFlag": "🇫🇷",
@@ -2410,13 +2719,13 @@
         "market": "Heimsieg",
         "marketKey": "homeWin",
         "icon": "🏠",
-        "conf": "low",
-        "sc": 1.217,
-        "odds": null,
-        "modelOdds": 2.1,
+        "conf": "medium",
+        "sc": 1.167,
+        "odds": 1.75,
+        "modelOdds": 1.71,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Marseille ist in Topform (zuletzt 2 Siege) und gewinnt 80% seiner Heimspiele. Das Angriffsspiel (Ø 1.7 Tore/Spiel) trifft auf eine anfällige Strasbourg-Abwehr (kassiert Ø 4.2 Tore/Spiel). · H2H: 8H/9U/2A (19 Duelle)",
+        "reason": "Marseille ist in Topform (zuletzt 2 Siege) und gewinnt 80% seiner Heimspiele. Das Angriffsspiel (Ø 1.7 Tore/Spiel) trifft auf eine anfällige Strasbourg-Abwehr (kassiert Ø 4.2 Tore/Spiel). · H2H: 3H/6U/1A (10 Duelle)",
         "mods": [
           "<span class=\"mod-chip mod-inj\">🟡 Marseille 1.2 (Abw1)</span>"
         ],
@@ -2424,22 +2733,17 @@
         "boldAlt": null
       },
       {
-        "market": "Over 3.5 Tore",
-        "marketKey": "over35",
+        "market": "Over 2.75 Tore",
+        "marketKey": "over_2_75_tore",
         "icon": "🔥",
-        "conf": "low",
+        "conf": "high",
         "sc": 0.82,
-        "odds": null,
-        "modelOdds": 1.71,
-        "value": null,
+        "odds": 1.66,
+        "modelOdds": 1.4,
+        "value": "value",
         "oddsIsEst": false,
-        "reason": "Marseille erzielt Ø 1.7, Strasbourg Ø 0.8 Tore/Spiel — die Torerwartung kommt vor allem aus defensiver Anfälligkeit (Gegentore: Marseille Ø 1.8, Strasbourg Ø 4.2). Das Modell erwartet 4.2 Tore insgesamt: ein Ergebnis mit 4+ Treffern ist trotz moderater Angriffe möglich. Historisch Ø 2.84 Tore/Duell.<br>⚽ Marseille: M. Greenwood 16G+7A · Strasbourg: J. Panichelli 16G+1A",
-        "mods": [
-          "<span class=\"mod-chip mod-inj\">🟡 Marseille 1.2 (Abw1)</span>",
-          "<span class=\"mod-chip mod-inj\">🟡 Strasbourg 1.6 (Ang1)</span>",
-          "<span class=\"mod-chip\" style=\"background:#0d1a2d;color:#79c0ff;border:1px solid #1d4e7a\">📉 Strasbourg -10% xG · Marseille +7% xGA</span>",
-          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Strasbourg Abstieg quasi sicher (-8% xG)</span>"
-        ],
+        "reason": "Marseille erzielt Ø 1.7, Strasbourg Ø 0.8 Tore/Spiel — die Torerwartung kommt vor allem aus defensiver Anfälligkeit (Gegentore: Marseille Ø 1.8, Strasbourg Ø 4.2). Das Modell erwartet 4.2 Tore insgesamt: ein Ergebnis mit 4+ Treffern ist trotz moderater Angriffe möglich. Historisch Ø 2.8 Tore/Duell.<br>⚽ Marseille: M. Greenwood 16G+7A · Strasbourg: J. Panichelli 16G+1A",
+        "mods": [],
         "saferAlt": null,
         "boldAlt": null
       },
@@ -2904,7 +3208,6 @@
         "oddsIsEst": false,
         "reason": "Rennes ist auswärts unter Abstiegsdruck — das wirkt sich oft negativ auf die Leistung aus. Paris Saint Germain gewinnt 54% seiner Heimspiele und kann diesen Vorteil nutzen. · H2H: 10H/2U/7A (19 Duelle)",
         "mods": [
-          "<span class=\"mod-chip mod-inj\">🟡 Paris Saint Germain 1.0 (MF1)</span>",
           "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Paris Saint Germain Abstieg quasi sicher (-8% xG)</span>"
         ],
         "saferAlt": null,
@@ -2915,14 +3218,13 @@
         "marketKey": "over25",
         "icon": "⚽",
         "conf": "low",
-        "sc": 0.677,
+        "sc": 0.706,
         "odds": null,
-        "modelOdds": 1.53,
+        "modelOdds": 1.52,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Paris Saint Germain erzielt Ø 0.9 Tore/Spiel, Rennes Ø 1.8 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Paris Saint Germain Ø 1.8, Rennes Ø 2.5). Das Modell erwartet 3.5 Tore: mindestens 3 Treffer sind gut möglich.<br>⚽ Germain: B. Barcola 11G+1A · Rennes: E. Lepaul 20G+5A",
+        "reason": "Paris Saint Germain erzielt Ø 0.9 Tore/Spiel, Rennes Ø 1.8 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Paris Saint Germain Ø 1.8, Rennes Ø 2.5). Das Modell erwartet 3.5 Tore: mindestens 3 Treffer sind gut möglich.<br>⚽ Rennes: E. Lepaul 20G+5A",
         "mods": [
-          "<span class=\"mod-chip mod-inj\">🟡 Paris Saint Germain 1.0 (MF1)</span>",
           "<span class=\"mod-chip mod-inj\">🟠 Rennes 2.2 (Abw1/MF1)</span>",
           "<span class=\"mod-chip\" style=\"background:#0d1a2d;color:#79c0ff;border:1px solid #1d4e7a\">📉 Rennes +7% xGA</span>",
           "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Paris Saint Germain Abstieg quasi sicher (-8% xG)</span>",
@@ -2938,10 +3240,78 @@
         "conf": "low",
         "sc": 0.85,
         "odds": null,
-        "modelOdds": 1.27,
+        "modelOdds": 1.26,
         "value": null,
         "oddsIsEst": false,
         "reason": "Paris Saint Germain (Ø 0.9 Tore/Spiel) und Rennes (Ø 1.8) spielen beide offensiv — ein Treffer schon in der ersten Halbzeit ist sehr wahrscheinlich.",
+        "mods": [],
+        "saferAlt": null,
+        "boldAlt": null
+      }
+    ]
+  },
+  {
+    "league": "FRA",
+    "leagueName": "Ligue 1",
+    "leagueFlag": "🇫🇷",
+    "roundsLeft": 34,
+    "home": "Lille",
+    "away": "Paris Saint Germain",
+    "date": "28.08.2026",
+    "dateIso": "2026-08-28",
+    "eventId": 1552746,
+    "matchScore": 7.1,
+    "picks": [
+      {
+        "market": "Heimsieg",
+        "marketKey": "homeWin",
+        "icon": "🏠",
+        "conf": "low",
+        "sc": 0.529,
+        "odds": null,
+        "modelOdds": 3.48,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Paris Saint Germain ist auswärts unter Abstiegsdruck — das wirkt sich oft negativ auf die Leistung aus. Lille gewinnt 70% seiner Heimspiele und kann diesen Vorteil nutzen. · H2H: 3H/3U/14A (20 Duelle)",
+        "mods": [
+          "<span class=\"mod-chip mod-inj\">🟠 Lille 2.2 (Abw1/MF1)</span>",
+          "<span class=\"mod-chip mod-fat\">😴 Lille 5T Pause (-4% xG)</span>"
+        ],
+        "saferAlt": null,
+        "boldAlt": null
+      },
+      {
+        "market": "Over 2.5 Tore",
+        "marketKey": "over25",
+        "icon": "⚽",
+        "conf": "low",
+        "sc": 0.81,
+        "odds": null,
+        "modelOdds": 1.43,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Lille erzielt Ø 2.8 Tore/Spiel, Paris Saint Germain Ø 0.9 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Lille Ø 2.0, Paris Saint Germain Ø 1.8). Das Modell erwartet 3.8 Tore: mindestens 3 Treffer sind gut möglich.<br>⚽ Lille: M. Fernandez-Pardo 8G+5A",
+        "mods": [
+          "<span class=\"mod-chip mod-inj\">🟠 Lille 2.2 (Abw1/MF1)</span>",
+          "<span class=\"mod-chip\" style=\"background:#0d1a2d;color:#79c0ff;border:1px solid #1d4e7a\">📉 Lille +7% xGA</span>",
+          "<span class=\"mod-chip mod-fat\">😴 Lille 5T Pause (-4% xG)</span>",
+          "<span class=\"mod-chip mod-fat\">😴 Paris Saint Germain 5T Pause (-6% xG)</span>",
+          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Paris Saint Germain Abstieg quasi sicher (-8% xG)</span>"
+        ],
+        "saferAlt": null,
+        "boldAlt": null
+      },
+      {
+        "market": "1. HZ: Over 0.5 Tore",
+        "marketKey": "ht_over05",
+        "icon": "⏱️",
+        "conf": "low",
+        "sc": 0.85,
+        "odds": null,
+        "modelOdds": 1.23,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Lille (Ø 2.8 Tore/Spiel) und Paris Saint Germain (Ø 0.9) spielen beide offensiv — ein Treffer schon in der ersten Halbzeit ist sehr wahrscheinlich.",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -3151,12 +3521,12 @@
         "marketKey": "dcX2",
         "icon": "🎯",
         "conf": "low",
-        "sc": 0.245,
+        "sc": 0.208,
         "odds": null,
-        "modelOdds": 1.49,
+        "modelOdds": 1.63,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Austria Vienna zeigt starke Auswärtsform (30% Auswärtssieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Austria Vienna geht der Einsatz verloren.",
+        "reason": "Austria Vienna zeigt starke Auswärtsform (23% Auswärtssieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Austria Vienna geht der Einsatz verloren.",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -3168,10 +3538,10 @@
         "conf": "low",
         "sc": 0.75,
         "odds": null,
-        "modelOdds": 1.78,
+        "modelOdds": 1.73,
         "value": null,
         "oddsIsEst": false,
-        "reason": "TSV Hartberg erzielt Ø 1.3 Tore/Spiel, Austria Vienna Ø 1.9 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: TSV Hartberg Ø 1.1, Austria Vienna Ø 1.2). Das Modell erwartet 2.8 Tore: mit 2.8 erwarteten Toren ist die Marke von 2.5 Toren erreichbar.",
+        "reason": "TSV Hartberg erzielt Ø 1.3 Tore/Spiel, Austria Vienna Ø 1.7 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: TSV Hartberg Ø 1.1, Austria Vienna Ø 1.6). Das Modell erwartet 2.8 Tore: mit 2.8 erwarteten Toren ist die Marke von 2.5 Toren erreichbar.",
         "mods": [
           "<span class=\"mod-chip mod-inj\">🟡 TSV Hartberg 1.2 (Abw1)</span>",
           "<span class=\"mod-chip\" style=\"background:#0d1a2d;color:#79c0ff;border:1px solid #1d4e7a\">📉 TSV Hartberg +7% xGA</span>"
@@ -3264,11 +3634,12 @@
         "conf": "low",
         "sc": 1.832,
         "odds": null,
-        "modelOdds": 2.54,
+        "modelOdds": 2.55,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Rapid Vienna ist in Topform (zuletzt 6 Siege) und gewinnt 93% seiner Heimspiele. Das Angriffsspiel (Ø 2.6 Tore/Spiel) trifft auf eine anfällige Grazer AK-Abwehr (kassiert Ø 2.3 Tore/Spiel). · H2H: 1H/2U/1A (4 Duelle)<br>📊 Heimstatistik (Saison): 100% Siege · 100% Clean Sheets.",
+        "reason": "Rapid Vienna ist in Topform (zuletzt 6 Siege) und gewinnt 93% seiner Heimspiele. Das Angriffsspiel (Ø 2.5 Tore/Spiel) trifft auf eine anfällige Grazer AK-Abwehr (kassiert Ø 2.3 Tore/Spiel). · H2H: 1H/2U/1A (4 Duelle)<br>📊 Heimstatistik (Saison): 100% Siege · 100% Clean Sheets.",
         "mods": [
+          "<span class=\"mod-chip mod-inj\">🟡 Rapid Vienna 1.0 (MF1)</span>",
           "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Rapid Vienna nahezu gesichert (-8% xG)</span>"
         ],
         "saferAlt": null,
@@ -3280,11 +3651,11 @@
         "icon": "🏠",
         "conf": "low",
         "sc": 0.78,
-        "odds": 1.32,
+        "odds": 1.35,
         "modelOdds": 1.49,
         "value": null,
         "oddsIsEst": true,
-        "reason": "Rapid Vienna trifft im Schnitt 2.6 Mal pro Spiel — der Gegner lässt 2.3 Tore zu. Das Modell erwartet 2.4 Heimtore: mindestens 2 Treffer für Rapid Vienna sind gut möglich.<br>⚽ Vienna: B. Bolla 1G+3A",
+        "reason": "Rapid Vienna trifft im Schnitt 2.5 Mal pro Spiel — der Gegner lässt 2.3 Tore zu. Das Modell erwartet 2.4 Heimtore: mindestens 2 Treffer für Rapid Vienna sind gut möglich.<br>⚽ Vienna: B. Bolla 1G+3A",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -3296,10 +3667,10 @@
         "conf": "low",
         "sc": 0.85,
         "odds": null,
-        "modelOdds": 1.26,
+        "modelOdds": 1.27,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Rapid Vienna (Ø 2.6 Tore/Spiel) und Grazer AK (Ø 1.4) spielen beide offensiv — ein Treffer schon in der ersten Halbzeit ist sehr wahrscheinlich.",
+        "reason": "Rapid Vienna (Ø 2.5 Tore/Spiel) und Grazer AK (Ø 1.4) spielen beide offensiv — ein Treffer schon in der ersten Halbzeit ist sehr wahrscheinlich.",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -3519,12 +3890,12 @@
         "marketKey": "dc1X",
         "icon": "🎯",
         "conf": "low",
-        "sc": 0.33,
+        "sc": 0.293,
         "odds": null,
-        "modelOdds": 1.48,
+        "modelOdds": 1.61,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Austria Vienna ist Favorit (30% Heimsieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Austria Vienna geht der Einsatz verloren.",
+        "reason": "Austria Vienna ist Favorit (23% Heimsieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Austria Vienna geht der Einsatz verloren.",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -3536,10 +3907,10 @@
         "conf": "low",
         "sc": 0.92,
         "odds": null,
-        "modelOdds": 1.53,
+        "modelOdds": 1.5,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Austria Vienna erzielt Ø 1.9 Tore/Spiel, WSG Wattens Ø 1.7 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Austria Vienna Ø 1.2, WSG Wattens Ø 1.6). Das Modell erwartet 3.3 Tore: mindestens 3 Treffer sind gut möglich.",
+        "reason": "Austria Vienna erzielt Ø 1.7 Tore/Spiel, WSG Wattens Ø 1.7 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Austria Vienna Ø 1.6, WSG Wattens Ø 1.6). Das Modell erwartet 3.3 Tore: mindestens 3 Treffer sind gut möglich.",
         "mods": [
           "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ WSG Wattens Abstieg quasi sicher (-8% xG)</span>"
         ],
@@ -3550,13 +3921,13 @@
         "market": "Über 10.5 Ecken",
         "marketKey": "corners_over:10.5",
         "icon": "🚩",
-        "conf": "high",
-        "sc": 0.74,
-        "odds": 1.65,
-        "modelOdds": 2.05,
+        "conf": "medium",
+        "sc": 0.58,
+        "odds": 1.83,
+        "modelOdds": 2.31,
         "value": null,
         "oddsIsEst": true,
-        "reason": "Beide Teams spielen offensiv — ca. 11 Ecken werden in diesem Spiel erwartet.",
+        "reason": "Beide Teams spielen offensiv — ca. 11 Ecken werden in diesem Spiel erwartet. Beide Defensiven sind anfällig, was viele Angriffe und damit mehr Ecken begünstigt.",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -3582,11 +3953,12 @@
         "conf": "low",
         "sc": 1.768,
         "odds": null,
-        "modelOdds": 3.62,
+        "modelOdds": 3.66,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Rapid Vienna ist in Topform (zuletzt 6 Siege) und gewinnt 100% seiner Auswärtsspiele. Das Angriffsspiel (Ø 1.7 Tore/Spiel) trifft auf eine anfällige Red Bull Salzburg-Abwehr (kassiert Ø 0.0 Tore/Spiel). · H2H: 11H/4U/5A (20 Duelle)<br>📊 Auswärtsstatistik (Saison): 100% Siege · 0% Clean Sheets.",
+        "reason": "Rapid Vienna ist in Topform (zuletzt 6 Siege) und gewinnt 100% seiner Auswärtsspiele. Das Angriffsspiel (Ø 1.6 Tore/Spiel) trifft auf eine anfällige Red Bull Salzburg-Abwehr (kassiert Ø 0.0 Tore/Spiel). · H2H: 11H/4U/5A (20 Duelle)<br>📊 Auswärtsstatistik (Saison): 100% Siege · 0% Clean Sheets.",
         "mods": [
+          "<span class=\"mod-chip mod-inj\">🟡 Rapid Vienna 1.0 (MF1)</span>",
           "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Rapid Vienna nahezu gesichert (-8% xG)</span>"
         ],
         "saferAlt": null,
@@ -3599,13 +3971,90 @@
         "conf": "low",
         "sc": 0.67,
         "odds": null,
-        "modelOdds": 1.49,
+        "modelOdds": 1.47,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Das Modell erwartet nur 2.0 Tore insgesamt — Red Bull Salzburg (Ø 0.9 Tore/Spiel) und Rapid Vienna (Ø 1.7) sind beide offensiv zu schwach für viele Treffer.<br>📊 Saison-Statistiken: Red Bull Salzburg 100% Clean Sheets zuhause · Rapid Vienna trifft in 0% der Auswärtsspiele nicht.<br>🛡️ Salzburg: K. Boma (VER · 7.7 Rtg) · Vienna: B. Bolla (VER · 7.5 Rtg)",
+        "reason": "Das Modell erwartet nur 2.0 Tore insgesamt — Red Bull Salzburg (Ø 0.9 Tore/Spiel) und Rapid Vienna (Ø 1.6) sind beide offensiv zu schwach für viele Treffer.<br>📊 Saison-Statistiken: Red Bull Salzburg 100% Clean Sheets zuhause · Rapid Vienna trifft in 0% der Auswärtsspiele nicht.<br>🛡️ Salzburg: K. Boma (VER · 7.7 Rtg) · Vienna: B. Bolla (VER · 7.5 Rtg)",
         "mods": [
+          "<span class=\"mod-chip mod-inj\">🟡 Rapid Vienna 1.0 (MF1)</span>",
           "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Rapid Vienna nahezu gesichert (-8% xG)</span>"
         ],
+        "saferAlt": null,
+        "boldAlt": null
+      },
+      {
+        "market": "Unter 8.5 Ecken",
+        "marketKey": "corners_under:8.5",
+        "icon": "🚩",
+        "conf": "medium",
+        "sc": 0.6,
+        "odds": 1.4,
+        "modelOdds": 1.46,
+        "value": null,
+        "oddsIsEst": true,
+        "reason": "Taktisch defensives Spiel mit erwarteten ~7 Ecken.",
+        "mods": [],
+        "saferAlt": null,
+        "boldAlt": null
+      }
+    ]
+  },
+  {
+    "league": "AUT",
+    "leagueName": "Österreich BL",
+    "leagueFlag": "🇦🇹",
+    "roundsLeft": 30,
+    "home": "Austria Lustenau",
+    "away": "WSG Wattens",
+    "date": "28.08.2026",
+    "dateIso": "2026-08-28",
+    "eventId": 1561918,
+    "matchScore": 7.5,
+    "picks": [
+      {
+        "market": "Doppelte Chance: 1X",
+        "marketKey": "dc1X",
+        "icon": "🎯",
+        "conf": "low",
+        "sc": 0.28,
+        "odds": null,
+        "modelOdds": 1.21,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Austria Lustenau ist Favorit (20% Heimsieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Austria Lustenau geht der Einsatz verloren.",
+        "mods": [
+          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Austria Lustenau Abstieg quasi sicher (-8% xG)</span>"
+        ],
+        "saferAlt": null,
+        "boldAlt": null
+      },
+      {
+        "market": "Austria Lustenau über 1.5 Tore",
+        "marketKey": "team_goals_home_over:1.5",
+        "icon": "🏠",
+        "conf": "low",
+        "sc": 0.66,
+        "odds": 1.53,
+        "modelOdds": 1.76,
+        "value": null,
+        "oddsIsEst": true,
+        "reason": "Austria Lustenau trifft im Schnitt 0.9 Mal pro Spiel — der Gegner lässt 3.2 Tore zu. Das Modell erwartet 2.0 Heimtore: mindestens 2 Treffer für Austria Lustenau sind gut möglich.",
+        "mods": [],
+        "saferAlt": null,
+        "boldAlt": null
+      },
+      {
+        "market": "Unter 6.5 Ecken",
+        "marketKey": "corners_under:6.5",
+        "icon": "🚩",
+        "conf": "low",
+        "sc": 0.72,
+        "odds": 1.74,
+        "modelOdds": 1.61,
+        "value": null,
+        "oddsIsEst": true,
+        "reason": "Taktisch defensives Spiel mit erwarteten ~6 Ecken.",
+        "mods": [],
         "saferAlt": null,
         "boldAlt": null
       }
@@ -4075,12 +4524,12 @@
         "marketKey": "homeWin",
         "icon": "🏠",
         "conf": "low",
-        "sc": 1.753,
+        "sc": 1.013,
         "odds": null,
-        "modelOdds": 1.56,
+        "modelOdds": 1.59,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Ajax ist in Topform (zuletzt 6 Siege) und gewinnt 93% seiner Heimspiele. Das Angriffsspiel (Ø 3.0 Tore/Spiel) trifft auf eine anfällige Heerenveen-Abwehr (kassiert Ø 2.1 Tore/Spiel). · H2H: 16H/3U/1A (20 Duelle)",
+        "reason": "Ajax kämpft um den Titel — ein Heimsieg ist Pflicht. Gewinnt 93% der Heimspiele und erzielt Ø 2.7 Tore/Spiel. Der Druck erhöht die Intensität. · H2H: 16H/3U/1A (20 Duelle)",
         "mods": [
           "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Ajax nahezu gesichert (-8% xG)</span>"
         ],
@@ -4097,7 +4546,7 @@
         "modelOdds": 1.11,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Ajax erzielt Ø 3.0 Tore/Spiel, Heerenveen Ø 3.3 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Ajax Ø 0.8, Heerenveen Ø 2.1). Das Modell erwartet 4.7 Tore: mindestens 3 Treffer sind gut möglich.<br>⚽ Ajax: S. Berghuis 1G+3A",
+        "reason": "Ajax erzielt Ø 2.7 Tore/Spiel, Heerenveen Ø 3.3 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Ajax Ø 1.0, Heerenveen Ø 2.1). Das Modell erwartet 4.7 Tore: mindestens 3 Treffer sind gut möglich.<br>⚽ Ajax: S. Berghuis 1G+3A",
         "mods": [
           "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Ajax nahezu gesichert (-8% xG)</span>"
         ],
@@ -4111,10 +4560,10 @@
         "conf": "low",
         "sc": 0.85,
         "odds": null,
-        "modelOdds": 1.14,
+        "modelOdds": 1.15,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Ajax (Ø 3.0 Tore/Spiel) und Heerenveen (Ø 3.3) spielen beide offensiv — ein Treffer schon in der ersten Halbzeit ist sehr wahrscheinlich.",
+        "reason": "Ajax (Ø 2.7 Tore/Spiel) und Heerenveen (Ø 3.3) spielen beide offensiv — ein Treffer schon in der ersten Halbzeit ist sehr wahrscheinlich.",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -4549,6 +4998,69 @@
     ]
   },
   {
+    "league": "NED",
+    "leagueName": "Eredivisie",
+    "leagueFlag": "🇳🇱",
+    "roundsLeft": 33,
+    "home": "Groningen",
+    "away": "Fortuna Sittard",
+    "date": "28.08.2026",
+    "dateIso": "2026-08-28",
+    "eventId": 1552144,
+    "matchScore": 7.5,
+    "picks": [
+      {
+        "market": "Heimsieg",
+        "marketKey": "homeWin",
+        "icon": "🏠",
+        "conf": "low",
+        "sc": 1.097,
+        "odds": null,
+        "modelOdds": 2.2,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Groningen ist in Topform (zuletzt 2 Siege) und gewinnt 80% seiner Heimspiele. Das Angriffsspiel (Ø 1.8 Tore/Spiel) trifft auf eine anfällige Fortuna Sittard-Abwehr (kassiert Ø 2.0 Tore/Spiel). · H2H: 7H/1U/6A (14 Duelle)<br>📊 Heimstatistik (Saison): 100% Siege · 0% Clean Sheets.",
+        "mods": [
+          "<span class=\"mod-chip mod-fat\">😴 Groningen 5T Pause (-4% xG)</span>"
+        ],
+        "saferAlt": null,
+        "boldAlt": null
+      },
+      {
+        "market": "Over 2.5 Tore",
+        "marketKey": "over25",
+        "icon": "⚽",
+        "conf": "low",
+        "sc": 0.8,
+        "odds": null,
+        "modelOdds": 1.5,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Groningen erzielt Ø 1.8 Tore/Spiel, Fortuna Sittard Ø 2.0 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Groningen Ø 1.1, Fortuna Sittard Ø 2.0). Das Modell erwartet 3.5 Tore: mindestens 3 Treffer sind gut möglich.",
+        "mods": [
+          "<span class=\"mod-chip mod-fat\">😴 Groningen 5T Pause (-4% xG)</span>"
+        ],
+        "saferAlt": null,
+        "boldAlt": null
+      },
+      {
+        "market": "1. HZ: Over 0.5 Tore",
+        "marketKey": "ht_over05",
+        "icon": "⏱️",
+        "conf": "low",
+        "sc": 0.85,
+        "odds": null,
+        "modelOdds": 1.27,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Groningen (Ø 1.8 Tore/Spiel) und Fortuna Sittard (Ø 2.0) spielen beide offensiv — ein Treffer schon in der ersten Halbzeit ist sehr wahrscheinlich.",
+        "mods": [],
+        "saferAlt": null,
+        "boldAlt": null
+      }
+    ]
+  },
+  {
     "league": "POR",
     "leagueName": "Primeira Liga",
     "leagueFlag": "🇵🇹",
@@ -4969,12 +5481,12 @@
         "marketKey": "awayWin",
         "icon": "✈️",
         "conf": "low",
-        "sc": 0.751,
+        "sc": 0.636,
         "odds": null,
-        "modelOdds": 2,
+        "modelOdds": 2.04,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Casa Pia steckt im Abstiegskampf und ist defensiv anfällig (kassiert Ø 2.3 Tore/Spiel). Benfica mit 60% Auswärtssieg-Rate kann diesen Vorteil nutzen. · H2H: 1H/3U/4A (8 Duelle)<br>📊 Elo bestätigt: Elo 1428 vs 1824 (Δ-396)",
+        "reason": "Casa Pia steckt im Abstiegskampf und ist defensiv anfällig (kassiert Ø 2.3 Tore/Spiel). Benfica mit 50% Auswärtssieg-Rate kann diesen Vorteil nutzen. · H2H: 1H/3U/4A (8 Duelle)<br>📊 Elo bestätigt: Elo 1428 vs 1824 (Δ-396)",
         "mods": [
           "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Benfica Abstieg quasi sicher (-8% xG)</span>"
         ],
@@ -4988,10 +5500,10 @@
         "conf": "low",
         "sc": 0.88,
         "odds": null,
-        "modelOdds": 2.02,
+        "modelOdds": 2,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Casa Pia erzielt Ø 1.0 Tore/Spiel, Benfica Ø 3.0 — beide Defensiven sind anfällig und lassen viele Gegentore zu. Das Modell erwartet 3.9 Tore insgesamt: ein Torfestival mit 4+ Treffern ist klar möglich. Historisch Ø 2.5 Tore/Duell.",
+        "reason": "Casa Pia erzielt Ø 1.0 Tore/Spiel, Benfica Ø 2.8 — beide Defensiven sind anfällig und lassen viele Gegentore zu. Das Modell erwartet 3.9 Tore insgesamt: ein Torfestival mit 4+ Treffern ist klar möglich. Historisch Ø 2.5 Tore/Duell.",
         "mods": [
           "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Casa Pia Abstieg quasi sicher (-8% xG)</span>",
           "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Benfica Abstieg quasi sicher (-8% xG)</span>"
@@ -5006,10 +5518,10 @@
         "conf": "low",
         "sc": 0.85,
         "odds": null,
-        "modelOdds": 1.24,
+        "modelOdds": 1.23,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Casa Pia (Ø 1.0 Tore/Spiel) und Benfica (Ø 3.0) spielen beide offensiv — ein Treffer schon in der ersten Halbzeit ist sehr wahrscheinlich.",
+        "reason": "Casa Pia (Ø 1.0 Tore/Spiel) und Benfica (Ø 2.8) spielen beide offensiv — ein Treffer schon in der ersten Halbzeit ist sehr wahrscheinlich.",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -5312,6 +5824,69 @@
     ]
   },
   {
+    "league": "POR",
+    "leagueName": "Primeira Liga",
+    "leagueFlag": "🇵🇹",
+    "roundsLeft": 33,
+    "home": "Rio Ave",
+    "away": "Sporting CP",
+    "date": "28.08.2026",
+    "dateIso": "2026-08-28",
+    "eventId": 1575481,
+    "matchScore": 7.5,
+    "picks": [
+      {
+        "market": "Doppelte Chance: 1X",
+        "marketKey": "dc1X",
+        "icon": "🎯",
+        "conf": "low",
+        "sc": 0.444,
+        "odds": null,
+        "modelOdds": 2.55,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Rio Ave ist Favorit (80% Heimsieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Rio Ave geht der Einsatz verloren.",
+        "mods": [
+          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Rio Ave Abstieg quasi sicher (-8% xG)</span>"
+        ],
+        "saferAlt": null,
+        "boldAlt": null
+      },
+      {
+        "market": "Over 2.5 Tore",
+        "marketKey": "over25",
+        "icon": "⚽",
+        "conf": "low",
+        "sc": 0.81,
+        "odds": null,
+        "modelOdds": 1.38,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Rio Ave erzielt Ø 1.7 Tore/Spiel, Sporting CP Ø 3.5 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Rio Ave Ø 1.1, Sporting CP Ø 0.8). Das Modell erwartet 3.8 Tore: mindestens 3 Treffer sind gut möglich.",
+        "mods": [
+          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Rio Ave Abstieg quasi sicher (-8% xG)</span>"
+        ],
+        "saferAlt": null,
+        "boldAlt": null
+      },
+      {
+        "market": "1. HZ: Over 0.5 Tore",
+        "marketKey": "ht_over05",
+        "icon": "⏱️",
+        "conf": "low",
+        "sc": 0.85,
+        "odds": null,
+        "modelOdds": 1.25,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Rio Ave (Ø 1.7 Tore/Spiel) und Sporting CP (Ø 3.5) spielen beide offensiv — ein Treffer schon in der ersten Halbzeit ist sehr wahrscheinlich.",
+        "mods": [],
+        "saferAlt": null,
+        "boldAlt": null
+      }
+    ]
+  },
+  {
     "league": "SCO",
     "leagueName": "Scottish Prem",
     "leagueFlag": "🏴󠁧󠁢󠁳󠁣󠁴󠁿",
@@ -5324,16 +5899,16 @@
     "matchScore": 7.5,
     "picks": [
       {
-        "market": "Heimsieg",
-        "marketKey": "homeWin",
-        "icon": "🏠",
+        "market": "Doppelte Chance: 1X",
+        "marketKey": "dc1X",
+        "icon": "🎯",
         "conf": "low",
-        "sc": 0.538,
+        "sc": 0.321,
         "odds": null,
-        "modelOdds": 1.91,
+        "modelOdds": 1.52,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Kilmarnock ist auswärts unter Abstiegsdruck — das wirkt sich oft negativ auf die Leistung aus. Hibernian gewinnt 30% seiner Heimspiele und kann diesen Vorteil nutzen. · H2H: 12H/6U/2A (20 Duelle)<br>📊 Heimstatistik (Saison): 0% Siege · 0% Clean Sheets.",
+        "reason": "Hibernian ist Favorit (25% Heimsieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Hibernian geht der Einsatz verloren.",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -5386,16 +5961,16 @@
     "matchScore": 7.5,
     "picks": [
       {
-        "market": "Doppelte Chance: 1X",
-        "marketKey": "dc1X",
-        "icon": "🎯",
+        "market": "Heimsieg",
+        "marketKey": "homeWin",
+        "icon": "🏠",
         "conf": "low",
-        "sc": 0.272,
+        "sc": 0.64,
         "odds": null,
-        "modelOdds": 1.72,
+        "modelOdds": 2.59,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Motherwell ist Favorit (27% Heimsieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Motherwell geht der Einsatz verloren.",
+        "reason": "Motherwell kämpft um den Titel — ein Heimsieg ist Pflicht. Gewinnt 35% der Heimspiele und erzielt Ø 1.6 Tore/Spiel. Der Druck erhöht die Intensität. · H2H: 8H/3U/9A (20 Duelle)<br>📊 Heimstatistik (Saison): 0% Siege · 100% Clean Sheets.",
         "mods": [
           "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Motherwell nahezu gesichert (-8% xG)</span>"
         ],
@@ -5403,16 +5978,16 @@
         "boldAlt": null
       },
       {
-        "market": "Over 2.5 Tore",
-        "marketKey": "over25",
-        "icon": "⚽",
+        "market": "Beide Teams treffen: Nein",
+        "marketKey": "noBtts",
+        "icon": "🔒",
         "conf": "low",
-        "sc": 0.57,
-        "odds": null,
-        "modelOdds": 1.81,
+        "sc": 0.49,
+        "odds": 2.82,
+        "modelOdds": 1.59,
         "value": null,
-        "oddsIsEst": false,
-        "reason": "Motherwell erzielt Ø 1.7 Tore/Spiel, Aberdeen Ø 1.9 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Motherwell Ø 1.1, Aberdeen Ø 0.9). Das Modell erwartet 2.9 Tore: mindestens 3 Treffer sind gut möglich.",
+        "oddsIsEst": true,
+        "reason": "Motherwell ist offensiv sehr schwach (Ø 1.6 Tore/Spiel) — ein Treffer ist für dieses Team schon eine Herausforderung. Wahrscheinlich bleibt eines der beiden Teams ohne Tor.<br>📊 Saison-Stats: Motherwell hält 100% Clean Sheets zuhause · Aberdeen trifft in 100% der Auswärtsspiele nicht.<br>🛡️ Motherwell: A. Paulsen (TW · 7.5 Rtg) · Aberdeen: D. Happe (VER · 7.8 Rtg)",
         "mods": [
           "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Motherwell nahezu gesichert (-8% xG)</span>",
           "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Aberdeen Abstieg quasi sicher (-8% xG)</span>"
@@ -5426,8 +6001,8 @@
         "icon": "🚩",
         "conf": "low",
         "sc": 0.64,
-        "odds": 1.81,
-        "modelOdds": 2.28,
+        "odds": 1.95,
+        "modelOdds": 2.48,
         "value": null,
         "oddsIsEst": true,
         "reason": "Beide Teams spielen offensiv — ca. 11 Ecken werden in diesem Spiel erwartet.",
@@ -5574,12 +6149,12 @@
         "marketKey": "dcX2",
         "icon": "🎯",
         "conf": "low",
-        "sc": 0.151,
+        "sc": 0.164,
         "odds": null,
-        "modelOdds": 1.96,
+        "modelOdds": 1.69,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Heart Of Midlothian zeigt starke Auswärtsform (15% Auswärtssieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Heart Of Midlothian geht der Einsatz verloren.",
+        "reason": "Heart Of Midlothian zeigt starke Auswärtsform (18% Auswärtssieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Heart Of Midlothian geht der Einsatz verloren.",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -5590,8 +6165,8 @@
         "icon": "🔒",
         "conf": "low",
         "sc": 0.38,
-        "odds": 1.42,
-        "modelOdds": 1.94,
+        "odds": 1.45,
+        "modelOdds": 1.85,
         "value": null,
         "oddsIsEst": true,
         "reason": "Falkirk ist offensiv sehr schwach (Ø 0.7 Tore/Spiel) — ein Treffer ist für dieses Team schon eine Herausforderung. Wahrscheinlich bleibt eines der beiden Teams ohne Tor.<br>📊 Saison-Stats: Falkirk hält 0% Clean Sheets zuhause · Heart Of Midlothian trifft in 0% der Auswärtsspiele nicht.<br>🛡️ Falkirk: L. Henderson (VER · 7.3 Rtg) · Midlothian: O. McEntee (VER · 7.8 Rtg)",
@@ -5607,7 +6182,7 @@
         "icon": "🚩",
         "conf": "high",
         "sc": 0.72,
-        "odds": 1.64,
+        "odds": 1.66,
         "modelOdds": 1.61,
         "value": null,
         "oddsIsEst": true,
@@ -5674,14 +6249,14 @@
     "date": "14.08.2026",
     "dateIso": "2026-08-14",
     "eventId": 1584370,
-    "matchScore": 6.7,
+    "matchScore": 7.5,
     "picks": [
       {
         "market": "Auswärtssieg",
         "marketKey": "awayWin",
         "icon": "✈️",
         "conf": "low",
-        "sc": 0.781,
+        "sc": 0.941,
         "odds": null,
         "modelOdds": 1.79,
         "value": null,
@@ -5698,7 +6273,7 @@
         "marketKey": "over25",
         "icon": "⚽",
         "conf": "low",
-        "sc": 0.66,
+        "sc": 0.56,
         "odds": null,
         "modelOdds": 1.71,
         "value": null,
@@ -5738,57 +6313,34 @@
     "date": "15.08.2026",
     "dateIso": "2026-08-15",
     "eventId": 1584374,
-    "matchScore": 7.5,
+    "matchScore": 7.2,
     "picks": [
       {
         "market": "Doppelte Chance: X2",
         "marketKey": "dcX2",
         "icon": "🎯",
         "conf": "low",
-        "sc": 0.48,
+        "sc": 0.4,
         "odds": null,
-        "modelOdds": 1.25,
+        "modelOdds": 1.26,
         "value": null,
         "oddsIsEst": false,
         "reason": "Rizespor zeigt starke Auswärtsform (50% Auswärtssieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Rizespor geht der Einsatz verloren.",
-        "mods": [
-          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Rizespor Abstieg quasi sicher (-8% xG)</span>"
-        ],
+        "mods": [],
         "saferAlt": null,
         "boldAlt": null
       },
       {
-        "market": "Beide Teams treffen",
-        "marketKey": "btts",
-        "icon": "⚽",
+        "market": "1. HZ: Under 0.5 Tore",
+        "marketKey": "1_hz_under_0_5_tore",
+        "icon": "⏱️",
         "conf": "low",
-        "sc": 0.7,
-        "odds": 2.07,
-        "modelOdds": 2.26,
+        "sc": 0.12,
+        "odds": null,
+        "modelOdds": 2.94,
         "value": null,
-        "oddsIsEst": true,
-        "reason": "Konyaspor (Ø 0.9 Tore/Spiel) und Rizespor (Ø 1.4) treffen beide regelmäßig — beide Defensiven sind anfällig und lassen Gegentore zu. Beide Teams werden voraussichtlich treffen.<br>⚽ Konyaspor: U. Nayir 17G+2A · Rizespor: Q. Laçi 7G+9A",
-        "mods": [
-          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Konyaspor Abstieg quasi sicher (-8% xG)</span>",
-          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Rizespor Abstieg quasi sicher (-8% xG)</span>"
-        ],
-        "saferAlt": {
-          "market": "Over 1.5 Tore",
-          "estOdds": 1.39
-        },
-        "boldAlt": null
-      },
-      {
-        "market": "Unter 8.5 Ecken",
-        "marketKey": "corners_under:8.5",
-        "icon": "🚩",
-        "conf": "low",
-        "sc": 0.6,
-        "odds": 1.42,
-        "modelOdds": 1.49,
-        "value": null,
-        "oddsIsEst": true,
-        "reason": "Taktisch defensives Spiel mit erwarteten ~7 Ecken.",
+        "oddsIsEst": false,
+        "reason": "Taktisch vorsichtiger Spielbeginn erwartet — beide Teams tasten sich ab. Das Modell erwartet insgesamt nur 2.4 Tore: ein torloser Start in die erste Halbzeit ist gut möglich.",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -5805,19 +6357,19 @@
     "date": "15.08.2026",
     "dateIso": "2026-08-15",
     "eventId": 1584373,
-    "matchScore": 6.9,
+    "matchScore": 7.2,
     "picks": [
       {
         "market": "Heimsieg",
         "marketKey": "homeWin",
         "icon": "🏠",
         "conf": "low",
-        "sc": 0.912,
+        "sc": 0.932,
         "odds": null,
-        "modelOdds": 2.84,
+        "modelOdds": 2.87,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Trabzonspor ist auswärts unter Abstiegsdruck — das wirkt sich oft negativ auf die Leistung aus. Kasımpaşa gewinnt 93% seiner Heimspiele und kann diesen Vorteil nutzen. · H2H: 4H/6U/10A (20 Duelle)",
+        "reason": "Kasımpaşa kämpft um den Titel — ein Heimsieg ist Pflicht. Gewinnt 93% der Heimspiele und erzielt Ø 1.8 Tore/Spiel. Der Druck erhöht die Intensität. · H2H: 4H/6U/10A (20 Duelle)",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -5828,31 +6380,15 @@
         "icon": "🔒",
         "conf": "low",
         "sc": 0.38,
-        "odds": 1.32,
-        "modelOdds": 1.34,
+        "odds": 1.36,
+        "modelOdds": 1.36,
         "value": null,
         "oddsIsEst": true,
-        "reason": "Trabzonspor ist offensiv sehr schwach (Ø 0.4 Tore/Spiel) — ein Treffer ist für dieses Team schon eine Herausforderung. Wahrscheinlich bleibt eines der beiden Teams ohne Tor.<br>🛡️ Kasımpaşa: A. Gianniotis (TW) · Trabzonspor: Wagner Pina (VER)",
+        "reason": "Trabzonspor ist offensiv sehr schwach (Ø 0.5 Tore/Spiel) — ein Treffer ist für dieses Team schon eine Herausforderung. Wahrscheinlich bleibt eines der beiden Teams ohne Tor.<br>🛡️ Kasımpaşa: A. Gianniotis (TW) · Trabzonspor: Wagner Pina (VER)",
         "mods": [
           "<span class=\"mod-chip mod-inj\">🟠 Trabzonspor 2.2 (Abw1/MF1)</span>",
-          "<span class=\"mod-chip\" style=\"background:#0d1a2d;color:#79c0ff;border:1px solid #1d4e7a\">📉 Trabzonspor +7% xGA</span>",
-          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Trabzonspor Abstieg quasi sicher (-8% xG)</span>"
+          "<span class=\"mod-chip\" style=\"background:#0d1a2d;color:#79c0ff;border:1px solid #1d4e7a\">📉 Trabzonspor +7% xGA</span>"
         ],
-        "saferAlt": null,
-        "boldAlt": null
-      },
-      {
-        "market": "Unter 8.5 Ecken",
-        "marketKey": "corners_under:8.5",
-        "icon": "🚩",
-        "conf": "medium",
-        "sc": 0.6,
-        "odds": 1.4,
-        "modelOdds": 1.43,
-        "value": null,
-        "oddsIsEst": true,
-        "reason": "Taktisch defensives Spiel mit erwarteten ~7 Ecken.",
-        "mods": [],
         "saferAlt": null,
         "boldAlt": null
       }
@@ -5979,19 +6515,19 @@
     "date": "16.08.2026",
     "dateIso": "2026-08-16",
     "eventId": 1584368,
-    "matchScore": 7.3,
+    "matchScore": 6.8,
     "picks": [
       {
-        "market": "Heimsieg",
-        "marketKey": "homeWin",
-        "icon": "🏠",
+        "market": "Doppelte Chance: 1X",
+        "marketKey": "dc1X",
+        "icon": "🎯",
         "conf": "low",
-        "sc": 0.566,
+        "sc": 0.357,
         "odds": null,
-        "modelOdds": 1.91,
+        "modelOdds": 1.21,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Başakşehir kämpft um den Titel — ein Heimsieg ist Pflicht. Gewinnt 54% der Heimspiele und erzielt Ø 1.2 Tore/Spiel. Der Druck erhöht die Intensität. · H2H: 3H/1U/0A (4 Duelle)",
+        "reason": "Başakşehir ist Favorit (54% Heimsieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Başakşehir geht der Einsatz verloren.",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -6003,13 +6539,13 @@
         "conf": "low",
         "sc": 0.57,
         "odds": null,
-        "modelOdds": 1.99,
+        "modelOdds": 1.94,
         "value": null,
         "oddsIsEst": false,
         "reason": "Das Modell erwartet nur 2.3 Tore insgesamt — Başakşehir (Ø 1.2 Tore/Spiel) und Kocaelispor (Ø 0.3) sind beide offensiv zu schwach für viele Treffer.<br>🛡️ Başakşehir: E. Bayram (VER · 7.4 Rtg) · Kocaelispor: A. Dijksteel (VER)",
         "mods": [
-          "<span class=\"mod-chip mod-inj\">🟠 Kocaelispor 2.4 (Abw2)</span>",
-          "<span class=\"mod-chip\" style=\"background:#0d1a2d;color:#79c0ff;border:1px solid #1d4e7a\">📉 Kocaelispor +14% xGA</span>"
+          "<span class=\"mod-chip mod-inj\">🔴 Kocaelispor 4.1 (TW1/Ang1)</span>",
+          "<span class=\"mod-chip\" style=\"background:#0d1a2d;color:#79c0ff;border:1px solid #1d4e7a\">📉 Kocaelispor -10% xG · Kocaelispor +9% xGA</span>"
         ],
         "saferAlt": null,
         "boldAlt": null
@@ -6020,7 +6556,7 @@
         "icon": "🚩",
         "conf": "high",
         "sc": 0.72,
-        "odds": 1.46,
+        "odds": 1.44,
         "modelOdds": 1.61,
         "value": null,
         "oddsIsEst": true,
@@ -6041,35 +6577,43 @@
     "date": "16.08.2026",
     "dateIso": "2026-08-16",
     "eventId": 1584369,
-    "matchScore": 6.7,
+    "matchScore": 6.6,
     "picks": [
       {
         "market": "Heimsieg",
         "marketKey": "homeWin",
         "icon": "🏠",
         "conf": "low",
-        "sc": 1.181,
+        "sc": 1.321,
         "odds": null,
-        "modelOdds": 2.03,
+        "modelOdds": 2.05,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Beşiktaş ist in Topform (zuletzt 4 Siege) und gewinnt 86% seiner Heimspiele. Das Angriffsspiel (Ø 1.3 Tore/Spiel) trifft auf eine anfällige Eyüpspor-Abwehr (kassiert Ø 0.0 Tore/Spiel). · H2H: 5H/1U/0A (6 Duelle)",
-        "mods": [],
+        "reason": "Beşiktaş ist in Topform (zuletzt 4 Siege) und gewinnt 86% seiner Heimspiele. Das Angriffsspiel (Ø 1.2 Tore/Spiel) trifft auf eine anfällige Eyüpspor-Abwehr (kassiert Ø 0.0 Tore/Spiel). · H2H: 5H/1U/0A (6 Duelle)",
+        "mods": [
+          "<span class=\"mod-chip mod-inj\">🟡 Beşiktaş 1.2 (Abw1)</span>",
+          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Beşiktaş Abstieg quasi sicher (-8% xG)</span>"
+        ],
         "saferAlt": null,
         "boldAlt": null
       },
       {
-        "market": "1. HZ: Under 0.5 Tore",
-        "marketKey": "1_hz_under_0_5_tore",
-        "icon": "⏱️",
+        "market": "Over 3.5 Tore",
+        "marketKey": "over35",
+        "icon": "🔥",
         "conf": "low",
-        "sc": 0.12,
+        "sc": 0.18,
         "odds": null,
-        "modelOdds": 2.2,
+        "modelOdds": 7.22,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Taktisch vorsichtiger Spielbeginn erwartet — beide Teams tasten sich ab. Das Modell erwartet insgesamt nur 1.8 Tore: ein torloser Start in die erste Halbzeit ist gut möglich.",
-        "mods": [],
+        "reason": "Beşiktaş erzielt Ø 1.2 Tore/Spiel, Eyüpspor Ø 1.4 — beide Defensiven sind anfällig und lassen viele Gegentore zu. Das Modell erwartet 1.8 Tore insgesamt: ein Torfestival mit 4+ Treffern ist klar möglich. Historisch Ø 3.83 Tore/Duell.<br>⚽ Beşiktaş: O. Kökçü 8G+8A · Eyüpspor: U. Bozok 6G+6A",
+        "mods": [
+          "<span class=\"mod-chip mod-inj\">🟡 Beşiktaş 1.2 (Abw1)</span>",
+          "<span class=\"mod-chip\" style=\"background:#0d1a2d;color:#79c0ff;border:1px solid #1d4e7a\">📉 Beşiktaş +7% xGA</span>",
+          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Beşiktaş Abstieg quasi sicher (-8% xG)</span>",
+          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Eyüpspor Abstieg quasi sicher (-8% xG)</span>"
+        ],
         "saferAlt": null,
         "boldAlt": null
       }
@@ -6085,19 +6629,19 @@
     "date": "16.08.2026",
     "dateIso": "2026-08-16",
     "eventId": 1584367,
-    "matchScore": 7.5,
+    "matchScore": 6.9,
     "picks": [
       {
         "market": "Heimsieg",
         "marketKey": "homeWin",
         "icon": "🏠",
         "conf": "low",
-        "sc": 0.924,
+        "sc": 0.904,
         "odds": null,
-        "modelOdds": 3.25,
+        "modelOdds": 3.19,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Amed kämpft um den Titel — ein Heimsieg ist Pflicht. Gewinnt 93% der Heimspiele und erzielt Ø 2.0 Tore/Spiel. Der Druck erhöht die Intensität. · H2H: 1H/2U/3A (6 Duelle)",
+        "reason": "Erzurumspor FK ist auswärts unter Abstiegsdruck — das wirkt sich oft negativ auf die Leistung aus. Amed gewinnt 93% seiner Heimspiele und kann diesen Vorteil nutzen. · H2H: 1H/2U/3A (6 Duelle)",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -6107,13 +6651,15 @@
         "marketKey": "under25",
         "icon": "🛡️",
         "conf": "low",
-        "sc": 0.69,
+        "sc": 0.57,
         "odds": null,
-        "modelOdds": 1.55,
+        "modelOdds": 1.52,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Das Modell erwartet nur 2.0 Tore insgesamt — Amed (Ø 2.0 Tore/Spiel) und Erzurumspor FK (Ø 1.5) sind beide offensiv zu schwach für viele Treffer.<br>🛡️ Amed: M. Yeşil (VER · 7.2 Rtg) · FK: O. Ovacıklı (VER · 7.3 Rtg)",
-        "mods": [],
+        "reason": "Das Modell erwartet nur 2.0 Tore insgesamt — Amed (Ø 2.0 Tore/Spiel) und Erzurumspor FK (Ø 1.4) sind beide offensiv zu schwach für viele Treffer.<br>🛡️ Amed: M. Yeşil (VER · 7.2 Rtg) · FK: O. Ovacıklı (VER · 7.3 Rtg)",
+        "mods": [
+          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Erzurumspor FK Abstieg quasi sicher (-8% xG)</span>"
+        ],
         "saferAlt": null,
         "boldAlt": null
       },
@@ -6121,10 +6667,10 @@
         "market": "Über 10.5 Ecken",
         "marketKey": "corners_over:10.5",
         "icon": "🚩",
-        "conf": "high",
-        "sc": 0.8,
-        "odds": 1.63,
-        "modelOdds": 2.02,
+        "conf": "medium",
+        "sc": 0.64,
+        "odds": 1.76,
+        "modelOdds": 2.21,
         "value": null,
         "oddsIsEst": true,
         "reason": "Beide Teams spielen offensiv — ca. 11 Ecken werden in diesem Spiel erwartet.",
@@ -6196,21 +6742,22 @@
     "date": "21.08.2026",
     "dateIso": "2026-08-21",
     "eventId": 1584378,
-    "matchScore": 7.3,
+    "matchScore": 7.5,
     "picks": [
       {
         "market": "Heimsieg",
         "marketKey": "homeWin",
         "icon": "🏠",
         "conf": "low",
-        "sc": 0.807,
+        "sc": 0.647,
         "odds": null,
-        "modelOdds": 3.54,
+        "modelOdds": 3.6,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Erzurumspor FK kämpft um den Titel — ein Heimsieg ist Pflicht. Gewinnt 80% der Heimspiele und erzielt Ø 1.4 Tore/Spiel. Der Druck erhöht die Intensität. · H2H: 0H/1U/3A (4 Duelle)",
+        "reason": "Erzurumspor FK gewinnt 80% seiner Heimspiele und erzielt dabei Ø 1.3 Tore/Spiel. Der Gegner kassiert Ø 2.2 Tore/Spiel. · H2H: 0H/1U/3A (4 Duelle)",
         "mods": [
-          "<span class=\"mod-chip mod-fat\">😴 Erzurumspor FK 5T Pause (-4% xG)</span>"
+          "<span class=\"mod-chip mod-fat\">😴 Erzurumspor FK 5T Pause (-4% xG)</span>",
+          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Erzurumspor FK Abstieg quasi sicher (-8% xG)</span>"
         ],
         "saferAlt": null,
         "boldAlt": null
@@ -6222,30 +6769,34 @@
         "conf": "low",
         "sc": 0.66,
         "odds": null,
-        "modelOdds": 1.66,
+        "modelOdds": 1.69,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Erzurumspor FK erzielt Ø 1.4 Tore/Spiel, Galatasaray Ø 1.8 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Erzurumspor FK Ø 0.5, Galatasaray Ø 2.2). Das Modell erwartet 3.0 Tore: mindestens 3 Treffer sind gut möglich.<br>⚽ FK: E. Tozlu 21G+6A · Galatasaray: V. Osimhen 15G+5A",
+        "reason": "Erzurumspor FK erzielt Ø 1.3 Tore/Spiel, Galatasaray Ø 1.8 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Erzurumspor FK Ø 0.5, Galatasaray Ø 2.2). Das Modell erwartet 3.0 Tore: mindestens 3 Treffer sind gut möglich.<br>⚽ FK: E. Tozlu 21G+6A · Galatasaray: V. Osimhen 15G+5A",
         "mods": [
-          "<span class=\"mod-chip mod-fat\">😴 Erzurumspor FK 5T Pause (-4% xG)</span>"
+          "<span class=\"mod-chip mod-fat\">😴 Erzurumspor FK 5T Pause (-4% xG)</span>",
+          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Erzurumspor FK Abstieg quasi sicher (-8% xG)</span>"
         ],
         "saferAlt": null,
         "boldAlt": null
       },
       {
-        "market": "Über 10.5 Ecken",
-        "marketKey": "corners_over:10.5",
+        "market": "Über 9.5 Ecken",
+        "marketKey": "corners_over:9.5",
         "icon": "🚩",
         "conf": "medium",
         "sc": 0.64,
-        "odds": 1.89,
-        "modelOdds": 2.39,
+        "odds": 1.63,
+        "modelOdds": 1.73,
         "value": null,
         "oddsIsEst": true,
-        "reason": "Beide Teams spielen offensiv — ca. 11 Ecken werden in diesem Spiel erwartet.",
+        "reason": "Beide Teams spielen offensiv — ca. 10 Ecken werden in diesem Spiel erwartet.",
         "mods": [],
         "saferAlt": null,
-        "boldAlt": null
+        "boldAlt": {
+          "market": "Über 11.5 Ecken",
+          "estOdds": 2.43
+        }
       }
     ]
   },
@@ -6268,47 +6819,29 @@
         "conf": "low",
         "sc": 0.649,
         "odds": null,
-        "modelOdds": 2.54,
+        "modelOdds": 2.51,
         "value": null,
         "oddsIsEst": false,
         "reason": "Samsunspor ist auswärts unter Abstiegsdruck — das wirkt sich oft negativ auf die Leistung aus. Rizespor gewinnt 73% seiner Heimspiele und kann diesen Vorteil nutzen. · H2H: 5H/5U/4A (14 Duelle)",
-        "mods": [
-          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Rizespor Abstieg quasi sicher (-8% xG)</span>"
-        ],
+        "mods": [],
         "saferAlt": null,
         "boldAlt": null
       },
       {
-        "market": "Over 3.5 Tore",
-        "marketKey": "over35",
-        "icon": "🔥",
+        "market": "Under 2.5 Tore",
+        "marketKey": "under25",
+        "icon": "🛡️",
         "conf": "low",
-        "sc": 0.18,
+        "sc": 0.38,
         "odds": null,
-        "modelOdds": 4.84,
+        "modelOdds": 1.68,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Rizespor erzielt Ø 1.4 Tore/Spiel, Samsunspor Ø 0.9 — beide Defensiven sind anfällig und lassen viele Gegentore zu. Das Modell erwartet 2.3 Tore insgesamt: ein Torfestival mit 4+ Treffern ist klar möglich. Historisch Ø 2.5 Tore/Duell.<br>⚽ Rizespor: Q. Laçi 7G+9A · Samsunspor: Marius 9G+4A",
+        "reason": "Das Modell erwartet nur 2.3 Tore insgesamt — Rizespor (Ø 1.5 Tore/Spiel) und Samsunspor (Ø 0.9) sind beide offensiv zu schwach für viele Treffer.<br>🛡️ Rizespor: C. Højer (VER) · Samsunspor: R. van Drongelen (VER · 7.1 Rtg)",
         "mods": [
           "<span class=\"mod-chip mod-fat\">😴 Samsunspor 5T Pause (-6% xG)</span>",
-          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Rizespor Abstieg quasi sicher (-8% xG)</span>",
           "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Samsunspor Abstieg quasi sicher (-8% xG)</span>"
         ],
-        "saferAlt": null,
-        "boldAlt": null
-      },
-      {
-        "market": "Unter 8.5 Ecken",
-        "marketKey": "corners_under:8.5",
-        "icon": "🚩",
-        "conf": "low",
-        "sc": 0.6,
-        "odds": 1.4,
-        "modelOdds": 1.47,
-        "value": null,
-        "oddsIsEst": true,
-        "reason": "Taktisch defensives Spiel mit erwarteten ~7 Ecken.",
-        "mods": [],
         "saferAlt": null,
         "boldAlt": null
       }
@@ -6324,14 +6857,14 @@
     "date": "22.08.2026",
     "dateIso": "2026-08-22",
     "eventId": 1584377,
-    "matchScore": 6.5,
+    "matchScore": 7.5,
     "picks": [
       {
         "market": "Heimsieg",
         "marketKey": "homeWin",
         "icon": "🏠",
         "conf": "low",
-        "sc": 1.147,
+        "sc": 1.307,
         "odds": null,
         "modelOdds": 3.31,
         "value": null,
@@ -6348,7 +6881,7 @@
         "marketKey": "under25",
         "icon": "🛡️",
         "conf": "low",
-        "sc": 0.72,
+        "sc": 0.84,
         "odds": null,
         "modelOdds": 1.52,
         "value": null,
@@ -6391,19 +6924,19 @@
     "date": "22.08.2026",
     "dateIso": "2026-08-22",
     "eventId": 1584380,
-    "matchScore": 6.9,
+    "matchScore": 6.7,
     "picks": [
       {
         "market": "Heimsieg",
         "marketKey": "homeWin",
         "icon": "🏠",
         "conf": "low",
-        "sc": 1.408,
+        "sc": 1.269,
         "odds": null,
-        "modelOdds": 1.86,
+        "modelOdds": 1.88,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Fenerbahçe ist in Topform (zuletzt 2 Siege) und gewinnt 93% seiner Heimspiele. Das Angriffsspiel (Ø 1.8 Tore/Spiel) trifft auf eine anfällige Konyaspor-Abwehr (kassiert Ø 1.7 Tore/Spiel). · H2H: 11H/3U/6A (20 Duelle)",
+        "reason": "Fenerbahçe ist in Topform (zuletzt 2 Siege) und gewinnt 93% seiner Heimspiele. Das Angriffsspiel (Ø 1.8 Tore/Spiel) trifft auf eine anfällige Konyaspor-Abwehr (kassiert Ø 1.6 Tore/Spiel). · H2H: 11H/3U/6A (20 Duelle)",
         "mods": [
           "<span class=\"mod-chip mod-inj\">🟡 Fenerbahçe 1.2 (Abw1)</span>"
         ],
@@ -6417,7 +6950,7 @@
         "conf": "low",
         "sc": 0.12,
         "odds": null,
-        "modelOdds": 2.9,
+        "modelOdds": 2.89,
         "value": null,
         "oddsIsEst": false,
         "reason": "Taktisch vorsichtiger Spielbeginn erwartet — beide Teams tasten sich ab. Das Modell erwartet insgesamt nur 2.4 Tore: ein torloser Start in die erste Halbzeit ist gut möglich.",
@@ -6437,20 +6970,22 @@
     "date": "23.08.2026",
     "dateIso": "2026-08-23",
     "eventId": 1584384,
-    "matchScore": 7.2,
+    "matchScore": 7,
     "picks": [
       {
-        "market": "Doppelte Chance: X2",
-        "marketKey": "dcX2",
+        "market": "Doppelte Chance: 1X",
+        "marketKey": "dc1X",
         "icon": "🎯",
         "conf": "low",
-        "sc": 0.369,
+        "sc": 0.272,
         "odds": null,
-        "modelOdds": 1.29,
+        "modelOdds": 1.96,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Başakşehir zeigt starke Auswärtsform (35% Auswärtssieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Başakşehir geht der Einsatz verloren.",
-        "mods": [],
+        "reason": "Trabzonspor ist Favorit (32% Heimsieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Trabzonspor geht der Einsatz verloren.",
+        "mods": [
+          "<span class=\"mod-chip mod-inj\">🟠 Trabzonspor 2.2 (Abw1/MF1)</span>"
+        ],
         "saferAlt": null,
         "boldAlt": null
       },
@@ -6461,14 +6996,13 @@
         "conf": "low",
         "sc": 0.57,
         "odds": null,
-        "modelOdds": 1.78,
+        "modelOdds": 1.76,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Das Modell erwartet nur 2.3 Tore insgesamt — Trabzonspor (Ø 0.4 Tore/Spiel) und Başakşehir (Ø 1.2) sind beide offensiv zu schwach für viele Treffer.<br>🛡️ Trabzonspor: Wagner Pina (VER) · Başakşehir: E. Bayram (VER · 7.4 Rtg)",
+        "reason": "Das Modell erwartet nur 2.3 Tore insgesamt — Trabzonspor (Ø 0.5 Tore/Spiel) und Başakşehir (Ø 1.2) sind beide offensiv zu schwach für viele Treffer.<br>🛡️ Trabzonspor: Wagner Pina (VER) · Başakşehir: E. Bayram (VER · 7.4 Rtg)",
         "mods": [
           "<span class=\"mod-chip mod-inj\">🟠 Trabzonspor 2.2 (Abw1/MF1)</span>",
-          "<span class=\"mod-chip\" style=\"background:#0d1a2d;color:#79c0ff;border:1px solid #1d4e7a\">📉 Trabzonspor +7% xGA</span>",
-          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Trabzonspor Abstieg quasi sicher (-8% xG)</span>"
+          "<span class=\"mod-chip\" style=\"background:#0d1a2d;color:#79c0ff;border:1px solid #1d4e7a\">📉 Trabzonspor +7% xGA</span>"
         ],
         "saferAlt": null,
         "boldAlt": null
@@ -6479,7 +7013,7 @@
         "icon": "🚩",
         "conf": "high",
         "sc": 0.72,
-        "odds": 1.4,
+        "odds": 1.43,
         "modelOdds": 1.61,
         "value": null,
         "oddsIsEst": true,
@@ -6500,7 +7034,7 @@
     "date": "23.08.2026",
     "dateIso": "2026-08-23",
     "eventId": 1584379,
-    "matchScore": 6.6,
+    "matchScore": 6.2,
     "picks": [
       {
         "market": "Heimsieg",
@@ -6509,12 +7043,12 @@
         "conf": "low",
         "sc": 1.088,
         "odds": null,
-        "modelOdds": 1.85,
+        "modelOdds": 1.86,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Eyüpspor ist in Topform (zuletzt 2 Siege) und gewinnt 93% seiner Heimspiele. Das Angriffsspiel (Ø 1.5 Tore/Spiel) trifft auf eine anfällige Gaziantep FK-Abwehr (kassiert Ø 0.8 Tore/Spiel). · H2H: 5H/0U/1A (6 Duelle)",
+        "reason": "Eyüpspor ist in Topform (zuletzt 2 Siege) und gewinnt 93% seiner Heimspiele. Das Angriffsspiel (Ø 1.4 Tore/Spiel) trifft auf eine anfällige Gaziantep FK-Abwehr (kassiert Ø 0.8 Tore/Spiel). · H2H: 5H/0U/1A (6 Duelle)",
         "mods": [
-          "<span class=\"mod-chip mod-inj\">🟠 Eyüpspor 2.4 (Abw2)</span>"
+          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Eyüpspor Abstieg quasi sicher (-8% xG)</span>"
         ],
         "saferAlt": null,
         "boldAlt": null
@@ -6526,7 +7060,7 @@
         "conf": "low",
         "sc": 0.12,
         "odds": null,
-        "modelOdds": 2.52,
+        "modelOdds": 2.45,
         "value": null,
         "oddsIsEst": false,
         "reason": "Taktisch vorsichtiger Spielbeginn erwartet — beide Teams tasten sich ab. Das Modell erwartet insgesamt nur 2.0 Tore: ein torloser Start in die erste Halbzeit ist gut möglich.",
@@ -6540,16 +7074,16 @@
         "icon": "🚩",
         "conf": "medium",
         "sc": 0.64,
-        "odds": 1.56,
-        "modelOdds": 1.72,
+        "odds": 1.7,
+        "modelOdds": 1.79,
         "value": null,
         "oddsIsEst": true,
-        "reason": "Beide Teams spielen offensiv — ca. 11 Ecken werden in diesem Spiel erwartet.",
+        "reason": "Beide Teams spielen offensiv — ca. 10 Ecken werden in diesem Spiel erwartet.",
         "mods": [],
         "saferAlt": null,
         "boldAlt": {
           "market": "Über 11.5 Ecken",
-          "estOdds": 2.27
+          "estOdds": 2.59
         }
       }
     ]
@@ -6615,7 +7149,7 @@
     "date": "23.08.2026",
     "dateIso": "2026-08-23",
     "eventId": 1584376,
-    "matchScore": 6.9,
+    "matchScore": 6.1,
     "picks": [
       {
         "market": "Auswärtssieg",
@@ -6624,11 +7158,14 @@
         "conf": "low",
         "sc": 1.031,
         "odds": null,
-        "modelOdds": 2.33,
+        "modelOdds": 2.36,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Beşiktaş ist in Topform (zuletzt 4 Siege) und gewinnt 60% seiner Auswärtsspiele. Das Angriffsspiel (Ø 1.3 Tore/Spiel) trifft auf eine anfällige Alanyaspor-Abwehr (kassiert Ø 1.1 Tore/Spiel). · H2H: 4H/6U/10A (20 Duelle)",
-        "mods": [],
+        "reason": "Beşiktaş ist in Topform (zuletzt 4 Siege) und gewinnt 60% seiner Auswärtsspiele. Das Angriffsspiel (Ø 1.2 Tore/Spiel) trifft auf eine anfällige Alanyaspor-Abwehr (kassiert Ø 1.1 Tore/Spiel). · H2H: 4H/6U/10A (20 Duelle)",
+        "mods": [
+          "<span class=\"mod-chip mod-inj\">🟡 Beşiktaş 1.2 (Abw1)</span>",
+          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Beşiktaş Abstieg quasi sicher (-8% xG)</span>"
+        ],
         "saferAlt": null,
         "boldAlt": null
       },
@@ -6639,13 +7176,15 @@
         "conf": "low",
         "sc": 0.31,
         "odds": null,
-        "modelOdds": 2.03,
+        "modelOdds": 2.04,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Alanyaspor erzielt Ø 1.9 Tore/Spiel, Beşiktaş Ø 1.3 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Alanyaspor Ø 1.1, Beşiktaş Ø 0.7). Das Modell erwartet 2.5 Tore: mit 2.5 erwarteten Toren ist die Marke von 2.5 Toren erreichbar.<br>⚽ Alanyaspor: F. Hadërgjonaj 6G+9A · Beşiktaş: O. Kökçü 8G+8A",
+        "reason": "Alanyaspor erzielt Ø 1.9 Tore/Spiel, Beşiktaş Ø 1.2 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Alanyaspor Ø 1.1, Beşiktaş Ø 0.8). Das Modell erwartet 2.5 Tore: mit 2.5 erwarteten Toren ist die Marke von 2.5 Toren erreichbar.<br>⚽ Alanyaspor: F. Hadërgjonaj 6G+9A · Beşiktaş: O. Kökçü 8G+8A",
         "mods": [
           "<span class=\"mod-chip mod-inj\">🟠 Alanyaspor 2.2 (Abw1/MF1)</span>",
-          "<span class=\"mod-chip\" style=\"background:#0d1a2d;color:#79c0ff;border:1px solid #1d4e7a\">📉 Alanyaspor +7% xGA</span>"
+          "<span class=\"mod-chip mod-inj\">🟡 Beşiktaş 1.2 (Abw1)</span>",
+          "<span class=\"mod-chip\" style=\"background:#0d1a2d;color:#79c0ff;border:1px solid #1d4e7a\">📉 Alanyaspor +7% xGA · Beşiktaş +7% xGA</span>",
+          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Beşiktaş Abstieg quasi sicher (-8% xG)</span>"
         ],
         "saferAlt": null,
         "boldAlt": null
@@ -6656,8 +7195,8 @@
         "icon": "🚩",
         "conf": "medium",
         "sc": 0.64,
-        "odds": 1.58,
-        "modelOdds": 1.74,
+        "odds": 1.69,
+        "modelOdds": 1.87,
         "value": null,
         "oddsIsEst": true,
         "reason": "Beide Teams spielen offensiv — ca. 10 Ecken werden in diesem Spiel erwartet.",
@@ -6665,7 +7204,7 @@
         "saferAlt": null,
         "boldAlt": {
           "market": "Über 11.5 Ecken",
-          "estOdds": 2.32
+          "estOdds": 2.57
         }
       }
     ]
@@ -6680,35 +7219,38 @@
     "date": "24.08.2026",
     "dateIso": "2026-08-24",
     "eventId": 1584382,
-    "matchScore": 7.5,
+    "matchScore": 6.7,
     "picks": [
       {
         "market": "Auswärtssieg",
         "marketKey": "awayWin",
         "icon": "✈️",
         "conf": "low",
-        "sc": 1.002,
+        "sc": 0.842,
         "odds": null,
         "modelOdds": 1.71,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Amed kämpft im Titelkampf um Punkte auswärts. Gewinnt 84% der Auswärtsspiele und erzielt Ø 2.0 Tore/Spiel. Titeldruck treibt die Leistung. · H2H: 1H/0U/3A (4 Duelle)",
+        "reason": "Amed gewinnt 84% seiner Auswärtsspiele und erzielt dabei Ø 2.0 Tore/Spiel. Der Gegner kassiert Ø 2.2 Tore/Spiel. · H2H: 1H/0U/3A (4 Duelle)",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
       },
       {
-        "market": "Amed über 1.5 Tore",
-        "marketKey": "team_goals_away_over:1.5",
-        "icon": "✈️",
-        "conf": "medium",
-        "sc": 0.68,
-        "odds": 1.47,
-        "modelOdds": 1.71,
+        "market": "Under 2.5 Tore",
+        "marketKey": "under25",
+        "icon": "🛡️",
+        "conf": "low",
+        "sc": 0.57,
+        "odds": null,
+        "modelOdds": 1.72,
         "value": null,
-        "oddsIsEst": true,
-        "reason": "Amed trifft im Schnitt 2.0 Mal pro Spiel — der Gegner lässt 2.3 Tore zu. Das Modell erwartet 2.1 Auswärtstore: mindestens 2 Treffer für Amed sind gut möglich.<br>⚽ Amed: M. Diagne 30G+5A",
-        "mods": [],
+        "oddsIsEst": false,
+        "reason": "Das Modell erwartet nur 2.0 Tore insgesamt — Kocaelispor (Ø 0.3 Tore/Spiel) und Amed (Ø 2.0) sind beide offensiv zu schwach für viele Treffer.<br>🛡️ Kocaelispor: A. Dijksteel (VER) · Amed: M. Yeşil (VER · 7.2 Rtg)",
+        "mods": [
+          "<span class=\"mod-chip mod-inj\">🔴 Kocaelispor 4.1 (TW1/Ang1)</span>",
+          "<span class=\"mod-chip\" style=\"background:#0d1a2d;color:#79c0ff;border:1px solid #1d4e7a\">📉 Kocaelispor -10% xG · Kocaelispor +9% xGA</span>"
+        ],
         "saferAlt": null,
         "boldAlt": null
       },
@@ -6718,12 +7260,61 @@
         "icon": "🚩",
         "conf": "medium",
         "sc": 0.6,
-        "odds": 1.64,
+        "odds": 1.61,
         "modelOdds": 1.94,
         "value": null,
         "oddsIsEst": true,
         "reason": "Taktisch defensives Spiel mit erwarteten ~7 Ecken.",
         "mods": [],
+        "saferAlt": null,
+        "boldAlt": null
+      }
+    ]
+  },
+  {
+    "league": "TUR",
+    "leagueName": "Süper Lig",
+    "leagueFlag": "🇹🇷",
+    "roundsLeft": 38,
+    "home": "Gençlerbirliği S.K.",
+    "away": "Erzurumspor FK",
+    "date": "28.08.2026",
+    "dateIso": "2026-08-28",
+    "eventId": 1584391,
+    "matchScore": 7,
+    "picks": [
+      {
+        "market": "Heimsieg",
+        "marketKey": "homeWin",
+        "icon": "🏠",
+        "conf": "low",
+        "sc": 0.57,
+        "odds": null,
+        "modelOdds": 2.41,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Erzurumspor FK ist auswärts unter Abstiegsdruck — das wirkt sich oft negativ auf die Leistung aus. Gençlerbirliği S.K. gewinnt 61% seiner Heimspiele und kann diesen Vorteil nutzen. · H2H: 6H/2U/2A (10 Duelle)",
+        "mods": [
+          "<span class=\"mod-chip mod-fat\">😴 Gençlerbirliği S.K. 5T Pause (-4% xG)</span>"
+        ],
+        "saferAlt": null,
+        "boldAlt": null
+      },
+      {
+        "market": "Under 2.5 Tore",
+        "marketKey": "under25",
+        "icon": "🛡️",
+        "conf": "low",
+        "sc": 0.472,
+        "odds": null,
+        "modelOdds": 1.76,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Das Modell erwartet nur 2.5 Tore insgesamt — Gençlerbirliği S.K. (Ø 1.0 Tore/Spiel) und Erzurumspor FK (Ø 1.4) sind beide offensiv zu schwach für viele Treffer.<br>🛡️ S.K.: D. Goutas (VER) · FK: O. Ovacıklı (VER · 7.3 Rtg)",
+        "mods": [
+          "<span class=\"mod-chip mod-fat\">😴 Gençlerbirliği S.K. 5T Pause (-4% xG)</span>",
+          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Erzurumspor FK Abstieg quasi sicher (-8% xG)</span>"
+        ],
         "saferAlt": null,
         "boldAlt": null
       }
@@ -6917,18 +7508,19 @@
     "matchScore": 7.5,
     "picks": [
       {
-        "market": "Heimsieg",
-        "marketKey": "homeWin",
-        "icon": "🏠",
+        "market": "Auswärtssieg",
+        "marketKey": "awayWin",
+        "icon": "✈️",
         "conf": "low",
-        "sc": 1.726,
+        "sc": 0.914,
         "odds": null,
-        "modelOdds": 2.51,
+        "modelOdds": 3.03,
         "value": null,
         "oddsIsEst": false,
-        "reason": "FC Lugano ist in Topform (zuletzt 6 Siege) und gewinnt 93% seiner Heimspiele. Das Angriffsspiel (Ø 3.5 Tore/Spiel) trifft auf eine anfällige FC ST. Gallen-Abwehr (kassiert Ø 2.3 Tore/Spiel). · H2H: 6H/6U/8A (20 Duelle)<br>📊 Heimstatistik (Saison): 100% Siege · 50% Clean Sheets.<br>🔥 Aktueller Lauf: FC Lugano 3× ungeschlagen.",
+        "reason": "FC ST. Gallen kämpft im Titelkampf um Punkte auswärts. Gewinnt 87% der Auswärtsspiele und erzielt Ø 2.4 Tore/Spiel. Titeldruck treibt die Leistung. · H2H: 6H/6U/8A (20 Duelle)<br>📊 Auswärtsstatistik (Saison): 100% Siege · 0% Clean Sheets.",
         "mods": [
-          "<span class=\"mod-chip mod-inj\">🟡 FC Lugano 1.2 (Abw1)</span>"
+          "<span class=\"mod-chip mod-inj\">🔴 FC ST. Gallen 5.1 (TW1/Ang1/MF1)</span>",
+          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ FC ST. Gallen nahezu gesichert (-8% xG)</span>"
         ],
         "saferAlt": null,
         "boldAlt": null
@@ -6987,12 +7579,12 @@
         "marketKey": "dcX2",
         "icon": "🎯",
         "conf": "low",
-        "sc": 0.275,
+        "sc": 0.299,
         "odds": null,
         "modelOdds": 1.53,
         "value": null,
         "oddsIsEst": false,
-        "reason": "FC Sion zeigt starke Auswärtsform (27% Auswärtssieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von FC Sion geht der Einsatz verloren.",
+        "reason": "FC Sion zeigt starke Auswärtsform (32% Auswärtssieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von FC Sion geht der Einsatz verloren.",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -7044,18 +7636,18 @@
     "matchScore": 7.5,
     "picks": [
       {
-        "market": "Doppelte Chance: 1X",
-        "marketKey": "dc1X",
+        "market": "Doppelte Chance: X2",
+        "marketKey": "dcX2",
         "icon": "🎯",
         "conf": "low",
-        "sc": 0.164,
+        "sc": 0.151,
         "odds": null,
-        "modelOdds": 1.75,
+        "modelOdds": 1.5,
         "value": null,
         "oddsIsEst": false,
-        "reason": "FC Thun ist Favorit (18% Heimsieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von FC Thun geht der Einsatz verloren.",
+        "reason": "Servette FC zeigt starke Auswärtsform (15% Auswärtssieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Servette FC geht der Einsatz verloren.",
         "mods": [
-          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ FC Thun Abstieg quasi sicher (-8% xG)</span>"
+          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Servette FC Abstieg quasi sicher (-8% xG)</span>"
         ],
         "saferAlt": null,
         "boldAlt": null
@@ -7065,12 +7657,12 @@
         "marketKey": "over25",
         "icon": "⚽",
         "conf": "low",
-        "sc": 0.92,
+        "sc": 0.734,
         "odds": null,
-        "modelOdds": 1.48,
+        "modelOdds": 1.38,
         "value": null,
         "oddsIsEst": false,
-        "reason": "FC Thun erzielt Ø 1.7 Tore/Spiel, Servette FC Ø 0.9 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: FC Thun Ø 2.7, Servette FC Ø 1.4). Das Modell erwartet 3.3 Tore: mindestens 3 Treffer sind gut möglich.",
+        "reason": "FC Thun erzielt Ø 1.8 Tore/Spiel, Servette FC Ø 0.9 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: FC Thun Ø 3.0, Servette FC Ø 1.4). Das Modell erwartet 3.5 Tore: mindestens 3 Treffer sind gut möglich.",
         "mods": [
           "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ FC Thun Abstieg quasi sicher (-8% xG)</span>",
           "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Servette FC Abstieg quasi sicher (-8% xG)</span>"
@@ -7079,16 +7671,16 @@
         "boldAlt": null
       },
       {
-        "market": "1. HZ: Beide Teams treffen",
-        "marketKey": "ht_btts",
+        "market": "1. HZ: Over 0.5 Tore",
+        "marketKey": "ht_over05",
         "icon": "⏱️",
         "conf": "low",
-        "sc": 0.54,
+        "sc": 0.85,
         "odds": null,
-        "modelOdds": 3.66,
+        "modelOdds": 1.25,
         "value": null,
         "oddsIsEst": false,
-        "reason": "FC Thun (Ø 1.7 Tore/Spiel) und Servette FC (Ø 0.9) starten offensiv — beide Teams könnten schon in der ersten Halbzeit getroffen haben.",
+        "reason": "FC Thun (Ø 1.8 Tore/Spiel) und Servette FC (Ø 0.9) spielen beide offensiv — ein Treffer schon in der ersten Halbzeit ist sehr wahrscheinlich.",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -7391,12 +7983,12 @@
         "marketKey": "awayWin",
         "icon": "✈️",
         "conf": "low",
-        "sc": 1.247,
+        "sc": 1.337,
         "odds": null,
         "modelOdds": 1.7,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Anderlecht ist in Topform (zuletzt 3 Siege) und gewinnt 74% seiner Auswärtsspiele. Das Angriffsspiel (Ø 1.7 Tore/Spiel) trifft auf eine anfällige SK Beveren-Abwehr (kassiert Ø 2.2 Tore/Spiel). · H2H: 2H/3U/13A (18 Duelle)",
+        "reason": "Anderlecht ist in Topform (zuletzt 4 Siege) und gewinnt 74% seiner Auswärtsspiele. Das Angriffsspiel (Ø 1.7 Tore/Spiel) trifft auf eine anfällige SK Beveren-Abwehr (kassiert Ø 2.2 Tore/Spiel). · H2H: 2H/3U/13A (18 Duelle)",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -7452,12 +8044,12 @@
         "marketKey": "dcX2",
         "icon": "🎯",
         "conf": "low",
-        "sc": 0.374,
+        "sc": 0.399,
         "odds": null,
-        "modelOdds": 1.32,
+        "modelOdds": 1.26,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Gent zeigt starke Auswärtsform (41% Auswärtssieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Gent geht der Einsatz verloren.",
+        "reason": "Gent zeigt starke Auswärtsform (46% Auswärtssieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Gent geht der Einsatz verloren.",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -7469,10 +8061,10 @@
         "conf": "low",
         "sc": 0.816,
         "odds": null,
-        "modelOdds": 1.42,
+        "modelOdds": 1.37,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Das Modell erwartet nur 1.9 Tore insgesamt — RAAL La Louvière (Ø 0.7 Tore/Spiel) und Gent (Ø 0.9) sind beide offensiv zu schwach für viele Treffer.",
+        "reason": "Das Modell erwartet nur 1.8 Tore insgesamt — RAAL La Louvière (Ø 0.7 Tore/Spiel) und Gent (Ø 0.9) sind beide offensiv zu schwach für viele Treffer.",
         "mods": [
           "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ RAAL La Louvière Abstieg quasi sicher (-8% xG)</span>"
         ],
@@ -7785,12 +8377,12 @@
         "marketKey": "homeWin",
         "icon": "🏠",
         "conf": "low",
-        "sc": 1.205,
+        "sc": 0.777,
         "odds": null,
         "modelOdds": 1.82,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Gent ist in Topform (zuletzt 2 Siege) und gewinnt 78% seiner Heimspiele. Das Angriffsspiel (Ø 1.9 Tore/Spiel) trifft auf eine anfällige OH Leuven-Abwehr (kassiert Ø 3.1 Tore/Spiel). · H2H: 10H/5U/5A (20 Duelle)<br>📊 Heimstatistik (Saison): 100% Siege · 100% Clean Sheets.",
+        "reason": "OH Leuven ist auswärts unter Abstiegsdruck — das wirkt sich oft negativ auf die Leistung aus. Gent gewinnt 80% seiner Heimspiele und kann diesen Vorteil nutzen. · H2H: 10H/5U/5A (20 Duelle)<br>📊 Heimstatistik (Saison): 100% Siege · 100% Clean Sheets.",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -7995,6 +8587,67 @@
         "value": null,
         "oddsIsEst": false,
         "reason": "Club Brugge KV (Ø 3.0 Tore/Spiel) und Cercle Brugge (Ø 2.0) spielen beide offensiv — ein Treffer schon in der ersten Halbzeit ist sehr wahrscheinlich.",
+        "mods": [],
+        "saferAlt": null,
+        "boldAlt": null
+      }
+    ]
+  },
+  {
+    "league": "BEL",
+    "leagueName": "Jupiler Pro League",
+    "leagueFlag": "🇧🇪",
+    "roundsLeft": 39,
+    "home": "Genk",
+    "away": "SK Beveren",
+    "date": "28.08.2026",
+    "dateIso": "2026-08-28",
+    "eventId": 1558608,
+    "matchScore": 7.5,
+    "picks": [
+      {
+        "market": "Doppelte Chance: 1X",
+        "marketKey": "dc1X",
+        "icon": "🎯",
+        "conf": "low",
+        "sc": 0.382,
+        "odds": null,
+        "modelOdds": 2.2,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Genk ist Favorit (41% Heimsieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Genk geht der Einsatz verloren.",
+        "mods": [
+          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Genk Abstieg quasi sicher (-8% xG)</span>"
+        ],
+        "saferAlt": null,
+        "boldAlt": null
+      },
+      {
+        "market": "SK Beveren über 1.5 Tore",
+        "marketKey": "team_goals_away_over:1.5",
+        "icon": "✈️",
+        "conf": "low",
+        "sc": 0.68,
+        "odds": 1.4,
+        "modelOdds": 1.71,
+        "value": null,
+        "oddsIsEst": true,
+        "reason": "SK Beveren trifft im Schnitt 2.1 Mal pro Spiel — der Gegner lässt 2.4 Tore zu. Das Modell erwartet 2.3 Auswärtstore: mindestens 2 Treffer für SK Beveren sind gut möglich.",
+        "mods": [],
+        "saferAlt": null,
+        "boldAlt": null
+      },
+      {
+        "market": "1. HZ: Over 0.5 Tore",
+        "marketKey": "ht_over05",
+        "icon": "⏱️",
+        "conf": "low",
+        "sc": 0.85,
+        "odds": null,
+        "modelOdds": 1.22,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Genk (Ø 0.9 Tore/Spiel) und SK Beveren (Ø 2.1) spielen beide offensiv — ein Treffer schon in der ersten Halbzeit ist sehr wahrscheinlich.",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -8868,6 +9521,117 @@
     ]
   },
   {
+    "league": "POL",
+    "leagueName": "Ekstraklasa",
+    "leagueFlag": "🇵🇱",
+    "roundsLeft": 31,
+    "home": "Wisla Plock",
+    "away": "Korona Kielce",
+    "date": "28.08.2026",
+    "dateIso": "2026-08-28",
+    "eventId": 1553153,
+    "matchScore": 7.5,
+    "picks": [
+      {
+        "market": "Doppelte Chance: 1X",
+        "marketKey": "dc1X",
+        "icon": "🎯",
+        "conf": "low",
+        "sc": 0.283,
+        "odds": null,
+        "modelOdds": 1.23,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Wisla Plock ist Favorit (27% Heimsieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von Wisla Plock geht der Einsatz verloren.",
+        "mods": [
+          "<span class=\"mod-chip mod-fat\">😴 Wisla Plock 5T Pause (-4% xG)</span>"
+        ],
+        "saferAlt": null,
+        "boldAlt": null
+      },
+      {
+        "market": "Beide Teams treffen: Nein",
+        "marketKey": "noBtts",
+        "icon": "🔒",
+        "conf": "medium",
+        "sc": 0.64,
+        "odds": 1.15,
+        "modelOdds": 1.23,
+        "value": null,
+        "oddsIsEst": true,
+        "reason": "Korona Kielce ist offensiv sehr schwach (Ø 0.3 Tore/Spiel) — ein Treffer ist für dieses Team schon eine Herausforderung. Wahrscheinlich bleibt eines der beiden Teams ohne Tor.<br>📊 Saison-Stats: Wisla Plock hält 100% Clean Sheets zuhause · Korona Kielce trifft in 100% der Auswärtsspiele nicht.<br>🛡️ Plock: M. Flis (VER) · Kielce: K. Sotiriou (VER)",
+        "mods": [
+          "<span class=\"mod-chip mod-fat\">😴 Wisla Plock 5T Pause (-4% xG)</span>"
+        ],
+        "saferAlt": null,
+        "boldAlt": null
+      }
+    ]
+  },
+  {
+    "league": "POL",
+    "leagueName": "Ekstraklasa",
+    "leagueFlag": "🇵🇱",
+    "roundsLeft": 31,
+    "home": "Legia Warszawa",
+    "away": "Slask Wroclaw",
+    "date": "28.08.2026",
+    "dateIso": "2026-08-28",
+    "eventId": 1553147,
+    "matchScore": 7.5,
+    "picks": [
+      {
+        "market": "Heimsieg",
+        "marketKey": "homeWin",
+        "icon": "🏠",
+        "conf": "low",
+        "sc": 0.913,
+        "odds": null,
+        "modelOdds": 1.78,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Legia Warszawa kämpft um den Titel — ein Heimsieg ist Pflicht. Gewinnt 87% der Heimspiele und erzielt Ø 2.8 Tore/Spiel. Der Druck erhöht die Intensität. · H2H: 9H/4U/2A (15 Duelle)<br>📊 Heimstatistik (Saison): 100% Siege · 0% Clean Sheets.",
+        "mods": [
+          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Legia Warszawa nahezu gesichert (-8% xG)</span>"
+        ],
+        "saferAlt": null,
+        "boldAlt": null
+      },
+      {
+        "market": "Over 2.5 Tore",
+        "marketKey": "over25",
+        "icon": "⚽",
+        "conf": "low",
+        "sc": 0.78,
+        "odds": null,
+        "modelOdds": 1.61,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Legia Warszawa erzielt Ø 2.8 Tore/Spiel, Slask Wroclaw Ø 1.0 — beide Defensiven lassen regelmäßig Gegentore zu (Gegentore: Legia Warszawa Ø 1.1, Slask Wroclaw Ø 2.0). Das Modell erwartet 3.5 Tore: mindestens 3 Treffer sind gut möglich.",
+        "mods": [
+          "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Legia Warszawa nahezu gesichert (-8% xG)</span>"
+        ],
+        "saferAlt": null,
+        "boldAlt": null
+      },
+      {
+        "market": "1. HZ: Over 0.5 Tore",
+        "marketKey": "ht_over05",
+        "icon": "⏱️",
+        "conf": "low",
+        "sc": 0.85,
+        "odds": null,
+        "modelOdds": 1.27,
+        "value": null,
+        "oddsIsEst": false,
+        "reason": "Legia Warszawa (Ø 2.8 Tore/Spiel) und Slask Wroclaw (Ø 1.0) spielen beide offensiv — ein Treffer schon in der ersten Halbzeit ist sehr wahrscheinlich.",
+        "mods": [],
+        "saferAlt": null,
+        "boldAlt": null
+      }
+    ]
+  },
+  {
     "league": "HUN",
     "leagueName": "NB I",
     "leagueFlag": "🇭🇺",
@@ -9072,7 +9836,7 @@
         "modelOdds": 2.01,
         "value": null,
         "oddsIsEst": true,
-        "reason": "Debreceni VSC ist offensiv sehr schwach (Ø 0.4 Tore/Spiel) — ein Treffer ist für dieses Team schon eine Herausforderung. Wahrscheinlich bleibt eines der beiden Teams ohne Tor.<br>📊 Saison-Stats: Debreceni VSC hält 50% Clean Sheets zuhause · Gyori ETO FC trifft in 0% der Auswärtsspiele nicht.<br>🛡️ VSC: Á. Lang (VER) · FC: M. Krpić (VER · 7.4 Rtg)",
+        "reason": "Debreceni VSC ist offensiv sehr schwach (Ø 0.4 Tore/Spiel) — ein Treffer ist für dieses Team schon eine Herausforderung. Wahrscheinlich bleibt eines der beiden Teams ohne Tor.<br>📊 Saison-Stats: Debreceni VSC hält 50% Clean Sheets zuhause · Gyori ETO FC trifft in 0% der Auswärtsspiele nicht.<br>🛡️ VSC: P. Andreev (TW) · FC: M. Krpić (VER · 7.4 Rtg)",
         "mods": [
           "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Debreceni VSC Abstieg quasi sicher (-8% xG)</span>"
         ],
@@ -9529,7 +10293,7 @@
         "conf": "low",
         "sc": 0.705,
         "odds": null,
-        "modelOdds": 2.36,
+        "modelOdds": 2.37,
         "value": null,
         "oddsIsEst": false,
         "reason": "Zalaegerszegi TE ist auswärts unter Abstiegsdruck — das wirkt sich oft negativ auf die Leistung aus. Gyori ETO FC gewinnt 78% seiner Heimspiele und kann diesen Vorteil nutzen. · H2H: 5H/4U/4A (13 Duelle)<br>📊 Heimstatistik (Saison): 100% Siege · 100% Clean Sheets.",
@@ -9544,10 +10308,10 @@
         "conf": "low",
         "sc": 0.82,
         "odds": null,
-        "modelOdds": 1.8,
+        "modelOdds": 1.91,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Gyori ETO FC erzielt Ø 2.5 Tore/Spiel, Zalaegerszegi TE Ø 1.7 — beide Defensiven sind anfällig und lassen viele Gegentore zu. Das Modell erwartet 4.0 Tore insgesamt: ein Torfestival mit 4+ Treffern ist klar möglich. Historisch Ø 2.23 Tore/Duell.",
+        "reason": "Gyori ETO FC erzielt Ø 2.3 Tore/Spiel, Zalaegerszegi TE Ø 1.7 — beide Defensiven sind anfällig und lassen viele Gegentore zu. Das Modell erwartet 3.9 Tore insgesamt: ein Torfestival mit 4+ Treffern ist klar möglich. Historisch Ø 2.23 Tore/Duell.",
         "mods": [
           "<span class=\"mod-chip mod-fat\">😴 Zalaegerszegi TE 5T Pause (-6% xG)</span>",
           "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ Zalaegerszegi TE Abstieg quasi sicher (-8% xG)</span>"
@@ -9562,10 +10326,10 @@
         "conf": "low",
         "sc": 0.85,
         "odds": null,
-        "modelOdds": 1.2,
+        "modelOdds": 1.21,
         "value": null,
         "oddsIsEst": false,
-        "reason": "Gyori ETO FC (Ø 2.5 Tore/Spiel) und Zalaegerszegi TE (Ø 1.7) spielen beide offensiv — ein Treffer schon in der ersten Halbzeit ist sehr wahrscheinlich.",
+        "reason": "Gyori ETO FC (Ø 2.3 Tore/Spiel) und Zalaegerszegi TE (Ø 1.7) spielen beide offensiv — ein Treffer schon in der ersten Halbzeit ist sehr wahrscheinlich.",
         "mods": [],
         "saferAlt": null,
         "boldAlt": null
@@ -9810,12 +10574,12 @@
         "marketKey": "dcX2",
         "icon": "🎯",
         "conf": "low",
-        "sc": 0.224,
+        "sc": 0.261,
         "odds": null,
-        "modelOdds": 1.4,
+        "modelOdds": 1.28,
         "value": null,
         "oddsIsEst": false,
-        "reason": "HNK Hajduk Split zeigt starke Auswärtsform (18% Auswärtssieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von HNK Hajduk Split geht der Einsatz verloren.",
+        "reason": "HNK Hajduk Split zeigt starke Auswärtsform (25% Auswärtssieg-Rate) — diese Wette gewinnt sowohl bei einem Sieg als auch bei einem Unentschieden. Nur bei einer Niederlage von HNK Hajduk Split geht der Einsatz verloren.",
         "mods": [
           "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ HNK Hajduk Split Abstieg quasi sicher (-8% xG)</span>"
         ],
@@ -9829,29 +10593,14 @@
         "conf": "low",
         "sc": 0.84,
         "odds": null,
-        "modelOdds": 1.77,
+        "modelOdds": 1.74,
         "value": null,
         "oddsIsEst": false,
-        "reason": "HNK Gorica erzielt Ø 0.4, HNK Hajduk Split Ø 1.5 Tore/Spiel — die Torerwartung kommt vor allem aus anfälligen Defensiven (Gegentore: HNK Gorica Ø 2.0, HNK Hajduk Split Ø 2.2). Das Modell erwartet 3.0 Tore: mindestens 3 Treffer sind gut möglich.",
+        "reason": "HNK Gorica erzielt Ø 0.4, HNK Hajduk Split Ø 2.0 Tore/Spiel — die Torerwartung kommt vor allem aus anfälligen Defensiven (Gegentore: HNK Gorica Ø 2.0, HNK Hajduk Split Ø 1.9). Das Modell erwartet 3.1 Tore: mindestens 3 Treffer sind gut möglich.",
         "mods": [
           "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ HNK Gorica Abstieg quasi sicher (-8% xG)</span>",
           "<span class=\"mod-chip\" style=\"background:#1a1a1a;color:#aaa;border:1px solid #444\">⬜ HNK Hajduk Split Abstieg quasi sicher (-8% xG)</span>"
         ],
-        "saferAlt": null,
-        "boldAlt": null
-      },
-      {
-        "market": "Unter 7.5 Ecken",
-        "marketKey": "corners_under:7.5",
-        "icon": "🚩",
-        "conf": "low",
-        "sc": 0.72,
-        "odds": 1.42,
-        "modelOdds": 1.61,
-        "value": null,
-        "oddsIsEst": true,
-        "reason": "Taktisch defensives Spiel mit erwarteten ~7 Ecken.",
-        "mods": [],
         "saferAlt": null,
         "boldAlt": null
       }
