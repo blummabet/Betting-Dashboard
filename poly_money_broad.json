@@ -1,15 +1,15 @@
 {
- "n": 372,
+ "n": 373,
  "minOdds": 1.35,
- "moneyHitRate": 0.578,
- "priceHitRate": 0.589,
- "brierMoney": 0.5042,
- "brierPrice": 0.4793,
+ "moneyHitRate": 0.579,
+ "priceHitRate": 0.582,
+ "brierMoney": 0.4976,
+ "brierPrice": 0.4821,
  "disagree": {
-  "n": 9,
-  "moneyWon": 0,
-  "priceWon": 4,
-  "neither": 5
+  "n": 7,
+  "moneyWon": 1,
+  "priceWon": 2,
+  "neither": 4
  },
  "verdict": "preis_besser",
  "byLeague": [
@@ -27,6 +27,14 @@
    "moneyHitRate": 0.6,
    "brierMoney": 0.4472,
    "brierPrice": 0.4473,
+   "verdict": "gleichauf"
+  },
+  {
+   "league": "ESPORTS",
+   "n": 161,
+   "moneyHitRate": 0.615,
+   "brierMoney": 0.4558,
+   "brierPrice": 0.4558,
    "verdict": "gleichauf"
   },
   {
@@ -55,34 +63,26 @@
   },
   {
    "league": "TENNIS",
-   "n": 49,
-   "moneyHitRate": 0.592,
-   "brierMoney": 0.4662,
-   "brierPrice": 0.4662,
-   "verdict": "gleichauf"
-  },
-  {
-   "league": "ESPORTS",
-   "n": 161,
-   "moneyHitRate": 0.615,
-   "brierMoney": 0.455,
-   "brierPrice": 0.4549,
+   "n": 52,
+   "moneyHitRate": 0.558,
+   "brierMoney": 0.4864,
+   "brierPrice": 0.4864,
    "verdict": "gleichauf"
   },
   {
    "league": "MLB",
-   "n": 79,
-   "moneyHitRate": 0.494,
-   "brierMoney": 0.5411,
-   "brierPrice": 0.501,
+   "n": 78,
+   "moneyHitRate": 0.5,
+   "brierMoney": 0.5218,
+   "brierPrice": 0.5031,
    "verdict": "preis_besser"
   },
   {
    "league": "SOCCER",
-   "n": 33,
-   "moneyHitRate": 0.455,
-   "brierMoney": 0.7886,
-   "brierPrice": 0.6048,
+   "n": 32,
+   "moneyHitRate": 0.5,
+   "brierMoney": 0.735,
+   "brierPrice": 0.6012,
    "verdict": "preis_besser"
   }
  ],
@@ -256,6 +256,18 @@
    "totalUsd": 436954
   },
   {
+   "key": "mlb-stl-chc-2026-08-14",
+   "league": "MLB",
+   "winner": "Chicago Cubs",
+   "moneyFav": "Chicago Cubs",
+   "priceFav": "Chicago Cubs",
+   "moneyShare": 0.635,
+   "priceProb": 0.635,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 411324
+  },
+  {
    "key": "mlb-atl-nyy-2026-08-09",
    "league": "MLB",
    "winner": "Atlanta Braves",
@@ -314,6 +326,18 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 357644
+  },
+  {
+   "key": "cs2-prv-100t-2026-08-14",
+   "league": "ESPORTS",
+   "winner": "PARIVISION",
+   "moneyFav": "PARIVISION",
+   "priceFav": "PARIVISION",
+   "moneyShare": 0.505,
+   "priceProb": 0.505,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 356328
   },
   {
    "key": "lol-kt-dk-2026-08-12",
@@ -542,50 +566,26 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 260597
-  },
-  {
-   "key": "cs2-fal2-ast10-2026-08-13",
-   "league": "ESPORTS",
-   "winner": "Team Falcons",
-   "moneyFav": "Team Falcons",
-   "priceFav": "Team Falcons",
-   "moneyShare": 0.685,
-   "priceProb": 0.685,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 245249
-  },
-  {
-   "key": "cs2-bb3-faze-2026-08-12",
-   "league": "ESPORTS",
-   "winner": "FaZe",
-   "moneyFav": "FaZe",
-   "priceFav": "FaZe",
-   "moneyShare": 0.525,
-   "priceProb": 0.525,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 240968
   }
  ],
- "generatedAt": "2026-08-14T20:47:56.357551+00:00",
+ "generatedAt": "2026-08-14T21:43:33.625546+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 420,
   "nfl": 800,
-  "mlb": 587,
+  "mlb": 586,
   "nhl": 403,
   "mls": 737,
   "epl": 474,
   "soccer": 800,
-  "tennis": 508,
+  "tennis": 503,
   "ucl": 500,
   "laliga": 0,
   "bundesliga": 401,
   "serie-a": 37,
   "ligue-1": 467,
-  "esports": 626,
+  "esports": 621,
   "cs2": 405,
   "lol": 373,
   "dota": 9,
@@ -595,7 +595,7 @@
   "boxing": 224,
   "golf": 301,
   "f1": 334,
-  "cricket": 565
+  "cricket": 556
  },
  "sweepStats": {
   "sweepOpen": 500,
