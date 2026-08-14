@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-14T19:14:44.969511+00:00",
+ "generatedAt": "2026-08-14T19:58:41.010417+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -27,8 +27,37 @@
   "soccer_liga": 27
  },
  "trackRecord": {
-  "tracked": 90,
+  "tracked": 92,
   "converged": 3
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|chicagocubs-stlouiscardinals|stlouiscardinals",
+   "sport": "baseball_mlb",
+   "event": "St. Louis Cardinals vs Chicago Cubs",
+   "market": "Moneyline",
+   "outcome": "St. Louis Cardinals",
+   "polyPP": 5.5,
+   "pinnPP": 26.0,
+   "gapPP": -20.46,
+   "vol": 678598,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-14T19:58:41.010219+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagocubs-stlouiscardinals|chicagocubs",
+   "sport": "baseball_mlb",
+   "event": "St. Louis Cardinals vs Chicago Cubs",
+   "market": "Moneyline",
+   "outcome": "Chicago Cubs",
+   "polyPP": 94.5,
+   "pinnPP": 74.0,
+   "gapPP": 20.46,
+   "vol": 678598,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-14T19:58:41.010219+00:00"
+  }
+ ]
 }
