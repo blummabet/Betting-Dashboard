@@ -1,25 +1,875 @@
 {
-"generatedAt": "2026-08-13T19:38:04.633738+00:00",
+"generatedAt": "2026-08-14T00:08:29.280670+00:00",
 "byVerdict": {
 "konsens": {
-"n": 22,
-"wins": 15,
-"hitRate": 0.6818,
-"pinnN": 0,
-"pinnHitRate": null
+"n": 34,
+"wins": 22,
+"hitRate": 0.6471,
+"polyN": 34,
+"polyWins": 22,
+"polyHitRate": 0.6471,
+"pinnN": 1,
+"pinnHitRate": 1.0
 },
 "uneinig": {
-"n": 6,
-"wins": 2,
+"n": 9,
+"wins": 3,
 "hitRate": 0.3333,
+"polyN": 9,
+"polyWins": 1,
+"polyHitRate": 0.1111,
 "pinnN": 0,
 "pinnHitRate": null
+},
+"teil": {
+"n": 1,
+"wins": 0,
+"hitRate": 0.0,
+"polyN": 1,
+"polyWins": 0,
+"polyHitRate": 0.0,
+"pinnN": 1,
+"pinnHitRate": 0.0
 }
 },
-"global": {
-"n": 28,
-"wins": 17,
-"hitRate": 0.6071
+"byLeague": {
+"UEFA Europa Conference Qualifiers": {
+"n": 17,
+"wins": 8,
+"hitRate": 0.4706
 },
-"pending": 14
+"North American Leagues Cup": {
+"n": 7,
+"wins": 6,
+"hitRate": 0.8571
+},
+"UEFA Europa League Qualifiers": {
+"n": 7,
+"wins": 5,
+"hitRate": 0.7143
+},
+"CONMEBOL Copa Libertadores": {
+"n": 4,
+"wins": 0,
+"hitRate": 0.0
+},
+"Elite Friendlies": {
+"n": 4,
+"wins": 2,
+"hitRate": 0.5
+},
+"Argentinian Cup": {
+"n": 1,
+"wins": 1,
+"hitRate": 1.0
+},
+"CONMEBOL Copa Sudamericana": {
+"n": 1,
+"wins": 1,
+"hitRate": 1.0
+},
+"Chilean Primera B": {
+"n": 1,
+"wins": 0,
+"hitRate": 0.0
+},
+"UEFA Super Cup": {
+"n": 1,
+"wins": 1,
+"hitRate": 1.0
+},
+"Uzbekistan Super League": {
+"n": 1,
+"wins": 1,
+"hitRate": 1.0
+}
+},
+"byStrength": {
+"strong": {
+"n": 9,
+"wins": 6,
+"hitRate": 0.6667
+},
+"weak": {
+"n": 2,
+"wins": 1,
+"hitRate": 0.5
+}
+},
+"divergence": {
+"n": 9,
+"betfairWins": 3,
+"betfairRate": 0.3333,
+"polyN": 9,
+"polyWins": 1,
+"polyRate": 0.1111
+},
+"recent": [
+{
+"matchId": "35881028",
+"home": "Santos",
+"away": "Macara",
+"league": "CONMEBOL Copa Sudamericana",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Santos",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-08-13T22:00:00Z",
+"settledAt": "2026-08-14T00:08:29.279692+00:00"
+},
+{
+"matchId": "35672382",
+"home": "Mirassol",
+"away": "LDU",
+"league": "CONMEBOL Copa Libertadores",
+"verdict": "teil",
+"moneySide": "home",
+"moneyName": "Mirassol",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-13T22:00:00Z",
+"settledAt": "2026-08-13T23:56:14.392291+00:00"
+},
+{
+"matchId": "35917211",
+"home": "Anderlecht",
+"away": "PAOK",
+"league": "UEFA Europa League Qualifiers",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Anderlecht",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+2
+],
+"kickoff": "2026-08-13T18:30:00Z",
+"settledAt": "2026-08-13T21:38:15.580359+00:00"
+},
+{
+"matchId": "35917737",
+"home": "Sion",
+"away": "FC Noah",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Sion",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-08-13T18:15:00Z",
+"settledAt": "2026-08-13T21:23:12.902626+00:00"
+},
+{
+"matchId": "35917616",
+"home": "Dinamo Tirana",
+"away": "FK Auda",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Dinamo Tirana",
+"polySide": "away",
+"winner": "home",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+4,
+0
+],
+"kickoff": "2026-08-13T19:00:00Z",
+"settledAt": "2026-08-13T21:08:11.018594+00:00"
+},
+{
+"matchId": "35917205",
+"home": "Egnatia Rrogozhine",
+"away": "Shamrock Rovers",
+"league": "UEFA Europa League Qualifiers",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Egnatia Rrogozhine",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+5,
+1
+],
+"kickoff": "2026-08-13T19:00:00Z",
+"settledAt": "2026-08-13T21:08:11.018594+00:00"
+},
+{
+"matchId": "35917614",
+"home": "Shelbourne",
+"away": "Ajax",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Ajax",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-08-13T18:45:00Z",
+"settledAt": "2026-08-13T20:53:09.247309+00:00"
+},
+{
+"matchId": "35917207",
+"home": "Rangers",
+"away": "Jagiellonia Bialystock",
+"league": "UEFA Europa League Qualifiers",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Rangers",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-13T18:30:00Z",
+"settledAt": "2026-08-13T20:38:07.589834+00:00"
+},
+{
+"matchId": "35914660",
+"home": "Vikingur Reykjavik",
+"away": "Thun",
+"league": "UEFA Europa League Qualifiers",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Vikingur Reykjavik",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+2
+],
+"kickoff": "2026-08-13T17:30:00Z",
+"settledAt": "2026-08-13T20:38:07.589834+00:00"
+},
+{
+"matchId": "35917732",
+"home": "NSI Runavik",
+"away": "Lugano",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "NSI Runavik",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-08-13T17:30:00Z",
+"settledAt": "2026-08-13T20:38:07.589834+00:00"
+},
+{
+"matchId": "35917743",
+"home": "Gent",
+"away": "IFK Goteborg",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Gent",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-13T18:30:00Z",
+"settledAt": "2026-08-13T20:38:07.589834+00:00"
+},
+{
+"matchId": "35917738",
+"home": "Austria Wien",
+"away": "Beitar Jerusalem",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Beitar Jerusalem",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-08-13T18:30:00Z",
+"settledAt": "2026-08-13T20:23:06.243952+00:00"
+},
+{
+"matchId": "35917665",
+"home": "Hammarby",
+"away": "Rakow Czestochowa",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Hammarby",
+"polySide": "away",
+"winner": "away",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-08-13T17:00:00Z",
+"settledAt": "2026-08-13T20:08:05.830702+00:00"
+},
+{
+"matchId": "35914628",
+"home": "CSKA Sofia",
+"away": "Maccabi Tel Aviv",
+"league": "UEFA Europa League Qualifiers",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Maccabi Tel Aviv",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+3
+],
+"kickoff": "2026-08-13T18:00:00Z",
+"settledAt": "2026-08-13T20:08:05.830702+00:00"
+},
+{
+"matchId": "35917605",
+"home": "Dinamo Minsk",
+"away": "Braga",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Braga",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-08-13T17:00:00Z",
+"settledAt": "2026-08-13T20:08:05.830702+00:00"
+},
+{
+"matchId": "35917692",
+"home": "Dunajska Streda",
+"away": "FC Twente",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "FC Twente",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+3,
+3
+],
+"kickoff": "2026-08-13T17:00:00Z",
+"settledAt": "2026-08-13T20:08:05.830702+00:00"
+},
+{
+"matchId": "35917730",
+"home": "FC Vaduz",
+"away": "FC Inter Turku",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-08-13T17:30:00Z",
+"settledAt": "2026-08-13T19:30:30.452033+00:00"
+},
+{
+"matchId": "35914477",
+"home": "Besiktas",
+"away": "Hradec Kralove",
+"league": "UEFA Europa League Qualifiers",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Besiktas",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-08-13T17:00:00Z",
+"settledAt": "2026-08-13T18:53:00.536062+00:00"
+},
+{
+"matchId": "35917203",
+"home": "Pafos FC",
+"away": "Red Bull Salzburg",
+"league": "UEFA Europa League Qualifiers",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Pafos FC",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+3,
+3
+],
+"kickoff": "2026-08-13T17:00:00Z",
+"settledAt": "2026-08-13T18:53:00.536062+00:00"
+},
+{
+"matchId": "35917610",
+"home": "ML Vitebsk",
+"away": "Borac Banja Luka",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Borac Banja Luka",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-08-13T17:00:00Z",
+"settledAt": "2026-08-13T18:53:00.536062+00:00"
+},
+{
+"matchId": "35917622",
+"home": "Rigas Futbola Skola",
+"away": "FK Jablonec",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "FK Jablonec",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-08-13T16:30:00Z",
+"settledAt": "2026-08-13T18:23:28.320723+00:00"
+},
+{
+"matchId": "35917615",
+"home": "Qarabag FK",
+"away": "Dynamo Kiev",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Qarabag Fk",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-08-13T16:00:00Z",
+"settledAt": "2026-08-13T18:08:02.386863+00:00"
+},
+{
+"matchId": "35917618",
+"home": "Ilves",
+"away": "Rijeka",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Rijeka",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-13T16:00:00Z",
+"settledAt": "2026-08-13T17:52:56.197897+00:00"
+},
+{
+"matchId": "35917690",
+"home": "Tallinna FC Flora",
+"away": "Inter Club Escaldes",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Inter Club Escaldes",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+4
+],
+"kickoff": "2026-08-13T16:00:00Z",
+"settledAt": "2026-08-13T17:52:56.197897+00:00"
+},
+{
+"matchId": "35927565",
+"home": "Toluca",
+"away": "FC Dallas",
+"league": "North American Leagues Cup",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Toluca",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-08-13T02:00:00Z",
+"settledAt": "2026-08-13T17:07:48.086575+00:00"
+},
+{
+"matchId": "35927550",
+"home": "Inter Miami CF",
+"away": "Leon",
+"league": "North American Leagues Cup",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Inter Miami CF",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+3
+],
+"kickoff": "2026-08-12T23:30:00Z",
+"settledAt": "2026-08-13T17:07:48.086575+00:00"
+},
+{
+"matchId": "35917612",
+"home": "Rapid Vienna",
+"away": "Paide Linnameeskond",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Rapid Vienna",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-08-12T16:00:00Z",
+"settledAt": "2026-08-13T17:07:48.086575+00:00"
+},
+{
+"matchId": "35927557",
+"home": "Monterrey",
+"away": "Nashville SC",
+"league": "North American Leagues Cup",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Monterrey",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-08-13T00:00:00Z",
+"settledAt": "2026-08-13T17:07:48.086575+00:00"
+},
+{
+"matchId": "35917309",
+"home": "GKS Katowice",
+"away": "Hapoel Tel Aviv",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Hapoel Tel Aviv",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-08-12T16:00:00Z",
+"settledAt": "2026-08-13T17:07:48.086575+00:00"
+},
+{
+"matchId": "35921422",
+"home": "Newcastle",
+"away": "Everton",
+"league": "Elite Friendlies",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Everton",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+3
+],
+"kickoff": "2026-08-12T16:15:00Z",
+"settledAt": "2026-08-13T17:07:48.086575+00:00"
+},
+{
+"matchId": "35921614",
+"home": "Arsenal",
+"away": "Como",
+"league": "Elite Friendlies",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Arsenal",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-12T18:30:00Z",
+"settledAt": "2026-08-13T17:07:48.086575+00:00"
+},
+{
+"matchId": "35733917",
+"home": "Paris St-G",
+"away": "Aston Villa",
+"league": "UEFA Super Cup",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Paris St-G",
+"polySide": "draw",
+"winner": "home",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-08-12T19:00:00Z",
+"settledAt": "2026-08-13T17:07:48.086575+00:00"
+},
+{
+"matchId": "35908387",
+"home": "Deportivo",
+"away": "Real Madrid",
+"league": "Elite Friendlies",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Real Madrid",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-08-12T19:00:00Z",
+"settledAt": "2026-08-13T17:07:48.086575+00:00"
+},
+{
+"matchId": "35928213",
+"home": "Nottm Forest",
+"away": "Bayer 04 Leverkusen",
+"league": "Elite Friendlies",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-08-12T18:45:00Z",
+"settledAt": "2026-08-13T17:07:48.086575+00:00"
+},
+{
+"matchId": "35667446",
+"home": "SE Palmeiras",
+"away": "Cerro Porteno",
+"league": "CONMEBOL Copa Libertadores",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "SE Palmeiras",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-12T22:00:00Z",
+"settledAt": "2026-08-13T17:07:48.086575+00:00"
+},
+{
+"matchId": "35667414",
+"home": "CA Platense",
+"away": "Coquimbo Unido",
+"league": "CONMEBOL Copa Libertadores",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "CA Platense",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-12T22:00:00Z",
+"settledAt": "2026-08-13T17:07:48.086575+00:00"
+},
+{
+"matchId": "35927558",
+"home": "Orlando City",
+"away": "Atletico San Luis",
+"league": "North American Leagues Cup",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Orlando City",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+6,
+4
+],
+"kickoff": "2026-08-12T23:30:00Z",
+"settledAt": "2026-08-13T17:07:48.086575+00:00"
+},
+{
+"matchId": "35912632",
+"home": "Atl Tucuman",
+"away": "CA Independiente",
+"league": "Argentinian Cup",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Atl Tucuman",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+0
+],
+"kickoff": "2026-08-12T22:15:00Z",
+"settledAt": "2026-08-13T17:07:48.086575+00:00"
+},
+{
+"matchId": "35667420",
+"home": "Cruzeiro MG",
+"away": "Flamengo",
+"league": "CONMEBOL Copa Libertadores",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Cruzeiro MG",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-13T00:30:00Z",
+"settledAt": "2026-08-13T17:07:48.086575+00:00"
+},
+{
+"matchId": "35927578",
+"home": "Seattle Sounders",
+"away": "Guadalajara",
+"league": "North American Leagues Cup",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Guadalajara",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-08-13T02:30:00Z",
+"settledAt": "2026-08-13T17:07:48.086575+00:00"
+}
+],
+"global": {
+"n": 44,
+"wins": 25,
+"hitRate": 0.5682
+},
+"pending": 8
 }
