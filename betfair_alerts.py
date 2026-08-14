@@ -296,7 +296,29 @@ def _dir_event_jump(a) -> bool:
     return False
 
 
-def _dir_line(a) -> str:
+def _ou_under_alive(a):
+    """14.08.2026 (Lucas): True, wenn der gepushte Ausgang ein UNDER ist, das noch LEBT (aktueller Stand
+    unter der Linie). Nur dann ist eine Live-Drift kein normaler Zeit-Verfall, sondern ein Fade — jemand
+    layt das Under / will das Tor. False bei Over/Team-Maerkten oder schon gerissener Linie; None unklar.
+    Ein Under muss mit der Uhr KUERZER werden; driftet es raus, drueckt Geld GEGEN es."""
+    label = str(a.get("leadLabel") or a.get("leadName") or "").lower()
+    if "under" not in label:
+        return False
+    m = re.search(r"(\d+(?:[.,]\d+)?)", label)
+    if not m:
+        return None
+    try:
+        line = float(m.group(1).replace(",", "."))
+    except ValueError:
+        return None
+    li = a.get("live") or {}
+    g1, g2 = li.get("goal_v1"), li.get("goal_v2")
+    if not (isinstance(g1, int) and isinstance(g2, int)):
+        return None
+    return (g1 + g2) < line
+
+
+def _dir_line(a, ou_fade=False) -> str:
     """08.08.2026 (Lucas: „ist es Back oder Lay?"): Quotenbewegung des Favoriten. Matched-Volumen sagt
     nicht, ob gebackt oder gelayt wurde — die Quote schon. Kuerzer = echter Back-Rueckhalt, driftet =
     nur Volumen ohne Richtung. Nur zeigen, wenn eindeutig (in/out).
@@ -312,6 +334,12 @@ def _dir_line(a) -> str:
     if d == "in":
         return "\n📈 Quote bestätigt — Back%s" % move   # 08.08.2026 (Lucas): NICHT ✅ — das nutzt er selbst zum Auswerten im Channel
     if _is_live(a):   # 09.08.2026 (Lucas): in-play driftet die Quote von allein mit der Zeit (kein Tor -> Sieg-Quote steigt), egal ob jemand layt -> KEIN falsches 'kein Back'-Urteil; vor Anpfiff bleibt es (da bewegt nur Geld die Quote)
+        # 14.08.2026 (Lucas, vorerst NUR Trades): Under muss mit der Uhr kuerzer werden. Driftet es RAUS,
+        # obwohl der Ausgang noch lebt (Stand < Linie), drueckt Geld GEGEN das Under -> jemand layt es /
+        # will das Tor. Das ist der Fade, kein normaler Zeit-Drift.
+        if ou_fade and _ou_under_alive(a) is True:
+            return ("\n⚠️ Geld liegt auf <b>Under</b>, aber Quote driftet raus%s — Under wird gelayt, "
+                    "die Gegenseite will das Tor" % move)
         return "\n⏳ Quote driftet%s — im Spiel normal (Zeit läuft)" % move
     return "\n⚠️ Quote driftet — kein Back-Rückhalt%s" % move
 
@@ -471,7 +499,7 @@ def build_message(a) -> str:
             pct = lambda x: "—" if x is None else "%.0f%%" % (x * 100)
             msg += ("\n%s %s · X %s · %s %s" % (_esc(a["home"]), pct(a["hs"]), pct(a["ds"]),
                                                 _esc(a["away"]), pct(a["as_"])))
-        return msg + _fuehrt_line(a) + _dir_line(a)
+        return msg + _fuehrt_line(a) + _dir_line(a, ou_fade=True) + _draw_inplay_note(a)
     tl = "Top-Liga" if a["tier"] == "top" else "Rest-Liga"
     msg = ("🟡 <b>Betfair · Frisches Geld</b> · %s\n" % tl + head
            + "💶 <b>%s</b>: +<b>%s</b> frisch → jetzt <b>%s</b>"
@@ -479,7 +507,7 @@ def build_message(a) -> str:
     if a.get("leadName"):
         odd = _lead_odd_txt(a)
         msg += "\nführt: %s (%.0f%%)%s" % (_esc(a["leadName"]), (a.get("leadShare") or 0.0) * 100, odd)
-    return msg + _fuehrt_line(a) + _dir_line(a)
+    return msg + _fuehrt_line(a) + _dir_line(a, ou_fade=True) + _draw_inplay_note(a)
 
 
 def _bar(share, width=10):
@@ -647,6 +675,26 @@ def _draw_inplay_chase(a) -> bool:
         return False   # nicht in-play
     od = a.get("leadOdd")
     return isinstance(od, (int, float)) and od < DRAW_INPLAY_CHASE_MAX_ODD
+
+
+def _draw_inplay_note(a) -> str:
+    """14.08.2026 (Lucas): Warnzeile fuer In-Play-Remis-Nachlauf. Fallende X-Quote + Geld aufs Live-Remis
+    SIEHT aus wie Rueckenwind ('Quote bestaetigt Back'), ist aber der Zeit-Effekt: das Remis wird mit der
+    Uhr von selbst wahrscheinlicher, der fallende Kurs ist die Falle (-31..-79% ROI, betfair_draw_tracker).
+    Nur In-Play + Match Odds + The Draw. Zwei Stufen: <2.2 = schon kollabiert (der belegte Verlust-Kern)."""
+    if str(a.get("leadName") or "") != "The Draw" or a.get("market") != "Match Odds":
+        return ""
+    li = a.get("live") or {}
+    if li.get("time") is None or li.get("finished"):
+        return ""   # nicht in-play -> Pre-Match-Remis ist ~break-even, keine Warnung
+    od = a.get("leadOdd")
+    if isinstance(od, (int, float)) and od < DRAW_INPLAY_CHASE_MAX_ODD:
+        return ("\n⛔ <b>Remis schon kollabiert</b> (X &lt; 2.2) — mit der Uhr wird das Remis von selbst "
+                "wahrscheinlicher, der fallende Kurs ist die Falle. Nachlaufen verliert (−31…−79% ROI).")
+    g1, g2 = li.get("goal_v1"), li.get("goal_v2")
+    tail = ", Remis wird von allein wahrscheinlicher" if (g1 == 0 and g2 == 0) else ""
+    return ("\n⚠️ <b>Aber:</b> In-Play-Remis-Nachlauf — die fallende X-Quote ist hier kein Rückenwind, "
+            "sondern der Zeit-Effekt" + tail + ". Nachlaufen verliert historisch (−31…−79% ROI).")
 
 
 def collect_alerts(prices: dict, hist: dict, ht_top=HT_TOP_EUR, ht_rest=HT_REST_EUR,
