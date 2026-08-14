@@ -281,7 +281,14 @@ jobs:
           # Remote kann sich zwischenzeitlich bewegt haben (paralleler Workflow) → rebasen, dann push.
           # --autostash: geteilte tracked-Dateien (z.B. telegram-log.json) außerhalb der Stage-Liste
           # dürfen den Rebase nicht mit „unstaged changes" blockieren (Fix 29.06.2026, s. update-mls).
-          git pull --rebase --autostash origin main || true
-          git push
+          # 14.08.2026 (Lucas): Push-Race mit parallelen Bot-Pushes (betfair alle 10 Min, liga, ...) -> Retry.
+          # Vor JEDEM Versuch neu rebasen; ein einzelner rebase+push verliert, wenn origin/main sich
+          # zwischen rebase und push nochmal bewegt. Bis 5x, dann erst echter Fehler.
+          for attempt in 1 2 3 4 5; do
+            git pull --rebase --autostash origin main || true
+            if git push; then echo "OK Push nach Versuch $attempt"; break; fi
+            echo "Push-Versuch $attempt fehlgeschlagen (origin bewegt) - retry..."; sleep 3
+            if [ "$attempt" = "5" ]; then echo "Push nach 5 Versuchen fehlgeschlagen"; exit 1; fi
+          done
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
