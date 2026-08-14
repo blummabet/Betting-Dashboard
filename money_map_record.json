@@ -1,23 +1,23 @@
 {
-"generatedAt": "2026-08-14T18:12:46.605464+00:00",
+"generatedAt": "2026-08-14T18:40:44.088234+00:00",
 "byVerdict": {
 "konsens": {
-"n": 44,
-"wins": 29,
-"hitRate": 0.6591,
-"polyN": 44,
-"polyWins": 29,
-"polyHitRate": 0.6591,
+"n": 46,
+"wins": 30,
+"hitRate": 0.6522,
+"polyN": 46,
+"polyWins": 30,
+"polyHitRate": 0.6522,
 "pinnN": 1,
 "pinnHitRate": 1.0
 },
 "uneinig": {
-"n": 14,
+"n": 15,
 "wins": 3,
-"hitRate": 0.2143,
-"polyN": 14,
-"polyWins": 3,
-"polyHitRate": 0.2143,
+"hitRate": 0.2,
+"polyN": 15,
+"polyWins": 4,
+"polyHitRate": 0.2667,
 "pinnN": 2,
 "pinnHitRate": 1.0
 },
@@ -68,6 +68,11 @@
 "wins": 0,
 "hitRate": 0.0
 },
+"German Bundesliga 2": {
+"n": 2,
+"wins": 1,
+"hitRate": 0.5
+},
 "Uzbekistan Super League": {
 "n": 2,
 "wins": 2,
@@ -93,6 +98,11 @@
 "wins": 1,
 "hitRate": 1.0
 },
+"Romanian Liga I": {
+"n": 1,
+"wins": 0,
+"hitRate": 0.0
+},
 "UAE Arabian Gulf League": {
 "n": 1,
 "wins": 0,
@@ -106,25 +116,82 @@
 },
 "byStrength": {
 "strong": {
-"n": 18,
-"wins": 12,
-"hitRate": 0.6667
+"n": 20,
+"wins": 13,
+"hitRate": 0.65
 },
 "weak": {
-"n": 8,
+"n": 9,
 "wins": 2,
-"hitRate": 0.25
+"hitRate": 0.2222
 }
 },
 "divergence": {
-"n": 14,
+"n": 15,
 "betfairWins": 3,
-"betfairRate": 0.2143,
-"polyN": 14,
-"polyWins": 3,
-"polyRate": 0.2143
+"betfairRate": 0.2,
+"polyN": 15,
+"polyWins": 4,
+"polyRate": 0.2667
 },
 "recent": [
+{
+"matchId": "35909982",
+"home": "FC Voluntari",
+"away": "ACS Petrolul 52",
+"league": "Romanian Liga I",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "away",
+"winner": "away",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-08-14T15:30:00Z",
+"settledAt": "2026-08-14T18:31:27.283075+00:00"
+},
+{
+"matchId": "35923735",
+"home": "Holstein Kiel",
+"away": "St Pauli",
+"league": "German Bundesliga 2",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "St Pauli",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-08-14T16:30:00Z",
+"settledAt": "2026-08-14T18:31:27.283075+00:00"
+},
+{
+"matchId": "35916721",
+"home": "Braunschweig",
+"away": "Bochum",
+"league": "German Bundesliga 2",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Bochum",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-08-14T16:30:00Z",
+"settledAt": "2026-08-14T18:31:27.283075+00:00"
+},
 {
 "matchId": "35921857",
 "home": "Marseille",
@@ -827,69 +894,12 @@
 ],
 "kickoff": "2026-08-13T16:00:00Z",
 "settledAt": "2026-08-13T18:08:02.386863+00:00"
-},
-{
-"matchId": "35917618",
-"home": "Ilves",
-"away": "Rijeka",
-"league": "UEFA Europa Conference Qualifiers",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Rijeka",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-08-13T16:00:00Z",
-"settledAt": "2026-08-13T17:52:56.197897+00:00"
-},
-{
-"matchId": "35917690",
-"home": "Tallinna FC Flora",
-"away": "Inter Club Escaldes",
-"league": "UEFA Europa Conference Qualifiers",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Inter Club Escaldes",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-4
-],
-"kickoff": "2026-08-13T16:00:00Z",
-"settledAt": "2026-08-13T17:52:56.197897+00:00"
-},
-{
-"matchId": "35927565",
-"home": "Toluca",
-"away": "FC Dallas",
-"league": "North American Leagues Cup",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Toluca",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-08-13T02:00:00Z",
-"settledAt": "2026-08-13T17:07:48.086575+00:00"
 }
 ],
 "global": {
-"n": 59,
-"wins": 32,
-"hitRate": 0.5424
+"n": 62,
+"wins": 33,
+"hitRate": 0.5323
 },
 "pending": 11
 }
