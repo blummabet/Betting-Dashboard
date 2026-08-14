@@ -240,11 +240,9 @@
       "id": "public_consensus",
       "label": "Public-Konsens (Soft-Books) vorhanden",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "538-727: kein public_hw"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Ohne public_* feuert public_static_bias nicht."
     },
     {
@@ -331,7 +329,7 @@
         "523-490 Auswärtssieg @2.93: sichere Linie Doppelte Chance — X2 @1.477 verfügbar (≥1.35), nicht abgeleitet",
         "532-543 Auswärtssieg @2.71: sichere Linie Doppelte Chance — X2 @1.476 verfügbar (≥1.35), nicht abgeleitet",
         "536-728 Heimsieg @2.2: sichere Linie Doppelte Chance — 1X @1.366 verfügbar (≥1.35), nicht abgeleitet",
-        "544-797 Auswärtssieg @3.36: sichere Linie Doppelte Chance — X2 @1.605 verfügbar (≥1.35), nicht abgeleitet",
+        "544-797 Auswärtssieg @3.36: sichere Linie Doppelte Chance — X2 @1.637 verfügbar (≥1.35), nicht abgeleitet",
         "160-162 Auswärtssieg @3.5: sichere Linie Doppelte Chance — X2 @1.81 verfügbar (≥1.35), nicht abgeleitet",
         "164-185 Auswärtssieg @4.85: sichere Linie Doppelte Chance — X2 @2.152 verfügbar (≥1.35), nicht abgeleitet",
         "1660-168 Heimsieg @5.45: sichere Linie Doppelte Chance — 1X @2.43 verfügbar (≥1.35), nicht abgeleitet",
@@ -408,9 +406,11 @@
       "id": "soft_opening_captured",
       "label": "Soft-Eröffnung echt erfasst",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "538-727: Soft bewegte sich 2.0→1.97, aber Opening==Jetzt (1.97) — nicht eingefroren"
+      ],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
     },
     {
@@ -505,5 +505,5 @@
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-08-13T19:03:03.529135+00:00"
+  "generatedAt": "2026-08-14T08:14:57.163682+00:00"
 }
