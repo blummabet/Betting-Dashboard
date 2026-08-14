@@ -2838,6 +2838,9 @@ function renderSharpRadar() {
         const key   = `${fx.home}-${fx.away}`;
         const snaps = _wmOddsHist[key];
         if (!snaps || snaps.length < 1) continue;
+        // 14.08.2026 (Lucas): keine Rueckrunden-Geister (z.B. April 2027) als ACT/WATCH — nur Fenster -7d..+60d.
+        const _fxD = new Date(fx.date + 'T00:00:00');
+        if (isNaN(_fxD) || _fxD < new Date(Date.now() - 7*86400000) || _fxD > new Date(Date.now() + 60*86400000)) continue;
         const homeT = _wmT[fx.home] || { name: fx.home, flag: '🏳' };
         const awayT = _wmT[fx.away] || { name: fx.away, flag: '🏳' };
         const first = snaps[0];
@@ -2882,7 +2885,7 @@ function renderSharpRadar() {
     wmFxData.sort((a, b) => b.maxAbsShift - a.maxAbsShift);
 
     // ── Section A: Sparkline Cards (top movers + all fixtures with ≥2 snaps) ──
-    const sparkFx = wmFxData.filter(d => d.snapCount >= 2);
+    const sparkFx = wmFxData.filter(d => d.snapCount >= 4);   // 14.08.2026 (Lucas): >=4 Snapshots fuer echten Verlauf (2-Punkt-Moves = Rauschen)
     if (sparkFx.length > 0) {
       // Count ACT/WATCH fixtures for section header badges
       const actCount  = sparkFx.filter(d => d.maxAbsShift >= 4).length;
