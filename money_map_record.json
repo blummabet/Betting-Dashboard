@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-08-14T02:53:43.570358+00:00",
+"generatedAt": "2026-08-14T03:08:44.986408+00:00",
 "byVerdict": {
 "konsens": {
 "n": 37,
@@ -12,12 +12,12 @@
 "pinnHitRate": 1.0
 },
 "uneinig": {
-"n": 11,
+"n": 12,
 "wins": 3,
-"hitRate": 0.2727,
-"polyN": 11,
-"polyWins": 2,
-"polyHitRate": 0.1818,
+"hitRate": 0.25,
+"polyN": 12,
+"polyWins": 3,
+"polyHitRate": 0.25,
 "pinnN": 1,
 "pinnHitRate": 1.0
 },
@@ -39,9 +39,9 @@
 "hitRate": 0.4706
 },
 "North American Leagues Cup": {
-"n": 9,
+"n": 10,
 "wins": 6,
-"hitRate": 0.6667
+"hitRate": 0.6
 },
 "UEFA Europa League Qualifiers": {
 "n": 7,
@@ -91,20 +91,39 @@
 "hitRate": 0.5833
 },
 "weak": {
-"n": 4,
+"n": 5,
 "wins": 1,
-"hitRate": 0.25
+"hitRate": 0.2
 }
 },
 "divergence": {
-"n": 11,
+"n": 12,
 "betfairWins": 3,
-"betfairRate": 0.2727,
-"polyN": 11,
-"polyWins": 2,
-"polyRate": 0.1818
+"betfairRate": 0.25,
+"polyN": 12,
+"polyWins": 3,
+"polyRate": 0.25
 },
 "recent": [
+{
+"matchId": "35931672",
+"home": "Cruz Azul",
+"away": "Chicago Fire",
+"league": "North American Leagues Cup",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "away",
+"winner": "away",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-08-14T01:00:00Z",
+"settledAt": "2026-08-14T03:08:44.985518+00:00"
+},
 {
 "matchId": "35883673",
 "home": "Cienciano",
@@ -845,31 +864,12 @@
 ],
 "kickoff": "2026-08-12T18:45:00Z",
 "settledAt": "2026-08-13T17:07:48.086575+00:00"
-},
-{
-"matchId": "35667446",
-"home": "SE Palmeiras",
-"away": "Cerro Porteno",
-"league": "CONMEBOL Copa Libertadores",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "SE Palmeiras",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-08-12T22:00:00Z",
-"settledAt": "2026-08-13T17:07:48.086575+00:00"
 }
 ],
 "global": {
-"n": 49,
+"n": 50,
 "wins": 26,
-"hitRate": 0.5306
+"hitRate": 0.52
 },
-"pending": 4
+"pending": 3
 }
