@@ -43,9 +43,9 @@
       "ok": false,
       "nFail": 3,
       "failures": [
-        "cs2-sf2-ef1-2026-08-08: seit 6.4 Tagen offen — keine Auflösung gefunden",
-        "atp-smith-gill-2026-08-10: seit 4.4 Tagen offen — keine Auflösung gefunden",
-        "atp-blanche-sakamot-2026-08-10: seit 4.4 Tagen offen — keine Auflösung gefunden"
+        "cs2-sf2-ef1-2026-08-08: seit 6.5 Tagen offen — keine Auflösung gefunden",
+        "atp-smith-gill-2026-08-10: seit 4.5 Tagen offen — keine Auflösung gefunden",
+        "atp-blanche-sakamot-2026-08-10: seit 4.5 Tagen offen — keine Auflösung gefunden"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -85,11 +85,11 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "500/527 'live' Geld-Märkte sind schon >6h nach Anpfiff (95%) — $14,544,388 Whale-Geld auf fertigen Spielen"
+        "500/535 'live' Geld-Märkte sind schon >6h nach Anpfiff (93%) — $14,424,574 Whale-Geld auf fertigen Spielen"
       ],
       "note": "Der Close-Feed setzt kein resolved-Flag; fertige Spiele bleiben 'live'. Alle Views filtern jetzt auf den rekonstruierten Anpfiff — dieser Check misst den Geister-Anteil im Roh-Feed (steigt er, prunt/löst der Feed nicht mehr auf; jede ungegatete View zeigt dann fertige Spiele)."
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-08-14T09:23:20.490073+00:00"
+  "generatedAt": "2026-08-14T11:31:10.588079+00:00"
 }
