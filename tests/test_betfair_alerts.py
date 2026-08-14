@@ -523,7 +523,7 @@ class TestConsensusBlock(unittest.TestCase):
         cidx = {"9": {"matchId": "9", "moneySide": "home", "moneyName": "Napoli",
                       "pinnOdd": 1.62, "pinnMovePP": 2.0, "softOdd": 1.58, "softN": 6,
                       "poly": {"odd": 1.70, "vol": 40000}, "verdict": "konsens"}}
-        b = BA._consensus_block({"matchId": "9"}, cidx)
+        b = BA._consensus_block({"matchId": "9", "market": "Match Odds"}, cidx)
         self.assertIn("Pinnacle @1.62", b)
         self.assertIn("▲2.0pp", b)
         self.assertIn("Soft @1.58×6", b)
@@ -534,32 +534,30 @@ class TestConsensusBlock(unittest.TestCase):
 
     def test_block_uneinig_and_empty(self):
         cidx = {"9": {"matchId": "9", "moneyName": "Napoli", "pinnOdd": 3.4, "verdict": "uneinig"}}
-        self.assertIn("uneinig", BA._consensus_block({"matchId": "9"}, cidx))
+        self.assertIn("uneinig", BA._consensus_block({"matchId": "9", "market": "Match Odds"}, cidx))
         # kein Anker / kein Eintrag -> leer
-        self.assertEqual(BA._consensus_block({"matchId": "9"}, {"9": {"verdict": "no_anchor"}}), "")
-        self.assertEqual(BA._consensus_block({"matchId": "9"}, {}), "")
+        self.assertEqual(BA._consensus_block({"matchId": "9", "market": "Match Odds"}, {"9": {"verdict": "no_anchor"}}), "")
+        self.assertEqual(BA._consensus_block({"matchId": "9", "market": "Match Odds"}, {}), "")
 
-    def test_block_live_shows_caveat_not_hard_verdict(self):
-        # 11.08.2026 (Lucas): live sind die 1X2-Quoten teils vom Vorspiel (Pinnacle eingefroren, Soft
-        # live) -> kein hartes "uneinig", sondern ehrlicher Live-Hinweis; auch keine (stale) pp-Bewegung.
+    def test_block_live_suppressed(self):
+        # 14.08.2026 (Lucas): live sind die 1X2-Quoten teils vom Vorspiel (stale, near-lock nach Toren)
+        # -> Zweitmeinung bei Live-Spielen ganz weglassen (Rosenborg-Fall).
         cidx = {"9": {"matchId": "9", "moneyName": "Central Cordoba", "live": True,
                       "pinnOdd": 9.35, "pinnMovePP": 68.6, "softOdd": 11.0, "softN": 23,
                       "verdict": "uneinig"}}
-        b = BA._consensus_block({"matchId": "9"}, cidx)
-        self.assertIn("Pinnacle @9.35", b)         # Zahlen bleiben sichtbar
-        self.assertIn("Soft @11.00", b)
-        self.assertIn("Live", b)                   # ehrlicher Hinweis
-        self.assertIn("Vorspiel", b)
-        self.assertNotIn("uneinig", b)             # KEIN hartes Vorspiel-Verdikt
-        self.assertNotIn("Buchmacher sehen", b)
-        self.assertNotIn("pp", b)                  # keine (stale) Pinnacle-Bewegung
+        self.assertEqual(BA._consensus_block({"matchId": "9", "market": "Match Odds"}, cidx), "")
+
+    def test_block_wrong_market_suppressed(self):
+        # 14.08.2026 (Lucas): Konsens ist 1X2 — bei Ueber/Unter-Geld ist das ein anderer Markt -> leer.
+        cidx = {"9": {"matchId": "9", "moneyName": "Napoli", "pinnOdd": 1.62, "verdict": "konsens"}}
+        self.assertEqual(BA._consensus_block({"matchId": "9", "market": "Over/Under 2.5"}, cidx), "")
 
     def test_block_prematch_keeps_hard_verdict(self):
-        # Gegenprobe: ohne live-Flag (Vorspiel) bleibt alles beim Alten (Verdikt + Bewegung).
+        # Gegenprobe: 1X2-Geld + pre-match -> alles beim Alten (Verdikt + Bewegung).
         cidx = {"9": {"matchId": "9", "moneyName": "Napoli", "live": False,
                       "pinnOdd": 1.62, "pinnMovePP": 2.0, "softOdd": 1.58, "softN": 6,
                       "verdict": "konsens"}}
-        b = BA._consensus_block({"matchId": "9"}, cidx)
+        b = BA._consensus_block({"matchId": "9", "market": "Match Odds"}, cidx)
         self.assertIn("Konsens", b)
         self.assertIn("2.0pp", b)
         self.assertNotIn("Vorspiel", b)
