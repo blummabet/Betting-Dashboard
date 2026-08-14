@@ -43,9 +43,9 @@
       "ok": false,
       "nFail": 3,
       "failures": [
-        "cs2-sf2-ef1-2026-08-08: seit 6.1 Tagen offen — keine Auflösung gefunden",
-        "atp-smith-gill-2026-08-10: seit 4.1 Tagen offen — keine Auflösung gefunden",
-        "atp-blanche-sakamot-2026-08-10: seit 4.1 Tagen offen — keine Auflösung gefunden"
+        "cs2-sf2-ef1-2026-08-08: seit 6.2 Tagen offen — keine Auflösung gefunden",
+        "atp-smith-gill-2026-08-10: seit 4.2 Tagen offen — keine Auflösung gefunden",
+        "atp-blanche-sakamot-2026-08-10: seit 4.2 Tagen offen — keine Auflösung gefunden"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -67,10 +67,10 @@
       "failures": [
         "14/53 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (26%) — Trefferquote allein trügt",
         "   0x84cfffc3f1… n=19 Treffer 53% P&L $-7,649,958",
-        "   0xe9076a87c5… n=38 Treffer 53% P&L $-7,515,164",
-        "   0xc3c3b3ef30… n=104 Treffer 63% P&L $-3,794,925",
-        "   0x224a89dbe0… n=37 Treffer 57% P&L $-3,471,815",
-        "180/233 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
+        "   0xe9076a87c5… n=39 Treffer 51% P&L $-7,523,544",
+        "   0xc3c3b3ef30… n=106 Treffer 62% P&L $-3,797,114",
+        "   0x224a89dbe0… n=38 Treffer 55% P&L $-3,470,835",
+        "181/234 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
     },
@@ -90,11 +90,11 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "471/526 'live' Geld-Märkte sind schon >6h nach Anpfiff (90%) — $13,542,461 Whale-Geld auf fertigen Spielen"
+        "474/516 'live' Geld-Märkte sind schon >6h nach Anpfiff (92%) — $13,811,774 Whale-Geld auf fertigen Spielen"
       ],
       "note": "Der Close-Feed setzt kein resolved-Flag; fertige Spiele bleiben 'live'. Alle Views filtern jetzt auf den rekonstruierten Anpfiff — dieser Check misst den Geister-Anteil im Roh-Feed (steigt er, prunt/löst der Feed nicht mehr auf; jede ungegatete View zeigt dann fertige Spiele)."
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-08-14T03:17:52.165496+00:00"
+  "generatedAt": "2026-08-14T05:11:22.967218+00:00"
 }
