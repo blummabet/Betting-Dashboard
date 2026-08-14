@@ -704,6 +704,71 @@ def _draw_inplay_note(a) -> str:
             "sondern der Zeit-Effekt" + tail + ". Nachlaufen verliert historisch (−31…−79% ROI).")
 
 
+# 14.08.2026 (Lucas): zwei Public-Filter gegen unnoetige HT/Live-Pushs, wo die Geld-% der QUOTE
+# widersprechen. Trades sieht die weiter (Under-Fade-Hinweis etc.), Public nicht.
+PUB_INCOHERENT_SHARE = float(os.environ.get("BF_PUB_INCOHERENT_SHARE") or 0.70)
+PUB_INCOHERENT_ODD   = float(os.environ.get("BF_PUB_INCOHERENT_ODD") or 3.0)
+
+
+def _pub_incoherent(a) -> bool:
+    """Hoher Geld-Anteil (>=70%) AUF einer langen Quote (>=3.0) — % und Preis widersprechen sich
+    (85% koennen bei gesundem Markt nicht auf einem @13.50-Longshot liegen) -> Public-Artefakt."""
+    sh, od = a.get("leadShare") or 0.0, a.get("leadOdd")
+    return sh >= PUB_INCOHERENT_SHARE and isinstance(od, (int, float)) and od >= PUB_INCOHERENT_ODD
+
+
+def _pub_live_drift(a) -> bool:
+    """Live: die Geld-Seite driftet RAUS (leadDir 'out') — der Preis laeuft gegen die %-Mehrheit
+    (Under-Fade). Fuer Public raus."""
+    return bool(_is_live(a)) and a.get("leadDir") == "out"
+
+
+# 14.08.2026 (Lucas): HZ-Pushs nur solange die erste Halbzeit LAEUFT und der Ausgang plausibel ist.
+# In der Pause (⏸ Halbzeit / is_ht) steht das HZ-Ergebnis praktisch -> zu spaet; Geld auf einen
+# HZ-Longshot (Quote > HT_MAX_ODD_PUB) ist ein toter Ausgang, kein Signal. NUR Public.
+HT_MAX_ODD_PUB = float(os.environ.get("BF_HT_MAX_ODD_PUB") or 4.0)
+
+
+def _pub_ht_useless(a) -> bool:
+    if a.get("scenario") != "ht":
+        return False
+    if (a.get("live") or {}).get("is_ht"):
+        return True   # Halbzeitpause -> HZ-Ergebnis steht
+    od = a.get("leadOdd")
+    return isinstance(od, (int, float)) and od > HT_MAX_ODD_PUB
+
+
+# 14.08.2026 (Lucas): eskalierende Wiederhol-Bremse fuers Public. Derselbe Markt muss zum Re-Push das
+# Geld nur um DEDUP_FACTOR steigern -> in liquiden Ligen 4-5x Spam. Ab dem 3. Push wird die noetige
+# Steigerung hoeher gestaffelt. Zaehler steckt im pub_seen (rueckwaerts-kompatibel: alter float = 1x).
+PUB_RESEND_LADDER = [1.5, 2.5, 4.0, 6.0]   # Faktor fuer 1->2, 2->3, 3->4, 4->5+
+
+
+def _pub_seen_rec(rec):
+    if isinstance(rec, (int, float)):
+        return float(rec), 1
+    if isinstance(rec, dict):
+        return float(rec.get("v") or 0.0), int(rec.get("n") or 1)
+    return 0.0, 0
+
+
+def should_send_public(seen, key, value) -> bool:
+    rec = seen.get(key)
+    if rec is None:
+        return True
+    prev_v, n = _pub_seen_rec(rec)
+    factor = PUB_RESEND_LADDER[min(max(n, 1) - 1, len(PUB_RESEND_LADDER) - 1)]
+    try:
+        return value >= prev_v * factor
+    except Exception:
+        return True
+
+
+def _pub_seen_put(seen, key, value) -> None:
+    _, n = _pub_seen_rec(seen.get(key))
+    seen[key] = {"v": value, "n": n + 1}
+
+
 def collect_alerts(prices: dict, hist: dict, ht_top=HT_TOP_EUR, ht_rest=HT_REST_EUR,
                    fresh_top=FRESH_TOP_EUR, fresh_rest=FRESH_REST_EUR) -> list:
     out = []
@@ -784,14 +849,17 @@ def main():
     # (Lucas 13.08.2026, Audit) NUR Public: In-Play-Draw-Nachlauf zur kollabierten X-Quote raus -
     # backen verliert dort real (-31..-79% ROI). Pre-Match-Draw und andere Seiten bleiben; Trades sieht es weiter.
     pub_alerts = [a for a in pub_alerts if not _draw_inplay_chase(a)]
+    # 14.08.2026 (Lucas): unnoetige HT/Live-Pushs raus, wo die Geld-% der Quote widersprechen
+    # (Galatasaray 85%@13.50; Wolves Under 87% aber Quote driftet). Trades sieht sie weiter.
+    pub_alerts = [a for a in pub_alerts if not _pub_incoherent(a) and not _pub_live_drift(a) and not _pub_ht_useless(a)]
     pub_sent = 0
     for a in pub_alerts:
         key = a["scenario"] + ":" + a["matchId"]
-        if should_send(pub_seen, key, a["value"]):
+        if should_send_public(pub_seen, key, a["value"]):
             # 13.08.2026 (Lucas): Zweitmeinung (Pinnacle/Soft/Poly) auch im Public — wie im Trades-Push (nur fresh).
             pub_msg = build_public_message(a) + (_consensus_block(a, cidx) if a["scenario"] == "fresh" else "")
             if _tg_public(pub_msg):
-                pub_seen[key] = a["value"]
+                _pub_seen_put(pub_seen, key, a["value"])
                 pub_sent += 1
                 _log_public_push(a, cidx)   # fürs Tracking/Auswerten (+ Konsens-Zweitmeinung)
     try:
