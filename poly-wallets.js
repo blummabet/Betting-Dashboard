@@ -1703,7 +1703,10 @@ function _pwPlayLabel(key,oc){
     const p=_pwPrettyKey(key);
     if(p) return p;
   }
-  return names.join(' vs ');
+  // 14.08.2026 (Lucas): Draw-Ausgang ("Draw (A vs. B)") ist KEIN Team -> rausfiltern, sonst entsteht
+  // "A vs B vs Draw (A vs. B)". Bei 3-Weg bleiben die zwei echten Teams (gleicher Fix wie _matchup).
+  const _teams=names.filter(n=>!/^(draw|the draw|unentschieden)\b/i.test(n));
+  return (_teams.length>=2?_teams:names).join(' vs ');
 }
 function _pwShortlistScore(key,m){
   const oc=Object.entries(m.shares||{}).map(([s,u])=>({s,u:Number(u)||0}));
