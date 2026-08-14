@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-08-14T01:53:41.397596+00:00",
+"generatedAt": "2026-08-14T02:08:37.923799+00:00",
 "byVerdict": {
 "konsens": {
 "n": 36,
@@ -12,12 +12,12 @@
 "pinnHitRate": 1.0
 },
 "uneinig": {
-"n": 10,
+"n": 11,
 "wins": 3,
-"hitRate": 0.3,
-"polyN": 10,
-"polyWins": 1,
-"polyHitRate": 0.1,
+"hitRate": 0.2727,
+"polyN": 11,
+"polyWins": 2,
+"polyHitRate": 0.1818,
 "pinnN": 1,
 "pinnHitRate": 1.0
 },
@@ -39,9 +39,9 @@
 "hitRate": 0.4706
 },
 "North American Leagues Cup": {
-"n": 8,
+"n": 9,
 "wins": 6,
-"hitRate": 0.75
+"hitRate": 0.6667
 },
 "UEFA Europa League Qualifiers": {
 "n": 7,
@@ -86,9 +86,9 @@
 },
 "byStrength": {
 "strong": {
-"n": 10,
+"n": 11,
 "wins": 6,
-"hitRate": 0.6
+"hitRate": 0.5455
 },
 "weak": {
 "n": 4,
@@ -97,14 +97,33 @@
 }
 },
 "divergence": {
-"n": 10,
+"n": 11,
 "betfairWins": 3,
-"betfairRate": 0.3,
-"polyN": 10,
-"polyWins": 1,
-"polyRate": 0.1
+"betfairRate": 0.2727,
+"polyN": 11,
+"polyWins": 2,
+"polyRate": 0.1818
 },
 "recent": [
+{
+"matchId": "35931587",
+"home": "Philadelphia",
+"away": "Santos Laguna",
+"league": "North American Leagues Cup",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Philadelphia",
+"polySide": "away",
+"winner": "away",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-08-13T23:00:00Z",
+"settledAt": "2026-08-14T02:08:37.799511+00:00"
+},
 {
 "matchId": "35931607",
 "home": "New York City",
@@ -845,31 +864,12 @@
 ],
 "kickoff": "2026-08-12T22:00:00Z",
 "settledAt": "2026-08-13T17:07:48.086575+00:00"
-},
-{
-"matchId": "35927558",
-"home": "Orlando City",
-"away": "Atletico San Luis",
-"league": "North American Leagues Cup",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Orlando City",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-6,
-4
-],
-"kickoff": "2026-08-12T23:30:00Z",
-"settledAt": "2026-08-13T17:07:48.086575+00:00"
 }
 ],
 "global": {
-"n": 47,
+"n": 48,
 "wins": 25,
-"hitRate": 0.5319
+"hitRate": 0.5208
 },
-"pending": 6
+"pending": 5
 }
