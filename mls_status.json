@@ -347,9 +347,11 @@
       "id": "safer_line_applied",
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "1598-1607 Heimsieg @2.7: sichere Linie Doppelte Chance — 1X @1.486 verfügbar (≥1.35), nicht abgeleitet"
+      ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
     {
@@ -536,6 +538,6 @@
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 4,
-  "generatedAt": "2026-08-14T08:35:03.626589+00:00"
+  "nFail": 5,
+  "generatedAt": "2026-08-14T11:40:08.033256+00:00"
 }
