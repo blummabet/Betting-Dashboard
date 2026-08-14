@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-14T23:00:57.611731+00:00",
+ "generatedAt": "2026-08-14T23:37:46.389488+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,8 +9,8 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 321,
- "pinnKeys": 209,
- "matched": 117,
+ "pinnKeys": 213,
+ "matched": 121,
  "footballRows": 93,
  "crossRows": 228,
  "footballSkippedStale": 58,
@@ -22,13 +22,70 @@
   "soccer_liga": 27
  },
  "matchedBySport": {
-  "baseball_mlb": 24,
+  "baseball_mlb": 28,
   "soccer_mls": 66,
   "soccer_liga": 27
  },
  "trackRecord": {
-  "tracked": 92,
+  "tracked": 96,
   "converged": 3
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|bostonredsox-pittsburghpirates|bostonredsox",
+   "sport": "baseball_mlb",
+   "event": "Boston Red Sox vs Pittsburgh Pirates",
+   "market": "Moneyline",
+   "outcome": "Boston Red Sox",
+   "polyPP": 16.0,
+   "pinnPP": 39.2,
+   "gapPP": -23.15,
+   "vol": 521510,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-14T23:37:46.387855+00:00"
+  },
+  {
+   "id": "baseball_mlb|bostonredsox-pittsburghpirates|pittsburghpirates",
+   "sport": "baseball_mlb",
+   "event": "Boston Red Sox vs Pittsburgh Pirates",
+   "market": "Moneyline",
+   "outcome": "Pittsburgh Pirates",
+   "polyPP": 84.0,
+   "pinnPP": 60.8,
+   "gapPP": 23.15,
+   "vol": 521510,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-14T23:37:46.387855+00:00"
+  },
+  {
+   "id": "baseball_mlb|coloradorockies-sanfranciscogiants|coloradorockies",
+   "sport": "baseball_mlb",
+   "event": "Colorado Rockies vs San Francisco Giants",
+   "market": "Moneyline",
+   "outcome": "Colorado Rockies",
+   "polyPP": 44.5,
+   "pinnPP": 37.2,
+   "gapPP": 7.33,
+   "vol": 50843,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-14T23:37:46.387855+00:00"
+  },
+  {
+   "id": "baseball_mlb|coloradorockies-sanfranciscogiants|sanfranciscogiants",
+   "sport": "baseball_mlb",
+   "event": "Colorado Rockies vs San Francisco Giants",
+   "market": "Moneyline",
+   "outcome": "San Francisco Giants",
+   "polyPP": 55.5,
+   "pinnPP": 62.8,
+   "gapPP": -7.33,
+   "vol": 50843,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-14T23:37:46.387855+00:00"
+  }
+ ]
 }
