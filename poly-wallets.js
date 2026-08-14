@@ -1142,7 +1142,10 @@ function _pwGlobalEdge(cs){
 // Spielname wertlos. Dann lesbaren Namen aus dem Slug ableiten: {liga}-{a}-{b}-{datum}[-{prop}].
 function _pwEventLabel(key, names, league){
   const GEN=/^(yes|no|ja|nein|over|under|draw|remis)$/i;
-  const real=(names||[]).filter(n=>!GEN.test(String(n).trim()));
+  // 14.08.2026 (Lucas): "Draw (A vs. B)" ist ein Outcome, kein drittes Team — praefix-basiert raus
+  // (GEN mit $-Anker traf nur das nackte "draw"). Fallback greift, wenn <2 echte Namen bleiben.
+  const DRAWP=/^(draw|the draw|unentschieden|remis)\b/i;
+  const real=(names||[]).filter(n=>{const t=String(n).trim();return !GEN.test(t)&&!DRAWP.test(t);});
   if(real.length>=2) return real.map(_pwEsc).join(' <span style="color:#6e7681">vs</span> ');
   let str=String(key||'').replace(/-\d{4}-\d{2}-\d{2}/g,'');
   let parts=str.split('-').filter(Boolean);
@@ -1501,8 +1504,17 @@ function _pwTopPlays(limit, live, useSportPass){
     const r=_pwShortlistScore(k,m);
     if(r&&r.verdict==='BET') all.push(r);   // 13.08.2026 (Lucas): FADE raus aus Public-Plays (-28% ROI, 26% hit) — nur BET wird promotet; FADE bleibt nur als Verdikt in der Detailtabelle
   }
-  all.sort((a,b)=>b.conv-a.conv);
-  return limit?all.slice(0,limit):all;
+  // 14.08.2026 (Lucas): dasselbe Spiel taucht auf Polymarket manchmal unter zwei Event-Slugs auf
+  // (Basis + "-more-markets") -> exakt gleicher Pick 2x in den Play-Boxen. Nach normalisiertem
+  // Spiel+Seite (Key ohne "-more-markets") dedupen, staerkste Conviction gewinnt.
+  const _seen={}, _dedup=[];
+  for(const r of all){
+    const gk=String(r.key||'').replace('-more-markets|','|');
+    if(_seen[gk]==null){ _seen[gk]=_dedup.length; _dedup.push(r); }
+    else if((+r.conv||0)>(+_dedup[_seen[gk]].conv||0)){ _dedup[_seen[gk]]=r; }
+  }
+  _dedup.sort((a,b)=>b.conv-a.conv);
+  return limit?_dedup.slice(0,limit):_dedup;
 }
 
 // (01.08.2026, Lucas) PUBLIC-KANDIDAT „Top-Play" — hart gegatet, NUR Vorschau (sendet nicht).
@@ -1697,6 +1709,13 @@ function _pwPrettyKey(key){
   return s.replace(/[-_]+/g,' ').trim();
 }
 const _PW_GENERIC_OUTCOME=/^(yes|no|over|under|the draw|draw|tie|remis|ja|nein)$/i;
+// 14.08.2026 (Lucas): zentraler Draw-Filter fuer 3-Weg-Poly-Maerkte. "Draw (A vs. B)" ist ein
+// Outcome, kein drittes Team. Fallback: bleiben <2 Namen uebrig, Originalliste behalten (2-Weg unberuehrt).
+function _pwNoDraw(names){
+  const arr=(names||[]).map(function(n){return String(n);});
+  const teams=arr.filter(function(n){return !/^(draw|the draw|unentschieden|remis)\b/i.test(n.trim());});
+  return teams.length>=2?teams:arr;
+}
 function _pwPlayLabel(key,oc){
   const names=(oc||[]).map(o=>String(o.s||'').trim()).filter(Boolean);
   if(names.length && names.every(n=>_PW_GENERIC_OUTCOME.test(n))){
@@ -1947,7 +1966,7 @@ function _pwMomentum(hist){
     }
     if(!best||Math.abs(best.move)<1) continue;   // <1pp = Rauschen
     const spanH=(Date.parse(latest.ts)-Date.parse(base.ts))/3.6e6;
-    rows.push({key,league,spanH,htk:latest.htk,vol:latest.v,match:Object.keys(latest.p).join(' vs '),
+    rows.push({key,league,spanH,htk:latest.htk,vol:latest.v,match:_pwNoDraw(Object.keys(latest.p)).join(' vs '),
       side:best.side,from:best.from,to:best.to,move:best.move,step:best.step});
   }
   rows.sort((a,b)=>Math.abs(b.move)-Math.abs(a.move));
@@ -2037,7 +2056,7 @@ function _pwFlips(hist){
       if(!isNaN(koMs)&&(Date.now()-koMs)>4*3.6e6) continue; }
     const b=lead(base), l=lead(latest);
     if(!b||!l||b===l) continue;
-    rows.push({key,from:b,to:l,league:latest.league||base.league,ts:Date.parse(latest.ts),match:Object.keys(latest.p||{}).join(' vs ')});
+    rows.push({key,from:b,to:l,league:latest.league||base.league,ts:Date.parse(latest.ts),match:_pwNoDraw(Object.keys(latest.p||{})).join(' vs ')});
   }
   return rows.sort((a,b)=>b.ts-a.ts);
 }
