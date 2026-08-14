@@ -669,15 +669,36 @@
     '</div>';
   }
 
+  // 14.08.2026 (Lucas): Kategorie-Liste ein-/ausklappen. Zustand in window._bfrCollapsed -> ueberlebt
+  // Daten-Re-Renders; Toggle schaltet DOM direkt (kein Full-Rerender, kein Scroll-Sprung).
+  window._bfrCollapsed = window._bfrCollapsed || {};
+  window._bfrToggleCat = function (key) {
+    window._bfrCollapsed = window._bfrCollapsed || {};
+    var now = !window._bfrCollapsed[key];
+    window._bfrCollapsed[key] = now;
+    var el = document.getElementById('bfrcat-' + key);
+    var ch = document.getElementById('bfrchev-' + key);
+    if (el) el.style.display = now ? 'none' : 'block';
+    if (ch) ch.textContent = now ? '\u25B8' : '\u25BE';   // ▸ / ▾
+  };
+
   function section(matches, title, accent, sub) {
     if (!matches.length) return '';
     var maxTot = matches.reduce(function (a, m) { return Math.max(a, cardMoney(m)); }, 1);
+    var key = title.replace(/[^a-zA-Z0-9]/g, '');
+    window._bfrCollapsed = window._bfrCollapsed || {};
+    var collapsed = !!window._bfrCollapsed[key];
     return '<div style="margin:6px 0 20px">' +
-      '<div style="display:flex;align-items:baseline;gap:10px;margin:0 0 10px;padding-bottom:7px;border-bottom:2px solid ' + accent + '33">' +
+      '<div onclick="_bfrToggleCat(\'' + key + '\')" title="Ein-/Ausklappen" style="display:flex;align-items:baseline;gap:10px;margin:0 0 10px;padding-bottom:7px;border-bottom:2px solid ' + accent + '33;cursor:pointer;user-select:none">' +
+        '<span id="bfrchev-' + key + '" style="font-size:12px;color:' + accent + '">' + (collapsed ? '\u25B8' : '\u25BE') + '</span>' +
         '<h2 style="margin:0;font-size:16px;color:' + accent + '">' + title + '</h2>' +
         '<span style="font-size:11px;color:' + C.dim + '">' + sub + '</span>' +
         '<span style="margin-left:auto;font-size:12px;color:' + C.mut + '">' + matches.length + ' Spiel' + (matches.length === 1 ? '' : 'e') + '</span>' +
-      '</div>' + matches.map(function (m) { return matchCard(m, maxTot); }).join('') + '</div>';
+      '</div>' +
+      '<div id="bfrcat-' + key + '" style="display:' + (collapsed ? 'none' : 'block') + '">' +
+        matches.map(function (m) { return matchCard(m, maxTot); }).join('') +
+      '</div>' +
+    '</div>';
   }
 
   // ── Hotspot-Leiste: konkreter Ausgang mit dem meisten Geld ──────────────────
