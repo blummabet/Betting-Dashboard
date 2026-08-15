@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-15T16:42:00.533100+00:00",
+ "generatedAt": "2026-08-15T18:47:52.506170+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -8,27 +8,84 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 363,
- "pinnKeys": 239,
- "matched": 147,
- "footballRows": 117,
- "crossRows": 246,
- "footballSkippedStale": 50,
+ "polyRowsSeen": 383,
+ "pinnKeys": 247,
+ "matched": 165,
+ "footballRows": 135,
+ "crossRows": 248,
+ "footballSkippedStale": 44,
  "seenBySport": {
-  "americanfootball_nfl": 142,
+  "americanfootball_nfl": 144,
   "baseball_mlb": 102,
   "boxing_boxing": 2,
   "soccer_mls": 66,
-  "soccer_liga": 51
+  "soccer_liga": 69
  },
  "matchedBySport": {
   "baseball_mlb": 30,
   "soccer_mls": 66,
-  "soccer_liga": 51
+  "soccer_liga": 69
  },
  "trackRecord": {
-  "tracked": 110,
-  "converged": 7
+  "tracked": 112,
+  "converged": 9
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|alaves-getafe|aw",
+   "sport": "soccer_liga",
+   "event": "Alaves vs Getafe",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 24.5,
+   "pinnPP": 6.7,
+   "gapPP": 17.76,
+   "vol": 26903,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-15T18:47:52.505968+00:00"
+  },
+  {
+   "id": "soccer_liga|alaves-getafe|hw",
+   "sport": "soccer_liga",
+   "event": "Alaves vs Getafe",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 40.5,
+   "pinnPP": 54.5,
+   "gapPP": -14.03,
+   "vol": 26903,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-15T18:47:52.505968+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagowhitesox-detroittigers|chicagowhitesox",
+   "sport": "baseball_mlb",
+   "event": "Chicago White Sox vs Detroit Tigers",
+   "market": "Moneyline",
+   "outcome": "Chicago White Sox",
+   "polyPP": 36.5,
+   "pinnPP": 48.2,
+   "gapPP": -11.67,
+   "vol": 749960,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 26.51,
+   "firstSeen": "2026-08-15T00:00:04.870391+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagowhitesox-detroittigers|detroittigers",
+   "sport": "baseball_mlb",
+   "event": "Chicago White Sox vs Detroit Tigers",
+   "market": "Moneyline",
+   "outcome": "Detroit Tigers",
+   "polyPP": 63.5,
+   "pinnPP": 51.8,
+   "gapPP": 11.67,
+   "vol": 749960,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 26.51,
+   "firstSeen": "2026-08-15T00:00:04.870391+00:00"
+  }
+ ]
 }
