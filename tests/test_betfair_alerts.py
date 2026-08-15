@@ -41,7 +41,7 @@ class TestHtAlert(unittest.TestCase):
     def test_fires_when_onesided(self):
         # Rest-Tier: 6000 ≥ 5000 UND ~83–100% auf Alpha (≥85% mit 5500/6000)
         m = match(markets=self._ht_market(5500, 250, 250))
-        a = BA.ht_alert(m)
+        a = BA.ht_alert(m, 10000, 5000)
         self.assertIsNotNone(a)
         self.assertEqual(a["scenario"], "ht")
         self.assertAlmostEqual(a["total"], 6000)
@@ -58,15 +58,15 @@ class TestHtAlert(unittest.TestCase):
 
     def test_top_tier_needs_10k(self):
         # Top-Liga: 8000 < 10000 → nichts; 11000 ≥ 10000 → feuert
-        self.assertIsNone(BA.ht_alert(match(league="German Bundesliga", markets=self._ht_market(8000, 0, 0))))
-        self.assertIsNotNone(BA.ht_alert(match(league="German Bundesliga", markets=self._ht_market(11000, 0, 0))))
+        self.assertIsNone(BA.ht_alert(match(league="German Bundesliga", markets=self._ht_market(8000, 0, 0)), 10000, 5000))
+        self.assertIsNotNone(BA.ht_alert(match(league="German Bundesliga", markets=self._ht_market(11000, 0, 0)), 10000, 5000))
 
     def test_over15_first_half_counts(self):
         # „egal ob over 1,5 oder 12x HT": Über/Unter 1,5 erste HZ zählt genauso.
         m = match(markets=mk("First Half Goals 1.5", [
             {"name": "Over 1.5 Goals", "odd": 1.9, "vol": 5500},
             {"name": "Under 1.5 Goals", "odd": 2.0, "vol": 300}]))
-        a = BA.ht_alert(m)
+        a = BA.ht_alert(m, 10000, 5000)
         self.assertIsNotNone(a)
         self.assertEqual(a["market"], "First Half Goals 1.5")
         self.assertFalse(a["isX2"])
@@ -81,7 +81,7 @@ class TestFreshAlert(unittest.TestCase):
         m = match(mid=7, league="German Bundesliga",
                   markets=mk("Match Odds", [{"name": "Alpha", "odd": 2, "vol": 40000}, {"name": "Beta", "odd": 2, "vol": 12000}]))
         hist = {"7": [{"mkv": {"Match Odds": 20000}}, {"mkv": {"Match Odds": 52000}}]}   # +32k auf 1X2 (≥30k)
-        a = BA.fresh_alert(m, hist)
+        a = BA.fresh_alert(m, hist, 30000, 20000)
         self.assertIsNotNone(a)
         self.assertEqual(a["tier"], "top")
         self.assertEqual(a["market"], "Match Odds")
@@ -99,7 +99,7 @@ class TestFreshAlert(unittest.TestCase):
                   markets=mk("Over/Under 2.5 Goals", [{"name": "Over 2.5 Goals", "odd": 2, "vol": 32000}, {"name": "Under 2.5 Goals", "odd": 2, "vol": 3000}]))
         hist = {"8": [{"mkv": {"Match Odds": 40000, "Over/Under 2.5 Goals": 10000}},
                       {"mkv": {"Match Odds": 47000, "Over/Under 2.5 Goals": 35000}}]}
-        a = BA.fresh_alert(m, hist)
+        a = BA.fresh_alert(m, hist, 30000, 20000)
         self.assertIsNotNone(a)
         self.assertEqual(a["market"], "Over/Under 2.5 Goals")
         self.assertAlmostEqual(a["inflow"], 25000)
@@ -124,7 +124,7 @@ class TestFreshWindow(unittest.TestCase):
                   markets=mk("Match Odds", [{"name": "Alpha", "odd": 2, "vol": 45000}]))
         if live is not None:
             m["liveInfo"] = live
-        return BA.fresh_alert(m, {"7": [p_prev, p_last]})
+        return BA.fresh_alert(m, {"7": [p_prev, p_last]}, 30000, 20000)
 
     def test_window_min_from_timestamps(self):
         a = self._alert({"mkv": {"Match Odds": 10000}, "ts": "2026-08-09T20:00:00+00:00"},
@@ -179,7 +179,7 @@ class TestLeadOddTxt(unittest.TestCase):
         m = match(mid=7, league="German Bundesliga",
                   markets=mk("Match Odds", [{"name": "Braga", "odd": 42.0, "vol": 45000},
                                             {"name": "Moreirense", "odd": 1.05, "vol": 5000}]))
-        a = BA.fresh_alert(m, {"7": [{"mkv": {"Match Odds": 10000}}, {"mkv": {"Match Odds": 45000}}]})
+        a = BA.fresh_alert(m, {"7": [{"mkv": {"Match Odds": 10000}}, {"mkv": {"Match Odds": 45000}}]}, 30000, 20000)
         a["leadPrev"] = 1.05          # Quote vor dem Ausgleich (Geld lief dort rein)
         msg = BA.build_public_message(a)
         self.assertIn("Geld lief @~1.05 rein", msg)
@@ -230,7 +230,7 @@ class TestMessage(unittest.TestCase):
         m = match(markets=mk("Half Time", [{"name": "Alpha", "odd": 2, "vol": 8000},
                                            {"name": "The Draw", "odd": 3, "vol": 500},
                                            {"name": "Beta", "odd": 4, "vol": 500}]))
-        msg = BA.build_message(BA.ht_alert(m))
+        msg = BA.build_message(BA.ht_alert(m, 10000, 5000))
         self.assertIn("Halbzeit-Geld", msg)
         self.assertIn("HZ 1X2", msg)
         self.assertIn("auf Alpha", msg)   # dominanter Ausgang genannt
@@ -239,7 +239,7 @@ class TestMessage(unittest.TestCase):
     def test_fresh_message(self):
         m = match(mid=7, league="German Bundesliga",
                   markets=mk("Match Odds", [{"name": "Alpha", "odd": 2, "vol": 45000}]))
-        a = BA.fresh_alert(m, {"7": [{"mkv": {"Match Odds": 10000}}, {"mkv": {"Match Odds": 45000}}]})
+        a = BA.fresh_alert(m, {"7": [{"mkv": {"Match Odds": 10000}}, {"mkv": {"Match Odds": 45000}}]}, 30000, 20000)
         msg = BA.build_message(a)
         self.assertIn("Frisches Geld", msg)
         self.assertIn("Top-Liga", msg)
@@ -252,7 +252,7 @@ class TestCollect(unittest.TestCase):
     def test_collects_both(self):
         m = match(mid=9, league="Chinese League 2", country="CN", markets=mk("Half Time",
                   [{"name": "Alpha", "odd": 2, "vol": 8000}]))
-        alerts = BA.collect_alerts({"matches": [m]}, {"9": [{"mkv": {"Half Time": 1000}}, {"mkv": {"Half Time": 22000}}]})
+        alerts = BA.collect_alerts({"matches": [m]}, {"9": [{"mkv": {"Half Time": 1000}}, {"mkv": {"Half Time": 22000}}]}, 10000, 5000, 30000, 20000)
         kinds = sorted(a["scenario"] for a in alerts)
         self.assertEqual(kinds, ["fresh", "ht"])
 
@@ -285,7 +285,7 @@ class TestFavoriteFilter(unittest.TestCase):
     def test_fresh_fires_when_lead_odd_ok(self):
         m = match(mid=7, league="German Bundesliga",
                   markets=mk("Match Odds", [{"name": "Alpha", "odd": 1.6, "vol": 60000}, {"name": "Beta", "odd": 3.2, "vol": 30000}]))
-        a = BA.fresh_alert(m, {"7": [{"mkv": {"Match Odds": 60000}}, {"mkv": {"Match Odds": 90000}}]})
+        a = BA.fresh_alert(m, {"7": [{"mkv": {"Match Odds": 60000}}, {"mkv": {"Match Odds": 90000}}]}, 30000, 20000)
         self.assertIsNotNone(a)
         self.assertAlmostEqual(a["leadOdd"], 1.6)
 
@@ -294,7 +294,7 @@ class TestBoldMoney(unittest.TestCase):
     def test_fresh_money_is_bold(self):
         m = match(mid=7, league="German Bundesliga",
                   markets=mk("Match Odds", [{"name": "Alpha", "odd": 1.8, "vol": 45000}]))
-        a = BA.fresh_alert(m, {"7": [{"mkv": {"Match Odds": 10000}}, {"mkv": {"Match Odds": 45000}}]})
+        a = BA.fresh_alert(m, {"7": [{"mkv": {"Match Odds": 10000}}, {"mkv": {"Match Odds": 45000}}]}, 30000, 20000)
         msg = BA.build_message(a)
         self.assertIn("+<b>", msg)          # Zufluss fett
         self.assertIn("jetzt <b>", msg)     # Markt-Volumen fett
@@ -304,7 +304,7 @@ class TestBoldMoney(unittest.TestCase):
         m = match(markets=mk("Half Time", [{"name": "Alpha", "odd": 1.9, "vol": 8000},
                                            {"name": "The Draw", "odd": 3, "vol": 500},
                                            {"name": "Beta", "odd": 5, "vol": 500}]))
-        msg = BA.build_message(BA.ht_alert(m))
+        msg = BA.build_message(BA.ht_alert(m, 10000, 5000))
         self.assertRegex(msg, r"HZ 1X2: <b>€")   # gematchtes Geld fett
 
 
