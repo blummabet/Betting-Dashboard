@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-15T22:58:50.117413+00:00",
+ "generatedAt": "2026-08-15T23:35:00.032303+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -8,27 +8,27 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 380,
- "pinnKeys": 228,
- "matched": 154,
- "footballRows": 132,
- "crossRows": 248,
- "footballSkippedStale": 43,
+ "polyRowsSeen": 392,
+ "pinnKeys": 240,
+ "matched": 168,
+ "footballRows": 150,
+ "crossRows": 242,
+ "footballSkippedStale": 37,
  "seenBySport": {
-  "americanfootball_nfl": 144,
+  "americanfootball_nfl": 138,
   "baseball_mlb": 102,
   "boxing_boxing": 2,
-  "soccer_mls": 66,
+  "soccer_mls": 84,
   "soccer_liga": 66
  },
  "matchedBySport": {
-  "baseball_mlb": 22,
-  "soccer_mls": 66,
+  "baseball_mlb": 18,
+  "soccer_mls": 84,
   "soccer_liga": 66
  },
  "trackRecord": {
   "tracked": 118,
-  "converged": 11
+  "converged": 13
  },
  "discrepancies": [
   {
@@ -38,11 +38,11 @@
    "market": "Moneyline",
    "outcome": "Baltimore Orioles",
    "polyPP": 41.5,
-   "pinnPP": 55.4,
-   "gapPP": -13.94,
-   "vol": 5631,
+   "pinnPP": 55.6,
+   "gapPP": -14.06,
+   "vol": 5632,
    "richtung": "Poly zu niedrig → backen",
-   "convergePP": 0.0,
+   "convergePP": -0.12,
    "firstSeen": "2026-08-15T22:58:50.117206+00:00"
   },
   {
@@ -52,12 +52,68 @@
    "market": "Moneyline",
    "outcome": "Tampa Bay Rays",
    "polyPP": 58.5,
-   "pinnPP": 44.6,
-   "gapPP": 13.94,
-   "vol": 5631,
+   "pinnPP": 44.4,
+   "gapPP": 14.06,
+   "vol": 5632,
    "richtung": "Poly zu hoch → faden",
-   "convergePP": 0.0,
+   "convergePP": -0.12,
    "firstSeen": "2026-08-15T22:58:50.117206+00:00"
+  },
+  {
+   "id": "baseball_mlb|bostonredsox-pittsburghpirates|bostonredsox",
+   "sport": "baseball_mlb",
+   "event": "Boston Red Sox vs Pittsburgh Pirates",
+   "market": "Moneyline",
+   "outcome": "Boston Red Sox",
+   "polyPP": 61.5,
+   "pinnPP": 51.0,
+   "gapPP": 10.45,
+   "vol": 84149,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 12.7,
+   "firstSeen": "2026-08-14T23:37:46.387855+00:00"
+  },
+  {
+   "id": "baseball_mlb|bostonredsox-pittsburghpirates|pittsburghpirates",
+   "sport": "baseball_mlb",
+   "event": "Boston Red Sox vs Pittsburgh Pirates",
+   "market": "Moneyline",
+   "outcome": "Pittsburgh Pirates",
+   "polyPP": 38.5,
+   "pinnPP": 49.0,
+   "gapPP": -10.45,
+   "vol": 84149,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 12.7,
+   "firstSeen": "2026-08-14T23:37:46.387855+00:00"
+  },
+  {
+   "id": "baseball_mlb|cincinnatireds-miamimarlins|miamimarlins",
+   "sport": "baseball_mlb",
+   "event": "Miami Marlins vs Cincinnati Reds",
+   "market": "Moneyline",
+   "outcome": "Miami Marlins",
+   "polyPP": 47.5,
+   "pinnPP": 38.3,
+   "gapPP": 9.17,
+   "vol": 274176,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 19.43,
+   "firstSeen": "2026-08-15T00:00:04.870391+00:00"
+  },
+  {
+   "id": "baseball_mlb|cincinnatireds-miamimarlins|cincinnatireds",
+   "sport": "baseball_mlb",
+   "event": "Miami Marlins vs Cincinnati Reds",
+   "market": "Moneyline",
+   "outcome": "Cincinnati Reds",
+   "polyPP": 52.5,
+   "pinnPP": 61.7,
+   "gapPP": -9.17,
+   "vol": 274176,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 19.43,
+   "firstSeen": "2026-08-15T00:00:04.870391+00:00"
   }
  ]
 }
