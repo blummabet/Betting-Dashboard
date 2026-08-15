@@ -1793,8 +1793,11 @@ def main():
     # Per Team-Namen gematcht (event_key, reihenfolge-unabhängig/normalisiert). Kein Match → kein Signal.
     betfair_snapshots = {}
     _bf_ekey = None
+    _bf_index = []          # 15.08.2026 (Lucas): toleranter Fallback-Abgleich (Namensvarianten)
+    _bf_find = None
     try:
         from poly_cross_sport import event_key as _bf_ekey
+        from team_match import find_match as _bf_find
         _bf_file = os.path.join(os.path.dirname(WM_FILE), "betfair_prices.json")
         if os.path.exists(_bf_file):
             with open(_bf_file, encoding="utf-8") as bff:
@@ -1803,9 +1806,20 @@ def main():
                 _h, _a = _bm.get("home"), _bm.get("away")
                 if _h and _a:
                     betfair_snapshots[_bf_ekey(_h, _a)] = _bm
+                    _bf_index.append((_h, _a, _bm))
             print(f"  Betfair-Geld: {len(betfair_snapshots)} Matches für betfair_money-Signal")
     except Exception as e:
         print(f"  ⚠️  Betfair-Geld-Snapshot nicht ladbar: {e}")
+
+    def _bf_lookup(_h, _a):
+        # 15.08.2026 (Lucas): erst exakter event_key, dann toleranter Namensabgleich (team_match) —
+        # faengt "Deportivo" vs "Deportivo La Coruna", "Utd" vs "United", FC/SC/CF-Suffixe.
+        if not betfair_snapshots:
+            return None
+        _m = betfair_snapshots.get(_bf_ekey(_h, _a)) if _bf_ekey else None
+        if _m is not None:
+            return _m
+        return _bf_find(_bf_index, _h, _a) if _bf_find else None
 
     # Smart-Money-Verteilung (19.06.2026): Geld-Split + Wallet-Konzentration je Spiel aus
     # fetch_wm_poly_smartmoney.py (data-api /holders+/trades, läuft am Mac-Runner). Optional
@@ -2090,9 +2104,8 @@ def main():
                     "odds_history": odds_history.get(ha_key, []) if odds_history else [],
                     "odds_snapshot": mkt.get(ha_key, {}),
                     "poly_snapshot": poly_snapshots.get(ha_key, {}),
-                    "betfair_snapshot": (betfair_snapshots.get(_bf_ekey(
-                        fx.get("homeName") or fx.get("home"), fx.get("awayName") or fx.get("away")))
-                        if (betfair_snapshots and _bf_ekey) else None),
+                    "betfair_snapshot": _bf_lookup(
+                        fx.get("homeName") or fx.get("home"), fx.get("awayName") or fx.get("away")),
                     "smartmoney":    smartmoney,
                     "travel":       travel_data,
                     "injuries":     injuries,
