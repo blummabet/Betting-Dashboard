@@ -406,6 +406,22 @@ def _market_volume(ev, oc, fallback):
     return tot if hit else fallback
 
 
+_EXHIBITION_RE = _re.compile(
+    r"\blegends\b|all[- ]?stars?\b|\bexhibition\b|\btestimonial\b|charity\s*match"
+    r"|\bveterans?\b|\bold\s*boys\b|\bmasters\b|\blegends?\s+xi\b",
+    _re.I)
+
+
+def _is_exhibition(oc):
+    """15.08.2026 (Lucas): Legenden-/Show-/Benefiz-Spiel? Am Ausgangs-Namen erkannt ("... Legends",
+    "All-Star", "Exhibition", "Testimonial", ...). 'legends' bewusst im PLURAL -> das eSport-Team
+    "Anyone's Legend" (Singular) bleibt drin. Kein Wettsignal -> aus allen Poly-Views. REIN."""
+    for o in (oc or []):
+        if _EXHIBITION_RE.search(str(o.get("label") or "")):
+            return True
+    return False
+
+
 WHALES_PER_MARKET = 4   # 25.07.2026 (Lucas: „was setzen einzelne Wale") — Top-N je Markt mitschreiben
 
 
@@ -577,7 +593,7 @@ def fetch_markets(live_only=False):
                         uvol = float(ev.get("volume") or 0)
                         if uvol >= min_vol:
                             uoc = _outcomes(ev)
-                            if len(uoc) >= 2:
+                            if len(uoc) >= 2 and not _is_exhibition(uoc):
                                 uprices = {o["label"]: o["price"] for o in uoc if o["price"] is not None}
                                 umvol = _market_volume(ev, uoc, uvol)   # 15.08.2026 (Lucas): Markt- statt Event-Volumen
                                 if uprices and (key not in upcoming or umvol > upcoming[key]["totalUsd"]):
@@ -592,6 +608,8 @@ def fetch_markets(live_only=False):
                 oc = _outcomes(ev)
                 if len(oc) < 2:
                     continue
+                if _is_exhibition(oc):
+                    continue                 # 15.08.2026 (Lucas): Legenden-/Show-Match = kein Signal
                 seen.add((key, False))
                 mvol = _market_volume(ev, oc, vol)   # 15.08.2026 (Lucas): Markt- statt Event-Volumen
                 candidates.append((vol, key, league_of(ev, key), htk, oc, cls == "live", mvol))
@@ -606,7 +624,7 @@ def fetch_markets(live_only=False):
                     continue
                 oc = _outcomes(ev)
                 rp = {o["label"]: o["price"] for o in oc if o["price"] is not None}
-                if rp:
+                if rp and not _is_exhibition(oc):
                     seen.add((key, True))
                     markets.append({"key": key, "league": league_of(ev, key),
                                     "resolved": True, "resolvedPrices": rp,

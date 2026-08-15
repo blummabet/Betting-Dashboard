@@ -45,5 +45,44 @@ class TestPubLiveDrift(unittest.TestCase):
         self.assertFalse(BA._pub_live_drift(self._live(leadDir=None)))
 
 
+
+class TestLiveUnderReactive(unittest.TestCase):
+    """15.08.2026 (Lucas): live in-play Tore-Über/Unter, Geld auf UNTER = reaktiv (Zeit-Zerfall) -> raus
+    (HZ + Voll-Match, Trades + Public). Über bleibt, HZ-1X2/1X2/Corners/Vor-Anpfiff bleiben."""
+    def _a(self, **kw):
+        base = {"scenario": "ht", "market": "First Half Goals 1.5", "leadLabel": "Under 1.5 Goals",
+                "leadOdd": 1.85, "leadDir": "in", "live": {"time": 38}}
+        base.update(kw)
+        return base
+
+    def test_live_hz_under_raus(self):
+        self.assertTrue(BA._live_under_reactive(self._a()))
+
+    def test_live_ft_under_raus(self):
+        # der neue Fall: Voll-Match Over/Under 2.5, fresh, live, Unter (Bolton v Preston)
+        self.assertTrue(BA._live_under_reactive({"scenario": "fresh", "market": "Over/Under 2.5 Goals",
+            "leadName": "Under 2.5 Goals", "leadOdd": 1.35, "live": {"time": 84}}))
+
+    def test_live_over_bleibt(self):
+        self.assertFalse(BA._live_under_reactive(self._a(market="First Half Goals 0.5", leadLabel="Over 0.5 Goals")))
+        self.assertFalse(BA._live_under_reactive({"scenario": "fresh", "market": "Over/Under 2.5 Goals",
+            "leadName": "Over 2.5 Goals", "live": {"time": 84}}))
+
+    def test_vor_anpfiff_bleibt(self):
+        self.assertFalse(BA._live_under_reactive(self._a(live={}, kickoff="2999-01-01T00:00:00Z")))
+        self.assertFalse(BA._live_under_reactive({"scenario": "fresh", "market": "Over/Under 2.5 Goals",
+            "leadName": "Under 2.5 Goals", "live": {}, "kickoff": "2999-01-01T00:00:00Z"}))
+
+    def test_hz_1x2_und_1x2_bleiben(self):
+        self.assertFalse(BA._live_under_reactive(self._a(market="Half Time", leadLabel="Bolton (Heim)")))
+        self.assertFalse(BA._live_under_reactive({"scenario": "fresh", "market": "Match Odds",
+            "leadName": "Bolton", "live": {"time": 84}}))
+
+    def test_corners_cards_nicht_betroffen(self):
+        # "Corners/Cards Over/Under" enthält kein "Goals" -> bleibt
+        self.assertFalse(BA._live_under_reactive({"scenario": "fresh", "market": "Corners Over/Under 8.5",
+            "leadName": "Under 8.5", "live": {"time": 84}}))
+
+
 if __name__ == "__main__":
     unittest.main()

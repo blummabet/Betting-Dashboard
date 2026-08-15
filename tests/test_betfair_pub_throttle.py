@@ -54,5 +54,30 @@ class TestEscalatingResend(unittest.TestCase):
         BA._pub_seen_put(seen, "k", 200); self.assertEqual(seen["k"]["n"], 2)
 
 
+
+class TestPubLiveOnce(unittest.TestCase):
+    """15.08.2026 (Lucas): live nur EIN Public-Push pro Spiel (Norwich kam 2. mal). Vor-Anpfiff: Leiter."""
+    def _live(self, **kw):
+        base = {"scenario": "fresh", "matchId": "35759270", "live": {"time": 60}}
+        base.update(kw); return base
+
+    def test_live_zweiter_push_raus(self):
+        seen = {}
+        a = self._live()
+        # 1. Push geht (noch nichts gesehen)
+        self.assertFalse(BA._pub_skip_live_resend(a, seen))
+        BA._pub_seen_put(seen, "fresh:35759270", 70000)
+        # 2. Push desselben Live-Spiels -> unterdrückt, egal wie stark das Volumen wuchs
+        self.assertTrue(BA._pub_skip_live_resend(a, seen))
+
+    def test_vor_anpfiff_behaelt_leiter(self):
+        seen = {"fresh:1": {"v": 70000, "n": 1}}
+        pre = {"scenario": "fresh", "matchId": "1", "live": {}, "kickoff": "2999-01-01T00:00:00Z"}
+        self.assertFalse(BA._pub_skip_live_resend(pre, seen))   # nicht live -> Leiter entscheidet
+
+    def test_erstes_live_ohne_seen_geht(self):
+        self.assertFalse(BA._pub_skip_live_resend(self._live(), {}))
+
+
 if __name__ == "__main__":
     unittest.main()

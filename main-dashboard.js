@@ -1099,7 +1099,7 @@
         var lag = (p.signals || []).some(function (s) { return s && s.name === 'steam_lag' && (+s.score || 0) > 0; });
         if (!bet && !lag) return;
         var conv = +p.convictionScore || 0;
-        var o = { id: 'x' + mid(f.home, f.away, f.matchId), k: k, home: f.home, away: f.away, league: f.league, odd: p.odds, exotic: false };
+        var o = { id: 'x' + mid(f.home, f.away, f.matchId), k: k, home: f.home, away: f.away, league: f.league, odd: p.odds, exotic: false, src: 'card' };
         if (bet) { o.score = 60 + conv * 3.5; o.badge = 'BET' + (conv ? ' ' + conv : ''); o.bc = A.good; o.why = 'Engine-Pick · ' + short(p.market || ''); }
         else { o.score = 48 + conv * 2; o.badge = '⚡ Poly-Lag'; o.bc = A.blue; o.why = 'Pinnacle zieht, Poly hinkt nach · ' + short(p.market || ''); }
         put(o);
@@ -1116,7 +1116,7 @@
       var ico = (typeof _pwSportIcon === 'function') ? _pwSportIcon(r.league) + ' ' : '';
       put({ id: 'p' + (r.key || (r.match || '')), k: k, live: live, exotic: false, odd: null,
         label: esc(String(r.match || '').slice(0, 36)) + ' <span style="color:var(--mi3)">→</span> <b style="color:#4cc2ff">' + esc(r.side || '') + '</b>',
-        score: (r.verdict === 'BET' ? 60 + conv * 3.5 : 48 + conv * 2), bc: A.poly, badge: ico + 'Poly ' + r.verdict,
+        src: 'poly', score: (r.verdict === 'BET' ? 60 + conv * 3.5 : 48 + conv * 2), bc: A.poly, badge: ico + 'Poly ' + r.verdict,
         why: mp + '% Geld' + ((r.sharp && r.sharp.n) ? ' · Wallets ' + Math.round(r.sharp.hit * 100) + '% (n' + r.sharp.n + ')' : '') + (r.vol ? ' · ' + usd(r.vol) : '') });
     });
     // 3) Betfair-Steam — geld-getrieben; plausibel gefiltert, Richtung ehrlich beschriftet
@@ -1126,7 +1126,7 @@
       var moneyIn = pp > 0, ex = exoticLg(x.league, false);  // pp>0 = Quote fiel = Geld rein
       put({ id: 'b' + mid(x.home, x.away, x.matchId), k: x.kickoff ? Date.parse(String(x.kickoff).replace('Z', '+00:00')) : NaN,
         home: x.home, away: x.away, league: x.league, odd: x.odd, exotic: ex,
-        score: 34 + Math.min(app, 15) - (moneyIn ? 0 : 8), badge: '💷 Steam', bc: A.bf,
+        src: 'bf', score: 42 + Math.min(app, 22) - (moneyIn ? 0 : 8), badge: '💷 Steam', bc: A.bf,
         why: moneyIn ? ('Geld auf ' + short(x.sideName || '') + ' · Quote zieht ' + pp.toFixed(1) + 'pp')
                      : (short(x.sideName || '') + ' driftet ' + pp.toFixed(1) + 'pp → Geld auf Gegenseite') });
     });
@@ -1140,11 +1140,23 @@
       var ex = !r.pinn, bf = r.betfair && r.betfair.name, pl = r.poly && r.poly.name;
       put({ id: 'm' + mid(r.home, r.away, r.matchId), k: r.kickoff ? Date.parse(String(r.kickoff).replace('Z', '+00:00')) : NaN,
         home: r.home, away: r.away, league: r.league, odd: null, exotic: ex, live: r.live,
-        score: 44, badge: '🔗 Divergenz', bc: A.flow,
+        src: 'mm', score: 50, badge: '🔗 Divergenz', bc: A.flow,
         why: 'Betfair-Geld auf ' + short(bf || '') + ', Poly auf ' + short(pl || '') + ' — Fehlbepreisung' });
     });
-    var items = Object.keys(cand).map(function (id) { return cand[id]; })
-      .sort(function (a, b) { return b.score - a.score || a.k - b.k; }).slice(0, 5);
+    // 15.08.2026 (Lucas): Quellen-Diversitaet — sonst verdraengen Poly/Card-BETs (60-95) die
+    // Betfair-Steam (<=64) und Money-Map (50) strukturell aus den Top-5. Die staerksten Signale zuerst,
+    // dann je EIN garantierter Platz fuer die beste Betfair- und Money-Map-Zeile, Rest nach Score.
+    var _all = Object.keys(cand).map(function (id) { return cand[id]; })
+      .sort(function (a, b) { return b.score - a.score || a.k - b.k; });
+    var items = (function () {
+      var N = 5, pick = [], used = {};
+      var take = function (x) { if (x && !used[x.id]) { used[x.id] = 1; pick.push(x); } };
+      var firstOf = function (s) { for (var i = 0; i < _all.length; i++) { if (_all[i].src === s) return _all[i]; } return null; };
+      for (var i = 0; i < _all.length && pick.length < N - 2; i++) take(_all[i]);   // 3 staerkste zuerst
+      take(firstOf('bf')); take(firstOf('mm'));                                     // Quellen-Reserve
+      for (var j = 0; j < _all.length && pick.length < N; j++) take(_all[j]);        // Rest auffuellen
+      return pick.sort(function (a, b) { return b.score - a.score || a.k - b.k; });
+    })();
     if (!items.length) return '<section id="mdJetztBox" class="md-jetzt md-rise" style="border-color:var(--mln);background:var(--m1);padding-bottom:13px">' +
       '<div class="md-jz-h"><span style="font-size:16px;opacity:.55">🎯</span><span class="md-jz-t" style="color:var(--mi2)">Top-Wetten jetzt</span>' +
       '<span class="md-jz-s">gerade kein spielbares Signal in den nächsten Stunden — meldet sich automatisch.</span></div></section>';

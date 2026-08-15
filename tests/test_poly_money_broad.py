@@ -429,6 +429,34 @@ class TestSeriesMarketPicker:
         assert [o["label"] for o in oc] == ["Lakers", "Celtics"] and oc[0]["cond"] == "0xabc"
 
 
+class TestExhibitionFilter:
+    """15.08.2026 (Lucas): Legenden-/Show-Spiele sind kein Wettsignal -> raus, echte Spiele bleiben."""
+    def test_legends_erkannt(self):
+        assert B._is_exhibition([{"label": "FC Bayern Munich Legends"}, {"label": "RB Leipzig"}])
+        assert B._is_exhibition([{"label": "Real Madrid All-Stars"}])
+        assert B._is_exhibition([{"label": "Liverpool Legends"}, {"label": "Milan Glorie"}])
+
+    def test_echtes_team_bleibt(self):
+        # eSport "Anyone's Legend" (Singular) ist ein echtes Team -> NICHT gefiltert
+        assert not B._is_exhibition([{"label": "Anyone's Legend"}, {"label": "ThunderTalk Gaming"}])
+        assert not B._is_exhibition([{"label": "Deportivo La Coruna"}, {"label": "Elche"}])
+        assert not B._is_exhibition([{"label": "TEAM VISION"}, {"label": "Team Spirit"}])
+
+    def test_fetch_markets_wirft_legends_raus(self, monkeypatch):
+        ev = {"slug": "clf-bay-rbl", "volume": 113000, "startTime": "2026-08-15T12:00:00Z",
+              "markets": [{"outcomes": '["FC Bayern Munich Legends","RB Leipzig"]',
+                           "outcomePrices": '["0.55","0.45"]', "clobTokenIds": '["t0","t1"]',
+                           "conditionId": "0xleg", "volumeNum": 113000}]}
+        monkeypatch.setattr(B, "_tags", lambda: ["soccer"])
+        monkeypatch.setattr(B, "_cfg", lambda: (7500, 1.35))
+        monkeypatch.setattr(B, "_gamma_events", lambda tag, closed: ([ev] if not closed else []))
+        monkeypatch.setattr(B, "_gamma_top", lambda closed: [])
+        monkeypatch.setattr(B, "_hours_to_ko", lambda e, now: 1.0)
+        monkeypatch.setattr(B, "_market_money", lambda oc: {"shares": {"a": 60, "b": 40}, "whales": []})
+        markets = B.fetch_markets()
+        assert not any(m.get("key") == "clf-bay-rbl" for m in markets), "Legends-Spiel darf nicht drin sein"
+
+
 class TestFetchMarketsDedupUndDiagnose:
     """21.07.2026 (Lucas: „mehr Sport?"): ein Markt kann unter mehreren Tags liegen (cs2 ⊂ esports) —
     darf nur EINMAL zählen. rawByTag macht sichtbar, welche Sport-Tags überhaupt Events liefern."""

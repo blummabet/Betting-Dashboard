@@ -1500,6 +1500,7 @@ function _pwLeagueMoneyVerdict(league){
 }
 // (01.08.2026, Lucas) Wiederverwendbare Play-Rangliste — Kern für „🔥 Heute wetten" UND die
 // Übersicht-Box. limit=0 → alle. useSportPass steuert den Sport-Filter (Übersicht: aus).
+var PW_LIVE_MAX_PRICE = 0.77;   // 15.08.2026 (Lucas): wie Live-Watch — live > 77¢ (Quote <1.30) = fast entschieden, kein Value
 function _pwTopPlays(limit, live, useSportPass){
   live = live || (_pwCache && _pwCache.broadLive) || {};
   const all=[];
@@ -1508,7 +1509,11 @@ function _pwTopPlays(limit, live, useSportPass){
     if(_pwSportCategory(m.league)==='Sonstige') continue;   // kein Politik/Krypto/Sonstiges in die Play-Liste
     if(useSportPass && !_pwSportPass(m.league)) continue;
     const r=_pwShortlistScore(k,m);
-    if(r&&r.verdict==='BET') all.push(r);   // 13.08.2026 (Lucas): FADE raus aus Public-Plays (-28% ROI, 26% hit) — nur BET wird promotet; FADE bleibt nur als Verdikt in der Detailtabelle
+    if(r&&r.verdict==='BET'){
+      const _lv=(r.htk!=null&&r.htk<0);   // 15.08.2026 (Lucas): live fast entschieden (>77¢) = kein Value, wie Live-Watch
+      if(_lv&&typeof r.price==='number'&&r.price>PW_LIVE_MAX_PRICE) continue;
+      all.push(r);   // 13.08.2026 (Lucas): FADE raus aus Public-Plays — nur BET wird promotet
+    }
   }
   // 14.08.2026 (Lucas): dasselbe Spiel taucht auf Polymarket manchmal unter zwei Event-Slugs auf
   // (Basis + "-more-markets") -> exakt gleicher Pick 2x in den Play-Boxen. Nach normalisiertem

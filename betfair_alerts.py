@@ -40,12 +40,12 @@ JUMP_REL = 0.40   # 08.08.2026 (Lucas, Viking-Fall 1.23->3.60 nach 1:1): springt
                   # nicht von Backern/Layern) -> Richtung "unklar" statt eines falschen Back-/Lay-Urteils.
                   # Gilt in BEIDE Richtungen: ein Tor kann die Quote auch crashen und ein falsches "Back" faken.
 
-HT_TOP_EUR     = 10000.0  # Halbzeit-Geld-Schwelle Top-Liga + International (Lucas 30.07.2026)
-HT_REST_EUR    = 5000.0   # ... und Rest-Ligen
+HT_TOP_EUR     = float(os.environ.get("BF_HT_TOP_EUR") or 15000.0)   # Halbzeit-Geld-Schwelle Top-Liga + International (15.08.2026 Lucas: 10K->15K, Sa-Flut)
+HT_REST_EUR    = float(os.environ.get("BF_HT_REST_EUR") or 10000.0)  # ... und Rest-Ligen (15.08.2026 Lucas: 5K->10K)
 HT_MIN_SHARE   = 0.85     # ... und davon min. dieser Anteil auf EINEN Ausgang (einseitig)
 MIN_LEAD_ODD   = 1.30     # Geld auf einen Favoriten mit Quote < 1.30 (führt schon, wenig Value) = kein Push (Lucas 30.07.2026, vorher 1.15)
-FRESH_TOP_EUR  = 30000.0  # frisches Geld Top-Liga
-FRESH_REST_EUR = 20000.0  # ... und Rest-Ligen
+FRESH_TOP_EUR  = float(os.environ.get("BF_FRESH_TOP_EUR") or 50000.0)   # frisches Geld Top-Liga (15.08.2026 Lucas: 30K->50K)
+FRESH_REST_EUR = float(os.environ.get("BF_FRESH_REST_EUR") or 35000.0)  # ... und Rest-Ligen (15.08.2026 Lucas: 20K->35K)
 # 31.07.2026 (Lucas) — kuratierte, HÖHERE Schwellen für den ÖFFENTLICHEN Channel (nur die wirklich
 # dicken Bewegungen public, kein Spam). Halbzeit: Top 50K / Rest 15K gematcht. Frisch: Top 100K / Rest 30K.
 PUB_HT_TOP     = 50000.0
@@ -749,6 +749,23 @@ def _pub_ht_useless(a) -> bool:
     return isinstance(od, (int, float)) and od > HT_MAX_ODD_PUB
 
 
+def _live_under_reactive(a) -> bool:
+    """15.08.2026 (Lucas): live in-play TORE-Über/Unter (HZ 'First Half Goals X.5' ODER Voll
+    'Over/Under X.5 Goals'), Geld auf UNTER = reaktiv. Mit ablaufender Zeit verkürzt sich Unter
+    mechanisch, die Quote crasht (Bolton v Preston Under 2.5 @1.35, 2.16->1.35 in Min 70-84) -> die
+    'Back'-Bestätigung ist Zeit-Zerfall, KEIN Signal. Über bleibt (echte Tor-Erwartung); HZ-1X2 +
+    1X2-Moneyflow + Corners/Cards (kein 'Goals') + Vor-Anpfiff bleiben. Szenario-übergreifend (ht +
+    fresh), BEIDE Kanäle (Trades + Public) — reaktives Unter ist überall wertlos (wie der Remis-Chase)."""
+    if not _is_live(a):
+        return False
+    mk = str(a.get("market") or "")
+    is_goals_ou = ("First Half Goals" in mk) or ("Over/Under" in mk and "Goals" in mk)
+    if not is_goals_ou:
+        return False
+    lbl = str(a.get("leadLabel") or a.get("leadName") or "").lower()
+    return "under" in lbl or "unter" in lbl
+
+
 # 14.08.2026 (Lucas): eskalierende Wiederhol-Bremse fuers Public. Derselbe Markt muss zum Re-Push das
 # Geld nur um DEDUP_FACTOR steigern -> in liquiden Ligen 4-5x Spam. Ab dem 3. Push wird die noetige
 # Steigerung hoeher gestaffelt. Zaehler steckt im pub_seen (rueckwaerts-kompatibel: alter float = 1x).
@@ -778,6 +795,15 @@ def should_send_public(seen, key, value) -> bool:
 def _pub_seen_put(seen, key, value) -> None:
     _, n = _pub_seen_rec(seen.get(key))
     seen[key] = {"v": value, "n": n + 1}
+
+
+def _pub_skip_live_resend(a, pub_seen) -> bool:
+    """15.08.2026 (Lucas): live nur EIN Public-Push pro Spiel. Ein bereits gesendetes LIVE-Spiel NICHT
+    erneut pushen, auch wenn das Volumen weiter waechst (reaktives Nachlaufen — Norwich kam 2. mal, weil
+    das Live-Volumen um 1.5x wuchs). Vor-Anpfiff behält die eskalierende Wiederhol-Leiter."""
+    if not _is_live(a):
+        return False
+    return pub_seen.get(a["scenario"] + ":" + a["matchId"]) is not None
 
 
 def collect_alerts(prices: dict, hist: dict, ht_top=HT_TOP_EUR, ht_rest=HT_REST_EUR,
@@ -821,7 +847,7 @@ def main():
     alerts = _drop_subthreshold_jump(_leader_gate(attach_direction(collect_alerts(prices, hist), direction)))
     # 14.08.2026 (Lucas): kollabiertes In-Play-Remis (X<2.2) auch aus TRADES raus — eh wertlos
     # (-31..-79% ROI). Bisher nur Public gefiltert. Andere Draws (>2.2) + Nicht-Draws bleiben (mit Warn-Note).
-    alerts = [a for a in alerts if not _draw_inplay_chase(a)]
+    alerts = [a for a in alerts if not _draw_inplay_chase(a) and not _live_under_reactive(a)]
     sent = 0
     for a in alerts:
         key = a["scenario"] + ":" + a["matchId"]
@@ -862,10 +888,12 @@ def main():
     pub_alerts = [a for a in pub_alerts if not _draw_inplay_chase(a)]
     # 14.08.2026 (Lucas): unnoetige HT/Live-Pushs raus, wo die Geld-% der Quote widersprechen
     # (Galatasaray 85%@13.50; Wolves Under 87% aber Quote driftet). Trades sieht sie weiter.
-    pub_alerts = [a for a in pub_alerts if not _pub_incoherent(a) and not _pub_live_drift(a) and not _pub_ht_useless(a) and not _pub_unconfirmed_fav(a)]
+    pub_alerts = [a for a in pub_alerts if not _pub_incoherent(a) and not _pub_live_drift(a) and not _pub_ht_useless(a) and not _pub_unconfirmed_fav(a) and not _live_under_reactive(a)]
     pub_sent = 0
     for a in pub_alerts:
         key = a["scenario"] + ":" + a["matchId"]
+        if _pub_skip_live_resend(a, pub_seen):
+            continue   # 15.08.2026 (Lucas): live nur EIN Public-Push pro Spiel
         if should_send_public(pub_seen, key, a["value"]):
             # 13.08.2026 (Lucas): Zweitmeinung (Pinnacle/Soft/Poly) auch im Public — wie im Trades-Push (nur fresh).
             pub_msg = build_public_message(a) + (_consensus_block(a, cidx) if a["scenario"] == "fresh" else "")
