@@ -1097,6 +1097,7 @@
     var exoticLg = function (lg, anchored) { if (anchored) return false; lg = String(lg || ''); if (THIN.test(lg)) return true; return !MAJOR.test(lg); };
     var mid = function (h, a, id) { return id || (team(h) + team(a)); };
     var _polyMaxInf = (polyPlays || []).reduce(function (a, p) { return Math.max(a, _mdPlayInflow(p)); }, 1);
+    var _bfFlowMax = ((_md.data.bfOverview && _md.data.bfOverview.flow) || []).reduce(function (a, x) { return Math.max(a, +x.deltaEur || 0); }, 1);
     var cand = {};
     var put = function (o) {
       if (isNaN(o.k) || o.k < floor || o.k > soon) return;
@@ -1141,6 +1142,17 @@
         match: esc(team(x.home)) + vsp + esc(team(x.away)), pick: esc(short(x.sideName || '') || '—'),
         score: 42 + Math.min(app, 22) - (moneyIn ? 0 : 8), badge: '💷 Steam', bc: A.bf });
     });
+    // 3b) Betfair „Frisches Geld" (€) — wo wirklich Geld reinkippt (15.08.2026 Lucas: Steam PLUS Geld).
+    ((_md.data.bfOverview && _md.data.bfOverview.flow) || []).forEach(function (x) {
+      var dv = +x.deltaEur || 0, od = x.odd;
+      if (dv < 2000) return;                                   // Rausch-Untergrenze wie im Radar
+      if (od != null && (+od < 1.30 || +od > 15)) return;      // Lock/Longshot raus (wie _mdBfFlowBody)
+      var ex = exoticLg(x.league, false);
+      put({ id: 'bf' + mid(x.home, x.away, x.matchId), k: now, live: !!_mdBfLiveById(x.matchId),
+        exotic: ex, src: 'bfflow', odd: od, deltaEur: dv, nowEur: +x.nowEur || 0, sideName: x.sideName, dir: x.dir,
+        match: esc(team(x.home)) + vsp + esc(team(x.away)), pick: esc(short(x.sideName || '') || '—'),
+        score: 46 + Math.min(dv / 3000, 20), badge: '💷 Geld', bc: A.bf });
+    });
     // 4) Money-Map — NUR echte Divergenz (starke Fehlbepreisung).
     ((_md.data.moneyMap && _md.data.moneyMap.rows) || []).forEach(function (r) {
       if (r.verdict !== 'uneinig') return;
@@ -1157,12 +1169,14 @@
     var _all = Object.keys(cand).map(function (id) { return cand[id]; })
       .sort(function (a, b) { return b.score - a.score || a.k - b.k; });
     var items = (function () {
-      var N = 5, pick = [], used = {};
+      var N = 6, pick = [], used = {};   // 15.08.2026 (Lucas): bis zu 6, damit Betfair (Steam + Geld) + Money-Map reinpassen
       var take = function (x) { if (x && !used[x.id]) { used[x.id] = 1; pick.push(x); } };
       var firstOf = function (s) { for (var i = 0; i < _all.length; i++) { if (_all[i].src === s) return _all[i]; } return null; };
-      for (var i = 0; i < _all.length && pick.length < N - 2; i++) take(_all[i]);   // 3 staerkste zuerst
-      take(firstOf('bf')); take(firstOf('mm'));                                     // Quellen-Reserve
-      for (var j = 0; j < _all.length && pick.length < N; j++) take(_all[j]);        // Rest auffuellen
+      var reserve = [firstOf('bf'), firstOf('bfflow'), firstOf('mm')].filter(Boolean);   // Betfair-Steam + Betfair-Geld + Money-Map
+      var strong = Math.max(0, N - reserve.length);
+      for (var i = 0; i < _all.length && pick.length < strong; i++) take(_all[i]);   // staerkste zuerst
+      reserve.forEach(take);                                                          // Quellen-Reserve
+      for (var j = 0; j < _all.length && pick.length < N; j++) take(_all[j]);          // Rest auffuellen
       return pick.sort(function (a, b) { return b.score - a.score || a.k - b.k; });
     })();
     if (!items.length) return '<section id="mdJetztBox" class="md-jetzt md-rise" style="border-color:var(--mln);background:var(--m1);padding-bottom:13px">' +
@@ -1175,6 +1189,10 @@
         var ap = Math.min(Math.abs(+o.pp || 0), 25), val = ((o.pp > 0) ? '+' : '') + (+o.pp).toFixed(1) + 'pp';
         var sub = o.moneyIn ? ('Quote zieht rein' + (o.odd != null ? ' · @' + (+o.odd).toFixed(2) : '')) : 'Quote driftet → Geld auf Gegenseite';
         return '<div class="md-sig">' + _mdSigCell('Betfair-Geld', val, A.bf, ap / 25 * 100, sub) + '</div>';
+      }
+      if (o.src === 'bfflow') {
+        var dv = +o.deltaEur || 0, nv = +o.nowEur || 0;
+        return '<div class="md-sig">' + _mdSigCell('Betfair-Geld', '+' + eur(dv), A.bf, _bfFlowMax ? dv / _bfFlowMax * 100 : 60, 'jetzt ' + eur(nv) + (o.odd != null ? ' @' + (+o.odd).toFixed(2) : '')) + '</div>';
       }
       if (o.src === 'mm') {
         var bs = Math.round((o.bf && o.bf.sharePct) || 0), ps = Math.round((o.pl && o.pl.sharePct) || 0);
@@ -1193,7 +1211,7 @@
       var oddTxt = (x.odd != null) ? ' <span class="q">@' + (+x.odd).toFixed(2) + '</span>' : '';
       var pickLine = (x.src === 'mm')
         ? '<div class="md-jz-pick md-jz-div"><b style="color:' + A.bf + '">BF</b> ' + esc(short((x.bf && x.bf.name) || '—')) + ' <span style="color:var(--mi3)">vs</span> <b style="color:' + A.poly + '">Poly</b> ' + esc(short((x.pl && x.pl.name) || '—')) + '</div>'
-        : '<div class="md-jz-pick"><span style="color:var(--mi3)">→</span> <b>' + (x.pick || '—') + '</b>' + oddTxt + '</div>';
+        : '<div class="md-jz-pick"><span style="color:var(--mi3)">→</span> <b>' + (x.pick || '—') + '</b>' + oddTxt + ((x.src === 'bfflow') ? _bfReactiveChip(x.sideName, x.live) : '') + '</div>';
       return '<div class="md-jz-row md-jz-row3">' +
         '<div class="md-jz-l1"><span class="md-jz-n">' + (i + 1) + '</span>' +
         '<span class="md-jz-nm">' + x.match + '</span>' + badge + live + chip +
