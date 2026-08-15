@@ -1,25 +1,25 @@
 {
-"generatedAt": "2026-08-15T01:26:08.528489+00:00",
+"generatedAt": "2026-08-15T01:36:43.096045+00:00",
 "byVerdict": {
 "konsens": {
-"n": 61,
-"wins": 43,
-"hitRate": 0.7049,
-"polyN": 59,
-"polyWins": 42,
-"polyHitRate": 0.7119,
+"n": 62,
+"wins": 44,
+"hitRate": 0.7097,
+"polyN": 60,
+"polyWins": 43,
+"polyHitRate": 0.7167,
 "pinnN": 4,
 "pinnHitRate": 0.75
 },
 "uneinig": {
-"n": 18,
+"n": 19,
 "wins": 4,
-"hitRate": 0.2222,
+"hitRate": 0.2105,
 "polyN": 18,
 "polyWins": 4,
 "polyHitRate": 0.2222,
-"pinnN": 4,
-"pinnHitRate": 0.75
+"pinnN": 5,
+"pinnHitRate": 0.8
 },
 "teil": {
 "n": 2,
@@ -57,6 +57,11 @@
 "n": 5,
 "wins": 0,
 "hitRate": 0.0
+},
+"Brazilian Serie B": {
+"n": 3,
+"wins": 2,
+"hitRate": 0.6667
 },
 "CONMEBOL Copa Sudamericana": {
 "n": 3,
@@ -107,11 +112,6 @@
 "n": 1,
 "wins": 0,
 "hitRate": 0.0
-},
-"Brazilian Serie B": {
-"n": 1,
-"wins": 1,
-"hitRate": 1.0
 },
 "Bulgarian A League": {
 "n": 1,
@@ -191,25 +191,63 @@
 },
 "byStrength": {
 "strong": {
-"n": 31,
-"wins": 24,
-"hitRate": 0.7742
+"n": 32,
+"wins": 25,
+"hitRate": 0.7812
 },
 "weak": {
-"n": 17,
+"n": 18,
 "wins": 6,
-"hitRate": 0.3529
+"hitRate": 0.3333
 }
 },
 "divergence": {
-"n": 18,
+"n": 19,
 "betfairWins": 4,
-"betfairRate": 0.2222,
+"betfairRate": 0.2105,
 "polyN": 18,
 "polyWins": 4,
 "polyRate": 0.2222
 },
 "recent": [
+{
+"matchId": "35926400",
+"home": "Sport Recife",
+"away": "Londrina",
+"league": "Brazilian Serie B",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Sport Recife",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-08-14T23:30:00Z",
+"settledAt": "2026-08-15T01:36:42.958369+00:00"
+},
+{
+"matchId": "35922731",
+"home": "Ponte Preta",
+"away": "Nautico PE",
+"league": "Brazilian Serie B",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Nautico PE",
+"polySide": null,
+"winner": "draw",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-14T22:30:00Z",
+"settledAt": "2026-08-15T01:36:42.958369+00:00"
+},
 {
 "matchId": "35898076",
 "home": "Racing Club",
@@ -931,50 +969,12 @@
 ],
 "kickoff": "2026-08-13T22:00:00Z",
 "settledAt": "2026-08-14T00:08:29.279692+00:00"
-},
-{
-"matchId": "35672382",
-"home": "Mirassol",
-"away": "LDU",
-"league": "CONMEBOL Copa Libertadores",
-"verdict": "teil",
-"moneySide": "home",
-"moneyName": "Mirassol",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-08-13T22:00:00Z",
-"settledAt": "2026-08-13T23:56:14.392291+00:00"
-},
-{
-"matchId": "35917211",
-"home": "Anderlecht",
-"away": "PAOK",
-"league": "UEFA Europa League Qualifiers",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Anderlecht",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-2
-],
-"kickoff": "2026-08-13T18:30:00Z",
-"settledAt": "2026-08-13T21:38:15.580359+00:00"
 }
 ],
 "global": {
-"n": 81,
-"wins": 48,
-"hitRate": 0.5926
+"n": 83,
+"wins": 49,
+"hitRate": 0.5904
 },
-"pending": 5
+"pending": 3
 }
