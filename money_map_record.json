@@ -1,10 +1,10 @@
 {
-"generatedAt": "2026-08-15T21:43:18.238314+00:00",
+"generatedAt": "2026-08-15T21:49:34.305853+00:00",
 "byVerdict": {
 "konsens": {
-"n": 94,
-"wins": 74,
-"hitRate": 0.7872,
+"n": 96,
+"wins": 76,
+"hitRate": 0.7917,
 "polyN": 85,
 "polyWins": 65,
 "polyHitRate": 0.7647,
@@ -12,14 +12,14 @@
 "pinnHitRate": 0.75
 },
 "uneinig": {
-"n": 30,
+"n": 31,
 "wins": 7,
-"hitRate": 0.2333,
-"polyN": 23,
-"polyWins": 6,
-"polyHitRate": 0.2609,
-"pinnN": 12,
-"pinnHitRate": 0.6667
+"hitRate": 0.2258,
+"polyN": 24,
+"polyWins": 7,
+"polyHitRate": 0.2917,
+"pinnN": 13,
+"pinnHitRate": 0.6154
 },
 "teil": {
 "n": 2,
@@ -73,6 +73,11 @@
 "wins": 4,
 "hitRate": 0.8
 },
+"Belgian Pro League": {
+"n": 4,
+"wins": 2,
+"hitRate": 0.5
+},
 "Chinese Super League": {
 "n": 4,
 "wins": 3,
@@ -108,11 +113,6 @@
 "wins": 0,
 "hitRate": 0.0
 },
-"Belgian Pro League": {
-"n": 2,
-"wins": 0,
-"hitRate": 0.0
-},
 "Chilean Primera B": {
 "n": 2,
 "wins": 0,
@@ -132,6 +132,11 @@
 "n": 2,
 "wins": 2,
 "hitRate": 1.0
+},
+"Spanish La Liga": {
+"n": 2,
+"wins": 1,
+"hitRate": 0.5
 },
 "Uzbekistan Super League": {
 "n": 2,
@@ -218,11 +223,6 @@
 "wins": 0,
 "hitRate": 0.0
 },
-"Spanish La Liga": {
-"n": 1,
-"wins": 1,
-"hitRate": 1.0
-},
 "Spanish Segunda Division": {
 "n": 1,
 "wins": 1,
@@ -261,20 +261,77 @@
 "hitRate": 0.8148
 },
 "weak": {
-"n": 39,
-"wins": 20,
-"hitRate": 0.5128
+"n": 42,
+"wins": 22,
+"hitRate": 0.5238
 }
 },
 "divergence": {
-"n": 30,
+"n": 31,
 "betfairWins": 7,
-"betfairRate": 0.2333,
-"polyN": 23,
-"polyWins": 6,
-"polyRate": 0.2609
+"betfairRate": 0.2258,
+"polyN": 24,
+"polyWins": 7,
+"polyRate": 0.2917
 },
 "recent": [
+{
+"matchId": "35780314",
+"home": "Sevilla",
+"away": "Rayo Vallecano",
+"league": "Spanish La Liga",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Rayo Vallecano",
+"polySide": "home",
+"winner": "home",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-08-15T19:30:00Z",
+"settledAt": "2026-08-15T21:49:34.166922+00:00"
+},
+{
+"matchId": "35918593",
+"home": "Oud-Heverlee Leuven",
+"away": "Club Brugge",
+"league": "Belgian Pro League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Club Brugge",
+"polySide": null,
+"winner": "away",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+0,
+3
+],
+"kickoff": "2026-08-15T18:45:00Z",
+"settledAt": "2026-08-15T21:49:34.166922+00:00"
+},
+{
+"matchId": "35918635",
+"home": "Genk",
+"away": "Westerlo",
+"league": "Belgian Pro League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Genk",
+"polySide": null,
+"winner": "home",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+3,
+2
+],
+"kickoff": "2026-08-15T18:45:00Z",
+"settledAt": "2026-08-15T21:49:34.166922+00:00"
+},
 {
 "matchId": "35895909",
 "home": "Fluminense",
@@ -977,69 +1034,12 @@
 ],
 "kickoff": "2026-08-15T09:00:00Z",
 "settledAt": "2026-08-15T12:12:18.154537+00:00"
-},
-{
-"matchId": "35916664",
-"home": "Kobe",
-"away": "FC Tokyo",
-"league": "Japanese J League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "FC Tokyo",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-08-15T10:00:00Z",
-"settledAt": "2026-08-15T11:59:52.713352+00:00"
-},
-{
-"matchId": "35937984",
-"home": "Tochigi Uva FC",
-"away": "Vanraure Hachinohe",
-"league": "Japanese J League 2",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Tochigi UVA FC",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-5,
-0
-],
-"kickoff": "2026-08-15T09:00:00Z",
-"settledAt": "2026-08-15T10:57:10.162138+00:00"
-},
-{
-"matchId": "35924647",
-"home": "Vancouver FC",
-"away": "Pacific",
-"league": "Canadian Premier League",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Vancouver FC",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-08-15T01:00:00Z",
-"settledAt": "2026-08-15T04:05:42.081747+00:00"
 }
 ],
 "global": {
-"n": 126,
-"wins": 82,
-"hitRate": 0.6508
+"n": 129,
+"wins": 84,
+"hitRate": 0.6512
 },
-"pending": 3
+"pending": 1
 }
