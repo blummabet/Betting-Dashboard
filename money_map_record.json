@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-08-15T03:56:54.399732+00:00",
+"generatedAt": "2026-08-15T04:05:42.213603+00:00",
 "byVerdict": {
 "konsens": {
 "n": 65,
@@ -12,12 +12,12 @@
 "pinnHitRate": 0.75
 },
 "uneinig": {
-"n": 19,
+"n": 20,
 "wins": 4,
-"hitRate": 0.2105,
-"polyN": 18,
+"hitRate": 0.2,
+"polyN": 19,
 "polyWins": 4,
-"polyHitRate": 0.2222,
+"polyHitRate": 0.2105,
 "pinnN": 5,
 "pinnHitRate": 0.8
 },
@@ -128,6 +128,11 @@
 "wins": 1,
 "hitRate": 1.0
 },
+"Canadian Premier League": {
+"n": 1,
+"wins": 0,
+"hitRate": 0.0
+},
 "Chilean Primera Division": {
 "n": 1,
 "wins": 1,
@@ -206,20 +211,39 @@
 "hitRate": 0.8
 },
 "weak": {
-"n": 18,
+"n": 19,
 "wins": 6,
-"hitRate": 0.3333
+"hitRate": 0.3158
 }
 },
 "divergence": {
-"n": 19,
+"n": 20,
 "betfairWins": 4,
-"betfairRate": 0.2105,
-"polyN": 18,
+"betfairRate": 0.2,
+"polyN": 19,
 "polyWins": 4,
-"polyRate": 0.2222
+"polyRate": 0.2105
 },
 "recent": [
+{
+"matchId": "35924647",
+"home": "Vancouver FC",
+"away": "Pacific",
+"league": "Canadian Premier League",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Vancouver FC",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-15T01:00:00Z",
+"settledAt": "2026-08-15T04:05:42.081747+00:00"
+},
 {
 "matchId": "35933516",
 "home": "Bolivar",
@@ -960,31 +984,12 @@
 ],
 "kickoff": "2026-08-13T23:00:00Z",
 "settledAt": "2026-08-14T02:08:37.799511+00:00"
-},
-{
-"matchId": "35931607",
-"home": "New York City",
-"away": "Necaxa",
-"league": "North American Leagues Cup",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "New York City",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-08-13T23:30:00Z",
-"settledAt": "2026-08-14T01:38:34.565513+00:00"
 }
 ],
 "global": {
-"n": 86,
+"n": 87,
 "wins": 52,
-"hitRate": 0.6047
+"hitRate": 0.5977
 },
-"pending": 1
+"pending": 0
 }
