@@ -24,7 +24,7 @@ from pathlib import Path
 BASE = Path(__file__).resolve().parent
 PRICES_FILE = BASE / "betfair_prices.json"
 DIR_FILE = BASE / "betfair_direction.json"
-REL_MIN = 0.03   # relative Quotenbewegung ab der eine Richtung gilt (darunter = flat/Rauschen)
+REL_MIN = 0.005  # 14.08.2026 (Lucas): 3% in 15min war zu hart (fast alles flat) -> 0.5%. Relative Quotenbewegung ab der eine Richtung gilt (darunter = flat/Rauschen)
 
 
 def classify(cur, prev):

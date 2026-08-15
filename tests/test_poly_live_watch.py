@@ -141,3 +141,25 @@ class TestPriceCeiling77:
     def test_unter_77_kommt_durch(self):
         al = W.find_alerts({"k": self._m(0.70)}, {}, {}, set(), NOW)           # Quote ~1.43
         assert "0xbig" in {a["wallet"] for a in al}
+
+
+
+class TestMarketCapGuard:
+    """15.08.2026 (Lucas): Position > gesamtes Markt-Volumen (totalUsd) = Daten-Artefakt -> raus."""
+    def _m(self, usd, total):
+        return {"league": "esports", "prices": {"A": 0.67, "B": 0.33}, "totalUsd": total,
+                "whales": [{"wallet": "0xbig", "side": "A", "usd": usd}]}
+
+    def test_position_groesser_als_markt_raus(self):
+        # $99K-Position in $35.8K-Markt (Team-Vision-Fall) -> Artefakt, kein Push
+        assert W.find_alerts({"k": self._m(99000, 35800)}, {}, {}, set(), NOW) == []
+
+    def test_plausible_position_kommt_durch(self):
+        al = W.find_alerts({"k": self._m(30000, 80000)}, {}, {}, set(), NOW)
+        assert "0xbig" in {a["wallet"] for a in al}
+
+    def test_ohne_totalusd_kein_guard(self):
+        # kein totalUsd -> Guard greift nicht (kein Vergleich moeglich), normale Gates entscheiden
+        m = {"league": "esports", "prices": {"A": 0.67}, "whales": [{"wallet": "0xbig", "side": "A", "usd": 30000}]}
+        al = W.find_alerts({"k": m}, {}, {}, set(), NOW)
+        assert "0xbig" in {a["wallet"] for a in al}

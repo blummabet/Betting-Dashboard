@@ -17,7 +17,7 @@ def _prices(over_odd, under_odd, mid="1"):
 def test_classify():
     assert D.classify(1.40, 1.50) == "in"     # -6.7% -> kuerzer -> Back
     assert D.classify(1.60, 1.50) == "out"    # +6.7% -> laenger -> Lay/Drift
-    assert D.classify(1.51, 1.50) == "flat"   # < 3% -> Rauschen
+    assert D.classify(1.502, 1.50) == "flat"  # 14.08.2026: < 0.5% -> Rauschen
     assert D.classify(None, 1.50) == "flat"
     assert D.classify(1.4, 0) == "flat"
 

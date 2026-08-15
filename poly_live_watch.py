@@ -113,6 +113,12 @@ def find_alerts(live, close, scores, seen, now=None):
             if not isinstance(price, (int, float)) or price < LIVE_MIN_PRICE or price > LIVE_MAX_PRICE:
                 continue                              # entschieden/tot (z.B. @100) -> Settlement, kein Signal (gilt auch fuer scharfe)
             usd = float(w.get("usd") or 0)
+            # 15.08.2026 (Lucas): eine EINZELNE Position kann nicht groesser sein als der ganze Markt.
+            # usd = gehaltene Shares × Preis; usd > totalUsd => kaputte Holder-Zahl ($99K-„Einstieg" in
+            # $36K-Markt) -> raus, kein Push.
+            _mtot = float(m.get("totalUsd") or 0)
+            if _mtot > 0 and usd > _mtot:
+                continue
             sc = _score(scores, wal)
             sharp = is_sharp(sc)
             if not ((sharp and usd >= SHARP_MIN_USD) or usd >= LIVE_BIG_USD):

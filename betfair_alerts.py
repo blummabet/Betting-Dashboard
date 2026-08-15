@@ -710,7 +710,7 @@ PUB_INCOHERENT_SHARE = float(os.environ.get("BF_PUB_INCOHERENT_SHARE") or 0.70)
 PUB_INCOHERENT_ODD   = float(os.environ.get("BF_PUB_INCOHERENT_ODD") or 3.0)
 
 
-PUB_SHORT_FAV_ODD = float(os.environ.get("BF_PUB_SHORT_FAV_ODD") or 1.50)
+PUB_SHORT_FAV_ODD = float(os.environ.get("BF_PUB_SHORT_FAV_ODD") or 1.35)   # 14.08.2026 (Lucas): 1.50 -> 1.35
 
 
 def _pub_unconfirmed_fav(a) -> bool:
