@@ -65,18 +65,32 @@ class TestPubLiveOnce(unittest.TestCase):
         seen = {}
         a = self._live()
         # 1. Push geht (noch nichts gesehen)
-        self.assertFalse(BA._pub_skip_live_resend(a, seen))
+        self.assertFalse(BA._pub_skip_resend(a, seen))
         BA._pub_seen_put(seen, "fresh:35759270", 70000)
         # 2. Push desselben Live-Spiels -> unterdrückt, egal wie stark das Volumen wuchs
-        self.assertTrue(BA._pub_skip_live_resend(a, seen))
+        self.assertTrue(BA._pub_skip_resend(a, seen))
 
     def test_vor_anpfiff_behaelt_leiter(self):
         seen = {"fresh:1": {"v": 70000, "n": 1}}
         pre = {"scenario": "fresh", "matchId": "1", "live": {}, "kickoff": "2999-01-01T00:00:00Z"}
-        self.assertFalse(BA._pub_skip_live_resend(pre, seen))   # nicht live -> Leiter entscheidet
+        self.assertFalse(BA._pub_skip_resend(pre, seen))   # nicht live -> Leiter entscheidet
 
     def test_erstes_live_ohne_seen_geht(self):
-        self.assertFalse(BA._pub_skip_live_resend(self._live(), {}))
+        self.assertFalse(BA._pub_skip_resend(self._live(), {}))
+
+    def test_ht_zweiter_push_raus(self):
+        # 15.08.2026 (Lucas): HZ-Geld auch nur EIN Push — Guabira HZ 15K->23.3K (1.55x) kam 2. mal (PRE)
+        ht = {"scenario": "ht", "matchId": "42", "live": {}, "kickoff": "2999-01-01T00:00:00Z"}
+        seen = {}
+        self.assertFalse(BA._pub_skip_resend(ht, seen))          # 1. Push geht
+        BA._pub_seen_put(seen, "ht:42", 15000)
+        self.assertTrue(BA._pub_skip_resend(ht, seen))           # 2. Push -> unterdrückt (auch Vor-Anpfiff)
+
+    def test_fresh_vor_anpfiff_behaelt_leiter(self):
+        # Vor-Anpfiff FRISCH (1X2) behaelt die Staffel-Leiter (Galatasaray) -> NICHT unterdrueckt
+        seen = {"fresh:9": {"v": 70000, "n": 1}}
+        pre = {"scenario": "fresh", "matchId": "9", "live": {}, "kickoff": "2999-01-01T00:00:00Z"}
+        self.assertFalse(BA._pub_skip_resend(pre, seen))
 
 
 if __name__ == "__main__":

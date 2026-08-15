@@ -664,13 +664,17 @@ def fetch_markets(live_only=False):
         except Exception:
             _avg_get = None
     for vol, key, league, htk, oc, is_live, mvol in candidates:
-        if is_live:
-            if live_calls >= MAX_HOLDER_CALLS_LIVE:
-                continue
-        elif holder_calls >= MAX_HOLDER_CALLS:
+        # 15.08.2026 (Lucas): Budget erschoepft ODER kein Geld-Split -> trotzdem Preis+Vol-Zeile fuer die
+        # Money-Map (ohne Whale-Split). Sonst verschwindet ein near-KO-Spiel wie Sevilla-Rayo komplett,
+        # obwohl Poly den Markt hat (fiel nur aus dem 90er-Holder-Budget). REIN additiv.
+        _over = (live_calls >= MAX_HOLDER_CALLS_LIVE) if is_live else (holder_calls >= MAX_HOLDER_CALLS)
+        if _over:
+            _pv = {o["label"]: o["price"] for o in oc if o["price"] is not None}
+            if _pv:
+                markets.append({"key": key, "league": league, "hoursToKickoff": htk,
+                                "totalUsd": round(mvol), "shares": {}, "prices": _pv, "whales": [],
+                                "live": is_live, "resolved": False, "resolvedPrices": {}})
             continue
-        if holder_calls >= MAX_HOLDER_CALLS and live_calls >= MAX_HOLDER_CALLS_LIVE:
-            break
         try:
             mm = _market_money(oc)     # 25.07.2026: EIN Fetch → Shares + Einzel-Wale
         except Exception:
@@ -680,7 +684,12 @@ def fetch_markets(live_only=False):
         else:
             holder_calls += 1
         if not mm:
-            continue     # ohne Geld-Split keine Aussage über „liegt das Geld richtig"
+            _pv = {o["label"]: o["price"] for o in oc if o["price"] is not None}
+            if _pv:
+                markets.append({"key": key, "league": league, "hoursToKickoff": htk,
+                                "totalUsd": round(mvol), "shares": {}, "prices": _pv, "whales": [],
+                                "live": is_live, "resolved": False, "resolvedPrices": {}})
+            continue
         shares = mm["shares"]
         prices = {o["label"]: o["price"] for o in oc if o["price"] is not None}
         _whales = mm.get("whales") or []

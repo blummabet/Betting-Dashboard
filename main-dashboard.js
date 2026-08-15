@@ -1171,8 +1171,13 @@
     var items = (function () {
       var N = 6, pick = [], used = {};   // 15.08.2026 (Lucas): bis zu 6, damit Betfair (Steam + Geld) + Money-Map reinpassen
       var take = function (x) { if (x && !used[x.id]) { used[x.id] = 1; pick.push(x); } };
-      var firstOf = function (s) { for (var i = 0; i < _all.length; i++) { if (_all[i].src === s) return _all[i]; } return null; };
-      var reserve = [firstOf('bf'), firstOf('bfflow'), firstOf('mm')].filter(Boolean);   // Betfair-Steam + Betfair-Geld + Money-Map
+      var firstOf = function (s, ok) { for (var i = 0; i < _all.length; i++) { var x = _all[i]; if (x.src === s && (!ok || ok(x))) return x; } return null; };
+      // 15.08.2026 (Lucas): Betfair nur reservieren, wenn's was taugt — sonst kein €9K-Draw / duenner Exoten-Steam.
+      var reserve = [
+        firstOf('bf', function (x) { return !x.exotic && Math.abs(+x.pp || 0) >= 3; }),   // ordentlicher Steam (nicht exotisch, >=3pp)
+        firstOf('bfflow', function (x) { return (+x.deltaEur || 0) >= 30000; }),           // echter Geld-Zufluss (>=EUR30K), kein Mini-Draw
+        firstOf('mm')
+      ].filter(Boolean);
       var strong = Math.max(0, N - reserve.length);
       for (var i = 0; i < _all.length && pick.length < strong; i++) take(_all[i]);   // staerkste zuerst
       reserve.forEach(take);                                                          // Quellen-Reserve

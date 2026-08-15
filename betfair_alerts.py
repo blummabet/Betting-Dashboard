@@ -805,11 +805,12 @@ def _pub_seen_put(seen, key, value) -> None:
     seen[key] = {"v": value, "n": n + 1}
 
 
-def _pub_skip_live_resend(a, pub_seen) -> bool:
-    """15.08.2026 (Lucas): live nur EIN Public-Push pro Spiel. Ein bereits gesendetes LIVE-Spiel NICHT
-    erneut pushen, auch wenn das Volumen weiter waechst (reaktives Nachlaufen — Norwich kam 2. mal, weil
-    das Live-Volumen um 1.5x wuchs). Vor-Anpfiff behält die eskalierende Wiederhol-Leiter."""
-    if not _is_live(a):
+def _pub_skip_resend(a, pub_seen) -> bool:
+    """15.08.2026 (Lucas): live ODER Halbzeit-Geld -> nur EIN Public-Push pro Spiel. Ein bereits
+    gesendetes Live-Spiel bzw. HZ-Signal NICHT erneut pushen, auch wenn das Volumen weiter waechst
+    (Norwich live 2. mal @1.5x; Guabira HZ 15K->23.3K @1.55x, Vor-Anpfiff). Vor-Anpfiff-FRISCH
+    (1X2-Moneyflow) behält die eskalierende Wiederhol-Leiter (Galatasaray-Staffelung)."""
+    if not (_is_live(a) or a.get("scenario") == "ht"):
         return False
     return pub_seen.get(a["scenario"] + ":" + a["matchId"]) is not None
 
@@ -900,7 +901,7 @@ def main():
     pub_sent = 0
     for a in pub_alerts:
         key = a["scenario"] + ":" + a["matchId"]
-        if _pub_skip_live_resend(a, pub_seen):
+        if _pub_skip_resend(a, pub_seen):
             continue   # 15.08.2026 (Lucas): live nur EIN Public-Push pro Spiel
         if should_send_public(pub_seen, key, a["value"]):
             # 13.08.2026 (Lucas): Zweitmeinung (Pinnacle/Soft/Poly) auch im Public — wie im Trades-Push (nur fresh).
