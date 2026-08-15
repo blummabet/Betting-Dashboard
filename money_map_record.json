@@ -1,13 +1,13 @@
 {
-"generatedAt": "2026-08-15T11:51:45.473250+00:00",
+"generatedAt": "2026-08-15T11:59:52.714947+00:00",
 "byVerdict": {
 "konsens": {
-"n": 66,
+"n": 67,
 "wins": 48,
-"hitRate": 0.7273,
-"polyN": 64,
+"hitRate": 0.7164,
+"polyN": 65,
 "polyWins": 47,
-"polyHitRate": 0.7344,
+"polyHitRate": 0.7231,
 "pinnN": 4,
 "pinnHitRate": 0.75
 },
@@ -79,6 +79,11 @@
 "hitRate": 0.0
 },
 "German Bundesliga 2": {
+"n": 2,
+"wins": 1,
+"hitRate": 0.5
+},
+"Japanese J League": {
 "n": 2,
 "wins": 1,
 "hitRate": 0.5
@@ -163,11 +168,6 @@
 "wins": 0,
 "hitRate": 0.0
 },
-"Japanese J League": {
-"n": 1,
-"wins": 1,
-"hitRate": 1.0
-},
 "Japanese J League 2": {
 "n": 1,
 "wins": 1,
@@ -211,9 +211,9 @@
 },
 "byStrength": {
 "strong": {
-"n": 36,
+"n": 37,
 "wins": 29,
-"hitRate": 0.8056
+"hitRate": 0.7838
 },
 "weak": {
 "n": 19,
@@ -230,6 +230,25 @@
 "polyRate": 0.2105
 },
 "recent": [
+{
+"matchId": "35916664",
+"home": "Kobe",
+"away": "FC Tokyo",
+"league": "Japanese J League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "FC Tokyo",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-08-15T10:00:00Z",
+"settledAt": "2026-08-15T11:59:52.713352+00:00"
+},
 {
 "matchId": "35937984",
 "home": "Tochigi Uva FC",
@@ -970,31 +989,12 @@
 ],
 "kickoff": "2026-08-14T01:00:00Z",
 "settledAt": "2026-08-14T03:08:44.985518+00:00"
-},
-{
-"matchId": "35883673",
-"home": "Cienciano",
-"away": "Botafogo FR",
-"league": "CONMEBOL Copa Sudamericana",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Cienciano",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-6,
-1
-],
-"kickoff": "2026-08-14T00:30:00Z",
-"settledAt": "2026-08-14T02:34:19.048813+00:00"
 }
 ],
 "global": {
-"n": 88,
+"n": 89,
 "wins": 53,
-"hitRate": 0.6023
+"hitRate": 0.5955
 },
-"pending": 9
+"pending": 10
 }
