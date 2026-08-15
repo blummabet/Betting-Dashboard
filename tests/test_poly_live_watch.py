@@ -172,3 +172,19 @@ class TestMarketCapGuard:
         m = {"league": "esports", "prices": {"A": 0.67}, "whales": [{"wallet": "0xbig", "side": "A", "usd": 30000}]}
         al = W.find_alerts({"k": m}, {}, {}, set(), NOW)
         assert "0xbig" in {a["wallet"] for a in al}
+
+
+class TestLabelDraw:
+    """15.08.2026 (Lucas): 3-Wege-Markt -> Draw-Ausgang darf nicht als Team im Spielnamen landen."""
+    def test_dreiweg_draw_rausgefiltert(self):
+        pr = {"Sevilla FC": 0.30, "Draw (Sevilla FC vs. Rayo Vallecano de Madrid)": 0.25,
+              "Rayo Vallecano de Madrid": 0.45}
+        assert W._label("lal-sev-ray-2026-08-15", pr) == "Sevilla FC vs Rayo Vallecano de Madrid"
+
+    def test_the_draw_auch_raus(self):
+        pr = {"Home": 0.5, "The Draw": 0.25, "Away": 0.25}
+        assert W._label("x", pr) == "Home vs Away"
+
+    def test_zweiweg_unveraendert(self):
+        pr = {"TEAM VISION": 0.6, "Team Spirit": 0.4}
+        assert W._label("dota2-x", pr) == "TEAM VISION vs Team Spirit"

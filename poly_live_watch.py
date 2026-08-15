@@ -155,7 +155,11 @@ def _short(w):
 
 def _label(key, prices):
     gen = {"yes", "no", "over", "under", "draw", "ja", "nein"}
-    names = [n for n in (prices or {}) if str(n).strip().lower() not in gen]
+    def _is_generic(n):
+        s = str(n).strip().lower()
+        # 15.08.2026 (Lucas): Poly-Draw = "Draw (X vs. Y)" -> nicht als Team zaehlen (sonst "X vs Draw (…)")
+        return s in gen or s.startswith("draw") or s.startswith("the draw")
+    names = [n for n in (prices or {}) if not _is_generic(n)]
     if len(names) >= 2:
         return "%s vs %s" % (names[0], names[1])
     s = re.sub(r"-\d{4}-\d{2}-\d{2}.*", "", str(key))
