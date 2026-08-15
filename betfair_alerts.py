@@ -710,6 +710,17 @@ PUB_INCOHERENT_SHARE = float(os.environ.get("BF_PUB_INCOHERENT_SHARE") or 0.70)
 PUB_INCOHERENT_ODD   = float(os.environ.get("BF_PUB_INCOHERENT_ODD") or 3.0)
 
 
+PUB_SHORT_FAV_ODD = float(os.environ.get("BF_PUB_SHORT_FAV_ODD") or 1.50)
+
+
+def _pub_unconfirmed_fav(a) -> bool:
+    """14.08.2026 (Lucas): kurzer Favorit (Geld-Seite < PUB_SHORT_FAV_ODD) OHNE Quoten-Bestaetigung
+    (leadDir != 'in') -> erwartbares Favoriten-Geld ohne Rueckhalt, kein Signal. Nur wenn die Quote
+    KUERZER wird (Back) darf es ins Public. Galatasaray @1.37 driftet raus; ein backed Favorit bleibt."""
+    od = a.get("leadOdd")
+    return isinstance(od, (int, float)) and od < PUB_SHORT_FAV_ODD and a.get("leadDir") != "in"
+
+
 def _pub_incoherent(a) -> bool:
     """Hoher Geld-Anteil (>=70%) AUF einer langen Quote (>=3.0) — % und Preis widersprechen sich
     (85% koennen bei gesundem Markt nicht auf einem @13.50-Longshot liegen) -> Public-Artefakt."""
@@ -851,7 +862,7 @@ def main():
     pub_alerts = [a for a in pub_alerts if not _draw_inplay_chase(a)]
     # 14.08.2026 (Lucas): unnoetige HT/Live-Pushs raus, wo die Geld-% der Quote widersprechen
     # (Galatasaray 85%@13.50; Wolves Under 87% aber Quote driftet). Trades sieht sie weiter.
-    pub_alerts = [a for a in pub_alerts if not _pub_incoherent(a) and not _pub_live_drift(a) and not _pub_ht_useless(a)]
+    pub_alerts = [a for a in pub_alerts if not _pub_incoherent(a) and not _pub_live_drift(a) and not _pub_ht_useless(a) and not _pub_unconfirmed_fav(a)]
     pub_sent = 0
     for a in pub_alerts:
         key = a["scenario"] + ":" + a["matchId"]
