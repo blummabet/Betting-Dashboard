@@ -286,6 +286,57 @@ def _capture_class(htk):
     return None
 
 
+import re as _re
+
+_MAP_PROP_RE = _re.compile(
+    r"\b(map|game|karte|spiel)\s*\d"                       # "Map 1", "Game 2", "Karte 3"
+    r"|handicap|spread|over\s*/?\s*under|correct\s*score"   # Handicap / Totals / exaktes Ergebnis
+    r"|first\s*blood|\bduration\b|\bkills?\b|\brounds?\b"  # eSport-Props
+    r"|to\s*win\s*(map|game)\b",
+    _re.I)
+
+
+def _market_rows(m):
+    """Ein Gamma-Markt -> [{label,price,cond,token}] (echte Team-Ausgaenge, Struktur 1) oder []."""
+    try:
+        names = _json.loads(m.get("outcomes", "[]") or "[]")
+        prices = _json.loads(m.get("outcomePrices", "[]") or "[]")
+        tokens = _json.loads(m.get("clobTokenIds", "[]") or "[]")
+    except Exception:
+        return []
+    if len(names) < 2 or len(prices) != len(names):
+        return []
+    if {str(n).strip().lower() for n in names} == {"yes", "no"}:
+        return []
+    cond = m.get("conditionId")
+    rows = []
+    for i, nm in enumerate(names):
+        try:
+            p = float(prices[i])
+        except (TypeError, ValueError, IndexError):
+            p = None
+        rows.append({"label": str(nm), "price": p, "cond": cond,
+                     "token": tokens[i] if i < len(tokens) else None})
+    return rows
+
+
+def _is_map_prop(m):
+    """True, wenn der Markt eine einzelne Map / ein Handicap / ein Prop ist (NICHT der Serien-Sieger).
+    15.08.2026 (Lucas): eine laufende Map laeuft gegen 99¢ -> darf den Serien-Markt nicht verdraengen."""
+    txt = " ".join(str(m.get(k) or "") for k in ("question", "groupItemTitle", "slug"))
+    return bool(_MAP_PROP_RE.search(txt))
+
+
+def _mkt_vol(m):
+    v = m.get("volumeNum")
+    if v is None:
+        v = m.get("volume")
+    try:
+        return float(v)
+    except (TypeError, ValueError):
+        return 0.0
+
+
 def _outcomes(ev):
     """Moneyline-Ausgaenge eines Events → [{label, price, cond, token}]. ZWEI Poly-Strukturen:
     (1) EIN Markt mit Team-Ausgaengen (US-Sport, viele Soccer): outcomes = [Team1, (Draw,) Team2].
@@ -294,28 +345,16 @@ def _outcomes(ev):
         Ja-Preis. Ohne (2) fielen solche Spiele als „Yes/No" durch → nie gegen Teamnamen matchbar
         (poly:null in der Money-Map). REIN."""
     markets = ev.get("markets") or []
-    # (1) echter Multi-Ausgang-Markt — reine Ja/Nein-Maerkte hier ueberspringen
-    for m in markets:
-        try:
-            names = _json.loads(m.get("outcomes", "[]") or "[]")
-            prices = _json.loads(m.get("outcomePrices", "[]") or "[]")
-            tokens = _json.loads(m.get("clobTokenIds", "[]") or "[]")
-        except Exception:
-            continue
-        if len(names) < 2 or len(prices) != len(names):
-            continue
-        if {str(n).strip().lower() for n in names} == {"yes", "no"}:
-            continue     # reiner Ja/Nein-Markt → evtl. Struktur (2), hier nicht
-        cond = m.get("conditionId")
-        rows = []
-        for i, nm in enumerate(names):
-            try:
-                p = float(prices[i])
-            except (TypeError, ValueError, IndexError):
-                p = None
-            rows.append({"label": str(nm), "price": p, "cond": cond,
-                         "token": tokens[i] if i < len(tokens) else None})
-        return rows
+    # (1) echte Team-Ausgang-Maerkte: unter ALLEN den SERIEN/Moneyline-Markt waehlen, NICHT eine
+    # laufende Map. 15.08.2026 (Lucas): bei Best-of-3-eSport lieferte "erster 2-Wege-Markt" die gerade
+    # laufende Map, die gegen Map-Ende auf 99¢ laeuft (TEAM VISION 0.99 statt Serie ~0.74 / Quote 1.35).
+    cand = [(m, _market_rows(m)) for m in markets]
+    cand = [(m, r) for m, r in cand if r]
+    if cand:
+        series = [(m, r) for m, r in cand if not _is_map_prop(m)]   # Map/Handicap/Totals raus
+        pool = series or cand                                        # nichts uebrig -> altes Verhalten
+        pool.sort(key=lambda mr: -_mkt_vol(mr[0]))                   # Serie hat i.d.R. das meiste Volumen
+        return pool[0][1]
     # (2) gruppierte Ja/Nein-Maerkte: groupItemTitle = Ausgang, Ja-Preis = Wahrscheinlichkeit
     rows = []
     for m in markets:
@@ -339,6 +378,32 @@ def _outcomes(ev):
         rows.append({"label": str(title), "price": p, "cond": m.get("conditionId"),
                      "token": tokens[yi] if yi < len(tokens) else None})
     return rows if len(rows) >= 2 else []
+
+
+def _market_volume(ev, oc, fallback):
+    """15.08.2026 (Lucas): Volumen NUR der Markt(e), aus denen _outcomes die Ausgaenge zog (per
+    conditionId) — statt des ganzen Event-Volumens. Ein Best-of-3-eSport-Event summiert Serie + Map1
+    + Map2 + Map3 (+ Handicaps) -> Event-Volumen bis ~8x hoeher als der Moneyline-Markt (TEAM VISION:
+    Event $1.24M, Markt ~$150K). totalUsd muss denselben Markt beschreiben, aus dem die Wale kommen,
+    sonst ist der usd>totalUsd-Guard wertlos. Fallback: Event-Volumen, wenn kein Markt-Volumen lesbar.
+    REIN/testbar."""
+    conds = {o.get("cond") for o in (oc or []) if o.get("cond")}
+    if not conds:
+        return fallback
+    tot, hit = 0.0, False
+    for m in (ev.get("markets") or []):
+        if m.get("conditionId") in conds:
+            v = m.get("volumeNum")
+            if v is None:
+                v = m.get("volume")
+            try:
+                v = float(v)
+            except (TypeError, ValueError):
+                continue
+            if v >= 0:
+                tot += v
+                hit = True
+    return tot if hit else fallback
 
 
 WHALES_PER_MARKET = 4   # 25.07.2026 (Lucas: „was setzen einzelne Wale") — Top-N je Markt mitschreiben
@@ -514,9 +579,10 @@ def fetch_markets(live_only=False):
                             uoc = _outcomes(ev)
                             if len(uoc) >= 2:
                                 uprices = {o["label"]: o["price"] for o in uoc if o["price"] is not None}
-                                if uprices and (key not in upcoming or uvol > upcoming[key]["totalUsd"]):
+                                umvol = _market_volume(ev, uoc, uvol)   # 15.08.2026 (Lucas): Markt- statt Event-Volumen
+                                if uprices and (key not in upcoming or umvol > upcoming[key]["totalUsd"]):
                                     upcoming[key] = {"league": league_of(ev, key), "hoursToKickoff": round(htk, 2),
-                                                     "totalUsd": round(uvol), "prices": uprices}
+                                                     "totalUsd": round(umvol), "prices": uprices}
                     continue        # ausserhalb Erfassungs-(Holder-)Fenster
                 if live_only and cls != "live":
                     continue        # Live-only Schnell-Lauf: Vor-Spiel-Maerkte ueberspringen        # kein unmittelbarer Anpfiff → kein Sportspiel (Politik/Krypto raus)
@@ -527,7 +593,8 @@ def fetch_markets(live_only=False):
                 if len(oc) < 2:
                     continue
                 seen.add((key, False))
-                candidates.append((vol, key, league_of(ev, key), htk, oc, cls == "live"))
+                mvol = _market_volume(ev, oc, vol)   # 15.08.2026 (Lucas): Markt- statt Event-Volumen
+                candidates.append((vol, key, league_of(ev, key), htk, oc, cls == "live", mvol))
             except Exception:
                 continue
 
@@ -578,7 +645,7 @@ def fetch_markets(live_only=False):
             from fetch_wm_poly_smartmoney import _http_get as _avg_get
         except Exception:
             _avg_get = None
-    for vol, key, league, htk, oc, is_live in candidates:
+    for vol, key, league, htk, oc, is_live, mvol in candidates:
         if is_live:
             if live_calls >= MAX_HOLDER_CALLS_LIVE:
                 continue
@@ -606,7 +673,7 @@ def fetch_markets(live_only=False):
             except Exception:
                 pass
         markets.append({"key": key, "league": league,
-                        "hoursToKickoff": htk, "totalUsd": round(vol),
+                        "hoursToKickoff": htk, "totalUsd": round(mvol),
                         "shares": shares, "prices": prices, "whales": _whales,
                         "live": is_live,
                         "resolved": False, "resolvedPrices": {}})

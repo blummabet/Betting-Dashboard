@@ -341,6 +341,93 @@ class TestGammaParser:
         assert abs(B._hours_to_ko(ev, now) - 2.0) < 1e-6
         assert B._hours_to_ko({"startTime": "kaputt"}, now) is None
 
+    def test_market_volume_bo3_nimmt_nur_serie(self):
+        # 15.08.2026 (Lucas): Best-of-3-Event summiert Serie+Map1+Map2 -> Event 1.2M, Serie 150K.
+        # _outcomes zieht die Serie (0xser); totalUsd muss 150K sein, nicht das Event-Volumen.
+        ev = {"volume": 1200000, "markets": [
+            {"outcomes": '["TEAM VISION","Team Spirit"]', "outcomePrices": '["0.99","0.01"]',
+             "clobTokenIds": '["t0","t1"]', "conditionId": "0xser", "volumeNum": 150000},
+            {"question": "Map 1", "outcomes": '["A","B"]', "outcomePrices": '["0.5","0.5"]',
+             "clobTokenIds": '["m0","m1"]', "conditionId": "0xmap1", "volumeNum": 600000},
+            {"question": "Map 2", "outcomes": '["A","B"]', "outcomePrices": '["0.5","0.5"]',
+             "clobTokenIds": '["n0","n1"]', "conditionId": "0xmap2", "volumeNum": 450000}]}
+        oc = B._outcomes(ev)
+        assert B._market_volume(ev, oc, float(ev["volume"])) == 150000
+
+    def test_market_volume_gruppiert_summiert_conds(self):
+        # Struktur (2): gruppierte Ja/Nein-Maerkte -> mehrere conds fuer EIN Spiel -> summieren.
+        ev = {"volume": 999999, "markets": [
+            {"groupItemTitle": "Team A", "outcomes": '["Yes","No"]', "outcomePrices": '["0.6","0.4"]',
+             "clobTokenIds": '["a0","a1"]', "conditionId": "0xA", "volumeNum": 40000},
+            {"groupItemTitle": "Team B", "outcomes": '["Yes","No"]', "outcomePrices": '["0.4","0.6"]',
+             "clobTokenIds": '["b0","b1"]', "conditionId": "0xB", "volumeNum": 25000}]}
+        oc = B._outcomes(ev)
+        assert B._market_volume(ev, oc, float(ev["volume"])) == 65000
+
+    def test_market_volume_fallback_ohne_marktvolumen(self):
+        # Kein volumeNum/volume am Markt -> Fallback = Event-Volumen (kein schlechteres Verhalten).
+        ev = {"volume": 50000, "markets": [
+            {"outcomes": '["A","B"]', "outcomePrices": '["0.6","0.4"]',
+             "clobTokenIds": '["t0","t1"]', "conditionId": "0xabc"}]}
+        oc = B._outcomes(ev)
+        assert B._market_volume(ev, oc, 50000.0) == 50000.0
+
+    def test_market_volume_ohne_conds_fallback(self):
+        assert B._market_volume({"markets": []}, [], 123.0) == 123.0
+
+
+class TestSeriesMarketPicker:
+    """15.08.2026 (Lucas): eSport-Best-of-3 — _outcomes muss den SERIEN-Markt liefern, nicht die
+    gerade laufende Map (die gegen Map-Ende auf 99¢ laeuft). TEAM-VISION-Fall."""
+
+    def _ev(self):
+        # Reihenfolge absichtlich Map ZUERST (wie live beobachtet) -> Serie darf trotzdem gewinnen.
+        return {"slug": "dota2-vsn-ts", "volume": 1200000, "markets": [
+            {"question": "TEAM VISION vs Team Spirit - Map 1", "outcomes": '["TEAM VISION","Team Spirit"]',
+             "outcomePrices": '["0.99","0.01"]', "clobTokenIds": '["m0","m1"]',
+             "conditionId": "0xmap1", "volumeNum": 600000},
+            {"question": "TEAM VISION vs Team Spirit", "outcomes": '["TEAM VISION","Team Spirit"]',
+             "outcomePrices": '["0.74","0.26"]', "clobTokenIds": '["s0","s1"]',
+             "conditionId": "0xseries", "volumeNum": 150000},
+            {"question": "Map 2 Winner", "outcomes": '["TEAM VISION","Team Spirit"]',
+             "outcomePrices": '["0.55","0.45"]', "clobTokenIds": '["n0","n1"]',
+             "conditionId": "0xmap2", "volumeNum": 90000}]}
+
+    def test_nimmt_serie_nicht_map(self):
+        oc = B._outcomes(self._ev())
+        assert oc[0]["cond"] == "0xseries", oc
+        assert oc[0]["price"] == 0.74 and oc[0]["label"] == "TEAM VISION"
+
+    def test_totalusd_wird_serie(self):
+        oc = B._outcomes(self._ev())
+        # mit dem Markt-Volumen-Fix: totalUsd = Serie (150K), nicht Event (1.2M) und nicht Map (600K)
+        assert B._market_volume(self._ev(), oc, 1200000.0) == 150000
+
+    def test_map_prop_regex(self):
+        assert B._is_map_prop({"question": "Foo - Map 1"})
+        assert B._is_map_prop({"groupItemTitle": "Game 3 Winner"})
+        assert B._is_map_prop({"question": "Team A Handicap -1.5"})
+        assert B._is_map_prop({"question": "Total Kills Over/Under"})
+        assert not B._is_map_prop({"question": "TEAM VISION vs Team Spirit"})
+        assert not B._is_map_prop({"question": "Real Madrid vs Barcelona"})
+
+    def test_nur_maps_faellt_auf_volumen_zurueck(self):
+        # kein reiner Serien-Markt -> hoechstes Volumen (kein Absturz, altes Verhalten als Netz)
+        ev = {"markets": [
+            {"question": "Map 1", "outcomes": '["A","B"]', "outcomePrices": '["0.9","0.1"]',
+             "clobTokenIds": '["a","b"]', "conditionId": "0x1", "volumeNum": 10000},
+            {"question": "Map 2", "outcomes": '["A","B"]', "outcomePrices": '["0.6","0.4"]',
+             "clobTokenIds": '["c","d"]', "conditionId": "0x2", "volumeNum": 80000}]}
+        oc = B._outcomes(ev)
+        assert oc[0]["cond"] == "0x2"
+
+    def test_einzelmarkt_unveraendert(self):
+        # US-Sport/Soccer mit EINEM Moneyline-Markt -> unveraendert
+        ev = {"markets": [{"outcomes": '["Lakers","Celtics"]', "outcomePrices": '["0.62","0.38"]',
+                           "clobTokenIds": '["t0","t1"]', "conditionId": "0xabc"}]}
+        oc = B._outcomes(ev)
+        assert [o["label"] for o in oc] == ["Lakers", "Celtics"] and oc[0]["cond"] == "0xabc"
+
 
 class TestFetchMarketsDedupUndDiagnose:
     """21.07.2026 (Lucas: „mehr Sport?"): ein Markt kann unter mehreren Tags liegen (cs2 ⊂ esports) —
@@ -392,6 +479,25 @@ class TestFetchMarketsDedupUndDiagnose:
         markets = B.fetch_markets()
         keys = [m["key"] for m in markets if not m["resolved"]]
         assert keys == ["ufc-big"], "der volumenstärkste Markt (UFC) muss den einen Split kriegen, nicht MLB"
+
+    def test_totalusd_ist_marktvolumen_nicht_event(self, monkeypatch):
+        """15.08.2026 (Lucas): Best-of-3-Event, Event-Volumen 1.2M, Serie-Markt 150K.
+        Die gespeicherte Markt-Zeile muss totalUsd=150000 tragen (nicht 1.2M)."""
+        ev = {"slug": "dota2-vsn-ts", "volume": 1200000, "startTime": "2026-08-15T12:00:00Z",
+              "markets": [
+                  {"outcomes": '["TEAM VISION","Team Spirit"]', "outcomePrices": '["0.66","0.34"]',
+                   "clobTokenIds": '["t0","t1"]', "conditionId": "0xser", "volumeNum": 150000},
+                  {"question": "Map 1", "outcomes": '["A","B"]', "outcomePrices": '["0.5","0.5"]',
+                   "clobTokenIds": '["m0","m1"]', "conditionId": "0xmap1", "volumeNum": 700000}]}
+        monkeypatch.setattr(B, "_tags", lambda: ["dota2"])
+        monkeypatch.setattr(B, "_cfg", lambda: (7500, 1.35))
+        monkeypatch.setattr(B, "_gamma_events", lambda tag, closed: ([ev] if not closed else []))
+        monkeypatch.setattr(B, "_gamma_top", lambda closed: [])
+        monkeypatch.setattr(B, "_hours_to_ko", lambda e, now: 1.0)
+        monkeypatch.setattr(B, "_market_money", lambda oc: {"shares": {"TEAM VISION": 90, "Team Spirit": 60}, "whales": []})
+        markets = B.fetch_markets()
+        row = [m for m in markets if m["key"] == "dota2-vsn-ts" and not m["resolved"]]
+        assert row and row[0]["totalUsd"] == 150000, row
 
 
 class TestVolumeSweep:
