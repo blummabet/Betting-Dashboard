@@ -151,10 +151,19 @@ class TestMarketCapGuard:
                 "whales": [{"wallet": "0xbig", "side": "A", "usd": usd}]}
 
     def test_position_groesser_als_markt_raus(self):
-        # $99K-Position in $35.8K-Markt (Team-Vision-Fall) -> Artefakt, kein Push
+        # $99K-Position in $35.8K-Markt (>100%) -> Artefakt, kein Push
         assert W.find_alerts({"k": self._m(99000, 35800)}, {}, {}, set(), NOW) == []
 
+    def test_team_vision_136k_in_150k_raus(self):
+        # 15.08.2026 (Lucas): $136K-„Einstieg" bei ~$150K Spiel-Volumen (91%) -> raus
+        assert W.find_alerts({"k": self._m(136000, 150710)}, {}, {}, set(), NOW) == []
+
+    def test_ueber_halbem_volumen_raus(self):
+        # 60% des Spiel-Volumens -> raus
+        assert W.find_alerts({"k": self._m(48000, 80000)}, {}, {}, set(), NOW) == []
+
     def test_plausible_position_kommt_durch(self):
+        # 37.5% des Spiel-Volumens -> plausibler Einstieg, bleibt
         al = W.find_alerts({"k": self._m(30000, 80000)}, {}, {}, set(), NOW)
         assert "0xbig" in {a["wallet"] for a in al}
 

@@ -24,6 +24,7 @@ LIVE_BIG_USD  = float(os.environ.get("POLY_LIVE_BIG_USD") or 25000)    # gross g
 SHARP_MIN_USD = float(os.environ.get("POLY_LIVE_SHARP_MIN_USD") or 5000)  # 12.08.2026 (Lucas): auch scharfe Wallets brauchen eine Mindest-Summe -- ein $370-Einstieg ist kein Signal
 LIVE_MAX_PRICE = float(os.environ.get("POLY_LIVE_MAX_PRICE") or 0.77)   # 14.08.2026 (Lucas): 0.90->0.77 = Quote 1.30. Ueber 77¢ (Quote <1.30) live = eingepreiste Fuehrung/kurzer Favorit, reaktiv, kein Value (Al-Ettifaq @84¢ 1:0). Sportuebergreifend (auch eSport).
 LIVE_MIN_PRICE = float(os.environ.get("POLY_LIVE_MIN_PRICE") or 0.10)   # <= toter Ausgang -> Lay/Rausch
+LIVE_MAX_POS_FRAC = float(os.environ.get("POLY_LIVE_MAX_POS_FRAC") or 0.5)   # 15.08.2026 (Lucas): eine EINZELNE Position > 50% des ganzen Spiel-Volumens ist kein frischer Einstieg, sondern Positionswert/Artefakt -> raus ($136K in $150K-Spiel = 91%)
 LIVE_CONTEST_MIN_USD = float(os.environ.get("POLY_LIVE_CONTEST_MIN_USD") or 25000)  # 12.08.2026 (Lucas): ab so viel je Seite = umkaempft -> gar kein Live-Signal (Gegenseiten-Krieg)
 SEEN_TTL_H   = float(os.environ.get("POLY_LIVE_SEEN_TTL_H") or 12)   # gemeldete Wallet+Markt so lange nicht erneut
 # Sharp-Definition — identisch zum Frontend: genug Historie UND profitabel UND schlaegt die Linie UND
@@ -113,11 +114,12 @@ def find_alerts(live, close, scores, seen, now=None):
             if not isinstance(price, (int, float)) or price < LIVE_MIN_PRICE or price > LIVE_MAX_PRICE:
                 continue                              # entschieden/tot (z.B. @100) -> Settlement, kein Signal (gilt auch fuer scharfe)
             usd = float(w.get("usd") or 0)
-            # 15.08.2026 (Lucas): eine EINZELNE Position kann nicht groesser sein als der ganze Markt.
-            # usd = gehaltene Shares × Preis; usd > totalUsd => kaputte Holder-Zahl ($99K-„Einstieg" in
-            # $36K-Markt) -> raus, kein Push.
+            # 15.08.2026 (Lucas): eine EINZELNE Position, die > POLY_LIVE_MAX_POS_FRAC (Default 50%) des
+            # GANZEN Spiel-Volumens ausmacht, ist kein frischer Einstieg, sondern Positionswert
+            # (Shares × Preis) einer laenger aufgebauten Position bzw. ein Daten-Artefakt. TEAM VISION:
+            # $136K-„Einstieg" bei ~$150K Spiel-Volumen (91%) -> raus. (Frueher nur usd > totalUsd = 100%.)
             _mtot = float(m.get("totalUsd") or 0)
-            if _mtot > 0 and usd > _mtot:
+            if _mtot > 0 and usd > LIVE_MAX_POS_FRAC * _mtot:
                 continue
             sc = _score(scores, wal)
             sharp = is_sharp(sc)
