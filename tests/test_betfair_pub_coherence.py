@@ -46,6 +46,34 @@ class TestPubLiveDrift(unittest.TestCase):
 
 
 
+class TestTradesKeepDriftFade(unittest.TestCase):
+    """15.08.2026 (Lucas, B): Trades — gebacktes reaktives Unter (leadDir 'in') raus, driftendes Unter
+    (leadDir 'out') bleibt (Fade-/Lay-Signal mit Text). Public entfernt weiter alles (siehe oben)."""
+    def _u(self, **kw):
+        base = {"scenario": "fresh", "market": "Over/Under 2.5 Goals", "leadName": "Under 2.5 Goals",
+                "live": {"time": 82}}
+        base.update(kw); return base
+
+    def test_gebacktes_unter_raus(self):
+        # Bolton-Typ: Quote crasht -> leadDir 'in' -> raus aus Trades
+        self.assertTrue(BA._trades_reactive_backed_under(self._u(leadDir="in")))
+
+    def test_driftendes_unter_bleibt(self):
+        # Fade: Geld auf Under aber Quote driftet -> leadDir 'out' -> bleibt in Trades
+        self.assertFalse(BA._trades_reactive_backed_under(self._u(leadDir="out")))
+
+    def test_flat_unter_bleibt(self):
+        self.assertFalse(BA._trades_reactive_backed_under(self._u(leadDir=None)))
+
+    def test_over_bleibt(self):
+        self.assertFalse(BA._trades_reactive_backed_under(self._u(leadName="Over 2.5 Goals", leadDir="in")))
+
+    def test_public_entfernt_weiter_alles(self):
+        # _live_under_reactive (Public-Kette) faengt weiterhin gebackt UND driftend
+        self.assertTrue(BA._live_under_reactive(self._u(leadDir="in")))
+        self.assertTrue(BA._live_under_reactive(self._u(leadDir="out")))
+
+
 class TestLiveUnderReactive(unittest.TestCase):
     """15.08.2026 (Lucas): live in-play Tore-Über/Unter, Geld auf UNTER = reaktiv (Zeit-Zerfall) -> raus
     (HZ + Voll-Match, Trades + Public). Über bleibt, HZ-1X2/1X2/Corners/Vor-Anpfiff bleiben."""

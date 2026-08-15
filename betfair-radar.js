@@ -557,13 +557,16 @@
     var seg = rs.map(function (r, i) { var w = Math.max(0, (+r.vol || 0) / tot * 100); return '<div style="width:' + w + '%;background:' + cols[i % cols.length] + '"></div>'; }).join('');
     return '<div style="display:flex;height:' + (slim ? 7 : 9) + 'px;border-radius:5px;overflow:hidden;background:#0b0f14;gap:1px">' + seg + '</div>';
   }
+  // 15.08.2026 (Lucas): live Tore-Unter = reaktiv (Uhr-Zerfall, Tor kippt es -> Lay-Verdacht).
+  function reactiveUnder(m, name) { return isLive(m) && /under|unter/i.test(String(name || '')) && /goal|tore/i.test(String(name || '')); }
+  function reactiveTag(m, name) { return reactiveUnder(m, name) ? ' <span style="font-size:9px;font-weight:800;padding:1px 5px;border-radius:6px;background:rgba(248,81,73,.16);color:' + C.live + '" title="Live-Unter läuft mit der Uhr runter — ein Tor kippt es. Reaktives Geld (Lay-Verdacht, Over ist die scharfe Seite).">⚠ reaktiv</span>' : ''; }
   function distRows(mk, m) {
     var rs = runnersOf(mk), tot = distTotal(mk) || 1, cols = segCols(rs.length);
     return rs.slice().sort(function (a, b) { return (+b.vol || 0) - (+a.vol || 0); }).map(function (r) {
       var i = rs.indexOf(r), pct = (+r.vol || 0) / tot * 100;
       return '<div style="display:flex;align-items:center;gap:8px;font-size:12px;margin-top:5px">' +
         '<span style="width:9px;height:9px;border-radius:2px;background:' + cols[i % cols.length] + ';flex:none"></span>' +
-        '<span style="flex:1;color:' + C.ink + '">' + esc(rLabel(r.name, m)) + '</span>' +
+        '<span style="flex:1;color:' + C.ink + '">' + esc(rLabel(r.name, m)) + reactiveTag(m, r.name) + '</span>' +
         '<span style="width:38px;text-align:right;font-weight:800;color:' + C.ink + '">' + pct.toFixed(0) + '%</span>' +
         '<span style="width:66px;text-align:right;font-weight:800;color:' + C.vol + '">' + fmtE(r.vol) + '</span>' +
         '<span style="width:44px;text-align:right;color:' + C.mut + '">@' + fO(r.odd) + '</span></div>';
@@ -587,7 +590,7 @@
     var pct = lead ? (+lead.vol || 0) / tot * 100 : 0, ht = x.mm.grp === 'HT';
     return '<div style="display:flex;align-items:center;gap:10px;margin-top:9px;padding-top:9px;border-top:1px solid ' + C.bd + '">' +
       '<span style="min-width:56px;font-size:11px;font-weight:800;color:' + (ht ? C.purp : C.mut) + '">' + x.mm.label + '</span>' +
-      '<span style="font-size:12px;color:' + C.ink + ';font-weight:700">→ ' + esc(lead ? rLabel(lead.name, m) : '—') + '</span>' +
+      '<span style="font-size:12px;color:' + C.ink + ';font-weight:700">→ ' + esc(lead ? rLabel(lead.name, m) : '—') + reactiveTag(m, lead && lead.name) + '</span>' +
       '<span style="font-size:12px;font-weight:900;color:' + C.gold + '">' + pct.toFixed(0) + '%</span>' +
       '<span style="flex:1;max-width:160px">' + distBar(mk, true) + '</span>' +
       '<span style="font-size:13px;font-weight:800;color:' + C.vol + '">' + fmtE(mvolG(m, x.mm.id)) + '</span>' +
