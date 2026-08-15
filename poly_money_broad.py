@@ -165,7 +165,8 @@ from datetime import timedelta as _td
 # ihre Saison startet (August), gehören ihre Poly-Tags (la-liga, serie-a, bundesliga, ligue-1) hier
 # dazu — rawByTag im Output zeigt dann, welcher Slug echt Events liefert.
 SPORT_TAGS = ["nba", "nfl", "mlb", "nhl", "mls", "epl", "soccer", "tennis", "ucl",
-              "laliga", "bundesliga", "serie-a", "ligue-1",   # 03.08.2026 (Lucas): Poly listet Top-Ligen einzeln (/sports/laliga/…), nicht (nur) unter "soccer"
+              "la-liga", "bundesliga", "serie-a", "ligue-1", "primeira-liga",
+              "brazil-serie-a", "brasileirao", "belgium-pro-league", "eredivisie", "super-lig",   # 03.08.2026 (Lucas): Poly listet Top-Ligen einzeln (/sports/laliga/…), nicht (nur) unter "soccer"
               "esports", "cs2", "lol", "dota", "valorant",
               "ufc", "mma", "boxing", "golf", "f1", "cricket"]
 GAMMA = "https://gamma-api.polymarket.com/events"
