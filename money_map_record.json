@@ -1,23 +1,23 @@
 {
-"generatedAt": "2026-08-15T14:28:57.657358+00:00",
+"generatedAt": "2026-08-15T14:42:44.314960+00:00",
 "byVerdict": {
 "konsens": {
-"n": 78,
-"wins": 58,
-"hitRate": 0.7436,
-"polyN": 75,
-"polyWins": 56,
-"polyHitRate": 0.7467,
+"n": 79,
+"wins": 59,
+"hitRate": 0.7468,
+"polyN": 76,
+"polyWins": 57,
+"polyHitRate": 0.75,
 "pinnN": 4,
 "pinnHitRate": 0.75
 },
 "uneinig": {
-"n": 20,
+"n": 21,
 "wins": 4,
-"hitRate": 0.2,
-"polyN": 19,
-"polyWins": 4,
-"polyHitRate": 0.2105,
+"hitRate": 0.1905,
+"polyN": 20,
+"polyWins": 5,
+"polyHitRate": 0.25,
 "pinnN": 5,
 "pinnHitRate": 0.8
 },
@@ -74,6 +74,11 @@
 "hitRate": 0.6667
 },
 "CONMEBOL Copa Sudamericana": {
+"n": 3,
+"wins": 2,
+"hitRate": 0.6667
+},
+"Chinese Super League": {
 "n": 3,
 "wins": 2,
 "hitRate": 0.6667
@@ -158,11 +163,6 @@
 "wins": 1,
 "hitRate": 1.0
 },
-"Chinese Super League": {
-"n": 1,
-"wins": 1,
-"hitRate": 1.0
-},
 "Danish Superliga": {
 "n": 1,
 "wins": 1,
@@ -221,25 +221,63 @@
 },
 "byStrength": {
 "strong": {
-"n": 44,
-"wins": 35,
-"hitRate": 0.7955
+"n": 45,
+"wins": 36,
+"hitRate": 0.8
 },
 "weak": {
-"n": 23,
+"n": 24,
 "wins": 10,
-"hitRate": 0.4348
+"hitRate": 0.4167
 }
 },
 "divergence": {
-"n": 20,
+"n": 21,
 "betfairWins": 4,
-"betfairRate": 0.2,
-"polyN": 19,
-"polyWins": 4,
-"polyRate": 0.2105
+"betfairRate": 0.1905,
+"polyN": 20,
+"polyWins": 5,
+"polyRate": 0.25
 },
 "recent": [
+{
+"matchId": "35917184",
+"home": "Zhejiang Greentown",
+"away": "Chengdu Rongcheng",
+"league": "Chinese Super League",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Zhejiang Greentown",
+"polySide": "away",
+"winner": "away",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+2,
+3
+],
+"kickoff": "2026-08-15T11:35:00Z",
+"settledAt": "2026-08-15T14:42:44.146677+00:00"
+},
+{
+"matchId": "35920851",
+"home": "Tianjin Jinmen Tiger FC",
+"away": "Beijing Guoan",
+"league": "Chinese Super League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Beijing Guoan",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+4
+],
+"kickoff": "2026-08-15T11:35:00Z",
+"settledAt": "2026-08-15T14:42:44.146677+00:00"
+},
 {
 "matchId": "35916762",
 "home": "Greuther Furth",
@@ -961,50 +999,12 @@
 ],
 "kickoff": "2026-08-14T16:00:00Z",
 "settledAt": "2026-08-14T19:10:35.498293+00:00"
-},
-{
-"matchId": "35909982",
-"home": "FC Voluntari",
-"away": "ACS Petrolul 52",
-"league": "Romanian Liga I",
-"verdict": "uneinig",
-"moneySide": "draw",
-"moneyName": "The Draw",
-"polySide": "away",
-"winner": "away",
-"moneyWin": false,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-08-14T15:30:00Z",
-"settledAt": "2026-08-14T18:31:27.283075+00:00"
-},
-{
-"matchId": "35923735",
-"home": "Holstein Kiel",
-"away": "St Pauli",
-"league": "German Bundesliga 2",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "St Pauli",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-08-14T16:30:00Z",
-"settledAt": "2026-08-14T18:31:27.283075+00:00"
 }
 ],
 "global": {
-"n": 100,
-"wins": 63,
-"hitRate": 0.63
+"n": 102,
+"wins": 64,
+"hitRate": 0.6275
 },
 "pending": 11
 }
