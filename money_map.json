@@ -1,6 +1,6 @@
 {
-"generatedAt": "2026-08-15T12:12:17.921264+00:00",
-"count": 8,
+"generatedAt": "2026-08-15T12:27:20.501198+00:00",
+"count": 9,
 "rows": [
 {
 "matchId": "35760350",
@@ -13,18 +13,43 @@
 "betfair": {
 "side": "home",
 "name": "Bolton",
-"sharePct": 75,
-"eur": 166611
+"sharePct": 76,
+"eur": 179473
 },
 "poly": null,
+"pinn": null,
+"mmStrong": false,
+"nSources": 1
+},
+{
+"matchId": "35916762",
+"home": "Greuther Furth",
+"away": "Nurnberg",
+"league": "German Bundesliga 2",
+"live": true,
+"kickoff": "2026-08-15T11:00:00Z",
+"verdict": "uneinig",
+"betfair": {
+"side": "home",
+"name": "Greuther Furth",
+"sharePct": 43,
+"eur": 152122
+},
+"poly": {
+"side": "away",
+"name": "1. FC Nürnberg",
+"sharePct": 74,
+"usd": 326102,
+"src": "live"
+},
 "pinn": {
-"fav": "home",
-"home": 0.851,
-"draw": 0.1101,
-"away": 0.0389
+"fav": "away",
+"home": 0.0763,
+"draw": 0.2335,
+"away": 0.6902
 },
 "mmStrong": false,
-"nSources": 2
+"nSources": 3
 },
 {
 "matchId": "35923736",
@@ -37,8 +62,8 @@
 "betfair": {
 "side": "away",
 "name": "FC Magdeburg",
-"sharePct": 60,
-"eur": 93401
+"sharePct": 64,
+"eur": 104420
 },
 "poly": {
 "side": "away",
@@ -58,43 +83,18 @@
 "league": "South Korean K1 League",
 "live": true,
 "kickoff": "2026-08-15T10:30:00Z",
-"verdict": "uneinig",
+"verdict": "konsens",
 "betfair": {
 "side": "home",
 "name": "FC Seoul",
-"sharePct": 42,
-"eur": 48285
+"sharePct": 57,
+"eur": 70856
 },
 "poly": {
-"side": "away",
-"name": "Daejeon Hana Citizen FC",
-"sharePct": 62,
-"usd": 63107,
-"src": "live"
-},
-"pinn": null,
-"mmStrong": false,
-"nSources": 2
-},
-{
-"matchId": "35920851",
-"home": "Tianjin Jinmen Tiger FC",
-"away": "Beijing Guoan",
-"league": "Chinese Super League",
-"live": true,
-"kickoff": "2026-08-15T11:35:00Z",
-"verdict": "konsens",
-"betfair": {
-"side": "away",
-"name": "Beijing Guoan",
-"sharePct": 78,
-"eur": 37058
-},
-"poly": {
-"side": "away",
-"name": "Beijing Guoan FC",
-"sharePct": 71,
-"usd": 29475,
+"side": "home",
+"name": "FC Seoul",
+"sharePct": 95,
+"usd": 90366,
 "src": "live"
 },
 "pinn": null,
@@ -112,8 +112,8 @@
 "betfair": {
 "side": "home",
 "name": "Ljungskile",
-"sharePct": 65,
-"eur": 33624
+"sharePct": 66,
+"eur": 40992
 },
 "poly": {
 "side": "home",
@@ -127,24 +127,24 @@
 "nSources": 2
 },
 {
-"matchId": "35916714",
-"home": "Gwangju FC",
-"away": "Pohang Steelers",
-"league": "South Korean K1 League",
+"matchId": "35920851",
+"home": "Tianjin Jinmen Tiger FC",
+"away": "Beijing Guoan",
+"league": "Chinese Super League",
 "live": true,
-"kickoff": "2026-08-15T10:30:00Z",
+"kickoff": "2026-08-15T11:35:00Z",
 "verdict": "konsens",
 "betfair": {
 "side": "away",
-"name": "Pohang Steelers",
-"sharePct": 75,
-"eur": 27298
+"name": "Beijing Guoan",
+"sharePct": 79,
+"eur": 39952
 },
 "poly": {
 "side": "away",
-"name": "Pohang Steelers FC",
-"sharePct": 94,
-"usd": 51156,
+"name": "Beijing Guoan FC",
+"sharePct": 69,
+"usd": 37681,
 "src": "live"
 },
 "pinn": null,
@@ -158,19 +158,19 @@
 "league": "Chinese Super League",
 "live": true,
 "kickoff": "2026-08-15T11:35:00Z",
-"verdict": "uneinig",
+"verdict": "konsens",
 "betfair": {
 "side": "home",
 "name": "Zhejiang Greentown",
-"sharePct": 78,
-"eur": 24761
+"sharePct": 82,
+"eur": 32509
 },
 "poly": {
-"side": "away",
-"name": "Chengdu Rongcheng FC",
-"sharePct": 80,
-"usd": 8075,
-"src": "close"
+"side": "home",
+"name": "Zhejiang Zhiye FC",
+"sharePct": 74,
+"usd": 80403,
+"src": "live"
 },
 "pinn": null,
 "mmStrong": true,
@@ -187,8 +187,8 @@
 "betfair": {
 "side": "away",
 "name": "Sirius",
-"sharePct": 76,
-"eur": 23542
+"sharePct": 67,
+"eur": 29168
 },
 "poly": {
 "side": "away",
@@ -199,15 +199,40 @@
 },
 "pinn": {
 "fav": "away",
-"home": 0.2875,
-"draw": 0.2609,
-"away": 0.4516
+"home": 0.2964,
+"draw": 0.2623,
+"away": 0.4412
 },
 "mmStrong": true,
 "nSources": 3
+},
+{
+"matchId": "35917182",
+"home": "Yunnan Yukun",
+"away": "Dalian Yingbo",
+"league": "Chinese Super League",
+"live": true,
+"kickoff": "2026-08-15T12:00:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "away",
+"name": "Dalian Yingbo",
+"sharePct": 75,
+"eur": 18084
+},
+"poly": {
+"side": "away",
+"name": "Dalian Yingbo FC",
+"sharePct": 57,
+"usd": 12142,
+"src": "close"
+},
+"pinn": null,
+"mmStrong": true,
+"nSources": 2
 }
 ],
-"nameMatchMisses": 4,
+"nameMatchMisses": 2,
 "nameMatchMissList": [
 {
 "matchId": "35774743",
@@ -220,18 +245,6 @@
 "home": "Liaoning Tieren FC",
 "away": "Shenzhen Peng City",
 "league": "Chinese Super League"
-},
-{
-"matchId": "35916716",
-"home": "Jeju Utd",
-"away": "FC Anyang",
-"league": "South Korean K1 League"
-},
-{
-"matchId": "35917449",
-"home": "Union St Gilloise",
-"away": "Zulte-Waregem",
-"league": "Belgian Pro League"
 }
 ]
 }
