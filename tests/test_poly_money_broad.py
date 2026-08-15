@@ -505,8 +505,11 @@ class TestFetchMarketsDedupUndDiagnose:
         monkeypatch.setattr(B, "_market_money", lambda oc: {"shares": {"A": 60, "B": 40}, "whales": []})
         monkeypatch.setattr(B, "MAX_HOLDER_CALLS", 1)   # nur EIN Split möglich
         markets = B.fetch_markets()
-        keys = [m["key"] for m in markets if not m["resolved"]]
-        assert keys == ["ufc-big"], "der volumenstärkste Markt (UFC) muss den einen Split kriegen, nicht MLB"
+        rows = {m["key"]: m for m in markets if not m["resolved"]}
+        # 15.08.2026 (Lucas): der volumenstaerkste Markt (UFC) kriegt den EINEN Geld-Split; der schwaechere
+        # (MLB) faellt nicht mehr weg, sondern kommt als Preis+Vol-Zeile OHNE Split (near-KO-Fallback).
+        assert rows["ufc-big"]["shares"], "UFC muss den Geld-Split kriegen"
+        assert not rows["mlb-small"]["shares"], "MLB: nur Preis+Vol-Fallback, kein Split"
 
     def test_totalusd_ist_marktvolumen_nicht_event(self, monkeypatch):
         """15.08.2026 (Lucas): Best-of-3-Event, Event-Volumen 1.2M, Serie-Markt 150K.
