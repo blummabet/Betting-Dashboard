@@ -1,6 +1,6 @@
 {
-"generatedAt": "2026-08-15T14:57:37.164541+00:00",
-"count": 7,
+"generatedAt": "2026-08-15T15:12:39.446322+00:00",
+"count": 9,
 "rows": [
 {
 "matchId": "35759269",
@@ -13,18 +13,24 @@
 "betfair": {
 "side": "home",
 "name": "Middlesbrough",
-"sharePct": 59,
-"eur": 487963
+"sharePct": 54,
+"eur": 557462
 },
-"poly": null,
+"poly": {
+"side": "home",
+"name": "Middlesbrough FC",
+"sharePct": 55,
+"usd": 176270,
+"src": "live"
+},
 "pinn": {
 "fav": "away",
-"home": 0.2508,
-"draw": 0.3186,
-"away": 0.4306
+"home": 0.2401,
+"draw": 0.321,
+"away": 0.4389
 },
 "mmStrong": false,
-"nSources": 2
+"nSources": 3
 },
 {
 "matchId": "35759270",
@@ -37,15 +43,15 @@
 "betfair": {
 "side": "home",
 "name": "Norwich",
-"sharePct": 83,
-"eur": 275329
+"sharePct": 82,
+"eur": 312879
 },
 "poly": null,
 "pinn": {
 "fav": "home",
-"home": 0.4655,
-"draw": 0.3566,
-"away": 0.178
+"home": 0.4457,
+"draw": 0.372,
+"away": 0.1824
 },
 "mmStrong": false,
 "nSources": 2
@@ -62,14 +68,14 @@
 "side": "home",
 "name": "Union St Gilloise",
 "sharePct": 79,
-"eur": 176771
+"eur": 186860
 },
 "poly": null,
 "pinn": {
 "fav": "home",
-"home": 0.5061,
-"draw": 0.3417,
-"away": 0.1522
+"home": 0.4939,
+"draw": 0.3486,
+"away": 0.1575
 },
 "mmStrong": false,
 "nSources": 2
@@ -85,18 +91,24 @@
 "betfair": {
 "side": "away",
 "name": "Millwall",
-"sharePct": 58,
-"eur": 154177
+"sharePct": 63,
+"eur": 180317
 },
-"poly": null,
+"poly": {
+"side": "away",
+"name": "Millwall FC",
+"sharePct": 98,
+"usd": 24245,
+"src": "live"
+},
 "pinn": {
 "fav": "away",
-"home": 0.0492,
-"draw": 0.1652,
-"away": 0.7856
+"home": 0.0416,
+"draw": 0.1577,
+"away": 0.8007
 },
-"mmStrong": false,
-"nSources": 2
+"mmStrong": true,
+"nSources": 3
 },
 {
 "matchId": "35918681",
@@ -109,19 +121,49 @@
 "betfair": {
 "side": "home",
 "name": "Bayern Munich",
-"sharePct": 87,
-"eur": 102735
+"sharePct": 89,
+"eur": 132985
 },
 "poly": {
 "side": "home",
 "name": "Bayern Munich",
-"sharePct": 78,
-"usd": 64873,
+"sharePct": 94,
+"usd": 75494,
 "src": "live"
 },
 "pinn": null,
 "mmStrong": true,
 "nSources": 2
+},
+{
+"matchId": "35760344",
+"home": "Stoke",
+"away": "Swansea",
+"league": "English Sky Bet Championship",
+"live": true,
+"kickoff": "2026-08-15T14:00:00Z",
+"verdict": "uneinig",
+"betfair": {
+"side": "home",
+"name": "Stoke",
+"sharePct": 48,
+"eur": 69371
+},
+"poly": {
+"side": "home",
+"name": "Stoke City FC",
+"sharePct": 58,
+"usd": 33178,
+"src": "live"
+},
+"pinn": {
+"fav": "draw",
+"home": 0.3364,
+"draw": 0.3972,
+"away": 0.2663
+},
+"mmStrong": false,
+"nSources": 3
 },
 {
 "matchId": "35774744",
@@ -135,13 +177,13 @@
 "side": "home",
 "name": "Barnsley",
 "sharePct": 52,
-"eur": 23476
+"eur": 24728
 },
 "poly": {
 "side": "home",
 "name": "Barnsley FC",
-"sharePct": 90,
-"usd": 15623,
+"sharePct": 91,
+"usd": 15722,
 "src": "live"
 },
 "pinn": null,
@@ -159,19 +201,38 @@
 "betfair": {
 "side": "away",
 "name": "Stockport",
-"sharePct": 52,
-"eur": 17736
+"sharePct": 63,
+"eur": 23990
 },
 "poly": {
 "side": "home",
 "name": "Plymouth Argyle FC",
 "sharePct": 65,
-"usd": 46833,
+"usd": 48646,
 "src": "live"
 },
 "pinn": null,
-"mmStrong": false,
+"mmStrong": true,
 "nSources": 2
+},
+{
+"matchId": "35760340",
+"home": "Portsmouth",
+"away": "QPR",
+"league": "English Sky Bet Championship",
+"live": true,
+"kickoff": "2026-08-15T14:00:00Z",
+"verdict": "no_anchor",
+"betfair": {
+"side": "away",
+"name": "QPR",
+"sharePct": 58,
+"eur": 151097
+},
+"poly": null,
+"pinn": null,
+"mmStrong": false,
+"nSources": 1
 }
 ],
 "nameMatchMisses": 5,
@@ -189,22 +250,22 @@
 "league": "English Sky Bet League 2"
 },
 {
-"matchId": "35774768",
-"home": "York City",
-"away": "Bristol Rovers",
-"league": "English Sky Bet League 2"
-},
-{
 "matchId": "35917449",
 "home": "Union St Gilloise",
 "away": "Zulte-Waregem",
 "league": "Belgian Pro League"
 },
 {
-"matchId": "35760345",
-"home": "Bristol City",
-"away": "Millwall",
-"league": "English Sky Bet Championship"
+"matchId": "35759291",
+"home": "Cambridge Utd",
+"away": "Wigan",
+"league": "English Sky Bet League 1"
+},
+{
+"matchId": "35774768",
+"home": "York City",
+"away": "Bristol Rovers",
+"league": "English Sky Bet League 2"
 }
 ]
 }
