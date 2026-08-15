@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-08-15T19:54:39.667631+00:00",
+"generatedAt": "2026-08-15T20:28:57.903646+00:00",
 "byVerdict": {
 "konsens": {
 "n": 93,
@@ -12,14 +12,14 @@
 "pinnHitRate": 0.75
 },
 "uneinig": {
-"n": 28,
+"n": 29,
 "wins": 6,
-"hitRate": 0.2143,
+"hitRate": 0.2069,
 "polyN": 23,
 "polyWins": 6,
 "polyHitRate": 0.2609,
-"pinnN": 10,
-"pinnHitRate": 0.7
+"pinnN": 11,
+"pinnHitRate": 0.7273
 },
 "teil": {
 "n": 2,
@@ -103,6 +103,11 @@
 "wins": 3,
 "hitRate": 1.0
 },
+"Turkish Super League": {
+"n": 3,
+"wins": 0,
+"hitRate": 0.0
+},
 "Belgian Pro League": {
 "n": 2,
 "wins": 0,
@@ -127,11 +132,6 @@
 "n": 2,
 "wins": 2,
 "hitRate": 1.0
-},
-"Turkish Super League": {
-"n": 2,
-"wins": 0,
-"hitRate": 0.0
 },
 "Uzbekistan Super League": {
 "n": 2,
@@ -251,20 +251,39 @@
 "hitRate": 0.8148
 },
 "weak": {
-"n": 36,
+"n": 37,
 "wins": 18,
-"hitRate": 0.5
+"hitRate": 0.4865
 }
 },
 "divergence": {
-"n": 28,
+"n": 29,
 "betfairWins": 6,
-"betfairRate": 0.2143,
+"betfairRate": 0.2069,
 "polyN": 23,
 "polyWins": 6,
 "polyRate": 0.2609
 },
 "recent": [
+{
+"matchId": "35868896",
+"home": "Genclerbirligi",
+"away": "Fenerbahce",
+"league": "Turkish Super League",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Fenerbahce",
+"polySide": null,
+"winner": "home",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-08-15T18:30:00Z",
+"settledAt": "2026-08-15T20:28:13.125909+00:00"
+},
 {
 "matchId": "35914232",
 "home": "Excelsior",
@@ -1005,31 +1024,12 @@
 ],
 "kickoff": "2026-08-14T23:00:00Z",
 "settledAt": "2026-08-15T02:11:09.875391+00:00"
-},
-{
-"matchId": "35918746",
-"home": "Cusco FC",
-"away": "Juan Pablo II College",
-"league": "Peruvian Primera Division",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Cusco FC",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-08-14T23:00:00Z",
-"settledAt": "2026-08-15T02:11:09.875391+00:00"
 }
 ],
 "global": {
-"n": 123,
+"n": 124,
 "wins": 80,
-"hitRate": 0.6504
+"hitRate": 0.6452
 },
-"pending": 4
+"pending": 5
 }
