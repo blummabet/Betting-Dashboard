@@ -284,8 +284,18 @@ jobs:
           # 14.08.2026 (Lucas): Push-Race mit parallelen Bot-Pushes (betfair alle 10 Min, liga, ...) -> Retry.
           # Vor JEDEM Versuch neu rebasen; ein einzelner rebase+push verliert, wenn origin/main sich
           # zwischen rebase und push nochmal bewegt. Bis 5x, dann erst echter Fehler.
+          # 15.08.2026 (Lucas): Merge (-X ours) statt Rebase + explizite Konfliktaufloesung.
+          # Der Rebase-Ansatz blieb bei Konflikten in geteilten JSONs (liga-odds-history.json) haengen
+          # (detached HEAD, unmerged files) und ALLE Retries scheiterten mit 'unmerged files'. Merge
+          # -X ours loest die meisten Konflikte automatisch zugunsten der frisch generierten Runner-Daten;
+          # verbleibende behalten wir per --ours und committen sie. Robust gegen Parallel-Bot-Push-Races.
           for attempt in 1 2 3 4 5; do
-            git pull --rebase --autostash origin main || true
+            git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+            CONFLICTS=$(git diff --name-only --diff-filter=U)
+            if [ -n "$CONFLICTS" ]; then
+              echo "$CONFLICTS" | while read f; do git checkout --ours -- "$f"; git add "$f"; done
+              git diff --staged --quiet || git commit -m "liga: auto-resolve merge [skip ci]"
+            fi
             if git push; then echo "OK Push nach Versuch $attempt"; break; fi
             echo "Push-Versuch $attempt fehlgeschlagen (origin bewegt) - retry..."; sleep 3
             if [ "$attempt" = "5" ]; then echo "Push nach 5 Versuchen fehlgeschlagen"; exit 1; fi
