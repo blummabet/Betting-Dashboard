@@ -766,6 +766,14 @@ def _live_under_reactive(a) -> bool:
     return "under" in lbl or "unter" in lbl
 
 
+def _trades_reactive_backed_under(a) -> bool:
+    """15.08.2026 (Lucas, B): NUR Trades — das GEBACKTE reaktive Live-Unter (Quote crasht, leadDir 'in',
+    Bolton-Typ) raus. Das DRIFTENDE Unter (leadDir 'out') bleibt in Trades: das ist das Fade-/Lay-Signal
+    (Geld auf Under, aber Quote driftet -> Gegenseite will das Tor), das _dir_line als Text ausweist.
+    Public entfernt weiterhin ALLES live Unter (_live_under_reactive in der Public-Kette)."""
+    return _live_under_reactive(a) and a.get("leadDir") == "in"
+
+
 # 14.08.2026 (Lucas): eskalierende Wiederhol-Bremse fuers Public. Derselbe Markt muss zum Re-Push das
 # Geld nur um DEDUP_FACTOR steigern -> in liquiden Ligen 4-5x Spam. Ab dem 3. Push wird die noetige
 # Steigerung hoeher gestaffelt. Zaehler steckt im pub_seen (rueckwaerts-kompatibel: alter float = 1x).
@@ -847,7 +855,7 @@ def main():
     alerts = _drop_subthreshold_jump(_leader_gate(attach_direction(collect_alerts(prices, hist), direction)))
     # 14.08.2026 (Lucas): kollabiertes In-Play-Remis (X<2.2) auch aus TRADES raus — eh wertlos
     # (-31..-79% ROI). Bisher nur Public gefiltert. Andere Draws (>2.2) + Nicht-Draws bleiben (mit Warn-Note).
-    alerts = [a for a in alerts if not _draw_inplay_chase(a) and not _live_under_reactive(a)]
+    alerts = [a for a in alerts if not _draw_inplay_chase(a) and not _trades_reactive_backed_under(a)]
     sent = 0
     for a in alerts:
         key = a["scenario"] + ":" + a["matchId"]

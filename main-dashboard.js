@@ -215,6 +215,15 @@
       '.md-jz-tm{font-size:13px;font-weight:600;color:var(--mi);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
       '.md-jz-sub{font-size:11px;color:var(--mi2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
       '.md-jz-ko{font-family:"JetBrains Mono",monospace;font-size:12px;font-weight:800;color:var(--bf);white-space:nowrap;}',
+      '.md-jz-row3{display:block;padding:11px 0;border-top:1px solid var(--mln);}',
+      '.md-jz-row3:first-of-type{border-top:0;}',
+      '.md-jz-l1{display:flex;align-items:center;gap:6px;}',
+      '.md-jz-n{color:var(--mi3);font-weight:800;font-size:11px;}',
+      '.md-jz-nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;font-weight:600;color:var(--mi2);}',
+      '.md-jz-pick{font-size:14.5px;font-weight:800;color:var(--mi);margin-top:5px;line-height:1.25;}',
+      '.md-jz-pick b{color:#4cc2ff;}',
+      '.md-jz-pick .q{color:var(--mi3);font-weight:700;font-size:12px;}',
+      '.md-jz-div{font-size:12.5px;font-weight:700;line-height:1.3;}',
       '.md-jz-mv{font-family:"JetBrains Mono",monospace;font-size:12px;font-weight:800;white-space:nowrap;text-align:right;min-width:52px;}',
       '.md-badge{display:inline-block;font-size:9.5px;font-weight:800;padding:1px 6px;border-radius:5px;margin-left:6px;vertical-align:1px;}',
       '.mpc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}',
@@ -408,7 +417,7 @@
     var mx = items.reduce(function (a, x) { return Math.max(a, +x.deltaEur || 0); }, 1);
     return items.map(function (x) {
       return rowEl(_bfTeams(x) + _mdBfLiveById(x.matchId), '+' + eur(x.deltaEur), A.good,
-        '→ ' + esc(x.sideName || '') + _mdDirBadge(x.dir) + ' · jetzt ' + eur(x.nowEur) + (x.odd != null ? ' @' + (+x.odd).toFixed(2) : ''),
+        '→ ' + esc(x.sideName || '') + _bfReactiveChip(x.sideName, !!_mdBfLiveById(x.matchId)) + _mdDirBadge(x.dir) + ' · jetzt ' + eur(x.nowEur) + (x.odd != null ? ' @' + (+x.odd).toFixed(2) : ''),
         meter(mx ? (+x.deltaEur / mx * 100) : 0, A.good));
     }).join('') + _ageStr(_md.data.betfair);
   }
@@ -604,6 +613,9 @@
     for (var i = 0; i < ms.length; i++) if (String(ms[i].matchId) === String(id)) return _mdBfLive(ms[i]);
     return '';
   }
+  // 15.08.2026 (Lucas): live Tore-Unter = reaktiv (verkürzt sich mit der Uhr, ein Tor kippt es -> Lay-Verdacht).
+  function _bfReactiveUnder(sideName, live) { if (!live) return false; var s = String(sideName || ''); return /under|unter/i.test(s) && /goal|tore/i.test(s); }
+  function _bfReactiveChip(sideName, live) { return _bfReactiveUnder(sideName, live) ? ' <span class="md-badge" style="background:rgba(229,83,75,.14);color:' + A.red + '" title="Live-Unter läuft mit der Uhr runter — ein Tor kippt es. Reaktives Geld, Lay-Verdacht (Over ist die scharfe Seite).">⚠ reaktiv</span>' : ''; }
   function _mdRingRow(main, sub, conv, color) {
     return '<div class="md-r">' + _mdRing(conv, color) + '<div class="md-r-main"><div class="md-r-t">' + main + '</div>'
       + (sub ? '<div class="md-r-s">' + sub + '</div>' : '') + '</div></div>';
@@ -799,7 +811,7 @@
     return rows.map(function (x) {
       var m = x.m, b = x.b, pct = Math.round(b.share * 100);
       var od = (b.lead && b.lead.odd != null && +b.lead.odd > 1) ? ' <span style="color:var(--mi3)">@' + (+b.lead.odd).toFixed(2) + '</span>' : '';
-      return _mdDonutRow(_bfTeams(m) + _mdBfLive(m), (_HT_MK[b.name] || b.name) + ' \u2192 ' + esc(b.lead.name) + od + _mdDirBadge(_mdDirOf(m.matchId, b.name, b.lead.name)), eur(b.vol), A.bf, pct, A.bf);
+      return _mdDonutRow(_bfTeams(m) + _mdBfLive(m), (_HT_MK[b.name] || b.name) + ' \u2192 ' + esc(b.lead.name) + _bfReactiveChip(b.lead.name, !!_mdBfLive(m)) + od + _mdDirBadge(_mdDirOf(m.matchId, b.name, b.lead.name)), eur(b.vol), A.bf, pct, A.bf);
     }).join('') + _ageStr(_md.data.betfair);
   }
 
@@ -918,7 +930,7 @@
       var m = x.m, b = x.b, pct = Math.round(b.share * 100);
       // 05.08.2026 (Lucas): Führungsquote dazu, dann ist die Kachel immer eindeutig (@1.74 vs @1.06).
       var od = (b.lead && b.lead.odd != null && +b.lead.odd > 1) ? ' <span style="color:var(--mi3)">@' + (+b.lead.odd).toFixed(2) + '</span>' : '';
-      return _mdDonutRow(teamsOf(m) + _mdBfLive(m), esc(short(b.name)) + ' → ' + esc(b.lead.name) + od + _mdDirBadge(_mdDirOf(m.matchId, b.name, b.lead.name)), eur(b.vol), A.bf, pct, A.bf);
+      return _mdDonutRow(teamsOf(m) + _mdBfLive(m), esc(short(b.name)) + ' → ' + esc(b.lead.name) + _bfReactiveChip(b.lead.name, !!_mdBfLive(m)) + od + _mdDirBadge(_mdDirOf(m.matchId, b.name, b.lead.name)), eur(b.vol), A.bf, pct, A.bf);
     }).join('') : empty('Kein großes Betfair-Geld.');
     bfBody += _ageStr(_md.data.betfair);
 
@@ -1084,6 +1096,7 @@
     var THIN = /qualif|u1[789]|u2[0-3]|reserve|friendl|primera b|segunda|women|frauen|youth|amateur/i;
     var exoticLg = function (lg, anchored) { if (anchored) return false; lg = String(lg || ''); if (THIN.test(lg)) return true; return !MAJOR.test(lg); };
     var mid = function (h, a, id) { return id || (team(h) + team(a)); };
+    var _polyMaxInf = (polyPlays || []).reduce(function (a, p) { return Math.max(a, _mdPlayInflow(p)); }, 1);
     var cand = {};
     var put = function (o) {
       if (isNaN(o.k) || o.k < floor || o.k > soon) return;
@@ -1099,25 +1112,24 @@
         var lag = (p.signals || []).some(function (s) { return s && s.name === 'steam_lag' && (+s.score || 0) > 0; });
         if (!bet && !lag) return;
         var conv = +p.convictionScore || 0;
-        var o = { id: 'x' + mid(f.home, f.away, f.matchId), k: k, home: f.home, away: f.away, league: f.league, odd: p.odds, exotic: false, src: 'card' };
-        if (bet) { o.score = 60 + conv * 3.5; o.badge = 'BET' + (conv ? ' ' + conv : ''); o.bc = A.good; o.why = 'Engine-Pick · ' + short(p.market || ''); }
-        else { o.score = 48 + conv * 2; o.badge = '⚡ Poly-Lag'; o.bc = A.blue; o.why = 'Pinnacle zieht, Poly hinkt nach · ' + short(p.market || ''); }
+        var o = { id: 'x' + mid(f.home, f.away, f.matchId), k: k, exotic: false, src: 'card', conv: conv, odd: p.odds,
+                  match: esc(team(f.home)) + vsp + esc(team(f.away)), pick: esc(short(p.market || '') || 'Pick') };
+        if (bet) { o.score = 60 + conv * 3.5; o.badge = 'BET' + (conv ? ' ' + conv : ''); o.bc = A.good; }
+        else { o.score = 48 + conv * 2; o.badge = '⚡ Poly-Lag'; o.bc = A.blue; }
         put(o);
       });
     });
     // 2) Poly-Public-Plays ("Heute spielenswert") — empirisch die staerkste Flaeche (74% Treffer, +ROI).
-    //    Async nachgereicht via _mdFillJetzt. Live (in-play) bleibt drin — Poly ist in-play spielbar.
     (polyPlays || []).forEach(function (r) {
       if (r.verdict !== 'BET' && r.verdict !== 'ABWÄGEN') return;
       var htk = (r.htk == null) ? null : +r.htk, live = (htk != null && htk < 0);
       var k = (htk == null || live) ? now : now + htk * 3600e3;
       if (htk != null && !live && k > soon) return;
-      var conv = +r.conv || 0, mp = Math.round((+r.moneyPct || 0) * 100);
+      var conv = +r.conv || 0;
       var ico = (typeof _pwSportIcon === 'function') ? _pwSportIcon(r.league) + ' ' : '';
-      put({ id: 'p' + (r.key || (r.match || '')), k: k, live: live, exotic: false, odd: null,
-        label: esc(String(r.match || '').slice(0, 36)) + ' <span style="color:var(--mi3)">→</span> <b style="color:#4cc2ff">' + esc(r.side || '') + '</b>',
-        src: 'poly', score: (r.verdict === 'BET' ? 60 + conv * 3.5 : 48 + conv * 2), bc: A.poly, badge: ico + 'Poly ' + r.verdict,
-        why: mp + '% Geld' + ((r.sharp && r.sharp.n) ? ' · Wallets ' + Math.round(r.sharp.hit * 100) + '% (n' + r.sharp.n + ')' : '') + (r.vol ? ' · ' + usd(r.vol) : '') });
+      put({ id: 'p' + (r.key || (r.match || '')), k: k, live: live, exotic: false, odd: null, src: 'poly', poly: r,
+        match: esc(String(r.match || '')), pick: esc(r.side || ''),
+        score: (r.verdict === 'BET' ? 60 + conv * 3.5 : 48 + conv * 2), bc: A.poly, badge: ico + 'Poly ' + r.verdict });
     });
     // 3) Betfair-Steam — geld-getrieben; plausibel gefiltert, Richtung ehrlich beschriftet
     ((_md.data.bfOverview && _md.data.bfOverview.steam) || []).forEach(function (x) {
@@ -1125,27 +1137,23 @@
       if (app < 1.5 || app > 25) return;           // <1.5 kein Signal · >25pp = Platzhalter-Artefakt
       var moneyIn = pp > 0, ex = exoticLg(x.league, false);  // pp>0 = Quote fiel = Geld rein
       put({ id: 'b' + mid(x.home, x.away, x.matchId), k: x.kickoff ? Date.parse(String(x.kickoff).replace('Z', '+00:00')) : NaN,
-        home: x.home, away: x.away, league: x.league, odd: x.odd, exotic: ex,
-        src: 'bf', score: 42 + Math.min(app, 22) - (moneyIn ? 0 : 8), badge: '💷 Steam', bc: A.bf,
-        why: moneyIn ? ('Geld auf ' + short(x.sideName || '') + ' · Quote zieht ' + pp.toFixed(1) + 'pp')
-                     : (short(x.sideName || '') + ' driftet ' + pp.toFixed(1) + 'pp → Geld auf Gegenseite') });
+        exotic: ex, src: 'bf', odd: x.odd, pp: pp, moneyIn: moneyIn,
+        match: esc(team(x.home)) + vsp + esc(team(x.away)), pick: esc(short(x.sideName || '') || '—'),
+        score: 42 + Math.min(app, 22) - (moneyIn ? 0 : 8), badge: '💷 Steam', bc: A.bf });
     });
-    // 4) Money-Map — NUR echte Divergenz (starke Fehlbepreisung). Trivial-Favoriten-Konsens ist kein
-    //    Edge (Geld auf den Favoriten, WEIL er Favorit ist) -> raus aus der Box (bleibt im Money-Map-Tab).
+    // 4) Money-Map — NUR echte Divergenz (starke Fehlbepreisung).
     ((_md.data.moneyMap && _md.data.moneyMap.rows) || []).forEach(function (r) {
       if (r.verdict !== 'uneinig') return;
       var strong = r.mmStrong;
-      if (strong === undefined) { var bs = (r.betfair && r.betfair.sharePct) || 0, ps = (r.poly && r.poly.sharePct) || 0; strong = bs >= 55 && ps >= 55; }
+      if (strong === undefined) { var bs0 = (r.betfair && r.betfair.sharePct) || 0, ps0 = (r.poly && r.poly.sharePct) || 0; strong = bs0 >= 55 && ps0 >= 55; }
       if (!strong) return;
-      var ex = !r.pinn, bf = r.betfair && r.betfair.name, pl = r.poly && r.poly.name;
+      var ex = !r.pinn;
       put({ id: 'm' + mid(r.home, r.away, r.matchId), k: r.kickoff ? Date.parse(String(r.kickoff).replace('Z', '+00:00')) : NaN,
-        home: r.home, away: r.away, league: r.league, odd: null, exotic: ex, live: r.live,
-        src: 'mm', score: 50, badge: '🔗 Divergenz', bc: A.flow,
-        why: 'Betfair-Geld auf ' + short(bf || '') + ', Poly auf ' + short(pl || '') + ' — Fehlbepreisung' });
+        exotic: ex, live: r.live, src: 'mm', odd: null, bf: r.betfair, pl: r.poly,
+        match: esc(team(r.home)) + vsp + esc(team(r.away)), pick: 'Divergenz',
+        score: 50, badge: '🔗 Divergenz', bc: A.flow });
     });
-    // 15.08.2026 (Lucas): Quellen-Diversitaet — sonst verdraengen Poly/Card-BETs (60-95) die
-    // Betfair-Steam (<=64) und Money-Map (50) strukturell aus den Top-5. Die staerksten Signale zuerst,
-    // dann je EIN garantierter Platz fuer die beste Betfair- und Money-Map-Zeile, Rest nach Score.
+    // 15.08.2026 (Lucas): Quellen-Diversitaet — je EIN garantierter Platz fuer Betfair + Money-Map.
     var _all = Object.keys(cand).map(function (id) { return cand[id]; })
       .sort(function (a, b) { return b.score - a.score || a.k - b.k; });
     var items = (function () {
@@ -1160,18 +1168,37 @@
     if (!items.length) return '<section id="mdJetztBox" class="md-jetzt md-rise" style="border-color:var(--mln);background:var(--m1);padding-bottom:13px">' +
       '<div class="md-jz-h"><span style="font-size:16px;opacity:.55">🎯</span><span class="md-jz-t" style="color:var(--mi2)">Top-Wetten jetzt</span>' +
       '<span class="md-jz-s">gerade kein spielbares Signal in den nächsten Stunden — meldet sich automatisch.</span></div></section>';
+    // Signal-Balken je Quelle (gleicher Stil wie "Heute spielenswert")
+    var sigOf = function (o) {
+      if (o.src === 'poly' && o.poly) return _mdSigStrip(o.poly, _polyMaxInf);
+      if (o.src === 'bf') {
+        var ap = Math.min(Math.abs(+o.pp || 0), 25), val = ((o.pp > 0) ? '+' : '') + (+o.pp).toFixed(1) + 'pp';
+        var sub = o.moneyIn ? ('Quote zieht rein' + (o.odd != null ? ' · @' + (+o.odd).toFixed(2) : '')) : 'Quote driftet → Geld auf Gegenseite';
+        return '<div class="md-sig">' + _mdSigCell('Betfair-Geld', val, A.bf, ap / 25 * 100, sub) + '</div>';
+      }
+      if (o.src === 'mm') {
+        var bs = Math.round((o.bf && o.bf.sharePct) || 0), ps = Math.round((o.pl && o.pl.sharePct) || 0);
+        return '<div class="md-sig">' + _mdSigCell('Betfair', bs + '%', A.bf, bs, esc(short((o.bf && o.bf.name) || '—')))
+          + _mdSigCell('Poly', ps + '%', A.poly, ps, esc(short((o.pl && o.pl.name) || '—'))) + '</div>';
+      }
+      var cv = +o.conv || 0;   // card
+      return '<div class="md-sig">' + _mdSigCell('Conviction', cv + '/10', A.good, cv * 10, 'Engine-Pick · Verdikt-Gate') + '</div>';
+    };
     var body = items.map(function (x, i) {
       var min = Math.max(0, Math.round((x.k - now) / 60000));
       var ko = x.live ? 'live' : (min < 60 ? min + 'm' : Math.floor(min / 60) + 'h' + (min % 60 ? ' ' + (min % 60) + 'm' : ''));
       var live = x.live ? '<span class="md-badge" style="background:rgba(229,83,75,.16);color:' + A.red + '">● LIVE</span>' : '';
       var chip = x.exotic ? '<span class="md-badge" style="background:rgba(201,133,0,.14);color:' + A.gold + '" title="dünner/exotischer Markt — Signal weniger verlässlich">dünn</span>' : '';
-      var oddTxt = x.odd != null ? ' · @' + (+x.odd).toFixed(2) : '';
-      var teams = x.label || (esc(team(x.home)) + vsp + esc(team(x.away)));
-      return '<div class="md-jz-row"><div class="md-jz-main"><div class="md-jz-tm">' +
-        '<span style="color:var(--mi3);font-weight:800;font-size:11px;margin-right:3px">' + (i + 1) + '</span>' +
-        teams +
-        '<span class="md-badge" style="background:rgba(120,130,150,.14);color:' + x.bc + '">' + x.badge + '</span>' + live + chip +
-        '</div><div class="md-jz-sub">' + esc(x.why) + oddTxt + '</div></div><span class="md-jz-ko">⏱ ' + ko + '</span></div>';
+      var badge = '<span class="md-badge" style="background:rgba(120,130,150,.14);color:' + x.bc + '">' + x.badge + '</span>';
+      var oddTxt = (x.odd != null) ? ' <span class="q">@' + (+x.odd).toFixed(2) + '</span>' : '';
+      var pickLine = (x.src === 'mm')
+        ? '<div class="md-jz-pick md-jz-div"><b style="color:' + A.bf + '">BF</b> ' + esc(short((x.bf && x.bf.name) || '—')) + ' <span style="color:var(--mi3)">vs</span> <b style="color:' + A.poly + '">Poly</b> ' + esc(short((x.pl && x.pl.name) || '—')) + '</div>'
+        : '<div class="md-jz-pick"><span style="color:var(--mi3)">→</span> <b>' + (x.pick || '—') + '</b>' + oddTxt + '</div>';
+      return '<div class="md-jz-row md-jz-row3">' +
+        '<div class="md-jz-l1"><span class="md-jz-n">' + (i + 1) + '</span>' +
+        '<span class="md-jz-nm">' + x.match + '</span>' + badge + live + chip +
+        '<span class="md-jz-ko">⏱ ' + ko + '</span></div>' +
+        pickLine + sigOf(x) + '</div>';
     }).join('');
     return '<section id="mdJetztBox" class="md-jetzt md-rise"><div class="md-jz-h"><span style="font-size:16px">🎯</span>' +
       '<span class="md-jz-t">Top-Wetten jetzt</span><span class="md-jz-s">das Beste aus Cards · Poly · Betfair · Money-Map — nach Signal-Stärke</span></div>' + body + '</section>';
