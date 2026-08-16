@@ -1,6 +1,6 @@
 {
-"generatedAt": "2026-08-16T17:15:18.887853+00:00",
-"count": 7,
+"generatedAt": "2026-08-16T17:29:03.626447+00:00",
+"count": 8,
 "rows": [
 {
 "matchId": "35780311",
@@ -13,19 +13,24 @@
 "betfair": {
 "side": "home",
 "name": "Espanyol",
-"sharePct": 61,
-"eur": 266252
+"sharePct": 71,
+"eur": 374608
 },
 "poly": {
 "side": "home",
 "name": "RCD Espanyol de Barcelona",
-"sharePct": 91,
-"usd": 312486,
+"sharePct": 96,
+"usd": 734225,
 "src": "live"
 },
-"pinn": null,
+"pinn": {
+"fav": "home",
+"home": 0.6714,
+"draw": 0.2254,
+"away": 0.1032
+},
 "mmStrong": true,
-"nSources": 2
+"nSources": 3
 },
 {
 "matchId": "35868897",
@@ -39,16 +44,41 @@
 "side": "home",
 "name": "Basaksehir",
 "sharePct": 66,
-"eur": 216261
+"eur": 222356
 },
 "poly": null,
 "pinn": {
 "fav": "home",
-"home": 0.7708,
-"draw": 0.1774,
-"away": 0.0518
+"home": 0.785,
+"draw": 0.1751,
+"away": 0.0399
 },
 "mmStrong": false,
+"nSources": 2
+},
+{
+"matchId": "35898603",
+"home": "Girona",
+"away": "Leganes",
+"league": "Spanish Segunda Division",
+"live": true,
+"kickoff": "2026-08-16T17:00:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "home",
+"name": "Girona",
+"sharePct": 80,
+"eur": 131905
+},
+"poly": {
+"side": "home",
+"name": "Girona FC",
+"sharePct": 57,
+"usd": 11727,
+"src": "live"
+},
+"pinn": null,
+"mmStrong": true,
 "nSources": 2
 },
 {
@@ -62,8 +92,8 @@
 "betfair": {
 "side": "draw",
 "name": "The Draw",
-"sharePct": 57,
-"eur": 95122
+"sharePct": 48,
+"eur": 113345
 },
 "poly": {
 "side": "home",
@@ -73,38 +103,8 @@
 "src": "close"
 },
 "pinn": null,
-"mmStrong": true,
+"mmStrong": false,
 "nSources": 2
-},
-{
-"matchId": "35914202",
-"home": "Rapid Vienna",
-"away": "Grazer AK",
-"league": "Austrian Bundesliga",
-"live": true,
-"kickoff": "2026-08-16T17:00:00Z",
-"verdict": "konsens",
-"betfair": {
-"side": "home",
-"name": "Rapid Vienna",
-"sharePct": 87,
-"eur": 77292
-},
-"poly": {
-"side": "home",
-"name": "SK Rapid",
-"sharePct": 60,
-"usd": 16975,
-"src": "live"
-},
-"pinn": {
-"fav": "home",
-"home": 0.6252,
-"draw": 0.2408,
-"away": 0.1339
-},
-"mmStrong": true,
-"nSources": 3
 },
 {
 "matchId": "35922758",
@@ -117,24 +117,49 @@
 "betfair": {
 "side": "home",
 "name": "Arouca",
-"sharePct": 81,
-"eur": 70905
+"sharePct": 83,
+"eur": 88999
 },
 "poly": {
 "side": "home",
 "name": "FC Arouca",
 "sharePct": 99,
-"usd": 225001,
+"usd": 233470,
 "src": "live"
 },
 "pinn": {
 "fav": "home",
-"home": 0.5359,
-"draw": 0.2774,
-"away": 0.1868
+"home": 0.5108,
+"draw": 0.3098,
+"away": 0.1793
 },
 "mmStrong": true,
 "nSources": 3
+},
+{
+"matchId": "35914202",
+"home": "Rapid Vienna",
+"away": "Grazer AK",
+"league": "Austrian Bundesliga",
+"live": true,
+"kickoff": "2026-08-16T17:00:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "home",
+"name": "Rapid Vienna",
+"sharePct": 88,
+"eur": 80756
+},
+"poly": {
+"side": "home",
+"name": "SK Rapid",
+"sharePct": 99,
+"usd": 18763,
+"src": "live"
+},
+"pinn": null,
+"mmStrong": true,
+"nSources": 2
 },
 {
 "matchId": "35921798",
@@ -143,55 +168,50 @@
 "league": "Polish Ekstraklasa",
 "live": true,
 "kickoff": "2026-08-16T15:30:00Z",
-"verdict": "uneinig",
+"verdict": "konsens",
 "betfair": {
 "side": "home",
 "name": "Cracovia Krakow",
-"sharePct": 43,
-"eur": 46939
+"sharePct": 61,
+"eur": 71327
 },
 "poly": {
 "side": "home",
 "name": "KS Cracovia Krakow",
-"sharePct": 24,
-"usd": 33251,
+"sharePct": 91,
+"usd": 45043,
 "src": "live"
 },
-"pinn": {
-"fav": "draw",
-"home": 0.2465,
-"draw": 0.5277,
-"away": 0.2258
-},
-"mmStrong": false,
-"nSources": 3
+"pinn": null,
+"mmStrong": true,
+"nSources": 2
 },
 {
 "matchId": "35922536",
 "home": "Fredrikstad",
 "away": "Kristiansund",
 "league": "Norwegian Eliteserien",
-"live": false,
+"live": true,
 "kickoff": "2026-08-16T17:15:00Z",
 "verdict": "konsens",
 "betfair": {
 "side": "home",
 "name": "Fredrikstad",
 "sharePct": 91,
-"eur": 18205
+"eur": 37293
 },
 "poly": {
 "side": "home",
 "name": "Fredrikstad FK",
-"sharePct": 97,
-"usd": 35103,
-"src": "close"
+"sharePct": 99,
+"usd": 109781,
+"src": "live"
 },
 "pinn": {
 "fav": "home",
-"home": 0.558,
-"draw": 0.2401,
-"away": 0.2019
+"home": 0.7355,
+"draw": 0.18,
+"away": 0.0845
 },
 "mmStrong": true,
 "nSources": 3
