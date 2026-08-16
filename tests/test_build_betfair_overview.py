@@ -95,7 +95,7 @@ def test_flow_list_ranks_by_inflow_and_filters_small():
         "1": [{"mkv": {"Match Odds": 100000}}, {"mkv": {"Match Odds": 161989}}],   # +61989 auf Match Odds
         "2": [{"mkv": {"Match Odds": 10000}}, {"mkv": {"Match Odds": 11000}}],     # +1000 < 2000 -> raus
     }
-    out = bo.flow_list(prices, hist)
+    out = bo.flow_list(prices, hist, NOW)
     assert len(out) == 1 and out[0]["home"] == "Brondby"
     assert out[0]["deltaEur"] == 61989 and out[0]["nowEur"] == 161989
     assert out[0]["sideName"] == "Brondby"   # Lead des größten Marktes
@@ -109,17 +109,17 @@ def test_flow_list_suppresses_money_on_leader():
     # Heim (Napoli) fuehrt 1:0, Lead-Runner = Napoli (vol 9000 > 1000) -> reaktiv -> raus
     lead = _match(1, "Napoli", "Osasuna", ko, {"hw": 1.5, "aw": 6.0},
                   live={"time": 34, "goal_v1": 1, "goal_v2": 0, "finished": False})
-    assert bo.flow_list({"matches": [lead]}, hist) == []
+    assert bo.flow_list({"matches": [lead]}, hist, NOW) == []
     # Gleichstand 1:1 -> Filter greift nicht
     lvl = _match(1, "Napoli", "Osasuna", ko, {"hw": 1.5, "aw": 6.0},
                  live={"time": 34, "goal_v1": 1, "goal_v2": 1, "finished": False})
-    assert len(bo.flow_list({"matches": [lvl]}, hist)) == 1
+    assert len(bo.flow_list({"matches": [lvl]}, hist, NOW)) == 1
     # Heim fuehrt, aber Geld auf AUSWAERTS (Rueckstand) -> bleibt (Aufholjagd)
     trail = _match(1, "Napoli", "Osasuna", ko, {"hw": 1.5, "aw": 6.0},
                    live={"time": 34, "goal_v1": 1, "goal_v2": 0, "finished": False})
     trail["markets"]["Match Odds"]["runners"] = [{"name": "Napoli", "odd": 1.5, "vol": 1000},
                                                  {"name": "Osasuna", "odd": 6.0, "vol": 9000}]
-    r = bo.flow_list({"matches": [trail]}, hist)
+    r = bo.flow_list({"matches": [trail]}, hist, NOW)
     assert len(r) == 1 and r[0]["sideName"] == "Osasuna"
 
 
@@ -128,9 +128,24 @@ def test_flow_list_attaches_direction():
     prices = {"matches": [_match(1, "Brondby", "Viborg", iso(NOW + timedelta(hours=1)), {"hw": 2.2, "aw": 3.0})]}
     hist = {"1": [{"mkv": {"Match Odds": 100000}}, {"mkv": {"Match Odds": 161989}}]}
     direction = {"1": {"Match Odds": {"Brondby": {"dir": "in", "prev": 2.4, "odd": 2.2}}}}
-    out = bo.flow_list(prices, hist, direction=direction)
+    out = bo.flow_list(prices, hist, NOW, direction=direction)
     assert out[0]["dir"] == "in"
-    assert bo.flow_list(prices, hist)[0]["dir"] is None   # ohne direction -> kein Badge
+    assert bo.flow_list(prices, hist, NOW)[0]["dir"] is None   # ohne direction -> kein Badge
+
+
+def test_flow_list_excludes_finished_and_over():
+    # 16.08.2026 (Lucas: „das Spiel ist vorbei, steht aber oben in der Kohle"): fertige/abgelaufene Spiele
+    # raus — per finished-Flag UND per Wall-Clock (der Feed setzt finished nicht immer zeitnah).
+    hist = {"1": [{"mkv": {"Match Odds": 100000}}, {"mkv": {"Match Odds": 200000}}]}
+    fin = _match(1, "Napoli", "Osasuna", iso(NOW - timedelta(minutes=30)), {"hw": 2.0, "aw": 2.0},
+                 live={"time": 90, "goal_v1": 1, "goal_v2": 1, "finished": True})
+    assert bo.flow_list({"matches": [fin]}, hist, NOW) == []                 # finished-Flag
+    over = _match(1, "Napoli", "Osasuna", iso(NOW - timedelta(minutes=200)), {"hw": 2.0, "aw": 2.0},
+                  live={"time": 49, "goal_v1": 2, "goal_v2": 2, "finished": False})
+    assert bo.flow_list({"matches": [over]}, hist, NOW) == []                # laengst vorbei (Racing-Villarreal-Typ)
+    live = _match(1, "Napoli", "Osasuna", iso(NOW - timedelta(minutes=30)), {"hw": 2.0, "aw": 2.0},
+                  live={"time": 34, "goal_v1": 1, "goal_v2": 1, "finished": False})
+    assert len(bo.flow_list({"matches": [live]}, hist, NOW)) == 1            # echt live bleibt
 
 
 def test_build_shape():

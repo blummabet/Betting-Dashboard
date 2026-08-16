@@ -4742,6 +4742,20 @@
           "elo": null
         },
         {
+          "id": "4665",
+          "name": "Racing Santander",
+          "logo": "https://media.api-sports.io/football/teams/4665.png",
+          "flag": "<img src=\"https://media.api-sports.io/football/teams/4665.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+          "elo": null
+        },
+        {
+          "id": "533",
+          "name": "Villarreal",
+          "logo": "https://media.api-sports.io/football/teams/533.png",
+          "flag": "<img src=\"https://media.api-sports.io/football/teams/533.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+          "elo": null
+        },
+        {
           "id": "529",
           "name": "Barcelona",
           "logo": "https://media.api-sports.io/football/teams/529.png",
@@ -4753,13 +4767,6 @@
           "name": "Real Madrid",
           "logo": "https://media.api-sports.io/football/teams/541.png",
           "flag": "<img src=\"https://media.api-sports.io/football/teams/541.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-          "elo": null
-        },
-        {
-          "id": "533",
-          "name": "Villarreal",
-          "logo": "https://media.api-sports.io/football/teams/533.png",
-          "flag": "<img src=\"https://media.api-sports.io/football/teams/533.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
           "elo": null
         },
         {
@@ -4830,13 +4837,6 @@
           "name": "Osasuna",
           "logo": "https://media.api-sports.io/football/teams/727.png",
           "flag": "<img src=\"https://media.api-sports.io/football/teams/727.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-          "elo": null
-        },
-        {
-          "id": "4665",
-          "name": "Racing Santander",
-          "logo": "https://media.api-sports.io/football/teams/4665.png",
-          "flag": "<img src=\"https://media.api-sports.io/football/teams/4665.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
           "elo": null
         },
         {
@@ -4920,11 +4920,20 @@
           "awayName": "Villarreal",
           "matchday": 1,
           "date": "2026-08-16",
-          "kickoff": "2026-08-16T15:00:00Z",
-          "venue": "Estadio El Sardinero",
+          "kickoff": "2026-08-16T15:00:00+00:00",
+          "venue": "El Sardinero",
           "fid": 1570339,
-          "result": null,
-          "time": "17:00"
+          "result": {
+            "status": "FT",
+            "home_score": 2,
+            "away_score": 2,
+            "stats": {
+              "xgHome": 2.01,
+              "xgAway": 0.87,
+              "xgTotal": 2.88,
+              "xgSource": "api"
+            }
+          }
         },
         {
           "home": "540",
@@ -21851,10 +21860,10 @@
       },
       "ahH_n200": 1.96,
       "ahA_p200": 1.93,
-      "poly_hw": 0.845,
+      "poly_hw": 0.835,
       "poly_dr": 0.115,
       "poly_aw": 0.055,
-      "poly_vol": 5015.02,
+      "poly_vol": 14493.17,
       "poly_slug": "epl-ars-cov-2026-08-21",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
@@ -21905,8 +21914,8 @@
       "ahA_n125": 1.94,
       "poly_hw": 0.115,
       "poly_dr": 0.205,
-      "poly_aw": 0.695,
-      "poly_vol": 7100.38,
+      "poly_aw": 0.685,
+      "poly_vol": 7983.6,
       "poly_slug": "epl-hul-mun-2026-08-22",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
@@ -21952,12 +21961,12 @@
           2.0
         ]
       },
-      "ahA_p025": 2.0,
       "ahH_n025": 1.91,
+      "ahA_p025": 2.0,
       "poly_hw": 0.445,
-      "poly_dr": 0.285,
+      "poly_dr": 0.275,
       "poly_aw": 0.275,
-      "poly_vol": 771.97,
+      "poly_vol": 847.83,
       "poly_slug": "epl-eve-cry-2026-08-22",
       "marketsFreshAt": "2026-08-16T18:26:23.283009+00:00",
       "public_hw": 2.15,
@@ -22000,10 +22009,10 @@
           1.92
         ]
       },
-      "poly_hw": 0.355,
+      "poly_hw": 0.35,
       "poly_dr": 0.295,
       "poly_aw": 0.355,
-      "poly_vol": 343.07,
+      "poly_vol": 363.07,
       "poly_slug": "epl-ips-sun-2026-08-22",
       "marketsFreshAt": "2026-08-16T18:26:23.283009+00:00",
       "public_hw": 2.7,
@@ -22046,12 +22055,12 @@
           1.89
         ]
       },
-      "ahA_p025": 1.89,
       "ahH_n025": 2.02,
-      "poly_hw": 0.425,
+      "ahA_p025": 1.89,
+      "poly_hw": 0.42,
       "poly_dr": 0.285,
       "poly_aw": 0.295,
-      "poly_vol": 119.9,
+      "poly_vol": 180.3,
       "poly_slug": "epl-not-lee-2026-08-22",
       "marketsFreshAt": "2026-08-16T18:26:23.283009+00:00",
       "public_hw": 2.25,
@@ -22098,7 +22107,7 @@
       "poly_hw": 0.385,
       "poly_dr": 0.265,
       "poly_aw": 0.355,
-      "poly_vol": 5451.65,
+      "poly_vol": 6306.99,
       "poly_slug": "epl-bre-tot-2026-08-22",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
@@ -22151,7 +22160,7 @@
       "poly_hw": 0.675,
       "poly_dr": 0.185,
       "poly_aw": 0.145,
-      "poly_vol": 5082.4,
+      "poly_vol": 5275.71,
       "poly_slug": "epl-mac-bou-2026-08-23",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
@@ -22199,12 +22208,12 @@
           1.92
         ]
       },
-      "ahA_p025": 1.92,
       "ahH_n025": 1.97,
+      "ahA_p025": 1.92,
       "poly_hw": 0.425,
-      "poly_dr": 0.26,
-      "poly_aw": 0.325,
-      "poly_vol": 1651.61,
+      "poly_dr": 0.255,
+      "poly_aw": 0.315,
+      "poly_vol": 3820.6,
       "poly_slug": "epl-bri-ast-2026-08-23",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
@@ -22248,12 +22257,12 @@
           1.93
         ]
       },
-      "ahA_n050": 1.93,
       "ahA_n025": 1.82,
+      "ahA_n050": 1.93,
       "poly_hw": 0.255,
       "poly_dr": 0.245,
-      "poly_aw": 0.515,
-      "poly_vol": 19776.9,
+      "poly_aw": 0.505,
+      "poly_vol": 29804.48,
       "poly_slug": "epl-new-liv-2026-08-23",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
@@ -22301,12 +22310,12 @@
           2.07
         ]
       },
-      "ahA_n050": 2.07,
       "ahA_n025": 1.81,
-      "poly_hw": 0.285,
+      "ahA_n050": 2.07,
+      "poly_hw": 0.275,
       "poly_dr": 0.255,
       "poly_aw": 0.475,
-      "poly_vol": 4838.06,
+      "poly_vol": 4982.58,
       "poly_slug": "epl-ful-che-2026-08-24",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
@@ -22352,10 +22361,10 @@
       },
       "ahA_n050": 1.83,
       "ahA_n075": 2.07,
-      "poly_hw": 0.2,
+      "poly_hw": 0.195,
       "poly_dr": 0.27,
-      "poly_aw": 0.52,
-      "poly_vol": 1.82,
+      "poly_aw": 0.53,
+      "poly_vol": 41.44,
       "poly_slug": "sea-udi-com-2026-08-22",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
@@ -22403,9 +22412,9 @@
       },
       "ahA_n050": 1.86,
       "poly_hw": 0.195,
-      "poly_dr": 0.29,
-      "poly_aw": 0.51,
-      "poly_vol": 263.58,
+      "poly_dr": 0.285,
+      "poly_aw": 0.515,
+      "poly_vol": 317.19,
       "poly_slug": "sea-gen-nap-2026-08-22",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
@@ -22553,8 +22562,8 @@
           1.96
         ]
       },
-      "ahA_p025": 1.96,
       "ahH_n025": 1.92,
+      "ahA_p025": 1.96,
       "poly_hw": 0.43,
       "poly_dr": 0.3,
       "poly_aw": 0.27,
@@ -22603,10 +22612,10 @@
         ]
       },
       "ahA_n075": 2.05,
-      "poly_hw": 0.21,
+      "poly_hw": 0.205,
       "poly_dr": 0.26,
       "poly_aw": 0.545,
-      "poly_vol": 204.16,
+      "poly_vol": 211.67,
       "poly_slug": "sea-tor-mil-2026-08-23",
       "marketsFreshAt": "2026-08-16T18:26:23.283009+00:00",
       "public_hw": 4.4,
@@ -22700,10 +22709,10 @@
         ]
       },
       "ahA_n125": 2.05,
-      "poly_hw": 0.125,
+      "poly_hw": 0.115,
       "poly_dr": 0.21,
       "poly_aw": 0.665,
-      "poly_vol": 31.87,
+      "poly_vol": 361.14,
       "poly_slug": "sea-fro-juv-2026-08-23",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
       "marketsFreshAt": "2026-08-08T10:26:07.287576+00:00",
@@ -22749,8 +22758,8 @@
           1.87
         ]
       },
-      "ahA_p025": 1.87,
       "ahH_n025": 2.03,
+      "ahA_p025": 1.87,
       "poly_hw": 0.41,
       "poly_dr": 0.3,
       "poly_aw": 0.295,
@@ -22798,10 +22807,10 @@
           2.15
         ]
       },
-      "poly_hw": 0.355,
+      "poly_hw": 0.37,
       "poly_dr": 0.32,
       "poly_aw": 0.315,
-      "poly_vol": 38.71,
+      "poly_vol": 59.64,
       "poly_slug": "sea-par-cag-2026-08-22",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
       "marketsFreshAt": "2026-08-06T13:52:23.353681+00:00",
@@ -22899,12 +22908,12 @@
           1.96
         ]
       },
-      "ahH_n150": 1.94,
       "ahA_p150": 1.96,
-      "poly_hw": 0.745,
+      "ahH_n150": 1.94,
+      "poly_hw": 0.755,
       "poly_dr": 0.165,
       "poly_aw": 0.085,
-      "poly_vol": 1414.16,
+      "poly_vol": 4298.06,
       "poly_slug": "lal-mad-mala-2026-08-19",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
       "marketsFreshAt": "2026-08-10T16:48:21.983386+00:00",
@@ -22999,10 +23008,13 @@
       "ahA_p025": 2.1,
       "ahA_p050": 1.82,
       "ahH_n025": 1.84,
-      "poly_hw": 0.465,
-      "poly_dr": 0.295,
-      "poly_aw": 0.245,
-      "poly_vol": 8680.59,
+      "ahA_p050": 1.82,
+      "ahH_n050": 2.11,
+      "ahA_p025": 2.1,
+      "poly_hw": 0.955,
+      "poly_dr": 0.035,
+      "poly_aw": 0.005,
+      "poly_vol": 870253.4,
       "poly_slug": "lal-esp-lev-2026-08-16",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
@@ -23075,7 +23087,7 @@
       "poly_hw": 0.695,
       "poly_dr": 0.185,
       "poly_aw": 0.125,
-      "poly_vol": 35.14,
+      "poly_vol": 140.01,
       "poly_slug": "lal-rea-rso-2026-08-26",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
       "marketsFreshAt": "2026-07-17T15:09:53.819048+00:00",
@@ -23123,7 +23135,6 @@
           1.93
         ]
       },
-      "ahA_p025": 1.93,
       "ahH_n025": 1.97,
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
@@ -23177,8 +23188,8 @@
       "ahA_p150": 2.18,
       "poly_hw": 0.75,
       "poly_dr": 0.15,
-      "poly_aw": 0.1,
-      "poly_vol": 3.9,
+      "poly_aw": 0.105,
+      "poly_vol": 632.74,
       "poly_slug": "bun-bay-stu-2026-08-28",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
@@ -23272,11 +23283,12 @@
         ]
       },
       "ahA_p075": 1.95,
+      "ahH_n075": 1.89,
       "ahH_n150": 3.02,
       "ahH_n075": 1.89,
       "poly_hw": 0.575,
       "poly_dr": 0.23,
-      "poly_aw": 0.195,
+      "poly_aw": 0.2,
       "poly_vol": 0,
       "poly_slug": "bun-mai-scp-2026-08-29",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
@@ -23325,8 +23337,8 @@
           1.91
         ]
       },
-      "ahH_n150": 1.94,
       "ahA_p150": 1.91,
+      "ahH_n150": 1.94,
       "poly_hw": 0.73,
       "poly_dr": 0.17,
       "poly_aw": 0.1,
@@ -23383,9 +23395,9 @@
         ]
       },
       "ahA_n100": 1.94,
-      "poly_hw": 0.19,
-      "poly_dr": 0.205,
-      "poly_aw": 0.605,
+      "poly_hw": 0.175,
+      "poly_dr": 0.21,
+      "poly_aw": 0.61,
       "poly_vol": 0,
       "poly_slug": "bun-elv-b04-2026-08-29",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
@@ -23490,7 +23502,7 @@
       "ahA_p150": 1.65,
       "poly_hw": 0.64,
       "poly_dr": 0.205,
-      "poly_aw": 0.165,
+      "poly_aw": 0.175,
       "poly_vol": 25.42,
       "poly_slug": "bun-lei-moe-2026-08-29",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
@@ -23540,8 +23552,8 @@
         ]
       },
       "ahH_n025": 2.08,
-      "poly_hw": 0.39,
-      "poly_dr": 0.265,
+      "poly_hw": 0.395,
+      "poly_dr": 0.27,
       "poly_aw": 0.345,
       "poly_vol": 0,
       "poly_slug": "bun-uni-ein-2026-08-29",
@@ -23788,7 +23800,7 @@
           2.07
         ]
       },
-      "poly_hw": 0.375,
+      "poly_hw": 0.38,
       "poly_dr": 0.265,
       "poly_aw": 0.34,
       "poly_vol": 5,
@@ -23835,8 +23847,8 @@
         ]
       },
       "ahA_n075": 1.92,
-      "poly_hw": 0.175,
-      "poly_dr": 0.25,
+      "poly_hw": 0.17,
+      "poly_dr": 0.24,
       "poly_aw": 0.58,
       "poly_vol": 5.08,
       "poly_slug": "fl1-ang-lil-2026-08-23",
@@ -23893,8 +23905,8 @@
       "ahH_n150": 2.72,
       "poly_hw": 0.535,
       "poly_dr": 0.235,
-      "poly_aw": 0.22,
-      "poly_vol": 3632.31,
+      "poly_aw": 0.215,
+      "poly_vol": 4229.31,
       "poly_slug": "fl1-olm-str-2026-08-21",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
       "marketsFreshAt": "2026-07-17T06:11:18.629118+00:00",
@@ -23942,8 +23954,8 @@
           2.05
         ]
       },
-      "ahA_p025": 2.05,
       "ahH_n025": 1.85,
+      "ahA_p025": 2.05,
       "poly_hw": 0.455,
       "poly_dr": 0.265,
       "poly_aw": 0.275,
@@ -24045,12 +24057,12 @@
           2.0
         ]
       },
-      "ahA_n050": 2.07,
       "ahA_n025": 2.0,
-      "poly_hw": 0.305,
+      "ahA_n050": 2.07,
+      "poly_hw": 0.31,
       "poly_dr": 0.26,
-      "poly_aw": 0.435,
-      "poly_vol": 30.64,
+      "poly_aw": 0.415,
+      "poly_vol": 99.2,
       "poly_slug": "fl1-tou-lyo-2026-08-22",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
@@ -24098,12 +24110,12 @@
           1.93
         ]
       },
-      "ahA_p025": 1.93,
       "ahH_n025": 1.92,
+      "ahA_p025": 1.93,
       "poly_hw": 0.425,
       "poly_dr": 0.315,
       "poly_aw": 0.255,
-      "poly_vol": 166.41,
+      "poly_vol": 1430.9,
       "poly_slug": "lal-ray-ala-2026-08-20",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
       "marketsFreshAt": "2026-08-02T11:13:10.307263+00:00",
@@ -24155,10 +24167,13 @@
       "ahA_p025": 2.08,
       "ahA_p050": 1.82,
       "ahH_n025": 1.79,
-      "poly_hw": 0.475,
-      "poly_dr": 0.295,
+      "ahA_p050": 1.82,
+      "ahH_n050": 2.1,
+      "ahA_p025": 2.08,
+      "poly_hw": 0.465,
+      "poly_dr": 0.285,
       "poly_aw": 0.255,
-      "poly_vol": 552.7,
+      "poly_vol": 707.23,
       "poly_slug": "lal-bet-rso-2026-08-21",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
       "marketsFreshAt": "2026-08-14T04:02:20.015928+00:00",
@@ -24209,9 +24224,9 @@
       "ahH_n100": 2.06,
       "ahH_n150": 2.83,
       "poly_hw": 0.565,
-      "poly_dr": 0.265,
+      "poly_dr": 0.255,
       "poly_aw": 0.185,
-      "poly_vol": 559.91,
+      "poly_vol": 910.75,
       "poly_slug": "lal-bil-sev-2026-08-22",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
       "marketsFreshAt": "2026-08-03T11:17:19.844604+00:00",
@@ -24259,8 +24274,8 @@
       "ahH_n025": 1.86,
       "poly_hw": 0.445,
       "poly_dr": 0.285,
-      "poly_aw": 0.27,
-      "poly_vol": 357.46,
+      "poly_aw": 0.265,
+      "poly_vol": 454.57,
       "poly_slug": "lal-val-cel-2026-08-22",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
       "marketsFreshAt": "2026-08-14T04:02:20.015928+00:00",
@@ -24309,7 +24324,7 @@
       "poly_hw": 0.155,
       "poly_dr": 0.225,
       "poly_aw": 0.625,
-      "poly_vol": 1124.81,
+      "poly_vol": 2661.2,
       "poly_slug": "lal-esp-rea-2026-08-22",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
       "marketsFreshAt": "2026-08-03T11:17:19.844604+00:00",
@@ -24359,8 +24374,8 @@
       "ahA_p150": 1.43,
       "poly_hw": 0.52,
       "poly_dr": 0.265,
-      "poly_aw": 0.23,
-      "poly_vol": 184.68,
+      "poly_aw": 0.225,
+      "poly_vol": 215.85,
       "poly_slug": "lal-mad-vil-2026-08-23",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
       "marketsFreshAt": "2026-08-09T14:28:51.510547+00:00",
@@ -24415,8 +24430,8 @@
       "ahH_n150": 3.89,
       "poly_hw": 0.485,
       "poly_dr": 0.33,
-      "poly_aw": 0.185,
-      "poly_vol": 113.19,
+      "poly_aw": 0.205,
+      "poly_vol": 3696.95,
       "poly_slug": "lal-get-rrc-2026-08-23",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
       "marketsFreshAt": "2026-08-02T11:13:10.307263+00:00",
@@ -24524,7 +24539,7 @@
       "poly_hw": 0.53,
       "poly_dr": 0.265,
       "poly_aw": 0.22,
-      "poly_vol": 52.21,
+      "poly_vol": 62.21,
       "poly_slug": "lal-osa-lev-2026-08-24",
       "marketsCarriedAt": "2026-08-16T18:26:23.283009+00:00",
       "marketsFreshAt": "2026-08-03T11:17:19.844604+00:00",
@@ -24618,9 +24633,9 @@
           2.75
         ]
       },
-      "poly_hw": 0.48,
+      "poly_hw": 0.485,
       "poly_dr": 0.29,
-      "poly_aw": 0.255,
+      "poly_aw": 0.25,
       "poly_vol": 2514.19,
       "poly_slug": "lal-cel-osa-2026-08-16",
       "marketsFreshAt": "2026-08-16T18:26:23.283009+00:00",
@@ -24639,6 +24654,146 @@
       "public_aw_open": 3.65,
       "public_o25_open": 2.07,
       "public_u25_open": 1.72
+    },
+    "536-530": {
+      "poly_hw": 0.31,
+      "poly_dr": 0.27,
+      "poly_aw": 0.505,
+      "poly_vol": 0,
+      "poly_slug": "lal-sev-mad-2026-08-29"
+    },
+    "548-540": {
+      "poly_hw": 0.505,
+      "poly_dr": 0.275,
+      "poly_aw": 0.28,
+      "poly_vol": 0,
+      "poly_slug": "lal-rso-esp-2026-08-29"
+    },
+    "539-543": {
+      "poly_hw": 0.345,
+      "poly_dr": 0.295,
+      "poly_aw": 0.405,
+      "poly_vol": 0,
+      "poly_slug": "lal-lev-bet-2026-08-29"
+    },
+    "47-34": {
+      "poly_hw": 0.405,
+      "poly_dr": 0.295,
+      "poly_aw": 0.355,
+      "poly_vol": 0,
+      "poly_slug": "epl-tot-new-2026-08-29"
+    },
+    "108-77": {
+      "poly_hw": 0.545,
+      "poly_dr": 0.275,
+      "poly_aw": 0.265,
+      "poly_vol": 0,
+      "poly_slug": "fl1-aja-ang-2026-08-29"
+    },
+    "106-96": {
+      "poly_hw": 0.425,
+      "poly_dr": 0.295,
+      "poly_aw": 0.325,
+      "poly_vol": 0,
+      "poly_slug": "fl1-sbr-tou-2026-08-29"
+    },
+    "1346-64": {
+      "poly_hw": 0.545,
+      "poly_dr": 0.26,
+      "poly_aw": 0.245,
+      "poly_vol": 0,
+      "poly_slug": "epl-cov-hul-2026-08-29"
+    },
+    "35-45": {
+      "poly_hw": 0.51,
+      "poly_dr": 0.28,
+      "poly_aw": 0.27,
+      "poly_vol": 0,
+      "poly_slug": "epl-bou-eve-2026-08-29"
+    },
+    "80-111": {
+      "poly_hw": 0.605,
+      "poly_dr": 0.255,
+      "poly_aw": 0.23,
+      "poly_vol": 11.9,
+      "poly_slug": "fl1-lyo-hac-2026-08-29"
+    },
+    "40-65": {
+      "poly_hw": 0.485,
+      "poly_dr": 0.27,
+      "poly_aw": 0.26,
+      "poly_vol": 0,
+      "poly_slug": "epl-liv-not-2026-08-29"
+    },
+    "95-116": {
+      "poly_hw": 0.395,
+      "poly_dr": 0.295,
+      "poly_aw": 0.345,
+      "poly_vol": 0,
+      "poly_slug": "fl1-str-rcl-2026-08-29"
+    },
+    "496-523": {
+      "poly_hw": 0.42,
+      "poly_dr": 0.45,
+      "poly_aw": 0.435,
+      "poly_vol": 0,
+      "poly_slug": "sea-juv-par-2026-08-29"
+    },
+    "502-512": {
+      "poly_hw": 0.425,
+      "poly_dr": 0.45,
+      "poly_aw": 0.435,
+      "poly_vol": 0,
+      "poly_slug": "sea-fio-fro-2026-08-29"
+    },
+    "1579-494": {
+      "poly_hw": 0.44,
+      "poly_dr": 0.45,
+      "poly_aw": 0.44,
+      "poly_vol": 0,
+      "poly_slug": "sea-mon-udi-2026-08-29"
+    },
+    "488-503": {
+      "poly_hw": 0.435,
+      "poly_dr": 0.45,
+      "poly_aw": 0.435,
+      "poly_vol": 0,
+      "poly_slug": "sea-sas-tor-2026-08-29"
+    },
+    "542-533": {
+      "poly_hw": 0.335,
+      "poly_dr": 0.285,
+      "poly_aw": 0.42,
+      "poly_vol": 1.49,
+      "poly_slug": "lal-ala-vil-2026-08-28"
+    },
+    "4665-797": {
+      "poly_hw": 0.46,
+      "poly_dr": 0.295,
+      "poly_aw": 0.335,
+      "poly_vol": 0,
+      "poly_slug": "lal-rrc-elc-2026-08-28"
+    },
+    "52-50": {
+      "poly_hw": 0.305,
+      "poly_dr": 0.255,
+      "poly_aw": 0.53,
+      "poly_vol": 12.55,
+      "poly_slug": "epl-cry-mac-2026-08-28"
+    },
+    "79-114": {
+      "poly_hw": 0.585,
+      "poly_dr": 0.26,
+      "poly_aw": 0.44,
+      "poly_vol": 40.19,
+      "poly_slug": "fl1-lil-psg-2026-08-28"
+    },
+    "489-517": {
+      "poly_hw": 0.435,
+      "poly_dr": 0.455,
+      "poly_aw": 0.435,
+      "poly_vol": 0,
+      "poly_slug": "sea-mil-ven-2026-08-28"
     }
   },
   "picks": {
@@ -26679,7 +26834,7 @@
           "medianPP": 51.5,
           "kind": "konsens",
           "outlier": null,
-          "outlierGapPP": 1.7
+          "outlierGapPP": 2.0
         },
         "signals": [
           {
@@ -27057,7 +27212,7 @@
         "consensus": {
           "side": "away",
           "sources": {
-            "pinnacle": 0.466,
+            "pinnacle": 0.467,
             "poly": 0.475,
             "soft": 0.488
           },
@@ -31916,7 +32071,7 @@
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "📉 Pinnacle 1.46→1.39 (Sharp-Money-Drop +4.5pp) · ✅ Soft-Konsens folgte +5.0pp (bestätigt) · sichere Linie abgeleitet: AH Heim −1.25 @1.85",
+        "info": "📉 Pinnacle 1.46→1.39 (Sharp-Money-Drop +4.4pp) · ✅ Soft-Konsens folgte +5.0pp (bestätigt) · sichere Linie abgeleitet: AH Heim −1.25 @1.85",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -31925,7 +32080,7 @@
         "lamA": null,
         "lamTotal": null,
         "source": "steam",
-        "steamMovePP": 4.5,
+        "steamMovePP": 4.4,
         "steamMoveRawPP": 3.4,
         "steamOpen": 1.46,
         "steamCur": 1.39,
@@ -32746,7 +32901,7 @@
           "medianPP": 41.7,
           "kind": "konsens",
           "outlier": null,
-          "outlierGapPP": 2.8
+          "outlierGapPP": 2.6
         },
         "signals": [
           {
@@ -33171,18 +33326,18 @@
         "sharpMoveActive": true,
         "sharpMoveDetails": {
           "triggered": true,
-          "pinn_move_pp": 6.16,
+          "pinn_move_pp": 6.32,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
           "hours_since_open": 343.2,
           "open_pinn_odds": 2.05,
-          "current_pinn_odds": 1.82,
+          "current_pinn_odds": 1.815,
           "move_age_decay": 0.5,
           "move_age_days": 14.3
         },
         "openingMovement": {
           "in_pick_direction": true,
-          "move_pp": 6.16
+          "move_pp": 6.32
         },
         "origVerdict": "ABWÄGEN",
         "origOdds": 1.82,
@@ -33436,7 +33591,7 @@
         "consensus": {
           "side": "away",
           "sources": {
-            "pinnacle": 0.192,
+            "pinnacle": 0.19,
             "poly": 0.185,
             "soft": 0.194
           },
@@ -33445,7 +33600,7 @@
           "medianPP": 19.2,
           "kind": "konsens",
           "outlier": null,
-          "outlierGapPP": 0.7
+          "outlierGapPP": 0.5
         },
         "signals": [
           {
@@ -34606,7 +34761,7 @@
         "consensus": {
           "side": "away",
           "sources": {
-            "pinnacle": 0.218,
+            "pinnacle": 0.216,
             "poly": 0.22,
             "soft": 0.235
           },
@@ -36153,11 +36308,11 @@
           "side": "away",
           "sources": {
             "pinnacle": 0.205,
-            "poly": 0.195,
+            "poly": 0.2,
             "soft": 0.222
           },
           "n": 3,
-          "spreadPP": 2.7,
+          "spreadPP": 2.2,
           "medianPP": 20.5,
           "kind": "konsens",
           "outlier": null,
@@ -36432,7 +36587,7 @@
         "mktSig": 0,
         "storySig": 0,
         "edgePP": -2,
-        "info": "📉 Pinnacle 6.75→4.77 (Sharp-Money-Drop +7.2pp) · Soft-Konsens hinkt +1.7pp (Value, noch nicht bestätigt) · ✅ Sichere Linie abgeleitet: Doppelte Chance — 1X @2.36 (These: Heimsieg @5.2)",
+        "info": "📉 Pinnacle 6.75→4.77 (Sharp-Money-Drop +7.1pp) · Soft-Konsens hinkt +1.7pp (Value, noch nicht bestätigt) · ✅ Sichere Linie abgeleitet: Doppelte Chance — 1X @2.36 (These: Heimsieg @5.2)",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -36441,7 +36596,7 @@
         "lamA": null,
         "lamTotal": null,
         "source": "steam",
-        "steamMovePP": 7.2,
+        "steamMovePP": 7.1,
         "steamMoveRawPP": 6.1,
         "steamOpen": 6.75,
         "steamCur": 4.77,
@@ -36468,15 +36623,15 @@
           "side": "home",
           "sources": {
             "pinnacle": 0.198,
-            "poly": 0.19,
+            "poly": 0.175,
             "soft": 0.192
           },
           "n": 3,
-          "spreadPP": 0.8,
+          "spreadPP": 2.3,
           "medianPP": 19.2,
           "kind": "konsens",
           "outlier": null,
-          "outlierGapPP": 0.6
+          "outlierGapPP": 1.7
         },
         "signals": [
           {
@@ -37085,11 +37240,11 @@
           "side": "away",
           "sources": {
             "pinnacle": 0.178,
-            "poly": 0.165,
+            "poly": 0.175,
             "soft": 0.192
           },
           "n": 3,
-          "spreadPP": 2.7,
+          "spreadPP": 1.7,
           "medianPP": 17.8,
           "kind": "konsens",
           "outlier": null,
@@ -37365,15 +37520,15 @@
           "side": "home",
           "sources": {
             "pinnacle": 0.386,
-            "poly": 0.39,
+            "poly": 0.395,
             "soft": 0.42
           },
           "n": 3,
           "spreadPP": 3.5,
-          "medianPP": 39.0,
+          "medianPP": 39.5,
           "kind": "konsens",
           "outlier": null,
-          "outlierGapPP": 3.0
+          "outlierGapPP": 2.5
         },
         "signals": [
           {
@@ -38462,15 +38617,27 @@
       },
       {
         "team": "4665",
-        "played": 0,
+        "played": 1,
         "won": 0,
-        "draw": 0,
+        "draw": 1,
         "lost": 0,
-        "points": 0,
-        "gf": 0,
-        "ga": 0,
+        "points": 1,
+        "gf": 2,
+        "ga": 2,
         "gd": 0,
         "pos": 3
+      },
+      {
+        "team": "533",
+        "played": 1,
+        "won": 0,
+        "draw": 1,
+        "lost": 0,
+        "points": 1,
+        "gf": 2,
+        "ga": 2,
+        "gd": 0,
+        "pos": 4
       },
       {
         "team": "529",
@@ -38482,7 +38649,7 @@
         "gf": 0,
         "ga": 0,
         "gd": 0,
-        "pos": 4
+        "pos": 5
       },
       {
         "team": "530",
@@ -38494,7 +38661,7 @@
         "gf": 0,
         "ga": 0,
         "gd": 0,
-        "pos": 5
+        "pos": 6
       },
       {
         "team": "531",
@@ -38506,22 +38673,10 @@
         "gf": 0,
         "ga": 0,
         "gd": 0,
-        "pos": 6
-      },
-      {
-        "team": "532",
-        "played": 0,
-        "won": 0,
-        "draw": 0,
-        "lost": 0,
-        "points": 0,
-        "gf": 0,
-        "ga": 0,
-        "gd": 0,
         "pos": 7
       },
       {
-        "team": "533",
+        "team": "532",
         "played": 0,
         "won": 0,
         "draw": 0,
@@ -39358,12 +39513,21 @@
   },
   "thirdRanking": [
     {
+      "team": "4665",
+      "group": "ESP",
+      "points": 1,
+      "gd": 0,
+      "gf": 2,
+      "rank": 1,
+      "qualifies": true
+    },
+    {
       "team": "110",
       "group": "FRA",
       "points": 0,
       "gd": 0,
       "gf": 0,
-      "rank": 1,
+      "rank": 2,
       "qualifies": true
     },
     {
@@ -39372,21 +39536,12 @@
       "points": 0,
       "gd": 0,
       "gf": 0,
-      "rank": 2,
+      "rank": 3,
       "qualifies": true
     },
     {
       "team": "34",
       "group": "ENG",
-      "points": 0,
-      "gd": 0,
-      "gf": 0,
-      "rank": 3,
-      "qualifies": true
-    },
-    {
-      "team": "4665",
-      "group": "ESP",
       "points": 0,
       "gd": 0,
       "gf": 0,
@@ -41108,9 +41263,10 @@
     "55": 55,
     "542": 542,
     "536": 536,
+    "4665": 4665,
+    "533": 533,
     "529": 529,
     "541": 541,
-    "533": 533,
     "530": 530,
     "543": 543,
     "538": 538,
@@ -41121,7 +41277,6 @@
     "797": 797,
     "539": 539,
     "727": 727,
-    "4665": 4665,
     "544": 544,
     "535": 535,
     "728": 728,
@@ -55690,7 +55845,7 @@
       "avgGoals": 3.2,
       "over25Rate": 0.4,
       "bttsRate": 0.6,
-      "updatedAt": "2026-08-09T06:58:23.402298+00:00"
+      "updatedAt": "2026-08-16T18:09:50.762738+00:00"
     },
     "108-77": {
       "games": 10,
@@ -55700,7 +55855,7 @@
       "avgGoals": 2.5,
       "over25Rate": 0.4,
       "bttsRate": 0.5,
-      "updatedAt": "2026-08-09T06:58:25.093119+00:00"
+      "updatedAt": "2026-08-16T18:09:52.416525+00:00"
     },
     "110-114": {
       "games": 10,
@@ -55710,7 +55865,7 @@
       "avgGoals": 2.5,
       "over25Rate": 0.6,
       "bttsRate": 0.7,
-      "updatedAt": "2026-08-09T06:58:26.796618+00:00"
+      "updatedAt": "2026-08-16T18:09:54.071904+00:00"
     },
     "110-95": {
       "games": 8,
@@ -55740,7 +55895,7 @@
       "avgGoals": 2.3,
       "over25Rate": 0.5,
       "bttsRate": 0.7,
-      "updatedAt": "2026-08-09T06:58:28.487709+00:00"
+      "updatedAt": "2026-08-16T18:09:55.729480+00:00"
     },
     "114-84": {
       "games": 2,
@@ -55760,11 +55915,11 @@
       "avgGoals": 2.5,
       "over25Rate": 0.6,
       "bttsRate": 0.5,
-      "updatedAt": "2026-08-09T06:58:30.186190+00:00"
+      "updatedAt": "2026-08-16T18:09:57.381004+00:00"
     },
     "1298-106": {
       "games": 0,
-      "updatedAt": "2026-08-09T06:58:31.875715+00:00"
+      "updatedAt": "2026-08-16T18:09:59.029520+00:00"
     },
     "1346-64": {
       "games": 10,
@@ -55774,7 +55929,7 @@
       "avgGoals": 2.2,
       "over25Rate": 0.3,
       "bttsRate": 0.6,
-      "updatedAt": "2026-08-09T06:58:33.571613+00:00"
+      "updatedAt": "2026-08-16T18:10:00.689934+00:00"
     },
     "1579-494": {
       "games": 7,
@@ -55784,7 +55939,7 @@
       "avgGoals": 2.857,
       "over25Rate": 0.714,
       "bttsRate": 0.857,
-      "updatedAt": "2026-08-09T06:58:35.286727+00:00"
+      "updatedAt": "2026-08-16T18:10:02.361327+00:00"
     },
     "33-57": {
       "games": 3,
@@ -55804,7 +55959,7 @@
       "avgGoals": 3.6,
       "over25Rate": 0.7,
       "bttsRate": 0.7,
-      "updatedAt": "2026-08-09T06:58:38.686879+00:00"
+      "updatedAt": "2026-08-16T18:10:05.848706+00:00"
     },
     "35-45": {
       "games": 10,
@@ -55824,7 +55979,7 @@
       "avgGoals": 2.1,
       "over25Rate": 0.4,
       "bttsRate": 0.4,
-      "updatedAt": "2026-08-09T06:58:40.377584+00:00"
+      "updatedAt": "2026-08-16T18:10:07.506757+00:00"
     },
     "40-65": {
       "games": 9,
@@ -55844,7 +55999,7 @@
       "avgGoals": 5.5,
       "over25Rate": 1.0,
       "bttsRate": 0.5,
-      "updatedAt": "2026-08-09T06:58:42.076088+00:00"
+      "updatedAt": "2026-08-16T18:10:09.168336+00:00"
     },
     "45-52": {
       "games": 10,
@@ -55854,7 +56009,7 @@
       "avgGoals": 2.4,
       "over25Rate": 0.6,
       "bttsRate": 0.6,
-      "updatedAt": "2026-08-09T06:58:43.769934+00:00"
+      "updatedAt": "2026-08-16T18:10:10.826985+00:00"
     },
     "47-34": {
       "games": 10,
@@ -55894,7 +56049,7 @@
       "avgGoals": 2.75,
       "over25Rate": 0.5,
       "bttsRate": 0.0,
-      "updatedAt": "2026-08-09T06:58:45.473923+00:00"
+      "updatedAt": "2026-08-16T18:10:12.475957+00:00"
     },
     "49-51": {
       "games": 10,
@@ -55934,7 +56089,7 @@
       "avgGoals": 1.75,
       "over25Rate": 0.25,
       "bttsRate": 0.25,
-      "updatedAt": "2026-08-09T06:58:47.160697+00:00"
+      "updatedAt": "2026-08-16T18:10:14.221128+00:00"
     },
     "495-492": {
       "games": 10,
@@ -55944,7 +56099,7 @@
       "avgGoals": 3.6,
       "over25Rate": 0.9,
       "bttsRate": 0.8,
-      "updatedAt": "2026-08-09T06:58:48.853952+00:00"
+      "updatedAt": "2026-08-16T18:10:15.875043+00:00"
     },
     "496-523": {
       "games": 10,
@@ -55964,7 +56119,7 @@
       "avgGoals": 3.1,
       "over25Rate": 0.6,
       "bttsRate": 0.6,
-      "updatedAt": "2026-08-09T06:58:50.551195+00:00"
+      "updatedAt": "2026-08-16T18:10:17.530420+00:00"
     },
     "499-488": {
       "games": 10,
@@ -55974,7 +56129,7 @@
       "avgGoals": 2.7,
       "over25Rate": 0.7,
       "bttsRate": 0.6,
-      "updatedAt": "2026-08-09T06:58:52.242237+00:00"
+      "updatedAt": "2026-08-16T18:10:19.185188+00:00"
     },
     "499-500": {
       "games": 10,
@@ -55994,7 +56149,7 @@
       "avgGoals": 3.6,
       "over25Rate": 0.8,
       "bttsRate": 0.8,
-      "updatedAt": "2026-08-09T06:58:53.946604+00:00"
+      "updatedAt": "2026-08-16T18:10:20.841262+00:00"
     },
     "500-487": {
       "games": 10,
@@ -56004,7 +56159,7 @@
       "avgGoals": 2.3,
       "over25Rate": 0.5,
       "bttsRate": 0.3,
-      "updatedAt": "2026-08-09T06:58:55.635363+00:00"
+      "updatedAt": "2026-08-16T18:10:22.487944+00:00"
     },
     "502-512": {
       "games": 6,
@@ -56024,7 +56179,7 @@
       "avgGoals": 3.1,
       "over25Rate": 0.7,
       "bttsRate": 0.7,
-      "updatedAt": "2026-08-09T06:58:57.331729+00:00"
+      "updatedAt": "2026-08-16T18:10:24.156248+00:00"
     },
     "505-1579": {
       "games": 6,
@@ -56034,7 +56189,7 @@
       "avgGoals": 3.333,
       "over25Rate": 0.5,
       "bttsRate": 0.667,
-      "updatedAt": "2026-08-09T06:58:59.025986+00:00"
+      "updatedAt": "2026-08-16T18:10:25.806616+00:00"
     },
     "51-66": {
       "games": 10,
@@ -56044,7 +56199,7 @@
       "avgGoals": 3.5,
       "over25Rate": 0.7,
       "bttsRate": 0.6,
-      "updatedAt": "2026-08-09T06:59:00.719165+00:00"
+      "updatedAt": "2026-08-16T18:10:27.461405+00:00"
     },
     "512-496": {
       "games": 7,
@@ -56054,7 +56209,7 @@
       "avgGoals": 3.0,
       "over25Rate": 0.571,
       "bttsRate": 0.429,
-      "updatedAt": "2026-08-09T06:59:02.424487+00:00"
+      "updatedAt": "2026-08-16T18:10:29.112735+00:00"
     },
     "517-867": {
       "games": 8,
@@ -56064,7 +56219,7 @@
       "avgGoals": 2.5,
       "over25Rate": 0.375,
       "bttsRate": 0.75,
-      "updatedAt": "2026-08-09T06:59:04.114708+00:00"
+      "updatedAt": "2026-08-16T18:10:30.765728+00:00"
     },
     "52-50": {
       "games": 10,
@@ -56084,7 +56239,7 @@
       "avgGoals": 2.9,
       "over25Rate": 0.5,
       "bttsRate": 0.7,
-      "updatedAt": "2026-08-09T06:59:05.815032+00:00"
+      "updatedAt": "2026-08-16T18:10:32.413750+00:00"
     },
     "55-47": {
       "games": 10,
@@ -56094,7 +56249,7 @@
       "avgGoals": 2.7,
       "over25Rate": 0.5,
       "bttsRate": 0.5,
-      "updatedAt": "2026-08-09T06:59:07.524438+00:00"
+      "updatedAt": "2026-08-16T18:10:34.064201+00:00"
     },
     "57-746": {
       "games": 10,
@@ -56104,7 +56259,7 @@
       "avgGoals": 2.6,
       "over25Rate": 0.4,
       "bttsRate": 0.6,
-      "updatedAt": "2026-08-09T06:59:09.231590+00:00"
+      "updatedAt": "2026-08-16T18:10:35.721986+00:00"
     },
     "63-55": {
       "games": 10,
@@ -56124,7 +56279,7 @@
       "avgGoals": 2.25,
       "over25Rate": 0.5,
       "bttsRate": 0.375,
-      "updatedAt": "2026-08-09T06:59:10.921195+00:00"
+      "updatedAt": "2026-08-16T18:10:37.466041+00:00"
     },
     "65-63": {
       "games": 10,
@@ -56134,7 +56289,7 @@
       "avgGoals": 2.6,
       "over25Rate": 0.4,
       "bttsRate": 0.6,
-      "updatedAt": "2026-08-09T06:59:12.615458+00:00"
+      "updatedAt": "2026-08-16T18:10:39.117242+00:00"
     },
     "66-42": {
       "games": 10,
@@ -56164,7 +56319,7 @@
       "avgGoals": 1.8,
       "over25Rate": 0.2,
       "bttsRate": 0.4,
-      "updatedAt": "2026-08-09T06:59:14.312536+00:00"
+      "updatedAt": "2026-08-16T18:10:40.785822+00:00"
     },
     "79-85": {
       "games": 10,
@@ -56194,7 +56349,7 @@
       "avgGoals": 2.8,
       "over25Rate": 0.5,
       "bttsRate": 0.7,
-      "updatedAt": "2026-08-09T06:59:16.015347+00:00"
+      "updatedAt": "2026-08-16T18:10:42.605022+00:00"
     },
     "84-97": {
       "games": 10,
@@ -56204,7 +56359,7 @@
       "avgGoals": 3.0,
       "over25Rate": 0.6,
       "bttsRate": 0.8,
-      "updatedAt": "2026-08-09T06:59:17.706932+00:00"
+      "updatedAt": "2026-08-16T18:10:44.252026+00:00"
     },
     "85-94": {
       "games": 10,
@@ -56214,7 +56369,7 @@
       "avgGoals": 2.9,
       "over25Rate": 0.5,
       "bttsRate": 0.5,
-      "updatedAt": "2026-08-09T06:59:19.401478+00:00"
+      "updatedAt": "2026-08-16T18:10:45.933870+00:00"
     },
     "867-497": {
       "games": 10,
@@ -56258,7 +56413,7 @@
       "avgGoals": 3.0,
       "over25Rate": 0.8,
       "bttsRate": 0.7,
-      "updatedAt": "2026-08-09T06:59:21.095618+00:00"
+      "updatedAt": "2026-08-16T18:10:47.578695+00:00"
     },
     "97-110": {
       "games": 10,
@@ -56508,7 +56663,7 @@
       "avgGoals": 3.5,
       "over25Rate": 0.75,
       "bttsRate": 0.5,
-      "updatedAt": "2026-08-09T06:58:36.982309+00:00"
+      "updatedAt": "2026-08-16T18:10:04.189025+00:00"
     },
     "165-175": {
       "games": 10,
@@ -56577,7 +56732,7 @@
         1387083,
         1387069
       ],
-      "updatedAt": "2026-08-16T06:45:34.822739+00:00"
+      "updatedAt": "2026-08-16T18:12:23.005447+00:00"
     },
     "64": {
       "xgForAvg": 1.248,
@@ -56647,7 +56802,7 @@
         1379324,
         1379312
       ],
-      "updatedAt": "2026-08-16T06:46:00.907287+00:00"
+      "updatedAt": "2026-08-16T18:12:49.612015+00:00"
     },
     "47": {
       "xgForAvg": 1.309,
@@ -56659,22 +56814,22 @@
       "xgForAvg": 1.41,
       "xgAgainstAvg": 2.01,
       "xgGames": 2,
-      "xgSimForAvg": 1.462,
-      "xgSimAgainstAvg": 1.053,
+      "xgSimForAvg": 1.495,
+      "xgSimAgainstAvg": 1.305,
       "shotsInsideForAvg": 9.0,
-      "sotForAvg": 4.0,
-      "savesForAvg": 1.67,
-      "blocksForAvg": 4.67,
+      "sotForAvg": 4.33,
+      "savesForAvg": 2.33,
+      "blocksForAvg": 4.33,
       "keyPassesForAvg": null,
       "ratingAvg": null,
       "games": 3,
       "source": "apif_real",
       "fixture_ids": [
+        1582365,
         1379344,
-        1379331,
-        1542889
+        1379331
       ],
-      "updatedAt": "2026-08-16T06:45:17.956018+00:00"
+      "updatedAt": "2026-08-16T18:12:05.580042+00:00"
     },
     "35": {
       "xgForAvg": 1.81,
@@ -56954,7 +57109,7 @@
         1388002,
         1387952
       ],
-      "updatedAt": "2026-08-16T06:49:58.902950+00:00"
+      "updatedAt": "2026-08-16T18:16:52.137396+00:00"
     },
     "94": {
       "xgForAvg": 1.922,
@@ -57242,7 +57397,7 @@
         1388609,
         1388599
       ],
-      "updatedAt": "2026-08-16T06:47:32.865791+00:00"
+      "updatedAt": "2026-08-16T18:14:21.601608+00:00"
     },
     "162": {
       "xgForAvg": 1.167,
@@ -57362,7 +57517,7 @@
         1545417,
         1388912
       ],
-      "updatedAt": "2026-08-16T06:48:10.131574+00:00"
+      "updatedAt": "2026-08-16T18:14:59.703170+00:00"
     },
     "192": {
       "xgForAvg": 1.3,
@@ -57383,7 +57538,7 @@
         1388598,
         1388594
       ],
-      "updatedAt": "2026-08-16T06:47:56.546366+00:00"
+      "updatedAt": "2026-08-16T18:14:45.855788+00:00"
     }
   },
   "squads": {
@@ -69976,7 +70131,28 @@
       ]
     }
   },
-  "topScorers": {},
+  "topScorers": {
+    "542": {
+      "name": "M. Díaz",
+      "goals": 1.0,
+      "appearances": 1.0
+    },
+    "728": {
+      "name": "Álvaro García",
+      "goals": 1.0,
+      "appearances": 1.0
+    },
+    "536": {
+      "name": "Peque Fernández",
+      "goals": 1.0,
+      "appearances": 1.0
+    },
+    "546": {
+      "name": "S. Boselli",
+      "goals": 0.0,
+      "appearances": 1.0
+    }
+  },
   "coachChange": {
     "49": {
       "name": "Xabi Alonso",
@@ -70094,6 +70270,10 @@
         "date": "2026-07-12"
       },
       {
+        "name": "L. Digne",
+        "date": "2026-08-07"
+      },
+      {
         "name": "E. Barrenechea",
         "date": "2026-06-29"
       }
@@ -70158,6 +70338,10 @@
       {
         "name": "A. Devine",
         "date": "2026-07-06"
+      },
+      {
+        "name": "Yang Min-Hyeok",
+        "date": "2026-08-11"
       },
       {
         "name": "L. Vušković",
@@ -70258,14 +70442,18 @@
         "date": "2026-06-29"
       }
     ],
-    "529": [
+    "4665": [
       {
-        "name": "R. Lewandowski",
-        "date": "2026-06-29"
+        "name": "Aritz Aldasoro",
+        "date": "2026-07-08"
       },
       {
-        "name": "M. Rashford",
-        "date": "2026-06-29"
+        "name": "C. Michelin",
+        "date": "2026-06-30"
+      },
+      {
+        "name": "Suleiman Camara",
+        "date": "2026-08-02"
       }
     ],
     "533": [
@@ -70280,6 +70468,16 @@
       {
         "name": "VÃ­ctor Moreno",
         "date": "2026-07-09"
+      }
+    ],
+    "529": [
+      {
+        "name": "R. Lewandowski",
+        "date": "2026-06-29"
+      },
+      {
+        "name": "M. Rashford",
+        "date": "2026-06-29"
       }
     ],
     "543": [
@@ -70376,20 +70574,6 @@
       {
         "name": "S. Becker",
         "date": "2026-06-29"
-      }
-    ],
-    "4665": [
-      {
-        "name": "Aritz Aldasoro",
-        "date": "2026-07-08"
-      },
-      {
-        "name": "C. Michelin",
-        "date": "2026-06-30"
-      },
-      {
-        "name": "Suleiman Camara",
-        "date": "2026-08-02"
       }
     ],
     "544": [
@@ -70979,13 +71163,13 @@
   },
   "injuries": {
     "_meta": {
-      "updatedAt": "2026-08-16T06:53:04.910031+00:00",
+      "updatedAt": "2026-08-16T18:20:00.140476+00:00",
       "daysUntilWM": 0,
       "status": "live",
       "teamsWithData": 9
     },
     "542": {
-      "updatedAt": "2026-08-16T06:53:04.910031+00:00",
+      "updatedAt": "2026-08-16T18:20:00.140476+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71013,7 +71197,7 @@
       ]
     },
     "546": {
-      "updatedAt": "2026-08-16T06:53:04.910031+00:00",
+      "updatedAt": "2026-08-16T18:20:00.140476+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71035,7 +71219,7 @@
       ]
     },
     "728": {
-      "updatedAt": "2026-08-16T06:53:04.910031+00:00",
+      "updatedAt": "2026-08-16T18:20:00.140476+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71064,7 +71248,7 @@
       ]
     },
     "536": {
-      "updatedAt": "2026-08-16T06:53:04.910031+00:00",
+      "updatedAt": "2026-08-16T18:20:00.140476+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71086,7 +71270,7 @@
       ]
     },
     "4665": {
-      "updatedAt": "2026-08-16T06:53:04.910031+00:00",
+      "updatedAt": "2026-08-16T18:20:00.140476+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71100,7 +71284,7 @@
       ]
     },
     "540": {
-      "updatedAt": "2026-08-16T06:53:04.910031+00:00",
+      "updatedAt": "2026-08-16T18:20:00.140476+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71122,7 +71306,7 @@
       ]
     },
     "797": {
-      "updatedAt": "2026-08-16T06:53:04.910031+00:00",
+      "updatedAt": "2026-08-16T18:20:00.140476+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71150,7 +71334,7 @@
       ]
     },
     "539": {
-      "updatedAt": "2026-08-16T06:53:04.910031+00:00",
+      "updatedAt": "2026-08-16T18:20:00.140476+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71171,7 +71355,7 @@
       ]
     },
     "544": {
-      "updatedAt": "2026-08-16T06:53:04.910031+00:00",
+      "updatedAt": "2026-08-16T18:20:00.140476+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71347,7 +71531,7 @@
         "H"
       ],
       "overLineRate": 0.333,
-      "updatedAt": "2026-08-16T06:44:27.584248+00:00",
+      "updatedAt": "2026-08-16T18:11:14.376030+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -71573,7 +71757,7 @@
         "A"
       ],
       "overLineRate": 0.25,
-      "updatedAt": "2026-08-16T06:44:53.807971+00:00",
+      "updatedAt": "2026-08-16T18:11:40.766139+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
