@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-08-16T17:30:17.274166+00:00",
+"generatedAt": "2026-08-16T17:45:20.708995+00:00",
 "byVerdict": {
 "konsens": {
 "n": 139,
@@ -12,12 +12,12 @@
 "pinnHitRate": 0.875
 },
 "uneinig": {
-"n": 51,
+"n": 52,
 "wins": 12,
-"hitRate": 0.2353,
-"polyN": 42,
+"hitRate": 0.2308,
+"polyN": 43,
 "polyWins": 12,
-"polyHitRate": 0.2857,
+"polyHitRate": 0.2791,
 "pinnN": 26,
 "pinnHitRate": 0.5769
 },
@@ -63,6 +63,11 @@
 "wins": 6,
 "hitRate": 0.75
 },
+"Dutch Eredivisie": {
+"n": 7,
+"wins": 5,
+"hitRate": 0.7143
+},
 "UEFA Europa League Qualifiers": {
 "n": 7,
 "wins": 5,
@@ -72,11 +77,6 @@
 "n": 6,
 "wins": 4,
 "hitRate": 0.6667
-},
-"Dutch Eredivisie": {
-"n": 6,
-"wins": 5,
-"hitRate": 0.8333
 },
 "Japanese J League": {
 "n": 6,
@@ -311,9 +311,9 @@
 },
 "byStrength": {
 "strong": {
-"n": 97,
+"n": 98,
 "wins": 75,
-"hitRate": 0.7732
+"hitRate": 0.7653
 },
 "weak": {
 "n": 62,
@@ -322,14 +322,33 @@
 }
 },
 "divergence": {
-"n": 51,
+"n": 52,
 "betfairWins": 12,
-"betfairRate": 0.2353,
-"polyN": 42,
+"betfairRate": 0.2308,
+"polyN": 43,
 "polyWins": 12,
-"polyRate": 0.2857
+"polyRate": 0.2791
 },
 "recent": [
+{
+"matchId": "35916760",
+"home": "Ajax",
+"away": "Heerenveen",
+"league": "Dutch Eredivisie",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Ajax",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-08-16T14:45:00Z",
+"settledAt": "2026-08-16T17:45:20.556675+00:00"
+},
 {
 "matchId": "35921551",
 "home": "Kalmar FF",
@@ -1070,31 +1089,12 @@
 ],
 "kickoff": "2026-08-16T10:30:00Z",
 "settledAt": "2026-08-16T12:29:50.359602+00:00"
-},
-{
-"matchId": "35937991",
-"home": "Yokohama FC",
-"away": "Iwata",
-"league": "Japanese J League 2",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Yokohama FC",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-08-16T09:00:00Z",
-"settledAt": "2026-08-16T12:00:43.790785+00:00"
 }
 ],
 "global": {
-"n": 192,
+"n": 193,
 "wins": 120,
-"hitRate": 0.625
+"hitRate": 0.6218
 },
-"pending": 11
+"pending": 13
 }
