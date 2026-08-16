@@ -1151,9 +1151,22 @@ function _pwEventLabel(key, names, league){
   // 14.08.2026 (Lucas): "Draw (A vs. B)" ist ein Outcome, kein drittes Team — praefix-basiert raus
   // (GEN mit $-Anker traf nur das nackte "draw"). Fallback greift, wenn <2 echte Namen bleiben.
   const DRAWP=/^(draw|the draw|unentschieden|remis)\b/i;
-  const real=(names||[]).filter(n=>{const t=String(n).trim();return !GEN.test(t)&&!DRAWP.test(t);});
-  if(real.length>=2) return real.map(_pwEsc).join(' <span style="color:#6e7681">vs</span> ');
-  let str=String(key||'').replace(/-\d{4}-\d{2}-\d{2}/g,'');
+  const _real=(arr)=>(arr||[]).filter(n=>{const t=String(n).trim();return !GEN.test(t)&&!DRAWP.test(t);});
+  const _vs=(a)=>a.map(_pwEsc).join(' <span style="color:#6e7681">vs</span> ');
+  const real=_real(names);
+  if(real.length>=2) return _vs(real);
+  // 16.08.2026 (Lucas): Prop-Markt (Over/Under, "-more-markets") -> Outcomes sind KEINE Teams. Echte
+  // Paarung aus dem BASIS-Event holen; sonst leakt "DEN ODE HOR More Markets" (roher Slug + Suffix).
+  const base=String(key||'').replace(/-(more-markets|exact-score|halftime-result|1st-half|first-half|2nd-half)$/i,'');
+  if(base!==String(key||'')){
+    const srcs=[_pwCache&&_pwCache.broadLiveNow,_pwCache&&_pwCache.broadLive];
+    for(let i=0;i<srcs.length;i++){
+      const bm=srcs[i]&&srcs[i][base];
+      const bnames=(bm&&bm.shares)?_real(Object.keys(bm.shares)):[];
+      if(bnames.length>=2) return _vs(bnames);
+    }
+  }
+  let str=base.replace(/-\d{4}-\d{2}-\d{2}/g,'');   // Prop-Suffix schon weg -> kein "More Markets"
   let parts=str.split('-').filter(Boolean);
   const lg=String(league||'').toLowerCase();
   if(parts.length>1 && parts[0].toLowerCase()===lg) parts.shift();
@@ -1427,7 +1440,7 @@ function _pwLiveWhales(){
     +'<span class="pw-kicker">⚡ LIVE — Geld & Wallets auf laufenden Spielen</span>'
     +'<span class="pw-sec-note">nur In-Play-Märkte · frischer Zufluss + Whales, die JETZT reingehen · alle ~5 Min</span></div>';
   let rows=(live?Object.entries(live):[]).map(e=>({k:e[0],m:e[1]}))
-    .filter(x=>x.m && x.m.shares && (x.m.totalUsd||0)>=5000 && _pwSportPass(x.m.league) && !_pwLiveDecided(x.m) && !_pwKoStale(x.m));
+    .filter(x=>x.m && x.m.shares && (x.m.totalUsd||0)>=5000 && _pwSportPass(x.m.league) && !_pwLiveDecided(x.m) && !_pwKoStale(x.m) && !_pwLiveGone(x.m));
   if(!rows.length){
     const _sm=_pwLiveStaleMin(), _had=live&&Object.keys(live).length;
     const _stale=(_sm!=null&&_sm>20&&_had);
@@ -1501,12 +1514,17 @@ function _pwLeagueMoneyVerdict(league){
 // (01.08.2026, Lucas) Wiederverwendbare Play-Rangliste — Kern für „🔥 Heute wetten" UND die
 // Übersicht-Box. limit=0 → alle. useSportPass steuert den Sport-Filter (Übersicht: aus).
 var PW_LIVE_MAX_PRICE = 0.77;   // 15.08.2026 (Lucas): wie Live-Watch — live > 77¢ (Quote <1.30) = fast entschieden, kein Value
+var PW_LIVE_FRESH_MAX_MIN = 45;   // 16.08.2026 (Lucas): Live-Snapshot älter als das = der Scan führt das Spiel nicht mehr -> vorbei/eingefroren -> nicht als Live-Play zeigen (fertige Esport-Spiele hingen 1h+ in den Top-Wetten)
+function _pwLiveGone(m){ var a=(typeof _pwLiveAge==='function')?_pwLiveAge(m):null; return a!=null && a>PW_LIVE_FRESH_MAX_MIN; }
 var PW_LIVE_FLIP_GAP = 0.20;   // 16.08.2026 (Lucas): live gekippt — Shares-Seite liegt >=20pp hinter dem Preis-Favoriten => Markt gegen die Positionsmehrheit, Play raus
 function _pwTopPlays(limit, live, useSportPass){
   live = live || (_pwCache && _pwCache.broadLive) || {};
   const all=[];
   for(const [k,m] of Object.entries(live)){
     if(!m||m.resolved!=null||_pwKoStale(m)) continue;
+    // 16.08.2026 (Lucas): fertiges Live-Spiel raus. Ein laut close-Freeze schon laufendes Spiel (realHtk<0)
+    // gilt nur als aktuell, wenn der LIVE-Scan es noch FRISCH führt — sonst vorbei/eingefroren (blockierte Platz).
+    if((_pwRealHtk(m)||0)<0){ var _lnm=_pwCache&&_pwCache.broadLiveNow&&_pwCache.broadLiveNow[k]; if(!_lnm||_pwLiveGone(_lnm)) continue; }
     if(_pwSportCategory(m.league)==='Sonstige') continue;   // kein Politik/Krypto/Sonstiges in die Play-Liste
     if(useSportPass && !_pwSportPass(m.league)) continue;
     const r=_pwShortlistScore(k,m);
@@ -1601,7 +1619,7 @@ function _pwLiveTopWhales(n){
   const live=_pwCache&&_pwCache.broadLiveNow; if(!live) return [];
   const byMarket={};   // Dedup: je Markt der groesste Whale
   Object.entries(live).forEach(([k,m])=>{
-    if(!m||!m.shares||(Number(m.totalUsd)||0)<5000||!_pwSportPass(m.league)||_pwLiveDecided(m)||_pwKoStale(m)) return;
+    if(!m||!m.shares||(Number(m.totalUsd)||0)<5000||!_pwSportPass(m.league)||_pwLiveDecided(m)||_pwKoStale(m)||_pwLiveGone(m)) return;
     const pre=_pwPregameWhales(k);
     const label=_pwEventLabel(k,Object.keys(m.shares||{}),m.league);
     (m.whales||[]).forEach(w=>{
