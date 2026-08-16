@@ -1,14 +1,14 @@
 {
- "n": 405,
+ "n": 410,
  "minOdds": 1.35,
- "moneyHitRate": 0.578,
- "priceHitRate": 0.575,
- "brierMoney": 0.5183,
- "brierPrice": 0.4934,
+ "moneyHitRate": 0.576,
+ "priceHitRate": 0.576,
+ "brierMoney": 0.5193,
+ "brierPrice": 0.494,
  "disagree": {
-  "n": 17,
+  "n": 18,
   "moneyWon": 4,
-  "priceWon": 3,
+  "priceWon": 4,
   "neither": 10
  },
  "verdict": "preis_besser",
@@ -25,8 +25,8 @@
    "league": "ESPORTS",
    "n": 166,
    "moneyHitRate": 0.62,
-   "brierMoney": 0.4603,
-   "brierPrice": 0.4603,
+   "brierMoney": 0.4597,
+   "brierPrice": 0.4597,
    "verdict": "gleichauf"
   },
   {
@@ -39,10 +39,10 @@
   },
   {
    "league": "TENNIS",
-   "n": 52,
-   "moneyHitRate": 0.654,
-   "brierMoney": 0.4436,
-   "brierPrice": 0.4436,
+   "n": 53,
+   "moneyHitRate": 0.642,
+   "brierMoney": 0.4456,
+   "brierPrice": 0.4456,
    "verdict": "gleichauf"
   },
   {
@@ -65,8 +65,8 @@
    "league": "SOCCER",
    "n": 59,
    "moneyHitRate": 0.441,
-   "brierMoney": 0.7751,
-   "brierPrice": 0.632,
+   "brierMoney": 0.7608,
+   "brierPrice": 0.6221,
    "verdict": "preis_besser"
   },
   {
@@ -79,6 +79,18 @@
   }
  ],
  "rows": [
+  {
+   "key": "lal-rrc-vil-2026-08-16",
+   "league": "LA-LIGA",
+   "winner": "Draw (Real Racing Club vs. Villarreal CF)",
+   "moneyFav": "Villarreal CF",
+   "priceFav": "Villarreal CF",
+   "moneyShare": 0.942,
+   "priceProb": 0.498,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 1243834
+  },
   {
    "key": "cs2-vit-100t-2026-08-12",
    "league": "ESPORTS",
@@ -258,6 +270,18 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 346573
+  },
+  {
+   "key": "lal-rrc-vil-2026-08-16-exact-score",
+   "league": "LA-LIGA",
+   "winner": "Real Racing Club 2 - 2 Villarreal CF",
+   "moneyFav": "Real Racing Club 0 - 0 Villarreal CF",
+   "priceFav": "Any Other Score",
+   "moneyShare": 0.514,
+   "priceProb": 0.142,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 338008
   },
   {
    "key": "cs2-furia-9z-2026-08-15",
@@ -534,33 +558,9 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 220024
-  },
-  {
-   "key": "mlb-cle-cws-2026-08-09",
-   "league": "MLB",
-   "winner": "Chicago White Sox",
-   "moneyFav": "Cleveland Guardians",
-   "priceFav": "Cleveland Guardians",
-   "moneyShare": 0.545,
-   "priceProb": 0.545,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 219080
-  },
-  {
-   "key": "mlb-oak-bos-2026-08-09",
-   "league": "MLB",
-   "winner": "Athletics",
-   "moneyFav": "Boston Red Sox",
-   "priceFav": "Boston Red Sox",
-   "moneyShare": 0.675,
-   "priceProb": 0.675,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 217187
   }
  ],
- "generatedAt": "2026-08-16T17:05:26.148821+00:00",
+ "generatedAt": "2026-08-16T17:36:30.859516+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -568,12 +568,12 @@
   "nfl": 800,
   "mlb": 579,
   "nhl": 403,
-  "mls": 757,
+  "mls": 758,
   "epl": 509,
   "soccer": 800,
-  "tennis": 584,
+  "tennis": 590,
   "ucl": 501,
-  "la-liga": 565,
+  "la-liga": 559,
   "bundesliga": 450,
   "serie-a": 37,
   "ligue-1": 509,
@@ -583,7 +583,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 577,
+  "esports": 574,
   "cs2": 405,
   "lol": 373,
   "dota": 9,
@@ -595,12 +595,13 @@
   "f1": 354,
   "cricket": 525,
   "allsvenskan": 1,
-  "austria-bundesliga": 154,
+  "austria-bundesliga": 159,
+  "bulgaria-parva-liga": 201,
   "bundesliga-2": 444,
   "champions-league": 295,
   "champions-league-final": 12,
   "denmark-superliga": 425,
-  "efl-championship": 585,
+  "efl-championship": 582,
   "english-premier-league": 2,
   "europa-conference-league": 691,
   "europa-league": 173,
@@ -611,20 +612,21 @@
   "ligue-2": 518,
   "naitons-league": 1,
   "nations-league": 25,
-  "norway-eliteserien": 447,
+  "norway-eliteserien": 445,
   "poland-ekstraklasa": 210,
   "premier-league": 508,
   "saudi-professional-league": 572,
-  "scotland-league-cup": 164,
+  "scotland-league-cup": 159,
   "serbian-superliga": 174,
   "serie-b": 507,
+  "slovenia-prvaliga": 132,
   "sweden-allsvenskan": 414,
   "uefa-champions-league": 16,
   "uefa-conference-league": 6,
   "uefa-europa-league": 8,
   "uefa-nations-league": 35,
   "uefa-womens-champions-league": 1,
-  "ukraine-premier-liha": 425
+  "ukraine-premier-liha": 424
  },
  "sweepStats": {
   "sweepOpen": 500,
