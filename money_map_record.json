@@ -1,23 +1,23 @@
 {
-"generatedAt": "2026-08-16T14:58:12.241248+00:00",
+"generatedAt": "2026-08-16T15:30:53.926184+00:00",
 "byVerdict": {
 "konsens": {
-"n": 124,
-"wins": 94,
-"hitRate": 0.7581,
-"polyN": 113,
-"polyWins": 83,
-"polyHitRate": 0.7345,
+"n": 130,
+"wins": 99,
+"hitRate": 0.7615,
+"polyN": 118,
+"polyWins": 87,
+"polyHitRate": 0.7373,
 "pinnN": 8,
 "pinnHitRate": 0.875
 },
 "uneinig": {
-"n": 41,
+"n": 42,
 "wins": 10,
-"hitRate": 0.2439,
-"polyN": 34,
+"hitRate": 0.2381,
+"polyN": 35,
 "polyWins": 8,
-"polyHitRate": 0.2353,
+"polyHitRate": 0.2286,
 "pinnN": 18,
 "pinnHitRate": 0.6111
 },
@@ -68,6 +68,11 @@
 "wins": 5,
 "hitRate": 0.7143
 },
+"Dutch Eredivisie": {
+"n": 6,
+"wins": 5,
+"hitRate": 0.8333
+},
 "Japanese J League": {
 "n": 6,
 "wins": 5,
@@ -93,17 +98,17 @@
 "wins": 3,
 "hitRate": 0.75
 },
-"Dutch Eredivisie": {
-"n": 4,
-"wins": 4,
-"hitRate": 1.0
-},
 "Italian Coppa Italia": {
 "n": 4,
 "wins": 4,
 "hitRate": 1.0
 },
 "South Korean K1 League": {
+"n": 4,
+"wins": 3,
+"hitRate": 0.75
+},
+"Swedish Allsvenskan": {
 "n": 4,
 "wins": 3,
 "hitRate": 0.75
@@ -163,6 +168,11 @@
 "wins": 2,
 "hitRate": 1.0
 },
+"Danish Superliga": {
+"n": 2,
+"wins": 2,
+"hitRate": 1.0
+},
 "English Sky Bet League 1": {
 "n": 2,
 "wins": 2,
@@ -173,17 +183,17 @@
 "wins": 1,
 "hitRate": 0.5
 },
+"Norwegian Eliteserien": {
+"n": 2,
+"wins": 1,
+"hitRate": 0.5
+},
 "Other Competitions Soccer": {
 "n": 2,
 "wins": 1,
 "hitRate": 0.5
 },
 "Spanish La Liga": {
-"n": 2,
-"wins": 1,
-"hitRate": 0.5
-},
-"Swedish Allsvenskan": {
 "n": 2,
 "wins": 1,
 "hitRate": 0.5
@@ -233,20 +243,10 @@
 "wins": 1,
 "hitRate": 1.0
 },
-"Danish Superliga": {
-"n": 1,
-"wins": 1,
-"hitRate": 1.0
-},
 "Ecuadorian Serie A": {
 "n": 1,
 "wins": 0,
 "hitRate": 0.0
-},
-"Norwegian Eliteserien": {
-"n": 1,
-"wins": 1,
-"hitRate": 1.0
 },
 "Polish Ekstraklasa": {
 "n": 1,
@@ -283,6 +283,11 @@
 "wins": 1,
 "hitRate": 1.0
 },
+"Ukrainian Premier League": {
+"n": 1,
+"wins": 1,
+"hitRate": 1.0
+},
 "Uruguayan Primera Division": {
 "n": 1,
 "wins": 1,
@@ -291,25 +296,158 @@
 },
 "byStrength": {
 "strong": {
-"n": 78,
-"wins": 61,
-"hitRate": 0.7821
+"n": 84,
+"wins": 65,
+"hitRate": 0.7738
 },
 "weak": {
-"n": 56,
-"wins": 26,
-"hitRate": 0.4643
+"n": 57,
+"wins": 27,
+"hitRate": 0.4737
 }
 },
 "divergence": {
-"n": 41,
+"n": 42,
 "betfairWins": 10,
-"betfairRate": 0.2439,
-"polyN": 34,
+"betfairRate": 0.2381,
+"polyN": 35,
 "polyWins": 8,
-"polyRate": 0.2353
+"polyRate": 0.2286
 },
 "recent": [
+{
+"matchId": "35916763",
+"home": "Feyenoord",
+"away": "Go Ahead Eagles",
+"league": "Dutch Eredivisie",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Feyenoord",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-08-16T12:30:00Z",
+"settledAt": "2026-08-16T15:30:53.760436+00:00"
+},
+{
+"matchId": "35916766",
+"home": "FC Twente",
+"away": "PEC Zwolle",
+"league": "Dutch Eredivisie",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "FC Twente",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-08-16T12:30:00Z",
+"settledAt": "2026-08-16T15:30:53.760436+00:00"
+},
+{
+"matchId": "35921147",
+"home": "Aalesunds",
+"away": "Valerenga",
+"league": "Norwegian Eliteserien",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Aalesunds",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+5,
+5
+],
+"kickoff": "2026-08-16T12:30:00Z",
+"settledAt": "2026-08-16T15:30:53.760436+00:00"
+},
+{
+"matchId": "35934876",
+"home": "FC Kharkiv",
+"away": "Shakhtar",
+"league": "Ukrainian Premier League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Shakhtar",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-08-16T12:30:00Z",
+"settledAt": "2026-08-16T15:30:53.760436+00:00"
+},
+{
+"matchId": "35921143",
+"home": "Brommapojkarna",
+"away": "Orgryte",
+"league": "Swedish Allsvenskan",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Brommapojkarna",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-08-16T12:00:00Z",
+"settledAt": "2026-08-16T15:09:16.566010+00:00"
+},
+{
+"matchId": "35920910",
+"home": "Degerfors",
+"away": "IFK Goteborg",
+"league": "Swedish Allsvenskan",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Degerfors",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+0
+],
+"kickoff": "2026-08-16T12:00:00Z",
+"settledAt": "2026-08-16T15:09:16.566010+00:00"
+},
+{
+"matchId": "35913649",
+"home": "FC Nordsjaelland",
+"away": "Silkeborg",
+"league": "Danish Superliga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "FC Nordsjaelland",
+"polySide": null,
+"winner": "home",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-08-16T12:00:00Z",
+"settledAt": "2026-08-16T15:09:16.566010+00:00"
+},
 {
 "matchId": "35918751",
 "home": "Malaysia",
@@ -936,145 +1074,12 @@
 ],
 "kickoff": "2026-08-15T21:30:00Z",
 "settledAt": "2026-08-16T00:43:34.676982+00:00"
-},
-{
-"matchId": "35922864",
-"home": "Guayaquil City",
-"away": "Libertad FC",
-"league": "Ecuadorian Serie A",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Libertad FC",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-08-15T21:30:00Z",
-"settledAt": "2026-08-16T00:43:34.676982+00:00"
-},
-{
-"matchId": "35933548",
-"home": "Guabira",
-"away": "The Strongest",
-"league": "Bolivian Liga de Futbol Profesional",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Guabira",
-"polySide": "away",
-"winner": "home",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-08-15T21:15:00Z",
-"settledAt": "2026-08-16T00:28:32.351084+00:00"
-},
-{
-"matchId": "35922857",
-"home": "CD Los Chankas",
-"away": "Melgar",
-"league": "Peruvian Primera Division",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Melgar",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-3
-],
-"kickoff": "2026-08-15T20:30:00Z",
-"settledAt": "2026-08-15T23:33:38.429530+00:00"
-},
-{
-"matchId": "35922886",
-"home": "Deportes Limache",
-"away": "Universidad de Chile",
-"league": "Chilean Primera Division",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Universidad de Chile",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-3
-],
-"kickoff": "2026-08-15T21:30:00Z",
-"settledAt": "2026-08-15T23:28:28.768918+00:00"
-},
-{
-"matchId": "35932979",
-"home": "Amazonas FC",
-"away": "Botafogo PB",
-"league": "Brazilian Serie C",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Botafogo PB",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-08-15T20:00:00Z",
-"settledAt": "2026-08-15T22:00:27.714334+00:00"
-},
-{
-"matchId": "35780314",
-"home": "Sevilla",
-"away": "Rayo Vallecano",
-"league": "Spanish La Liga",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Rayo Vallecano",
-"polySide": "home",
-"winner": "home",
-"moneyWin": false,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-08-15T19:30:00Z",
-"settledAt": "2026-08-15T21:49:34.166922+00:00"
-},
-{
-"matchId": "35918593",
-"home": "Oud-Heverlee Leuven",
-"away": "Club Brugge",
-"league": "Belgian Pro League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Club Brugge",
-"polySide": null,
-"winner": "away",
-"moneyWin": true,
-"polyWin": null,
-"ftScore": [
-0,
-3
-],
-"kickoff": "2026-08-15T18:45:00Z",
-"settledAt": "2026-08-15T21:49:34.166922+00:00"
 }
 ],
 "global": {
-"n": 167,
-"wins": 105,
-"hitRate": 0.6287
+"n": 174,
+"wins": 110,
+"hitRate": 0.6322
 },
-"pending": 22
+"pending": 20
 }
