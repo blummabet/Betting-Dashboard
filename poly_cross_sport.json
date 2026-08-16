@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-16T21:56:39.057171+00:00",
+ "generatedAt": "2026-08-16T22:37:11.621599+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -8,14 +8,14 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 408,
- "pinnKeys": 256,
+ "polyRowsSeen": 406,
+ "pinnKeys": 254,
  "matched": 198,
  "footballRows": 192,
- "crossRows": 216,
+ "crossRows": 214,
  "footballSkippedStale": 41,
  "seenBySport": {
-  "americanfootball_nfl": 128,
+  "americanfootball_nfl": 126,
   "baseball_mlb": 86,
   "boxing_boxing": 2,
   "soccer_mls": 99,
@@ -27,22 +27,50 @@
   "soccer_liga": 93
  },
  "trackRecord": {
-  "tracked": 110,
+  "tracked": 112,
   "converged": 21
  },
  "discrepancies": [
+  {
+   "id": "soccer_mls|newyorkcityfc-philadelphiaunion|hw",
+   "sport": "soccer_mls",
+   "event": "New York City FC vs Philadelphia Union",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 52.5,
+   "pinnPP": 38.6,
+   "gapPP": 13.95,
+   "vol": 613869,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-16T22:37:11.621416+00:00"
+  },
+  {
+   "id": "soccer_mls|newyorkcityfc-philadelphiaunion|aw",
+   "sport": "soccer_mls",
+   "event": "New York City FC vs Philadelphia Union",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 24.0,
+   "pinnPP": 35.5,
+   "gapPP": -11.51,
+   "vol": 613869,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-16T22:37:11.621416+00:00"
+  },
   {
    "id": "baseball_mlb|athletics-texasrangers|texasrangers",
    "sport": "baseball_mlb",
    "event": "Texas Rangers vs Athletics",
    "market": "Moneyline",
    "outcome": "Texas Rangers",
-   "polyPP": 53.5,
-   "pinnPP": 46.4,
-   "gapPP": 7.15,
-   "vol": 656118,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": 34.92,
+   "polyPP": 2.4,
+   "pinnPP": 10.6,
+   "gapPP": -8.17,
+   "vol": 729994,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 33.9,
    "firstSeen": "2026-08-15T03:05:40.716634+00:00"
   },
   {
@@ -51,41 +79,13 @@
    "event": "Texas Rangers vs Athletics",
    "market": "Moneyline",
    "outcome": "Athletics",
-   "polyPP": 46.5,
-   "pinnPP": 53.6,
-   "gapPP": -7.15,
-   "vol": 656118,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": 34.92,
-   "firstSeen": "2026-08-15T03:05:40.716634+00:00"
-  },
-  {
-   "id": "baseball_mlb|coloradorockies-sanfranciscogiants|coloradorockies",
-   "sport": "baseball_mlb",
-   "event": "Colorado Rockies vs San Francisco Giants",
-   "market": "Moneyline",
-   "outcome": "Colorado Rockies",
-   "polyPP": 36.5,
-   "pinnPP": 30.4,
-   "gapPP": 6.06,
-   "vol": 228632,
+   "polyPP": 97.6,
+   "pinnPP": 89.4,
+   "gapPP": 8.17,
+   "vol": 729994,
    "richtung": "Poly zu hoch → faden",
-   "convergePP": 1.27,
-   "firstSeen": "2026-08-14T23:37:46.387855+00:00"
-  },
-  {
-   "id": "baseball_mlb|coloradorockies-sanfranciscogiants|sanfranciscogiants",
-   "sport": "baseball_mlb",
-   "event": "Colorado Rockies vs San Francisco Giants",
-   "market": "Moneyline",
-   "outcome": "San Francisco Giants",
-   "polyPP": 63.5,
-   "pinnPP": 69.6,
-   "gapPP": -6.06,
-   "vol": 228632,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": 1.27,
-   "firstSeen": "2026-08-14T23:37:46.387855+00:00"
+   "convergePP": 33.9,
+   "firstSeen": "2026-08-15T03:05:40.716634+00:00"
   }
  ]
 }
