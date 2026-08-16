@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-16T22:58:07.050649+00:00",
+ "generatedAt": "2026-08-16T23:34:39.084492+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -8,26 +8,56 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 406,
- "pinnKeys": 248,
- "matched": 192,
- "footballRows": 192,
+ "polyRowsSeen": 409,
+ "pinnKeys": 251,
+ "matched": 197,
+ "footballRows": 195,
  "crossRows": 214,
- "footballSkippedStale": 41,
+ "footballSkippedStale": 40,
  "seenBySport": {
   "americanfootball_nfl": 126,
   "baseball_mlb": 86,
   "boxing_boxing": 2,
-  "soccer_mls": 99,
+  "soccer_mls": 102,
   "soccer_liga": 93
  },
  "matchedBySport": {
-  "soccer_mls": 99,
+  "baseball_mlb": 2,
+  "soccer_mls": 102,
   "soccer_liga": 93
  },
  "trackRecord": {
-  "tracked": 112,
+  "tracked": 114,
   "converged": 21
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|houstonastros-seattlemariners|seattlemariners",
+   "sport": "baseball_mlb",
+   "event": "Seattle Mariners vs Houston Astros",
+   "market": "Moneyline",
+   "outcome": "Seattle Mariners",
+   "polyPP": 59.5,
+   "pinnPP": 43.8,
+   "gapPP": 15.69,
+   "vol": 462628,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-16T23:34:39.084118+00:00"
+  },
+  {
+   "id": "baseball_mlb|houstonastros-seattlemariners|houstonastros",
+   "sport": "baseball_mlb",
+   "event": "Seattle Mariners vs Houston Astros",
+   "market": "Moneyline",
+   "outcome": "Houston Astros",
+   "polyPP": 40.5,
+   "pinnPP": 56.2,
+   "gapPP": -15.69,
+   "vol": 462628,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-16T23:34:39.084118+00:00"
+  }
+ ]
 }
