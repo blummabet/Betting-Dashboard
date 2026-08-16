@@ -940,8 +940,11 @@
     var whBody = wh.length ? wh.map(function (w) {
       var live = (w.hrs != null && w.hrs < 0) ? _MD_LIVE : '';
       var hrs = (w.hrs != null && w.hrs >= 0) ? (w.hrs < 1 ? '<1h' : Math.round(w.hrs) + 'h') : '';
-      return rowEl(fl(_flagFrom(w.country, w.league, w.league)) + _mdPolyLink(w.key, esc(w.side || '?')) + live, usd(w.usd), A.poly,
-        esc(String(w.league || '')) + (hrs ? ' · in ' + hrs : ''), meter(whMax ? (w.usd / whMax) * 100 : 0, A.poly));
+      // 16.08.2026 (Lucas): Spielkontext statt nur "Over"/"Under" — Spiel aus dem Basis-Event aufloesen.
+      var _gm = (typeof _pwCache !== 'undefined' && _pwCache) ? ((_pwCache.broadLiveNow && _pwCache.broadLiveNow[w.key]) || (_pwCache.broadLive && _pwCache.broadLive[w.key])) : null;
+      var _gn = (_gm && typeof _pwPlayLabel === 'function') ? _pwPlayLabel(w.key, Object.keys(_gm.shares || {}).map(function (s) { return { s: s }; })) : '';
+      return rowEl(fl(_flagFrom(w.country, w.league, w.league)) + _mdPolyLink(w.key, esc((_gn || w.side || '?').slice(0, 34))) + live, usd(w.usd), A.poly,
+        '\u2192 ' + esc(String(w.side || '?')) + ' \u00b7 ' + esc(String(w.league || '')) + (hrs ? ' \u00b7 in ' + hrs : ''), meter(whMax ? (w.usd / whMax) * 100 : 0, A.poly));
     }).join('') : empty('Keine großen Whale-Bets gerade (ab ' + usd(MD_WHALE_MIN_USD) + ') — ruhiger Slate.');
 
     // Sharp — Divergenzbalken (Steam-Richtung)
