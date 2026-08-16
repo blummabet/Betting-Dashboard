@@ -86,13 +86,8 @@
       "label": "Pinnacle-1X2 vollständig + plausibel",
       "severity": "warn",
       "ok": false,
-      "nFail": 8,
+      "nFail": 3,
       "failures": [
-        "1602-9569: 1X2 unvollständig hw=None dr=None aw=None",
-        "1613-1614: 1X2 unvollständig hw=None dr=None aw=None",
-        "1615-1609: 1X2 unvollständig hw=None dr=None aw=None",
-        "1611-20787: 1X2 unvollständig hw=None dr=None aw=None",
-        "1612-1608: 1X2 unvollständig hw=None dr=None aw=None",
         "1595-16489: 1X2 unvollständig hw=None dr=None aw=None",
         "1606-1597: 1X2 unvollständig hw=None dr=None aw=None",
         "1617-25484: 1X2 unvollständig hw=None dr=None aw=None"
@@ -187,7 +182,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "35/37 mit AH · 37/37 mit Public-O/U."
+      "note": "31/31 mit AH · 31/31 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -266,12 +261,13 @@
       "label": "Public-Konsens (Soft-Books) vorhanden",
       "severity": "warn",
       "ok": false,
-      "nFail": 4,
+      "nFail": 5,
       "failures": [
         "20787-1610: kein public_hw",
         "1600-16489: kein public_hw",
         "1612-1603: kein public_hw",
-        "1609-1600: kein public_hw"
+        "1609-1600: kein public_hw",
+        "1616-25484: kein public_hw"
       ],
       "note": "Ohne public_* feuert public_static_bias nicht."
     },
@@ -494,10 +490,17 @@
       "label": "Beendete Spiele haben Match-Stats (xG)",
       "severity": "warn",
       "ok": false,
-      "nFail": 2,
+      "nFail": 9,
       "failures": [
         "2242-1596: beendet, aber keine result.stats (xG)",
-        "9568-1613: beendet, aber keine result.stats (xG)"
+        "9568-1613: beendet, aber keine result.stats (xG)",
+        "1598-2242: beendet, aber keine result.stats (xG)",
+        "1601-1609: beendet, aber keine result.stats (xG)",
+        "1608-1602: beendet, aber keine result.stats (xG)",
+        "1614-1615: beendet, aber keine result.stats (xG)",
+        "18310-1613: beendet, aber keine result.stats (xG)",
+        "1600-1605: beendet, aber keine result.stats (xG)",
+        "9569-9568: beendet, aber keine result.stats (xG)"
       ],
       "note": "Ohne Match-xG lernt der Bayesian-Loop nur aus Glück/Pech, nicht aus dem Prozess."
     },
@@ -539,5 +542,5 @@
     }
   ],
   "nFail": 5,
-  "generatedAt": "2026-08-15T19:31:01.577030+00:00"
+  "generatedAt": "2026-08-16T07:35:12.610830+00:00"
 }

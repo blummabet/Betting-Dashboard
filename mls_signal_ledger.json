@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-08-15T19:31:01Z",
-    "total_records": 15
+    "updated_at": "2026-08-16T07:35:12Z",
+    "total_records": 18
   },
   "records": [
     {
@@ -606,6 +606,125 @@
       "engineVersion": "v1",
       "clvPP": 2.82,
       "processVerdict": "DESERVED_LOSS"
+    },
+    {
+      "key": "MLS-19-1596-20787|Doppelte Chance — X2",
+      "matchKey": "MLS-19-1596-20787",
+      "market": "Doppelte Chance — X2",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "h2h_pattern",
+          "score": 1.0
+        },
+        {
+          "name": "chance_creation",
+          "score": 1.97
+        },
+        {
+          "name": "form_rating",
+          "score": 5.0
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": -0.55
+        },
+        {
+          "name": "mls_travel",
+          "score": -0.6
+        }
+      ],
+      "resolvedAt": "2026-08-16T07:35:04Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -2.6,
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "MLS-19-1608-1602|Doppelte Chance — X2",
+      "matchKey": "MLS-19-1608-1602",
+      "market": "Doppelte Chance — X2",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 0.97
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.46
+        },
+        {
+          "name": "chance_creation",
+          "score": 1.68
+        },
+        {
+          "name": "form_rating",
+          "score": 2.03
+        },
+        {
+          "name": "league_pressure",
+          "score": 0.35
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 0.86
+        },
+        {
+          "name": "transfer_shift",
+          "score": 1.2
+        },
+        {
+          "name": "mls_travel",
+          "score": -0.62
+        }
+      ],
+      "resolvedAt": "2026-08-16T07:35:04Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": false,
+      "engineVersion": "v1",
+      "clvPP": -4.14
+    },
+    {
+      "key": "MLS-19-9569-9568|Doppelte Chance — X2",
+      "matchKey": "MLS-19-9569-9568",
+      "market": "Doppelte Chance — X2",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 1.44
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 1.2
+        },
+        {
+          "name": "chance_creation",
+          "score": 3.64
+        },
+        {
+          "name": "form_rating",
+          "score": -0.84
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 0.6
+        },
+        {
+          "name": "venue_form",
+          "score": 1.6
+        }
+      ],
+      "resolvedAt": "2026-08-16T07:35:04Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -4.28
     }
   ]
 }
