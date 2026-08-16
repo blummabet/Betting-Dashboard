@@ -1,23 +1,23 @@
 {
-"generatedAt": "2026-08-16T15:15:05.172921+00:00",
+"generatedAt": "2026-08-16T15:30:53.926184+00:00",
 "byVerdict": {
 "konsens": {
-"n": 127,
-"wins": 97,
-"hitRate": 0.7638,
-"polyN": 115,
-"polyWins": 85,
-"polyHitRate": 0.7391,
+"n": 130,
+"wins": 99,
+"hitRate": 0.7615,
+"polyN": 118,
+"polyWins": 87,
+"polyHitRate": 0.7373,
 "pinnN": 8,
 "pinnHitRate": 0.875
 },
 "uneinig": {
-"n": 41,
+"n": 42,
 "wins": 10,
-"hitRate": 0.2439,
-"polyN": 34,
+"hitRate": 0.2381,
+"polyN": 35,
 "polyWins": 8,
-"polyHitRate": 0.2353,
+"polyHitRate": 0.2286,
 "pinnN": 18,
 "pinnHitRate": 0.6111
 },
@@ -68,6 +68,11 @@
 "wins": 5,
 "hitRate": 0.7143
 },
+"Dutch Eredivisie": {
+"n": 6,
+"wins": 5,
+"hitRate": 0.8333
+},
 "Japanese J League": {
 "n": 6,
 "wins": 5,
@@ -92,11 +97,6 @@
 "n": 4,
 "wins": 3,
 "hitRate": 0.75
-},
-"Dutch Eredivisie": {
-"n": 4,
-"wins": 4,
-"hitRate": 1.0
 },
 "Italian Coppa Italia": {
 "n": 4,
@@ -183,6 +183,11 @@
 "wins": 1,
 "hitRate": 0.5
 },
+"Norwegian Eliteserien": {
+"n": 2,
+"wins": 1,
+"hitRate": 0.5
+},
 "Other Competitions Soccer": {
 "n": 2,
 "wins": 1,
@@ -243,11 +248,6 @@
 "wins": 0,
 "hitRate": 0.0
 },
-"Norwegian Eliteserien": {
-"n": 1,
-"wins": 1,
-"hitRate": 1.0
-},
 "Polish Ekstraklasa": {
 "n": 1,
 "wins": 1,
@@ -283,6 +283,11 @@
 "wins": 1,
 "hitRate": 1.0
 },
+"Ukrainian Premier League": {
+"n": 1,
+"wins": 1,
+"hitRate": 1.0
+},
 "Uruguayan Primera Division": {
 "n": 1,
 "wins": 1,
@@ -291,9 +296,9 @@
 },
 "byStrength": {
 "strong": {
-"n": 80,
-"wins": 63,
-"hitRate": 0.7875
+"n": 84,
+"wins": 65,
+"hitRate": 0.7738
 },
 "weak": {
 "n": 57,
@@ -302,14 +307,90 @@
 }
 },
 "divergence": {
-"n": 41,
+"n": 42,
 "betfairWins": 10,
-"betfairRate": 0.2439,
-"polyN": 34,
+"betfairRate": 0.2381,
+"polyN": 35,
 "polyWins": 8,
-"polyRate": 0.2353
+"polyRate": 0.2286
 },
 "recent": [
+{
+"matchId": "35916763",
+"home": "Feyenoord",
+"away": "Go Ahead Eagles",
+"league": "Dutch Eredivisie",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Feyenoord",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-08-16T12:30:00Z",
+"settledAt": "2026-08-16T15:30:53.760436+00:00"
+},
+{
+"matchId": "35916766",
+"home": "FC Twente",
+"away": "PEC Zwolle",
+"league": "Dutch Eredivisie",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "FC Twente",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-08-16T12:30:00Z",
+"settledAt": "2026-08-16T15:30:53.760436+00:00"
+},
+{
+"matchId": "35921147",
+"home": "Aalesunds",
+"away": "Valerenga",
+"league": "Norwegian Eliteserien",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Aalesunds",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+5,
+5
+],
+"kickoff": "2026-08-16T12:30:00Z",
+"settledAt": "2026-08-16T15:30:53.760436+00:00"
+},
+{
+"matchId": "35934876",
+"home": "FC Kharkiv",
+"away": "Shakhtar",
+"league": "Ukrainian Premier League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Shakhtar",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-08-16T12:30:00Z",
+"settledAt": "2026-08-16T15:30:53.760436+00:00"
+},
 {
 "matchId": "35921143",
 "home": "Brommapojkarna",
@@ -993,88 +1074,12 @@
 ],
 "kickoff": "2026-08-15T21:30:00Z",
 "settledAt": "2026-08-16T00:43:34.676982+00:00"
-},
-{
-"matchId": "35922864",
-"home": "Guayaquil City",
-"away": "Libertad FC",
-"league": "Ecuadorian Serie A",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Libertad FC",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-08-15T21:30:00Z",
-"settledAt": "2026-08-16T00:43:34.676982+00:00"
-},
-{
-"matchId": "35933548",
-"home": "Guabira",
-"away": "The Strongest",
-"league": "Bolivian Liga de Futbol Profesional",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Guabira",
-"polySide": "away",
-"winner": "home",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-08-15T21:15:00Z",
-"settledAt": "2026-08-16T00:28:32.351084+00:00"
-},
-{
-"matchId": "35922857",
-"home": "CD Los Chankas",
-"away": "Melgar",
-"league": "Peruvian Primera Division",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Melgar",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-3
-],
-"kickoff": "2026-08-15T20:30:00Z",
-"settledAt": "2026-08-15T23:33:38.429530+00:00"
-},
-{
-"matchId": "35922886",
-"home": "Deportes Limache",
-"away": "Universidad de Chile",
-"league": "Chilean Primera Division",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Universidad de Chile",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-3
-],
-"kickoff": "2026-08-15T21:30:00Z",
-"settledAt": "2026-08-15T23:28:28.768918+00:00"
 }
 ],
 "global": {
-"n": 170,
-"wins": 108,
-"hitRate": 0.6353
+"n": 174,
+"wins": 110,
+"hitRate": 0.6322
 },
-"pending": 21
+"pending": 20
 }
