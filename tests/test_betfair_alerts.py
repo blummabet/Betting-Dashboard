@@ -257,10 +257,6 @@ class TestCollect(unittest.TestCase):
         self.assertEqual(kinds, ["fresh", "ht"])
 
 
-if __name__ == "__main__":
-    unittest.main(verbosity=2)
-
-
 class TestFavoriteFilter(unittest.TestCase):
     def test_ht_skips_near_lock_favorite(self):
         # 100% auf einem Ausgang, aber Quote 1.05 (fuehrt schon) -> sinnlos, kein Push
@@ -571,6 +567,22 @@ class TestConsensusBlock(unittest.TestCase):
         self.assertEqual(BA._consensus_for_push({"matchId": "3"}, cidx), {"verdict": "no_anchor", "agree": None})
         self.assertIsNone(BA._consensus_for_push({"matchId": "99"}, cidx))   # kein Eintrag
         self.assertIsNone(BA._consensus_for_push({"matchId": "1"}, None))
+
+
+class TestPubUnderGoals(unittest.TestCase):
+    """16.08.2026 (Lucas): Under-Tore-Über/Unter gehoert NIE in den Public-Kanal — live UND vor Anpfiff
+    (der Live-Riegel griff nur in-play, Girona-v-Leganes-Under 2.5 vor Anpfiff rutschte durch)."""
+    def test_prematch_under_goals_blocked(self):
+        self.assertTrue(BA._pub_under_goals({"market": "Over/Under 2.5 Goals", "leadName": "Under 2.5 Goals"}))
+
+    def test_live_under_goals_blocked(self):
+        self.assertTrue(BA._pub_under_goals({"market": "First Half Goals 1.5", "leadLabel": "Under 1.5 Goals", "live": {"mins": 40}}))
+
+    def test_over_goals_kept(self):
+        self.assertFalse(BA._pub_under_goals({"market": "Over/Under 2.5 Goals", "leadName": "Over 2.5 Goals"}))
+
+    def test_match_odds_kept(self):
+        self.assertFalse(BA._pub_under_goals({"market": "Match Odds", "leadName": "Alpha"}))
 
 
 if __name__ == "__main__":
