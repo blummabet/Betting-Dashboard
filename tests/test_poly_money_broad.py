@@ -597,7 +597,12 @@ def test_laliga_slug_prefix_maps_to_LALIGA():
 
 def test_laliga_tag_in_scan():
     import poly_money_broad as M
-    assert "laliga" in M.SPORT_TAGS
+    # 16.08.2026 (Lucas): Poly-Gamma-Tag ist "la-liga" (aus Sevilla-Event bestaetigt), NICHT "laliga"
+    # (lieferte 0 Events). La Liga kam nur zufaellig ueber den Volumen-Sweep rein. Slug korrigiert.
+    assert "la-liga" in M.SPORT_TAGS
+    assert "laliga" not in M.SPORT_TAGS
+    for _lg in ("primeira-liga", "brazil-serie-a", "belgium-pro-league", "eredivisie", "super-lig"):
+        assert _lg in M.SPORT_TAGS, "fehlender Liga-Tag: " + _lg
 
 
 # ── 11.08.2026 (Lucas, Stufe 1 Live-Erfassung) ──────────────────────────────────────────────────
