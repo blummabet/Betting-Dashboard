@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-08-16T21:03:43.399261+00:00",
+"generatedAt": "2026-08-16T21:26:03.571315+00:00",
 "byVerdict": {
 "konsens": {
 "n": 154,
@@ -12,14 +12,14 @@
 "pinnHitRate": 0.875
 },
 "uneinig": {
-"n": 53,
+"n": 55,
 "wins": 12,
-"hitRate": 0.2264,
-"polyN": 44,
+"hitRate": 0.2182,
+"polyN": 45,
 "polyWins": 12,
-"polyHitRate": 0.2727,
-"pinnN": 26,
-"pinnHitRate": 0.5769
+"polyHitRate": 0.2667,
+"pinnN": 28,
+"pinnHitRate": 0.5714
 },
 "teil": {
 "n": 2,
@@ -78,6 +78,11 @@
 "wins": 5,
 "hitRate": 0.7143
 },
+"Italian Coppa Italia": {
+"n": 6,
+"wins": 5,
+"hitRate": 0.8333
+},
 "Japanese J League": {
 "n": 6,
 "wins": 5,
@@ -98,11 +103,6 @@
 "wins": 0,
 "hitRate": 0.0
 },
-"Italian Coppa Italia": {
-"n": 5,
-"wins": 5,
-"hitRate": 1.0
-},
 "Argentinian Primera Division": {
 "n": 4,
 "wins": 2,
@@ -117,6 +117,11 @@
 "n": 4,
 "wins": 2,
 "hitRate": 0.5
+},
+"Portuguese Primeira Liga": {
+"n": 4,
+"wins": 3,
+"hitRate": 0.75
 },
 "South Korean K1 League": {
 "n": 4,
@@ -174,11 +179,6 @@
 "hitRate": 1.0
 },
 "Polish Ekstraklasa": {
-"n": 3,
-"wins": 3,
-"hitRate": 1.0
-},
-"Portuguese Primeira Liga": {
 "n": 3,
 "wins": 3,
 "hitRate": 1.0
@@ -316,20 +316,58 @@
 "hitRate": 0.7909
 },
 "weak": {
-"n": 66,
+"n": 68,
 "wins": 28,
-"hitRate": 0.4242
+"hitRate": 0.4118
 }
 },
 "divergence": {
-"n": 53,
+"n": 55,
 "betfairWins": 12,
-"betfairRate": 0.2264,
-"polyN": 44,
+"betfairRate": 0.2182,
+"polyN": 45,
 "polyWins": 12,
-"polyRate": 0.2727
+"polyRate": 0.2667
 },
 "recent": [
+{
+"matchId": "35934964",
+"home": "Famalicao",
+"away": "Maritimo",
+"league": "Portuguese Primeira Liga",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Famalicao",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-08-16T19:30:00Z",
+"settledAt": "2026-08-16T21:26:03.568025+00:00"
+},
+{
+"matchId": "35931772",
+"home": "Lazio",
+"away": "Mantova",
+"league": "Italian Coppa Italia",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Lazio",
+"polySide": null,
+"winner": "away",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-08-16T19:15:00Z",
+"settledAt": "2026-08-16T21:15:36.409919+00:00"
+},
 {
 "matchId": "35868014",
 "home": "Pumas UNAM",
@@ -1051,50 +1089,12 @@
 ],
 "kickoff": "2026-08-16T12:30:00Z",
 "settledAt": "2026-08-16T15:30:53.760436+00:00"
-},
-{
-"matchId": "35934876",
-"home": "FC Kharkiv",
-"away": "Shakhtar",
-"league": "Ukrainian Premier League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Shakhtar",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-08-16T12:30:00Z",
-"settledAt": "2026-08-16T15:30:53.760436+00:00"
-},
-{
-"matchId": "35921143",
-"home": "Brommapojkarna",
-"away": "Orgryte",
-"league": "Swedish Allsvenskan",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Brommapojkarna",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-08-16T12:00:00Z",
-"settledAt": "2026-08-16T15:09:16.566010+00:00"
 }
 ],
 "global": {
-"n": 209,
+"n": 211,
 "wins": 133,
-"hitRate": 0.6364
+"hitRate": 0.6303
 },
-"pending": 11
+"pending": 13
 }
