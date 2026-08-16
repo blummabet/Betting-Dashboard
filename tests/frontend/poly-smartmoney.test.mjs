@@ -140,8 +140,9 @@ test('_pwEventLabel: echte Team-Namen bleiben „A vs B"', () => {
 test('_pwEventLabel: Ja/Nein-Markt → Name aus Slug, kein „No vs Yes"', () => {
   const w = win();
   assert.equal(w._pwEventLabel('mls-mim-mia-2026-07-25', ['No', 'Yes'], 'MLS'), 'MIM MIA');
+  // 16.08.2026 (Lucas): Prop-Suffix ("-exact-score" etc.) wird jetzt gestrippt -> kein "…Exact Score"-Leak mehr.
   assert.equal(w._pwEventLabel('ucl-agf-lep-2026-07-21-exact-score', ['Yes', 'No'], 'UCL'),
-               'AGF LEP Exact Score');
+               'AGF LEP');
   const out = w._pwEventLabel('mlb-pit-nyy-2026-07-20-player-props', ['No', 'Yes'], 'MLB');
   assert.doesNotMatch(out, /No|Yes/);
   assert.match(out, /PIT NYY/);
