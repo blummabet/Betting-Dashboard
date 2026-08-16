@@ -1,6 +1,6 @@
 {
-"generatedAt": "2026-08-16T09:59:29.045084+00:00",
-"count": 7,
+"generatedAt": "2026-08-16T10:32:27.737168+00:00",
+"count": 8,
 "rows": [
 {
 "matchId": "35937991",
@@ -13,18 +13,18 @@
 "betfair": {
 "side": "home",
 "name": "Yokohama FC",
-"sharePct": 47,
-"eur": 138639
+"sharePct": 59,
+"eur": 184074
 },
 "poly": {
 "side": "home",
 "name": "Yokohama FC",
-"sharePct": 83,
-"usd": 22953,
+"sharePct": 92,
+"usd": 31952,
 "src": "live"
 },
 "pinn": null,
-"mmStrong": false,
+"mmStrong": true,
 "nSources": 2
 },
 {
@@ -39,13 +39,13 @@
 "side": "away",
 "name": "Villarreal",
 "sharePct": 67,
-"eur": 78717
+"eur": 81690
 },
 "poly": {
 "side": "away",
 "name": "Villarreal CF",
 "sharePct": 46,
-"usd": 245116,
+"usd": 245258,
 "src": "upcoming"
 },
 "pinn": {
@@ -69,7 +69,7 @@
 "side": "draw",
 "name": "The Draw",
 "sharePct": 40,
-"eur": 77604
+"eur": 81015
 },
 "poly": {
 "side": "away",
@@ -83,24 +83,54 @@
 "nSources": 2
 },
 {
+"matchId": "35920367",
+"home": "ADO Den Haag",
+"away": "FC Groningen",
+"league": "Dutch Eredivisie",
+"live": true,
+"kickoff": "2026-08-16T10:15:00Z",
+"verdict": "teil",
+"betfair": {
+"side": "home",
+"name": "ADO Den Haag",
+"sharePct": 42,
+"eur": 54456
+},
+"poly": {
+"side": "home",
+"name": "ADO Den Haag",
+"sharePct": 89,
+"usd": 181328,
+"src": "live"
+},
+"pinn": {
+"fav": "home",
+"home": 0.3794,
+"draw": 0.2795,
+"away": 0.3411
+},
+"mmStrong": false,
+"nSources": 3
+},
+{
 "matchId": "35920295",
 "home": "Bucheon FC 1995",
 "away": "Jeonbuk Motors",
 "league": "South Korean K1 League",
-"live": false,
+"live": true,
 "kickoff": "2026-08-16T10:30:00Z",
 "verdict": "konsens",
 "betfair": {
 "side": "away",
 "name": "Jeonbuk Motors",
-"sharePct": 89,
-"eur": 34775
+"sharePct": 90,
+"eur": 46906
 },
 "poly": {
 "side": "away",
 "name": "Jeonbuk Hyundai Motors FC",
-"sharePct": 76,
-"usd": 27528,
+"sharePct": 74,
+"usd": 63936,
 "src": "close"
 },
 "pinn": null,
@@ -119,7 +149,7 @@
 "side": "away",
 "name": "Southampton",
 "sharePct": 62,
-"eur": 33850
+"eur": 36372
 },
 "poly": {
 "side": "away",
@@ -138,6 +168,31 @@
 "nSources": 3
 },
 {
+"matchId": "35920293",
+"home": "Incheon Utd",
+"away": "Gimcheon Sangmu",
+"league": "South Korean K1 League",
+"live": true,
+"kickoff": "2026-08-16T10:30:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "home",
+"name": "Incheon Utd",
+"sharePct": 83,
+"eur": 34608
+},
+"poly": {
+"side": "home",
+"name": "Incheon United FC",
+"sharePct": 97,
+"usd": 16885,
+"src": "close"
+},
+"pinn": null,
+"mmStrong": true,
+"nSources": 2
+},
+{
 "matchId": "35916763",
 "home": "Feyenoord",
 "away": "Go Ahead Eagles",
@@ -149,62 +204,38 @@
 "side": "home",
 "name": "Feyenoord",
 "sharePct": 74,
-"eur": 23622
+"eur": 24468
 },
 "poly": {
 "side": "home",
 "name": "Feyenoord Rotterdam",
 "sharePct": 87,
-"usd": 8159,
+"usd": 10318,
 "src": "close"
 },
 "pinn": {
 "fav": "home",
-"home": 0.7083,
-"draw": 0.1638,
-"away": 0.1279
+"home": 0.7086,
+"draw": 0.1647,
+"away": 0.1266
 },
 "mmStrong": true,
 "nSources": 3
-},
-{
-"matchId": "35920367",
-"home": "ADO Den Haag",
-"away": "FC Groningen",
-"league": "Dutch Eredivisie",
-"live": false,
-"kickoff": "2026-08-16T10:15:00Z",
-"verdict": "uneinig",
-"betfair": {
-"side": "away",
-"name": "FC Groningen",
-"sharePct": 35,
-"eur": 15235
-},
-"poly": {
-"side": "home",
-"name": "ADO Den Haag",
-"sharePct": 86,
-"usd": 116585,
-"src": "close"
-},
-"pinn": {
-"fav": "home",
-"home": 0.3739,
-"draw": 0.2675,
-"away": 0.3586
-},
-"mmStrong": false,
-"nSources": 3
 }
 ],
-"nameMatchMisses": 1,
+"nameMatchMisses": 2,
 "nameMatchMissList": [
 {
 "matchId": "35920294",
 "home": "Ulsan Hyundai Horang-i",
 "away": "Gangwon",
 "league": "South Korean K1 League"
+},
+{
+"matchId": "35941238",
+"home": "Ugyen Academy",
+"away": "Tensung FC",
+"league": "Bhutan Premier League"
 }
 ]
 }
