@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-08-16T01:46:42.945444+00:00",
+"generatedAt": "2026-08-16T02:00:16.506977+00:00",
 "byVerdict": {
 "konsens": {
 "n": 102,
@@ -12,14 +12,14 @@
 "pinnHitRate": 0.8
 },
 "uneinig": {
-"n": 33,
+"n": 35,
 "wins": 8,
-"hitRate": 0.2424,
-"polyN": 26,
+"hitRate": 0.2286,
+"polyN": 28,
 "polyWins": 7,
-"polyHitRate": 0.2692,
-"pinnN": 14,
-"pinnHitRate": 0.6429
+"polyHitRate": 0.25,
+"pinnN": 15,
+"pinnHitRate": 0.6667
 },
 "teil": {
 "n": 2,
@@ -98,6 +98,11 @@
 "wins": 2,
 "hitRate": 0.6667
 },
+"Chilean Primera Division": {
+"n": 3,
+"wins": 2,
+"hitRate": 0.6667
+},
 "Dutch Eredivisie": {
 "n": 3,
 "wins": 3,
@@ -132,11 +137,6 @@
 "n": 2,
 "wins": 0,
 "hitRate": 0.0
-},
-"Chilean Primera Division": {
-"n": 2,
-"wins": 2,
-"hitRate": 1.0
 },
 "English Sky Bet League 1": {
 "n": 2,
@@ -208,6 +208,11 @@
 "wins": 1,
 "hitRate": 1.0
 },
+"Mexican Liga MX": {
+"n": 1,
+"wins": 0,
+"hitRate": 0.0
+},
 "Norwegian Eliteserien": {
 "n": 1,
 "wins": 1,
@@ -276,20 +281,58 @@
 "hitRate": 0.8246
 },
 "weak": {
-"n": 47,
+"n": 49,
 "wins": 24,
-"hitRate": 0.5106
+"hitRate": 0.4898
 }
 },
 "divergence": {
-"n": 33,
+"n": 35,
 "betfairWins": 8,
-"betfairRate": 0.2424,
-"polyN": 26,
+"betfairRate": 0.2286,
+"polyN": 28,
 "polyWins": 7,
-"polyRate": 0.2692
+"polyRate": 0.25
 },
 "recent": [
+{
+"matchId": "35868101",
+"home": "Atlante",
+"away": "Toluca",
+"league": "Mexican Liga MX",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Toluca",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-08-15T23:00:00Z",
+"settledAt": "2026-08-16T02:00:16.357228+00:00"
+},
+{
+"matchId": "35922849",
+"home": "Everton De Vina",
+"away": "Audax Italiano",
+"league": "Chilean Primera Division",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Everton De Vina",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-16T00:00:00Z",
+"settledAt": "2026-08-16T02:00:16.357228+00:00"
+},
 {
 "matchId": "35868599",
 "home": "Charlotte FC",
@@ -1011,50 +1054,12 @@
 ],
 "kickoff": "2026-08-15T11:00:00Z",
 "settledAt": "2026-08-15T14:12:37.504023+00:00"
-},
-{
-"matchId": "35923730",
-"home": "Hertha Berlin",
-"away": "FC Heidenheim",
-"league": "German Bundesliga 2",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Hertha Berlin",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-4,
-1
-],
-"kickoff": "2026-08-15T11:00:00Z",
-"settledAt": "2026-08-15T14:12:37.504023+00:00"
-},
-{
-"matchId": "35916715",
-"home": "FC Seoul",
-"away": "Daejeon Citizen",
-"league": "South Korean K1 League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "FC Seoul",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-4,
-2
-],
-"kickoff": "2026-08-15T10:30:00Z",
-"settledAt": "2026-08-15T13:42:35.815674+00:00"
 }
 ],
 "global": {
-"n": 137,
+"n": 139,
 "wins": 89,
-"hitRate": 0.6496
+"hitRate": 0.6403
 },
-"pending": 10
+"pending": 9
 }
