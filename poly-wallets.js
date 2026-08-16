@@ -1294,7 +1294,7 @@ if(typeof window!=='undefined') window._pwOverNormTop=_pwOverNormTop;
 
 function _pwMoneyLive(live){
   const all=(live?Object.entries(live):[]).map(([k,m])=>({k,m}))
-    .filter(x=>x.m && x.m.resolved==null && x.m.shares && (x.m.totalUsd||0)>=5000 && !_pwKoStale(x.m));
+    .filter(x=>x.m && x.m.resolved==null && x.m.shares && Object.keys(x.m.shares).length && (x.m.totalUsd||0)>=5000 && !_pwKoStale(x.m));   // 16.08.2026 (Lucas): leere shares:{} (Volumen ohne Split, Capture-Luecke) raus -> kein Crash im Geld-Split
   const cats=new Set(all.map(x=>_pwSportCategory(x.m.league)));
   const rows=all.filter(x=>_pwSportPass(x.m.league))
     .sort((a,b)=>(b.m.totalUsd||0)-(a.m.totalUsd||0)).slice(0,30);
@@ -1306,7 +1306,7 @@ function _pwMoneyLive(live){
   const body=rows.map(({k,m})=>{
     const oc=Object.entries(m.shares||{}).map(([name,usd])=>({name,usd:Number(usd)||0}));
     const total=oc.reduce((s,o)=>s+o.usd,0)||1; oc.sort((a,b)=>b.usd-a.usd);
-    const fav=oc[0], favPct=Math.round(fav.usd/total*100);
+    const fav=oc[0]||{name:'—',usd:0}, favPct=Math.round(fav.usd/total*100);   // 16.08.2026 (Lucas): Guard wie _pwLiveCard/_pwNormRow — oc kann leer sein
     const favPrice=(m.prices&&m.prices[fav.name]!=null)?Math.round(m.prices[fav.name]*100)+'¢':'—';
     // Spiel-Spalte klickbar → direkt auf den Polymarket-Markt (Key ist der Event-Slug). 25.07.2026 (Lucas).
     const matchTxt=_pwEventLabel(k, oc.map(o=>o.name), m.league);
