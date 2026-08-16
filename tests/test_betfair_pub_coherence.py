@@ -32,17 +32,18 @@ class TestPubLiveDrift(unittest.TestCase):
         return a
 
     def test_live_drift_out_flagged(self):
-        self.assertTrue(BA._pub_live_drift(self._live()))            # Wolves-Fall
+        self.assertTrue(BA._pub_drift(self._live()))            # Wolves-Fall
 
     def test_live_backed_in_ok(self):
-        self.assertFalse(BA._pub_live_drift(self._live(leadDir="in")))
+        self.assertFalse(BA._pub_drift(self._live(leadDir="in")))
 
-    def test_prematch_drift_not_flagged(self):
-        # nicht live -> greift nicht (Vor-Anpfiff-Drift ist eigener Fall)
-        self.assertFalse(BA._pub_live_drift({"live": {}, "leadDir": "out"}))
+    def test_prematch_drift_now_flagged(self):
+        # 16.08.2026 (Lucas, Lens v PSG @1.73 in Public): Vor-Anpfiff-Drift wird JETZT auch geblockt
+        # (leadDir 'out') — _pub_drift greift live UND vor Anpfiff, nicht mehr nur in-play.
+        self.assertTrue(BA._pub_drift({"live": {}, "leadDir": "out"}))
 
     def test_live_flat_ok(self):
-        self.assertFalse(BA._pub_live_drift(self._live(leadDir=None)))
+        self.assertFalse(BA._pub_drift(self._live(leadDir=None)))
 
 
 
