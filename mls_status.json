@@ -85,13 +85,9 @@
       "id": "odds_sane",
       "label": "Pinnacle-1X2 vollständig + plausibel",
       "severity": "warn",
-      "ok": false,
-      "nFail": 3,
-      "failures": [
-        "1595-16489: 1X2 unvollständig hw=None dr=None aw=None",
-        "1606-1597: 1X2 unvollständig hw=None dr=None aw=None",
-        "1617-25484: 1X2 unvollständig hw=None dr=None aw=None"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Quelle für Modell-Baseline + Edge."
     },
     {
@@ -182,7 +178,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "31/31 mit AH · 31/31 mit Public-O/U."
+      "note": "34/34 mit AH · 34/34 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -344,9 +340,10 @@
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
       "ok": false,
-      "nFail": 1,
+      "nFail": 2,
       "failures": [
-        "1598-1607 Heimsieg @2.7: sichere Linie Doppelte Chance — 1X @1.467 verfügbar (≥1.35), nicht abgeleitet"
+        "1598-1607 Heimsieg @2.7: sichere Linie Doppelte Chance — 1X @1.603 verfügbar (≥1.35), nicht abgeleitet",
+        "1599-9568 Heimsieg @2.4: sichere Linie Doppelte Chance — 1X @1.482 verfügbar (≥1.35), nicht abgeleitet"
       ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
@@ -490,17 +487,12 @@
       "label": "Beendete Spiele haben Match-Stats (xG)",
       "severity": "warn",
       "ok": false,
-      "nFail": 9,
+      "nFail": 4,
       "failures": [
         "2242-1596: beendet, aber keine result.stats (xG)",
         "9568-1613: beendet, aber keine result.stats (xG)",
-        "1598-2242: beendet, aber keine result.stats (xG)",
-        "1601-1609: beendet, aber keine result.stats (xG)",
         "1608-1602: beendet, aber keine result.stats (xG)",
-        "1614-1615: beendet, aber keine result.stats (xG)",
-        "18310-1613: beendet, aber keine result.stats (xG)",
-        "1600-1605: beendet, aber keine result.stats (xG)",
-        "9569-9568: beendet, aber keine result.stats (xG)"
+        "1614-1615: beendet, aber keine result.stats (xG)"
       ],
       "note": "Ohne Match-xG lernt der Bayesian-Loop nur aus Glück/Pech, nicht aus dem Prozess."
     },
@@ -541,6 +533,6 @@
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 5,
-  "generatedAt": "2026-08-16T07:35:12.610830+00:00"
+  "nFail": 4,
+  "generatedAt": "2026-08-16T19:26:37.311658+00:00"
 }
