@@ -1501,6 +1501,7 @@ function _pwLeagueMoneyVerdict(league){
 // (01.08.2026, Lucas) Wiederverwendbare Play-Rangliste — Kern für „🔥 Heute wetten" UND die
 // Übersicht-Box. limit=0 → alle. useSportPass steuert den Sport-Filter (Übersicht: aus).
 var PW_LIVE_MAX_PRICE = 0.77;   // 15.08.2026 (Lucas): wie Live-Watch — live > 77¢ (Quote <1.30) = fast entschieden, kein Value
+var PW_LIVE_FLIP_GAP = 0.20;   // 16.08.2026 (Lucas): live gekippt — Shares-Seite liegt >=20pp hinter dem Preis-Favoriten => Markt gegen die Positionsmehrheit, Play raus
 function _pwTopPlays(limit, live, useSportPass){
   live = live || (_pwCache && _pwCache.broadLive) || {};
   const all=[];
@@ -1799,6 +1800,14 @@ function _pwShortlistScore(key,m){
     reasons=['⚠️ Markt gedreht — Preis '+adv.fromPeak.toFixed(0)+'pp gegen uns'].concat(reasons).slice(0,3);
     sigs.push('turned');
     conv=Math.max(1,conv-3);   // stark abwerten → rutscht ans Ende der Liste
+  }
+  // 16.08.2026 (Lucas Übersicht): Live-Flip-Riegel — laufendes Spiel, Shares-Seite != Preis-Seite und
+  // Preis klar (>=PW_LIVE_FLIP_GAP) dagegen => der Markt ist auf die Gegenseite gekippt, unsere Positions-
+  // mehrheit ist Vor-Anpfiff-Alt. Braucht KEINE History (anders als _pwAdverseFor) -> greift trotz Scan-Lag.
+  if((_pwRealHtk(m)||0) < 0 && priceFav && best !== priceFav
+     && typeof pr[best]==='number' && typeof pr[priceFav]==='number'
+     && (pr[priceFav]-pr[best]) >= PW_LIVE_FLIP_GAP){
+    return {verdict:'SKIP', turned:true};
   }
   return {key,match:_pwPlayLabel(key,oc),verdict:(best===moneyFav?'BET':'FADE'),side:best,
     conv,reasons,signals:sigs,vol,htk:_pwRealHtk(m),league:m.league,turned,

@@ -1147,6 +1147,7 @@
       var dv = +x.deltaEur || 0, od = x.odd;
       if (dv < 2000) return;                                   // Rausch-Untergrenze wie im Radar
       if (od != null && (+od < 1.30 || +od > 15)) return;      // Lock/Longshot raus (wie _mdBfFlowBody)
+      if (x.dir === 'out') return;                             // 16.08.2026 (Lucas): driftet = kein Back-Rückhalt → nicht als Geld-Top-Wette (bleibt im Frisches-Geld-Radar, dort als „driftet" markiert)
       var ex = exoticLg(x.league, false);
       put({ id: 'bf' + mid(x.home, x.away, x.matchId), k: now, live: !!_mdBfLiveById(x.matchId),
         exotic: ex, src: 'bfflow', odd: od, deltaEur: dv, nowEur: +x.nowEur || 0, sideName: x.sideName, dir: x.dir,
