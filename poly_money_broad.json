@@ -1,40 +1,32 @@
 {
- "n": 387,
+ "n": 406,
  "minOdds": 1.35,
  "moneyHitRate": 0.574,
- "priceHitRate": 0.574,
- "brierMoney": 0.5055,
- "brierPrice": 0.4932,
+ "priceHitRate": 0.576,
+ "brierMoney": 0.5111,
+ "brierPrice": 0.4946,
  "disagree": {
-  "n": 12,
+  "n": 15,
   "moneyWon": 4,
-  "priceWon": 4,
-  "neither": 4
+  "priceWon": 5,
+  "neither": 6
  },
  "verdict": "preis_besser",
  "byLeague": [
   {
    "league": "MLB",
-   "n": 78,
-   "moneyHitRate": 0.513,
-   "brierMoney": 0.5025,
-   "brierPrice": 0.5026,
+   "n": 84,
+   "moneyHitRate": 0.536,
+   "brierMoney": 0.4987,
+   "brierPrice": 0.4988,
    "verdict": "gleichauf"
   },
   {
    "league": "ESPORTS",
-   "n": 159,
-   "moneyHitRate": 0.616,
-   "brierMoney": 0.4624,
-   "brierPrice": 0.4624,
-   "verdict": "gleichauf"
-  },
-  {
-   "league": "UFC",
-   "n": 14,
-   "moneyHitRate": 0.5,
-   "brierMoney": 0.514,
-   "brierPrice": 0.514,
+   "n": 161,
+   "moneyHitRate": 0.621,
+   "brierMoney": 0.4609,
+   "brierPrice": 0.4609,
    "verdict": "gleichauf"
   },
   {
@@ -47,10 +39,10 @@
   },
   {
    "league": "TENNIS",
-   "n": 72,
-   "moneyHitRate": 0.569,
-   "brierMoney": 0.4852,
-   "brierPrice": 0.4852,
+   "n": 70,
+   "moneyHitRate": 0.586,
+   "brierMoney": 0.4758,
+   "brierPrice": 0.4758,
    "verdict": "gleichauf"
   },
   {
@@ -62,11 +54,27 @@
    "verdict": "gleichauf"
   },
   {
+   "league": "UFC",
+   "n": 19,
+   "moneyHitRate": 0.474,
+   "brierMoney": 0.5012,
+   "brierPrice": 0.5011,
+   "verdict": "gleichauf"
+  },
+  {
+   "league": "MLS",
+   "n": 9,
+   "moneyHitRate": 0.556,
+   "brierMoney": 0.6526,
+   "brierPrice": 0.5396,
+   "verdict": "preis_besser"
+  },
+  {
    "league": "SOCCER",
-   "n": 49,
-   "moneyHitRate": 0.531,
-   "brierMoney": 0.6982,
-   "brierPrice": 0.5908,
+   "n": 48,
+   "moneyHitRate": 0.479,
+   "brierMoney": 0.7534,
+   "brierPrice": 0.6234,
    "verdict": "preis_besser"
   }
  ],
@@ -94,18 +102,6 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 771290
-  },
-  {
-   "key": "lol-hle1-gen-2026-08-10",
-   "league": "ESPORTS",
-   "winner": "Hanwha Life Esports",
-   "moneyFav": "Gen.G",
-   "priceFav": "Gen.G",
-   "moneyShare": 0.565,
-   "priceProb": 0.565,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 659625
   },
   {
    "key": "mlb-cle-det-2026-08-11",
@@ -214,6 +210,18 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 436954
+  },
+  {
+   "key": "ufc-jal-kau-2026-08-15",
+   "league": "UFC",
+   "winner": "Jalin Turner",
+   "moneyFav": "Jalin Turner",
+   "priceFav": "Jalin Turner",
+   "moneyShare": 0.515,
+   "priceProb": 0.515,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 414560
   },
   {
    "key": "mlb-stl-chc-2026-08-14",
@@ -444,6 +452,18 @@
    "totalUsd": 271326
   },
   {
+   "key": "ufc-vic-tre3-2026-08-15",
+   "league": "UFC",
+   "winner": "Tresean Gore",
+   "moneyFav": "Vicente Luque",
+   "priceFav": "Vicente Luque",
+   "moneyShare": 0.505,
+   "priceProb": 0.505,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 267115
+  },
+  {
    "key": "mlb-sea-nyy-2026-08-11",
    "league": "MLB",
    "winner": "New York Yankees",
@@ -538,48 +558,42 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 225989
-  },
-  {
-   "key": "atp-norrie-prizmic-2026-08-13",
-   "league": "TENNIS",
-   "winner": "Cameron Norrie",
-   "moneyFav": "Cameron Norrie",
-   "priceFav": "Cameron Norrie",
-   "moneyShare": 0.665,
-   "priceProb": 0.665,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 224199
   }
  ],
- "generatedAt": "2026-08-15T21:36:40.898282+00:00",
+ "generatedAt": "2026-08-16T04:04:19.460242+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 419,
   "nfl": 800,
-  "mlb": 587,
+  "mlb": 564,
   "nhl": 403,
-  "mls": 737,
-  "epl": 481,
+  "mls": 678,
+  "epl": 501,
   "soccer": 800,
-  "tennis": 533,
+  "tennis": 590,
   "ucl": 500,
-  "laliga": 0,
-  "bundesliga": 408,
+  "la-liga": 544,
+  "bundesliga": 438,
   "serie-a": 37,
-  "ligue-1": 474,
-  "esports": 594,
+  "ligue-1": 499,
+  "primeira-liga": 510,
+  "brazil-serie-a": 528,
+  "brasileirao": 0,
+  "belgium-pro-league": 0,
+  "eredivisie": 0,
+  "super-lig": 1,
+  "esports": 589,
   "cs2": 405,
   "lol": 373,
   "dota": 9,
-  "valorant": 418,
-  "ufc": 460,
+  "valorant": 417,
+  "ufc": 458,
   "mma": 46,
   "boxing": 224,
   "golf": 308,
   "f1": 354,
-  "cricket": 527
+  "cricket": 525
  },
  "sweepStats": {
   "sweepOpen": 500,
