@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-16T15:57:53.348314+00:00",
+ "generatedAt": "2026-08-16T17:56:15.763452+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -8,27 +8,56 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 404,
- "pinnKeys": 264,
- "matched": 202,
- "footballRows": 180,
+ "polyRowsSeen": 413,
+ "pinnKeys": 273,
+ "matched": 211,
+ "footballRows": 189,
  "crossRows": 224,
- "footballSkippedStale": 33,
+ "footballSkippedStale": 44,
  "seenBySport": {
   "americanfootball_nfl": 128,
   "baseball_mlb": 94,
   "boxing_boxing": 2,
   "soccer_mls": 96,
-  "soccer_liga": 84
+  "soccer_liga": 93
  },
  "matchedBySport": {
   "baseball_mlb": 22,
   "soccer_mls": 96,
-  "soccer_liga": 84
+  "soccer_liga": 93
  },
  "trackRecord": {
   "tracked": 116,
-  "converged": 15
+  "converged": 17
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|baltimoreorioles-tampabayrays|baltimoreorioles",
+   "sport": "baseball_mlb",
+   "event": "Baltimore Orioles vs Tampa Bay Rays",
+   "market": "Moneyline",
+   "outcome": "Baltimore Orioles",
+   "polyPP": 97.5,
+   "pinnPP": 90.4,
+   "gapPP": 7.12,
+   "vol": 572288,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 6.82,
+   "firstSeen": "2026-08-15T22:58:50.117206+00:00"
+  },
+  {
+   "id": "baseball_mlb|baltimoreorioles-tampabayrays|tampabayrays",
+   "sport": "baseball_mlb",
+   "event": "Baltimore Orioles vs Tampa Bay Rays",
+   "market": "Moneyline",
+   "outcome": "Tampa Bay Rays",
+   "polyPP": 2.5,
+   "pinnPP": 9.6,
+   "gapPP": -7.12,
+   "vol": 572288,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 6.82,
+   "firstSeen": "2026-08-15T22:58:50.117206+00:00"
+  }
+ ]
 }
