@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-16T20:59:07.340343+00:00",
+ "generatedAt": "2026-08-16T21:34:25.678991+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -8,27 +8,84 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 410,
- "pinnKeys": 262,
- "matched": 200,
+ "polyRowsSeen": 408,
+ "pinnKeys": 256,
+ "matched": 198,
  "footballRows": 192,
- "crossRows": 218,
+ "crossRows": 216,
  "footballSkippedStale": 41,
  "seenBySport": {
   "americanfootball_nfl": 128,
-  "baseball_mlb": 88,
+  "baseball_mlb": 86,
   "boxing_boxing": 2,
   "soccer_mls": 99,
   "soccer_liga": 93
  },
  "matchedBySport": {
-  "baseball_mlb": 8,
+  "baseball_mlb": 6,
   "soccer_mls": 99,
   "soccer_liga": 93
  },
  "trackRecord": {
   "tracked": 110,
-  "converged": 17
+  "converged": 19
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|losangelesdodgers-milwaukeebrewers|milwaukeebrewers",
+   "sport": "baseball_mlb",
+   "event": "Milwaukee Brewers vs Los Angeles Dodgers",
+   "market": "Moneyline",
+   "outcome": "Milwaukee Brewers",
+   "polyPP": 54.5,
+   "pinnPP": 37.2,
+   "gapPP": 17.34,
+   "vol": 943290,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 10.65,
+   "firstSeen": "2026-08-14T03:14:54.503709+00:00"
+  },
+  {
+   "id": "baseball_mlb|losangelesdodgers-milwaukeebrewers|losangelesdodgers",
+   "sport": "baseball_mlb",
+   "event": "Milwaukee Brewers vs Los Angeles Dodgers",
+   "market": "Moneyline",
+   "outcome": "Los Angeles Dodgers",
+   "polyPP": 45.5,
+   "pinnPP": 62.8,
+   "gapPP": -17.34,
+   "vol": 943290,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 10.65,
+   "firstSeen": "2026-08-14T03:14:54.503709+00:00"
+  },
+  {
+   "id": "baseball_mlb|coloradorockies-sanfranciscogiants|coloradorockies",
+   "sport": "baseball_mlb",
+   "event": "Colorado Rockies vs San Francisco Giants",
+   "market": "Moneyline",
+   "outcome": "Colorado Rockies",
+   "polyPP": 36.5,
+   "pinnPP": 27.1,
+   "gapPP": 9.43,
+   "vol": 198050,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -2.1,
+   "firstSeen": "2026-08-14T23:37:46.387855+00:00"
+  },
+  {
+   "id": "baseball_mlb|coloradorockies-sanfranciscogiants|sanfranciscogiants",
+   "sport": "baseball_mlb",
+   "event": "Colorado Rockies vs San Francisco Giants",
+   "market": "Moneyline",
+   "outcome": "San Francisco Giants",
+   "polyPP": 63.5,
+   "pinnPP": 72.9,
+   "gapPP": -9.43,
+   "vol": 198050,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -2.1,
+   "firstSeen": "2026-08-14T23:37:46.387855+00:00"
+  }
+ ]
 }
