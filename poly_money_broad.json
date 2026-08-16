@@ -1,40 +1,32 @@
 {
- "n": 387,
+ "n": 403,
  "minOdds": 1.35,
- "moneyHitRate": 0.576,
- "priceHitRate": 0.576,
- "brierMoney": 0.4988,
- "brierPrice": 0.4905,
+ "moneyHitRate": 0.573,
+ "priceHitRate": 0.578,
+ "brierMoney": 0.5108,
+ "brierPrice": 0.4947,
  "disagree": {
-  "n": 10,
+  "n": 13,
   "moneyWon": 3,
-  "priceWon": 3,
-  "neither": 4
+  "priceWon": 5,
+  "neither": 5
  },
- "verdict": "gleichauf",
+ "verdict": "preis_besser",
  "byLeague": [
   {
    "league": "MLB",
-   "n": 79,
-   "moneyHitRate": 0.519,
-   "brierMoney": 0.5001,
-   "brierPrice": 0.5002,
+   "n": 84,
+   "moneyHitRate": 0.536,
+   "brierMoney": 0.4987,
+   "brierPrice": 0.4988,
    "verdict": "gleichauf"
   },
   {
    "league": "ESPORTS",
-   "n": 158,
-   "moneyHitRate": 0.62,
-   "brierMoney": 0.462,
-   "brierPrice": 0.462,
-   "verdict": "gleichauf"
-  },
-  {
-   "league": "UFC",
-   "n": 18,
-   "moneyHitRate": 0.444,
-   "brierMoney": 0.5029,
-   "brierPrice": 0.5029,
+   "n": 160,
+   "moneyHitRate": 0.619,
+   "brierMoney": 0.4625,
+   "brierPrice": 0.4625,
    "verdict": "gleichauf"
   },
   {
@@ -48,9 +40,9 @@
   {
    "league": "TENNIS",
    "n": 70,
-   "moneyHitRate": 0.571,
-   "brierMoney": 0.4816,
-   "brierPrice": 0.4816,
+   "moneyHitRate": 0.586,
+   "brierMoney": 0.4758,
+   "brierPrice": 0.4758,
    "verdict": "gleichauf"
   },
   {
@@ -62,11 +54,27 @@
    "verdict": "gleichauf"
   },
   {
+   "league": "UFC",
+   "n": 19,
+   "moneyHitRate": 0.474,
+   "brierMoney": 0.5012,
+   "brierPrice": 0.5011,
+   "verdict": "gleichauf"
+  },
+  {
    "league": "SOCCER",
    "n": 47,
-   "moneyHitRate": 0.553,
-   "brierMoney": 0.6643,
-   "brierPrice": 0.5848,
+   "moneyHitRate": 0.489,
+   "brierMoney": 0.7394,
+   "brierPrice": 0.6157,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "MLS",
+   "n": 8,
+   "moneyHitRate": 0.5,
+   "brierMoney": 0.7295,
+   "brierPrice": 0.5743,
    "verdict": "preis_besser"
   }
  ],
@@ -202,6 +210,18 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 436954
+  },
+  {
+   "key": "ufc-jal-kau-2026-08-15",
+   "league": "UFC",
+   "winner": "Jalin Turner",
+   "moneyFav": "Jalin Turner",
+   "priceFav": "Jalin Turner",
+   "moneyShare": 0.515,
+   "priceProb": 0.515,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 414560
   },
   {
    "key": "mlb-stl-chc-2026-08-14",
@@ -538,49 +558,37 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 225989
-  },
-  {
-   "key": "mlb-lad-ari-2026-08-09",
-   "league": "MLB",
-   "winner": "Arizona Diamondbacks",
-   "moneyFav": "Los Angeles Dodgers",
-   "priceFav": "Los Angeles Dodgers",
-   "moneyShare": 0.555,
-   "priceProb": 0.555,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 220024
   }
  ],
- "generatedAt": "2026-08-16T01:59:20.990690+00:00",
+ "generatedAt": "2026-08-16T03:16:14.062719+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 419,
   "nfl": 800,
-  "mlb": 570,
+  "mlb": 562,
   "nhl": 403,
-  "mls": 729,
+  "mls": 689,
   "epl": 481,
   "soccer": 800,
-  "tennis": 594,
+  "tennis": 592,
   "ucl": 500,
   "la-liga": 544,
   "bundesliga": 408,
   "serie-a": 37,
   "ligue-1": 474,
   "primeira-liga": 510,
-  "brazil-serie-a": 534,
+  "brazil-serie-a": 529,
   "brasileirao": 0,
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 594,
+  "esports": 589,
   "cs2": 405,
   "lol": 373,
   "dota": 9,
-  "valorant": 419,
-  "ufc": 461,
+  "valorant": 416,
+  "ufc": 459,
   "mma": 46,
   "boxing": 224,
   "golf": 308,
@@ -590,6 +598,6 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 428
+  "sweepAdded": 426
  }
 }
