@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-08-16T14:45:49.206993+00:00",
+"generatedAt": "2026-08-16T14:58:12.241248+00:00",
 "byVerdict": {
 "konsens": {
 "n": 124,
@@ -12,12 +12,12 @@
 "pinnHitRate": 0.875
 },
 "uneinig": {
-"n": 40,
+"n": 41,
 "wins": 10,
-"hitRate": 0.25,
-"polyN": 33,
-"polyWins": 7,
-"polyHitRate": 0.2121,
+"hitRate": 0.2439,
+"polyN": 34,
+"polyWins": 8,
+"polyHitRate": 0.2353,
 "pinnN": 18,
 "pinnHitRate": 0.6111
 },
@@ -173,6 +173,11 @@
 "wins": 1,
 "hitRate": 0.5
 },
+"Other Competitions Soccer": {
+"n": 2,
+"wins": 1,
+"hitRate": 0.5
+},
 "Spanish La Liga": {
 "n": 2,
 "wins": 1,
@@ -243,11 +248,6 @@
 "wins": 1,
 "hitRate": 1.0
 },
-"Other Competitions Soccer": {
-"n": 1,
-"wins": 1,
-"hitRate": 1.0
-},
 "Polish Ekstraklasa": {
 "n": 1,
 "wins": 1,
@@ -291,9 +291,9 @@
 },
 "byStrength": {
 "strong": {
-"n": 77,
+"n": 78,
 "wins": 61,
-"hitRate": 0.7922
+"hitRate": 0.7821
 },
 "weak": {
 "n": 56,
@@ -302,14 +302,33 @@
 }
 },
 "divergence": {
-"n": 40,
+"n": 41,
 "betfairWins": 10,
-"betfairRate": 0.25,
-"polyN": 33,
-"polyWins": 7,
-"polyRate": 0.2121
+"betfairRate": 0.2439,
+"polyN": 34,
+"polyWins": 8,
+"polyRate": 0.2353
 },
 "recent": [
+{
+"matchId": "35918751",
+"home": "Malaysia",
+"away": "Vietnam",
+"league": "Other Competitions Soccer",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "away",
+"winner": "away",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-08-16T13:00:00Z",
+"settledAt": "2026-08-16T14:58:12.238425+00:00"
+},
 {
 "matchId": "35760351",
 "home": "Watford",
@@ -1050,31 +1069,12 @@
 ],
 "kickoff": "2026-08-15T18:45:00Z",
 "settledAt": "2026-08-15T21:49:34.166922+00:00"
-},
-{
-"matchId": "35918635",
-"home": "Genk",
-"away": "Westerlo",
-"league": "Belgian Pro League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Genk",
-"polySide": null,
-"winner": "home",
-"moneyWin": true,
-"polyWin": null,
-"ftScore": [
-3,
-2
-],
-"kickoff": "2026-08-15T18:45:00Z",
-"settledAt": "2026-08-15T21:49:34.166922+00:00"
 }
 ],
 "global": {
-"n": 166,
+"n": 167,
 "wins": 105,
-"hitRate": 0.6325
+"hitRate": 0.6287
 },
-"pending": 23
+"pending": 22
 }
