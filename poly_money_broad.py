@@ -192,6 +192,54 @@ def _tags():
     except Exception:
         return SPORT_TAGS
 
+# 16.08.2026 (Lucas): Self-Discovery der Fussball-Liga-Tags — persistente Registry.
+LEAGUE_TAGS_FILE = "poly_football_tags.json"
+_GENERIC_TAG_SKIP = {"sports", "games", "soccer", "football", "all", "live", "match", "matches",
+                     "sport", "world", "international", "recurring", "weekly", "daily", "new",
+                     "trending", "featured", "hide-from-new", "esports"}
+
+
+def _discover_football_tags(events):
+    """Aus Poly-Events die Fussball-Liga-Tag-Slugs ziehen. NUR Events mit 'soccer'-Tag zaehlen (kein
+    anderer Sport rein); daraus jeder nicht-generische Tag-Slug (= die Liga, z.B. 'la-liga',
+    'primeira-liga', 'brazil-serie-a'). REIN/defensiv."""
+    out = set()
+    for ev in events or []:
+        try:
+            slugs = set()
+            for t in (ev.get("tags") or []):
+                s = str((t.get("slug") if isinstance(t, dict) else t) or "").strip().lower()
+                if s:
+                    slugs.add(s)
+            if "soccer" not in slugs:
+                continue
+            for s in slugs:
+                if s not in _GENERIC_TAG_SKIP and not s.isdigit() and 2 <= len(s) <= 40:
+                    out.add(s)
+        except Exception:
+            continue
+    return out
+
+
+def _load_league_registry():
+    try:
+        d = _json.loads((BASE / LEAGUE_TAGS_FILE).read_text(encoding="utf-8"))
+        return set(x for x in d if isinstance(x, str)) if isinstance(d, list) else set()
+    except Exception:
+        return set()
+
+
+def _save_league_registry(new_slugs):
+    """Merge-on-write: Live- UND Global-Scan schreiben -> nie clobbern, nur Union."""
+    try:
+        cur = _load_league_registry()
+        allslugs = cur | {str(s).strip().lower() for s in (new_slugs or set()) if s}
+        if allslugs != cur:
+            (BASE / LEAGUE_TAGS_FILE).write_text(
+                _json.dumps(sorted(allslugs), ensure_ascii=False, indent=1), encoding="utf-8")
+    except Exception:
+        pass
+
 
 def _get(url):
     try:
@@ -570,6 +618,9 @@ def fetch_markets(live_only=False):
     now = _now()
     min_vol, _ = _cfg()
     tags = _tags()
+    # 16.08.2026 (Lucas): entdeckte Fussball-Ligen mitfetchen -> JEDE Liga voll erfasst, nicht nur hartkodierte.
+    _discovered = set()
+    tags = list(dict.fromkeys(list(tags) + sorted(_load_league_registry())))
     markets = []
     raw_by_tag = {}                      # je Tag: wie viele ROH-Events kamen (offen+aufgelöst)
     seen = set()                         # Dedup: ein Markt kann unter mehreren Tags liegen (cs2 ⊂ esports)
@@ -639,6 +690,7 @@ def fetch_markets(live_only=False):
         closed_evs = _gamma_events(tag, closed=True)
         raw_by_tag[tag] = len(open_evs) + len(closed_evs)
         _ingest(open_evs, closed_evs, lambda ev, key, _t=tag: _t.upper())
+        _discovered |= _discover_football_tags(open_evs) | _discover_football_tags(closed_evs)
 
     # B) Tag-LOSER Volumen-Sweep — fängt JEDE Sportart mit Volumen ein, auch ohne kuratierten Tag
     # (nimmt der „Liga fehlt still"-Klasse die Grundlage). Dedup gegen A über `seen`; Liga aus Slug.
@@ -646,6 +698,7 @@ def fetch_markets(live_only=False):
     sweep_closed = _gamma_top(closed=True)
     before = len(candidates) + len(markets)
     _ingest(sweep_open, sweep_closed, lambda ev, key: _league_from_slug(key))
+    _discovered |= _discover_football_tags(sweep_open) | _discover_football_tags(sweep_closed)
     sweep_added = (len(candidates) + len(markets)) - before
 
     # 21.07.2026 (Lucas: „mehr Sport?"): das Holders-Budget nach VOLUMEN vergeben — die größten
@@ -727,6 +780,8 @@ def fetch_markets(live_only=False):
             print(f"  \U0001f501 {len(_bf)} getrackte Markt-Auflösung(en) per Slug nachgezogen (Key-Match)")
     except Exception as _e:
         print(f"  Resolution-Backfill übersprungen (nicht fatal): {_e}")
+    _save_league_registry(_discovered)   # 16.08.2026 (Lucas): neu entdeckte Fussball-Ligen persistieren -> naechster Lauf fetcht sie voll
+    fetch_markets.discovered = sorted(_discovered)   # Diagnose
     fetch_markets.raw_by_tag = raw_by_tag   # 21.07.2026: für die Diagnose im Output
     return markets
 
