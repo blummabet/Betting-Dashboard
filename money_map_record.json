@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-08-16T02:58:52.472624+00:00",
+"generatedAt": "2026-08-16T03:13:47.435510+00:00",
 "byVerdict": {
 "konsens": {
 "n": 106,
@@ -12,14 +12,14 @@
 "pinnHitRate": 0.8
 },
 "uneinig": {
-"n": 35,
+"n": 36,
 "wins": 8,
-"hitRate": 0.2286,
-"polyN": 28,
+"hitRate": 0.2222,
+"polyN": 29,
 "polyWins": 7,
-"polyHitRate": 0.25,
-"pinnN": 15,
-"pinnHitRate": 0.6667
+"polyHitRate": 0.2414,
+"pinnN": 16,
+"pinnHitRate": 0.6875
 },
 "teil": {
 "n": 2,
@@ -138,6 +138,11 @@
 "wins": 2,
 "hitRate": 1.0
 },
+"Brazilian Serie A": {
+"n": 2,
+"wins": 1,
+"hitRate": 0.5
+},
 "Chilean Primera B": {
 "n": 2,
 "wins": 0,
@@ -169,11 +174,6 @@
 "hitRate": 1.0
 },
 "Austrian Bundesliga": {
-"n": 1,
-"wins": 1,
-"hitRate": 1.0
-},
-"Brazilian Serie A": {
 "n": 1,
 "wins": 1,
 "hitRate": 1.0
@@ -276,9 +276,9 @@
 },
 "byStrength": {
 "strong": {
-"n": 59,
+"n": 60,
 "wins": 49,
-"hitRate": 0.8305
+"hitRate": 0.8167
 },
 "weak": {
 "n": 51,
@@ -287,14 +287,33 @@
 }
 },
 "divergence": {
-"n": 35,
+"n": 36,
 "betfairWins": 8,
-"betfairRate": 0.2286,
-"polyN": 28,
+"betfairRate": 0.2222,
+"polyN": 29,
 "polyWins": 7,
-"polyRate": 0.25
+"polyRate": 0.2414
 },
 "recent": [
+{
+"matchId": "35895911",
+"home": "Sao Paulo",
+"away": "Coritiba",
+"league": "Brazilian Serie A",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Sao Paulo",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-16T00:00:00Z",
+"settledAt": "2026-08-16T03:13:47.283457+00:00"
+},
 {
 "matchId": "35868052",
 "home": "Nashville SC",
@@ -1035,31 +1054,12 @@
 ],
 "kickoff": "2026-08-15T12:00:00Z",
 "settledAt": "2026-08-15T15:12:40.037373+00:00"
-},
-{
-"matchId": "35920810",
-"home": "Singapore",
-"away": "Thailand",
-"league": "Other Competitions Soccer",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Thailand",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-3
-],
-"kickoff": "2026-08-15T13:00:00Z",
-"settledAt": "2026-08-15T14:57:37.565306+00:00"
 }
 ],
 "global": {
-"n": 143,
+"n": 144,
 "wins": 91,
-"hitRate": 0.6364
+"hitRate": 0.6319
 },
 "pending": 7
 }
