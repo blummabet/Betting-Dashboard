@@ -1,13 +1,13 @@
 {
-"generatedAt": "2026-08-16T18:15:22.127137+00:00",
+"generatedAt": "2026-08-16T19:01:59.989619+00:00",
 "byVerdict": {
 "konsens": {
-"n": 143,
-"wins": 110,
-"hitRate": 0.7692,
-"polyN": 131,
-"polyWins": 98,
-"polyHitRate": 0.7481,
+"n": 147,
+"wins": 114,
+"hitRate": 0.7755,
+"polyN": 135,
+"polyWins": 102,
+"polyHitRate": 0.7556,
 "pinnN": 8,
 "pinnHitRate": 0.875
 },
@@ -113,6 +113,11 @@
 "wins": 3,
 "hitRate": 0.75
 },
+"Spanish La Liga": {
+"n": 4,
+"wins": 2,
+"hitRate": 0.5
+},
 "Turkish Super League": {
 "n": 4,
 "wins": 1,
@@ -158,17 +163,27 @@
 "wins": 3,
 "hitRate": 1.0
 },
+"Polish Ekstraklasa": {
+"n": 3,
+"wins": 3,
+"hitRate": 1.0
+},
 "Saudi Professional League": {
 "n": 3,
 "wins": 3,
 "hitRate": 1.0
 },
-"Spanish La Liga": {
+"Spanish Segunda Division": {
 "n": 3,
-"wins": 1,
-"hitRate": 0.3333
+"wins": 3,
+"hitRate": 1.0
 },
 "Bolivian Liga de Futbol Profesional": {
+"n": 2,
+"wins": 2,
+"hitRate": 1.0
+},
+"Bulgarian A League": {
 "n": 2,
 "wins": 2,
 "hitRate": 1.0
@@ -203,17 +218,7 @@
 "wins": 1,
 "hitRate": 0.5
 },
-"Polish Ekstraklasa": {
-"n": 2,
-"wins": 2,
-"hitRate": 1.0
-},
 "Portuguese Primeira Liga": {
-"n": 2,
-"wins": 2,
-"hitRate": 1.0
-},
-"Spanish Segunda Division": {
 "n": 2,
 "wins": 2,
 "hitRate": 1.0
@@ -242,11 +247,6 @@
 "n": 1,
 "wins": 0,
 "hitRate": 0.0
-},
-"Bulgarian A League": {
-"n": 1,
-"wins": 1,
-"hitRate": 1.0
 },
 "Canadian Premier League": {
 "n": 1,
@@ -311,9 +311,9 @@
 },
 "byStrength": {
 "strong": {
-"n": 101,
-"wins": 78,
-"hitRate": 0.7723
+"n": 105,
+"wins": 82,
+"hitRate": 0.781
 },
 "weak": {
 "n": 63,
@@ -330,6 +330,82 @@
 "polyRate": 0.2791
 },
 "recent": [
+{
+"matchId": "35780311",
+"home": "Espanyol",
+"away": "Levante",
+"league": "Spanish La Liga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Espanyol",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+0
+],
+"kickoff": "2026-08-16T17:00:00Z",
+"settledAt": "2026-08-16T19:01:59.983822+00:00"
+},
+{
+"matchId": "35898608",
+"home": "Burgos",
+"away": "Cordoba",
+"league": "Spanish Segunda Division",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Burgos",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+2
+],
+"kickoff": "2026-08-16T17:00:00Z",
+"settledAt": "2026-08-16T19:01:59.983822+00:00"
+},
+{
+"matchId": "35920323",
+"home": "CSKA Sofia",
+"away": "Botev Vratsa",
+"league": "Bulgarian A League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "CSKA Sofia",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+5,
+0
+],
+"kickoff": "2026-08-16T16:00:00Z",
+"settledAt": "2026-08-16T19:00:26.962408+00:00"
+},
+{
+"matchId": "35921798",
+"home": "Cracovia Krakow",
+"away": "Rakow Czestochowa",
+"league": "Polish Ekstraklasa",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Cracovia Krakow",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-08-16T15:30:00Z",
+"settledAt": "2026-08-16T18:30:26.761409+00:00"
+},
 {
 "matchId": "35937422",
 "home": "Schalke 04",
@@ -1013,88 +1089,12 @@
 ],
 "kickoff": "2026-08-16T11:30:00Z",
 "settledAt": "2026-08-16T14:30:06.013703+00:00"
-},
-{
-"matchId": "35936793",
-"home": "Suzhou Dongwu",
-"away": "Nantong Zhiyun F.C",
-"league": "Chinese League 1",
-"verdict": "uneinig",
-"moneySide": "draw",
-"moneyName": "The Draw",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-08-16T11:00:00Z",
-"settledAt": "2026-08-16T14:15:03.153993+00:00"
-},
-{
-"matchId": "35921467",
-"home": "Djurgardens",
-"away": "AIK",
-"league": "Swedish Allsvenskan",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "AIK",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-3
-],
-"kickoff": "2026-08-16T12:00:00Z",
-"settledAt": "2026-08-16T13:59:00.656089+00:00"
-},
-{
-"matchId": "35920295",
-"home": "Bucheon FC 1995",
-"away": "Jeonbuk Motors",
-"league": "South Korean K1 League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Bucheon FC 1995",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-2
-],
-"kickoff": "2026-08-16T10:30:00Z",
-"settledAt": "2026-08-16T13:36:16.650228+00:00"
-},
-{
-"matchId": "35928428",
-"home": "Paju Citizen",
-"away": "Seongnam FC",
-"league": "South Korean K2 League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Seongnam FC",
-"polySide": "away",
-"winner": "home",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-08-16T10:30:00Z",
-"settledAt": "2026-08-16T13:36:16.650228+00:00"
 }
 ],
 "global": {
-"n": 197,
-"wins": 123,
-"hitRate": 0.6244
+"n": 201,
+"wins": 127,
+"hitRate": 0.6318
 },
-"pending": 11
+"pending": 7
 }
