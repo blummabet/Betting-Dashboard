@@ -1,26 +1,18 @@
 {
- "n": 424,
+ "n": 423,
  "minOdds": 1.35,
- "moneyHitRate": 0.568,
- "priceHitRate": 0.564,
- "brierMoney": 0.5298,
- "brierPrice": 0.4993,
+ "moneyHitRate": 0.567,
+ "priceHitRate": 0.563,
+ "brierMoney": 0.534,
+ "brierPrice": 0.5009,
  "disagree": {
-  "n": 22,
-  "moneyWon": 6,
-  "priceWon": 4,
+  "n": 20,
+  "moneyWon": 5,
+  "priceWon": 3,
   "neither": 12
  },
  "verdict": "preis_besser",
  "byLeague": [
-  {
-   "league": "MLB",
-   "n": 80,
-   "moneyHitRate": 0.55,
-   "brierMoney": 0.4867,
-   "brierPrice": 0.4868,
-   "verdict": "gleichauf"
-  },
   {
    "league": "ESPORTS",
    "n": 167,
@@ -38,11 +30,19 @@
    "verdict": "gleichauf"
   },
   {
+   "league": "MLB",
+   "n": 73,
+   "moneyHitRate": 0.548,
+   "brierMoney": 0.4873,
+   "brierPrice": 0.4873,
+   "verdict": "gleichauf"
+  },
+  {
    "league": "TENNIS",
-   "n": 56,
-   "moneyHitRate": 0.661,
-   "brierMoney": 0.4383,
-   "brierPrice": 0.4383,
+   "n": 58,
+   "moneyHitRate": 0.672,
+   "brierMoney": 0.4342,
+   "brierPrice": 0.4342,
    "verdict": "gleichauf"
   },
   {
@@ -71,10 +71,10 @@
   },
   {
    "league": "SOCCER",
-   "n": 58,
-   "moneyHitRate": 0.397,
-   "brierMoney": 0.7695,
-   "brierPrice": 0.6357,
+   "n": 61,
+   "moneyHitRate": 0.393,
+   "brierMoney": 0.7876,
+   "brierPrice": 0.6434,
    "verdict": "preis_besser"
   },
   {
@@ -87,6 +87,18 @@
   }
  ],
  "rows": [
+  {
+   "key": "ecs-ars-mci-2026-08-16-more-markets",
+   "league": "SOCCER",
+   "winner": "Over",
+   "moneyFav": "Over",
+   "priceFav": "Over",
+   "moneyShare": 0.535,
+   "priceProb": 0.535,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 2378826
+  },
   {
    "key": "lal-rrc-vil-2026-08-16",
    "league": "LA-LIGA",
@@ -182,18 +194,6 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 490003
-  },
-  {
-   "key": "mlb-cle-cws-2026-08-08",
-   "league": "MLB",
-   "winner": "Chicago White Sox",
-   "moneyFav": "Cleveland Guardians",
-   "priceFav": "Cleveland Guardians",
-   "moneyShare": 0.545,
-   "priceProb": 0.545,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 439426
   },
   {
    "key": "mlb-kc-lad-2026-08-10",
@@ -424,18 +424,6 @@
    "totalUsd": 280333
   },
   {
-   "key": "mlb-lad-ari-2026-08-08",
-   "league": "MLB",
-   "winner": "Los Angeles Dodgers",
-   "moneyFav": "Los Angeles Dodgers",
-   "priceFav": "Los Angeles Dodgers",
-   "moneyShare": 0.646,
-   "priceProb": 0.645,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 271326
-  },
-  {
    "key": "ufc-vic-tre3-2026-08-15",
    "league": "UFC",
    "winner": "Tresean Gore",
@@ -532,18 +520,6 @@
    "totalUsd": 240485
   },
   {
-   "key": "mlb-hou-sd-2026-08-08",
-   "league": "MLB",
-   "winner": "San Diego Padres",
-   "moneyFav": "San Diego Padres",
-   "priceFav": "San Diego Padres",
-   "moneyShare": 0.525,
-   "priceProb": 0.525,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 236242
-  },
-  {
    "key": "cs2-mgc-mglz-2026-08-12",
    "league": "ESPORTS",
    "winner": "TheMongolz",
@@ -566,49 +542,73 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 220975
+  },
+  {
+   "key": "mlb-lad-ari-2026-08-09",
+   "league": "MLB",
+   "winner": "Arizona Diamondbacks",
+   "moneyFav": "Los Angeles Dodgers",
+   "priceFav": "Los Angeles Dodgers",
+   "moneyShare": 0.555,
+   "priceProb": 0.555,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 220024
+  },
+  {
+   "key": "mlb-cle-cws-2026-08-09",
+   "league": "MLB",
+   "winner": "Chicago White Sox",
+   "moneyFav": "Cleveland Guardians",
+   "priceFav": "Cleveland Guardians",
+   "moneyShare": 0.545,
+   "priceProb": 0.545,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 219080
   }
  ],
- "generatedAt": "2026-08-16T19:58:55.034890+00:00",
+ "generatedAt": "2026-08-16T20:41:25.438381+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 419,
   "nfl": 800,
-  "mlb": 577,
+  "mlb": 574,
   "nhl": 403,
   "mls": 758,
   "epl": 509,
   "soccer": 800,
-  "tennis": 758,
+  "tennis": 755,
   "ucl": 502,
   "la-liga": 552,
   "bundesliga": 450,
   "serie-a": 37,
   "ligue-1": 509,
   "primeira-liga": 519,
-  "brazil-serie-a": 515,
+  "brazil-serie-a": 514,
   "brasileirao": 0,
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 583,
+  "esports": 580,
   "cs2": 405,
   "lol": 373,
   "dota": 9,
-  "valorant": 418,
+  "valorant": 417,
   "ufc": 455,
   "mma": 47,
   "boxing": 224,
   "golf": 304,
   "f1": 354,
-  "cricket": 507,
+  "cricket": 505,
   "allsvenskan": 1,
   "austria-bundesliga": 161,
   "bulgaria-parva-liga": 207,
   "bundesliga-2": 444,
   "champions-league": 295,
   "champions-league-final": 12,
-  "denmark-superliga": 424,
+  "denmark-superliga": 443,
   "efl-championship": 576,
   "english-premier-league": 2,
   "europa-conference-league": 691,
@@ -617,7 +617,7 @@
   "k-league": 500,
   "la-liga-2": 547,
   "liga-mx-apertura": 2,
-  "ligue-2": 518,
+  "ligue-2": 521,
   "naitons-league": 1,
   "nations-league": 25,
   "norway-eliteserien": 459,
@@ -628,7 +628,7 @@
   "serbian-superliga": 175,
   "serie-b": 507,
   "slovenia-prvaliga": 138,
-  "sweden-allsvenskan": 413,
+  "sweden-allsvenskan": 409,
   "uefa-champions-league": 16,
   "uefa-conference-league": 6,
   "uefa-europa-league": 8,
@@ -639,6 +639,6 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 423
+  "sweepAdded": 422
  }
 }
