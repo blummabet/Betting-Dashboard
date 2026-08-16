@@ -56,6 +56,34 @@
 
   var _bf = { data: null, hist: null, track: null, loading: false, view: 'live', league: 'all', tab: 'all', date: 'all', onlyLive: false, market: 'all', cardOpen: {}, trackBy: 'league' };
   var MIN_CONF_N = 20;   // ab so vielen abgerechneten Spielen gilt eine Liga×Markt-Quote als „belastbar"
+  // 16.08.2026 (Lucas): betfair_prices.json kann Doppel-Einträge tragen (Workflow-Merge einer sich
+  // aendernden JSON verdoppelt Array-Zeilen). Radar-seitig hart deduppen: pro matchId EIN Eintrag,
+  // bevorzugt der, dessen Match-Odds-Runner zu home/away passen (fixt "Debreceni → GAIS"-Korruption),
+  // dann hoechstes Volumen.
+  function _bfPairScore(m) {
+    var mo = (m && m.markets && m.markets['Match Odds']) || {}, rs = mo.runners || [];
+    var h = String((m && m.home) || '').trim().toLowerCase(), a = String((m && m.away) || '').trim().toLowerCase();
+    var sc = 0;
+    for (var i = 0; i < rs.length; i++) {
+      var rn = String((rs[i] && rs[i].name) || '').trim().toLowerCase();
+      if (!rn || /draw|unentschieden|remis/.test(rn)) continue;
+      if (h && (h.indexOf(rn) >= 0 || rn.indexOf(h) >= 0)) sc++;
+      else if (a && (a.indexOf(rn) >= 0 || rn.indexOf(a) >= 0)) sc++;
+    }
+    return sc;
+  }
+  function _bfDedupMatches(matches) {
+    if (!Array.isArray(matches)) return matches || [];
+    var by = {}, order = [], noid = [];
+    for (var i = 0; i < matches.length; i++) {
+      var m = matches[i], id = String((m && m.matchId) || '');
+      if (!id) { noid.push(m); continue; }
+      if (!(id in by)) { by[id] = m; order.push(id); continue; }
+      var a = _bfPairScore(m), b = _bfPairScore(by[id]);
+      if (a > b || (a === b && (+(m && m.totalVol) || 0) > (+(by[id] && by[id].totalVol) || 0))) by[id] = m;
+    }
+    return order.map(function (id) { return by[id]; }).concat(noid);
+  }
   window._bfState = _bf;
 
   function _bfFetch3() {
@@ -78,7 +106,7 @@
     if (_bf.data || _bf.loading) return;
     _bf.loading = true;
     _bfFetch3().then(function (a) {
-      _bf.data = a[0] || { matches: [] }; _bf.hist = a[1] || {}; _bf.track = a[2] || null; _bf.pubrec = a[3] || null; _bf.dir = a[4] || {}; _bf.consensus = a[5] || null;
+      _bf.data = a[0] || { matches: [] }; if (_bf.data && Array.isArray(_bf.data.matches)) _bf.data.matches = _bfDedupMatches(_bf.data.matches); _bf.hist = a[1] || {}; _bf.track = a[2] || null; _bf.pubrec = a[3] || null; _bf.dir = a[4] || {}; _bf.consensus = a[5] || null;
       _bf._cohCache = {}; _bf._mixBase = null; _bf._normBase = null;
       _bf.loading = false; _bf.cardOpen = {};
       var p = document.getElementById('betfairRadarPanel');

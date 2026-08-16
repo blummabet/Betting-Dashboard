@@ -94,6 +94,7 @@ jobs:
             exit 0
           fi
           git commit -m "🟡 Betfair Radar Update $(date -u '+%Y-%m-%d %H:%M UTC') [skip ci]"
+          MINE=$(git rev-parse HEAD)   # 16.08.2026 (Lucas): unsere frische Version, um den reinen Snapshot betfair_prices.json nach dem Merge zu erzwingen
           for attempt in 1 2 3 4 5; do
             git pull origin main --no-rebase -X ours --autostash 2>&1 || true
             CONFLICTS=$(git diff --name-only --diff-filter=U)
@@ -101,6 +102,11 @@ jobs:
               echo "$CONFLICTS" | while read f; do git checkout --ours -- "$f"; git add "$f"; done
               git diff --staged --quiet || git commit -m "🔧 auto-resolve merge [skip ci]"
             fi
+            # 16.08.2026 (Lucas): reiner Snapshot betfair_prices.json nach dem Merge IMMER auf unsere
+            # frische Version — der zeilenbasierte -X ours-Merge verdoppelt sonst Array-Eintraege (Doppel-
+            # Spiele im Radar). Voll neu generiert je Lauf -> kein Datenverlust. Nur DIESE Datei.
+            git checkout "$MINE" -- betfair_prices.json 2>/dev/null && git add betfair_prices.json
+            git diff --staged --quiet || git commit -m "🔧 betfair_prices frisch (kein Merge-Doppel) [skip ci]"
             if git push 2>&1; then echo "✅ Push nach Versuch $attempt"; exit 0; fi
             echo "Push-Versuch $attempt fehlgeschlagen — retry…"; sleep 3
           done
