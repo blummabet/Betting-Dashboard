@@ -766,6 +766,24 @@ def _live_under_reactive(a) -> bool:
     return "under" in lbl or "unter" in lbl
 
 
+def _pub_under_goals(a) -> bool:
+    """16.08.2026 (Lucas: „das mit Under haben wir schon 3x gefixt — wie gibt es das"): Der Live-Under-
+    Riegel (_live_under_reactive) greift NUR in-play. VOR-Anpfiff-Tore-Über/Unter mit Geld auf UNTER
+    (z.B. Girona v Leganes, Under 2.5 @2.04, 30 Min vor Anpfiff) rutschte weiter ins Public. Dieselbe
+    Klasse hat über 21 Public-Under-Pushs einen katastrophalen CLV (Ø -17..-24pp): der Push laeuft dem
+    schon gecrashten Preis HINTERHER, gewinnt hoechstens auf Varianz (Tore-arm ist haeufig), zahlt aber
+    immer den schlechten Preis. Fuer den KURATIERTEN Public-Kanal komplett raus — jedes Tore-Über/Unter
+    mit Geld auf UNTER, live ODER vor Anpfiff. Over/Team-Maerkte bleiben (echte Tor-/Sieg-Erwartung).
+    Trades (Firehose) sieht Vor-Anpfiff-Under weiter; nur das live GEBACKTE Under faellt dort
+    (_trades_reactive_backed_under)."""
+    mk = str(a.get("market") or "")
+    is_goals_ou = ("First Half Goals" in mk) or ("Over/Under" in mk and "Goals" in mk)
+    if not is_goals_ou:
+        return False
+    lbl = str(a.get("leadLabel") or a.get("leadName") or "").lower()
+    return "under" in lbl or "unter" in lbl
+
+
 def _trades_reactive_backed_under(a) -> bool:
     """15.08.2026 (Lucas, B): NUR Trades — das GEBACKTE reaktive Live-Unter (Quote crasht, leadDir 'in',
     Bolton-Typ) raus. Das DRIFTENDE Unter (leadDir 'out') bleibt in Trades: das ist das Fade-/Lay-Signal
@@ -897,7 +915,7 @@ def main():
     pub_alerts = [a for a in pub_alerts if not _draw_inplay_chase(a)]
     # 14.08.2026 (Lucas): unnoetige HT/Live-Pushs raus, wo die Geld-% der Quote widersprechen
     # (Galatasaray 85%@13.50; Wolves Under 87% aber Quote driftet). Trades sieht sie weiter.
-    pub_alerts = [a for a in pub_alerts if not _pub_incoherent(a) and not _pub_live_drift(a) and not _pub_ht_useless(a) and not _pub_unconfirmed_fav(a) and not _live_under_reactive(a)]
+    pub_alerts = [a for a in pub_alerts if not _pub_incoherent(a) and not _pub_live_drift(a) and not _pub_ht_useless(a) and not _pub_unconfirmed_fav(a) and not _pub_under_goals(a)]   # 16.08.2026 (Lucas): Under-Tore aus Public, live UND vor Anpfiff
     pub_sent = 0
     for a in pub_alerts:
         key = a["scenario"] + ":" + a["matchId"]

@@ -129,6 +129,22 @@ def _is_upcoming(m, now):
     return (ko - now).total_seconds() > -KICKOFF_GRACE_S
 
 
+FT_WALL_MIN = 125   # 16.08.2026 (Lucas): nach ~125 Min Wall-Clock ist jedes Fussballspiel durch (90 + HZ + Nachspiel + Puffer)
+
+
+def _is_over(m, now):
+    """16.08.2026 (Lucas: „das Spiel ist vorbei, steht aber oben in der Kohle"): flow_list hatte — anders
+    als steam_list — GAR keinen Fertig-Filter, also hing ein abgelaufenes Spiel (hoechstes Volumen) oben
+    im Zufluss. Durch, wenn der Feed es meldet ODER wall-clock laengst vorbei (der Live-Feed setzt
+    'finished' nicht immer zeitnah — Racing-Villarreal stand auf finished=false bei 2:2, war aber durch).
+    Live-Spiele (Uhr laeuft, < FT_WALL_MIN nach Anpfiff) bleiben — deren Zufluss ist gewollt."""
+    li = m.get("liveInfo") or {}
+    if li.get("finished"):
+        return True
+    ko = _parse_ts(m.get("kickoff"))
+    return ko is not None and (now - ko).total_seconds() > FT_WALL_MIN * 60
+
+
 def steam_list(prices, hist, now, top=TOP_STEAM):
     out = []
     for m in (prices.get("matches") or []):
@@ -150,10 +166,12 @@ def steam_list(prices, hist, now, top=TOP_STEAM):
     return out[:top]
 
 
-def flow_list(prices, hist, top=TOP_FLOW, direction=None):
+def flow_list(prices, hist, now, top=TOP_FLOW, direction=None):
     out = []
     by_id = {str(m.get("matchId")): m for m in (prices.get("matches") or [])}
     for mid, m in by_id.items():
+        if _is_over(m, now):
+            continue   # 16.08.2026 (Lucas): fertige/abgelaufene Spiele raus — steam filtert schon, flow bisher nicht
         arr = hist.get(mid)
         if not isinstance(arr, list) or len(arr) < 2:
             continue
@@ -200,7 +218,7 @@ def build(prices, hist, now, direction=None):
                                  "die Übersicht client-seitig über _bfCoherence."},
         "generatedAt": now.isoformat(),
         "steam": steam_list(prices, hist, now),
-        "flow": flow_list(prices, hist, direction=direction),
+        "flow": flow_list(prices, hist, now, direction=direction),
     }
 
 

@@ -1187,6 +1187,18 @@ function _pwEventLabel(key, names, league){
 // Sportart × Phase (live / ≤3h vor Anpfiff / früher). Cross-Sport-Vergleich wäre unfair
 // (MLB-Markt ≫ Nischen-Esport), darum die Sportart mit im Bucket. Ab ×1.6 auffällig, ab ×2.6 stark.
 var PW_NORM_AMBER = 1.6, PW_NORM_RED = 2.6, PW_NORM_MIN_PEERS = 4, PW_NORM_MIN_USD = 5000, PW_NORM_MIN_INFLOW = 1000;
+// 16.08.2026 (Lucas Übersicht-Check): "welche Seite hat die Masse gesetzt"-Sektionen (Großes Geld,
+// ×-Norm) nur fuer Maerkte mit echter Seiten-Aufteilung. Raus: (a) leere shares:{} (Volumen ohne Split,
+// Capture-Luecke — z.B. cs2-9z-mgc "Geld auf — 0%") und (b) Exact-Score-Props, deren Favorit eine
+// Score-Zeile "0 - 0" ist (keine Seite -> Rauschen; das Moneyline-Event deckt das Spiel schon ab).
+function _pwSideMarket(k,m){
+  if(!m||!m.shares) return false;
+  var names=Object.keys(m.shares); if(!names.length) return false;
+  if(/-exact-score$/i.test(String(k||''))) return false;
+  var fav=names[0], best=-Infinity;
+  for(var i=0;i<names.length;i++){ var u=Number(m.shares[names[i]])||0; if(u>best){best=u;fav=names[i];} }
+  return !_PW_SCORE_RX.test(String(fav||''));
+}
 function _pwNormStage(m){ var h=_pwRealHtk(m); if(h==null) return 'pre'; if(h<0) return 'live'; if(h<=3) return 'soon'; return 'pre'; }
 function _pwNormKey(m){ return _pwSportCategory(m.league)+'|'+_pwNormStage(m); }
 // Frischer Zufluss = Δ Gesamt-Volumen zwischen den letzten zwei History-Punkten (Poly-Volumen
@@ -1243,7 +1255,7 @@ function _pwNormBlock(title,note,items,mode){
 function _pwOverNorm(live,hist){
   if(!live||!Object.keys(live).length) return '';
   var cand=Object.entries(live).map(function(e){return {k:e[0],m:e[1]};})
-    .filter(function(x){return x.m&&x.m.resolved==null&&(x.m.totalUsd||0)>=PW_NORM_MIN_USD&&!_pwKoStale(x.m)&&_pwSportPass(x.m.league);});
+    .filter(function(x){return x.m&&x.m.resolved==null&&(x.m.totalUsd||0)>=PW_NORM_MIN_USD&&!_pwKoStale(x.m)&&_pwSportPass(x.m.league)&&_pwSideMarket(x.k,x.m);});
   if(!cand.length) return '';
   var over=function(items,valFn,floor){
     var base=_pwMedianBy(items,function(it){return _pwNormKey(it.m);},function(it){return it.val;});
@@ -1274,7 +1286,7 @@ if(typeof window!=='undefined'){ window._pwOverNorm=_pwOverNorm; window._pwNormS
 function _pwOverNormTop(limit){
   var live=_pwCache&&_pwCache.broadLive; if(!live) return [];
   var cand=Object.entries(live).map(function(e){return {k:e[0],m:e[1]};})
-    .filter(function(x){return x.m&&x.m.resolved==null&&(x.m.totalUsd||0)>=PW_NORM_MIN_USD&&!_pwKoStale(x.m)&&_pwSportPass(x.m.league);})
+    .filter(function(x){return x.m&&x.m.resolved==null&&(x.m.totalUsd||0)>=PW_NORM_MIN_USD&&!_pwKoStale(x.m)&&_pwSportPass(x.m.league)&&_pwSideMarket(x.k,x.m);})
     .map(function(x){return {k:x.k,m:x.m,val:x.m.totalUsd||0};});
   if(!cand.length) return [];
   var base=_pwMedianBy(cand,function(it){return _pwNormKey(it.m);},function(it){return it.val;});
@@ -1294,7 +1306,7 @@ if(typeof window!=='undefined') window._pwOverNormTop=_pwOverNormTop;
 
 function _pwMoneyLive(live){
   const all=(live?Object.entries(live):[]).map(([k,m])=>({k,m}))
-    .filter(x=>x.m && x.m.resolved==null && x.m.shares && Object.keys(x.m.shares).length && (x.m.totalUsd||0)>=5000 && !_pwKoStale(x.m));   // 16.08.2026 (Lucas): leere shares:{} (Volumen ohne Split, Capture-Luecke) raus -> kein Crash im Geld-Split
+    .filter(x=>x.m && x.m.resolved==null && x.m.shares && Object.keys(x.m.shares).length && (x.m.totalUsd||0)>=5000 && !_pwKoStale(x.m) && _pwSideMarket(x.k,x.m));   // 16.08.2026 (Lucas): leere shares:{} (Volumen ohne Split, Capture-Luecke) raus -> kein Crash im Geld-Split
   const cats=new Set(all.map(x=>_pwSportCategory(x.m.league)));
   const rows=all.filter(x=>_pwSportPass(x.m.league))
     .sort((a,b)=>(b.m.totalUsd||0)-(a.m.totalUsd||0)).slice(0,30);
@@ -2006,7 +2018,7 @@ function _pwMomentum(hist){
     }
     if(!best||Math.abs(best.move)<1) continue;   // <1pp = Rauschen
     const spanH=(Date.parse(latest.ts)-Date.parse(base.ts))/3.6e6;
-    rows.push({key,league,spanH,htk:latest.htk,vol:latest.v,match:_pwNoDraw(Object.keys(latest.p)).join(' vs '),
+    rows.push({key,league,spanH,htk:latest.htk,vol:latest.v,match:_pwPlayLabel(key,Object.keys(latest.p).map(s=>({s}))),   // 16.08.2026 (Lucas): Prop-aware Label (kein Exact-Score-Zeilen-Leak, kein rohes "Over vs Under")
       side:best.side,from:best.from,to:best.to,move:best.move,step:best.step});
   }
   rows.sort((a,b)=>Math.abs(b.move)-Math.abs(a.move));
