@@ -397,16 +397,26 @@ def select(track: dict, seen: dict, now: datetime,
 
 
 def _matchup(key, broad):
-    """Paarung „TeamA v TeamB" aus poly_money_broad_close.json (shares-Keys = Ausgänge). None sonst."""
-    m = (broad or {}).get(key) if isinstance(broad, dict) else None
-    sh = (m or {}).get("shares") if isinstance(m, dict) else None
-    names = list(sh.keys()) if isinstance(sh, dict) else []
-    # 13.08.2026 (Lucas): Draw-Ausgang (z.B. "Draw (A vs. B)") ist KEIN Team -> rausfiltern, sonst
-    # entsteht "A v Draw (A vs. B)". Bei 3-Weg bleiben so die zwei echten Teams stehen.
-    _draw = ("draw", "the draw", "unentschieden")
-    teams = [n for n in names if not str(n).strip().lower().startswith(_draw)]
-    if len(teams) < 2:
-        teams = names   # 2-Weg / Prop ohne klares Draw-Label -> unveraendert
+    """Paarung „TeamA v TeamB" aus poly_money_broad_close.json (shares-Keys = Ausgänge). None sonst.
+    16.08.2026 (Lucas): Prop-Märkte (Über/Unter, Ja/Nein) haben generische Outcomes statt Teams — sonst
+    entsteht „Over v Under". Solche Outcomes rausfiltern (wie den Draw); echte Paarung aus dem BASIS-Event
+    (Key ohne „-more-markets") ziehen. Kein erfasstes Basis-Event -> None (Post zeigt dann die Seite)."""
+    def _gen(n):
+        s = str(n).strip().lower()
+        return (s.startswith("draw") or s.startswith("the draw") or s.startswith("unentschieden")
+                or s in ("over", "under", "über", "unter", "yes", "no", "ja", "nein", "tie"))
+
+    def _teams_of(kk):
+        m = (broad or {}).get(kk) if isinstance(broad, dict) else None
+        sh = (m or {}).get("shares") if isinstance(m, dict) else None
+        names = list(sh.keys()) if isinstance(sh, dict) else []
+        return [n for n in names if not _gen(n)]
+
+    teams = _teams_of(key)
+    if len(teams) < 2 and "-more-markets" in str(key):
+        base = _teams_of(str(key).replace("-more-markets", ""))   # echte Teams aus dem Hauptmarkt
+        if len(base) >= 2:
+            teams = base
     return " v ".join(teams[:2]) if len(teams) >= 2 else None
 
 
