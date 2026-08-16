@@ -1,17 +1,17 @@
 {
- "n": 390,
+ "n": 387,
  "minOdds": 1.35,
- "moneyHitRate": 0.569,
- "priceHitRate": 0.574,
- "brierMoney": 0.5061,
- "brierPrice": 0.4939,
+ "moneyHitRate": 0.576,
+ "priceHitRate": 0.576,
+ "brierMoney": 0.4988,
+ "brierPrice": 0.4905,
  "disagree": {
-  "n": 12,
+  "n": 10,
   "moneyWon": 3,
-  "priceWon": 5,
+  "priceWon": 3,
   "neither": 4
  },
- "verdict": "preis_besser",
+ "verdict": "gleichauf",
  "byLeague": [
   {
    "league": "MLB",
@@ -23,10 +23,18 @@
   },
   {
    "league": "ESPORTS",
-   "n": 159,
-   "moneyHitRate": 0.616,
-   "brierMoney": 0.4624,
-   "brierPrice": 0.4624,
+   "n": 158,
+   "moneyHitRate": 0.62,
+   "brierMoney": 0.462,
+   "brierPrice": 0.462,
+   "verdict": "gleichauf"
+  },
+  {
+   "league": "UFC",
+   "n": 18,
+   "moneyHitRate": 0.444,
+   "brierMoney": 0.5029,
+   "brierPrice": 0.5029,
    "verdict": "gleichauf"
   },
   {
@@ -39,10 +47,10 @@
   },
   {
    "league": "TENNIS",
-   "n": 71,
-   "moneyHitRate": 0.549,
-   "brierMoney": 0.4933,
-   "brierPrice": 0.4933,
+   "n": 70,
+   "moneyHitRate": 0.571,
+   "brierMoney": 0.4816,
+   "brierPrice": 0.4816,
    "verdict": "gleichauf"
   },
   {
@@ -54,19 +62,11 @@
    "verdict": "gleichauf"
   },
   {
-   "league": "UFC",
-   "n": 17,
-   "moneyHitRate": 0.471,
-   "brierMoney": 0.5025,
-   "brierPrice": 0.5024,
-   "verdict": "gleichauf"
-  },
-  {
    "league": "SOCCER",
-   "n": 49,
-   "moneyHitRate": 0.531,
-   "brierMoney": 0.6982,
-   "brierPrice": 0.5908,
+   "n": 47,
+   "moneyHitRate": 0.553,
+   "brierMoney": 0.6643,
+   "brierPrice": 0.5848,
    "verdict": "preis_besser"
   }
  ],
@@ -94,18 +94,6 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 771290
-  },
-  {
-   "key": "lol-hle1-gen-2026-08-10",
-   "league": "ESPORTS",
-   "winner": "Hanwha Life Esports",
-   "moneyFav": "Gen.G",
-   "priceFav": "Gen.G",
-   "moneyShare": 0.565,
-   "priceProb": 0.565,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 659625
   },
   {
    "key": "mlb-cle-det-2026-08-11",
@@ -550,37 +538,49 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 225989
+  },
+  {
+   "key": "mlb-lad-ari-2026-08-09",
+   "league": "MLB",
+   "winner": "Arizona Diamondbacks",
+   "moneyFav": "Los Angeles Dodgers",
+   "priceFav": "Los Angeles Dodgers",
+   "moneyShare": 0.555,
+   "priceProb": 0.555,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 220024
   }
  ],
- "generatedAt": "2026-08-15T23:59:30.455599+00:00",
+ "generatedAt": "2026-08-16T01:59:20.990690+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 419,
   "nfl": 800,
-  "mlb": 582,
+  "mlb": 570,
   "nhl": 403,
-  "mls": 737,
+  "mls": 729,
   "epl": 481,
   "soccer": 800,
-  "tennis": 602,
+  "tennis": 594,
   "ucl": 500,
-  "la-liga": 545,
+  "la-liga": 544,
   "bundesliga": 408,
   "serie-a": 37,
   "ligue-1": 474,
-  "primeira-liga": 515,
-  "brazil-serie-a": 541,
+  "primeira-liga": 510,
+  "brazil-serie-a": 534,
   "brasileirao": 0,
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 601,
+  "esports": 594,
   "cs2": 405,
   "lol": 373,
   "dota": 9,
   "valorant": 419,
-  "ufc": 465,
+  "ufc": 461,
   "mma": 46,
   "boxing": 224,
   "golf": 308,
@@ -590,6 +590,6 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 426
+  "sweepAdded": 428
  }
 }
