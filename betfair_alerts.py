@@ -728,10 +728,13 @@ def _pub_incoherent(a) -> bool:
     return sh >= PUB_INCOHERENT_SHARE and isinstance(od, (int, float)) and od >= PUB_INCOHERENT_ODD
 
 
-def _pub_live_drift(a) -> bool:
-    """Live: die Geld-Seite driftet RAUS (leadDir 'out') — der Preis laeuft gegen die %-Mehrheit
-    (Under-Fade). Fuer Public raus."""
-    return bool(_is_live(a)) and a.get("leadDir") == "out"
+def _pub_drift(a) -> bool:
+    """16.08.2026 (Lucas, Lens v PSG @1.73 in Public trotz „⚠️ kein Back-Rückhalt"): Geld-Seite driftet
+    RAUS (leadDir 'out') = keine Quoten-Bestaetigung, der Preis laeuft GEGEN das Geld. Frueher nur LIVE
+    gefiltert — der Vor-Anpfiff-1X2-Fall (PSG 84% @1.73, 1.64->1.73) rutschte durch, weil der Favorit
+    ueber PUB_SHORT_FAV_ODD (1.35) lag. Jetzt live UND vor Anpfiff: driftendes Geld gehoert nie ins
+    kuratierte Public. Trades sieht es weiter (mit ⚠️-Drift-Hinweis)."""
+    return a.get("leadDir") == "out"
 
 
 # 14.08.2026 (Lucas): HZ-Pushs nur solange die erste Halbzeit LAEUFT und der Ausgang plausibel ist.
@@ -915,17 +918,17 @@ def main():
     pub_alerts = [a for a in pub_alerts if not _draw_inplay_chase(a)]
     # 14.08.2026 (Lucas): unnoetige HT/Live-Pushs raus, wo die Geld-% der Quote widersprechen
     # (Galatasaray 85%@13.50; Wolves Under 87% aber Quote driftet). Trades sieht sie weiter.
-    pub_alerts = [a for a in pub_alerts if not _pub_incoherent(a) and not _pub_live_drift(a) and not _pub_ht_useless(a) and not _pub_unconfirmed_fav(a) and not _pub_under_goals(a)]   # 16.08.2026 (Lucas): Under-Tore aus Public, live UND vor Anpfiff
+    pub_alerts = [a for a in pub_alerts if not _pub_incoherent(a) and not _pub_drift(a) and not _pub_ht_useless(a) and not _pub_unconfirmed_fav(a) and not _pub_under_goals(a)]   # 16.08.2026 (Lucas): Under-Tore aus Public, live UND vor Anpfiff
     pub_sent = 0
     for a in pub_alerts:
         key = a["scenario"] + ":" + a["matchId"]
         if _pub_skip_resend(a, pub_seen):
             continue   # 15.08.2026 (Lucas): live nur EIN Public-Push pro Spiel
-        if should_send_public(pub_seen, key, a["value"]):
+        if should_send_public(pub_seen, key, _lead_magnitude(a)):   # 16.08.2026 (Lucas): Zufluss, nicht das wachsende Gesamtvolumen
             # 13.08.2026 (Lucas): Zweitmeinung (Pinnacle/Soft/Poly) auch im Public — wie im Trades-Push (nur fresh).
             pub_msg = build_public_message(a) + (_consensus_block(a, cidx) if a["scenario"] == "fresh" else "")
             if _tg_public(pub_msg):
-                _pub_seen_put(pub_seen, key, a["value"])
+                _pub_seen_put(pub_seen, key, _lead_magnitude(a))
                 pub_sent += 1
                 _log_public_push(a, cidx)   # fürs Tracking/Auswerten (+ Konsens-Zweitmeinung)
     try:

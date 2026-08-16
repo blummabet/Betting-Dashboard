@@ -569,6 +569,28 @@ class TestConsensusBlock(unittest.TestCase):
         self.assertIsNone(BA._consensus_for_push({"matchId": "1"}, None))
 
 
+class TestPubDriftAndResend(unittest.TestCase):
+    """16.08.2026 (Lucas, Lens v PSG 2x in Public, 4 Min Abstand): (1) driftendes Geld (leadDir 'out')
+    gehoert nie ins Public — live UND vor Anpfiff. (2) Public-Resend gatet auf den ZUFLUSS
+    (_lead_magnitude), nicht aufs ewig wachsende Gesamt-Marktvolumen (a['value']=mkt_total)."""
+    def test_pub_drift_blocks_out_live_and_prematch(self):
+        self.assertTrue(BA._pub_drift({"leadDir": "out"}))                       # vor Anpfiff
+        self.assertTrue(BA._pub_drift({"leadDir": "out", "live": {"time": 30}})) # live
+        self.assertFalse(BA._pub_drift({"leadDir": "in"}))                       # Back -> bleibt
+        self.assertFalse(BA._pub_drift({"leadDir": "flat"}))
+
+    def test_pub_resend_gates_on_inflow_not_total(self):
+        seen = {}
+        a1 = {"scenario": "fresh", "inflow": 55700, "total": 170300, "value": 170300}
+        m1 = BA._lead_magnitude(a1)
+        self.assertEqual(m1, 55700)                                             # Zufluss, nicht total
+        self.assertTrue(BA.should_send_public(seen, "fresh:X", m1))            # 1. Push
+        BA._pub_seen_put(seen, "fresh:X", m1)
+        a2 = {"scenario": "fresh", "inflow": 67700, "total": 316700, "value": 316700}
+        # Gesamtvolumen x1.86 (wuerde faelschlich re-senden), Zufluss nur x1.22 < 1.5 -> KEIN Resend:
+        self.assertFalse(BA.should_send_public(seen, "fresh:X", BA._lead_magnitude(a2)))
+
+
 class TestPubUnderGoals(unittest.TestCase):
     """16.08.2026 (Lucas): Under-Tore-Über/Unter gehoert NIE in den Public-Kanal — live UND vor Anpfiff
     (der Live-Riegel griff nur in-play, Girona-v-Leganes-Under 2.5 vor Anpfiff rutschte durch)."""
