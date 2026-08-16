@@ -197,6 +197,9 @@ LEAGUE_TAGS_FILE = "poly_football_tags.json"
 _GENERIC_TAG_SKIP = {"sports", "games", "soccer", "football", "all", "live", "match", "matches",
                      "sport", "world", "international", "recurring", "weekly", "daily", "new",
                      "trending", "featured", "hide-from-new", "esports"}
+# 16.08.2026 (Lucas): NUR echte Liga-/Wettbewerb-Tags aufnehmen. Poly-Events tragen Dutzende Tags
+# (Team/Spieler/Thema) — ohne diesen Filter explodiert die Registry (380 Junk statt ~36 Ligen).
+_LEAGUE_PAT = r"(liga|league|ligue|bundesliga|serie-[abc]|eredivisie|eliteserien|allsvenskan|superettan|ekstraklasa|championship|premier|division|veikkausliiga|superliga)"
 
 
 def _discover_football_tags(events):
@@ -214,7 +217,9 @@ def _discover_football_tags(events):
             if "soccer" not in slugs:
                 continue
             for s in slugs:
-                if s not in _GENERIC_TAG_SKIP and not s.isdigit() and 2 <= len(s) <= 40:
+                if s in _GENERIC_TAG_SKIP or s.isdigit() or not (2 <= len(s) <= 40):
+                    continue
+                if _re.search(_LEAGUE_PAT, s):   # 16.08.2026 (Lucas): nur echte Liga-Tags, kein Team/Spieler/Thema-Junk
                     out.add(s)
         except Exception:
             continue

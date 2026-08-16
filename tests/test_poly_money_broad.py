@@ -19,6 +19,10 @@ def _no_slug_backfill(monkeypatch):
     # Tag/Sweep-Verhalten und bleiben deterministisch (sonst zieht der Backfill echte Auflösungen
     # rein und "toter Tag" ist nicht mehr []).
     monkeypatch.setattr(B, "backfill_resolutions_by_slug", lambda *a, **k: [])
+    # 16.08.2026 (Lucas): Self-Discovery-Registry aus den fetch_markets-Unit-Tests raushalten -> die
+    # Tests pruefen reines Tag/Sweep-Verhalten, unabhaengig von einer poly_football_tags.json auf Platte.
+    monkeypatch.setattr(B, "_load_league_registry", lambda: set())
+    monkeypatch.setattr(B, "_save_league_registry", lambda *a, **k: None)
 
 
 class TestSportTags:
