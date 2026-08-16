@@ -853,7 +853,7 @@ function _pwGlobalWhales(live){
   for(const [k,m] of (live?Object.entries(live):[])){
     if(!m||!Array.isArray(m.whales)||!m.whales.length||!_pwSportPass(m.league)) continue;
     if(m.resolved!=null||_pwKoStale(m)) continue;   // 03.08.2026 (Lucas): schon angepfiffene/aufgeloeste Spiele raus
-    const match=Object.keys(m.shares||{}).join(' vs ');
+    const match=(typeof _pwPlayLabel==='function')?_pwPlayLabel(k,Object.keys(m.shares||{}).map(s=>({s}))):Object.keys(m.shares||{}).join(' vs ');   // 16.08.2026 (Lucas): Spielkontext statt "Over vs Under"
     for(const wh of m.whales) if(wh&&wh.wallet) all.push({wallet:wh.wallet,side:wh.side,usd:Number(wh.usd)||0,key:k,league:m.league,match});
   }
   all.sort((a,b)=>b.usd-a.usd);
@@ -1063,7 +1063,7 @@ function _pwGlobalWhaleLeaderboard(live){
   const agg={};
   for(const [k,m] of (live?Object.entries(live):[])){
     if(!m||m.resolved!=null||_pwKoStale(m)||!Array.isArray(m.whales)||!m.whales.length||!_pwSportPass(m.league)) continue;   // 03.08.2026 (Lucas): + Anpfiff-Gate
-    const match=Object.keys(m.shares||{}).join(' vs ');
+    const match=(typeof _pwPlayLabel==='function')?_pwPlayLabel(k,Object.keys(m.shares||{}).map(s=>({s}))):Object.keys(m.shares||{}).join(' vs ');   // 16.08.2026 (Lucas): Spielkontext statt "Over vs Under"
     for(const wh of m.whales){
       if(!wh||!wh.wallet) continue;
       const usd=Number(wh.usd)||0;
@@ -1146,27 +1146,34 @@ function _pwGlobalEdge(cs){
 // 26.07.2026 (Lucas: No-vs-Yes als Spielname ist sinnlos). Team-Maerkte haben echte Namen in den
 // Ausgaengen (-> A vs B). Binaere Ja/Nein-Maerkte (Props, Einzelfragen) haetten nur Yes/No -> als
 // Spielname wertlos. Dann lesbaren Namen aus dem Slug ableiten: {liga}-{a}-{b}-{datum}[-{prop}].
-function _pwEventLabel(key, names, league){
-  const GEN=/^(yes|no|ja|nein|over|under|draw|remis)$/i;
-  // 14.08.2026 (Lucas): "Draw (A vs. B)" ist ein Outcome, kein drittes Team — praefix-basiert raus
-  // (GEN mit $-Anker traf nur das nackte "draw"). Fallback greift, wenn <2 echte Namen bleiben.
-  const DRAWP=/^(draw|the draw|unentschieden|remis)\b/i;
-  const _real=(arr)=>(arr||[]).filter(n=>{const t=String(n).trim();return !GEN.test(t)&&!DRAWP.test(t);});
-  const _vs=(a)=>a.map(_pwEsc).join(' <span style="color:#6e7681">vs</span> ');
-  const real=_real(names);
-  if(real.length>=2) return _vs(real);
-  // 16.08.2026 (Lucas): Prop-Markt (Over/Under, "-more-markets") -> Outcomes sind KEINE Teams. Echte
-  // Paarung aus dem BASIS-Event holen; sonst leakt "DEN ODE HOR More Markets" (roher Slug + Suffix).
-  const base=String(key||'').replace(/-(more-markets|exact-score|halftime-result|1st-half|first-half|2nd-half)$/i,'');
-  if(base!==String(key||'')){
-    const srcs=[_pwCache&&_pwCache.broadLiveNow,_pwCache&&_pwCache.broadLive];
-    for(let i=0;i<srcs.length;i++){
-      const bm=srcs[i]&&srcs[i][base];
-      const bnames=(bm&&bm.shares)?_real(Object.keys(bm.shares)):[];
-      if(bnames.length>=2) return _vs(bnames);
-    }
+// 16.08.2026 (Lucas): geteilter Team-Resolver fuer ALLE Label-Funktionen. Bei Prop-Maerkten
+// (-more-markets/-exact-score/…) sind die Outcomes KEINE Teams (Over/Under, Score-Zeilen "0 - 0") ->
+// echte Paarung aus dem BASIS-Event ziehen. Liefert {teams:[A,B]|null, base}.
+const _PW_SCORE_RX=/\d\s*[-:]\s*\d/;
+const _PW_GEN_RX=/^(yes|no|ja|nein|over|under|draw|remis|tie)$/i;
+const _PW_DRAWP_RX=/^(draw|the draw|unentschieden|remis)\b/i;
+const _PW_PROP_SUFFIX_RX=/-(more-markets|exact-score|halftime-result|1st-half|first-half|2nd-half)$/i;
+function _pwRealTeams(arr){
+  return (arr||[]).filter(n=>{const t=String(n).trim();return t&&!_PW_GEN_RX.test(t)&&!_PW_DRAWP_RX.test(t)&&!_PW_SCORE_RX.test(t);});
+}
+function _pwResolveTeams(key, names){
+  const base=String(key||'').replace(_PW_PROP_SUFFIX_RX,'');
+  if(base===String(key||'')){                     // kein Prop -> Outcomes SIND die Teams
+    const r=_pwRealTeams(names); return {teams:r.length>=2?r.slice(0,2):null, base};
   }
-  let str=base.replace(/-\d{4}-\d{2}-\d{2}/g,'');   // Prop-Suffix schon weg -> kein "More Markets"
+  const srcs=[_pwCache&&_pwCache.broadLiveNow,_pwCache&&_pwCache.broadLive];  // Prop -> Teams aus Basis-Event
+  for(let i=0;i<srcs.length;i++){
+    const bm=srcs[i]&&srcs[i][base];
+    const r=bm&&bm.shares?_pwRealTeams(Object.keys(bm.shares)):[];
+    if(r.length>=2) return {teams:r.slice(0,2), base};
+  }
+  return {teams:null, base};
+}
+function _pwEventLabel(key, names, league){
+  const {teams,base}=_pwResolveTeams(key,names);
+  if(teams) return teams.map(_pwEsc).join(' <span style="color:#6e7681">vs</span> ');
+  // 16.08.2026 (Lucas): keine Teams aufloesbar -> Slug MIT Suffix als Markt-Typ-Hinweis (kein blindes Strippen).
+  let str=String(key||'').replace(/-\d{4}-\d{2}-\d{2}/g,'');
   let parts=str.split('-').filter(Boolean);
   const lg=String(league||'').toLowerCase();
   if(parts.length>1 && parts[0].toLowerCase()===lg) parts.shift();
@@ -1539,7 +1546,7 @@ function _pwTopPlays(limit, live, useSportPass){
   // Spiel+Seite (Key ohne "-more-markets") dedupen, staerkste Conviction gewinnt.
   const _seen={}, _dedup=[];
   for(const r of all){
-    const gk=String(r.key||'').replace('-more-markets|','|');
+    const gk=String(r.key||'').replace(_PW_PROP_SUFFIX_RX,'');   // 16.08.2026 (Lucas): Basis + -more-markets/-exact-score = EIN Spiel -> ein Pick (staerkste Conviction)
     if(_seen[gk]==null){ _seen[gk]=_dedup.length; _dedup.push(r); }
     else if((+r.conv||0)>(+_dedup[_seen[gk]].conv||0)){ _dedup[_seen[gk]]=r; }
   }
@@ -1748,14 +1755,9 @@ function _pwNoDraw(names){
 }
 function _pwPlayLabel(key,oc){
   const names=(oc||[]).map(o=>String(o.s||'').trim()).filter(Boolean);
-  if(names.length && names.every(n=>_PW_GENERIC_OUTCOME.test(n))){
-    const p=_pwPrettyKey(key);
-    if(p) return p;
-  }
-  // 14.08.2026 (Lucas): Draw-Ausgang ("Draw (A vs. B)") ist KEIN Team -> rausfiltern, sonst entsteht
-  // "A vs B vs Draw (A vs. B)". Bei 3-Weg bleiben die zwei echten Teams (gleicher Fix wie _matchup).
-  const _teams=names.filter(n=>!/^(draw|the draw|unentschieden)\b/i.test(n));
-  return (_teams.length>=2?_teams:names).join(' vs ');
+  const {teams,base}=_pwResolveTeams(key,names);   // 16.08.2026 (Lucas): Prop-aware, wie _pwEventLabel
+  if(teams) return teams.join(' vs ');
+  return _pwPrettyKey(key);                         // 16.08.2026 (Lucas): keine Teams -> Slug + Markt-Typ-Hinweis
 }
 function _pwShortlistScore(key,m){
   const oc=Object.entries(m.shares||{}).map(([s,u])=>({s,u:Number(u)||0}));
