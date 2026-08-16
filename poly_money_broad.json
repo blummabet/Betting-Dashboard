@@ -1,26 +1,18 @@
 {
- "n": 389,
+ "n": 390,
  "minOdds": 1.35,
- "moneyHitRate": 0.571,
- "priceHitRate": 0.573,
- "brierMoney": 0.506,
+ "moneyHitRate": 0.569,
+ "priceHitRate": 0.574,
+ "brierMoney": 0.5061,
  "brierPrice": 0.4939,
  "disagree": {
-  "n": 13,
-  "moneyWon": 4,
+  "n": 12,
+  "moneyWon": 3,
   "priceWon": 5,
   "neither": 4
  },
  "verdict": "preis_besser",
  "byLeague": [
-  {
-   "league": "UFC",
-   "n": 16,
-   "moneyHitRate": 0.5,
-   "brierMoney": 0.5019,
-   "brierPrice": 0.502,
-   "verdict": "gleichauf"
-  },
   {
    "league": "MLB",
    "n": 79,
@@ -59,6 +51,14 @@
    "moneyHitRate": 0.333,
    "brierMoney": 0.5719,
    "brierPrice": 0.5719,
+   "verdict": "gleichauf"
+  },
+  {
+   "league": "UFC",
+   "n": 17,
+   "moneyHitRate": 0.471,
+   "brierMoney": 0.5025,
+   "brierPrice": 0.5024,
    "verdict": "gleichauf"
   },
   {
@@ -444,6 +444,18 @@
    "totalUsd": 271326
   },
   {
+   "key": "ufc-vic-tre3-2026-08-15",
+   "league": "UFC",
+   "winner": "Tresean Gore",
+   "moneyFav": "Vicente Luque",
+   "priceFav": "Vicente Luque",
+   "moneyShare": 0.505,
+   "priceProb": 0.505,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 267115
+  },
+  {
    "key": "mlb-sea-nyy-2026-08-11",
    "league": "MLB",
    "winner": "New York Yankees",
@@ -538,21 +550,9 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 225989
-  },
-  {
-   "key": "mlb-lad-ari-2026-08-09",
-   "league": "MLB",
-   "winner": "Arizona Diamondbacks",
-   "moneyFav": "Los Angeles Dodgers",
-   "priceFav": "Los Angeles Dodgers",
-   "moneyShare": 0.555,
-   "priceProb": 0.555,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 220024
   }
  ],
- "generatedAt": "2026-08-15T23:36:34.302657+00:00",
+ "generatedAt": "2026-08-15T23:59:30.455599+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -569,8 +569,8 @@
   "bundesliga": 408,
   "serie-a": 37,
   "ligue-1": 474,
-  "primeira-liga": 516,
-  "brazil-serie-a": 542,
+  "primeira-liga": 515,
+  "brazil-serie-a": 541,
   "brasileirao": 0,
   "belgium-pro-league": 0,
   "eredivisie": 0,
@@ -580,7 +580,7 @@
   "lol": 373,
   "dota": 9,
   "valorant": 419,
-  "ufc": 466,
+  "ufc": 465,
   "mma": 46,
   "boxing": 224,
   "golf": 308,
@@ -590,6 +590,6 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 425
+  "sweepAdded": 426
  }
 }
