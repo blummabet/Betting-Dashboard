@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-08-16T04:04:20.074644+00:00",
+ "updatedAt": "2026-08-16T04:52:04.493125+00:00",
  "stake": 10.0,
  "expired": 0,
  "open": {
@@ -56,7 +56,7 @@
    "entryPrice": 0.555,
    "firstTs": "2026-08-15T23:36:34.896005+00:00",
    "lastPrice": 0.565,
-   "lastTs": "2026-08-16T04:04:20.074644+00:00",
+   "lastTs": "2026-08-16T04:52:04.493125+00:00",
    "htkAtEntry": 0.4173983333333333,
    "public": true,
    "reasons": [
@@ -78,7 +78,7 @@
    "entryPrice": 0.455,
    "firstTs": "2026-08-15T23:36:34.896005+00:00",
    "lastPrice": 0.455,
-   "lastTs": "2026-08-16T04:04:20.074644+00:00",
+   "lastTs": "2026-08-16T04:52:04.493125+00:00",
    "htkAtEntry": 2.9173980555555556,
    "public": true,
    "reasons": [
@@ -100,7 +100,7 @@
    "entryPrice": 0.775,
    "firstTs": "2026-08-15T23:59:31.128176+00:00",
    "lastPrice": 0.805,
-   "lastTs": "2026-08-16T04:04:20.074644+00:00",
+   "lastTs": "2026-08-16T04:52:04.493125+00:00",
    "htkAtEntry": 0.7107472222222222,
    "public": false,
    "reasons": [
@@ -122,7 +122,7 @@
    "entryPrice": 0.5,
    "firstTs": "2026-08-16T01:59:21.615434+00:00",
    "lastPrice": 0.5,
-   "lastTs": "2026-08-16T04:04:20.074644+00:00",
+   "lastTs": "2026-08-16T04:52:04.493125+00:00",
    "htkAtEntry": 0.03414333333333333,
    "public": true,
    "reasons": [
@@ -135,28 +135,6 @@
    ],
    "stake": 10.0
   },
-  "mlb-tex-oak-2026-08-15|Texas Rangers": {
-   "key": "mlb-tex-oak-2026-08-15",
-   "side": "Texas Rangers",
-   "verdict": "BET",
-   "conv": 5,
-   "league": "MLB",
-   "entryPrice": 0.605,
-   "firstTs": "2026-08-16T03:16:14.656016+00:00",
-   "lastPrice": 0.605,
-   "lastTs": "2026-08-16T04:04:20.074644+00:00",
-   "htkAtEntry": -1.570221111111111,
-   "public": false,
-   "reasons": [
-    "großes Geld auf Texas Rangers (60%) → $141K",
-    "Pinnacle: Poly 17pp zu billig → Value"
-   ],
-   "signals": [
-    "money",
-    "pinn"
-   ],
-   "stake": 10.0
-  },
   "lol-lgd-jdg-2026-08-16|JD Gaming": {
    "key": "lol-lgd-jdg-2026-08-16",
    "side": "JD Gaming",
@@ -166,7 +144,7 @@
    "entryPrice": 0.695,
    "firstTs": "2026-08-16T04:04:20.074644+00:00",
    "lastPrice": 0.695,
-   "lastTs": "2026-08-16T04:04:20.074644+00:00",
+   "lastTs": "2026-08-16T04:52:04.493125+00:00",
    "htkAtEntry": 2.9553930555555556,
    "public": true,
    "reasons": [
@@ -7627,16 +7605,38 @@
    "firstTs": "2026-08-15T20:41:26.315953+00:00",
    "settledTs": "2026-08-16T04:04:20.074644+00:00",
    "resolvedTs": "2026-08-16T04:04:19.370819+00:00"
+  },
+  {
+   "key": "mlb-tex-oak-2026-08-15",
+   "side": "Texas Rangers",
+   "verdict": "BET",
+   "conv": 5,
+   "league": "MLB",
+   "entryPrice": 0.605,
+   "closePrice": 0.605,
+   "result": "win",
+   "winner": "Texas Rangers",
+   "pnl": 6.53,
+   "clvPP": 0.0,
+   "stake": 10.0,
+   "public": false,
+   "signals": [
+    "money",
+    "pinn"
+   ],
+   "firstTs": "2026-08-16T03:16:14.656016+00:00",
+   "settledTs": "2026-08-16T04:52:04.493125+00:00",
+   "resolvedTs": "2026-08-16T04:52:03.788477+00:00"
   }
  ],
  "agg": {
   "all": {
-   "n": 348,
-   "wins": 190,
-   "hit": 0.546,
-   "pnl": -212.29,
-   "stake": 3480.0,
-   "roi": -0.061,
+   "n": 349,
+   "wins": 191,
+   "hit": 0.5473,
+   "pnl": -205.76,
+   "stake": 3490.0,
+   "roi": -0.059,
    "clvAvg": -0.04
   },
   "public": {
@@ -7659,12 +7659,12 @@
     "clvAvg": 0.0
    },
    "5": {
-    "n": 50,
-    "wins": 18,
-    "hit": 0.36,
-    "pnl": -151.65,
-    "stake": 500.0,
-    "roi": -0.3033,
+    "n": 51,
+    "wins": 19,
+    "hit": 0.3725,
+    "pnl": -145.12,
+    "stake": 510.0,
+    "roi": -0.2845,
     "clvAvg": 0.08
    },
    "6": {
@@ -7715,12 +7715,12 @@
   },
   "byVerdict": {
    "BET": {
-    "n": 270,
-    "wins": 168,
-    "hit": 0.6222,
-    "pnl": -55.6,
-    "stake": 2700.0,
-    "roi": -0.0206,
+    "n": 271,
+    "wins": 169,
+    "hit": 0.6236,
+    "pnl": -49.07,
+    "stake": 2710.0,
+    "roi": -0.0181,
     "clvAvg": -0.08
    },
    "FADE": {
@@ -7735,21 +7735,21 @@
   },
   "bySignal": {
    "money": {
-    "n": 168,
-    "wins": 117,
-    "hit": 0.6964,
-    "pnl": 41.61,
-    "stake": 1680.0,
-    "roi": 0.0248,
+    "n": 169,
+    "wins": 118,
+    "hit": 0.6982,
+    "pnl": 48.14,
+    "stake": 1690.0,
+    "roi": 0.0285,
     "clvAvg": -0.18
    },
    "pinn": {
-    "n": 2,
-    "wins": 1,
-    "hit": 0.5,
-    "pnl": -6.01,
-    "stake": 20.0,
-    "roi": -0.3005,
+    "n": 3,
+    "wins": 2,
+    "hit": 0.6667,
+    "pnl": 0.52,
+    "stake": 30.0,
+    "roi": 0.0173,
     "clvAvg": 0.0
    },
    "sharp": {
