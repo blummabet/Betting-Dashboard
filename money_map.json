@@ -1,6 +1,6 @@
 {
-"generatedAt": "2026-08-16T11:29:41.928388+00:00",
-"count": 11,
+"generatedAt": "2026-08-16T11:44:46.997366+00:00",
+"count": 13,
 "rows": [
 {
 "matchId": "35920367",
@@ -13,13 +13,13 @@
 "betfair": {
 "side": "away",
 "name": "FC Groningen",
-"sharePct": 77,
-"eur": 164363
+"sharePct": 81,
+"eur": 201757
 },
 "poly": {
 "side": "away",
 "name": "FC Groningen",
-"sharePct": 97,
+"sharePct": 96,
 "usd": 227865,
 "src": "live"
 },
@@ -28,29 +28,34 @@
 "nSources": 2
 },
 {
-"matchId": "35688892",
-"home": "Arsenal",
-"away": "Man City",
-"league": "English Community Shield",
-"live": false,
-"kickoff": "2026-08-16T14:00:00Z",
-"verdict": "uneinig",
+"matchId": "35923723",
+"home": "Arminia Bielefeld",
+"away": "Cottbus",
+"league": "German Bundesliga 2",
+"live": true,
+"kickoff": "2026-08-16T11:30:00Z",
+"verdict": "konsens",
 "betfair": {
-"side": "draw",
-"name": "The Draw",
-"sharePct": 36,
-"eur": 94955
+"side": "home",
+"name": "Arminia Bielefeld",
+"sharePct": 61,
+"eur": 115606
 },
 "poly": {
-"side": "away",
-"name": "Manchester City",
-"sharePct": 51,
-"usd": 182024,
-"src": "close"
+"side": "home",
+"name": "DSC Arminia Bielefeld",
+"sharePct": 62,
+"usd": 13989,
+"src": "live"
 },
-"pinn": null,
-"mmStrong": false,
-"nSources": 2
+"pinn": {
+"fav": "home",
+"home": 0.6241,
+"draw": 0.2196,
+"away": 0.1563
+},
+"mmStrong": true,
+"nSources": 3
 },
 {
 "matchId": "35916763",
@@ -63,23 +68,78 @@
 "betfair": {
 "side": "home",
 "name": "Feyenoord",
-"sharePct": 90,
-"eur": 94281
+"sharePct": 91,
+"eur": 114289
 },
 "poly": {
 "side": "home",
 "name": "Feyenoord Rotterdam",
-"sharePct": 84,
-"usd": 10589,
+"sharePct": 96,
+"usd": 40784,
 "src": "close"
 },
 "pinn": {
 "fav": "home",
-"home": 0.7236,
-"draw": 0.1587,
-"away": 0.1178
+"home": 0.7429,
+"draw": 0.1533,
+"away": 0.1038
 },
 "mmStrong": true,
+"nSources": 3
+},
+{
+"matchId": "35688892",
+"home": "Arsenal",
+"away": "Man City",
+"league": "English Community Shield",
+"live": false,
+"kickoff": "2026-08-16T14:00:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "away",
+"name": "Man City",
+"sharePct": 34,
+"eur": 109068
+},
+"poly": {
+"side": "away",
+"name": "Manchester City",
+"sharePct": 50,
+"usd": 186420,
+"src": "close"
+},
+"pinn": null,
+"mmStrong": false,
+"nSources": 2
+},
+{
+"matchId": "35928117",
+"home": "Hannover",
+"away": "Wolfsburg",
+"league": "German Bundesliga 2",
+"live": true,
+"kickoff": "2026-08-16T11:30:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "home",
+"name": "Hannover",
+"sharePct": 52,
+"eur": 105657
+},
+"poly": {
+"side": "home",
+"name": "Hannover 96",
+"sharePct": 84,
+"usd": 64937,
+"src": "live"
+},
+"pinn": {
+"fav": "home",
+"home": 0.4079,
+"draw": 0.2636,
+"away": 0.3286
+},
+"mmStrong": false,
 "nSources": 3
 },
 {
@@ -94,13 +154,13 @@
 "side": "away",
 "name": "Villarreal",
 "sharePct": 67,
-"eur": 90317
+"eur": 93107
 },
 "poly": {
 "side": "away",
 "name": "Villarreal CF",
 "sharePct": 46,
-"usd": 247273,
+"usd": 248800,
 "src": "upcoming"
 },
 "pinn": {
@@ -123,43 +183,18 @@
 "betfair": {
 "side": "away",
 "name": "Jeonbuk Motors",
-"sharePct": 56,
-"eur": 85473
+"sharePct": 52,
+"eur": 91139
 },
 "poly": {
 "side": "home",
 "name": "Bucheon FC 1995",
-"sharePct": 81,
+"sharePct": 82,
 "usd": 94257,
 "src": "live"
 },
 "pinn": null,
-"mmStrong": true,
-"nSources": 2
-},
-{
-"matchId": "35920293",
-"home": "Incheon Utd",
-"away": "Gimcheon Sangmu",
-"league": "South Korean K1 League",
-"live": true,
-"kickoff": "2026-08-16T10:30:00Z",
-"verdict": "konsens",
-"betfair": {
-"side": "home",
-"name": "Incheon Utd",
-"sharePct": 80,
-"eur": 54009
-},
-"poly": {
-"side": "home",
-"name": "Incheon United FC",
-"sharePct": 92,
-"usd": 140927,
-"src": "live"
-},
-"pinn": null,
-"mmStrong": true,
+"mmStrong": false,
 "nSources": 2
 },
 {
@@ -174,52 +209,77 @@
 "side": "away",
 "name": "Southampton",
 "sharePct": 67,
-"eur": 52232
+"eur": 62697
 },
 "poly": {
 "side": "away",
 "name": "Southampton FC",
-"sharePct": 34,
-"usd": 19763,
+"sharePct": 54,
+"usd": 28277,
 "src": "close"
 },
 "pinn": {
 "fav": "away",
-"home": 0.2526,
-"draw": 0.2587,
-"away": 0.4887
+"home": 0.2525,
+"draw": 0.2614,
+"away": 0.486
 },
 "mmStrong": false,
 "nSources": 3
 },
 {
-"matchId": "35928117",
-"home": "Hannover",
-"away": "Wolfsburg",
-"league": "German Bundesliga 2",
-"live": false,
-"kickoff": "2026-08-16T11:30:00Z",
+"matchId": "35920293",
+"home": "Incheon Utd",
+"away": "Gimcheon Sangmu",
+"league": "South Korean K1 League",
+"live": true,
+"kickoff": "2026-08-16T10:30:00Z",
 "verdict": "konsens",
 "betfair": {
 "side": "home",
-"name": "Hannover",
-"sharePct": 51,
-"eur": 26834
+"name": "Incheon Utd",
+"sharePct": 80,
+"eur": 55143
 },
 "poly": {
-"side": "away",
-"name": "VfL Wolfsburg",
-"sharePct": 63,
-"usd": 10761,
+"side": "home",
+"name": "Incheon United FC",
+"sharePct": 92,
+"usd": 140927,
+"src": "live"
+},
+"pinn": null,
+"mmStrong": true,
+"nSources": 2
+},
+{
+"matchId": "35921467",
+"home": "Djurgardens",
+"away": "AIK",
+"league": "Swedish Allsvenskan",
+"live": false,
+"kickoff": "2026-08-16T12:00:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "home",
+"name": "Djurgardens",
+"sharePct": 90,
+"eur": 26986
+},
+"poly": {
+"side": "home",
+"name": "Djurgardens IF",
+"sharePct": 97,
+"usd": 22165,
 "src": "close"
 },
 "pinn": {
 "fav": "home",
-"home": 0.4418,
-"draw": 0.2481,
-"away": 0.3101
+"home": 0.6867,
+"draw": 0.1794,
+"away": 0.1339
 },
-"mmStrong": false,
+"mmStrong": true,
 "nSources": 3
 },
 {
@@ -233,13 +293,13 @@
 "betfair": {
 "side": "draw",
 "name": "The Draw",
-"sharePct": 42,
-"eur": 20682
+"sharePct": 44,
+"eur": 23644
 },
 "poly": {
 "side": "away",
 "name": "Sagan Tosu",
-"sharePct": 37,
+"sharePct": 35,
 "usd": 27153,
 "src": "live"
 },
@@ -258,8 +318,8 @@
 "betfair": {
 "side": "home",
 "name": "Varnamo",
-"sharePct": 55,
-"eur": 18325
+"sharePct": 57,
+"eur": 20715
 },
 "poly": {
 "side": "home",
@@ -283,8 +343,8 @@
 "betfair": {
 "side": "away",
 "name": "Seongnam FC",
-"sharePct": 85,
-"eur": 15471
+"sharePct": 84,
+"eur": 16601
 },
 "poly": {
 "side": "away",
