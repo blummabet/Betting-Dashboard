@@ -1,23 +1,23 @@
 {
-"generatedAt": "2026-08-16T17:29:03.940983+00:00",
+"generatedAt": "2026-08-16T17:30:17.274166+00:00",
 "byVerdict": {
 "konsens": {
-"n": 137,
-"wins": 105,
-"hitRate": 0.7664,
-"polyN": 125,
-"polyWins": 93,
-"polyHitRate": 0.744,
+"n": 139,
+"wins": 107,
+"hitRate": 0.7698,
+"polyN": 127,
+"polyWins": 95,
+"polyHitRate": 0.748,
 "pinnN": 8,
 "pinnHitRate": 0.875
 },
 "uneinig": {
-"n": 50,
+"n": 51,
 "wins": 12,
-"hitRate": 0.24,
-"polyN": 41,
-"polyWins": 11,
-"polyHitRate": 0.2683,
+"hitRate": 0.2353,
+"polyN": 42,
+"polyWins": 12,
+"polyHitRate": 0.2857,
 "pinnN": 26,
 "pinnHitRate": 0.5769
 },
@@ -43,15 +43,15 @@
 "wins": 7,
 "hitRate": 0.5833
 },
+"Elite Friendlies": {
+"n": 10,
+"wins": 7,
+"hitRate": 0.7
+},
 "English Sky Bet Championship": {
 "n": 10,
 "wins": 6,
 "hitRate": 0.6
-},
-"Elite Friendlies": {
-"n": 9,
-"wins": 7,
-"hitRate": 0.7778
 },
 "US MLS": {
 "n": 9,
@@ -83,6 +83,11 @@
 "wins": 5,
 "hitRate": 0.8333
 },
+"Swedish Allsvenskan": {
+"n": 6,
+"wins": 5,
+"hitRate": 0.8333
+},
 "Brazilian Serie B": {
 "n": 5,
 "wins": 2,
@@ -104,11 +109,6 @@
 "hitRate": 1.0
 },
 "South Korean K1 League": {
-"n": 4,
-"wins": 3,
-"hitRate": 0.75
-},
-"Swedish Allsvenskan": {
 "n": 4,
 "wins": 3,
 "hitRate": 0.75
@@ -311,25 +311,82 @@
 },
 "byStrength": {
 "strong": {
-"n": 95,
-"wins": 73,
-"hitRate": 0.7684
+"n": 97,
+"wins": 75,
+"hitRate": 0.7732
 },
 "weak": {
-"n": 61,
+"n": 62,
 "wins": 27,
-"hitRate": 0.4426
+"hitRate": 0.4355
 }
 },
 "divergence": {
-"n": 50,
+"n": 51,
 "betfairWins": 12,
-"betfairRate": 0.24,
-"polyN": 41,
-"polyWins": 11,
-"polyRate": 0.2683
+"betfairRate": 0.2353,
+"polyN": 42,
+"polyWins": 12,
+"polyRate": 0.2857
 },
 "recent": [
+{
+"matchId": "35921551",
+"home": "Kalmar FF",
+"away": "Hammarby",
+"league": "Swedish Allsvenskan",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Hammarby",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+4
+],
+"kickoff": "2026-08-16T14:30:00Z",
+"settledAt": "2026-08-16T17:30:17.121605+00:00"
+},
+{
+"matchId": "35944486",
+"home": "FC Basel",
+"away": "Barcelona",
+"league": "Elite Friendlies",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "away",
+"winner": "away",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+2,
+5
+],
+"kickoff": "2026-08-16T14:30:00Z",
+"settledAt": "2026-08-16T17:30:17.121605+00:00"
+},
+{
+"matchId": "35921541",
+"home": "GAIS",
+"away": "Malmo FF",
+"league": "Swedish Allsvenskan",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Malmo FF",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-08-16T14:30:00Z",
+"settledAt": "2026-08-16T17:30:17.121605+00:00"
+},
 {
 "matchId": "35780316",
 "home": "Racing Santander",
@@ -1032,69 +1089,12 @@
 ],
 "kickoff": "2026-08-16T09:00:00Z",
 "settledAt": "2026-08-16T12:00:43.790785+00:00"
-},
-{
-"matchId": "35927795",
-"home": "Tokushima",
-"away": "Tosu",
-"league": "Japanese J League 2",
-"verdict": "uneinig",
-"moneySide": "draw",
-"moneyName": "The Draw",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-08-16T10:00:00Z",
-"settledAt": "2026-08-16T12:00:43.790785+00:00"
-},
-{
-"matchId": "35868519",
-"home": "Los Angeles FC",
-"away": "San Diego FC",
-"league": "US MLS",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Los Angeles FC",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-08-16T02:40:00Z",
-"settledAt": "2026-08-16T05:40:36.576260+00:00"
-},
-{
-"matchId": "35868518",
-"home": "San Jose Earthquakes",
-"away": "St Louis City SC",
-"league": "US MLS",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "St Louis City SC",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-3
-],
-"kickoff": "2026-08-16T02:40:00Z",
-"settledAt": "2026-08-16T05:40:36.576260+00:00"
 }
 ],
 "global": {
-"n": 189,
-"wins": 118,
-"hitRate": 0.6243
+"n": 192,
+"wins": 120,
+"hitRate": 0.625
 },
-"pending": 14
+"pending": 11
 }
