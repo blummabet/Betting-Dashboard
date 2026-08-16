@@ -706,6 +706,7 @@
 
   // ── Hotspot-Leiste: konkreter Ausgang mit dem meisten Geld ──────────────────
   var HOTSPOT_MIN_SHARE = 60;   // (Lucas 02.08.) oberer Block nur mit klarer Mehrheit
+  var HOTSPOT_MAX_ODD = 5.0;   // 16.08.2026 (Lucas): Geld-Mehrheit auf schwerem Außenseiter (Quote >5.0 = <20% implizit) = Lay-/Churn-Volumen, kein 'wo das Geld liegt'-Signal (Ulsan @9.80 mit 64% live hinten). Preis widerspricht.
   var HOTSPOT_MIN_EUR = 2000;   // (Lucas 04.08.) 'groesste' Einzel-Ausgaenge: Kruemel (<2K) raus. Bei Lock-Spielen (FT-Fav @<1.30 ausgeblendet) tauchte sonst ein 920-EUR-Seitenmarkt neben 24K-Positionen auf = Rausch-Liquiditaet. Nur dieser Block; Kartendetail bleibt bei CHIP_FLOOR.
   // 05.08.2026 (Lucas: 1:0 fuehrt und Kohle kommt = reaktiv, wertlos): Geld auf die bereits
   // fuehrende Mannschaft ist kein handelbares Signal — im Radar (Hotspots + Frisches Geld) abfangen.
@@ -728,6 +729,7 @@
         var mk = mkOf(m, mm.id); if (!mk || distTotal(mk) <= 0) return;
         var lead = leadRunner(mk); if (!lead) return;
         if (typeof lead.odd === 'number' && lead.odd < MIN_ODD_SHOW) return;   // Geld auf ~Lock-Favorit = keine Info
+        if (typeof lead.odd === 'number' && lead.odd > HOTSPOT_MAX_ODD) return;   // 16.08.2026 (Lucas): Geld-Mehrheit auf schwerem Außenseiter = Exchange-Churn, kein Signal (bleibt im Deep-Dive)
         // 08.08.2026 (Lucas): Geld auf den Fuehrenden NICHT mehr rauswerfen — mit „▶ fuehrt" markiert + Back/driftet-Badge ist es ein echtes Signal.
         var v = eur(lead.vol); if (v < HOTSPOT_MIN_EUR) return;
         var pct = (+lead.vol || 0) / (distTotal(mk) || 1) * 100;
