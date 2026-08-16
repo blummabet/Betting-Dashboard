@@ -1,25 +1,25 @@
 {
-"generatedAt": "2026-08-16T15:56:01.500258+00:00",
+"generatedAt": "2026-08-16T16:01:23.638695+00:00",
 "byVerdict": {
 "konsens": {
-"n": 132,
-"wins": 101,
-"hitRate": 0.7652,
-"polyN": 120,
-"polyWins": 89,
-"polyHitRate": 0.7417,
+"n": 135,
+"wins": 104,
+"hitRate": 0.7704,
+"polyN": 123,
+"polyWins": 92,
+"polyHitRate": 0.748,
 "pinnN": 8,
 "pinnHitRate": 0.875
 },
 "uneinig": {
-"n": 45,
+"n": 47,
 "wins": 11,
-"hitRate": 0.2444,
+"hitRate": 0.234,
 "polyN": 38,
 "polyWins": 9,
 "polyHitRate": 0.2368,
-"pinnN": 21,
-"pinnHitRate": 0.5714
+"pinnN": 23,
+"pinnHitRate": 0.5652
 },
 "teil": {
 "n": 2,
@@ -43,6 +43,11 @@
 "wins": 7,
 "hitRate": 0.5833
 },
+"Elite Friendlies": {
+"n": 9,
+"wins": 7,
+"hitRate": 0.7778
+},
 "English Sky Bet Championship": {
 "n": 9,
 "wins": 6,
@@ -52,11 +57,6 @@
 "n": 9,
 "wins": 5,
 "hitRate": 0.5556
-},
-"Elite Friendlies": {
-"n": 8,
-"wins": 6,
-"hitRate": 0.75
 },
 "German Bundesliga 2": {
 "n": 8,
@@ -83,15 +83,15 @@
 "wins": 5,
 "hitRate": 0.8333
 },
+"Brazilian Serie B": {
+"n": 5,
+"wins": 2,
+"hitRate": 0.4
+},
 "CONMEBOL Copa Libertadores": {
 "n": 5,
 "wins": 0,
 "hitRate": 0.0
-},
-"Brazilian Serie B": {
-"n": 4,
-"wins": 2,
-"hitRate": 0.5
 },
 "Chinese Super League": {
 "n": 4,
@@ -114,6 +114,11 @@
 "hitRate": 0.75
 },
 "Argentinian Primera Division": {
+"n": 3,
+"wins": 1,
+"hitRate": 0.3333
+},
+"Brazilian Serie A": {
 "n": 3,
 "wins": 1,
 "hitRate": 0.3333
@@ -158,11 +163,6 @@
 "wins": 2,
 "hitRate": 1.0
 },
-"Brazilian Serie A": {
-"n": 2,
-"wins": 1,
-"hitRate": 0.5
-},
 "Chilean Primera B": {
 "n": 2,
 "wins": 0,
@@ -177,6 +177,11 @@
 "n": 2,
 "wins": 2,
 "hitRate": 1.0
+},
+"Finnish Veikkausliiga": {
+"n": 2,
+"wins": 1,
+"hitRate": 0.5
 },
 "Mexican Liga MX": {
 "n": 2,
@@ -258,11 +263,6 @@
 "wins": 1,
 "hitRate": 1.0
 },
-"Finnish Veikkausliiga": {
-"n": 1,
-"wins": 0,
-"hitRate": 0.0
-},
 "Portuguese Primeira Liga": {
 "n": 1,
 "wins": 1,
@@ -272,6 +272,11 @@
 "n": 1,
 "wins": 0,
 "hitRate": 0.0
+},
+"Scottish League Cup": {
+"n": 1,
+"wins": 1,
+"hitRate": 1.0
 },
 "South Korean K2 League": {
 "n": 1,
@@ -306,25 +311,120 @@
 },
 "byStrength": {
 "strong": {
-"n": 88,
-"wins": 68,
-"hitRate": 0.7727
+"n": 91,
+"wins": 71,
+"hitRate": 0.7802
 },
 "weak": {
-"n": 58,
+"n": 60,
 "wins": 27,
-"hitRate": 0.4655
+"hitRate": 0.45
 }
 },
 "divergence": {
-"n": 45,
+"n": 47,
 "betfairWins": 11,
-"betfairRate": 0.2444,
+"betfairRate": 0.234,
 "polyN": 38,
 "polyWins": 9,
 "polyRate": 0.2368
 },
 "recent": [
+{
+"matchId": "35876305",
+"home": "Hibernian",
+"away": "Partick",
+"league": "Scottish League Cup",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Hibernian",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-08-16T13:00:00Z",
+"settledAt": "2026-08-16T16:01:23.485972+00:00"
+},
+{
+"matchId": "35921588",
+"home": "HJK Helsinki",
+"away": "Jaro",
+"league": "Finnish Veikkausliiga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "HJK Helsinki",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+0
+],
+"kickoff": "2026-08-16T13:00:00Z",
+"settledAt": "2026-08-16T16:01:23.485972+00:00"
+},
+{
+"matchId": "35893412",
+"home": "Nottm Forest",
+"away": "Brest",
+"league": "Elite Friendlies",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Nottm Forest",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-08-16T13:00:00Z",
+"settledAt": "2026-08-16T16:01:23.485972+00:00"
+},
+{
+"matchId": "35895904",
+"home": "Chapecoense",
+"away": "Bahia",
+"league": "Brazilian Serie A",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Bahia",
+"polySide": null,
+"winner": "draw",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+3,
+3
+],
+"kickoff": "2026-08-16T14:00:00Z",
+"settledAt": "2026-08-16T16:01:23.485972+00:00"
+},
+{
+"matchId": "35929015",
+"home": "Operario PR",
+"away": "Avai",
+"league": "Brazilian Serie B",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Operario PR",
+"polySide": null,
+"winner": "away",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-08-16T14:00:00Z",
+"settledAt": "2026-08-16T16:01:23.485972+00:00"
+},
 {
 "matchId": "35688892",
 "home": "Arsenal",
@@ -989,107 +1089,12 @@
 ],
 "kickoff": "2026-08-16T00:15:00Z",
 "settledAt": "2026-08-16T03:28:49.257787+00:00"
-},
-{
-"matchId": "35895911",
-"home": "Sao Paulo",
-"away": "Coritiba",
-"league": "Brazilian Serie A",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Sao Paulo",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-08-16T00:00:00Z",
-"settledAt": "2026-08-16T03:13:47.283457+00:00"
-},
-{
-"matchId": "35868052",
-"home": "Nashville SC",
-"away": "Inter Miami CF",
-"league": "US MLS",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Nashville SC",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-4,
-1
-],
-"kickoff": "2026-08-16T00:40:00Z",
-"settledAt": "2026-08-16T02:49:09.557173+00:00"
-},
-{
-"matchId": "35868610",
-"home": "Orlando City",
-"away": "FC Cincinnati",
-"league": "US MLS",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "FC Cincinnati",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-08-15T23:40:00Z",
-"settledAt": "2026-08-16T02:43:48.862103+00:00"
-},
-{
-"matchId": "35868041",
-"home": "Atlanta Utd",
-"away": "New York Red Bulls",
-"league": "US MLS",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "New York Red Bulls",
-"polySide": "away",
-"winner": "home",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-08-15T23:40:00Z",
-"settledAt": "2026-08-16T02:43:48.862103+00:00"
-},
-{
-"matchId": "35868611",
-"home": "Toronto FC",
-"away": "New England Revolution",
-"league": "US MLS",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Toronto FC",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-08-15T23:40:00Z",
-"settledAt": "2026-08-16T02:43:48.862103+00:00"
 }
 ],
 "global": {
-"n": 179,
-"wins": 113,
-"hitRate": 0.6313
+"n": 184,
+"wins": 116,
+"hitRate": 0.6304
 },
-"pending": 18
+"pending": 13
 }
