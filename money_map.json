@@ -1,6 +1,6 @@
 {
-"generatedAt": "2026-08-17T19:17:57.910540+00:00",
-"count": 10,
+"generatedAt": "2026-08-17T19:32:58.999064+00:00",
+"count": 13,
 "rows": [
 {
 "matchId": "35780323",
@@ -13,15 +13,15 @@
 "betfair": {
 "side": "home",
 "name": "Deportivo",
-"sharePct": 64,
-"eur": 737141
+"sharePct": 68,
+"eur": 883813
 },
 "poly": null,
 "pinn": {
 "fav": "home",
-"home": 0.4319,
-"draw": 0.3232,
-"away": 0.2449
+"home": 0.3627,
+"draw": 0.3627,
+"away": 0.2746
 },
 "mmStrong": false,
 "nSources": 2
@@ -37,19 +37,24 @@
 "betfair": {
 "side": "away",
 "name": "Wrexham",
-"sharePct": 56,
-"eur": 338697
+"sharePct": 60,
+"eur": 432502
 },
 "poly": {
 "side": "away",
 "name": "Wrexham AFC",
-"sharePct": 66,
-"usd": 71171,
+"sharePct": 64,
+"usd": 101127,
 "src": "live"
 },
-"pinn": null,
+"pinn": {
+"fav": "away",
+"home": 0.1589,
+"draw": 0.2373,
+"away": 0.6039
+},
 "mmStrong": true,
-"nSources": 2
+"nSources": 3
 },
 {
 "matchId": "35925902",
@@ -62,18 +67,13 @@
 "betfair": {
 "side": "away",
 "name": "Benfica",
-"sharePct": 88,
-"eur": 181084
+"sharePct": 91,
+"eur": 276000
 },
 "poly": null,
-"pinn": {
-"fav": "away",
-"home": 0.0521,
-"draw": 0.1199,
-"away": 0.828
-},
+"pinn": null,
 "mmStrong": false,
-"nSources": 2
+"nSources": 1
 },
 {
 "matchId": "35868887",
@@ -86,21 +86,21 @@
 "betfair": {
 "side": "home",
 "name": "Samsunspor",
-"sharePct": 48,
-"eur": 179192
+"sharePct": 50,
+"eur": 191839
 },
 "poly": {
 "side": "home",
 "name": "Samsunspor",
-"sharePct": 43,
-"usd": 89004,
+"sharePct": 62,
+"usd": 146327,
 "src": "live"
 },
 "pinn": {
 "fav": "home",
-"home": 0.3555,
-"draw": 0.3476,
-"away": 0.297
+"home": 0.6472,
+"draw": 0.2489,
+"away": 0.1039
 },
 "mmStrong": false,
 "nSources": 3
@@ -116,14 +116,14 @@
 "betfair": {
 "side": "away",
 "name": "KA Akureyri",
-"sharePct": 49,
-"eur": 105042
+"sharePct": 47,
+"eur": 148480
 },
 "poly": {
 "side": "away",
 "name": "KA Akureyri",
-"sharePct": 70,
-"usd": 13133,
+"sharePct": 56,
+"usd": 13482,
 "src": "live"
 },
 "pinn": null,
@@ -131,49 +131,24 @@
 "nSources": 2
 },
 {
-"matchId": "35927044",
-"home": "De Graafschap",
-"away": "Jong AZ Alkmaar",
-"league": "Dutch Eerste Divisie",
-"live": true,
-"kickoff": "2026-08-17T18:00:00Z",
-"verdict": "uneinig",
-"betfair": {
-"side": "away",
-"name": "Jong AZ Alkmaar",
-"sharePct": 47,
-"eur": 71055
-},
-"poly": {
-"side": "home",
-"name": "De Graafschap",
-"sharePct": 42,
-"usd": 18877,
-"src": "live"
-},
-"pinn": null,
-"mmStrong": false,
-"nSources": 2
-},
-{
-"matchId": "35947039",
-"home": "Batman Petrolspor",
-"away": "Boluspor",
-"league": "Turkish 1 Lig",
+"matchId": "35898939",
+"home": "FCSB",
+"away": "Botosani",
+"league": "Romanian Liga I",
 "live": true,
 "kickoff": "2026-08-17T18:30:00Z",
 "verdict": "konsens",
 "betfair": {
 "side": "home",
-"name": "Batman Petrolspor",
-"sharePct": 81,
-"eur": 58872
+"name": "FCSB",
+"sharePct": 79,
+"eur": 92955
 },
 "poly": {
 "side": "home",
-"name": "Batman Petrolspor",
-"sharePct": 86,
-"usd": 24324,
+"name": "FCSB",
+"sharePct": 60,
+"usd": 11029,
 "src": "live"
 },
 "pinn": null,
@@ -191,24 +166,74 @@
 "betfair": {
 "side": "home",
 "name": "US Cremonese",
-"sharePct": 50,
-"eur": 54470
+"sharePct": 65,
+"eur": 85764
 },
 "poly": {
 "side": "home",
 "name": "US Cremonese",
-"sharePct": 38,
-"usd": 25905,
+"sharePct": 68,
+"usd": 35731,
 "src": "live"
 },
 "pinn": {
 "fav": "home",
-"home": 0.3959,
-"draw": 0.3224,
-"away": 0.2817
+"home": 0.681,
+"draw": 0.2309,
+"away": 0.0882
 },
-"mmStrong": false,
+"mmStrong": true,
 "nSources": 3
+},
+{
+"matchId": "35927044",
+"home": "De Graafschap",
+"away": "Jong AZ Alkmaar",
+"league": "Dutch Eerste Divisie",
+"live": true,
+"kickoff": "2026-08-17T18:00:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "away",
+"name": "Jong AZ Alkmaar",
+"sharePct": 51,
+"eur": 83466
+},
+"poly": {
+"side": "away",
+"name": "Jong AZ Alkmaar",
+"sharePct": 60,
+"usd": 20576,
+"src": "live"
+},
+"pinn": null,
+"mmStrong": false,
+"nSources": 2
+},
+{
+"matchId": "35947039",
+"home": "Batman Petrolspor",
+"away": "Boluspor",
+"league": "Turkish 1 Lig",
+"live": true,
+"kickoff": "2026-08-17T18:30:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "home",
+"name": "Batman Petrolspor",
+"sharePct": 82,
+"eur": 65418
+},
+"poly": {
+"side": "home",
+"name": "Batman Petrolspor",
+"sharePct": 84,
+"usd": 27181,
+"src": "live"
+},
+"pinn": null,
+"mmStrong": true,
+"nSources": 2
 },
 {
 "matchId": "35925847",
@@ -222,13 +247,68 @@
 "side": "draw",
 "name": "The Draw",
 "sharePct": 53,
-"eur": 47592
+"eur": 48630
 },
 "poly": {
 "side": "away",
 "name": "Vitesse Arnhem",
-"sharePct": 42,
-"usd": 15085,
+"sharePct": 73,
+"usd": 15214,
+"src": "live"
+},
+"pinn": null,
+"mmStrong": false,
+"nSources": 2
+},
+{
+"matchId": "35931830",
+"home": "Palermo",
+"away": "Lecce",
+"league": "Italian Coppa Italia",
+"live": true,
+"kickoff": "2026-08-17T19:15:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "home",
+"name": "Palermo",
+"sharePct": 71,
+"eur": 40140
+},
+"poly": {
+"side": "home",
+"name": "Palermo FC",
+"sharePct": 40,
+"usd": 16427,
+"src": "live"
+},
+"pinn": {
+"fav": "home",
+"home": 0.3991,
+"draw": 0.2904,
+"away": 0.3106
+},
+"mmStrong": false,
+"nSources": 3
+},
+{
+"matchId": "35925848",
+"home": "Jong Ajax Amsterdam",
+"away": "Emmen",
+"league": "Dutch Eerste Divisie",
+"live": true,
+"kickoff": "2026-08-17T18:00:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "away",
+"name": "Emmen",
+"sharePct": 50,
+"eur": 39368
+},
+"poly": {
+"side": "away",
+"name": "FC Emmen",
+"sharePct": 70,
+"usd": 8320,
 "src": "live"
 },
 "pinn": null,
@@ -240,14 +320,14 @@
 "home": "Almeria",
 "away": "Eldense",
 "league": "Spanish Segunda Division",
-"live": false,
+"live": true,
 "kickoff": "2026-08-17T19:30:00Z",
 "verdict": "konsens",
 "betfair": {
 "side": "home",
 "name": "Almeria",
-"sharePct": 80,
-"eur": 21897
+"sharePct": 82,
+"eur": 32683
 },
 "poly": {
 "side": "home",
