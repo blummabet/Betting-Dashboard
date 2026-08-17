@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-08-17T05:00:01.195182+00:00",
+ "updatedAt": "2026-08-17T05:53:04.113004+00:00",
  "stake": 10.0,
  "expired": 0,
  "open": {
@@ -78,7 +78,7 @@
    "entryPrice": 0.735,
    "firstTs": "2026-08-16T14:09:11.781306+00:00",
    "lastPrice": 0.735,
-   "lastTs": "2026-08-17T05:00:01.195182+00:00",
+   "lastTs": "2026-08-17T05:53:04.113004+00:00",
    "htkAtEntry": 2.938317777777778,
    "public": true,
    "reasons": [
@@ -88,28 +88,6 @@
    "signals": [
     "money",
     "sharp"
-   ],
-   "stake": 10.0
-  },
-  "mls-sea-vwh-2026-08-16|Vancouver Whitecaps FC": {
-   "key": "mls-sea-vwh-2026-08-16",
-   "side": "Vancouver Whitecaps FC",
-   "verdict": "BET",
-   "conv": 6,
-   "league": "MLS",
-   "entryPrice": 0.525,
-   "firstTs": "2026-08-17T01:57:31.116485+00:00",
-   "lastPrice": 0.525,
-   "lastTs": "2026-08-17T05:00:01.195182+00:00",
-   "htkAtEntry": 0.56753,
-   "public": false,
-   "reasons": [
-    "großes Geld auf Vancouver Whitecaps FC (94%) → $253K",
-    "Steam läuft rein (+3.0pp)"
-   ],
-   "signals": [
-    "money",
-    "steam"
    ],
    "stake": 10.0
   }
@@ -8498,16 +8476,38 @@
    "firstTs": "2026-08-16T21:36:28.838557+00:00",
    "settledTs": "2026-08-17T04:08:09.115601+00:00",
    "resolvedTs": "2026-08-17T04:08:08.372204+00:00"
+  },
+  {
+   "key": "mls-sea-vwh-2026-08-16",
+   "side": "Vancouver Whitecaps FC",
+   "verdict": "BET",
+   "conv": 6,
+   "league": "MLS",
+   "entryPrice": 0.525,
+   "closePrice": 0.525,
+   "result": "win",
+   "winner": "Vancouver Whitecaps FC",
+   "pnl": 9.05,
+   "clvPP": 0.0,
+   "stake": 10.0,
+   "public": false,
+   "signals": [
+    "money",
+    "steam"
+   ],
+   "firstTs": "2026-08-17T01:57:31.116485+00:00",
+   "settledTs": "2026-08-17T05:53:04.113004+00:00",
+   "resolvedTs": "2026-08-17T05:53:03.314267+00:00"
   }
  ],
  "agg": {
   "all": {
-   "n": 391,
-   "wins": 214,
-   "hit": 0.5473,
-   "pnl": -259.2,
-   "stake": 3910.0,
-   "roi": -0.0663,
+   "n": 392,
+   "wins": 215,
+   "hit": 0.5485,
+   "pnl": -250.15,
+   "stake": 3920.0,
+   "roi": -0.0638,
    "clvAvg": -0.04
   },
   "public": {
@@ -8539,12 +8539,12 @@
     "clvAvg": -0.03
    },
    "6": {
-    "n": 104,
-    "wins": 62,
-    "hit": 0.5962,
-    "pnl": 103.77,
-    "stake": 1040.0,
-    "roi": 0.0998,
+    "n": 105,
+    "wins": 63,
+    "hit": 0.6,
+    "pnl": 112.82,
+    "stake": 1050.0,
+    "roi": 0.1074,
     "clvAvg": 0.01
    },
    "7": {
@@ -8586,12 +8586,12 @@
   },
   "byVerdict": {
    "BET": {
-    "n": 313,
-    "wins": 192,
-    "hit": 0.6134,
-    "pnl": -102.51,
-    "stake": 3130.0,
-    "roi": -0.0328,
+    "n": 314,
+    "wins": 193,
+    "hit": 0.6146,
+    "pnl": -93.46,
+    "stake": 3140.0,
+    "roi": -0.0298,
     "clvAvg": -0.07
    },
    "FADE": {
@@ -8606,12 +8606,12 @@
   },
   "bySignal": {
    "money": {
-    "n": 199,
-    "wins": 138,
-    "hit": 0.6935,
-    "pnl": 62.73,
-    "stake": 1990.0,
-    "roi": 0.0315,
+    "n": 200,
+    "wins": 139,
+    "hit": 0.695,
+    "pnl": 71.78,
+    "stake": 2000.0,
+    "roi": 0.0359,
     "clvAvg": -0.1
    },
    "pinn": {
@@ -8633,12 +8633,12 @@
     "clvAvg": -0.06
    },
    "steam": {
-    "n": 94,
-    "wins": 55,
-    "hit": 0.5851,
-    "pnl": -66.38,
-    "stake": 940.0,
-    "roi": -0.0706,
+    "n": 95,
+    "wins": 56,
+    "hit": 0.5895,
+    "pnl": -57.33,
+    "stake": 950.0,
+    "roi": -0.0603,
     "clvAvg": -0.02
    },
    "turned": {
