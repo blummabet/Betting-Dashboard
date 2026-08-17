@@ -1,26 +1,67 @@
 {
-  "bets": [],
+  "bets": [
+    {
+      "betKey": "1598-1606-Unentschieden",
+      "home": "Orlando City SC",
+      "away": "Real Salt Lake",
+      "homeId": "1598",
+      "awayId": "1606",
+      "market": "Unentschieden",
+      "stake": 5.5,
+      "polyPrice": 0.22,
+      "polyOdds": 4.545,
+      "pinnFair": 0.2508,
+      "pinnClose": null,
+      "clvPP": null,
+      "polyClose": null,
+      "polyClvPP": null,
+      "isSteamLag": false,
+      "result": "SOLD",
+      "pnl": 0.0,
+      "score": null,
+      "slug": "",
+      "source": "auto",
+      "placedAt": "2026-08-17T22:21:20.275640+00:00",
+      "resolvedAt": "2026-08-17T22:21:20.504574+00:00",
+      "sellPrice": null,
+      "sellReason": "manuell auf Polymarket geschlossen"
+    }
+  ],
   "summary": {
-    "totalBets": 0,
-    "resolved": 0,
+    "totalBets": 1,
+    "resolved": 1,
     "pending": 0,
-    "sold": 0,
+    "sold": 1,
     "wins": 0,
     "losses": 0,
     "voids": 0,
     "winRate": null,
-    "totalStaked": 0,
-    "totalPnl": 0,
+    "totalStaked": 5.5,
+    "totalPnl": 0.0,
     "roi": 0.0,
     "avgCLV": null,
     "sharpeEst": null,
     "postmortem": {
-      "closedN": 0,
-      "realizedPnl": 0,
+      "closedN": 1,
+      "realizedPnl": 0.0,
       "avgClv": null,
-      "clvCoverage": "0/0",
-      "byMarket": {},
-      "byExit": {},
+      "clvCoverage": "0/1",
+      "byMarket": {
+        "1X2": {
+          "n": 1,
+          "pnl": 0.0,
+          "avgClv": null,
+          "clvCoverage": "0/1"
+        }
+      },
+      "byExit": {
+        "Sell-sonstig": {
+          "n": 1,
+          "pnl": 0.0,
+          "avgClv": null,
+          "clvCoverage": "0/1"
+        }
+      },
       "heldToClose": {
         "n": 0,
         "exitBetter": 0,
@@ -29,5 +70,5 @@
       }
     }
   },
-  "updatedAt": "2026-08-17T12:57:53.098813+00:00"
+  "updatedAt": "2026-08-17T22:21:20.931509+00:00"
 }
