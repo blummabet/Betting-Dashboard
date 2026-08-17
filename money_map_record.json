@@ -1,25 +1,25 @@
 {
-"generatedAt": "2026-08-17T17:49:24.708640+00:00",
+"generatedAt": "2026-08-17T18:17:02.782461+00:00",
 "byVerdict": {
 "konsens": {
-"n": 176,
+"n": 177,
 "wins": 139,
-"hitRate": 0.7898,
-"polyN": 162,
+"hitRate": 0.7853,
+"polyN": 163,
 "polyWins": 125,
-"polyHitRate": 0.7716,
+"polyHitRate": 0.7669,
 "pinnN": 8,
 "pinnHitRate": 0.875
 },
 "uneinig": {
-"n": 61,
-"wins": 13,
-"hitRate": 0.2131,
-"polyN": 51,
-"polyWins": 16,
-"polyHitRate": 0.3137,
-"pinnN": 30,
-"pinnHitRate": 0.5333
+"n": 62,
+"wins": 14,
+"hitRate": 0.2258,
+"polyN": 52,
+"polyWins": 17,
+"polyHitRate": 0.3269,
+"pinnN": 31,
+"pinnHitRate": 0.5161
 },
 "teil": {
 "n": 2,
@@ -178,6 +178,11 @@
 "wins": 1,
 "hitRate": 0.3333
 },
+"Finnish Veikkausliiga": {
+"n": 3,
+"wins": 2,
+"hitRate": 0.6667
+},
 "Japanese J League 2": {
 "n": 3,
 "wins": 3,
@@ -227,11 +232,6 @@
 "n": 2,
 "wins": 2,
 "hitRate": 1.0
-},
-"Finnish Veikkausliiga": {
-"n": 2,
-"wins": 1,
-"hitRate": 0.5
 },
 "Other Competitions Soccer": {
 "n": 2,
@@ -283,6 +283,11 @@
 "wins": 1,
 "hitRate": 1.0
 },
+"Mexican U21": {
+"n": 1,
+"wins": 0,
+"hitRate": 0.0
+},
 "Scottish League Cup": {
 "n": 1,
 "wins": 1,
@@ -321,25 +326,63 @@
 },
 "byStrength": {
 "strong": {
-"n": 130,
+"n": 131,
 "wins": 103,
-"hitRate": 0.7923
+"hitRate": 0.7863
 },
 "weak": {
-"n": 76,
-"wins": 32,
-"hitRate": 0.4211
+"n": 77,
+"wins": 33,
+"hitRate": 0.4286
 }
 },
 "divergence": {
-"n": 61,
-"betfairWins": 13,
-"betfairRate": 0.2131,
-"polyN": 51,
-"polyWins": 16,
-"polyRate": 0.3137
+"n": 62,
+"betfairWins": 14,
+"betfairRate": 0.2258,
+"polyN": 52,
+"polyWins": 17,
+"polyRate": 0.3269
 },
 "recent": [
+{
+"matchId": "35925116",
+"home": "Gnistan",
+"away": "Ilves",
+"league": "Finnish Veikkausliiga",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Gnistan",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+2
+],
+"kickoff": "2026-08-17T15:00:00Z",
+"settledAt": "2026-08-17T18:17:02.636976+00:00"
+},
+{
+"matchId": "35948113",
+"home": "Pachuca U21",
+"away": "Puebla U21",
+"league": "Mexican U21",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Pachuca U21",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-08-17T15:15:01Z",
+"settledAt": "2026-08-17T18:17:02.636976+00:00"
+},
 {
 "matchId": "35898940",
 "home": "Universitatea Cluj",
@@ -1061,50 +1104,12 @@
 ],
 "kickoff": "2026-08-16T17:00:00Z",
 "settledAt": "2026-08-16T20:03:04.267776+00:00"
-},
-{
-"matchId": "35780311",
-"home": "Espanyol",
-"away": "Levante",
-"league": "Spanish La Liga",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Espanyol",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-0
-],
-"kickoff": "2026-08-16T17:00:00Z",
-"settledAt": "2026-08-16T19:01:59.983822+00:00"
-},
-{
-"matchId": "35898608",
-"home": "Burgos",
-"away": "Cordoba",
-"league": "Spanish Segunda Division",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Burgos",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-2
-],
-"kickoff": "2026-08-16T17:00:00Z",
-"settledAt": "2026-08-16T19:01:59.983822+00:00"
 }
 ],
 "global": {
-"n": 239,
-"wins": 153,
-"hitRate": 0.6402
+"n": 241,
+"wins": 154,
+"hitRate": 0.639
 },
-"pending": 13
+"pending": 15
 }
