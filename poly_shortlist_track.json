@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-08-17T01:57:31.116485+00:00",
+ "updatedAt": "2026-08-17T03:16:04.827151+00:00",
  "stake": 10.0,
  "expired": 0,
  "open": {
@@ -78,7 +78,7 @@
    "entryPrice": 0.735,
    "firstTs": "2026-08-16T14:09:11.781306+00:00",
    "lastPrice": 0.735,
-   "lastTs": "2026-08-17T01:57:31.116485+00:00",
+   "lastTs": "2026-08-17T03:16:04.827151+00:00",
    "htkAtEntry": 2.938317777777778,
    "public": true,
    "reasons": [
@@ -87,48 +87,6 @@
    ],
    "signals": [
     "money",
-    "sharp"
-   ],
-   "stake": 10.0
-  },
-  "bra-mir-fla-2026-08-16|CR Flamengo": {
-   "key": "bra-mir-fla-2026-08-16",
-   "side": "CR Flamengo",
-   "verdict": "BET",
-   "conv": 7,
-   "league": "BRAZIL-SERIE-A",
-   "entryPrice": 0.515,
-   "firstTs": "2026-08-16T20:41:26.130455+00:00",
-   "lastPrice": 0.515,
-   "lastTs": "2026-08-17T01:57:31.116485+00:00",
-   "htkAtEntry": 0.8483469444444445,
-   "public": true,
-   "reasons": [
-    "großes Geld auf CR Flamengo (78%) → $35K",
-    "🔥 scharfe Wallet (84/139, 60% · +$3.63M)"
-   ],
-   "signals": [
-    "money",
-    "sharp"
-   ],
-   "stake": 10.0
-  },
-  "mlb-sea-hou-2026-08-16|Over": {
-   "key": "mlb-sea-hou-2026-08-16",
-   "side": "Over",
-   "verdict": "BET",
-   "conv": 6,
-   "league": "MLB",
-   "entryPrice": 0.525,
-   "firstTs": "2026-08-16T20:41:26.130455+00:00",
-   "lastPrice": 0.515,
-   "lastTs": "2026-08-17T01:57:31.116485+00:00",
-   "htkAtEntry": 2.6883466666666664,
-   "public": false,
-   "reasons": [
-    "🔥 scharfe Wallet (20/33, 61% · +$59K)"
-   ],
-   "signals": [
     "sharp"
    ],
    "stake": 10.0
@@ -142,7 +100,7 @@
    "entryPrice": 0.465,
    "firstTs": "2026-08-16T21:36:28.838557+00:00",
    "lastPrice": 0.495,
-   "lastTs": "2026-08-17T01:57:31.116485+00:00",
+   "lastTs": "2026-08-17T03:16:04.827151+00:00",
    "htkAtEntry": 0.9275547222222222,
    "public": true,
    "reasons": [
@@ -166,7 +124,7 @@
    "entryPrice": 0.525,
    "firstTs": "2026-08-17T01:57:31.116485+00:00",
    "lastPrice": 0.525,
-   "lastTs": "2026-08-17T01:57:31.116485+00:00",
+   "lastTs": "2026-08-17T03:16:04.827151+00:00",
    "htkAtEntry": 0.56753,
    "public": false,
    "reasons": [
@@ -8498,25 +8456,68 @@
    "firstTs": "2026-08-16T21:36:28.838557+00:00",
    "settledTs": "2026-08-17T01:57:31.116485+00:00",
    "resolvedTs": "2026-08-17T01:57:30.377947+00:00"
+  },
+  {
+   "key": "bra-mir-fla-2026-08-16",
+   "side": "CR Flamengo",
+   "verdict": "BET",
+   "conv": 7,
+   "league": "BRAZIL-SERIE-A",
+   "entryPrice": 0.515,
+   "closePrice": 0.515,
+   "result": "win",
+   "winner": "CR Flamengo",
+   "pnl": 9.42,
+   "clvPP": 0.0,
+   "stake": 10.0,
+   "public": true,
+   "signals": [
+    "money",
+    "sharp"
+   ],
+   "firstTs": "2026-08-16T20:41:26.130455+00:00",
+   "settledTs": "2026-08-17T03:16:04.827151+00:00",
+   "resolvedTs": "2026-08-17T03:16:04.043540+00:00"
+  },
+  {
+   "key": "mlb-sea-hou-2026-08-16",
+   "side": "Over",
+   "verdict": "BET",
+   "conv": 6,
+   "league": "MLB",
+   "entryPrice": 0.525,
+   "closePrice": 0.515,
+   "result": "loss",
+   "winner": "Seattle Mariners",
+   "pnl": -10.0,
+   "clvPP": -1.0,
+   "stake": 10.0,
+   "public": false,
+   "signals": [
+    "sharp"
+   ],
+   "firstTs": "2026-08-16T20:41:26.130455+00:00",
+   "settledTs": "2026-08-17T03:16:04.827151+00:00",
+   "resolvedTs": "2026-08-17T03:16:04.043540+00:00"
   }
  ],
  "agg": {
   "all": {
-   "n": 388,
-   "wins": 213,
-   "hit": 0.549,
-   "pnl": -248.62,
-   "stake": 3880.0,
-   "roi": -0.0641,
+   "n": 390,
+   "wins": 214,
+   "hit": 0.5487,
+   "pnl": -249.2,
+   "stake": 3900.0,
+   "roi": -0.0639,
    "clvAvg": -0.05
   },
   "public": {
-   "n": 112,
-   "wins": 78,
-   "hit": 0.6964,
-   "pnl": 42.86,
-   "stake": 1120.0,
-   "roi": 0.0383,
+   "n": 113,
+   "wins": 79,
+   "hit": 0.6991,
+   "pnl": 52.28,
+   "stake": 1130.0,
+   "roi": 0.0463,
    "clvAvg": -0.07
   },
   "byConv": {
@@ -8539,21 +8540,21 @@
     "clvAvg": -0.03
    },
    "6": {
-    "n": 103,
+    "n": 104,
     "wins": 62,
-    "hit": 0.6019,
-    "pnl": 113.77,
-    "stake": 1030.0,
-    "roi": 0.1105,
-    "clvAvg": 0.02
+    "hit": 0.5962,
+    "pnl": 103.77,
+    "stake": 1040.0,
+    "roi": 0.0998,
+    "clvAvg": 0.01
    },
    "7": {
-    "n": 120,
-    "wins": 69,
-    "hit": 0.575,
-    "pnl": -62.85,
-    "stake": 1200.0,
-    "roi": -0.0524,
+    "n": 121,
+    "wins": 70,
+    "hit": 0.5785,
+    "pnl": -53.43,
+    "stake": 1210.0,
+    "roi": -0.0442,
     "clvAvg": -0.35
    },
    "8": {
@@ -8586,11 +8587,11 @@
   },
   "byVerdict": {
    "BET": {
-    "n": 310,
-    "wins": 191,
-    "hit": 0.6161,
-    "pnl": -91.93,
-    "stake": 3100.0,
+    "n": 312,
+    "wins": 192,
+    "hit": 0.6154,
+    "pnl": -92.51,
+    "stake": 3120.0,
     "roi": -0.0297,
     "clvAvg": -0.08
    },
@@ -8606,12 +8607,12 @@
   },
   "bySignal": {
    "money": {
-    "n": 197,
-    "wins": 137,
-    "hit": 0.6954,
-    "pnl": 63.31,
-    "stake": 1970.0,
-    "roi": 0.0321,
+    "n": 198,
+    "wins": 138,
+    "hit": 0.697,
+    "pnl": 72.73,
+    "stake": 1980.0,
+    "roi": 0.0367,
     "clvAvg": -0.12
    },
    "pinn": {
@@ -8624,12 +8625,12 @@
     "clvAvg": 0.0
    },
    "sharp": {
-    "n": 296,
-    "wins": 158,
-    "hit": 0.5338,
-    "pnl": -196.17,
-    "stake": 2960.0,
-    "roi": -0.0663,
+    "n": 298,
+    "wins": 159,
+    "hit": 0.5336,
+    "pnl": -196.75,
+    "stake": 2980.0,
+    "roi": -0.066,
     "clvAvg": -0.07
    },
    "steam": {
