@@ -150,6 +150,8 @@ def _load(name):
 
 import json as _json
 import urllib.request as _url
+import urllib.error as _urlerr
+import time as _time
 from datetime import timedelta as _td
 
 # Sport-Tags, die Poly liquide listet. Erweiterbar über cocobet_config poly.money_broad_tags.
@@ -246,14 +248,37 @@ def _save_league_registry(new_slugs):
         pass
 
 
+# 16.08.2026 (Lucas, nach dem Poly-Rate-Limit-Update): _get war ein Einzelversuch — bei 429/5xx still
+# None und KEIN Backoff (hämmerte weiter). Jetzt 429-/5xx-bewusst: Retry-After respektieren (gedeckelt,
+# der Scan hat ein Workflow-Timeout), sonst kurzer Backoff, EIN Retry. 404/andere -> sofort None wie bisher.
+_HTTP_MAX_RETRIES = 2
+_HTTP_BACKOFF_CAP = 3.0   # Sek — Retry-After respektieren, aber deckeln (kein Timeout-Sprengen)
 def _get(url):
-    try:
-        req = _url.Request(url, headers={"User-Agent": "BetEdge/1.0", "Accept": "application/json"})
-        with _url.urlopen(req, timeout=_HTTP_TIMEOUT) as r:
-            return _json.loads(r.read())
-    except Exception as e:
-        print(f"  HTTP {url[:70]}… : {e}")
-        return None
+    for _attempt in range(_HTTP_MAX_RETRIES):
+        try:
+            req = _url.Request(url, headers={"User-Agent": "BetEdge/1.0", "Accept": "application/json"})
+            with _url.urlopen(req, timeout=_HTTP_TIMEOUT) as r:
+                return _json.loads(r.read())
+        except _urlerr.HTTPError as e:
+            if e.code == 404:
+                return None                       # nicht vorhanden -> kein Retry
+            if (e.code == 429 or 500 <= e.code < 600) and _attempt < _HTTP_MAX_RETRIES - 1:
+                ra = e.headers.get("Retry-After") if getattr(e, "headers", None) else None
+                try:
+                    wait = float(ra)
+                except (TypeError, ValueError):
+                    wait = 2 ** _attempt
+                _time.sleep(min(max(wait, 0.0), _HTTP_BACKOFF_CAP))
+                continue
+            print(f"  HTTP {e.code} {url[:70]}… : {e}")
+            return None
+        except Exception as e:
+            if _attempt < _HTTP_MAX_RETRIES - 1:
+                _time.sleep(min(2 ** _attempt, _HTTP_BACKOFF_CAP))
+                continue
+            print(f"  HTTP {url[:70]}… : {e}")
+            return None
+    return None
 
 
 def _gamma_events(tag, closed, now=None):

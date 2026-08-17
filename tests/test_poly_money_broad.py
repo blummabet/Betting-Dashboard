@@ -672,3 +672,57 @@ class TestCaptureLive:
                          "capturedAt": (_LNOW - timedelta(hours=1)).isoformat()}}
         out = B.capture_live([self._mkt()], frisch, now=_LNOW)
         assert "gz" in out                              # < keep_h -> bleibt, auch wenn diesen Lauf nicht gesehen
+
+
+# 16.08.2026 (Lucas, nach Poly-Rate-Limit-Update): _get muss 429/5xx abfedern (Retry-After + Backoff,
+# ein Retry) statt still None — sonst reissen gedrosselte Läufe Löcher (leere Shares). 404 sofort None.
+def _get_with(urlopen_fn):
+    o_open, o_sleep = B._url.urlopen, B._time.sleep
+    B._url.urlopen = urlopen_fn
+    B._time.sleep = lambda *_a, **_k: None
+    try:
+        return B._get("https://x/y")
+    finally:
+        B._url.urlopen, B._time.sleep = o_open, o_sleep
+
+
+def _fake_json(d):
+    import json
+    class R:
+        _d = json.dumps(d).encode()
+        def read(self): return self._d
+        def __enter__(self): return self
+        def __exit__(self, *a): return False
+    return R()
+
+
+def test_get_429_then_success_retries():
+    import io, urllib.error
+    st = {"n": 0}
+    def op(req, timeout=None):
+        st["n"] += 1
+        if st["n"] == 1:
+            raise urllib.error.HTTPError(req.full_url, 429, "TM", {"Retry-After": "0"}, io.BytesIO(b""))
+        return _fake_json({"ok": True})
+    assert _get_with(op) == {"ok": True}
+    assert st["n"] == 2
+
+
+def test_get_404_immediate_none():
+    import io, urllib.error
+    st = {"n": 0}
+    def op(req, timeout=None):
+        st["n"] += 1
+        raise urllib.error.HTTPError(req.full_url, 404, "NF", {}, io.BytesIO(b""))
+    assert _get_with(op) is None
+    assert st["n"] == 1
+
+
+def test_get_429_always_gives_up():
+    import io, urllib.error
+    st = {"n": 0}
+    def op(req, timeout=None):
+        st["n"] += 1
+        raise urllib.error.HTTPError(req.full_url, 429, "TM", {"Retry-After": "0"}, io.BytesIO(b""))
+    assert _get_with(op) is None
+    assert st["n"] == 2
