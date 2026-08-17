@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-08-17T03:16:04.827151+00:00",
+ "updatedAt": "2026-08-17T04:08:09.115601+00:00",
  "stake": 10.0,
  "expired": 0,
  "open": {
@@ -78,7 +78,7 @@
    "entryPrice": 0.735,
    "firstTs": "2026-08-16T14:09:11.781306+00:00",
    "lastPrice": 0.735,
-   "lastTs": "2026-08-17T03:16:04.827151+00:00",
+   "lastTs": "2026-08-17T04:08:09.115601+00:00",
    "htkAtEntry": 2.938317777777778,
    "public": true,
    "reasons": [
@@ -87,30 +87,6 @@
    ],
    "signals": [
     "money",
-    "sharp"
-   ],
-   "stake": 10.0
-  },
-  "bra-cor1-cru-2026-08-16|SC Corinthians Paulista": {
-   "key": "bra-cor1-cru-2026-08-16",
-   "side": "SC Corinthians Paulista",
-   "verdict": "BET",
-   "conv": 10,
-   "league": "BRAZIL-SERIE-A",
-   "entryPrice": 0.465,
-   "firstTs": "2026-08-16T21:36:28.838557+00:00",
-   "lastPrice": 0.495,
-   "lastTs": "2026-08-17T03:16:04.827151+00:00",
-   "htkAtEntry": 0.9275547222222222,
-   "public": true,
-   "reasons": [
-    "großes Geld auf SC Corinthians Paulista (75%) → $29K",
-    "Steam läuft rein (+5.0pp)",
-    "🔥 scharfe Wallet (85/141, 60% · +$3.63M)"
-   ],
-   "signals": [
-    "money",
-    "steam",
     "sharp"
    ],
    "stake": 10.0
@@ -124,7 +100,7 @@
    "entryPrice": 0.525,
    "firstTs": "2026-08-17T01:57:31.116485+00:00",
    "lastPrice": 0.525,
-   "lastTs": "2026-08-17T03:16:04.827151+00:00",
+   "lastTs": "2026-08-17T04:08:09.115601+00:00",
    "htkAtEntry": 0.56753,
    "public": false,
    "reasons": [
@@ -8499,26 +8475,49 @@
    "firstTs": "2026-08-16T20:41:26.130455+00:00",
    "settledTs": "2026-08-17T03:16:04.827151+00:00",
    "resolvedTs": "2026-08-17T03:16:04.043540+00:00"
+  },
+  {
+   "key": "bra-cor1-cru-2026-08-16",
+   "side": "SC Corinthians Paulista",
+   "verdict": "BET",
+   "conv": 10,
+   "league": "BRAZIL-SERIE-A",
+   "entryPrice": 0.465,
+   "closePrice": 0.495,
+   "result": "loss",
+   "winner": "Cruzeiro EC",
+   "pnl": -10.0,
+   "clvPP": 3.0,
+   "stake": 10.0,
+   "public": true,
+   "signals": [
+    "money",
+    "steam",
+    "sharp"
+   ],
+   "firstTs": "2026-08-16T21:36:28.838557+00:00",
+   "settledTs": "2026-08-17T04:08:09.115601+00:00",
+   "resolvedTs": "2026-08-17T04:08:08.372204+00:00"
   }
  ],
  "agg": {
   "all": {
-   "n": 390,
+   "n": 391,
    "wins": 214,
-   "hit": 0.5487,
-   "pnl": -249.2,
-   "stake": 3900.0,
-   "roi": -0.0639,
-   "clvAvg": -0.05
+   "hit": 0.5473,
+   "pnl": -259.2,
+   "stake": 3910.0,
+   "roi": -0.0663,
+   "clvAvg": -0.04
   },
   "public": {
-   "n": 113,
+   "n": 114,
    "wins": 79,
-   "hit": 0.6991,
-   "pnl": 52.28,
-   "stake": 1130.0,
-   "roi": 0.0463,
-   "clvAvg": -0.07
+   "hit": 0.693,
+   "pnl": 42.28,
+   "stake": 1140.0,
+   "roi": 0.0371,
+   "clvAvg": -0.04
   },
   "byConv": {
    "4": {
@@ -8576,24 +8575,24 @@
     "clvAvg": 0.14
    },
    "10": {
-    "n": 7,
+    "n": 8,
     "wins": 4,
-    "hit": 0.5714,
-    "pnl": -21.88,
-    "stake": 70.0,
-    "roi": -0.3126,
-    "clvAvg": 0.79
+    "hit": 0.5,
+    "pnl": -31.88,
+    "stake": 80.0,
+    "roi": -0.3985,
+    "clvAvg": 1.06
    }
   },
   "byVerdict": {
    "BET": {
-    "n": 312,
+    "n": 313,
     "wins": 192,
-    "hit": 0.6154,
-    "pnl": -92.51,
-    "stake": 3120.0,
-    "roi": -0.0297,
-    "clvAvg": -0.08
+    "hit": 0.6134,
+    "pnl": -102.51,
+    "stake": 3130.0,
+    "roi": -0.0328,
+    "clvAvg": -0.07
    },
    "FADE": {
     "n": 78,
@@ -8607,13 +8606,13 @@
   },
   "bySignal": {
    "money": {
-    "n": 198,
+    "n": 199,
     "wins": 138,
-    "hit": 0.697,
-    "pnl": 72.73,
-    "stake": 1980.0,
-    "roi": 0.0367,
-    "clvAvg": -0.12
+    "hit": 0.6935,
+    "pnl": 62.73,
+    "stake": 1990.0,
+    "roi": 0.0315,
+    "clvAvg": -0.1
    },
    "pinn": {
     "n": 3,
@@ -8625,22 +8624,22 @@
     "clvAvg": 0.0
    },
    "sharp": {
-    "n": 298,
+    "n": 299,
     "wins": 159,
-    "hit": 0.5336,
-    "pnl": -196.75,
-    "stake": 2980.0,
-    "roi": -0.066,
-    "clvAvg": -0.07
+    "hit": 0.5318,
+    "pnl": -206.75,
+    "stake": 2990.0,
+    "roi": -0.0691,
+    "clvAvg": -0.06
    },
    "steam": {
-    "n": 93,
+    "n": 94,
     "wins": 55,
-    "hit": 0.5914,
-    "pnl": -56.38,
-    "stake": 930.0,
-    "roi": -0.0606,
-    "clvAvg": -0.05
+    "hit": 0.5851,
+    "pnl": -66.38,
+    "stake": 940.0,
+    "roi": -0.0706,
+    "clvAvg": -0.02
    },
    "turned": {
     "n": 1,
