@@ -1,15 +1,15 @@
 {
- "n": 424,
+ "n": 433,
  "minOdds": 1.35,
- "moneyHitRate": 0.564,
- "priceHitRate": 0.557,
- "brierMoney": 0.5295,
- "brierPrice": 0.503,
+ "moneyHitRate": 0.568,
+ "priceHitRate": 0.559,
+ "brierMoney": 0.5258,
+ "brierPrice": 0.5037,
  "disagree": {
-  "n": 23,
-  "moneyWon": 7,
+  "n": 25,
+  "moneyWon": 8,
   "priceWon": 4,
-  "neither": 12
+  "neither": 13
  },
  "verdict": "preis_besser",
  "byLeague": [
@@ -22,11 +22,19 @@
    "verdict": "geld_schaerfer"
   },
   {
+   "league": "MLS",
+   "n": 20,
+   "moneyHitRate": 0.65,
+   "brierMoney": 0.5783,
+   "brierPrice": 0.5825,
+   "verdict": "gleichauf"
+  },
+  {
    "league": "ESPORTS",
-   "n": 160,
-   "moneyHitRate": 0.619,
-   "brierMoney": 0.4632,
-   "brierPrice": 0.4632,
+   "n": 161,
+   "moneyHitRate": 0.621,
+   "brierMoney": 0.4625,
+   "brierPrice": 0.4625,
    "verdict": "gleichauf"
   },
   {
@@ -70,14 +78,6 @@
    "verdict": "gleichauf"
   },
   {
-   "league": "MLS",
-   "n": 17,
-   "moneyHitRate": 0.588,
-   "brierMoney": 0.6491,
-   "brierPrice": 0.5804,
-   "verdict": "preis_besser"
-  },
-  {
    "league": "LA-LIGA",
    "n": 6,
    "moneyHitRate": 0.5,
@@ -87,10 +87,10 @@
   },
   {
    "league": "SOCCER",
-   "n": 60,
-   "moneyHitRate": 0.4,
-   "brierMoney": 0.7794,
-   "brierPrice": 0.6386,
+   "n": 61,
+   "moneyHitRate": 0.393,
+   "brierMoney": 0.7753,
+   "brierPrice": 0.6368,
    "verdict": "preis_besser"
   }
  ],
@@ -540,6 +540,18 @@
    "totalUsd": 196605
   },
   {
+   "key": "bra-vit-bot-2026-08-16",
+   "league": "BRAZIL-SERIE-A",
+   "winner": "EC Vitória",
+   "moneyFav": "EC Vitória",
+   "priceFav": "EC Vitória",
+   "moneyShare": 0.944,
+   "priceProb": 0.433,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 192524
+  },
+  {
    "key": "lol-mkoi-navi-2026-08-16",
    "league": "ESPORTS",
    "winner": "Movistar KOI",
@@ -562,29 +574,17 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 186786
-  },
-  {
-   "key": "mlb-col-ari-2026-08-11",
-   "league": "MLB",
-   "winner": "Colorado Rockies",
-   "moneyFav": "Arizona Diamondbacks",
-   "priceFav": "Arizona Diamondbacks",
-   "moneyShare": 0.615,
-   "priceProb": 0.615,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 180117
   }
  ],
- "generatedAt": "2026-08-17T01:57:30.490055+00:00",
+ "generatedAt": "2026-08-17T03:16:04.164309+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 419,
   "nfl": 800,
-  "mlb": 548,
+  "mlb": 551,
   "nhl": 403,
-  "mls": 746,
+  "mls": 740,
   "epl": 509,
   "soccer": 800,
   "tennis": 800,
@@ -594,29 +594,29 @@
   "serie-a": 37,
   "ligue-1": 509,
   "primeira-liga": 498,
-  "brazil-serie-a": 499,
+  "brazil-serie-a": 487,
   "brasileirao": 0,
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 609,
+  "esports": 607,
   "cs2": 405,
   "lol": 373,
   "dota": 9,
-  "valorant": 425,
+  "valorant": 424,
   "ufc": 460,
   "mma": 47,
   "boxing": 224,
   "golf": 304,
   "f1": 354,
-  "cricket": 500,
+  "cricket": 493,
   "allsvenskan": 1,
-  "austria-bundesliga": 159,
+  "austria-bundesliga": 160,
   "bulgaria-parva-liga": 213,
   "bundesliga-2": 444,
   "champions-league": 295,
   "champions-league-final": 12,
-  "denmark-superliga": 447,
+  "denmark-superliga": 448,
   "efl-championship": 575,
   "english-premier-league": 2,
   "europa-conference-league": 691,
@@ -632,10 +632,10 @@
   "poland-ekstraklasa": 216,
   "premier-league": 508,
   "saudi-professional-league": 586,
-  "scotland-league-cup": 161,
+  "scotland-league-cup": 162,
   "serbian-superliga": 173,
   "serie-b": 512,
-  "slovenia-prvaliga": 135,
+  "slovenia-prvaliga": 136,
   "sweden-allsvenskan": 410,
   "uefa-champions-league": 16,
   "uefa-conference-league": 6,
@@ -647,6 +647,6 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 423
+  "sweepAdded": 422
  }
 }
