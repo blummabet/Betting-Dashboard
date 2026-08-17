@@ -178,7 +178,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "34/34 mit AH · 34/34 mit Public-O/U."
+      "note": "30/30 mit AH · 30/30 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -340,10 +340,11 @@
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
       "ok": false,
-      "nFail": 2,
+      "nFail": 3,
       "failures": [
-        "1598-1607 Heimsieg @2.7: sichere Linie Doppelte Chance — 1X @1.603 verfügbar (≥1.35), nicht abgeleitet",
-        "1599-9568 Heimsieg @2.4: sichere Linie Doppelte Chance — 1X @1.482 verfügbar (≥1.35), nicht abgeleitet"
+        "1598-1607 Heimsieg @2.7: sichere Linie Doppelte Chance — 1X @1.692 verfügbar (≥1.35), nicht abgeleitet",
+        "1599-9568 Heimsieg @2.4: sichere Linie Doppelte Chance — 1X @1.462 verfügbar (≥1.35), nicht abgeleitet",
+        "1614-1605 Auswärtssieg @2.77: sichere Linie Doppelte Chance — X2 @1.381 verfügbar (≥1.35), nicht abgeleitet"
       ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
@@ -487,12 +488,10 @@
       "label": "Beendete Spiele haben Match-Stats (xG)",
       "severity": "warn",
       "ok": false,
-      "nFail": 4,
+      "nFail": 2,
       "failures": [
         "2242-1596: beendet, aber keine result.stats (xG)",
-        "9568-1613: beendet, aber keine result.stats (xG)",
-        "1608-1602: beendet, aber keine result.stats (xG)",
-        "1614-1615: beendet, aber keine result.stats (xG)"
+        "9568-1613: beendet, aber keine result.stats (xG)"
       ],
       "note": "Ohne Match-xG lernt der Bayesian-Loop nur aus Glück/Pech, nicht aus dem Prozess."
     },
@@ -534,5 +533,5 @@
     }
   ],
   "nFail": 4,
-  "generatedAt": "2026-08-16T19:26:37.311658+00:00"
+  "generatedAt": "2026-08-17T08:04:17.760023+00:00"
 }
