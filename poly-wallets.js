@@ -151,16 +151,21 @@ const _PW_VIEW_INTRO = {
 let _pwSportFilter='all';
 function _pwSetSportFilter(cat){ _pwSportFilter=cat; _pwRender(); }
 if(typeof window!=='undefined') window._pwSetSportFilter=_pwSetSportFilter;
-function _pwSportCategory(s){
+function _pwSportCategory(s, sport){
+  // 16.08.2026 (Lucas): gestempelter Sport aus dem Capture (poly_money_broad) hat Vorrang — fängt
+  // abgekürzte Bewerbe (ERE/BEL1/RUS/AZE1/CLF …), die der String-Rateversuch nie erkennt.
+  if(sport && _PW_CAT_ICON[sport]) return sport;
   const x=String(s||'').toLowerCase();
-  if(/soccer|epl|ucl|mls|laliga|la-liga|liga|bundesliga|serie|ligue|fussball|fußball|\blal\b/.test(x)) return 'Fußball';   // \blal\b: Poly-Slug-Präfix für La Liga (lal-ala-get-…)
+  // spezifische Sportarten ZUERST (sonst klauen breite Fußball-Begriffe wie „championship" sie)
+  if(/esport|cs2|csgo|\blol\b|dota|valorant/.test(x)) return 'E-Sport';
   if(/basketball|nba|nfl|americanfootball|baseball|mlb|icehockey|hockey|nhl|wnba|ncaa/.test(x)) return 'US-Sport';
-  if(/esport|cs2|csgo|lol|dota|valorant/.test(x)) return 'E-Sport';
   if(/tennis|wta|atp/.test(x)) return 'Tennis';
   if(/mma|ufc|boxing|box|kampf/.test(x)) return 'Kampfsport';
   if(/golf/.test(x)) return 'Golf';
   if(/f1|formula|motor|nascar/.test(x)) return 'Motorsport';
   if(/cricket/.test(x)) return 'Cricket';
+  // Fußball breit: Namen + Liga-Muster (16.08.2026 Lucas: Eredivisie/Allsvenskan/EFL-Championship/… gefangen)
+  if(/soccer|football|fussball|fußball|\bepl\b|\bucl\b|\buel\b|uecl|conference|europa|libertad|sudameri|\bmls\b|liga|ligue|serie|bundesliga|eredivisie|allsven|superett|elitese|ekstrakla|veikkau|primeira|championship|super-?lig|pro-?league|\blal\b/.test(x)) return 'Fußball';
   return 'Sonstige';
 }
 const _PW_CAT_ICON={'Fußball':'⚽','US-Sport':'🏀','E-Sport':'🎮','Tennis':'🎾','Kampfsport':'🥊','Golf':'⛳','Motorsport':'🏎️','Cricket':'🏏','Sonstige':'🎯'};
@@ -177,7 +182,7 @@ function _pwSportFilterBar(cats){
     +'<span class="pw-mut" style="font-size:11px;margin-right:2px">Filter:</span>'
     +chip('all','Alle')+present.map(c=>chip(c,_PW_CAT_ICON[c]+' '+c)).join('')+'</div>';
 }
-function _pwSportPass(s){ return _pwSportFilter==='all' || _pwSportCategory(s)===_pwSportFilter; }
+function _pwSportPass(s, sport){ return _pwSportFilter==='all' || _pwSportCategory(s, sport)===_pwSportFilter; }
 // 25.07.2026 (Lucas: „Filter nur beim letzten Tab"): Kategorien aus ALLEN globalen Quellen
 // (kommendes Geld + Cross-Sport-Edge) vereinen → EINE Filterleiste oben, auf jedem Unter-Reiter.
 function _pwGlobalCats(){
@@ -288,7 +293,7 @@ const PW_STALE_AFTER_KO_H = 4;   // Default (eSport/Tennis/Cricket: lange Serien
 // fertige Spiel weiter als live ein. Sportabhaengiger Cutoff loest genau das, ohne den eSport-Live-
 // Tab zu beschneiden.
 const PW_STALE_AFTER_KO_H_FOOTBALL = 2.5;
-function _pwStaleCutoff(m){ return _pwSportCategory(m&&m.league)==='Fußball' ? PW_STALE_AFTER_KO_H_FOOTBALL : PW_STALE_AFTER_KO_H; }
+function _pwStaleCutoff(m){ return _pwSportCategory(m&&m.league, m&&m.sport)==='Fußball' ? PW_STALE_AFTER_KO_H_FOOTBALL : PW_STALE_AFTER_KO_H; }
 function _pwKoStale(m){ const r=_pwRealHtk(m); return r!=null && r < -_pwStaleCutoff(m); }
 function _pwSideCol(s){return PW_C[s]||(s==='bttsY'?PW_C.over:s==='bttsN'?PW_C.under:PW_C.txt);}
 
@@ -713,7 +718,8 @@ const PW_LEAGUE_CAT={
   ufc:['Kampfsport','🥊'],mma:['Kampfsport','🥊'],boxing:['Kampfsport','🥊'],
   golf:['Golf','⛳'],f1:['Motorsport','🏎'],cricket:['Cricket','🏏'],
 };
-function _pwCatOf(league){
+function _pwCatOf(league, sport){
+  if(sport && _PW_CAT_ICON[sport]) return [sport, _PW_CAT_ICON[sport]];   // 16.08.2026 (Lucas): gestempelter Sport zuerst
   const c=PW_LEAGUE_CAT[String(league||'').toLowerCase()];
   if(c) return c;
   // 03.08.2026 (Lucas: „Poly hat nun La Liga“): Regex-Fallback statt exaktem Key — laliga/bundesliga/
@@ -1200,7 +1206,7 @@ function _pwSideMarket(k,m){
   return !_PW_SCORE_RX.test(String(fav||''));
 }
 function _pwNormStage(m){ var h=_pwRealHtk(m); if(h==null) return 'pre'; if(h<0) return 'live'; if(h<=3) return 'soon'; return 'pre'; }
-function _pwNormKey(m){ return _pwSportCategory(m.league)+'|'+_pwNormStage(m); }
+function _pwNormKey(m){ return _pwSportCategory(m.league, m.sport)+'|'+_pwNormStage(m); }
 // Frischer Zufluss = Δ Gesamt-Volumen zwischen den letzten zwei History-Punkten (Poly-Volumen
 // wächst nur, also ist Δ≥0 „neu dazugekommenes Geld"). null, wenn <2 Punkte vorliegen.
 function _pwInflow(key,hist){ var a=hist&&hist[key]; if(!Array.isArray(a)||a.length<2) return null; var v2=Number(a[a.length-1].v), v1=Number(a[a.length-2].v); if(!isFinite(v2)||!isFinite(v1)) return null; var d=v2-v1; return d>0?d:0; }
@@ -1233,7 +1239,7 @@ function _pwNormRow(it,mx,mode){
   var m=it.m;
   var oc=Object.entries(m.shares||{}).map(function(e){return {n:e[0],u:Number(e[1])||0};}).sort(function(a,b){return b.u-a.u;});
   var tot=oc.reduce(function(s,o){return s+o.u;},0)||1, fav=oc[0]||{n:'—',u:0}, favPct=Math.round(fav.u/tot*100);
-  var ic=_pwCatOf(m.league)[1], lg=(m.league||'').toUpperCase();
+  var ic=_pwCatOf(m.league, m.sport)[1], lg=(m.league||'').toUpperCase();
   var name=_pwEventLabel(it.k,oc.map(function(o){return o.n;}),m.league);
   var link=it.k?('https://polymarket.com/event/'+encodeURIComponent(it.k)):null;
   var nameHtml=link?('<a href="'+link+'" target="_blank" rel="noopener" class="pwn-a">'+name+' ↗</a>'):name;
@@ -1255,7 +1261,7 @@ function _pwNormBlock(title,note,items,mode){
 function _pwOverNorm(live,hist){
   if(!live||!Object.keys(live).length) return '';
   var cand=Object.entries(live).map(function(e){return {k:e[0],m:e[1]};})
-    .filter(function(x){return x.m&&x.m.resolved==null&&(x.m.totalUsd||0)>=PW_NORM_MIN_USD&&!_pwKoStale(x.m)&&_pwSportPass(x.m.league)&&_pwSideMarket(x.k,x.m);});
+    .filter(function(x){return x.m&&x.m.resolved==null&&(x.m.totalUsd||0)>=PW_NORM_MIN_USD&&!_pwKoStale(x.m)&&_pwSportPass(x.m.league, x.m.sport)&&_pwSideMarket(x.k,x.m);});
   if(!cand.length) return '';
   var over=function(items,valFn,floor){
     var base=_pwMedianBy(items,function(it){return _pwNormKey(it.m);},function(it){return it.val;});
@@ -1286,7 +1292,7 @@ if(typeof window!=='undefined'){ window._pwOverNorm=_pwOverNorm; window._pwNormS
 function _pwOverNormTop(limit){
   var live=_pwCache&&_pwCache.broadLive; if(!live) return [];
   var cand=Object.entries(live).map(function(e){return {k:e[0],m:e[1]};})
-    .filter(function(x){return x.m&&x.m.resolved==null&&(x.m.totalUsd||0)>=PW_NORM_MIN_USD&&!_pwKoStale(x.m)&&_pwSportPass(x.m.league)&&_pwSideMarket(x.k,x.m);})
+    .filter(function(x){return x.m&&x.m.resolved==null&&(x.m.totalUsd||0)>=PW_NORM_MIN_USD&&!_pwKoStale(x.m)&&_pwSportPass(x.m.league, x.m.sport)&&_pwSideMarket(x.k,x.m);})
     .map(function(x){return {k:x.k,m:x.m,val:x.m.totalUsd||0};});
   if(!cand.length) return [];
   var base=_pwMedianBy(cand,function(it){return _pwNormKey(it.m);},function(it){return it.val;});
@@ -1307,8 +1313,8 @@ if(typeof window!=='undefined') window._pwOverNormTop=_pwOverNormTop;
 function _pwMoneyLive(live){
   const all=(live?Object.entries(live):[]).map(([k,m])=>({k,m}))
     .filter(x=>x.m && x.m.resolved==null && x.m.shares && Object.keys(x.m.shares).length && (x.m.totalUsd||0)>=5000 && !_pwKoStale(x.m) && _pwSideMarket(x.k,x.m));   // 16.08.2026 (Lucas): leere shares:{} (Volumen ohne Split, Capture-Luecke) raus -> kein Crash im Geld-Split
-  const cats=new Set(all.map(x=>_pwSportCategory(x.m.league)));
-  const rows=all.filter(x=>_pwSportPass(x.m.league))
+  const cats=new Set(all.map(x=>_pwSportCategory(x.m.league, x.m.sport)));
+  const rows=all.filter(x=>_pwSportPass(x.m.league, x.m.sport))
     .sort((a,b)=>(b.m.totalUsd||0)-(a.m.totalUsd||0)).slice(0,30);
   const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">💰 Wo liegt das große Geld — alle Sportarten</span>'
     +'<span class="pw-sec-note">kommende Spiele nach Poly-Volumen · auf welche Seite hat die Masse gesetzt · zum Folgen</span></div>';
@@ -1324,7 +1330,7 @@ function _pwMoneyLive(live){
     const matchTxt=_pwEventLabel(k, oc.map(o=>o.name), m.league);
     const match=k?('<a href="https://polymarket.com/event/'+encodeURIComponent(k)+'" target="_blank" rel="noopener" '
       +'style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Auf Polymarket öffnen ↗">'+matchTxt+' <span style="color:#a78bfa">↗</span></a>'):matchTxt;
-    const ic=_pwCatOf(m.league)[1], lg=(m.league||'').toUpperCase();
+    const ic=_pwCatOf(m.league, m.sport)[1], lg=(m.league||'').toUpperCase();
     const _rh=_pwRealHtk(m); const htk=_rh!=null?(_rh<0?'live':_rh<1?'<1h':Math.round(_rh)+'h'):'—';
     // Split-Balken (bis 3 Ausgänge)
     const cols=['#4cc2ff','#f5c518','#ff5d5d'];
@@ -1544,8 +1550,8 @@ function _pwTopPlays(limit, live, useSportPass){
     // 16.08.2026 (Lucas): fertiges Live-Spiel raus. Ein laut close-Freeze schon laufendes Spiel (realHtk<0)
     // gilt nur als aktuell, wenn der LIVE-Scan es noch FRISCH führt — sonst vorbei/eingefroren (blockierte Platz).
     if((_pwRealHtk(m)||0)<0){ var _lnm=_pwCache&&_pwCache.broadLiveNow&&_pwCache.broadLiveNow[k]; if(!_lnm||_pwLiveGone(_lnm)) continue; }
-    if(_pwSportCategory(m.league)==='Sonstige') continue;   // kein Politik/Krypto/Sonstiges in die Play-Liste
-    if(useSportPass && !_pwSportPass(m.league)) continue;
+    if(_pwSportCategory(m.league, m.sport)==='Sonstige') continue;   // kein Politik/Krypto/Sonstiges in die Play-Liste
+    if(useSportPass && !_pwSportPass(m.league, m.sport)) continue;
     const r=_pwShortlistScore(k,m);
     if(r&&r.verdict==='BET'){
       const _lv=(r.htk!=null&&r.htk<0);   // 15.08.2026 (Lucas): live fast entschieden (>77¢) = kein Value, wie Live-Watch
@@ -1584,7 +1590,7 @@ function _pwWhalePublicCandidates(){
   const out=[];
   for(const pos of opens){
     if(!pos) continue;
-    if(_pwSportCategory(pos.league)==='Sonstige') continue;   // nur Sport
+    if(_pwSportCategory(pos.league, pos.sport)==='Sonstige') continue;   // nur Sport
     const usd=Number(pos.usd)||0; if(usd<=0) continue;
     const price=Number(pos.lastPrice!=null?pos.lastPrice:pos.entryPrice);
     if(!(price>=0.03 && price<=0.97)) continue;               // kein fast-sicher, kein Staub
@@ -2086,8 +2092,8 @@ function _pwNewEntries(track, hours, live){
   const open=track&&track.open; if(!open) return [];
   const cutoff=Date.now()-hours*3.6e6, rows=[];
   for(const e of Object.values(open)){
-    if(!e||!_pwSportPass(e.league)) continue;
-    if(_pwSportCategory(e.league)==='Sonstige') continue;      // Politik/Krypto (GREATER/ELON …) raus
+    if(!e||!_pwSportPass(e.league, e.sport)) continue;
+    if(_pwSportCategory(e.league, e.sport)==='Sonstige') continue;      // Politik/Krypto (GREATER/ELON …) raus
     if((Number(e.usd)||0) < PW_NEW_MIN_USD) continue;          // Kleckerbeträge raus — „GROSSE Einstiege"
     const t=Date.parse(e.firstTs); if(isNaN(t)||t<cutoff) continue;
     if(_pwEntryOver(e, live)) continue;                        // schon angepfiffen/durch → nicht „neu"

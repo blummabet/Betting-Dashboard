@@ -726,3 +726,30 @@ def test_get_429_always_gives_up():
         raise urllib.error.HTTPError(req.full_url, 429, "TM", {"Retry-After": "0"}, io.BytesIO(b""))
     assert _get_with(op) is None
     assert st["n"] == 2
+
+
+# 16.08.2026 (Lucas): Sport-Kategorie beim Capture stempeln — Fußball-Bewerbe mit abgekürztem Slug
+# (ERE/BEL1/RUS/AZE1/CLF …) wurden vom Frontend-String-Rateversuch als "Sonstige" fehlklassifiziert
+# und flogen aus Play-Liste/Neu + falschem Sport-Topf. Der Runner stempelt jetzt den echten Sport.
+def test_tag_category():
+    assert B._tag_category("soccer") == "Fußball"
+    assert B._tag_category("la-liga") == "Fußball"
+    assert B._tag_category("ere-random-league") == "Fußball"   # entdeckter Liga-Tag -> Default Fußball
+    assert B._tag_category("mlb") == "US-Sport"
+    assert B._tag_category("cs2") == "E-Sport"
+    assert B._tag_category("tennis") == "Tennis"
+
+
+def test_event_sport_from_tags():
+    assert B._event_sport({"tags": [{"slug": "soccer"}]}) == "Fußball"
+    assert B._event_sport({"tags": ["cs2"]}) == "E-Sport"
+    assert B._event_sport({"tags": [{"slug": "eredivisie"}]}) == "Fußball"
+    assert B._event_sport({"tags": [{"slug": "politics"}]}) is None
+    assert B._event_sport({"tags": []}) is None
+
+
+def test_capture_carries_sport():
+    m = [{"key": "x", "league": "ERE", "sport": "Fußball", "hoursToKickoff": 1.0,
+          "totalUsd": 20000, "shares": {"A": 1}, "prices": {"A": 0.5}}]
+    out = B.capture(m, {}, min_vol=7500)
+    assert out["x"]["sport"] == "Fußball"

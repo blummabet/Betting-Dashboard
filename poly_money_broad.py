@@ -342,6 +342,35 @@ def _league_from_slug(key):
     return _SLUG_LEAGUE_ALIAS.get(head, head.upper())
 
 
+# 16.08.2026 (Lucas): Sport-Kategorie beim ERFASSEN stempeln. Der Frontend-Rateversuch aus dem Liga-
+# String verfehlte abgekuerzte Bewerbe (ERE=Eredivisie, BEL1, RUS, AZE1, CLF, EFL-Championship …) -> sie
+# landeten als "Sonstige"/🎯 und flogen aus Play-Liste/Neu + falschem Sport-Topf. Der Runner WEISS die
+# Sportart (Tag, unter dem er den Markt holt) -> hart stempeln.
+_SPORT_BY_TAG = {
+    "nba": "US-Sport", "nfl": "US-Sport", "mlb": "US-Sport", "nhl": "US-Sport",
+    "esports": "E-Sport", "cs2": "E-Sport", "csgo": "E-Sport", "lol": "E-Sport", "dota": "E-Sport", "valorant": "E-Sport",
+    "tennis": "Tennis", "atp": "Tennis", "wta": "Tennis",
+    "ufc": "Kampfsport", "mma": "Kampfsport", "boxing": "Kampfsport",
+    "golf": "Golf", "f1": "Motorsport", "nascar": "Motorsport", "cricket": "Cricket",
+}
+_FOOT_TAGS = ("soccer", "football", "epl", "ucl", "uel", "mls", "la-liga", "laliga", "bundesliga",
+              "serie-a", "ligue-1", "primeira-liga", "eredivisie", "super-lig", "brazil-serie-a", "brasileirao")
+def _tag_category(tag):
+    """Kategorie des Sport-Tags, unter dem der Markt geholt wurde. SPORT_TAGS + entdeckte Liga-Registry
+    sind bis auf die _SPORT_BY_TAG-Liste alle Fußball -> Default Fußball."""
+    return _SPORT_BY_TAG.get(str(tag or "").lower().strip(), "Fußball")
+def _event_sport(ev):
+    """Sport eines Events aus SEINEN Tags (fuer den tag-losen Volumen-Sweep). Bekannter Sport-Tag ->
+    Kategorie; Fußball-Tag -> Fußball; sonst None (Politik/Krypto -> Frontend entscheidet = Sonstige)."""
+    for _t in (ev.get("tags") or []):
+        slug = str((_t.get("slug") if isinstance(_t, dict) else _t) or "").lower()
+        if slug in _SPORT_BY_TAG:
+            return _SPORT_BY_TAG[slug]
+        if slug in _FOOT_TAGS:
+            return "Fußball"
+    return None
+
+
 def _hours_to_ko(ev, now):
     ko = ev.get("startTime") or ev.get("gameStartTime") or ev.get("startDate")
     try:
@@ -657,7 +686,7 @@ def fetch_markets(live_only=False):
     candidates = []                      # near-kickoff 2-Wege-Kandidaten, VOR den Holders-Calls
     upcoming = {}                        # money-map: weiter draussen liegende Sport-Maerkte, NUR Preis+Vol (kein Holder-Call)
 
-    def _ingest(open_evs, closed_evs, league_of):
+    def _ingest(open_evs, closed_evs, league_of, sport_of):
         """Ein Fetch-Ergebnis einsammeln. `league_of(ev, key)` liefert das Liga-Label.
         Anpfiff-Fenster (0<htk<=3h) + Volumen sind der eigentliche Sport-Filter."""
         # 1) Offene, near-kickoff Märkte SAMMELN (Holders-Call später, nach Volumen priorisiert)
@@ -679,7 +708,7 @@ def fetch_markets(live_only=False):
                                 uprices = {o["label"]: o["price"] for o in uoc if o["price"] is not None}
                                 umvol = _market_volume(ev, uoc, uvol)   # 15.08.2026 (Lucas): Markt- statt Event-Volumen
                                 if uprices and (key not in upcoming or umvol > upcoming[key]["totalUsd"]):
-                                    upcoming[key] = {"league": league_of(ev, key), "hoursToKickoff": round(htk, 2),
+                                    upcoming[key] = {"league": league_of(ev, key), "sport": sport_of(ev, key), "hoursToKickoff": round(htk, 2),
                                                      "totalUsd": round(umvol), "prices": uprices}
                     continue        # ausserhalb Erfassungs-(Holder-)Fenster
                 if live_only and cls != "live":
@@ -694,7 +723,7 @@ def fetch_markets(live_only=False):
                     continue                 # 15.08.2026 (Lucas): Legenden-/Show-Match = kein Signal
                 seen.add((key, False))
                 mvol = _market_volume(ev, oc, vol)   # 15.08.2026 (Lucas): Markt- statt Event-Volumen
-                candidates.append((vol, key, league_of(ev, key), htk, oc, cls == "live", mvol))
+                candidates.append((vol, key, league_of(ev, key), sport_of(ev, key), htk, oc, cls == "live", mvol))
             except Exception:
                 continue
 
@@ -708,7 +737,7 @@ def fetch_markets(live_only=False):
                 rp = {o["label"]: o["price"] for o in oc if o["price"] is not None}
                 if rp and not _is_exhibition(oc):
                     seen.add((key, True))
-                    markets.append({"key": key, "league": league_of(ev, key),
+                    markets.append({"key": key, "league": league_of(ev, key), "sport": sport_of(ev, key),
                                     "resolved": True, "resolvedPrices": rp,
                                     "hoursToKickoff": None, "totalUsd": 0, "shares": {}, "prices": {}})
             except Exception:
@@ -719,7 +748,7 @@ def fetch_markets(live_only=False):
         open_evs = _gamma_events(tag, closed=False)
         closed_evs = _gamma_events(tag, closed=True)
         raw_by_tag[tag] = len(open_evs) + len(closed_evs)
-        _ingest(open_evs, closed_evs, lambda ev, key, _t=tag: _t.upper())
+        _ingest(open_evs, closed_evs, lambda ev, key, _t=tag: _t.upper(), lambda ev, key, _t=tag: _tag_category(_t))
         _discovered |= _discover_football_tags(open_evs) | _discover_football_tags(closed_evs)
 
     # B) Tag-LOSER Volumen-Sweep — fängt JEDE Sportart mit Volumen ein, auch ohne kuratierten Tag
@@ -727,7 +756,7 @@ def fetch_markets(live_only=False):
     sweep_open = _gamma_top(closed=False)
     sweep_closed = _gamma_top(closed=True)
     before = len(candidates) + len(markets)
-    _ingest(sweep_open, sweep_closed, lambda ev, key: _league_from_slug(key))
+    _ingest(sweep_open, sweep_closed, lambda ev, key: _league_from_slug(key), lambda ev, key: _event_sport(ev))
     _discovered |= _discover_football_tags(sweep_open) | _discover_football_tags(sweep_closed)
     sweep_added = (len(candidates) + len(markets)) - before
 
@@ -747,7 +776,7 @@ def fetch_markets(live_only=False):
             from fetch_wm_poly_smartmoney import _http_get as _avg_get
         except Exception:
             _avg_get = None
-    for vol, key, league, htk, oc, is_live, mvol in candidates:
+    for vol, key, league, sport, htk, oc, is_live, mvol in candidates:
         # 15.08.2026 (Lucas): Budget erschoepft ODER kein Geld-Split -> trotzdem Preis+Vol-Zeile fuer die
         # Money-Map (ohne Whale-Split). Sonst verschwindet ein near-KO-Spiel wie Sevilla-Rayo komplett,
         # obwohl Poly den Markt hat (fiel nur aus dem 90er-Holder-Budget). REIN additiv.
@@ -755,7 +784,7 @@ def fetch_markets(live_only=False):
         if _over:
             _pv = {o["label"]: o["price"] for o in oc if o["price"] is not None}
             if _pv:
-                markets.append({"key": key, "league": league, "hoursToKickoff": htk,
+                markets.append({"key": key, "league": league, "sport": sport, "hoursToKickoff": htk,
                                 "totalUsd": round(mvol), "shares": {}, "prices": _pv, "whales": [],
                                 "live": is_live, "resolved": False, "resolvedPrices": {}})
             continue
@@ -770,7 +799,7 @@ def fetch_markets(live_only=False):
         if not mm:
             _pv = {o["label"]: o["price"] for o in oc if o["price"] is not None}
             if _pv:
-                markets.append({"key": key, "league": league, "hoursToKickoff": htk,
+                markets.append({"key": key, "league": league, "sport": sport, "hoursToKickoff": htk,
                                 "totalUsd": round(mvol), "shares": {}, "prices": _pv, "whales": [],
                                 "live": is_live, "resolved": False, "resolvedPrices": {}})
             continue
@@ -783,7 +812,7 @@ def fetch_markets(live_only=False):
                                    _pos_cache, _avg_get, _pos_budget)
             except Exception:
                 pass
-        markets.append({"key": key, "league": league,
+        markets.append({"key": key, "league": league, "sport": sport,
                         "hoursToKickoff": htk, "totalUsd": round(mvol),
                         "shares": shares, "prices": prices, "whales": _whales,
                         "live": is_live,
@@ -833,7 +862,7 @@ def capture(markets, frozen, now=None, min_vol=MIN_VOL_USD, grace_h=GHOST_GRACE_
         if prev is not None and prev.get("hoursToKickoff", 99) <= htk:
             continue
         out[key] = {"shares": m.get("shares") or {}, "prices": m.get("prices") or {},
-                    "league": m.get("league"), "totalUsd": round(float(m.get("totalUsd") or 0)),
+                    "league": m.get("league"), "sport": m.get("sport"), "totalUsd": round(float(m.get("totalUsd") or 0)),
                     "whales": m.get("whales") or [],   # 25.07.2026 (Lucas): Einzel-Wale je Markt (c)
                     "hoursToKickoff": round(htk, 2), "capturedAt": now.isoformat()}
     # 06.08.2026 (Lucas): Geister-Maerkte prunen. ko = capturedAt + hoursToKickoff; liegt der mehr als
@@ -874,7 +903,7 @@ def capture_live(markets, prev, now=None, min_vol=MIN_VOL_USD, keep_h=LIVE_KEEP_
             continue
         htk = m.get("hoursToKickoff")
         out[key] = {"shares": m.get("shares") or {}, "prices": m.get("prices") or {},
-                    "whales": m.get("whales") or [], "league": m.get("league"),
+                    "whales": m.get("whales") or [], "league": m.get("league"), "sport": m.get("sport"),
                     "totalUsd": round(float(m.get("totalUsd") or 0)),
                     "hoursToKickoff": round(float(htk), 2) if isinstance(htk, (int, float)) else None,
                     "capturedAt": now.isoformat(), "live": True}
