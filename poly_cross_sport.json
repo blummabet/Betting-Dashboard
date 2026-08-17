@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-17T22:41:44.134848+00:00",
+ "generatedAt": "2026-08-17T23:01:01.495715+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -28,7 +28,36 @@
  },
  "trackRecord": {
   "tracked": 117,
-  "converged": 21
+  "converged": 19
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|baltimoreorioles-tampabayrays|baltimoreorioles",
+   "sport": "baseball_mlb",
+   "event": "Baltimore Orioles vs Tampa Bay Rays",
+   "market": "Moneyline",
+   "outcome": "Baltimore Orioles",
+   "polyPP": 59.5,
+   "pinnPP": 38.7,
+   "gapPP": 20.79,
+   "vol": 1058325,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -6.85,
+   "firstSeen": "2026-08-15T22:58:50.117206+00:00"
+  },
+  {
+   "id": "baseball_mlb|baltimoreorioles-tampabayrays|tampabayrays",
+   "sport": "baseball_mlb",
+   "event": "Baltimore Orioles vs Tampa Bay Rays",
+   "market": "Moneyline",
+   "outcome": "Tampa Bay Rays",
+   "polyPP": 40.5,
+   "pinnPP": 61.3,
+   "gapPP": -20.79,
+   "vol": 1058325,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -6.85,
+   "firstSeen": "2026-08-15T22:58:50.117206+00:00"
+  }
+ ]
 }
