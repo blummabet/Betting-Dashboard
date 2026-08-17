@@ -1,23 +1,23 @@
 {
-"generatedAt": "2026-08-17T19:48:07.238714+00:00",
+"generatedAt": "2026-08-17T20:02:01.178378+00:00",
 "byVerdict": {
 "konsens": {
-"n": 181,
-"wins": 143,
-"hitRate": 0.7901,
-"polyN": 167,
-"polyWins": 129,
-"polyHitRate": 0.7725,
+"n": 184,
+"wins": 146,
+"hitRate": 0.7935,
+"polyN": 169,
+"polyWins": 131,
+"polyHitRate": 0.7751,
 "pinnN": 8,
 "pinnHitRate": 0.875
 },
 "uneinig": {
-"n": 63,
-"wins": 14,
-"hitRate": 0.2222,
-"polyN": 53,
+"n": 64,
+"wins": 15,
+"hitRate": 0.2344,
+"polyN": 54,
 "polyWins": 17,
-"polyHitRate": 0.3208,
+"polyHitRate": 0.3148,
 "pinnN": 32,
 "pinnHitRate": 0.5312
 },
@@ -88,6 +88,11 @@
 "wins": 5,
 "hitRate": 0.7143
 },
+"Swedish Allsvenskan": {
+"n": 7,
+"wins": 6,
+"hitRate": 0.8571
+},
 "UEFA Europa League Qualifiers": {
 "n": 7,
 "wins": 5,
@@ -108,7 +113,7 @@
 "wins": 4,
 "hitRate": 0.6667
 },
-"Swedish Allsvenskan": {
+"Spanish Segunda Division": {
 "n": 6,
 "wins": 5,
 "hitRate": 0.8333
@@ -119,11 +124,6 @@
 "hitRate": 0.0
 },
 "Peruvian Primera Division": {
-"n": 5,
-"wins": 4,
-"hitRate": 0.8
-},
-"Spanish Segunda Division": {
 "n": 5,
 "wins": 4,
 "hitRate": 0.8
@@ -139,6 +139,11 @@
 "hitRate": 0.75
 },
 "Chinese Super League": {
+"n": 4,
+"wins": 3,
+"hitRate": 0.75
+},
+"Danish Superliga": {
 "n": 4,
 "wins": 3,
 "hitRate": 0.75
@@ -169,11 +174,6 @@
 "hitRate": 1.0
 },
 "CONMEBOL Copa Sudamericana": {
-"n": 3,
-"wins": 2,
-"hitRate": 0.6667
-},
-"Danish Superliga": {
 "n": 3,
 "wins": 2,
 "hitRate": 0.6667
@@ -243,6 +243,11 @@
 "wins": 2,
 "hitRate": 1.0
 },
+"Serbian Super League": {
+"n": 2,
+"wins": 2,
+"hitRate": 1.0
+},
 "Swedish Superettan": {
 "n": 2,
 "wins": 0,
@@ -298,11 +303,6 @@
 "wins": 1,
 "hitRate": 1.0
 },
-"Serbian Super League": {
-"n": 1,
-"wins": 1,
-"hitRate": 1.0
-},
 "South Korean K2 League": {
 "n": 1,
 "wins": 0,
@@ -331,25 +331,101 @@
 },
 "byStrength": {
 "strong": {
-"n": 135,
-"wins": 106,
-"hitRate": 0.7852
+"n": 136,
+"wins": 107,
+"hitRate": 0.7868
 },
 "weak": {
-"n": 78,
-"wins": 34,
-"hitRate": 0.4359
+"n": 81,
+"wins": 37,
+"hitRate": 0.4568
 }
 },
 "divergence": {
-"n": 63,
-"betfairWins": 14,
-"betfairRate": 0.2222,
-"polyN": 53,
+"n": 64,
+"betfairWins": 15,
+"betfairRate": 0.2344,
+"polyN": 54,
 "polyWins": 17,
-"polyRate": 0.3208
+"polyRate": 0.3148
 },
 "recent": [
+{
+"matchId": "35923845",
+"home": "Hacken",
+"away": "Halmstads",
+"league": "Swedish Allsvenskan",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Hacken",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-08-17T17:00:00Z",
+"settledAt": "2026-08-17T20:02:01.011192+00:00"
+},
+{
+"matchId": "35898609",
+"home": "Sporting Gijon",
+"away": "Sabadell",
+"league": "Spanish Segunda Division",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-08-17T17:00:00Z",
+"settledAt": "2026-08-17T20:02:01.011192+00:00"
+},
+{
+"matchId": "35913654",
+"home": "Brondby",
+"away": "SonderjyskE",
+"league": "Danish Superliga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Brondby",
+"polySide": null,
+"winner": "home",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+3,
+2
+],
+"kickoff": "2026-08-17T17:00:00Z",
+"settledAt": "2026-08-17T20:02:01.011192+00:00"
+},
+{
+"matchId": "35925064",
+"home": "FK Novi Pazar",
+"away": "Vojvodina",
+"league": "Serbian Super League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Fk Novi Pazar",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-08-17T18:00:00Z",
+"settledAt": "2026-08-17T20:02:01.011192+00:00"
+},
 {
 "matchId": "35931818",
 "home": "Sassuolo",
@@ -1033,88 +1109,12 @@
 ],
 "kickoff": "2026-08-16T19:30:00Z",
 "settledAt": "2026-08-16T21:26:03.568025+00:00"
-},
-{
-"matchId": "35931772",
-"home": "Lazio",
-"away": "Mantova",
-"league": "Italian Coppa Italia",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Lazio",
-"polySide": null,
-"winner": "away",
-"moneyWin": false,
-"polyWin": null,
-"ftScore": [
-0,
-2
-],
-"kickoff": "2026-08-16T19:15:00Z",
-"settledAt": "2026-08-16T21:15:36.409919+00:00"
-},
-{
-"matchId": "35868014",
-"home": "Pumas UNAM",
-"away": "Queretaro",
-"league": "Mexican Liga MX",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Pumas UNAM",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-08-16T18:00:00Z",
-"settledAt": "2026-08-16T21:03:43.235884+00:00"
-},
-{
-"matchId": "35896918",
-"home": "Sarmiento de Junin",
-"away": "CA Huracan",
-"league": "Argentinian Primera Division",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Sarmiento de Junin",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-08-16T18:00:00Z",
-"settledAt": "2026-08-16T21:03:43.235884+00:00"
-},
-{
-"matchId": "35922536",
-"home": "Fredrikstad",
-"away": "Kristiansund",
-"league": "Norwegian Eliteserien",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Fredrikstad",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-08-16T17:15:00Z",
-"settledAt": "2026-08-16T20:15:33.724285+00:00"
 }
 ],
 "global": {
-"n": 246,
-"wins": 158,
-"hitRate": 0.6423
+"n": 250,
+"wins": 162,
+"hitRate": 0.648
 },
-"pending": 18
+"pending": 15
 }
