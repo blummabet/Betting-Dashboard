@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-17T18:58:08.524942+00:00",
+ "generatedAt": "2026-08-17T19:42:36.009165+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -8,27 +8,56 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 422,
- "pinnKeys": 276,
- "matched": 212,
- "footballRows": 192,
+ "polyRowsSeen": 425,
+ "pinnKeys": 279,
+ "matched": 215,
+ "footballRows": 195,
  "crossRows": 230,
- "footballSkippedStale": 40,
+ "footballSkippedStale": 69,
  "seenBySport": {
   "americanfootball_nfl": 152,
   "baseball_mlb": 76,
   "boxing_boxing": 2,
   "soccer_mls": 90,
-  "soccer_liga": 102
+  "soccer_liga": 105
  },
  "matchedBySport": {
   "baseball_mlb": 20,
   "soccer_mls": 90,
-  "soccer_liga": 102
+  "soccer_liga": 105
  },
  "trackRecord": {
-  "tracked": 115,
+  "tracked": 117,
   "converged": 21
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|cincinnatireds-stlouiscardinals|stlouiscardinals",
+   "sport": "baseball_mlb",
+   "event": "St. Louis Cardinals vs Cincinnati Reds",
+   "market": "Moneyline",
+   "outcome": "St. Louis Cardinals",
+   "polyPP": 66.5,
+   "pinnPP": 52.2,
+   "gapPP": 14.34,
+   "vol": 1454187,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-17T19:42:36.008958+00:00"
+  },
+  {
+   "id": "baseball_mlb|cincinnatireds-stlouiscardinals|cincinnatireds",
+   "sport": "baseball_mlb",
+   "event": "St. Louis Cardinals vs Cincinnati Reds",
+   "market": "Moneyline",
+   "outcome": "Cincinnati Reds",
+   "polyPP": 33.5,
+   "pinnPP": 47.8,
+   "gapPP": -14.34,
+   "vol": 1454187,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-17T19:42:36.008958+00:00"
+  }
+ ]
 }
