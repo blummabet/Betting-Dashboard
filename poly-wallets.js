@@ -108,13 +108,16 @@ function _pwViewTabs(){
   // 19.07.2026 (Lucas: „besser aufteilen") — 4 Unter-Reiter statt 9 gestapelter Sektionen.
   // Reihenfolge 25.07.2026: globales „Großes Geld" (immer Content+Filter) zuerst → Landing-Tab.
   return '<div class="pw-ds" style="margin-top:-6px">'
-    +b('bet','🔥 Heute wetten')+b('track','📊 Track-Record')+b('xsport','🎯 Poly-Radar')+b('money','💰 Großes Geld')+b('live','⚡ LIVE')+b('move','📈 Bewegung')+b('new','🆕 Neu')+b('edge','🎯 Chancen')+b('whales','🐋 Whales')+b('pinnpoly','📊 Pinni×Poly')
+    +b('terminal','🖥️ Terminal')+b('bet','🔥 Heute wetten')+b('track','📊 Track-Record')+b('xsport','🎯 Poly-Radar')+b('money','💰 Großes Geld')+b('live','⚡ LIVE')+b('move','📈 Bewegung')+b('new','🆕 Neu')+b('edge','🎯 Chancen')+b('whales','🐋 Whales')+b('pinnpoly','📊 Pinni×Poly')
     +'</div>';
 }
 
 // 25.07.2026 (Lucas: „alle Zahlen verwirrend, keine Ahnung was ich damit mache"). Pro Unter-Reiter
 // EINE Klartext-Box: was zeige ich, und — wichtiger — was tust DU damit. Kein Jargon, ein Satz je.
 const _PW_VIEW_INTRO = {
+  terminal: ['🖥️ Terminal — alle handelbaren Kanten auf einem Screen',
+    'Dieselben Plays und Conviction wie „🔥 Heute wetten" (identische Engine) — nur dicht, nach Conviction und nach der historischen Bilanz der Stufe geordnet. CLV-Bucket zeigt je Conviction-Stufe, wie sie in deinem Paper-Track wirklich performt.',
+    'Von oben abarbeiten: hohe Conviction mit grünem CLV-Bucket zuerst. Gemutete Stufen (historisch -EV, z.B. Konv5) stehen ausgegraut unten — Toggle blendet sie ganz aus. Nichts gelöscht, nichts am Algo geändert.'],
   live: ['⚡ LIVE — Geld & Wallets auf laufenden Spielen',
     'Nur In-Play-Märkte (Esport/Tennis/…). Wo fließt GERADE Geld rein, welche Whales steigen JETZT ein — markiert die, die vor Anpfiff nicht im Top-4 waren (live rein).',
     'Mitschauen, was daherkommt: großer frischer Zufluss + eine live einsteigende Wallet ist das Signal, das man vor Anpfiff nicht sieht. Noch roh (Stufe 2 v1) — kein Auto-Signal, erstmal beobachten.'],
@@ -449,6 +452,10 @@ function _pwRender(){
   const showDs=_pwSportFilter===(f.noAnchor?'E-Sport':'Fußball');
 
   // 19.07.2026 (Lucas) — eigener Sub-View „Liegt das Geld richtig?" neben dem Edge-Board.
+  if(_pwView==='terminal'){
+    panel.innerHTML=_pwViewTabs()+_pwSportFilterBar(_pwGlobalCats())+_pwViewIntro('terminal')+_pwTerminal();
+    return;
+  }
   if(_pwView==='money'){
     // (b) Wo liegt das große Geld (kommend, alle Sportarten) ZUERST, dann (d) Rückblick „liegt es richtig".
     // 25.07.2026 (Lucas: „Liga-Umschalter oben gehört weg"): der Wallets-Tab ist global über alle
@@ -877,7 +884,7 @@ function _pwGlobalWhales(live){
   const banner=_pwStaleBanner(live);
   const body=all.slice(0,25).map(x=>{
     const wl=_pwWalletChip(x.wallet);
-    const mk='<a href="https://polymarket.com/event/'+encodeURIComponent(x.key)+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Markt öffnen ↗">'+_pwEsc(x.match)+' <span style="color:#a78bfa">↗</span></a>';
+    const mk='<a href="https://polymarket.com/event/'+encodeURIComponent(x.key)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Markt öffnen ↗">'+_pwEsc(x.match)+' <span style="color:#a78bfa">↗</span></a>';
     return '<tr><td style="white-space:nowrap">'+_pwSportIcon(x.league)+' <span class="pw-mut" style="font-size:11px">'+_pwEsc((x.league||'').toUpperCase())+'</span></td>'
       +'<td>'+mk+'</td><td>'+wl+'</td>'
       +'<td class="pw-cm"><b style="color:#4cc2ff">'+_pwEsc(x.side)+'</b></td>'
@@ -932,7 +939,7 @@ function _pwWhaleDrill(wallet){
     :'<span class="pw-mut">noch kein Track-Record — sammelt über aufgelöste Positionen</span>';
   const rows=open.length?open.map(e=>'<tr>'
     +'<td style="white-space:nowrap">'+_pwSportIcon(e.league)+' <span class="pw-mut" style="font-size:11px">'+_pwEsc((e.league||'').toUpperCase())+'</span></td>'
-    +'<td><a href="https://polymarket.com/event/'+encodeURIComponent(e.key)+'" target="_blank" rel="noopener" style="color:inherit;border-bottom:1px dotted #6e7681;text-decoration:none">'+_pwEsc(e.key)+' <span style="color:#a78bfa">↗</span></a></td>'
+    +'<td><a href="https://polymarket.com/event/'+encodeURIComponent(e.key)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:inherit;border-bottom:1px dotted #6e7681;text-decoration:none">'+_pwEsc(e.key)+' <span style="color:#a78bfa">↗</span></a></td>'
     +'<td class="pw-cm"><b style="color:#4cc2ff">'+_pwEsc(e.side)+'</b></td>'
     +'<td class="pw-cn pw-mut">'+(e.firstPrice!=null?Math.round(e.firstPrice*100)+'¢':'—')+'</td>'
     +'<td class="pw-cn" style="font-weight:700">'+_pwUsd(e.usd)+'</td></tr>').join('')
@@ -989,7 +996,7 @@ function _pwPnl(v) { const n = Number(v) || 0; return (n < 0 ? '−' : '+') + _p
 function _pwNowCell(openMap, wallet) {
   const opens = openMap[wallet] || [], op = opens[0];
   if (!op) return '<span class="pw-mut" style="font-size:11px">— keine offene Position</span>';
-  return _pwSportIcon(op.league) + ' <a href="https://polymarket.com/event/' + encodeURIComponent(op.key) + '" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Markt oeffnen"><b>' + _pwEsc(op.side) + '</b></a> <span class="pw-mut" style="font-size:11px">' + _pwUsd(op.usd) + (opens.length > 1 ? ' · +' + (opens.length - 1) : '') + '</span>';
+  return _pwSportIcon(op.league) + ' <a href="https://polymarket.com/event/' + encodeURIComponent(op.key) + '" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Markt oeffnen"><b>' + _pwEsc(op.side) + '</b></a> <span class="pw-mut" style="font-size:11px">' + _pwUsd(op.usd) + (opens.length > 1 ? ' · +' + (opens.length - 1) : '') + '</span>';
 }
 function _pwMedal(i) { return i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1); }
 
@@ -1089,7 +1096,7 @@ function _pwGlobalWhaleLeaderboard(live){
     const sh=_pwSharpCell(r.wallet);
     const wl=_pwWalletChip(r.wallet);
     const sports=[...r.sports].slice(0,4).map(s=>_pwSportIcon(s)).join('');
-    const mk=r.top?('<a href="https://polymarket.com/event/'+encodeURIComponent(r.top.key)+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Markt öffnen ↗">'+_pwEsc(r.top.match)+' <span style="color:#a78bfa">↗</span></a>'):'—';
+    const mk=r.top?('<a href="https://polymarket.com/event/'+encodeURIComponent(r.top.key)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Markt öffnen ↗">'+_pwEsc(r.top.match)+' <span style="color:#a78bfa">↗</span></a>'):'—';
     return '<tr><td class="pw-cn pw-mut">'+(i+1)+'</td>'
       +'<td style="white-space:nowrap">'+(sh.proven?'🔥 ':'')+wl+'</td>'
       +'<td class="pw-cn" style="font-weight:800">'+_pwUsd(r.usd)+'</td>'
@@ -1432,7 +1439,7 @@ function _pwLiveCard(x){
   const seg=oc.slice(0,3).map((o,i)=>'<i style="display:inline-block;height:100%;width:'+Math.round(o.usd/tot*100)+'%;background:'+cols[i]+'" title="'+_pwEsc(o.name)+' '+Math.round(o.usd/tot*100)+'%"></i>').join('');
   const ic=_pwCatOf(m.league)[1];
   const label=_pwEventLabel(k, oc.map(o=>o.name), m.league);
-  const match='<a href="https://polymarket.com/event/'+encodeURIComponent(k)+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681">'+label+' <span style="color:#a78bfa">↗</span></a>';
+  const match='<a href="https://polymarket.com/event/'+encodeURIComponent(k)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681">'+label+' <span style="color:#a78bfa">↗</span></a>';
   const inflow=(x.inflow!=null && x.inflow>0)?'<span style="color:#a78bfa;font-weight:700">+'+_pwUsd(x.inflow)+' seit letztem Scan</span>':'';
   const liveBadge='<span style="font-size:9px;font-weight:800;color:#f85149;border:1px solid rgba(248,81,73,.5);border-radius:5px;padding:0 5px;margin-left:6px">● LIVE</span>';
   const pre=_pwPregameWhales(k);
@@ -1964,6 +1971,243 @@ function _pwTrackRecord(track){
     +_pwTrackSettled(track.settled);
 }
 
+// 18.08.2026 (Lucas): 🖥️ TERMINAL — dichtes Board als Aufsatz auf „Heute wetten" (_pwTopPlays, UNVERAENDERT).
+// Gleiche Plays, gleiche Conviction. NEU: CLV-Bucket je Conviction-Stufe (aus poly_shortlist_track.agg.byConv)
+// + Auto-Mute historisch -EV Stufen (z.B. Konv5). Slice 1 = Board; Edge/Kelly/Drilldown = Slice 2.
+let _pwTermHideMuted=false;
+function _pwTermMute(v){ _pwTermHideMuted=!!v; _pwRender(); }
+if(typeof window!=='undefined') window._pwTermMute=_pwTermMute;
+
+function _pwTermBucket(conv){
+  const bc=(_pwCache&&_pwCache.shortlistTrack&&_pwCache.shortlistTrack.agg&&_pwCache.shortlistTrack.agg.byConv)||{};
+  return bc[String(conv)]||null;
+}
+function _pwTermMuted(r){
+  const b=_pwTermBucket(r.conv);
+  if(b&&b.n>=20&&typeof b.roi==='number'&&b.roi<=-0.10) return {m:true,reason:'Konv'+r.conv+' '+Math.round(b.roi*100)+'% ROI · n'+b.n};   // nur klar -EV (<=-10%); knapp negative Stufen (z.B. -5%) bleiben sichtbar mit rotem Chip
+  if((+r.conv||0)<=4) return {m:true,reason:'Konv≤4 dünn'};
+  return {m:false,reason:''};
+}
+function _pwTermIsPublic(r){ return !!(r.conv>=7 && r.moneyPct>=0.60 && r.sharp && r.sharp.n>=8 && r.sharp.hit>=0.55); }
+
+// 18.08.2026 (Lucas) Slice 2 — Drilldown: Preis-Kurve (Variante A: Poly vs faire Pinnacle + Kante-Fläche),
+// Konviktions-Aufschlüsselung, Whale-Tape, ½-Kelly. Rein lesend & additiv.
+let _pwTermRow=null;
+function _pwTermOpen(k){ _pwTermRow=(String(_pwTermRow)===String(k))?null:k; _pwRender(); }
+if(typeof window!=='undefined') window._pwTermOpen=_pwTermOpen;
+
+function _pwTermHist(key){ const c=_pwCache||{}; return (c.broadLiveHist&&c.broadLiveHist[key])||(c.broadHist&&c.broadHist[key])||[]; }
+function _pwTermFair(r){
+  const cs=_pwCache&&_pwCache.crossSport, disc=(cs&&cs.discrepancies)||[];
+  const side=String(r.side||'').toLowerCase();
+  for(const d of disc){ if(!d) continue; const oc=String(d.outcome||'').toLowerCase();
+    if(oc&&side&&(oc.includes(side)||side.includes(oc))&&typeof d.pinnPP==='number') return d.pinnPP/100; }
+  return null;
+}
+function _pwTermCurve(r){
+  const H=_pwTermHist(r.key).filter(s=>s&&s.p&&typeof s.p[r.side]==='number');
+  if(H.length<2) return '<div style="color:#484f58;font-size:11px;padding:8px 2px">Zu wenig Preis-Verlauf für eine Kurve (sammelt über die Runner-Läufe).</div>';
+  const fair=_pwTermFair(r);
+  const W=520,Hh=160,pl=40,pr=64,pt=14,pb=26,cw=W-pl-pr,ch=Hh-pt-pb;
+  const t0=Date.parse(H[0].ts), t1=Date.parse(H[H.length-1].ts)||t0+1;
+  const ps=H.map(s=>s.p[r.side]); let mn=Math.min.apply(null,ps),mx=Math.max.apply(null,ps);
+  if(fair!=null){ mn=Math.min(mn,fair); mx=Math.max(mx,fair); }
+  const pad=(mx-mn)*0.18||0.04; mn-=pad; mx+=pad; if(mx<=mn) mx=mn+0.04;
+  const X=t=>pl+((t-t0)/((t1-t0)||1))*cw, Y=p=>pt+(mx-p)/(mx-mn)*ch;
+  const line=H.map((s,i)=>(i?'L':'M')+X(Date.parse(s.ts)).toFixed(1)+' '+Y(s.p[r.side]).toFixed(1)).join(' ');
+  const lp=H[H.length-1].p[r.side];
+  let ticks=''; for(let i=0;i<3;i++){ const pv=mn+(mx-mn)*(i/2), yy=Y(pv);
+    ticks+='<line x1="'+pl+'" y1="'+yy.toFixed(1)+'" x2="'+(pl+cw)+'" y2="'+yy.toFixed(1)+'" stroke="#21262d" stroke-width=".5"/><text x="'+(pl-6)+'" y="'+(yy+3).toFixed(1)+'" text-anchor="end" font-size="9" fill="#484f58" font-family="monospace">'+Math.round(pv*100)+'¢</text>'; }
+  let wedge='',fairEl='',edgeEl='';
+  if(fair!=null&&fair>lp){ const yf=Y(fair);
+    wedge='<path d="'+line+' L'+X(t1).toFixed(1)+' '+yf.toFixed(1)+' L'+X(t0).toFixed(1)+' '+yf.toFixed(1)+' Z" fill="rgba(63,185,80,.15)"/>';
+    fairEl='<line x1="'+pl+'" y1="'+yf.toFixed(1)+'" x2="'+(pl+cw)+'" y2="'+yf.toFixed(1)+'" stroke="#5eead4" stroke-width="1.3" stroke-dasharray="5 3"/><text x="'+(pl+cw+4)+'" y="'+(yf+3).toFixed(1)+'" font-size="9" fill="#5eead4" font-family="monospace">faire Pinnacle '+Math.round(fair*100)+'¢</text>';
+    edgeEl='<text x="'+(pl+cw+4)+'" y="'+((Y(lp)+yf)/2).toFixed(1)+'" font-size="9.5" fill="#3fb950" font-family="monospace" font-weight="700">+'+Math.round((fair-lp)*100)+'¢</text>'; }
+  const dot='<circle cx="'+X(t1).toFixed(1)+'" cy="'+Y(lp).toFixed(1)+'" r="4" fill="#a78bfa"/><text x="'+(X(t1)-6).toFixed(1)+'" y="'+(Y(lp)-7).toFixed(1)+'" text-anchor="end" font-size="10.5" fill="#a78bfa" font-family="monospace" font-weight="700">Poly '+Math.round(lp*100)+'¢</text>';
+  return '<svg viewBox="0 0 '+W+' '+Hh+'" style="width:100%;max-width:'+W+'px;display:block">'+ticks+wedge
+    +'<path d="'+line+'" fill="none" stroke="#a78bfa" stroke-width="2"/>'+fairEl+edgeEl+dot
+    +'<text x="'+pl+'" y="'+(Hh-6)+'" font-size="8.5" fill="#484f58">Opening</text><text x="'+(pl+cw)+'" y="'+(Hh-6)+'" text-anchor="end" font-size="8.5" fill="#484f58">jetzt</text></svg>';
+}
+function _pwTermWhaleTape(r){
+  const m=(_pwCache&&_pwCache.broadLive&&_pwCache.broadLive[r.key])||null;
+  const wh=(m&&Array.isArray(m.whales))?m.whales.slice():[];
+  if(!wh.length) return '<span style="color:#484f58;font-size:11px">keine Whale-Positionen erfasst</span>';
+  const sc=(_pwCache&&_pwCache.walletTrack&&_pwCache.walletTrack.scores)||{};
+  wh.sort((a,b)=>(b.usd||0)-(a.usd||0));
+  return wh.slice(0,6).map((w,i)=>{
+    const raw=sc[w.wallet], n=(raw&&raw.n)||0;
+    const hit=n?Math.round((raw.wins||0)/n*100):null, clv=n?(raw.clvSumPP/n):null;
+    const medal=i===0?'🥇':i===1?'🥈':i===2?'🥉':'&nbsp;&nbsp;';
+    const onSide=(w.side===r.side);
+    const trk=n>=8?(' <span style="color:#484f58">· '+hit+'% n'+n+(clv!=null?' · CLV '+(clv>=0?'+':'')+clv.toFixed(1):'')+'</span>'):' <span style="color:#484f58">· neu</span>';
+    const wl=String(w.wallet||'');
+    return '<div style="font-family:ui-monospace,monospace;font-size:11.5px;line-height:1.95">'+medal+' <span style="color:'+(onSide?'#a78bfa':'#6e7681')+'">'+wl.slice(0,6)+'…'+wl.slice(-3)+'</span> '+_pwUsd(w.usd)+(onSide?'':' <span style="color:#e3b341;font-size:10px">⟂ '+_pwEsc(w.side)+'</span>')+trk+'</div>';
+  }).join('');
+}
+function _pwTermConvPanel(r){
+  const col=r.conv>=8?'#3fb950':r.conv>=6?'#e3b341':'#8b949e';
+  const reasons=(r.reasons||[]).map(x=>'<div style="font-size:11px;color:#8b949e;line-height:1.7">• '+_pwEsc(x)+'</div>').join('');
+  return '<div style="text-align:center;margin-bottom:6px"><div style="font-size:26px;font-weight:900;font-family:ui-monospace,monospace;color:'+col+'">'+r.conv+'<span style="font-size:13px;color:#484f58">/10</span></div></div>'+(reasons||'<div style="font-size:11px;color:#484f58">—</div>');
+}
+// 18.08.2026 (Lucas, Arkham-Inspiration) Slice 3 — Orderbuch/Spread/Liquidität + gelabeltes Trade-Tape.
+// Frontend liest m.book (bids/asks/spread) + m.trades vom Runner; fehlt es → „sammelt".
+// Plus Wettbewerbs-Badge (Sport-Emoji + kurzes Liga-Kürzel) statt nur ⚽.
+const _PW_LEAGUE_ABBR = [
+  [/uefa champions|champions league|\bucl\b/i,'UCL','#5b8def'],
+  [/europa league|\buel\b/i,'UEL','#e3742f'],
+  [/premier league|\bepl\b|english premier/i,'EPL','#3fb950'],
+  [/la ?liga/i,'LaLiga','#e3b341'],
+  [/serie a/i,'SerieA','#4cc2ff'],
+  [/bundesliga/i,'BL','#f85149'],
+  [/ligue ?1/i,'L1','#a78bfa'],
+  [/eredivisie/i,'ERE','#e3742f'],
+  [/\bmls\b/i,'MLS','#4cc2ff'],
+  [/counter-?strike|\bcs2\b|csgo|cs:go/i,'CS2','#e3b341'],
+  [/league of legends|\blol\b|\blck\b|\blpl\b|\blec\b/i,'LoL','#c9a227'],
+  [/dota/i,'Dota','#f85149'],
+  [/valorant|\bval\b/i,'VAL','#f85149'],
+  [/\batp\b/i,'ATP','#3fb950'],
+  [/\bwta\b/i,'WTA','#a78bfa'],
+  [/\bmlb\b|baseball/i,'MLB','#4cc2ff'],
+  [/\bnba\b|basketball/i,'NBA','#e3742f'],
+  [/\bnfl\b|american football/i,'NFL','#3fb950'],
+  [/\bnhl\b|ice ?hockey/i,'NHL','#4cc2ff'],
+];
+function _pwLeagueBadge(league, sport, hint){
+  const emoji=_pwSportIcon(sport||league||hint);
+  const hay=String(league||'')+' '+String(hint||'');
+  let abbr='',col='#6e7681';
+  for(let i=0;i<_PW_LEAGUE_ABBR.length;i++){ const e=_PW_LEAGUE_ABBR[i]; if(e[0].test(hay)){ abbr=e[1]; col=e[2]; break; } }
+  if(!abbr){ const L=String(league||'').replace(/[^A-Za-z0-9 ]/g,'').trim();
+    if(L && !/^espo?rts?$/i.test(L)) abbr=L.split(/\s+/).filter(Boolean).slice(0,2).map(w=>w[0]).join('').toUpperCase().slice(0,3); }
+  return '<span style="display:inline-flex;align-items:center;gap:4px;white-space:nowrap">'+emoji
+    +(abbr?'<span style="font-size:8px;font-weight:800;letter-spacing:.02em;color:'+col+';border:1px solid '+col+'66;background:'+col+'1f;padding:0 4px;border-radius:4px">'+_pwEsc(abbr)+'</span>':'')+'</span>';
+}
+
+function _pwTermBook(r){
+  const m=(_pwCache&&_pwCache.broadLive&&_pwCache.broadLive[r.key])||null, b=m&&m.book;
+  if(!b||!Array.isArray(b.asks)||!Array.isArray(b.bids)||(!b.asks.length&&!b.bids.length))
+    return '<div style="color:#484f58;font-size:11px">Orderbuch: sammelt (Runner erfasst Tiefe je Play-Markt).</div>';
+  const all=b.asks.concat(b.bids).map(x=>x[1]||0), maxSz=Math.max.apply(null,all)||1;
+  const row=(p,sz,side)=>{ const w=Math.round((sz/maxSz)*100), col=side==='ask'?'#f85149':'#3fb950';
+    return '<div style="position:relative;display:flex;justify-content:space-between;font-family:ui-monospace,monospace;font-size:11px;padding:2px 7px">'
+      +'<span style="position:absolute;top:0;bottom:0;'+(side==='ask'?'right':'left')+':0;width:'+w+'%;background:'+col+'14"></span>'
+      +'<span style="position:relative;color:'+col+'">'+Math.round(p*100)+'¢</span><span style="position:relative;color:#8b949e">'+_pwUsd(sz)+'</span></div>'; };
+  const asks=b.asks.slice(0,4).slice().reverse().map(x=>row(x[0],x[1],'ask')).join('');
+  const bids=b.bids.slice(0,4).map(x=>row(x[0],x[1],'bid')).join('');
+  const spC=(b.ask!=null&&b.bid!=null)?Math.round((b.ask-b.bid)*100):null;
+  const spPct=(b.spreadPct!=null)?b.spreadPct:(b.ask&&spC!=null?spC/(b.ask*100)*100:null);
+  const liq=(spPct!=null&&spPct<=3)?'<span style="color:#3fb950;font-weight:700">liquide</span>'
+    :(spPct!=null&&spPct<=6)?'<span style="color:#e3b341;font-weight:700">mittel</span>':'<span style="color:#f85149;font-weight:700">eng</span>';
+  const mid='<div style="display:flex;justify-content:space-between;font-family:ui-monospace,monospace;font-size:10.5px;color:#8b949e;border-top:1px solid #21262d;border-bottom:1px solid #21262d;padding:3px 7px;margin:2px 0">'
+    +'<span>Spread '+(spC!=null?spC+'¢':'—')+(spPct!=null?' ('+spPct.toFixed(1)+'%)':'')+'</span>'+liq+'</div>';
+  return asks+mid+bids;
+}
+
+function _pwTermTape(r){
+  const m=(_pwCache&&_pwCache.broadLive&&_pwCache.broadLive[r.key])||null;
+  const tr=(m&&Array.isArray(m.trades))?m.trades.slice(0,7):[];
+  const _ago=t=>{ if(t.tsAgo) return t.tsAgo; var ts=t.ts; if(ts==null) return ''; var ms;
+    if(typeof ts==='number'||/^\d+$/.test(String(ts))){ var n=Number(ts); ms=n<1e12?n*1000:n; } else { ms=Date.parse(ts); }
+    if(isNaN(ms)) return ''; var mi=Math.max(0,Math.round((Date.now()-ms)/60000)); return mi<60?mi+'m':Math.floor(mi/60)+'h'; };
+  if(!tr.length) return '<div style="color:#484f58;font-size:11px">Trade-Tape: sammelt (letzte große Käufe/Verkäufe je Markt).</div>';
+  const sc=(_pwCache&&_pwCache.walletTrack&&_pwCache.walletTrack.scores)||{};
+  return tr.map(t=>{ const buy=(t.action?String(t.action).toUpperCase()!=='SELL':t.buy!==false);
+    const onSide=(t.side===r.side); const raw=sc[t.wallet], sharp=!!(raw&&raw.n>=8);
+    const wl=String(t.wallet||''), name=t.label||(wl?wl.slice(0,6)+'…'+wl.slice(-3):'?'), col=buy?'#3fb950':'#f85149';
+    return '<div style="display:flex;align-items:center;gap:8px;font-family:ui-monospace,monospace;font-size:11px;line-height:1.95">'
+      +'<span style="color:#484f58;min-width:52px">'+_pwEsc(_ago(t))+'</span>'
+      +'<span style="flex:1;color:'+(sharp?'#a78bfa':'#8b949e')+';overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+_pwEsc(name)+(sharp?' 🔥':'')+'</span>'
+      +'<span style="color:'+col+';font-weight:800;min-width:34px">'+(buy?'BUY':'SELL')+'</span>'
+      +'<span style="color:'+(onSide?'#4cc2ff':'#6e7681')+';min-width:60px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+_pwEsc(t.side||'')+'</span>'
+      +'<span style="color:#8b949e;min-width:30px;text-align:right">'+Math.round((t.price||0)*100)+'¢</span>'
+      +'<span style="color:#e6edf3;font-weight:700;min-width:54px;text-align:right">'+_pwUsd(t.usd)+'</span></div>';
+  }).join('');
+}
+
+function _pwTermDrawer(r){
+  const fair=_pwTermFair(r), poly=r.price;
+  const box='background:#0f1626;border:1px solid #21262d;border-radius:10px;padding:11px 13px';
+  let kelly;
+  if(fair!=null&&poly!=null&&fair>poly&&poly<1){ const f=(fair-poly)/(1-poly), hk=Math.max(0,f/2);
+    kelly='<div style="font-size:20px;font-weight:900;color:#3fb950;font-family:ui-monospace,monospace">'+(hk*100).toFixed(1)+'%</div><div style="font-size:10.5px;color:#8b949e;margin-top:2px">½-Kelly der Bankroll · Edge +'+Math.round((fair-poly)*100)+'¢</div>';
+  } else { kelly='<div style="font-size:15px;font-weight:800;color:#484f58">kein Stake</div><div style="font-size:10.5px;color:#8b949e;margin-top:2px">'+(fair==null?'kein Pinnacle-Anker':'keine positive Kante')+'</div>'; }
+  return '<div style="padding:12px 4px 6px">'
+    +'<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px">'
+      +'<div style="flex:2;min-width:300px;'+box+'"><div style="font-size:11px;color:#484f58;margin-bottom:4px">Poly-Preis '+_pwEsc(r.side)+(fair!=null?' vs. faire Pinnacle · grüne Fläche = Kante':' — reine Poly-Sicht (kein Pinnacle-Anker)')+'</div>'+_pwTermCurve(r)+'</div>'
+      +'<div style="flex:1;min-width:150px;'+box+'"><div style="font-size:11px;color:#484f58;margin-bottom:2px">Konviktion — warum</div>'+_pwTermConvPanel(r)+'</div>'
+      +'<div style="flex:1;min-width:130px;'+box+';display:flex;flex-direction:column;justify-content:center;text-align:center">'+kelly+'</div>'
+    +'</div>'
+    +'<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px">'
+      +'<div style="flex:1;min-width:230px;'+box+'"><div style="font-size:11px;color:#484f58;margin-bottom:6px">📖 Orderbuch '+_pwEsc(r.side)+' — Ausführbarkeit (Spread &amp; Tiefe)</div>'+_pwTermBook(r)+'</div>'
+      +'<div style="flex:1;min-width:230px;'+box+'"><div style="font-size:11px;color:#484f58;margin-bottom:6px">🐋 Whale-Tape — wer steht drin (nach Einsatz · Track wenn n≥8 · ⟂ Gegenseite)</div>'+_pwTermWhaleTape(r)+'</div>'
+    +'</div>'
+    +'<div style="'+box+'"><div style="font-size:11px;color:#484f58;margin-bottom:6px">⚡ Live-Trades — frischer Fluss (BUY grün / SELL rot · 🔥 = scharfe Wallet · blau = auf unserer Seite)</div>'+_pwTermTape(r)+'</div>'
+  +'</div>';
+}
+
+function _pwTerminal(){
+  const useSP=(_pwSportFilter && _pwSportFilter!=='all');
+  const plays=_pwTopPlays(0, _pwCache&&_pwCache.broadLive, useSP);
+  const rows=plays.map(r=>({r, mute:_pwTermMuted(r), pub:_pwTermIsPublic(r)}));
+  // Nicht-gemutet zuerst (nach Conviction, kommt schon sortiert), gemutete danach.
+  rows.sort((a,b)=>{ const am=a.mute.m?1:0,bm=b.mute.m?1:0; if(am!==bm) return am-bm; return (b.r.conv||0)-(a.r.conv||0); });
+  const nMuted=rows.filter(x=>x.mute.m).length;
+  const shown=_pwTermHideMuted?rows.filter(x=>!x.mute.m):rows;
+  const handelbar=rows.length-nMuted;
+
+  const agg=(_pwCache&&_pwCache.shortlistTrack&&_pwCache.shortlistTrack.agg)||{};
+  const pub=agg.public||{}, allA=agg.all||{};
+  const kpi=(v,lbl,col,sub)=>'<div style="flex:1;min-width:128px;background:#0d1117;border:1px solid #21262d;border-left:3px solid '+col+';border-radius:10px;padding:11px 13px">'
+    +'<div style="font-size:20px;font-weight:900;color:'+col+';line-height:1.1">'+v+'</div>'
+    +'<div style="font-size:10px;color:#8b949e;text-transform:uppercase;letter-spacing:.4px;margin-top:4px">'+lbl+'</div>'
+    +(sub?'<div style="font-size:10px;color:#6e7681;margin-top:1px">'+sub+'</div>':'')+'</div>';
+  const pctS=x=>x==null?'—':(x>=0?'+':'')+(Math.round(x*1000)/10)+'%';
+  const kpiBand='<div style="display:flex;gap:10px;flex-wrap:wrap;margin:2px 0 14px">'
+    +kpi(pctS(pub.roi),'ROI Public-Segment',(pub.roi>=0?'#3fb950':'#f85149'),'n'+(pub.n||0)+' · CLV '+((pub.clvAvg!=null)?(pub.clvAvg>=0?'+':'')+pub.clvAvg:'—'))
+    +kpi(pctS(allA.roi),'ROI ganze Shortlist',(allA.roi>=0?'#3fb950':'#f85149'),'n'+(allA.n||0)+' · Rauschen inkl.')
+    +kpi(String(handelbar),'handelbare Plays jetzt','#a78bfa',nMuted?(nMuted+' gemutet'):'nichts gemutet')
+    +'</div>';
+
+  const th=(t,a)=>'<th style="font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:#484f58;font-weight:700;text-align:'+(a||'right')+';padding:7px 9px;border-bottom:1px solid #21262d;white-space:nowrap">'+t+'</th>';
+  let out='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🖥️ Terminal — handelbare Kanten</span>'
+    +'<span class="pw-sec-note">dieselben „Heute wetten"-Plays &amp; Conviction, dicht + nach Bilanz geordnet · CLV-Bucket = wie die Conviction-Stufe historisch performt (dein Paper-Track) · ◆ = Public-Kandidat</span></div>';
+  out+=kpiBand;
+  if(nMuted) out+='<div style="display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:11.5px;color:#8b949e"><label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" '+(_pwTermHideMuted?'checked':'')+' onclick="_pwTermMute(this.checked)"/> '+nMuted+' gemutete (historisch -EV) ausblenden</label></div>';
+  if(!shown.length) return out+'<div class="pw-none">Aktuell keine klare Gelegenheit. Die Shortlist lebt von Steam &amp; scharfen Wallets — die sammeln sich über die Runner-Läufe.</div></section>';
+
+  out+='<div class="pw-tw"><table class="pw-tbl" style="width:100%"><thead><tr>'
+    +th('Anpfiff','left')+th('Spiel','left')+th('Pick','left')+th('Konviktion')+th('Geld / Fluss')+th('CLV-Bucket')+th('Einstieg')+'</tr></thead><tbody>';
+  let mutedStarted=false;
+  shown.forEach(x=>{
+    const r=x.r; const open=(String(_pwTermRow)===String(r.key));
+    if(x.mute.m && !mutedStarted){ mutedStarted=true;
+      out+='<tr><td colspan="7" style="padding:10px 9px 4px;font-size:10px;color:#484f58;border-top:1px dashed #21262d">🔇 Gemutet — Conviction-Stufe historisch -EV (dein Track) oder zu dünn. Nach unten sortiert.</td></tr>'; }
+    const convCol=r.conv>=8?'#3fb950':r.conv>=6?'#e3b341':'#8b949e';
+    const meter='<span style="display:inline-flex;align-items:center;gap:6px"><span style="width:46px;height:6px;background:#161b22;border-radius:3px;overflow:hidden;display:inline-block"><span style="display:block;height:6px;width:'+(Math.max(0,Math.min(10,r.conv))*10)+'%;background:'+convCol+'"></span></span><span style="font-family:ui-monospace,monospace;font-weight:800;color:'+convCol+';font-size:11.5px">'+r.conv+'</span></span>';
+    const b=_pwTermBucket(r.conv);
+    const clv=(b&&b.n>=20)
+      ? '<span style="font-family:ui-monospace,monospace;font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:5px;color:'+(b.roi>0?'#3fb950':b.roi<0?'#f85149':'#8b949e')+';background:'+(b.roi>0?'rgba(63,185,80,.1)':b.roi<0?'rgba(248,81,73,.1)':'transparent')+'">'+(b.roi>0?'🟢':b.roi<0?'🔴':'⚪')+' '+(b.roi>=0?'+':'')+Math.round(b.roi*100)+'% · n'+b.n+'</span>'
+      : '<span style="color:#484f58;font-size:10px">'+(b?('dünn n'+b.n):'—')+'</span>';
+    const htk=r.htk!=null?(r.htk<0?'<span style="color:#f85149;font-weight:700">● LIVE</span>':r.htk<1?'<1h':Math.round(r.htk)+'h'):'—';
+    const price=(r.price!=null)?Math.round(r.price*100)+'¢':'—';
+    const mk='<a href="https://polymarket.com/event/'+encodeURIComponent(r.key)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Markt öffnen ↗">'+_pwEsc(r.match)+' <span style="color:#a78bfa">↗</span></a>';
+    const moneyPct=(r.moneyPct!=null)?Math.round(r.moneyPct*100)+'%':'—';
+    out+='<tr onclick="_pwTermOpen(\''+r.key+'\')" style="cursor:pointer;opacity:'+(x.mute.m?'0.5':'1')+';background:'+(open?'rgba(167,139,250,.06)':'transparent')+'">'
+      +'<td class="pw-cn" style="text-align:left;font-family:ui-monospace,monospace;color:#8b949e"><span style="color:#484f58;margin-right:3px">'+(open?'▾':'▸')+'</span>'+htk+'</td>'
+      +'<td style="white-space:nowrap">'+_pwLeagueBadge(r.league,r.sport,r.match)+' '+mk+(x.pub?' <span title="Public-Kandidat" style="color:#a78bfa">◆</span>':'')+'</td>'
+      +'<td class="pw-cm" style="font-weight:700;color:#4cc2ff">'+_pwEsc(r.side)+(x.mute.m?' <span style="font-family:system-ui;font-size:8.5px;color:#484f58;border:1px solid #21262d;padding:0 4px;border-radius:4px">🔇 '+_pwEsc(x.mute.reason)+'</span>':'')+'</td>'
+      +'<td class="pw-cn">'+meter+'</td>'
+      +'<td class="pw-cn" style="font-family:ui-monospace,monospace">'+_pwUsd(r.vol)+' <span class="pw-mut" style="font-size:10px">'+moneyPct+'</span></td>'
+      +'<td class="pw-cn">'+clv+'</td>'
+      +'<td class="pw-cn pw-mut" style="font-family:ui-monospace,monospace">'+price+'</td></tr>';
+    if(open) out+='<tr><td colspan="7" style="background:rgba(167,139,250,.03);padding:0 9px 6px">'+_pwTermDrawer(r)+'</td></tr>';
+  });
+  out+='</tbody></table></div>';
+  out+='<div style="font-size:10px;color:#484f58;margin-top:9px;line-height:1.5">Gleiche Engine wie 🔥 Heute wetten (nichts am Algo geändert) — nur dichter, nach Conviction &amp; belegter Stufe geordnet. Muten = ausgrauen &amp; nach unten (nie löschen), datengetrieben aus deinem Paper-Track. <b>Nächste Stufe:</b> Zeile klicken → Drilldown mit Preis-vs-Pinnacle-Kurve (Kante-Fläche), Whale-Tape &amp; ½-Kelly.</div></section>';
+  return out;
+}
+
 function _pwShortlist(live){
   const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🔥 Heute wetten — die klarsten Gelegenheiten</span>'
     +'<span class="pw-sec-note">nur Märkte mit echtem Signal (Steam · scharfe Wallet · Geld-vs-Preis) · BET = mit dem Geld, FADE = dagegen · Conviction 0–10 · nichts blind, das ist ein Ausgangspunkt</span></div>';
@@ -1975,7 +2219,7 @@ function _pwShortlist(live){
     const bet=r.verdict==='BET'; const vc=bet?'#3fb950':'#e3b341'; const top=ix===0;
     const badge='<span style="display:inline-block;padding:2px 9px;border-radius:12px;border:1px solid '+vc+';color:'+vc+';font-weight:800;font-size:11px">'+r.verdict+'</span>';
     const convCol=r.conv>=8?'#3fb950':r.conv>=6?'#e3b341':'#8b949e';
-    const mk='<a href="https://polymarket.com/event/'+encodeURIComponent(r.key)+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Markt öffnen ↗">'+_pwEsc(r.match)+' <span style="color:#a78bfa">↗</span></a>';
+    const mk='<a href="https://polymarket.com/event/'+encodeURIComponent(r.key)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Markt öffnen ↗">'+_pwEsc(r.match)+' <span style="color:#a78bfa">↗</span></a>';
     const htk=r.htk!=null?(r.htk<0?'live':r.htk<1?'<1h':Math.round(r.htk)+'h'):'—';
     const price=(r.price!=null)?Math.round(r.price*100)+'¢':'—';
     const room=(r.price!=null)?(r.price>=0.85?' <span style="color:#e3b341;font-size:9.5px">eng</span>':r.price<=0.35?' <span style="color:#a78bfa;font-size:9.5px">Auß.</span>':''):'';
@@ -2038,7 +2282,7 @@ function _pwMomentum(hist){
     const tag=Math.abs(r.step)<0.3?'<span class="pw-mut">→ flach</span>'
       :cont?'<span style="color:#3fb950;font-weight:700">▲ Steam</span>'
       :'<span style="color:#f85149;font-weight:700">▼ dreht</span>';
-    const mk='<a href="https://polymarket.com/event/'+encodeURIComponent(r.key)+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Markt öffnen ↗">'+_pwEsc(r.match)+' <span style="color:#a78bfa">↗</span></a>';
+    const mk='<a href="https://polymarket.com/event/'+encodeURIComponent(r.key)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Markt öffnen ↗">'+_pwEsc(r.match)+' <span style="color:#a78bfa">↗</span></a>';
     const htk=r.htk!=null?(r.htk<0?'live':r.htk<1?'<1h':Math.round(r.htk)+'h'):'—';
     return '<tr>'
       +'<td style="white-space:nowrap">'+_pwSportIcon(r.league)+' <span class="pw-mut" style="font-size:11px">'+_pwEsc((r.league||'').toUpperCase())+'</span></td>'
@@ -2128,7 +2372,7 @@ function _pwWhatsNew(){
   if(entries.length){
     const body=entries.map(e=>{
       const wl=_pwWalletChip(e.wallet);
-      const mk='<a href="https://polymarket.com/event/'+encodeURIComponent(e.key)+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681">'+_pwEsc(e.key)+' <span style="color:#a78bfa">↗</span></a>';
+      const mk='<a href="https://polymarket.com/event/'+encodeURIComponent(e.key)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681">'+_pwEsc(e.key)+' <span style="color:#a78bfa">↗</span></a>';
       return '<tr><td class="pw-cn pw-mut">'+ago(e.ts)+'</td>'
         +'<td style="white-space:nowrap">'+_pwSportIcon(e.league)+'</td>'
         +'<td>'+mk+'</td><td>'+(e.sharp?'🔥 ':'')+wl+'</td>'
@@ -2143,7 +2387,7 @@ function _pwWhatsNew(){
   if(flips.length){
     const body=flips.map(f=>'<tr><td class="pw-cn pw-mut">'+ago(f.ts)+'</td>'
       +'<td style="white-space:nowrap">'+_pwSportIcon(f.league)+' <span class="pw-mut" style="font-size:11px">'+_pwEsc((f.league||'').toUpperCase())+'</span></td>'
-      +'<td><a href="https://polymarket.com/event/'+encodeURIComponent(f.key)+'" target="_blank" rel="noopener" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681">'+_pwEsc(f.match)+' <span style="color:#a78bfa">↗</span></a></td>'
+      +'<td><a href="https://polymarket.com/event/'+encodeURIComponent(f.key)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681">'+_pwEsc(f.match)+' <span style="color:#a78bfa">↗</span></a></td>'
       +'<td class="pw-cm"><span class="pw-mut">'+_pwEsc(f.from)+'</span> → <b style="color:#4cc2ff">'+_pwEsc(f.to)+'</b></td></tr>').join('');
     h+='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🔀 Favorit gekippt</span>'
       +'<span class="pw-sec-note">Märkte, in denen die führende Seite seit Beobachtungsbeginn gewechselt hat — oft ein starker Move</span></div>'

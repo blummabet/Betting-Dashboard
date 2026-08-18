@@ -29,6 +29,7 @@ Wird importiert von:
 import json
 import os
 import urllib.request
+import poly_competition as PC   # 18.08.2026: gemeinsame Slug->Wettbewerb-Quelle
 from datetime import datetime, timezone
 
 # ── Env-Variablen ──────────────────────────────────────────────────────────
@@ -89,34 +90,14 @@ def _flag(team_id: str) -> str:
     return _FLAGS.get(team_id.upper(), "")   # 18.08.2026 (Lucas): Klub-Teams (MLS/Liga) ohne Laender-Match -> kein Flag statt weisse Fahne
 
 
-# -- Wettbewerb aus dem Polymarket-Slug ableiten ---------------------------
-# Slug-Praefix (fifwc-/mls-/epl-/lal-/sea-/fl1-/bun-...) -> (Label, Poly-URL-Pfad).
-# 18.08.2026 (Lucas): frueher waren Header + Poly-Link fest auf den WM-Wettbewerb verdrahtet,
-# sodass MLS-/Liga-Auto-Bets falsch gelabelt wurden. Jetzt pro Bet aus dem Slug bestimmt.
-_COMP_BY_SLUG: dict[str, tuple[str, str]] = {
-    "fifwc":        ("WM 2026",         "fifa-world-cup"),
-    "mls":          ("MLS",             "mls"),
-    "epl":          ("Premier League",  "epl"),
-    "lal":          ("La Liga",         "laliga"),
-    "sea":          ("Serie A",         "serie-a"),
-    "fl1":          ("Ligue 1",         "ligue-1"),
-    "bun":          ("Bundesliga",      "bundesliga"),
-    "championship": ("Championship",    "championship"),
-    "eredivisie":   ("Eredivisie",      "eredivisie"),
-}
-
+# -- Wettbewerb aus dem Polymarket-Slug (zentrale Quelle: poly_competition.py) -------------
+# 18.08.2026 (Lucas): eine Quelle der Wahrheit fuer Push + Resolver-Buckets (kein Doppel-Mapping).
 def _competition(slug: str | None) -> tuple[str, str | None]:
-    """(Label, Poly-URL-Pfad) fuer den Wettbewerb dieses Slugs. Fallback: 'Fussball' + kein Pfad."""
-    pfx = (slug or "").split("-", 1)[0].lower()
-    return _COMP_BY_SLUG.get(pfx, ("Fussball", None))
+    """(Label, Poly-URL-Pfad) fuer den Wettbewerb dieses Slugs. Delegiert an poly_competition."""
+    return PC.label_of(slug), PC.poly_path(slug)
 
 def _poly_url(slug: str | None) -> str | None:
-    """Korrekter Polymarket-Link je Wettbewerb (nicht mehr fest verdrahtet)."""
-    if not slug:
-        return None
-    _, path = _competition(slug)
-    return (f"https://polymarket.com/sports/{path}/{slug}" if path
-            else f"https://polymarket.com/event/{slug}")
+    return PC.poly_url(slug)
 
 
 def is_auto_source(source: str | None) -> bool:

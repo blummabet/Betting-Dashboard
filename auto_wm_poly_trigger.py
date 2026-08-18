@@ -138,6 +138,7 @@ ENGINE_HI_CONF_BONUS_PP = _cfg("trade", "engine_hi_conf_bonus_pp", 1.0)
 ADAPTIVE_DAILY_FRACTION = _cfg("trade", "adaptive_daily_fraction", 0.40)
 
 import cocobet_dataset as D   # 29.06.2026: dataset-aware (MLS-Poly-Dry-Run)
+import poly_competition as PC   # 18.08.2026 (Lucas): Wettbewerb aus Slug (per-Liga-Stats/CLV)
 
 BASE_DIR              = os.path.dirname(os.path.abspath(__file__))
 # Dataset-aware: wm_* | liga_* | mls_* je COCOBET_DATASET. WM unverändert.
@@ -1156,6 +1157,11 @@ def main():
                 # FIX 14.06.2026: source explizit taggen (vorher fehlte es → Frontend/Resolve
                 # mussten auf "default=auto" vertrauen). Betting-Seite filtert auf source.
                 "source":         "auto_steam" if is_steam else "auto",
+                # 18.08.2026 (Lucas): Slug + Wettbewerb mitschreiben -> Resolver/Stats koennen
+                # per-Liga (EPL/LaLiga/... nicht nur "liga") buckten. Rein additiv.
+                "slug":           order.get("slug", ""),
+                "competition":    PC.key_of(order.get("slug"), D.active_dataset()),
+                "competitionLabel": PC.label_of(order.get("slug"), D.active_dataset()),
             })
         else:
             _err = str(result.get("error") or "")
