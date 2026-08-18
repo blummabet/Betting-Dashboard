@@ -564,3 +564,33 @@ class TestPinnacleTotals(unittest.TestCase):
         self.assertIn("2.5", tev.get("totals") or {})
 
 
+
+
+# 18.08.2026 (Lucas: „live beim Betfair-Terminal die Poly-Odds"): pick_poly waehlt die Poly-Quelle je
+# Phase. LAUFENDES Spiel -> frische Live-Poly ZUERST (nicht die eingefrorene Close-Quote); nicht-live ->
+# Close zuerst, dann Upcoming. Fixt: Live-Spiel im Close-Pool zeigte veraltete Pre-Match-Poly-Odds.
+class TestPickPolyPhase(unittest.TestCase):
+    def _pools(self):
+        close = [{"prices": {"Borac Banja Luka": 0.60, "Fk Velez Mostar": 0.40},
+                  "shares": {"Borac Banja Luka": 60000, "Fk Velez Mostar": 40000}, "totalUsd": 100000}]
+        live  = [{"prices": {"Borac Banja Luka": 0.70, "Fk Velez Mostar": 0.30},
+                  "shares": {"Borac Banja Luka": 70000, "Fk Velez Mostar": 30000}, "totalUsd": 50000}]
+        up    = [{"prices": {"Borac Banja Luka": 0.55, "Fk Velez Mostar": 0.45},
+                  "shares": {}, "totalUsd": 8000}]
+        return close, live, up
+
+    def test_live_prefers_fresh_live_pool(self):
+        m = bf_match(); close, live, up = self._pools()
+        r = BC.pick_poly(m, BC.money_side(m), True, close, live, up)
+        self.assertEqual(r["odd"], round(1 / 0.70, 2))   # Live-Quote, NICHT die eingefrorene Close-Quote
+
+    def test_nonlive_prefers_close(self):
+        m = bf_match(); close, live, up = self._pools()
+        r = BC.pick_poly(m, BC.money_side(m), False, close, live, up)
+        self.assertEqual(r["odd"], round(1 / 0.60, 2))   # Close (mit Holder-Shares)
+
+    def test_fallback_chain(self):
+        m = bf_match(); close, live, up = self._pools()
+        self.assertEqual(BC.pick_poly(m, BC.money_side(m), True, close, [], up)["odd"], round(1 / 0.60, 2))  # live leer -> close
+        self.assertEqual(BC.pick_poly(m, BC.money_side(m), True, [], [], up)["odd"], round(1 / 0.55, 2))     # -> upcoming
+        self.assertIsNone(BC.pick_poly(m, BC.money_side(m), True, [], [], []))                                # nichts
