@@ -1014,8 +1014,6 @@
     for(i=0;i<arr.length;i++){ if(String(arr[i].matchId)===String(g.matchId)){ m=arr[i]; break; } }
     if(!m||!m.markets) return '';
     var PT=g.pinnTotals||null;
-    // O/U-Edge je Linie vs Pinnacle (18.08.2026, Lucas): faire de-viggte Pinnacle-Over/Under-% × Betfair-
-    // Quote − 1, beste Seite. Nur echte Tor-Totals ('Over/Under X.5 Goals'); BTTS/Ecken/1.HZ ohne Anker.
     function _ouEdge(x){
       if(!PT) return null;
       var lm=String(x.k).match(/^Over\/Under ([0-9.]+) Goals$/); if(!lm) return null;
@@ -1024,23 +1022,22 @@
       runnersOf(x.mk).forEach(function(r){ var nm=String(r&&r.name||'').toLowerCase(), od=+r.odd;
         if(!(od>1)) return;
         if(nm.indexOf('over')===0) oOdd=od; else if(nm.indexOf('under')===0) uOdd=od; });
-      // Phasen-Mismatch-Schutz: Betfairs EIGENE implied (de-viggt) vs Pinnacle. Weichen sie stark ab
-      // (Betfair live, Pinnacle noch pre-match o. umgekehrt), ist die „Edge" ein Artefakt, kein Value.
       if(oOdd&&uOdd){ var io=1/oOdd, iu=1/uOdd, bfO=io/(io+iu);
         if(Math.abs(bfO-pt.overFair)>0.25) return null; }
       var eO=(oOdd!=null)?pt.overFair*oOdd-1:null;
       var eU=(uOdd!=null&&typeof pt.underFair==='number')?pt.underFair*uOdd-1:null;
       var e=null,side=''; if(eO!=null){e=eO;side='Über';} if(eU!=null&&(e==null||eU>e)){e=eU;side='Unter';}
       if(e==null) return null;
-      if(Math.abs(e)>0.35) return null;   // Restschutz gegen einseitige Extrem-Longshots
+      if(Math.abs(e)>0.35) return null;
       return {e:e,side:side};
     }
     var list=[];
     for(var k in m.markets){ if(k==='Match Odds') continue;
-      var v=distTotal(m.markets[k]); if(!(v>=50)) continue;   // <€50 matched = Rauschen
+      // 18.08.2026 (Lucas): Correct Score / Half Time Score raus — nie gebraucht, nur Rauschen.
+      if(k.indexOf('Correct Score')>=0 || k.indexOf('Half Time Score')>=0) continue;
+      var v=distTotal(m.markets[k]); if(!(v>=50)) continue;
       var it={k:k,v:v,mk:m.markets[k]}; it.edge=_ouEdge(it); list.push(it); }
     if(!list.length) return '';
-    // Value-Linien (Edge ≥ +2%) nach oben, sonst nach Geld — so geht keine Kante unter dem €-Ranking verloren
     list.sort(function(a,b){
       var av=(a.edge&&a.edge.e>=0.02)?1:0, bv=(b.edge&&b.edge.e>=0.02)?1:0;
       if(av!==bv) return bv-av;
@@ -1050,41 +1047,48 @@
     var totOther=list.reduce(function(a,x){return a+x.v;},0);
     var nEdge=list.filter(function(x){return x.edge&&x.edge.e>=0.02;}).length;
     var hasPT=!!(PT&&Object.keys(PT).length);
+    // eine Marktseite: Name @Quote (+ Back/driftet an DIESER Seite) · matched € · Anteil%
+    function sideCell(r, x, isLead, alignRight){
+      if(!r) return '<div style="min-width:128px"></div>';
+      var c=isLead?'#4cc2ff':C.ink, tV=x.v||0, pct=tV>0?Math.round((+r.vol||0)/tV*100):0;
+      return '<div style="min-width:128px;text-align:'+(alignRight?'right':'left')+'">'
+        +'<span style="font-family:monospace;font-weight:'+(isLead?'800':'600')+';color:'+c+';font-size:11.5px">'+esc(rLabel(r.name,m))+' <span style="color:#5eead4">@'+fO(r.odd)+'</span></span>'+dirBadge(m,x.k,r)
+        +'<div style="font-family:monospace;font-size:10px;color:'+C.mut+';margin-top:1px">'+_tEur(+r.vol||0)+' <span style="color:'+C.dim+'">· '+pct+'%</span></div></div>';
+    }
     var body=top.map(function(x){
       var rs=runnersOf(x.mk).filter(function(r){return r&&r.name;}).slice()
               .sort(function(a,b){ return (+b.vol||0)-(+a.vol||0); });
-      var lead=rs[0]||{}, other=(rs.length===2?rs[1]:null);
-      var share=x.v>0?Math.round((+lead.vol||0)/x.v*100):0;
-      var seite='<b style="color:#4cc2ff">'+esc(rLabel(lead.name,m))+'</b> <span style="color:#5eead4">@'+fO(lead.odd)+'</span>'+dirBadge(m,x.k,lead);
-      if(other){ seite+=' <span style="color:'+C.dim+'">·</span> '+esc(rLabel(other.name,m))+' <span style="color:#5eead4">@'+fO(other.odd)+'</span>'; }
-      else if(rs.length>2){ seite+=' <span style="color:'+C.dim+';font-size:10px">· '+rs.length+' Runner</span>'; }
-      var bar='<span style="display:inline-block;width:78px;height:7px;border-radius:4px;overflow:hidden;background:'+C.bd+';vertical-align:middle"><span style="display:block;height:7px;width:'+share+'%;background:#4cc2ff"></span></span>'
-             +' <span style="color:'+C.dim+';font-size:10px">'+share+'%</span>';
+      var lead=rs[0]||{}, other=(rs.length===2?rs[1]:null), tV=x.v||0;
+      var lPct=tV>0?Math.round((+lead.vol||0)/tV*100):0, oPct=other?(100-lPct):0;
+      var bar= other
+        ? '<div style="display:flex;height:9px;width:84px;flex:none;border-radius:5px;overflow:hidden;background:'+C.bd+'"><div style="width:'+lPct+'%;background:#4cc2ff"></div><div style="width:'+oPct+'%;background:#2b6e93"></div></div>'
+        : '<div style="width:84px;flex:none;text-align:center;color:'+C.dim+';font-size:10px">'+(rs.length>2?(rs.length+' Runner'):'')+'</div>';
+      var moneyCell='<div style="display:flex;align-items:center;gap:10px">'+sideCell(lead,x,true,true)+bar+(other?sideCell(other,x,false,false):'<div style="min-width:128px"></div>')+'</div>';
       var eCell, hot=false;
       if(x.edge){ var e=x.edge.e; hot=(e>=0.02);
         var ec=e>=0.02?'#2ee08a':e>=-0.01?'#f5c518':C.dim;
-        eCell='<span style="color:'+ec+';font-family:monospace;font-weight:800;font-size:11.5px">'+(e>=0?'+':'')+(e*100).toFixed(1)+'%</span> <span style="color:'+C.dim+';font-size:10px">'+x.edge.side+'</span>';
-      } else { eCell='<span style="color:'+C.dim+';font-size:10px" title="kein Pinnacle-Total auf dieser Linie">—</span>'; }
-      return '<tr style="border-top:1px solid rgba(255,255,255,.04)'+(hot?';border-left:2px solid #2ee08a':'')+'">'
-        +'<td style="padding:5px 8px;color:'+C.ink+';font-size:11.5px;white-space:nowrap">'+esc(_tMkShort(x.k))+'</td>'
-        +'<td style="padding:5px 8px;font-family:monospace;font-size:11.5px">'+seite+'</td>'
-        +'<td style="padding:5px 8px;text-align:center;white-space:nowrap">'+bar+'</td>'
-        +'<td style="padding:5px 8px;text-align:right;white-space:nowrap">'+eCell+'</td>'
-        +'<td style="padding:5px 8px;text-align:right;font-family:monospace;font-size:11.5px;color:'+C.mut+';white-space:nowrap">'+_tEur(x.v)+'</td>'
+        eCell='<span style="color:'+ec+';font-family:monospace;font-weight:800;font-size:12px">'+(e>=0?'+':'')+(e*100).toFixed(1)+'%</span> <span style="color:'+C.dim+';font-size:10px">'+x.edge.side+'</span>';
+      } else { eCell='<span style="color:'+C.dim+';font-size:11px" title="kein Pinnacle-Total auf dieser Linie">—</span>'; }
+      return '<tr style="border-top:1px solid rgba(255,255,255,.05)'+(hot?';border-left:2px solid #2ee08a':'')+'">'
+        +'<td style="padding:7px 8px;color:'+C.ink+';font-size:12px;font-weight:600;white-space:nowrap;vertical-align:top">'+esc(_tMkShort(x.k))+'</td>'
+        +'<td style="padding:7px 8px">'+moneyCell+'</td>'
+        +'<td style="padding:7px 8px;text-align:right;white-space:nowrap;vertical-align:top">'+eCell+'</td>'
+        +'<td style="padding:7px 8px;text-align:right;font-family:monospace;font-size:11.5px;color:'+C.mut+';white-space:nowrap;vertical-align:top">'+_tEur(x.v)+'</td>'
         +'</tr>';
     }).join('');
     var col2='background:'+C.card+';border:1px solid '+C.bd+';border-radius:10px;padding:10px 12px';
     var th=function(t,a){ return '<th style="font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:'+C.dim+';text-align:'+(a||'right')+';padding:3px 8px">'+t+'</th>'; };
     return '<div style="'+col2+';margin-top:12px">'
-      +'<div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:4px">'
+      +'<div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:6px">'
         +'<span style="font-size:11px;color:'+C.dim+'">Andere Märkte — wo sonst das Geld liegt · Betfair matched</span>'
         +'<span style="font-size:10px;color:'+C.mut+'">'+_tEur(totOther)+' neben 1X2'+(rest>0?(' · +'+rest+' weitere'):'')
           +(hasPT?(nEdge?(' · <span style="color:#2ee08a;font-weight:700">'+nEdge+' O/U-Kante'+(nEdge>1?'n':'')+' ≥ +2%</span>'):' · keine O/U-Kante ≥ +2%'):'')+'</span></div>'
       +'<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse">'
-        +'<thead><tr>'+th('Markt','left')+th('Führend (mehr Geld) · Gegenquote','left')+th('Anteil','center')+th('Edge vs Pinnacle')+th('Fluss')+'</tr></thead><tbody>'+body+'</tbody></table></div>'
-      +'<div style="font-size:10px;color:'+C.mut+';margin-top:7px;line-height:1.5">Edge vs Pinnacle = faire O/U-% (de-viggt, neuester Pinnacle-Snap) × Betfair-Quote − 1, beste Seite; grün ≥ +2%. '
+        +'<thead><tr>'+th('Markt','left')+th('Wo das Geld liegt · <span style="color:#4cc2ff">mehr</span> ←→ Gegenseite (Quote · matched €)','left')+th('Edge vs Pinnacle')+th('Fluss ges.')+'</tr></thead><tbody>'+body+'</tbody></table></div>'
+      +'<div style="font-size:10px;color:'+C.mut+';margin-top:8px;line-height:1.55">Je Markt beide Seiten mit Quote, gematchtem € und Anteil; der Balken zeigt das Verhältnis (<span style="color:#4cc2ff">blau</span> = mehr Geld). „Back ✓/driftet" steht an der Seite, für die es gilt (aus dem Quotenverlauf). '
+        +'Edge vs Pinnacle = faire O/U-% (de-viggt, neuester Pinnacle-Snap) × Betfair-Quote − 1, beste Seite; grün ≥ +2%. '
         +(hasPT?'':'<b>Noch keine Pinnacle-Totals im Datensatz</b> — erscheinen nach dem nächsten Betfair-Lauf. ')
-        +'Linien ohne Pinnacle-Total (BTTS, Ecken, 1.HZ …) bleiben ohne Edge. Blau = Seite mit mehr Geld · „Back ✓/driftet" aus dem Quotenverlauf.</div>'
+        +'Linien ohne Pinnacle-Total (BTTS, Ecken, 1.HZ …) bleiben ohne Edge.</div>'
       +'</div>';
   }
   function _tDrawer(g){
