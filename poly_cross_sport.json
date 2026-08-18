@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-18T01:51:06.776081+00:00",
+ "generatedAt": "2026-08-18T03:09:22.687715+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,8 +9,8 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 423,
- "pinnKeys": 299,
- "matched": 223,
+ "pinnKeys": 297,
+ "matched": 221,
  "footballRows": 195,
  "crossRows": 228,
  "footballSkippedStale": 39,
@@ -22,27 +22,55 @@
   "soccer_liga": 105
  },
  "matchedBySport": {
-  "baseball_mlb": 28,
+  "baseball_mlb": 26,
   "soccer_mls": 90,
   "soccer_liga": 105
  },
  "trackRecord": {
-  "tracked": 131,
+  "tracked": 133,
   "converged": 19
  },
  "discrepancies": [
+  {
+   "id": "baseball_mlb|chicagocubs-chicagowhitesox|chicagowhitesox",
+   "sport": "baseball_mlb",
+   "event": "Chicago White Sox vs Chicago Cubs",
+   "market": "Moneyline",
+   "outcome": "Chicago White Sox",
+   "polyPP": 17.5,
+   "pinnPP": 80.4,
+   "gapPP": -62.93,
+   "vol": 524959,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-18T03:09:22.687524+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagocubs-chicagowhitesox|chicagocubs",
+   "sport": "baseball_mlb",
+   "event": "Chicago White Sox vs Chicago Cubs",
+   "market": "Moneyline",
+   "outcome": "Chicago Cubs",
+   "polyPP": 82.5,
+   "pinnPP": 19.6,
+   "gapPP": 62.93,
+   "vol": 524959,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-18T03:09:22.687524+00:00"
+  },
   {
    "id": "baseball_mlb|atlantabraves-minnesotatwins|atlantabraves",
    "sport": "baseball_mlb",
    "event": "Atlanta Braves vs Minnesota Twins",
    "market": "Moneyline",
    "outcome": "Atlanta Braves",
-   "polyPP": 13.5,
+   "polyPP": 9.6,
    "pinnPP": 54.6,
-   "gapPP": -41.07,
-   "vol": 322686,
+   "gapPP": -44.97,
+   "vol": 613919,
    "richtung": "Poly zu niedrig → backen",
-   "convergePP": 0.0,
+   "convergePP": -3.9,
    "firstSeen": "2026-08-18T01:51:06.775843+00:00"
   },
   {
@@ -51,68 +79,12 @@
    "event": "Atlanta Braves vs Minnesota Twins",
    "market": "Moneyline",
    "outcome": "Minnesota Twins",
-   "polyPP": 86.5,
+   "polyPP": 90.4,
    "pinnPP": 45.4,
-   "gapPP": 41.07,
-   "vol": 322686,
+   "gapPP": 44.97,
+   "vol": 613919,
    "richtung": "Poly zu hoch → faden",
-   "convergePP": 0.0,
-   "firstSeen": "2026-08-18T01:51:06.775843+00:00"
-  },
-  {
-   "id": "baseball_mlb|detroittigers-pittsburghpirates|detroittigers",
-   "sport": "baseball_mlb",
-   "event": "Detroit Tigers vs Pittsburgh Pirates",
-   "market": "Moneyline",
-   "outcome": "Detroit Tigers",
-   "polyPP": 81.6,
-   "pinnPP": 44.6,
-   "gapPP": 37.04,
-   "vol": 517285,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": -29.78,
-   "firstSeen": "2026-08-17T23:48:57.993834+00:00"
-  },
-  {
-   "id": "baseball_mlb|detroittigers-pittsburghpirates|pittsburghpirates",
-   "sport": "baseball_mlb",
-   "event": "Detroit Tigers vs Pittsburgh Pirates",
-   "market": "Moneyline",
-   "outcome": "Pittsburgh Pirates",
-   "polyPP": 18.4,
-   "pinnPP": 55.4,
-   "gapPP": -37.04,
-   "vol": 517285,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": -29.78,
-   "firstSeen": "2026-08-17T23:48:57.993834+00:00"
-  },
-  {
-   "id": "baseball_mlb|coloradorockies-losangelesdodgers|losangelesdodgers",
-   "sport": "baseball_mlb",
-   "event": "Los Angeles Dodgers vs Colorado Rockies",
-   "market": "Moneyline",
-   "outcome": "Los Angeles Dodgers",
-   "polyPP": 91.5,
-   "pinnPP": 61.7,
-   "gapPP": 29.85,
-   "vol": 570449,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": 0.0,
-   "firstSeen": "2026-08-18T01:51:06.775843+00:00"
-  },
-  {
-   "id": "baseball_mlb|coloradorockies-losangelesdodgers|coloradorockies",
-   "sport": "baseball_mlb",
-   "event": "Los Angeles Dodgers vs Colorado Rockies",
-   "market": "Moneyline",
-   "outcome": "Colorado Rockies",
-   "polyPP": 8.5,
-   "pinnPP": 38.3,
-   "gapPP": -29.85,
-   "vol": 570449,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": 0.0,
+   "convergePP": -3.9,
    "firstSeen": "2026-08-18T01:51:06.775843+00:00"
   }
  ]
