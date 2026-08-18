@@ -492,3 +492,75 @@ class TestPolyUpcomingFallback(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)
+
+
+# 18.08.2026 (Lucas): Pinnacle-Totals andocken -> O/U-Edge. De-vig 2-Weg, parse_totals (volle Leiter
+# aus totals+alternate_totals, nur Pinnacle), _fmt_line, und build_game haengt pinnTotals an.
+def _odds_totals_event(home="Borac Banja Luka", away="Fk Velez Mostar"):
+    return {
+        "home_team": home, "away_team": away, "commence_time": "2026-08-09T16:30:00Z",
+        "bookmakers": [
+            {"key": "pinnacle", "markets": [
+                {"key": "totals", "outcomes": [
+                    {"name": "Over", "price": 1.95, "point": 2.5},
+                    {"name": "Under", "price": 1.90, "point": 2.5}]},
+                {"key": "alternate_totals", "outcomes": [
+                    {"name": "Over", "price": 1.30, "point": 1.5},
+                    {"name": "Under", "price": 3.60, "point": 1.5},
+                    {"name": "Over", "price": 3.30, "point": 3.5},
+                    {"name": "Under", "price": 1.34, "point": 3.5}]}]},
+            # Soft-Buch wird ignoriert (nur Pinnacle ist der Anker)
+            {"key": "betfair_ex_eu", "markets": [
+                {"key": "totals", "outcomes": [
+                    {"name": "Over", "price": 2.5, "point": 2.5},
+                    {"name": "Under", "price": 1.5, "point": 2.5}]}]},
+        ]}
+
+
+class TestPinnacleTotals(unittest.TestCase):
+    def test_devig2_symmetric(self):
+        p = BC._devig2(1.95, 1.95)
+        self.assertAlmostEqual(p[0], 0.5, places=6)
+        self.assertAlmostEqual(p[0] + p[1], 1.0, places=9)
+
+    def test_devig2_lopsided_and_bad(self):
+        p = BC._devig2(1.10, 8.0)         # Over klarer Favorit
+        self.assertGreater(p[0], 0.8)
+        self.assertIsNone(BC._devig2(None, 1.9))
+        self.assertIsNone(BC._devig2(0, 1.9))
+
+    def test_fmt_line(self):
+        self.assertEqual(BC._fmt_line(2.5), "2.5")
+        self.assertEqual(BC._fmt_line(3.0), "3")
+        self.assertIsNone(BC._fmt_line(None))
+
+    def test_parse_totals_full_ladder_pinnacle_only(self):
+        t = BC.parse_totals(_odds_totals_event())
+        tot = t["totals"]
+        self.assertEqual(set(tot), {"1.5", "2.5", "3.5"})   # totals + alternate_totals zusammen
+        # jede Linie de-viggt auf Summe 1
+        for ln, v in tot.items():
+            self.assertAlmostEqual(v["overFair"] + v["underFair"], 1.0, places=6)
+        # 2.5 ~ Coinflip, leicht Under-lastig (Under-Quote kuerzer)
+        self.assertGreater(tot["2.5"]["underFair"], tot["2.5"]["overFair"])
+        # Soft-Buch-Quoten dürfen NICHT durchschlagen (Over@2.5 bleibt Pinnacle 1.95, nicht 2.5)
+        self.assertEqual(tot["2.5"]["overOdd"], 1.95)
+
+    def test_build_game_attaches_pinn_totals(self):
+        m = bf_match()
+        tev = BC.parse_totals(_odds_totals_event())
+        g = BC.build_game(m, None, None, {}, None, totals_ev=tev)
+        self.assertIn("pinnTotals", g)
+        self.assertEqual(set(g["pinnTotals"]), {"1.5", "2.5", "3.5"})
+        # ohne totals_ev bleibt es None (rueckwaertskompatibel)
+        g2 = BC.build_game(m, None, None, {}, None)
+        self.assertIsNone(g2["pinnTotals"])
+
+    def test_match_event_carries_totals_when_flipped(self):
+        # Betfair-Heim/Auswaerts vertauscht ggue. odds-api -> _flip muss totals erhalten
+        m = bf_match(home="Fk Velez Mostar", away="Borac Banja Luka")
+        tev = BC.match_event(m, [BC.parse_totals(_odds_totals_event())])
+        self.assertIsNotNone(tev)
+        self.assertIn("2.5", tev.get("totals") or {})
+
+

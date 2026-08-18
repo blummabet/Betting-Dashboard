@@ -176,6 +176,26 @@ def _devig3(h, d, a):
     return [x / s for x in inv]
 
 
+def _devig2(over, under):
+    """Zwei-Weg-Quoten (Over/Under, dezimal) -> de-viggte [pOver, pUnder]."""
+    try:
+        io, iu = 1.0 / float(over), 1.0 / float(under)
+    except (TypeError, ValueError, ZeroDivisionError):
+        return None
+    tot = io + iu
+    if tot <= 0:
+        return None
+    return [io / tot, iu / tot]
+
+
+def _fmt_line(pt):
+    """Totals-Punkt (2.5) -> Label-Schluessel passend zu Betfair ('2.5'). 3.0 -> '3'."""
+    try:
+        return ("%g" % float(pt))
+    except (TypeError, ValueError):
+        return None
+
+
 def parse_event(ev) -> dict:
     """the-odds-api-Event -> Probs (de-viggt) UND rohe Dezimal-Quoten je Quelle, [heim, remis, auswaerts]."""
     home, away = ev.get("home_team"), ev.get("away_team")
@@ -211,13 +231,49 @@ def parse_event(ev) -> dict:
             "pinn": pinn, "soft": soft, "pinnOdds": pinn_odds, "softOdds": soft_odds, "nSoft": len(soft_p)}
 
 
+def parse_totals(ev) -> dict:
+    """the-odds-api-Event (regions=eu, markets=totals+alternate_totals) -> Pinnacle-Over/Under je Linie,
+    de-viggt zu fairen Wahrscheinlichkeiten. Nur Pinnacle (der Anker). Rueckgabe wie parse_event
+    (home/away/commence) plus 'totals': {lineStr: {overFair,underFair,overOdd,underOdd}}."""
+    home, away = ev.get("home_team"), ev.get("away_team")
+    raw = {}
+    for bk in ev.get("bookmakers") or []:
+        if bk.get("key") != "pinnacle":
+            continue
+        for mkt in bk.get("markets") or []:
+            if mkt.get("key") not in ("totals", "alternate_totals"):
+                continue
+            for oc in mkt.get("outcomes") or []:
+                pt, nm, pr = oc.get("point"), oc.get("name"), oc.get("price")
+                key = _fmt_line(pt)
+                if key is None or nm is None or not pr:
+                    continue
+                slot = raw.setdefault(key, {})
+                side = str(nm).lower()
+                if side.startswith("over"):
+                    slot["overOdd"] = float(pr)
+                elif side.startswith("under"):
+                    slot["underOdd"] = float(pr)
+        break
+    totals = {}
+    for key, v in raw.items():
+        o, u = v.get("overOdd"), v.get("underOdd")
+        fair = _devig2(o, u)
+        if not fair:
+            continue
+        totals[key] = {"overFair": _r(fair[0]), "underFair": _r(fair[1]),
+                       "overOdd": round(o, 2), "underOdd": round(u, 2)}
+    return {"home": home, "away": away, "commence": ev.get("commence_time"), "totals": totals}
+
+
 def _flip(ev) -> dict:
     """Event mit vertauschten Teams (falls Heim/Auswaerts zwischen den Quellen gedreht sind)."""
     def rev(p):
         return [p[2], p[1], p[0]] if p else None
     return {"home": ev["away"], "away": ev["home"], "commence": ev.get("commence"),
             "pinn": rev(ev.get("pinn")), "soft": rev(ev.get("soft")),
-            "pinnOdds": rev(ev.get("pinnOdds")), "softOdds": rev(ev.get("softOdds")), "nSoft": ev.get("nSoft")}
+            "pinnOdds": rev(ev.get("pinnOdds")), "softOdds": rev(ev.get("softOdds")), "nSoft": ev.get("nSoft"),
+            "totals": ev.get("totals")}
 
 
 # ── Polymarket (globaler Broad-Scan: poly_money_broad_close.json) ─────────────
@@ -638,7 +694,7 @@ def mm_summary(ledger, now=None, recent_keep=40):
             "pending": sum(1 for e in (ledger or []) if isinstance(e, dict) and e.get("status") == "pending")}
 
 
-def build_game(m, ev, prev, direction, poly=None) -> dict:
+def build_game(m, ev, prev, direction, poly=None, totals_ev=None) -> dict:
     """Ein Spiel: Betfair-Geld-Seite + (falls Anker) Pinnacle/Soft-Probs+Quoten, Poly-Odd+Volumen,
     Bewegung, Verdikt. REIN (Netz passiert vorher)."""
     ms = money_side(m)
@@ -661,6 +717,7 @@ def build_game(m, ev, prev, direction, poly=None) -> dict:
         "softN": ev.get("nSoft") if ev else None,
         "poly": poly,
         "pinn": None, "soft": None, "pinnMovePP": None, "verdict": "no_anchor", "agree": None,
+       "pinnTotals": None,
     }
     pinn = ev.get("pinn") if ev else None
     soft = ev.get("soft") if ev else None
@@ -689,6 +746,9 @@ def build_game(m, ev, prev, direction, poly=None) -> dict:
         else:
             out["verdict"] = "uneinig"       # Buchmacher sehen die andere Seite vorn
         out["agree"] = out["verdict"] in ("konsens", "teil")
+    # 18.08.2026 (Lucas): Pinnacle-Totals (volle Over/Under-Leiter) andocken -> O/U-Edge im Terminal.
+    if totals_ev and totals_ev.get("totals"):
+        out["pinnTotals"] = totals_ev["totals"]
     return out
 
 
@@ -705,6 +765,24 @@ def fetch_odds(sport_key):
         return data if isinstance(data, list) else []
     except Exception as e:
         print("odds-fetch %s: %s" % (sport_key, e))
+        return []
+
+
+def fetch_totals(sport_key):
+    """Pinnacle Over/Under, VOLLE Leiter (18.08.2026, Lucas): separater Call, nur eu-Region (dort liegt
+    Pinnacle) + markets=totals,alternate_totals. So kostet es nur die Totals-Maerkte in EINER Region
+    statt aller Maerkte ueber alle Regionen. h2h-Call bleibt unveraendert."""
+    if not ODDS_KEY:
+        return []
+    url = ("%s/sports/%s/odds?apiKey=%s&regions=eu&markets=totals,alternate_totals&oddsFormat=decimal&dateFormat=iso"
+           % (ODDS_BASE, sport_key, ODDS_KEY))
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "cocobet-consensus"})
+        with urllib.request.urlopen(req, timeout=20) as r:
+            data = json.load(r)
+        return data if isinstance(data, list) else []
+    except Exception as e:
+        print("totals-fetch %s: %s" % (sport_key, e))
         return []
 
 
@@ -730,6 +808,7 @@ def main():
             need.setdefault(k, []).append(m)
 
     events_by_key = {k: [parse_event(e) for e in (fetch_odds(k) or [])] for k in need}
+    totals_by_key = {k: [parse_totals(e) for e in (fetch_totals(k) or [])] for k in need}
 
     # Poly (globaler Broad-Scan, committet vom Poly-Workflow): nur Basis-Moneylines (kein
     # more-markets/exact-score/total), damit wir die Team-Preise + Volumen matchen koennen.
@@ -759,6 +838,7 @@ def main():
         mid = str(m.get("matchId"))
         k = LEAGUE_ODDS_KEY.get(m.get("league"))
         ev = match_event(m, events_by_key.get(k, [])) if k else None
+        tev = match_event(m, totals_by_key.get(k, [])) if k else None
         poly = match_poly(m, money_side(m), poly_entries)
         if poly is None:
             # 18.08.2026 (Lucas): Terminal-Konviktion zeigte „kein Poly-Markt" fuer Spiele >3h vor Anpfiff
@@ -772,7 +852,7 @@ def main():
                     or match_poly(m, money_side(m), poly_upcoming_entries))
         prevlist = hist.get(mid) or []
         prev = prevlist[-1] if prevlist else None
-        g = build_game(m, ev, prev, direction, poly)
+        g = build_game(m, ev, prev, direction, poly, totals_ev=tev)
         games.append(g)
         # Money-Map Poly-Pool (12.08.2026, Lucas): live (laufend) > close (<=3h, mit Shares) >
         # upcoming (weit draussen, nur Preis+Vol). So erscheint die Poly-Blase auch lange vor Anpfiff.
