@@ -186,6 +186,86 @@ PNL_API = "https://user-pnl-api.polymarket.com/user-pnl?user_address={user}&inte
 MAX_POSITION_CALLS = int(os.environ.get("POLY_MAX_POSITION_CALLS") or 150)
 FETCH_AVGPRICE = (os.environ.get("POLY_FETCH_AVGPRICE") or "1") == "1"
 
+# 18.08.2026 (Lucas, Arkham-Inspiration): Orderbuch (Spread/Tiefe) + letzte Trades je money-fav-Seite.
+# Fuers Poly-Terminal-Drilldown. Buch-Snapshot ~5 Min -> Liquiditaets-/Spread-Indikator, keine Live-Leiter.
+BOOK_URL      = "https://clob.polymarket.com/book?token_id={token_id}"
+TRADES_URL    = "https://data-api.polymarket.com/trades?market={cond}&limit=50"
+FETCH_BOOK    = (os.environ.get("POLY_FETCH_BOOK") or "1") == "1"
+MAX_BOOK_CALLS = int(os.environ.get("POLY_MAX_BOOK_CALLS") or 40)   # 2 Calls/Markt -> ~Top-20 Vol-Maerkte
+TRADE_MIN_USD = int(os.environ.get("POLY_TRADE_MIN_USD") or 300)
+BOOK_LEVELS   = 6
+
+
+def _enrich_book_trades(m_row, oc, get, budget):
+    """m_row['book'] (Top-of-Book + Spread der money-fav-Seite) + m_row['trades'] (letzte nennenswerte
+    Kaeufe/Verkaeufe). Defensiv: kein Token/Budget/Fehler -> still, nichts gesetzt. budget=[rest] (mutable,
+    2 Calls je Markt). get(url)->JSON|None. REIN (Netz nur via get)."""
+    shares = m_row.get("shares") or {}
+    prices = m_row.get("prices") or {}
+    if shares:
+        fav = max(shares.items(), key=lambda kv: kv[1] or 0)[0]
+    elif prices:
+        fav = max(prices.items(), key=lambda kv: kv[1] or 0)[0]
+    else:
+        return
+    o = next((x for x in (oc or []) if x.get("label") == fav), None)
+    if not o:
+        return
+    tok, cond = o.get("token"), o.get("cond")
+    tok2lbl = {x.get("token"): x.get("label") for x in (oc or []) if x.get("token")}
+    # --- Orderbuch ---
+    if tok and budget[0] > 0:
+        budget[0] -= 1
+        data = get(BOOK_URL.format(token_id=tok))
+        if isinstance(data, dict):
+            try:
+                bids = sorted(((float(b["price"]), float(b.get("size", 0) or 0))
+                               for b in (data.get("bids") or [])
+                               if isinstance(b, dict) and b.get("price") is not None), key=lambda x: -x[0])
+                asks = sorted(((float(a["price"]), float(a.get("size", 0) or 0))
+                               for a in (data.get("asks") or [])
+                               if isinstance(a, dict) and a.get("price") is not None), key=lambda x: x[0])
+            except (TypeError, ValueError):
+                bids = asks = []
+            if bids and asks:
+                bid, ask = bids[0][0], asks[0][0]
+                m_row["book"] = {
+                    "side": fav, "bid": round(bid, 4), "ask": round(ask, 4),
+                    "spreadC": round((ask - bid) * 100, 2),
+                    "spreadPct": round((ask - bid) / ask * 100, 2) if ask else None,
+                    "bids": [[round(p, 4), round(s)] for p, s in bids[:BOOK_LEVELS]],
+                    "asks": [[round(p, 4), round(s)] for p, s in asks[:BOOK_LEVELS]],
+                }
+    # --- letzte Trades ---
+    if cond and budget[0] > 0:
+        budget[0] -= 1
+        tr = get(TRADES_URL.format(cond=cond))
+        if isinstance(tr, list) and tr:
+            out = []
+            for t in tr:
+                if not isinstance(t, dict):
+                    continue
+                try:
+                    sz = float(t.get("size") or 0)
+                    pr = float(t.get("price") or 0)
+                except (TypeError, ValueError):
+                    continue
+                usd = round(sz * pr)
+                if usd < TRADE_MIN_USD:
+                    continue
+                side_lbl = (t.get("outcome") or t.get("outcomeName")
+                            or tok2lbl.get(t.get("asset")) or tok2lbl.get(t.get("token")) or "")
+                out.append({
+                    "wallet": t.get("proxyWallet") or t.get("proxy_wallet") or t.get("wallet") or "",
+                    "action": ("SELL" if str(t.get("side") or "").upper() == "SELL" else "BUY"),
+                    "side": side_lbl, "price": round(pr, 4), "usd": usd, "ts": t.get("timestamp"),
+                })
+                if len(out) >= 8:
+                    break
+            if out:
+                m_row["trades"] = out
+
+
 
 def _tags():
     try:
@@ -770,6 +850,13 @@ def fetch_markets(live_only=False):
     # Ø-Einstieg-Anreicherung (CLV-Fix): eine /positions-Abfrage je Wallet, marktübergreifend gecacht,
     # hart gedeckelt. Fällt der Import/Fetch aus, läuft alles wie bisher weiter (nur ohne avgPrice).
     _pos_cache, _pos_budget = {}, [MAX_POSITION_CALLS]
+    # Orderbuch/Trades-Getter (Poly-Terminal). Defensiv: Import faellt aus -> keine Buecher, Rest laeuft.
+    _bt_get, _book_budget = None, [MAX_BOOK_CALLS]
+    if FETCH_BOOK:
+        try:
+            from fetch_wm_poly_smartmoney import _http_get as _bt_get
+        except Exception:
+            _bt_get = None
     _avg_get = None
     if FETCH_AVGPRICE and not live_only:
         try:
@@ -812,11 +899,17 @@ def fetch_markets(live_only=False):
                                    _pos_cache, _avg_get, _pos_budget)
             except Exception:
                 pass
-        markets.append({"key": key, "league": league, "sport": sport,
-                        "hoursToKickoff": htk, "totalUsd": round(mvol),
-                        "shares": shares, "prices": prices, "whales": _whales,
-                        "live": is_live,
-                        "resolved": False, "resolvedPrices": {}})
+        _mrow = {"key": key, "league": league, "sport": sport,
+                 "hoursToKickoff": htk, "totalUsd": round(mvol),
+                 "shares": shares, "prices": prices, "whales": _whales,
+                 "live": is_live,
+                 "resolved": False, "resolvedPrices": {}}
+        if _bt_get and _book_budget[0] > 0:
+            try:
+                _enrich_book_trades(_mrow, oc, _bt_get, _book_budget)
+            except Exception:
+                pass
+        markets.append(_mrow)
     fetch_markets.sweep_stats = {"sweepOpen": len(sweep_open), "sweepClosed": len(sweep_closed),
                                  "sweepAdded": sweep_added}
     fetch_markets.upcoming = upcoming
@@ -864,7 +957,9 @@ def capture(markets, frozen, now=None, min_vol=MIN_VOL_USD, grace_h=GHOST_GRACE_
         out[key] = {"shares": m.get("shares") or {}, "prices": m.get("prices") or {},
                     "league": m.get("league"), "sport": m.get("sport"), "totalUsd": round(float(m.get("totalUsd") or 0)),
                     "whales": m.get("whales") or [],   # 25.07.2026 (Lucas): Einzel-Wale je Markt (c)
-                    "hoursToKickoff": round(htk, 2), "capturedAt": now.isoformat()}
+                    "hoursToKickoff": round(htk, 2), "capturedAt": now.isoformat(),
+                    **({"book": m["book"]} if m.get("book") else {}),
+                    **({"trades": m["trades"]} if m.get("trades") else {})}
     # 06.08.2026 (Lucas): Geister-Maerkte prunen. ko = capturedAt + hoursToKickoff; liegt der mehr als
     # grace_h in der Vergangenheit UND ist der Markt nicht resolved -> raus. Aufgeloeste Snapshots bleiben
     # (Treffer-Auswertung); ebenso Maerkte, die GERADE in diesem Lauf abrechnen (deren frozen-Close braucht
@@ -906,7 +1001,9 @@ def capture_live(markets, prev, now=None, min_vol=MIN_VOL_USD, keep_h=LIVE_KEEP_
                     "whales": m.get("whales") or [], "league": m.get("league"), "sport": m.get("sport"),
                     "totalUsd": round(float(m.get("totalUsd") or 0)),
                     "hoursToKickoff": round(float(htk), 2) if isinstance(htk, (int, float)) else None,
-                    "capturedAt": now.isoformat(), "live": True}
+                    "capturedAt": now.isoformat(), "live": True,
+                    **({"book": m["book"]} if m.get("book") else {}),
+                    **({"trades": m["trades"]} if m.get("trades") else {})}
         seen.add(key)
     cutoff = now - timedelta(hours=keep_h)
     for k in list(out.keys()):

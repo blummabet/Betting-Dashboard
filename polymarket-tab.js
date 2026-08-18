@@ -3086,6 +3086,31 @@ function _buildPostmortemHtml(pm) {
     </tr>`;
   const mkRows = Object.entries(pm.byMarket || {}).map(([k, v]) => row(k, v)).join('');
   const exRows = Object.entries(pm.byExit   || {}).map(([k, v]) => row(k, v)).join('');
+  // 18.08.2026 (Lucas): Nach Liga — P&L/ROI/CLV je Wettbewerb (byCompetition aus resolve_wm_results).
+  const pctRoi = v => v == null ? '<span style="color:#484f58">—</span>'
+    : `<span style="color:${v >= 0 ? '#3fb950' : '#f85149'}">${v >= 0 ? '+' : ''}${v.toFixed(1)}%</span>`;
+  const compRow = (k, v) => `<tr style="border-top:1px solid #161b22">
+      <td style="padding:6px 10px;font-size:11px;color:#e6edf3;font-weight:600">${v.label || k}</td>
+      <td style="padding:6px 10px;font-size:11px;text-align:center;color:#8b949e">${v.n}</td>
+      <td style="padding:6px 10px;font-size:11px;text-align:right;font-weight:700;color:${eurCol(v.pnl)}">${eur(v.pnl)}</td>
+      <td style="padding:6px 10px;font-size:11px;text-align:right;font-weight:700">${pctRoi(v.roi)}</td>
+      <td style="padding:6px 10px;font-size:11px;text-align:center">${clv(v.avgClv)} <span style="color:#484f58;font-size:9px">${v.clvCoverage}</span></td>
+    </tr>`;
+  const compRows = Object.entries(pm.byCompetition || {})
+    .sort((a, b) => (b[1].n || 0) - (a[1].n || 0))
+    .map(([k, v]) => compRow(k, v)).join('');
+  const tblComp = (title, rows) => rows ? `
+    <div style="margin-top:10px">
+      <div style="font-size:10px;color:#6e7681;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">${title}</div>
+      <table style="width:100%;border-collapse:collapse;border:1px solid #21262d;border-radius:6px;overflow:hidden">
+        <thead><tr style="background:#161b22">
+          <th style="padding:5px 10px;font-size:9px;color:#484f58;text-align:left;text-transform:uppercase;letter-spacing:.5px">Liga</th>
+          <th style="padding:5px 10px;font-size:9px;color:#484f58;text-align:center;text-transform:uppercase">n</th>
+          <th style="padding:5px 10px;font-size:9px;color:#484f58;text-align:right;text-transform:uppercase">P&L</th>
+          <th style="padding:5px 10px;font-size:9px;color:#484f58;text-align:right;text-transform:uppercase">ROI</th>
+          <th style="padding:5px 10px;font-size:9px;color:#3fb950;text-align:center;text-transform:uppercase">ØCLV</th>
+        </tr></thead><tbody>${rows}</tbody>
+      </table></div>` : '';
   const htc = pm.heldToClose || {};
   const htcLine = (htc.n || 0) > 0
     ? `🔁 Halten bis Closing: ${htc.exitBetter}× früher-raus besser · ${htc.holdBetter}× halten besser (Ø ${eur(htc.avgDeltaEur)}/Trade)`
@@ -3107,6 +3132,7 @@ function _buildPostmortemHtml(pm) {
       <div style="font-size:11px;font-weight:700;color:#484f58;text-transform:uppercase;letter-spacing:.5px;margin-bottom:4px">🔬 Trade Post-Mortem — was trägt, was nicht</div>
       <div style="font-size:11px;color:#8b949e">${pm.closedN} geschlossen · realisiert <b style="color:${eurCol(pm.realizedPnl)}">${eur(pm.realizedPnl)}</b> · ØCLV ${clv(pm.avgClv)} <span style="color:#484f58">(${pm.clvCoverage})</span></div>
       ${covNote}
+      ${tblComp('Nach Liga — wo trägt der Edge', compRows)}
       ${tbl('Nach Markt-Typ', mkRows)}
       ${tbl('Nach Exit-Grund', exRows)}
       <div style="margin-top:10px;font-size:10px;color:#8b949e;line-height:1.5">${htcLine}</div>

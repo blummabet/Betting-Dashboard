@@ -74,6 +74,7 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 import cocobet_dataset as D   # dataset-aware Closing-Datei (WM vs Liga/MLS)
+import poly_competition as PC   # 18.08.2026 (Lucas): per-Wettbewerb P&L/CLV-Buckets
 
 BASE          = Path(__file__).parent
 # Minutengenaue Closing-Linien liegen je Dataset in einer eigenen Datei
@@ -90,6 +91,15 @@ RESULTS_FILE  = Path(str(D.file("wm_results.json", "liga_results.json")))
 # 13.07.2026 (MLS-Audit): war hart wm2026 → find_poly_close_price fand für MLS-Trades NIE einen
 # Schlusskurs → Poly-CLV blieb dauerhaft None, obwohl mls-poly-history.json committet wird.
 POLY_HIST_FILE = Path(str(D.file("wm2026-poly-history.json", "liga-poly-history.json")))
+
+
+# 18.08.2026 (Lucas): Wettbewerb je Bet fuer per-Liga-Buckets. Bevorzugt das beim Platzieren
+# gestempelte Feld; sonst aus dem Slug; sonst Datensatz-Fallback (Altbestand ohne Slug).
+def _bet_comp_key(b: dict) -> str:
+    return b.get("competition") or PC.key_of(b.get("slug"), D.active_dataset())
+
+def _bet_comp_label(b: dict) -> str:
+    return b.get("competitionLabel") or PC.label_of(b.get("slug"), D.active_dataset())
 
 # Mapping zwischen Pick-Market-Label und Poly-Snapshot-Key
 # (Polymarket-Snapshots haben Keys wie poly_hw / poly_dr / poly_aw / poly_o25 / poly_u25)
@@ -584,6 +594,8 @@ def normalize_bet(bet: dict) -> dict:
                 "polyPrice": float(pick.get("polyPrice", 0)),
                 "pinnFair":  float(pick.get("pinnFair", 0)) if pick.get("pinnFair") else None,
                 "slug":      pick.get("slug", ""),
+                "competition":      PC.key_of(pick.get("slug"), D.active_dataset()),
+                "competitionLabel": PC.label_of(pick.get("slug"), D.active_dataset()),
                 "placedAt":  bet.get("savedAt", ""),
                 "source":    "manual",
             }
@@ -963,6 +975,10 @@ def _write_back_status_to_placed(resolved_bets: list[dict], now_iso: str) -> Non
 
 
 def _write_results(bets: list[dict], now_iso: str) -> None:
+    # 18.08.2026 (Lucas): jeden Bet mit Wettbewerb stempeln (per-Liga-Sicht im Dashboard/Audit).
+    for _b in bets:
+        _b["competition"]      = _bet_comp_key(_b)
+        _b["competitionLabel"] = _bet_comp_label(_b)
     finished = [b for b in bets if b.get("result") in ("WIN", "LOSS", "VOID")]
     voids    = [b for b in finished if b.get("result") == "VOID"]
     sold     = [b for b in bets if b.get("result") == "SOLD"]   # früh verkauft (FIX 13.06.2026)
@@ -1017,7 +1033,7 @@ def _write_results(bets: list[dict], now_iso: str) -> None:
         if "deep-loss" in rsn:             return "Deep-Loss"
         return "Sell-sonstig"
 
-    _bym, _byx = {}, {}
+    _bym, _byx, _byc = {}, {}, {}   # byMarket / byExit / byCompetition
     _htc_n = _htc_better = _htc_worse = 0
     _htc_delta = 0.0
     for b in closed:
@@ -1027,6 +1043,12 @@ def _write_results(bets: list[dict], now_iso: str) -> None:
             _e = _d.setdefault(_k, {"n": 0, "pnl": 0.0, "clvN": 0, "clvSum": 0.0})
             _e["n"] += 1; _e["pnl"] += _pnl
             if isinstance(_clv, (int, float)): _e["clvN"] += 1; _e["clvSum"] += _clv
+        _ck = _bet_comp_key(b)
+        _ce = _byc.setdefault(_ck, {"label": _bet_comp_label(b), "n": 0, "pnl": 0.0,
+                                    "staked": 0.0, "clvN": 0, "clvSum": 0.0})
+        _ce["n"] += 1; _ce["pnl"] += _pnl
+        if b.get("result") != "VOID": _ce["staked"] += (b.get("stake") or 0)
+        if isinstance(_clv, (int, float)): _ce["clvN"] += 1; _ce["clvSum"] += _clv
         _pc, _entry, _stake = b.get("polyClose"), b.get("polyPrice"), (b.get("stake") or 0)
         if isinstance(_pc, (int, float)) and isinstance(_entry, (int, float)) and _entry > 0:
             _htc_pnl = _stake * (_pc / _entry - 1)
@@ -1040,6 +1062,14 @@ def _write_results(bets: list[dict], now_iso: str) -> None:
                     "clvCoverage": f"{v['clvN']}/{v['n']}"}
                 for k, v in sorted(d.items())}
 
+    def _fin_comp(d):
+        return {k: {"label": v["label"], "n": v["n"], "pnl": round(v["pnl"], 2),
+                    "staked": round(v["staked"], 2),
+                    "roi": round(v["pnl"] / v["staked"] * 100, 2) if v["staked"] > 0 else None,
+                    "avgClv": round(v["clvSum"] / v["clvN"], 2) if v["clvN"] else None,
+                    "clvCoverage": f"{v['clvN']}/{v['n']}"}
+                for k, v in sorted(d.items())}
+
     postmortem = {
         "closedN":      len(closed),
         "realizedPnl":  round(total_pnl, 2),
@@ -1047,6 +1077,7 @@ def _write_results(bets: list[dict], now_iso: str) -> None:
         "clvCoverage":  f"{len(clv_values)}/{len(closed)}",   # Frühindikator-Abdeckung
         "byMarket":     _fin(_bym),
         "byExit":       _fin(_byx),
+        "byCompetition": _fin_comp(_byc),   # 18.08.2026 (Lucas): P&L/ROI/CLV je Liga
         "heldToClose":  {"n": _htc_n, "exitBetter": _htc_better, "holdBetter": _htc_worse,
                          "avgDeltaEur": round(_htc_delta / _htc_n, 2) if _htc_n else None},
     }
