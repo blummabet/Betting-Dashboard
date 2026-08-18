@@ -891,6 +891,12 @@
   function _tEdge(g){ var s=g.moneySide, p=(g.pinn&&typeof g.pinn[s]==='number')?g.pinn[s]:null; return (p&&g.moneyOdd>1)?(p*g.moneyOdd-1):null; }
   function _tFair(g){ var s=g.moneySide, p=(g.pinn&&typeof g.pinn[s]==='number')?g.pinn[s]:null; return (p&&p>0)?(1/p):null; }
   function _tBucket(g){ var t=(_bf.track&&_bf.track.byLeagueMarket)||{}; return t[(g.league||'')+'|Match Odds']||null; }
+  // 17.08.2026 (Lucas P1): Auto-Mute — Zeilen, die keine handelbare Kante sind, ausgrauen & nach unten:
+  // (a) kein Pinnacle-Anker (edge==null -> die illiquiden @110/@230-Ligen), (b) historisch schwacher CLV-Bucket.
+  function _tMute(g){ var e=_tEdge(g), b=_tBucket(g);
+    if(e==null) return {m:true,r:'kein Anker'};
+    if(b && b.n>=10 && typeof b.roi==='number' && b.roi<=-0.05) return {m:true,r:'Bucket '+Math.round(b.roi*100)+'% ROI'};
+    return {m:false,r:''}; }
   var _TSK={home:'hw',draw:'dr',away:'aw'};
   function _tSer(g){ var h=(_bf.hist||{})[String(g.matchId)]||[]; var key=_TSK[g.moneySide]||'hw'; var pts=[];
     for(var i=0;i<h.length;i++){ var s=h[i]; if(!s||!s.mo) continue; var o=s.mo[key];
@@ -1019,30 +1025,36 @@
     var cx=_bf.consensus, games=((cx&&cx.games)||[]).slice();
     if(!games.length) return viewToggle()+'<div style="padding:44px;text-align:center;color:'+C.mut+'">Noch keine Konsens-Daten — das Terminal füllt sich mit dem nächsten Betfair-Lauf.</div>';
     var bank=_tBank();
-    var rows=games.map(function(g){ return {g:g,edge:_tEdge(g),b:_tBucket(g),hk:_tHalfKelly(g)}; });
-    rows.sort(function(a,b){ return (b.edge==null?-9:b.edge)-(a.edge==null?-9:a.edge); });
+    var rows=games.map(function(g){ return {g:g,edge:_tEdge(g),b:_tBucket(g),hk:_tHalfKelly(g),mute:_tMute(g)}; });
+    rows.sort(function(a,b){ var am=a.mute.m?1:0,bm=b.mute.m?1:0; if(am!==bm) return am-bm; return (b.edge==null?-9:b.edge)-(a.edge==null?-9:a.edge); });
+    var nMuted=rows.filter(function(r){return r.mute.m;}).length, hideMuted=!!_bf.termHideMuted;
+    var shown=hideMuted?rows.filter(function(r){return !r.mute.m;}):rows;
     var eCol=function(e){ return e==null?C.mut:e>=0.02?'#2ee08a':e>=-0.01?'#f5c518':'#ff5d5d'; };
     var dot=function(on,c){ return '<i style="display:inline-block;width:8px;height:8px;border-radius:50%;margin-left:3px;background:'+(on?c:'#26324a')+'"></i>'; };
     var th=function(t,a){ return '<th style="font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:'+C.dim+';font-weight:700;text-align:'+(a||'right')+';padding:7px 10px;border-bottom:1px solid '+C.bd+';white-space:nowrap">'+t+'</th>'; };
     var head='<div style="display:flex;align-items:baseline;gap:10px;margin:2px 0 8px;flex-wrap:wrap"><span style="font-size:13px;font-weight:800;color:'+C.ink+'">🖥️ Terminal — handelbare Kanten</span>'
-      +'<span style="font-size:10.5px;color:'+C.dim+'">Edge = faire Pinnacle-% × Quote − 1 · Konv. = Betfair-Richtung + Pinnacle + Poly · CLV-Bucket = historische Kante je Liga (n≥10) · Zeile klicken → Drilldown</span></div>';
+      +'<span style="font-size:10.5px;color:'+C.dim+'">Edge = faire Pinnacle-% × Quote − 1 · Konviktion = Betfair-Fluss + Pinnacle-Steam + Poly (0–100) · CLV-Bucket = hist. Kante je Liga (n≥10) · gemutet = nicht handelbar · Zeile klicken → Drilldown</span></div>';
     var bankBar='<div style="display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:11.5px;color:'+C.mut+'">Bankroll <span style="color:'+C.dim+'">€</span>'
       +'<input type="number" value="'+bank+'" min="0" step="50" onchange="_bfTermBank(this.value)" onclick="event.stopPropagation()" style="width:96px;background:'+C.card+';border:1px solid '+C.bd+';border-radius:7px;color:'+C.ink+';padding:4px 8px;font-family:monospace;font-size:12px"/>'
-      +'<span style="color:'+C.dim+'">→ ½-Kelly-Stakes in € je Zeile</span></div>';
+      +'<span style="color:'+C.dim+'">→ ½-Kelly-Stakes in € je Zeile</span>'
+      +(nMuted?'<label style="margin-left:auto;display:inline-flex;align-items:center;gap:6px;cursor:pointer;color:'+C.mut+'"><input type="checkbox" '+(hideMuted?'checked':'')+' onchange="_bfTermMute(this.checked)" onclick="event.stopPropagation()" style="cursor:pointer"/> '+nMuted+' gemutet ausblenden</label>':'')
+      +'</div>';
     var out=viewToggle()+head+bankBar+'<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12.5px">'
       +'<thead><tr>'+th('Anpfiff','left')+th('Spiel','left')+th('Pick','left')+th('Edge')+th('Konviktion')+th('Fluss')+th('CLV-Bucket')+th('½-Kelly €')+'</tr></thead><tbody>';
-    rows.forEach(function(r){
+    var mutedStarted=false;
+    shown.forEach(function(r){
       var g=r.g,e=r.edge,open=(String(_bf.termOpen)===String(g.matchId));
+      if(r.mute.m && !mutedStarted){ mutedStarted=true; out+='<tr><td colspan="8" style="padding:10px 10px 4px;font-size:10px;color:'+C.dim+';border-top:1px dashed '+C.bd+'">🔇 Nicht handelbar (gemutet) — kein Pinnacle-Anker oder historisch schwacher Bucket. Nach unten sortiert.</td></tr>'; }
       var dirTag=g.moneyDir==='in'?'<span style="font-size:8.5px;font-weight:800;color:#2ee08a;background:rgba(46,224,138,.14);padding:1px 5px;border-radius:5px">BACK</span>'
                  :g.moneyDir==='out'?'<span style="font-size:8.5px;font-weight:800;color:#ff5d5d;background:rgba(255,93,93,.14);padding:1px 5px;border-radius:5px">DRIFT</span>':'';
       var conv=_tConvMeter(g);
       var clv=(r.b&&r.b.n>=10)?('<span style="font-family:monospace;font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:5px;color:'+(r.b.roi>0?'#2ee08a':r.b.roi<0?'#ff5d5d':C.mut)+';background:'+(r.b.roi>0?'rgba(46,224,138,.1)':r.b.roi<0?'rgba(255,93,93,.1)':'transparent')+'">'+(r.b.roi>0?'🟢':r.b.roi<0?'🔴':'⚪')+' '+Math.round(r.b.hitRate*100)+'% · n'+r.b.n+'</span>'):'<span style="color:'+C.dim+';font-size:10px">dünn</span>';
       var ko=g.live?'<span style="color:#ff5d5d;font-weight:700;font-family:monospace">● LIVE</span>':'<span style="font-family:monospace;color:'+C.mut+'">'+_tKoTxt(g.kickoff)+'</span>';
       var stakeCell=r.hk>0?('<b>'+_tEur(bank*r.hk)+'</b> <span style="color:'+C.dim+';font-weight:600">'+(r.hk*100).toFixed(1)+'%</span>'):'—';
-      out+='<tr onclick="_bfTermOpen(\''+g.matchId+'\')" style="border-bottom:1px solid rgba(255,255,255,.045);cursor:pointer;background:'+(open?'rgba(76,194,255,.06)':'transparent')+'">'
+      out+='<tr onclick="_bfTermOpen(\''+g.matchId+'\')" style="border-bottom:1px solid rgba(255,255,255,.045);cursor:pointer;opacity:'+(r.mute.m?'0.5':'1')+';background:'+(open?'rgba(76,194,255,.06)':'transparent')+'">'
         +'<td style="padding:7px 10px">'+ko+'</td>'
         +'<td style="padding:7px 10px"><span style="color:'+C.dim+';margin-right:4px">'+(open?'▾':'▸')+'</span><b>'+esc(g.home)+'</b> <span style="color:'+C.dim+'">v '+esc(g.away)+'</span><div style="font-size:10px;color:'+C.dim+';padding-left:14px">'+esc(g.league||'')+'</div></td>'
-        +'<td style="padding:7px 10px;font-family:monospace"><b>'+esc(g.moneyName)+'</b> <span style="color:#5eead4">@'+(g.moneyOdd||'—')+'</span></td>'
+        +'<td style="padding:7px 10px;font-family:monospace"><b>'+esc(g.moneyName)+'</b> <span style="color:#5eead4">@'+(g.moneyOdd||'—')+'</span>'+(r.mute.m?' <span style="font-family:system-ui;font-size:8.5px;color:'+C.dim+';border:1px solid '+C.bd+';padding:0 4px;border-radius:4px;white-space:nowrap">🔇 '+esc(r.mute.r)+'</span>':'')+'</td>'
         +'<td style="padding:7px 10px;text-align:right;font-family:monospace;font-weight:800;color:'+eCol(e)+'">'+(e==null?'—':(e>=0?'+':'')+(e*100).toFixed(1)+'%')+'</td>'
         +'<td style="padding:7px 10px;text-align:right;white-space:nowrap">'+conv+'</td>'
         +'<td style="padding:7px 10px;text-align:right;font-family:monospace;white-space:nowrap">'+_tEur(g.totVol)+' '+dirTag+'</td>'
@@ -1620,6 +1632,7 @@
   try{ var _cb=(typeof localStorage!=='undefined')&&localStorage.getItem('cocoBank'); if(_cb!=null&&_cb!==false&&!isNaN(+_cb)) _bf.bankroll=+_cb; }catch(e){}
   window._bfTermOpen = function (mid) { _bf.termOpen = (String(_bf.termOpen)===String(mid))?null:mid; rerender(); };
   window._bfTermBank = function (v) { var n=parseFloat(v); if(isNaN(n)||n<0) n=0; _bf.bankroll=n; try{localStorage.setItem('cocoBank',n);}catch(e){} rerender(); };
+  window._bfTermMute = function (v) { _bf.termHideMuted=!!v; rerender(); };
   window._bfSetView = function (v) { _bf.view = v; rerender(); };
   window._bfSetTrackBy = function (v) { _bf.trackBy = v; rerender(); };
   window._bfSetLeague = function (v) { _bf.league = v; rerender(); };

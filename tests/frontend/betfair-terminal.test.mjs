@@ -22,6 +22,15 @@ function consensusFixture() {
       kickoff: iso(90 * 60e3), moneySide: 'home', moneyName: 'Gamma', moneyOdd: 1.20,
       moneyDir: 'out', totVol: 25000, pinn: { home: 0.82, draw: 0.12, away: 0.06, fav: 'away' },
       verdict: 'uneinig', pinnMovePP: -2.0, poly: null },
+    // C: kein Pinnacle-Anker -> muss gemutet werden ('kein Anker')
+    { matchId: 'C', home: 'Epsilon', away: 'Zeta', league: 'Klein Liga', live: true,
+      kickoff: iso(-10 * 60e3), moneySide: 'home', moneyName: 'Epsilon', moneyOdd: 1.05,
+      moneyDir: 'in', totVol: 5000, pinn: null, verdict: 'no_anchor', poly: null },
+    // D: Anker da, aber historisch schwacher CLV-Bucket -> muss gemutet werden ('Bucket')
+    { matchId: 'D', home: 'Eta', away: 'Theta', league: 'Schwach Liga', live: false,
+      kickoff: iso(120 * 60e3), moneySide: 'home', moneyName: 'Eta', moneyOdd: 1.60,
+      moneyDir: 'in', totVol: 30000, pinn: { home: 0.66, draw: 0.2, away: 0.14, fav: 'home' },
+      verdict: 'konsens', pinnMovePP: 0.5, poly: { sharePct: 60, odd: 1.6, vol: 20000 } },
   ] };
 }
 function histFixture() {
@@ -46,6 +55,7 @@ function boot() {
   w._bfState.data = { matches: [] };   // sonst triggert renderBetfairRadar einen fetch (kein Netz im Test)
   w._bfState.consensus = consensusFixture();
   w._bfState.hist = histFixture();
+  w._bfState.track = { n: 500, byLeagueMarket: { 'Schwach Liga|Match Odds': { n: 12, roi: -0.12, hitRate: 0.30 } } };
   w._bfState.loading = false;
   w._bfState.view = 'terminal';
   return w;
@@ -102,6 +112,24 @@ test('Konviktions-Score (P4): einig+Geld-rein+Steam hoch, Widerspruch+Drift nied
   // Gamma (uneinig+out) muss klar niedriger sein
   w._bfTermOpen('A'); w._bfTermOpen('B');
   assert.match(panel(w), /⚠ Widerspruch|Schwach/, 'Gamma niedrige Konviktion / Widerspruch');
+});
+
+test('Auto-Mute (P1): kein-Anker & schwacher Bucket werden gemutet, nach unten sortiert, ausblendbar', () => {
+  const w = boot();
+  const board = panel(w);
+  assert.match(board, /Nicht handelbar \(gemutet\)/, 'Trenn-Zeile für gemutete Reihen');
+  assert.match(board, /🔇 kein Anker/, 'no-anchor-Zeile trägt kein-Anker-Tag');
+  assert.match(board, /🔇 Bucket -12% ROI/, 'schwacher-Bucket-Zeile trägt Bucket-Tag');
+  // gemutete Zeilen (C/D) stehen unter den handelbaren (Alpha/Gamma)
+  assert.ok(board.indexOf('Alpha') < board.indexOf('Epsilon'), 'handelbar vor kein-Anker');
+  assert.ok(board.indexOf('Gamma') < board.indexOf('Eta'), 'handelbar vor schwachem Bucket');
+  // Toggle blendet gemutete komplett aus
+  w._bfTermMute(true);
+  const hidden = panel(w);
+  assert.ok(!/Epsilon/.test(hidden) && !/Eta/.test(hidden), 'gemutete Zeilen ausgeblendet');
+  assert.match(hidden, /Alpha/, 'handelbare bleiben sichtbar');
+  w._bfTermMute(false);
+  assert.match(panel(w), /Epsilon/, 'Toggle zeigt gemutete wieder');
 });
 
 test('Konsens-View bleibt unbeschädigt (additiv)', () => {
