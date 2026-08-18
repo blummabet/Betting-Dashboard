@@ -343,6 +343,19 @@ def match_poly(m, ms, poly_entries):
             "sharePct": share_pct}
 
 
+
+def pick_poly(m, ms, is_live, poly_close, poly_live, poly_upcoming):
+    """Poly-Quelle je Phase (18.08.2026, Lucas): LAUFENDES Spiel -> frische Live-Poly ZUERST (sonst
+    zeigt der Terminal auf einem Live-Spiel die eingefrorene Pre-Match-Quote aus dem Close-Pool).
+    Nicht-live: Close (<=3h Freeze, mit Holder-Shares) zuerst, dann Upcoming (weit vor Anpfiff, Preis+Vol).
+    Rein additiv/reine Auswahl-Logik, ohne Netz testbar."""
+    poly = match_poly(m, ms, poly_live) if is_live else None
+    if poly is None:
+        poly = match_poly(m, ms, poly_close)
+    if poly is None:
+        poly = match_poly(m, ms, poly_upcoming)
+    return poly
+
 def match_event(m, evs):
     """Bestes Odds-Event zum Betfair-Spiel, orientiert auf dessen Heim/Auswaerts. None wenn kein Match."""
     home, away = m.get("home"), m.get("away")
@@ -839,17 +852,13 @@ def main():
         k = LEAGUE_ODDS_KEY.get(m.get("league"))
         ev = match_event(m, events_by_key.get(k, [])) if k else None
         tev = match_event(m, totals_by_key.get(k, [])) if k else None
-        poly = match_poly(m, money_side(m), poly_entries)
-        if poly is None:
-            # 18.08.2026 (Lucas): Terminal-Konviktion zeigte „kein Poly-Markt" fuer Spiele >3h vor Anpfiff
-            # (Atletico-Malaga), obwohl Poly den Markt hat — der Close-Freeze faengt nur <=3h. Fallback auf
-            # LIVE (laufend) bzw. die breitere UPCOMING-Erfassung (Preis+Vol, kein Holder-Freeze) → Poly-Quote
-            # erscheint auch frueh. sharePct bleibt None (keine Holder-Daten), odd+vol sind da. Rein additiv:
-            # Close-Treffer haben weiter Vorrang, nur bisher leeres poly wird gefuellt.
-            _li = m.get("liveInfo") or {}
-            _isl = bool(_li.get("time")) and not _li.get("finished")
-            poly = ((match_poly(m, money_side(m), poly_live_entries) if _isl else None)
-                    or match_poly(m, money_side(m), poly_upcoming_entries))
+        # Poly-Quelle je nach Phase (18.08.2026, Lucas): LAUFENDES Spiel -> FRISCHE Live-Poly hat Vorrang,
+        # sonst zeigte der Terminal auf einem Live-Spiel die eingefrorene Pre-Match-Quote aus dem Close-Pool.
+        # Nicht-live: Close (<=3h Freeze, mit Holder-Shares) zuerst, dann die breitere Upcoming-Erfassung
+        # (Preis+Vol, kein Freeze) fuer Spiele weit vor Anpfiff. sharePct kann bei live/upcoming None sein.
+        _li = m.get("liveInfo") or {}
+        _isl = bool(_li.get("time")) and not _li.get("finished")
+        poly = pick_poly(m, money_side(m), _isl, poly_entries, poly_live_entries, poly_upcoming_entries)
         prevlist = hist.get(mid) or []
         prev = prevlist[-1] if prevlist else None
         g = build_game(m, ev, prev, direction, poly, totals_ev=tev)
