@@ -1,101 +1,75 @@
 {
-"updatedAt": "2026-08-18T03:55:52.145135+00:00",
+"updatedAt": "2026-08-18T04:11:22.013906+00:00",
 "record": {
-"updatedAt": "2026-08-18T03:55:52.145135+00:00",
-"settled": 2882,
-"open": 118,
+"updatedAt": "2026-08-18T04:11:22.013906+00:00",
+"settled": 2894,
+"open": 106,
 "buckets": {
 "alle": {
-"n": 2882,
-"posRate": 0.445,
-"avgClv": -1.13,
-"avgClv30": 0.06
+"n": 2894,
+"posRate": 0.444,
+"avgClv": -1.16,
+"avgClv30": 0.07
 },
 "sharp": {
-"n": 108,
-"posRate": 0.435,
-"avgClv": -4.42,
-"avgClv30": -0.61
+"n": 109,
+"posRate": 0.431,
+"avgClv": -4.57,
+"avgClv30": -0.6
 },
 "valueZone": {
-"n": 1474,
+"n": 1477,
 "posRate": 0.5,
-"avgClv": -0.71,
-"avgClv30": 1.05
+"avgClv": -0.66,
+"avgClv30": 1.1
 },
 "mature": {
-"n": 1899,
-"posRate": 0.447,
-"avgClv": -1.36,
-"avgClv30": 0.48
+"n": 1903,
+"posRate": 0.445,
+"avgClv": -1.42,
+"avgClv30": 0.45
 },
 "notChasing": {
-"n": 1742,
-"posRate": 0.471,
+"n": 1753,
+"posRate": 0.469,
 "avgClv": -1.4,
-"avgClv30": 0.03
+"avgClv30": 0.05
 },
 "chasing": {
-"n": 1140,
-"posRate": 0.406,
-"avgClv": -0.73,
-"avgClv30": 0.11
+"n": 1141,
+"posRate": 0.405,
+"avgClv": -0.78,
+"avgClv30": 0.09
 },
 "bySize": {
 "10-25k": {
 "n": 590,
-"posRate": 0.453,
-"avgClv": -1.68,
-"avgClv30": 0.18
+"posRate": 0.451,
+"avgClv": -1.75,
+"avgClv30": 0.1
 },
 "5-10k": {
-"n": 663,
-"posRate": 0.442,
-"avgClv": -1.36,
-"avgClv30": 0.52
+"n": 669,
+"posRate": 0.439,
+"avgClv": -1.35,
+"avgClv30": 0.6
 },
 "2-5k": {
-"n": 1316,
-"posRate": 0.438,
-"avgClv": -1.13,
-"avgClv30": -0.33
+"n": 1320,
+"posRate": 0.439,
+"avgClv": -1.08,
+"avgClv30": -0.27
 },
 "25k+": {
-"n": 313,
-"posRate": 0.466,
-"avgClv": 0.36,
-"avgClv30": 0.5
+"n": 315,
+"posRate": 0.463,
+"avgClv": 0.07,
+"avgClv30": 0.28
 }
 }
 }
 },
 "ledger": [
-{
-"sig": "mlb-col-sf-2026-08-15|0x5268527977f700f9bf9b6d5cd843859e4e70135d",
-"key": "mlb-col-sf-2026-08-15",
-"side": "San Francisco Giants",
-"wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
-"usd": 10733,
-"league": "MLB",
-"entryPrice": 0.8,
-"totalUsd": 240216,
-"movePP": 33.5,
-"flags": {
-"valueZone": false,
-"mature": true,
-"notChasing": false,
-"sharp": false,
-"sizeBand": "10-25k"
-},
-"firstTs": "2026-08-15T21:20:47.702999+00:00",
-"status": "settled",
-"latestPrice": 0.977,
-"clvPP": 17.7,
-"clv30": 17.7,
-"updatedAt": "2026-08-15T21:32:01.861329+00:00",
-"finalClvPP": 17.7,
-"settledAt": "2026-08-15T21:32:01.861329+00:00"
-},
 {
 "sig": "wta-cirstea-bartunk-2026-08-15|0x5c035da7d3df55a0458706830c542eda097a31bb",
 "key": "wta-cirstea-bartunk-2026-08-15",
@@ -75260,11 +75234,13 @@
 "sizeBand": "5-10k"
 },
 "firstTs": "2026-08-17T18:09:54.498010+00:00",
-"status": "open",
+"status": "settled",
 "latestPrice": 0.695,
 "clvPP": -6.0,
 "clv30": 0.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T03:55:52.145135+00:00",
+"finalClvPP": -6.0,
+"settledAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "wta-shnaide-chwalin-2026-08-17|0xe954ddb021c19495f1c556f59dadbd1494821ef1",
@@ -75284,11 +75260,13 @@
 "sizeBand": "2-5k"
 },
 "firstTs": "2026-08-17T18:09:54.498010+00:00",
-"status": "open",
+"status": "settled",
 "latestPrice": 0.305,
 "clvPP": 6.0,
 "clv30": 0.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T03:55:52.145135+00:00",
+"finalClvPP": 6.0,
+"settledAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "wta-shnaide-chwalin-2026-08-17|0xf377b9fb12a4b7507a4f997461a73eb30b564159",
@@ -75308,11 +75286,13 @@
 "sizeBand": "2-5k"
 },
 "firstTs": "2026-08-17T18:09:54.498010+00:00",
-"status": "open",
+"status": "settled",
 "latestPrice": 0.695,
 "clvPP": -6.0,
 "clv30": 0.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T03:55:52.145135+00:00",
+"finalClvPP": -6.0,
+"settledAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "wta-shnaide-chwalin-2026-08-17|0xde9f7f4e77a1595623ceb58e469f776257ccd43c",
@@ -75332,11 +75312,13 @@
 "sizeBand": "5-10k"
 },
 "firstTs": "2026-08-17T19:10:57.826669+00:00",
-"status": "open",
+"status": "settled",
 "latestPrice": 0.695,
 "clvPP": -6.0,
 "clv30": 15.5,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T03:55:52.145135+00:00",
+"finalClvPP": -6.0,
+"settledAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "wta-shnaide-chwalin-2026-08-17|0x1a9567b6373a835a7425381406e1a952ccf73a16",
@@ -75356,11 +75338,13 @@
 "sizeBand": "2-5k"
 },
 "firstTs": "2026-08-17T19:25:58.073537+00:00",
-"status": "open",
+"status": "settled",
 "latestPrice": 0.695,
 "clvPP": -13.0,
 "clv30": 8.5,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T03:55:52.145135+00:00",
+"finalClvPP": -13.0,
+"settledAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "wta-shnaide-chwalin-2026-08-17|0x9bb1bc70c9e098f2f297416d06a0aa3992534dbe",
@@ -75380,11 +75364,13 @@
 "sizeBand": "25k+"
 },
 "firstTs": "2026-08-17T19:39:04.068610+00:00",
-"status": "open",
+"status": "settled",
 "latestPrice": 0.695,
 "clvPP": -18.0,
 "clv30": 3.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T03:55:52.145135+00:00",
+"finalClvPP": -18.0,
+"settledAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "wta-shnaide-chwalin-2026-08-17|0x441909510a0b18a7df9f5ea588314a53d5bcfcf4",
@@ -75404,11 +75390,13 @@
 "sizeBand": "5-10k"
 },
 "firstTs": "2026-08-17T19:57:09.586406+00:00",
-"status": "open",
+"status": "settled",
 "latestPrice": 0.695,
 "clvPP": -21.5,
 "clv30": -0.5,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T03:55:52.145135+00:00",
+"finalClvPP": -21.5,
+"settledAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "wta-shnaide-chwalin-2026-08-17|0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
@@ -75428,11 +75416,13 @@
 "sizeBand": "5-10k"
 },
 "firstTs": "2026-08-17T20:08:41.688304+00:00",
-"status": "open",
+"status": "settled",
 "latestPrice": 0.695,
 "clvPP": -21.0,
 "clv30": 0.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T03:55:52.145135+00:00",
+"finalClvPP": -21.0,
+"settledAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-onclin-mccabe-2026-08-17|0xd8b4d1e58dc7d60ddc886bcb9d456eb5da887773",
@@ -75456,7 +75446,7 @@
 "latestPrice": 0.495,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-onclin-mccabe-2026-08-17|0x2ae1122086095bfadca58cb5cd142926059fe179",
@@ -75480,7 +75470,7 @@
 "latestPrice": 0.505,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-onclin-mccabe-2026-08-17|0x160bf4f27cdaaaed1408ccd1558ab30c210d4296",
@@ -75504,7 +75494,7 @@
 "latestPrice": 0.505,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-hijikat-mensik-2026-08-17|0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
@@ -75528,7 +75518,7 @@
 "latestPrice": 0.9585,
 "clvPP": 18.4,
 "clv30": 0.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-hijikat-mensik-2026-08-17|0xdb859a551fcf56e49416160911476bea7307152f",
@@ -75552,7 +75542,7 @@
 "latestPrice": 0.0415,
 "clvPP": -18.4,
 "clv30": 0.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-hijikat-mensik-2026-08-17|0x73e5cd209c144497b2fe399ab6698bffb62ce3d8",
@@ -75576,7 +75566,7 @@
 "latestPrice": 0.9585,
 "clvPP": 18.4,
 "clv30": 0.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-hijikat-mensik-2026-08-17|0x877fdb546da48353fd712056495f66e31dad8f3b",
@@ -75600,7 +75590,7 @@
 "latestPrice": 0.9585,
 "clvPP": 18.4,
 "clv30": 0.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "wta-shnaide-chwalin-2026-08-17|0x204f72f35326db932158cba6adff0b9a1da95e14",
@@ -75620,11 +75610,13 @@
 "sizeBand": "10-25k"
 },
 "firstTs": "2026-08-17T20:56:12.168832+00:00",
-"status": "open",
+"status": "settled",
 "latestPrice": 0.695,
 "clvPP": -22.0,
 "clv30": -24.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T03:55:52.145135+00:00",
+"finalClvPP": -22.0,
+"settledAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "wta-shnaide-chwalin-2026-08-17|0x5268527977f700f9bf9b6d5cd843859e4e70135d",
@@ -75644,11 +75636,13 @@
 "sizeBand": "5-10k"
 },
 "firstTs": "2026-08-17T20:56:12.168832+00:00",
-"status": "open",
+"status": "settled",
 "latestPrice": 0.695,
 "clvPP": -22.0,
 "clv30": -24.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T03:55:52.145135+00:00",
+"finalClvPP": -22.0,
+"settledAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-onclin-mccabe-2026-08-17|0x2f017a99ea9531a4d7760e67f0ce3b17982afa78",
@@ -75672,7 +75666,7 @@
 "latestPrice": 0.495,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-hijikat-mensik-2026-08-17|0x5ba61105b276b4e793d0b5a5d773b78186720f07",
@@ -75696,7 +75690,7 @@
 "latestPrice": 0.9585,
 "clvPP": 18.4,
 "clv30": 0.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-alves-pavlovi-2026-08-17|0x41b4cd880a61de2f5728594decf7f2cbfc2a10da",
@@ -75720,7 +75714,7 @@
 "latestPrice": 0.635,
 "clvPP": 19.0,
 "clv30": 21.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-alves-pavlovi-2026-08-17|0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
@@ -75744,7 +75738,7 @@
 "latestPrice": 0.365,
 "clvPP": -19.0,
 "clv30": -21.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-alves-pavlovi-2026-08-17|0xc2930286341961a77363298e5b63271530f5fac3",
@@ -75768,7 +75762,7 @@
 "latestPrice": 0.365,
 "clvPP": -19.0,
 "clv30": -21.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-bal-tb-2026-08-17|0x4be1fa92e6ceaf886aac0bbec3be6c527133aa70",
@@ -75792,7 +75786,7 @@
 "latestPrice": 0.205,
 "clvPP": -19.0,
 "clv30": -3.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-bal-tb-2026-08-17|0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
@@ -75816,7 +75810,7 @@
 "latestPrice": 0.795,
 "clvPP": 19.0,
 "clv30": 3.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-bal-tb-2026-08-17|0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -75840,7 +75834,7 @@
 "latestPrice": 0.795,
 "clvPP": 19.0,
 "clv30": 3.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-bal-tb-2026-08-17|0x16bb9951a36fce71e2ef57890b786145e0ba8492",
@@ -75864,7 +75858,7 @@
 "latestPrice": 0.795,
 "clvPP": 19.0,
 "clv30": 3.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-harri-shelba-2026-08-17|0x984b1c59a883393abede657aa6706e2c6035867a",
@@ -75888,7 +75882,7 @@
 "latestPrice": 0.375,
 "clvPP": -2.0,
 "clv30": -2.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-harri-shelba-2026-08-17|0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
@@ -75912,7 +75906,7 @@
 "latestPrice": 0.625,
 "clvPP": 2.0,
 "clv30": 2.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-harri-shelba-2026-08-17|0x9c3ce009c9b039956665cecc4cd14de862b5e8c9",
@@ -75936,7 +75930,7 @@
 "latestPrice": 0.625,
 "clvPP": 2.0,
 "clv30": 2.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-harri-shelba-2026-08-17|0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
@@ -75960,7 +75954,7 @@
 "latestPrice": 0.625,
 "clvPP": 2.0,
 "clv30": 2.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-bal-tb-2026-08-17|0x2dc13c6bda81b202281e796953a7323de675b33c",
@@ -75984,7 +75978,7 @@
 "latestPrice": 0.205,
 "clvPP": -33.5,
 "clv30": 21.5,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-stl-cin-2026-08-17|0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
@@ -76008,7 +76002,7 @@
 "latestPrice": 0.545,
 "clvPP": -4.0,
 "clv30": -28.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-stl-cin-2026-08-17|0x7542fa229f63a7bd8a9ca4584638004a39317a20",
@@ -76032,7 +76026,7 @@
 "latestPrice": 0.455,
 "clvPP": 4.0,
 "clv30": 28.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-stl-cin-2026-08-17|0xf95846967c9093e4881506162077ec8f7049db13",
@@ -76056,7 +76050,7 @@
 "latestPrice": 0.545,
 "clvPP": -4.0,
 "clv30": -28.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-stl-cin-2026-08-17|0xabb89972b21b304c1bed2bf26f35c8741ac9bba3",
@@ -76080,7 +76074,7 @@
 "latestPrice": 0.545,
 "clvPP": -4.0,
 "clv30": -28.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-bicknel-purcell-2026-08-17|0xb7aba0e44edb6773c3b3a8308aae8a24781fa2d1",
@@ -76104,7 +76098,7 @@
 "latestPrice": 0.575,
 "clvPP": -19.0,
 "clv30": 1.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-det-pit-2026-08-17|0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
@@ -76128,7 +76122,7 @@
 "latestPrice": 0.0665,
 "clvPP": -42.9,
 "clv30": -25.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-det-pit-2026-08-17|0x3dfb153c197d4c19d3b31c1ecd2c7b6860eeabaf",
@@ -76152,7 +76146,7 @@
 "latestPrice": 0.9335,
 "clvPP": 42.9,
 "clv30": 25.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-det-pit-2026-08-17|0xdb859a551fcf56e49416160911476bea7307152f",
@@ -76176,7 +76170,7 @@
 "latestPrice": 0.0665,
 "clvPP": -42.9,
 "clv30": -25.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-det-pit-2026-08-17|0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
@@ -76200,7 +76194,7 @@
 "latestPrice": 0.9335,
 "clvPP": 42.9,
 "clv30": 25.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-hijikat-mensik-2026-08-17|0x42c99f38d2b951b0dc8e8bd5371fa80c9dd19623",
@@ -76224,7 +76218,7 @@
 "latestPrice": 0.9585,
 "clvPP": 13.4,
 "clv30": 6.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-hijikat-mensik-2026-08-17|0x6485f47d0344c03eb4340f985159f6eb2dcba265",
@@ -76248,7 +76242,7 @@
 "latestPrice": 0.9585,
 "clvPP": 13.4,
 "clv30": 6.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-hijikat-mensik-2026-08-17|0xde9f7f4e77a1595623ceb58e469f776257ccd43c",
@@ -76272,7 +76266,7 @@
 "latestPrice": 0.9585,
 "clvPP": 13.4,
 "clv30": 6.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-bal-tb-2026-08-17|0x3dfb153c197d4c19d3b31c1ecd2c7b6860eeabaf",
@@ -76296,7 +76290,7 @@
 "latestPrice": 0.205,
 "clvPP": -55.0,
 "clv30": -47.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-stl-cin-2026-08-17|0xfd672b99a7cc7835bf931f0cea09bf7f7680ef90",
@@ -76320,7 +76314,7 @@
 "latestPrice": 0.455,
 "clvPP": -24.0,
 "clv30": -18.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-stl-cin-2026-08-17|0x4f29e103339919c4baaea2a60195cf1c8bb27a7e",
@@ -76344,7 +76338,7 @@
 "latestPrice": 0.455,
 "clvPP": -24.0,
 "clv30": -18.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-det-pit-2026-08-17|0xa71093cafc0c099b4ccab24c3cb8018d817923c4",
@@ -76368,7 +76362,7 @@
 "latestPrice": 0.9335,
 "clvPP": 17.8,
 "clv30": 14.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-det-pit-2026-08-17|0xf43842aca68209bd8bd3b4cfae00a32053769559",
@@ -76392,7 +76386,7 @@
 "latestPrice": 0.9335,
 "clvPP": 5.8,
 "clv30": 8.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-atl-min-2026-08-17|0x1ab3580b6d258e31ca0a3efdb93173d081dd64af",
@@ -76416,7 +76410,7 @@
 "latestPrice": 0.875,
 "clvPP": 43.0,
 "clv30": 2.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-atl-min-2026-08-17|0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
@@ -76440,7 +76434,7 @@
 "latestPrice": 0.125,
 "clvPP": -43.0,
 "clv30": -2.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-atl-min-2026-08-17|0xf95846967c9093e4881506162077ec8f7049db13",
@@ -76464,7 +76458,7 @@
 "latestPrice": 0.125,
 "clvPP": -43.0,
 "clv30": -2.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-atl-min-2026-08-17|0xa0f21e6d351baa9185716b5c00c2925ed9621848",
@@ -76488,7 +76482,7 @@
 "latestPrice": 0.125,
 "clvPP": -43.0,
 "clv30": -2.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-mia-phi-2026-08-17|0x82398835fe16616214d928ba87127e28fc1cd9a3",
@@ -76512,7 +76506,7 @@
 "latestPrice": 0.845,
 "clvPP": 9.0,
 "clv30": 9.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-mia-phi-2026-08-17|0xf1528f12e645462c344799b62b1b421a6a4c64aa",
@@ -76536,7 +76530,7 @@
 "latestPrice": 0.845,
 "clvPP": 9.0,
 "clv30": 9.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-mia-phi-2026-08-17|0x43cab54b56aba79c29c1ba14b889e7de5532c219",
@@ -76560,7 +76554,7 @@
 "latestPrice": 0.155,
 "clvPP": -9.0,
 "clv30": -9.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-cws-chc-2026-08-17|0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
@@ -76584,7 +76578,7 @@
 "latestPrice": 0.805,
 "clvPP": 39.0,
 "clv30": -21.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-cws-chc-2026-08-17|0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
@@ -76608,7 +76602,7 @@
 "latestPrice": 0.195,
 "clvPP": -39.0,
 "clv30": 21.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-cws-chc-2026-08-17|0x9f15613ebf1f36d4bc679e1211d1fc567cf9bdb3",
@@ -76632,7 +76626,7 @@
 "latestPrice": 0.195,
 "clvPP": -39.0,
 "clv30": 21.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-cws-chc-2026-08-17|0x56acab44cfca2e88bb9b3406890aea7bfa0cd77e",
@@ -76656,7 +76650,7 @@
 "latestPrice": 0.195,
 "clvPP": -39.0,
 "clv30": 21.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-mia-phi-2026-08-17|0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
@@ -76680,7 +76674,7 @@
 "latestPrice": 0.845,
 "clvPP": -5.0,
 "clv30": -5.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-hijikat-mensik-2026-08-17|0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
@@ -76704,7 +76698,7 @@
 "latestPrice": 0.9585,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-hijikat-mensik-2026-08-17|0x986b121c40e715167dde178b8520bf132a57bdc6",
@@ -76728,7 +76722,7 @@
 "latestPrice": 0.9585,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-bicknel-purcell-2026-08-17|0x29788995bd3d54faec1c4cf8b37f564793deb511",
@@ -76752,7 +76746,7 @@
 "latestPrice": 0.425,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-atl-min-2026-08-17|0x8fba2c29715c41dd87e781c23373aa1e0549d08a",
@@ -76776,7 +76770,7 @@
 "latestPrice": 0.875,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-atl-min-2026-08-17|0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -76800,7 +76794,7 @@
 "latestPrice": 0.875,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-atl-min-2026-08-17|0xf2b51ac841854ede9bf46f3e38dea6d979d32e6d",
@@ -76824,7 +76818,7 @@
 "latestPrice": 0.875,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-atl-min-2026-08-17|0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
@@ -76848,7 +76842,7 @@
 "latestPrice": 0.875,
 "clvPP": 12.0,
 "clv30": 12.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-atl-min-2026-08-17|0x7542fa229f63a7bd8a9ca4584638004a39317a20",
@@ -76872,7 +76866,7 @@
 "latestPrice": 0.125,
 "clvPP": -12.0,
 "clv30": -12.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-atl-min-2026-08-17|0x4f29e103339919c4baaea2a60195cf1c8bb27a7e",
@@ -76896,7 +76890,7 @@
 "latestPrice": 0.875,
 "clvPP": 12.0,
 "clv30": 12.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "wta-eala-anisimo-2026-08-17|0x59018ff1f4300838f635386ab5e0b8b353ce63a2",
@@ -76917,10 +76911,10 @@
 },
 "firstTs": "2026-08-18T02:19:20.979263+00:00",
 "status": "open",
-"latestPrice": 0.255,
-"clvPP": -27.0,
+"latestPrice": 0.535,
+"clvPP": 1.0,
 "clv30": 6.5,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "wta-eala-anisimo-2026-08-17|0xaa7789219c17e180dcb5933099c90d885f1d15a5",
@@ -76941,10 +76935,10 @@
 },
 "firstTs": "2026-08-18T02:19:20.979263+00:00",
 "status": "open",
-"latestPrice": 0.255,
-"clvPP": -27.0,
+"latestPrice": 0.535,
+"clvPP": 1.0,
 "clv30": 6.5,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "wta-eala-anisimo-2026-08-17|0x0cdff1e562faf5ece704ef15f6a9fc4232e7ec9e",
@@ -76965,10 +76959,10 @@
 },
 "firstTs": "2026-08-18T02:19:20.979263+00:00",
 "status": "open",
-"latestPrice": 0.255,
-"clvPP": -27.0,
+"latestPrice": 0.535,
+"clvPP": 1.0,
 "clv30": 6.5,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "wta-eala-anisimo-2026-08-17|0xb272505077cc2c6bde5acca133ea6364152e5030",
@@ -76989,10 +76983,10 @@
 },
 "firstTs": "2026-08-18T02:19:20.979263+00:00",
 "status": "open",
-"latestPrice": 0.745,
-"clvPP": 27.0,
+"latestPrice": 0.465,
+"clvPP": -1.0,
 "clv30": -6.5,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-cws-chc-2026-08-17|0x3dfb153c197d4c19d3b31c1ecd2c7b6860eeabaf",
@@ -77016,7 +77010,7 @@
 "latestPrice": 0.805,
 "clvPP": 6.0,
 "clv30": 6.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-cws-chc-2026-08-17|0xaa7789219c17e180dcb5933099c90d885f1d15a5",
@@ -77040,7 +77034,7 @@
 "latestPrice": 0.805,
 "clvPP": 6.0,
 "clv30": 6.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-cws-chc-2026-08-17|0x5268527977f700f9bf9b6d5cd843859e4e70135d",
@@ -77064,7 +77058,7 @@
 "latestPrice": 0.195,
 "clvPP": -6.0,
 "clv30": -6.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "wta-eala-anisimo-2026-08-17|0x0e604be17c231a33dc01e38a722c7fe3984e3bad",
@@ -77085,10 +77079,10 @@
 },
 "firstTs": "2026-08-18T02:34:22.798819+00:00",
 "status": "open",
-"latestPrice": 0.255,
-"clvPP": -25.0,
+"latestPrice": 0.535,
+"clvPP": 3.0,
 "clv30": 8.5,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-cws-chc-2026-08-17|0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -77112,7 +77106,7 @@
 "latestPrice": 0.805,
 "clvPP": 4.0,
 "clv30": 4.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "wta-eala-anisimo-2026-08-17|0x0353aaf82abbd3e69c00059df0a825bc198fc2ff",
@@ -77133,10 +77127,10 @@
 },
 "firstTs": "2026-08-18T02:49:20.075367+00:00",
 "status": "open",
-"latestPrice": 0.745,
-"clvPP": 26.0,
+"latestPrice": 0.465,
+"clvPP": -2.0,
 "clv30": -20.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-paul-vallejo-2026-08-17|0x49e0265d1a3636870df298e2ef5e681e246e9af1",
@@ -77157,10 +77151,10 @@
 },
 "firstTs": "2026-08-18T02:49:20.075367+00:00",
 "status": "open",
-"latestPrice": 0.61,
-"clvPP": -16.5,
+"latestPrice": 0.735,
+"clvPP": -4.0,
 "clv30": -30.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mlb-cws-chc-2026-08-17|0x4f29e103339919c4baaea2a60195cf1c8bb27a7e",
@@ -77184,7 +77178,7 @@
 "latestPrice": 0.805,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-paul-vallejo-2026-08-17|0x8bfee7aeca33003fe9d7398d5143dc7866542d74",
@@ -77205,10 +77199,10 @@
 },
 "firstTs": "2026-08-18T03:07:30.853606+00:00",
 "status": "open",
-"latestPrice": 0.61,
-"clvPP": -13.5,
+"latestPrice": 0.735,
+"clvPP": -1.0,
 "clv30": -48.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-paul-vallejo-2026-08-17|0xade215552e9f86df1a72fbf9a13672fa0f75e86d",
@@ -77229,10 +77223,10 @@
 },
 "firstTs": "2026-08-18T03:07:30.853606+00:00",
 "status": "open",
-"latestPrice": 0.61,
-"clvPP": -13.5,
+"latestPrice": 0.735,
+"clvPP": -1.0,
 "clv30": -48.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-paul-vallejo-2026-08-17|0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -77253,10 +77247,10 @@
 },
 "firstTs": "2026-08-18T03:07:30.853606+00:00",
 "status": "open",
-"latestPrice": 0.39,
-"clvPP": 13.5,
+"latestPrice": 0.265,
+"clvPP": 1.0,
 "clv30": 48.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-paul-vallejo-2026-08-17|0xd0625e1eb3f7324ea272e1ab92eb98e3ec12d893",
@@ -77277,10 +77271,10 @@
 },
 "firstTs": "2026-08-18T03:07:30.853606+00:00",
 "status": "open",
-"latestPrice": 0.61,
-"clvPP": -13.5,
+"latestPrice": 0.735,
+"clvPP": -1.0,
 "clv30": -48.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mex-pac-pue-2026-08-17|0xdc41c39b95453c943174f369926018f6963bdd7e",
@@ -77304,7 +77298,7 @@
 "latestPrice": 0.265,
 "clvPP": -32.0,
 "clv30": -25.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mex-pac-pue-2026-08-17|0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
@@ -77328,7 +77322,7 @@
 "latestPrice": 0.265,
 "clvPP": -32.0,
 "clv30": -25.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mex-pac-pue-2026-08-17|0x032eb1bc893940263ad0b01889f262fc232f2a9e",
@@ -77352,7 +77346,7 @@
 "latestPrice": 0.265,
 "clvPP": -32.0,
 "clv30": -25.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mex-pac-pue-2026-08-17|0x7ea571c40408f340c1c8fc8eaacebab53c1bde7b",
@@ -77376,7 +77370,7 @@
 "latestPrice": 0.265,
 "clvPP": -32.0,
 "clv30": -25.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "wta-eala-anisimo-2026-08-17|0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
@@ -77397,10 +77391,10 @@
 },
 "firstTs": "2026-08-18T03:22:33.896865+00:00",
 "status": "open",
-"latestPrice": 0.255,
-"clvPP": -46.0,
+"latestPrice": 0.535,
+"clvPP": -18.0,
 "clv30": -46.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "wta-eala-anisimo-2026-08-17|0xdb859a551fcf56e49416160911476bea7307152f",
@@ -77421,10 +77415,10 @@
 },
 "firstTs": "2026-08-18T03:22:33.896865+00:00",
 "status": "open",
-"latestPrice": 0.745,
-"clvPP": 46.0,
+"latestPrice": 0.465,
+"clvPP": 18.0,
 "clv30": 46.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mex-pac-pue-2026-08-17|0x0346afae2603313d2bbee96b628536c8cbe352a5",
@@ -77448,7 +77442,7 @@
 "latestPrice": 0.265,
 "clvPP": -32.0,
 "clv30": -32.0,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "wta-eala-anisimo-2026-08-17|0x085fd7e4886bd3c491d979ea5c8052b0d3d34d1c",
@@ -77469,10 +77463,10 @@
 },
 "firstTs": "2026-08-18T03:37:34.772435+00:00",
 "status": "open",
-"latestPrice": 0.255,
-"clvPP": -1.0,
-"clv30": null,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"latestPrice": 0.535,
+"clvPP": 27.0,
+"clv30": 27.0,
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "wta-eala-anisimo-2026-08-17|0xa0f21e6d351baa9185716b5c00c2925ed9621848",
@@ -77493,10 +77487,10 @@
 },
 "firstTs": "2026-08-18T03:37:34.772435+00:00",
 "status": "open",
-"latestPrice": 0.745,
-"clvPP": 1.0,
-"clv30": null,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"latestPrice": 0.465,
+"clvPP": -27.0,
+"clv30": -27.0,
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-paul-vallejo-2026-08-17|0x5268527977f700f9bf9b6d5cd843859e4e70135d",
@@ -77517,10 +77511,10 @@
 },
 "firstTs": "2026-08-18T03:37:34.772435+00:00",
 "status": "open",
-"latestPrice": 0.39,
-"clvPP": -34.5,
-"clv30": null,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"latestPrice": 0.265,
+"clvPP": -47.0,
+"clv30": -47.0,
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-paul-vallejo-2026-08-17|0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
@@ -77541,10 +77535,10 @@
 },
 "firstTs": "2026-08-18T03:37:34.772435+00:00",
 "status": "open",
-"latestPrice": 0.39,
-"clvPP": -34.5,
-"clv30": null,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"latestPrice": 0.265,
+"clvPP": -47.0,
+"clv30": -47.0,
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mex-pac-pue-2026-08-17|0x44c58184f89a5c2f699dc8943009cb3d75a08d45",
@@ -77567,8 +77561,8 @@
 "status": "open",
 "latestPrice": 0.435,
 "clvPP": 6.0,
-"clv30": null,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"clv30": 6.0,
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mex-pac-pue-2026-08-17|0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
@@ -77591,8 +77585,8 @@
 "status": "open",
 "latestPrice": 0.435,
 "clvPP": 6.0,
-"clv30": null,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"clv30": 6.0,
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "mex-pac-pue-2026-08-17|0x204f72f35326db932158cba6adff0b9a1da95e14",
@@ -77615,8 +77609,8 @@
 "status": "open",
 "latestPrice": 0.435,
 "clvPP": 6.0,
-"clv30": null,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"clv30": 6.0,
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-paul-vallejo-2026-08-17|0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
@@ -77637,10 +77631,10 @@
 },
 "firstTs": "2026-08-18T03:52:31.641908+00:00",
 "status": "open",
-"latestPrice": 0.39,
-"clvPP": -8.0,
+"latestPrice": 0.265,
+"clvPP": -20.5,
 "clv30": null,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-paul-vallejo-2026-08-17|0xaa7789219c17e180dcb5933099c90d885f1d15a5",
@@ -77661,10 +77655,10 @@
 },
 "firstTs": "2026-08-18T03:52:31.641908+00:00",
 "status": "open",
-"latestPrice": 0.61,
-"clvPP": 8.0,
+"latestPrice": 0.735,
+"clvPP": 20.5,
 "clv30": null,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "itf-xingdao-xi-2026-08-18|0xe30e74595517de48f1fb19f4553dd3d9f1e96b87",
@@ -77684,11 +77678,13 @@
 "sizeBand": "25k+"
 },
 "firstTs": "2026-08-18T03:52:31.641908+00:00",
-"status": "open",
-"latestPrice": 0.675,
-"clvPP": -4.5,
-"clv30": null,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"status": "settled",
+"latestPrice": 0.0055,
+"clvPP": -71.5,
+"clv30": -71.5,
+"updatedAt": "2026-08-18T04:11:22.013906+00:00",
+"finalClvPP": -71.5,
+"settledAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "itf-xingdao-xi-2026-08-18|0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
@@ -77708,11 +77704,13 @@
 "sizeBand": "5-10k"
 },
 "firstTs": "2026-08-18T03:52:31.641908+00:00",
-"status": "open",
-"latestPrice": 0.325,
-"clvPP": 4.5,
-"clv30": null,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"status": "settled",
+"latestPrice": 0.9945,
+"clvPP": 71.5,
+"clv30": 71.5,
+"updatedAt": "2026-08-18T04:11:22.013906+00:00",
+"finalClvPP": 71.5,
+"settledAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "itf-mochizu-koyam-2026-08-18|0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
@@ -77733,10 +77731,10 @@
 },
 "firstTs": "2026-08-18T03:52:31.641908+00:00",
 "status": "open",
-"latestPrice": 0.39,
-"clvPP": -2.5,
+"latestPrice": 0.16,
+"clvPP": -25.5,
 "clv30": null,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "itf-huan-saitoh-2026-08-18|0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
@@ -77757,10 +77755,10 @@
 },
 "firstTs": "2026-08-18T03:52:31.641908+00:00",
 "status": "open",
-"latestPrice": 0.485,
-"clvPP": -1.5,
+"latestPrice": 0.2,
+"clvPP": -30.0,
 "clv30": null,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "itf-huan-saitoh-2026-08-18|0x746295855be6f49fe2da2accd69ea34b3cf23ac3",
@@ -77781,10 +77779,10 @@
 },
 "firstTs": "2026-08-18T03:52:31.641908+00:00",
 "status": "open",
-"latestPrice": 0.515,
-"clvPP": 1.5,
+"latestPrice": 0.8,
+"clvPP": 30.0,
 "clv30": null,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "atp-paul-vallejo-2026-08-17|0x5f659bccbc353dbf7bcdffdee73bee60bb482036",
@@ -77805,10 +77803,10 @@
 },
 "firstTs": "2026-08-18T03:55:52.145135+00:00",
 "status": "open",
-"latestPrice": 0.61,
-"clvPP": 0.0,
+"latestPrice": 0.735,
+"clvPP": 12.5,
 "clv30": null,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 },
 {
 "sig": "itf-xingdao-xi-2026-08-18|0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
@@ -77828,11 +77826,37 @@
 "sizeBand": "2-5k"
 },
 "firstTs": "2026-08-18T03:55:52.145135+00:00",
+"status": "settled",
+"latestPrice": 0.9945,
+"clvPP": 67.0,
+"clv30": 67.0,
+"updatedAt": "2026-08-18T04:11:22.013906+00:00",
+"finalClvPP": 67.0,
+"settledAt": "2026-08-18T04:11:22.013906+00:00"
+},
+{
+"sig": "itf-mochizu-koyam-2026-08-18|0x746295855be6f49fe2da2accd69ea34b3cf23ac3",
+"key": "itf-mochizu-koyam-2026-08-18",
+"side": "Hiromasa Koyama",
+"wallet": "0x746295855be6f49fe2da2accd69ea34b3cf23ac3",
+"usd": 2632,
+"league": "TENNIS",
+"entryPrice": 0.84,
+"totalUsd": 10303,
+"movePP": 25.5,
+"flags": {
+"valueZone": false,
+"mature": false,
+"notChasing": false,
+"sharp": false,
+"sizeBand": "2-5k"
+},
+"firstTs": "2026-08-18T04:11:22.013906+00:00",
 "status": "open",
-"latestPrice": 0.325,
+"latestPrice": 0.84,
 "clvPP": 0.0,
 "clv30": null,
-"updatedAt": "2026-08-18T03:55:52.145135+00:00"
+"updatedAt": "2026-08-18T04:11:22.013906+00:00"
 }
 ]
 }
