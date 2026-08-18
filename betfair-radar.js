@@ -882,9 +882,183 @@
     return '<span title="' + esc(tip) + '" style="display:inline-flex;gap:4px;align-items:center;padding:1px 7px;border-radius:20px;background:' + (solid ? 'rgba(63,185,80,.10)' : 'transparent') + ';border:1px solid ' + (solid ? 'rgba(63,185,80,.3)' : C.bd) + ';font-size:10px;font-weight:700;color:' + col + ';opacity:' + (solid ? 1 : 0.6) + '">🎯 ' + _pctTxt(v.hitRate) + ' · ' + _roiTxt(v.roi) + ' <span style="color:' + C.dim + ';font-weight:600">n' + v.n + '</span></span>';
   }
 
+  // 17.08.2026 (Lucas): 🖥️ TERMINAL — dichtes Profi-Board + Drilldown. Rein lesend & additiv.
+  // Board: Konsens (faire Pinnacle-% -> Edge) + Richtung + Poly-Gegencheck + CLV-Bucket je Liga.
+  // Drilldown: Preis-Kurve (Verlauf) + Volumen, gematcht-je-Quote, inferierte Back/Lay-Richtung, ½-Kelly in €.
+  function _tKoTxt(iso){ if(!iso) return '—'; var t=Date.parse(String(iso)); if(isNaN(t)) return '—';
+    var m=Math.round((t-Date.now())/60000); if(m<0) return 'live'; if(m<60) return 'in '+m+'′'; return 'in '+Math.floor(m/60)+':'+('0'+(m%60)).slice(-2); }
+  function _tEur(v){ v=Number(v)||0; if(v>=1e6) return '€'+(v/1e6).toFixed(1)+'M'; if(v>=1e3) return '€'+Math.round(v/1e3)+'K'; return '€'+Math.round(v); }
+  function _tEdge(g){ var s=g.moneySide, p=(g.pinn&&typeof g.pinn[s]==='number')?g.pinn[s]:null; return (p&&g.moneyOdd>1)?(p*g.moneyOdd-1):null; }
+  function _tFair(g){ var s=g.moneySide, p=(g.pinn&&typeof g.pinn[s]==='number')?g.pinn[s]:null; return (p&&p>0)?(1/p):null; }
+  function _tBucket(g){ var t=(_bf.track&&_bf.track.byLeagueMarket)||{}; return t[(g.league||'')+'|Match Odds']||null; }
+  var _TSK={home:'hw',draw:'dr',away:'aw'};
+  function _tSer(g){ var h=(_bf.hist||{})[String(g.matchId)]||[]; var key=_TSK[g.moneySide]||'hw'; var pts=[];
+    for(var i=0;i<h.length;i++){ var s=h[i]; if(!s||!s.mo) continue; var o=s.mo[key];
+      if(typeof o==='number'&&o>1&&s.ts){ var t=Date.parse(s.ts); if(!isNaN(t)) pts.push({t:t,o:o,v:Number(s.totalVol)||0}); } }
+    pts.sort(function(a,b){return a.t-b.t;}); return pts; }
+  function _tBank(){ var b=(_bf.bankroll!=null)?_bf.bankroll:1000; _bf.bankroll=b; return b; }
+  function _tHalfKelly(g){ var e=_tEdge(g); return (e!=null&&e>0&&g.moneyOdd>1)?(e/(g.moneyOdd-1))*0.5:0; }
+  // 17.08.2026 (Lucas P4): Cross-Source-Konviktion — die 3 Quellen (Betfair-Fluss + Pinnacle-Anker/Steam
+  // + Poly-Crowd) zu EINER Zahl 0–100 verdichtet. Einig + Geld rein + Sharp-Steam → hoch; Drift/Widerspruch → runter.
+  function _tConv(g){
+    var v=g.verdict||'no_anchor';
+    var base=v==='konsens'?60:v==='teil'?42:v==='uneinig'?8:20;
+    var bf=g.moneyDir==='in'?25:g.moneyDir==='out'?-20:0;
+    var mv=(typeof g.pinnMovePP==='number')?g.pinnMovePP:null;
+    var steam=mv==null?0:(mv>=1?15:mv>=0.2?8:mv<=-0.5?-8:0);
+    var ps=(g.poly&&typeof g.poly.sharePct==='number')?g.poly.sharePct:null;
+    var poly=ps==null?0:(ps>=65?10:ps>=55?5:ps<45?-8:0);
+    var s=Math.max(0,Math.min(100,base+bf+steam+poly));
+    if(v==='no_anchor') s=Math.min(s,55);   // ohne Pinnacle-Anker keine „starke" Konviktion behaupten
+    var label=s>=80?'🔥 Stark':s>=60?'Solide':s>=40?'Mittel':(v==='uneinig'?'⚠ Widerspruch':'Schwach');
+    var col=s>=80?'#2ee08a':s>=60?'#5eead4':s>=40?'#f5c518':'#ff5d5d';
+    return {score:s,label:label,col:col,base:base,bf:bf,steam:steam,poly:poly,verdict:v,ps:ps,mv:mv};
+  }
+  function _tConvMeter(g){ var c=_tConv(g);
+    return '<div style="display:inline-flex;align-items:center;gap:6px" title="Konviktion '+c.score+'/100 · '+esc(c.label)+'">'
+      +'<div style="width:46px;height:6px;background:#141c2c;border-radius:3px;overflow:hidden"><div style="height:6px;width:'+c.score+'%;background:'+c.col+'"></div></div>'
+      +'<span style="font-family:monospace;font-weight:800;color:'+c.col+';font-size:11.5px">'+c.score+'</span></div>'; }
+  function _tConvPanel(g){ var c=_tConv(g);
+    var vtxt={konsens:'Konsens — alle Quellen sehen dieselbe Seite vorn',teil:'Teil-Konsens — Anker stimmt, eine Quelle schert aus',uneinig:'Uneinig — Buchmacher sehen die andere Seite vorn',no_anchor:'Kein Pinnacle-Anker — nur Betfair/Poly'}[c.verdict]||c.verdict;
+    var srow=function(dcol,on,name,txt){ return '<div style="display:flex;align-items:center;gap:7px;margin:4px 0">'
+      +'<i style="display:inline-block;width:8px;height:8px;border-radius:50%;background:'+(on?dcol:'#26324a')+';flex:none"></i>'
+      +'<span style="font-size:11px;color:'+C.mut+';width:58px;flex:none">'+name+'</span>'
+      +'<span style="font-size:11px;color:'+(on?C.ink:C.dim)+'">'+txt+'</span></div>'; };
+    var bfTxt=g.moneyDir==='in'?'Geld REIN (Back)':g.moneyDir==='out'?'driftet (Geld raus)':'flach';
+    var pinTxt=g.pinn?((g.pinn.fav===g.moneySide?'Favorit stimmt':'Favorit ANDERS')+(c.mv!=null?' · Move '+(c.mv>0?'+':'')+c.mv+'pp':'')):'kein Pinnacle';
+    var polTxt=c.ps==null?'kein Poly-Markt':(c.ps+'% Crowd'+(c.ps>=55?' (einig)':c.ps<45?' (dagegen)':''));
+    return '<div style="text-align:center;margin-bottom:8px"><div style="font-size:26px;font-weight:900;font-family:monospace;color:'+c.col+';line-height:1">'+c.score+'</div>'
+      +'<div style="font-size:12px;font-weight:800;color:'+c.col+'">'+esc(c.label)+'</div>'
+      +'<div style="font-size:10px;color:'+C.dim+';margin-top:2px">'+esc(vtxt)+'</div></div>'
+      +srow('#4cc2ff',g.moneyDir==='in',' Betfair',bfTxt)
+      +srow('#5eead4',!!(g.pinn&&g.pinn.fav===g.moneySide),' Pinnacle',pinTxt)
+      +srow('#a78bfa',!!(c.ps!=null&&c.ps>=55),' Poly',polTxt); }
+
+  function _tChart(g){
+    var pts=_tSer(g); if(pts.length<2) return '<div style="color:'+C.dim+';font-size:11px;padding:10px 2px">Zu wenig Verlaufsdaten für eine Kurve.</div>';
+    var fair=_tFair(g);
+    var W=680,H=158,pl=46,pr=58,pt=12,pb=34,cw=W-pl-pr,ch=H-pt-pb;
+    var t0=pts[0].t,t1=pts[pts.length-1].t; if(t1<=t0) t1=t0+1;
+    var os=pts.map(function(p){return p.o;}),mn=Math.min.apply(null,os),mx=Math.max.apply(null,os);
+    if(fair!=null){ mn=Math.min(mn,fair); mx=Math.max(mx,fair); }
+    var pad=(mx-mn)*0.14||0.1; mn-=pad; mx+=pad; if(mx<=mn) mx=mn+0.1;
+    var X=function(t){return pl+(t-t0)/(t1-t0)*cw;};
+    var Y=function(o){return pt+(mx-o)/(mx-mn)*ch;};   // konventionell: hohe Quote oben, niedrige unten (Drift steigt, Steam faellt)
+    var i,line=pts.map(function(p,ix){return (ix?'L':'M')+X(p.t).toFixed(1)+' '+Y(p.o).toFixed(1);}).join(' ');
+    var area=line+' L'+X(pts[pts.length-1].t).toFixed(1)+' '+(pt+ch).toFixed(1)+' L'+X(pts[0].t).toFixed(1)+' '+(pt+ch).toFixed(1)+' Z';
+    var maxdv=1; for(i=1;i<pts.length;i++){ var dv=pts[i].v-pts[i-1].v; if(dv>maxdv) maxdv=dv; }
+    var vb='',bw=Math.max(1,cw/pts.length*0.6);
+    for(i=1;i<pts.length;i++){ var dv2=pts[i].v-pts[i-1].v; if(dv2<=0) continue; var hh=dv2/maxdv*24, up=pts[i].o<pts[i-1].o;
+      vb+='<rect x="'+(X(pts[i].t)-bw/2).toFixed(1)+'" y="'+(H-pb+8-hh).toFixed(1)+'" width="'+bw.toFixed(1)+'" height="'+hh.toFixed(1)+'" fill="'+(up?'#2ee08a':'#ff5d5d')+'" opacity="0.5"/>'; }
+    var ticks=''; for(i=0;i<3;i++){ var ov=mn+(mx-mn)*(i/2), yy=Y(ov);
+      ticks+='<line x1="'+pl+'" y1="'+yy.toFixed(1)+'" x2="'+(pl+cw)+'" y2="'+yy.toFixed(1)+'" stroke="'+C.bd+'" stroke-width="0.5" opacity="0.5"/>'
+        +'<text x="'+(pl-6)+'" y="'+(yy+3).toFixed(1)+'" text-anchor="end" font-size="9" fill="'+C.dim+'" font-family="monospace">'+ov.toFixed(2)+'</text>'; }
+    var fairEl=''; if(fair!=null&&fair>=mn&&fair<=mx){ var fy=Y(fair);
+      fairEl='<line x1="'+pl+'" y1="'+fy.toFixed(1)+'" x2="'+(pl+cw)+'" y2="'+fy.toFixed(1)+'" stroke="#5eead4" stroke-width="1" stroke-dasharray="4 3"/>'
+        +'<text x="'+(pl+cw+4)+'" y="'+(fy+3).toFixed(1)+'" font-size="9" fill="#5eead4" font-family="monospace">fair '+fair.toFixed(2)+'</text>'; }
+    var koEl='',kt=Date.parse(String(g.kickoff||'')); if(!isNaN(kt)&&kt>=t0&&kt<=t1){ var kx=X(kt);
+      koEl='<line x1="'+kx.toFixed(1)+'" y1="'+pt+'" x2="'+kx.toFixed(1)+'" y2="'+(pt+ch)+'" stroke="'+C.gold+'" stroke-width="1" stroke-dasharray="2 3" opacity="0.7"/>'
+        +'<text x="'+(kx+3).toFixed(1)+'" y="'+(pt+9)+'" font-size="8.5" fill="'+C.gold+'">Anpfiff</text>'; }
+    var last=pts[pts.length-1];
+    var dotEl='<circle cx="'+X(last.t).toFixed(1)+'" cy="'+Y(last.o).toFixed(1)+'" r="3.5" fill="#4cc2ff"/>'
+      +'<text x="'+(X(last.t)-6).toFixed(1)+'" y="'+(Y(last.o)-6).toFixed(1)+'" font-size="9.5" fill="#4cc2ff" font-family="monospace" text-anchor="end">'+last.o.toFixed(2)+'</text>';
+    return '<svg viewBox="0 0 '+W+' '+H+'" width="100%" style="max-width:'+W+'px;display:block">'
+      +ticks+vb
+      +'<path d="'+area+'" fill="rgba(76,194,255,.08)"/>'
+      +'<path d="'+line+'" fill="none" stroke="#4cc2ff" stroke-width="1.6"/>'
+      +fairEl+koEl+dotEl
+      +'<text x="'+pl+'" y="'+(H-6)+'" font-size="8.5" fill="'+C.dim+'">Opening</text>'
+      +'<text x="'+(pl+cw)+'" y="'+(H-6)+'" font-size="8.5" fill="'+C.dim+'" text-anchor="end">jetzt</text>'
+      +'</svg>';
+  }
+
+  function _tMBP(g){
+    var pts=_tSer(g); if(pts.length<2) return '';
+    var bins={},any=false,i;
+    for(i=1;i<pts.length;i++){ var dv=pts[i].v-pts[i-1].v; if(dv<=0) continue; var o=pts[i].o, step=o<4?0.05:0.2, b=+(Math.round(o/step)*step).toFixed(2); bins[b]=(bins[b]||0)+dv; any=true; }
+    if(!any) return '';
+    var arr=Object.keys(bins).map(function(k){return {o:+k,v:bins[k]};});
+    arr.sort(function(a,b){return b.v-a.v;}); arr=arr.slice(0,7); arr.sort(function(a,b){return a.o-b.o;});
+    var max=Math.max.apply(null,arr.map(function(x){return x.v;}))||1;
+    return arr.map(function(x){ var w=Math.round(x.v/max*100);
+      return '<div style="display:flex;align-items:center;gap:8px;margin:3px 0">'
+        +'<span style="width:44px;font-family:monospace;font-size:11px;color:'+C.ink+';text-align:right">'+x.o.toFixed(2)+'</span>'
+        +'<div style="flex:1;background:#141c2c;border-radius:4px;overflow:hidden;height:12px"><div style="height:12px;width:'+w+'%;background:linear-gradient(90deg,#2ee08a,#4cc2ff)"></div></div>'
+        +'<span style="width:58px;font-family:monospace;font-size:10.5px;color:'+C.mut+';text-align:right">'+_tEur(x.v)+'</span></div>'; }).join('');
+  }
+
+  function _tDrawer(g){
+    var edge=_tEdge(g),fair=_tFair(g),pts=_tSer(g),bank=_tBank(),hk=_tHalfKelly(g),stake=bank*hk;
+    var dir='',dcol=C.mut; if(pts.length>=2){ var d=pts[pts.length-1].o-pts[0].o;
+      if(d< -0.01){ dir='BACK — Quote von '+pts[0].o.toFixed(2)+' auf '+pts[pts.length-1].o.toFixed(2)+' gekürzt (Geld rein)'; dcol='#2ee08a'; }
+      else if(d>0.01){ dir='DRIFT — Quote von '+pts[0].o.toFixed(2)+' auf '+pts[pts.length-1].o.toFixed(2)+' gestiegen (Geld raus)'; dcol='#ff5d5d'; }
+      else { dir='flach — kaum Bewegung ('+pts[0].o.toFixed(2)+' → '+pts[pts.length-1].o.toFixed(2)+')'; } }
+    var col2='background:'+C.card+';border:1px solid '+C.bd+';border-radius:10px;padding:10px 12px';
+    var kelly= (edge!=null&&edge>0)
+      ? '<div style="font-size:22px;font-weight:900;color:#2ee08a;font-family:monospace">'+_tEur(stake)+'</div><div style="font-size:10.5px;color:'+C.mut+';margin-top:2px">½-Kelly · '+(hk*100).toFixed(1)+'% der Bankroll ('+_tEur(bank)+')</div>'
+      : '<div style="font-size:15px;font-weight:800;color:'+C.dim+'">kein Stake</div><div style="font-size:10.5px;color:'+C.mut+';margin-top:2px">keine positive Kante — '+(edge==null?'kein Pinnacle-Anker':'Edge '+(edge*100).toFixed(1)+'%')+'</div>';
+    return '<div style="padding:12px 4px 6px">'
+      +'<div style="display:flex;gap:12px;flex-wrap:wrap;margin-bottom:12px">'
+        +'<div style="flex:2;min-width:300px;'+col2+'">'
+          +'<div style="font-size:11px;color:'+C.dim+';margin-bottom:4px">Quotenverlauf '+esc(g.moneyName)+' (Money-Seite) · faire Pinnacle-Linie gestrichelt · Balken = Zufluss</div>'
+          +_tChart(g)+'</div>'
+        +'<div style="flex:1;min-width:180px;'+col2+'"><div style="font-size:11px;color:'+C.dim+';margin-bottom:2px">Konviktion (3 Quellen)</div>'+_tConvPanel(g)+'</div>'
+        +'<div style="flex:1;min-width:150px;'+col2+';display:flex;flex-direction:column;justify-content:center;text-align:center">'+kelly+'</div>'
+      +'</div>'
+      +'<div style="display:flex;gap:12px;flex-wrap:wrap">'
+        +'<div style="flex:1;min-width:240px;'+col2+'"><div style="font-size:11px;color:'+C.dim+';margin-bottom:6px">Gematcht je Quote — wo floss das Geld</div>'+(_tMBP(g)||'<span style="color:'+C.dim+';font-size:11px">kein Zufluss im Verlauf</span>')+'</div>'
+        +'<div style="flex:1;min-width:240px;'+col2+'">'
+          +'<div style="font-size:11px;color:'+C.dim+';margin-bottom:6px">Richtung (aus Quotenverlauf inferiert)</div>'
+          +'<div style="font-size:12.5px;font-weight:700;color:'+dcol+';line-height:1.5">'+dir+'</div>'
+          +'<div style="font-size:10.5px;color:'+C.mut+';margin-top:8px;line-height:1.5">Edge '+(edge==null?'—':(edge>=0?'+':'')+(edge*100).toFixed(1)+'%')+' · faire Quote '+(fair==null?'—':fair.toFixed(2))+' vs. angeboten '+(g.moneyOdd||'—')+'. Kein Orderbuch — Betwatch liefert nur gematchtes Volumen, Richtung ist inferiert.</div>'
+        +'</div>'
+      +'</div></div>';
+  }
+
+  function renderTerminal(){
+    var cx=_bf.consensus, games=((cx&&cx.games)||[]).slice();
+    if(!games.length) return viewToggle()+'<div style="padding:44px;text-align:center;color:'+C.mut+'">Noch keine Konsens-Daten — das Terminal füllt sich mit dem nächsten Betfair-Lauf.</div>';
+    var bank=_tBank();
+    var rows=games.map(function(g){ return {g:g,edge:_tEdge(g),b:_tBucket(g),hk:_tHalfKelly(g)}; });
+    rows.sort(function(a,b){ return (b.edge==null?-9:b.edge)-(a.edge==null?-9:a.edge); });
+    var eCol=function(e){ return e==null?C.mut:e>=0.02?'#2ee08a':e>=-0.01?'#f5c518':'#ff5d5d'; };
+    var dot=function(on,c){ return '<i style="display:inline-block;width:8px;height:8px;border-radius:50%;margin-left:3px;background:'+(on?c:'#26324a')+'"></i>'; };
+    var th=function(t,a){ return '<th style="font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:'+C.dim+';font-weight:700;text-align:'+(a||'right')+';padding:7px 10px;border-bottom:1px solid '+C.bd+';white-space:nowrap">'+t+'</th>'; };
+    var head='<div style="display:flex;align-items:baseline;gap:10px;margin:2px 0 8px;flex-wrap:wrap"><span style="font-size:13px;font-weight:800;color:'+C.ink+'">🖥️ Terminal — handelbare Kanten</span>'
+      +'<span style="font-size:10.5px;color:'+C.dim+'">Edge = faire Pinnacle-% × Quote − 1 · Konv. = Betfair-Richtung + Pinnacle + Poly · CLV-Bucket = historische Kante je Liga (n≥10) · Zeile klicken → Drilldown</span></div>';
+    var bankBar='<div style="display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:11.5px;color:'+C.mut+'">Bankroll <span style="color:'+C.dim+'">€</span>'
+      +'<input type="number" value="'+bank+'" min="0" step="50" onchange="_bfTermBank(this.value)" onclick="event.stopPropagation()" style="width:96px;background:'+C.card+';border:1px solid '+C.bd+';border-radius:7px;color:'+C.ink+';padding:4px 8px;font-family:monospace;font-size:12px"/>'
+      +'<span style="color:'+C.dim+'">→ ½-Kelly-Stakes in € je Zeile</span></div>';
+    var out=viewToggle()+head+bankBar+'<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12.5px">'
+      +'<thead><tr>'+th('Anpfiff','left')+th('Spiel','left')+th('Pick','left')+th('Edge')+th('Konviktion')+th('Fluss')+th('CLV-Bucket')+th('½-Kelly €')+'</tr></thead><tbody>';
+    rows.forEach(function(r){
+      var g=r.g,e=r.edge,open=(String(_bf.termOpen)===String(g.matchId));
+      var dirTag=g.moneyDir==='in'?'<span style="font-size:8.5px;font-weight:800;color:#2ee08a;background:rgba(46,224,138,.14);padding:1px 5px;border-radius:5px">BACK</span>'
+                 :g.moneyDir==='out'?'<span style="font-size:8.5px;font-weight:800;color:#ff5d5d;background:rgba(255,93,93,.14);padding:1px 5px;border-radius:5px">DRIFT</span>':'';
+      var conv=_tConvMeter(g);
+      var clv=(r.b&&r.b.n>=10)?('<span style="font-family:monospace;font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:5px;color:'+(r.b.roi>0?'#2ee08a':r.b.roi<0?'#ff5d5d':C.mut)+';background:'+(r.b.roi>0?'rgba(46,224,138,.1)':r.b.roi<0?'rgba(255,93,93,.1)':'transparent')+'">'+(r.b.roi>0?'🟢':r.b.roi<0?'🔴':'⚪')+' '+Math.round(r.b.hitRate*100)+'% · n'+r.b.n+'</span>'):'<span style="color:'+C.dim+';font-size:10px">dünn</span>';
+      var ko=g.live?'<span style="color:#ff5d5d;font-weight:700;font-family:monospace">● LIVE</span>':'<span style="font-family:monospace;color:'+C.mut+'">'+_tKoTxt(g.kickoff)+'</span>';
+      var stakeCell=r.hk>0?('<b>'+_tEur(bank*r.hk)+'</b> <span style="color:'+C.dim+';font-weight:600">'+(r.hk*100).toFixed(1)+'%</span>'):'—';
+      out+='<tr onclick="_bfTermOpen(\''+g.matchId+'\')" style="border-bottom:1px solid rgba(255,255,255,.045);cursor:pointer;background:'+(open?'rgba(76,194,255,.06)':'transparent')+'">'
+        +'<td style="padding:7px 10px">'+ko+'</td>'
+        +'<td style="padding:7px 10px"><span style="color:'+C.dim+';margin-right:4px">'+(open?'▾':'▸')+'</span><b>'+esc(g.home)+'</b> <span style="color:'+C.dim+'">v '+esc(g.away)+'</span><div style="font-size:10px;color:'+C.dim+';padding-left:14px">'+esc(g.league||'')+'</div></td>'
+        +'<td style="padding:7px 10px;font-family:monospace"><b>'+esc(g.moneyName)+'</b> <span style="color:#5eead4">@'+(g.moneyOdd||'—')+'</span></td>'
+        +'<td style="padding:7px 10px;text-align:right;font-family:monospace;font-weight:800;color:'+eCol(e)+'">'+(e==null?'—':(e>=0?'+':'')+(e*100).toFixed(1)+'%')+'</td>'
+        +'<td style="padding:7px 10px;text-align:right;white-space:nowrap">'+conv+'</td>'
+        +'<td style="padding:7px 10px;text-align:right;font-family:monospace;white-space:nowrap">'+_tEur(g.totVol)+' '+dirTag+'</td>'
+        +'<td style="padding:7px 10px;text-align:right">'+clv+'</td>'
+        +'<td style="padding:7px 10px;text-align:right;font-family:monospace;font-weight:700;color:'+(r.hk>0?C.ink:C.dim)+'">'+stakeCell+'</td>'
+        +'</tr>';
+      if(open){ out+='<tr style="background:rgba(76,194,255,.03)"><td colspan="8" style="padding:0 10px 6px">'+_tDrawer(g)+'</td></tr>'; }
+    });
+    out+='</tbody></table></div>';
+    out+='<div style="font-size:10px;color:'+C.dim+';margin-top:9px;line-height:1.5">Fluss = gematchtes Volumen (Betwatch); Richtung aus dem Quotenverlauf inferiert (nicht Back/Lay-Orderbuch). ½-Kelly in € aus deiner Bankroll, nur bei positiver Edge. Zeile klicken für Preis-Kurve, gematcht-je-Quote & Richtung.</div>';
+    return out;
+  }
+
   function viewToggle() {
     var b = function (id, lbl) { var on = _bf.view === id; return '<button onclick="_bfSetView(\'' + id + '\')" style="padding:6px 13px;border:1px solid ' + (on ? C.gold : C.bd) + ';background:' + (on ? 'rgba(255,184,12,.12)' : 'transparent') + ';color:' + (on ? C.gold : C.mut) + ';font-size:12px;font-weight:700;cursor:pointer">' + lbl + '</button>'; };
-    return '<div style="display:inline-flex;border-radius:9px;overflow:hidden;border:1px solid ' + C.bd + ';margin:6px 0 12px">' + b('live', '🔴 Live-Radar') + b('record', '📊 Trefferquoten') + b('push', '📈 Push-Bilanz') + b('consensus', '🧭 Konsens') + '</div>';
+    return '<div style="display:inline-flex;border-radius:9px;overflow:hidden;border:1px solid ' + C.bd + ';margin:6px 0 12px">' + b('live', '🔴 Live-Radar') + b('record', '📊 Trefferquoten') + b('push', '📈 Push-Bilanz') + b('consensus', '🧭 Konsens') + b('terminal', '🖥️ Terminal') + '</div>';
   }
 
   // 05.08.2026 (Lucas: wissen wir, ob die Kohle erfolgreich war?): DIE Gesamt-Bilanz. Bisher gab es
@@ -1217,6 +1391,7 @@
 
     if (!_bf.data) { _bfLoad(); return head + '<div style="padding:50px;text-align:center;color:' + C.mut + '">⏳ Betfair-Daten werden geladen …</div>'; }
 
+    if (_bf.view === 'terminal') return head + renderTerminal();
     if (_bf.view === 'record') return head + renderTrackBoard();
     if (_bf.view === 'push') return head + renderPushBoard();
     if (_bf.view === 'consensus') return head + renderConsensusBoard();
@@ -1442,6 +1617,9 @@
   window._bfDrawerHTML = drawerHTML;   // Test-Hook
 
   function rerender() { var p = document.getElementById('betfairRadarPanel'); if (p) p.innerHTML = renderBetfairRadar(); }
+  try{ var _cb=(typeof localStorage!=='undefined')&&localStorage.getItem('cocoBank'); if(_cb!=null&&_cb!==false&&!isNaN(+_cb)) _bf.bankroll=+_cb; }catch(e){}
+  window._bfTermOpen = function (mid) { _bf.termOpen = (String(_bf.termOpen)===String(mid))?null:mid; rerender(); };
+  window._bfTermBank = function (v) { var n=parseFloat(v); if(isNaN(n)||n<0) n=0; _bf.bankroll=n; try{localStorage.setItem('cocoBank',n);}catch(e){} rerender(); };
   window._bfSetView = function (v) { _bf.view = v; rerender(); };
   window._bfSetTrackBy = function (v) { _bf.trackBy = v; rerender(); };
   window._bfSetLeague = function (v) { _bf.league = v; rerender(); };
