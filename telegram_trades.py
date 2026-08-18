@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-telegram_trades.py — Dedizierter Trades-Channel für WM 2026 Polymarket
+telegram_trades.py — Dedizierter Trades-Channel für Polymarket-Auto-Trades (Wettbewerb aus Slug abgeleitet)
 
 Sendet Nachrichten an einen SEPARATEN Telegram-Channel nur für Trades.
 Dieser Channel ist KEIN User-facing WM-Info-Channel — er loggt nur:
@@ -86,7 +86,37 @@ _FLAGS = {
 }
 
 def _flag(team_id: str) -> str:
-    return _FLAGS.get(team_id.upper(), "🏳️")
+    return _FLAGS.get(team_id.upper(), "")   # 18.08.2026 (Lucas): Klub-Teams (MLS/Liga) ohne Laender-Match -> kein Flag statt weisse Fahne
+
+
+# -- Wettbewerb aus dem Polymarket-Slug ableiten ---------------------------
+# Slug-Praefix (fifwc-/mls-/epl-/lal-/sea-/fl1-/bun-...) -> (Label, Poly-URL-Pfad).
+# 18.08.2026 (Lucas): frueher waren Header + Poly-Link fest auf den WM-Wettbewerb verdrahtet,
+# sodass MLS-/Liga-Auto-Bets falsch gelabelt wurden. Jetzt pro Bet aus dem Slug bestimmt.
+_COMP_BY_SLUG: dict[str, tuple[str, str]] = {
+    "fifwc":        ("WM 2026",         "fifa-world-cup"),
+    "mls":          ("MLS",             "mls"),
+    "epl":          ("Premier League",  "epl"),
+    "lal":          ("La Liga",         "laliga"),
+    "sea":          ("Serie A",         "serie-a"),
+    "fl1":          ("Ligue 1",         "ligue-1"),
+    "bun":          ("Bundesliga",      "bundesliga"),
+    "championship": ("Championship",    "championship"),
+    "eredivisie":   ("Eredivisie",      "eredivisie"),
+}
+
+def _competition(slug: str | None) -> tuple[str, str | None]:
+    """(Label, Poly-URL-Pfad) fuer den Wettbewerb dieses Slugs. Fallback: 'Fussball' + kein Pfad."""
+    pfx = (slug or "").split("-", 1)[0].lower()
+    return _COMP_BY_SLUG.get(pfx, ("Fussball", None))
+
+def _poly_url(slug: str | None) -> str | None:
+    """Korrekter Polymarket-Link je Wettbewerb (nicht mehr fest verdrahtet)."""
+    if not slug:
+        return None
+    _, path = _competition(slug)
+    return (f"https://polymarket.com/sports/{path}/{slug}" if path
+            else f"https://polymarket.com/event/{slug}")
 
 
 def is_auto_source(source: str | None) -> bool:
@@ -119,6 +149,7 @@ def notify_trade_opened(
     poly_odds = f"{1/poly_price:.2f}" if poly_price and poly_price > 0 else "?"
     stake_str = f"€{stake:.2f}"
     pct_str   = f"{round(poly_price * 100)}¢"
+    comp_label, _ = _competition(slug)
 
     is_auto = is_auto_source(source)
     icon  = "🤖" if is_auto else "👆"
@@ -135,16 +166,17 @@ def notify_trade_opened(
         edge_line = f"\n🎯 Edge: <b>+{edge_pp:.1f}pp</b> vs Pinnacle{pinn_str}"
 
     poly_link = ""
-    if slug:
-        poly_link = f"\n🔗 <a href='https://polymarket.com/sports/fifa-world-cup/{slug}'>Polymarket öffnen</a>"
+    _url = _poly_url(slug)
+    if _url:
+        poly_link = f"\n🔗 <a href='{_url}'>Polymarket öffnen</a>"
 
     order_line = f"\n🆔 Order: <code>{order_id[:24]}</code>" if order_id else ""
 
     text = (
         f"{icon} <b>{label} PLATZIERT</b>\n"
         f"━━━━━━━━━━━━━━━━━━━\n"
-        f"🏆 WM 2026\n"
-        f"{flag_h} {home} vs {away} {flag_a}\n"
+        f"🏆 {comp_label}\n"
+        f"{(flag_h+' ') if flag_h else ''}{home} vs {away}{(' '+flag_a) if flag_a else ''}\n"
         f"📋 Markt: <b>{market}</b>\n"
         f"💰 Einsatz: <b>{stake_str}</b>\n"
         f"📊 Poly: <b>{poly_odds}</b> ({pct_str})"
@@ -171,18 +203,20 @@ def notify_sell_alert(
     flag_h   = _flag(home_id) if home_id else ""
     flag_a   = _flag(away_id) if away_id else ""
     entry_oc = f"{1/entry_price:.2f}" if entry_price > 0 else "?"
+    comp_label, _ = _competition(slug)
     cur_oc   = f"{1/current_price:.2f}" if current_price > 0 else "?"
     profit_sign = "+" if estimated_profit >= 0 else ""
 
     poly_link = ""
-    if slug:
-        poly_link = f"\n🔗 <a href='https://polymarket.com/sports/fifa-world-cup/{slug}'>Jetzt verkaufen →</a>"
+    _url = _poly_url(slug)
+    if _url:
+        poly_link = f"\n🔗 <a href='{_url}'>Jetzt verkaufen →</a>"
 
     text = (
         f"💰 <b>POSITION VERKAUFEN</b>  [{reason}]\n"
         f"━━━━━━━━━━━━━━━━━━━\n"
-        f"🏆 WM 2026\n"
-        f"{flag_h} {home} vs {away} {flag_a}\n"
+        f"🏆 {comp_label}\n"
+        f"{(flag_h+' ') if flag_h else ''}{home} vs {away}{(' '+flag_a) if flag_a else ''}\n"
         f"📋 Markt: <b>{market}</b>\n"
         f"📈 Entry: {entry_oc} → Jetzt: <b>{cur_oc}</b>\n"
         f"💵 Einsatz: €{stake:.2f}  |  Gewinn: <b>{profit_sign}€{abs(estimated_profit):.2f}</b>  ({profit_sign}{profit_pct:.0f}%)"
@@ -207,6 +241,7 @@ def notify_trade_closed(
     flag_a   = _flag(away_id) if away_id else ""
 
     result_icon = {"WIN": "✅", "LOSS": "❌", "VOID": "⬜"}.get(result, "❓")
+    comp_label = "CocoBet Trade"   # closed hat keinen Slug -> neutral
     pnl_sign    = "+" if pnl >= 0 else ""
     pnl_col     = "🟢" if pnl > 0 else "🔴" if pnl < 0 else "⬜"
 
@@ -220,8 +255,8 @@ def notify_trade_closed(
     text = (
         f"{result_icon} <b>BET RESOLVED — {result}</b>\n"
         f"━━━━━━━━━━━━━━━━━━━\n"
-        f"🏆 WM 2026\n"
-        f"{flag_h} {home} vs {away} {flag_a}\n"
+        f"🏆 {comp_label}\n"
+        f"{(flag_h+' ') if flag_h else ''}{home} vs {away}{(' '+flag_a) if flag_a else ''}\n"
         f"📋 Markt: <b>{market}</b>"
         f"{score_line}\n"
         f"{pnl_col} P&L: <b>{pnl_sign}€{abs(pnl):.2f}</b>"
@@ -237,7 +272,7 @@ def notify_system_start(mode: str = "dry-run") -> bool:
     icon = "🤖" if mode == "live" else "🧪"
     text = (
         f"{icon} <b>Auto-Trigger gestartet</b>  [{mode.upper()}]\n"
-        f"WM 2026 Polymarket System\n"
+        f"CocoBet Polymarket System\n"
         f"🕐 {now}"
     )
     return send_trades_message(text)

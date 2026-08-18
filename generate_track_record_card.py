@@ -269,7 +269,10 @@ def main():
     stand = f"Stand: {now_local.strftime('%d.%m.%y · %H:%M')}"
 
     # Period-Label = jüngste gespielte Runde (statt hart „Gruppenphase")
-    period = f"WM 2026 · {k['highlight_round']}" if k.get("highlight_round") else "WM 2026"
+    # 18.08.2026 (Lucas): Datensatz-Label statt hart „WM 2026" (MLS/Liga-Card zeigte sonst WM).
+    _DS_LABEL = {"wm": "WM 2026", "mls": "MLS", "liga": "Top-5-Ligen"}
+    _dsl = _DS_LABEL.get(D.active_dataset(), "CocoBet")
+    period = f"{_dsl} · {k['highlight_round']}" if k.get("highlight_round") else _dsl
 
     from tiktok_card_templates import track_record_card
     html = track_record_card(
