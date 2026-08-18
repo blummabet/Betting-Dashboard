@@ -24,30 +24,66 @@
       "placedAt": "2026-08-17T22:21:20.275640+00:00",
       "resolvedAt": "2026-08-17T22:21:20.504574+00:00",
       "sellPrice": null,
-      "sellReason": "manuell auf Polymarket geschlossen"
+      "sellReason": "manuell auf Polymarket geschlossen",
+      "competition": "mls",
+      "competitionLabel": "MLS"
+    },
+    {
+      "betKey": "1595-16489-Under 2.5 Tore",
+      "home": "Seattle Sounders",
+      "away": "Austin",
+      "homeId": "1595",
+      "awayId": "16489",
+      "market": "Under 2.5 Tore",
+      "stake": 5.5,
+      "polyPrice": 0.17,
+      "polyOdds": 5.882,
+      "pinnFair": 0.4241,
+      "pinnClose": null,
+      "clvPP": null,
+      "polyClose": null,
+      "polyClvPP": null,
+      "isSteamLag": false,
+      "result": "SOLD",
+      "pnl": 0.0,
+      "score": null,
+      "slug": "mls-sea-aus-2026-08-19-more-markets",
+      "source": "auto",
+      "placedAt": "2026-08-18T12:59:35.908360+00:00",
+      "resolvedAt": "2026-08-18T12:59:36.123337+00:00",
+      "sellPrice": null,
+      "sellReason": "manuell auf Polymarket geschlossen",
+      "competition": "mls",
+      "competitionLabel": "MLS"
     }
   ],
   "summary": {
-    "totalBets": 1,
-    "resolved": 1,
+    "totalBets": 2,
+    "resolved": 2,
     "pending": 0,
-    "sold": 1,
+    "sold": 2,
     "wins": 0,
     "losses": 0,
     "voids": 0,
     "winRate": null,
-    "totalStaked": 5.5,
+    "totalStaked": 11.0,
     "totalPnl": 0.0,
     "roi": 0.0,
     "avgCLV": null,
     "sharpeEst": null,
     "postmortem": {
-      "closedN": 1,
+      "closedN": 2,
       "realizedPnl": 0.0,
       "avgClv": null,
-      "clvCoverage": "0/1",
+      "clvCoverage": "0/2",
       "byMarket": {
         "1X2": {
+          "n": 1,
+          "pnl": 0.0,
+          "avgClv": null,
+          "clvCoverage": "0/1"
+        },
+        "O/U": {
           "n": 1,
           "pnl": 0.0,
           "avgClv": null,
@@ -56,10 +92,21 @@
       },
       "byExit": {
         "Sell-sonstig": {
-          "n": 1,
+          "n": 2,
           "pnl": 0.0,
           "avgClv": null,
-          "clvCoverage": "0/1"
+          "clvCoverage": "0/2"
+        }
+      },
+      "byCompetition": {
+        "mls": {
+          "label": "MLS",
+          "n": 2,
+          "pnl": 0.0,
+          "staked": 11.0,
+          "roi": 0.0,
+          "avgClv": null,
+          "clvCoverage": "0/2"
         }
       },
       "heldToClose": {
@@ -70,5 +117,5 @@
       }
     }
   },
-  "updatedAt": "2026-08-18T05:58:09.249371+00:00"
+  "updatedAt": "2026-08-18T12:59:36.516980+00:00"
 }
