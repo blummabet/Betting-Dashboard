@@ -175,7 +175,7 @@ def main():
 
     header = f"🔄 <b>Pick-Updates · {now.strftime('%d.%m.%Y')}</b>\n{total_changes} relevante Änderung{'en' if total_changes != 1 else ''} seit letzter Meldung."
     body = "\n".join(lines)
-    msg = f"{header}\n{body}\n\n<i>Details + Klick-Sprung im Dashboard → WM 2026 Tab oben.</i>"
+    msg = f"{header}\n{body}\n\n<i>Details + Klick-Sprung im Dashboard oben.</i>"
 
     ok = tg_send(msg)
     if ok:
