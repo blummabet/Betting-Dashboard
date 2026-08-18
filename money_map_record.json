@@ -1,13 +1,13 @@
 {
-"generatedAt": "2026-08-18T01:49:38.793321+00:00",
+"generatedAt": "2026-08-18T02:04:41.584332+00:00",
 "byVerdict": {
 "konsens": {
-"n": 197,
+"n": 199,
 "wins": 156,
-"hitRate": 0.7919,
-"polyN": 181,
+"hitRate": 0.7839,
+"polyN": 182,
 "polyWins": 140,
-"polyHitRate": 0.7735,
+"polyHitRate": 0.7692,
 "pinnN": 11,
 "pinnHitRate": 0.7273
 },
@@ -69,9 +69,9 @@
 "hitRate": 0.5556
 },
 "Brazilian Serie A": {
-"n": 8,
+"n": 9,
 "wins": 4,
-"hitRate": 0.5
+"hitRate": 0.4444
 },
 "German Bundesliga 2": {
 "n": 8,
@@ -228,6 +228,11 @@
 "wins": 2,
 "hitRate": 1.0
 },
+"Brazilian Serie C": {
+"n": 2,
+"wins": 0,
+"hitRate": 0.0
+},
 "Chinese League 1": {
 "n": 2,
 "wins": 2,
@@ -269,11 +274,6 @@
 "hitRate": 1.0
 },
 "Argentinian Primera Nacional": {
-"n": 1,
-"wins": 0,
-"hitRate": 0.0
-},
-"Brazilian Serie C": {
 "n": 1,
 "wins": 0,
 "hitRate": 0.0
@@ -346,14 +346,14 @@
 },
 "byStrength": {
 "strong": {
-"n": 147,
+"n": 148,
 "wins": 115,
-"hitRate": 0.7823
+"hitRate": 0.777
 },
 "weak": {
-"n": 86,
+"n": 87,
 "wins": 39,
-"hitRate": 0.4535
+"hitRate": 0.4483
 }
 },
 "divergence": {
@@ -365,6 +365,44 @@
 "polyRate": 0.3214
 },
 "recent": [
+{
+"matchId": "35895936",
+"home": "Internacional",
+"away": "Remo",
+"league": "Brazilian Serie A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Internacional",
+"polySide": null,
+"winner": "draw",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-17T23:00:00Z",
+"settledAt": "2026-08-18T02:04:41.426535+00:00"
+},
+{
+"matchId": "35933757",
+"home": "Guarani",
+"away": "Ypiranga RS",
+"league": "Brazilian Serie C",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Guarani",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-08-17T23:00:00Z",
+"settledAt": "2026-08-18T02:04:41.426535+00:00"
+},
 {
 "matchId": "35896921",
 "home": "Velez Sarsfield",
@@ -1086,50 +1124,12 @@
 ],
 "kickoff": "2026-08-16T22:10:00Z",
 "settledAt": "2026-08-17T01:16:02.314588+00:00"
-},
-{
-"matchId": "35868099",
-"home": "CF America",
-"away": "Atletico San Luis",
-"league": "Mexican Liga MX",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "CF America",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-0
-],
-"kickoff": "2026-08-16T23:00:00Z",
-"settledAt": "2026-08-17T01:00:54.835108+00:00"
-},
-{
-"matchId": "35895901",
-"home": "Mirassol",
-"away": "Flamengo",
-"league": "Brazilian Serie A",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Flamengo",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-5
-],
-"kickoff": "2026-08-16T21:30:00Z",
-"settledAt": "2026-08-17T00:30:52.003947+00:00"
 }
 ],
 "global": {
-"n": 266,
+"n": 268,
 "wins": 172,
-"hitRate": 0.6466
+"hitRate": 0.6418
 },
-"pending": 4
+"pending": 3
 }
