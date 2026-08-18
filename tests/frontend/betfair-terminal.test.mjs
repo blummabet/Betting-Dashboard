@@ -166,3 +166,33 @@ test('Drilldown zeigt „Andere Märkte" (Über/Unter) aus betfair_prices je mat
   assert.match(open, /BTTS/, 'BTTS-Zeile da');
   assert.ok(!/Match Odds/.test(open.split('Andere Märkte')[1] || ''), 'Match Odds NICHT im Andere-Märkte-Block (ist ja die Hauptzeile)');
 });
+
+// 18.08.2026 (Lucas: „an Pinnacle-Totals andocken wäre geil"): O/U-Edge im Drilldown = faire
+// Pinnacle-O/U-% (aus g.pinnTotals, de-viggt) × Betfair-Quote − 1. Plus Phasen-Mismatch-Schutz:
+// weicht Betfairs eigene implied stark von Pinnacle ab (live vs pre-match), wird die Edge unterdrückt.
+test('Drilldown zeigt O/U-Edge vs Pinnacle + unterdrückt Phasen-Mismatch', () => {
+  const w = boot();
+  w._bfState.data = { matches: [
+    { matchId: 'A', home: 'Alpha', away: 'Beta',
+      markets: {
+        'Match Odds': { runners: [ { name: 'Alpha', odd: 1.58, vol: 100000 }, { name: 'The Draw', odd: 3.7, vol: 8000 }, { name: 'Beta', odd: 6.5, vol: 6000 } ] },
+        // 2.5: Pinnacle overFair 0.55, Betfair Over@1.88 -> +3.4% Über (echte kleine Kante)
+        'Over/Under 2.5 Goals': { runners: [ { name: 'Over 2.5 Goals', odd: 1.88, vol: 9000 }, { name: 'Under 2.5 Goals', odd: 2.14, vol: 6000 } ] },
+        // 1.5: Betfair implied Over ~0.95 (Over@1.02/Under@20), Pinnacle overFair 0.60 -> Gap>0.25 -> Mismatch -> unterdrückt
+        'Over/Under 1.5 Goals': { runners: [ { name: 'Over 1.5 Goals', odd: 1.02, vol: 4000 }, { name: 'Under 1.5 Goals', odd: 20.0, vol: 300 } ] },
+        // BTTS: kein Pinnacle-Total -> kein Edge
+        'Both teams to Score?': { runners: [ { name: 'Yes', odd: 1.90, vol: 5000 }, { name: 'No', odd: 1.95, vol: 3000 } ] },
+      } },
+  ] };
+  // Pinnacle-Totals ans Consensus-Spiel A hängen (kommt real aus betfair_consensus.py)
+  w._bfState.consensus.games = w._bfState.consensus.games.map(g =>
+    g.matchId === 'A' ? { ...g, pinnTotals: { '2.5': { overFair: 0.55, underFair: 0.45 }, '1.5': { overFair: 0.60, underFair: 0.40 } } } : g);
+  w._bfTermOpen('A');
+  const open = panel(w);
+  assert.match(open, /Edge vs Pinnacle/, 'Edge-Spalte im Andere-Märkte-Block');
+  assert.match(open, /\+3\.4%/, 'Ü/U 2.5 zeigt +3,4% Edge');
+  assert.match(open, /O\/U-Kante/, 'Header-Badge zählt die Kante ≥ +2%');
+  // genau EINE grün markierte Value-Zeile (2.5) — die 1.5-Zeile ist Phasen-Mismatch -> unterdrückt
+  const greens = (open.match(/border-left:2px solid #2ee08a/g) || []).length;
+  assert.strictEqual(greens, 1, 'nur die echte Kante ist grün, Mismatch-Zeile nicht');
+});
