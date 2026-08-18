@@ -932,13 +932,15 @@
       +'<span style="font-size:11px;color:'+(on?C.ink:C.dim)+'">'+txt+'</span></div>'; };
     var bfTxt=g.moneyDir==='in'?'Geld REIN (Back)':g.moneyDir==='out'?'driftet (Geld raus)':'flach';
     var pinTxt=g.pinn?((g.pinn.fav===g.moneySide?'Favorit stimmt':'Favorit ANDERS')+(c.mv!=null?' · Move '+(c.mv>0?'+':'')+c.mv+'pp':'')):'kein Pinnacle';
-    var polTxt=c.ps==null?'kein Poly-Markt':(c.ps+'% Crowd'+(c.ps>=55?' (einig)':c.ps<45?' (dagegen)':''));
+    var _pO=(g.poly&&typeof g.poly.odd==='number')?g.poly.odd:null;
+    var polTxt=(c.ps!=null)?(c.ps+'% Crowd'+(c.ps>=55?' (einig)':c.ps<45?' (dagegen)':''))
+      :(_pO!=null?('Quote '+_pO+(g.poly.vol?' · '+_tEur(g.poly.vol):'')+' · Share erst ~3h vor Anpfiff'):'kein Poly-Markt');
     return '<div style="text-align:center;margin-bottom:8px"><div style="font-size:26px;font-weight:900;font-family:monospace;color:'+c.col+';line-height:1">'+c.score+'</div>'
       +'<div style="font-size:12px;font-weight:800;color:'+c.col+'">'+esc(c.label)+'</div>'
       +'<div style="font-size:10px;color:'+C.dim+';margin-top:2px">'+esc(vtxt)+'</div></div>'
       +srow('#4cc2ff',g.moneyDir==='in',' Betfair',bfTxt)
       +srow('#5eead4',!!(g.pinn&&g.pinn.fav===g.moneySide),' Pinnacle',pinTxt)
-      +srow('#a78bfa',!!(c.ps!=null&&c.ps>=55),' Poly',polTxt); }
+      +srow('#a78bfa',!!((c.ps!=null&&c.ps>=55)||_pO!=null),' Poly',polTxt); }
 
   function _tChart(g){
     var pts=_tSer(g); if(pts.length<2) return '<div style="color:'+C.dim+';font-size:11px;padding:10px 2px">Zu wenig Verlaufsdaten für eine Kurve.</div>';

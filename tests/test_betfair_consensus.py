@@ -453,3 +453,42 @@ class TestMmMoneyGate(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestPolyUpcomingFallback(unittest.TestCase):
+    """18.08.2026 (Lucas): Poly-Quote muss auch >3h vor Anpfiff kommen (upcoming-Pool, nur Preis+Vol,
+    kein Holder-Freeze). Atletico-Malaga zeigte 'kein Poly-Markt' obwohl Poly den Markt hat."""
+
+    def _upcoming_entry(self):
+        # Form wie poly_money_upcoming.json: prices (Poly-Labels, mit Akzent/„Club … de"), totalUsd, KEINE shares
+        return {"prices": {"Club Atlético de Madrid": 0.735,
+                           "Draw (Club Atlético de Madrid vs. Málaga CF)": 0.165,
+                           "Málaga CF": 0.085},
+                "totalUsd": 61467, "src": "upcoming"}
+
+    def test_match_poly_ohne_shares_liefert_odd_und_vol(self):
+        m = bf_match(home="Atletico Madrid", away="Malaga", league="Spanish La Liga", country="ES",
+                     runners=[{"name": "Atletico Madrid", "odd": 1.36},
+                              {"name": "The Draw", "odd": 5.0},
+                              {"name": "Malaga", "odd": 8.0}])
+        res = BC.match_poly(m, BC.money_side(m), [self._upcoming_entry()])
+        self.assertIsNotNone(res, "Poly-Markt muss (per Namens-Match) gefunden werden")
+        self.assertAlmostEqual(res["odd"], 1.36, places=2)     # 1/0.735
+        self.assertEqual(res["vol"], 61467)
+        self.assertIsNone(res["sharePct"])                     # kein Holder-Freeze -> Share None (Preis reicht)
+
+    def test_fallback_kette_close_leer_dann_upcoming(self):
+        m = bf_match(home="Atletico Madrid", away="Malaga", league="Spanish La Liga", country="ES",
+                     runners=[{"name": "Atletico Madrid", "odd": 1.36},
+                              {"name": "The Draw", "odd": 5.0},
+                              {"name": "Malaga", "odd": 8.0}])
+        ms = BC.money_side(m)
+        close_entries = []                                     # Close-Freeze hat den Markt (noch) nicht
+        upcoming_entries = [self._upcoming_entry()]
+        poly = BC.match_poly(m, ms, close_entries) or BC.match_poly(m, ms, upcoming_entries)
+        self.assertIsNotNone(poly)                             # Fallback fuellt das vorher leere poly
+        self.assertAlmostEqual(poly["odd"], 1.36, places=2)
+
+
+if __name__ == "__main__":
+    unittest.main(verbosity=2)

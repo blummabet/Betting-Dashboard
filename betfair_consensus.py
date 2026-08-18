@@ -760,6 +760,16 @@ def main():
         k = LEAGUE_ODDS_KEY.get(m.get("league"))
         ev = match_event(m, events_by_key.get(k, [])) if k else None
         poly = match_poly(m, money_side(m), poly_entries)
+        if poly is None:
+            # 18.08.2026 (Lucas): Terminal-Konviktion zeigte „kein Poly-Markt" fuer Spiele >3h vor Anpfiff
+            # (Atletico-Malaga), obwohl Poly den Markt hat — der Close-Freeze faengt nur <=3h. Fallback auf
+            # LIVE (laufend) bzw. die breitere UPCOMING-Erfassung (Preis+Vol, kein Holder-Freeze) → Poly-Quote
+            # erscheint auch frueh. sharePct bleibt None (keine Holder-Daten), odd+vol sind da. Rein additiv:
+            # Close-Treffer haben weiter Vorrang, nur bisher leeres poly wird gefuellt.
+            _li = m.get("liveInfo") or {}
+            _isl = bool(_li.get("time")) and not _li.get("finished")
+            poly = ((match_poly(m, money_side(m), poly_live_entries) if _isl else None)
+                    or match_poly(m, money_side(m), poly_upcoming_entries))
         prevlist = hist.get(mid) or []
         prev = prevlist[-1] if prevlist else None
         g = build_game(m, ev, prev, direction, poly)
