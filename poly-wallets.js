@@ -168,7 +168,7 @@ function _pwSportCategory(s, sport){
   if(/f1|formula|motor|nascar/.test(x)) return 'Motorsport';
   if(/cricket/.test(x)) return 'Cricket';
   // Fußball breit: Namen + Liga-Muster (16.08.2026 Lucas: Eredivisie/Allsvenskan/EFL-Championship/… gefangen)
-  if(/soccer|football|fussball|fußball|\bepl\b|\bucl\b|\buel\b|uecl|conference|europa|libertad|sudameri|\bmls\b|liga|ligue|serie|bundesliga|eredivisie|allsven|superett|elitese|ekstrakla|veikkau|primeira|championship|super-?lig|pro-?league|\blal\b/.test(x)) return 'Fußball';
+  if(/soccer|football|fussball|fußball|\bepl\b|\bucl\b|\buel\b|uecl|uefa|champions|conmebol|concacaf|copa|coupe|\bdfb\b|\befl\b|conference|europa|libertad|sudameri|\bmls\b|liga|ligue|serie|bundesliga|eredivisie|allsven|superett|elitese|ekstrakla|veikkau|primeira|championship|super-?lig|pro-?league|\blal\b/.test(x)) return 'Fußball';
   return 'Sonstige';
 }
 const _PW_CAT_ICON={'Fußball':'⚽','US-Sport':'🏀','E-Sport':'🎮','Tennis':'🎾','Kampfsport':'🥊','Golf':'⛳','Motorsport':'🏎️','Cricket':'🏏','Sonstige':'🎯'};
@@ -1115,8 +1115,12 @@ function _pwGlobalWhaleLeaderboard(live){
 // Kriterium (Lücke schließt sich über Tage → echt; steht → Artefakt). Dieselbe Daten wie Poly-Radar.
 const _PW_SPORT_ICON={soccer:'⚽',basketball:'🏀',americanfootball:'🏈',baseball:'⚾',icehockey:'🏒',
   mma:'🥊',boxing:'🥊',tennis:'🎾',cricket:'🏏',golf:'⛳',esports:'🎮'};
-function _pwSportIcon(sport){const s=String(sport||'').toLowerCase();
-  for(const k in _PW_SPORT_ICON) if(s.indexOf(k)>=0) return _PW_SPORT_ICON[k]; return '🎯';}
+function _pwSportIcon(sport){
+  // 18.08.2026 (Lucas: „für Fußball dieses komische Pfeil-Icon"): frueher grobe Eigen-Map -> Fallback 🎯
+  // fuer La-Liga/Serie/Ligue etc. Jetzt ueber den robusten _pwSportCategory (kennt alle Liga-Muster).
+  if(sport && _PW_CAT_ICON[sport]) return _PW_CAT_ICON[sport];   // schon eine Kategorie ('Fußball' …)
+  return _PW_CAT_ICON[_pwSportCategory(sport)] || '🎯';
+}
 function _pwGlobalEdge(cs){
   const allDisc=(cs&&cs.discrepancies)?cs.discrepancies.slice():[];
   const cats=new Set(allDisc.map(d=>_pwSportCategory(d.sport)));
