@@ -153,11 +153,10 @@
           "awayName": "Coventry",
           "matchday": 1,
           "date": "2026-08-21",
-          "kickoff": "2026-08-21T19:00:00Z",
+          "kickoff": "2026-08-21T19:00:00+00:00",
           "venue": "Emirates Stadium",
           "fid": 1557367,
-          "result": null,
-          "time": "21:00"
+          "result": null
         },
         {
           "home": "64",
@@ -400,10 +399,11 @@
           "awayName": "Arsenal",
           "matchday": 2,
           "date": "2026-08-31",
-          "kickoff": "2026-08-31T19:00:00+00:00",
+          "kickoff": "2026-08-31T19:00:00Z",
           "venue": "Villa Park",
           "fid": 1557377,
-          "result": null
+          "result": null,
+          "time": "21:00"
         },
         {
           "home": "57",
@@ -766,49 +766,13 @@
           "result": null
         },
         {
-          "home": "1346",
-          "away": "34",
-          "homeName": "Coventry",
-          "awayName": "Newcastle",
-          "matchday": 6,
-          "date": "2026-10-10",
-          "kickoff": "2026-10-10T14:00:00+00:00",
-          "venue": "Coventry Building Society Arena",
-          "fid": 1557420,
-          "result": null
-        },
-        {
-          "home": "33",
-          "away": "47",
-          "homeName": "Manchester United",
-          "awayName": "Tottenham",
-          "matchday": 6,
-          "date": "2026-10-10",
-          "kickoff": "2026-10-10T14:00:00+00:00",
-          "venue": "Old Trafford",
-          "fid": 1557425,
-          "result": null
-        },
-        {
-          "home": "40",
-          "away": "50",
-          "homeName": "Liverpool",
-          "awayName": "Manchester City",
-          "matchday": 6,
-          "date": "2026-10-10",
-          "kickoff": "2026-10-10T14:00:00+00:00",
-          "venue": "Anfield",
-          "fid": 1557424,
-          "result": null
-        },
-        {
           "home": "42",
           "away": "63",
           "homeName": "Arsenal",
           "awayName": "Leeds",
           "matchday": 6,
           "date": "2026-10-10",
-          "kickoff": "2026-10-10T14:00:00+00:00",
+          "kickoff": "2026-10-10T11:30:00+00:00",
           "venue": "Emirates Stadium",
           "fid": 1557417,
           "result": null
@@ -826,18 +790,6 @@
           "result": null
         },
         {
-          "home": "52",
-          "away": "65",
-          "homeName": "Crystal Palace",
-          "awayName": "Nottingham Forest",
-          "matchday": 6,
-          "date": "2026-10-10",
-          "kickoff": "2026-10-10T14:00:00+00:00",
-          "venue": "Selhurst Park",
-          "fid": 1557421,
-          "result": null
-        },
-        {
           "home": "57",
           "away": "36",
           "homeName": "Ipswich",
@@ -847,18 +799,6 @@
           "kickoff": "2026-10-10T14:00:00+00:00",
           "venue": "Portman Road",
           "fid": 1557423,
-          "result": null
-        },
-        {
-          "home": "64",
-          "away": "45",
-          "homeName": "Hull City",
-          "awayName": "Everton",
-          "matchday": 6,
-          "date": "2026-10-10",
-          "kickoff": "2026-10-10T14:00:00+00:00",
-          "venue": "MKM Stadium",
-          "fid": 1557422,
           "result": null
         },
         {
@@ -886,27 +826,75 @@
           "result": null
         },
         {
-          "home": "34",
-          "away": "66",
-          "homeName": "Newcastle",
-          "awayName": "Aston Villa",
-          "matchday": 7,
-          "date": "2026-10-17",
-          "kickoff": "2026-10-17T14:00:00+00:00",
-          "venue": null,
-          "fid": 1557434,
+          "home": "33",
+          "away": "47",
+          "homeName": "Manchester United",
+          "awayName": "Tottenham",
+          "matchday": 6,
+          "date": "2026-10-10",
+          "kickoff": "2026-10-10T16:30:00+00:00",
+          "venue": "Old Trafford",
+          "fid": 1557425,
           "result": null
         },
         {
-          "home": "35",
-          "away": "746",
-          "homeName": "Bournemouth",
-          "awayName": "Sunderland",
+          "home": "52",
+          "away": "65",
+          "homeName": "Crystal Palace",
+          "awayName": "Nottingham Forest",
+          "matchday": 6,
+          "date": "2026-10-11",
+          "kickoff": "2026-10-11T13:00:00+00:00",
+          "venue": "Selhurst Park",
+          "fid": 1557421,
+          "result": null
+        },
+        {
+          "home": "64",
+          "away": "45",
+          "homeName": "Hull City",
+          "awayName": "Everton",
+          "matchday": 6,
+          "date": "2026-10-11",
+          "kickoff": "2026-10-11T13:00:00+00:00",
+          "venue": "MKM Stadium",
+          "fid": 1557422,
+          "result": null
+        },
+        {
+          "home": "40",
+          "away": "50",
+          "homeName": "Liverpool",
+          "awayName": "Manchester City",
+          "matchday": 6,
+          "date": "2026-10-11",
+          "kickoff": "2026-10-11T15:30:00+00:00",
+          "venue": "Anfield",
+          "fid": 1557424,
+          "result": null
+        },
+        {
+          "home": "1346",
+          "away": "34",
+          "homeName": "Coventry",
+          "awayName": "Newcastle",
+          "matchday": 6,
+          "date": "2026-10-12",
+          "kickoff": "2026-10-12T19:00:00+00:00",
+          "venue": "Coventry Building Society Arena",
+          "fid": 1557420,
+          "result": null
+        },
+        {
+          "home": "45",
+          "away": "49",
+          "homeName": "Everton",
+          "awayName": "Chelsea",
           "matchday": 7,
           "date": "2026-10-17",
-          "kickoff": "2026-10-17T14:00:00+00:00",
-          "venue": "Vitality Stadium",
-          "fid": 1557427,
+          "kickoff": "2026-10-17T11:30:00+00:00",
+          "venue": "Hill Dickinson Stadium",
+          "fid": 1557430,
           "result": null
         },
         {
@@ -922,30 +910,6 @@
           "result": null
         },
         {
-          "home": "45",
-          "away": "49",
-          "homeName": "Everton",
-          "awayName": "Chelsea",
-          "matchday": 7,
-          "date": "2026-10-17",
-          "kickoff": "2026-10-17T14:00:00+00:00",
-          "venue": "Hill Dickinson Stadium",
-          "fid": 1557430,
-          "result": null
-        },
-        {
-          "home": "47",
-          "away": "1346",
-          "homeName": "Tottenham",
-          "awayName": "Coventry",
-          "matchday": 7,
-          "date": "2026-10-17",
-          "kickoff": "2026-10-17T14:00:00+00:00",
-          "venue": "Tottenham Hotspur Stadium",
-          "fid": 1557436,
-          "result": null
-        },
-        {
           "home": "50",
           "away": "57",
           "homeName": "Manchester City",
@@ -955,18 +919,6 @@
           "kickoff": "2026-10-17T14:00:00+00:00",
           "venue": "Etihad Stadium",
           "fid": 1557433,
-          "result": null
-        },
-        {
-          "home": "51",
-          "away": "52",
-          "homeName": "Brighton",
-          "awayName": "Crystal Palace",
-          "matchday": 7,
-          "date": "2026-10-17",
-          "kickoff": "2026-10-17T14:00:00+00:00",
-          "venue": "Amex Stadium",
-          "fid": 1557429,
           "result": null
         },
         {
@@ -982,13 +934,49 @@
           "result": null
         },
         {
+          "home": "34",
+          "away": "66",
+          "homeName": "Newcastle",
+          "awayName": "Aston Villa",
+          "matchday": 7,
+          "date": "2026-10-17",
+          "kickoff": "2026-10-17T16:30:00+00:00",
+          "venue": null,
+          "fid": 1557434,
+          "result": null
+        },
+        {
+          "home": "35",
+          "away": "746",
+          "homeName": "Bournemouth",
+          "awayName": "Sunderland",
+          "matchday": 7,
+          "date": "2026-10-18",
+          "kickoff": "2026-10-18T13:00:00+00:00",
+          "venue": "Vitality Stadium",
+          "fid": 1557427,
+          "result": null
+        },
+        {
+          "home": "51",
+          "away": "52",
+          "homeName": "Brighton",
+          "awayName": "Crystal Palace",
+          "matchday": 7,
+          "date": "2026-10-18",
+          "kickoff": "2026-10-18T13:00:00+00:00",
+          "venue": "Amex Stadium",
+          "fid": 1557429,
+          "result": null
+        },
+        {
           "home": "63",
           "away": "33",
           "homeName": "Leeds",
           "awayName": "Manchester United",
           "matchday": 7,
-          "date": "2026-10-17",
-          "kickoff": "2026-10-17T14:00:00+00:00",
+          "date": "2026-10-18",
+          "kickoff": "2026-10-18T13:00:00+00:00",
           "venue": "Elland Road",
           "fid": 1557432,
           "result": null
@@ -999,10 +987,46 @@
           "homeName": "Nottingham Forest",
           "awayName": "Arsenal",
           "matchday": 7,
-          "date": "2026-10-17",
-          "kickoff": "2026-10-17T14:00:00+00:00",
+          "date": "2026-10-18",
+          "kickoff": "2026-10-18T15:30:00+00:00",
           "venue": "City Ground",
           "fid": 1557435,
+          "result": null
+        },
+        {
+          "home": "47",
+          "away": "1346",
+          "homeName": "Tottenham",
+          "awayName": "Coventry",
+          "matchday": 7,
+          "date": "2026-10-19",
+          "kickoff": "2026-10-19T19:00:00+00:00",
+          "venue": "Tottenham Hotspur Stadium",
+          "fid": 1557436,
+          "result": null
+        },
+        {
+          "home": "57",
+          "away": "65",
+          "homeName": "Ipswich",
+          "awayName": "Nottingham Forest",
+          "matchday": 8,
+          "date": "2026-10-23",
+          "kickoff": "2026-10-23T19:00:00+00:00",
+          "venue": "Portman Road",
+          "fid": 1557443,
+          "result": null
+        },
+        {
+          "home": "66",
+          "away": "50",
+          "homeName": "Aston Villa",
+          "awayName": "Manchester City",
+          "matchday": 8,
+          "date": "2026-10-24",
+          "kickoff": "2026-10-24T11:30:00+00:00",
+          "venue": "Villa Park",
+          "fid": 1557438,
           "result": null
         },
         {
@@ -1015,18 +1039,6 @@
           "kickoff": "2026-10-24T14:00:00+00:00",
           "venue": "Coventry Building Society Arena",
           "fid": 1557440,
-          "result": null
-        },
-        {
-          "home": "33",
-          "away": "35",
-          "homeName": "Manchester United",
-          "awayName": "Bournemouth",
-          "matchday": 8,
-          "date": "2026-10-24",
-          "kickoff": "2026-10-24T14:00:00+00:00",
-          "venue": "Old Trafford",
-          "fid": 1557445,
           "result": null
         },
         {
@@ -1060,9 +1072,21 @@
           "awayName": "Tottenham",
           "matchday": 8,
           "date": "2026-10-24",
-          "kickoff": "2026-10-24T14:00:00+00:00",
+          "kickoff": "2026-10-24T16:30:00+00:00",
           "venue": "Stamford Bridge",
           "fid": 1557439,
+          "result": null
+        },
+        {
+          "home": "33",
+          "away": "35",
+          "homeName": "Manchester United",
+          "awayName": "Bournemouth",
+          "matchday": 8,
+          "date": "2026-10-25",
+          "kickoff": "2026-10-25T14:00:00+00:00",
+          "venue": "Old Trafford",
+          "fid": 1557445,
           "result": null
         },
         {
@@ -1071,22 +1095,10 @@
           "homeName": "Crystal Palace",
           "awayName": "Newcastle",
           "matchday": 8,
-          "date": "2026-10-24",
-          "kickoff": "2026-10-24T14:00:00+00:00",
+          "date": "2026-10-25",
+          "kickoff": "2026-10-25T14:00:00+00:00",
           "venue": "Selhurst Park",
           "fid": 1557441,
-          "result": null
-        },
-        {
-          "home": "57",
-          "away": "65",
-          "homeName": "Ipswich",
-          "awayName": "Nottingham Forest",
-          "matchday": 8,
-          "date": "2026-10-24",
-          "kickoff": "2026-10-24T14:00:00+00:00",
-          "venue": "Portman Road",
-          "fid": 1557443,
           "result": null
         },
         {
@@ -1095,22 +1107,10 @@
           "homeName": "Hull City",
           "awayName": "Brentford",
           "matchday": 8,
-          "date": "2026-10-24",
-          "kickoff": "2026-10-24T14:00:00+00:00",
+          "date": "2026-10-25",
+          "kickoff": "2026-10-25T14:00:00+00:00",
           "venue": "MKM Stadium",
           "fid": 1557442,
-          "result": null
-        },
-        {
-          "home": "66",
-          "away": "50",
-          "homeName": "Aston Villa",
-          "awayName": "Manchester City",
-          "matchday": 8,
-          "date": "2026-10-24",
-          "kickoff": "2026-10-24T14:00:00+00:00",
-          "venue": "Villa Park",
-          "fid": 1557438,
           "result": null
         },
         {
@@ -1119,10 +1119,22 @@
           "homeName": "Sunderland",
           "awayName": "Leeds",
           "matchday": 8,
-          "date": "2026-10-24",
-          "kickoff": "2026-10-24T14:00:00+00:00",
+          "date": "2026-10-25",
+          "kickoff": "2026-10-25T16:30:00+00:00",
           "venue": "Stadium of Light",
           "fid": 1557446,
+          "result": null
+        },
+        {
+          "home": "49",
+          "away": "33",
+          "homeName": "Chelsea",
+          "awayName": "Manchester United",
+          "matchday": 9,
+          "date": "2026-10-31",
+          "kickoff": "2026-10-31T12:30:00+00:00",
+          "venue": "Stamford Bridge",
+          "fid": 1557450,
           "result": null
         },
         {
@@ -1138,18 +1150,6 @@
           "result": null
         },
         {
-          "home": "34",
-          "away": "45",
-          "homeName": "Newcastle",
-          "awayName": "Everton",
-          "matchday": 9,
-          "date": "2026-10-31",
-          "kickoff": "2026-10-31T15:00:00+00:00",
-          "venue": null,
-          "fid": 1557455,
-          "result": null
-        },
-        {
           "home": "35",
           "away": "63",
           "homeName": "Bournemouth",
@@ -1159,42 +1159,6 @@
           "kickoff": "2026-10-31T15:00:00+00:00",
           "venue": "Vitality Stadium",
           "fid": 1557448,
-          "result": null
-        },
-        {
-          "home": "40",
-          "away": "42",
-          "homeName": "Liverpool",
-          "awayName": "Arsenal",
-          "matchday": 9,
-          "date": "2026-10-31",
-          "kickoff": "2026-10-31T15:00:00+00:00",
-          "venue": "Anfield",
-          "fid": 1557453,
-          "result": null
-        },
-        {
-          "home": "47",
-          "away": "52",
-          "homeName": "Tottenham",
-          "awayName": "Crystal Palace",
-          "matchday": 9,
-          "date": "2026-10-31",
-          "kickoff": "2026-10-31T15:00:00+00:00",
-          "venue": "Tottenham Hotspur Stadium",
-          "fid": 1557456,
-          "result": null
-        },
-        {
-          "home": "49",
-          "away": "33",
-          "homeName": "Chelsea",
-          "awayName": "Manchester United",
-          "matchday": 9,
-          "date": "2026-10-31",
-          "kickoff": "2026-10-31T15:00:00+00:00",
-          "venue": "Stamford Bridge",
-          "fid": 1557450,
           "result": null
         },
         {
@@ -1234,15 +1198,51 @@
           "result": null
         },
         {
+          "home": "47",
+          "away": "52",
+          "homeName": "Tottenham",
+          "awayName": "Crystal Palace",
+          "matchday": 9,
+          "date": "2026-10-31",
+          "kickoff": "2026-10-31T17:30:00+00:00",
+          "venue": "Tottenham Hotspur Stadium",
+          "fid": 1557456,
+          "result": null
+        },
+        {
           "home": "66",
           "away": "36",
           "homeName": "Aston Villa",
           "awayName": "Fulham",
           "matchday": 9,
-          "date": "2026-10-31",
-          "kickoff": "2026-10-31T15:00:00+00:00",
+          "date": "2026-11-01",
+          "kickoff": "2026-11-01T14:00:00+00:00",
           "venue": "Villa Park",
           "fid": 1557447,
+          "result": null
+        },
+        {
+          "home": "40",
+          "away": "42",
+          "homeName": "Liverpool",
+          "awayName": "Arsenal",
+          "matchday": 9,
+          "date": "2026-11-01",
+          "kickoff": "2026-11-01T16:30:00+00:00",
+          "venue": "Anfield",
+          "fid": 1557453,
+          "result": null
+        },
+        {
+          "home": "34",
+          "away": "45",
+          "homeName": "Newcastle",
+          "awayName": "Everton",
+          "matchday": 9,
+          "date": "2026-11-02",
+          "kickoff": "2026-11-02T20:00:00+00:00",
+          "venue": null,
+          "fid": 1557455,
           "result": null
         },
         {
@@ -4767,6 +4767,20 @@
           "elo": null
         },
         {
+          "id": "797",
+          "name": "Elche",
+          "logo": "https://media.api-sports.io/football/teams/797.png",
+          "flag": "<img src=\"https://media.api-sports.io/football/teams/797.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+          "elo": null
+        },
+        {
+          "id": "544",
+          "name": "Deportivo La Coruna",
+          "logo": "https://media.api-sports.io/football/teams/544.png",
+          "flag": "<img src=\"https://media.api-sports.io/football/teams/544.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+          "elo": null
+        },
+        {
           "id": "529",
           "name": "Barcelona",
           "logo": "https://media.api-sports.io/football/teams/529.png",
@@ -4823,24 +4837,10 @@
           "elo": null
         },
         {
-          "id": "797",
-          "name": "Elche",
-          "logo": "https://media.api-sports.io/football/teams/797.png",
-          "flag": "<img src=\"https://media.api-sports.io/football/teams/797.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-          "elo": null
-        },
-        {
           "id": "727",
           "name": "Osasuna",
           "logo": "https://media.api-sports.io/football/teams/727.png",
           "flag": "<img src=\"https://media.api-sports.io/football/teams/727.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-          "elo": null
-        },
-        {
-          "id": "544",
-          "name": "Deportivo La Coruna",
-          "logo": "https://media.api-sports.io/football/teams/544.png",
-          "flag": "<img src=\"https://media.api-sports.io/football/teams/544.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
           "elo": null
         },
         {
@@ -4969,9 +4969,19 @@
           "matchday": 1,
           "date": "2026-08-17",
           "kickoff": "2026-08-17T19:00:00+00:00",
-          "venue": "Estadio Municipal de Riazor",
+          "venue": "Estadio Riazor",
           "fid": 1570337,
-          "result": null
+          "result": {
+            "status": "FT",
+            "home_score": 1,
+            "away_score": 1,
+            "stats": {
+              "xgHome": 0.34,
+              "xgAway": 1.41,
+              "xgTotal": 1.75,
+              "xgSource": "api"
+            }
+          }
         },
         {
           "home": "530",
@@ -4992,11 +5002,10 @@
           "awayName": "Alaves",
           "matchday": 2,
           "date": "2026-08-20",
-          "kickoff": "2026-08-20T19:00:00Z",
+          "kickoff": "2026-08-20T19:00:00+00:00",
           "venue": "Estadio Municipal de Butarque",
           "fid": 1570351,
-          "result": null,
-          "time": "21:00"
+          "result": null
         },
         {
           "home": "543",
@@ -5005,11 +5014,10 @@
           "awayName": "Real Sociedad",
           "matchday": 2,
           "date": "2026-08-21",
-          "kickoff": "2026-08-21T19:00:00Z",
+          "kickoff": "2026-08-21T19:00:00+00:00",
           "venue": "Estadio de La Cartuja",
           "fid": 1570345,
-          "result": null,
-          "time": "21:00"
+          "result": null
         },
         {
           "home": "531",
@@ -5273,10 +5281,11 @@
           "awayName": "Getafe",
           "matchday": 3,
           "date": "2026-08-31",
-          "kickoff": "2026-08-31T17:30:00+00:00",
+          "kickoff": "2026-08-31T17:30:00Z",
           "venue": "Estadio El Sadar",
           "fid": 1570358,
-          "result": null
+          "result": null,
+          "time": "19:30"
         },
         {
           "home": "529",
@@ -13460,11 +13469,10 @@
           "awayName": "Como",
           "matchday": 1,
           "date": "2026-08-22",
-          "kickoff": "2026-08-22T16:30:00Z",
+          "kickoff": "2026-08-22T16:30:00+00:00",
           "venue": "Bluenergy Stadium - Stadio Friuli",
           "fid": 1550095,
-          "result": null,
-          "time": "18:30"
+          "result": null
         },
         {
           "home": "505",
@@ -13485,11 +13493,10 @@
           "awayName": "Napoli",
           "matchday": 1,
           "date": "2026-08-22",
-          "kickoff": "2026-08-22T18:45:00Z",
+          "kickoff": "2026-08-22T18:45:00+00:00",
           "venue": "Stadio Luigi Ferraris",
           "fid": 1550091,
-          "result": null,
-          "time": "20:45"
+          "result": null
         },
         {
           "home": "523",
@@ -13498,11 +13505,10 @@
           "awayName": "Cagliari",
           "matchday": 1,
           "date": "2026-08-22",
-          "kickoff": "2026-08-22T18:45:00Z",
+          "kickoff": "2026-08-22T18:45:00+00:00",
           "venue": "Stadio Ennio Tardini",
           "fid": 1550093,
-          "result": null,
-          "time": "20:45"
+          "result": null
         },
         {
           "home": "512",
@@ -13692,10 +13698,11 @@
           "awayName": "AS Roma",
           "matchday": 2,
           "date": "2026-08-31",
-          "kickoff": "2026-08-31T16:30:00+00:00",
+          "kickoff": "2026-08-31T16:30:00Z",
           "venue": "Stadio Via del Mare",
           "fid": 1550103,
-          "result": null
+          "result": null,
+          "time": "18:30"
         },
         {
           "home": "499",
@@ -13704,10 +13711,11 @@
           "awayName": "Bologna",
           "matchday": 2,
           "date": "2026-08-31",
-          "kickoff": "2026-08-31T18:45:00+00:00",
+          "kickoff": "2026-08-31T18:45:00Z",
           "venue": "New Balance Arena",
           "fid": 1550098,
-          "result": null
+          "result": null,
+          "time": "20:45"
         },
         {
           "home": "495",
@@ -18170,11 +18178,10 @@
           "awayName": "Strasbourg",
           "matchday": 1,
           "date": "2026-08-21",
-          "kickoff": "2026-08-21T18:45:00Z",
+          "kickoff": "2026-08-21T18:45:00+00:00",
           "venue": null,
           "fid": 1552733,
-          "result": null,
-          "time": "20:45"
+          "result": null
         },
         {
           "home": "116",
@@ -21861,43 +21868,43 @@
         "o25": 1.6,
         "u25": 2.3
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 1.18,
-      "dr": 7.7,
-      "aw": 15.4,
+      "dr": 7.76,
+      "aw": 15.49,
       "bookmaker": "pinnacle",
-      "dc1X": 1.023,
+      "dc1X": 1.024,
       "dc12": 1.096,
-      "dcX2": 5.133,
+      "dcX2": 5.17,
       "o25": 1.53,
       "u25": 2.4,
       "ahLadder": {
         "-2.0": [
-          2.0,
-          1.89
+          1.98,
+          1.91
         ]
       },
-      "ahA_p200": 1.89,
-      "ahH_n200": 2.0,
+      "ahA_p200": 1.91,
+      "ahH_n200": 1.98,
       "poly_hw": 0.835,
       "poly_dr": 0.115,
       "poly_aw": 0.045,
       "poly_vol": 38757.01,
       "poly_slug": "epl-ars-cov-2026-08-21",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 1.17,
-      "public_dr": 7.225,
+      "public_dr": 7.0,
       "public_aw": 15.0,
-      "public_bookmaker": "Konsens (46 Books)",
-      "public_o25": 1.57,
-      "public_u25": 2.33,
+      "public_bookmaker": "Konsens (47 Books)",
+      "public_o25": 1.58,
+      "public_u25": 2.32,
       "public_o35": 2.2,
       "public_u35": 1.6,
       "public_ou_bookmaker": "Konsens (18 Books)",
       "bf_hw": 1.2,
       "bf_dr": 8.2,
-      "bf_aw": 21.0,
+      "bf_aw": 20.0,
       "public_hw_open": 1.17,
       "public_dr_open": 7.5,
       "public_aw_open": 13.0,
@@ -21914,38 +21921,39 @@
         "o25": 1.65,
         "u25": 2.2
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
-      "hw": 8.5,
-      "dr": 4.85,
-      "aw": 1.4,
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
+      "hw": 8.7,
+      "dr": 5.05,
+      "aw": 1.38,
       "bookmaker": "pinnacle",
-      "dc1X": 3.088,
-      "dc12": 1.202,
-      "dcX2": 1.086,
+      "dc1X": 3.195,
+      "dc12": 1.191,
+      "dcX2": 1.084,
       "o25": 1.73,
       "u25": 2.05,
       "ahLadder": {
-        "1.25": [
-          2.04,
-          1.87
+        "1.5": [
+          1.86,
+          2.05
         ]
       },
+      "ahA_n150": 2.05,
       "ahA_n125": 1.87,
-      "poly_hw": 0.115,
-      "poly_dr": 0.205,
+      "poly_hw": 0.105,
+      "poly_dr": 0.195,
       "poly_aw": 0.695,
-      "poly_vol": 8794.74,
+      "poly_vol": 9167.0,
       "poly_slug": "epl-hul-mun-2026-08-22",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 8.0,
-      "public_dr": 4.7,
+      "public_dr": 4.8,
       "public_aw": 1.38,
       "public_bookmaker": "Konsens (47 Books)",
       "public_o25": 1.7,
-      "public_u25": 2.13,
-      "public_ou_bookmaker": "Konsens (23 Books)",
-      "bf_hw": 9.6,
+      "public_u25": 2.15,
+      "public_ou_bookmaker": "Konsens (22 Books)",
+      "bf_hw": 9.8,
       "bf_dr": 5.1,
       "bf_aw": 1.41,
       "public_hw_open": 6.0,
@@ -21964,7 +21972,7 @@
         "o25": 1.81,
         "u25": 2.01
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 2.21,
       "dr": 3.48,
       "aw": 3.41,
@@ -21980,19 +21988,19 @@
           2.0
         ]
       },
-      "ahA_p025": 2.0,
       "ahH_n025": 1.91,
+      "ahA_p025": 2.0,
       "poly_hw": 0.445,
       "poly_dr": 0.275,
       "poly_aw": 0.28,
-      "poly_vol": 1297.14,
+      "poly_vol": 1337.72,
       "poly_slug": "epl-eve-cry-2026-08-22",
-      "marketsFreshAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsFreshAt": "2026-08-18T10:22:08.174370+00:00",
       "public_hw": 2.15,
       "public_dr": 3.4,
       "public_aw": 3.3,
       "public_bookmaker": "Konsens (47 Books)",
-      "public_o25": 1.9,
+      "public_o25": 1.91,
       "public_u25": 1.88,
       "public_ou_bookmaker": "Konsens (23 Books)",
       "bf_hw": 2.26,
@@ -22012,16 +22020,16 @@
         "o25": 1.9,
         "u25": 1.9
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
-      "hw": 2.78,
-      "dr": 3.35,
-      "aw": 2.67,
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
+      "hw": 2.8,
+      "dr": 3.3,
+      "aw": 2.69,
       "bookmaker": "pinnacle",
-      "dc1X": 1.519,
-      "dc12": 1.362,
-      "dcX2": 1.486,
-      "o25": 1.94,
-      "u25": 1.94,
+      "dc1X": 1.515,
+      "dc12": 1.372,
+      "dcX2": 1.482,
+      "o25": 2.01,
+      "u25": 1.88,
       "ahLadder": {
         "0.0": [
           1.99,
@@ -22029,19 +22037,19 @@
         ]
       },
       "poly_hw": 0.345,
-      "poly_dr": 0.285,
+      "poly_dr": 0.295,
       "poly_aw": 0.355,
-      "poly_vol": 861.1,
+      "poly_vol": 927.69,
       "poly_slug": "epl-ips-sun-2026-08-22",
-      "marketsFreshAt": "2026-08-18T04:29:41.587408+00:00",
-      "public_hw": 2.65,
+      "marketsFreshAt": "2026-08-18T10:22:08.174370+00:00",
+      "public_hw": 2.7,
       "public_dr": 3.3,
       "public_aw": 2.6,
       "public_bookmaker": "Konsens (47 Books)",
-      "public_o25": 1.93,
+      "public_o25": 1.94,
       "public_u25": 1.85,
       "public_ou_bookmaker": "Konsens (23 Books)",
-      "bf_hw": 2.82,
+      "bf_hw": 2.84,
       "bf_dr": 3.4,
       "bf_aw": 2.76,
       "public_hw_open": 2.62,
@@ -22058,7 +22066,7 @@
         "o25": 1.94,
         "u25": 1.85
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 2.35,
       "dr": 3.42,
       "aw": 3.17,
@@ -22074,15 +22082,15 @@
           1.88
         ]
       },
-      "ahA_p025": 1.88,
       "ahH_n025": 2.03,
+      "ahA_p025": 1.88,
       "poly_hw": 0.415,
       "poly_dr": 0.285,
       "poly_aw": 0.305,
-      "poly_vol": 999.44,
+      "poly_vol": 1659.81,
       "poly_slug": "epl-not-lee-2026-08-22",
-      "marketsFreshAt": "2026-08-18T04:29:41.587408+00:00",
-      "public_hw": 2.25,
+      "marketsFreshAt": "2026-08-18T10:22:08.174370+00:00",
+      "public_hw": 2.26,
       "public_dr": 3.35,
       "public_aw": 3.1,
       "public_bookmaker": "Konsens (47 Books)",
@@ -22106,40 +22114,40 @@
         "o25": 1.62,
         "u25": 2.25
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
-      "hw": 2.45,
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
+      "hw": 2.51,
       "dr": 3.72,
-      "aw": 2.8,
+      "aw": 2.73,
       "bookmaker": "pinnacle",
-      "dc1X": 1.477,
-      "dc12": 1.307,
-      "dcX2": 1.598,
+      "dc1X": 1.499,
+      "dc12": 1.308,
+      "dcX2": 1.575,
       "o25": 1.62,
       "u25": 2.25,
       "ahLadder": {
         "0.0": [
-          1.83,
-          2.09
+          1.87,
+          2.04
         ]
       },
       "ahA_p025": 1.79,
       "poly_hw": 0.385,
       "poly_dr": 0.265,
       "poly_aw": 0.355,
-      "poly_vol": 24055.28,
+      "poly_vol": 25672.98,
       "poly_slug": "epl-bre-tot-2026-08-22",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 2.4,
-      "public_dr": 3.55,
+      "public_dr": 3.56,
       "public_aw": 2.75,
       "public_bookmaker": "Konsens (47 Books)",
-      "public_o25": 1.665,
+      "public_o25": 1.65,
       "public_u25": 2.19,
       "public_ou_bookmaker": "Konsens (18 Books)",
       "bf_hw": 2.54,
       "bf_dr": 3.75,
-      "bf_aw": 2.86,
+      "bf_aw": 2.88,
       "public_hw_open": 2.5,
       "public_dr_open": 3.5,
       "public_aw_open": 2.5,
@@ -22156,7 +22164,7 @@
         "o25": 1.36,
         "u25": 2.9
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 1.48,
       "dr": 5.09,
       "aw": 6.01,
@@ -22173,24 +22181,24 @@
         ]
       },
       "ahH_n150": 2.22,
-      "ahA_p150": 1.77,
       "ahH_n125": 2.01,
       "ahA_p125": 1.9,
+      "ahA_p150": 1.77,
       "poly_hw": 0.665,
       "poly_dr": 0.185,
       "poly_aw": 0.145,
-      "poly_vol": 8381.99,
+      "poly_vol": 8718.61,
       "poly_slug": "epl-mac-bou-2026-08-23",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 1.44,
-      "public_dr": 4.8,
+      "public_dr": 4.85,
       "public_aw": 6.0,
       "public_bookmaker": "Konsens (47 Books)",
       "public_o25": 1.44,
       "public_u25": 2.78,
       "public_o35": 2.055,
-      "public_u35": 1.75,
+      "public_u35": 1.76,
       "public_ou_bookmaker": "Konsens (23 Books)",
       "bf_hw": 1.52,
       "bf_dr": 5.1,
@@ -22211,36 +22219,36 @@
         "o25": 1.57,
         "u25": 2.38
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
-      "hw": 2.26,
-      "dr": 3.7,
-      "aw": 3.11,
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
+      "hw": 2.27,
+      "dr": 3.66,
+      "aw": 3.12,
       "bookmaker": "pinnacle",
-      "dc1X": 1.403,
-      "dc12": 1.309,
-      "dcX2": 1.69,
+      "dc1X": 1.401,
+      "dc12": 1.314,
+      "dcX2": 1.684,
       "o25": 1.57,
       "u25": 2.38,
       "ahLadder": {
         "-0.25": [
           1.98,
-          1.93
+          1.92
         ]
       },
-      "ahA_p025": 1.93,
       "ahH_n025": 1.98,
+      "ahA_p025": 1.92,
       "poly_hw": 0.425,
       "poly_dr": 0.255,
       "poly_aw": 0.315,
-      "poly_vol": 4236.25,
+      "poly_vol": 4282.33,
       "poly_slug": "epl-bri-ast-2026-08-23",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
-      "public_hw": 2.23,
+      "public_hw": 2.22,
       "public_dr": 3.6,
       "public_aw": 3.0,
       "public_bookmaker": "Konsens (47 Books)",
-      "public_o25": 1.605,
+      "public_o25": 1.62,
       "public_u25": 2.28,
       "public_ou_bookmaker": "Konsens (18 Books)",
       "bf_hw": 2.3,
@@ -22260,14 +22268,14 @@
         "o25": 1.4,
         "u25": 2.88
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 3.7,
-      "dr": 4.04,
+      "dr": 4.03,
       "aw": 1.93,
       "bookmaker": "pinnacle",
-      "dc1X": 1.931,
+      "dc1X": 1.929,
       "dc12": 1.268,
-      "dcX2": 1.306,
+      "dcX2": 1.305,
       "o25": 1.5,
       "u25": 2.5,
       "ahLadder": {
@@ -22276,14 +22284,14 @@
           1.94
         ]
       },
-      "ahA_n050": 1.94,
       "ahA_n025": 1.82,
+      "ahA_n050": 1.94,
       "poly_hw": 0.255,
       "poly_dr": 0.245,
       "poly_aw": 0.505,
-      "poly_vol": 34256.0,
+      "poly_vol": 34491.4,
       "poly_slug": "epl-new-liv-2026-08-23",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 3.55,
       "public_dr": 3.9,
@@ -22294,9 +22302,9 @@
       "public_o35": 2.18,
       "public_u35": 1.66,
       "public_ou_bookmaker": "Konsens (20 Books)",
-      "bf_hw": 3.95,
-      "bf_dr": 4.0,
-      "bf_aw": 1.97,
+      "bf_hw": 3.9,
+      "bf_dr": 4.1,
+      "bf_aw": 1.96,
       "public_hw_open": 2.75,
       "public_dr_open": 3.8,
       "public_aw_open": 2.2,
@@ -22313,37 +22321,37 @@
         "o25": 1.62,
         "u25": 2.25
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 3.64,
-      "dr": 3.97,
-      "aw": 1.94,
+      "dr": 3.9,
+      "aw": 1.96,
       "bookmaker": "pinnacle",
-      "dc1X": 1.899,
-      "dc12": 1.266,
-      "dcX2": 1.303,
+      "dc1X": 1.883,
+      "dc12": 1.274,
+      "dcX2": 1.304,
       "o25": 1.62,
       "u25": 2.25,
       "ahLadder": {
         "0.5": [
-          1.93,
-          1.95
+          1.92,
+          1.97
         ]
       },
-      "ahA_n050": 1.95,
       "ahA_n025": 1.81,
-      "poly_hw": 0.275,
-      "poly_dr": 0.255,
-      "poly_aw": 0.485,
-      "poly_vol": 7891.36,
+      "ahA_n050": 1.97,
+      "poly_hw": 0.26,
+      "poly_dr": 0.25,
+      "poly_aw": 0.495,
+      "poly_vol": 7951.6,
       "poly_slug": "epl-ful-che-2026-08-24",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 3.5,
       "public_dr": 3.75,
       "public_aw": 1.96,
       "public_bookmaker": "Konsens (46 Books)",
-      "public_o25": 1.615,
-      "public_u25": 2.28,
+      "public_o25": 1.62,
+      "public_u25": 2.25,
       "public_ou_bookmaker": "Konsens (18 Books)",
       "bf_hw": 3.85,
       "bf_dr": 3.9,
@@ -22362,7 +22370,7 @@
         "o25": 2.25,
         "u25": 1.75
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 4.72,
       "dr": 3.62,
       "aw": 1.83,
@@ -22385,7 +22393,7 @@
       "poly_aw": 0.53,
       "poly_vol": 99.92,
       "poly_slug": "sea-udi-com-2026-08-22",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 4.5,
       "public_dr": 3.5,
@@ -22393,10 +22401,10 @@
       "public_bookmaker": "Konsens (48 Books)",
       "public_o25": 2.12,
       "public_u25": 1.7,
-      "public_ou_bookmaker": "Konsens (22 Books)",
+      "public_ou_bookmaker": "Konsens (21 Books)",
       "bf_hw": 5.0,
       "bf_dr": 3.6,
-      "bf_aw": 1.87,
+      "bf_aw": 1.88,
       "public_hw_open": 5.0,
       "public_dr_open": 3.4,
       "public_aw_open": 1.85,
@@ -22413,7 +22421,7 @@
         "o25": 2.35,
         "u25": 1.7
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 5.15,
       "dr": 3.3,
       "aw": 1.85,
@@ -22435,18 +22443,18 @@
       "poly_aw": 0.52,
       "poly_vol": 349.63,
       "poly_slug": "sea-gen-nap-2026-08-22",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
-      "public_hw": 4.655,
+      "public_hw": 4.625,
       "public_dr": 3.3,
-      "public_aw": 1.83,
+      "public_aw": 1.84,
       "public_bookmaker": "Konsens (48 Books)",
       "public_o25": 2.185,
       "public_u25": 1.63,
       "public_ou_bookmaker": "Konsens (16 Books)",
       "bf_hw": 5.2,
-      "bf_dr": 3.45,
-      "bf_aw": 1.88,
+      "bf_dr": 3.4,
+      "bf_aw": 1.91,
       "public_hw_open": 5.5,
       "public_dr_open": 3.45,
       "public_aw_open": 1.72,
@@ -22463,7 +22471,7 @@
         "o25": 1.86,
         "u25": 1.94
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 1.58,
       "dr": 4.16,
       "aw": 5.85,
@@ -22479,27 +22487,27 @@
           1.87
         ]
       },
-      "ahH_n150": 2.6,
-      "ahA_p150": 1.59,
-      "ahA_p100": 1.87,
       "ahH_n100": 2.02,
-      "poly_hw": 0.61,
+      "ahH_n150": 2.6,
+      "ahA_p100": 1.87,
+      "ahA_p150": 1.59,
+      "poly_hw": 0.615,
       "poly_dr": 0.23,
       "poly_aw": 0.155,
       "poly_vol": 73.46,
       "poly_slug": "sea-rom-fio-2026-08-24",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-17T02:08:15.548988+00:00",
       "public_hw": 1.54,
       "public_dr": 4.0,
-      "public_aw": 5.86,
+      "public_aw": 5.8,
       "public_bookmaker": "Konsens (47 Books)",
       "public_o25": 1.85,
       "public_u25": 1.93,
       "public_ou_bookmaker": "Konsens (23 Books)",
-      "bf_hw": 1.58,
+      "bf_hw": 1.61,
       "bf_dr": 4.1,
-      "bf_aw": 6.4,
+      "bf_aw": 6.2,
       "public_hw_open": 1.51,
       "public_dr_open": 4.33,
       "public_aw_open": 6.85,
@@ -22514,7 +22522,7 @@
         "o25": 1.65,
         "u25": 2.2
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 1.55,
       "dr": 4.47,
       "aw": 5.93,
@@ -22530,23 +22538,23 @@
           1.99
         ]
       },
-      "ahH_n150": 2.49,
-      "ahA_p150": 1.63,
-      "ahA_p100": 1.99,
       "ahH_n100": 1.92,
+      "ahH_n150": 2.49,
+      "ahA_p100": 1.99,
+      "ahA_p150": 1.63,
       "poly_hw": 0.62,
-      "poly_dr": 0.21,
+      "poly_dr": 0.215,
       "poly_aw": 0.155,
       "poly_vol": 4.76,
       "poly_slug": "sea-ata-sas-2026-08-23",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-17T02:08:15.548988+00:00",
       "public_hw": 1.5,
       "public_dr": 4.34,
       "public_aw": 5.9,
       "public_bookmaker": "Konsens (48 Books)",
-      "public_o25": 1.67,
-      "public_u25": 2.16,
+      "public_o25": 1.66,
+      "public_u25": 2.17,
       "public_ou_bookmaker": "Konsens (17 Books)",
       "bf_hw": 1.56,
       "bf_dr": 4.4,
@@ -22565,7 +22573,7 @@
         "o25": 2.1,
         "u25": 1.7
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 2.24,
       "dr": 3.23,
       "aw": 3.52,
@@ -22581,14 +22589,14 @@
           1.96
         ]
       },
-      "ahA_p025": 1.96,
       "ahH_n025": 1.92,
-      "poly_hw": 0.43,
+      "ahA_p025": 1.96,
+      "poly_hw": 0.435,
       "poly_dr": 0.3,
       "poly_aw": 0.27,
       "poly_vol": 45.45,
       "poly_slug": "sea-bol-laz-2026-08-24",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-17T02:08:15.548988+00:00",
       "public_hw": 2.15,
       "public_dr": 3.2,
@@ -22597,7 +22605,7 @@
       "public_o25": 2.2,
       "public_u25": 1.65,
       "public_ou_bookmaker": "Konsens (22 Books)",
-      "bf_hw": 2.28,
+      "bf_hw": 2.3,
       "bf_dr": 3.2,
       "bf_aw": 3.55,
       "public_hw_open": 2.11,
@@ -22614,14 +22622,14 @@
         "o25": 1.9,
         "u25": 1.9
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
-      "hw": 4.57,
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
+      "hw": 4.56,
       "dr": 3.82,
-      "aw": 1.8,
+      "aw": 1.81,
       "bookmaker": "pinnacle",
-      "dc1X": 2.081,
-      "dc12": 1.291,
-      "dcX2": 1.223,
+      "dc1X": 2.079,
+      "dc12": 1.296,
+      "dcX2": 1.228,
       "o25": 1.94,
       "u25": 1.94,
       "ahLadder": {
@@ -22636,15 +22644,15 @@
       "poly_aw": 0.545,
       "poly_vol": 417.02,
       "poly_slug": "sea-tor-mil-2026-08-23",
-      "marketsFreshAt": "2026-08-18T04:29:41.587408+00:00",
-      "public_hw": 4.4,
+      "marketsFreshAt": "2026-08-18T10:22:08.174370+00:00",
+      "public_hw": 4.425,
       "public_dr": 3.7,
       "public_aw": 1.75,
       "public_bookmaker": "Konsens (48 Books)",
       "public_o25": 1.88,
       "public_u25": 1.91,
       "public_ou_bookmaker": "Konsens (23 Books)",
-      "bf_hw": 4.9,
+      "bf_hw": 5.0,
       "bf_dr": 3.85,
       "bf_aw": 1.83,
       "public_hw_open": 4.55,
@@ -22663,7 +22671,7 @@
         "o25": 1.71,
         "u25": 2.33
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 1.21,
       "dr": 7.05,
       "aw": 13.16,
@@ -22679,21 +22687,21 @@
           2.0
         ]
       },
-      "ahA_p175": 2.0,
       "ahH_n150": 1.78,
       "ahH_n175": 1.88,
+      "ahA_p175": 2.0,
       "ahA_p150": 2.21,
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
-      "public_hw": 1.21,
-      "public_dr": 6.25,
+      "public_hw": 1.205,
+      "public_dr": 6.45,
       "public_aw": 13.0,
       "public_bookmaker": "Konsens (48 Books)",
-      "public_o25": 1.62,
-      "public_u25": 2.25,
+      "public_o25": 1.6,
+      "public_u25": 2.275,
       "public_ou_bookmaker": "Konsens (16 Books)",
-      "bf_hw": 1.23,
-      "bf_dr": 7.0,
+      "bf_hw": 1.24,
+      "bf_dr": 7.2,
       "bf_aw": 16.5,
       "public_hw_open": 1.23,
       "public_dr_open": 6.6,
@@ -22711,7 +22719,7 @@
         "o25": 1.78,
         "u25": 1.94
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 7.38,
       "dr": 4.74,
       "aw": 1.45,
@@ -22731,9 +22739,9 @@
       "poly_hw": 0.115,
       "poly_dr": 0.205,
       "poly_aw": 0.675,
-      "poly_vol": 597.13,
+      "poly_vol": 602.08,
       "poly_slug": "sea-fro-juv-2026-08-23",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-08-08T10:26:07.287576+00:00",
       "public_hw": 6.95,
       "public_dr": 4.375,
@@ -22761,7 +22769,7 @@
         "o25": 2.16,
         "u25": 1.63
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 2.28,
       "dr": 3.27,
       "aw": 3.45,
@@ -22777,20 +22785,20 @@
           1.95
         ]
       },
-      "ahA_p025": 1.95,
       "ahH_n025": 1.95,
-      "poly_hw": 0.41,
+      "ahA_p025": 1.95,
+      "poly_hw": 0.415,
       "poly_dr": 0.3,
-      "poly_aw": 0.295,
-      "poly_vol": 0,
+      "poly_aw": 0.275,
+      "poly_vol": 142.98,
       "poly_slug": "sea-ven-lec-2026-08-23",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
-      "public_hw": 2.275,
+      "public_hw": 2.25,
       "public_dr": 3.2,
-      "public_aw": 3.265,
+      "public_aw": 3.3,
       "public_bookmaker": "Konsens (48 Books)",
-      "public_o25": 2.23,
+      "public_o25": 2.205,
       "public_u25": 1.65,
       "public_ou_bookmaker": "Konsens (22 Books)",
       "bf_hw": 2.32,
@@ -22810,20 +22818,20 @@
         "o25": 2.43,
         "u25": 1.66
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
-      "hw": 2.62,
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
+      "hw": 2.6,
       "dr": 3.0,
-      "aw": 3.15,
+      "aw": 3.18,
       "bookmaker": "pinnacle",
-      "dc1X": 1.399,
+      "dc1X": 1.393,
       "dc12": 1.43,
-      "dcX2": 1.537,
+      "dcX2": 1.544,
       "o25": 2.3,
       "u25": 1.57,
       "ahLadder": {
         "0.0": [
-          1.79,
-          2.15
+          1.77,
+          2.18
         ]
       },
       "poly_hw": 0.37,
@@ -22831,18 +22839,18 @@
       "poly_aw": 0.315,
       "poly_vol": 59.64,
       "poly_slug": "sea-par-cag-2026-08-22",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-08-06T13:52:23.353681+00:00",
-      "public_hw": 2.52,
+      "public_hw": 2.51,
       "public_dr": 3.05,
       "public_aw": 2.9,
       "public_bookmaker": "Konsens (48 Books)",
       "public_o25": 2.38,
       "public_u25": 1.55,
       "public_ou_bookmaker": "Konsens (17 Books)",
-      "bf_hw": 2.68,
+      "bf_hw": 2.64,
       "bf_dr": 3.1,
-      "bf_aw": 3.1,
+      "bf_aw": 3.25,
       "public_hw_open": 2.7,
       "public_dr_open": 3.05,
       "public_aw_open": 2.96,
@@ -22859,7 +22867,7 @@
         "o25": 1.5,
         "u25": 2.45
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 1.39,
       "dr": 5.09,
       "aw": 7.13,
@@ -22878,10 +22886,10 @@
         ]
       },
       "ahH_n150": 2.19,
-      "ahA_p150": 1.79,
       "ahH_n125": 1.86,
       "ahA_p125": 1.99,
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "ahA_p150": 1.79,
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-17T15:09:53.819048+00:00",
       "public_hw": 1.37,
       "public_dr": 5.0,
@@ -22911,14 +22919,14 @@
         "o25": 1.72,
         "u25": 2.3
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
-      "hw": 1.31,
-      "dr": 5.68,
-      "aw": 10.38,
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
+      "hw": 1.3,
+      "dr": 5.69,
+      "aw": 10.4,
       "bookmaker": "pinnacle",
-      "dc1X": 1.064,
-      "dc12": 1.163,
-      "dcX2": 3.671,
+      "dc1X": 1.058,
+      "dc12": 1.156,
+      "dcX2": 3.678,
       "o25": 1.83,
       "u25": 2.06,
       "ahLadder": {
@@ -22934,18 +22942,18 @@
       "poly_aw": 0.085,
       "poly_vol": 4298.06,
       "poly_slug": "lal-mad-mala-2026-08-19",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-08-10T16:48:21.983386+00:00",
-      "public_hw": 1.29,
+      "public_hw": 1.295,
       "public_dr": 5.5,
       "public_aw": 10.5,
-      "public_bookmaker": "Konsens (39 Books)",
-      "public_o25": 1.71,
+      "public_bookmaker": "Konsens (42 Books)",
+      "public_o25": 1.7,
       "public_u25": 2.12,
-      "public_ou_bookmaker": "Konsens (17 Books)",
-      "bf_hw": 1.32,
-      "bf_dr": 5.9,
-      "bf_aw": 13.0,
+      "public_ou_bookmaker": "Konsens (19 Books)",
+      "bf_hw": 1.35,
+      "bf_dr": 5.6,
+      "bf_aw": 11.5,
       "public_hw_open": 1.26,
       "public_dr_open": 4.9,
       "public_aw_open": 1.06,
@@ -22960,7 +22968,7 @@
         "o25": 1.96,
         "u25": 1.72
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 2.69,
       "dr": 3.24,
       "aw": 2.71,
@@ -22978,10 +22986,10 @@
       },
       "poly_hw": 0.355,
       "poly_dr": 0.295,
-      "poly_aw": 0.355,
-      "poly_vol": 97.13,
+      "poly_aw": 0.35,
+      "poly_vol": 249.26,
       "poly_slug": "lal-val-bet-2026-08-25",
-      "marketsFreshAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsFreshAt": "2026-08-18T10:22:08.174370+00:00",
       "public_hw": 2.65,
       "public_dr": 3.27,
       "public_aw": 2.62,
@@ -23008,7 +23016,7 @@
         "o25": 1.53,
         "u25": 2.4
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 1.39,
       "dr": 5.11,
       "aw": 7.13,
@@ -23027,28 +23035,28 @@
         ]
       },
       "ahH_n150": 2.16,
-      "ahA_p150": 1.81,
       "ahH_n125": 1.85,
       "ahA_p125": 2.0,
-      "poly_hw": 0.695,
+      "ahA_p150": 1.81,
+      "poly_hw": 0.705,
       "poly_dr": 0.185,
-      "poly_aw": 0.125,
-      "poly_vol": 239.76,
+      "poly_aw": 0.11,
+      "poly_vol": 241.17,
       "poly_slug": "lal-rea-rso-2026-08-26",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-17T15:09:53.819048+00:00",
-      "public_hw": 1.36,
-      "public_dr": 5.05,
-      "public_aw": 7.35,
+      "public_hw": 1.38,
+      "public_dr": 5.0,
+      "public_aw": 7.0,
       "public_bookmaker": "Konsens (32 Books)",
       "public_o25": 1.53,
       "public_u25": 2.4,
-      "public_o35": 2.18,
-      "public_u35": 1.65,
+      "public_o35": 2.3,
+      "public_u35": 1.6,
       "public_ou_bookmaker": "Konsens (12 Books)",
-      "bf_hw": 1.4,
-      "bf_dr": 5.3,
-      "bf_aw": 7.8,
+      "bf_hw": 1.38,
+      "bf_dr": 5.4,
+      "bf_aw": 7.6,
       "public_hw_open": 1.46,
       "public_dr_open": 3.7,
       "public_aw_open": 4.5,
@@ -23067,40 +23075,40 @@
         "o25": 1.22,
         "u25": 4.0
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 1.3,
-      "dr": 6.05,
-      "aw": 7.85,
+      "dr": 6.06,
+      "aw": 7.86,
       "bookmaker": "pinnacle",
       "dc1X": 1.07,
-      "dc12": 1.115,
-      "dcX2": 3.417,
+      "dc12": 1.116,
+      "dcX2": 3.422,
       "o25": 1.22,
       "u25": 4.0,
       "o35": 1.69,
       "u35": 2.36,
       "ahLadder": {
         "-1.75": [
-          1.94,
+          1.93,
           1.89
         ]
       },
-      "ahA_p175": 1.89,
       "ahH_n150": 1.8,
-      "ahH_n175": 1.94,
+      "ahH_n175": 1.93,
+      "ahA_p175": 1.89,
       "ahA_p150": 2.18,
       "poly_hw": 0.76,
       "poly_dr": 0.145,
       "poly_aw": 0.105,
       "poly_vol": 2032.89,
       "poly_slug": "bun-bay-stu-2026-08-28",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 1.28,
       "public_dr": 6.0,
       "public_aw": 8.0,
       "public_bookmaker": "Konsens (45 Books)",
-      "public_o25": 1.25,
+      "public_o25": 1.24,
       "public_u25": 3.95,
       "public_o35": 1.57,
       "public_u35": 2.32,
@@ -23124,7 +23132,7 @@
         "o25": 1.81,
         "u25": 2.17
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 2.01,
       "dr": 3.63,
       "aw": 3.61,
@@ -23140,15 +23148,15 @@
           1.85
         ]
       },
-      "ahH_n050": 2.02,
-      "ahA_p050": 1.85,
       "ahH_n100": 3.02,
+      "ahA_p050": 1.85,
+      "ahH_n050": 2.02,
       "poly_hw": 0.48,
       "poly_dr": 0.25,
-      "poly_aw": 0.26,
+      "poly_aw": 0.25,
       "poly_vol": 0,
       "poly_slug": "bun-fre-wer-2026-08-30",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-17T11:18:26.705671+00:00",
       "public_hw": 2.01,
       "public_dr": 3.6,
@@ -23174,7 +23182,7 @@
         "o25": 1.75,
         "u25": 2.25
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 1.69,
       "dr": 4.03,
       "aw": 4.62,
@@ -23190,15 +23198,15 @@
           1.95
         ]
       },
-      "ahH_n150": 3.02,
       "ahH_n075": 1.89,
+      "ahH_n150": 3.02,
       "ahA_p075": 1.95,
-      "poly_hw": 0.57,
+      "poly_hw": 0.56,
       "poly_dr": 0.23,
-      "poly_aw": 0.2,
+      "poly_aw": 0.19,
       "poly_vol": 0,
       "poly_slug": "bun-mai-scp-2026-08-29",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 1.67,
       "public_dr": 3.9,
@@ -23226,7 +23234,7 @@
         "o25": 1.5,
         "u25": 2.5
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 1.33,
       "dr": 5.5,
       "aw": 8.19,
@@ -23246,12 +23254,12 @@
       },
       "ahH_n150": 1.94,
       "ahA_p150": 1.91,
-      "poly_hw": 0.725,
-      "poly_dr": 0.17,
-      "poly_aw": 0.1,
-      "poly_vol": 0,
+      "poly_hw": 0.715,
+      "poly_dr": 0.155,
+      "poly_aw": 0.11,
+      "poly_vol": 14.01,
       "poly_slug": "bun-dor-hsv-2026-08-29",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-30T11:47:56.930101+00:00",
       "public_hw": 1.32,
       "public_dr": 5.25,
@@ -23283,7 +23291,7 @@
         "o25": 1.44,
         "u25": 2.62
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 4.77,
       "dr": 4.66,
       "aw": 1.58,
@@ -23302,12 +23310,12 @@
         ]
       },
       "ahA_n100": 1.94,
-      "poly_hw": 0.185,
-      "poly_dr": 0.205,
+      "poly_hw": 0.19,
+      "poly_dr": 0.19,
       "poly_aw": 0.615,
       "poly_vol": 15.87,
       "poly_slug": "bun-elv-b04-2026-08-29",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 5.2,
       "public_dr": 4.5,
@@ -23337,14 +23345,14 @@
         "o25": 1.64,
         "u25": 2.47
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 2.18,
       "dr": 3.73,
-      "aw": 3.08,
+      "aw": 3.09,
       "bookmaker": "pinnacle",
       "dc1X": 1.376,
-      "dc12": 1.277,
-      "dcX2": 1.687,
+      "dc12": 1.278,
+      "dcX2": 1.69,
       "o25": 1.62,
       "u25": 2.25,
       "ahLadder": {
@@ -23353,16 +23361,16 @@
           1.93
         ]
       },
-      "ahA_p025": 1.93,
-      "ahH_n025": 1.92,
-      "ahA_p100": 1.39,
       "ahH_n100": 3.12,
+      "ahA_p100": 1.39,
+      "ahH_n025": 1.92,
+      "ahA_p025": 1.93,
       "poly_hw": 0.44,
-      "poly_dr": 0.25,
+      "poly_dr": 0.255,
       "poly_aw": 0.3,
       "poly_vol": 0,
       "poly_slug": "bun-aug-s04-2026-08-30",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-16T20:52:21.181721+00:00",
       "public_hw": 2.1,
       "public_dr": 3.7,
@@ -23390,7 +23398,7 @@
         "o25": 1.44,
         "u25": 2.7
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 1.53,
       "dr": 4.64,
       "aw": 5.32,
@@ -23408,16 +23416,16 @@
           1.99
         ]
       },
-      "ahH_n150": 2.45,
-      "ahA_p150": 1.65,
-      "ahA_p100": 1.99,
       "ahH_n100": 1.86,
-      "poly_hw": 0.635,
-      "poly_dr": 0.205,
+      "ahH_n150": 2.45,
+      "ahA_p100": 1.99,
+      "ahA_p150": 1.65,
+      "poly_hw": 0.645,
+      "poly_dr": 0.19,
       "poly_aw": 0.17,
       "poly_vol": 25.42,
       "poly_slug": "bun-lei-moe-2026-08-29",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 1.53,
       "public_dr": 4.5,
@@ -23447,7 +23455,7 @@
         "o25": 1.79,
         "u25": 2.19
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 2.47,
       "dr": 3.52,
       "aw": 2.77,
@@ -23464,12 +23472,12 @@
         ]
       },
       "ahH_n025": 2.08,
-      "poly_hw": 0.4,
+      "poly_hw": 0.395,
       "poly_dr": 0.27,
-      "poly_aw": 0.345,
+      "poly_aw": 0.34,
       "poly_vol": 21.61,
       "poly_slug": "bun-uni-ein-2026-08-29",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 2.38,
       "public_dr": 3.5,
@@ -23497,7 +23505,7 @@
         "o25": 1.57,
         "u25": 2.3
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 2.98,
       "dr": 3.67,
       "aw": 2.27,
@@ -23518,10 +23526,10 @@
       "ahA_n025": 1.98,
       "poly_hw": 0.325,
       "poly_dr": 0.25,
-      "poly_aw": 0.42,
+      "poly_aw": 0.43,
       "poly_vol": 48.39,
       "poly_slug": "bun-koe-hof-2026-08-29",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 2.8,
       "public_dr": 3.6,
@@ -23551,7 +23559,7 @@
         "o25": 1.74,
         "u25": 2.27
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 2.88,
       "dr": 3.51,
       "aw": 2.5,
@@ -23567,14 +23575,14 @@
           1.82
         ]
       },
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-08-06T13:52:23.353681+00:00",
       "public_hw": 2.7,
       "public_dr": 3.5,
       "public_aw": 2.45,
-      "public_bookmaker": "Konsens (45 Books)",
+      "public_bookmaker": "Konsens (46 Books)",
       "public_o25": 1.67,
-      "public_u25": 2.16,
+      "public_u25": 2.15,
       "public_ou_bookmaker": "Konsens (18 Books)",
       "bf_hw": 2.88,
       "bf_dr": 3.65,
@@ -23593,7 +23601,7 @@
         "o25": 1.64,
         "u25": 2.46
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 3.56,
       "dr": 4.07,
       "aw": 1.97,
@@ -23612,21 +23620,21 @@
       "ahA_n050": 1.98,
       "poly_hw": 0.265,
       "poly_dr": 0.24,
-      "poly_aw": 0.495,
+      "poly_aw": 0.49,
       "poly_vol": 299.96,
       "poly_slug": "fl1-hac-asm-2026-08-23",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-18T08:05:16.543140+00:00",
       "public_hw": 3.4,
       "public_dr": 3.8,
       "public_aw": 1.95,
-      "public_bookmaker": "Konsens (46 Books)",
+      "public_bookmaker": "Konsens (47 Books)",
       "public_o25": 1.57,
       "public_u25": 2.32,
       "public_o35": 2.3,
       "public_u35": 1.54,
       "public_ou_bookmaker": "Konsens (16 Books)",
-      "bf_hw": 3.6,
+      "bf_hw": 3.65,
       "bf_dr": 4.0,
       "bf_aw": 2.0,
       "public_hw_open": 1.02,
@@ -23645,7 +23653,7 @@
         "o25": 1.68,
         "u25": 2.38
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 1.6,
       "dr": 4.41,
       "aw": 5.37,
@@ -23661,27 +23669,27 @@
           1.88
         ]
       },
-      "ahH_n150": 2.69,
-      "ahA_p150": 1.55,
-      "ahA_p100": 1.88,
       "ahH_n100": 2.03,
-      "poly_hw": 0.615,
-      "poly_dr": 0.22,
-      "poly_aw": 0.17,
+      "ahH_n150": 2.69,
+      "ahA_p100": 1.88,
+      "ahA_p150": 1.55,
+      "poly_hw": 0.61,
+      "poly_dr": 0.215,
+      "poly_aw": 0.175,
       "poly_vol": 202.66,
       "poly_slug": "fl1-rcl-aja-2026-08-22",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
-      "public_hw": 1.6,
-      "public_dr": 4.125,
-      "public_aw": 5.1,
-      "public_bookmaker": "Konsens (46 Books)",
-      "public_o25": 1.62,
-      "public_u25": 2.2,
+      "public_hw": 1.57,
+      "public_dr": 4.2,
+      "public_aw": 5.2,
+      "public_bookmaker": "Konsens (47 Books)",
+      "public_o25": 1.61,
+      "public_u25": 2.25,
       "public_ou_bookmaker": "Konsens (16 Books)",
-      "bf_hw": 1.61,
-      "bf_dr": 4.3,
-      "bf_aw": 5.3,
+      "bf_hw": 1.62,
+      "bf_dr": 4.4,
+      "bf_aw": 5.4,
       "public_hw_open": 1.02,
       "public_dr_open": 1.02,
       "public_aw_open": 1.02,
@@ -23696,7 +23704,7 @@
         "o25": 1.87,
         "u25": 2.08
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 2.52,
       "dr": 3.52,
       "aw": 2.84,
@@ -23713,21 +23721,21 @@
         ]
       },
       "poly_hw": 0.38,
-      "poly_dr": 0.275,
+      "poly_dr": 0.27,
       "poly_aw": 0.34,
       "poly_vol": 25.07,
       "poly_slug": "fl1-lmf-sbr-2026-08-22",
-      "marketsFreshAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsFreshAt": "2026-08-18T10:22:08.174370+00:00",
       "public_hw": 2.45,
       "public_dr": 3.5,
-      "public_aw": 2.7,
-      "public_bookmaker": "Konsens (46 Books)",
+      "public_aw": 2.72,
+      "public_bookmaker": "Konsens (47 Books)",
       "public_o25": 1.77,
-      "public_u25": 2.02,
+      "public_u25": 2.05,
       "public_ou_bookmaker": "Konsens (21 Books)",
       "bf_hw": 2.54,
       "bf_dr": 3.55,
-      "bf_aw": 2.82,
+      "bf_aw": 2.86,
       "public_hw_open": 1.18,
       "public_dr_open": 1.02,
       "public_aw_open": 1.18,
@@ -23742,7 +23750,7 @@
         "o25": 1.98,
         "u25": 1.96
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 5.13,
       "dr": 3.89,
       "aw": 1.71,
@@ -23764,11 +23772,11 @@
       "poly_aw": 0.57,
       "poly_vol": 148.3,
       "poly_slug": "fl1-ang-lil-2026-08-23",
-      "marketsFreshAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsFreshAt": "2026-08-18T10:22:08.174370+00:00",
       "public_hw": 5.0,
       "public_dr": 3.75,
-      "public_aw": 1.68,
-      "public_bookmaker": "Konsens (46 Books)",
+      "public_aw": 1.67,
+      "public_bookmaker": "Konsens (47 Books)",
       "public_o25": 1.93,
       "public_u25": 1.83,
       "public_ou_bookmaker": "Konsens (21 Books)",
@@ -23791,7 +23799,7 @@
         "o25": 1.44,
         "u25": 2.7
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 1.75,
       "dr": 4.17,
       "aw": 4.42,
@@ -23809,26 +23817,26 @@
           1.94
         ]
       },
-      "ahA_p075": 1.94,
       "ahH_n150": 2.72,
-      "ahH_n100": 2.03,
-      "ahH_n075": 1.96,
-      "ahA_p100": 1.8,
       "ahA_p150": 1.54,
+      "ahH_n075": 1.96,
+      "ahA_p075": 1.94,
+      "ahH_n100": 2.03,
+      "ahA_p100": 1.8,
       "poly_hw": 0.545,
       "poly_dr": 0.235,
       "poly_aw": 0.215,
       "poly_vol": 9806.72,
       "poly_slug": "fl1-olm-str-2026-08-21",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-17T06:11:18.629118+00:00",
       "public_hw": 1.73,
       "public_dr": 4.0,
       "public_aw": 4.2,
-      "public_bookmaker": "Konsens (46 Books)",
+      "public_bookmaker": "Konsens (47 Books)",
       "public_o25": 1.52,
       "public_u25": 2.42,
-      "public_o35": 2.33,
+      "public_o35": 2.32,
       "public_u35": 1.57,
       "public_ou_bookmaker": "Konsens (16 Books)",
       "bf_hw": 1.78,
@@ -23850,41 +23858,41 @@
         "o25": 1.87,
         "u25": 2.08
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
-      "hw": 2.14,
-      "dr": 3.6,
-      "aw": 3.47,
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
+      "hw": 2.15,
+      "dr": 3.61,
+      "aw": 3.42,
       "bookmaker": "pinnacle",
-      "dc1X": 1.342,
-      "dc12": 1.324,
-      "dcX2": 1.767,
+      "dc1X": 1.347,
+      "dc12": 1.32,
+      "dcX2": 1.756,
       "o25": 1.75,
       "u25": 2.0,
       "ahLadder": {
         "-0.25": [
-          1.86,
-          2.05
+          1.88,
+          2.04
         ]
       },
-      "ahA_p025": 2.05,
-      "ahH_n025": 1.86,
+      "ahH_n025": 1.88,
+      "ahA_p025": 2.04,
       "poly_hw": 0.455,
       "poly_dr": 0.265,
       "poly_aw": 0.275,
-      "poly_vol": 345.98,
+      "poly_vol": 748.28,
       "poly_slug": "fl1-ogc-lor-2026-08-22",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 2.1,
       "public_dr": 3.5,
       "public_aw": 3.25,
-      "public_bookmaker": "Konsens (46 Books)",
+      "public_bookmaker": "Konsens (47 Books)",
       "public_o25": 1.76,
       "public_u25": 2.02,
       "public_ou_bookmaker": "Konsens (21 Books)",
-      "bf_hw": 2.18,
+      "bf_hw": 2.2,
       "bf_dr": 3.7,
-      "bf_aw": 3.5,
+      "bf_aw": 3.45,
       "public_hw_open": 1.19,
       "public_dr_open": 1.02,
       "public_aw_open": 1.19,
@@ -23901,7 +23909,7 @@
         "o25": 1.4,
         "u25": 2.9
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 1.39,
       "dr": 5.64,
       "aw": 6.98,
@@ -23923,19 +23931,19 @@
       "ahH_n125": 1.84,
       "ahA_p125": 2.02,
       "ahA_p150": 1.88,
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-18T08:05:16.543140+00:00",
       "public_hw": 1.38,
       "public_dr": 5.25,
-      "public_aw": 6.68,
-      "public_bookmaker": "Konsens (46 Books)",
+      "public_aw": 6.75,
+      "public_bookmaker": "Konsens (47 Books)",
       "public_o25": 1.37,
       "public_u25": 3.05,
       "public_o35": 1.93,
       "public_u35": 1.83,
       "public_ou_bookmaker": "Konsens (21 Books)",
-      "bf_hw": 1.42,
-      "bf_dr": 5.8,
+      "bf_hw": 1.43,
+      "bf_dr": 5.6,
       "bf_aw": 7.2,
       "public_hw_open": 1.02,
       "public_dr_open": 1.02,
@@ -23953,7 +23961,7 @@
         "o25": 1.8,
         "u25": 2.17
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 3.02,
       "dr": 3.6,
       "aw": 2.35,
@@ -23974,14 +23982,14 @@
       "poly_hw": 0.315,
       "poly_dr": 0.265,
       "poly_aw": 0.415,
-      "poly_vol": 512.37,
+      "poly_vol": 588.95,
       "poly_slug": "fl1-tou-lyo-2026-08-22",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 3.0,
       "public_dr": 3.55,
       "public_aw": 2.25,
-      "public_bookmaker": "Konsens (46 Books)",
+      "public_bookmaker": "Konsens (47 Books)",
       "public_o25": 1.72,
       "public_u25": 2.08,
       "public_ou_bookmaker": "Konsens (20 Books)",
@@ -24004,34 +24012,34 @@
         "o25": 2.62,
         "u25": 1.44
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
-      "hw": 2.3,
-      "dr": 3.08,
-      "aw": 3.64,
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
+      "hw": 2.28,
+      "dr": 3.09,
+      "aw": 3.69,
       "bookmaker": "pinnacle",
-      "dc1X": 1.317,
+      "dc1X": 1.312,
       "dc12": 1.409,
-      "dcX2": 1.668,
+      "dcX2": 1.682,
       "o15": 1.5,
       "u15": 2.38,
       "o25": 2.62,
       "u25": 1.44,
       "ahLadder": {
         "-0.25": [
-          1.95,
-          1.95
+          1.93,
+          1.97
         ]
       },
-      "ahA_p025": 1.95,
-      "ahH_n025": 1.95,
+      "ahH_n025": 1.93,
+      "ahA_p025": 1.97,
       "poly_hw": 0.425,
       "poly_dr": 0.315,
       "poly_aw": 0.255,
       "poly_vol": 2934.02,
       "poly_slug": "lal-ray-ala-2026-08-20",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-08-02T11:13:10.307263+00:00",
-      "public_hw": 2.24,
+      "public_hw": 2.235,
       "public_dr": 3.0,
       "public_aw": 3.55,
       "public_bookmaker": "Konsens (42 Books)",
@@ -24042,7 +24050,7 @@
       "public_ou_bookmaker": "Konsens (15 Books)",
       "bf_hw": 2.3,
       "bf_dr": 3.1,
-      "bf_aw": 3.9,
+      "bf_aw": 3.95,
       "public_hw_open": 2.02,
       "public_dr_open": 3.0,
       "public_aw_open": 3.75,
@@ -24059,42 +24067,42 @@
         "o25": 2.05,
         "u25": 1.65
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
-      "hw": 2.09,
-      "dr": 3.48,
-      "aw": 3.73,
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
+      "hw": 2.07,
+      "dr": 3.53,
+      "aw": 3.72,
       "bookmaker": "pinnacle",
-      "dc1X": 1.306,
-      "dc12": 1.339,
-      "dcX2": 1.8,
-      "o25": 2.1,
-      "u25": 1.67,
+      "dc1X": 1.305,
+      "dc12": 1.33,
+      "dcX2": 1.811,
+      "o25": 2.07,
+      "u25": 1.83,
       "ahLadder": {
         "-0.5": [
-          2.1,
+          2.08,
           1.83
         ]
       },
-      "ahA_p025": 2.08,
       "ahH_n025": 1.79,
-      "ahH_n050": 2.1,
       "ahA_p050": 1.83,
+      "ahH_n050": 2.08,
+      "ahA_p025": 2.08,
       "poly_hw": 0.465,
       "poly_dr": 0.285,
       "poly_aw": 0.255,
       "poly_vol": 1575.37,
       "poly_slug": "lal-bet-rso-2026-08-21",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-08-14T04:02:20.015928+00:00",
-      "public_hw": 2.06,
+      "public_hw": 2.05,
       "public_dr": 3.4,
       "public_aw": 3.6,
       "public_bookmaker": "Konsens (41 Books)",
-      "public_o25": 2.08,
-      "public_u25": 1.72,
-      "public_ou_bookmaker": "Konsens (19 Books)",
-      "bf_hw": 2.18,
-      "bf_dr": 3.45,
+      "public_o25": 2.035,
+      "public_u25": 1.75,
+      "public_ou_bookmaker": "Konsens (20 Books)",
+      "bf_hw": 2.14,
+      "bf_dr": 3.5,
       "bf_aw": 3.85,
       "public_hw_open": 2.115,
       "public_dr_open": 3.225,
@@ -24110,44 +24118,44 @@
         "o25": 2.15,
         "u25": 1.68
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
-      "hw": 1.72,
-      "dr": 3.86,
-      "aw": 5.07,
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
+      "hw": 1.74,
+      "dr": 3.78,
+      "aw": 5.09,
       "bookmaker": "pinnacle",
-      "dc1X": 1.19,
-      "dc12": 1.284,
-      "dcX2": 2.192,
+      "dc1X": 1.192,
+      "dc12": 1.297,
+      "dcX2": 2.169,
       "o25": 2.1,
       "u25": 1.7,
       "ahLadder": {
         "-0.75": [
-          1.95,
-          1.95
+          1.97,
+          1.93
         ]
       },
-      "ahA_p075": 1.95,
       "ahH_n150": 2.83,
-      "ahH_n100": 2.06,
-      "ahH_n075": 1.95,
-      "ahA_p100": 1.74,
       "ahA_p150": 1.51,
+      "ahH_n075": 1.97,
+      "ahA_p075": 1.93,
+      "ahH_n100": 2.06,
+      "ahA_p100": 1.74,
       "poly_hw": 0.565,
       "poly_dr": 0.255,
       "poly_aw": 0.175,
-      "poly_vol": 1860.87,
+      "poly_vol": 1874.32,
       "poly_slug": "lal-bil-sev-2026-08-22",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-08-03T11:17:19.844604+00:00",
       "public_hw": 1.7,
       "public_dr": 3.6,
-      "public_aw": 5.1,
+      "public_aw": 5.0,
       "public_bookmaker": "Konsens (42 Books)",
       "public_o25": 2.16,
       "public_u25": 1.66,
       "public_ou_bookmaker": "Konsens (16 Books)",
-      "bf_hw": 1.75,
-      "bf_dr": 3.8,
+      "bf_hw": 1.76,
+      "bf_dr": 3.75,
       "bf_aw": 5.6,
       "public_hw_open": 1.6,
       "public_dr_open": 3.75,
@@ -24163,41 +24171,41 @@
         "o25": 2.15,
         "u25": 1.6
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
-      "hw": 2.22,
-      "dr": 3.36,
-      "aw": 3.5,
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
+      "hw": 2.29,
+      "dr": 3.28,
+      "aw": 3.41,
       "bookmaker": "pinnacle",
-      "dc1X": 1.337,
-      "dc12": 1.358,
-      "dcX2": 1.714,
+      "dc1X": 1.349,
+      "dc12": 1.37,
+      "dcX2": 1.672,
       "o25": 2.15,
       "u25": 1.67,
       "ahLadder": {
         "-0.25": [
-          1.92,
-          1.99
+          1.97,
+          1.93
         ]
       },
-      "ahA_p025": 1.99,
-      "ahH_n025": 1.92,
-      "poly_hw": 0.44,
-      "poly_dr": 0.285,
+      "ahH_n025": 1.97,
+      "ahA_p025": 1.93,
+      "poly_hw": 0.435,
+      "poly_dr": 0.295,
       "poly_aw": 0.265,
-      "poly_vol": 2186.5,
+      "poly_vol": 3190.99,
       "poly_slug": "lal-val-cel-2026-08-22",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-08-14T04:02:20.015928+00:00",
-      "public_hw": 2.15,
-      "public_dr": 3.3,
-      "public_aw": 3.4,
+      "public_hw": 2.2,
+      "public_dr": 3.25,
+      "public_aw": 3.385,
       "public_bookmaker": "Konsens (42 Books)",
-      "public_o25": 2.15,
-      "public_u25": 1.69,
+      "public_o25": 2.2,
+      "public_u25": 1.64,
       "public_ou_bookmaker": "Konsens (19 Books)",
-      "bf_hw": 2.3,
+      "bf_hw": 2.32,
       "bf_dr": 3.35,
-      "bf_aw": 3.7,
+      "bf_aw": 3.55,
       "public_hw_open": 2.3,
       "public_dr_open": 3.1,
       "public_aw_open": 3.0,
@@ -24212,42 +24220,42 @@
         "o25": 1.7,
         "u25": 2.12
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
-      "hw": 7.62,
-      "dr": 4.69,
-      "aw": 1.44,
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
+      "hw": 7.2,
+      "dr": 4.55,
+      "aw": 1.47,
       "bookmaker": "pinnacle",
-      "dc1X": 2.903,
-      "dc12": 1.211,
-      "dcX2": 1.102,
+      "dc1X": 2.788,
+      "dc12": 1.221,
+      "dcX2": 1.111,
       "o25": 1.7,
       "u25": 2.1,
       "ahLadder": {
         "1.25": [
-          1.9,
-          2.0
+          1.83,
+          2.09
         ]
       },
-      "ahA_n100": 1.88,
-      "ahA_n125": 2.0,
       "ahA_n150": 2.55,
-      "poly_hw": 0.145,
-      "poly_dr": 0.225,
-      "poly_aw": 0.625,
-      "poly_vol": 6099.64,
+      "ahA_n100": 1.88,
+      "ahA_n125": 2.09,
+      "poly_hw": 0.115,
+      "poly_dr": 0.205,
+      "poly_aw": 0.685,
+      "poly_vol": 55566.94,
       "poly_slug": "lal-esp-rea-2026-08-22",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-08-03T11:17:19.844604+00:00",
       "public_hw": 7.0,
-      "public_dr": 4.6,
+      "public_dr": 4.5,
       "public_aw": 1.44,
       "public_bookmaker": "Konsens (42 Books)",
-      "public_o25": 1.69,
-      "public_u25": 2.16,
+      "public_o25": 1.7,
+      "public_u25": 2.14,
       "public_ou_bookmaker": "Konsens (19 Books)",
-      "bf_hw": 8.6,
-      "bf_dr": 4.9,
-      "bf_aw": 1.46,
+      "bf_hw": 8.0,
+      "bf_dr": 4.8,
+      "bf_aw": 1.48,
       "public_hw_open": 4.9,
       "public_dr_open": 4.0,
       "public_aw_open": 1.6,
@@ -24262,7 +24270,7 @@
         "o25": 2.05,
         "u25": 1.65
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 1.88,
       "dr": 3.78,
       "aw": 4.2,
@@ -24279,24 +24287,24 @@
         ]
       },
       "ahH_n150": 3.19,
-      "ahH_n050": 1.88,
       "ahA_p050": 2.02,
+      "ahH_n050": 1.88,
       "ahA_p150": 1.43,
-      "poly_hw": 0.52,
+      "poly_hw": 0.525,
       "poly_dr": 0.26,
       "poly_aw": 0.225,
       "poly_vol": 386.86,
       "poly_slug": "lal-mad-vil-2026-08-23",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-08-09T14:28:51.510547+00:00",
-      "public_hw": 1.86,
+      "public_hw": 1.85,
       "public_dr": 3.6,
       "public_aw": 4.0,
       "public_bookmaker": "Konsens (41 Books)",
-      "public_o25": 1.815,
-      "public_u25": 1.96,
+      "public_o25": 1.82,
+      "public_u25": 1.97,
       "public_ou_bookmaker": "Konsens (20 Books)",
-      "bf_hw": 1.92,
+      "bf_hw": 1.93,
       "bf_dr": 3.8,
       "bf_aw": 4.3,
       "public_hw_open": 1.85,
@@ -24315,48 +24323,50 @@
         "o25": 2.9,
         "u25": 1.36
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
-      "hw": 2.11,
-      "dr": 2.96,
-      "aw": 4.52,
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
+      "hw": 2.17,
+      "dr": 3.0,
+      "aw": 4.16,
       "bookmaker": "pinnacle",
-      "dc1X": 1.232,
-      "dc12": 1.438,
-      "dcX2": 1.789,
+      "dc1X": 1.259,
+      "dc12": 1.426,
+      "dcX2": 1.743,
       "o15": 1.62,
       "u15": 2.15,
       "o25": 2.9,
       "u25": 1.36,
       "ahLadder": {
-        "-0.5": [
-          2.12,
-          1.81
+        "-0.25": [
+          1.83,
+          2.09
         ]
       },
       "ahH_n150": 3.89,
-      "ahA_p150": 1.32,
       "ahA_p050": 1.81,
       "ahH_n050": 2.12,
+      "ahA_p150": 1.32,
+      "ahH_n025": 1.83,
+      "ahA_p025": 2.09,
       "ahH_n100": 2.77,
-      "poly_hw": 0.465,
-      "poly_dr": 0.335,
-      "poly_aw": 0.205,
-      "poly_vol": 9171.33,
+      "poly_hw": 0.455,
+      "poly_dr": 0.325,
+      "poly_aw": 0.215,
+      "poly_vol": 22669.47,
       "poly_slug": "lal-get-rrc-2026-08-23",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-08-02T11:13:10.307263+00:00",
-      "public_hw": 2.05,
+      "public_hw": 2.1,
       "public_dr": 2.95,
-      "public_aw": 4.25,
+      "public_aw": 4.0,
       "public_bookmaker": "Konsens (42 Books)",
-      "public_o15": 1.64,
-      "public_u15": 2.2,
+      "public_o15": 1.56,
+      "public_u15": 2.33,
       "public_o25": 2.82,
       "public_u25": 1.43,
       "public_ou_bookmaker": "Konsens (15 Books)",
-      "bf_hw": 2.2,
+      "bf_hw": 2.24,
       "bf_dr": 3.0,
-      "bf_aw": 4.5,
+      "bf_aw": 4.4,
       "public_hw_open": 1.845,
       "public_dr_open": 3.0,
       "public_aw_open": 4.325,
@@ -24375,37 +24385,37 @@
         "o35": 2.05,
         "u35": 1.67
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
-      "hw": 7.78,
-      "dr": 6.06,
-      "aw": 1.34,
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
+      "hw": 7.86,
+      "dr": 6.17,
+      "aw": 1.33,
       "bookmaker": "pinnacle",
-      "dc1X": 3.407,
-      "dc12": 1.143,
-      "dcX2": 1.097,
+      "dc1X": 3.457,
+      "dc12": 1.138,
+      "dcX2": 1.094,
       "o25": 1.44,
       "u25": 2.7,
       "o35": 2.05,
       "u35": 1.67,
       "ahLadder": {
         "1.5": [
-          1.95,
-          1.95
+          1.99,
+          1.92
         ]
       },
-      "ahA_n150": 1.95,
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "ahA_n150": 1.92,
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-08-12T12:56:18.324320+00:00",
-      "public_hw": 8.475,
-      "public_dr": 5.5,
-      "public_aw": 1.32,
+      "public_hw": 8.45,
+      "public_dr": 5.55,
+      "public_aw": 1.31,
       "public_bookmaker": "Konsens (42 Books)",
       "public_o25": 1.46,
       "public_u25": 2.68,
       "public_o35": 2.17,
       "public_u35": 1.66,
       "public_ou_bookmaker": "Konsens (15 Books)",
-      "bf_hw": 10.5,
+      "bf_hw": 10.0,
       "bf_dr": 6.2,
       "bf_aw": 1.34,
       "public_hw_open": 7.5,
@@ -24424,43 +24434,43 @@
         "o25": 1.85,
         "u25": 1.93
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
-      "hw": 1.83,
-      "dr": 3.7,
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
+      "hw": 1.85,
+      "dr": 3.63,
       "aw": 4.43,
       "bookmaker": "pinnacle",
-      "dc1X": 1.224,
-      "dc12": 1.295,
-      "dcX2": 2.016,
-      "o25": 1.99,
-      "u25": 1.88,
+      "dc1X": 1.225,
+      "dc12": 1.305,
+      "dcX2": 1.995,
+      "o25": 2.07,
+      "u25": 1.82,
       "ahLadder": {
         "-0.5": [
-          1.84,
-          2.06
+          1.86,
+          2.04
         ]
       },
       "ahH_n150": 2.88,
+      "ahA_p050": 2.04,
+      "ahH_n050": 1.86,
       "ahA_p150": 1.5,
-      "ahA_p050": 2.06,
-      "ahA_p100": 1.64,
-      "ahH_n050": 1.84,
       "ahH_n100": 2.22,
-      "poly_hw": 0.53,
+      "ahA_p100": 1.64,
+      "poly_hw": 0.525,
       "poly_dr": 0.265,
-      "poly_aw": 0.22,
-      "poly_vol": 62.21,
+      "poly_aw": 0.215,
+      "poly_vol": 644.65,
       "poly_slug": "lal-osa-lev-2026-08-24",
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-08-03T11:17:19.844604+00:00",
       "public_hw": 1.83,
       "public_dr": 3.6,
-      "public_aw": 4.275,
-      "public_bookmaker": "Konsens (36 Books)",
-      "public_o25": 1.96,
-      "public_u25": 1.85,
-      "public_ou_bookmaker": "Konsens (19 Books)",
-      "bf_hw": 1.86,
+      "public_aw": 4.3,
+      "public_bookmaker": "Konsens (38 Books)",
+      "public_o25": 1.97,
+      "public_u25": 1.8,
+      "public_ou_bookmaker": "Konsens (20 Books)",
+      "bf_hw": 1.87,
       "bf_dr": 3.7,
       "bf_aw": 4.6,
       "public_hw_open": 1.7,
@@ -24479,7 +24489,7 @@
         "o15": 1.47,
         "u15": 2.45
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 2.68,
       "dr": 3.08,
       "aw": 2.93,
@@ -24497,20 +24507,20 @@
           2.03
         ]
       },
-      "ahA_p025": 1.78,
       "ahH_n025": 2.14,
-      "marketsCarriedAt": "2026-08-18T04:29:41.587408+00:00",
+      "ahA_p025": 1.78,
+      "marketsCarriedAt": "2026-08-18T10:22:08.174370+00:00",
       "marketsFreshAt": "2026-08-12T12:56:18.324320+00:00",
-      "public_hw": 2.55,
+      "public_hw": 2.56,
       "public_dr": 3.04,
       "public_aw": 2.9,
-      "public_bookmaker": "Konsens (32 Books)",
-      "public_o15": 1.5,
+      "public_bookmaker": "Konsens (34 Books)",
+      "public_o15": 1.49,
       "public_u15": 2.45,
       "public_o25": 2.48,
       "public_u25": 1.51,
-      "public_ou_bookmaker": "Konsens (12 Books)",
-      "bf_hw": 2.8,
+      "public_ou_bookmaker": "Konsens (13 Books)",
+      "bf_hw": 2.78,
       "bf_dr": 3.0,
       "bf_aw": 3.05,
       "public_hw_open": 2.4,
@@ -24529,7 +24539,7 @@
         "o25": 2.1,
         "u25": 1.7
       },
-      "updatedAt": "2026-08-18T04:29:41.587408+00:00",
+      "updatedAt": "2026-08-18T10:22:08.174370+00:00",
       "hw": 2.0,
       "dr": 3.4,
       "aw": 3.8,
@@ -24550,7 +24560,7 @@
       "poly_aw": 0.25,
       "poly_vol": 2514.19,
       "poly_slug": "lal-cel-osa-2026-08-16",
-      "marketsFreshAt": "2026-08-18T04:29:41.587408+00:00",
+      "marketsFreshAt": "2026-08-18T10:22:08.174370+00:00",
       "public_hw": 1.97,
       "public_dr": 3.4,
       "public_aw": 3.75,
@@ -24572,16 +24582,16 @@
     "ENG-1-42-1346": [],
     "ENG-1-64-33": [
       {
-        "market": "Auswärtssieg",
-        "odds": 1.38,
-        "modelOdds": 1.395,
-        "conf": "medium",
+        "market": "AH Auswärts −1.25",
+        "odds": 1.87,
+        "modelOdds": 1.87,
+        "conf": "high",
         "verdict": "NOBET",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": -4,
-        "info": "📉 Pinnacle 1.46→1.4 (Sharp-Money-Drop +3.9pp) · ✅ Soft-Konsens folgte +3.0pp (bestätigt) · ⏱️ Late Entry — Lernwert, weniger CLV",
+        "edgePP": 0,
+        "info": "📉 Pinnacle 1.46→1.38 (Sharp-Money-Drop +5.1pp) · ✅ Soft-Konsens folgte +3.0pp (bestätigt) · sichere Linie abgeleitet: AH Auswärts −1.25 @1.87",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -24590,7 +24600,285 @@
         "lamA": null,
         "lamTotal": null,
         "source": "steam",
-        "steamMovePP": 3.9,
+        "steamMovePP": 5.1,
+        "steamMoveRawPP": 4.0,
+        "steamOpen": 1.46,
+        "steamCur": 1.38,
+        "softOpen": null,
+        "softNow": null,
+        "entryBook": "pini",
+        "entryOdd": 1.87,
+        "lateEntry": false,
+        "steamDerived": true,
+        "softConfirmed": true,
+        "softFollowPP": 3.0,
+        "ahLine": -1.25,
+        "recentMovePP": 2.8,
+        "freshnessState": "drift",
+        "legHours": 50.0,
+        "legSnaps": 8,
+        "lastMoveH": 0.0,
+        "flipReady": false,
+        "baseVerdict": "ABWÄGEN",
+        "consensus": {
+          "side": "away",
+          "sources": {
+            "pinnacle": 0.688,
+            "poly": 0.695
+          },
+          "n": 2,
+          "spreadPP": 0.7,
+          "medianPP": 69.2,
+          "kind": null,
+          "outlier": "pinnacle",
+          "outlierGapPP": 0.3
+        },
+        "signals": [
+          {
+            "name": "form_trend",
+            "score": 1.4,
+            "confidence": 0.85,
+            "evidence": "📈 Letzte 15 Spiele: Heim trifft 1.1 pro Partie und kassiert 0.9, Auswärts 1.9 und 1.3.",
+            "weight": 1.139,
+            "weighted_score": 1.36,
+            "metadata": {
+              "home_scored": 1.13,
+              "home_conceded": 0.87,
+              "away_scored": 1.93,
+              "away_conceded": 1.27,
+              "home_games": 15,
+              "away_games": 15,
+              "pick_side": "away"
+            }
+          },
+          {
+            "name": "h2h_pattern",
+            "score": 1.0,
+            "confidence": 0.75,
+            "evidence": "⚔️ Direkte Duelle (8): 1 Heimsiege, 2 Remis, 5 Auswärtssiege — Auswärts holt davon 75%.",
+            "weight": 1.0,
+            "weighted_score": 0.3,
+            "metadata": {
+              "games": 8,
+              "home_wins": 1,
+              "draws": 2,
+              "away_wins": 5,
+              "picked_rate": 0.75,
+              "pick_side": "away"
+            },
+            "correlation_discount_applied": 0.4
+          },
+          {
+            "name": "freshness_leg",
+            "score": 0.0,
+            "confidence": 0.5,
+            "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +2.8pp) — kein frisches Geld",
+            "weight": 1.0,
+            "weighted_score": 0.0,
+            "metadata": {
+              "state": "drift",
+              "recentMovePP": 2.8,
+              "legSnaps": 8,
+              "legHours": 50.0,
+              "flipReady": false
+            }
+          },
+          {
+            "name": "transfer_shift",
+            "score": -1.2,
+            "confidence": 0.55,
+            "evidence": "Schlüssel-Abgang Auswärts 2 / Gegner 0",
+            "weight": 1.0,
+            "weighted_score": -0.66,
+            "metadata": {
+              "homeShift": 0.0,
+              "awayShift": 1.0
+            }
+          },
+          {
+            "name": "move_following",
+            "score": 2.0,
+            "confidence": 0.7,
+            "evidence": "Pinnacle hat Auswärts seit der Eröffnung um +5.7pp verkürzt — ein großer, klarer Sharp-Move. Historisch (Top-5) trägt genau diese Größenklasse den stärksten Edge, unabhängig von der Team-Form.",
+            "weight": 1.0,
+            "weighted_score": 1.4,
+            "metadata": {
+              "move_pp": 5.73,
+              "bucket": "strong",
+              "outcome": "away"
+            }
+          },
+          {
+            "name": "venue_form",
+            "score": 1.05,
+            "confidence": 0.62,
+            "evidence": "⚡ Ortsform: Heim trifft in 17-Netto daheim, Auswärts 43-Netto auf Reisen (getroffen − kassiert) — -0.26 Unterschied zugunsten Auswärts. Der Heim/Auswärts-Split ist hier aussagekräftiger als der Gesamtschnitt.",
+            "weight": 1.0,
+            "weighted_score": 0.26,
+            "metadata": {
+              "venue_net_home": 0.167,
+              "venue_net_away": 0.429,
+              "relative": -0.262,
+              "home_venue_games": 6,
+              "away_venue_games": 7,
+              "pick_side": "away"
+            },
+            "correlation_discount_applied": 0.4
+          }
+        ],
+        "signalAdjustmentPP": 0.81,
+        "signalCountPos": 4,
+        "signalCountNeg": 1,
+        "signalAdjustmentPP_trade": 0.8,
+        "signalCountPos_trade": 4,
+        "signalCountNeg_trade": 1,
+        "effectiveEdgePP": 0.8,
+        "effectiveEdgePP_trade": 0.8,
+        "convictionScore": 3,
+        "earlySeasonPenalty": 1.0,
+        "convictionVerdict": "watch",
+        "convictionLabel": "👁 Beobachten",
+        "convictionFamilies": {
+          "sharp_money": 1,
+          "model_stack": 3,
+          "context": 0,
+          "market": 0
+        },
+        "openingMovement": {
+          "in_pick_direction": true,
+          "move_pp": 3.97
+        },
+        "origVerdict": "ABWÄGEN",
+        "origOdds": 1.87,
+        "nobetReason": "Conviction 3/10 < 4 — zu dünn",
+        "engineVersion": "v1"
+      },
+      {
+        "market": "Unter 2.5 Tore",
+        "odds": 2.15,
+        "modelOdds": 2.098,
+        "conf": "medium",
+        "verdict": "NOBET",
+        "modSig": 0,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": -1,
+        "info": "📉 Pinnacle 2.2→2.05 (Sharp-Money-Drop +3.3pp) · Soft-Konsens hinkt +2.3pp (Value, noch nicht bestätigt)",
+        "icon": "🔥",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "steam",
+        "lamH": null,
+        "lamA": null,
+        "lamTotal": null,
+        "source": "steam",
+        "steamMovePP": 3.3,
+        "steamMoveRawPP": 3.3,
+        "steamOpen": 2.2,
+        "steamCur": 2.05,
+        "softOpen": 2.2,
+        "softNow": 2.15,
+        "entryBook": "soft",
+        "entryOdd": 2.15,
+        "lateEntry": false,
+        "steamDerived": false,
+        "softConfirmed": false,
+        "softFollowPP": 1.1,
+        "ahLine": null,
+        "recentMovePP": 0.0,
+        "freshnessState": "drift",
+        "legHours": 0.0,
+        "legSnaps": 1,
+        "lastMoveH": 0.0,
+        "flipReady": false,
+        "baseVerdict": "ABWÄGEN",
+        "signals": [
+          {
+            "name": "xg_strength",
+            "score": -1.26,
+            "confidence": 0.77,
+            "evidence": "⚡ Die xG-Werte deuten auf ~2.86 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Unter (+0.36).",
+            "weight": 1.219,
+            "weighted_score": -1.18,
+            "metadata": {
+              "expected_total": 2.86,
+              "ou_line": 2.5,
+              "diff_to_line": 0.36,
+              "is_proxy": false,
+              "pick_side": "Unter 2.5"
+            }
+          },
+          {
+            "name": "freshness_leg",
+            "score": 0.0,
+            "confidence": 0.5,
+            "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +0.0pp) — kein frisches Geld",
+            "weight": 1.0,
+            "weighted_score": 0.0,
+            "metadata": {
+              "state": "drift",
+              "recentMovePP": 0.0,
+              "legSnaps": 1,
+              "legHours": 0.0,
+              "flipReady": false
+            }
+          },
+          {
+            "name": "transfer_shift",
+            "score": 0.6,
+            "confidence": 0.55,
+            "evidence": "Schlüsselspieler abgegeben → geringere Tor-Bedrohung",
+            "weight": 1.0,
+            "weighted_score": 0.33,
+            "metadata": {
+              "homeShift": 0.0,
+              "awayShift": 1.0
+            }
+          }
+        ],
+        "signalAdjustmentPP": -0.43,
+        "signalCountPos": 1,
+        "signalCountNeg": 1,
+        "signalAdjustmentPP_trade": -0.4,
+        "signalCountPos_trade": 1,
+        "signalCountNeg_trade": 1,
+        "effectiveEdgePP": -1.4,
+        "effectiveEdgePP_trade": -1.4,
+        "convictionScore": 1,
+        "earlySeasonPenalty": 1.0,
+        "convictionVerdict": "skip",
+        "convictionLabel": null,
+        "convictionFamilies": {
+          "sharp_money": 1,
+          "model_stack": 1,
+          "context": 0,
+          "market": 0
+        },
+        "origVerdict": "ABWÄGEN",
+        "origOdds": 2.15,
+        "nobetReason": "Conviction 1/10 < 4 — zu dünn",
+        "engineVersion": "v1"
+      },
+      {
+        "market": "Auswärtssieg",
+        "odds": 1.38,
+        "modelOdds": 1.395,
+        "conf": "high",
+        "verdict": "NOBET",
+        "modSig": 0,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": -4,
+        "info": "📉 Pinnacle 1.46→1.4 (Sharp-Money-Drop +4.0pp) · ✅ Soft-Konsens folgte +3.0pp (bestätigt) · ⏱️ Late Entry — Lernwert, weniger CLV",
+        "icon": "🔥",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "steam",
+        "lamH": null,
+        "lamA": null,
+        "lamTotal": null,
+        "source": "steam",
+        "steamMovePP": 4.0,
         "steamMoveRawPP": 2.9,
         "steamOpen": 1.46,
         "steamCur": 1.4,
@@ -24756,113 +25044,7 @@
         },
         "origVerdict": "ABWÄGEN",
         "origOdds": 1.38,
-        "nobetReason": "Conviction 3/10 < 4 — zu dünn",
-        "engineVersion": "v1"
-      },
-      {
-        "market": "Unter 2.5 Tore",
-        "odds": 2.13,
-        "modelOdds": 2.098,
-        "conf": "medium",
-        "verdict": "NOBET",
-        "modSig": 0,
-        "mktSig": 0,
-        "storySig": 0,
-        "edgePP": -1,
-        "info": "📉 Pinnacle 2.2→2.05 (Sharp-Money-Drop +3.3pp) · ✅ Soft-Konsens folgte +1.5pp (bestätigt)",
-        "icon": "🔥",
-        "result": null,
-        "clvPP": 0.0,
-        "dataQuality": "steam",
-        "lamH": null,
-        "lamA": null,
-        "lamTotal": null,
-        "source": "steam",
-        "steamMovePP": 3.3,
-        "steamMoveRawPP": 3.3,
-        "steamOpen": 2.2,
-        "steamCur": 2.05,
-        "softOpen": 2.2,
-        "softNow": 2.13,
-        "entryBook": "soft",
-        "entryOdd": 2.13,
-        "lateEntry": false,
-        "steamDerived": false,
-        "softConfirmed": true,
-        "softFollowPP": 1.5,
-        "ahLine": null,
-        "recentMovePP": 0.0,
-        "freshnessState": "drift",
-        "legHours": 0.0,
-        "legSnaps": 1,
-        "lastMoveH": 0.0,
-        "flipReady": false,
-        "baseVerdict": "ABWÄGEN",
-        "signals": [
-          {
-            "name": "xg_strength",
-            "score": -1.26,
-            "confidence": 0.77,
-            "evidence": "⚡ Die xG-Werte deuten auf ~2.86 Tore pro Spiel hin, die Linie steht bei 2.5 — Tendenz Unter (+0.36).",
-            "weight": 1.219,
-            "weighted_score": -1.18,
-            "metadata": {
-              "expected_total": 2.86,
-              "ou_line": 2.5,
-              "diff_to_line": 0.36,
-              "is_proxy": false,
-              "pick_side": "Unter 2.5"
-            }
-          },
-          {
-            "name": "freshness_leg",
-            "score": 0.0,
-            "confidence": 0.5,
-            "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +0.0pp) — kein frisches Geld",
-            "weight": 1.0,
-            "weighted_score": 0.0,
-            "metadata": {
-              "state": "drift",
-              "recentMovePP": 0.0,
-              "legSnaps": 1,
-              "legHours": 0.0,
-              "flipReady": false
-            }
-          },
-          {
-            "name": "transfer_shift",
-            "score": 0.6,
-            "confidence": 0.55,
-            "evidence": "Schlüsselspieler abgegeben → geringere Tor-Bedrohung",
-            "weight": 1.0,
-            "weighted_score": 0.33,
-            "metadata": {
-              "homeShift": 0.0,
-              "awayShift": 1.0
-            }
-          }
-        ],
-        "signalAdjustmentPP": -0.43,
-        "signalCountPos": 1,
-        "signalCountNeg": 1,
-        "signalAdjustmentPP_trade": -0.4,
-        "signalCountPos_trade": 1,
-        "signalCountNeg_trade": 1,
-        "effectiveEdgePP": -1.4,
-        "effectiveEdgePP_trade": -1.4,
-        "convictionScore": 1,
-        "earlySeasonPenalty": 1.0,
-        "convictionVerdict": "skip",
-        "convictionLabel": null,
-        "convictionFamilies": {
-          "sharp_money": 1,
-          "model_stack": 1,
-          "context": 0,
-          "market": 0
-        },
-        "origVerdict": "ABWÄGEN",
-        "origOdds": 2.13,
-        "nobetReason": "Conviction 1/10 < 4 — zu dünn",
+        "nobetReason": "Kein Value mehr — Move ausgelaufen / Konsens konvergiert",
         "engineVersion": "v1"
       }
     ],
@@ -25681,7 +25863,7 @@
         },
         "origVerdict": "ABWÄGEN",
         "origOdds": 1.48,
-        "nobetReason": "Conviction 1/10 < 4 — zu dünn",
+        "nobetReason": "Edge weg — Linie gegen den Pick gelaufen (1.48→2.4)",
         "engineVersion": "v1"
       },
       {
@@ -26571,14 +26753,14 @@
       {
         "market": "Auswärtssieg",
         "odds": 1.9,
-        "modelOdds": 1.919,
+        "modelOdds": 1.921,
         "conf": "medium",
         "verdict": "NOBET",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": -3,
-        "info": "📉 Pinnacle 2.18→1.93 (Sharp-Money-Drop +7.0pp) · ✅ Soft-Konsens folgte +7.2pp (bestätigt) · ⏱️ Late Entry — Lernwert, weniger CLV",
+        "info": "📉 Pinnacle 2.18→1.93 (Sharp-Money-Drop +7.1pp) · ✅ Soft-Konsens folgte +7.2pp (bestätigt) · ⏱️ Late Entry — Lernwert, weniger CLV",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -26587,7 +26769,7 @@
         "lamA": null,
         "lamTotal": null,
         "source": "steam",
-        "steamMovePP": 7.0,
+        "steamMovePP": 7.1,
         "steamMoveRawPP": 5.9,
         "steamOpen": 2.18,
         "steamCur": 1.93,
@@ -26674,14 +26856,14 @@
           },
           {
             "name": "coach_change",
-            "score": 0.37,
+            "score": 0.36,
             "confidence": 0.39,
-            "evidence": "Neuer Trainer Andoni Iraola (47d) → Auswärts-Bounce",
+            "evidence": "Neuer Trainer Andoni Iraola (48d) → Auswärts-Bounce",
             "weight": 1.0,
             "weighted_score": 0.06,
             "metadata": {
               "homeBounce": 0.0,
-              "awayBounce": 0.373
+              "awayBounce": 0.36
             },
             "correlation_discount_applied": 0.4
           },
@@ -26705,7 +26887,7 @@
             "weight": 1.0,
             "weighted_score": 1.4,
             "metadata": {
-              "move_pp": 6.82,
+              "move_pp": 6.79,
               "bucket": "strong",
               "outcome": "away"
             }
@@ -26748,18 +26930,18 @@
         "sharpMoveActive": true,
         "sharpMoveDetails": {
           "triggered": true,
-          "pinn_move_pp": 5.94,
+          "pinn_move_pp": 6.76,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 1244.0,
+          "hours_since_open": 1249.8,
           "open_pinn_odds": 2.18,
-          "current_pinn_odds": 1.93,
+          "current_pinn_odds": 1.9,
           "move_age_decay": 0.0,
-          "move_age_days": 51.8
+          "move_age_days": 52.1
         },
         "openingMovement": {
           "in_pick_direction": true,
-          "move_pp": 5.94
+          "move_pp": 6.76
         },
         "origVerdict": "ABWÄGEN",
         "origOdds": 1.9,
@@ -26976,14 +27158,14 @@
       {
         "market": "Auswärtssieg",
         "odds": 1.96,
-        "modelOdds": 1.941,
+        "modelOdds": 1.959,
         "conf": "medium",
         "verdict": "NOBET",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": -2,
-        "info": "📉 Pinnacle 2.23→1.94 (Sharp-Money-Drop +7.7pp) · ⏱️ Late Entry — Lernwert, weniger CLV",
+        "info": "📉 Pinnacle 2.23→1.96 (Sharp-Money-Drop +7.3pp) · ⏱️ Late Entry — Lernwert, weniger CLV",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -26992,10 +27174,10 @@
         "lamA": null,
         "lamTotal": null,
         "source": "steam",
-        "steamMovePP": 7.7,
-        "steamMoveRawPP": 6.7,
+        "steamMovePP": 7.3,
+        "steamMoveRawPP": 6.2,
         "steamOpen": 2.23,
-        "steamCur": 1.94,
+        "steamCur": 1.96,
         "softOpen": 2.0,
         "softNow": 1.96,
         "entryBook": "soft",
@@ -27005,10 +27187,10 @@
         "softConfirmed": false,
         "softFollowPP": 1.0,
         "ahLine": null,
-        "recentMovePP": 1.6,
+        "recentMovePP": -0.5,
         "freshnessState": "drift",
-        "legHours": 10.6,
-        "legSnaps": 3,
+        "legHours": 15.2,
+        "legSnaps": 2,
         "lastMoveH": 0.0,
         "flipReady": false,
         "baseVerdict": "ABWÄGEN",
@@ -27016,36 +27198,17 @@
           "side": "away",
           "sources": {
             "pinnacle": 0.495,
-            "poly": 0.485,
+            "poly": 0.495,
             "soft": 0.51
           },
           "n": 3,
-          "spreadPP": 2.5,
+          "spreadPP": 1.6,
           "medianPP": 49.5,
           "kind": "konsens",
           "outlier": null,
-          "outlierGapPP": 1.6
+          "outlierGapPP": 1.5
         },
         "signals": [
-          {
-            "name": "lead_lag_bias",
-            "score": 2.2,
-            "confidence": 0.7,
-            "evidence": "Pinnacle hat Auswärts um +1.6pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
-            "weight": 1.0,
-            "weighted_score": 1.54,
-            "metadata": {
-              "stage": "confirmed",
-              "pinn_move_pp": 1.65,
-              "soft_moves": [
-                {
-                  "bk": "public",
-                  "move_pp": 1.68
-                }
-              ],
-              "outcome": "aw"
-            }
-          },
           {
             "name": "h2h_pattern",
             "score": 0.6,
@@ -27084,14 +27247,14 @@
             "name": "freshness_leg",
             "score": 0.0,
             "confidence": 0.5,
-            "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +1.6pp) — kein frisches Geld",
+            "evidence": "⏸ Move ruht (Drift, letzter Abschnitt -0.5pp) — kein frisches Geld",
             "weight": 1.0,
             "weighted_score": 0.0,
             "metadata": {
               "state": "drift",
-              "recentMovePP": 1.6,
-              "legSnaps": 3,
-              "legHours": 10.6,
+              "recentMovePP": -0.5,
+              "legSnaps": 2,
+              "legHours": 15.2,
               "flipReady": false
             }
           },
@@ -27111,15 +27274,14 @@
             "name": "move_following",
             "score": 2.0,
             "confidence": 0.7,
-            "evidence": "Pinnacle hat Auswärts seit der Eröffnung um +7.2pp verkürzt — ein großer, klarer Sharp-Move. Historisch (Top-5) trägt genau diese Größenklasse den stärksten Edge, unabhängig von der Team-Form.",
+            "evidence": "Pinnacle hat Auswärts seit der Eröffnung um +6.7pp verkürzt — ein großer, klarer Sharp-Move. Historisch (Top-5) trägt genau diese Größenklasse den stärksten Edge, unabhängig von der Team-Form.",
             "weight": 1.0,
-            "weighted_score": 0.56,
+            "weighted_score": 1.4,
             "metadata": {
-              "move_pp": 7.2,
+              "move_pp": 6.73,
               "bucket": "strong",
               "outcome": "away"
-            },
-            "correlation_discount_applied": 0.4
+            }
           },
           {
             "name": "venue_form",
@@ -27139,14 +27301,14 @@
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 0.37,
-        "signalCountPos": 4,
+        "signalAdjustmentPP": 0.18,
+        "signalCountPos": 3,
         "signalCountNeg": 2,
-        "signalAdjustmentPP_trade": 0.4,
-        "signalCountPos_trade": 4,
+        "signalAdjustmentPP_trade": 0.2,
+        "signalCountPos_trade": 3,
         "signalCountNeg_trade": 2,
-        "effectiveEdgePP": -1.6,
-        "effectiveEdgePP_trade": -1.6,
+        "effectiveEdgePP": -1.8,
+        "effectiveEdgePP_trade": -1.8,
         "convictionScore": 2,
         "earlySeasonPenalty": 1.0,
         "convictionVerdict": "skip",
@@ -27163,11 +27325,11 @@
           "pinn_move_pp": 6.18,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 1244.0,
+          "hours_since_open": 1249.8,
           "open_pinn_odds": 2.23,
           "current_pinn_odds": 1.96,
           "move_age_decay": 0.0,
-          "move_age_days": 51.8
+          "move_age_days": 52.1
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -27958,7 +28120,7 @@
         "origVerdict": "ABWÄGEN",
         "origOdds": 1.92,
         "nobetSince": "2026-08-04T14:33:16.385236+00:00",
-        "nobetReason": "Edge weg — Linie gegen den Pick gelaufen (1.92→4.655)"
+        "nobetReason": "Edge weg — Linie gegen den Pick gelaufen (1.92→4.625)"
       }
     ],
     "ITA-1-497-502": [
@@ -28161,7 +28323,7 @@
         "origVerdict": "ABWÄGEN",
         "origOdds": 6.55,
         "nobetSince": "2026-07-12T16:53:47.547628+00:00",
-        "nobetReason": "Quote zu kurz geworden (6.55→5.86) — kein Value mehr"
+        "nobetReason": "Quote zu kurz geworden (6.55→5.8) — kein Value mehr"
       }
     ],
     "ITA-1-499-488": [
@@ -28542,22 +28704,22 @@
         "origVerdict": "ABWÄGEN",
         "origOdds": 4.55,
         "nobetSince": "2026-07-06T11:04:37.691695+00:00",
-        "nobetReason": "Quote zu kurz geworden (4.55→4.4) — kein Value mehr",
+        "nobetReason": "Quote zu kurz geworden (4.55→4.425) — kein Value mehr",
         "engineVersion": "v1"
       }
     ],
     "ITA-1-505-1579": [
       {
         "market": "Über 2.5 Tore",
-        "odds": 1.62,
+        "odds": 1.6,
         "modelOdds": 1.628,
         "conf": "high",
         "verdict": "NOBET",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": -3,
-        "info": "📉 Pinnacle 1.71→1.6 (Sharp-Money-Drop +4.0pp) · Soft-Konsens hinkt +0.8pp (Value, noch nicht bestätigt)",
+        "edgePP": -4,
+        "info": "📉 Pinnacle 1.71→1.6 (Sharp-Money-Drop +4.0pp) · ⏱️ Late Entry — Lernwert, weniger CLV",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -28571,13 +28733,13 @@
         "steamOpen": 1.71,
         "steamCur": 1.6,
         "softOpen": 1.6,
-        "softNow": 1.62,
+        "softNow": 1.6,
         "entryBook": "soft",
-        "entryOdd": 1.62,
-        "lateEntry": false,
+        "entryOdd": 1.6,
+        "lateEntry": true,
         "steamDerived": false,
         "softConfirmed": false,
-        "softFollowPP": -0.8,
+        "softFollowPP": 0.0,
         "ahLine": null,
         "recentMovePP": 0.0,
         "freshnessState": "drift",
@@ -28638,8 +28800,8 @@
         "signalAdjustmentPP_trade": 2.2,
         "signalCountPos_trade": 2,
         "signalCountNeg_trade": 0,
-        "effectiveEdgePP": -0.8,
-        "effectiveEdgePP_trade": -0.8,
+        "effectiveEdgePP": -1.8,
+        "effectiveEdgePP_trade": -1.8,
         "convictionScore": 3,
         "earlySeasonPenalty": 1.0,
         "convictionVerdict": "watch",
@@ -28651,7 +28813,7 @@
           "market": 0
         },
         "origVerdict": "ABWÄGEN",
-        "origOdds": 1.62,
+        "origOdds": 1.6,
         "nobetReason": "Conviction 3/10 < 4 — zu dünn",
         "engineVersion": "v1"
       },
@@ -31098,11 +31260,11 @@
           "pinn_move_pp": 5.43,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 1123.6,
+          "hours_since_open": 1129.5,
           "open_pinn_odds": 1.48,
           "current_pinn_odds": 1.37,
           "move_age_decay": 0.0,
-          "move_age_days": 46.8
+          "move_age_days": 47.1
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -31359,17 +31521,17 @@
         "signals": [
           {
             "name": "public_static_bias",
-            "score": 1.4,
+            "score": 1.47,
             "confidence": 0.5,
-            "evidence": "Die breite Masse (Konsens (17 Books)) unterschätzt Unter 2.5 um 2.4pp (Pinnacle höher) — wir nehmen den Value gegen die Masse.",
+            "evidence": "Die breite Masse (Konsens (19 Books)) unterschätzt Unter 2.5 um 2.5pp (Pinnacle höher) — wir nehmen den Value gegen die Masse.",
             "weight": 1.0,
-            "weighted_score": 0.7,
+            "weighted_score": 0.73,
             "metadata": {
               "market_key": "u25",
-              "diff_pp": -2.4,
+              "diff_pp": -2.54,
               "sharp_p": 0.4704,
-              "public_p": 0.4465,
-              "public_bk": "Konsens (17 Books)"
+              "public_p": 0.445,
+              "public_bk": "Konsens (19 Books)"
             }
           },
           {
@@ -31434,26 +31596,26 @@
           },
           {
             "name": "reverse_line_move",
-            "score": 2.37,
-            "confidence": 0.58,
-            "evidence": "Reverse Line Move: Das Publikum meidet Unter (-2.4pp), aber Pinnacle zieht die Linie genau dorthin (+4.3pp) — scharfes Geld auf unserer unbeliebten Seite.",
+            "score": 2.44,
+            "confidence": 0.59,
+            "evidence": "Reverse Line Move: Das Publikum meidet Unter (-2.5pp), aber Pinnacle zieht die Linie genau dorthin (+4.3pp) — scharfes Geld auf unserer unbeliebten Seite.",
             "weight": 1.0,
-            "weighted_score": 1.37,
+            "weighted_score": 1.44,
             "metadata": {
               "pinn_move_pp": 4.26,
-              "public_lean_pp": -2.4,
+              "public_lean_pp": -2.54,
               "outcome": "under"
             }
           }
         ],
-        "signalAdjustmentPP": -0.36,
+        "signalAdjustmentPP": -0.32,
         "signalCountPos": 3,
         "signalCountNeg": 2,
-        "signalAdjustmentPP_trade": -0.4,
+        "signalAdjustmentPP_trade": -0.3,
         "signalCountPos_trade": 3,
         "signalCountNeg_trade": 2,
-        "effectiveEdgePP": -0.4,
-        "effectiveEdgePP_trade": -0.4,
+        "effectiveEdgePP": -0.3,
+        "effectiveEdgePP_trade": -0.3,
         "convictionScore": 3,
         "earlySeasonPenalty": 1.0,
         "convictionVerdict": "watch",
@@ -31890,7 +32052,7 @@
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "📉 Pinnacle 1.46→1.39 (Sharp-Money-Drop +4.4pp) · ✅ Soft-Konsens folgte +5.0pp (bestätigt) · sichere Linie abgeleitet: AH Heim −1.25 @1.85",
+        "info": "📉 Pinnacle 1.46→1.39 (Sharp-Money-Drop +4.5pp) · ✅ Soft-Konsens folgte +4.0pp (bestätigt) · sichere Linie abgeleitet: AH Heim −1.25 @1.85",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -31899,7 +32061,7 @@
         "lamA": null,
         "lamTotal": null,
         "source": "steam",
-        "steamMovePP": 4.4,
+        "steamMovePP": 4.5,
         "steamMoveRawPP": 3.4,
         "steamOpen": 1.46,
         "steamCur": 1.39,
@@ -31910,7 +32072,7 @@
         "lateEntry": false,
         "steamDerived": true,
         "softConfirmed": true,
-        "softFollowPP": 5.0,
+        "softFollowPP": 4.0,
         "ahLine": -1.25,
         "recentMovePP": 0.0,
         "freshnessState": "drift",
@@ -31923,14 +32085,14 @@
           "side": "home",
           "sources": {
             "pinnacle": 0.682,
-            "poly": 0.7
+            "poly": 0.705
           },
           "n": 2,
-          "spreadPP": 1.8,
-          "medianPP": 69.1,
+          "spreadPP": 2.3,
+          "medianPP": 69.3,
           "kind": null,
-          "outlier": "pinnacle",
-          "outlierGapPP": 0.9
+          "outlier": "poly",
+          "outlierGapPP": 1.2
         },
         "signals": [
           {
@@ -32016,13 +32178,13 @@
           },
           {
             "name": "coach_change",
-            "score": 0.37,
+            "score": 0.36,
             "confidence": 0.39,
-            "evidence": "Neuer Trainer José Mourinho (47d) → Heim-Bounce",
+            "evidence": "Neuer Trainer José Mourinho (48d) → Heim-Bounce",
             "weight": 1.0,
             "weighted_score": 0.06,
             "metadata": {
-              "homeBounce": 0.373,
+              "homeBounce": 0.36,
               "awayBounce": 0.0
             },
             "correlation_discount_applied": 0.4
@@ -32090,21 +32252,9 @@
           "context": 0,
           "market": 0
         },
-        "sharpMoveActive": true,
-        "sharpMoveDetails": {
-          "triggered": true,
-          "pinn_move_pp": 5.04,
-          "soft_lag_pp": 0.0,
-          "soft_lag_bonus": false,
-          "hours_since_open": 1123.6,
-          "open_pinn_odds": 1.46,
-          "current_pinn_odds": 1.36,
-          "move_age_decay": 0.0,
-          "move_age_days": 46.8
-        },
         "openingMovement": {
           "in_pick_direction": true,
-          "move_pp": 5.04
+          "move_pp": 3.97
         },
         "origVerdict": "ABWÄGEN",
         "origOdds": 1.85,
@@ -32312,7 +32462,7 @@
         "origVerdict": "ABWÄGEN",
         "origOdds": 1.4,
         "nobetSince": "2026-08-10T22:31:29.505609+00:00",
-        "nobetReason": "Quote zu kurz geworden (1.4→1.36) — kein Value mehr"
+        "nobetReason": "Quote zu kurz geworden (1.4→1.38) — kein Value mehr"
       }
     ],
     "ESP-1-542-546": [
@@ -32527,7 +32677,7 @@
         "info": "📉 Pinnacle 3.5→3.13 (Sharp-Money-Drop +3.9pp) · ✅ Soft-Konsens folgte +3.7pp (bestätigt) · ⏱️ Late Entry — Lernwert, weniger CLV · ✅ Sichere Linie abgeleitet: Doppelte Chance — X2 @1.56 (These: Auswärtssieg @3.1)",
         "icon": "🔥",
         "result": null,
-        "clvPP": 0.0,
+        "clvPP": -8.61,
         "dataQuality": "steam",
         "lamH": null,
         "lamA": null,
@@ -32687,7 +32837,8 @@
         "origVerdict": "ABWÄGEN",
         "origOdds": 1.56,
         "nobetSince": "2026-08-08T08:33:11.688863+00:00",
-        "nobetReason": "Conviction 1/10 < 4 — zu dünn"
+        "nobetReason": "Conviction 1/10 < 4 — zu dünn",
+        "clvResolved": true
       },
       {
         "market": "Heimsieg",
@@ -32702,7 +32853,7 @@
         "info": "📉 Pinnacle 2.36→2.18 (Sharp-Money-Drop +4.2pp) · ✅ Soft-Konsens folgte +2.1pp (bestätigt)",
         "icon": "🔥",
         "result": null,
-        "clvPP": 0.0,
+        "clvPP": 0.07,
         "dataQuality": "steam",
         "lamH": null,
         "lamA": null,
@@ -32893,7 +33044,8 @@
         "origVerdict": "ABWÄGEN",
         "origOdds": 2.25,
         "nobetSince": "2026-08-06T23:03:20.289819+00:00",
-        "nobetReason": "Conviction 3/10 < 4 — zu dünn"
+        "nobetReason": "Conviction 3/10 < 4 — zu dünn",
+        "clvResolved": true
       },
       {
         "market": "Auswärtssieg",
@@ -32908,7 +33060,7 @@
         "info": "📉 Pinnacle 3.5→3.38 (Sharp-Money-Drop +4.6pp) · ⏱️ Late Entry — Lernwert, weniger CLV",
         "icon": "🔥",
         "result": null,
-        "clvPP": 0.0,
+        "clvPP": -5.16,
         "dataQuality": "steam",
         "lamH": null,
         "lamA": null,
@@ -33084,13 +33236,14 @@
           "kind": "konsens",
           "outlier": null,
           "outlierGapPP": 4.6
-        }
+        },
+        "clvResolved": true
       }
     ],
     "ESP-2-530-533": [
       {
         "market": "Über 2.5 Tore",
-        "odds": 1.81,
+        "odds": 1.82,
         "modelOdds": 1.858,
         "conf": "high",
         "verdict": "NOBET",
@@ -33098,7 +33251,7 @@
         "mktSig": 0,
         "storySig": 0,
         "edgePP": -3,
-        "info": "📉 Pinnacle 2.05→1.88 (Sharp-Money-Drop +4.4pp) · ✅ Soft-Konsens folgte +7.7pp (bestätigt) · ⏱️ Late Entry — Lernwert, weniger CLV",
+        "info": "📉 Pinnacle 2.05→1.88 (Sharp-Money-Drop +4.4pp) · ✅ Soft-Konsens folgte +7.6pp (bestätigt) · ⏱️ Late Entry — Lernwert, weniger CLV",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -33112,13 +33265,13 @@
         "steamOpen": 2.05,
         "steamCur": 1.88,
         "softOpen": 2.11,
-        "softNow": 1.815,
+        "softNow": 1.82,
         "entryBook": "soft",
-        "entryOdd": 1.81,
+        "entryOdd": 1.82,
         "lateEntry": true,
         "steamDerived": false,
         "softConfirmed": true,
-        "softFollowPP": 7.7,
+        "softFollowPP": 7.6,
         "ahLine": null,
         "recentMovePP": 0.0,
         "freshnessState": "drift",
@@ -33223,21 +33376,21 @@
         "sharpMoveActive": true,
         "sharpMoveDetails": {
           "triggered": true,
-          "pinn_move_pp": 6.32,
+          "pinn_move_pp": 6.16,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 377.3,
+          "hours_since_open": 383.2,
           "open_pinn_odds": 2.05,
-          "current_pinn_odds": 1.815,
+          "current_pinn_odds": 1.82,
           "move_age_decay": 0.5,
-          "move_age_days": 15.7
+          "move_age_days": 16.0
         },
         "openingMovement": {
           "in_pick_direction": true,
-          "move_pp": 6.32
+          "move_pp": 6.16
         },
         "origVerdict": "ABWÄGEN",
-        "origOdds": 1.81,
+        "origOdds": 1.82,
         "nobetReason": "Conviction 3/10 < 4 — zu dünn",
         "engineVersion": "v1"
       },
@@ -33445,15 +33598,15 @@
     "ESP-2-531-536": [
       {
         "market": "Doppelte Chance — X2",
-        "odds": 2.19,
-        "modelOdds": 2.183,
+        "odds": 2.17,
+        "modelOdds": 2.157,
         "conf": "high",
         "verdict": "NOBET",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": -2,
-        "info": "📉 Pinnacle 6.0→5.07 (Sharp-Money-Drop +4.1pp) · ⏱️ Late Entry — Lernwert, weniger CLV · ✅ Sichere Linie abgeleitet: Doppelte Chance — X2 @2.19 (These: Auswärtssieg @5.1)",
+        "info": "📉 Pinnacle 6.0→5.09 (Sharp-Money-Drop +4.1pp) · ⏱️ Late Entry — Lernwert, weniger CLV · ✅ Sichere Linie abgeleitet: Doppelte Chance — X2 @2.17 (These: Auswärtssieg @5)",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -33463,20 +33616,20 @@
         "lamTotal": null,
         "source": "steam",
         "steamMovePP": 4.1,
-        "steamMoveRawPP": 3.1,
+        "steamMoveRawPP": 3.0,
         "steamOpen": 6.0,
-        "steamCur": 5.07,
+        "steamCur": 5.09,
         "softOpen": 5.25,
-        "softNow": 5.1,
+        "softNow": 5.0,
         "entryBook": "soft",
-        "entryOdd": 2.19,
+        "entryOdd": 2.17,
         "lateEntry": true,
         "steamDerived": false,
         "softConfirmed": false,
-        "softFollowPP": 0.6,
+        "softFollowPP": 1.0,
         "ahLine": null,
         "safeThesisMarket": "Auswärtssieg",
-        "safeThesisOdds": 5.1,
+        "safeThesisOdds": 5.0,
         "safeDerived": true,
         "recentMovePP": 0.0,
         "freshnessState": "drift",
@@ -33490,10 +33643,10 @@
           "sources": {
             "pinnacle": 0.19,
             "poly": 0.175,
-            "soft": 0.196
+            "soft": 0.2
           },
           "n": 3,
-          "spreadPP": 2.1,
+          "spreadPP": 2.5,
           "medianPP": 19.0,
           "kind": "konsens",
           "outlier": null,
@@ -33561,11 +33714,11 @@
             "name": "move_following",
             "score": 1.2,
             "confidence": 0.6,
-            "evidence": "Pinnacle zog Auswärts um +3.2pp an — ein solider Sharp-Move mittlerer Größe, der dem schärfsten Geld folgt.",
+            "evidence": "Pinnacle zog Auswärts um +3.1pp an — ein solider Sharp-Move mittlerer Größe, der dem schärfsten Geld folgt.",
             "weight": 1.0,
             "weighted_score": 0.29,
             "metadata": {
-              "move_pp": 3.16,
+              "move_pp": 3.12,
               "bucket": "mid",
               "outcome": "away"
             },
@@ -33609,10 +33762,10 @@
         },
         "openingMovement": {
           "in_pick_direction": true,
-          "move_pp": 2.94
+          "move_pp": 3.33
         },
         "origVerdict": "ABWÄGEN",
-        "origOdds": 2.19,
+        "origOdds": 2.17,
         "nobetReason": "Conviction 1/10 < 4 — zu dünn",
         "engineVersion": "v1"
       }
@@ -33623,14 +33776,14 @@
       {
         "market": "Auswärtssieg",
         "odds": 1.44,
-        "modelOdds": 1.436,
+        "modelOdds": 1.466,
         "conf": "medium",
-        "verdict": "ABWÄGEN",
+        "verdict": "NOBET",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
-        "edgePP": -3,
-        "info": "📉 Pinnacle 1.62→1.44 (Sharp-Money-Drop +8.7pp) · ✅ Soft-Konsens folgte +6.9pp (bestätigt) · ⏱️ Late Entry — Lernwert, weniger CLV",
+        "edgePP": -4,
+        "info": "📉 Pinnacle 1.62→1.47 (Sharp-Money-Drop +7.4pp) · ✅ Soft-Konsens folgte +6.9pp (bestätigt) · ⏱️ Late Entry — Lernwert, weniger CLV",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -33639,10 +33792,10 @@
         "lamA": null,
         "lamTotal": null,
         "source": "steam",
-        "steamMovePP": 8.7,
-        "steamMoveRawPP": 7.7,
+        "steamMovePP": 7.4,
+        "steamMoveRawPP": 6.3,
         "steamOpen": 1.62,
-        "steamCur": 1.44,
+        "steamCur": 1.47,
         "softOpen": 1.6,
         "softNow": 1.44,
         "entryBook": "soft",
@@ -33652,63 +33805,45 @@
         "softConfirmed": true,
         "softFollowPP": 6.9,
         "ahLine": null,
-        "recentMovePP": 6.6,
-        "freshnessState": "confirm",
-        "legHours": 40.5,
-        "legSnaps": 8,
+        "recentMovePP": -1.4,
+        "freshnessState": "drift",
+        "legHours": 9.5,
+        "legSnaps": 3,
         "lastMoveH": 0.0,
         "flipReady": false,
         "baseVerdict": "ABWÄGEN",
         "consensus": {
           "side": "away",
           "sources": {
-            "pinnacle": 0.656,
-            "poly": 0.665,
+            "pinnacle": 0.66,
+            "poly": 0.685,
             "soft": 0.694
           },
           "n": 3,
-          "spreadPP": 3.9,
-          "medianPP": 66.5,
+          "spreadPP": 3.5,
+          "medianPP": 68.5,
           "kind": "konsens",
           "outlier": null,
-          "outlierGapPP": 2.9
+          "outlierGapPP": 2.5
         },
         "signals": [
           {
             "name": "lead_lag_bias",
-            "score": 5.04,
+            "score": 3.22,
             "confidence": 0.7,
-            "evidence": "Pinnacle hat Auswärts um +3.8pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
+            "evidence": "Pinnacle hat Auswärts um +2.4pp bewegt, und public ziehen schon nach (1) — der Move ist bestätigt.",
             "weight": 1.0,
-            "weighted_score": 3.53,
+            "weighted_score": 2.25,
             "metadata": {
               "stage": "confirmed",
-              "pinn_move_pp": 3.78,
+              "pinn_move_pp": 2.41,
               "soft_moves": [
                 {
                   "bk": "public",
-                  "move_pp": 4.77
+                  "move_pp": 4.12
                 }
               ],
               "outcome": "aw"
-            }
-          },
-          {
-            "name": "injury",
-            "score": 4.0,
-            "confidence": 0.74,
-            "evidence": "🩹 Heim 4.0pp (K. Garcia (FWD), J. Puado (MID))",
-            "weight": 1.0,
-            "weighted_score": 2.96,
-            "metadata": {
-              "home_impact_pp": 4.0,
-              "away_impact_pp": 0.0,
-              "pick_side": "away",
-              "home_players": [
-                "K. Garcia (FWD)",
-                "J. Puado (MID)"
-              ],
-              "away_players": []
             }
           },
           {
@@ -33765,44 +33900,44 @@
           },
           {
             "name": "apif_predictions",
-            "score": -2.78,
-            "confidence": 0.65,
-            "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 16.8pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
+            "score": -2.57,
+            "confidence": 0.63,
+            "evidence": "📊 Ein zweites Modell (API-Football) sieht Auswärts um 15.5pp niedriger als Pinnacle — das mahnt zur Vorsicht.",
             "weight": 1.0,
-            "weighted_score": -1.81,
+            "weighted_score": -1.62,
             "metadata": {
               "outcome": "away",
               "apif_p": 0.5,
-              "sharp_p": 0.6684,
-              "diff_pp": -16.84,
+              "sharp_p": 0.6548,
+              "diff_pp": -15.48,
               "advice": "Double chance : draw or Real Madrid"
             }
           },
           {
             "name": "freshness_leg",
-            "score": 3.3,
-            "confidence": 0.82,
-            "evidence": "✅ Frisch bestätigt: Pinnacle +6.6pp im letzten Abschnitt (für den Pick)",
+            "score": 0.0,
+            "confidence": 0.5,
+            "evidence": "⏸ Move ruht (Drift, letzter Abschnitt -1.4pp) — kein frisches Geld",
             "weight": 1.0,
-            "weighted_score": 2.71,
+            "weighted_score": 0.0,
             "metadata": {
-              "state": "confirm",
-              "recentMovePP": 6.6,
-              "legSnaps": 8,
-              "legHours": 40.5,
+              "state": "drift",
+              "recentMovePP": -1.4,
+              "legSnaps": 3,
+              "legHours": 9.5,
               "flipReady": false
             }
           },
           {
             "name": "coach_change",
-            "score": 0.37,
+            "score": 0.36,
             "confidence": 0.39,
-            "evidence": "Neuer Trainer José Mourinho (47d) → Auswärts-Bounce",
+            "evidence": "Neuer Trainer José Mourinho (48d) → Auswärts-Bounce",
             "weight": 1.0,
             "weighted_score": 0.06,
             "metadata": {
               "homeBounce": 0.0,
-              "awayBounce": 0.373
+              "awayBounce": 0.36
             },
             "correlation_discount_applied": 0.4
           },
@@ -33812,42 +33947,41 @@
             "confidence": 0.55,
             "evidence": "Schlüssel-Abgang Auswärts 0 / Gegner 3",
             "weight": 1.0,
-            "weighted_score": 0.26,
+            "weighted_score": 0.66,
             "metadata": {
               "homeShift": 1.0,
               "awayShift": 0.0
-            },
-            "correlation_discount_applied": 0.4
+            }
           },
           {
             "name": "move_following",
             "score": 2.0,
             "confidence": 0.7,
-            "evidence": "Pinnacle hat Auswärts seit der Eröffnung um +7.8pp verkürzt — ein großer, klarer Sharp-Move. Historisch (Top-5) trägt genau diese Größenklasse den stärksten Edge, unabhängig von der Team-Form.",
+            "evidence": "Pinnacle hat Auswärts seit der Eröffnung um +6.5pp verkürzt — ein großer, klarer Sharp-Move. Historisch (Top-5) trägt genau diese Größenklasse den stärksten Edge, unabhängig von der Team-Form.",
             "weight": 1.0,
             "weighted_score": 0.56,
             "metadata": {
-              "move_pp": 7.82,
+              "move_pp": 6.46,
               "bucket": "strong",
               "outcome": "away"
             },
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 2.01,
-        "signalCountPos": 9,
+        "signalAdjustmentPP": 0.94,
+        "signalCountPos": 7,
         "signalCountNeg": 1,
-        "signalAdjustmentPP_trade": -1.3,
-        "signalCountPos_trade": 8,
+        "signalAdjustmentPP_trade": 0.9,
+        "signalCountPos_trade": 7,
         "signalCountNeg_trade": 1,
-        "effectiveEdgePP": -1.0,
-        "effectiveEdgePP_trade": -4.3,
-        "convictionScore": 5,
+        "effectiveEdgePP": -3.1,
+        "effectiveEdgePP_trade": -3.1,
+        "convictionScore": 3,
         "earlySeasonPenalty": 1.0,
-        "convictionVerdict": "abwaegen",
-        "convictionLabel": "⭐ Gute Wette",
+        "convictionVerdict": "watch",
+        "convictionLabel": "👁 Beobachten",
         "convictionFamilies": {
-          "sharp_money": 3,
+          "sharp_money": 1,
           "model_stack": 3,
           "context": 0,
           "market": 0
@@ -33855,20 +33989,22 @@
         "sharpMoveActive": true,
         "sharpMoveDetails": {
           "triggered": true,
-          "pinn_move_pp": 7.72,
+          "pinn_move_pp": 6.3,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 377.3,
+          "hours_since_open": 383.2,
           "open_pinn_odds": 1.62,
-          "current_pinn_odds": 1.44,
+          "current_pinn_odds": 1.47,
           "move_age_decay": 0.5,
-          "move_age_days": 15.7
+          "move_age_days": 16.0
         },
         "openingMovement": {
           "in_pick_direction": true,
-          "move_pp": 7.72
+          "move_pp": 6.3
         },
-        "stake": 2.0,
+        "origVerdict": "ABWÄGEN",
+        "origOdds": 1.44,
+        "nobetReason": "Conviction 3/10 < 4 — zu dünn",
         "engineVersion": "v1"
       },
       {
@@ -34196,7 +34332,7 @@
         "origVerdict": "ABWÄGEN",
         "origOdds": 2.1,
         "nobetSince": "2026-08-10T12:55:47.820109+00:00",
-        "nobetReason": "Quote zu kurz geworden (2.1→2.06) — kein Value mehr"
+        "nobetReason": "Quote zu kurz geworden (2.1→2.05) — kein Value mehr"
       },
       {
         "market": "Doppelte Chance — X2",
@@ -34417,15 +34553,15 @@
     "ESP-2-546-4665": [
       {
         "market": "Doppelte Chance — X2",
-        "odds": 1.79,
-        "modelOdds": 1.774,
-        "conf": "high",
-        "verdict": "NOBET",
+        "odds": 1.74,
+        "modelOdds": 1.731,
+        "conf": "medium",
+        "verdict": "ABWÄGEN",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": -2,
-        "info": "📉 Pinnacle 5.25→4.52 (Sharp-Money-Drop +4.1pp) · ⏱️ Late Entry — Lernwert, weniger CLV · ✅ Sichere Linie abgeleitet: Doppelte Chance — X2 @1.79 (These: Auswärtssieg @4.25)",
+        "info": "📉 Pinnacle 5.25→4.16 (Sharp-Money-Drop +6.1pp) · ✅ Soft-Konsens folgte +1.9pp (bestätigt) · ⏱️ Late Entry — Lernwert, weniger CLV · ✅ Sichere Linie abgeleitet: Doppelte Chance — X2 @1.74 (These: Auswärtssieg @4)",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -34434,64 +34570,44 @@
         "lamA": null,
         "lamTotal": null,
         "source": "steam",
-        "steamMovePP": 4.1,
-        "steamMoveRawPP": 3.1,
+        "steamMovePP": 6.1,
+        "steamMoveRawPP": 5.0,
         "steamOpen": 5.25,
-        "steamCur": 4.52,
+        "steamCur": 4.16,
         "softOpen": 4.325,
-        "softNow": 4.25,
+        "softNow": 4.0,
         "entryBook": "soft",
-        "entryOdd": 1.79,
+        "entryOdd": 1.74,
         "lateEntry": true,
         "steamDerived": false,
-        "softConfirmed": false,
-        "softFollowPP": 0.4,
+        "softConfirmed": true,
+        "softFollowPP": 1.9,
         "ahLine": null,
         "safeThesisMarket": "Auswärtssieg",
-        "safeThesisOdds": 4.25,
+        "safeThesisOdds": 4.0,
         "safeDerived": true,
-        "recentMovePP": 2.8,
-        "freshnessState": "drift",
-        "legHours": 52.7,
-        "legSnaps": 13,
-        "lastMoveH": 30.4,
+        "recentMovePP": 4.7,
+        "freshnessState": "confirm",
+        "legHours": 61.4,
+        "legSnaps": 14,
+        "lastMoveH": 0.0,
         "flipReady": false,
         "baseVerdict": "ABWÄGEN",
         "consensus": {
           "side": "away",
           "sources": {
-            "pinnacle": 0.213,
+            "pinnacle": 0.232,
             "poly": 0.215,
-            "soft": 0.235
+            "soft": 0.25
           },
           "n": 3,
-          "spreadPP": 2.2,
-          "medianPP": 21.5,
+          "spreadPP": 3.5,
+          "medianPP": 23.2,
           "kind": "konsens",
           "outlier": null,
-          "outlierGapPP": 2.0
+          "outlierGapPP": 1.8
         },
         "signals": [
-          {
-            "name": "injury",
-            "score": -1.7,
-            "confidence": 0.6,
-            "evidence": "🩹 Heim 0.8pp (Juanmi (?), C. Uche (?)) · Auswärts 2.5pp (G. Guliashvili (FWD))",
-            "weight": 1.0,
-            "weighted_score": -1.02,
-            "metadata": {
-              "home_impact_pp": 0.8,
-              "away_impact_pp": 2.5,
-              "pick_side": "away",
-              "home_players": [
-                "Juanmi (?)",
-                "C. Uche (?)"
-              ],
-              "away_players": [
-                "G. Guliashvili (FWD)"
-              ]
-            }
-          },
           {
             "name": "form_trend",
             "score": 2.9,
@@ -34529,16 +34645,16 @@
           },
           {
             "name": "freshness_leg",
-            "score": 0.0,
-            "confidence": 0.5,
-            "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +2.8pp) — kein frisches Geld",
+            "score": 2.35,
+            "confidence": 0.85,
+            "evidence": "✅ Frisch bestätigt: Pinnacle +4.7pp im letzten Abschnitt (für den Pick)",
             "weight": 1.0,
-            "weighted_score": 0.0,
+            "weighted_score": 2.0,
             "metadata": {
-              "state": "drift",
-              "recentMovePP": 2.8,
-              "legSnaps": 13,
-              "legHours": 52.7,
+              "state": "confirm",
+              "recentMovePP": 4.7,
+              "legSnaps": 14,
+              "legHours": 61.4,
               "flipReady": false
             }
           },
@@ -34557,14 +34673,14 @@
           },
           {
             "name": "move_following",
-            "score": 1.2,
-            "confidence": 0.6,
-            "evidence": "Pinnacle zog Auswärts um +3.3pp an — ein solider Sharp-Move mittlerer Größe, der dem schärfsten Geld folgt.",
+            "score": 2.0,
+            "confidence": 0.7,
+            "evidence": "Pinnacle hat Auswärts seit der Eröffnung um +5.2pp verkürzt — ein großer, klarer Sharp-Move. Historisch (Top-5) trägt genau diese Größenklasse den stärksten Edge, unabhängig von der Team-Form.",
             "weight": 1.0,
-            "weighted_score": 0.29,
+            "weighted_score": 0.56,
             "metadata": {
-              "move_pp": 3.34,
-              "bucket": "mid",
+              "move_pp": 5.16,
+              "bucket": "strong",
               "outcome": "away"
             },
             "correlation_discount_applied": 0.4
@@ -34587,20 +34703,20 @@
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 1.42,
-        "signalCountPos": 4,
-        "signalCountNeg": 2,
-        "signalAdjustmentPP_trade": 1.4,
+        "signalAdjustmentPP": 2.49,
+        "signalCountPos": 5,
+        "signalCountNeg": 1,
+        "signalAdjustmentPP_trade": 0.1,
         "signalCountPos_trade": 4,
-        "signalCountNeg_trade": 2,
-        "effectiveEdgePP": -0.6,
-        "effectiveEdgePP_trade": -0.6,
-        "convictionScore": 3,
+        "signalCountNeg_trade": 1,
+        "effectiveEdgePP": 0.5,
+        "effectiveEdgePP_trade": -1.9,
+        "convictionScore": 5,
         "earlySeasonPenalty": 1.0,
-        "convictionVerdict": "watch",
-        "convictionLabel": "👁 Beobachten",
+        "convictionVerdict": "abwaegen",
+        "convictionLabel": "⭐ Gute Wette",
         "convictionFamilies": {
-          "sharp_money": 1,
+          "sharp_money": 3,
           "model_stack": 3,
           "context": 0,
           "market": 0
@@ -34608,37 +34724,35 @@
         "sharpMoveActive": true,
         "sharpMoveDetails": {
           "triggered": true,
-          "pinn_move_pp": 4.48,
+          "pinn_move_pp": 5.95,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 377.3,
+          "hours_since_open": 383.2,
           "open_pinn_odds": 5.25,
-          "current_pinn_odds": 4.25,
+          "current_pinn_odds": 4.0,
           "move_age_decay": 0.5,
-          "move_age_days": 15.7
+          "move_age_days": 16.0
         },
         "openingMovement": {
           "in_pick_direction": true,
-          "move_pp": 4.48
+          "move_pp": 5.95
         },
-        "origVerdict": "ABWÄGEN",
-        "origOdds": 1.79,
-        "nobetReason": "Conviction 3/10 < 4 — zu dünn",
+        "stake": 2.0,
         "engineVersion": "v1"
       }
     ],
     "ESP-2-727-539": [
       {
         "market": "Doppelte Chance — X2",
-        "odds": 2.02,
-        "modelOdds": 2.018,
+        "odds": 2.0,
+        "modelOdds": 1.995,
         "conf": "medium",
         "verdict": "NOBET",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": -2,
-        "info": "📉 Pinnacle 5.0→4.43 (Sharp-Money-Drop +3.6pp) · ⏱️ Late Entry — Lernwert, weniger CLV · ✅ Sichere Linie abgeleitet: Doppelte Chance — X2 @2.02 (These: Auswärtssieg @4.28)",
+        "info": "📉 Pinnacle 5.0→4.43 (Sharp-Money-Drop +3.7pp) · ⏱️ Late Entry — Lernwert, weniger CLV · ✅ Sichere Linie abgeleitet: Doppelte Chance — X2 @2 (These: Auswärtssieg @4.3)",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -34647,21 +34761,21 @@
         "lamA": null,
         "lamTotal": null,
         "source": "steam",
-        "steamMovePP": 3.6,
+        "steamMovePP": 3.7,
         "steamMoveRawPP": 2.6,
         "steamOpen": 5.0,
         "steamCur": 4.43,
         "softOpen": 4.5,
-        "softNow": 4.275,
+        "softNow": 4.3,
         "entryBook": "soft",
-        "entryOdd": 2.02,
+        "entryOdd": 2.0,
         "lateEntry": true,
         "steamDerived": false,
         "softConfirmed": false,
-        "softFollowPP": 1.2,
+        "softFollowPP": 1.0,
         "ahLine": null,
         "safeThesisMarket": "Auswärtssieg",
-        "safeThesisOdds": 4.28,
+        "safeThesisOdds": 4.3,
         "safeDerived": true,
         "recentMovePP": 0.0,
         "freshnessState": "drift",
@@ -34673,36 +34787,18 @@
         "consensus": {
           "side": "away",
           "sources": {
-            "pinnacle": 0.216,
-            "poly": 0.22,
-            "soft": 0.234
+            "pinnacle": 0.217,
+            "poly": 0.215,
+            "soft": 0.233
           },
           "n": 3,
-          "spreadPP": 1.7,
-          "medianPP": 22.0,
+          "spreadPP": 1.8,
+          "medianPP": 21.7,
           "kind": "konsens",
           "outlier": null,
-          "outlierGapPP": 1.4
+          "outlierGapPP": 1.6
         },
         "signals": [
-          {
-            "name": "injury",
-            "score": -2.4,
-            "confidence": 0.64,
-            "evidence": "🩹 Auswärts 2.4pp (R. Brugue (?), A. Primo (GK))",
-            "weight": 1.0,
-            "weighted_score": -1.54,
-            "metadata": {
-              "home_impact_pp": 0.0,
-              "away_impact_pp": 2.4,
-              "pick_side": "away",
-              "home_players": [],
-              "away_players": [
-                "R. Brugue (?)",
-                "A. Primo (GK)"
-              ]
-            }
-          },
           {
             "name": "form_trend",
             "score": 0.97,
@@ -34775,7 +34871,7 @@
             "weight": 1.0,
             "weighted_score": 0.12,
             "metadata": {
-              "move_pp": 2.57,
+              "move_pp": 2.58,
               "bucket": "weak_confirm",
               "state_edge": 0.334,
               "outcome": "away"
@@ -34799,14 +34895,14 @@
             }
           }
         ],
-        "signalAdjustmentPP": -0.25,
+        "signalAdjustmentPP": 0.26,
         "signalCountPos": 4,
-        "signalCountNeg": 2,
-        "signalAdjustmentPP_trade": -0.2,
+        "signalCountNeg": 1,
+        "signalAdjustmentPP_trade": 0.3,
         "signalCountPos_trade": 4,
-        "signalCountNeg_trade": 2,
-        "effectiveEdgePP": -2.2,
-        "effectiveEdgePP_trade": -2.2,
+        "signalCountNeg_trade": 1,
+        "effectiveEdgePP": -1.7,
+        "effectiveEdgePP_trade": -1.7,
         "convictionScore": 3,
         "earlySeasonPenalty": 1.0,
         "convictionVerdict": "watch",
@@ -34819,11 +34915,133 @@
         },
         "openingMovement": {
           "in_pick_direction": true,
-          "move_pp": 3.39
+          "move_pp": 3.26
         },
         "origVerdict": "ABWÄGEN",
-        "origOdds": 2.02,
+        "origOdds": 2.0,
         "nobetReason": "Conviction 3/10 < 4 — zu dünn",
+        "engineVersion": "v1"
+      },
+      {
+        "market": "Unter 2.5 Tore",
+        "odds": 1.8,
+        "modelOdds": 1.804,
+        "conf": "medium",
+        "verdict": "NOBET",
+        "modSig": 0,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": -2,
+        "info": "📉 Pinnacle 1.93→1.82 (Sharp-Money-Drop +3.1pp) · ✅ Soft-Konsens folgte +3.1pp (bestätigt) · ⏱️ Late Entry — Lernwert, weniger CLV",
+        "icon": "🔥",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "steam",
+        "lamH": null,
+        "lamA": null,
+        "lamTotal": null,
+        "source": "steam",
+        "steamMovePP": 3.1,
+        "steamMoveRawPP": 3.1,
+        "steamOpen": 1.93,
+        "steamCur": 1.82,
+        "softOpen": 1.905,
+        "softNow": 1.8,
+        "entryBook": "soft",
+        "entryOdd": 1.8,
+        "lateEntry": true,
+        "steamDerived": false,
+        "softConfirmed": true,
+        "softFollowPP": 3.1,
+        "ahLine": null,
+        "recentMovePP": 0.0,
+        "freshnessState": "drift",
+        "legHours": 0.0,
+        "legSnaps": 1,
+        "lastMoveH": 0.0,
+        "flipReady": false,
+        "baseVerdict": "ABWÄGEN",
+        "signals": [
+          {
+            "name": "h2h_pattern",
+            "score": 1.2,
+            "confidence": 0.75,
+            "evidence": "⚔️ Aus den letzten 10 Duellen: im Schnitt 2.3 Tore (Linie 2.5) · in 30% fielen über 2.5 Tore → spricht für Unter 2.5.",
+            "weight": 1.0,
+            "weighted_score": 0.9,
+            "metadata": {
+              "games": 10,
+              "h2h_avg_goals": 2.3,
+              "h2h_over25_rate": 0.3,
+              "pick_side": "Unter 2.5"
+            }
+          },
+          {
+            "name": "freshness_leg",
+            "score": 0.0,
+            "confidence": 0.5,
+            "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +0.0pp) — kein frisches Geld",
+            "weight": 1.0,
+            "weighted_score": 0.0,
+            "metadata": {
+              "state": "drift",
+              "recentMovePP": 0.0,
+              "legSnaps": 1,
+              "legHours": 0.0,
+              "flipReady": false
+            }
+          },
+          {
+            "name": "transfer_shift",
+            "score": 0.6,
+            "confidence": 0.55,
+            "evidence": "Schlüsselspieler abgegeben → geringere Tor-Bedrohung",
+            "weight": 1.0,
+            "weighted_score": 0.33,
+            "metadata": {
+              "homeShift": 1.0,
+              "awayShift": 1.0
+            }
+          },
+          {
+            "name": "move_following",
+            "score": 1.2,
+            "confidence": 0.6,
+            "evidence": "Pinnacle zog Unter um +4.3pp an — ein solider Sharp-Move mittlerer Größe, der dem schärfsten Geld folgt.",
+            "weight": 1.0,
+            "weighted_score": 0.72,
+            "metadata": {
+              "move_pp": 4.27,
+              "bucket": "mid",
+              "outcome": "under"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 0.81,
+        "signalCountPos": 3,
+        "signalCountNeg": 0,
+        "signalAdjustmentPP_trade": 0.8,
+        "signalCountPos_trade": 3,
+        "signalCountNeg_trade": 0,
+        "effectiveEdgePP": -1.2,
+        "effectiveEdgePP_trade": -1.2,
+        "convictionScore": 2,
+        "earlySeasonPenalty": 1.0,
+        "convictionVerdict": "skip",
+        "convictionLabel": null,
+        "convictionFamilies": {
+          "sharp_money": 1,
+          "model_stack": 2,
+          "context": 0,
+          "market": 0
+        },
+        "openingMovement": {
+          "in_pick_direction": true,
+          "move_pp": 3.74
+        },
+        "origVerdict": "ABWÄGEN",
+        "origOdds": 1.8,
+        "nobetReason": "Conviction 2/10 < 4 — zu dünn",
         "engineVersion": "v1"
       }
     ],
@@ -35255,7 +35473,7 @@
         "origVerdict": "ABWÄGEN",
         "origOdds": 2.5,
         "nobetSince": "2026-08-14T07:16:07.875084+00:00",
-        "nobetReason": "Edge weg — Linie gegen den Pick gelaufen (2.5→8.475)"
+        "nobetReason": "Edge weg — Linie gegen den Pick gelaufen (2.5→8.45)"
       }
     ],
     "ESP-3-4665-797": [],
@@ -35630,7 +35848,7 @@
         "mktSig": 0,
         "storySig": 0,
         "edgePP": -3,
-        "info": "📉 Pinnacle 4.05→3.61 (Sharp-Money-Drop +4.0pp) · ✅ Soft-Konsens folgte +4.3pp (bestätigt) · ⏱️ Late Entry — Lernwert, weniger CLV · ✅ Sichere Linie abgeleitet: Doppelte Chance — X2 @1.81 (These: Auswärtssieg @3.45)",
+        "info": "📉 Pinnacle 4.05→3.61 (Sharp-Money-Drop +4.2pp) · ✅ Soft-Konsens folgte +4.3pp (bestätigt) · ⏱️ Late Entry — Lernwert, weniger CLV · ✅ Sichere Linie abgeleitet: Doppelte Chance — X2 @1.81 (These: Auswärtssieg @3.45)",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -35639,7 +35857,7 @@
         "lamA": null,
         "lamTotal": null,
         "source": "steam",
-        "steamMovePP": 4.0,
+        "steamMovePP": 4.2,
         "steamMoveRawPP": 3.0,
         "steamOpen": 4.05,
         "steamCur": 3.61,
@@ -35666,15 +35884,15 @@
           "side": "away",
           "sources": {
             "pinnacle": 0.264,
-            "poly": 0.265,
+            "poly": 0.25,
             "soft": 0.29
           },
           "n": 3,
-          "spreadPP": 2.6,
-          "medianPP": 26.5,
+          "spreadPP": 4.0,
+          "medianPP": 26.4,
           "kind": "konsens",
           "outlier": null,
-          "outlierGapPP": 2.5
+          "outlierGapPP": 2.6
         },
         "signals": [
           {
@@ -35793,11 +36011,11 @@
           "pinn_move_pp": 4.29,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 1089.4,
+          "hours_since_open": 1095.2,
           "open_pinn_odds": 4.05,
           "current_pinn_odds": 3.45,
           "move_age_decay": 0.0,
-          "move_age_days": 45.4
+          "move_age_days": 45.6
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -36203,7 +36421,7 @@
         "mktSig": 0,
         "storySig": 0,
         "edgePP": -3,
-        "info": "📉 Pinnacle 5.2→4.62 (Sharp-Money-Drop +3.4pp) · ⏱️ Late Entry — Lernwert, weniger CLV · ✅ Sichere Linie abgeleitet: Doppelte Chance — X2 @2.15 (These: Auswärtssieg @4.5)",
+        "info": "📉 Pinnacle 5.2→4.62 (Sharp-Money-Drop +3.6pp) · ⏱️ Late Entry — Lernwert, weniger CLV · ✅ Sichere Linie abgeleitet: Doppelte Chance — X2 @2.15 (These: Auswärtssieg @4.5)",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -36212,7 +36430,7 @@
         "lamA": null,
         "lamTotal": null,
         "source": "steam",
-        "steamMovePP": 3.4,
+        "steamMovePP": 3.6,
         "steamMoveRawPP": 2.4,
         "steamOpen": 5.2,
         "steamCur": 4.62,
@@ -36239,11 +36457,11 @@
           "side": "away",
           "sources": {
             "pinnacle": 0.205,
-            "poly": 0.2,
+            "poly": 0.19,
             "soft": 0.222
           },
           "n": 3,
-          "spreadPP": 2.2,
+          "spreadPP": 3.2,
           "medianPP": 20.5,
           "kind": "konsens",
           "outlier": null,
@@ -36518,7 +36736,7 @@
         "mktSig": 0,
         "storySig": 0,
         "edgePP": -2,
-        "info": "📉 Pinnacle 6.75→4.77 (Sharp-Money-Drop +7.1pp) · Soft-Konsens hinkt +1.7pp (Value, noch nicht bestätigt) · ✅ Sichere Linie abgeleitet: Doppelte Chance — 1X @2.36 (These: Heimsieg @5.2)",
+        "info": "📉 Pinnacle 6.75→4.77 (Sharp-Money-Drop +7.2pp) · Soft-Konsens hinkt +1.7pp (Value, noch nicht bestätigt) · ✅ Sichere Linie abgeleitet: Doppelte Chance — 1X @2.36 (These: Heimsieg @5.2)",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -36527,7 +36745,7 @@
         "lamA": null,
         "lamTotal": null,
         "source": "steam",
-        "steamMovePP": 7.1,
+        "steamMovePP": 7.2,
         "steamMoveRawPP": 6.1,
         "steamOpen": 6.75,
         "steamCur": 4.77,
@@ -36554,15 +36772,15 @@
           "side": "home",
           "sources": {
             "pinnacle": 0.198,
-            "poly": 0.185,
+            "poly": 0.19,
             "soft": 0.192
           },
           "n": 3,
-          "spreadPP": 1.3,
+          "spreadPP": 0.8,
           "medianPP": 19.2,
           "kind": "konsens",
           "outlier": null,
-          "outlierGapPP": 0.7
+          "outlierGapPP": 0.6
         },
         "signals": [
           {
@@ -36617,11 +36835,11 @@
           "pinn_move_pp": 4.42,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 1075.9,
+          "hours_since_open": 1081.7,
           "open_pinn_odds": 6.75,
           "current_pinn_odds": 5.2,
           "move_age_decay": 0.0,
-          "move_age_days": 44.8
+          "move_age_days": 45.1
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -36751,14 +36969,14 @@
       {
         "market": "Doppelte Chance — X2",
         "odds": 1.69,
-        "modelOdds": 1.703,
+        "modelOdds": 1.704,
         "conf": "high",
         "verdict": "NOBET",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": -3,
-        "info": "📉 Pinnacle 3.4→3.08 (Sharp-Money-Drop +4.1pp) · ⏱️ Late Entry — Lernwert, weniger CLV · ✅ Sichere Linie abgeleitet: Doppelte Chance — X2 @1.69 (These: Auswärtssieg @3.1)",
+        "info": "📉 Pinnacle 3.4→3.09 (Sharp-Money-Drop +4.1pp) · ⏱️ Late Entry — Lernwert, weniger CLV · ✅ Sichere Linie abgeleitet: Doppelte Chance — X2 @1.69 (These: Auswärtssieg @3.1)",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -36768,9 +36986,9 @@
         "lamTotal": null,
         "source": "steam",
         "steamMovePP": 4.1,
-        "steamMoveRawPP": 3.1,
+        "steamMoveRawPP": 3.0,
         "steamOpen": 3.4,
-        "steamCur": 3.08,
+        "steamCur": 3.09,
         "softOpen": null,
         "softNow": 3.1,
         "entryBook": "soft",
@@ -36793,16 +37011,16 @@
         "consensus": {
           "side": "away",
           "sources": {
-            "pinnacle": 0.31,
+            "pinnacle": 0.309,
             "poly": 0.3,
             "soft": 0.323
           },
           "n": 3,
           "spreadPP": 2.3,
-          "medianPP": 31.0,
+          "medianPP": 30.9,
           "kind": "konsens",
           "outlier": null,
-          "outlierGapPP": 1.3
+          "outlierGapPP": 1.4
         },
         "signals": [
           {
@@ -36859,7 +37077,7 @@
             "weight": 1.0,
             "weighted_score": 0.72,
             "metadata": {
-              "move_pp": 3.22,
+              "move_pp": 3.15,
               "bucket": "mid",
               "outcome": "away"
             }
@@ -36885,7 +37103,7 @@
         },
         "openingMovement": {
           "in_pick_direction": true,
-          "move_pp": 2.85
+          "move_pp": 2.95
         },
         "origVerdict": "ABWÄGEN",
         "origOdds": 1.69,
@@ -37130,13 +37348,13 @@
         "market": "Doppelte Chance — X2",
         "odds": 2.48,
         "modelOdds": 2.515,
-        "conf": "medium",
+        "conf": "high",
         "verdict": "NOBET",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": -2,
-        "info": "📉 Pinnacle 6.3→5.32 (Sharp-Money-Drop +3.9pp) · ✅ Soft-Konsens folgte +3.2pp (bestätigt) · ⏱️ Late Entry — Lernwert, weniger CLV · ✅ Sichere Linie abgeleitet: Doppelte Chance — X2 @2.48 (These: Auswärtssieg @5.25)",
+        "info": "📉 Pinnacle 6.3→5.32 (Sharp-Money-Drop +4.1pp) · ✅ Soft-Konsens folgte +3.2pp (bestätigt) · ⏱️ Late Entry — Lernwert, weniger CLV · ✅ Sichere Linie abgeleitet: Doppelte Chance — X2 @2.48 (These: Auswärtssieg @5.25)",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -37145,7 +37363,7 @@
         "lamA": null,
         "lamTotal": null,
         "source": "steam",
-        "steamMovePP": 3.9,
+        "steamMovePP": 4.1,
         "steamMoveRawPP": 2.9,
         "steamOpen": 6.3,
         "steamCur": 5.32,
@@ -37452,15 +37670,15 @@
           "side": "home",
           "sources": {
             "pinnacle": 0.386,
-            "poly": 0.4,
+            "poly": 0.395,
             "soft": 0.42
           },
           "n": 3,
           "spreadPP": 3.5,
-          "medianPP": 40.0,
+          "medianPP": 39.5,
           "kind": "konsens",
           "outlier": null,
-          "outlierGapPP": 2.0
+          "outlierGapPP": 2.5
         },
         "signals": [
           {
@@ -37744,6 +37962,23 @@
             }
           },
           {
+            "name": "h2h_pattern",
+            "score": -0.6,
+            "confidence": 0.85,
+            "evidence": "⚔️ Direkte Duelle (10): 2 Heimsiege, 3 Remis, 5 Auswärtssiege — Heim holt davon 35%.",
+            "weight": 1.0,
+            "weighted_score": -0.2,
+            "metadata": {
+              "games": 10,
+              "home_wins": 2,
+              "draws": 3,
+              "away_wins": 5,
+              "picked_rate": 0.35,
+              "pick_side": "home"
+            },
+            "correlation_discount_applied": 0.4
+          },
+          {
             "name": "freshness_leg",
             "score": 0.0,
             "confidence": 0.5,
@@ -37815,14 +38050,14 @@
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 0.59,
+        "signalAdjustmentPP": 0.47,
         "signalCountPos": 4,
-        "signalCountNeg": 1,
-        "signalAdjustmentPP_trade": 0.6,
+        "signalCountNeg": 2,
+        "signalAdjustmentPP_trade": 0.5,
         "signalCountPos_trade": 4,
-        "signalCountNeg_trade": 1,
-        "effectiveEdgePP": -2.4,
-        "effectiveEdgePP_trade": -2.4,
+        "signalCountNeg_trade": 2,
+        "effectiveEdgePP": -2.5,
+        "effectiveEdgePP_trade": -2.5,
         "convictionScore": 3,
         "earlySeasonPenalty": 1.0,
         "convictionVerdict": "watch",
@@ -37839,11 +38074,11 @@
           "pinn_move_pp": 6.47,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 1089.4,
+          "hours_since_open": 1095.2,
           "open_pinn_odds": 3.42,
           "current_pinn_odds": 2.8,
           "move_age_decay": 0.0,
-          "move_age_days": 45.4
+          "move_age_days": 45.6
         },
         "openingMovement": {
           "in_pick_direction": true,
@@ -38289,12 +38524,12 @@
     "profile": "liga_default",
     "placeholder": true,
     "season": 2026,
-    "dataUpdatedAt": "2026-08-17T06:57:19.827364+00:00",
-    "oddsUpdatedAt": "2026-08-18T04:29:41.587408+00:00",
-    "picksUpdatedAt": "2026-08-18T04:29:46.679632+00:00",
-    "formUpdatedAt": "2026-08-17T07:00:29.043469+00:00",
-    "cornersUpdatedAt": "2026-08-17T07:07:56.506674+00:00",
-    "xgUpdatedAt": "2026-08-17T07:07:56.506678+00:00",
+    "dataUpdatedAt": "2026-08-18T06:44:05.059697+00:00",
+    "oddsUpdatedAt": "2026-08-18T10:22:08.174370+00:00",
+    "picksUpdatedAt": "2026-08-18T10:22:11.707137+00:00",
+    "formUpdatedAt": "2026-08-18T06:44:32.395380+00:00",
+    "cornersUpdatedAt": "2026-08-18T06:45:28.284519+00:00",
+    "xgUpdatedAt": "2026-08-18T06:45:28.284523+00:00",
     "engineVersion": "v1"
   },
   "standings": {
@@ -38602,31 +38837,31 @@
         "pos": 5
       },
       {
-        "team": "529",
-        "played": 0,
+        "team": "544",
+        "played": 1,
         "won": 0,
-        "draw": 0,
+        "draw": 1,
         "lost": 0,
-        "points": 0,
-        "gf": 0,
-        "ga": 0,
+        "points": 1,
+        "gf": 1,
+        "ga": 1,
         "gd": 0,
         "pos": 6
       },
       {
-        "team": "530",
-        "played": 0,
+        "team": "797",
+        "played": 1,
         "won": 0,
-        "draw": 0,
+        "draw": 1,
         "lost": 0,
-        "points": 0,
-        "gf": 0,
-        "ga": 0,
+        "points": 1,
+        "gf": 1,
+        "ga": 1,
         "gd": 0,
         "pos": 7
       },
       {
-        "team": "531",
+        "team": "529",
         "played": 0,
         "won": 0,
         "draw": 0,
@@ -38638,7 +38873,7 @@
         "pos": 8
       },
       {
-        "team": "532",
+        "team": "530",
         "played": 0,
         "won": 0,
         "draw": 0,
@@ -38650,7 +38885,7 @@
         "pos": 9
       },
       {
-        "team": "535",
+        "team": "531",
         "played": 0,
         "won": 0,
         "draw": 0,
@@ -38662,7 +38897,7 @@
         "pos": 10
       },
       {
-        "team": "538",
+        "team": "532",
         "played": 0,
         "won": 0,
         "draw": 0,
@@ -38674,7 +38909,7 @@
         "pos": 11
       },
       {
-        "team": "541",
+        "team": "535",
         "played": 0,
         "won": 0,
         "draw": 0,
@@ -38686,7 +38921,7 @@
         "pos": 12
       },
       {
-        "team": "543",
+        "team": "538",
         "played": 0,
         "won": 0,
         "draw": 0,
@@ -38698,7 +38933,7 @@
         "pos": 13
       },
       {
-        "team": "544",
+        "team": "541",
         "played": 0,
         "won": 0,
         "draw": 0,
@@ -38710,7 +38945,7 @@
         "pos": 14
       },
       {
-        "team": "548",
+        "team": "543",
         "played": 0,
         "won": 0,
         "draw": 0,
@@ -38722,7 +38957,7 @@
         "pos": 15
       },
       {
-        "team": "727",
+        "team": "548",
         "played": 0,
         "won": 0,
         "draw": 0,
@@ -38734,7 +38969,7 @@
         "pos": 16
       },
       {
-        "team": "797",
+        "team": "727",
         "played": 0,
         "won": 0,
         "draw": 0,
@@ -41216,6 +41451,8 @@
     "536": 536,
     "4665": 4665,
     "533": 533,
+    "797": 797,
+    "544": 544,
     "529": 529,
     "541": 541,
     "530": 530,
@@ -41224,9 +41461,7 @@
     "532": 532,
     "548": 548,
     "531": 531,
-    "797": 797,
     "727": 727,
-    "544": 544,
     "535": 535,
     "728": 728,
     "539": 539,
@@ -56674,6 +56909,16 @@
       "over25Rate": 0.3,
       "bttsRate": 0.4,
       "updatedAt": "2026-08-17T07:00:29.043233+00:00"
+    },
+    "192-167": {
+      "games": 10,
+      "homeWins": 2,
+      "draws": 3,
+      "awayWins": 5,
+      "avgGoals": 3.1,
+      "over25Rate": 0.6,
+      "bttsRate": 0.6,
+      "updatedAt": "2026-08-18T06:44:32.395174+00:00"
     }
   },
   "xgStats": {
@@ -56702,7 +56947,7 @@
         1387083,
         1387069
       ],
-      "updatedAt": "2026-08-17T18:56:25.249998+00:00"
+      "updatedAt": "2026-08-18T06:46:17.300484+00:00"
     },
     "64": {
       "xgForAvg": 1.123,
@@ -56772,7 +57017,7 @@
         1379324,
         1379312
       ],
-      "updatedAt": "2026-08-17T18:56:54.790613+00:00"
+      "updatedAt": "2026-08-18T06:46:48.631766+00:00"
     },
     "47": {
       "xgForAvg": 1.312,
@@ -56799,7 +57044,7 @@
         1379344,
         1379331
       ],
-      "updatedAt": "2026-08-17T18:56:06.040482+00:00"
+      "updatedAt": "2026-08-18T06:45:57.001991+00:00"
     },
     "35": {
       "xgForAvg": 1.82,
@@ -57019,7 +57264,7 @@
         1544371,
         1388002
       ],
-      "updatedAt": "2026-08-17T19:01:32.642902+00:00"
+      "updatedAt": "2026-08-18T06:51:34.273182+00:00"
     },
     "94": {
       "xgForAvg": 2.039,
@@ -57262,7 +57507,7 @@
         1388609,
         1388599
       ],
-      "updatedAt": "2026-08-17T18:58:38.118432+00:00"
+      "updatedAt": "2026-08-18T06:48:38.028792+00:00"
     },
     "162": {
       "xgForAvg": 1.06,
@@ -57367,7 +57612,7 @@
         1545417,
         1388912
       ],
-      "updatedAt": "2026-08-17T18:59:20.346268+00:00"
+      "updatedAt": "2026-08-18T06:49:22.728481+00:00"
     },
     "192": {
       "xgForAvg": 1.3,
@@ -57388,7 +57633,7 @@
         1388598,
         1388594
       ],
-      "updatedAt": "2026-08-17T18:59:04.966023+00:00"
+      "updatedAt": "2026-08-18T06:49:06.451134+00:00"
     }
   },
   "squads": {
@@ -70022,132 +70267,137 @@
     "49": {
       "name": "Xabi Alonso",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "36": {
       "name": "Alvaro Arbeloa",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "40": {
       "name": "Andoni Iraola",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
+    },
+    "52": {
+      "name": "P. Sage",
+      "since": "2026-07-01",
+      "daysSince": 48
     },
     "57": {
       "name": "Gary O'Neil",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "533": {
       "name": "Inigo Perez",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "541": {
       "name": "José Mourinho",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "531": {
       "name": "Edin Terzic",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "727": {
       "name": "Luis Ramis",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "728": {
       "name": "Benat San Jose",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "173": {
       "name": "Martin Demichelis",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "169": {
       "name": "Adi Hutter",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "182": {
       "name": "Mauro Lustrinelli",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "499": {
       "name": "M. Sarri",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "502": {
       "name": "F. Grosso",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "487": {
       "name": "G. Gattuso",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "489": {
       "name": "Ruben Amorim",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "1579": {
       "name": "Ivan Juric",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "492": {
       "name": "M. Allegri",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "503": {
       "name": "I. Abate",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "91": {
       "name": "Filipe Luís",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "97": {
       "name": "A. Dujeux",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "79": {
       "name": "Davide Ancelotti",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "84": {
       "name": "O. Pantaloni",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "81": {
       "name": "Bruno Genesio",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "114": {
       "name": "L. Rosenior",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "116": {
       "name": "D. Toppmöller",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "96": {
       "name": "J. Askou",
@@ -70398,6 +70648,26 @@
         "date": "2026-07-09"
       }
     ],
+    "797": [
+      {
+        "name": "Gonzalo Villar",
+        "date": "2026-06-29"
+      },
+      {
+        "name": "André Silva",
+        "date": "2026-06-30"
+      },
+      {
+        "name": "Rafa Mir",
+        "date": "2026-06-29"
+      }
+    ],
+    "544": [
+      {
+        "name": "Cristian Herrera",
+        "date": "2026-06-29"
+      }
+    ],
     "529": [
       {
         "name": "R. Lewandowski",
@@ -70456,20 +70726,6 @@
         "date": "2026-07-09"
       }
     ],
-    "797": [
-      {
-        "name": "Gonzalo Villar",
-        "date": "2026-06-29"
-      },
-      {
-        "name": "André Silva",
-        "date": "2026-06-30"
-      },
-      {
-        "name": "Rafa Mir",
-        "date": "2026-06-29"
-      }
-    ],
     "727": [
       {
         "name": "Víctor Muñoz",
@@ -70477,12 +70733,6 @@
       },
       {
         "name": "S. Becker",
-        "date": "2026-06-29"
-      }
-    ],
-    "544": [
-      {
-        "name": "Cristian Herrera",
         "date": "2026-06-29"
       }
     ],
@@ -71039,7 +71289,7 @@
     "95": [
       {
         "name": "V. Barco",
-        "date": "2026-07-31"
+        "date": "2026-08-01"
       },
       {
         "name": "M. Penders",
@@ -71081,13 +71331,13 @@
   },
   "injuries": {
     "_meta": {
-      "updatedAt": "2026-08-17T19:04:54.301762+00:00",
+      "updatedAt": "2026-08-18T06:55:04.291858+00:00",
       "daysUntilWM": 0,
       "status": "live",
       "teamsWithData": 12
     },
     "542": {
-      "updatedAt": "2026-08-17T19:04:54.301762+00:00",
+      "updatedAt": "2026-08-18T06:55:04.291858+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71095,14 +71345,14 @@
           "type": "Unknown",
           "reason": "",
           "status": "missing",
-          "fixture": "2026-08-15T17:30:00+00:00"
+          "fixture": "2026-08-20T19:00:00+00:00"
         },
         {
           "name": "T. Mendes",
           "type": "Unknown",
           "reason": "",
           "status": "missing",
-          "fixture": "2026-08-15T17:30:00+00:00"
+          "fixture": "2026-08-20T19:00:00+00:00"
         },
         {
           "name": "N. Valentini",
@@ -71114,7 +71364,7 @@
       ]
     },
     "546": {
-      "updatedAt": "2026-08-17T19:04:54.301762+00:00",
+      "updatedAt": "2026-08-18T06:55:04.291858+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71134,7 +71384,7 @@
       ]
     },
     "728": {
-      "updatedAt": "2026-08-17T19:04:54.301762+00:00",
+      "updatedAt": "2026-08-18T06:55:04.291858+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71142,26 +71392,26 @@
           "type": "Unknown",
           "reason": "",
           "status": "missing",
-          "fixture": "2026-08-15T19:30:00+00:00"
+          "fixture": "2026-08-20T19:00:00+00:00"
         },
         {
           "name": "Luiz Felipe",
           "type": "Unknown",
           "reason": "",
           "status": "missing",
-          "fixture": "2026-08-15T19:30:00+00:00"
+          "fixture": "2026-08-20T19:00:00+00:00"
         },
         {
           "name": "D. Mendez",
           "type": "Unknown",
           "reason": "",
           "status": "missing",
-          "fixture": "2026-08-15T19:30:00+00:00"
+          "fixture": "2026-08-20T19:00:00+00:00"
         }
       ]
     },
     "536": {
-      "updatedAt": "2026-08-17T19:04:54.301762+00:00",
+      "updatedAt": "2026-08-18T06:55:04.291858+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71181,7 +71431,7 @@
       ]
     },
     "4665": {
-      "updatedAt": "2026-08-17T19:04:54.301762+00:00",
+      "updatedAt": "2026-08-18T06:55:04.291858+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71189,13 +71439,12 @@
           "type": "Unknown",
           "reason": "",
           "status": "missing",
-          "fixture": "2026-08-16T15:00:00+00:00",
-          "position": "F"
+          "fixture": "2026-08-16T15:00:00+00:00"
         }
       ]
     },
     "540": {
-      "updatedAt": "2026-08-17T19:04:54.301762+00:00",
+      "updatedAt": "2026-08-18T06:55:04.291858+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71203,23 +71452,29 @@
           "type": "Unknown",
           "reason": "",
           "status": "missing",
-          "fixture": "2026-08-16T17:00:00+00:00",
-          "position": "F"
+          "fixture": "2026-08-16T17:00:00+00:00"
         },
         {
           "name": "J. Puado",
           "type": "Unknown",
           "reason": "",
           "status": "missing",
-          "fixture": "2026-08-16T17:00:00+00:00",
-          "position": "M"
+          "fixture": "2026-08-16T17:00:00+00:00"
         }
       ]
     },
     "797": {
-      "updatedAt": "2026-08-17T19:04:54.301762+00:00",
+      "updatedAt": "2026-08-18T06:55:04.291858+00:00",
       "source": "wm_league",
       "players": [
+        {
+          "name": "A. Boayar",
+          "type": "Unknown",
+          "reason": "",
+          "status": "missing",
+          "fixture": "2026-08-17T19:00:00+00:00",
+          "position": "M"
+        },
         {
           "name": "G. Diangana",
           "type": "Unknown",
@@ -71241,19 +71496,11 @@
           "reason": "",
           "status": "missing",
           "fixture": "2026-08-17T19:00:00+00:00"
-        },
-        {
-          "name": "A. Boayar",
-          "type": "Unknown",
-          "reason": "",
-          "status": "missing",
-          "fixture": "2026-08-17T19:00:00+00:00",
-          "position": "M"
         }
       ]
     },
     "539": {
-      "updatedAt": "2026-08-17T19:04:54.301762+00:00",
+      "updatedAt": "2026-08-18T06:55:04.291858+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71268,13 +71515,12 @@
           "type": "Unknown",
           "reason": "",
           "status": "missing",
-          "fixture": "2026-08-16T17:00:00+00:00",
-          "position": "G"
+          "fixture": "2026-08-16T17:00:00+00:00"
         }
       ]
     },
     "544": {
-      "updatedAt": "2026-08-17T19:04:54.301762+00:00",
+      "updatedAt": "2026-08-18T06:55:04.291858+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71290,25 +71536,11 @@
           "reason": "",
           "status": "missing",
           "fixture": "2026-08-17T19:00:00+00:00"
-        },
-        {
-          "name": "A. Altimira",
-          "type": "Unknown",
-          "reason": "",
-          "status": "missing",
-          "fixture": "2026-08-17T19:00:00+00:00"
-        },
-        {
-          "name": "J. Asp",
-          "type": "Unknown",
-          "reason": "",
-          "status": "missing",
-          "fixture": "2026-08-17T19:00:00+00:00"
         }
       ]
     },
     "530": {
-      "updatedAt": "2026-08-17T19:04:54.301762+00:00",
+      "updatedAt": "2026-08-18T06:55:04.291858+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71328,7 +71560,7 @@
       ]
     },
     "535": {
-      "updatedAt": "2026-08-17T19:04:54.301762+00:00",
+      "updatedAt": "2026-08-18T06:55:04.291858+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71355,6 +71587,21 @@
           "position": "D"
         },
         {
+          "name": "A. Nino",
+          "type": "Unknown",
+          "reason": "",
+          "status": "missing",
+          "fixture": "2026-08-19T19:00:00+00:00"
+        },
+        {
+          "name": "A. Ochoa",
+          "type": "Unknown",
+          "reason": "",
+          "status": "missing",
+          "fixture": "2026-08-19T19:00:00+00:00",
+          "position": "M"
+        },
+        {
           "name": "M. Diarra",
           "type": "Unknown",
           "reason": "",
@@ -71368,13 +71615,6 @@
           "status": "missing",
           "fixture": "2026-08-19T19:00:00+00:00",
           "position": "M"
-        },
-        {
-          "name": "A. Nino",
-          "type": "Unknown",
-          "reason": "",
-          "status": "missing",
-          "fixture": "2026-08-19T19:00:00+00:00"
         }
       ]
     },
@@ -71547,7 +71787,7 @@
         "H"
       ],
       "overLineRate": 0.333,
-      "updatedAt": "2026-08-17T18:19:12.266215+00:00",
+      "updatedAt": "2026-08-18T06:45:00.362734+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -71765,7 +72005,7 @@
         "A"
       ],
       "overLineRate": 0.25,
-      "updatedAt": "2026-08-17T18:19:39.603621+00:00",
+      "updatedAt": "2026-08-18T06:45:28.284266+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,

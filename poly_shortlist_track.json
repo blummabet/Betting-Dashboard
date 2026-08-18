@@ -1,7 +1,7 @@
 {
- "updatedAt": "2026-08-18T04:56:10.315259+00:00",
+ "updatedAt": "2026-08-18T11:45:20.249381+00:00",
  "stake": 10.0,
- "expired": 1,
+ "expired": 0,
  "open": {
   "ecs-ars-mci-2026-08-16|Manchester City": {
    "key": "ecs-ars-mci-2026-08-16",
@@ -34,7 +34,7 @@
    "entryPrice": 0.735,
    "firstTs": "2026-08-16T14:09:11.781306+00:00",
    "lastPrice": 0.735,
-   "lastTs": "2026-08-18T04:56:10.315259+00:00",
+   "lastTs": "2026-08-18T11:45:20.249381+00:00",
    "htkAtEntry": 2.938317777777778,
    "public": true,
    "reasons": [
@@ -78,7 +78,7 @@
    "entryPrice": 0.505,
    "firstTs": "2026-08-17T19:00:41.730327+00:00",
    "lastPrice": 0.505,
-   "lastTs": "2026-08-18T04:56:10.315259+00:00",
+   "lastTs": "2026-08-18T11:45:20.249381+00:00",
    "htkAtEntry": 1.0281161111111112,
    "public": false,
    "reasons": [
@@ -89,44 +89,46 @@
    ],
    "stake": 10.0
   },
-  "mlb-oak-kc-2026-08-17|Kansas City Royals": {
-   "key": "mlb-oak-kc-2026-08-17",
-   "side": "Kansas City Royals",
+  "itf-havlick-bervid-2026-08-18|Lucie Havlickova": {
+   "key": "itf-havlick-bervid-2026-08-18",
+   "side": "Lucie Havlickova",
    "verdict": "BET",
-   "conv": 7,
-   "league": "MLB",
-   "entryPrice": 0.635,
-   "firstTs": "2026-08-17T20:47:10.067502+00:00",
-   "lastPrice": 0.635,
-   "lastTs": "2026-08-18T04:56:10.315259+00:00",
-   "htkAtEntry": 2.92762,
-   "public": true,
+   "conv": 6,
+   "league": "TENNIS",
+   "entryPrice": 0.875,
+   "firstTs": "2026-08-18T10:50:42.681222+00:00",
+   "lastPrice": 0.875,
+   "lastTs": "2026-08-18T11:45:20.249381+00:00",
+   "htkAtEntry": 0.7081722222222222,
+   "public": false,
    "reasons": [
-    "großes Geld auf Kansas City Royals (64%) → $129K",
-    "🔥 scharfe Wallet (12/19, 63% · +$42K)"
+    "großes Geld auf Lucie Havlickova (87%) → $17K",
+    "Steam läuft rein (+2.0pp)"
    ],
    "signals": [
     "money",
-    "sharp"
+    "steam"
    ],
    "stake": 10.0
   },
-  "wta-eala-anisimo-2026-08-17|Amanda Anisimova": {
-   "key": "wta-eala-anisimo-2026-08-17",
-   "side": "Amanda Anisimova",
+  "atp-bruncli-kumstat-2026-08-17|Jan Kumstat": {
+   "key": "atp-bruncli-kumstat-2026-08-17",
+   "side": "Jan Kumstat",
    "verdict": "BET",
-   "conv": 5,
+   "conv": 7,
    "league": "TENNIS",
-   "entryPrice": 0.535,
-   "firstTs": "2026-08-17T21:44:49.374915+00:00",
-   "lastPrice": 0.525,
-   "lastTs": "2026-08-18T04:56:10.315259+00:00",
-   "htkAtEntry": 2.7983366666666667,
+   "entryPrice": 0.595,
+   "firstTs": "2026-08-18T11:45:20.249381+00:00",
+   "lastPrice": 0.595,
+   "lastTs": "2026-08-18T11:45:20.249381+00:00",
+   "htkAtEntry": 0.05716861111111111,
    "public": false,
    "reasons": [
-    "🔥 scharfe Wallet (92/154, 60% · +$3.64M)"
+    "Steam läuft rein (+4.0pp)",
+    "🔥 scharfe Wallet (94/160, 59% · +$3.60M)"
    ],
    "signals": [
+    "steam",
     "sharp"
    ],
    "stake": 10.0
@@ -8775,25 +8777,89 @@
    "firstTs": "2026-08-17T20:47:10.067502+00:00",
    "settledTs": "2026-08-18T04:02:13.220372+00:00",
    "resolvedTs": "2026-08-18T04:02:12.347498+00:00"
+  },
+  {
+   "key": "wta-eala-anisimo-2026-08-17",
+   "side": "Amanda Anisimova",
+   "verdict": "BET",
+   "conv": 5,
+   "league": "TENNIS",
+   "entryPrice": 0.535,
+   "closePrice": 0.525,
+   "result": "win",
+   "winner": "Amanda Anisimova",
+   "pnl": 8.69,
+   "clvPP": -1.0,
+   "stake": 10.0,
+   "public": false,
+   "signals": [
+    "sharp"
+   ],
+   "firstTs": "2026-08-17T21:44:49.374915+00:00",
+   "settledTs": "2026-08-18T05:49:04.682562+00:00",
+   "resolvedTs": "2026-08-18T05:49:03.784011+00:00"
+  },
+  {
+   "key": "mlb-oak-kc-2026-08-17",
+   "side": "Kansas City Royals",
+   "verdict": "BET",
+   "conv": 7,
+   "league": "MLB",
+   "entryPrice": 0.635,
+   "closePrice": 0.635,
+   "result": "win",
+   "winner": "Kansas City Royals",
+   "pnl": 5.75,
+   "clvPP": 0.0,
+   "stake": 10.0,
+   "public": true,
+   "signals": [
+    "money",
+    "sharp"
+   ],
+   "firstTs": "2026-08-17T20:47:10.067502+00:00",
+   "settledTs": "2026-08-18T07:07:18.793120+00:00",
+   "resolvedTs": "2026-08-18T07:07:18.065831+00:00"
+  },
+  {
+   "key": "atp-compagn-dahlin-2026-08-17",
+   "side": "Max Dahlin",
+   "verdict": "BET",
+   "conv": 5,
+   "league": "TENNIS",
+   "entryPrice": 0.555,
+   "closePrice": 0.555,
+   "result": "loss",
+   "winner": "Tommaso Compagnucci",
+   "pnl": -10.0,
+   "clvPP": 0.0,
+   "stake": 10.0,
+   "public": false,
+   "signals": [
+    "sharp"
+   ],
+   "firstTs": "2026-08-18T07:57:40.021678+00:00",
+   "settledTs": "2026-08-18T10:50:42.681222+00:00",
+   "resolvedTs": "2026-08-18T10:50:41.899238+00:00"
   }
  ],
  "agg": {
   "all": {
-   "n": 403,
-   "wins": 220,
-   "hit": 0.5459,
-   "pnl": -287.65,
-   "stake": 4030.0,
-   "roi": -0.0714,
+   "n": 406,
+   "wins": 222,
+   "hit": 0.5468,
+   "pnl": -283.21,
+   "stake": 4060.0,
+   "roi": -0.0698,
    "clvAvg": -0.02
   },
   "public": {
-   "n": 119,
-   "wins": 82,
-   "hit": 0.6891,
-   "pnl": 32.48,
-   "stake": 1190.0,
-   "roi": 0.0273,
+   "n": 120,
+   "wins": 83,
+   "hit": 0.6917,
+   "pnl": 38.23,
+   "stake": 1200.0,
+   "roi": 0.0319,
    "clvAvg": 0.01
   },
   "byConv": {
@@ -8807,13 +8873,13 @@
     "clvAvg": 0.0
    },
    "5": {
-    "n": 62,
-    "wins": 21,
-    "hit": 0.3387,
-    "pnl": -221.02,
-    "stake": 620.0,
-    "roi": -0.3565,
-    "clvAvg": 0.02
+    "n": 64,
+    "wins": 22,
+    "hit": 0.3438,
+    "pnl": -222.33,
+    "stake": 640.0,
+    "roi": -0.3474,
+    "clvAvg": 0.01
    },
    "6": {
     "n": 109,
@@ -8825,12 +8891,12 @@
     "clvAvg": 0.02
    },
    "7": {
-    "n": 126,
-    "wins": 73,
-    "hit": 0.5794,
-    "pnl": -63.23,
-    "stake": 1260.0,
-    "roi": -0.0502,
+    "n": 127,
+    "wins": 74,
+    "hit": 0.5827,
+    "pnl": -57.48,
+    "stake": 1270.0,
+    "roi": -0.0453,
     "clvAvg": -0.29
    },
    "8": {
@@ -8863,12 +8929,12 @@
   },
   "byVerdict": {
    "BET": {
-    "n": 325,
-    "wins": 198,
-    "hit": 0.6092,
-    "pnl": -130.96,
-    "stake": 3250.0,
-    "roi": -0.0403,
+    "n": 328,
+    "wins": 200,
+    "hit": 0.6098,
+    "pnl": -126.52,
+    "stake": 3280.0,
+    "roi": -0.0386,
     "clvAvg": -0.04
    },
    "FADE": {
@@ -8883,12 +8949,12 @@
   },
   "bySignal": {
    "money": {
-    "n": 206,
-    "wins": 143,
-    "hit": 0.6942,
-    "pnl": 65.23,
-    "stake": 2060.0,
-    "roi": 0.0317,
+    "n": 207,
+    "wins": 144,
+    "hit": 0.6957,
+    "pnl": 70.98,
+    "stake": 2070.0,
+    "roi": 0.0343,
     "clvAvg": -0.06
    },
    "pinn": {
@@ -8901,13 +8967,13 @@
     "clvAvg": 0.0
    },
    "sharp": {
-    "n": 308,
-    "wins": 163,
-    "hit": 0.5292,
-    "pnl": -237.5,
-    "stake": 3080.0,
-    "roi": -0.0771,
-    "clvAvg": -0.04
+    "n": 311,
+    "wins": 165,
+    "hit": 0.5305,
+    "pnl": -233.06,
+    "stake": 3110.0,
+    "roi": -0.0749,
+    "clvAvg": -0.05
    },
    "steam": {
     "n": 97,
