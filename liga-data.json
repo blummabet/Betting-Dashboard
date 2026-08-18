@@ -153,11 +153,10 @@
           "awayName": "Coventry",
           "matchday": 1,
           "date": "2026-08-21",
-          "kickoff": "2026-08-21T19:00:00Z",
+          "kickoff": "2026-08-21T19:00:00+00:00",
           "venue": "Emirates Stadium",
           "fid": 1557367,
-          "result": null,
-          "time": "21:00"
+          "result": null
         },
         {
           "home": "64",
@@ -400,10 +399,11 @@
           "awayName": "Arsenal",
           "matchday": 2,
           "date": "2026-08-31",
-          "kickoff": "2026-08-31T19:00:00+00:00",
+          "kickoff": "2026-08-31T19:00:00Z",
           "venue": "Villa Park",
           "fid": 1557377,
-          "result": null
+          "result": null,
+          "time": "21:00"
         },
         {
           "home": "57",
@@ -766,49 +766,13 @@
           "result": null
         },
         {
-          "home": "1346",
-          "away": "34",
-          "homeName": "Coventry",
-          "awayName": "Newcastle",
-          "matchday": 6,
-          "date": "2026-10-10",
-          "kickoff": "2026-10-10T14:00:00+00:00",
-          "venue": "Coventry Building Society Arena",
-          "fid": 1557420,
-          "result": null
-        },
-        {
-          "home": "33",
-          "away": "47",
-          "homeName": "Manchester United",
-          "awayName": "Tottenham",
-          "matchday": 6,
-          "date": "2026-10-10",
-          "kickoff": "2026-10-10T14:00:00+00:00",
-          "venue": "Old Trafford",
-          "fid": 1557425,
-          "result": null
-        },
-        {
-          "home": "40",
-          "away": "50",
-          "homeName": "Liverpool",
-          "awayName": "Manchester City",
-          "matchday": 6,
-          "date": "2026-10-10",
-          "kickoff": "2026-10-10T14:00:00+00:00",
-          "venue": "Anfield",
-          "fid": 1557424,
-          "result": null
-        },
-        {
           "home": "42",
           "away": "63",
           "homeName": "Arsenal",
           "awayName": "Leeds",
           "matchday": 6,
           "date": "2026-10-10",
-          "kickoff": "2026-10-10T14:00:00+00:00",
+          "kickoff": "2026-10-10T11:30:00+00:00",
           "venue": "Emirates Stadium",
           "fid": 1557417,
           "result": null
@@ -826,18 +790,6 @@
           "result": null
         },
         {
-          "home": "52",
-          "away": "65",
-          "homeName": "Crystal Palace",
-          "awayName": "Nottingham Forest",
-          "matchday": 6,
-          "date": "2026-10-10",
-          "kickoff": "2026-10-10T14:00:00+00:00",
-          "venue": "Selhurst Park",
-          "fid": 1557421,
-          "result": null
-        },
-        {
           "home": "57",
           "away": "36",
           "homeName": "Ipswich",
@@ -847,18 +799,6 @@
           "kickoff": "2026-10-10T14:00:00+00:00",
           "venue": "Portman Road",
           "fid": 1557423,
-          "result": null
-        },
-        {
-          "home": "64",
-          "away": "45",
-          "homeName": "Hull City",
-          "awayName": "Everton",
-          "matchday": 6,
-          "date": "2026-10-10",
-          "kickoff": "2026-10-10T14:00:00+00:00",
-          "venue": "MKM Stadium",
-          "fid": 1557422,
           "result": null
         },
         {
@@ -886,27 +826,75 @@
           "result": null
         },
         {
-          "home": "34",
-          "away": "66",
-          "homeName": "Newcastle",
-          "awayName": "Aston Villa",
-          "matchday": 7,
-          "date": "2026-10-17",
-          "kickoff": "2026-10-17T14:00:00+00:00",
-          "venue": null,
-          "fid": 1557434,
+          "home": "33",
+          "away": "47",
+          "homeName": "Manchester United",
+          "awayName": "Tottenham",
+          "matchday": 6,
+          "date": "2026-10-10",
+          "kickoff": "2026-10-10T16:30:00+00:00",
+          "venue": "Old Trafford",
+          "fid": 1557425,
           "result": null
         },
         {
-          "home": "35",
-          "away": "746",
-          "homeName": "Bournemouth",
-          "awayName": "Sunderland",
+          "home": "52",
+          "away": "65",
+          "homeName": "Crystal Palace",
+          "awayName": "Nottingham Forest",
+          "matchday": 6,
+          "date": "2026-10-11",
+          "kickoff": "2026-10-11T13:00:00+00:00",
+          "venue": "Selhurst Park",
+          "fid": 1557421,
+          "result": null
+        },
+        {
+          "home": "64",
+          "away": "45",
+          "homeName": "Hull City",
+          "awayName": "Everton",
+          "matchday": 6,
+          "date": "2026-10-11",
+          "kickoff": "2026-10-11T13:00:00+00:00",
+          "venue": "MKM Stadium",
+          "fid": 1557422,
+          "result": null
+        },
+        {
+          "home": "40",
+          "away": "50",
+          "homeName": "Liverpool",
+          "awayName": "Manchester City",
+          "matchday": 6,
+          "date": "2026-10-11",
+          "kickoff": "2026-10-11T15:30:00+00:00",
+          "venue": "Anfield",
+          "fid": 1557424,
+          "result": null
+        },
+        {
+          "home": "1346",
+          "away": "34",
+          "homeName": "Coventry",
+          "awayName": "Newcastle",
+          "matchday": 6,
+          "date": "2026-10-12",
+          "kickoff": "2026-10-12T19:00:00+00:00",
+          "venue": "Coventry Building Society Arena",
+          "fid": 1557420,
+          "result": null
+        },
+        {
+          "home": "45",
+          "away": "49",
+          "homeName": "Everton",
+          "awayName": "Chelsea",
           "matchday": 7,
           "date": "2026-10-17",
-          "kickoff": "2026-10-17T14:00:00+00:00",
-          "venue": "Vitality Stadium",
-          "fid": 1557427,
+          "kickoff": "2026-10-17T11:30:00+00:00",
+          "venue": "Hill Dickinson Stadium",
+          "fid": 1557430,
           "result": null
         },
         {
@@ -922,30 +910,6 @@
           "result": null
         },
         {
-          "home": "45",
-          "away": "49",
-          "homeName": "Everton",
-          "awayName": "Chelsea",
-          "matchday": 7,
-          "date": "2026-10-17",
-          "kickoff": "2026-10-17T14:00:00+00:00",
-          "venue": "Hill Dickinson Stadium",
-          "fid": 1557430,
-          "result": null
-        },
-        {
-          "home": "47",
-          "away": "1346",
-          "homeName": "Tottenham",
-          "awayName": "Coventry",
-          "matchday": 7,
-          "date": "2026-10-17",
-          "kickoff": "2026-10-17T14:00:00+00:00",
-          "venue": "Tottenham Hotspur Stadium",
-          "fid": 1557436,
-          "result": null
-        },
-        {
           "home": "50",
           "away": "57",
           "homeName": "Manchester City",
@@ -955,18 +919,6 @@
           "kickoff": "2026-10-17T14:00:00+00:00",
           "venue": "Etihad Stadium",
           "fid": 1557433,
-          "result": null
-        },
-        {
-          "home": "51",
-          "away": "52",
-          "homeName": "Brighton",
-          "awayName": "Crystal Palace",
-          "matchday": 7,
-          "date": "2026-10-17",
-          "kickoff": "2026-10-17T14:00:00+00:00",
-          "venue": "Amex Stadium",
-          "fid": 1557429,
           "result": null
         },
         {
@@ -982,13 +934,49 @@
           "result": null
         },
         {
+          "home": "34",
+          "away": "66",
+          "homeName": "Newcastle",
+          "awayName": "Aston Villa",
+          "matchday": 7,
+          "date": "2026-10-17",
+          "kickoff": "2026-10-17T16:30:00+00:00",
+          "venue": null,
+          "fid": 1557434,
+          "result": null
+        },
+        {
+          "home": "35",
+          "away": "746",
+          "homeName": "Bournemouth",
+          "awayName": "Sunderland",
+          "matchday": 7,
+          "date": "2026-10-18",
+          "kickoff": "2026-10-18T13:00:00+00:00",
+          "venue": "Vitality Stadium",
+          "fid": 1557427,
+          "result": null
+        },
+        {
+          "home": "51",
+          "away": "52",
+          "homeName": "Brighton",
+          "awayName": "Crystal Palace",
+          "matchday": 7,
+          "date": "2026-10-18",
+          "kickoff": "2026-10-18T13:00:00+00:00",
+          "venue": "Amex Stadium",
+          "fid": 1557429,
+          "result": null
+        },
+        {
           "home": "63",
           "away": "33",
           "homeName": "Leeds",
           "awayName": "Manchester United",
           "matchday": 7,
-          "date": "2026-10-17",
-          "kickoff": "2026-10-17T14:00:00+00:00",
+          "date": "2026-10-18",
+          "kickoff": "2026-10-18T13:00:00+00:00",
           "venue": "Elland Road",
           "fid": 1557432,
           "result": null
@@ -999,10 +987,46 @@
           "homeName": "Nottingham Forest",
           "awayName": "Arsenal",
           "matchday": 7,
-          "date": "2026-10-17",
-          "kickoff": "2026-10-17T14:00:00+00:00",
+          "date": "2026-10-18",
+          "kickoff": "2026-10-18T15:30:00+00:00",
           "venue": "City Ground",
           "fid": 1557435,
+          "result": null
+        },
+        {
+          "home": "47",
+          "away": "1346",
+          "homeName": "Tottenham",
+          "awayName": "Coventry",
+          "matchday": 7,
+          "date": "2026-10-19",
+          "kickoff": "2026-10-19T19:00:00+00:00",
+          "venue": "Tottenham Hotspur Stadium",
+          "fid": 1557436,
+          "result": null
+        },
+        {
+          "home": "57",
+          "away": "65",
+          "homeName": "Ipswich",
+          "awayName": "Nottingham Forest",
+          "matchday": 8,
+          "date": "2026-10-23",
+          "kickoff": "2026-10-23T19:00:00+00:00",
+          "venue": "Portman Road",
+          "fid": 1557443,
+          "result": null
+        },
+        {
+          "home": "66",
+          "away": "50",
+          "homeName": "Aston Villa",
+          "awayName": "Manchester City",
+          "matchday": 8,
+          "date": "2026-10-24",
+          "kickoff": "2026-10-24T11:30:00+00:00",
+          "venue": "Villa Park",
+          "fid": 1557438,
           "result": null
         },
         {
@@ -1015,18 +1039,6 @@
           "kickoff": "2026-10-24T14:00:00+00:00",
           "venue": "Coventry Building Society Arena",
           "fid": 1557440,
-          "result": null
-        },
-        {
-          "home": "33",
-          "away": "35",
-          "homeName": "Manchester United",
-          "awayName": "Bournemouth",
-          "matchday": 8,
-          "date": "2026-10-24",
-          "kickoff": "2026-10-24T14:00:00+00:00",
-          "venue": "Old Trafford",
-          "fid": 1557445,
           "result": null
         },
         {
@@ -1060,9 +1072,21 @@
           "awayName": "Tottenham",
           "matchday": 8,
           "date": "2026-10-24",
-          "kickoff": "2026-10-24T14:00:00+00:00",
+          "kickoff": "2026-10-24T16:30:00+00:00",
           "venue": "Stamford Bridge",
           "fid": 1557439,
+          "result": null
+        },
+        {
+          "home": "33",
+          "away": "35",
+          "homeName": "Manchester United",
+          "awayName": "Bournemouth",
+          "matchday": 8,
+          "date": "2026-10-25",
+          "kickoff": "2026-10-25T14:00:00+00:00",
+          "venue": "Old Trafford",
+          "fid": 1557445,
           "result": null
         },
         {
@@ -1071,22 +1095,10 @@
           "homeName": "Crystal Palace",
           "awayName": "Newcastle",
           "matchday": 8,
-          "date": "2026-10-24",
-          "kickoff": "2026-10-24T14:00:00+00:00",
+          "date": "2026-10-25",
+          "kickoff": "2026-10-25T14:00:00+00:00",
           "venue": "Selhurst Park",
           "fid": 1557441,
-          "result": null
-        },
-        {
-          "home": "57",
-          "away": "65",
-          "homeName": "Ipswich",
-          "awayName": "Nottingham Forest",
-          "matchday": 8,
-          "date": "2026-10-24",
-          "kickoff": "2026-10-24T14:00:00+00:00",
-          "venue": "Portman Road",
-          "fid": 1557443,
           "result": null
         },
         {
@@ -1095,22 +1107,10 @@
           "homeName": "Hull City",
           "awayName": "Brentford",
           "matchday": 8,
-          "date": "2026-10-24",
-          "kickoff": "2026-10-24T14:00:00+00:00",
+          "date": "2026-10-25",
+          "kickoff": "2026-10-25T14:00:00+00:00",
           "venue": "MKM Stadium",
           "fid": 1557442,
-          "result": null
-        },
-        {
-          "home": "66",
-          "away": "50",
-          "homeName": "Aston Villa",
-          "awayName": "Manchester City",
-          "matchday": 8,
-          "date": "2026-10-24",
-          "kickoff": "2026-10-24T14:00:00+00:00",
-          "venue": "Villa Park",
-          "fid": 1557438,
           "result": null
         },
         {
@@ -1119,10 +1119,22 @@
           "homeName": "Sunderland",
           "awayName": "Leeds",
           "matchday": 8,
-          "date": "2026-10-24",
-          "kickoff": "2026-10-24T14:00:00+00:00",
+          "date": "2026-10-25",
+          "kickoff": "2026-10-25T16:30:00+00:00",
           "venue": "Stadium of Light",
           "fid": 1557446,
+          "result": null
+        },
+        {
+          "home": "49",
+          "away": "33",
+          "homeName": "Chelsea",
+          "awayName": "Manchester United",
+          "matchday": 9,
+          "date": "2026-10-31",
+          "kickoff": "2026-10-31T12:30:00+00:00",
+          "venue": "Stamford Bridge",
+          "fid": 1557450,
           "result": null
         },
         {
@@ -1138,18 +1150,6 @@
           "result": null
         },
         {
-          "home": "34",
-          "away": "45",
-          "homeName": "Newcastle",
-          "awayName": "Everton",
-          "matchday": 9,
-          "date": "2026-10-31",
-          "kickoff": "2026-10-31T15:00:00+00:00",
-          "venue": null,
-          "fid": 1557455,
-          "result": null
-        },
-        {
           "home": "35",
           "away": "63",
           "homeName": "Bournemouth",
@@ -1159,42 +1159,6 @@
           "kickoff": "2026-10-31T15:00:00+00:00",
           "venue": "Vitality Stadium",
           "fid": 1557448,
-          "result": null
-        },
-        {
-          "home": "40",
-          "away": "42",
-          "homeName": "Liverpool",
-          "awayName": "Arsenal",
-          "matchday": 9,
-          "date": "2026-10-31",
-          "kickoff": "2026-10-31T15:00:00+00:00",
-          "venue": "Anfield",
-          "fid": 1557453,
-          "result": null
-        },
-        {
-          "home": "47",
-          "away": "52",
-          "homeName": "Tottenham",
-          "awayName": "Crystal Palace",
-          "matchday": 9,
-          "date": "2026-10-31",
-          "kickoff": "2026-10-31T15:00:00+00:00",
-          "venue": "Tottenham Hotspur Stadium",
-          "fid": 1557456,
-          "result": null
-        },
-        {
-          "home": "49",
-          "away": "33",
-          "homeName": "Chelsea",
-          "awayName": "Manchester United",
-          "matchday": 9,
-          "date": "2026-10-31",
-          "kickoff": "2026-10-31T15:00:00+00:00",
-          "venue": "Stamford Bridge",
-          "fid": 1557450,
           "result": null
         },
         {
@@ -1234,15 +1198,51 @@
           "result": null
         },
         {
+          "home": "47",
+          "away": "52",
+          "homeName": "Tottenham",
+          "awayName": "Crystal Palace",
+          "matchday": 9,
+          "date": "2026-10-31",
+          "kickoff": "2026-10-31T17:30:00+00:00",
+          "venue": "Tottenham Hotspur Stadium",
+          "fid": 1557456,
+          "result": null
+        },
+        {
           "home": "66",
           "away": "36",
           "homeName": "Aston Villa",
           "awayName": "Fulham",
           "matchday": 9,
-          "date": "2026-10-31",
-          "kickoff": "2026-10-31T15:00:00+00:00",
+          "date": "2026-11-01",
+          "kickoff": "2026-11-01T14:00:00+00:00",
           "venue": "Villa Park",
           "fid": 1557447,
+          "result": null
+        },
+        {
+          "home": "40",
+          "away": "42",
+          "homeName": "Liverpool",
+          "awayName": "Arsenal",
+          "matchday": 9,
+          "date": "2026-11-01",
+          "kickoff": "2026-11-01T16:30:00+00:00",
+          "venue": "Anfield",
+          "fid": 1557453,
+          "result": null
+        },
+        {
+          "home": "34",
+          "away": "45",
+          "homeName": "Newcastle",
+          "awayName": "Everton",
+          "matchday": 9,
+          "date": "2026-11-02",
+          "kickoff": "2026-11-02T20:00:00+00:00",
+          "venue": null,
+          "fid": 1557455,
           "result": null
         },
         {
@@ -4767,6 +4767,20 @@
           "elo": null
         },
         {
+          "id": "797",
+          "name": "Elche",
+          "logo": "https://media.api-sports.io/football/teams/797.png",
+          "flag": "<img src=\"https://media.api-sports.io/football/teams/797.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+          "elo": null
+        },
+        {
+          "id": "544",
+          "name": "Deportivo La Coruna",
+          "logo": "https://media.api-sports.io/football/teams/544.png",
+          "flag": "<img src=\"https://media.api-sports.io/football/teams/544.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+          "elo": null
+        },
+        {
           "id": "529",
           "name": "Barcelona",
           "logo": "https://media.api-sports.io/football/teams/529.png",
@@ -4823,24 +4837,10 @@
           "elo": null
         },
         {
-          "id": "797",
-          "name": "Elche",
-          "logo": "https://media.api-sports.io/football/teams/797.png",
-          "flag": "<img src=\"https://media.api-sports.io/football/teams/797.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-          "elo": null
-        },
-        {
           "id": "727",
           "name": "Osasuna",
           "logo": "https://media.api-sports.io/football/teams/727.png",
           "flag": "<img src=\"https://media.api-sports.io/football/teams/727.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-          "elo": null
-        },
-        {
-          "id": "544",
-          "name": "Deportivo La Coruna",
-          "logo": "https://media.api-sports.io/football/teams/544.png",
-          "flag": "<img src=\"https://media.api-sports.io/football/teams/544.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
           "elo": null
         },
         {
@@ -4969,9 +4969,19 @@
           "matchday": 1,
           "date": "2026-08-17",
           "kickoff": "2026-08-17T19:00:00+00:00",
-          "venue": "Estadio Municipal de Riazor",
+          "venue": "Estadio Riazor",
           "fid": 1570337,
-          "result": null
+          "result": {
+            "status": "FT",
+            "home_score": 1,
+            "away_score": 1,
+            "stats": {
+              "xgHome": 0.34,
+              "xgAway": 1.41,
+              "xgTotal": 1.75,
+              "xgSource": "api"
+            }
+          }
         },
         {
           "home": "530",
@@ -4992,11 +5002,10 @@
           "awayName": "Alaves",
           "matchday": 2,
           "date": "2026-08-20",
-          "kickoff": "2026-08-20T19:00:00Z",
+          "kickoff": "2026-08-20T19:00:00+00:00",
           "venue": "Estadio Municipal de Butarque",
           "fid": 1570351,
-          "result": null,
-          "time": "21:00"
+          "result": null
         },
         {
           "home": "543",
@@ -5005,11 +5014,10 @@
           "awayName": "Real Sociedad",
           "matchday": 2,
           "date": "2026-08-21",
-          "kickoff": "2026-08-21T19:00:00Z",
+          "kickoff": "2026-08-21T19:00:00+00:00",
           "venue": "Estadio de La Cartuja",
           "fid": 1570345,
-          "result": null,
-          "time": "21:00"
+          "result": null
         },
         {
           "home": "531",
@@ -5273,10 +5281,11 @@
           "awayName": "Getafe",
           "matchday": 3,
           "date": "2026-08-31",
-          "kickoff": "2026-08-31T17:30:00+00:00",
+          "kickoff": "2026-08-31T17:30:00Z",
           "venue": "Estadio El Sadar",
           "fid": 1570358,
-          "result": null
+          "result": null,
+          "time": "19:30"
         },
         {
           "home": "529",
@@ -13460,11 +13469,10 @@
           "awayName": "Como",
           "matchday": 1,
           "date": "2026-08-22",
-          "kickoff": "2026-08-22T16:30:00Z",
+          "kickoff": "2026-08-22T16:30:00+00:00",
           "venue": "Bluenergy Stadium - Stadio Friuli",
           "fid": 1550095,
-          "result": null,
-          "time": "18:30"
+          "result": null
         },
         {
           "home": "505",
@@ -13485,11 +13493,10 @@
           "awayName": "Napoli",
           "matchday": 1,
           "date": "2026-08-22",
-          "kickoff": "2026-08-22T18:45:00Z",
+          "kickoff": "2026-08-22T18:45:00+00:00",
           "venue": "Stadio Luigi Ferraris",
           "fid": 1550091,
-          "result": null,
-          "time": "20:45"
+          "result": null
         },
         {
           "home": "523",
@@ -13498,11 +13505,10 @@
           "awayName": "Cagliari",
           "matchday": 1,
           "date": "2026-08-22",
-          "kickoff": "2026-08-22T18:45:00Z",
+          "kickoff": "2026-08-22T18:45:00+00:00",
           "venue": "Stadio Ennio Tardini",
           "fid": 1550093,
-          "result": null,
-          "time": "20:45"
+          "result": null
         },
         {
           "home": "512",
@@ -13692,10 +13698,11 @@
           "awayName": "AS Roma",
           "matchday": 2,
           "date": "2026-08-31",
-          "kickoff": "2026-08-31T16:30:00+00:00",
+          "kickoff": "2026-08-31T16:30:00Z",
           "venue": "Stadio Via del Mare",
           "fid": 1550103,
-          "result": null
+          "result": null,
+          "time": "18:30"
         },
         {
           "home": "499",
@@ -13704,10 +13711,11 @@
           "awayName": "Bologna",
           "matchday": 2,
           "date": "2026-08-31",
-          "kickoff": "2026-08-31T18:45:00+00:00",
+          "kickoff": "2026-08-31T18:45:00Z",
           "venue": "New Balance Arena",
           "fid": 1550098,
-          "result": null
+          "result": null,
+          "time": "20:45"
         },
         {
           "home": "495",
@@ -18170,11 +18178,10 @@
           "awayName": "Strasbourg",
           "matchday": 1,
           "date": "2026-08-21",
-          "kickoff": "2026-08-21T18:45:00Z",
+          "kickoff": "2026-08-21T18:45:00+00:00",
           "venue": null,
           "fid": 1552733,
-          "result": null,
-          "time": "20:45"
+          "result": null
         },
         {
           "home": "116",
@@ -21861,7 +21868,7 @@
         "o25": 1.6,
         "u25": 2.3
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 1.18,
       "dr": 7.76,
       "aw": 15.49,
@@ -21877,14 +21884,14 @@
           1.91
         ]
       },
-      "ahH_n200": 1.98,
       "ahA_p200": 1.91,
+      "ahH_n200": 1.98,
       "poly_hw": 0.835,
       "poly_dr": 0.115,
       "poly_aw": 0.045,
       "poly_vol": 38757.01,
       "poly_slug": "epl-ars-cov-2026-08-21",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 1.17,
       "public_dr": 7.0,
@@ -21914,7 +21921,7 @@
         "o25": 1.65,
         "u25": 2.2
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 8.5,
       "dr": 4.85,
       "aw": 1.4,
@@ -21931,12 +21938,12 @@
         ]
       },
       "ahA_n125": 1.87,
-      "poly_hw": 0.115,
-      "poly_dr": 0.205,
+      "poly_hw": 0.105,
+      "poly_dr": 0.195,
       "poly_aw": 0.695,
-      "poly_vol": 8794.74,
+      "poly_vol": 9167.0,
       "poly_slug": "epl-hul-mun-2026-08-22",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 8.0,
       "public_dr": 4.7,
@@ -21964,7 +21971,7 @@
         "o25": 1.81,
         "u25": 2.01
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 2.21,
       "dr": 3.48,
       "aw": 3.41,
@@ -21980,14 +21987,14 @@
           2.0
         ]
       },
-      "ahA_p025": 2.0,
       "ahH_n025": 1.91,
+      "ahA_p025": 2.0,
       "poly_hw": 0.445,
       "poly_dr": 0.275,
       "poly_aw": 0.28,
-      "poly_vol": 1297.14,
+      "poly_vol": 1337.72,
       "poly_slug": "epl-eve-cry-2026-08-22",
-      "marketsFreshAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsFreshAt": "2026-08-18T06:57:31.765994+00:00",
       "public_hw": 2.15,
       "public_dr": 3.4,
       "public_aw": 3.3,
@@ -22012,7 +22019,7 @@
         "o25": 1.9,
         "u25": 1.9
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 2.78,
       "dr": 3.35,
       "aw": 2.67,
@@ -22029,11 +22036,11 @@
         ]
       },
       "poly_hw": 0.345,
-      "poly_dr": 0.285,
+      "poly_dr": 0.295,
       "poly_aw": 0.355,
-      "poly_vol": 861.1,
+      "poly_vol": 927.69,
       "poly_slug": "epl-ips-sun-2026-08-22",
-      "marketsFreshAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsFreshAt": "2026-08-18T06:57:31.765994+00:00",
       "public_hw": 2.7,
       "public_dr": 3.3,
       "public_aw": 2.6,
@@ -22058,7 +22065,7 @@
         "o25": 1.94,
         "u25": 1.85
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 2.35,
       "dr": 3.42,
       "aw": 3.17,
@@ -22074,14 +22081,14 @@
           1.88
         ]
       },
-      "ahA_p025": 1.88,
       "ahH_n025": 2.03,
+      "ahA_p025": 1.88,
       "poly_hw": 0.415,
       "poly_dr": 0.285,
       "poly_aw": 0.305,
-      "poly_vol": 999.44,
+      "poly_vol": 1659.81,
       "poly_slug": "epl-not-lee-2026-08-22",
-      "marketsFreshAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsFreshAt": "2026-08-18T06:57:31.765994+00:00",
       "public_hw": 2.25,
       "public_dr": 3.35,
       "public_aw": 3.1,
@@ -22106,7 +22113,7 @@
         "o25": 1.62,
         "u25": 2.25
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 2.45,
       "dr": 3.72,
       "aw": 2.8,
@@ -22126,9 +22133,9 @@
       "poly_hw": 0.385,
       "poly_dr": 0.265,
       "poly_aw": 0.355,
-      "poly_vol": 24055.28,
+      "poly_vol": 25672.98,
       "poly_slug": "epl-bre-tot-2026-08-22",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 2.4,
       "public_dr": 3.55,
@@ -22156,7 +22163,7 @@
         "o25": 1.36,
         "u25": 2.9
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 1.48,
       "dr": 5.09,
       "aw": 6.01,
@@ -22172,16 +22179,16 @@
           1.9
         ]
       },
-      "ahH_n150": 2.22,
+      "ahH_n125": 2.01,
       "ahA_p150": 1.77,
       "ahA_p125": 1.9,
-      "ahH_n125": 2.01,
+      "ahH_n150": 2.22,
       "poly_hw": 0.665,
       "poly_dr": 0.185,
       "poly_aw": 0.145,
-      "poly_vol": 8381.99,
+      "poly_vol": 8718.61,
       "poly_slug": "epl-mac-bou-2026-08-23",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 1.44,
       "public_dr": 4.8,
@@ -22211,7 +22218,7 @@
         "o25": 1.57,
         "u25": 2.38
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 2.26,
       "dr": 3.7,
       "aw": 3.11,
@@ -22227,14 +22234,14 @@
           1.93
         ]
       },
-      "ahA_p025": 1.93,
       "ahH_n025": 1.98,
+      "ahA_p025": 1.93,
       "poly_hw": 0.425,
       "poly_dr": 0.255,
       "poly_aw": 0.315,
-      "poly_vol": 4236.25,
+      "poly_vol": 4282.33,
       "poly_slug": "epl-bri-ast-2026-08-23",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 2.23,
       "public_dr": 3.6,
@@ -22260,7 +22267,7 @@
         "o25": 1.4,
         "u25": 2.88
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 3.7,
       "dr": 4.03,
       "aw": 1.93,
@@ -22276,14 +22283,14 @@
           1.94
         ]
       },
-      "ahA_n025": 1.82,
       "ahA_n050": 1.94,
+      "ahA_n025": 1.82,
       "poly_hw": 0.255,
       "poly_dr": 0.245,
       "poly_aw": 0.505,
-      "poly_vol": 34256.0,
+      "poly_vol": 34491.4,
       "poly_slug": "epl-new-liv-2026-08-23",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 3.55,
       "public_dr": 3.9,
@@ -22313,7 +22320,7 @@
         "o25": 1.62,
         "u25": 2.25
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 3.64,
       "dr": 3.97,
       "aw": 1.94,
@@ -22329,14 +22336,14 @@
           1.95
         ]
       },
-      "ahA_n025": 1.81,
       "ahA_n050": 1.95,
-      "poly_hw": 0.275,
-      "poly_dr": 0.255,
-      "poly_aw": 0.485,
-      "poly_vol": 7891.36,
+      "ahA_n025": 1.81,
+      "poly_hw": 0.26,
+      "poly_dr": 0.25,
+      "poly_aw": 0.495,
+      "poly_vol": 7951.6,
       "poly_slug": "epl-ful-che-2026-08-24",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 3.5,
       "public_dr": 3.75,
@@ -22362,7 +22369,7 @@
         "o25": 2.25,
         "u25": 1.75
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 4.72,
       "dr": 3.62,
       "aw": 1.83,
@@ -22378,14 +22385,14 @@
           1.83
         ]
       },
-      "ahA_n075": 2.07,
       "ahA_n050": 1.83,
+      "ahA_n075": 2.07,
       "poly_hw": 0.195,
       "poly_dr": 0.275,
       "poly_aw": 0.53,
       "poly_vol": 99.92,
       "poly_slug": "sea-udi-com-2026-08-22",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 4.5,
       "public_dr": 3.5,
@@ -22393,7 +22400,7 @@
       "public_bookmaker": "Konsens (48 Books)",
       "public_o25": 2.12,
       "public_u25": 1.7,
-      "public_ou_bookmaker": "Konsens (22 Books)",
+      "public_ou_bookmaker": "Konsens (21 Books)",
       "bf_hw": 5.0,
       "bf_dr": 3.6,
       "bf_aw": 1.87,
@@ -22413,7 +22420,7 @@
         "o25": 2.35,
         "u25": 1.7
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 5.15,
       "dr": 3.3,
       "aw": 1.85,
@@ -22435,7 +22442,7 @@
       "poly_aw": 0.52,
       "poly_vol": 349.63,
       "poly_slug": "sea-gen-nap-2026-08-22",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 4.655,
       "public_dr": 3.3,
@@ -22463,7 +22470,7 @@
         "o25": 1.86,
         "u25": 1.94
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 1.58,
       "dr": 4.16,
       "aw": 5.85,
@@ -22483,17 +22490,17 @@
       "ahH_n150": 2.6,
       "ahA_p100": 1.87,
       "ahH_n100": 2.02,
-      "poly_hw": 0.61,
+      "poly_hw": 0.615,
       "poly_dr": 0.23,
       "poly_aw": 0.155,
       "poly_vol": 73.46,
       "poly_slug": "sea-rom-fio-2026-08-24",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-17T02:08:15.548988+00:00",
-      "public_hw": 1.545,
+      "public_hw": 1.54,
       "public_dr": 4.0,
       "public_aw": 5.8,
-      "public_bookmaker": "Konsens (46 Books)",
+      "public_bookmaker": "Konsens (47 Books)",
       "public_o25": 1.85,
       "public_u25": 1.93,
       "public_ou_bookmaker": "Konsens (23 Books)",
@@ -22514,7 +22521,7 @@
         "o25": 1.65,
         "u25": 2.2
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 1.55,
       "dr": 4.47,
       "aw": 5.93,
@@ -22535,11 +22542,11 @@
       "ahA_p100": 1.99,
       "ahH_n100": 1.92,
       "poly_hw": 0.62,
-      "poly_dr": 0.21,
+      "poly_dr": 0.215,
       "poly_aw": 0.155,
       "poly_vol": 4.76,
       "poly_slug": "sea-ata-sas-2026-08-23",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-17T02:08:15.548988+00:00",
       "public_hw": 1.5,
       "public_dr": 4.35,
@@ -22565,7 +22572,7 @@
         "o25": 2.1,
         "u25": 1.7
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 2.24,
       "dr": 3.23,
       "aw": 3.52,
@@ -22581,14 +22588,14 @@
           1.96
         ]
       },
-      "ahA_p025": 1.96,
       "ahH_n025": 1.92,
-      "poly_hw": 0.43,
+      "ahA_p025": 1.96,
+      "poly_hw": 0.435,
       "poly_dr": 0.3,
       "poly_aw": 0.27,
       "poly_vol": 45.45,
       "poly_slug": "sea-bol-laz-2026-08-24",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-17T02:08:15.548988+00:00",
       "public_hw": 2.15,
       "public_dr": 3.2,
@@ -22614,7 +22621,7 @@
         "o25": 1.9,
         "u25": 1.9
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 4.56,
       "dr": 3.82,
       "aw": 1.81,
@@ -22636,7 +22643,7 @@
       "poly_aw": 0.545,
       "poly_vol": 417.02,
       "poly_slug": "sea-tor-mil-2026-08-23",
-      "marketsFreshAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsFreshAt": "2026-08-18T06:57:31.765994+00:00",
       "public_hw": 4.425,
       "public_dr": 3.7,
       "public_aw": 1.75,
@@ -22663,7 +22670,7 @@
         "o25": 1.71,
         "u25": 2.33
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 1.21,
       "dr": 7.05,
       "aw": 13.16,
@@ -22679,11 +22686,11 @@
           2.0
         ]
       },
-      "ahA_p175": 2.0,
       "ahH_n175": 1.88,
       "ahA_p150": 2.21,
+      "ahA_p175": 2.0,
       "ahH_n150": 1.78,
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 1.205,
       "public_dr": 6.25,
@@ -22711,7 +22718,7 @@
         "o25": 1.78,
         "u25": 1.94
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 7.38,
       "dr": 4.74,
       "aw": 1.45,
@@ -22731,14 +22738,14 @@
       "poly_hw": 0.115,
       "poly_dr": 0.205,
       "poly_aw": 0.675,
-      "poly_vol": 597.13,
+      "poly_vol": 602.08,
       "poly_slug": "sea-fro-juv-2026-08-23",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-08-08T10:26:07.287576+00:00",
-      "public_hw": 7.0,
-      "public_dr": 4.4,
+      "public_hw": 6.95,
+      "public_dr": 4.375,
       "public_aw": 1.44,
-      "public_bookmaker": "Konsens (47 Books)",
+      "public_bookmaker": "Konsens (48 Books)",
       "public_o25": 1.82,
       "public_u25": 1.98,
       "public_ou_bookmaker": "Konsens (23 Books)",
@@ -22761,7 +22768,7 @@
         "o25": 2.16,
         "u25": 1.63
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 2.28,
       "dr": 3.27,
       "aw": 3.45,
@@ -22777,19 +22784,19 @@
           1.95
         ]
       },
-      "ahA_p025": 1.95,
       "ahH_n025": 1.95,
-      "poly_hw": 0.41,
+      "ahA_p025": 1.95,
+      "poly_hw": 0.415,
       "poly_dr": 0.3,
-      "poly_aw": 0.295,
-      "poly_vol": 0,
+      "poly_aw": 0.275,
+      "poly_vol": 142.98,
       "poly_slug": "sea-ven-lec-2026-08-23",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
-      "public_hw": 2.28,
+      "public_hw": 2.275,
       "public_dr": 3.2,
-      "public_aw": 3.28,
-      "public_bookmaker": "Konsens (47 Books)",
+      "public_aw": 3.265,
+      "public_bookmaker": "Konsens (48 Books)",
       "public_o25": 2.23,
       "public_u25": 1.65,
       "public_ou_bookmaker": "Konsens (22 Books)",
@@ -22810,7 +22817,7 @@
         "o25": 2.43,
         "u25": 1.66
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 2.6,
       "dr": 3.0,
       "aw": 3.18,
@@ -22831,7 +22838,7 @@
       "poly_aw": 0.315,
       "poly_vol": 59.64,
       "poly_slug": "sea-par-cag-2026-08-22",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-08-06T13:52:23.353681+00:00",
       "public_hw": 2.52,
       "public_dr": 3.05,
@@ -22859,7 +22866,7 @@
         "o25": 1.5,
         "u25": 2.45
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 1.39,
       "dr": 5.09,
       "aw": 7.13,
@@ -22877,11 +22884,11 @@
           1.99
         ]
       },
-      "ahH_n150": 2.19,
+      "ahH_n125": 1.86,
       "ahA_p150": 1.79,
       "ahA_p125": 1.99,
-      "ahH_n125": 1.86,
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "ahH_n150": 2.19,
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-17T15:09:53.819048+00:00",
       "public_hw": 1.37,
       "public_dr": 5.0,
@@ -22911,7 +22918,7 @@
         "o25": 1.72,
         "u25": 2.3
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 1.31,
       "dr": 5.68,
       "aw": 10.38,
@@ -22934,14 +22941,14 @@
       "poly_aw": 0.085,
       "poly_vol": 4298.06,
       "poly_slug": "lal-mad-mala-2026-08-19",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-08-10T16:48:21.983386+00:00",
       "public_hw": 1.29,
       "public_dr": 5.5,
       "public_aw": 10.5,
-      "public_bookmaker": "Konsens (42 Books)",
+      "public_bookmaker": "Konsens (41 Books)",
       "public_o25": 1.7,
-      "public_u25": 2.12,
+      "public_u25": 2.14,
       "public_ou_bookmaker": "Konsens (19 Books)",
       "bf_hw": 1.32,
       "bf_dr": 5.9,
@@ -22960,7 +22967,7 @@
         "o25": 1.96,
         "u25": 1.72
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 2.69,
       "dr": 3.24,
       "aw": 2.71,
@@ -22978,14 +22985,14 @@
       },
       "poly_hw": 0.355,
       "poly_dr": 0.295,
-      "poly_aw": 0.355,
-      "poly_vol": 97.13,
+      "poly_aw": 0.35,
+      "poly_vol": 249.26,
       "poly_slug": "lal-val-bet-2026-08-25",
-      "marketsFreshAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsFreshAt": "2026-08-18T06:57:31.765994+00:00",
       "public_hw": 2.65,
-      "public_dr": 3.27,
-      "public_aw": 2.62,
-      "public_bookmaker": "Konsens (31 Books)",
+      "public_dr": 3.285,
+      "public_aw": 2.635,
+      "public_bookmaker": "Konsens (30 Books)",
       "public_o25": 1.94,
       "public_u25": 1.82,
       "public_ou_bookmaker": "Konsens (15 Books)",
@@ -23008,7 +23015,7 @@
         "o25": 1.53,
         "u25": 2.4
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 1.39,
       "dr": 5.11,
       "aw": 7.13,
@@ -23026,20 +23033,20 @@
           2.0
         ]
       },
-      "ahH_n150": 2.16,
+      "ahH_n125": 1.85,
       "ahA_p150": 1.81,
       "ahA_p125": 2.0,
-      "ahH_n125": 1.85,
-      "poly_hw": 0.695,
+      "ahH_n150": 2.16,
+      "poly_hw": 0.705,
       "poly_dr": 0.185,
-      "poly_aw": 0.125,
-      "poly_vol": 239.76,
+      "poly_aw": 0.11,
+      "poly_vol": 241.17,
       "poly_slug": "lal-rea-rso-2026-08-26",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-17T15:09:53.819048+00:00",
-      "public_hw": 1.38,
+      "public_hw": 1.37,
       "public_dr": 5.0,
-      "public_aw": 7.0,
+      "public_aw": 7.05,
       "public_bookmaker": "Konsens (32 Books)",
       "public_o25": 1.53,
       "public_u25": 2.4,
@@ -23067,7 +23074,7 @@
         "o25": 1.22,
         "u25": 4.0
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 1.3,
       "dr": 6.06,
       "aw": 7.86,
@@ -23085,16 +23092,16 @@
           1.89
         ]
       },
-      "ahA_p175": 1.89,
       "ahH_n175": 1.93,
       "ahA_p150": 2.18,
+      "ahA_p175": 1.89,
       "ahH_n150": 1.8,
       "poly_hw": 0.76,
       "poly_dr": 0.145,
       "poly_aw": 0.105,
       "poly_vol": 2032.89,
       "poly_slug": "bun-bay-stu-2026-08-28",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 1.28,
       "public_dr": 6.0,
@@ -23124,7 +23131,7 @@
         "o25": 1.81,
         "u25": 2.17
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 2.01,
       "dr": 3.63,
       "aw": 3.61,
@@ -23145,10 +23152,10 @@
       "ahH_n100": 3.02,
       "poly_hw": 0.48,
       "poly_dr": 0.25,
-      "poly_aw": 0.26,
+      "poly_aw": 0.25,
       "poly_vol": 0,
       "poly_slug": "bun-fre-wer-2026-08-30",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-17T11:18:26.705671+00:00",
       "public_hw": 2.01,
       "public_dr": 3.6,
@@ -23174,7 +23181,7 @@
         "o25": 1.75,
         "u25": 2.25
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 1.69,
       "dr": 4.03,
       "aw": 4.62,
@@ -23191,14 +23198,14 @@
         ]
       },
       "ahH_n075": 1.89,
-      "ahH_n150": 3.02,
       "ahA_p075": 1.95,
-      "poly_hw": 0.57,
+      "ahH_n150": 3.02,
+      "poly_hw": 0.56,
       "poly_dr": 0.23,
-      "poly_aw": 0.2,
+      "poly_aw": 0.19,
       "poly_vol": 0,
       "poly_slug": "bun-mai-scp-2026-08-29",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 1.67,
       "public_dr": 3.9,
@@ -23226,7 +23233,7 @@
         "o25": 1.5,
         "u25": 2.5
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 1.33,
       "dr": 5.5,
       "aw": 8.19,
@@ -23246,12 +23253,12 @@
       },
       "ahA_p150": 1.91,
       "ahH_n150": 1.94,
-      "poly_hw": 0.725,
-      "poly_dr": 0.17,
-      "poly_aw": 0.1,
-      "poly_vol": 0,
+      "poly_hw": 0.715,
+      "poly_dr": 0.155,
+      "poly_aw": 0.11,
+      "poly_vol": 14.01,
       "poly_slug": "bun-dor-hsv-2026-08-29",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-30T11:47:56.930101+00:00",
       "public_hw": 1.32,
       "public_dr": 5.25,
@@ -23283,7 +23290,7 @@
         "o25": 1.44,
         "u25": 2.62
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 4.77,
       "dr": 4.66,
       "aw": 1.58,
@@ -23302,12 +23309,12 @@
         ]
       },
       "ahA_n100": 1.94,
-      "poly_hw": 0.185,
-      "poly_dr": 0.205,
+      "poly_hw": 0.19,
+      "poly_dr": 0.19,
       "poly_aw": 0.615,
       "poly_vol": 15.87,
       "poly_slug": "bun-elv-b04-2026-08-29",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 5.2,
       "public_dr": 4.5,
@@ -23337,7 +23344,7 @@
         "o25": 1.64,
         "u25": 2.47
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 2.18,
       "dr": 3.73,
       "aw": 3.08,
@@ -23353,16 +23360,16 @@
           1.93
         ]
       },
-      "ahA_p025": 1.93,
       "ahH_n025": 1.92,
-      "ahA_p100": 1.39,
       "ahH_n100": 3.12,
+      "ahA_p100": 1.39,
+      "ahA_p025": 1.93,
       "poly_hw": 0.44,
-      "poly_dr": 0.25,
+      "poly_dr": 0.255,
       "poly_aw": 0.3,
       "poly_vol": 0,
       "poly_slug": "bun-aug-s04-2026-08-30",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-16T20:52:21.181721+00:00",
       "public_hw": 2.1,
       "public_dr": 3.7,
@@ -23390,7 +23397,7 @@
         "o25": 1.44,
         "u25": 2.7
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 1.53,
       "dr": 4.64,
       "aw": 5.32,
@@ -23412,12 +23419,12 @@
       "ahH_n150": 2.45,
       "ahA_p100": 1.99,
       "ahH_n100": 1.86,
-      "poly_hw": 0.635,
-      "poly_dr": 0.205,
+      "poly_hw": 0.645,
+      "poly_dr": 0.19,
       "poly_aw": 0.17,
       "poly_vol": 25.42,
       "poly_slug": "bun-lei-moe-2026-08-29",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 1.53,
       "public_dr": 4.5,
@@ -23447,7 +23454,7 @@
         "o25": 1.79,
         "u25": 2.19
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 2.47,
       "dr": 3.52,
       "aw": 2.77,
@@ -23464,12 +23471,12 @@
         ]
       },
       "ahH_n025": 2.08,
-      "poly_hw": 0.4,
+      "poly_hw": 0.395,
       "poly_dr": 0.27,
-      "poly_aw": 0.345,
+      "poly_aw": 0.34,
       "poly_vol": 21.61,
       "poly_slug": "bun-uni-ein-2026-08-29",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 2.38,
       "public_dr": 3.5,
@@ -23497,7 +23504,7 @@
         "o25": 1.57,
         "u25": 2.3
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 2.98,
       "dr": 3.67,
       "aw": 2.27,
@@ -23518,10 +23525,10 @@
       "ahA_n025": 1.98,
       "poly_hw": 0.325,
       "poly_dr": 0.25,
-      "poly_aw": 0.42,
+      "poly_aw": 0.43,
       "poly_vol": 48.39,
       "poly_slug": "bun-koe-hof-2026-08-29",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 2.8,
       "public_dr": 3.6,
@@ -23551,7 +23558,7 @@
         "o25": 1.74,
         "u25": 2.27
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 2.88,
       "dr": 3.51,
       "aw": 2.5,
@@ -23567,7 +23574,7 @@
           1.82
         ]
       },
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-08-06T13:52:23.353681+00:00",
       "public_hw": 2.7,
       "public_dr": 3.5,
@@ -23593,7 +23600,7 @@
         "o25": 1.64,
         "u25": 2.46
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 3.56,
       "dr": 4.07,
       "aw": 1.97,
@@ -23612,10 +23619,10 @@
       "ahA_n050": 1.98,
       "poly_hw": 0.265,
       "poly_dr": 0.24,
-      "poly_aw": 0.495,
+      "poly_aw": 0.49,
       "poly_vol": 299.96,
       "poly_slug": "fl1-hac-asm-2026-08-23",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-18T08:05:16.543140+00:00",
       "public_hw": 3.4,
       "public_dr": 3.8,
@@ -23645,7 +23652,7 @@
         "o25": 1.68,
         "u25": 2.38
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 1.6,
       "dr": 4.41,
       "aw": 5.37,
@@ -23665,12 +23672,12 @@
       "ahH_n150": 2.69,
       "ahA_p100": 1.88,
       "ahH_n100": 2.03,
-      "poly_hw": 0.615,
-      "poly_dr": 0.22,
-      "poly_aw": 0.17,
+      "poly_hw": 0.61,
+      "poly_dr": 0.215,
+      "poly_aw": 0.175,
       "poly_vol": 202.66,
       "poly_slug": "fl1-rcl-aja-2026-08-22",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 1.6,
       "public_dr": 4.2,
@@ -23696,7 +23703,7 @@
         "o25": 1.87,
         "u25": 2.08
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 2.52,
       "dr": 3.52,
       "aw": 2.84,
@@ -23713,11 +23720,11 @@
         ]
       },
       "poly_hw": 0.38,
-      "poly_dr": 0.275,
+      "poly_dr": 0.27,
       "poly_aw": 0.34,
       "poly_vol": 25.07,
       "poly_slug": "fl1-lmf-sbr-2026-08-22",
-      "marketsFreshAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsFreshAt": "2026-08-18T06:57:31.765994+00:00",
       "public_hw": 2.45,
       "public_dr": 3.5,
       "public_aw": 2.7,
@@ -23742,7 +23749,7 @@
         "o25": 1.98,
         "u25": 1.96
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 5.13,
       "dr": 3.89,
       "aw": 1.71,
@@ -23764,7 +23771,7 @@
       "poly_aw": 0.57,
       "poly_vol": 148.3,
       "poly_slug": "fl1-ang-lil-2026-08-23",
-      "marketsFreshAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsFreshAt": "2026-08-18T06:57:31.765994+00:00",
       "public_hw": 5.0,
       "public_dr": 3.75,
       "public_aw": 1.675,
@@ -23791,7 +23798,7 @@
         "o25": 1.44,
         "u25": 2.7
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 1.75,
       "dr": 4.17,
       "aw": 4.42,
@@ -23810,17 +23817,17 @@
         ]
       },
       "ahH_n075": 1.96,
-      "ahH_n150": 2.72,
-      "ahA_p075": 1.94,
       "ahA_p100": 1.8,
       "ahA_p150": 1.54,
+      "ahA_p075": 1.94,
       "ahH_n100": 2.03,
+      "ahH_n150": 2.72,
       "poly_hw": 0.545,
       "poly_dr": 0.235,
       "poly_aw": 0.215,
       "poly_vol": 9806.72,
       "poly_slug": "fl1-olm-str-2026-08-21",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-17T06:11:18.629118+00:00",
       "public_hw": 1.73,
       "public_dr": 4.0,
@@ -23850,7 +23857,7 @@
         "o25": 1.87,
         "u25": 2.08
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 2.14,
       "dr": 3.6,
       "aw": 3.47,
@@ -23866,14 +23873,14 @@
           2.05
         ]
       },
-      "ahA_p025": 2.05,
       "ahH_n025": 1.86,
+      "ahA_p025": 2.05,
       "poly_hw": 0.455,
       "poly_dr": 0.265,
       "poly_aw": 0.275,
-      "poly_vol": 345.98,
+      "poly_vol": 748.28,
       "poly_slug": "fl1-ogc-lor-2026-08-22",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 2.1,
       "public_dr": 3.5,
@@ -23901,7 +23908,7 @@
         "o25": 1.4,
         "u25": 2.9
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 1.39,
       "dr": 5.64,
       "aw": 6.98,
@@ -23919,11 +23926,11 @@
           1.88
         ]
       },
-      "ahA_p125": 2.02,
       "ahA_p150": 1.88,
       "ahH_n125": 1.84,
+      "ahA_p125": 2.02,
       "ahH_n150": 2.03,
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-18T08:05:16.543140+00:00",
       "public_hw": 1.38,
       "public_dr": 5.25,
@@ -23934,7 +23941,7 @@
       "public_o35": 1.93,
       "public_u35": 1.83,
       "public_ou_bookmaker": "Konsens (21 Books)",
-      "bf_hw": 1.41,
+      "bf_hw": 1.43,
       "bf_dr": 5.8,
       "bf_aw": 7.2,
       "public_hw_open": 1.02,
@@ -23953,7 +23960,7 @@
         "o25": 1.8,
         "u25": 2.17
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 3.02,
       "dr": 3.6,
       "aw": 2.35,
@@ -23969,14 +23976,14 @@
           2.05
         ]
       },
-      "ahA_n025": 2.05,
       "ahA_n050": 2.07,
+      "ahA_n025": 2.05,
       "poly_hw": 0.315,
       "poly_dr": 0.265,
       "poly_aw": 0.415,
-      "poly_vol": 512.37,
+      "poly_vol": 588.95,
       "poly_slug": "fl1-tou-lyo-2026-08-22",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-07-21T10:21:14.431628+00:00",
       "public_hw": 3.0,
       "public_dr": 3.55,
@@ -24004,7 +24011,7 @@
         "o25": 2.62,
         "u25": 1.44
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 2.28,
       "dr": 3.09,
       "aw": 3.69,
@@ -24022,14 +24029,14 @@
           1.97
         ]
       },
-      "ahA_p025": 1.97,
       "ahH_n025": 1.93,
+      "ahA_p025": 1.97,
       "poly_hw": 0.425,
       "poly_dr": 0.315,
       "poly_aw": 0.255,
       "poly_vol": 2934.02,
       "poly_slug": "lal-ray-ala-2026-08-20",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-08-02T11:13:10.307263+00:00",
       "public_hw": 2.235,
       "public_dr": 3.0,
@@ -24059,7 +24066,7 @@
         "o25": 2.05,
         "u25": 1.65
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 2.07,
       "dr": 3.53,
       "aw": 3.72,
@@ -24075,22 +24082,22 @@
           1.83
         ]
       },
-      "ahA_p025": 2.08,
       "ahH_n050": 2.08,
-      "ahA_p050": 1.83,
       "ahH_n025": 1.79,
+      "ahA_p050": 1.83,
+      "ahA_p025": 2.08,
       "poly_hw": 0.465,
       "poly_dr": 0.285,
       "poly_aw": 0.255,
       "poly_vol": 1575.37,
       "poly_slug": "lal-bet-rso-2026-08-21",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-08-14T04:02:20.015928+00:00",
       "public_hw": 2.05,
       "public_dr": 3.4,
       "public_aw": 3.6,
       "public_bookmaker": "Konsens (41 Books)",
-      "public_o25": 2.03,
+      "public_o25": 2.035,
       "public_u25": 1.75,
       "public_ou_bookmaker": "Konsens (20 Books)",
       "bf_hw": 2.14,
@@ -24110,7 +24117,7 @@
         "o25": 2.15,
         "u25": 1.68
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 1.74,
       "dr": 3.78,
       "aw": 5.09,
@@ -24127,17 +24134,17 @@
         ]
       },
       "ahH_n075": 1.97,
-      "ahH_n150": 2.83,
-      "ahA_p075": 1.93,
       "ahA_p100": 1.74,
       "ahA_p150": 1.51,
+      "ahA_p075": 1.93,
       "ahH_n100": 2.06,
+      "ahH_n150": 2.83,
       "poly_hw": 0.565,
       "poly_dr": 0.255,
       "poly_aw": 0.175,
-      "poly_vol": 1860.87,
+      "poly_vol": 1874.32,
       "poly_slug": "lal-bil-sev-2026-08-22",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-08-03T11:17:19.844604+00:00",
       "public_hw": 1.7,
       "public_dr": 3.6,
@@ -24163,7 +24170,7 @@
         "o25": 2.15,
         "u25": 1.6
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 2.29,
       "dr": 3.28,
       "aw": 3.41,
@@ -24179,14 +24186,14 @@
           1.93
         ]
       },
-      "ahA_p025": 1.93,
       "ahH_n025": 1.97,
-      "poly_hw": 0.44,
-      "poly_dr": 0.285,
+      "ahA_p025": 1.93,
+      "poly_hw": 0.435,
+      "poly_dr": 0.295,
       "poly_aw": 0.265,
-      "poly_vol": 2186.5,
+      "poly_vol": 3190.99,
       "poly_slug": "lal-val-cel-2026-08-22",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-08-14T04:02:20.015928+00:00",
       "public_hw": 2.15,
       "public_dr": 3.26,
@@ -24212,7 +24219,7 @@
         "o25": 1.7,
         "u25": 2.12
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 7.35,
       "dr": 4.6,
       "aw": 1.46,
@@ -24228,15 +24235,15 @@
           2.05
         ]
       },
-      "ahA_n150": 2.55,
       "ahA_n125": 2.05,
       "ahA_n100": 1.88,
-      "poly_hw": 0.145,
-      "poly_dr": 0.225,
-      "poly_aw": 0.625,
-      "poly_vol": 6099.64,
+      "ahA_n150": 2.55,
+      "poly_hw": 0.115,
+      "poly_dr": 0.205,
+      "poly_aw": 0.685,
+      "poly_vol": 55566.94,
       "poly_slug": "lal-esp-rea-2026-08-22",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-08-03T11:17:19.844604+00:00",
       "public_hw": 7.0,
       "public_dr": 4.5,
@@ -24262,7 +24269,7 @@
         "o25": 2.05,
         "u25": 1.65
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 1.88,
       "dr": 3.78,
       "aw": 4.2,
@@ -24278,16 +24285,16 @@
           2.02
         ]
       },
-      "ahH_n050": 1.88,
       "ahA_p150": 1.43,
+      "ahH_n050": 1.88,
       "ahA_p050": 2.02,
       "ahH_n150": 3.19,
-      "poly_hw": 0.52,
+      "poly_hw": 0.525,
       "poly_dr": 0.26,
       "poly_aw": 0.225,
       "poly_vol": 386.86,
       "poly_slug": "lal-mad-vil-2026-08-23",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-08-09T14:28:51.510547+00:00",
       "public_hw": 1.85,
       "public_dr": 3.6,
@@ -24315,39 +24322,41 @@
         "o25": 2.9,
         "u25": 1.36
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
-      "hw": 2.11,
-      "dr": 2.96,
-      "aw": 4.52,
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
+      "hw": 2.17,
+      "dr": 3.0,
+      "aw": 4.16,
       "bookmaker": "pinnacle",
-      "dc1X": 1.232,
-      "dc12": 1.438,
-      "dcX2": 1.789,
+      "dc1X": 1.259,
+      "dc12": 1.426,
+      "dcX2": 1.743,
       "o15": 1.62,
       "u15": 2.15,
       "o25": 2.9,
       "u25": 1.36,
       "ahLadder": {
-        "-0.5": [
-          2.12,
-          1.81
+        "-0.25": [
+          1.83,
+          2.09
         ]
       },
-      "ahH_n050": 2.12,
-      "ahH_n150": 3.89,
-      "ahH_n100": 2.77,
+      "ahH_n025": 1.83,
       "ahA_p150": 1.32,
       "ahA_p050": 1.81,
-      "poly_hw": 0.465,
-      "poly_dr": 0.335,
-      "poly_aw": 0.205,
-      "poly_vol": 9171.33,
+      "ahH_n050": 2.12,
+      "ahH_n100": 2.77,
+      "ahA_p025": 2.09,
+      "ahH_n150": 3.89,
+      "poly_hw": 0.455,
+      "poly_dr": 0.325,
+      "poly_aw": 0.215,
+      "poly_vol": 22669.47,
       "poly_slug": "lal-get-rrc-2026-08-23",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-08-02T11:13:10.307263+00:00",
-      "public_hw": 2.05,
+      "public_hw": 2.055,
       "public_dr": 2.95,
-      "public_aw": 4.25,
+      "public_aw": 4.14,
       "public_bookmaker": "Konsens (42 Books)",
       "public_o15": 1.64,
       "public_u15": 2.2,
@@ -24375,30 +24384,30 @@
         "o35": 2.05,
         "u35": 1.67
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
-      "hw": 7.8,
-      "dr": 6.06,
-      "aw": 1.34,
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
+      "hw": 7.86,
+      "dr": 6.17,
+      "aw": 1.33,
       "bookmaker": "pinnacle",
-      "dc1X": 3.41,
-      "dc12": 1.144,
-      "dcX2": 1.097,
+      "dc1X": 3.457,
+      "dc12": 1.138,
+      "dcX2": 1.094,
       "o25": 1.44,
       "u25": 2.7,
       "o35": 2.05,
       "u35": 1.67,
       "ahLadder": {
         "1.5": [
-          1.96,
-          1.94
+          1.99,
+          1.92
         ]
       },
-      "ahA_n150": 1.94,
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "ahA_n150": 1.92,
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-08-12T12:56:18.324320+00:00",
-      "public_hw": 8.475,
-      "public_dr": 5.5,
-      "public_aw": 1.32,
+      "public_hw": 8.45,
+      "public_dr": 5.55,
+      "public_aw": 1.3,
       "public_bookmaker": "Konsens (42 Books)",
       "public_o25": 1.46,
       "public_u25": 2.68,
@@ -24424,42 +24433,42 @@
         "o25": 1.85,
         "u25": 1.93
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
-      "hw": 1.83,
-      "dr": 3.7,
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
+      "hw": 1.85,
+      "dr": 3.63,
       "aw": 4.43,
       "bookmaker": "pinnacle",
-      "dc1X": 1.224,
-      "dc12": 1.295,
-      "dcX2": 2.016,
-      "o25": 1.99,
-      "u25": 1.88,
+      "dc1X": 1.225,
+      "dc12": 1.305,
+      "dcX2": 1.995,
+      "o25": 2.07,
+      "u25": 1.82,
       "ahLadder": {
         "-0.5": [
-          1.84,
-          2.06
+          1.86,
+          2.04
         ]
       },
-      "ahH_n050": 1.84,
-      "ahH_n150": 2.88,
       "ahA_p100": 1.64,
-      "ahH_n100": 2.22,
       "ahA_p150": 1.5,
-      "ahA_p050": 2.06,
-      "poly_hw": 0.53,
+      "ahH_n050": 1.86,
+      "ahH_n100": 2.22,
+      "ahA_p050": 2.04,
+      "ahH_n150": 2.88,
+      "poly_hw": 0.525,
       "poly_dr": 0.265,
-      "poly_aw": 0.22,
-      "poly_vol": 62.21,
+      "poly_aw": 0.215,
+      "poly_vol": 644.65,
       "poly_slug": "lal-osa-lev-2026-08-24",
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-08-03T11:17:19.844604+00:00",
       "public_hw": 1.83,
       "public_dr": 3.6,
-      "public_aw": 4.25,
-      "public_bookmaker": "Konsens (37 Books)",
-      "public_o25": 1.96,
-      "public_u25": 1.85,
-      "public_ou_bookmaker": "Konsens (19 Books)",
+      "public_aw": 4.3,
+      "public_bookmaker": "Konsens (38 Books)",
+      "public_o25": 1.97,
+      "public_u25": 1.8,
+      "public_ou_bookmaker": "Konsens (20 Books)",
       "bf_hw": 1.86,
       "bf_dr": 3.7,
       "bf_aw": 4.6,
@@ -24479,7 +24488,7 @@
         "o15": 1.47,
         "u15": 2.45
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 2.68,
       "dr": 3.08,
       "aw": 2.93,
@@ -24497,19 +24506,19 @@
           2.03
         ]
       },
-      "ahA_p025": 1.78,
       "ahH_n025": 2.14,
-      "marketsCarriedAt": "2026-08-18T06:33:00.954264+00:00",
+      "ahA_p025": 1.78,
+      "marketsCarriedAt": "2026-08-18T06:57:31.765994+00:00",
       "marketsFreshAt": "2026-08-12T12:56:18.324320+00:00",
       "public_hw": 2.55,
-      "public_dr": 3.03,
+      "public_dr": 3.04,
       "public_aw": 2.9,
-      "public_bookmaker": "Konsens (33 Books)",
-      "public_o15": 1.5,
+      "public_bookmaker": "Konsens (34 Books)",
+      "public_o15": 1.49,
       "public_u15": 2.45,
       "public_o25": 2.48,
       "public_u25": 1.51,
-      "public_ou_bookmaker": "Konsens (12 Books)",
+      "public_ou_bookmaker": "Konsens (13 Books)",
       "bf_hw": 2.8,
       "bf_dr": 3.0,
       "bf_aw": 3.05,
@@ -24529,7 +24538,7 @@
         "o25": 2.1,
         "u25": 1.7
       },
-      "updatedAt": "2026-08-18T06:33:00.954264+00:00",
+      "updatedAt": "2026-08-18T06:57:31.765994+00:00",
       "hw": 2.0,
       "dr": 3.4,
       "aw": 3.8,
@@ -24550,7 +24559,7 @@
       "poly_aw": 0.25,
       "poly_vol": 2514.19,
       "poly_slug": "lal-cel-osa-2026-08-16",
-      "marketsFreshAt": "2026-08-18T06:33:00.954264+00:00",
+      "marketsFreshAt": "2026-08-18T06:57:31.765994+00:00",
       "public_hw": 1.97,
       "public_dr": 3.4,
       "public_aw": 3.75,
@@ -24566,6 +24575,244 @@
       "public_aw_open": 3.65,
       "public_o25_open": 2.07,
       "public_u25_open": 1.72
+    },
+    "727-546": {
+      "poly_hw": 0.485,
+      "poly_dr": 0.5,
+      "poly_aw": 0.485,
+      "poly_vol": 0,
+      "poly_slug": "lal-osa-get-2026-08-31"
+    },
+    "66-42": {
+      "poly_hw": 0.315,
+      "poly_dr": 0.275,
+      "poly_aw": 0.395,
+      "poly_vol": 0,
+      "poly_slug": "epl-ast-ars-2026-08-31"
+    },
+    "499-500": {
+      "poly_hw": 0.435,
+      "poly_dr": 0.445,
+      "poly_aw": 0.435,
+      "poly_vol": 0,
+      "poly_slug": "sea-ata-bol-2026-08-31"
+    },
+    "867-497": {
+      "poly_hw": 0.435,
+      "poly_dr": 0.445,
+      "poly_aw": 0.435,
+      "poly_vol": 0,
+      "poly_slug": "sea-lec-rom-2026-08-31"
+    },
+    "538-531": {
+      "poly_hw": 0.44,
+      "poly_dr": 0.445,
+      "poly_aw": 0.435,
+      "poly_vol": 0,
+      "poly_slug": "lal-cel-bil-2026-08-30"
+    },
+    "541-535": {
+      "poly_hw": 0.635,
+      "poly_dr": 0.205,
+      "poly_aw": 0.195,
+      "poly_vol": 0,
+      "poly_slug": "lal-rea-mala-2026-08-30"
+    },
+    "63-55": {
+      "poly_hw": 0.38,
+      "poly_dr": 0.295,
+      "poly_aw": 0.335,
+      "poly_vol": 0,
+      "poly_slug": "epl-lee-bre-2026-08-30"
+    },
+    "33-57": {
+      "poly_hw": 0.675,
+      "poly_dr": 0.22,
+      "poly_aw": 0.205,
+      "poly_vol": 538.9,
+      "poly_slug": "epl-mun-ips-2026-08-30"
+    },
+    "746-36": {
+      "poly_hw": 0.365,
+      "poly_dr": 0.295,
+      "poly_aw": 0.355,
+      "poly_vol": 0,
+      "poly_slug": "epl-sun-ful-2026-08-30"
+    },
+    "91-81": {
+      "poly_hw": 0.465,
+      "poly_dr": 0.29,
+      "poly_aw": 0.375,
+      "poly_vol": 0,
+      "poly_slug": "fl1-asm-olm-2026-08-30"
+    },
+    "114-84": {
+      "poly_hw": 0.695,
+      "poly_dr": 0.205,
+      "poly_aw": 0.19,
+      "poly_vol": 0,
+      "poly_slug": "fl1-pfc-ogc-2026-08-30"
+    },
+    "49-51": {
+      "poly_hw": 0.53,
+      "poly_dr": 0.295,
+      "poly_aw": 0.305,
+      "poly_vol": 2.86,
+      "poly_slug": "epl-che-bri-2026-08-30"
+    },
+    "487-495": {
+      "poly_hw": 0.435,
+      "poly_dr": 0.445,
+      "poly_aw": 0.435,
+      "poly_vol": 0,
+      "poly_slug": "sea-laz-gen-2026-08-30"
+    },
+    "492-895": {
+      "poly_hw": 0.435,
+      "poly_dr": 0.445,
+      "poly_aw": 0.435,
+      "poly_vol": 0,
+      "poly_slug": "sea-nap-com-2026-08-30"
+    },
+    "536-530": {
+      "poly_hw": 0.31,
+      "poly_dr": 0.265,
+      "poly_aw": 0.48,
+      "poly_vol": 0,
+      "poly_slug": "lal-sev-mad-2026-08-29"
+    },
+    "548-540": {
+      "poly_hw": 0.43,
+      "poly_dr": 0.275,
+      "poly_aw": 0.28,
+      "poly_vol": 10,
+      "poly_slug": "lal-rso-esp-2026-08-29"
+    },
+    "539-543": {
+      "poly_hw": 0.35,
+      "poly_dr": 0.295,
+      "poly_aw": 0.38,
+      "poly_vol": 5,
+      "poly_slug": "lal-lev-bet-2026-08-29"
+    },
+    "47-34": {
+      "poly_hw": 0.38,
+      "poly_dr": 0.295,
+      "poly_aw": 0.355,
+      "poly_vol": 0,
+      "poly_slug": "epl-tot-new-2026-08-29"
+    },
+    "108-77": {
+      "poly_hw": 0.545,
+      "poly_dr": 0.275,
+      "poly_aw": 0.265,
+      "poly_vol": 0,
+      "poly_slug": "fl1-aja-ang-2026-08-29"
+    },
+    "106-96": {
+      "poly_hw": 0.425,
+      "poly_dr": 0.295,
+      "poly_aw": 0.325,
+      "poly_vol": 0,
+      "poly_slug": "fl1-sbr-tou-2026-08-29"
+    },
+    "1346-64": {
+      "poly_hw": 0.55,
+      "poly_dr": 0.24,
+      "poly_aw": 0.24,
+      "poly_vol": 20,
+      "poly_slug": "epl-cov-hul-2026-08-29"
+    },
+    "35-45": {
+      "poly_hw": 0.425,
+      "poly_dr": 0.275,
+      "poly_aw": 0.38,
+      "poly_vol": 17.97,
+      "poly_slug": "epl-bou-eve-2026-08-29"
+    },
+    "80-111": {
+      "poly_hw": 0.605,
+      "poly_dr": 0.245,
+      "poly_aw": 0.23,
+      "poly_vol": 15.48,
+      "poly_slug": "fl1-lyo-hac-2026-08-29"
+    },
+    "40-65": {
+      "poly_hw": 0.515,
+      "poly_dr": 0.445,
+      "poly_aw": 0.055,
+      "poly_vol": 1862.9,
+      "poly_slug": "epl-liv-not-2026-08-29"
+    },
+    "95-116": {
+      "poly_hw": 0.375,
+      "poly_dr": 0.295,
+      "poly_aw": 0.475,
+      "poly_vol": 0,
+      "poly_slug": "fl1-str-rcl-2026-08-29"
+    },
+    "496-523": {
+      "poly_hw": 0.725,
+      "poly_dr": 0.235,
+      "poly_aw": 0.235,
+      "poly_vol": 60.48,
+      "poly_slug": "sea-juv-par-2026-08-29"
+    },
+    "502-512": {
+      "poly_hw": 0.435,
+      "poly_dr": 0.445,
+      "poly_aw": 0.435,
+      "poly_vol": 0,
+      "poly_slug": "sea-fio-fro-2026-08-29"
+    },
+    "1579-494": {
+      "poly_hw": 0.435,
+      "poly_dr": 0.445,
+      "poly_aw": 0.435,
+      "poly_vol": 0,
+      "poly_slug": "sea-mon-udi-2026-08-29"
+    },
+    "488-503": {
+      "poly_hw": 0.435,
+      "poly_dr": 0.445,
+      "poly_aw": 0.435,
+      "poly_vol": 0,
+      "poly_slug": "sea-sas-tor-2026-08-29"
+    },
+    "542-533": {
+      "poly_hw": 0.365,
+      "poly_dr": 0.285,
+      "poly_aw": 0.385,
+      "poly_vol": 6.49,
+      "poly_slug": "lal-ala-vil-2026-08-28"
+    },
+    "4665-797": {
+      "poly_hw": 0.42,
+      "poly_dr": 0.295,
+      "poly_aw": 0.335,
+      "poly_vol": 0,
+      "poly_slug": "lal-rrc-elc-2026-08-28"
+    },
+    "52-50": {
+      "poly_hw": 0.19,
+      "poly_dr": 0.25,
+      "poly_aw": 0.5,
+      "poly_vol": 22.73,
+      "poly_slug": "epl-cry-mac-2026-08-28"
+    },
+    "79-114": {
+      "poly_hw": 0.385,
+      "poly_dr": 0.155,
+      "poly_aw": 0.62,
+      "poly_vol": 565.15,
+      "poly_slug": "fl1-lil-psg-2026-08-28"
+    },
+    "489-517": {
+      "poly_hw": 0.735,
+      "poly_dr": 0.425,
+      "poly_aw": 0.395,
+      "poly_vol": 0,
+      "poly_slug": "sea-mil-ven-2026-08-28"
     }
   },
   "picks": {
@@ -26674,14 +26921,14 @@
           },
           {
             "name": "coach_change",
-            "score": 0.37,
+            "score": 0.36,
             "confidence": 0.39,
-            "evidence": "Neuer Trainer Andoni Iraola (47d) → Auswärts-Bounce",
+            "evidence": "Neuer Trainer Andoni Iraola (48d) → Auswärts-Bounce",
             "weight": 1.0,
             "weighted_score": 0.06,
             "metadata": {
               "homeBounce": 0.0,
-              "awayBounce": 0.373
+              "awayBounce": 0.36
             },
             "correlation_discount_applied": 0.4
           },
@@ -26751,7 +26998,7 @@
           "pinn_move_pp": 5.94,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 1246.0,
+          "hours_since_open": 1246.4,
           "open_pinn_odds": 2.18,
           "current_pinn_odds": 1.93,
           "move_age_decay": 0.0,
@@ -27016,11 +27263,11 @@
           "side": "away",
           "sources": {
             "pinnacle": 0.495,
-            "poly": 0.485,
+            "poly": 0.495,
             "soft": 0.512
           },
           "n": 3,
-          "spreadPP": 2.7,
+          "spreadPP": 1.7,
           "medianPP": 49.5,
           "kind": "konsens",
           "outlier": null,
@@ -27163,7 +27410,7 @@
           "pinn_move_pp": 6.31,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 1246.0,
+          "hours_since_open": 1246.4,
           "open_pinn_odds": 2.23,
           "current_pinn_odds": 1.955,
           "move_age_decay": 0.0,
@@ -31098,7 +31345,7 @@
           "pinn_move_pp": 5.43,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 1125.7,
+          "hours_since_open": 1126.1,
           "open_pinn_odds": 1.48,
           "current_pinn_odds": 1.37,
           "move_age_decay": 0.0,
@@ -31359,16 +31606,16 @@
         "signals": [
           {
             "name": "public_static_bias",
-            "score": 1.47,
-            "confidence": 0.5,
-            "evidence": "Die breite Masse (Konsens (19 Books)) unterschätzt Unter 2.5 um 2.5pp (Pinnacle höher) — wir nehmen den Value gegen die Masse.",
+            "score": 1.59,
+            "confidence": 0.51,
+            "evidence": "Die breite Masse (Konsens (19 Books)) unterschätzt Unter 2.5 um 2.8pp (Pinnacle höher) — wir nehmen den Value gegen die Masse.",
             "weight": 1.0,
-            "weighted_score": 0.73,
+            "weighted_score": 0.81,
             "metadata": {
               "market_key": "u25",
-              "diff_pp": -2.54,
+              "diff_pp": -2.77,
               "sharp_p": 0.4704,
-              "public_p": 0.445,
+              "public_p": 0.4427,
               "public_bk": "Konsens (19 Books)"
             }
           },
@@ -31434,19 +31681,19 @@
           },
           {
             "name": "reverse_line_move",
-            "score": 2.44,
+            "score": 2.55,
             "confidence": 0.59,
-            "evidence": "Reverse Line Move: Das Publikum meidet Unter (-2.5pp), aber Pinnacle zieht die Linie genau dorthin (+4.3pp) — scharfes Geld auf unserer unbeliebten Seite.",
+            "evidence": "Reverse Line Move: Das Publikum meidet Unter (-2.8pp), aber Pinnacle zieht die Linie genau dorthin (+4.3pp) — scharfes Geld auf unserer unbeliebten Seite.",
             "weight": 1.0,
-            "weighted_score": 1.44,
+            "weighted_score": 1.5,
             "metadata": {
               "pinn_move_pp": 4.26,
-              "public_lean_pp": -2.54,
+              "public_lean_pp": -2.77,
               "outcome": "under"
             }
           }
         ],
-        "signalAdjustmentPP": -0.32,
+        "signalAdjustmentPP": -0.28,
         "signalCountPos": 3,
         "signalCountNeg": 2,
         "signalAdjustmentPP_trade": -0.3,
@@ -31569,7 +31816,7 @@
         "origVerdict": "ABWÄGEN",
         "origOdds": 2.71,
         "nobetSince": "2026-07-09T12:36:59.701013+00:00",
-        "nobetReason": "Quote zu kurz geworden (2.71→2.62) — kein Value mehr"
+        "nobetReason": "Quote zu kurz geworden (2.71→2.635) — kein Value mehr"
       }
     ],
     "ESP-1-536-728": [
@@ -31890,7 +32137,7 @@
         "mktSig": 0,
         "storySig": 0,
         "edgePP": 0,
-        "info": "📉 Pinnacle 1.46→1.39 (Sharp-Money-Drop +4.4pp) · ✅ Soft-Konsens folgte +4.0pp (bestätigt) · sichere Linie abgeleitet: AH Heim −1.25 @1.85",
+        "info": "📉 Pinnacle 1.46→1.39 (Sharp-Money-Drop +4.4pp) · ✅ Soft-Konsens folgte +4.5pp (bestätigt) · sichere Linie abgeleitet: AH Heim −1.25 @1.85",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -31910,7 +32157,7 @@
         "lateEntry": false,
         "steamDerived": true,
         "softConfirmed": true,
-        "softFollowPP": 4.0,
+        "softFollowPP": 4.5,
         "ahLine": -1.25,
         "recentMovePP": 0.0,
         "freshnessState": "drift",
@@ -31923,14 +32170,14 @@
           "side": "home",
           "sources": {
             "pinnacle": 0.682,
-            "poly": 0.7
+            "poly": 0.705
           },
           "n": 2,
-          "spreadPP": 1.8,
-          "medianPP": 69.1,
+          "spreadPP": 2.3,
+          "medianPP": 69.3,
           "kind": null,
-          "outlier": "pinnacle",
-          "outlierGapPP": 0.9
+          "outlier": "poly",
+          "outlierGapPP": 1.2
         },
         "signals": [
           {
@@ -32016,13 +32263,13 @@
           },
           {
             "name": "coach_change",
-            "score": 0.37,
+            "score": 0.36,
             "confidence": 0.39,
-            "evidence": "Neuer Trainer José Mourinho (47d) → Heim-Bounce",
+            "evidence": "Neuer Trainer José Mourinho (48d) → Heim-Bounce",
             "weight": 1.0,
             "weighted_score": 0.06,
             "metadata": {
-              "homeBounce": 0.373,
+              "homeBounce": 0.36,
               "awayBounce": 0.0
             },
             "correlation_discount_applied": 0.4
@@ -32090,9 +32337,21 @@
           "context": 0,
           "market": 0
         },
+        "sharpMoveActive": true,
+        "sharpMoveDetails": {
+          "triggered": true,
+          "pinn_move_pp": 4.5,
+          "soft_lag_pp": 0.0,
+          "soft_lag_bonus": false,
+          "hours_since_open": 1126.1,
+          "open_pinn_odds": 1.46,
+          "current_pinn_odds": 1.37,
+          "move_age_decay": 0.0,
+          "move_age_days": 46.9
+        },
         "openingMovement": {
           "in_pick_direction": true,
-          "move_pp": 3.97
+          "move_pp": 4.5
         },
         "origVerdict": "ABWÄGEN",
         "origOdds": 1.85,
@@ -32300,7 +32559,7 @@
         "origVerdict": "ABWÄGEN",
         "origOdds": 1.4,
         "nobetSince": "2026-08-10T22:31:29.505609+00:00",
-        "nobetReason": "Quote zu kurz geworden (1.4→1.38) — kein Value mehr"
+        "nobetReason": "Quote zu kurz geworden (1.4→1.37) — kein Value mehr"
       }
     ],
     "ESP-1-542-546": [
@@ -32515,7 +32774,7 @@
         "info": "📉 Pinnacle 3.5→3.13 (Sharp-Money-Drop +3.9pp) · ✅ Soft-Konsens folgte +3.7pp (bestätigt) · ⏱️ Late Entry — Lernwert, weniger CLV · ✅ Sichere Linie abgeleitet: Doppelte Chance — X2 @1.56 (These: Auswärtssieg @3.1)",
         "icon": "🔥",
         "result": null,
-        "clvPP": 0.0,
+        "clvPP": -8.61,
         "dataQuality": "steam",
         "lamH": null,
         "lamA": null,
@@ -32675,7 +32934,8 @@
         "origVerdict": "ABWÄGEN",
         "origOdds": 1.56,
         "nobetSince": "2026-08-08T08:33:11.688863+00:00",
-        "nobetReason": "Conviction 1/10 < 4 — zu dünn"
+        "nobetReason": "Conviction 1/10 < 4 — zu dünn",
+        "clvResolved": true
       },
       {
         "market": "Heimsieg",
@@ -32690,7 +32950,7 @@
         "info": "📉 Pinnacle 2.36→2.18 (Sharp-Money-Drop +4.2pp) · ✅ Soft-Konsens folgte +2.1pp (bestätigt)",
         "icon": "🔥",
         "result": null,
-        "clvPP": 0.0,
+        "clvPP": 0.07,
         "dataQuality": "steam",
         "lamH": null,
         "lamA": null,
@@ -32881,7 +33141,8 @@
         "origVerdict": "ABWÄGEN",
         "origOdds": 2.25,
         "nobetSince": "2026-08-06T23:03:20.289819+00:00",
-        "nobetReason": "Conviction 3/10 < 4 — zu dünn"
+        "nobetReason": "Conviction 3/10 < 4 — zu dünn",
+        "clvResolved": true
       },
       {
         "market": "Auswärtssieg",
@@ -32896,7 +33157,7 @@
         "info": "📉 Pinnacle 3.5→3.38 (Sharp-Money-Drop +4.6pp) · ⏱️ Late Entry — Lernwert, weniger CLV",
         "icon": "🔥",
         "result": null,
-        "clvPP": 0.0,
+        "clvPP": -5.16,
         "dataQuality": "steam",
         "lamH": null,
         "lamA": null,
@@ -33072,7 +33333,8 @@
           "kind": "konsens",
           "outlier": null,
           "outlierGapPP": 4.6
-        }
+        },
+        "clvResolved": true
       }
     ],
     "ESP-2-530-533": [
@@ -33214,7 +33476,7 @@
           "pinn_move_pp": 6.16,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 379.3,
+          "hours_since_open": 379.7,
           "open_pinn_odds": 2.05,
           "current_pinn_odds": 1.82,
           "move_age_decay": 0.5,
@@ -33650,16 +33912,16 @@
         "consensus": {
           "side": "away",
           "sources": {
-            "pinnacle": 0.656,
-            "poly": 0.665,
+            "pinnacle": 0.66,
+            "poly": 0.685,
             "soft": 0.694
           },
           "n": 3,
-          "spreadPP": 3.9,
-          "medianPP": 66.5,
+          "spreadPP": 3.5,
+          "medianPP": 68.5,
           "kind": "konsens",
           "outlier": null,
-          "outlierGapPP": 2.9
+          "outlierGapPP": 2.5
         },
         "signals": [
           {
@@ -33675,28 +33937,10 @@
               "soft_moves": [
                 {
                   "bk": "public",
-                  "move_pp": 4.41
+                  "move_pp": 4.25
                 }
               ],
               "outcome": "aw"
-            }
-          },
-          {
-            "name": "injury",
-            "score": 4.0,
-            "confidence": 0.74,
-            "evidence": "🩹 Heim 4.0pp (K. Garcia (FWD), J. Puado (MID))",
-            "weight": 1.0,
-            "weighted_score": 2.96,
-            "metadata": {
-              "home_impact_pp": 4.0,
-              "away_impact_pp": 0.0,
-              "pick_side": "away",
-              "home_players": [
-                "K. Garcia (FWD)",
-                "J. Puado (MID)"
-              ],
-              "away_players": []
             }
           },
           {
@@ -33783,14 +34027,14 @@
           },
           {
             "name": "coach_change",
-            "score": 0.37,
+            "score": 0.36,
             "confidence": 0.39,
-            "evidence": "Neuer Trainer José Mourinho (47d) → Auswärts-Bounce",
+            "evidence": "Neuer Trainer José Mourinho (48d) → Auswärts-Bounce",
             "weight": 1.0,
             "weighted_score": 0.06,
             "metadata": {
               "homeBounce": 0.0,
-              "awayBounce": 0.373
+              "awayBounce": 0.36
             },
             "correlation_discount_applied": 0.4
           },
@@ -33800,12 +34044,11 @@
             "confidence": 0.55,
             "evidence": "Schlüssel-Abgang Auswärts 0 / Gegner 3",
             "weight": 1.0,
-            "weighted_score": 0.26,
+            "weighted_score": 0.66,
             "metadata": {
               "homeShift": 1.0,
               "awayShift": 0.0
-            },
-            "correlation_discount_applied": 0.4
+            }
           },
           {
             "name": "move_following",
@@ -33822,14 +34065,14 @@
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 1.45,
-        "signalCountPos": 8,
+        "signalAdjustmentPP": 1.02,
+        "signalCountPos": 7,
         "signalCountNeg": 1,
-        "signalAdjustmentPP_trade": 1.4,
-        "signalCountPos_trade": 8,
+        "signalAdjustmentPP_trade": 1.0,
+        "signalCountPos_trade": 7,
         "signalCountNeg_trade": 1,
-        "effectiveEdgePP": -1.6,
-        "effectiveEdgePP_trade": -1.6,
+        "effectiveEdgePP": -2.0,
+        "effectiveEdgePP_trade": -2.0,
         "convictionScore": 3,
         "earlySeasonPenalty": 1.0,
         "convictionVerdict": "watch",
@@ -33846,7 +34089,7 @@
           "pinn_move_pp": 7.72,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 379.3,
+          "hours_since_open": 379.7,
           "open_pinn_odds": 1.62,
           "current_pinn_odds": 1.44,
           "move_age_decay": 0.5,
@@ -34407,15 +34650,15 @@
     "ESP-2-546-4665": [
       {
         "market": "Doppelte Chance — X2",
-        "odds": 1.79,
-        "modelOdds": 1.774,
-        "conf": "high",
-        "verdict": "NOBET",
+        "odds": 1.74,
+        "modelOdds": 1.731,
+        "conf": "medium",
+        "verdict": "ABWÄGEN",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": -2,
-        "info": "📉 Pinnacle 5.25→4.52 (Sharp-Money-Drop +4.1pp) · ⏱️ Late Entry — Lernwert, weniger CLV · ✅ Sichere Linie abgeleitet: Doppelte Chance — X2 @1.79 (These: Auswärtssieg @4.25)",
+        "info": "📉 Pinnacle 5.25→4.16 (Sharp-Money-Drop +6.0pp) · ⏱️ Late Entry — Lernwert, weniger CLV · ✅ Sichere Linie abgeleitet: Doppelte Chance — X2 @1.74 (These: Auswärtssieg @4.14)",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -34424,64 +34667,44 @@
         "lamA": null,
         "lamTotal": null,
         "source": "steam",
-        "steamMovePP": 4.1,
-        "steamMoveRawPP": 3.1,
+        "steamMovePP": 6.0,
+        "steamMoveRawPP": 5.0,
         "steamOpen": 5.25,
-        "steamCur": 4.52,
+        "steamCur": 4.16,
         "softOpen": 4.325,
-        "softNow": 4.25,
+        "softNow": 4.14,
         "entryBook": "soft",
-        "entryOdd": 1.79,
+        "entryOdd": 1.74,
         "lateEntry": true,
         "steamDerived": false,
         "softConfirmed": false,
-        "softFollowPP": 0.4,
+        "softFollowPP": 1.0,
         "ahLine": null,
         "safeThesisMarket": "Auswärtssieg",
-        "safeThesisOdds": 4.25,
+        "safeThesisOdds": 4.14,
         "safeDerived": true,
-        "recentMovePP": 2.8,
-        "freshnessState": "drift",
-        "legHours": 52.7,
-        "legSnaps": 13,
-        "lastMoveH": 30.4,
+        "recentMovePP": 4.7,
+        "freshnessState": "confirm",
+        "legHours": 61.4,
+        "legSnaps": 14,
+        "lastMoveH": 0.0,
         "flipReady": false,
         "baseVerdict": "ABWÄGEN",
         "consensus": {
           "side": "away",
           "sources": {
-            "pinnacle": 0.213,
+            "pinnacle": 0.232,
             "poly": 0.215,
-            "soft": 0.235
+            "soft": 0.242
           },
           "n": 3,
-          "spreadPP": 2.2,
-          "medianPP": 21.5,
+          "spreadPP": 2.7,
+          "medianPP": 23.2,
           "kind": "konsens",
           "outlier": null,
-          "outlierGapPP": 2.0
+          "outlierGapPP": 1.7
         },
         "signals": [
-          {
-            "name": "injury",
-            "score": -1.7,
-            "confidence": 0.6,
-            "evidence": "🩹 Heim 0.8pp (Juanmi (?), C. Uche (?)) · Auswärts 2.5pp (G. Guliashvili (FWD))",
-            "weight": 1.0,
-            "weighted_score": -1.02,
-            "metadata": {
-              "home_impact_pp": 0.8,
-              "away_impact_pp": 2.5,
-              "pick_side": "away",
-              "home_players": [
-                "Juanmi (?)",
-                "C. Uche (?)"
-              ],
-              "away_players": [
-                "G. Guliashvili (FWD)"
-              ]
-            }
-          },
           {
             "name": "form_trend",
             "score": 2.9,
@@ -34519,16 +34742,16 @@
           },
           {
             "name": "freshness_leg",
-            "score": 0.0,
-            "confidence": 0.5,
-            "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +2.8pp) — kein frisches Geld",
+            "score": 2.35,
+            "confidence": 0.85,
+            "evidence": "✅ Frisch bestätigt: Pinnacle +4.7pp im letzten Abschnitt (für den Pick)",
             "weight": 1.0,
-            "weighted_score": 0.0,
+            "weighted_score": 2.0,
             "metadata": {
-              "state": "drift",
-              "recentMovePP": 2.8,
-              "legSnaps": 13,
-              "legHours": 52.7,
+              "state": "confirm",
+              "recentMovePP": 4.7,
+              "legSnaps": 14,
+              "legHours": 61.4,
               "flipReady": false
             }
           },
@@ -34547,14 +34770,14 @@
           },
           {
             "name": "move_following",
-            "score": 1.2,
-            "confidence": 0.6,
-            "evidence": "Pinnacle zog Auswärts um +3.3pp an — ein solider Sharp-Move mittlerer Größe, der dem schärfsten Geld folgt.",
+            "score": 2.0,
+            "confidence": 0.7,
+            "evidence": "Pinnacle hat Auswärts seit der Eröffnung um +5.2pp verkürzt — ein großer, klarer Sharp-Move. Historisch (Top-5) trägt genau diese Größenklasse den stärksten Edge, unabhängig von der Team-Form.",
             "weight": 1.0,
-            "weighted_score": 0.29,
+            "weighted_score": 0.56,
             "metadata": {
-              "move_pp": 3.34,
-              "bucket": "mid",
+              "move_pp": 5.16,
+              "bucket": "strong",
               "outcome": "away"
             },
             "correlation_discount_applied": 0.4
@@ -34577,20 +34800,20 @@
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 1.42,
-        "signalCountPos": 4,
-        "signalCountNeg": 2,
-        "signalAdjustmentPP_trade": 1.4,
+        "signalAdjustmentPP": 2.49,
+        "signalCountPos": 5,
+        "signalCountNeg": 1,
+        "signalAdjustmentPP_trade": 0.1,
         "signalCountPos_trade": 4,
-        "signalCountNeg_trade": 2,
-        "effectiveEdgePP": -0.6,
-        "effectiveEdgePP_trade": -0.6,
-        "convictionScore": 3,
+        "signalCountNeg_trade": 1,
+        "effectiveEdgePP": 0.5,
+        "effectiveEdgePP_trade": -1.9,
+        "convictionScore": 4,
         "earlySeasonPenalty": 1.0,
         "convictionVerdict": "watch",
         "convictionLabel": "👁 Beobachten",
         "convictionFamilies": {
-          "sharp_money": 1,
+          "sharp_money": 2,
           "model_stack": 3,
           "context": 0,
           "market": 0
@@ -34598,37 +34821,35 @@
         "sharpMoveActive": true,
         "sharpMoveDetails": {
           "triggered": true,
-          "pinn_move_pp": 4.48,
+          "pinn_move_pp": 5.11,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 379.3,
+          "hours_since_open": 379.7,
           "open_pinn_odds": 5.25,
-          "current_pinn_odds": 4.25,
+          "current_pinn_odds": 4.14,
           "move_age_decay": 0.5,
           "move_age_days": 15.8
         },
         "openingMovement": {
           "in_pick_direction": true,
-          "move_pp": 4.48
+          "move_pp": 5.11
         },
-        "origVerdict": "ABWÄGEN",
-        "origOdds": 1.79,
-        "nobetReason": "Conviction 3/10 < 4 — zu dünn",
+        "stake": 2.0,
         "engineVersion": "v1"
       }
     ],
     "ESP-2-727-539": [
       {
         "market": "Doppelte Chance — X2",
-        "odds": 2.02,
-        "modelOdds": 2.018,
+        "odds": 2.0,
+        "modelOdds": 1.995,
         "conf": "medium",
         "verdict": "NOBET",
         "modSig": 0,
         "mktSig": 0,
         "storySig": 0,
         "edgePP": -2,
-        "info": "📉 Pinnacle 5.0→4.43 (Sharp-Money-Drop +3.6pp) · ⏱️ Late Entry — Lernwert, weniger CLV · ✅ Sichere Linie abgeleitet: Doppelte Chance — X2 @2.02 (These: Auswärtssieg @4.25)",
+        "info": "📉 Pinnacle 5.0→4.43 (Sharp-Money-Drop +3.6pp) · ⏱️ Late Entry — Lernwert, weniger CLV · ✅ Sichere Linie abgeleitet: Doppelte Chance — X2 @2 (These: Auswärtssieg @4.3)",
         "icon": "🔥",
         "result": null,
         "clvPP": 0.0,
@@ -34642,16 +34863,16 @@
         "steamOpen": 5.0,
         "steamCur": 4.43,
         "softOpen": 4.5,
-        "softNow": 4.25,
+        "softNow": 4.3,
         "entryBook": "soft",
-        "entryOdd": 2.02,
+        "entryOdd": 2.0,
         "lateEntry": true,
         "steamDerived": false,
         "softConfirmed": false,
-        "softFollowPP": 1.3,
+        "softFollowPP": 1.0,
         "ahLine": null,
         "safeThesisMarket": "Auswärtssieg",
-        "safeThesisOdds": 4.25,
+        "safeThesisOdds": 4.3,
         "safeDerived": true,
         "recentMovePP": 0.0,
         "freshnessState": "drift",
@@ -34663,36 +34884,18 @@
         "consensus": {
           "side": "away",
           "sources": {
-            "pinnacle": 0.216,
-            "poly": 0.22,
-            "soft": 0.235
+            "pinnacle": 0.217,
+            "poly": 0.215,
+            "soft": 0.233
           },
           "n": 3,
-          "spreadPP": 1.9,
-          "medianPP": 22.0,
+          "spreadPP": 1.8,
+          "medianPP": 21.7,
           "kind": "konsens",
           "outlier": null,
-          "outlierGapPP": 1.5
+          "outlierGapPP": 1.6
         },
         "signals": [
-          {
-            "name": "injury",
-            "score": -2.4,
-            "confidence": 0.64,
-            "evidence": "🩹 Auswärts 2.4pp (R. Brugue (?), A. Primo (GK))",
-            "weight": 1.0,
-            "weighted_score": -1.54,
-            "metadata": {
-              "home_impact_pp": 0.0,
-              "away_impact_pp": 2.4,
-              "pick_side": "away",
-              "home_players": [],
-              "away_players": [
-                "R. Brugue (?)",
-                "A. Primo (GK)"
-              ]
-            }
-          },
           {
             "name": "form_trend",
             "score": 0.97,
@@ -34765,7 +34968,7 @@
             "weight": 1.0,
             "weighted_score": 0.12,
             "metadata": {
-              "move_pp": 2.57,
+              "move_pp": 2.58,
               "bucket": "weak_confirm",
               "state_edge": 0.334,
               "outcome": "away"
@@ -34789,14 +34992,14 @@
             }
           }
         ],
-        "signalAdjustmentPP": -0.25,
+        "signalAdjustmentPP": 0.26,
         "signalCountPos": 4,
-        "signalCountNeg": 2,
-        "signalAdjustmentPP_trade": -0.2,
+        "signalCountNeg": 1,
+        "signalAdjustmentPP_trade": 0.3,
         "signalCountPos_trade": 4,
-        "signalCountNeg_trade": 2,
-        "effectiveEdgePP": -2.2,
-        "effectiveEdgePP_trade": -2.2,
+        "signalCountNeg_trade": 1,
+        "effectiveEdgePP": -1.7,
+        "effectiveEdgePP_trade": -1.7,
         "convictionScore": 3,
         "earlySeasonPenalty": 1.0,
         "convictionVerdict": "watch",
@@ -34809,11 +35012,133 @@
         },
         "openingMovement": {
           "in_pick_direction": true,
-          "move_pp": 3.53
+          "move_pp": 3.26
         },
         "origVerdict": "ABWÄGEN",
-        "origOdds": 2.02,
+        "origOdds": 2.0,
         "nobetReason": "Conviction 3/10 < 4 — zu dünn",
+        "engineVersion": "v1"
+      },
+      {
+        "market": "Unter 2.5 Tore",
+        "odds": 1.8,
+        "modelOdds": 1.804,
+        "conf": "medium",
+        "verdict": "NOBET",
+        "modSig": 0,
+        "mktSig": 0,
+        "storySig": 0,
+        "edgePP": -2,
+        "info": "📉 Pinnacle 1.93→1.82 (Sharp-Money-Drop +3.1pp) · ✅ Soft-Konsens folgte +3.1pp (bestätigt) · ⏱️ Late Entry — Lernwert, weniger CLV",
+        "icon": "🔥",
+        "result": null,
+        "clvPP": 0.0,
+        "dataQuality": "steam",
+        "lamH": null,
+        "lamA": null,
+        "lamTotal": null,
+        "source": "steam",
+        "steamMovePP": 3.1,
+        "steamMoveRawPP": 3.1,
+        "steamOpen": 1.93,
+        "steamCur": 1.82,
+        "softOpen": 1.905,
+        "softNow": 1.8,
+        "entryBook": "soft",
+        "entryOdd": 1.8,
+        "lateEntry": true,
+        "steamDerived": false,
+        "softConfirmed": true,
+        "softFollowPP": 3.1,
+        "ahLine": null,
+        "recentMovePP": 0.0,
+        "freshnessState": "drift",
+        "legHours": 0.0,
+        "legSnaps": 1,
+        "lastMoveH": 0.0,
+        "flipReady": false,
+        "baseVerdict": "ABWÄGEN",
+        "signals": [
+          {
+            "name": "h2h_pattern",
+            "score": 1.2,
+            "confidence": 0.75,
+            "evidence": "⚔️ Aus den letzten 10 Duellen: im Schnitt 2.3 Tore (Linie 2.5) · in 30% fielen über 2.5 Tore → spricht für Unter 2.5.",
+            "weight": 1.0,
+            "weighted_score": 0.9,
+            "metadata": {
+              "games": 10,
+              "h2h_avg_goals": 2.3,
+              "h2h_over25_rate": 0.3,
+              "pick_side": "Unter 2.5"
+            }
+          },
+          {
+            "name": "freshness_leg",
+            "score": 0.0,
+            "confidence": 0.5,
+            "evidence": "⏸ Move ruht (Drift, letzter Abschnitt +0.0pp) — kein frisches Geld",
+            "weight": 1.0,
+            "weighted_score": 0.0,
+            "metadata": {
+              "state": "drift",
+              "recentMovePP": 0.0,
+              "legSnaps": 1,
+              "legHours": 0.0,
+              "flipReady": false
+            }
+          },
+          {
+            "name": "transfer_shift",
+            "score": 0.6,
+            "confidence": 0.55,
+            "evidence": "Schlüsselspieler abgegeben → geringere Tor-Bedrohung",
+            "weight": 1.0,
+            "weighted_score": 0.33,
+            "metadata": {
+              "homeShift": 1.0,
+              "awayShift": 1.0
+            }
+          },
+          {
+            "name": "move_following",
+            "score": 1.2,
+            "confidence": 0.6,
+            "evidence": "Pinnacle zog Unter um +4.3pp an — ein solider Sharp-Move mittlerer Größe, der dem schärfsten Geld folgt.",
+            "weight": 1.0,
+            "weighted_score": 0.72,
+            "metadata": {
+              "move_pp": 4.27,
+              "bucket": "mid",
+              "outcome": "under"
+            }
+          }
+        ],
+        "signalAdjustmentPP": 0.81,
+        "signalCountPos": 3,
+        "signalCountNeg": 0,
+        "signalAdjustmentPP_trade": 0.8,
+        "signalCountPos_trade": 3,
+        "signalCountNeg_trade": 0,
+        "effectiveEdgePP": -1.2,
+        "effectiveEdgePP_trade": -1.2,
+        "convictionScore": 2,
+        "earlySeasonPenalty": 1.0,
+        "convictionVerdict": "skip",
+        "convictionLabel": null,
+        "convictionFamilies": {
+          "sharp_money": 1,
+          "model_stack": 2,
+          "context": 0,
+          "market": 0
+        },
+        "openingMovement": {
+          "in_pick_direction": true,
+          "move_pp": 3.74
+        },
+        "origVerdict": "ABWÄGEN",
+        "origOdds": 1.8,
+        "nobetReason": "Conviction 2/10 < 4 — zu dünn",
         "engineVersion": "v1"
       }
     ],
@@ -35245,7 +35570,7 @@
         "origVerdict": "ABWÄGEN",
         "origOdds": 2.5,
         "nobetSince": "2026-08-14T07:16:07.875084+00:00",
-        "nobetReason": "Edge weg — Linie gegen den Pick gelaufen (2.5→8.475)"
+        "nobetReason": "Edge weg — Linie gegen den Pick gelaufen (2.5→8.45)"
       }
     ],
     "ESP-3-4665-797": [],
@@ -35656,15 +35981,15 @@
           "side": "away",
           "sources": {
             "pinnacle": 0.264,
-            "poly": 0.265,
+            "poly": 0.25,
             "soft": 0.29
           },
           "n": 3,
-          "spreadPP": 2.6,
-          "medianPP": 26.5,
+          "spreadPP": 4.0,
+          "medianPP": 26.4,
           "kind": "konsens",
           "outlier": null,
-          "outlierGapPP": 2.5
+          "outlierGapPP": 2.6
         },
         "signals": [
           {
@@ -35783,7 +36108,7 @@
           "pinn_move_pp": 4.29,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 1091.4,
+          "hours_since_open": 1091.8,
           "open_pinn_odds": 4.05,
           "current_pinn_odds": 3.45,
           "move_age_decay": 0.0,
@@ -36229,11 +36554,11 @@
           "side": "away",
           "sources": {
             "pinnacle": 0.205,
-            "poly": 0.2,
+            "poly": 0.19,
             "soft": 0.222
           },
           "n": 3,
-          "spreadPP": 2.2,
+          "spreadPP": 3.2,
           "medianPP": 20.5,
           "kind": "konsens",
           "outlier": null,
@@ -36544,15 +36869,15 @@
           "side": "home",
           "sources": {
             "pinnacle": 0.198,
-            "poly": 0.185,
+            "poly": 0.19,
             "soft": 0.192
           },
           "n": 3,
-          "spreadPP": 1.3,
+          "spreadPP": 0.8,
           "medianPP": 19.2,
           "kind": "konsens",
           "outlier": null,
-          "outlierGapPP": 0.7
+          "outlierGapPP": 0.6
         },
         "signals": [
           {
@@ -36607,7 +36932,7 @@
           "pinn_move_pp": 4.42,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 1077.9,
+          "hours_since_open": 1078.3,
           "open_pinn_odds": 6.75,
           "current_pinn_odds": 5.2,
           "move_age_decay": 0.0,
@@ -36783,16 +37108,16 @@
         "consensus": {
           "side": "away",
           "sources": {
-            "pinnacle": 0.31,
+            "pinnacle": 0.309,
             "poly": 0.3,
             "soft": 0.323
           },
           "n": 3,
           "spreadPP": 2.3,
-          "medianPP": 31.0,
+          "medianPP": 30.9,
           "kind": "konsens",
           "outlier": null,
-          "outlierGapPP": 1.3
+          "outlierGapPP": 1.4
         },
         "signals": [
           {
@@ -37442,15 +37767,15 @@
           "side": "home",
           "sources": {
             "pinnacle": 0.386,
-            "poly": 0.4,
+            "poly": 0.395,
             "soft": 0.42
           },
           "n": 3,
           "spreadPP": 3.5,
-          "medianPP": 40.0,
+          "medianPP": 39.5,
           "kind": "konsens",
           "outlier": null,
-          "outlierGapPP": 2.0
+          "outlierGapPP": 2.5
         },
         "signals": [
           {
@@ -37734,6 +38059,23 @@
             }
           },
           {
+            "name": "h2h_pattern",
+            "score": -0.6,
+            "confidence": 0.85,
+            "evidence": "⚔️ Direkte Duelle (10): 2 Heimsiege, 3 Remis, 5 Auswärtssiege — Heim holt davon 35%.",
+            "weight": 1.0,
+            "weighted_score": -0.2,
+            "metadata": {
+              "games": 10,
+              "home_wins": 2,
+              "draws": 3,
+              "away_wins": 5,
+              "picked_rate": 0.35,
+              "pick_side": "home"
+            },
+            "correlation_discount_applied": 0.4
+          },
+          {
             "name": "freshness_leg",
             "score": 0.0,
             "confidence": 0.5,
@@ -37805,14 +38147,14 @@
             "correlation_discount_applied": 0.4
           }
         ],
-        "signalAdjustmentPP": 0.59,
+        "signalAdjustmentPP": 0.47,
         "signalCountPos": 4,
-        "signalCountNeg": 1,
-        "signalAdjustmentPP_trade": 0.6,
+        "signalCountNeg": 2,
+        "signalAdjustmentPP_trade": 0.5,
         "signalCountPos_trade": 4,
-        "signalCountNeg_trade": 1,
-        "effectiveEdgePP": -2.4,
-        "effectiveEdgePP_trade": -2.4,
+        "signalCountNeg_trade": 2,
+        "effectiveEdgePP": -2.5,
+        "effectiveEdgePP_trade": -2.5,
         "convictionScore": 3,
         "earlySeasonPenalty": 1.0,
         "convictionVerdict": "watch",
@@ -37829,7 +38171,7 @@
           "pinn_move_pp": 6.47,
           "soft_lag_pp": 0.0,
           "soft_lag_bonus": false,
-          "hours_since_open": 1091.4,
+          "hours_since_open": 1091.8,
           "open_pinn_odds": 3.42,
           "current_pinn_odds": 2.8,
           "move_age_decay": 0.0,
@@ -38279,12 +38621,12 @@
     "profile": "liga_default",
     "placeholder": true,
     "season": 2026,
-    "dataUpdatedAt": "2026-08-17T06:57:19.827364+00:00",
-    "oddsUpdatedAt": "2026-08-18T06:33:00.954264+00:00",
-    "picksUpdatedAt": "2026-08-18T06:33:04.768809+00:00",
-    "formUpdatedAt": "2026-08-17T07:00:29.043469+00:00",
-    "cornersUpdatedAt": "2026-08-17T07:07:56.506674+00:00",
-    "xgUpdatedAt": "2026-08-17T07:07:56.506678+00:00",
+    "dataUpdatedAt": "2026-08-18T06:44:05.059697+00:00",
+    "oddsUpdatedAt": "2026-08-18T06:57:31.765994+00:00",
+    "picksUpdatedAt": "2026-08-18T06:58:01.094052+00:00",
+    "formUpdatedAt": "2026-08-18T06:44:32.395380+00:00",
+    "cornersUpdatedAt": "2026-08-18T06:45:28.284519+00:00",
+    "xgUpdatedAt": "2026-08-18T06:45:28.284523+00:00",
     "engineVersion": "v1"
   },
   "standings": {
@@ -38592,31 +38934,31 @@
         "pos": 5
       },
       {
-        "team": "529",
-        "played": 0,
+        "team": "544",
+        "played": 1,
         "won": 0,
-        "draw": 0,
+        "draw": 1,
         "lost": 0,
-        "points": 0,
-        "gf": 0,
-        "ga": 0,
+        "points": 1,
+        "gf": 1,
+        "ga": 1,
         "gd": 0,
         "pos": 6
       },
       {
-        "team": "530",
-        "played": 0,
+        "team": "797",
+        "played": 1,
         "won": 0,
-        "draw": 0,
+        "draw": 1,
         "lost": 0,
-        "points": 0,
-        "gf": 0,
-        "ga": 0,
+        "points": 1,
+        "gf": 1,
+        "ga": 1,
         "gd": 0,
         "pos": 7
       },
       {
-        "team": "531",
+        "team": "529",
         "played": 0,
         "won": 0,
         "draw": 0,
@@ -38628,7 +38970,7 @@
         "pos": 8
       },
       {
-        "team": "532",
+        "team": "530",
         "played": 0,
         "won": 0,
         "draw": 0,
@@ -38640,7 +38982,7 @@
         "pos": 9
       },
       {
-        "team": "535",
+        "team": "531",
         "played": 0,
         "won": 0,
         "draw": 0,
@@ -38652,7 +38994,7 @@
         "pos": 10
       },
       {
-        "team": "538",
+        "team": "532",
         "played": 0,
         "won": 0,
         "draw": 0,
@@ -38664,7 +39006,7 @@
         "pos": 11
       },
       {
-        "team": "541",
+        "team": "535",
         "played": 0,
         "won": 0,
         "draw": 0,
@@ -38676,7 +39018,7 @@
         "pos": 12
       },
       {
-        "team": "543",
+        "team": "538",
         "played": 0,
         "won": 0,
         "draw": 0,
@@ -38688,7 +39030,7 @@
         "pos": 13
       },
       {
-        "team": "544",
+        "team": "541",
         "played": 0,
         "won": 0,
         "draw": 0,
@@ -38700,7 +39042,7 @@
         "pos": 14
       },
       {
-        "team": "548",
+        "team": "543",
         "played": 0,
         "won": 0,
         "draw": 0,
@@ -38712,7 +39054,7 @@
         "pos": 15
       },
       {
-        "team": "727",
+        "team": "548",
         "played": 0,
         "won": 0,
         "draw": 0,
@@ -38724,7 +39066,7 @@
         "pos": 16
       },
       {
-        "team": "797",
+        "team": "727",
         "played": 0,
         "won": 0,
         "draw": 0,
@@ -41206,6 +41548,8 @@
     "536": 536,
     "4665": 4665,
     "533": 533,
+    "797": 797,
+    "544": 544,
     "529": 529,
     "541": 541,
     "530": 530,
@@ -41214,9 +41558,7 @@
     "532": 532,
     "548": 548,
     "531": 531,
-    "797": 797,
     "727": 727,
-    "544": 544,
     "535": 535,
     "728": 728,
     "539": 539,
@@ -56664,6 +57006,16 @@
       "over25Rate": 0.3,
       "bttsRate": 0.4,
       "updatedAt": "2026-08-17T07:00:29.043233+00:00"
+    },
+    "192-167": {
+      "games": 10,
+      "homeWins": 2,
+      "draws": 3,
+      "awayWins": 5,
+      "avgGoals": 3.1,
+      "over25Rate": 0.6,
+      "bttsRate": 0.6,
+      "updatedAt": "2026-08-18T06:44:32.395174+00:00"
     }
   },
   "xgStats": {
@@ -56692,7 +57044,7 @@
         1387083,
         1387069
       ],
-      "updatedAt": "2026-08-17T18:56:25.249998+00:00"
+      "updatedAt": "2026-08-18T06:46:17.300484+00:00"
     },
     "64": {
       "xgForAvg": 1.123,
@@ -56762,7 +57114,7 @@
         1379324,
         1379312
       ],
-      "updatedAt": "2026-08-17T18:56:54.790613+00:00"
+      "updatedAt": "2026-08-18T06:46:48.631766+00:00"
     },
     "47": {
       "xgForAvg": 1.312,
@@ -56789,7 +57141,7 @@
         1379344,
         1379331
       ],
-      "updatedAt": "2026-08-17T18:56:06.040482+00:00"
+      "updatedAt": "2026-08-18T06:45:57.001991+00:00"
     },
     "35": {
       "xgForAvg": 1.82,
@@ -57009,7 +57361,7 @@
         1544371,
         1388002
       ],
-      "updatedAt": "2026-08-17T19:01:32.642902+00:00"
+      "updatedAt": "2026-08-18T06:51:34.273182+00:00"
     },
     "94": {
       "xgForAvg": 2.039,
@@ -57252,7 +57604,7 @@
         1388609,
         1388599
       ],
-      "updatedAt": "2026-08-17T18:58:38.118432+00:00"
+      "updatedAt": "2026-08-18T06:48:38.028792+00:00"
     },
     "162": {
       "xgForAvg": 1.06,
@@ -57357,7 +57709,7 @@
         1545417,
         1388912
       ],
-      "updatedAt": "2026-08-17T18:59:20.346268+00:00"
+      "updatedAt": "2026-08-18T06:49:22.728481+00:00"
     },
     "192": {
       "xgForAvg": 1.3,
@@ -57378,7 +57730,7 @@
         1388598,
         1388594
       ],
-      "updatedAt": "2026-08-17T18:59:04.966023+00:00"
+      "updatedAt": "2026-08-18T06:49:06.451134+00:00"
     }
   },
   "squads": {
@@ -70012,132 +70364,137 @@
     "49": {
       "name": "Xabi Alonso",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "36": {
       "name": "Alvaro Arbeloa",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "40": {
       "name": "Andoni Iraola",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
+    },
+    "52": {
+      "name": "P. Sage",
+      "since": "2026-07-01",
+      "daysSince": 48
     },
     "57": {
       "name": "Gary O'Neil",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "533": {
       "name": "Inigo Perez",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "541": {
       "name": "José Mourinho",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "531": {
       "name": "Edin Terzic",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "727": {
       "name": "Luis Ramis",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "728": {
       "name": "Benat San Jose",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "173": {
       "name": "Martin Demichelis",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "169": {
       "name": "Adi Hutter",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "182": {
       "name": "Mauro Lustrinelli",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "499": {
       "name": "M. Sarri",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "502": {
       "name": "F. Grosso",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "487": {
       "name": "G. Gattuso",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "489": {
       "name": "Ruben Amorim",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "1579": {
       "name": "Ivan Juric",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "492": {
       "name": "M. Allegri",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "503": {
       "name": "I. Abate",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "91": {
       "name": "Filipe Luís",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "97": {
       "name": "A. Dujeux",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "79": {
       "name": "Davide Ancelotti",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "84": {
       "name": "O. Pantaloni",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "81": {
       "name": "Bruno Genesio",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "114": {
       "name": "L. Rosenior",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "116": {
       "name": "D. Toppmöller",
       "since": "2026-07-01",
-      "daysSince": 47
+      "daysSince": 48
     },
     "96": {
       "name": "J. Askou",
@@ -70388,6 +70745,26 @@
         "date": "2026-07-09"
       }
     ],
+    "797": [
+      {
+        "name": "Gonzalo Villar",
+        "date": "2026-06-29"
+      },
+      {
+        "name": "André Silva",
+        "date": "2026-06-30"
+      },
+      {
+        "name": "Rafa Mir",
+        "date": "2026-06-29"
+      }
+    ],
+    "544": [
+      {
+        "name": "Cristian Herrera",
+        "date": "2026-06-29"
+      }
+    ],
     "529": [
       {
         "name": "R. Lewandowski",
@@ -70446,20 +70823,6 @@
         "date": "2026-07-09"
       }
     ],
-    "797": [
-      {
-        "name": "Gonzalo Villar",
-        "date": "2026-06-29"
-      },
-      {
-        "name": "André Silva",
-        "date": "2026-06-30"
-      },
-      {
-        "name": "Rafa Mir",
-        "date": "2026-06-29"
-      }
-    ],
     "727": [
       {
         "name": "Víctor Muñoz",
@@ -70467,12 +70830,6 @@
       },
       {
         "name": "S. Becker",
-        "date": "2026-06-29"
-      }
-    ],
-    "544": [
-      {
-        "name": "Cristian Herrera",
         "date": "2026-06-29"
       }
     ],
@@ -71029,7 +71386,7 @@
     "95": [
       {
         "name": "V. Barco",
-        "date": "2026-07-31"
+        "date": "2026-08-01"
       },
       {
         "name": "M. Penders",
@@ -71071,13 +71428,13 @@
   },
   "injuries": {
     "_meta": {
-      "updatedAt": "2026-08-17T19:04:54.301762+00:00",
+      "updatedAt": "2026-08-18T06:55:04.291858+00:00",
       "daysUntilWM": 0,
       "status": "live",
       "teamsWithData": 12
     },
     "542": {
-      "updatedAt": "2026-08-17T19:04:54.301762+00:00",
+      "updatedAt": "2026-08-18T06:55:04.291858+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71085,14 +71442,14 @@
           "type": "Unknown",
           "reason": "",
           "status": "missing",
-          "fixture": "2026-08-15T17:30:00+00:00"
+          "fixture": "2026-08-20T19:00:00+00:00"
         },
         {
           "name": "T. Mendes",
           "type": "Unknown",
           "reason": "",
           "status": "missing",
-          "fixture": "2026-08-15T17:30:00+00:00"
+          "fixture": "2026-08-20T19:00:00+00:00"
         },
         {
           "name": "N. Valentini",
@@ -71104,7 +71461,7 @@
       ]
     },
     "546": {
-      "updatedAt": "2026-08-17T19:04:54.301762+00:00",
+      "updatedAt": "2026-08-18T06:55:04.291858+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71124,7 +71481,7 @@
       ]
     },
     "728": {
-      "updatedAt": "2026-08-17T19:04:54.301762+00:00",
+      "updatedAt": "2026-08-18T06:55:04.291858+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71132,26 +71489,26 @@
           "type": "Unknown",
           "reason": "",
           "status": "missing",
-          "fixture": "2026-08-15T19:30:00+00:00"
+          "fixture": "2026-08-20T19:00:00+00:00"
         },
         {
           "name": "Luiz Felipe",
           "type": "Unknown",
           "reason": "",
           "status": "missing",
-          "fixture": "2026-08-15T19:30:00+00:00"
+          "fixture": "2026-08-20T19:00:00+00:00"
         },
         {
           "name": "D. Mendez",
           "type": "Unknown",
           "reason": "",
           "status": "missing",
-          "fixture": "2026-08-15T19:30:00+00:00"
+          "fixture": "2026-08-20T19:00:00+00:00"
         }
       ]
     },
     "536": {
-      "updatedAt": "2026-08-17T19:04:54.301762+00:00",
+      "updatedAt": "2026-08-18T06:55:04.291858+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71171,7 +71528,7 @@
       ]
     },
     "4665": {
-      "updatedAt": "2026-08-17T19:04:54.301762+00:00",
+      "updatedAt": "2026-08-18T06:55:04.291858+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71179,13 +71536,12 @@
           "type": "Unknown",
           "reason": "",
           "status": "missing",
-          "fixture": "2026-08-16T15:00:00+00:00",
-          "position": "F"
+          "fixture": "2026-08-16T15:00:00+00:00"
         }
       ]
     },
     "540": {
-      "updatedAt": "2026-08-17T19:04:54.301762+00:00",
+      "updatedAt": "2026-08-18T06:55:04.291858+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71193,23 +71549,29 @@
           "type": "Unknown",
           "reason": "",
           "status": "missing",
-          "fixture": "2026-08-16T17:00:00+00:00",
-          "position": "F"
+          "fixture": "2026-08-16T17:00:00+00:00"
         },
         {
           "name": "J. Puado",
           "type": "Unknown",
           "reason": "",
           "status": "missing",
-          "fixture": "2026-08-16T17:00:00+00:00",
-          "position": "M"
+          "fixture": "2026-08-16T17:00:00+00:00"
         }
       ]
     },
     "797": {
-      "updatedAt": "2026-08-17T19:04:54.301762+00:00",
+      "updatedAt": "2026-08-18T06:55:04.291858+00:00",
       "source": "wm_league",
       "players": [
+        {
+          "name": "A. Boayar",
+          "type": "Unknown",
+          "reason": "",
+          "status": "missing",
+          "fixture": "2026-08-17T19:00:00+00:00",
+          "position": "M"
+        },
         {
           "name": "G. Diangana",
           "type": "Unknown",
@@ -71231,19 +71593,11 @@
           "reason": "",
           "status": "missing",
           "fixture": "2026-08-17T19:00:00+00:00"
-        },
-        {
-          "name": "A. Boayar",
-          "type": "Unknown",
-          "reason": "",
-          "status": "missing",
-          "fixture": "2026-08-17T19:00:00+00:00",
-          "position": "M"
         }
       ]
     },
     "539": {
-      "updatedAt": "2026-08-17T19:04:54.301762+00:00",
+      "updatedAt": "2026-08-18T06:55:04.291858+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71258,13 +71612,12 @@
           "type": "Unknown",
           "reason": "",
           "status": "missing",
-          "fixture": "2026-08-16T17:00:00+00:00",
-          "position": "G"
+          "fixture": "2026-08-16T17:00:00+00:00"
         }
       ]
     },
     "544": {
-      "updatedAt": "2026-08-17T19:04:54.301762+00:00",
+      "updatedAt": "2026-08-18T06:55:04.291858+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71280,25 +71633,11 @@
           "reason": "",
           "status": "missing",
           "fixture": "2026-08-17T19:00:00+00:00"
-        },
-        {
-          "name": "A. Altimira",
-          "type": "Unknown",
-          "reason": "",
-          "status": "missing",
-          "fixture": "2026-08-17T19:00:00+00:00"
-        },
-        {
-          "name": "J. Asp",
-          "type": "Unknown",
-          "reason": "",
-          "status": "missing",
-          "fixture": "2026-08-17T19:00:00+00:00"
         }
       ]
     },
     "530": {
-      "updatedAt": "2026-08-17T19:04:54.301762+00:00",
+      "updatedAt": "2026-08-18T06:55:04.291858+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71318,7 +71657,7 @@
       ]
     },
     "535": {
-      "updatedAt": "2026-08-17T19:04:54.301762+00:00",
+      "updatedAt": "2026-08-18T06:55:04.291858+00:00",
       "source": "wm_league",
       "players": [
         {
@@ -71345,6 +71684,21 @@
           "position": "D"
         },
         {
+          "name": "A. Nino",
+          "type": "Unknown",
+          "reason": "",
+          "status": "missing",
+          "fixture": "2026-08-19T19:00:00+00:00"
+        },
+        {
+          "name": "A. Ochoa",
+          "type": "Unknown",
+          "reason": "",
+          "status": "missing",
+          "fixture": "2026-08-19T19:00:00+00:00",
+          "position": "M"
+        },
+        {
           "name": "M. Diarra",
           "type": "Unknown",
           "reason": "",
@@ -71358,13 +71712,6 @@
           "status": "missing",
           "fixture": "2026-08-19T19:00:00+00:00",
           "position": "M"
-        },
-        {
-          "name": "A. Nino",
-          "type": "Unknown",
-          "reason": "",
-          "status": "missing",
-          "fixture": "2026-08-19T19:00:00+00:00"
         }
       ]
     },
@@ -71537,7 +71884,7 @@
         "H"
       ],
       "overLineRate": 0.333,
-      "updatedAt": "2026-08-17T18:19:12.266215+00:00",
+      "updatedAt": "2026-08-18T06:45:00.362734+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         false,
@@ -71755,7 +72102,7 @@
         "A"
       ],
       "overLineRate": 0.25,
-      "updatedAt": "2026-08-17T18:19:39.603621+00:00",
+      "updatedAt": "2026-08-18T06:45:28.284266+00:00",
       "cardLine": 3.5,
       "cardOverSeq": [
         true,
