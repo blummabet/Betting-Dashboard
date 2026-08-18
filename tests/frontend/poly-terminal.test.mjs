@@ -53,3 +53,30 @@ test('Terminal-Button steht im View-Umschalter', async () => {
   const html = await render({ 'poly_shortlist_track.json': AGG }, 'money');
   assert.match(html, /🖥️ Terminal/, 'Umschalter enthält Terminal-Button');
 });
+
+// 18.08.2026 (Lucas: „dass auch in Geld/Bewegung ein laufendes Spiel den frischen Live-Preis zeigt"):
+// Geld-Linse muss fuer ein IN-PLAY-Spiel die frische Live-Poly (broadLiveNow) statt der eingefrorenen
+// Close-Quote nehmen. Relative Zeitstempel, damit der Test nicht mit der Zeit „gone" wird.
+test('Geld-Linse nimmt bei laufendem Spiel die frische Live-Poly statt der Close-Freeze', async () => {
+  const iso = (minAgo) => new Date(Date.now() - minAgo * 60000).toISOString();
+  const K = 'ucl-alpbet-live';
+  const close = { [K]: { prices: { Alpha: 0.40, Beta: 0.60 }, shares: { Alpha: 40000, Beta: 60000 },
+    league: 'UEFA Champions League', totalUsd: 200000, hoursToKickoff: -0.4, kickoff: iso(25), capturedAt: iso(23) } };
+  const live = { [K]: { prices: { Alpha: 0.25, Beta: 0.75 }, shares: { Alpha: 25000, Beta: 75000 },
+    league: 'UEFA Champions League', totalUsd: 260000, kickoff: iso(25), capturedAt: iso(6) } };
+  const dom = new JSDOM('<!DOCTYPE html><body><div id="polyWalletsPanel"></div></body>',
+    { url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
+  const w = dom.window;
+  w.fetch = mockFetch({ 'mls-data.json': { groups: {} }, 'mls_poly_prices.json': { prices: {} },
+    'mls_poly_wallets.json': { topPositionsAll: [], updatedAt: new Date().toISOString() }, 'mls-odds-history.json': {},
+    'poly_shortlist_track.json': AGG, 'poly_money_broad_close.json': close, 'poly_money_broad_live.json': live });
+  w.eval(readFileSync(PW, 'utf8'));
+  w._pwDsId = 'mls'; w.initPolyWallets();
+  await new Promise(r => setTimeout(r, 25));
+  w._pwSetView('terminal'); w._pwTermSetLens('geld');
+  const html = w.document.getElementById('polyWalletsPanel').innerHTML;
+  assert.match(html, /\$260K/, 'frisches Live-Volumen ($260K) sichtbar');
+  assert.ok(!/\$200K/.test(html), 'eingefrorenes Close-Volumen ($200K) NICHT');
+  assert.match(html, /75¢/, 'Live-Preis 75¢ sichtbar');
+  assert.ok(!/60¢/.test(html), 'Close-Preis 60¢ NICHT');
+});
