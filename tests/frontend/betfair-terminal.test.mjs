@@ -139,3 +139,30 @@ test('Konsens-View bleibt unbeschädigt (additiv)', () => {
   assert.ok(!/🖥️ Terminal — handelbare Kanten/.test(h), 'Konsens rendert nicht das Terminal-Board');
   assert.doesNotThrow(() => w._bfSetView('live'));
 });
+
+// 18.08.2026 (Lucas: „im Terminal nur 1X2, kein Over/Under — im Drilldown die anderen Märkte auch
+// zeigen"): der Drilldown verknüpft per matchId mit betfair_prices.json und listet O/U/BTTS/…
+// nach Matched-Volumen, mit führender Seite + Gegenquote. Reines Betfair-Geld, kein Edge-Anker.
+test('Drilldown zeigt „Andere Märkte" (Über/Unter) aus betfair_prices je matchId', () => {
+  const w = boot();
+  // prices-Match zu Consensus-Game 'A' mit O/U-Markt bestücken
+  w._bfState.data = { matches: [
+    { matchId: 'A', home: 'Alpha', away: 'Beta',
+      markets: {
+        'Match Odds': { runners: [
+          { name: 'Alpha', odd: 1.58, vol: 100000 }, { name: 'The Draw', odd: 3.7, vol: 8000 }, { name: 'Beta', odd: 6.5, vol: 6000 } ] },
+        'Over/Under 2.5 Goals': { runners: [
+          { name: 'Under 2.5 Goals', odd: 1.80, vol: 14000 }, { name: 'Over 2.5 Goals', odd: 2.10, vol: 9000 } ] },
+        'Both teams to Score?': { runners: [
+          { name: 'Yes', odd: 1.90, vol: 5000 }, { name: 'No', odd: 1.95, vol: 3000 } ] },
+      } },
+  ] };
+  const closed = panel(w);
+  assert.ok(!/Andere Märkte/.test(closed), 'geschlossen: kein Andere-Märkte-Block');
+  w._bfTermOpen('A');
+  const open = panel(w);
+  assert.match(open, /Andere Märkte/, 'Drilldown zeigt Andere-Märkte-Block');
+  assert.match(open, /Ü\/U 2\.5/, 'Über/Unter-2.5-Zeile da (gekürztes Label)');
+  assert.match(open, /BTTS/, 'BTTS-Zeile da');
+  assert.ok(!/Match Odds/.test(open.split('Andere Märkte')[1] || ''), 'Match Odds NICHT im Andere-Märkte-Block (ist ja die Hauptzeile)');
+});

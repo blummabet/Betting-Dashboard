@@ -995,6 +995,64 @@
         +'<span style="width:58px;font-family:monospace;font-size:10.5px;color:'+C.mut+';text-align:right">'+_tEur(x.v)+'</span></div>'; }).join('');
   }
 
+  // 18.08.2026 (Lucas: „im Terminal ist nur 1X2 abgedeckt, kein Over/Under — im Drilldown die anderen
+  // Märkte auch zeigen"): Neben Match Odds trägt Betfair pro Spiel Über/Unter, BTTS, DNB, 1.HZ … mit
+  // echtem Matched-Volumen. Consensus-Game hat die nicht, betfair_prices.json (=_bf.data.matches) schon
+  // → per matchId verknüpfen. Rein lesend, kein Pinnacle-Anker auf diesen Märkten → kein Edge/Stake,
+  // nur „wo liegt sonst das Geld + Back/driftet-Richtung".
+  function _tMkShort(k){
+    return String(k)
+      .replace('Over/Under ','Ü/U ').replace(' Goals','')
+      .replace('Both Teams to Score?','BTTS').replace('Both teams to Score?','BTTS')
+      .replace('Draw no Bet','Unentschieden-frei')
+      .replace('First Half Goals ','1.HZ Tore ')
+      .replace('Half Time/Full Time','HZ/EZ').replace('Half Time Score','HZ-Ergebnis').replace('Half Time','Halbzeit')
+      .replace('Correct Score','Exakt-Ergebnis');
+  }
+  function _tOtherMarkets(g){
+    var arr=(_bf.data&&_bf.data.matches)||[], m=null, i;
+    for(i=0;i<arr.length;i++){ if(String(arr[i].matchId)===String(g.matchId)){ m=arr[i]; break; } }
+    if(!m||!m.markets) return '';
+    var list=[];
+    for(var k in m.markets){ if(k==='Match Odds') continue;
+      var v=distTotal(m.markets[k]); if(!(v>=50)) continue;   // <€50 matched = Rauschen
+      list.push({k:k,v:v,mk:m.markets[k]}); }
+    if(!list.length) return '';
+    list.sort(function(a,b){ return b.v-a.v; });
+    var top=list.slice(0,6), rest=list.length-top.length;
+    var totOther=list.reduce(function(a,x){return a+x.v;},0);
+    var body=top.map(function(x){
+      var rs=runnersOf(x.mk).filter(function(r){return r&&r.name;}).slice()
+              .sort(function(a,b){ return (+b.vol||0)-(+a.vol||0); });
+      var lead=rs[0]||{}, other=(rs.length===2?rs[1]:null);
+      var share=x.v>0?Math.round((+lead.vol||0)/x.v*100):0;
+      var seite='<b style="color:#4cc2ff">'+esc(rLabel(lead.name,m))+'</b> <span style="color:#5eead4">@'+fO(lead.odd)+'</span>'+dirBadge(m,x.k,lead);
+      if(other){ seite+=' <span style="color:'+C.dim+'">·</span> '+esc(rLabel(other.name,m))+' <span style="color:#5eead4">@'+fO(other.odd)+'</span>'; }
+      else if(rs.length>2){ seite+=' <span style="color:'+C.dim+';font-size:10px">· '+rs.length+' Runner</span>'; }
+      var bar='<span style="display:inline-block;width:78px;height:7px;border-radius:4px;overflow:hidden;background:'+C.bd+';vertical-align:middle"><span style="display:block;height:7px;width:'+share+'%;background:#4cc2ff"></span></span>'
+             +' <span style="color:'+C.dim+';font-size:10px">'+share+'%</span>';
+      return '<tr style="border-top:1px solid rgba(255,255,255,.04)">'
+        +'<td style="padding:5px 8px;color:'+C.ink+';font-size:11.5px;white-space:nowrap">'+esc(_tMkShort(x.k))+'</td>'
+        +'<td style="padding:5px 8px;font-family:monospace;font-size:11.5px">'+seite+'</td>'
+        +'<td style="padding:5px 8px;text-align:center;white-space:nowrap">'+bar+'</td>'
+        +'<td style="padding:5px 8px;text-align:right;font-family:monospace;font-size:11.5px;color:'+C.mut+';white-space:nowrap">'+_tEur(x.v)+'</td>'
+        +'</tr>';
+    }).join('');
+    var col2='background:'+C.card+';border:1px solid '+C.bd+';border-radius:10px;padding:10px 12px';
+    return '<div style="'+col2+';margin-top:12px">'
+      +'<div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:4px">'
+        +'<span style="font-size:11px;color:'+C.dim+'">Andere Märkte — wo sonst das Geld liegt · Betfair matched</span>'
+        +'<span style="font-size:10px;color:'+C.mut+'">'+_tEur(totOther)+' neben 1X2'+(rest>0?(' · +'+rest+' weitere'):'')+'</span></div>'
+      +'<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse">'
+        +'<thead><tr>'
+        +'<th style="font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:'+C.dim+';text-align:left;padding:3px 8px">Markt</th>'
+        +'<th style="font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:'+C.dim+';text-align:left;padding:3px 8px">Führend (mehr Geld) · Gegenquote</th>'
+        +'<th style="font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:'+C.dim+';text-align:center;padding:3px 8px">Anteil</th>'
+        +'<th style="font-size:9.5px;letter-spacing:.05em;text-transform:uppercase;color:'+C.dim+';text-align:right;padding:3px 8px">Fluss</th>'
+        +'</tr></thead><tbody>'+body+'</tbody></table></div>'
+      +'<div style="font-size:10px;color:'+C.mut+';margin-top:7px;line-height:1.5">Kein Pinnacle-Anker auf diesen Märkten — reines Betfair-Geld (matched), keine Edge-/Stake-Rechnung. Blau = Seite mit mehr Geld · „Back ✓/driftet" aus dem Quotenverlauf.</div>'
+      +'</div>';
+  }
   function _tDrawer(g){
     var edge=_tEdge(g),fair=_tFair(g),pts=_tSer(g),bank=_tBank(),hk=_tHalfKelly(g),stake=bank*hk;
     var dir='',dcol=C.mut; if(pts.length>=2){ var d=pts[pts.length-1].o-pts[0].o;
@@ -1020,7 +1078,9 @@
           +'<div style="font-size:12.5px;font-weight:700;color:'+dcol+';line-height:1.5">'+dir+'</div>'
           +'<div style="font-size:10.5px;color:'+C.mut+';margin-top:8px;line-height:1.5">Edge '+(edge==null?'—':(edge>=0?'+':'')+(edge*100).toFixed(1)+'%')+' · faire Quote '+(fair==null?'—':fair.toFixed(2))+' vs. angeboten '+(g.moneyOdd||'—')+'. Kein Orderbuch — Betwatch liefert nur gematchtes Volumen, Richtung ist inferiert.</div>'
         +'</div>'
-      +'</div></div>';
+      +'</div>'
+      +_tOtherMarkets(g)
+      +'</div>';
   }
 
   function renderTerminal(){
