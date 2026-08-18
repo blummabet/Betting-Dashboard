@@ -2146,65 +2146,134 @@ function _pwTermDrawer(r){
   +'</div>';
 }
 
-function _pwTerminal(){
+// 18.08.2026 (Lucas): Terminal-Linsen — nichts verlieren. Kanten=signal-gated (Heute wetten) ·
+// Geld/Bewegung/Live = volles Markt-Universum (broadLive), gleiche Spalten, andere Auswahl+Sortierung.
+let _pwTermLens='kanten';
+function _pwTermSetLens(l){ _pwTermLens=l; _pwTermRow=null; _pwRender(); }
+if(typeof window!=='undefined') window._pwTermSetLens=_pwTermSetLens;
+
+function _pwMarketSteam(key, side){
+  const c=_pwCache||{}; const H=(c.broadLiveHist&&c.broadLiveHist[key])||(c.broadHist&&c.broadHist[key])||[];
+  if(H.length<2) return null; const a=H[0], b=H[H.length-1];
+  const p1=a.p&&a.p[side], p2=b.p&&b.p[side];
+  if(typeof p1!=='number'||typeof p2!=='number') return null; return (p2-p1)*100;
+}
+// Markt (broadLive) -> Play-artige Zeile. Conviction via Engine falls sie greift, sonst null („kein Signal").
+function _pwMarketRow(key, m){
+  if(!m) return null; const shares=m.shares||{}, prices=m.prices||{};
+  let fav=null,fu=-1; for(const k in shares){ if((+shares[k]||0)>fu){fu=+shares[k]; fav=k;} }
+  if(fav==null){ let pm=-1; for(const k in prices){ if((+prices[k]||0)>pm){pm=+prices[k]; fav=k;} } }
+  if(fav==null) return null;
+  const tot=Object.keys(shares).reduce((a,k)=>a+(+shares[k]||0),0);
+  const moneyPct=tot>0?(+shares[fav]||0)/tot:null;
+  let conv=null, reasons=[], sharp=null;
+  try{ const sc=_pwShortlistScore(key, m); if(sc&&typeof sc.conv==='number'){ conv=sc.conv; reasons=sc.reasons||[]; sharp=sc.sharp||null; } }catch(e){}
+  const match=_pwPlayLabel(key, Object.keys(prices).map(s=>({s})));
+  return {key, match, side:fav, conv, reasons, moneyPct, sharp,
+          price:(typeof prices[fav]==='number'?prices[fav]:null),
+          vol:m.totalUsd||0, htk:_pwRealHtk(m), league:m.league, sport:m.sport};
+}
+function _pwTermRows(lens){
   const useSP=(_pwSportFilter && _pwSportFilter!=='all');
-  const plays=_pwTopPlays(0, _pwCache&&_pwCache.broadLive, useSP);
-  const rows=plays.map(r=>({r, mute:_pwTermMuted(r), pub:_pwTermIsPublic(r)}));
-  // Nicht-gemutet zuerst (nach Conviction, kommt schon sortiert), gemutete danach.
-  rows.sort((a,b)=>{ const am=a.mute.m?1:0,bm=b.mute.m?1:0; if(am!==bm) return am-bm; return (b.r.conv||0)-(a.r.conv||0); });
-  const nMuted=rows.filter(x=>x.mute.m).length;
-  const shown=_pwTermHideMuted?rows.filter(x=>!x.mute.m):rows;
-  const handelbar=rows.length-nMuted;
+  if(lens==='kanten'){
+    return _pwTopPlays(0, _pwCache&&_pwCache.broadLive, useSP)
+      .map(r=>({r, mute:_pwTermMuted(r), pub:_pwTermIsPublic(r)}));
+  }
+  // Live-Linse zieht aus dem LAUFENDEN Universum (broadLiveNow = poly_money_broad_live.json),
+  // NICHT aus broadLive (=close.json, nur kommende Maerkte). Sonst waere Live immer leer, obwohl
+  // der Live-Reiter Maerkte hat — genau das darf nicht verloren gehen. Gleiche Filter wie Live-Reiter.
+  const uni=(lens==='live')?((_pwCache&&_pwCache.broadLiveNow)||{}):((_pwCache&&_pwCache.broadLive)||{});
+  const rows=[];
+  for(const k in uni){ const m=uni[k];
+    if(!m||m.resolved!=null||_pwKoStale(m)) continue;
+    if(lens==='live'){
+      if(!m.shares||(m.totalUsd||0)<5000||_pwLiveDecided(m)||_pwLiveGone(m)) continue;
+      if(useSP && !_pwSportPass(m.league,m.sport)) continue;
+    } else {
+      if((_pwRealHtk(m)||0)<0){ const lnm=_pwCache&&_pwCache.broadLiveNow&&_pwCache.broadLiveNow[k]; if(!lnm||_pwLiveGone(lnm)) continue; }
+      if(_pwSportCategory(m.league,m.sport)==='Sonstige') continue;
+      if(useSP && !_pwSportPass(m.league,m.sport)) continue;
+    }
+    const r=_pwMarketRow(k,m); if(!r) continue;
+    if(lens==='bewegung'){ r._steam=_pwMarketSteam(k,r.side); if(r._steam==null||Math.abs(r._steam)<1) continue; }
+    rows.push({r, mute:{m:false,reason:''}, pub:_pwTermIsPublic(r)});
+  }
+  if(lens==='geld') rows.sort((a,b)=>(b.r.vol||0)-(a.r.vol||0));
+  else if(lens==='bewegung') rows.sort((a,b)=>Math.abs(b.r._steam||0)-Math.abs(a.r._steam||0));
+  else if(lens==='live') rows.sort((a,b)=>(b.r.vol||0)-(a.r.vol||0));
+  return rows.slice(0,40);
+}
+function _pwTermMeter(conv){
+  if(conv==null) return '<span style="display:inline-flex;align-items:center;gap:6px"><span style="width:46px;height:6px;background:#161b22;border-radius:3px;display:inline-block"></span><span style="color:#484f58;font-size:11px">—</span></span>';
+  const c=conv>=8?'#3fb950':conv>=6?'#e3b341':'#8b949e';
+  return '<span style="display:inline-flex;align-items:center;gap:6px"><span style="width:46px;height:6px;background:#161b22;border-radius:3px;overflow:hidden;display:inline-block"><span style="display:block;height:6px;width:'+(Math.max(0,Math.min(10,conv))*10)+'%;background:'+c+'"></span></span><span style="font-family:ui-monospace,monospace;font-weight:800;color:'+c+';font-size:11.5px">'+conv+'</span></span>';
+}
+
+function _pwTerminal(){
+  const lens=_pwTermLens||'kanten';
+  const _lensDef={kanten:['🎯 Kanten','handelbare Kanten — signal-gated (dieselbe „Heute wetten"-Engine), nach Conviction & CLV-Stufe.'],
+                  geld:['💰 Geld','ALLE Märkte nach Zufluss — auch ohne Signal. Konviktion/Edge/CLV daneben zeigen, ob was dahintersteckt.'],
+                  bewegung:['📈 Bewegung','ALLE Märkte nach Steam (Preis-Move) — wohin das Geld zieht.'],
+                  live:['⚡ Live','laufende Spiele nach Zufluss.']};
+  const rowsAll=_pwTermRows(lens);
+  const isK=(lens==='kanten');
+  let rows=rowsAll.slice();
+  if(isK) rows.sort((a,b)=>{ const am=a.mute.m?1:0,bm=b.mute.m?1:0; if(am!==bm) return am-bm; return (b.r.conv||0)-(a.r.conv||0); });
+  const nMuted=isK?rows.filter(x=>x.mute.m).length:0;
+  const shown=(isK&&_pwTermHideMuted)?rows.filter(x=>!x.mute.m):rows;
+
+  const lbtn=(id)=>{ const on=id===lens, d=_lensDef[id]; return '<button onclick="_pwTermSetLens(\''+id+'\')" style="padding:5px 12px;border:1px solid '+(on?'#a78bfa':'#21262d')+';background:'+(on?'rgba(167,139,250,.14)':'transparent')+';color:'+(on?'#a78bfa':'#8b949e')+';font-size:12px;font-weight:700;cursor:pointer;border-radius:0">'+d[0]+'</button>'; };
+  const lensBar='<div style="display:inline-flex;border-radius:9px;overflow:hidden;border:1px solid #21262d;margin:2px 0 10px">'+['kanten','geld','bewegung','live'].map(lbtn).join('')+'</div>';
 
   const agg=(_pwCache&&_pwCache.shortlistTrack&&_pwCache.shortlistTrack.agg)||{};
   const pub=agg.public||{}, allA=agg.all||{};
-  const kpi=(v,lbl,col,sub)=>'<div style="flex:1;min-width:128px;background:#0d1117;border:1px solid #21262d;border-left:3px solid '+col+';border-radius:10px;padding:11px 13px">'
-    +'<div style="font-size:20px;font-weight:900;color:'+col+';line-height:1.1">'+v+'</div>'
-    +'<div style="font-size:10px;color:#8b949e;text-transform:uppercase;letter-spacing:.4px;margin-top:4px">'+lbl+'</div>'
-    +(sub?'<div style="font-size:10px;color:#6e7681;margin-top:1px">'+sub+'</div>':'')+'</div>';
+  const kpi=(v,lbl,col,sub)=>'<div style="flex:1;min-width:128px;background:#0d1117;border:1px solid #21262d;border-left:3px solid '+col+';border-radius:10px;padding:11px 13px"><div style="font-size:20px;font-weight:900;color:'+col+';line-height:1.1">'+v+'</div><div style="font-size:10px;color:#8b949e;text-transform:uppercase;letter-spacing:.4px;margin-top:4px">'+lbl+'</div>'+(sub?'<div style="font-size:10px;color:#6e7681;margin-top:1px">'+sub+'</div>':'')+'</div>';
   const pctS=x=>x==null?'—':(x>=0?'+':'')+(Math.round(x*1000)/10)+'%';
-  const kpiBand='<div style="display:flex;gap:10px;flex-wrap:wrap;margin:2px 0 14px">'
+  const kpiBand=isK?('<div style="display:flex;gap:10px;flex-wrap:wrap;margin:2px 0 14px">'
     +kpi(pctS(pub.roi),'ROI Public-Segment',(pub.roi>=0?'#3fb950':'#f85149'),'n'+(pub.n||0)+' · CLV '+((pub.clvAvg!=null)?(pub.clvAvg>=0?'+':'')+pub.clvAvg:'—'))
     +kpi(pctS(allA.roi),'ROI ganze Shortlist',(allA.roi>=0?'#3fb950':'#f85149'),'n'+(allA.n||0)+' · Rauschen inkl.')
-    +kpi(String(handelbar),'handelbare Plays jetzt','#a78bfa',nMuted?(nMuted+' gemutet'):'nichts gemutet')
-    +'</div>';
+    +kpi(String(rows.length-nMuted),'handelbare Plays jetzt','#a78bfa',nMuted?(nMuted+' gemutet'):'nichts gemutet')+'</div>'):'';
 
   const th=(t,a)=>'<th style="font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:#484f58;font-weight:700;text-align:'+(a||'right')+';padding:7px 9px;border-bottom:1px solid #21262d;white-space:nowrap">'+t+'</th>';
-  let out='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🖥️ Terminal — handelbare Kanten</span>'
-    +'<span class="pw-sec-note">dieselben „Heute wetten"-Plays &amp; Conviction, dicht + nach Bilanz geordnet · CLV-Bucket = wie die Conviction-Stufe historisch performt (dein Paper-Track) · ◆ = Public-Kandidat</span></div>';
-  out+=kpiBand;
-  if(nMuted) out+='<div style="display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:11.5px;color:#8b949e"><label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" '+(_pwTermHideMuted?'checked':'')+' onclick="_pwTermMute(this.checked)"/> '+nMuted+' gemutete (historisch -EV) ausblenden</label></div>';
-  if(!shown.length) return out+'<div class="pw-none">Aktuell keine klare Gelegenheit. Die Shortlist lebt von Steam &amp; scharfen Wallets — die sammeln sich über die Runner-Läufe.</div></section>';
+  let out='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🖥️ Terminal — '+_lensDef[lens][0].replace(/^\S+\s/,'')+'</span>'
+    +'<span class="pw-sec-note">'+_lensDef[lens][1]+' · Zeile klicken → Drilldown · alte Reiter bleiben, nichts geht verloren</span></div>';
+  out+=lensBar+kpiBand;
+  if(isK&&nMuted) out+='<div style="display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:11.5px;color:#8b949e"><label style="display:inline-flex;align-items:center;gap:6px;cursor:pointer"><input type="checkbox" '+(_pwTermHideMuted?'checked':'')+' onclick="_pwTermMute(this.checked)"/> '+nMuted+' gemutete (historisch -EV) ausblenden</label></div>';
+  if(!shown.length) return out+'<div class="pw-none">'+(isK?'Aktuell keine klare Gelegenheit — die Shortlist lebt von Steam &amp; scharfen Wallets.':'Keine Märkte in dieser Linse gerade.')+'</div></section>';
 
+  const flHead=lens==='bewegung'?'Steam':'Geld / Fluss';
   out+='<div class="pw-tw"><table class="pw-tbl" style="width:100%"><thead><tr>'
-    +th('Anpfiff','left')+th('Spiel','left')+th('Pick','left')+th('Konviktion')+th('Geld / Fluss')+th('CLV-Bucket')+th('Einstieg')+'</tr></thead><tbody>';
+    +th('Anpfiff','left')+th('Spiel','left')+th('Pick','left')+th('Konviktion')+th(flHead)+th('CLV-Bucket')+th('Einstieg')+'</tr></thead><tbody>';
   let mutedStarted=false;
   shown.forEach(x=>{
     const r=x.r; const open=(String(_pwTermRow)===String(r.key));
-    if(x.mute.m && !mutedStarted){ mutedStarted=true;
-      out+='<tr><td colspan="7" style="padding:10px 9px 4px;font-size:10px;color:#484f58;border-top:1px dashed #21262d">🔇 Gemutet — Conviction-Stufe historisch -EV (dein Track) oder zu dünn. Nach unten sortiert.</td></tr>'; }
-    const convCol=r.conv>=8?'#3fb950':r.conv>=6?'#e3b341':'#8b949e';
-    const meter='<span style="display:inline-flex;align-items:center;gap:6px"><span style="width:46px;height:6px;background:#161b22;border-radius:3px;overflow:hidden;display:inline-block"><span style="display:block;height:6px;width:'+(Math.max(0,Math.min(10,r.conv))*10)+'%;background:'+convCol+'"></span></span><span style="font-family:ui-monospace,monospace;font-weight:800;color:'+convCol+';font-size:11.5px">'+r.conv+'</span></span>';
-    const b=_pwTermBucket(r.conv);
+    if(isK&&x.mute.m && !mutedStarted){ mutedStarted=true;
+      out+='<tr><td colspan="7" style="padding:10px 9px 4px;font-size:10px;color:#484f58;border-top:1px dashed #21262d">🔇 Gemutet — Conviction-Stufe historisch -EV (dein Track) oder zu dünn.</td></tr>'; }
+    const meter=_pwTermMeter(r.conv);
+    const b=(r.conv!=null)?_pwTermBucket(r.conv):null;
     const clv=(b&&b.n>=20)
       ? '<span style="font-family:ui-monospace,monospace;font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:5px;color:'+(b.roi>0?'#3fb950':b.roi<0?'#f85149':'#8b949e')+';background:'+(b.roi>0?'rgba(63,185,80,.1)':b.roi<0?'rgba(248,81,73,.1)':'transparent')+'">'+(b.roi>0?'🟢':b.roi<0?'🔴':'⚪')+' '+(b.roi>=0?'+':'')+Math.round(b.roi*100)+'% · n'+b.n+'</span>'
       : '<span style="color:#484f58;font-size:10px">'+(b?('dünn n'+b.n):'—')+'</span>';
     const htk=r.htk!=null?(r.htk<0?'<span style="color:#f85149;font-weight:700">● LIVE</span>':r.htk<1?'<1h':Math.round(r.htk)+'h'):'—';
     const price=(r.price!=null)?Math.round(r.price*100)+'¢':'—';
     const mk='<a href="https://polymarket.com/event/'+encodeURIComponent(r.key)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Markt öffnen ↗">'+_pwEsc(r.match)+' <span style="color:#a78bfa">↗</span></a>';
-    const moneyPct=(r.moneyPct!=null)?Math.round(r.moneyPct*100)+'%':'—';
-    out+='<tr onclick="_pwTermOpen(\''+r.key+'\')" style="cursor:pointer;opacity:'+(x.mute.m?'0.5':'1')+';background:'+(open?'rgba(167,139,250,.06)':'transparent')+'">'
+    let fluss;
+    if(lens==='bewegung'){ const st=r._steam||0, up=st>=0; fluss='<span style="color:'+(up?'#3fb950':'#f85149')+';font-weight:700">'+(up?'▲ ':'▼ ')+(st>=0?'+':'')+st.toFixed(1)+'pp</span>'; }
+    else { const moneyPct=(r.moneyPct!=null)?Math.round(r.moneyPct*100)+'%':'—'; fluss=_pwUsd(r.vol)+' <span class="pw-mut" style="font-size:10px">'+moneyPct+'</span>'; }
+    out+='<tr onclick="_pwTermOpen(\''+r.key+'\')" style="cursor:pointer;opacity:'+((isK&&x.mute.m)?'0.5':'1')+';background:'+(open?'rgba(167,139,250,.06)':'transparent')+'">'
       +'<td class="pw-cn" style="text-align:left;font-family:ui-monospace,monospace;color:#8b949e"><span style="color:#484f58;margin-right:3px">'+(open?'▾':'▸')+'</span>'+htk+'</td>'
       +'<td style="white-space:nowrap">'+_pwLeagueBadge(r.league,r.sport,r.match)+' '+mk+(x.pub?' <span title="Public-Kandidat" style="color:#a78bfa">◆</span>':'')+'</td>'
-      +'<td class="pw-cm" style="font-weight:700;color:#4cc2ff">'+_pwEsc(r.side)+(x.mute.m?' <span style="font-family:system-ui;font-size:8.5px;color:#484f58;border:1px solid #21262d;padding:0 4px;border-radius:4px">🔇 '+_pwEsc(x.mute.reason)+'</span>':'')+'</td>'
+      +'<td class="pw-cm" style="font-weight:700;color:#4cc2ff">'+_pwEsc(r.side)+((isK&&x.mute.m)?' <span style="font-family:system-ui;font-size:8.5px;color:#484f58;border:1px solid #21262d;padding:0 4px;border-radius:4px">🔇 '+_pwEsc(x.mute.reason)+'</span>':'')+'</td>'
       +'<td class="pw-cn">'+meter+'</td>'
-      +'<td class="pw-cn" style="font-family:ui-monospace,monospace">'+_pwUsd(r.vol)+' <span class="pw-mut" style="font-size:10px">'+moneyPct+'</span></td>'
+      +'<td class="pw-cn" style="font-family:ui-monospace,monospace">'+fluss+'</td>'
       +'<td class="pw-cn">'+clv+'</td>'
       +'<td class="pw-cn pw-mut" style="font-family:ui-monospace,monospace">'+price+'</td></tr>';
     if(open) out+='<tr><td colspan="7" style="background:rgba(167,139,250,.03);padding:0 9px 6px">'+_pwTermDrawer(r)+'</td></tr>';
   });
   out+='</tbody></table></div>';
-  out+='<div style="font-size:10px;color:#484f58;margin-top:9px;line-height:1.5">Gleiche Engine wie 🔥 Heute wetten (nichts am Algo geändert) — nur dichter, nach Conviction &amp; belegter Stufe geordnet. Muten = ausgrauen &amp; nach unten (nie löschen), datengetrieben aus deinem Paper-Track. <b>Nächste Stufe:</b> Zeile klicken → Drilldown mit Preis-vs-Pinnacle-Kurve (Kante-Fläche), Whale-Tape &amp; ½-Kelly.</div></section>';
+  out+='<div style="font-size:10px;color:#484f58;margin-top:9px;line-height:1.5">'+(isK
+    ?'Gleiche Engine wie 🔥 Heute wetten (Algo unverändert). Muten = ausgrauen &amp; nach unten (nie löschen), aus deinem Paper-Track.'
+    :'Linse „'+_lensDef[lens][0]+'" = volles Markt-Universum, nicht signal-gefiltert. Konviktion „—" = kein Wett-Signal (nur Geld/Bewegung). So geht nichts verloren, was in Großes-Geld/Bewegung/Live steht.')+'</div></section>';
   return out;
 }
 

@@ -40,8 +40,11 @@ const AGG = { updatedAt: new Date().toISOString(), stake: 10, agg: {
 
 test('Terminal-Reiter rendert Board-Kopf + KPI-Band aus shortlist_track.agg', async () => {
   const html = await render({ 'poly_shortlist_track.json': AGG, 'poly_money_broad_live.json': {} }, 'terminal');
-  assert.match(html, /Terminal — handelbare Kanten/, 'Board-Kopf da');
-  assert.match(html, /ROI Public-Segment/, 'KPI-Label Public');
+  assert.match(html, /🖥️ Terminal — Kanten/, 'Board-Kopf (Kanten-Linse) da');
+  assert.match(html, /handelbare Kanten/, 'Kanten-Note vorhanden');
+  assert.match(html, /💰 Geld/, 'Geld-Linse im Umschalter');
+  assert.match(html, /📈 Bewegung/, 'Bewegung-Linse im Umschalter');
+  assert.match(html, /ROI Public-Segment/, 'KPI-Label Public (nur Kanten-Linse)');
   assert.match(html, /\+2\.7%/, 'Public-ROI +2.7% aus agg');
   assert.match(html, /-7\.1%/, 'ganze-Shortlist-ROI -7.1% aus agg');
 });
