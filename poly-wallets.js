@@ -2177,6 +2177,16 @@ function _pwMarketRow(key, m){
           price:(typeof prices[fav]==='number'?prices[fav]:null),
           vol:m.totalUsd||0, htk:_pwRealHtk(m), league:m.league, sport:m.sport};
 }
+// 18.08.2026 (Lucas): fuer laufende Spiele in Geld/Bewegung die FRISCHE Live-Poly bevorzugen, sonst
+// zeigt das Terminal den eingefrorenen Close-Preis auf einem Live-Spiel. Preise/Shares/Volumen/Zeit aus
+// live, Liga/Sport/uebriges aus close behalten (falls live sie nicht traegt). Kanten bleibt unberuehrt.
+function _pwLivePreferred(m, lnm){
+  if(!lnm) return m;
+  return Object.assign({}, m, {
+    prices:(lnm.prices||m.prices), shares:(lnm.shares||m.shares),
+    totalUsd:(lnm.totalUsd!=null?lnm.totalUsd:m.totalUsd),
+    whales:(lnm.whales||m.whales), capturedAt:(lnm.capturedAt||m.capturedAt), _live:true });
+}
 function _pwTermRows(lens){
   const useSP=(_pwSportFilter && _pwSportFilter!=='all');
   if(lens==='kanten'){
@@ -2190,15 +2200,18 @@ function _pwTermRows(lens){
   const rows=[];
   for(const k in uni){ const m=uni[k];
     if(!m||m.resolved!=null||_pwKoStale(m)) continue;
+    let mrow=m;
     if(lens==='live'){
       if(!m.shares||(m.totalUsd||0)<5000||_pwLiveDecided(m)||_pwLiveGone(m)) continue;
       if(useSP && !_pwSportPass(m.league,m.sport)) continue;
     } else {
-      if((_pwRealHtk(m)||0)<0){ const lnm=_pwCache&&_pwCache.broadLiveNow&&_pwCache.broadLiveNow[k]; if(!lnm||_pwLiveGone(lnm)) continue; }
+      if((_pwRealHtk(m)||0)<0){ const lnm=_pwCache&&_pwCache.broadLiveNow&&_pwCache.broadLiveNow[k];
+        if(!lnm||_pwLiveGone(lnm)) continue;
+        mrow=_pwLivePreferred(m,lnm); }   // laufendes Spiel -> frische Live-Poly statt Close-Freeze
       if(_pwSportCategory(m.league,m.sport)==='Sonstige') continue;
       if(useSP && !_pwSportPass(m.league,m.sport)) continue;
     }
-    const r=_pwMarketRow(k,m); if(!r) continue;
+    const r=_pwMarketRow(k,mrow); if(!r) continue;
     if(lens==='bewegung'){ r._steam=_pwMarketSteam(k,r.side); if(r._steam==null||Math.abs(r._steam)<1) continue; }
     rows.push({r, mute:{m:false,reason:''}, pub:_pwTermIsPublic(r)});
   }
