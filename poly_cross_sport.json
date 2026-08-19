@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-19T22:02:11.369557+00:00",
+ "generatedAt": "2026-08-19T22:42:20.120845+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -8,21 +8,21 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 444,
+ "polyRowsSeen": 446,
  "pinnKeys": 300,
- "matched": 216,
+ "matched": 218,
  "footballRows": 198,
- "crossRows": 246,
- "footballSkippedStale": 38,
+ "crossRows": 248,
+ "footballSkippedStale": 37,
  "seenBySport": {
   "americanfootball_nfl": 150,
-  "baseball_mlb": 94,
+  "baseball_mlb": 96,
   "boxing_boxing": 2,
   "soccer_mls": 90,
   "soccer_liga": 108
  },
  "matchedBySport": {
-  "baseball_mlb": 18,
+  "baseball_mlb": 20,
   "soccer_mls": 90,
   "soccer_liga": 108
  },
@@ -30,5 +30,34 @@
   "tracked": 136,
   "converged": 30
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|miamimarlins-philadelphiaphillies|miamimarlins",
+   "sport": "baseball_mlb",
+   "event": "Miami Marlins vs Philadelphia Phillies",
+   "market": "Moneyline",
+   "outcome": "Miami Marlins",
+   "polyPP": 28.5,
+   "pinnPP": 39.6,
+   "gapPP": -11.1,
+   "vol": 409291,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 4.51,
+   "firstSeen": "2026-08-17T23:48:57.993834+00:00"
+  },
+  {
+   "id": "baseball_mlb|miamimarlins-philadelphiaphillies|philadelphiaphillies",
+   "sport": "baseball_mlb",
+   "event": "Miami Marlins vs Philadelphia Phillies",
+   "market": "Moneyline",
+   "outcome": "Philadelphia Phillies",
+   "polyPP": 71.5,
+   "pinnPP": 60.4,
+   "gapPP": 11.1,
+   "vol": 409291,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 4.51,
+   "firstSeen": "2026-08-17T23:48:57.993834+00:00"
+  }
+ ]
 }
