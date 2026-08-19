@@ -502,6 +502,7 @@ def build_message(a) -> str:
         msg = ("🔵 <b>Betfair · Halbzeit-Geld (einseitig)</b>\n" + head   # 31.07.2026 (Lucas): blaue Kugel fuer HZ = schneller erkennbar; Frisches Geld bleibt gelb
                + "💷 %s: <b>%s</b> gematcht · <b>%.0f%%</b> auf %s%s"
                  % (_esc(lbl), _euro(a["total"]), a["leadShare"] * 100, _esc(a["leadLabel"]), odd))
+        msg += _fresh_inline(a)
         if a.get("isX2"):
             pct = lambda x: "—" if x is None else "%.0f%%" % (x * 100)
             msg += ("\n%s %s · X %s · %s %s" % (_esc(a["home"]), pct(a["hs"]), pct(a["ds"]),
@@ -577,6 +578,23 @@ def _money_on_leader(m, lead_name) -> bool:
     return bool(ldr) and bool(lead_name) and str(lead_name) == str(ldr)
 
 
+def _fresh_inline(a) -> str:
+    """18.08.2026 (Lucas): frischen Zufluss IN die blaue HT-Nachricht schreiben (eigene 💶-Zeile),
+    wenn ein fresh-Alert denselben HT-Markt betraf. Zeigt +Zufluss, %frisch und das Zeitfenster."""
+    f = a.get("freshMerge")
+    if not f:
+        return ""
+    inflow = f.get("inflow") or 0.0
+    total = f.get("total") or 0.0
+    seg = []
+    if total:
+        seg.append("%.0f%% frisch" % (inflow / total * 100.0))
+    line = "\n💶 <b>+%s</b> Zufluss" % _euro(inflow)
+    if seg:
+        line += " · " + " · ".join(seg)
+    return line + _window_txt(f)
+
+
 def build_public_message(a, trades=False) -> str:
     """Oeffentliches Format (05.08.2026, Lucas: schoener + informativer): Anpfiff/Live-Status +
     Spielstand, Zufluss-Anteil am Markt, visuelle Geld-Leiste, Quote. Telegram-HTML (b/i, Unicode)."""
@@ -591,8 +609,9 @@ def build_public_message(a, trades=False) -> str:
     if a["scenario"] == "ht":
         share = a.get("leadShare") or 0.0
         return (live_badge + "🔵 <b>Betfair Halftime Flow</b>\n\n" + teams + "\n\n"
-                + "💷 <b>%s</b> — Halbzeit-Geld\n<b>%s</b> gematcht\n\n"
+                + "💷 <b>%s</b> — Halbzeit-Geld\n<b>%s</b> gematcht"
                   % (_esc(_short_mk(a["market"])), _euro(a["total"]))
+                + _fresh_inline(a) + "\n\n"
                 + "📊 <b>%s</b>  %s %.0f%%%s"
                   % (_esc(a["leadLabel"]), _bar(share), share * 100, odd)
                 + _fuehrt_line(a) + _dir_line(a, ou_fade=trades))
@@ -844,8 +863,15 @@ def collect_alerts(prices: dict, hist: dict, ht_top=HT_TOP_EUR, ht_rest=HT_REST_
         if a:
             out.append(a)
         f = fresh_alert(m, hist, fresh_top, fresh_rest)
+        # 18.08.2026 (Lucas): kein zweiter fast identischer Push. Betrifft der frische Zufluss (fresh)
+        # DENSELBEN Markt wie das HZ-Geld-Signal (ht), MERGEN wir ihn IN die blaue HT-Nachricht (blaue
+        # Kugel = HT sofort erkennbar; Zufluss als eigene 💶-Zeile) statt eine zweite gelbe zu schicken.
+        # Auf einem ANDEREN Markt bleibt fresh eigenstaendig (z.B. 1X2-Zufluss neben HZ-O/U-Geld).
         if f:
-            out.append(f)
+            if a and f.get("market") == a.get("market"):
+                a["freshMerge"] = f
+            else:
+                out.append(f)
     return out
 
 

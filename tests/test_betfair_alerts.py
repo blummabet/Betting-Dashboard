@@ -249,12 +249,34 @@ class TestMessage(unittest.TestCase):
 
 
 class TestCollect(unittest.TestCase):
-    def test_collects_both(self):
+    def test_dedup_ht_and_fresh_same_market_merges(self):
+        # 18.08.2026 (Lucas): HZ-Geld UND frischer Zufluss auf DEMSELBEN Markt -> EIN Push (blaue HT-
+        # Nachricht), der frische Zufluss wird als 💶-Zeile HINEINGEMERGT (nicht zweite gelbe Nachricht).
         m = match(mid=9, league="Chinese League 2", country="CN", markets=mk("Half Time",
                   [{"name": "Alpha", "odd": 2, "vol": 8000}]))
         alerts = BA.collect_alerts({"matches": [m]}, {"9": [{"mkv": {"Half Time": 1000}}, {"mkv": {"Half Time": 22000}}]}, 10000, 5000, 30000, 20000)
         kinds = sorted(a["scenario"] for a in alerts)
+        self.assertEqual(kinds, ["ht"])                      # nur EIN Alert
+        ht = alerts[0]
+        self.assertIn("freshMerge", ht)                      # Zufluss drangehaengt
+        pub = BA.build_public_message(ht)
+        self.assertIn("🔵", pub)                             # blaue Kugel = HT erkennbar
+        self.assertIn("Zufluss", pub)                        # Zufluss-Zeile drin
+        self.assertEqual(pub.count("Betfair"), 1)            # nur EIN Header, keine Dopplung
+
+    def test_keeps_fresh_on_different_market(self):
+        # ht feuert auf Half Time, fresh auf Match Odds (ANDERER Markt) -> beide bleiben.
+        markets = {}
+        markets.update(mk("Half Time", [{"name": "Alpha", "odd": 2, "vol": 8000}]))
+        markets.update(mk("Match Odds", [{"name": "Alpha", "odd": 2, "vol": 45000}]))
+        m = match(mid=9, league="Chinese League 2", country="CN", markets=markets)
+        hist = {"9": [{"mkv": {"Half Time": 6000, "Match Odds": 1000}},
+                      {"mkv": {"Half Time": 8000, "Match Odds": 45000}}]}
+        alerts = BA.collect_alerts({"matches": [m]}, hist, 10000, 5000, 30000, 20000)
+        kinds = sorted(a["scenario"] for a in alerts)
         self.assertEqual(kinds, ["fresh", "ht"])
+        self.assertEqual(next(a["market"] for a in alerts if a["scenario"] == "fresh"), "Match Odds")
+        self.assertEqual(next(a["market"] for a in alerts if a["scenario"] == "ht"), "Half Time")
 
 
 class TestFavoriteFilter(unittest.TestCase):
