@@ -283,6 +283,27 @@
   }
   window._mdLoad = _mdLoad;
 
+  // 19.08.2026 (Lucas: „Betfair-HT-Kasten zeigt alte Spiele, Live-Badge fehlt bei laufenden"): das
+  // Main-Dashboard lud die Daten NUR EINMAL beim Öffnen und aktualisierte nie. Spiele, die nach dem
+  // Laden anpfiffen, hatten im eingefrorenen Snapshot kein liveInfo.time -> kein Live-Badge; alte Spiele
+  // blieben liegen, „Stand vor X Min" wuchs unbegrenzt, obwohl die Betfair-Action 1-2x weitergelaufen
+  // war. Fix (wie der Radar): periodischer Refresh alle 2 Min + beim Zurückkehren zum Tab, NUR wenn das
+  // Dashboard sichtbar ist. _mdLoad(true) re-fetcht frisch ohne Lade-Platzhalter (Daten sind ja schon da).
+  function _mdRefresh() {
+    if (_md.loading) return;
+    var p = document.getElementById('mainDashPanel');
+    if (!p || p.style.display === 'none') return;   // nur nachladen, wenn das Dashboard sichtbar ist
+    _mdLoad(true);
+  }
+  window._mdRefresh = _mdRefresh;
+  if (typeof window !== 'undefined' && !window._mdAutoRefreshSet && !window._mdNoAutoRefresh
+      && !/jsdom/i.test((window.navigator && window.navigator.userAgent) || '')) {   // in jsdom-Tests aus (Timer würde node offenhalten)
+    window._mdAutoRefreshSet = true;
+    var _mdTimer = setInterval(_mdRefresh, 2 * 60000);
+    if (_mdTimer && typeof _mdTimer.unref === 'function') _mdTimer.unref();   // Tests: node sauber beenden
+    document.addEventListener('visibilitychange', function () { if (!document.hidden) _mdRefresh(); });
+  }
+
   // ── Daten-Extraktion ──────────────────────────────────────────────────────
   function fixtures(data) {
     var out = [];
@@ -784,10 +805,21 @@
     var ko = m.kickoff ? Date.parse(m.kickoff) : NaN;
     return !isNaN(ko) && (Date.now() - ko) > 3.5 * 3.6e6;
   }
+  // 19.08.2026 (Lucas: „wenn Halbzeit vorbei brauch ich's nicht mehr, blockiert sonst neue Spiele"):
+  // die HT-Kachel zeigt NUR Erste-Halbzeit-Maerkte (HT 1X2, HT O/U 0.5/1.5). Laeuft schon die 2. HZ,
+  // ist das HT-Geld entschieden = Rauschen und klaut Slots. Raus, sobald die 1. HZ vorbei ist. Die
+  // Halbzeitpause selbst (is_ht) bleibt sichtbar — Peak-Interesse, HT gerade entschieden.
+  function _mdHtOver(m) {
+    var li = m.liveInfo || {};
+    if (li.is_ht) return false;                        // Halbzeitpause -> noch zeigen
+    var t = li.time;
+    return (typeof t === 'number') && t >= 46;         // 2. Halbzeit -> HT-Markt durch, raus
+  }
   function _mdBfHt() {
     var ms = (_md.data.betfair && _md.data.betfair.matches) || [], rows = [];
     ms.forEach(function (m) {
       if (_mdBfStale(m)) return;   // durchgelaufene Spiele nicht mehr zeigen
+      if (_mdHtOver(m)) return;    // 1. HZ vorbei -> HT-Markt entschieden, Slot fuer laufende Spiele frei
       var best = null, mk = m.markets || {};
       for (var name in _HT_MK) {
         var market = mk[name]; if (!market) continue;
