@@ -43,7 +43,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "cs2-innerc-sashia1-2026-08-16: seit 3.1 Tagen offen — keine Auflösung gefunden"
+        "cs2-innerc-sashia1-2026-08-16: seit 3.2 Tagen offen — keine Auflösung gefunden"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -63,12 +63,12 @@
       "ok": false,
       "nFail": 6,
       "failures": [
-        "12/45 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (27%) — Trefferquote allein trügt",
-        "   0x224a89dbe0… n=59 Treffer 54% P&L $-4,198,714",
-        "   0xc3c3b3ef30… n=178 Treffer 58% P&L $-3,763,198",
+        "12/44 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (27%) — Trefferquote allein trügt",
+        "   0x224a89dbe0… n=59 Treffer 54% P&L $-4,139,924",
+        "   0xc3c3b3ef30… n=179 Treffer 59% P&L $-3,760,223",
         "   0xa0f21e6d35… n=36 Treffer 67% P&L $-2,771,339",
         "   0xabb89972b2… n=17 Treffer 59% P&L $-2,563,982",
-        "274/319 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
+        "274/318 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
     },
@@ -88,11 +88,11 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "571/609 'live' Geld-Märkte sind schon >6h nach Anpfiff (94%) — $15,575,325 Whale-Geld auf fertigen Spielen"
+        "571/603 'live' Geld-Märkte sind schon >6h nach Anpfiff (95%) — $15,441,678 Whale-Geld auf fertigen Spielen"
       ],
       "note": "Der Close-Feed setzt kein resolved-Flag; fertige Spiele bleiben 'live'. Alle Views filtern jetzt auf den rekonstruierten Anpfiff — dieser Check misst den Geister-Anteil im Roh-Feed (steigt er, prunt/löst der Feed nicht mehr auf; jede ungegatete View zeigt dann fertige Spiele)."
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-08-19T03:14:49.521671+00:00"
+  "generatedAt": "2026-08-19T04:04:21.683727+00:00"
 }

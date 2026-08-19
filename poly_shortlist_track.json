@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-08-19T03:14:30.789803+00:00",
+ "updatedAt": "2026-08-19T04:04:02.209899+00:00",
  "stake": 10.0,
  "expired": 0,
  "open": {
@@ -12,7 +12,7 @@
    "entryPrice": 0.735,
    "firstTs": "2026-08-16T14:09:11.781306+00:00",
    "lastPrice": 0.735,
-   "lastTs": "2026-08-19T03:14:30.789803+00:00",
+   "lastTs": "2026-08-19T04:04:02.209899+00:00",
    "htkAtEntry": 2.938317777777778,
    "public": true,
    "reasons": [
@@ -56,7 +56,7 @@
    "entryPrice": 0.505,
    "firstTs": "2026-08-17T19:00:41.730327+00:00",
    "lastPrice": 0.505,
-   "lastTs": "2026-08-19T03:14:30.789803+00:00",
+   "lastTs": "2026-08-19T04:04:02.209899+00:00",
    "htkAtEntry": 1.0281161111111112,
    "public": false,
    "reasons": [
@@ -98,7 +98,7 @@
    "entryPrice": 0.465,
    "firstTs": "2026-08-18T23:41:23.124135+00:00",
    "lastPrice": 0.395,
-   "lastTs": "2026-08-19T03:14:30.789803+00:00",
+   "lastTs": "2026-08-19T04:04:02.209899+00:00",
    "htkAtEntry": 0.6177219444444444,
    "public": true,
    "reasons": [
@@ -120,56 +120,12 @@
    "entryPrice": 0.625,
    "firstTs": "2026-08-18T23:41:23.124135+00:00",
    "lastPrice": 0.625,
-   "lastTs": "2026-08-19T03:14:30.789803+00:00",
+   "lastTs": "2026-08-19T04:04:02.209899+00:00",
    "htkAtEntry": 0.8677219444444444,
    "public": false,
    "reasons": [
     "großes Geld auf Under (62%) → $16K",
     "🔥 scharfe Wallet (124/211, 59% · +$4.26M)"
-   ],
-   "signals": [
-    "money",
-    "sharp"
-   ],
-   "stake": 10.0
-  },
-  "mlb-laa-hou-2026-08-18|Houston Astros": {
-   "key": "mlb-laa-hou-2026-08-18",
-   "side": "Houston Astros",
-   "verdict": "BET",
-   "conv": 5,
-   "league": "MLB",
-   "entryPrice": 0.615,
-   "firstTs": "2026-08-19T01:56:53.056100+00:00",
-   "lastPrice": 0.615,
-   "lastTs": "2026-08-19T03:14:30.789803+00:00",
-   "htkAtEntry": -1.7208144444444444,
-   "public": false,
-   "reasons": [
-    "großes Geld auf Houston Astros (61%) → $37K",
-    "Pinnacle: Poly 16pp zu teuer auf Los Angeles Angels"
-   ],
-   "signals": [
-    "money",
-    "pinn"
-   ],
-   "stake": 10.0
-  },
-  "mlb-lad-col-2026-08-18|Los Angeles Dodgers": {
-   "key": "mlb-lad-col-2026-08-18",
-   "side": "Los Angeles Dodgers",
-   "verdict": "BET",
-   "conv": 7,
-   "league": "MLB",
-   "entryPrice": 0.645,
-   "firstTs": "2026-08-19T03:14:30.789803+00:00",
-   "lastPrice": 0.645,
-   "lastTs": "2026-08-19T03:14:30.789803+00:00",
-   "htkAtEntry": -2.5146294444444446,
-   "public": true,
-   "reasons": [
-    "großes Geld auf Los Angeles Dodgers (65%) → $89K",
-    "🔥 scharfe Wallet (14/21, 67% · +$42K)"
    ],
    "signals": [
     "money",
@@ -9191,26 +9147,70 @@
    "firstTs": "2026-08-19T03:14:30.789803+00:00",
    "settledTs": "2026-08-19T03:14:30.789803+00:00",
    "resolvedTs": "2026-08-19T03:14:30.014276+00:00"
+  },
+  {
+   "key": "mlb-laa-hou-2026-08-18",
+   "side": "Houston Astros",
+   "verdict": "BET",
+   "conv": 5,
+   "league": "MLB",
+   "entryPrice": 0.615,
+   "closePrice": 0.615,
+   "result": "loss",
+   "winner": "Los Angeles Angels",
+   "pnl": -10.0,
+   "clvPP": 0.0,
+   "stake": 10.0,
+   "public": false,
+   "signals": [
+    "money",
+    "pinn"
+   ],
+   "firstTs": "2026-08-19T01:56:53.056100+00:00",
+   "settledTs": "2026-08-19T04:04:02.209899+00:00",
+   "resolvedTs": "2026-08-19T04:04:01.413058+00:00"
+  },
+  {
+   "key": "mlb-lad-col-2026-08-18",
+   "side": "Los Angeles Dodgers",
+   "verdict": "BET",
+   "conv": 7,
+   "league": "MLB",
+   "entryPrice": 0.645,
+   "closePrice": 0.645,
+   "result": "win",
+   "winner": "Los Angeles Dodgers",
+   "pnl": 5.5,
+   "clvPP": 0.0,
+   "stake": 10.0,
+   "public": true,
+   "signals": [
+    "money",
+    "sharp"
+   ],
+   "firstTs": "2026-08-19T03:14:30.789803+00:00",
+   "settledTs": "2026-08-19T04:04:02.209899+00:00",
+   "resolvedTs": "2026-08-19T04:04:01.413058+00:00"
   }
  ],
  "agg": {
   "all": {
-   "n": 420,
-   "wins": 232,
-   "hit": 0.5524,
-   "pnl": -202.28,
-   "stake": 4200.0,
-   "roi": -0.0482,
+   "n": 422,
+   "wins": 233,
+   "hit": 0.5521,
+   "pnl": -206.78,
+   "stake": 4220.0,
+   "roi": -0.049,
    "clvAvg": -0.06
   },
   "public": {
-   "n": 124,
-   "wins": 85,
-   "hit": 0.6855,
-   "pnl": 23.74,
-   "stake": 1240.0,
-   "roi": 0.0191,
-   "clvAvg": -0.08
+   "n": 125,
+   "wins": 86,
+   "hit": 0.688,
+   "pnl": 29.24,
+   "stake": 1250.0,
+   "roi": 0.0234,
+   "clvAvg": -0.07
   },
   "byConv": {
    "4": {
@@ -9223,12 +9223,12 @@
     "clvAvg": 0.0
    },
    "5": {
-    "n": 68,
+    "n": 69,
     "wins": 25,
-    "hit": 0.3676,
-    "pnl": -136.78,
-    "stake": 680.0,
-    "roi": -0.2011,
+    "hit": 0.3623,
+    "pnl": -146.78,
+    "stake": 690.0,
+    "roi": -0.2127,
     "clvAvg": -0.11
    },
    "6": {
@@ -9241,13 +9241,13 @@
     "clvAvg": 0.02
    },
    "7": {
-    "n": 133,
-    "wins": 78,
-    "hit": 0.5865,
-    "pnl": -63.73,
-    "stake": 1330.0,
-    "roi": -0.0479,
-    "clvAvg": -0.36
+    "n": 134,
+    "wins": 79,
+    "hit": 0.5896,
+    "pnl": -58.23,
+    "stake": 1340.0,
+    "roi": -0.0435,
+    "clvAvg": -0.35
    },
    "8": {
     "n": 62,
@@ -9279,12 +9279,12 @@
   },
   "byVerdict": {
    "BET": {
-    "n": 342,
-    "wins": 210,
-    "hit": 0.614,
-    "pnl": -45.59,
-    "stake": 3420.0,
-    "roi": -0.0133,
+    "n": 344,
+    "wins": 211,
+    "hit": 0.6134,
+    "pnl": -50.09,
+    "stake": 3440.0,
+    "roi": -0.0146,
     "clvAvg": -0.1
    },
    "FADE": {
@@ -9299,30 +9299,30 @@
   },
   "bySignal": {
    "money": {
-    "n": 218,
-    "wins": 152,
-    "hit": 0.6972,
-    "pnl": 69.86,
-    "stake": 2180.0,
-    "roi": 0.032,
+    "n": 220,
+    "wins": 153,
+    "hit": 0.6955,
+    "pnl": 65.36,
+    "stake": 2200.0,
+    "roi": 0.0297,
     "clvAvg": -0.11
    },
    "pinn": {
-    "n": 4,
+    "n": 5,
     "wins": 3,
-    "hit": 0.75,
-    "pnl": 5.56,
-    "stake": 40.0,
-    "roi": 0.139,
+    "hit": 0.6,
+    "pnl": -4.44,
+    "stake": 50.0,
+    "roi": -0.0888,
     "clvAvg": 0.0
    },
    "sharp": {
-    "n": 318,
-    "wins": 170,
-    "hit": 0.5346,
-    "pnl": -149.24,
-    "stake": 3180.0,
-    "roi": -0.0469,
+    "n": 319,
+    "wins": 171,
+    "hit": 0.5361,
+    "pnl": -143.74,
+    "stake": 3190.0,
+    "roi": -0.0451,
     "clvAvg": -0.08
    },
    "steam": {
