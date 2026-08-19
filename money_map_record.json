@@ -1,23 +1,23 @@
 {
-"generatedAt": "2026-08-19T20:54:14.191153+00:00",
+"generatedAt": "2026-08-19T21:09:14.900187+00:00",
 "byVerdict": {
 "konsens": {
-"n": 218,
-"wins": 170,
-"hitRate": 0.7798,
-"polyN": 199,
-"polyWins": 152,
-"polyHitRate": 0.7638,
-"pinnN": 14,
-"pinnHitRate": 0.6429
+"n": 220,
+"wins": 172,
+"hitRate": 0.7818,
+"polyN": 201,
+"polyWins": 154,
+"polyHitRate": 0.7662,
+"pinnN": 15,
+"pinnHitRate": 0.6667
 },
 "uneinig": {
-"n": 71,
-"wins": 17,
-"hitRate": 0.2394,
-"polyN": 61,
+"n": 72,
+"wins": 18,
+"hitRate": 0.25,
+"polyN": 62,
 "polyWins": 20,
-"polyHitRate": 0.3279,
+"polyHitRate": 0.3226,
 "pinnN": 33,
 "pinnHitRate": 0.5455
 },
@@ -123,6 +123,11 @@
 "wins": 5,
 "hitRate": 0.8333
 },
+"Spanish La Liga": {
+"n": 6,
+"wins": 3,
+"hitRate": 0.5
+},
 "Turkish Super League": {
 "n": 6,
 "wins": 2,
@@ -153,10 +158,10 @@
 "wins": 4,
 "hitRate": 0.8
 },
-"Spanish La Liga": {
+"Saudi Kings Cup": {
 "n": 5,
-"wins": 2,
-"hitRate": 0.4
+"wins": 4,
+"hitRate": 0.8
 },
 "Danish Superliga": {
 "n": 4,
@@ -174,11 +179,6 @@
 "hitRate": 0.75
 },
 "Romanian Liga I": {
-"n": 4,
-"wins": 3,
-"hitRate": 0.75
-},
-"Saudi Kings Cup": {
 "n": 4,
 "wins": 3,
 "hitRate": 0.75
@@ -273,6 +273,11 @@
 "wins": 2,
 "hitRate": 1.0
 },
+"Friendly Matches": {
+"n": 2,
+"wins": 2,
+"hitRate": 1.0
+},
 "Serbian Super League": {
 "n": 2,
 "wins": 2,
@@ -304,11 +309,6 @@
 "hitRate": 1.0
 },
 "English Community Shield": {
-"n": 1,
-"wins": 1,
-"hitRate": 1.0
-},
-"Friendly Matches": {
 "n": 1,
 "wins": 1,
 "hitRate": 1.0
@@ -366,9 +366,9 @@
 },
 "byStrength": {
 "strong": {
-"n": 161,
-"wins": 126,
-"hitRate": 0.7826
+"n": 164,
+"wins": 129,
+"hitRate": 0.7866
 },
 "weak": {
 "n": 98,
@@ -377,14 +377,71 @@
 }
 },
 "divergence": {
-"n": 71,
-"betfairWins": 17,
-"betfairRate": 0.2394,
-"polyN": 61,
+"n": 72,
+"betfairWins": 18,
+"betfairRate": 0.25,
+"polyN": 62,
 "polyWins": 20,
-"polyRate": 0.3279
+"polyRate": 0.3226
 },
 "recent": [
+{
+"matchId": "35780305",
+"home": "Atletico Madrid",
+"away": "Malaga",
+"league": "Spanish La Liga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Atletico Madrid",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-08-19T19:00:00Z",
+"settledAt": "2026-08-19T21:09:14.738737+00:00"
+},
+{
+"matchId": "35950671",
+"home": "Barcelona",
+"away": "Al Ahly Cairo",
+"league": "Friendly Matches",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Barcelona",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-08-19T18:00:00Z",
+"settledAt": "2026-08-19T21:09:14.738737+00:00"
+},
+{
+"matchId": "35959437",
+"home": "Al-Ula FC",
+"away": "Al-Fateh (KSA)",
+"league": "Saudi Kings Cup",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Al-Ula FC",
+"polySide": "away",
+"winner": "home",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+3,
+0
+],
+"kickoff": "2026-08-19T18:00:00Z",
+"settledAt": "2026-08-19T21:09:14.738737+00:00"
+},
 {
 "matchId": "35931500",
 "home": "NEC Nijmegen",
@@ -1087,69 +1144,12 @@
 ],
 "kickoff": "2026-08-17T19:00:00Z",
 "settledAt": "2026-08-17T21:03:03.527276+00:00"
-},
-{
-"matchId": "35925770",
-"home": "Valur",
-"away": "KA Akureyri",
-"league": "Icelandic Urvalsdeild",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "KA Akureyri",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-4,
-4
-],
-"kickoff": "2026-08-17T18:00:00Z",
-"settledAt": "2026-08-17T21:03:03.527276+00:00"
-},
-{
-"matchId": "35927044",
-"home": "De Graafschap",
-"away": "Jong AZ Alkmaar",
-"league": "Dutch Eerste Divisie",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Jong AZ Alkmaar",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-5
-],
-"kickoff": "2026-08-17T18:00:00Z",
-"settledAt": "2026-08-17T21:03:03.527276+00:00"
-},
-{
-"matchId": "35925847",
-"home": "Jong FC Utrecht",
-"away": "Vitesse Arnhem",
-"league": "Dutch Eerste Divisie",
-"verdict": "uneinig",
-"moneySide": "draw",
-"moneyName": "The Draw",
-"polySide": "away",
-"winner": "away",
-"moneyWin": false,
-"polyWin": true,
-"ftScore": [
-1,
-3
-],
-"kickoff": "2026-08-17T18:00:00Z",
-"settledAt": "2026-08-17T21:03:03.527276+00:00"
 }
 ],
 "global": {
-"n": 292,
-"wins": 188,
-"hitRate": 0.6438
+"n": 295,
+"wins": 191,
+"hitRate": 0.6475
 },
-"pending": 9
+"pending": 6
 }
