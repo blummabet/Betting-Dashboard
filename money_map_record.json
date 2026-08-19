@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-08-19T12:23:22.580520+00:00",
+"generatedAt": "2026-08-19T12:38:23.327053+00:00",
 "byVerdict": {
 "konsens": {
 "n": 214,
@@ -12,12 +12,12 @@
 "pinnHitRate": 0.6429
 },
 "uneinig": {
-"n": 69,
+"n": 70,
 "wins": 17,
-"hitRate": 0.2464,
-"polyN": 59,
-"polyWins": 19,
-"polyHitRate": 0.322,
+"hitRate": 0.2429,
+"polyN": 60,
+"polyWins": 20,
+"polyHitRate": 0.3333,
 "pinnN": 33,
 "pinnHitRate": 0.5455
 },
@@ -238,6 +238,11 @@
 "wins": 2,
 "hitRate": 1.0
 },
+"Australia Cup": {
+"n": 2,
+"wins": 1,
+"hitRate": 0.5
+},
 "Austrian Bundesliga": {
 "n": 2,
 "wins": 2,
@@ -282,11 +287,6 @@
 "n": 1,
 "wins": 0,
 "hitRate": 0.0
-},
-"Australia Cup": {
-"n": 1,
-"wins": 1,
-"hitRate": 1.0
 },
 "Canadian Premier League": {
 "n": 1,
@@ -366,20 +366,39 @@
 "hitRate": 0.7771
 },
 "weak": {
-"n": 96,
+"n": 97,
 "wins": 44,
-"hitRate": 0.4583
+"hitRate": 0.4536
 }
 },
 "divergence": {
-"n": 69,
+"n": 70,
 "betfairWins": 17,
-"betfairRate": 0.2464,
-"polyN": 59,
-"polyWins": 19,
-"polyRate": 0.322
+"betfairRate": 0.2429,
+"polyN": 60,
+"polyWins": 20,
+"polyRate": 0.3333
 },
 "recent": [
+{
+"matchId": "35953784",
+"home": "Apia Leichhardt Tigers",
+"away": "Melbourne Victory",
+"league": "Australia Cup",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "away",
+"winner": "away",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-08-19T09:30:00Z",
+"settledAt": "2026-08-19T12:38:23.091880+00:00"
+},
 {
 "matchId": "35937476",
 "home": "Goias",
@@ -1120,31 +1139,12 @@
 ],
 "kickoff": "2026-08-17T17:00:00Z",
 "settledAt": "2026-08-17T20:02:01.011192+00:00"
-},
-{
-"matchId": "35925064",
-"home": "FK Novi Pazar",
-"away": "Vojvodina",
-"league": "Serbian Super League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Fk Novi Pazar",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-08-17T18:00:00Z",
-"settledAt": "2026-08-17T20:02:01.011192+00:00"
 }
 ],
 "global": {
-"n": 286,
+"n": 287,
 "wins": 184,
-"hitRate": 0.6434
+"hitRate": 0.6411
 },
-"pending": 8
+"pending": 7
 }
