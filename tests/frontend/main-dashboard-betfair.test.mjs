@@ -159,3 +159,27 @@ test('Frisches Geld: @1.01-Zufluss fliegt raus, normale Quote bleibt', () => {
   assert.match(h, /RealHeim/, 'normaler Zufluss bleibt');
   assert.ok(!/LockHeim/.test(h), '@1.01-Zufluss (Quasi-Lock) ist gefiltert');
 });
+
+// 19.08.2026 (Lucas): HT-Kachel = nur Erste-Halbzeit-Maerkte. Laeuft schon die 2. HZ, ist das HT-Geld
+// entschieden und soll raus (blockiert sonst Slots fuer laufende Spiele). Halbzeitpause (is_ht) bleibt.
+test('HT-Kachel droppt Spiele, deren 1. Halbzeit vorbei ist (2. HZ), behaelt 1. HZ + Halbzeitpause', () => {
+  const w = load();
+  const HT = (over) => ({ 'First Half Goals 1.5': { runners: [
+    { name: 'Over 1.5 Goals', odd: 1.5, vol: over }, { name: 'Under 1.5 Goals', odd: 2.6, vol: 2000 }] } });
+  seed(w, { betfair: { matches: [
+    { matchId: 11, home: 'FirstHalfLauf', away: 'A', country: 'DE', league: 'L1',
+      kickoff: new Date(Date.now() - 30 * 60000).toISOString(), liveInfo: { time: 30, is_ht: false }, markets: HT(12000) },
+    { matchId: 12, home: 'ZweiteHalbzeit', away: 'B', country: 'DE', league: 'L2',
+      kickoff: new Date(Date.now() - 60 * 60000).toISOString(), liveInfo: { time: 60, is_ht: false }, markets: HT(15000) },
+    { matchId: 13, home: 'Halbzeitpause', away: 'C', country: 'DE', league: 'L3',
+      kickoff: new Date(Date.now() - 47 * 60000).toISOString(), liveInfo: { time: 45, is_ht: true }, markets: HT(9000) },
+  ] }, bfOverview: { generatedAt: new Date().toISOString(), steam: [], flow: [] } });
+  w._renderMainDash();
+  const h = w.document.getElementById('mainDashPanel').innerHTML;
+  // nur die HT-Box betrachten (Volumen-Kachel „Betfair-Kohle" zeigt 2.-HZ-Geld weiter — anderer Zweck)
+  const a0 = h.indexOf('Betfair HT'), a1 = h.indexOf('Betfair-Steam', a0);
+  const htBox = h.slice(a0, a1 > a0 ? a1 : a0 + 3000);
+  assert.match(htBox, /FirstHalfLauf/, '1. Halbzeit laeuft -> in HT-Box');
+  assert.match(htBox, /Halbzeitpause/, 'Halbzeitpause (is_ht) -> in HT-Box');
+  assert.ok(!/ZweiteHalbzeit/.test(htBox), '2. Halbzeit -> aus HT-Box raus');
+});
