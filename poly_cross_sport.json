@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-19T09:49:33.186823+00:00",
+ "generatedAt": "2026-08-19T19:40:44.265896+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -8,27 +8,84 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 448,
- "pinnKeys": 296,
- "matched": 216,
- "footballRows": 198,
- "crossRows": 250,
- "footballSkippedStale": 38,
+ "polyRowsSeen": 457,
+ "pinnKeys": 309,
+ "matched": 225,
+ "footballRows": 201,
+ "crossRows": 256,
+ "footballSkippedStale": 71,
  "seenBySport": {
   "americanfootball_nfl": 152,
-  "baseball_mlb": 96,
+  "baseball_mlb": 102,
   "boxing_boxing": 2,
   "soccer_mls": 90,
-  "soccer_liga": 108
+  "soccer_liga": 111
  },
  "matchedBySport": {
-  "baseball_mlb": 18,
+  "baseball_mlb": 24,
   "soccer_mls": 90,
-  "soccer_liga": 108
+  "soccer_liga": 111
  },
  "trackRecord": {
-  "tracked": 138,
-  "converged": 26
+  "tracked": 136,
+  "converged": 28
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|newyorkmets-sandiegopadres|sandiegopadres",
+   "sport": "baseball_mlb",
+   "event": "San Diego Padres vs New York Mets",
+   "market": "Moneyline",
+   "outcome": "San Diego Padres",
+   "polyPP": 3.5,
+   "pinnPP": 15.6,
+   "gapPP": -12.08,
+   "vol": 456643,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -4.11,
+   "firstSeen": "2026-08-17T23:48:57.993834+00:00"
+  },
+  {
+   "id": "baseball_mlb|newyorkmets-sandiegopadres|newyorkmets",
+   "sport": "baseball_mlb",
+   "event": "San Diego Padres vs New York Mets",
+   "market": "Moneyline",
+   "outcome": "New York Mets",
+   "polyPP": 96.5,
+   "pinnPP": 84.4,
+   "gapPP": 12.08,
+   "vol": 456643,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -4.11,
+   "firstSeen": "2026-08-17T23:48:57.993834+00:00"
+  },
+  {
+   "id": "baseball_mlb|atlantabraves-minnesotatwins|atlantabraves",
+   "sport": "baseball_mlb",
+   "event": "Atlanta Braves vs Minnesota Twins",
+   "market": "Moneyline",
+   "outcome": "Atlanta Braves",
+   "polyPP": 54.5,
+   "pinnPP": 47.8,
+   "gapPP": 6.7,
+   "vol": 633819,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 34.37,
+   "firstSeen": "2026-08-18T01:51:06.775843+00:00"
+  },
+  {
+   "id": "baseball_mlb|atlantabraves-minnesotatwins|minnesotatwins",
+   "sport": "baseball_mlb",
+   "event": "Atlanta Braves vs Minnesota Twins",
+   "market": "Moneyline",
+   "outcome": "Minnesota Twins",
+   "polyPP": 45.5,
+   "pinnPP": 52.2,
+   "gapPP": -6.7,
+   "vol": 633819,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 34.37,
+   "firstSeen": "2026-08-18T01:51:06.775843+00:00"
+  }
+ ]
 }
