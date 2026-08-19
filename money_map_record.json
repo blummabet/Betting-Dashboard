@@ -1,23 +1,23 @@
 {
-"generatedAt": "2026-08-18T22:07:02.770316+00:00",
+"generatedAt": "2026-08-19T00:08:58.074405+00:00",
 "byVerdict": {
 "konsens": {
-"n": 208,
-"wins": 162,
-"hitRate": 0.7788,
-"polyN": 191,
-"polyWins": 146,
-"polyHitRate": 0.7644,
+"n": 209,
+"wins": 163,
+"hitRate": 0.7799,
+"polyN": 192,
+"polyWins": 147,
+"polyHitRate": 0.7656,
 "pinnN": 11,
 "pinnHitRate": 0.7273
 },
 "uneinig": {
-"n": 68,
-"wins": 16,
-"hitRate": 0.2353,
-"polyN": 58,
+"n": 69,
+"wins": 17,
+"hitRate": 0.2464,
+"polyN": 59,
 "polyWins": 19,
-"polyHitRate": 0.3276,
+"polyHitRate": 0.322,
 "pinnN": 33,
 "pinnHitRate": 0.5455
 },
@@ -148,6 +148,11 @@
 "wins": 2,
 "hitRate": 0.4
 },
+"CONMEBOL Copa Sudamericana": {
+"n": 4,
+"wins": 3,
+"hitRate": 0.75
+},
 "Chinese Super League": {
 "n": 4,
 "wins": 3,
@@ -182,11 +187,6 @@
 "n": 3,
 "wins": 3,
 "hitRate": 1.0
-},
-"CONMEBOL Copa Sudamericana": {
-"n": 3,
-"wins": 2,
-"hitRate": 0.6667
 },
 "Chilean Primera B": {
 "n": 3,
@@ -233,6 +233,11 @@
 "wins": 3,
 "hitRate": 1.0
 },
+"Argentinian Cup": {
+"n": 2,
+"wins": 2,
+"hitRate": 1.0
+},
 "Austrian Bundesliga": {
 "n": 2,
 "wins": 2,
@@ -272,11 +277,6 @@
 "n": 2,
 "wins": 0,
 "hitRate": 0.0
-},
-"Argentinian Cup": {
-"n": 1,
-"wins": 1,
-"hitRate": 1.0
 },
 "Argentinian Primera Nacional": {
 "n": 1,
@@ -361,25 +361,63 @@
 },
 "byStrength": {
 "strong": {
-"n": 155,
-"wins": 120,
-"hitRate": 0.7742
+"n": 156,
+"wins": 121,
+"hitRate": 0.7756
 },
 "weak": {
-"n": 91,
-"wins": 41,
-"hitRate": 0.4505
+"n": 92,
+"wins": 42,
+"hitRate": 0.4565
 }
 },
 "divergence": {
-"n": 68,
-"betfairWins": 16,
-"betfairRate": 0.2353,
-"polyN": 58,
+"n": 69,
+"betfairWins": 17,
+"betfairRate": 0.2464,
+"polyN": 59,
 "polyWins": 19,
-"polyRate": 0.3276
+"polyRate": 0.322
 },
 "recent": [
+{
+"matchId": "35930914",
+"home": "Deportivo Recoleta",
+"away": "Boca Juniors",
+"league": "CONMEBOL Copa Sudamericana",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Boca Juniors",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+4
+],
+"kickoff": "2026-08-18T22:00:00Z",
+"settledAt": "2026-08-18T23:52:16.682584+00:00"
+},
+{
+"matchId": "35913518",
+"home": "Deportivo Riestra",
+"away": "Gimnasia La Plata",
+"league": "Argentinian Cup",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-18T20:00:00Z",
+"settledAt": "2026-08-18T23:08:47.150504+00:00"
+},
 {
 "matchId": "35931491",
 "home": "Dinamo Zagreb",
@@ -1101,50 +1139,12 @@
 ],
 "kickoff": "2026-08-17T16:00:00Z",
 "settledAt": "2026-08-17T19:03:03.425733+00:00"
-},
-{
-"matchId": "35925116",
-"home": "Gnistan",
-"away": "Ilves",
-"league": "Finnish Veikkausliiga",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Gnistan",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-2
-],
-"kickoff": "2026-08-17T15:00:00Z",
-"settledAt": "2026-08-17T18:17:02.636976+00:00"
-},
-{
-"matchId": "35948113",
-"home": "Pachuca U21",
-"away": "Puebla U21",
-"league": "Mexican U21",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Pachuca U21",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-08-17T15:15:01Z",
-"settledAt": "2026-08-17T18:17:02.636976+00:00"
 }
 ],
 "global": {
-"n": 279,
-"wins": 179,
-"hitRate": 0.6416
+"n": 281,
+"wins": 181,
+"hitRate": 0.6441
 },
-"pending": 6
+"pending": 5
 }

@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-18T21:58:21.638619+00:00",
+ "generatedAt": "2026-08-18T23:58:36.442176+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,8 +9,8 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 448,
- "pinnKeys": 316,
- "matched": 228,
+ "pinnKeys": 312,
+ "matched": 226,
  "footballRows": 198,
  "crossRows": 250,
  "footballSkippedStale": 38,
@@ -22,13 +22,98 @@
   "soccer_liga": 108
  },
  "matchedBySport": {
-  "baseball_mlb": 30,
+  "baseball_mlb": 28,
   "soccer_mls": 90,
   "soccer_liga": 108
  },
  "trackRecord": {
-  "tracked": 133,
-  "converged": 19
+  "tracked": 137,
+  "converged": 27
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|atlantabraves-minnesotatwins|atlantabraves",
+   "sport": "baseball_mlb",
+   "event": "Atlanta Braves vs Minnesota Twins",
+   "market": "Moneyline",
+   "outcome": "Atlanta Braves",
+   "polyPP": 35.5,
+   "pinnPP": 57.4,
+   "gapPP": -21.86,
+   "vol": 264138,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 19.21,
+   "firstSeen": "2026-08-18T01:51:06.775843+00:00"
+  },
+  {
+   "id": "baseball_mlb|atlantabraves-minnesotatwins|minnesotatwins",
+   "sport": "baseball_mlb",
+   "event": "Atlanta Braves vs Minnesota Twins",
+   "market": "Moneyline",
+   "outcome": "Minnesota Twins",
+   "polyPP": 64.5,
+   "pinnPP": 42.6,
+   "gapPP": 21.86,
+   "vol": 264138,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 19.21,
+   "firstSeen": "2026-08-18T01:51:06.775843+00:00"
+  },
+  {
+   "id": "baseball_mlb|milwaukeebrewers-seattlemariners|seattlemariners",
+   "sport": "baseball_mlb",
+   "event": "Seattle Mariners vs Milwaukee Brewers",
+   "market": "Moneyline",
+   "outcome": "Seattle Mariners",
+   "polyPP": 27.5,
+   "pinnPP": 38.8,
+   "gapPP": -11.31,
+   "vol": 181604,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-18T23:58:36.441859+00:00"
+  },
+  {
+   "id": "baseball_mlb|milwaukeebrewers-seattlemariners|milwaukeebrewers",
+   "sport": "baseball_mlb",
+   "event": "Seattle Mariners vs Milwaukee Brewers",
+   "market": "Moneyline",
+   "outcome": "Milwaukee Brewers",
+   "polyPP": 72.5,
+   "pinnPP": 61.2,
+   "gapPP": 11.31,
+   "vol": 181604,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-18T23:58:36.441859+00:00"
+  },
+  {
+   "id": "baseball_mlb|athletics-kansascityroyals|athletics",
+   "sport": "baseball_mlb",
+   "event": "Athletics vs Kansas City Royals",
+   "market": "Moneyline",
+   "outcome": "Athletics",
+   "polyPP": 51.5,
+   "pinnPP": 40.8,
+   "gapPP": 10.74,
+   "vol": 465986,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 5.04,
+   "firstSeen": "2026-08-17T23:59:22.839086+00:00"
+  },
+  {
+   "id": "baseball_mlb|athletics-kansascityroyals|kansascityroyals",
+   "sport": "baseball_mlb",
+   "event": "Athletics vs Kansas City Royals",
+   "market": "Moneyline",
+   "outcome": "Kansas City Royals",
+   "polyPP": 48.5,
+   "pinnPP": 59.2,
+   "gapPP": -10.74,
+   "vol": 465986,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 5.04,
+   "firstSeen": "2026-08-17T23:59:22.839086+00:00"
+  }
+ ]
 }
