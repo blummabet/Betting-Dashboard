@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-08-19T04:04:02.209899+00:00",
+ "updatedAt": "2026-08-19T04:56:04.195101+00:00",
  "stake": 10.0,
  "expired": 0,
  "open": {
@@ -12,7 +12,7 @@
    "entryPrice": 0.735,
    "firstTs": "2026-08-16T14:09:11.781306+00:00",
    "lastPrice": 0.735,
-   "lastTs": "2026-08-19T04:04:02.209899+00:00",
+   "lastTs": "2026-08-19T04:56:04.195101+00:00",
    "htkAtEntry": 2.938317777777778,
    "public": true,
    "reasons": [
@@ -56,7 +56,7 @@
    "entryPrice": 0.505,
    "firstTs": "2026-08-17T19:00:41.730327+00:00",
    "lastPrice": 0.505,
-   "lastTs": "2026-08-19T04:04:02.209899+00:00",
+   "lastTs": "2026-08-19T04:56:04.195101+00:00",
    "htkAtEntry": 1.0281161111111112,
    "public": false,
    "reasons": [
@@ -98,34 +98,12 @@
    "entryPrice": 0.465,
    "firstTs": "2026-08-18T23:41:23.124135+00:00",
    "lastPrice": 0.395,
-   "lastTs": "2026-08-19T04:04:02.209899+00:00",
+   "lastTs": "2026-08-19T04:56:04.195101+00:00",
    "htkAtEntry": 0.6177219444444444,
    "public": true,
    "reasons": [
     "großes Geld auf CA Banfield (84%) → $69K",
     "🔥 scharfe Wallet (25/44, 57% · +$657K)"
-   ],
-   "signals": [
-    "money",
-    "sharp"
-   ],
-   "stake": 10.0
-  },
-  "lib-tol-ind1-2026-08-11-more-markets|Under": {
-   "key": "lib-tol-ind1-2026-08-11-more-markets",
-   "side": "Under",
-   "verdict": "BET",
-   "conv": 6,
-   "league": "SOCCER",
-   "entryPrice": 0.625,
-   "firstTs": "2026-08-18T23:41:23.124135+00:00",
-   "lastPrice": 0.625,
-   "lastTs": "2026-08-19T04:04:02.209899+00:00",
-   "htkAtEntry": 0.8677219444444444,
-   "public": false,
-   "reasons": [
-    "großes Geld auf Under (62%) → $16K",
-    "🔥 scharfe Wallet (124/211, 59% · +$4.26M)"
    ],
    "signals": [
     "money",
@@ -9191,16 +9169,38 @@
    "firstTs": "2026-08-19T03:14:30.789803+00:00",
    "settledTs": "2026-08-19T04:04:02.209899+00:00",
    "resolvedTs": "2026-08-19T04:04:01.413058+00:00"
+  },
+  {
+   "key": "lib-tol-ind1-2026-08-11-more-markets",
+   "side": "Under",
+   "verdict": "BET",
+   "conv": 6,
+   "league": "SOCCER",
+   "entryPrice": 0.625,
+   "closePrice": 0.625,
+   "result": "win",
+   "winner": "Under",
+   "pnl": 6.0,
+   "clvPP": 0.0,
+   "stake": 10.0,
+   "public": false,
+   "signals": [
+    "money",
+    "sharp"
+   ],
+   "firstTs": "2026-08-18T23:41:23.124135+00:00",
+   "settledTs": "2026-08-19T04:56:04.195101+00:00",
+   "resolvedTs": "2026-08-19T04:56:03.420685+00:00"
   }
  ],
  "agg": {
   "all": {
-   "n": 422,
-   "wins": 233,
-   "hit": 0.5521,
-   "pnl": -206.78,
-   "stake": 4220.0,
-   "roi": -0.049,
+   "n": 423,
+   "wins": 234,
+   "hit": 0.5532,
+   "pnl": -200.78,
+   "stake": 4230.0,
+   "roi": -0.0475,
    "clvAvg": -0.06
   },
   "public": {
@@ -9232,13 +9232,13 @@
     "clvAvg": -0.11
    },
    "6": {
-    "n": 113,
-    "wins": 68,
-    "hit": 0.6018,
-    "pnl": 106.75,
-    "stake": 1130.0,
-    "roi": 0.0945,
-    "clvAvg": 0.02
+    "n": 114,
+    "wins": 69,
+    "hit": 0.6053,
+    "pnl": 112.75,
+    "stake": 1140.0,
+    "roi": 0.0989,
+    "clvAvg": 0.01
    },
    "7": {
     "n": 134,
@@ -9279,12 +9279,12 @@
   },
   "byVerdict": {
    "BET": {
-    "n": 344,
-    "wins": 211,
-    "hit": 0.6134,
-    "pnl": -50.09,
-    "stake": 3440.0,
-    "roi": -0.0146,
+    "n": 345,
+    "wins": 212,
+    "hit": 0.6145,
+    "pnl": -44.09,
+    "stake": 3450.0,
+    "roi": -0.0128,
     "clvAvg": -0.1
    },
    "FADE": {
@@ -9299,12 +9299,12 @@
   },
   "bySignal": {
    "money": {
-    "n": 220,
-    "wins": 153,
-    "hit": 0.6955,
-    "pnl": 65.36,
-    "stake": 2200.0,
-    "roi": 0.0297,
+    "n": 221,
+    "wins": 154,
+    "hit": 0.6968,
+    "pnl": 71.36,
+    "stake": 2210.0,
+    "roi": 0.0323,
     "clvAvg": -0.11
    },
    "pinn": {
@@ -9317,12 +9317,12 @@
     "clvAvg": 0.0
    },
    "sharp": {
-    "n": 319,
-    "wins": 171,
-    "hit": 0.5361,
-    "pnl": -143.74,
-    "stake": 3190.0,
-    "roi": -0.0451,
+    "n": 320,
+    "wins": 172,
+    "hit": 0.5375,
+    "pnl": -137.74,
+    "stake": 3200.0,
+    "roi": -0.043,
     "clvAvg": -0.08
    },
    "steam": {
