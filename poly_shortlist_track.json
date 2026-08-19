@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-08-19T01:56:53.056100+00:00",
+ "updatedAt": "2026-08-19T03:14:30.789803+00:00",
  "stake": 10.0,
  "expired": 0,
  "open": {
@@ -12,7 +12,7 @@
    "entryPrice": 0.735,
    "firstTs": "2026-08-16T14:09:11.781306+00:00",
    "lastPrice": 0.735,
-   "lastTs": "2026-08-19T01:56:53.056100+00:00",
+   "lastTs": "2026-08-19T03:14:30.789803+00:00",
    "htkAtEntry": 2.938317777777778,
    "public": true,
    "reasons": [
@@ -56,7 +56,7 @@
    "entryPrice": 0.505,
    "firstTs": "2026-08-17T19:00:41.730327+00:00",
    "lastPrice": 0.505,
-   "lastTs": "2026-08-19T01:56:53.056100+00:00",
+   "lastTs": "2026-08-19T03:14:30.789803+00:00",
    "htkAtEntry": 1.0281161111111112,
    "public": false,
    "reasons": [
@@ -89,48 +89,6 @@
    ],
    "stake": 10.0
   },
-  "mlb-wsh-tex-2026-08-18|Over": {
-   "key": "mlb-wsh-tex-2026-08-18",
-   "side": "Over",
-   "verdict": "BET",
-   "conv": 5,
-   "league": "MLB",
-   "entryPrice": 0.525,
-   "firstTs": "2026-08-18T22:45:54.985290+00:00",
-   "lastPrice": 0.435,
-   "lastTs": "2026-08-19T01:56:53.056100+00:00",
-   "htkAtEntry": 1.3782925,
-   "public": false,
-   "reasons": [
-    "Steam läuft rein (+10.0pp)"
-   ],
-   "signals": [
-    "steam"
-   ],
-   "stake": 10.0
-  },
-  "mlb-mia-phi-2026-08-18|Philadelphia Phillies": {
-   "key": "mlb-mia-phi-2026-08-18",
-   "side": "Philadelphia Phillies",
-   "verdict": "BET",
-   "conv": 5,
-   "league": "MLB",
-   "entryPrice": 0.665,
-   "firstTs": "2026-08-18T23:07:24.703652+00:00",
-   "lastPrice": 0.665,
-   "lastTs": "2026-08-19T01:56:53.056100+00:00",
-   "htkAtEntry": -0.3998627777777779,
-   "public": false,
-   "reasons": [
-    "großes Geld auf Philadelphia Phillies (66%) → $55K",
-    "Pinnacle: Poly 10pp zu teuer auf Miami Marlins"
-   ],
-   "signals": [
-    "money",
-    "pinn"
-   ],
-   "stake": 10.0
-  },
   "argcopa-ban-afm-2026-08-18|CA Banfield": {
    "key": "argcopa-ban-afm-2026-08-18",
    "side": "CA Banfield",
@@ -140,7 +98,7 @@
    "entryPrice": 0.465,
    "firstTs": "2026-08-18T23:41:23.124135+00:00",
    "lastPrice": 0.395,
-   "lastTs": "2026-08-19T01:56:53.056100+00:00",
+   "lastTs": "2026-08-19T03:14:30.789803+00:00",
    "htkAtEntry": 0.6177219444444444,
    "public": true,
    "reasons": [
@@ -162,7 +120,7 @@
    "entryPrice": 0.625,
    "firstTs": "2026-08-18T23:41:23.124135+00:00",
    "lastPrice": 0.625,
-   "lastTs": "2026-08-19T01:56:53.056100+00:00",
+   "lastTs": "2026-08-19T03:14:30.789803+00:00",
    "htkAtEntry": 0.8677219444444444,
    "public": false,
    "reasons": [
@@ -184,7 +142,7 @@
    "entryPrice": 0.615,
    "firstTs": "2026-08-19T01:56:53.056100+00:00",
    "lastPrice": 0.615,
-   "lastTs": "2026-08-19T01:56:53.056100+00:00",
+   "lastTs": "2026-08-19T03:14:30.789803+00:00",
    "htkAtEntry": -1.7208144444444444,
    "public": false,
    "reasons": [
@@ -194,6 +152,28 @@
    "signals": [
     "money",
     "pinn"
+   ],
+   "stake": 10.0
+  },
+  "mlb-lad-col-2026-08-18|Los Angeles Dodgers": {
+   "key": "mlb-lad-col-2026-08-18",
+   "side": "Los Angeles Dodgers",
+   "verdict": "BET",
+   "conv": 7,
+   "league": "MLB",
+   "entryPrice": 0.645,
+   "firstTs": "2026-08-19T03:14:30.789803+00:00",
+   "lastPrice": 0.645,
+   "lastTs": "2026-08-19T03:14:30.789803+00:00",
+   "htkAtEntry": -2.5146294444444446,
+   "public": true,
+   "reasons": [
+    "großes Geld auf Los Angeles Dodgers (65%) → $89K",
+    "🔥 scharfe Wallet (14/21, 67% · +$42K)"
+   ],
+   "signals": [
+    "money",
+    "sharp"
    ],
    "stake": 10.0
   }
@@ -9146,17 +9126,82 @@
    "firstTs": "2026-08-18T22:45:54.985290+00:00",
    "settledTs": "2026-08-19T01:56:53.056100+00:00",
    "resolvedTs": "2026-08-19T01:56:52.331157+00:00"
+  },
+  {
+   "key": "mlb-wsh-tex-2026-08-18",
+   "side": "Over",
+   "verdict": "BET",
+   "conv": 5,
+   "league": "MLB",
+   "entryPrice": 0.525,
+   "closePrice": 0.435,
+   "result": "loss",
+   "winner": "Texas Rangers",
+   "pnl": -10.0,
+   "clvPP": -9.0,
+   "stake": 10.0,
+   "public": false,
+   "signals": [
+    "steam"
+   ],
+   "firstTs": "2026-08-18T22:45:54.985290+00:00",
+   "settledTs": "2026-08-19T03:14:30.789803+00:00",
+   "resolvedTs": "2026-08-19T03:14:30.014276+00:00"
+  },
+  {
+   "key": "mlb-mia-phi-2026-08-18",
+   "side": "Philadelphia Phillies",
+   "verdict": "BET",
+   "conv": 5,
+   "league": "MLB",
+   "entryPrice": 0.665,
+   "closePrice": 0.665,
+   "result": "win",
+   "winner": "Philadelphia Phillies",
+   "pnl": 5.04,
+   "clvPP": 0.0,
+   "stake": 10.0,
+   "public": false,
+   "signals": [
+    "money",
+    "pinn"
+   ],
+   "firstTs": "2026-08-18T23:07:24.703652+00:00",
+   "settledTs": "2026-08-19T03:14:30.789803+00:00",
+   "resolvedTs": "2026-08-19T03:14:30.014276+00:00"
+  },
+  {
+   "key": "mlb-sea-mil-2026-08-18",
+   "side": "Milwaukee Brewers",
+   "verdict": "BET",
+   "conv": 6,
+   "league": "MLB",
+   "entryPrice": 0.615,
+   "closePrice": 0.615,
+   "result": "win",
+   "winner": "Milwaukee Brewers",
+   "pnl": 6.26,
+   "clvPP": 0.0,
+   "stake": 10.0,
+   "public": false,
+   "signals": [
+    "money",
+    "sharp"
+   ],
+   "firstTs": "2026-08-19T03:14:30.789803+00:00",
+   "settledTs": "2026-08-19T03:14:30.789803+00:00",
+   "resolvedTs": "2026-08-19T03:14:30.014276+00:00"
   }
  ],
  "agg": {
   "all": {
-   "n": 417,
-   "wins": 230,
-   "hit": 0.5516,
-   "pnl": -203.58,
-   "stake": 4170.0,
-   "roi": -0.0488,
-   "clvAvg": -0.04
+   "n": 420,
+   "wins": 232,
+   "hit": 0.5524,
+   "pnl": -202.28,
+   "stake": 4200.0,
+   "roi": -0.0482,
+   "clvAvg": -0.06
   },
   "public": {
    "n": 124,
@@ -9178,21 +9223,21 @@
     "clvAvg": 0.0
    },
    "5": {
-    "n": 66,
-    "wins": 24,
-    "hit": 0.3636,
-    "pnl": -131.82,
-    "stake": 660.0,
-    "roi": -0.1997,
-    "clvAvg": 0.02
+    "n": 68,
+    "wins": 25,
+    "hit": 0.3676,
+    "pnl": -136.78,
+    "stake": 680.0,
+    "roi": -0.2011,
+    "clvAvg": -0.11
    },
    "6": {
-    "n": 112,
-    "wins": 67,
-    "hit": 0.5982,
-    "pnl": 100.49,
-    "stake": 1120.0,
-    "roi": 0.0897,
+    "n": 113,
+    "wins": 68,
+    "hit": 0.6018,
+    "pnl": 106.75,
+    "stake": 1130.0,
+    "roi": 0.0945,
     "clvAvg": 0.02
    },
    "7": {
@@ -9234,13 +9279,13 @@
   },
   "byVerdict": {
    "BET": {
-    "n": 339,
-    "wins": 208,
-    "hit": 0.6136,
-    "pnl": -46.89,
-    "stake": 3390.0,
-    "roi": -0.0138,
-    "clvAvg": -0.07
+    "n": 342,
+    "wins": 210,
+    "hit": 0.614,
+    "pnl": -45.59,
+    "stake": 3420.0,
+    "roi": -0.0133,
+    "clvAvg": -0.1
    },
    "FADE": {
     "n": 78,
@@ -9254,40 +9299,40 @@
   },
   "bySignal": {
    "money": {
-    "n": 216,
-    "wins": 150,
-    "hit": 0.6944,
-    "pnl": 58.56,
-    "stake": 2160.0,
-    "roi": 0.0271,
+    "n": 218,
+    "wins": 152,
+    "hit": 0.6972,
+    "pnl": 69.86,
+    "stake": 2180.0,
+    "roi": 0.032,
     "clvAvg": -0.11
    },
    "pinn": {
-    "n": 3,
-    "wins": 2,
-    "hit": 0.6667,
-    "pnl": 0.52,
-    "stake": 30.0,
-    "roi": 0.0173,
+    "n": 4,
+    "wins": 3,
+    "hit": 0.75,
+    "pnl": 5.56,
+    "stake": 40.0,
+    "roi": 0.139,
     "clvAvg": 0.0
    },
    "sharp": {
-    "n": 317,
-    "wins": 169,
-    "hit": 0.5331,
-    "pnl": -155.5,
-    "stake": 3170.0,
-    "roi": -0.0491,
+    "n": 318,
+    "wins": 170,
+    "hit": 0.5346,
+    "pnl": -149.24,
+    "stake": 3180.0,
+    "roi": -0.0469,
     "clvAvg": -0.08
    },
    "steam": {
-    "n": 103,
+    "n": 104,
     "wins": 62,
-    "hit": 0.6019,
-    "pnl": -55.2,
-    "stake": 1030.0,
-    "roi": -0.0536,
-    "clvAvg": 0.04
+    "hit": 0.5962,
+    "pnl": -65.2,
+    "stake": 1040.0,
+    "roi": -0.0627,
+    "clvAvg": -0.05
    },
    "turned": {
     "n": 1,
