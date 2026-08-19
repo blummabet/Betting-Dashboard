@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-08-19T04:56:04.195101+00:00",
+ "updatedAt": "2026-08-19T05:50:24.848405+00:00",
  "stake": 10.0,
  "expired": 0,
  "open": {
@@ -12,7 +12,7 @@
    "entryPrice": 0.735,
    "firstTs": "2026-08-16T14:09:11.781306+00:00",
    "lastPrice": 0.735,
-   "lastTs": "2026-08-19T04:56:04.195101+00:00",
+   "lastTs": "2026-08-19T05:50:24.848405+00:00",
    "htkAtEntry": 2.938317777777778,
    "public": true,
    "reasons": [
@@ -56,7 +56,7 @@
    "entryPrice": 0.505,
    "firstTs": "2026-08-17T19:00:41.730327+00:00",
    "lastPrice": 0.505,
-   "lastTs": "2026-08-19T04:56:04.195101+00:00",
+   "lastTs": "2026-08-19T05:50:24.848405+00:00",
    "htkAtEntry": 1.0281161111111112,
    "public": false,
    "reasons": [
@@ -86,28 +86,6 @@
    "signals": [
     "money",
     "steam"
-   ],
-   "stake": 10.0
-  },
-  "argcopa-ban-afm-2026-08-18|CA Banfield": {
-   "key": "argcopa-ban-afm-2026-08-18",
-   "side": "CA Banfield",
-   "verdict": "BET",
-   "conv": 7,
-   "league": "SOCCER",
-   "entryPrice": 0.465,
-   "firstTs": "2026-08-18T23:41:23.124135+00:00",
-   "lastPrice": 0.395,
-   "lastTs": "2026-08-19T04:56:04.195101+00:00",
-   "htkAtEntry": 0.6177219444444444,
-   "public": true,
-   "reasons": [
-    "großes Geld auf CA Banfield (84%) → $69K",
-    "🔥 scharfe Wallet (25/44, 57% · +$657K)"
-   ],
-   "signals": [
-    "money",
-    "sharp"
    ],
    "stake": 10.0
   }
@@ -9191,26 +9169,48 @@
    "firstTs": "2026-08-18T23:41:23.124135+00:00",
    "settledTs": "2026-08-19T04:56:04.195101+00:00",
    "resolvedTs": "2026-08-19T04:56:03.420685+00:00"
+  },
+  {
+   "key": "argcopa-ban-afm-2026-08-18",
+   "side": "CA Banfield",
+   "verdict": "BET",
+   "conv": 7,
+   "league": "SOCCER",
+   "entryPrice": 0.465,
+   "closePrice": 0.395,
+   "result": "loss",
+   "winner": "Draw (CA Banfield vs. CA Ferrocarril Midland)",
+   "pnl": -10.0,
+   "clvPP": -7.0,
+   "stake": 10.0,
+   "public": true,
+   "signals": [
+    "money",
+    "sharp"
+   ],
+   "firstTs": "2026-08-18T23:41:23.124135+00:00",
+   "settledTs": "2026-08-19T05:50:24.848405+00:00",
+   "resolvedTs": "2026-08-19T05:50:24.112697+00:00"
   }
  ],
  "agg": {
   "all": {
-   "n": 423,
+   "n": 424,
    "wins": 234,
-   "hit": 0.5532,
-   "pnl": -200.78,
-   "stake": 4230.0,
-   "roi": -0.0475,
-   "clvAvg": -0.06
+   "hit": 0.5519,
+   "pnl": -210.78,
+   "stake": 4240.0,
+   "roi": -0.0497,
+   "clvAvg": -0.08
   },
   "public": {
-   "n": 125,
+   "n": 126,
    "wins": 86,
-   "hit": 0.688,
-   "pnl": 29.24,
-   "stake": 1250.0,
-   "roi": 0.0234,
-   "clvAvg": -0.07
+   "hit": 0.6825,
+   "pnl": 19.24,
+   "stake": 1260.0,
+   "roi": 0.0153,
+   "clvAvg": -0.13
   },
   "byConv": {
    "4": {
@@ -9241,13 +9241,13 @@
     "clvAvg": 0.01
    },
    "7": {
-    "n": 134,
+    "n": 135,
     "wins": 79,
-    "hit": 0.5896,
-    "pnl": -58.23,
-    "stake": 1340.0,
-    "roi": -0.0435,
-    "clvAvg": -0.35
+    "hit": 0.5852,
+    "pnl": -68.23,
+    "stake": 1350.0,
+    "roi": -0.0505,
+    "clvAvg": -0.4
    },
    "8": {
     "n": 62,
@@ -9279,13 +9279,13 @@
   },
   "byVerdict": {
    "BET": {
-    "n": 345,
+    "n": 346,
     "wins": 212,
-    "hit": 0.6145,
-    "pnl": -44.09,
-    "stake": 3450.0,
-    "roi": -0.0128,
-    "clvAvg": -0.1
+    "hit": 0.6127,
+    "pnl": -54.09,
+    "stake": 3460.0,
+    "roi": -0.0156,
+    "clvAvg": -0.12
    },
    "FADE": {
     "n": 78,
@@ -9299,13 +9299,13 @@
   },
   "bySignal": {
    "money": {
-    "n": 221,
+    "n": 222,
     "wins": 154,
-    "hit": 0.6968,
-    "pnl": 71.36,
-    "stake": 2210.0,
-    "roi": 0.0323,
-    "clvAvg": -0.11
+    "hit": 0.6937,
+    "pnl": 61.36,
+    "stake": 2220.0,
+    "roi": 0.0276,
+    "clvAvg": -0.14
    },
    "pinn": {
     "n": 5,
@@ -9317,13 +9317,13 @@
     "clvAvg": 0.0
    },
    "sharp": {
-    "n": 320,
+    "n": 321,
     "wins": 172,
-    "hit": 0.5375,
-    "pnl": -137.74,
-    "stake": 3200.0,
-    "roi": -0.043,
-    "clvAvg": -0.08
+    "hit": 0.5358,
+    "pnl": -147.74,
+    "stake": 3210.0,
+    "roi": -0.046,
+    "clvAvg": -0.1
    },
    "steam": {
     "n": 104,
