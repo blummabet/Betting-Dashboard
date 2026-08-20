@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-20T15:31:30.598567+00:00",
+ "generatedAt": "2026-08-20T18:59:51.335141+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -8,27 +8,84 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 389,
- "pinnKeys": 247,
- "matched": 163,
- "footballRows": 153,
- "crossRows": 236,
- "footballSkippedStale": 73,
+ "polyRowsSeen": 394,
+ "pinnKeys": 266,
+ "matched": 168,
+ "footballRows": 156,
+ "crossRows": 238,
+ "footballSkippedStale": 72,
  "seenBySport": {
   "americanfootball_nfl": 150,
-  "baseball_mlb": 84,
+  "baseball_mlb": 86,
   "boxing_boxing": 2,
   "soccer_mls": 45,
-  "soccer_liga": 108
+  "soccer_liga": 111
  },
  "matchedBySport": {
-  "baseball_mlb": 10,
+  "baseball_mlb": 12,
   "soccer_mls": 45,
-  "soccer_liga": 108
+  "soccer_liga": 111
  },
  "trackRecord": {
-  "tracked": 142,
+  "tracked": 144,
   "converged": 28
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|clevelandguardians-sanfranciscogiants|sanfranciscogiants",
+   "sport": "baseball_mlb",
+   "event": "San Francisco Giants vs Cleveland Guardians",
+   "market": "Moneyline",
+   "outcome": "San Francisco Giants",
+   "polyPP": 8.5,
+   "pinnPP": 17.0,
+   "gapPP": -8.49,
+   "vol": 765482,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -2.04,
+   "firstSeen": "2026-08-19T23:36:51.967703+00:00"
+  },
+  {
+   "id": "baseball_mlb|clevelandguardians-sanfranciscogiants|clevelandguardians",
+   "sport": "baseball_mlb",
+   "event": "San Francisco Giants vs Cleveland Guardians",
+   "market": "Moneyline",
+   "outcome": "Cleveland Guardians",
+   "polyPP": 91.5,
+   "pinnPP": 83.0,
+   "gapPP": 8.49,
+   "vol": 765482,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -2.04,
+   "firstSeen": "2026-08-19T23:36:51.967703+00:00"
+  },
+  {
+   "id": "baseball_mlb|tampabayrays-torontobluejays|torontobluejays",
+   "sport": "baseball_mlb",
+   "event": "Toronto Blue Jays vs Tampa Bay Rays",
+   "market": "Moneyline",
+   "outcome": "Toronto Blue Jays",
+   "polyPP": 90.5,
+   "pinnPP": 83.3,
+   "gapPP": 7.17,
+   "vol": 569305,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-20T18:59:51.334903+00:00"
+  },
+  {
+   "id": "baseball_mlb|tampabayrays-torontobluejays|tampabayrays",
+   "sport": "baseball_mlb",
+   "event": "Toronto Blue Jays vs Tampa Bay Rays",
+   "market": "Moneyline",
+   "outcome": "Tampa Bay Rays",
+   "polyPP": 9.5,
+   "pinnPP": 16.7,
+   "gapPP": -7.17,
+   "vol": 569305,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-20T18:59:51.334903+00:00"
+  }
+ ]
 }
