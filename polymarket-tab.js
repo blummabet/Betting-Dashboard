@@ -259,7 +259,7 @@ function toEnglishName(name) {
 
 // ── 2. STATE ────────────────────────────────────────────
 
-let _polyState = {
+var _polyState = {   // 20.08.2026: var (nicht let), damit Tests _polyState.prices setzen koennen
   dateStr:  null,
   picks:    [],
   prices:   {},   // pickId → { found:bool, price:float|null, eventTitle:str }
@@ -3317,12 +3317,25 @@ function _buildPerformanceHtml(data) {
 // „Cards" = 1:1 die Dashboard-Karten (echtes Verdict BET/ABWÄGEN). „Value" = Poly-Quote
 // besser als der Markt. „Heute" = die besten Poly-Plays, exakt dieselbe Engine wie das
 // Terminal „🔥 Heute wetten" (_pwTopPlays aus poly-wallets.js) — zum manuellen Nachspielen.
+// Poly-Edge (pp) fuer die Value-Definition: „Poly bietet bessere Quote als der Markt".
+// Positiv = Poly-Preis niedriger als unsere Referenz-Implied (= hoehere Quote). Braucht den
+// geladenen Poly-Preis; vorher null. Genau der Wert, den die EDGE-Spalte der Card zeigt.
+function _polyPickEdgePP(p) {
+  const pr  = _polyState.prices[p.id];
+  const ref = p.oddsIsEst ? p.modelOdds : p.odds;
+  if (!pr || !pr.found || !ref) return null;
+  return Math.round(((1 / ref) - pr.price) * 100);
+}
+// Value = echte Poly-Kante ab +1pp (unter 1pp zeigt die Card „≈ 0%").
+function _polyPickHasValue(p) { const e = _polyPickEdgePP(p); return e != null && e >= 1; }
+
 function _polyCounts() {
   const picks = _polyState.picks || [];
   let cards = 0, value = 0;
   for (const p of picks) {
     const v = _pickCardVerdict(p);
-    if (v === 'BET' || v === 'ABWÄGEN') cards++; else value++;
+    if (v === 'BET' || v === 'ABWÄGEN') cards++;   // Cards = 1:1 die Card-Bets (kann mit Value ueberlappen)
+    if (_polyPickHasValue(p)) value++;             // Value = wo Poly besser ist als der Markt
   }
   return { cards, value };
 }
@@ -3463,33 +3476,31 @@ function renderPolyPickCards() {
   }
 
   // 20.08.2026 (Lucas): ZWEI klar getrennte Bereiche.
-  //  1) „Zum Wetten" — 1:1 wie die Cards: nur echte Card-Verdicts BET/ABWÄGEN.
-  //  2) „Poly-Kante" — der Rest: Spiele, wo Poly evtl. eine bessere Quote bietet als
-  //     der Markt (Pinnacle/Bookie). Kein Modell-BET, sondern reine Preis-Chance.
-  const _isCardBet = p => { const v = _pickCardVerdict(p); return v === 'BET' || v === 'ABWÄGEN'; };
-  const cardBets = picks.filter(_isCardBet);
-  const polyOnly = picks.filter(p => !_isCardBet(p));
-
-  // Value-Kante (Poly-Quote besser als Referenz) — nur zum Sortieren der Value-Liste
-  const _polyEdgePP = p => {
-    const pr  = _polyState.prices[p.id];
-    const ref = p.oddsIsEst ? p.modelOdds : p.odds;
-    if (!pr || !pr.found || !ref) return null;
-    return Math.round(((1 / ref) - pr.price) * 100);
-  };
-  polyOnly.sort((a, b) => ((_polyEdgePP(b) ?? -999) - (_polyEdgePP(a) ?? -999)));
-
-  const sec  = (_polyState.section === 'value') ? 'value' : 'cards';
-  const list = sec === 'value' ? polyOnly : cardBets;
+  //  📇 Cards = 1:1 die Card-Bets (Modell-Verdict BET/ABWÄGEN).
+  //  💜 Value = Spiele, wo Poly eine bessere Quote als der Markt bietet (positive Edge),
+  //     nach Edge sortiert — egal welches Verdict. Beide Lenses duerfen ueberlappen.
+  const sec = (_polyState.section === 'value') ? 'value' : 'cards';
 
   const _emptyBox = (txt) => `<div style="grid-column:1/-1;padding:16px 18px;background:#0d1117;border:1px solid #21262d;border-radius:10px;color:#8b949e;font-size:12px;line-height:1.6">${txt}</div>`;
 
-  if (!list.length) {
-    return sec === 'value'
-      ? _emptyBox('💜 <strong style="color:#e6edf3">Value</strong> — aktuell kein Spiel, bei dem Poly eine bessere Quote bietet als der Markt.')
-      : _emptyBox('📇 <strong style="color:#e6edf3">Cards</strong> — aktuell kein Spiel mit Card-Verdict <b style="color:#3fb950">BET</b> oder <b style="color:#f5c518">ABWÄGEN</b>. Schau im <b style="color:#a78bfa">Value</b>-Tab, ob Poly bessere Quoten bietet.');
+  if (sec === 'value') {
+    const value = picks.filter(_polyPickHasValue)
+      .sort((a, b) => (_polyPickEdgePP(b) - _polyPickEdgePP(a)));
+    if (!value.length) {
+      // Preise noch nicht geladen? Dann anderer Hinweis als „echt keine Kante".
+      const anyPriced = Object.values(_polyState.prices || {}).some(pr => pr && pr.found);
+      return _emptyBox(anyPriced
+        ? '💜 <strong style="color:#e6edf3">Value</strong> — aktuell bietet Poly bei keinem Spiel eine bessere Quote als der Markt.'
+        : '💜 <strong style="color:#e6edf3">Value</strong> — ⏳ warte auf die Polymarket-Preise. Sobald geladen, erscheinen hier die Spiele, bei denen Poly besser quotiert als der Markt.');
+    }
+    return value.map(_renderPickCard).join('');
   }
-  return list.map(_renderPickCard).join('');
+
+  const cardBets = picks.filter(p => { const v = _pickCardVerdict(p); return v === 'BET' || v === 'ABWÄGEN'; });
+  if (!cardBets.length) {
+    return _emptyBox('📇 <strong style="color:#e6edf3">Cards</strong> — aktuell kein Spiel mit Card-Verdict <b style="color:#3fb950">BET</b> oder <b style="color:#f5c518">ABWÄGEN</b>. Schau im <b style="color:#a78bfa">Value</b>-Tab, ob Poly bessere Quoten bietet.');
+  }
+  return cardBets.map(_renderPickCard).join('');
 }
 
 // ── 6. STATS ────────────────────────────────────────────
@@ -5237,6 +5248,9 @@ async function _fetchAllPricesAsync() {
   // Single re-render after all prices are set
   const grid = document.getElementById('polyPickGrid');
   if (grid) grid.innerHTML = renderPolyPickCards();
+  // 20.08.2026 (Lucas): Value-Zaehler haengt am Poly-Preis → Sub-Tab-Leiste jetzt aktualisieren.
+  const _bar = document.getElementById('polySubtabBar');
+  if (_bar) _bar.innerHTML = _polySubtabBar();
 
   // Update status label
   if (statusEl) {

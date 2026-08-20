@@ -121,3 +121,49 @@ test('Standard-Auswahl ist LEER (kein Auto-Select-All)', () => {
   assert.equal(/new Set\(_polyState\.picks\.map/.test(src), false,
     'Auto-Select-All noch im Code — Vorauswahl darf nicht alle Picks anhaken');
 });
+
+// ── 20.08.2026 (Lucas: „Value war umgekehrt"): Value = Poly-Edge, nicht die SKIP-Reste ──
+test('_polyPickHasValue: positive Poly-Edge zaehlt, egal welches Verdict', () => {
+  const w = loadPoly();
+  w._polyState.prices = {
+    A: { found:true, price:0.50 },   // ref 1.88 → implied .532 → +3pp  → Value
+    B: { found:true, price:0.60 },   // ref 1.50 → implied .667 → +7pp  → Value
+    C: { found:true, price:0.80 },   // ref 1.50 → implied .667 → -13pp → keine Value
+    D: undefined,                    // kein Preis → null → keine Value
+  };
+  const mk = (id, odds) => ({ id, odds });
+  assert.equal(w._polyPickHasValue(mk('A', 1.88)), true,  'SKIP mit +3pp muss Value sein');
+  assert.equal(w._polyPickHasValue(mk('B', 1.50)), true);
+  assert.equal(w._polyPickHasValue(mk('C', 1.50)), false, 'negative Edge ist keine Value');
+  assert.equal(w._polyPickHasValue(mk('D', 1.50)), false, 'ohne Preis keine Value');
+});
+
+test('Value-Tab zeigt Poly-Edge-Spiele (auch SKIP), Cards zeigt sie NICHT wenn kein Bet', () => {
+  const w = loadPoly();
+  // skipPick = computeVerdict SKIP (Modell fade), aber Poly quotiert besser → Value.
+  const sp = { ...skipPick, id:'SKIP1', odds:1.88 };
+  const bp = { ...betPick,  id:'BET1',  odds:2.0 };
+  w._polyState.picks  = [sp, bp];
+  w._polyState.prices = { SKIP1: { found:true, price:0.50 }, BET1: { found:true, price:0.60 } };
+  // ref(sp)=1.88→.532 vs .50 = +3pp Value ; ref(bp)=2.0→.50 vs .60 = -10pp keine Value
+
+  w._polyState.section = 'value';
+  const vhtml = w.renderPolyPickCards();
+  assert.ok(vhtml.includes('data-id="SKIP1"'), 'SKIP mit Poly-Edge fehlt im Value-Tab');
+  assert.ok(!vhtml.includes('data-id="BET1"'), 'BET ohne Poly-Edge darf NICHT im Value-Tab stehen');
+
+  w._polyState.section = 'cards';
+  const chtml = w.renderPolyPickCards();
+  assert.ok(chtml.includes('data-id="BET1"'), 'BET fehlt im Cards-Tab');
+  assert.ok(!chtml.includes('data-id="SKIP1"'), 'SKIP darf NICHT im Cards-Tab stehen');
+});
+
+test('_polyCounts: Cards=Bets, Value=Poly-Edge (koennen ueberlappen)', () => {
+  const w = loadPoly();
+  const bpEdge = { ...betPick, id:'BE', odds:1.5 };   // BET UND +Edge → beide zaehlen
+  w._polyState.picks  = [bpEdge];
+  w._polyState.prices = { BE: { found:true, price:0.55 } };  // 1.5→.667 vs .55 = +12pp
+  const c = w._polyCounts();
+  assert.equal(c.cards, 1, 'BET zaehlt bei Cards');
+  assert.equal(c.value, 1, 'derselbe +Edge-Pick zaehlt auch bei Value (Overlap ok)');
+});
