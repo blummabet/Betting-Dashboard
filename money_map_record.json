@@ -1,25 +1,25 @@
 {
-"generatedAt": "2026-08-20T01:24:40.725973+00:00",
+"generatedAt": "2026-08-20T01:39:47.946460+00:00",
 "byVerdict": {
 "konsens": {
-"n": 224,
-"wins": 174,
-"hitRate": 0.7768,
-"polyN": 205,
-"polyWins": 156,
-"polyHitRate": 0.761,
+"n": 226,
+"wins": 175,
+"hitRate": 0.7743,
+"polyN": 207,
+"polyWins": 157,
+"polyHitRate": 0.7585,
 "pinnN": 16,
 "pinnHitRate": 0.625
 },
 "uneinig": {
-"n": 74,
-"wins": 19,
-"hitRate": 0.2568,
-"polyN": 63,
-"polyWins": 20,
-"polyHitRate": 0.3175,
-"pinnN": 34,
-"pinnHitRate": 0.5588
+"n": 76,
+"wins": 20,
+"hitRate": 0.2632,
+"polyN": 65,
+"polyWins": 21,
+"polyHitRate": 0.3231,
+"pinnN": 36,
+"pinnHitRate": 0.5556
 },
 "teil": {
 "n": 3,
@@ -38,15 +38,15 @@
 "wins": 8,
 "hitRate": 0.4706
 },
+"US MLS": {
+"n": 15,
+"wins": 9,
+"hitRate": 0.6
+},
 "Elite Friendlies": {
 "n": 13,
 "wins": 9,
 "hitRate": 0.6923
-},
-"US MLS": {
-"n": 13,
-"wins": 8,
-"hitRate": 0.6154
 },
 "North American Leagues Cup": {
 "n": 12,
@@ -78,6 +78,11 @@
 "wins": 4,
 "hitRate": 0.4444
 },
+"Brazilian Serie B": {
+"n": 9,
+"wins": 4,
+"hitRate": 0.4444
+},
 "German Bundesliga 2": {
 "n": 8,
 "wins": 6,
@@ -92,11 +97,6 @@
 "n": 7,
 "wins": 5,
 "hitRate": 0.7143
-},
-"Brazilian Serie B": {
-"n": 7,
-"wins": 3,
-"hitRate": 0.4286
 },
 "Dutch Eredivisie": {
 "n": 7,
@@ -371,25 +371,101 @@
 },
 "byStrength": {
 "strong": {
-"n": 166,
+"n": 167,
 "wins": 130,
-"hitRate": 0.7831
+"hitRate": 0.7784
 },
 "weak": {
-"n": 102,
-"wins": 46,
-"hitRate": 0.451
+"n": 105,
+"wins": 48,
+"hitRate": 0.4571
 }
 },
 "divergence": {
-"n": 74,
-"betfairWins": 19,
-"betfairRate": 0.2568,
-"polyN": 63,
-"polyWins": 20,
-"polyRate": 0.3175
+"n": 76,
+"betfairWins": 20,
+"betfairRate": 0.2632,
+"polyN": 65,
+"polyWins": 21,
+"polyRate": 0.3231
 },
 "recent": [
+{
+"matchId": "35895625",
+"home": "New York Red Bulls",
+"away": "Nashville SC",
+"league": "US MLS",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Nashville SC",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-08-19T23:30:00Z",
+"settledAt": "2026-08-20T01:39:47.793124+00:00"
+},
+{
+"matchId": "35895629",
+"home": "Columbus",
+"away": "CF Montreal",
+"league": "US MLS",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Columbus",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-08-19T23:30:00Z",
+"settledAt": "2026-08-20T01:39:47.793124+00:00"
+},
+{
+"matchId": "35937479",
+"home": "Avai",
+"away": "Sport Recife",
+"league": "Brazilian Serie B",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Avai",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-08-19T22:30:00Z",
+"settledAt": "2026-08-20T01:39:47.793124+00:00"
+},
+{
+"matchId": "35945686",
+"home": "Fortaleza EC",
+"away": "Sao Bernardo",
+"league": "Brazilian Serie B",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Fortaleza EC",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-19T22:30:00Z",
+"settledAt": "2026-08-20T01:39:47.793124+00:00"
+},
 {
 "matchId": "35933884",
 "home": "Cerro Porteno",
@@ -1073,88 +1149,12 @@
 ],
 "kickoff": "2026-08-17T22:15:00Z",
 "settledAt": "2026-08-18T01:19:36.443956+00:00"
-},
-{
-"matchId": "35937618",
-"home": "Club Deportes Santa Cruz",
-"away": "San Luis",
-"league": "Chilean Primera B",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "San Luis",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-2
-],
-"kickoff": "2026-08-17T22:00:00Z",
-"settledAt": "2026-08-17T23:54:32.696700+00:00"
-},
-{
-"matchId": "35896905",
-"home": "Lanus",
-"away": "CA Independiente",
-"league": "Argentinian Primera Division",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "CA Independiente",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-3
-],
-"kickoff": "2026-08-17T20:00:00Z",
-"settledAt": "2026-08-17T23:04:48.094656+00:00"
-},
-{
-"matchId": "35931830",
-"home": "Palermo",
-"away": "Lecce",
-"league": "Italian Coppa Italia",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Palermo",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-08-17T19:15:00Z",
-"settledAt": "2026-08-17T22:18:07.435725+00:00"
-},
-{
-"matchId": "35925902",
-"home": "Casa Pia",
-"away": "Benfica",
-"league": "Portuguese Primeira Liga",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Benfica",
-"polySide": null,
-"winner": "away",
-"moneyWin": true,
-"polyWin": null,
-"ftScore": [
-0,
-7
-],
-"kickoff": "2026-08-17T19:15:00Z",
-"settledAt": "2026-08-17T22:18:07.435725+00:00"
 }
 ],
 "global": {
-"n": 301,
-"wins": 194,
-"hitRate": 0.6445
+"n": 305,
+"wins": 196,
+"hitRate": 0.6426
 },
-"pending": 17
+"pending": 13
 }
