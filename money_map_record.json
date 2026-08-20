@@ -1,25 +1,25 @@
 {
-"generatedAt": "2026-08-20T20:56:37.535857+00:00",
+"generatedAt": "2026-08-20T21:05:19.569960+00:00",
 "byVerdict": {
 "konsens": {
-"n": 253,
-"wins": 195,
-"hitRate": 0.7708,
-"polyN": 234,
-"polyWins": 177,
-"polyHitRate": 0.7564,
+"n": 256,
+"wins": 197,
+"hitRate": 0.7695,
+"polyN": 237,
+"polyWins": 179,
+"polyHitRate": 0.7553,
 "pinnN": 16,
 "pinnHitRate": 0.625
 },
 "uneinig": {
-"n": 83,
+"n": 84,
 "wins": 22,
-"hitRate": 0.2651,
-"polyN": 72,
+"hitRate": 0.2619,
+"polyN": 73,
 "polyWins": 24,
-"polyHitRate": 0.3333,
-"pinnN": 37,
-"pinnHitRate": 0.5676
+"polyHitRate": 0.3288,
+"pinnN": 38,
+"pinnHitRate": 0.5789
 },
 "teil": {
 "n": 3,
@@ -34,24 +34,24 @@
 },
 "byLeague": {
 "UEFA Europa Conference Qualifiers": {
-"n": 28,
-"wins": 15,
-"hitRate": 0.5357
+"n": 30,
+"wins": 16,
+"hitRate": 0.5333
 },
 "US MLS": {
 "n": 26,
 "wins": 15,
 "hitRate": 0.5769
 },
+"UEFA Europa League Qualifiers": {
+"n": 14,
+"wins": 11,
+"hitRate": 0.7857
+},
 "Elite Friendlies": {
 "n": 13,
 "wins": 9,
 "hitRate": 0.6923
-},
-"UEFA Europa League Qualifiers": {
-"n": 13,
-"wins": 10,
-"hitRate": 0.7692
 },
 "North American Leagues Cup": {
 "n": 12,
@@ -113,6 +113,11 @@
 "wins": 5,
 "hitRate": 0.7143
 },
+"Spanish La Liga": {
+"n": 7,
+"wins": 3,
+"hitRate": 0.4286
+},
 "Spanish Segunda Division": {
 "n": 7,
 "wins": 6,
@@ -127,11 +132,6 @@
 "n": 6,
 "wins": 5,
 "hitRate": 0.8333
-},
-"Spanish La Liga": {
-"n": 6,
-"wins": 3,
-"hitRate": 0.5
 },
 "Turkish Super League": {
 "n": 6,
@@ -376,25 +376,101 @@
 },
 "byStrength": {
 "strong": {
-"n": 191,
-"wins": 149,
-"hitRate": 0.7801
+"n": 194,
+"wins": 151,
+"hitRate": 0.7784
 },
 "weak": {
-"n": 115,
+"n": 116,
 "wins": 51,
-"hitRate": 0.4435
+"hitRate": 0.4397
 }
 },
 "divergence": {
-"n": 83,
+"n": 84,
 "betfairWins": 22,
-"betfairRate": 0.2651,
-"polyN": 72,
+"betfairRate": 0.2619,
+"polyN": 73,
 "polyWins": 24,
-"polyRate": 0.3333
+"polyRate": 0.3288
 },
 "recent": [
+{
+"matchId": "35895528",
+"home": "Rayo Vallecano",
+"away": "Alaves",
+"league": "Spanish La Liga",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Rayo Vallecano",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-20T19:00:00Z",
+"settledAt": "2026-08-20T21:05:19.418875+00:00"
+},
+{
+"matchId": "35938922",
+"home": "Crvena Zvezda",
+"away": "Plzen",
+"league": "UEFA Europa League Qualifiers",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Crvena Zvezda",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+0
+],
+"kickoff": "2026-08-20T18:00:00Z",
+"settledAt": "2026-08-20T21:05:19.418875+00:00"
+},
+{
+"matchId": "35947529",
+"home": "Vikingur Reykjavik",
+"away": "Borac Banja Luka",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Borac Banja Luka",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+3
+],
+"kickoff": "2026-08-20T18:00:00Z",
+"settledAt": "2026-08-20T21:05:19.418875+00:00"
+},
+{
+"matchId": "35947664",
+"home": "KF Drita",
+"away": "Inter Club Escaldes",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "KF Drita",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-08-20T18:00:00Z",
+"settledAt": "2026-08-20T21:05:19.418875+00:00"
+},
 {
 "matchId": "35939524",
 "home": "Braga",
@@ -1078,88 +1154,12 @@
 ],
 "kickoff": "2026-08-19T23:30:00Z",
 "settledAt": "2026-08-20T01:39:47.793124+00:00"
-},
-{
-"matchId": "35937479",
-"home": "Avai",
-"away": "Sport Recife",
-"league": "Brazilian Serie B",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Avai",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-08-19T22:30:00Z",
-"settledAt": "2026-08-20T01:39:47.793124+00:00"
-},
-{
-"matchId": "35945686",
-"home": "Fortaleza EC",
-"away": "Sao Bernardo",
-"league": "Brazilian Serie B",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Fortaleza EC",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-08-19T22:30:00Z",
-"settledAt": "2026-08-20T01:39:47.793124+00:00"
-},
-{
-"matchId": "35933884",
-"home": "Cerro Porteno",
-"away": "SE Palmeiras",
-"league": "CONMEBOL Copa Libertadores",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "SE Palmeiras",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-08-19T22:00:00Z",
-"settledAt": "2026-08-20T01:09:41.569962+00:00"
-},
-{
-"matchId": "35933888",
-"home": "Coquimbo Unido",
-"away": "CA Platense",
-"league": "CONMEBOL Copa Libertadores",
-"verdict": "konsens",
-"moneySide": "draw",
-"moneyName": "The Draw",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-5,
-6
-],
-"kickoff": "2026-08-19T22:00:00Z",
-"settledAt": "2026-08-20T01:09:41.569962+00:00"
 }
 ],
 "global": {
-"n": 339,
-"wins": 218,
-"hitRate": 0.6431
+"n": 343,
+"wins": 220,
+"hitRate": 0.6414
 },
-"pending": 14
+"pending": 11
 }
