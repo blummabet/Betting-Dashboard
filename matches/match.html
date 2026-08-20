@@ -742,7 +742,7 @@ function renderMoneyMap(D){
 }
 
 function renderBetfairMoney(D){
-  var b=D.betfairMoney; if(!b||!b.runners||!b.runners.length) return '';
+  var b=D.betfairMoney; if(!b||!b.runners||!b.runners.length) return '<div class="emod bf-mod" style="opacity:.72"><div class="emod-h">💷 Betfair <span class="emod-badge" style="background:#d9592618;color:#d95926">nahe Anpfiff</span></div><div class="emod-sub">Das Börsen-Geld — wie sich das gematchte Volumen je Ausgang und je Wettart verteilt — erscheint hier, sobald Betfair den Markt zum Spieltag füllt (meist wenige Stunden vor Anpfiff).</div></div>';
   var tot=b.runners.reduce(function(a,r){return a+(r.eur||0);},0)||1;
   var cols=['#d95926','#8a6d5a','#5a4a42'];
   var dist=b.runners.map(function(r,i){return '<i style="width:'+Math.max(3,r.eur/tot*100)+'%;background:'+cols[Math.min(i,2)]+';color:'+(i===0?'#06120c':'#e8edf3')+'">'+Math.round(r.eur/tot*100)+'%</i>';}).join('');
@@ -756,7 +756,7 @@ function renderBetfairMoney(D){
 }
 
 function renderPolyFlow(D){
-  var p=D.polyFlow; if(!p||!p.outcomes||!p.outcomes.length) return '';
+  var p=D.polyFlow; if(!p||!p.outcomes||!p.outcomes.length){ if(D.poly&&D.poly.cards&&D.poly.cards.length) return ''; return '<div class="emod pf-mod" style="opacity:.72"><div class="emod-h">🎮 Polymarket <span class="emod-badge" style="background:#00d4a118;color:#00d4a1">nahe Anpfiff</span></div><div class="emod-sub">Implizite Wahrscheinlichkeit, Geld-Split der Halter und die größten Wallets — erscheinen, sobald Polymarket den Markt für dieses Spiel listet (meist näher am Anpfiff).</div></div>'; }
   var probs=p.outcomes.map(function(o,i){return '<div class="pf-pr"><span class="pn">'+_evEsc(_evPolyName(o.name))+'</span><span class="pbar"><i style="width:'+o.pct+'%;background:'+(i===0?'#00d4a1':'#6b7a8d')+'"></i></span><span class="pv">'+o.pct+'%</span></div>';}).join('');
   var callout='';
   if(p.hasShares){

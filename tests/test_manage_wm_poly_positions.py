@@ -376,3 +376,49 @@ class TestAgeLossKickoffGate(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestKickoffTimingFix(unittest.TestCase):
+    """19.08.2026 (Lucas): Pre-Match-Close timte auf matchDate (nur Datum, 00:00) statt kickoff. Bei
+    Anpfiff NACH Mitternacht UTC (matchDate = Vortag) wurde h_until schon vor dem Match negativ ->
+    time_based_exit feuerte NIE -> Position rutschte LIVE ins Spiel. Fix: echtes kickoff mitziehen."""
+    def test_position_uses_real_kickoff_not_dateonly(self):
+        import json, tempfile
+        import manage_wm_poly_positions as M
+        bet = {"betKey": "1595-16489-Under 2.5 Tore", "home": "Seattle Sounders", "away": "Austin",
+               "homeId": "1595", "awayId": "16489", "market": "Under 2.5 Tore", "polyPrice": 0.17,
+               "stake": 5.5, "status": "placed", "tokenId": "tok", "sharesEstimate": 32.0,
+               "matchDate": "2026-08-19", "kickoff": "2026-08-20T01:30:00Z"}
+        fd, path = tempfile.mkstemp(suffix=".json"); os.close(fd)
+        with open(path, "w", encoding="utf-8") as f:
+            json.dump({"bets": [bet]}, f)
+        orig = M.AUTO_BETS_FILE
+        M.AUTO_BETS_FILE = path
+        try:
+            pos = M.load_auto_bets_as_positions()
+        finally:
+            M.AUTO_BETS_FILE = orig
+            os.remove(path)
+        self.assertEqual(len(pos), 1)
+        # matchDate ist jetzt die echte kickoff-Zeit (ISO), nicht mehr nur das Vortags-Datum
+        self.assertEqual(pos[0]["matchDate"], "2026-08-20T01:30:00Z")
+        self.assertEqual(pos[0].get("kickoff"), "2026-08-20T01:30:00Z")
+        self.assertNotEqual(pos[0]["matchDate"], "2026-08-19")
+
+    def test_hours_until_match_precise_from_kickoff(self):
+        # ISO-Datetime -> praezise Stunden (nicht Tages-Vielfaches). Ein Match in 1h liegt im
+        # Pre-Match-Close-Fenster [KO-2h, KO]; das Vortags-Datum haette h_until faelschlich negativ gemacht.
+        from datetime import datetime, timezone, timedelta
+        import manage_wm_poly_positions as M
+        ko = (datetime.now(timezone.utc) + timedelta(minutes=20)).strftime("%Y-%m-%dT%H:%M:%SZ")
+        h = M.hours_until_match(ko)
+        self.assertIsNotNone(h)
+        self.assertTrue(0 < h <= M.PRE_MATCH_CLOSE_HOURS, f"h_until={h} sollte im Pre-Match-Close-Fenster liegen")
+        sell, _ = M.time_based_exit(h, 5.0)
+        self.assertTrue(sell, "Pre-Match-Close muss im 40-Min-Fenster vor Anpfiff feuern")
+        # Gegenprobe: mit dem alten Vortags-Datum (Anpfiff nach Mitternacht UTC) waere h_until negativ
+        # -> KEIN Close (genau der Bug). hours_until_match auf reines Datum aus der Vergangenheit:
+        past_date = (datetime.now(timezone.utc) - timedelta(days=1)).strftime("%Y-%m-%d")
+        h_bug = M.hours_until_match(past_date)
+        self.assertTrue(h_bug is not None and h_bug < 0, "Vortags-Datum -> negativ (alter Bug)")
+        self.assertFalse(M.time_based_exit(h_bug, 5.0)[0], "negatives h_until -> Close feuert nicht (alter Bug)")

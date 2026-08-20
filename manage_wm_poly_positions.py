@@ -644,7 +644,13 @@ def load_auto_bets_as_positions() -> list:
             # ── Auto-sell fields ─────────────────────────────────
             "tokenId":        bet.get("tokenId", ""),
             "sharesEstimate": bet.get("sharesEstimate", 0.0),
-            "matchDate":      bet.get("matchDate", ""),
+            # 19.08.2026 (Lucas: „Position lief in den Match, nicht vor Anpfiff verkauft"): der Manager
+            # timte den Pre-Match-Close auf matchDate (nur Datum, 00:00) statt auf die echte kickoff-Zeit.
+            # Bei Anpfiff NACH Mitternacht UTC (matchDate = Vortag) wurde h_until schon vor dem Match
+            # negativ -> time_based_exit feuerte NIE -> Position rutschte ins Spiel. Fix: echtes kickoff
+            # (ISO-Datetime) mitziehen und fürs Timing nehmen; matchDate nur noch Fallback.
+            "kickoff":        bet.get("kickoff", ""),
+            "matchDate":      bet.get("kickoff") or bet.get("matchDate", ""),
             "isSteamLag":     bet.get("isSteamLag", False),
         })
     return positions
@@ -806,7 +812,7 @@ def main():
                     _ko_map[f"{_fx.get('home')}-{_fx.get('away')}"] = _k
         _fixed = 0
         for p in all_positions:
-            rk = p.get("kickoff") or _ko_map.get(f"{p.get('homeId')}-{p.get('awayId')}")
+            rk = p.get("kickoff") or _ko_map.get(f"{p.get('home')}-{p.get('away')}")   # _ko_map ist NAMEN-basiert (nicht IDs)
             if rk and rk != p.get("matchDate"):
                 p["matchDate"] = rk
                 _fixed += 1
