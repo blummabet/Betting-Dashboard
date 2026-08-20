@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-08-20T04:03:42.572159+00:00",
+ "updatedAt": "2026-08-20T04:57:58.518238+00:00",
  "stake": 10.0,
  "expired": 0,
  "open": {
@@ -12,7 +12,7 @@
    "entryPrice": 0.735,
    "firstTs": "2026-08-16T14:09:11.781306+00:00",
    "lastPrice": 0.735,
-   "lastTs": "2026-08-20T04:03:42.572159+00:00",
+   "lastTs": "2026-08-20T04:57:58.518238+00:00",
    "htkAtEntry": 2.938317777777778,
    "public": true,
    "reasons": [
@@ -56,34 +56,12 @@
    "entryPrice": 0.585,
    "firstTs": "2026-08-19T21:46:33.333679+00:00",
    "lastPrice": 0.595,
-   "lastTs": "2026-08-20T04:03:42.572159+00:00",
+   "lastTs": "2026-08-20T04:57:58.518238+00:00",
    "htkAtEntry": 2.7980766666666663,
    "public": true,
    "reasons": [
     "großes Geld auf CR Flamengo (76%) → $40K",
     "🔥 scharfe Wallet (101/170, 59% · +$3.64M)"
-   ],
-   "signals": [
-    "money",
-    "sharp"
-   ],
-   "stake": 10.0
-  },
-  "wta-sabalen-bejlek-2026-08-19|Aryna Sabalenka": {
-   "key": "wta-sabalen-bejlek-2026-08-19",
-   "side": "Aryna Sabalenka",
-   "verdict": "BET",
-   "conv": 7,
-   "league": "TENNIS",
-   "entryPrice": 0.865,
-   "firstTs": "2026-08-19T22:47:03.460833+00:00",
-   "lastPrice": 0.885,
-   "lastTs": "2026-08-20T04:03:42.572159+00:00",
-   "htkAtEntry": 2.8777105555555553,
-   "public": false,
-   "reasons": [
-    "großes Geld auf Aryna Sabalenka (86%) → $40K",
-    "🔥 scharfe Wallet (34/68, 50% · +$8.86M)"
    ],
    "signals": [
     "money",
@@ -100,7 +78,7 @@
    "entryPrice": 0.445,
    "firstTs": "2026-08-19T23:40:50.098953+00:00",
    "lastPrice": 0.555,
-   "lastTs": "2026-08-20T04:03:42.572159+00:00",
+   "lastTs": "2026-08-20T04:57:58.518238+00:00",
    "htkAtEntry": 2.8883233333333336,
    "public": true,
    "reasons": [
@@ -122,7 +100,7 @@
    "entryPrice": 0.535,
    "firstTs": "2026-08-20T01:57:03.846205+00:00",
    "lastPrice": 0.535,
-   "lastTs": "2026-08-20T04:03:42.572159+00:00",
+   "lastTs": "2026-08-20T04:57:58.518238+00:00",
    "htkAtEntry": 0.6140294444444444,
    "public": true,
    "reasons": [
@@ -134,28 +112,6 @@
     "money",
     "steam",
     "sharp"
-   ],
-   "stake": 10.0
-  },
-  "mlb-lad-col-2026-08-19|Los Angeles Dodgers": {
-   "key": "mlb-lad-col-2026-08-19",
-   "side": "Los Angeles Dodgers",
-   "verdict": "BET",
-   "conv": 5,
-   "league": "MLB",
-   "entryPrice": 0.645,
-   "firstTs": "2026-08-20T03:16:26.989467+00:00",
-   "lastPrice": 0.645,
-   "lastTs": "2026-08-20T04:03:42.572159+00:00",
-   "htkAtEntry": -2.529208888888889,
-   "public": false,
-   "reasons": [
-    "großes Geld auf Los Angeles Dodgers (64%) → $288K",
-    "Pinnacle: Poly 28pp zu billig → Value"
-   ],
-   "signals": [
-    "money",
-    "pinn"
    ],
    "stake": 10.0
   }
@@ -9805,16 +9761,60 @@
    "firstTs": "2026-08-19T23:08:06.168852+00:00",
    "settledTs": "2026-08-20T04:03:42.572159+00:00",
    "resolvedTs": "2026-08-20T04:03:41.761334+00:00"
+  },
+  {
+   "key": "wta-sabalen-bejlek-2026-08-19",
+   "side": "Aryna Sabalenka",
+   "verdict": "BET",
+   "conv": 7,
+   "league": "TENNIS",
+   "entryPrice": 0.865,
+   "closePrice": 0.885,
+   "result": "loss",
+   "winner": "Sara Bejlek",
+   "pnl": -10.0,
+   "clvPP": 2.0,
+   "stake": 10.0,
+   "public": false,
+   "signals": [
+    "money",
+    "sharp"
+   ],
+   "firstTs": "2026-08-19T22:47:03.460833+00:00",
+   "settledTs": "2026-08-20T04:57:58.518238+00:00",
+   "resolvedTs": "2026-08-20T04:57:57.750715+00:00"
+  },
+  {
+   "key": "mlb-lad-col-2026-08-19",
+   "side": "Los Angeles Dodgers",
+   "verdict": "BET",
+   "conv": 5,
+   "league": "MLB",
+   "entryPrice": 0.645,
+   "closePrice": 0.645,
+   "result": "win",
+   "winner": "Los Angeles Dodgers",
+   "pnl": 5.5,
+   "clvPP": 0.0,
+   "stake": 10.0,
+   "public": false,
+   "signals": [
+    "money",
+    "pinn"
+   ],
+   "firstTs": "2026-08-20T03:16:26.989467+00:00",
+   "settledTs": "2026-08-20T04:57:58.518238+00:00",
+   "resolvedTs": "2026-08-20T04:57:57.750715+00:00"
   }
  ],
  "agg": {
   "all": {
-   "n": 449,
-   "wins": 245,
-   "hit": 0.5457,
-   "pnl": -284.32,
-   "stake": 4490.0,
-   "roi": -0.0633,
+   "n": 451,
+   "wins": 246,
+   "hit": 0.5455,
+   "pnl": -288.82,
+   "stake": 4510.0,
+   "roi": -0.064,
    "clvAvg": -0.06
   },
   "public": {
@@ -9837,12 +9837,12 @@
     "clvAvg": 0.0
    },
    "5": {
-    "n": 79,
-    "wins": 30,
-    "hit": 0.3797,
-    "pnl": -158.16,
-    "stake": 790.0,
-    "roi": -0.2002,
+    "n": 80,
+    "wins": 31,
+    "hit": 0.3875,
+    "pnl": -152.66,
+    "stake": 800.0,
+    "roi": -0.1908,
     "clvAvg": -0.16
    },
    "6": {
@@ -9855,13 +9855,13 @@
     "clvAvg": 0.01
    },
    "7": {
-    "n": 145,
+    "n": 146,
     "wins": 84,
-    "hit": 0.5793,
-    "pnl": -93.46,
-    "stake": 1450.0,
-    "roi": -0.0645,
-    "clvAvg": -0.31
+    "hit": 0.5753,
+    "pnl": -103.46,
+    "stake": 1460.0,
+    "roi": -0.0709,
+    "clvAvg": -0.29
    },
    "8": {
     "n": 63,
@@ -9893,12 +9893,12 @@
   },
   "byVerdict": {
    "BET": {
-    "n": 371,
-    "wins": 223,
-    "hit": 0.6011,
-    "pnl": -127.63,
-    "stake": 3710.0,
-    "roi": -0.0344,
+    "n": 373,
+    "wins": 224,
+    "hit": 0.6005,
+    "pnl": -132.13,
+    "stake": 3730.0,
+    "roi": -0.0354,
     "clvAvg": -0.09
    },
    "FADE": {
@@ -9913,31 +9913,31 @@
   },
   "bySignal": {
    "money": {
-    "n": 241,
-    "wins": 162,
-    "hit": 0.6722,
-    "pnl": -8.79,
-    "stake": 2410.0,
-    "roi": -0.0036,
-    "clvAvg": -0.1
+    "n": 243,
+    "wins": 163,
+    "hit": 0.6708,
+    "pnl": -13.29,
+    "stake": 2430.0,
+    "roi": -0.0055,
+    "clvAvg": -0.09
    },
    "pinn": {
-    "n": 6,
-    "wins": 3,
-    "hit": 0.5,
-    "pnl": -14.44,
-    "stake": 60.0,
-    "roi": -0.2407,
+    "n": 7,
+    "wins": 4,
+    "hit": 0.5714,
+    "pnl": -8.94,
+    "stake": 70.0,
+    "roi": -0.1277,
     "clvAvg": 0.0
    },
    "sharp": {
-    "n": 335,
+    "n": 336,
     "wins": 179,
-    "hit": 0.5343,
-    "pnl": -181.21,
-    "stake": 3350.0,
-    "roi": -0.0541,
-    "clvAvg": -0.06
+    "hit": 0.5327,
+    "pnl": -191.21,
+    "stake": 3360.0,
+    "roi": -0.0569,
+    "clvAvg": -0.05
    },
    "steam": {
     "n": 114,
