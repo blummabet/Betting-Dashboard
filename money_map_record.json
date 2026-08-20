@@ -1,23 +1,23 @@
 {
-"generatedAt": "2026-08-20T17:53:58.583015+00:00",
+"generatedAt": "2026-08-20T17:56:21.488990+00:00",
 "byVerdict": {
 "konsens": {
-"n": 237,
-"wins": 182,
-"hitRate": 0.7679,
-"polyN": 218,
-"polyWins": 164,
-"polyHitRate": 0.7523,
+"n": 238,
+"wins": 183,
+"hitRate": 0.7689,
+"polyN": 219,
+"polyWins": 165,
+"polyHitRate": 0.7534,
 "pinnN": 16,
 "pinnHitRate": 0.625
 },
 "uneinig": {
-"n": 81,
+"n": 82,
 "wins": 22,
-"hitRate": 0.2716,
-"polyN": 70,
-"polyWins": 23,
-"polyHitRate": 0.3286,
+"hitRate": 0.2683,
+"polyN": 71,
+"polyWins": 24,
+"polyHitRate": 0.338,
 "pinnN": 37,
 "pinnHitRate": 0.5676
 },
@@ -39,9 +39,9 @@
 "hitRate": 0.5769
 },
 "UEFA Europa Conference Qualifiers": {
-"n": 17,
+"n": 18,
 "wins": 8,
-"hitRate": 0.4706
+"hitRate": 0.4444
 },
 "Elite Friendlies": {
 "n": 13,
@@ -93,6 +93,11 @@
 "wins": 5,
 "hitRate": 0.625
 },
+"UEFA Europa League Qualifiers": {
+"n": 8,
+"wins": 6,
+"hitRate": 0.75
+},
 "Belgian Pro League": {
 "n": 7,
 "wins": 5,
@@ -117,11 +122,6 @@
 "n": 7,
 "wins": 6,
 "hitRate": 0.8571
-},
-"UEFA Europa League Qualifiers": {
-"n": 7,
-"wins": 5,
-"hitRate": 0.7143
 },
 "Japanese J League": {
 "n": 6,
@@ -376,25 +376,63 @@
 },
 "byStrength": {
 "strong": {
-"n": 178,
-"wins": 138,
-"hitRate": 0.7753
+"n": 179,
+"wins": 139,
+"hitRate": 0.7765
 },
 "weak": {
-"n": 110,
+"n": 111,
 "wins": 49,
-"hitRate": 0.4455
+"hitRate": 0.4414
 }
 },
 "divergence": {
-"n": 81,
+"n": 82,
 "betfairWins": 22,
-"betfairRate": 0.2716,
-"polyN": 70,
-"polyWins": 23,
-"polyRate": 0.3286
+"betfairRate": 0.2683,
+"polyN": 71,
+"polyWins": 24,
+"polyRate": 0.338
 },
 "recent": [
+{
+"matchId": "35942613",
+"home": "Jagiellonia Bialystock",
+"away": "FC Iberia 1999",
+"league": "UEFA Europa League Qualifiers",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Jagiellonia Bialystock",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+0
+],
+"kickoff": "2026-08-20T16:00:00Z",
+"settledAt": "2026-08-20T17:56:21.483845+00:00"
+},
+{
+"matchId": "35947717",
+"home": "Lincoln Red Imps",
+"away": "Larne",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Lincoln Red Imps",
+"polySide": "away",
+"winner": "away",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-08-20T16:00:00Z",
+"settledAt": "2026-08-20T17:56:21.483845+00:00"
+},
 {
 "matchId": "35935960",
 "home": "Al-Wakra",
@@ -1116,50 +1154,12 @@
 ],
 "kickoff": "2026-08-19T00:30:00Z",
 "settledAt": "2026-08-19T03:33:54.331142+00:00"
-},
-{
-"matchId": "35930929",
-"home": "Univ Catolica (Chile)",
-"away": "Estudiantes",
-"league": "CONMEBOL Copa Libertadores",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Estudiantes",
-"polySide": null,
-"winner": "away",
-"moneyWin": true,
-"polyWin": null,
-"ftScore": [
-0,
-3
-],
-"kickoff": "2026-08-19T00:30:00Z",
-"settledAt": "2026-08-19T03:33:54.331142+00:00"
-},
-{
-"matchId": "35930887",
-"home": "Independiente Rivadavia",
-"away": "Fluminense",
-"league": "CONMEBOL Copa Libertadores",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Fluminense",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-08-18T22:00:00Z",
-"settledAt": "2026-08-19T01:07:18.269968+00:00"
 }
 ],
 "global": {
-"n": 321,
-"wins": 205,
-"hitRate": 0.6386
+"n": 323,
+"wins": 206,
+"hitRate": 0.6378
 },
-"pending": 16
+"pending": 15
 }
