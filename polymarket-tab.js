@@ -906,14 +906,19 @@ async function _loadNationalPolyPicksAsync() {
 // EINE Sammelstelle für alle Betting-Tab-Pick-Quellen — verhindert, dass eine Quelle an einem
 // Aggregations-Punkt vergessen wird (genau so fiel MLS raus). WM + Liga/MLS + Club-Ligen.
 function _collectAllPolyPicks(dateStr) {
-  // 21.08.2026 (Lucas: „Cards soll nur die echten Card-Picks zeigen"): NUR gestempelte
-  // Dataset-Picks (WM + National/Liga/MLS), wie das Dashboard/Tracking. Der frühere Club-Pfad
-  // (getPolyPicks → getBettingPicks) rechnete für die Top-5 EIGENE Picks über ALLE Märkte neu
-  // (Newcastle Over 2.5 etc.) — Spiele, die gar nicht in den echten Picks stehen. Raus.
-  let wm = [], mls = [];
+  // 21.08.2026 (Lucas): Cards und Value haben UNTERSCHIEDLICHE Quellen —
+  //   📇 Cards = NUR gestempelte Dataset-Picks (haben ein `verdict`-Feld) = 1:1 die Card-Picks.
+  //   💜 Value = zusaetzlich der breite Poly-Preis-Scan (getPolyPicks → getBettingPicks über
+  //             O/U + BTTS + 1X2), damit „wo Poly bessere Quote als der Markt" alle Preis-Kanten
+  //             findet. Der Club-Scan hat KEIN `verdict` → landet nie in Cards, nur in Value.
+  let wm = [], mls = [], club = [];
   try { wm   = getWmPolyPicks(dateStr)     || []; } catch (_e) {}
   try { mls  = getMlsLigaPolyPicks(dateStr) || []; } catch (_e) {}
-  return [...wm, ...mls];
+  try { club = getPolyPicks(dateStr)       || []; } catch (_e) {}
+  // Dedup: gestempelter Pick (mit verdict) gewinnt gegen denselben Club-Scan-Pick (gleiche id).
+  const seen = new Set([...wm, ...mls].map(p => p.id));
+  const clubUnique = club.filter(p => !seen.has(p.id));
+  return [...wm, ...mls, ...clubUnique];
 }
 
 // ── 4. POLYMARKET PRICES (from server-cached JSON) ──────
@@ -3345,9 +3350,8 @@ function _polyCounts() {
   const picks = _polyState.picks || [];
   let cards = 0, value = 0;
   for (const p of picks) {
-    const v = _pickCardVerdict(p);
-    if (v === 'BET' || v === 'ABWÄGEN') cards++;   // Cards = 1:1 die Card-Bets (kann mit Value ueberlappen)
-    if (_polyPickHasValue(p)) value++;             // Value = wo Poly besser ist als der Markt
+    if (p.verdict === 'BET' || p.verdict === 'ABWÄGEN') cards++;   // Cards = gestempelte Card-Picks
+    if (_polyPickHasValue(p)) value++;                             // Value = echte Poly-Kante (auch Club-Scan)
   }
   return { cards, value };
 }
@@ -3508,7 +3512,8 @@ function renderPolyPickCards() {
     return value.map(_renderPickCard).join('');
   }
 
-  const cardBets = picks.filter(p => { const v = _pickCardVerdict(p); return v === 'BET' || v === 'ABWÄGEN'; });
+  // Cards = NUR gestempelte Card-Picks (Dataset-verdict). Club-Scan (kein verdict) → nie hier.
+  const cardBets = picks.filter(p => p.verdict === 'BET' || p.verdict === 'ABWÄGEN');
   if (!cardBets.length) {
     return _emptyBox('📇 <strong style="color:#e6edf3">Cards</strong> — aktuell kein Spiel mit Card-Verdict <b style="color:#3fb950">BET</b> oder <b style="color:#f5c518">ABWÄGEN</b>. Schau im <b style="color:#a78bfa">Value</b>-Tab, ob Poly bessere Quoten bietet.');
   }

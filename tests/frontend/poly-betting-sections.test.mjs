@@ -142,7 +142,7 @@ test('Value-Tab zeigt Poly-Edge-Spiele (auch SKIP), Cards zeigt sie NICHT wenn k
   const w = loadPoly();
   // skipPick = computeVerdict SKIP (Modell fade), aber Poly quotiert besser → Value.
   const sp = { ...skipPick, id:'SKIP1', odds:1.88 };
-  const bp = { ...betPick,  id:'BET1',  odds:2.0 };
+  const bp = { ...betPick,  id:'BET1',  odds:2.0, verdict:'BET' };
   w._polyState.picks  = [sp, bp];
   w._polyState.prices = { SKIP1: { found:true, price:0.50 }, BET1: { found:true, price:0.60 } };
   // ref(sp)=1.88→.532 vs .50 = +3pp Value ; ref(bp)=2.0→.50 vs .60 = -10pp keine Value
@@ -160,7 +160,7 @@ test('Value-Tab zeigt Poly-Edge-Spiele (auch SKIP), Cards zeigt sie NICHT wenn k
 
 test('_polyCounts: Cards=Bets, Value=Poly-Edge (koennen ueberlappen)', () => {
   const w = loadPoly();
-  const bpEdge = { ...betPick, id:'BE', odds:1.5 };   // BET UND +Edge → beide zaehlen
+  const bpEdge = { ...betPick, id:'BE', odds:1.5, verdict:'BET' };   // gestempelter BET UND +Edge
   w._polyState.picks  = [bpEdge];
   w._polyState.prices = { BE: { found:true, price:0.55 } };  // 1.5→.667 vs .55 = +12pp
   const c = w._polyCounts();
@@ -179,4 +179,32 @@ test('_polyPickHasValue: ~Modell (oddsIsEst) zaehlt NIE als Value — auch mit d
   const realPick  = { id:'R', odds:1.88, oddsIsEst:false };
   assert.equal(w._polyPickHasValue(modelPick), false, '~Modell darf nicht als Value zaehlen');
   assert.equal(w._polyPickHasValue(realPick),  true,  'echte Pinnacle/Bookie-Kante ist Value');
+});
+
+// ── 21.08.2026 (Lucas: „Value 1:1 wie Cards, O/U+BTTS weg"): Quellen wieder getrennt ──
+// Cards = nur gestempelte Dataset-Picks (verdict-Feld). Value = auch der Club-Preis-Scan
+// (O/U/BTTS, KEIN verdict) mit echter Poly-Kante. Der Club-Scan darf NIE in Cards.
+test('Cards nur gestempelt; Value bekommt Club-Scan (O/U) mit echter Kante zurueck', () => {
+  const w = loadPoly();
+  const stamped = { id:'MLS|Orlando|RSL|Heimsieg', home:'Orlando', away:'RSL', market:'Heimsieg',
+                    verdict:'ABWÄGEN', odds:1.85, oddsIsEst:false, leagueFlag:'🇺🇸', leagueName:'MLS' };
+  const clubOU  = { id:'ENG|Newcastle|Liverpool|Over 2.5 Tore', home:'Newcastle', away:'Liverpool',
+                    market:'Over 2.5 Tore', odds:1.5, oddsIsEst:false, leagueFlag:'🏴', leagueName:'PL' }; // kein verdict
+  w._polyState.picks  = [stamped, clubOU];
+  w._polyState.prices = {
+    'MLS|Orlando|RSL|Heimsieg':               { found:true, price:0.60 },   // 1.85→.541 vs .60 = -6pp → keine Value
+    'ENG|Newcastle|Liverpool|Over 2.5 Tore':  { found:true, price:0.60 },   // 1.5→.667 vs .60 = +7pp → Value
+  };
+  w._polyState.section = 'cards';
+  const c = w.renderPolyPickCards();
+  assert.ok(c.includes('data-id="MLS|Orlando|RSL|Heimsieg"'), 'gestempelter Pick fehlt in Cards');
+  assert.ok(!c.includes('Newcastle'), 'Club-Scan-Pick (kein verdict) darf NICHT in Cards');
+
+  w._polyState.section = 'value';
+  const v = w.renderPolyPickCards();
+  assert.ok(v.includes('Newcastle'), 'Club-O/U mit +7pp Kante fehlt in Value');
+
+  const cnt = w._polyCounts();
+  assert.equal(cnt.cards, 1, 'Cards-Zaehler = 1 gestempelter');
+  assert.equal(cnt.value, 1, 'Value-Zaehler = 1 (Newcastle O/U)');
 });
