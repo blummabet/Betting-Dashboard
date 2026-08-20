@@ -41,10 +41,9 @@
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
       "ok": false,
-      "nFail": 2,
+      "nFail": 1,
       "failures": [
-        "cs2-innerc-sashia1-2026-08-16: seit 3.9 Tagen offen — keine Auflösung gefunden",
-        "col1-gdr-llf-2026-08-09: seit 10.9 Tagen offen — keine Auflösung gefunden"
+        "cs2-innerc-sashia1-2026-08-16: seit 4.5 Tagen offen — keine Auflösung gefunden"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -62,9 +61,14 @@
       "label": "'Bewiesene' Wallets wirklich profitabel",
       "severity": "warn",
       "ok": false,
-      "nFail": 1,
+      "nFail": 6,
       "failures": [
-        "278/323 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
+        "12/45 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (27%) — Trefferquote allein trügt",
+        "   0x224a89dbe0… n=69 Treffer 51% P&L $-4,397,341",
+        "   0xc3c3b3ef30… n=191 Treffer 57% P&L $-3,802,591",
+        "   0xa0f21e6d35… n=38 Treffer 66% P&L $-2,782,888",
+        "   0xabb89972b2… n=17 Treffer 59% P&L $-2,563,982",
+        "294/339 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
     },
@@ -84,11 +88,11 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "591/666 'live' Geld-Märkte sind schon >6h nach Anpfiff (89%) — $16,607,311 Whale-Geld auf fertigen Spielen"
+        "643/674 'live' Geld-Märkte sind schon >6h nach Anpfiff (95%) — $19,418,439 Whale-Geld auf fertigen Spielen"
       ],
       "note": "Der Close-Feed setzt kein resolved-Flag; fertige Spiele bleiben 'live'. Alle Views filtern jetzt auf den rekonstruierten Anpfiff — dieser Check misst den Geister-Anteil im Roh-Feed (steigt er, prunt/löst der Feed nicht mehr auf; jede ungegatete View zeigt dann fertige Spiele)."
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-08-19T20:50:45.131167+00:00"
+  "generatedAt": "2026-08-20T12:21:17.572825+00:00"
 }
