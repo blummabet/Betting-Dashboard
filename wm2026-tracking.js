@@ -932,28 +932,28 @@
   //  Groups picks by date, shows match context per row
   // ─────────────────────────────────────────────────────
   function _buildPicksTable(picks, todayIso) {
-    // Group by date
-    const byDate = {};
-    for (const p of picks) {
-      const d = p._row.fx.date;
-      if (!byDate[d]) byDate[d] = [];
-      byDate[d].push(p);
-    }
+    // 21.08.2026 (Lucas: „ausgewertete ausblenden, nur auf Klick — man muss viel scrollen"):
+    // Bereits ausgewertete Picks (result != null) landen eingeklappt in einem <details>.
+    // Offene (result == null, AUSSTEHEND) bleiben direkt sichtbar.
+    const _buildGroups = (list) => {
+      const byDate = {};
+      for (const p of list) {
+        const d = p._row.fx.date;
+        if (!byDate[d]) byDate[d] = [];
+        byDate[d].push(p);
+      }
+      let out = '';
+      for (const date of Object.keys(byDate).sort()) {
+        const isToday   = date === todayIso;
+        const isPast    = date < todayIso;
+        const dateLabel = _fmtDate(date);
+        const statusBadge = isToday
+          ? `<span class="wm-date-today">HEUTE</span>`
+          : isPast
+            ? `<span style="font-size:9px;background:var(--surface2);color:var(--muted);border-radius:4px;padding:2px 6px;">GESPIELT</span>`
+            : `<span style="font-size:9px;background:rgba(63,185,80,0.12);color:#3fb950;border-radius:4px;padding:2px 6px;">AUSSTEHEND</span>`;
 
-    let html = `<div class="wm-trk-table">`;
-
-    for (const date of Object.keys(byDate).sort()) {
-      const isToday   = date === todayIso;
-      const isPast    = date < todayIso;
-      const isFuture  = date > todayIso;
-      const dateLabel = _fmtDate(date);
-      const statusBadge = isToday
-        ? `<span class="wm-date-today">HEUTE</span>`
-        : isPast
-          ? `<span style="font-size:9px;background:var(--surface2);color:var(--muted);border-radius:4px;padding:2px 6px;">GESPIELT</span>`
-          : `<span style="font-size:9px;background:rgba(63,185,80,0.12);color:#3fb950;border-radius:4px;padding:2px 6px;">AUSSTEHEND</span>`;
-
-      html += `
+        out += `
       <div class="wm-trk-date-block">
         <div class="wm-date-divider">
           <span class="wm-date-divider-text">${dateLabel}</span>
@@ -961,47 +961,59 @@
           <span class="wm-date-divider-line"></span>
         </div>`;
 
-      // Group by fixture within date
-      const byFx = {};
-      for (const p of byDate[date]) {
-        const key = `${p._row.fx.groupKey}-${p._row.fx.matchday}-${p._row.fx.home}-${p._row.fx.away}`;
-        if (!byFx[key]) byFx[key] = { row: p._row, picks: [] };
-        byFx[key].picks.push(p);
-      }
+        const byFx = {};
+        for (const p of byDate[date]) {
+          const key = `${p._row.fx.groupKey}-${p._row.fx.matchday}-${p._row.fx.home}-${p._row.fx.away}`;
+          if (!byFx[key]) byFx[key] = { row: p._row, picks: [] };
+          byFx[key].picks.push(p);
+        }
 
-      for (const fxKey of Object.keys(byFx).sort()) {
-        const { row, picks: fxPicks } = byFx[fxKey];
-        const { fx, homeTeam, awayTeam, isLocked } = row;
+        for (const fxKey of Object.keys(byFx).sort()) {
+          const { row, picks: fxPicks } = byFx[fxKey];
+          const { fx, homeTeam, awayTeam, isLocked } = row;
 
-        // Fixture header
-        const groupStr  = (row.gData.name || `Gruppe ${fx.groupKey}`);
-        const timeStr   = fx.time ? fx.time + ' Uhr' : '';
-        const lockIcon  = isLocked ? '🔒' : '📋';
-        const lockTip   = isLocked ? 'Eingefroren' : 'Ausstehend';
+          const groupStr  = (row.gData.name || `Gruppe ${fx.groupKey}`);
+          const timeStr   = fx.time ? fx.time + ' Uhr' : '';
+          const lockIcon  = isLocked ? '🔒' : '📋';
 
-        html += `
+          out += `
         <div class="wm-trk-fx-block">
           <div class="wm-trk-fx-header">
             <span class="wm-trk-fx-teams">${homeTeam.flag} ${homeTeam.name} vs ${awayTeam.flag} ${awayTeam.name}</span>
             <span class="wm-trk-fx-meta">${lockIcon} ${groupStr} · ST${fx.matchday}${timeStr ? ' · ' + timeStr : ''}</span>
           </div>`;
 
-        // Score row (if available)
-        if (fx.scoreHome != null && fx.scoreAway != null) {
-          html += `<div class="wm-trk-score">${fx.scoreHome} : ${fx.scoreAway}</div>`;
+          if (fx.scoreHome != null && fx.scoreAway != null) {
+            out += `<div class="wm-trk-score">${fx.scoreHome} : ${fx.scoreAway}</div>`;
+          }
+
+          for (const p of fxPicks) out += _buildTrackingRow(p);
+
+          out += `</div>`;
         }
 
-        // Pick rows
-        for (const p of fxPicks) {
-          html += _buildTrackingRow(p);
-        }
-
-        html += `</div>`;
+        out += `</div>`; // wm-trk-date-block
       }
+      return out;
+    };
 
-      html += `</div>`; // wm-trk-date-block
+    const pending  = picks.filter(p => p.result == null);
+    const resolved = picks.filter(p => p.result != null);
+
+    let html = `<div class="wm-trk-table">`;
+    html += _buildGroups(pending);
+    if (!pending.length && resolved.length) {
+      html += `<div style="text-align:center;color:var(--muted,#8b949e);font-size:12px;padding:16px 8px">Keine offenen Picks — alle ausgewertet (unten aufklappen).</div>`;
     }
-
+    if (resolved.length) {
+      html += `
+      <details class="wm-trk-resolved" style="margin-top:16px">
+        <summary style="cursor:pointer;padding:10px 12px;background:var(--surface2,#161b22);border:1px solid var(--border,#30363d);border-radius:8px;font-size:12px;font-weight:700;color:var(--muted,#8b949e);user-select:none">
+          📁 ${resolved.length} ausgewertete Picks — zum Ein-/Ausblenden klicken
+        </summary>
+        <div style="margin-top:10px">${_buildGroups(resolved)}</div>
+      </details>`;
+    }
     html += `</div>`; // wm-trk-table
     return html;
   }
