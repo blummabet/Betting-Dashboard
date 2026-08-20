@@ -1,15 +1,15 @@
 {
-"generatedAt": "2026-08-20T00:54:39.412536+00:00",
+"generatedAt": "2026-08-20T01:09:41.731002+00:00",
 "byVerdict": {
 "konsens": {
-"n": 221,
-"wins": 172,
-"hitRate": 0.7783,
-"polyN": 202,
-"polyWins": 154,
-"polyHitRate": 0.7624,
-"pinnN": 15,
-"pinnHitRate": 0.6667
+"n": 224,
+"wins": 174,
+"hitRate": 0.7768,
+"polyN": 205,
+"polyWins": 156,
+"polyHitRate": 0.761,
+"pinnN": 16,
+"pinnHitRate": 0.625
 },
 "uneinig": {
 "n": 74,
@@ -63,6 +63,11 @@
 "wins": 8,
 "hitRate": 0.7273
 },
+"CONMEBOL Copa Libertadores": {
+"n": 10,
+"wins": 3,
+"hitRate": 0.3
+},
 "Argentinian Primera Division": {
 "n": 9,
 "wins": 5,
@@ -72,11 +77,6 @@
 "n": 9,
 "wins": 4,
 "hitRate": 0.4444
-},
-"CONMEBOL Copa Libertadores": {
-"n": 8,
-"wins": 2,
-"hitRate": 0.25
 },
 "German Bundesliga 2": {
 "n": 8,
@@ -263,6 +263,11 @@
 "wins": 0,
 "hitRate": 0.0
 },
+"Canadian Premier League": {
+"n": 2,
+"wins": 1,
+"hitRate": 0.5
+},
 "Chinese League 1": {
 "n": 2,
 "wins": 2,
@@ -289,11 +294,6 @@
 "hitRate": 0.0
 },
 "Argentinian Primera Nacional": {
-"n": 1,
-"wins": 0,
-"hitRate": 0.0
-},
-"Canadian Premier League": {
 "n": 1,
 "wins": 0,
 "hitRate": 0.0
@@ -371,14 +371,14 @@
 },
 "byStrength": {
 "strong": {
-"n": 165,
-"wins": 129,
-"hitRate": 0.7818
+"n": 166,
+"wins": 130,
+"hitRate": 0.7831
 },
 "weak": {
-"n": 100,
-"wins": 45,
-"hitRate": 0.45
+"n": 102,
+"wins": 46,
+"hitRate": 0.451
 }
 },
 "divergence": {
@@ -390,6 +390,63 @@
 "polyRate": 0.3175
 },
 "recent": [
+{
+"matchId": "35933884",
+"home": "Cerro Porteno",
+"away": "SE Palmeiras",
+"league": "CONMEBOL Copa Libertadores",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "SE Palmeiras",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-08-19T22:00:00Z",
+"settledAt": "2026-08-20T01:09:41.569962+00:00"
+},
+{
+"matchId": "35933888",
+"home": "Coquimbo Unido",
+"away": "CA Platense",
+"league": "CONMEBOL Copa Libertadores",
+"verdict": "konsens",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+5,
+6
+],
+"kickoff": "2026-08-19T22:00:00Z",
+"settledAt": "2026-08-20T01:09:41.569962+00:00"
+},
+{
+"matchId": "35950863",
+"home": "Forge",
+"away": "FC Supra du Quebec",
+"league": "Canadian Premier League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Forge",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+2
+],
+"kickoff": "2026-08-19T23:00:00Z",
+"settledAt": "2026-08-20T01:09:41.569962+00:00"
+},
 {
 "matchId": "35950669",
 "home": "Aguilas Doradas",
@@ -1092,69 +1149,12 @@
 ],
 "kickoff": "2026-08-17T19:15:00Z",
 "settledAt": "2026-08-17T22:18:07.435725+00:00"
-},
-{
-"matchId": "35931817",
-"home": "US Cremonese",
-"away": "Sampdoria",
-"league": "Italian Coppa Italia",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "US Cremonese",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-08-17T18:45:00Z",
-"settledAt": "2026-08-17T21:45:41.964948+00:00"
-},
-{
-"matchId": "35947039",
-"home": "Batman Petrolspor",
-"away": "Boluspor",
-"league": "Turkish 1 Lig",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Batman Petrolspor",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-08-17T18:30:00Z",
-"settledAt": "2026-08-17T21:33:05.665407+00:00"
-},
-{
-"matchId": "35898607",
-"home": "Almeria",
-"away": "Eldense",
-"league": "Spanish Segunda Division",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Almeria",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-0
-],
-"kickoff": "2026-08-17T19:30:00Z",
-"settledAt": "2026-08-17T21:33:05.665407+00:00"
 }
 ],
 "global": {
-"n": 298,
-"wins": 192,
-"hitRate": 0.6443
+"n": 301,
+"wins": 194,
+"hitRate": 0.6445
 },
-"pending": 19
+"pending": 17
 }
