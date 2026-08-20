@@ -122,20 +122,25 @@ test('MLS-Fixtures fließen in die Datums-Chips (POLY_LEAGUES enthält MLS)', ()
   assert.ok(!dates.includes('26.07.2099'), 'Nicht-Poly-Liga (BRA) darf nicht auftauchen');
 });
 
-// 25.07.2026 (Lucas: „seh nichts im Betting-Tab") — MLS/Liga-Picks aus NATIONAL_PICKS_FOR_POLY
-// laufen jetzt durch dieselbe Eligibilitäts-Schwelle wie WM. Schwelle bleibt (Lucas' Wahl):
-// starkes ABWÄGEN erscheint, schwaches nicht.
-test('MLS-Picks aus NATIONAL_PICKS_FOR_POLY: nur ab Conviction-Schwelle', () => {
+// 21.08.2026 (Lucas: „Cards soll nur die echten Card-Picks zeigen, wie im Tracking"):
+// KEIN Conviction-Gate mehr im MLS/Liga-Pfad. Cards = 1:1 die gestempelten BET/ABWÄGEN-Picks,
+// exakt wie das Dashboard/Tracking — auch schwache ABWÄGEN (conv 2–4), wenn sie auf der Card stehen.
+// (Frueher wurde hier auf conv >= Schwelle gefiltert; das warf Lucas' echte Card-Picks raus.)
+test('MLS-Picks aus NATIONAL_PICKS_FOR_POLY: ALLE gestempelten BET/ABWÄGEN (kein conv-Gate)', () => {
   const w = loadPoly();
   w.NATIONAL_PICKS_FOR_POLY = [
     { league: 'MLS', home: 'Inter Miami', away: 'Orlando', homeId: 1, awayId: 2, date: '2099-07-25',
-      market: 'Heimsieg', odds: 1.9, modelOdds: 1.8, verdict: 'ABWÄGEN', convictionScore: MIN_CONV + 1, edgePP: 3 },
+      market: 'Heimsieg', odds: 1.9, modelOdds: 1.8, verdict: 'ABWÄGEN', convictionScore: 7, edgePP: 3 },
     { league: 'MLS', home: 'CF Montreal', away: 'Chicago', homeId: 3, awayId: 4, date: '2099-07-25',
       market: 'Auswärtssieg', odds: 3.0, modelOdds: 2.8, verdict: 'ABWÄGEN', convictionScore: 2, edgePP: 1 },
+    { league: 'MLS', home: 'FC Dallas', away: 'Houston', homeId: 7, awayId: 8, date: '2099-07-25',
+      market: 'Unentschieden', odds: 3.2, modelOdds: 3.0, verdict: 'NOBET', convictionScore: 9, edgePP: 0 },
   ];
   const picks = w.getMlsLigaPolyPicks('');
   const teams = picks.map(p => p.home);
-  assert.deepEqual(teams, ['Inter Miami'], 'nur das starke ABWÄGEN (≥Schwelle) darf erscheinen');
+  assert.ok(teams.includes('Inter Miami'), 'starkes ABWÄGEN fehlt');
+  assert.ok(teams.includes('CF Montreal'), 'schwaches ABWÄGEN (echter Card-Pick) darf NICHT rausfliegen');
+  assert.ok(!teams.includes('FC Dallas'), 'NOBET gehoert nicht in die Cards');
   assert.equal(picks[0].league, 'MLS');
   assert.equal(picks[0].leagueFlag, '🇺🇸');
 });

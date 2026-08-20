@@ -834,7 +834,9 @@ function getMlsLigaPolyPicks(dateStr) {
     const [y, m, d] = String(e.date || '').split('-');
     const dateFmt = (y && m && d) ? `${d}.${m}.${y}` : null;
     if (dateStr && dateFmt && dateFmt !== dateStr) continue;
-    if (!_polyPickEligible(e.verdict, e.convictionScore)) continue;
+    // 21.08.2026 (Lucas): kein conv-Gate mehr — Cards = 1:1 die gestempelten Card-Picks
+    // (BET + ABWÄGEN, wie das Dashboard). Schwache ABWÄGEN gehören dazu, wenn sie auf der Card stehen.
+    if (e.verdict !== 'BET' && e.verdict !== 'ABWÄGEN') continue;
     const polyMarket = WM_MARKET_TO_POLY[e.market];
     if (!polyMarket) continue;
     const meta = _POLY_LEAGUE_META[e.league] || { flag: '🏆', name: e.league || 'Liga' };
@@ -904,11 +906,14 @@ async function _loadNationalPolyPicksAsync() {
 // EINE Sammelstelle für alle Betting-Tab-Pick-Quellen — verhindert, dass eine Quelle an einem
 // Aggregations-Punkt vergessen wird (genau so fiel MLS raus). WM + Liga/MLS + Club-Ligen.
 function _collectAllPolyPicks(dateStr) {
-  let wm = [], mls = [], club = [];
+  // 21.08.2026 (Lucas: „Cards soll nur die echten Card-Picks zeigen"): NUR gestempelte
+  // Dataset-Picks (WM + National/Liga/MLS), wie das Dashboard/Tracking. Der frühere Club-Pfad
+  // (getPolyPicks → getBettingPicks) rechnete für die Top-5 EIGENE Picks über ALLE Märkte neu
+  // (Newcastle Over 2.5 etc.) — Spiele, die gar nicht in den echten Picks stehen. Raus.
+  let wm = [], mls = [];
   try { wm   = getWmPolyPicks(dateStr)     || []; } catch (_e) {}
   try { mls  = getMlsLigaPolyPicks(dateStr) || []; } catch (_e) {}
-  try { club = getPolyPicks(dateStr)       || []; } catch (_e) {}
-  return [...wm, ...mls, ...club];
+  return [...wm, ...mls];
 }
 
 // ── 4. POLYMARKET PRICES (from server-cached JSON) ──────
