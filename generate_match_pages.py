@@ -43,12 +43,24 @@ def _mnorm(x):
     x = re.sub(r"[^a-z0-9 ]", " ", x.lower())
     return set(t for t in x.split() if len(t) > 2 and t not in _MNOISE and not t.isdigit())
 
+# 19.08.2026 (Lucas: „Event-Page-Betfair/Poly weiter abdecken"): generische Einzel-Token, die allein
+# KEIN Match rechtfertigen (Leeds United vs Newcastle United teilen nur „united"). „real/atletico/
+# deportivo/club" sind bereits in _MNOISE.
+_MFILLER = {"city", "united"}
+
 def _mscore(a, b):
     A, B = _mnorm(a), _mnorm(b)
     if not A or not B:
         return 0.0
     inter = A & B
-    return len(inter) / max(len(A), len(B)) if inter else 0.0
+    if not inter:
+        return 0.0
+    # Containment (min-Nenner) statt max: Kurz-vs-Lang-Namen sollen matchen — Poly „Brighton" vs Event
+    # „Brighton Hove Albion" gab mit max 0.33 (kein Match), mit min 1.0. Guard: ein einzelner generischer
+    # Token (city/united/…) reicht NICHT als Beleg.
+    if len(inter) == 1 and next(iter(inter)) in _MFILLER:
+        return 0.0
+    return len(inter) / min(len(A), len(B))
 
 def _teams_match(h, a, rh, ra, thr=0.5):
     return _mscore(h, rh) >= thr and _mscore(a, ra) >= thr

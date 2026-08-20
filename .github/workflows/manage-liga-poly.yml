@@ -1,0 +1,174 @@
+name: 💹 Liga (Top-5) Poly Positionen überwachen
+
+# 19.08.2026 (Lucas: „läuft das Trading auch für LaLiga/Premier League/Top-5? Da startet jede
+# Woche was neues, es muss doch Trades geben"). Befund: die Top-5-DATEN (liga-data.json,
+# liga_poly_prices.json über ENG/ESP/GER/ITA/FRA) wurden längst geholt, aber es gab KEIN
+# Manage-/Trade-Workflow für den liga-Datensatz — nur manage-mls-poly.yml (mls) + manage-wm-poly.yml
+# (wm, Crons aus = Off-Season). Deshalb liefen für Top-5 weder Auto-Trader noch Positions-Manager →
+# keine Trades. Dies ist das exakte Pendant zu manage-mls-poly.yml, nur COCOBET_DATASET=liga →
+# arbeitet ausschließlich auf liga_poly_prices.json / liga_auto_bets_placed.json / liga_poly_balance.json /
+# liga_position_health.json / liga-data.json. MLS und WM bleiben vollständig unberührt.
+#
+# ⚠️ TRADING IST STANDARDMÄSSIG AUS. Eigene Secrets (LIGA_AUTO_TRIGGER_ENABLED / LIGA_AUTO_SELL_ENABLED),
+# NICHT die MLS-/WM-Schalter. Solange die LIGA-Secrets nicht existieren, ist der Default 'false':
+# der Auto-Trader analysiert nur (Dry-Run), platziert und verkauft NICHTS. Lucas flippt Top-5 live
+# selbst, wenn er die Namens-/Preis-Zuordnung am 1. Lauf geprüft hat (genau wie damals bei MLS).
+#
+# Läuft self-hosted auf dem Mac: Polymarket geoblockt jede Rechenzentrums-IP (403). Nur Privat-IPs
+# dürfen Orders platzieren. Die reinen DATEN-Fetcher laufen in update-liga.yml / fetch-liga-odds-dense.yml.
+#
+# Zeitfenster: europäische Top-5-Anpfiffe (Sa/So-Nachmittag + Wochentag-Abend), grob 10–21 UTC.
+# Alle 30 Min, damit garantiert ein Lauf ins 40-Min-Pre-Match-Close-Fenster jedes Spiels fällt.
+# Kosten-Hinweis: jeder Lauf holt frische Pinnacle-Odds (the-odds-api). Fenster/Kadenz bei Bedarf senken.
+on:
+  schedule:
+    - cron: '0,30 10-21 * * *'   # Top-5-Anpfiffe (europäischer Nachmittag/Abend, UTC) inkl. Vorlauf
+    - cron: '0 8 * * *'          # Tages-Housekeeping (lang gehaltene Positionen)
+  workflow_dispatch:
+    inputs:
+      reason:
+        description: 'Grund für manuellen Run (optional)'
+        required: false
+        default: 'manual check'
+
+permissions:
+  contents: write
+
+concurrency:
+  group: update-liga
+  cancel-in-progress: false
+
+jobs:
+  monitor-liga-positions:
+    runs-on: [self-hosted, macOS]
+    env:
+      COCOBET_DATASET: liga
+      COCOBET_PROFILE: liga_default
+
+    steps:
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python + py-clob-client-v2 einrichten (Mac)
+        run: |
+          PYTHON=""
+          for PY in /opt/homebrew/bin/python3.13 /opt/homebrew/bin/python3.12 /opt/homebrew/bin/python3.11 /usr/local/bin/python3.13 /usr/local/bin/python3.12 /usr/local/bin/python3.11; do
+            if "$PY" --version &>/dev/null 2>&1; then PYTHON="$PY"; break; fi
+          done
+          if [ -z "$PYTHON" ]; then echo "❌ Kein Python >= 3.11 gefunden"; exit 1; fi
+          echo "✅ $PYTHON ($($PYTHON --version))"
+          echo "POLY_PYTHON=$PYTHON" >> $GITHUB_ENV
+          $PYTHON -m pip install --break-system-packages requests --quiet
+          $PYTHON -m pip uninstall -y py-clob-client py-clob-client-v2 2>/dev/null || true
+          $PYTHON -m pip install --break-system-packages "git+https://github.com/Polymarket/py-clob-client-v2.git@main" 2>&1 | tail -3
+          $PYTHON -c "from py_clob_client_v2.client import ClobClient; print('✅ py-clob-client-v2 ok')"
+
+      - name: 📈 Liga Pinnacle-Odds frisch (Steam-Frische)
+        run: ${{ env.POLY_PYTHON }} fetch_liga_odds.py
+        continue-on-error: true
+        env:
+          ODDS_API_KEY:            ${{ secrets.ODDS_API_KEY }}
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
+      - name: 💹 Liga Polymarket Preise aktualisieren
+        run: ${{ env.POLY_PYTHON }} fetch_wm_poly_prices.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
+      - name: 💰 Liga Polymarket Balance fetchen
+        run: ${{ env.POLY_PYTHON }} fetch_wm_poly_balance.py
+        continue-on-error: true
+        env:
+          POLY_PRIVATE_KEY:    ${{ secrets.POLY_PRIVATE_KEY }}
+          POLY_FUNDER_ADDRESS: ${{ secrets.POLY_FUNDER_ADDRESS }}
+          POLY_API_KEY:        ${{ secrets.POLY_API_KEY }}
+          POLY_API_SECRET:     ${{ secrets.POLY_API_SECRET }}
+          POLY_API_PASSPHRASE: ${{ secrets.POLY_API_PASSPHRASE }}
+
+      - name: 🤖 Auto-Trigger Liga Bets (Default AUS)
+        run: ${{ env.POLY_PYTHON }} auto_wm_poly_trigger.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:            ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID:   ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+          POLY_PRIVATE_KEY:          ${{ secrets.POLY_PRIVATE_KEY }}
+          POLY_FUNDER_ADDRESS:       ${{ secrets.POLY_FUNDER_ADDRESS }}
+          POLY_API_KEY:              ${{ secrets.POLY_API_KEY }}
+          POLY_API_SECRET:           ${{ secrets.POLY_API_SECRET }}
+          POLY_API_PASSPHRASE:       ${{ secrets.POLY_API_PASSPHRASE }}
+          AUTO_TRIGGER_ENABLED:      ${{ secrets.LIGA_AUTO_TRIGGER_ENABLED || 'false' }}
+
+      - name: 📊 Liga Poly Positionen prüfen + Auto-Sell (Default AUS)
+        run: ${{ env.POLY_PYTHON }} manage_wm_poly_positions.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:           ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_CHAT_ID:         ${{ secrets.TELEGRAM_CHAT_ID }}
+          TELEGRAM_TRADES_CHAT_ID:  ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+          POLY_PRIVATE_KEY:         ${{ secrets.POLY_PRIVATE_KEY }}
+          POLY_FUNDER_ADDRESS:      ${{ secrets.POLY_FUNDER_ADDRESS }}
+          POLY_API_KEY:             ${{ secrets.POLY_API_KEY }}
+          POLY_API_SECRET:          ${{ secrets.POLY_API_SECRET }}
+          POLY_API_PASSPHRASE:      ${{ secrets.POLY_API_PASSPHRASE }}
+          AUTO_SELL_ENABLED:        ${{ secrets.LIGA_AUTO_SELL_ENABLED || 'false' }}
+
+      - name: 🅼 Liga Maker-Orders verwalten (Default AUS)
+        run: ${{ env.POLY_PYTHON }} manage_poly_maker_orders.py
+        continue-on-error: true
+        env:
+          COCOBET_DATASET:     liga
+          COCOBET_PROFILE:     liga_default
+          POLY_PRIVATE_KEY:    ${{ secrets.POLY_PRIVATE_KEY }}
+          POLY_FUNDER_ADDRESS: ${{ secrets.POLY_FUNDER_ADDRESS }}
+          POLY_API_KEY:        ${{ secrets.POLY_API_KEY }}
+          POLY_API_SECRET:     ${{ secrets.POLY_API_SECRET }}
+          POLY_API_PASSPHRASE: ${{ secrets.POLY_API_PASSPHRASE }}
+
+      - name: 📈 Liga Bets resolven (P&L + CLV)
+        run: ${{ env.POLY_PYTHON }} resolve_wm_results.py
+        continue-on-error: true
+
+      - name: 🩺 Liga Position-Health-Check
+        run: ${{ env.POLY_PYTHON }} monitor_open_positions.py
+        continue-on-error: true
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
+      - name: 🛡️ Wipe-Check (kein leerer Datensatz darf committet werden)
+        run: ${{ env.POLY_PYTHON }} check_not_wiped.py
+
+      - name: 💾 Status speichern
+        run: |
+          git config user.name "CocoBet Bot"
+          git config user.email "bot@cocobet.local"
+          for f in \
+            liga_poly_prices.json liga_poly_balance.json liga_auto_bets_placed.json \
+            liga_poly_positions.json liga_position_health.json liga_position_health_alerts.json \
+            liga_poly_resting_orders.json \
+            liga-poly-history.json liga_book_health.json liga_kill_switch.json \
+            liga-data.json liga-odds-history.json \
+            liga_results.json liga_pick_calibration.json; do
+            [ -f "$f" ] && git add "$f"
+          done
+          if git diff --staged --quiet; then
+            echo "Keine Änderungen — kein Commit."; exit 0
+          fi
+          git commit -m "💹 Liga Poly Update $(date -u +'%d.%m.%Y %H:%M') UTC"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          for attempt in 1 2 3 4 5; do
+            git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+            CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null)
+            if [ -n "$CONFLICTS" ]; then
+              echo "$CONFLICTS" | while read f; do git checkout --ours -- "$f"; git add "$f"; done
+              git diff --staged --quiet || git commit -m "🔧 auto-resolve merge conflicts"
+            fi
+            if git push 2>&1; then echo "✅ Push nach Versuch $attempt"; exit 0; fi
+            echo "⚠️ Push $attempt fehlgeschlagen — retry…"; sleep $((attempt * 3))
+          done
+          echo "❌ Push fehlgeschlagen"; exit 1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

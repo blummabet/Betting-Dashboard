@@ -264,6 +264,7 @@ let _polyState = {
   picks:    [],
   prices:   {},   // pickId → { found:bool, price:float|null, eventTitle:str }
   selected: new Set(),
+  section:  'cards',   // 20.08.2026 (Lucas): Sub-Tabs — 'cards' | 'value' | 'heute'
 };
 
 // ── 3. PICK COLLECTION ──────────────────────────────────
@@ -402,7 +403,7 @@ function polyChangeDate(dateStr) {
   // Alle Quellen: WM + Liga/MLS + Club-Ligen (eine Sammelstelle, damit keine vergessen wird)
   _polyState.picks = _collectAllPolyPicks(dateStr);
   _polyState.prices   = {};
-  _polyState.selected = new Set(_polyState.picks.map(p => p.id));
+  _polyState.selected = new Set();
   _polyRefreshStickyBar();
 
   // Aktiven Chip umsetzen (der Chip-Block rendert sich komplett neu — Zähler inklusive)
@@ -417,10 +418,16 @@ function polyChangeDate(dateStr) {
   const status = document.getElementById('polyPriceStatus');
   if (status) { status.textContent = '⏳ Polymarket-Preise werden geladen…'; status.style.color = ''; }
 
-  const pickSection = document.getElementById('polyPicksLabel');
-  if (pickSection) pickSection.textContent = `Picks — ${_polyState.picks.length} verfügbar`;
+  const bar = document.getElementById('polySubtabBar');
+  if (bar) bar.innerHTML = _polySubtabBar();
 
-  document.getElementById('polyPickGrid').innerHTML = renderPolyPickCards();
+  // Aktive Sektion neu rendern (Heute laedt sich selbst nach, Cards/Value fuellen das Grid).
+  if (_polyState.section === 'heute') {
+    _loadPolyHeute();
+  } else {
+    const grid = document.getElementById('polyPickGrid');
+    if (grid) grid.innerHTML = renderPolyPickCards();
+  }
   _fetchAllPricesAsync();
 }
 
@@ -1398,10 +1405,30 @@ function _confBadge(conf) {
   return `<span style="font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;background:${c.bg};color:${c.color};border:1px solid ${c.border};letter-spacing:.3px">${c.label}</span>`;
 }
 
+// ── Canonical Card-Verdict — EINZIGE Wahrheit, 1:1 wie die Dashboard-Cards ───────
+// 20.08.2026 (Lucas: „1:1 die cards, wo was zu wetten ist"): Der Betting-Tab labelte
+// frische Club/Liga-Picks bisher ueber `conf` (high→BET). Das wich vom Card-Verdict ab —
+// ein Spiel stand als ✅ BET, obwohl die Card via computeVerdict() NOBET/SKIP sagte.
+// Precomputed Picks (WM/National) tragen ihren echten `verdict` bereits; frische
+// Club/Liga-Picks bekommen ihn hier aus computeVerdict() — exakt wie _verdictBlock().
+function _pickCardVerdict(pick) {
+  if (pick.verdict) return pick.verdict;
+  try {
+    const _eff = (pick.oddsIsEst || !pick.odds) ? pick.modelOdds : pick.odds;
+    if (typeof computeVerdict === 'function' && pick.modelOdds != null && _eff != null) {
+      return computeVerdict({
+        modelOdds: pick.modelOdds, odds: _eff, oddsIsEst: pick.oddsIsEst,
+        market: pick.market, oddsOpen: pick.oddsOpen, h2h: pick.h2h,
+      }).verdict;
+    }
+  } catch (_e) { /* fall through to conf */ }
+  return pick.conf === 'high' ? 'BET' : pick.conf === 'medium' ? 'ABWÄGEN' : null;
+}
+
 function _verdictTag(pick) {
   // 27.07.2026 (Lucas: „im Betting-Tab sehen ob BET oder ABWÄGEN"): der ECHTE Card-Verdict
   // (pick.verdict), Fallback über conf (high=BET, medium=ABWÄGEN). Ersetzt das kryptische HIGH/MED.
-  const v = pick.verdict || (pick.conf === 'high' ? 'BET' : pick.conf === 'medium' ? 'ABWÄGEN' : null);
+  const v = _pickCardVerdict(pick);
   const map = {
     'BET':     { bg: '#3fb95022', border: '#3fb95055', color: '#3fb950', label: '✅ BET' },
     'ABWÄGEN': { bg: '#f5c51822', border: '#f5c51855', color: '#f5c518', label: '⚖️ ABWÄGEN' },
@@ -3286,6 +3313,138 @@ function _buildPerformanceHtml(data) {
     </div>`;
 }
 
+// ── Sub-Tabs: Cards / Value / Heute (20.08.2026, Lucas) ─────────────────────────
+// „Cards" = 1:1 die Dashboard-Karten (echtes Verdict BET/ABWÄGEN). „Value" = Poly-Quote
+// besser als der Markt. „Heute" = die besten Poly-Plays, exakt dieselbe Engine wie das
+// Terminal „🔥 Heute wetten" (_pwTopPlays aus poly-wallets.js) — zum manuellen Nachspielen.
+function _polyCounts() {
+  const picks = _polyState.picks || [];
+  let cards = 0, value = 0;
+  for (const p of picks) {
+    const v = _pickCardVerdict(p);
+    if (v === 'BET' || v === 'ABWÄGEN') cards++; else value++;
+  }
+  return { cards, value };
+}
+
+function _polySubtabBar() {
+  const c   = _polyCounts();
+  const sec = _polyState.section || 'cards';
+  const btn = (id, label, count) => {
+    const on = id === sec;
+    return `<button onclick="_polySetSection('${id}')"
+      style="padding:7px 15px;border:1px solid ${on ? '#a78bfa' : '#30363d'};
+             background:${on ? 'rgba(167,139,250,.16)' : '#161b22'};
+             color:${on ? '#a78bfa' : '#8b949e'};font-size:12px;font-weight:${on ? '800' : '600'};
+             cursor:pointer;font-family:inherit;border-radius:0;white-space:nowrap;transition:all .12s">
+      ${label}${count !== undefined ? ` <span style="opacity:.7;font-size:10px">${count}</span>` : ''}</button>`;
+  };
+  return `<div style="display:inline-flex;border-radius:9px;overflow:hidden;border:1px solid #30363d">
+    ${btn('cards', '📇 Cards', c.cards)}${btn('value', '💜 Value', c.value)}${btn('heute', '🔥 Heute')}
+  </div>`;
+}
+
+function _polySetSection(sec) {
+  _polyState.section = sec;
+  const bar    = document.getElementById('polySubtabBar');
+  const grid   = document.getElementById('polyPickGrid');
+  const heute  = document.getElementById('polyHeuteBox');
+  const status = document.getElementById('polyPriceStatus');
+  if (bar) bar.innerHTML = _polySubtabBar();
+  if (sec === 'heute') {
+    if (grid)   grid.style.display = 'none';
+    if (status) status.style.visibility = 'hidden';
+    if (heute) { heute.style.display = 'block'; _loadPolyHeute(); }
+  } else {
+    if (heute)  heute.style.display = 'none';
+    if (status) status.style.visibility = 'visible';
+    if (grid)  { grid.style.display = 'grid'; grid.innerHTML = renderPolyPickCards(); }
+  }
+}
+
+// ── „Heute" — Terminal-„Heute wetten"-Engine im Betting-Tab ─────────────────────
+// Spiegelt _pwTopPlays() 1:1 (signal-gated BET-Plays, nach Conviction). Lädt Daten über
+// denselben schlanken Loader wie die Übersicht-Box (_pwEnsurePlaysData). Kein eigener
+// Scorer — es ist bewusst dieselbe Engine, der Lucas im Terminal vertraut.
+let _polyHeutePlays = [];
+
+function _renderPolyHeute(plays) {
+  const head = (n) => `
+    <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:2px">
+      <span style="font-size:13px;font-weight:800;color:#ff8a5c">🔥 Heute — die besten Poly-Plays</span>
+      <span style="font-size:11px;color:#6e7681">${n ? n + ' Play' + (n !== 1 ? 's' : '') + ' · ' : ''}gleiche Engine wie Terminal „Heute wetten"</span>
+    </div>
+    <div style="font-size:11px;color:#6e7681;margin-bottom:10px;line-height:1.5">Signal-gated (Geld · Steam · scharfe Wallets · Pinnacle), nach Conviction. „🟣 Setzen" öffnet den Markt zum manuellen Nachspielen.</div>`;
+
+  const wrap = (inner) => `<div style="border:1px solid #30363d;border-radius:12px;background:#0d1117;overflow:hidden">
+    <div style="padding:12px 14px 2px">${head(Array.isArray(plays) ? plays.length : 0)}</div>${inner}</div>`;
+
+  if (plays === null) return wrap(`<div style="padding:0 14px 14px;color:#6e7681;font-size:12px">⏳ Lade Poly-Plays…</div>`);
+  if (!plays.length)  return wrap(`<div style="padding:0 14px 14px;color:#6e7681;font-size:12px">Aktuell keine handelbare Kante (kein BET-Play). Sobald der Scan (~alle 30 Min) welche findet, stehen sie hier.</div>`);
+
+  _polyHeutePlays = plays;
+  const rows = plays.map((r, i) => {
+    const icon  = (typeof _pwSportIcon === 'function') ? _pwSportIcon(r.league) : '🎯';
+    const meter = (typeof _pwTermMeter === 'function') ? _pwTermMeter(r.conv) : (`<span style="color:#8b949e;font-size:11px">Conv ${r.conv}</span>`);
+    const url   = 'https://polymarket.com/event/' + encodeURIComponent(r.key || '');
+    const price = (typeof r.price === 'number' && r.price > 0)
+      ? `<span style="font-size:11px;color:#a78bfa;font-weight:700">${Math.round(r.price * 100)}¢ · ${(1 / r.price).toFixed(2)}</span>` : '';
+    const htk = (r.htk == null) ? '' : (r.htk < 0
+      ? '<span style="color:#ff5c5c;font-weight:800;font-size:10px">● LIVE</span>'
+      : `<span style="color:#8b949e;font-size:11px">${r.htk < 1 ? '<1h' : 'in ' + Math.round(r.htk) + 'h'}</span>`);
+    const mtxt = String(r.match || '—').replace(/</g, '&lt;');
+    const stxt = String(r.side  || '').replace(/</g, '&lt;');
+    return `<div style="display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:10px 14px;border-top:1px solid #161b22">
+      <span style="font-size:18px">${icon}</span>
+      <div style="min-width:0">
+        <div style="font-size:13px;font-weight:700;color:#e6edf3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+          ${mtxt} <span style="color:#484f58">→</span> <b style="color:#4cc2ff">${stxt}</b>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:4px;flex-wrap:wrap">${meter}${price}${htk}</div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
+        <button onclick="event.stopPropagation();_polyHeuteLog(${i})"
+          style="background:#a78bfa18;border:1px solid #a78bfa44;border-radius:6px;color:#a78bfa;font-size:11px;font-weight:700;padding:5px 9px;cursor:pointer;font-family:inherit">✏️ loggen</button>
+        <a href="${url}" target="_blank" rel="noopener" onclick="event.stopPropagation()"
+          style="background:linear-gradient(135deg,#a78bfa,#7c3aed);border-radius:6px;color:#fff;font-size:11px;font-weight:800;padding:6px 11px;text-decoration:none;white-space:nowrap">🟣 Setzen ↗</a>
+      </div>
+    </div>`;
+  }).join('');
+  return wrap(rows);
+}
+
+function _loadPolyHeute() {
+  const box = document.getElementById('polyHeuteBox');
+  if (!box) return;
+  if (typeof _pwEnsurePlaysData !== 'function' || typeof _pwTopPlays !== 'function') {
+    box.innerHTML = _renderPolyHeute([]);   // poly-wallets.js nicht geladen → leer statt Crash
+    return;
+  }
+  box.innerHTML = _renderPolyHeute(null);   // Ladezustand
+  try {
+    _pwEnsurePlaysData(function () {
+      let plays = [];
+      try { plays = _pwTopPlays(12, null, false) || []; } catch (_e) { plays = []; }
+      const b = document.getElementById('polyHeuteBox');
+      if (b) b.innerHTML = _renderPolyHeute(plays);
+    });
+  } catch (_e) { box.innerHTML = _renderPolyHeute([]); }
+}
+
+function _polyHeuteLog(idx) {
+  const r = _polyHeutePlays[idx];
+  if (!r) return;
+  _ensureWmPosModal();
+  const parts = String(r.match || '').split(' vs ');
+  const price = (typeof r.price === 'number' && r.price > 0) ? r.price : 0.5;
+  const edge  = Math.max(0, ((+r.conv || 0) - 5) * 2);   // grobe Kelly-Basis aus Conviction
+  _openLogPositionModal({
+    home: parts[0] || r.match || '—', away: parts[1] || '',
+    market: r.side || 'Pick', priceKey: r.side || '',
+    polyPrice: price, pinnFair: price, slug: r.key || '', edge,
+  });
+}
+
 function renderPolyPickCards() {
   const picks = _polyState.picks;
 
@@ -3303,22 +3462,34 @@ function renderPolyPickCards() {
     </div>`;
   }
 
-  const clubPicks = picks.filter(p => !p.isWm);
-  const wmPicks   = picks.filter(p => p.isWm);
+  // 20.08.2026 (Lucas): ZWEI klar getrennte Bereiche.
+  //  1) „Zum Wetten" — 1:1 wie die Cards: nur echte Card-Verdicts BET/ABWÄGEN.
+  //  2) „Poly-Kante" — der Rest: Spiele, wo Poly evtl. eine bessere Quote bietet als
+  //     der Markt (Pinnacle/Bookie). Kein Modell-BET, sondern reine Preis-Chance.
+  const _isCardBet = p => { const v = _pickCardVerdict(p); return v === 'BET' || v === 'ABWÄGEN'; };
+  const cardBets = picks.filter(_isCardBet);
+  const polyOnly = picks.filter(p => !_isCardBet(p));
 
-  const wmPickHtml = wmPicks.length > 0
-    ? `<div style="grid-column:1/-1;font-size:11px;color:#6e7681;margin-bottom:8px;padding-top:4px">
-         WM System-Picks (${wmPicks.length}):
-       </div>` + wmPicks.map(_renderPickCard).join('')
-    : '';
+  // Value-Kante (Poly-Quote besser als Referenz) — nur zum Sortieren der Value-Liste
+  const _polyEdgePP = p => {
+    const pr  = _polyState.prices[p.id];
+    const ref = p.oddsIsEst ? p.modelOdds : p.odds;
+    if (!pr || !pr.found || !ref) return null;
+    return Math.round(((1 / ref) - pr.price) * 100);
+  };
+  polyOnly.sort((a, b) => ((_polyEdgePP(b) ?? -999) - (_polyEdgePP(a) ?? -999)));
 
-  const clubHtml = clubPicks.length > 0
-    ? `<div style="grid-column:1/-1;font-size:11px;color:#6e7681;margin:12px 0 8px">
-         Club-Liga Picks (${clubPicks.length}):
-       </div>` + clubPicks.map(_renderPickCard).join('')
-    : '';
+  const sec  = (_polyState.section === 'value') ? 'value' : 'cards';
+  const list = sec === 'value' ? polyOnly : cardBets;
 
-  return wmPickHtml + clubHtml;
+  const _emptyBox = (txt) => `<div style="grid-column:1/-1;padding:16px 18px;background:#0d1117;border:1px solid #21262d;border-radius:10px;color:#8b949e;font-size:12px;line-height:1.6">${txt}</div>`;
+
+  if (!list.length) {
+    return sec === 'value'
+      ? _emptyBox('💜 <strong style="color:#e6edf3">Value</strong> — aktuell kein Spiel, bei dem Poly eine bessere Quote bietet als der Markt.')
+      : _emptyBox('📇 <strong style="color:#e6edf3">Cards</strong> — aktuell kein Spiel mit Card-Verdict <b style="color:#3fb950">BET</b> oder <b style="color:#f5c518">ABWÄGEN</b>. Schau im <b style="color:#a78bfa">Value</b>-Tab, ob Poly bessere Quoten bietet.');
+  }
+  return list.map(_renderPickCard).join('');
 }
 
 // ── 6. STATS ────────────────────────────────────────────
@@ -4889,7 +5060,7 @@ function initPolymarket() {
   _polyState.dateStr  = dateStr;
   _polyState.picks    = _collectAllPolyPicks(dateStr);   // WM + Liga/MLS + Club (nicht nur Club)
   _polyState.prices   = {};
-  _polyState.selected = new Set(_polyState.picks.map(p => p.id)); // start: all selected
+  _polyState.selected = new Set(); // 20.08.2026 (Lucas): NICHTS vorauswaehlen — sonst kann Bulk-Ausloesen bloed enden
 
   // ── WM 2026 Picks async dazuladen ───────────────────────────────────────
   // Falls window.WM2026_DATA noch nicht gesetzt (User hat WM-Tab noch nie geöffnet),
@@ -4899,7 +5070,7 @@ function initPolymarket() {
     _loadWmDataAsync().then(() => {
       if (window._wmDataCache) {
         _polyState.picks = _collectAllPolyPicks(_polyState.dateStr || dateStr);
-        _polyState.selected = new Set(_polyState.picks.map(p => p.id));
+        _polyState.selected = new Set();
         const grid = document.getElementById('polyPickGrid');
         if (grid) grid.innerHTML = renderPolyPickCards();
         const stats = document.getElementById('polyStatsSection');
@@ -4915,7 +5086,7 @@ function initPolymarket() {
   if (!window.NATIONAL_PICKS_FOR_POLY) {
     _loadNationalPolyPicksAsync().then(() => {
       _polyState.picks = _collectAllPolyPicks(_polyState.dateStr || dateStr);
-      _polyState.selected = new Set(_polyState.picks.map(p => p.id));
+      _polyState.selected = new Set();
       const grid = document.getElementById('polyPickGrid');
       if (grid) grid.innerHTML = renderPolyPickCards();
       const chips = document.getElementById('polyDateChips');
@@ -4963,14 +5134,15 @@ function initPolymarket() {
       <button onclick="document.getElementById('polySetupHint').style.display='none'" style="background:none;border:none;color:#8b949e;cursor:pointer;font-size:16px;padding:0;line-height:1;flex-shrink:0">✕</button>
     </div>
 
-    <!-- ── PICKS SECTION ──────────────────────────────── -->
-    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px">
-      <span id="polyPicksLabel" style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#8b949e">Picks — ${n} verfügbar</span>
+    <!-- ── SUB-TABS: Cards / Value / Heute ──────────────── -->
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
+      <div id="polySubtabBar">${_polySubtabBar()}</div>
       <span style="font-size:11px;color:#8b949e" id="polyPriceStatus">⏳ Polymarket-Preise werden geladen…</span>
     </div>
     <div id="polyPickGrid" style="display:grid;grid-template-columns:repeat(auto-fill,minmax(290px,1fr));gap:12px;margin-bottom:40px">
       ${renderPolyPickCards()}
     </div>
+    <div id="polyHeuteBox" style="display:none;margin-bottom:40px"></div>
 
     <!-- ── STATS SECTION ──────────────────────────────── -->
     <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#8b949e;margin-bottom:10px;margin-top:8px">
