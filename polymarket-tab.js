@@ -3327,7 +3327,14 @@ function _polyPickEdgePP(p) {
   return Math.round(((1 / ref) - pr.price) * 100);
 }
 // Value = echte Poly-Kante ab +1pp (unter 1pp zeigt die Card „≈ 0%").
-function _polyPickHasValue(p) { const e = _polyPickEdgePP(p); return e != null && e >= 1; }
+// 20.08.2026 (Lucas: „keine Modell-Dinger, Pinnacle-Anker"): ~Modell-Picks (oddsIsEst,
+// keine echte Bookie/Pinnacle-Quote) fliegen aus Value raus — die Edge waere sonst
+// Modell-vs-Poly, nicht Poly-vs-Markt. Nur echte Quoten zaehlen als Value.
+function _polyPickHasValue(p) {
+  if (p.oddsIsEst) return false;
+  const e = _polyPickEdgePP(p);
+  return e != null && e >= 1;
+}
 
 function _polyCounts() {
   const picks = _polyState.picks || [];

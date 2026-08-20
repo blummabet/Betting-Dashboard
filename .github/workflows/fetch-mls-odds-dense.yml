@@ -39,6 +39,7 @@ jobs:
       - name: 💰 MLS-Quoten holen (nur fetch_liga_odds)
         env:
           ODDS_API_KEY: ${{ secrets.ODDS_API_KEY }}
+          FETCH_EXTRA_MARKETS: '1'   # 20.08.2026 (Lucas): Pinnacle-BTTS + alternate_totals pro Spiel holen (Credits aufgeladen) → fair_btts wird berechnet, BTTS handelbar statt ~Modell
         run: python fetch_liga_odds.py
 
       - name: 📡 MLS Sharp-Moves erkennen (Radar)

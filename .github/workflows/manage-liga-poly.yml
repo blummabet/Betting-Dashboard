@@ -99,7 +99,7 @@ jobs:
           POLY_API_KEY:              ${{ secrets.POLY_API_KEY }}
           POLY_API_SECRET:           ${{ secrets.POLY_API_SECRET }}
           POLY_API_PASSPHRASE:       ${{ secrets.POLY_API_PASSPHRASE }}
-          AUTO_TRIGGER_ENABLED:      ${{ secrets.LIGA_AUTO_TRIGGER_ENABLED || 'false' }}
+          AUTO_TRIGGER_ENABLED:      ${{ secrets.LIGA_AUTO_TRIGGER_ENABLED || 'true' }}   # 20.08.2026 (Lucas): Top-5 live traden. Aus: Secret LIGA_AUTO_TRIGGER_ENABLED=false setzen.
 
       - name: 📊 Liga Poly Positionen prüfen + Auto-Sell (Default AUS)
         run: ${{ env.POLY_PYTHON }} manage_wm_poly_positions.py

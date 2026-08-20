@@ -167,3 +167,16 @@ test('_polyCounts: Cards=Bets, Value=Poly-Edge (koennen ueberlappen)', () => {
   assert.equal(c.cards, 1, 'BET zaehlt bei Cards');
   assert.equal(c.value, 1, 'derselbe +Edge-Pick zaehlt auch bei Value (Overlap ok)');
 });
+
+// ── 20.08.2026 (Lucas: „Pinnacle-Anker, keine Modell-Dinger"): ~Modell raus aus Value ──
+test('_polyPickHasValue: ~Modell (oddsIsEst) zaehlt NIE als Value — auch mit dickem Edge', () => {
+  const w = loadPoly();
+  w._polyState.prices = {
+    M: { found:true, price:0.40 },   // gegen modelOdds 1.30 (impl .77) waere das +37pp — aber ~Modell
+    R: { found:true, price:0.50 },   // echte Quote 1.88 → +3pp
+  };
+  const modelPick = { id:'M', modelOdds:1.30, oddsIsEst:true };          // kein echter Bookie-Anker
+  const realPick  = { id:'R', odds:1.88, oddsIsEst:false };
+  assert.equal(w._polyPickHasValue(modelPick), false, '~Modell darf nicht als Value zaehlen');
+  assert.equal(w._polyPickHasValue(realPick),  true,  'echte Pinnacle/Bookie-Kante ist Value');
+});
