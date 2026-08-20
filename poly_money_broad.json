@@ -1,15 +1,15 @@
 {
- "n": 474,
+ "n": 485,
  "minOdds": 1.35,
- "moneyHitRate": 0.502,
- "priceHitRate": 0.513,
- "brierMoney": 0.614,
- "brierPrice": 0.5524,
+ "moneyHitRate": 0.507,
+ "priceHitRate": 0.515,
+ "brierMoney": 0.6162,
+ "brierPrice": 0.552,
  "disagree": {
-  "n": 61,
+  "n": 59,
   "moneyWon": 9,
-  "priceWon": 14,
-  "neither": 38
+  "priceWon": 13,
+  "neither": 37
  },
  "verdict": "preis_besser",
  "byLeague": [
@@ -20,22 +20,6 @@
    "brierMoney": 0.3183,
    "brierPrice": 0.415,
    "verdict": "geld_schaerfer"
-  },
-  {
-   "league": "TENNIS",
-   "n": 28,
-   "moneyHitRate": 0.5,
-   "brierMoney": 0.5333,
-   "brierPrice": 0.5334,
-   "verdict": "gleichauf"
-  },
-  {
-   "league": "ESPORTS",
-   "n": 169,
-   "moneyHitRate": 0.556,
-   "brierMoney": 0.4899,
-   "brierPrice": 0.4899,
-   "verdict": "gleichauf"
   },
   {
    "league": "UFC",
@@ -62,11 +46,27 @@
    "verdict": "gleichauf"
   },
   {
+   "league": "TENNIS",
+   "n": 30,
+   "moneyHitRate": 0.5,
+   "brierMoney": 0.5331,
+   "brierPrice": 0.5331,
+   "verdict": "gleichauf"
+  },
+  {
+   "league": "ESPORTS",
+   "n": 171,
+   "moneyHitRate": 0.561,
+   "brierMoney": 0.4879,
+   "brierPrice": 0.4878,
+   "verdict": "gleichauf"
+  },
+  {
    "league": "MLB",
-   "n": 58,
-   "moneyHitRate": 0.586,
-   "brierMoney": 0.4727,
-   "brierPrice": 0.4726,
+   "n": 59,
+   "moneyHitRate": 0.593,
+   "brierMoney": 0.473,
+   "brierPrice": 0.4729,
    "verdict": "gleichauf"
   },
   {
@@ -95,10 +95,10 @@
   },
   {
    "league": "SOCCER",
-   "n": 107,
-   "moneyHitRate": 0.336,
-   "brierMoney": 0.8948,
-   "brierPrice": 0.6644,
+   "n": 112,
+   "moneyHitRate": 0.348,
+   "brierMoney": 0.9053,
+   "brierPrice": 0.666,
    "verdict": "preis_besser"
   }
  ],
@@ -116,6 +116,18 @@
    "totalUsd": 1882327
   },
   {
+   "key": "lal-ray-ala-2026-08-20",
+   "league": "SOCCER",
+   "winner": "Draw (Rayo Vallecano de Madrid vs. Deportivo Alavés)",
+   "moneyFav": "Rayo Vallecano de Madrid",
+   "priceFav": "Rayo Vallecano de Madrid",
+   "moneyShare": 0.901,
+   "priceProb": 0.391,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 1347248
+  },
+  {
    "key": "lal-rrc-vil-2026-08-16",
    "league": "LA-LIGA",
    "winner": "Draw (Real Racing Club vs. Villarreal CF)",
@@ -126,6 +138,18 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 1243834
+  },
+  {
+   "key": "cs2-g2-furia-2026-08-20",
+   "league": "ESPORTS",
+   "winner": "FURIA",
+   "moneyFav": "FURIA",
+   "priceFav": "FURIA",
+   "moneyShare": 0.575,
+   "priceProb": 0.575,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 717407
   },
   {
    "key": "lal-ala-get-2026-08-15",
@@ -558,46 +582,22 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 216709
-  },
-  {
-   "key": "mlb-bos-pit-2026-08-14",
-   "league": "MLB",
-   "winner": "Pittsburgh Pirates",
-   "moneyFav": "Boston Red Sox",
-   "priceFav": "Boston Red Sox",
-   "moneyShare": 0.525,
-   "priceProb": 0.525,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 210566
-  },
-  {
-   "key": "mlb-sf-cle-2026-08-20",
-   "league": "MLB",
-   "winner": "Cleveland Guardians",
-   "moneyFav": "Cleveland Guardians",
-   "priceFav": "Cleveland Guardians",
-   "moneyShare": 0.655,
-   "priceProb": 0.655,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 208635
   }
  ],
- "generatedAt": "2026-08-20T20:49:53.741422+00:00",
+ "generatedAt": "2026-08-20T21:46:32.112575+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 421,
   "nfl": 800,
-  "mlb": 565,
+  "mlb": 562,
   "nhl": 403,
   "mls": 646,
   "epl": 556,
   "soccer": 800,
-  "tennis": 504,
+  "tennis": 498,
   "ucl": 451,
-  "la-liga": 584,
+  "la-liga": 578,
   "bundesliga": 469,
   "serie-a": 43,
   "ligue-1": 545,
@@ -607,7 +607,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 637,
+  "esports": 630,
   "cs2": 406,
   "lol": 377,
   "dota": 9,
@@ -628,7 +628,7 @@
   "denmark-superliga": 473,
   "efl-championship": 652,
   "english-premier-league": 2,
-  "europa-conference-league": 723,
+  "europa-conference-league": 689,
   "europa-league": 174,
   "japan-j-league": 612,
   "japan-j2-league": 542,
@@ -657,6 +657,6 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 424
+  "sweepAdded": 422
  }
 }
