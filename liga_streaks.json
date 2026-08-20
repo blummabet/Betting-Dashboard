@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "liga",
-    "generatedAt": "2026-08-19T18:15:47.472569+00:00",
+    "generatedAt": "2026-08-20T06:51:55.126991+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -1975,6 +1975,47 @@
       "matchupPct": 66
     },
     {
+      "teamId": "530",
+      "team": "Atletico Madrid",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/530.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 8,
+      "venue": "all",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 71,
+        "label": "Eigen 71% + Gegner 87% → 77%"
+      },
+      "ratePct": 71,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 7,
+      "next": {
+        "oppId": "533",
+        "oppName": "Villarreal",
+        "atHome": true,
+        "date": "2026-08-23",
+        "kickoff": "2026-08-23T15:00:00+00:00",
+        "oppRatePct": 87
+      },
+      "oppSupportPct": 87,
+      "matchupPct": 77
+    },
+    {
       "teamId": "535",
       "team": "Malaga",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/535.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -1988,7 +2029,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 87,
-        "label": "Eigen 87% + Gegner 60% → 76%"
+        "label": "Eigen 87% + Gegner 47% → 71%"
       },
       "ratePct": 87,
       "seq": [
@@ -2003,17 +2044,17 @@
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 1,
+      "preN": 0,
       "next": {
-        "oppId": "530",
-        "oppName": "Atletico Madrid",
-        "atHome": false,
-        "date": "2026-08-19",
-        "kickoff": "2026-08-19T19:00:00+00:00",
-        "oppRatePct": 60
+        "oppId": "544",
+        "oppName": "Deportivo La Coruna",
+        "atHome": true,
+        "date": "2026-08-24",
+        "kickoff": "2026-08-24T19:30:00+00:00",
+        "oppRatePct": 47
       },
-      "oppSupportPct": 60,
-      "matchupPct": 76
+      "oppSupportPct": 47,
+      "matchupPct": 71
     },
     {
       "teamId": "539",
@@ -3562,22 +3603,22 @@
       "matchupPct": 71
     },
     {
-      "teamId": "530",
-      "team": "Atletico Madrid",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/530.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "529",
+      "team": "Barcelona",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/529.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ESP",
       "leagueName": "La Liga",
       "type": "scored",
       "market": "Team trifft",
       "length": 7,
-      "venue": "all",
+      "venue": "H",
       "strong": true,
       "continuation": {
         "state": "intakt",
-        "ratePct": 75,
-        "label": "Eigen 75% + Gegner 80% → 77%"
+        "ratePct": 80,
+        "label": "Eigen 80% + Gegner 80% → 80%"
       },
-      "ratePct": 75,
+      "ratePct": 80,
       "seq": [
         true,
         true,
@@ -3589,18 +3630,59 @@
         false
       ],
       "xgBacked": null,
-      "basis": "prior",
-      "preN": 8,
+      "basis": "pure",
+      "preN": 1,
       "next": {
-        "oppId": "535",
-        "oppName": "Malaga",
-        "atHome": true,
-        "date": "2026-08-19",
-        "kickoff": "2026-08-19T19:00:00+00:00",
+        "oppId": "797",
+        "oppName": "Elche",
+        "atHome": false,
+        "date": "2026-08-23",
+        "kickoff": "2026-08-23T19:30:00+00:00",
         "oppRatePct": 80
       },
       "oppSupportPct": 80,
-      "matchupPct": 77
+      "matchupPct": 80
+    },
+    {
+      "teamId": "529",
+      "team": "Barcelona",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/529.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "unbeaten",
+      "market": "Ungeschlagen",
+      "length": 7,
+      "venue": "H",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 73,
+        "label": "Eigen 73% + Gegner 60% → 68%"
+      },
+      "ratePct": 73,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 1,
+      "next": {
+        "oppId": "797",
+        "oppName": "Elche",
+        "atHome": false,
+        "date": "2026-08-23",
+        "kickoff": "2026-08-23T19:30:00+00:00",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 68
     },
     {
       "teamId": "541",
@@ -4451,6 +4533,47 @@
       },
       "oppSupportPct": 27,
       "matchupPct": 55
+    },
+    {
+      "teamId": "529",
+      "team": "Barcelona",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/529.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "win",
+      "market": "Sieg-Serie",
+      "length": 7,
+      "venue": "H",
+      "strong": true,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 73,
+        "label": "Eigen 73% + Gegner 20% → 52%"
+      },
+      "ratePct": 73,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 1,
+      "next": {
+        "oppId": "797",
+        "oppName": "Elche",
+        "atHome": false,
+        "date": "2026-08-23",
+        "kickoff": "2026-08-23T19:30:00+00:00",
+        "oppRatePct": 20
+      },
+      "oppSupportPct": 20,
+      "matchupPct": 52
     },
     {
       "teamId": "797",
@@ -5699,86 +5822,6 @@
       "matchupPct": 69
     },
     {
-      "teamId": "529",
-      "team": "Barcelona",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/529.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 6,
-      "venue": "H",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 80,
-        "label": "Eigen 80% + Gegner 80% → 80%"
-      },
-      "ratePct": 80,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 1,
-      "next": {
-        "oppId": "797",
-        "oppName": "Elche",
-        "atHome": false,
-        "date": "2026-08-23",
-        "kickoff": "2026-08-23T19:30:00+00:00",
-        "oppRatePct": 80
-      },
-      "oppSupportPct": 80,
-      "matchupPct": 80
-    },
-    {
-      "teamId": "529",
-      "team": "Barcelona",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/529.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "unbeaten",
-      "market": "Ungeschlagen",
-      "length": 6,
-      "venue": "H",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 73,
-        "label": "Eigen 73% + Gegner 60% → 68%"
-      },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 1,
-      "next": {
-        "oppId": "797",
-        "oppName": "Elche",
-        "atHome": false,
-        "date": "2026-08-23",
-        "kickoff": "2026-08-23T19:30:00+00:00",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 68
-    },
-    {
       "teamId": "532",
       "team": "Valencia",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/532.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -5832,7 +5875,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 78,
-        "label": "Eigen 78% + Gegner 87% → 82%"
+        "label": "Eigen 78% + Gegner 80% → 79%"
       },
       "ratePct": 78,
       "seq": [
@@ -5854,131 +5897,10 @@
         "atHome": false,
         "date": "2026-08-23",
         "kickoff": "2026-08-23T15:00:00+00:00",
-        "oppRatePct": 87
+        "oppRatePct": 80
       },
-      "oppSupportPct": 87,
-      "matchupPct": 82
-    },
-    {
-      "teamId": "535",
-      "team": "Malaga",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/535.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "bttsYes",
-      "market": "Beide Teams treffen",
-      "length": 6,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 73% → 69%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 9,
-      "next": {
-        "oppId": "530",
-        "oppName": "Atletico Madrid",
-        "atHome": false,
-        "date": "2026-08-19",
-        "kickoff": "2026-08-19T19:00:00+00:00",
-        "oppRatePct": 73
-      },
-      "oppSupportPct": 73,
-      "matchupPct": 69
-    },
-    {
-      "teamId": "535",
-      "team": "Malaga",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/535.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 6,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 89,
-        "label": "Eigen 89% + Gegner 87% → 88%"
-      },
-      "ratePct": 89,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 9,
-      "next": {
-        "oppId": "530",
-        "oppName": "Atletico Madrid",
-        "atHome": false,
-        "date": "2026-08-19",
-        "kickoff": "2026-08-19T19:00:00+00:00",
-        "oppRatePct": 87
-      },
-      "oppSupportPct": 87,
-      "matchupPct": 88
-    },
-    {
-      "teamId": "535",
-      "team": "Malaga",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/535.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 6,
-      "venue": "A",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 93,
-        "label": "Eigen 93% + Gegner 87% → 91%"
-      },
-      "ratePct": 93,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 0,
-      "next": {
-        "oppId": "530",
-        "oppName": "Atletico Madrid",
-        "atHome": false,
-        "date": "2026-08-19",
-        "kickoff": "2026-08-19T19:00:00+00:00",
-        "oppRatePct": 87
-      },
-      "oppSupportPct": 87,
-      "matchupPct": 91
+      "oppSupportPct": 80,
+      "matchupPct": 79
     },
     {
       "teamId": "538",
@@ -7343,87 +7265,6 @@
       "matchupPct": 59
     },
     {
-      "teamId": "529",
-      "team": "Barcelona",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/529.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "win",
-      "market": "Sieg-Serie",
-      "length": 6,
-      "venue": "H",
-      "strong": true,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 73,
-        "label": "Eigen 73% + Gegner 20% → 52%"
-      },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 1,
-      "next": {
-        "oppId": "797",
-        "oppName": "Elche",
-        "atHome": false,
-        "date": "2026-08-23",
-        "kickoff": "2026-08-23T19:30:00+00:00",
-        "oppRatePct": 20
-      },
-      "oppSupportPct": 20,
-      "matchupPct": 52
-    },
-    {
-      "teamId": "535",
-      "team": "Malaga",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/535.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 6,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 44,
-        "label": "Eigen 44% + Gegner 67% → 53%"
-      },
-      "ratePct": 44,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 9,
-      "next": {
-        "oppId": "530",
-        "oppName": "Atletico Madrid",
-        "atHome": false,
-        "date": "2026-08-19",
-        "kickoff": "2026-08-19T19:00:00+00:00",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 53
-    },
-    {
       "teamId": "540",
       "team": "Espanyol",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/540.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -8676,10 +8517,10 @@
       "strong": true,
       "continuation": {
         "state": "intakt",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 67% → 67%"
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 67% → 63%"
       },
-      "ratePct": 67,
+      "ratePct": 60,
       "seq": [
         true,
         true,
@@ -8692,58 +8533,17 @@
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 4,
+      "preN": 3,
       "next": {
-        "oppId": "535",
-        "oppName": "Malaga",
+        "oppId": "533",
+        "oppName": "Villarreal",
         "atHome": true,
-        "date": "2026-08-19",
-        "kickoff": "2026-08-19T19:00:00+00:00",
+        "date": "2026-08-23",
+        "kickoff": "2026-08-23T15:00:00+00:00",
         "oppRatePct": 67
       },
       "oppSupportPct": 67,
-      "matchupPct": 67
-    },
-    {
-      "teamId": "530",
-      "team": "Atletico Madrid",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/530.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "bttsYes",
-      "market": "Beide Teams treffen",
-      "length": 5,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 80% → 68%"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 10,
-      "next": {
-        "oppId": "535",
-        "oppName": "Malaga",
-        "atHome": true,
-        "date": "2026-08-19",
-        "kickoff": "2026-08-19T19:00:00+00:00",
-        "oppRatePct": 80
-      },
-      "oppSupportPct": 80,
-      "matchupPct": 68
+      "matchupPct": 63
     },
     {
       "teamId": "530",
@@ -8758,10 +8558,10 @@
       "strong": true,
       "continuation": {
         "state": "intakt",
-        "ratePct": 73,
-        "label": "Eigen 73% + Gegner 80% → 76%"
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 73% → 69%"
       },
-      "ratePct": 73,
+      "ratePct": 67,
       "seq": [
         true,
         true,
@@ -8774,17 +8574,17 @@
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 4,
+      "preN": 3,
       "next": {
-        "oppId": "535",
-        "oppName": "Malaga",
+        "oppId": "533",
+        "oppName": "Villarreal",
         "atHome": true,
-        "date": "2026-08-19",
-        "kickoff": "2026-08-19T19:00:00+00:00",
-        "oppRatePct": 80
+        "date": "2026-08-23",
+        "kickoff": "2026-08-23T15:00:00+00:00",
+        "oppRatePct": 73
       },
-      "oppSupportPct": 80,
-      "matchupPct": 76
+      "oppSupportPct": 73,
+      "matchupPct": 69
     },
     {
       "teamId": "530",
@@ -8800,7 +8600,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 87,
-        "label": "Eigen 87% + Gegner 80% → 84%"
+        "label": "Eigen 87% + Gegner 87% → 87%"
       },
       "ratePct": 87,
       "seq": [
@@ -8815,17 +8615,17 @@
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 4,
+      "preN": 3,
       "next": {
-        "oppId": "535",
-        "oppName": "Malaga",
+        "oppId": "533",
+        "oppName": "Villarreal",
         "atHome": true,
-        "date": "2026-08-19",
-        "kickoff": "2026-08-19T19:00:00+00:00",
-        "oppRatePct": 80
+        "date": "2026-08-23",
+        "kickoff": "2026-08-23T15:00:00+00:00",
+        "oppRatePct": 87
       },
-      "oppSupportPct": 80,
-      "matchupPct": 84
+      "oppSupportPct": 87,
+      "matchupPct": 87
     },
     {
       "teamId": "532",
@@ -8882,7 +8682,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 87,
-        "label": "Eigen 87% + Gegner 87% → 87%"
+        "label": "Eigen 87% + Gegner 80% → 84%"
       },
       "ratePct": 87,
       "seq": [
@@ -8901,10 +8701,10 @@
         "atHome": false,
         "date": "2026-08-23",
         "kickoff": "2026-08-23T15:00:00+00:00",
-        "oppRatePct": 87
+        "oppRatePct": 80
       },
-      "oppSupportPct": 87,
-      "matchupPct": 87
+      "oppSupportPct": 80,
+      "matchupPct": 84
     },
     {
       "teamId": "533",
@@ -8920,7 +8720,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 60,
-        "label": "Eigen 60% + Gegner 87% → 71%"
+        "label": "Eigen 60% + Gegner 80% → 68%"
       },
       "ratePct": 60,
       "seq": [
@@ -8942,10 +8742,10 @@
         "atHome": false,
         "date": "2026-08-23",
         "kickoff": "2026-08-23T15:00:00+00:00",
-        "oppRatePct": 87
+        "oppRatePct": 80
       },
-      "oppSupportPct": 87,
-      "matchupPct": 71
+      "oppSupportPct": 80,
+      "matchupPct": 68
     },
     {
       "teamId": "536",
@@ -10539,47 +10339,6 @@
       "matchupPct": 54
     },
     {
-      "teamId": "530",
-      "team": "Atletico Madrid",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/530.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 5,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 50,
-        "label": "Eigen 50% + Gegner 67% → 57%"
-      },
-      "ratePct": 50,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 10,
-      "next": {
-        "oppId": "535",
-        "oppName": "Malaga",
-        "atHome": true,
-        "date": "2026-08-19",
-        "kickoff": "2026-08-19T19:00:00+00:00",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 57
-    },
-    {
       "teamId": "540",
       "team": "Espanyol",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/540.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -11116,7 +10875,7 @@
       "continuation": {
         "state": "wackelt",
         "ratePct": 20,
-        "label": "Eigen 20% + Gegner 67% → 39%"
+        "label": "Eigen 20% + Gegner 60% → 36%"
       },
       "ratePct": 20,
       "seq": [
@@ -11138,10 +10897,10 @@
         "atHome": false,
         "date": "2026-08-23",
         "kickoff": "2026-08-23T15:00:00+00:00",
-        "oppRatePct": 67
+        "oppRatePct": 60
       },
-      "oppSupportPct": 67,
-      "matchupPct": 39
+      "oppSupportPct": 60,
+      "matchupPct": 36
     },
     {
       "teamId": "728",
@@ -12951,10 +12710,10 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 80,
-        "label": "Eigen 80% + Gegner 73% → 77%"
+        "ratePct": 73,
+        "label": "Eigen 73% + Gegner 53% → 65%"
       },
-      "ratePct": 80,
+      "ratePct": 73,
       "seq": [
         true,
         true,
@@ -12966,18 +12725,18 @@
         true
       ],
       "xgBacked": null,
-      "basis": "prior",
-      "preN": 5,
+      "basis": "pure",
+      "preN": 4,
       "next": {
-        "oppId": "530",
-        "oppName": "Atletico Madrid",
-        "atHome": false,
-        "date": "2026-08-19",
-        "kickoff": "2026-08-19T19:00:00+00:00",
-        "oppRatePct": 73
+        "oppId": "544",
+        "oppName": "Deportivo La Coruna",
+        "atHome": true,
+        "date": "2026-08-24",
+        "kickoff": "2026-08-24T19:30:00+00:00",
+        "oppRatePct": 53
       },
-      "oppSupportPct": 73,
-      "matchupPct": 77
+      "oppSupportPct": 53,
+      "matchupPct": 65
     },
     {
       "teamId": "535",
@@ -12992,10 +12751,10 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 80,
-        "label": "Eigen 80% + Gegner 87% → 83%"
+        "ratePct": 87,
+        "label": "Eigen 87% + Gegner 60% → 76%"
       },
-      "ratePct": 80,
+      "ratePct": 87,
       "seq": [
         true,
         true,
@@ -13007,18 +12766,18 @@
         true
       ],
       "xgBacked": null,
-      "basis": "prior",
-      "preN": 5,
+      "basis": "pure",
+      "preN": 4,
       "next": {
-        "oppId": "530",
-        "oppName": "Atletico Madrid",
-        "atHome": false,
-        "date": "2026-08-19",
-        "kickoff": "2026-08-19T19:00:00+00:00",
-        "oppRatePct": 87
+        "oppId": "544",
+        "oppName": "Deportivo La Coruna",
+        "atHome": true,
+        "date": "2026-08-24",
+        "kickoff": "2026-08-24T19:30:00+00:00",
+        "oppRatePct": 60
       },
-      "oppSupportPct": 87,
-      "matchupPct": 83
+      "oppSupportPct": 60,
+      "matchupPct": 76
     },
     {
       "teamId": "538",
@@ -15434,10 +15193,10 @@
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 40,
-        "label": "Eigen 40% + Gegner 67% → 51%"
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 40% → 52%"
       },
-      "ratePct": 40,
+      "ratePct": 60,
       "seq": [
         true,
         true,
@@ -15449,18 +15208,18 @@
         true
       ],
       "xgBacked": null,
-      "basis": "prior",
-      "preN": 5,
+      "basis": "pure",
+      "preN": 4,
       "next": {
-        "oppId": "530",
-        "oppName": "Atletico Madrid",
-        "atHome": false,
-        "date": "2026-08-19",
-        "kickoff": "2026-08-19T19:00:00+00:00",
-        "oppRatePct": 67
+        "oppId": "544",
+        "oppName": "Deportivo La Coruna",
+        "atHome": true,
+        "date": "2026-08-24",
+        "kickoff": "2026-08-24T19:30:00+00:00",
+        "oppRatePct": 40
       },
-      "oppSupportPct": 67,
-      "matchupPct": 51
+      "oppSupportPct": 40,
+      "matchupPct": 52
     },
     {
       "teamId": "540",
@@ -15823,6 +15582,47 @@
       },
       "oppSupportPct": 40,
       "matchupPct": 52
+    },
+    {
+      "teamId": "530",
+      "team": "Atletico Madrid",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/530.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
+      "length": 4,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 29,
+        "label": "Eigen 29% + Gegner 78% → 49%"
+      },
+      "ratePct": 29,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 7,
+      "next": {
+        "oppId": "533",
+        "oppName": "Villarreal",
+        "atHome": true,
+        "date": "2026-08-23",
+        "kickoff": "2026-08-23T15:00:00+00:00",
+        "oppRatePct": 78
+      },
+      "oppSupportPct": 78,
+      "matchupPct": 49
     },
     {
       "teamId": "533",
@@ -16476,7 +16276,7 @@
       "continuation": {
         "state": "wackelt",
         "ratePct": 45,
-        "label": "Eigen 45% + Gegner 33% → 40%"
+        "label": "Eigen 45% + Gegner 40% → 43%"
       },
       "ratePct": 45,
       "seq": [
@@ -16498,10 +16298,10 @@
         "atHome": false,
         "date": "2026-08-24",
         "kickoff": "2026-08-24T19:30:00+00:00",
-        "oppRatePct": 67
+        "oppRatePct": 60
       },
-      "oppSupportPct": 33,
-      "matchupPct": 40
+      "oppSupportPct": 40,
+      "matchupPct": 43
     },
     {
       "teamId": "1660",
@@ -16700,47 +16500,6 @@
       },
       "oppSupportPct": 0,
       "matchupPct": 26
-    },
-    {
-      "teamId": "530",
-      "team": "Atletico Madrid",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/530.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
-      "length": 4,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 29,
-        "label": "Eigen 29% + Gegner 30% → 29%"
-      },
-      "ratePct": 29,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 7,
-      "next": {
-        "oppId": "535",
-        "oppName": "Malaga",
-        "atHome": true,
-        "date": "2026-08-19",
-        "kickoff": "2026-08-19T19:00:00+00:00",
-        "oppRatePct": 30
-      },
-      "oppSupportPct": 30,
-      "matchupPct": 29
     },
     {
       "teamId": "108",
@@ -18395,6 +18154,46 @@
       "matchupPct": 72
     },
     {
+      "teamId": "530",
+      "team": "Atletico Madrid",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/530.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 87,
+        "label": "Eigen 87% + Gegner 87% → 87%"
+      },
+      "ratePct": 87,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 4,
+      "next": {
+        "oppId": "533",
+        "oppName": "Villarreal",
+        "atHome": true,
+        "date": "2026-08-23",
+        "kickoff": "2026-08-23T15:00:00+00:00",
+        "oppRatePct": 87
+      },
+      "oppSupportPct": 87,
+      "matchupPct": 87
+    },
+    {
       "teamId": "533",
       "team": "Villarreal",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/533.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -18408,7 +18207,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 57,
-        "label": "Eigen 57% + Gegner 73% → 63%"
+        "label": "Eigen 57% + Gegner 67% → 61%"
       },
       "ratePct": 57,
       "seq": [
@@ -18430,10 +18229,10 @@
         "atHome": false,
         "date": "2026-08-23",
         "kickoff": "2026-08-23T15:00:00+00:00",
-        "oppRatePct": 73
+        "oppRatePct": 67
       },
-      "oppSupportPct": 73,
-      "matchupPct": 63
+      "oppSupportPct": 67,
+      "matchupPct": 61
     },
     {
       "teamId": "533",
@@ -18449,7 +18248,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 67,
-        "label": "Eigen 67% + Gegner 60% → 64%"
+        "label": "Eigen 67% + Gegner 53% → 61%"
       },
       "ratePct": 67,
       "seq": [
@@ -18471,10 +18270,10 @@
         "atHome": false,
         "date": "2026-08-23",
         "kickoff": "2026-08-23T15:00:00+00:00",
-        "oppRatePct": 60
+        "oppRatePct": 53
       },
-      "oppSupportPct": 60,
-      "matchupPct": 64
+      "oppSupportPct": 53,
+      "matchupPct": 61
     },
     {
       "teamId": "536",
@@ -22294,6 +22093,46 @@
       "matchupPct": 48
     },
     {
+      "teamId": "530",
+      "team": "Atletico Madrid",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/530.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "unbeaten",
+      "market": "Ungeschlagen",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 53,
+        "label": "Eigen 53% + Gegner 47% → 51%"
+      },
+      "ratePct": 53,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 4,
+      "next": {
+        "oppId": "533",
+        "oppName": "Villarreal",
+        "atHome": true,
+        "date": "2026-08-23",
+        "kickoff": "2026-08-23T15:00:00+00:00",
+        "oppRatePct": 47
+      },
+      "oppSupportPct": 47,
+      "matchupPct": 51
+    },
+    {
       "teamId": "536",
       "team": "Sevilla",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/536.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -22588,7 +22427,7 @@
       "continuation": {
         "state": "neutral",
         "ratePct": 60,
-        "label": "Eigen 60% + Gegner 33% → 49%"
+        "label": "Eigen 60% + Gegner 40% → 52%"
       },
       "ratePct": 60,
       "seq": [
@@ -22609,10 +22448,10 @@
         "atHome": false,
         "date": "2026-08-24",
         "kickoff": "2026-08-24T19:30:00+00:00",
-        "oppRatePct": 67
+        "oppRatePct": 60
       },
-      "oppSupportPct": 33,
-      "matchupPct": 49
+      "oppSupportPct": 40,
+      "matchupPct": 52
     },
     {
       "teamId": "546",
@@ -24880,6 +24719,46 @@
       },
       "oppSupportPct": 47,
       "matchupPct": 44
+    },
+    {
+      "teamId": "530",
+      "team": "Atletico Madrid",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/530.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "win",
+      "market": "Sieg-Serie",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 47,
+        "label": "Eigen 47% + Gegner 27% → 39%"
+      },
+      "ratePct": 47,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 4,
+      "next": {
+        "oppId": "533",
+        "oppName": "Villarreal",
+        "atHome": true,
+        "date": "2026-08-23",
+        "kickoff": "2026-08-23T15:00:00+00:00",
+        "oppRatePct": 27
+      },
+      "oppSupportPct": 27,
+      "matchupPct": 39
     },
     {
       "teamId": "541",
