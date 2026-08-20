@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-08-20T04:57:58.518238+00:00",
+ "updatedAt": "2026-08-20T05:50:50.856265+00:00",
  "stake": 10.0,
  "expired": 0,
  "open": {
@@ -12,7 +12,7 @@
    "entryPrice": 0.735,
    "firstTs": "2026-08-16T14:09:11.781306+00:00",
    "lastPrice": 0.735,
-   "lastTs": "2026-08-20T04:57:58.518238+00:00",
+   "lastTs": "2026-08-20T05:50:50.856265+00:00",
    "htkAtEntry": 2.938317777777778,
    "public": true,
    "reasons": [
@@ -47,50 +47,6 @@
    ],
    "stake": 10.0
   },
-  "lib-fla-cru-2026-08-19|CR Flamengo": {
-   "key": "lib-fla-cru-2026-08-19",
-   "side": "CR Flamengo",
-   "verdict": "BET",
-   "conv": 7,
-   "league": "SOCCER",
-   "entryPrice": 0.585,
-   "firstTs": "2026-08-19T21:46:33.333679+00:00",
-   "lastPrice": 0.595,
-   "lastTs": "2026-08-20T04:57:58.518238+00:00",
-   "htkAtEntry": 2.7980766666666663,
-   "public": true,
-   "reasons": [
-    "großes Geld auf CR Flamengo (76%) → $40K",
-    "🔥 scharfe Wallet (101/170, 59% · +$3.64M)"
-   ],
-   "signals": [
-    "money",
-    "sharp"
-   ],
-   "stake": 10.0
-  },
-  "mls-lag-sje-2026-08-19|Los Angeles Galaxy": {
-   "key": "mls-lag-sje-2026-08-19",
-   "side": "Los Angeles Galaxy",
-   "verdict": "BET",
-   "conv": 7,
-   "league": "MLS",
-   "entryPrice": 0.445,
-   "firstTs": "2026-08-19T23:40:50.098953+00:00",
-   "lastPrice": 0.555,
-   "lastTs": "2026-08-20T04:57:58.518238+00:00",
-   "htkAtEntry": 2.8883233333333336,
-   "public": true,
-   "reasons": [
-    "großes Geld auf Los Angeles Galaxy (72%) → $28K",
-    "🔥 scharfe Wallet (101/170, 59% · +$3.62M)"
-   ],
-   "signals": [
-    "money",
-    "sharp"
-   ],
-   "stake": 10.0
-  },
   "mls-por-sdg-2026-08-19|Portland Timbers": {
    "key": "mls-por-sdg-2026-08-19",
    "side": "Portland Timbers",
@@ -100,7 +56,7 @@
    "entryPrice": 0.535,
    "firstTs": "2026-08-20T01:57:03.846205+00:00",
    "lastPrice": 0.535,
-   "lastTs": "2026-08-20T04:57:58.518238+00:00",
+   "lastTs": "2026-08-20T05:50:50.856265+00:00",
    "htkAtEntry": 0.6140294444444444,
    "public": true,
    "reasons": [
@@ -112,6 +68,28 @@
     "money",
     "steam",
     "sharp"
+   ],
+   "stake": 10.0
+  },
+  "dota2-vsn2-boombo-2026-08-20|TEAM VISION": {
+   "key": "dota2-vsn2-boombo-2026-08-20",
+   "side": "TEAM VISION",
+   "verdict": "BET",
+   "conv": 6,
+   "league": "ESPORTS",
+   "entryPrice": 0.755,
+   "firstTs": "2026-08-20T05:50:50.856265+00:00",
+   "lastPrice": 0.755,
+   "lastTs": "2026-08-20T05:50:50.856265+00:00",
+   "htkAtEntry": 0.21645444444444445,
+   "public": false,
+   "reasons": [
+    "großes Geld auf TEAM VISION (75%) → $903K",
+    "Steam läuft rein (+3.0pp)"
+   ],
+   "signals": [
+    "money",
+    "steam"
    ],
    "stake": 10.0
   }
@@ -9805,26 +9783,70 @@
    "firstTs": "2026-08-20T03:16:26.989467+00:00",
    "settledTs": "2026-08-20T04:57:58.518238+00:00",
    "resolvedTs": "2026-08-20T04:57:57.750715+00:00"
+  },
+  {
+   "key": "lib-fla-cru-2026-08-19",
+   "side": "CR Flamengo",
+   "verdict": "BET",
+   "conv": 7,
+   "league": "SOCCER",
+   "entryPrice": 0.585,
+   "closePrice": 0.595,
+   "result": "win",
+   "winner": "CR Flamengo",
+   "pnl": 7.09,
+   "clvPP": 1.0,
+   "stake": 10.0,
+   "public": true,
+   "signals": [
+    "money",
+    "sharp"
+   ],
+   "firstTs": "2026-08-19T21:46:33.333679+00:00",
+   "settledTs": "2026-08-20T05:50:50.856265+00:00",
+   "resolvedTs": "2026-08-20T05:50:50.100701+00:00"
+  },
+  {
+   "key": "mls-lag-sje-2026-08-19",
+   "side": "Los Angeles Galaxy",
+   "verdict": "BET",
+   "conv": 7,
+   "league": "MLS",
+   "entryPrice": 0.445,
+   "closePrice": 0.555,
+   "result": "win",
+   "winner": "Los Angeles Galaxy",
+   "pnl": 12.47,
+   "clvPP": 11.0,
+   "stake": 10.0,
+   "public": true,
+   "signals": [
+    "money",
+    "sharp"
+   ],
+   "firstTs": "2026-08-19T23:40:50.098953+00:00",
+   "settledTs": "2026-08-20T05:50:50.856265+00:00",
+   "resolvedTs": "2026-08-20T05:50:50.100701+00:00"
   }
  ],
  "agg": {
   "all": {
-   "n": 451,
-   "wins": 246,
-   "hit": 0.5455,
-   "pnl": -288.82,
-   "stake": 4510.0,
-   "roi": -0.064,
-   "clvAvg": -0.06
+   "n": 453,
+   "wins": 248,
+   "hit": 0.5475,
+   "pnl": -269.26,
+   "stake": 4530.0,
+   "roi": -0.0594,
+   "clvAvg": -0.03
   },
   "public": {
-   "n": 134,
-   "wins": 91,
-   "hit": 0.6791,
-   "pnl": 13.83,
-   "stake": 1340.0,
-   "roi": 0.0103,
-   "clvAvg": -0.04
+   "n": 136,
+   "wins": 93,
+   "hit": 0.6838,
+   "pnl": 33.39,
+   "stake": 1360.0,
+   "roi": 0.0246,
+   "clvAvg": 0.05
   },
   "byConv": {
    "4": {
@@ -9855,13 +9877,13 @@
     "clvAvg": 0.01
    },
    "7": {
-    "n": 146,
-    "wins": 84,
-    "hit": 0.5753,
-    "pnl": -103.46,
-    "stake": 1460.0,
-    "roi": -0.0709,
-    "clvAvg": -0.29
+    "n": 148,
+    "wins": 86,
+    "hit": 0.5811,
+    "pnl": -83.9,
+    "stake": 1480.0,
+    "roi": -0.0567,
+    "clvAvg": -0.21
    },
    "8": {
     "n": 63,
@@ -9893,13 +9915,13 @@
   },
   "byVerdict": {
    "BET": {
-    "n": 373,
-    "wins": 224,
-    "hit": 0.6005,
-    "pnl": -132.13,
-    "stake": 3730.0,
-    "roi": -0.0354,
-    "clvAvg": -0.09
+    "n": 375,
+    "wins": 226,
+    "hit": 0.6027,
+    "pnl": -112.57,
+    "stake": 3750.0,
+    "roi": -0.03,
+    "clvAvg": -0.05
    },
    "FADE": {
     "n": 78,
@@ -9913,13 +9935,13 @@
   },
   "bySignal": {
    "money": {
-    "n": 243,
-    "wins": 163,
-    "hit": 0.6708,
-    "pnl": -13.29,
-    "stake": 2430.0,
-    "roi": -0.0055,
-    "clvAvg": -0.09
+    "n": 245,
+    "wins": 165,
+    "hit": 0.6735,
+    "pnl": 6.27,
+    "stake": 2450.0,
+    "roi": 0.0026,
+    "clvAvg": -0.04
    },
    "pinn": {
     "n": 7,
@@ -9931,13 +9953,13 @@
     "clvAvg": 0.0
    },
    "sharp": {
-    "n": 336,
-    "wins": 179,
-    "hit": 0.5327,
-    "pnl": -191.21,
-    "stake": 3360.0,
-    "roi": -0.0569,
-    "clvAvg": -0.05
+    "n": 338,
+    "wins": 181,
+    "hit": 0.5355,
+    "pnl": -171.65,
+    "stake": 3380.0,
+    "roi": -0.0508,
+    "clvAvg": -0.02
    },
    "steam": {
     "n": 114,
