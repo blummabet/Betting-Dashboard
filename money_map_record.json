@@ -1,25 +1,25 @@
 {
-"generatedAt": "2026-08-20T03:25:00.300145+00:00",
+"generatedAt": "2026-08-20T03:34:39.403722+00:00",
 "byVerdict": {
 "konsens": {
-"n": 232,
-"wins": 178,
-"hitRate": 0.7672,
-"polyN": 213,
-"polyWins": 160,
-"polyHitRate": 0.7512,
+"n": 233,
+"wins": 179,
+"hitRate": 0.7682,
+"polyN": 214,
+"polyWins": 161,
+"polyHitRate": 0.7523,
 "pinnN": 16,
 "pinnHitRate": 0.625
 },
 "uneinig": {
-"n": 76,
-"wins": 20,
-"hitRate": 0.2632,
-"polyN": 65,
+"n": 78,
+"wins": 21,
+"hitRate": 0.2692,
+"polyN": 67,
 "polyWins": 21,
-"polyHitRate": 0.3231,
-"pinnN": 36,
-"pinnHitRate": 0.5556
+"polyHitRate": 0.3134,
+"pinnN": 37,
+"pinnHitRate": 0.5676
 },
 "teil": {
 "n": 3,
@@ -34,9 +34,9 @@
 },
 "byLeague": {
 "US MLS": {
-"n": 20,
-"wins": 11,
-"hitRate": 0.55
+"n": 21,
+"wins": 12,
+"hitRate": 0.5714
 },
 "UEFA Europa Conference Qualifiers": {
 "n": 17,
@@ -53,6 +53,11 @@
 "wins": 7,
 "hitRate": 0.5833
 },
+"CONMEBOL Copa Libertadores": {
+"n": 11,
+"wins": 4,
+"hitRate": 0.3636
+},
 "English Sky Bet Championship": {
 "n": 11,
 "wins": 6,
@@ -67,11 +72,6 @@
 "n": 10,
 "wins": 5,
 "hitRate": 0.5
-},
-"CONMEBOL Copa Libertadores": {
-"n": 10,
-"wins": 3,
-"hitRate": 0.3
 },
 "Argentinian Primera Division": {
 "n": 9,
@@ -98,6 +98,11 @@
 "wins": 5,
 "hitRate": 0.7143
 },
+"CONMEBOL Copa Sudamericana": {
+"n": 7,
+"wins": 4,
+"hitRate": 0.5714
+},
 "Dutch Eredivisie": {
 "n": 7,
 "wins": 5,
@@ -117,11 +122,6 @@
 "n": 7,
 "wins": 5,
 "hitRate": 0.7143
-},
-"CONMEBOL Copa Sudamericana": {
-"n": 6,
-"wins": 4,
-"hitRate": 0.6667
 },
 "Japanese J League": {
 "n": 6,
@@ -371,25 +371,82 @@
 },
 "byStrength": {
 "strong": {
-"n": 172,
-"wins": 133,
-"hitRate": 0.7733
+"n": 173,
+"wins": 134,
+"hitRate": 0.7746
 },
 "weak": {
-"n": 106,
-"wins": 48,
-"hitRate": 0.4528
+"n": 108,
+"wins": 49,
+"hitRate": 0.4537
 }
 },
 "divergence": {
-"n": 76,
-"betfairWins": 20,
-"betfairRate": 0.2632,
-"polyN": 65,
+"n": 78,
+"betfairWins": 21,
+"betfairRate": 0.2692,
+"polyN": 67,
 "polyWins": 21,
-"polyRate": 0.3231
+"polyRate": 0.3134
 },
 "recent": [
+{
+"matchId": "35934036",
+"home": "Flamengo",
+"away": "Cruzeiro MG",
+"league": "CONMEBOL Copa Libertadores",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Flamengo",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-08-20T00:30:00Z",
+"settledAt": "2026-08-20T03:34:39.242123+00:00"
+},
+{
+"matchId": "35931165",
+"home": "Santa Fe",
+"away": "River Plate",
+"league": "CONMEBOL Copa Sudamericana",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "River Plate",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-08-20T00:30:00Z",
+"settledAt": "2026-08-20T03:34:39.242123+00:00"
+},
+{
+"matchId": "35895626",
+"home": "Minnesota Utd",
+"away": "Atlanta Utd",
+"league": "US MLS",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Atlanta Utd",
+"polySide": "home",
+"winner": "away",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-08-20T00:30:00Z",
+"settledAt": "2026-08-20T03:34:39.242123+00:00"
+},
 {
 "matchId": "35895624",
 "home": "Kansas City",
@@ -1092,69 +1149,12 @@
 ],
 "kickoff": "2026-08-18T16:00:00Z",
 "settledAt": "2026-08-18T17:51:47.409759+00:00"
-},
-{
-"matchId": "35950722",
-"home": "Buxoro FK",
-"away": "Neftchi Fargona",
-"league": "Uzbekistan Super League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Buxoro FK",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-4,
-1
-],
-"kickoff": "2026-08-18T15:00:00Z",
-"settledAt": "2026-08-18T17:05:40.016376+00:00"
-},
-{
-"matchId": "35944549",
-"home": "Thailand",
-"away": "Singapore",
-"league": "Other Competitions Soccer",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Singapore",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-08-18T13:00:00Z",
-"settledAt": "2026-08-18T16:06:22.359471+00:00"
-},
-{
-"matchId": "35950828",
-"home": "Raiders",
-"away": "Sydney FC",
-"league": "Australia Cup",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Sydney FC",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-08-18T09:30:00Z",
-"settledAt": "2026-08-18T11:35:57.409971+00:00"
 }
 ],
 "global": {
-"n": 311,
-"wins": 199,
-"hitRate": 0.6399
+"n": 314,
+"wins": 201,
+"hitRate": 0.6401
 },
-"pending": 10
+"pending": 7
 }
