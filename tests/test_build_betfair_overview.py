@@ -93,7 +93,7 @@ def test_flow_list_ranks_by_inflow_and_filters_small():
     ]}
     hist = {
         "1": [{"mkv": {"Match Odds": 100000}}, {"mkv": {"Match Odds": 161989}}],   # +61989 auf Match Odds
-        "2": [{"mkv": {"Match Odds": 10000}}, {"mkv": {"Match Odds": 11000}}],     # +1000 < 2000 -> raus
+        "2": [{"mkv": {"Match Odds": 10000}}, {"mkv": {"Match Odds": 11000}}],     # +1000 < 10000 -> raus
     }
     out = bo.flow_list(prices, hist, NOW)
     assert len(out) == 1 and out[0]["home"] == "Brondby"
@@ -151,7 +151,34 @@ def test_flow_list_excludes_finished_and_over():
 def test_build_shape():
     prices = {"matches": [_match(1, "A", "B", iso(NOW + timedelta(hours=1)), {"hw": 2.0, "aw": 3.0})]}
     hist = {"1": [{"mo": {"hw": 4.0, "aw": 3.0}, "mkv": {"Match Odds": 1000}},
-                  {"mo": {"hw": 2.0, "aw": 3.0}, "mkv": {"Match Odds": 9000}}]}
+                  {"mo": {"hw": 2.0, "aw": 3.0}, "mkv": {"Match Odds": 15000}}]}
     d = bo.build(prices, hist, NOW)
     assert set(("_meta", "generatedAt", "steam", "flow")) <= set(d)
     assert d["steam"] and d["flow"]   # beide Signale feuern
+
+
+def test_flow_list_thin_market_anomaly():
+    # 21.08.2026 (Lucas: Fix-Erkennung): ein paar Tausend €, die den Grossteil eines kleinen Marktes
+    # ausmachen -> Duenn-Markt-Anomalie (thin=True), auch unter FLOW_MIN_EUR. Kleiner Zufluss auf
+    # grossem/liquidem Markt -> raus (weder gross-absolut noch marktdominant).
+    ko = iso(NOW + timedelta(hours=1))
+    prices = {"matches": [
+        _match(1, "Obscure", "United", ko, {"hw": 2.0, "aw": 3.0}),   # duenner Markt
+        _match(2, "Big", "Liquid", ko, {"hw": 2.0, "aw": 3.0}),       # grosser Markt, kleiner Zufluss
+    ]}
+    hist = {
+        "1": [{"mkv": {"Match Odds": 1000}}, {"mkv": {"Match Odds": 4000}}],    # +3000 = 75% -> thin
+        "2": [{"mkv": {"Match Odds": 50000}}, {"mkv": {"Match Odds": 53000}}],  # +3000 = 5.7% -> raus
+    }
+    out = bo.flow_list(prices, hist, NOW)
+    assert len(out) == 1
+    assert out[0]["home"] == "Obscure" and out[0]["thin"] is True and out[0]["sharePct"] == 75
+
+
+def test_flow_list_big_money_not_thin():
+    # Grosses absolutes Geld (>= FLOW_MIN_EUR) auf liquidem Markt -> zeigt, aber thin=False.
+    ko = iso(NOW + timedelta(hours=1))
+    prices = {"matches": [_match(1, "A", "B", ko, {"hw": 2.0, "aw": 3.0})]}
+    hist = {"1": [{"mkv": {"Match Odds": 100000}}, {"mkv": {"Match Odds": 115000}}]}  # +15000 gross
+    out = bo.flow_list(prices, hist, NOW)
+    assert len(out) == 1 and out[0]["thin"] is False

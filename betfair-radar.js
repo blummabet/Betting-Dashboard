@@ -785,7 +785,12 @@
   }
 
   // ── Frisches Geld: Zufluss seit dem letzten Update (aus der History-Delta je Markt) ──────────
-  var FLOW_MIN_EUR = 2000;     // €-Zufluss erst ab so viel zeigen
+  var FLOW_MIN_EUR = 10000;    // €-Zufluss erst ab so viel zeigen (21.08.2026 Lucas: 2000->10000)
+  // 21.08.2026 (Lucas: Fix-Erkennung): 2. Weg — ein paar Tausend €, die den GROSSTEIL eines kleinen
+  // Marktes ausmachen (duenne Liga/Markt), sind das Anomalie-/Fix-Signal, auch unter FLOW_MIN_EUR.
+  var THIN_MIN_EUR = 2000;     // Duenn-Markt-Zufluss ab so viel absolut
+  var THIN_SHARE   = 0.40;     // ... und >= so viel Anteil am Marktgeld
+  function _flowThin(x) { var e = eur(x.delta), c = eur(x.curr); return e < FLOW_MIN_EUR && e >= THIN_MIN_EUR && c > 0 && (e / c) >= THIN_SHARE; }
   var SURGE_MIN_BASE = 1000;   // % Surge nur wenn Basis ≥ so viel € (sonst Rauschen)
   var SURGE_MIN_DELTA = 500;   // und Zuwachs ≥ so viel €
   var SURGE_MIN_PCT = 25;      // und ≥ so viel % Sprung
@@ -832,7 +837,8 @@
     if (mode === 'eur') {
       var w = Math.max(6, Math.round(Math.min(100, x.delta / mx * 100)));   // Balken = Zufluss relativ zum größten Zufluss (grün, eine Farbe)
       bar = '<div class="bfb-bar"><i style="width:' + w + '%;background:' + C.back + '"></i></div>';
-      meta = '<span class="bfb-v" style="color:' + C.back + '">▲ +' + fmtE(x.delta) + '</span><br><span class="bfb-odd">jetzt ' + fmtE(x.curr) + '</span>' + (ld ? ' <span class="bfb-s">' + ld.share + '%</span>' : '');
+      var _thinBadge = _flowThin(x) ? ' <span title="Zufluss macht ' + Math.round(eur(x.delta) / eur(x.curr) * 100) + '% des gesamten Marktgeldes aus — d\u00fcnner Markt, oft eine Liga/ein Markt, den du beim Buchmacher nicht spielen kannst. Anomalie/Fix-Kandidat." style="font-size:9px;font-weight:800;color:#f2c14e;border:1px solid rgba(234,185,56,.5);border-radius:4px;padding:0 4px">\uD83D\uDD0D d\u00fcnner Markt</span>' : '';
+      meta = '<span class="bfb-v" style="color:' + C.back + '">▲ +' + fmtE(x.delta) + '</span>' + _thinBadge + '<br><span class="bfb-odd">jetzt ' + fmtE(x.curr) + '</span>' + (ld ? ' <span class="bfb-s">' + ld.share + '%</span>' : '');
     } else {
       var w = Math.max(6, Math.round(Math.min(100, x.pct / 300 * 100)));
       bar = '<div class="bfb-bar"><i style="width:' + w + '%;background:' + C.back + '"></i></div>';
@@ -848,10 +854,61 @@
     var mx = mode === 'eur' ? (Math.max.apply(null, items.map(function (x) { return x.delta; })) || 1) : 1;
     return '<div class="bfb-sub">' + label + '</div><div class="bfb-grid">' + items.map(function (x) { return _flowBar(x, mode, mx); }).join('') + '</div>';
   }
+  // ── 🔍 Fix-Verdacht (21.08.2026, Lucas) — HZ-Geld dominiert den FT-Markt ─────────────
+  // Lucas' Erfahrung ueber Jahre: liegt auf dem HALBZEIT-Markt mehr Geld als auf Full-Time, macht das
+  // technisch keinen Sinn (FT ist normal viel liquider) -> starkes Fix-Indiz. Dazu die Neben-Indizien:
+  // Geld rein + Quote faellt (Back ✓) und sehr einseitig (>=90% auf einer Seite) bei kleinen Betraegen.
+  // SCANNT ALLE frischen Spiele (nicht nur die ueber der Radar-Schwelle) — Fix-Spiele liegen ja gerade
+  // auf duennen Maerkten UNTER der normalen Geld-Schwelle.
+  var FIX_HT_MIN = 2000;   // HZ-Geld-Boden fuer den Verdacht (filtert den €8/€28-Mini-Kram)
+  function _htFtVols(m) {
+    var ft = 0, ht = 0, htMk = null;
+    MK.forEach(function (mm) {
+      var v = eur(mvolG(m, mm.id));
+      if (mm.grp === 'FT') { if (v > ft) ft = v; }
+      else if (v > ht) { ht = v; htMk = mm.id; }
+    });
+    return { ft: ft, ht: ht, htMk: htMk };
+  }
+  function _fixCandidates(matches) {
+    var out = [];
+    (matches || []).forEach(function (m) {
+      if (isStale(m)) return;
+      var v = _htFtVols(m);
+      if (v.ht >= FIX_HT_MIN && v.ht >= v.ft) {   // HZ-Geld >= FT-Geld und ueber dem Boden
+        out.push({ m: m, ht: v.ht, ft: v.ft, htMk: v.htMk, ratio: v.ft > 0 ? v.ht / v.ft : 99 });
+      }
+    });
+    out.sort(function (a, b) { return b.ratio - a.ratio; });   // krassestes Missverhaeltnis oben
+    return out;
+  }
+  function fixStrip(cands) {
+    var head = '<div style="font-size:12px;color:' + C.lay + ';font-weight:800;margin-bottom:8px">🔍 Fix-Verdacht — mehr Geld auf dem <b>Halbzeit</b>- als dem Full-Time-Markt <span style="color:' + C.dim + ';font-weight:600">(technisch unlogisch, klassisches Anomalie-Muster · Klick springt zum Spiel)</span></div>';
+    var body;
+    if (!cands || !cands.length) {
+      body = '<div style="font-size:11px;color:' + C.dim + '">gerade kein Spiel, wo HZ-Geld (≥ €2K) den Full-Time-Markt übersteigt.</div>';
+    } else {
+      body = '<div class="bfb-grid">' + cands.slice(0, 8).map(function (c) {
+        var m = c.m, mk = mkOf(m, c.htMk), lead = mk ? leadRunner(mk) : null, tot = mk ? distTotal(mk) : 0;
+        var share = (lead && tot) ? Math.round((+lead.vol || 0) / tot * 100) : 0;
+        var side = lead ? rLabel(lead.name, m) : '';
+        var oddTxt = (lead && fO(lead.odd) !== '–') ? ' <span class="bfb-odd">@' + fO(lead.odd) + '</span>' : '';
+        var back = dirBadge(m, c.htMk, lead);
+        var oneSided = share >= 90 ? ' <span title="Fast alles Geld auf einer Seite bei kleinem Betrag — Achtungszeichen." style="font-size:9px;font-weight:800;color:#f2c14e;border:1px solid rgba(234,185,56,.5);border-radius:4px;padding:0 4px">' + share + '% einseitig</span>' : '';
+        var htLbl = MK_ID[c.htMk] ? MK_ID[c.htMk].label : 'HZ';
+        return '<div class="bfb-row' + _rowHl(m) + '" onclick="_bfJump(\'' + esc(m.matchId) + '\')">' +
+          '<div class="bfb-lbl"><div class="bfb-g">' + flag(m.country, m.league) + ' ' + esc(String(m.home).slice(0, 13)) + ' – ' + esc(String(m.away).slice(0, 13)) + '</div>' +
+          '<div class="bfb-o"><span class="bfb-mk ht">' + esc(htLbl) + (side ? ' →' : '') + '</span>' + (side ? ' ' + side : '') + oddTxt + '</div></div>' +
+          '<div class="bfb-meta"><span class="bfb-v" style="color:' + C.lay + '">HZ ' + fmtE(c.ht) + '</span><br><span class="bfb-odd">FT ' + fmtE(c.ft) + ' · ' + (c.ft > 0 ? c.ratio.toFixed(1) + '\u00d7 mehr auf HZ' : 'FT ~0') + '</span>' + back + oneSided + '</div></div>';
+      }).join('') + '</div>';
+    }
+    return '<div style="background:linear-gradient(180deg,rgba(248,81,73,.07),transparent);border:1px solid rgba(248,81,73,.28);border-radius:14px;padding:11px 13px;margin:0 0 14px">' + head + body + '</div>';
+  }
+
   function flowStrip(base) {
     var items = flowItems(base);
-    var eurItems = items.filter(function (x) { return eur(x.delta) >= FLOW_MIN_EUR && _leadOddOk(x.m, x.mm); })   // 08.08.2026 (Lucas): Fuehrungs-Geld nicht mehr filtern, stattdessen „▶ fuehrt" markieren
-      .sort(function (a, b) { return b.delta - a.delta; }).slice(0, 6);
+    var eurItems = items.filter(function (x) { return (eur(x.delta) >= FLOW_MIN_EUR || _flowThin(x)) && _leadOddOk(x.m, x.mm); })   // 08.08.2026: Fuehrungs-Geld nicht filtern, „▶ fuehrt". 21.08.2026 (Lucas): + Duenn-Markt-Anomalie-Weg
+      .sort(function (a, b) { return ((_flowThin(b) ? 1 : 0) - (_flowThin(a) ? 1 : 0)) || (b.delta - a.delta); }).slice(0, 8);
     var surge = items.filter(function (x) { return eur(x.prev) >= SURGE_MIN_BASE && eur(x.delta) >= SURGE_MIN_DELTA && x.pct >= SURGE_MIN_PCT && x.pct < 900 && _leadOddOk(x.m, x.mm); })
       .sort(function (a, b) { return b.pct - a.pct; }).slice(0, 6);
     var head = '<div style="font-size:12px;color:' + C.back + ';font-weight:800;margin-bottom:8px">💸 Frisches Geld — was seit dem letzten Lauf reinfloss &amp; auf welche Seite <span style="color:' + C.dim + ';font-weight:600">(Klick springt zum Spiel)</span></div>';
@@ -1509,6 +1566,7 @@
     if (_bf.view === 'consensus') return head + renderConsensusBoard();
 
     var fresh = (_bf.data.matches || []).filter(function (m) { return !isStale(m); });
+    var fixCands = _fixCandidates(fresh);   // 21.08.2026 (Lucas): Fix-Verdacht scannt ALLE frischen Spiele (auch unter der Radar-Schwelle)
     var qAll = fresh.filter(qualifies);
 
     var q = qAll.slice();
@@ -1533,7 +1591,7 @@
       : '';
 
     if (!qAll.length) {
-      return head + stale + '<div style="margin-top:14px;padding:40px 24px;text-align:center;color:' + C.mut + ';font-size:13px;line-height:1.6;background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:14px">Aktuell kein Spiel über der Geld-Schwelle (' +
+      return head + stale + fixStrip(fixCands) + '<div style="margin-top:14px;padding:40px 24px;text-align:center;color:' + C.mut + ';font-size:13px;line-height:1.6;background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:14px">Aktuell kein Spiel über der Geld-Schwelle (' +
         'Top: €20k FT/€10k HT · Int./UEFA: €20k/€10k · Rest: €15k/€5k). Sobald irgendwo genug Geld liegt, erscheint es hier.</div>' + _pushThr();
     }
 
@@ -1546,7 +1604,7 @@
     if (_bf.onlyLive) flowBase = flowBase.filter(function (m) { return isLive(m); });
     if (_bf.market !== 'all') flowBase = flowBase.filter(function (m) { return mvolG(m, _bf.market) > 0; });
 
-    var out = head + viewToggle() + infoBand(groups) + hotspotStrip(q) + flowStrip(flowBase) + dateBar(qAll) + controlBar(qAll) + legend() + stale;
+    var out = head + viewToggle() + infoBand(groups) + hotspotStrip(q) + flowStrip(flowBase) + fixStrip(fixCands) + dateBar(qAll) + controlBar(qAll) + legend() + stale;
     var t = _bf.tab;
     if (t === 'all' || t === 'top') out += section(groups.top, '⭐ Top 5 + MLS', C.gold, '≥ €20k FT · €10k HT');
     if (t === 'all' || t === 'intl') out += section(groups.intl, '🇪🇺 International / UEFA', C.blue, '≥ €20k FT · €10k HT');
