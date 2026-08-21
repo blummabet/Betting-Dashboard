@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v174';   // 21.08.2026 (Lucas): Event-Pages bleiben auf dem schoenen alten Design (wm-match-v2). Betfair-Block war schon da; Poly-Block bekommt jetzt einen Daten-Fallback aus money_map (Poly-Geld-Favorit + Betfair-Konsens-Zeile), damit er bei Liga-Spielen im gleichen Stil erscheint statt sich zu verstecken.
+const VERSION = 'cocobet-v177';   // 21.08.2026 (Lucas): + Fix-Verdacht-Liste im Radar (HZ-Geld > FT-Geld = Anomalie-/Fix-Muster, Boden EUR2K), Neben-Indizien Back-Bewegung + einseitig.
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

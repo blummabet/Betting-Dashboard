@@ -434,10 +434,11 @@
     var items = (((_md.data.bfOverview || {}).flow) || []).filter(function (x) {
       return !(x.odd != null && (+x.odd < FLOW_MIN_ODD || +x.odd > FLOW_MAX_ODD));
     });
-    if (!items.length) return empty('Kein frischer Zufluss ≥ €2K — sammelt (2 Snapshots nötig).');
+    if (!items.length) return empty('Kein auffälliger Zufluss gerade (großes Geld ≥ €10K oder marktdominant) — sammelt (2 Snapshots nötig).');
     var mx = items.reduce(function (a, x) { return Math.max(a, +x.deltaEur || 0); }, 1);
     return items.map(function (x) {
-      return rowEl(_bfTeams(x) + _mdBfLiveById(x.matchId), '+' + eur(x.deltaEur), A.good,
+      var _thinB = x.thin ? ' <span title="Zufluss macht ' + (x.sharePct != null ? x.sharePct + '% ' : '') + 'des gesamten Marktgeldes aus — dünner Markt, oft nicht beim Buchmacher spielbar. Anomalie/Fix-Kandidat." style="font-size:9px;font-weight:800;color:#f2c14e;border:1px solid rgba(234,185,56,.5);border-radius:4px;padding:0 4px">🔍 dünner Markt</span>' : '';
+      return rowEl(_bfTeams(x) + _mdBfLiveById(x.matchId) + _thinB, '+' + eur(x.deltaEur), A.good,
         '→ ' + esc(x.sideName || '') + _bfReactiveChip(x.sideName, !!_mdBfLiveById(x.matchId)) + _mdDirBadge(x.dir) + ' · jetzt ' + eur(x.nowEur) + (x.odd != null ? ' @' + (+x.odd).toFixed(2) : ''),
         meter(mx ? (+x.deltaEur / mx * 100) : 0, A.good));
     }).join('') + _ageStr(_md.data.betfair);

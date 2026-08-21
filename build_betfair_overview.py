@@ -33,10 +33,15 @@ except Exception:
 
 MOVE_MIN_PP = 1.5      # = Radar moveOf: schwächere Bewegungen ignorieren
 MAX_MOVE_PP = 25.0     # 13.08.2026 (Lucas): darueber = Platzhalter-/Opening-Quoten-Artefakt (z.B. 1.05->7.60 = -73pp), kein echtes Steam
-FLOW_MIN_EUR = 2000    # = Radar FLOW_MIN_EUR: Zufluss erst ab so viel zeigen
+FLOW_MIN_EUR = 10000   # = Radar FLOW_MIN_EUR: Zufluss erst ab so viel zeigen (21.08.2026 Lucas: 2000->10000, EUR2K ist bei Top-5-Liquiditaet Rauschen)
 FLOW_MIN_ODD = 1.30    # (Lucas 04.08.) Geld auf Quasi-Lock (@<1.30, oft live/entschieden) = kein Signal
+# 21.08.2026 (Lucas: Fix-Erkennung): 2. Weg neben dem grossen Geld. Ein paar Tausend EUR, die den
+# GROSSTEIL eines kleinen Marktes ausmachen (duenne Liga/Markt, oft beim Buchmacher nicht spielbar),
+# sind das interessante Anomalie-/Fix-Signal — auch wenn absolut unter FLOW_MIN_EUR.
+THIN_MIN_EUR = 2000    # Dünn-Markt-Zufluss erst ab so viel absolut
+THIN_SHARE   = 0.40    # ... UND wenn er >= so viel Anteil am Gesamtgeld des Marktes ausmacht
 TOP_STEAM = 5
-TOP_FLOW = 5
+TOP_FLOW = 8    # 21.08.2026 (Lucas): hoch von 5 — Duenn-Markt-Anomalien sollen nicht vom Cap fallen
 KICKOFF_GRACE_S = 60   # winzige Toleranz, damit ein Spiel exakt bei Anpfiff nicht flackert
 
 
@@ -189,7 +194,10 @@ def flow_list(prices, hist, now, top=TOP_FLOW, direction=None):
             _dm = _vb - _va
             if _dm > best_d:
                 best_d, best_name, best_now = _dm, _mname, _vb
-        if best_name is None or best_d < FLOW_MIN_EUR:
+        _share = (best_d / best_now) if best_now else 0.0
+        _big = best_d >= FLOW_MIN_EUR
+        _thin = (not _big) and best_d >= THIN_MIN_EUR and _share >= THIN_SHARE   # ein paar Tausend, die den kleinen Markt dominieren
+        if best_name is None or not (_big or _thin):
             continue
         mkt = best_name
         lead = _lead((m.get("markets") or {}).get(best_name))
@@ -205,9 +213,10 @@ def flow_list(prices, hist, now, top=TOP_FLOW, direction=None):
         row.update({"deltaEur": round(best_d), "nowEur": round(best_now),
                     "market": mkt, "sideName": (lead or {}).get("name"),
                     "odd": _num((lead or {}).get("odd")),
+                    "thin": bool(_thin), "sharePct": round(_share * 100),   # 21.08.2026 (Lucas): Fix-Radar-Markierung
                     "dir": (_d or {}).get("dir")})   # 'in'=Back (Quote kuerzer) · 'out'=driftet
         out.append(row)
-    out.sort(key=lambda r: r["deltaEur"], reverse=True)
+    out.sort(key=lambda r: (not r.get("thin"), -r["deltaEur"]))   # Duenn-Markt-Anomalien oben, dann groesstes Geld
     return out[:top]
 
 
