@@ -168,6 +168,8 @@ def recently_sent_team_ids(state: dict, today_iso: str) -> set[str]:
 
 TELEGRAM_TOKEN   = os.environ.get("TELEGRAM_TOKEN", "").strip()
 TRADES_CHAT_ID   = os.environ.get("TELEGRAM_TRADES_CHAT_ID", "").strip()
+PUB_CHAT_ID      = os.environ.get("TELEGRAM_CHAT_ID", "").strip()   # 21.08.2026 (Lucas): oeffentlicher Channel (wie Whale-Public)
+MONEYMAP_PUBLIC  = os.environ.get("MONEYMAP_PUBLIC", "false").lower() == "true"   # Money-Map-Cards auch an Public pushen
 SKIP_RENDER      = os.environ.get("SKIP_RENDER", "").lower() == "true"
 SKIP_TELEGRAM    = os.environ.get("SKIP_TELEGRAM", "").lower() == "true"
 # 14.06.2026 (Lucas): Umstellung auf Match-Preview-Cards. Daily-Picks-Sammelkarte
@@ -585,15 +587,16 @@ def render_to_png(html_path: Path) -> Path | None:
 #  TELEGRAM
 # ═══════════════════════════════════════════════════════════════════════════
 
-def tg_send_photo(png_path: Path, caption: str = "") -> bool:
-    if SKIP_TELEGRAM or not TELEGRAM_TOKEN or not TRADES_CHAT_ID:
+def tg_send_photo(png_path: Path, caption: str = "", chat_id: str = "") -> bool:
+    _chat = (chat_id or TRADES_CHAT_ID)
+    if SKIP_TELEGRAM or not TELEGRAM_TOKEN or not _chat:
         print(f"  ↪ Telegram skip ({png_path.name})")
         return False
     url = f"https://api.telegram.org/bot{TELEGRAM_TOKEN}/sendPhoto"
     import http.client, mimetypes
     boundary = "----CocoBetBoundary"
     body_parts = []
-    body_parts.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"chat_id\"\r\n\r\n{TRADES_CHAT_ID}\r\n")
+    body_parts.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"chat_id\"\r\n\r\n{_chat}\r\n")
     body_parts.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"parse_mode\"\r\n\r\nHTML\r\n")
     if caption:
         body_parts.append(f"--{boundary}\r\nContent-Disposition: form-data; name=\"caption\"\r\n\r\n{caption}\r\n")
@@ -1571,17 +1574,28 @@ def main():
         save_dedup(dedup)
         print(f"💾 Dedup-State aktualisiert ({len(dedup['history'])} Einträge)")
 
+    # Money-Map-Cards zusätzlich an den PUBLIC-Channel (21.08.2026, Lucas: täglicher Public-Heartbeat —
+    # Markt-Konsens statt direktem Tipp, feuert öfter als Whales). Separat vom Trades-Channel; setzt
+    # sent_to_telegram, damit der Money-Map-Dedup auch greift wenn NUR Public bedient wurde.
+    moneymap_public_ids = []
+    if MONEYMAP_PUBLIC and PUB_CHAT_ID and not SKIP_TELEGRAM and TELEGRAM_TOKEN and moneymap_cards:
+        for _label, _png, _cap in moneymap_cards:
+            if tg_send_photo(_png, _cap, chat_id=PUB_CHAT_ID):
+                moneymap_public_ids.append(_label.replace("moneymap_", "", 1))
+        if moneymap_public_ids:
+            print(f"📣 {len(moneymap_public_ids)}/{len(moneymap_cards)} Money-Map-Card(s) an Public gepusht")
+
     # Money-Map-Dedup (matchId, 10-Tage-Trim) — NUR nach erfolgreichem Send, damit ein Spiel
     # nicht 3 Tage in Folge dieselbe Card wirft (21.08.2026, Lucas: nur starke Signale, aber je Spiel einmal).
-    if sent_to_telegram and moneymap_ids:
+    if moneymap_public_ids:
         _mmd = _mm_load_dedup()
-        for _mid in moneymap_ids:
+        for _mid in moneymap_public_ids:
             _mmd.setdefault("history", []).append({"date": today_iso, "matchId": _mid})
         from datetime import timedelta as _td_mm
         _cut = (date.fromisoformat(today_iso) - _td_mm(days=10)).isoformat()
         _mmd["history"] = [h for h in _mmd["history"] if h.get("date", "") >= _cut]
         _mm_save_dedup(_mmd)
-        print(f"💾 Money-Map-Dedup aktualisiert ({len(_mmd['history'])} Einträge)")
+        print(f"💾 Money-Map-Public-Dedup aktualisiert ({len(_mmd['history'])} Einträge)")
 
     # 6. Player-Pick Dedup (Spielername, 14 Tage)
     if player_pick and sent_to_telegram:

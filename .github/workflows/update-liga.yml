@@ -190,12 +190,16 @@ jobs:
         env:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+          TELEGRAM_CHAT_ID:        ${{ secrets.TELEGRAM_CHAT_ID }}
           ANTHROPIC_API_KEY:       ${{ secrets.ANTHROPIC_API_KEY }}
           SEND_PREVIEWS: "true"
           SEND_REVIEWS:  "false"
           # 21.08.2026 (Lucas): Money-Map-Cards (Betfair-€ + Poly-$ + Pinnacle je Spiel, nur mmStrong).
           # money_map.json ist GLOBAL -> NUR hier setzen (ein Lauf/Tag), sonst 3x dieselbe Card (liga/mls/wm).
           SEND_MONEYMAP: "true"
+          # Money-Map-Cards auch an den PUBLIC-Channel (Lucas: taeglicher Public-Heartbeat).
+          # 21.08.2026: erstmal "false" = NUR Trades (Lucas testet zuerst). Auf "true" flippen wenn ok.
+          MONEYMAP_PUBLIC: "false"
         run: python generate_daily_tiktok.py || true
 
       - name: 📊 Liga Recap → Public (POST-Match)
@@ -273,6 +277,7 @@ jobs:
           git add liga_player_streaks.json 2>/dev/null || true
           git add liga_daily-tiktok 2>/dev/null || true
           git add liga_tiktok_sent.json liga-telegram-log.json 2>/dev/null || true
+          git add money_map_sent.json 2>/dev/null || true              # Money-Map-Public-Dedup (matchId, 21.08.2026 Lucas)
           git add liga_pick_announce_state.json 2>/dev/null || true
           git add liga_streak_watch.json 2>/dev/null || true
           git add liga_poly_prices.json 2>/dev/null || true          # Poly-Preise (Trading-Lag)

@@ -1,0 +1,53 @@
+name: 🧪 Test Money-Map-Cards → Trades
+
+# 21.08.2026 (Lucas): sauberer, wiederholbarer Test der Money-Map-Cards NUR an den Trades-Channel.
+# Loest bewusst NICHTS anderes aus (kein Daten-Refresh, kein Public-Digest, kein Serien-Watch).
+# money_map.json kommt aus dem Repo-Checkout (vom Betfair-Radar committet). MONEYMAP_PUBLIC bleibt
+# hart aus, TELEGRAM_CHAT_ID wird gar nicht gesetzt -> Public ist doppelt abgesichert unmoeglich.
+# Wiederholbar: MONEYMAP_PUBLIC=false schreibt keinen Dedup -> jeder Klick zeigt die Karten erneut
+# (mit den jeweils frischen Geld-Zahlen aus money_map.json).
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: test-moneymap
+  cancel-in-progress: false
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    steps:
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+
+      - name: 🐍 Python einrichten
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: 📦 Dependencies + Playwright + Chromium
+        run: |
+          python -m pip install --upgrade pip
+          pip install playwright
+          playwright install chromium --with-deps
+
+      - name: 🧪 Nur Money-Map-Cards → Trades (Public AUS)
+        env:
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+          COCOBET_DATASET:  liga
+          SKIP_GUARD:       "true"
+          SEND_MONEYMAP:    "true"
+          MONEYMAP_PUBLIC:  "false"
+          SEND_PREVIEWS:    "false"
+          SEND_REVIEWS:     "false"
+          SEND_STREAKS:     "false"
+          SEND_KILLER_STAT: "false"
+          SEND_BIZARRE:     "false"
+        run: python generate_daily_tiktok.py
