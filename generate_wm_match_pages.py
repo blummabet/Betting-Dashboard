@@ -42,6 +42,50 @@ def load_json(path):
     with open(path, encoding="utf-8") as f:
         return json.load(f)
 
+# 21.08.2026 (Lucas): Polymarket-Geld fuer die Event-Page aus money_map.json (matcht Betfair<->Poly
+# je Spiel, breite Abdeckung inkl. Liga). liga_poly_smartmoney.json existiert nicht → smartMoney war
+# immer None → Poly-Block versteckt. money_map liefert zumindest den Poly-Geld-Favoriten zuverlaessig.
+_MONEY_MAP_CACHE = {}
+def _money_map_rows():
+    if "r" not in _MONEY_MAP_CACHE:
+        d = load_json(os.path.join(BASE, "money_map.json")) or {}
+        _MONEY_MAP_CACHE["r"] = d.get("rows") or []
+    return _MONEY_MAP_CACHE["r"]
+
+def _mm_norm(x):
+    import re as _re
+    return _re.sub(r"[^a-z0-9]+", "", str(x or "").lower())
+
+def _mm_like(a, b):
+    a, b = _mm_norm(a), _mm_norm(b)
+    return bool(a and b and (a == b or a in b or b in a))
+
+def poly_money_from_map(home_name, away_name):
+    """Poly-Geld-Favorit fuer dieses Spiel aus money_map (oder None)."""
+    for r in _money_map_rows():
+        if not isinstance(r, dict):
+            continue
+        if _mm_like(home_name, r.get("home")) and _mm_like(away_name, r.get("away")):
+            poly = r.get("poly") or {}
+            bf = r.get("betfair") or {}
+            if not poly.get("sharePct"):
+                return None
+            # Seite (home/away/draw) → welches Team
+            side = poly.get("side")
+            favTeam = (home_name if side == "home" else away_name if side == "away"
+                       else poly.get("name") or "—")
+            return {
+                "favSide": side, "favTeam": favTeam,
+                "sharePct": poly.get("sharePct"), "usd": poly.get("usd"),
+                "srcTag": poly.get("src") or "",
+                # Cross-Check: sieht Betfair dieselbe Seite vorne?
+                "betfairAgree": (bf.get("side") == side) if bf.get("side") else None,
+                "betfairPct": bf.get("sharePct"),
+                "verdict": r.get("verdict"),
+            }
+    return None
+
+
 
 def upset_score(home_elo, away_elo):
     gap = abs(home_elo - away_elo)
@@ -735,6 +779,7 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
 
     # Smart-Money (Polymarket-Wallet-Verteilung) für dieses Spiel
     smart_money = _smartmoney_all().get(odds_key)
+    poly_money = poly_money_from_map(home_team["name"], away_team["name"])   # 21.08.2026 (Lucas): Poly-Geld-Block-Fallback
 
     # Betfair-Exchange-Geld + Markt-Konsens (31.07.2026) — nur wenn die Börse das Spiel führt.
     betfair_block = build_betfair_block(home_team["name"], away_team["name"], betfair_snaps or {}, betfair_norm or {})
@@ -805,6 +850,7 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
         "pinnOdds":      pinn_odds,
         "softOdds":      soft_odds,
         "smartMoney":    smart_money,
+        "polyMoney":     poly_money,
         "betfair":       betfair_block,
         "consensus":     consensus_block,
         "playerProps":   player_props_out,

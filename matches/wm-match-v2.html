@@ -671,9 +671,30 @@ function renderOdds(P){
 }
 
 // ── Polymarket / Smart Money ──
+function _renderPolyMoneyCompact(P, box, pm){
+  const usd = pm.usd>=1e6?'$'+(pm.usd/1e6).toFixed(1)+'M':'$'+Math.round((pm.usd||0)/1e3)+'k';
+  const pct = Math.round(pm.sharePct), rest = Math.max(0,100-pct);
+  const favC = pm.favSide==='away' ? 'a' : 'h';
+  const cross = pm.betfairAgree===true
+    ? '<div class="sm-edge" style="background:rgba(45,212,126,.08);border-color:rgba(45,212,126,.3)">\u2705 Betfair sieht dieselbe Seite vorne'+(pm.betfairPct?' ('+Math.round(pm.betfairPct)+'% Geld)':'')+' \u2014 Konsens beider B\u00f6rsen.</div>'
+    : pm.betfairAgree===false
+    ? '<div class="sm-edge" style="background:rgba(255,93,93,.07);border-color:rgba(255,93,93,.3)">\u2696\ufe0f Betfair-Geld liegt auf der anderen Seite \u2014 die B\u00f6rsen sind uneinig.</div>'
+    : '';
+  const fav=String(pm.favTeam||'').replace(/</g,'&lt;');
+  box.innerHTML='<div class="chap-h" style="margin-bottom:4px"><span class="cs">\ud83d\udcb0 <b style="color:#c4b5fd">Polymarket-Geld</b> \u2014 wo das gro\u00dfe Geld liegt</span></div>'
+    +'<div class="smbar"><div class="seg '+favC+'" data-w="'+pct+'">'+(pct>=12?pct+'%':'')+'</div><div class="seg d" data-w="'+rest+'">'+(rest>=12?rest+'%':'')+'</div></div>'
+    +'<div class="sm-meta"><span>'+usd+' auf Polymarket</span><span><b style="color:var(--text)">'+fav+'</b> '+pct+'% \u00b7 Rest '+rest+'%</span></div>'+cross
+    +'<p class="viz-foot">Verteilung des gro\u00dfen Polymarket-Geldes auf diesem Spiel (aus dem Cross-Book-Abgleich). Volle Wallet-Aufschl\u00fcsselung erscheint n\u00e4her am Anpfiff.</p>';
+  obs(box,()=>box.querySelectorAll('.smbar .seg').forEach(s=>s.style.width=s.dataset.w+'%'));
+}
+
 function renderPoly(P){
   const box=$('poly-box'),sm=P.smartMoney;
-  if(!sm||!sm.outcomes){ $('poly-card').style.display='none'; return; }
+  if(!sm||!sm.outcomes){
+    // 21.08.2026 (Lucas): Fallback — kompakter Poly-Geld-Block aus money_map (voller Wallet-Split vorab nicht verfuegbar).
+    if(P.polyMoney && P.polyMoney.sharePct){ _renderPolyMoneyCompact(P, box, P.polyMoney); return; }
+    $('poly-card').style.display='none'; return;
+  }
   const o=sm.outcomes,pct=x=>(x&&x.share!=null)?Math.round(x.share*100):0;
   const h=pct(o.home),d=pct(o.draw),a=pct(o.away);
   const usd=sm.totalUsd>=1e6?`$${(sm.totalUsd/1e6).toFixed(1)}M`:`$${Math.round((sm.totalUsd||0)/1e3)}k`;
