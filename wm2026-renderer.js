@@ -31,6 +31,24 @@
     return _mode === 'liga' ? 'liga' : 'wm';
   }
 
+  // 21.08.2026 (Lucas): Event-Page-Link. Liga (Top-5) → NEUES System (matches/match.html mit
+  // Team-Namen-Slug UND Poly/Betfair-Block, generiert von generate_match_pages.py). WM/MLS →
+  // altes wm-match-v2 (dort generiert; MLS noch nicht im neuen System). Slug = EXAKT wie
+  // generate_match_pages.slugify (Umlaute + [^a-z0-9]+→-).
+  function _mpEventHref(fx) {
+    const pfx = _mpPrefix(fx);
+    if (pfx === 'liga') {
+      const _sl = t => String(t || '').toLowerCase()
+        .replace(/ä/g,'ae').replace(/ö/g,'oe').replace(/ü/g,'ue').replace(/ß/g,'ss')
+        .replace(/á/g,'a').replace(/é/g,'e').replace(/í/g,'i').replace(/ó/g,'o').replace(/ú/g,'u')
+        .replace(/ñ/g,'n').replace(/ç/g,'c')
+        .replace(/[^a-z0-9]+/g,'-').replace(/^-|-$/g,'');
+      const hn = fx.homeName || String(fx.home), an = fx.awayName || String(fx.away);
+      return `matches/match.html?m=${_sl(hn)}-vs-${_sl(an)}-${fx.date}`;
+    }
+    return `matches/wm-match-v2.html?m=${pfx}-${String(fx.home).toLowerCase()}-vs-${String(fx.away).toLowerCase()}-${fx.date}`;
+  }
+
   // (20.07.2026) Anstehende Spieltage EINER Gruppe — Kern des „MLS zeigt Spieltag 1"-Bugs:
   // die Filterleiste darf nur Fixtures der aktiven Gruppe sehen, sonst erbt die MLS die Top-5-
   // Spieltage (deren Saison noch nicht läuft → md 1), obwohl die MLS längst bei md 18 steht.
@@ -1813,7 +1831,7 @@
         .join('<span style="color:#30363d;margin:0 6px">·</span>');
       html += `<div class="cc-actions">
         <div class="cc-data-tier">${_chips}</div>
-        <a class="cc-detail-btn" href="matches/wm-match-v2.html?m=${slug}" target="_blank">↗ Analyse</a>
+        <a class="cc-detail-btn" href="${_mpEventHref(fx)}" target="_blank">↗ Analyse</a>
         <button class="cc-share-btn" onclick="window.wmSharePick && window.wmSharePick('${fx.groupKey}-${fx.matchday}-${fx.home}-${fx.away}')">📤 Posten</button>
       </div>`;
     } else {
@@ -1821,7 +1839,7 @@
         <div class="cc-data-tier">
           ${isPlayed ? '<span class="cc-tier-pill">gespielt</span>' : '<span class="cc-tier-pill">beobachten</span>'}
         </div>
-        <a class="cc-detail-btn" href="matches/wm-match-v2.html?m=${slug}" target="_blank">↗ Analyse</a>
+        <a class="cc-detail-btn" href="${_mpEventHref(fx)}" target="_blank">↗ Analyse</a>
         <span></span>
       </div>`;
     }
@@ -1994,7 +2012,7 @@
       const _slug = `${_mpPrefix(fx)}-${fx.home.toLowerCase()}-vs-${fx.away.toLowerCase()}-${fx.date}`;
       html += `<div class="cc-actions">
         <div class="cc-data-tier"><span class="cc-tier-pill">${isPlayed ? 'gespielt' : 'beobachten'}</span></div>
-        <a class="cc-detail-btn" href="matches/wm-match-v2.html?m=${_slug}" target="_blank">↗ Analyse</a>
+        <a class="cc-detail-btn" href="${_mpEventHref(fx)}" target="_blank">↗ Analyse</a>
         <span></span>
       </div>`;
     }
