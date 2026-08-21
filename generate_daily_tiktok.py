@@ -184,6 +184,7 @@ SEND_STREAKS     = os.environ.get("SEND_STREAKS", "true").lower() == "true"   # 
 SEND_MONEYMAP    = os.environ.get("SEND_MONEYMAP", "false").lower() == "true"
 MONEYMAP_FILE    = BASE / "money_map.json"
 MONEYMAP_DEDUP   = BASE / "money_map_sent.json"   # matchId-Dedup, damit ein Spiel nicht 3 Tage in Folge kommt
+MONEYMAP_MAX     = int(os.environ.get("MONEYMAP_MAX") or 3)   # 21.08.2026 (Lucas): Tages-Cap Public — Top-N, nicht jedes starke Spiel
 # 30.06.2026 (Lucas: „Killer-Stat brauchen wir nicht, ist komisch"): Default AUS. Reviews/Previews +
 # Serien sind der Content; Killer-Stat nur noch opt-in via SEND_KILLER_STAT=true.
 SEND_KILLER_STAT = os.environ.get("SEND_KILLER_STAT", "").lower() == "true"
@@ -994,6 +995,8 @@ def build_money_map_cards(today_iso: str):
         date_label = f"{wd} \u00b7 {do.strftime('%d.%m.%Y')}"
     except Exception:
         date_label = today_iso
+    # Kandidaten sammeln (mmStrong, verdict ok, Geld vorhanden, nicht schon an Public geschickt)
+    cands = []
     for r in rows:
         if not r.get("mmStrong"):
             continue
@@ -1004,6 +1007,25 @@ def build_money_map_cards(today_iso: str):
         mid = str(r.get("matchId") or (str(r.get("home", "")) + "-" + str(r.get("away", ""))))
         if mid in sent_ids:
             continue
+        cands.append((mid, r))
+
+    # Ranking (21.08.2026, Lucas): „dreifach bestätigt" zuerst (Betfair+Poly+Pinnacle-Konsens, nSources>=3),
+    # dann normaler Konsens, dann Divergenz; innerhalb jeder Stufe das meiste Geld (Betfair € + Poly $).
+    def _mm_rank(item):
+        r = item[1]
+        bf = r.get("betfair") or {}; pl = r.get("poly") or {}
+        kon = r.get("verdict") == "konsens"
+        triple = kon and (r.get("nSources") or 0) >= 3
+        money = (bf.get("eur") or 0) + (pl.get("usd") or 0)
+        return (0 if triple else (1 if kon else 2), -money)
+    cands.sort(key=_mm_rank)
+
+    _total = len(cands)
+    cands = cands[:MONEYMAP_MAX]
+    if _total > len(cands):
+        print(f"💰 Money-Map: {_total} starke Spiele, Cap {MONEYMAP_MAX} → {_total - len(cands)} übersprungen (Rang zu niedrig)")
+
+    for mid, r in cands:
         try:
             html = money_map_card(
                 league_label=r.get("league") or "", date_label=date_label,
