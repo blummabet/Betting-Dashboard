@@ -631,3 +631,44 @@ class TestPubUnderGoals(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestFixAlert(unittest.TestCase):
+    # 21.08.2026 (Lucas): Fix-Verdacht ⚫ — HZ-Geld dominiert den FT-Markt (HZ>=FT, HZ>=2000, FT>0).
+    def _mkts(self, ft_vol, ht_vol):
+        m = {}
+        m.update(mk("Match Odds", [{"name": "Alpha", "odd": 2.0, "vol": ft_vol}]))
+        m.update(mk("Half Time", [{"name": "Alpha", "odd": 1.6, "vol": ht_vol},
+                                   {"name": "The Draw", "odd": 4.0, "vol": 300}]))
+        return m
+
+    def test_fires_when_ht_exceeds_ft(self):
+        m = match(mid=9, league="Lithuanian 1 Lyga", country="LT", markets=self._mkts(600, 5000))
+        a = BA.fix_alert(m)
+        self.assertIsNotNone(a)
+        self.assertEqual(a["scenario"], "fix")
+        self.assertEqual(a["market"], "Half Time")
+        self.assertAlmostEqual(a["ratio"], 5300 / 600, places=1)   # HT total 5300 vs FT 600
+        self.assertGreaterEqual(a["leadShare"], 0.90)              # 5000/5300 ~94%
+        self.assertIn("⚫", BA.build_message(a))                    # schwarze Kugel
+
+    def test_none_when_ft_dominates(self):
+        # Man-Utd-Fall: FT ist ein Vielfaches -> kein Fix
+        m = match(mid=9, league="English Premier League", country="GB", markets=self._mkts(90000, 3000))
+        self.assertIsNone(BA.fix_alert(m))
+
+    def test_none_below_floor(self):
+        # HZ > FT, aber HZ (1500+300) unter 2000 -> kein Fix
+        m = match(mid=9, markets=self._mkts(500, 1200))
+        self.assertIsNone(BA.fix_alert(m))
+
+    def test_none_when_no_ft_market(self):
+        # kein FT-Markt (ft=0) -> Datenluecke, kein Fix
+        m = match(mid=9, markets=mk("Half Time", [{"name": "Alpha", "odd": 2.0, "vol": 8000}]))
+        self.assertIsNone(BA.fix_alert(m))
+
+    def test_fix_stays_out_of_public_scenarios(self):
+        # collect_alerts liefert das fix-Szenario (Trades); Public-Ausschluss ist in main().
+        m = match(mid=9, league="Lithuanian 1 Lyga", country="LT", markets=self._mkts(600, 5000))
+        kinds = sorted(a["scenario"] for a in BA.collect_alerts({"matches": [m]}, {}, 10000, 5000, 30000, 20000))
+        self.assertIn("fix", kinds)

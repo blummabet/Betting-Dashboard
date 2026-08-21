@@ -43,6 +43,11 @@ JUMP_REL = 0.40   # 08.08.2026 (Lucas, Viking-Fall 1.23->3.60 nach 1:1): springt
 HT_TOP_EUR     = float(os.environ.get("BF_HT_TOP_EUR") or 15000.0)   # Halbzeit-Geld-Schwelle Top-Liga + International (15.08.2026 Lucas: 10K->15K, Sa-Flut)
 HT_REST_EUR    = float(os.environ.get("BF_HT_REST_EUR") or 10000.0)  # ... und Rest-Ligen (15.08.2026 Lucas: 5K->10K)
 HT_MIN_SHARE   = 0.85     # ... und davon min. dieser Anteil auf EINEN Ausgang (einseitig)
+# 21.08.2026 (Lucas): Fix-Verdacht-Push (⚫ schwarze Kugel). HZ-Geld dominiert den FT-Markt (HZ >= FT und
+# >= Boden) = technisch unlogisch -> Fix-Muster. Eigene Maerkte-Sets fuer FT vs HT (wie im Radar).
+FIX_HT_MIN_EUR = float(os.environ.get("BF_FIX_HT_MIN_EUR") or 2000.0)   # HZ-Geld-Boden Fix-Verdacht
+FIX_FT_MARKETS = ("Match Odds", "Over/Under 2.5 Goals", "Over/Under 3.5 Goals", "Both teams to Score?")
+FIX_HT_MARKETS = ("Half Time", "First Half Goals 0.5", "First Half Goals 1.5")
 MIN_LEAD_ODD   = 1.30     # Geld auf einen Favoriten mit Quote < 1.30 (führt schon, wenig Value) = kein Push (Lucas 30.07.2026, vorher 1.15)
 FRESH_TOP_EUR  = float(os.environ.get("BF_FRESH_TOP_EUR") or 50000.0)   # frisches Geld Top-Liga (15.08.2026 Lucas: 30K->50K)
 FRESH_REST_EUR = float(os.environ.get("BF_FRESH_REST_EUR") or 35000.0)  # ... und Rest-Ligen (15.08.2026 Lucas: 20K->35K)
@@ -217,6 +222,42 @@ def ht_alert(m, top_thr=HT_TOP_EUR, rest_thr=HT_REST_EUR):
         if a and (best is None or a["total"] > best["total"]):
             best = a
     return best
+
+
+def fix_alert(m):
+    """Szenario „fix" (21.08.2026, Lucas): HZ-Geld dominiert den FT-Markt (HZ >= FT UND >= FIX_HT_MIN_EUR).
+    Technisch unlogisch (FT ist normal viel liquider) -> Fix-Verdacht. Scannt jedes Spiel unabhaengig von
+    der normalen Geld-Schwelle (Fix-Spiele liegen auf duennen Maerkten). ⚫ schwarze Kugel im Push."""
+    mkts = m.get("markets") or {}
+    ft_max = 0.0
+    for name in FIX_FT_MARKETS:
+        mk = mkts.get(name)
+        if mk:
+            v = _vol(mk)
+            if v > ft_max:
+                ft_max = v
+    ht_max, ht_name = 0.0, None
+    for name in FIX_HT_MARKETS:
+        mk = mkts.get(name)
+        if mk:
+            v = _vol(mk)
+            if v > ht_max:
+                ht_max, ht_name = v, name
+    if ht_name is None or ft_max <= 0 or ht_max < FIX_HT_MIN_EUR or ht_max < ft_max:
+        return None   # ft_max>0: nur echtes HZ>FT (nicht HZ mit fehlendem/leerem FT-Markt = Datenluecke)
+    runners = (mkts.get(ht_name) or {}).get("runners") or []
+    lead = max(runners, key=lambda r: (r.get("vol") or 0.0), default=None)
+    if not lead:
+        return None
+    lead_share = (lead.get("vol") or 0.0) / ht_max if ht_max else 0.0
+    ratio = (ht_max / ft_max) if ft_max > 0 else 99.0
+    return {"scenario": "fix", "matchId": str(m.get("matchId")), "value": ht_max,
+            "home": m.get("home"), "away": m.get("away"), "league": m.get("league"), "flag": _flag(m),
+            "market": ht_name, "mktLabel": HT_LABEL.get(ht_name, _short_mk(ht_name)),
+            "kickoff": m.get("kickoff"), "live": m.get("liveInfo") or {},
+            "htEur": ht_max, "ftEur": ft_max, "ratio": ratio, "total": ht_max, "tier": tier_of(m),
+            "leadName": lead.get("name"), "leadLabel": _ht_label(lead.get("name"), m.get("home"), m.get("away")),
+            "leadShare": lead_share, "leadOdd": lead.get("odd")}
 
 
 def _market_lead(m, name):
@@ -496,6 +537,17 @@ def _lead_odd_txt(a) -> str:
 def build_message(a) -> str:
     head = ("%s <b>%s</b> v <b>%s</b>\n<i>%s</i>\n"
             % (a["flag"], _esc(a["home"]), _esc(a["away"]), _esc(str(a["league"])[:48])))
+    if a["scenario"] == "fix":
+        odd = _lead_odd_txt(a)
+        lbl = a.get("mktLabel") or "HZ"
+        _ratio_txt = ("<b>%.1f×</b> mehr auf HZ" % a["ratio"]) if a.get("ftEur", 0) > 0 else "FT ~0"
+        msg = ("\u26ab <b>Betfair · Fix-Verdacht</b> — mehr Geld auf <b>Halbzeit</b> als Full-Time\n" + head
+               + "\U0001f4b7 %s: <b>%s</b> HZ  vs  <b>%s</b> FT · %s\n"
+                 % (_esc(lbl), _euro(a["htEur"]), _euro(a["ftEur"]), _ratio_txt)
+               + "<b>%.0f%%</b> auf %s%s" % ((a.get("leadShare") or 0.0) * 100, _esc(a["leadLabel"]), odd))
+        if (a.get("leadShare") or 0.0) >= 0.90:
+            msg += " · sehr einseitig"
+        return msg + _dir_line(a, ou_fade=False)
     if a["scenario"] == "ht":
         odd = _lead_odd_txt(a)
         lbl = a.get("mktLabel") or "HZ"
@@ -872,6 +924,10 @@ def collect_alerts(prices: dict, hist: dict, ht_top=HT_TOP_EUR, ht_rest=HT_REST_
                 a["freshMerge"] = f
             else:
                 out.append(f)
+        # 21.08.2026 (Lucas): Fix-Verdacht (⚫) — HZ-Geld > FT-Geld. Eigenes Szenario, eigener Dedup-Key.
+        x = fix_alert(m)
+        if x:
+            out.append(x)
     return out
 
 
@@ -934,6 +990,7 @@ def main():
     # 85%-Gate; Trades bleibt ungefiltert (obskure Ligen bewusst drin — dort oft Sharp Money).
     pub_alerts = [a for a in pub_alerts
                   if a.get("scenario") != "fresh" or (a.get("leadShare") or 0.0) >= PUB_FRESH_MIN_SHARE]
+    pub_alerts = [a for a in pub_alerts if a.get("scenario") != "fix"]   # 21.08.2026 (Lucas): Fix-Verdacht NUR Trades, nie Public
     # (Lucas 09.08.2026) NUR Public: nach einem Spielereignis (Tor/Karte) neu bepreiste Maerkte raus.
     # Wenn die Quote gerade durch ein Tor gesprungen ist (_dir_event_jump), ist die Richtung unklar und
     # der Push reaktiv/gewagt - nichts fuer den oeffentlichen Kanal. Trades sieht ihn weiter (mit Richtung-
