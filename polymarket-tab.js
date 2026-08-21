@@ -3397,13 +3397,58 @@ function _polySetSection(sec) {
 // Scorer — es ist bewusst dieselbe Engine, der Lucas im Terminal vertraut.
 let _polyHeutePlays = [];
 
+// 21.08.2026 (Lucas): „Heute"-Bet direkt auslösen WO MÖGLICH. Heute-Plays kommen aus der Broad-Engine
+// (nur key/side/price/conv) — kein sauberes home/away/market fuer den Bet-Placer. Wenn ein Heute-Play aber
+// DASSELBE Spiel wie ein Cards/Value-Pick ist (Slug-Match via Preis-Cache) UND die Seite zum Pick-Markt
+// passt, bauen wir den verifizierten betOrder → direkter Trigger (mit Bestaetigungs-Dialog). Sonst: Link.
+function _heuteSideMatches(rside, p) {
+  const m = String(p.market || '');
+  rside = String(rside || '').toLowerCase().trim();
+  const home = String(p.home || '').toLowerCase().trim();
+  const away = String(p.away || '').toLowerCase().trim();
+  const has = (t) => t && rside.indexOf(t) >= 0;
+  // Team-Match: beidseitiges Voll-Substring (rside ⊂ name ODER name ⊂ rside). KEIN Einzelwort —
+  // sonst matcht „Real Sociedad" faelschlich „Real Betis" (gemeinsames „Real"). Innerhalb des schon
+  // per Slug gematchten Spiels sind die zwei Teams eindeutig genug.
+  const teamHit = (name) => name && name.length >= 3 && rside.length >= 3 && (rside.indexOf(name) >= 0 || name.indexOf(rside) >= 0);
+  if (m === 'Heimsieg')       return teamHit(home);
+  if (m === 'Auswärtssieg')   return teamHit(away);
+  if (m === 'Unentschieden')  return has('draw') || has('unentsch') || has('remis') || has('tie') || rside === 'x';
+  if (m === 'Over 2.5 Tore')  return has('over') || has('über') || has('ueber');
+  if (m === 'Under 2.5 Tore') return has('under') || has('unter');
+  if (m.indexOf('Beide Teams') >= 0) return has('yes') || has('ja') || has('both') || has('beide');
+  return false;
+}
+function _polyHeuteBetOrder(r, picks) {
+  if (!r || !r.key || _polyPriceCache == null || !picks || !picks.length) return null;
+  const gk = String(r.key).replace(/-more-markets$/, '').toLowerCase();
+  const rside = String(r.side || '').toLowerCase();
+  for (const p of picks) {
+    const ce = _polyPriceCache[(p.home || '') + '|' + (p.away || '')];
+    if (!ce || !ce.found) continue;
+    const isOu = (p.market === 'Over 2.5 Tore' || p.market === 'Under 2.5 Tore' || String(p.market).indexOf('Beide Teams') >= 0);
+    const pslug = (isOu && ce.moreMktSlug) ? ce.moreMktSlug : ce.slug;
+    if (!pslug) continue;
+    if (String(pslug).replace(/-more-markets$/, '').toLowerCase() !== gk) continue;   // gleiches Spiel (Slug)
+    if (!_heuteSideMatches(rside, p)) continue;                                         // Seite passt zum Pick-Markt
+    const polyPrice = ce.markets && ce.markets[p.market];
+    if (!(polyPrice > 0)) continue;
+    const pinnFair = p.odds ? (1 / p.odds) : (p.modelOdds ? (1 / p.modelOdds) : null);
+    const edge = (pinnFair && polyPrice) ? Math.round((pinnFair - polyPrice) * 100) : (p.edgePP || 0);
+    return { home: p.home, away: p.away, market: p.market, polyPrice: polyPrice, pinnFair: pinnFair,
+             slug: pslug, edge: edge,
+             conviction: (typeof r.conv === 'number' ? r.conv : (p.convictionScore != null ? p.convictionScore : null)) };
+  }
+  return null;
+}
+
 function _renderPolyHeute(plays) {
   const head = (n) => `
     <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:2px">
       <span style="font-size:13px;font-weight:800;color:#ff8a5c">🔥 Heute — die besten Poly-Plays</span>
       <span style="font-size:11px;color:#6e7681">${n ? n + ' Play' + (n !== 1 ? 's' : '') + ' · ' : ''}gleiche Engine wie Terminal „Heute wetten"</span>
     </div>
-    <div style="font-size:11px;color:#6e7681;margin-bottom:10px;line-height:1.5">Signal-gated (Geld · Steam · scharfe Wallets · Pinnacle), nach Conviction. „🟣 Setzen" öffnet den Markt zum manuellen Nachspielen.</div>`;
+    <div style="font-size:11px;color:#6e7681;margin-bottom:10px;line-height:1.5">Signal-gated (Geld · Steam · scharfe Wallets · Pinnacle), nach Conviction. „🟣 Setzen" löst direkt aus (Bestätigungs-Dialog), wenn es ein Pick-Spiel ist — sonst „🟣 Öffnen ↗" zum manuellen Nachspielen.</div>`;
 
   const wrap = (inner) => `<div style="border:1px solid #30363d;border-radius:12px;background:#0d1117;overflow:hidden">
     <div style="padding:12px 14px 2px">${head(Array.isArray(plays) ? plays.length : 0)}</div>${inner}</div>`;
@@ -3412,6 +3457,8 @@ function _renderPolyHeute(plays) {
   if (!plays.length)  return wrap(`<div style="padding:0 14px 14px;color:#6e7681;font-size:12px">Aktuell keine handelbare Kante (kein BET-Play). Sobald der Scan (~alle 30 Min) welche findet, stehen sie hier.</div>`);
 
   _polyHeutePlays = plays;
+  let _hPicks = [];
+  try { if (_polyPriceCache != null && typeof _collectAllPolyPicks === 'function') _hPicks = _collectAllPolyPicks() || []; } catch (_e) { _hPicks = []; }
   const rows = plays.map((r, i) => {
     const icon  = (typeof _pwSportIcon === 'function') ? _pwSportIcon(r.league) : '🎯';
     const meter = (typeof _pwTermMeter === 'function') ? _pwTermMeter(r.conv) : (`<span style="color:#8b949e;font-size:11px">Conv ${r.conv}</span>`);
@@ -3434,8 +3481,15 @@ function _renderPolyHeute(plays) {
       <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
         <button onclick="event.stopPropagation();_polyHeuteLog(${i})"
           style="background:#a78bfa18;border:1px solid #a78bfa44;border-radius:6px;color:#a78bfa;font-size:11px;font-weight:700;padding:5px 9px;cursor:pointer;font-family:inherit">✏️ loggen</button>
-        <a href="${url}" target="_blank" rel="noopener" onclick="event.stopPropagation()"
-          style="background:linear-gradient(135deg,#a78bfa,#7c3aed);border-radius:6px;color:#fff;font-size:11px;font-weight:800;padding:6px 11px;text-decoration:none;white-space:nowrap">🟣 Setzen ↗</a>
+        ${(() => {
+          const bo = _polyHeuteBetOrder(r, _hPicks);
+          return bo
+            ? `<button onclick="event.stopPropagation();_wmBetConfirm(decodeURIComponent('${encodeURIComponent(JSON.stringify(bo))}'))"
+                 title="Direkt auslösen — es öffnet sich der Bestätigungs-Dialog"
+                 style="background:linear-gradient(135deg,#a78bfa,#7c3aed);border:none;border-radius:6px;color:#fff;font-size:11px;font-weight:800;padding:6px 11px;cursor:pointer;white-space:nowrap;font-family:inherit">🟣 Setzen</button>`
+            : `<a href="${url}" target="_blank" rel="noopener" onclick="event.stopPropagation()"
+                 style="background:#a78bfa22;border:1px solid #a78bfa55;border-radius:6px;color:#a78bfa;font-size:11px;font-weight:800;padding:6px 11px;text-decoration:none;white-space:nowrap">🟣 Öffnen ↗</a>`;
+        })()}
       </div>
     </div>`;
   }).join('');
