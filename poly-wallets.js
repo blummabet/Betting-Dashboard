@@ -18,7 +18,7 @@
 
 let _polyWalletsLoaded = false;
 let _pwState = { open: null };
-let _pwCache = null;
+var _pwCache = null;   // 21.08.2026: var (nicht let) -> testbar
 let _pwCharts = [];   // Chart.js-Instanzen (vor Re-Render zerstören)
 
 const PW_SPREAD_HAIRCUT = 1.5, PW_NOISE = 2.0, PW_TRADE = 4.0, PW_MOVE_FRESH = 2.0;
@@ -235,8 +235,9 @@ function initPolyWallets(){
     jf('poly_money_broad_live.json'),        // 11.08.2026 (Lucas Stufe 2): laufende Maerkte (Live-Erfassung, alle ~5 Min)
     jf('poly_money_broad_live_history.json'),
     jf('poly_live_signal_track.json'),       // 12.08.2026 (Lucas): Live-Signal Forward-CLV Track-Record
-  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack])=>{
-    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack};
+    jf('money_map.json'),                    // 21.08.2026 (Lucas): Betfair-Geld je Spiel → Gegencheck im Kanten-Scorer
+  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap])=>{
+    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap};
     _pwRender();
   }).catch(err=>{
     // 12.07.2026: Vorher gab es KEIN catch — eine Exception im Render (z.B. der
@@ -1630,8 +1631,9 @@ function _pwEnsurePlaysData(cb){
   const jf=u=>fetch(u+b,{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);
   Promise.all([jf('poly_money_broad_close.json'),jf('poly_money_broad_history.json'),
                jf('poly_money_broad.json'),jf('poly_wallet_track.json'),jf('poly_cross_sport.json'),
-               jf('poly_money_broad_live.json'),jf('poly_money_broad_live_history.json')])
-   .then(([broadLive,broadHist,moneyBroad,walletTrack,crossSport,broadLiveNow,broadLiveHist])=>{
+               jf('poly_money_broad_live.json'),jf('poly_money_broad_live_history.json'),
+               jf('money_map.json')])
+   .then(([broadLive,broadHist,moneyBroad,walletTrack,crossSport,broadLiveNow,broadLiveHist,moneyMap])=>{
      if(!_pwCache) _pwCache={};
      if(!_pwCache.broadLive)     _pwCache.broadLive=broadLive;
      if(!_pwCache.broadHist)     _pwCache.broadHist=broadHist;
@@ -1640,6 +1642,7 @@ function _pwEnsurePlaysData(cb){
      if(!_pwCache.crossSport)    _pwCache.crossSport=crossSport;
      if(!_pwCache.broadLiveNow)  _pwCache.broadLiveNow=broadLiveNow;
      if(!_pwCache.broadLiveHist) _pwCache.broadLiveHist=broadLiveHist;
+     if(!_pwCache.moneyMap)      _pwCache.moneyMap=moneyMap;   // 21.08.2026 (Lucas): Betfair-Geld-Gegencheck
      _pwPlaysLoadedTs=Date.now();
      cb&&cb();
    }).catch(()=>{ cb&&cb(); });
@@ -1788,6 +1791,77 @@ function _pwPlayLabel(key,oc){
   if(teams) return teams.join(' vs ');
   return _pwPrettyKey(key);                         // 16.08.2026 (Lucas): keine Teams -> Slug + Markt-Typ-Hinweis
 }
+// 21.08.2026 (Lucas: „checken wir ob auf betfair kohle liegt?"): Betfair-Geld-Gegencheck fuer den
+// Kanten/Heute-Scorer — symmetrisch zum Betfair-Terminal, das Poly schon als Bestaetigung hat.
+// Quelle: money_map.json (matcht Betfair<->Poly je Spiel, inkl. UEFA). Liefert den Betfair-Geld-
+// Favoriten fuer DIESES Spiel (auf die Poly-Outcome-Namen gemappt) oder null.
+// 21.08.2026 (Lucas #3): Track-kalibrierte Konviktion. Aus poly_shortlist_track.json (settled)
+// die reale Performance JE SIGNAL-MIX rechnen und historisch klar -EV Mixe abwerten. Kern-Erkenntnis:
+// sharp/steam ALLEIN verlieren stark (-12%/-38% ROI), nur MIT money gewinnen sie.
+let _pwComboCache=null, _pwComboRef=null;
+const _PW_CALIB_CORE=['money','sharp','steam','pinn','gvp'];
+function _pwComboStatsAll(){
+  const st=_pwCache&&_pwCache.shortlistTrack&&_pwCache.shortlistTrack.settled;
+  if(!st) return null;
+  if(_pwComboRef===st && _pwComboCache) return _pwComboCache;
+  const core=new Set(_PW_CALIB_CORE), agg={};
+  for(const x of st){
+    const sigs=(x.signals||[]).filter(t=>core.has(t)).slice().sort();
+    const k=sigs.join('+')||'(none)';
+    const a=agg[k]||(agg[k]={n:0,wins:0,stake:0,pnl:0});
+    a.n++; if(x.result==='win')a.wins++; a.stake+=Number(x.stake)||0; a.pnl+=Number(x.pnl)||0;
+  }
+  for(const k in agg){ const a=agg[k]; a.roi=a.stake?a.pnl/a.stake:0; a.hit=a.n?a.wins/a.n:0; }
+  _pwComboCache=agg; _pwComboRef=st; return agg;
+}
+function _pwComboFor(sigs){
+  const agg=_pwComboStatsAll(); if(!agg) return null;
+  const core=new Set(_PW_CALIB_CORE);
+  const k=(sigs||[]).filter(t=>core.has(t)).slice().sort().join('+')||'(none)';
+  return agg[k]||null;
+}
+// Basis-ROI der ganzen Shortlist (agg.all) — Kalibrierung ist RELATIV dazu: ein Mix ueber dem
+// Schnitt wird leicht aufgewertet, drunter leicht abgewertet. So bleibt der Durchschnitt stabil,
+// nur die Rangfolge schaerft sich. Kein Signal fliegt raus.
+function _pwComboBaselineRoi(){
+  const a=_pwCache&&_pwCache.shortlistTrack&&_pwCache.shortlistTrack.agg&&_pwCache.shortlistTrack.agg.all;
+  return (a&&typeof a.roi==='number')?a.roi:0;
+}
+// Kontinuierliche, symmetrische Konviktions-Kalibrierung (21.08.2026, Lucas: „automatisch mitlernen
+// und weiter gewichten, Signale nicht ganz raus"). Verschiebt conv sanft Richtung realer Mix-Performance,
+// gewichtet nach Stichprobe (conf = n/(n+25) → kleine n zaehlen wenig, kein Overfit). Asymmetrisch
+// geklammert: mehr Abwertung (-3) als Boost (+2) erlaubt (Risiko-vorsichtig). Gibt {conv,reason,tag}.
+function _pwCalibConv(sigs, conv){
+  const cb=_pwComboFor(sigs);
+  if(!cb || cb.n<8) return {conv, reason:null, tag:null};
+  const base=_pwComboBaselineRoi();
+  const conf=cb.n/(cb.n+25);
+  const adj=Math.max(-3, Math.min(2, (cb.roi-base)*15*conf));
+  const nc=Math.max(1, Math.min(10, Math.round(conv+adj)));
+  if(nc===conv) return {conv, reason:null, tag:null};
+  const up=nc>conv;
+  return { conv:nc,
+    reason:(up?'📈':'📉')+' Signal-Mix real '+Math.round(cb.roi*100)+'% ROI (n'+cb.n+') → '+(up?'+':'')+(nc-conv)+' Konv',
+    tag: up?'calib+':'calib-' };
+}
+
+function _pwBfEur(v){ const n=Number(v)||0; return n>=1e6?'€'+(n/1e6).toFixed(1)+'M':n>=1e3?'€'+Math.round(n/1e3)+'K':'€'+Math.round(n); }
+function _pwBfFav(oc){
+  const mm=_pwCache&&_pwCache.moneyMap; const rows=mm&&mm.rows; if(!rows||!rows.length) return null;
+  const norm=x=>String(x||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+  const like=(x,y)=>{ x=norm(x); y=norm(y); return x&&y&&(x===y||x.includes(y)||y.includes(x)); };
+  const names=(oc||[]).map(o=>o.s).filter(Boolean);
+  for(const r of rows){
+    const bf=r.betfair; if(!bf) continue;
+    if(!(names.some(n=>like(n,r.home)) && names.some(n=>like(n,r.away)))) continue;   // beide Teams muessen matchen
+    const favName=bf.name || (bf.side==='home'?r.home:bf.side==='away'?r.away:null);
+    if(!favName) return null;
+    const polySide=names.find(n=>like(n,favName)) || null;
+    return { polySide, name:favName, pct:Number(bf.sharePct)||0, eur:Number(bf.eur)||0, side:bf.side };
+  }
+  return null;
+}
+
 function _pwShortlistScore(key,m){
   const oc=Object.entries(m.shares||{}).map(([s,u])=>({s,u:Number(u)||0}));
   if(oc.length<2) return {verdict:'SKIP'};
@@ -1834,6 +1908,12 @@ function _pwShortlistScore(key,m){
     if(pe.back) add(pe.side,w,'Pinnacle: Poly '+Math.abs(pe.gapPP).toFixed(0)+'pp zu billig → Value','pinn');
     else if(pe.other) add(pe.other,w,'Pinnacle: Poly '+Math.abs(pe.gapPP).toFixed(0)+'pp zu teuer auf '+pe.side,'pinn');
   }
+  // 21.08.2026 (Lucas): Betfair-Geld als Gegencheck. Liegt auf Betfair Geld (>=55%) auf einer Seite,
+  // zaehlt das als Bestaetigung fuer die Seite (moderate Gewichtung, kippt gut gestuetzte Picks nicht).
+  const _bf=_pwBfFav(oc);
+  if(_bf && _bf.polySide && _bf.pct>=55){
+    add(_bf.polySide, _bf.pct>=70?1.5:1, '💷 Betfair-Geld bestätigt: '+_bf.pct+'% · '+_pwBfEur(_bf.eur), 'bf');
+  }
   let best=null,bs=0; for(const s in sides) if(sides[s]>bs){bs=sides[s];best=s;}
   const vol=m.totalUsd||0;
   if(!best||bs<3||vol<15000) return {verdict:'SKIP'};
@@ -1850,6 +1930,14 @@ function _pwShortlistScore(key,m){
     sigs.push('turned');
     conv=Math.max(1,conv-3);   // stark abwerten → rutscht ans Ende der Liste
   }
+  // 21.08.2026 (Lucas #3, kontinuierlich): Track-Kalibrierung — conv sanft Richtung realer Mix-
+  // Performance ziehen (auf UND ab, gewichtet nach Stichprobe). Kein Signal raus; nur Rangfolge schaerfen.
+  const _ca=_pwCalibConv(sigs, conv);
+  conv=_ca.conv;
+  if(_ca.reason){
+    reasons=[_ca.reason].concat(reasons).slice(0,3);
+    if(!sigs.includes(_ca.tag)) sigs.push(_ca.tag);
+  }
   // 16.08.2026 (Lucas Übersicht): Live-Flip-Riegel — laufendes Spiel, Shares-Seite != Preis-Seite und
   // Preis klar (>=PW_LIVE_FLIP_GAP) dagegen => der Markt ist auf die Gegenseite gekippt, unsere Positions-
   // mehrheit ist Vor-Anpfiff-Alt. Braucht KEINE History (anders als _pwAdverseFor) -> greift trotz Scan-Lag.
@@ -1858,9 +1946,16 @@ function _pwShortlistScore(key,m){
      && (pr[priceFav]-pr[best]) >= PW_LIVE_FLIP_GAP){
     return {verdict:'SKIP', turned:true};
   }
+  // Betfair-Gegencheck relativ zur empfohlenen Seite (fuer die Anzeige im Konviktions-Panel).
+  let bf=null;
+  if(_bf){
+    const _n=x=>String(x||'').toLowerCase().replace(/[^a-z0-9]/g,'');
+    const agree=_bf.polySide && (_n(_bf.polySide)===_n(best) || _n(_bf.polySide).includes(_n(best)) || _n(best).includes(_n(_bf.polySide)));
+    bf={agree:!!agree, pct:_bf.pct, eur:_bf.eur, name:_bf.name};
+  }
   return {key,match:_pwPlayLabel(key,oc),verdict:(best===moneyFav?'BET':'FADE'),side:best,
     conv,reasons,signals:sigs,vol,htk:_pwRealHtk(m),league:m.league,turned,
-    moneyPct,sharp:(sh&&sh.side===best)?sh:null,price:(typeof pr[best]==='number'?pr[best]:null)};
+    moneyPct,sharp:(sh&&sh.side===best)?sh:null,price:(typeof pr[best]==='number'?pr[best]:null),bf};
 }
 // 📊 Paper-Track-Record der „Heute wetten"-Shortlist (02.08.2026, Lucas). Liest poly_shortlist_track.json
 // (open/settled/agg), zeigt: KPIs je Sicht (ganze Shortlist + Public), Conviction-Tabelle (die
@@ -1987,6 +2082,9 @@ function _pwTermBucket(conv){
   return bc[String(conv)]||null;
 }
 function _pwTermMuted(r){
+  // 21.08.2026 (Lucas #3): Signal-Mix historisch klar -EV → muten (Grund zeigt echten ROI).
+  const cb=_pwComboFor(r.signals);
+  if(cb && cb.n>=15 && cb.roi<=-0.10) return {m:true,reason:'Mix '+Math.round(cb.roi*100)+'% ROI · n'+cb.n};
   const b=_pwTermBucket(r.conv);
   if(b&&b.n>=20&&typeof b.roi==='number'&&b.roi<=-0.10) return {m:true,reason:'Konv'+r.conv+' '+Math.round(b.roi*100)+'% ROI · n'+b.n};   // nur klar -EV (<=-10%); knapp negative Stufen (z.B. -5%) bleiben sichtbar mit rotem Chip
   if((+r.conv||0)<=4) return {m:true,reason:'Konv≤4 dünn'};
@@ -2051,7 +2149,14 @@ function _pwTermWhaleTape(r){
 function _pwTermConvPanel(r){
   const col=r.conv>=8?'#3fb950':r.conv>=6?'#e3b341':'#8b949e';
   const reasons=(r.reasons||[]).map(x=>'<div style="font-size:11px;color:#8b949e;line-height:1.7">• '+_pwEsc(x)+'</div>').join('');
-  return '<div style="text-align:center;margin-bottom:6px"><div style="font-size:26px;font-weight:900;font-family:ui-monospace,monospace;color:'+col+'">'+r.conv+'<span style="font-size:13px;color:#484f58">/10</span></div></div>'+(reasons||'<div style="font-size:11px;color:#484f58">—</div>');
+  // 21.08.2026 (Lucas): Betfair-Geld-Gegencheck sichtbar (bestaetigt / dagegen / kein Match).
+  let bfLine='';
+  if(r.bf){
+    bfLine = r.bf.agree
+      ? '<div style="font-size:11px;color:#3fb950;line-height:1.7;margin-top:4px">💷 Betfair bestätigt · '+r.bf.pct+'% · '+_pwBfEur(r.bf.eur)+'</div>'
+      : '<div style="font-size:11px;color:#e3742f;line-height:1.7;margin-top:4px">💷 Betfair-Geld auf '+_pwEsc(r.bf.name)+' ('+r.bf.pct+'%) — Gegenseite</div>';
+  }
+  return '<div style="text-align:center;margin-bottom:6px"><div style="font-size:26px;font-weight:900;font-family:ui-monospace,monospace;color:'+col+'">'+r.conv+'<span style="font-size:13px;color:#484f58">/10</span></div></div>'+(reasons||'<div style="font-size:11px;color:#484f58">—</div>')+bfLine;
 }
 // 18.08.2026 (Lucas, Arkham-Inspiration) Slice 3 — Orderbuch/Spread/Liquidität + gelabeltes Trade-Tape.
 // Frontend liest m.book (bids/asks/spread) + m.trades vom Runner; fehlt es → „sammelt".
