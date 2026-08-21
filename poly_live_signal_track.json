@@ -1,14 +1,14 @@
 {
-"updatedAt": "2026-08-21T08:42:33.485012+00:00",
+"updatedAt": "2026-08-21T08:55:32.655083+00:00",
 "record": {
-"updatedAt": "2026-08-21T08:42:33.485012+00:00",
-"settled": 2946,
-"open": 54,
+"updatedAt": "2026-08-21T08:55:32.655083+00:00",
+"settled": 2964,
+"open": 36,
 "buckets": {
 "alle": {
-"n": 2946,
-"posRate": 0.463,
-"avgClv": -0.5,
+"n": 2964,
+"posRate": 0.464,
+"avgClv": -0.48,
 "avgClv30": 0.17
 },
 "sharp": {
@@ -18,41 +18,41 @@
 "avgClv30": -1.69
 },
 "valueZone": {
-"n": 1517,
+"n": 1533,
 "posRate": 0.517,
-"avgClv": -0.34,
+"avgClv": -0.32,
 "avgClv30": 0.32
 },
 "mature": {
-"n": 1845,
-"posRate": 0.448,
-"avgClv": -0.68,
-"avgClv30": 0.4
+"n": 1863,
+"posRate": 0.449,
+"avgClv": -0.65,
+"avgClv30": 0.41
 },
 "notChasing": {
-"n": 1781,
-"posRate": 0.487,
+"n": 1796,
+"posRate": 0.488,
 "avgClv": -1.44,
 "avgClv30": -0.16
 },
 "chasing": {
-"n": 1165,
+"n": 1168,
 "posRate": 0.427,
-"avgClv": 0.93,
-"avgClv30": 0.67
+"avgClv": 0.98,
+"avgClv30": 0.68
 },
 "bySize": {
-"25k+": {
-"n": 377,
-"posRate": 0.469,
-"avgClv": -0.31,
-"avgClv30": -0.77
-},
 "10-25k": {
-"n": 580,
-"posRate": 0.452,
-"avgClv": -2.26,
-"avgClv30": -1.0
+"n": 588,
+"posRate": 0.456,
+"avgClv": -2.15,
+"avgClv30": -0.83
+},
+"25k+": {
+"n": 381,
+"posRate": 0.467,
+"avgClv": -0.37,
+"avgClv30": -0.84
 },
 "2-5k": {
 "n": 1348,
@@ -61,67 +61,15 @@
 "avgClv30": 1.0
 },
 "5-10k": {
-"n": 641,
-"posRate": 0.463,
-"avgClv": -1.58,
-"avgClv30": 0.01
+"n": 647,
+"posRate": 0.464,
+"avgClv": -1.54,
+"avgClv30": -0.05
 }
 }
 }
 },
 "ledger": [
-{
-"sig": "atp-rehberg-nicod-2026-08-17|0x5d7639ed5fd3c5ebf0fc69d548e1046acd0f9168",
-"key": "atp-rehberg-nicod-2026-08-17",
-"side": "Max Hans Rehberg",
-"wallet": "0x5d7639ed5fd3c5ebf0fc69d548e1046acd0f9168",
-"usd": 95539,
-"league": "TENNIS",
-"entryPrice": 0.965,
-"totalUsd": 75530,
-"movePP": 19.0,
-"flags": {
-"valueZone": false,
-"mature": true,
-"notChasing": false,
-"sharp": false,
-"sizeBand": "25k+"
-},
-"firstTs": "2026-08-18T11:54:00.092070+00:00",
-"status": "settled",
-"latestPrice": 0.9995,
-"clvPP": 3.5,
-"clv30": 3.5,
-"updatedAt": "2026-08-18T12:08:26.162663+00:00",
-"finalClvPP": 3.5,
-"settledAt": "2026-08-18T12:08:26.162663+00:00"
-},
-{
-"sig": "atp-rehberg-nicod-2026-08-17|0x46ee4944d72cceaac9c19e08e0491cbad461ae61",
-"key": "atp-rehberg-nicod-2026-08-17",
-"side": "Max Hans Rehberg",
-"wallet": "0x46ee4944d72cceaac9c19e08e0491cbad461ae61",
-"usd": 14686,
-"league": "TENNIS",
-"entryPrice": 0.965,
-"totalUsd": 75530,
-"movePP": 19.0,
-"flags": {
-"valueZone": false,
-"mature": true,
-"notChasing": false,
-"sharp": false,
-"sizeBand": "10-25k"
-},
-"firstTs": "2026-08-18T11:54:00.092070+00:00",
-"status": "settled",
-"latestPrice": 0.9995,
-"clvPP": 3.5,
-"clv30": 3.5,
-"updatedAt": "2026-08-18T12:08:26.162663+00:00",
-"finalClvPP": 3.5,
-"settledAt": "2026-08-18T12:08:26.162663+00:00"
-},
 {
 "sig": "atp-rehberg-nicod-2026-08-17|0xb31e41965df4ab8014de4c4d8da9deff0a6ac120",
 "key": "atp-rehberg-nicod-2026-08-17",
@@ -72065,102 +72013,6 @@
 "settledAt": "2026-08-21T00:22:41.746074+00:00"
 },
 {
-"sig": "wnba-ind-dal-2026-08-20|0x1d2efa184454366ad3e79f3395d25396c20b896d",
-"key": "wnba-ind-dal-2026-08-20",
-"side": "Over",
-"wallet": "0x1d2efa184454366ad3e79f3395d25396c20b896d",
-"usd": 61327,
-"league": "WNBA",
-"entryPrice": 0.505,
-"totalUsd": 239986,
-"movePP": null,
-"flags": {
-"valueZone": true,
-"mature": true,
-"notChasing": true,
-"sharp": false,
-"sizeBand": "25k+"
-},
-"firstTs": "2026-08-21T00:07:43.067468+00:00",
-"status": "open",
-"latestPrice": 0.27,
-"clvPP": -23.5,
-"clv30": -23.5,
-"updatedAt": "2026-08-21T00:37:49.859797+00:00"
-},
-{
-"sig": "wnba-ind-dal-2026-08-20|0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
-"key": "wnba-ind-dal-2026-08-20",
-"side": "Under",
-"wallet": "0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
-"usd": 22615,
-"league": "WNBA",
-"entryPrice": 0.495,
-"totalUsd": 239986,
-"movePP": null,
-"flags": {
-"valueZone": true,
-"mature": true,
-"notChasing": true,
-"sharp": false,
-"sizeBand": "10-25k"
-},
-"firstTs": "2026-08-21T00:07:43.067468+00:00",
-"status": "open",
-"latestPrice": 0.73,
-"clvPP": 23.5,
-"clv30": 23.5,
-"updatedAt": "2026-08-21T00:37:49.859797+00:00"
-},
-{
-"sig": "wnba-ind-dal-2026-08-20|0xb915070c8007b1bdf4b1ef04e56b066a022e8da5",
-"key": "wnba-ind-dal-2026-08-20",
-"side": "Under",
-"wallet": "0xb915070c8007b1bdf4b1ef04e56b066a022e8da5",
-"usd": 21749,
-"league": "WNBA",
-"entryPrice": 0.495,
-"totalUsd": 239986,
-"movePP": null,
-"flags": {
-"valueZone": true,
-"mature": true,
-"notChasing": true,
-"sharp": false,
-"sizeBand": "10-25k"
-},
-"firstTs": "2026-08-21T00:07:43.067468+00:00",
-"status": "open",
-"latestPrice": 0.73,
-"clvPP": 23.5,
-"clv30": 23.5,
-"updatedAt": "2026-08-21T00:37:49.859797+00:00"
-},
-{
-"sig": "wnba-ind-dal-2026-08-20|0xdc41c39b95453c943174f369926018f6963bdd7e",
-"key": "wnba-ind-dal-2026-08-20",
-"side": "Under",
-"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-"usd": 11919,
-"league": "WNBA",
-"entryPrice": 0.495,
-"totalUsd": 239986,
-"movePP": null,
-"flags": {
-"valueZone": true,
-"mature": true,
-"notChasing": true,
-"sharp": false,
-"sizeBand": "10-25k"
-},
-"firstTs": "2026-08-21T00:07:43.067468+00:00",
-"status": "open",
-"latestPrice": 0.73,
-"clvPP": 23.5,
-"clv30": 23.5,
-"updatedAt": "2026-08-21T00:37:49.859797+00:00"
-},
-{
 "sig": "bra2-ath-crb-2026-08-20-exact-score|0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
 "key": "bra2-ath-crb-2026-08-20-exact-score",
 "side": "Athletic Club 2 - 2 CR Brasil",
@@ -76763,6 +76615,110 @@
 "settledAt": "2026-08-21T08:09:41.425088+00:00"
 },
 {
+"sig": "wnba-ind-dal-2026-08-20|0x1d2efa184454366ad3e79f3395d25396c20b896d",
+"key": "wnba-ind-dal-2026-08-20",
+"side": "Over",
+"wallet": "0x1d2efa184454366ad3e79f3395d25396c20b896d",
+"usd": 61327,
+"league": "WNBA",
+"entryPrice": 0.505,
+"totalUsd": 239986,
+"movePP": null,
+"flags": {
+"valueZone": true,
+"mature": true,
+"notChasing": true,
+"sharp": false,
+"sizeBand": "25k+"
+},
+"firstTs": "2026-08-21T00:07:43.067468+00:00",
+"status": "settled",
+"latestPrice": 0.27,
+"clvPP": -23.5,
+"clv30": -23.5,
+"updatedAt": "2026-08-21T00:37:49.859797+00:00",
+"finalClvPP": -23.5,
+"settledAt": "2026-08-21T08:55:32.655083+00:00"
+},
+{
+"sig": "wnba-ind-dal-2026-08-20|0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
+"key": "wnba-ind-dal-2026-08-20",
+"side": "Under",
+"wallet": "0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
+"usd": 22615,
+"league": "WNBA",
+"entryPrice": 0.495,
+"totalUsd": 239986,
+"movePP": null,
+"flags": {
+"valueZone": true,
+"mature": true,
+"notChasing": true,
+"sharp": false,
+"sizeBand": "10-25k"
+},
+"firstTs": "2026-08-21T00:07:43.067468+00:00",
+"status": "settled",
+"latestPrice": 0.73,
+"clvPP": 23.5,
+"clv30": 23.5,
+"updatedAt": "2026-08-21T00:37:49.859797+00:00",
+"finalClvPP": 23.5,
+"settledAt": "2026-08-21T08:55:32.655083+00:00"
+},
+{
+"sig": "wnba-ind-dal-2026-08-20|0xb915070c8007b1bdf4b1ef04e56b066a022e8da5",
+"key": "wnba-ind-dal-2026-08-20",
+"side": "Under",
+"wallet": "0xb915070c8007b1bdf4b1ef04e56b066a022e8da5",
+"usd": 21749,
+"league": "WNBA",
+"entryPrice": 0.495,
+"totalUsd": 239986,
+"movePP": null,
+"flags": {
+"valueZone": true,
+"mature": true,
+"notChasing": true,
+"sharp": false,
+"sizeBand": "10-25k"
+},
+"firstTs": "2026-08-21T00:07:43.067468+00:00",
+"status": "settled",
+"latestPrice": 0.73,
+"clvPP": 23.5,
+"clv30": 23.5,
+"updatedAt": "2026-08-21T00:37:49.859797+00:00",
+"finalClvPP": 23.5,
+"settledAt": "2026-08-21T08:55:32.655083+00:00"
+},
+{
+"sig": "wnba-ind-dal-2026-08-20|0xdc41c39b95453c943174f369926018f6963bdd7e",
+"key": "wnba-ind-dal-2026-08-20",
+"side": "Under",
+"wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+"usd": 11919,
+"league": "WNBA",
+"entryPrice": 0.495,
+"totalUsd": 239986,
+"movePP": null,
+"flags": {
+"valueZone": true,
+"mature": true,
+"notChasing": true,
+"sharp": false,
+"sizeBand": "10-25k"
+},
+"firstTs": "2026-08-21T00:07:43.067468+00:00",
+"status": "settled",
+"latestPrice": 0.73,
+"clvPP": 23.5,
+"clv30": 23.5,
+"updatedAt": "2026-08-21T00:37:49.859797+00:00",
+"finalClvPP": 23.5,
+"settledAt": "2026-08-21T08:55:32.655083+00:00"
+},
+{
 "sig": "nfl-lv-hou-2026-08-21|0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
 "key": "nfl-lv-hou-2026-08-21",
 "side": "Raiders",
@@ -76780,11 +76736,13 @@
 "sizeBand": "25k+"
 },
 "firstTs": "2026-08-21T00:07:43.067468+00:00",
-"status": "open",
+"status": "settled",
 "latestPrice": 0.0605,
 "clvPP": -48.5,
 "clv30": -32.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:42:33.485012+00:00",
+"finalClvPP": -48.5,
+"settledAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "nfl-lv-hou-2026-08-21|0x15a681d447124c90dbd85be526af18ca1611bf5d",
@@ -76804,11 +76762,13 @@
 "sizeBand": "25k+"
 },
 "firstTs": "2026-08-21T00:07:43.067468+00:00",
-"status": "open",
+"status": "settled",
 "latestPrice": 0.9395,
 "clvPP": 48.4,
 "clv30": 32.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:42:33.485012+00:00",
+"finalClvPP": 48.4,
+"settledAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "nfl-lv-hou-2026-08-21|0xabb89972b21b304c1bed2bf26f35c8741ac9bba3",
@@ -76828,11 +76788,13 @@
 "sizeBand": "5-10k"
 },
 "firstTs": "2026-08-21T00:07:43.067468+00:00",
-"status": "open",
+"status": "settled",
 "latestPrice": 0.9395,
 "clvPP": 48.4,
 "clv30": 32.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:42:33.485012+00:00",
+"finalClvPP": 48.4,
+"settledAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "nfl-lv-hou-2026-08-21|0x3dfb153c197d4c19d3b31c1ecd2c7b6860eeabaf",
@@ -76852,11 +76814,13 @@
 "sizeBand": "5-10k"
 },
 "firstTs": "2026-08-21T00:07:43.067468+00:00",
-"status": "open",
+"status": "settled",
 "latestPrice": 0.0605,
 "clvPP": -48.5,
 "clv30": -32.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:42:33.485012+00:00",
+"finalClvPP": -48.5,
+"settledAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "nfl-lv-hou-2026-08-21|0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
@@ -76876,11 +76840,13 @@
 "sizeBand": "5-10k"
 },
 "firstTs": "2026-08-21T00:22:41.746074+00:00",
-"status": "open",
+"status": "settled",
 "latestPrice": 0.0605,
 "clvPP": -33.5,
 "clv30": -32.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:42:33.485012+00:00",
+"finalClvPP": -33.5,
+"settledAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "nfl-lv-hou-2026-08-21|0x7d92fd69504bfd391162e1442cb784c0af408676",
@@ -76900,11 +76866,13 @@
 "sizeBand": "10-25k"
 },
 "firstTs": "2026-08-21T00:37:49.859797+00:00",
-"status": "open",
+"status": "settled",
 "latestPrice": 0.9395,
 "clvPP": 16.4,
 "clv30": 15.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:42:33.485012+00:00",
+"finalClvPP": 16.4,
+"settledAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "nfl-lv-hou-2026-08-21|0x46992d0e547e3822a9c28723f51bfa804ae4e03c",
@@ -76924,11 +76892,13 @@
 "sizeBand": "25k+"
 },
 "firstTs": "2026-08-21T01:55:06.902955+00:00",
-"status": "open",
+"status": "settled",
 "latestPrice": 0.9395,
 "clvPP": 1.4,
 "clv30": -5.5,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:42:33.485012+00:00",
+"finalClvPP": 1.4,
+"settledAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "dota2-ironwi-boombo-2026-08-20|0x6d20c35f65d9899b6d6b74f8466e824580f9a165",
@@ -76952,7 +76922,7 @@
 "latestPrice": 0.645,
 "clvPP": 5.0,
 "clv30": -21.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "dota2-ironwi-boombo-2026-08-20|0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
@@ -76976,7 +76946,7 @@
 "latestPrice": 0.355,
 "clvPP": -5.0,
 "clv30": 21.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "dota2-ironwi-boombo-2026-08-20|0x9f15613ebf1f36d4bc679e1211d1fc567cf9bdb3",
@@ -77000,7 +76970,7 @@
 "latestPrice": 0.645,
 "clvPP": 5.0,
 "clv30": -21.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "dota2-ironwi-boombo-2026-08-20|0x6ac5bb06a9eb05641fd5e82640268b92f3ab4b6e",
@@ -77024,7 +76994,7 @@
 "latestPrice": 0.355,
 "clvPP": -5.0,
 "clv30": 21.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "dota2-ironwi-boombo-2026-08-20|0xc35049bc7b6bd28a49a40b261466ca91aad63669",
@@ -77048,7 +77018,7 @@
 "latestPrice": 0.355,
 "clvPP": -26.0,
 "clv30": 7.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "itf-matsud-ya-2026-08-21|0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
@@ -77072,7 +77042,7 @@
 "latestPrice": 0.755,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "dota2-liquid-flc-2026-08-21|0x6d20c35f65d9899b6d6b74f8466e824580f9a165",
@@ -77096,7 +77066,7 @@
 "latestPrice": 0.535,
 "clvPP": -1.0,
 "clv30": -16.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "dota2-liquid-flc-2026-08-21|0x44c1dfe43260c94ed4f1d00de2e1f80fb113ebc1",
@@ -77120,7 +77090,7 @@
 "latestPrice": 0.465,
 "clvPP": 1.0,
 "clv30": 16.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "dota2-liquid-flc-2026-08-21|0xe16d3f2a5807999b358affd9445c3a09e45e5e30",
@@ -77144,7 +77114,7 @@
 "latestPrice": 0.465,
 "clvPP": 1.0,
 "clv30": 16.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "dota2-liquid-flc-2026-08-21|0x8f052cac064735ee560bd2f919ae8ee35ef0b18e",
@@ -77168,7 +77138,7 @@
 "latestPrice": 0.465,
 "clvPP": 1.0,
 "clv30": 16.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "dota2-liquid-flc-2026-08-21|0xc69bd5567b40ef4d11922eaa57e1f9be1c642076",
@@ -77192,7 +77162,7 @@
 "latestPrice": 0.465,
 "clvPP": 1.0,
 "clv30": 17.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "dota2-liquid-flc-2026-08-21|0xcd66d7ff1d5ddbb5e57d9eac844403550256664f",
@@ -77216,7 +77186,7 @@
 "latestPrice": 0.535,
 "clvPP": -1.0,
 "clv30": -17.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "dota2-liquid-flc-2026-08-21|0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -77240,7 +77210,7 @@
 "latestPrice": 0.465,
 "clvPP": -15.0,
 "clv30": 8.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "lol-edg-tt-2026-08-21|0x6ac5bb06a9eb05641fd5e82640268b92f3ab4b6e",
@@ -77260,11 +77230,13 @@
 "sizeBand": "10-25k"
 },
 "firstTs": "2026-08-21T07:04:27.484002+00:00",
-"status": "open",
-"latestPrice": 0.1355,
-"clvPP": -42.0,
+"status": "settled",
+"latestPrice": 0.0005,
+"clvPP": -55.5,
 "clv30": -10.5,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00",
+"finalClvPP": -55.5,
+"settledAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "lol-edg-tt-2026-08-21|0x1b47e9b128e6b671edebfb2cac23dd3efc40d814",
@@ -77284,11 +77256,13 @@
 "sizeBand": "10-25k"
 },
 "firstTs": "2026-08-21T07:04:27.484002+00:00",
-"status": "open",
-"latestPrice": 0.1355,
-"clvPP": -42.0,
+"status": "settled",
+"latestPrice": 0.0005,
+"clvPP": -55.5,
 "clv30": -10.5,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00",
+"finalClvPP": -55.5,
+"settledAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "lol-edg-tt-2026-08-21|0x07b1235ea85393b56b5b00a5988144f84ba66dfc",
@@ -77308,11 +77282,13 @@
 "sizeBand": "5-10k"
 },
 "firstTs": "2026-08-21T07:04:27.484002+00:00",
-"status": "open",
-"latestPrice": 0.8645,
-"clvPP": 42.0,
+"status": "settled",
+"latestPrice": 0.9995,
+"clvPP": 55.5,
 "clv30": 10.5,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00",
+"finalClvPP": 55.5,
+"settledAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "lol-edg-tt-2026-08-21|0x8c406c3275517b345e9481c49125e9a6629780df",
@@ -77332,11 +77308,13 @@
 "sizeBand": "5-10k"
 },
 "firstTs": "2026-08-21T07:04:27.484002+00:00",
-"status": "open",
-"latestPrice": 0.8645,
-"clvPP": 42.0,
+"status": "settled",
+"latestPrice": 0.9995,
+"clvPP": 55.5,
 "clv30": 10.5,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00",
+"finalClvPP": 55.5,
+"settledAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "dota2-liquid-flc-2026-08-21|0x547f2917d51f2e63ab382dcf641d4e0240162937",
@@ -77360,7 +77338,7 @@
 "latestPrice": 0.535,
 "clvPP": 23.0,
 "clv30": -3.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "lol-edg-tt-2026-08-21|0xdd882a70680633a75516f6ed5fce443e2d96dadb",
@@ -77380,11 +77358,13 @@
 "sizeBand": "5-10k"
 },
 "firstTs": "2026-08-21T07:22:56.799651+00:00",
-"status": "open",
-"latestPrice": 0.1355,
-"clvPP": -45.9,
+"status": "settled",
+"latestPrice": 0.0005,
+"clvPP": -59.5,
 "clv30": -31.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00",
+"finalClvPP": -59.5,
+"settledAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "dota2-liquid-flc-2026-08-21|0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
@@ -77408,7 +77388,7 @@
 "latestPrice": 0.465,
 "clvPP": -26.0,
 "clv30": -8.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "lol-edg-tt-2026-08-21|0x6e9f61710b1703bb7e0ef7ebe1323c443a1d0eae",
@@ -77428,11 +77408,13 @@
 "sizeBand": "10-25k"
 },
 "firstTs": "2026-08-21T07:53:57.667040+00:00",
-"status": "open",
-"latestPrice": 0.8645,
-"clvPP": 15.0,
+"status": "settled",
+"latestPrice": 0.9995,
+"clvPP": 28.5,
 "clv30": 6.5,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00",
+"finalClvPP": 28.5,
+"settledAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "lol-edg-tt-2026-08-21|0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -77452,11 +77434,13 @@
 "sizeBand": "10-25k"
 },
 "firstTs": "2026-08-21T07:53:57.667040+00:00",
-"status": "open",
-"latestPrice": 0.8645,
-"clvPP": 15.0,
+"status": "settled",
+"latestPrice": 0.9995,
+"clvPP": 28.5,
 "clv30": 6.5,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00",
+"finalClvPP": 28.5,
+"settledAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "cs2-blackp-rustec-2026-08-21|0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
@@ -77477,10 +77461,10 @@
 },
 "firstTs": "2026-08-21T08:09:41.425088+00:00",
 "status": "open",
-"latestPrice": 0.655,
-"clvPP": 24.0,
+"latestPrice": 0.675,
+"clvPP": 26.0,
 "clv30": 24.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "cs2-blackp-rustec-2026-08-21|0x58a382757ceb02e6f78fecb643f944c155195336",
@@ -77501,10 +77485,10 @@
 },
 "firstTs": "2026-08-21T08:09:41.425088+00:00",
 "status": "open",
-"latestPrice": 0.345,
-"clvPP": -24.0,
+"latestPrice": 0.325,
+"clvPP": -26.0,
 "clv30": -24.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "cs2-blackp-rustec-2026-08-21|0x38181f43e5802391522583a82d05893df3039797",
@@ -77525,10 +77509,10 @@
 },
 "firstTs": "2026-08-21T08:09:41.425088+00:00",
 "status": "open",
-"latestPrice": 0.345,
-"clvPP": -24.0,
+"latestPrice": 0.325,
+"clvPP": -26.0,
 "clv30": -24.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "val-drx1-spe-2026-08-21|0x24189b6c233a6b9a5365fe99b380673e900766c8",
@@ -77549,10 +77533,10 @@
 },
 "firstTs": "2026-08-21T08:09:41.425088+00:00",
 "status": "open",
-"latestPrice": 0.815,
-"clvPP": 22.5,
+"latestPrice": 0.855,
+"clvPP": 26.5,
 "clv30": 22.5,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "val-drx1-spe-2026-08-21|0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
@@ -77573,10 +77557,10 @@
 },
 "firstTs": "2026-08-21T08:09:41.425088+00:00",
 "status": "open",
-"latestPrice": 0.185,
-"clvPP": -22.5,
+"latestPrice": 0.145,
+"clvPP": -26.5,
 "clv30": -22.5,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "val-jdg-blg-2026-08-21|0x65c18d740c8246af3353741c0b32e4b6da552988",
@@ -77597,10 +77581,10 @@
 },
 "firstTs": "2026-08-21T08:09:41.425088+00:00",
 "status": "open",
-"latestPrice": 0.655,
-"clvPP": 26.0,
+"latestPrice": 0.675,
+"clvPP": 28.0,
 "clv30": 26.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "val-jdg-blg-2026-08-21|0x4f0eaecdea458c5ec4a248ce6a8443975bae0200",
@@ -77621,10 +77605,10 @@
 },
 "firstTs": "2026-08-21T08:09:41.425088+00:00",
 "status": "open",
-"latestPrice": 0.345,
-"clvPP": -26.0,
+"latestPrice": 0.325,
+"clvPP": -28.0,
 "clv30": -26.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "cs2-npg-33-2026-08-21|0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
@@ -77645,10 +77629,10 @@
 },
 "firstTs": "2026-08-21T08:09:41.425088+00:00",
 "status": "open",
-"latestPrice": 0.815,
-"clvPP": 18.5,
+"latestPrice": 0.84,
+"clvPP": 21.0,
 "clv30": 18.5,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "cs2-npg-33-2026-08-21|0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
@@ -77669,10 +77653,10 @@
 },
 "firstTs": "2026-08-21T08:09:41.425088+00:00",
 "status": "open",
-"latestPrice": 0.185,
-"clvPP": -18.5,
+"latestPrice": 0.16,
+"clvPP": -21.0,
 "clv30": -18.5,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "itf-pop-nag-2026-08-21|0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -77693,10 +77677,10 @@
 },
 "firstTs": "2026-08-21T08:09:41.425088+00:00",
 "status": "open",
-"latestPrice": 0.755,
-"clvPP": 5.0,
+"latestPrice": 0.435,
+"clvPP": -27.0,
 "clv30": 5.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "itf-pop-nag-2026-08-21|0x5f659bccbc353dbf7bcdffdee73bee60bb482036",
@@ -77717,10 +77701,10 @@
 },
 "firstTs": "2026-08-21T08:09:41.425088+00:00",
 "status": "open",
-"latestPrice": 0.245,
-"clvPP": -5.0,
+"latestPrice": 0.565,
+"clvPP": 27.0,
 "clv30": -5.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "itf-pop-nag-2026-08-21|0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
@@ -77741,10 +77725,10 @@
 },
 "firstTs": "2026-08-21T08:09:41.425088+00:00",
 "status": "open",
-"latestPrice": 0.755,
-"clvPP": 5.0,
+"latestPrice": 0.435,
+"clvPP": -27.0,
 "clv30": 5.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "itf-pie-mettrau-2026-08-21|0xe1dd4ef6bf7c060e7a7fd682a48f5f62d9b9fb67",
@@ -77765,10 +77749,10 @@
 },
 "firstTs": "2026-08-21T08:09:41.425088+00:00",
 "status": "open",
-"latestPrice": 0.525,
-"clvPP": 16.0,
+"latestPrice": 0.355,
+"clvPP": -1.0,
 "clv30": 16.0,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "lol-edg-tt-2026-08-21|0x751be7122f148fba5aa2021ace98edc2001873fd",
@@ -77788,11 +77772,13 @@
 "sizeBand": "10-25k"
 },
 "firstTs": "2026-08-21T08:24:41.094096+00:00",
-"status": "open",
-"latestPrice": 0.8645,
-"clvPP": 8.5,
-"clv30": null,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"status": "settled",
+"latestPrice": 0.9995,
+"clvPP": 22.0,
+"clv30": 22.0,
+"updatedAt": "2026-08-21T08:55:32.655083+00:00",
+"finalClvPP": 22.0,
+"settledAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "val-drx1-spe-2026-08-21|0xfdc0bd67fbd71aa8edd00121eb2a7fcbddc34b85",
@@ -77813,10 +77799,10 @@
 },
 "firstTs": "2026-08-21T08:24:41.094096+00:00",
 "status": "open",
-"latestPrice": 0.815,
-"clvPP": 0.0,
-"clv30": null,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"latestPrice": 0.855,
+"clvPP": 4.0,
+"clv30": 4.0,
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "itf-juhas-popko-2026-08-21|0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
@@ -77837,10 +77823,10 @@
 },
 "firstTs": "2026-08-21T08:24:41.094096+00:00",
 "status": "open",
-"latestPrice": 0.645,
-"clvPP": -4.0,
-"clv30": null,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"latestPrice": 0.785,
+"clvPP": 10.0,
+"clv30": 10.0,
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "itf-juhas-popko-2026-08-21|0x6982049c65e98606f65a0ce71fdb9b61296da165",
@@ -77861,10 +77847,10 @@
 },
 "firstTs": "2026-08-21T08:24:41.094096+00:00",
 "status": "open",
-"latestPrice": 0.355,
-"clvPP": 4.0,
-"clv30": null,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"latestPrice": 0.215,
+"clvPP": -10.0,
+"clv30": -10.0,
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "itf-astakho-zolotar-2026-08-21|0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
@@ -77885,10 +77871,10 @@
 },
 "firstTs": "2026-08-21T08:24:41.094096+00:00",
 "status": "open",
-"latestPrice": 0.4,
-"clvPP": 5.5,
-"clv30": null,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"latestPrice": 0.485,
+"clvPP": 14.0,
+"clv30": 14.0,
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "dota2-liquid-flc-2026-08-21|0x5257aa84944804bbb0c718814ebebeeafaca3e2a",
@@ -77912,7 +77898,7 @@
 "latestPrice": 0.535,
 "clvPP": 0.0,
 "clv30": null,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "cs2-blackp-rustec-2026-08-21|0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
@@ -77933,10 +77919,10 @@
 },
 "firstTs": "2026-08-21T08:42:33.485012+00:00",
 "status": "open",
-"latestPrice": 0.655,
-"clvPP": 0.0,
+"latestPrice": 0.675,
+"clvPP": 2.0,
 "clv30": null,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 },
 {
 "sig": "itf-pie-mettrau-2026-08-21|0xc2930286341961a77363298e5b63271530f5fac3",
@@ -77957,10 +77943,60 @@
 },
 "firstTs": "2026-08-21T08:42:33.485012+00:00",
 "status": "open",
-"latestPrice": 0.475,
+"latestPrice": 0.645,
+"clvPP": 17.0,
+"clv30": null,
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
+},
+{
+"sig": "lol-edg-tt-2026-08-21|0x52ecea7b3159f09db589e4f4ee64872fd0bba6f3",
+"key": "lol-edg-tt-2026-08-21",
+"side": "EDward Gaming",
+"wallet": "0x52ecea7b3159f09db589e4f4ee64872fd0bba6f3",
+"usd": 43532,
+"league": "ESPORTS",
+"entryPrice": 0.9995,
+"totalUsd": 405670,
+"movePP": 22.0,
+"flags": {
+"valueZone": false,
+"mature": true,
+"notChasing": false,
+"sharp": false,
+"sizeBand": "25k+"
+},
+"firstTs": "2026-08-21T08:55:32.655083+00:00",
+"status": "settled",
+"latestPrice": 0.9995,
+"clvPP": 0.0,
+"clv30": 0.0,
+"updatedAt": "2026-08-21T08:55:32.655083+00:00",
+"finalClvPP": 0.0,
+"settledAt": "2026-08-21T08:55:32.655083+00:00"
+},
+{
+"sig": "val-jdg-blg-2026-08-21|0x9fad8308ef6b6ed5320e53a290a3bd4ad91f5a9f",
+"key": "val-jdg-blg-2026-08-21",
+"side": "JD Gaming",
+"wallet": "0x9fad8308ef6b6ed5320e53a290a3bd4ad91f5a9f",
+"usd": 2025,
+"league": "ESPORTS",
+"entryPrice": 0.675,
+"totalUsd": 24315,
+"movePP": 12.5,
+"flags": {
+"valueZone": true,
+"mature": false,
+"notChasing": false,
+"sharp": false,
+"sizeBand": "2-5k"
+},
+"firstTs": "2026-08-21T08:55:32.655083+00:00",
+"status": "open",
+"latestPrice": 0.675,
 "clvPP": 0.0,
 "clv30": null,
-"updatedAt": "2026-08-21T08:42:33.485012+00:00"
+"updatedAt": "2026-08-21T08:55:32.655083+00:00"
 }
 ]
 }
