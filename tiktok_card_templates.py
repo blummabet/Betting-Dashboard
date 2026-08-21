@@ -1731,3 +1731,188 @@ body {{ background:#0a0e18; display:flex; align-items:center; justify-content:ce
 </body></html>"""
 
 
+
+# ── Money-Map-Card (21.08.2026, Lucas) ────────────────────────────────────────
+# Social-Card (360×640, CocoBet-Look) im Stil der Dashboard-Money-Map: Betfair-Geld (€)
+# und Polymarket-Geld ($) auf einer Heim⟷Auswärts-Achse, Blasengröße = Geldmenge,
+# blaue Linie = Pinnacle-Fairwert. NUR mmStrong-Fälle posten (starker Konsens ODER
+# starke Divergenz). Instagram-tauglich → Quoten/%/Geld erlaubt (Lucas: „poste auf IG,
+# dort nicht so streng"). Reuse der echten money-map.js-Achsen-Mathematik.
+import math as _mm_math
+
+def _mmc_usd(v):
+    v = float(v or 0)
+    if v >= 1e6: return "$%.2fM" % (v/1e6)
+    if v >= 1e3: return ("$%.0fK" % (v/1e3)) if v >= 1e4 else ("$%.1fK" % (v/1e3))
+    return "$%d" % round(v)
+
+def _mmc_eur(v):
+    v = float(v or 0)
+    if v >= 1e6: return "€%.2fM" % (v/1e6)
+    if v >= 1e3: return ("€%.0fK" % (v/1e3)) if v >= 1e4 else ("€%.1fK" % (v/1e3))
+    return "€%d" % round(v)
+
+def _mmc_clamp(v, a, b): return a if v < a else b if v > b else v
+def _mmc_dia(m): return max(30, min(68, 20 + _mm_math.sqrt(float(m or 0))/8))
+def _mmc_pos_share(side, sp):
+    if side == "draw" or side is None: return 50.0
+    d = 1 if side == "away" else -1
+    return _mmc_clamp(50 + d*((float(sp or 33))-33)*0.9, 15, 85)
+def _mmc_pos_pinn(pn):
+    if not pn: return None
+    return _mmc_clamp(50 + ((float(pn.get("away") or 0))-(float(pn.get("home") or 0)))*90, 15, 85)
+
+_MMC_CSS = """
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#0a0e18; display:flex; align-items:center; justify-content:center;
+  min-height:100vh; font-family:-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; }
+.card { width:360px; height:640px;
+  background:
+    radial-gradient(circle at 50% 20%, rgba(RGB,0.12) 0%, transparent 55%),
+    linear-gradient(180deg, #0a0e18 0%, #080d18 100%);
+  background-image:
+    radial-gradient(circle at 50% 20%, rgba(RGB,0.12) 0%, transparent 55%),
+    linear-gradient(rgba(255,255,255,0.012) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255,255,255,0.012) 1px, transparent 1px);
+  background-size: auto, 24px 24px, 24px 24px;
+  border-radius:24px; padding:22px 20px 18px; position:relative; overflow:hidden;
+  display:flex; flex-direction:column; border:1px solid rgba(255,255,255,0.04); }
+.top { display:flex; align-items:center; justify-content:space-between; margin-bottom:14px; }
+.brand-top { font-size:11px; font-weight:800; letter-spacing:3px; color:#f5c518; }
+.badge-top { font-size:10px; font-weight:700; letter-spacing:1px; color:ACCENT;
+  background:rgba(RGB,0.10); border:1px solid rgba(RGB,0.35); border-radius:18px; padding:5px 12px; }
+.date-row { display:flex; justify-content:space-between; align-items:baseline;
+  padding-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.06); margin-bottom:14px; }
+.date-main { font-size:16px; font-weight:900; color:#fff; letter-spacing:-0.3px; }
+.date-sub { font-size:10px; color:rgba(255,255,255,0.45); font-weight:700;
+  text-transform:uppercase; letter-spacing:1.2px; }
+.mid { flex:1; display:flex; flex-direction:column; justify-content:center; }
+.teams { text-align:center; margin-bottom:6px; }
+.team .tn { font-size:22px; font-weight:900; color:#fff; letter-spacing:-0.3px; }
+.vs { font-size:11px; font-weight:700; color:rgba(255,255,255,0.40);
+  text-transform:uppercase; letter-spacing:2px; margin:5px 0; }
+.reading { text-align:center; font-size:12.5px; line-height:1.55; color:rgba(255,255,255,0.62);
+  margin:4px 6px 6px; }
+.legend { display:flex; justify-content:center; gap:14px; flex-wrap:wrap; margin-top:14px; }
+.legend span { font-size:10px; font-weight:700; color:rgba(255,255,255,0.5);
+  display:inline-flex; align-items:center; gap:5px; }
+.legend i { width:9px; height:9px; border-radius:50%; display:inline-block; }
+.legend i.lbf { background:#eab938; } .legend i.lpoly { background:#22a06b; }
+.legend i.lpinn { width:3px; height:11px; border-radius:2px; background:#3987e5; }
+.mm-axis { position:relative; height:150px; margin:16px 2px 6px; }
+.mm-ends { position:absolute; top:0; left:0; right:0; display:flex; justify-content:space-between;
+  font-size:12px; font-weight:800; color:#c3ccdb; }
+.mm-lane { position:absolute; left:14%; right:6%; height:2px; border-radius:2px;
+  background:linear-gradient(90deg,rgba(154,164,177,.08),rgba(154,164,177,.28),rgba(154,164,177,.08)); }
+.mm-lane.mm-lbf { top:64px } .mm-lane.mm-lpoly { top:112px }
+.mm-ll { position:absolute; left:0; transform:translateY(-50%); font-size:10px; font-weight:800; }
+.mm-ll.mm-lbf { top:64px; color:#eab938 } .mm-ll.mm-lpoly { top:112px; color:#22a06b }
+.mm-pinn { position:absolute; top:44px; transform:translateX(-50%); text-align:center; z-index:1 }
+.mm-pinn i { display:block; width:2px; height:86px; background:linear-gradient(180deg,#3987e5,rgba(57,135,229,.25));
+  margin:0 auto; border-radius:2px; box-shadow:0 0 10px rgba(57,135,229,.6); }
+.mm-pinn .mm-d { width:9px; height:9px; background:#3987e5; transform:rotate(45deg);
+  margin:-3px auto 0; border-radius:2px; }
+.mm-pl { position:absolute; top:-18px; left:50%; transform:translateX(-50%); font-size:9px;
+  color:#8fc0ff; font-weight:800; white-space:nowrap; }
+.mm-col { position:absolute; top:60px; height:60px; width:3px; transform:translateX(-50%); border-radius:3px;
+  background:linear-gradient(180deg,rgba(46,160,67,0),rgba(46,160,67,.4),rgba(46,160,67,0)); z-index:0 }
+.mm-bub { position:absolute; transform:translate(-50%,-50%); border-radius:50%; display:grid;
+  place-items:center; font-size:10px; font-weight:800; color:#0a0e14;
+  box-shadow:0 4px 14px -4px rgba(0,0,0,.7); border:2px solid rgba(255,255,255,.16); z-index:2 }
+.mm-bub.mm-bf { background:radial-gradient(circle at 35% 30%,#f6d477,#eab938) }
+.mm-bub.mm-poly { background:radial-gradient(circle at 35% 30%,#54cf9a,#22a06b); color:#04140d }
+.mm-bub.mm-poly-est { border-style:dashed; border-color:rgba(84,207,154,.7); opacity:.92 }
+.footer { display:flex; align-items:center; gap:9px;
+  border-top:1px solid rgba(255,255,255,0.06); padding-top:12px; }
+.verd { font-size:14px; font-weight:900; color:ACCENT; }
+.vsub { font-size:11px; color:rgba(255,255,255,0.45); font-weight:600; }
+.src { margin-left:auto; font-size:10.5px; font-weight:800; color:rgba(255,255,255,0.5);
+  background:rgba(255,255,255,0.04); border:1px solid rgba(255,255,255,0.08);
+  border-radius:20px; padding:3px 9px; }
+"""
+
+def money_map_card(
+    league_label: str,
+    date_label: str,
+    home: str,
+    away: str,
+    verdict: str,               # "konsens" | "uneinig"
+    strong: bool,
+    betfair: dict | None,       # {side,name,sharePct,eur}
+    poly: dict | None,          # {side,name,sharePct,usd,src}
+    pinn: dict | None,          # {fav,home,draw,away} oder None
+    n_sources: int = 0,
+) -> str:
+    """Money-Map-Social-Card (360×640). Betfair-€- & Poly-$-Blase auf Heim⟷Auswärts-Achse,
+    Pinnacle-Linie als scharfer Anker. Nur für mmStrong-Fälle gedacht."""
+    bf, pl, pn = betfair, poly, pinn
+    kon = verdict == "konsens"; div = verdict == "uneinig"
+    accent = "#3fb950" if kon else ("#e3b341" if div else "#8a95ad")
+    rgb    = "63,185,80" if kon else ("227,179,65" if div else "138,149,173")
+
+    bfPos = _mmc_pos_share(bf.get("side"), bf.get("sharePct")) if bf else None
+    pPos  = _mmc_pos_share(pl.get("side"), pl.get("sharePct")) if pl else None
+    pnPos = _mmc_pos_pinn(pn)
+
+    bub = ""
+    if bf and pl and bfPos is not None and pPos is not None and abs(bfPos-pPos) < 8:
+        bub += '<div class="mm-col" style="left:%.1f%%"></div>' % ((bfPos+pPos)/2)
+    if pn and pnPos is not None:
+        pf = pn.get("fav"); pp = round((float(pn.get(pf) or 0))*100)
+        bub += ('<div class="mm-pinn" style="left:%.1f%%"><span class="mm-pl">Pinnacle %d%%</span>'
+                '<i></i><div class="mm-d"></div></div>') % (pnPos, pp)
+    if bf and bfPos is not None:
+        d = _mmc_dia(bf.get("eur"))
+        bub += '<div class="mm-bub mm-bf" style="left:%.1f%%;top:64px;width:%.0fpx;height:%.0fpx">%s</div>' % (
+            bfPos, d, d, _mmc_eur(bf.get("eur")))
+    if pl and pPos is not None:
+        d2 = _mmc_dia(pl.get("usd")); est = " mm-poly-est" if pl.get("src") == "upcoming" else ""
+        bub += '<div class="mm-bub mm-poly%s" style="left:%.1f%%;top:112px;width:%.0fpx;height:%.0fpx">%s</div>' % (
+            est, pPos, d2, d2, _mmc_usd(pl.get("usd")))
+
+    import html as _mmc_html
+    _en = lambda s: _mmc_html.escape(str("" if s is None else s))
+    def _favname(x): return _en((x.get("name") if x else "") or "")
+    if kon:
+        vtxt = "✅ KONSENS" if strong else "✅ knapp einig"
+        vsub = "beide Märkte einig" if strong else "knapp einig"
+        reading = ("Betfair-Geld und Polymarket-Geld ziehen beide auf <b>%s</b>%s."
+                   % (_favname(bf), " — Pinnacle bestätigt die Linie" if pn else "")) if strong \
+                  else "Beide Märkte tendieren leicht auf dieselbe Seite — schwaches Signal."
+    elif div:
+        vtxt = "⚠️ DIVERGENZ" if strong else "◽ Münzwurf"
+        vsub = "Geld & scharfe Linie uneinig" if strong else "kein klares Signal"
+        reading = ("Das Geld ist gespalten: Betfair auf <b>%s</b>, Polymarket auf <b>%s</b>."
+                   % (_favname(bf), _favname(pl))) if strong \
+                  else "Betfair und Polymarket sind sich uneinig, beide nahe 50/50."
+    else:
+        vtxt = "—"; vsub = ""; reading = ""
+
+    css = _MMC_CSS.replace("RGB", rgb).replace("ACCENT", accent)
+    return """<!DOCTYPE html><html lang="de"><head><meta charset="UTF-8"><title>Money Map</title>
+<style>%s</style></head><body>
+<div class="card">
+  <div class="top"><div class="brand-top">COCOBET</div><div class="badge-top">💰 MONEY MAP</div></div>
+  <div class="date-row"><div class="date-main">%s</div><div class="date-sub">%s</div></div>
+  <div class="mid">
+    <div class="teams"><div class="team"><span class="tn">%s</span></div>
+      <div class="vs">vs</div><div class="team"><span class="tn">%s</span></div></div>
+    <div class="reading">%s</div>
+    <div class="mm-axis">
+      <div class="mm-ends"><span>%s</span><span>%s</span></div>
+      <div class="mm-lane mm-lbf"></div>
+      <div class="mm-lane mm-lpoly"%s></div>
+      %s
+    </div>
+    <div class="legend"><span><i class="lbf"></i>Betfair-Geld</span>
+      <span><i class="lpoly"></i>Polymarket-Geld</span>
+      <span><i class="lpinn"></i>Pinnacle-Fairwert</span></div>
+  </div>
+  <div class="footer"><span class="verd">%s</span><span class="vsub">%s</span>
+    <span class="src">%d / 3 Quellen</span></div>
+</div></body></html>""" % (
+        css, _en(league_label or ""), _en(date_label or ""),
+        _en(home), _en(away), reading,
+        _en(home), _en(away),
+        ("" if pl else ' style="opacity:.4"'),
+        bub, vtxt, vsub, int(n_sources or 0))

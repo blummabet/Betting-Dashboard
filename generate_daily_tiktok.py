@@ -29,7 +29,7 @@ import urllib.request
 from datetime import date, datetime, timezone
 from pathlib import Path
 
-from tiktok_card_templates import hook_card, info_card, bizarre_info_card, player_pick_card, daily_picks_card, match_preview_card, match_review_card, streak_card, player_streak_card
+from tiktok_card_templates import hook_card, info_card, bizarre_info_card, player_pick_card, daily_picks_card, match_preview_card, match_review_card, streak_card, player_streak_card, money_map_card
 from tiktok_story_plan import get_story_for_date
 from bizarre_quote_picker import get_daily_bizarre_card
 from player_pick_picker import get_daily_player_pick, save_dedup as save_player_dedup, _load_dedup as _load_player_dedup
@@ -176,6 +176,12 @@ SEND_DAILY_PICKS = os.environ.get("SEND_DAILY_PICKS", "").lower() == "true"
 SEND_PREVIEWS    = os.environ.get("SEND_PREVIEWS", "true").lower() == "true"
 SEND_REVIEWS     = os.environ.get("SEND_REVIEWS", "true").lower() == "true"   # Vortags-Nachbericht
 SEND_STREAKS     = os.environ.get("SEND_STREAKS", "true").lower() == "true"   # Serien-Spotlight (gegated)
+# 21.08.2026 (Lucas): Money-Map-Card (Betfair-€ + Poly-$ + Pinnacle je Spiel). money_map.json ist
+# GLOBAL (EPL/LaLiga/MLS zusammen) → nur in EINEM Lauf generieren (SEND_MONEYMAP=1 nur im liga-Preview-
+# Step), sonst entsteht dieselbe Card 3× (liga/mls/wm). Nur mmStrong-Fälle (starker Konsens/Divergenz).
+SEND_MONEYMAP    = os.environ.get("SEND_MONEYMAP", "false").lower() == "true"
+MONEYMAP_FILE    = BASE / "money_map.json"
+MONEYMAP_DEDUP   = BASE / "money_map_sent.json"   # matchId-Dedup, damit ein Spiel nicht 3 Tage in Folge kommt
 # 30.06.2026 (Lucas: „Killer-Stat brauchen wir nicht, ist komisch"): Default AUS. Reviews/Previews +
 # Serien sind der Content; Killer-Stat nur noch opt-in via SEND_KILLER_STAT=true.
 SEND_KILLER_STAT = os.environ.get("SEND_KILLER_STAT", "").lower() == "true"
@@ -868,16 +874,35 @@ def build_streak_cards(today_iso: str, dedup: dict) -> list:
     return [(f"streak_{s.get('teamId')}_{s.get('type')}", png, caption)]
 
 
+# 21.08.2026 (Lucas: „Label-Fix"): Kopfzeile der Preview/Review-Cards dataset-aware.
+# WM → Turnier-Phase; Klub-Ligen → echter Liga-Name (statt hartkodiert „WM 2026 · Gruppenphase").
+_LEAGUE_LABELS = {
+    "ENG": "Premier League", "ESP": "LaLiga", "GER": "Bundesliga",
+    "ITA": "Serie A", "FRA": "Ligue 1", "MLS": "Major League Soccer",
+}
+
+def _season_phase_for(pkey: str) -> str:
+    """date-sub links auf der Card. WM behält die Turnier-Phase; Klub-Ligen zeigen den Liga-Namen
+    (aus dem gkey-Präfix des pkey, z.B. \"ENG-1-42-1346\" → Premier League)."""
+    if D.active_dataset() == "wm":
+        return "WM 2026 · Gruppenphase"
+    gkey = (pkey or "").split("-")[0]
+    return _LEAGUE_LABELS.get(gkey, gkey or "Liga")
+
+
 def _iter_match_contexts(wm: dict):
     """Yields (fx, teams, group_label, pkey) über Gruppenspiele + bothResolved KO-Spiele.
     29.06.2026 (Lucas: „keine Review/Preview, aber Killer-Stat"): in der KO-Phase liegen die Spiele in
     koFixtures statt groups → Preview/Review fanden nichts → Killer-Stat-Fallback feuerte. KO: globale
     Team-Union (KO-Fixtures haben nur IDs), roundLabel statt Gruppe, pkey wie generate_wm_picks (KO-…)."""
+    _is_wm = D.active_dataset() == "wm"
     for gkey, gdata in (wm.get("groups") or {}).items():
         teams = {t["id"]: t for t in gdata.get("teams", [])}
         for fx in gdata.get("fixtures", []):
-            yield fx, teams, f"Gruppe {gkey} · ST {fx.get('matchday')}", \
-                f"{gkey}-{fx.get('matchday')}-{fx['home']}-{fx['away']}"
+            _md = fx.get('matchday')
+            _glabel = (f"Gruppe {gkey} · ST {_md}" if _is_wm else f"Spieltag {_md}")
+            yield fx, teams, _glabel, \
+                f"{gkey}-{_md}-{fx['home']}-{fx['away']}"
     all_teams = {}
     for gd in (wm.get("groups") or {}).values():
         for t in gd.get("teams", []):
@@ -888,6 +913,114 @@ def _iter_match_contexts(wm: dict):
         rnd = fx.get("round") or "KO"
         yield fx, all_teams, f"🏆 {fx.get('roundLabel') or rnd}", \
             f"KO-{rnd}-{fx['home']}-{fx['away']}"
+
+
+# 21.08.2026 (Lucas): TikTok-Content an die Picks haengen — Preview UND Review nur fuer Spiele mit
+# sichtbarem BET/ABWÄGEN-Pick (alle Ligen). Filter 1:1 wie tiktok_story_plan.py (kein trackingExcluded/
+# synthetic). Aktuell BET+ABWÄGEN (es gibt keine BET); sobald mehr BET, kann man auf BET-only gehen.
+def _active_pick_for(wm: dict, pkey: str):
+    picks = [p for p in (wm.get("picks") or {}).get(pkey, [])
+             if p.get("verdict") in ("BET", "ABWÄGEN")
+             and not p.get("trackingExcluded") and not p.get("synthetic")]
+    if not picks:
+        return None
+    picks.sort(key=lambda p: (p.get("verdict") != "BET", -(p.get("edgePP") or 0)))
+    return picks[0]
+
+def _preview_story_from_pick(pick: dict, name_h: str, name_a: str) -> str:
+    """Kurzer Story-Hook aus dem Pick, wenn kein aiPreview vorliegt (die Facts tragen die Analyse)."""
+    mkt = pick.get("market") or "diesem Markt"
+    if pick.get("verdict") == "BET":
+        return (f"Unser Modell findet hier Value: <strong>{mkt}</strong>. Die Zahlen sagen, der Markt "
+                f"hat {name_h} vs {name_a} noch nicht sauber eingepreist \u2014 genau da schauen wir hin.")
+    return (f"{name_h} vs {name_a} steht auf der Beobachtungsliste: <strong>{mkt}</strong> ist einen Blick "
+            f"wert. Knapp, aber die Signale deuten eine Richtung an.")
+
+
+def _kickoff_label(fx: dict) -> str:
+    """Anpfiff-Zeile. WM hat vorformatiertes fx['time']; Klub-Ligen liefern nur fx['kickoff']
+    (ISO/UTC) → nach Wien (CEST UTC+2) wie der Dashboard-Renderer. Fallback: leer → nur Datum."""
+    t = (fx.get("time") or "").strip()
+    if t:
+        return f"{t} Uhr"
+    ko = fx.get("kickoff")
+    if ko:
+        try:
+            from datetime import datetime as _dt, timedelta as _td
+            d = _dt.fromisoformat(str(ko).replace("Z", "+00:00"))
+            d = d + _td(hours=2)   # UTC → Wien (CEST), konsistent mit wm2026-renderer
+            return f"{d.hour:02d}:{d.minute:02d} Uhr"
+        except Exception:
+            pass
+    return ""
+
+
+def _mm_load_dedup():
+    try:
+        return json.loads(MONEYMAP_DEDUP.read_text(encoding="utf-8"))
+    except Exception:
+        return {"history": []}
+
+def _mm_save_dedup(state):
+    try:
+        MONEYMAP_DEDUP.write_text(json.dumps(state, ensure_ascii=False, indent=2), encoding="utf-8")
+    except Exception as e:
+        print(f"\u26a0\ufe0f  money_map_sent.json schreiben fehlgeschlagen: {e}")
+
+def build_money_map_cards(today_iso: str):
+    """Money-Map-Cards nur fuer posten-wuerdige Spiele: mmStrong (starker Konsens ODER starke Divergenz),
+    Betfair+Poly vorhanden. matchId-Dedup (4 Tage) gegen Wiederholung ueber Tage. Gibt (produced, new_ids)
+    zurueck; Dedup wird erst nach erfolgreichem Telegram-Send geschrieben."""
+    produced, new_ids = [], []
+    if not MONEYMAP_FILE.exists():
+        print("\U0001f4b0 money_map.json fehlt \u2014 keine Money-Map-Cards")
+        return produced, new_ids
+    try:
+        mm = json.loads(MONEYMAP_FILE.read_text(encoding="utf-8"))
+    except Exception as e:
+        print(f"\u26a0\ufe0f  money_map.json nicht lesbar: {e}")
+        return produced, new_ids
+    rows = mm.get("rows") or []
+    dedup = _mm_load_dedup()
+    from datetime import timedelta as _td
+    cutoff = (date.fromisoformat(today_iso) - _td(days=4)).isoformat()
+    sent_ids = {h.get("matchId") for h in dedup.get("history", []) if h.get("date", "") >= cutoff}
+    from datetime import datetime as _dt
+    try:
+        do = _dt.fromisoformat(today_iso); wd = ["Mo", "Di", "Mi", "Do", "Fr", "Sa", "So"][do.weekday()]
+        date_label = f"{wd} \u00b7 {do.strftime('%d.%m.%Y')}"
+    except Exception:
+        date_label = today_iso
+    for r in rows:
+        if not r.get("mmStrong"):
+            continue
+        if r.get("verdict") not in ("konsens", "uneinig"):
+            continue
+        if not (r.get("betfair") or r.get("poly")):
+            continue
+        mid = str(r.get("matchId") or (str(r.get("home", "")) + "-" + str(r.get("away", ""))))
+        if mid in sent_ids:
+            continue
+        try:
+            html = money_map_card(
+                league_label=r.get("league") or "", date_label=date_label,
+                home=r.get("home", ""), away=r.get("away", ""),
+                verdict=r.get("verdict"), strong=bool(r.get("mmStrong")),
+                betfair=r.get("betfair"), poly=r.get("poly"), pinn=r.get("pinn"),
+                n_sources=r.get("nSources") or 0,
+            )
+        except Exception as e:
+            print(f"\u26a0\ufe0f  Money-Map-Card {mid} fehlgeschlagen: {e}")
+            continue
+        path = OUTPUT_DIR / f"{today_iso}_moneymap_{mid}.html"
+        path.write_text(html, encoding="utf-8")
+        png = render_to_png(path)
+        if png:
+            vlabel = "Konsens" if r.get("verdict") == "konsens" else "Divergenz"
+            produced.append((f"moneymap_{mid}", png,
+                             f"\U0001f4b0 <b>Money Map \u00b7 {r.get('home','')} vs {r.get('away','')}</b> \u00b7 {vlabel}"))
+            new_ids.append(mid)
+    return produced, new_ids
 
 
 def build_match_preview_cards(wm: dict, today_iso: str) -> list:
@@ -908,20 +1041,23 @@ def build_match_preview_cards(wm: dict, today_iso: str) -> list:
             if fx.get("date") != today_iso:
                 continue
             hid, aid = fx["home"], fx["away"]
+            pick = _active_pick_for(wm, pkey)   # 21.08.2026 (Lucas): nur Spiele mit BET/ABWÄGEN-Pick
+            if not pick:
+                continue
             h, a = teams.get(hid, {}), teams.get(aid, {})
             prev = previews.get(pkey) or {}
             story = (prev.get("tgSnippet") or "").strip()
-            if not story:
-                continue   # ohne Story keine Card
             form_h, form_a = forms.get(hid, {}), forms.get(aid, {})
             elo_diff = (h.get("elo") or 0) - (a.get("elo") or 0)
             angle_key = _preview_angle(form_h, form_a, elo_diff)
             angle_label, accent, rgb = _PREVIEW_ANGLES[angle_key]
             flag_h, flag_a = h.get("flag", "🏳️"), a.get("flag", "🏳️")
             name_h, name_a = h.get("name", hid), a.get("name", aid)
+            if not story:   # 21.08.2026 (Lucas): kein aiPreview → Story aus dem Pick bauen
+                story = _preview_story_from_pick(pick, name_h, name_a)
             facts = _preview_facts(fx, flag_h, name_h, flag_a, name_a,
                                    form_h, form_a, xgs.get(hid), xgs.get(aid), elo_diff)
-            kickoff_label = (fx.get("time", "") + " Uhr").strip()
+            kickoff_label = _kickoff_label(fx)
             venue = (fx.get("venue") or "").split("·")[0].strip()[:34]
             html = match_preview_card(
                 date_label=date_label, flag_h=flag_h, name_h=name_h,
@@ -929,6 +1065,7 @@ def build_match_preview_cards(wm: dict, today_iso: str) -> list:
                 venue=venue, group_label=group_label,
                 angle_label=angle_label, accent=accent, accent_rgb=rgb,
                 story_text=story, facts=facts,
+                season_phase=_season_phase_for(pkey),
             )
             path = OUTPUT_DIR / f"{today_iso}_preview_{hid}_{aid}.html"
             path.write_text(html, encoding="utf-8")
@@ -1037,6 +1174,8 @@ def build_match_review_cards(wm: dict, today_iso: str) -> list:
     for fx, teams, group_label, _pkey in _iter_match_contexts(wm):
             if fx.get("date") != yest:
                 continue
+            if not _active_pick_for(wm, _pkey):   # 21.08.2026 (Lucas): nur Spiele mit BET/ABWÄGEN-Pick
+                continue
             r = fx.get("result") or {}
             if r.get("status") not in ("FT", "AET", "PEN"):
                 continue
@@ -1060,6 +1199,7 @@ def build_match_review_cards(wm: dict, today_iso: str) -> list:
                 group_label=group_label,
                 angle_label=angle_label, accent=accent, accent_rgb=rgb,
                 recap_text=recap, facts=facts,
+                season_phase=_season_phase_for(_pkey),
             )
             path = OUTPUT_DIR / f"{today_iso}_review_{hid}_{aid}.html"
             path.write_text(html, encoding="utf-8")
@@ -1109,6 +1249,16 @@ def main():
         except Exception as e:
             print(f"⚠️  Match-Review-Cards fehlgeschlagen: {e}")
 
+    # 1b. Money-Map-Cards (21.08.2026, Lucas) — GLOBAL, nur im designierten Lauf (SEND_MONEYMAP=1).
+    #     Nur mmStrong-Fälle. Früh gebaut, damit sie den „nichts zu posten"-Guard mit auslösen.
+    moneymap_cards, moneymap_ids = [], []
+    if SEND_MONEYMAP:
+        try:
+            moneymap_cards, moneymap_ids = build_money_map_cards(today_iso)
+            print(f"💰 Money-Map-Cards: {len(moneymap_cards)} Spiel(e)")
+        except Exception as e:
+            print(f"⚠️  Money-Map-Cards fehlgeschlagen: {e}")
+
     dedup = load_dedup()
     excluded = MANUAL_POSTED_TEAMS | recently_sent_team_ids(dedup, today_iso)
 
@@ -1132,7 +1282,7 @@ def main():
             print(f"⚡ Daily Killer-Stat: {fact['info']['name']}" if fact
                   else "⚡ Kein Killer-Stat heute")
 
-    if not story and not fact and not reviews:
+    if not story and not fact and not reviews and not moneymap_cards:
         print("\nNichts zu posten. Ende.")
         return
 
@@ -1140,6 +1290,7 @@ def main():
     print()
     produced = []  # list of (label, png_path, caption)
     produced.extend(reviews)   # Vortags-Reviews (schon gerendert in build_match_review_cards)
+    produced.extend(moneymap_cards)   # 1b. Money-Map-Cards (global, gegated)
     if story:
         paths = write_cards("story", story, today_iso)
         for kind in ("hook", "info"):
@@ -1419,6 +1570,18 @@ def main():
         dedup["history"] = [h for h in dedup["history"] if h.get("date", "") >= cutoff]
         save_dedup(dedup)
         print(f"💾 Dedup-State aktualisiert ({len(dedup['history'])} Einträge)")
+
+    # Money-Map-Dedup (matchId, 10-Tage-Trim) — NUR nach erfolgreichem Send, damit ein Spiel
+    # nicht 3 Tage in Folge dieselbe Card wirft (21.08.2026, Lucas: nur starke Signale, aber je Spiel einmal).
+    if sent_to_telegram and moneymap_ids:
+        _mmd = _mm_load_dedup()
+        for _mid in moneymap_ids:
+            _mmd.setdefault("history", []).append({"date": today_iso, "matchId": _mid})
+        from datetime import timedelta as _td_mm
+        _cut = (date.fromisoformat(today_iso) - _td_mm(days=10)).isoformat()
+        _mmd["history"] = [h for h in _mmd["history"] if h.get("date", "") >= _cut]
+        _mm_save_dedup(_mmd)
+        print(f"💾 Money-Map-Dedup aktualisiert ({len(_mmd['history'])} Einträge)")
 
     # 6. Player-Pick Dedup (Spielername, 14 Tage)
     if player_pick and sent_to_telegram:

@@ -193,6 +193,9 @@ jobs:
           ANTHROPIC_API_KEY:       ${{ secrets.ANTHROPIC_API_KEY }}
           SEND_PREVIEWS: "true"
           SEND_REVIEWS:  "false"
+          # 21.08.2026 (Lucas): Money-Map-Cards (Betfair-€ + Poly-$ + Pinnacle je Spiel, nur mmStrong).
+          # money_map.json ist GLOBAL -> NUR hier setzen (ein Lauf/Tag), sonst 3x dieselbe Card (liga/mls/wm).
+          SEND_MONEYMAP: "true"
         run: python generate_daily_tiktok.py || true
 
       - name: 📊 Liga Recap → Public (POST-Match)
