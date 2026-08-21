@@ -1,14 +1,14 @@
 {
- "n": 529,
+ "n": 535,
  "minOdds": 1.35,
  "moneyHitRate": 0.516,
- "priceHitRate": 0.529,
- "brierMoney": 0.6235,
- "brierPrice": 0.5539,
+ "priceHitRate": 0.527,
+ "brierMoney": 0.6224,
+ "brierPrice": 0.5536,
  "disagree": {
-  "n": 67,
+  "n": 66,
   "moneyWon": 10,
-  "priceWon": 17,
+  "priceWon": 16,
   "neither": 40
  },
  "verdict": "preis_besser",
@@ -20,6 +20,22 @@
    "brierMoney": 0.3183,
    "brierPrice": 0.415,
    "verdict": "geld_schaerfer"
+  },
+  {
+   "league": "TENNIS",
+   "n": 40,
+   "moneyHitRate": 0.5,
+   "brierMoney": 0.5424,
+   "brierPrice": 0.5425,
+   "verdict": "gleichauf"
+  },
+  {
+   "league": "ESPORTS",
+   "n": 177,
+   "moneyHitRate": 0.582,
+   "brierMoney": 0.4801,
+   "brierPrice": 0.4801,
+   "verdict": "gleichauf"
   },
   {
    "league": "UFC",
@@ -43,22 +59,6 @@
    "moneyHitRate": 0.375,
    "brierMoney": 0.5522,
    "brierPrice": 0.5522,
-   "verdict": "gleichauf"
-  },
-  {
-   "league": "TENNIS",
-   "n": 38,
-   "moneyHitRate": 0.5,
-   "brierMoney": 0.5438,
-   "brierPrice": 0.5438,
-   "verdict": "gleichauf"
-  },
-  {
-   "league": "ESPORTS",
-   "n": 173,
-   "moneyHitRate": 0.584,
-   "brierMoney": 0.4788,
-   "brierPrice": 0.4787,
    "verdict": "gleichauf"
   },
   {
@@ -114,6 +114,18 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 3797786
+  },
+  {
+   "key": "dota2-ts8-vsn2-2026-08-21",
+   "league": "ESPORTS",
+   "winner": "TEAM VISION",
+   "moneyFav": "TEAM VISION",
+   "priceFav": "TEAM VISION",
+   "moneyShare": 0.634,
+   "priceProb": 0.635,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 2259442
   },
   {
    "key": "lal-mad-mala-2026-08-19",
@@ -306,6 +318,18 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 365698
+  },
+  {
+   "key": "cs2-lgc-fal2-2026-08-21",
+   "league": "ESPORTS",
+   "winner": "Legacy",
+   "moneyFav": "Team Falcons",
+   "priceFav": "Team Falcons",
+   "moneyShare": 0.735,
+   "priceProb": 0.735,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 357990
   },
   {
    "key": "mlb-nyy-bal-2026-08-20",
@@ -558,46 +582,22 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 241878
-  },
-  {
-   "key": "mlb-wsh-tex-2026-08-20",
-   "league": "MLB",
-   "winner": "Texas Rangers",
-   "moneyFav": "Texas Rangers",
-   "priceFav": "Texas Rangers",
-   "moneyShare": 0.625,
-   "priceProb": 0.625,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 239492
-  },
-  {
-   "key": "mlb-atl-min-2026-08-18",
-   "league": "MLB",
-   "winner": "Minnesota Twins",
-   "moneyFav": "Atlanta Braves",
-   "priceFav": "Atlanta Braves",
-   "moneyShare": 0.575,
-   "priceProb": 0.575,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 237032
   }
  ],
- "generatedAt": "2026-08-21T13:14:09.853358+00:00",
+ "generatedAt": "2026-08-21T17:49:00.206665+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 422,
   "nfl": 800,
-  "mlb": 563,
+  "mlb": 575,
   "nhl": 403,
   "mls": 646,
   "epl": 556,
   "soccer": 800,
-  "tennis": 500,
-  "ucl": 451,
-  "la-liga": 583,
+  "tennis": 471,
+  "ucl": 452,
+  "la-liga": 585,
   "bundesliga": 469,
   "serie-a": 43,
   "ligue-1": 552,
@@ -607,7 +607,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 589,
+  "esports": 576,
   "cs2": 408,
   "lol": 377,
   "dota": 9,
@@ -617,7 +617,7 @@
   "boxing": 224,
   "golf": 336,
   "f1": 365,
-  "cricket": 495,
+  "cricket": 479,
   "allsvenskan": 1,
   "austria-bundesliga": 162,
   "bulgaria-parva-liga": 231,
@@ -625,12 +625,12 @@
   "champions-league": 295,
   "champions-league-final": 12,
   "chinese-super-league": 520,
-  "denmark-superliga": 473,
+  "denmark-superliga": 474,
   "efl-championship": 652,
   "english-premier-league": 2,
   "europa-conference-league": 569,
   "europa-league": 174,
-  "japan-j-league": 600,
+  "japan-j-league": 598,
   "japan-j2-league": 542,
   "k-league": 528,
   "la-liga-2": 554,
