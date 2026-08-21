@@ -875,7 +875,7 @@
     (matches || []).forEach(function (m) {
       if (isStale(m)) return;
       var v = _htFtVols(m);
-      if (v.ht >= FIX_HT_MIN && v.ht >= v.ft) {   // HZ-Geld >= FT-Geld und ueber dem Boden
+      if (v.ft > 0 && v.ht >= FIX_HT_MIN && v.ht >= v.ft) {   // echtes HZ>=FT (FT vorhanden) und ueber dem Boden
         out.push({ m: m, ht: v.ht, ft: v.ft, htMk: v.htMk, ratio: v.ft > 0 ? v.ht / v.ft : 99 });
       }
     });
