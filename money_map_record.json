@@ -1,25 +1,25 @@
 {
-"generatedAt": "2026-08-20T23:45:11.906397+00:00",
+"generatedAt": "2026-08-20T23:56:54.428643+00:00",
 "byVerdict": {
 "konsens": {
-"n": 261,
-"wins": 199,
-"hitRate": 0.7625,
-"polyN": 242,
-"polyWins": 181,
-"polyHitRate": 0.7479,
+"n": 262,
+"wins": 200,
+"hitRate": 0.7634,
+"polyN": 243,
+"polyWins": 182,
+"polyHitRate": 0.749,
 "pinnN": 16,
 "pinnHitRate": 0.625
 },
 "uneinig": {
-"n": 85,
+"n": 87,
 "wins": 22,
-"hitRate": 0.2588,
-"polyN": 74,
+"hitRate": 0.2529,
+"polyN": 76,
 "polyWins": 24,
-"polyHitRate": 0.3243,
-"pinnN": 38,
-"pinnHitRate": 0.5789
+"polyHitRate": 0.3158,
+"pinnN": 40,
+"pinnHitRate": 0.6
 },
 "teil": {
 "n": 3,
@@ -53,15 +53,15 @@
 "wins": 9,
 "hitRate": 0.6923
 },
+"CONMEBOL Copa Libertadores": {
+"n": 12,
+"wins": 4,
+"hitRate": 0.3333
+},
 "North American Leagues Cup": {
 "n": 12,
 "wins": 7,
 "hitRate": 0.5833
-},
-"CONMEBOL Copa Libertadores": {
-"n": 11,
-"wins": 4,
-"hitRate": 0.3636
 },
 "English Sky Bet Championship": {
 "n": 11,
@@ -88,6 +88,11 @@
 "wins": 4,
 "hitRate": 0.4444
 },
+"CONMEBOL Copa Sudamericana": {
+"n": 9,
+"wins": 5,
+"hitRate": 0.5556
+},
 "German Bundesliga 2": {
 "n": 8,
 "wins": 6,
@@ -102,11 +107,6 @@
 "n": 7,
 "wins": 5,
 "hitRate": 0.7143
-},
-"CONMEBOL Copa Sudamericana": {
-"n": 7,
-"wins": 4,
-"hitRate": 0.5714
 },
 "Dutch Eredivisie": {
 "n": 7,
@@ -381,9 +381,9 @@
 },
 "byStrength": {
 "strong": {
-"n": 197,
-"wins": 152,
-"hitRate": 0.7716
+"n": 200,
+"wins": 153,
+"hitRate": 0.765
 },
 "weak": {
 "n": 119,
@@ -392,14 +392,71 @@
 }
 },
 "divergence": {
-"n": 85,
+"n": 87,
 "betfairWins": 22,
-"betfairRate": 0.2588,
-"polyN": 74,
+"betfairRate": 0.2529,
+"polyN": 76,
 "polyWins": 24,
-"polyRate": 0.3243
+"polyRate": 0.3158
 },
 "recent": [
+{
+"matchId": "35937918",
+"home": "Macara",
+"away": "Santos",
+"league": "CONMEBOL Copa Sudamericana",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Macara",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-08-20T22:00:00Z",
+"settledAt": "2026-08-20T23:56:54.422659+00:00"
+},
+{
+"matchId": "35937921",
+"home": "LDU",
+"away": "Mirassol",
+"league": "CONMEBOL Copa Libertadores",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "LDU",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-08-20T22:00:00Z",
+"settledAt": "2026-08-20T23:56:54.422659+00:00"
+},
+{
+"matchId": "35937917",
+"home": "Olimpia",
+"away": "Vasco Da Gama",
+"league": "CONMEBOL Copa Sudamericana",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Vasco Da Gama",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+4
+],
+"kickoff": "2026-08-20T22:00:00Z",
+"settledAt": "2026-08-20T23:56:54.422659+00:00"
+},
 {
 "matchId": "35952241",
 "home": "Real Santander",
@@ -1102,69 +1159,12 @@
 ],
 "kickoff": "2026-08-20T00:30:00Z",
 "settledAt": "2026-08-20T03:34:39.242123+00:00"
-},
-{
-"matchId": "35895626",
-"home": "Minnesota Utd",
-"away": "Atlanta Utd",
-"league": "US MLS",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Atlanta Utd",
-"polySide": "home",
-"winner": "away",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-08-20T00:30:00Z",
-"settledAt": "2026-08-20T03:34:39.242123+00:00"
-},
-{
-"matchId": "35895624",
-"home": "Kansas City",
-"away": "St Louis City SC",
-"league": "US MLS",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "St Louis City SC",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-08-20T00:10:00Z",
-"settledAt": "2026-08-20T03:24:59.933372+00:00"
-},
-{
-"matchId": "35895630",
-"home": "Orlando City",
-"away": "Chicago Fire",
-"league": "US MLS",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Chicago Fire",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-08-19T23:40:00Z",
-"settledAt": "2026-08-20T03:09:55.681297+00:00"
 }
 ],
 "global": {
-"n": 349,
-"wins": 222,
-"hitRate": 0.6361
+"n": 352,
+"wins": 223,
+"hitRate": 0.6335
 },
-"pending": 9
+"pending": 7
 }
