@@ -77,8 +77,9 @@
       "label": "Pinnacle-1X2 vollständig + plausibel",
       "severity": "warn",
       "ok": false,
-      "nFail": 4,
+      "nFail": 5,
       "failures": [
+        "542-533: 1X2 unvollständig hw=None dr=None aw=None",
         "4665-797: 1X2 unvollständig hw=None dr=None aw=None",
         "52-50: 1X2 unvollständig hw=None dr=None aw=None",
         "79-114: 1X2 unvollständig hw=None dr=None aw=None",
@@ -174,7 +175,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "52/52 mit AH · 52/52 mit Public-O/U."
+      "note": "51/51 mit AH · 51/51 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -253,8 +254,9 @@
       "label": "Public-Konsens (Soft-Books) vorhanden",
       "severity": "warn",
       "ok": false,
-      "nFail": 4,
+      "nFail": 5,
       "failures": [
+        "542-533: kein public_hw",
         "4665-797: kein public_hw",
         "52-50: kein public_hw",
         "79-114: kein public_hw",
@@ -330,21 +332,20 @@
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
       "ok": false,
-      "nFail": 24,
+      "nFail": 23,
       "failures": [
         "64-33 Unter 2.5 Tore @2.2: sichere Linie Unter 3.5 Tore @1.5 verfügbar (≥1.35), nicht abgeleitet",
         "45-52 Unter 2.5 Tore @1.88: sichere Linie Unter 3.5 Tore @1.35 verfügbar (≥1.35), nicht abgeleitet",
         "45-52 Auswärtssieg @3.4: sichere Linie Doppelte Chance — X2 @1.717 verfügbar (≥1.35), nicht abgeleitet",
         "57-746 Auswärtssieg @2.5: sichere Linie Doppelte Chance — X2 @1.487 verfügbar (≥1.35), nicht abgeleitet",
-        "65-63 Auswärtssieg @3.1: sichere Linie Doppelte Chance — X2 @1.666 verfügbar (≥1.35), nicht abgeleitet",
-        "55-47 Heimsieg @2.25: sichere Linie Doppelte Chance — 1X @1.482 verfügbar (≥1.35), nicht abgeleitet",
-        "55-47 Auswärtssieg @2.5: sichere Linie Doppelte Chance — X2 @1.587 verfügbar (≥1.35), nicht abgeleitet",
+        "55-47 Heimsieg @2.25: sichere Linie Doppelte Chance — 1X @1.475 verfügbar (≥1.35), nicht abgeleitet",
+        "55-47 Auswärtssieg @2.5: sichere Linie Doppelte Chance — X2 @1.59 verfügbar (≥1.35), nicht abgeleitet",
         "50-35 Auswärtssieg @6.5: sichere Linie Doppelte Chance — X2 @2.706 verfügbar (≥1.35), nicht abgeleitet",
         "51-66 Auswärtssieg @2.88: sichere Linie Doppelte Chance — X2 @1.721 verfügbar (≥1.35), nicht abgeleitet",
         "34-40 Unter 2.5 Tore @2.65: sichere Linie Unter 3.5 Tore @1.71 verfügbar (≥1.35), nicht abgeleitet",
-        "494-895 Über 2.5 Tore @2.12: sichere Linie Über 1.5 Tore @1.39 verfügbar (≥1.35), nicht abgeleitet",
-        "497-502 Auswärtssieg @6.55: sichere Linie Doppelte Chance — X2 @2.455 verfügbar (≥1.35), nicht abgeleitet",
-        "499-488 Auswärtssieg @6.05: sichere Linie Doppelte Chance — X2 @2.551 verfügbar (≥1.35), nicht abgeleitet",
+        "494-895 Über 2.5 Tore @2.12: sichere Linie Über 1.5 Tore @1.38 verfügbar (≥1.35), nicht abgeleitet",
+        "497-502 Auswärtssieg @6.55: sichere Linie Doppelte Chance — X2 @2.452 verfügbar (≥1.35), nicht abgeleitet",
+        "499-488 Auswärtssieg @6.05: sichere Linie Doppelte Chance — X2 @2.543 verfügbar (≥1.35), nicht abgeleitet",
         "500-487 Auswärtssieg @3.74: sichere Linie Doppelte Chance — X2 @1.694 verfügbar (≥1.35), nicht abgeleitet",
         "503-489 Heimsieg @4.55: sichere Linie Doppelte Chance — 1X @2.118 verfügbar (≥1.35), nicht abgeleitet",
         "523-490 Auswärtssieg @2.93: sichere Linie Doppelte Chance — X2 @1.536 verfügbar (≥1.35), nicht abgeleitet",
@@ -523,5 +524,5 @@
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-08-20T19:17:34.059577+00:00"
+  "generatedAt": "2026-08-21T07:05:55.344879+00:00"
 }
