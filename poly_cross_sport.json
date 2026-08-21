@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-21T18:56:22.117006+00:00",
+ "generatedAt": "2026-08-21T20:41:49.914217+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -13,7 +13,7 @@
  "matched": 186,
  "footballRows": 156,
  "crossRows": 230,
- "footballSkippedStale": 70,
+ "footballSkippedStale": 68,
  "seenBySport": {
   "americanfootball_nfl": 152,
   "baseball_mlb": 76,
@@ -27,8 +27,37 @@
   "soccer_liga": 111
  },
  "trackRecord": {
-  "tracked": 146,
+  "tracked": 148,
   "converged": 28
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|marseille-strasbourg|dr",
+   "sport": "soccer_liga",
+   "event": "Marseille vs Strasbourg",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 23.5,
+   "pinnPP": 33.2,
+   "gapPP": -9.7,
+   "vol": 9807,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -0.87,
+   "firstSeen": "2026-08-21T19:38:16.105455+00:00"
+  },
+  {
+   "id": "soccer_liga|marseille-strasbourg|hw",
+   "sport": "soccer_liga",
+   "event": "Marseille vs Strasbourg",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 54.5,
+   "pinnPP": 48.4,
+   "gapPP": 6.13,
+   "vol": 9807,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.44,
+   "firstSeen": "2026-08-21T19:38:16.105455+00:00"
+  }
+ ]
 }
