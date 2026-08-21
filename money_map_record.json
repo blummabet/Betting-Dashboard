@@ -1,13 +1,13 @@
 {
-"generatedAt": "2026-08-21T20:39:02.266799+00:00",
+"generatedAt": "2026-08-21T20:45:59.046556+00:00",
 "byVerdict": {
 "konsens": {
-"n": 280,
-"wins": 214,
-"hitRate": 0.7643,
-"polyN": 261,
-"polyWins": 196,
-"polyHitRate": 0.751,
+"n": 282,
+"wins": 216,
+"hitRate": 0.766,
+"polyN": 262,
+"polyWins": 197,
+"polyHitRate": 0.7519,
 "pinnN": 17,
 "pinnHitRate": 0.6471
 },
@@ -238,6 +238,11 @@
 "wins": 2,
 "hitRate": 0.6667
 },
+"German Cup": {
+"n": 3,
+"wins": 2,
+"hitRate": 0.6667
+},
 "Japanese J League 2": {
 "n": 3,
 "wins": 3,
@@ -287,11 +292,6 @@
 "n": 2,
 "wins": 2,
 "hitRate": 1.0
-},
-"German Cup": {
-"n": 2,
-"wins": 1,
-"hitRate": 0.5
 },
 "Serbian Super League": {
 "n": 2,
@@ -344,6 +344,11 @@
 "hitRate": 1.0
 },
 "Estonian Premier League": {
+"n": 1,
+"wins": 1,
+"hitRate": 1.0
+},
+"French Ligue 1": {
 "n": 1,
 "wins": 1,
 "hitRate": 1.0
@@ -411,14 +416,14 @@
 },
 "byStrength": {
 "strong": {
-"n": 214,
-"wins": 166,
-"hitRate": 0.7757
+"n": 215,
+"wins": 167,
+"hitRate": 0.7767
 },
 "weak": {
-"n": 125,
-"wins": 55,
-"hitRate": 0.44
+"n": 126,
+"wins": 56,
+"hitRate": 0.4444
 }
 },
 "divergence": {
@@ -430,6 +435,44 @@
 "polyRate": 0.3205
 },
 "recent": [
+{
+"matchId": "35785930",
+"home": "Marseille",
+"away": "Strasbourg",
+"league": "French Ligue 1",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Marseille",
+"polySide": null,
+"winner": "home",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+4,
+0
+],
+"kickoff": "2026-08-21T18:45:00Z",
+"settledAt": "2026-08-21T20:45:59.036438+00:00"
+},
+{
+"matchId": "35951311",
+"home": "Hansa Rostock",
+"away": "Stuttgart",
+"league": "German Cup",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Stuttgart",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+4
+],
+"kickoff": "2026-08-21T18:45:00Z",
+"settledAt": "2026-08-21T20:45:59.036438+00:00"
+},
 {
 "matchId": "35949039",
 "home": "Standard",
@@ -1151,50 +1194,12 @@
 ],
 "kickoff": "2026-08-20T18:30:00Z",
 "settledAt": "2026-08-20T20:26:33.904033+00:00"
-},
-{
-"matchId": "35948242",
-"home": "Sion",
-"away": "Ajax",
-"league": "UEFA Europa Conference Qualifiers",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Ajax",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-4
-],
-"kickoff": "2026-08-20T18:15:00Z",
-"settledAt": "2026-08-20T20:11:31.112759+00:00"
-},
-{
-"matchId": "35948056",
-"home": "FC Twente",
-"away": "Qarabag FK",
-"league": "UEFA Europa Conference Qualifiers",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "FC Twente",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-08-20T18:00:00Z",
-"settledAt": "2026-08-20T19:57:06.824321+00:00"
 }
 ],
 "global": {
-"n": 372,
-"wins": 239,
-"hitRate": 0.6425
+"n": 374,
+"wins": 241,
+"hitRate": 0.6444
 },
-"pending": 19
+"pending": 17
 }
