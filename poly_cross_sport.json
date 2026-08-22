@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-22T22:39:14.104743+00:00",
+ "generatedAt": "2026-08-22T22:59:05.633677+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -8,27 +8,84 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 388,
- "pinnKeys": 254,
- "matched": 170,
+ "polyRowsSeen": 390,
+ "pinnKeys": 258,
+ "matched": 174,
  "footballRows": 144,
- "crossRows": 244,
+ "crossRows": 246,
  "footballSkippedStale": 42,
  "seenBySport": {
-  "americanfootball_nfl": 142,
+  "americanfootball_nfl": 144,
   "baseball_mlb": 100,
   "boxing_boxing": 2,
   "soccer_mls": 48,
   "soccer_liga": 96
  },
  "matchedBySport": {
-  "baseball_mlb": 26,
+  "baseball_mlb": 30,
   "soccer_mls": 48,
   "soccer_liga": 96
  },
  "trackRecord": {
   "tracked": 179,
-  "converged": 30
+  "converged": 32
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|philadelphiaphillies-stlouiscardinals|stlouiscardinals",
+   "sport": "baseball_mlb",
+   "event": "St. Louis Cardinals vs Philadelphia Phillies",
+   "market": "Moneyline",
+   "outcome": "St. Louis Cardinals",
+   "polyPP": 11.5,
+   "pinnPP": 33.8,
+   "gapPP": -22.29,
+   "vol": 338265,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -11.74,
+   "firstSeen": "2026-08-21T23:02:19.980131+00:00"
+  },
+  {
+   "id": "baseball_mlb|philadelphiaphillies-stlouiscardinals|philadelphiaphillies",
+   "sport": "baseball_mlb",
+   "event": "St. Louis Cardinals vs Philadelphia Phillies",
+   "market": "Moneyline",
+   "outcome": "Philadelphia Phillies",
+   "polyPP": 88.5,
+   "pinnPP": 66.2,
+   "gapPP": 22.29,
+   "vol": 338265,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -11.74,
+   "firstSeen": "2026-08-21T23:02:19.980131+00:00"
+  },
+  {
+   "id": "baseball_mlb|arizonadiamondbacks-cincinnatireds|cincinnatireds",
+   "sport": "baseball_mlb",
+   "event": "Cincinnati Reds vs Arizona Diamondbacks",
+   "market": "Moneyline",
+   "outcome": "Cincinnati Reds",
+   "polyPP": 36.5,
+   "pinnPP": 45.1,
+   "gapPP": -8.56,
+   "vol": 36921,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 29.19,
+   "firstSeen": "2026-08-22T03:08:12.763206+00:00"
+  },
+  {
+   "id": "baseball_mlb|arizonadiamondbacks-cincinnatireds|arizonadiamondbacks",
+   "sport": "baseball_mlb",
+   "event": "Cincinnati Reds vs Arizona Diamondbacks",
+   "market": "Moneyline",
+   "outcome": "Arizona Diamondbacks",
+   "polyPP": 63.5,
+   "pinnPP": 54.9,
+   "gapPP": 8.56,
+   "vol": 36921,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 29.19,
+   "firstSeen": "2026-08-22T03:08:12.763206+00:00"
+  }
+ ]
 }
