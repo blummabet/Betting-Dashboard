@@ -169,6 +169,7 @@ def build_watch(streaks: list, wm: dict, watched: dict, today: str, now=None) ->
                  "length": s.get("length"), "market": s.get("market"),
                  "pickKey": nx.get("pickKey"), "oppName": nx.get("oppName"),
                  "date": gdate, "kickoff": nx.get("kickoff"), "xgBacked": s.get("xgBacked"),
+                 "flag": safe_flag(s.get("flag")), "oppRatePct": nx.get("oppRatePct"),
                  "postedAt": now.isoformat()}
         out.append((key, entry, _watch_msg(s, nx)))
     return out
@@ -190,6 +191,35 @@ def _watch_msg(s: dict, nx: dict) -> str:
     if isinstance(opp_pct, (int, float)):
         lines.append(f"Gegner-Grundrate passt in {opp_pct}% seiner Spiele.")
     return "\n".join(lines)
+
+
+def build_watch_digest(entries: list) -> str:
+    """EIN gebündelter Public-Push für ALLE heute anstehenden Serien (22.08.2026, Lucas:
+    „reicht 1 Nachricht am Tag"). Ersetzt die frühere Eine-Nachricht-je-Serie-Flut. Heißeste
+    Serie zuerst, kompakte 2-Zeilen-Blöcke, TikTok-safe (keine Quoten/€)."""
+    rows = sorted(entries or [], key=lambda e: (e.get("length") or 0), reverse=True)
+    n = len(rows)
+    head = ["🔥 <b>Serien-Watch</b> — heute",
+            f"<i>{n} {'Team' if n == 1 else 'Teams'} mit heißer Serie vor dem Anpfiff</i>"]
+    blocks = ["\n".join(head)]
+    for e in rows:
+        icon = _ICON.get(e.get("type"), "🔥")
+        flag = e.get("flag") or ""
+        phrase = e.get("market") or _PHRASE.get(e.get("type"), "Serie")
+        top = (f"{icon} {flag} <b>{e.get('team')}</b> · "
+               f"<b>{e.get('length')}×</b> {phrase}")
+        det = f"↳ gegen {e.get('oppName') or '—'}"
+        pct = e.get("oppRatePct")
+        if isinstance(pct, (int, float)):
+            det += f" · Grundrate {pct}%"
+        xgb = e.get("xgBacked")
+        if xgb is True:
+            det += " · ✓ xG"
+        elif xgb is False:
+            det += " · ⚠️ Glück"
+        blocks.append(f"{top}\n{det}")
+    blocks.append("🤖 <i>CocoBet · Serien-Modell</i>")
+    return "\n\n".join(blocks)
 
 
 # ── MODE=recap ────────────────────────────────────────────────────────────────
@@ -241,10 +271,15 @@ def main() -> None:
         print(f"📊 Serien-Recap: {len(msgs)} gepostet, {len(done)} abgeschlossen.")
     else:  # watch
         new = build_watch(streaks, wm, watched, today)
-        for key, entry, msg in new:
-            if tg_send(msg):
-                watched[key] = entry
-        print(f"🔥 Serien-Watch: {len(new)} neue Serie(n) bewacht.")
+        if new:
+            # 22.08.2026 (Lucas: „reicht 1 Nachricht am Tag"): EIN gebündelter Serien-Watch-Digest
+            # statt einer Nachricht je Serie. Alle enthaltenen Serien werden NUR bei erfolgreichem
+            # Send als bewacht markiert (all-or-nothing) → Recap-Kopplung bleibt intakt.
+            digest = build_watch_digest([e for _k, e, _m in new])
+            if tg_send(digest):
+                for key, entry, _m in new:
+                    watched[key] = entry
+        print(f"🔥 Serien-Watch: {len(new)} Serie(n) → " + ("1 Sammel-Push" if new else "kein Push") + ".")
 
     _save_state(state)
 

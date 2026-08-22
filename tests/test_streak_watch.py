@@ -187,5 +187,48 @@ class TestSendGuard(unittest.TestCase):
         self.assertTrue(W.tg_send("x"))
 
 
+class TestWatchDigest(unittest.TestCase):
+    """22.08.2026 (Lucas: „reicht 1 Nachricht am Tag"): der Watch-Zweig bündelt jetzt ALLE
+    anstehenden Serien in EINEN Push. Hier: Aufbau/Format/Sortierung des Digests."""
+
+    def _entries(self):
+        return [
+            {"team": "Tottenham", "type": "scored", "length": 12, "market": "Team trifft",
+             "oppName": "Brentford", "flag": "🏴", "oppRatePct": 60, "xgBacked": None},
+            {"team": "Inter", "type": "scored", "length": 15, "market": "Team trifft",
+             "oppName": "Monza", "flag": "🇮🇹", "oppRatePct": 60, "xgBacked": True},
+            {"team": "Celta Vigo", "type": "scored", "length": 11, "market": "Team trifft",
+             "oppName": "Valencia", "flag": "🇪🇸", "oppRatePct": 87, "xgBacked": False},
+        ]
+
+    def test_ein_string_mit_allen_teams(self):
+        msg = W.build_watch_digest(self._entries())
+        self.assertIsInstance(msg, str)
+        for t in ("Inter", "Tottenham", "Celta Vigo", "Monza", "Brentford", "Valencia"):
+            self.assertIn(t, msg)
+        self.assertIn("Serien-Watch", msg)
+        self.assertIn("3 Teams", msg)               # Zähler im Header
+        self.assertEqual(msg.count("Serien-Watch"), 1)   # nur EIN Header, keine Wiederholung
+
+    def test_heisseste_zuerst(self):
+        msg = W.build_watch_digest(self._entries())
+        self.assertLess(msg.index("Inter"), msg.index("Tottenham"))   # 15× vor 12×
+        self.assertLess(msg.index("Tottenham"), msg.index("Celta Vigo"))  # 12× vor 11×
+
+    def test_xg_siegel_und_grundrate(self):
+        msg = W.build_watch_digest(self._entries())
+        self.assertIn("Grundrate 87%", msg)
+        self.assertIn("✓ xG", msg)      # Inter (xgBacked True)
+        self.assertIn("⚠️", msg)        # Celta (xgBacked False)
+
+    def test_singular_ein_team(self):
+        msg = W.build_watch_digest(self._entries()[:1])
+        self.assertIn("1 Team ", msg)   # Singular, nicht „1 Teams"
+
+    def test_leer_kein_crash(self):
+        msg = W.build_watch_digest([])
+        self.assertIn("0 Teams", msg)
+
+
 if __name__ == "__main__":
     unittest.main()
