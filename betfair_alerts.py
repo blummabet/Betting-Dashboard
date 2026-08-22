@@ -47,6 +47,7 @@ HT_MIN_SHARE   = 0.85     # ... und davon min. dieser Anteil auf EINEN Ausgang (
 # >= Boden) = technisch unlogisch -> Fix-Muster. Eigene Maerkte-Sets fuer FT vs HT (wie im Radar).
 FIX_HT_MIN_EUR = float(os.environ.get("BF_FIX_HT_MIN_EUR") or 2000.0)   # HZ-Geld-Boden Fix-Verdacht
 FIX_RATIO_MIN  = float(os.environ.get("BF_FIX_RATIO_MIN") or 2.0)      # 22.08.2026 (Lucas): HZ muss FT KLAR dominieren (>=2x). 1.1x = nahezu ident = Rauschen.
+FIX_LEAD_SHARE = float(os.environ.get("BF_FIX_LEAD_SHARE") or 0.65)    # 22.08.2026 (Lucas): der HZ-Markt muss klar EINSEITIG sein (>=65% auf einer Seite). 50/50-O/U ist Rauschen.
 FIX_FT_MARKETS = ("Match Odds", "Over/Under 2.5 Goals", "Over/Under 3.5 Goals", "Both teams to Score?")
 FIX_HT_MARKETS = ("Half Time", "First Half Goals 0.5", "First Half Goals 1.5")
 MIN_LEAD_ODD   = 1.30     # Geld auf einen Favoriten mit Quote < 1.30 (führt schon, wenig Value) = kein Push (Lucas 30.07.2026, vorher 1.15)
@@ -281,35 +282,51 @@ def fix_alert(m):
     Technisch unlogisch (FT ist normal viel liquider) -> Fix-Verdacht. Scannt jedes Spiel unabhaengig von
     der normalen Geld-Schwelle (Fix-Spiele liegen auf duennen Maerkten). ⚫ schwarze Kugel im Push."""
     mkts = m.get("markets") or {}
-    ft_max = 0.0
+    if not _fix_window_ok(m):
+        return None
+    # FT-Baseline: groesster FT-Markt — Name mitfuehren, damit der Push zeigt WELCHER FT-Markt verglichen wird.
+    ft_max, ft_name = 0.0, None
     for name in FIX_FT_MARKETS:
         mk = mkts.get(name)
         if mk:
             v = _vol(mk)
             if v > ft_max:
-                ft_max = v
-    ht_max, ht_name = 0.0, None
+                ft_max, ft_name = v, name
+    if ft_max <= 0:
+        return None   # kein FT-Markt (Datenluecke) -> kein „HZ > FT"-Vergleich moeglich
+    # HT-Markt-Wahl (22.08.2026, Lucas): NICHT der volumenstaerkste HT-Markt, sondern der mit dem
+    # groessten EINSEITIGEN Geld. Ein 50/50-O/U (viel Volumen, aber ausgewogen) ist kein Fix-Signal;
+    # ein klar einseitig geladener HT-Markt (z.B. 7K auf Away HT) schon. leadShare-Gate + Auswahl nach lead_vol.
+    best = None   # (lead_vol, name, total, lead_runner, lead_share)
     for name in FIX_HT_MARKETS:
         mk = mkts.get(name)
-        if mk:
-            v = _vol(mk)
-            if v > ht_max:
-                ht_max, ht_name = v, name
-    if (ht_name is None or ft_max <= 0 or ht_max < FIX_HT_MIN_EUR
-            or ht_max < ft_max * FIX_RATIO_MIN     # 22.08.2026 (Lucas): HZ muss FT >=2x dominieren
-            or not _fix_window_ok(m)):             # 22.08.2026 (Lucas): nicht bei Halbzeit/2. HZ/Ende
-        return None   # ft_max>0: nur echtes HZ>FT (nicht HZ mit fehlendem/leerem FT-Markt = Datenluecke)
-    runners = (mkts.get(ht_name) or {}).get("runners") or []
-    lead = max(runners, key=lambda r: (r.get("vol") or 0.0), default=None)
-    if not lead:
+        if not mk:
+            continue
+        total = _vol(mk)
+        if total < FIX_HT_MIN_EUR:
+            continue
+        runners = (mk.get("runners") or [])
+        lead = max(runners, key=lambda r: (r.get("vol") or 0.0), default=None)
+        if not lead:
+            continue
+        lead_vol = lead.get("vol") or 0.0
+        lead_share = (lead_vol / total) if total else 0.0
+        if lead_share < FIX_LEAD_SHARE:      # ausgewogen (50/50) -> kein Signal
+            continue
+        if best is None or lead_vol > best[0]:
+            best = (lead_vol, name, total, lead, lead_share)
+    if best is None:
         return None
-    lead_share = (lead.get("vol") or 0.0) / ht_max if ht_max else 0.0
-    ratio = (ht_max / ft_max) if ft_max > 0 else 99.0
-    return {"scenario": "fix", "matchId": str(m.get("matchId")), "value": ht_max,
+    lead_vol, ht_name, ht_total, lead, lead_share = best
+    if ht_total < ft_max * FIX_RATIO_MIN:    # HZ muss FT klar dominieren (>=2x)
+        return None
+    ratio = (ht_total / ft_max) if ft_max > 0 else 99.0
+    return {"scenario": "fix", "matchId": str(m.get("matchId")), "value": ht_total,
             "home": m.get("home"), "away": m.get("away"), "league": m.get("league"), "flag": _flag(m),
             "market": ht_name, "mktLabel": HT_LABEL.get(ht_name, _short_mk(ht_name)),
             "kickoff": m.get("kickoff"), "live": m.get("liveInfo") or {},
-            "htEur": ht_max, "ftEur": ft_max, "ratio": ratio, "total": ht_max, "tier": tier_of(m),
+            "htEur": ht_total, "ftEur": ft_max, "ftName": ft_name, "ftLabel": _short_mk(ft_name),
+            "ratio": ratio, "total": ht_total, "tier": tier_of(m),
             "leadName": lead.get("name"), "leadLabel": _ht_label(lead.get("name"), m.get("home"), m.get("away")),
             "leadShare": lead_share, "leadOdd": lead.get("odd")}
 
@@ -598,8 +615,9 @@ def build_message(a) -> str:
         _st = _flow_status(a)   # 21.08.2026 (Lucas): Anpfiff/Live-Status wie in den anderen Pushes
         msg = ("\u26ab <b>Betfair · Fix-Verdacht</b> — mehr Geld auf <b>Halbzeit</b> als Full-Time\n" + head
                + ((_st + "\n") if _st else "")
-               + "\U0001f4b7 %s: <b>%s</b> HZ  vs  <b>%s</b> FT · %s\n"
-                 % (_esc(lbl), _euro(a["htEur"]), _euro(a["ftEur"]), _ratio_txt)
+               + "\U0001f4b7 %s: <b>%s</b> HZ  vs  <b>%s</b> FT%s · %s\n"
+                 % (_esc(lbl), _euro(a["htEur"]), _euro(a["ftEur"]),
+                    ((" (" + _esc(a.get("ftLabel")) + ")") if a.get("ftLabel") else ""), _ratio_txt)
                + "<b>%.0f%%</b> auf %s%s" % ((a.get("leadShare") or 0.0) * 100, _esc(a["leadLabel"]), odd))
         if (a.get("leadShare") or 0.0) >= 0.90:
             msg += " · sehr einseitig"
