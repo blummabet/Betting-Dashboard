@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-22T21:00:08.360251+00:00",
+ "generatedAt": "2026-08-22T21:36:10.987361+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -8,27 +8,56 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 401,
- "pinnKeys": 275,
- "matched": 183,
- "footballRows": 153,
- "crossRows": 248,
- "footballSkippedStale": 54,
+ "polyRowsSeen": 391,
+ "pinnKeys": 263,
+ "matched": 173,
+ "footballRows": 147,
+ "crossRows": 244,
+ "footballSkippedStale": 56,
  "seenBySport": {
-  "americanfootball_nfl": 146,
+  "americanfootball_nfl": 142,
   "baseball_mlb": 100,
   "boxing_boxing": 2,
   "soccer_mls": 48,
-  "soccer_liga": 105
+  "soccer_liga": 99
  },
  "matchedBySport": {
-  "baseball_mlb": 30,
+  "baseball_mlb": 26,
   "soccer_mls": 48,
-  "soccer_liga": 105
+  "soccer_liga": 99
  },
  "trackRecord": {
   "tracked": 179,
   "converged": 30
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|espanyol-realmadrid|aw",
+   "sport": "soccer_liga",
+   "event": "Espanyol vs Real Madrid",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 96.5,
+   "pinnPP": 42.5,
+   "gapPP": 54.0,
+   "vol": 2594040,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -35.64,
+   "firstSeen": "2026-08-22T19:57:01.559869+00:00"
+  },
+  {
+   "id": "soccer_liga|espanyol-realmadrid|dr",
+   "sport": "soccer_liga",
+   "event": "Espanyol vs Real Madrid",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 3.5,
+   "pinnPP": 50.1,
+   "gapPP": -46.56,
+   "vol": 2594040,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -36.63,
+   "firstSeen": "2026-08-22T19:57:01.559869+00:00"
+  }
+ ]
 }
