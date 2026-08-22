@@ -636,8 +636,7 @@ async function initPolyTrader() {
   } catch(e) {
     // Still show WM table even if poly_trader_data.json fails
     await wmPromise;
-    const wmHtml = (typeof _renderWmMarketTable === 'function') ? _renderWmMarketTable() : '';
-    panel.innerHTML = wmHtml + `<div style="text-align:center;padding:40px 20px;color:#f85149">
+    panel.innerHTML = `<div style="text-align:center;padding:40px 20px;color:#f85149">
       <div style="font-size:32px;margin-bottom:12px">⚠️</div>
       <div style="font-weight:700;margin-bottom:6px">Club-Daten nicht gefunden</div>
       <div style="font-size:12px;color:#6b7a8d">poly_trader_data.json fehlt — läuft nach dem nächsten GitHub Actions Workflow</div>
@@ -847,7 +846,7 @@ function renderPolyTrader(panel) {
     <svg xmlns="http://www.w3.org/2000/svg" width="1" height="1" style="display:none" onload="if(window.loadPositionHealth && !window._healthLoading){window._healthLoading=true;loadPositionHealth().finally(()=>{window._healthLoading=false;});}"></svg>
   `;
 
-  panel.innerHTML = healthBlock + cockpitBlock + wmTableHtml;
+  panel.innerHTML = healthBlock + cockpitBlock;   // 22.08.2026 (Lucas): WM-Markttabelle raus — Liga-Cockpit ist der Live-Stand
 
   // Fix 08.06.2026: SVG-onload-Trigger feuern in modernen Browsern nicht
   // mehr zuverlässig wenn via innerHTML eingefügt (Security-Hardening).

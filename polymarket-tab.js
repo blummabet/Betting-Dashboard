@@ -3042,14 +3042,15 @@ function _renderWmMarketTable() {
     // der Balance-Dateien nehmen (MLS-Pipeline schreibt mls_poly_balance.json). Fehler-Dateien
     // (error-Feld) nur, wenn keine echte existiert.
     Promise.all([
-      fetch('mls_poly_balance.json?' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
-      fetch('wm_poly_balance.json?'  + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch('liga_poly_balance.json?' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch('mls_poly_balance.json?'  + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
+      fetch('wm_poly_balance.json?'   + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
     ])
-      .then(([mls, wm]) => {
+      .then(([liga, mls, wm]) => {
         const el = document.getElementById('wmPolyBalance');
         if (!el) return;
         const ts = x => (x && x.updatedAt) ? Date.parse(x.updatedAt) : -1;
-        const cand = [mls, wm].filter(x => x && (x.total != null || x.usdc != null));
+        const cand = [liga, mls, wm].filter(x => x && (x.total != null || x.usdc != null));   // 22.08.2026 (Lucas): liga dazu — frischeste Wallet-Snapshot
         const good = cand.filter(x => !x.error);
         const d = (good.length ? good : cand).sort((a, b) => ts(b) - ts(a))[0];   // frischeste echte gewinnt
         if (!d) { el.textContent = '—'; return; }
@@ -4015,7 +4016,11 @@ function _polyHoursUntil(iso) {
 function renderTradingCockpit(data) {
   const { placed, balance: bal, kill, poly, data: wmData } = (data || {});
   const bets = (placed?.bets) || [];
-  const balanceUsd = parseFloat(bal?.usdc || 0);
+  const balanceUsd = parseFloat(bal?.usdc || 0);            // FREI (setzbar) — speist die Cap-Mathe
+  // 22.08.2026 (Lucas: „Balance 105 statt 132"): das KPI zeigt die WALLET-EQUITY (frei + Positionen),
+  // nicht nur das freie Guthaben. Cap-Berechnung bleibt bewusst auf balanceUsd (frei).
+  const balanceTotal = parseFloat(bal?.total ?? bal?.usdc ?? 0);
+  const balancePos   = parseFloat(bal?.positions || 0);
   const killEnabled = (kill?.enabled !== false);
   const killReason = kill?.reason || '';
 
@@ -4071,9 +4076,9 @@ function renderTradingCockpit(data) {
   const heroKpis = [
     {
       label: 'Balance',
-      value: fmtUsd(balanceUsd),
-      sub: balanceUsd < 50 ? 'auflаden empfohlen' : `${(balanceUsd / 200 * 100).toFixed(0)}% von Ziel-Bankroll`,
-      color: balanceUsd < 10 ? '#f85149' : balanceUsd < 50 ? '#e3b341' : '#00d4a1',
+      value: fmtUsd(balanceTotal),
+      sub: balancePos > 0.01 ? `$${balanceUsd.toFixed(2)} frei + $${balancePos.toFixed(2)} in Pos.` : (balanceTotal < 50 ? 'aufladen empfohlen' : `${(balanceTotal / 200 * 100).toFixed(0)}% von Ziel-Bankroll`),
+      color: balanceTotal < 10 ? '#f85149' : balanceTotal < 50 ? '#e3b341' : '#00d4a1',
       icon: '💼',
     },
     {
@@ -4292,7 +4297,7 @@ async function refreshCockpit() {
 
 function renderAutoTraderConfig() {
   return `
-    <details style="background:#161b22;border:1px solid #30363d;border-radius:12px;padding:14px 18px;margin-bottom:16px" open>
+    <details style="background:#161b22;border:1px solid #30363d;border-radius:12px;padding:14px 18px;margin-bottom:16px">
       <summary style="cursor:pointer;font-size:14px;font-weight:800;color:#e6edf3;outline:none;list-style:none;display:flex;align-items:center;justify-content:space-between">
         <span>🤖 Auto-Trader · Config &amp; Live-Status</span>
         <span style="font-size:11px;color:#8b949e;font-weight:600">▾ ein-/ausklappen</span>
