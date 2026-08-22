@@ -874,6 +874,16 @@
   // SCANNT ALLE frischen Spiele (nicht nur die ueber der Radar-Schwelle) — Fix-Spiele liegen ja gerade
   // auf duennen Maerkten UNTER der normalen Geld-Schwelle.
   var FIX_HT_MIN = 2000;   // HZ-Geld-Boden fuer den Verdacht (filtert den €8/€28-Mini-Kram)
+  var FIX_RATIO_MIN = 2.0; // 22.08.2026 (Lucas): HZ muss FT KLAR dominieren (>=2x). 1.1x = nahezu ident = Rauschen.
+  // 22.08.2026 (Lucas: „es ist grad Pause 😂"): Fix nur solange der HZ-Markt NOCH offen ist —
+  // vor Anpfiff oder 1. Halbzeit. Ab Halbzeit/2. HZ/Ende ist er durch, „mehr Geld auf HZ" wertlos.
+  function _fixWindowOk(m) {
+    var li = m.liveInfo || {};
+    if (li.finished || li.is_ht) return false;
+    var t = li.time;
+    if (typeof t === "number" && t > 45) return false;
+    return true;
+  }
   function _htFtVols(m) {
     var ft = 0, ht = 0, htMk = null;
     MK.forEach(function (mm) {
@@ -888,7 +898,7 @@
     (matches || []).forEach(function (m) {
       if (isStale(m)) return;
       var v = _htFtVols(m);
-      if (v.ft > 0 && v.ht >= FIX_HT_MIN && v.ht >= v.ft) {   // echtes HZ>=FT (FT vorhanden) und ueber dem Boden
+      if (v.ft > 0 && v.ht >= FIX_HT_MIN && v.ht >= v.ft * FIX_RATIO_MIN && _fixWindowOk(m)) {   // HZ >=2x FT, ueber Boden, HZ-Markt noch offen
         out.push({ m: m, ht: v.ht, ft: v.ft, htMk: v.htMk, ratio: v.ft > 0 ? v.ht / v.ft : 99 });
       }
     });

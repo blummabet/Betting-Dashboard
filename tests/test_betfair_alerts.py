@@ -704,6 +704,29 @@ class TestFixAlert(unittest.TestCase):
         m = match(mid=9, markets=mk("Half Time", [{"name": "Alpha", "odd": 2.0, "vol": 8000}]))
         self.assertIsNone(BA.fix_alert(m))
 
+    def test_none_when_ratio_too_weak(self):
+        # 22.08.2026 (Lucas): €2.4K HZ vs €2.1K FT (1.1x) = nahezu ident = Rauschen -> kein Fix
+        m = match(mid=9, markets=self._mkts(2100, 2100))   # HT total 2400 vs FT 2100 -> ratio 1.14 < 2
+        self.assertIsNone(BA.fix_alert(m))
+
+    def test_fires_first_half(self):
+        # starke Ratio + 1. Halbzeit (Minute 30) -> HZ-Markt noch offen -> feuert
+        m = match(mid=9, league="Lithuanian 1 Lyga", country="LT", markets=self._mkts(600, 5000))
+        m["liveInfo"] = {"time": 30, "is_ht": False, "finished": False}
+        self.assertIsNotNone(BA.fix_alert(m))
+
+    def test_none_at_halftime(self):
+        # 22.08.2026 (Lucas: „es ist grad Pause 😂"): bei Halbzeit ist der HZ-Markt durch -> kein Fix
+        m = match(mid=9, league="Lithuanian 1 Lyga", country="LT", markets=self._mkts(600, 5000))
+        m["liveInfo"] = {"time": 45, "is_ht": True, "finished": False}
+        self.assertIsNone(BA.fix_alert(m))
+
+    def test_none_second_half(self):
+        # 2. Halbzeit (Minute 60) -> HZ-Markt vorbei -> kein Fix (trotz starker Ratio)
+        m = match(mid=9, league="Lithuanian 1 Lyga", country="LT", markets=self._mkts(600, 5000))
+        m["liveInfo"] = {"time": 60, "is_ht": False, "finished": False}
+        self.assertIsNone(BA.fix_alert(m))
+
     def test_fix_stays_out_of_public_scenarios(self):
         # collect_alerts liefert das fix-Szenario (Trades); Public-Ausschluss ist in main().
         m = match(mid=9, league="Lithuanian 1 Lyga", country="LT", markets=self._mkts(600, 5000))

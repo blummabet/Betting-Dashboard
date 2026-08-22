@@ -46,6 +46,7 @@ HT_MIN_SHARE   = 0.85     # ... und davon min. dieser Anteil auf EINEN Ausgang (
 # 21.08.2026 (Lucas): Fix-Verdacht-Push (⚫ schwarze Kugel). HZ-Geld dominiert den FT-Markt (HZ >= FT und
 # >= Boden) = technisch unlogisch -> Fix-Muster. Eigene Maerkte-Sets fuer FT vs HT (wie im Radar).
 FIX_HT_MIN_EUR = float(os.environ.get("BF_FIX_HT_MIN_EUR") or 2000.0)   # HZ-Geld-Boden Fix-Verdacht
+FIX_RATIO_MIN  = float(os.environ.get("BF_FIX_RATIO_MIN") or 2.0)      # 22.08.2026 (Lucas): HZ muss FT KLAR dominieren (>=2x). 1.1x = nahezu ident = Rauschen.
 FIX_FT_MARKETS = ("Match Odds", "Over/Under 2.5 Goals", "Over/Under 3.5 Goals", "Both teams to Score?")
 FIX_HT_MARKETS = ("Half Time", "First Half Goals 0.5", "First Half Goals 1.5")
 MIN_LEAD_ODD   = 1.30     # Geld auf einen Favoriten mit Quote < 1.30 (führt schon, wenig Value) = kein Push (Lucas 30.07.2026, vorher 1.15)
@@ -262,8 +263,21 @@ def ht_alert(m, top_thr=HT_TOP_EUR, rest_thr=HT_REST_EUR):
     return best
 
 
+def _fix_window_ok(m) -> bool:
+    """22.08.2026 (Lucas): Fix-Verdacht nur solange der HZ-Markt NOCH offen ist — vor Anpfiff oder in
+    der 1. Halbzeit. Ab Halbzeit/2. HZ/Ende ist der HZ-Markt praktisch durch, „mehr Geld auf HZ" ist
+    dann wertlos (Lucas: „es ist grad Pause 😂")."""
+    li = m.get("liveInfo") or {}
+    if li.get("finished") or li.get("is_ht"):
+        return False
+    t = li.get("time")
+    if isinstance(t, (int, float)) and t > 45:
+        return False   # 2. Halbzeit -> HZ-Markt vorbei
+    return True
+
+
 def fix_alert(m):
-    """Szenario „fix" (21.08.2026, Lucas): HZ-Geld dominiert den FT-Markt (HZ >= FT UND >= FIX_HT_MIN_EUR).
+    """Szenario „fix" (21.08.2026, Lucas): HZ-Geld dominiert den FT-Markt KLAR (HZ >= 2x FT UND >= FIX_HT_MIN_EUR, nur vor/in 1. HZ).
     Technisch unlogisch (FT ist normal viel liquider) -> Fix-Verdacht. Scannt jedes Spiel unabhaengig von
     der normalen Geld-Schwelle (Fix-Spiele liegen auf duennen Maerkten). ⚫ schwarze Kugel im Push."""
     mkts = m.get("markets") or {}
@@ -281,7 +295,9 @@ def fix_alert(m):
             v = _vol(mk)
             if v > ht_max:
                 ht_max, ht_name = v, name
-    if ht_name is None or ft_max <= 0 or ht_max < FIX_HT_MIN_EUR or ht_max < ft_max:
+    if (ht_name is None or ft_max <= 0 or ht_max < FIX_HT_MIN_EUR
+            or ht_max < ft_max * FIX_RATIO_MIN     # 22.08.2026 (Lucas): HZ muss FT >=2x dominieren
+            or not _fix_window_ok(m)):             # 22.08.2026 (Lucas): nicht bei Halbzeit/2. HZ/Ende
         return None   # ft_max>0: nur echtes HZ>FT (nicht HZ mit fehlendem/leerem FT-Markt = Datenluecke)
     runners = (mkts.get(ht_name) or {}).get("runners") or []
     lead = max(runners, key=lambda r: (r.get("vol") or 0.0), default=None)
