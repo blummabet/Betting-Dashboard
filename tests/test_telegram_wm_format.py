@@ -48,6 +48,24 @@ class TestTelegramWmFormat(unittest.TestCase):
     def test_at_least_one_card(self):
         self.assertTrue(self.cards, "Keine Karte gebaut — Fixture/Datenproblem")
 
+    def test_no_pick_games_not_listed(self):
+        # 21.08.2026 (Lucas): Spiele ohne BET/ABWÄGEN werden nicht mehr gelistet → die „kein Pick"-
+        # Zeile (no_edge, DE + EN) darf in keiner Morning-Card mehr vorkommen.
+        import json as _json
+        wm = _json.loads((BASE / "wm2026-data.json").read_text(encoding="utf-8"))
+        dates = sorted({fx["date"] for g in (wm.get("groups") or {}).values()
+                        for fx in (g.get("fixtures") or []) if fx.get("date")})
+        seen = 0
+        for d in dates:
+            for lang in ("de", "en"):
+                msg = telegram_wm.build_morning_card(wm, d, lang)
+                if not msg:
+                    continue
+                seen += 1
+                self.assertNotIn("Kein Pick mit ausreichend", msg, f"DE no_edge @ {d}")
+                self.assertNotIn("No pick with enough", msg, f"EN no_edge @ {d}")
+        self.assertGreater(seen, 0, "keine Morning-Card gebaut — Fixture-Problem")
+
     def test_no_forbidden_substrings(self):
         for d, fn, msg in self.cards:
             for bad in FORBIDDEN:

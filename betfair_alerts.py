@@ -541,7 +541,9 @@ def build_message(a) -> str:
         odd = _lead_odd_txt(a)
         lbl = a.get("mktLabel") or "HZ"
         _ratio_txt = ("<b>%.1f×</b> mehr auf HZ" % a["ratio"]) if a.get("ftEur", 0) > 0 else "FT ~0"
+        _st = _flow_status(a)   # 21.08.2026 (Lucas): Anpfiff/Live-Status wie in den anderen Pushes
         msg = ("\u26ab <b>Betfair · Fix-Verdacht</b> — mehr Geld auf <b>Halbzeit</b> als Full-Time\n" + head
+               + ((_st + "\n") if _st else "")
                + "\U0001f4b7 %s: <b>%s</b> HZ  vs  <b>%s</b> FT · %s\n"
                  % (_esc(lbl), _euro(a["htEur"]), _euro(a["ftEur"]), _ratio_txt)
                + "<b>%.0f%%</b> auf %s%s" % ((a.get("leadShare") or 0.0) * 100, _esc(a["leadLabel"]), odd))

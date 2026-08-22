@@ -407,6 +407,14 @@ def build_morning_card(wm: dict, target_date: str, lang: str = "de") -> str | No
     if not matches_today:
         return None  # Keine Spiele heute
 
+    # 21.08.2026 (Lucas): Spiele OHNE postbaren BET/ABWÄGEN-Pick gar nicht listen — „unnötig die
+    # aufzulisten wenn da nichts ist". Betrifft Header-Zähler UND Liste (beide nutzen matches_today).
+    matches_today = [m for m in matches_today
+                     if any(p.get("verdict") in ("BET", "ABWÄGEN") and _is_posted(p)
+                            for p in (m.get("picks") or []))]
+    if not matches_today:
+        return None  # heute kein Spiel mit BET/ABWÄGEN → keine Morning-Card
+
     # Sortierung + Anzeige-Zeit aus echtem kickoff (UTC → Wien CEST UTC+2).
     # FIX 11.06.2026: fx.time ist unzuverlässig (mal Wien, mal Venue-Local —
     # BRA-MAR "18:00" = NY statt 00:00 Wien, KOR-CZE 00:00-Platzhalter). kickoff
