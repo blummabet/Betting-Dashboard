@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-22T06:02:21.923104+00:00",
+ "generatedAt": "2026-08-22T06:59:38.710496+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -13,7 +13,7 @@
  "matched": 173,
  "footballRows": 147,
  "crossRows": 226,
- "footballSkippedStale": 48,
+ "footballSkippedStale": 74,
  "seenBySport": {
   "americanfootball_nfl": 148,
   "baseball_mlb": 76,
@@ -27,8 +27,37 @@
   "soccer_liga": 102
  },
  "trackRecord": {
-  "tracked": 168,
+  "tracked": 170,
   "converged": 30
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|brentford-tottenham|hw",
+   "sport": "soccer_liga",
+   "event": "Brentford vs Tottenham",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 38.5,
+   "pinnPP": 45.4,
+   "gapPP": -6.89,
+   "vol": 25673,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-22T06:59:38.710251+00:00"
+  },
+  {
+   "id": "soccer_liga|brentford-tottenham|aw",
+   "sport": "soccer_liga",
+   "event": "Brentford vs Tottenham",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 35.5,
+   "pinnPP": 29.0,
+   "gapPP": 6.47,
+   "vol": 25673,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-22T06:59:38.710251+00:00"
+  }
+ ]
 }
