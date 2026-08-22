@@ -567,6 +567,25 @@ test('×-Norm: zu wenige Vergleichsspiele → kein Ratio (Median instabil)', () 
 });
 
 
+test('×-Norm Liga-relativ: Klein-Liga-Anomalie erkannt, großes Normal-Spiel NICHT überflaggt', () => {
+  const { w } = boot();
+  const mk = (v) => ({ 'Match Odds': { runners: [ { name: 'H', vol: v * 0.6, odd: 2.0 }, { name: 'A', vol: v * 0.4, odd: 2.2 } ] } });
+  const mm = (id, v, L) => ({ matchId: id, home: 'H' + id, away: 'A' + id, league: L, country: 'AT', kickoff: '2031-01-01T20:00:00Z', liveInfo: {}, markets: mk(v) });
+  // Große Liga: 5 Spiele à 100K (Median 100K). Kleine Liga: 5 à 4K + 1 Anomalie à 40K (Median 4K).
+  w._bfState.data = { matches: [
+    mm(1, 100000, 'Big'), mm(2, 100000, 'Big'), mm(3, 100000, 'Big'), mm(4, 100000, 'Big'), mm(5, 100000, 'Big'),
+    mm(6, 4000, 'Small'), mm(7, 4000, 'Small'), mm(8, 4000, 'Small'), mm(9, 4000, 'Small'), mm(10, 4000, 'Small'),
+    mm(11, 40000, 'Small'),
+  ] };
+  w._bfState._normBase = null; w._bfState._cohCache = {};
+  const rSmallAnom = w._bfNormRatio(w._bfState.data.matches[10]);  // 40K in Small (Median 4K) → ×10
+  const rBigNorm  = w._bfNormRatio(w._bfState.data.matches[0]);    // 100K in Big  (Median 100K) → ×1
+  assert.ok(rSmallAnom >= 8 && rSmallAnom <= 12, 'Klein-Liga-Anomalie ~×10 (Liga-relativ), war ' + rSmallAnom);
+  assert.ok(rBigNorm >= 0.9 && rBigNorm <= 1.1, 'großes Normal-Spiel ~×1 für seine Liga, war ' + rBigNorm);
+  // Kern: die 40K-Anomalie schlägt an, obwohl sie GLOBAL (Median wäre ~4K..100K) kleiner ist als die 100K-Spiele.
+  assert.ok(rSmallAnom > rBigNorm, 'Liga-relativ: kleine Anomalie sticht das große Normal-Spiel');
+});
+
 test('Frisches Geld respektiert dieselbe Tier-Schwelle wie Hotspots (kein Klein-Liga-Zufluss)', () => {
   const { w } = boot();
   // Ein qualifiziertes Groß-Spiel + ein Klein-Spiel unter der Schwelle — beide mit frischem Zufluss.

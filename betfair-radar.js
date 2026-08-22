@@ -469,31 +469,44 @@
   // Stage → { med: Median-€ auf dem ganzen Spiel, n: Anzahl Vergleichsspiele }. Memoisiert bis Reload,
   // wird an denselben Stellen wie _mixBase geleert. Nur Spiele ab NORM_MIN_EUR zählen (Kleckerbeträge
   // würden den Median nach unten ziehen und harmlose Spiele „über Norm" aussehen lassen).
+  // 22.08.2026 (Lucas: „auf Liga relativ"): drei Vergleichs-Ebenen statt nur global. Ein EPL-Riese
+  // gegen den globalen Live-Pool (voll Mini-Ligen) ergab ×200 = nutzlos. Jetzt zuerst gegen die EIGENE
+  // Liga: „viel Geld FÜR EIN EPL-Spiel" ist die aussagekräftige Zahl. Kaskade in _normRatio:
+  // Liga+Phase → Liga (jede Phase) → global+Phase (Fallback für dünn besetzte Ligen).
+  function _normLeague(m) { return String(m.league || m.leagueId || '?'); }
   function _normBase() {
     if (_bf._normBase) return _bf._normBase;
-    var ms = (_bf.data && _bf.data.matches) || [], acc = {}, i;
+    var ms = (_bf.data && _bf.data.matches) || [], ls = {}, lg = {}, sg = {}, i;
     for (i = 0; i < ms.length; i++) {
       var tot = eur(totalG(ms[i])); if (tot < NORM_MIN_EUR) continue;
-      var st = _stageOf(ms[i]); (acc[st] = acc[st] || []).push(tot);
+      var st = _stageOf(ms[i]), L = _normLeague(ms[i]);
+      (ls[st + '|' + L] = ls[st + '|' + L] || []).push(tot);
+      (lg[L] = lg[L] || []).push(tot);
+      (sg[st] = sg[st] || []).push(tot);
     }
-    var base = {};
-    for (var s in acc) { var arr = acc[s].sort(function (a, b) { return a - b; }); base[s] = { med: arr[Math.floor(arr.length / 2)], n: arr.length }; }
-    _bf._normBase = base; return base;
+    function _med(map) {
+      var out = {}; for (var k in map) { var a = map[k].sort(function (x, y) { return x - y; }); out[k] = { med: a[Math.floor(a.length / 2)], n: a.length }; } return out;
+    }
+    _bf._normBase = { ls: _med(ls), lg: _med(lg), sg: _med(sg) };
+    return _bf._normBase;
   }
   // Verhältnis Spiel-Geld ÷ Stage-Median. null, wenn zu wenige Vergleichsspiele (Median instabil)
   // oder das Spiel selbst zu klein ist (dann ist „×3" nur Rauschen auf Kleckerbeträgen).
   function _normRatio(m) {
     var tot = eur(totalG(m)); if (tot < NORM_MIN_EUR) return null;
-    var b = _normBase()[_stageOf(m)];
-    if (!b || b.n < NORM_MIN_PEERS || !b.med) return null;
-    return tot / b.med;
+    var b = _normBase(), st = _stageOf(m), L = _normLeague(m), ok = function (x) { return x && x.n >= NORM_MIN_PEERS && x.med; };
+    var pick = b.ls[st + '|' + L];                 // 1. gleiche Liga + gleiche Phase (praeziseste)
+    if (!ok(pick)) pick = b.lg[L];                  // 2. gleiche Liga, jede Phase
+    if (!ok(pick)) pick = b.sg[st];                 // 3. global gleiche Phase (Fallback duenner Ligen)
+    if (!ok(pick)) return null;
+    return tot / pick.med;
   }
   function _normLvl(m) { var r = _normRatio(m); return r == null ? 0 : (r >= NORM_RED ? 2 : r >= NORM_AMBER ? 1 : 0); }
   function _normCls(m) { var l = _normLvl(m); return l === 2 ? ' bfb-over2' : l === 1 ? ' bfb-over' : ''; }
   function _normBadge(m) {
     var r = _normRatio(m); if (r == null || r < NORM_AMBER) return '';
     var red = r >= NORM_RED, col = red ? '#f0883e' : C.gold;   // 02.08.2026 (Lucas): Gold->Orange zweistufig statt Rot (Rot = nur Live)
-    return '<span class="bfb-norm" style="color:' + col + ';border-color:' + col + '" title="' + (red ? 'weit über' : 'über') + ' dem üblichen Geld für diese Spielphase (Median aller vergleichbaren Spiele)">×' + r.toFixed(1) + ' Norm</span>';
+    return '<span class="bfb-norm" style="color:' + col + ';border-color:' + col + '" title="' + (red ? 'weit über' : 'über') + ' dem üblichen Geld für diese Liga (Median vergleichbarer Spiele derselben Liga/Phase; Fallback global)">×' + r.toFixed(1) + ' Norm</span>';
   }
   function _normLine(m) { var b = _normBadge(m); return b ? '<br>' + b : ''; }
   // (31.07.2026, Lucas) Live-Hervorhebung in den Streifen: Rot = NUR Live (×-Norm ist amber).
