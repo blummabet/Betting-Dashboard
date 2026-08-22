@@ -1,14 +1,14 @@
 {
- "n": 581,
+ "n": 579,
  "minOdds": 1.35,
- "moneyHitRate": 0.527,
- "priceHitRate": 0.539,
- "brierMoney": 0.6207,
- "brierPrice": 0.554,
+ "moneyHitRate": 0.515,
+ "priceHitRate": 0.528,
+ "brierMoney": 0.6302,
+ "brierPrice": 0.5583,
  "disagree": {
-  "n": 77,
+  "n": 78,
   "moneyWon": 12,
-  "priceWon": 19,
+  "priceWon": 20,
   "neither": 46
  },
  "verdict": "preis_besser",
@@ -22,11 +22,19 @@
    "verdict": "geld_schaerfer"
   },
   {
+   "league": "TENNIS",
+   "n": 33,
+   "moneyHitRate": 0.545,
+   "brierMoney": 0.5268,
+   "brierPrice": 0.5269,
+   "verdict": "gleichauf"
+  },
+  {
    "league": "ESPORTS",
-   "n": 190,
-   "moneyHitRate": 0.589,
-   "brierMoney": 0.4714,
-   "brierPrice": 0.4714,
+   "n": 187,
+   "moneyHitRate": 0.583,
+   "brierMoney": 0.4727,
+   "brierPrice": 0.4727,
    "verdict": "gleichauf"
   },
   {
@@ -51,14 +59,6 @@
    "moneyHitRate": 0.3,
    "brierMoney": 0.6028,
    "brierPrice": 0.6028,
-   "verdict": "gleichauf"
-  },
-  {
-   "league": "TENNIS",
-   "n": 34,
-   "moneyHitRate": 0.559,
-   "brierMoney": 0.5252,
-   "brierPrice": 0.5252,
    "verdict": "gleichauf"
   },
   {
@@ -94,19 +94,19 @@
    "verdict": "preis_besser"
   },
   {
-   "league": "SOCCER",
-   "n": 175,
-   "moneyHitRate": 0.406,
-   "brierMoney": 0.833,
-   "brierPrice": 0.6485,
+   "league": "EPL",
+   "n": 15,
+   "moneyHitRate": 0.267,
+   "brierMoney": 0.894,
+   "brierPrice": 0.6963,
    "verdict": "preis_besser"
   },
   {
-   "league": "EPL",
-   "n": 7,
-   "moneyHitRate": 0.286,
-   "brierMoney": 1.0349,
-   "brierPrice": 0.8295,
+   "league": "SOCCER",
+   "n": 169,
+   "moneyHitRate": 0.385,
+   "brierMoney": 0.861,
+   "brierPrice": 0.662,
    "verdict": "preis_besser"
   }
  ],
@@ -254,6 +254,18 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 564871
+  },
+  {
+   "key": "epl-ips-sun-2026-08-22",
+   "league": "EPL",
+   "winner": "Ipswich Town FC",
+   "moneyFav": "Sunderland AFC",
+   "priceFav": "Sunderland AFC",
+   "moneyShare": 0.933,
+   "priceProb": 0.363,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 558618
   },
   {
    "key": "ucl-fen-lyo-2026-08-18",
@@ -578,21 +590,9 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 253267
-  },
-  {
-   "key": "mls-lag-sje-2026-08-19",
-   "league": "MLS",
-   "winner": "Los Angeles Galaxy",
-   "moneyFav": "Los Angeles Galaxy",
-   "priceFav": "Los Angeles Galaxy",
-   "moneyShare": 0.949,
-   "priceProb": 0.541,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 246867
   }
  ],
- "generatedAt": "2026-08-22T15:46:52.041010+00:00",
+ "generatedAt": "2026-08-22T17:05:23.184073+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -600,10 +600,10 @@
   "nfl": 800,
   "mlb": 575,
   "nhl": 403,
-  "mls": 647,
-  "epl": 547,
+  "mls": 654,
+  "epl": 527,
   "soccer": 800,
-  "tennis": 455,
+  "tennis": 448,
   "ucl": 453,
   "la-liga": 585,
   "bundesliga": 476,
@@ -615,7 +615,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 572,
+  "esports": 565,
   "cs2": 408,
   "lol": 377,
   "dota": 9,
@@ -623,7 +623,7 @@
   "ufc": 458,
   "mma": 47,
   "boxing": 224,
-  "golf": 336,
+  "golf": 343,
   "f1": 365,
   "cricket": 451,
   "allsvenskan": 1,
@@ -632,31 +632,31 @@
   "bundesliga-2": 479,
   "champions-league": 295,
   "champions-league-final": 12,
-  "chinese-super-league": 506,
-  "denmark-superliga": 480,
-  "efl-championship": 648,
+  "chinese-super-league": 492,
+  "denmark-superliga": 481,
+  "efl-championship": 633,
   "english-premier-league": 2,
   "europa-conference-league": 569,
   "europa-league": 174,
-  "japan-j-league": 551,
-  "japan-j2-league": 478,
-  "k-league": 502,
+  "japan-j-league": 549,
+  "japan-j2-league": 472,
+  "k-league": 500,
   "la-liga-2": 553,
   "liga-mx-apertura": 2,
-  "ligue-2": 523,
+  "ligue-2": 509,
   "naitons-league": 1,
   "national-league": 570,
   "nations-league": 25,
   "norway-eliteserien": 458,
   "poland-ekstraklasa": 252,
-  "premier-league": 545,
+  "premier-league": 524,
   "saudi-professional-league": 579,
   "scotland-league-cup": 164,
   "scottish-premiership": 522,
   "serbian-superliga": 224,
   "serie-b": 533,
   "slovenia-prvaliga": 156,
-  "sweden-allsvenskan": 444,
+  "sweden-allsvenskan": 439,
   "uefa-champions-league": 21,
   "uefa-conference-league": 11,
   "uefa-europa-league": 13,
@@ -667,6 +667,6 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 422
+  "sweepAdded": 424
  }
 }
