@@ -1,23 +1,23 @@
 {
-"generatedAt": "2026-08-22T13:30:41.066177+00:00",
+"generatedAt": "2026-08-22T13:36:28.879640+00:00",
 "byVerdict": {
 "konsens": {
-"n": 310,
-"wins": 241,
-"hitRate": 0.7774,
-"polyN": 289,
-"polyWins": 220,
-"polyHitRate": 0.7612,
+"n": 311,
+"wins": 242,
+"hitRate": 0.7781,
+"polyN": 290,
+"polyWins": 221,
+"polyHitRate": 0.7621,
 "pinnN": 17,
 "pinnHitRate": 0.6471
 },
 "uneinig": {
-"n": 96,
-"wins": 27,
-"hitRate": 0.2812,
-"polyN": 85,
+"n": 97,
+"wins": 28,
+"hitRate": 0.2887,
+"polyN": 86,
 "polyWins": 28,
-"polyHitRate": 0.3294,
+"polyHitRate": 0.3256,
 "pinnN": 43,
 "pinnHitRate": 0.6047
 },
@@ -148,6 +148,11 @@
 "wins": 4,
 "hitRate": 0.6667
 },
+"Chinese Super League": {
+"n": 6,
+"wins": 4,
+"hitRate": 0.6667
+},
 "Dutch Eerste Divisie": {
 "n": 6,
 "wins": 4,
@@ -167,11 +172,6 @@
 "n": 6,
 "wins": 5,
 "hitRate": 0.8333
-},
-"Chinese Super League": {
-"n": 5,
-"wins": 3,
-"hitRate": 0.6
 },
 "German Cup": {
 "n": 5,
@@ -208,6 +208,11 @@
 "wins": 3,
 "hitRate": 0.75
 },
+"English Sky Bet League 1": {
+"n": 4,
+"wins": 4,
+"hitRate": 1.0
+},
 "Norwegian Eliteserien": {
 "n": 4,
 "wins": 2,
@@ -242,11 +247,6 @@
 "n": 3,
 "wins": 1,
 "hitRate": 0.3333
-},
-"English Sky Bet League 1": {
-"n": 3,
-"wins": 3,
-"hitRate": 1.0
 },
 "Finnish Veikkausliiga": {
 "n": 3,
@@ -436,25 +436,63 @@
 },
 "byStrength": {
 "strong": {
-"n": 238,
-"wins": 187,
-"hitRate": 0.7857
+"n": 239,
+"wins": 188,
+"hitRate": 0.7866
 },
 "weak": {
-"n": 138,
-"wins": 64,
-"hitRate": 0.4638
+"n": 139,
+"wins": 65,
+"hitRate": 0.4676
 }
 },
 "divergence": {
-"n": 96,
-"betfairWins": 27,
-"betfairRate": 0.2812,
-"polyN": 85,
+"n": 97,
+"betfairWins": 28,
+"betfairRate": 0.2887,
+"polyN": 86,
 "polyWins": 28,
-"polyRate": 0.3294
+"polyRate": 0.3256
 },
 "recent": [
+{
+"matchId": "35944545",
+"home": "Luton",
+"away": "Notts Co",
+"league": "English Sky Bet League 1",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-08-22T11:30:00Z",
+"settledAt": "2026-08-22T13:36:28.730229+00:00"
+},
+{
+"matchId": "35951274",
+"home": "Chengdu Rongcheng",
+"away": "Shanghai Shenhua",
+"league": "Chinese Super League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Shanghai Shenhua",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+5
+],
+"kickoff": "2026-08-22T11:35:00Z",
+"settledAt": "2026-08-22T13:36:28.730229+00:00"
+},
 {
 "matchId": "35737540",
 "home": "Hull",
@@ -1176,50 +1214,12 @@
 ],
 "kickoff": "2026-08-21T18:45:00Z",
 "settledAt": "2026-08-21T20:39:02.259679+00:00"
-},
-{
-"matchId": "35946266",
-"home": "Sirius",
-"away": "Hacken",
-"league": "Swedish Allsvenskan",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Hacken",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-3
-],
-"kickoff": "2026-08-21T17:00:00Z",
-"settledAt": "2026-08-21T20:01:27.299017+00:00"
-},
-{
-"matchId": "35955070",
-"home": "Al Faisaly ( KSA )",
-"away": "NEOM Sports Club",
-"league": "Saudi Professional League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "NEOM Sports Club",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-08-21T18:00:00Z",
-"settledAt": "2026-08-21T20:01:27.299017+00:00"
 }
 ],
 "global": {
-"n": 409,
-"wins": 269,
-"hitRate": 0.6577
+"n": 411,
+"wins": 271,
+"hitRate": 0.6594
 },
-"pending": 23
+"pending": 21
 }
