@@ -181,14 +181,14 @@ test('Frisches Geld: €-Zufluss + % Surge aus mkv-History-Delta', () => {
   w._bfState.hist = {
     '1': [
       { ts: iso(-15 * 60e3), mkv: { 'Match Odds': 10000, 'First Half Goals 0.5': 1200 } },
-      { ts: iso(0), mkv: { 'Match Odds': 15000, 'First Half Goals 0.5': 4800 } },  // +5K bzw. +300%
+      { ts: iso(0), mkv: { 'Match Odds': 25000, 'First Half Goals 0.5': 4800 } },  // +15K bzw. +300% (21.08.2026: FLOW_MIN 2K->10K)
     ],
   };
   const html = w._renderBetfairRadar();
   assert.match(html, /Frisches Geld/);
   assert.match(html, /Größte Zuflüsse/);
   assert.match(html, /Größte Sprünge/);
-  assert.ok(html.includes('▲ +€5K'), '€-Zufluss Match Odds +€5K');
+  assert.ok(html.includes('▲ +€15K'), '€-Zufluss Match Odds +€15K (>= FLOW_MIN 10K)');
   assert.match(html, /HT O\/U 0\.5/);
   assert.ok(html.includes('+300%'), 'Surge +300%');
   assert.match(html, /🚨/, 'großer Sprung markiert');
