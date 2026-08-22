@@ -7,13 +7,12 @@
 "n": 30,
 "nClv": 30,
 "nGraded": 28,
-"avgClvPP": -3.58,
-"pctBeatClose": 23.3,
-"winPct": 50.0,
-"wins": 14,
-"losses": 14,
+"avgClvPP": -3.64,
+"pctBeatClose": 20.0,
+"winPct": 53.6,
+"wins": 15,
+"losses": 13,
 "series": [
-0.78,
 -10.29,
 -12.94,
 2.82,
@@ -42,10 +41,11 @@
 -4.75,
 -1.25,
 -19.69,
--2.39
+-2.39,
+-1.13
 ],
-"oldest": "2026-07-19T01:10:37Z",
-"newest": "2026-08-22T06:57:24Z",
+"oldest": "2026-07-19T07:47:58Z",
+"newest": "2026-08-22T18:28:52Z",
 "betfair": {
 "n": 8000,
 "hitPct": 52.3,
@@ -83,19 +83,19 @@
 }
 },
 "signalBoard": {
-"n": 27,
-"baseWinPct": 52,
+"n": 28,
+"baseWinPct": 54,
 "minFire": 6,
 "rows": [
 {
 "name": "form_trend",
-"fire": 23,
-"supp": 13,
-"suppWinPct": 54,
+"fire": 24,
+"supp": 14,
+"suppWinPct": 57,
 "opp": 10,
 "oppWinPct": 50,
-"edge": 4,
-"clvAvg": -3.54
+"edge": 7,
+"clvAvg": -3.44
 },
 {
 "name": "topscorer_momentum",
@@ -129,23 +129,33 @@
 },
 {
 "name": "injury",
-"fire": 14,
+"fire": 15,
 "supp": 10,
 "suppWinPct": 70,
-"opp": 4,
-"oppWinPct": 50,
-"edge": 20,
-"clvAvg": -4.27
+"opp": 5,
+"oppWinPct": 60,
+"edge": 10,
+"clvAvg": -4.07
 },
 {
 "name": "xg_strength",
-"fire": 13,
-"supp": 10,
-"suppWinPct": 50,
+"fire": 14,
+"supp": 11,
+"suppWinPct": 55,
 "opp": 3,
 "oppWinPct": 67,
-"edge": -17,
-"clvAvg": -2.23
+"edge": -12,
+"clvAvg": -2.15
+},
+{
+"name": "venue_form",
+"fire": 11,
+"supp": 6,
+"suppWinPct": 67,
+"opp": 5,
+"oppWinPct": 80,
+"edge": -13,
+"clvAvg": -2.96
 },
 {
 "name": "mls_travel",
@@ -158,24 +168,14 @@
 "clvAvg": -4.94
 },
 {
-"name": "venue_form",
-"fire": 10,
-"supp": 6,
-"suppWinPct": 67,
-"opp": 4,
-"oppWinPct": 75,
-"edge": -8,
-"clvAvg": -3.14
-},
-{
 "name": "transfer_shift",
-"fire": 9,
+"fire": 10,
 "supp": 4,
 "suppWinPct": 50,
 "opp": 5,
 "oppWinPct": 60,
 "edge": -10,
-"clvAvg": -4.57
+"clvAvg": -4.22
 },
 {
 "name": "lead_lag_bias",
@@ -266,6 +266,16 @@
 "oppWinPct": null,
 "edge": null,
 "clvAvg": 3.17
+},
+{
+"name": "apif_predictions",
+"fire": 1,
+"supp": 1,
+"suppWinPct": 100,
+"opp": 0,
+"oppWinPct": null,
+"edge": null,
+"clvAvg": -1.13
 },
 {
 "name": "league_pressure",
