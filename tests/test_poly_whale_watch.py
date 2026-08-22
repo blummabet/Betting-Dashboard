@@ -389,3 +389,23 @@ class TestSelectSubBreakeven(unittest.TestCase):
         self.assertNotIn("loser|k1|home", picks)
         self.assertIn("unknown|k2|home", picks)
         self.assertIn("sharp|k3|home", picks)
+
+
+class TestPubMinOdds(unittest.TestCase):
+    # 22.08.2026 (Lucas): Public-Whale nur bei Mindest-Quote >=1.30 (Einstieg/Jetzt <= ~0.769).
+    def test_short_favourite_rejected(self):
+        self.assertFalse(P._pub_min_odds_ok(_pos(50000, price=0.86)))   # Odds ~1.16 -> raus
+        self.assertFalse(P._pub_min_odds_ok(_pos(50000, price=0.80)))   # Odds 1.25 -> raus
+
+    def test_ok_at_or_above_min_odds(self):
+        self.assertTrue(P._pub_min_odds_ok(_pos(50000, price=0.769)))   # ~1.30 Grenze
+        self.assertTrue(P._pub_min_odds_ok(_pos(50000, price=0.60)))    # 1.67
+        self.assertTrue(P._pub_min_odds_ok(_pos(50000, price=0.30)))    # Aussenseiter 3.33 -> bleibt
+
+    def test_current_price_drifted_short_rejected(self):
+        pos = _pos(50000, price=0.70)   # Einstieg 1.43 ok
+        pos["lastPrice"] = 0.90         # aber jetzt 1.11 -> zu kurz
+        self.assertFalse(P._pub_min_odds_ok(pos))
+
+    def test_bad_price_rejected(self):
+        self.assertFalse(P._pub_min_odds_ok({"firstPrice": None}))

@@ -43,6 +43,9 @@ POLY_MARKETS = {
 
 # ── Leagues covered on Polymarket ────────────────────────
 POLY_LEAGUES = {'GER', 'ENG', 'ITA', 'ESP', 'FRA', 'NED', 'POR', 'TUR', 'GER2', 'SCO', 'ENG2'}
+# 22.08.2026 (Lucas): getradet werden NUR Top-5 + MLS. POLY_LEAGUES bleibt breit (Whale/Betting-Tab
+# nutzen polymarket_prices.json), aber der Trader-Kandidaten-Pool wird hier auf das Tradeable-Set beschraenkt.
+TRADEABLE_LEAGUES = {'GER', 'ENG', 'ITA', 'ESP', 'FRA', 'MLS'}
 
 # ── WM 2026 team ID → English name (for Polymarket matching) ─────────────────
 WM_TEAM_EN = {
@@ -1017,14 +1020,20 @@ def main():
 
 # Markets where we can compare Poly price to Pinnacle fair odds
 # Maps Poly market name → (odds_open key, odds_current key)
+# 22.08.2026 (Lucas: „wir haben die Daten schon — Leiter + Both-Teams-Score"): Fair pro Markt.
+#   ('fair', primary_key, fallback_key)  → vorberechnete de-viggte Fair-Odds (pinn_ bevorzugt, sonst plain)
+#   ('devig', want_key, other_key)       → on-the-fly aus den Rohquoten de-viggt (Daten lagen in
+#                                          prematch-data.json, waren nur nie als *_fair-Key ausgewiesen)
+# hw_fair == pinn_hw_fair (verifiziert) — der plain-Key ist auf mehr Fixtures da, daher als Fallback.
 TRADER_MARKET_MAP = {
-    'Heimsieg':       ('pinn_hw_fair', 'pinn_hw_fair'),
-    'Auswärtssieg':   ('pinn_aw_fair', 'pinn_aw_fair'),
-    'Unentschieden':  ('pinn_dr_fair', 'pinn_dr_fair'),
-    'Over 2.5 Tore':  ('o25_fair',     'o25_fair'),
-    'Over 1.5 Tore':  (None,           None),   # no Pinnacle fair key → Poly-only tracking
-    'Over 3.5 Tore':  (None,           None),
-    'Beide Teams treffen': (None,       None),
+    'Heimsieg':                  ('fair',  'pinn_hw_fair', 'hw_fair'),
+    'Auswärtssieg':              ('fair',  'pinn_aw_fair', 'aw_fair'),
+    'Unentschieden':             ('fair',  'pinn_dr_fair', 'dr_fair'),
+    'Over 2.5 Tore':             ('fair',  'pinn_o25_fair', 'o25_fair'),
+    'Over 1.5 Tore':             ('devig', 'o15',   'u15'),
+    'Over 3.5 Tore':             ('devig', 'o35',   'u35'),
+    'Beide Teams treffen':       ('devig', 'bttsY', 'bttsN'),
+    'Beide Teams treffen: Nein': ('devig', 'bttsN', 'bttsY'),
 }
 
 # Minimum bookie move (pp) to flag as SHARP signal
@@ -1052,6 +1061,30 @@ def _implied(fair_odds: float | None) -> float | None:
     """Convert decimal fair odds to implied probability %."""
     if fair_odds and fair_odds > 1:
         return round(100.0 / fair_odds, 2)
+    return None
+
+
+def _bookie_impl(odds: dict, market_name: str) -> float | None:
+    """22.08.2026 (Lucas): Pinnacle-implizite Wahrscheinlichkeit (%) fuer den Markt — EINE Quelle
+    (TRADER_MARKET_MAP). 'fair': vorberechnete Fair-Odds (primary, sonst fallback). 'devig': zwei
+    Rohquoten zu einer fairen 2-Wege-Wahrscheinlichkeit entvigt (O1.5/O3.5/BTTS)."""
+    spec = TRADER_MARKET_MAP.get(market_name)
+    if not spec or not isinstance(odds, dict):
+        return None
+    kind = spec[0]
+    if kind == "fair":
+        for k in spec[1:]:
+            v = odds.get(k)
+            if isinstance(v, (int, float)) and v > 1:
+                return _implied(v)
+        return None
+    if kind == "devig":
+        a, b = odds.get(spec[1]), odds.get(spec[2])
+        if isinstance(a, (int, float)) and isinstance(b, (int, float)) and a > 1 and b > 1:
+            ia, ib = 1.0 / a, 1.0 / b
+            s = ia + ib
+            if s > 0:
+                return round(100.0 * ia / s, 2)
     return None
 
 
@@ -1113,6 +1146,8 @@ def update_trader_data(poly_results: dict, unique_matches: dict):
         pass
 
     candidates = trader.get('candidates', {})
+    # 22.08.2026 (Lucas): Alt-Kandidaten aus Nicht-Tradeable-Ligen (TUR/NED/POR/SCO/GER2/ENG2) rauswerfen.
+    candidates = {k: v for k, v in candidates.items() if v.get('league') in TRADEABLE_LEAGUES}
     today = datetime.now(timezone.utc).date()
     updated_count = 0
 
@@ -1127,6 +1162,8 @@ def update_trader_data(poly_results: dict, unique_matches: dict):
         if len(meta) < 4:
             continue
         home, away, date_str, league = meta
+        if league not in TRADEABLE_LEAGUES:
+            continue   # 22.08.2026 (Lucas): nur Top-5 + MLS traden
 
         # Parse kickoff date
         kickoff_date = None
@@ -1159,12 +1196,11 @@ def update_trader_data(poly_results: dict, unique_matches: dict):
             if not isinstance(poly_price, (int, float)):
                 continue
 
-            open_key, cur_key = TRADER_MARKET_MAP[market_name]
             candidate_key = f"{match_key}|{market_name}"
 
-            # Bookie implied probabilities
-            bookie_open_impl = _implied(odds_open.get(open_key)) if open_key else None
-            bookie_cur_impl  = _implied(odds_cur.get(cur_key))   if cur_key  else None
+            # Bookie implied probabilities (22.08.2026: markt-generisch inkl. O1.5/O3.5/BTTS)
+            bookie_open_impl = _bookie_impl(odds_open, market_name)
+            bookie_cur_impl  = _bookie_impl(odds_cur,  market_name)
             bookie_move_pp   = None
             if bookie_open_impl is not None and bookie_cur_impl is not None:
                 bookie_move_pp = round(bookie_cur_impl - bookie_open_impl, 2)

@@ -74,6 +74,7 @@ PUB_MIN_TR            = int(os.environ.get("WHALE_PUB_MIN_TR")            or 8) 
 PUB_MIN_HITRATE       = float(os.environ.get("WHALE_PUB_MIN_HITRATE")     or 0.5)
 PUB_MIN_USD_NOREC     = float(os.environ.get("WHALE_PUB_MIN_USD_NOREC")   or 150000)   # 06.08.2026 (Lucas: Feed straffen): Wallet OHNE belastbaren Record (n<PUB_MIN_TR) nur ab so viel $
 CONTEST_MIN_USD       = float(os.environ.get("WHALE_CONTEST_MIN_USD")     or 100000)   # 12.08.2026 (Lucas): Public — Gross-Einstiege ab so viel auf ZWEI Seiten = umkaempft -> gar nicht posten
+PUB_MIN_ODDS          = float(os.environ.get("WHALE_PUB_MIN_ODDS")       or 1.30)     # 22.08.2026 (Lucas): Public — Whale-Bet braucht Mindest-Quote (86c/1.16 = zu wenig Value). Einstieg/Jetzt <= 1/odds.
 
 
 # 03.08.2026 (Lucas: „50% ist Münzwurf, kein Beweis"): „bewiesen" heißt jetzt STATISTISCH über
@@ -531,6 +532,24 @@ def _tg_public(text: str) -> bool:
         return False
 
 
+def _pub_min_odds_ok(pos) -> bool:
+    """22.08.2026 (Lucas): Public-Whale nur bei sinnvoller Mindest-Quote. Ein Whale, der bei ~86c
+    (Odds ~1.16) einsteigt, ist fuer den oeffentlichen Feed „recht wenig" Value. Gate auf den
+    Einstieg (firstPrice) UND — falls vorhanden — den Jetzt-Preis (lastPrice): beide muessen Odds
+    >= PUB_MIN_ODDS ergeben (Preis <= 1/odds). Aussenseiter (niedriger Preis, hohe Odds) bleiben drin."""
+    max_price = (1.0 / PUB_MIN_ODDS) if PUB_MIN_ODDS > 0 else 1.0
+    try:
+        fp = float(pos.get("firstPrice"))
+    except (TypeError, ValueError):
+        return False
+    if fp > max_price:
+        return False
+    lp = pos.get("lastPrice")
+    if isinstance(lp, (int, float)) and lp > max_price:
+        return False
+    return True
+
+
 def _pub_keep(pos, scores):
     """13.08.2026 (Lucas): Public NUR bewiesen scharfe Wallets — Record n>=PUB_MIN_TR, >=PUB_MIN_HITRATE
     Treffer, kein bestaetigter Verlierer (_is_smart). Grosse-aber-unbewiesene Wallets (frueher ab
@@ -589,6 +608,7 @@ def main():
                       PUB_MIN_TR, PUB_MIN_HITRATE)
     pub_cand = [c for c in pub_cand if _pub_ok(c[1])]   # nur Sport + sinnvoller Preis (Public)
     pub_cand = [c for c in pub_cand if _pub_keep(c[1], scores)]   # 06.08.2026 (Lucas): Feed straffen — grosse Wallets ohne Record nur ab PUB_MIN_USD_NOREC
+    pub_cand = [c for c in pub_cand if _pub_min_odds_ok(c[1])]   # 22.08.2026 (Lucas): Public-Mindest-Quote (>=1.30) — kurze Favoriten raus
     _pre_contest = len(pub_cand)
     pub_cand = [c for c in pub_cand if not _contested_market(c[1].get("key"), broad)]   # 12.08.2026 (Lucas): Gegenseiten-Krieg raus — umkaempfte Spiele gar nicht posten
     if _pre_contest != len(pub_cand):
