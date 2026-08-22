@@ -532,6 +532,31 @@ def should_send(seen: dict, key: str, value: float) -> bool:
         return True
 
 
+# 22.08.2026 (Lucas: „grosse Ligen werden mit Geld geflutet"): pro Spiel kein zweiter Moneyflow-
+# (fresh-)Push innerhalb der Sperre — egal wie stark der Zufluss waechst. Zeitstempel je matchId
+# unter store["_freshTs"]. Gilt fuer BEIDE Kanaele (jeder Kanal hat seinen eigenen Seen-Store).
+FRESH_COOLDOWN_MIN = float(os.environ.get("BF_FRESH_COOLDOWN_MIN") or 15.0)
+
+
+def _fresh_cooldown_ok(store: dict, match_id, now=None) -> bool:
+    if FRESH_COOLDOWN_MIN <= 0:
+        return True
+    now = now or datetime.now(timezone.utc)
+    ts = (store.get("_freshTs") or {}).get(str(match_id))
+    if not ts:
+        return True
+    try:
+        last = datetime.fromisoformat(str(ts).replace("Z", "+00:00"))
+        return (now - last).total_seconds() >= FRESH_COOLDOWN_MIN * 60.0
+    except Exception:
+        return True
+
+
+def _fresh_cooldown_mark(store: dict, match_id, now=None) -> None:
+    now = now or datetime.now(timezone.utc)
+    store.setdefault("_freshTs", {})[str(match_id)] = now.isoformat()
+
+
 def _consensus_index() -> dict:
     """betfair_consensus.json (vom Runner, betfair_consensus.py, laeuft VOR alerts) -> {matchId: game}."""
     try:
@@ -943,7 +968,7 @@ def _trades_reactive_backed_under(a) -> bool:
 # 14.08.2026 (Lucas): eskalierende Wiederhol-Bremse fuers Public. Derselbe Markt muss zum Re-Push das
 # Geld nur um DEDUP_FACTOR steigern -> in liquiden Ligen 4-5x Spam. Ab dem 3. Push wird die noetige
 # Steigerung hoeher gestaffelt. Zaehler steckt im pub_seen (rueckwaerts-kompatibel: alter float = 1x).
-PUB_RESEND_LADDER = [1.5, 2.5, 4.0, 6.0]   # Faktor fuer 1->2, 2->3, 3->4, 4->5+
+PUB_RESEND_LADDER = [2.0, 3.0, 4.5, 6.0]   # 22.08.2026 (Lucas): 1->2 von 1.5 auf 2.0 gehaertet (grosse Ligen werden geflutet)
 
 
 def _pub_seen_rec(rec):
@@ -1034,12 +1059,16 @@ def main():
     sent = 0
     for a in alerts:
         key = a["scenario"] + ":" + a["matchId"]
+        if a["scenario"] == "fresh" and not _fresh_cooldown_ok(seen, a["matchId"]):
+            continue   # 22.08.2026 (Lucas): kein zweiter Fresh-Push binnen FRESH_COOLDOWN_MIN
         if should_send(seen, key, a["value"]):
             # 09.08.2026 (Lucas): Trades-„Frisches Geld" jetzt im Public-Format (Geld-Leiste + %, auch <80%)
             # PLUS die Zweitmeinung der anderen Quellen. HT bleibt beim kompakten Format.
             msg = (build_public_message(a, trades=True) + _consensus_block(a, cidx)) if a["scenario"] == "fresh" else build_message(a)
             if send_trades_message(msg):
                 seen[key] = a["value"]     # nur bei Erfolg merken (Preview/Fehler → nächster Lauf retry)
+                if a["scenario"] == "fresh":
+                    _fresh_cooldown_mark(seen, a["matchId"])
                 sent += 1
     _save_seen(SEEN_FILE, seen)
     print("Betfair-Alerts: %d Kandidaten, %d gesendet" % (len(alerts), sent))
@@ -1072,11 +1101,15 @@ def main():
         key = a["scenario"] + ":" + a["matchId"]
         if _pub_skip_resend(a, pub_seen):
             continue   # 15.08.2026 (Lucas): live nur EIN Public-Push pro Spiel
+        if a["scenario"] == "fresh" and not _fresh_cooldown_ok(pub_seen, a["matchId"]):
+            continue   # 22.08.2026 (Lucas): kein zweiter Fresh-Push binnen FRESH_COOLDOWN_MIN
         if should_send_public(pub_seen, key, _lead_magnitude(a)):   # 16.08.2026 (Lucas): Zufluss, nicht das wachsende Gesamtvolumen
             # 13.08.2026 (Lucas): Zweitmeinung (Pinnacle/Soft/Poly) auch im Public — wie im Trades-Push (nur fresh).
             pub_msg = build_public_message(a) + (_consensus_block(a, cidx) if a["scenario"] == "fresh" else "")
             if _tg_public(pub_msg):
                 _pub_seen_put(pub_seen, key, _lead_magnitude(a))
+                if a["scenario"] == "fresh":
+                    _fresh_cooldown_mark(pub_seen, a["matchId"])
                 pub_sent += 1
                 _log_public_push(a, cidx)   # fürs Tracking/Auswerten (+ Konsens-Zweitmeinung)
     _save_seen(PUB_SEEN_FILE, pub_seen)

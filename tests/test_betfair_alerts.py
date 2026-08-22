@@ -666,6 +666,30 @@ class TestSeenDurability(unittest.TestCase):
         self.assertTrue(os.path.exists(self._repo))
         self.assertTrue(os.path.exists(BA._local_mirror(self._repo)))
 
+class TestFreshCooldown(unittest.TestCase):
+    # 22.08.2026 (Lucas): kein zweiter Moneyflow-(fresh-)Push binnen FRESH_COOLDOWN_MIN je Spiel.
+    def test_cooldown_blocks_then_releases(self):
+        from datetime import datetime, timezone, timedelta
+        store = {}
+        t0 = datetime(2026, 8, 22, 18, 0, tzinfo=timezone.utc)
+        self.assertTrue(BA._fresh_cooldown_ok(store, "M1", now=t0))     # nie gesendet -> ok
+        BA._fresh_cooldown_mark(store, "M1", now=t0)
+        # 10 Min spaeter (< 15) -> gesperrt
+        self.assertFalse(BA._fresh_cooldown_ok(store, "M1", now=t0 + timedelta(minutes=10)))
+        # 16 Min spaeter (> 15) -> wieder frei
+        self.assertTrue(BA._fresh_cooldown_ok(store, "M1", now=t0 + timedelta(minutes=16)))
+        # anderes Spiel unberuehrt
+        self.assertTrue(BA._fresh_cooldown_ok(store, "M2", now=t0 + timedelta(minutes=10)))
+
+    def test_ladder_hardened(self):
+        # 1->2 jetzt 2.0 statt 1.5: der 109K->195K-Fall (1.78x) wuerde NICHT mehr durchgehen
+        self.assertEqual(BA.PUB_RESEND_LADDER[0], 2.0)
+        seen = {}
+        self.assertTrue(BA.should_send_public(seen, "fresh:X", 109400))   # erster
+        BA._pub_seen_put(seen, "fresh:X", 109400)
+        self.assertFalse(BA.should_send_public(seen, "fresh:X", 195100))  # 1.78x < 2.0 -> blockt
+        self.assertTrue(BA.should_send_public(seen, "fresh:X", 220000))   # 2.01x -> durch
+
 if __name__ == "__main__":
     unittest.main()
 
