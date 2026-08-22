@@ -1,25 +1,25 @@
 {
-"generatedAt": "2026-08-22T19:46:22.921459+00:00",
+"generatedAt": "2026-08-22T19:55:15.563948+00:00",
 "byVerdict": {
 "konsens": {
-"n": 335,
-"wins": 261,
-"hitRate": 0.7791,
-"polyN": 311,
-"polyWins": 236,
-"polyHitRate": 0.7588,
+"n": 336,
+"wins": 262,
+"hitRate": 0.7798,
+"polyN": 312,
+"polyWins": 237,
+"polyHitRate": 0.7596,
 "pinnN": 20,
 "pinnHitRate": 0.65
 },
 "uneinig": {
-"n": 111,
+"n": 112,
 "wins": 32,
-"hitRate": 0.2883,
-"polyN": 100,
+"hitRate": 0.2857,
+"polyN": 101,
 "polyWins": 32,
-"polyHitRate": 0.32,
-"pinnN": 56,
-"pinnHitRate": 0.625
+"polyHitRate": 0.3168,
+"pinnN": 57,
+"pinnHitRate": 0.6316
 },
 "teil": {
 "n": 3,
@@ -113,6 +113,11 @@
 "wins": 4,
 "hitRate": 0.4444
 },
+"Saudi Professional League": {
+"n": 9,
+"wins": 7,
+"hitRate": 0.7778
+},
 "Swedish Allsvenskan": {
 "n": 9,
 "wins": 7,
@@ -152,11 +157,6 @@
 "n": 7,
 "wins": 7,
 "hitRate": 1.0
-},
-"Saudi Professional League": {
-"n": 7,
-"wins": 6,
-"hitRate": 0.8571
 },
 "Chilean Primera Division": {
 "n": 6,
@@ -451,25 +451,63 @@
 },
 "byStrength": {
 "strong": {
-"n": 255,
-"wins": 201,
-"hitRate": 0.7882
+"n": 256,
+"wins": 202,
+"hitRate": 0.7891
 },
 "weak": {
-"n": 161,
+"n": 162,
 "wins": 75,
-"hitRate": 0.4658
+"hitRate": 0.463
 }
 },
 "divergence": {
-"n": 111,
+"n": 112,
 "betfairWins": 32,
-"betfairRate": 0.2883,
-"polyN": 100,
+"betfairRate": 0.2857,
+"polyN": 101,
 "polyWins": 32,
-"polyRate": 0.32
+"polyRate": 0.3168
 },
 "recent": [
+{
+"matchId": "35955014",
+"home": "Al Ahli",
+"away": "Abha",
+"league": "Saudi Professional League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Al Ahli",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+0
+],
+"kickoff": "2026-08-22T18:00:00Z",
+"settledAt": "2026-08-22T19:55:15.401132+00:00"
+},
+{
+"matchId": "35945203",
+"home": "Al-Khaleej Saihat",
+"away": "Al-Shabab (KSA)",
+"league": "Saudi Professional League",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Al-Shabab (KSA)",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-08-22T18:00:00Z",
+"settledAt": "2026-08-22T19:55:15.401132+00:00"
+},
 {
 "matchId": "35953657",
 "home": "Dundee Utd",
@@ -1191,50 +1229,12 @@
 ],
 "kickoff": "2026-08-22T12:00:00Z",
 "settledAt": "2026-08-22T14:00:50.479303+00:00"
-},
-{
-"matchId": "35944545",
-"home": "Luton",
-"away": "Notts Co",
-"league": "English Sky Bet League 1",
-"verdict": "uneinig",
-"moneySide": "draw",
-"moneyName": "The Draw",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-08-22T11:30:00Z",
-"settledAt": "2026-08-22T13:36:28.730229+00:00"
-},
-{
-"matchId": "35951274",
-"home": "Chengdu Rongcheng",
-"away": "Shanghai Shenhua",
-"league": "Chinese Super League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Shanghai Shenhua",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-4,
-5
-],
-"kickoff": "2026-08-22T11:35:00Z",
-"settledAt": "2026-08-22T13:36:28.730229+00:00"
 }
 ],
 "global": {
-"n": 449,
-"wins": 294,
-"hitRate": 0.6548
+"n": 451,
+"wins": 295,
+"hitRate": 0.6541
 },
-"pending": 23
+"pending": 21
 }
