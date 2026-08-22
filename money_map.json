@@ -1,6 +1,6 @@
 {
-"generatedAt": "2026-08-22T17:31:12.968239+00:00",
-"count": 20,
+"generatedAt": "2026-08-22T17:46:10.475918+00:00",
+"count": 21,
 "rows": [
 {
 "matchId": "35737558",
@@ -13,14 +13,14 @@
 "betfair": {
 "side": "home",
 "name": "Brentford",
-"sharePct": 74,
-"eur": 2413850
+"sharePct": 77,
+"eur": 2745891
 },
 "poly": {
 "side": "home",
 "name": "Brentford FC",
 "sharePct": 100,
-"usd": 4525423,
+"usd": 4621752,
 "src": "live"
 },
 "pinn": null,
@@ -38,15 +38,15 @@
 "betfair": {
 "side": "home",
 "name": "Inter",
-"sharePct": 91,
-"eur": 992003
+"sharePct": 93,
+"eur": 1251236
 },
 "poly": null,
 "pinn": {
 "fav": "home",
-"home": 0.6493,
-"draw": 0.2666,
-"away": 0.084
+"home": 0.6492,
+"draw": 0.2681,
+"away": 0.0828
 },
 "mmStrong": false,
 "nSources": 2
@@ -62,23 +62,23 @@
 "betfair": {
 "side": "away",
 "name": "Como",
-"sharePct": 56,
-"eur": 670740
+"sharePct": 52,
+"eur": 741544
 },
 "poly": {
 "side": "away",
 "name": "Como 1907",
-"sharePct": 56,
-"usd": 436103,
+"sharePct": 55,
+"usd": 455752,
 "src": "live"
 },
 "pinn": {
 "fav": "home",
-"home": 0.4801,
-"draw": 0.3137,
-"away": 0.2062
+"home": 0.4839,
+"draw": 0.3115,
+"away": 0.2046
 },
-"mmStrong": true,
+"mmStrong": false,
 "nSources": 3
 },
 {
@@ -93,20 +93,50 @@
 "side": "away",
 "name": "Real Madrid",
 "sharePct": 87,
-"eur": 526224
+"eur": 559222
 },
 "poly": {
 "side": "away",
 "name": "Real Madrid CF",
-"sharePct": 84,
-"usd": 529221,
+"sharePct": 88,
+"usd": 587160,
 "src": "close"
 },
 "pinn": {
 "fav": "away",
-"home": 0.1204,
-"draw": 0.2032,
-"away": 0.6764
+"home": 0.1278,
+"draw": 0.2056,
+"away": 0.6665
+},
+"mmStrong": true,
+"nSources": 3
+},
+{
+"matchId": "35895529",
+"home": "Valencia",
+"away": "Celta Vigo",
+"league": "Spanish La Liga",
+"live": true,
+"kickoff": "2026-08-22T17:30:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "home",
+"name": "Valencia",
+"sharePct": 60,
+"eur": 205983
+},
+"poly": {
+"side": "home",
+"name": "Valencia CF",
+"sharePct": 60,
+"usd": 88757,
+"src": "live"
+},
+"pinn": {
+"fav": "home",
+"home": 0.3786,
+"draw": 0.3188,
+"away": 0.3026
 },
 "mmStrong": true,
 "nSources": 3
@@ -122,15 +152,15 @@
 "betfair": {
 "side": "away",
 "name": "Napoli",
-"sharePct": 49,
-"eur": 168224
+"sharePct": 45,
+"eur": 188231
 },
 "poly": null,
 "pinn": {
 "fav": "away",
-"home": 0.2158,
-"draw": 0.3083,
-"away": 0.476
+"home": 0.2167,
+"draw": 0.304,
+"away": 0.4793
 },
 "mmStrong": false,
 "nSources": 2
@@ -142,22 +172,47 @@
 "league": "Turkish Super League",
 "live": true,
 "kickoff": "2026-08-22T16:00:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "away",
+"name": "Samsunspor",
+"sharePct": 49,
+"eur": 174004
+},
+"poly": null,
+"pinn": null,
+"mmStrong": false,
+"nSources": 1
+},
+{
+"matchId": "35953657",
+"home": "Dundee Utd",
+"away": "Dundee",
+"league": "Scottish Premiership",
+"live": true,
+"kickoff": "2026-08-22T16:45:00Z",
 "verdict": "uneinig",
 "betfair": {
 "side": "home",
-"name": "Rizespor",
-"sharePct": 48,
-"eur": 157387
+"name": "Dundee Utd",
+"sharePct": 54,
+"eur": 91575
 },
-"poly": null,
+"poly": {
+"side": "home",
+"name": "Dundee United FC",
+"sharePct": 59,
+"usd": 145857,
+"src": "live"
+},
 "pinn": {
 "fav": "away",
-"home": 0.1761,
-"draw": 0.3183,
-"away": 0.5056
+"home": 0.1755,
+"draw": 0.2929,
+"away": 0.5315
 },
 "mmStrong": false,
-"nSources": 2
+"nSources": 3
 },
 {
 "matchId": "35737552",
@@ -171,13 +226,13 @@
 "side": "away",
 "name": "Liverpool",
 "sharePct": 70,
-"eur": 86906
+"eur": 87231
 },
 "poly": {
 "side": "away",
 "name": "Liverpool FC",
 "sharePct": 52,
-"usd": 193988,
+"usd": 194451,
 "src": "upcoming"
 },
 "pinn": {
@@ -187,36 +242,6 @@
 "away": 0.5064
 },
 "mmStrong": false,
-"nSources": 3
-},
-{
-"matchId": "35953657",
-"home": "Dundee Utd",
-"away": "Dundee",
-"league": "Scottish Premiership",
-"live": true,
-"kickoff": "2026-08-22T16:45:00Z",
-"verdict": "teil",
-"betfair": {
-"side": "home",
-"name": "Dundee Utd",
-"sharePct": 60,
-"eur": 79830
-},
-"poly": {
-"side": "home",
-"name": "Dundee United FC",
-"sharePct": 87,
-"usd": 135595,
-"src": "live"
-},
-"pinn": {
-"fav": "home",
-"home": 0.435,
-"draw": 0.3408,
-"away": 0.2242
-},
-"mmStrong": true,
 "nSources": 3
 },
 {
@@ -231,13 +256,13 @@
 "side": "away",
 "name": "Las Palmas",
 "sharePct": 52,
-"eur": 61043
+"eur": 65568
 },
 "poly": {
 "side": "away",
 "name": "UD Las Palmas",
-"sharePct": 66,
-"usd": 17414,
+"sharePct": 87,
+"usd": 18137,
 "src": "live"
 },
 "pinn": null,
@@ -255,21 +280,21 @@
 "betfair": {
 "side": "home",
 "name": "Estoril Praia",
-"sharePct": 71,
-"eur": 50612
+"sharePct": 68,
+"eur": 58205
 },
 "poly": {
 "side": "home",
 "name": "Estoril Praia",
-"sharePct": 99,
-"usd": 170726,
+"sharePct": 98,
+"usd": 174901,
 "src": "live"
 },
 "pinn": {
 "fav": "away",
-"home": 0.2516,
-"draw": 0.2861,
-"away": 0.4623
+"home": 0.2496,
+"draw": 0.3053,
+"away": 0.4451
 },
 "mmStrong": true,
 "nSources": 3
@@ -285,51 +310,51 @@
 "betfair": {
 "side": "home",
 "name": "Man City",
-"sharePct": 65,
-"eur": 50299
+"sharePct": 67,
+"eur": 54520
 },
 "poly": {
 "side": "home",
 "name": "Manchester City FC",
 "sharePct": 66,
-"usd": 46128,
+"usd": 46260,
 "src": "upcoming"
 },
 "pinn": {
 "fav": "home",
-"home": 0.6355,
-"draw": 0.1959,
-"away": 0.1686
+"home": 0.637,
+"draw": 0.1951,
+"away": 0.1679
 },
 "mmStrong": true,
 "nSources": 3
 },
 {
-"matchId": "35948376",
-"home": "Estoril Praia",
-"away": "Rio Ave",
-"league": "Portuguese Primeira Liga",
+"matchId": "35945439",
+"home": "Al-Kholood Club",
+"away": "Al-Taawoun Buraidah",
+"league": "Saudi Professional League",
 "live": true,
-"kickoff": "2026-08-22T17:00:00Z",
-"verdict": "uneinig",
+"kickoff": "2026-08-22T16:10:00Z",
+"verdict": "konsens",
 "betfair": {
 "side": "home",
-"name": "Estoril Praia",
-"sharePct": 71,
-"eur": 50262
+"name": "Al-Kholood Club",
+"sharePct": 97,
+"eur": 52971
 },
 "poly": {
 "side": "home",
-"name": "Estoril Praia",
-"sharePct": 99,
-"usd": 170726,
+"name": "Al Kholood Saudi Club",
+"sharePct": 89,
+"usd": 7599,
 "src": "live"
 },
 "pinn": {
-"fav": "away",
-"home": 0.2516,
-"draw": 0.2861,
-"away": 0.4623
+"fav": "home",
+"home": 0.8636,
+"draw": 0.1046,
+"away": 0.0318
 },
 "mmStrong": true,
 "nSources": 3
@@ -346,7 +371,7 @@
 "side": "home",
 "name": "Orlando City",
 "sharePct": 97,
-"eur": 45474
+"eur": 45478
 },
 "poly": {
 "side": "home",
@@ -371,13 +396,13 @@
 "side": "away",
 "name": "Legia Warsaw",
 "sharePct": 69,
-"eur": 37594
+"eur": 37768
 },
 "poly": {
 "side": "away",
 "name": "Legia Warszawa",
-"sharePct": 78,
-"usd": 8312,
+"sharePct": 87,
+"usd": 8317,
 "src": "live"
 },
 "pinn": null,
@@ -396,13 +421,13 @@
 "side": "away",
 "name": "Barcelona",
 "sharePct": 83,
-"eur": 35927
+"eur": 35944
 },
 "poly": {
 "side": "away",
 "name": "FC Barcelona",
 "sharePct": 74,
-"usd": 38437,
+"usd": 38615,
 "src": "upcoming"
 },
 "pinn": {
@@ -415,6 +440,31 @@
 "nSources": 3
 },
 {
+"matchId": "35947051",
+"home": "Sturm Graz",
+"away": "SC Austria Lustenau",
+"league": "Austrian Bundesliga",
+"live": true,
+"kickoff": "2026-08-22T17:30:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "home",
+"name": "Sturm Graz",
+"sharePct": 59,
+"eur": 35613
+},
+"poly": {
+"side": "home",
+"name": "SK Sturm Graz",
+"sharePct": 68,
+"usd": 8482,
+"src": "live"
+},
+"pinn": null,
+"mmStrong": true,
+"nSources": 2
+},
+{
 "matchId": "35949417",
 "home": "Albacete",
 "away": "Sociedad B",
@@ -425,49 +475,19 @@
 "betfair": {
 "side": "home",
 "name": "Albacete",
-"sharePct": 76,
-"eur": 30766
+"sharePct": 75,
+"eur": 32177
 },
 "poly": {
 "side": "home",
 "name": "Albacete Balompié",
-"sharePct": 90,
-"usd": 31953,
+"sharePct": 87,
+"usd": 32932,
 "src": "live"
 },
 "pinn": null,
 "mmStrong": true,
 "nSources": 2
-},
-{
-"matchId": "35945509",
-"home": "Sporting Lisbon",
-"away": "Alverca",
-"league": "Portuguese Primeira Liga",
-"live": false,
-"kickoff": "2026-08-22T19:30:00Z",
-"verdict": "konsens",
-"betfair": {
-"side": "home",
-"name": "Sporting Lisbon",
-"sharePct": 82,
-"eur": 25743
-},
-"poly": {
-"side": "home",
-"name": "Sporting CP",
-"sharePct": 85,
-"usd": 12540,
-"src": "close"
-},
-"pinn": {
-"fav": "home",
-"home": 0.8041,
-"draw": 0.1259,
-"away": 0.07
-},
-"mmStrong": true,
-"nSources": 3
 },
 {
 "matchId": "35785402",
@@ -481,20 +501,50 @@
 "side": "home",
 "name": "Nice",
 "sharePct": 56,
-"eur": 24413
+"eur": 28959
 },
 "poly": {
 "side": "home",
 "name": "OGC Nice",
-"sharePct": 61,
-"usd": 23984,
+"sharePct": 60,
+"usd": 24343,
 "src": "close"
 },
 "pinn": {
 "fav": "home",
-"home": 0.409,
-"draw": 0.2995,
-"away": 0.2915
+"home": 0.4073,
+"draw": 0.3004,
+"away": 0.2923
+},
+"mmStrong": true,
+"nSources": 3
+},
+{
+"matchId": "35945509",
+"home": "Sporting Lisbon",
+"away": "Alverca",
+"league": "Portuguese Primeira Liga",
+"live": false,
+"kickoff": "2026-08-22T19:30:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "home",
+"name": "Sporting Lisbon",
+"sharePct": 83,
+"eur": 26604
+},
+"poly": {
+"side": "home",
+"name": "Sporting CP",
+"sharePct": 83,
+"usd": 13150,
+"src": "close"
+},
+"pinn": {
+"fav": "home",
+"home": 0.805,
+"draw": 0.1254,
+"away": 0.0696
 },
 "mmStrong": true,
 "nSources": 3
@@ -511,72 +561,23 @@
 "side": "away",
 "name": "Paris FC",
 "sharePct": 64,
-"eur": 20131
+"eur": 20599
 },
 "poly": {
 "side": "away",
 "name": "Paris FC",
 "sharePct": 89,
-"usd": 15275,
+"usd": 15675,
 "src": "close"
 },
 "pinn": {
 "fav": "away",
-"home": 0.2861,
-"draw": 0.2756,
-"away": 0.4382
+"home": 0.2829,
+"draw": 0.2749,
+"away": 0.4423
 },
 "mmStrong": true,
 "nSources": 3
-},
-{
-"matchId": "35945206",
-"home": "Al-Fateh (KSA)",
-"away": "Al-Ettifaq",
-"league": "Saudi Professional League",
-"live": true,
-"kickoff": "2026-08-22T15:45:00Z",
-"verdict": "uneinig",
-"betfair": {
-"side": "away",
-"name": "Al-Ettifaq",
-"sharePct": 42,
-"eur": 18252
-},
-"poly": {
-"side": "away",
-"name": "Al Ettifaq Saudi Club",
-"sharePct": 90,
-"usd": 60108,
-"src": "live"
-},
-"pinn": {
-"fav": "draw",
-"home": 0.1847,
-"draw": 0.5574,
-"away": 0.2579
-},
-"mmStrong": false,
-"nSources": 3
-},
-{
-"matchId": "35938942",
-"home": "UTA Arad",
-"away": "FC Hunedoara",
-"league": "Romanian Liga I",
-"live": true,
-"kickoff": "2026-08-22T15:30:00Z",
-"verdict": "no_anchor",
-"betfair": {
-"side": "away",
-"name": "FC Hunedoara",
-"sharePct": 64,
-"eur": 241078
-},
-"poly": null,
-"pinn": null,
-"mmStrong": false,
-"nSources": 1
 }
 ],
 "nameMatchMisses": 7,
