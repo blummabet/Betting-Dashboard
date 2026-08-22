@@ -2,7 +2,7 @@
  "_meta": {
   "description": "Übersicht-Sidecar: Vor-Anpfiff-Steam + frischer Zufluss (leicht, damit der erste Menüpunkt schnell bleibt). Fehlbepreisung rechnet die Übersicht client-seitig über _bfCoherence."
  },
- "generatedAt": "2026-08-22T17:01:06.013257+00:00",
+ "generatedAt": "2026-08-22T17:16:10.542697+00:00",
  "steam": [
   {
    "matchId": 35956629,
@@ -22,10 +22,10 @@
    "away": "Lyon",
    "country": "FR",
    "league": "French Ligue 1",
-   "side": "hw",
-   "sideName": "Toulouse",
-   "pp": 4.2,
-   "odd": 2.44,
+   "side": "aw",
+   "sideName": "Lyon",
+   "pp": -4.0,
+   "odd": 3.25,
    "kickoff": "2026-08-22T18:45:00Z"
   },
   {
@@ -41,6 +41,18 @@
    "kickoff": "2026-08-23T01:30:00Z"
   },
   {
+   "matchId": 35945203,
+   "home": "Al-Khaleej Saihat",
+   "away": "Al-Shabab (KSA)",
+   "country": "SA",
+   "league": "Saudi Professional League",
+   "side": "hw",
+   "sideName": "Al-Khaleej Saihat",
+   "pp": -2.9,
+   "odd": 2.88,
+   "kickoff": "2026-08-22T18:00:00Z"
+  },
+  {
    "matchId": 35947154,
    "home": "FC Cincinnati",
    "away": "Seattle Sounders",
@@ -51,34 +63,97 @@
    "pp": -2.8,
    "odd": 1.74,
    "kickoff": "2026-08-22T23:30:00Z"
-  },
-  {
-   "matchId": 35947158,
-   "home": "San Jose Earthquakes",
-   "away": "Minnesota Utd",
-   "country": "US",
-   "league": "US MLS",
-   "side": "hw",
-   "sideName": "San Jose Earthquakes",
-   "pp": -2.6,
-   "odd": 2.38,
-   "kickoff": "2026-08-23T02:30:00Z"
   }
  ],
  "flow": [
   {
-   "matchId": 35944538,
-   "home": "Sparta Rotterdam",
-   "away": "FC Utrecht",
-   "country": "NL",
-   "league": "Dutch Eredivisie",
-   "deltaEur": 3440,
-   "nowEur": 7252,
-   "market": "Over/Under 2.5 Goals",
-   "sideName": "Over 2.5 Goals",
-   "odd": 2.02,
+   "matchId": 35944587,
+   "home": "Al-Sadd",
+   "away": "Al Ahli (QAT)",
+   "country": "QA",
+   "league": "Qatari Stars League",
+   "deltaEur": 4867,
+   "nowEur": 5463,
+   "market": "First Half Goals 1.5",
+   "sideName": "Over 1.5 Goals",
+   "odd": 3.15,
    "thin": true,
-   "sharePct": 47,
+   "sharePct": 89,
+   "dir": "out"
+  },
+  {
+   "matchId": 35947369,
+   "home": "PFC Levski Sofia",
+   "away": "Spartak Varna",
+   "country": "BG",
+   "league": "Bulgarian A League",
+   "deltaEur": 4570,
+   "nowEur": 7980,
+   "market": "Match Odds",
+   "sideName": "PFC Levski Sofia",
+   "odd": 1.31,
+   "thin": true,
+   "sharePct": 57,
+   "dir": "out"
+  },
+  {
+   "matchId": 35944539,
+   "home": "Ghazl El Mahallah",
+   "away": "Pyramids",
+   "country": "EG",
+   "league": "Egyptian Premier",
+   "deltaEur": 3078,
+   "nowEur": 5427,
+   "market": "Over/Under 2.5 Goals",
+   "sideName": "Under 2.5 Goals",
+   "odd": 1.39,
+   "thin": true,
+   "sharePct": 57,
+   "dir": "flat"
+  },
+  {
+   "matchId": 35850511,
+   "home": "Kalamata",
+   "away": "Aris",
+   "country": "GR",
+   "league": "Greek Super League",
+   "deltaEur": 2593,
+   "nowEur": 2603,
+   "market": "First Half Goals 0.5",
+   "sideName": "Over 0.5 Goals",
+   "odd": 1.93,
+   "thin": true,
+   "sharePct": 100,
+   "dir": "flat"
+  },
+  {
+   "matchId": 35938939,
+   "home": "Dinamo Bucharest",
+   "away": "Universitatea Cluj",
+   "country": "RO",
+   "league": "Romanian Liga I",
+   "deltaEur": 2234,
+   "nowEur": 4191,
+   "market": "Match Odds",
+   "sideName": "Dinamo Bucharest",
+   "odd": 1.79,
+   "thin": true,
+   "sharePct": 53,
+   "dir": "in"
+  },
+  {
+   "matchId": 35734727,
+   "home": "Inter",
+   "away": "AC Monza",
+   "country": "IT",
+   "league": "Italian Serie A",
+   "deltaEur": 182872,
+   "nowEur": 915711,
+   "market": "Match Odds",
+   "sideName": "Inter",
+   "odd": 1.41,
+   "thin": false,
+   "sharePct": 20,
    "dir": "out"
   },
   {
@@ -87,14 +162,29 @@
    "away": "Como",
    "country": "IT",
    "league": "Italian Serie A",
-   "deltaEur": 19410,
-   "nowEur": 469702,
+   "deltaEur": 126179,
+   "nowEur": 595881,
    "market": "Match Odds",
    "sideName": "Como",
-   "odd": 2.1,
+   "odd": 4.2,
    "thin": false,
-   "sharePct": 4,
+   "sharePct": 21,
    "dir": "out"
+  },
+  {
+   "matchId": 35949418,
+   "home": "AD Ceuta FC",
+   "away": "Las Palmas",
+   "country": "ES",
+   "league": "Spanish Segunda Division",
+   "deltaEur": 28087,
+   "nowEur": 52781,
+   "market": "Match Odds",
+   "sideName": "Las Palmas",
+   "odd": 3.05,
+   "thin": false,
+   "sharePct": 53,
+   "dir": "flat"
   }
  ]
 }
