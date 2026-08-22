@@ -407,12 +407,17 @@ def money_side(m):
     tot = sum((r.get("vol") or 0.0) for r in rs) or 1.0
     lead = max(rs, key=lambda r: (r.get("vol") or 0.0))
     name = lead.get("name")
-    if name == "The Draw":
+    # 22.08.2026 (Lucas: „Kohle sieht aus wie Home, liegt aber 90% auf Alkmaar"): Betfair liefert den
+    # Ausgangsnamen oft anders formatiert als den Teamnamen ("Az Alkmaar" vs "AZ Alkmaar") -> exaktes
+    # == schlug fehl und fiel in den else-Zweig -> falsche Seite "home". Jetzt Fuzzy-Match (_name_score)
+    # gegen BEIDE Teams, stärkere Seite gewinnt (Draw separat).
+    nm = str(name or "")
+    if nm.strip().lower() in ("the draw", "draw", "tie"):
         side = "draw"
-    elif name == m.get("away"):
-        side = "away"
     else:
-        side = "home"
+        sh = _name_score(nm, m.get("home") or "")
+        sa = _name_score(nm, m.get("away") or "")
+        side = "away" if sa > sh else "home"
     return {"side": side, "name": name, "share": (lead.get("vol") or 0.0) / tot,
             "odd": lead.get("odd"), "totVol": tot}
 

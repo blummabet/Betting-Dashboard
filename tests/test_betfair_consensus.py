@@ -112,6 +112,15 @@ class TestMoneySide(unittest.TestCase):
         self.assertEqual(ms["side"], "home")
         self.assertAlmostEqual(ms["share"], 0.8, places=3)
 
+    def test_away_lead_case_mismatch(self):
+        # 22.08.2026 (Lucas): Betfair "Az Alkmaar" vs Team "AZ Alkmaar" — Casing darf die Seite nicht kippen.
+        m = bf_match(home="Fortuna Sittard", away="AZ Alkmaar", runners=[
+            {"name": "Fortuna Sittard", "odd": 8.0, "vol": 10000},
+            {"name": "The Draw", "odd": 5.0, "vol": 10000},
+            {"name": "Az Alkmaar", "odd": 1.3, "vol": 80000}])
+        ms = BC.money_side(m)
+        self.assertEqual(ms["side"], "away")   # 90% Geld auf AZ = away, nicht home
+
     def test_draw_lead(self):
         m = bf_match(runners=[
             {"name": "Borac Banja Luka", "odd": 2.5, "vol": 10000},
