@@ -70,6 +70,44 @@ PUB_SEEN_FILE  = "betfair_public_seen.json"
 PUB_LEDGER_FILE = "betfair_public_ledger.json"   # gesendete Public-Pushs fürs Tracking/Auswerten
 DEDUP_FACTOR   = 1.5
 SEEN_FILE      = "betfair_alerts_seen.json"
+
+# 22.08.2026 (Lucas: „wieso kam die doppelt fuer HT?"): Der Dedup-State lag NUR im Repo. Im
+# dauergepushten Repo kann betfair_alerts_seen.json einen Push verlieren (oder ein 1-Min-Folgelauf
+# checkt vorher aus) -> prev=None -> Fix-Verdacht (Wert `ht_max` waechst nicht, ×1.5-Gate greift nie)
+# feuert sofort erneut. Fix: Seen-State zusaetzlich LOKAL auf dem (immer selben) self-hosted Mac-Runner
+# spiegeln; beim Laden Repo ∪ Lokal (lokal gewinnt — es ueberlebt fehlgeschlagene Pushes). STATE_DIR
+# liegt in $HOME, ausserhalb des Repo-Checkouts, wird von actions/checkout nicht angetastet.
+def _state_dir() -> str:
+    d = os.environ.get("COCOBET_STATE_DIR") or os.path.join(os.path.expanduser("~"), ".cocobet_state")
+    try:
+        os.makedirs(d, exist_ok=True)
+    except Exception:
+        pass
+    return d
+
+
+def _local_mirror(name: str) -> str:
+    return os.path.join(_state_dir(), os.path.basename(name))
+
+
+def _load_seen(repo_file: str) -> dict:
+    """Repo-Seen ∪ lokaler Runner-Spiegel (lokal gewinnt) -> ueberlebt fehlgeschlagene Pushes."""
+    def _j(path):
+        try:
+            d = json.load(open(path, encoding="utf-8"))
+            return d if isinstance(d, dict) else {}
+        except Exception:
+            return {}
+    return {**_j(repo_file), **_j(_local_mirror(repo_file))}
+
+
+def _save_seen(repo_file: str, seen: dict) -> None:
+    """In Repo-Datei (Backup/Sichtbarkeit) UND lokalen Spiegel schreiben."""
+    for path in (repo_file, _local_mirror(repo_file)):
+        try:
+            json.dump(seen, open(path, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
+        except Exception as e:
+            print("konnte Seen-State nicht schreiben (%s):" % path, e)
 HT_MARKETS     = ("Half Time", "First Half Goals 1.5")   # HZ-1X2 ODER Über/Unter 1,5 erste Halbzeit
 HT_LABEL       = {"Half Time": "HZ 1X2", "First Half Goals 1.5": "HZ Over/Under 1.5", "First Half Goals 0.5": "HZ Over/Under 0.5"}
 
@@ -943,10 +981,7 @@ def main():
         hist = json.load(open("betfair_history.json", encoding="utf-8"))
     except Exception:
         hist = {}
-    try:
-        seen = json.load(open(SEEN_FILE, encoding="utf-8"))
-    except Exception:
-        seen = {}
+    seen = _load_seen(SEEN_FILE)
 
     try:
         direction = json.load(open(DIRECTION_FILE, encoding="utf-8"))
@@ -972,18 +1007,12 @@ def main():
             if send_trades_message(msg):
                 seen[key] = a["value"]     # nur bei Erfolg merken (Preview/Fehler → nächster Lauf retry)
                 sent += 1
-    try:
-        json.dump(seen, open(SEEN_FILE, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
-    except Exception as e:
-        print("konnte Seen-State nicht schreiben:", e)
+    _save_seen(SEEN_FILE, seen)
     print("Betfair-Alerts: %d Kandidaten, %d gesendet" % (len(alerts), sent))
 
     # 🟡 Öffentlicher Moneyflow (kuratierte, höhere Schwellen) → CocoBet-Community-Channel.
     # Eigener Dedup-State, damit die höhere Public-Schwelle unabhängig vom Trades-Channel greift.
-    try:
-        pub_seen = json.load(open(PUB_SEEN_FILE, encoding="utf-8"))
-    except Exception:
-        pub_seen = {}
+    pub_seen = _load_seen(PUB_SEEN_FILE)
     pub_alerts = _leader_gate(attach_direction(
         collect_alerts(prices, hist, PUB_HT_TOP, PUB_HT_REST, PUB_FRESH_TOP, PUB_FRESH_REST), direction),
         PUB_HT_TOP, PUB_HT_REST, PUB_FRESH_TOP, PUB_FRESH_REST)
@@ -1016,10 +1045,7 @@ def main():
                 _pub_seen_put(pub_seen, key, _lead_magnitude(a))
                 pub_sent += 1
                 _log_public_push(a, cidx)   # fürs Tracking/Auswerten (+ Konsens-Zweitmeinung)
-    try:
-        json.dump(pub_seen, open(PUB_SEEN_FILE, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
-    except Exception as e:
-        print("konnte Public-Seen nicht schreiben:", e)
+    _save_seen(PUB_SEEN_FILE, pub_seen)
     print("Betfair Public-Moneyflow: %d Kandidaten, %d gesendet" % (len(pub_alerts), pub_sent))
 
 

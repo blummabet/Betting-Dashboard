@@ -1,5 +1,5 @@
 # tests/test_betfair_alerts.py — Betfair-Telegram-Alerts (29.07.2026)
-import os, sys, unittest
+import os, sys, unittest, tempfile, shutil
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 import betfair_alerts as BA
 
@@ -628,6 +628,43 @@ class TestPubUnderGoals(unittest.TestCase):
     def test_match_odds_kept(self):
         self.assertFalse(BA._pub_under_goals({"market": "Match Odds", "leadName": "Alpha"}))
 
+
+class TestSeenDurability(unittest.TestCase):
+    """22.08.2026 (Lucas: „wieso kam die doppelt"): Fix-Verdacht-Doppler, weil der Dedup-State nur
+    im Repo lag und einen Push verlieren konnte. Der lokale Runner-Spiegel muss den Re-Push verhindern,
+    selbst wenn die Repo-Seen-Datei den State verloren hat."""
+
+    def setUp(self):
+        self._tmp = tempfile.mkdtemp()
+        self._prev = os.environ.get("COCOBET_STATE_DIR")
+        os.environ["COCOBET_STATE_DIR"] = os.path.join(self._tmp, "state")
+        self._repo = os.path.join(self._tmp, "betfair_alerts_seen.json")
+
+    def tearDown(self):
+        if self._prev is None:
+            os.environ.pop("COCOBET_STATE_DIR", None)
+        else:
+            os.environ["COCOBET_STATE_DIR"] = self._prev
+        shutil.rmtree(self._tmp, ignore_errors=True)
+
+    def test_local_mirror_verhindert_repush_bei_repo_verlust(self):
+        key = "fix:HKR-KIT"
+        # Lauf 1: senden -> in Repo + lokalen Spiegel schreiben
+        seen = BA._load_seen(self._repo)
+        self.assertTrue(BA.should_send(seen, key, 2400.0))   # erstmalig -> senden
+        seen[key] = 2400.0
+        BA._save_seen(self._repo, seen)
+        # Repo verliert den Push (Datei weg / leer), lokaler Spiegel bleibt
+        open(self._repo, "w").write("{}")
+        # Lauf 2: laden -> Union mit lokalem Spiegel -> KEIN Re-Push (Wert waechst nicht)
+        seen2 = BA._load_seen(self._repo)
+        self.assertIn(key, seen2)
+        self.assertFalse(BA.should_send(seen2, key, 2400.0))
+
+    def test_save_schreibt_beide_dateien(self):
+        BA._save_seen(self._repo, {"fix:X": 1.0})
+        self.assertTrue(os.path.exists(self._repo))
+        self.assertTrue(os.path.exists(BA._local_mirror(self._repo)))
 
 if __name__ == "__main__":
     unittest.main()

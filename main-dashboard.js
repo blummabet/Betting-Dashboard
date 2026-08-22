@@ -1015,7 +1015,7 @@
       '<div id="md-cell-live" class="md-cell">' + _mdLiveWidePlaceholder() + '</div>' +
       '</div>';
 
-    p.innerHTML = _head() + _mdPulse() + _mdJetzt() + _kpis() + _mdHero() + grid +
+    p.innerHTML = _head() + _mdPulse() + _mdSignalBoard() + _mdJetzt() + _kpis() + _mdHero() + grid +
       '<div class="md-foot">Kuratierter Überblick · tippe „alle →" für den vollen Bereich</div>';
     _mdFillPlays();
     _mdFillPubPreview();
@@ -1086,6 +1086,90 @@
       '<div class="md-pulse-h">📈 Puls<span class="mpc-hint">letzte abgerechnete · Klick → Bereich</span></div>' +
       '<div class="mpc-grid">' + cards.join('') + '</div>' + _mdStrip(d) + _ageStr(d) + '</section>';
   }
+  // ── 🧪 Signal-Bilanz (22.08.2026, Lucas: „checken ob die Signale funktionieren") ──────────────
+  // Ausklappbares Board direkt unter dem Puls: pro Signal n + Win% dafuer/dagegen + Edge + Ampel.
+  // Daten: dashboard_pulse.json .signalBoard (build_dashboard_pulse.py). Rein diagnostisch, read-only.
+  var _SIG_LABELS = {
+    form_trend:['📈','Form-Trend'], xg_strength:['⚡','xG-Stärke'], chance_creation:['🎨','Chancen'],
+    form_rating:['📋','Form-Rating'], smart_money:['🐋','Smart Money'], betfair_money:['💷','Betfair-Geld'],
+    betfair_coherence:['💷','Betfair-Kohärenz'], injury:['🩹','Verletzungen'], lead_lag_bias:['📊','Sharp-Lag'],
+    freshness_leg:['🌬️','Frische'], pressure_index:['🎯','Tabellendruck'], league_pressure:['🔥','Ligadruck'],
+    h2h_pattern:['⚔️','H2H'], venue_form:['🏟️','Heim/Auswärts'], topscorer_momentum:['🥅','Torjäger'],
+    transfer_shift:['📦','Kader-Abgänge'], fixture_congestion:['🗓️','Termindichte'], apif_predictions:['🤖','Prognose-Modell'],
+    travel_burden:['✈️','Reise'], mls_travel:['✈️','MLS-Reise'], weather_signal:['🌡️','Wetter'],
+    lineup_signal:['🧩','Aufstellung'], incentive_signal:['🎲','Anreiz'], public_static_bias:['👥','Public-Bias'],
+    reverse_line_move:['🔄','Reverse-Line'], multi_book_steam:['💨','Multi-Book-Steam'], opener_move:['📊','Opener'],
+    move_following:['💨','Steam-Move'], streak_momentum:['🔗','Serie'], altitude_signal:['⛰️','Höhe'],
+    coach_change:['🔄','Trainerwechsel'], game_state_openness:['🔓','Spieloffenheit'], polymarket_sharp:['🌊','Poly-Fluss'],
+    steam_lag:['💨','Steam-Lag'], pinnacle_move:['📊','Pinnacle-Bewegung']
+  };
+  function _sigLabel(nm){ var m=_SIG_LABELS[nm]; return m ? {ic:m[0],lb:m[1]} : {ic:'•',lb:nm}; }
+  function _sbStyles(){
+    if(document.getElementById('sbStyles')) return;
+    var s=document.createElement('style'); s.id='sbStyles';
+    s.textContent='.sb-wrap{margin-top:10px}.sb-sum{display:flex;align-items:center;gap:10px;cursor:pointer;list-style:none}'
+      +'.sb-sum::-webkit-details-marker{display:none}.sb-sum::after{content:\'▸\';color:var(--mi3);font-size:12px;margin-left:auto}'
+      +'details[open] .sb-sum::after{content:\'▾\'}'
+      +'.sb-legend{font-size:10.5px;color:var(--mi3);margin:9px 0 7px;line-height:1.5}'
+      +'.sb-list{display:flex;flex-direction:column;gap:2px}'
+      +'.sb-row{display:grid;grid-template-columns:9px 1.35fr .45fr 1fr 1fr .6fr;align-items:center;gap:8px;padding:5px 6px;border-radius:8px;font-size:11.5px}'
+      +'.sb-row:nth-child(odd){background:rgba(255,255,255,.025)}'
+      +'.sb-dot{width:9px;height:9px;border-radius:50%}'
+      +'.sb-nm{font-weight:700;color:var(--mi);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}'
+      +'.sb-fire{color:var(--mi3);font-variant-numeric:tabular-nums;text-align:right}'
+      +'.sb-cell{color:var(--mi2);font-variant-numeric:tabular-nums;white-space:nowrap}'
+      +'.sb-cell i{color:var(--mi3);font-style:normal;font-size:9px;margin-left:2px}'
+      +'.sb-edge{font-weight:800;text-align:right;font-variant-numeric:tabular-nums}';
+    document.head.appendChild(s);
+  }
+  function _mdSignalBoard(){
+    var d=_md.data.pulse||{}, b=d.signalBoard;
+    if(!b||!b.rows||!b.rows.length) return '';
+    _sbStyles();
+    var base=b.baseWinPct;
+    // Belastbarkeit: Edge nur bei genug Faellen auf BEIDEN Seiten (supp>=8 & opp>=5); sonst
+    // „dafuer vs. Baseline" wenn die Stuetz-Seite dick genug ist (supp>=10); sonst zu wenig Daten.
+    var strength=function(r){
+      if(r.supp>=8 && r.opp>=5 && r.edge!=null) return r.edge;
+      if(r.supp>=10 && r.suppWinPct!=null) return r.suppWinPct-base;
+      return null;
+    };
+    var tier=function(r){
+      var s=strength(r);
+      if(s==null) return {c:'var(--mi3)'};
+      if(s>=10) return {c:A.good};
+      if(s<=-12) return {c:A.red};
+      return {c:A.gold};
+    };
+    var rows=b.rows.slice().sort(function(x,y){
+      var sx=strength(x), sy=strength(y);
+      if(sx==null&&sy==null) return y.fire-x.fire;
+      if(sx==null) return 1;
+      if(sy==null) return -1;
+      return sy-sx;
+    });
+    var pct=function(v){return v==null?'—':Math.round(v)+'%';};
+    var lines=rows.map(function(r){
+      var L=_sigLabel(r.name), tg=tier(r), st=strength(r);
+      var viaBase=!(r.supp>=8&&r.opp>=5&&r.edge!=null)&&r.supp>=10;
+      var edgeTxt=st==null?'—':((st>0?'+':'')+Math.round(st)+'%'+(viaBase?'<i style="font-size:8px;color:var(--mi3);margin-left:1px">⌀</i>':''));
+      return '<div class="sb-row">'
+        +'<span class="sb-dot" style="background:'+tg.c+'"></span>'
+        +'<span class="sb-nm">'+L.ic+' '+esc(L.lb)+'</span>'
+        +'<span class="sb-fire">n'+r.fire+'</span>'
+        +'<span class="sb-cell" title="Win% wenn das Signal den Pick STÜTZT ('+r.supp+' Fälle)">'+pct(r.suppWinPct)+' <i>dafür</i></span>'
+        +'<span class="sb-cell" title="Win% wenn das Signal GEGEN den Pick steht ('+r.opp+' Fälle)">'+pct(r.oppWinPct)+' <i>gegen</i></span>'
+        +'<span class="sb-edge" style="color:'+tg.c+'">'+edgeTxt+'</span>'
+        +'</div>';
+    }).join('');
+    return '<details class="md-pulse md-rise sb-wrap">'
+      +'<summary class="sb-sum"><span class="md-pulse-h" style="margin:0">🧪 Signal-Bilanz</span>'
+      +'<span class="mpc-hint">funktionieren die Signale? · '+b.n+' Picks · Ø '+Math.round(base)+'% Win</span></summary>'
+      +'<div class="sb-legend">🟢 trägt Richtungsinfo · 🟡 schwach · 🔴 evtl. schädlich · ⚪ zu wenig Daten. '
+      +'„dafür/gegen" = Win-Quote, wenn das Signal den Pick stützt bzw. dagegen steht · Zahl rechts = Edge (dafür−gegen), ⌀ = dafür vs. Ø bei dünner Gegen-Seite.</div>'
+      +'<div class="sb-list">'+lines+'</div></details>';
+  }
+
   // 13.08.2026 (Lucas-Audit): „Jetzt spielen"-Leiste — wo lohnt Setzen (beste Conviction-Stufe/Signal
   // nach ROI) + was gerade laeuft. Daten lagen schon in dashboard_pulse.json (strip), wurden aber nie
   // gerendert. CSS .md-pulse-strip existierte bereits.

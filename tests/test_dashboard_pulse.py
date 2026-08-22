@@ -40,3 +40,26 @@ def test_best_bucket_haelt_schwelle_und_waehlt_hoechsten_roi():
 def test_best_bucket_none_wenn_alles_negativ_oder_zu_klein():
     assert bp._best_bucket({"7": {"n": 17, "roi": -0.05}, "10": {"n": 2, "roi": 0.5}}) is None
     assert bp._best_bucket({}) is None
+
+
+# 22.08.2026 (Lucas): Signal-Bilanz — pro-Signal Win% dafür/dagegen + Edge.
+def _rec(res, sigs):
+    return {"result": res, "resolvedAt": "2026-08-22T00:00:00Z", "clvPP": 0.0,
+            "signals": [{"name": n, "score": s} for n, s in sigs]}
+
+def test_signal_scoreboard_edge_und_seiten():
+    recs = [
+        _rec("WIN",  [("form_trend", 3.0), ("h2h_pattern", -2.0)]),
+        _rec("WIN",  [("form_trend", 2.0), ("h2h_pattern", -1.0)]),
+        _rec("LOSS", [("form_trend", -2.0), ("h2h_pattern", 1.5)]),
+    ]
+    b = bp._signal_scoreboard(recs)
+    assert b["n"] == 3
+    rows = {r["name"]: r for r in b["rows"]}
+    ft = rows["form_trend"]
+    assert ft["fire"] == 3 and ft["supp"] == 2 and ft["opp"] == 1
+    assert ft["suppWinPct"] == 100 and ft["oppWinPct"] == 0 and ft["edge"] == 100
+
+def test_signal_scoreboard_leer_ist_none():
+    assert bp._signal_scoreboard([]) is None
+    assert bp._signal_scoreboard([{"result": "VOID", "signals": []}]) is None

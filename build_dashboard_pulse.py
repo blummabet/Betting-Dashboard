@@ -105,6 +105,57 @@ def _strip(track=None, bf_ledger=None, cards_open=0) -> dict:
     }
 
 
+SIG_SUPP_TH  = 0.5   # ab |score| >= 0.5 zaehlt ein Signal als DAFUER / DAGEGEN
+SIG_MIN_FIRE = 6     # darunter: „zu wenig Daten" (Ampel grau)
+
+
+# 22.08.2026 (Lucas): WM raus — die hat mit dem Liga-Betrieb nichts zu tun. Board zaehlt nur die
+# Ligen mit laufenden Cards (Top-5 + MLS). Anfangs kleine n; fuellt sich Wochenende fuer Wochenende.
+BOARD_EXCLUDE = ("wm_signal_ledger.json",)
+
+
+def _signal_scoreboard(recs, exclude=BOARD_EXCLUDE) -> dict | None:
+    """22.08.2026 (Lucas: „checken ob die Signale ueberhaupt funktionieren"). Pro Signal ueber
+    ALLE abgerechneten Cards: wie oft gefeuert, und Win% wenn es DAFUER (score>=TH) vs. DAGEGEN
+    (score<=-TH) stand. edge = Win%dafuer − Win%dagegen (>0 = Signal traegt Richtungsinfo). Plus
+    Ø CLV je Signal. Voller Ledger-Bestand (nicht nur die letzten 30), damit Samples belastbar sind."""
+    graded = [r for r in recs if str(r.get("result")).upper() in ("WIN", "LOSS")
+              and r.get("_ledger") not in exclude]
+    if not graded:
+        return None
+    base_w = sum(1 for r in graded if str(r.get("result")).upper() == "WIN")
+    agg = {}
+    for r in graded:
+        win = str(r.get("result")).upper() == "WIN"
+        clv = r.get("clvPP")
+        for s in (r.get("signals") or []):
+            nm = s.get("name")
+            if not nm:
+                continue
+            sc = s.get("score") or 0
+            a = agg.setdefault(nm, {"fire": 0, "supp": 0, "suppW": 0, "opp": 0, "oppW": 0, "clvSum": 0.0, "clvN": 0})
+            a["fire"] += 1
+            if isinstance(clv, (int, float)):
+                a["clvSum"] += clv; a["clvN"] += 1
+            if sc >= SIG_SUPP_TH:
+                a["supp"] += 1; a["suppW"] += 1 if win else 0
+            elif sc <= -SIG_SUPP_TH:
+                a["opp"] += 1; a["oppW"] += 1 if win else 0
+    rows = []
+    for nm, a in agg.items():
+        sr = round(100.0 * a["suppW"] / a["supp"]) if a["supp"] else None
+        orr = round(100.0 * a["oppW"] / a["opp"]) if a["opp"] else None
+        edge = (sr - orr) if (sr is not None and orr is not None) else None
+        rows.append({"name": nm, "fire": a["fire"],
+                     "supp": a["supp"], "suppWinPct": sr,
+                     "opp": a["opp"], "oppWinPct": orr,
+                     "edge": edge,
+                     "clvAvg": round(a["clvSum"] / a["clvN"], 2) if a["clvN"] else None})
+    rows.sort(key=lambda x: -x["fire"])
+    return {"n": len(graded), "baseWinPct": round(100.0 * base_w / len(graded)),
+            "minFire": SIG_MIN_FIRE, "rows": rows}
+
+
 def build() -> dict:
     recs, cards_open = [], 0
     for lf in LEDGERS:
@@ -113,6 +164,7 @@ def build() -> dict:
             if not isinstance(r, dict):
                 continue
             if r.get("resolvedAt"):
+                r["_ledger"] = lf          # Herkunft merken (fuer Board-Filter)
                 recs.append(r)
             else:
                 cards_open += 1
@@ -139,6 +191,7 @@ def build() -> dict:
         "poly": _poly_pulse(),         # 07.08.2026 (Lucas): Poly „Heute wetten" mit in den Puls
         "moneymap": _moneymap_pulse(),  # 11.08.2026 (Lucas): Money-Map-Konsens mit in den Puls
         "strip": _strip(cards_open=cards_open),   # 07.08.2026 (Lucas): wo lohnt Setzen + was laeuft
+        "signalBoard": _signal_scoreboard(recs),  # 22.08.2026 (Lucas): pro-Signal-Bilanz (funktionieren sie?)
     }
 
 
