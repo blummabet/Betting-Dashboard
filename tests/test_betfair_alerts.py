@@ -727,6 +727,34 @@ class TestFixAlert(unittest.TestCase):
         m["liveInfo"] = {"time": 60, "is_ht": False, "finished": False}
         self.assertIsNone(BA.fix_alert(m))
 
+    def test_none_when_ht_balanced(self):
+        # 22.08.2026 (Lucas): O/U-HZ 50/50 (viel Volumen, aber ausgewogen) = kein Fix-Signal
+        mk1 = {}
+        mk1.update(mk("Match Odds", [{"name": "Alpha", "odd": 2.0, "vol": 1000}]))
+        mk1.update(mk("First Half Goals 1.5", [{"name": "Over 1.5", "odd": 2.0, "vol": 3550},
+                                               {"name": "Under 1.5", "odd": 1.8, "vol": 3550}]))
+        m = match(mid=9, markets=mk1)
+        self.assertIsNone(BA.fix_alert(m))
+
+    def test_picks_onesided_ht_over_balanced(self):
+        # 22.08.2026 (Lucas): der einseitig geladene HZ-Markt (7K auf Away) ist das Signal — NICHT
+        # der volumengleiche, aber 50/50 verteilte O/U-HZ-Markt.
+        mk1 = {}
+        mk1.update(mk("Match Odds", [{"name": "Alpha", "odd": 2.0, "vol": 1700}]))
+        mk1.update(mk("First Half Goals 1.5", [{"name": "Over 1.5", "odd": 2.0, "vol": 3550},
+                                               {"name": "Under 1.5", "odd": 1.8, "vol": 3550}]))
+        mk1.update(mk("Half Time", [{"name": "Beta", "odd": 1.5, "vol": 7000},
+                                    {"name": "The Draw", "odd": 4.0, "vol": 500},
+                                    {"name": "Alpha", "odd": 6.0, "vol": 300}]))
+        m = match(mid=9, home="Alpha", away="Beta", markets=mk1)
+        a = BA.fix_alert(m)
+        self.assertIsNotNone(a)
+        self.assertEqual(a["market"], "Half Time")       # einseitiger Markt gewaehlt, nicht das O/U
+        self.assertEqual(a["leadName"], "Beta")
+        self.assertGreaterEqual(a["leadShare"], 0.85)     # 7000/7800 ~90%
+        self.assertEqual(a.get("ftName"), "Match Odds")   # FT-Vergleichsmarkt benannt
+        self.assertIn("FT (1X2)", BA.build_message(a))    # FT-Vergleichsmarkt steht im Push
+
     def test_fix_stays_out_of_public_scenarios(self):
         # collect_alerts liefert das fix-Szenario (Trades); Public-Ausschluss ist in main().
         m = match(mid=9, league="Lithuanian 1 Lyga", country="LT", markets=self._mkts(600, 5000))

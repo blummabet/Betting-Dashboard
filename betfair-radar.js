@@ -875,6 +875,7 @@
   // auf duennen Maerkten UNTER der normalen Geld-Schwelle.
   var FIX_HT_MIN = 2000;   // HZ-Geld-Boden fuer den Verdacht (filtert den €8/€28-Mini-Kram)
   var FIX_RATIO_MIN = 2.0; // 22.08.2026 (Lucas): HZ muss FT KLAR dominieren (>=2x). 1.1x = nahezu ident = Rauschen.
+  var FIX_LEAD_SHARE = 0.65; // 22.08.2026 (Lucas): HZ-Markt muss klar EINSEITIG sein (>=65%). 50/50-O/U ist kein Signal.
   // 22.08.2026 (Lucas: „es ist grad Pause 😂"): Fix nur solange der HZ-Markt NOCH offen ist —
   // vor Anpfiff oder 1. Halbzeit. Ab Halbzeit/2. HZ/Ende ist er durch, „mehr Geld auf HZ" wertlos.
   function _fixWindowOk(m) {
@@ -885,11 +886,23 @@
     return true;
   }
   function _htFtVols(m) {
-    var ft = 0, ht = 0, htMk = null;
+    var ft = 0;
     MK.forEach(function (mm) {
-      var v = eur(mvolG(m, mm.id));
-      if (mm.grp === 'FT') { if (v > ft) ft = v; }
-      else if (v > ht) { ht = v; htMk = mm.id; }
+      if (mm.grp === 'FT') { var v = eur(mvolG(m, mm.id)); if (v > ft) ft = v; }
+    });
+    // 22.08.2026 (Lucas): NICHT den volumenstaerksten HZ-Markt nehmen, sondern den mit dem groessten
+    // EINSEITIGEN Geld. Ein 50/50-O/U ist kein Fix-Signal; ein klar einseitig geladener HZ-Markt schon.
+    var ht = 0, htMk = null, bestLead = -1;
+    MK.forEach(function (mm) {
+      if (mm.grp !== 'HT') return;
+      var tot = eur(mvolG(m, mm.id));
+      if (tot < FIX_HT_MIN) return;
+      var mk = mkOf(m, mm.id), lead = mk ? leadRunner(mk) : null, dtot = mk ? distTotal(mk) : 0;
+      if (!lead || !dtot) return;
+      var share = (+lead.vol || 0) / dtot;
+      if (share < FIX_LEAD_SHARE) return;      // ausgewogen -> raus
+      var leadEur = tot * share;               // einseitiges Geld in €
+      if (leadEur > bestLead) { bestLead = leadEur; ht = tot; htMk = mm.id; }
     });
     return { ft: ft, ht: ht, htMk: htMk };
   }
