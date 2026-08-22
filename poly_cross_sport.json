@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-22T15:57:42.594064+00:00",
+ "generatedAt": "2026-08-22T16:41:25.009083+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -8,27 +8,56 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 413,
- "pinnKeys": 291,
- "matched": 195,
- "footballRows": 165,
+ "polyRowsSeen": 410,
+ "pinnKeys": 288,
+ "matched": 192,
+ "footballRows": 162,
  "crossRows": 248,
- "footballSkippedStale": 64,
+ "footballSkippedStale": 60,
  "seenBySport": {
   "americanfootball_nfl": 146,
   "baseball_mlb": 100,
   "boxing_boxing": 2,
   "soccer_mls": 45,
-  "soccer_liga": 120
+  "soccer_liga": 117
  },
  "matchedBySport": {
   "baseball_mlb": 30,
   "soccer_mls": 45,
-  "soccer_liga": 120
+  "soccer_liga": 117
  },
  "trackRecord": {
   "tracked": 172,
   "converged": 30
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|brentford-tottenham|hw",
+   "sport": "soccer_liga",
+   "event": "Brentford vs Tottenham",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 38.5,
+   "pinnPP": 47.2,
+   "gapPP": -8.69,
+   "vol": 25673,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -1.8,
+   "firstSeen": "2026-08-22T06:59:38.710251+00:00"
+  },
+  {
+   "id": "soccer_liga|brentford-tottenham|aw",
+   "sport": "soccer_liga",
+   "event": "Brentford vs Tottenham",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 35.5,
+   "pinnPP": 27.6,
+   "gapPP": 7.88,
+   "vol": 25673,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -1.41,
+   "firstSeen": "2026-08-22T06:59:38.710251+00:00"
+  }
+ ]
 }
