@@ -1,36 +1,18 @@
 {
 "_meta": {
 "description": "Übersicht-Puls: letzte 30 abgerechnete Picks (CLV/Trefferquote).",
-"generatedAt": "2026-08-23T06:55:50Z",
-"updated_at": "2026-08-23T06:55:50Z"
+"generatedAt": "2026-08-23T07:40:53Z",
+"updated_at": "2026-08-23T07:40:53Z"
 },
 "n": 30,
 "nClv": 30,
-"nGraded": 30,
-"avgClvPP": -2.96,
-"pctBeatClose": 23.3,
-"winPct": 56.7,
-"wins": 17,
-"losses": 13,
+"nGraded": 29,
+"avgClvPP": -2.72,
+"pctBeatClose": 26.7,
+"winPct": 65.5,
+"wins": 19,
+"losses": 10,
 "series": [
-3.1,
--6.76,
-1.05,
--1.4,
--2.76,
--5.69,
--4.94,
-5.28,
--2.49,
--4.88,
--0.7,
--2.52,
--4.81,
-0.97,
--4.28,
--4.14,
--2.6,
-4.24,
 -5.44,
 -1.64,
 -18.65,
@@ -42,10 +24,28 @@
 -1.13,
 0.15,
 0.12,
--0.24
+-0.24,
+-0.44,
+-3.41,
+-3.84,
+-13.4,
+2.19,
+-2.68,
+-4.13,
+-0.51,
+-0.83,
+1.36,
+-1.29,
+1.11,
+-0.0,
+3.55,
+10.16,
+-14.99,
+-0.42,
+1.55
 ],
-"oldest": "2026-07-23T09:31:12Z",
-"newest": "2026-08-23T06:55:42Z",
+"oldest": "2026-08-17T08:04:11Z",
+"newest": "2026-08-23T07:40:53Z",
 "betfair": {
 "n": 8000,
 "hitPct": 52.2,
@@ -77,155 +77,165 @@
 "n": 16
 },
 "inflight": {
-"poly": 4,
+"poly": 5,
 "betfair": 0,
 "cards": 0
 }
 },
 "signalBoard": {
-"n": 31,
-"baseWinPct": 55,
+"n": 48,
+"baseWinPct": 56,
 "minFire": 6,
 "rows": [
 {
-"name": "form_trend",
-"fire": 25,
-"supp": 15,
-"suppWinPct": 53,
-"opp": 10,
-"oppWinPct": 50,
-"edge": 3,
-"clvAvg": -3.31
-},
-{
 "name": "topscorer_momentum",
-"fire": 23,
-"supp": 12,
-"suppWinPct": 33,
-"opp": 2,
+"fire": 35,
+"supp": 19,
+"suppWinPct": 37,
+"opp": 3,
 "oppWinPct": 100,
-"edge": -67,
-"clvAvg": -2.9
+"edge": -63,
+"clvAvg": -2.36
 },
 {
-"name": "chance_creation",
-"fire": 17,
-"supp": 12,
-"suppWinPct": 67,
-"opp": 5,
-"oppWinPct": 20,
-"edge": 47,
-"clvAvg": -4.27
+"name": "form_trend",
+"fire": 35,
+"supp": 24,
+"suppWinPct": 58,
+"opp": 11,
+"oppWinPct": 45,
+"edge": 13,
+"clvAvg": -2.33
 },
 {
 "name": "form_rating",
-"fire": 17,
-"supp": 12,
-"suppWinPct": 75,
-"opp": 5,
-"oppWinPct": 20,
-"edge": 55,
-"clvAvg": -4.83
-},
-{
-"name": "injury",
-"fire": 16,
-"supp": 10,
-"suppWinPct": 70,
-"opp": 6,
-"oppWinPct": 50,
-"edge": 20,
-"clvAvg": -3.83
+"fire": 30,
+"supp": 23,
+"suppWinPct": 65,
+"opp": 7,
+"oppWinPct": 14,
+"edge": 51,
+"clvAvg": -3.29
 },
 {
 "name": "xg_strength",
-"fire": 16,
-"supp": 13,
-"suppWinPct": 54,
-"opp": 3,
-"oppWinPct": 67,
-"edge": -13,
-"clvAvg": -1.89
+"fire": 28,
+"supp": 24,
+"suppWinPct": 62,
+"opp": 4,
+"oppWinPct": 50,
+"edge": 12,
+"clvAvg": -1.45
+},
+{
+"name": "chance_creation",
+"fire": 26,
+"supp": 19,
+"suppWinPct": 63,
+"opp": 7,
+"oppWinPct": 43,
+"edge": 20,
+"clvAvg": -3.14
 },
 {
 "name": "transfer_shift",
-"fire": 12,
-"supp": 6,
-"suppWinPct": 50,
-"opp": 5,
-"oppWinPct": 60,
-"edge": -10,
-"clvAvg": -3.53
+"fire": 23,
+"supp": 12,
+"suppWinPct": 58,
+"opp": 8,
+"oppWinPct": 75,
+"edge": -17,
+"clvAvg": -2.26
 },
 {
 "name": "venue_form",
-"fire": 12,
-"supp": 6,
-"suppWinPct": 67,
-"opp": 6,
-"oppWinPct": 83,
-"edge": -16,
-"clvAvg": -2.7
+"fire": 22,
+"supp": 10,
+"suppWinPct": 70,
+"opp": 12,
+"oppWinPct": 67,
+"edge": 3,
+"clvAvg": -1.62
 },
 {
 "name": "mls_travel",
-"fire": 11,
-"supp": 2,
-"suppWinPct": 100,
-"opp": 9,
-"oppWinPct": 44,
-"edge": 56,
-"clvAvg": -4.94
-},
-{
-"name": "h2h_pattern",
-"fire": 10,
-"supp": 8,
-"suppWinPct": 62,
-"opp": 2,
+"fire": 20,
+"supp": 6,
+"suppWinPct": 67,
+"opp": 12,
 "oppWinPct": 50,
-"edge": 12,
-"clvAvg": -2.54
-},
-{
-"name": "lead_lag_bias",
-"fire": 10,
-"supp": 8,
-"suppWinPct": 50,
-"opp": 2,
-"oppWinPct": 50,
-"edge": 0,
-"clvAvg": -0.23
+"edge": 17,
+"clvAvg": -3.18
 },
 {
 "name": "betfair_money",
-"fire": 9,
-"supp": 6,
-"suppWinPct": 83,
+"fire": 20,
+"supp": 13,
+"suppWinPct": 69,
+"opp": 7,
+"oppWinPct": 57,
+"edge": 12,
+"clvAvg": -3.53
+},
+{
+"name": "injury",
+"fire": 19,
+"supp": 12,
+"suppWinPct": 67,
+"opp": 7,
+"oppWinPct": 57,
+"edge": 10,
+"clvAvg": -3.45
+},
+{
+"name": "lead_lag_bias",
+"fire": 18,
+"supp": 15,
+"suppWinPct": 47,
 "opp": 3,
-"oppWinPct": 100,
-"edge": -17,
-"clvAvg": -5.04
+"oppWinPct": 33,
+"edge": 14,
+"clvAvg": -0.42
+},
+{
+"name": "h2h_pattern",
+"fire": 18,
+"supp": 14,
+"suppWinPct": 71,
+"opp": 4,
+"oppWinPct": 50,
+"edge": 21,
+"clvAvg": -1.76
 },
 {
 "name": "fixture_congestion",
-"fire": 7,
-"supp": 5,
-"suppWinPct": 60,
-"opp": 1,
+"fire": 15,
+"supp": 12,
+"suppWinPct": 58,
+"opp": 2,
 "oppWinPct": 0,
-"edge": 60,
-"clvAvg": -3.09
+"edge": 58,
+"clvAvg": -2.62
 },
 {
 "name": "freshness_leg",
-"fire": 6,
-"supp": 6,
-"suppWinPct": 83,
+"fire": 12,
+"supp": 12,
+"suppWinPct": 67,
 "opp": 0,
 "oppWinPct": null,
 "edge": null,
-"clvAvg": -6.21
+"clvAvg": -3.14
+},
+{
+"name": "league_pressure",
+"fire": 7,
+"supp": 3,
+"suppWinPct": 33,
+"opp": 0,
+"oppWinPct": null,
+"edge": null,
+"clvAvg": -3.66
 },
 {
 "name": "opener_move",
@@ -288,6 +298,16 @@
 "clvAvg": 3.17
 },
 {
+"name": "coach_change",
+"fire": 1,
+"supp": 0,
+"suppWinPct": null,
+"opp": 0,
+"oppWinPct": null,
+"edge": null,
+"clvAvg": -1.29
+},
+{
 "name": "streak_momentum",
 "fire": 1,
 "supp": 0,
@@ -296,16 +316,6 @@
 "oppWinPct": null,
 "edge": null,
 "clvAvg": 0.12
-},
-{
-"name": "league_pressure",
-"fire": 1,
-"supp": 0,
-"suppWinPct": null,
-"opp": 0,
-"oppWinPct": null,
-"edge": null,
-"clvAvg": -4.14
 }
 ]
 }

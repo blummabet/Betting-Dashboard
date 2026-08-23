@@ -178,7 +178,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "15/30 mit AH · 30/30 mit Public-O/U."
+      "note": "12/17 mit AH · 17/17 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -342,17 +342,9 @@
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
       "ok": false,
-      "nFail": 9,
+      "nFail": 1,
       "failures": [
-        "1598-1606 Heimsieg @1.85: sichere Linie Doppelte Chance — 1X @1.373 verfügbar (≥1.35), nicht abgeleitet",
-        "1598-1606 Auswärtssieg @2.6: sichere Linie Doppelte Chance — X2 @1.843 verfügbar (≥1.35), nicht abgeleitet",
-        "1614-1605 Auswärtssieg @2.77: sichere Linie Doppelte Chance — X2 @1.849 verfügbar (≥1.35), nicht abgeleitet",
-        "16489-1599 Heimsieg @2.9: sichere Linie Doppelte Chance — 1X @1.853 verfügbar (≥1.35), nicht abgeleitet",
-        "16489-1599 Unter 2.5 Tore @2.19: sichere Linie Unter 3.5 Tore @1.55 verfügbar (≥1.35), nicht abgeleitet",
-        "20787-1600 Unter 2.5 Tore @2.02: sichere Linie Unter 3.5 Tore @1.38 verfügbar (≥1.35), nicht abgeleitet",
-        "20787-1600 Heimsieg @1.95: sichere Linie Doppelte Chance — 1X @1.352 verfügbar (≥1.35), nicht abgeleitet",
-        "20787-1600 Auswärtssieg @3.3: sichere Linie Doppelte Chance — X2 @1.732 verfügbar (≥1.35), nicht abgeleitet",
-        "1609-1604 Auswärtssieg @2.45: sichere Linie Doppelte Chance — X2 @1.653 verfügbar (≥1.35), nicht abgeleitet"
+        "1609-1604 Auswärtssieg @2.45: sichere Linie Doppelte Chance — X2 @1.668 verfügbar (≥1.35), nicht abgeleitet"
       ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
@@ -438,15 +430,6 @@
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
     },
     {
-      "id": "smartmoney_cluster_sane",
-      "label": "Smart-Money-Cluster kohärent",
-      "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
-      "note": "cluster ∈ ℕ₀, ≤ holders; buy/sell ≥ 0; netFlow = buy − sell. Sonst rechnet der Cluster-Boost/Exit-Penalty im smart_money-Signal auf Müll."
-    },
-    {
       "id": "card_only_not_in_trade",
       "label": "Card-Signale nicht im Trade-Pfad",
       "severity": "warn",
@@ -496,10 +479,18 @@
       "label": "Beendete Spiele haben Match-Stats (xG)",
       "severity": "warn",
       "ok": false,
-      "nFail": 2,
+      "nFail": 10,
       "failures": [
         "2242-1596: beendet, aber keine result.stats (xG)",
-        "9568-1613: beendet, aber keine result.stats (xG)"
+        "9568-1613: beendet, aber keine result.stats (xG)",
+        "1598-1606: beendet, aber keine result.stats (xG)",
+        "1602-1607: beendet, aber keine result.stats (xG)",
+        "1614-1605: beendet, aber keine result.stats (xG)",
+        "18310-1615: beendet, aber keine result.stats (xG)",
+        "2242-1595: beendet, aber keine result.stats (xG)",
+        "9568-1601: beendet, aber keine result.stats (xG)",
+        "20787-1600: beendet, aber keine result.stats (xG)",
+        "9569-1613: beendet, aber keine result.stats (xG)"
       ],
       "note": "Ohne Match-xG lernt der Bayesian-Loop nur aus Glück/Pech, nicht aus dem Prozess."
     },
@@ -541,5 +532,5 @@
     }
   ],
   "nFail": 4,
-  "generatedAt": "2026-08-22T19:27:45.603490+00:00"
+  "generatedAt": "2026-08-23T07:40:53.647206+00:00"
 }
