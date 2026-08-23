@@ -63,3 +63,33 @@ def test_signal_scoreboard_edge_und_seiten():
 def test_signal_scoreboard_leer_ist_none():
     assert bp._signal_scoreboard([]) is None
     assert bp._signal_scoreboard([{"result": "VOID", "signals": []}]) is None
+
+
+# ── NOBET-Bilanz (23.08.2026, Lucas): waren die Abstufungen richtig? Schatten-Win + CLV je Grund ──
+def test_nobet_bucket_mapping():
+    assert bp._nobet_bucket("Conviction 3/10 < 4 — zu dünn") == "Conviction zu dünn"
+    assert bp._nobet_bucket("Edge weg — Linie gegen den Pick gelaufen (2.6→3.2)") == "Linie weggelaufen"
+    assert bp._nobet_bucket("Engine-Netto -0.2pp negativ — Modell gegen den Pick") == "Engine gegen den Pick"
+    assert bp._nobet_bucket("Quote zu kurz geworden (1.6→1.4) — kein Value mehr") == "Quote zu kurz geworden"
+    assert bp._nobet_bucket("Kein Value mehr — Move ausgelaufen / Konsens konvergiert") == "Value ausgelaufen"
+    assert bp._nobet_bucket(None) == "Sonstige"
+
+
+def test_nobet_scoreboard_aggregates_shadow_and_clv(monkeypatch):
+    fake = {"picks": {"K1": [
+        {"verdict": "NOBET", "shadowResult": "WIN",  "nobetReason": "Conviction 3/10 < 4 — zu dünn", "clvPP": -5.0},
+        {"verdict": "NOBET", "shadowResult": "LOSS", "nobetReason": "Conviction 2/10 < 4 — zu dünn", "clvPP": -3.0},
+        {"verdict": "BET",   "shadowResult": "WIN",  "clvPP": 9.0},    # kein NOBET → ignoriert
+        {"verdict": "NOBET", "shadowResult": None,   "clvPP": 2.0},    # kein shadow → ignoriert
+    ]}}
+    monkeypatch.setattr(bp, "_load", lambda name: fake if name == "liga-data.json" else {})
+    b = bp._nobet_scoreboard(["liga-data.json"])
+    assert b["n"] == 2 and b["wins"] == 1 and b["winPct"] == 50
+    assert b["clvAvg"] == -4.0
+    assert len(b["rows"]) == 1
+    assert b["rows"][0]["reason"] == "Conviction zu dünn" and b["rows"][0]["n"] == 2 and b["rows"][0]["clvAvg"] == -4.0
+
+
+def test_nobet_scoreboard_leer_ist_none(monkeypatch):
+    monkeypatch.setattr(bp, "_load", lambda name: {})
+    assert bp._nobet_scoreboard(["x.json"]) is None

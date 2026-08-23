@@ -156,6 +156,66 @@ def _signal_scoreboard(recs, exclude=BOARD_EXCLUDE) -> dict | None:
             "minFire": SIG_MIN_FIRE, "rows": rows}
 
 
+# ── NOBET-Bilanz (23.08.2026, Lucas: „wenn ein NOBET stark positiv wäre, was macht man?") ──────
+# Waren unsere Abstufungen richtig? Pro Kipp-Grund die Schatten-Trefferquote UND den Schatten-CLV
+# der demoteten Picks (verdict=NOBET + shadowResult). STRENG getrennt vom echten P&L — reines
+# Kalibrier-Signal. CLV ist der Nordstern: lief die Linie NACH dem Kippen weiter GEGEN uns
+# (Ø CLV < 0) → richtig gekippt; weiter FÜR uns (Ø CLV > 0) → zu früh raus = Sieger weggeworfen.
+NOBET_MIN_FIRE = 6      # darunter: „zu wenig Daten" (grau)
+NOBET_CLV_BAND = 1.0    # |Ø CLV| >= 1pp entscheidet grün/rot; dazwischen gelb
+DATA_FILES = ["liga-data.json", "mls-data.json", "wm2026-data.json"]
+
+
+def _nobet_bucket(reason) -> str:
+    r = (reason or "").lower()
+    if "conviction" in r:                                   return "Conviction zu dünn"
+    if "engine-netto" in r or "modell gegen" in r:          return "Engine gegen den Pick"
+    if "linie gegen" in r or "edge weg" in r:               return "Linie weggelaufen"
+    if "zu kurz" in r:                                       return "Quote zu kurz geworden"
+    if "value" in r or "ausgelaufen" in r or "konsens" in r: return "Value ausgelaufen"
+    return "Sonstige"
+
+
+def _nobet_scoreboard(data_files=None) -> dict | None:
+    files = data_files if data_files is not None else DATA_FILES
+    buckets, tot = {}, {"n": 0, "w": 0, "clvSum": 0.0, "clvN": 0}
+    for f in files:
+        d = _load(f)
+        picks = d.get("picks") if isinstance(d, dict) else None
+        if not isinstance(picks, dict):
+            continue
+        for pl in picks.values():
+            if not isinstance(pl, list):
+                continue
+            for p in pl:
+                if not isinstance(p, dict) or p.get("verdict") != "NOBET":
+                    continue
+                sr = str(p.get("shadowResult") or "").upper()
+                if sr not in ("WIN", "LOSS"):
+                    continue
+                a = buckets.setdefault(_nobet_bucket(p.get("nobetReason")),
+                                       {"n": 0, "w": 0, "clvSum": 0.0, "clvN": 0})
+                a["n"] += 1; tot["n"] += 1
+                if sr == "WIN":
+                    a["w"] += 1; tot["w"] += 1
+                clv = p.get("clvPP")
+                if isinstance(clv, (int, float)):
+                    a["clvSum"] += clv; a["clvN"] += 1
+                    tot["clvSum"] += clv; tot["clvN"] += 1
+    if not tot["n"]:
+        return None
+    rows = []
+    for bk, a in buckets.items():
+        rows.append({"reason": bk, "n": a["n"], "wins": a["w"],
+                     "winPct": round(100.0 * a["w"] / a["n"]) if a["n"] else None,
+                     "clvAvg": round(a["clvSum"] / a["clvN"], 2) if a["clvN"] else None})
+    rows.sort(key=lambda x: -x["n"])
+    return {"n": tot["n"], "wins": tot["w"],
+            "winPct": round(100.0 * tot["w"] / tot["n"]) if tot["n"] else None,
+            "clvAvg": round(tot["clvSum"] / tot["clvN"], 2) if tot["clvN"] else None,
+            "minFire": NOBET_MIN_FIRE, "clvBand": NOBET_CLV_BAND, "rows": rows}
+
+
 def build() -> dict:
     recs, cards_open = [], 0
     for lf in LEDGERS:
@@ -192,6 +252,7 @@ def build() -> dict:
         "moneymap": _moneymap_pulse(),  # 11.08.2026 (Lucas): Money-Map-Konsens mit in den Puls
         "strip": _strip(cards_open=cards_open),   # 07.08.2026 (Lucas): wo lohnt Setzen + was laeuft
         "signalBoard": _signal_scoreboard(recs),  # 22.08.2026 (Lucas): pro-Signal-Bilanz (funktionieren sie?)
+        "nobetBoard": _nobet_scoreboard(),  # 23.08.2026 (Lucas): NOBET-Bilanz — waren die Abstufungen richtig (Schatten-Win + CLV je Grund)?
     }
 
 

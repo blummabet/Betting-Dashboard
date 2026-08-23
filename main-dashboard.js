@@ -1015,7 +1015,7 @@
       '<div id="md-cell-live" class="md-cell">' + _mdLiveWidePlaceholder() + '</div>' +
       '</div>';
 
-    p.innerHTML = _head() + _mdPulse() + _mdSignalBoard() + _mdJetzt() + _kpis() + _mdHero() + grid +
+    p.innerHTML = _head() + _mdPulse() + _mdSignalBoard() + _mdNobetBoard() + _mdJetzt() + _kpis() + _mdHero() + grid +
       '<div class="md-foot">Kuratierter Überblick · tippe „alle →" für den vollen Bereich</div>';
     _mdFillPlays();
     _mdFillPubPreview();
@@ -1167,6 +1167,43 @@
       +'<span class="mpc-hint">funktionieren die Signale? · '+b.n+' Picks · Ø '+Math.round(base)+'% Win</span></summary>'
       +'<div class="sb-legend">🟢 trägt Richtungsinfo · 🟡 schwach · 🔴 evtl. schädlich · ⚪ zu wenig Daten. '
       +'„dafür/gegen" = Win-Quote, wenn das Signal den Pick stützt bzw. dagegen steht · Zahl rechts = Edge (dafür−gegen), ⌀ = dafür vs. Ø bei dünner Gegen-Seite.</div>'
+      +'<div class="sb-list">'+lines+'</div></details>';
+  }
+
+  // ── 🚫 NOBET-Bilanz (23.08.2026, Lucas: „wenn ein NOBET stark positiv wäre — was macht man?") ──
+  // Waren unsere Abstufungen richtig? Pro Kipp-Grund: Schatten-Trefferquote + Ø CLV der demoteten
+  // Picks. CLV ist der Richter (negativ = Linie lief weiter gegen uns = richtig gekippt). Read-only,
+  // NICHT im P&L. Daten: dashboard_pulse.json .nobetBoard (build_dashboard_pulse.py).
+  function _mdNobetBoard(){
+    var d=_md.data.pulse||{}, b=d.nobetBoard;
+    if(!b||!b.rows||!b.rows.length) return '';
+    _sbStyles();
+    var band=b.clvBand||1, minF=b.minFire||6;
+    var tier=function(r){
+      if(r.n<minF||r.clvAvg==null) return {c:'var(--mi3)', t:'zu wenig Daten'};
+      if(r.clvAvg<=-band) return {c:A.good, t:'gut gekippt'};
+      if(r.clvAvg>=band)  return {c:A.red,  t:'zu früh gekippt'};
+      return {c:A.gold, t:'grenzwertig'};
+    };
+    var clvTxt=function(v){ return v==null?'—':((v>0?'+':'')+(+v).toFixed(1)+'pp'); };
+    var lines=b.rows.map(function(r){
+      var tg=tier(r);
+      var clvCol=(r.clvAvg!=null&&r.clvAvg<0)?A.good:(r.clvAvg>0?A.red:'var(--mi2)');
+      return '<div class="sb-row">'
+        +'<span class="sb-dot" style="background:'+tg.c+'"></span>'
+        +'<span class="sb-nm">'+esc(r.reason)+'</span>'
+        +'<span class="sb-fire">n'+r.n+'</span>'
+        +'<span class="sb-cell" title="Schatten-Trefferquote — hätte gewonnen">'+(r.winPct==null?'—':r.winPct+'%')+' <i>Schatten</i></span>'
+        +'<span class="sb-cell" style="color:'+clvCol+'" title="Ø Closing Line Value NACH dem Kippen — der ehrliche Richter">'+clvTxt(r.clvAvg)+' <i>CLV</i></span>'
+        +'<span class="sb-edge" style="color:'+tg.c+';font-size:9.5px;font-weight:700">'+tg.t+'</span>'
+        +'</div>';
+    }).join('');
+    var overCol=(b.clvAvg!=null&&b.clvAvg<0)?A.good:(b.clvAvg>0?A.red:'var(--mi2)');
+    return '<details class="md-pulse md-rise sb-wrap">'
+      +'<summary class="sb-sum"><span class="md-pulse-h" style="margin:0">🚫 NOBET-Bilanz</span>'
+      +'<span class="mpc-hint">richtig abgestuft? · '+b.n+' NOBETs · Schatten '+(b.winPct==null?'—':b.winPct+'%')+' · Ø CLV <b style="color:'+overCol+'">'+clvTxt(b.clvAvg)+'</b></span></summary>'
+      +'<div class="sb-legend">CLV ist der Richter: 🟢 <b>gut gekippt</b> (Linie lief weiter GEGEN uns, Ø CLV negativ) · 🔴 <b>zu früh</b> (lief weiter FÜR uns → Sieger weggeworfen) · ⚪ zu wenig Daten.<br>'
+      +'„Schatten" = hätte gewonnen — <b>allein trügerisch</b>: hohe Quote bei negativem CLV heißt, der Preis war schon weg (also korrekt gekippt). Zählt NICHT in P&L/Lernen.</div>'
       +'<div class="sb-list">'+lines+'</div></details>';
   }
 
