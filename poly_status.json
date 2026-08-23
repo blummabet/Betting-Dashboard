@@ -40,11 +40,9 @@
       "id": "settlement_alive",
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "cs2-innerc-sashia1-2026-08-16: seit 7.2 Tagen offen — keine Auflösung gefunden"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
     {
@@ -63,12 +61,12 @@
       "ok": false,
       "nFail": 6,
       "failures": [
-        "12/46 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (26%) — Trefferquote allein trügt",
+        "12/45 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (27%) — Trefferquote allein trügt",
         "   0x84cfffc3f1… n=48 Treffer 52% P&L $-7,755,377",
         "   0x224a89dbe0… n=86 Treffer 52% P&L $-4,581,660",
-        "   0xc3c3b3ef30… n=223 Treffer 52% P&L $-3,855,136",
+        "   0xc3c3b3ef30… n=223 Treffer 52% P&L $-3,855,166",
         "   0xa0f21e6d35… n=44 Treffer 66% P&L $-2,719,104",
-        "360/406 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
+        "362/407 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
     },
@@ -88,11 +86,11 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "776/827 'live' Geld-Märkte sind schon >6h nach Anpfiff (94%) — $35,928,251 Whale-Geld auf fertigen Spielen"
+        "782/824 'live' Geld-Märkte sind schon >6h nach Anpfiff (95%) — $36,423,179 Whale-Geld auf fertigen Spielen"
       ],
       "note": "Der Close-Feed setzt kein resolved-Flag; fertige Spiele bleiben 'live'. Alle Views filtern jetzt auf den rekonstruierten Anpfiff — dieser Check misst den Geister-Anteil im Roh-Feed (steigt er, prunt/löst der Feed nicht mehr auf; jede ungegatete View zeigt dann fertige Spiele)."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-08-23T04:25:41.872654+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-08-23T05:15:02.369551+00:00"
 }
