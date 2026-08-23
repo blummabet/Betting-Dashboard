@@ -1,23 +1,23 @@
 {
-"generatedAt": "2026-08-23T13:18:03.333302+00:00",
+"generatedAt": "2026-08-23T13:33:04.091218+00:00",
 "byVerdict": {
 "konsens": {
-"n": 369,
-"wins": 287,
-"hitRate": 0.7778,
-"polyN": 341,
-"polyWins": 257,
-"polyHitRate": 0.7537,
+"n": 370,
+"wins": 288,
+"hitRate": 0.7784,
+"polyN": 342,
+"polyWins": 258,
+"polyHitRate": 0.7544,
 "pinnN": 21,
 "pinnHitRate": 0.6667
 },
 "uneinig": {
-"n": 124,
+"n": 125,
 "wins": 36,
-"hitRate": 0.2903,
-"polyN": 110,
-"polyWins": 35,
-"polyHitRate": 0.3182,
+"hitRate": 0.288,
+"polyN": 111,
+"polyWins": 36,
+"polyHitRate": 0.3243,
 "pinnN": 66,
 "pinnHitRate": 0.6212
 },
@@ -153,6 +153,11 @@
 "wins": 6,
 "hitRate": 0.75
 },
+"South Korean K1 League": {
+"n": 8,
+"wins": 6,
+"hitRate": 0.75
+},
 "Chilean Primera Division": {
 "n": 7,
 "wins": 5,
@@ -182,11 +187,6 @@
 "n": 6,
 "wins": 4,
 "hitRate": 0.6667
-},
-"South Korean K1 League": {
-"n": 6,
-"wins": 5,
-"hitRate": 0.8333
 },
 "Uzbekistan Super League": {
 "n": 6,
@@ -471,20 +471,58 @@
 "hitRate": 0.7842
 },
 "weak": {
-"n": 187,
-"wins": 88,
-"hitRate": 0.4706
+"n": 189,
+"wins": 89,
+"hitRate": 0.4709
 }
 },
 "divergence": {
-"n": 124,
+"n": 125,
 "betfairWins": 36,
-"betfairRate": 0.2903,
-"polyN": 110,
-"polyWins": 35,
-"polyRate": 0.3182
+"betfairRate": 0.288,
+"polyN": 111,
+"polyWins": 36,
+"polyRate": 0.3243
 },
 "recent": [
+{
+"matchId": "35947357",
+"home": "Daejeon Citizen",
+"away": "Gangwon",
+"league": "South Korean K1 League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Daejeon Citizen",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+0
+],
+"kickoff": "2026-08-23T10:30:00Z",
+"settledAt": "2026-08-23T13:33:03.935809+00:00"
+},
+{
+"matchId": "35947351",
+"home": "Gwangju FC",
+"away": "Incheon Utd",
+"league": "South Korean K1 League",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "away",
+"winner": "away",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-08-23T10:30:00Z",
+"settledAt": "2026-08-23T13:33:03.935809+00:00"
+},
 {
 "matchId": "35944876",
 "home": "Go Ahead Eagles",
@@ -1206,50 +1244,12 @@
 ],
 "kickoff": "2026-08-22T19:30:00Z",
 "settledAt": "2026-08-22T21:27:42.761345+00:00"
-},
-{
-"matchId": "35734730",
-"home": "Genoa",
-"away": "Napoli",
-"league": "Italian Serie A",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Napoli",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-2
-],
-"kickoff": "2026-08-22T18:45:00Z",
-"settledAt": "2026-08-22T20:46:29.852525+00:00"
-},
-{
-"matchId": "35785985",
-"home": "ESTAC Troyes",
-"away": "Paris FC",
-"league": "French Ligue 1",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Paris FC",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-08-22T18:45:00Z",
-"settledAt": "2026-08-22T20:46:29.852525+00:00"
 }
 ],
 "global": {
-"n": 498,
-"wins": 324,
-"hitRate": 0.6506
+"n": 500,
+"wins": 325,
+"hitRate": 0.65
 },
-"pending": 20
+"pending": 19
 }
