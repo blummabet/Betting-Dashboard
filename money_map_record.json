@@ -1,25 +1,25 @@
 {
-"generatedAt": "2026-08-23T20:18:42.931065+00:00",
+"generatedAt": "2026-08-23T20:30:01.933775+00:00",
 "byVerdict": {
 "konsens": {
-"n": 406,
-"wins": 321,
-"hitRate": 0.7906,
-"polyN": 378,
-"polyWins": 290,
-"polyHitRate": 0.7672,
-"pinnN": 23,
-"pinnHitRate": 0.6957
+"n": 407,
+"wins": 322,
+"hitRate": 0.7912,
+"polyN": 379,
+"polyWins": 291,
+"polyHitRate": 0.7678,
+"pinnN": 24,
+"pinnHitRate": 0.7083
 },
 "uneinig": {
-"n": 136,
+"n": 137,
 "wins": 38,
-"hitRate": 0.2794,
-"polyN": 120,
-"polyWins": 40,
-"polyHitRate": 0.3333,
-"pinnN": 72,
-"pinnHitRate": 0.6111
+"hitRate": 0.2774,
+"polyN": 121,
+"polyWins": 41,
+"polyHitRate": 0.3388,
+"pinnN": 73,
+"pinnHitRate": 0.6164
 },
 "teil": {
 "n": 5,
@@ -88,6 +88,11 @@
 "wins": 7,
 "hitRate": 0.5385
 },
+"Turkish Super League": {
+"n": 13,
+"wins": 8,
+"hitRate": 0.6154
+},
 "Brazilian Serie A": {
 "n": 12,
 "wins": 5,
@@ -122,11 +127,6 @@
 "n": 11,
 "wins": 8,
 "hitRate": 0.7273
-},
-"Turkish Super League": {
-"n": 11,
-"wins": 7,
-"hitRate": 0.6364
 },
 "Belgian Pro League": {
 "n": 10,
@@ -476,25 +476,63 @@
 },
 "byStrength": {
 "strong": {
-"n": 311,
+"n": 312,
 "wins": 247,
-"hitRate": 0.7942
+"hitRate": 0.7917
 },
 "weak": {
-"n": 203,
-"wins": 95,
-"hitRate": 0.468
+"n": 204,
+"wins": 96,
+"hitRate": 0.4706
 }
 },
 "divergence": {
-"n": 136,
+"n": 137,
 "betfairWins": 38,
-"betfairRate": 0.2794,
-"polyN": 120,
-"polyWins": 40,
-"polyRate": 0.3333
+"betfairRate": 0.2774,
+"polyN": 121,
+"polyWins": 41,
+"polyRate": 0.3388
 },
 "recent": [
+{
+"matchId": "35949314",
+"home": "Alanyaspor",
+"away": "Besiktas",
+"league": "Turkish Super League",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Besiktas",
+"polySide": "home",
+"winner": "home",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-08-23T18:30:00Z",
+"settledAt": "2026-08-23T20:30:01.768474+00:00"
+},
+{
+"matchId": "35952117",
+"home": "Goztepe",
+"away": "Genclerbirligi",
+"league": "Turkish Super League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Genclerbirligi",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-08-23T18:30:00Z",
+"settledAt": "2026-08-23T20:30:01.768474+00:00"
+},
 {
 "matchId": "35945742",
 "home": "Hapoel Jerusalem",
@@ -1216,50 +1254,12 @@
 ],
 "kickoff": "2026-08-23T12:00:00Z",
 "settledAt": "2026-08-23T15:06:26.363961+00:00"
-},
-{
-"matchId": "35947144",
-"home": "AGF",
-"away": "OB",
-"league": "Danish Superliga",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "AGF",
-"polySide": null,
-"winner": "draw",
-"moneyWin": false,
-"polyWin": null,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-08-23T12:00:00Z",
-"settledAt": "2026-08-23T15:06:26.363961+00:00"
-},
-{
-"matchId": "35737557",
-"home": "Man City",
-"away": "Bournemouth",
-"league": "English Premier League",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Man City",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-08-23T13:00:00Z",
-"settledAt": "2026-08-23T14:59:17.152882+00:00"
 }
 ],
 "global": {
-"n": 547,
-"wins": 360,
-"hitRate": 0.6581
+"n": 549,
+"wins": 361,
+"hitRate": 0.6576
 },
-"pending": 22
+"pending": 20
 }
