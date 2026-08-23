@@ -1,25 +1,25 @@
 {
-"generatedAt": "2026-08-23T02:16:50.173165+00:00",
+"generatedAt": "2026-08-23T02:31:51.318922+00:00",
 "byVerdict": {
 "konsens": {
-"n": 352,
-"wins": 274,
-"hitRate": 0.7784,
-"polyN": 326,
-"polyWins": 247,
-"polyHitRate": 0.7577,
+"n": 354,
+"wins": 275,
+"hitRate": 0.7768,
+"polyN": 328,
+"polyWins": 248,
+"polyHitRate": 0.7561,
 "pinnN": 20,
 "pinnHitRate": 0.65
 },
 "uneinig": {
-"n": 121,
+"n": 122,
 "wins": 35,
-"hitRate": 0.2893,
-"polyN": 107,
+"hitRate": 0.2869,
+"polyN": 108,
 "polyWins": 35,
-"polyHitRate": 0.3271,
-"pinnN": 65,
-"pinnHitRate": 0.6308
+"polyHitRate": 0.3241,
+"pinnN": 66,
+"pinnHitRate": 0.6212
 },
 "teil": {
 "n": 5,
@@ -39,9 +39,9 @@
 "hitRate": 0.5
 },
 "US MLS": {
-"n": 26,
-"wins": 15,
-"hitRate": 0.5769
+"n": 28,
+"wins": 16,
+"hitRate": 0.5714
 },
 "English Sky Bet Championship": {
 "n": 20,
@@ -68,6 +68,11 @@
 "wins": 9,
 "hitRate": 0.6923
 },
+"Brazilian Serie A": {
+"n": 12,
+"wins": 5,
+"hitRate": 0.4167
+},
 "Japanese J League": {
 "n": 12,
 "wins": 9,
@@ -82,11 +87,6 @@
 "n": 12,
 "wins": 10,
 "hitRate": 0.8333
-},
-"Brazilian Serie A": {
-"n": 11,
-"wins": 5,
-"hitRate": 0.4545
 },
 "Italian Coppa Italia": {
 "n": 11,
@@ -466,9 +466,9 @@
 },
 "byStrength": {
 "strong": {
-"n": 265,
-"wins": 209,
-"hitRate": 0.7887
+"n": 268,
+"wins": 210,
+"hitRate": 0.7836
 },
 "weak": {
 "n": 180,
@@ -477,14 +477,71 @@
 }
 },
 "divergence": {
-"n": 121,
+"n": 122,
 "betfairWins": 35,
-"betfairRate": 0.2893,
-"polyN": 107,
+"betfairRate": 0.2869,
+"polyN": 108,
 "polyWins": 35,
-"polyRate": 0.3271
+"polyRate": 0.3241
 },
 "recent": [
+{
+"matchId": "35947147",
+"home": "Orlando City",
+"away": "Real Salt Lake",
+"league": "US MLS",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Orlando City",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-08-22T23:30:00Z",
+"settledAt": "2026-08-23T02:31:51.153592+00:00"
+},
+{
+"matchId": "35947154",
+"home": "FC Cincinnati",
+"away": "Seattle Sounders",
+"league": "US MLS",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "FC Cincinnati",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-22T23:30:00Z",
+"settledAt": "2026-08-23T02:31:51.153592+00:00"
+},
+{
+"matchId": "35925593",
+"home": "Cruzeiro MG",
+"away": "Flamengo",
+"league": "Brazilian Serie A",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Flamengo",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-08-22T23:30:00Z",
+"settledAt": "2026-08-23T02:31:51.153592+00:00"
+},
 {
 "matchId": "35945775",
 "home": "Santa Fe",
@@ -1187,69 +1244,12 @@
 ],
 "kickoff": "2026-08-22T17:00:00Z",
 "settledAt": "2026-08-22T19:01:17.244734+00:00"
-},
-{
-"matchId": "35945206",
-"home": "Al-Fateh (KSA)",
-"away": "Al-Ettifaq",
-"league": "Saudi Professional League",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Al-Ettifaq",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-08-22T15:45:00Z",
-"settledAt": "2026-08-22T18:46:12.576199+00:00"
-},
-{
-"matchId": "35737558",
-"home": "Brentford",
-"away": "Tottenham",
-"league": "English Premier League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Brentford",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-0
-],
-"kickoff": "2026-08-22T16:30:00Z",
-"settledAt": "2026-08-22T18:31:13.206590+00:00"
-},
-{
-"matchId": "35734727",
-"home": "Inter",
-"away": "AC Monza",
-"league": "Italian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Inter",
-"polySide": null,
-"winner": "home",
-"moneyWin": true,
-"polyWin": null,
-"ftScore": [
-4,
-1
-],
-"kickoff": "2026-08-22T16:30:00Z",
-"settledAt": "2026-08-22T18:31:13.206590+00:00"
 }
 ],
 "global": {
-"n": 478,
-"wins": 310,
-"hitRate": 0.6485
+"n": 481,
+"wins": 311,
+"hitRate": 0.6466
 },
-"pending": 19
+"pending": 16
 }
