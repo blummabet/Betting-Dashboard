@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-23T18:49:11.644760+00:00",
+ "generatedAt": "2026-08-23T19:35:26.593513+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,42 +9,56 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 435,
- "pinnKeys": 283,
- "matched": 223,
- "footballRows": 195,
+ "polyRowsSeen": 432,
+ "pinnKeys": 278,
+ "matched": 220,
+ "footballRows": 192,
  "crossRows": 240,
- "footballSkippedStale": 66,
+ "footballSkippedStale": 65,
  "seenBySport": {
   "americanfootball_nfl": 128,
   "baseball_mlb": 98,
   "icehockey_nhl": 12,
   "boxing_boxing": 2,
   "soccer_mls": 48,
-  "soccer_liga": 147
+  "soccer_liga": 144
  },
  "matchedBySport": {
   "baseball_mlb": 28,
   "soccer_mls": 48,
-  "soccer_liga": 147
+  "soccer_liga": 144
  },
  "trackRecord": {
-  "tracked": 200,
-  "converged": 41
+  "tracked": 201,
+  "converged": 45
  },
  "discrepancies": [
+  {
+   "id": "soccer_liga|getafe-racingsantander|hw",
+   "sport": "soccer_liga",
+   "event": "Getafe vs Racing Santander",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 43.5,
+   "pinnPP": 94.8,
+   "gapPP": -51.3,
+   "vol": 39889,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -42.59,
+   "firstSeen": "2026-08-23T18:49:11.644472+00:00"
+  },
   {
    "id": "baseball_mlb|detroittigers-kansascityroyals|detroittigers",
    "sport": "baseball_mlb",
    "event": "Detroit Tigers vs Kansas City Royals",
    "market": "Moneyline",
    "outcome": "Detroit Tigers",
-   "polyPP": 13.5,
-   "pinnPP": 60.5,
-   "gapPP": -47.0,
-   "vol": 108073,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": -6.76,
+   "polyPP": 43.5,
+   "pinnPP": 11.1,
+   "gapPP": 32.45,
+   "vol": 154827,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 7.79,
    "firstSeen": "2026-08-22T01:50:45.312877+00:00"
   },
   {
@@ -53,41 +67,13 @@
    "event": "Detroit Tigers vs Kansas City Royals",
    "market": "Moneyline",
    "outcome": "Kansas City Royals",
-   "polyPP": 86.5,
-   "pinnPP": 39.5,
-   "gapPP": 47.0,
-   "vol": 108073,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": -6.76,
-   "firstSeen": "2026-08-22T01:50:45.312877+00:00"
-  },
-  {
-   "id": "baseball_mlb|newyorkyankees-torontobluejays|torontobluejays",
-   "sport": "baseball_mlb",
-   "event": "Toronto Blue Jays vs New York Yankees",
-   "market": "Moneyline",
-   "outcome": "Toronto Blue Jays",
-   "polyPP": 47.5,
-   "pinnPP": 35.0,
-   "gapPP": 12.5,
-   "vol": 448818,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": -2.75,
-   "firstSeen": "2026-08-15T19:34:43.411116+00:00"
-  },
-  {
-   "id": "baseball_mlb|newyorkyankees-torontobluejays|newyorkyankees",
-   "sport": "baseball_mlb",
-   "event": "Toronto Blue Jays vs New York Yankees",
-   "market": "Moneyline",
-   "outcome": "New York Yankees",
-   "polyPP": 52.5,
-   "pinnPP": 65.0,
-   "gapPP": -12.5,
-   "vol": 448818,
+   "polyPP": 56.5,
+   "pinnPP": 88.9,
+   "gapPP": -32.45,
+   "vol": 154827,
    "richtung": "Poly zu niedrig → backen",
-   "convergePP": -2.75,
-   "firstSeen": "2026-08-15T19:34:43.411116+00:00"
+   "convergePP": 7.79,
+   "firstSeen": "2026-08-22T01:50:45.312877+00:00"
   },
   {
    "id": "soccer_liga|getafe-racingsantander|dr",
@@ -96,54 +82,54 @@
    "market": "1X2",
    "outcome": "Remis",
    "polyPP": 32.5,
-   "pinnPP": 43.6,
-   "gapPP": -11.07,
+   "pinnPP": 5.1,
+   "gapPP": 27.4,
    "vol": 39889,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": 0.0,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -16.33,
    "firstSeen": "2026-08-23T18:49:11.644472+00:00"
   },
   {
-   "id": "baseball_mlb|miamimarlins-washingtonnationals|washingtonnationals",
-   "sport": "baseball_mlb",
-   "event": "Washington Nationals vs Miami Marlins",
-   "market": "Moneyline",
-   "outcome": "Washington Nationals",
-   "polyPP": 38.5,
-   "pinnPP": 29.4,
-   "gapPP": 9.09,
-   "vol": 73205,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": 22.42,
-   "firstSeen": "2026-08-22T01:50:45.312877+00:00"
-  },
-  {
-   "id": "baseball_mlb|miamimarlins-washingtonnationals|miamimarlins",
-   "sport": "baseball_mlb",
-   "event": "Washington Nationals vs Miami Marlins",
-   "market": "Moneyline",
-   "outcome": "Miami Marlins",
-   "polyPP": 61.5,
-   "pinnPP": 70.6,
-   "gapPP": -9.09,
-   "vol": 73205,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": 22.42,
-   "firstSeen": "2026-08-22T01:50:45.312877+00:00"
-  },
-  {
-   "id": "soccer_liga|getafe-racingsantander|hw",
+   "id": "soccer_liga|getafe-racingsantander|aw",
    "sport": "soccer_liga",
    "event": "Getafe vs Racing Santander",
    "market": "1X2",
-   "outcome": "Heim",
-   "polyPP": 43.5,
-   "pinnPP": 34.8,
-   "gapPP": 8.71,
+   "outcome": "Auswärts",
+   "polyPP": 24.5,
+   "pinnPP": 0.1,
+   "gapPP": 24.4,
    "vol": 39889,
    "richtung": "Poly zu hoch → faden",
    "convergePP": 0.0,
-   "firstSeen": "2026-08-23T18:49:11.644472+00:00"
+   "firstSeen": "2026-08-23T19:35:26.593169+00:00"
+  },
+  {
+   "id": "baseball_mlb|philadelphiaphillies-stlouiscardinals|stlouiscardinals",
+   "sport": "baseball_mlb",
+   "event": "St. Louis Cardinals vs Philadelphia Phillies",
+   "market": "Moneyline",
+   "outcome": "St. Louis Cardinals",
+   "polyPP": 94.5,
+   "pinnPP": 85.8,
+   "gapPP": 8.71,
+   "vol": 636206,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 1.84,
+   "firstSeen": "2026-08-21T23:02:19.980131+00:00"
+  },
+  {
+   "id": "baseball_mlb|philadelphiaphillies-stlouiscardinals|philadelphiaphillies",
+   "sport": "baseball_mlb",
+   "event": "St. Louis Cardinals vs Philadelphia Phillies",
+   "market": "Moneyline",
+   "outcome": "Philadelphia Phillies",
+   "polyPP": 5.5,
+   "pinnPP": 14.2,
+   "gapPP": -8.71,
+   "vol": 636206,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 1.84,
+   "firstSeen": "2026-08-21T23:02:19.980131+00:00"
   }
  ]
 }
