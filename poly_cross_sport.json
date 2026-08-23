@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-23T15:36:39.023330+00:00",
+ "generatedAt": "2026-08-23T15:58:33.041275+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,8 +10,8 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 410,
- "pinnKeys": 266,
- "matched": 196,
+ "pinnKeys": 268,
+ "matched": 198,
  "footballRows": 180,
  "crossRows": 230,
  "footballSkippedStale": 55,
@@ -24,13 +24,56 @@
   "soccer_liga": 132
  },
  "matchedBySport": {
-  "baseball_mlb": 16,
+  "baseball_mlb": 18,
   "soccer_mls": 48,
   "soccer_liga": 132
  },
  "trackRecord": {
-  "tracked": 194,
+  "tracked": 197,
   "converged": 39
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|liverpool-newcastle|aw",
+   "sport": "soccer_liga",
+   "event": "Newcastle vs Liverpool",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 50.5,
+   "pinnPP": 32.0,
+   "gapPP": 18.52,
+   "vol": 272885,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-23T15:58:33.040977+00:00"
+  },
+  {
+   "id": "soccer_liga|liverpool-newcastle|hw",
+   "sport": "soccer_liga",
+   "event": "Newcastle vs Liverpool",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 24.5,
+   "pinnPP": 41.5,
+   "gapPP": -16.98,
+   "vol": 272885,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-23T15:58:33.040977+00:00"
+  },
+  {
+   "id": "soccer_liga|atleticomadrid-villarreal|dr",
+   "sport": "soccer_liga",
+   "event": "Atletico Madrid vs Villarreal",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 25.5,
+   "pinnPP": 32.3,
+   "gapPP": -6.81,
+   "vol": 7148,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-23T15:58:33.040977+00:00"
+  }
+ ]
 }
