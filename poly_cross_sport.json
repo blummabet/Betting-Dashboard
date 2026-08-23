@@ -1,77 +1,65 @@
 {
- "generatedAt": "2026-08-23T15:01:00.104154+00:00",
+ "generatedAt": "2026-08-23T17:56:53.254433+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
   "boxing_boxing",
+  "icehockey_nhl",
   "soccer_liga",
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 400,
- "pinnKeys": 268,
- "matched": 200,
- "footballRows": 180,
- "crossRows": 220,
- "footballSkippedStale": 57,
+ "polyRowsSeen": 427,
+ "pinnKeys": 277,
+ "matched": 215,
+ "footballRows": 189,
+ "crossRows": 238,
+ "footballSkippedStale": 68,
  "seenBySport": {
   "americanfootball_nfl": 128,
-  "baseball_mlb": 90,
+  "baseball_mlb": 96,
+  "icehockey_nhl": 12,
   "boxing_boxing": 2,
   "soccer_mls": 48,
-  "soccer_liga": 132
+  "soccer_liga": 141
  },
  "matchedBySport": {
-  "baseball_mlb": 20,
+  "baseball_mlb": 26,
   "soccer_mls": 48,
-  "soccer_liga": 132
+  "soccer_liga": 141
  },
  "trackRecord": {
-  "tracked": 194,
-  "converged": 39
+  "tracked": 198,
+  "converged": 41
  },
  "discrepancies": [
   {
-   "id": "soccer_liga|bournemouth-manchestercity|hw",
-   "sport": "soccer_liga",
-   "event": "Manchester City vs Bournemouth",
-   "market": "1X2",
-   "outcome": "Heim",
-   "polyPP": 65.5,
-   "pinnPP": 7.5,
-   "gapPP": 57.99,
-   "vol": 58589,
+   "id": "baseball_mlb|miamimarlins-washingtonnationals|washingtonnationals",
+   "sport": "baseball_mlb",
+   "event": "Washington Nationals vs Miami Marlins",
+   "market": "Moneyline",
+   "outcome": "Washington Nationals",
+   "polyPP": 25.5,
+   "pinnPP": 37.8,
+   "gapPP": -12.28,
+   "vol": 63733,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 19.23,
+   "firstSeen": "2026-08-22T01:50:45.312877+00:00"
+  },
+  {
+   "id": "baseball_mlb|miamimarlins-washingtonnationals|miamimarlins",
+   "sport": "baseball_mlb",
+   "event": "Washington Nationals vs Miami Marlins",
+   "market": "Moneyline",
+   "outcome": "Miami Marlins",
+   "polyPP": 74.5,
+   "pinnPP": 62.2,
+   "gapPP": 12.28,
+   "vol": 63733,
    "richtung": "Poly zu hoch → faden",
-   "convergePP": -24.1,
-   "firstSeen": "2026-08-23T14:40:46.938929+00:00"
-  },
-  {
-   "id": "soccer_liga|bournemouth-manchestercity|aw",
-   "sport": "soccer_liga",
-   "event": "Manchester City vs Bournemouth",
-   "market": "1X2",
-   "outcome": "Auswärts",
-   "polyPP": 15.5,
-   "pinnPP": 65.7,
-   "gapPP": -50.16,
-   "vol": 58589,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": -29.62,
-   "firstSeen": "2026-08-23T14:40:46.938929+00:00"
-  },
-  {
-   "id": "soccer_liga|bournemouth-manchestercity|dr",
-   "sport": "soccer_liga",
-   "event": "Manchester City vs Bournemouth",
-   "market": "1X2",
-   "outcome": "Remis",
-   "polyPP": 19.5,
-   "pinnPP": 26.8,
-   "gapPP": -7.32,
-   "vol": 58589,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": 5.54,
-   "firstSeen": "2026-08-23T14:40:46.938929+00:00"
+   "convergePP": 19.23,
+   "firstSeen": "2026-08-22T01:50:45.312877+00:00"
   }
  ]
 }
