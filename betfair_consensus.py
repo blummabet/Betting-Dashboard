@@ -527,8 +527,12 @@ def _mm_money_ok(row, single_min=MM_SINGLE_MIN):
     (Marquee-Spiel wie ein UEFA-Super-Cup). Gar kein Geld -> raus. Killt duenne Einzelquellen-Spiele
     (U19/Minnows), ohne gute Divergenz-Faelle mit kleinem Betfair aber echtem Poly zu opfern. REIN."""
     bf = float((row.get("betfair") or {}).get("eur") or 0)
-    pl = float((row.get("poly") or {}).get("usd") or 0)
-    n_money = (1 if bf > 0 else 0) + (1 if pl > 0 else 0)
+    _pl = row.get("poly") or {}
+    pl = float(_pl.get("usd") or 0)
+    # 23.08.2026 (Lucas): ein Scan-Poly (nur fairer Preis, ~kein echtes Geld) füllt die Poly-SEITE,
+    # zählt aber NICHT als Geldquelle — sonst würde ein dünner Preis einen schwachen Betfair-Row retten.
+    pl_money = pl if _pl.get("src") != "scan" else 0.0
+    n_money = (1 if bf > 0 else 0) + (1 if pl_money > 0 else 0)
     if n_money >= 2:
         return True
     if n_money == 1:
@@ -849,6 +853,25 @@ def main():
                     if isinstance(v, dict) and v.get("prices")
                     and not any(x in str(k) for x in ("-more-markets", "-exact-score", "-total", "-spread"))
                     and len(v.get("prices")) <= 4] if isinstance(poly_upcoming_raw, dict) else []
+    # 23.08.2026 (Lucas: „Serie A ist alles da, aber Money-Map zeigt kein Poly"): letzter Fallback ist
+    # der FAIRE Poly-Preis aus dem Pinnacle×Poly-Scan (pinnacle_poly_scan.json). Er deckt auch dünne
+    # Märkte ($597-Bücher), die durch die Volumen-Schwelle des Broad-Money-Scans fallen. Er füllt NUR
+    # die Poly-SEITE (für den Konsens) — als „scan" markiert, damit er im Render als dünn/Preis erscheint
+    # und im Money-Gate NICHT als echte Geldquelle zählt (siehe _mm_money_ok).
+    scan_raw = _load("pinnacle_poly_scan.json", {})
+    poly_scan_entries = []
+    for _k, _v in ((scan_raw.get("games") or {}).items() if isinstance(scan_raw, dict) else []):
+        if not isinstance(_v, dict):
+            continue
+        _snaps = _v.get("snaps") or []
+        _last = _snaps[-1] if _snaps else None
+        _poly = (_last or {}).get("poly") if isinstance(_last, dict) else None
+        _home, _away = _v.get("home"), _v.get("away")
+        if not (isinstance(_poly, list) and len(_poly) >= 3 and _home and _away):
+            continue
+        poly_scan_entries.append({
+            "prices": {_home: _poly[0], "Draw": _poly[1], _away: _poly[2]},
+            "shares": {}, "totalUsd": (_last or {}).get("vol") or 0, "src": "scan"})
 
     now = _now_iso()
     games, new_hist, mm_rows, mm_name_misses = [], {}, [], []
@@ -876,8 +899,10 @@ def main():
             mm_pool, mm_g = poly_live_entries, build_game(m, ev, prev, direction, match_poly(m, money_side(m), poly_live_entries))
         elif _best_poly_entry(m, poly_entries) is not None:
             mm_pool, mm_g = poly_entries, g
-        else:
+        elif _best_poly_entry(m, poly_upcoming_entries) is not None:
             mm_pool, mm_g = poly_upcoming_entries, g   # Verdikt bleibt no_anchor; money_map_row leitet Konsens aus Betfair vs Poly ab
+        else:
+            mm_pool, mm_g = poly_scan_entries, g   # 23.08.2026 (Lucas): dünner Markt -> fairer Poly-Preis aus dem Scan
         _mmr = money_map_row(mm_g, poly_fav(m, mm_pool))
         mm_rows.append(_mmr)
         # 13.08.2026 (Lucas-Audit): Namens-Match-Miss zaehlen - Betfair-Geld da, Poly=None, aber im

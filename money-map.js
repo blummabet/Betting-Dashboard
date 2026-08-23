@@ -91,7 +91,7 @@
       +'<div class="mm-ch"><span>⚽</span><span class="mm-t">'+_esc(r.home)+' <span class="mm-vs">vs</span> '+_esc(r.away)+'</span>'+live+'<span class="mm-lg">'+_esc(r.league||'')+'</span></div>'
       +'<div class="mm-axis"><div class="mm-ends"><span>'+_esc(r.home)+'</span><span>'+_esc(r.away)+'</span></div>'
         +'<div class="mm-lane mm-lbf"></div><div class="mm-ll mm-lbf">Betfair</div>'
-        +'<div class="mm-lane mm-lpoly"></div><div class="mm-ll mm-lpoly"'+(poly?'':' style="opacity:.4"')+'>Poly'+(poly?(poly.src==='upcoming'?' · früh':''):' · kein Markt')+'</div>'
+        +'<div class="mm-lane mm-lpoly"></div><div class="mm-ll mm-lpoly"'+(poly?'':' style="opacity:.4"')+'>Poly'+(poly?(poly.src==='scan'?' · Preis (dünn)':(poly.src==='upcoming'?' · früh':'')):' · kein Markt')+'</div>'
         +bub+'</div>'
       +(pn?('<div class="mm-odds"><span class="mm-om">Faire Quote · Pinnacle</span>'
         +'<span class="'+((bf&&bf.side==='home')?'mm-oc':'')+'"><b>1</b> '+_fair(pn.home)+'</span>'
