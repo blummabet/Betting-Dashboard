@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-23T13:46:26.014464+00:00",
+ "generatedAt": "2026-08-23T14:40:46.939210+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -8,27 +8,70 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 390,
- "pinnKeys": 256,
- "matched": 190,
- "footballRows": 168,
- "crossRows": 222,
+ "polyRowsSeen": 397,
+ "pinnKeys": 265,
+ "matched": 197,
+ "footballRows": 177,
+ "crossRows": 220,
  "footballSkippedStale": 58,
  "seenBySport": {
   "americanfootball_nfl": 128,
-  "baseball_mlb": 92,
+  "baseball_mlb": 90,
   "boxing_boxing": 2,
   "soccer_mls": 48,
-  "soccer_liga": 120
+  "soccer_liga": 129
  },
  "matchedBySport": {
-  "baseball_mlb": 22,
+  "baseball_mlb": 20,
   "soccer_mls": 48,
-  "soccer_liga": 120
+  "soccer_liga": 129
  },
  "trackRecord": {
-  "tracked": 191,
+  "tracked": 194,
   "converged": 38
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|bournemouth-manchestercity|hw",
+   "sport": "soccer_liga",
+   "event": "Manchester City vs Bournemouth",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 65.5,
+   "pinnPP": 31.6,
+   "gapPP": 33.89,
+   "vol": 58589,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-23T14:40:46.938929+00:00"
+  },
+  {
+   "id": "soccer_liga|bournemouth-manchestercity|aw",
+   "sport": "soccer_liga",
+   "event": "Manchester City vs Bournemouth",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 15.5,
+   "pinnPP": 36.0,
+   "gapPP": -20.54,
+   "vol": 58589,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-23T14:40:46.938929+00:00"
+  },
+  {
+   "id": "soccer_liga|bournemouth-manchestercity|dr",
+   "sport": "soccer_liga",
+   "event": "Manchester City vs Bournemouth",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 19.5,
+   "pinnPP": 32.4,
+   "gapPP": -12.86,
+   "vol": 58589,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-23T14:40:46.938929+00:00"
+  }
+ ]
 }
