@@ -27,6 +27,22 @@ class TestCarryNobet(unittest.TestCase):
         self.assertIsNone(nb["result"])
         self.assertIn("Edge weg", nb["nobetReason"])  # 1.67 → 1.84 = gegen den Pick
 
+    def test_carry_rewrites_stale_card_narrative(self):
+        # 23.08.2026 (Lucas, Orlando–RSL): der eingefrorene "Sharp-Money-Drop · Value"-Text lügt
+        # nach einer Umkehr. Beim Carry muss info auf den gekippten Stand gehen, origInfo bleibt.
+        stale = ("📉 Pinnacle 2.43→2.06 (Sharp-Money-Drop +6.1pp) · "
+                 "Soft-Konsens hinkt +10.1pp (Value, noch nicht bestätigt)")
+        existing = [{"market": "Auswärtssieg", "verdict": "ABWÄGEN", "odds": 2.6,
+                     "info": stale, "icon": "🔥"}]
+        out = G._carry_nobet(existing, [], {"aw": 3.26}, "2026-08-23T00:00:00Z")
+        nb = out[0]
+        self.assertEqual(nb["verdict"], "NOBET")
+        self.assertNotIn("Sharp-Money-Drop", nb["info"])   # kein totes Value-Narrativ mehr
+        self.assertIn("gekippt", nb["info"])
+        self.assertIn(nb["nobetReason"], nb["info"])        # zeigt den echten Grund
+        self.assertEqual(nb["origInfo"], stale)             # Original zur Nachverfolgung erhalten
+        self.assertEqual(nb["icon"], "↩")                   # kein 🔥 auf einer toten Karte
+
     def test_still_a_pick_no_nobet(self):
         existing = [{"market": "Unter 2.5 Tore", "verdict": "ABWÄGEN", "odds": 1.67}]
         new = [{"market": "Unter 2.5 Tore", "verdict": "BET", "odds": 1.70}]

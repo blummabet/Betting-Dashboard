@@ -1446,6 +1446,20 @@ def _carry_nobet(existing_pk, new_picks, odds_snap, now_iso):
             nb["nobetReason"] = f"Quote zu kurz geworden ({orig:g}→{cur:g}) — kein Value mehr"
         else:
             nb["nobetReason"] = "Kein Value mehr — Move ausgelaufen / Konsens konvergiert"
+
+        # Karten-Narrativ auf den gekippten Stand bringen (23.08.2026, Lucas: „sollte ein Pick
+        # kippen, zeigen wir das in den Cards"). Der bei Erzeugung eingefrorene info-Text
+        # („📉 Pinnacle …→… Sharp-Money-Drop · Value noch nicht bestätigt") ist NACH einer Umkehr
+        # gelogen — die Linie ist ja gegen uns gelaufen. Cards + Tracking lesen dasselbe info-Feld
+        # (Single Source), also hier zentral überschreiben statt in jedem Renderer. Original bleibt
+        # als origInfo erhalten. Ohne dieses Feld schrie eine tote Gegenrichtungs-Karte weiter
+        # „Sharp-Money-Drop Value" (MLS Orlando–RSL Auswärts: 2.06-Schnappschuss vom 17.08.,
+        # Linie längst bei 3.26).
+        if old.get("info") and "origInfo" not in nb:
+            nb["origInfo"] = old.get("info")
+        nb["info"] = "↩ Pick gekippt · " + nb["nobetReason"]
+        nb["icon"] = "↩"          # kein 🔥 mehr — impliziert sonst aktives Sharp-Money
+
         out.append(nb)
         new_markets.add(m)
     return out

@@ -270,6 +270,16 @@ class TestCardOnlyTradeIsolation(unittest.TestCase):
         self.assertIsNotNone(c)
         self.assertFalse(c["ok"])
 
+    def test_resolved_pick_exempt(self):
+        # Aufgelöstes Spiel: _trade ist ein eingefrorener Build-Snapshot (freshness zerfällt
+        # nach Anpfiff), nicht mehr handelbar → Tripwire darf NICHT anschlagen (22.08.2026).
+        leaky = self._pick(-0.5)          # würde offen sofort failen
+        leaky["resolvedAt"] = "2026-08-22T06:57:24Z"
+        leaky["finalScore"] = "1-0"
+        c = self._run({"ESP-2-543-548": [leaky]})
+        self.assertIsNotNone(c)
+        self.assertTrue(c["ok"])
+
 
 if __name__ == "__main__":
     unittest.main()

@@ -286,7 +286,8 @@
         "542-533: kein public_hw",
         "4665-797: kein public_hw",
         "79-114: kein public_hw",
-        "489-517: kein public_hw"
+        "489-517: kein public_hw",
+        "531-536: kein public_hw"
       ],
       "note": "Ohne public_* feuert public_static_bias nicht."
     },
@@ -454,11 +455,9 @@
       "id": "card_only_not_in_trade",
       "label": "Card-Signale nicht im Trade-Pfad",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "ESP-2-543-548 Doppelte Chance — X2: signalAdj_trade -1.2 ≠ erwartet -0.9 (adj -0.9 − card-only 0.0) — Card-Signal leckt in den Trade-Pfad"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "freshness_leg/smart_money müssen aus signalAdjustmentPP_trade abgezogen sein (generate_wm_picks _CARD_ONLY). Sonst treibt ein Card-Signal den Auto-Trader."
     },
     {
