@@ -168,7 +168,7 @@ function _pwSportCategory(s, sport){
   if(/f1|formula|motor|nascar/.test(x)) return 'Motorsport';
   if(/cricket/.test(x)) return 'Cricket';
   // Fußball breit: Namen + Liga-Muster (16.08.2026 Lucas: Eredivisie/Allsvenskan/EFL-Championship/… gefangen)
-  if(/soccer|football|fussball|fußball|\bepl\b|\bucl\b|\buel\b|uecl|uefa|champions|conmebol|concacaf|copa|coupe|\bdfb\b|\befl\b|conference|europa|libertad|sudameri|\bmls\b|liga|ligue|serie|bundesliga|eredivisie|allsven|superett|elitese|ekstrakla|veikkau|primeira|championship|super-?lig|pro-?league|\blal\b/.test(x)) return 'Fußball';
+  if(/soccer|football|fussball|fußball|\bepl\b|premier|\bucl\b|\buel\b|uecl|uefa|champions|conmebol|concacaf|copa|coupe|\bdfb\b|\befl\b|conference|europa|libertad|sudameri|\bmls\b|liga|ligue|serie|bundesliga|eredivisie|allsven|superett|elitese|ekstrakla|veikkau|primeira|championship|super-?lig|pro-?league|\blal\b/.test(x)) return 'Fußball';
   return 'Sonstige';
 }
 const _PW_CAT_ICON={'Fußball':'⚽','US-Sport':'🏀','E-Sport':'🎮','Tennis':'🎾','Kampfsport':'🥊','Golf':'⛳','Motorsport':'🏎️','Cricket':'🏏','Sonstige':'🎯'};
@@ -1347,7 +1347,7 @@ function _pwOverNormTop(limit){
       var m=it.m||{};
       var oc=Object.entries(m.shares||{}).map(function(e){return {n:e[0],u:Number(e[1])||0};}).sort(function(a,b){return b.u-a.u;});
       var tot=oc.reduce(function(su,o){return su+o.u;},0)||1, fav=oc[0]||{n:'-',u:0};
-      return {key:it.k, league:m.league, name:_pwEventLabel(it.k,oc.map(function(o){return o.n;}),m.league),
+      return {key:it.k, league:m.league, sport:m.sport, name:_pwEventLabel(it.k,oc.map(function(o){return o.n;}),m.league),
               fav:fav.n, favPct:Math.round(fav.u/tot*100), usd:m.totalUsd||0, ratio:it.ratio,
               url: it.k?('https://polymarket.com/event/'+encodeURIComponent(it.k)):null};
     });
@@ -1699,7 +1699,7 @@ function _pwLiveTopWhales(n){
       if(usd < PW_LIVE_WHALE_MIN_USD) return;   // nur echte Betraege
       const sc=_pwWalletScore(w.wallet), sharp=_pwIsSharpScore(sc), isNew=!pre.has(String(w.wallet).toLowerCase());
       const _sp=(m.prices&&m.prices[w.side]!=null&&isFinite(Number(m.prices[w.side])))?Math.round(Number(m.prices[w.side])*100):null;
-      const e={key:k,label:label,league:m.league,side:w.side||'—',usd:usd,wallet:w.wallet,
+      const e={key:k,label:label,league:m.league,sport:m.sport,side:w.side||'—',usd:usd,wallet:w.wallet,
                sharp:sharp,isNew:isNew,sharpLive:sharp&&isNew,avgPrice:w.avgPrice,price:_sp,
                sc:(sc&&sc.n>=4)?{avgClv:sc.avgClv,hit:sc.hit,n:sc.n}:null};
       const cur=byMarket[k];
@@ -1720,7 +1720,7 @@ function _pwLiveTopInflow(n){
   return out.slice(0,n||5).map(x=>{
     const oc=Object.entries(x.m.shares||{}).map(e=>({name:e[0],usd:Number(e[1])||0})).sort((a,b)=>b.usd-a.usd);
     const tot=oc.reduce((s,o)=>s+o.usd,0)||1, fav=oc[0]||{name:'—',usd:0};
-    return {key:x.k,label:_pwEventLabel(x.k,oc.map(o=>o.name),x.m.league),league:x.m.league,
+    return {key:x.k,label:_pwEventLabel(x.k,oc.map(o=>o.name),x.m.league),league:x.m.league,sport:x.m.sport,
             inflow:x.inflow,totalUsd:Number(x.m.totalUsd)||0,favName:fav.name,favPct:Math.round(fav.usd/tot*100),
             favPrice:(x.m.prices&&x.m.prices[fav.name]!=null)?Math.round(x.m.prices[fav.name]*100):null};
   });
