@@ -24,29 +24,30 @@ class TestHtUseless(unittest.TestCase):
 
 class TestEscalatingResend(unittest.TestCase):
     def test_ladder_hoehere_huerde_ab_3(self):
+        # Leiter [2.0, 3.0, 4.5, 6.0] (22.08.2026, Lucas: 1->2 von 1.5 auf 2.0 gehaertet).
         seen = {}; k = "ht:1"
         self.assertTrue(BA.should_send_public(seen, k, 10000))          # 1. immer
         BA._pub_seen_put(seen, k, 10000)                               # n=1
-        # 2. Push braucht 1.5x = 15000
-        self.assertFalse(BA.should_send_public(seen, k, 14000))
-        self.assertTrue(BA.should_send_public(seen, k, 15000))
-        BA._pub_seen_put(seen, k, 15000)                              # n=2
-        # 3. Push braucht 2.5x = 37500 (gestaffelt hoeher)
-        self.assertFalse(BA.should_send_public(seen, k, 30000))
-        self.assertTrue(BA.should_send_public(seen, k, 37500))
-        BA._pub_seen_put(seen, k, 37500)                             # n=3
-        # 4. Push braucht 4x = 150000
-        self.assertFalse(BA.should_send_public(seen, k, 120000))
-        self.assertTrue(BA.should_send_public(seen, k, 150000))
-        BA._pub_seen_put(seen, k, 150000)                            # n=4
-        # 5.+ braucht 6x = 900000
-        self.assertFalse(BA.should_send_public(seen, k, 500000))
-        self.assertTrue(BA.should_send_public(seen, k, 900000))
+        # 2. Push braucht 2.0x = 20000
+        self.assertFalse(BA.should_send_public(seen, k, 19000))
+        self.assertTrue(BA.should_send_public(seen, k, 20000))
+        BA._pub_seen_put(seen, k, 20000)                              # n=2
+        # 3. Push braucht 3.0x = 60000
+        self.assertFalse(BA.should_send_public(seen, k, 59000))
+        self.assertTrue(BA.should_send_public(seen, k, 60000))
+        BA._pub_seen_put(seen, k, 60000)                             # n=3
+        # 4. Push braucht 4.5x = 270000
+        self.assertFalse(BA.should_send_public(seen, k, 269000))
+        self.assertTrue(BA.should_send_public(seen, k, 270000))
+        BA._pub_seen_put(seen, k, 270000)                           # n=4
+        # 5.+ braucht 6.0x = 1620000
+        self.assertFalse(BA.should_send_public(seen, k, 1000000))
+        self.assertTrue(BA.should_send_public(seen, k, 1620000))
 
     def test_backward_compat_alter_float(self):
-        seen = {"ht:1": 10000.0}   # Alt-Eintrag = float -> als 1x gewertet
-        self.assertFalse(BA.should_send_public(seen, "ht:1", 14000))   # <1.5x
-        self.assertTrue(BA.should_send_public(seen, "ht:1", 15000))    # >=1.5x
+        seen = {"ht:1": 10000.0}   # Alt-Eintrag = float -> als n=1 gewertet -> 2.0x Huerde
+        self.assertFalse(BA.should_send_public(seen, "ht:1", 19000))   # <2.0x
+        self.assertTrue(BA.should_send_public(seen, "ht:1", 20000))    # >=2.0x
 
     def test_put_zaehlt_hoch(self):
         seen = {}
