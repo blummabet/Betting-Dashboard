@@ -1193,18 +1193,28 @@ const _PW_SCORE_RX=/\d\s*[-:]\s*\d/;
 const _PW_GEN_RX=/^(yes|no|ja|nein|over|under|draw|remis|tie)$/i;
 const _PW_DRAWP_RX=/^(draw|the draw|unentschieden|remis)\b/i;
 const _PW_PROP_SUFFIX_RX=/-(more-markets|exact-score|halftime-result|1st-half|first-half|2nd-half)$/i;
+// 23.08.2026 (Lucas): breitere Liste NUR fuer die Team-Namens-Aufloesung (nicht fuers Play-Dedup) —
+// so wird auch bei -total-corners/-btts/-player-props der Basis-Event fuer die Teamnamen gefunden,
+// ohne solche eigenstaendigen Wett-Typen faelschlich mit der Moneyline zu einem Play zu verschmelzen.
+const _PW_NAME_SUFFIX_RX=/-(more-markets|exact-score|halftime-result|total-corners|total-cards|total-goals|both-teams-to-score|btts|first-to-score|player-props|1st-half|first-half|2nd-half)$/i;
 function _pwRealTeams(arr){
   return (arr||[]).filter(n=>{const t=String(n).trim();return t&&!_PW_GEN_RX.test(t)&&!_PW_DRAWP_RX.test(t)&&!_PW_SCORE_RX.test(t);});
 }
 function _pwResolveTeams(key, names){
-  const base=String(key||'').replace(_PW_PROP_SUFFIX_RX,'');
+  const base=String(key||'').replace(_PW_NAME_SUFFIX_RX,'');
   if(base===String(key||'')){                     // kein Prop -> Outcomes SIND die Teams
     const r=_pwRealTeams(names); return {teams:r.length>=2?r.slice(0,2):null, base};
   }
-  const srcs=[_pwCache&&_pwCache.broadLiveNow,_pwCache&&_pwCache.broadLive];  // Prop -> Teams aus Basis-Event
+  // Prop (z.B. -total-corners, -exact-score) -> Teamnamen aus dem Basis-Event ziehen. 23.08.2026 (Lucas):
+  // (a) auch prices lesen (Basis-Event hat oft leere shares, die Teamnamen stehen dann nur in prices),
+  // (b) alle geladenen Broad-Caches durchsuchen (Close/Live/Global), nicht nur die zwei Live-Quellen —
+  // sonst bleibt "epl new liv · total corners" als roher Slug stehen statt "Newcastle vs Liverpool".
+  const srcs=[_pwCache&&_pwCache.broadLiveNow,_pwCache&&_pwCache.broadLive,_pwCache&&_pwCache.moneyBroad];
   for(let i=0;i<srcs.length;i++){
-    const bm=srcs[i]&&srcs[i][base];
-    const r=bm&&bm.shares?_pwRealTeams(Object.keys(bm.shares)):[];
+    const bm=srcs[i]&&srcs[i][base]; if(!bm) continue;
+    const keysS=bm.shares?Object.keys(bm.shares):[];
+    const keysP=bm.prices?Object.keys(bm.prices):[];
+    const r=_pwRealTeams(keysS.length?keysS:keysP);
     if(r.length>=2) return {teams:r.slice(0,2), base};
   }
   return {teams:null, base};
@@ -2044,14 +2054,32 @@ function _pwTrackSettled(settled){
     +'<span class="pw-sec-note">◆ = war Public-Kandidat · ✓/✗ = Markt getroffen · P&amp;L bei fixem $-Einsatz · CLV = Einstieg→Schluss</span></div>'
     +'<div class="pw-tw"><table class="pw-tbl"><thead><tr><th>Markt</th><th>Seite</th><th>Verdikt</th><th>Conv</th><th>Einstieg</th><th>Erg.</th><th>P&amp;L</th><th>CLV</th></tr></thead><tbody>'+body+'</tbody></table></div></section>';
 }
+// 23.08.2026 (Lucas): Live-Konviktion eines offenen Plays neu rechnen — die im Track gespeicherte Zahl
+// ist beim EINSTIEG eingefroren, die Uebersicht rechnet live. Fuer den „Einstieg -> jetzt"-Pfeil in den
+// offenen Plays holen wir den aktuellen Markt (live > close > global) und lassen den Scorer neu urteilen.
+// null = Markt nicht mehr im Scan (abgepfiffen/aufgeloest) ODER der Play wuerde jetzt gar nicht mehr feuern.
+function _pwLiveConvFor(key){
+  const c=_pwCache||{};
+  const m=(c.broadLiveNow&&c.broadLiveNow[key]) || (c.broadLive&&c.broadLive[key]) || (c.moneyBroad&&c.moneyBroad[key]);
+  if(!m) return null;
+  try{ const sc=_pwShortlistScore(key,m); return (sc&&typeof sc.conv==='number')?sc.conv:null; }catch(e){ return null; }
+}
 function _pwTrackOpen(open){
   const arr=Object.values(open||{}).sort((a,b)=>(b.conv||0)-(a.conv||0));
   if(!arr.length) return '';
-  const head='<div style="font-size:12px;color:#8b949e;margin:14px 0 6px"><b style="color:#e6edf3">'+arr.length+' offene Plays</b> — laufen noch, werden bei Markt-Auflösung abgerechnet</div>';
-  const body=arr.slice(0,12).map(e=>'<span style="display:inline-block;margin:0 6px 6px 0;padding:4px 9px;border-radius:14px;background:#0f1626;border:1px solid rgba(255,255,255,.08);font-size:11.5px">'
+  const head='<div style="font-size:12px;color:#8b949e;margin:14px 0 6px"><b style="color:#e6edf3">'+arr.length+' offene Plays</b> — laufen noch, werden bei Markt-Auflösung abgerechnet · <span class="pw-mut">Konviktion = Einstieg → jetzt (live)</span></div>';
+  const body=arr.slice(0,12).map(e=>{
+    const lc=_pwLiveConvFor(e.key);
+    // Pfeil nur wenn die Live-Zahl real abweicht — sonst nur die eingefrorene Einstiegs-Konviktion.
+    const trend=(lc!=null && e.conv!=null && lc!==e.conv)
+      ? ' <span style="color:'+(lc>e.conv?'#3fb950':'#f0883e')+';font-weight:700"> → '+lc+' '+(lc>e.conv?'↑':'↓')+'</span>'
+      : '';
+    const convTxt=(e.conv!=null?e.conv+'/10':'')+trend;
+    return '<span style="display:inline-block;margin:0 6px 6px 0;padding:4px 9px;border-radius:14px;background:#0f1626;border:1px solid rgba(255,255,255,.08);font-size:11.5px">'
     +_pwSportIcon(e.league)+' <b style="color:#4cc2ff">'+_pwEsc(String(e.side).slice(0,16))+'</b> '
-    +'<span class="pw-mut">'+(e.verdict||'')+' · '+(e.conv!=null?e.conv+'/10':'')+' · '+(e.entryPrice!=null?Math.round(e.entryPrice*100)+'¢':'')+'</span>'
-    +(e.public?' <span style="color:#a78bfa">◆</span>':'')+'</span>').join('');
+    +'<span class="pw-mut">'+(e.verdict||'')+' · '+convTxt+' · '+(e.entryPrice!=null?Math.round(e.entryPrice*100)+'¢':'')+'</span>'
+    +(e.public?' <span style="color:#a78bfa">◆</span>':'')+'</span>';
+  }).join('');
   return head+'<div style="margin-bottom:6px">'+body+'</div>';
 }
 const _PW_SIG_LABEL={sharp:'🔥 Scharfe Wallet',steam:'📈 Steam',money:'💰 Geld-Mehrheit',gvp:'⚖️ Geld vs Preis',pinn:'🎯 Pinnacle-Value'};

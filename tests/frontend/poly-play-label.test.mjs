@@ -36,3 +36,39 @@ test('Over/Under gilt auch als generisch → Key-Label', () => {
   const ou = [{ s: 'Over', u: 55 }, { s: 'Under', u: 45 }];
   assert.equal(w._pwPlayLabel('epl-ars-che-2026-08-16', ou), 'epl ars che');
 });
+
+test('Prop-Markt (total-corners): Match-Name aus Basis-Event, auch wenn dessen shares leer sind', () => {
+  const w = load();
+  // Basis-Event traegt die Teamnamen nur in prices (shares leer) — genau der Frosinone/Newcastle-Fall.
+  w._pwCache = { broadLive: { 'epl-new-liv-2026-08-23': {
+    shares: {},
+    prices: { 'Newcastle United FC': 0.42, 'Draw (Newcastle United FC vs. Liverpool FC)': 0.28, 'Liverpool FC': 0.30 }
+  } } };
+  const ou = [{ s: 'Over', u: 51 }, { s: 'Under', u: 49 }];
+  assert.equal(
+    w._pwPlayLabel('epl-new-liv-2026-08-23-total-corners', ou),
+    'Newcastle United FC vs Liverpool FC'
+  );
+});
+
+test('Prop-Markt: Teamnamen auch aus moneyBroad-Cache aufloesbar', () => {
+  const w = load();
+  w._pwCache = { moneyBroad: { 'bra-cor-cor1-2026-08-23': {
+    shares: { 'Corinthians': 70, 'Cruzeiro': 30 }
+  } } };
+  const ou = [{ s: 'Over', u: 60 }, { s: 'Under', u: 40 }];
+  assert.equal(
+    w._pwPlayLabel('bra-cor-cor1-2026-08-23-total-corners', ou),
+    'Corinthians vs Cruzeiro'
+  );
+});
+
+test('Prop ohne auffindbaren Basis-Event: sauberer Slug-Fallback bleibt', () => {
+  const w = load();
+  w._pwCache = { broadLive: {} };
+  const ou = [{ s: 'Over', u: 55 }, { s: 'Under', u: 45 }];
+  assert.equal(
+    w._pwPlayLabel('epl-new-liv-2026-08-23-total-corners', ou),
+    'epl new liv · total corners'
+  );
+});
