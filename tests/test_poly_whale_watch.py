@@ -443,3 +443,33 @@ class TestTop20RankBadge(unittest.TestCase):
         pos = {"wallet": "0xAAA", "league": "ESPORTS", "side": "X", "key": "k", "usd": 25000, "firstPrice": 0.6}
         card = P.build_card(pos, self._scores(), restock=False, broad={})
         self.assertIn("Rang #1", card)
+
+
+class TestPublicTopN(unittest.TestCase):
+    # 23.08.2026 (Lucas): Public postet NUR die Top-N (Default 10) der Sharp-Rangliste, mit Rang-Badge.
+    def _scores(self):
+        s = {}
+        # 12 qualifizierende Wallets ($2K Ø, P&L absteigend) -> Rang 1..12
+        for i in range(12):
+            s["0x%02d" % i] = {"n": 20, "wins": 13, "clvSumPP": 20, "usd": 40000, "pnl": 1_000_000 - i * 10_000}
+        return s
+
+    def test_top10_in_gate_11th_out(self):
+        sc = self._scores()
+        self.assertTrue(P._pub_in_top_n(sc, "0x00"))    # Rang 1
+        self.assertTrue(P._pub_in_top_n(sc, "0x09"))    # Rang 10
+        self.assertFalse(P._pub_in_top_n(sc, "0x10"))   # Rang 11 -> raus
+        self.assertFalse(P._pub_in_top_n(sc, "0xDEAD"))
+
+    def test_public_card_shows_top10_badge(self):
+        sc = self._scores()
+        pos = {"wallet": "0x00", "league": "ESPORTS", "side": "X", "key": "k", "usd": 41000, "firstPrice": 0.62}
+        card = P.build_public_card(pos, sc, restock=False, broad={})
+        self.assertIn("Top-10-Wallet", card)
+        self.assertIn("Rang #1", card)
+
+    def test_public_card_no_badge_for_outside_topn(self):
+        sc = self._scores()
+        pos = {"wallet": "0x10", "league": "ESPORTS", "side": "X", "key": "k", "usd": 41000, "firstPrice": 0.62}
+        card = P.build_public_card(pos, sc, restock=False, broad={})
+        self.assertNotIn("Top-10-Wallet", card)

@@ -75,6 +75,7 @@ PUB_MIN_HITRATE       = float(os.environ.get("WHALE_PUB_MIN_HITRATE")     or 0.5
 PUB_MIN_USD_NOREC     = float(os.environ.get("WHALE_PUB_MIN_USD_NOREC")   or 150000)   # 06.08.2026 (Lucas: Feed straffen): Wallet OHNE belastbaren Record (n<PUB_MIN_TR) nur ab so viel $
 CONTEST_MIN_USD       = float(os.environ.get("WHALE_CONTEST_MIN_USD")     or 100000)   # 12.08.2026 (Lucas): Public — Gross-Einstiege ab so viel auf ZWEI Seiten = umkaempft -> gar nicht posten
 PUB_MIN_ODDS          = float(os.environ.get("WHALE_PUB_MIN_ODDS")       or 1.30)     # 22.08.2026 (Lucas): Public — Whale-Bet braucht Mindest-Quote (86c/1.16 = zu wenig Value). Einstieg/Jetzt <= 1/odds.
+PUB_TOP_N             = int(os.environ.get("WHALE_PUB_TOP_N")            or 10)   # 23.08.2026 (Lucas): Public postet NUR die Top-N der Sharp-Rangliste (kuratiert), optisch mit Rang-Badge wie im Trades-Channel.
 
 
 # 03.08.2026 (Lucas: „50% ist Münzwurf, kein Beweis"): „bewiesen" heißt jetzt STATISTISCH über
@@ -246,15 +247,11 @@ _RANK_MIN_AVG_USD = 1000.0
 _RANK_HITW = 6.0
 _RANK_K    = 6.0
 _RANK_TOP  = 20
-_rank_cache = {}
 
 
 def _sharp_rank_map(scores):
     if not isinstance(scores, dict) or not scores:
         return {}
-    ckey = id(scores)
-    if ckey in _rank_cache:
-        return _rank_cache[ckey]
     has_pnl = any(isinstance(v, dict) and isinstance(v.get("pnl"), (int, float)) for v in scores.values())
     rows = []
     for w, v in scores.items():
@@ -278,20 +275,24 @@ def _sharp_rank_map(scores):
             raw = avg_clv + (hit - 0.5) * _RANK_HITW
             rows.append((w, raw * (n / (n + _RANK_K))))
     rows.sort(key=lambda x: -x[1])
-    rank = {str(w).lower(): i + 1 for i, (w, _) in enumerate(rows[:_RANK_TOP])}
-    _rank_cache[ckey] = rank
-    return rank
+    return {str(w).lower(): i + 1 for i, (w, _) in enumerate(rows)}   # volle Rangliste; Anzeige/Gate cappen selbst
 
 
-def _rank_badge(scores, wallet):
-    """Push-Zeile, wenn die Wallet in der Top-20 der Sharp-Rangliste steht — sonst None."""
+def _rank_badge(scores, wallet, top=_RANK_TOP):
+    """Push-Zeile, wenn die Wallet in der Top-`top` der Sharp-Rangliste steht — sonst None."""
     if not wallet:
         return None
     r = _sharp_rank_map(scores).get(str(wallet).lower())
-    if not r:
+    if not r or r > top:
         return None
     medal = "🥇" if r == 1 else "🥈" if r == 2 else "🥉" if r == 3 else "🏅"
-    return "%s <b>Top-%d-Wallet</b> · Rang #%d der Sharp-Rangliste" % (medal, _RANK_TOP, r)
+    return "%s <b>Top-%d-Wallet</b> · Rang #%d der Sharp-Rangliste" % (medal, top, r)
+
+
+def _pub_in_top_n(scores, wallet, n=PUB_TOP_N):
+    """Public-Gate (23.08.2026, Lucas): nur die Top-N der Sharp-Rangliste ins öffentliche Feed."""
+    r = _sharp_rank_map(scores).get(str(wallet).lower()) if wallet else None
+    return bool(r and r <= n)
 
 
 def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None, extra: int = 0) -> str:
@@ -561,8 +562,11 @@ def build_public_card(pos: dict, scores: dict, restock: bool, broad: dict) -> st
     top = "%s <b>%s</b>" % (emoji, _esc(matchup)) if matchup else "%s <b>%s</b>" % (emoji, _esc(side))
     if ko:
         top += " · %s" % ko
-    lines = [header, "", top, "<i>%s</i>" % _esc(sport), "",
-             "💰 <b>%s</b> auf <b>%s</b>" % (_usd(pos.get("usd") or 0), _esc(side))]
+    lines = [header, "", top, "<i>%s</i>" % _esc(sport)]
+    _tw = _rank_badge(scores, pos.get("wallet"), top=PUB_TOP_N)
+    if _tw:
+        lines.append(_tw)
+    lines += ["", "💰 <b>%s</b> auf <b>%s</b>" % (_usd(pos.get("usd") or 0), _esc(side))]
     pm = _price_move(pos)
     if pm:
         lines.append(pm)
@@ -670,7 +674,7 @@ def main():
     pub_cand = select(track, pub_seen, now, PUB_MIN_USD_UNTRACKED, PUB_MIN_USD_TRACKED,
                       PUB_MIN_TR, PUB_MIN_HITRATE)
     pub_cand = [c for c in pub_cand if _pub_ok(c[1])]   # nur Sport + sinnvoller Preis (Public)
-    pub_cand = [c for c in pub_cand if _pub_keep(c[1], scores)]   # 06.08.2026 (Lucas): Feed straffen — grosse Wallets ohne Record nur ab PUB_MIN_USD_NOREC
+    pub_cand = [c for c in pub_cand if _pub_in_top_n(scores, c[1].get("wallet"))]   # 23.08.2026 (Lucas): Public = NUR Top-N der Sharp-Rangliste
     pub_cand = [c for c in pub_cand if _pub_min_odds_ok(c[1])]   # 22.08.2026 (Lucas): Public-Mindest-Quote (>=1.30) — kurze Favoriten raus
     _pre_contest = len(pub_cand)
     pub_cand = [c for c in pub_cand if not _contested_market(c[1].get("key"), broad)]   # 12.08.2026 (Lucas): Gegenseiten-Krieg raus — umkaempfte Spiele gar nicht posten
