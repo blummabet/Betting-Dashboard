@@ -1,25 +1,25 @@
 {
-"generatedAt": "2026-08-23T20:33:53.220322+00:00",
+"generatedAt": "2026-08-23T20:48:48.469822+00:00",
 "byVerdict": {
 "konsens": {
-"n": 407,
-"wins": 322,
-"hitRate": 0.7912,
-"polyN": 379,
-"polyWins": 291,
-"polyHitRate": 0.7678,
-"pinnN": 24,
-"pinnHitRate": 0.7083
+"n": 410,
+"wins": 324,
+"hitRate": 0.7902,
+"polyN": 382,
+"polyWins": 294,
+"polyHitRate": 0.7696,
+"pinnN": 25,
+"pinnHitRate": 0.68
 },
 "uneinig": {
-"n": 137,
+"n": 138,
 "wins": 38,
-"hitRate": 0.2774,
+"hitRate": 0.2754,
 "polyN": 121,
 "polyWins": 41,
 "polyHitRate": 0.3388,
-"pinnN": 73,
-"pinnHitRate": 0.6164
+"pinnN": 74,
+"pinnHitRate": 0.6216
 },
 "teil": {
 "n": 5,
@@ -93,6 +93,11 @@
 "wins": 8,
 "hitRate": 0.6154
 },
+"Argentinian Primera Division": {
+"n": 12,
+"wins": 6,
+"hitRate": 0.5
+},
 "Brazilian Serie A": {
 "n": 12,
 "wins": 5,
@@ -117,11 +122,6 @@
 "n": 12,
 "wins": 9,
 "hitRate": 0.75
-},
-"Argentinian Primera Division": {
-"n": 11,
-"wins": 6,
-"hitRate": 0.5455
 },
 "Italian Coppa Italia": {
 "n": 11,
@@ -168,20 +168,25 @@
 "wins": 6,
 "hitRate": 0.75
 },
+"French Ligue 1": {
+"n": 8,
+"wins": 4,
+"hitRate": 0.5
+},
 "German Bundesliga 2": {
 "n": 8,
 "wins": 6,
 "hitRate": 0.75
 },
+"Italian Serie A": {
+"n": 8,
+"wins": 5,
+"hitRate": 0.625
+},
 "South Korean K1 League": {
 "n": 8,
 "wins": 6,
 "hitRate": 0.75
-},
-"French Ligue 1": {
-"n": 7,
-"wins": 4,
-"hitRate": 0.5714
 },
 "Japanese J League 2": {
 "n": 7,
@@ -192,11 +197,6 @@
 "n": 6,
 "wins": 4,
 "hitRate": 0.6667
-},
-"Italian Serie A": {
-"n": 6,
-"wins": 3,
-"hitRate": 0.5
 },
 "Italian Serie B": {
 "n": 6,
@@ -476,25 +476,101 @@
 },
 "byStrength": {
 "strong": {
-"n": 312,
-"wins": 247,
-"hitRate": 0.7917
+"n": 314,
+"wins": 249,
+"hitRate": 0.793
 },
 "weak": {
-"n": 204,
+"n": 206,
 "wins": 96,
-"hitRate": 0.4706
+"hitRate": 0.466
 }
 },
 "divergence": {
-"n": 137,
+"n": 138,
 "betfairWins": 38,
-"betfairRate": 0.2774,
+"betfairRate": 0.2754,
 "polyN": 121,
 "polyWins": 41,
 "polyRate": 0.3388
 },
 "recent": [
+{
+"matchId": "35734729",
+"home": "Torino",
+"away": "AC Milan",
+"league": "Italian Serie A",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "AC Milan",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-08-23T18:45:00Z",
+"settledAt": "2026-08-23T20:48:48.318793+00:00"
+},
+{
+"matchId": "35737572",
+"home": "Atalanta",
+"away": "Sassuolo",
+"league": "Italian Serie A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Atalanta",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-08-23T18:45:00Z",
+"settledAt": "2026-08-23T20:48:48.318793+00:00"
+},
+{
+"matchId": "35963344",
+"home": "Rennes",
+"away": "Paris St-G",
+"league": "French Ligue 1",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Rennes",
+"polySide": null,
+"winner": "draw",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-08-23T18:45:00Z",
+"settledAt": "2026-08-23T20:48:48.318793+00:00"
+},
+{
+"matchId": "35922910",
+"home": "Barracas Central",
+"away": "CA Platense",
+"league": "Argentinian Primera Division",
+"verdict": "konsens",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "away",
+"winner": "away",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-08-23T17:45:00Z",
+"settledAt": "2026-08-23T20:48:48.318793+00:00"
+},
 {
 "matchId": "35949314",
 "home": "Alanyaspor",
@@ -1178,88 +1254,12 @@
 ],
 "kickoff": "2026-08-23T13:30:00Z",
 "settledAt": "2026-08-23T16:33:31.725574+00:00"
-},
-{
-"matchId": "35951259",
-"home": "Lommel",
-"away": "Westerlo",
-"league": "Belgian Pro League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Lommel",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-4,
-0
-],
-"kickoff": "2026-08-23T14:00:00Z",
-"settledAt": "2026-08-23T15:56:52.335370+00:00"
-},
-{
-"matchId": "35947045",
-"home": "PSV",
-"away": "FC Groningen",
-"league": "Dutch Eredivisie",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "PSV",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-5,
-1
-],
-"kickoff": "2026-08-23T12:30:00Z",
-"settledAt": "2026-08-23T15:32:25.296236+00:00"
-},
-{
-"matchId": "35950898",
-"home": "Young Boys",
-"away": "FC Vaduz",
-"league": "Swiss Super League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Young Boys",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-4,
-2
-],
-"kickoff": "2026-08-23T12:00:00Z",
-"settledAt": "2026-08-23T15:06:26.363961+00:00"
-},
-{
-"matchId": "35947974",
-"home": "IFK Goteborg",
-"away": "Elfsborg",
-"league": "Swedish Allsvenskan",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "IFK Goteborg",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-08-23T12:00:00Z",
-"settledAt": "2026-08-23T15:06:26.363961+00:00"
 }
 ],
 "global": {
-"n": 549,
-"wins": 361,
-"hitRate": 0.6576
+"n": 553,
+"wins": 363,
+"hitRate": 0.6564
 },
-"pending": 20
+"pending": 17
 }
