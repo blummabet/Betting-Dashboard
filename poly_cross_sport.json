@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-23T11:58:10.028931+00:00",
+ "generatedAt": "2026-08-23T15:01:00.104154+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -8,27 +8,70 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 371,
- "pinnKeys": 233,
- "matched": 169,
- "footballRows": 147,
- "crossRows": 224,
- "footballSkippedStale": 63,
+ "polyRowsSeen": 400,
+ "pinnKeys": 268,
+ "matched": 200,
+ "footballRows": 180,
+ "crossRows": 220,
+ "footballSkippedStale": 57,
  "seenBySport": {
   "americanfootball_nfl": 128,
-  "baseball_mlb": 94,
+  "baseball_mlb": 90,
   "boxing_boxing": 2,
   "soccer_mls": 48,
-  "soccer_liga": 99
+  "soccer_liga": 132
  },
  "matchedBySport": {
-  "baseball_mlb": 22,
+  "baseball_mlb": 20,
   "soccer_mls": 48,
-  "soccer_liga": 99
+  "soccer_liga": 132
  },
  "trackRecord": {
-  "tracked": 191,
-  "converged": 38
+  "tracked": 194,
+  "converged": 39
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|bournemouth-manchestercity|hw",
+   "sport": "soccer_liga",
+   "event": "Manchester City vs Bournemouth",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 65.5,
+   "pinnPP": 7.5,
+   "gapPP": 57.99,
+   "vol": 58589,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -24.1,
+   "firstSeen": "2026-08-23T14:40:46.938929+00:00"
+  },
+  {
+   "id": "soccer_liga|bournemouth-manchestercity|aw",
+   "sport": "soccer_liga",
+   "event": "Manchester City vs Bournemouth",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 15.5,
+   "pinnPP": 65.7,
+   "gapPP": -50.16,
+   "vol": 58589,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -29.62,
+   "firstSeen": "2026-08-23T14:40:46.938929+00:00"
+  },
+  {
+   "id": "soccer_liga|bournemouth-manchestercity|dr",
+   "sport": "soccer_liga",
+   "event": "Manchester City vs Bournemouth",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 19.5,
+   "pinnPP": 26.8,
+   "gapPP": -7.32,
+   "vol": 58589,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 5.54,
+   "firstSeen": "2026-08-23T14:40:46.938929+00:00"
+  }
+ ]
 }
