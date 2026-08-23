@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-22T23:34:46.602829+00:00",
+ "generatedAt": "2026-08-22T23:57:40.040580+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,7 +9,7 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 402,
- "pinnKeys": 268,
+ "pinnKeys": 266,
  "matched": 192,
  "footballRows": 162,
  "crossRows": 240,
@@ -27,22 +27,78 @@
   "soccer_liga": 96
  },
  "trackRecord": {
-  "tracked": 179,
-  "converged": 30
+  "tracked": 181,
+  "converged": 36
  },
  "discrepancies": [
+  {
+   "id": "baseball_mlb|athletics-houstonastros|athletics",
+   "sport": "baseball_mlb",
+   "event": "Athletics vs Houston Astros",
+   "market": "Moneyline",
+   "outcome": "Athletics",
+   "polyPP": 54.5,
+   "pinnPP": 33.7,
+   "gapPP": 20.78,
+   "vol": 142732,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-22T23:57:40.040300+00:00"
+  },
+  {
+   "id": "baseball_mlb|athletics-houstonastros|houstonastros",
+   "sport": "baseball_mlb",
+   "event": "Athletics vs Houston Astros",
+   "market": "Moneyline",
+   "outcome": "Houston Astros",
+   "polyPP": 45.5,
+   "pinnPP": 66.3,
+   "gapPP": -20.78,
+   "vol": 142732,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-22T23:57:40.040300+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagowhitesox-newyorkmets|newyorkmets",
+   "sport": "baseball_mlb",
+   "event": "New York Mets vs Chicago White Sox",
+   "market": "Moneyline",
+   "outcome": "New York Mets",
+   "polyPP": 61.5,
+   "pinnPP": 48.3,
+   "gapPP": 13.2,
+   "vol": 229223,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 8.49,
+   "firstSeen": "2026-08-22T01:50:45.312877+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagowhitesox-newyorkmets|chicagowhitesox",
+   "sport": "baseball_mlb",
+   "event": "New York Mets vs Chicago White Sox",
+   "market": "Moneyline",
+   "outcome": "Chicago White Sox",
+   "polyPP": 38.5,
+   "pinnPP": 51.7,
+   "gapPP": -13.2,
+   "vol": 229223,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 8.49,
+   "firstSeen": "2026-08-22T01:50:45.312877+00:00"
+  },
   {
    "id": "baseball_mlb|baltimoreorioles-tampabayrays|tampabayrays",
    "sport": "baseball_mlb",
    "event": "Tampa Bay Rays vs Baltimore Orioles",
    "market": "Moneyline",
    "outcome": "Tampa Bay Rays",
-   "polyPP": 67.5,
+   "polyPP": 63.5,
    "pinnPP": 51.7,
-   "gapPP": 15.84,
-   "vol": 913523,
+   "gapPP": 11.84,
+   "vol": 950487,
    "richtung": "Poly zu hoch → faden",
-   "convergePP": -1.9,
+   "convergePP": 2.1,
    "firstSeen": "2026-08-15T22:58:50.117206+00:00"
   },
   {
@@ -51,12 +107,12 @@
    "event": "Tampa Bay Rays vs Baltimore Orioles",
    "market": "Moneyline",
    "outcome": "Baltimore Orioles",
-   "polyPP": 32.5,
+   "polyPP": 36.5,
    "pinnPP": 48.3,
-   "gapPP": -15.84,
-   "vol": 913523,
+   "gapPP": -11.84,
+   "vol": 950487,
    "richtung": "Poly zu niedrig → backen",
-   "convergePP": -1.9,
+   "convergePP": 2.1,
    "firstSeen": "2026-08-15T22:58:50.117206+00:00"
   },
   {
@@ -68,7 +124,7 @@
    "polyPP": 36.5,
    "pinnPP": 45.1,
    "gapPP": -8.56,
-   "vol": 38356,
+   "vol": 55722,
    "richtung": "Poly zu niedrig → backen",
    "convergePP": 29.19,
    "firstSeen": "2026-08-22T03:08:12.763206+00:00"
@@ -82,9 +138,37 @@
    "polyPP": 63.5,
    "pinnPP": 54.9,
    "gapPP": 8.56,
-   "vol": 38356,
+   "vol": 55722,
    "richtung": "Poly zu hoch → faden",
    "convergePP": 29.19,
+   "firstSeen": "2026-08-22T03:08:12.763206+00:00"
+  },
+  {
+   "id": "baseball_mlb|losangelesdodgers-pittsburghpirates|pittsburghpirates",
+   "sport": "baseball_mlb",
+   "event": "Pittsburgh Pirates vs Los Angeles Dodgers",
+   "market": "Moneyline",
+   "outcome": "Pittsburgh Pirates",
+   "polyPP": 66.5,
+   "pinnPP": 59.0,
+   "gapPP": 7.51,
+   "vol": 313234,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 9.91,
+   "firstSeen": "2026-08-22T03:08:12.763206+00:00"
+  },
+  {
+   "id": "baseball_mlb|losangelesdodgers-pittsburghpirates|losangelesdodgers",
+   "sport": "baseball_mlb",
+   "event": "Pittsburgh Pirates vs Los Angeles Dodgers",
+   "market": "Moneyline",
+   "outcome": "Los Angeles Dodgers",
+   "polyPP": 33.5,
+   "pinnPP": 41.0,
+   "gapPP": -7.51,
+   "vol": 313234,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 9.91,
    "firstSeen": "2026-08-22T03:08:12.763206+00:00"
   }
  ]
