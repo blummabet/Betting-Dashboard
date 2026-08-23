@@ -1,23 +1,23 @@
 {
-"generatedAt": "2026-08-23T21:27:31.346037+00:00",
+"generatedAt": "2026-08-23T21:33:57.426268+00:00",
 "byVerdict": {
 "konsens": {
-"n": 414,
-"wins": 328,
-"hitRate": 0.7923,
-"polyN": 386,
-"polyWins": 298,
-"polyHitRate": 0.772,
+"n": 415,
+"wins": 329,
+"hitRate": 0.7928,
+"polyN": 387,
+"polyWins": 299,
+"polyHitRate": 0.7726,
 "pinnN": 25,
 "pinnHitRate": 0.68
 },
 "uneinig": {
-"n": 139,
+"n": 140,
 "wins": 39,
-"hitRate": 0.2806,
-"polyN": 122,
-"polyWins": 41,
-"polyHitRate": 0.3361,
+"hitRate": 0.2786,
+"polyN": 123,
+"polyWins": 42,
+"polyHitRate": 0.3415,
 "pinnN": 74,
 "pinnHitRate": 0.6216
 },
@@ -63,6 +63,11 @@
 "wins": 11,
 "hitRate": 0.7857
 },
+"Spanish La Liga": {
+"n": 14,
+"wins": 8,
+"hitRate": 0.5714
+},
 "UEFA Europa League Qualifiers": {
 "n": 14,
 "wins": 11,
@@ -82,11 +87,6 @@
 "n": 13,
 "wins": 9,
 "hitRate": 0.6923
-},
-"Spanish La Liga": {
-"n": 13,
-"wins": 7,
-"hitRate": 0.5385
 },
 "Turkish Super League": {
 "n": 13,
@@ -213,6 +213,11 @@
 "wins": 3,
 "hitRate": 0.5
 },
+"Romanian Liga I": {
+"n": 6,
+"wins": 4,
+"hitRate": 0.6667
+},
 "Uzbekistan Super League": {
 "n": 6,
 "wins": 5,
@@ -229,11 +234,6 @@
 "hitRate": 0.8
 },
 "Other Competitions Soccer": {
-"n": 5,
-"wins": 4,
-"hitRate": 0.8
-},
-"Romanian Liga I": {
 "n": 5,
 "wins": 4,
 "hitRate": 0.8
@@ -481,25 +481,63 @@
 },
 "byStrength": {
 "strong": {
-"n": 319,
-"wins": 254,
-"hitRate": 0.7962
+"n": 320,
+"wins": 255,
+"hitRate": 0.7969
 },
 "weak": {
-"n": 206,
+"n": 207,
 "wins": 96,
-"hitRate": 0.466
+"hitRate": 0.4638
 }
 },
 "divergence": {
-"n": 139,
+"n": 140,
 "betfairWins": 39,
-"betfairRate": 0.2806,
-"polyN": 122,
-"polyWins": 41,
-"polyRate": 0.3361
+"betfairRate": 0.2786,
+"polyN": 123,
+"polyWins": 42,
+"polyRate": 0.3415
 },
 "recent": [
+{
+"matchId": "35895544",
+"home": "Elche",
+"away": "Barcelona",
+"league": "Spanish La Liga",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Barcelona",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+5
+],
+"kickoff": "2026-08-23T19:30:00Z",
+"settledAt": "2026-08-23T21:33:57.273305+00:00"
+},
+{
+"matchId": "35935893",
+"home": "CFR Cluj",
+"away": "FCSB",
+"league": "Romanian Liga I",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "FCSB",
+"polySide": "home",
+"winner": "home",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-08-23T18:30:00Z",
+"settledAt": "2026-08-23T21:33:57.273305+00:00"
+},
 {
 "matchId": "35949415",
 "home": "Porto",
@@ -1221,50 +1259,12 @@
 ],
 "kickoff": "2026-08-23T15:15:00Z",
 "settledAt": "2026-08-23T17:18:28.774281+00:00"
-},
-{
-"matchId": "35947067",
-"home": "AC Horsens",
-"away": "Lyngby",
-"league": "Danish Superliga",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "AC Horsens",
-"polySide": "away",
-"winner": "home",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-08-23T14:00:00Z",
-"settledAt": "2026-08-23T17:03:23.406711+00:00"
-},
-{
-"matchId": "35948508",
-"home": "Eibar",
-"away": "Valladolid",
-"league": "Spanish Segunda Division",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Eibar",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-08-23T15:00:00Z",
-"settledAt": "2026-08-23T16:59:50.851012+00:00"
 }
 ],
 "global": {
-"n": 558,
-"wins": 368,
-"hitRate": 0.6595
+"n": 560,
+"wins": 369,
+"hitRate": 0.6589
 },
-"pending": 16
+"pending": 14
 }
