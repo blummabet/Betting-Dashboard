@@ -815,3 +815,34 @@ class TestFixAlert(unittest.TestCase):
         m = match(mid=9, league="Lithuanian 1 Lyga", country="LT", markets=self._mkts(600, 5000))
         kinds = sorted(a["scenario"] for a in BA.collect_alerts({"matches": [m]}, {}, 10000, 5000, 30000, 20000))
         self.assertIn("fix", kinds)
+
+
+class TestFreshFinishedLateGate(unittest.TestCase):
+    """23.08.2026 (Lucas: „solche Push im trades wertlos, vor allem wenn schon beendet"): kein
+    Moneyflow-Push auf beendete oder in der Schlussphase (>=85') laufende Spiele — kein bespielbares
+    Fenster mehr, spätes/reaktives Geld ist kein Signal."""
+    def _m(self, live=None):
+        m = match(mid=7, league="German Bundesliga",
+                  markets=mk("Match Odds", [{"name": "Alpha", "odd": 2, "vol": 45000}]))
+        if live is not None:
+            m["liveInfo"] = live
+        return m
+
+    HIST = {"7": [{"mkv": {"Match Odds": 10000}, "min": 60}, {"mkv": {"Match Odds": 60000}, "min": 88}]}
+
+    def test_finished_game_no_push(self):
+        self.assertIsNone(BA.fresh_alert(self._m(live={"finished": True, "time": 90}), self.HIST, 30000, 20000))
+
+    def test_late_minute_no_push(self):
+        # 87' laufend, nicht als finished geflaggt -> trotzdem raus (>=85)
+        self.assertIsNone(BA.fresh_alert(self._m(live={"finished": False, "time": 87}), self.HIST, 30000, 20000))
+
+    def test_midgame_still_fires(self):
+        a = BA.fresh_alert(self._m(live={"finished": False, "time": 60}), self.HIST, 30000, 20000)
+        self.assertIsNotNone(a)
+        self.assertEqual(a["scenario"], "fresh")
+
+    def test_prematch_unaffected(self):
+        # Vor Anpfiff: liveInfo leer -> time None -> Gate greift nicht
+        a = BA.fresh_alert(self._m(live={}), self.HIST, 30000, 20000)
+        self.assertIsNotNone(a)
