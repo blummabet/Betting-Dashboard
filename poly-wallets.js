@@ -979,6 +979,23 @@ const PW_RANK_MIN_N_PNL = 8;   // sobald echte Poly-P&L da ist, reicht weniger g
 const PW_RANK_FLOOR_N = 8;      // ab so vielen getrackten Wetten greift der Schärfe-Floor
 const PW_RANK_FLOOR_CLV = 0;    // Ø CLV muss ≥ 0 sein (Einstieg schlägt Close)
 const PW_RANK_FLOOR_HIT = 0.45; // und Trefferquote ≥ 45 %
+
+// 23.08.2026 (Lucas: „das Wallet spielt auch hundert-Euro-Beträge, das interessiert mich nicht —
+// ab 4-stellig aufwärts"). Rangliste standardmäßig auf Wallets mit ernsthaftem Ø-Einsatz filtern.
+// Umschaltbar (Chip) falls man doch alle sehen will.
+const PW_RANK_MIN_AVG_USD = 1000;
+let _pwRankBigOnly = true;
+function _pwSetRankBigOnly(v){ if(v===_pwRankBigOnly) return; _pwRankBigOnly=v; _pwRender(); }
+if(typeof window!=='undefined') window._pwSetRankBigOnly=_pwSetRankBigOnly;
+function _pwRankToggle(){
+  const chip=(v,label)=>{const on=_pwRankBigOnly===v;
+    return '<button onclick="_pwSetRankBigOnly('+(v?'true':'false')+')" style="padding:4px 11px;border-radius:16px;border:1px solid '
+      +(on?'#5eead4':'var(--border)')+';background:'+(on?'rgba(94,234,212,.16)':'transparent')+';color:'+(on?'#5eead4':'var(--muted)')
+      +';font-size:11.5px;font-weight:'+(on?700:500)+';cursor:pointer;font-family:inherit">'+label+'</button>';};
+  return '<div style="max-width:1000px;margin:2px auto 12px;display:flex;gap:7px;flex-wrap:wrap;align-items:center">'
+    +'<span class="pw-mut" style="font-size:11px;font-weight:700;margin-right:2px">Einsatz-Filter:</span>'
+    +chip(true,'💰 nur ≥ $1.000 / Wette')+chip(false,'alle')+'</div>';
+}
 const PW_RANK_K = 6;           // Shrinkage: kleine Stichproben werden zur Neutralität gezogen
 const PW_RANK_HITW = 6;        // Gewicht der Trefferquote (ggü. CLV) im Kombi-Score
 function _pwWalletKombi(sc) {
@@ -1027,9 +1044,10 @@ function _pwRankByPnl(scores, openMap, kick) {
     // (Ø CLV<0) oder klar unter Münzwurf trifft (Treffer<45 %), gehört nicht in die „Schärfste"-Liste,
     // egal wie hoch die Lifetime-P&L. Zu dünn getrackte (n<FLOOR_N) bleiben (können wir noch nicht beurteilen).
     .filter(function (r) { return r.n < PW_RANK_FLOOR_N || (r.avgClv >= PW_RANK_FLOOR_CLV && r.hit >= PW_RANK_FLOOR_HIT); })
+    .filter(function (r) { return !_pwRankBigOnly || (r.n > 0 && r.usd / r.n >= PW_RANK_MIN_AVG_USD); })   // 4-stellig-Filter (Lucas)
     .sort(function (a, b) { return b.pnl - a.pnl; }).slice(0, 20);
   const intro = '<section class="pw-sec"><div class="pw-sec-head">' + kick
-    + '<span class="pw-sec-note">Wallets, die den Close schlagen (Ø CLV ≥ 0 &amp; Treffer ≥ 45 % bei genug n), sortiert nach <b>echter Poly-Gesamt-Bilanz</b> (data-api /positions) · 🔥 = profitabel</span></div>';
+    + '<span class="pw-sec-note">Wallets, die den Close schlagen (Ø CLV ≥ 0 &amp; Treffer ≥ 45 % bei genug n), sortiert nach <b>echter Poly-Gesamt-Bilanz</b> (data-api /positions) · 🔥 = profitabel · nur Wallets ab $1.000 Ø-Einsatz</span></div>' + _pwRankToggle();
   if (!rows.length) return intro + '<div class="pw-none">Noch keine Wallet mit P&amp;L-Historie erfasst.</div></section>';
   const body = rows.map(function (r, i) {
     const pcol = r.pnl >= 0 ? '#3fb950' : '#f85149', clvCol = r.avgClv >= 0 ? '#3fb950' : '#f85149';
@@ -1040,10 +1058,11 @@ function _pwRankByPnl(scores, openMap, kick) {
       + '<td class="pw-cn">' + Math.round(r.hit * 100) + '%</td>'
       + '<td class="pw-cn pw-mut">' + r.n + '</td>'
       + '<td class="pw-cn pw-mut">' + _pwUsd(r.usd) + '</td>'
+      + '<td class="pw-cn" style="font-weight:700">' + _pwUsd(r.n ? r.usd / r.n : 0) + '</td>'
       + '<td>' + _pwNowCell(openMap, r.wallet) + '</td></tr>';
   }).join('');
   return intro + '<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
-    + '<th>#</th><th>Wallet</th><th>Poly-P&amp;L</th><th>Ø CLV</th><th>Treffer</th><th>n</th><th>Einsatz</th><th>setzt gerade auf</th>'
+    + '<th>#</th><th>Wallet</th><th>Poly-P&amp;L</th><th>Ø CLV</th><th>Treffer</th><th>n</th><th>Einsatz</th><th>Ø/Wette</th><th>setzt gerade auf</th>'
     + '</tr></thead><tbody>' + body + '</tbody></table></div></section>';
 }
 function _pwRankByClv(scores, openMap, kick) {
@@ -1051,10 +1070,12 @@ function _pwRankByClv(scores, openMap, kick) {
     const v = scores[w]; if (!v || !v.n || v.n < PW_RANK_MIN_N) return null;
     const sc = { wallet: w, n: v.n, avgClv: (v.clvSumPP || 0) / v.n, hit: (v.wins || 0) / v.n, pnl: Number(v.pnl) || 0, usd: Number(v.usd) || 0 };
     sc.score = _pwWalletKombi(sc); return sc;
-  }).filter(Boolean).sort(function (a, b) { return b.score - a.score; }).slice(0, 20);
+  }).filter(Boolean)
+    .filter(function (r) { return !_pwRankBigOnly || (r.n > 0 && r.usd / r.n >= PW_RANK_MIN_AVG_USD); })   // 4-stellig-Filter (Lucas)
+    .sort(function (a, b) { return b.score - a.score; }).slice(0, 20);
   const intro = '<section class="pw-sec"><div class="pw-sec-head">' + kick
     + '<span class="pw-sec-note">Interim: Kombi-Score aus Ø CLV + Treffer, ab n≥' + PW_RANK_MIN_N + ' getrackten Wetten · über alle Sportarten</span></div>'
-    + '<div class="pw-sec-p" style="background:rgba(227,179,65,.08);border:1px solid rgba(227,179,65,.3);border-radius:9px;padding:9px 12px;margin:2px 0 12px"><b style="color:#e3b341">⚠️ Vorläufig — misst Timing (CLV), nicht Gewinn.</b> Diese Zahlen kommen nur aus den <i>wenigen großen Wetten, die wir mitbekommen haben</i> (nicht die Poly-Gesamt-Bilanz). Ein Wallet kann hier oben stehen und auf Polymarket trotzdem tief im Minus sein. Die Rangliste nach <b>echter P&amp;L</b> kommt, sobald der Runner sie mitzieht.</div>';
+    + '<div class="pw-sec-p" style="background:rgba(227,179,65,.08);border:1px solid rgba(227,179,65,.3);border-radius:9px;padding:9px 12px;margin:2px 0 12px"><b style="color:#e3b341">⚠️ Vorläufig — misst Timing (CLV), nicht Gewinn.</b> Diese Zahlen kommen nur aus den <i>wenigen großen Wetten, die wir mitbekommen haben</i> (nicht die Poly-Gesamt-Bilanz). Ein Wallet kann hier oben stehen und auf Polymarket trotzdem tief im Minus sein. Die Rangliste nach <b>echter P&amp;L</b> kommt, sobald der Runner sie mitzieht.</div>' + _pwRankToggle();
   if (!rows.length) return intro + '<div class="pw-none">Noch keine Wallet mit genug getrackter Historie (min. ' + PW_RANK_MIN_N + ' Wetten). Sammelt sich über die nächsten Tage.</div></section>';
   const body = rows.map(function (r, i) {
     const proven = _pwIsSharpScore(r), scol = r.score > 0 ? '#3fb950' : '#f85149', clvCol = r.avgClv >= 0 ? '#3fb950' : '#f85149';   // 13.08.2026 (Lucas-Audit): 🔥 nur bei echtem Sharp-Gate
@@ -1065,10 +1086,11 @@ function _pwRankByClv(scores, openMap, kick) {
       + '<td class="pw-cn">' + Math.round(r.hit * 100) + '%</td>'
       + '<td class="pw-cn pw-mut">' + r.n + '</td>'
       + '<td class="pw-cn pw-mut">' + _pwUsd(r.usd) + '</td>'
+      + '<td class="pw-cn" style="font-weight:700">' + _pwUsd(r.n ? r.usd / r.n : 0) + '</td>'
       + '<td>' + _pwNowCell(openMap, r.wallet) + '</td></tr>';
   }).join('');
   return intro + '<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
-    + '<th>#</th><th>Wallet</th><th>CLV-Score</th><th>Ø CLV</th><th>Treffer</th><th>n</th><th>Einsatz</th><th>setzt gerade auf</th>'
+    + '<th>#</th><th>Wallet</th><th>CLV-Score</th><th>Ø CLV</th><th>Treffer</th><th>n</th><th>Einsatz</th><th>Ø/Wette</th><th>setzt gerade auf</th>'
     + '</tr></thead><tbody>' + body + '</tbody></table></div></section>';
 }
 if (typeof window !== 'undefined') window._pwSharpRanking = _pwSharpRanking;
