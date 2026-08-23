@@ -55,6 +55,7 @@ FIX_HT_MARKETS = ("Half Time", "First Half Goals 0.5", "First Half Goals 1.5")
 MIN_LEAD_ODD   = 1.30     # Geld auf einen Favoriten mit Quote < 1.30 (führt schon, wenig Value) = kein Push (Lucas 30.07.2026, vorher 1.15)
 FRESH_TOP_EUR  = float(os.environ.get("BF_FRESH_TOP_EUR") or 50000.0)   # frisches Geld Top-Liga (15.08.2026 Lucas: 30K->50K)
 FRESH_REST_EUR = float(os.environ.get("BF_FRESH_REST_EUR") or 35000.0)  # ... und Rest-Ligen (15.08.2026 Lucas: 20K->35K)
+FRESH_LATE_MAX_MIN = float(os.environ.get("BF_FRESH_LATE_MAX_MIN") or 85.0)  # 23.08.2026 (Lucas: „schon beendet als Status"): In-Play-Moneyflow nur bis Minute 85 — danach (und bei finished) ist der Markt praktisch durch, spätes/reaktives Geld ist nicht mehr bespielbar.
 # 31.07.2026 (Lucas) — kuratierte, HÖHERE Schwellen für den ÖFFENTLICHEN Channel (nur die wirklich
 # dicken Bewegungen public, kein Spam). Halbzeit: Top 50K / Rest 15K gematcht. Frisch: Top 100K / Rest 30K.
 PUB_HT_TOP     = 50000.0
@@ -351,6 +352,16 @@ def _market_lead(m, name):
 
 def fresh_alert(m, hist, top_thr=FRESH_TOP_EUR, rest_thr=FRESH_REST_EUR):
     """Szenario 2: Zufluss auf dem GRÖSSTEN Zufluss-Markt (aus mkv) ≥ tier-Schwelle — pro Markt."""
+    # 23.08.2026 (Lucas: „solche Push im trades wertlos, vor allem wenn schon beendet"): ein beendetes
+    # oder in der Schlussphase (>=FRESH_LATE_MAX_MIN) laufendes Spiel hat kein bespielbares Fenster mehr —
+    # das späte Geld läuft nur noch aufs Sichere bzw. reagiert auf ein Spielereignis (Quote neu gepreist).
+    # Kein Moneyflow-Push mehr. (Vor-Anpfiff: liveInfo leer -> time None -> unberührt.)
+    _li = m.get("liveInfo") or {}
+    if _li.get("finished"):
+        return None
+    _mt = _li.get("time")
+    if isinstance(_mt, (int, float)) and _mt >= FRESH_LATE_MAX_MIN:
+        return None
     pts = (hist or {}).get(str(m.get("matchId")))
     if not isinstance(pts, list) or len(pts) < 2:
         return None
