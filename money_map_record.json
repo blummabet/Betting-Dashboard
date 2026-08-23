@@ -1,25 +1,25 @@
 {
-"generatedAt": "2026-08-23T23:19:06.032581+00:00",
+"generatedAt": "2026-08-23T23:34:49.363959+00:00",
 "byVerdict": {
 "konsens": {
-"n": 422,
-"wins": 335,
-"hitRate": 0.7938,
-"polyN": 394,
-"polyWins": 305,
-"polyHitRate": 0.7741,
+"n": 423,
+"wins": 336,
+"hitRate": 0.7943,
+"polyN": 395,
+"polyWins": 306,
+"polyHitRate": 0.7747,
 "pinnN": 25,
 "pinnHitRate": 0.68
 },
 "uneinig": {
-"n": 142,
+"n": 144,
 "wins": 41,
-"hitRate": 0.2887,
-"polyN": 125,
+"hitRate": 0.2847,
+"polyN": 127,
 "polyWins": 43,
-"polyHitRate": 0.344,
-"pinnN": 75,
-"pinnHitRate": 0.6133
+"polyHitRate": 0.3386,
+"pinnN": 76,
+"pinnHitRate": 0.6184
 },
 "teil": {
 "n": 5,
@@ -53,15 +53,15 @@
 "wins": 15,
 "hitRate": 0.8824
 },
+"Brazilian Serie A": {
+"n": 16,
+"wins": 8,
+"hitRate": 0.5
+},
 "Spanish Segunda Division": {
 "n": 16,
 "wins": 13,
 "hitRate": 0.8125
-},
-"Brazilian Serie A": {
-"n": 15,
-"wins": 8,
-"hitRate": 0.5333
 },
 "Brazilian Serie B": {
 "n": 14,
@@ -188,6 +188,11 @@
 "wins": 4,
 "hitRate": 0.5
 },
+"Peruvian Primera Division": {
+"n": 8,
+"wins": 5,
+"hitRate": 0.625
+},
 "South Korean K1 League": {
 "n": 8,
 "wins": 6,
@@ -197,11 +202,6 @@
 "n": 7,
 "wins": 7,
 "hitRate": 1.0
-},
-"Peruvian Primera Division": {
-"n": 7,
-"wins": 5,
-"hitRate": 0.7143
 },
 "Colombian Primera A": {
 "n": 6,
@@ -227,6 +227,11 @@
 "n": 6,
 "wins": 5,
 "hitRate": 0.8333
+},
+"Ecuadorian Serie A": {
+"n": 5,
+"wins": 3,
+"hitRate": 0.6
 },
 "English Sky Bet League 1": {
 "n": 5,
@@ -257,11 +262,6 @@
 "n": 4,
 "wins": 4,
 "hitRate": 1.0
-},
-"Ecuadorian Serie A": {
-"n": 4,
-"wins": 2,
-"hitRate": 0.5
 },
 "Finnish Veikkausliiga": {
 "n": 4,
@@ -481,25 +481,82 @@
 },
 "byStrength": {
 "strong": {
-"n": 327,
-"wins": 261,
-"hitRate": 0.7982
+"n": 329,
+"wins": 262,
+"hitRate": 0.7964
 },
 "weak": {
-"n": 209,
+"n": 210,
 "wins": 98,
-"hitRate": 0.4689
+"hitRate": 0.4667
 }
 },
 "divergence": {
-"n": 142,
+"n": 144,
 "betfairWins": 41,
-"betfairRate": 0.2887,
-"polyN": 125,
+"betfairRate": 0.2847,
+"polyN": 127,
 "polyWins": 43,
-"polyRate": 0.344
+"polyRate": 0.3386
 },
 "recent": [
+{
+"matchId": "35925637",
+"home": "Santos",
+"away": "Mirassol",
+"league": "Brazilian Serie A",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Santos",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-23T21:30:00Z",
+"settledAt": "2026-08-23T23:34:49.214791+00:00"
+},
+{
+"matchId": "35937736",
+"home": "Melgar",
+"away": "Alianza Lima",
+"league": "Peruvian Primera Division",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Melgar",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-23T20:30:00Z",
+"settledAt": "2026-08-23T23:34:49.214791+00:00"
+},
+{
+"matchId": "35949719",
+"home": "Delfin",
+"away": "Aucas",
+"league": "Ecuadorian Serie A",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Aucas",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-08-23T20:30:00Z",
+"settledAt": "2026-08-23T23:34:49.214791+00:00"
+},
 {
 "matchId": "35947120",
 "home": "New England Revolution",
@@ -1202,69 +1259,12 @@
 ],
 "kickoff": "2026-08-23T16:00:00Z",
 "settledAt": "2026-08-23T19:04:26.688542+00:00"
-},
-{
-"matchId": "35954772",
-"home": "FC Phonix Lubeck",
-"away": "Paderborn",
-"league": "German Cup",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Paderborn",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-4
-],
-"kickoff": "2026-08-23T16:00:00Z",
-"settledAt": "2026-08-23T19:04:26.688542+00:00"
-},
-{
-"matchId": "35943345",
-"home": "Deportes Concepcion",
-"away": "Coquimbo Unido",
-"league": "Chilean Primera Division",
-"verdict": "konsens",
-"moneySide": "draw",
-"moneyName": "The Draw",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-08-23T16:00:00Z",
-"settledAt": "2026-08-23T19:04:26.688542+00:00"
-},
-{
-"matchId": "35951323",
-"home": "Rot-Weiss Essen",
-"away": "St Pauli",
-"league": "German Cup",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Rot-Weiss Essen",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-08-23T16:00:00Z",
-"settledAt": "2026-08-23T19:04:26.688542+00:00"
 }
 ],
 "global": {
-"n": 569,
-"wins": 377,
-"hitRate": 0.6626
+"n": 572,
+"wins": 378,
+"hitRate": 0.6608
 },
-"pending": 12
+"pending": 9
 }
