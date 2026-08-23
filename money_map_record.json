@@ -1,23 +1,23 @@
 {
-"generatedAt": "2026-08-23T20:48:48.469822+00:00",
+"generatedAt": "2026-08-23T20:54:38.376637+00:00",
 "byVerdict": {
 "konsens": {
-"n": 410,
-"wins": 324,
-"hitRate": 0.7902,
-"polyN": 382,
-"polyWins": 294,
-"polyHitRate": 0.7696,
+"n": 411,
+"wins": 325,
+"hitRate": 0.7908,
+"polyN": 383,
+"polyWins": 295,
+"polyHitRate": 0.7702,
 "pinnN": 25,
 "pinnHitRate": 0.68
 },
 "uneinig": {
-"n": 138,
-"wins": 38,
-"hitRate": 0.2754,
-"polyN": 121,
+"n": 139,
+"wins": 39,
+"hitRate": 0.2806,
+"polyN": 122,
 "polyWins": 41,
-"polyHitRate": 0.3388,
+"polyHitRate": 0.3361,
 "pinnN": 74,
 "pinnHitRate": 0.6216
 },
@@ -188,6 +188,11 @@
 "wins": 6,
 "hitRate": 0.75
 },
+"Italian Serie B": {
+"n": 7,
+"wins": 3,
+"hitRate": 0.4286
+},
 "Japanese J League 2": {
 "n": 7,
 "wins": 7,
@@ -197,11 +202,6 @@
 "n": 6,
 "wins": 4,
 "hitRate": 0.6667
-},
-"Italian Serie B": {
-"n": 6,
-"wins": 2,
-"hitRate": 0.3333
 },
 "Peruvian Primera Division": {
 "n": 6,
@@ -373,6 +373,11 @@
 "wins": 1,
 "hitRate": 1.0
 },
+"Croatian HNL": {
+"n": 1,
+"wins": 1,
+"hitRate": 1.0
+},
 "Egyptian Premier": {
 "n": 1,
 "wins": 1,
@@ -476,9 +481,9 @@
 },
 "byStrength": {
 "strong": {
-"n": 314,
-"wins": 249,
-"hitRate": 0.793
+"n": 316,
+"wins": 251,
+"hitRate": 0.7943
 },
 "weak": {
 "n": 206,
@@ -487,14 +492,52 @@
 }
 },
 "divergence": {
-"n": 138,
-"betfairWins": 38,
-"betfairRate": 0.2754,
-"polyN": 121,
+"n": 139,
+"betfairWins": 39,
+"betfairRate": 0.2806,
+"polyN": 122,
 "polyWins": 41,
-"polyRate": 0.3388
+"polyRate": 0.3361
 },
 "recent": [
+{
+"matchId": "35857387",
+"home": "Cesena",
+"away": "Sampdoria",
+"league": "Italian Serie B",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-23T19:00:00Z",
+"settledAt": "2026-08-23T20:54:38.226471+00:00"
+},
+{
+"matchId": "35949451",
+"home": "Hajduk Split",
+"away": "Osijek",
+"league": "Croatian HNL",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Hajduk Split",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+0
+],
+"kickoff": "2026-08-23T19:00:00Z",
+"settledAt": "2026-08-23T20:54:38.226471+00:00"
+},
 {
 "matchId": "35734729",
 "home": "Torino",
@@ -1216,50 +1259,12 @@
 ],
 "kickoff": "2026-08-23T13:30:00Z",
 "settledAt": "2026-08-23T16:33:31.725574+00:00"
-},
-{
-"matchId": "35947142",
-"home": "Braunschweig",
-"away": "Union Berlin",
-"league": "German Cup",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Union Berlin",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-4
-],
-"kickoff": "2026-08-23T13:30:00Z",
-"settledAt": "2026-08-23T16:33:31.725574+00:00"
-},
-{
-"matchId": "35951331",
-"home": "Carl Zeiss Jena",
-"away": "SV Darmstadt",
-"league": "German Cup",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "SV Darmstadt",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-08-23T13:30:00Z",
-"settledAt": "2026-08-23T16:33:31.725574+00:00"
 }
 ],
 "global": {
-"n": 553,
-"wins": 363,
-"hitRate": 0.6564
+"n": 555,
+"wins": 365,
+"hitRate": 0.6577
 },
-"pending": 17
+"pending": 16
 }
