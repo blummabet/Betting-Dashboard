@@ -1919,15 +1919,22 @@ def check_card_only_not_in_trade(ctx):
     """ZWEI-FLÄCHEN-INVARIANTE (20.06.2026, Lucas: „Poly-Signale KEINERLEI Auswirkung aufs
     Polymarket-Trading"). freshness_leg + smart_money sind Card-only. Der Auto-Trader liest die
     _trade-Felder (signalAdjustmentPP_trade → signalAdj_<field>), die den Card-only-Score abziehen.
-    Dieser Guard ist der harte Tripwire: für JEDES Pick mit Card-only-Signal muss
+    Dieser Guard ist der harte Tripwire: für JEDES noch OFFENE Pick mit Card-only-Signal muss
     signalAdjustmentPP_trade ≈ signalAdjustmentPP − Σ(card-only score) sein. Weicht es ab, leckt
-    ein Card-Signal in den Trade-Pfad (= Zirkel bei smart_money: Poly-Geld entscheidet Poly-Trade)."""
+    ein Card-Signal in den Trade-Pfad (= Zirkel bei smart_money: Poly-Geld entscheidet Poly-Trade).
+
+    Nur OFFENE Picks (nur die kann der Auto-Trader noch handeln): aufgelöste/beendete Picks werden
+    nie neu gebaut, daher friert ihr _trade-Wert den Build-Snapshot ein — freshness_leg zerfällt
+    nach Anpfiff auf 0, der Snapshot bleibt aber stehen → harmlose Alt-Differenz, kein Live-Leck
+    (22.08.2026: einziger Treffer war ein längst resolvtes ESP-2-Doppelte-Chance, nie ein Handelsmarkt)."""
     picks = ctx.wm.get("picks") or {}
     fails = []
     for key, plist in picks.items():
         if not isinstance(plist, list):
             continue
         for p in plist:
+            if p.get("result") or p.get("resolvedAt") or p.get("clvResolved"):
+                continue   # aufgelöst → nie neu gebaut, _trade ist ein Alt-Snapshot, nicht mehr handelbar
             sigs = p.get("signals")
             adj, trade = p.get("signalAdjustmentPP"), p.get("signalAdjustmentPP_trade")
             if not isinstance(sigs, list) or not isinstance(adj, (int, float)) \
