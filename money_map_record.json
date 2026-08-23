@@ -1,25 +1,25 @@
 {
-"generatedAt": "2026-08-23T16:48:33.695920+00:00",
+"generatedAt": "2026-08-23T16:59:51.010356+00:00",
 "byVerdict": {
 "konsens": {
-"n": 383,
-"wins": 301,
-"hitRate": 0.7859,
-"polyN": 355,
-"polyWins": 271,
-"polyHitRate": 0.7634,
+"n": 384,
+"wins": 302,
+"hitRate": 0.7865,
+"polyN": 356,
+"polyWins": 272,
+"polyHitRate": 0.764,
 "pinnN": 21,
 "pinnHitRate": 0.6667
 },
 "uneinig": {
-"n": 129,
+"n": 130,
 "wins": 37,
-"hitRate": 0.2868,
+"hitRate": 0.2846,
 "polyN": 114,
 "polyWins": 38,
 "polyHitRate": 0.3333,
-"pinnN": 68,
-"pinnHitRate": 0.6176
+"pinnN": 69,
+"pinnHitRate": 0.6232
 },
 "teil": {
 "n": 5,
@@ -78,6 +78,11 @@
 "wins": 9,
 "hitRate": 0.6923
 },
+"Spanish Segunda Division": {
+"n": 13,
+"wins": 11,
+"hitRate": 0.8462
+},
 "Brazilian Serie A": {
 "n": 12,
 "wins": 5,
@@ -92,11 +97,6 @@
 "n": 12,
 "wins": 7,
 "hitRate": 0.5833
-},
-"Spanish Segunda Division": {
-"n": 12,
-"wins": 10,
-"hitRate": 0.8333
 },
 "Argentinian Primera Division": {
 "n": 11,
@@ -248,6 +248,11 @@
 "wins": 2,
 "hitRate": 0.5
 },
+"Finnish Veikkausliiga": {
+"n": 4,
+"wins": 2,
+"hitRate": 0.5
+},
 "Italian Serie A": {
 "n": 4,
 "wins": 2,
@@ -282,11 +287,6 @@
 "n": 3,
 "wins": 1,
 "hitRate": 0.3333
-},
-"Finnish Veikkausliiga": {
-"n": 3,
-"wins": 2,
-"hitRate": 0.6667
 },
 "Qatari Stars League": {
 "n": 3,
@@ -466,25 +466,63 @@
 },
 "byStrength": {
 "strong": {
-"n": 291,
-"wins": 230,
-"hitRate": 0.7904
+"n": 292,
+"wins": 231,
+"hitRate": 0.7911
 },
 "weak": {
-"n": 193,
+"n": 194,
 "wins": 91,
-"hitRate": 0.4715
+"hitRate": 0.4691
 }
 },
 "divergence": {
-"n": 129,
+"n": 130,
 "betfairWins": 37,
-"betfairRate": 0.2868,
+"betfairRate": 0.2846,
 "polyN": 114,
 "polyWins": 38,
 "polyRate": 0.3333
 },
 "recent": [
+{
+"matchId": "35948508",
+"home": "Eibar",
+"away": "Valladolid",
+"league": "Spanish Segunda Division",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Eibar",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-08-23T15:00:00Z",
+"settledAt": "2026-08-23T16:59:50.851012+00:00"
+},
+{
+"matchId": "35948325",
+"home": "TPS",
+"away": "FC Inter Turku",
+"league": "Finnish Veikkausliiga",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "FC Inter Turku",
+"polySide": null,
+"winner": "draw",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-08-23T15:00:00Z",
+"settledAt": "2026-08-23T16:59:50.851012+00:00"
+},
 {
 "matchId": "35963145",
 "home": "VfB 1921 Krieschow",
@@ -1206,50 +1244,12 @@
 ],
 "kickoff": "2026-08-22T23:30:00Z",
 "settledAt": "2026-08-23T02:31:51.153592+00:00"
-},
-{
-"matchId": "35925593",
-"home": "Cruzeiro MG",
-"away": "Flamengo",
-"league": "Brazilian Serie A",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Flamengo",
-"polySide": "away",
-"winner": "home",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-08-22T23:30:00Z",
-"settledAt": "2026-08-23T02:31:51.153592+00:00"
-},
-{
-"matchId": "35945775",
-"home": "Santa Fe",
-"away": "America de Cali S.A",
-"league": "Colombian Primera A",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "America de Cali S.A",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-08-22T23:10:00Z",
-"settledAt": "2026-08-23T02:16:50.032754+00:00"
 }
 ],
 "global": {
-"n": 517,
-"wins": 339,
-"hitRate": 0.6557
+"n": 519,
+"wins": 340,
+"hitRate": 0.6551
 },
-"pending": 22
+"pending": 21
 }
