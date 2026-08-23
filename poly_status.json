@@ -43,7 +43,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "cs2-innerc-sashia1-2026-08-16: seit 7.0 Tagen offen — keine Auflösung gefunden"
+        "cs2-innerc-sashia1-2026-08-16: seit 7.1 Tagen offen — keine Auflösung gefunden"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -61,9 +61,14 @@
       "label": "'Bewiesene' Wallets wirklich profitabel",
       "severity": "warn",
       "ok": false,
-      "nFail": 1,
+      "nFail": 6,
       "failures": [
-        "353/398 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
+        "12/47 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (26%) — Trefferquote allein trügt",
+        "   0x84cfffc3f1… n=47 Treffer 51% P&L $-7,754,627",
+        "   0x224a89dbe0… n=84 Treffer 51% P&L $-4,601,119",
+        "   0xc3c3b3ef30… n=223 Treffer 52% P&L $-3,855,132",
+        "   0xa0f21e6d35… n=43 Treffer 65% P&L $-2,725,655",
+        "358/405 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
     },
@@ -83,11 +88,11 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "785/872 'live' Geld-Märkte sind schon >6h nach Anpfiff (90%) — $34,740,113 Whale-Geld auf fertigen Spielen"
+        "798/865 'live' Geld-Märkte sind schon >6h nach Anpfiff (92%) — $36,411,856 Whale-Geld auf fertigen Spielen"
       ],
       "note": "Der Close-Feed setzt kein resolved-Flag; fertige Spiele bleiben 'live'. Alle Views filtern jetzt auf den rekonstruierten Anpfiff — dieser Check misst den Geister-Anteil im Roh-Feed (steigt er, prunt/löst der Feed nicht mehr auf; jede ungegatete View zeigt dann fertige Spiele)."
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-08-23T00:00:29.302588+00:00"
+  "generatedAt": "2026-08-23T02:03:10.948742+00:00"
 }
