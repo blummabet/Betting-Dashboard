@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "mls",
-    "generatedAt": "2026-08-22T07:33:45.127890+00:00",
+    "generatedAt": "2026-08-22T19:25:34.362531+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -6653,6 +6653,88 @@
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1597.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "MLS",
       "leagueName": "Major League Soccer",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 50,
+        "label": "Eigen 50% + Gegner 40% → 46%"
+      },
+      "ratePct": 50,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 12,
+      "next": {
+        "oppId": "1603",
+        "oppName": "Vancouver Whitecaps",
+        "atHome": false,
+        "date": "2026-08-23",
+        "kickoff": "2026-08-23T01:30:00+00:00",
+        "oppRatePct": 40
+      },
+      "oppSupportPct": 40,
+      "matchupPct": 46
+    },
+    {
+      "teamId": "1597",
+      "team": "FC Dallas",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1597.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 50,
+        "label": "Eigen 50% + Gegner 40% → 46%"
+      },
+      "ratePct": 50,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 8,
+      "next": {
+        "oppId": "1603",
+        "oppName": "Vancouver Whitecaps",
+        "atHome": false,
+        "date": "2026-08-23",
+        "kickoff": "2026-08-23T01:30:00+00:00",
+        "oppRatePct": 40
+      },
+      "oppSupportPct": 40,
+      "matchupPct": 46
+    },
+    {
+      "teamId": "1597",
+      "team": "FC Dallas",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1597.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
       "type": "bttsYes",
       "market": "Beide Teams treffen",
       "length": 3,
@@ -7492,116 +7574,6 @@
       },
       "oppSupportPct": 64,
       "matchupPct": 50
-    },
-    {
-      "teamId": "1597",
-      "team": "FC Dallas",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1597.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 50,
-        "label": "Eigen 50% + Gegner 40% → 46% · Linie/Signale dagegen"
-      },
-      "ratePct": 50,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 12,
-      "next": {
-        "oppId": "1603",
-        "oppName": "Vancouver Whitecaps",
-        "atHome": false,
-        "date": "2026-08-23",
-        "kickoff": "2026-08-23T01:30:00+00:00",
-        "oppRatePct": 40
-      },
-      "oppSupportPct": 40,
-      "matchupPct": 46,
-      "signalInfo": {
-        "state": "contradict",
-        "count": 6,
-        "conviction": 5,
-        "names": [
-          "injury",
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength",
-          "chance_creation",
-          "fixture_congestion"
-        ],
-        "market": "Unter 3.5 Tore"
-      }
-    },
-    {
-      "teamId": "1597",
-      "team": "FC Dallas",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1597.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 50,
-        "label": "Eigen 50% + Gegner 40% → 46% · Linie/Signale dagegen"
-      },
-      "ratePct": 50,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 8,
-      "next": {
-        "oppId": "1603",
-        "oppName": "Vancouver Whitecaps",
-        "atHome": false,
-        "date": "2026-08-23",
-        "kickoff": "2026-08-23T01:30:00+00:00",
-        "oppRatePct": 40
-      },
-      "oppSupportPct": 40,
-      "matchupPct": 46,
-      "signalInfo": {
-        "state": "contradict",
-        "count": 6,
-        "conviction": 5,
-        "names": [
-          "injury",
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength",
-          "chance_creation",
-          "fixture_congestion"
-        ],
-        "market": "Unter 3.5 Tore"
-      }
     },
     {
       "teamId": "1600",
