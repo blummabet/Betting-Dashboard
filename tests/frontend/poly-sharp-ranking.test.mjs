@@ -37,10 +37,10 @@ const rankSlice = h => h.split('Schärfste Wallets')[1].split('Größte Whales')
 const CLV_TRACK = {
   updatedAt: new Date().toISOString(),
   scores: {
-    '0xAAA': { n: 30, clvSumPP: 90, wins: 21, usd: 8000 },  // top
-    '0xBBB': { n: 15, clvSumPP: 30, wins: 9, usd: 6000 },   // mitte
-    '0xCCC': { n: 9,  clvSumPP: 84, wins: 5, usd: 15000 },  // n<12 → NICHT gelistet (der „−800K"-Fall)
-    '0xDDD': { n: 12, clvSumPP: -24, wins: 3, usd: 4000 },  // negativ, unten
+    '0xAAA': { n: 30, clvSumPP: 90, wins: 21, usd: 60000 },  // top (avg $2K/Wette)
+    '0xBBB': { n: 15, clvSumPP: 30, wins: 9, usd: 30000 },   // mitte (avg $2K)
+    '0xCCC': { n: 9,  clvSumPP: 84, wins: 5, usd: 18000 },  // n<12 → NICHT gelistet (der „−800K"-Fall)
+    '0xDDD': { n: 12, clvSumPP: -24, wins: 3, usd: 24000 },  // negativ, unten (avg $2K)
   },
   open: { '0xAAA|k1|Bayern Munich': { wallet: '0xAAA', key: 'k1', side: 'Bayern Munich', league: 'SOCCER', usd: 1200 } },
 };
@@ -66,10 +66,10 @@ test('Interim (CLV): trägt den ehrlichen „kein Gewinn"-Warnhinweis', async ()
 const PNL_TRACK = {
   updatedAt: new Date().toISOString(),
   scores: {
-    '0xP1': { n: 10, clvSumPP: 20, wins: 6, usd: 9000, pnl: 50000 },     // +50K → #1
-    '0xP2': { n: 10, clvSumPP: 90, wins: 6, usd: 9000, pnl: -800000 },   // −800K → trotz Top-CLV UNTEN
-    '0xP3': { n: 20, clvSumPP: 10, wins: 12, usd: 5000, pnl: 12000 },    // +12K → mitte
-    '0xP4': { n: 5,  clvSumPP: 40, wins: 4, usd: 3000, pnl: 99999 },     // n<8 → NICHT gelistet
+    '0xP1': { n: 10, clvSumPP: 20, wins: 6, usd: 20000, pnl: 50000 },     // +50K → #1 (avg $2K)
+    '0xP2': { n: 10, clvSumPP: 90, wins: 6, usd: 20000, pnl: -800000 },   // −800K → trotz Top-CLV UNTEN
+    '0xP3': { n: 20, clvSumPP: 10, wins: 12, usd: 40000, pnl: 12000 },    // +12K → mitte (avg $2K)
+    '0xP4': { n: 5,  clvSumPP: 40, wins: 4, usd: 10000, pnl: 99999 },     // n<8 → NICHT gelistet
   },
   open: {},
 };
@@ -83,6 +83,38 @@ test('P&L-Modus: rankt nach echter Bilanz — −800K-Wallet trotz Top-CLV ganz 
   assert.ok(i1 < i3 && i3 < i2, 'Reihenfolge nach P&L: +50K > +12K > −800K');
   assert.match(rank, /−\$800K/, 'Verlust negativ dargestellt');
   assert.doesNotMatch(rank, /0xP4/, 'n<8 im P&L-Modus ausgeschlossen');
+});
+
+// ── 4-stellig-Einsatz-Filter (23.08.2026, Lucas: „hundert-Euro-Beträge interessieren nicht") ──
+const SIZE_TRACK = {
+  updatedAt: new Date().toISOString(),
+  scores: {
+    '0xBIG':   { n: 20, clvSumPP: 40, wins: 12, usd: 40000, pnl: 30000 },  // Ø $2K/Wette → bleibt
+    '0xSMALL': { n: 20, clvSumPP: 40, wins: 12, usd: 6000,  pnl: 30000 },  // Ø $300/Wette → weg (Default)
+  },
+  open: {},
+};
+
+test('Einsatz-Filter: Default blendet <$1.000-Ø-Wallets aus, Toggle „alle" zeigt sie', async () => {
+  const dom = new JSDOM('<!DOCTYPE html><body><div id="polyWalletsPanel"></div></body>',
+    { url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
+  const { window: w } = dom;
+  w.fetch = mockFetch({
+    'mls-data.json': { groups: {} }, 'mls_poly_prices.json': { prices: {} },
+    'mls_poly_wallets.json': baseWallets, 'mls-odds-history.json': {},
+    'poly_wallet_track.json': SIZE_TRACK,
+  });
+  w.eval(readFileSync(PW, 'utf8'));
+  w._pwDsId = 'mls'; w.initPolyWallets();
+  await new Promise(r => setTimeout(r, 30));
+  w._pwSetSportFilter('all'); w._pwSetView('whales');
+  let rank = rankSlice(w.document.getElementById('polyWalletsPanel').innerHTML);
+  assert.match(rank, /0xBIG/, 'Ø $2K-Wallet bleibt');
+  assert.doesNotMatch(rank, /0xSMALL/, 'Ø $300-Wallet ist per Default raus');
+  // Toggle auf „alle"
+  w._pwSetRankBigOnly(false);
+  rank = rankSlice(w.document.getElementById('polyWalletsPanel').innerHTML);
+  assert.match(rank, /0xSMALL/, 'nach Toggle „alle" wieder sichtbar');
 });
 
 test('leerer Track-Record → freundlicher Hinweis statt Crash', async () => {

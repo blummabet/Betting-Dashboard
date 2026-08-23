@@ -135,9 +135,10 @@ class TestLigaProfileDiffers(unittest.TestCase):
         """Liga: 12 Bets/Tag statt 8."""
         self.assertEqual(self.mod.DAILY_BET_CAP, 12)
 
-    def test_liga_has_lower_min_vol(self):
-        """Liga: niedrigere Vol-Schwelle (Ligen oft weniger liquide)."""
-        self.assertEqual(self.mod.MIN_VOL, 5000)
+    def test_liga_min_vol(self):
+        """Liga/MLS Vol-Schwelle (23.08.2026, Lucas): von 5000 auf 1500 gesenkt — auf Poly-Fußball
+        erreichen fast keine Top-5-Märkte $5000, wodurch nie ein Bet feuerte. 1500 = wie WM."""
+        self.assertEqual(self.mod.MIN_VOL, 1500)
 
 
 class TestFallbackWhenConfigMissing(unittest.TestCase):
