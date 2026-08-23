@@ -180,6 +180,12 @@ SAFE_LINE_MIN_ODDS = _cfg("edge", "safe_line_min_odds", 1.35)
 REVERSER_THRESHOLD_PP  = _cfg("edge", "reverser_threshold_pp",  3.0)   # Eltern zurückstufen (warn)
 REVERSER_FLIP_PP       = _cfg("edge", "reverser_flip_pp",       5.0)   # höhere Hürde: Gegen-Konter ableiten
 CONFIRM_THRESHOLD_PP   = _cfg("edge", "confirm_threshold_pp",   3.0)
+
+# Markt-Lock / Immutability-Fenster (23.08.2026, Lucas): ab wieviel Stunden VOR ANPFIFF ein
+# bereits existierender Pick nicht mehr umgebaut wird (nur noch Signale/Conviction/Anzeige
+# refreshen). Vorher datumsgrob „fx_date ≤ morgen" (~48h) → fror 1-2 Tage zu früh ein. 12h deckt
+# sich mit dem morgendlichen Posting am Spieltag; eine Umkehr davor wird noch sauber nachgezogen.
+IMMUTABLE_WINDOW_H = _cfg("edge", "immutable_window_h", 12.0)
 LEG_NOISE_PP           = _cfg("edge", "leg_noise_pp",           0.4)
 # Dünn-Daten-Guard: ein vertrauenswürdiges reverse/confirm braucht genug DICHTE Snaps. Die
 # Leg-Erkennung stoppt zudem an großen Zeitlücken (alte, spärliche Vor-Turnier-Daten) — sonst
@@ -1298,12 +1304,19 @@ def fixture_pick_state(fx, has_pick, today, now_dt, cutover_dt):
     ko = _parse_kickoff(fx.get("kickoff"))
     if ko is not None and now_dt is not None and ko <= now_dt:
         return "kickoff_passed"
-    # Rollendes Posted-Fenster (28.06.2026, Lucas): ein BEREITS existierender Pick, dessen Anpfiff
-    # heute/morgen ist, wird NICHT mehr umgebaut → Markt-Lock (nur Signale/Conviction refreshen).
-    # Sonst durfte ein Pick spät pre-match das Marktziel wechseln (KO ZAF-CAN: Auswärtssieg→Unter,
-    # der gewinnende Markt wurde nachträglich „der Pick" → unehrlicher Track-Record). fx_date<=tomorrow
-    # ist exakt das Immutability-Fenster aus [[feedback_posted_picks_immutable]].
-    if has_pick and fx_date and today:
+    # Rollendes Posted-Fenster (28.06.2026, Lucas; 23.08.2026 auf Zeit-Basis verengt): ein BEREITS
+    # existierender Pick wird ab IMMUTABLE_WINDOW_H Stunden VOR ANPFIFF nicht mehr umgebaut →
+    # Markt-Lock (nur Signale/Conviction/Anzeige refreshen). Sonst durfte ein Pick spät pre-match
+    # das Marktziel wechseln (KO ZAF-CAN: Auswärtssieg→Unter → unehrlicher Track-Record).
+    # 23.08.2026 (Lucas): früher datumsgrob „fx_date ≤ morgen" (~48h) → fror 1-2 Tage zu früh ein,
+    # eine Umkehr davor wurde nicht mehr nachgezogen. Jetzt 12h vor Anpfiff (= morgendliches Posting
+    # am Spieltag). Siehe [[feedback_posted_picks_immutable]].
+    if has_pick and ko is not None and now_dt is not None:
+        if (ko - now_dt) <= timedelta(hours=IMMUTABLE_WINDOW_H):
+            return "refresh"
+    elif has_pick and fx_date and today:
+        # Fallback ohne parsebaren Anpfiff (fx.kickoff fehlt/unparsebar): datumsgrob wie früher,
+        # damit ein imminenter geposteter Pick nicht versehentlich neu gebaut wird.
         try:
             from datetime import date as _date, timedelta as _td
             _tomorrow = (_date.fromisoformat(today) + _td(days=1)).isoformat()

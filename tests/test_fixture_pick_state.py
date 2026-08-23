@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """test_fixture_pick_state.py — Pick-Immutability/Freeze-Ladder (28.06.2026, Lucas:
-KO-Pick ZAF-CAN kippte spät pre-match Auswärtssieg→Unter). Rollendes Posted-Fenster."""
+KO-Pick ZAF-CAN kippte spät pre-match Auswärtssieg→Unter). Rollendes Posted-Fenster.
+23.08.2026 (Lucas): Lock-Fenster von datumsgrob (~48h) auf 12h vor Anpfiff verengt."""
 import sys
 import unittest
-from datetime import datetime, timezone
+from datetime import datetime, timezone, timedelta
 from pathlib import Path
 
 REPO = Path(__file__).parent.parent
@@ -31,8 +32,27 @@ class TestPickState(unittest.TestCase):
         fx = _fx(TODAY, "2026-06-28T19:00:00Z")
         self.assertEqual(G.fixture_pick_state(fx, False, TODAY, NOW, CUTOVER), "rebuild")
 
-    def test_tomorrow_with_pick_locked(self):
+    def test_within_12h_locked_refresh(self):
+        # Anpfiff in 11h → innerhalb des 12h-Fensters → Markt-Lock (refresh)
+        ko = (NOW + timedelta(hours=11)).isoformat()
+        fx = _fx(ko[:10], ko)
+        self.assertEqual(G.fixture_pick_state(fx, True, TODAY, NOW, CUTOVER), "refresh")
+
+    def test_just_outside_12h_still_rebuilds(self):
+        # Anpfiff in 13h → außerhalb 12h → darf noch dem Steam folgen (rebuild), NICHT gelockt.
+        # Genau die Verengung vom 23.08.2026 (vorher hätte „morgen" ~25h gelockt).
+        ko = (NOW + timedelta(hours=13)).isoformat()
+        fx = _fx(ko[:10], ko)
+        self.assertEqual(G.fixture_pick_state(fx, True, TODAY, NOW, CUTOVER), "rebuild")
+
+    def test_tomorrow_evening_no_longer_locked(self):
+        # Morgen abends (~25h hin) → NICHT mehr gelockt (früher „refresh", jetzt „rebuild")
         fx = _fx("2026-06-29", "2026-06-29T19:00:00Z")
+        self.assertEqual(G.fixture_pick_state(fx, True, TODAY, NOW, CUTOVER), "rebuild")
+
+    def test_unparseable_kickoff_falls_back_to_date_lock(self):
+        # Kein parsebarer Anpfiff + Datum heute → datumsgrober Fallback lockt weiter (Sicherheit)
+        fx = _fx(TODAY, None)
         self.assertEqual(G.fixture_pick_state(fx, True, TODAY, NOW, CUTOVER), "refresh")
 
     def test_kickoff_passed_frozen(self):

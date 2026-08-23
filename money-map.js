@@ -50,6 +50,10 @@
 '.mm-foot{display:flex;align-items:center;gap:8px;margin-top:10px;padding-top:11px;border-top:1px solid #242c38}',
 '.mm-verd{font-size:12.5px;font-weight:800}.mm-verd.k{color:#4ade80}.mm-verd.d{color:#e3b341}.mm-verd.p{color:#9aa4b1}',
 '.mm-vsub{font-size:11.5px;color:#6b7480}',
+'.mm-odds{display:flex;gap:12px;align-items:center;flex-wrap:wrap;margin:6px 2px 0;font-size:11.5px;font-weight:700;color:#c2ccd8;font-variant-numeric:tabular-nums}',
+'.mm-odds .mm-om{color:#6b7480;font-weight:600;letter-spacing:.02em}',
+'.mm-odds .mm-oc{color:#4ade80}',
+'.mm-odds b{color:#8fc0ff;font-weight:800;margin-right:3px}',
 '.mm-src{margin-left:auto;font-size:10.5px;font-weight:800;color:#6b7480;background:#1b2430;border:1px solid #242c38;border-radius:20px;padding:3px 9px}',
 '.mm-trk-intro{color:#8a95ad;font-size:12.5px;line-height:1.55;max-width:760px;margin-bottom:14px}',
 '.mm-tbl{width:100%;border-collapse:collapse;max-width:640px}',
@@ -68,6 +72,7 @@
   function _dia(m){return Math.max(30,Math.min(72,20+Math.sqrt(+m||0)/8));}
   function _posShare(side,sharePct){ if(side==='draw'||side==null)return 50; var d=(side==='away')?1:-1; return _clamp(50+d*((+sharePct||33)-33)*0.9,7,93); }
   function _posPinn(pn){ if(!pn)return null; var h=+pn.home||0,a=+pn.away||0; return _clamp(50+(a-h)*90,7,93); }
+  function _fair(p){ p=+p||0; return p>0?(1/p).toFixed(2):'—'; }   // de-viggte Wahrscheinlichkeit → faire Quote
 
   function _mmAgeH(){ var g=_mm.map&&_mm.map.generatedAt; if(!g) return null; var t=Date.parse(g); return isNaN(t)?null:Math.max(0,(Date.now()-t)/3.6e6); }
   function _mmCard(r){
@@ -88,6 +93,10 @@
         +'<div class="mm-lane mm-lbf"></div><div class="mm-ll mm-lbf">Betfair</div>'
         +'<div class="mm-lane mm-lpoly"></div><div class="mm-ll mm-lpoly"'+(poly?'':' style="opacity:.4"')+'>Poly'+(poly?(poly.src==='upcoming'?' · früh':''):' · kein Markt')+'</div>'
         +bub+'</div>'
+      +(pn?('<div class="mm-odds"><span class="mm-om">Faire Quote · Pinnacle</span>'
+        +'<span class="'+((bf&&bf.side==='home')?'mm-oc':'')+'"><b>1</b> '+_fair(pn.home)+'</span>'
+        +'<span class="'+((bf&&bf.side==='draw')?'mm-oc':'')+'"><b>X</b> '+_fair(pn.draw)+'</span>'
+        +'<span class="'+((bf&&bf.side==='away')?'mm-oc':'')+'"><b>2</b> '+_fair(pn.away)+'</span></div>'):'')
       +'<div class="mm-foot"><span class="mm-verd '+(konS?'k':(divS?'d':'p'))+'">'+vtxt+'</span><span class="mm-vsub">'+vsub+'</span><span class="mm-src">'+(r.nSources||0)+' / 3</span></div>'
       +'</div>';
   }
