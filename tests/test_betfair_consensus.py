@@ -603,3 +603,28 @@ class TestPickPolyPhase(unittest.TestCase):
         self.assertEqual(BC.pick_poly(m, BC.money_side(m), True, close, [], up)["odd"], round(1 / 0.60, 2))  # live leer -> close
         self.assertEqual(BC.pick_poly(m, BC.money_side(m), True, [], [], up)["odd"], round(1 / 0.55, 2))     # -> upcoming
         self.assertIsNone(BC.pick_poly(m, BC.money_side(m), True, [], [], []))                                # nichts
+
+
+class TestPolyScanFallback(unittest.TestCase):
+    # 23.08.2026 (Lucas: „Serie A ist alles da, aber Money-Map zeigt kein Poly"): dünner Markt →
+    # fairer Poly-Preis aus pinnacle_poly_scan als Fallback. Füllt die Poly-SEITE, zählt aber NICHT
+    # als Geldquelle.
+    def _scan_entry(self, home, away, ph, pd, pa, vol=597):
+        return {"prices": {home: ph, "Draw": pd, away: pa}, "shares": {}, "totalUsd": vol, "src": "scan"}
+
+    def test_poly_fav_from_scan_price(self):
+        e = [self._scan_entry("Frosinone Calcio", "Juventus FC", 0.115, 0.205, 0.675)]
+        pf = BC.poly_fav({"home": "Frosinone", "away": "Juventus"}, e)
+        self.assertIsNotNone(pf)
+        self.assertEqual(pf["side"], "away")
+        self.assertEqual(pf["name"], "Juventus FC")
+        self.assertEqual(pf["sharePct"], 68)     # 0.675 * 100
+        self.assertEqual(pf["src"], "scan")
+
+    def test_scan_poly_not_a_money_source(self):
+        # schwacher Betfair (<150K) + Scan-Poly → NICHT gerettet (Scan zählt nicht als Geld)
+        self.assertFalse(BC._mm_money_ok({"betfair": {"eur": 50000}, "poly": {"usd": 597, "src": "scan"}}))
+        # aber echtes Poly-Geld rettet den schwachen Betfair
+        self.assertTrue(BC._mm_money_ok({"betfair": {"eur": 50000}, "poly": {"usd": 40000, "src": "close"}}))
+        # starker Betfair alleine (>=150K) bleibt auch mit Scan-Poly drin
+        self.assertTrue(BC._mm_money_ok({"betfair": {"eur": 161000}, "poly": {"usd": 597, "src": "scan"}}))
