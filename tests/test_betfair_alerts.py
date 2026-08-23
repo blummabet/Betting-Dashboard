@@ -779,6 +779,37 @@ class TestFixAlert(unittest.TestCase):
         self.assertEqual(a.get("ftName"), "Match Odds")   # FT-Vergleichsmarkt benannt
         self.assertIn("FT (1X2)", BA.build_message(a))    # FT-Vergleichsmarkt steht im Push
 
+    def test_none_when_lead_near_lock(self):
+        # 23.08.2026 (Lucas, Admira): HZ Under 1.5 @1.08 (93% = Naht-Lock) — Geld auf's Offensichtliche,
+        # kein Fix-Verdacht. Selbe Dominanz/Einseitigkeit wie ein echtes Signal, nur die Quote verrät's.
+        mk1 = {}
+        mk1.update(mk("Match Odds", [{"name": "Alpha", "odd": 2.0, "vol": 1400}]))
+        mk1.update(mk("First Half Goals 1.5", [{"name": "Under 1.5", "odd": 1.08, "vol": 2900},
+                                               {"name": "Over 1.5", "odd": 8.0, "vol": 60}]))
+        m = match(mid=9, markets=mk1)
+        self.assertIsNone(BA.fix_alert(m))
+
+    def test_fires_when_onesided_at_real_odds(self):
+        # Gegenprobe: dieselbe Struktur, aber die einseitige Seite steht bei @1.6 (echte Unsicherheit) -> feuert
+        mk1 = {}
+        mk1.update(mk("Match Odds", [{"name": "Alpha", "odd": 2.0, "vol": 1400}]))
+        mk1.update(mk("First Half Goals 1.5", [{"name": "Under 1.5", "odd": 1.6, "vol": 2900},
+                                               {"name": "Over 1.5", "odd": 2.4, "vol": 60}]))
+        m = match(mid=9, markets=mk1)
+        self.assertIsNotNone(BA.fix_alert(m))
+
+    def test_none_late_first_half(self):
+        # 23.08.2026 (Lucas): Minute 40 (>30) — HZ-Markt praktisch durch, spätes Geld auf's Sichere -> kein Fix
+        m = match(mid=9, league="Lithuanian 1 Lyga", country="LT", markets=self._mkts(600, 5000))
+        m["liveInfo"] = {"time": 40, "is_ht": False, "finished": False}
+        self.assertIsNone(BA.fix_alert(m))
+
+    def test_fires_early_first_half(self):
+        # Minute 20 (<=30) + echte Odds -> HZ-Markt noch offen -> feuert
+        m = match(mid=9, league="Lithuanian 1 Lyga", country="LT", markets=self._mkts(600, 5000))
+        m["liveInfo"] = {"time": 20, "is_ht": False, "finished": False}
+        self.assertIsNotNone(BA.fix_alert(m))
+
     def test_fix_stays_out_of_public_scenarios(self):
         # collect_alerts liefert das fix-Szenario (Trades); Public-Ausschluss ist in main().
         m = match(mid=9, league="Lithuanian 1 Lyga", country="LT", markets=self._mkts(600, 5000))

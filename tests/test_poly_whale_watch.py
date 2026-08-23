@@ -409,3 +409,37 @@ class TestPubMinOdds(unittest.TestCase):
 
     def test_bad_price_rejected(self):
         self.assertFalse(P._pub_min_odds_ok({"firstPrice": None}))
+
+
+class TestTop20RankBadge(unittest.TestCase):
+    # 23.08.2026 (Lucas): Top-20-Wallets im Trades-Push extra markieren (Rang der Sharp-Rangliste).
+    def _scores(self):
+        # 3 Wallets ueber $1000 Ø-Einsatz, alle mit P&L (Modus A) + 1 Klein-Wallet (Ø $200 -> raus)
+        return {
+            "0xAAA": {"n": 20, "wins": 12, "clvSumPP": 20, "usd": 40000, "pnl": 500000},  # #1
+            "0xBBB": {"n": 20, "wins": 12, "clvSumPP": 20, "usd": 40000, "pnl": 200000},  # #2
+            "0xCCC": {"n": 20, "wins": 12, "clvSumPP": 20, "usd": 40000, "pnl":  90000},  # #3
+            "0xTINY": {"n": 20, "wins": 12, "clvSumPP": 20, "usd": 4000, "pnl": 999999},  # Ø $200 -> NICHT gelistet
+        }
+
+    def test_rank_map_matches_pnl_order_and_size_filter(self):
+        rmap = P._sharp_rank_map(self._scores())
+        self.assertEqual(rmap.get("0xaaa"), 1)
+        self.assertEqual(rmap.get("0xbbb"), 2)
+        self.assertEqual(rmap.get("0xccc"), 3)
+        self.assertIsNone(rmap.get("0xtiny"))   # Klein-Einsatz raus trotz Top-P&L
+
+    def test_badge_present_for_top_wallet(self):
+        b = P._rank_badge(self._scores(), "0xAAA")
+        self.assertIsNotNone(b)
+        self.assertIn("Rang #1", b)
+        self.assertIn("Top-20", b)
+
+    def test_no_badge_for_untracked_wallet(self):
+        self.assertIsNone(P._rank_badge(self._scores(), "0xDEAD"))
+        self.assertIsNone(P._rank_badge(self._scores(), "0xTINY"))
+
+    def test_card_carries_badge(self):
+        pos = {"wallet": "0xAAA", "league": "ESPORTS", "side": "X", "key": "k", "usd": 25000, "firstPrice": 0.6}
+        card = P.build_card(pos, self._scores(), restock=False, broad={})
+        self.assertIn("Rang #1", card)

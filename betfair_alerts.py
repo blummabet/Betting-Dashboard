@@ -48,6 +48,8 @@ HT_MIN_SHARE   = 0.85     # ... und davon min. dieser Anteil auf EINEN Ausgang (
 FIX_HT_MIN_EUR = float(os.environ.get("BF_FIX_HT_MIN_EUR") or 2000.0)   # HZ-Geld-Boden Fix-Verdacht
 FIX_RATIO_MIN  = float(os.environ.get("BF_FIX_RATIO_MIN") or 2.0)      # 22.08.2026 (Lucas): HZ muss FT KLAR dominieren (>=2x). 1.1x = nahezu ident = Rauschen.
 FIX_LEAD_SHARE = float(os.environ.get("BF_FIX_LEAD_SHARE") or 0.65)    # 22.08.2026 (Lucas): der HZ-Markt muss klar EINSEITIG sein (>=65% auf einer Seite). 50/50-O/U ist Rauschen.
+FIX_INPLAY_MAX_MIN = float(os.environ.get("BF_FIX_INPLAY_MAX_MIN") or 30.0)   # 23.08.2026 (Lucas, Admira „1 min später war Halbzeit"): HZ-Markt in-play nur bis Minute 30 — danach ist der HZ-Ausgang praktisch durch (Zeit entscheidet), spätes Geld auf's Sichere ist kein Fix-Signal.
+FIX_LEAD_MIN_ODD = float(os.environ.get("BF_FIX_LEAD_MIN_ODD") or 1.15)       # 23.08.2026 (Lucas): die einseitig geladene Seite darf nicht schon quasi entschieden sein (@1.08 = 93 % = Naht-Lock) — dann ist es Geld auf's Offensichtliche, kein Fix-Verdacht.
 FIX_FT_MARKETS = ("Match Odds", "Over/Under 2.5 Goals", "Over/Under 3.5 Goals", "Both teams to Score?")
 FIX_HT_MARKETS = ("Half Time", "First Half Goals 0.5", "First Half Goals 1.5")
 MIN_LEAD_ODD   = 1.30     # Geld auf einen Favoriten mit Quote < 1.30 (führt schon, wenig Value) = kein Push (Lucas 30.07.2026, vorher 1.15)
@@ -272,8 +274,8 @@ def _fix_window_ok(m) -> bool:
     if li.get("finished") or li.get("is_ht"):
         return False
     t = li.get("time")
-    if isinstance(t, (int, float)) and t > 45:
-        return False   # 2. Halbzeit -> HZ-Markt vorbei
+    if isinstance(t, (int, float)) and t > FIX_INPLAY_MAX_MIN:
+        return False   # HZ-Markt zu weit fortgeschritten -> Ausgang praktisch durch (Zeit entscheidet)
     return True
 
 
@@ -313,6 +315,9 @@ def fix_alert(m):
         lead_share = (lead_vol / total) if total else 0.0
         if lead_share < FIX_LEAD_SHARE:      # ausgewogen (50/50) -> kein Signal
             continue
+        _lo = lead.get("odd")
+        if isinstance(_lo, (int, float)) and _lo < FIX_LEAD_MIN_ODD:
+            continue   # Naht-Lock (@~1.0) -> Geld auf's Sichere/Offensichtliche, kein Fix-Signal
         if best is None or lead_vol > best[0]:
             best = (lead_vol, name, total, lead, lead_share)
     if best is None:

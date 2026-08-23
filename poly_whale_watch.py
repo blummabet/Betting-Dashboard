@@ -234,6 +234,66 @@ def _esc(x) -> str:
     return html.escape(str(x if x is not None else ""))
 
 
+# ── Top-20 Sharp-Rangliste im Push (23.08.2026, Lucas: „Top-20-Wallets extra highlighten, damit ich
+# seh: ist eine Top-Wallet") ──────────────────────────────────────────────────────────────────────
+# Spiegelt EXAKT die Dashboard-Rangliste (poly-wallets.js _pwSharpRanking). Modus A (echte Poly-P&L),
+# sobald irgendein Wallet pnl hat, sonst Interim CLV-Kombi. Gates identisch: n-Floor, im P&L-Modus
+# Ø CLV ≥ 0 & Treffer ≥ 45 %, plus 4-stellig-Filter (Ø-Einsatz ≥ $1.000). → {wallet_lower: Rang 1..20}.
+_RANK_MIN_N_PNL   = 8
+_RANK_MIN_N_CLV   = 12
+_RANK_FLOOR_HIT   = 0.45
+_RANK_MIN_AVG_USD = 1000.0
+_RANK_HITW = 6.0
+_RANK_K    = 6.0
+_RANK_TOP  = 20
+_rank_cache = {}
+
+
+def _sharp_rank_map(scores):
+    if not isinstance(scores, dict) or not scores:
+        return {}
+    ckey = id(scores)
+    if ckey in _rank_cache:
+        return _rank_cache[ckey]
+    has_pnl = any(isinstance(v, dict) and isinstance(v.get("pnl"), (int, float)) for v in scores.values())
+    rows = []
+    for w, v in scores.items():
+        if not isinstance(v, dict):
+            continue
+        n = v.get("n") or 0
+        usd = v.get("usd") or 0
+        if not (n > 0 and usd / n >= _RANK_MIN_AVG_USD):        # 4-stellig-Filter (wie Dashboard)
+            continue
+        avg_clv = (v.get("clvSumPP") or 0) / n
+        hit = (v.get("wins") or 0) / n
+        if has_pnl:
+            if not isinstance(v.get("pnl"), (int, float)) or n < _RANK_MIN_N_PNL:
+                continue
+            if not (avg_clv >= 0 and hit >= _RANK_FLOOR_HIT):   # Schärfe-Floor (P&L-Modus)
+                continue
+            rows.append((w, v["pnl"]))
+        else:
+            if n < _RANK_MIN_N_CLV:
+                continue
+            raw = avg_clv + (hit - 0.5) * _RANK_HITW
+            rows.append((w, raw * (n / (n + _RANK_K))))
+    rows.sort(key=lambda x: -x[1])
+    rank = {str(w).lower(): i + 1 for i, (w, _) in enumerate(rows[:_RANK_TOP])}
+    _rank_cache[ckey] = rank
+    return rank
+
+
+def _rank_badge(scores, wallet):
+    """Push-Zeile, wenn die Wallet in der Top-20 der Sharp-Rangliste steht — sonst None."""
+    if not wallet:
+        return None
+    r = _sharp_rank_map(scores).get(str(wallet).lower())
+    if not r:
+        return None
+    medal = "🥇" if r == 1 else "🥈" if r == 2 else "🥉" if r == 3 else "🏅"
+    return "%s <b>Top-%d-Wallet</b> · Rang #%d der Sharp-Rangliste" % (medal, _RANK_TOP, r)
+
+
 def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None, extra: int = 0) -> str:
     """Trades-Push (01.08.2026, Lucas: „entscheidungsreif") — Matchup, Anpfiff, Einstieg→Jetzt-Preis,
     Wallet-Qualität, Markt-Link. Ein Push = eine fertige Wett-Entscheidung."""
@@ -258,6 +318,9 @@ def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None, extra
     else:
         header = "🐋 <b>Großer Whale-Einstieg</b>"
     lines = ["%s · %s %s" % (header, emoji, _esc(sport))]
+    _tw = _rank_badge(scores, pos.get("wallet"))
+    if _tw:
+        lines.append(_tw)
     l2 = _esc(matchup) if matchup else "<b>%s</b>" % _esc(side)
     if ko:
         l2 += " · %s" % ko

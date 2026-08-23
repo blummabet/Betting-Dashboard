@@ -876,13 +876,15 @@
   var FIX_HT_MIN = 2000;   // HZ-Geld-Boden fuer den Verdacht (filtert den €8/€28-Mini-Kram)
   var FIX_RATIO_MIN = 2.0; // 22.08.2026 (Lucas): HZ muss FT KLAR dominieren (>=2x). 1.1x = nahezu ident = Rauschen.
   var FIX_LEAD_SHARE = 0.65; // 22.08.2026 (Lucas): HZ-Markt muss klar EINSEITIG sein (>=65%). 50/50-O/U ist kein Signal.
+  var FIX_INPLAY_MAX_MIN = 30; // 23.08.2026 (Lucas, Admira „1 min später war Halbzeit"): HZ-Markt in-play nur bis Minute 30 — danach entscheidet die Zeit, spätes Geld auf's Sichere ist kein Fix-Signal.
+  var FIX_LEAD_MIN_ODD = 1.15; // 23.08.2026 (Lucas): einseitige Seite darf nicht schon quasi entschieden sein (@1.08 = 93% = Naht-Lock) — sonst Geld auf's Offensichtliche.
   // 22.08.2026 (Lucas: „es ist grad Pause 😂"): Fix nur solange der HZ-Markt NOCH offen ist —
   // vor Anpfiff oder 1. Halbzeit. Ab Halbzeit/2. HZ/Ende ist er durch, „mehr Geld auf HZ" wertlos.
   function _fixWindowOk(m) {
     var li = m.liveInfo || {};
     if (li.finished || li.is_ht) return false;
     var t = li.time;
-    if (typeof t === "number" && t > 45) return false;
+    if (typeof t === "number" && t > FIX_INPLAY_MAX_MIN) return false;
     return true;
   }
   function _htFtVols(m) {
@@ -901,6 +903,8 @@
       if (!lead || !dtot) return;
       var share = (+lead.vol || 0) / dtot;
       if (share < FIX_LEAD_SHARE) return;      // ausgewogen -> raus
+      var lo = +lead.odd;
+      if (lo && lo < FIX_LEAD_MIN_ODD) return; // Naht-Lock (@~1.0) -> Geld auf's Sichere, kein Fix-Signal
       var leadEur = tot * share;               // einseitiges Geld in €
       if (leadEur > bestLead) { bestLead = leadEur; ht = tot; htMk = mm.id; }
     });
