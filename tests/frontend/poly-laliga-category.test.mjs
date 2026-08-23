@@ -14,7 +14,7 @@ function boot() {
 
 test('_pwCatOf: La Liga & die anderen Top-Ligen → Fußball ⚽ (Regex-Fallback)', () => {
   const w = boot();
-  for (const lg of ['laliga', 'LALIGA', 'bundesliga', 'serie', 'ligue', 'epl', 'soccer', 'lal-ala-get-2026-08-15', 'LAL']) {
+  for (const lg of ['laliga', 'LALIGA', 'bundesliga', 'serie', 'ligue', 'epl', 'premier', 'Premier League', 'PREMIER-LEAGUE', 'soccer', 'lal-ala-get-2026-08-15', 'LAL']) {
     assert.deepEqual(w._pwCatOf(lg), ['Fußball', '⚽'], lg + ' → Fußball');
   }
 });
@@ -30,4 +30,15 @@ test('_pwSportCategory kennt laliga (Sport-Filter greift)', () => {
   const w = boot();
   assert.equal(w._pwSportCategory('laliga-rma-bar-2026-08-16'), 'Fußball');
   assert.equal(w._pwSportPass ? (w._pwSetSportFilter && w._pwSetSportFilter('all'), w._pwSportPass('laliga')) : true, true);
+});
+
+test('23.08.2026 (Lucas): Serie A / Premier League zeigen ⚽ (nicht mehr 🎯), auch via gestempeltem Sport', () => {
+  const w = boot();
+  assert.equal(w._pwSportCategory('Italian Serie A'), 'Fußball');
+  assert.equal(w._pwSportCategory('Premier League'), 'Fußball');
+  assert.equal(w._pwSportCategory('PREMIER-LEAGUE'), 'Fußball');
+  // abgekürzter Liga-Code ohne Regex-Treffer, aber gestempelter Sport rettet ihn:
+  assert.equal(w._pwSportCategory('ERE', 'Fußball'), 'Fußball');
+  // genuin Sonstige bleibt Sonstige (Fallback 🎯 korrekt):
+  assert.equal(w._pwSportCategory('US Politics 2026'), 'Sonstige');
 });

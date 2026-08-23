@@ -756,7 +756,15 @@
       : rowEl(main, usd(w.usd), A.poly, sub, '');
   }
   var _MD_SPORT_ICO = { ESPORTS: '🎮', TENNIS: '🎾', MLB: '⚾', NBA: '🏀', WNBA: '🏀', NFL: '🏈', NHL: '🏒', MMA: '🥊', UFC: '🥊', GOLF: '⛳', SOCCER: '⚽', MLS: '⚽', CRICKET: '🏏' };
-  function _mdSportIco(lg) { var k = String(lg || '').toUpperCase(); return _MD_SPORT_ICO[k] || (k.indexOf('SOCCER') === 0 ? '⚽' : '🎯'); }
+  // 23.08.2026 (Lucas: „Fußball hat dieses komische andere Icon"): früher grobe Exakt-Map + Fallback 🎯
+  // für Serie A/La Liga/… . Jetzt über den robusten _pwSportCategory (kennt alle Liga-Muster UND den
+  // gestempelten Sport aus dem Capture). Fallbacks nur, falls poly-wallets.js (noch) nicht geladen ist.
+  function _mdSportIco(lg, sp) {
+    if (typeof _pwSportCategory === 'function' && typeof _PW_CAT_ICON !== 'undefined')
+      return _PW_CAT_ICON[_pwSportCategory(lg, sp)] || '🎯';
+    if (typeof _pwSportIcon === 'function') return _pwSportIcon(lg);
+    var k = String(lg || '').toUpperCase(); return _MD_SPORT_ICO[k] || (k.indexOf('SOCCER') === 0 ? '⚽' : '🎯');
+  }
   // 💰 Volumen über Norm (aus dem Großes-Geld-Tab): welche Märkte ziehen verhältnismäßig — Gesamt-$ ÷
   // Median gleicher Sportart×Phase. ×1.6 auffällig, ×2.6 stark. Ersetzt Whale-Watch (07.08.2026, Lucas).
   function _mdOverNormBody(rows) {
@@ -764,7 +772,7 @@
     var mx = rows.reduce(function (a, r) { return Math.max(a, +r.ratio || 0); }, 1);
     return rows.map(function (r) {
       var col = r.ratio >= 2.6 ? A.red : A.gold;
-      var label = _mdSportIco(r.league) + ' ' + (r.url
+      var label = _mdSportIco(r.league, r.sport) + ' ' + (r.url
         ? '<a href="' + r.url + '" target="_blank" rel="noopener" style="color:inherit;text-decoration:none">' + r.name + ' ↗</a>'
         : r.name);
       // 08.08.2026 (Lucas): bei ~50/50 ist „Geld auf X" sinnlos (könnte genauso die Gegenseite sein) — dann neutral labeln.
@@ -858,13 +866,13 @@
       : w.isNew ? '<span class="md-lv-tag" style="color:' + A.red + ';border-color:rgba(229,83,75,.5)">🔴 live rein</span>' : '';
     var rec = w.sc ? ' <span style="color:' + (w.sc.avgClv > 0 ? A.good : A.red) + ';font-weight:700">' + (w.sc.avgClv >= 0 ? '+' : '') + w.sc.avgClv.toFixed(1) + 'pp</span> <span style="color:var(--mi3)">' + Math.round(w.sc.hit * 100) + '%·n' + w.sc.n + '</span>' : '';
     var avg = (w.price != null) ? ' @' + w.price + '¢' : ((w.avgPrice != null && isFinite(w.avgPrice)) ? ' @' + Math.round(w.avgPrice * 100) + '¢' : '');
-    var main = _mdSportIco(w.league) + ' ' + _mdPolyLink(w.key, '<b style="color:#4cc2ff">' + esc(String(w.side).slice(0, 22)) + '</b>') + live;
+    var main = _mdSportIco(w.league, w.sport) + ' ' + _mdPolyLink(w.key, '<b style="color:#4cc2ff">' + esc(String(w.side).slice(0, 22)) + '</b>') + live;
     var sub = esc(String(w.label).replace(/<[^>]*>/g, '').slice(0, 40)) + rec;
     return rowEl(main, usd(w.usd) + avg, A.poly, sub, tag ? '<div class="md-lv-tags">' + tag + '</div>' : '');
   }
   function _mdLiveInflowRow(r, mx) {
     var side = (r.favPct != null && r.favPct >= 55) ? ('Geld auf ' + esc(String(r.favName).slice(0, 18)) + ' ' + r.favPct + '%' + (r.favPrice != null ? ' · ' + r.favPrice + '¢' : '')) : ('~offen · ' + (r.favPct != null ? r.favPct + '%' : ''));
-    var main = _mdSportIco(r.league) + ' ' + _mdPolyLink(r.key, esc(String(r.label).replace(/<[^>]*>/g, '').slice(0, 34))) + _MD_LIVE;
+    var main = _mdSportIco(r.league, r.sport) + ' ' + _mdPolyLink(r.key, esc(String(r.label).replace(/<[^>]*>/g, '').slice(0, 34))) + _MD_LIVE;
     var sub = side + ' · ' + usd(r.totalUsd) + ' gesamt';
     return rowEl(main, '+' + usd(r.inflow), A.flow, sub, meter(mx ? (r.inflow / mx * 100) : 0, A.flow));
   }
