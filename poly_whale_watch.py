@@ -74,6 +74,7 @@ PUB_MIN_TR            = int(os.environ.get("WHALE_PUB_MIN_TR")            or 8) 
 PUB_MIN_HITRATE       = float(os.environ.get("WHALE_PUB_MIN_HITRATE")     or 0.5)
 PUB_MIN_USD_NOREC     = float(os.environ.get("WHALE_PUB_MIN_USD_NOREC")   or 150000)   # 06.08.2026 (Lucas: Feed straffen): Wallet OHNE belastbaren Record (n<PUB_MIN_TR) nur ab so viel $
 CONTEST_MIN_USD       = float(os.environ.get("WHALE_CONTEST_MIN_USD")     or 100000)   # 12.08.2026 (Lucas): Public — Gross-Einstiege ab so viel auf ZWEI Seiten = umkaempft -> gar nicht posten
+CONFLICT_TOP_N        = int(os.environ.get("WHALE_CONFLICT_TOP_N")        or 20)       # 24.08.2026 (Lucas, INOX-Fall): haelt eine andere Wallet aus den Top-N die Gegenseite, ist das Signal mehrdeutig — RANG statt Dollar, deshalb greift es auch bei $7K.
 PUB_MIN_ODDS          = float(os.environ.get("WHALE_PUB_MIN_ODDS")       or 1.30)     # 22.08.2026 (Lucas): Public — Whale-Bet braucht Mindest-Quote (86c/1.16 = zu wenig Value). Einstieg/Jetzt <= 1/odds.
 PUB_TOP_N             = int(os.environ.get("WHALE_PUB_TOP_N")            or 10)   # 23.08.2026 (Lucas): Public postet NUR die Top-N der Sharp-Rangliste (kuratiert), optisch mit Rang-Badge wie im Trades-Channel.
 
@@ -335,6 +336,12 @@ def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None, extra
             lines.append("💡 Außenseiter-Seite — die Wallet hält gegen den Markt")
     except Exception:
         pass
+    # 24.08.2026 (Lucas): steht eine andere Top-Wallet dagegen, gehoert das IN die Nachricht —
+    # sonst liest sich der Push als Empfehlung, obwohl die Gegenseite genauso gut belegt ist.
+    _cf = _conflicting_top_wallet(pos, broad, scores)
+    if _cf:
+        lines.append("⚔️ <b>Rang #%d haelt die Gegenseite</b> — %s (%s)"
+                     % (_cf["rank"], _esc(_cf["side"]), _usd(_cf["usd"])))
     lines.append(_wallet_line(scores, pos.get("wallet")))
     if key:
         lines.append('<a href="https://polymarket.com/event/%s">→ Markt öffnen ↗</a>' % _esc(key))
@@ -626,6 +633,39 @@ def _pub_keep(pos, scores):
     return _is_smart(s, PUB_MIN_TR, PUB_MIN_HITRATE)
 
 
+def _conflicting_top_wallet(pos, broad, scores, top=None):
+    """Sitzt eine ANDERE Top-N-Wallet auf einer anderen Seite desselben Markts? REIN/testbar.
+
+    24.08.2026 (Lucas' INOX-Fall): zwei bewiesene Wallets auf Gegenseiten heben sich als Signal
+    weitgehend auf — dem einen zu folgen ist dort ein Muenzwurf. `_contested_market` fing das
+    nicht: es misst DOLLAR (>=$100K je Seite) und laeuft nur im Public-Kanal. Hier zaehlt der
+    RANG, damit auch ein $7K-Gegeneinstieg einer Top-Wallet auffaellt.
+
+    Gibt die bestplatzierte Gegen-Wallet zurueck: {"rank", "side", "usd", "wallet"} oder None.
+    """
+    top = top or CONFLICT_TOP_N
+    key, side, me = pos.get("key"), pos.get("side"), str(pos.get("wallet") or "").lower()
+    if not (key and side):
+        return None
+    m = (broad or {}).get(key) if isinstance(broad, dict) else None
+    if not isinstance(m, dict):
+        return None
+    ranks = _sharp_rank_map(scores)
+    best = None
+    for w in (m.get("whales") or []):
+        if not isinstance(w, dict):
+            continue
+        w_side, w_wallet = w.get("side"), str(w.get("wallet") or "").lower()
+        if not w_side or w_side == side or not w_wallet or w_wallet == me:
+            continue
+        r = ranks.get(w_wallet)
+        if not r or r > top:
+            continue
+        if best is None or r < best["rank"]:
+            best = {"rank": r, "side": w_side, "usd": float(w.get("usd") or 0), "wallet": w_wallet}
+    return best
+
+
 def _contested_market(key, broad, min_usd=CONTEST_MIN_USD):
     """12.08.2026 (Lucas): „Gegenseiten-Krieg" — hat EIN Markt Gross-Einstiege (>= min_usd) auf MEHR
     ALS EINER Seite, ist er umkaempft und taugt NICHT als Public-Whale-Signal (zwei widerspruechliche
@@ -680,6 +720,13 @@ def main():
     pub_cand = [c for c in pub_cand if not _contested_market(c[1].get("key"), broad)]   # 12.08.2026 (Lucas): Gegenseiten-Krieg raus — umkaempfte Spiele gar nicht posten
     if _pre_contest != len(pub_cand):
         print(f"  \U0001f91d {_pre_contest - len(pub_cand)} umkaempfte(s) Spiel(e) unterdrueckt (Gross-Geld auf beiden Seiten)")
+    # 24.08.2026 (Lucas, INOX-Fall): dasselbe nach RANG statt Dollar. Zwei sich widersprechende
+    # Empfehlungen kurz nacheinander sind im oeffentlichen Kanal das Schlechteste — im Trades-
+    # Kanal steht stattdessen die Warnzeile, dort entscheidet Lucas selbst.
+    _pre_conf = len(pub_cand)
+    pub_cand = [c for c in pub_cand if not _conflicting_top_wallet(c[1], broad, scores)]
+    if _pre_conf != len(pub_cand):
+        print(f"  \u2694\ufe0f  {_pre_conf - len(pub_cand)} Post(s) unterdrueckt — eine andere Top-Wallet haelt die Gegenseite")
     pub_sent = 0
     for pkey, pos, restock in pub_cand[:MAX_ALERTS]:
         if _tg_public(build_public_card(pos, scores, restock, broad)):
