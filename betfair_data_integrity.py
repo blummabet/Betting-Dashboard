@@ -48,6 +48,7 @@ HISTORY_FILE    = "betfair_history.json"        # {matchId:[{ts,totalVol,mo,kick
 DIRECTION_FILE  = "betfair_direction.json"      # {matchId:{market:{runner:{dir,prev,odd}}}}
 CONSENSUS_FILE  = "betfair_consensus.json"      # {generatedAt,count,covered,games:[…]}
 RECORD_FILE     = "betfair_track_record.json"   # {generatedAt,n,byLeagueMarket,byTeamMarket}
+LNORM_FILE      = "betfair_league_norm.json"    # {generatedAt,byLeagueStage:{"Liga|Phase":{med,n}}}
 RESULTS_FILE    = "betfair_track_results.json"  # [{league,market,fav,odd,win,settledAt,…}]
 STATE_FILE      = "betfair_track_state.json"    # {pending:{matchId:{kickoff,signals,…}}}
 OVERVIEW_FILE   = "betfair_overview.json"        # {generatedAt,steam,flow}
@@ -121,7 +122,7 @@ class BetfairCtx:
     """Einmal gebaut, an jeden Guard gereicht. Alles bereits geladen/getrimmt."""
     def __init__(self, now=None, prices=None, history=None, direction=None,
                  consensus=None, record=None, results=None, state=None,
-                 overview=None, pubrec=None):
+                 overview=None, pubrec=None, lnorm=None):
         self.now = now or datetime.now(timezone.utc)
         self.prices = prices if isinstance(prices, dict) else {}
         self.matches = self.prices.get("matches") or []
@@ -133,6 +134,7 @@ class BetfairCtx:
         self.state = state if isinstance(state, dict) else {}
         self.overview = overview if isinstance(overview, dict) else {}
         self.pubrec = pubrec  # Schema unklar → defensiv, kein Cast
+        self.lnorm = lnorm if isinstance(lnorm, dict) else {}
 
     def age_h(self, ts_str):
         t = _parse_ts(ts_str)
@@ -431,6 +433,29 @@ def check_track_record_grading_sane(ctx):
 
 
 @betfair_check
+def check_league_norm_usable(ctx):
+    """24.08.2026 (Lucas: „bei PL und Serie A steht das x-Norm immer noch so extrem"): das Badge misst
+    ein Spiel gegen den gelernten Median seiner Liga+Phase aus betfair_league_norm.json. Faellt der
+    Lernschritt aus (er laeuft mit continue-on-error), friert die Basis ein und das Badge misst still
+    gegen einen veralteten Massstab — sichtbar wird das NIE von selbst, weil das Badge weiter erscheint.
+    Zwei Lecks: (a) Datei alt/kaputt, (b) Datei da, aber leer gelernt (z.B. Liga-Join gerissen)."""
+    if not ctx.lnorm:
+        return _chk("league_norm_usable", "Liga-Basis fuers x-Norm-Badge gelernt", "warn",
+                    ["betfair_league_norm.json fehlt — das Badge faellt auf den heutigen Schnappschuss "
+                     "zurueck und verschwindet fuer die meisten Ligen"],
+                    "betfair_league_norm.py laeuft im Betfair-Workflow.")
+    age = ctx.age_h(ctx.lnorm.get("generatedAt"))
+    fails, sev = _fresh_fail(age, "generatedAt", DERIVED_WARN_H, DERIVED_ERR_H)
+    usable = int(ctx.lnorm.get("usable") or 0)
+    if usable < 20:
+        fails = fails + [f"nur {usable} belastbare Liga|Phase-Buckets (n>=4) — Liga-Join gerissen?"]
+        sev = "error"
+    return _chk("league_norm_usable", "Liga-Basis fuers x-Norm-Badge gelernt", sev, fails,
+                "Ohne belastbare Basis zeigt der Radar bewusst gar kein x-Norm-Badge — ein falsches "
+                "waere schlimmer. Faellt der Guard, ist die Ursache fast immer der Lernschritt.")
+
+
+@betfair_check
 def check_no_stuck_pending(ctx):
     """Prunt/settlet die Track-Record-Maschine noch? Ein pending-Spiel bleibt bis PENDING_TTL_H (60 h)
     NORMAL liegen (Spiele ohne 'finished'-Flag, die zu frueh aus dem Feed verschwanden). Erst DANACH
@@ -524,6 +549,7 @@ def build_ctx_from_disk(now=None):
         state=_load(STATE_FILE),
         overview=_load(OVERVIEW_FILE),
         pubrec=_load(PUBREC_FILE),
+        lnorm=_load(LNORM_FILE),
     )
 
 

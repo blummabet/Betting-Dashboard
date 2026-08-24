@@ -266,5 +266,35 @@ class TestRegistryAndMain(unittest.TestCase):
         self.assertIsInstance(res, list)
 
 
+# ── Gelernte Liga-Basis fuers x-Norm-Badge (24.08.2026, Lucas) ────────────────
+# Der Lernschritt laeuft mit continue-on-error. Faellt er aus, misst das Badge weiter — nur gegen
+# einen eingefrorenen Massstab. Genau das soll hier auffliegen, statt still weiterzulaufen.
+class TestLeagueNorm(unittest.TestCase):
+    def _lnorm(self, usable=200, age_h=0.2):
+        ts = (NOW - timedelta(hours=age_h)).isoformat()
+        return {"generatedAt": ts, "usable": usable, "buckets": usable + 50, "n": 2000,
+                "byLeagueStage": {"English Premier League|p1": {"med": 1254554, "n": 9}}}
+
+    def test_frisch_und_belastbar_ist_ok(self):
+        self.assertTrue(BI.check_league_norm_usable(ctx(lnorm=self._lnorm()))["ok"])
+
+    def test_fehlende_datei_warnt(self):
+        c = BI.check_league_norm_usable(ctx(lnorm={}))
+        self.assertFalse(c["ok"])
+        self.assertEqual(c["severity"], "warn")
+
+    def test_eingefrorene_basis_faellt_auf(self):
+        c = BI.check_league_norm_usable(ctx(lnorm=self._lnorm(age_h=12)))
+        self.assertFalse(c["ok"])
+        self.assertEqual(c["severity"], "error")
+
+    def test_leer_gelernt_ist_ein_fehler(self):
+        # Datei frisch, aber der Liga-Join gerissen -> fast keine Buckets. Sieht von aussen gesund aus.
+        c = BI.check_league_norm_usable(ctx(lnorm=self._lnorm(usable=3)))
+        self.assertFalse(c["ok"])
+        self.assertEqual(c["severity"], "error")
+        self.assertTrue(any("Liga-Join" in f for f in c["failures"]))
+
+
 if __name__ == "__main__":
     unittest.main()
