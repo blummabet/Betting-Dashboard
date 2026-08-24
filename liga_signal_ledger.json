@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-08-23T18:26:31Z",
-    "total_records": 5
+    "updated_at": "2026-08-24T07:59:04Z",
+    "total_records": 6
   },
   "records": [
     {
@@ -149,6 +149,45 @@
       "engineVersion": "v1",
       "clvPP": 0.12,
       "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "ITA-1-503-489|Heimsieg",
+      "matchKey": "ITA-1-503-489",
+      "market": "Heimsieg",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "injury",
+          "score": 4.0
+        },
+        {
+          "name": "form_trend",
+          "score": 1.6
+        },
+        {
+          "name": "lineup_signal",
+          "score": 2.22
+        },
+        {
+          "name": "transfer_shift",
+          "score": 0.72
+        },
+        {
+          "name": "venue_form",
+          "score": 2.0
+        },
+        {
+          "name": "betfair_money",
+          "score": -1.95
+        }
+      ],
+      "resolvedAt": "2026-08-24T07:58:59Z",
+      "source": "steam",
+      "convictionScore": 3,
+      "lateEntry": false,
+      "engineVersion": "v1",
+      "clvPP": -2.13,
+      "processVerdict": "DESERVED_LOSS"
     },
     {
       "key": "ITA-1-523-490|Auswärtssieg",
