@@ -67,7 +67,12 @@ ALERT_PP         = _cfg("telegram", "alert_edge_min_pp",         5)
 ALERT_PP_BIG     = _cfg("telegram", "alert_steam_pp",            10)
 CUMUL_PP         = _cfg("telegram", "alert_cumul_pp",            8)
 SNAP_WINDOW_DAYS = _cfg("telegram", "snap_window_days",          14)
-MIN_MOVE_GAP_MIN = _cfg("telegram", "min_move_gap_min",         20)   # 02.08.2026 (Lucas): prev muss ≥ so viele Min älter als curr sein — sonst „Geister-Steam" aus zwei (fast) gleichzeitigen Erst-Captures eines gerade aufgetauchten Spiels
+MIN_MOVE_GAP_MIN = _cfg("telegram", "min_move_gap_min",         20)
+# 23.08.2026 (Lucas, Man City–Coventry „Sowas nichts für Trade?"): ein kohärenter 1X2-Reprice hält den
+# Overround ~konstant. Springt er zwischen zwei Snapshots um mehr als das (Teil-/Misch-Capture: nur ein
+# Ausgang aktualisiert, die anderen stale), „kürzen" rechnerisch ALLE drei -> Geister-Steam. Ab hier ist
+# das 1X2-Bein unbrauchbar (in pp; 6 = 0.06 Overround-Sprung). O/U/BTTS/Ecken bleiben unberührt.
+COHERENCE_MAX_OVERROUND_JUMP = _cfg("telegram", "coherence_max_overround_jump_pp", 6) / 100.0   # 02.08.2026 (Lucas): prev muss ≥ so viele Min älter als curr sein — sonst „Geister-Steam" aus zwei (fast) gleichzeitigen Erst-Captures eines gerade aufgetauchten Spiels
 MAX_ALERTS       = _cfg("telegram", "max_sharp_alerts_per_run",  6)
 
 
@@ -207,6 +212,28 @@ def pp_shift(old_odds: float | None, new_odds: float | None) -> float:
         if old_p is None or new_p is None:
             return 0.0
         return round(new_p - old_p, 2)
+
+
+
+def _snap_overround(snap):
+    """Roher 1X2-Overround eines Snapshots (Summe der impliziten Wahrscheinlichkeiten) oder None."""
+    try:
+        hw, dr, aw = float(snap.get("hw")), float(snap.get("dr")), float(snap.get("aw"))
+    except (TypeError, ValueError, AttributeError):
+        return None
+    if hw > 0 and dr > 0 and aw > 0:
+        return 1.0 / hw + 1.0 / dr + 1.0 / aw
+    return None
+
+
+def _incoherent_1x2_move(prev, curr) -> bool:
+    """True = der 1X2-Overround springt zwischen prev und curr zu stark → die drei hw/dr/aw-Shifts sind
+    ein Buch-Margen-Artefakt (Teil-Capture), kein echter Reprice. 23.08.2026 (Lucas): Man City–Coventry
+    ging mit Overround 5% → 28% raus (alle drei „kürzen"), rutschte knapp unter die 1.30-Platzhaltergrenze."""
+    op, oc = _snap_overround(prev), _snap_overround(curr)
+    if op is None or oc is None:
+        return False
+    return abs(oc - op) > COHERENCE_MAX_OVERROUND_JUMP
 
 
 def odds_arrow(shift: float) -> str:
@@ -459,6 +486,10 @@ def analyze_moves(history: dict, wm: dict, poly_edges: dict) -> list[dict]:
         hw_shift   = pp_shift(prev.get("hw"),    curr.get("hw"))
         dr_shift   = pp_shift(prev.get("dr"),    curr.get("dr"))
         aw_shift   = pp_shift(prev.get("aw"),    curr.get("aw"))
+        # 23.08.2026 (Lucas): 1X2-Bein verwerfen, wenn der Overround-Sprung das Buch als inkohärent
+        # (Teil-Capture) ausweist — sonst „kürzen" alle drei und es entsteht ein Geister-Steam.
+        if _incoherent_1x2_move(prev, curr):
+            hw_shift = dr_shift = aw_shift = 0
         o15_shift  = pp_shift(prev.get("o15"),   curr.get("o15"))
         u15_shift  = pp_shift(prev.get("u15"),   curr.get("u15"))
         o25_shift  = pp_shift(prev.get("o25"),   curr.get("o25"))
@@ -483,6 +514,8 @@ def analyze_moves(history: dict, wm: dict, poly_edges: dict) -> list[dict]:
         cumul_hw   = pp_shift(opening_snap.get("hw"),    curr.get("hw"))
         cumul_dr   = pp_shift(opening_snap.get("dr"),    curr.get("dr"))
         cumul_aw   = pp_shift(opening_snap.get("aw"),    curr.get("aw"))
+        if _incoherent_1x2_move(opening_snap, curr):
+            cumul_hw = cumul_dr = cumul_aw = 0
         cumul_o15  = pp_shift(opening_snap.get("o15"),   curr.get("o15"))
         cumul_u15  = pp_shift(opening_snap.get("u15"),   curr.get("u15"))
         cumul_o25  = pp_shift(opening_snap.get("o25"),   curr.get("o25"))
