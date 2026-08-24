@@ -245,3 +245,31 @@ class TestKoGamesHandled(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestIncoherentBookGuard(unittest.TestCase):
+    """23.08.2026 (Lucas, Man City–Coventry „Sowas nichts für Trade?"): ein 1X2-Move, bei dem der
+    Overround stark springt (Teil-/Misch-Capture), ist ein Geister-Steam — alle drei Ausgänge „kürzen".
+    Das 1X2-Bein muss dann verworfen werden; echte Repricings (Overround ~konstant) bleiben."""
+
+    def setUp(self):
+        import detect_wm_sharp_moves as D
+        self.D = D
+
+    def test_mancity_coventry_ghost_is_incoherent(self):
+        prev = {"hw": 1.21, "dr": 7.40, "aw": 11.00}   # Overround ~1.05
+        curr = {"hw": 1.12, "dr": 5.00, "aw": 5.20}    # Overround ~1.29 -> alle drei „kürzen"
+        self.assertTrue(self.D._incoherent_1x2_move(prev, curr))
+
+    def test_real_reprice_is_coherent(self):
+        prev = {"hw": 2.10, "dr": 3.40, "aw": 3.60}
+        curr = {"hw": 1.80, "dr": 3.70, "aw": 4.30}    # Heim kürzt, Rest driftet, Overround stabil
+        self.assertFalse(self.D._incoherent_1x2_move(prev, curr))
+
+    def test_partial_snapshot_not_flagged(self):
+        # Kein volles 1X2 -> nicht beurteilbar -> nicht als inkohärent werfen
+        self.assertFalse(self.D._incoherent_1x2_move({"hw": 1.50}, {"hw": 1.40, "dr": 4.0, "aw": 6.0}))
+
+    def test_overround_helper(self):
+        self.assertAlmostEqual(self.D._snap_overround({"hw": 2.0, "dr": 4.0, "aw": 4.0}), 1.0, places=3)
+        self.assertIsNone(self.D._snap_overround({"hw": 2.0}))
