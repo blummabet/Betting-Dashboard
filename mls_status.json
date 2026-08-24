@@ -178,7 +178,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "17/17 mit AH · 17/17 mit Public-O/U."
+      "note": "15/15 mit AH · 15/15 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -247,11 +247,9 @@
       "id": "lineup_present",
       "label": "Aufstellung da vor Anpfiff (T-90min)",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "1609-1604: Anpfiff in 62min, KEINE Aufstellung"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "lineup_signal braucht die Startelf. War leer wegen Namens-Match + Wien-Zeit-Bug."
     },
     {
@@ -343,11 +341,9 @@
       "id": "safer_line_applied",
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "1609-1604 Auswärtssieg @2.45: sichere Linie Doppelte Chance — X2 @1.681 verfügbar (≥1.35), nicht abgeleitet"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
     {
@@ -430,15 +426,6 @@
       "nFail": 0,
       "failures": [],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
-    },
-    {
-      "id": "smartmoney_cluster_sane",
-      "label": "Smart-Money-Cluster kohärent",
-      "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
-      "note": "cluster ∈ ℕ₀, ≤ holders; buy/sell ≥ 0; netFlow = buy − sell. Sonst rechnet der Cluster-Boost/Exit-Penalty im smart_money-Signal auf Müll."
     },
     {
       "id": "card_only_not_in_trade",
@@ -534,6 +521,6 @@
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 5,
-  "generatedAt": "2026-08-23T19:27:36.162427+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-08-24T08:20:39.915747+00:00"
 }
