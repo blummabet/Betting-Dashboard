@@ -33,11 +33,14 @@ w.eval(readFileSync(PW, 'utf8'));
 
 await new Promise((res) => w._pwEnsurePlaysData(res));
 
-let plays = [], pub = [], blockedCats = [];
+let plays = [], pub = [], blockedCats = [], whales = [];
 try { plays = w._pwTopPlays(0, false, false) || []; } catch { plays = []; }
 try { pub = w._pwPublicTopPlays() || []; } catch { pub = []; }
 
 try { blockedCats = w.PW_BLOCKED_BET_CATS || []; } catch { blockedCats = []; }
+// 24.08.2026 (Lucas, Whales-Tab): die noch spielbaren offenen Positionen der Top-20-Wallets —
+// dieselbe Funktion, die auch der Betting-Tab rendert. Fürs Nachspiel-Papier-Depot.
+try { whales = (w._pwWhalePlays ? w._pwWhalePlays() : []) || []; } catch { whales = []; }
 for (const p of plays) {
   try { p.cat = w._pwSportCategory(p.league, p.sport); } catch { p.cat = null; }
 }
@@ -46,6 +49,16 @@ const publicKeys = pub.map(p => p.key + '|' + p.side);
 const out = {
   generatedAt: new Date().toISOString(),
   blockedCats,                       // eine Quelle: kommt aus poly-wallets.js
+  whales: whales.map(r => ({
+    key: r.key, side: r.side,
+    price: (typeof r.price === 'number' ? r.price : null),
+    n: r.n, bestRank: r.bestRank,
+    league: r.league || null, sport: r.sport || null,
+    cat: (() => { try { return w._pwSportCategory(r.league, r.sport); } catch { return null; } })(),
+    usd: Math.round(r.usd || 0),
+    entryAvg: (r.entryAvg != null ? Math.round(r.entryAvg * 1e4) / 1e4 : null),
+    htk: (r.htk == null ? null : Math.round(r.htk * 100) / 100),
+  })),
   plays: plays.map(p => ({
     key: p.key, side: p.side, verdict: p.verdict, conv: p.conv,
     match: p.match || null,

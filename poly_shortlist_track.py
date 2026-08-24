@@ -319,6 +319,16 @@ def main() -> int:
     track = update_track(prev, emit, close if isinstance(close, dict) else {},
                          resolutions if isinstance(resolutions, dict) else {})
     (BASE / TRACK_FILE).write_text(json.dumps(track, ensure_ascii=False, indent=1), encoding="utf-8")
+    # 24.08.2026 (Lucas): Whale-Nachspiel-Depot auf DEMSELBEN Emitter-Output mitschreiben — sonst
+    # müsste der Scan node+jsdom ein zweites Mal starten. Defensiv gekapselt: fällt es aus,
+    # bleibt der Shortlist-Track heil (er ist die ältere, wichtigere Fläche).
+    try:
+        import poly_whale_follow as _WF
+        _WF.write_from_emit(emit, close if isinstance(close, dict) else {},
+                            resolutions if isinstance(resolutions, dict) else {})
+    except Exception as _e:
+        print(f"  ⚠️  Whale-Nachspiel-Depot übersprungen (nicht fatal): {_e}")
+
     a = track["agg"]["all"]
     print(f"📈 Shortlist-Paper-Track: {len(track['open'])} offen · {a['n']} abgerechnet · "
           f"Treffer {a['hit']*100:.0f}% · ROI {a['roi']*100:+.1f}% · Ø CLV {a['clvAvg']:+.1f}pp "

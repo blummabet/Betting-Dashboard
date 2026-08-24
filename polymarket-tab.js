@@ -3376,7 +3376,7 @@ function _polySubtabBar() {
       ${label}${count !== undefined ? ` <span style="opacity:.7;font-size:10px">${count}</span>` : ''}</button>`;
   };
   return `<div style="display:inline-flex;border-radius:9px;overflow:hidden;border:1px solid #30363d">
-    ${btn('cards', '📇 Cards', c.cards)}${btn('value', '💜 Value', c.value)}${btn('heute', '🔥 Heute')}
+    ${btn('cards', '📇 Cards', c.cards)}${btn('value', '💜 Value', c.value)}${btn('heute', '🔥 Heute')}${btn('whales', '🐋 Whales', Array.isArray(_polyWhalePlays) ? _polyWhalePlays.length : undefined)}
   </div>`;
 }
 
@@ -3385,17 +3385,18 @@ function _polySetSection(sec) {
   const bar    = document.getElementById('polySubtabBar');
   const grid   = document.getElementById('polyPickGrid');
   const heute  = document.getElementById('polyHeuteBox');
+  const whales = document.getElementById('polyWhaleBox');
   const status = document.getElementById('polyPriceStatus');
   if (bar) bar.innerHTML = _polySubtabBar();
-  if (sec === 'heute') {
-    if (grid)   grid.style.display = 'none';
-    if (status) status.style.visibility = 'hidden';
-    if (heute) { heute.style.display = 'block'; _loadPolyHeute(); }
-  } else {
-    if (heute)  heute.style.display = 'none';
-    if (status) status.style.visibility = 'visible';
-    if (grid)  { grid.style.display = 'grid'; grid.innerHTML = renderPolyPickCards(); }
-  }
+  // 24.08.2026: zwei Sonder-Sektionen (Heute, Whales) statt einer — deshalb generisch statt if/else.
+  const special = (sec === 'heute' || sec === 'whales');
+  if (grid)   grid.style.display = special ? 'none' : 'grid';
+  if (status) status.style.visibility = special ? 'hidden' : 'visible';
+  if (heute)  heute.style.display  = (sec === 'heute')  ? 'block' : 'none';
+  if (whales) whales.style.display = (sec === 'whales') ? 'block' : 'none';
+  if (sec === 'heute')       _loadPolyHeute();
+  else if (sec === 'whales') _loadPolyWhales();
+  else if (grid)             grid.innerHTML = renderPolyPickCards();
 }
 
 // ── „Heute" — Terminal-„Heute wetten"-Engine im Betting-Tab ─────────────────────
@@ -3585,6 +3586,115 @@ function _renderPolyHeute(plays) {
     </div>`;
   }).join('');
   return wrap(rows);
+}
+
+// ── 🐋 Whales (24.08.2026, Lucas: „die Wetten der Top-20 Wale aus der Übersicht") ─────────────
+// Quelle ist EXAKT die Rangliste aus dem Wallets-Menü (`_pwWhalePlays` → `_pwRankRows`), gefiltert
+// auf noch spielbare Positionen (Markt im Feed, Anpfiff in der Zukunft). Konsens zuerst: liegen
+// zwei Top-Wallets auf derselben Seite, ist das die eigentliche Nachricht.
+// „Einstieg → jetzt" ist die ehrliche Spalte: die Whales haben IHREN Preis, wir kaufen später.
+let _polyWhalePlays = null, _polyWhaleAgg = null;
+
+function _polyWhaleKpi() {
+  const d = _polyWhaleAgg;
+  if (!d || !d.agg || (!d.agg.n && !(d.open || []).length)) return '';
+  const a = d.agg, open = (d.open || []).length, pill = (t, c) => `<span style="font-size:11px;color:${c};font-weight:700">${t}</span>`;
+  const parts = [];
+  if (a.n) {
+    parts.push(pill(`${a.n} abgerechnet`, '#8b949e'));
+    parts.push(pill(`${Math.round(a.hit * 100)}% Treffer`, '#8b949e'));
+    if (a.roi != null) parts.push(pill(`ROI ${(a.roi * 100).toFixed(1)}%`, a.roi >= 0 ? '#3fb950' : '#f85149'));
+    if (a.clvAvg != null) parts.push(pill(`Ø CLV ${a.clvAvg >= 0 ? '+' : ''}${a.clvAvg}pp`, a.clvAvg >= 0 ? '#3fb950' : '#f85149'));
+  }
+  if (open) parts.push(pill(`${open} offen`, '#a78bfa'));
+  return `<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 8px">`
+    + `<span style="font-size:11px;color:#6e7681">📋 Nachspielen (Papier, zu UNSEREM Preis):</span>`
+    + parts.join('<span style="color:#30363d">·</span>') + `</div>`;
+}
+
+function _polyLoadWhaleAgg() {
+  if (_polyWhaleAgg !== null) return;
+  _polyWhaleAgg = false;
+  fetch('poly_whale_follow_track.json', { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : null)
+    .then(d => { if (d) { _polyWhaleAgg = d; const b = document.getElementById('polyWhaleBox');
+                          if (b && _polyWhalePlays) b.innerHTML = _renderPolyWhales(_polyWhalePlays); } })
+    .catch(() => {});
+}
+
+function _renderPolyWhales(plays) {
+  const topN = (typeof PW_WHALE_TOP_N !== 'undefined') ? PW_WHALE_TOP_N : 20;
+  const head = (n) => `
+    <div style="display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;margin-bottom:2px">
+      <span style="font-size:13px;font-weight:800;color:#4cc2ff">🐋 Whales — was die Top-${topN} gerade halten</span>
+      <span style="font-size:11px;color:#6e7681">${n ? n + ' spielbar · ' : ''}gleiche Rangliste wie im Wallets-Menü</span>
+    </div>`;
+  const wrap = (inner) => `<div style="border:1px solid #30363d;border-radius:12px;background:#0d1117;overflow:hidden">
+    <div style="padding:12px 14px 2px">${head(Array.isArray(plays) ? plays.length : 0)}${_polyWhaleKpi()}</div>${inner}</div>`;
+
+  if (plays === null) return wrap(`<div style="padding:0 14px 14px;color:#6e7681;font-size:12px">⏳ Lade Wallet-Rangliste…</div>`);
+  if (!plays.length)  return wrap(`<div style="padding:0 14px 14px;color:#6e7681;font-size:12px">Keine der Top-${topN}-Wallets hält gerade eine Position, die noch vor Anpfiff steht. Positionen in schon laufenden oder beendeten Spielen blende ich bewusst aus — die kann man nicht mehr nachspielen.</div>`);
+
+  _polyWhalePlays = plays;
+  _polyLoadWhaleAgg();
+  const rows = plays.map((r) => {
+    const icon  = (typeof _pwSportIcon === 'function') ? _pwSportIcon(r.league) : '🎯';
+    const url   = 'https://polymarket.com/event/' + encodeURIComponent(r.key || '');
+    const mtxt  = String(r.match || r.key || '—').replace(/</g, '&lt;');
+    const stxt  = String(r.side  || '').replace(/</g, '&lt;');
+    const price = (typeof r.price === 'number' && r.price > 0)
+      ? `<span style="font-size:11px;color:#a78bfa;font-weight:700">${Math.round(r.price * 100)}¢ · ${(1 / r.price).toFixed(2)}</span>` : '';
+    // Konsens-Badge: DIE Nachricht dieser Fläche.
+    const cons = r.n >= 2
+      ? `<span style="font-size:10.5px;font-weight:800;color:#3fb950;background:rgba(63,185,80,.14);border:1px solid rgba(63,185,80,.35);border-radius:20px;padding:2px 8px">${r.n} von ${topN} einig</span>`
+      : `<span style="font-size:10.5px;color:#8b949e">${(typeof _pwMedal === 'function') ? _pwMedal(r.bestRank - 1) : '#' + r.bestRank} der Rangliste</span>`;
+    // Einstieg → jetzt: hat der Preis den Move schon gemacht?
+    const drift = (r.driftPP == null) ? ''
+      : `<span style="font-size:11px;color:${r.driftPP > 2 ? '#f85149' : r.driftPP < -2 ? '#3fb950' : '#8b949e'}" title="Ihr Ø Einstieg ${Math.round((r.entryAvg||0)*100)}¢ → jetzt ${Math.round((r.price||0)*100)}¢">`
+        + `Einstieg ${Math.round((r.entryAvg || 0) * 100)}¢ → ${r.driftPP > 0 ? '+' : ''}${r.driftPP}pp</span>`;
+    const htk = `<span style="color:#8b949e;font-size:11px">${r.htk < 1 ? '<1h' : 'in ' + Math.round(r.htk) + 'h'}</span>`;
+    const usd = (typeof _pwUsd === 'function' && r.usd) ? `<span style="font-size:11px;color:#6e7681">${_pwUsd(r.usd)} Whale-Geld</span>` : '';
+    const bo  = _polyHeuteTokenOrder(r);   // exakt derselbe Token-Weg wie im Heute-Tab
+    return `<div style="display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:10px 14px;border-top:1px solid #161b22">
+      <span style="font-size:18px">${icon}</span>
+      <div style="min-width:0">
+        <div style="font-size:13px;font-weight:700;color:#e6edf3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">
+          ${mtxt} <span style="color:#484f58">→</span> <b style="color:#4cc2ff">${stxt}</b>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;margin-top:4px;flex-wrap:wrap">${cons}${price}${drift}${htk}${usd}</div>
+      </div>
+      <div style="display:flex;gap:6px;align-items:center;flex-shrink:0">
+        ${bo
+          ? `<button onclick="event.stopPropagation();_wmBetConfirm(decodeURIComponent('${encodeURIComponent(JSON.stringify(bo))}'))"
+               title="Direkt auslösen — es öffnet sich der Bestätigungs-Dialog"
+               style="background:linear-gradient(135deg,#4cc2ff,#1f6feb);border:none;border-radius:6px;color:#fff;font-size:11px;font-weight:800;padding:6px 11px;cursor:pointer;white-space:nowrap;font-family:inherit">🟣 Setzen</button>`
+          : `<a href="${url}" target="_blank" rel="noopener" onclick="event.stopPropagation()"
+               style="background:#a78bfa22;border:1px solid #a78bfa55;border-radius:6px;color:#a78bfa;font-size:11px;font-weight:800;padding:6px 11px;text-decoration:none;white-space:nowrap">🟣 Öffnen ↗</a>`}
+      </div>
+    </div>`;
+  }).join('');
+  return wrap(rows);
+}
+
+function _loadPolyWhales() {
+  const box = document.getElementById('polyWhaleBox');
+  if (!box) return;
+  if (typeof _pwEnsurePlaysData !== 'function' || typeof _pwWhalePlays !== 'function') {
+    box.innerHTML = _renderPolyWhales([]);   // poly-wallets.js nicht geladen → leer statt Crash
+    return;
+  }
+  box.innerHTML = _renderPolyWhales(null);
+  try {
+    _pwEnsurePlaysData(function () {
+      let plays = [];
+      try { plays = _pwWhalePlays() || []; } catch (_e) { plays = []; }
+      _polyWhalePlays = plays;
+      const b = document.getElementById('polyWhaleBox');
+      if (b) b.innerHTML = _renderPolyWhales(plays);
+      const bar = document.getElementById('polySubtabBar');
+      if (bar) bar.innerHTML = _polySubtabBar();   // Zähler im Reiter nachziehen
+    });
+  } catch (_e) { box.innerHTML = _renderPolyWhales([]); }
 }
 
 function _loadPolyHeute() {
@@ -5311,7 +5421,7 @@ function initPolymarket() {
       <button onclick="document.getElementById('polySetupHint').style.display='none'" style="background:none;border:none;color:#8b949e;cursor:pointer;font-size:16px;padding:0;line-height:1;flex-shrink:0">✕</button>
     </div>
 
-    <!-- ── SUB-TABS: Cards / Value / Heute ──────────────── -->
+    <!-- ── SUB-TABS: Cards / Value / Heute / Whales ─────── -->
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px;flex-wrap:wrap;gap:8px">
       <div id="polySubtabBar">${_polySubtabBar()}</div>
       <span style="font-size:11px;color:#8b949e" id="polyPriceStatus">⏳ Polymarket-Preise werden geladen…</span>
@@ -5320,6 +5430,7 @@ function initPolymarket() {
       ${renderPolyPickCards()}
     </div>
     <div id="polyHeuteBox" style="display:none;margin-bottom:40px"></div>
+    <div id="polyWhaleBox" style="display:none;margin-bottom:40px"></div>
 
     <!-- ── STATS SECTION ──────────────────────────────── -->
     <div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:#8b949e;margin-bottom:10px;margin-top:8px">

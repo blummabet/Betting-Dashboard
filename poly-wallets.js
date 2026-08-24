@@ -1029,6 +1029,68 @@ function _pwNowCell(openMap, wallet) {
 }
 function _pwMedal(i) { return i === 0 ? '🥇' : i === 1 ? '🥈' : i === 2 ? '🥉' : (i + 1); }
 
+// ── 🐋 Whale-Plays (24.08.2026, Lucas: „im Betting ein Tab mit den Wetten der Top-20 Wale") ──
+// Dieselbe Rangliste wie im Wallets-Menü (Modus A echte P&L, sonst CLV-Interim) → deren OFFENE
+// Positionen. Gefiltert auf das, was man noch spielen KANN: Markt im Feed, nicht aufgelöst,
+// Anpfiff in der Zukunft. Ohne diesen Filter wäre der Tab ein Friedhof — von 17 offenen
+// Positionen der Top-20 waren am 24.08. genau 1 vor Anpfiff, 9 liefen schon, 7 waren gar nicht
+// mehr im Feed (poly_wallet_track hält offen, bis eine Auflösung kommt).
+const PW_WHALE_TOP_N = 20;
+function _pwRankRows() {
+  const scores = _pwCache && _pwCache.walletTrack && _pwCache.walletTrack.scores;
+  if (!scores || !Object.keys(scores).length) return [];
+  const hasPnl = Object.values(scores).some(s => s && typeof s.pnl === 'number');
+  return hasPnl ? _pwRankRowsPnl(scores) : _pwRankRowsClv(scores);
+}
+// Markt zu einem Key: live zuerst, sonst der Vor-Spiel-Freeze. (`moneyBroad` ist NICHT die
+// Markt-Landkarte, sondern der Genauigkeits-Backtest {n, byLeague} — als Fallback wertlos.)
+function _pwMarketFor(key) {
+  const c = _pwCache || {};
+  return (c.broadLiveNow && c.broadLiveNow[key]) || (c.broadLive && c.broadLive[key]) || null;
+}
+function _pwWhalePlays(topN) {
+  const top = _pwRankRows().slice(0, topN || PW_WHALE_TOP_N);
+  if (!top.length) return [];
+  const openMap = _pwOpenByWallet(), agg = {};
+  top.forEach(function (r, i) {
+    (openMap[r.wallet] || []).forEach(function (p) {
+      if (!p || !p.key || !p.side) return;
+      const m = _pwMarketFor(p.key);
+      if (!m || m.resolved != null) return;            // nicht mehr im Feed / aufgelöst → nicht spielbar
+      const htk = _pwRealHtk(m);
+      if (htk == null || htk <= 0) return;             // angepfiffen → raus (Lucas: „nur noch spielbar")
+      const gk = p.key + '|' + p.side;
+      const e = agg[gk] || (agg[gk] = {
+        key: p.key, side: p.side, league: m.league || p.league, sport: m.sport, htk: htk,
+        price: (m.prices || {})[p.side], token: (m.tokens || {})[p.side] || null,
+        // _pwEventLabel liefert HTML (<span>vs</span>) — hier braucht es KLARTEXT, weil der
+        // Renderer escaped und der Token-Order-Bauer das Label an ' vs ' zerlegt. _pwPlayLabel
+        // ist genau die Klartext-Variante, die auch der Heute-Scorer benutzt.
+        match: _pwPlayLabel(p.key, Object.keys(m.shares || m.prices || {}).map(function (s) { return { s: s }; })),
+        wallets: [], usd: 0, _eSum: 0, _eW: 0 });
+      const u = Number(p.usd) || 0;
+      const ent = Number(p.entryPrice != null ? p.entryPrice : p.firstPrice);
+      e.wallets.push({ wallet: r.wallet, rank: i + 1, pnl: r.pnl, usd: u, entry: (ent > 0 ? ent : null) });
+      e.usd += u;
+      if (ent > 0) { e._eSum += ent * (u || 1); e._eW += (u || 1); }   // größere Position wiegt schwerer
+    });
+  });
+  const out = Object.keys(agg).map(function (k) {
+    const e = agg[k];
+    e.entryAvg = e._eW ? (e._eSum / e._eW) : null;
+    // „Haben wir den Move verpasst?" — ihr Einstieg vs. der Preis, den WIR jetzt zahlen.
+    e.driftPP = (typeof e.price === 'number' && e.entryAvg) ? Math.round((e.price - e.entryAvg) * 1000) / 10 : null;
+    e.n = e.wallets.length;
+    e.bestRank = Math.min.apply(null, e.wallets.map(function (w) { return w.rank; }));
+    delete e._eSum; delete e._eW;
+    return e;
+  });
+  // Konsens zuerst: ein Wallet ist eine Meinung, zwei sind ein Signal.
+  out.sort(function (a, b) { return (b.n - a.n) || (a.bestRank - b.bestRank) || (b.usd - a.usd); });
+  return out;
+}
+try { window._pwWhalePlays = _pwWhalePlays; window.PW_WHALE_TOP_N = PW_WHALE_TOP_N; } catch (_e) {}
+
 // 🥇 Schärfste Wallets — Rangliste. ZWEI Modi:
 //  (A) echte Poly-Bilanz (scores[w].pnl vorhanden, vom Mac-Runner aus der data-api /positions) →
 //      primär nach realer P&L ranken, CLV/Treffer/n als Nebenwert. Das ist „wer verdient wirklich".
@@ -1046,8 +1108,11 @@ function _pwSharpRanking() {
   const hasPnl = Object.values(scores).some(s => s && typeof s.pnl === 'number');
   return hasPnl ? _pwRankByPnl(scores, openMap, kick) : _pwRankByClv(scores, openMap, kick);
 }
-function _pwRankByPnl(scores, openMap, kick) {
-  const rows = Object.keys(scores).map(function (w) {
+// 24.08.2026 (Lucas, Whales-Tab): die AUSWAHL der Top-Wallets steckte bisher mitten im HTML-Bauen.
+// Jetzt eigene Funktion, damit der Betting-Tab exakt dieselben Wallets bekommt wie das Wallets-Menü —
+// ein zweites, nachgebautes Ranking wäre genau die Sorte Drift, die uns schon dreimal erwischt hat.
+function _pwRankRowsPnl(scores) {
+  return Object.keys(scores).map(function (w) {
     const v = scores[w]; if (!v || typeof v.pnl !== 'number' || (v.n || 0) < PW_RANK_MIN_N_PNL) return null;
     return { wallet: w, pnl: v.pnl, n: v.n || 0, avgClv: v.n ? (v.clvSumPP || 0) / v.n : 0, hit: v.n ? (v.wins || 0) / v.n : 0, usd: Number(v.usd) || 0 };
   }).filter(Boolean)
@@ -1057,6 +1122,9 @@ function _pwRankByPnl(scores, openMap, kick) {
     .filter(function (r) { return r.n < PW_RANK_FLOOR_N || (r.avgClv >= PW_RANK_FLOOR_CLV && r.hit >= PW_RANK_FLOOR_HIT); })
     .filter(function (r) { return !_pwRankBigOnly || (r.n > 0 && r.usd / r.n >= PW_RANK_MIN_AVG_USD); })   // 4-stellig-Filter (Lucas)
     .sort(function (a, b) { return b.pnl - a.pnl; }).slice(0, 20);
+}
+function _pwRankByPnl(scores, openMap, kick) {
+  const rows = _pwRankRowsPnl(scores);
   const intro = '<section class="pw-sec"><div class="pw-sec-head">' + kick
     + '<span class="pw-sec-note">Wallets, die den Close schlagen (Ø CLV ≥ 0 &amp; Treffer ≥ 45 % bei genug n), sortiert nach <b>echter Poly-Gesamt-Bilanz</b> (data-api /positions) · 🔥 = profitabel · nur Wallets ab $1.000 Ø-Einsatz</span></div>' + _pwRankToggle();
   if (!rows.length) return intro + '<div class="pw-none">Noch keine Wallet mit P&amp;L-Historie erfasst.</div></section>';
@@ -1076,14 +1144,17 @@ function _pwRankByPnl(scores, openMap, kick) {
     + '<th>#</th><th>Wallet</th><th>Poly-P&amp;L</th><th>Ø CLV</th><th>Treffer</th><th>n</th><th>Einsatz</th><th>Ø/Wette</th><th>setzt gerade auf</th>'
     + '</tr></thead><tbody>' + body + '</tbody></table></div></section>';
 }
-function _pwRankByClv(scores, openMap, kick) {
-  const rows = Object.keys(scores).map(function (w) {
+function _pwRankRowsClv(scores) {
+  return Object.keys(scores).map(function (w) {
     const v = scores[w]; if (!v || !v.n || v.n < PW_RANK_MIN_N) return null;
     const sc = { wallet: w, n: v.n, avgClv: (v.clvSumPP || 0) / v.n, hit: (v.wins || 0) / v.n, pnl: Number(v.pnl) || 0, usd: Number(v.usd) || 0 };
     sc.score = _pwWalletKombi(sc); return sc;
   }).filter(Boolean)
     .filter(function (r) { return !_pwRankBigOnly || (r.n > 0 && r.usd / r.n >= PW_RANK_MIN_AVG_USD); })   // 4-stellig-Filter (Lucas)
     .sort(function (a, b) { return b.score - a.score; }).slice(0, 20);
+}
+function _pwRankByClv(scores, openMap, kick) {
+  const rows = _pwRankRowsClv(scores);
   const intro = '<section class="pw-sec"><div class="pw-sec-head">' + kick
     + '<span class="pw-sec-note">Interim: Kombi-Score aus Ø CLV + Treffer, ab n≥' + PW_RANK_MIN_N + ' getrackten Wetten · über alle Sportarten</span></div>'
     + '<div class="pw-sec-p" style="background:rgba(227,179,65,.08);border:1px solid rgba(227,179,65,.3);border-radius:9px;padding:9px 12px;margin:2px 0 12px"><b style="color:#e3b341">⚠️ Vorläufig — misst Timing (CLV), nicht Gewinn.</b> Diese Zahlen kommen nur aus den <i>wenigen großen Wetten, die wir mitbekommen haben</i> (nicht die Poly-Gesamt-Bilanz). Ein Wallet kann hier oben stehen und auf Polymarket trotzdem tief im Minus sein. Die Rangliste nach <b>echter P&amp;L</b> kommt, sobald der Runner sie mitzieht.</div>' + _pwRankToggle();
