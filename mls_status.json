@@ -178,7 +178,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "12/17 mit AH · 17/17 mit Public-O/U."
+      "note": "17/17 mit AH · 17/17 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -247,9 +247,11 @@
       "id": "lineup_present",
       "label": "Aufstellung da vor Anpfiff (T-90min)",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "1609-1604: Anpfiff in 62min, KEINE Aufstellung"
+      ],
       "note": "lineup_signal braucht die Startelf. War leer wegen Namens-Match + Wien-Zeit-Bug."
     },
     {
@@ -344,7 +346,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "1609-1604 Auswärtssieg @2.45: sichere Linie Doppelte Chance — X2 @1.668 verfügbar (≥1.35), nicht abgeleitet"
+        "1609-1604 Auswärtssieg @2.45: sichere Linie Doppelte Chance — X2 @1.681 verfügbar (≥1.35), nicht abgeleitet"
       ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
@@ -430,6 +432,15 @@
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
     },
     {
+      "id": "smartmoney_cluster_sane",
+      "label": "Smart-Money-Cluster kohärent",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "cluster ∈ ℕ₀, ≤ holders; buy/sell ≥ 0; netFlow = buy − sell. Sonst rechnet der Cluster-Boost/Exit-Penalty im smart_money-Signal auf Müll."
+    },
+    {
       "id": "card_only_not_in_trade",
       "label": "Card-Signale nicht im Trade-Pfad",
       "severity": "warn",
@@ -479,18 +490,10 @@
       "label": "Beendete Spiele haben Match-Stats (xG)",
       "severity": "warn",
       "ok": false,
-      "nFail": 10,
+      "nFail": 2,
       "failures": [
         "2242-1596: beendet, aber keine result.stats (xG)",
-        "9568-1613: beendet, aber keine result.stats (xG)",
-        "1598-1606: beendet, aber keine result.stats (xG)",
-        "1602-1607: beendet, aber keine result.stats (xG)",
-        "1614-1605: beendet, aber keine result.stats (xG)",
-        "18310-1615: beendet, aber keine result.stats (xG)",
-        "2242-1595: beendet, aber keine result.stats (xG)",
-        "9568-1601: beendet, aber keine result.stats (xG)",
-        "20787-1600: beendet, aber keine result.stats (xG)",
-        "9569-1613: beendet, aber keine result.stats (xG)"
+        "9568-1613: beendet, aber keine result.stats (xG)"
       ],
       "note": "Ohne Match-xG lernt der Bayesian-Loop nur aus Glück/Pech, nicht aus dem Prozess."
     },
@@ -531,6 +534,6 @@
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 4,
-  "generatedAt": "2026-08-23T07:40:53.647206+00:00"
+  "nFail": 5,
+  "generatedAt": "2026-08-23T19:27:36.162427+00:00"
 }
