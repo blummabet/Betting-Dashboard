@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-08-24T03:04:13.107963+00:00",
+"generatedAt": "2026-08-24T03:34:16.634898+00:00",
 "byVerdict": {
 "konsens": {
 "n": 431,
@@ -12,14 +12,14 @@
 "pinnHitRate": 0.7037
 },
 "uneinig": {
-"n": 146,
+"n": 147,
 "wins": 41,
-"hitRate": 0.2808,
-"polyN": 129,
+"hitRate": 0.2789,
+"polyN": 130,
 "polyWins": 44,
-"polyHitRate": 0.3411,
-"pinnN": 77,
-"pinnHitRate": 0.6234
+"polyHitRate": 0.3385,
+"pinnN": 78,
+"pinnHitRate": 0.6282
 },
 "teil": {
 "n": 5,
@@ -68,6 +68,11 @@
 "wins": 13,
 "hitRate": 0.8125
 },
+"Argentinian Primera Division": {
+"n": 14,
+"wins": 6,
+"hitRate": 0.4286
+},
 "Brazilian Serie B": {
 "n": 14,
 "wins": 8,
@@ -82,11 +87,6 @@
 "n": 14,
 "wins": 11,
 "hitRate": 0.7857
-},
-"Argentinian Primera Division": {
-"n": 13,
-"wins": 6,
-"hitRate": 0.4615
 },
 "CONMEBOL Copa Libertadores": {
 "n": 13,
@@ -486,20 +486,39 @@
 "hitRate": 0.7923
 },
 "weak": {
-"n": 212,
+"n": 213,
 "wins": 98,
-"hitRate": 0.4623
+"hitRate": 0.4601
 }
 },
 "divergence": {
-"n": 146,
+"n": 147,
 "betfairWins": 41,
-"betfairRate": 0.2808,
-"polyN": 129,
+"betfairRate": 0.2789,
+"polyN": 130,
 "polyWins": 44,
-"polyRate": 0.3411
+"polyRate": 0.3385
 },
 "recent": [
+{
+"matchId": "35922846",
+"home": "Racing Club",
+"away": "Boca Juniors",
+"league": "Argentinian Primera Division",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Racing Club",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-24T00:30:00Z",
+"settledAt": "2026-08-24T03:34:16.487929+00:00"
+},
 {
 "matchId": "35949549",
 "home": "LDU",
@@ -1240,31 +1259,12 @@
 ],
 "kickoff": "2026-08-23T17:00:00Z",
 "settledAt": "2026-08-23T20:03:43.800829+00:00"
-},
-{
-"matchId": "35952142",
-"home": "Sporting Gijon",
-"away": "Burgos",
-"league": "Spanish Segunda Division",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Sporting Gijon",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-08-23T17:00:00Z",
-"settledAt": "2026-08-23T20:03:43.800829+00:00"
 }
 ],
 "global": {
-"n": 582,
+"n": 583,
 "wins": 383,
-"hitRate": 0.6581
+"hitRate": 0.6569
 },
-"pending": 5
+"pending": 4
 }
