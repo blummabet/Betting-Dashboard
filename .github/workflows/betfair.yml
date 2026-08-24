@@ -60,6 +60,10 @@ jobs:
       - name: 📊 Track-Record aktualisieren (Trefferquote je Liga×Markt)
         run: ${{ env.BETFAIR_PY }} betfair_track_record.py
 
+      - name: 📚 Liga-Basis lernen (was ist ueblich fuer Liga X in Phase Y — Basis fuers x-Norm-Badge)
+        run: ${{ env.BETFAIR_PY }} betfair_league_norm.py
+        continue-on-error: true
+
       - name: Draw-Geld-Tracker (X-Einsaetze, Pre-Match + In-Play, kam X)
         run: ${{ env.BETFAIR_PY }} betfair_draw_tracker.py
         continue-on-error: true
@@ -88,7 +92,7 @@ jobs:
         run: |
           git config user.name "cocobet-bot"
           git config user.email "bot@users.noreply.github.com"
-          git add betfair_prices.json betfair_history.json betfair_overview.json betfair_track_state.json betfair_track_results.json betfair_track_record.json betfair_direction.json betfair_draw_state.json betfair_draw_results.json betfair_draw_record.json betfair_alerts_seen.json betfair_public_seen.json betfair_public_ledger.json betfair_public_record.json betfair_consensus.json betfair_consensus_history.json betfair_status.json money_map.json money_map_ledger.json money_map_record.json 2>/dev/null || true
+          git add betfair_prices.json betfair_history.json betfair_overview.json betfair_track_state.json betfair_track_results.json betfair_track_record.json betfair_league_norm.json betfair_league_norm_state.json betfair_direction.json betfair_draw_state.json betfair_draw_results.json betfair_draw_record.json betfair_alerts_seen.json betfair_public_seen.json betfair_public_ledger.json betfair_public_record.json betfair_consensus.json betfair_consensus_history.json betfair_status.json money_map.json money_map_ledger.json money_map_record.json 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "keine Änderung — nichts zu committen"
             exit 0

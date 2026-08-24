@@ -169,7 +169,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "73/73 mit AH · 73/73 mit Public-O/U."
+      "note": "79/79 mit AH · 79/79 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -238,9 +238,12 @@
       "id": "lineup_present",
       "label": "Aufstellung da vor Anpfiff (T-90min)",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 2,
+      "failures": [
+        "36-49: Anpfiff in 24min, KEINE Aufstellung",
+        "535-544: Anpfiff in 54min, KEINE Aufstellung"
+      ],
       "note": "lineup_signal braucht die Startelf. War leer wegen Namens-Match + Wien-Zeit-Bug."
     },
     {
@@ -326,15 +329,15 @@
       "ok": false,
       "nFail": 11,
       "failures": [
-        "47-34 Heimsieg @2.05: sichere Linie Doppelte Chance — 1X @1.388 verfügbar (≥1.35), nicht abgeleitet",
-        "63-55 Heimsieg @2.75: sichere Linie Doppelte Chance — 1X @1.475 verfügbar (≥1.35), nicht abgeleitet",
-        "497-502 Auswärtssieg @6.55: sichere Linie Doppelte Chance — X2 @2.195 verfügbar (≥1.35), nicht abgeleitet",
-        "532-543 Auswärtssieg @2.71: sichere Linie Doppelte Chance — X2 @1.461 verfügbar (≥1.35), nicht abgeleitet",
+        "47-34 Heimsieg @2.05: sichere Linie Doppelte Chance — 1X @1.41 verfügbar (≥1.35), nicht abgeleitet",
+        "63-55 Heimsieg @2.75: sichere Linie Doppelte Chance — 1X @1.48 verfügbar (≥1.35), nicht abgeleitet",
+        "497-502 Auswärtssieg @6.55: sichere Linie Doppelte Chance — X2 @2.169 verfügbar (≥1.35), nicht abgeleitet",
+        "532-543 Auswärtssieg @2.71: sichere Linie Doppelte Chance — X2 @1.457 verfügbar (≥1.35), nicht abgeleitet",
         "539-543 Auswärtssieg @2.22: sichere Linie Doppelte Chance — X2 @1.369 verfügbar (≥1.35), nicht abgeleitet",
-        "160-162 Auswärtssieg @3.5: sichere Linie Doppelte Chance — X2 @1.837 verfügbar (≥1.35), nicht abgeleitet",
+        "160-162 Auswärtssieg @3.5: sichere Linie Doppelte Chance — X2 @1.852 verfügbar (≥1.35), nicht abgeleitet",
         "164-185 Auswärtssieg @4.85: sichere Linie Doppelte Chance — X2 @2.249 verfügbar (≥1.35), nicht abgeleitet",
         "1660-168 Heimsieg @5.45: sichere Linie Doppelte Chance — 1X @2.44 verfügbar (≥1.35), nicht abgeleitet",
-        "173-163 Auswärtssieg @5.6: sichere Linie Doppelte Chance — X2 @2.549 verfügbar (≥1.35), nicht abgeleitet",
+        "173-163 Auswärtssieg @5.6: sichere Linie Doppelte Chance — X2 @2.56 verfügbar (≥1.35), nicht abgeleitet",
         "182-169 Heimsieg @2.42: sichere Linie Doppelte Chance — 1X @1.486 verfügbar (≥1.35), nicht abgeleitet",
         "192-167 Heimsieg @2.89: sichere Linie Doppelte Chance — 1X @1.67 verfügbar (≥1.35), nicht abgeleitet"
       ],
@@ -407,11 +410,9 @@
       "id": "soft_opening_captured",
       "label": "Soft-Eröffnung echt erfasst",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "727-546: Soft bewegte sich 2.05→2.1, aber Opening==Jetzt (2.1) — nicht eingefroren"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
     },
     {
@@ -506,5 +507,5 @@
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-08-24T07:59:05.329164+00:00"
+  "generatedAt": "2026-08-24T18:35:40.668773+00:00"
 }
