@@ -1,23 +1,23 @@
 {
-"generatedAt": "2026-08-24T21:51:15.913404+00:00",
+"generatedAt": "2026-08-24T22:10:10.571356+00:00",
 "byVerdict": {
 "konsens": {
-"n": 447,
-"wins": 355,
-"hitRate": 0.7942,
-"polyN": 418,
-"polyWins": 324,
-"polyHitRate": 0.7751,
+"n": 448,
+"wins": 356,
+"hitRate": 0.7946,
+"polyN": 419,
+"polyWins": 325,
+"polyHitRate": 0.7757,
 "pinnN": 29,
 "pinnHitRate": 0.7241
 },
 "uneinig": {
-"n": 153,
-"wins": 44,
-"hitRate": 0.2876,
-"polyN": 135,
+"n": 154,
+"wins": 45,
+"hitRate": 0.2922,
+"polyN": 136,
 "polyWins": 44,
-"polyHitRate": 0.3259,
+"polyHitRate": 0.3235,
 "pinnN": 80,
 "pinnHitRate": 0.625
 },
@@ -148,6 +148,11 @@
 "wins": 7,
 "hitRate": 0.7
 },
+"English Premier League": {
+"n": 10,
+"wins": 8,
+"hitRate": 0.8
+},
 "Italian Serie A": {
 "n": 10,
 "wins": 7,
@@ -164,11 +169,6 @@
 "hitRate": 0.5556
 },
 "Danish Superliga": {
-"n": 9,
-"wins": 7,
-"hitRate": 0.7778
-},
-"English Premier League": {
 "n": 9,
 "wins": 7,
 "hitRate": 0.7778
@@ -318,6 +318,11 @@
 "wins": 2,
 "hitRate": 1.0
 },
+"Argentinian Primera Nacional": {
+"n": 2,
+"wins": 1,
+"hitRate": 0.5
+},
 "Australia Cup": {
 "n": 2,
 "wins": 1,
@@ -362,11 +367,6 @@
 "n": 2,
 "wins": 1,
 "hitRate": 0.5
-},
-"Argentinian Primera Nacional": {
-"n": 1,
-"wins": 0,
-"hitRate": 0.0
 },
 "Chinese League 2": {
 "n": 1,
@@ -486,25 +486,63 @@
 },
 "byStrength": {
 "strong": {
-"n": 350,
-"wins": 279,
-"hitRate": 0.7971
+"n": 351,
+"wins": 280,
+"hitRate": 0.7977
 },
 "weak": {
-"n": 222,
-"wins": 103,
-"hitRate": 0.464
+"n": 223,
+"wins": 104,
+"hitRate": 0.4664
 }
 },
 "divergence": {
-"n": 153,
-"betfairWins": 44,
-"betfairRate": 0.2876,
-"polyN": 135,
+"n": 154,
+"betfairWins": 45,
+"betfairRate": 0.2922,
+"polyN": 136,
 "polyWins": 44,
-"polyRate": 0.3259
+"polyRate": 0.3235
 },
 "recent": [
+{
+"matchId": "35737555",
+"home": "Fulham",
+"away": "Chelsea",
+"league": "English Premier League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Chelsea",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+3
+],
+"kickoff": "2026-08-24T19:00:00Z",
+"settledAt": "2026-08-24T22:10:10.394124+00:00"
+},
+{
+"matchId": "35949824",
+"home": "CA Guemes",
+"away": "Atletico Rafaela",
+"league": "Argentinian Primera Nacional",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-08-24T19:00:00Z",
+"settledAt": "2026-08-24T22:10:10.394124+00:00"
+},
 {
 "matchId": "35951718",
 "home": "Reims",
@@ -1226,50 +1264,12 @@
 ],
 "kickoff": "2026-08-23T19:00:00Z",
 "settledAt": "2026-08-23T22:03:59.416613+00:00"
-},
-{
-"matchId": "35925622",
-"home": "EC Vitoria Salvador",
-"away": "Bahia",
-"league": "Brazilian Serie A",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Bahia",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-2
-],
-"kickoff": "2026-08-23T19:00:00Z",
-"settledAt": "2026-08-23T22:03:59.416613+00:00"
-},
-{
-"matchId": "35925613",
-"home": "Red Bull Bragantino",
-"away": "Gremio",
-"league": "Brazilian Serie A",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Red Bull Bragantino",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-08-23T19:00:00Z",
-"settledAt": "2026-08-23T22:03:59.416613+00:00"
 }
 ],
 "global": {
-"n": 605,
-"wins": 400,
-"hitRate": 0.6612
+"n": 607,
+"wins": 402,
+"hitRate": 0.6623
 },
-"pending": 6
+"pending": 5
 }
