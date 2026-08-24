@@ -473,3 +473,88 @@ class TestPublicTopN(unittest.TestCase):
         pos = {"wallet": "0x10", "league": "ESPORTS", "side": "X", "key": "k", "usd": 41000, "firstPrice": 0.62}
         card = P.build_public_card(pos, sc, restock=False, broad={})
         self.assertNotIn("Top-10-Wallet", card)
+
+
+# ── Konflikt zwischen Top-Wallets im Push (24.08.2026, Lucas' INOX-Fall) ─────
+# Zwei bewiesene Wallets auf Gegenseiten desselben Markts gingen als ZWEI sich widersprechende
+# Push raus (#7 auf INOX, #9 auf Butterfly), ohne sich zu erwaehnen. `_contested_market` fing das
+# nicht: das misst DOLLAR (>=$100K je Seite) und laeuft nur im Public-Kanal — $8,5K gegen $7K
+# segelt durch. Hier zaehlt der RANG, damit auch kleine Gegeneinstiege bewiesener Wallets auffallen.
+class TestConflictingTopWallet(unittest.TestCase):
+    def _scores(self):
+        return {
+            "0xAAA": {"n": 20, "wins": 12, "clvSumPP": 20, "usd": 40000, "pnl": 500000},  # #1
+            "0xBBB": {"n": 20, "wins": 12, "clvSumPP": 20, "usd": 40000, "pnl": 200000},  # #2
+            "0xCCC": {"n": 20, "wins": 12, "clvSumPP": 20, "usd": 40000, "pnl":  90000},  # #3
+            "0xTINY": {"n": 20, "wins": 12, "clvSumPP": 20, "usd": 4000, "pnl": 999999},  # ungerankt
+        }
+
+    def _broad(self, whales):
+        return {"k1": {"whales": whales}}
+
+    def _pos(self, wallet="0xAAA", side="INOX", key="k1"):
+        return {"wallet": wallet, "key": key, "side": side, "league": "ESPORTS",
+                "usd": 8500, "firstPrice": 0.55}
+
+    def test_findet_gegenseite(self):
+        b = self._broad([{"wallet": "0xccc", "side": "Butterfly", "usd": 7000}])
+        cf = P._conflicting_top_wallet(self._pos(), b, self._scores())
+        self.assertEqual(cf["rank"], 3)
+        self.assertEqual(cf["side"], "Butterfly")
+        self.assertEqual(cf["usd"], 7000.0)
+
+    def test_bestplatzierte_gegenseite_gewinnt(self):
+        # Mehrere Gegner -> der BESTE Rang zaehlt, nicht der groesste Einsatz.
+        b = self._broad([{"wallet": "0xccc", "side": "Butterfly", "usd": 90000},
+                         {"wallet": "0xbbb", "side": "Butterfly", "usd": 300}])
+        cf = P._conflicting_top_wallet(self._pos(), b, self._scores())
+        self.assertEqual(cf["rank"], 2)
+
+    def test_gleiche_seite_ist_kein_konflikt(self):
+        b = self._broad([{"wallet": "0xccc", "side": "INOX", "usd": 7000}])
+        self.assertIsNone(P._conflicting_top_wallet(self._pos(), b, self._scores()))
+
+    def test_eigene_wallet_zaehlt_nicht(self):
+        # Dieselbe Wallet auf mehreren Ausgaengen (z.B. Exact-Score-Maerkte) ist kein Widerspruch.
+        b = self._broad([{"wallet": "0xaaa", "side": "Butterfly", "usd": 7000}])
+        self.assertIsNone(P._conflicting_top_wallet(self._pos(), b, self._scores()))
+
+    def test_ungerankte_wallet_zaehlt_nicht(self):
+        b = self._broad([{"wallet": "0xtiny", "side": "Butterfly", "usd": 7000},
+                         {"wallet": "0xdead", "side": "Butterfly", "usd": 90000}])
+        self.assertIsNone(P._conflicting_top_wallet(self._pos(), b, self._scores()))
+
+    def test_rang_ausserhalb_top_n_zaehlt_nicht(self):
+        b = self._broad([{"wallet": "0xccc", "side": "Butterfly", "usd": 7000}])
+        self.assertIsNone(P._conflicting_top_wallet(self._pos(), b, self._scores(), top=2))
+        self.assertIsNotNone(P._conflicting_top_wallet(self._pos(), b, self._scores(), top=3))
+
+    def test_kleiner_einsatz_greift_trotzdem(self):
+        # Genau Lucas' Fall: $7K haette `_contested_market` (>=$100K) nie ausgeloest.
+        b = self._broad([{"wallet": "0xccc", "side": "Butterfly", "usd": 7000}])
+        self.assertFalse(P._contested_market("k1", b))
+        self.assertIsNotNone(P._conflicting_top_wallet(self._pos(), b, self._scores()))
+
+    def test_kaputte_daten_werfen_nicht(self):
+        sc = self._scores()
+        self.assertIsNone(P._conflicting_top_wallet({}, self._broad([]), sc))
+        self.assertIsNone(P._conflicting_top_wallet(self._pos(), None, sc))
+        self.assertIsNone(P._conflicting_top_wallet(self._pos(), {"k1": "kaputt"}, sc))
+        self.assertIsNone(P._conflicting_top_wallet(self._pos(key="andere"), self._broad(
+            [{"wallet": "0xccc", "side": "Butterfly", "usd": 7000}]), sc))
+        self.assertIsNone(P._conflicting_top_wallet(self._pos(), self._broad(
+            ["kaputt", {"side": "Butterfly"}, {"wallet": "0xccc"}]), sc))
+
+    def test_trades_card_zeigt_warnzeile(self):
+        b = self._broad([{"wallet": "0xccc", "side": "Butterfly", "usd": 7000}])
+        card = P.build_card(self._pos(), self._scores(), restock=False, broad=b)
+        self.assertIn("Rang #3", card)
+        self.assertIn("Gegenseite", card)
+        self.assertIn("Butterfly", card)
+
+    def test_trades_card_ohne_konflikt_ohne_zeile(self):
+        card = P.build_card(self._pos(), self._scores(), restock=False, broad=self._broad([]))
+        self.assertNotIn("Gegenseite", card)
+        # und ohne broad ueberhaupt (Default None) faellt die Card nicht um
+        self.assertNotIn("Gegenseite", P.build_card(self._pos(), self._scores(), restock=False))
+
