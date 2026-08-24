@@ -1,25 +1,25 @@
 {
-"generatedAt": "2026-08-24T19:51:19.776200+00:00",
+"generatedAt": "2026-08-24T20:02:34.079699+00:00",
 "byVerdict": {
 "konsens": {
-"n": 437,
-"wins": 346,
-"hitRate": 0.7918,
-"polyN": 409,
-"polyWins": 316,
-"polyHitRate": 0.7726,
+"n": 440,
+"wins": 348,
+"hitRate": 0.7909,
+"polyN": 411,
+"polyWins": 317,
+"polyHitRate": 0.7713,
 "pinnN": 28,
 "pinnHitRate": 0.7143
 },
 "uneinig": {
-"n": 149,
-"wins": 42,
-"hitRate": 0.2819,
-"polyN": 132,
+"n": 151,
+"wins": 43,
+"hitRate": 0.2848,
+"polyN": 133,
 "polyWins": 44,
-"polyHitRate": 0.3333,
-"pinnN": 78,
-"pinnHitRate": 0.6282
+"polyHitRate": 0.3308,
+"pinnN": 79,
+"pinnHitRate": 0.6203
 },
 "teil": {
 "n": 5,
@@ -98,6 +98,11 @@
 "wins": 9,
 "hitRate": 0.6923
 },
+"Swedish Allsvenskan": {
+"n": 13,
+"wins": 10,
+"hitRate": 0.7692
+},
 "Turkish Super League": {
 "n": 13,
 "wins": 8,
@@ -117,11 +122,6 @@
 "n": 12,
 "wins": 7,
 "hitRate": 0.5833
-},
-"Swedish Allsvenskan": {
-"n": 12,
-"wins": 9,
-"hitRate": 0.75
 },
 "Italian Coppa Italia": {
 "n": 11,
@@ -148,10 +148,20 @@
 "wins": 8,
 "hitRate": 0.8
 },
+"Saudi Professional League": {
+"n": 10,
+"wins": 8,
+"hitRate": 0.8
+},
 "Chinese Super League": {
 "n": 9,
 "wins": 5,
 "hitRate": 0.5556
+},
+"Danish Superliga": {
+"n": 9,
+"wins": 7,
+"hitRate": 0.7778
 },
 "English Premier League": {
 "n": 9,
@@ -162,16 +172,6 @@
 "n": 9,
 "wins": 6,
 "hitRate": 0.6667
-},
-"Saudi Professional League": {
-"n": 9,
-"wins": 7,
-"hitRate": 0.7778
-},
-"Danish Superliga": {
-"n": 8,
-"wins": 6,
-"hitRate": 0.75
 },
 "French Ligue 1": {
 "n": 8,
@@ -278,6 +278,11 @@
 "wins": 2,
 "hitRate": 0.5
 },
+"Swedish Superettan": {
+"n": 4,
+"wins": 0,
+"hitRate": 0.0
+},
 "Brazilian Serie C": {
 "n": 3,
 "wins": 1,
@@ -342,11 +347,6 @@
 "n": 2,
 "wins": 2,
 "hitRate": 1.0
-},
-"Swedish Superettan": {
-"n": 2,
-"wins": 0,
-"hitRate": 0.0
 },
 "Swiss Super League": {
 "n": 2,
@@ -486,25 +486,120 @@
 },
 "byStrength": {
 "strong": {
-"n": 343,
-"wins": 272,
-"hitRate": 0.793
+"n": 344,
+"wins": 273,
+"hitRate": 0.7936
 },
 "weak": {
-"n": 215,
-"wins": 99,
-"hitRate": 0.4605
+"n": 219,
+"wins": 101,
+"hitRate": 0.4612
 }
 },
 "divergence": {
-"n": 149,
-"betfairWins": 42,
-"betfairRate": 0.2819,
-"polyN": 132,
+"n": 151,
+"betfairWins": 43,
+"betfairRate": 0.2848,
+"polyN": 133,
 "polyWins": 44,
-"polyRate": 0.3333
+"polyRate": 0.3308
 },
 "recent": [
+{
+"matchId": "35948543",
+"home": "Malmo FF",
+"away": "Djurgardens",
+"league": "Swedish Allsvenskan",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Djurgardens",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+3
+],
+"kickoff": "2026-08-24T17:00:00Z",
+"settledAt": "2026-08-24T20:02:33.913606+00:00"
+},
+{
+"matchId": "35947069",
+"home": "Brondby",
+"away": "Silkeborg",
+"league": "Danish Superliga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Brondby",
+"polySide": null,
+"winner": "home",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-08-24T17:00:00Z",
+"settledAt": "2026-08-24T20:02:33.913606+00:00"
+},
+{
+"matchId": "35953394",
+"home": "Ostersunds FK",
+"away": "Ljungskile",
+"league": "Swedish Superettan",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Ostersunds FK",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-08-24T17:00:00Z",
+"settledAt": "2026-08-24T20:02:33.913606+00:00"
+},
+{
+"matchId": "35953398",
+"home": "Varnamo",
+"away": "Landskrona",
+"league": "Swedish Superettan",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Varnamo",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-24T17:00:00Z",
+"settledAt": "2026-08-24T20:02:33.913606+00:00"
+},
+{
+"matchId": "35967526",
+"home": "Al-Ittihad",
+"away": "Al-Hazm (KSA)",
+"league": "Saudi Professional League",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Al-Ittihad",
+"polySide": null,
+"winner": "home",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+3,
+2
+],
+"kickoff": "2026-08-24T18:00:00Z",
+"settledAt": "2026-08-24T20:02:33.913606+00:00"
+},
 {
 "matchId": "35951330",
 "home": "Altglienicke",
@@ -1169,107 +1264,12 @@
 ],
 "kickoff": "2026-08-23T19:30:00Z",
 "settledAt": "2026-08-23T21:27:31.186629+00:00"
-},
-{
-"matchId": "35949501",
-"home": "Sport Boys (Per)",
-"away": "Cienciano",
-"league": "Peruvian Primera Division",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Sport Boys (Per)",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-5,
-1
-],
-"kickoff": "2026-08-23T18:00:00Z",
-"settledAt": "2026-08-23T21:06:08.249060+00:00"
-},
-{
-"matchId": "35857387",
-"home": "Cesena",
-"away": "Sampdoria",
-"league": "Italian Serie B",
-"verdict": "uneinig",
-"moneySide": "draw",
-"moneyName": "The Draw",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-08-23T19:00:00Z",
-"settledAt": "2026-08-23T20:54:38.226471+00:00"
-},
-{
-"matchId": "35949451",
-"home": "Hajduk Split",
-"away": "Osijek",
-"league": "Croatian HNL",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Hajduk Split",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-4,
-0
-],
-"kickoff": "2026-08-23T19:00:00Z",
-"settledAt": "2026-08-23T20:54:38.226471+00:00"
-},
-{
-"matchId": "35734729",
-"home": "Torino",
-"away": "AC Milan",
-"league": "Italian Serie A",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "AC Milan",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-08-23T18:45:00Z",
-"settledAt": "2026-08-23T20:48:48.318793+00:00"
-},
-{
-"matchId": "35737572",
-"home": "Atalanta",
-"away": "Sassuolo",
-"league": "Italian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Atalanta",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-08-23T18:45:00Z",
-"settledAt": "2026-08-23T20:48:48.318793+00:00"
 }
 ],
 "global": {
-"n": 591,
-"wins": 389,
-"hitRate": 0.6582
+"n": 596,
+"wins": 392,
+"hitRate": 0.6577
 },
-"pending": 19
+"pending": 14
 }
