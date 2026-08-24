@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-24T14:05:13.854471+00:00",
+ "generatedAt": "2026-08-24T15:01:05.210966+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,7 +10,7 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 392,
- "pinnKeys": 266,
+ "pinnKeys": 268,
  "matched": 200,
  "footballRows": 180,
  "crossRows": 212,
@@ -29,8 +29,37 @@
   "soccer_liga": 135
  },
  "trackRecord": {
-  "tracked": 191,
+  "tracked": 193,
   "converged": 49
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|coloradorockies-washingtonnationals|coloradorockies",
+   "sport": "baseball_mlb",
+   "event": "Colorado Rockies vs Washington Nationals",
+   "market": "Moneyline",
+   "outcome": "Colorado Rockies",
+   "polyPP": 43.5,
+   "pinnPP": 36.3,
+   "gapPP": 7.18,
+   "vol": 5792,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-24T15:01:05.210262+00:00"
+  },
+  {
+   "id": "baseball_mlb|coloradorockies-washingtonnationals|washingtonnationals",
+   "sport": "baseball_mlb",
+   "event": "Colorado Rockies vs Washington Nationals",
+   "market": "Moneyline",
+   "outcome": "Washington Nationals",
+   "polyPP": 56.5,
+   "pinnPP": 63.7,
+   "gapPP": -7.18,
+   "vol": 5792,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-24T15:01:05.210262+00:00"
+  }
+ ]
 }
