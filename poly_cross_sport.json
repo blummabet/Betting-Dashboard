@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-24T22:05:08.232691+00:00",
+ "generatedAt": "2026-08-24T22:44:54.850575+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,11 +10,11 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 400,
- "pinnKeys": 290,
- "matched": 200,
+ "pinnKeys": 296,
+ "matched": 206,
  "footballRows": 180,
  "crossRows": 220,
- "footballSkippedStale": 72,
+ "footballSkippedStale": 58,
  "seenBySport": {
   "americanfootball_nfl": 120,
   "baseball_mlb": 72,
@@ -24,13 +24,70 @@
   "soccer_liga": 135
  },
  "matchedBySport": {
-  "baseball_mlb": 20,
+  "baseball_mlb": 26,
   "soccer_mls": 45,
   "soccer_liga": 135
  },
  "trackRecord": {
-  "tracked": 196,
+  "tracked": 200,
   "converged": 49
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|arizonadiamondbacks-chicagocubs|chicagocubs",
+   "sport": "baseball_mlb",
+   "event": "Chicago Cubs vs Arizona Diamondbacks",
+   "market": "Moneyline",
+   "outcome": "Chicago Cubs",
+   "polyPP": 57.5,
+   "pinnPP": 51.2,
+   "gapPP": 6.35,
+   "vol": 34616,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-24T22:44:54.850291+00:00"
+  },
+  {
+   "id": "baseball_mlb|arizonadiamondbacks-chicagocubs|arizonadiamondbacks",
+   "sport": "baseball_mlb",
+   "event": "Chicago Cubs vs Arizona Diamondbacks",
+   "market": "Moneyline",
+   "outcome": "Arizona Diamondbacks",
+   "polyPP": 42.5,
+   "pinnPP": 48.8,
+   "gapPP": -6.35,
+   "vol": 34616,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-24T22:44:54.850291+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagowhitesox-texasrangers|texasrangers",
+   "sport": "baseball_mlb",
+   "event": "Texas Rangers vs Chicago White Sox",
+   "market": "Moneyline",
+   "outcome": "Texas Rangers",
+   "polyPP": 44.5,
+   "pinnPP": 50.5,
+   "gapPP": -6.01,
+   "vol": 35578,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-24T22:44:54.850291+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagowhitesox-texasrangers|chicagowhitesox",
+   "sport": "baseball_mlb",
+   "event": "Texas Rangers vs Chicago White Sox",
+   "market": "Moneyline",
+   "outcome": "Chicago White Sox",
+   "polyPP": 55.5,
+   "pinnPP": 49.5,
+   "gapPP": 6.01,
+   "vol": 35578,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-24T22:44:54.850291+00:00"
+  }
+ ]
 }
