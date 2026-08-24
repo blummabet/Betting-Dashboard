@@ -1,19 +1,18 @@
 {
 "_meta": {
 "description": "Übersicht-Puls: letzte 30 abgerechnete Picks (CLV/Trefferquote).",
-"generatedAt": "2026-08-24T06:44:27Z",
-"updated_at": "2026-08-24T06:44:27Z"
+"generatedAt": "2026-08-24T07:59:05Z",
+"updated_at": "2026-08-24T07:59:05Z"
 },
 "n": 30,
 "nClv": 30,
 "nGraded": 29,
-"avgClvPP": -2.72,
+"avgClvPP": -2.61,
 "pctBeatClose": 26.7,
-"winPct": 65.5,
-"wins": 19,
-"losses": 10,
+"winPct": 62.1,
+"wins": 18,
+"losses": 11,
 "series": [
--5.44,
 -1.64,
 -18.65,
 -0.63,
@@ -42,10 +41,11 @@
 10.16,
 -14.99,
 -0.42,
-1.55
+1.55,
+-2.13
 ],
-"oldest": "2026-08-17T08:04:11Z",
-"newest": "2026-08-23T19:27:35Z",
+"oldest": "2026-08-20T07:44:21Z",
+"newest": "2026-08-24T07:58:59Z",
 "betfair": {
 "n": 8000,
 "hitPct": 52.3,
@@ -83,10 +83,20 @@
 }
 },
 "signalBoard": {
-"n": 48,
-"baseWinPct": 56,
+"n": 49,
+"baseWinPct": 55,
 "minFire": 6,
 "rows": [
+{
+"name": "form_trend",
+"fire": 36,
+"supp": 25,
+"suppWinPct": 56,
+"opp": 11,
+"oppWinPct": 45,
+"edge": 11,
+"clvAvg": -2.32
+},
 {
 "name": "topscorer_momentum",
 "fire": 35,
@@ -96,16 +106,6 @@
 "oppWinPct": 100,
 "edge": -63,
 "clvAvg": -2.36
-},
-{
-"name": "form_trend",
-"fire": 35,
-"supp": 24,
-"suppWinPct": 58,
-"opp": 11,
-"oppWinPct": 45,
-"edge": 13,
-"clvAvg": -2.33
 },
 {
 "name": "form_rating",
@@ -139,23 +139,43 @@
 },
 {
 "name": "transfer_shift",
-"fire": 23,
-"supp": 12,
-"suppWinPct": 58,
+"fire": 24,
+"supp": 13,
+"suppWinPct": 54,
 "opp": 8,
 "oppWinPct": 75,
-"edge": -17,
+"edge": -21,
 "clvAvg": -2.26
 },
 {
 "name": "venue_form",
-"fire": 22,
-"supp": 10,
-"suppWinPct": 70,
+"fire": 23,
+"supp": 11,
+"suppWinPct": 64,
 "opp": 12,
 "oppWinPct": 67,
-"edge": 3,
-"clvAvg": -1.62
+"edge": -3,
+"clvAvg": -1.64
+},
+{
+"name": "betfair_money",
+"fire": 21,
+"supp": 13,
+"suppWinPct": 69,
+"opp": 8,
+"oppWinPct": 50,
+"edge": 19,
+"clvAvg": -3.47
+},
+{
+"name": "injury",
+"fire": 20,
+"supp": 13,
+"suppWinPct": 62,
+"opp": 7,
+"oppWinPct": 57,
+"edge": 5,
+"clvAvg": -3.38
 },
 {
 "name": "mls_travel",
@@ -166,26 +186,6 @@
 "oppWinPct": 50,
 "edge": 17,
 "clvAvg": -3.18
-},
-{
-"name": "betfair_money",
-"fire": 20,
-"supp": 13,
-"suppWinPct": 69,
-"opp": 7,
-"oppWinPct": 57,
-"edge": 12,
-"clvAvg": -3.53
-},
-{
-"name": "injury",
-"fire": 19,
-"supp": 12,
-"suppWinPct": 67,
-"opp": 7,
-"oppWinPct": 57,
-"edge": 10,
-"clvAvg": -3.45
 },
 {
 "name": "lead_lag_bias",
@@ -249,13 +249,13 @@
 },
 {
 "name": "lineup_signal",
-"fire": 2,
-"supp": 2,
-"suppWinPct": 50,
+"fire": 3,
+"supp": 3,
+"suppWinPct": 33,
 "opp": 0,
 "oppWinPct": null,
 "edge": null,
-"clvAvg": -0.06
+"clvAvg": -0.75
 },
 {
 "name": "apif_predictions",
@@ -320,19 +320,19 @@
 ]
 },
 "nobetBoard": {
-"n": 91,
-"wins": 49,
-"winPct": 54,
-"clvAvg": -5.41,
+"n": 108,
+"wins": 54,
+"winPct": 50,
+"clvAvg": -5.09,
 "minFire": 6,
 "clvBand": 1.0,
 "rows": [
 {
 "reason": "Conviction zu dünn",
-"n": 50,
-"wins": 22,
-"winPct": 44,
-"clvAvg": -5.75
+"n": 67,
+"wins": 27,
+"winPct": 40,
+"clvAvg": -5.15
 },
 {
 "reason": "Linie weggelaufen",
