@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v180';   // 21.08.2026 (Lucas): Poly-'Heute'-Bet direkt ausloesen wo moeglich (Match zu Cards/Value-Pick via Slug+Seite), sonst Link.
+const VERSION = 'cocobet-v181';   // 21.08.2026 (Lucas): Poly-'Heute'-Bet direkt ausloesen wo moeglich (Match zu Cards/Value-Pick via Slug+Seite), sonst Link.
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

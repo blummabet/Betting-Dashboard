@@ -22,6 +22,8 @@ Lokales Setup (optional, zum Testen):
 import argparse
 import json
 import os
+import re as _re      # 24.08.2026: modulweit — _norm_outcome laeuft auf Modulebene,
+                      # die lokalen `import re as _re` in einzelnen Funktionen greifen dort nicht.
 import sys
 import math
 import time
@@ -158,6 +160,45 @@ def _parse_json_list(val) -> list:
         except Exception:
             return []
     return []
+
+
+def _norm_outcome(s) -> str:
+    return _re.sub(r"[^a-z0-9]", "", str(s or "").lower())
+
+
+def find_token_by_outcome_name(event: dict, side: str) -> str | None:
+    """Token über den AUSGANGS-NAMEN finden (Tennis-Spieler, E-Sport-Teams, Over/Under …). REIN.
+
+    24.08.2026: Der „Heute\"/„Whales\"-Direktweg schickt den Token normalerweise mit — poly_money_broad
+    schreibt ihn je Markt in den Feed. Direkt nach einem Deploy (vor dem ersten Scan mit dem neuen
+    Code) und bei Märkten, die das Holder-Budget eines Laufs nicht erfasst hat, fehlt er aber.
+    Dann löst der Placer selbst auf. `find_clob_token_id` hilft hier NICHT: die kennt nur
+    OUTCOME_MAP (Heimsieg/Over 2.5/BTTS), keine Spielernamen.
+
+    Zwei Poly-Strukturen, dieselben wie in poly_money_broad._outcomes:
+      (1) ein Markt mit Team-/Spieler-Ausgängen → Label direkt matchen
+      (2) gruppierte Ja/Nein-Märkte → Ausgang steht im groupItemTitle, gesetzt wird der Ja-Token
+    """
+    want = _norm_outcome(side)
+    if not want:
+        return None
+    for m in (event.get("markets") or []):
+        try:
+            names = json.loads(m.get("outcomes", "[]") or "[]")
+            toks = json.loads(m.get("clobTokenIds", "[]") or "[]")
+        except Exception:
+            continue
+        if not names or len(names) != len(toks):
+            continue
+        for i, n in enumerate(names):                      # (1)
+            if _norm_outcome(n) == want:
+                return toks[i]
+        title = m.get("groupItemTitle")                     # (2)
+        if title and _norm_outcome(title) == want:
+            yi = next((i for i, n in enumerate(names) if _norm_outcome(n) == "yes"), None)
+            if yi is not None:
+                return toks[yi]
+    return None
 
 
 def find_clob_token_id(event: dict, market_label: str, home: str, away: str) -> str | None:
@@ -986,6 +1027,21 @@ def main():
         if order.get("tokenId"):
             token_id = str(order["tokenId"])
             print("  🎯 Token direkt aus der Order — keine Gamma-Aufloesung noetig")
+        # Kein Token in der Order (Deploy frisch / Markt nicht im Holder-Budget des Scans)?
+        # Dann über den Slug auflösen — der Play trägt polyKey + side. So hängt der Button NICHT
+        # an der Scan-Kadenz. (24.08.2026, Lucas: „haben nur einen Öffnen-Link".)
+        if not token_id and order.get("polyKey") and order.get("side"):
+            _slug = str(order["polyKey"])
+            _ev = gamma_fetch_by_slug(_slug)
+            if not _ev:
+                _base = _re.sub(r"-more-markets?$", "", _slug)
+                _ev = gamma_fetch_by_slug(_base) if _base != _slug else None
+            if _ev:
+                token_id = find_token_by_outcome_name(_ev, order["side"])
+                if token_id:
+                    print(f"  🎯 Token über Slug+Ausgangsname aufgelöst ({_slug} → {order['side']})")
+                else:
+                    print(f"  ⚠️  Ausgang '{order['side']}' nicht in {_slug} gefunden — versuche Standardweg")
         if not token_id and order.get("_isHandicap") and order.get("tokens"):
             token_id = order["tokens"][0]
             print(f"  🎯 Handicap-Markt — Spread-Token direkt aus Candidate")

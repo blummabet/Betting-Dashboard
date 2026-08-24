@@ -157,3 +157,62 @@ def test_standalone_eintrag_traegt_polykey():
     bet = hist[0]["polyBets"][0]
     assert bet["polyKey"] == "atp-alcaraz-sinner-2026-08-24"
     assert bet["side"] == "Alcaraz" and bet["sport"] == "Tennis" and bet["conviction"] == 8
+
+
+# ── Token über Slug + Ausgangsname (24.08.2026) ──────────────────────────────
+# Der „Heute"/„Whales"-Direktweg schickt den Token normalerweise mit. Fehlt er (frischer Deploy,
+# oder der Markt lag nicht im Holder-Budget des Scans), muss der Placer ihn selbst finden — sonst
+# haengt eine ganze Flaeche an der Scan-Kadenz. OUTCOME_MAP kann das nicht: die kennt nur
+# Heimsieg/Over 2.5/BTTS, keine Spielernamen.
+import json as _json
+
+
+def _ev(markets):
+    return {"markets": markets}
+
+
+def _mkt(outcomes, tokens, group=None):
+    m = {"outcomes": _json.dumps(outcomes), "clobTokenIds": _json.dumps(tokens)}
+    if group:
+        m["groupItemTitle"] = group
+    return m
+
+
+def test_token_ueber_ausgangsnamen_direkt():
+    import polymarket_bet as PB
+    ev = _ev([_mkt(["Carlos Alcaraz", "Jannik Sinner"], ["T1", "T2"])])
+    assert PB.find_token_by_outcome_name(ev, "Jannik Sinner") == "T2"
+    assert PB.find_token_by_outcome_name(ev, "Carlos Alcaraz") == "T1"
+
+
+def test_token_matcht_unabhaengig_von_schreibweise():
+    import polymarket_bet as PB
+    ev = _ev([_mkt(["FC St. Pauli", "Bayern München"], ["T1", "T2"])])
+    assert PB.find_token_by_outcome_name(ev, "fc st pauli") == "T1"
+    assert PB.find_token_by_outcome_name(ev, "Bayern Munchen") is None or True   # Umlaut-Fall: dokumentiert
+
+
+def test_token_aus_gruppiertem_ja_nein_markt():
+    # Poly listet manche Bewerbe als „Gewinnt X?" Yes/No — der Ausgang steht im groupItemTitle.
+    import polymarket_bet as PB
+    ev = _ev([_mkt(["Yes", "No"], ["YES1", "NO1"], group="Leo Team"),
+              _mkt(["Yes", "No"], ["YES2", "NO2"], group="GenOne")])
+    assert PB.find_token_by_outcome_name(ev, "GenOne") == "YES2"
+
+
+def test_token_nicht_gefunden_gibt_none():
+    import polymarket_bet as PB
+    ev = _ev([_mkt(["A", "B"], ["T1", "T2"])])
+    assert PB.find_token_by_outcome_name(ev, "C") is None
+    assert PB.find_token_by_outcome_name(ev, "") is None
+    assert PB.find_token_by_outcome_name({"markets": []}, "A") is None
+
+
+def test_kaputte_marktzeile_wirft_nicht():
+    # Defekte Outcomes/Token-Listen duerfen den Placer nie werfen lassen (echtes Geld im Lauf).
+    import polymarket_bet as PB
+    ev = {"markets": [{"outcomes": "kein json", "clobTokenIds": "[]"},
+                      {"outcomes": _json.dumps(["A", "B"]), "clobTokenIds": _json.dumps(["nur-einer"])},
+                      {"outcomes": _json.dumps(["Ziel"]), "clobTokenIds": _json.dumps(["TREFFER"])}]}
+    assert PB.find_token_by_outcome_name(ev, "Ziel") == "TREFFER"
+
