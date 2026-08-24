@@ -100,13 +100,13 @@
             .then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
         });
     };
-    return Promise.all([jf('betfair_prices.json'), jf('betfair_history.json'), jf('betfair_track_record.json'), jf('betfair_public_record.json'), jf('betfair_direction.json'), jf('betfair_consensus.json')]);
+    return Promise.all([jf('betfair_prices.json'), jf('betfair_history.json'), jf('betfair_track_record.json'), jf('betfair_public_record.json'), jf('betfair_direction.json'), jf('betfair_consensus.json'), jf('betfair_league_norm.json')]);
   }
   function _bfLoad() {
     if (_bf.data || _bf.loading) return;
     _bf.loading = true;
     _bfFetch3().then(function (a) {
-      _bf.data = a[0] || { matches: [] }; if (_bf.data && Array.isArray(_bf.data.matches)) _bf.data.matches = _bfDedupMatches(_bf.data.matches); _bf.hist = a[1] || {}; _bf.track = a[2] || null; _bf.pubrec = a[3] || null; _bf.dir = a[4] || {}; _bf.consensus = a[5] || null;
+      _bf.data = a[0] || { matches: [] }; if (_bf.data && Array.isArray(_bf.data.matches)) _bf.data.matches = _bfDedupMatches(_bf.data.matches); _bf.hist = a[1] || {}; _bf.track = a[2] || null; _bf.pubrec = a[3] || null; _bf.dir = a[4] || {}; _bf.consensus = a[5] || null; _bf.lnorm = a[6] || null;
       _bf._cohCache = {}; _bf._mixBase = null; _bf._normBase = null;
       _bf.loading = false; _bf.cardOpen = {};
       var p = document.getElementById('betfairRadarPanel');
@@ -132,6 +132,7 @@
       if (a[3] != null) _bf.pubrec = a[3];
       if (a[4] != null) _bf.dir = a[4];
       if (a[5] != null) _bf.consensus = a[5];
+      if (a[6] != null) _bf.lnorm = a[6];
       _bf._cohCache = {}; _bf._mixBase = null; _bf._normBase = null;
       _bf.loading = false;
       var pp = document.getElementById('betfairRadarPanel');
@@ -450,10 +451,10 @@
 
   // ── ×-Norm: liegt auf DIESEM Spiel überverhältnismäßig viel Geld? ───────────────
   // Idee (Lucas 30.07.): nicht die absolute €-Summe zählt, sondern das VERHÄLTNIS zum
-  // Üblichen für die gleiche Spielphase. Live zieht generell mehr Geld — also vergleichen
-  // wir live-mit-live und vor-Anpfiff-mit-vor-Anpfiff: Stage-Median über ALLE aktuellen
-  // Spiele (quer über die Ligen) = sofort nutzbarer Querschnitts-Fallback. Die gelernte
-  // Liga-Basis (betfair_track_record) kommt als zweite Schicht später obendrauf.
+  // Üblichen für die gleiche Liga UND die gleiche Spielphase. Live zieht generell mehr Geld —
+  // also vergleichen wir live-mit-live und vor-Anpfiff-mit-vor-Anpfiff, und ein EPL-Spiel nur
+  // mit EPL-Spielen. Die Basis liefert betfair_league_norm.py (gelernt aus der Historie);
+  // Details und der Grund dafür stehen bei _normBasis weiter unten.
   // Über ~1,6× Median = auffällig (Bernstein), über ~2,6× = stark (rot umrandet).
   var NORM_AMBER = 1.6, NORM_RED = 2.6, NORM_MIN_PEERS = 4, NORM_MIN_EUR = 3000;
   function _stageOf(m) {
@@ -469,44 +470,71 @@
   // Stage → { med: Median-€ auf dem ganzen Spiel, n: Anzahl Vergleichsspiele }. Memoisiert bis Reload,
   // wird an denselben Stellen wie _mixBase geleert. Nur Spiele ab NORM_MIN_EUR zählen (Kleckerbeträge
   // würden den Median nach unten ziehen und harmlose Spiele „über Norm" aussehen lassen).
-  // 22.08.2026 (Lucas: „auf Liga relativ"): drei Vergleichs-Ebenen statt nur global. Ein EPL-Riese
-  // gegen den globalen Live-Pool (voll Mini-Ligen) ergab ×200 = nutzlos. Jetzt zuerst gegen die EIGENE
-  // Liga: „viel Geld FÜR EIN EPL-Spiel" ist die aussagekräftige Zahl. Kaskade in _normRatio:
-  // Liga+Phase → Liga (jede Phase) → global+Phase (Fallback für dünn besetzte Ligen).
+  // 22.08.2026 (Lucas: „auf Liga relativ"): Vergleich gegen die EIGENE Liga statt gegen alles —
+  // „viel Geld FÜR EIN EPL-Spiel" ist die aussagekräftige Zahl. _normBase liefert dafür den
+  // heutigen Schnappschuss (Liga+Phase, Liga). Der greift aber nur, wenn heute genug Spiele
+  // derselben Liga laufen — die Hauptquelle ist seit 24.08. die gelernte Basis, siehe _normBasis.
   function _normLeague(m) { return String(m.league || m.leagueId || '?'); }
   function _normBase() {
     if (_bf._normBase) return _bf._normBase;
-    var ms = (_bf.data && _bf.data.matches) || [], ls = {}, lg = {}, sg = {}, i;
+    // 24.08.2026: der globale Pool (sg) wird nicht mehr gebaut — er war die Ursache der ×80.
+    var ms = (_bf.data && _bf.data.matches) || [], ls = {}, lg = {}, i;
     for (i = 0; i < ms.length; i++) {
       var tot = eur(totalG(ms[i])); if (tot < NORM_MIN_EUR) continue;
       var st = _stageOf(ms[i]), L = _normLeague(ms[i]);
       (ls[st + '|' + L] = ls[st + '|' + L] || []).push(tot);
-      (lg[L] = lg[L] || []).push(tot);
-      (sg[st] = sg[st] || []).push(tot);
+      (lg[L] = lg[L] || []).push(tot);   // 24.08.2026: kein globaler Stage-Pool mehr — siehe _normBasis
     }
     function _med(map) {
       var out = {}; for (var k in map) { var a = map[k].sort(function (x, y) { return x - y; }); out[k] = { med: a[Math.floor(a.length / 2)], n: a.length }; } return out;
     }
-    _bf._normBase = { ls: _med(ls), lg: _med(lg), sg: _med(sg) };
+    _bf._normBase = { ls: _med(ls), lg: _med(lg) };
     return _bf._normBase;
   }
-  // Verhältnis Spiel-Geld ÷ Stage-Median. null, wenn zu wenige Vergleichsspiele (Median instabil)
-  // oder das Spiel selbst zu klein ist (dann ist „×3" nur Rauschen auf Kleckerbeträgen).
+  // 24.08.2026 (Lucas: „bei Premier League und Serie A steht das immer noch so extrem"): die
+  // Liga-Stufe vom 22.08. war eingebaut — sie lief nur ins Leere. Jede Stufe verlangt
+  // NORM_MIN_PEERS Vergleichsspiele, und die kamen aus dem AKTUELLEN Schnappschuss. Den erreichen
+  // fast nie 4 Spiele derselben Liga (24.08.: 2 von 34 Ligen), also fiel praktisch alles auf den
+  // GLOBALEN Pool durch — und der besteht aus Slovenian U19, Reserve- und Nachwuchsspielen
+  // (Median ~€11K). Fulham–Chelsea kam so auf ×82; an echten EPL-Spielen gemessen sind es ×0.6.
+  // Das Badge war nicht ungenau, es war INVERTIERT: das Spiel lag unter seiner Liga-Norm.
+  //
+  // Die Basis muss aus der ZEIT kommen, nicht aus dem Moment. betfair_league_norm.py lernt rollend
+  // „was ist üblich für Liga X in Phase Y" (60-Tage-Fenster, Median echter Spiele) — das ist die
+  // erste Stufe. Der heutige Schnappschuss bleibt als Notnagel für Ligen, die noch keine Historie
+  // haben. Der globale Fallback ist RAUS: kennen wir die Liga nicht, sagen wir nichts, statt sie
+  // am falschen Maßstab zu messen. Kein Badge ist besser als ein falsches.
+  function _normLearned(L, st) {
+    var b = _bf.lnorm && _bf.lnorm.byLeagueStage, x = b && b[L + '|' + st];
+    return (x && x.n >= NORM_MIN_PEERS && x.med) ? x : null;
+  }
+  // { med, n, src } oder null. src: 'gelernt' = Historie, 'heute' = aktueller Schnappschuss.
+  function _normBasis(m) {
+    if (eur(totalG(m)) < NORM_MIN_EUR) return null;   // Kleckerspiel: „×3" waere nur Rauschen
+    var st = _stageOf(m), L = _normLeague(m);
+    var pick = _normLearned(L, st);                   // 1. gelernte Liga+Phase (die aussagekraeftige)
+    if (pick) return { med: pick.med, n: pick.n, src: 'gelernt' };
+    var b = _normBase(), ok = function (x) { return x && x.n >= NORM_MIN_PEERS && x.med; };
+    pick = b.ls[st + '|' + L];                        // 2. heutige Spiele derselben Liga+Phase
+    if (!ok(pick)) pick = b.lg[L];                    // 3. heutige Spiele derselben Liga
+    return ok(pick) ? { med: pick.med, n: pick.n, src: 'heute' } : null;
+  }
   function _normRatio(m) {
-    var tot = eur(totalG(m)); if (tot < NORM_MIN_EUR) return null;
-    var b = _normBase(), st = _stageOf(m), L = _normLeague(m), ok = function (x) { return x && x.n >= NORM_MIN_PEERS && x.med; };
-    var pick = b.ls[st + '|' + L];                 // 1. gleiche Liga + gleiche Phase (praeziseste)
-    if (!ok(pick)) pick = b.lg[L];                  // 2. gleiche Liga, jede Phase
-    if (!ok(pick)) pick = b.sg[st];                 // 3. global gleiche Phase (Fallback duenner Ligen)
-    if (!ok(pick)) return null;
-    return tot / pick.med;
+    var b = _normBasis(m);
+    return b ? (eur(totalG(m)) / b.med) : null;
   }
   function _normLvl(m) { var r = _normRatio(m); return r == null ? 0 : (r >= NORM_RED ? 2 : r >= NORM_AMBER ? 1 : 0); }
   function _normCls(m) { var l = _normLvl(m); return l === 2 ? ' bfb-over2' : l === 1 ? ' bfb-over' : ''; }
   function _normBadge(m) {
-    var r = _normRatio(m); if (r == null || r < NORM_AMBER) return '';
+    var b = _normBasis(m); if (!b) return '';
+    var r = eur(totalG(m)) / b.med; if (r < NORM_AMBER) return '';
     var red = r >= NORM_RED, col = red ? '#f0883e' : C.gold;   // 02.08.2026 (Lucas): Gold->Orange zweistufig statt Rot (Rot = nur Live)
-    return '<span class="bfb-norm" style="color:' + col + ';border-color:' + col + '" title="' + (red ? 'weit über' : 'über') + ' dem üblichen Geld für diese Liga (Median vergleichbarer Spiele derselben Liga/Phase; Fallback global)">×' + r.toFixed(1) + ' Norm</span>';
+    // Der Tooltip nennt die Basis, damit die Zahl nachpruefbar ist: an WAS gemessen und aus wie
+    // vielen Spielen. Genau das fehlte, als das Badge still gegen den globalen Pool mass.
+    var basis = (b.src === 'gelernt' ? 'gelernter Median dieser Liga in dieser Spielphase'
+                                     : 'Median der heutigen Spiele dieser Liga')
+              + ': ' + fmtE(b.med) + ' aus ' + b.n + ' Spielen';
+    return '<span class="bfb-norm" style="color:' + col + ';border-color:' + col + '" title="' + (red ? 'weit über' : 'über') + ' dem üblichen Geld für diese Liga — ' + basis + '. Ohne belastbare Liga-Basis zeigen wir gar kein Badge.">×' + r.toFixed(1) + ' Norm</span>';
   }
   function _normLine(m) { var b = _normBadge(m); return b ? '<br>' + b : ''; }
   // (31.07.2026, Lucas) Live-Hervorhebung in den Streifen: Rot = NUR Live (×-Norm ist amber).
@@ -524,6 +552,8 @@
     return parts.length ? '<br>' + parts.join(' ') : '';
   }
   window._bfNormRatio = _normRatio;   // Test-Hook
+  window._bfNormBasis = _normBasis;   // Test-Hook
+  window._bfNormBadge = _normBadge;   // Test-Hook
   window._bfStageOf = _stageOf;
 
   function dateBar(matches) {
