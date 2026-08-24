@@ -39,9 +39,9 @@ def _now():
     return datetime.now(timezone.utc)
 
 
-def _load(name):
+def _load(name, base=None):
     try:
-        return json.loads((BASE / name).read_text(encoding="utf-8"))
+        return json.loads(((base or BASE) / name).read_text(encoding="utf-8"))
     except Exception:
         return {}
 
@@ -147,13 +147,19 @@ def aggregate(settled) -> dict:
             "byCat": {k: _agg_one(v) for k, v in sorted(by_cat.items())}}
 
 
-def write_from_emit(emit, close=None, resolutions=None, now=None) -> dict:
+def write_from_emit(emit, close=None, resolutions=None, now=None, base=None) -> dict:
     """Aus einem BEREITS geladenen Emitter-Output schreiben. So muss der Scan node/jsdom nur EINMAL
-    starten (poly_shortlist_track ruft das mit demselben `emit` auf)."""
-    close = close if isinstance(close, dict) else _load(CLOSE_FILE)
-    resolutions = resolutions if isinstance(resolutions, dict) else _load(RES_FILE)
-    track = update_track(_load(TRACK_FILE), emit or {}, close, resolutions, now=now)
-    (BASE / TRACK_FILE).write_text(json.dumps(track, ensure_ascii=False, indent=1), encoding="utf-8")
+    starten (poly_shortlist_track ruft das mit demselben `emit` auf).
+
+    `base` MUSS durchgereicht werden: die main()-Tests von poly_shortlist_track monkeypatchen
+    dessen BASE auf ein tmp-Verzeichnis. Ohne das schreibt der Hook beim Testlauf in die echte
+    Repo-Wurzel — Pipeline-Output lokal erzeugt, genau was hier verboten ist.
+    """
+    base = base or BASE
+    close = close if isinstance(close, dict) else _load(CLOSE_FILE, base)
+    resolutions = resolutions if isinstance(resolutions, dict) else _load(RES_FILE, base)
+    track = update_track(_load(TRACK_FILE, base), emit or {}, close, resolutions, now=now)
+    (base / TRACK_FILE).write_text(json.dumps(track, ensure_ascii=False, indent=1), encoding="utf-8")
     a = track["agg"]["all"]
     c = track["agg"].get("consensus")
     print(f"🐋 Whale-Nachspiel-Depot: {len(track['open'])} offen · {a['n']} abgerechnet"

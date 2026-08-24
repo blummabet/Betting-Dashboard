@@ -137,7 +137,7 @@ const _PW_VIEW_INTRO = {
     'Bündelt alle Signale zu einem Verdikt je Markt: BET (mit dem Geld) oder FADE (dagegen), Conviction 0–10. Zeigt nur echte Signale — bloße Favoriten ohne Edge fehlen bewusst.',
     'Von oben nach unten abarbeiten: hohe Conviction zuerst prüfen, „Warum" lesen, selbst entscheiden. Leere Liste = heute keine klare Kante → nicht wetten.'],
   track: ['📊 Track-Record — wie gut „Heute wetten" WIRKLICH performt (Paper)',
-    'Jeder Global-Scan schreibt die exakten Shortlist-Empfehlungen mit (fixer Einsatz $10 zum Einstiegspreis) und rechnet bei Auflösung ab: Trefferquote, ROI, Ø CLV. Zwei Sichten: ganze Shortlist und die harten Public-Kandidaten. Es wird NICHTS gesetzt — reines Mitschreiben.',
+    'Jeder Global-Scan schreibt die exakten Shortlist-Empfehlungen mit (fixer Einsatz $10 zum Einstiegspreis) und rechnet bei Auflösung ab: Trefferquote, ROI, Ø CLV. Zwei Sichten: bespielbare Sportarten und die harten Public-Kandidaten (gesperrte laufen als reine Beobachtung mit). Es wird NICHTS gesetzt — reines Mitschreiben.',
     'Auf die Conviction-Tabelle schauen: erst wenn eine Stufe über genug Spiele klar im Plus ist (ROI + CLV), lohnt das echte Nachspielen (Auto-Bet) — vorher nur beobachten.'],
   new: ['🆕 Neu — was sich seit deinem letzten Blick getan hat',
     'Aktivitäts-Feed über alle Sportarten: neue große Whale-Einstiege (letzte 24h) und Märkte, in denen der Favorit gekippt ist. Der schnelle „was ist passiert"-Check.',
@@ -2114,7 +2114,10 @@ function _pwTrackKpis(a, label, hint){
 // ROI, und schaltet NICHTS automatisch frei — es ist ein Hinweis.
 function _pwTrackBlocked(agg, reentry, blockedCats){
   const a=agg&&agg.blocked;
-  const cats=(blockedCats||[]).join(' · ')||'—';
+  const cats=(blockedCats||[]).join(' · ');
+  // Kein Segment gesperrt UND nichts abgerechnet -> gar keine Zeile. (Sonst stand da
+  // „Nicht bespielbar: — —" auf jedem Board, das die Sperrliste noch nicht kennt.)
+  if(!cats.length && !(a&&a.n)) return '';
   if(!a||!a.n) return '<div class="pw-mut" style="font-size:11px;margin:-8px 0 14px">🚫 Nicht bespielbar: '
     +_pwEsc(cats)+' — bisher keine abgerechneten Plays. Bleiben im Depot, damit ein Umschwung sichtbar würde.</div>';
   const roiCol=a.roi>0?'#3fb950':a.roi<0?'#f85149':'#8b949e';

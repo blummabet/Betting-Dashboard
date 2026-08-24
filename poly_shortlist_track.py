@@ -325,7 +325,8 @@ def main() -> int:
     try:
         import poly_whale_follow as _WF
         _WF.write_from_emit(emit, close if isinstance(close, dict) else {},
-                            resolutions if isinstance(resolutions, dict) else {})
+                            resolutions if isinstance(resolutions, dict) else {},
+                            base=BASE)   # NICHT weglassen: main()-Tests patchen BASE auf tmp
     except Exception as _e:
         print(f"  ⚠️  Whale-Nachspiel-Depot übersprungen (nicht fatal): {_e}")
 

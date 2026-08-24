@@ -52,7 +52,10 @@ test('Track-View rendert KPIs, Conviction-Tabelle, offene + abgerechnete Plays',
   await new Promise(r => setTimeout(r, 40));
   w._pwSetView('track');
   const html = w.document.getElementById('polyWalletsPanel').innerHTML;
-  assert.match(html, /Ganze Shortlist/);
+  // 24.08.2026: Der Kopf heisst jetzt „Bespielbar" — die alte Schlagzeile mischte Sportarten
+  // rein, auf die nie gesetzt wird (US-Sport/Kampfsport). Die stehen als Beobachtung daneben.
+  assert.match(html, /Bespielbar/);
+  assert.doesNotMatch(html, /Nicht bespielbar/, 'ohne Sperrliste keine leere Beobachtungs-Zeile');
   assert.match(html, /Public-Kandidaten/);
   assert.match(html, /Nach Conviction/);
   assert.match(html, /9\/10/); assert.match(html, /7\/10/);
@@ -83,3 +86,40 @@ test('Signal-Attribution: Tabelle je Ausloeser-Signal (Treffer/ROI/CLV)', async 
   assert.match(html, /Steam/);
   assert.match(html, /\+60%/, 'Sharp-ROI 0.6 dargestellt');
 });
+
+
+// ── 24.08.2026: bespielbar vs. nur beobachtet ────────────────────────────────
+// Lucas: „ziehen NFL/UFC/MLB die Statistik runter — sollen wir die rausnehmen?" Antwort im Code:
+// nein, aber getrennt ausweisen. Die Beobachtungs-Zeile ist der sichtbare Teil dieser Trennung.
+test('Beobachtungs-Zeile: gesperrte Sportarten getrennt, mit Wiedereintritts-Stand', async () => {
+  const t = JSON.parse(JSON.stringify(TRACK));
+  t.blockedCats = ['US-Sport', 'Kampfsport'];
+  t.agg.bettable = { n: 1, wins: 1, hit: 1, pnl: 6.13, stake: 10, roi: 0.613, clvAvg: 6 };
+  t.agg.blocked  = { n: 1, wins: 0, hit: 0, pnl: -10, stake: 10, roi: -1, clvAvg: -5 };
+  t.reentry = { 'US-Sport': { n: 40, clvN: 10, clvAvg: -1.7, eligible: false, needN: 10, needClvN: 15 },
+                'Kampfsport': { n: 3, clvN: 0, clvAvg: null, eligible: false, needN: 47, needClvN: 25 } };
+  const w = boot(t); w.initPolyWallets();
+  await new Promise(r => setTimeout(r, 40));
+  w._pwSetView('track');
+  const html = w.document.getElementById('polyWalletsPanel').innerHTML;
+  assert.match(html, /Nicht bespielbar/, 'Beobachtungs-Zeile da');
+  assert.match(html, /US-Sport · Kampfsport/, 'gesperrte Sportarten benannt');
+  assert.match(html, /Wiedereintritt/, 'Wiedereintritts-Stand sichtbar');
+  assert.match(html, /kein Schluss erfasst/, 'clvAvg=null wird ehrlich benannt, nicht als 0 gezeigt');
+  // Die Schlagzeile oben zeigt die BESPIELBARE Teilmenge, nicht mehr den Mischwert.
+  assert.match(html, /🟢 Bespielbar/);
+});
+
+test('Beobachtungs-Zeile meldet, wenn eine gesperrte Sportart wieder in Frage kommt', async () => {
+  const t = JSON.parse(JSON.stringify(TRACK));
+  t.blockedCats = ['US-Sport'];
+  t.agg.blocked = { n: 60, wins: 33, hit: 0.55, pnl: 40, stake: 600, roi: 0.066, clvAvg: 0.8 };
+  t.reentry = { 'US-Sport': { n: 60, clvN: 30, clvAvg: 0.8, eligible: true, needN: 0, needClvN: 0 } };
+  const w = boot(t); w.initPolyWallets();
+  await new Promise(r => setTimeout(r, 40));
+  w._pwSetView('track');
+  const html = w.document.getElementById('polyWalletsPanel').innerHTML;
+  assert.match(html, /erfüllt die Wiedereintritts-Kriterien/, 'Melder schlägt an');
+  assert.match(html, /PW_BLOCKED_BET_CATS/, 'sagt WO man die Sperre umlegt');
+});
+
