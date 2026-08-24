@@ -872,6 +872,13 @@ def log_bet_to_history(history: list, order: dict, result: dict) -> None:
             "error":     result.get("error"),
             "placedAt":  datetime.now(timezone.utc).isoformat(),
             "result":    None,
+            # 24.08.2026: Play-Key (= Poly-Event-Slug) + gesetzte Seite mitschreiben. Nur damit
+            # laesst sich ein Tennis-/E-Sport-Bet spaeter ueber poly_resolutions.json abrechnen
+            # (es gibt kein Fixture, an dem resolve_wm_results haengen koennte).
+            "polyKey":   order.get("polyKey"),
+            "side":      order.get("side"),
+            "sport":     order.get("sport"),
+            "conviction": order.get("conviction"),
         }],
     })
 
@@ -972,7 +979,14 @@ def main():
         # falschen Token treffen. Daher für AH direkt verwenden: tokens[0] = YES-
         # Token = „Team deckt das Handicap".
         token_id = None
-        if order.get("_isHandicap") and order.get("tokens"):
+        # 24.08.2026 (Lucas, „Heute"-Tab): traegt die Order die CLOB-Token-ID schon, brauchen wir
+        # GAR KEINE Aufloesung ueber Gamma/Teamnamen. Der Token kommt aus poly_money_broad
+        # (Feld `tokens` je Markt) und ist damit exakt der Ausgang, den die Engine empfiehlt --
+        # sportartenunabhaengig (Tennis/E-Sport haben weder Fixture noch Team-Mapping).
+        if order.get("tokenId"):
+            token_id = str(order["tokenId"])
+            print("  🎯 Token direkt aus der Order — keine Gamma-Aufloesung noetig")
+        if not token_id and order.get("_isHandicap") and order.get("tokens"):
             token_id = order["tokens"][0]
             print(f"  🎯 Handicap-Markt — Spread-Token direkt aus Candidate")
 

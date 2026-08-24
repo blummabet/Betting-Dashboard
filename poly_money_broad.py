@@ -64,6 +64,10 @@ RESOLUTIONS_KEEP_DAYS = 14                    # Shortlist-Paper-Tracker — abre
 # sind -- GLEICHE Schwelle wie die Integrity-Pruefung (POLY_KICKOFF_GRACE_H), damit der Feed die eine
 # saubere Quelle fuer alle Views ist. Aufgeloeste Snapshots bleiben (fuer die Treffer-Auswertung).
 GHOST_GRACE_H = float(os.environ.get("POLY_KICKOFF_GRACE_H") or 6)
+# 24.08.2026 (Lucas, "$41 Mio Whale-Geld auf fertigen Spielen"): aufgeloeste Snapshots bleiben fuer
+# die Treffer-Auswertung -- aber nicht ewig. Danach ist die Wette laengst abgerechnet und der
+# Eintrag nur noch Ballast in einer Datei, die JEDE Flaeche parst.
+CLOSE_RESOLVED_KEEP_DAYS = float(os.environ.get("POLY_CLOSE_RESOLVED_KEEP_DAYS") or 30)
 
 # 11.08.2026 (Lucas, Stufe 1 Live-Erfassung): Maerkte auch NACH Anpfiff weiter abgreifen -> eigener
 # Live-Speicher, GETRENNT vom Vor-Spiel-Freeze (der bleibt die Auswertungs-Basis). Kostet nur mehr
@@ -525,6 +529,21 @@ def _mkt_vol(m):
         return 0.0
 
 
+def _tokens_of(oc):
+    """{Ausgangs-Label: CLOB-Token-ID} aus den Outcomes. REIN.
+
+    24.08.2026 (Lucas, „Heute"-Tab: „kriegen wir das hin, dass ich von dort gleich die Wette
+    ausloese?"): Der Token lag bisher nur transient in `oc` (fuer Holders/Orderbuch) und wurde
+    danach verworfen. Das Frontend musste den Play deshalb ueber Slug+Teamnamen an einen
+    gestempelten Card-Pick matchen, damit der Placer den Token per Gamma aufloesen konnte --
+    ging nur fuer Fussball MIT Pick (~7% der Plays). Mit dem Token IM Feed traegt jeder Play
+    alles, was der Placer braucht: keine Namens-Aufloesung, jede Sportart.
+    Key-gleich zu `shares`/`prices`, also direkt mit der empfohlenen Seite (`side`) lookupbar.
+    """
+    return {o["label"]: o["token"] for o in (oc or [])
+            if isinstance(o, dict) and o.get("label") and o.get("token")}
+
+
 def _outcomes(ev):
     """Moneyline-Ausgaenge eines Events → [{label, price, cond, token}]. ZWEI Poly-Strukturen:
     (1) EIN Markt mit Team-Ausgaengen (US-Sport, viele Soccer): outcomes = [Team1, (Draw,) Team2].
@@ -873,7 +892,7 @@ def fetch_markets(live_only=False):
             if _pv:
                 markets.append({"key": key, "league": league, "sport": sport, "hoursToKickoff": htk,
                                 "totalUsd": round(mvol), "shares": {}, "prices": _pv, "whales": [],
-                                "live": is_live, "resolved": False, "resolvedPrices": {}})
+                                "live": is_live, "resolved": False, "resolvedPrices": {}, "tokens": _tokens_of(oc)})
             continue
         try:
             mm = _market_money(oc)     # 25.07.2026: EIN Fetch → Shares + Einzel-Wale
@@ -888,7 +907,7 @@ def fetch_markets(live_only=False):
             if _pv:
                 markets.append({"key": key, "league": league, "sport": sport, "hoursToKickoff": htk,
                                 "totalUsd": round(mvol), "shares": {}, "prices": _pv, "whales": [],
-                                "live": is_live, "resolved": False, "resolvedPrices": {}})
+                                "live": is_live, "resolved": False, "resolvedPrices": {}, "tokens": _tokens_of(oc)})
             continue
         shares = mm["shares"]
         prices = {o["label"]: o["price"] for o in oc if o["price"] is not None}
@@ -903,7 +922,7 @@ def fetch_markets(live_only=False):
                  "hoursToKickoff": htk, "totalUsd": round(mvol),
                  "shares": shares, "prices": prices, "whales": _whales,
                  "live": is_live,
-                 "resolved": False, "resolvedPrices": {}}
+                 "resolved": False, "resolvedPrices": {}, "tokens": _tokens_of(oc)}
         if _bt_get and _book_budget[0] > 0:
             try:
                 _enrich_book_trades(_mrow, oc, _bt_get, _book_budget)
@@ -938,7 +957,54 @@ def fetch_markets(live_only=False):
     return markets
 
 
-def capture(markets, frozen, now=None, min_vol=MIN_VOL_USD, grace_h=GHOST_GRACE_H):
+def _entry_age_days(entry, now):
+    """Alter eines Frozen-Eintrags in Tagen (capturedAt). None = nicht bestimmbar. REIN."""
+    try:
+        ct = datetime.fromisoformat(str(entry.get("capturedAt")).replace("Z", "+00:00"))
+    except (TypeError, ValueError, AttributeError):
+        return None
+    return (now - ct).total_seconds() / 86400.0
+
+
+def _stamp_resolutions(out, markets, resolutions, now):
+    """Aufloesung IN den Frozen-Eintrag stempeln (resolved/resolvedPrices/resolvedAt). REIN.
+
+    24.08.2026 (Lucas, "$41 Mio Whale-Geld auf fertigen Spielen"): Der Geister-Prune von 06.08.
+    lief ins Leere. Er verschont Maerkte, die in DIESEM Lauf abrechnen (`key in resolving`) --
+    Gamma liefert aber jeden geschlossenen Event bei JEDEM Lauf wieder mit, also war fast jeder
+    Geister-Key dauerhaft prune-immun, ohne dass die Aufloesung je im Eintrag ankam (919 von 928
+    Geistern hatten sie laengst in poly_resolutions.json). Erst das Stempeln macht den Eintrag
+    ehrlich: aufgeloest statt still "live" -- Guard, Views und Wallet-Track sehen dasselbe.
+    Zwei Quellen: die resolved-Zeilen dieses Laufs (mit Preisen) und das rollierende
+    Aufloesungs-Ledger (Nachzuegler, nur Gewinner). Stempelt nie ueber ein bestehendes resolved.
+    """
+    res = {}
+    for m in markets or []:
+        if isinstance(m, dict) and m.get("resolved") and m.get("key"):
+            res[m["key"]] = {"prices": m.get("resolvedPrices") or {}}
+    for k, v in (resolutions or {}).items():
+        if k in res or not isinstance(v, dict):
+            continue
+        w = v.get("winner")
+        if w:
+            res[k] = {"winner": w}
+    n = 0
+    for key, info in res.items():
+        e = out.get(key)
+        if not isinstance(e, dict) or e.get("resolved"):
+            continue
+        e["resolved"] = True
+        if info.get("prices"):
+            e["resolvedPrices"] = info["prices"]
+        if info.get("winner"):
+            e["resolvedWinner"] = info["winner"]
+        e["resolvedAt"] = now.isoformat()
+        n += 1
+    return n
+
+
+def capture(markets, frozen, now=None, min_vol=MIN_VOL_USD, grace_h=GHOST_GRACE_H,
+            resolutions=None, resolved_keep_days=CLOSE_RESOLVED_KEEP_DAYS):
     """Nah am Anpfiff einfrieren (Geld-Verteilung + Preis + Liga). REIN, testbar."""
     now = now or _now()
     out = dict(frozen or {})
@@ -958,6 +1024,9 @@ def capture(markets, frozen, now=None, min_vol=MIN_VOL_USD, grace_h=GHOST_GRACE_
                     "league": m.get("league"), "sport": m.get("sport"), "totalUsd": round(float(m.get("totalUsd") or 0)),
                     "whales": m.get("whales") or [],   # 25.07.2026 (Lucas): Einzel-Wale je Markt (c)
                     "hoursToKickoff": round(htk, 2), "capturedAt": now.isoformat(),
+                    # 24.08.2026: Token mitfrieren (Direkt-Order aus „Heute") — nur fuer offene
+                    # Maerkte relevant, aufgeloeste Eintraege tragen ihn nie -> Datei bleibt schlank.
+                    **({"tokens": m["tokens"]} if m.get("tokens") else {}),
                     **({"book": m["book"]} if m.get("book") else {}),
                     **({"trades": m["trades"]} if m.get("trades") else {})}
     # 06.08.2026 (Lucas): Geister-Maerkte prunen. ko = capturedAt + hoursToKickoff; liegt der mehr als
@@ -965,9 +1034,19 @@ def capture(markets, frozen, now=None, min_vol=MIN_VOL_USD, grace_h=GHOST_GRACE_
     # (Treffer-Auswertung); ebenso Maerkte, die GERADE in diesem Lauf abrechnen (deren frozen-Close braucht
     # der Wallet-Track als CLV-Referenz). Nicht parsebare Zeit/htk bleibt konservativ drin.
     resolving = {m.get("key") for m in (markets or []) if m.get("resolved")}
+    # 24.08.2026: ERST die Aufloesung in den Eintrag stempeln -- sonst bleibt ein aufgeloester
+    # Markt via `resolving` ewig prune-immun UND sieht fuer jede Flaeche weiter "live" aus.
+    _stamp_resolutions(out, markets, resolutions, now)
     for key in list(out.keys()):
         e = out.get(key)
-        if not isinstance(e, dict) or e.get("resolved") or key in resolving:
+        if not isinstance(e, dict):
+            continue
+        if e.get("resolved"):
+            _age_d = _entry_age_days(e, now)
+            if _age_d is not None and _age_d > resolved_keep_days:
+                del out[key]      # abgerechnet und alt -> raus (Retention)
+            continue
+        if key in resolving:
             continue
         htk_e = e.get("hoursToKickoff")
         if not isinstance(htk_e, (int, float)):
@@ -1002,6 +1081,9 @@ def capture_live(markets, prev, now=None, min_vol=MIN_VOL_USD, keep_h=LIVE_KEEP_
                     "totalUsd": round(float(m.get("totalUsd") or 0)),
                     "hoursToKickoff": round(float(htk), 2) if isinstance(htk, (int, float)) else None,
                     "capturedAt": now.isoformat(), "live": True,
+                    # 24.08.2026: Token auch live mitschreiben — Live-Plays sollen genauso
+                    # direkt setzbar sein wie Vor-Spiel-Plays.
+                    **({"tokens": m["tokens"]} if m.get("tokens") else {}),
                     **({"book": m["book"]} if m.get("book") else {}),
                     **({"trades": m["trades"]} if m.get("trades") else {})}
         seen.add(key)
@@ -1271,7 +1353,7 @@ def main() -> int:
         # Timeout) lief der Geister-Prune NIE, und der Close-Feed wuchs auf ~96% fertige Spiele (Integritäts-
         # Warnung „Geister-Märkte"). Jetzt auch OHNE frischen Fetch prunen: capture([], frozen) fügt nichts
         # hinzu, wirft nur die Märkte raus, die > GHOST_GRACE_H nach Anpfiff und unaufgelöst sind.
-        frozen = capture([], _load(CLOSE_FILE))
+        frozen = capture([], _load(CLOSE_FILE), resolutions=_load(RESOLUTIONS_FILE))
         (BASE / CLOSE_FILE).write_text(json.dumps(frozen, ensure_ascii=False, indent=1), encoding="utf-8")
         live_store = capture_live([], _load(LIVE_FILE))   # Live-Speicher auch auf Leer-Laeufen prunen
         (BASE / LIVE_FILE).write_text(json.dumps(live_store, ensure_ascii=False, indent=1), encoding="utf-8")
@@ -1281,7 +1363,7 @@ def main() -> int:
         return 0
     pre  = [m for m in markets if not m.get("live")]   # Vor-Spiel + aufgeloest: bestehende Pipeline unveraendert
     live = [m for m in markets if m.get("live")]        # 11.08.2026 (Lucas Stufe 1): laufende Spiele, eigener Datenpfad
-    frozen = capture(pre, _load(CLOSE_FILE), min_vol=min_vol)
+    frozen = capture(pre, _load(CLOSE_FILE), min_vol=min_vol, resolutions=_load(RESOLUTIONS_FILE))
     (BASE / CLOSE_FILE).write_text(json.dumps(frozen, ensure_ascii=False, indent=1), encoding="utf-8")
 
     # ① Momentum (25.07.2026): globale Preis-Zeitreihe fortschreiben (Steam/Reversal über alle Sportarten)

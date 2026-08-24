@@ -1928,6 +1928,12 @@ function _wmBetConfirm(orderJson) {
   if (order.synthetic) {
     warnings.push(`Synthetischer saferAlt-Pick — als Insurance gedacht, nicht als Trade`);
   }
+  // 24.08.2026: Direkt-Order aus „Heute" hat keinen Pinnacle-Anker (Tennis/E-Sport haben bei uns
+  // keine faire Baseline) — das MUSS im Dialog stehen, sonst sieht ein Klick hier aus wie ein
+  // Value-Bet mit Edge, ist aber reine Broad-Conviction (Geld · Steam · scharfe Wallets).
+  if (order.polyKey && order.edge == null) {
+    warnings.push(`Kein Pinnacle-Anker — beruht allein auf Geld/Steam/Wallets` + (conv != null ? ` (Conviction ${conv}/10)` : ``));
+  }
   if (typeof order.effectiveEdge === 'number' && typeof order.edge === 'number'
       && Math.abs(order.effectiveEdge - order.edge) > 1) {
     const sign = order.signalAdj > 0 ? '+' : '';
@@ -1952,8 +1958,8 @@ function _wmBetConfirm(orderJson) {
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:18px">
       <span style="font-size:24px">🏆</span>
       <div>
-        <div style="font-size:16px;font-weight:800;color:#e6edf3">WM 2026 Bet bestätigen</div>
-        <div style="font-size:12px;color:#8b949e">${order.home} vs ${order.away}</div>
+        <div style="font-size:16px;font-weight:800;color:#e6edf3">${order.polyKey ? 'Poly-Play bestätigen' : 'WM 2026 Bet bestätigen'}</div>
+        <div style="font-size:12px;color:#8b949e">${order.away ? order.home + ' vs ' + order.away : order.home}</div>
       </div>
       <button onclick="document.getElementById('polyModal').style.display='none'"
         style="margin-left:auto;background:none;border:none;color:#6e7681;font-size:18px;cursor:pointer">✕</button>
@@ -3420,8 +3426,57 @@ function _heuteSideMatches(rside, p) {
   if (m.indexOf('Beide Teams') >= 0) return has('yes') || has('ja') || has('both') || has('beide');
   return false;
 }
+// 24.08.2026 (Lucas: „kriegen wir hin, dass ich von dort gleich die Wette ausloese?").
+// Sportarten OHNE Direkt-Button — der Papier-Track (poly_shortlist_track, 500 abgerechnete Plays)
+// zeigt dort die Verluste: US-Sport (MLB −28%, NFL −49% ROI) und Kampfsport (UFC −31%) trugen
+// zusammen ~$253 der $260 Gesamtverlust. Fussball +2,5%, Tennis +2,0%, E-Sport −5,7% (bewusst
+// dabei, Lucas' Entscheidung). Dort bleibt es beim Link. Eine Zeile zum Nachjustieren.
+// Die Liste lebt in poly-wallets.js (PW_BLOCKED_BET_CATS) und wird von dort ueber window geteilt —
+// so lesen Setzen-Button, Public-Gate und Papier-Depot GARANTIERT dieselbe. Der Fallback greift nur,
+// wenn poly-wallets.js nicht geladen ist (isolierte Tests); Werte bewusst identisch.
+const _POLY_HEUTE_BET_FALLBACK = ['US-Sport', 'Kampfsport'];
+function _polyBlockedCats() {
+  try {
+    const l = (typeof window !== 'undefined') && window.PW_BLOCKED_BET_CATS;
+    return (Array.isArray(l) && l.length) ? l : _POLY_HEUTE_BET_FALLBACK;
+  } catch (_e) { return _POLY_HEUTE_BET_FALLBACK; }
+}
+
+function _polyHeuteBetBlocked(r) {
+  if (typeof _pwSportCategory !== 'function') return false;
+  try { return _polyBlockedCats().indexOf(_pwSportCategory(r && r.league, r && r.sport)) >= 0; }
+  catch (_e) { return false; }
+}
+
+// Direkt-Order ALLEIN aus dem Play: seit 24.08. traegt jeder Play die CLOB-Token-ID seiner Seite
+// (poly_money_broad schreibt `tokens` je Markt). Der Placer nimmt `tokenId` und ueberspringt die
+// ganze Gamma-/Teamnamen-Aufloesung -> funktioniert fuer Tennis/E-Sport genauso wie fuer Fussball.
+// KEIN Pinnacle-Anker fuer diese Plays -> edge bleibt null (Basis-Einsatz, Warnung im Dialog).
+function _polyHeuteTokenOrder(r) {
+  if (!r || !r.token || !r.key || !r.side) return null;
+  if (_polyHeuteBetBlocked(r)) return null;
+  const label = String(r.match || '').trim();
+  const parts = label.split(/\s+vs\.?\s+/i);
+  const home  = parts[0] || label || String(r.key);
+  const away  = parts.length > 1 ? parts.slice(1).join(' vs ') : '';
+  return {
+    home: home, away: away,
+    market: String(r.side),                       // der Ausgang IST der Markt (Token zeigt exakt darauf)
+    polyPrice: (typeof r.price === 'number' && r.price > 0) ? r.price : null,
+    slug: String(r.key).replace(/-more-markets$/, ''),
+    tokenId: String(r.token),
+    polyKey: String(r.key),                       // Abrechnung laeuft ueber diesen Slug
+    side: String(r.side),
+    league: r.league || '', sport: r.sport || '',
+    edge: null,
+    conviction: (typeof r.conv === 'number' ? r.conv : null),
+  };
+}
+
 function _polyHeuteBetOrder(r, picks) {
-  if (!r || !r.key || _polyPriceCache == null || !picks || !picks.length) return null;
+  if (!r || !r.key) return null;
+  if (_polyPriceCache == null || !picks || !picks.length)
+    return _polyHeuteTokenOrder(r);   // kein Cache/keine Picks -> trotzdem per Token setzbar
   const gk = String(r.key).replace(/-more-markets$/, '').toLowerCase();
   const rside = String(r.side || '').toLowerCase();
   for (const p of picks) {
@@ -3440,7 +3495,40 @@ function _polyHeuteBetOrder(r, picks) {
              slug: pslug, edge: edge,
              conviction: (typeof r.conv === 'number' ? r.conv : (p.convictionScore != null ? p.convictionScore : null)) };
   }
-  return null;
+  // Kein verifizierter Card-Pick -> Direkt-Order aus dem Play selbst (Token).
+  return _polyHeuteTokenOrder(r);   // kein Card-Pick gefunden
+}
+
+// 24.08.2026: Bilanz der DIREKT hier gesetzten Wetten (poly_direct_bets.json, über den Slug
+// abgerechnet). Bewusst im selben Kasten wie die Plays: wer hier klickt, soll sehen, was das
+// Klicken bisher gebracht hat — und zwar echt, nicht das Papier-Depot.
+let _polyDirectAgg = null;
+function _polyLoadDirect() {
+  if (_polyDirectAgg !== null) return;
+  _polyDirectAgg = false;                              // nur ein Versuch pro Seitenaufruf
+  fetch('poly_direct_bets.json', { cache: 'no-store' })
+    .then(r => r.ok ? r.json() : null)
+    .then(d => { if (d) { _polyDirectAgg = d; const b = document.getElementById('polyHeuteBox');
+                          if (b && _polyHeutePlays) b.innerHTML = _renderPolyHeute(_polyHeutePlays); } })
+    .catch(() => {});
+}
+function _polyDirectKpi() {
+  const d = _polyDirectAgg;
+  if (!d || !d.agg) return '';
+  const a = d.agg, open = (d.open || []).length;
+  if (!a.n && !open) return '';
+  const pill = (txt, col) => `<span style="font-size:11px;color:${col};font-weight:700">${txt}</span>`;
+  const parts = [];
+  if (a.n) {
+    parts.push(pill(`${a.n} abgerechnet`, '#8b949e'));
+    parts.push(pill(`${Math.round(a.hit * 100)}% Treffer`, '#8b949e'));
+    parts.push(pill(`${a.pnl >= 0 ? '+' : '−'}$${Math.abs(a.pnl).toFixed(2)}`, a.pnl >= 0 ? '#3fb950' : '#f85149'));
+    if (a.roi != null) parts.push(pill(`ROI ${(a.roi * 100).toFixed(1)}%`, a.roi >= 0 ? '#3fb950' : '#f85149'));
+    if (a.clvAvg != null) parts.push(pill(`Ø CLV ${a.clvAvg >= 0 ? '+' : ''}${a.clvAvg}pp`, a.clvAvg >= 0 ? '#3fb950' : '#f85149'));
+  }
+  if (open) parts.push(pill(`${open} offen`, '#a78bfa'));
+  return `<div style="display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:0 0 8px">`
+    + `<span style="font-size:11px;color:#6e7681">🎯 Von hier gesetzt:</span>${parts.join('<span style="color:#30363d">·</span>')}</div>`;
 }
 
 function _renderPolyHeute(plays) {
@@ -3449,7 +3537,8 @@ function _renderPolyHeute(plays) {
       <span style="font-size:13px;font-weight:800;color:#ff8a5c">🔥 Heute — die besten Poly-Plays</span>
       <span style="font-size:11px;color:#6e7681">${n ? n + ' Play' + (n !== 1 ? 's' : '') + ' · ' : ''}gleiche Engine wie Terminal „Heute wetten"</span>
     </div>
-    <div style="font-size:11px;color:#6e7681;margin-bottom:10px;line-height:1.5">Signal-gated (Geld · Steam · scharfe Wallets · Pinnacle), nach Conviction. „🟣 Setzen" löst direkt aus (Bestätigungs-Dialog), wenn es ein Pick-Spiel ist — sonst „🟣 Öffnen ↗" zum manuellen Nachspielen.</div>`;
+    ${_polyDirectKpi()}
+    <div style="font-size:11px;color:#6e7681;margin-bottom:10px;line-height:1.5">Signal-gated (Geld · Steam · scharfe Wallets · Pinnacle), nach Conviction. „🟣 Setzen" löst direkt aus (Bestätigungs-Dialog) — auch ohne Card-Pick, über den Poly-Token. US-Sport und Kampfsport bleiben bewusst Link: dort war der Papier-Track klar negativ.</div>`;
 
   const wrap = (inner) => `<div style="border:1px solid #30363d;border-radius:12px;background:#0d1117;overflow:hidden">
     <div style="padding:12px 14px 2px">${head(Array.isArray(plays) ? plays.length : 0)}</div>${inner}</div>`;
@@ -3458,6 +3547,7 @@ function _renderPolyHeute(plays) {
   if (!plays.length)  return wrap(`<div style="padding:0 14px 14px;color:#6e7681;font-size:12px">Aktuell keine handelbare Kante (kein BET-Play). Sobald der Scan (~alle 30 Min) welche findet, stehen sie hier.</div>`);
 
   _polyHeutePlays = plays;
+  _polyLoadDirect();   // Bilanz der Direkt-Wetten nachladen (rendert einmal nach, wenn da)
   let _hPicks = [];
   try { if (_polyPriceCache != null && typeof _collectAllPolyPicks === 'function') _hPicks = _collectAllPolyPicks() || []; } catch (_e) { _hPicks = []; }
   const rows = plays.map((r, i) => {

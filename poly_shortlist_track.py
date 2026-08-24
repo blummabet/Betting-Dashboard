@@ -36,6 +36,15 @@ SETTLED_KEEP = 500                                          # abgerechnete Plays
 UNTRACKED_TTL_D = float(os.environ.get("SHORTLIST_UNTRACKED_TTL_D") or 2)    # nicht getrackt → nie auflösbar
 STALE_TTL_D     = float(os.environ.get("SHORTLIST_STALE_TTL_D") or 14)       # getrackt, aber hängt → Backstop
 
+# 24.08.2026 (Lucas: „was ist, wenn die mal wieder besser werden?"). Gesperrte Sportarten fliegen
+# NICHT aus dem Depot — sie werden weiter mitgeschrieben und auf Wiedereintritt geprüft. Kriterium
+# ist der CLV, NICHT der ROI: CLV ist der Frühindikator (misst, ob wir besser als der Schluss
+# kaufen), ROI der verrauschte Nachlauf. Nur Zeilen mit ECHT erfasstem Schluss zählen — ein clvPP
+# von 0 heißt „keine Schluss-Referenz", nicht „flach" (Lehre vom 07.08., Poly-Shortlist-CLV).
+REENTRY_MIN_N     = int(os.environ.get("SHORTLIST_REENTRY_MIN_N") or 50)     # so viele frische Plays mindestens
+REENTRY_MIN_CLV_N = int(os.environ.get("SHORTLIST_REENTRY_MIN_CLV_N") or 25) # davon mit echter Schluss-Referenz
+REENTRY_WINDOW    = int(os.environ.get("SHORTLIST_REENTRY_WINDOW") or 200)   # nur die jüngsten N je Sportart
+
 
 def _now():
     return datetime.now(timezone.utc)
@@ -98,6 +107,31 @@ def load_emit():
         return None
 
 
+# Spiegel von `_pwSportCategory` (poly-wallets.js) — NUR für Alt-Zeilen, die noch kein `cat` tragen.
+# Neue Plays bekommen die Kategorie vom Emitter, der die echte Frontend-Funktion lädt (kein Drift).
+# Bewusst grob: hier zählt allein, ob eine Zeile in eine GESPERRTE Kategorie fällt.
+def _cat_from_league(lg):
+    x = str(lg or "").lower()
+    if any(t in x for t in ("esport", "cs2", "csgo", "lol", "dota", "valorant")):
+        return "E-Sport"
+    if any(t in x for t in ("nba", "nfl", "mlb", "nhl", "wnba", "ncaa", "basketball", "baseball", "hockey")):
+        return "US-Sport"
+    if any(t in x for t in ("tennis", "wta", "atp")):
+        return "Tennis"
+    if any(t in x for t in ("ufc", "mma", "boxing")):
+        return "Kampfsport"
+    if "golf" in x:
+        return "Golf"
+    if "cricket" in x:
+        return "Cricket"
+    return "Fußball"
+
+
+def _row_cat(r):
+    """Kategorie einer Zeile: was der Emitter gestempelt hat, sonst aus der Liga abgeleitet."""
+    return r.get("cat") or _cat_from_league(r.get("league"))
+
+
 def _ok_price(p):
     return isinstance(p, (int, float)) and 0.0 < float(p) < 1.0
 
@@ -115,9 +149,20 @@ def _agg_one(rows):
             "clvAvg": round(clv / n, 2) if n else 0.0}
 
 
-def aggregate(settled):
+def aggregate(settled, blocked=()):
     allr = settled
     pub = [r for r in settled if r.get("public")]
+    # 24.08.2026 (Lucas): die Gesamt-Kennzahl mischte Sportarten, auf die nie gesetzt wird, mit
+    # denen, auf die gesetzt wird — dadurch sah das Depot schlechter aus als das, was man wirklich
+    # spielt. `all` bleibt unverändert (Kalibrierungs-Basis im Frontend hängt daran); `bettable`
+    # ist die ehrliche Schlagzeile, `blocked` die Beobachtungs-Zeile.
+    _bl = set(blocked or ())
+    bet = [r for r in settled if _row_cat(r) not in _bl]
+    blk = [r for r in settled if _row_cat(r) in _bl]
+    by_cat = {}
+    for r in settled:
+        by_cat.setdefault(_row_cat(r), []).append(r)
+    by_cat = {k: _agg_one(v) for k, v in sorted(by_cat.items())}
     by_conv = {}
     for c in range(0, 11):
         rows = [r for r in settled if int(r.get("conv") or 0) == c]
@@ -140,14 +185,46 @@ def aggregate(settled):
         if rows:
             by_signal[tg] = _agg_one(rows)
     return {"all": _agg_one(allr), "public": _agg_one(pub),
+            "bettable": _agg_one(bet), "blocked": _agg_one(blk), "byCat": by_cat,
             "byConv": by_conv, "byVerdict": by_verdict, "bySignal": by_signal}
 
 
-def update_track(prev, emit, close, resolutions, now=None, stake=STAKE):
+def reentry_status(settled, blocked, min_n=REENTRY_MIN_N, min_clv_n=REENTRY_MIN_CLV_N,
+                   window=REENTRY_WINDOW):
+    """Je gesperrter Sportart: verdient sie einen zweiten Blick? REIN/testbar.
+
+    Bewertet NUR die jüngsten `window` abgerechneten Plays dieser Kategorie — eine Sportart, die
+    vor einem halben Jahr schlecht war, soll sich freilaufen können. Kriterium ist Ø CLV ≥ 0 über
+    genug Zeilen MIT echter Schluss-Referenz. `eligible` schaltet NICHTS frei: es ist ein Hinweis,
+    die Sperre legt Lucas selbst um (echtes Geld auf verrauschten Daten automatisch freizuschalten
+    wäre der falsche Automatismus).
+    """
+    out = {}
+    for cat in sorted(set(blocked or ())):
+        rows = [r for r in settled if _row_cat(r) == cat][-window:]
+        clvs = [float(r["clvPP"]) for r in rows
+                if isinstance(r.get("clvPP"), (int, float)) and r["clvPP"] != 0]
+        avg = round(sum(clvs) / len(clvs), 2) if clvs else None
+        a = _agg_one(rows) if rows else None
+        out[cat] = {
+            "n": len(rows), "clvN": len(clvs), "clvAvg": avg,
+            "roi": (a["roi"] if a else None), "hit": (a["hit"] if a else None),
+            "eligible": bool(len(rows) >= min_n and len(clvs) >= min_clv_n
+                             and avg is not None and avg >= 0),
+            "needN": max(0, min_n - len(rows)), "needClvN": max(0, min_clv_n - len(clvs)),
+        }
+    return out
+
+
+def update_track(prev, emit, close, resolutions, now=None, stake=STAKE, blocked=None):
     """REIN/testbar. Öffnet neue Plays, zieht lastPrice mit, rechnet aufgelöste ab. Ein Play =
     (marketKey, side); der Einstieg (firstTs/entryPrice) ist der ERSTE Zeitpunkt, an dem der Play
     in der Shortlist auftauchte — genau das, was man live gesetzt hätte."""
     now = now or _now()
+    # Sperrliste kommt aus dem Emitter (= poly-wallets.js, eine Quelle). Faellt der Emitter aus,
+    # gilt der zuletzt bekannte Stand aus dem Track-File statt einer leeren Liste.
+    _bl = blocked if blocked is not None else list(
+        (emit or {}).get("blockedCats") or (prev or {}).get("blockedCats") or [])
     open_ = {k: dict(v) for k, v in (prev.get("open") or {}).items() if isinstance(v, dict)}
     settled = [dict(s) for s in (prev.get("settled") or []) if isinstance(s, dict)]
     settled_keys = {(s.get("key"), s.get("side")) for s in settled}
@@ -168,6 +245,7 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE):
         open_[ok] = {
             "key": key, "side": side, "verdict": pl.get("verdict"),
             "conv": pl.get("conv"), "league": pl.get("league"),
+            "cat": pl.get("cat") or _cat_from_league(pl.get("league")),   # 24.08.2026: Sportart mitführen
             "entryPrice": round(float(price), 4), "firstTs": now.isoformat(),
             "lastPrice": round(float(price), 4), "lastTs": now.isoformat(),
             "htkAtEntry": pl.get("htk"), "public": bool(pl.get("public")),
@@ -196,7 +274,7 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE):
         clv = round((close_ref - entry) * 100, 2)
         settled.append({
             "key": e["key"], "side": e["side"], "verdict": e.get("verdict"),
-            "conv": e.get("conv"), "league": e.get("league"),
+            "conv": e.get("conv"), "league": e.get("league"), "cat": e.get("cat"),
             "entryPrice": round(entry, 4), "closePrice": round(close_ref, 4),
             "result": "win" if win else "loss", "winner": winner,
             "pnl": round(pnl, 2), "clvPP": clv, "stake": st,
@@ -222,7 +300,8 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE):
 
     settled = settled[-SETTLED_KEEP:]
     return {"updatedAt": now.isoformat(), "stake": stake, "expired": n_expired,
-            "open": open_, "settled": settled, "agg": aggregate(settled)}
+            "blockedCats": _bl, "reentry": reentry_status(settled, _bl),
+            "open": open_, "settled": settled, "agg": aggregate(settled, _bl)}
 
 
 def main() -> int:

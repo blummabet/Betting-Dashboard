@@ -187,3 +187,94 @@ def test_resolution_still_wins_over_expiry():
     t = st.update_track(prev, _emit([]), {}, res, now=NOW)
     assert not t["open"] and t["expired"] == 0
     assert t["settled"][0]["result"] == "win"
+
+
+# ── Bespielbar vs. nur beobachtet (24.08.2026) ───────────────────────────────
+# Lucas: „sollen wir NFL/UFC/MLB/NBA ganz rausnehmen, wenn sie die Statistik runterziehen?"
+# Antwort: nein — mitschreiben kostet nichts und ist die einzige Rückfahrkarte. Stattdessen wird
+# die Kennzahl getrennt und ein Wiedereintritt am CLV gemessen.
+BLOCKED = ["US-Sport", "Kampfsport"]
+
+
+def _row(cat, league, result="loss", pnl=-10.0, clv=0.0, stake=10.0, public=False):
+    return {"cat": cat, "league": league, "result": result, "pnl": pnl, "clvPP": clv,
+            "stake": stake, "conv": 7, "verdict": "BET", "public": public, "signals": []}
+
+
+def test_cat_fallback_fuer_altzeilen():
+    # Alt-Zeilen tragen kein `cat` — die Kategorie muss aus der Liga fallen, sonst zaehlen
+    # historische MLB-Plays faelschlich als bespielbar.
+    assert st._row_cat({"league": "MLB"}) == "US-Sport"
+    assert st._row_cat({"league": "NBA"}) == "US-Sport"
+    assert st._row_cat({"league": "UFC"}) == "Kampfsport"
+    assert st._row_cat({"league": "ATP"}) == "Tennis"
+    assert st._row_cat({"league": "ESPORTS"}) == "E-Sport"
+    assert st._row_cat({"league": "EPL"}) == "Fußball"
+    # gestempeltes cat gewinnt immer gegen die Ableitung
+    assert st._row_cat({"cat": "Tennis", "league": "MLB"}) == "Tennis"
+
+
+def test_aggregate_trennt_bespielbar_von_gesperrt():
+    settled = [_row("Fußball", "EPL", "win", 10.0), _row("Tennis", "ATP", "win", 10.0),
+               _row("US-Sport", "MLB"), _row("Kampfsport", "UFC")]
+    a = st.aggregate(settled, BLOCKED)
+    assert a["all"]["n"] == 4
+    assert a["bettable"]["n"] == 2 and a["bettable"]["pnl"] == 20.0
+    assert a["blocked"]["n"] == 2 and a["blocked"]["pnl"] == -20.0
+    assert a["byCat"]["US-Sport"]["n"] == 1
+
+
+def test_aggregate_ohne_sperrliste_bleibt_alles_bespielbar():
+    settled = [_row("US-Sport", "MLB")]
+    a = st.aggregate(settled)
+    assert a["bettable"]["n"] == 1 and a["blocked"]["n"] == 0
+
+
+def test_reentry_braucht_genug_plays_UND_echte_schlusskurse():
+    # 40 Plays mit gutem CLV -> zu wenige Plays; eligible bleibt False.
+    settled = [_row("US-Sport", "MLB", clv=1.0) for _ in range(40)]
+    r = st.reentry_status(settled, BLOCKED)["US-Sport"]
+    assert r["eligible"] is False and r["needN"] == 10
+
+
+def test_reentry_zaehlt_clv_null_nicht_als_flach():
+    # clvPP == 0 heisst „keine Schluss-Referenz erfasst", nicht „flach" (Lehre 07.08.).
+    settled = [_row("US-Sport", "MLB", clv=0.0) for _ in range(60)]
+    r = st.reentry_status(settled, BLOCKED)["US-Sport"]
+    assert r["clvN"] == 0 and r["clvAvg"] is None and r["eligible"] is False
+
+
+def test_reentry_meldet_wenn_die_sportart_dreht():
+    settled = [_row("US-Sport", "MLB", clv=1.2) for _ in range(30)] + \
+              [_row("US-Sport", "MLB", clv=0.0) for _ in range(30)]
+    r = st.reentry_status(settled, BLOCKED)["US-Sport"]
+    assert r["n"] == 60 and r["clvN"] == 30 and r["clvAvg"] == 1.2
+    assert r["eligible"] is True
+
+
+def test_reentry_schaut_nur_auf_die_juengsten_plays():
+    # Alte Katastrophe darf eine gedrehte Sportart nicht ewig blockieren.
+    alt = [_row("US-Sport", "MLB", clv=-5.0) for _ in range(300)]
+    neu = [_row("US-Sport", "MLB", clv=1.0) for _ in range(60)]
+    r = st.reentry_status(alt + neu, BLOCKED, window=60)["US-Sport"]
+    assert r["clvAvg"] == 1.0 and r["eligible"] is True
+
+
+def test_update_track_nimmt_sperrliste_aus_dem_emitter():
+    from datetime import datetime, timezone
+    now = datetime(2026, 8, 24, 12, 0, tzinfo=timezone.utc)
+    emit = {"blockedCats": BLOCKED, "plays": [
+        {"key": "mlb-a-b", "side": "A", "verdict": "BET", "conv": 7, "league": "MLB",
+         "cat": "US-Sport", "price": 0.5}]}
+    out = st.update_track({}, emit, {}, {}, now=now)
+    assert out["blockedCats"] == BLOCKED
+    assert out["open"]["mlb-a-b|A"]["cat"] == "US-Sport"
+    assert "US-Sport" in out["reentry"]
+
+
+def test_update_track_faellt_auf_letzten_stand_zurueck_wenn_emitter_leer():
+    from datetime import datetime, timezone
+    now = datetime(2026, 8, 24, 12, 0, tzinfo=timezone.utc)
+    out = st.update_track({"blockedCats": BLOCKED}, {"plays": []}, {}, {}, now=now)
+    assert out["blockedCats"] == BLOCKED
+

@@ -40,6 +40,7 @@ BASE = Path(__file__).resolve().parent
 
 # ── Datei-Namen (alle read-only außer poly_status.json) ─────────────────────
 CLOSE_FILE      = "poly_money_broad_close.json"     # {key:{prices,league,capturedAt,hoursToKickoff,…}}
+DIRECT_FILE     = "poly_direct_bets.json"           # 24.08.2026: echte „Heute"-Wetten, über den Slug abgerechnet
 RES_FILE        = "poly_resolutions.json"           # {key:{winner,ts}}
 WALLET_FILE     = "poly_wallet_track.json"          # {open,scores:{addr:{n,wins,usd,pnl?}},updatedAt}
 SHORTLIST_FILE  = "poly_shortlist_track.json"       # {updatedAt,open,settled,agg,stake}
@@ -56,6 +57,8 @@ KICKOFF_GRACE_H  = float(os.environ.get("POLY_KICKOFF_GRACE_H")or 6)    # ab so 
 STALE_OPEN_DAYS  = float(os.environ.get("POLY_STALE_OPEN_DAYS")or 3)    # offene Paper-Position älter → hängt
 GHOST_SHARE_FLOOR = float(os.environ.get("POLY_GHOST_SHARE_FLOOR")or 0.5) # >so viel der Live-Geld-Märkte schon durch = Feed voller Geister
 GHOST_MIN_N      = int(os.environ.get("POLY_GHOST_MIN_N")     or 20)    # erst ab so vielen Geld-Märkten bewerten
+STAMP_MISS_MAX   = int(os.environ.get("POLY_STAMP_MISS_MAX")  or 20)    # so viele Nachzügler ohne resolved-Stempel sind normal
+DIRECT_OPEN_MAX_D= float(os.environ.get("POLY_DIRECT_OPEN_MAX_D") or 3) # echte Direkt-Wette so lange ohne Auflösung = Alarm
 OVERLAP_FLOOR    = float(os.environ.get("POLY_OVERLAP_FLOOR")  or 0.60) # Auflösungs-Trefferquote je Liga
 OVERLAP_MIN_N    = int(os.environ.get("POLY_OVERLAP_MIN_N")    or 8)    # Liga erst ab so vielen fälligen Keys bewerten
 PROVEN_MIN_TR    = int(os.environ.get("POLY_PROVEN_MIN_TR")    or 3)    # = poly_whale_watch MIN_TR
@@ -103,7 +106,7 @@ def _chk(cid, label, severity, failures, note=""):
 class PolyCtx:
     """Einmal gebaut, an jeden Guard gereicht. Alles bereits geladen/getrimmt."""
     def __init__(self, now=None, close=None, resolutions=None, wallet_track=None,
-                 shortlist=None, broad=None, cross_sport=None, trader=None):
+                 shortlist=None, broad=None, cross_sport=None, trader=None, direct_bets=None):
         self.now = now or datetime.now(timezone.utc)
         self.close = close if isinstance(close, dict) else {}
         self.resolutions = resolutions if isinstance(resolutions, dict) else {}
@@ -112,6 +115,9 @@ class PolyCtx:
         self.broad = broad if isinstance(broad, dict) else {}
         self.cross_sport = cross_sport if isinstance(cross_sport, dict) else {}
         self.trader = trader if isinstance(trader, dict) else {}
+        # 24.08.2026: echte Wetten aus dem „Heute"-Tab (poly_direct_bets.json) — die haben kein
+        # Fixture und werden ueber den Slug abgerechnet, brauchen also einen eigenen Guard.
+        self.direct_bets = direct_bets if isinstance(direct_bets, dict) else {}
 
     def age_h(self, ts_str):
         """Alter in Stunden eines ISO-Zeitstempels; None wenn nicht parsbar."""
@@ -368,6 +374,41 @@ def check_stale_live_markets(ctx):
                 "(steigt er, prunt/löst der Feed nicht mehr auf; jede ungegatete View zeigt dann fertige Spiele).")
 
 
+@poly_check
+def check_close_resolution_stamped(ctx):
+    """Guard auf den Bug vom 24.08.2026: die Auflösung LAG VOR (poly_resolutions.json), landete aber
+    nie im Close-Eintrag — der Markt sah für jede Fläche weiter „offen/live" aus und war zugleich
+    prune-immun (`key in resolving`). Genau die stille Klasse: nichts crasht, alles ist da, nur der
+    Stempel fehlt. Gemessen: unaufgelöste Close-Einträge, deren Auflösung im Ledger steht."""
+    miss = [k for k, v in ctx.close.items()
+            if isinstance(v, dict) and v.get("resolved") is None and k in ctx.resolutions]
+    fails = []
+    if len(miss) > STAMP_MISS_MAX:
+        fails.append(f"{len(miss)} Close-Einträge sind unaufgelöst, obwohl die Auflösung im Ledger "
+                     f"steht (z.B. {', '.join(miss[:3])}) — capture() stempelt nicht")
+    return _chk("close_resolution_stamped", "Auflösung landet im Close-Eintrag", "warn", fails,
+                "poly_resolutions kennt den Ausgang, der Close-Eintrag nicht: der Markt bleibt für alle "
+                "Flächen 'live' und entkommt dem Geister-Prune. Ein paar Nachzügler pro Lauf sind normal.")
+
+
+@poly_check
+def check_direct_bets_settling(ctx):
+    """Echtes Geld darf nicht unabgerechnet liegen bleiben (24.08.2026). Die direkt aus dem
+    „Heute"-Tab gesetzten Wetten haben kein Fixture — sie werden allein über den Poly-Slug
+    aufgelöst (poly_direct_bets.py). Bleibt so ein Bet nach dem Spiel ohne Auflösung, fehlt er
+    still in P&L UND CLV: genau die Klasse Loch, die man erst Wochen später bemerkt."""
+    old = [b for b in (ctx.direct_bets.get("open") or [])
+           if isinstance(b, dict) and (b.get("ageDays") or 0) > DIRECT_OPEN_MAX_D]
+    fails = [f"{b.get('key')} → {b.get('side')}: seit {float(b.get('ageDays') or 0):.1f} Tagen "
+             f"gesetzt (${float(b.get('stake') or 0):.0f}), keine Auflösung"
+             for b in old[:5]]
+    if len(old) > 5:
+        fails.append(f"… und {len(old) - 5} weitere")
+    return _chk("direct_bets_settling", "Direkt gesetzte Wetten rechnen ab", "warn", fails,
+                "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den "
+                "Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz.")
+
+
 # ── Ausführung ────────────────────────────────────────────────────────────────
 def run_checks(ctx):
     """Führt die ganze Registry aus. Pure. Ein crashender Check killt den Rest nicht."""
@@ -393,6 +434,7 @@ def build_ctx_from_disk(now=None):
         broad=_load(BROAD_FILE),
         cross_sport=_load(CROSS_FILE),
         trader=_load(TRADER_FILE),
+        direct_bets=_load(DIRECT_FILE),
     )
 
 

@@ -175,6 +175,47 @@ class TestGhostPrune:
                             "hoursToKickoff": None, "capturedAt": "nonsense"}}
         assert "weird" in B.capture([], frozen, now=self.NOW, min_vol=7500)
 
+    # 24.08.2026 (Lucas, "$41 Mio Whale-Geld auf fertigen Spielen"): der Prune oben lief ins Leere,
+    # weil Gamma jeden geschlossenen Event bei jedem Lauf mitliefert -> `key in resolving` machte
+    # fast jeden Geister-Key dauerhaft prune-immun, ohne dass die Aufloesung je im Eintrag ankam.
+    def test_aufloesung_wird_in_den_eintrag_gestempelt(self):
+        td = self.timedelta
+        frozen = {"settling": self._e(self.NOW - td(hours=10), 1.0)}
+        markets = [{"key": "settling", "resolved": True, "resolvedPrices": {"A": 1.0, "B": 0.0}}]
+        out = B.capture(markets, frozen, now=self.NOW, min_vol=7500)
+        assert out["settling"]["resolved"] is True                     # nicht mehr still "live"
+        assert out["settling"]["resolvedPrices"] == {"A": 1.0, "B": 0.0}
+        assert out["settling"].get("resolvedAt")
+
+    def test_nachzuegler_aus_dem_aufloesungs_ledger_wird_gestempelt(self):
+        # Die Aufloesung liegt laengst im rollierenden Ledger, der Markt taucht im Lauf nicht mehr auf.
+        td = self.timedelta
+        frozen = {"ghost": self._e(self.NOW - td(hours=30), 1.0)}
+        out = B.capture([], frozen, now=self.NOW, min_vol=7500,
+                        resolutions={"ghost": {"winner": "A", "ts": "x"}})
+        assert out["ghost"]["resolved"] is True and out["ghost"]["resolvedWinner"] == "A"
+
+    def test_geist_ohne_jede_aufloesung_fliegt_weiter_raus(self):
+        td = self.timedelta
+        frozen = {"ghost": self._e(self.NOW - td(hours=30), 1.0)}
+        assert "ghost" not in B.capture([], frozen, now=self.NOW, min_vol=7500,
+                                        resolutions={"anderer": {"winner": "A"}})
+
+    def test_aufgeloeste_fliegen_nach_retention_raus(self):
+        td = self.timedelta
+        frozen = {"alt":  self._e(self.NOW - td(days=40), 1.0, resolved=True),
+                  "neu":  self._e(self.NOW - td(days=3),  1.0, resolved=True)}
+        out = B.capture([], frozen, now=self.NOW, min_vol=7500, resolved_keep_days=30)
+        assert "alt" not in out and "neu" in out
+
+    def test_stempel_ueberschreibt_bestehende_aufloesung_nicht(self):
+        td = self.timedelta
+        e = self._e(self.NOW - td(hours=30), 1.0, resolved=True)
+        e["resolvedPrices"] = {"A": 1.0, "B": 0.0}
+        out = B.capture([{"key": "k", "resolved": True, "resolvedPrices": {"B": 1.0, "A": 0.0}}],
+                        {"k": e}, now=self.NOW, min_vol=7500)
+        assert out["k"]["resolvedPrices"] == {"A": 1.0, "B": 0.0}
+
 
 class TestAppendHistory:
     # 25.07.2026 (Lucas ① Momentum): globale Poly-Preis-Zeitreihe je Markt fortschreiben.
@@ -753,3 +794,42 @@ def test_capture_carries_sport():
           "totalUsd": 20000, "shares": {"A": 1}, "prices": {"A": 0.5}}]
     out = B.capture(m, {}, min_vol=7500)
     assert out["x"]["sport"] == "Fußball"
+
+
+class TestTokensImFeed:
+    """24.08.2026 (Lucas, „Heute"-Tab direkt setzen): die CLOB-Token-ID lag nur transient in `oc`
+    und wurde verworfen -> der Betting-Tab musste den Play ueber Slug+Teamnamen an einen
+    gestempelten Card-Pick matchen (nur Fussball MIT Pick). Mit dem Token IM Feed traegt jeder
+    Play alles fuer die Order — jede Sportart, ohne Namens-Aufloesung."""
+    from datetime import datetime, timezone
+    NOW = datetime(2026, 8, 24, 12, 0, tzinfo=timezone.utc)
+
+    OC = [{"label": "Team A", "price": 0.55, "token": "111"},
+          {"label": "Team B", "price": 0.45, "token": "222"},
+          {"label": "ohne Token", "price": 0.10}]
+
+    def _m(self, tokens=None):
+        m = {"key": "k", "league": "ESPORTS", "sport": "E-Sport", "hoursToKickoff": 1.0,
+             "totalUsd": 50000, "shares": {"Team A": 0.6, "Team B": 0.4},
+             "prices": {"Team A": 0.55, "Team B": 0.45}, "whales": [], "resolved": False}
+        if tokens is not None:
+            m["tokens"] = tokens
+        return m
+
+    def test_tokens_of_nur_vollstaendige_ausgaenge(self):
+        assert B._tokens_of(self.OC) == {"Team A": "111", "Team B": "222"}
+        assert B._tokens_of([]) == {} and B._tokens_of(None) == {}
+
+    def test_tokens_landen_im_freeze(self):
+        out = B.capture([self._m(B._tokens_of(self.OC))], {}, now=self.NOW, min_vol=7500)
+        assert out["k"]["tokens"] == {"Team A": "111", "Team B": "222"}
+
+    def test_tokens_landen_im_live_speicher(self):
+        m = self._m(B._tokens_of(self.OC)); m["live"] = True
+        out = B.capture_live([m], {}, now=self.NOW, min_vol=7500)
+        assert out["k"]["tokens"] == {"Team A": "111", "Team B": "222"}
+
+    def test_ohne_token_kein_leeres_feld(self):
+        # Nichts erfinden: fehlt der Token, fehlt das Feld (statt None-Muell im 1-MB-Feed).
+        out = B.capture([self._m(None)], {}, now=self.NOW, min_vol=7500)
+        assert "tokens" not in out["k"]
