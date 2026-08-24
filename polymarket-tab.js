@@ -3453,8 +3453,12 @@ function _polyHeuteBetBlocked(r) {
 // (poly_money_broad schreibt `tokens` je Markt). Der Placer nimmt `tokenId` und ueberspringt die
 // ganze Gamma-/Teamnamen-Aufloesung -> funktioniert fuer Tennis/E-Sport genauso wie fuer Fussball.
 // KEIN Pinnacle-Anker fuer diese Plays -> edge bleibt null (Basis-Einsatz, Warnung im Dialog).
+// 24.08.2026 (Lucas: „haben nur einen Öffnen-Link"): Token ist ein BESCHLEUNIGER, keine Bedingung.
+// Fehlt er (Deploy frisch, oder der Markt lag nicht im Holder-Budget des Scans), löst der Placer
+// ihn über polyKey + side selbst auf. Vorher fiel der Button stumm auf einen Link zurück — und
+// „Sportart gesperrt" war von „Token fehlt" nicht zu unterscheiden.
 function _polyHeuteTokenOrder(r) {
-  if (!r || !r.token || !r.key || !r.side) return null;
+  if (!r || !r.key || !r.side) return null;
   if (_polyHeuteBetBlocked(r)) return null;
   const label = String(r.match || '').trim();
   const parts = label.split(/\s+vs\.?\s+/i);
@@ -3465,7 +3469,7 @@ function _polyHeuteTokenOrder(r) {
     market: String(r.side),                       // der Ausgang IST der Markt (Token zeigt exakt darauf)
     polyPrice: (typeof r.price === 'number' && r.price > 0) ? r.price : null,
     slug: String(r.key).replace(/-more-markets$/, ''),
-    tokenId: String(r.token),
+    tokenId: (r.token ? String(r.token) : null),   // null → Placer löst über den Slug auf
     polyKey: String(r.key),                       // Abrechnung laeuft ueber diesen Slug
     side: String(r.side),
     league: r.league || '', sport: r.sport || '',
@@ -3577,9 +3581,10 @@ function _renderPolyHeute(plays) {
           const bo = _polyHeuteBetOrder(r, _hPicks);
           return bo
             ? `<button onclick="event.stopPropagation();_wmBetConfirm(decodeURIComponent('${encodeURIComponent(JSON.stringify(bo))}'))"
-                 title="Direkt auslösen — es öffnet sich der Bestätigungs-Dialog"
-                 style="background:linear-gradient(135deg,#a78bfa,#7c3aed);border:none;border-radius:6px;color:#fff;font-size:11px;font-weight:800;padding:6px 11px;cursor:pointer;white-space:nowrap;font-family:inherit">🟣 Setzen</button>`
+                 title="${bo.tokenId ? 'Direkt auslösen — Token liegt vor' : 'Direkt auslösen — der Runner löst den Markt über den Slug auf'}"
+                 style="background:linear-gradient(135deg,#a78bfa,#7c3aed);border:none;border-radius:6px;color:#fff;font-size:11px;font-weight:800;padding:6px 11px;cursor:pointer;white-space:nowrap;font-family:inherit">🟣 Setzen</button><a href="${url}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="Markt auf Polymarket ansehen" style="background:#a78bfa14;border:1px solid #a78bfa33;border-radius:6px;color:#a78bfa;font-size:11px;font-weight:800;padding:6px 8px;text-decoration:none">↗</a>`
             : `<a href="${url}" target="_blank" rel="noopener" onclick="event.stopPropagation()"
+                 title="Sportart bewusst nicht setzbar (US-Sport/Kampfsport — im Papier-Track klar negativ). Auf Polymarket öffnen."
                  style="background:#a78bfa22;border:1px solid #a78bfa55;border-radius:6px;color:#a78bfa;font-size:11px;font-weight:800;padding:6px 11px;text-decoration:none;white-space:nowrap">🟣 Öffnen ↗</a>`;
         })()}
       </div>
@@ -3667,8 +3672,9 @@ function _renderPolyWhales(plays) {
         ${bo
           ? `<button onclick="event.stopPropagation();_wmBetConfirm(decodeURIComponent('${encodeURIComponent(JSON.stringify(bo))}'))"
                title="Direkt auslösen — es öffnet sich der Bestätigungs-Dialog"
-               style="background:linear-gradient(135deg,#4cc2ff,#1f6feb);border:none;border-radius:6px;color:#fff;font-size:11px;font-weight:800;padding:6px 11px;cursor:pointer;white-space:nowrap;font-family:inherit">🟣 Setzen</button>`
+               style="background:linear-gradient(135deg,#4cc2ff,#1f6feb);border:none;border-radius:6px;color:#fff;font-size:11px;font-weight:800;padding:6px 11px;cursor:pointer;white-space:nowrap;font-family:inherit">🟣 Setzen</button><a href="${url}" target="_blank" rel="noopener" onclick="event.stopPropagation()" title="Markt auf Polymarket ansehen" style="background:#a78bfa14;border:1px solid #a78bfa33;border-radius:6px;color:#a78bfa;font-size:11px;font-weight:800;padding:6px 8px;text-decoration:none">↗</a>`
           : `<a href="${url}" target="_blank" rel="noopener" onclick="event.stopPropagation()"
+               title="Sportart bewusst nicht setzbar (US-Sport/Kampfsport — im Papier-Track klar negativ). Auf Polymarket öffnen."
                style="background:#a78bfa22;border:1px solid #a78bfa55;border-radius:6px;color:#a78bfa;font-size:11px;font-weight:800;padding:6px 11px;text-decoration:none;white-space:nowrap">🟣 Öffnen ↗</a>`}
       </div>
     </div>`;

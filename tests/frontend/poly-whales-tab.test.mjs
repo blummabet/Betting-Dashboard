@@ -109,13 +109,19 @@ test('Whales: Match-Label ist Klartext (kein HTML im escapten Text)', async () =
   });
 });
 
-test('Whales: Token → Setzen-Button, ohne Token → Link', async () => {
+test('Whales: Setzen auch ohne Token — Link NUR noch bei gesperrter Sportart', async () => {
+  // 24.08.2026: Vorher fiel ein tokenloser Play stumm auf einen Link zurück und war damit von einer
+  // bewusst gesperrten Sportart nicht zu unterscheiden. Jetzt ist der Link ein eindeutiges Signal.
   await withData(BROAD, TRACK, (w) => {
     const [mitToken, ohneToken] = w._pwWhalePlays();
     assert.strictEqual(mitToken.token, 'TOK1');
     assert.strictEqual(ohneToken.token, null);
-    assert.ok(w._renderPolyWhales([mitToken]).includes('🟣 Setzen'));
-    assert.ok(w._renderPolyWhales([ohneToken]).includes('🟣 Öffnen'));
+    assert.ok(w._renderPolyWhales([mitToken]).includes('🟣 Setzen'), 'mit Token setzbar');
+    assert.ok(w._renderPolyWhales([ohneToken]).includes('🟣 Setzen'), 'ohne Token ebenfalls setzbar');
+    const gesperrt = { ...mitToken, league: 'MLB', sport: null };
+    const html = w._renderPolyWhales([gesperrt]);
+    assert.ok(html.includes('🟣 Öffnen'), 'gesperrte Sportart bleibt Link');
+    assert.match(html, /bewusst nicht setzbar/, 'und sagt im Tooltip warum');
   });
 });
 

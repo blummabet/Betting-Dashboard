@@ -46,15 +46,21 @@ test('_heuteSideMatches: Over/Under/BTTS', () => {
   assert.equal(w._heuteSideMatches('yes', { market:'Beide Teams treffen', home:'A', away:'B' }), true);
 });
 
-test('_polyHeuteBetOrder: ohne Preis-Cache und ohne Token -> null (Link-Fallback)', () => {
+test('_polyHeuteBetOrder: ohne Preis-Cache faellt es auf die Token-Order zurueck', () => {
+  // 24.08.2026: Frueher gab es hier null (= Link). Der Card-Pick-Weg braucht den Preis-Cache, der
+  // Direktweg nicht — polyKey+side reichen, den Rest loest der Runner ueber den Slug auf.
   const w = loadPoly();
   const r = { key:'some-slug', side:'Real Betis', price:0.6, conv:8 };
-  assert.equal(w._polyHeuteBetOrder(r, [{ home:'Real Betis', away:'Real Sociedad', market:'Heimsieg', odds:2.0 }]), null);
+  const o = w._polyHeuteBetOrder(r, [{ home:'Real Betis', away:'Real Sociedad', market:'Heimsieg', odds:2.0 }]);
+  assert.ok(o && o.polyKey === 'some-slug' && o.side === 'Real Betis');
 });
 
-test('_polyHeuteBetOrder: keine Picks und kein Token -> null', () => {
+test('_polyHeuteBetOrder: null nur ohne Key/Seite — sonst immer eine Order', () => {
   const w = loadPoly();
-  assert.equal(w._polyHeuteBetOrder({ key:'x', side:'y' }, []), null);
+  assert.ok(w._polyHeuteBetOrder({ key:'x', side:'y' }, []), 'Key+Seite reichen');
+  assert.equal(w._polyHeuteBetOrder({ key:'x' }, []), null, 'ohne Seite keine Order');
+  assert.equal(w._polyHeuteBetOrder({ side:'y' }, []), null, 'ohne Key keine Order');
+  assert.equal(w._polyHeuteBetOrder(null, []), null);
 });
 
 // ── 24.08.2026 (Lucas: „kriegen wir hin, dass ich von dort gleich die Wette auslöse?") ──────────
@@ -94,10 +100,17 @@ test('_polyHeuteTokenOrder: baut eine vollstaendige Direkt-Order aus dem Play', 
   assert.equal(o.edge, null);                     // kein Pinnacle-Anker -> kein erfundener Edge
 });
 
-test('_polyHeuteTokenOrder: ohne Token kein Direkt-Button', () => {
+test('_polyHeuteTokenOrder: ohne Token trotzdem eine Order (Placer löst über den Slug auf)', () => {
+  // 24.08.2026 (Lucas: „haben nur einen Öffnen-Link"): der Button hing am Token, den poly_money_broad
+  // erst ab dem ersten Scan mit dem neuen Code schreibt — dazwischen war JEDER Play tokenlos. Der
+  // Token ist jetzt ein Beschleuniger: fehlt er, trägt die Order polyKey+side und der Runner löst auf.
   const w = loadPolyWithSport('Tennis');
   const { token, ...ohne } = PLAY;
-  assert.equal(w._polyHeuteTokenOrder(ohne), null);
+  const o = w._polyHeuteTokenOrder(ohne);
+  assert.ok(o, 'Order auch ohne Token');
+  assert.equal(o.tokenId, null, 'tokenId explizit null, nicht erfunden');
+  assert.equal(o.polyKey, PLAY.key);
+  assert.equal(o.side, PLAY.side);
 });
 
 test('_polyHeuteTokenOrder: US-Sport und Kampfsport bleiben Link', () => {
