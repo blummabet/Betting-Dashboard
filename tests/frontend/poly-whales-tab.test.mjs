@@ -54,6 +54,8 @@ const BROAD = {
   'cs2-g1-leo2':  market('ESPORTS',  1.7, { 'Leo Team': 0.325, 'GenOne': 0.675 }, { 'Leo Team': 'TOK1' }),
   'atp-a-b':      market('ATP',      3.0, { 'Spieler A': 0.55, 'Spieler B': 0.45 }),
   'cs2-laeuft':   market('ESPORTS', -1.2, { 'Team X': 0.60, 'Team Y': 0.40 }),
+  // 24.08.2026 (Lucas' INOX-Fall): zwei Top-Wallets auf GEGENSEITEN desselben Markts.
+  'cs2-streit':   market('ESPORTS',  2.0, { 'Rot': 0.52, 'Blau': 0.48 }, { 'Rot': 'TOK9', 'Blau': 'TOK8' }),
 };
 
 const TRACK = {
@@ -67,6 +69,9 @@ const TRACK = {
     { wallet: '0xC', key: 'atp-a-b',     side: 'Spieler A', league: 'ATP',    usd: 8000, entryPrice: 0.50 },
     // laeuft schon → darf NICHT auftauchen
     { wallet: '0xA', key: 'cs2-laeuft',  side: 'Team X',    league: 'ESPORTS', usd: 9000, entryPrice: 0.55 },
+    // Konflikt: #1 auf Rot, #3 auf Blau — beide bewiesen, beide Top-20
+    { wallet: '0xA', key: 'cs2-streit', side: 'Rot',  league: 'ESPORTS', usd: 5000, entryPrice: 0.50 },
+    { wallet: '0xC', key: 'cs2-streit', side: 'Blau', league: 'ESPORTS', usd: 4000, entryPrice: 0.47 },
     // gar nicht im Feed (Ledger haengt) → darf NICHT auftauchen
     { wallet: '0xB', key: 'lol-weg-2026-08-01', side: 'Irgendwer', league: 'ESPORTS', usd: 7000, entryPrice: 0.6 },
   ],
@@ -75,7 +80,7 @@ const TRACK = {
 test('Whales: nur noch spielbare Positionen (laufend + nicht-im-Feed fliegen raus)', async () => {
   await withData(BROAD, TRACK, (w) => {
     const keys = w._pwWhalePlays().map(p => p.key);
-    assert.deepStrictEqual([...keys].sort(), ['atp-a-b', 'cs2-g1-leo2']);
+    assert.deepStrictEqual([...new Set(keys)].sort(), ['atp-a-b', 'cs2-g1-leo2', 'cs2-streit']);
     assert.ok(!keys.includes('cs2-laeuft'), 'laufendes Spiel raus');
     assert.ok(!keys.includes('lol-weg-2026-08-01'), 'nicht mehr im Feed raus');
   });
@@ -154,3 +159,56 @@ test('Whales: ohne qualifizierte Wallets kein Absturz', async () => {
     assert.ok(w._renderPolyWhales([]).includes('🐋 Whales'));
   });
 });
+
+
+// ── Konflikt zwischen Top-Wallets (24.08.2026) ───────────────────────────────
+// Lucas' INOX-Fall: #7 auf INOX, #9 auf Butterfly — zwei BEWIESENE Wallets gegeneinander, und die
+// Fläche sagte kein Wort. Genau dort ist Folgen ein Münzwurf, also muss es dranstehen.
+
+test('Whales: Gegenseiten desselben Markts werden als Konflikt markiert', async () => {
+  await withData(BROAD, TRACK, (w) => {
+    const streit = w._pwWhalePlays().filter(p => p.key === 'cs2-streit');
+    assert.strictEqual(streit.length, 2, 'beide Seiten erscheinen');
+    for (const p of streit) {
+      assert.strictEqual(p.conflict, true, p.side + ' muss Konflikt tragen');
+      assert.strictEqual(p.against.length, 1);
+      assert.ok(p.against[0].side !== p.side, 'Gegenseite benannt');
+      assert.ok(Number.isFinite(p.against[0].bestRank), 'Rang der Gegenseite ist eine Zahl (nicht undefined)');
+    }
+    const rot = streit.find(p => p.side === 'Rot'), blau = streit.find(p => p.side === 'Blau');
+    assert.strictEqual(rot.bestRank, 1); assert.strictEqual(rot.against[0].bestRank, 3);
+    assert.strictEqual(blau.bestRank, 3); assert.strictEqual(blau.against[0].bestRank, 1);
+  });
+});
+
+test('Whales: Konflikt-Plays stehen ganz hinten — auch mit besserem Rang', async () => {
+  await withData(BROAD, TRACK, (w) => {
+    const plays = w._pwWhalePlays();
+    const idx = plays.findIndex(p => p.conflict);
+    assert.ok(idx > -1, 'Konflikt vorhanden');
+    // Ab dem ersten Konflikt darf nichts Konfliktfreies mehr kommen.
+    assert.ok(plays.slice(idx).every(p => p.conflict), 'Konflikte bilden den Schluss');
+    // Und der #1-Rang rutscht trotz Bestrang nach hinten.
+    assert.ok(plays[0].bestRank >= 1 && !plays[0].conflict, 'vorne steht ein konfliktfreier Play');
+  });
+});
+
+test('Whales: Badge zeigt „⚔️ #a gegen #b" statt Konsens', async () => {
+  await withData(BROAD, TRACK, (w) => {
+    const streit = w._pwWhalePlays().filter(p => p.key === 'cs2-streit');
+    const html = w._renderPolyWhales(streit);
+    assert.match(html, /⚔️ #1 gegen #3/);
+    assert.match(html, /⚔️ #3 gegen #1/);
+    assert.doesNotMatch(html, /einig/, 'kein Konsens-Badge bei Konflikt');
+    assert.match(html, /heben sich als Signal weitgehend auf/, 'Tooltip erklaert warum');
+  });
+});
+
+test('Whales: ohne Gegenseite kein Konflikt-Flag', async () => {
+  await withData(BROAD, TRACK, (w) => {
+    const leo = w._pwWhalePlays().find(p => p.key === 'cs2-g1-leo2');
+    assert.ok(leo && !leo.conflict, 'Konsens-Play bleibt konfliktfrei');
+    assert.strictEqual(leo.n, 2);
+  });
+});
+

@@ -3650,7 +3650,14 @@ function _renderPolyWhales(plays) {
     const price = (typeof r.price === 'number' && r.price > 0)
       ? `<span style="font-size:11px;color:#a78bfa;font-weight:700">${Math.round(r.price * 100)}¢ · ${(1 / r.price).toFixed(2)}</span>` : '';
     // Konsens-Badge: DIE Nachricht dieser Fläche.
-    const cons = r.n >= 2
+    // Konflikt schlägt Konsens: steht eine andere Top-Wallet auf der Gegenseite, ist DAS die
+    // Nachricht — nicht dass hier zwei einig sind.
+    const opp = (r.conflict && r.against && r.against[0]) ? r.against[0] : null;
+    const cons = opp
+      ? `<span style="font-size:10.5px;font-weight:800;color:#e3b341;background:rgba(227,179,65,.14);border:1px solid rgba(227,179,65,.4);border-radius:20px;padding:2px 8px" `
+        + `title="Eine andere Top-Wallet hält die Gegenseite (${String(opp.side).replace(/"/g,'')}, ${opp.n} Wallet${opp.n!==1?'s':''}). Zwei bewiesene Wallets gegeneinander heben sich als Signal weitgehend auf.">`
+        + `⚔️ #${r.bestRank} gegen #${opp.bestRank}</span>`
+      : r.n >= 2
       ? `<span style="font-size:10.5px;font-weight:800;color:#3fb950;background:rgba(63,185,80,.14);border:1px solid rgba(63,185,80,.35);border-radius:20px;padding:2px 8px">${r.n} von ${topN} einig</span>`
       : `<span style="font-size:10.5px;color:#8b949e">${(typeof _pwMedal === 'function') ? _pwMedal(r.bestRank - 1) : '#' + r.bestRank} der Rangliste</span>`;
     // Einstieg → jetzt: hat der Preis den Move schon gemacht?

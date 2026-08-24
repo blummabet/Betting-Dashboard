@@ -53,6 +53,8 @@ const out = {
     key: r.key, side: r.side,
     price: (typeof r.price === 'number' ? r.price : null),
     n: r.n, bestRank: r.bestRank,
+    conflict: !!r.conflict,
+    againstRank: (r.conflict && r.against && r.against[0]) ? r.against[0].bestRank : null,
     league: r.league || null, sport: r.sport || null,
     cat: (() => { try { return w._pwSportCategory(r.league, r.sport); } catch { return null; } })(),
     usd: Math.round(r.usd || 0),

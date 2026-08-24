@@ -76,6 +76,11 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE) -> dict:
             "entryPrice": round(float(price), 4), "lastPrice": round(float(price), 4),
             "firstTs": now.isoformat(), "lastTs": now.isoformat(),
             "consensusAtEntry": int(pl.get("n") or 1),
+            # 24.08.2026 (Lucas' INOX-Fall): stand beim Einstieg eine andere Top-Wallet auf der
+            # Gegenseite? Eingefroren wie der Konsens — sonst wäre es Rückblick. Damit lässt sich
+            # später MESSEN, ob Konflikt-Plays wirklich schlechter laufen, statt es anzunehmen.
+            "conflictAtEntry": bool(pl.get("conflict")),
+            "againstRankAtEntry": pl.get("againstRank"),
             "bestRankAtEntry": int(pl.get("bestRank") or 0) or None,
             "whaleEntryAvg": pl.get("entryAvg"), "whaleUsd": pl.get("usd"),
             "htkAtEntry": pl.get("htk"), "stake": stake,
@@ -105,6 +110,7 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE) -> dict:
             "result": "win" if win else "loss", "winner": winner,
             "pnl": round(pnl, 2), "clvPP": round((close_ref - entry) * 100, 2), "stake": st,
             "consensusAtEntry": e.get("consensusAtEntry"), "bestRankAtEntry": e.get("bestRankAtEntry"),
+            "conflictAtEntry": e.get("conflictAtEntry"), "againstRankAtEntry": e.get("againstRankAtEntry"),
             # Die Kernzahl: wie viel vom Move war schon weg, als wir eingestiegen sind?
             "whaleEntryAvg": e.get("whaleEntryAvg"),
             "lagPP": (round((entry - float(e["whaleEntryAvg"])) * 100, 2)
@@ -137,6 +143,8 @@ def aggregate(settled) -> dict:
     by_cat = {}
     for r in rows:
         by_cat.setdefault(str(r.get("cat") or "?"), []).append(r)
+    confl = [r for r in rows if r.get("conflictAtEntry")]
+    clean = [r for r in rows if not r.get("conflictAtEntry")]
     lags = [float(r["lagPP"]) for r in rows if isinstance(r.get("lagPP"), (int, float))]
     out = _agg_one(rows) if rows else {"n": 0, "wins": 0, "hit": 0.0, "pnl": 0.0,
                                        "stake": 0.0, "roi": 0.0, "clvAvg": 0.0}
@@ -144,6 +152,9 @@ def aggregate(settled) -> dict:
     return {"all": out,
             "solo": _agg_one(solo) if solo else None,
             "consensus": _agg_one(cons) if cons else None,
+            # Die eigentliche Frage hinter dem Konflikt-Flag: laufen diese Plays messbar schlechter?
+            "conflict": (_agg_one(confl) if confl else None),
+            "clean": (_agg_one(clean) if clean else None),
             "byCat": {k: _agg_one(v) for k, v in sorted(by_cat.items())}}
 
 

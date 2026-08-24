@@ -1085,8 +1085,30 @@ function _pwWhalePlays(topN) {
     delete e._eSum; delete e._eW;
     return e;
   });
-  // Konsens zuerst: ein Wallet ist eine Meinung, zwei sind ein Signal.
-  out.sort(function (a, b) { return (b.n - a.n) || (a.bestRank - b.bestRank) || (b.usd - a.usd); });
+  // Konflikt: halten Top-Wallets GEGENSEITEN desselben Markts? (24.08.2026, Lucas' INOX-Fall)
+  // Zwei bewiesene Wallets auf verschiedenen Seiten heben sich als Signal weitgehend auf —
+  // das MUSS dranstehen, sonst liest man eine Seite als Empfehlung, obwohl die andere genauso
+  // gut belegt ist. Nicht unterdrückt, nur markiert und nach hinten sortiert (erst messen).
+  // WICHTIG: erst NACH der map() oben — `n`/`bestRank` entstehen dort. Vorher gebaut,
+  // trug `against` lauter undefined-Ränge (Badge zeigte „#undefined").
+  const byMarket = {};
+  out.forEach(function (e) { (byMarket[e.key] = byMarket[e.key] || []).push(e); });
+  Object.keys(byMarket).forEach(function (mk) {
+    const list = byMarket[mk];
+    if (list.length < 2) return;
+    list.forEach(function (e) {
+      e.conflict = true;
+      e.against = list.filter(function (o) { return o !== e; })
+        .map(function (o) { return { side: o.side, n: o.n, bestRank: o.bestRank, usd: o.usd }; })
+        .sort(function (x, y) { return x.bestRank - y.bestRank; });
+    });
+  });
+  // Konsens zuerst, Konflikt ganz ans Ende: ein Wallet ist eine Meinung, zwei sind ein Signal —
+  // zwei GEGENEINANDER sind keins.
+  out.sort(function (a, b) {
+    return ((a.conflict ? 1 : 0) - (b.conflict ? 1 : 0))
+        || (b.n - a.n) || (a.bestRank - b.bestRank) || (b.usd - a.usd);
+  });
   return out;
 }
 try { window._pwWhalePlays = _pwWhalePlays; window.PW_WHALE_TOP_N = PW_WHALE_TOP_N; } catch (_e) {}
