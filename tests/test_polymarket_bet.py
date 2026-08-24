@@ -140,3 +140,20 @@ class TestLigaProfileDiffers(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# ── 24.08.2026: Heute-Play-Bet ohne Fixture ──────────────────────────────────
+def test_standalone_eintrag_traegt_polykey():
+    """Ein Tennis-/E-Sport-Bet findet kein Fixture in picks_history -> Standalone-Eintrag. Der MUSS
+    polyKey (= Poly-Slug) und die gesetzte Seite tragen, sonst ist er spaeter nicht abrechenbar
+    (resolve_wm_results kennt solche Maerkte nicht, poly_resolutions schon)."""
+    import polymarket_bet as PB
+    hist = []
+    order = {"home": "Alcaraz", "away": "Sinner", "market": "Alcaraz", "polyPrice": 0.58,
+             "polyKey": "atp-alcaraz-sinner-2026-08-24", "side": "Alcaraz", "sport": "Tennis",
+             "conviction": 8, "league": "TENNIS", "stake": 10}
+    PB.log_bet_to_history(hist, order, {"status": "placed", "orderId": "0xabc", "error": None})
+    assert len(hist) == 1
+    bet = hist[0]["polyBets"][0]
+    assert bet["polyKey"] == "atp-alcaraz-sinner-2026-08-24"
+    assert bet["side"] == "Alcaraz" and bet["sport"] == "Tennis" and bet["conviction"] == 8

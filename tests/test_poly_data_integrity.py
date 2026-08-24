@@ -212,3 +212,68 @@ def test_stale_live_markets_ignores_resolved_and_moneyless():
 def test_stale_live_markets_small_sample_stays_green():
     close = {f"mlb-done-{i}": _mkt(-10) for i in range(5)}   # < GHOST_MIN_N → nicht bewerten
     assert pdi.check_stale_live_markets(pdi.PolyCtx(now=NOW, close=close))["ok"]
+
+
+# ── Auflösung landet im Close-Eintrag (24.08.2026) ────────────────────────────
+def _close_unstamped(n):
+    return {f"k{i}": {"capturedAt": iso(NOW), "hoursToKickoff": 1.0} for i in range(n)}
+
+
+def test_close_resolution_stamped_green_when_stamped():
+    close = {"k0": {"capturedAt": iso(NOW), "hoursToKickoff": 1.0, "resolved": True}}
+    c = pdi.check_close_resolution_stamped(
+        pdi.PolyCtx(now=NOW, close=close, resolutions={"k0": {"winner": "A"}}))
+    assert c["ok"] and c["id"] == "close_resolution_stamped"
+
+
+def test_close_resolution_stamped_fires_when_ledger_knows_but_entry_does_not():
+    n = pdi.STAMP_MISS_MAX + 5
+    close = _close_unstamped(n)
+    res = {k: {"winner": "A"} for k in close}
+    c = pdi.check_close_resolution_stamped(pdi.PolyCtx(now=NOW, close=close, resolutions=res))
+    assert not c["ok"] and str(n) in c["failures"][0]
+
+
+def test_close_resolution_stamped_tolerates_few_stragglers():
+    close = _close_unstamped(pdi.STAMP_MISS_MAX)
+    res = {k: {"winner": "A"} for k in close}
+    assert pdi.check_close_resolution_stamped(pdi.PolyCtx(now=NOW, close=close, resolutions=res))["ok"]
+
+
+def test_close_resolution_stamped_ignores_entries_without_ledger_entry():
+    close = _close_unstamped(pdi.STAMP_MISS_MAX + 5)
+    assert pdi.check_close_resolution_stamped(pdi.PolyCtx(now=NOW, close=close, resolutions={}))["ok"]
+
+
+# ── Direkt gesetzte Wetten rechnen ab (24.08.2026) ────────────────────────────
+# Echtes Geld: ein Bet aus dem „Heute"-Tab hat kein Fixture und wird nur ueber den Poly-Slug
+# aufgeloest. Haengt er, fehlt er still in P&L UND CLV — der Guard ist die einzige Sichtbarkeit.
+def test_direct_bets_settling_green_when_fresh():
+    ctx = pdi.PolyCtx(now=NOW, direct_bets={"open": [
+        {"key": "cs2-a-b", "side": "Team A", "ageDays": 0.5, "stake": 10}]})
+    c = pdi.check_direct_bets_settling(ctx)
+    assert c["ok"] and c["id"] == "direct_bets_settling"
+
+
+def test_direct_bets_settling_fires_on_stuck_bet():
+    ctx = pdi.PolyCtx(now=NOW, direct_bets={"open": [
+        {"key": "cs2-a-b", "side": "Team A", "ageDays": pdi.DIRECT_OPEN_MAX_D + 2, "stake": 25}]})
+    c = pdi.check_direct_bets_settling(ctx)
+    assert not c["ok"]
+    assert "cs2-a-b" in c["failures"][0] and "Team A" in c["failures"][0]
+
+
+def test_direct_bets_settling_lists_at_most_five_plus_rest():
+    open_ = [{"key": f"k{i}", "side": "A", "ageDays": 9.0, "stake": 10} for i in range(8)]
+    c = pdi.check_direct_bets_settling(pdi.PolyCtx(now=NOW, direct_bets={"open": open_}))
+    assert not c["ok"] and len(c["failures"]) == 6 and "3 weitere" in c["failures"][-1]
+
+
+def test_direct_bets_settling_green_without_file():
+    # Feature frisch / noch nie gesetzt -> kein Alarm.
+    assert pdi.check_direct_bets_settling(pdi.PolyCtx(now=NOW))["ok"]
+
+
+def test_direct_bets_settling_in_registry():
+    assert "direct_bets_settling" in {c["id"] for c in pdi.run_checks(pdi.PolyCtx(now=NOW))}
+

@@ -172,6 +172,17 @@ function _pwSportCategory(s, sport){
   return 'Sonstige';
 }
 const _PW_CAT_ICON={'Fußball':'⚽','US-Sport':'🏀','E-Sport':'🎮','Tennis':'🎾','Kampfsport':'🥊','Golf':'⛳','Motorsport':'🏎️','Cricket':'🏏','Sonstige':'🎯'};
+// 24.08.2026 (Lucas: „sollen wir die dann ganz rausnehmen? was wenn sie besser werden?").
+// Sportarten, auf die NICHT gesetzt und die NICHT oeffentlich promotet werden. Gemessen am
+// Papier-Depot ueber 500 abgerechnete Plays: MLB n=72, ROI −28%, 90%-Intervall komplett unter
+// null, Ø CLV −1,62pp — das ist Signal, kein Pech. NFL (n=6) und UFC (n=7) sind statistisch
+// nichts, dort ist die Sperre eine Vorsichtsentscheidung (kein Modell, duenne Maerkte).
+// NBA hat null Plays. BEWUSST NICHT aus dem Scan/Papier-Depot entfernt: das Mitschreiben ist
+// gratis und die EINZIGE Art, je zu merken, dass eine Sportart dreht (Wiedereintritt ueber CLV,
+// siehe poly_shortlist_track.reentry_status).
+const PW_BLOCKED_BET_CATS=['US-Sport','Kampfsport'];
+try{ window.PW_BLOCKED_BET_CATS=PW_BLOCKED_BET_CATS; }catch(_e){}   // eine Quelle fuer Emitter + Betting-Tab
+function _pwBetBlocked(r){ return PW_BLOCKED_BET_CATS.indexOf(_pwSportCategory(r&&r.league,r&&r.sport))>=0; }
 // Filter-Chip-Leiste aus den tatsächlich vorhandenen Kategorien (order fix, nur präsente zeigen).
 function _pwSportFilterBar(cats){
   const order=['Fußball','US-Sport','E-Sport','Tennis','Kampfsport','Golf','Motorsport','Cricket','Sonstige'];
@@ -1620,7 +1631,11 @@ function _pwTopPlays(limit, live, useSportPass){
 // Nur was wir öffentlich vertreten würden: Conviction≥7 (Skala neu, = altes ≥9) + bewiesene Wallet (n≥8 & ≥55% Treffer)
 // + echte Geld-Mehrheit ≥60% + Sport. Sport-Filter der View wird ignoriert (public = alle Sportarten).
 function _pwPublicTopPlays(){
+  // 24.08.2026 (Lucas): gesperrte Sportarten fliegen HIER raus, nicht erst beim Setzen — der
+  // oeffentliche Track-Record ist das Produkt. Bisher gingen 13 MLB-Plays als Public-Kandidat
+  // durch. Im Scan/Papier-Depot bleiben sie (Beobachtung), nur nicht mehr im Schaufenster.
   return _pwTopPlays(0,false,false).filter(r=>
+    !_pwBetBlocked(r) &&
     r.conv>=7 && r.moneyPct>=0.60 && r.sharp && r.sharp.n>=8 && r.sharp.hit>=0.55);   // 09.08.2026: ≥7 nach Basis-4→2-Umstellung = gleiche effektive Stärke wie vorher ≥9
 }
 
@@ -1985,8 +2000,13 @@ function _pwShortlistScore(key,m){
     const agree=_bf.polySide && (_n(_bf.polySide)===_n(best) || _n(_bf.polySide).includes(_n(best)) || _n(best).includes(_n(_bf.polySide)));
     bf={agree:!!agree, pct:_bf.pct, eur:_bf.eur, name:_bf.name};
   }
+  // 24.08.2026 (Lucas): `token` = CLOB-Token-ID der empfohlenen Seite (seit heute im Broad-Feed).
+  // Damit kann der Betting-Tab die Wette DIREKT ausloesen, statt den Play erst ueber Slug+Teamnamen
+  // an einen gestempelten Card-Pick zu matchen (ging nur fuer Fussball MIT Pick). `sport` fuer die
+  // Sportart-Sperre. Beides rein additiv — bestehende Verbraucher ignorieren die Felder.
   return {key,match:_pwPlayLabel(key,oc),verdict:(best===moneyFav?'BET':'FADE'),side:best,
-    conv,reasons,signals:sigs,vol,htk:_pwRealHtk(m),league:m.league,turned,
+    conv,reasons,signals:sigs,vol,htk:_pwRealHtk(m),league:m.league,sport:m.sport,turned,
+    token:((m.tokens||{})[best]||null),
     moneyPct,sharp:(sh&&sh.side===best)?sh:null,price:(typeof pr[best]==='number'?pr[best]:null),bf};
 }
 // 📊 Paper-Track-Record der „Heute wetten"-Shortlist (02.08.2026, Lucas). Liest poly_shortlist_track.json
@@ -2015,6 +2035,40 @@ function _pwTrackKpis(a, label, hint){
       +card('Netto P&amp;L', a.n?_pwtUsd(a.pnl):'—', roiCol, 'Einsatz $'+Math.round(a.stake||0))
       +card('Ø CLV', a.n?_pwtSig(a.clvAvg)+'pp':'—', clvCol, 'Einstieg→Schluss')
     +'</div></div>';
+}
+// 24.08.2026 (Lucas: „ziehen die die Statistik runter?"). Ja — deshalb steht vorne die Zahl, die
+// wirklich bespielt wird, und die gesperrten Sportarten kommen als eigene BEOBACHTUNGS-Zeile.
+// Nicht gelöscht, sondern beobachtet: das Mitschreiben kostet nichts und ist die einzige Art zu
+// merken, dass eine Sportart dreht. Wiedereintritt wird am CLV gemessen (Frühindikator), nicht am
+// ROI, und schaltet NICHTS automatisch frei — es ist ein Hinweis.
+function _pwTrackBlocked(agg, reentry, blockedCats){
+  const a=agg&&agg.blocked;
+  const cats=(blockedCats||[]).join(' · ')||'—';
+  if(!a||!a.n) return '<div class="pw-mut" style="font-size:11px;margin:-8px 0 14px">🚫 Nicht bespielbar: '
+    +_pwEsc(cats)+' — bisher keine abgerechneten Plays. Bleiben im Depot, damit ein Umschwung sichtbar würde.</div>';
+  const roiCol=a.roi>0?'#3fb950':a.roi<0?'#f85149':'#8b949e';
+  const clvCol=a.clvAvg>0?'#3fb950':a.clvAvg<0?'#f85149':'#8b949e';
+  let hint='';
+  const rs=reentry||{};
+  const ready=Object.keys(rs).filter(k=>rs[k]&&rs[k].eligible);
+  if(ready.length){
+    hint='<div style="font-size:11.5px;color:#3fb950;font-weight:700;margin-top:5px">↩︎ '
+      +_pwEsc(ready.join(', '))+' erfüllt die Wiedereintritts-Kriterien (Ø CLV ≥ 0 über genug frische Plays)'
+      +' — Sperre in poly-wallets.js <code>PW_BLOCKED_BET_CATS</code> prüfen.</div>';
+  } else {
+    const parts=Object.keys(rs).map(k=>{
+      const r=rs[k]||{};
+      const clv=(r.clvAvg==null)?'kein Schluss erfasst':(_pwtSig(r.clvAvg)+'pp');
+      const need=r.needN?(' · noch '+r.needN+' Plays'):(r.needClvN?(' · noch '+r.needClvN+' mit Schluss'):'');
+      return _pwEsc(k)+' '+clv+' ('+(r.n||0)+')'+need;
+    });
+    if(parts.length) hint='<div class="pw-mut" style="font-size:11px;margin-top:5px">Wiedereintritt (Ø CLV ≥ 0): '+parts.join(' · ')+'</div>';
+  }
+  return '<div style="background:#0f1626;border:1px solid rgba(255,255,255,.06);border-radius:10px;padding:9px 12px;margin:-6px 0 16px">'
+    +'<div style="font-size:11.5px;color:#8b949e">🚫 <b style="color:#c9d1d9">Nicht bespielbar</b> ('+_pwEsc(cats)+') — nur Beobachtung, kein Geld: '
+      +'<b>'+a.n+'</b> Plays · Treffer '+_pwtPct(a.hit)
+      +' · ROI <b style="color:'+roiCol+'">'+_pwtSig(Math.round(a.roi*1000)/10)+'%</b>'
+      +' · Ø CLV <b style="color:'+clvCol+'">'+_pwtSig(a.clvAvg)+'pp</b></div>'+hint+'</div>';
 }
 function _pwTrackConvTable(byConv){
   const rows=Object.keys(byConv||{}).map(k=>({c:+k, a:byConv[k]})).sort((x,y)=>y.c-x.c);
@@ -2112,7 +2166,8 @@ function _pwTrackRecord(track){
   const agg=track.agg||{all:{n:0},public:{n:0},byConv:{}};
   const upd=track.updatedAt?('<div class="pw-mut" style="font-size:11px;margin:2px 0 10px">Stand '+_pwEsc(String(track.updatedAt).slice(0,16).replace('T',' '))+' · fixer Einsatz $'+Math.round(track.stake||10)+' je Play</div>'):'';
   return intro+upd
-    +_pwTrackKpis(agg.all||{n:0}, '🟢 Ganze Shortlist', '(alle Plays, jede Conviction)')
+    +_pwTrackKpis(agg.bettable||agg.all||{n:0}, '🟢 Bespielbar', '(alle Sportarten, auf die gesetzt werden darf)')
+    +_pwTrackBlocked(agg, track.reentry, track.blockedCats)
     +_pwTrackKpis(agg.public||{n:0}, '◆ Public-Kandidaten', '(hart gegated: Conv≥7 + bewiesene Wallet + Mehrheit)')
     +_pwTrackConvTable(agg.byConv)
     +_pwTrackSignalTable(agg.bySignal)

@@ -33,17 +33,26 @@ w.eval(readFileSync(PW, 'utf8'));
 
 await new Promise((res) => w._pwEnsurePlaysData(res));
 
-let plays = [], pub = [];
+let plays = [], pub = [], blockedCats = [];
 try { plays = w._pwTopPlays(0, false, false) || []; } catch { plays = []; }
 try { pub = w._pwPublicTopPlays() || []; } catch { pub = []; }
+
+try { blockedCats = w.PW_BLOCKED_BET_CATS || []; } catch { blockedCats = []; }
+for (const p of plays) {
+  try { p.cat = w._pwSportCategory(p.league, p.sport); } catch { p.cat = null; }
+}
 
 const publicKeys = pub.map(p => p.key + '|' + p.side);
 const out = {
   generatedAt: new Date().toISOString(),
+  blockedCats,                       // eine Quelle: kommt aus poly-wallets.js
   plays: plays.map(p => ({
     key: p.key, side: p.side, verdict: p.verdict, conv: p.conv,
     match: p.match || null,
-    league: p.league || null, htk: (p.htk == null ? null : p.htk),
+    league: p.league || null, sport: p.sport || null,
+    // 24.08.2026: Sport-KATEGORIE gleich mitgeben. Das Papier-Depot kann dann nach Sportart
+    // aufschluesseln (bespielbar vs. nur beobachtet), ohne _pwSportCategory nach Python zu portieren.
+    cat: p.cat || null, htk: (p.htk == null ? null : p.htk),
     moneyPct: (p.moneyPct == null ? null : p.moneyPct),
     price: (typeof p.price === 'number' ? p.price : null),
     reasons: p.reasons || [],

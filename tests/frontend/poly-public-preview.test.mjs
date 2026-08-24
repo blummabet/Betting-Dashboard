@@ -92,14 +92,49 @@ test('#69 Sharp-Qualität: bewiesene Wallet hebt Conviction + Warum zeigt Record
   });
 });
 
-test('#70 Public Top-Play: erfüllt harte Gates → Kandidat', async () => {
+test('#70 Public Top-Play: MLB fällt seit 24.08. aus dem Public-Gate (US-Sport gesperrt)', async () => {
+  // Der Play erfüllt ALLE inhaltlichen Gates — er fliegt allein an der Sportart raus. Grund:
+  // im Papier-Depot brachte US-Sport über 78 Plays −29,6% ROI bei Ø CLV −0,51pp, und der
+  // öffentliche Track-Record ist das Produkt. Im Scan/Depot bleibt der Play (Beobachtung).
   await withData((w) => {
-    const tops = w._pwPublicTopPlays();
-    assert.ok(tops.length >= 1, 'mindestens ein Top-Play-Kandidat');
-    const t = tops[0];
-    assert.strictEqual(t.side, 'Atlanta Braves');
-    assert.ok(t.conv >= 7 && t.moneyPct >= 0.60 && t.sharp.n >= 8 && t.sharp.hit >= 0.55,
-      'alle Gates erfüllt');
+    const r = w._pwShortlistScore('mlb-braves-padres', BROAD['mlb-braves-padres']);
+    assert.ok(r.conv >= 7 && r.moneyPct >= 0.60 && r.sharp && r.sharp.n >= 8,
+      'inhaltlich weiterhin ein starker Play: ' + JSON.stringify({ conv: r.conv, money: r.moneyPct }));
+    assert.strictEqual(w._pwPublicTopPlays().length, 0, 'aber kein Public-Kandidat mehr');
+    assert.ok(w._pwTopPlays(0, false, false).some(p => p.key === 'mlb-braves-padres'),
+      'im Scan/Papier-Depot bleibt er drin — sonst könnte man einen Umschwung nie bemerken');
+  });
+});
+
+test('#70 Public Top-Play: dieselbe Konstellation in erlaubter Sportart → Kandidat', async () => {
+  // Gegenprobe: nur die Liga getauscht (EPL statt MLB), sonst identisch.
+  const broad2 = { 'epl-arsenal-chelsea': market('EPL',
+    { 'Arsenal': 65000, 'Chelsea': 35000 }, { 'Arsenal': 0.62, 'Chelsea': 0.38 }, 100000) };
+  const track2 = { updatedAt: new Date().toISOString(),
+    scores: { '0xSHARP': { n: 10, clvSumPP: 20, wins: 7, usd: 40000, pnl: 150000 } },
+    open: [{ wallet: '0xSHARP', key: 'epl-arsenal-chelsea', side: 'Arsenal', league: 'EPL',
+             usd: 40000, entryPrice: 0.55, lastPrice: 0.62 }] };
+  const w = boot({
+    'mls-data.json': { groups: {} }, 'mls_poly_prices.json': { prices: {} },
+    'mls_poly_wallets.json': { topPositionsAll: [], matches: {}, updatedAt: new Date().toISOString() },
+    'poly_money_broad_close.json': broad2, 'poly_money_broad_history.json': {},
+    'poly_money_broad.json': { n: 100, byLeague: [] },
+    'poly_wallet_track.json': track2, 'poly_cross_sport.json': { discrepancies: [] },
+  });
+  await new Promise((res) => w._pwEnsurePlaysData(res));
+  const tops = w._pwPublicTopPlays();
+  assert.strictEqual(tops.length, 1, 'Fußball-Play bleibt Public-Kandidat');
+  assert.strictEqual(tops[0].side, 'Arsenal');
+});
+
+test('#70 Sperrliste ist EINE Quelle (window.PW_BLOCKED_BET_CATS)', async () => {
+  await withData((w) => {
+    // Array kommt aus dem jsdom-Realm -> ueber den Inhalt vergleichen, nicht referenzgleich.
+    assert.deepStrictEqual(Array.from(w.PW_BLOCKED_BET_CATS), ['US-Sport', 'Kampfsport']);
+    assert.strictEqual(w._pwBetBlocked({ league: 'MLB' }), true);
+    assert.strictEqual(w._pwBetBlocked({ league: 'UFC' }), true);
+    assert.strictEqual(w._pwBetBlocked({ league: 'ATP' }), false);
+    assert.strictEqual(w._pwBetBlocked({ league: 'EPL' }), false);
   });
 });
 

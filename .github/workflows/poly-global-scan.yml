@@ -109,6 +109,13 @@ jobs:
         run: ${{ env.POLY_PYTHON }} fetch_poly_esports.py
         continue-on-error: true
 
+      # 24.08.2026 (Lucas): Wetten, die direkt aus dem „Heute"-Tab ausgelöst wurden, haben kein
+      # Fixture — resolve_wm_results sieht sie nie. Hier über den Poly-Slug abrechnen (P&L + CLV),
+      # VOR den Integritäts-Checks, damit der Guard den frischen Stand prüft.
+      - name: 🎯 Direkt-Wetten abrechnen (Slug → P&L/CLV)
+        run: ${{ env.POLY_PYTHON }} poly_direct_bets.py
+        continue-on-error: true
+
       - name: 🛡️ Poly-Daten-Integrität (Ausgabe-Checks → poly_status.json)
         run: ${{ env.POLY_PYTHON }} poly_data_integrity.py
         continue-on-error: true
@@ -120,6 +127,7 @@ jobs:
           for f in \
             poly_money_broad.json poly_money_broad_close.json poly_money_broad_history.json poly_money_upcoming.json poly_wallet_track.json \
             poly_resolutions.json poly_shortlist_track.json poly_status.json poly_football_tags.json \
+            poly_direct_bets.json \
             poly_cross_sport.json poly_cross_sport_history.json poly_cross_sport_seen.json \
             poly_whale_seen.json poly_whale_public_seen.json \
             shortlist_push_seen.json \
