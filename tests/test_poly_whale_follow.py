@@ -12,6 +12,7 @@ KEY = "cs2-g1-leo2-2026-08-24"
 
 
 def _emit(price=0.325, n=2, entry_avg=0.30, **kw):
+    # kw reicht alles durch, was der Emitter mitgibt (conflict, againstRank, …)
     w = {"key": KEY, "side": "Leo Team", "price": price, "n": n, "bestRank": 9,
          "league": "ESPORTS", "cat": "E-Sport", "usd": 2516, "entryAvg": entry_avg, "htk": 1.7}
     w.update(kw)
@@ -114,3 +115,41 @@ def test_konsens_und_solo_getrennt_ausgewiesen():
 def test_leeres_depot_kippt_nicht_um():
     t = WF.update_track({}, {"whales": []}, {}, {}, now=NOW)
     assert t["agg"]["all"]["n"] == 0 and t["agg"]["consensus"] is None
+
+
+# ── Konflikt-Flag (24.08.2026, Lucas' INOX-Fall) ─────────────────────────────
+# Zwei bewiesene Top-Wallets auf Gegenseiten. Ob solche Plays wirklich schlechter laufen, ist eine
+# EMPIRISCHE Frage — also wird der Zustand beim Einstieg eingefroren und getrennt ausgewiesen,
+# statt ihn anzunehmen.
+def test_konflikt_wird_beim_einstieg_eingefroren():
+    t = WF.update_track({}, _emit(conflict=True, againstRank=7), _close(), {}, now=NOW)
+    e = t["open"][f"{KEY}|Leo Team"]
+    assert e["conflictAtEntry"] is True and e["againstRankAtEntry"] == 7
+    # Loest sich der Konflikt spaeter auf, bleibt der Play trotzdem als Konflikt gewertet.
+    t2 = WF.update_track(t, _emit(conflict=False), _close(), {}, now=NOW + timedelta(hours=1))
+    assert t2["open"][f"{KEY}|Leo Team"]["conflictAtEntry"] is True
+
+
+def test_konflikt_wandert_in_die_abrechnung():
+    t = WF.update_track({}, _emit(conflict=True, againstRank=7), _close(), {}, now=NOW)
+    t2 = WF.update_track(t, {"whales": []}, _close(), {KEY: {"winner": "Leo Team"}}, now=NOW)
+    assert t2["settled"][0]["conflictAtEntry"] is True
+
+
+def test_bilanz_trennt_konflikt_von_sauber():
+    konflikt = {"key": "a-b", "side": "A", "price": 0.5, "n": 1, "cat": "E-Sport",
+                "entryAvg": 0.5, "conflict": True, "againstRank": 4}
+    sauber = {"key": "c-d", "side": "C", "price": 0.5, "n": 2, "cat": "E-Sport", "entryAvg": 0.5}
+    close = {"a-b": {"prices": {"A": 0.5}}, "c-d": {"prices": {"C": 0.5}}}
+    t = WF.update_track({}, {"whales": [konflikt, sauber]}, close, {}, now=NOW)
+    t2 = WF.update_track(t, {"whales": []}, close,
+                         {"a-b": {"winner": "B"}, "c-d": {"winner": "C"}}, now=NOW)
+    a = t2["agg"]
+    assert a["conflict"]["n"] == 1 and a["conflict"]["pnl"] == -10.0
+    assert a["clean"]["n"] == 1 and a["clean"]["pnl"] == 10.0
+
+
+def test_ohne_konflikt_kein_konflikt_bucket():
+    t = WF.update_track({}, _emit(), _close(), {KEY: {"winner": "Leo Team"}}, now=NOW)
+    assert t["agg"]["conflict"] is None and t["agg"]["clean"]["n"] == 1
+
