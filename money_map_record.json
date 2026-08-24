@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-08-24T01:04:02.254373+00:00",
+"generatedAt": "2026-08-24T01:19:03.427474+00:00",
 "byVerdict": {
 "konsens": {
 "n": 426,
@@ -12,14 +12,14 @@
 "pinnHitRate": 0.7037
 },
 "uneinig": {
-"n": 145,
+"n": 146,
 "wins": 41,
-"hitRate": 0.2828,
-"polyN": 128,
+"hitRate": 0.2808,
+"polyN": 129,
 "polyWins": 44,
-"polyHitRate": 0.3438,
-"pinnN": 76,
-"pinnHitRate": 0.6184
+"polyHitRate": 0.3411,
+"pinnN": 77,
+"pinnHitRate": 0.6234
 },
 "teil": {
 "n": 5,
@@ -83,6 +83,11 @@
 "wins": 11,
 "hitRate": 0.7857
 },
+"Argentinian Primera Division": {
+"n": 13,
+"wins": 6,
+"hitRate": 0.4615
+},
 "CONMEBOL Copa Libertadores": {
 "n": 13,
 "wins": 5,
@@ -97,11 +102,6 @@
 "n": 13,
 "wins": 8,
 "hitRate": 0.6154
-},
-"Argentinian Primera Division": {
-"n": 12,
-"wins": 6,
-"hitRate": 0.5
 },
 "Dutch Eredivisie": {
 "n": 12,
@@ -481,9 +481,9 @@
 },
 "byStrength": {
 "strong": {
-"n": 332,
+"n": 333,
 "wins": 265,
-"hitRate": 0.7982
+"hitRate": 0.7958
 },
 "weak": {
 "n": 211,
@@ -492,14 +492,33 @@
 }
 },
 "divergence": {
-"n": 145,
+"n": 146,
 "betfairWins": 41,
-"betfairRate": 0.2828,
-"polyN": 128,
+"betfairRate": 0.2808,
+"polyN": 129,
 "polyWins": 44,
-"polyRate": 0.3438
+"polyRate": 0.3411
 },
 "recent": [
+{
+"matchId": "35922917",
+"home": "River Plate",
+"away": "Velez Sarsfield",
+"league": "Argentinian Primera Division",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "River Plate",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-08-23T22:15:00Z",
+"settledAt": "2026-08-24T01:19:03.285680+00:00"
+},
 {
 "matchId": "35925638",
 "home": "Chapecoense",
@@ -1240,31 +1259,12 @@
 ],
 "kickoff": "2026-08-23T17:30:00Z",
 "settledAt": "2026-08-23T19:33:54.363236+00:00"
-},
-{
-"matchId": "35737563",
-"home": "Venezia",
-"away": "Lecce",
-"league": "Italian Serie A",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Venezia",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-2
-],
-"kickoff": "2026-08-23T16:30:00Z",
-"settledAt": "2026-08-23T19:33:54.363236+00:00"
 }
 ],
 "global": {
-"n": 576,
+"n": 577,
 "wins": 381,
-"hitRate": 0.6615
+"hitRate": 0.6603
 },
 "pending": 7
 }
