@@ -43,7 +43,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "cs2-ruby1-hs2-2026-08-21: seit 3.2 Tagen offen — keine Auflösung gefunden"
+        "cs2-ruby1-hs2-2026-08-21: seit 3.3 Tagen offen — keine Auflösung gefunden"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -64,11 +64,11 @@
       "nFail": 6,
       "failures": [
         "13/49 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (27%) — Trefferquote allein trügt",
-        "   0x84cfffc3f1… n=49 Treffer 53% P&L $-7,754,069",
-        "   0x224a89dbe0… n=92 Treffer 51% P&L $-4,697,390",
+        "   0x84cfffc3f1… n=49 Treffer 53% P&L $-7,753,866",
+        "   0x224a89dbe0… n=92 Treffer 51% P&L $-4,697,412",
         "   0xc3c3b3ef30… n=230 Treffer 53% P&L $-3,848,840",
-        "   0xa0f21e6d35… n=47 Treffer 66% P&L $-2,695,906",
-        "378/427 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
+        "   0xa0f21e6d35… n=47 Treffer 66% P&L $-2,696,142",
+        "379/428 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
     },
@@ -88,11 +88,11 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "898/909 'live' Geld-Märkte sind schon >6h nach Anpfiff (99%) — $41,645,548 Whale-Geld auf fertigen Spielen"
+        "901/909 'live' Geld-Märkte sind schon >6h nach Anpfiff (99%) — $41,931,521 Whale-Geld auf fertigen Spielen"
       ],
       "note": "Der Close-Feed setzt kein resolved-Flag; fertige Spiele bleiben 'live'. Alle Views filtern jetzt auf den rekonstruierten Anpfiff — dieser Check misst den Geister-Anteil im Roh-Feed (steigt er, prunt/löst der Feed nicht mehr auf; jede ungegatete View zeigt dann fertige Spiele)."
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-08-24T05:27:31.552752+00:00"
+  "generatedAt": "2026-08-24T06:28:24.969595+00:00"
 }
