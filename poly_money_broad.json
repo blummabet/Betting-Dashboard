@@ -1,15 +1,15 @@
 {
- "n": 641,
+ "n": 648,
  "minOdds": 1.35,
- "moneyHitRate": 0.504,
- "priceHitRate": 0.512,
- "brierMoney": 0.6521,
- "brierPrice": 0.5702,
+ "moneyHitRate": 0.505,
+ "priceHitRate": 0.515,
+ "brierMoney": 0.6498,
+ "brierPrice": 0.5716,
  "disagree": {
-  "n": 83,
-  "moneyWon": 15,
-  "priceWon": 20,
-  "neither": 48
+  "n": 89,
+  "moneyWon": 16,
+  "priceWon": 23,
+  "neither": 50
  },
  "verdict": "preis_besser",
  "byLeague": [
@@ -39,10 +39,10 @@
   },
   {
    "league": "CRICKET",
-   "n": 6,
-   "moneyHitRate": 0.833,
-   "brierMoney": 0.4089,
-   "brierPrice": 0.4089,
+   "n": 5,
+   "moneyHitRate": 0.8,
+   "brierMoney": 0.4374,
+   "brierPrice": 0.4374,
    "verdict": "gleichauf"
   },
   {
@@ -63,10 +63,10 @@
   },
   {
    "league": "TENNIS",
-   "n": 19,
-   "moneyHitRate": 0.684,
-   "brierMoney": 0.5021,
-   "brierPrice": 0.5021,
+   "n": 16,
+   "moneyHitRate": 0.688,
+   "brierMoney": 0.4738,
+   "brierPrice": 0.4738,
    "verdict": "gleichauf"
   },
   {
@@ -79,10 +79,10 @@
   },
   {
    "league": "EPL",
-   "n": 27,
-   "moneyHitRate": 0.333,
-   "brierMoney": 0.7869,
-   "brierPrice": 0.6693,
+   "n": 32,
+   "moneyHitRate": 0.406,
+   "brierMoney": 0.7139,
+   "brierPrice": 0.6526,
    "verdict": "preis_besser"
   },
   {
@@ -111,10 +111,10 @@
   },
   {
    "league": "SOCCER",
-   "n": 149,
-   "moneyHitRate": 0.362,
-   "brierMoney": 0.8674,
-   "brierPrice": 0.67,
+   "n": 153,
+   "moneyHitRate": 0.366,
+   "brierMoney": 0.8642,
+   "brierPrice": 0.6728,
    "verdict": "preis_besser"
   },
   {
@@ -131,6 +131,14 @@
    "moneyHitRate": 0.286,
    "brierMoney": 1.0428,
    "brierPrice": 0.7209,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "LA-LIGA-2",
+   "n": 5,
+   "moneyHitRate": 0.2,
+   "brierMoney": 1.1569,
+   "brierPrice": 0.7973,
    "verdict": "preis_besser"
   }
  ],
@@ -158,6 +166,18 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 3797786
+  },
+  {
+   "key": "epl-ful-che-2026-08-24",
+   "league": "EPL",
+   "winner": "Chelsea FC",
+   "moneyFav": "Chelsea FC",
+   "priceFav": "Chelsea FC",
+   "moneyShare": 0.875,
+   "priceProb": 0.473,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 3569922
   },
   {
    "key": "epl-new-liv-2026-08-23",
@@ -448,18 +468,6 @@
    "totalUsd": 424666
   },
   {
-   "key": "wta-gauff-pegula-2026-08-23",
-   "league": "TENNIS",
-   "winner": "Coco Gauff",
-   "moneyFav": "Coco Gauff",
-   "priceFav": "Coco Gauff",
-   "moneyShare": 0.585,
-   "priceProb": 0.585,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 416109
-  },
-  {
    "key": "ufc-jal-kau-2026-08-15",
    "league": "UFC",
    "winner": "Jalin Turner",
@@ -580,6 +588,18 @@
    "totalUsd": 305617
   },
   {
+   "key": "epl-ful-che-2026-08-24-exact-score",
+   "league": "EPL",
+   "winner": "Fulham FC 2 - 3 Chelsea FC",
+   "moneyFav": "Fulham FC 1 - 2 Chelsea FC",
+   "priceFav": "Fulham FC 1 - 1 Chelsea FC",
+   "moneyShare": 0.259,
+   "priceProb": 0.121,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 297688
+  },
+  {
    "key": "mlb-sea-mil-2026-08-19",
    "league": "MLB",
    "winner": "Seattle Mariners",
@@ -602,21 +622,9 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 289440
-  },
-  {
-   "key": "mlb-lad-col-2026-08-19",
-   "league": "MLB",
-   "winner": "Los Angeles Dodgers",
-   "moneyFav": "Los Angeles Dodgers",
-   "priceFav": "Los Angeles Dodgers",
-   "moneyShare": 0.645,
-   "priceProb": 0.645,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 287934
   }
  ],
- "generatedAt": "2026-08-24T20:52:32.147557+00:00",
+ "generatedAt": "2026-08-24T21:47:07.320195+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -625,11 +633,11 @@
   "mlb": 576,
   "nhl": 416,
   "mls": 632,
-  "epl": 559,
+  "epl": 552,
   "soccer": 800,
   "tennis": 800,
   "ucl": 457,
-  "la-liga": 588,
+  "la-liga": 582,
   "bundesliga": 543,
   "serie-a": 48,
   "ligue-1": 550,
@@ -639,7 +647,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 584,
+  "esports": 587,
   "cs2": 410,
   "lol": 382,
   "dota": 9,
@@ -649,7 +657,7 @@
   "boxing": 224,
   "golf": 357,
   "f1": 366,
-  "cricket": 561,
+  "cricket": 557,
   "allsvenskan": 1,
   "austria-bundesliga": 206,
   "brazil-serie-b": 4,
@@ -657,7 +665,7 @@
   "bundesliga-2": 529,
   "champions-league": 295,
   "champions-league-final": 12,
-  "chinese-super-league": 522,
+  "chinese-super-league": 523,
   "czechia-fortuna-liga": 9,
   "denmark-superliga": 509,
   "efl-championship": 652,
@@ -668,7 +676,7 @@
   "japan-j-league": 617,
   "japan-j2-league": 544,
   "k-league": 532,
-  "la-liga-2": 562,
+  "la-liga-2": 555,
   "liga-mx-apertura": 2,
   "ligue-2": 529,
   "naitons-league": 1,
@@ -676,14 +684,14 @@
   "nations-league": 25,
   "norway-eliteserien": 518,
   "poland-ekstraklasa": 286,
-  "premier-league": 556,
-  "saudi-professional-league": 603,
+  "premier-league": 549,
+  "saudi-professional-league": 602,
   "scotland-league-cup": 164,
   "scottish-premiership": 550,
   "serbian-superliga": 223,
-  "serie-b": 528,
+  "serie-b": 534,
   "slovenia-prvaliga": 175,
-  "sweden-allsvenskan": 445,
+  "sweden-allsvenskan": 439,
   "switzerland-super-league": 192,
   "uefa-champions-league": 26,
   "uefa-conference-league": 16,
