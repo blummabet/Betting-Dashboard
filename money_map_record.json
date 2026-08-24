@@ -1,23 +1,23 @@
 {
-"generatedAt": "2026-08-24T18:36:02.684719+00:00",
+"generatedAt": "2026-08-24T19:21:07.647619+00:00",
 "byVerdict": {
 "konsens": {
-"n": 435,
-"wins": 344,
-"hitRate": 0.7908,
-"polyN": 407,
-"polyWins": 314,
-"polyHitRate": 0.7715,
+"n": 437,
+"wins": 346,
+"hitRate": 0.7918,
+"polyN": 409,
+"polyWins": 316,
+"polyHitRate": 0.7726,
 "pinnN": 28,
 "pinnHitRate": 0.7143
 },
 "uneinig": {
-"n": 147,
-"wins": 41,
-"hitRate": 0.2789,
-"polyN": 130,
+"n": 149,
+"wins": 42,
+"hitRate": 0.2819,
+"polyN": 132,
 "polyWins": 44,
-"polyHitRate": 0.3385,
+"polyHitRate": 0.3333,
 "pinnN": 78,
 "pinnHitRate": 0.6282
 },
@@ -48,15 +48,15 @@
 "wins": 12,
 "hitRate": 0.5714
 },
+"German Cup": {
+"n": 20,
+"wins": 17,
+"hitRate": 0.85
+},
 "Brazilian Serie A": {
 "n": 18,
 "wins": 10,
 "hitRate": 0.5556
-},
-"German Cup": {
-"n": 18,
-"wins": 16,
-"hitRate": 0.8889
 },
 "Mexican Liga MX": {
 "n": 16,
@@ -263,6 +263,11 @@
 "wins": 3,
 "hitRate": 0.75
 },
+"Bulgarian A League": {
+"n": 4,
+"wins": 4,
+"hitRate": 1.0
+},
 "Finnish Veikkausliiga": {
 "n": 4,
 "wins": 2,
@@ -277,11 +282,6 @@
 "n": 3,
 "wins": 1,
 "hitRate": 0.3333
-},
-"Bulgarian A League": {
-"n": 3,
-"wins": 3,
-"hitRate": 1.0
 },
 "Canadian Premier League": {
 "n": 3,
@@ -329,6 +329,11 @@
 "hitRate": 1.0
 },
 "Friendly Matches": {
+"n": 2,
+"wins": 2,
+"hitRate": 1.0
+},
+"Israeli Premier League": {
 "n": 2,
 "wins": 2,
 "hitRate": 1.0
@@ -423,11 +428,6 @@
 "wins": 0,
 "hitRate": 0.0
 },
-"Israeli Premier League": {
-"n": 1,
-"wins": 1,
-"hitRate": 1.0
-},
 "Latvian Virsliga": {
 "n": 1,
 "wins": 1,
@@ -486,25 +486,101 @@
 },
 "byStrength": {
 "strong": {
-"n": 340,
-"wins": 270,
-"hitRate": 0.7941
+"n": 343,
+"wins": 272,
+"hitRate": 0.793
 },
 "weak": {
-"n": 214,
-"wins": 98,
-"hitRate": 0.4579
+"n": 215,
+"wins": 99,
+"hitRate": 0.4605
 }
 },
 "divergence": {
-"n": 147,
-"betfairWins": 41,
-"betfairRate": 0.2789,
-"polyN": 130,
+"n": 149,
+"betfairWins": 42,
+"betfairRate": 0.2819,
+"polyN": 132,
 "polyWins": 44,
-"polyRate": 0.3385
+"polyRate": 0.3333
 },
 "recent": [
+{
+"matchId": "35951330",
+"home": "Altglienicke",
+"away": "Wolfsburg",
+"league": "German Cup",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Wolfsburg",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-08-24T16:00:00Z",
+"settledAt": "2026-08-24T19:06:06.821135+00:00"
+},
+{
+"matchId": "35951325",
+"home": "Wurzburger Kickers",
+"away": "FC Koln",
+"league": "German Cup",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "FC Koln",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-08-24T16:00:00Z",
+"settledAt": "2026-08-24T19:06:06.821135+00:00"
+},
+{
+"matchId": "35948063",
+"home": "Botev Vratsa",
+"away": "Botev Plovdiv",
+"league": "Bulgarian A League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Botev Vratsa",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-08-24T16:00:00Z",
+"settledAt": "2026-08-24T19:06:06.821135+00:00"
+},
+{
+"matchId": "35953311",
+"home": "Maccabi Netanya",
+"away": "Bnei Sakhnin",
+"league": "Israeli Premier League",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-08-24T17:00:00Z",
+"settledAt": "2026-08-24T18:58:11.473965+00:00"
+},
 {
 "matchId": "35734734",
 "home": "Bologna",
@@ -1188,88 +1264,12 @@
 ],
 "kickoff": "2026-08-23T18:45:00Z",
 "settledAt": "2026-08-23T20:48:48.318793+00:00"
-},
-{
-"matchId": "35963344",
-"home": "Rennes",
-"away": "Paris St-G",
-"league": "French Ligue 1",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Rennes",
-"polySide": null,
-"winner": "draw",
-"moneyWin": false,
-"polyWin": null,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-08-23T18:45:00Z",
-"settledAt": "2026-08-23T20:48:48.318793+00:00"
-},
-{
-"matchId": "35922910",
-"home": "Barracas Central",
-"away": "CA Platense",
-"league": "Argentinian Primera Division",
-"verdict": "konsens",
-"moneySide": "draw",
-"moneyName": "The Draw",
-"polySide": "away",
-"winner": "away",
-"moneyWin": false,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-08-23T17:45:00Z",
-"settledAt": "2026-08-23T20:48:48.318793+00:00"
-},
-{
-"matchId": "35949314",
-"home": "Alanyaspor",
-"away": "Besiktas",
-"league": "Turkish Super League",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Besiktas",
-"polySide": "home",
-"winner": "home",
-"moneyWin": false,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-08-23T18:30:00Z",
-"settledAt": "2026-08-23T20:30:01.768474+00:00"
-},
-{
-"matchId": "35952117",
-"home": "Goztepe",
-"away": "Genclerbirligi",
-"league": "Turkish Super League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Genclerbirligi",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-08-23T18:30:00Z",
-"settledAt": "2026-08-23T20:30:01.768474+00:00"
 }
 ],
 "global": {
-"n": 587,
-"wins": 386,
-"hitRate": 0.6576
+"n": 591,
+"wins": 389,
+"hitRate": 0.6582
 },
-"pending": 14
+"pending": 18
 }
