@@ -1,7 +1,33 @@
 {
- "updatedAt": "2026-08-24T11:48:15.245799+00:00",
+ "updatedAt": "2026-08-24T13:17:56.858891+00:00",
  "stake": 10.0,
  "expired": 0,
+ "blockedCats": [
+  "US-Sport",
+  "Kampfsport"
+ ],
+ "reentry": {
+  "Kampfsport": {
+   "n": 7,
+   "clvN": 4,
+   "clvAvg": -0.84,
+   "roi": -0.3111,
+   "hit": 0.4286,
+   "eligible": false,
+   "needN": 43,
+   "needClvN": 21
+  },
+  "US-Sport": {
+   "n": 75,
+   "clvN": 24,
+   "clvAvg": -1.67,
+   "roi": -0.3001,
+   "hit": 0.4133,
+   "eligible": false,
+   "needN": 0,
+   "needClvN": 1
+  }
+ },
  "open": {
   "cs2-ruby1-hs2-2026-08-21|ex-RUBY": {
    "key": "cs2-ruby1-hs2-2026-08-21",
@@ -12,7 +38,7 @@
    "entryPrice": 0.68,
    "firstTs": "2026-08-21T11:45:56.952462+00:00",
    "lastPrice": 0.69,
-   "lastTs": "2026-08-24T11:48:15.245799+00:00",
+   "lastTs": "2026-08-24T13:17:56.858891+00:00",
    "htkAtEntry": 2.278193611111111,
    "public": true,
    "reasons": [
@@ -47,28 +73,6 @@
    ],
    "stake": 10.0
   },
-  "cs2-ntr-forzer-2026-08-24|Nuclear TigeRES": {
-   "key": "cs2-ntr-forzer-2026-08-24",
-   "side": "Nuclear TigeRES",
-   "verdict": "BET",
-   "conv": 7,
-   "league": "ESPORTS",
-   "entryPrice": 0.745,
-   "firstTs": "2026-08-24T06:28:15.978768+00:00",
-   "lastPrice": 0.705,
-   "lastTs": "2026-08-24T11:48:15.245799+00:00",
-   "htkAtEntry": 2.568087777777778,
-   "public": true,
-   "reasons": [
-    "großes Geld auf Nuclear TigeRES (75%) → $31K",
-    "🔥 scharfe Wallet (52/88, 59% · +$344K)"
-   ],
-   "signals": [
-    "money",
-    "sharp"
-   ],
-   "stake": 10.0
-  },
   "cs2-inox-btf-2026-08-24|INOX Division": {
    "key": "cs2-inox-btf-2026-08-24",
    "side": "INOX Division",
@@ -78,7 +82,7 @@
    "entryPrice": 0.565,
    "firstTs": "2026-08-24T08:32:56.308056+00:00",
    "lastPrice": 0.565,
-   "lastTs": "2026-08-24T11:48:15.245799+00:00",
+   "lastTs": "2026-08-24T13:17:56.858891+00:00",
    "htkAtEntry": 2.484666666666667,
    "public": false,
    "reasons": [
@@ -88,30 +92,30 @@
     "sharp"
    ],
    "stake": 10.0
-  }
- },
- "settled": [
-  {
-   "key": "mlb-laa-mia-2026-08-07",
-   "side": "Los Angeles Angels",
-   "verdict": "FADE",
-   "conv": 8,
-   "league": "MLB",
-   "entryPrice": 0.415,
-   "closePrice": 0.415,
-   "result": "win",
-   "winner": "Los Angeles Angels",
-   "pnl": 14.1,
-   "clvPP": 0.0,
-   "stake": 10.0,
+  },
+  "wta-pridank-falei-2026-08-24|Elena Pridankina": {
+   "key": "wta-pridank-falei-2026-08-24",
+   "side": "Elena Pridankina",
+   "verdict": "BET",
+   "conv": 5,
+   "league": "TENNIS",
+   "cat": "Tennis",
+   "entryPrice": 0.515,
+   "firstTs": "2026-08-24T13:17:56.858891+00:00",
+   "lastPrice": 0.515,
+   "lastTs": "2026-08-24T13:17:56.858891+00:00",
+   "htkAtEntry": 1.7433155555555555,
    "public": false,
+   "reasons": [
+    "🔥 scharfe Wallet (11/19, 58% · +$362K)"
+   ],
    "signals": [
     "sharp"
    ],
-   "firstTs": "2026-08-07T20:58:24.907897+00:00",
-   "settledTs": "2026-08-08T03:58:31.644145+00:00",
-   "resolvedTs": "2026-08-08T03:58:31.012677+00:00"
-  },
+   "stake": 10.0
+  }
+ },
+ "settled": [
   {
    "key": "mlb-cin-wsh-2026-08-07",
    "side": "Cincinnati Reds",
@@ -10936,26 +10940,132 @@
    "firstTs": "2026-08-24T05:27:24.252620+00:00",
    "settledTs": "2026-08-24T11:48:15.245799+00:00",
    "resolvedTs": "2026-08-24T11:48:14.332957+00:00"
+  },
+  {
+   "key": "cs2-ntr-forzer-2026-08-24",
+   "side": "Nuclear TigeRES",
+   "verdict": "BET",
+   "conv": 7,
+   "league": "ESPORTS",
+   "cat": null,
+   "entryPrice": 0.745,
+   "closePrice": 0.705,
+   "result": "loss",
+   "winner": "FORZE Reload",
+   "pnl": -10.0,
+   "clvPP": -4.0,
+   "stake": 10.0,
+   "public": true,
+   "signals": [
+    "money",
+    "sharp"
+   ],
+   "firstTs": "2026-08-24T06:28:15.978768+00:00",
+   "settledTs": "2026-08-24T13:17:56.858891+00:00",
+   "resolvedTs": "2026-08-24T13:17:55.394786+00:00"
   }
  ],
  "agg": {
   "all": {
    "n": 500,
-   "wins": 280,
-   "hit": 0.56,
-   "pnl": -269.31,
+   "wins": 279,
+   "hit": 0.558,
+   "pnl": -293.41,
    "stake": 5000.0,
-   "roi": -0.0539,
+   "roi": -0.0587,
    "clvAvg": -0.13
   },
   "public": {
-   "n": 172,
+   "n": 173,
    "wins": 116,
-   "hit": 0.6744,
-   "pnl": 31.18,
-   "stake": 1720.0,
-   "roi": 0.0181,
-   "clvAvg": -0.22
+   "hit": 0.6705,
+   "pnl": 21.18,
+   "stake": 1730.0,
+   "roi": 0.0122,
+   "clvAvg": -0.24
+  },
+  "bettable": {
+   "n": 418,
+   "wins": 245,
+   "hit": 0.5861,
+   "pnl": -46.58,
+   "stake": 4180.0,
+   "roi": -0.0111,
+   "clvAvg": -0.06
+  },
+  "blocked": {
+   "n": 82,
+   "wins": 34,
+   "hit": 0.4146,
+   "pnl": -246.83,
+   "stake": 820.0,
+   "roi": -0.301,
+   "clvAvg": -0.53
+  },
+  "byCat": {
+   "Cricket": {
+    "n": 1,
+    "wins": 1,
+    "hit": 1.0,
+    "pnl": 1.43,
+    "stake": 10.0,
+    "roi": 0.143,
+    "clvAvg": 1.0
+   },
+   "E-Sport": {
+    "n": 124,
+    "wins": 76,
+    "hit": 0.6129,
+    "pnl": -98.91,
+    "stake": 1240.0,
+    "roi": -0.0798,
+    "clvAvg": -0.06
+   },
+   "Fußball": {
+    "n": 174,
+    "wins": 93,
+    "hit": 0.5345,
+    "pnl": 25.45,
+    "stake": 1740.0,
+    "roi": 0.0146,
+    "clvAvg": -0.21
+   },
+   "Golf": {
+    "n": 1,
+    "wins": 1,
+    "hit": 1.0,
+    "pnl": 1.98,
+    "stake": 10.0,
+    "roi": 0.198,
+    "clvAvg": 0.0
+   },
+   "Kampfsport": {
+    "n": 7,
+    "wins": 3,
+    "hit": 0.4286,
+    "pnl": -21.78,
+    "stake": 70.0,
+    "roi": -0.3111,
+    "clvAvg": -0.48
+   },
+   "Tennis": {
+    "n": 118,
+    "wins": 74,
+    "hit": 0.6271,
+    "pnl": 23.47,
+    "stake": 1180.0,
+    "roi": 0.0199,
+    "clvAvg": 0.16
+   },
+   "US-Sport": {
+    "n": 75,
+    "wins": 31,
+    "hit": 0.4133,
+    "pnl": -225.05,
+    "stake": 750.0,
+    "roi": -0.3001,
+    "clvAvg": -0.53
+   }
   },
   "byConv": {
    "4": {
@@ -10986,21 +11096,21 @@
     "clvAvg": 0.04
    },
    "7": {
-    "n": 171,
+    "n": 172,
     "wins": 107,
-    "hit": 0.6257,
-    "pnl": -63.74,
-    "stake": 1710.0,
-    "roi": -0.0373,
-    "clvAvg": -0.41
+    "hit": 0.6221,
+    "pnl": -73.74,
+    "stake": 1720.0,
+    "roi": -0.0429,
+    "clvAvg": -0.43
    },
    "8": {
-    "n": 47,
-    "wins": 24,
-    "hit": 0.5106,
-    "pnl": -90.99,
-    "stake": 470.0,
-    "roi": -0.1936,
+    "n": 46,
+    "wins": 23,
+    "hit": 0.5,
+    "pnl": -105.09,
+    "stake": 460.0,
+    "roi": -0.2285,
     "clvAvg": 0.14
    },
    "9": {
@@ -11024,21 +11134,21 @@
   },
   "byVerdict": {
    "BET": {
-    "n": 442,
+    "n": 443,
     "wins": 263,
-    "hit": 0.595,
-    "pnl": -165.31,
-    "stake": 4420.0,
-    "roi": -0.0374,
-    "clvAvg": -0.15
+    "hit": 0.5937,
+    "pnl": -175.31,
+    "stake": 4430.0,
+    "roi": -0.0396,
+    "clvAvg": -0.16
    },
    "FADE": {
-    "n": 58,
-    "wins": 17,
-    "hit": 0.2931,
-    "pnl": -104.0,
-    "stake": 580.0,
-    "roi": -0.1793,
+    "n": 57,
+    "wins": 16,
+    "hit": 0.2807,
+    "pnl": -118.1,
+    "stake": 570.0,
+    "roi": -0.2072,
     "clvAvg": 0.09
    }
   },
@@ -11053,13 +11163,13 @@
     "clvAvg": 0.23
    },
    "money": {
-    "n": 315,
+    "n": 316,
     "wins": 206,
-    "hit": 0.654,
-    "pnl": -20.97,
-    "stake": 3150.0,
-    "roi": -0.0067,
-    "clvAvg": -0.15
+    "hit": 0.6519,
+    "pnl": -30.97,
+    "stake": 3160.0,
+    "roi": -0.0098,
+    "clvAvg": -0.16
    },
    "pinn": {
     "n": 7,
@@ -11072,12 +11182,12 @@
    },
    "sharp": {
     "n": 361,
-    "wins": 200,
-    "hit": 0.554,
-    "pnl": -126.0,
+    "wins": 199,
+    "hit": 0.5512,
+    "pnl": -150.1,
     "stake": 3610.0,
-    "roi": -0.0349,
-    "clvAvg": -0.13
+    "roi": -0.0416,
+    "clvAvg": -0.14
    },
    "steam": {
     "n": 136,
