@@ -1,25 +1,25 @@
 {
-"generatedAt": "2026-08-25T03:11:21.696472+00:00",
+"generatedAt": "2026-08-25T03:21:44.530502+00:00",
 "byVerdict": {
 "konsens": {
-"n": 457,
-"wins": 364,
-"hitRate": 0.7965,
-"polyN": 428,
+"n": 458,
+"wins": 365,
+"hitRate": 0.7969,
+"polyN": 429,
 "polyWins": 333,
-"polyHitRate": 0.778,
-"pinnN": 30,
-"pinnHitRate": 0.7333
+"polyHitRate": 0.7762,
+"pinnN": 31,
+"pinnHitRate": 0.7419
 },
 "uneinig": {
-"n": 154,
+"n": 155,
 "wins": 45,
-"hitRate": 0.2922,
-"polyN": 136,
+"hitRate": 0.2903,
+"polyN": 137,
 "polyWins": 44,
-"polyHitRate": 0.3235,
-"pinnN": 80,
-"pinnHitRate": 0.625
+"polyHitRate": 0.3212,
+"pinnN": 81,
+"pinnHitRate": 0.6296
 },
 "teil": {
 "n": 5,
@@ -58,6 +58,11 @@
 "wins": 10,
 "hitRate": 0.5556
 },
+"Argentinian Primera Division": {
+"n": 17,
+"wins": 8,
+"hitRate": 0.4706
+},
 "Spanish Segunda Division": {
 "n": 17,
 "wins": 14,
@@ -77,11 +82,6 @@
 "n": 16,
 "wins": 9,
 "hitRate": 0.5625
-},
-"Argentinian Primera Division": {
-"n": 15,
-"wins": 7,
-"hitRate": 0.4667
 },
 "Turkish Super League": {
 "n": 14,
@@ -491,20 +491,58 @@
 "hitRate": 0.7989
 },
 "weak": {
-"n": 225,
-"wins": 106,
-"hitRate": 0.4711
+"n": 227,
+"wins": 107,
+"hitRate": 0.4714
 }
 },
 "divergence": {
-"n": 154,
+"n": 155,
 "betfairWins": 45,
-"betfairRate": 0.2922,
-"polyN": 136,
+"betfairRate": 0.2903,
+"polyN": 137,
 "polyWins": 44,
-"polyRate": 0.3235
+"polyRate": 0.3212
 },
 "recent": [
+{
+"matchId": "35922873",
+"home": "Talleres",
+"away": "Rosario Central",
+"league": "Argentinian Primera Division",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Talleres",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-08-25T00:15:00Z",
+"settledAt": "2026-08-25T03:21:44.385484+00:00"
+},
+{
+"matchId": "35922851",
+"home": "Lanus",
+"away": "Argentinos Juniors",
+"league": "Argentinian Primera Division",
+"verdict": "konsens",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-25T00:15:00Z",
+"settledAt": "2026-08-25T03:21:44.385484+00:00"
+},
 {
 "matchId": "35949998",
 "home": "Libertad FC",
@@ -1226,50 +1264,12 @@
 ],
 "kickoff": "2026-08-23T23:00:00Z",
 "settledAt": "2026-08-24T02:04:20.203542+00:00"
-},
-{
-"matchId": "35947150",
-"home": "Atlanta Utd",
-"away": "Kansas City",
-"league": "US MLS",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Atlanta Utd",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-08-23T23:00:00Z",
-"settledAt": "2026-08-24T02:04:20.203542+00:00"
-},
-{
-"matchId": "35922917",
-"home": "River Plate",
-"away": "Velez Sarsfield",
-"league": "Argentinian Primera Division",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "River Plate",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-08-23T22:15:00Z",
-"settledAt": "2026-08-24T01:19:03.285680+00:00"
 }
 ],
 "global": {
-"n": 616,
-"wins": 410,
-"hitRate": 0.6656
+"n": 618,
+"wins": 411,
+"hitRate": 0.665
 },
-"pending": 4
+"pending": 2
 }
