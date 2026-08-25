@@ -1059,6 +1059,11 @@ function _pwWhalePlays(topN) {
       if (!m || m.resolved != null) return;            // nicht mehr im Feed / aufgelöst → nicht spielbar
       const htk = _pwRealHtk(m);
       if (htk == null || htk <= 0) return;             // angepfiffen → raus (Lucas: „nur noch spielbar")
+      // 25.08.2026 (Lucas: „diese Sportarten scheinen in vielen Tabs noch auf"): der Whales-Tab ist
+      // eine SETZ-Flaeche. Gesperrte Sportarten fielen hier auf einen toten „Öffnen"-Link zurueck —
+      // Zeilen, die man nie spielen wird. Die Beobachtung lebt weiter im Wallets-Tab (Rangliste,
+      // groesste Positionen, Trades) und im Papier-Depot, wo sie hingehoert.
+      if (_pwBetBlocked({ league: m.league || p.league, sport: m.sport })) return;
       const gk = p.key + '|' + p.side;
       const e = agg[gk] || (agg[gk] = {
         key: p.key, side: p.side, league: m.league || p.league, sport: m.sport, htk: htk,

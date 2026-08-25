@@ -34,7 +34,7 @@ Ein HTML-Post je frischer Großposition in den Trades-Channel (TELEGRAM_TRADES_C
 poly_whale_seen.json {posKey → {usd, ts}}: je Position EINMAL alerten; erneut nur, wenn die
 Wallet signifikant aufstockt (≥ +50% USD) — dann als „aufgestockt".
 """
-import json, math, os, urllib.request, urllib.error, html
+import json, math, os, re as _re, urllib.request, urllib.error, html   # 25.08.2026: _re fuer sport_category (Spiegel von _pwSportCategory)
 from datetime import datetime, timezone
 from pathlib import Path
 
@@ -134,6 +134,7 @@ def _is_confirmed_loser(s) -> bool:
 PUB_CHAT   = (os.environ.get("TELEGRAM_CHAT_ID") or "").strip()
 PUB_SEEN_FILE = BASE / "poly_whale_public_seen.json"
 BROAD_FILE    = BASE / "poly_money_broad_close.json"
+SHORTLIST_FILE = BASE / "poly_shortlist_track.json"   # 25.08.2026: traegt blockedCats — die EINE Sperrliste
 
 # league-Key → (Emoji, Klartext)
 _SPORT = {
@@ -142,6 +143,61 @@ _SPORT = {
     "NFL": ("🏈", "NFL"), "NHL": ("🏒", "NHL"), "MMA": ("🥊", "MMA"), "UFC": ("🥊", "UFC"),
     "GOLF": ("⛳", "Golf"), "F1": ("🏎️", "Formel 1"), "CRICKET": ("🏏", "Cricket"),
 }
+BLOCKED_FALLBACK = ("US-Sport", "Kampfsport")   # nur wenn poly_shortlist_track.json fehlt
+
+# Spiegel von _pwSportCategory (poly-wallets.js). Bewusst dieselbe Reihenfolge: spezifische
+# Sportarten zuerst, sonst klauen breite Fussball-Begriffe wie "championship" sie weg.
+_CAT_RULES = (
+    ("E-Sport",    r"esport|cs2|csgo|\blol\b|dota|valorant"),
+    ("US-Sport",   r"basketball|nba|nfl|americanfootball|baseball|mlb|icehockey|hockey|nhl|wnba|ncaa"),
+    ("Tennis",     r"tennis|wta|atp"),
+    ("Kampfsport", r"mma|ufc|boxing|box|kampf"),
+    ("Golf",       r"golf"),
+    ("Motorsport", r"f1|formula|motor|nascar"),
+    ("Cricket",    r"cricket"),
+)
+
+
+def sport_category(league, sport=None):
+    """Liga-String → Kategorie ("US-Sport", "Fussball", …). REIN/testbar.
+
+    Der gestempelte Sport aus dem Capture hat Vorrang, genau wie im Dashboard — er faengt
+    abgekuerzte Bewerbe, die der String-Rateversuch nie erkennt.
+    """
+    if sport:
+        return str(sport)
+    x = str(league or "").lower()
+    for cat, rx in _CAT_RULES:
+        if _re.search(rx, x):
+            return cat
+    # Exakt dieselbe Schreibweise wie _PW_CAT_ICON im Dashboard ("Fußball" mit ß) — die Sperrliste
+    # kommt von dort, ein "Fussball" hier wuerde stumm nie matchen.
+    return "Fußball" if _re.search(
+        r"soccer|football|fussball|\bepl\b|premier|\bucl\b|\buel\b|uecl|uefa|champions|conmebol|"
+        r"concacaf|copa|coupe|\bdfb\b|\befl\b|conference|europa|libertad|sudameri|\bmls\b|liga|ligue|"
+        r"serie|bundesliga|eredivisie|allsven|superett|elitese|ekstrakla|veikkau|primeira|championship|"
+        r"super-?lig|pro-?league|\blal\b", x) else "Sonstige"
+
+
+def blocked_cats(shortlist=None):
+    """Die gesperrten Kategorien — aus poly_shortlist_track.json, nicht hier hartkodiert. REIN.
+
+    Sie entstehen in poly-wallets.js (PW_BLOCKED_BET_CATS) und wandern ueber emit_shortlist.mjs
+    ins Papier-Depot. Legt Lucas die Sperre dort um, zieht der Push automatisch mit — zwei
+    getrennte Listen waeren genau die Art Drift, die diesen Fix noetig gemacht hat.
+    """
+    got = (shortlist or {}).get("blockedCats") if isinstance(shortlist, dict) else None
+    cats = [str(c) for c in got if c] if isinstance(got, list) else []
+    return cats or list(BLOCKED_FALLBACK)
+
+
+def bet_blocked(pos, cats=None):
+    """Faellt diese Position in eine gesperrte Sportart? REIN."""
+    if not isinstance(pos, dict):
+        return False
+    return sport_category(pos.get("league"), pos.get("sport")) in (cats or BLOCKED_FALLBACK)
+
+
 def _sport(league: str):
     x = str(league or "").upper()
     if x in _SPORT:
@@ -296,7 +352,8 @@ def _pub_in_top_n(scores, wallet, n=PUB_TOP_N):
     return bool(r and r <= n)
 
 
-def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None, extra: int = 0) -> str:
+def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None, extra: int = 0,
+               blocked=None) -> str:
     """Trades-Push (01.08.2026, Lucas: „entscheidungsreif") — Matchup, Anpfiff, Einstieg→Jetzt-Preis,
     Wallet-Qualität, Markt-Link. Ein Push = eine fertige Wett-Entscheidung."""
     emoji, sport = _sport(pos.get("league"))
@@ -323,6 +380,12 @@ def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None, extra
     _tw = _rank_badge(scores, pos.get("wallet"))
     if _tw:
         lines.append(_tw)
+    # 25.08.2026 (Lucas: „haben wir MLB nicht entfernt?"): weit nach oben, direkt unter den
+    # Rang. Ohne diese Zeile liest sich der Push als Empfehlung fuer etwas, wofuer im Dashboard
+    # bewusst kein Setzen-Button existiert.
+    if bet_blocked(pos, blocked):
+        lines.append("🚫 <b>Sportart aktuell nicht bespielbar</b> — im Papier-Depot klar negativ. "
+                     "Kein Setzen-Button, kein Public-Post. Steht nur zur Beobachtung hier.")
     l2 = _esc(matchup) if matchup else "<b>%s</b>" % _esc(side)
     if ko:
         l2 += " · %s" % ko
@@ -691,6 +754,7 @@ def main():
     now    = datetime.now(timezone.utc)
 
     broad = _load(BROAD_FILE, {})   # Matchup/Anpfiff/Preis-Kontext für die Trades-Cards
+    _blocked = blocked_cats(_load(SHORTLIST_FILE, {}))
     # (01.08.2026, Lucas: 1a) Trades-Channel bekommt denselben Sanity-Filter wie Public:
     # nur Sport + Preis 3–97¢ → kein @100¢-schon-entschieden, kein Politik/Krypto-Müll.
     cand = [c for c in select(track, seen, now, sharp_floor=MIN_USD_SHARP) if _pub_ok(c[1])]
@@ -700,7 +764,7 @@ def main():
     now_iso = now.strftime("%Y-%m-%dT%H:%M:%SZ")
     sent = 0
     for pkey, pos, restock in cand[:MAX_ALERTS]:
-        card = build_card(pos, scores, restock, broad, extra=_extra.get(pkey, 0))
+        card = build_card(pos, scores, restock, broad, extra=_extra.get(pkey, 0), blocked=_blocked)
         if tg_send(card):
             sent += 1
             seen[pkey] = {"usd": float(pos.get("usd") or 0), "ts": now_iso}
@@ -715,6 +779,12 @@ def main():
                       PUB_MIN_TR, PUB_MIN_HITRATE)
     pub_cand = [c for c in pub_cand if _pub_ok(c[1])]   # nur Sport + sinnvoller Preis (Public)
     pub_cand = [c for c in pub_cand if _pub_in_top_n(scores, c[1].get("wallet"))]   # 23.08.2026 (Lucas): Public = NUR Top-N der Sharp-Rangliste
+    # 25.08.2026 (Lucas): der oeffentliche Kanal ist das Produkt — was wir selbst nicht setzen
+    # wuerden, vertreten wir dort auch nicht. Im Trades-Kanal steht stattdessen die Hinweiszeile.
+    _pre_blk = len(pub_cand)
+    pub_cand = [c for c in pub_cand if not bet_blocked(c[1], _blocked)]
+    if _pre_blk != len(pub_cand):
+        print(f"  \U0001f6ab {_pre_blk - len(pub_cand)} Post(s) unterdrueckt — gesperrte(r) Sportart ({', '.join(_blocked)})")
     pub_cand = [c for c in pub_cand if _pub_min_odds_ok(c[1])]   # 22.08.2026 (Lucas): Public-Mindest-Quote (>=1.30) — kurze Favoriten raus
     _pre_contest = len(pub_cand)
     pub_cand = [c for c in pub_cand if not _contested_market(c[1].get("key"), broad)]   # 12.08.2026 (Lucas): Gegenseiten-Krieg raus — umkaempfte Spiele gar nicht posten

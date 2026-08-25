@@ -56,6 +56,9 @@ const BROAD = {
   'cs2-laeuft':   market('ESPORTS', -1.2, { 'Team X': 0.60, 'Team Y': 0.40 }),
   // 24.08.2026 (Lucas' INOX-Fall): zwei Top-Wallets auf GEGENSEITEN desselben Markts.
   'cs2-streit':   market('ESPORTS',  2.0, { 'Rot': 0.52, 'Blau': 0.48 }, { 'Rot': 'TOK9', 'Blau': 'TOK8' }),
+  // 25.08.2026 (Lucas: gesperrte Sportarten tauchen in vielen Tabs noch auf): spielbar und mit
+  // Token — darf trotzdem NICHT im Whales-Tab landen.
+  'mlb-cle-laa':  market('MLB',      1.5, { 'Guardians': 0.61, 'Angels': 0.39 }, { 'Guardians': 'TOKM' }),
 };
 
 const TRACK = {
@@ -72,6 +75,8 @@ const TRACK = {
     // Konflikt: #1 auf Rot, #3 auf Blau — beide bewiesen, beide Top-20
     { wallet: '0xA', key: 'cs2-streit', side: 'Rot',  league: 'ESPORTS', usd: 5000, entryPrice: 0.50 },
     { wallet: '0xC', key: 'cs2-streit', side: 'Blau', league: 'ESPORTS', usd: 4000, entryPrice: 0.47 },
+    // gesperrte Sportart (US-Sport) → darf NICHT auftauchen
+    { wallet: '0xA', key: 'mlb-cle-laa', side: 'Guardians', league: 'MLB', usd: 4000, entryPrice: 0.55 },
     // gar nicht im Feed (Ledger haengt) → darf NICHT auftauchen
     { wallet: '0xB', key: 'lol-weg-2026-08-01', side: 'Irgendwer', league: 'ESPORTS', usd: 7000, entryPrice: 0.6 },
   ],
@@ -114,19 +119,28 @@ test('Whales: Match-Label ist Klartext (kein HTML im escapten Text)', async () =
   });
 });
 
-test('Whales: Setzen auch ohne Token — Link NUR noch bei gesperrter Sportart', async () => {
-  // 24.08.2026: Vorher fiel ein tokenloser Play stumm auf einen Link zurück und war damit von einer
-  // bewusst gesperrten Sportart nicht zu unterscheiden. Jetzt ist der Link ein eindeutiges Signal.
+test('Whales: jede Zeile ist setzbar — mit wie ohne Token', async () => {
+  // 24.08.2026: Vorher fiel ein tokenloser Play stumm auf einen Link zurück. Seit dem Slug-Fallback
+  // ist der Token ein Beschleuniger, keine Bedingung.
   await withData(BROAD, TRACK, (w) => {
     const [mitToken, ohneToken] = w._pwWhalePlays();
     assert.strictEqual(mitToken.token, 'TOK1');
     assert.strictEqual(ohneToken.token, null);
     assert.ok(w._renderPolyWhales([mitToken]).includes('🟣 Setzen'), 'mit Token setzbar');
     assert.ok(w._renderPolyWhales([ohneToken]).includes('🟣 Setzen'), 'ohne Token ebenfalls setzbar');
-    const gesperrt = { ...mitToken, league: 'MLB', sport: null };
-    const html = w._renderPolyWhales([gesperrt]);
-    assert.ok(html.includes('🟣 Öffnen'), 'gesperrte Sportart bleibt Link');
-    assert.match(html, /bewusst nicht setzbar/, 'und sagt im Tooltip warum');
+  });
+});
+
+test('Whales: gesperrte Sportarten tauchen gar nicht erst auf', async () => {
+  // 25.08.2026 (Lucas: haben wir MLB nicht entfernt? scheint in vielen Tabs noch auf): der Tab ist
+  // eine SETZ-Fläche. Vorher landete MLB hier als toter Öffnen-Link — eine Zeile, die man nie spielen
+  // wird. Beobachtet wird weiter, aber im Wallets-Tab und im Papier-Depot, wo es hingehört.
+  await withData(BROAD, TRACK, (w) => {
+    const plays = w._pwWhalePlays();
+    assert.ok(plays.length > 0, 'die ungesperrten bleiben');
+    assert.ok(!plays.some(p => p.key === 'mlb-cle-laa'), 'MLB-Play ist raus');
+    assert.ok(!plays.some(p => w._pwBetBlocked(p)), 'keine einzige gesperrte Sportart in der Liste');
+    assert.ok(!w._renderPolyWhales(plays).includes('🟣 Öffnen'), 'kein Notausgang mehr, nur Setzen');
   });
 });
 
