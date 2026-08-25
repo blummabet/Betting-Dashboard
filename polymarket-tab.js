@@ -5029,6 +5029,10 @@ function polyOpenSettings() {
         Speichern
       </button>
     </div>
+    <button onclick="polyCheckPAT().then(_polyPatResultBox)"
+      style="background:none;border:1px solid #30363d;border-radius:6px;color:#8b949e;font-size:11px;font-weight:700;padding:6px 12px;cursor:pointer;font-family:inherit;margin-bottom:10px">
+      🔍 Gespeicherten Token prüfen
+    </button>
     <div style="font-size:11px;color:#8b949e;margin-bottom:20px;line-height:1.5">
       Scope: <code style="color:#00d4a1;background:#00d4a110;padding:1px 5px;border-radius:3px">repo</code>
       · Erstellen unter github.com → Settings → Developer settings → Tokens (classic)
@@ -5047,6 +5051,53 @@ function polyOpenSettings() {
       <div style="font-size:11px;color:#8b949e;margin-top:4px">Repo: ${POLY_GITHUB_REPO}</div>
     </div>`;
   document.getElementById('polyModal').style.display = 'flex';
+}
+
+// Kam die Maske aus einem laufenden Bet-Versuch? Dann zurueck zur Bestaetigung, statt den Nutzer
+// den Play neu suchen zu lassen. EIN Klick fehlt dann noch — bewusst kein Auto-Versand: der letzte
+// Druck auf „auslösen" ist bei echtem Geld eine eigene Entscheidung.
+function _polyResumePending() {
+  const modal = document.getElementById('polyModal');
+  let pending = null;
+  try { pending = modal && modal.dataset.pendingOrder ? JSON.parse(modal.dataset.pendingOrder) : null; } catch (e) { pending = null; }
+  if (pending) { _wmBetConfirm(pending); return; }
+  if (modal) modal.style.display = 'none';
+}
+
+// Lesende Probe — KEINE Nebenwirkung. Beantwortet Gueltigkeit und Sichtbarkeit in einem Zug.
+async function polyCheckPAT(token) {
+  const pat = token || _getGithubPAT();
+  if (!pat) return { ok: false, status: 0, text: 'Kein Token gesetzt.' };
+  let resp;
+  try {
+    resp = await fetch(`https://api.github.com/repos/${POLY_GITHUB_REPO}`, {
+      headers: { 'Authorization': `Bearer ${pat}`, 'Accept': 'application/vnd.github+json',
+                 'X-GitHub-Api-Version': '2022-11-28' },
+    });
+  } catch (e) {
+    return { ok: false, status: 0, text: 'Keine Verbindung zu GitHub — Netz oder Blocker.' };
+  }
+  if (resp.ok) return { ok: true, status: resp.status, text: `Token gültig — ${POLY_GITHUB_REPO} sichtbar.` };
+  const t = { 401: 'Token ungültig: abgelaufen, unvollständig kopiert oder von GitHub widerrufen. Neu erzeugen.',
+              404: 'Token sieht das Repo nicht — bei einem privaten Repo heißt das: Scope `repo` fehlt.',
+              403: 'Verboten — bei SSO-Organisationen den Token zusätzlich autorisieren.' }[resp.status]
+            || `Unerwartete Antwort (HTTP ${resp.status}).`;
+  return { ok: false, status: resp.status, text: t };
+}
+
+function _polyPatResultBox(res) {
+  const host = document.getElementById('polyModalBody');
+  if (!host) return;
+  const old = host.querySelector('[data-pat-check]');
+  if (old) old.remove();
+  const box = document.createElement('div');
+  box.setAttribute('data-pat-check', '1');
+  const col = res.ok ? '#3fb950' : '#f85149';
+  box.style.cssText = `background:${col}15;border:1px solid ${col}55;border-radius:8px;padding:12px 14px;margin-top:14px`;
+  box.innerHTML = `<div style="font-size:13px;font-weight:800;color:${col};margin-bottom:4px">`
+    + `${res.ok ? '✅ Token geprüft' : '❌ Token abgelehnt'}${res.status ? ' · HTTP ' + res.status : ''}</div>`
+    + `<div style="font-size:12px;color:#8b949e;line-height:1.5">${res.text}</div>`;
+  host.appendChild(box);
 }
 
 function polySavePAT() {
@@ -5076,15 +5127,19 @@ function polySavePAT() {
   }
   const btn = document.getElementById('polySettingsBtn');
   if (btn) { btn.style.color = '#3fb950'; btn.style.borderColor = '#3fb95055'; }
-  _polyToast('✅ GitHub Token gespeichert');
-  // Kam die Maske aus einem laufenden Bet-Versuch? Dann zurueck zur Bestaetigung, statt den
-  // Nutzer den Play neu suchen zu lassen. EIN Klick fehlt dann noch — bewusst kein Auto-Versand:
-  // der letzte Druck auf „auslösen" ist bei echtem Geld eine eigene Entscheidung.
-  const modal = document.getElementById('polyModal');
-  let pending = null;
-  try { pending = modal && modal.dataset.pendingOrder ? JSON.parse(modal.dataset.pendingOrder) : null; } catch (e) { pending = null; }
-  if (pending) { _wmBetConfirm(pending); return; }
-  if (modal) modal.style.display = 'none';
+  // 25.08.2026 (Lucas' 401): sofort gegen GitHub pruefen. Ein kaputter Token soll im SETUP
+  // auffallen, nicht in dem Moment, in dem echtes Geld gesetzt werden soll.
+  _polyToast('⏳ Token wird geprüft…');
+  polyCheckPAT(val).then(res => {
+    _polyPatResultBox(res);
+    if (!res.ok) {
+      if (btn) { btn.style.color = '#f85149'; btn.style.borderColor = '#f8514955'; }
+      _polyToast('❌ Token abgelehnt — nicht einsatzbereit');
+      return;
+    }
+    _polyToast('✅ Token gültig und gespeichert');
+    _polyResumePending();
+  });
 }
 
 // ── GitHub dispatch ─────────────────────────────────────

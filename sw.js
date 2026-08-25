@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v188';   // 25.08.2026 (Lucas): Sammel-Versand zeigt den HTTP-Grund statt nur „Versand fehlgeschlagen".
+const VERSION = 'cocobet-v189';   // 25.08.2026 (Lucas' 401): Token wird beim Speichern gegen GitHub geprueft — Setup scheitert im Setup, nicht in der Wette.
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

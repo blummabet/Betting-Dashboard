@@ -291,6 +291,7 @@ test('Nach dem Speichern geht es zur Bestaetigung zurueck — nicht ins Leere', 
   await w._wmBetDispatch();                       // oeffnet die Maske
   w.document.getElementById('polyPatInput').value = 'ghp_abc123';
   w.polySavePAT();
+  await new Promise(r => setTimeout(r, 20));   // Speichern prueft den Token erst gegen GitHub
   const html = w.document.getElementById('polyModalBody').innerHTML;
   assert.match(html, /Poly-Play bestätigen/, 'die Bestaetigung ist zurueck');
   assert.match(html, /Bet via GitHub auslösen/, 'ein Klick fehlt noch — bewusst kein Auto-Versand');
@@ -402,5 +403,68 @@ test('Sammel-Versand zeigt den HTTP-Grund, nicht nur einen Toast', async () => {
   assert.match(html, /repo/, 'nennt den fehlenden Scope');
   assert.match(html, /Nichts gesetzt/, 'sagt, dass keine Wette steht');
   assert.strictEqual(w._polyDispatchError.status, 404, 'auch in der Konsole abfragbar');
+});
+
+
+// ── Token wird beim Speichern geprueft (25.08.2026, Lucas' HTTP 401) ─────────────────────────
+// Der Token war ungueltig — auffallen tat das aber erst beim Klick, der echtes Geld setzt.
+// Eine LESENDE Probe (GET /repos/{repo}) beantwortet Gueltigkeit und Sichtbarkeit ohne
+// Nebenwirkung, und zwar im Setup, wo ein Fehlschlag nichts kostet.
+
+function bootPatCheck(repoResp) {
+  const dom = new JSDOM('<!DOCTYPE html><body><div id="polyModal"><div id="polyModalBody"></div></div></body>',
+    { url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
+  const w = dom.window;
+  const calls = [];
+  w.fetch = (url, opt) => {
+    calls.push({ url: String(url), method: (opt && opt.method) || 'GET' });
+    if (String(url).includes('/repos/')) return Promise.resolve(repoResp);
+    return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+  };
+  w.localStorage.clear();
+  w.eval(readFileSync(VERDICT, 'utf8'));
+  w.eval(readFileSync(POLY, 'utf8'));
+  return { w, calls };
+}
+const OK200   = { ok: true,  status: 200, json: () => Promise.resolve({ full_name: 'blummabet/Betting-Dashboard' }) };
+const BAD401  = { ok: false, status: 401, json: () => Promise.resolve({ message: 'Bad credentials' }) };
+const NOTF404 = { ok: false, status: 404, json: () => Promise.resolve({ message: 'Not Found' }) };
+
+test('Token-Probe ist LESEND — kein Dispatch, keine Wette', async () => {
+  const { w, calls } = bootPatCheck(OK200);
+  const res = await w.polyCheckPAT('ghp_gut');
+  assert.strictEqual(res.ok, true);
+  assert.ok(calls.every(c => c.method === 'GET'), 'nur GET');
+  assert.ok(!calls.some(c => c.url.includes('/dispatches')), 'niemals ein Dispatch beim Pruefen');
+});
+
+test('401 wird als kaputter Token benannt, 404 als fehlender Scope', async () => {
+  const a = await bootPatCheck(BAD401).w.polyCheckPAT('ghp_alt');
+  assert.strictEqual(a.ok, false);
+  assert.match(a.text, /abgelaufen|unvollständig|widerrufen/);
+  const b = await bootPatCheck(NOTF404).w.polyCheckPAT('ghp_eng');
+  assert.match(b.text, /Scope `repo`/);
+});
+
+test('Speichern zeigt das Ergebnis und laesst einen kaputten Token nicht durchgehen', async () => {
+  const { w } = bootPatCheck(BAD401);
+  w.polyOpenSettings();
+  w.document.getElementById('polyPatInput').value = 'ghp_kaputt';
+  w.polySavePAT();
+  await new Promise(r => setTimeout(r, 20));
+  const html = w.document.getElementById('polyModalBody').innerHTML;
+  assert.match(html, /Token abgelehnt/);
+  assert.match(html, /HTTP 401/);
+  assert.doesNotMatch(html, /Poly-Play bestätigen/, 'es geht NICHT zur Wette weiter');
+});
+
+test('Gueltiger Token fuehrt zur Bestaetigung zurueck', async () => {
+  const { w } = bootPatCheck(OK200);
+  w.document.getElementById('polyModal').dataset.pendingOrder = JSON.stringify(HEUTE_ORDER);
+  w.polyOpenSettings();
+  w.document.getElementById('polyPatInput').value = 'ghp_gut';
+  w.polySavePAT();
+  await new Promise(r => setTimeout(r, 20));
+  assert.match(w.document.getElementById('polyModalBody').innerHTML, /Poly-Play bestätigen/);
 });
 
