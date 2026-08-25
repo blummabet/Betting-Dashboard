@@ -1,25 +1,25 @@
 {
-"generatedAt": "2026-08-25T20:38:44.927622+00:00",
+"generatedAt": "2026-08-25T20:44:08.461886+00:00",
 "byVerdict": {
 "konsens": {
-"n": 470,
-"wins": 377,
-"hitRate": 0.8021,
-"polyN": 441,
-"polyWins": 344,
-"polyHitRate": 0.78,
-"pinnN": 32,
-"pinnHitRate": 0.75
+"n": 472,
+"wins": 379,
+"hitRate": 0.803,
+"polyN": 443,
+"polyWins": 346,
+"polyHitRate": 0.781,
+"pinnN": 34,
+"pinnHitRate": 0.7647
 },
 "uneinig": {
-"n": 160,
-"wins": 48,
-"hitRate": 0.3,
-"polyN": 142,
-"polyWins": 46,
-"polyHitRate": 0.3239,
-"pinnN": 83,
-"pinnHitRate": 0.6145
+"n": 161,
+"wins": 49,
+"hitRate": 0.3043,
+"polyN": 143,
+"polyWins": 47,
+"polyHitRate": 0.3287,
+"pinnN": 84,
+"pinnHitRate": 0.6071
 },
 "teil": {
 "n": 5,
@@ -158,6 +158,11 @@
 "wins": 7,
 "hitRate": 0.7
 },
+"English Football League Cup": {
+"n": 10,
+"wins": 9,
+"hitRate": 0.9
+},
 "English Premier League": {
 "n": 10,
 "wins": 8,
@@ -212,11 +217,6 @@
 "n": 7,
 "wins": 5,
 "hitRate": 0.7143
-},
-"English Football League Cup": {
-"n": 7,
-"wins": 6,
-"hitRate": 0.8571
 },
 "Japanese J League 2": {
 "n": 7,
@@ -496,25 +496,82 @@
 },
 "byStrength": {
 "strong": {
-"n": 370,
-"wins": 298,
-"hitRate": 0.8054
+"n": 371,
+"wins": 299,
+"hitRate": 0.8059
 },
 "weak": {
-"n": 232,
-"wins": 110,
-"hitRate": 0.4741
+"n": 234,
+"wins": 112,
+"hitRate": 0.4786
 }
 },
 "divergence": {
-"n": 160,
-"betfairWins": 48,
-"betfairRate": 0.3,
-"polyN": 142,
-"polyWins": 46,
-"polyRate": 0.3239
+"n": 161,
+"betfairWins": 49,
+"betfairRate": 0.3043,
+"polyN": 143,
+"polyWins": 47,
+"polyRate": 0.3287
 },
 "recent": [
+{
+"matchId": "35931557",
+"home": "Ipswich",
+"away": "Leicester",
+"league": "English Football League Cup",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Ipswich",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-08-25T18:45:00Z",
+"settledAt": "2026-08-25T20:44:08.291204+00:00"
+},
+{
+"matchId": "35928682",
+"home": "Watford",
+"away": "Peterborough",
+"league": "English Football League Cup",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Peterborough",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+5
+],
+"kickoff": "2026-08-25T18:45:00Z",
+"settledAt": "2026-08-25T20:44:08.291204+00:00"
+},
+{
+"matchId": "35928300",
+"home": "Blackburn",
+"away": "Sheff Utd",
+"league": "English Football League Cup",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Sheff Utd",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-08-25T18:45:00Z",
+"settledAt": "2026-08-25T20:44:08.291204+00:00"
+},
 {
 "matchId": "35928178",
 "home": "Southampton",
@@ -1217,69 +1274,12 @@
 ],
 "kickoff": "2026-08-24T18:00:00Z",
 "settledAt": "2026-08-24T21:06:09.752197+00:00"
-},
-{
-"matchId": "35734714",
-"home": "Roma",
-"away": "Fiorentina",
-"league": "Italian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Roma",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-4,
-0
-],
-"kickoff": "2026-08-24T18:45:00Z",
-"settledAt": "2026-08-24T20:46:28.772899+00:00"
-},
-{
-"matchId": "35895521",
-"home": "Osasuna",
-"away": "Levante",
-"league": "Spanish La Liga",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Osasuna",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-08-24T17:30:00Z",
-"settledAt": "2026-08-24T20:36:21.116321+00:00"
-},
-{
-"matchId": "35948543",
-"home": "Malmo FF",
-"away": "Djurgardens",
-"league": "Swedish Allsvenskan",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Djurgardens",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-3
-],
-"kickoff": "2026-08-24T17:00:00Z",
-"settledAt": "2026-08-24T20:02:33.913606+00:00"
 }
 ],
 "global": {
-"n": 635,
-"wins": 426,
-"hitRate": 0.6709
+"n": 638,
+"wins": 429,
+"hitRate": 0.6724
 },
-"pending": 16
+"pending": 13
 }
