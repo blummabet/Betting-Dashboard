@@ -43,7 +43,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "cs2-ruby1-hs2-2026-08-21: seit 4.0 Tagen offen — keine Auflösung gefunden"
+        "cs2-ruby1-hs2-2026-08-21: seit 4.1 Tagen offen — keine Auflösung gefunden"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -61,14 +61,9 @@
       "label": "'Bewiesene' Wallets wirklich profitabel",
       "severity": "warn",
       "ok": false,
-      "nFail": 6,
+      "nFail": 1,
       "failures": [
-        "13/49 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (27%) — Trefferquote allein trügt",
-        "   0x84cfffc3f1… n=49 Treffer 53% P&L $-7,751,168",
-        "   0x224a89dbe0… n=92 Treffer 51% P&L $-4,783,628",
-        "   0xc3c3b3ef30… n=233 Treffer 52% P&L $-3,833,260",
-        "   0xa0f21e6d35… n=49 Treffer 67% P&L $-2,670,708",
-        "389/438 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
+        "393/441 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
     },
@@ -110,5 +105,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-08-25T00:03:26.592998+00:00"
+  "generatedAt": "2026-08-25T01:55:51.240193+00:00"
 }
