@@ -2033,6 +2033,7 @@ async function _wmBetDispatch() {
   const btn = document.getElementById('wmBetDispatchBtn');
   if (btn) { btn.disabled = true; btn.textContent = '⏳ Wird ausgelöst…'; btn.style.opacity = '.6'; }
   _polyDispatchError = null;   // frischer Versuch
+  _polyDispatchNoPat = false;
 
   // 25.08.2026 (Lucas' Heute-Test): ein Poly-Direktplay traegt polyKey/side/tokenId — genau die
   // Felder, an denen der Placer den Markt findet. Die alte feste Feldliste liess sie fallen und
@@ -2101,6 +2102,8 @@ async function _wmBetDispatch() {
           Schließen
         </button>
       </div>`;
+  } else if (_polyDispatchNoPat) {
+    return;   // Einstellungen sind offen; nach dem Speichern geht es dort weiter
   } else {
     if (btn) { btn.disabled = false; btn.textContent = '🟣 Nochmal versuchen'; btn.style.opacity = '1'; }
     const e = _polyDispatchError;
@@ -4960,11 +4963,33 @@ function _polyRefreshStickyBar() {
 
 const POLY_GITHUB_REPO = 'blummabet/Betting-Dashboard';
 
+// Funktioniert Browser-Speicher hier ueberhaupt? Live geprueft, nicht angenommen — genau daran
+// scheiterte Lucas' Schleife „speichern → nichts → Maske wieder" (25.08.2026).
+function _localStorageWorks() {
+  try {
+    const k = '__betedge_probe__';
+    localStorage.setItem(k, '1');
+    const ok = localStorage.getItem(k) === '1';
+    localStorage.removeItem(k);
+    return ok;
+  } catch (e) { return false; }
+}
+
 function _getGithubPAT() {
   try { return localStorage.getItem('betedge_github_pat') || ''; } catch { return ''; }
 }
+// _saveGithubPAT gibt zurueck, ob der Token WIRKLICH liegen blieb (25.08.2026, Lucas' Schleife).
+// Zurueckgelesen statt geglaubt: iOS-Privatmodus, geblockte Website-Daten und manche PWA-Kontexte
+// lassen setItem werfen oder still verpuffen. Vorher meldete die Oberflaeche trotzdem Erfolg.
 function _saveGithubPAT(token) {
-  try { localStorage.setItem('betedge_github_pat', token.trim()); } catch (e) {}
+  const val = String(token || '').trim();
+  try {
+    localStorage.setItem('betedge_github_pat', val);
+    return localStorage.getItem('betedge_github_pat') === val;
+  } catch (e) {
+    console.error('[PAT] localStorage nicht verfuegbar:', e);
+    return false;
+  }
 }
 
 function polyOpenSettings() {
@@ -4996,6 +5021,11 @@ function polyOpenSettings() {
       <div style="font-size:13px;color:${current ? '#3fb950' : '#f85149'}">
         ${current ? '✅ Token gespeichert' : '❌ Kein Token — Bets können nicht ausgelöst werden'}
       </div>
+      <div style="font-size:11px;color:${_localStorageWorks() ? '#8b949e' : '#f85149'};margin-top:4px">
+        ${_localStorageWorks()
+          ? 'Browser-Speicher: ok'
+          : '⚠️ Browser-Speicher blockiert — hier kann KEIN Token liegen bleiben (privater Modus / Website-Daten gesperrt)'}
+      </div>
       <div style="font-size:11px;color:#8b949e;margin-top:4px">Repo: ${POLY_GITHUB_REPO}</div>
     </div>`;
   document.getElementById('polyModal').style.display = 'flex';
@@ -5007,12 +5037,36 @@ function polySavePAT() {
   if (!val.startsWith('ghp_') && !val.startsWith('github_pat_')) {
     _polyToast('⚠️ Sieht nicht wie ein GitHub Token aus');
   }
-  _saveGithubPAT(val);
-  document.getElementById('polyModal').style.display = 'none';
-  _polyToast('✅ GitHub Token gespeichert');
-  // Refresh settings button color
+  if (!_saveGithubPAT(val)) {
+    // Speicher-Fehler sichtbar machen statt Erfolg vorzutaeuschen — sonst laeuft man in die Schleife
+    // „speichern → nichts → Maske wieder".
+    const host = document.getElementById('polyModalBody');
+    if (host) {
+      const old = host.querySelector('[data-pat-err]');
+      if (old) old.remove();
+      const box = document.createElement('div');
+      box.setAttribute('data-pat-err', '1');
+      box.style.cssText = 'background:#f8514915;border:1px solid #f8514955;border-radius:8px;padding:12px 14px;margin-top:14px';
+      box.innerHTML = '<div style="font-size:13px;font-weight:800;color:#f85149;margin-bottom:6px">❌ Dein Browser speichert nichts</div>'
+        + '<div style="font-size:12px;color:#8b949e;line-height:1.5">Der Token liess sich nicht ablegen — das passiert im privaten Modus, '
+        + 'bei blockierten Website-Daten und in manchen App-Kontexten. In einem normalen Browser-Tab erneut versuchen '
+        + 'und Website-Daten fuer diese Seite erlauben.</div>';
+      host.appendChild(box);
+    }
+    _polyToast('❌ Token konnte nicht gespeichert werden');
+    return;
+  }
   const btn = document.getElementById('polySettingsBtn');
   if (btn) { btn.style.color = '#3fb950'; btn.style.borderColor = '#3fb95055'; }
+  _polyToast('✅ GitHub Token gespeichert');
+  // Kam die Maske aus einem laufenden Bet-Versuch? Dann zurueck zur Bestaetigung, statt den
+  // Nutzer den Play neu suchen zu lassen. EIN Klick fehlt dann noch — bewusst kein Auto-Versand:
+  // der letzte Druck auf „auslösen" ist bei echtem Geld eine eigene Entscheidung.
+  const modal = document.getElementById('polyModal');
+  let pending = null;
+  try { pending = modal && modal.dataset.pendingOrder ? JSON.parse(modal.dataset.pendingOrder) : null; } catch (e) { pending = null; }
+  if (pending) { _wmBetConfirm(pending); return; }
+  if (modal) modal.style.display = 'none';
 }
 
 // ── GitHub dispatch ─────────────────────────────────────
@@ -5034,10 +5088,14 @@ function _polyDatasetForLeague(league) {
 
 // Letzter Dispatch-Fehler (Status + GitHub-Meldung + Hinweis) fuer eine brauchbare Anzeige.
 let _polyDispatchError = null;
+let _polyDispatchNoPat = false;   // Abbruch mangels Token — keine Fehlerbox zeigen
 
 async function _callGitHubDispatch(orders) {
   const pat = _getGithubPAT();
   if (!pat) {
+    // Kein Token ist kein Fehlschlag der Anfrage — die rote „Dispatch fehlgeschlagen"-Box waere hier
+    // irrefuehrend. Die Einstellungen sind schon offen; der Aufrufer haelt still.
+    _polyDispatchNoPat = true;
     polyOpenSettings();
     return false;
   }

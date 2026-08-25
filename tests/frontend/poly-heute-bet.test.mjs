@@ -246,3 +246,77 @@ test('Netzfehler meldet UNKLAR statt falschem Erfolg', async () => {
   assert.doesNotMatch(html, /Action ausgelöst/, 'kein falsches Erfolgs-Signal');
 });
 
+
+// ── Token-Setup: die Schleife (25.08.2026, Lucas) ────────────────────────────────────────────
+// „Ruft immer die Maske auf, ich speichere, nichts passiert, Fenster kommt wieder."
+// Zwei Ursachen: Speichern war eine Sackgasse (Fenster zu, schwebende Order vergessen), und der
+// Erfolg wurde gemeldet, ohne zurueckzulesen — blockt der Browser localStorage, log die Oberflaeche.
+
+function bootPat({ storageBroken = false } = {}) {
+  const dom = new JSDOM('<!DOCTYPE html><body><div id="polyModal"><div id="polyModalBody"></div></div></body>',
+    { url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
+  const w = dom.window;
+  const sent = [];
+  w.fetch = (url, opt) => {
+    if (String(url).includes('/dispatches')) { sent.push(JSON.parse(opt.body)); return Promise.resolve({ ok: true, status: 204, json: () => Promise.resolve({}) }); }
+    return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+  };
+  w.localStorage.clear();
+  if (storageBroken) {
+    Object.defineProperty(w, 'localStorage', {
+      configurable: true,
+      get() { return { getItem: () => null, setItem() { throw new Error('blocked'); }, removeItem() {}, clear() {} }; },
+    });
+  }
+  w.eval(readFileSync(VERDICT, 'utf8'));
+  w.eval(readFileSync(POLY, 'utf8'));
+  return { w, sent };
+}
+
+test('Kein Token: Einstellungen oeffnen, aber KEINE Fehlerbox', async () => {
+  // Ein fehlender Token ist kein fehlgeschlagener Dispatch — die rote Box waere hier irrefuehrend.
+  const { w, sent } = bootPat();
+  w.document.getElementById('polyModal').dataset.pendingOrder = JSON.stringify(HEUTE_ORDER);
+  await w._wmBetDispatch();
+  assert.strictEqual(sent.length, 0, 'ohne Token wird nichts verschickt');
+  const html = w.document.getElementById('polyModalBody').innerHTML;
+  assert.match(html, /Personal Access Token/, 'die Maske steht da');
+  assert.doesNotMatch(html, /Dispatch fehlgeschlagen/);
+});
+
+test('Nach dem Speichern geht es zur Bestaetigung zurueck — nicht ins Leere', async () => {
+  const { w } = bootPat();
+  const modal = w.document.getElementById('polyModal');
+  modal.dataset.pendingOrder = JSON.stringify(HEUTE_ORDER);
+  await w._wmBetDispatch();                       // oeffnet die Maske
+  w.document.getElementById('polyPatInput').value = 'ghp_abc123';
+  w.polySavePAT();
+  const html = w.document.getElementById('polyModalBody').innerHTML;
+  assert.match(html, /Poly-Play bestätigen/, 'die Bestaetigung ist zurueck');
+  assert.match(html, /Bet via GitHub auslösen/, 'ein Klick fehlt noch — bewusst kein Auto-Versand');
+  assert.notStrictEqual(modal.style.display, 'none', 'Fenster bleibt offen');
+});
+
+test('Danach loest derselbe Play wirklich aus', async () => {
+  const { w, sent } = bootPat();
+  w.document.getElementById('polyModal').dataset.pendingOrder = JSON.stringify(HEUTE_ORDER);
+  await w._wmBetDispatch();
+  w.document.getElementById('polyPatInput').value = 'ghp_abc123';
+  w.polySavePAT();
+  await w._wmBetDispatch();
+  assert.strictEqual(sent.length, 1);
+  assert.strictEqual(sent[0].client_payload.orders[0].polyKey, HEUTE_ORDER.polyKey);
+});
+
+test('Blockierter Browser-Speicher meldet den Fehler, statt Erfolg zu behaupten', async () => {
+  const { w } = bootPat({ storageBroken: true });
+  w.polyOpenSettings();
+  assert.match(w.document.getElementById('polyModalBody').innerHTML, /Browser-Speicher blockiert/,
+    'der Zustand steht schon beim Oeffnen da');
+  w.document.getElementById('polyPatInput').value = 'ghp_abc123';
+  w.polySavePAT();
+  const html = w.document.getElementById('polyModalBody').innerHTML;
+  assert.match(html, /Dein Browser speichert nichts/);
+  assert.doesNotMatch(html, /Poly-Play bestätigen/, 'kein Weiterlaufen auf einer Luege');
+});
+

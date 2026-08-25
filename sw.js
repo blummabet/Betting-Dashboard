@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v185';   // 25.08.2026 (Lucas' Heute-Test): Poly-Felder (polyKey/side/tokenId) kommen jetzt beim Dispatch an; echter HTTP-Fehler statt „PAT pruefen".
+const VERSION = 'cocobet-v186';   // 25.08.2026 (Lucas): Token-Schleife raus — Speichern wird zurueckgelesen und fuehrt zur Bestaetigung zurueck.
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
