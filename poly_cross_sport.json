@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-25T21:44:30.979032+00:00",
+ "generatedAt": "2026-08-25T22:03:07.413438+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -31,7 +31,36 @@
  },
  "trackRecord": {
   "tracked": 212,
-  "converged": 49
+  "converged": 51
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|detroittigers-tampabayrays|tampabayrays",
+   "sport": "baseball_mlb",
+   "event": "Tampa Bay Rays vs Detroit Tigers",
+   "market": "Moneyline",
+   "outcome": "Tampa Bay Rays",
+   "polyPP": 54.5,
+   "pinnPP": 47.8,
+   "gapPP": 6.67,
+   "vol": 257075,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 14.89,
+   "firstSeen": "2026-08-24T23:09:06.317297+00:00"
+  },
+  {
+   "id": "baseball_mlb|detroittigers-tampabayrays|detroittigers",
+   "sport": "baseball_mlb",
+   "event": "Tampa Bay Rays vs Detroit Tigers",
+   "market": "Moneyline",
+   "outcome": "Detroit Tigers",
+   "polyPP": 45.5,
+   "pinnPP": 52.2,
+   "gapPP": -6.67,
+   "vol": 257075,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 14.89,
+   "firstSeen": "2026-08-24T23:09:06.317297+00:00"
+  }
+ ]
 }
