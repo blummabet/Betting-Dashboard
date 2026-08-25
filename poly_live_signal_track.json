@@ -1,13 +1,13 @@
 {
-"updatedAt": "2026-08-25T05:43:40.170429+00:00",
+"updatedAt": "2026-08-25T05:58:43.490049+00:00",
 "record": {
-"updatedAt": "2026-08-25T05:43:40.170429+00:00",
-"settled": 2911,
-"open": 89,
+"updatedAt": "2026-08-25T05:58:43.490049+00:00",
+"settled": 2922,
+"open": 78,
 "buckets": {
 "alle": {
-"n": 2911,
-"posRate": 0.439,
+"n": 2922,
+"posRate": 0.438,
 "avgClv": -0.09,
 "avgClv30": -0.27
 },
@@ -18,136 +18,58 @@
 "avgClv30": 1.44
 },
 "valueZone": {
-"n": 1438,
+"n": 1446,
 "posRate": 0.508,
 "avgClv": 0.28,
-"avgClv30": -0.74
+"avgClv30": -0.72
 },
 "mature": {
-"n": 1767,
+"n": 1777,
 "posRate": 0.423,
-"avgClv": 0.13,
-"avgClv30": -0.11
+"avgClv": 0.16,
+"avgClv30": -0.09
 },
 "notChasing": {
-"n": 1723,
-"posRate": 0.458,
-"avgClv": -0.29,
-"avgClv30": 0.02
+"n": 1727,
+"posRate": 0.457,
+"avgClv": -0.33,
+"avgClv30": 0.01
 },
 "chasing": {
-"n": 1188,
+"n": 1195,
 "posRate": 0.411,
-"avgClv": 0.2,
-"avgClv30": -0.69
+"avgClv": 0.26,
+"avgClv30": -0.67
 },
 "bySize": {
+"5-10k": {
+"n": 687,
+"posRate": 0.41,
+"avgClv": -2.05,
+"avgClv30": -0.1
+},
 "2-5k": {
-"n": 1383,
+"n": 1386,
 "posRate": 0.458,
-"avgClv": 0.65,
+"avgClv": 0.68,
 "avgClv30": -0.26
 },
-"5-10k": {
-"n": 683,
-"posRate": 0.41,
-"avgClv": -2.07,
-"avgClv30": -0.22
-},
 "10-25k": {
-"n": 502,
-"posRate": 0.422,
-"avgClv": 0.91,
-"avgClv30": 0.63
+"n": 505,
+"posRate": 0.42,
+"avgClv": 0.8,
+"avgClv30": 0.52
 },
 "25k+": {
-"n": 343,
-"posRate": 0.443,
-"avgClv": -0.61,
+"n": 344,
+"posRate": 0.442,
+"avgClv": -0.6,
 "avgClv30": -1.76
 }
 }
 }
 },
 "ledger": [
-{
-"sig": "bra-int-cam-2026-08-22|0xbc5613462ce3902eea10874a11cf74191f4a8f28",
-"key": "bra-int-cam-2026-08-22",
-"side": "SC Internacional",
-"wallet": "0xbc5613462ce3902eea10874a11cf74191f4a8f28",
-"usd": 2055,
-"league": "BRAZIL-SERIE-A",
-"entryPrice": 0.545,
-"totalUsd": 360548,
-"movePP": null,
-"flags": {
-"valueZone": true,
-"mature": true,
-"notChasing": true,
-"sharp": false,
-"sizeBand": "2-5k"
-},
-"firstTs": "2026-08-22T21:34:00.357921+00:00",
-"status": "settled",
-"latestPrice": 0.0005,
-"clvPP": -54.5,
-"clv30": -10.0,
-"updatedAt": "2026-08-22T23:47:45.198874+00:00",
-"finalClvPP": -54.5,
-"settledAt": "2026-08-22T23:47:45.198874+00:00"
-},
-{
-"sig": "wta-liang-kraus-2026-08-22|0x204f72f35326db932158cba6adff0b9a1da95e14",
-"key": "wta-liang-kraus-2026-08-22",
-"side": "Sinja Kraus",
-"wallet": "0x204f72f35326db932158cba6adff0b9a1da95e14",
-"usd": 3424,
-"league": "TENNIS",
-"entryPrice": 0.705,
-"totalUsd": 27091,
-"movePP": -4.0,
-"flags": {
-"valueZone": true,
-"mature": false,
-"notChasing": true,
-"sharp": false,
-"sizeBand": "2-5k"
-},
-"firstTs": "2026-08-22T21:49:01.012319+00:00",
-"status": "settled",
-"latestPrice": 0.0005,
-"clvPP": -70.5,
-"clv30": -35.0,
-"updatedAt": "2026-08-22T23:47:45.198874+00:00",
-"finalClvPP": -70.5,
-"settledAt": "2026-08-22T23:47:45.198874+00:00"
-},
-{
-"sig": "wta-liang-kraus-2026-08-22|0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
-"key": "wta-liang-kraus-2026-08-22",
-"side": "En-Shuo Liang",
-"wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
-"usd": 3114,
-"league": "TENNIS",
-"entryPrice": 0.295,
-"totalUsd": 27091,
-"movePP": 4.0,
-"flags": {
-"valueZone": true,
-"mature": false,
-"notChasing": true,
-"sharp": false,
-"sizeBand": "2-5k"
-},
-"firstTs": "2026-08-22T21:49:01.012319+00:00",
-"status": "settled",
-"latestPrice": 0.9995,
-"clvPP": 70.5,
-"clv30": 35.0,
-"updatedAt": "2026-08-22T23:47:45.198874+00:00",
-"finalClvPP": 70.5,
-"settledAt": "2026-08-22T23:47:45.198874+00:00"
-},
 {
 "sig": "wta-liang-kraus-2026-08-22|0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
 "key": "wta-liang-kraus-2026-08-22",
@@ -76090,7 +76012,7 @@
 "latestPrice": 0.045,
 "clvPP": -62.0,
 "clv30": -16.5,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "mlb-bos-mia-2026-08-24|0xdb859a551fcf56e49416160911476bea7307152f",
@@ -76114,7 +76036,7 @@
 "latestPrice": 0.655,
 "clvPP": 13.0,
 "clv30": -14.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "mlb-bos-mia-2026-08-24|0x408fe71e6b5401ecd6733970cb6f1a25e984b2f4",
@@ -76138,7 +76060,7 @@
 "latestPrice": 0.345,
 "clvPP": -13.0,
 "clv30": 14.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "mlb-bos-mia-2026-08-24|0xdc41c39b95453c943174f369926018f6963bdd7e",
@@ -76162,7 +76084,7 @@
 "latestPrice": 0.345,
 "clvPP": -13.0,
 "clv30": 14.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "mlb-bos-mia-2026-08-24|0xa08455c829a493054315e40e7817321e8c77bb99",
@@ -76186,7 +76108,7 @@
 "latestPrice": 0.345,
 "clvPP": -13.0,
 "clv30": 14.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "mlb-tb-det-2026-08-24|0x1b355d8a196f012d983da4b09fddde431e00b4b6",
@@ -76210,7 +76132,7 @@
 "latestPrice": 0.925,
 "clvPP": 16.0,
 "clv30": 1.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "mlb-tb-det-2026-08-24|0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -76234,7 +76156,7 @@
 "latestPrice": 0.925,
 "clvPP": 16.0,
 "clv30": 1.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "mlb-tb-det-2026-08-24|0x58776759ee5c70a915138706a1308add8bc5d894",
@@ -76258,7 +76180,7 @@
 "latestPrice": 0.075,
 "clvPP": -16.0,
 "clv30": -1.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "mlb-tb-det-2026-08-24|0x684baa57c338c2549aec0aa3f034f695d72a8409",
@@ -76282,7 +76204,7 @@
 "latestPrice": 0.075,
 "clvPP": -16.0,
 "clv30": -1.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "atp-brooksb-tsitsip-2026-08-24|0xdb859a551fcf56e49416160911476bea7307152f",
@@ -76306,7 +76228,7 @@
 "latestPrice": 0.925,
 "clvPP": 58.0,
 "clv30": 45.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "atp-brooksb-tsitsip-2026-08-24|0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
@@ -76330,7 +76252,7 @@
 "latestPrice": 0.075,
 "clvPP": -58.0,
 "clv30": -45.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "atp-brooksb-tsitsip-2026-08-24|0x42c99f38d2b951b0dc8e8bd5371fa80c9dd19623",
@@ -76354,7 +76276,7 @@
 "latestPrice": 0.075,
 "clvPP": -58.0,
 "clv30": -45.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "atp-brooksb-tsitsip-2026-08-24|0x56acab44cfca2e88bb9b3406890aea7bfa0cd77e",
@@ -76378,7 +76300,7 @@
 "latestPrice": 0.075,
 "clvPP": -58.0,
 "clv30": -45.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-parks-marcink-2026-08-24|0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
@@ -76402,7 +76324,7 @@
 "latestPrice": 0.285,
 "clvPP": -57.0,
 "clv30": 7.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-parks-marcink-2026-08-24|0x9c3ce009c9b039956665cecc4cd14de862b5e8c9",
@@ -76426,7 +76348,7 @@
 "latestPrice": 0.285,
 "clvPP": -57.0,
 "clv30": 7.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-parks-marcink-2026-08-24|0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
@@ -76450,7 +76372,7 @@
 "latestPrice": 0.285,
 "clvPP": -57.0,
 "clv30": 7.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-parks-marcink-2026-08-24|0xcf7379b4b891c06d88807f6f70efa75378120215",
@@ -76474,7 +76396,7 @@
 "latestPrice": 0.285,
 "clvPP": -57.0,
 "clv30": 7.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-tjen-yastrem-2026-08-24|0xdbdd45150249e229eb4ca8aa48a30dca21faa5de",
@@ -76498,7 +76420,7 @@
 "latestPrice": 0.045,
 "clvPP": -62.0,
 "clv30": -38.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-tjen-yastrem-2026-08-24|0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -76522,7 +76444,7 @@
 "latestPrice": 0.955,
 "clvPP": 62.0,
 "clv30": 38.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-tjen-yastrem-2026-08-24|0xdd8e67a862bd81067891ad41e86e9673229ef023",
@@ -76546,7 +76468,7 @@
 "latestPrice": 0.045,
 "clvPP": -62.0,
 "clv30": -38.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "atp-brooksb-tsitsip-2026-08-24|0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -76570,7 +76492,7 @@
 "latestPrice": 0.925,
 "clvPP": 38.5,
 "clv30": 21.5,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-tjen-yastrem-2026-08-24|0x74abf3b2ed2c5af0959a112f849c8f80b94aee2b",
@@ -76594,7 +76516,7 @@
 "latestPrice": 0.045,
 "clvPP": -69.0,
 "clv30": -33.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-tjen-yastrem-2026-08-24|0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
@@ -76618,7 +76540,7 @@
 "latestPrice": 0.045,
 "clvPP": -69.0,
 "clv30": -33.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "mlb-col-wsh-2026-08-24|0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -76642,7 +76564,7 @@
 "latestPrice": 0.915,
 "clvPP": 27.0,
 "clv30": -17.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "mlb-col-wsh-2026-08-24|0xeafc018ccbca46db203ba57c3e798ce0e84fe4c4",
@@ -76666,7 +76588,7 @@
 "latestPrice": 0.915,
 "clvPP": 27.0,
 "clv30": -17.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "mlb-col-wsh-2026-08-24|0x4f29e103339919c4baaea2a60195cf1c8bb27a7e",
@@ -76690,7 +76612,7 @@
 "latestPrice": 0.915,
 "clvPP": 27.0,
 "clv30": -17.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "atp-brooksb-tsitsip-2026-08-24|0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
@@ -76714,7 +76636,7 @@
 "latestPrice": 0.925,
 "clvPP": 14.0,
 "clv30": -6.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-parks-marcink-2026-08-24|0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -76738,7 +76660,7 @@
 "latestPrice": 0.285,
 "clvPP": -65.0,
 "clv30": -43.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-tjen-yastrem-2026-08-24|0x5268527977f700f9bf9b6d5cd843859e4e70135d",
@@ -76762,7 +76684,7 @@
 "latestPrice": 0.955,
 "clvPP": 45.5,
 "clv30": -29.5,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "mlb-tb-det-2026-08-24|0x4f29e103339919c4baaea2a60195cf1c8bb27a7e",
@@ -76786,7 +76708,7 @@
 "latestPrice": 0.925,
 "clvPP": 15.0,
 "clv30": 11.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "atp-balshaw-kovacev-2026-08-24|0xd27cc742d023d06ef633a4c880cf1ff1836ec081",
@@ -76810,7 +76732,7 @@
 "latestPrice": 0.775,
 "clvPP": 10.0,
 "clv30": 14.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "atp-balshaw-kovacev-2026-08-24|0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
@@ -76834,7 +76756,7 @@
 "latestPrice": 0.225,
 "clvPP": -10.0,
 "clv30": -14.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "atp-balshaw-kovacev-2026-08-24|0x33c96d86e23e971777e9a0b59f4e21cc9e546f9a",
@@ -76858,7 +76780,7 @@
 "latestPrice": 0.775,
 "clvPP": 10.0,
 "clv30": 14.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-tjen-yastrem-2026-08-24|0x204f72f35326db932158cba6adff0b9a1da95e14",
@@ -76882,7 +76804,7 @@
 "latestPrice": 0.955,
 "clvPP": 24.0,
 "clv30": -51.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-tjen-yastrem-2026-08-24|0x42c99f38d2b951b0dc8e8bd5371fa80c9dd19623",
@@ -76906,7 +76828,7 @@
 "latestPrice": 0.955,
 "clvPP": 24.0,
 "clv30": -51.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "mlb-tb-det-2026-08-24|0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
@@ -76930,7 +76852,7 @@
 "latestPrice": 0.925,
 "clvPP": 8.0,
 "clv30": 4.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "mlb-tb-det-2026-08-24|0xaa7789219c17e180dcb5933099c90d885f1d15a5",
@@ -76954,7 +76876,7 @@
 "latestPrice": 0.925,
 "clvPP": 8.0,
 "clv30": 4.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "mlb-col-wsh-2026-08-24|0x58776759ee5c70a915138706a1308add8bc5d894",
@@ -76978,7 +76900,7 @@
 "latestPrice": 0.085,
 "clvPP": -49.0,
 "clv30": 3.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-tjen-yastrem-2026-08-24|0xc23dc0eca9e1c2e293de8911b9ac254f0bcd82c8",
@@ -77002,7 +76924,7 @@
 "latestPrice": 0.955,
 "clvPP": 36.0,
 "clv30": 36.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "mlb-tb-det-2026-08-24|0x8bfee7aeca33003fe9d7398d5143dc7866542d74",
@@ -77026,7 +76948,7 @@
 "latestPrice": 0.925,
 "clvPP": 13.0,
 "clv30": 13.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-parks-marcink-2026-08-24|0xe1dd4ef6bf7c060e7a7fd682a48f5f62d9b9fb67",
@@ -77050,7 +76972,7 @@
 "latestPrice": 0.715,
 "clvPP": 22.0,
 "clv30": 22.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-parks-marcink-2026-08-24|0x38337de21ff0bb0a11a40761507d51e318d633d1",
@@ -77074,7 +76996,7 @@
 "latestPrice": 0.715,
 "clvPP": 22.0,
 "clv30": 22.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-sawangk-stephen-2026-08-24|0xe98c6194374418b1d1b27321f025bd64ac2c8792",
@@ -77098,7 +77020,7 @@
 "latestPrice": 0.945,
 "clvPP": 33.0,
 "clv30": 33.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-tjen-yastrem-2026-08-24|0x1e386b0e0f1fc58c67ce738d7bbc4ba7ec74fd47",
@@ -77122,7 +77044,7 @@
 "latestPrice": 0.045,
 "clvPP": -75.0,
 "clv30": -75.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "mlb-col-wsh-2026-08-24|0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
@@ -77146,7 +77068,7 @@
 "latestPrice": 0.085,
 "clvPP": -52.0,
 "clv30": -52.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "atp-brooksb-tsitsip-2026-08-24|0x8bfee7aeca33003fe9d7398d5143dc7866542d74",
@@ -77170,7 +77092,7 @@
 "latestPrice": 0.925,
 "clvPP": 18.5,
 "clv30": 18.5,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-parks-marcink-2026-08-24|0xdc41c39b95453c943174f369926018f6963bdd7e",
@@ -77194,7 +77116,7 @@
 "latestPrice": 0.715,
 "clvPP": -4.0,
 "clv30": -4.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-parks-marcink-2026-08-24|0x5268527977f700f9bf9b6d5cd843859e4e70135d",
@@ -77218,7 +77140,7 @@
 "latestPrice": 0.715,
 "clvPP": -4.0,
 "clv30": -4.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "val-ushi-ars-2026-08-24|0x3c2b0236a49e16eea4b1bf026d945da0320d825e",
@@ -77242,7 +77164,7 @@
 "latestPrice": 0.8485,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "val-ushi-ars-2026-08-24|0x67bb64fac5252df3f61ee2d91a4b1350e40eb6ef",
@@ -77266,7 +77188,7 @@
 "latestPrice": 0.8485,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-tjen-yastrem-2026-08-24|0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
@@ -77290,7 +77212,7 @@
 "latestPrice": 0.955,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "mlb-bos-mia-2026-08-24|0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -77314,7 +77236,7 @@
 "latestPrice": 0.655,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "mlb-col-wsh-2026-08-24|0x447d7eb8ecb8930e7b5f353b4298e2562d905eea",
@@ -77338,7 +77260,7 @@
 "latestPrice": 0.915,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "atp-brooksb-tsitsip-2026-08-24|0x1e386b0e0f1fc58c67ce738d7bbc4ba7ec74fd47",
@@ -77362,7 +77284,7 @@
 "latestPrice": 0.925,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-parks-marcink-2026-08-24|0x204f72f35326db932158cba6adff0b9a1da95e14",
@@ -77386,7 +77308,7 @@
 "latestPrice": 0.715,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-sawangk-stephen-2026-08-24|0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
@@ -77410,7 +77332,7 @@
 "latestPrice": 0.945,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "atp-jones-svajd-2026-08-24|0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -77434,7 +77356,7 @@
 "latestPrice": 0.695,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "mlb-pit-sd-2026-08-24|0x3dfb153c197d4c19d3b31c1ecd2c7b6860eeabaf",
@@ -77458,7 +77380,7 @@
 "latestPrice": 0.735,
 "clvPP": 29.0,
 "clv30": 2.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "mlb-pit-sd-2026-08-24|0x684baa57c338c2549aec0aa3f034f695d72a8409",
@@ -77482,7 +77404,7 @@
 "latestPrice": 0.265,
 "clvPP": -29.0,
 "clv30": -2.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "mlb-pit-sd-2026-08-24|0xe4a785280932b1de883176e17284a4ad19194a1d",
@@ -77506,7 +77428,7 @@
 "latestPrice": 0.265,
 "clvPP": -29.0,
 "clv30": -2.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "mlb-pit-sd-2026-08-24|0xd38ad20037839959d89165cf448568d584b28d26",
@@ -77530,7 +77452,7 @@
 "latestPrice": 0.735,
 "clvPP": 29.0,
 "clv30": 2.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "mlb-pit-sd-2026-08-24|0xdb859a551fcf56e49416160911476bea7307152f",
@@ -77554,7 +77476,7 @@
 "latestPrice": 0.265,
 "clvPP": -30.0,
 "clv30": 1.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "itf-kaiiwan-tanuma-2026-08-25|0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
@@ -77578,7 +77500,7 @@
 "latestPrice": 0.225,
 "clvPP": -64.0,
 "clv30": -30.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "mlb-pit-sd-2026-08-24|0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
@@ -77602,7 +77524,7 @@
 "latestPrice": 0.735,
 "clvPP": 5.0,
 "clv30": -4.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-parry-vekic-2026-08-24|0x9b11866433281ade9f2811dbde8acdefc45f5375",
@@ -77622,11 +77544,13 @@
 "sizeBand": "2-5k"
 },
 "firstTs": "2026-08-25T03:41:06.647703+00:00",
-"status": "open",
-"latestPrice": 0.235,
-"clvPP": -31.0,
+"status": "settled",
+"latestPrice": 0.0005,
+"clvPP": -54.5,
 "clv30": -9.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00",
+"finalClvPP": -54.5,
+"settledAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-parry-vekic-2026-08-24|0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -77646,11 +77570,13 @@
 "sizeBand": "2-5k"
 },
 "firstTs": "2026-08-25T03:41:06.647703+00:00",
-"status": "open",
-"latestPrice": 0.235,
-"clvPP": -31.0,
+"status": "settled",
+"latestPrice": 0.0005,
+"clvPP": -54.5,
 "clv30": -9.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00",
+"finalClvPP": -54.5,
+"settledAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-parry-vekic-2026-08-24|0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
@@ -77670,11 +77596,13 @@
 "sizeBand": "2-5k"
 },
 "firstTs": "2026-08-25T03:41:06.647703+00:00",
-"status": "open",
-"latestPrice": 0.765,
-"clvPP": 31.0,
+"status": "settled",
+"latestPrice": 0.9995,
+"clvPP": 54.4,
 "clv30": 9.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00",
+"finalClvPP": 54.4,
+"settledAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-parry-vekic-2026-08-24|0x0353aaf82abbd3e69c00059df0a825bc198fc2ff",
@@ -77694,11 +77622,13 @@
 "sizeBand": "5-10k"
 },
 "firstTs": "2026-08-25T03:55:36.455780+00:00",
-"status": "open",
-"latestPrice": 0.765,
-"clvPP": 20.0,
+"status": "settled",
+"latestPrice": 0.9995,
+"clvPP": 43.5,
 "clv30": 0.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00",
+"finalClvPP": 43.5,
+"settledAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-parry-vekic-2026-08-24|0xf3a1493cf87d23177107b5b3f737f0c586f1bf4b",
@@ -77718,11 +77648,13 @@
 "sizeBand": "5-10k"
 },
 "firstTs": "2026-08-25T03:55:36.455780+00:00",
-"status": "open",
-"latestPrice": 0.235,
-"clvPP": -20.0,
+"status": "settled",
+"latestPrice": 0.0005,
+"clvPP": -43.5,
 "clv30": 0.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00",
+"finalClvPP": -43.5,
+"settledAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-parry-vekic-2026-08-24|0xe6a9d2301ed7e1222002d04e9463c5f521d9e35a",
@@ -77742,11 +77674,13 @@
 "sizeBand": "2-5k"
 },
 "firstTs": "2026-08-25T03:55:36.455780+00:00",
-"status": "open",
-"latestPrice": 0.765,
-"clvPP": 20.0,
+"status": "settled",
+"latestPrice": 0.9995,
+"clvPP": 43.5,
 "clv30": 0.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00",
+"finalClvPP": 43.5,
+"settledAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "mlb-pit-sd-2026-08-24|0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
@@ -77770,7 +77704,7 @@
 "latestPrice": 0.735,
 "clvPP": 0.0,
 "clv30": 0.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-parry-vekic-2026-08-24|0xaa7789219c17e180dcb5933099c90d885f1d15a5",
@@ -77790,11 +77724,13 @@
 "sizeBand": "5-10k"
 },
 "firstTs": "2026-08-25T04:14:12.172424+00:00",
-"status": "open",
-"latestPrice": 0.235,
-"clvPP": -22.0,
+"status": "settled",
+"latestPrice": 0.0005,
+"clvPP": -45.5,
 "clv30": 28.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00",
+"finalClvPP": -45.5,
+"settledAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-parry-vekic-2026-08-24|0xd38ad20037839959d89165cf448568d584b28d26",
@@ -77814,11 +77750,13 @@
 "sizeBand": "2-5k"
 },
 "firstTs": "2026-08-25T04:44:02.711214+00:00",
-"status": "open",
-"latestPrice": 0.765,
-"clvPP": 44.5,
+"status": "settled",
+"latestPrice": 0.9995,
+"clvPP": 68.0,
 "clv30": 16.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00",
+"finalClvPP": 68.0,
+"settledAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-parry-vekic-2026-08-24|0x42c99f38d2b951b0dc8e8bd5371fa80c9dd19623",
@@ -77838,11 +77776,13 @@
 "sizeBand": "2-5k"
 },
 "firstTs": "2026-08-25T04:51:31.424713+00:00",
-"status": "open",
-"latestPrice": 0.235,
-"clvPP": -50.0,
+"status": "settled",
+"latestPrice": 0.0005,
+"clvPP": -73.5,
 "clv30": -28.0,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"updatedAt": "2026-08-25T05:58:43.490049+00:00",
+"finalClvPP": -73.5,
+"settledAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-parry-vekic-2026-08-24|0x6d20c35f65d9899b6d6b74f8466e824580f9a165",
@@ -77862,11 +77802,13 @@
 "sizeBand": "10-25k"
 },
 "firstTs": "2026-08-25T05:21:31.238811+00:00",
-"status": "open",
-"latestPrice": 0.235,
-"clvPP": -28.5,
-"clv30": null,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"status": "settled",
+"latestPrice": 0.0005,
+"clvPP": -52.0,
+"clv30": -52.0,
+"updatedAt": "2026-08-25T05:58:43.490049+00:00",
+"finalClvPP": -52.0,
+"settledAt": "2026-08-25T05:58:43.490049+00:00"
 },
 {
 "sig": "wta-parry-vekic-2026-08-24|0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
@@ -77886,11 +77828,91 @@
 "sizeBand": "5-10k"
 },
 "firstTs": "2026-08-25T05:21:31.238811+00:00",
-"status": "open",
-"latestPrice": 0.765,
-"clvPP": 28.5,
-"clv30": null,
-"updatedAt": "2026-08-25T05:43:40.170429+00:00"
+"status": "settled",
+"latestPrice": 0.9995,
+"clvPP": 52.0,
+"clv30": 52.0,
+"updatedAt": "2026-08-25T05:58:43.490049+00:00",
+"finalClvPP": 52.0,
+"settledAt": "2026-08-25T05:58:43.490049+00:00"
+},
+{
+"sig": "wta-parry-vekic-2026-08-24|0x9909dfa7a317343039193b349909e2094b59311c",
+"key": "wta-parry-vekic-2026-08-24",
+"side": "Diane Parry",
+"wallet": "0x9909dfa7a317343039193b349909e2094b59311c",
+"usd": 26534,
+"league": "TENNIS",
+"entryPrice": 0.9995,
+"totalUsd": 490562,
+"movePP": 45.5,
+"flags": {
+"valueZone": false,
+"mature": true,
+"notChasing": false,
+"sharp": false,
+"sizeBand": "25k+"
+},
+"firstTs": "2026-08-25T05:58:43.490049+00:00",
+"status": "settled",
+"latestPrice": 0.9995,
+"clvPP": 0.0,
+"clv30": 0.0,
+"updatedAt": "2026-08-25T05:58:43.490049+00:00",
+"finalClvPP": 0.0,
+"settledAt": "2026-08-25T05:58:43.490049+00:00"
+},
+{
+"sig": "wta-parry-vekic-2026-08-24|0x30ae3992180b30b791df5e6e5480629449594318",
+"key": "wta-parry-vekic-2026-08-24",
+"side": "Diane Parry",
+"wallet": "0x30ae3992180b30b791df5e6e5480629449594318",
+"usd": 11523,
+"league": "TENNIS",
+"entryPrice": 0.9995,
+"totalUsd": 490562,
+"movePP": 45.5,
+"flags": {
+"valueZone": false,
+"mature": true,
+"notChasing": false,
+"sharp": false,
+"sizeBand": "10-25k"
+},
+"firstTs": "2026-08-25T05:58:43.490049+00:00",
+"status": "settled",
+"latestPrice": 0.9995,
+"clvPP": 0.0,
+"clv30": 0.0,
+"updatedAt": "2026-08-25T05:58:43.490049+00:00",
+"finalClvPP": 0.0,
+"settledAt": "2026-08-25T05:58:43.490049+00:00"
+},
+{
+"sig": "wta-parry-vekic-2026-08-24|0x204f72f35326db932158cba6adff0b9a1da95e14",
+"key": "wta-parry-vekic-2026-08-24",
+"side": "Diane Parry",
+"wallet": "0x204f72f35326db932158cba6adff0b9a1da95e14",
+"usd": 10971,
+"league": "TENNIS",
+"entryPrice": 0.9995,
+"totalUsd": 490562,
+"movePP": 45.5,
+"flags": {
+"valueZone": false,
+"mature": true,
+"notChasing": false,
+"sharp": false,
+"sizeBand": "10-25k"
+},
+"firstTs": "2026-08-25T05:58:43.490049+00:00",
+"status": "settled",
+"latestPrice": 0.9995,
+"clvPP": 0.0,
+"clv30": 0.0,
+"updatedAt": "2026-08-25T05:58:43.490049+00:00",
+"finalClvPP": 0.0,
+"settledAt": "2026-08-25T05:58:43.490049+00:00"
 }
 ]
 }
