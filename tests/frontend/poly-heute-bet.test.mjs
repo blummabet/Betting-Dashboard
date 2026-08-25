@@ -392,3 +392,15 @@ test('Badge auf der Karte folgt dem echten Zustand', () => {
   assert.doesNotMatch(html, /🟣 Platziert/);
 });
 
+test('Sammel-Versand zeigt den HTTP-Grund, nicht nur einen Toast', async () => {
+  // 25.08.2026: Im Sammel-Weg stand nur „Versand fehlgeschlagen" plus ein Kommentar im Code, die
+  // Details stuenden im Dialog — sie standen dort nie. Lucas hatte keinen Anhaltspunkt.
+  const { w } = bootBets({ dispatchOk: false });
+  await w.polyDispatch();
+  const html = w.document.getElementById('polyModalBody').innerHTML;
+  assert.match(html, /HTTP 404/);
+  assert.match(html, /repo/, 'nennt den fehlenden Scope');
+  assert.match(html, /Nichts gesetzt/, 'sagt, dass keine Wette steht');
+  assert.strictEqual(w._polyDispatchError.status, 404, 'auch in der Konsole abfragbar');
+});
+
