@@ -833,3 +833,28 @@ class TestTokensImFeed:
         # Nichts erfinden: fehlt der Token, fehlt das Feld (statt None-Muell im 1-MB-Feed).
         out = B.capture([self._m(None)], {}, now=self.NOW, min_vol=7500)
         assert "tokens" not in out["k"]
+
+
+# ── Upcoming-Fenster (25.08.2026, Lucas) ─────────────────────────────────────
+# Lucas schickte den Poly-Link auf Barcelona–Athletic, nachdem ich behauptet hatte, Poly fuehre das
+# Spiel nicht. Poly fuehrte es sehr wohl — mit $21,7K, 55h vor Anpfiff. Nur unser Fenster war 48h.
+# Das Weiten kostet nichts (die Events sind im Sweep ohnehin geholt), aber es muss festgehalten
+# werden: ein Spiel zwei Tage vor Anpfiff gehoert in die Erfassung.
+def test_upcoming_fenster_deckt_mehrere_tage():
+    assert B.UPCOMING_WINDOW_H >= 96, "ein Spieltag-Vorlauf von unter 4 Tagen laesst Event-Pages leer"
+
+
+def test_upcoming_haelt_ein_spiel_zwei_tage_vor_anpfiff():
+    now = datetime(2026, 8, 25, 12, 0, tzinfo=timezone.utc)
+    fresh = {"lal-bar-bil-2026-08-27": {"league": "LA-LIGA", "hoursToKickoff": 55.0,
+                                        "totalUsd": 21683, "prices": {"FC Barcelona": 0.725}}}
+    out = B.prune_upcoming({}, fresh, now=now)
+    assert "lal-bar-bil-2026-08-27" in out
+
+
+def test_upcoming_prunt_angepfiffene_spiele():
+    now = datetime(2026, 8, 25, 12, 0, tzinfo=timezone.utc)
+    prev = {"alt": {"league": "LA-LIGA", "hoursToKickoff": 1.0, "totalUsd": 9000, "prices": {"X": 0.5},
+                    "capturedAt": (now - timedelta(hours=3)).isoformat()}}
+    assert B.prune_upcoming(prev, {}, now=now) == {}
+
