@@ -866,6 +866,31 @@ def save_history(data: list) -> None:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
 
+MATCH_DATE_TOLERANCE_D = 2   # Wetten fallen nahe an den Anpfiff — alles Weitere ist ein anderes Spiel
+
+
+def _fixture_matches(fixture: dict, home: str, away: str, now=None) -> bool:
+    """Gehoert die Wette wirklich zu dieser Zeile? REIN/testbar.
+
+    25.08.2026 (Lucas' erste echte Wetten): vorher reichte EIN passender Name und das Datum wurde
+    ignoriert — eine Wette von heute landete an einem Spiel vom 14.05. Beides muss stimmen, sonst
+    rechnet die Aufloesung sie spaeter gegen das falsche Ergebnis ab.
+    """
+    if not isinstance(fixture, dict) or not home or not away:
+        return False
+    if fixture.get("home") != home or fixture.get("away") != away:
+        return False
+    iso = str(fixture.get("dateIso") or "")[:10]
+    if not iso:
+        return True                     # kein Datum in der Zeile -> Namen muessen genuegen
+    try:
+        d = datetime.strptime(iso, "%Y-%m-%d").date()
+    except ValueError:
+        return True
+    heute = (now or datetime.now(timezone.utc)).date()
+    return abs((d - heute).days) <= MATCH_DATE_TOLERANCE_D
+
+
 def log_bet_to_history(history: list, order: dict, result: dict) -> None:
     """
     Add a polymarket bet log entry to the relevant fixture in picks_history.json.
@@ -877,7 +902,7 @@ def log_bet_to_history(history: list, order: dict, result: dict) -> None:
     today   = datetime.now(timezone.utc).strftime("%d.%m.%Y")
 
     for fixture in history:
-        if fixture.get("home") == home or fixture.get("away") == away:
+        if _fixture_matches(fixture, home, away):
             if not fixture.get("polyBets"):
                 fixture["polyBets"] = []
             fixture["polyBets"].append({
