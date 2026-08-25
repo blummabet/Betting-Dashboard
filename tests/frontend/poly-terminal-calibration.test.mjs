@@ -35,20 +35,33 @@ function synth() {
   return { settled, agg: { all: { n: settled.length, roi: 0 } } };
 }
 
-// Struktur-Check auf ECHTEN Daten. BEWUSST ohne feste ROI-Schwelle: die Datei wächst mit jedem
-// Scan, jede absolute Zahl wäre wieder eine Zeitbombe. Geprüft wird die AUSSAGE der Kalibrierung
-// — money+sharp schlägt sharp-allein — und dass die Stichprobe überhaupt trägt.
-test('_pwComboFor auf echten Daten: money+sharp schlaegt sharp-allein', () => {
+// 25.08.2026: Auch die AUSSAGE gehört nicht in einen Test gegen Live-Daten. Am 24.08. wurden hier
+// die Schwellen auf einen synthetischen Track verlegt und die Ordnung „money+sharp schlägt
+// sharp-allein" auf echten Daten stehen gelassen — genau die kippte einen Tag später von selbst
+// (sharp −1,04 % vs money+sharp −1,26 % bei n=138/190; beide praktisch flach, der Abstand ist
+// Rauschen). Eine Ordnung, die aus Bot-Daten kommt, ist ein BEFUND, kein Invariant: ändert er sich,
+// ist das eine Nachricht an Lucas, kein roter Build. Auf echten Daten wird deshalb nur noch die
+// VERDRAHTUNG geprüft; die inhaltliche Aussage steht am synthetischen Track ([[feedback_tests_no_live_data_thresholds]]).
+test('_pwComboFor auf echten Daten: verdrahtet und plausibel — ohne Aussage ueber die Reihenfolge', () => {
   const w = load(REAL);
+  for (const combo of [['sharp'], ['money','sharp']]) {
+    const r = w._pwComboFor(combo);
+    assert.ok(r, combo.join('+') + ' liefert kein Ergebnis');
+    assert.ok(r.n >= 50, combo.join('+') + '-Combo zu duenn (n=' + r.n + ')');
+    assert.ok(typeof r.roi === 'number' && Number.isFinite(r.roi), 'ROI ist eine endliche Zahl');
+    assert.ok(r.roi > -1 && r.roi < 5, 'ROI in einem physikalisch moeglichen Band');
+  }
+  // Darf nicht werfen, egal wo die Zahlen gerade stehen.
+  assert.ok(typeof w._pwTermMuted({ conv:6, signals:['sharp'] }).m === 'boolean');
+});
+
+test('_pwComboFor: money+sharp schlaegt sharp-allein — am synthetischen Track', () => {
+  // Die Aussage, auf der die Kalibrierung ruht. Hier steht sie auf Daten, die sich nicht bewegen.
+  const w = load(synth());
   const sharp = w._pwComboFor(['sharp']);
   const ms    = w._pwComboFor(['money','sharp']);
-  assert.ok(sharp && sharp.n >= 50, 'sharp-Combo zu duenn');
-  assert.ok(ms && ms.n >= 50, 'money+sharp-Combo zu duenn');
-  assert.ok(typeof sharp.roi === 'number' && typeof ms.roi === 'number', 'ROIs sind Zahlen');
   assert.ok(ms.roi > sharp.roi,
-    `money+sharp muss besser als sharp-allein sein (sharp ${(sharp.roi*100).toFixed(1)}%, ms ${(ms.roi*100).toFixed(1)}%)`);
-  // Verdrahtung gegen echte Daten: darf nicht werfen, egal wo die Zahlen gerade stehen.
-  assert.ok(typeof w._pwTermMuted({ conv:6, signals:['sharp'] }).m === 'boolean');
+    `money+sharp muss besser sein (sharp ${(sharp.roi*100).toFixed(1)}%, ms ${(ms.roi*100).toFixed(1)}%)`);
 });
 
 test('_pwTermMuted mutet historisch -EV Mix (sharp-allein), nicht money+sharp', () => {

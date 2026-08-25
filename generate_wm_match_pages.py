@@ -434,6 +434,86 @@ def _bf_event_key(a, b):
     except Exception:
         return "-".join(sorted([(a or "").strip().lower(), (b or "").strip().lower()]))
 
+# Woerter, die zu viele Vereine teilen — als Bruecke wertlos und gefaehrlich.
+# Woerter, die zu viele Vereine teilen — als Bruecke wertlos. Vor allem STADT-Namen sind
+# gefaehrlich: „Manchester United" und „Manchester City" wuerden sonst als dasselbe Team gelten,
+# und der Paar-Test rettet das nicht, wenn beide am selben Tag gegen dieselbe Mannschaft spielen.
+_BF_STOPWORDS = {"united", "sporting", "national", "internacional", "juniors", "wanderers",
+                 "rangers", "rovers", "albion", "county", "manchester", "london", "madrid",
+                 "milano", "milan", "roma", "torino", "sevilla", "bristol", "sheffield",
+                 "nottingham", "newcastle", "birmingham", "istanbul", "moskva", "beograd"}
+
+
+def _bf_compatible(a, b):
+    """Zwei Team-Schreibweisen, dasselbe Team? REIN/testbar.
+
+    25.08.2026 (Lucas): der exakte `event_key` verlor „Real Betis"/„Betis" und
+    „Athletic Club"/„Athletic Bilbao". Enthaltensein reicht — aber nur ab 4 Zeichen, sonst wuerde
+    „FC" auf alles passen.
+    """
+    from poly_cross_sport import norm as _n
+    na, nb = _n(a), _n(b)
+    if not na or not nb:
+        return False
+    if na == nb or (len(na) >= 4 and len(nb) >= 4 and (na in nb or nb in na)):
+        return True
+    # „Athletic Club" und „Athletic Bilbao" enthalten einander NICHT — sie teilen ein markantes Wort.
+    # Mindestlaenge 5 haelt „Real"/„Real" (Madrid vs Sociedad) und „FC"/„United" bewusst draussen;
+    # genau die waeren die gefaehrlichen Fehltreffer.
+    wa = {w for w in (_n(x) for x in str(a).split()) if len(w) >= 5 and w not in _BF_STOPWORDS}
+    wb = {w for w in (_n(x) for x in str(b).split()) if len(w) >= 5 and w not in _BF_STOPWORDS}
+    return bool(wa & wb)
+
+
+def _bf_find(snaps, fuzzy, home, away, date=None):
+    """Betfair-Snapshot zum Spiel. Erst exakt, dann Namens-Bruecke am selben Spieltag. REIN.
+
+    Die Bruecke ist bewusst eng: gleicher Tag (±1 wegen Zeitzone), BEIDE Seiten kompatibel, und der
+    Treffer muss EINDEUTIG sein. Zwei Kandidaten heisst lieber kein Block als der falsche.
+    """
+    m = (snaps or {}).get(_bf_event_key(home, away))
+    if m:
+        return m
+    if not fuzzy or not date:
+        return None
+    from datetime import date as _date, timedelta as _td
+    try:
+        d0 = _date.fromisoformat(str(date)[:10])
+        days = [str(d0 + _td(days=k)) for k in (0, -1, 1)]
+    except Exception:
+        days = [str(date)[:10]]
+    hits = []
+    for day in days:
+        for cand in (fuzzy.get(day) or []):
+            if ((_bf_compatible(home, cand.get("home")) and _bf_compatible(away, cand.get("away")))
+                    or (_bf_compatible(home, cand.get("away")) and _bf_compatible(away, cand.get("home")))):
+                hits.append(cand)
+    return hits[0] if len(hits) == 1 else None
+
+
+_LNORM_CACHE = {}
+
+
+def _bf_learned_norm():
+    """Gelernte Liga-Basis aus betfair_league_norm.json ({} wenn es sie noch nicht gibt).
+
+    Ueber einen Cache-Dict, damit Tests eine Basis setzen koennen statt gegen die Live-Datei zu
+    laufen — Schwellen gegen Bot-Daten zu pruefen ist die Klasse Test, die eines Tages ohne
+    Code-Aenderung rot wird ([[feedback_tests_no_live_data_thresholds]]).
+    """
+    if "b" not in _LNORM_CACHE:
+        import os as _os
+        f = _os.path.join(BASE, "betfair_league_norm.json")
+        got = {}
+        if _os.path.exists(f):
+            try:
+                got = (json.load(open(f, encoding="utf-8")) or {}).get("byLeagueStage") or {}
+            except Exception:
+                got = {}
+        _LNORM_CACHE["b"] = got
+    return _LNORM_CACHE["b"]
+
+
 def _bf_market_total(m):
     """Summe der Runner-Volumina über ALLE Märkte — identisch zu totalG() im Radar."""
     s = 0.0
@@ -471,11 +551,14 @@ def load_betfair():
         print(f"  ⚠️  Betfair-Preise nicht ladbar: {e}")
         return {}, {}
     now_ms = (datetime.utcnow() - datetime(1970, 1, 1)).total_seconds() * 1000
-    snaps, base = {}, {}
+    snaps, base, fuzzy = {}, {}, {}
     for m in (raw.get("matches") or []):
         h, a = m.get("home"), m.get("away")
         if h and a:
             snaps[_bf_event_key(h, a)] = m
+            _day = str(m.get("kickoff") or "")[:10]
+            if _day:
+                fuzzy.setdefault(_day, []).append(m)
         st = _bf_stage(m, now_ms)
         tot = _bf_market_total(m)
         if st and tot >= BF_NORM_MIN_EUR:
@@ -483,7 +566,7 @@ def load_betfair():
     for st in base:
         base[st].sort()
     print(f"  Betfair-Geld: {len(snaps)} Matches geladen (×-Norm-Basis: {{ {', '.join(f'{k}:{len(v)}' for k,v in base.items())} }})")
-    return snaps, base
+    return snaps, base, fuzzy
 
 def _median(xs):
     n = len(xs)
@@ -505,10 +588,165 @@ def _bf_market_shares(m, market_name, runner_map):
             out[tok] = {"vol": round(v), "share": round(v / tot, 4) if tot else None, "odd": rr.get("odd")}
     return (out or None), round(tot)
 
-def build_betfair_block(home_name, away_name, snaps, norm_base):
+_BROAD_CACHE = {}
+
+
+def _broad_rows():
+    """poly_money_broad_close.json — dieselbe Quelle, aus der Radar, Wallets und Whales leben."""
+    if "r" not in _BROAD_CACHE:
+        d = load_json(os.path.join(BASE, "poly_money_broad_close.json")) or {}
+        _BROAD_CACHE["r"] = d if isinstance(d, dict) else {}
+    return _BROAD_CACHE["r"]
+
+
+def _broad_outcome_slot(label, home, away):
+    """Ausgangs-Label → 'home' | 'draw' | 'away' | None. REIN."""
+    from poly_cross_sport import norm as _n
+    lab = _n(label)
+    if not lab:
+        return None
+    if lab.startswith("draw") or "draw" in lab[:6]:
+        return "draw"
+    h, a = _n(home), _n(away)
+    if h and (lab == h or (len(lab) >= 4 and len(h) >= 4 and (lab in h or h in lab))):
+        return "home"
+    if a and (lab == a or (len(lab) >= 4 and len(a) >= 4 and (lab in a or a in lab))):
+        return "away"
+    return None
+
+
+def poly_broad_smartmoney(home_name, away_name, date=None):
+    """Polymarket-Geld je Ausgang aus dem Broad-Feed — im Format, das die Seite schon rendert.
+
+    25.08.2026 (Lucas: „seh immer noch keinen Poly-Block"): Quelle war money_map.json, die einen
+    Betfair<->Poly-Doppeltreffer verlangt und deshalb aktuell 2 Zeilen fuehrt. Der Broad-Feed hat
+    380+ Fussball-Maerkte MIT Wallet-Aufschluesselung — genau das, was `renderPoly` erwartet
+    (outcomes.{home,draw,away}.{share,holders,topHolderShare}).
+
+    Nur der 1X2-Basismarkt: die Zusatzmaerkte (-exact-score, -more-markets, -halftime-result) tragen
+    dieselben Teamnamen und wuerden sonst als Kandidat mitzaehlen.
+    """
+    best = None
+    for key, m in (_broad_rows() or {}).items():
+        if not isinstance(m, dict) or m.get("resolved") is not None:
+            continue
+        if any(key.endswith(sfx) for sfx in ("-exact-score", "-more-markets", "-halftime-result")):
+            continue
+        shares = m.get("shares") or {}
+        if len(shares) < 2:
+            continue
+        slots = {}
+        for lab, usd in shares.items():
+            slot = _broad_outcome_slot(lab, home_name, away_name)
+            if slot:
+                slots.setdefault(slot, []).append((lab, float(usd or 0)))
+        if "home" not in slots or "away" not in slots:
+            continue                                  # beide Teams muessen vorkommen
+        tot = sum(v for lst in slots.values() for _, v in lst)
+        if tot <= 0:
+            continue
+        if best is None or tot > best[0]:
+            best = (tot, m, slots)
+    if not best:
+        return None
+    tot, m, slots = best
+    whales = [w for w in (m.get("whales") or []) if isinstance(w, dict)]
+    out = {}
+    for slot in ("home", "draw", "away"):
+        lst = slots.get(slot) or []
+        if not lst:
+            continue
+        usd = sum(v for _, v in lst)
+        labels = {lab for lab, _ in lst}
+        mine = sorted((float(w.get("usd") or 0) for w in whales if w.get("side") in labels), reverse=True)
+        out[slot] = {"share": round(usd / tot, 4), "usd": round(usd),
+                     "holders": len(mine) or None,
+                     "topHolderShare": (round(mine[0] / usd, 4) if mine and usd > 0 else None)}
+    if "home" not in out or "away" not in out:
+        return None
+    return {"outcomes": out, "totalUsd": round(tot),
+            "topTraders": len([w for w in whales if float(w.get("usd") or 0) >= 1000]),
+            "src": "broad"}
+
+
+_UPCOMING_CACHE = {}
+
+
+def _upcoming_rows():
+    """poly_money_upcoming.json — Poly-Preise + Volumen bis 48h vor Anpfiff.
+
+    25.08.2026 (Lucas): der Close-Feed friert erst ~3h vor Anpfiff ein und enthaelt fuer eine Seite,
+    die Tage vorher erzeugt wird, GAR NICHTS (0 Eintraege ab dem 25.08.). Diese Datei gibt es seit
+    dem 12.08. fuer die Money Map und sie hat genau das Fehlende: Valencia–Betis, Real Madrid–Real
+    Sociedad & Co. schon am Vortag. Keine Wallet-Aufschluesselung (kein Holder-Call) — dafuer
+    rendert die Seite den kompakten Block.
+    """
+    if "r" not in _UPCOMING_CACHE:
+        d = load_json(os.path.join(BASE, "poly_money_upcoming.json")) or {}
+        _UPCOMING_CACHE["r"] = d if isinstance(d, dict) else {}
+    return _UPCOMING_CACHE["r"]
+
+
+def poly_upcoming_money(home_name, away_name, betfair_block=None):
+    """Kompakter Poly-Geld-Block (Favorit + Anteil + Volumen) fuer Spiele vor dem Close-Fenster.
+
+    Auf Polymarket IST der Preis die Geldverteilung — deshalb ist `sharePct` hier der de-viggte
+    Preis-Anteil der fuehrenden Seite, nicht ein Shares-Anteil. Das steht so im Tooltip der Seite.
+    """
+    best = None
+    for key, m in (_upcoming_rows() or {}).items():
+        if not isinstance(m, dict):
+            continue
+        if any(key.endswith(sfx) for sfx in ("-exact-score", "-more-markets", "-halftime-result")):
+            continue
+        prices = m.get("prices") or {}
+        if len(prices) < 2:
+            continue
+        slots = {}
+        for lab, pr in prices.items():
+            slot = _broad_outcome_slot(lab, home_name, away_name)
+            if slot and isinstance(pr, (int, float)):
+                slots[slot] = max(slots.get(slot, 0.0), float(pr))
+        if "home" not in slots or "away" not in slots:
+            continue
+        vol = float(m.get("totalUsd") or 0)
+        if best is None or vol > best[0]:
+            best = (vol, slots)
+    if not best:
+        return None
+    vol, slots = best
+    tot = sum(slots.values())
+    if tot <= 0:
+        return None
+    side = max(slots, key=lambda k: slots[k])
+    share = slots[side] / tot                       # de-viggt: Summe der Ausgangs-Preise = 1
+    fav = home_name if side == "home" else away_name if side == "away" else "Unentschieden"
+    # Cross-Check gegen den Betfair-FAVORITEN (niedrigste Quote), nicht gegen die groesste
+    # Geld-Saeule: bei Valencia–Betis liegen 60% des Geldes auf dem Remis, Favorit ist es deshalb
+    # nicht. „Die Boersen sind uneinig" darf nur stehen, wenn sie wirklich verschiedene Seiten
+    # vorne sehen.
+    bf_side, bf_pct = None, None
+    if isinstance(betfair_block, dict):
+        mo = betfair_block.get("mo") or {}
+        od = mo.get("odds") or {}
+        bf_side = _fav_token(od.get("home"), od.get("draw"), od.get("away"))
+        if bf_side:
+            _sh = ((mo.get("shares") or {}).get(bf_side) or {}).get("share")
+            bf_pct = round(_sh * 100) if isinstance(_sh, (int, float)) else None
+    return {
+        "favSide": side, "favTeam": fav,
+        "sharePct": round(share * 100), "usd": round(vol),
+        "srcTag": "upcoming",
+        "betfairAgree": (bf_side == side) if bf_side else None,
+        "betfairPct": bf_pct,
+        "verdict": None,
+    }
+
+
+def build_betfair_block(home_name, away_name, snaps, norm_base, fuzzy=None, date=None):
     if not snaps:
         return None
-    m = snaps.get(_bf_event_key(home_name, away_name))
+    m = _bf_find(snaps, fuzzy, home_name, away_name, date)
     if not m:
         return None
     now_ms = (datetime.utcnow() - datetime(1970, 1, 1)).total_seconds() * 1000
@@ -530,13 +768,14 @@ def build_betfair_block(home_name, away_name, snaps, norm_base):
     # ×-Norm
     st = _bf_stage(m, now_ms)
     ratio, lvl = None, 0
+    # 25.08.2026: gelernte Liga-Basis statt Schnappschuss — identisch zum Radar seit 24.08.
+    # Der alte Weg mass ein EPL-Spiel gegen einen Pool voller Mini-Ligen und kam auf x80,
+    # wo x0.6 richtig war. Ohne belastbare Liga-Basis gibt es hier gar keinen Wert.
     if st and total >= BF_NORM_MIN_EUR:
-        peers = (norm_base or {}).get(st) or []
-        if len(peers) >= BF_NORM_MIN_PEERS:
-            med = _median(peers)
-            if med:
-                ratio = round(total / med, 2)
-                lvl = 2 if ratio >= BF_NORM_RED else (1 if ratio >= BF_NORM_AMBER else 0)
+        _lb = (_bf_learned_norm() or {}).get('%s|%s' % (m.get('league'), st))
+        if isinstance(_lb, dict) and (_lb.get('n') or 0) >= BF_NORM_MIN_PEERS and _lb.get('med'):
+            ratio = round(total / float(_lb['med']), 2)
+            lvl = 2 if ratio >= BF_NORM_RED else (1 if ratio >= BF_NORM_AMBER else 0)
     # „Heavy money" Seite: wo Geld-Anteil den fairen Anteil am stärksten übersteigt
     heavy = None
     if mo_shares and fair and (mo_total or 0) >= 3000:
@@ -593,7 +832,7 @@ def build_consensus(pinn, soft, smart, betfair):
     return {"sources": src, "modal": modal, "agree": agree, "n": len(src), "nAgree": toks.count(modal)}
 
 
-def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, ai_previews=None, poly_lookup=None, betfair_snaps=None, betfair_norm=None):
+def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, ai_previews=None, poly_lookup=None, betfair_snaps=None, betfair_norm=None, betfair_fuzzy=None):
     home_id = fixture["home"]
     away_id = fixture["away"]
     home_team = team_lookup[home_id]
@@ -779,10 +1018,18 @@ def build_payload(group_id, group_data, fixture, team_lookup, wm, history=None, 
 
     # Smart-Money (Polymarket-Wallet-Verteilung) für dieses Spiel
     smart_money = _smartmoney_all().get(odds_key)
-    poly_money = poly_money_from_map(home_team["name"], away_team["name"])   # 21.08.2026 (Lucas): Poly-Geld-Block-Fallback
-
+    if not (smart_money and smart_money.get("outcomes")):
+        # liga_poly_smartmoney.json existiert nicht — der Broad-Feed liefert dasselbe Format.
+        smart_money = poly_broad_smartmoney(home_team["name"], away_team["name"], date) or smart_money
     # Betfair-Exchange-Geld + Markt-Konsens (31.07.2026) — nur wenn die Börse das Spiel führt.
-    betfair_block = build_betfair_block(home_team["name"], away_team["name"], betfair_snaps or {}, betfair_norm or {})
+    # Steht VOR dem Poly-Block, weil der kompakte Poly-Block den Betfair-Cross-Check mitnimmt.
+    betfair_block = build_betfair_block(home_team["name"], away_team["name"], betfair_snaps or {},
+                                        betfair_norm or {}, fuzzy=betfair_fuzzy, date=date)
+
+    # Reihenfolge nach Reichhaltigkeit: money_map (selten, hat aber den fertigen Cross-Check) →
+    # poly_money_upcoming (bis 48h vorher — der Normalfall einer Vorschau-Seite).
+    poly_money = (poly_money_from_map(home_team["name"], away_team["name"])
+                  or poly_upcoming_money(home_team["name"], away_team["name"], betfair_block))
     consensus_block = build_consensus(pinn_odds, soft_odds, smart_money, betfair_block)
 
     # Group teams + fixtures (for group table / context)
@@ -898,7 +1145,7 @@ def main():
     slugs = []
 
     # Betfair-Exchange-Snapshot (31.07.2026): einmal laden → Event-Pages backen Geld-Verteilung + ×-Norm.
-    _bf_snaps, _bf_norm = load_betfair()
+    _bf_snaps, _bf_norm, _bf_fuzzy = load_betfair()
 
     # Liga: nur „live" Spiele bepagen — sonst 1066 statt ~40 Seiten. „Live" =
     #   Quoten da  ODER  ≤2 Wochen  ODER  in den nächsten MATCH_PAGE_MDS Spieltagen der
@@ -944,7 +1191,7 @@ def main():
                 print(f"  SKIP: unknown team {home_id} or {away_id}")
                 continue
 
-            slug, payload = build_payload(group_id, group_data, fixture, team_lookup, wm, history, ai_previews, poly_lookup, _bf_snaps, _bf_norm)
+            slug, payload = build_payload(group_id, group_data, fixture, team_lookup, wm, history, ai_previews, poly_lookup, _bf_snaps, _bf_norm, _bf_fuzzy)
             out_path = os.path.join(DATA_DIR, f"{slug}.json")
             with open(out_path, "w", encoding="utf-8") as f:
                 json.dump(payload, f, ensure_ascii=False, separators=(",", ":"))
@@ -965,7 +1212,7 @@ def main():
                 print(f"  SKIP KO: unknown team {home_id} or {away_id}")
                 continue
             slug, payload = build_payload("KO", _ko_group, fixture, team_lookup, wm,
-                                          history, ai_previews, poly_lookup, _bf_snaps, _bf_norm)
+                                          history, ai_previews, poly_lookup, _bf_snaps, _bf_norm, _bf_fuzzy)
             out_path = os.path.join(DATA_DIR, f"{slug}.json")
             with open(out_path, "w", encoding="utf-8") as f:
                 json.dump(payload, f, ensure_ascii=False, separators=(",", ":"))

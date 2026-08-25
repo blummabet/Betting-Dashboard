@@ -73,13 +73,35 @@ class Betfair(unittest.TestCase):
         self.assertEqual(b["heavy"]["edgePP"], 36)
 
     def test_xnorm_ratio(self):
+        # 25.08.2026: die Basis kommt jetzt GELERNT je Liga+Phase (betfair_league_norm.json), nicht
+        # mehr aus dem Schnappschuss — derselbe Umbau wie im Radar am 24.08. Ein Spiel gegen einen
+        # Pool fremder Ligen zu messen ergab dort ×80, wo ×0.6 richtig war.
         m = _bf_match("X", "Y", [8000, 1100, 900], [1.6, 4, 6], {"home": .44, "draw": .24, "away": .32})
+        m["league"] = "Test Liga"
+        m["kickoff"] = "2099-01-01T12:00:00Z"          # weit in der Zukunft → Phase p0
         snaps = {G._bf_event_key("X", "Y"): m}
-        # Peer-Median 5000 (5 Peers) → 10000/5000 = 2.0× → Level 1 (amber, >=1.6, <2.6)
-        norm = {"p0": [4000, 4500, 5000, 5500, 6000]}
-        b = G.build_betfair_block("X", "Y", snaps, norm)
-        self.assertEqual(b["normRatio"], 2.0)
-        self.assertEqual(b["normLvl"], 1)
+        G._LNORM_CACHE["b"] = {"Test Liga|p0": {"med": 5000, "n": 9}}
+        try:
+            b = G.build_betfair_block("X", "Y", snaps, {})
+            self.assertEqual(b["normRatio"], 2.0)      # 10000 / 5000
+            self.assertEqual(b["normLvl"], 1)          # amber: >=1.6, <2.6
+        finally:
+            G._LNORM_CACHE.clear()
+
+    def test_xnorm_ohne_belastbare_basis_kein_wert(self):
+        # Kein Badge ist besser als ein falsches: zu duenne oder fehlende Liga-Basis → kein Wert.
+        m = _bf_match("X", "Y", [8000, 1100, 900], [1.6, 4, 6], {"home": .44, "draw": .24, "away": .32})
+        m["league"] = "Test Liga"
+        m["kickoff"] = "2099-01-01T12:00:00Z"
+        snaps = {G._bf_event_key("X", "Y"): m}
+        for basis in ({}, {"Test Liga|p0": {"med": 5000, "n": 3}}, {"Andere Liga|p0": {"med": 5000, "n": 9}}):
+            G._LNORM_CACHE["b"] = basis
+            try:
+                b = G.build_betfair_block("X", "Y", snaps, {})
+                self.assertIsNone(b["normRatio"])
+                self.assertEqual(b["normLvl"], 0)
+            finally:
+                G._LNORM_CACHE.clear()
 
     def test_bf_total(self):
         m = _bf_match("X", "Y", [5000, 1000, 1000], [1.5, 4, 6], {"home": .6, "draw": .2, "away": .2}, total_pad=3000)
