@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "liga",
-    "generatedAt": "2026-08-25T11:58:10.646630+00:00",
+    "generatedAt": "2026-08-25T18:19:59.345022+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -4495,47 +4495,6 @@
       "flag": "<img src=\"https://media.api-sports.io/football/teams/35.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ENG",
       "leagueName": "Premier League",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 6,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 56,
-        "label": "Eigen 56% + Gegner 67% → 60%"
-      },
-      "ratePct": 56,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 9,
-      "next": {
-        "oppId": "45",
-        "oppName": "Everton",
-        "atHome": true,
-        "date": "2026-08-29",
-        "kickoff": "2026-08-29T14:00:00+00:00",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 60
-    },
-    {
-      "teamId": "35",
-      "team": "Bournemouth",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/35.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
       "type": "scored",
       "market": "Team trifft",
       "length": 6,
@@ -6609,6 +6568,58 @@
       },
       "oppSupportPct": 29,
       "matchupPct": 54
+    },
+    {
+      "teamId": "35",
+      "team": "Bournemouth",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/35.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 6,
+      "venue": "all",
+      "strong": true,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 56,
+        "label": "Eigen 56% + Gegner 67% → 60% · Linie/Signale dagegen"
+      },
+      "ratePct": 56,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 9,
+      "next": {
+        "oppId": "45",
+        "oppName": "Everton",
+        "atHome": true,
+        "date": "2026-08-29",
+        "kickoff": "2026-08-29T14:00:00+00:00",
+        "oppRatePct": 67
+      },
+      "oppSupportPct": 67,
+      "matchupPct": 60,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 3,
+        "conviction": 4,
+        "names": [
+          "h2h_pattern",
+          "xg_strength",
+          "transfer_shift"
+        ],
+        "market": "Unter 3.5 Tore"
+      }
     },
     {
       "teamId": "40",
@@ -8995,47 +9006,6 @@
       "matchupPct": 51
     },
     {
-      "teamId": "494",
-      "team": "Udinese",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/494.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
-      "type": "under25",
-      "market": "Unter 2,5 Tore",
-      "length": 5,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 33% → 49%"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 10,
-      "next": {
-        "oppId": "1579",
-        "oppName": "Monza",
-        "atHome": false,
-        "date": "2026-08-29",
-        "kickoff": "2026-08-29T16:30:00+00:00",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 33,
-      "matchupPct": 49
-    },
-    {
       "teamId": "497",
       "team": "AS Roma",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/497.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -9647,6 +9617,57 @@
       "flag": "<img src=\"https://media.api-sports.io/football/teams/494.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ITA",
       "leagueName": "Serie A",
+      "type": "under25",
+      "market": "Unter 2,5 Tore",
+      "length": 5,
+      "venue": "all",
+      "strong": true,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 33% → 49% · Linie/Signale dagegen"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 10,
+      "next": {
+        "oppId": "1579",
+        "oppName": "Monza",
+        "atHome": false,
+        "date": "2026-08-29",
+        "kickoff": "2026-08-29T16:30:00+00:00",
+        "oppRatePct": 67
+      },
+      "oppSupportPct": 33,
+      "matchupPct": 49,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 2,
+        "conviction": 4,
+        "names": [
+          "form_trend",
+          "h2h_pattern"
+        ],
+        "market": "Über 2.5 Tore"
+      }
+    },
+    {
+      "teamId": "494",
+      "team": "Udinese",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/494.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ITA",
+      "leagueName": "Serie A",
       "type": "unbeaten",
       "market": "Ungeschlagen",
       "length": 5,
@@ -10081,6 +10102,108 @@
       },
       "oppSupportPct": 53,
       "matchupPct": 65
+    },
+    {
+      "teamId": "1579",
+      "team": "Monza",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1579.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ITA",
+      "leagueName": "Serie A",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 4,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 55,
+        "label": "Eigen 55% + Gegner 27% → 44% · Signale bestätigen"
+      },
+      "ratePct": 55,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 11,
+      "next": {
+        "oppId": "494",
+        "oppName": "Udinese",
+        "atHome": true,
+        "date": "2026-08-29",
+        "kickoff": "2026-08-29T16:30:00+00:00",
+        "oppRatePct": 27
+      },
+      "oppSupportPct": 27,
+      "matchupPct": 44,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 2,
+        "conviction": 4,
+        "names": [
+          "form_trend",
+          "h2h_pattern"
+        ],
+        "market": "Über 2.5 Tore"
+      }
+    },
+    {
+      "teamId": "1579",
+      "team": "Monza",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1579.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ITA",
+      "leagueName": "Serie A",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 4,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 40,
+        "label": "Eigen 40% + Gegner 27% → 35% · Signale bestätigen"
+      },
+      "ratePct": 40,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 5,
+      "next": {
+        "oppId": "494",
+        "oppName": "Udinese",
+        "atHome": true,
+        "date": "2026-08-29",
+        "kickoff": "2026-08-29T16:30:00+00:00",
+        "oppRatePct": 27
+      },
+      "oppSupportPct": 27,
+      "matchupPct": 35,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 2,
+        "conviction": 4,
+        "names": [
+          "form_trend",
+          "h2h_pattern"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "1579",
@@ -13122,47 +13245,6 @@
       "matchupPct": 66
     },
     {
-      "teamId": "35",
-      "team": "Bournemouth",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/35.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 4,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 40,
-        "label": "Eigen 40% + Gegner 67% → 51%"
-      },
-      "ratePct": 40,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 5,
-      "next": {
-        "oppId": "45",
-        "oppName": "Everton",
-        "atHome": true,
-        "date": "2026-08-29",
-        "kickoff": "2026-08-29T14:00:00+00:00",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 51
-    },
-    {
       "teamId": "36",
       "team": "Fulham",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/36.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -13445,44 +13527,6 @@
       },
       "oppSupportPct": 53,
       "matchupPct": 51
-    },
-    {
-      "teamId": "494",
-      "team": "Udinese",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/494.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
-      "type": "under25",
-      "market": "Unter 2,5 Tore",
-      "length": 4,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 73,
-        "label": "Eigen 73% + Gegner 33% → 57%"
-      },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 1,
-      "next": {
-        "oppId": "1579",
-        "oppName": "Monza",
-        "atHome": false,
-        "date": "2026-08-29",
-        "kickoff": "2026-08-29T16:30:00+00:00",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 33,
-      "matchupPct": 57
     },
     {
       "teamId": "494",
@@ -15077,61 +15121,20 @@
       "matchupPct": 44
     },
     {
-      "teamId": "1579",
-      "team": "Monza",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1579.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
+      "teamId": "35",
+      "team": "Bournemouth",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/35.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
       "type": "over25",
       "market": "Über 2,5 Tore",
       "length": 4,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 55,
-        "label": "Eigen 55% + Gegner 27% → 44%"
-      },
-      "ratePct": 55,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 11,
-      "next": {
-        "oppId": "494",
-        "oppName": "Udinese",
-        "atHome": true,
-        "date": "2026-08-29",
-        "kickoff": "2026-08-29T16:30:00+00:00",
-        "oppRatePct": 27
-      },
-      "oppSupportPct": 27,
-      "matchupPct": 44
-    },
-    {
-      "teamId": "1579",
-      "team": "Monza",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1579.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 4,
-      "venue": "H",
+      "venue": "A",
       "strong": false,
       "continuation": {
         "state": "wackelt",
         "ratePct": 40,
-        "label": "Eigen 40% + Gegner 27% → 35%"
+        "label": "Eigen 40% + Gegner 67% → 51% · Linie/Signale dagegen"
       },
       "ratePct": 40,
       "seq": [
@@ -15140,23 +15143,34 @@
         true,
         true,
         false,
+        false,
         true,
-        true,
-        false
+        true
       ],
       "xgBacked": null,
       "basis": "prior",
       "preN": 5,
       "next": {
-        "oppId": "494",
-        "oppName": "Udinese",
+        "oppId": "45",
+        "oppName": "Everton",
         "atHome": true,
         "date": "2026-08-29",
-        "kickoff": "2026-08-29T16:30:00+00:00",
-        "oppRatePct": 27
+        "kickoff": "2026-08-29T14:00:00+00:00",
+        "oppRatePct": 67
       },
-      "oppSupportPct": 27,
-      "matchupPct": 35
+      "oppSupportPct": 67,
+      "matchupPct": 51,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 3,
+        "conviction": 4,
+        "names": [
+          "h2h_pattern",
+          "xg_strength",
+          "transfer_shift"
+        ],
+        "market": "Unter 3.5 Tore"
+      }
     },
     {
       "teamId": "494",
@@ -15172,7 +15186,7 @@
       "continuation": {
         "state": "wackelt",
         "ratePct": 50,
-        "label": "Eigen 50% + Gegner 33% → 43%"
+        "label": "Eigen 50% + Gegner 33% → 43% · Linie/Signale dagegen"
       },
       "ratePct": 50,
       "seq": [
@@ -15197,7 +15211,65 @@
         "oppRatePct": 67
       },
       "oppSupportPct": 33,
-      "matchupPct": 43
+      "matchupPct": 43,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 2,
+        "conviction": 4,
+        "names": [
+          "form_trend",
+          "h2h_pattern"
+        ],
+        "market": "Über 2.5 Tore"
+      }
+    },
+    {
+      "teamId": "494",
+      "team": "Udinese",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/494.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ITA",
+      "leagueName": "Serie A",
+      "type": "under25",
+      "market": "Unter 2,5 Tore",
+      "length": 4,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 73,
+        "label": "Eigen 73% + Gegner 33% → 57% · Linie/Signale dagegen"
+      },
+      "ratePct": 73,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 1,
+      "next": {
+        "oppId": "1579",
+        "oppName": "Monza",
+        "atHome": false,
+        "date": "2026-08-29",
+        "kickoff": "2026-08-29T16:30:00+00:00",
+        "oppRatePct": 67
+      },
+      "oppSupportPct": 33,
+      "matchupPct": 57,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 2,
+        "conviction": 4,
+        "names": [
+          "form_trend",
+          "h2h_pattern"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "51",
@@ -15998,47 +16070,6 @@
       },
       "oppSupportPct": 67,
       "matchupPct": 75
-    },
-    {
-      "teamId": "45",
-      "team": "Everton",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/45.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 57,
-        "label": "Eigen 57% + Gegner 73% → 63%"
-      },
-      "ratePct": 57,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 7,
-      "next": {
-        "oppId": "35",
-        "oppName": "Bournemouth",
-        "atHome": false,
-        "date": "2026-08-29",
-        "kickoff": "2026-08-29T14:00:00+00:00",
-        "oppRatePct": 73
-      },
-      "oppSupportPct": 73,
-      "matchupPct": 63
     },
     {
       "teamId": "45",
@@ -22017,6 +22048,58 @@
       },
       "oppSupportPct": 20,
       "matchupPct": 32
+    },
+    {
+      "teamId": "45",
+      "team": "Everton",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/45.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 57,
+        "label": "Eigen 57% + Gegner 73% → 63% · Linie/Signale dagegen"
+      },
+      "ratePct": 57,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 7,
+      "next": {
+        "oppId": "35",
+        "oppName": "Bournemouth",
+        "atHome": false,
+        "date": "2026-08-29",
+        "kickoff": "2026-08-29T14:00:00+00:00",
+        "oppRatePct": 73
+      },
+      "oppSupportPct": 73,
+      "matchupPct": 63,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 3,
+        "conviction": 4,
+        "names": [
+          "h2h_pattern",
+          "xg_strength",
+          "transfer_shift"
+        ],
+        "market": "Unter 3.5 Tore"
+      }
     },
     {
       "teamId": "49",
