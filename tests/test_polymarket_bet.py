@@ -272,3 +272,74 @@ def test_kein_treffer_gibt_eigenen_eintrag():
     assert hist[0].get("polyBets") is None
     assert hist[1]["polyBets"][0]["polyKey"] == "k"
 
+
+# ── Jede Wette bekommt polyKey + side (25.08.2026, Lucas) ────────────────────────────────────
+# Ohne die beiden Felder ist eine Wette spaeter nicht abrechenbar: poly_direct_bets.py verlangt
+# sie, und die Aufloeser lesen polyBets gar nicht. Die Real-Madrid-Wette fiel genau so durch.
+# Gestempelt wird im Placer, weil dort das Event UND die Token-ID vorliegen — notiert wird damit,
+# was TATSAECHLICH gekauft wurde, nicht was das Frontend vermutet hat.
+def _ev_team():
+    return {"slug": "lal-rea-rso-2026-08-26", "markets": [
+        {"outcomes": _json.dumps(["Real Madrid CF", "Real Sociedad"]),
+         "clobTokenIds": _json.dumps(["TOK-RMA", "TOK-RSO"])}]}
+
+
+def _ev_group():
+    return {"slug": "cs2-abc-2026-08-25", "markets": [
+        {"outcomes": _json.dumps(["Yes", "No"]), "clobTokenIds": _json.dumps(["Y1", "N1"]),
+         "groupItemTitle": "Leo Team"}]}
+
+
+def test_ausgang_rueckwaerts_aus_dem_token():
+    import polymarket_bet as PB
+    assert PB.outcome_for_token(_ev_team(), "TOK-RSO") == "Real Sociedad"
+    assert PB.outcome_for_token(_ev_group(), "Y1") == "Leo Team", "Ja-Token zeigt auf den Gruppentitel"
+    assert PB.outcome_for_token(_ev_team(), "UNBEKANNT") is None
+    assert PB.outcome_for_token(None, "TOK-RMA") is None
+    assert PB.outcome_for_token(_ev_team(), None) is None
+
+
+def test_slug_kommt_aus_order_oder_event_oder_url():
+    import polymarket_bet as PB
+    assert PB.slug_of(_ev_team(), {"polyKey": "aus-order"}) == "aus-order"
+    assert PB.slug_of(_ev_team(), {}) == "lal-rea-rso-2026-08-26"
+    assert PB.slug_of(None, {"eventUrl": "https://polymarket.com/event/lal-bar-bil-2026-08-27-more-markets"}) \
+        == "lal-bar-bil-2026-08-27-more-markets"
+    assert PB.slug_of(None, {}) is None
+
+
+def test_stempel_fuellt_nur_was_fehlt():
+    import polymarket_bet as PB
+    o = {"home": "Real Madrid", "away": "Real Sociedad", "market": "Over 2.5 Tore"}
+    PB.stamp_poly_fields(o, _ev_team(), "TOK-RMA")
+    assert o["polyKey"] == "lal-rea-rso-2026-08-26"
+    assert o["side"] == "Real Madrid CF"
+    # Was die Order schon mitbringt, wird NICHT ueberschrieben — das Frontend weiss es genauer.
+    o2 = {"polyKey": "eigen", "side": "Under"}
+    PB.stamp_poly_fields(o2, _ev_team(), "TOK-RMA")
+    assert o2 == {"polyKey": "eigen", "side": "Under"}
+
+
+def test_stempel_ohne_event_wirft_nicht():
+    import polymarket_bet as PB
+    o = {"home": "A", "away": "B"}
+    PB.stamp_poly_fields(o, None, None)
+    assert o.get("polyKey") is None and o.get("side") is None
+
+
+def test_an_ein_spiel_gehaengte_wette_traegt_die_felder():
+    # Der Real-Madrid-Fall: passendes Spiel vorhanden -> Zeile haengt dort, MUSS aber abrechenbar sein.
+    import polymarket_bet as PB
+    from datetime import datetime as _d, timezone as _z
+    heute = _d.now(_z.utc).strftime("%Y-%m-%d")
+    hist = [{"home": "Real Madrid", "away": "Real Sociedad", "dateIso": heute}]
+    PB.log_bet_to_history(hist, {"home": "Real Madrid", "away": "Real Sociedad",
+                                 "market": "Over 2.5 Tore", "stake": 5, "polyPrice": 0.665,
+                                 "polyKey": "lal-rea-rso-2026-08-26", "side": "Over",
+                                 "sport": "Fußball", "conviction": 7},
+                          {"orderId": "0x1", "status": "placed", "error": None})
+    b = hist[0]["polyBets"][0]
+    assert b["polyKey"] == "lal-rea-rso-2026-08-26"
+    assert b["side"] == "Over"
+    assert b["sport"] == "Fußball"
+

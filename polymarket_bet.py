@@ -869,6 +869,61 @@ def save_history(data: list) -> None:
 MATCH_DATE_TOLERANCE_D = 2   # Wetten fallen nahe an den Anpfiff — alles Weitere ist ein anderes Spiel
 
 
+def outcome_for_token(event: dict, token_id: str):
+    """Token-ID → Ausgangs-Name, rueckwaerts durch die Maerkte des Events. REIN/testbar.
+
+    Gegenstueck zu find_token_by_outcome_name. Zwei Poly-Strukturen, wie ueberall:
+    ein Markt mit Team-/Spieler-Ausgaengen, und gruppierte Ja/Nein-Maerkte (Ausgang im
+    groupItemTitle, der Ja-Token zeigt darauf).
+    """
+    if not event or not token_id:
+        return None
+    want = str(token_id)
+    for m in (event.get("markets") or []):
+        try:
+            names = json.loads(m.get("outcomes", "[]") or "[]")
+            toks = json.loads(m.get("clobTokenIds", "[]") or "[]")
+        except Exception:
+            continue
+        if not names or len(names) != len(toks):
+            continue
+        for i, t in enumerate(toks):
+            if str(t) != want:
+                continue
+            lab = str(names[i])
+            if lab.strip().lower() in ("yes", "ja") and m.get("groupItemTitle"):
+                return str(m["groupItemTitle"])       # „Gewinnt X?" -> X
+            return lab
+    return None
+
+
+def slug_of(event: dict, order: dict):
+    """Poly-Slug fuers Spiel: aus der Order, sonst aus dem Event. REIN."""
+    for v in (order.get("polyKey"), order.get("slug"), (event or {}).get("slug")):
+        if v:
+            return str(v)
+    url = str(order.get("eventUrl") or "")
+    if "/event/" in url:
+        return url.rsplit("/event/", 1)[1].split("?")[0].strip("/")
+    return None
+
+
+def stamp_poly_fields(order: dict, event: dict, token_id: str) -> None:
+    """polyKey + side in die Order schreiben, falls sie fehlen. Aendert `order` in place.
+
+    Ohne diese beiden Felder ist eine Wette spaeter nicht abrechenbar — sie steht dann zwar in
+    picks_history.json, aber kein Ledger findet sie wieder.
+    """
+    if not order.get("polyKey"):
+        s = slug_of(event, order)
+        if s:
+            order["polyKey"] = s
+    if not order.get("side"):
+        o = outcome_for_token(event, token_id)
+        if o:
+            order["side"] = o
+
+
 def _fixture_matches(fixture: dict, home: str, away: str, now=None) -> bool:
     """Gehoert die Wette wirklich zu dieser Zeile? REIN/testbar.
 
@@ -918,6 +973,12 @@ def log_bet_to_history(history: list, order: dict, result: dict) -> None:
                 "status":    result.get("status"),
                 "error":     result.get("error"),
                 "placedAt":  datetime.now(timezone.utc).isoformat(),
+                # 25.08.2026: auch die an ein Spiel gehaengte Zeile braucht diese Felder — ohne sie
+                # findet poly_direct_bets.py die Wette nie wieder (genau der Real-Madrid-Fall).
+                "polyKey":   order.get("polyKey"),
+                "side":      order.get("side"),
+                "sport":     order.get("sport"),
+                "conviction": order.get("conviction"),
                 "result":    None,  # filled in later by polySetResult()
             })
             return
@@ -1045,6 +1106,7 @@ def main():
         # falschen Token treffen. Daher für AH direkt verwenden: tokens[0] = YES-
         # Token = „Team deckt das Handicap".
         token_id = None
+        _resolved_ev = None      # das Event, aus dem der Token stammt — fuer die Rueckwaerts-Aufloesung
         # 24.08.2026 (Lucas, „Heute"-Tab): traegt die Order die CLOB-Token-ID schon, brauchen wir
         # GAR KEINE Aufloesung ueber Gamma/Teamnamen. Der Token kommt aus poly_money_broad
         # (Feld `tokens` je Markt) und ist damit exakt der Ausgang, den die Engine empfiehlt --
@@ -1062,6 +1124,7 @@ def main():
                 _base = _re.sub(r"-more-markets?$", "", _slug)
                 _ev = gamma_fetch_by_slug(_base) if _base != _slug else None
             if _ev:
+                _resolved_ev = _ev
                 token_id = find_token_by_outcome_name(_ev, order["side"])
                 if token_id:
                     print(f"  🎯 Token über Slug+Ausgangsname aufgelöst ({_slug} → {order['side']})")
@@ -1081,6 +1144,7 @@ def main():
                 continue
 
             print(f"  ✅ Event: {event.get('title')}")
+            _resolved_ev = event
 
             # 3. CLOB Token ID für den Outcome finden
             token_id = find_clob_token_id(event, market, home, away)
@@ -1169,7 +1233,9 @@ def main():
                 print(f"  ❌ Order fehlgeschlagen: {result['error']}")
                 failed += 1
 
-        # 5. In History loggen
+        # 5. In History loggen — vorher polyKey/side nachtragen, sonst ist die Wette spaeter
+        #    nicht abrechenbar (25.08.2026, Lucas: die Real-Madrid-Wette fiel durch jedes Raster).
+        stamp_poly_fields(order, _resolved_ev, token_id)
         log_bet_to_history(history, order, result)
 
         if i < len(orders):

@@ -4646,9 +4646,58 @@ async function _loadPolyStatsData() {
 
 function renderPolyStats() {
   _loadPolyStatsData();   // Hintergrund-Refresh; füllt #polyStatsSection wenn fertig
+  // Die eigene Wett-Liste haengt NICHT an den Server-Daten (die kommen aus *_results.json und
+  // enthalten manuelle Wetten gar nicht). Sie erscheint deshalb sofort, nicht erst nach dem Laden.
   return _polyStatsCache
     ? _polyStatsHtml(_polyStatsCache)
-    : `<div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:30px;text-align:center;color:#8b949e">⏳ Performance lädt…</div>`;
+    : _polyMyBetsHtml()
+      + `<div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:30px;text-align:center;color:#8b949e">⏳ Performance lädt…</div>`;
+}
+
+// „Meine ausgelösten Wetten" — die Liste, die es bis heute nicht gab. Quelle ist der lokale
+// Bestand, den `_syncBetsFromHistory` aus picks_history.json fuellt: das ist dieselbe Datei, die
+// polymarket_bet.py auf dem Runner schreibt. Bewusst UNABHAENGIG von *_results.json, denn dort
+// kommen manuelle Wetten nie an.
+function _polyMyBetsHtml() {
+  const bets = _getPolyBets()
+    .slice()
+    .sort((a, b) => String(b.placed || '').localeCompare(String(a.placed || '')));
+  const badge = (b) => {
+    const st = b.result ? 'result' : (b.state || 'dispatched');
+    return { result:     { t: b.result === 'won' ? '✅ Gewonnen' : b.result === 'lost' ? '❌ Verloren' : '〇 ' + b.result, c: b.result === 'won' ? '#3fb950' : b.result === 'lost' ? '#f85149' : '#8b949e' },
+             confirmed:  { t: '🟣 Platziert',    c: '#a78bfa' },
+             dispatched: { t: '⏳ Angefragt',    c: '#e3b341' },
+             unknown:    { t: '⚠️ Unklar',       c: '#e3b341' },
+             failed:     { t: '❌ Nicht gesetzt', c: '#f85149' } }[st]
+        || { t: '⏳ Angefragt', c: '#e3b341' };
+  };
+  const kopf = '<div style="font-size:12px;font-weight:800;color:#a78bfa;margin:0 0 10px">🟣 Meine ausgelösten Wetten'
+    + `<span style="color:#8b949e;font-weight:600"> · ${bets.length}</span></div>`;
+  if (!bets.length) {
+    return '<div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:16px;margin-bottom:16px">'
+      + kopf
+      + '<div style="font-size:12px;color:#8b949e;line-height:1.5">Noch keine. Sobald du eine Wette auslöst, steht sie hier — '
+      + 'bestätigt wird sie, wenn der Runner sie in picks_history.json zurückmeldet (das dauert bis zum nächsten Pages-Deploy).</div></div>';
+  }
+  const zeilen = bets.slice(0, 25).map(b => {
+    const bd = badge(b);
+    const preis = b.polyPrice ? `${Math.round(b.polyPrice * 100)}¢ · ${(1 / b.polyPrice).toFixed(2)}` : '—';
+    const wann = String(b.placed || '').slice(0, 16).replace('T', ' ');
+    const esc = (x) => String(x == null ? '' : x).replace(/</g, '&lt;');
+    return `<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:9px 0;border-top:1px solid #21262d">
+      <div style="flex:1;min-width:150px">
+        <div style="font-size:13px;font-weight:700;color:#e6edf3">${esc(b.home)}${b.away ? ' <span style="color:#8b949e;font-weight:400">vs</span> ' + esc(b.away) : ''}</div>
+        <div style="font-size:11px;color:#8b949e">${esc(b.market)} · ${wann}</div>
+      </div>
+      <div style="font-size:12px;color:#8b949e;white-space:nowrap">${preis}</div>
+      <div style="font-size:12px;color:#e6edf3;white-space:nowrap">$${(+b.stake || 0).toFixed(2)}</div>
+      <div style="font-size:11px;font-weight:700;color:${bd.c};white-space:nowrap">${bd.t}</div>
+    </div>`;
+  }).join('');
+  return '<div style="background:#161b22;border:1px solid #30363d;border-radius:10px;padding:16px;margin-bottom:16px">'
+    + kopf + zeilen
+    + (bets.length > 25 ? `<div style="font-size:11px;color:#8b949e;margin-top:8px">… und ${bets.length - 25} weitere</div>` : '')
+    + '<div style="font-size:11px;color:#484f58;margin-top:10px;line-height:1.5">Quelle: picks_history.json aus dem Repo — dieselbe Datei, die der Runner nach jeder Order schreibt.</div></div>';
 }
 
 function _polyStatsHtml(c) {
@@ -4728,6 +4777,7 @@ function _polyStatsHtml(c) {
   const upd = res.updatedAt ? new Date(res.updatedAt).toLocaleString('de-AT', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) : '—';
 
   return `
+    ${_polyMyBetsHtml()}
     <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap">
       <span style="font-size:11px;color:#8b949e">Nur <strong style="color:#e3b341">manuell getriggerte</strong> Wetten · Server-getrackt (resolve_wm_results) · Stand ${upd}</span>
       <span style="margin-left:auto;font-size:11px;color:#8b949e">✋ ${total} Manuell · ${pending} offen${autoCount > 0 ? ` · <span title="Auto-Trader-Trades — sichtbar im Trading-Cockpit, hier ausgeblendet">🤖 ${autoCount} Auto ausgeblendet</span>` : ''}</span>

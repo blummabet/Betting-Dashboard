@@ -497,3 +497,54 @@ test('Aufraeumen ohne Altlast sagt das und aendert nichts', () => {
   assert.strictEqual(JSON.parse(w.localStorage.getItem('betedge_poly_bets')).length, 1);
 });
 
+
+// ── „Meine ausgelösten Wetten" (25.08.2026, Lucas dreimal: „wo seh ich die?") ────────────────
+// Antwort war: nirgends. Die bestehende Liste liest *_results.json, und dort kommen manuell
+// ausgeloeste Wetten nie an — kein Aufloeser liest `polyBets`. Diese Flaeche liest den lokalen
+// Bestand, den _syncBetsFromHistory aus picks_history.json fuellt.
+
+test('Wett-Liste zeigt jede ausgeloeste Wette mit ihrem Zustand', () => {
+  const { w } = bootBets();
+  w.localStorage.setItem('betedge_poly_bets', JSON.stringify([
+    { id: '1', home: 'Real Madrid', away: 'Real Sociedad', market: 'Over 2.5 Tore',
+      stake: 5, polyPrice: 0.665, placed: '2026-08-25T13:49:17Z', state: 'confirmed', result: null },
+    { id: '2', home: 'Henrique Rocha', away: 'Michael Mmoh', market: 'Henrique Rocha',
+      stake: 5, polyPrice: 0.575, placed: '2026-08-25T13:49:53Z', state: 'dispatched', result: null },
+  ]));
+  const html = w._polyMyBetsHtml();
+  assert.match(html, /Real Madrid/);
+  assert.match(html, /Henrique Rocha/);
+  assert.match(html, /🟣 Platziert/);
+  assert.match(html, /⏳ Angefragt/);
+  assert.match(html, /67¢/, 'Preis und Quote stehen dran');
+  assert.match(html, /· 2</, 'Anzahl im Kopf');
+});
+
+test('Wett-Liste sortiert die neueste nach oben', () => {
+  const { w } = bootBets();
+  w.localStorage.setItem('betedge_poly_bets', JSON.stringify([
+    { id: 'alt', home: 'Alt', away: 'X', market: 'M', placed: '2026-05-01T10:00:00Z', state: 'confirmed' },
+    { id: 'neu', home: 'Neu', away: 'Y', market: 'M', placed: '2026-08-25T13:49:00Z', state: 'confirmed' },
+  ]));
+  const html = w._polyMyBetsHtml();
+  assert.ok(html.indexOf('Neu') < html.indexOf('Alt'), 'neueste zuerst');
+});
+
+test('Leere Liste erklaert, was passieren muss', () => {
+  const { w } = bootBets();
+  w.localStorage.setItem('betedge_poly_bets', '[]');
+  const html = w._polyMyBetsHtml();
+  assert.match(html, /Noch keine/);
+  assert.match(html, /picks_history\.json/, 'sagt, woher die Bestaetigung kommt');
+});
+
+test('Liste erscheint auch, solange die Server-Daten noch laden', () => {
+  const { w } = bootBets();
+  w.localStorage.setItem('betedge_poly_bets', JSON.stringify([
+    { id: '1', home: 'Real Madrid', away: 'Real Sociedad', market: 'Over 2.5 Tore', placed: '2026-08-25T13:49:17Z', state: 'confirmed' },
+  ]));
+  const html = w.renderPolyStats();
+  assert.match(html, /Real Madrid/, 'haengt nicht an *_results.json');
+  assert.match(html, /Performance lädt/);
+});
+
