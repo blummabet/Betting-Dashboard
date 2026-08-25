@@ -133,3 +133,116 @@ test('_polyHeuteTokenOrder: Label ohne "vs" -> home traegt das Label, away leer'
   assert.equal(o.home, 'Winner of Group A');
   assert.equal(o.away, '');
 });
+
+
+// ── Versand: was tatsaechlich bei GitHub landet (25.08.2026, Lucas' Heute-Test) ───────────────
+// Lucas loeste einen Heute-Play aus, bekam „PAT pruefen" und nichts passierte. Der Token fehlte —
+// aber selbst MIT Token waere nichts angekommen: `_wmBetDispatch` baute die Order aus einer festen
+// Feldliste und liess polyKey/side/tokenId liegen, stempelte alles als WM2026 und baute eine
+// fifa-world-cup-URL fuer einen LoL-Markt. Der Placer findet den Markt genau ueber diese Felder.
+
+function bootDispatch(order, respond) {
+  const dom = new JSDOM('<!DOCTYPE html><body><div id="polyModal"><div id="polyModalBody"></div></div></body>',
+    { url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
+  const w = dom.window;
+  const sent = [];
+  w.fetch = (url, opt) => {
+    if (String(url).includes('/dispatches')) {
+      sent.push({ url: String(url), body: JSON.parse(opt.body), auth: opt.headers.Authorization });
+      return Promise.resolve(respond || { ok: true, status: 204, json: () => Promise.resolve({}) });
+    }
+    return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+  };
+  w.localStorage.clear();
+  w.eval(readFileSync(VERDICT, 'utf8'));
+  w.eval(readFileSync(POLY, 'utf8'));
+  w.localStorage.setItem('betedge_github_pat', 'ghp_testtoken');
+  w.document.getElementById('polyModal').dataset.pendingOrder = JSON.stringify(order);
+  return { w, sent };
+}
+
+const HEUTE_ORDER = {
+  home: 'GSMC', away: 'Spar', market: 'Under', polyPrice: 0.78,
+  slug: 'lol-gsmc-spar-2026-08-25', tokenId: 'TOK-UNDER',
+  polyKey: 'lol-gsmc-spar-2026-08-25', side: 'Under',
+  league: 'ESPORTS', sport: 'E-Sport', edge: null, conviction: 8,
+};
+
+test('Versand: Poly-Play traegt polyKey, side und Token bis zu GitHub', async () => {
+  const { w, sent } = bootDispatch(HEUTE_ORDER);
+  await w._wmBetDispatch();
+  assert.strictEqual(sent.length, 1, 'genau ein Dispatch');
+  const o = sent[0].body.client_payload.orders[0];
+  assert.strictEqual(o.polyKey, 'lol-gsmc-spar-2026-08-25');
+  assert.strictEqual(o.side, 'Under');
+  assert.strictEqual(o.tokenId, 'TOK-UNDER');
+  assert.strictEqual(o.sport, 'E-Sport');
+  assert.strictEqual(o.conviction, 8);
+  assert.notStrictEqual(o.league, 'WM2026', 'kein WM-Stempel auf einem LoL-Markt');
+  assert.match(o.eventUrl, /polymarket\.com\/event\/lol-gsmc-spar/, 'kein fifa-world-cup-Pfad');
+  assert.strictEqual(sent[0].body.event_type, 'place-poly-bets');
+});
+
+test('Versand: ohne Token bleibt tokenId null — der Placer loest ueber den Slug auf', async () => {
+  const { tokenId, ...ohne } = HEUTE_ORDER;
+  const { w, sent } = bootDispatch(ohne);
+  await w._wmBetDispatch();
+  const o = sent[0].body.client_payload.orders[0];
+  assert.strictEqual(o.tokenId, null, 'null, nicht erfunden');
+  assert.strictEqual(o.polyKey, 'lol-gsmc-spar-2026-08-25', 'der Slug traegt den Fallback');
+});
+
+test('Versand: eine WM-Order bleibt unveraendert', async () => {
+  const wm = { home: 'Deutschland', away: 'Brasilien', market: 'Heimsieg', polyPrice: 0.55,
+               slug: 'wm-ger-bra', edge: 4.2, pinnFair: 0.52 };
+  const { w, sent } = bootDispatch(wm);
+  await w._wmBetDispatch();
+  const o = sent[0].body.client_payload.orders[0];
+  assert.strictEqual(o.league, 'WM2026');
+  assert.match(o.eventUrl, /fifa-world-cup/);
+  assert.strictEqual(o.polyKey, undefined, 'keine Poly-Felder auf einer WM-Order');
+  assert.strictEqual(o.edgePP, 4.2);
+});
+
+test('Fehlschlag: Status und GitHub-Meldung stehen im Dialog, nicht nur „PAT pruefen"', async () => {
+  const { w } = bootDispatch(HEUTE_ORDER,
+    { ok: false, status: 404, json: () => Promise.resolve({ message: 'Not Found' }) });
+  await w._wmBetDispatch();
+  const html = w.document.getElementById('polyModalBody').innerHTML;
+  assert.match(html, /HTTP 404/);
+  assert.match(html, /Not Found/);
+  assert.match(html, /repo/, 'nennt den fehlenden Scope als wahrscheinlichste Ursache');
+  assert.match(html, /Token ändern/, 'Weg zur Korrektur steht daneben');
+});
+
+test('Fehlschlag 401: anderer Hinweis als bei 404', async () => {
+  const { w } = bootDispatch(HEUTE_ORDER,
+    { ok: false, status: 401, json: () => Promise.resolve({ message: 'Bad credentials' }) });
+  await w._wmBetDispatch();
+  const html = w.document.getElementById('polyModalBody').innerHTML;
+  assert.match(html, /HTTP 401/);
+  assert.match(html, /abgelaufen/);
+  assert.doesNotMatch(html, /Scope/, '401 ist kein Scope-Problem');
+});
+
+test('Netzfehler meldet UNKLAR statt falschem Erfolg', async () => {
+  // Vorher stand hier `ok = true` („koennte trotzdem gelaufen sein"). Bei echtem Geld fuehrt ein
+  // falsches ✅ dazu, dass man ein zweites Mal setzt — der teuerste denkbare Anzeigefehler.
+  const dom = new JSDOM('<!DOCTYPE html><body><div id="polyModal"><div id="polyModalBody"></div></div></body>',
+    { url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
+  const w = dom.window;
+  w.fetch = (url) => String(url).includes('/dispatches')
+    ? Promise.reject(new Error('network down'))
+    : Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+  w.localStorage.clear();
+  w.eval(readFileSync(VERDICT, 'utf8'));
+  w.eval(readFileSync(POLY, 'utf8'));
+  w.localStorage.setItem('betedge_github_pat', 'ghp_testtoken');
+  w.document.getElementById('polyModal').dataset.pendingOrder = JSON.stringify(HEUTE_ORDER);
+  await w._wmBetDispatch();
+  const html = w.document.getElementById('polyModalBody').innerHTML;
+  assert.match(html, /Unklar/);
+  assert.match(html, /Place Polymarket Bets/, 'sagt WO man nachsieht');
+  assert.doesNotMatch(html, /Action ausgelöst/, 'kein falsches Erfolgs-Signal');
+});
+
