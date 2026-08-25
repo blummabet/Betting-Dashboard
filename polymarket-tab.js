@@ -1612,6 +1612,14 @@ function _renderPickCard(pick) {
   const _placedResult = _placedBet?.result; // null = pending, 'won'/'lost' etc = resolved
 
   if (isPlaced) {
+    // 25.08.2026 (Lucas): „Platziert" nur, wenn der Runner es bestaetigt hat. Alles andere ist
+    // ehrlich als angefragt/unklar zu benennen — eine Position, die es nicht gibt, ist teurer als
+    // ein haesslicheres Badge. Alt-Eintraege ohne `state` gelten als NICHT bestaetigt.
+    const _st = _placedBet.state || 'dispatched';
+    const _polyPlacedBadge = _st === 'confirmed' ? { t: '🟣 Platziert', c: '#a78bfa' }
+                           : _st === 'failed'    ? { t: '❌ Nicht gesetzt', c: '#f85149' }
+                           : _st === 'unknown'   ? { t: '⚠️ Unklar', c: '#e3b341' }
+                           :                       { t: '⏳ Angefragt', c: '#e3b341' };
     const resIcon  = _placedResult === 'won'  ? '✅ Gewonnen'
                    : _placedResult === 'lost' ? '❌ Verloren'
                    : _placedResult === 'void' ? '〇 Void'
@@ -1626,8 +1634,8 @@ function _renderPickCard(pick) {
          data-id="${pick.id}"
          style="opacity:.75;cursor:default;position:relative">
       <!-- Placed banner -->
-      <div style="position:absolute;top:10px;right:10px;background:${_placedResult ? (_placedResult==='won'?'#1a3a24':'#3a1a1a') : '#1a2340'};border:1px solid ${_placedResult ? resCol+'55' : '#a78bfa55'};border-radius:6px;padding:3px 8px;font-size:11px;font-weight:700;color:${_placedResult ? resCol : '#a78bfa'}">
-        ${_placedResult ? resIcon : '🟣 Platziert'}
+      <div style="position:absolute;top:10px;right:10px;background:${_placedResult ? (_placedResult==='won'?'#1a3a24':'#3a1a1a') : '#1a2340'};border:1px solid ${(_placedResult ? resCol : _polyPlacedBadge.c)+'55'};border-radius:6px;padding:3px 8px;font-size:11px;font-weight:700;color:${_placedResult ? resCol : _polyPlacedBadge.c}">
+        ${_placedResult ? resIcon : _polyPlacedBadge.t}
       </div>
       <!-- League -->
       <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
@@ -3956,13 +3964,34 @@ async function _syncBetsFromHistory(silent = true) {
   const _key  = (home, away, market) => `${_norm(home)}|${_norm(away)}|${_norm(market)}`;
   const idx   = new Set(existing.map(b => _key(b.home, b.away, b.market)));
 
+  // 25.08.2026 (Lucas: „werden als platziert angezeigt, sind aber nicht platziert"): der Sync
+  // ERGAENZTE nur und liess lokale Optimismus-Eintraege unberuehrt — eine fehlgeschlagene Order
+  // wurde sogar ausdruecklich uebersprungen und blieb damit fuer immer „Platziert". Jetzt wird
+  // jeder lokale Eintrag gegen den Repo-Stand bestaetigt oder als fehlgeschlagen markiert.
+  const byKey = {};
+  existing.forEach(b => { byKey[_key(b.home, b.away, b.market)] = b; });
+  let abgeglichen = 0;
+  for (const fx of history) {
+    if (!Array.isArray(fx.polyBets)) continue;
+    for (const pb of fx.polyBets) {
+      const kk = _key(fx.home, fx.away, pb.market);
+      const lokal = byKey[kk];
+      if (lokal) {
+        const neu = pb.status === 'placed' ? 'confirmed'
+                  : pb.status === 'failed' ? 'failed'
+                  : lokal.state;
+        if (neu && neu !== lokal.state) { lokal.state = neu; abgeglichen++; }
+      }
+    }
+  }
+
   let imported = 0;
   for (const fx of history) {
     if (!Array.isArray(fx.polyBets)) continue;
     for (const pb of fx.polyBets) {
-      if (pb.status === 'failed') continue; // skip failed orders
       const k = _key(fx.home, fx.away, pb.market);
       if (idx.has(k)) continue; // already tracked
+      if (pb.status === 'failed') continue;   // gescheiterte Order nicht neu anlegen
 
       existing.push({
         id:        `${fx.league || ''}|${fx.home}|${fx.away}|${pb.market}`,
@@ -3975,6 +4004,7 @@ async function _syncBetsFromHistory(silent = true) {
         polyPrice: pb.polyPrice || null,
         placed:    pb.placedAt || fx.date || '',
         method:    'auto',
+        state:     pb.status === 'placed' ? 'confirmed' : 'dispatched',
         result:    pb.result  || null,
       });
       idx.add(k);
@@ -3982,7 +4012,7 @@ async function _syncBetsFromHistory(silent = true) {
     }
   }
 
-  if (imported > 0) {
+  if (imported > 0 || abgeglichen > 0) {
     _savePolyBets(existing);
     console.log(`[PolyBets] ✅ ${imported} Bet(s) aus picks_history.json importiert`);
     if (!silent) _polyToast(`📥 ${imported} Bet${imported !== 1 ? 's' : ''} aus Repo importiert`);
@@ -5250,6 +5280,21 @@ function polyConfirm() {
   document.getElementById('polyModal').style.display = 'flex';
 }
 
+// 25.08.2026: Fehlgeschlagener Versand darf keine Karteileiche hinterlassen, die „Platziert"
+// behauptet. Nimmt genau die Eintraege zurueck, die dieser Versuch angelegt hat.
+function _polyRollbackBets(savedBets) {
+  const ids = new Set((savedBets || []).map(b => b.id));
+  if (!ids.size) return;
+  try { _savePolyBets(_getPolyBets().filter(b => !(ids.has(b.id) && b.state === 'dispatched'))); }
+  catch (e) { console.error('[PolyDispatch] Rollback fehlgeschlagen:', e); }
+  for (const id of ids) {
+    if (window._polyPlacedThisSession && window._polyPlacedThisSession[id]
+        && window._polyPlacedThisSession[id].state === 'dispatched') {
+      delete window._polyPlacedThisSession[id];
+    }
+  }
+}
+
 async function polyDispatch() {
   const orders = window._polyOrdersObj;
   const sel    = window._polyOrdersSel;
@@ -5280,6 +5325,9 @@ async function polyDispatch() {
         polyPrice: pd?.found ? pd.price : null,
         placed:    new Date().toISOString(),
         method:    'auto',
+        // 25.08.2026 (Lucas): NICHT „platziert" — nur angefragt. Bestaetigt wird erst, was
+        // der Runner in picks_history.json zurueckmeldet (_syncBetsFromHistory).
+        state:     'dispatched',
         result:    null,
       };
       bets.push(entry);
@@ -5308,28 +5356,50 @@ async function polyDispatch() {
   if (statsEl) statsEl.innerHTML = renderPolyStats();
 
   // ── Dispatch to GitHub ─────────────────────────────────────────────────────
-  let ok = false;
+  let ok = false, _polyDispatchUnklar = false;
   try {
     ok = await _callGitHubDispatch(orders);
-  } catch(dispatchErr) {
+  } catch (dispatchErr) {
+    // Vorher stand hier `ok = true`. Ein Netzfehler ist aber kein Erfolg — er ist Unwissen, und
+    // das muss man sehen koennen, sonst setzt man doppelt.
     console.error('[PolyDispatch] GitHub dispatch threw:', dispatchErr);
-    // Bets already saved above — treat as unknown (action may have triggered)
-    ok = true;
+    _polyDispatchUnklar = true;
+    for (const b of savedBets) {
+      b.state = 'unknown';
+      if (window._polyPlacedThisSession[b.id]) window._polyPlacedThisSession[b.id].state = 'unknown';
+    }
+    try { const all = _getPolyBets(); all.forEach(x => { if (savedBets.some(s => s.id === x.id) && x.state === 'dispatched') x.state = 'unknown'; }); _savePolyBets(all); } catch (e) {}
   }
 
-  if (ok) {
+  // Neuzeichnen darf den Geld-Zustand nie beeinflussen: faellt das Rendern um, sind Rollback und
+  // Markierung trotzdem schon passiert.
+  const _redraw = () => {
+    try {
+      const g = document.getElementById('polyPickGrid');
+      if (g) g.innerHTML = renderPolyPickCards();
+      if (statsEl) statsEl.innerHTML = renderPolyStats();
+    } catch (e) { console.error('[PolyDispatch] Neuzeichnen fehlgeschlagen:', e); }
+  };
+  if (_polyDispatchUnklar) {
+    if (btn) { btn.disabled = false; btn.textContent = '🟣 Nochmal versuchen'; }
+    _redraw();
+    _polyToast('⚠️ Unklar — erst in Actions → 🟣 Place Polymarket Bets nachsehen');
+  } else if (ok) {
     _polyState.selected.clear();
     _polyRefreshStickyBar();
     const modal = document.getElementById('polyModal');
     if (modal) modal.style.display = 'none';
-    const grid = document.getElementById('polyPickGrid');
-    if (grid) grid.innerHTML = renderPolyPickCards();
-    if (statsEl) statsEl.innerHTML = renderPolyStats();
-    _polyToast(`🟣 ${sel.length} Bet${sel.length !== 1 ? 's' : ''} ausgelöst via GitHub Action!`);
+    _redraw();
+    // „ausgeloest" ist die Wahrheit — platziert ist es erst, wenn der Runner es zurueckmeldet.
+    _polyToast(`⏳ ${sel.length} Bet${sel.length !== 1 ? 's' : ''} angefragt — Bestätigung folgt aus dem Repo`);
   } else {
+    // Nichts ist rausgegangen: die eben angelegten Eintraege wieder entfernen, sonst behauptet die
+    // Karte fuer immer „Platziert".
+    _polyRollbackBets(savedBets);
     if (btn) { btn.disabled = false; btn.textContent = '🟣 Bets via GitHub auslösen'; }
-    _polyToast('❌ GitHub API Fehler — Token prüfen');
-    polyOpenSettings();
+    _redraw();
+    _polyToast('❌ Versand fehlgeschlagen — nichts gesetzt');
+    if (!_polyDispatchNoPat) { /* Fehlerdetails stehen im Dialog */ } else { polyOpenSettings(); }
   }
 }
 
@@ -5349,6 +5419,9 @@ function polySavePending() {
       polyPrice:  pd?.found ? pd.price : null,
       placed:     new Date().toISOString(),
       method:     'manual',
+      // Von Hand als gesetzt gemeldet — das IST eine Bestaetigung, nur eben von Lucas statt vom
+      // Runner. Deshalb 'confirmed' und nicht 'dispatched'.
+      state:      'confirmed',
       result:     null,
     });
   }

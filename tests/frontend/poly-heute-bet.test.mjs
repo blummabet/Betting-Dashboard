@@ -320,3 +320,75 @@ test('Blockierter Browser-Speicher meldet den Fehler, statt Erfolg zu behaupten'
   assert.doesNotMatch(html, /Poly-Play bestätigen/, 'kein Weiterlaufen auf einer Luege');
 });
 
+
+// ── „Platziert" muss wahr sein (25.08.2026, Lucas) ───────────────────────────────────────────
+// „Die Wetten werden als platziert angezeigt — aber sie sind nicht platziert." Der Code stempelte
+// die Karte VOR dem Versand („Save bets to localStorage BEFORE dispatch") und glich nie ab. Eine
+// Position, die es nicht gibt, ist der teuerste Anzeigefehler, den dieses Projekt haben kann.
+
+function bootBets({ dispatchOk = true, throwOnDispatch = false } = {}) {
+  const dom = new JSDOM('<!DOCTYPE html><body><div id="polyModal"><div id="polyModalBody"></div></div><div id="polyPickGrid"></div></body>',
+    { url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
+  const w = dom.window;
+  w.fetch = (url) => {
+    if (String(url).includes('/dispatches')) {
+      if (throwOnDispatch) return Promise.reject(new Error('offline'));
+      return Promise.resolve(dispatchOk ? { ok: true, status: 204, json: () => Promise.resolve({}) }
+                                        : { ok: false, status: 404, json: () => Promise.resolve({ message: 'Not Found' }) });
+    }
+    return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+  };
+  w.localStorage.clear();
+  w.eval(readFileSync(VERDICT, 'utf8'));
+  w.eval(readFileSync(POLY, 'utf8'));
+  w.localStorage.setItem('betedge_github_pat', 'ghp_x');
+  const pick = { id: 'p1', home: 'GSMC', away: 'Spar', market: 'Under', league: 'ESPORTS', date: '25.08.2026' };
+  w._polyOrdersObj = [{ home: 'GSMC', away: 'Spar', market: 'Under', league: 'ESPORTS' }];
+  w._polyOrdersSel = [pick];
+  w._polyState = { prices: { p1: { found: true, price: 0.78 } }, dateStr: '25.08.2026', selected: new Set() };
+  return { w, bets: () => JSON.parse(w.localStorage.getItem('betedge_poly_bets') || '[]') };
+}
+
+test('Nach dem Versand steht ANGEFRAGT, nicht platziert', async () => {
+  const { w, bets } = bootBets({ dispatchOk: true });
+  await w.polyDispatch();
+  const b = bets();
+  assert.strictEqual(b.length, 1);
+  assert.strictEqual(b[0].state, 'dispatched', 'bestaetigt wird erst, was der Runner zurueckmeldet');
+});
+
+test('Fehlgeschlagener Versand nimmt den Eintrag zurueck', async () => {
+  const { w, bets } = bootBets({ dispatchOk: false });
+  await w.polyDispatch();
+  assert.deepStrictEqual([...bets()], [], 'keine Karteileiche, die „Platziert" behauptet');
+  assert.ok(!w._polyPlacedThisSession || !w._polyPlacedThisSession.p1, 'auch nicht im Sitzungsspeicher');
+});
+
+test('Netzfehler heisst UNKLAR — der Eintrag bleibt, aber markiert', async () => {
+  const { w, bets } = bootBets({ throwOnDispatch: true });
+  await w.polyDispatch();
+  const b = bets();
+  assert.strictEqual(b.length, 1, 'nicht zuruecknehmen — es koennte gelaufen sein');
+  assert.strictEqual(b[0].state, 'unknown');
+});
+
+test('Badge auf der Karte folgt dem echten Zustand', () => {
+  const { w } = bootBets();
+  const pick = { id: 'p1', home: 'GSMC', away: 'Spar', market: 'Under', league: 'ESPORTS',
+                 leagueName: 'LoL', leagueFlag: '🎮', date: '25.08.2026' };
+  const setzen = (state) => w.localStorage.setItem('betedge_poly_bets',
+    JSON.stringify([{ id: 'p1', home: 'GSMC', away: 'Spar', market: 'Under', state, result: null, polyPrice: 0.78 }]));
+
+  setzen('confirmed');  assert.match(w._renderPickCard(pick), /🟣 Platziert/);
+  setzen('dispatched'); assert.match(w._renderPickCard(pick), /⏳ Angefragt/);
+  setzen('unknown');    assert.match(w._renderPickCard(pick), /⚠️ Unklar/);
+  setzen('failed');     assert.match(w._renderPickCard(pick), /Nicht gesetzt/);
+
+  // Alt-Eintrag ohne `state` (genau die, die Lucas jetzt faelschlich als platziert sieht):
+  w.localStorage.setItem('betedge_poly_bets',
+    JSON.stringify([{ id: 'p1', home: 'GSMC', away: 'Spar', market: 'Under', result: null, polyPrice: 0.78 }]));
+  const html = w._renderPickCard(pick);
+  assert.match(html, /⏳ Angefragt/, 'ohne Nachweis gilt NICHT als platziert');
+  assert.doesNotMatch(html, /🟣 Platziert/);
+});
+
