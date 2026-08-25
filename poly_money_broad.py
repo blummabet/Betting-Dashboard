@@ -87,7 +87,11 @@ LIVE_HIST_KEEP_H      = 12.0
 # (KEIN Holder-Call, KEINE Shares/Whales) -> die Money Map zeigt die Poly-Blase (Seite via Preis) auch
 # weit vor Anpfiff. Getrennt vom Close-Freeze (der bleibt die Auswertungs-Basis).
 UPCOMING_FILE         = "poly_money_upcoming.json"
-UPCOMING_WINDOW_H     = float(os.environ.get("POLY_UPCOMING_WINDOW_H") or 48.0)
+UPCOMING_WINDOW_H     = float(os.environ.get("POLY_UPCOMING_WINDOW_H") or 120.0)
+# 25.08.2026 (Lucas zeigte den Poly-Link auf Barcelona–Athletic, den wir „nicht gelistet" genannt
+# hatten): 48h war zu eng. Das Spiel lag 55h vor Anpfiff, hatte auf Poly aber schon $21,7K —
+# der Event-Page fehlte der Poly-Block nur wegen dieses Fensters. Weiten kostet NICHTS: die
+# Events sind im Sweep ohnehin geholt, hier wird nur gefiltert, welche wir uns merken.
 
 
 def update_resolutions(prev, markets, now=None, keep_days=RESOLUTIONS_KEEP_DAYS):

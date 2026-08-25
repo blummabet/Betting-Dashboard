@@ -2032,29 +2032,61 @@ async function _wmBetDispatch() {
 
   const btn = document.getElementById('wmBetDispatchBtn');
   if (btn) { btn.disabled = true; btn.textContent = '⏳ Wird ausgelöst…'; btn.style.opacity = '.6'; }
+  _polyDispatchError = null;   // frischer Versuch
 
+  // 25.08.2026 (Lucas' Heute-Test): ein Poly-Direktplay traegt polyKey/side/tokenId — genau die
+  // Felder, an denen der Placer den Markt findet. Die alte feste Feldliste liess sie fallen und
+  // stempelte alles als WM2026, inklusive fifa-world-cup-URL fuer einen LoL-Markt. Der Dialog
+  // unterschied die beiden Faelle schon; der Versand tat es nicht.
+  const _isPolyPlay = !!order.polyKey;
   const orders = [{
     home:      order.home,
     away:      order.away,
     market:    order.market,
-    league:    'WM2026',
+    league:    _isPolyPlay ? (order.league || 'POLY') : 'WM2026',
     stake:     _getStakeForEdge(order.edge ?? 0),
     polyPrice: order.polyPrice,
     slug:      order.slug,
-    eventUrl:  order.slug ? `https://polymarket.com/sports/fifa-world-cup/${order.slug}` : null,
+    eventUrl:  _isPolyPlay
+                 ? `https://polymarket.com/event/${order.polyKey}`
+                 : (order.slug ? `https://polymarket.com/sports/fifa-world-cup/${order.slug}` : null),
     edgePP:    order.edge,
     pinnFair:  order.pinnFair,
+    ...(_isPolyPlay ? {
+      polyKey:    order.polyKey,
+      side:       order.side,
+      tokenId:    order.tokenId || null,     // null -> Placer loest ueber den Slug auf
+      sport:      order.sport || '',
+      conviction: (order.conviction ?? null),
+    } : {}),
   }];
 
-  let ok = false;
+  let ok = false, _dispatchUnklar = false;
   try {
     ok = await _callGitHubDispatch(orders);
-  } catch(e) {
+  } catch (e) {
+    // 25.08.2026: hier stand `ok = true` mit der Begruendung, die Action koenne trotzdem gelaufen
+    // sein. Bei echtem Geld ist ein falsches „✅ ausgeloest" aber schlimmer als jede Fehlermeldung —
+    // man setzt dann ein zweites Mal. Der Wurf heisst: wir wissen es NICHT. Also sagen wir das.
     console.error('[WMBet] dispatch error:', e);
-    ok = true; // action may have triggered despite error
+    _dispatchUnklar = true;
   }
 
   const body  = document.getElementById('polyModalBody');
+
+  if (_dispatchUnklar) {
+    if (btn) { btn.disabled = false; btn.textContent = '🟣 Nochmal versuchen'; btn.style.opacity = '1'; }
+    const box = document.createElement('div');
+    box.style.cssText = 'background:#e3b34115;border:1px solid #e3b34155;border-radius:8px;padding:12px 14px;margin-top:14px';
+    box.setAttribute('data-dispatch-err', '1');
+    box.innerHTML = '<div style="font-size:13px;font-weight:800;color:#e3b341;margin-bottom:6px">⚠️ Unklar — Anfrage kam nicht durch</div>'
+      + '<div style="font-size:12px;color:#8b949e;line-height:1.5">Netzfehler. Die Action ist wahrscheinlich NICHT gelaufen, sicher ist das aber nicht. '
+      + 'Erst in GitHub → Actions → <b>🟣 Place Polymarket Bets</b> nachsehen, bevor du nochmal drückst — sonst steht die Wette doppelt.</div>';
+    const host = document.getElementById('polyModalBody');
+    if (host) { const old = host.querySelector('[data-dispatch-err]'); if (old) old.remove(); host.appendChild(box); }
+    _polyToast('⚠️ Dispatch unklar — erst in Actions nachsehen');
+    return;
+  }
 
   if (ok) {
     body.innerHTML = `
@@ -2071,7 +2103,19 @@ async function _wmBetDispatch() {
       </div>`;
   } else {
     if (btn) { btn.disabled = false; btn.textContent = '🟣 Nochmal versuchen'; btn.style.opacity = '1'; }
-    _polyToast('❌ GitHub Dispatch fehlgeschlagen — PAT prüfen');
+    const e = _polyDispatchError;
+    // Der Grund gehoert IN den Dialog: ein Toast ist weg, bevor man ihn gelesen hat, und ohne
+    // Status raet man zwischen abgelaufenem Token, fehlendem Scope und SSO.
+    const box = document.createElement('div');
+    box.style.cssText = 'background:#f8514915;border:1px solid #f8514955;border-radius:8px;padding:12px 14px;margin-top:14px';
+    box.innerHTML = `<div style="font-size:13px;font-weight:800;color:#f85149;margin-bottom:6px">❌ Dispatch fehlgeschlagen</div>`
+      + (e ? `<div style="font-size:12px;color:#e6edf3;margin-bottom:4px"><b>HTTP ${e.status}</b>${e.message ? ' — ' + String(e.message).replace(/</g, '&lt;') : ''}</div>`
+             + `<div style="font-size:12px;color:#8b949e;line-height:1.5">${e.hint}</div>`
+           : `<div style="font-size:12px;color:#8b949e">Kein Netz oder Anfrage blockiert — Konsole prüfen.</div>`)
+      + `<button onclick="polyOpenSettings()" style="margin-top:10px;background:none;border:1px solid #30363d;border-radius:6px;color:#8b949e;font-size:11px;font-weight:700;padding:6px 12px;cursor:pointer;font-family:inherit">⚙️ Token ändern</button>`;
+    const host = document.getElementById('polyModalBody');
+    if (host) { const old = host.querySelector('[data-dispatch-err]'); if (old) old.remove(); box.setAttribute('data-dispatch-err', '1'); host.appendChild(box); }
+    _polyToast(e ? `❌ Dispatch fehlgeschlagen (HTTP ${e.status})` : '❌ Dispatch fehlgeschlagen');
   }
 }
 
@@ -4988,6 +5032,9 @@ function _polyDatasetForLeague(league) {
   return { dataset: 'wm', profile: 'wm2026' };   // WM-Gruppen (A–L) + KO
 }
 
+// Letzter Dispatch-Fehler (Status + GitHub-Meldung + Hinweis) fuer eine brauchbare Anzeige.
+let _polyDispatchError = null;
+
 async function _callGitHubDispatch(orders) {
   const pat = _getGithubPAT();
   if (!pat) {
@@ -5018,7 +5065,22 @@ async function _callGitHubDispatch(orders) {
         client_payload: { orders: grp.orders, dataset, profile: grp.profile },
       }),
     });
-    if (!(resp.ok || resp.status === 204)) alleOk = false;
+    if (!(resp.ok || resp.status === 204)) {
+      alleOk = false;
+      // „PAT pruefen" half niemandem — die Ursachen sind voellig verschieden und stehen in der
+      // Antwort. 404 auf ein PRIVATES Repo heisst fast immer: Token ohne `repo`-Scope.
+      let detail = '';
+      try { detail = ((await resp.json()) || {}).message || ''; } catch (e) { detail = ''; }
+      _polyDispatchError = {
+        status: resp.status,
+        message: detail,
+        hint: resp.status === 401 ? 'Token falsch kopiert oder abgelaufen — neu erzeugen.'
+            : resp.status === 404 ? 'Repo nicht sichtbar: dem Token fehlt der Scope `repo` (GitHub meldet 404 statt 403). Classic-Token mit `repo` erzeugen.'
+            : resp.status === 403 ? 'Verboten — bei SSO-Organisationen den Token zusaetzlich autorisieren.'
+            : resp.status === 422 ? 'GitHub hat den Payload abgelehnt — das liegt NICHT am Token.'
+            : 'Unerwarteter Status — Details oben.',
+      };
+    }
   }
   return alleOk;
 }

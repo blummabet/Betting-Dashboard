@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v184';   // 25.08.2026 (Lucas): gesperrte Sportarten raus aus dem Whales-Tab; Whale-Push Public gesperrt, Trades mit Hinweis.
+const VERSION = 'cocobet-v185';   // 25.08.2026 (Lucas' Heute-Test): Poly-Felder (polyKey/side/tokenId) kommen jetzt beim Dispatch an; echter HTTP-Fehler statt „PAT pruefen".
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
