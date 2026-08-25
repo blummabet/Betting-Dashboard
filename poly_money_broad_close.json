@@ -74217,7 +74217,13 @@
     "usd": 1415,
     "ts": 1787585500
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Minnesota Twins": 1.0,
+   "Athletics": 0.0
+  },
+  "resolvedAt": "2026-08-25T08:02:42.180878+00:00"
  },
  "mlb-chc-ari-2026-08-24": {
   "shares": {
@@ -74457,7 +74463,13 @@
     "usd": 1000,
     "ts": 1787608674
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Pittsburgh Pirates": 1.0,
+   "San Diego Padres": 0.0
+  },
+  "resolvedAt": "2026-08-25T08:02:42.180878+00:00"
  },
  "mlb-cin-sf-2026-08-24": {
   "shares": {
@@ -74986,8 +74998,8 @@
  },
  "lol-drxc-foxy-2026-08-25": {
   "shares": {
-   "Kiwoom DRX Challengers": 29599.807259790014,
-   "BNK FearX Youth": 56196.43728368007
+   "Kiwoom DRX Challengers": 51372.63165046492,
+   "BNK FearX Youth": 97533.21196490998
   },
   "prices": {
    "Kiwoom DRX Challengers": 0.345,
@@ -74995,8 +75007,14 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 113958,
+  "totalUsd": 124199,
   "whales": [
+   {
+    "wallet": "0xe015b5a2a299167be835a2fd1e86f09c49e06ffd",
+    "side": "BNK FearX Youth",
+    "usd": 38146,
+    "avgPrice": 0.6582
+   },
    {
     "wallet": "0x7e5e420a5cde8a322f3b5b93a12a164827f47315",
     "side": "BNK FearX Youth",
@@ -75006,110 +75024,152 @@
    {
     "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
     "side": "BNK FearX Youth",
-    "usd": 6899,
-    "avgPrice": 0.6628
+    "usd": 13197,
+    "avgPrice": 0.6614
    },
    {
-    "wallet": "0xe015b5a2a299167be835a2fd1e86f09c49e06ffd",
-    "side": "BNK FearX Youth",
-    "usd": 6550,
-    "avgPrice": 0.65
-   },
-   {
-    "wallet": "0xafd492974cd531aae7786210438ae46b42047e61",
-    "side": "BNK FearX Youth",
-    "usd": 6550,
-    "avgPrice": 0.66
+    "wallet": "0xf377b9fb12a4b7507a4f997461a73eb30b564159",
+    "side": "Kiwoom DRX Challengers",
+    "usd": 10350,
+    "avgPrice": 0.3399
    }
   ],
-  "hoursToKickoff": 0.85,
-  "capturedAt": "2026-08-25T07:10:15.707501+00:00",
+  "hoursToKickoff": 0.02,
+  "capturedAt": "2026-08-25T08:02:42.180878+00:00",
   "tokens": {
    "Kiwoom DRX Challengers": "96393687277905719792990806986427801199660684461906974404532969846661412175868",
    "BNK FearX Youth": "72835395700134259588332574644422091828817858593039009302132496280761515931751"
   },
   "book": {
    "side": "BNK FearX Youth",
-   "bid": 0.65,
-   "ask": 0.66,
+   "bid": 0.66,
+   "ask": 0.67,
    "spreadC": 1.0,
-   "spreadPct": 1.52,
+   "spreadPct": 1.49,
    "bids": [
     [
+     0.66,
+     6889
+    ],
+    [
      0.65,
-     34964
+     4486
     ],
     [
      0.64,
-     8923
+     3003
     ],
     [
      0.63,
-     3511
+     4477
     ],
     [
      0.62,
-     534
+     1000
     ],
     [
      0.61,
-     500
-    ],
-    [
-     0.6,
-     1164
+     1005
     ]
    ],
    "asks": [
     [
-     0.66,
-     56999
-    ],
-    [
      0.67,
-     48442
+     11517
     ],
     [
      0.68,
-     3649
+     3324
     ],
     [
      0.69,
-     16348
+     2790
     ],
     [
      0.7,
-     1106
+     1495
     ],
     [
      0.71,
-     1321
+     2006
+    ],
+    [
+     0.72,
+     5
     ]
    ]
   },
   "trades": [
    {
-    "wallet": "0xe6638362b413c43c8e4993265edd0c66154ee9f8",
+    "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
     "action": "BUY",
     "side": "BNK FearX Youth",
     "price": 0.66,
-    "usd": 300,
-    "ts": 1787641338
+    "usd": 1660,
+    "ts": 1787644549
+   },
+   {
+    "wallet": "0xd4aea3e87d6d16badf19386f2049342b0e138ead",
+    "action": "BUY",
+    "side": "Kiwoom DRX Challengers",
+    "price": 0.34,
+    "usd": 323,
+    "ts": 1787644399
+   },
+   {
+    "wallet": "0xe015b5a2a299167be835a2fd1e86f09c49e06ffd",
+    "action": "BUY",
+    "side": "BNK FearX Youth",
+    "price": 0.66,
+    "usd": 31838,
+    "ts": 1787644347
    },
    {
     "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
     "action": "BUY",
     "side": "BNK FearX Youth",
     "price": 0.66,
-    "usd": 990,
-    "ts": 1787638962
+    "usd": 481,
+    "ts": 1787643909
+   },
+   {
+    "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
+    "action": "BUY",
+    "side": "BNK FearX Youth",
+    "price": 0.66,
+    "usd": 420,
+    "ts": 1787643885
+   },
+   {
+    "wallet": "0x4f4ebbdc7cd5ce12052b0db77ef47e098b3fb690",
+    "action": "BUY",
+    "side": "BNK FearX Youth",
+    "price": 0.66,
+    "usd": 726,
+    "ts": 1787643309
+   },
+   {
+    "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
+    "action": "BUY",
+    "side": "BNK FearX Youth",
+    "price": 0.66,
+    "usd": 963,
+    "ts": 1787643273
+   },
+   {
+    "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
+    "action": "BUY",
+    "side": "BNK FearX Youth",
+    "price": 0.66,
+    "usd": 1434,
+    "ts": 1787643199
    }
   ]
  },
  "cs2-color-cyb-2026-08-25": {
   "shares": {
-   "Color": 20544.662874269998,
-   "CYBERSHOKE Prospects": 11809.206289410004
+   "Color": 25404.607593020017,
+   "CYBERSHOKE Prospects": 14602.71417066
   },
   "prices": {
    "Color": 0.635,
@@ -75117,18 +75177,18 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 29947,
+  "totalUsd": 36767,
   "whales": [
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "Color",
-    "usd": 12719,
-    "avgPrice": 0.6395
+    "usd": 17390,
+    "avgPrice": 0.6396
    },
    {
     "wallet": "0x73e3fec494611d73c170cb2f23850fd998b21be9",
     "side": "CYBERSHOKE Prospects",
-    "usd": 7849,
+    "usd": 10688,
     "avgPrice": 0.3599
    },
    {
@@ -75143,8 +75203,8 @@
     "avgPrice": 0.5626
    }
   ],
-  "hoursToKickoff": 1.85,
-  "capturedAt": "2026-08-25T07:10:15.707501+00:00",
+  "hoursToKickoff": 1.02,
+  "capturedAt": "2026-08-25T08:02:42.180878+00:00",
   "tokens": {
    "Color": "104231706529731673329544808775849107314982702974420214796059744388494972171920",
    "CYBERSHOKE Prospects": "51623468559945264005464218289811193350594557845103487190056708847234859659825"
@@ -75158,57 +75218,81 @@
    "bids": [
     [
      0.63,
-     1699
+     8478
     ],
     [
      0.62,
-     880
+     2399
     ],
     [
      0.61,
-     1849
+     1554
     ],
     [
      0.6,
-     12503
+     12333
     ],
     [
      0.59,
-     7738
+     7431
     ],
     [
      0.58,
-     270
+     20
     ]
    ],
    "asks": [
     [
      0.64,
-     20263
+     12027
     ],
     [
      0.65,
-     2332
+     16
     ],
     [
      0.66,
-     718
+     895
     ],
     [
      0.67,
-     5777
+     1169
     ],
     [
      0.68,
-     753
+     325
     ],
     [
      0.69,
-     457
+     40
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "action": "BUY",
+    "side": "Color",
+    "price": 0.64,
+    "usd": 1198,
+    "ts": 1787643970
+   },
+   {
+    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "action": "BUY",
+    "side": "Color",
+    "price": 0.64,
+    "usd": 1148,
+    "ts": 1787643025
+   },
+   {
+    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "action": "BUY",
+    "side": "Color",
+    "price": 0.64,
+    "usd": 1108,
+    "ts": 1787642122
+   },
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "action": "BUY",
@@ -75248,159 +75332,119 @@
     "price": 0.64,
     "usd": 1498,
     "ts": 1787637601
-   },
-   {
-    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
-    "action": "BUY",
-    "side": "Color",
-    "price": 0.64,
-    "usd": 1469,
-    "ts": 1787636706
-   },
-   {
-    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
-    "action": "BUY",
-    "side": "Color",
-    "price": 0.64,
-    "usd": 1444,
-    "ts": 1787635806
-   },
-   {
-    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
-    "action": "BUY",
-    "side": "Color",
-    "price": 0.64,
-    "usd": 1420,
-    "ts": 1787634906
    }
   ]
  },
  "cs2-lph-qub-2026-08-25": {
   "shares": {
-   "LPH Gaming": 9368.408383375,
-   "QUB": 3040.0795416250003
+   "LPH Gaming": 11962.320634599997,
+   "QUB": 5126.9079944999985
   },
   "prices": {
-   "LPH Gaming": 0.755,
-   "QUB": 0.245
+   "LPH Gaming": 0.7,
+   "QUB": 0.3
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 15253,
+  "totalUsd": 17986,
   "whales": [
    {
     "wallet": "0x82d2e4dbb0a849ff8e2f5380719769145648beea",
     "side": "LPH Gaming",
-    "usd": 5748,
+    "usd": 5329,
     "avgPrice": 0.7645
-   },
-   {
-    "wallet": "0x60ec17443af511a21945f01430e61c803465f7b0",
-    "side": "LPH Gaming",
-    "usd": 690
-   },
-   {
-    "wallet": "0x267c3cc33b5fd40d6ad16c7c2dca1315045f5bfd",
-    "side": "LPH Gaming",
-    "usd": 609,
-    "avgPrice": 0.6397
    },
    {
     "wallet": "0xd619b68e64f256f8ddd185b261c8679eacf0c461",
     "side": "QUB",
-    "usd": 588,
+    "usd": 720,
     "avgPrice": 0.3633
+   },
+   {
+    "wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
+    "side": "LPH Gaming",
+    "usd": 708
+   },
+   {
+    "wallet": "0x984ffef12a23e7af5e2cef8e3283e0ab6a6e9a43",
+    "side": "QUB",
+    "usd": 682,
+    "avgPrice": 0.2893
    }
   ],
-  "hoursToKickoff": 0.85,
-  "capturedAt": "2026-08-25T07:10:15.707501+00:00",
+  "hoursToKickoff": 0.02,
+  "capturedAt": "2026-08-25T08:02:42.180878+00:00",
   "tokens": {
    "LPH Gaming": "46062858083746237172402045957031359282227437333398167438686114039300995348533",
    "QUB": "94042490357580507063494167114184699679783674667128092602980769901839156010597"
   },
   "book": {
    "side": "LPH Gaming",
-   "bid": 0.75,
-   "ask": 0.76,
-   "spreadC": 1.0,
-   "spreadPct": 1.32,
+   "bid": 0.59,
+   "ask": 0.72,
+   "spreadC": 13.0,
+   "spreadPct": 18.06,
    "bids": [
     [
-     0.75,
-     72
+     0.59,
+     48
     ],
     [
-     0.74,
-     358
+     0.58,
+     28
     ],
     [
-     0.73,
-     171
+     0.55,
+     20
     ],
     [
-     0.72,
-     148
+     0.44,
+     66
     ],
     [
-     0.71,
-     151
+     0.43,
+     90
     ],
     [
-     0.7,
-     116
+     0.41,
+     150
     ]
    ],
    "asks": [
     [
-     0.76,
-     656
+     0.72,
+     30
+    ],
+    [
+     0.74,
+     13
+    ],
+    [
+     0.75,
+     26
     ],
     [
      0.77,
-     583
-    ],
-    [
-     0.78,
-     10
+     30
     ],
     [
      0.79,
-     320
+     20
     ],
     [
      0.8,
-     1400
-    ],
-    [
-     0.82,
-     285
+     155
     ]
    ]
   },
   "trades": [
    {
-    "wallet": "0x82d2e4dbb0a849ff8e2f5380719769145648beea",
+    "wallet": "0x18c2841c2e333538851f4aeef9cbc455d772529a",
     "action": "BUY",
     "side": "LPH Gaming",
-    "price": 0.7708,
-    "usd": 1021,
-    "ts": 1787638428
-   },
-   {
-    "wallet": "0x82d2e4dbb0a849ff8e2f5380719769145648beea",
-    "action": "BUY",
-    "side": "LPH Gaming",
-    "price": 0.7731,
-    "usd": 2090,
-    "ts": 1787637930
-   },
-   {
-    "wallet": "0x82d2e4dbb0a849ff8e2f5380719769145648beea",
-    "action": "BUY",
-    "side": "LPH Gaming",
-    "price": 0.7557,
-    "usd": 2709,
-    "ts": 1787637877
+    "price": 0.68,
+    "usd": 395,
+    "ts": 1787644368
    }
   ]
  },
@@ -75528,46 +75572,46 @@
  },
  "auc-lf-nse-2026-08-25": {
   "shares": {
-   "Lions FC": 3698.8434918750013,
-   "Draw (Lions FC vs. North Sunshine Eagles FC)": 113.4948471,
-   "North Sunshine Eagles FC": 189.18502464
+   "Lions FC": 4509.4016762599995,
+   "Draw (Lions FC vs. North Sunshine Eagles FC)": 224.65476511999995,
+   "North Sunshine Eagles FC": 204.77689650000002
   },
   "prices": {
-   "Lions FC": 0.735,
-   "Draw (Lions FC vs. North Sunshine Eagles FC)": 0.155,
-   "North Sunshine Eagles FC": 0.095
+   "Lions FC": 0.755,
+   "Draw (Lions FC vs. North Sunshine Eagles FC)": 0.16,
+   "North Sunshine Eagles FC": 0.1
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 11089,
+  "totalUsd": 11848,
   "whales": [
    {
     "wallet": "0x2398a194611b494d4c06a083492af87f1dc88894",
     "side": "Lions FC",
-    "usd": 1935,
+    "usd": 1988,
     "avgPrice": 0.7976
    },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "Lions FC",
-    "usd": 1165,
-    "avgPrice": 0.7619
+    "usd": 1254,
+    "avgPrice": 0.761
    },
    {
-    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "wallet": "0x1ce5000f228a6a392306217670468778cb6117f9",
     "side": "Lions FC",
-    "usd": 112,
-    "avgPrice": 0.7767
+    "usd": 397,
+    "avgPrice": 0.7616
    },
    {
-    "wallet": "0x3644e3267869fbf86d72bf8745f9eecb5d0feb27",
+    "wallet": "0x91c7d9908cef31f3a1a6a659ddf26313dfde808f",
     "side": "Lions FC",
-    "usd": 94,
-    "avgPrice": 0.7799
+    "usd": 161,
+    "avgPrice": 0.7599
    }
   ],
-  "hoursToKickoff": 2.35,
-  "capturedAt": "2026-08-25T07:10:15.707501+00:00",
+  "hoursToKickoff": 1.52,
+  "capturedAt": "2026-08-25T08:02:42.180878+00:00",
   "tokens": {
    "Lions FC": "56014482227812753578053675403802587109467953928441214446008006964975253582165",
    "Draw (Lions FC vs. North Sunshine Eagles FC)": "41744129884774290894995378295268120268151966850381231368565421465580481969172",
@@ -75575,64 +75619,72 @@
   },
   "book": {
    "side": "Lions FC",
-   "bid": 0.73,
-   "ask": 0.74,
+   "bid": 0.75,
+   "ask": 0.76,
    "spreadC": 1.0,
-   "spreadPct": 1.35,
+   "spreadPct": 1.32,
    "bids": [
     [
+     0.75,
+     1239
+    ],
+    [
      0.73,
-     1052
+     617
     ],
     [
      0.72,
-     5
+     310
     ],
     [
      0.71,
-     162
+     344
     ],
     [
      0.7,
-     317
+     822
     ],
     [
      0.69,
-     538
-    ],
-    [
-     0.68,
-     384
+     821
     ]
    ],
    "asks": [
     [
-     0.74,
-     728
-    ],
-    [
-     0.75,
-     1038
-    ],
-    [
      0.76,
-     1047
+     282
     ],
     [
      0.77,
-     3517
+     724
     ],
     [
      0.78,
-     5381
+     2081
     ],
     [
      0.79,
-     2661
+     4412
+    ],
+    [
+     0.8,
+     6035
+    ],
+    [
+     0.81,
+     1995
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x1ce5000f228a6a392306217670468778cb6117f9",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.7616,
+    "usd": 400,
+    "ts": 1787644188
+   },
    {
     "wallet": "0x2398a194611b494d4c06a083492af87f1dc88894",
     "action": "BUY",
@@ -75642,5 +75694,801 @@
     "ts": 1787639565
    }
   ]
+ },
+ "kor-seo-bch-2026-08-25-more-markets": {
+  "shares": {
+   "Over": 2345.5548761700006,
+   "Under": 11869.929221829998
+  },
+  "prices": {
+   "Over": 0.165,
+   "Under": 0.835
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 14241,
+  "whales": [
+   {
+    "wallet": "0x547f2917d51f2e63ab382dcf641d4e0240162937",
+    "side": "Under",
+    "usd": 11256,
+    "avgPrice": 0.8399
+   },
+   {
+    "wallet": "0x204f72f35326db932158cba6adff0b9a1da95e14",
+    "side": "Over",
+    "usd": 982,
+    "avgPrice": 0.1597
+   },
+   {
+    "wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
+    "side": "Over",
+    "usd": 317
+   },
+   {
+    "wallet": "0x4c57e16157d4acea7037dcf12284e3804a9da7de",
+    "side": "Under",
+    "usd": 250,
+    "avgPrice": 0.84
+   }
+  ],
+  "hoursToKickoff": 2.52,
+  "capturedAt": "2026-08-25T08:02:42.180878+00:00",
+  "tokens": {
+   "Over": "106858709864837744892716493989739721792171157877311340597681536690040000610425",
+   "Under": "91959166620327240427053268106580396362223615525958138208956350380603524986657"
+  },
+  "book": {
+   "side": "Under",
+   "bid": 0.83,
+   "ask": 0.84,
+   "spreadC": 1.0,
+   "spreadPct": 1.19,
+   "bids": [
+    [
+     0.83,
+     297
+    ],
+    [
+     0.82,
+     5251
+    ],
+    [
+     0.81,
+     9930
+    ],
+    [
+     0.8,
+     4482
+    ],
+    [
+     0.79,
+     688
+    ],
+    [
+     0.78,
+     1070
+    ]
+   ],
+   "asks": [
+    [
+     0.84,
+     7128
+    ],
+    [
+     0.85,
+     7359
+    ],
+    [
+     0.86,
+     13366
+    ],
+    [
+     0.87,
+     7077
+    ],
+    [
+     0.88,
+     4384
+    ],
+    [
+     0.89,
+     5080
+    ]
+   ]
+  }
+ },
+ "atp-hassan-serna-2026-08-25": {
+  "shares": {
+   "Benjamin Hassan": 8702.957973875,
+   "Juan Manuel La Serna": 6432.4109809249985
+  },
+  "prices": {
+   "Benjamin Hassan": 0.575,
+   "Juan Manuel La Serna": 0.425
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 17554,
+  "whales": [
+   {
+    "wallet": "0x1029e54f164fc5f06b0f7b4498de323c2d77c621",
+    "side": "Benjamin Hassan",
+    "usd": 3770,
+    "avgPrice": 0.5799
+   },
+   {
+    "wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
+    "side": "Juan Manuel La Serna",
+    "usd": 1395
+   },
+   {
+    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+    "side": "Benjamin Hassan",
+    "usd": 1194
+   },
+   {
+    "wallet": "0xa0f21e6d351baa9185716b5c00c2925ed9621848",
+    "side": "Benjamin Hassan",
+    "usd": 1150,
+    "avgPrice": 0.57
+   }
+  ],
+  "hoursToKickoff": 0.52,
+  "capturedAt": "2026-08-25T08:02:42.180878+00:00",
+  "tokens": {
+   "Benjamin Hassan": "114956906196902517832225899625833194602858308219048726094793748301202885229239",
+   "Juan Manuel La Serna": "72520946567237836217345247548697417707742169944813457855417943520143307560211"
+  },
+  "book": {
+   "side": "Benjamin Hassan",
+   "bid": 0.57,
+   "ask": 0.58,
+   "spreadC": 1.0,
+   "spreadPct": 1.72,
+   "bids": [
+    [
+     0.57,
+     971
+    ],
+    [
+     0.56,
+     2719
+    ],
+    [
+     0.55,
+     10217
+    ],
+    [
+     0.54,
+     2689
+    ],
+    [
+     0.53,
+     147
+    ],
+    [
+     0.52,
+     1376
+    ]
+   ],
+   "asks": [
+    [
+     0.58,
+     17724
+    ],
+    [
+     0.59,
+     33605
+    ],
+    [
+     0.6,
+     8240
+    ],
+    [
+     0.61,
+     7425
+    ],
+    [
+     0.62,
+     1033
+    ],
+    [
+     0.63,
+     2104
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x1029e54f164fc5f06b0f7b4498de323c2d77c621",
+    "action": "BUY",
+    "side": "Benjamin Hassan",
+    "price": 0.58,
+    "usd": 3802,
+    "ts": 1787643874
+   },
+   {
+    "wallet": "0xd9dde44ddeababae222bf7aec96c85cbdab6b525",
+    "action": "BUY",
+    "side": "Juan Manuel La Serna",
+    "price": 0.43,
+    "usd": 885,
+    "ts": 1787643139
+   },
+   {
+    "wallet": "0x44114b01724bc80eafc404e89d1680dac5a1985e",
+    "action": "BUY",
+    "side": "Benjamin Hassan",
+    "price": 0.56,
+    "usd": 387,
+    "ts": 1787642451
+   },
+   {
+    "wallet": "0x0a26054fe174697bf6be759c4b600fdb830d1851",
+    "action": "BUY",
+    "side": "Benjamin Hassan",
+    "price": 0.56,
+    "usd": 890,
+    "ts": 1787632629
+   }
+  ]
+ },
+ "kor-seo-bch-2026-08-25": {
+  "shares": {
+   "FC Seoul": 7109.995116089997,
+   "Draw (FC Seoul vs. Bucheon FC 1995)": 117.557650365,
+   "Bucheon FC 1995": 783.5095749850002
+  },
+  "prices": {
+   "FC Seoul": 0.685,
+   "Draw (FC Seoul vs. Bucheon FC 1995)": 0.205,
+   "Bucheon FC 1995": 0.115
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 17182,
+  "whales": [
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "FC Seoul",
+    "usd": 2613,
+    "avgPrice": 0.6697
+   },
+   {
+    "wallet": "0xe3d4dee2427b98042822543f8e1e8ab7bafb2bac",
+    "side": "FC Seoul",
+    "usd": 1169,
+    "avgPrice": 0.6799
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "FC Seoul",
+    "usd": 575,
+    "avgPrice": 0.6675
+   },
+   {
+    "wallet": "0x03c6fb4ea4f9ce0d4fd5a3414e3e0a94cb6c3dd2",
+    "side": "FC Seoul",
+    "usd": 504,
+    "avgPrice": 0.6799
+   }
+  ],
+  "hoursToKickoff": 2.52,
+  "capturedAt": "2026-08-25T08:02:42.180878+00:00",
+  "tokens": {
+   "FC Seoul": "41329663221728793394425370735164904601055196765565034589064023715953357876919",
+   "Draw (FC Seoul vs. Bucheon FC 1995)": "34583627037183252441080463861374334523050316926818737882323268171702532227103",
+   "Bucheon FC 1995": "48145214897312917966185222955367740595568567787684464476073108315595099721024"
+  },
+  "book": {
+   "side": "FC Seoul",
+   "bid": 0.68,
+   "ask": 0.69,
+   "spreadC": 1.0,
+   "spreadPct": 1.45,
+   "bids": [
+    [
+     0.68,
+     1306
+    ],
+    [
+     0.67,
+     15669
+    ],
+    [
+     0.66,
+     9261
+    ],
+    [
+     0.65,
+     12117
+    ],
+    [
+     0.64,
+     9869
+    ],
+    [
+     0.63,
+     13804
+    ]
+   ],
+   "asks": [
+    [
+     0.69,
+     10034
+    ],
+    [
+     0.7,
+     23555
+    ],
+    [
+     0.71,
+     11415
+    ],
+    [
+     0.72,
+     23716
+    ],
+    [
+     0.73,
+     35257
+    ],
+    [
+     0.74,
+     29761
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x1ce5000f228a6a392306217670468778cb6117f9",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.69,
+    "usd": 300,
+    "ts": 1787644867
+   },
+   {
+    "wallet": "0xe3d4dee2427b98042822543f8e1e8ab7bafb2bac",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.68,
+    "usd": 1160,
+    "ts": 1787642143
+   },
+   {
+    "wallet": "0x03c6fb4ea4f9ce0d4fd5a3414e3e0a94cb6c3dd2",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.68,
+    "usd": 500,
+    "ts": 1787640310
+   }
+  ]
+ },
+ "kor-jej-poh-2026-08-25": {
+  "shares": {
+   "Jeju SK FC": 5480.511584445001,
+   "Draw (Jeju SK FC vs. Pohang Steelers FC)": 414.88510292999996,
+   "Pohang Steelers FC": 286.06036749500004
+  },
+  "prices": {
+   "Jeju SK FC": 0.405,
+   "Draw (Jeju SK FC vs. Pohang Steelers FC)": 0.305,
+   "Pohang Steelers FC": 0.295
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 16285,
+  "whales": [
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Jeju SK FC",
+    "usd": 2158,
+    "avgPrice": 0.4083
+   },
+   {
+    "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
+    "side": "Jeju SK FC",
+    "usd": 1519,
+    "avgPrice": 0.4
+   },
+   {
+    "wallet": "0xdd5ef115f801999575b03d78d0115ad8b2d59040",
+    "side": "Jeju SK FC",
+    "usd": 356
+   },
+   {
+    "wallet": "0xb4184f21d8ec34476e3944631b2afca34b77ef38",
+    "side": "Jeju SK FC",
+    "usd": 313,
+    "avgPrice": 0.4
+   }
+  ],
+  "hoursToKickoff": 2.52,
+  "capturedAt": "2026-08-25T08:02:42.180878+00:00",
+  "tokens": {
+   "Jeju SK FC": "104394586867963902582059173271396495676357263459462352446511961478666066977566",
+   "Draw (Jeju SK FC vs. Pohang Steelers FC)": "110508693818436218018128245295017323076196461210582783899005349044662927132171",
+   "Pohang Steelers FC": "104836436198378833346086147594871828228491565491433732487407927255381375263071"
+  },
+  "book": {
+   "side": "Jeju SK FC",
+   "bid": 0.4,
+   "ask": 0.41,
+   "spreadC": 1.0,
+   "spreadPct": 2.44,
+   "bids": [
+    [
+     0.4,
+     12833
+    ],
+    [
+     0.39,
+     8634
+    ],
+    [
+     0.38,
+     9562
+    ],
+    [
+     0.37,
+     5973
+    ],
+    [
+     0.36,
+     1771
+    ],
+    [
+     0.35,
+     2464
+    ]
+   ],
+   "asks": [
+    [
+     0.41,
+     2322
+    ],
+    [
+     0.42,
+     10248
+    ],
+    [
+     0.43,
+     16509
+    ],
+    [
+     0.44,
+     7625
+    ],
+    [
+     0.45,
+     10234
+    ],
+    [
+     0.46,
+     4451
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.41,
+    "usd": 446,
+    "ts": 1787640852
+   }
+  ]
+ },
+ "kor-jej-poh-2026-08-25-exact-score": {
+  "shares": {
+   "Jeju SK FC 0 - 0 Pohang Steelers FC": 31.28735631,
+   "Jeju SK FC 0 - 1 Pohang Steelers FC": 18.181,
+   "Jeju SK FC 1 - 0 Pohang Steelers FC": 33.41230725,
+   "Jeju SK FC 0 - 2 Pohang Steelers FC": 6.921354099999999,
+   "Jeju SK FC 1 - 1 Pohang Steelers FC": 40.68041740000001,
+   "Jeju SK FC 2 - 0 Pohang Steelers FC": 12.046875,
+   "Jeju SK FC 0 - 3 Pohang Steelers FC": 0.0,
+   "Jeju SK FC 1 - 2 Pohang Steelers FC": 37.73679,
+   "Jeju SK FC 2 - 1 Pohang Steelers FC": 49.63106016000001,
+   "Jeju SK FC 3 - 0 Pohang Steelers FC": 0.0,
+   "Jeju SK FC 1 - 3 Pohang Steelers FC": 6.337796874,
+   "Jeju SK FC 2 - 2 Pohang Steelers FC": 20.59827455,
+   "Jeju SK FC 3 - 1 Pohang Steelers FC": 23.80949259,
+   "Jeju SK FC 2 - 3 Pohang Steelers FC": 38.77274251200001,
+   "Jeju SK FC 3 - 2 Pohang Steelers FC": 49.641117504,
+   "Jeju SK FC 3 - 3 Pohang Steelers FC": 15.224691640500003,
+   "Any Other Score": 8.1125
+  },
+  "prices": {
+   "Jeju SK FC 0 - 0 Pohang Steelers FC": 0.105,
+   "Jeju SK FC 0 - 1 Pohang Steelers FC": 0.1,
+   "Jeju SK FC 1 - 0 Pohang Steelers FC": 0.125,
+   "Jeju SK FC 0 - 2 Pohang Steelers FC": 0.05,
+   "Jeju SK FC 1 - 1 Pohang Steelers FC": 0.14,
+   "Jeju SK FC 2 - 0 Pohang Steelers FC": 0.075,
+   "Jeju SK FC 0 - 3 Pohang Steelers FC": 0.0155,
+   "Jeju SK FC 1 - 2 Pohang Steelers FC": 0.075,
+   "Jeju SK FC 2 - 1 Pohang Steelers FC": 0.09,
+   "Jeju SK FC 3 - 0 Pohang Steelers FC": 0.028,
+   "Jeju SK FC 1 - 3 Pohang Steelers FC": 0.0235,
+   "Jeju SK FC 2 - 2 Pohang Steelers FC": 0.05,
+   "Jeju SK FC 3 - 1 Pohang Steelers FC": 0.0345,
+   "Jeju SK FC 2 - 3 Pohang Steelers FC": 0.016,
+   "Jeju SK FC 3 - 2 Pohang Steelers FC": 0.022,
+   "Jeju SK FC 3 - 3 Pohang Steelers FC": 0.0085,
+   "Any Other Score": 0.055
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 8002,
+  "whales": [
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Jeju SK FC 3 - 2 Pohang Steelers FC",
+    "usd": 47,
+    "avgPrice": 0.0231
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Jeju SK FC 2 - 3 Pohang Steelers FC",
+    "usd": 35,
+    "avgPrice": 0.0199
+   },
+   {
+    "wallet": "0x9f3de29575e01e29172348351bf42d59ab16d65d",
+    "side": "Jeju SK FC 1 - 0 Pohang Steelers FC",
+    "usd": 29,
+    "avgPrice": 0.1299
+   },
+   {
+    "wallet": "0x9f3de29575e01e29172348351bf42d59ab16d65d",
+    "side": "Jeju SK FC 1 - 1 Pohang Steelers FC",
+    "usd": 28,
+    "avgPrice": 0.15
+   }
+  ],
+  "hoursToKickoff": 2.52,
+  "capturedAt": "2026-08-25T08:02:42.180878+00:00",
+  "tokens": {
+   "Jeju SK FC 0 - 0 Pohang Steelers FC": "36854359211844603061612538243083558064963534211868256001157130317944242822851",
+   "Jeju SK FC 0 - 1 Pohang Steelers FC": "113947448515337233192439634202000904066834163237734248222038982236674025039506",
+   "Jeju SK FC 1 - 0 Pohang Steelers FC": "87224796303056371905521006536651209590843526865562494584096486498025171350620",
+   "Jeju SK FC 0 - 2 Pohang Steelers FC": "5508813800631123508381298376837962736317908764841137618262340546777413266574",
+   "Jeju SK FC 1 - 1 Pohang Steelers FC": "18494036349662384587884793425319900644069064343931308633469403454096226196517",
+   "Jeju SK FC 2 - 0 Pohang Steelers FC": "37360784183764342825165418642414725714773437956806086961096971050011372377763",
+   "Jeju SK FC 0 - 3 Pohang Steelers FC": "44600643725708293179790577143492856317597803858549957758352898922810701018184",
+   "Jeju SK FC 1 - 2 Pohang Steelers FC": "8406439690308901372536392963765036353677495491317706567567854313284757032568",
+   "Jeju SK FC 2 - 1 Pohang Steelers FC": "81918895285892538588237102954913410516761942605236201795234581309303733292337",
+   "Jeju SK FC 3 - 0 Pohang Steelers FC": "14789069195215039692958992749504061802231116372407230693431057320666812611016",
+   "Jeju SK FC 1 - 3 Pohang Steelers FC": "102197902483369659372971722524847100335249727129277461415397610541286256309642",
+   "Jeju SK FC 2 - 2 Pohang Steelers FC": "92474992968425365153526863823858645135880766930281631733696965043995697428017",
+   "Jeju SK FC 3 - 1 Pohang Steelers FC": "71320830390157366354941447459226513925716175523587542038601629546000938902210",
+   "Jeju SK FC 2 - 3 Pohang Steelers FC": "69971795427515157960206789917431385624741566612965963035829039590749311221169",
+   "Jeju SK FC 3 - 2 Pohang Steelers FC": "43520806784742327385549732997535868619125264016500495404944867814130375199172",
+   "Jeju SK FC 3 - 3 Pohang Steelers FC": "26883799264951984333007797742859703955751284538084889206260660336656399108367",
+   "Any Other Score": "638455070987368704273218657841440122177552140346692135945012167754759364702"
+  },
+  "book": {
+   "side": "Jeju SK FC 3 - 2 Pohang Steelers FC",
+   "bid": 0.02,
+   "ask": 0.024,
+   "spreadC": 0.4,
+   "spreadPct": 16.67,
+   "bids": [
+    [
+     0.02,
+     752
+    ],
+    [
+     0.016,
+     105587
+    ],
+    [
+     0.015,
+     112545
+    ],
+    [
+     0.014,
+     210937
+    ],
+    [
+     0.013,
+     227163
+    ],
+    [
+     0.012,
+     247026
+    ]
+   ],
+   "asks": [
+    [
+     0.024,
+     31
+    ],
+    [
+     0.025,
+     1785
+    ],
+    [
+     0.026,
+     40762
+    ],
+    [
+     0.027,
+     1734
+    ],
+    [
+     0.028,
+     3038
+    ],
+    [
+     0.029,
+     3041
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "action": "BUY",
+    "side": "No",
+    "price": 0.977,
+    "usd": 1065,
+    "ts": 1787630335
+   }
+  ]
+ },
+ "kor-san-jeo-2026-08-25-exact-score": {
+  "shares": {
+   "Gimcheon Sangmu FC 0 - 0 Jeonbuk Hyundai Motors FC": 12.218682225,
+   "Gimcheon Sangmu FC 0 - 1 Jeonbuk Hyundai Motors FC": 11.58837246,
+   "Gimcheon Sangmu FC 1 - 0 Jeonbuk Hyundai Motors FC": 3.3722815000000006,
+   "Gimcheon Sangmu FC 0 - 2 Jeonbuk Hyundai Motors FC": 58.937196,
+   "Gimcheon Sangmu FC 1 - 1 Jeonbuk Hyundai Motors FC": 6.605356545,
+   "Gimcheon Sangmu FC 2 - 0 Jeonbuk Hyundai Motors FC": 4.65,
+   "Gimcheon Sangmu FC 0 - 3 Jeonbuk Hyundai Motors FC": 19.025624999999998,
+   "Gimcheon Sangmu FC 1 - 2 Jeonbuk Hyundai Motors FC": 9.5741,
+   "Gimcheon Sangmu FC 2 - 1 Jeonbuk Hyundai Motors FC": 41.0625,
+   "Gimcheon Sangmu FC 3 - 0 Jeonbuk Hyundai Motors FC": 1.52,
+   "Gimcheon Sangmu FC 1 - 3 Jeonbuk Hyundai Motors FC": 39.52377,
+   "Gimcheon Sangmu FC 2 - 2 Jeonbuk Hyundai Motors FC": 1.7891665724999999,
+   "Gimcheon Sangmu FC 3 - 1 Jeonbuk Hyundai Motors FC": 17.9916665505,
+   "Gimcheon Sangmu FC 2 - 3 Jeonbuk Hyundai Motors FC": 56.123912264,
+   "Gimcheon Sangmu FC 3 - 2 Jeonbuk Hyundai Motors FC": 44.47647040299999,
+   "Gimcheon Sangmu FC 3 - 3 Jeonbuk Hyundai Motors FC": 19.121666652,
+   "Any Other Score": 4.23111096
+  },
+  "prices": {
+   "Gimcheon Sangmu FC 0 - 0 Jeonbuk Hyundai Motors FC": 0.075,
+   "Gimcheon Sangmu FC 0 - 1 Jeonbuk Hyundai Motors FC": 0.105,
+   "Gimcheon Sangmu FC 1 - 0 Jeonbuk Hyundai Motors FC": 0.085,
+   "Gimcheon Sangmu FC 0 - 2 Jeonbuk Hyundai Motors FC": 0.075,
+   "Gimcheon Sangmu FC 1 - 1 Jeonbuk Hyundai Motors FC": 0.135,
+   "Gimcheon Sangmu FC 2 - 0 Jeonbuk Hyundai Motors FC": 0.0465,
+   "Gimcheon Sangmu FC 0 - 3 Jeonbuk Hyundai Motors FC": 0.0365,
+   "Gimcheon Sangmu FC 1 - 2 Jeonbuk Hyundai Motors FC": 0.095,
+   "Gimcheon Sangmu FC 2 - 1 Jeonbuk Hyundai Motors FC": 0.075,
+   "Gimcheon Sangmu FC 3 - 0 Jeonbuk Hyundai Motors FC": 0.016,
+   "Gimcheon Sangmu FC 1 - 3 Jeonbuk Hyundai Motors FC": 0.0415,
+   "Gimcheon Sangmu FC 2 - 2 Jeonbuk Hyundai Motors FC": 0.0565,
+   "Gimcheon Sangmu FC 3 - 1 Jeonbuk Hyundai Motors FC": 0.0255,
+   "Gimcheon Sangmu FC 2 - 3 Jeonbuk Hyundai Motors FC": 0.028,
+   "Gimcheon Sangmu FC 3 - 2 Jeonbuk Hyundai Motors FC": 0.0215,
+   "Gimcheon Sangmu FC 3 - 3 Jeonbuk Hyundai Motors FC": 0.011,
+   "Any Other Score": 0.08
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 7635,
+  "whales": [
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Gimcheon Sangmu FC 2 - 3 Jeonbuk Hyundai Motors FC",
+    "usd": 53,
+    "avgPrice": 0.0299
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Gimcheon Sangmu FC 3 - 2 Jeonbuk Hyundai Motors FC",
+    "usd": 44,
+    "avgPrice": 0.0249
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Gimcheon Sangmu FC 1 - 3 Jeonbuk Hyundai Motors FC",
+    "usd": 40,
+    "avgPrice": 0.0459
+   },
+   {
+    "wallet": "0x6e9235b9a31c1d6308848068b21a470e95625280",
+    "side": "Gimcheon Sangmu FC 0 - 2 Jeonbuk Hyundai Motors FC",
+    "usd": 33,
+    "avgPrice": 0.08
+   }
+  ],
+  "hoursToKickoff": 2.52,
+  "capturedAt": "2026-08-25T08:02:42.180878+00:00",
+  "tokens": {
+   "Gimcheon Sangmu FC 0 - 0 Jeonbuk Hyundai Motors FC": "110711909255109813181961802253790620070411196318017967765541136835162743199115",
+   "Gimcheon Sangmu FC 0 - 1 Jeonbuk Hyundai Motors FC": "36618671072067077059810552075644464842466833122814185668040897871633081998833",
+   "Gimcheon Sangmu FC 1 - 0 Jeonbuk Hyundai Motors FC": "14378704211035834913304380506142897213486562291877044874411210967185683858622",
+   "Gimcheon Sangmu FC 0 - 2 Jeonbuk Hyundai Motors FC": "10334223058733021192999855733787091327665917888262233386820530610877050057550",
+   "Gimcheon Sangmu FC 1 - 1 Jeonbuk Hyundai Motors FC": "106127151014850786050593838161281634028293915482887900362842623950745668764865",
+   "Gimcheon Sangmu FC 2 - 0 Jeonbuk Hyundai Motors FC": "105246474336850496184291729914416802772531513443193521374237889645112845912879",
+   "Gimcheon Sangmu FC 0 - 3 Jeonbuk Hyundai Motors FC": "39899472603743325223677683560030077182499201419731595633948975908419827675210",
+   "Gimcheon Sangmu FC 1 - 2 Jeonbuk Hyundai Motors FC": "41301094628902079690455342644368751993532542065696900105879771844333795947821",
+   "Gimcheon Sangmu FC 2 - 1 Jeonbuk Hyundai Motors FC": "59408345853249343371656021133499683039004630817695094648280304447460529484241",
+   "Gimcheon Sangmu FC 3 - 0 Jeonbuk Hyundai Motors FC": "24723992303945842879654400715119195411456195105557039896381617419397763364906",
+   "Gimcheon Sangmu FC 1 - 3 Jeonbuk Hyundai Motors FC": "111667680165055360639803986156205189360139595531939323015823223187965571687221",
+   "Gimcheon Sangmu FC 2 - 2 Jeonbuk Hyundai Motors FC": "16422367447380914868759921531212147874136099429890627282956430866977986305573",
+   "Gimcheon Sangmu FC 3 - 1 Jeonbuk Hyundai Motors FC": "102068701410846843496460827025848075623656910388438347746376640832983195363450",
+   "Gimcheon Sangmu FC 2 - 3 Jeonbuk Hyundai Motors FC": "110378514924515651002217731249012656882407822477031405433144582909118260544409",
+   "Gimcheon Sangmu FC 3 - 2 Jeonbuk Hyundai Motors FC": "94612716208315471407303265895301276653536127379554017046627856825639474776636",
+   "Gimcheon Sangmu FC 3 - 3 Jeonbuk Hyundai Motors FC": "57372619146635898068634896143461988235930240875348774503696617105596038165801",
+   "Any Other Score": "62026883781009321314030270491680180096942353453122030959665929490369553125283"
+  },
+  "book": {
+   "side": "Gimcheon Sangmu FC 0 - 2 Jeonbuk Hyundai Motors FC",
+   "bid": 0.07,
+   "ask": 0.08,
+   "spreadC": 1.0,
+   "spreadPct": 12.5,
+   "bids": [
+    [
+     0.07,
+     9160
+    ],
+    [
+     0.06,
+     31536
+    ],
+    [
+     0.05,
+     35900
+    ],
+    [
+     0.04,
+     75978
+    ],
+    [
+     0.03,
+     98437
+    ],
+    [
+     0.02,
+     147656
+    ]
+   ],
+   "asks": [
+    [
+     0.08,
+     4855
+    ],
+    [
+     0.09,
+     44998
+    ],
+    [
+     0.1,
+     5576
+    ],
+    [
+     0.11,
+     3768
+    ],
+    [
+     0.12,
+     4263
+    ],
+    [
+     0.13,
+     3394
+    ]
+   ]
+  }
  }
 }
