@@ -468,3 +468,32 @@ test('Gueltiger Token fuehrt zur Bestaetigung zurueck', async () => {
   assert.match(w.document.getElementById('polyModalBody').innerHTML, /Poly-Play bestätigen/);
 });
 
+
+// ── Aufraeumen der Fehlversuche (25.08.2026, Lucas) ──────────────────────────────────────────
+// „Die Bets von vorhin, die nicht geklappt haben — koennen die wieder geloest werden?" Ja, aber
+// konservativ: bestaetigte Wetten und alles mit Ergebnis bleiben unangetastet.
+
+test('Aufraeumen entfernt nur Unbestaetigtes', () => {
+  const { w } = bootBets();
+  w.localStorage.setItem('betedge_poly_bets', JSON.stringify([
+    { id: 'a', home: 'A', away: 'B', market: 'X', state: 'dispatched', result: null },
+    { id: 'b', home: 'C', away: 'D', market: 'X', state: 'confirmed',  result: null },
+    { id: 'c', home: 'E', away: 'F', market: 'X', result: null },                 // Altbestand ohne state
+    { id: 'd', home: 'G', away: 'H', market: 'X', state: 'unknown',    result: null },
+    { id: 'e', home: 'I', away: 'J', market: 'X', state: 'dispatched', result: 'won' },  // hat Ergebnis
+  ]));
+  const n = w.polyCleanupUnconfirmed();
+  assert.strictEqual(n, 3, 'dispatched + ohne-state + unknown');
+  const rest = JSON.parse(w.localStorage.getItem('betedge_poly_bets')).map(b => b.id).sort();
+  assert.deepStrictEqual(rest, ['b', 'e'], 'bestaetigt und abgerechnet bleiben');
+});
+
+test('Aufraeumen ohne Altlast sagt das und aendert nichts', () => {
+  const { w } = bootBets();
+  w.localStorage.setItem('betedge_poly_bets', JSON.stringify([
+    { id: 'b', home: 'C', away: 'D', market: 'X', state: 'confirmed', result: null },
+  ]));
+  assert.strictEqual(w.polyCleanupUnconfirmed(), 0);
+  assert.strictEqual(JSON.parse(w.localStorage.getItem('betedge_poly_bets')).length, 1);
+});
+

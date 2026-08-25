@@ -4005,7 +4005,9 @@ async function _syncBetsFromHistory(silent = true) {
     console.log(`[PolyBets] ✅ ${imported} Bet(s) aus picks_history.json importiert`);
     if (!silent) _polyToast(`📥 ${imported} Bet${imported !== 1 ? 's' : ''} aus Repo importiert`);
   }
-  return imported;
+  // Auch ein reiner Abgleich muss ein Neuzeichnen ausloesen — sonst bleibt die Karte bis zum
+  // naechsten Laden auf „Angefragt", obwohl der Zustand schon „Platziert" ist.
+  return imported + abgeglichen;
 }
 
 // ═══════════════════════════════════════════════════════════════
@@ -5029,10 +5031,17 @@ function polyOpenSettings() {
         Speichern
       </button>
     </div>
-    <button onclick="polyCheckPAT().then(_polyPatResultBox)"
-      style="background:none;border:1px solid #30363d;border-radius:6px;color:#8b949e;font-size:11px;font-weight:700;padding:6px 12px;cursor:pointer;font-family:inherit;margin-bottom:10px">
-      🔍 Gespeicherten Token prüfen
-    </button>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px">
+      <button onclick="polyCheckPAT().then(_polyPatResultBox)"
+        style="background:none;border:1px solid #30363d;border-radius:6px;color:#8b949e;font-size:11px;font-weight:700;padding:6px 12px;cursor:pointer;font-family:inherit">
+        🔍 Gespeicherten Token prüfen
+      </button>
+      <button onclick="polyCleanupUnconfirmed()"
+        title="Entfernt Wetten, die nie bestätigt wurden (fehlgeschlagene Versuche). Bestätigte bleiben. Kommt eine davon doch aus dem Repo zurück, taucht sie wieder auf."
+        style="background:none;border:1px solid #30363d;border-radius:6px;color:#8b949e;font-size:11px;font-weight:700;padding:6px 12px;cursor:pointer;font-family:inherit">
+        🧹 Unbestätigte Wetten aufräumen
+      </button>
+    </div>
     <div style="font-size:11px;color:#8b949e;margin-bottom:20px;line-height:1.5">
       Scope: <code style="color:#00d4a1;background:#00d4a110;padding:1px 5px;border-radius:3px">repo</code>
       · Erstellen unter github.com → Settings → Developer settings → Tokens (classic)
@@ -5062,6 +5071,30 @@ function _polyResumePending() {
   try { pending = modal && modal.dataset.pendingOrder ? JSON.parse(modal.dataset.pendingOrder) : null; } catch (e) { pending = null; }
   if (pending) { _wmBetConfirm(pending); return; }
   if (modal) modal.style.display = 'none';
+}
+
+// Altbestand aus fehlgeschlagenen Versuchen loswerden (25.08.2026, Lucas). Nur was NIE bestaetigt
+// wurde und kein Ergebnis traegt; bestaetigte Wetten bleiben unberuehrt. Nicht endgueltig — war eine
+// davon doch echt, holt der naechste Abgleich mit picks_history.json sie zurueck.
+function _polyUnconfirmed(bets) {
+  return (bets || []).filter(b => b && !b.result && (b.state || 'dispatched') !== 'confirmed');
+}
+
+function polyCleanupUnconfirmed() {
+  const alle = _getPolyBets();
+  const weg  = _polyUnconfirmed(alle);
+  if (!weg.length) { _polyToast('Nichts aufzuräumen — alle Wetten sind bestätigt'); return 0; }
+  const ids = new Set(weg.map(b => b.id));
+  _savePolyBets(alle.filter(b => !ids.has(b.id)));
+  if (window._polyPlacedThisSession) ids.forEach(id => { delete window._polyPlacedThisSession[id]; });
+  try {
+    const grid = document.getElementById('polyPickGrid');
+    if (grid) grid.innerHTML = renderPolyPickCards();
+    const stats = document.getElementById('polyStatsSection');
+    if (stats) stats.innerHTML = renderPolyStats();
+  } catch (e) { console.error('[PolyCleanup] Neuzeichnen:', e); }
+  _polyToast(`🧹 ${weg.length} unbestätigte Wette${weg.length !== 1 ? 'n' : ''} entfernt`);
+  return weg.length;
 }
 
 // Lesende Probe — KEINE Nebenwirkung. Beantwortet Gueltigkeit und Sichtbarkeit in einem Zug.

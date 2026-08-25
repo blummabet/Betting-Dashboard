@@ -216,3 +216,59 @@ def test_kaputte_marktzeile_wirft_nicht():
                       {"outcomes": _json.dumps(["Ziel"]), "clobTokenIds": _json.dumps(["TREFFER"])}]}
     assert PB.find_token_by_outcome_name(ev, "Ziel") == "TREFFER"
 
+
+# ── Wette gehoert ans richtige Spiel (25.08.2026, Lucas' erste echte Wetten) ─────────────────
+# Vorher reichte EIN passender Name und das Datum wurde ignoriert: „Over 2.5 Tore" von heute landete
+# an einem Girona–Real Sociedad vom 14.05.2026. Die Aufloesung haette sie gegen das Mai-Ergebnis
+# abgerechnet — echtes Geld, falsch gewertet.
+from datetime import datetime as _dt, timezone as _tz
+
+_NOW = _dt(2026, 8, 25, 13, 49, tzinfo=_tz.utc)
+
+
+def _fx(home, away, iso):
+    return {"home": home, "away": away, "dateIso": iso}
+
+
+def test_beide_namen_muessen_passen():
+    import polymarket_bet as PB
+    assert PB._fixture_matches(_fx("Girona", "Real Sociedad", "2026-08-25"), "Girona", "Real Sociedad", _NOW)
+    assert not PB._fixture_matches(_fx("Girona", "Real Sociedad", "2026-08-25"), "Barcelona", "Real Sociedad", _NOW)
+    assert not PB._fixture_matches(_fx("Girona", "Real Sociedad", "2026-08-25"), "Girona", "Osasuna", _NOW)
+
+
+def test_altes_spiel_zaehlt_nicht():
+    import polymarket_bet as PB
+    assert not PB._fixture_matches(_fx("Girona", "Real Sociedad", "2026-05-14"), "Girona", "Real Sociedad", _NOW)
+
+
+def test_toleranz_fuer_zeitzonen():
+    import polymarket_bet as PB
+    for iso in ("2026-08-24", "2026-08-26", "2026-08-27"):
+        assert PB._fixture_matches(_fx("A", "B", iso), "A", "B", _NOW), iso
+    assert not PB._fixture_matches(_fx("A", "B", "2026-08-28"), "A", "B", _NOW)
+
+
+def test_ohne_datum_entscheiden_die_namen():
+    import polymarket_bet as PB
+    assert PB._fixture_matches({"home": "A", "away": "B"}, "A", "B", _NOW)
+    assert PB._fixture_matches(_fx("A", "B", "quatsch"), "A", "B", _NOW)
+
+
+def test_muell_wirft_nicht():
+    import polymarket_bet as PB
+    assert not PB._fixture_matches(None, "A", "B", _NOW)
+    assert not PB._fixture_matches({}, "", "B", _NOW)
+
+
+def test_kein_treffer_gibt_eigenen_eintrag():
+    # Genau der Weg, den die Tennis-Wette sauber gegangen ist.
+    import polymarket_bet as PB
+    hist = [_fx("Girona", "Real Sociedad", "2026-05-14")]
+    PB.log_bet_to_history(hist, {"home": "Girona", "away": "Real Sociedad", "market": "Over 2.5 Tore",
+                                 "stake": 5, "polyPrice": 0.66, "polyKey": "k", "side": "Over"},
+                          {"orderId": "0x1", "status": "placed", "error": None})
+    assert len(hist) == 2, "das Mai-Spiel darf die Wette nicht einsammeln"
+    assert hist[0].get("polyBets") is None
+    assert hist[1]["polyBets"][0]["polyKey"] == "k"
+
