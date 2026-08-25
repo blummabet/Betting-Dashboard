@@ -91,6 +91,15 @@
       "note": "Einzel-Ergebnisse muessen ein win-Bool, eine moegliche Quote und ein fav-Token haben; die Gesamtquote muss in einem plausiblen Band liegen — sonst rechnet das Grading falsch ab."
     },
     {
+      "id": "league_norm_usable",
+      "label": "Liga-Basis fuers x-Norm-Badge gelernt",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Ohne belastbare Basis zeigt der Radar bewusst gar kein x-Norm-Badge — ein falsches waere schlimmer. Faellt der Guard, ist die Ursache fast immer der Lernschritt."
+    },
+    {
       "id": "no_stuck_pending",
       "label": "Settlement/Prune lebt (kein Ueber-TTL-Stau)",
       "severity": "warn",
@@ -119,5 +128,5 @@
     }
   ],
   "nFail": 0,
-  "generatedAt": "2026-08-24T18:21:05.185300+00:00"
+  "generatedAt": "2026-08-25T04:36:52.322987+00:00"
 }

@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-24T17:47:20.809720+00:00",
+ "generatedAt": "2026-08-25T04:02:51.757730+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,28 +9,57 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 412,
+ "polyRowsSeen": 400,
  "pinnKeys": 294,
- "matched": 206,
- "footballRows": 186,
- "crossRows": 226,
- "footballSkippedStale": 74,
+ "matched": 204,
+ "footballRows": 180,
+ "crossRows": 220,
+ "footballSkippedStale": 58,
  "seenBySport": {
-  "americanfootball_nfl": 126,
+  "americanfootball_nfl": 120,
   "baseball_mlb": 72,
   "icehockey_nhl": 26,
   "boxing_boxing": 2,
   "soccer_mls": 45,
-  "soccer_liga": 141
+  "soccer_liga": 135
  },
  "matchedBySport": {
-  "baseball_mlb": 20,
+  "baseball_mlb": 24,
   "soccer_mls": 45,
-  "soccer_liga": 141
+  "soccer_liga": 135
  },
  "trackRecord": {
-  "tracked": 193,
+  "tracked": 212,
   "converged": 49
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|pittsburghpirates-sandiegopadres|pittsburghpirates",
+   "sport": "baseball_mlb",
+   "event": "Pittsburgh Pirates vs San Diego Padres",
+   "market": "Moneyline",
+   "outcome": "Pittsburgh Pirates",
+   "polyPP": 73.5,
+   "pinnPP": 47.3,
+   "gapPP": 26.19,
+   "vol": 542097,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -8.0,
+   "firstSeen": "2026-08-25T03:13:10.691820+00:00"
+  },
+  {
+   "id": "baseball_mlb|pittsburghpirates-sandiegopadres|sandiegopadres",
+   "sport": "baseball_mlb",
+   "event": "Pittsburgh Pirates vs San Diego Padres",
+   "market": "Moneyline",
+   "outcome": "San Diego Padres",
+   "polyPP": 26.5,
+   "pinnPP": 52.7,
+   "gapPP": -26.19,
+   "vol": 542097,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -8.0,
+   "firstSeen": "2026-08-25T03:13:10.691820+00:00"
+  }
+ ]
 }
