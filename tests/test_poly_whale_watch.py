@@ -558,3 +558,97 @@ class TestConflictingTopWallet(unittest.TestCase):
         # und ohne broad ueberhaupt (Default None) faellt die Card nicht um
         self.assertNotIn("Gegenseite", P.build_card(self._pos(), self._scores(), restock=False))
 
+
+# ── Gesperrte Sportarten im Push (25.08.2026, Lucas) ─────────────────────────
+# „Haben wir MLB nicht gestern entfernt? Kriegs weiter im Trades-Channel." Gesperrt waren nur drei
+# Stellen, alle im Frontend. poly_whale_watch kannte die Liste gar nicht — der zweite oeffentliche
+# Pfad blieb offen. Lucas' Wahl: Public sperren, Trades mit Hinweis.
+class TestSportCategory(unittest.TestCase):
+    def test_us_sport_und_kampfsport(self):
+        for lg in ("MLB", "NBA", "WNBA", "NFL", "NHL", "NCAAF"):
+            self.assertEqual(P.sport_category(lg), "US-Sport", lg)
+        for lg in ("UFC", "MMA", "Boxing"):
+            self.assertEqual(P.sport_category(lg), "Kampfsport", lg)
+
+    def test_spezifische_vor_fussball(self):
+        # „Championship" ist ein Fussball-Begriff — er darf E-Sport/Tennis nicht wegschnappen.
+        self.assertEqual(P.sport_category("ESPORTS"), "E-Sport")
+        self.assertEqual(P.sport_category("LoL Championship"), "E-Sport")
+        self.assertEqual(P.sport_category("ATP"), "Tennis")
+        self.assertEqual(P.sport_category("EFL Championship"), "Fußball")
+
+    def test_fussball_breit(self):
+        for lg in ("SOCCER", "EPL", "DENMARK-SUPERLIGA", "LA-LIGA-2", "Bundesliga", "MLS"):
+            self.assertEqual(P.sport_category(lg), "Fußball", lg)
+
+    def test_gestempelter_sport_hat_vorrang(self):
+        # Wie im Dashboard: das Capture kennt abgekuerzte Bewerbe, die kein Regex erraet.
+        self.assertEqual(P.sport_category("AZE1", sport="Fußball"), "Fußball")
+
+    def test_unbekannt_ist_sonstige(self):
+        self.assertEqual(P.sport_category("Quidditch"), "Sonstige")
+        self.assertEqual(P.sport_category(None), "Sonstige")
+
+    def test_vokabular_deckt_sich_mit_dem_dashboard(self):
+        """Der eigentliche Drift-Schutz: beide Mapper muessen DIESELBEN Kategorienamen liefern.
+
+        Die Sperrliste kommt aus poly-wallets.js. Haette Python hier „Fussball" (ohne ß) geschrieben,
+        waere die Sperre fuer Fussball stumm nie gegriffen — kein Fehler, kein Log, nur ein Loch.
+        """
+        import re
+        js = open(Path(__file__).parent.parent / "poly-wallets.js",
+                  encoding="utf-8").read()
+        block = re.search(r"const _PW_CAT_ICON=\{(.*?)\};", js, re.S).group(1)
+        js_cats = set(re.findall(r"'([^']+)':", block))
+        py_cats = {c for c, _ in P._CAT_RULES} | {"Fußball", "Sonstige"}
+        self.assertEqual(py_cats, js_cats)
+
+
+class TestBlockedCats(unittest.TestCase):
+    def test_liste_kommt_aus_dem_papier_depot(self):
+        self.assertEqual(P.blocked_cats({"blockedCats": ["US-Sport", "Golf"]}), ["US-Sport", "Golf"])
+
+    def test_fallback_wenn_datei_fehlt_oder_leer(self):
+        for bad in ({}, None, {"blockedCats": []}, {"blockedCats": "kaputt"}, "kaputt"):
+            self.assertEqual(P.blocked_cats(bad), list(P.BLOCKED_FALLBACK))
+
+    def test_bet_blocked(self):
+        cats = ["US-Sport", "Kampfsport"]
+        self.assertTrue(P.bet_blocked({"league": "MLB"}, cats))
+        self.assertTrue(P.bet_blocked({"league": "UFC"}, cats))
+        self.assertFalse(P.bet_blocked({"league": "ESPORTS"}, cats))
+        self.assertFalse(P.bet_blocked({"league": "EPL"}, cats))
+        self.assertFalse(P.bet_blocked(None, cats))
+        self.assertFalse(P.bet_blocked("kaputt", cats))
+
+    def test_umgelegte_sperre_zieht_durch(self):
+        # Legt Lucas die Sperre im Dashboard um, muss der Push mitziehen — ohne Code-Aenderung.
+        self.assertTrue(P.bet_blocked({"league": "ATP"}, P.blocked_cats({"blockedCats": ["Tennis"]})))
+        self.assertFalse(P.bet_blocked({"league": "MLB"}, P.blocked_cats({"blockedCats": ["Tennis"]})))
+
+
+class TestBlockedCard(unittest.TestCase):
+    def _sc(self):
+        return {"0xA": {"n": 27, "wins": 18, "clvSumPP": 2.7, "usd": 60000, "pnl": 500000}}
+
+    def _pos(self, league="MLB"):
+        return {"wallet": "0xA", "key": "k1", "side": "Cleveland Guardians", "league": league,
+                "usd": 4000, "firstPrice": 0.61}
+
+    def test_gesperrte_sportart_traegt_den_hinweis(self):
+        card = P.build_card(self._pos(), self._sc(), restock=False, broad={},
+                            blocked=["US-Sport", "Kampfsport"])
+        self.assertIn("nicht bespielbar", card)
+        self.assertIn("Beobachtung", card)
+        # Der Hinweis gehoert nach OBEN, nicht ans Ende — sonst liest man erst die Empfehlung.
+        self.assertLess(card.index("nicht bespielbar"), card.index("💰"))
+
+    def test_freie_sportart_ohne_hinweis(self):
+        card = P.build_card(self._pos("ESPORTS"), self._sc(), restock=False, broad={},
+                            blocked=["US-Sport", "Kampfsport"])
+        self.assertNotIn("nicht bespielbar", card)
+
+    def test_ohne_blocked_parameter_greift_der_fallback(self):
+        # build_card wird auch aus Tests/Skripten ohne Liste gerufen — die Sperre darf nicht ausfallen.
+        self.assertIn("nicht bespielbar", P.build_card(self._pos(), self._sc(), False, {}))
+
