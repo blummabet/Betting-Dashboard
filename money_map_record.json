@@ -1,25 +1,25 @@
 {
-"generatedAt": "2026-08-25T20:53:40.318436+00:00",
+"generatedAt": "2026-08-25T21:08:39.961235+00:00",
 "byVerdict": {
 "konsens": {
-"n": 475,
-"wins": 381,
-"hitRate": 0.8021,
-"polyN": 446,
-"polyWins": 348,
-"polyHitRate": 0.7803,
+"n": 478,
+"wins": 384,
+"hitRate": 0.8033,
+"polyN": 449,
+"polyWins": 350,
+"polyHitRate": 0.7795,
 "pinnN": 35,
 "pinnHitRate": 0.7429
 },
 "uneinig": {
-"n": 161,
-"wins": 49,
-"hitRate": 0.3043,
-"polyN": 143,
-"polyWins": 47,
-"polyHitRate": 0.3287,
-"pinnN": 84,
-"pinnHitRate": 0.6071
+"n": 162,
+"wins": 50,
+"hitRate": 0.3086,
+"polyN": 144,
+"polyWins": 48,
+"polyHitRate": 0.3333,
+"pinnN": 85,
+"pinnHitRate": 0.6
 },
 "teil": {
 "n": 5,
@@ -63,6 +63,11 @@
 "wins": 8,
 "hitRate": 0.4706
 },
+"Spanish La Liga": {
+"n": 17,
+"wins": 10,
+"hitRate": 0.5882
+},
 "Spanish Segunda Division": {
 "n": 17,
 "wins": 14,
@@ -78,10 +83,10 @@
 "wins": 11,
 "hitRate": 0.6875
 },
-"Spanish La Liga": {
-"n": 16,
-"wins": 9,
-"hitRate": 0.5625
+"English Football League Cup": {
+"n": 14,
+"wins": 12,
+"hitRate": 0.8571
 },
 "Turkish Super League": {
 "n": 14,
@@ -103,17 +108,17 @@
 "wins": 9,
 "hitRate": 0.6923
 },
+"Saudi Professional League": {
+"n": 13,
+"wins": 10,
+"hitRate": 0.7692
+},
 "Swedish Allsvenskan": {
 "n": 13,
 "wins": 10,
 "hitRate": 0.7692
 },
 "Dutch Eredivisie": {
-"n": 12,
-"wins": 10,
-"hitRate": 0.8333
-},
-"English Football League Cup": {
 "n": 12,
 "wins": 10,
 "hitRate": 0.8333
@@ -127,11 +132,6 @@
 "n": 12,
 "wins": 7,
 "hitRate": 0.5833
-},
-"Saudi Professional League": {
-"n": 12,
-"wins": 9,
-"hitRate": 0.75
 },
 "Italian Coppa Italia": {
 "n": 11,
@@ -496,25 +496,101 @@
 },
 "byStrength": {
 "strong": {
-"n": 373,
-"wins": 301,
-"hitRate": 0.807
+"n": 375,
+"wins": 303,
+"hitRate": 0.808
 },
 "weak": {
-"n": 235,
-"wins": 112,
-"hitRate": 0.4766
+"n": 237,
+"wins": 114,
+"hitRate": 0.481
 }
 },
 "divergence": {
-"n": 161,
-"betfairWins": 49,
-"betfairRate": 0.3043,
-"polyN": 143,
-"polyWins": 47,
-"polyRate": 0.3287
+"n": 162,
+"betfairWins": 50,
+"betfairRate": 0.3086,
+"polyN": 144,
+"polyWins": 48,
+"polyRate": 0.3333
 },
 "recent": [
+{
+"matchId": "35928175",
+"home": "Cardiff",
+"away": "Norwich",
+"league": "English Football League Cup",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Norwich",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-08-25T18:00:00Z",
+"settledAt": "2026-08-25T21:08:39.800037+00:00"
+},
+{
+"matchId": "35780315",
+"home": "Valencia",
+"away": "Betis",
+"league": "Spanish La Liga",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Betis",
+"polySide": "draw",
+"winner": "away",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-08-25T19:00:00Z",
+"settledAt": "2026-08-25T21:08:39.800037+00:00"
+},
+{
+"matchId": "35928149",
+"home": "Nottm Forest",
+"away": "Leeds",
+"league": "English Football League Cup",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Leeds",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-08-25T19:00:00Z",
+"settledAt": "2026-08-25T21:08:39.800037+00:00"
+},
+{
+"matchId": "35970821",
+"home": "Al-Ettifaq",
+"away": "Al Nassr",
+"league": "Saudi Professional League",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Al Nassr",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+3
+],
+"kickoff": "2026-08-25T18:00:00Z",
+"settledAt": "2026-08-25T21:08:39.800037+00:00"
+},
 {
 "matchId": "35961323",
 "home": "Bodo Glimt",
@@ -1198,88 +1274,12 @@
 ],
 "kickoff": "2026-08-24T19:00:00Z",
 "settledAt": "2026-08-24T22:10:10.394124+00:00"
-},
-{
-"matchId": "35951718",
-"home": "Reims",
-"away": "Annecy",
-"league": "French Ligue 2",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Reims",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-08-24T18:45:00Z",
-"settledAt": "2026-08-24T21:48:58.670183+00:00"
-},
-{
-"matchId": "35952132",
-"home": "Kocaelispor",
-"away": "Amed Sportif Faaliyetler",
-"league": "Turkish Super League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Kocaelispor",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-08-24T18:30:00Z",
-"settledAt": "2026-08-24T21:36:24.538307+00:00"
-},
-{
-"matchId": "35951324",
-"home": "Hallescher FC",
-"away": "Schalke 04",
-"league": "German Cup",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Schalke 04",
-"polySide": "home",
-"winner": "away",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-2,
-5
-],
-"kickoff": "2026-08-24T18:45:00Z",
-"settledAt": "2026-08-24T21:15:05.717144+00:00"
-},
-{
-"matchId": "35947471",
-"home": "Lokomotiv Plovdiv",
-"away": "Arda",
-"league": "Bulgarian A League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Arda",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-08-24T18:15:00Z",
-"settledAt": "2026-08-24T21:15:05.717144+00:00"
 }
 ],
 "global": {
-"n": 641,
-"wins": 431,
-"hitRate": 0.6724
+"n": 645,
+"wins": 435,
+"hitRate": 0.6744
 },
-"pending": 10
+"pending": 6
 }
