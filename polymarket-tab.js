@@ -2114,19 +2114,7 @@ async function _wmBetDispatch() {
     return;   // Einstellungen sind offen; nach dem Speichern geht es dort weiter
   } else {
     if (btn) { btn.disabled = false; btn.textContent = '🟣 Nochmal versuchen'; btn.style.opacity = '1'; }
-    const e = _polyDispatchError;
-    // Der Grund gehoert IN den Dialog: ein Toast ist weg, bevor man ihn gelesen hat, und ohne
-    // Status raet man zwischen abgelaufenem Token, fehlendem Scope und SSO.
-    const box = document.createElement('div');
-    box.style.cssText = 'background:#f8514915;border:1px solid #f8514955;border-radius:8px;padding:12px 14px;margin-top:14px';
-    box.innerHTML = `<div style="font-size:13px;font-weight:800;color:#f85149;margin-bottom:6px">❌ Dispatch fehlgeschlagen</div>`
-      + (e ? `<div style="font-size:12px;color:#e6edf3;margin-bottom:4px"><b>HTTP ${e.status}</b>${e.message ? ' — ' + String(e.message).replace(/</g, '&lt;') : ''}</div>`
-             + `<div style="font-size:12px;color:#8b949e;line-height:1.5">${e.hint}</div>`
-           : `<div style="font-size:12px;color:#8b949e">Kein Netz oder Anfrage blockiert — Konsole prüfen.</div>`)
-      + `<button onclick="polyOpenSettings()" style="margin-top:10px;background:none;border:1px solid #30363d;border-radius:6px;color:#8b949e;font-size:11px;font-weight:700;padding:6px 12px;cursor:pointer;font-family:inherit">⚙️ Token ändern</button>`;
-    const host = document.getElementById('polyModalBody');
-    if (host) { const old = host.querySelector('[data-dispatch-err]'); if (old) old.remove(); box.setAttribute('data-dispatch-err', '1'); host.appendChild(box); }
-    _polyToast(e ? `❌ Dispatch fehlgeschlagen (HTTP ${e.status})` : '❌ Dispatch fehlgeschlagen');
+    _polyShowDispatchError();
   }
 }
 
@@ -5120,6 +5108,25 @@ function _polyDatasetForLeague(league) {
 let _polyDispatchError = null;
 let _polyDispatchNoPat = false;   // Abbruch mangels Token — keine Fehlerbox zeigen
 
+// Der Grund gehoert IN den Dialog: ein Toast ist weg, bevor man ihn gelesen hat, und ohne Status
+// raet man zwischen abgelaufenem Token, fehlendem Scope und SSO. Wird von BEIDEN Versandwegen
+// benutzt — der Sammel-Versand hatte vorher nur einen Toast (25.08.2026, Lucas).
+function _polyShowDispatchError(extraNote) {
+  const e = _polyDispatchError;
+  const box = document.createElement('div');
+  box.setAttribute('data-dispatch-err', '1');
+  box.style.cssText = 'background:#f8514915;border:1px solid #f8514955;border-radius:8px;padding:12px 14px;margin-top:14px';
+  box.innerHTML = '<div style="font-size:13px;font-weight:800;color:#f85149;margin-bottom:6px">❌ Versand fehlgeschlagen</div>'
+    + (e ? `<div style="font-size:12px;color:#e6edf3;margin-bottom:4px"><b>HTTP ${e.status}</b>${e.message ? ' — ' + String(e.message).replace(/</g, '&lt;') : ''}</div>`
+           + `<div style="font-size:12px;color:#8b949e;line-height:1.5">${e.hint}</div>`
+         : '<div style="font-size:12px;color:#8b949e">Die Anfrage kam nicht bis zu GitHub — kein Netz, oder ein Blocker/VPN hat sie gestoppt.</div>')
+    + (extraNote ? `<div style="font-size:12px;color:#8b949e;line-height:1.5;margin-top:6px">${extraNote}</div>` : '')
+    + '<button onclick="polyOpenSettings()" style="margin-top:10px;background:none;border:1px solid #30363d;border-radius:6px;color:#8b949e;font-size:11px;font-weight:700;padding:6px 12px;cursor:pointer;font-family:inherit">⚙️ Token ändern</button>';
+  const host = document.getElementById('polyModalBody');
+  if (host) { const old = host.querySelector('[data-dispatch-err]'); if (old) old.remove(); host.appendChild(box); }
+  _polyToast(e ? `❌ Versand fehlgeschlagen (HTTP ${e.status})` : '❌ Versand fehlgeschlagen');
+}
+
 async function _callGitHubDispatch(orders) {
   const pat = _getGithubPAT();
   if (!pat) {
@@ -5168,6 +5175,10 @@ async function _callGitHubDispatch(orders) {
             : resp.status === 422 ? 'GitHub hat den Payload abgelehnt — das liegt NICHT am Token.'
             : 'Unerwarteter Status — Details oben.',
       };
+      // Auch in der Konsole greifbar: `_polyDispatchError` ist sonst modul-lokal und beim
+      // Fern-Debuggen nicht abfragbar.
+      try { window._polyDispatchError = _polyDispatchError; } catch (e) {}
+      console.error('[PolyDispatch] GitHub antwortete', resp.status, detail);
     }
   }
   return alleOk;
@@ -5398,8 +5409,8 @@ async function polyDispatch() {
     _polyRollbackBets(savedBets);
     if (btn) { btn.disabled = false; btn.textContent = '🟣 Bets via GitHub auslösen'; }
     _redraw();
-    _polyToast('❌ Versand fehlgeschlagen — nichts gesetzt');
-    if (!_polyDispatchNoPat) { /* Fehlerdetails stehen im Dialog */ } else { polyOpenSettings(); }
+    if (_polyDispatchNoPat) { polyOpenSettings(); }
+    else { _polyShowDispatchError('Nichts gesetzt — die Auswahl steht noch, du kannst es direkt nochmal versuchen.'); }
   }
 }
 
