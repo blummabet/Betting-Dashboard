@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-08-25T03:15:10.575707+00:00",
+ "updatedAt": "2026-08-25T04:06:17.169580+00:00",
  "stake": 10.0,
  "expired": 0,
  "open": {
@@ -19,24 +19,6 @@
    "whaleEntryAvg": 0.415,
    "whaleUsd": 2781,
    "htkAtEntry": 2.96,
-   "stake": 10.0
-  },
-  "wta-tauson-zarazua-2026-08-24|Renata Zarazua": {
-   "key": "wta-tauson-zarazua-2026-08-24",
-   "side": "Renata Zarazua",
-   "league": "TENNIS",
-   "cat": "Tennis",
-   "entryPrice": 0.265,
-   "lastPrice": 0.265,
-   "firstTs": "2026-08-24T22:48:19.365171+00:00",
-   "lastTs": "2026-08-25T03:15:10.575707+00:00",
-   "consensusAtEntry": 1,
-   "conflictAtEntry": false,
-   "againstRankAtEntry": null,
-   "bestRankAtEntry": 3,
-   "whaleEntryAvg": 0.2725,
-   "whaleUsd": 7777,
-   "htkAtEntry": 2.74,
    "stake": 10.0
   },
   "mlb-min-oak-2026-08-24|Athletics": {
@@ -65,7 +47,7 @@
    "entryPrice": 0.605,
    "lastPrice": 0.605,
    "firstTs": "2026-08-24T22:48:19.365171+00:00",
-   "lastTs": "2026-08-25T03:15:10.575707+00:00",
+   "lastTs": "2026-08-25T04:06:17.169580+00:00",
    "consensusAtEntry": 1,
    "conflictAtEntry": false,
    "againstRankAtEntry": null,
@@ -119,7 +101,7 @@
    "entryPrice": 0.375,
    "lastPrice": 0.375,
    "firstTs": "2026-08-25T00:03:17.509858+00:00",
-   "lastTs": "2026-08-25T03:15:10.575707+00:00",
+   "lastTs": "2026-08-25T04:06:17.169580+00:00",
    "consensusAtEntry": 1,
    "conflictAtEntry": true,
    "againstRankAtEntry": 4,
@@ -137,7 +119,7 @@
    "entryPrice": 0.585,
    "lastPrice": 0.575,
    "firstTs": "2026-08-25T01:55:40.660660+00:00",
-   "lastTs": "2026-08-25T03:15:10.575707+00:00",
+   "lastTs": "2026-08-25T04:06:17.169580+00:00",
    "consensusAtEntry": 1,
    "conflictAtEntry": false,
    "againstRankAtEntry": null,
@@ -1556,26 +1538,48 @@
    "firstTs": "2026-08-24T23:11:13.817832+00:00",
    "settledTs": "2026-08-25T03:15:10.575707+00:00",
    "resolvedTs": "2026-08-25T03:15:09.665838+00:00"
+  },
+  {
+   "key": "wta-tauson-zarazua-2026-08-24",
+   "side": "Renata Zarazua",
+   "league": "TENNIS",
+   "cat": "Tennis",
+   "entryPrice": 0.265,
+   "closePrice": 0.265,
+   "result": "loss",
+   "winner": "Clara Tauson",
+   "pnl": -10.0,
+   "clvPP": 0.0,
+   "stake": 10.0,
+   "consensusAtEntry": 1,
+   "bestRankAtEntry": 3,
+   "conflictAtEntry": false,
+   "againstRankAtEntry": null,
+   "whaleEntryAvg": 0.2725,
+   "lagPP": -0.75,
+   "firstTs": "2026-08-24T22:48:19.365171+00:00",
+   "settledTs": "2026-08-25T04:06:17.169580+00:00",
+   "resolvedTs": "2026-08-25T04:06:16.275039+00:00"
   }
  ],
  "agg": {
   "all": {
-   "n": 64,
+   "n": 65,
    "wins": 35,
-   "hit": 0.5469,
-   "pnl": 157.88,
-   "stake": 640.0,
-   "roi": 0.2467,
+   "hit": 0.5385,
+   "pnl": 147.88,
+   "stake": 650.0,
+   "roi": 0.2275,
    "clvAvg": -0.18,
-   "lagAvg": 0.3
+   "lagAvg": 0.28
   },
   "solo": {
-   "n": 59,
+   "n": 60,
    "wins": 31,
-   "hit": 0.5254,
-   "pnl": 121.03,
-   "stake": 590.0,
-   "roi": 0.2051,
+   "hit": 0.5167,
+   "pnl": 111.03,
+   "stake": 600.0,
+   "roi": 0.185,
    "clvAvg": -0.23
   },
   "consensus": {
@@ -1597,13 +1601,13 @@
    "clvAvg": 0.0
   },
   "clean": {
-   "n": 56,
+   "n": 57,
    "wins": 31,
-   "hit": 0.5536,
-   "pnl": 165.28,
-   "stake": 560.0,
-   "roi": 0.2951,
-   "clvAvg": -0.21
+   "hit": 0.5439,
+   "pnl": 155.28,
+   "stake": 570.0,
+   "roi": 0.2724,
+   "clvAvg": -0.2
   },
   "byCat": {
    "E-Sport": {
@@ -1625,12 +1629,12 @@
     "clvAvg": -0.57
    },
    "Tennis": {
-    "n": 34,
+    "n": 35,
     "wins": 18,
-    "hit": 0.5294,
-    "pnl": 137.51,
-    "stake": 340.0,
-    "roi": 0.4044,
+    "hit": 0.5143,
+    "pnl": 127.51,
+    "stake": 350.0,
+    "roi": 0.3643,
     "clvAvg": -0.1
    },
    "US-Sport": {
