@@ -1,25 +1,25 @@
 {
-"generatedAt": "2026-08-25T19:53:35.422794+00:00",
+"generatedAt": "2026-08-25T20:00:58.230602+00:00",
 "byVerdict": {
 "konsens": {
-"n": 463,
-"wins": 370,
-"hitRate": 0.7991,
-"polyN": 434,
-"polyWins": 337,
-"polyHitRate": 0.7765,
+"n": 464,
+"wins": 371,
+"hitRate": 0.7996,
+"polyN": 435,
+"polyWins": 338,
+"polyHitRate": 0.777,
 "pinnN": 32,
 "pinnHitRate": 0.75
 },
 "uneinig": {
-"n": 157,
+"n": 158,
 "wins": 47,
-"hitRate": 0.2994,
-"polyN": 139,
+"hitRate": 0.2975,
+"polyN": 140,
 "polyWins": 44,
-"polyHitRate": 0.3165,
-"pinnN": 81,
-"pinnHitRate": 0.6296
+"polyHitRate": 0.3143,
+"pinnN": 82,
+"pinnHitRate": 0.622
 },
 "teil": {
 "n": 5,
@@ -123,17 +123,17 @@
 "wins": 7,
 "hitRate": 0.5833
 },
+"Saudi Professional League": {
+"n": 12,
+"wins": 9,
+"hitRate": 0.75
+},
 "Italian Coppa Italia": {
 "n": 11,
 "wins": 8,
 "hitRate": 0.7273
 },
 "Portuguese Primeira Liga": {
-"n": 11,
-"wins": 9,
-"hitRate": 0.8182
-},
-"Saudi Professional League": {
 "n": 11,
 "wins": 9,
 "hitRate": 0.8182
@@ -233,6 +233,11 @@
 "wins": 4,
 "hitRate": 0.6667
 },
+"Swedish Superettan": {
+"n": 6,
+"wins": 2,
+"hitRate": 0.3333
+},
 "UEFA Champions League Qualifiers": {
 "n": 6,
 "wins": 3,
@@ -262,11 +267,6 @@
 "n": 5,
 "wins": 4,
 "hitRate": 0.8
-},
-"Swedish Superettan": {
-"n": 5,
-"wins": 1,
-"hitRate": 0.2
 },
 "Austrian Bundesliga": {
 "n": 4,
@@ -491,25 +491,63 @@
 },
 "byStrength": {
 "strong": {
-"n": 363,
-"wins": 291,
-"hitRate": 0.8017
+"n": 364,
+"wins": 292,
+"hitRate": 0.8022
 },
 "weak": {
-"n": 229,
+"n": 230,
 "wins": 109,
-"hitRate": 0.476
+"hitRate": 0.4739
 }
 },
 "divergence": {
-"n": 157,
+"n": 158,
 "betfairWins": 47,
-"betfairRate": 0.2994,
-"polyN": 139,
+"betfairRate": 0.2975,
+"polyN": 140,
 "polyWins": 44,
-"polyRate": 0.3165
+"polyRate": 0.3143
 },
 "recent": [
+{
+"matchId": "35956926",
+"home": "Orebro",
+"away": "Varbergs BoIS",
+"league": "Swedish Superettan",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Orebro",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-08-25T17:00:00Z",
+"settledAt": "2026-08-25T20:00:58.063055+00:00"
+},
+{
+"matchId": "35971389",
+"home": "Al-Shabab (KSA)",
+"away": "Al Riyadh SC",
+"league": "Saudi Professional League",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Al-Shabab (KSA)",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+3,
+3
+],
+"kickoff": "2026-08-25T18:00:00Z",
+"settledAt": "2026-08-25T20:00:58.063055+00:00"
+},
 {
 "matchId": "35961322",
 "home": "FC Sabah",
@@ -1231,50 +1269,12 @@
 ],
 "kickoff": "2026-08-24T17:00:00Z",
 "settledAt": "2026-08-24T18:58:11.473965+00:00"
-},
-{
-"matchId": "35734734",
-"home": "Bologna",
-"away": "Lazio",
-"league": "Italian Serie A",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Lazio",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-08-24T16:30:00Z",
-"settledAt": "2026-08-24T18:36:02.510825+00:00"
-},
-{
-"matchId": "35951322",
-"home": "Verl",
-"away": "Hamburger SV",
-"league": "German Cup",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Hamburger SV",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-3
-],
-"kickoff": "2026-08-24T16:00:00Z",
-"settledAt": "2026-08-24T17:52:23.003998+00:00"
 }
 ],
 "global": {
-"n": 625,
-"wins": 418,
-"hitRate": 0.6688
+"n": 627,
+"wins": 419,
+"hitRate": 0.6683
 },
-"pending": 25
+"pending": 23
 }
