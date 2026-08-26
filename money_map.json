@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-08-26T19:56:07.993063+00:00",
+"generatedAt": "2026-08-26T20:11:11.839294+00:00",
 "count": 17,
 "rows": [
 {
@@ -13,19 +13,24 @@
 "betfair": {
 "side": "home",
 "name": "Real Madrid",
-"sharePct": 94,
-"eur": 3665388
+"sharePct": 95,
+"eur": 3868174
 },
 "poly": {
 "side": "home",
 "name": "Real Madrid CF",
-"sharePct": 97,
-"usd": 4654325,
+"sharePct": 95,
+"usd": 4811553,
 "src": "live"
 },
-"pinn": null,
+"pinn": {
+"fav": "home",
+"home": 0.6759,
+"draw": 0.245,
+"away": 0.0792
+},
 "mmStrong": true,
-"nSources": 2
+"nSources": 3
 },
 {
 "matchId": "35931576",
@@ -38,15 +43,15 @@
 "betfair": {
 "side": "home",
 "name": "Newcastle",
-"sharePct": 85,
-"eur": 496450
+"sharePct": 86,
+"eur": 555545
 },
 "poly": null,
 "pinn": {
 "fav": "home",
-"home": 0.5986,
-"draw": 0.2901,
-"away": 0.1113
+"home": 0.8284,
+"draw": 0.1403,
+"away": 0.0312
 },
 "mmStrong": false,
 "nSources": 2
@@ -63,13 +68,13 @@
 "side": "home",
 "name": "Tottenham",
 "sharePct": 93,
-"eur": 435175
+"eur": 444079
 },
 "poly": {
 "side": "home",
 "name": "Tottenham Hotspur FC",
 "sharePct": 99,
-"usd": 325545,
+"usd": 342985,
 "src": "live"
 },
 "pinn": null,
@@ -83,28 +88,53 @@
 "league": "English Football League Cup",
 "live": true,
 "kickoff": "2026-08-26T18:45:00Z",
-"verdict": "konsens",
+"verdict": "uneinig",
 "betfair": {
 "side": "away",
 "name": "Burnley",
-"sharePct": 73,
-"eur": 254780
+"sharePct": 70,
+"eur": 308873
 },
 "poly": {
 "side": "away",
 "name": "Burnley FC",
-"sharePct": 92,
-"usd": 155565,
+"sharePct": 89,
+"usd": 164063,
 "src": "live"
 },
 "pinn": {
-"fav": "away",
-"home": 0.1869,
-"draw": 0.3622,
-"away": 0.451
+"fav": "draw",
+"home": 0.1803,
+"draw": 0.4242,
+"away": 0.3955
 },
 "mmStrong": true,
 "nSources": 3
+},
+{
+"matchId": "35957327",
+"home": "Viking",
+"away": "Dinamo Zagreb",
+"league": "UEFA Champions League Qualifiers",
+"live": true,
+"kickoff": "2026-08-26T19:00:00Z",
+"verdict": "uneinig",
+"betfair": {
+"side": "home",
+"name": "Viking",
+"sharePct": 44,
+"eur": 218720
+},
+"poly": {
+"side": "away",
+"name": "GNK Dinamo Zagreb",
+"sharePct": 51,
+"usd": 156584,
+"src": "live"
+},
+"pinn": null,
+"mmStrong": false,
+"nSources": 2
 },
 {
 "matchId": "35961314",
@@ -117,68 +147,18 @@
 "betfair": {
 "side": "home",
 "name": "NK Celje",
-"sharePct": 42,
-"eur": 195183
+"sharePct": 43,
+"eur": 210668
 },
 "poly": {
 "side": "home",
 "name": "NK Celje",
 "sharePct": 46,
-"usd": 121948,
+"usd": 182548,
 "src": "live"
 },
 "pinn": null,
 "mmStrong": false,
-"nSources": 2
-},
-{
-"matchId": "35957327",
-"home": "Viking",
-"away": "Dinamo Zagreb",
-"league": "UEFA Champions League Qualifiers",
-"live": true,
-"kickoff": "2026-08-26T19:00:00Z",
-"verdict": "uneinig",
-"betfair": {
-"side": "away",
-"name": "Dinamo Zagreb",
-"sharePct": 40,
-"eur": 192588
-},
-"poly": {
-"side": "home",
-"name": "Viking FK",
-"sharePct": 55,
-"usd": 148413,
-"src": "live"
-},
-"pinn": null,
-"mmStrong": false,
-"nSources": 2
-},
-{
-"matchId": "35957324",
-"home": "AEK Athens",
-"away": "PFC Levski Sofia",
-"league": "UEFA Champions League Qualifiers",
-"live": true,
-"kickoff": "2026-08-26T19:00:00Z",
-"verdict": "konsens",
-"betfair": {
-"side": "home",
-"name": "AEK Athens",
-"sharePct": 85,
-"eur": 190392
-},
-"poly": {
-"side": "home",
-"name": "AEK",
-"sharePct": 100,
-"usd": 122671,
-"src": "live"
-},
-"pinn": null,
-"mmStrong": true,
 "nSources": 2
 },
 {
@@ -193,12 +173,37 @@
 "side": "away",
 "name": "Everton",
 "sharePct": 92,
-"eur": 190355
+"eur": 203040
 },
 "poly": null,
 "pinn": null,
 "mmStrong": false,
 "nSources": 1
+},
+{
+"matchId": "35957324",
+"home": "AEK Athens",
+"away": "PFC Levski Sofia",
+"league": "UEFA Champions League Qualifiers",
+"live": true,
+"kickoff": "2026-08-26T19:00:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "home",
+"name": "AEK Athens",
+"sharePct": 85,
+"eur": 192376
+},
+"poly": {
+"side": "home",
+"name": "AEK",
+"sharePct": 100,
+"usd": 130419,
+"src": "live"
+},
+"pinn": null,
+"mmStrong": true,
+"nSources": 2
 },
 {
 "matchId": "35780320",
@@ -212,7 +217,7 @@
 "side": "home",
 "name": "Barcelona",
 "sharePct": 96,
-"eur": 122555
+"eur": 123358
 },
 "poly": {
 "side": "home",
@@ -241,8 +246,8 @@
 "betfair": {
 "side": "home",
 "name": "Celta Vigo",
-"sharePct": 88,
-"eur": 51710
+"sharePct": 86,
+"eur": 68233
 },
 "poly": {
 "side": "home",
@@ -261,6 +266,31 @@
 "nSources": 3
 },
 {
+"matchId": "35969276",
+"home": "Ajax",
+"away": "Sion",
+"league": "UEFA Europa Conference Qualifiers",
+"live": false,
+"kickoff": "2026-08-27T18:00:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "home",
+"name": "Ajax",
+"sharePct": 97,
+"eur": 37461
+},
+"poly": {
+"side": "home",
+"name": "AFC Ajax",
+"sharePct": 67,
+"usd": 51547,
+"src": "close"
+},
+"pinn": null,
+"mmStrong": true,
+"nSources": 2
+},
+{
 "matchId": "35929554",
 "home": "Vasco Da Gama",
 "away": "EC Vitoria Salvador",
@@ -271,8 +301,8 @@
 "betfair": {
 "side": "home",
 "name": "Vasco Da Gama",
-"sharePct": 87,
-"eur": 25954
+"sharePct": 85,
+"eur": 27151
 },
 "poly": {
 "side": "home",
@@ -296,8 +326,8 @@
 "betfair": {
 "side": "home",
 "name": "Liverpool",
-"sharePct": 70,
-"eur": 24435
+"sharePct": 71,
+"eur": 24612
 },
 "poly": {
 "side": "home",
@@ -326,8 +356,8 @@
 "betfair": {
 "side": "home",
 "name": "SE Palmeiras",
-"sharePct": 72,
-"eur": 22482
+"sharePct": 71,
+"eur": 23130
 },
 "poly": {
 "side": "home",
@@ -352,7 +382,7 @@
 "side": "home",
 "name": "Bayern Munich",
 "sharePct": 81,
-"eur": 21965
+"eur": 22009
 },
 "poly": {
 "side": "home",
@@ -382,7 +412,7 @@
 "side": "away",
 "name": "Man City",
 "sharePct": 81,
-"eur": 21330
+"eur": 21342
 },
 "poly": {
 "side": "away",
@@ -409,29 +439,10 @@
 "kickoff": "2026-08-26T19:00:00Z",
 "verdict": "no_anchor",
 "betfair": {
-"side": "home",
-"name": "Lyon",
-"sharePct": 51,
-"eur": 940988
-},
-"poly": null,
-"pinn": null,
-"mmStrong": false,
-"nSources": 1
-},
-{
-"matchId": "35986418",
-"home": "Al Ahli",
-"away": "Auckland FC",
-"league": "FIFA Intercontinental Cup",
-"live": true,
-"kickoff": "2026-08-26T18:00:00Z",
-"verdict": "no_anchor",
-"betfair": {
-"side": "home",
-"name": "Al Ahli",
-"sharePct": 96,
-"eur": 221500
+"side": "away",
+"name": "Fenerbahce",
+"sharePct": 48,
+"eur": 1063200
 },
 "poly": null,
 "pinn": null,
@@ -439,7 +450,7 @@
 "nSources": 1
 }
 ],
-"nameMatchMisses": 6,
+"nameMatchMisses": 5,
 "nameMatchMissList": [
 {
 "matchId": "35984885",
@@ -448,10 +459,10 @@
 "league": "Venezuelan Cup"
 },
 {
-"matchId": "35979523",
-"home": "San Antonio Bulo Bulo",
-"away": "The Strongest",
-"league": "Bolivian Liga de Futbol Profesional"
+"matchId": "35957325",
+"home": "Lyon",
+"away": "Fenerbahce",
+"league": "UEFA Champions League Qualifiers"
 },
 {
 "matchId": "35928174",
@@ -460,22 +471,16 @@
 "league": "English Football League Cup"
 },
 {
-"matchId": "35957325",
-"home": "Lyon",
-"away": "Fenerbahce",
-"league": "UEFA Champions League Qualifiers"
+"matchId": "35979523",
+"home": "San Antonio Bulo Bulo",
+"away": "The Strongest",
+"league": "Bolivian Liga de Futbol Profesional"
 },
 {
 "matchId": "35931576",
 "home": "Newcastle",
 "away": "West Brom",
 "league": "English Football League Cup"
-},
-{
-"matchId": "35971568",
-"home": "Chaco For Ever",
-"away": "CA San Miguel",
-"league": "Argentinian Primera Nacional"
 }
 ]
 }
