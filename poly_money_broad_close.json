@@ -85466,135 +85466,6 @@
   },
   "resolvedAt": "2026-08-26T03:20:27.453331+00:00"
  },
- "mlb-cle-laa-2026-08-25": {
-  "shares": {
-   "Cleveland Guardians": 70863.468060645,
-   "Los Angeles Angels": 50270.61772896001
-  },
-  "prices": {
-   "Cleveland Guardians": 0.585,
-   "Los Angeles Angels": 0.415
-  },
-  "league": "MLB",
-  "sport": "US-Sport",
-  "totalUsd": 118850,
-  "whales": [
-   {
-    "wallet": "0x3dfb153c197d4c19d3b31c1ecd2c7b6860eeabaf",
-    "side": "Cleveland Guardians",
-    "usd": 59596,
-    "avgPrice": 0.5799
-   },
-   {
-    "wallet": "0xb7271c112cbd83eb4c1ef1b554ff963604ae2a9d",
-    "side": "Los Angeles Angels",
-    "usd": 8035,
-    "avgPrice": 0.4199
-   },
-   {
-    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
-    "side": "Los Angeles Angels",
-    "usd": 8031
-   },
-   {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "side": "Los Angeles Angels",
-    "usd": 6225,
-    "avgPrice": 0.42
-   }
-  ],
-  "hoursToKickoff": 1.64,
-  "capturedAt": "2026-08-26T00:03:25.062239+00:00",
-  "tokens": {
-   "Cleveland Guardians": "43372672442648920904728416943978564438257471044592461908526164117761358483840",
-   "Los Angeles Angels": "29980974456409178098149224403689696124955234423784071263321565391961185350500"
-  },
-  "book": {
-   "side": "Cleveland Guardians",
-   "bid": 0.58,
-   "ask": 0.59,
-   "spreadC": 1.0,
-   "spreadPct": 1.69,
-   "bids": [
-    [
-     0.58,
-     44487
-    ],
-    [
-     0.57,
-     289793
-    ],
-    [
-     0.56,
-     202553
-    ],
-    [
-     0.55,
-     40926
-    ],
-    [
-     0.54,
-     15663
-    ],
-    [
-     0.53,
-     3734
-    ]
-   ],
-   "asks": [
-    [
-     0.59,
-     297339
-    ],
-    [
-     0.6,
-     146988
-    ],
-    [
-     0.61,
-     42942
-    ],
-    [
-     0.62,
-     7996
-    ],
-    [
-     0.63,
-     205
-    ],
-    [
-     0.64,
-     3185
-    ]
-   ]
-  },
-  "trades": [
-   {
-    "wallet": "0x4b493d8ea89203ecfa5ac53ff8fc4a45aa050397",
-    "action": "BUY",
-    "side": "Cleveland Guardians",
-    "price": 0.59,
-    "usd": 602,
-    "ts": 1787702322
-   },
-   {
-    "wallet": "0x3dfb153c197d4c19d3b31c1ecd2c7b6860eeabaf",
-    "action": "BUY",
-    "side": "Cleveland Guardians",
-    "price": 0.58,
-    "usd": 4185,
-    "ts": 1787702241
-   },
-   {
-    "wallet": "0x56acab44cfca2e88bb9b3406890aea7bfa0cd77e",
-    "action": "BUY",
-    "side": "Los Angeles Angels",
-    "price": 0.42,
-    "usd": 4842,
-    "ts": 1787699553
-   }
-  ]
- },
  "mlb-min-oak-2026-08-25": {
   "shares": {
    "Minnesota Twins": 62763.898642380045,
@@ -85707,7 +85578,13 @@
     "usd": 500,
     "ts": 1787697571
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Minnesota Twins": 0.0,
+   "Athletics": 1.0
+  },
+  "resolvedAt": "2026-08-26T08:26:32.627165+00:00"
  },
  "mlb-chc-ari-2026-08-25": {
   "shares": {
@@ -85820,7 +85697,13 @@
     "usd": 500,
     "ts": 1787695780
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Chicago Cubs": 0.0,
+   "Arizona Diamondbacks": 1.0
+  },
+  "resolvedAt": "2026-08-26T08:26:32.627165+00:00"
  },
  "mlb-phi-sea-2026-08-25": {
   "shares": {
@@ -85865,7 +85748,13 @@
   "tokens": {
    "Over": "74309186472615835126508500697465569015650552107391683292480901590940915111939",
    "Under": "77563266348019436874907087775459467442568443631832067480457541976516704698847"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Philadelphia Phillies": 0.0,
+   "Seattle Mariners": 1.0
+  },
+  "resolvedAt": "2026-08-26T08:26:32.627165+00:00"
  },
  "mlb-pit-sd-2026-08-25": {
   "shares": {
@@ -87109,8 +86998,8 @@
  },
  "cs2-aur1-g2-2026-08-26": {
   "shares": {
-   "Aurora Gaming": 86601.42949097493,
-   "G2": 91958.67451508503
+   "Aurora Gaming": 241975.8514348651,
+   "G2": 256899.1158148802
   },
   "prices": {
    "Aurora Gaming": 0.485,
@@ -87118,198 +87007,174 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 199558,
+  "totalUsd": 503697,
   "whales": [
    {
-    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "wallet": "0xcd30f4698c6f5f3829893e68e183a8e5ea18f316",
     "side": "G2",
-    "usd": 20959,
-    "avgPrice": 0.5192
+    "usd": 109923,
+    "avgPrice": 0.5231
    },
    {
-    "wallet": "0x1610db79f753a80207e1d66716be9e91e627ae49",
+    "wallet": "0xdb859a551fcf56e49416160911476bea7307152f",
     "side": "Aurora Gaming",
-    "usd": 20735,
-    "avgPrice": 0.4913
+    "usd": 97000,
+    "avgPrice": 0.4799
    },
    {
-    "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
-    "side": "G2",
-    "usd": 18025,
-    "avgPrice": 0.51
+    "wallet": "0x73e3fec494611d73c170cb2f23850fd998b21be9",
+    "side": "Aurora Gaming",
+    "usd": 41225,
+    "avgPrice": 0.47
    },
    {
-    "wallet": "0x8e74984fb998be82444627906740dc1a19c35972",
+    "wallet": "0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
     "side": "G2",
-    "usd": 15450,
-    "avgPrice": 0.51
+    "usd": 35696,
+    "avgPrice": 0.5199
    }
   ],
-  "hoursToKickoff": 1.46,
-  "capturedAt": "2026-08-26T07:34:32.064092+00:00",
+  "hoursToKickoff": 0.6,
+  "capturedAt": "2026-08-26T08:26:32.627165+00:00",
   "tokens": {
    "Aurora Gaming": "28599544096706751891088465368161070780779896972360086359781196036216961348347",
    "G2": "106987405440820630029594472022897484408603311500762849637609768921711794241873"
   },
   "book": {
    "side": "G2",
-   "bid": 0.51,
-   "ask": 0.52,
+   "bid": 0.52,
+   "ask": 0.53,
    "spreadC": 1.0,
-   "spreadPct": 1.92,
+   "spreadPct": 1.89,
    "bids": [
     [
+     0.52,
+     17241
+    ],
+    [
      0.51,
-     3936
+     205615
     ],
     [
      0.5,
-     52162
+     49233
     ],
     [
      0.49,
-     25470
+     24976
     ],
     [
      0.48,
-     14483
+     19780
     ],
     [
      0.47,
-     2505
-    ],
-    [
-     0.46,
-     1000
+     3146
     ]
    ],
    "asks": [
     [
-     0.52,
-     3027
-    ],
-    [
      0.53,
-     90737
+     51969
     ],
     [
      0.54,
-     17355
+     19640
     ],
     [
      0.55,
-     3276
+     7064
     ],
     [
      0.56,
-     2625
+     6728
     ],
     [
      0.57,
-     2100
+     3610
+    ],
+    [
+     0.58,
+     5131
     ]
    ]
   },
   "trades": [
    {
-    "wallet": "0x0dbecac99a2e849a708dea4ec6a711c885dc1999",
-    "action": "BUY",
-    "side": "Aurora Gaming",
-    "price": 0.49,
-    "usd": 970,
-    "ts": 1787715555
-   },
-   {
-    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
-    "action": "BUY",
-    "side": "G2",
-    "price": 0.51,
-    "usd": 1348,
-    "ts": 1787715001
-   },
-   {
-    "wallet": "0x1610db79f753a80207e1d66716be9e91e627ae49",
-    "action": "BUY",
-    "side": "Aurora Gaming",
-    "price": 0.49,
-    "usd": 16298,
-    "ts": 1787714710
-   },
-   {
-    "wallet": "0x1944ec2927cb2a86fcad6e555ef25ea65ec98088",
-    "action": "BUY",
-    "side": "Aurora Gaming",
-    "price": 0.49,
-    "usd": 4797,
-    "ts": 1787714403
-   },
-   {
-    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "wallet": "0x3c2b0236a49e16eea4b1bf026d945da0320d825e",
     "action": "BUY",
     "side": "G2",
     "price": 0.52,
-    "usd": 1177,
-    "ts": 1787713200
+    "usd": 300,
+    "ts": 1787732433
    },
    {
-    "wallet": "0xf4ec03081af3116b77f0d52c109c6828ff0ec574",
+    "wallet": "0x38337de21ff0bb0a11a40761507d51e318d633d1",
+    "action": "BUY",
+    "side": "Aurora Gaming",
+    "price": 0.49,
+    "usd": 7350,
+    "ts": 1787732400
+   },
+   {
+    "wallet": "0x2d0c6ca7b117a964ac790b8673fb1bce152b7f26",
     "action": "BUY",
     "side": "G2",
     "price": 0.52,
-    "usd": 2800,
-    "ts": 1787713003
+    "usd": 500,
+    "ts": 1787732305
    },
    {
-    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "wallet": "0xf1ef8705e9f63c790c6fffd6329aea7011718cd6",
     "action": "BUY",
     "side": "G2",
     "price": 0.52,
-    "usd": 1162,
-    "ts": 1787712297
+    "usd": 4160,
+    "ts": 1787731965
    }
   ]
  },
  "auc-plf-sm-2026-08-26": {
   "shares": {
-   "Preston Lions FC": 1137.7788767099998,
-   "Draw (Preston Lions FC vs. South Melbourne FC)": 96.58569487,
-   "South Melbourne FC": 1691.2416855599997
+   "Preston Lions FC": 1175.6813799500003,
+   "Draw (Preston Lions FC vs. South Melbourne FC)": 98.93077825,
+   "South Melbourne FC": 2721.7259680099996
   },
   "prices": {
-   "Preston Lions FC": 0.465,
-   "Draw (Preston Lions FC vs. South Melbourne FC)": 0.245,
-   "South Melbourne FC": 0.315
+   "Preston Lions FC": 0.385,
+   "Draw (Preston Lions FC vs. South Melbourne FC)": 0.25,
+   "South Melbourne FC": 0.365
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 9691,
+  "totalUsd": 10915,
   "whales": [
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "South Melbourne FC",
-    "usd": 992,
+    "usd": 1149,
     "avgPrice": 0.3239
    },
    {
-    "wallet": "0x2398a194611b494d4c06a083492af87f1dc88894",
-    "side": "Preston Lions FC",
-    "usd": 684,
-    "avgPrice": 0.4757
+    "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
+    "side": "South Melbourne FC",
+    "usd": 762,
+    "avgPrice": 0.3831
    },
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
     "side": "South Melbourne FC",
-    "usd": 657
+    "usd": 761
    },
    {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "wallet": "0x2398a194611b494d4c06a083492af87f1dc88894",
     "side": "Preston Lions FC",
-    "usd": 297,
-    "avgPrice": 0.4609
+    "usd": 566,
+    "avgPrice": 0.4757
    }
   ],
-  "hoursToKickoff": 1.96,
-  "capturedAt": "2026-08-26T07:34:32.064092+00:00",
+  "hoursToKickoff": 1.1,
+  "capturedAt": "2026-08-26T08:26:32.627165+00:00",
   "tokens": {
    "Preston Lions FC": "33338882291428288119228295922914742800352589440644845317268035174083267586336",
    "Draw (Preston Lions FC vs. South Melbourne FC)": "90269765466099189963051345150808592073084342301892327538302273066033198055844",
@@ -87317,64 +87182,72 @@
   },
   "book": {
    "side": "South Melbourne FC",
-   "bid": 0.31,
-   "ask": 0.32,
+   "bid": 0.36,
+   "ask": 0.37,
    "spreadC": 1.0,
-   "spreadPct": 3.13,
+   "spreadPct": 2.7,
    "bids": [
     [
+     0.36,
+     759
+    ],
+    [
+     0.35,
+     2169
+    ],
+    [
+     0.34,
+     394
+    ],
+    [
+     0.33,
+     475
+    ],
+    [
+     0.32,
+     769
+    ],
+    [
      0.31,
-     95
-    ],
-    [
-     0.3,
-     108
-    ],
-    [
-     0.29,
-     1369
-    ],
-    [
-     0.28,
-     326
-    ],
-    [
-     0.27,
-     472
-    ],
-    [
-     0.26,
-     302
+     308
     ]
    ],
    "asks": [
     [
-     0.32,
-     7
-    ],
-    [
-     0.33,
-     37
-    ],
-    [
-     0.34,
-     78
-    ],
-    [
-     0.35,
-     260
-    ],
-    [
-     0.36,
-     327
-    ],
-    [
      0.37,
-     8
+     13
+    ],
+    [
+     0.38,
+     132
+    ],
+    [
+     0.39,
+     1208
+    ],
+    [
+     0.4,
+     2479
+    ],
+    [
+     0.41,
+     401
+    ],
+    [
+     0.42,
+     653
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.3832,
+    "usd": 800,
+    "ts": 1787732134
+   },
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
     "action": "BUY",
@@ -87390,6 +87263,551 @@
     "price": 0.71,
     "usd": 576,
     "ts": 1787650516
+   }
+  ]
+ },
+ "val-ge1-drx1-2026-08-26": {
+  "shares": {
+   "Global Esports": 13946.785093049999,
+   "DRX": 11182.494988790007
+  },
+  "prices": {
+   "Global Esports": 0.555,
+   "DRX": 0.445
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 26279,
+  "whales": [
+   {
+    "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
+    "side": "Global Esports",
+    "usd": 8530,
+    "avgPrice": 0.5499
+   },
+   {
+    "wallet": "0x988d8d2a3b01f96a115cf0e20e59e134d65a9899",
+    "side": "DRX",
+    "usd": 4944,
+    "avgPrice": 0.4499
+   },
+   {
+    "wallet": "0x4980930da4ad1194d4f0fd5e29f17b70a42e5709",
+    "side": "DRX",
+    "usd": 1558,
+    "avgPrice": 0.44
+   },
+   {
+    "wallet": "0x866056133a70de9282a080758858d1a0c8b393ed",
+    "side": "DRX",
+    "usd": 999,
+    "avgPrice": 0.44
+   }
+  ],
+  "hoursToKickoff": 2.6,
+  "capturedAt": "2026-08-26T08:26:32.627165+00:00",
+  "tokens": {
+   "Global Esports": "8990784454184293782807962136222572723016439726170544802370953249897925191511",
+   "DRX": "114264613975637702328097356048531677385195768447720044187719222086008740995221"
+  },
+  "book": {
+   "side": "Global Esports",
+   "bid": 0.55,
+   "ask": 0.56,
+   "spreadC": 1.0,
+   "spreadPct": 1.79,
+   "bids": [
+    [
+     0.55,
+     37334
+    ],
+    [
+     0.54,
+     32175
+    ],
+    [
+     0.53,
+     1287
+    ],
+    [
+     0.52,
+     3241
+    ],
+    [
+     0.51,
+     168
+    ],
+    [
+     0.46,
+     65
+    ]
+   ],
+   "asks": [
+    [
+     0.56,
+     39114
+    ],
+    [
+     0.57,
+     8396
+    ],
+    [
+     0.58,
+     3762
+    ],
+    [
+     0.59,
+     3509
+    ],
+    [
+     0.6,
+     40
+    ],
+    [
+     0.61,
+     350
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x2714203fdcc0843fac3122edccea32c05bcd960f",
+    "action": "BUY",
+    "side": "Global Esports",
+    "price": 0.56,
+    "usd": 700,
+    "ts": 1787712444
+   },
+   {
+    "wallet": "0x988d8d2a3b01f96a115cf0e20e59e134d65a9899",
+    "action": "BUY",
+    "side": "DRX",
+    "price": 0.45,
+    "usd": 5000,
+    "ts": 1787712435
+   }
+  ]
+ },
+ "itf-schnyde-bonelli-2026-08-26": {
+  "shares": {
+   "Sarina Schnyder": 4755.618212895,
+   "Elsa Bonelli": 4851.6913081050025
+  },
+  "prices": {
+   "Sarina Schnyder": 0.495,
+   "Elsa Bonelli": 0.505
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 9606,
+  "whales": [
+   {
+    "wallet": "0x2f017a99ea9531a4d7760e67f0ce3b17982afa78",
+    "side": "Sarina Schnyder",
+    "usd": 4310,
+    "avgPrice": 0.4205
+   },
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "side": "Elsa Bonelli",
+    "usd": 3536
+   },
+   {
+    "wallet": "0xeaac36f714563e13d88db7a4f0a0898388f2d71d",
+    "side": "Elsa Bonelli",
+    "usd": 514
+   },
+   {
+    "wallet": "0x72e1597864456eda62878413cf3e60c332e4a45d",
+    "side": "Sarina Schnyder",
+    "usd": 425,
+    "avgPrice": 0.4898
+   }
+  ],
+  "hoursToKickoff": 1.1,
+  "capturedAt": "2026-08-26T08:26:32.627165+00:00",
+  "tokens": {
+   "Sarina Schnyder": "77583461127159284130228482874466120926636679840147874533911790732151007494789",
+   "Elsa Bonelli": "59844109509258420102300310154481080453359314556245834106816885838213335080845"
+  },
+  "book": {
+   "side": "Elsa Bonelli",
+   "bid": 0.5,
+   "ask": 0.51,
+   "spreadC": 1.0,
+   "spreadPct": 1.96,
+   "bids": [
+    [
+     0.5,
+     8964
+    ],
+    [
+     0.49,
+     20533
+    ],
+    [
+     0.48,
+     145
+    ],
+    [
+     0.47,
+     85
+    ],
+    [
+     0.46,
+     343
+    ],
+    [
+     0.36,
+     114
+    ]
+   ],
+   "asks": [
+    [
+     0.51,
+     29192
+    ],
+    [
+     0.52,
+     25108
+    ],
+    [
+     0.53,
+     128
+    ],
+    [
+     0.54,
+     87
+    ],
+    [
+     0.55,
+     106
+    ],
+    [
+     0.59,
+     91
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x2f017a99ea9531a4d7760e67f0ce3b17982afa78",
+    "action": "BUY",
+    "side": "Sarina Schnyder",
+    "price": 0.42,
+    "usd": 865,
+    "ts": 1787731152
+   },
+   {
+    "wallet": "0x2f017a99ea9531a4d7760e67f0ce3b17982afa78",
+    "action": "BUY",
+    "side": "Sarina Schnyder",
+    "price": 0.43,
+    "usd": 1050,
+    "ts": 1787731146
+   },
+   {
+    "wallet": "0x2f017a99ea9531a4d7760e67f0ce3b17982afa78",
+    "action": "BUY",
+    "side": "Sarina Schnyder",
+    "price": 0.42,
+    "usd": 1052,
+    "ts": 1787731125
+   },
+   {
+    "wallet": "0x2f017a99ea9531a4d7760e67f0ce3b17982afa78",
+    "action": "BUY",
+    "side": "Sarina Schnyder",
+    "price": 0.41,
+    "usd": 417,
+    "ts": 1787731074
+   }
+  ]
+ },
+ "cs2-g2a-bw-2026-08-26": {
+  "shares": {
+   "G2 Ares": 7636.352434480001,
+   "Bushido Wildcats": 12198.329213520003
+  },
+  "prices": {
+   "G2 Ares": 0.385,
+   "Bushido Wildcats": 0.615
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 11015,
+  "whales": [
+   {
+    "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
+    "side": "Bushido Wildcats",
+    "usd": 4941,
+    "avgPrice": 0.6099
+   },
+   {
+    "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
+    "side": "Bushido Wildcats",
+    "usd": 1570,
+    "avgPrice": 0.5999
+   },
+   {
+    "wallet": "0x806abb0e02f17fb904c37a93a41cac55eaf0b7da",
+    "side": "G2 Ares",
+    "usd": 1363,
+    "avgPrice": 0.3899
+   },
+   {
+    "wallet": "0x513587a2f36a8cb29333052a6a479091ef8a7217",
+    "side": "Bushido Wildcats",
+    "usd": 1363,
+    "avgPrice": 0.5889
+   }
+  ],
+  "hoursToKickoff": 2.6,
+  "capturedAt": "2026-08-26T08:26:32.627165+00:00",
+  "tokens": {
+   "G2 Ares": "11964947208944515813498000643193352540513072806552110033985348699774009056979",
+   "Bushido Wildcats": "65656664864194652597945810290598822902270115365757969955793496106456290950505"
+  },
+  "book": {
+   "side": "Bushido Wildcats",
+   "bid": 0.61,
+   "ask": 0.62,
+   "spreadC": 1.0,
+   "spreadPct": 1.61,
+   "bids": [
+    [
+     0.61,
+     5711
+    ],
+    [
+     0.6,
+     19273
+    ],
+    [
+     0.59,
+     1400
+    ],
+    [
+     0.58,
+     8
+    ],
+    [
+     0.57,
+     423
+    ],
+    [
+     0.56,
+     576
+    ]
+   ],
+   "asks": [
+    [
+     0.62,
+     810
+    ],
+    [
+     0.63,
+     413
+    ],
+    [
+     0.64,
+     919
+    ],
+    [
+     0.65,
+     100
+    ],
+    [
+     0.68,
+     12
+    ],
+    [
+     0.69,
+     1045
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x9267fe9a4aa7ea48d0d69cb487b3eb152fc7869e",
+    "action": "BUY",
+    "side": "G2 Ares",
+    "price": 0.39,
+    "usd": 966,
+    "ts": 1787732202
+   },
+   {
+    "wallet": "0x806abb0e02f17fb904c37a93a41cac55eaf0b7da",
+    "action": "BUY",
+    "side": "G2 Ares",
+    "price": 0.39,
+    "usd": 690,
+    "ts": 1787732155
+   },
+   {
+    "wallet": "0x847c93c0edf9d94674c83db54c1ab1255fa41aa1",
+    "action": "BUY",
+    "side": "G2 Ares",
+    "price": 0.39,
+    "usd": 470,
+    "ts": 1787732134
+   },
+   {
+    "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
+    "action": "BUY",
+    "side": "Bushido Wildcats",
+    "price": 0.61,
+    "usd": 1035,
+    "ts": 1787732125
+   },
+   {
+    "wallet": "0x43781287e47ca4c6976ab33233154fdc3b021bde",
+    "action": "BUY",
+    "side": "G2 Ares",
+    "price": 0.4,
+    "usd": 352,
+    "ts": 1787731729
+   }
+  ]
+ },
+ "kor-gwo-gwa-2026-08-26": {
+  "shares": {
+   "Gangwon FC": 4191.4344780599995,
+   "Draw (Gangwon FC vs. Gwangju FC)": 15.424310774999997,
+   "Gwangju FC": 541.549377
+  },
+  "prices": {
+   "Gangwon FC": 0.645,
+   "Draw (Gangwon FC vs. Gwangju FC)": 0.235,
+   "Gwangju FC": 0.125
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 10494,
+  "whales": [
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Gangwon FC",
+    "usd": 1654,
+    "avgPrice": 0.6424
+   },
+   {
+    "wallet": "0x2398a194611b494d4c06a083492af87f1dc88894",
+    "side": "Gangwon FC",
+    "usd": 1222,
+    "avgPrice": 0.6564
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Gwangju FC",
+    "usd": 311,
+    "avgPrice": 0.12
+   },
+   {
+    "wallet": "0xfcc71106212c778ca14102fbf5ac4d5d6a9a4d38",
+    "side": "Gangwon FC",
+    "usd": 201,
+    "avgPrice": 0.64
+   }
+  ],
+  "hoursToKickoff": 2.1,
+  "capturedAt": "2026-08-26T08:26:32.627165+00:00",
+  "tokens": {
+   "Gangwon FC": "23290310764414255867128467512925481571014723250727779642972798354146757286031",
+   "Draw (Gangwon FC vs. Gwangju FC)": "96544474036322628129446122391565417296086496082169379753527957234159545146400",
+   "Gwangju FC": "16416880148072557602177156056617611977832557298830457873632592720449503460203"
+  },
+  "book": {
+   "side": "Gangwon FC",
+   "bid": 0.63,
+   "ask": 0.64,
+   "spreadC": 1.0,
+   "spreadPct": 1.56,
+   "bids": [
+    [
+     0.63,
+     7637
+    ],
+    [
+     0.62,
+     9250
+    ],
+    [
+     0.61,
+     8645
+    ],
+    [
+     0.6,
+     8642
+    ],
+    [
+     0.59,
+     1584
+    ],
+    [
+     0.58,
+     1586
+    ]
+   ],
+   "asks": [
+    [
+     0.64,
+     9014
+    ],
+    [
+     0.65,
+     7799
+    ],
+    [
+     0.66,
+     12135
+    ],
+    [
+     0.67,
+     8519
+    ],
+    [
+     0.68,
+     3960
+    ],
+    [
+     0.69,
+     3013
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "action": "BUY",
+    "side": "No",
+    "price": 0.36,
+    "usd": 374,
+    "ts": 1787732568
+   },
+   {
+    "wallet": "0x2398a194611b494d4c06a083492af87f1dc88894",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.6565,
+    "usd": 1243,
+    "ts": 1787716656
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.6472,
+    "usd": 562,
+    "ts": 1787697513
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.64,
+    "usd": 841,
+    "ts": 1787697513
    }
   ]
  }
