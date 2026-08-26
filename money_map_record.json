@@ -1,23 +1,23 @@
 {
-"generatedAt": "2026-08-26T16:56:20.313489+00:00",
+"generatedAt": "2026-08-26T17:10:56.909620+00:00",
 "byVerdict": {
 "konsens": {
-"n": 489,
-"wins": 392,
-"hitRate": 0.8016,
-"polyN": 459,
-"polyWins": 358,
-"polyHitRate": 0.78,
+"n": 490,
+"wins": 393,
+"hitRate": 0.802,
+"polyN": 460,
+"polyWins": 359,
+"polyHitRate": 0.7804,
 "pinnN": 36,
 "pinnHitRate": 0.7222
 },
 "uneinig": {
-"n": 165,
+"n": 166,
 "wins": 51,
-"hitRate": 0.3091,
-"polyN": 147,
+"hitRate": 0.3072,
+"polyN": 148,
 "polyWins": 49,
-"polyHitRate": 0.3333,
+"polyHitRate": 0.3311,
 "pinnN": 85,
 "pinnHitRate": 0.6
 },
@@ -173,6 +173,11 @@
 "wins": 7,
 "hitRate": 0.7
 },
+"Uzbekistan Super League": {
+"n": 10,
+"wins": 7,
+"hitRate": 0.7
+},
 "Chinese Super League": {
 "n": 9,
 "wins": 5,
@@ -182,11 +187,6 @@
 "n": 9,
 "wins": 7,
 "hitRate": 0.7778
-},
-"Uzbekistan Super League": {
-"n": 9,
-"wins": 6,
-"hitRate": 0.6667
 },
 "Dutch Eerste Divisie": {
 "n": 8,
@@ -343,6 +343,11 @@
 "wins": 2,
 "hitRate": 1.0
 },
+"Egyptian Premier": {
+"n": 2,
+"wins": 1,
+"hitRate": 0.5
+},
 "English Sky Bet League 2": {
 "n": 2,
 "wins": 2,
@@ -394,11 +399,6 @@
 "hitRate": 1.0
 },
 "Croatian HNL": {
-"n": 1,
-"wins": 1,
-"hitRate": 1.0
-},
-"Egyptian Premier": {
 "n": 1,
 "wins": 1,
 "hitRate": 1.0
@@ -496,25 +496,63 @@
 },
 "byStrength": {
 "strong": {
-"n": 381,
-"wins": 308,
-"hitRate": 0.8084
+"n": 382,
+"wins": 309,
+"hitRate": 0.8089
 },
 "weak": {
-"n": 245,
+"n": 246,
 "wins": 118,
-"hitRate": 0.4816
+"hitRate": 0.4797
 }
 },
 "divergence": {
-"n": 165,
+"n": 166,
 "betfairWins": 51,
-"betfairRate": 0.3091,
-"polyN": 147,
+"betfairRate": 0.3072,
+"polyN": 148,
 "polyWins": 49,
-"polyRate": 0.3333
+"polyRate": 0.3311
 },
 "recent": [
+{
+"matchId": "35978187",
+"home": "Lokomotiv Tashkent",
+"away": "Bunyodkor",
+"league": "Uzbekistan Super League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Lokomotiv Tashkent",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+1
+],
+"kickoff": "2026-08-26T14:00:00Z",
+"settledAt": "2026-08-26T17:10:56.723624+00:00"
+},
+{
+"matchId": "35982271",
+"home": "Smouha",
+"away": "Asyut Petroleum",
+"league": "Egyptian Premier",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Smouha",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-08-26T14:00:00Z",
+"settledAt": "2026-08-26T17:10:56.723624+00:00"
+},
 {
 "matchId": "35978196",
 "home": "Qizilqum Zarafshon",
@@ -1236,50 +1274,12 @@
 ],
 "kickoff": "2026-08-25T14:00:00Z",
 "settledAt": "2026-08-25T17:08:18.805008+00:00"
-},
-{
-"matchId": "35969775",
-"home": "FC Seoul",
-"away": "Bucheon FC 1995",
-"league": "South Korean K1 League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "FC Seoul",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-08-25T10:30:00Z",
-"settledAt": "2026-08-25T13:40:40.226242+00:00"
-},
-{
-"matchId": "35969780",
-"home": "Gimcheon Sangmu",
-"away": "Jeonbuk Motors",
-"league": "South Korean K1 League",
-"verdict": "uneinig",
-"moneySide": "draw",
-"moneyName": "The Draw",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-08-25T10:30:00Z",
-"settledAt": "2026-08-25T13:40:40.226242+00:00"
 }
 ],
 "global": {
-"n": 659,
-"wins": 444,
-"hitRate": 0.6737
+"n": 661,
+"wins": 445,
+"hitRate": 0.6732
 },
-"pending": 14
+"pending": 15
 }
