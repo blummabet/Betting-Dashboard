@@ -1,19 +1,18 @@
 {
 "_meta": {
 "description": "Übersicht-Puls: letzte 30 abgerechnete Picks (CLV/Trefferquote).",
-"generatedAt": "2026-08-26T06:38:31Z",
-"updated_at": "2026-08-26T06:38:31Z"
+"generatedAt": "2026-08-26T07:08:32Z",
+"updated_at": "2026-08-26T07:08:32Z"
 },
 "n": 30,
 "nClv": 30,
 "nGraded": 29,
-"avgClvPP": -1.84,
+"avgClvPP": -1.91,
 "pctBeatClose": 33.3,
-"winPct": 62.1,
-"wins": 18,
-"losses": 11,
+"winPct": 65.5,
+"wins": 19,
+"losses": 10,
 "series": [
--0.63,
 -4.75,
 -1.25,
 -19.69,
@@ -42,10 +41,11 @@
 -2.13,
 1.28,
 1.46,
-1.55
+1.55,
+-2.59
 ],
 "oldest": "2026-08-20T07:44:21Z",
-"newest": "2026-08-25T19:44:37Z",
+"newest": "2026-08-26T07:08:30Z",
 "betfair": {
 "n": 8000,
 "hitPct": 52.2,
@@ -83,18 +83,18 @@
 }
 },
 "signalBoard": {
-"n": 51,
-"baseWinPct": 57,
+"n": 52,
+"baseWinPct": 58,
 "minFire": 6,
 "rows": [
 {
 "name": "form_trend",
-"fire": 37,
-"supp": 26,
-"suppWinPct": 58,
+"fire": 38,
+"supp": 27,
+"suppWinPct": 59,
 "opp": 11,
 "oppWinPct": 45,
-"edge": 13,
+"edge": 14,
 "clvAvg": -2.23
 },
 {
@@ -178,6 +178,26 @@
 "clvAvg": -3.15
 },
 {
+"name": "lead_lag_bias",
+"fire": 20,
+"supp": 16,
+"suppWinPct": 50,
+"opp": 4,
+"oppWinPct": 50,
+"edge": 0,
+"clvAvg": -0.44
+},
+{
+"name": "h2h_pattern",
+"fire": 20,
+"supp": 16,
+"suppWinPct": 75,
+"opp": 4,
+"oppWinPct": 50,
+"edge": 25,
+"clvAvg": -1.64
+},
+{
 "name": "mls_travel",
 "fire": 20,
 "supp": 6,
@@ -188,33 +208,13 @@
 "clvAvg": -3.18
 },
 {
-"name": "h2h_pattern",
-"fire": 19,
-"supp": 15,
-"suppWinPct": 73,
-"opp": 4,
-"oppWinPct": 50,
-"edge": 23,
-"clvAvg": -1.59
-},
-{
-"name": "lead_lag_bias",
-"fire": 19,
-"supp": 16,
-"suppWinPct": 50,
-"opp": 3,
-"oppWinPct": 33,
-"edge": 17,
-"clvAvg": -0.33
-},
-{
 "name": "fixture_congestion",
-"fire": 15,
-"supp": 12,
-"suppWinPct": 58,
+"fire": 16,
+"supp": 13,
+"suppWinPct": 62,
 "opp": 2,
 "oppWinPct": 0,
-"edge": 58,
+"edge": 62,
 "clvAvg": -2.62
 },
 {
@@ -248,24 +248,24 @@
 "clvAvg": -2.77
 },
 {
-"name": "apif_predictions",
-"fire": 3,
+"name": "lineup_signal",
+"fire": 4,
 "supp": 3,
+"suppWinPct": 33,
+"opp": 1,
+"oppWinPct": 100,
+"edge": -67,
+"clvAvg": -1.21
+},
+{
+"name": "apif_predictions",
+"fire": 4,
+"supp": 4,
 "suppWinPct": 100,
 "opp": 0,
 "oppWinPct": null,
 "edge": null,
-"clvAvg": 0.1
-},
-{
-"name": "lineup_signal",
-"fire": 3,
-"supp": 3,
-"suppWinPct": 33,
-"opp": 0,
-"oppWinPct": null,
-"edge": null,
-"clvAvg": -0.75
+"clvAvg": -0.57
 },
 {
 "name": "public_static_bias",
