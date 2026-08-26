@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-08-26T21:41:17.133625+00:00",
+"generatedAt": "2026-08-26T21:56:19.120428+00:00",
 "byVerdict": {
 "konsens": {
 "n": 500,
@@ -12,14 +12,14 @@
 "pinnHitRate": 0.7297
 },
 "uneinig": {
-"n": 166,
+"n": 167,
 "wins": 51,
-"hitRate": 0.3072,
-"polyN": 148,
+"hitRate": 0.3054,
+"polyN": 149,
 "polyWins": 49,
-"polyHitRate": 0.3311,
-"pinnN": 85,
-"pinnHitRate": 0.6
+"polyHitRate": 0.3289,
+"pinnN": 86,
+"pinnHitRate": 0.593
 },
 "teil": {
 "n": 5,
@@ -54,9 +54,9 @@
 "hitRate": 0.8571
 },
 "English Football League Cup": {
-"n": 19,
+"n": 20,
 "wins": 16,
-"hitRate": 0.8421
+"hitRate": 0.8
 },
 "Brazilian Serie A": {
 "n": 18,
@@ -511,20 +511,39 @@
 "hitRate": 0.8093
 },
 "weak": {
-"n": 250,
+"n": 251,
 "wins": 122,
-"hitRate": 0.488
+"hitRate": 0.4861
 }
 },
 "divergence": {
-"n": 166,
+"n": 167,
 "betfairWins": 51,
-"betfairRate": 0.3072,
-"polyN": 148,
+"betfairRate": 0.3054,
+"polyN": 149,
 "polyWins": 49,
-"polyRate": 0.3311
+"polyRate": 0.3289
 },
 "recent": [
+{
+"matchId": "35928162",
+"home": "Bradford",
+"away": "Burnley",
+"league": "English Football League Cup",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Burnley",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-08-26T18:45:00Z",
+"settledAt": "2026-08-26T21:56:18.952918+00:00"
+},
 {
 "matchId": "35957324",
 "home": "AEK Athens",
@@ -1265,31 +1284,12 @@
 ],
 "kickoff": "2026-08-25T18:45:00Z",
 "settledAt": "2026-08-25T20:38:44.778056+00:00"
-},
-{
-"matchId": "35928154",
-"home": "Cambridge Utd",
-"away": "Millwall",
-"league": "English Football League Cup",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Millwall",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-08-25T18:45:00Z",
-"settledAt": "2026-08-25T20:38:44.778056+00:00"
 }
 ],
 "global": {
-"n": 671,
+"n": 672,
 "wins": 454,
-"hitRate": 0.6766
+"hitRate": 0.6756
 },
-"pending": 13
+"pending": 12
 }
