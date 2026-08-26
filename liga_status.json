@@ -1,6 +1,15 @@
 {
   "checks": [
     {
+      "id": "inputs_readable",
+      "label": "Guard-Eingaben lesbar",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Ein leeres Ergebnis kann 'nichts zu bemaengeln' ODER 'Datei kaputt' heissen. Solange dieser Guard rot ist, sind die gruenen Haken der anderen wertlos."
+    },
+    {
       "id": "learning_loop_alive",
       "label": "Lern-Loop lernt (Ledger + CLV bei Resolves)",
       "severity": "warn",
@@ -76,9 +85,12 @@
       "id": "odds_sane",
       "label": "Pinnacle-1X2 vollständig + plausibel",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 2,
+      "failures": [
+        "548-538: 1X2 unvollständig hw=None dr=None aw=None",
+        "96-79: 1X2 unvollständig hw=None dr=None aw=None"
+      ],
       "note": "Quelle für Modell-Baseline + Edge."
     },
     {
@@ -101,12 +113,12 @@
     },
     {
       "id": "wallet_ledger_growing",
-      "label": "Wallet-Ledger wächst",
+      "label": "Wallet-Ledger wächst (Track-Record-Basis)",
       "severity": "warn",
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Liga hat bewusst kein Polymarket — Check nicht anwendbar."
+      "note": "build_poly_wallet_ledger.py läuft direkt nach jedem fetch_wm_poly_smartmoney.py."
     },
     {
       "id": "no_ghost_picks",
@@ -248,11 +260,13 @@
       "label": "Public-Konsens (Soft-Books) vorhanden",
       "severity": "warn",
       "ok": false,
-      "nFail": 3,
+      "nFail": 5,
       "failures": [
         "531-536: kein public_hw",
         "65-63: kein public_hw",
-        "116-108: kein public_hw"
+        "116-108: kein public_hw",
+        "548-538: kein public_hw",
+        "96-79: kein public_hw"
       ],
       "note": "Ohne public_* feuert public_static_bias nicht."
     },
@@ -324,20 +338,25 @@
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
       "ok": false,
-      "nFail": 12,
+      "nFail": 17,
       "failures": [
         "35-45 Unter 2.5 Tore @1.96: sichere Linie Unter 3.5 Tore @1.37 verfügbar (≥1.35), nicht abgeleitet",
         "47-34 Unter 2.5 Tore @2.15: sichere Linie Unter 3.5 Tore @1.49 verfügbar (≥1.35), nicht abgeleitet",
         "47-34 Heimsieg @2.05: sichere Linie Doppelte Chance — 1X @1.413 verfügbar (≥1.35), nicht abgeleitet",
-        "63-55 Heimsieg @2.75: sichere Linie Doppelte Chance — 1X @1.486 verfügbar (≥1.35), nicht abgeleitet",
+        "49-51 Unter 2.5 Tore @2.14: sichere Linie Unter 3.5 Tore @1.47 verfügbar (≥1.35), nicht abgeleitet",
+        "63-55 Unter 2.5 Tore @1.92: sichere Linie Unter 3.5 Tore @1.37 verfügbar (≥1.35), nicht abgeleitet",
+        "63-55 Heimsieg @2.75: sichere Linie Doppelte Chance — 1X @1.49 verfügbar (≥1.35), nicht abgeleitet",
         "1579-494 Über 2.5 Tore @2.25: sichere Linie Über 1.5 Tore @1.41 verfügbar (≥1.35), nicht abgeleitet",
         "489-517 Unter 2.5 Tore @1.93: sichere Linie Unter 3.5 Tore @1.39 verfügbar (≥1.35), nicht abgeleitet",
-        "160-162 Auswärtssieg @3.5: sichere Linie Doppelte Chance — X2 @1.852 verfügbar (≥1.35), nicht abgeleitet",
-        "164-185 Auswärtssieg @4.85: sichere Linie Doppelte Chance — X2 @2.249 verfügbar (≥1.35), nicht abgeleitet",
-        "1660-168 Heimsieg @5.45: sichere Linie Doppelte Chance — 1X @2.43 verfügbar (≥1.35), nicht abgeleitet",
-        "173-163 Auswärtssieg @5.6: sichere Linie Doppelte Chance — X2 @2.56 verfügbar (≥1.35), nicht abgeleitet",
-        "182-169 Heimsieg @2.42: sichere Linie Doppelte Chance — 1X @1.486 verfügbar (≥1.35), nicht abgeleitet",
-        "192-167 Heimsieg @2.89: sichere Linie Doppelte Chance — 1X @1.67 verfügbar (≥1.35), nicht abgeleitet"
+        "544-532 Über 2.5 Tore @2.3: sichere Linie Über 1.5 Tore @1.46 verfügbar (≥1.35), nicht abgeleitet",
+        "160-162 Unter 2.5 Tore @2.05: sichere Linie Unter 3.5 Tore @1.43 verfügbar (≥1.35), nicht abgeleitet",
+        "160-162 Auswärtssieg @3.5: sichere Linie Doppelte Chance — X2 @1.86 verfügbar (≥1.35), nicht abgeleitet",
+        "164-185 Auswärtssieg @4.85: sichere Linie Doppelte Chance — X2 @2.269 verfügbar (≥1.35), nicht abgeleitet",
+        "1660-168 Heimsieg @5.45: sichere Linie Doppelte Chance — 1X @2.377 verfügbar (≥1.35), nicht abgeleitet",
+        "170-174 Unter 2.5 Tore @2.23: sichere Linie Unter 3.5 Tore @1.46 verfügbar (≥1.35), nicht abgeleitet",
+        "173-163 Auswärtssieg @5.6: sichere Linie Doppelte Chance — X2 @2.444 verfügbar (≥1.35), nicht abgeleitet",
+        "182-169 Heimsieg @2.42: sichere Linie Doppelte Chance — 1X @1.51 verfügbar (≥1.35), nicht abgeleitet",
+        "192-167 Heimsieg @2.89: sichere Linie Doppelte Chance — 1X @1.655 verfügbar (≥1.35), nicht abgeleitet"
       ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
@@ -367,6 +386,15 @@
       "nFail": 0,
       "failures": [],
       "note": "freshness_leg-Signal muss bei confirm/reverse feuern, damit der Bayesian-Loop das Gewicht lernt. Fehlt es → Signal-Engine lief vor dem Frische-Block oder Signal nicht registriert."
+    },
+    {
+      "id": "smartmoney_sane",
+      "label": "Smart-Money-Daten kohärent",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Shares müssen ~1 summieren + totalUsd da. Sonst läuft das smart_money-Signal auf Müll. Quelle: fetch_wm_poly_smartmoney.py (data-api, Mac-Runner)."
     },
     {
       "id": "btts_not_templated_traded",
@@ -414,6 +442,15 @@
         "727-546: Soft bewegte sich 2.05→2.1, aber Opening==Jetzt (2.1) — nicht eingefroren"
       ],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
+    },
+    {
+      "id": "smartmoney_cluster_sane",
+      "label": "Smart-Money-Cluster kohärent",
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "cluster ∈ ℕ₀, ≤ holders; buy/sell ≥ 0; netFlow = buy − sell. Sonst rechnet der Cluster-Boost/Exit-Penalty im smart_money-Signal auf Müll."
     },
     {
       "id": "card_only_not_in_trade",
@@ -506,6 +543,6 @@
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-08-26T07:08:32.707901+00:00"
+  "nFail": 4,
+  "generatedAt": "2026-08-26T19:41:59.886675+00:00"
 }
