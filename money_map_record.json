@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-08-26T02:24:09.529099+00:00",
+"generatedAt": "2026-08-26T02:39:09.974087+00:00",
 "byVerdict": {
 "konsens": {
 "n": 484,
@@ -12,12 +12,12 @@
 "pinnHitRate": 0.7222
 },
 "uneinig": {
-"n": 162,
-"wins": 50,
-"hitRate": 0.3086,
-"polyN": 144,
+"n": 163,
+"wins": 51,
+"hitRate": 0.3129,
+"polyN": 145,
 "polyWins": 48,
-"polyHitRate": 0.3333,
+"polyHitRate": 0.331,
 "pinnN": 85,
 "pinnHitRate": 0.6
 },
@@ -108,6 +108,11 @@
 "wins": 9,
 "hitRate": 0.6923
 },
+"North American Leagues Cup": {
+"n": 13,
+"wins": 8,
+"hitRate": 0.6154
+},
 "Saudi Professional League": {
 "n": 13,
 "wins": 10,
@@ -127,11 +132,6 @@
 "n": 12,
 "wins": 9,
 "hitRate": 0.75
-},
-"North American Leagues Cup": {
-"n": 12,
-"wins": 7,
-"hitRate": 0.5833
 },
 "Italian Coppa Italia": {
 "n": 11,
@@ -501,20 +501,39 @@
 "hitRate": 0.8095
 },
 "weak": {
-"n": 240,
-"wins": 116,
-"hitRate": 0.4833
+"n": 241,
+"wins": 117,
+"hitRate": 0.4855
 }
 },
 "divergence": {
-"n": 162,
-"betfairWins": 50,
-"betfairRate": 0.3086,
-"polyN": 144,
+"n": 163,
+"betfairWins": 51,
+"betfairRate": 0.3129,
+"polyN": 145,
 "polyWins": 48,
-"polyRate": 0.3333
+"polyRate": 0.331
 },
 "recent": [
+{
+"matchId": "35978423",
+"home": "Monterrey",
+"away": "Chicago Fire",
+"league": "North American Leagues Cup",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Monterrey",
+"polySide": "away",
+"winner": "home",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-08-26T00:30:00Z",
+"settledAt": "2026-08-26T02:39:09.836811+00:00"
+},
 {
 "matchId": "35961638",
 "home": "Deportivo Madryn",
@@ -1255,31 +1274,12 @@
 ],
 "kickoff": "2026-08-24T22:30:00Z",
 "settledAt": "2026-08-25T01:36:35.904780+00:00"
-},
-{
-"matchId": "35922874",
-"home": "Tigre",
-"away": "Central Cordoba (SdE)",
-"league": "Argentinian Primera Division",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Tigre",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-08-24T22:00:00Z",
-"settledAt": "2026-08-25T01:06:32.874047+00:00"
 }
 ],
 "global": {
-"n": 651,
-"wins": 440,
-"hitRate": 0.6759
+"n": 652,
+"wins": 441,
+"hitRate": 0.6764
 },
-"pending": 6
+"pending": 5
 }
