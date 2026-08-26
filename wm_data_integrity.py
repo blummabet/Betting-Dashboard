@@ -42,14 +42,27 @@ import cocobet_dataset as D   # 29.06.2026: dataset-aware (mls neben wm/liga)
 _BASE = _Path(__file__).resolve().parent
 
 
+# Dateien, die in diesem Lauf nicht gelesen werden konnten (siehe check_inputs_readable).
+_LAZY_FAILED: set = set()
+
+
 def _lazy(fname):
     """Best-effort-Load einer JSON neben diesem Modul (für Guards, die nicht über
     run_checks injiziert werden — z.B. Auto-Bets/Odds-History)."""
     try:
         import json as _json
         p = _BASE / fname
-        return _json.loads(p.read_text(encoding="utf-8")) if p.exists() else {}
-    except Exception:
+        if not p.exists():
+            return {}
+        data = _json.loads(p.read_text(encoding="utf-8"))
+        _LAZY_FAILED.discard(fname)
+        return data
+    except Exception as e:
+        # 25.08.2026 (Audit-Befund 14): vorher still `{}` — und fuenf als GELD-KRITISCH markierte
+        # Guards meldeten daraufhin gruen, weil sie ueber eine leere Liste iterierten. Ein Guard,
+        # der seine Datei nicht lesen konnte, hat NICHTS geprueft und darf das nicht verschweigen.
+        print(f"  ⚠️  {fname} nicht lesbar: {e}")
+        _LAZY_FAILED.add(fname)
         return {}
 
 # Venue-Name/City-Substring → venue_id (Spiegel von generate_wm_picks._VENUE_NAME_TO_ID).
@@ -145,6 +158,25 @@ def integrity_check(fn):
 
 
 # ── Die Guards (je @integrity_check) ─────────────────────────────────────────
+
+@integrity_check
+def check_inputs_readable(ctx):
+    """25.08.2026 (Audit-Befund 14): Konnte diese Guard-Batterie ihre Eingaben ueberhaupt lesen?
+
+    `_lazy` gibt bei einem Lesefehler `{}` zurueck. Fuenf im Code als GELD-KRITISCH markierte Guards
+    iterieren dann ueber eine leere Liste, finden nichts zu bemaengeln und melden GRUEN — genau in
+    dem Moment, in dem sie am dringendsten gebraucht wuerden. Dieser Guard macht den Zustand
+    sichtbar, statt ihn den anderen zu ueberlassen.
+
+    Bewusst `error`: eine Batterie, die blind ist, ist keine Warnung wert, sondern ein Stopp-Signal.
+    """
+    fails = [f"{f} nicht lesbar — jeder Guard, der sie braucht, hat NICHTS geprueft"
+             for f in sorted(_LAZY_FAILED)]
+    return _chk("inputs_readable", "Guard-Eingaben lesbar", "error", fails,
+                "Ein leeres Ergebnis kann 'nichts zu bemaengeln' ODER 'Datei kaputt' heissen. "
+                "Solange dieser Guard rot ist, sind die gruenen Haken der anderen wertlos.")
+
+
 @integrity_check
 def check_poly_surfaces_alive(ctx):
     """20.07.2026 — die globalen Poly-Tracking-Flächen (Cross-Sport-Radar, E-Sport, Poly-Geld breit)
@@ -718,13 +750,14 @@ def check_wallet_ledger_growing(ctx):
     (siehe check_closing_capture_alive). Wir fragen deshalb nicht „gibt es die Datei", sondern
     „steht da neuer Bestand drin, obwohl es frischen Input gab".
 
-    Still bei Liga: dort gibt es bewusst kein Polymarket (Liquidität fehlt) → kein Dauer-Gelb.
+    25.08.2026 (Audit-Befund 07): der Liga-Sonderfall ist WEG. „Liga hat bewusst kein Polymarket"
+    stimmte bis zum 19.08.; seitdem tradet Liga real dort (manage-liga-poly.yml, echte Balance).
+    Der abgeschaltete Check war der EINZIGE Poly-Guard für Liga — deshalb meldete liga_status.json
+    54 grüne Haken, ohne je hinzusehen, während die Analyseschicht gar nicht lief.
+    Ohne frischen Snapshot bleibt der Check weiterhin still (der Zweig darunter greift), es gibt
+    also kein Dauer-Gelb in einer Spielpause.
     """
     from datetime import datetime as _d, timedelta as _td
-
-    if D.active_dataset() == "liga":
-        return _chk("wallet_ledger_growing", "Wallet-Ledger wächst", "warn", [],
-                    "Liga hat bewusst kein Polymarket — Check nicht anwendbar.")
 
     snap = _lazy(D.file("wm_poly_wallets.json", "liga_poly_wallets.json").name) or {}
     hat_input = bool(snap.get("topPositionsAll") or snap.get("bigTradesAll"))

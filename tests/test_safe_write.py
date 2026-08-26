@@ -96,3 +96,60 @@ class TestWriteJsonGuarded(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# ── Atomares Schreiben (25.08.2026, Audit-Befund 01) ─────────────────────────────────────────
+# Vorher: open(path,"w") + json.dump. Zwischen Oeffnen und letztem Byte ist die Datei kaputt.
+# Wird der Runner in dem Fenster abgeraeumt, faellt im naechsten Lauf jede Bankroll-Grenze aus,
+# weil der Loader still den Default liefert. temp+replace macht das Ersetzen zu EINEM Schritt.
+import json as _json
+import pytest as _pytest
+
+
+def test_schreibt_und_hinterlaesst_keine_tmp(tmp_path):
+    from safe_write import write_json_atomic
+    p = tmp_path / "bets.json"
+    write_json_atomic(p, {"bets": [1, 2, 3]})
+    assert _json.loads(p.read_text()) == {"bets": [1, 2, 3]}
+    assert not (tmp_path / "bets.json.tmp").exists()
+
+
+def test_ersetzt_bestehende_datei(tmp_path):
+    from safe_write import write_json_atomic
+    p = tmp_path / "bets.json"
+    write_json_atomic(p, {"bets": [1]})
+    write_json_atomic(p, {"bets": [1, 2]})
+    assert _json.loads(p.read_text())["bets"] == [1, 2]
+
+
+def test_darf_schrumpfen(tmp_path):
+    # Unterschied zu write_json_guarded: ein Ledger darf beim Prunen kleiner werden.
+    from safe_write import write_json_atomic
+    p = tmp_path / "ledger.json"
+    write_json_atomic(p, list(range(100)))
+    write_json_atomic(p, [1])
+    assert _json.loads(p.read_text()) == [1]
+
+
+def test_abbruch_mitten_im_schreiben_laesst_den_alten_stand_stehen(tmp_path, monkeypatch):
+    """Der eigentliche Punkt: geht das Schreiben schief, ist die ALTE Datei noch da und lesbar."""
+    import safe_write
+    p = tmp_path / "bets.json"
+    safe_write.write_json_atomic(p, {"bets": ["alt1", "alt2"]})
+
+    def kracht(*a, **kw):
+        raise OSError("Runner abgeraeumt")
+
+    monkeypatch.setattr(safe_write.json, "dump", kracht)
+    with _pytest.raises(OSError):
+        safe_write.write_json_atomic(p, {"bets": ["neu"]})
+
+    assert _json.loads(p.read_text())["bets"] == ["alt1", "alt2"], "alter Stand muss unversehrt sein"
+
+
+def test_kompakt_ohne_indent(tmp_path):
+    from safe_write import write_json_atomic
+    p = tmp_path / "gross.json"
+    write_json_atomic(p, {"a": 1, "b": 2}, indent=None)
+    assert p.read_text() == '{"a":1,"b":2}'
+

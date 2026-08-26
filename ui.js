@@ -506,14 +506,22 @@ async function loadWmControlCenter() {
     .reduce((s, b) => s + (parseFloat(b.stake) || 0), 0);
 
   // Kill-Switch
-  const ksOn = ks?.enabled !== false;   // default true (active)
-  const ksLabel = ksOn ? '🟢 LIVE' : '🔴 PAUSE';
-  const ksColor = ksOn ? '#3fb950' : '#f85149';
+  // 25.08.2026 (Audit-Befund 15): `ks` ist null, wenn die Datei nicht geladen werden konnte —
+  // vorher ergab das 🟢 LIVE. Die Python-Seite ist an derselben Stelle fail-closed (Korruption =
+  // Stop); das Dashboard behauptete das Gegenteil. Unbekannt ist jetzt ein eigener Zustand.
+  const ksUnknown = !ks;
+  const ksOn = ks?.enabled !== false;   // default true (active), sobald die Datei da ist
+  const ksLabel = ksUnknown ? '❔ UNBEKANNT' : ksOn ? '🟢 LIVE' : '🔴 PAUSE';
+  const ksColor = ksUnknown ? '#e3b341' : ksOn ? '#3fb950' : '#f85149';
 
   // Position-Health
+  // Dasselbe hier: der Monitor schreibt seit 25.08. ein `error`-Feld, wenn er die Wett-Datei nicht
+  // lesen konnte. „Keine offenen" und „ich weiss es nicht" sind zwei verschiedene Aussagen.
+  const healthUnknown = !health || !!health.error;
   const positions = health?.positions || [];
   const critical = positions.filter(p => (p.status === 'critical' || p.status === 'warning')).length;
-  const healthColor = positions.length === 0 ? '#8b949e' : critical > 0 ? '#f85149' : '#3fb950';
+  const healthColor = healthUnknown ? '#e3b341'
+                    : positions.length === 0 ? '#8b949e' : critical > 0 ? '#f85149' : '#3fb950';
 
   // P&L
   const totalPnl = results?.summary?.totalPnl ?? 0;
@@ -537,9 +545,10 @@ async function loadWmControlCenter() {
     stat('🤖', 'Bets heute', `${betsToday}/8`, betsToday >= 7 ? '#f85149' : '#3fb950',
          `$${stakeToday.toFixed(2)} / $50 max`),
     stat('🩺', 'Position-Health',
-         positions.length > 0 ? `${positions.length - critical}/${positions.length}` : '—',
+         healthUnknown ? '❔' : positions.length > 0 ? `${positions.length - critical}/${positions.length}` : '—',
          healthColor,
-         positions.length === 0 ? 'Keine offenen' : `${critical} kritisch`),
+         healthUnknown ? 'Wett-Datei nicht lesbar — Positionen unbekannt'
+           : positions.length === 0 ? 'Keine offenen' : `${critical} kritisch`),
     stat('📊', 'P&L (resolved)',
          results?.summary ? `${totalPnl >= 0 ? '+' : ''}$${totalPnl.toFixed(2)}` : '—',
          pnlColor,

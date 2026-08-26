@@ -427,68 +427,16 @@ def _streaks_for_match(home_id, away_id):
 BF_NORM_AMBER, BF_NORM_RED = 1.6, 2.6        # ×-Norm-Schwellen — identisch zum Radar
 BF_NORM_MIN_PEERS, BF_NORM_MIN_EUR = 4, 3000
 
-def _bf_event_key(a, b):
-    try:
-        from poly_cross_sport import event_key
-        return event_key(a, b)
-    except Exception:
-        return "-".join(sorted([(a or "").strip().lower(), (b or "").strip().lower()]))
+# 26.08.2026: Die Namens-Bruecke lebt jetzt in betfair_name_bridge.py — Terminal-Kartenlink und
+# Kohaerenz-Beobachter brauchen dieselbe. Eine zweite Kopie waere genau die Drift-Klasse, die uns
+# bei der Travel-Logik schon einmal erwischt hat (ein Ort gefixt, einer nicht).
+# Die _bf_*-Namen bleiben als Aliasse stehen: sie sind der getestete Vertrag dieses Moduls.
+import betfair_name_bridge as _BFN
 
-# Woerter, die zu viele Vereine teilen — als Bruecke wertlos und gefaehrlich.
-# Woerter, die zu viele Vereine teilen — als Bruecke wertlos. Vor allem STADT-Namen sind
-# gefaehrlich: „Manchester United" und „Manchester City" wuerden sonst als dasselbe Team gelten,
-# und der Paar-Test rettet das nicht, wenn beide am selben Tag gegen dieselbe Mannschaft spielen.
-_BF_STOPWORDS = {"united", "sporting", "national", "internacional", "juniors", "wanderers",
-                 "rangers", "rovers", "albion", "county", "manchester", "london", "madrid",
-                 "milano", "milan", "roma", "torino", "sevilla", "bristol", "sheffield",
-                 "nottingham", "newcastle", "birmingham", "istanbul", "moskva", "beograd"}
-
-
-def _bf_compatible(a, b):
-    """Zwei Team-Schreibweisen, dasselbe Team? REIN/testbar.
-
-    25.08.2026 (Lucas): der exakte `event_key` verlor „Real Betis"/„Betis" und
-    „Athletic Club"/„Athletic Bilbao". Enthaltensein reicht — aber nur ab 4 Zeichen, sonst wuerde
-    „FC" auf alles passen.
-    """
-    from poly_cross_sport import norm as _n
-    na, nb = _n(a), _n(b)
-    if not na or not nb:
-        return False
-    if na == nb or (len(na) >= 4 and len(nb) >= 4 and (na in nb or nb in na)):
-        return True
-    # „Athletic Club" und „Athletic Bilbao" enthalten einander NICHT — sie teilen ein markantes Wort.
-    # Mindestlaenge 5 haelt „Real"/„Real" (Madrid vs Sociedad) und „FC"/„United" bewusst draussen;
-    # genau die waeren die gefaehrlichen Fehltreffer.
-    wa = {w for w in (_n(x) for x in str(a).split()) if len(w) >= 5 and w not in _BF_STOPWORDS}
-    wb = {w for w in (_n(x) for x in str(b).split()) if len(w) >= 5 and w not in _BF_STOPWORDS}
-    return bool(wa & wb)
-
-
-def _bf_find(snaps, fuzzy, home, away, date=None):
-    """Betfair-Snapshot zum Spiel. Erst exakt, dann Namens-Bruecke am selben Spieltag. REIN.
-
-    Die Bruecke ist bewusst eng: gleicher Tag (±1 wegen Zeitzone), BEIDE Seiten kompatibel, und der
-    Treffer muss EINDEUTIG sein. Zwei Kandidaten heisst lieber kein Block als der falsche.
-    """
-    m = (snaps or {}).get(_bf_event_key(home, away))
-    if m:
-        return m
-    if not fuzzy or not date:
-        return None
-    from datetime import date as _date, timedelta as _td
-    try:
-        d0 = _date.fromisoformat(str(date)[:10])
-        days = [str(d0 + _td(days=k)) for k in (0, -1, 1)]
-    except Exception:
-        days = [str(date)[:10]]
-    hits = []
-    for day in days:
-        for cand in (fuzzy.get(day) or []):
-            if ((_bf_compatible(home, cand.get("home")) and _bf_compatible(away, cand.get("away")))
-                    or (_bf_compatible(home, cand.get("away")) and _bf_compatible(away, cand.get("home")))):
-                hits.append(cand)
-    return hits[0] if len(hits) == 1 else None
+_BF_STOPWORDS  = _BFN.STOPWORDS
+_bf_event_key  = _BFN.event_key
+_bf_compatible = _BFN.compatible
+_bf_find       = _BFN.find
 
 
 _LNORM_CACHE = {}

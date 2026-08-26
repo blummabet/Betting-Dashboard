@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v192';   // 25.08.2026 (Lucas): neue Liste „Meine ausgeloesten Wetten" im Betting-Tab — aus picks_history.json, unabhaengig von *_results.json.
+const VERSION = 'cocobet-v193';   // 25.08.2026 (Audit 13/15): nicht ladbare Status-Dateien werden gemeldet; Kill-Switch und Position-Health zeigen UNBEKANNT statt gruen.
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

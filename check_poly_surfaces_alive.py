@@ -132,8 +132,37 @@ def check_wallet_trades(files=WALLET_FILES) -> list:
     return out
 
 
+# 25.08.2026 (Audit-Befund 12): dieselbe Klasse eine Ebene tiefer. E-Sport schrieb 60 Positionen
+# und 60 Trades - aber clustersAll war hartkodiert [] und einen matches-Schluessel gab es gar nicht.
+# Der Conviction-Score fand fuer JEDEN E-Sport-Markt nichts (-> null) und die Exit-Warnung rendert
+# nie. Frisch, gefuellt, und trotzdem tot: genau das sieht die Freshness-Pruefung nicht.
+MIN_TRADES_FOR_CLUSTER_WARN = 10
+
+
+def check_wallet_clusters(files=WALLET_FILES) -> list:
+    """Trades da, aber clustersAll/matches leer = die Konsens-Achse kommt nicht an.
+    Non-blocking. Liest Disk, sonst rein."""
+    out = []
+    for fn in files:
+        try:
+            d = json.loads((BASE / fn).read_text(encoding="utf-8"))
+        except Exception:
+            continue
+        if not isinstance(d, dict):
+            continue
+        npos = len(d.get("topPositionsAll") or [])
+        ntr = len(d.get("bigTradesAll") or [])
+        if ntr >= MIN_TRADES_FOR_CLUSTER_WARN and not (d.get("clustersAll") or []):
+            out.append("%s: %d grosse Trades, aber 0 Konsens-Cluster - clustersAll kommt nicht an "
+                       "(Conviction-Score bleibt fuer jeden Markt null)" % (fn, ntr))
+        if npos >= MIN_POS_FOR_TRADES_WARN and not (d.get("matches") or {}):
+            out.append("%s: %d Positionen, aber kein matches-Schluessel - der Tab kann keine "
+                       "Markt-Sicht bauen (Exit-Warnung rendert nie)" % (fn, npos))
+    return out
+
+
 def main() -> int:
-    problems = evaluate(collect()) + check_wallet_trades()
+    problems = evaluate(collect()) + check_wallet_trades() + check_wallet_clusters()
     if not problems:
         print("✅ Alle Poly-Flächen leben (frisch geschrieben, auch wenn evtl. leer).")
         return 0

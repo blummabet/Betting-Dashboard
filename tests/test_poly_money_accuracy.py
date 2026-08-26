@@ -114,3 +114,90 @@ class TestResultsLookup:
         data = {"groups": {"L": {"fixtures": [
             {"home": "h", "away": "a", "result": {"status": "NS"}}]}}}
         assert M.results_lookup(data) == {}
+
+
+# ── Befund 16 (25.08.2026): byLeague war per Konstruktion immer leer ─────────
+# Der Producer (capture) schreibt kein `league`-Feld — er sieht die Liga gar nicht, weil
+# smartmoney sie nicht mitliefert. Deshalb kommt sie jetzt beim AUSWERTEN aus den Fixtures
+# dazu: das macht auch die bereits eingefrorene Historie rückwirkend nutzbar.
+
+class TestLeaguesLookup:
+    _DATA = {"groups": {
+        "ENG": {"fixtures": [{"home": "42", "away": "1346"}]},
+        "ESP": {"fixtures": [{"home": "542", "away": "546"}]},
+        "A":   {"fixtures": [{"home": "MEX", "away": "ZAF"}]}}}
+
+    def test_gruppenschluessel_ist_die_liga(self):
+        assert M.leagues_lookup(self._DATA) == {
+            "42-1346": "ENG", "542-546": "ESP", "MEX-ZAF": "A"}
+
+    def test_wm_gruppen_sind_keine_ligen(self):
+        """Ohne den valid-Filter würden bei der WM die Gruppen A–H als „Ligen" durchgehen.
+        Ein falsches Label ist schlimmer als keines."""
+        r = M.leagues_lookup(self._DATA, {"ENG", "ESP", "GER", "ITA", "FRA"})
+        assert set(r.values()) == {"ENG", "ESP"}
+        assert "MEX-ZAF" not in r
+
+    def test_unvollstaendige_fixture_wird_uebersprungen(self):
+        assert M.leagues_lookup({"groups": {"ENG": {"fixtures": [{"home": "42"}]}}}) == {}
+
+    def test_leere_daten(self):
+        assert M.leagues_lookup({}) == {}
+
+
+class TestByLeagueBefuellt:
+    @staticmethod
+    def _frozen(n, key_prefix):
+        # klar getrennte Verteilungen, damit Brier nicht zufällig gleich ist
+        return {f"{key_prefix}{i}": {"shares": {"home": 0.75, "away": 0.25},
+                                     "prices": {"home": 0.55, "away": 0.45}}
+                for i in range(n)}
+
+    def test_liga_kommt_aus_dem_lookup_nicht_aus_der_datei(self):
+        frozen = self._frozen(6, "E")
+        results = {k: "home" for k in frozen}
+        leagues = {k: "ENG" for k in frozen}
+        rep = M.evaluate(frozen, results, leagues=leagues)
+        assert [r["league"] for r in rep["byLeague"]] == ["ENG"]
+        assert rep["byLeague"][0]["n"] == 6
+
+    def test_ohne_lookup_bleibt_byleague_leer(self):
+        """Das war der Befund: der Aufrufer gab nie eine Liga mit → immer []."""
+        frozen = self._frozen(6, "E")
+        rep = M.evaluate(frozen, {k: "home" for k in frozen})
+        assert rep["byLeague"] == []
+
+    def test_feld_in_der_datei_schlaegt_den_lookup(self):
+        frozen = self._frozen(6, "E")
+        for v in frozen.values():
+            v["league"] = "ESP"
+        rep = M.evaluate(frozen, {k: "home" for k in frozen}, leagues={k: "ENG" for k in frozen})
+        assert [r["league"] for r in rep["byLeague"]] == ["ESP"]
+
+
+class TestSnapshotNichtUeberschreiben:
+    """Der eingefrorene Schluss-Snapshot ist nicht rekonstruierbar — ein Lesefehler darf ihn
+    nicht durch einen Teil-Stand ersetzen (dieselbe Familie wie Befund 01/02)."""
+
+    def test_fehlend_ist_nicht_kaputt(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(M, "BASE", tmp_path)
+        M._LOAD_FAILED.clear()
+        assert M._load("gibtsnicht.json") == {}
+        assert M._LOAD_FAILED == set()
+
+    def test_kaputt_wird_gemerkt(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(M, "BASE", tmp_path)
+        M._LOAD_FAILED.clear()
+        (tmp_path / "kaputt.json").write_text("{nicht json", encoding="utf-8")
+        assert M._load("kaputt.json") == {}
+        assert "kaputt.json" in M._LOAD_FAILED
+
+    def test_markierung_verschwindet_nach_erfolg(self, tmp_path, monkeypatch):
+        monkeypatch.setattr(M, "BASE", tmp_path)
+        M._LOAD_FAILED.clear()
+        f = tmp_path / "x.json"
+        f.write_text("{kaputt", encoding="utf-8")
+        M._load("x.json")
+        f.write_text('{"a": 1}', encoding="utf-8")
+        assert M._load("x.json") == {"a": 1}
+        assert M._LOAD_FAILED == set()

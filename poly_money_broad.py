@@ -33,6 +33,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import poly_money_accuracy as PMA
+from safe_write import write_json_atomic   # 25.08.2026: temp+replace statt halber Datei
 
 BASE = Path(__file__).resolve().parent
 
@@ -1341,10 +1342,10 @@ def main_live() -> int:
         markets = []
     live = [m for m in markets if m.get("live")]
     live_store = capture_live(live, _load(LIVE_FILE), min_vol=min_vol)
-    (BASE / LIVE_FILE).write_text(json.dumps(live_store, ensure_ascii=False, indent=1), encoding="utf-8")
+    write_json_atomic((BASE / LIVE_FILE), live_store, indent=1)
     live_hist = append_history(_load(LIVE_HIST_FILE), live, min_vol=min_vol,
                                max_points=LIVE_HIST_MAX_POINTS, keep_h=LIVE_HIST_KEEP_H)
-    (BASE / LIVE_HIST_FILE).write_text(json.dumps(live_hist, ensure_ascii=False, indent=1), encoding="utf-8")
+    write_json_atomic((BASE / LIVE_HIST_FILE), live_hist, indent=1)
     print(f"[LIVE-only] {len(live_store)} laufende Maerkte erfasst (Tail {LIVE_TAIL_H}h, Deckel {MAX_HOLDER_CALLS_LIVE})")
     return 0
 
@@ -1358,30 +1359,30 @@ def main() -> int:
         # Warnung „Geister-Märkte"). Jetzt auch OHNE frischen Fetch prunen: capture([], frozen) fügt nichts
         # hinzu, wirft nur die Märkte raus, die > GHOST_GRACE_H nach Anpfiff und unaufgelöst sind.
         frozen = capture([], _load(CLOSE_FILE), resolutions=_load(RESOLUTIONS_FILE))
-        (BASE / CLOSE_FILE).write_text(json.dumps(frozen, ensure_ascii=False, indent=1), encoding="utf-8")
+        write_json_atomic((BASE / CLOSE_FILE), frozen, indent=1)
         live_store = capture_live([], _load(LIVE_FILE))   # Live-Speicher auch auf Leer-Laeufen prunen
-        (BASE / LIVE_FILE).write_text(json.dumps(live_store, ensure_ascii=False, indent=1), encoding="utf-8")
+        write_json_atomic((BASE / LIVE_FILE), live_store, indent=1)
         _upc = prune_upcoming(_load(UPCOMING_FILE), {})   # Money-Map: nur Vergangenes prunen (kein frischer Fetch)
-        (BASE / UPCOMING_FILE).write_text(json.dumps(_upc, ensure_ascii=False, indent=1), encoding="utf-8")
+        write_json_atomic((BASE / UPCOMING_FILE), _upc, indent=1)
         print(f"ℹ️  Keine Poly-Märkte — Close-Feed nur von Geistern gepruned ({len(frozen)} bleiben).")
         return 0
     pre  = [m for m in markets if not m.get("live")]   # Vor-Spiel + aufgeloest: bestehende Pipeline unveraendert
     live = [m for m in markets if m.get("live")]        # 11.08.2026 (Lucas Stufe 1): laufende Spiele, eigener Datenpfad
     frozen = capture(pre, _load(CLOSE_FILE), min_vol=min_vol, resolutions=_load(RESOLUTIONS_FILE))
-    (BASE / CLOSE_FILE).write_text(json.dumps(frozen, ensure_ascii=False, indent=1), encoding="utf-8")
+    write_json_atomic((BASE / CLOSE_FILE), frozen, indent=1)
 
     # ① Momentum (25.07.2026): globale Preis-Zeitreihe fortschreiben (Steam/Reversal über alle Sportarten)
     # Live-Datenpfad (11.08.2026, Lucas Stufe 1): laufende Maerkte in EIGENEN Speicher, getrennt vom
     # Vor-Spiel-Freeze oben. capture_live friert NICHT ein (Live bewegt sich) -> immer der aktuelle Stand.
     live_store = capture_live(live, _load(LIVE_FILE), min_vol=min_vol)
-    (BASE / LIVE_FILE).write_text(json.dumps(live_store, ensure_ascii=False, indent=1), encoding="utf-8")
+    write_json_atomic((BASE / LIVE_FILE), live_store, indent=1)
     live_hist = append_history(_load(LIVE_HIST_FILE), live, min_vol=min_vol,
                                max_points=LIVE_HIST_MAX_POINTS, keep_h=LIVE_HIST_KEEP_H)
-    (BASE / LIVE_HIST_FILE).write_text(json.dumps(live_hist, ensure_ascii=False, indent=1), encoding="utf-8")
+    write_json_atomic((BASE / LIVE_HIST_FILE), live_hist, indent=1)
     print(f"[LIVE] {len(live_store)} laufende Maerkte erfasst (Tail {LIVE_TAIL_H}h, Deckel {MAX_HOLDER_CALLS_LIVE})")
 
     hist = append_history(_load(HIST_FILE), pre, min_vol=min_vol)
-    (BASE / HIST_FILE).write_text(json.dumps(hist, ensure_ascii=False, indent=1), encoding="utf-8")
+    write_json_atomic((BASE / HIST_FILE), hist, indent=1)
 
     # ② Sharp-Wallet-Track (25.07.2026): Einstieg→Close/Outcome je Whale werten (CLV/Treffer)
     prev_wtrack = _load(WTRACK_FILE)
@@ -1396,12 +1397,12 @@ def main() -> int:
             print(f"\U0001f4b0 Lifetime-P&L aktualisiert: {_n_pnl} Wallets")
     except Exception as _e:
         print(f"  P&L-Enrich uebersprungen (nicht fatal): {_e}")
-    (BASE / WTRACK_FILE).write_text(json.dumps(wtrack, ensure_ascii=False, indent=1), encoding="utf-8")
+    write_json_atomic((BASE / WTRACK_FILE), wtrack, indent=1)
     # 🔔 Sharp-im-Markt-Alarm: neue Einstiege bewiesen-scharfer Wallets → Telegram (Kür, nie fatal)
     # 📒 Rollierende Auflösungen (02.08.2026, Lucas) für den Shortlist-Paper-Tracker mitschreiben.
     try:
         _res = update_resolutions(_load(RESOLUTIONS_FILE), pre)
-        (BASE / RESOLUTIONS_FILE).write_text(json.dumps(_res, ensure_ascii=False, indent=1), encoding="utf-8")
+        write_json_atomic((BASE / RESOLUTIONS_FILE), _res, indent=1)
     except Exception as _e:
         print(f"  Resolutions-Update uebersprungen (nicht fatal): {_e}")
     n_alert = maybe_alert_sharp(prev_wtrack, wtrack)
@@ -1415,11 +1416,11 @@ def main() -> int:
     # 21.07.2026: welche Sport-Tags liefern überhaupt Events (statt zu raten, welche Poly hat)?
     rep["rawByTag"] = getattr(fetch_markets, "raw_by_tag", {})
     rep["sweepStats"] = getattr(fetch_markets, "sweep_stats", {})
-    (BASE / OUT_FILE).write_text(json.dumps(rep, ensure_ascii=False, indent=1), encoding="utf-8")
+    write_json_atomic((BASE / OUT_FILE), rep, indent=1)
 
     # Money-Map (12.08.2026, Lucas): breitere upcoming-Erfassung schreiben (Preis+Vol, kein Holder-Call)
     _upc = prune_upcoming(_load(UPCOMING_FILE), getattr(fetch_markets, "upcoming", {}) or {})
-    (BASE / UPCOMING_FILE).write_text(json.dumps(_upc, ensure_ascii=False, indent=1), encoding="utf-8")
+    write_json_atomic((BASE / UPCOMING_FILE), _upc, indent=1)
     print(f"[UPCOMING] {len(_upc)} Maerkte fuer die Money-Map (Preis+Vol, <={UPCOMING_WINDOW_H:.0f}h, kein Holder-Call)")
 
     print(f"=== Liegt das Geld richtig? BREIT · min Vol ${min_vol:.0f} · min Quote {min_odds} ===")

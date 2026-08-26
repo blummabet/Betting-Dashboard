@@ -59,6 +59,37 @@ def preserve_nonempty(old: Optional[dict], new: Optional[dict]) -> tuple[dict, l
     return merged, kept
 
 
+def write_json_atomic(path, data, *, indent=2) -> None:
+    """Atomar schreiben, ohne Schrumpf-Schutz. Fuer Dateien, die legitim kleiner werden duerfen.
+
+    25.08.2026 (Audit): der Normalfall im Repo war `open(path, "w")` + `json.dump` — dabei ist die
+    Datei zwischen Oeffnen und letztem Byte KAPUTT. Wird der Runner in diesem Fenster abgeraeumt
+    (Timeout, Cancel, Absturz), liegt eine unparsebare Datei da. Bei den Wett-Dateien heisst das:
+    Dedupe, Tageslimit, Exposure-Guard und Positionslimit fallen im naechsten Lauf GLEICHZEITIG
+    aus, weil der Loader still den Default liefert.
+
+    temp + `replace` macht das Ersetzen zu einem einzigen Dateisystem-Schritt: entweder der alte
+    Stand oder der neue, nie ein halber. Das `fsync` davor sorgt dafuer, dass der Inhalt wirklich
+    auf der Platte ist, bevor umgehaengt wird — sonst rettet der atomare Rename nur den Namen.
+
+    `write_json_guarded` bleibt fuer Feeds, die NIE schrumpfen duerfen (dort ist ein roter Job
+    richtig). Ein Wett-Ledger darf schrumpfen (Prune), deshalb hier ohne Schwelle.
+    """
+    import os as _os
+    p = Path(path)
+    tmp = p.with_suffix(p.suffix + ".tmp")
+    kw = {"ensure_ascii": False}
+    if indent is None:
+        kw["separators"] = (",", ":")      # kompakt, fuer grosse Ledger
+    else:
+        kw["indent"] = indent
+    with open(tmp, "w", encoding="utf-8") as f:
+        json.dump(data, f, **kw)
+        f.flush()
+        _os.fsync(f.fileno())
+    tmp.replace(p)
+
+
 def write_json_guarded(path, data, *,
                        count: Optional[Callable[[Any], int]] = None,
                        min_ratio: float = 0.5,

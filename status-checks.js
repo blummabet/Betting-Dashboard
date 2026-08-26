@@ -69,9 +69,21 @@ function _stAgo(d) {
   if (h < 48) return `vor ${h.toFixed(1)} Std`;
   return `vor ${Math.floor(h / 24)} Tagen`;
 }
+// 25.08.2026 (Audit-Befund 15): jede nicht ladbare Datei wird gemerkt. Vorher war `null` sowohl
+// "Datei fehlt" als auch "Datei kaputt" als auch "es gibt nichts zu melden" — und weil jeder Check
+// mit `if (data && …)` bewacht ist, wurde er dann still uebersprungen. Ergebnis: gruener Haken,
+// weil NICHTS geprueft wurde. Ein Check, der nicht laufen konnte, ist kein bestandener Check.
+let _stUnloadable = [];
+
 async function _stGet(f) {
-  try { const r = await fetch(f + '?t=' + Date.now()); return r.ok ? await r.json() : null; }
-  catch (e) { return null; }
+  try {
+    const r = await fetch(f + '?t=' + Date.now());
+    if (!r.ok) { _stUnloadable.push(`${f} (HTTP ${r.status})`); return null; }
+    return await r.json();
+  } catch (e) {
+    _stUnloadable.push(`${f} (${e && e.name === 'SyntaxError' ? 'kaputtes JSON' : 'nicht erreichbar'})`);
+    return null;
+  }
 }
 
 let _stRunning = false;
@@ -359,6 +371,7 @@ async function runStatusPage(force) {
     // WM/Intl-Flow darunter bleibt komplett unverändert.
     if (_stIsLigaLike(_stDataset)) { await _runLigaStatus(); return; }
 
+    _stUnloadable = [];   // frischer Lauf
     const [data, poly, oddsHist, bal, ks, autobets, status, valRep, ledger, weights] = await Promise.all([
       _stGet('wm2026-data.json'), _stGet('wm_poly_prices.json'), _stGet('wm2026-odds-history.json'),
       _stGet('wm_poly_balance.json'), _stGet('wm_kill_switch.json'), _stGet('wm_auto_bets_placed.json'),
@@ -368,6 +381,13 @@ async function runStatusPage(force) {
 
     const problems = [];
     const add = (sev, title, detail) => problems.push({ sev, title, detail });
+
+    // Zuerst: konnten wir ueberhaupt lesen? Sonst sind alle folgenden Haken wertlos.
+    if (_stUnloadable.length) {
+      add('err', `${_stUnloadable.length} Status-Checks konnten nicht laufen`,
+          `Nicht geladen: ${_stUnloadable.join(' · ')}. Die uebrigen Haken sagen deshalb nichts aus — `
+          + `ein uebersprungener Check ist kein bestandener Check.`);
+    }
 
     // ── WM-Winterisierung (20.07.2026): Turnier beendet → die Frische-Checks (Odds/Poly/Balance/
     // Stale-Edges) sind ERWARTET veraltet, TheOddsAPI droppt die WM. Ein grüner Hinweis statt roter

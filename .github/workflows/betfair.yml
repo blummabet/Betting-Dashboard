@@ -57,6 +57,14 @@ jobs:
         run: ${{ env.BETFAIR_PY }} betfair_consensus.py
         continue-on-error: true
 
+      - name: 🔗 Terminal-Kartenlink (unsere Card neben die Geld-Seite der Boerse)
+        run: ${{ env.BETFAIR_PY }} betfair_card_link.py
+        continue-on-error: true
+
+      - name: 🔎 Kohaerenz-Beobachter (wann liegt Geld in den Tormaerkten?)
+        run: ${{ env.BETFAIR_PY }} betfair_coherence_watch.py
+        continue-on-error: true
+
       - name: 📊 Track-Record aktualisieren (Trefferquote je Liga×Markt)
         run: ${{ env.BETFAIR_PY }} betfair_track_record.py
 
@@ -92,6 +100,8 @@ jobs:
         run: |
           git config user.name "cocobet-bot"
           git config user.email "bot@users.noreply.github.com"
+          git add betfair_card_link.json 2>/dev/null || true        # Terminal: unsere Card je Boersen-Spiel
+          git add betfair_coherence_watch.json 2>/dev/null || true   # ab wann liegt Geld in den Tormaerkten
           git add betfair_prices.json betfair_history.json betfair_overview.json betfair_track_state.json betfair_track_results.json betfair_track_record.json betfair_league_norm.json betfair_league_norm_state.json betfair_direction.json betfair_draw_state.json betfair_draw_results.json betfair_draw_record.json betfair_alerts_seen.json betfair_public_seen.json betfair_public_ledger.json betfair_public_record.json betfair_consensus.json betfair_consensus_history.json betfair_status.json money_map.json money_map_ledger.json money_map_record.json 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "keine Änderung — nichts zu committen"

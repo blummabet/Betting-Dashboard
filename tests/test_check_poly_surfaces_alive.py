@@ -82,3 +82,51 @@ class TestNewestOverEntries:
         surf = [{"name": "Poly-Geld Freeze", "ts": _iso(60)}]
         probs = PSA.evaluate(surf, now=NOW, stale_hours=30)
         assert len(probs) == 1 and "steht" in probs[0]
+
+
+class TestWalletClusterGuard:
+    """25.08.2026 (Audit-Befund 12): frisch, gefüllt — und trotzdem tot. E-Sport schrieb 60
+    Positionen und 60 Trades, aber clustersAll war hartkodiert [] und einen matches-Schlüssel
+    gab es gar nicht. Die Freshness-Prüfung sieht das nicht; dieser Check schon."""
+
+    @staticmethod
+    def _write(tmp_path, monkeypatch, payload, name="x_poly_wallets.json"):
+        import json
+        (tmp_path / name).write_text(json.dumps(payload), encoding="utf-8")
+        monkeypatch.setattr(PSA, "BASE", tmp_path)
+        return [name]
+
+    def test_trades_ohne_cluster_meldet(self, tmp_path, monkeypatch):
+        files = self._write(tmp_path, monkeypatch, {
+            "topPositionsAll": [{"usd": 1}] * 20,
+            "bigTradesAll": [{"usd": 1}] * 20,
+            "clustersAll": [], "matches": {"a": {}}})
+        probs = PSA.check_wallet_clusters(files)
+        assert len(probs) == 1 and "Konsens-Cluster" in probs[0]
+
+    def test_positionen_ohne_matches_meldet(self, tmp_path, monkeypatch):
+        files = self._write(tmp_path, monkeypatch, {
+            "topPositionsAll": [{"usd": 1}] * 20,
+            "bigTradesAll": [{"usd": 1}] * 20,
+            "clustersAll": [{"cluster": 2}]})
+        probs = PSA.check_wallet_clusters(files)
+        assert len(probs) == 1 and "matches" in probs[0]
+
+    def test_gesunde_datei_schweigt(self, tmp_path, monkeypatch):
+        files = self._write(tmp_path, monkeypatch, {
+            "topPositionsAll": [{"usd": 1}] * 20,
+            "bigTradesAll": [{"usd": 1}] * 20,
+            "clustersAll": [{"cluster": 2}], "matches": {"a": {}}})
+        assert PSA.check_wallet_clusters(files) == []
+
+    def test_frisch_aber_leer_ist_gesund(self, tmp_path, monkeypatch):
+        """Keine Trades, keine Positionen = nichts los, kein Befund. Nur die Kombination
+        'Daten da, Ableitung fehlt' ist krank."""
+        files = self._write(tmp_path, monkeypatch, {
+            "topPositionsAll": [], "bigTradesAll": [], "clustersAll": [], "matches": {}})
+        assert PSA.check_wallet_clusters(files) == []
+
+    def test_unlesbare_datei_wirft_nicht(self, tmp_path, monkeypatch):
+        (tmp_path / "kaputt.json").write_text("{nicht json", encoding="utf-8")
+        monkeypatch.setattr(PSA, "BASE", tmp_path)
+        assert PSA.check_wallet_clusters(["kaputt.json", "fehlt.json"]) == []

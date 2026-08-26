@@ -45,6 +45,7 @@ BASE = Path(__file__).parent
 # DATASET-AWARE (12.07.2026, Lucas: „MLS auf Polymarket"). Positions-Health muss je Datensatz
 # getrennt laufen — sonst würde ein MLS-Lauf die WM-Positionen bewerten (und umgekehrt).
 import cocobet_dataset as D  # noqa: E402
+from safe_write import write_json_atomic   # 25.08.2026: temp+replace statt halber Datei
 BETS_FILE     = Path(str(D.file("wm_auto_bets_placed.json",     "liga_auto_bets_placed.json")))
 POLY_FILE     = Path(str(D.file("wm_poly_prices.json",          "liga_poly_prices.json")))
 WM_FILE       = Path(str(D.data_file()))
@@ -86,17 +87,27 @@ def _now_iso() -> str:
     return datetime.now(timezone.utc).isoformat()
 
 
+# 25.08.2026 (Audit-Befund 13): fehlend und kaputt waren derselbe Zustand. Fuer den Health-Report
+# ist der Unterschied entscheidend — "keine offenen Positionen" und "ich konnte die Wetten nicht
+# lesen" duerfen nicht dieselbe Anzeige ergeben.
+_UNREADABLE: set = set()
+
+
 def _load(path: Path, default):
     if not path.exists():
         return default
     try:
-        return json.loads(path.read_text(encoding="utf-8"))
-    except Exception:
+        data = json.loads(path.read_text(encoding="utf-8"))
+        _UNREADABLE.discard(str(path))
+        return data
+    except Exception as e:
+        print(f"⚠️  {path.name} nicht lesbar: {e}")
+        _UNREADABLE.add(str(path))
         return default
 
 
 def _save(path: Path, data):
-    path.write_text(json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8")
+    write_json_atomic(path, data, indent=2)
 
 
 # Team-Flaggen aus wm2026-data (id→🇽🇽). Behebt 🏳🏳 im Position-Alert:
@@ -249,7 +260,13 @@ def resolve_current_market(bet: dict, current_fx: dict):
     elif "unter 1.5" in lbl or "under 1.5" in lbl: mkt_k = "u15"
     elif "über 3.5" in lbl or "over 3.5" in lbl: mkt_k = "o35"
     elif "unter 3.5" in lbl or "under 3.5" in lbl: mkt_k = "u35"
-    else: mkt_k = "hw"
+    else:
+        # 25.08.2026 (Audit-Befund 06): hier stand `mkt_k = "hw"` — kein Heimsieg-Fallback mehr.
+        # Ein Over-4.5- oder umbenannter Markt wurde gegen den HEIMSIEG gerechnet und der Unsinn
+        # als gueltiger Health-Score mit Faktoren-Aufschluesselung ins Telegram-Alert gerendert.
+        # compute_health kommt mit None zurecht (die Faktoren fallen dann weg).
+        print(f"  ⚠️  Markt '{lbl or bet.get('marketKey')}' nicht zuordenbar — kein Health-Score")
+        return (None, None, None)
     return (current_fx.get(f"edge_{mkt_k}"), current_fx.get(f"poly_{mkt_k}"), current_fx.get(f"fair_{mkt_k}"))
 
 
@@ -381,9 +398,17 @@ def main():
     open_bets = [b for b in bets if b.get("status") in (None, "open", "placed")
                                   and not b.get("sellPrice")]
 
+    if str(BETS_FILE) in _UNREADABLE:
+        # Nichts schreiben waere still; "keine offenen" schreiben waere gelogen. Also der dritte
+        # Zustand: der Report sagt selbst, dass er blind ist — das Dashboard kann das anzeigen.
+        print(f"🛑 {BETS_FILE.name} nicht lesbar — Health-Report meldet UNBEKANNT statt 'keine offenen'")
+        _save(HEALTH_FILE, {"lastRun": _now_iso(), "positions": [], "error":
+                            "konnte die Wett-Datei nicht lesen — Positionen unbekannt"})
+        return
+
     if not open_bets:
         print("ℹ️  Keine offenen Positionen — kein Health-Check nötig")
-        _save(HEALTH_FILE, {"lastRun": _now_iso(), "positions": []})
+        _save(HEALTH_FILE, {"lastRun": _now_iso(), "positions": [], "error": None})
         return
 
     poly_data = _load(POLY_FILE, {})

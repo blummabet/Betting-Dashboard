@@ -22,6 +22,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from poly_shortlist_track import _agg_one, _age_days, _ok_price, load_emit
+from safe_write import write_json_atomic   # 25.08.2026: temp+replace statt halber Datei
 
 BASE = Path(__file__).resolve().parent
 
@@ -170,7 +171,7 @@ def write_from_emit(emit, close=None, resolutions=None, now=None, base=None) -> 
     close = close if isinstance(close, dict) else _load(CLOSE_FILE, base)
     resolutions = resolutions if isinstance(resolutions, dict) else _load(RES_FILE, base)
     track = update_track(_load(TRACK_FILE, base), emit or {}, close, resolutions, now=now)
-    (base / TRACK_FILE).write_text(json.dumps(track, ensure_ascii=False, indent=1), encoding="utf-8")
+    write_json_atomic((base / TRACK_FILE), track, indent=1)
     a = track["agg"]["all"]
     c = track["agg"].get("consensus")
     print(f"🐋 Whale-Nachspiel-Depot: {len(track['open'])} offen · {a['n']} abgerechnet"

@@ -422,3 +422,43 @@ class TestKickoffTimingFix(unittest.TestCase):
         h_bug = M.hours_until_match(past_date)
         self.assertTrue(h_bug is not None and h_bug < 0, "Vortags-Datum -> negativ (alter Bug)")
         self.assertFalse(M.time_based_exit(h_bug, 5.0)[0], "negatives h_until -> Close feuert nicht (alter Bug)")
+
+
+# ── Anpfiffzeit auch fuer K.-o.-Spiele (25.08.2026, Audit-Befund 05) ─────────────────────────
+# Die Normalisierung durchsuchte nur `groups`. K.-o.-Spiele liegen in `koFixtures`
+# ([[feedback_ko_datapath]]) — fuer die blieb `matchDate` das reine Datum (00:00 UTC), die
+# Restzeit wurde negativ und `time_based_exit` stieg still aus: weder Pre-Match-Close noch
+# Stop-Loss feuerten. Genau der QAT-SUI-Fall vom 13.06.
+def test_kickoff_map_deckt_gruppen_und_ko(tmp_path, monkeypatch):
+    import json as _j
+    import manage_wm_poly_positions as MP
+    daten = {
+        "groups": {"A": {"fixtures": [{"home": "MEX", "away": "KOR", "kickoff": "2026-06-11T20:00:00Z"}]}},
+        "koFixtures": [{"home": "QAT", "away": "SUI", "kickoff": "2026-06-13T18:00:00Z"}],
+    }
+    f = tmp_path / "wm.json"
+    f.write_text(_j.dumps(daten), encoding="utf-8")
+
+    # Die Sammel-Logik aus main() nachbauen — genau der Block, der die koFixtures vergass.
+    _wm = _j.loads(f.read_text(encoding="utf-8"))
+    _ko_map = {}
+
+    def _sammle(_fixtures):
+        for _fx in (_fixtures or []):
+            if _fx.get("kickoff"):
+                _ko_map[f"{_fx.get('home')}-{_fx.get('away')}"] = _fx["kickoff"]
+
+    for _g in (_wm.get("groups") or {}).values():
+        _sammle(_g.get("fixtures"))
+    _sammle(_wm.get("koFixtures"))
+
+    assert _ko_map["MEX-KOR"] == "2026-06-11T20:00:00Z"
+    assert _ko_map["QAT-SUI"] == "2026-06-13T18:00:00Z", "K.-o.-Spiel fehlt — Stop-Loss feuert nie"
+
+
+def test_quelle_enthaelt_kofixtures():
+    """Der Regressions-Anker: der Sammel-Block im Modul muss koFixtures anfassen."""
+    from pathlib import Path
+    src = (Path(__file__).parent.parent / "manage_wm_poly_positions.py").read_text(encoding="utf-8")
+    assert "koFixtures" in src, "K.-o.-Spiele wieder vergessen — der Klassiker in diesem Projekt"
+

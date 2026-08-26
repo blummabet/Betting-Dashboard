@@ -230,3 +230,83 @@ class TestTournamentOverGate(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# ── Kaputte Wett-Datei darf nicht ueberschrieben werden (25.08.2026, Audit-Befund 01) ────────
+# `load_json` gab bei fehlender UND bei kaputter Datei still den Default. Fuer die Wett-Datei ist
+# der Unterschied entscheidend: fehlt sie, faengt man bei null an; ist sie kaputt, wuerde der Lauf
+# seine paar neuen Zeilen ueber die gesamte Positions-Historie schreiben — und gleichzeitig waeren
+# Dedupe, Tageslimit, Exposure-Guard und Positionslimit ausgefallen.
+def test_fehlende_datei_ist_kein_lesefehler(tmp_path):
+    import auto_wm_poly_trigger as T
+    T._LOAD_FAILED.clear()
+    p = tmp_path / "gibtsnicht.json"
+    assert T.load_json(str(p), {"bets": []}) == {"bets": []}
+    assert str(p) not in T._LOAD_FAILED, "fehlend != kaputt"
+
+
+def test_kaputte_datei_wird_gemerkt(tmp_path):
+    import auto_wm_poly_trigger as T
+    T._LOAD_FAILED.clear()
+    p = tmp_path / "kaputt.json"
+    p.write_text("{ das ist kein json", encoding="utf-8")
+    assert T.load_json(str(p), {"bets": []}) == {"bets": []}
+    assert str(p) in T._LOAD_FAILED
+
+
+def test_erfolgreiches_lesen_loescht_die_markierung(tmp_path):
+    import auto_wm_poly_trigger as T
+    p = tmp_path / "wieder_ok.json"
+    p.write_text("kaputt", encoding="utf-8")
+    T.load_json(str(p), {})
+    assert str(p) in T._LOAD_FAILED
+    p.write_text('{"bets": [1]}', encoding="utf-8")
+    T.load_json(str(p), {})
+    assert str(p) not in T._LOAD_FAILED, "nach erfolgreichem Lesen ist die Datei wieder gut"
+
+
+def test_save_json_ist_atomar(tmp_path, monkeypatch):
+    import auto_wm_poly_trigger as T
+    import safe_write
+    p = tmp_path / "placed.json"
+    T.save_json(str(p), {"bets": ["alt"]})
+    monkeypatch.setattr(safe_write.json, "dump", lambda *a, **k: (_ for _ in ()).throw(OSError("weg")))
+    try:
+        T.save_json(str(p), {"bets": ["neu"]})
+    except OSError:
+        pass
+    import json as _j
+    assert _j.loads(p.read_text())["bets"] == ["alt"], "alter Stand ueberlebt einen Abbruch"
+
+
+# ── Stale-Odds-Schutz faellt nicht mehr aus (25.08.2026, Audit-Befund 02) ────────────────────
+# Vorher gab die Funktion bei JEDEM Problem None zurueck, und der Aufrufer las None als
+# "kein Grund zu stoppen". Ausgerechnet bei kaputter Quoten-Datei war der Schutz also aus.
+def test_kaputte_quoten_datei_stoppt_statt_durchzuwinken(tmp_path, monkeypatch):
+    import auto_wm_poly_trigger as T
+    p = tmp_path / "wm.json"
+    p.write_text("{ kaputt", encoding="utf-8")
+    monkeypatch.setattr(T, "WM_DATA_FILE", str(p))
+    alter = T.newest_pinnacle_odds_age_h()
+    assert alter == T.ODDS_AGE_UNREADABLE
+    assert alter > T.MAX_ODDS_AGE_HOURS, "muss den Stopp ausloesen, nicht durchwinken"
+
+
+def test_odds_ohne_brauchbare_zeitstempel_stoppt_auch(tmp_path, monkeypatch):
+    import auto_wm_poly_trigger as T
+    p = tmp_path / "wm.json"
+    p.write_text('{"odds": {"a": {"hw": 2.0}}}', encoding="utf-8")   # kein updatedAt
+    monkeypatch.setattr(T, "WM_DATA_FILE", str(p))
+    assert T.newest_pinnacle_odds_age_h() == T.ODDS_AGE_UNREADABLE
+
+
+def test_frische_quoten_liefern_ein_echtes_alter(tmp_path, monkeypatch):
+    import auto_wm_poly_trigger as T
+    from datetime import datetime as _d, timezone as _z, timedelta as _td
+    ts = (_d.now(_z.utc) - _td(hours=2)).isoformat()
+    p = tmp_path / "wm.json"
+    p.write_text('{"odds": {"a": {"updatedAt": "%s"}}}' % ts, encoding="utf-8")
+    monkeypatch.setattr(T, "WM_DATA_FILE", str(p))
+    alter = T.newest_pinnacle_odds_age_h()
+    assert 1.5 < alter < 2.5 and alter != T.ODDS_AGE_UNREADABLE
+

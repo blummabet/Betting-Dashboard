@@ -862,8 +862,9 @@ def load_history() -> list:
 
 
 def save_history(data: list) -> None:
-    with open(HISTORY_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+    """Atomar (25.08.2026, Audit) — picks_history.json ist das Wett-Protokoll."""
+    from safe_write import write_json_atomic
+    write_json_atomic(HISTORY_FILE, data)
 
 
 MATCH_DATE_TOLERANCE_D = 2   # Wetten fallen nahe an den Anpfiff — alles Weitere ist ein anderes Spiel
@@ -1049,13 +1050,26 @@ def main():
     # ── Bankroll-Schutz vorbereiten ───────────────────────────────────────────
     # Heutige Bets aus wm_auto_bets_placed.json zählen (deckt Auto + Manual ab).
     today_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
-    try:
-        with open(PLACED_FILE, encoding="utf-8") as f:
-            placed_db = json.load(f)
-        placed_bets_today = [b for b in placed_db.get("bets", [])
-                             if (b.get("placedAt") or "")[:10] == today_str]
-    except Exception:
+    # 25.08.2026 (Audit-Befund 03): der Zaehler war komplett stumm. Bei kaputter Datei stand im
+    # Log `💰 Heute bereits: 0 Bet(s), $0.00` — nicht von einem echt leeren Tag zu unterscheiden.
+    # Diese beiden Werte fuettern die Tages- und Einsatz-Grenze; ohne sie gibt es keine Grenze.
+    # Fehlende Datei ist harmlos (erster Lauf), kaputte NICHT: dann wissen wir nicht, was heute
+    # schon lief, und duerfen nicht setzen.
+    if not os.path.exists(PLACED_FILE):
         placed_bets_today = []
+    else:
+        try:
+            with open(PLACED_FILE, encoding="utf-8") as f:
+                placed_db = json.load(f)
+            placed_bets_today = [b for b in placed_db.get("bets", [])
+                                 if (b.get("placedAt") or "")[:10] == today_str]
+        except Exception as e:
+            print(f"\n🛑 Tages-Zaehler nicht ermittelbar: {PLACED_FILE} ist nicht lesbar ({e}).")
+            print("   Ohne diese Datei greifen weder Tages-Cap noch Einsatz-Cap — KEINE Order.")
+            print("   Datei pruefen/wiederherstellen, dann erneut ausfuehren.")
+            # sys.exit statt return: main() wird ohne Auswertung des Rueckgabewerts aufgerufen,
+            # ein `return 1` haette den Workflow gruen gelassen.
+            sys.exit(1)
     bets_today_count = len(placed_bets_today)
     stake_today      = sum(float(b.get("stake") or 0) for b in placed_bets_today)
 

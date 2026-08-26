@@ -26,6 +26,7 @@ import json
 import os
 from datetime import datetime, timezone
 from pathlib import Path
+from safe_write import write_json_atomic   # 25.08.2026: temp+replace statt halber Datei
 
 BASE = Path(__file__).resolve().parent
 
@@ -164,7 +165,7 @@ def aggregate_by(rows, field) -> dict:
 def main() -> int:
     bets = collect_bets(_load(HISTORY_FILE, []))
     out = settle(bets, _load(CLOSE_FILE), _load(RES_FILE), prev=_load(OUT_FILE))
-    (BASE / OUT_FILE).write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
+    write_json_atomic((BASE / OUT_FILE), out, indent=1)
     a = out["agg"]
     print(f"🎯 Direkt-Bets: {len(bets)} platziert · {len(out['open'])} offen · {a['n']} abgerechnet"
           + (f" · Treffer {a['hit']*100:.0f}% · P&L ${a['pnl']:.2f}"

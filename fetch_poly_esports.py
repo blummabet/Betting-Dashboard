@@ -26,11 +26,18 @@ from pathlib import Path
 
 import poly_coherence
 import poly_money_broad as BR
+from fetch_wm_poly_smartmoney import _cluster_metrics as _cm_raw
 
 BASE = Path(__file__).resolve().parent
 ESPORT_TAGS = ["esports", "cs2", "lol", "dota", "valorant"]
 MIN_VOL_USD = 5_000
 _SIDES = ("home", "away")   # E-Sport-Moneyline ist 2-Wege (kein Remis)
+CLUSTER_WINDOW_H = 12.0     # E-Sport kennt kein Liga-Profil — festes Fenster wie der Default
+
+
+def _cluster_metrics(trades, window_h: float = CLUSTER_WINDOW_H):
+    """Konsens-Cluster/Net-Flow je Seite — identische Mathematik wie beim Fußball-Datensatz."""
+    return _cm_raw(trades, window_h)
 
 
 def _now():
@@ -42,6 +49,7 @@ def build(events, sm_fn, trades_fn=None) -> dict:
 
     sm_fn(cond, token, price) → {usd, topHolderShare, holders, _wallets:[{wallet,usd,shares}]} | None"""
     prices, sm_matches, top_pos, all_trades = {}, {}, [], []
+    wallet_matches, all_clusters = {}, []   # 25.08.2026 (Audit-Befund 12)
 
     for ev in events or []:
         try:
@@ -55,7 +63,7 @@ def build(events, sm_fn, trades_fn=None) -> dict:
             home, away = oc[0]["label"], oc[1]["label"]
             hp, ap = oc[0].get("price"), oc[1].get("price")
 
-            outs, wallets_here, total = {}, [], 0.0
+            outs, wallets_here, trades_here, total = {}, [], [], 0.0
             for side, o in zip(_SIDES, oc):
                 sm = sm_fn(o.get("cond"), o.get("token"), o.get("price"))
                 if not sm:
@@ -73,7 +81,7 @@ def build(events, sm_fn, trades_fn=None) -> dict:
                 if trades_fn:
                     _pick = home if side == "home" else away
                     for t in (trades_fn(o.get("cond"), _pick, side, o.get("price")) or []):
-                        all_trades.append({**t, "match": home + " – " + away, "key": key})
+                        trades_here.append({**t, "match": home + " – " + away, "key": key})
             if total <= 0:
                 continue
             for side in outs:                # share erst mit Gesamtsumme
@@ -85,15 +93,40 @@ def build(events, sm_fn, trades_fn=None) -> dict:
             sm_matches[key] = {"home": home, "away": away, "totalUsd": round(total),
                                "hoursToKickoff": BR._hours_to_ko(ev, BR._now()), "outcomes": outs}
             top_pos.extend(wallets_here)
+            all_trades.extend(trades_here)
+
+            # 25.08.2026 (Audit-Befund 12): clustersAll war hartkodiert [] und matches fehlte
+            # ganz. Der Conviction-Score fand damit für JEDEN E-Sport-Markt nichts (→ null)
+            # und die Exit-Liquiditäts-Warnung konnte nie rendern. Dieselbe _cluster_metrics
+            # wie beim Fußball-Fetcher — eine Mathematik, ein Test.
+            htk = sm_matches[key]["hoursToKickoff"]
+            wallet_matches[key] = {"home": home, "away": away,
+                                   "topPositions": sorted(wallets_here,
+                                                          key=lambda w: -(w.get("usd") or 0))[:12],
+                                   "bigTrades": sorted(trades_here,
+                                                       key=lambda t: (t.get("ts") or ""),
+                                                       reverse=True)[:20]}
+            for side, cm in _cluster_metrics(trades_here).items():
+                if cm.get("cluster", 0) <= 0 and cm.get("netFlowUsd", 0) == 0:
+                    continue
+                all_clusters.append({
+                    "key": key, "match": home + " – " + away, "side": side,
+                    "pick": home if side == "home" else away,
+                    "cluster": cm.get("cluster", 0), "netFlowUsd": cm.get("netFlowUsd", 0),
+                    "buyUsd": cm.get("buyUsd", 0), "sellUsd": cm.get("sellUsd", 0),
+                    "hoursToKickoff": htk})
         except Exception:
             continue
 
     top_pos.sort(key=lambda p: -(p.get("usd") or 0))
     all_trades.sort(key=lambda t: (t.get("ts") or ""), reverse=True)
+    all_clusters.sort(key=lambda c: (c.get("cluster", 0), -c.get("netFlowUsd", 0)), reverse=True)
     return {
         "prices":     {"prices": prices, "generatedAt": _now()},
         "smartmoney": {"matches": sm_matches, "updatedAt": _now()},
-        "wallets":    {"topPositionsAll": top_pos[:60], "bigTradesAll": all_trades[:60], "clustersAll": [],
+        "wallets":    {"matches": wallet_matches,
+                       "topPositionsAll": top_pos[:60], "bigTradesAll": all_trades[:60],
+                       "clustersAll": all_clusters[:60],
                        "emptyReason": None, "updatedAt": _now()},
     }
 

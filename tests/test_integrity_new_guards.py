@@ -375,3 +375,40 @@ class TestStreaksGuardAndMlsCtx(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+# ── Blinde Guard-Batterie meldet sich (25.08.2026, Audit-Befund 14) ──────────────────────────
+# `_lazy` gab bei einem Lesefehler still {} zurueck — fuenf als GELD-KRITISCH markierte Guards
+# iterierten dann ueber eine leere Liste und meldeten GRUEN. Ein Guard, der seine Datei nicht
+# lesen konnte, hat NICHTS geprueft und darf das nicht verschweigen.
+def test_lesbare_eingaben_sind_ok():
+    import wm_data_integrity as W
+    W._LAZY_FAILED.clear()
+    c = W.check_inputs_readable(None)
+    assert c["ok"] and c["severity"] == "error"
+
+
+def test_nicht_lesbare_eingabe_macht_den_guard_rot():
+    import wm_data_integrity as W
+    W._LAZY_FAILED.clear()
+    W._LAZY_FAILED.add("wm_auto_bets_placed.json")
+    try:
+        c = W.check_inputs_readable(None)
+        assert not c["ok"]
+        assert c["severity"] == "error", "blind ist ein Stopp-Signal, keine Warnung"
+        assert any("NICHTS geprueft" in f for f in c["failures"])
+    finally:
+        W._LAZY_FAILED.clear()
+
+
+def test_lazy_unterscheidet_fehlend_von_kaputt(tmp_path, monkeypatch):
+    import wm_data_integrity as W
+    W._LAZY_FAILED.clear()
+    monkeypatch.setattr(W, "_BASE", tmp_path)
+    (tmp_path / "kaputt.json").write_text("{ nein", encoding="utf-8")
+    assert W._lazy("kaputt.json") == {}
+    assert "kaputt.json" in W._LAZY_FAILED
+    assert W._lazy("gibtsnicht.json") == {}
+    assert "gibtsnicht.json" not in W._LAZY_FAILED, "fehlend ist kein Lesefehler"
+    W._LAZY_FAILED.clear()
+

@@ -548,14 +548,22 @@ def determine_result(bet: dict, res: dict) -> str:
         # _ah_result übernehmen (Single Source, keine Drift zwischen den Auflöse-Pfaden).
         _ml = (market or "").lower()
         if "ah " in _ml or _ml.startswith("ah") or "handicap" in _ml:
+            # 25.08.2026 (Audit-Befund 04): hier stand `except Exception: pass`. Scheiterte der
+            # Import oder war der Spielstand kein Integer, nahm compute_pnl den Default 1.0 —
+            # eine halbe Split-Wette wurde also mit VOLLEM Einsatz abgerechnet. Unsichtbar falsch:
+            # eine plausible Zahl landet in den Resultaten, das Dashboard zeigt sie als P&L, und
+            # die Signal-Gewichtung lernt auf verdoppelten Betraegen. Jetzt laut und markiert.
             try:
                 from resolve_wm_picks import _ah_result
                 _hs, _as = int(res.get("home_score")), int(res.get("away_score"))
                 _fac = _ah_result(_ml, _hs - _as)[1]
                 if _fac != 1.0:
                     bet["resultStakeFactor"] = _fac
-            except Exception:
-                pass
+                bet.pop("resultStakeFactorUnknown", None)
+            except Exception as e:
+                print(f"  ⚠️  AH-Einsatzfaktor fuer '{market}' nicht bestimmbar ({e}) — "
+                      f"P&L wird mit vollem Einsatz gerechnet und als unsicher markiert")
+                bet["resultStakeFactorUnknown"] = True
         return dyn
     return "VOID"
 

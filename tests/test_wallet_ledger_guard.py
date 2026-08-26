@@ -83,10 +83,23 @@ class TestGuardBleibtStill:
         _files(monkeypatch, _snapshot(leer=True), {})
         assert W.check_wallet_ledger_growing(_ctx())["ok"]
 
-    def test_liga_ist_ausgenommen(self, monkeypatch):
-        """Liga hat bewusst kein Polymarket (Liquidität fehlt) — sonst leuchtet es ewig gelb."""
+    def test_liga_ist_NICHT_mehr_ausgenommen(self, monkeypatch):
+        """25.08.2026 (Audit-Befund 07): der Liga-Sonderfall war die Ursache, nicht die Lösung.
+
+        Bis zum 19.08. stimmte „Liga hat bewusst kein Polymarket". Seitdem tradet Liga real dort —
+        und weil dieser Guard der EINZIGE Poly-Check für Liga war, meldete liga_status.json grüne
+        Haken, während die ganze Analyseschicht gar nicht lief. Ein Snapshot mit Daten und ohne
+        Ledger muss jetzt auch für Liga Alarm geben.
+        """
         monkeypatch.setenv("COCOBET_DATASET", "liga")
         _files(monkeypatch, _snapshot(), {})
+        assert not W.check_wallet_ledger_growing(_ctx())["ok"], \
+            "Snapshot da, Ledger fehlt — das ist genau der Zustand, den der Guard melden soll"
+
+    def test_liga_ohne_snapshot_bleibt_still(self, monkeypatch):
+        """Kein Dauer-Gelb in der Spielpause: ohne frischen Snapshot gibt es nichts zu sammeln."""
+        monkeypatch.setenv("COCOBET_DATASET", "liga")
+        _files(monkeypatch, _snapshot(leer=True), {})
         assert W.check_wallet_ledger_growing(_ctx())["ok"]
 
     def test_zwoelf_stunden_sind_noch_ok(self, monkeypatch):

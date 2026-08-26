@@ -25,6 +25,7 @@ Reiner Kern (fav_token, winning_token, grade, capture, settle, aggregate) ist ne
 import json
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
+from safe_write import write_json_atomic   # 25.08.2026: temp+replace statt halber Datei
 
 BASE = Path(__file__).resolve().parent
 PRICES_FILE = BASE / "betfair_prices.json"
@@ -507,7 +508,8 @@ def _load(p, default):
 
 
 def _write(p, data):
-    p.write_text(json.dumps(data, ensure_ascii=False, separators=(",", ":")), encoding="utf-8")
+    """Atomar (25.08.2026, Audit) — der Ledger traegt 8000 abgerechnete Signale."""
+    write_json_atomic(p, data, indent=None)
 
 
 def main():

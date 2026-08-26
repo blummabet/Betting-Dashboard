@@ -154,6 +154,13 @@ WM_DATA_FILE          = str(D.data_file())
 MAX_ODDS_AGE_HOURS    = _cfg("trade", "max_odds_age_hours", 24.0)
 
 
+# 25.08.2026 (Audit-Befund 02): "konnte das Alter nicht bestimmen" ist ein EIGENER Zustand und
+# keine Freigabe. Vorher gab die Funktion dafuer `None` zurueck — dieselbe Antwort wie "alles frisch",
+# nur dass der Aufrufer sie als "kein Grund zu stoppen" gelesen hat. Fail-closed wie beim
+# Kill-Switch (05.06.): unbekannt = anhalten, Lucas entscheidet.
+ODDS_AGE_UNREADABLE = float("inf")
+
+
 def newest_pinnacle_odds_age_h() -> float | None:
     """Alter (Stunden) der frischesten Pinnacle-Odds in wm2026-data.json.
     None wenn keine updatedAt-Timestamps gefunden werden."""
@@ -175,10 +182,13 @@ def newest_pinnacle_odds_age_h() -> float | None:
             if newest is None or t > newest:
                 newest = t
         if newest is None:
-            return None
+            # Datei gelesen, aber kein einziger brauchbarer Zeitstempel drin — das ist genauso
+            # wenig eine Freigabe wie ein Lesefehler.
+            return ODDS_AGE_UNREADABLE
         return (_dt.now(_tz.utc) - newest).total_seconds() / 3600.0
-    except Exception:
-        return None
+    except Exception as e:
+        print(f"  ⚠️  Pinnacle-Odds nicht lesbar ({e}) — Stale-Schutz greift vorsorglich")
+        return ODDS_AGE_UNREADABLE
 
 
 def is_kill_switch_active() -> tuple[bool, str]:
@@ -284,14 +294,24 @@ AUTO_TRIGGER_EDGE_ELO_ONLY = _cfg("trade", "auto_trigger_edge_elo_only", 8.0)
 
 # ── Hilfsfunktionen ────────────────────────────────────────────────────────────
 
+# 25.08.2026 (Audit): "Datei fehlt" und "Datei kaputt" waren derselbe Zustand — beides gab still
+# den Default. Fuer die Wett-Datei ist der Unterschied entscheidend: fehlt sie, faengt man bei null
+# an; ist sie kaputt, DARF man nicht bei null anfangen, sonst faellt jede Grenze weg und der Lauf
+# schreibt seinen leeren Stand darueber. Hier gemerkt, unten ausgewertet.
+_LOAD_FAILED: set = set()
+
+
 def load_json(path: str, default):
     if not os.path.exists(path):
         return default
     try:
         with open(path, encoding="utf-8") as f:
-            return json.load(f)
+            data = json.load(f)
+        _LOAD_FAILED.discard(str(path))
+        return data
     except Exception as e:
         print(f"  ⚠️  Fehler beim Laden von {path}: {e}")
+        _LOAD_FAILED.add(str(path))
         return default
 
 
@@ -347,8 +367,13 @@ def _cross_dataset_exposure(today_str: str):
 
 
 def save_json(path: str, data) -> None:
-    with open(path, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+    """Atomar schreiben (25.08.2026, Audit): temp + replace statt direkt in die Zieldatei.
+
+    Vorher war die Datei zwischen Oeffnen und letztem Byte kaputt. Genau in dem Fenster einen
+    Runner abzuraeumen reicht, damit im naechsten Lauf ALLE Bankroll-Grenzen ausfallen.
+    """
+    from safe_write import write_json_atomic
+    write_json_atomic(path, data)
 
 
 def days_until(date_str: str) -> int | None:
@@ -829,7 +854,10 @@ def main():
     # gefährliche Fehl-Trades. Dann lieber gar nicht traden.
     odds_age = newest_pinnacle_odds_age_h()
     if odds_age is not None and odds_age > MAX_ODDS_AGE_HOURS:
-        msg = (f"🛑 STALE-ODDS-STOP: frischeste Pinnacle-Odds {odds_age:.1f}h alt "
+        msg = ("🛑 STALE-ODDS-STOP: Quoten-Alter nicht bestimmbar (Datei fehlt, kaputt oder ohne "
+               "brauchbare Zeitstempel) — KEIN Auto-Trade. Fehlende Information ist keine Freigabe."
+               if odds_age == ODDS_AGE_UNREADABLE else
+               f"🛑 STALE-ODDS-STOP: frischeste Pinnacle-Odds {odds_age:.1f}h alt "
                f"(> {MAX_ODDS_AGE_HOURS:.0f}h Limit) — fetch_wm_odds eingefroren? "
                f"KEIN Auto-Trade, Edge gegen veraltete Preise wäre gefährlich.")
         print("  " + msg + "\n")
@@ -1177,6 +1205,15 @@ def main():
                 print(f"    ❌ Fehlgeschlagen: {_err}")
 
     # 5. Ergebnisse speichern
+    # 25.08.2026 (Audit): war die Wett-Datei kaputt, steht `placed_bets` auf leer — dann wuerde
+    # dieser Lauf die gesamte Positions-Historie mit seinen paar neuen Zeilen ueberschreiben.
+    # Lieber die neuen Bets nur im Log und in picks_history als die alten endgueltig verlieren.
+    if new_placed and str(PLACED_FILE) in _LOAD_FAILED:
+        print(f"\n  🛑 {PLACED_FILE} war nicht lesbar — NICHT ueberschrieben, sonst waere die "
+              f"Positions-Historie weg. {len(new_placed)} neue Bet(s) stehen in picks_history.json.")
+        print("     Datei von Hand pruefen/wiederherstellen, dann laeuft der naechste Lauf normal.")
+        save_history(history)
+        new_placed = []
     if new_placed:
         placed_bets.extend(new_placed)
         placed_data["bets"] = placed_bets

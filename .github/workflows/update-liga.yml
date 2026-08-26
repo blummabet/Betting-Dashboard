@@ -136,6 +136,36 @@ jobs:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
+      # ── Poly-Analyseschicht (25.08.2026, Audit-Befund 07) ────────────────────────────
+      # Liga tradet seit dem 19.08. real auf Polymarket, aber diese sechs Skripte liefen nur
+      # fuer MLS und WM. Sieben liga_poly_*-Dateien existierten schlicht nicht, der „⚽ Top-5"-
+      # Punkt im Wallets-Tab holte 404er. Alle sind dataset-aware und lesen COCOBET_DATASET aus
+      # dem env-Block dieses Workflows.
+      - name: 💰 Liga Polymarket Smart-Money + Wallets
+        run: python fetch_wm_poly_smartmoney.py
+        continue-on-error: true
+
+      # MUSS direkt nach dem Fetch laufen: der Snapshot haelt nur das AKTUELLE Fenster
+      # (Top-Holder + juengste grosse Trades). Was hier nicht weggeschrieben wird, ist beim
+      # naechsten Lauf weg — der spaetere Wallet-Track-Record hat diese Beobachtung dann nie.
+      - name: 📒 Liga Wallet-Ledger fortschreiben
+        run: python build_poly_wallet_ledger.py
+        continue-on-error: true
+
+      - name: 🎯 Liga Poly-Kohärenz + Settlement-Lücken
+        run: |
+          python poly_coherence.py || true
+          python poly_settlement_gap.py || true
+        continue-on-error: true
+
+      - name: 🅼 Liga Maker-Markout messen
+        run: python poly_markout.py || true
+        continue-on-error: true
+
+      - name: 🎯 Liga Geld-Genauigkeit (liegt das Geld richtig?)
+        run: python poly_money_accuracy.py || true
+        continue-on-error: true
+
       # 25.06.2026 (Lucas: „Navi da, keine Cards"): Pick-/Resolve-Schritte dürfen den Commit der
       # Daten NICHT blockieren. Wenn einer crasht, liegen Teams+Fixtures+Quoten trotzdem in
       # liga-data.json → Cards erscheinen. Darum `|| true` + Commit mit `if: always()`.
@@ -284,6 +314,13 @@ jobs:
           git add liga-poly-history.json 2>/dev/null || true         # Poly-Preis-Historie
           git add liga_steam_lag_log.json 2>/dev/null || true        # Steam-Lag Signal-Log
           git add liga_steam_lag_sell_dedup.json 2>/dev/null || true # Sell-Alert Dedup
+          # Poly-Analyseschicht (25.08.2026, Audit-Befund 07) — ohne diese Zeilen laeuft der
+          # Schritt oben zwar, aber sein Ergebnis verlaesst den Runner nie.
+          git add liga_poly_wallets.json liga_poly_smartmoney.json 2>/dev/null || true
+          git add liga_poly_wallet_ledger.json 2>/dev/null || true
+          git add liga_poly_coherence.json liga_poly_settlement.json 2>/dev/null || true
+          git add liga_poly_markout.json liga_poly_money_accuracy.json 2>/dev/null || true
+          git add liga_poly_money_close.json 2>/dev/null || true
           git diff --staged --quiet || git commit -m "liga: Daten + Quoten + Picks + Resolve + Lernen [skip ci]"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           # Remote kann sich zwischenzeitlich bewegt haben (paralleler Workflow) → rebasen, dann push.

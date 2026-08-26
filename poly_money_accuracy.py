@@ -37,6 +37,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 import cocobet_dataset as D
+from safe_write import write_json_atomic
 
 BASE = Path(__file__).resolve().parent
 
@@ -124,7 +125,7 @@ def _verdict(bm, bp):
     return "gleichauf"            # Geld schon im Preis → kein Zusatznutzen
 
 
-def evaluate(frozen: dict, results: dict, min_odds: float = 1.0) -> dict:
+def evaluate(frozen: dict, results: dict, min_odds: float = 1.0, leagues: dict | None = None) -> dict:
     """Eingefrorene Geld-/Preis-Verteilungen gegen den Ausgang. REIN.
 
     results:  {matchKey: "home"|"draw"|"away"}  (Gewinner-Ausgang)
@@ -132,7 +133,11 @@ def evaluate(frozen: dict, results: dict, min_odds: float = 1.0) -> dict:
               öfter recht — nimm min 1.35"). Ein Favorit mit Quote < min_odds ist zu klar, um
               etwas über die Klugheit der Masse auszusagen. Default 1.0 = kein Filter.
               Zusätzlich: pro Liga aufgeschlüsselt (byLeague), wenn die Einträge ein `league`-Tag
-              tragen — „wo hat die Masse mehr recht?"."""
+              tragen — „wo hat die Masse mehr recht?".
+    leagues:  {matchKey: Liga-Label} — Fallback für eingefrorene Einträge OHNE `league`-Feld.
+              25.08.2026 (Audit-Befund 16): der Producer schrieb das Feld nie, also war byLeague
+              per Konstruktion immer leer. Die Liga kommt jetzt beim Auswerten aus den Fixtures
+              dazu — damit wird auch die BEREITS eingefrorene Historie rückwirkend nutzbar."""
     fav_prob_cap = 1.0 / max(min_odds, 1e-9)   # Favorit-Wahrscheinlichkeit darüber = zu klar
     n = 0
     money_hit = price_hit = 0
@@ -172,7 +177,7 @@ def evaluate(frozen: dict, results: dict, min_odds: float = 1.0) -> dict:
             disagree["n"] += 1
             disagree["moneyWon" if m_ok else "priceWon" if p_ok else "neither"] += 1
 
-        lg = f.get("league")
+        lg = f.get("league") or (leagues or {}).get(key)
         if lg:
             b = by_league.setdefault(lg, {"n": 0, "moneyHit": 0, "bm": 0.0, "bp": 0.0})
             b["n"] += 1; b["moneyHit"] += m_ok; b["bm"] += bm_i; b["bp"] += bp_i
@@ -231,10 +236,40 @@ def results_lookup(data: dict) -> dict:
     return out
 
 
+def leagues_lookup(data: dict, valid=None) -> dict:
+    """{homeId-awayId: Liga-Code} aus den Fixtures. Der Gruppenschlüssel IST bei den
+    Klub-Datensätzen die Liga (ENG/ESP/GER/ITA/FRA, MLS).
+
+    `valid` (optional): nur diese Codes werden als Liga akzeptiert. Ohne den Filter würden bei
+    der WM die Gruppen A–H als „Ligen“ durchgehen — ein falsches Label ist schlimmer als keines.
+    """
+    out = {}
+    for gname, g in (data.get("groups") or {}).items():
+        if valid is not None and gname not in valid:
+            continue
+        for fx in (g.get("fixtures") or []):
+            h, a = fx.get("home"), fx.get("away")
+            if h and a:
+                out[f"{h}-{a}"] = gname
+    return out
+
+
+_LOAD_FAILED: set[str] = set()   # 25.08.2026 (Audit): „fehlt“ und „kaputt“ sind NICHT dasselbe
+
+
 def _load(name):
+    """Lädt eine JSON-Datei. Ein LESE-FEHLER wird gemerkt, damit niemand die Datei danach
+    überschreibt — der eingefrorene Schluss-Snapshot ist nicht rekonstruierbar."""
     try:
-        return json.loads((BASE / name).read_text(encoding="utf-8"))
-    except Exception:
+        d = json.loads((BASE / name).read_text(encoding="utf-8"))
+        _LOAD_FAILED.discard(name)
+        return d
+    except FileNotFoundError:
+        _LOAD_FAILED.discard(name)       # noch nie geschrieben — das ist der Normalfall am Anfang
+        return {}
+    except Exception as e:
+        print(f"\u26a0\ufe0f {name} ist da, aber nicht lesbar ({e}) — wird NICHT überschrieben.")
+        _LOAD_FAILED.add(name)
         return {}
 
 
@@ -244,14 +279,21 @@ def main() -> int:
     data = _load(D.data_file().name)
 
     close_file = D.file("wm_poly_money_close.json", "liga_poly_money_close.json")
-    frozen = capture(sm, pr, _load(close_file.name)) if sm else _load(close_file.name)
-    close_file.write_text(json.dumps(frozen, ensure_ascii=False, indent=1), encoding="utf-8")
+    prev = _load(close_file.name)
+    frozen = capture(sm, pr, prev) if sm else prev
+    if close_file.name in _LOAD_FAILED:
+        # Der alte Stand ist da, nur unlesbar. Ihn jetzt mit einem Teil-Stand zu ersetzen wäre
+        # der eigentliche Datenverlust — lieber diesen Lauf ohne Einfrieren beenden.
+        print(f"\u26d4 {close_file.name} nicht lesbar — Schluss-Snapshot bleibt unangetastet.")
+    else:
+        write_json_atomic(close_file, frozen, indent=1)
 
-    rep = evaluate(frozen, results_lookup(data))
+    rep = evaluate(frozen, results_lookup(data),
+                   leagues=leagues_lookup(data, set(D.leagues())))
     rep["dataset"] = D.active_dataset()
     rep["generatedAt"] = _now().isoformat()
     out = D.file("wm_poly_money_accuracy.json", "liga_poly_money_accuracy.json")
-    out.write_text(json.dumps(rep, ensure_ascii=False, indent=1), encoding="utf-8")
+    write_json_atomic(out, rep, indent=1)
 
     print(f"=== Liegt das Poly-Geld richtig? ({rep['dataset'].upper()}) ===")
     print(f"Eingefroren: {len(frozen)} Märkte · aufgelöst: {rep['n']}")

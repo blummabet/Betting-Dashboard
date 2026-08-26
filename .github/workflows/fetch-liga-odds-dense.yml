@@ -50,6 +50,19 @@ jobs:
       # Picks aus den frischen Odds neu generieren — Liga läuft voll nur 2×/Tag, ohne diesen
       # Schritt wären Steam-Picks bis zu 12h alt. Nutzt die bestehenden Signal-Daten (Form/xG/
       # Lineups vom letzten Volllauf) + die eben geholten Odds. Rein Odds-getrieben, keine Fetches.
+      # ── Poly-Wallets im 2h-Takt (25.08.2026, Audit-Befund 07) ────────────────────────
+      # Spiegel von fetch-mls-odds-dense: der Wallet-Snapshot haelt nur das AKTUELLE Fenster
+      # (Top-Holder + juengste grosse Trades). Der 2h-Takt ist die dichteste Sammlung, die wir
+      # haben — die Vollaeufe von update-liga (06/18 UTC) allein wuerden das meiste verpassen.
+      # Fuer Liga lief das bisher gar nicht, obwohl seit dem 19.08. real auf Poly gehandelt wird.
+      - name: 💰 Liga Polymarket Smart-Money + Wallets
+        run: python fetch_wm_poly_smartmoney.py
+        continue-on-error: true
+
+      - name: 📒 Liga Wallet-Ledger fortschreiben
+        run: python build_poly_wallet_ledger.py
+        continue-on-error: true
+
       - name: 🎯 Liga-Picks aus frischen Odds generieren
         run: python generate_liga_picks.py || true
 
@@ -71,6 +84,10 @@ jobs:
           git add liga_sharp_moves_log.json 2>/dev/null || true
           git add liga_sharp_dedup.json 2>/dev/null || true
           git add liga_pick_announce_state.json 2>/dev/null || true
+          # Poly-Wallets (25.08.2026, Audit-Befund 07) — ohne diese Zeilen bleibt der
+          # 2h-Snapshot auf dem Runner liegen und die Historie entsteht trotzdem nicht.
+          git add liga_poly_wallets.json liga_poly_smartmoney.json 2>/dev/null || true
+          git add liga_poly_wallet_ledger.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Änderung — nichts zu committen."; exit 0
           fi

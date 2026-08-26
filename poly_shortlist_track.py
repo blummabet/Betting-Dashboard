@@ -21,6 +21,7 @@ import subprocess
 import sys
 from datetime import datetime, timezone
 from pathlib import Path
+from safe_write import write_json_atomic   # 25.08.2026: temp+replace statt halber Datei
 
 BASE = Path(__file__).resolve().parent
 CLOSE_FILE = "poly_money_broad_close.json"
@@ -318,7 +319,7 @@ def main() -> int:
     prev = _load(TRACK_FILE)
     track = update_track(prev, emit, close if isinstance(close, dict) else {},
                          resolutions if isinstance(resolutions, dict) else {})
-    (BASE / TRACK_FILE).write_text(json.dumps(track, ensure_ascii=False, indent=1), encoding="utf-8")
+    write_json_atomic((BASE / TRACK_FILE), track, indent=1)
     # 24.08.2026 (Lucas): Whale-Nachspiel-Depot auf DEMSELBEN Emitter-Output mitschreiben — sonst
     # müsste der Scan node+jsdom ein zweites Mal starten. Defensiv gekapselt: fällt es aus,
     # bleibt der Shortlist-Track heil (er ist die ältere, wichtigere Fläche).

@@ -343,3 +343,34 @@ def test_an_ein_spiel_gehaengte_wette_traegt_die_felder():
     assert b["side"] == "Over"
     assert b["sport"] == "Fußball"
 
+
+# ── Halbe AH-Wette wird nicht still mit vollem Einsatz gerechnet (25.08.2026, Befund 04) ─────
+# `except Exception: pass` liess `resultStakeFactor` ungesetzt -> compute_pnl nahm den Default 1.0.
+# Eine Viertel-Linien-Wette wurde damit unsichtbar mit doppeltem Betrag abgerechnet: plausible Zahl
+# in den Resultaten, im Dashboard als P&L, und die Signal-Gewichtung lernt darauf.
+def test_halber_einsatz_halbiert_den_pnl():
+    import resolve_wm_results as R
+    voll = R.compute_pnl({"stake": 10, "polyPrice": 0.5}, "WIN")
+    halb = R.compute_pnl({"stake": 10, "polyPrice": 0.5, "resultStakeFactor": 0.5}, "WIN")
+    assert abs(halb - voll / 2) < 1e-9, "der Faktor muss den Einsatz wirklich halbieren"
+
+
+def test_unsicherer_faktor_wird_markiert():
+    """Laesst sich der Faktor nicht bestimmen, muss die Zeile das TRAGEN — sonst sieht die
+    verdoppelte Abrechnung wie ein normales Ergebnis aus."""
+    bet = {"stake": 10, "polyPrice": 0.5, "resultStakeFactorUnknown": True}
+    # Der P&L wird weiterhin gerechnet (mit vollem Einsatz), aber die Markierung bleibt lesbar.
+    import resolve_wm_results as R
+    assert R.compute_pnl(bet, "WIN") == R.compute_pnl({"stake": 10, "polyPrice": 0.5}, "WIN")
+    assert bet["resultStakeFactorUnknown"] is True
+
+
+def test_quelle_hat_kein_stilles_pass_mehr():
+    from pathlib import Path
+    src = (Path(__file__).parent.parent / "resolve_wm_results.py").read_text(encoding="utf-8")
+    i = src.index("_ah_result")
+    fenster = src[i:i + 1200]
+    assert "except Exception:\n                pass" not in fenster, \
+        "der AH-Faktor darf nicht mehr still verschluckt werden"
+    assert "resultStakeFactorUnknown" in fenster
+

@@ -29,6 +29,7 @@ from datetime import datetime, timezone, date
 from telegram_trades import is_auto_source  # Single Source: auto vs manual (deckt auto_steam)
 
 import cocobet_dataset as D   # 29.06.2026: dataset-aware (MLS-Poly-Dry-Run)
+from safe_write import write_json_atomic   # 25.08.2026: temp+replace statt halber Datei
 
 BASE           = os.path.dirname(os.path.abspath(__file__))
 # Dataset-aware: wm_* | liga_* | mls_* je COCOBET_DATASET. WM unverändert.
@@ -194,8 +195,7 @@ def write_book_health(path: str = None) -> None:
     try:
         from datetime import datetime as _dt, timezone as _tz
         snap = dict(_BOOK_HEALTH, ts=_dt.now(_tz.utc).isoformat())
-        with open(path or BOOK_HEALTH_FILE, "w", encoding="utf-8") as f:
-            json.dump(snap, f, ensure_ascii=False, indent=2)
+        write_json_atomic(path or BOOK_HEALTH_FILE, snap)
     except Exception as e:
         print(f"  ⚠️  write_book_health fehlgeschlagen: {e}")
 
@@ -293,8 +293,7 @@ def load_positions() -> dict:
 
 def save_positions(data: dict):
     data["updatedAt"] = datetime.now(timezone.utc).strftime("%d.%m.%Y %H:%M UTC")
-    with open(POSITIONS_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+    write_json_atomic(POSITIONS_FILE, data)   # 25.08.2026: offene Positionen nie halb schreiben
 
 
 def fetch_current_price(slug: str, market_key: str, match_key: str = "") -> float | None:
@@ -719,8 +718,7 @@ def persist_auto_bet_valuations(positions: list) -> int:
         n += 1
     if n:
         data["updatedAt"] = datetime.now(timezone.utc).isoformat()
-        with open(AUTO_BETS_FILE, "w", encoding="utf-8") as f:
-            json.dump(data, f, ensure_ascii=False, indent=2)
+        write_json_atomic(AUTO_BETS_FILE, data)
     return n
 
 
@@ -750,8 +748,7 @@ def update_auto_bet_status(bet_key: str, new_status: str,
             break
 
     data["updatedAt"] = datetime.now(timezone.utc).isoformat()
-    with open(AUTO_BETS_FILE, "w", encoding="utf-8") as f:
-        json.dump(data, f, ensure_ascii=False, indent=2)
+    write_json_atomic(AUTO_BETS_FILE, data)
 
 
 def main():
@@ -805,11 +802,22 @@ def main():
     try:
         _wm = json.load(open(str(D.data_file()), encoding="utf-8"))
         _ko_map = {}
-        for _g in (_wm.get("groups") or {}).values():
-            for _fx in (_g.get("fixtures") or []):
+        # 25.08.2026 (Audit-Befund 05): NUR `groups` durchsucht — K.-o.-Spiele liegen aber in
+        # `koFixtures` ([[feedback_ko_datapath]], der Klassiker in diesem Projekt). Fuer die fiel
+        # die Normalisierung aus, `matchDate` blieb das reine Datum (00:00 UTC), die Restzeit
+        # wurde negativ, und `time_based_exit` stieg still aus: weder der 2h-Pre-Match-Close noch
+        # der 15%-Stop-Loss feuerten. Genau der QAT-SUI-Fall vom 13.06. (-EUR 5,50).
+        def _sammle(_fixtures):
+            for _fx in (_fixtures or []):
                 _k = _fx.get("kickoff")
                 if _k:
                     _ko_map[f"{_fx.get('home')}-{_fx.get('away')}"] = _k
+
+        for _g in (_wm.get("groups") or {}).values():
+            _sammle(_g.get("fixtures"))
+        _sammle(_wm.get("koFixtures"))
+        for _r in (_wm.get("koRounds") or {}).values():
+            _sammle(_r.get("fixtures") if isinstance(_r, dict) else _r)
         _fixed = 0
         for p in all_positions:
             rk = p.get("kickoff") or _ko_map.get(f"{p.get('home')}-{p.get('away')}")   # _ko_map ist NAMEN-basiert (nicht IDs)
