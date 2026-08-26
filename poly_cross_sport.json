@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-26T19:19:16.866322+00:00",
+ "generatedAt": "2026-08-26T22:30:46.418751+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,44 +9,58 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 505,
- "pinnKeys": 337,
- "matched": 211,
- "footballRows": 177,
- "crossRows": 328,
- "footballSkippedStale": 75,
+ "polyRowsSeen": 506,
+ "pinnKeys": 330,
+ "matched": 206,
+ "footballRows": 174,
+ "crossRows": 332,
+ "footballSkippedStale": 77,
  "seenBySport": {
-  "americanfootball_nfl": 154,
-  "baseball_mlb": 96,
+  "americanfootball_nfl": 156,
+  "baseball_mlb": 98,
   "icehockey_nhl": 52,
   "boxing_boxing": 26,
   "soccer_mls": 45,
-  "soccer_liga": 132
+  "soccer_liga": 129
  },
  "matchedBySport": {
-  "baseball_mlb": 24,
+  "baseball_mlb": 22,
   "boxing_boxing": 10,
   "soccer_mls": 45,
-  "soccer_liga": 132
+  "soccer_liga": 129
  },
  "trackRecord": {
-  "tracked": 223,
+  "tracked": 221,
   "converged": 51
  },
  "discrepancies": [
   {
-   "id": "soccer_liga|realmadrid-realsociedad|hw",
-   "sport": "soccer_liga",
-   "event": "Real Madrid vs Real Sociedad",
-   "market": "1X2",
-   "outcome": "Heim",
-   "polyPP": 70.5,
-   "pinnPP": 81.7,
-   "gapPP": -11.23,
-   "vol": 12097,
+   "id": "baseball_mlb|houstonastros-newyorkyankees|houstonastros",
+   "sport": "baseball_mlb",
+   "event": "Houston Astros vs New York Yankees",
+   "market": "Moneyline",
+   "outcome": "Houston Astros",
+   "polyPP": 47.5,
+   "pinnPP": 40.9,
+   "gapPP": 6.56,
+   "vol": 69477,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -0.2,
+   "firstSeen": "2026-08-25T23:39:22.923923+00:00"
+  },
+  {
+   "id": "baseball_mlb|houstonastros-newyorkyankees|newyorkyankees",
+   "sport": "baseball_mlb",
+   "event": "Houston Astros vs New York Yankees",
+   "market": "Moneyline",
+   "outcome": "New York Yankees",
+   "polyPP": 52.5,
+   "pinnPP": 59.1,
+   "gapPP": -6.56,
+   "vol": 69477,
    "richtung": "Poly zu niedrig → backen",
-   "convergePP": -5.14,
-   "firstSeen": "2026-08-26T13:17:09.578142+00:00"
+   "convergePP": -0.2,
+   "firstSeen": "2026-08-25T23:39:22.923923+00:00"
   }
  ]
 }
