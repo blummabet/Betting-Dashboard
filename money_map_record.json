@@ -1,23 +1,23 @@
 {
-"generatedAt": "2026-08-26T21:56:19.120428+00:00",
+"generatedAt": "2026-08-26T22:11:19.932074+00:00",
 "byVerdict": {
 "konsens": {
-"n": 500,
-"wins": 402,
-"hitRate": 0.804,
-"polyN": 468,
-"polyWins": 365,
-"polyHitRate": 0.7799,
+"n": 502,
+"wins": 404,
+"hitRate": 0.8048,
+"polyN": 470,
+"polyWins": 367,
+"polyHitRate": 0.7809,
 "pinnN": 37,
 "pinnHitRate": 0.7297
 },
 "uneinig": {
-"n": 167,
+"n": 168,
 "wins": 51,
-"hitRate": 0.3054,
-"polyN": 149,
+"hitRate": 0.3036,
+"polyN": 150,
 "polyWins": 49,
-"polyHitRate": 0.3289,
+"polyHitRate": 0.3267,
 "pinnN": 86,
 "pinnHitRate": 0.593
 },
@@ -63,15 +63,15 @@
 "wins": 10,
 "hitRate": 0.5556
 },
+"Spanish La Liga": {
+"n": 18,
+"wins": 11,
+"hitRate": 0.6111
+},
 "Argentinian Primera Division": {
 "n": 17,
 "wins": 8,
 "hitRate": 0.4706
-},
-"Spanish La Liga": {
-"n": 17,
-"wins": 10,
-"hitRate": 0.5882
 },
 "Spanish Segunda Division": {
 "n": 17,
@@ -148,6 +148,11 @@
 "wins": 9,
 "hitRate": 0.8182
 },
+"UEFA Champions League Qualifiers": {
+"n": 11,
+"wins": 7,
+"hitRate": 0.6364
+},
 "Belgian Pro League": {
 "n": 10,
 "wins": 8,
@@ -169,11 +174,6 @@
 "hitRate": 0.8
 },
 "Italian Serie A": {
-"n": 10,
-"wins": 7,
-"hitRate": 0.7
-},
-"UEFA Champions League Qualifiers": {
 "n": 10,
 "wins": 7,
 "hitRate": 0.7
@@ -218,6 +218,11 @@
 "wins": 5,
 "hitRate": 0.625
 },
+"Bolivian Liga de Futbol Profesional": {
+"n": 7,
+"wins": 6,
+"hitRate": 0.8571
+},
 "Colombian Primera A": {
 "n": 7,
 "wins": 3,
@@ -232,11 +237,6 @@
 "n": 7,
 "wins": 7,
 "hitRate": 1.0
-},
-"Bolivian Liga de Futbol Profesional": {
-"n": 6,
-"wins": 5,
-"hitRate": 0.8333
 },
 "Other Competitions Soccer": {
 "n": 6,
@@ -506,25 +506,82 @@
 },
 "byStrength": {
 "strong": {
-"n": 388,
-"wins": 314,
-"hitRate": 0.8093
+"n": 390,
+"wins": 316,
+"hitRate": 0.8103
 },
 "weak": {
-"n": 251,
+"n": 252,
 "wins": 122,
-"hitRate": 0.4861
+"hitRate": 0.4841
 }
 },
 "divergence": {
-"n": 167,
+"n": 168,
 "betfairWins": 51,
-"betfairRate": 0.3054,
-"polyN": 149,
+"betfairRate": 0.3036,
+"polyN": 150,
 "polyWins": 49,
-"polyRate": 0.3289
+"polyRate": 0.3267
 },
 "recent": [
+{
+"matchId": "35780321",
+"home": "Real Madrid",
+"away": "Real Sociedad",
+"league": "Spanish La Liga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Real Madrid",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+1
+],
+"kickoff": "2026-08-26T19:00:00Z",
+"settledAt": "2026-08-26T22:11:19.783100+00:00"
+},
+{
+"matchId": "35961314",
+"home": "NK Celje",
+"away": "Slovan Bratislava",
+"league": "UEFA Champions League Qualifiers",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-08-26T19:00:00Z",
+"settledAt": "2026-08-26T22:11:19.783100+00:00"
+},
+{
+"matchId": "35979523",
+"home": "San Antonio Bulo Bulo",
+"away": "The Strongest",
+"league": "Bolivian Liga de Futbol Profesional",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "The Strongest",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+3
+],
+"kickoff": "2026-08-26T19:00:00Z",
+"settledAt": "2026-08-26T22:11:19.783100+00:00"
+},
 {
 "matchId": "35928162",
 "home": "Bradford",
@@ -1227,69 +1284,12 @@
 ],
 "kickoff": "2026-08-25T18:45:00Z",
 "settledAt": "2026-08-25T20:44:08.291204+00:00"
-},
-{
-"matchId": "35928178",
-"home": "Southampton",
-"away": "West Ham",
-"league": "English Football League Cup",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Southampton",
-"polySide": "away",
-"winner": "away",
-"moneyWin": false,
-"polyWin": true,
-"ftScore": [
-1,
-4
-],
-"kickoff": "2026-08-25T18:45:00Z",
-"settledAt": "2026-08-25T20:38:44.778056+00:00"
-},
-{
-"matchId": "35928144",
-"home": "Sheff Wed",
-"away": "Wolves",
-"league": "English Football League Cup",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Wolves",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-2
-],
-"kickoff": "2026-08-25T18:45:00Z",
-"settledAt": "2026-08-25T20:38:44.778056+00:00"
-},
-{
-"matchId": "35927582",
-"home": "Barnsley",
-"away": "Crewe",
-"league": "English Football League Cup",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Barnsley",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-2
-],
-"kickoff": "2026-08-25T18:45:00Z",
-"settledAt": "2026-08-25T20:38:44.778056+00:00"
 }
 ],
 "global": {
-"n": 672,
-"wins": 454,
+"n": 675,
+"wins": 456,
 "hitRate": 0.6756
 },
-"pending": 12
+"pending": 9
 }
