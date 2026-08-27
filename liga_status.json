@@ -10,6 +10,17 @@
       "note": "Ein leeres Ergebnis kann 'nichts zu bemaengeln' ODER 'Datei kaputt' heissen. Solange dieser Guard rot ist, sind die gruenen Haken der anderen wertlos."
     },
     {
+      "id": "picks_resolved",
+      "label": "Picks aufgelöst",
+      "severity": "error",
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "314 gespielte Matches älter als 3 Tage sind unaufgelöst (ältestes 2026-05-10) — resolve_picks.py läuft nicht durch"
+      ],
+      "note": "Ein Rückstand von ein paar Spielen ist normal. Dreistellig heißt: der Resolver stirbt still, und alles was auf Ergebnissen aufbaut lernt nichts mehr."
+    },
+    {
       "id": "learning_loop_alive",
       "label": "Lern-Loop lernt (Ledger + CLV bei Resolves)",
       "severity": "warn",
@@ -181,7 +192,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "80/80 mit AH · 80/80 mit Public-O/U."
+      "note": "79/79 mit AH · 79/79 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -338,25 +349,26 @@
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
       "ok": false,
-      "nFail": 17,
+      "nFail": 18,
       "failures": [
         "35-45 Unter 2.5 Tore @1.96: sichere Linie Unter 3.5 Tore @1.37 verfügbar (≥1.35), nicht abgeleitet",
         "47-34 Unter 2.5 Tore @2.15: sichere Linie Unter 3.5 Tore @1.49 verfügbar (≥1.35), nicht abgeleitet",
-        "47-34 Heimsieg @2.05: sichere Linie Doppelte Chance — 1X @1.413 verfügbar (≥1.35), nicht abgeleitet",
+        "47-34 Heimsieg @2.05: sichere Linie Doppelte Chance — 1X @1.441 verfügbar (≥1.35), nicht abgeleitet",
         "49-51 Unter 2.5 Tore @2.14: sichere Linie Unter 3.5 Tore @1.47 verfügbar (≥1.35), nicht abgeleitet",
-        "63-55 Unter 2.5 Tore @1.92: sichere Linie Unter 3.5 Tore @1.37 verfügbar (≥1.35), nicht abgeleitet",
-        "63-55 Heimsieg @2.75: sichere Linie Doppelte Chance — 1X @1.49 verfügbar (≥1.35), nicht abgeleitet",
+        "63-55 Unter 2.5 Tore @1.92: sichere Linie Unter 3.5 Tore @1.38 verfügbar (≥1.35), nicht abgeleitet",
+        "63-55 Heimsieg @2.75: sichere Linie Doppelte Chance — 1X @1.493 verfügbar (≥1.35), nicht abgeleitet",
         "1579-494 Über 2.5 Tore @2.25: sichere Linie Über 1.5 Tore @1.41 verfügbar (≥1.35), nicht abgeleitet",
+        "487-495 Über 2.5 Tore @2.33: sichere Linie Über 1.5 Tore @1.44 verfügbar (≥1.35), nicht abgeleitet",
         "489-517 Unter 2.5 Tore @1.93: sichere Linie Unter 3.5 Tore @1.39 verfügbar (≥1.35), nicht abgeleitet",
-        "544-532 Über 2.5 Tore @2.3: sichere Linie Über 1.5 Tore @1.46 verfügbar (≥1.35), nicht abgeleitet",
+        "544-532 Über 2.5 Tore @2.3: sichere Linie Über 1.5 Tore @1.45 verfügbar (≥1.35), nicht abgeleitet",
         "160-162 Unter 2.5 Tore @2.05: sichere Linie Unter 3.5 Tore @1.43 verfügbar (≥1.35), nicht abgeleitet",
-        "160-162 Auswärtssieg @3.5: sichere Linie Doppelte Chance — X2 @1.86 verfügbar (≥1.35), nicht abgeleitet",
-        "164-185 Auswärtssieg @4.85: sichere Linie Doppelte Chance — X2 @2.269 verfügbar (≥1.35), nicht abgeleitet",
-        "1660-168 Heimsieg @5.45: sichere Linie Doppelte Chance — 1X @2.377 verfügbar (≥1.35), nicht abgeleitet",
-        "170-174 Unter 2.5 Tore @2.23: sichere Linie Unter 3.5 Tore @1.46 verfügbar (≥1.35), nicht abgeleitet",
+        "160-162 Auswärtssieg @3.5: sichere Linie Doppelte Chance — X2 @1.899 verfügbar (≥1.35), nicht abgeleitet",
+        "164-185 Auswärtssieg @4.85: sichere Linie Doppelte Chance — X2 @2.275 verfügbar (≥1.35), nicht abgeleitet",
+        "1660-168 Heimsieg @5.45: sichere Linie Doppelte Chance — 1X @2.365 verfügbar (≥1.35), nicht abgeleitet",
+        "170-174 Unter 2.5 Tore @2.23: sichere Linie Unter 3.5 Tore @1.47 verfügbar (≥1.35), nicht abgeleitet",
         "173-163 Auswärtssieg @5.6: sichere Linie Doppelte Chance — X2 @2.444 verfügbar (≥1.35), nicht abgeleitet",
-        "182-169 Heimsieg @2.42: sichere Linie Doppelte Chance — 1X @1.51 verfügbar (≥1.35), nicht abgeleitet",
-        "192-167 Heimsieg @2.89: sichere Linie Doppelte Chance — 1X @1.655 verfügbar (≥1.35), nicht abgeleitet"
+        "182-169 Heimsieg @2.42: sichere Linie Doppelte Chance — 1X @1.542 verfügbar (≥1.35), nicht abgeleitet",
+        "192-167 Heimsieg @2.89: sichere Linie Doppelte Chance — 1X @1.657 verfügbar (≥1.35), nicht abgeleitet"
       ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
@@ -436,11 +448,9 @@
       "id": "soft_opening_captured",
       "label": "Soft-Eröffnung echt erfasst",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "727-546: Soft bewegte sich 2.05→2.1, aber Opening==Jetzt (2.1) — nicht eingefroren"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
     },
     {
@@ -544,5 +554,5 @@
     }
   ],
   "nFail": 4,
-  "generatedAt": "2026-08-26T19:41:59.886675+00:00"
+  "generatedAt": "2026-08-27T14:43:57.411469+00:00"
 }
