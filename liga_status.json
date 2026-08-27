@@ -16,7 +16,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "314 gespielte Matches älter als 3 Tage sind unaufgelöst (ältestes 2026-05-10) — resolve_picks.py läuft nicht durch"
+        "47 gespielte Matches älter als 3 Tage sind unaufgelöst (ältestes 2026-08-15) — resolve_picks.py läuft nicht durch"
       ],
       "note": "Ein Rückstand von ein paar Spielen ist normal. Dreistellig heißt: der Resolver stirbt still, und alles was auf Ergebnissen aufbaut lernt nichts mehr."
     },
@@ -97,8 +97,9 @@
       "label": "Pinnacle-1X2 vollständig + plausibel",
       "severity": "warn",
       "ok": false,
-      "nFail": 2,
+      "nFail": 3,
       "failures": [
+        "80-108: 1X2 unvollständig hw=None dr=None aw=None",
         "548-538: 1X2 unvollständig hw=None dr=None aw=None",
         "96-79: 1X2 unvollständig hw=None dr=None aw=None"
       ],
@@ -261,9 +262,12 @@
       "id": "lineup_present",
       "label": "Aufstellung da vor Anpfiff (T-90min)",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 2,
+      "failures": [
+        "538-727: Anpfiff in 50min, KEINE Aufstellung",
+        "529-531: Anpfiff in 80min, KEINE Aufstellung"
+      ],
       "note": "lineup_signal braucht die Startelf. War leer wegen Namens-Match + Wien-Zeit-Bug."
     },
     {
@@ -271,11 +275,12 @@
       "label": "Public-Konsens (Soft-Books) vorhanden",
       "severity": "warn",
       "ok": false,
-      "nFail": 5,
+      "nFail": 6,
       "failures": [
         "531-536: kein public_hw",
         "65-63: kein public_hw",
         "116-108: kein public_hw",
+        "80-108: kein public_hw",
         "548-538: kein public_hw",
         "96-79: kein public_hw"
       ],
@@ -349,7 +354,7 @@
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
       "ok": false,
-      "nFail": 18,
+      "nFail": 19,
       "failures": [
         "35-45 Unter 2.5 Tore @1.96: sichere Linie Unter 3.5 Tore @1.37 verfügbar (≥1.35), nicht abgeleitet",
         "47-34 Unter 2.5 Tore @2.15: sichere Linie Unter 3.5 Tore @1.49 verfügbar (≥1.35), nicht abgeleitet",
@@ -360,10 +365,11 @@
         "1579-494 Über 2.5 Tore @2.25: sichere Linie Über 1.5 Tore @1.41 verfügbar (≥1.35), nicht abgeleitet",
         "487-495 Über 2.5 Tore @2.33: sichere Linie Über 1.5 Tore @1.44 verfügbar (≥1.35), nicht abgeleitet",
         "489-517 Unter 2.5 Tore @1.93: sichere Linie Unter 3.5 Tore @1.39 verfügbar (≥1.35), nicht abgeleitet",
+        "539-543 Auswärtssieg @2.19: sichere Linie Doppelte Chance — X2 @1.352 verfügbar (≥1.35), nicht abgeleitet",
         "544-532 Über 2.5 Tore @2.3: sichere Linie Über 1.5 Tore @1.45 verfügbar (≥1.35), nicht abgeleitet",
         "160-162 Unter 2.5 Tore @2.05: sichere Linie Unter 3.5 Tore @1.43 verfügbar (≥1.35), nicht abgeleitet",
-        "160-162 Auswärtssieg @3.5: sichere Linie Doppelte Chance — X2 @1.899 verfügbar (≥1.35), nicht abgeleitet",
-        "164-185 Auswärtssieg @4.85: sichere Linie Doppelte Chance — X2 @2.275 verfügbar (≥1.35), nicht abgeleitet",
+        "160-162 Auswärtssieg @3.5: sichere Linie Doppelte Chance — X2 @1.887 verfügbar (≥1.35), nicht abgeleitet",
+        "164-185 Auswärtssieg @4.85: sichere Linie Doppelte Chance — X2 @2.269 verfügbar (≥1.35), nicht abgeleitet",
         "1660-168 Heimsieg @5.45: sichere Linie Doppelte Chance — 1X @2.365 verfügbar (≥1.35), nicht abgeleitet",
         "170-174 Unter 2.5 Tore @2.23: sichere Linie Unter 3.5 Tore @1.47 verfügbar (≥1.35), nicht abgeleitet",
         "173-163 Auswärtssieg @5.6: sichere Linie Doppelte Chance — X2 @2.444 verfügbar (≥1.35), nicht abgeleitet",
@@ -553,6 +559,6 @@
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 4,
-  "generatedAt": "2026-08-27T14:43:57.411469+00:00"
+  "nFail": 5,
+  "generatedAt": "2026-08-27T17:39:52.067547+00:00"
 }
