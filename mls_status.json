@@ -10,6 +10,17 @@
       "note": "Ein leeres Ergebnis kann 'nichts zu bemaengeln' ODER 'Datei kaputt' heissen. Solange dieser Guard rot ist, sind die gruenen Haken der anderen wertlos."
     },
     {
+      "id": "picks_resolved",
+      "label": "Picks aufgelöst",
+      "severity": "error",
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "47 gespielte Matches älter als 3 Tage sind unaufgelöst (ältestes 2026-08-15) — resolve_picks.py läuft nicht durch"
+      ],
+      "note": "Ein Rückstand von ein paar Spielen ist normal. Dreistellig heißt: der Resolver stirbt still, und alles was auf Ergebnissen aufbaut lernt nichts mehr."
+    },
+    {
       "id": "poly_surfaces_alive",
       "label": "Poly-Flächen liefern (kein stiller Tod)",
       "severity": "warn",
@@ -530,6 +541,6 @@
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-08-26T21:50:56.800447+00:00"
+  "nFail": 4,
+  "generatedAt": "2026-08-27T18:28:29.194738+00:00"
 }
