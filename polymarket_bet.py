@@ -201,6 +201,18 @@ def find_token_by_outcome_name(event: dict, side: str) -> str | None:
     return None
 
 
+def _iso_day(raw):
+    """TT.MM.JJJJ (oder schon ISO) → JJJJ-MM-TT. None, wenn nicht deutbar."""
+    from datetime import datetime as _d
+    raw = str(raw or "")
+    for fmt in ("%d.%m.%Y", "%Y-%m-%d"):
+        try:
+            return _d.strptime(raw[:10], fmt).date().isoformat()
+        except ValueError:
+            continue
+    return None
+
+
 def find_clob_token_id(event: dict, market_label: str, home: str, away: str) -> str | None:
     """
     Find the CLOB token ID for the specific outcome in an event's markets.
@@ -988,6 +1000,9 @@ def log_bet_to_history(history: list, order: dict, result: dict) -> None:
     history.append({
         "id":      f"poly-{today}-{home}-{away}-{market}".replace(" ", "_"),
         "date":    today,
+        # 27.08.2026: OHNE dieses Feld starb resolve_picks.py am harten Zugriff auf
+        # e["dateIso"] — zwei solche Zeilen haben die Auflösung zwei Monate lahmgelegt.
+        "dateIso": _iso_day(today),
         "home":    home,
         "away":    away,
         "league":  order.get("league", ""),

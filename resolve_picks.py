@@ -285,6 +285,36 @@ def evaluate_pick(market_key: str, home_goals: int, away_goals: int,
     return "void"
 
 
+def entry_date(entry):
+    """Spieltag eines Eintrags als date, oder None. WIRFT NIE.
+
+    27.08.2026 (Lucas: „Real Madrid war noch nicht ausgewertet"): der Pending-Filter griff hart
+    auf `e["dateIso"]` zu. Zwei Poly-Direktwetten (Frankreich-Irak 19.06., ein Tennis-Play vom
+    25.08.) hatten den Schlüssel gar nicht → KeyError → das Skript starb, BEVOR es irgendetwas
+    auflöste. Im Workflow steht `continue-on-error: true`, also lief der Job grün weiter und
+    committete die anderen Dateien. Ergebnis: seit dem 31.05. wurde KEIN Pick mehr aufgelöst,
+    315 Einträge lagen still da, und niemand sah es.
+
+    Ein einzelner kaputter Datensatz darf den ganzen Lauf nicht kippen. Fallback auf das
+    deutsche `date` (TT.MM.JJJJ), sonst None → Eintrag wird übersprungen und GEZÄHLT.
+    """
+    if not isinstance(entry, dict):
+        return None
+    iso = entry.get("dateIso")
+    if iso:
+        try:
+            return datetime.date.fromisoformat(str(iso)[:10])
+        except (TypeError, ValueError):
+            pass
+    raw = str(entry.get("date") or "")
+    for fmt in ("%d.%m.%Y", "%Y-%m-%d"):
+        try:
+            return datetime.datetime.strptime(raw, fmt).date()
+        except ValueError:
+            continue
+    return None
+
+
 # ── Main ──────────────────────────────────────────────────────────────────────
 
 def main():
@@ -304,7 +334,7 @@ def main():
     for e in history:
         if e.get("resolved"):
             continue
-        if e.get("finalScore") and e.get("picks") and all(p.get("result") for p in e["picks"]):
+        if e.get("finalScore") and e.get("picks") and all(p.get("result") for p in (e.get("picks") or [])):
             e["resolved"] = True
             auto_resolved += 1
     if auto_resolved:
@@ -314,12 +344,23 @@ def main():
     id_index, name_index = build_cache_index(CACHE_FILE)
 
     # Only process unresolved entries for past matches
-    pending = [
-        e for e in history
-        if not e.get("resolved")
-        and datetime.date.fromisoformat(e["dateIso"]) < today
-    ]
+    pending, undatiert = [], []
+    for e in history:
+        if not isinstance(e, dict) or e.get("resolved"):
+            continue
+        d = entry_date(e)
+        if d is None:
+            undatiert.append(e)
+            continue
+        if d < today:
+            pending.append(e)
     print(f"  Pending entries: {len(pending)}")
+    if undatiert:
+        # Laut sein, nicht still überspringen: genau diese Einträge haben den Lauf zwei
+        # Monate lang zum Absturz gebracht, ohne dass irgendwo etwas rot wurde.
+        print(f"  \u26a0\ufe0f  {len(undatiert)} Einträge ohne brauchbares Datum \u2014 "
+              f"übersprungen (Produzent prüfen): "
+              + ", ".join(str(e.get("id"))[:48] for e in undatiert[:3]))
 
     resolved_count  = 0
     cache_hits      = 0
@@ -329,9 +370,9 @@ def main():
     for entry in pending:
         event_id = entry.get("eventId")
         flag     = entry.get("leagueFlag", "")
-        home     = entry["home"]
-        away     = entry["away"]
-        date_iso = entry["dateIso"]
+        home     = entry.get("home") or "?"
+        away     = entry.get("away") or "?"
+        date_iso = entry.get("dateIso") or str(entry_date(entry) or "")
 
         # ── Primary: results-cache.json (ID + name fallback) ─────────────────
         result, match_method = lookup_cache(event_id, date_iso, home, away,
@@ -359,7 +400,10 @@ def main():
         status = result["status"]
 
         if status in ("postponed", "cancelled"):
-            for p in entry["picks"]:
+            # 27.08.2026: Poly-Direktwetten stehen als eigenständige Zeile mit `polyBets`
+            # statt `picks` in derselben Datei. Harter Zugriff wäre der nächste Absturz an
+            # genau derselben Stelle gewesen — eine Zeile ohne Card-Picks ist kein Fehler.
+            for p in (entry.get("picks") or []):
                 p["result"] = "void"
             entry["finalScore"] = status.upper()
             entry["resolved"]   = True
@@ -404,7 +448,7 @@ def main():
         }
         closing = entry.get("odds_closing") or entry.get("odds_bet") or {}
 
-        for p in entry["picks"]:
+        for p in (entry.get("picks") or []):
             outcome = evaluate_pick(p["marketKey"], hg, ag, result)
             p["result"] = outcome
             if outcome == "win":    wins += 1
@@ -437,9 +481,9 @@ def main():
         json.dump(history, f, ensure_ascii=False, indent=2)
 
     total       = len(history)
-    total_picks = sum(len(e["picks"]) for e in history)
-    won_picks   = sum(1 for e in history for p in e["picks"] if p.get("result") == "win")
-    lost_picks  = sum(1 for e in history for p in e["picks"] if p.get("result") == "loss")
+    total_picks = sum(len(e.get("picks") or []) for e in history)
+    won_picks   = sum(1 for e in history for p in (e.get("picks") or []) if p.get("result") == "win")
+    lost_picks  = sum(1 for e in history for p in (e.get("picks") or []) if p.get("result") == "loss")
     wr = round(won_picks / (won_picks + lost_picks) * 100, 1) if (won_picks + lost_picks) > 0 else None
 
     print(f"\n✅  Resolved {resolved_count} matches  "

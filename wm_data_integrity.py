@@ -177,6 +177,60 @@ def check_inputs_readable(ctx):
                 "Solange dieser Guard rot ist, sind die gruenen Haken der anderen wertlos.")
 
 
+RESOLVE_STALE_DAYS = 3     # so lange darf ein gespieltes Match unaufgelöst bleiben
+RESOLVE_MAX_OPEN   = 25    # darüber ist es kein Rückstand mehr, sondern ein Ausfall
+
+
+def _picks_history_open(history, today=None):
+    """(offene Alt-Einträge, aeltester Tag). REIN — wirft nie, auch bei Müll-Zeilen."""
+    import datetime as _dt
+    today = today or _dt.date.today()
+    offen, aeltester = 0, None
+    for e in (history or []):
+        if not isinstance(e, dict) or e.get("resolved"):
+            continue
+        raw = str(e.get("dateIso") or "")[:10]
+        d = None
+        for fmt in ("%Y-%m-%d", "%d.%m.%Y"):
+            try:
+                d = _dt.datetime.strptime(raw or str(e.get("date") or "")[:10], fmt).date()
+                break
+            except ValueError:
+                continue
+        if d is None or (today - d).days < RESOLVE_STALE_DAYS:
+            continue
+        offen += 1
+        if aeltester is None or d < aeltester:
+            aeltester = d
+    return offen, aeltester
+
+
+@integrity_check
+def check_picks_resolved(ctx):
+    """27.08.2026 (Lucas: „Real Madrid war noch nicht ausgewertet"): resolve_picks.py starb an
+    einem KeyError, weil ZWEI Poly-Direktwetten kein `dateIso` hatten. Der Workflow-Schritt
+    steht auf `continue-on-error: true` — der Job lief grün weiter, committete die anderen
+    Dateien, und seit dem 31.05. wurde KEIN Pick mehr aufgelöst. 315 Einträge, zwei Monate,
+    kein einziges rotes Licht.
+
+    Ohne Auflösung hungert der Lern-Loop, die Trefferquoten frieren ein und die Recaps sind
+    leer — alles Symptome, die man einzeln für sich erklaert. Dieser Guard nennt die Ursache.
+    """
+    hist = _lazy("picks_history.json")
+    if not isinstance(hist, list):
+        return _chk("picks_resolved", "Picks aufgelöst", "warn", [],
+                    "picks_history.json ist keine Liste — nichts zu prüfen.")
+    offen, aeltester = _picks_history_open(hist)
+    fails = []
+    if offen > RESOLVE_MAX_OPEN:
+        fails.append("%d gespielte Matches älter als %d Tage sind unaufgelöst (ältestes %s) "
+                     "— resolve_picks.py läuft nicht durch"
+                     % (offen, RESOLVE_STALE_DAYS, aeltester))
+    return _chk("picks_resolved", "Picks aufgelöst", "error", fails,
+                "Ein Rückstand von ein paar Spielen ist normal. Dreistellig heißt: der "
+                "Resolver stirbt still, und alles was auf Ergebnissen aufbaut lernt nichts mehr.")
+
+
 @integrity_check
 def check_poly_surfaces_alive(ctx):
     """20.07.2026 — die globalen Poly-Tracking-Flächen (Cross-Sport-Radar, E-Sport, Poly-Geld breit)
