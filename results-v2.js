@@ -20,6 +20,48 @@ const V2_RESULTS_URLS = [
   'https://blummabet.github.io/Betting-Dashboard/results-cache.json',
 ];
 
+// ── Statistik-Umfang (27.08.2026, Lucas) ─────────────────────────────────────
+// picks_history.json schleppt 20 Ligen aus dem alten breiten Card-System mit (Ungarn, Polen,
+// Kroatien, Schottland, Oesterreich, Schweiz, Tuerkei …) plus die komplette alte Saison bis
+// Mai. Lucas: „die will ich auf keinen Fall drauf haben, das haut uns die Statistik zusammen".
+// Gezaehlt wird nur, was wir heute bespielen: Top-5 ab Saisonstart, plus MLS.
+//
+// Die Liste steht in stats_scope.json, NICHT hier — dieselbe Datei liest der Python-Guard.
+// Zwei getippte Listen driften auseinander, sobald eine angefasst wird.
+const V2_SCOPE_URLS = [
+  'http://localhost:3001/stats_scope',
+  'stats_scope.json',
+  'https://blummabet.github.io/Betting-Dashboard/stats_scope.json',
+];
+let _v2Scope = null;          // {code: {name, seasonStart}} — null = noch nicht geladen
+
+async function _v2LoadScope() {
+  if (_v2Scope) return _v2Scope;
+  for (const u of V2_SCOPE_URLS) {
+    try {
+      const r = await fetch(u, { cache: 'no-store' });
+      if (!r.ok) continue;
+      const d = await r.json();
+      if (d && typeof d.leagues === 'object' && Object.keys(d.leagues).length) {
+        _v2Scope = d.leagues;
+        return _v2Scope;
+      }
+    } catch (e) { /* naechste Quelle */ }
+  }
+  return null;               // bewusst null, NICHT {} — der Aufrufer muss den Unterschied sehen
+}
+
+// Zaehlt dieser Eintrag in die Bilanz? Unbekannte Liga = NEIN (fail-closed): eine neu
+// dazukommende Liga verschmutzt die Zahlen nicht, bis jemand sie bewusst eintraegt.
+function _v2InScope(league, dateIso, scope) {
+  const sc = scope || _v2Scope;
+  if (!sc) return false;
+  const e = sc[String(league || '').trim()];
+  if (!e || !e.seasonStart) return false;
+  const d = String(dateIso || '').slice(0, 10);
+  return d.length === 10 && d >= e.seasonStart;
+}
+
 // Markets where we need corners data
 const CORNERS_MARKETS = /Ecken/i;
 // Markets where we need cards data
@@ -380,6 +422,7 @@ function importLegacyPicks() {
 
       for (const e of legacy) {
         if (BAD_LEAGUES.has(e.league)) continue;
+        if (!_v2InScope(e.league, e.dateIso || _toIso(e.date || ''))) continue;
         const picks = (e.picks || []).filter(p => p.conf !== 'low');
         if (!picks.length) continue;
 
@@ -432,6 +475,10 @@ function initResultsV2() {
   const panel = document.getElementById('trackingV2Panel');
   if (!panel) return;
 
+  // Statistik-Umfang zuerst holen — ohne ihn wird bewusst NICHTS gezaehlt (siehe _v2InScope).
+  // Nachladen + einmal neu rendern, damit der erste Aufbau nicht auf das Netz warten muss.
+  if (!_v2Scope) _v2LoadScope().then(sc => { if (sc) _renderV2Tab(); });
+
   // Free up localStorage quota before saving (prevents QuotaExceededError)
   if (typeof _trimLocalStorageQuota === 'function') _trimLocalStorageQuota();
 
@@ -481,7 +528,8 @@ function _renderV2Tab() {
 
   // ── 1. Past matches from localStorage ────────────────────────────────────
   const stored  = _v2Load();
-  let pastAll = stored.filter(e => e.dateIso < todayIso && e.dateIso >= TRACKING_START && e.matchScore > 0);
+  let pastAll = stored.filter(e => e.dateIso < todayIso && e.dateIso >= TRACKING_START
+                                  && e.matchScore > 0 && _v2InScope(e.league, e.dateIso));
 
   // ── Fallback: picks_history.json → fill gaps in localStorage ─────────────
   // If localStorage was trimmed (data loss), recover from picks_history.json
@@ -490,6 +538,7 @@ function _renderV2Tab() {
     const storedPairDates = new Set(pastAll.map(e => `${e.dateIso}|${e.home}|${e.away}`));
     for (const e of window._resultsData) {
       if (!e.dateIso || e.dateIso >= todayIso || e.dateIso < TRACKING_START) continue;
+      if (!_v2InScope(e.league, e.dateIso)) continue;   // alte Breiten-Ligen zaehlen nicht mit
       if (storedPairDates.has(`${e.dateIso}|${e.home}|${e.away}`)) continue;
       if (!e.picks || !e.picks.length) continue;
       // Convert picks_history format to V2 format
@@ -591,9 +640,21 @@ function _renderV2Tab() {
   let all;
   if (!bufToday.length && !pastAll.length && !resolvedNotInBuf.length && stored.length) {
     // Buffer not populated yet — show stored as interim (filtered for quality)
-    all = stored.filter(e => e.matchScore > 0);
+    all = stored.filter(e => e.matchScore > 0 && _v2InScope(e.league, e.dateIso));
   } else {
     all = [...pastAll, ...bufToday, ...resolvedNotInBuf];
+  }
+
+  // 27.08.2026: Ohne geladenen Umfang zaehlt nichts. Das ist Absicht (eine Bilanz, die
+  // stillschweigend 20 Ligen mitrechnet, ist schlimmer als eine sichtbar leere) — aber es muss
+  // DRANSTEHEN, sonst sieht ein Netz-Aussetzer aus wie „keine Picks".
+  const _v2ScopeMissing = !_v2Scope;
+  if (_v2ScopeMissing) {
+    panel.innerHTML = '<div style="padding:26px;text-align:center;color:#8b96a5;font-size:13px">'
+      + 'Statistik-Umfang (<code>stats_scope.json</code>) nicht geladen — es wird nichts gez\u00e4hlt, '
+      + 'damit hier keine falschen Zahlen stehen.<br>Seite neu laden; bleibt es so, fehlt die Datei im Deploy.'
+      + '</div>';
+    return;
   }
 
   const filtered = _applyFilters(all);

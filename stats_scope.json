@@ -1,0 +1,13 @@
+{
+  "_note": "Was zaehlt in die Card-Statistik? 27.08.2026 (Lucas: 'die Spiele aus den kleinen Ligen im alten System will ich auf keinen Fall drauf haben, das haut uns die Statistik zusammen' + 'die Top-5 erst in der neuen Saison'). EINE Definition fuer Guard (Python) und Anzeige (results-v2.js) - zwei Listen driften auseinander, sobald eine angefasst wird.",
+  "_regel": "Ein Eintrag zaehlt, wenn seine Liga hier steht UND sein Datum >= dem Saisonstart dieser Liga ist. Unbekannte Liga = zaehlt NICHT (fail-closed): eine neu dazukommende Liga verschmutzt die Bilanz nicht, bis jemand sie bewusst eintraegt.",
+  "leagues": {
+    "ENG": { "name": "Premier League",  "seasonStart": "2026-08-14" },
+    "ESP": { "name": "La Liga",         "seasonStart": "2026-08-14" },
+    "GER": { "name": "Bundesliga",      "seasonStart": "2026-08-14" },
+    "ITA": { "name": "Serie A",         "seasonStart": "2026-08-14" },
+    "FRA": { "name": "Ligue 1",         "seasonStart": "2026-08-14" },
+    "MLS": { "name": "Major League Soccer", "seasonStart": "2026-02-01" }
+  },
+  "updatedAt": "2026-08-27"
+}

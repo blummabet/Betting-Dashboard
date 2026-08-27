@@ -72,25 +72,27 @@ class TestGuard:
     def test_grosser_rueckstand_wird_rot(self):
         import wm_data_integrity as W
         heute = datetime.date(2026, 8, 27)
-        hist = [{"dateIso": "2026-08-01", "resolved": False} for _ in range(30)]
+        # 27.08.2026: der Guard zählt nur noch, was auch in die Bilanz zählt
+        # (stats_scope.json) — deshalb hier Top-5 mit Datum in der neuen Saison.
+        hist = [{"league": "ESP", "dateIso": "2026-08-16", "resolved": False} for _ in range(30)]
         offen, aeltester = W._picks_history_open(hist, heute)
-        assert offen == 30 and aeltester == datetime.date(2026, 8, 1)
+        assert offen == 30 and aeltester == datetime.date(2026, 8, 16)
         assert offen > W.RESOLVE_MAX_OPEN
 
-    def test_frisch_gespielt_zaehlt_nicht(self):
+    def test_frisch_gespielt_zählt_nicht(self):
         """Ein Spiel von gestern ist noch kein Rückstand — sonst ist der Guard nur Lärm."""
         import wm_data_integrity as W
-        hist = [{"dateIso": "2026-08-26", "resolved": False}]
+        hist = [{"league": "ESP", "dateIso": "2026-08-26", "resolved": False}]
         assert W._picks_history_open(hist, datetime.date(2026, 8, 27))[0] == 0
 
     def test_aufgeloeste_zaehlen_nicht(self):
         import wm_data_integrity as W
-        hist = [{"dateIso": "2026-06-01", "resolved": True} for _ in range(50)]
+        hist = [{"league": "ESP", "dateIso": "2026-08-20", "resolved": True} for _ in range(50)]
         assert W._picks_history_open(hist, datetime.date(2026, 8, 27))[0] == 0
 
     def test_muell_wirft_nicht(self):
         import wm_data_integrity as W
-        assert W._picks_history_open([None, "x", 5, {}, {"dateIso": "kaputt"}],
+        assert W._picks_history_open([None, "x", 5, {}, {"league": "ESP", "dateIso": "kaputt"}],
                                      datetime.date(2026, 8, 27)) == (0, None)
 
     def test_guard_ist_registriert(self):
