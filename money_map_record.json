@@ -1,23 +1,23 @@
 {
-"generatedAt": "2026-08-27T18:43:32.636352+00:00",
+"generatedAt": "2026-08-27T18:58:33.948442+00:00",
 "byVerdict": {
 "konsens": {
-"n": 510,
-"wins": 412,
-"hitRate": 0.8078,
-"polyN": 478,
-"polyWins": 375,
-"polyHitRate": 0.7845,
+"n": 511,
+"wins": 413,
+"hitRate": 0.8082,
+"polyN": 479,
+"polyWins": 376,
+"polyHitRate": 0.785,
 "pinnN": 37,
 "pinnHitRate": 0.7297
 },
 "uneinig": {
-"n": 172,
-"wins": 52,
-"hitRate": 0.3023,
-"polyN": 154,
+"n": 174,
+"wins": 53,
+"hitRate": 0.3046,
+"polyN": 156,
 "polyWins": 49,
-"polyHitRate": 0.3182,
+"polyHitRate": 0.3141,
 "pinnN": 87,
 "pinnHitRate": 0.5862
 },
@@ -33,15 +33,15 @@
 }
 },
 "byLeague": {
+"UEFA Europa Conference Qualifiers": {
+"n": 39,
+"wins": 20,
+"hitRate": 0.5128
+},
 "US MLS": {
 "n": 39,
 "wins": 22,
 "hitRate": 0.5641
-},
-"UEFA Europa Conference Qualifiers": {
-"n": 37,
-"wins": 19,
-"hitRate": 0.5135
 },
 "English Sky Bet Championship": {
 "n": 21,
@@ -94,9 +94,9 @@
 "hitRate": 0.6875
 },
 "UEFA Europa League Qualifiers": {
-"n": 15,
-"wins": 11,
-"hitRate": 0.7333
+"n": 16,
+"wins": 12,
+"hitRate": 0.75
 },
 "CONMEBOL Copa Libertadores": {
 "n": 14,
@@ -516,20 +516,77 @@
 "hitRate": 0.8095
 },
 "weak": {
-"n": 255,
-"wins": 124,
-"hitRate": 0.4863
+"n": 258,
+"wins": 126,
+"hitRate": 0.4884
 }
 },
 "divergence": {
-"n": 172,
-"betfairWins": 52,
-"betfairRate": 0.3023,
-"polyN": 154,
+"n": 174,
+"betfairWins": 53,
+"betfairRate": 0.3046,
+"polyN": 156,
 "polyWins": 49,
-"polyRate": 0.3182
+"polyRate": 0.3141
 },
 "recent": [
+{
+"matchId": "35978662",
+"home": "Brann",
+"away": "PAOK",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Brann",
+"polySide": "away",
+"winner": "home",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+3,
+2
+],
+"kickoff": "2026-08-27T17:00:00Z",
+"settledAt": "2026-08-27T18:58:33.771635+00:00"
+},
+{
+"matchId": "35971285",
+"home": "Rakow Czestochowa",
+"away": "Hajduk Split",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Rakow Czestochowa",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-08-27T17:00:00Z",
+"settledAt": "2026-08-27T18:58:33.771635+00:00"
+},
+{
+"matchId": "35964559",
+"home": "Plzen",
+"away": "Crvena Zvezda",
+"league": "UEFA Europa League Qualifiers",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Plzen",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+1
+],
+"kickoff": "2026-08-27T17:00:00Z",
+"settledAt": "2026-08-27T18:58:33.771635+00:00"
+},
 {
 "matchId": "35969017",
 "home": "Freiburg",
@@ -1232,69 +1289,12 @@
 ],
 "kickoff": "2026-08-25T22:00:00Z",
 "settledAt": "2026-08-26T01:09:01.544195+00:00"
-},
-{
-"matchId": "35979502",
-"home": "Universitario de Vinto",
-"away": "Nacional Potosi",
-"league": "Bolivian Liga de Futbol Profesional",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Universitario de Vinto",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-08-25T23:00:00Z",
-"settledAt": "2026-08-26T00:53:58.840363+00:00"
-},
-{
-"matchId": "35974921",
-"home": "Boca Juniors de Cali",
-"away": "Bogota",
-"league": "Colombian Primera B",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Bogota",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-08-25T20:30:00Z",
-"settledAt": "2026-08-25T22:24:07.480556+00:00"
-},
-{
-"matchId": "35962154",
-"home": "LASK Linz",
-"away": "Celtic",
-"league": "UEFA Champions League Qualifiers",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "LASK Linz",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-5,
-1
-],
-"kickoff": "2026-08-25T19:00:00Z",
-"settledAt": "2026-08-25T22:08:53.830193+00:00"
 }
 ],
 "global": {
-"n": 687,
-"wins": 465,
-"hitRate": 0.6769
+"n": 690,
+"wins": 467,
+"hitRate": 0.6768
 },
-"pending": 22
+"pending": 19
 }
