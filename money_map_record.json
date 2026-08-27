@@ -1,25 +1,25 @@
 {
-"generatedAt": "2026-08-27T03:26:50.550562+00:00",
+"generatedAt": "2026-08-27T03:41:50.286781+00:00",
 "byVerdict": {
 "konsens": {
-"n": 506,
-"wins": 408,
-"hitRate": 0.8063,
-"polyN": 474,
-"polyWins": 371,
-"polyHitRate": 0.7827,
+"n": 508,
+"wins": 410,
+"hitRate": 0.8071,
+"polyN": 476,
+"polyWins": 373,
+"polyHitRate": 0.7836,
 "pinnN": 37,
 "pinnHitRate": 0.7297
 },
 "uneinig": {
-"n": 168,
+"n": 169,
 "wins": 51,
-"hitRate": 0.3036,
-"polyN": 150,
+"hitRate": 0.3018,
+"polyN": 151,
 "polyWins": 49,
-"polyHitRate": 0.3267,
-"pinnN": 86,
-"pinnHitRate": 0.593
+"polyHitRate": 0.3245,
+"pinnN": 87,
+"pinnHitRate": 0.5862
 },
 "teil": {
 "n": 5,
@@ -88,15 +88,15 @@
 "wins": 11,
 "hitRate": 0.6875
 },
+"North American Leagues Cup": {
+"n": 15,
+"wins": 10,
+"hitRate": 0.6667
+},
 "CONMEBOL Copa Libertadores": {
 "n": 14,
 "wins": 6,
 "hitRate": 0.4286
-},
-"North American Leagues Cup": {
-"n": 14,
-"wins": 9,
-"hitRate": 0.6429
 },
 "Saudi Professional League": {
 "n": 14,
@@ -138,6 +138,11 @@
 "wins": 9,
 "hitRate": 0.75
 },
+"CONMEBOL Copa Sudamericana": {
+"n": 11,
+"wins": 6,
+"hitRate": 0.5455
+},
 "Italian Coppa Italia": {
 "n": 11,
 "wins": 8,
@@ -157,11 +162,6 @@
 "n": 10,
 "wins": 8,
 "hitRate": 0.8
-},
-"CONMEBOL Copa Sudamericana": {
-"n": 10,
-"wins": 6,
-"hitRate": 0.6
 },
 "Chilean Primera Division": {
 "n": 10,
@@ -343,6 +343,11 @@
 "wins": 1,
 "hitRate": 0.5
 },
+"Brazilian Cup": {
+"n": 2,
+"wins": 2,
+"hitRate": 1.0
+},
 "Chinese League 1": {
 "n": 2,
 "wins": 2,
@@ -392,11 +397,6 @@
 "n": 2,
 "wins": 1,
 "hitRate": 0.5
-},
-"Brazilian Cup": {
-"n": 1,
-"wins": 1,
-"hitRate": 1.0
 },
 "Chinese League 2": {
 "n": 1,
@@ -511,9 +511,9 @@
 },
 "byStrength": {
 "strong": {
-"n": 394,
-"wins": 320,
-"hitRate": 0.8122
+"n": 397,
+"wins": 322,
+"hitRate": 0.8111
 },
 "weak": {
 "n": 252,
@@ -522,14 +522,71 @@
 }
 },
 "divergence": {
-"n": 168,
+"n": 169,
 "betfairWins": 51,
-"betfairRate": 0.3036,
-"polyN": 150,
+"betfairRate": 0.3018,
+"polyN": 151,
 "polyWins": 49,
-"polyRate": 0.3267
+"polyRate": 0.3245
 },
 "recent": [
+{
+"matchId": "35929554",
+"home": "Vasco Da Gama",
+"away": "EC Vitoria Salvador",
+"league": "Brazilian Cup",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Vasco Da Gama",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-08-27T00:30:00Z",
+"settledAt": "2026-08-27T03:41:50.140202+00:00"
+},
+{
+"matchId": "35965764",
+"home": "River Plate",
+"away": "Santa Fe",
+"league": "CONMEBOL Copa Sudamericana",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "River Plate",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+7,
+8
+],
+"kickoff": "2026-08-27T00:30:00Z",
+"settledAt": "2026-08-27T03:41:50.140202+00:00"
+},
+{
+"matchId": "35978783",
+"home": "Toluca",
+"away": "Austin FC",
+"league": "North American Leagues Cup",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Toluca",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-08-27T00:30:00Z",
+"settledAt": "2026-08-27T03:41:50.140202+00:00"
+},
 {
 "matchId": "35929532",
 "home": "SE Palmeiras",
@@ -1232,69 +1289,12 @@
 ],
 "kickoff": "2026-08-25T19:00:00Z",
 "settledAt": "2026-08-25T21:08:39.800037+00:00"
-},
-{
-"matchId": "35970821",
-"home": "Al-Ettifaq",
-"away": "Al Nassr",
-"league": "Saudi Professional League",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Al Nassr",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-3
-],
-"kickoff": "2026-08-25T18:00:00Z",
-"settledAt": "2026-08-25T21:08:39.800037+00:00"
-},
-{
-"matchId": "35961323",
-"home": "Bodo Glimt",
-"away": "NEC Nijmegen",
-"league": "UEFA Champions League Qualifiers",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Bodo Glimt",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-0
-],
-"kickoff": "2026-08-25T19:00:00Z",
-"settledAt": "2026-08-25T20:53:40.163113+00:00"
-},
-{
-"matchId": "35928323",
-"home": "Birmingham",
-"away": "Brentford",
-"league": "English Football League Cup",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Brentford",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-6
-],
-"kickoff": "2026-08-25T19:00:00Z",
-"settledAt": "2026-08-25T20:53:40.163113+00:00"
 }
 ],
 "global": {
-"n": 679,
-"wins": 460,
-"hitRate": 0.6775
+"n": 682,
+"wins": 462,
+"hitRate": 0.6774
 },
-"pending": 12
+"pending": 10
 }
