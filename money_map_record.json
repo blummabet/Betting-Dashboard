@@ -1,23 +1,23 @@
 {
-"generatedAt": "2026-08-27T20:58:51.585581+00:00",
+"generatedAt": "2026-08-27T21:13:51.890905+00:00",
 "byVerdict": {
 "konsens": {
-"n": 518,
-"wins": 419,
-"hitRate": 0.8089,
-"polyN": 486,
-"polyWins": 382,
-"polyHitRate": 0.786,
+"n": 520,
+"wins": 421,
+"hitRate": 0.8096,
+"polyN": 488,
+"polyWins": 384,
+"polyHitRate": 0.7869,
 "pinnN": 37,
 "pinnHitRate": 0.7297
 },
 "uneinig": {
-"n": 175,
-"wins": 53,
-"hitRate": 0.3029,
-"polyN": 157,
+"n": 176,
+"wins": 54,
+"hitRate": 0.3068,
+"polyN": 158,
 "polyWins": 50,
-"polyHitRate": 0.3185,
+"polyHitRate": 0.3165,
 "pinnN": 87,
 "pinnHitRate": 0.5862
 },
@@ -34,9 +34,9 @@
 },
 "byLeague": {
 "UEFA Europa Conference Qualifiers": {
-"n": 42,
-"wins": 22,
-"hitRate": 0.5238
+"n": 44,
+"wins": 24,
+"hitRate": 0.5455
 },
 "US MLS": {
 "n": 39,
@@ -63,15 +63,15 @@
 "wins": 11,
 "hitRate": 0.5789
 },
+"UEFA Europa League Qualifiers": {
+"n": 19,
+"wins": 15,
+"hitRate": 0.7895
+},
 "Brazilian Serie A": {
 "n": 18,
 "wins": 10,
 "hitRate": 0.5556
-},
-"UEFA Europa League Qualifiers": {
-"n": 18,
-"wins": 14,
-"hitRate": 0.7778
 },
 "Argentinian Primera Division": {
 "n": 17,
@@ -511,9 +511,9 @@
 },
 "byStrength": {
 "strong": {
-"n": 405,
-"wins": 328,
-"hitRate": 0.8099
+"n": 408,
+"wins": 331,
+"hitRate": 0.8113
 },
 "weak": {
 "n": 260,
@@ -522,14 +522,71 @@
 }
 },
 "divergence": {
-"n": 175,
-"betfairWins": 53,
-"betfairRate": 0.3029,
-"polyN": 157,
+"n": 176,
+"betfairWins": 54,
+"betfairRate": 0.3068,
+"polyN": 158,
 "polyWins": 50,
-"polyRate": 0.3185
+"polyRate": 0.3165
 },
 "recent": [
+{
+"matchId": "35969276",
+"home": "Ajax",
+"away": "Sion",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Ajax",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+5,
+3
+],
+"kickoff": "2026-08-27T18:00:00Z",
+"settledAt": "2026-08-27T21:13:51.690698+00:00"
+},
+{
+"matchId": "35967945",
+"home": "Hapoel Tel Aviv",
+"away": "Atalanta",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Atalanta",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-08-27T18:00:00Z",
+"settledAt": "2026-08-27T21:13:51.690698+00:00"
+},
+{
+"matchId": "35964571",
+"home": "CSKA Sofia",
+"away": "OFI",
+"league": "UEFA Europa League Qualifiers",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "OFI",
+"polySide": "home",
+"winner": "away",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-08-27T18:00:00Z",
+"settledAt": "2026-08-27T21:13:51.690698+00:00"
+},
 {
 "matchId": "35931570",
 "home": "Fulham",
@@ -1232,69 +1289,12 @@
 ],
 "kickoff": "2026-08-26T16:00:00Z",
 "settledAt": "2026-08-26T19:11:07.209898+00:00"
-},
-{
-"matchId": "35978187",
-"home": "Lokomotiv Tashkent",
-"away": "Bunyodkor",
-"league": "Uzbekistan Super League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Lokomotiv Tashkent",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-4,
-1
-],
-"kickoff": "2026-08-26T14:00:00Z",
-"settledAt": "2026-08-26T17:10:56.723624+00:00"
-},
-{
-"matchId": "35982271",
-"home": "Smouha",
-"away": "Asyut Petroleum",
-"league": "Egyptian Premier",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Smouha",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-08-26T14:00:00Z",
-"settledAt": "2026-08-26T17:10:56.723624+00:00"
-},
-{
-"matchId": "35978196",
-"home": "Qizilqum Zarafshon",
-"away": "Nasaf",
-"league": "Uzbekistan Super League",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Nasaf",
-"polySide": "home",
-"winner": "home",
-"moneyWin": false,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-08-26T15:00:00Z",
-"settledAt": "2026-08-26T16:56:20.141720+00:00"
 }
 ],
 "global": {
-"n": 698,
-"wins": 473,
-"hitRate": 0.6777
+"n": 701,
+"wins": 476,
+"hitRate": 0.679
 },
-"pending": 15
+"pending": 12
 }
