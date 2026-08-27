@@ -186,8 +186,19 @@ def _picks_history_open(history, today=None):
     import datetime as _dt
     today = today or _dt.date.today()
     offen, aeltester = 0, None
+    try:
+        import stats_scope as _scope
+        umfang = _scope.load()
+    except Exception:
+        umfang = {}
     for e in (history or []):
         if not isinstance(e, dict) or e.get("resolved"):
+            continue
+        # 27.08.2026 (Lucas): nur zählen, was auch in die Bilanz zählt. picks_history schleppt
+        # 20 Ligen aus dem alten breiten Card-System mit; ein Guard, der über Ungarn und
+        # Schottland meckert, wird nach drei Tagen ignoriert — und dann übersieht man den Tag,
+        # an dem er recht hat.
+        if umfang and not _scope.counts(e.get("league"), e.get("dateIso"), umfang):
             continue
         raw = str(e.get("dateIso") or "")[:10]
         d = None
