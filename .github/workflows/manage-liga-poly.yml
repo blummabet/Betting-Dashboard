@@ -102,6 +102,10 @@ jobs:
           POLY_API_PASSPHRASE:       ${{ secrets.POLY_API_PASSPHRASE }}
           AUTO_TRIGGER_ENABLED:      ${{ secrets.LIGA_AUTO_TRIGGER_ENABLED || 'true' }}   # 20.08.2026 (Lucas): Top-5 live traden. Aus: Secret LIGA_AUTO_TRIGGER_ENABLED=false setzen.
 
+      - name: 🔬 Buch-Sonde (wuerden $5 gefuellt? REIN LESEND, platziert nichts)
+        run: ${{ env.POLY_PYTHON }} poly_book_probe.py
+        continue-on-error: true
+
       - name: 📊 Liga Poly Positionen prüfen + Auto-Sell (Default AUS)
         run: ${{ env.POLY_PYTHON }} manage_wm_poly_positions.py
         continue-on-error: true
@@ -152,7 +156,8 @@ jobs:
             liga_poly_resting_orders.json \
             liga-poly-history.json liga_book_health.json liga_kill_switch.json \
             liga-data.json liga-odds-history.json \
-            liga_results.json liga_pick_calibration.json; do
+            liga_results.json liga_pick_calibration.json \
+            liga_poly_book_probe.json; do
             [ -f "$f" ] && git add "$f"
           done
           if git diff --staged --quiet; then

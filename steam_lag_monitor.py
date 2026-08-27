@@ -478,6 +478,12 @@ def compute_edges(poly: dict, pinn: dict) -> list[dict]:
             "awayName":     p["awayName"],
             "matchDate":    p["date"][:10] if p.get("date") else "",
             "slug":         p.get("slug", ""),
+            # 26.08.2026 (Lucas: „wieso wird da nicht getradet?"): das Volumen war hier NICHT
+            # dabei, obwohl beide Quellen (Gamma + Cache) es liefern. Folge: entryVol war in
+            # ALLEN 50 geloggten Signalen 0 und jeder Push schrieb „Vol: ?" — ausgerechnet die
+            # Zahl, an der der Auto-Trader das Signal als erstes abweist, fiel auf dem Weg zum
+            # Push runter. Fehlende Information sah aus wie keine Einschränkung.
+            "vol":          p.get("vol", 0),
             "poly_hw":      p.get("hw"),
             "poly_dr":      p.get("dr"),
             "poly_aw":      p.get("aw"),
@@ -494,6 +500,41 @@ def compute_edges(poly: dict, pinn: dict) -> list[dict]:
             "edgeTrend":    pf.get("edgeTrend", "stable"),
         })
     return signals
+
+
+# ── Handelbarkeit ────────────────────────────────────────────────────────────
+# EINE Quelle mit dem Auto-Trader: dessen erste Hürde ist trade.min_vol_usdc. Steht die Zahl
+# hier noch einmal getippt, driften Push und Trader auseinander, sobald einer angefasst wird.
+TRADE_MIN_VOL_USDC = _cfg("trade", "min_vol_usdc", 1500)
+
+
+def tradable(vol) -> bool:
+    """Würde der Auto-Trader dieses Signal überhaupt anschauen? REIN.
+
+    NUR die Volumen-Hürde — sie ist die erste im Trader und die einzige, die wir hier ohne
+    Orderbuch prüfen können. „handelbar" heisst also: kommt bis zur nächsten Prüfung, NICHT
+    „wird sicher gekauft" (Spread, Buch-Liquidität und Ask-Edge entscheiden erst am Orderbuch).
+    Unbekanntes Volumen gilt als NICHT handelbar — fehlende Information ist keine Erlaubnis.
+    """
+    try:
+        return float(vol) >= TRADE_MIN_VOL_USDC
+    except (TypeError, ValueError):
+        return False
+
+
+def tradable_note(vol) -> str:
+    """Eine Zeile für den Push. Leer, wenn handelbar."""
+    if tradable(vol):
+        return ""
+    try:
+        v = float(vol)
+    except (TypeError, ValueError):
+        v = None
+    if not v:
+        return ("\u26a0\ufe0f <b>Nicht handelbar</b> \u2014 kein Poly-Volumen bekannt "
+                "(Auto-Trader braucht \u2265 $%s)" % f"{TRADE_MIN_VOL_USDC:,.0f}")
+    return ("\u26a0\ufe0f <b>Nicht handelbar</b> \u2014 nur $%s im Markt, "
+            "Auto-Trader braucht \u2265 $%s" % (f"{v:,.0f}", f"{TRADE_MIN_VOL_USDC:,.0f}"))
 
 
 # ── Signal-ID generieren ──────────────────────────────────────────────────────
@@ -1030,7 +1071,9 @@ def main():
                 and sig.get("status") == "OPEN"
                 and hc_key not in sell_dedup):
             steam_pp = sig.get("pinnMoveAtSignal", 0) or 0
-            vol_str  = f"${sig.get('entryVol', 0):,.0f}" if sig.get("entryVol") else "?"
+            _vol     = sig.get("entryVol", 0)
+            vol_str  = f"${_vol:,.0f}" if _vol else "unbekannt"
+            _note    = tradable_note(_vol)
             msg = (
                 f"⭐ <b>HIGH CONFIDENCE Steam Lag</b>\n"
                 f"{hf} <b>{home}</b> vs {af} <b>{away}</b>\n"
@@ -1039,7 +1082,8 @@ def main():
                 f"🔥 Pinn-Move: <b>+{steam_pp:.1f}pp</b> (Pinnacle hat sich bewegt)\n"
                 f"💹 Poly-Edge: <b>+{entry:.1f}pp</b> (Poly noch nicht reagiert)\n"
                 f"Vol: {vol_str}\n"
-                f"\n"
+                + (f"{_note}\n" if _note else "")
+                + f"\n"
                 f"✅ Beide Bedingungen erfüllt: Pinn-Move + Poly-Lag\n"
                 f"📅 Spiel: {sig.get('matchDate', '?')}\n"
                 f"\n🤖 CocoBet Steam Lag Monitor"
