@@ -1,6 +1,15 @@
 {
   "checks": [
     {
+      "id": "inputs_readable",
+      "label": "Guard-Eingaben lesbar",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Ein leeres Ergebnis kann 'nichts zu bemaengeln' ODER 'Datei kaputt' heissen. Solange dieser Guard rot ist, sind die gruenen Haken der anderen wertlos."
+    },
+    {
       "id": "poly_surfaces_alive",
       "label": "Poly-Flächen liefern (kein stiller Tod)",
       "severity": "warn",
@@ -522,5 +531,5 @@
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-08-26T07:50:14.355719+00:00"
+  "generatedAt": "2026-08-26T21:50:56.800447+00:00"
 }

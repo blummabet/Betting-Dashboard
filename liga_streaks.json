@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "liga",
-    "generatedAt": "2026-08-26T06:55:45.697588+00:00",
+    "generatedAt": "2026-08-26T19:28:18.236235+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -10725,46 +10725,6 @@
       "flag": "<img src=\"https://media.api-sports.io/football/teams/55.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ENG",
       "leagueName": "Premier League",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 73,
-        "label": "Eigen 73% + Gegner 53% → 65%"
-      },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 3,
-      "next": {
-        "oppId": "63",
-        "oppName": "Leeds",
-        "atHome": false,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T13:00:00+00:00",
-        "oppRatePct": 53
-      },
-      "oppSupportPct": 53,
-      "matchupPct": 65
-    },
-    {
-      "teamId": "55",
-      "team": "Brentford",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/55.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
       "type": "scored",
       "market": "Team trifft",
       "length": 4,
@@ -13917,47 +13877,6 @@
       "matchupPct": 55
     },
     {
-      "teamId": "55",
-      "team": "Brentford",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/55.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 4,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 64,
-        "label": "Eigen 64% + Gegner 53% → 60%"
-      },
-      "ratePct": 64,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 11,
-      "next": {
-        "oppId": "63",
-        "oppName": "Leeds",
-        "atHome": false,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T13:00:00+00:00",
-        "oppRatePct": 53
-      },
-      "oppSupportPct": 53,
-      "matchupPct": 60
-    },
-    {
       "teamId": "57",
       "team": "Ipswich",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/57.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -15430,6 +15349,111 @@
       },
       "oppSupportPct": 27,
       "matchupPct": 32
+    },
+    {
+      "teamId": "55",
+      "team": "Brentford",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/55.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 4,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 64,
+        "label": "Eigen 64% + Gegner 53% → 60% · Linie/Signale dagegen"
+      },
+      "ratePct": 64,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 11,
+      "next": {
+        "oppId": "63",
+        "oppName": "Leeds",
+        "atHome": false,
+        "date": "2026-08-30",
+        "kickoff": "2026-08-30T13:00:00+00:00",
+        "oppRatePct": 53
+      },
+      "oppSupportPct": 53,
+      "matchupPct": 60,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 4,
+        "conviction": 4,
+        "names": [
+          "form_trend",
+          "h2h_pattern",
+          "transfer_shift",
+          "move_following"
+        ],
+        "market": "Unter 3.5 Tore"
+      }
+    },
+    {
+      "teamId": "55",
+      "team": "Brentford",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/55.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 4,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 73,
+        "label": "Eigen 73% + Gegner 53% → 65% · Linie/Signale dagegen"
+      },
+      "ratePct": 73,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 3,
+      "next": {
+        "oppId": "63",
+        "oppName": "Leeds",
+        "atHome": false,
+        "date": "2026-08-30",
+        "kickoff": "2026-08-30T13:00:00+00:00",
+        "oppRatePct": 53
+      },
+      "oppSupportPct": 53,
+      "matchupPct": 65,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 4,
+        "conviction": 4,
+        "names": [
+          "form_trend",
+          "h2h_pattern",
+          "transfer_shift",
+          "move_following"
+        ],
+        "market": "Unter 3.5 Tore"
+      }
     },
     {
       "teamId": "55",
@@ -17583,13 +17607,12 @@
       "matchupPct": 53,
       "signalInfo": {
         "state": "confirm",
-        "count": 3,
+        "count": 2,
         "conviction": 4,
         "names": [
           "form_trend",
           "h2h_pattern",
-          "xg_strength",
-          "betfair_money"
+          "xg_strength"
         ],
         "market": "Über 2.5 Tore"
       }
