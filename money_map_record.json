@@ -1,23 +1,23 @@
 {
-"generatedAt": "2026-08-27T20:13:42.183652+00:00",
+"generatedAt": "2026-08-27T20:29:14.016734+00:00",
 "byVerdict": {
 "konsens": {
-"n": 515,
-"wins": 417,
-"hitRate": 0.8097,
-"polyN": 483,
-"polyWins": 380,
-"polyHitRate": 0.7867,
+"n": 516,
+"wins": 418,
+"hitRate": 0.8101,
+"polyN": 484,
+"polyWins": 381,
+"polyHitRate": 0.7872,
 "pinnN": 37,
 "pinnHitRate": 0.7297
 },
 "uneinig": {
-"n": 174,
+"n": 175,
 "wins": 53,
-"hitRate": 0.3046,
-"polyN": 156,
+"hitRate": 0.3029,
+"polyN": 157,
 "polyWins": 49,
-"polyHitRate": 0.3141,
+"polyHitRate": 0.3121,
 "pinnN": 87,
 "pinnHitRate": 0.5862
 },
@@ -43,6 +43,11 @@
 "wins": 22,
 "hitRate": 0.5641
 },
+"English Football League Cup": {
+"n": 21,
+"wins": 17,
+"hitRate": 0.8095
+},
 "English Sky Bet Championship": {
 "n": 21,
 "wins": 12,
@@ -53,20 +58,15 @@
 "wins": 18,
 "hitRate": 0.8571
 },
-"English Football League Cup": {
-"n": 20,
-"wins": 16,
-"hitRate": 0.8
+"Spanish La Liga": {
+"n": 19,
+"wins": 11,
+"hitRate": 0.5789
 },
 "Brazilian Serie A": {
 "n": 18,
 "wins": 10,
 "hitRate": 0.5556
-},
-"Spanish La Liga": {
-"n": 18,
-"wins": 11,
-"hitRate": 0.6111
 },
 "UEFA Europa League Qualifiers": {
 "n": 18,
@@ -511,25 +511,63 @@
 },
 "byStrength": {
 "strong": {
-"n": 402,
-"wins": 326,
-"hitRate": 0.8109
+"n": 403,
+"wins": 327,
+"hitRate": 0.8114
 },
 "weak": {
-"n": 259,
+"n": 260,
 "wins": 127,
-"hitRate": 0.4903
+"hitRate": 0.4885
 }
 },
 "divergence": {
-"n": 174,
+"n": 175,
 "betfairWins": 53,
-"betfairRate": 0.3046,
-"polyN": 156,
+"betfairRate": 0.3029,
+"polyN": 157,
 "polyWins": 49,
-"polyRate": 0.3141
+"polyRate": 0.3121
 },
 "recent": [
+{
+"matchId": "35938787",
+"home": "Celta Vigo",
+"away": "Osasuna",
+"league": "Spanish La Liga",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Celta Vigo",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-08-27T18:30:00Z",
+"settledAt": "2026-08-27T20:29:13.871248+00:00"
+},
+{
+"matchId": "35928173",
+"home": "Chelsea",
+"away": "Luton",
+"league": "English Football League Cup",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Chelsea",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-08-27T18:30:00Z",
+"settledAt": "2026-08-27T20:29:13.871248+00:00"
+},
 {
 "matchId": "35967941",
 "home": "Red Bull Salzburg",
@@ -1251,50 +1289,12 @@
 ],
 "kickoff": "2026-08-26T14:00:00Z",
 "settledAt": "2026-08-26T15:57:01.173488+00:00"
-},
-{
-"matchId": "35973448",
-"home": "Gangwon",
-"away": "Gwangju FC",
-"league": "South Korean K1 League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Gwangju FC",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-08-26T10:30:00Z",
-"settledAt": "2026-08-26T13:40:22.366779+00:00"
-},
-{
-"matchId": "35973446",
-"home": "FC Anyang",
-"away": "Incheon Utd",
-"league": "South Korean K1 League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Incheon Utd",
-"polySide": "away",
-"winner": "home",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-08-26T10:30:00Z",
-"settledAt": "2026-08-26T13:40:22.366779+00:00"
 }
 ],
 "global": {
-"n": 694,
-"wins": 471,
-"hitRate": 0.6787
+"n": 696,
+"wins": 472,
+"hitRate": 0.6782
 },
 "pending": 17
 }
