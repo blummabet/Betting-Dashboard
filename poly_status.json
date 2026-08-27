@@ -3,10 +3,12 @@
     {
       "id": "close_feed_fresh",
       "label": "Close-Feed frisch (frisches Geld kommt rein)",
-      "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "severity": "warn",
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "Close-Feed: jüngster Stand vor 5.1 h (> 3 h erwartet) · 1273 Märkte im File"
+      ],
       "note": "Jüngster erfasster Markt. Scan alle 30 Min — steht der Feed, sind Preise/CLV/Volumen alt."
     },
     {
@@ -43,7 +45,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "cs2-ruby1-hs2-2026-08-21: seit 5.9 Tagen offen — keine Auflösung gefunden"
+        "cs2-ruby1-hs2-2026-08-21: seit 6.2 Tagen offen — keine Auflösung gefunden"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -63,12 +65,12 @@
       "ok": false,
       "nFail": 6,
       "failures": [
-        "15/50 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (30%) — Trefferquote allein trügt",
+        "14/50 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (28%) — Trefferquote allein trügt",
         "   0x84cfffc3f1… n=49 Treffer 53% P&L $-7,749,600",
-        "   0x224a89dbe0… n=95 Treffer 51% P&L $-4,558,662",
-        "   0xc3c3b3ef30… n=264 Treffer 53% P&L $-3,798,419",
-        "   0xa0f21e6d35… n=58 Treffer 67% P&L $-2,660,072",
-        "401/451 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
+        "   0xc3c3b3ef30… n=270 Treffer 52% P&L $-3,811,724",
+        "   0xa0f21e6d35… n=62 Treffer 66% P&L $-2,660,701",
+        "   0xabb89972b2… n=24 Treffer 67% P&L $-2,563,982",
+        "404/454 'bewiesene' Wallets ohne P&L-Daten — Confirmed-Loser-Gate ist für sie blind"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
     },
@@ -109,6 +111,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-08-26T22:34:18.778391+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-08-27T03:37:35.750442+00:00"
 }
