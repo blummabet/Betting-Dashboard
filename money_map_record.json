@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-08-27T17:43:25.128428+00:00",
+"generatedAt": "2026-08-27T17:58:28.166334+00:00",
 "byVerdict": {
 "konsens": {
 "n": 509,
@@ -12,12 +12,12 @@
 "pinnHitRate": 0.7297
 },
 "uneinig": {
-"n": 169,
+"n": 171,
 "wins": 51,
-"hitRate": 0.3018,
-"polyN": 151,
+"hitRate": 0.2982,
+"polyN": 153,
 "polyWins": 49,
-"polyHitRate": 0.3245,
+"polyHitRate": 0.3203,
 "pinnN": 87,
 "pinnHitRate": 0.5862
 },
@@ -39,9 +39,9 @@
 "hitRate": 0.5641
 },
 "UEFA Europa Conference Qualifiers": {
-"n": 34,
+"n": 35,
 "wins": 17,
-"hitRate": 0.5
+"hitRate": 0.4857
 },
 "English Sky Bet Championship": {
 "n": 21,
@@ -93,6 +93,11 @@
 "wins": 11,
 "hitRate": 0.6875
 },
+"UEFA Europa League Qualifiers": {
+"n": 15,
+"wins": 11,
+"hitRate": 0.7333
+},
 "CONMEBOL Copa Libertadores": {
 "n": 14,
 "wins": 6,
@@ -107,11 +112,6 @@
 "n": 14,
 "wins": 9,
 "hitRate": 0.6429
-},
-"UEFA Europa League Qualifiers": {
-"n": 14,
-"wins": 11,
-"hitRate": 0.7857
 },
 "Elite Friendlies": {
 "n": 13,
@@ -511,25 +511,63 @@
 },
 "byStrength": {
 "strong": {
-"n": 397,
+"n": 398,
 "wins": 322,
-"hitRate": 0.8111
+"hitRate": 0.809
 },
 "weak": {
-"n": 253,
+"n": 254,
 "wins": 123,
-"hitRate": 0.4862
+"hitRate": 0.4843
 }
 },
 "divergence": {
-"n": 169,
+"n": 171,
 "betfairWins": 51,
-"betfairRate": 0.3018,
-"polyN": 151,
+"betfairRate": 0.2982,
+"polyN": 153,
 "polyWins": 49,
-"polyRate": 0.3245
+"polyRate": 0.3203
 },
 "recent": [
+{
+"matchId": "35969021",
+"home": "Maccabi Tel Aviv",
+"away": "Lugano",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Maccabi Tel Aviv",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-27T16:00:00Z",
+"settledAt": "2026-08-27T17:58:28.006423+00:00"
+},
+{
+"matchId": "35964597",
+"home": "Ararat Armenia",
+"away": "Universitatea Craiova",
+"league": "UEFA Europa League Qualifiers",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-08-27T16:00:00Z",
+"settledAt": "2026-08-27T17:58:28.006423+00:00"
+},
 {
 "matchId": "35978829",
 "home": "CF America",
@@ -1251,50 +1289,12 @@
 ],
 "kickoff": "2026-08-25T18:45:00Z",
 "settledAt": "2026-08-25T21:49:21.027196+00:00"
-},
-{
-"matchId": "35928175",
-"home": "Cardiff",
-"away": "Norwich",
-"league": "English Football League Cup",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Norwich",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-08-25T18:00:00Z",
-"settledAt": "2026-08-25T21:08:39.800037+00:00"
-},
-{
-"matchId": "35780315",
-"home": "Valencia",
-"away": "Betis",
-"league": "Spanish La Liga",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Betis",
-"polySide": "draw",
-"winner": "away",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-08-25T19:00:00Z",
-"settledAt": "2026-08-25T21:08:39.800037+00:00"
 }
 ],
 "global": {
-"n": 683,
+"n": 685,
 "wins": 463,
-"hitRate": 0.6779
+"hitRate": 0.6759
 },
-"pending": 23
+"pending": 22
 }
