@@ -7,15 +7,31 @@ name: ⚽ Liga aktualisieren (Top 5)
 on:
   schedule:
     # GETRENNT (nicht '0 6,18') — nur so unterscheidet github.event.schedule PRE- vs POST-Match:
-    - cron: '0 6 * * *'    # PRE-Match: Morgens CET, vor den Nachmittags-Anpfiffen (Digest + Previews)
-    - cron: '0 18 * * *'   # POST-Match: Abends CET (Recap + Reviews decken den Vortag ab)
+    # 28.08.2026 (Lucas: „ich hab den Push in der Früh vermisst") — von :00 auf :07 verschoben.
+    # Zwei Gründe, beide gemessen: (1) auf der vollen Stunde starten repo-weit bis zu 11 Jobs
+    # gleichzeitig, und :00 ist auch GitHub-global die vollste Minute. (2) 6 und 18 sind GERADE
+    # Stunden — genau die, auf denen fetch-liga-odds-dense (`0 */2`) läuft, und 18:00 zusätzlich
+    # manage-liga-poly. Alle drei lagen bis eben in DERSELBEN concurrency-Gruppe (s. unten):
+    # zwei bis drei Läufe in derselben Minute, einer läuft, die anderen warten — und ein
+    # wartender Lauf wird vom nächsten Ankömmling GECANCELT, nicht verschoben. Der Digest war
+    # mit 2 von 39 Läufen der seltenste Teilnehmer und damit strukturell der Verlierer.
+    # Beleg: 15.08., 27.08. und 28.08. fiel der 06:00-Slot komplett aus; der Abendlauf vom
+    # 27.08. kam erst am 28.08. um 02:00 an.
+    # GETRENNT (nicht '7 6,18') — nur so unterscheidet github.event.schedule PRE- vs POST-Match.
+    - cron: '7 6 * * *'    # PRE-Match: Morgens CET, vor den Nachmittags-Anpfiffen (Digest + Previews)
+    - cron: '7 18 * * *'   # POST-Match: Abends CET (Recap + Reviews decken den Vortag ab)
   workflow_dispatch:
 
 permissions:
   contents: write
 
 concurrency:
-  group: update-liga
+  # 28.08.2026: EIGENE Gruppe. Vorher teilte sich dieser Workflow die Gruppe „update-liga" mit
+  # manage-liga-poly (25 Läufe/Tag) und fetch-liga-odds-dense (12/Tag) — 39 Läufe durch eine
+  # Spur, und wer wartet, wird gecancelt. Nötig war das Bündeln nie: die drei laufen auf
+  # VERSCHIEDENEN Maschinen (2x ubuntu, 1x Mac), teilen also keine Dateien; sie schützt nur vor
+  # Git-Push-Races, und dafür hat jeder der drei längst seine 5-fach-Rebase-Retry-Schleife.
+  group: update-liga-main
   cancel-in-progress: false
 
 env:
@@ -208,7 +224,7 @@ jobs:
         run: python generate_wm_ai_preview.py || true
 
       - name: 📣 Liga Pick-Digest → Public (PRE-Match)
-        if: github.event.schedule == '0 6 * * *' || github.event_name == 'workflow_dispatch'
+        if: github.event.schedule == '7 6 * * *' || github.event_name == 'workflow_dispatch'
         env:
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -216,7 +232,7 @@ jobs:
         run: python telegram_wm.py || true
 
       - name: 🎬 Liga TikTok Preview-Cards (PRE-Match)
-        if: github.event.schedule == '0 6 * * *' || github.event_name == 'workflow_dispatch'
+        if: github.event.schedule == '7 6 * * *' || github.event_name == 'workflow_dispatch'
         env:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
@@ -233,7 +249,7 @@ jobs:
         run: python generate_daily_tiktok.py || true
 
       - name: 📊 Liga Recap → Public (POST-Match)
-        if: github.event.schedule == '0 18 * * *'
+        if: github.event.schedule == '7 18 * * *'
         env:
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -241,7 +257,7 @@ jobs:
         run: python telegram_wm.py || true
 
       - name: 🎬 Liga TikTok Review-Cards (POST-Match)
-        if: github.event.schedule == '0 18 * * *'
+        if: github.event.schedule == '7 18 * * *'
         env:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
@@ -258,7 +274,7 @@ jobs:
 
       # Serien-Watch pre-match (PRE-Lauf 06:00) + Recap post-match (POST-Lauf 18:00).
       - name: 🔥 Liga Serien-Watch (PRE-Match)
-        if: github.event.schedule == '0 6 * * *' || github.event_name == 'workflow_dispatch'
+        if: github.event.schedule == '7 6 * * *' || github.event_name == 'workflow_dispatch'
         env:
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -266,7 +282,7 @@ jobs:
         run: python telegram_streak_watch.py || true
 
       - name: 📊 Liga Serien-Recap (POST-Match)
-        if: github.event.schedule == '0 18 * * *'
+        if: github.event.schedule == '7 18 * * *'
         env:
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -312,6 +328,10 @@ jobs:
           git add liga_streak_watch.json 2>/dev/null || true
           git add liga_poly_prices.json 2>/dev/null || true          # Poly-Preise (Trading-Lag)
           git add liga-poly-history.json 2>/dev/null || true         # Poly-Preis-Historie
+          # 28.08.2026 (Bayern–Stuttgart fehlte): Slug-Gedaechtnis fuer den Rescue anpfiff-naher
+          # Spiele. Ohne diese Zeile liegt es nur auf der Runner-Platte und der Rescue startet
+          # bei jedem Lauf bei null. Eigene Zeile — `git add a b c` staged NICHTS, wenn eine fehlt.
+          git add liga_poly_slugs.json 2>/dev/null || true          # Poly-Slug-Gedaechtnis
           git add liga_steam_lag_log.json 2>/dev/null || true        # Steam-Lag Signal-Log
           # 27.08.2026 (Lucas: „Digest kam heute früh nicht"): telegram_wm.py hat einen
           # „heute schon gesendet"-Marker, aber für Liga hat ihn NIEMAND committet — er lag

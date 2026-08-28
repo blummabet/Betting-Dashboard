@@ -68,6 +68,12 @@ def _kickoff_passed(fx):
 
 import cocobet_dataset as D   # 29.06.2026: dataset-aware (WM / Liga / MLS-Poly-Dry-Run)
 from odds_plausibility import plausible_1x2, devig_1x2   # 19.07.2026: Platzhalter-Quoten raus
+try:                                  # 28.08.2026: Slug-Gedächtnis atomar schreiben
+    from safe_write import write_json_atomic
+except Exception:                     # safe_write fehlt → lieber schreiben als abbrechen
+    def write_json_atomic(path, data, *, indent=2):
+        with open(path, "w", encoding="utf-8") as _f:
+            json.dump(data, _f, ensure_ascii=False, indent=indent)
 
 BASE         = os.path.dirname(os.path.abspath(__file__))
 # Dataset-aware: wm_* | liga_* | mls_* je COCOBET_DATASET. WM-Verhalten unverändert.
@@ -157,24 +163,58 @@ else:
 # Seite 1 liefert 25./26.07., Seite 2 die Spiele vom 22./23.07.
 GAMMA_PAGE_LIMIT = 100          # hartes Server-Maximum
 GAMMA_MAX_PAGES = 6             # 600 Events Headroom; bricht früher ab, wenn eine Seite kurz ist
-GAMMA_URL_TMPL = (
+# 28.08.2026 (Lucas: „wieso ist das von heute Bayern - Stuttgart nicht aufgelistet?") — 🔴 DIE
+# SPIELNAHEN MÄRKTE FIELEN HINTEN RAUS. Beweis aus der Git-Historie von liga_poly_prices.json:
+#   23.08. 21:49 UTC → 75 Fixtures, Spanne 24.08.–05.09. (bun-bay-stu-2026-08-28 drin, Vol 6.501 $)
+#   24.08. 07:58 UTC → 73 Fixtures, Spanne 29.08.–06.09.
+# In EINEM Lauf: 14 Spiele weg (alle sechs vom 28.08. + vier Serie A vom 29.08.), 12 neue vom
+# 06.09. dazu — davon 11 mit Volumen 0. Rausgeflogen ist immer das ANPFIFF-NÄCHSTE Ende, neu
+# dazugekommen immer das fernste. Das ist die Signatur einer harten Obergrenze plus
+# `ascending=false` (fernste zuerst): oben kommt rein, unten — am Anpfiff — fällt raus.
+# Zwei Ursachen kommen dafür in Frage, und beide werden hier behandelt:
+#   (a) Gamma ignoriert `offset`, wenn MEHRERE `series_id` in einem Request stehen. Dann bricht
+#       die Paginierung nach Seite 1 ab (`neu == 0`) und wir sehen nie mehr als ~100 Rohevents —
+#       genau der beobachtete Deckel (Maximum über die ganze Historie: 75 Fixtures).
+#   (b) Polymarket listet je Serie nur ein rollierendes Fenster.
+# Fix (a): JE SERIE ein eigener paginierter Lauf statt eines gemergten Requests — keine Liga kann
+# eine andere aushungern. Fix Sortierung: `ascending=true` — schneidet eine Kappung dann am fernen
+# Ende ab (leere Märkte in 9 Tagen), nicht am handelbaren. Fix (b): der Slug-Rescue weiter unten.
+# NICHT „nur die Sortierung drehen": das 01.07.-Problem (KO-Events fielen ab) war der
+# spiegelverkehrte Fall. Deshalb holt fetch_gamma_events das ferne Ende NACH, sobald das
+# Seitenbudget einer Serie tatsächlich ausgeschöpft wurde.
+_GAMMA_RAW_TMPL = (
     "https://gamma-api.polymarket.com/events"
-    f"?{_GAMMA_FILTER}&limit={{limit}}&offset={{offset}}&active=true&closed=false"
-    "&order=startDate&ascending=false"
+    "?{flt}&limit={limit}&offset={offset}&active=true&closed=false"
+    "&order=startDate&ascending={asc}"
 )
+
+
+def gamma_url(limit=GAMMA_PAGE_LIMIT, offset=0, flt=None, ascending=True) -> str:
+    return _GAMMA_RAW_TMPL.format(
+        flt=flt or _GAMMA_FILTER, limit=limit, offset=offset,
+        asc="true" if ascending else "false",
+    )
+
+
+# Rückwärtskompatibel (Tests/Logging): derselbe String mit fest gebackenem Filter.
+GAMMA_URL_TMPL = _GAMMA_RAW_TMPL.replace("{flt}", _GAMMA_FILTER).replace("{asc}", "true")
 GAMMA_URL = GAMMA_URL_TMPL.format(limit=GAMMA_PAGE_LIMIT, offset=0)   # nur fürs Logging/Tests
 
+# Ein Filter pro Serie — NICHT gemergt (s. Ursache (a) oben).
+GAMMA_SERIES_FILTERS = (
+    [f"series_id={i}" for i in _ids] if POLY_SERIES_ID and _ids else [_GAMMA_FILTER]
+)
 
-def fetch_gamma_all(fetch=None) -> list:
-    """Alle offenen Events der Serie/des Tags — über Seiten hinweg.
 
-    Ohne Paginierung fehlten ganze Spieltage (s. Kommentar oben). `fetch` ist injizierbar (Tests).
+def _gamma_pages(_get, flt, ascending):
+    """(events, abgeschnitten) für EINEN Filter in EINER Richtung.
+
+    `abgeschnitten` ist True, wenn die zuletzt geholte Seite VOLL war — dann wissen wir nicht,
+    ob dahinter noch etwas liegt (Seitenbudget aus ODER `offset` wird ignoriert).
     """
-    _get = fetch or fetch_gamma
-    out, gesehen = [], set()
+    out, gesehen, voll = [], set(), False
     for seite in range(GAMMA_MAX_PAGES):
-        url = GAMMA_URL_TMPL.format(limit=GAMMA_PAGE_LIMIT, offset=seite * GAMMA_PAGE_LIMIT)
-        page = _get(url) or []
+        page = _get(gamma_url(offset=seite * GAMMA_PAGE_LIMIT, flt=flt, ascending=ascending)) or []
         neu = 0
         for e in page:
             eid = e.get("id") or e.get("slug")
@@ -183,11 +223,188 @@ def fetch_gamma_all(fetch=None) -> list:
             gesehen.add(eid)
             out.append(e)
             neu += 1
-        if len(page) < GAMMA_PAGE_LIMIT or neu == 0:
-            break               # letzte Seite erreicht
+        voll = len(page) >= GAMMA_PAGE_LIMIT
+        if not voll or neu == 0:
+            break               # letzte Seite erreicht (oder offset wird ignoriert)
+    return out, voll
+
+
+def fetch_gamma_all(fetch=None, gamma_filter=None, ascending=True) -> list:
+    """Alle offenen Events EINER Serie/eines Tags — über Seiten hinweg.
+
+    Ohne Paginierung fehlten ganze Spieltage (s. Kommentar oben). `fetch` ist injizierbar (Tests).
+    """
+    return _gamma_pages(fetch or fetch_gamma, gamma_filter or _GAMMA_FILTER, ascending)[0]
+
+
+def _event_datum(e) -> str:
+    """YYYY-MM-DD eines Gamma-Events — eventDate, sonst startDate, sonst aus dem Slug."""
+    for feld in ("eventDate", "startDate"):
+        wert = str(e.get(feld) or "")[:10]
+        if len(wert) == 10 and wert[4] == "-":
+            return wert
+    return slug_datum(e.get("slug")) or ""
+
+
+def fetch_gamma_events(fetch=None) -> list:
+    """Alle offenen Events ALLER konfigurierten Serien — je Serie ein eigener Lauf.
+
+    Diagnose je Serie (Anzahl + Datumsspanne) steht bewusst im Log: der Ausfall vom 24.08. war
+    fünf Tage lang unsichtbar, weil nur EINE Gesamtzahl geloggt wurde.
+    """
+    _get = fetch or fetch_gamma
+    out, gesehen = [], set()
+    for flt in GAMMA_SERIES_FILTERS:
+        got, abgeschnitten = _gamma_pages(_get, flt, True)
+        if abgeschnitten:
+            print(f"  ⚠️  {flt}: Seitenbudget ausgeschöpft — hole zusätzlich das ferne Ende")
+            got = got + _gamma_pages(_get, flt, False)[0]
+        neu = 0
+        for e in got:
+            eid = e.get("id") or e.get("slug")
+            if eid in gesehen:
+                continue
+            gesehen.add(eid)
+            out.append(e)
+            neu += 1
+        _d = sorted(x for x in (_event_datum(e) for e in got) if x)
+        spanne = f"  {_d[0]} … {_d[-1]}" if _d else ""
+        print(f"  · {flt}: {len(got)} Events ({neu} neu){spanne}")
     return out
 GAMMA_SLUG_URL = "https://gamma-api.polymarket.com/events?slug={slug}&markets=true"
 CLOB_URL = "https://clob.polymarket.com/books?token_id={token_id}"
+
+# ── Slug-Gedächtnis + Rescue (28.08.2026) ────────────────────────────────────
+# Wenn ein Spiel aus dem Batch fällt (Ursache (a) ODER (b) oben), ist es NICHT weg: sein
+# Gamma-Slug ist deterministisch und wir haben ihn schon einmal gesehen. Also merken wir jeden
+# je gelieferten Slug und holen anpfiff-nahe Spiele, die im Batch fehlen, EINZELN per Slug nach.
+# Das wirkt unabhängig davon, ob der Deckel bei uns oder bei Polymarket liegt.
+SLUG_MEMO_FILE = str(D.file("wm_poly_slugs.json", "liga_poly_slugs.json"))
+# Wie weit im Voraus gerettet wird. 3 Tage deckt Fr–So-Spieltage ab; alles darüber ist ohnehin
+# illiquide (die am 24.08. neu dazugekommenen 06.09.-Märkte hatten 11 von 12 mal Volumen 0).
+RESCUE_HORIZON_DAYS = int(_cfg("poly", "rescue_horizon_days", 3))
+# Abgelaufene Slugs verfallen — sonst wächst die Datei über eine Saison auf tausende Einträge.
+SLUG_MEMO_KEEP_DAYS = 2
+
+_SLUG_DATE_RE = re.compile(r"-(\d{4}-\d{2}-\d{2})$")
+
+
+def slug_datum(slug):
+    """YYYY-MM-DD aus einem Basis-Moneyline-Slug (…-2026-08-28) — sonst None.
+
+    Kind-/Spezialmärkte (…-2026-08-28-more-markets) haben das Datum NICHT am Ende und liefern
+    hier bewusst None: sie dürfen nie als eigenes Spiel ins Gedächtnis wandern.
+    """
+    m = _SLUG_DATE_RE.search(str(slug or ""))
+    return m.group(1) if m else None
+
+
+def lade_slug_memo(pfad=None) -> dict:
+    """{key: {"slug": …, "date": …}} — fehlende/kaputte Datei ist kein Fehler, nur leer."""
+    try:
+        with open(pfad or SLUG_MEMO_FILE, encoding="utf-8") as f:
+            memo = json.load(f)
+        return memo if isinstance(memo, dict) else {}
+    except Exception:
+        return {}
+
+
+def merke_slugs(memo, prices, heute=None) -> dict:
+    """Neue Slugs aufnehmen, abgelaufene verwerfen. Gibt ein NEUES dict zurück.
+
+    `prices` ist der fertige key→result-Dict des Laufs. Ein Lauf, der (wegen genau des Bugs, den
+    das hier heilen soll) ein Spiel nicht geliefert hat, darf den gemerkten Slug NICHT löschen —
+    deshalb wird nur ergänzt und rein nach Datum aufgeräumt, nie „nicht gesehen → raus".
+    """
+    heute = heute or datetime.now(timezone.utc).date().isoformat()
+    grenze = (datetime.fromisoformat(heute).date() - timedelta(days=SLUG_MEMO_KEEP_DAYS)).isoformat()
+    out = {}
+    for key, eintrag in (memo or {}).items():
+        if isinstance(eintrag, dict) and (eintrag.get("date") or "") >= grenze:
+            out[key] = eintrag
+    for key, p in (prices or {}).items():
+        d = slug_datum((p or {}).get("slug"))
+        if d and d >= grenze:
+            out[key] = {"slug": p["slug"], "date": d}
+    return out
+
+
+def rescue_kandidaten(memo, gesehene_slugs, heute=None, tage=None) -> list:
+    """Slugs anpfiff-naher Spiele, die im Batch FEHLEN — nach Datum sortiert.
+
+    Fenster ist [heute, heute+tage]. „heute" ist bewusst inklusive: Bayern–Stuttgart fehlte am
+    Spieltag selbst.
+    """
+    tage = RESCUE_HORIZON_DAYS if tage is None else tage
+    heute = heute or datetime.now(timezone.utc).date().isoformat()
+    bis = (datetime.fromisoformat(heute).date() + timedelta(days=tage)).isoformat()
+    gesehen = set(gesehene_slugs or ())
+    raus = []
+    for eintrag in (memo or {}).values():
+        if not isinstance(eintrag, dict):
+            continue
+        slug, d = eintrag.get("slug"), eintrag.get("date") or ""
+        if not slug or slug in gesehen:
+            continue
+        if heute <= d <= bis:
+            raus.append((d, slug))
+    return [slug for _, slug in sorted(set(raus))]
+
+
+def fehlende_nah_fixtures(wm, prices, jetzt=None, stunden=48) -> list:
+    """Fixtures mit Anpfiff in den nächsten `stunden`, für die KEIN Poly-Preis vorliegt.
+
+    Der Rescue oben kann nur Slugs holen, die wir schon einmal gesehen haben. Ein Spiel, das nie
+    im Batch war, bliebe damit still unsichtbar — genau die Stille, die den Ausfall vom 24.08.
+    fünf Tage lang verdeckt hat. Diese Liste ist die laute Variante.
+    """
+    if not isinstance(wm, dict):
+        return []
+    jetzt = jetzt or datetime.now(timezone.utc)
+    bis = jetzt + timedelta(hours=stunden)
+    haben = set(prices or {})
+    raus = []
+    fixtures = []
+    for g in (wm.get("groups") or {}).values():
+        fixtures.extend((g or {}).get("fixtures") or [])
+    fixtures.extend(wm.get("koFixtures") or [])
+    for fx in fixtures:
+        ko = fx.get("kickoff")
+        if not ko:
+            continue
+        try:
+            kod = datetime.fromisoformat(str(ko).replace("Z", "+00:00"))
+        except Exception:
+            continue
+        if not (jetzt <= kod <= bis):
+            continue
+        h, a = str(fx.get("home")), str(fx.get("away"))
+        # Poly spiegelt Spiele — beide Richtungen zählen als „vorhanden".
+        if f"{h}-{a}" in haben or f"{a}-{h}" in haben:
+            continue
+        raus.append({
+            "key": f"{h}-{a}",
+            "kickoff": ko,
+            "home": fx.get("homeName") or h,
+            "away": fx.get("awayName") or a,
+        })
+    return sorted(raus, key=lambda x: x["kickoff"])
+
+
+def hole_event_per_slug(slug, fetch=None):
+    """Ein einzelnes Gamma-Event per Slug. Bereits aufgelöste Events werden verworfen —
+    der Batch filtert `closed=false`, die Slug-Abfrage kann das nicht."""
+    _get = fetch or fetch_gamma
+    try:
+        treffer = _get(GAMMA_SLUG_URL.format(slug=slug)) or []
+    except Exception as e:
+        print(f"  ⚠️  Rescue {slug} fehlgeschlagen: {e}")
+        return None
+    for ev in treffer:
+        if ev.get("closed") is True or ev.get("active") is False:
+            continue
+        return ev
+    return None
 
 # ── Polymarket English team name → our WM team ID ─────────────────────────────
 POLY_NAME_TO_ID = {
@@ -328,6 +545,17 @@ def _build_name_map_from_data() -> dict:
 _POLY_NAME_ALIASES = {
     "RCD Espanyol de Barcelona": "540",   # Espanyol (nicht Barcelona 529 - "Barcelona" im Namen kollidiert)
     "Real Racing Club":          "4665",  # Racing Santander (kein Token-Overlap mit "Racing Santander")
+    # 28.08.2026 (Lucas' Runner-Log): fünf Namen liefen JEDEN Lauf ins Leere. Zwei davon
+    # mehrdeutig — und zwar als Nebenwirkung der Espanyol-Zeile eine Ebene höher: sobald
+    # "RCD Espanyol de Barcelona" in der Map steht, matcht "FC Barcelona" per Token-Überlapp
+    # auf 529 UND 540, der Resolver gibt (korrekt) None zurück und das Spiel fliegt raus.
+    # Ergebnis: Barcelona und Inter waren seit Saisonstart NIE handelbar; in einem einzigen
+    # Lauf gingen so 9 Fixtures verloren. Exakte Aliase greifen VOR dem Fuzzy-Match.
+    "FC Barcelona":              "529",   # vs 540 Espanyol ("… de Barcelona")
+    "FC Internazionale Milano":  "505",   # vs 489 AC Milan ("Milan" im Namen)
+    "Stade Rennais FC 1901":      "94",   # Rennes — Jahreszahl + Rechtsform, kein Token-Treffer
+    "ES Troyes AC":              "110",   # Estac Troyes
+    "RC Deportivo A Coruña":     "544",   # Deportivo La Coruna (A Coruña vs La Coruna)
 }
 _ACTIVE_NAME_MAP = (_build_name_map_from_data() if D.is_liga() else dict(POLY_NAME_TO_ID))
 if D.is_liga():
@@ -597,14 +825,29 @@ def compute_btts_edges(pinn_bttsY, pinn_bttsN, poly_btts, poly_btts_no, template
 def main():
     print("=== fetch_wm_poly_prices.py ===")
 
-    print(f"  Fetching {GAMMA_URL} (+ Folgeseiten)")
+    print(f"  Fetching {GAMMA_URL} (+ Folgeseiten, je Serie einzeln)")
     try:
-        events = fetch_gamma_all()
+        events = fetch_gamma_events()
     except Exception as e:
         print(f"  ERROR: {e}")
         sys.exit(1)
 
     print(f"  {len(events)} events received from Gamma API")
+
+    # ── Rescue anpfiff-naher Spiele, die im Batch fehlen (28.08.2026) ────────
+    slug_memo = lade_slug_memo()
+    _fehlend = rescue_kandidaten(slug_memo, {e.get("slug") for e in events})
+    if _fehlend:
+        print(f"  🛟 Rescue: {len(_fehlend)} anpfiff-nahe(s) Spiel(e) fehlt(en) im Batch — "
+              f"hole einzeln per Slug: {', '.join(_fehlend[:6])}"
+              f"{'…' if len(_fehlend) > 6 else ''}")
+        for _slug in _fehlend:
+            _ev = hole_event_per_slug(_slug)
+            if _ev:
+                events.append(_ev)
+                print(f"    ✓ nachgeholt: {_slug}")
+            else:
+                print(f"    ✗ nicht (mehr) offen: {_slug}")
     # Diagnose (01.07.2026): Datumsspanne der empfangenen Events — zeigt sofort, ob KO-Spiele (nach dem
     # letzten Gruppenspieltag) durchkommen. Wenn hier nur ≤ Gruppenphase steht, greift der Batch-Filter
     # nicht wie gewollt.
@@ -681,6 +924,12 @@ def main():
             ok += 1
         else:
             skip += 1
+
+    # Slug-Gedächtnis fortschreiben — Basis für den Rescue im nächsten Lauf.
+    try:
+        write_json_atomic(SLUG_MEMO_FILE, merke_slugs(slug_memo, prices))
+    except Exception as e:
+        print(f"  ⚠️  Slug-Gedächtnis schreiben fehlgeschlagen: {e}")
 
     # ── Patch wm2026-data.json mit aktuellen Poly-Preisen ────────────────────
     wm = None
@@ -1233,6 +1482,18 @@ def main():
           f" | {n_pinn} Pinnacle | edge≥3pp: {n_edge}"
           f" | 🔥 SteamLag: {n_steam} | 📈 growing: {n_grow}"
           f" | O/U: {n_ou}")
+
+    # ── Abdeckungs-Alarm (28.08.2026): fehlt ein Spiel, dessen Anpfiff bevorsteht? ──
+    _luecken = fehlende_nah_fixtures(wm, prices)
+    if _luecken:
+        print(f"  🚨 {len(_luecken)} Fixture(s) mit Anpfiff <48h ohne Polymarket-Markt:")
+        for _l in _luecken[:8]:
+            print(f"     – {_l['home']} vs {_l['away']}  [{_l['key']}]  {_l['kickoff']}")
+    elif wm is None:
+        # Ohne Fixture-Datei ist „keine Lücke" keine Aussage — fail-closed formulieren.
+        print("  ⚠️  Abdeckung nicht prüfbar — keine Fixture-Datei geladen")
+    else:
+        print("  ✅ Alle Fixtures mit Anpfiff <48h haben einen Polymarket-Markt")
 
     # ── Market Depth: CLOB bid/ask für Top-Edge-Fixtures ─────────────────────
     # Nur Fixtures mit bestEdge ≥ 3pp → max 15 CLOB-Requests pro Run

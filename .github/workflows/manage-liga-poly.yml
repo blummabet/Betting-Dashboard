@@ -157,7 +157,7 @@ jobs:
             liga-poly-history.json liga_book_health.json liga_kill_switch.json \
             liga-data.json liga-odds-history.json \
             liga_results.json liga_pick_calibration.json \
-            liga_poly_book_probe.json; do
+            liga_poly_book_probe.json liga_poly_slugs.json; do
             [ -f "$f" ] && git add "$f"
           done
           if git diff --staged --quiet; then

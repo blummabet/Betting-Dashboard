@@ -172,7 +172,7 @@ jobs:
             esports_poly_prices.json esports_poly_wallets.json esports_poly_smartmoney.json esports_poly_coherence.json esports_poly_status.json \
             mls-poly-history.json mls_book_health.json mls_kill_switch.json \
             mls-data.json mls-odds-history.json \
-            mls_results.json mls_pick_calibration.json; do
+            mls_results.json mls_pick_calibration.json mls_poly_slugs.json; do
             [ -f "$f" ] && git add "$f"
           done
           if git diff --staged --quiet; then

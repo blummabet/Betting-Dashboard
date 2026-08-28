@@ -69,6 +69,14 @@ class TestEmitAlerts(unittest.TestCase):
         self.mod = fetch_wm_lineups
         self.mod.CFG = {**self.mod.DEFAULT_CFG}
         self.mod.SKIP_TELEGRAM = True  # keine reale Telegram-API
+        # 28.08.2026: ALERT_DEDUP zeigt auf die ECHTE, committete wm_lineup_alerts.json.
+        # _emit_lineup_alerts speichert bei sent>0 — die Suite hat damit bei JEDEM Lauf die
+        # Dedup-Zeitstempel im Repo überschrieben (gefunden, weil `git status` nach dem
+        # Testlauf die Datei als geändert zeigte). Committet ein Runner das mit, verschiebt
+        # sich das Dedup-Fenster echter Alerts. Test schreibt ab jetzt in tempdir.
+        self._alert_tmp = tempfile.TemporaryDirectory()
+        self.addCleanup(self._alert_tmp.cleanup)
+        self.mod.ALERT_DEDUP = Path(self._alert_tmp.name) / "wm_lineup_alerts.json"
 
     def _entry(self, home_starting=None, home_subs=None,
                away_starting=None, away_subs=None, kickoff=None):
