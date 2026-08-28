@@ -1,23 +1,23 @@
 {
-"generatedAt": "2026-08-28T21:01:06.689475+00:00",
+"generatedAt": "2026-08-28T21:31:08.436466+00:00",
 "byVerdict": {
 "konsens": {
-"n": 537,
-"wins": 436,
-"hitRate": 0.8119,
-"polyN": 502,
-"polyWins": 397,
-"polyHitRate": 0.7908,
-"pinnN": 42,
-"pinnHitRate": 0.7381
+"n": 539,
+"wins": 438,
+"hitRate": 0.8126,
+"polyN": 504,
+"polyWins": 398,
+"polyHitRate": 0.7897,
+"pinnN": 43,
+"pinnHitRate": 0.7442
 },
 "uneinig": {
-"n": 178,
+"n": 179,
 "wins": 55,
-"hitRate": 0.309,
-"polyN": 159,
-"polyWins": 50,
-"polyHitRate": 0.3145,
+"hitRate": 0.3073,
+"polyN": 160,
+"polyWins": 51,
+"polyHitRate": 0.3187,
 "pinnN": 88,
 "pinnHitRate": 0.5909
 },
@@ -53,15 +53,15 @@
 "wins": 13,
 "hitRate": 0.5909
 },
+"Spanish La Liga": {
+"n": 22,
+"wins": 14,
+"hitRate": 0.6364
+},
 "German Cup": {
 "n": 21,
 "wins": 18,
 "hitRate": 0.8571
-},
-"Spanish La Liga": {
-"n": 21,
-"wins": 13,
-"hitRate": 0.619
 },
 "UEFA Europa League Qualifiers": {
 "n": 19,
@@ -203,6 +203,11 @@
 "wins": 4,
 "hitRate": 0.4444
 },
+"Italian Serie B": {
+"n": 9,
+"wins": 4,
+"hitRate": 0.4444
+},
 "Bolivian Liga de Futbol Profesional": {
 "n": 8,
 "wins": 7,
@@ -218,11 +223,6 @@
 "wins": 6,
 "hitRate": 0.75
 },
-"Italian Serie B": {
-"n": 8,
-"wins": 4,
-"hitRate": 0.5
-},
 "Peruvian Primera Division": {
 "n": 8,
 "wins": 5,
@@ -236,6 +236,11 @@
 "Japanese J League 2": {
 "n": 7,
 "wins": 7,
+"hitRate": 1.0
+},
+"Bulgarian A League": {
+"n": 6,
+"wins": 6,
 "hitRate": 1.0
 },
 "Other Competitions Soccer": {
@@ -262,11 +267,6 @@
 "n": 5,
 "wins": 4,
 "hitRate": 0.8
-},
-"Bulgarian A League": {
-"n": 5,
-"wins": 5,
-"hitRate": 1.0
 },
 "English Sky Bet League 1": {
 "n": 5,
@@ -521,25 +521,82 @@
 },
 "byStrength": {
 "strong": {
-"n": 418,
-"wins": 341,
-"hitRate": 0.8158
+"n": 419,
+"wins": 342,
+"hitRate": 0.8162
 },
 "weak": {
-"n": 269,
-"wins": 133,
-"hitRate": 0.4944
+"n": 271,
+"wins": 134,
+"hitRate": 0.4945
 }
 },
 "divergence": {
-"n": 178,
+"n": 179,
 "betfairWins": 55,
-"betfairRate": 0.309,
-"polyN": 159,
-"polyWins": 50,
-"polyRate": 0.3145
+"betfairRate": 0.3073,
+"polyN": 160,
+"polyWins": 51,
+"polyRate": 0.3187
 },
 "recent": [
+{
+"matchId": "35987229",
+"home": "US Cremonese",
+"away": "Modena",
+"league": "Italian Serie B",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "US Cremonese",
+"polySide": "away",
+"winner": "away",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+0,
+3
+],
+"kickoff": "2026-08-28T18:30:00Z",
+"settledAt": "2026-08-28T21:31:08.275648+00:00"
+},
+{
+"matchId": "35974047",
+"home": "Alaves",
+"away": "Villarreal",
+"league": "Spanish La Liga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Alaves",
+"polySide": "away",
+"winner": "home",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-08-28T19:30:00Z",
+"settledAt": "2026-08-28T21:31:08.275648+00:00"
+},
+{
+"matchId": "35971972",
+"home": "CSKA 1948 Sofia",
+"away": "Lokomotiv Plovdiv",
+"league": "Bulgarian A League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "CSKA 1948 Sofia",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-08-28T18:15:00Z",
+"settledAt": "2026-08-28T21:16:05.138974+00:00"
+},
 {
 "matchId": "35971124",
 "home": "Crystal Palace",
@@ -1242,69 +1299,12 @@
 ],
 "kickoff": "2026-08-27T16:00:00Z",
 "settledAt": "2026-08-27T17:58:28.006423+00:00"
-},
-{
-"matchId": "35978829",
-"home": "CF America",
-"away": "Columbus",
-"league": "North American Leagues Cup",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "CF America",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-08-27T02:45:00Z",
-"settledAt": "2026-08-27T04:56:59.156345+00:00"
-},
-{
-"matchId": "35929554",
-"home": "Vasco Da Gama",
-"away": "EC Vitoria Salvador",
-"league": "Brazilian Cup",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Vasco Da Gama",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-08-27T00:30:00Z",
-"settledAt": "2026-08-27T03:41:50.140202+00:00"
-},
-{
-"matchId": "35965764",
-"home": "River Plate",
-"away": "Santa Fe",
-"league": "CONMEBOL Copa Sudamericana",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "River Plate",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-7,
-8
-],
-"kickoff": "2026-08-27T00:30:00Z",
-"settledAt": "2026-08-27T03:41:50.140202+00:00"
 }
 ],
 "global": {
-"n": 720,
-"wins": 492,
+"n": 723,
+"wins": 494,
 "hitRate": 0.6833
 },
-"pending": 16
+"pending": 15
 }
