@@ -32,12 +32,17 @@ permissions:
 # Teilt die Gruppe mit update-mls / fetch-mls-odds-dense — alle schreiben mls-data.json +
 # mls_poly_prices.json → serialisieren, sonst überschreiben sich die Pushes.
 concurrency:
-  group: update-mls
+  # 28.08.2026: eigene Spur. Dieser Workflow laeuft auf dem Mac, update-mls und
+  # fetch-mls-odds-dense auf ubuntu — keine geteilten Dateien, nur der Git-Push, und den fangen
+  # die Rebase-Retry-Schleifen ab. In der gemeinsamen Spur wurde jeder wartende Lauf gecancelt.
+  group: manage-mls-poly
   cancel-in-progress: false
 
 jobs:
   monitor-mls-positions:
     runs-on: [self-hosted, macOS]
+    timeout-minutes: 20      # 28.08.2026: vorher GitHubs Default 360 — ein haengender Lauf konnte
+                             # einen der zwei Mac-Runner sechs Stunden besetzen.
     env:
       COCOBET_DATASET: mls
       COCOBET_PROFILE: mls_default
@@ -46,7 +51,13 @@ jobs:
       - name: 📥 Repo auschecken
         uses: actions/checkout@v4
 
-      - name: 🐍 Python + py-clob-client-v2 einrichten (Mac)
+      # 28.08.2026 — identisch zu manage-liga-poly.yml, gleiche Krankheit, gleicher Verlauf:
+      # committete Laeufe 25.08. 10 → 26.08. 6 → 27.08. 3 → 28.08. 2. Der alte Schritt baute
+      # py-clob-client-v2 bei jedem Lauf neu aus GitHub, war der einzige ohne continue-on-error
+      # vor dem Commit und konnte ohne timeout einen der zwei Mac-Runner blockieren. Der
+      # Preis-Fetch braucht den Client gar nicht (nur urllib) — Daten-Pfad und Trading-Pfad
+      # gehoeren deshalb getrennt.
+      - name: 🐍 Python finden (Mac, kein setup-python auf self-hosted)
         run: |
           PYTHON=""
           for PY in /opt/homebrew/bin/python3.13 /opt/homebrew/bin/python3.12 /opt/homebrew/bin/python3.11 /usr/local/bin/python3.13 /usr/local/bin/python3.12 /usr/local/bin/python3.11; do
@@ -56,9 +67,20 @@ jobs:
           echo "✅ $PYTHON ($($PYTHON --version))"
           echo "POLY_PYTHON=$PYTHON" >> $GITHUB_ENV
           $PYTHON -m pip install --break-system-packages requests --quiet
-          $PYTHON -m pip uninstall -y py-clob-client py-clob-client-v2 2>/dev/null || true
-          $PYTHON -m pip install --break-system-packages "git+https://github.com/Polymarket/py-clob-client-v2.git@main" 2>&1 | tail -3
-          $PYTHON -c "from py_clob_client_v2.client import ClobClient; print('✅ py-clob-client-v2 ok')"
+
+      - name: 🔌 CLOB-Client nur bei Bedarf nachziehen (Trading-Pfad)
+        continue-on-error: true
+        timeout-minutes: 5
+        run: |
+          PY="${{ env.POLY_PYTHON }}"
+          if $PY -c "from py_clob_client_v2.client import ClobClient" 2>/dev/null; then
+            echo "✅ py-clob-client-v2 bereits da — kein Neubau."
+            exit 0
+          fi
+          echo "↻ py-clob-client-v2 fehlt oder ist kaputt — einmalig neu bauen."
+          $PY -m pip uninstall -y py-clob-client py-clob-client-v2 2>/dev/null || true
+          $PY -m pip install --break-system-packages "git+https://github.com/Polymarket/py-clob-client-v2.git@main" 2>&1 | tail -3
+          $PY -c "from py_clob_client_v2.client import ClobClient; print('✅ py-clob-client-v2 ok')"
 
       # Frische Pinnacle-Fair VOR den Poly-Preisen: der Trade-Edge = Pinnacle-fair vs Live-Poly.
       - name: 📈 MLS Pinnacle-Odds frisch (Steam-Frische)

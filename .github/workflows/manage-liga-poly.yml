@@ -36,12 +36,20 @@ permissions:
   actions: read          # run_health.py liest die Steps DIESES Laufs
 
 concurrency:
-  group: update-liga
+  # 28.08.2026: raus aus der geteilten Spur „update-liga". Dieser Workflow laeuft auf dem MAC,
+  # update-liga und fetch-liga-odds-dense auf ubuntu — sie teilen also keine Dateien, nur den
+  # Git-Push, und den fangen die 5-fach-Rebase-Retry-Schleifen ab. In der gemeinsamen Spur wurde
+  # dagegen jeder wartende Lauf vom naechsten Ankoemmling gecancelt.
+  group: manage-liga-poly
   cancel-in-progress: false
 
 jobs:
   monitor-liga-positions:
     runs-on: [self-hosted, macOS]
+    # 28.08.2026: ohne diese Zeile galt GitHubs Default von 360 Minuten — ein haengender Lauf
+    # konnte einen der zwei Mac-Runner sechs Stunden besetzen. betfair.yml steht seit jeher auf 8
+    # und laeuft genau deshalb zuverlaessig. 20 ist grosszuegig: ein gesunder Lauf braucht wenige.
+    timeout-minutes: 20
     env:
       COCOBET_DATASET: liga
       COCOBET_PROFILE: liga_default
@@ -50,7 +58,17 @@ jobs:
       - name: 📥 Repo auschecken
         uses: actions/checkout@v4
 
-      - name: 🐍 Python + py-clob-client-v2 einrichten (Mac)
+      # 28.08.2026 (Lucas: „mmn ist polymarket tot") — hier lag der Grund. Der alte Schritt hat bei
+      # JEDEM der 25 Laeufe pro Tag py-clob-client-v2 deinstalliert und frisch aus GitHub gebaut.
+      # Drei Folgen: (1) er war der EINZIGE Schritt vor dem Commit ohne continue-on-error, ein
+      # Netz-Schluckauf riss also den ganzen Job mit — inklusive Preis-Update, das den Client gar
+      # nicht braucht (fetch_wm_poly_prices.py nutzt nur urllib). (2) Ohne timeout-minutes konnte
+      # ein haengender Build den Mac-Runner UND die concurrency-Spur bis zu 6 h blockieren; jeder
+      # weitere Lauf wurde derweil als wartend gecancelt. (3) Es kostete jedes Mal Minuten.
+      # Befund am 28.08.: letzter erfolgreicher Lauf 04:26 UTC, danach 13 Stunden nichts — waehrend
+      # betfair.yml auf DEMSELBEN Mac im 15-Minuten-Takt sauber durchlief (eigene Gruppe, timeout 8).
+      # Deshalb jetzt zweigeteilt: der Daten-Pfad haengt nicht mehr am Trading-Pfad.
+      - name: 🐍 Python finden (Mac, kein setup-python auf self-hosted)
         run: |
           PYTHON=""
           for PY in /opt/homebrew/bin/python3.13 /opt/homebrew/bin/python3.12 /opt/homebrew/bin/python3.11 /usr/local/bin/python3.13 /usr/local/bin/python3.12 /usr/local/bin/python3.11; do
@@ -60,9 +78,20 @@ jobs:
           echo "✅ $PYTHON ($($PYTHON --version))"
           echo "POLY_PYTHON=$PYTHON" >> $GITHUB_ENV
           $PYTHON -m pip install --break-system-packages requests --quiet
-          $PYTHON -m pip uninstall -y py-clob-client py-clob-client-v2 2>/dev/null || true
-          $PYTHON -m pip install --break-system-packages "git+https://github.com/Polymarket/py-clob-client-v2.git@main" 2>&1 | tail -3
-          $PYTHON -c "from py_clob_client_v2.client import ClobClient; print('✅ py-clob-client-v2 ok')"
+
+      - name: 🔌 CLOB-Client nur bei Bedarf nachziehen (Trading-Pfad)
+        continue-on-error: true
+        timeout-minutes: 5
+        run: |
+          PY="${{ env.POLY_PYTHON }}"
+          if $PY -c "from py_clob_client_v2.client import ClobClient" 2>/dev/null; then
+            echo "✅ py-clob-client-v2 bereits da — kein Neubau."
+            exit 0
+          fi
+          echo "↻ py-clob-client-v2 fehlt oder ist kaputt — einmalig neu bauen."
+          $PY -m pip uninstall -y py-clob-client py-clob-client-v2 2>/dev/null || true
+          $PY -m pip install --break-system-packages "git+https://github.com/Polymarket/py-clob-client-v2.git@main" 2>&1 | tail -3
+          $PY -c "from py_clob_client_v2.client import ClobClient; print('✅ py-clob-client-v2 ok')"
 
       - name: 📈 Liga Pinnacle-Odds frisch (Steam-Frische)
         run: ${{ env.POLY_PYTHON }} fetch_liga_odds.py

@@ -60,6 +60,10 @@ jobs:
     # Label 'macOS' trifft NUR den Mac, NICHT den (noch laufenden) Linux-VPS (der würde
     # wieder geoblockt). VPS kann gekündigt werden — wird hier nicht mehr genutzt.
     runs-on: [self-hosted, macOS]
+    # 28.08.2026: ohne timeout gilt GitHubs Default von 360 Minuten — ein haengender Lauf
+    # besetzt dann einen der zwei Mac-Runner einen halben Tag und blockiert die Poly-
+    # Manager von Liga und MLS gleich mit. betfair.yml steht seit jeher auf 8.
+    timeout-minutes: 20
 
     steps:
       - name: 📥 Repo auschecken

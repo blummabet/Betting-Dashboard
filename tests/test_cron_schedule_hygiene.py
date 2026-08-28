@@ -157,3 +157,93 @@ class TestLastBleibtImRahmen:
                   if f.endswith((".yml", ".yaml")) and f != "update-liga.yml"
                   and re.search(rf"^\s*group:\s*{re.escape(gruppe)}\s*$", lies(f), re.M)]
         assert not andere, f"Gruppe '{gruppe}' wird auch von {andere} benutzt"
+
+
+class TestMacRunnerDisziplin:
+    """28.08.2026 (Lucas: „mmn ist polymarket tot").
+
+    Befund: manage-liga-poly hatte seit 04:26 UTC keinen Lauf mehr committet — 13 Stunden, bei
+    25 geplanten Laeufen pro Tag. Die committeten Laeufe zerfielen ueber vier Tage von 13 auf 1
+    (MLS parallel von 10 auf 2). Auf DEMSELBEN Mac lief betfair.yml im 15-Minuten-Takt sauber
+    durch. Der Unterschied: betfair hat `timeout-minutes: 8` und eine eigene concurrency-Gruppe.
+
+    Ohne timeout gilt GitHubs Default von 360 Minuten. Ein haengender Lauf besetzt damit einen
+    der zwei Mac-Runner sechs Stunden lang — und blockiert, wenn er sich die Spur mit anderen
+    teilt, zusaetzlich jeden wartenden Lauf, der dann vom naechsten Ankoemmling gecancelt wird.
+    """
+    import os as _os
+
+    @staticmethod
+    def _jobs(datei):
+        import yaml
+        with open(os.path.join(WF, datei), encoding="utf-8") as f:
+            return list((yaml.safe_load(f).get("jobs") or {}).values())
+
+    @staticmethod
+    def _self_hosted():
+        import yaml
+        raus = []
+        for f in sorted(os.listdir(WF)):
+            if not f.endswith((".yml", ".yaml")):
+                continue
+            with open(os.path.join(WF, f), encoding="utf-8") as fh:
+                src = fh.read()
+            if "self-hosted" in src:
+                raus.append(f)
+        return raus
+
+    def test_jeder_mac_workflow_hat_ein_timeout(self):
+        ohne = []
+        for f in self._self_hosted():
+            for jd in self._jobs(f):
+                ro = (jd or {}).get("runs-on")
+                ro = ",".join(ro) if isinstance(ro, list) else str(ro)
+                if "self-hosted" in ro and (jd or {}).get("timeout-minutes") is None:
+                    ohne.append(f)
+        assert not ohne, (
+            f"Mac-Workflows ohne timeout-minutes: {sorted(set(ohne))} — GitHubs Default sind "
+            f"360 Minuten, das blockiert einen von zwei Runnern einen halben Tag.")
+
+    def test_timeouts_bleiben_im_rahmen(self):
+        zu_lang = []
+        for f in self._self_hosted():
+            for jd in self._jobs(f):
+                t = (jd or {}).get("timeout-minutes")
+                if t is not None and t > 75:
+                    zu_lang.append((f, t))
+        assert not zu_lang, f"Mac-Workflows mit sehr langem timeout: {zu_lang}"
+
+    def test_poly_manager_teilen_ihre_spur_nicht_mit_ubuntu_workflows(self):
+        """Mac und ubuntu teilen keine Dateien — die gemeinsame Spur kostete nur Laeufe."""
+        import yaml, re as _re
+        for datei in ("manage-liga-poly.yml", "manage-mls-poly.yml"):
+            with open(os.path.join(WF, datei), encoding="utf-8") as f:
+                src = f.read()
+            gruppe = _re.search(r"^concurrency:.*?^\s*group:\s*(\S+)", src, _re.M | _re.S).group(1)
+            andere = []
+            for f2 in sorted(os.listdir(WF)):
+                if not f2.endswith((".yml", ".yaml")) or f2 == datei:
+                    continue
+                with open(os.path.join(WF, f2), encoding="utf-8") as fh:
+                    s2 = fh.read()
+                if _re.search(rf"^\s*group:\s*{_re.escape(gruppe)}\s*$", s2, _re.M):
+                    andere.append(f2)
+            assert not andere, f"{datei}: Gruppe '{gruppe}' wird auch von {andere} benutzt"
+
+    def test_clob_client_wird_nicht_bei_jedem_lauf_neu_gebaut(self):
+        """Der Preis-Fetch nutzt nur urllib. Ein Netz-Schluckauf beim CLOB-Build darf den
+        Daten-Pfad nicht mitreissen — genau daran ist der Poly-Lauf gestorben."""
+        import yaml
+        for datei in ("manage-liga-poly.yml", "manage-mls-poly.yml"):
+            with open(os.path.join(WF, datei), encoding="utf-8") as f:
+                wf = yaml.safe_load(f)
+            steps = [s for jd in (wf.get("jobs") or {}).values() for s in (jd.get("steps") or [])]
+            bau = [s for s in steps if "py-clob-client-v2.git" in str(s.get("run") or "")]
+            assert len(bau) == 1, f"{datei}: {len(bau)} CLOB-Bau-Schritte, erwartet 1"
+            schritt = bau[0]
+            assert schritt.get("continue-on-error") is True, \
+                f"{datei}: CLOB-Bau ohne continue-on-error — reisst den ganzen Job mit"
+            assert schritt.get("timeout-minutes") is not None, \
+                f"{datei}: CLOB-Bau ohne timeout — kann den Runner blockieren"
+            assert "from py_clob_client_v2.client import ClobClient" in str(schritt.get("run")), \
+                f"{datei}: CLOB-Bau prueft nicht erst, ob der Client schon da ist"
