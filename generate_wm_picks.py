@@ -1283,6 +1283,44 @@ def _parse_kickoff(kt):
         return None
 
 
+MAX_VERDICT_FLIPS = 8   # mehr braucht niemand; hält die Datei klein
+
+
+def _log_verdict_flips(existing, new_picks, now_iso, published_before_iso=None):
+    """Verdict-Wechsel eines BESTEHENDEN Picks mitschreiben. REIN, wirft nie.
+
+    28.08.2026 (Lucas, Barcelona-Athletic): der Über-2.5-Pick war morgens NOBET, der manuell
+    angestoßene Public-Post enthielt deshalb nur den AH-Pick — und 14 Minuten VOR Anpfiff hob
+    die neu gerechnete Conviction ihn zurueck auf ABWÄGEN. Auf der Karte tauchte er damit
+    wieder auf. Fachlich ist das gewollt (die Aufstellung kommt T-1h und darf noch wirken),
+    aber unsichtbar war es irreführend: der Pick stand am Ende da, ohne je gepostet worden zu
+    sein.
+
+    Wir ändern die Logik NICHT (Lucas: „so lassen, aber sichtbar machen") — wir schreiben nur
+    mit, WANN sich ein Verdict gedreht hat. Die Karte kann es dann dranschreiben.
+    """
+    if not existing or not new_picks:
+        return new_picks
+    alt = {}
+    for p in existing:
+        if isinstance(p, dict) and p.get("market"):
+            alt[p["market"]] = p
+    for p in (new_picks or []):
+        if not isinstance(p, dict) or not p.get("market"):
+            continue
+        vor = alt.get(p["market"])
+        if not vor:
+            continue
+        log = list(vor.get("verdictFlips") or [])
+        v_alt, v_neu = vor.get("verdict"), p.get("verdict")
+        if v_alt and v_neu and v_alt != v_neu:
+            log.append({"ts": now_iso, "von": v_alt, "auf": v_neu})
+            log = log[-MAX_VERDICT_FLIPS:]
+        if log:
+            p["verdictFlips"] = log
+    return new_picks
+
+
 def fixture_pick_state(fx, has_pick, today, now_dt, cutover_dt):
     """Single Source of Truth: was passiert mit den Picks eines Fixtures?
 
@@ -2423,6 +2461,8 @@ def main():
             # NOBET-Karten (23.06.2026): ex-BET/ABWÄGEN ohne aktuellen Pick als NOBET behalten.
             new_picks = _carry_nobet(existing_pk, new_picks,
                                      mkt.get(f"{fx['home']}-{fx['away']}", {}), now_dt.isoformat())
+            # Verdict-Wechsel mitschreiben (28.08.2026) — Logik unverändert, nur sichtbar.
+            new_picks = _log_verdict_flips(existing_pk, new_picks, now_dt.isoformat())
             # Immer überschreiben — auch leere Liste löscht veraltete Picks
             wm["picks"][pick_key] = new_picks
 

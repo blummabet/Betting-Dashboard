@@ -1136,6 +1136,34 @@
   // Live-Picks (BET/ABWÄGEN, ohne ausgeschlossene/ersetzte) + AH-Linien-Dedup.
   // FIX 14.06.2026: je Seite+Vorzeichen nur die beste AH-Linie (höchste Edge) —
   // „AH Auswärts +0.5" UND „+0.75" sind redundant, eine Cover-Linie reicht (Lucas).
+  // ── Verdict-Wechsel sichtbar machen (28.08.2026, Lucas) ────────────────────
+  // Barcelona-Athletic: der Über-2.5-Pick war morgens NOBET (also nicht auf der Karte und
+  // nicht im Public-Post), und 14 Minuten VOR Anpfiff hob die neu gerechnete Conviction ihn
+  // zurück auf ABWÄGEN — da stand er wieder da, ohne je gepostet worden zu sein.
+  //
+  // Die Logik bleibt wie sie ist (die Aufstellung kommt T-1h und soll noch wirken dürfen).
+  // Aber es muss DRANSTEHEN, sonst wundert man sich zu Recht. generate_wm_picks schreibt die
+  // Wechsel in p.verdictFlips mit.
+  function _verdictFlipBadge(p) {
+    const flips = (p && Array.isArray(p.verdictFlips)) ? p.verdictFlips : [];
+    if (!flips.length) return '';
+    const last = flips[flips.length - 1];
+    let uhr = '';
+    try {
+      const d = new Date(last.ts);
+      if (isFinite(d.getTime())) {
+        uhr = d.toLocaleTimeString('de-AT', { hour: '2-digit', minute: '2-digit' });
+      }
+    } catch (e) { /* ohne Uhrzeit weiter */ }
+    const verlauf = flips.map(f => {
+      let t = '';
+      try { const d = new Date(f.ts); if (isFinite(d.getTime())) t = d.toLocaleString('de-AT', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }) + ' '; } catch (e) {}
+      return `${t}${f.von} \u2192 ${f.auf}`;
+    }).join(' \u00b7 ');
+    const titel = `Verdict nach der Veröffentlichung gedreht: ${verlauf}`.replace(/"/g, '&quot;');
+    return ` <span class="cc-verdict-flip" title="${titel}" style="font-size:9.5px;color:#e3b341;white-space:nowrap">\u21bb ${last.von}\u2192${last.auf}${uhr ? ' ' + uhr : ''}</span>`;
+  }
+
   function _wmLivePicks(fxPicks) {
     const base = (fxPicks || []).filter(p =>
       !p.trackingExcluded && !p.boldAlt && (p.verdict === 'BET' || p.verdict === 'ABWÄGEN'));
@@ -1658,7 +1686,7 @@
         const opStake = _stakeStr(op) ? ` <span class="cc-op-stake" style="color:#5eead4;font-weight:700;">💶 €${_stakeStr(op)}</span>` : '';
         html += `<div class="cc-op-row ${cls}">
           <span class="cc-op-verdict">${op.verdict}</span>
-          <span class="cc-op-market">${op.market}${synthBadge}</span>
+          <span class="cc-op-market">${op.market}${synthBadge}${_verdictFlipBadge(op)}</span>
           <span class="cc-op-odds">@${oddsStr}</span>${epp}${opStake}
         </div>`;
       }
@@ -1925,7 +1953,7 @@
       const oddsStr = hero.odds != null ? hero.odds.toFixed(2) : '—';
       html += `<div class="cc-pick${isAbw ? ' cc-pick-abw' : ''}">
         <div class="cc-pick-label">${isAbw ? 'Vorsichtiger Pick' : 'Unser Pick'}</div>
-        <div class="cc-pick-market">${hero.market}</div>
+        <div class="cc-pick-market">${hero.market}${_verdictFlipBadge(hero)}</div>
         <div class="cc-pick-odds"><span class="cc-at">@</span><span class="cc-num">${oddsStr}</span></div>
         <div class="cc-pick-conf">
           ${[1,2,3].map(n => `<span class="cc-star${isAbw ? ' cc-star-abw' : ''} ${n <= stars ? 'cc-star-full' : 'cc-star-empty'}">★</span>`).join('')}
