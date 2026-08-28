@@ -16,7 +16,9 @@ const SRC = readFileSync(new URL('main-dashboard.js', ROOT), 'utf8');
 // Funktion per Klammer-Zaehlung aus der Quelle schneiden — robuster als ein Regex, der an
 // jedem verschachtelten `}` scheitert.
 function load(name) {
-  const start = SRC.indexOf('function ' + name + '(data) {');
+  // 28.08.2026: Signatur nicht mehr auf `(data)` festnageln — _mdJoinPicks braucht inzwischen
+  // fxTeam(f, seite) und team(x) als Nachbarn, und die haben andere Parameter.
+  const start = SRC.indexOf('function ' + name + '(');
   assert.ok(start >= 0, name + ' nicht gefunden');
   let i = SRC.indexOf('{', start), tiefe = 0, ende = -1;
   for (let j = i; j < SRC.length; j++) {
@@ -28,7 +30,11 @@ function load(name) {
 }
 function build(name, ...deps) {
   // fixtures() ruft _mdJoinPicks — beide im selben Scope auswerten, sonst „is not defined".
-  const code = deps.map(load).concat([load(name)]).join('\n');
+  // _MD_TEAM_NAMES ist im echten Modul eine Modul-Variable; hier frisch je Build, damit sich
+  // die Tests nicht gegenseitig Namen unterschieben.
+  const basis = ['team', 'fxTeam', '_mdLearnTeamNames'].filter(function (n) { return n !== name; });
+  const code = 'var _MD_TEAM_NAMES = {};\n'
+    + basis.concat(deps).map(load).concat([load(name)]).join('\n');
   return new Function(code + '; return ' + name + ';')();
 }
 const join = build('_mdJoinPicks');

@@ -21,6 +21,34 @@
   function eur(v) { v = +v || 0; if (v >= 1e6) return '€' + (v / 1e6).toFixed(2) + 'M'; if (v >= 1e3) return '€' + (v / 1e3).toFixed(v >= 1e5 ? 0 : 1).replace('.0', '') + 'K'; return '€' + Math.round(v); }
   function usd(v) { v = +v || 0; if (v >= 1e6) return '$' + (v / 1e6).toFixed(2) + 'M'; if (v >= 1e3) return '$' + (v / 1e3).toFixed(v >= 1e5 ? 0 : 1).replace('.0', '') + 'K'; return '$' + Math.round(v); }
   function team(x) { if (!x) return '?'; if (typeof x === 'string') return x; return x.name || x.team || x.id || '?'; }
+  // 28.08.2026 (Lucas: „da passt noch was nicht mit den Team-Namen") — im Triple-Konsens stand
+  // „45 v 52" statt „Everton v Crystal Palace". Ursache: in liga-data.json / mls-data.json ist
+  // fx.home die TEAM-ID als String ("45"), der Klarname liegt daneben in fx.homeName. team()
+  // bekommt nur die ID und gibt sie mangels Besserem unveraendert zurueck. Im WM-Datensatz gibt
+  // es homeName gar nicht — dort ist fx.home ein Kuerzel ("MEX"), dessen Name in
+  // groups[*].teams steht. Reihenfolge deshalb: Name-Feld → ID→Name-Map des Datensatzes → Rohwert.
+  function fxTeam(f, seite) {
+    if (!f) return '?';
+    var nm = (seite === 'home') ? f.homeName : f.awayName;
+    if (nm) return nm;
+    var id = (seite === 'home') ? f.home : f.away;
+    var map = _MD_TEAM_NAMES && _MD_TEAM_NAMES[String(id)];
+    return map || team(id);
+  }
+  // ID→Name ueber ALLE geladenen Datensaetze. Bewusst global statt pro Aufruf: dieselbe Map
+  // bedient Liga, MLS und WM, und die IDs kollidieren zwischen den Datensaetzen nicht.
+  var _MD_TEAM_NAMES = {};
+  function _mdLearnTeamNames(data) {
+    if (!data || typeof data !== 'object') return;
+    var groups = data.groups || {};
+    for (var code in groups) {
+      var ts = (groups[code] || {}).teams || [];
+      for (var i = 0; i < ts.length; i++) {
+        var t = ts[i];
+        if (t && t.id != null && t.name) _MD_TEAM_NAMES[String(t.id)] = t.name;
+      }
+    }
+  }
   function short(k) {
     return String(k || '').replace('Over/Under', 'Ü/U').replace(' Goals', '').replace('Both teams to Score?', 'BTTS')
       .replace('Match Odds', '1X2').replace('First Half', 'HZ1').replace('Half Time/Full Time', 'HZ/EZ')
@@ -316,6 +344,7 @@
   // 3 „divergenz". Nur zusammengefuehrt hat sie niemand. (Verdrahtung ist nicht Ankunft.)
   function _mdJoinPicks(data) {
     if (!data || typeof data !== 'object') return [];
+    _mdLearnTeamNames(data);
     var picks = data.picks || {}, out = [];
     var add = function (code, fx) {
       if (!fx || typeof fx !== 'object') return;
@@ -327,6 +356,10 @@
         picks: Array.isArray(ps) ? ps : [],
         leagueName: fx.leagueName || code,
         group: code,
+        // Namen hier schon aufloesen: alles Nachgelagerte (Hero, „Jetzt", Sharp-Moves) liest
+        // dieselbe Kopie und muss die ID→Name-Frage nicht je Stelle neu beantworten.
+        homeName: fxTeam(fx, 'home'),
+        awayName: fxTeam(fx, 'away'),
       }));
     };
     var groups = data.groups || {};
@@ -602,7 +635,7 @@
     }).join('') + '</div>';
   }
   function _mdHero() {
-    var teams = function (f) { return fl(fxFlag(f)) + esc(team(f.home)) + ' <span style="color:var(--mi3);font-weight:400">v</span> ' + esc(team(f.away)); };
+    var teams = function (f) { return fl(fxFlag(f)) + esc(fxTeam(f, 'home')) + ' <span style="color:var(--mi3);font-weight:400">v</span> ' + esc(fxTeam(f, 'away')); };
     var top = '<div class="md-hero-top"><span class="md-hero-ic">⚖️</span>' +
       '<div><div class="md-hero-t">Triple-Konsens</div>' +
       '<div class="md-hero-s">wo Pinnacle · Betfair · Poly · Soft einig sind — und wo einer ausschert</div></div>' +
@@ -984,7 +1017,7 @@
     _mdStyle();
     p.classList.add('mdash');
     if (!_md.data) { _mdLoad(); return; }
-    var teamsOf = function (f) { return fl(fxFlag(f)) + esc(team(f.home)) + ' <span style="color:var(--mi3);font-weight:400">v</span> ' + esc(team(f.away)); };
+    var teamsOf = function (f) { return fl(fxFlag(f)) + esc(fxTeam(f, 'home')) + ' <span style="color:var(--mi3);font-weight:400">v</span> ' + esc(fxTeam(f, 'away')); };
 
     // Cards — Conviction-Meter
     var c = bestCards();
@@ -1321,7 +1354,7 @@
         if (!bet && !lag) return;
         var conv = +p.convictionScore || 0;
         var o = { id: 'x' + mid(f.home, f.away, f.matchId), k: k, exotic: false, src: 'card', conv: conv, odd: p.odds,
-                  match: esc(team(f.home)) + vsp + esc(team(f.away)), pick: esc(short(p.market || '') || 'Pick') };
+                  match: esc(fxTeam(f, 'home')) + vsp + esc(fxTeam(f, 'away')), pick: esc(short(p.market || '') || 'Pick') };
         if (bet) { o.score = 60 + conv * 3.5; o.badge = 'BET' + (conv ? ' ' + conv : ''); o.bc = A.good; }
         else { o.score = 48 + conv * 2; o.badge = '⚡ Poly-Lag'; o.bc = A.blue; }
         put(o);
