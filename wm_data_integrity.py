@@ -242,6 +242,86 @@ def check_picks_resolved(ctx):
                 "Resolver stirbt still, und alles was auf Ergebnissen aufbaut lernt nichts mehr.")
 
 
+RUN_HEALTH_DIR = "health"
+# Ab wann gilt ein Workflow als „meldet sich nicht mehr"? 26 h laesst einen taeglichen Lauf
+# einmal ausfallen, ohne zu schreien — zwei Ausfaelle hintereinander sind ein Muster.
+RUN_HEALTH_STALE_H = 26
+
+
+def _alter_h(ts, jetzt):
+    """Alter eines ISO-Zeitstempels in Stunden — None, wenn er nicht lesbar ist.
+
+    None heisst hier bewusst „unbekannt", nicht „frisch": der Aufrufer prueft dann keine
+    Ueberfaelligkeit, statt sie faelschlich als bestanden zu melden.
+    """
+    if not ts:
+        return None
+    try:
+        d = datetime.fromisoformat(str(ts).replace("Z", "+00:00"))
+    except Exception:
+        return None
+    if d.tzinfo is None:
+        d = d.replace(tzinfo=timezone.utc)
+    return (jetzt - d).total_seconds() / 3600.0
+
+
+def _run_health_dateien():
+    ordner = _BASE / RUN_HEALTH_DIR
+    try:
+        return sorted(ordner.glob("*.json"))
+    except Exception:
+        return []
+
+
+@integrity_check
+def check_run_health(ctx):
+    """28.08.2026 (Lucas: „stehen da Fehler die wir gar nicht mitkriegen?") — ja, 135 Stueck.
+
+    So viele Steps stehen auf `continue-on-error: true`; dazu 279 `|| true`. Ein Job kann
+    komplett gruen durchlaufen, waehrend ein Drittel davon gescheitert ist. Genau so war
+    resolve_picks.py drei Monate lang tot, ohne ein einziges rotes Licht.
+
+    run_health.py fragt am Ende jedes Laufs ueber die GitHub-API die eigenen Steps ab und legt
+    das Ergebnis in health/<slug>.json. Dieser Guard holt es auf die Status-Seite — sonst waere
+    es wieder nur verdrahtet und nicht angekommen.
+
+    Drei Dinge gelten als Fehler:
+      * ein Step des letzten Laufs ist gescheitert (auch wenn der Job gruen war),
+      * der Waechter konnte die API nicht fragen (dann wissen wir es NICHT — und das ist kein Gruen),
+      * eine Health-Datei ist ueberfaellig, der Workflow meldet sich also gar nicht mehr.
+    """
+    import json as _json
+    dateien = _run_health_dateien()
+    if not dateien:
+        return _chk("run_health", "Workflow-Laeufe fehlerfrei", "warn", [],
+                    "Noch keine health/*.json — run_health.py laeuft in keinem Workflow.")
+    jetzt = ctx.now if getattr(ctx, "now", None) else datetime.now(timezone.utc)
+    fails = []
+    for pfad in dateien:
+        try:
+            d = _json.loads(pfad.read_text(encoding="utf-8"))
+        except Exception as e:
+            fails.append("%s nicht lesbar: %s" % (pfad.name, e))
+            continue
+        name = d.get("workflow") or d.get("slug") or pfad.stem
+        laeufe = d.get("runs") or []
+        if not laeufe:
+            fails.append("%s: keine Laeufe verzeichnet" % name)
+            continue
+        letzter = laeufe[0]
+        if letzter.get("apiError"):
+            fails.append("%s: Lauf-Gesundheit UNBEKANNT (%s)" % (name, letzter["apiError"]))
+        for f in (letzter.get("failures") or [])[:5]:
+            fails.append("%s: Step '%s' %s — Job trotzdem gruen"
+                         % (name, f.get("step"), f.get("conclusion")))
+        alter = _alter_h(letzter.get("ts"), jetzt)
+        if alter is not None and alter > RUN_HEALTH_STALE_H:
+            fails.append("%s: seit %.0f h kein Lauf mehr verzeichnet" % (name, alter))
+    return _chk("run_health", "Workflow-Laeufe fehlerfrei", "error", fails,
+                "Quelle: health/*.json (run_health.py). Leere Liste heisst hier wirklich "
+                "'nichts gescheitert' — ein nicht abfragbarer Lauf steht oben als UNBEKANNT.")
+
+
 @integrity_check
 def check_poly_surfaces_alive(ctx):
     """20.07.2026 — die globalen Poly-Tracking-Flächen (Cross-Sport-Radar, E-Sport, Poly-Geld breit)

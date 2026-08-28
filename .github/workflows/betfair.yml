@@ -12,6 +12,7 @@ on:
 
 permissions:
   contents: write
+  actions: read          # run_health.py liest die Steps DIESES Laufs
 
 concurrency:
   group: betfair
@@ -96,11 +97,30 @@ jobs:
         run: ${{ env.BETFAIR_PY }} betfair_data_integrity.py
         continue-on-error: true
 
+      # 28.08.2026 (Lucas: „Fehler, die wir gar nicht mitkriegen") — 135 Steps stehen repo-weit
+      # auf continue-on-error. Dieser Waechter fragt ueber die GitHub-API die Steps DIESES Laufs
+      # ab und meldet jeden gescheiterten, auch wenn der Job gruen bleibt. `if: always()`, damit
+      # er gerade dann laeuft, wenn vorher etwas schiefging. Muss VOR dem Commit stehen, sonst
+      # bleibt health/ auf der Runner-Platte liegen.
+      - name: 🩺 Lauf-Gesundheit (verschluckte Fehler sichtbar machen)
+        if: always()
+        continue-on-error: true
+        # Self-hosted Mac: kein setup-python, deshalb der oben gefundene Interpreter.
+        # `python3` waere hier /usr/bin/python3 und je nach Mac zu alt.
+        run: ${{ env.BETFAIR_PY || 'python3' }} run_health.py --slug betfair
+        env:
+          GITHUB_TOKEN:            ${{ secrets.GITHUB_TOKEN }}
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
       - name: 💾 Committen + Push (Pull-Retry, wie die Poly-Workflows)
         run: |
           git config user.name "cocobet-bot"
           git config user.email "bot@users.noreply.github.com"
           git add betfair_card_link.json 2>/dev/null || true        # Terminal: unsere Card je Boersen-Spiel
+          # 28.08.2026: eigene Zeile, eigener Pfad — health/<slug>.json wird NUR von diesem
+          # Workflow geschrieben, deshalb kann sie mit keinem anderen kollidieren.
+          git add health/betfair.json 2>/dev/null || true
           git add betfair_coherence_watch.json 2>/dev/null || true   # ab wann liegt Geld in den Tormaerkten
           git add betfair_prices.json betfair_history.json betfair_overview.json betfair_track_state.json betfair_track_results.json betfair_track_record.json betfair_league_norm.json betfair_league_norm_state.json betfair_direction.json betfair_draw_state.json betfair_draw_results.json betfair_draw_record.json betfair_alerts_seen.json betfair_public_seen.json betfair_public_ledger.json betfair_public_record.json betfair_consensus.json betfair_consensus_history.json betfair_status.json money_map.json money_map_ledger.json money_map_record.json 2>/dev/null || true
           if git diff --cached --quiet; then

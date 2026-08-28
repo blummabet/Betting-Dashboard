@@ -24,6 +24,7 @@ on:
 
 permissions:
   contents: write
+  actions: read          # run_health.py liest die Steps DIESES Laufs
 
 concurrency:
   # 28.08.2026: EIGENE Gruppe. Vorher teilte sich dieser Workflow die Gruppe „update-liga" mit
@@ -293,6 +294,20 @@ jobs:
       # laufen mit `|| true` und das git add ist bedingungslos → ohne diesen Check würde ein
       # leer-geschriebener Datensatz (API-Key abgelaufen) einfach gepusht. KEIN `|| true` hier:
       # ein Wipe muss den Job ROT machen, nicht ins Live-Frontend wandern.
+      # 28.08.2026 (Lucas: „Fehler, die wir gar nicht mitkriegen") — 135 Steps stehen repo-weit
+      # auf continue-on-error. Dieser Waechter fragt ueber die GitHub-API die Steps DIESES Laufs
+      # ab und meldet jeden gescheiterten, auch wenn der Job gruen bleibt. `if: always()`, damit
+      # er gerade dann laeuft, wenn vorher etwas schiefging. Muss VOR dem Commit stehen, sonst
+      # bleibt health/ auf der Runner-Platte liegen.
+      - name: 🩺 Lauf-Gesundheit (verschluckte Fehler sichtbar machen)
+        if: always()
+        continue-on-error: true
+        run: python3 run_health.py --slug liga
+        env:
+          GITHUB_TOKEN:            ${{ secrets.GITHUB_TOKEN }}
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
       - name: 🛡️ Wipe-Check (kein leerer Datensatz darf committet werden)
         run: python check_not_wiped.py
 
@@ -332,6 +347,9 @@ jobs:
           # Spiele. Ohne diese Zeile liegt es nur auf der Runner-Platte und der Rescue startet
           # bei jedem Lauf bei null. Eigene Zeile — `git add a b c` staged NICHTS, wenn eine fehlt.
           git add liga_poly_slugs.json 2>/dev/null || true          # Poly-Slug-Gedaechtnis
+          # 28.08.2026: eigene Zeile, eigener Pfad — health/<slug>.json wird NUR von diesem
+          # Workflow geschrieben, deshalb kann sie mit keinem anderen kollidieren.
+          git add health/liga.json 2>/dev/null || true
           git add liga_steam_lag_log.json 2>/dev/null || true        # Steam-Lag Signal-Log
           # 27.08.2026 (Lucas: „Digest kam heute früh nicht"): telegram_wm.py hat einen
           # „heute schon gesendet"-Marker, aber für Liga hat ihn NIEMAND committet — er lag

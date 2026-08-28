@@ -22,6 +22,7 @@ on:
 
 permissions:
   contents: write
+  actions: read          # run_health.py liest die Steps DIESES Laufs
 
 concurrency:
   group: capture-closing-liga
@@ -59,6 +60,20 @@ jobs:
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
         run: python detect_wm_sharp_moves.py || true
 
+      # 28.08.2026 (Lucas: „Fehler, die wir gar nicht mitkriegen") — 135 Steps stehen repo-weit
+      # auf continue-on-error. Dieser Waechter fragt ueber die GitHub-API die Steps DIESES Laufs
+      # ab und meldet jeden gescheiterten, auch wenn der Job gruen bleibt. `if: always()`, damit
+      # er gerade dann laeuft, wenn vorher etwas schiefging. Muss VOR dem Commit stehen, sonst
+      # bleibt health/ auf der Runner-Platte liegen.
+      - name: 🩺 Lauf-Gesundheit (verschluckte Fehler sichtbar machen)
+        if: always()
+        continue-on-error: true
+        run: python3 run_health.py --slug closing-liga
+        env:
+          GITHUB_TOKEN:            ${{ secrets.GITHUB_TOKEN }}
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
       - name: 💾 Closing committen (nur wenn geändert)
         run: |
           git config user.name  "CocoBet Bot"
@@ -69,6 +84,9 @@ jobs:
           git checkout -- liga-data.json 2>/dev/null || true
           git add liga_closing_lines.json liga-odds-history.json 2>/dev/null || true
           git add liga_sharp_moves_log.json liga_sharp_dedup.json 2>/dev/null || true
+          # 28.08.2026: eigene Zeile, eigener Pfad — health/<slug>.json wird NUR von diesem
+          # Workflow geschrieben, deshalb kann sie mit keinem anderen kollidieren.
+          git add health/closing-liga.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Closing-Änderung — nichts zu committen."; exit 0
           fi

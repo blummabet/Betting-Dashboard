@@ -11,6 +11,7 @@ on:
 
 permissions:
   contents: write
+  actions: read          # run_health.py liest die Steps DIESES Laufs
 
 # Teilt die Gruppe mit update-liga → kein gleichzeitiges Schreiben/Pushen von liga-data.json.
 concurrency:
@@ -72,12 +73,29 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python notify_new_picks.py || true
 
+      # 28.08.2026 (Lucas: „Fehler, die wir gar nicht mitkriegen") — 135 Steps stehen repo-weit
+      # auf continue-on-error. Dieser Waechter fragt ueber die GitHub-API die Steps DIESES Laufs
+      # ab und meldet jeden gescheiterten, auch wenn der Job gruen bleibt. `if: always()`, damit
+      # er gerade dann laeuft, wenn vorher etwas schiefging. Muss VOR dem Commit stehen, sonst
+      # bleibt health/ auf der Runner-Platte liegen.
+      - name: 🩺 Lauf-Gesundheit (verschluckte Fehler sichtbar machen)
+        if: always()
+        continue-on-error: true
+        run: python3 run_health.py --slug liga-odds-dense
+        env:
+          GITHUB_TOKEN:            ${{ secrets.GITHUB_TOKEN }}
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
       - name: 💾 Odds + Snapshots + Closing committen
         run: |
           git config user.name  "CocoBet Bot"
           git config user.email "bot@cocobet.local"
           python build_dashboard_pulse.py || true   # 14.08.2026 (Lucas): Puls oefter frisch (gegen "Stand vor 3h")
           git add dashboard_pulse.json 2>/dev/null || true
+          # 28.08.2026: eigene Zeile, eigener Pfad — health/<slug>.json wird NUR von diesem
+          # Workflow geschrieben, deshalb kann sie mit keinem anderen kollidieren.
+          git add health/liga-odds-dense.json 2>/dev/null || true
           git add liga-data.json 2>/dev/null || true
           git add liga-odds-history.json 2>/dev/null || true
           git add liga_closing_lines.json 2>/dev/null || true

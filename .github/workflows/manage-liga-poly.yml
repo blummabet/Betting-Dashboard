@@ -33,6 +33,7 @@ on:
 
 permissions:
   contents: write
+  actions: read          # run_health.py liest die Steps DIESES Laufs
 
 concurrency:
   group: update-liga
@@ -143,6 +144,21 @@ jobs:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
+      # 28.08.2026 (Lucas: „Fehler, die wir gar nicht mitkriegen") — 135 Steps stehen repo-weit
+      # auf continue-on-error. Dieser Waechter fragt ueber die GitHub-API die Steps DIESES Laufs
+      # ab und meldet jeden gescheiterten, auch wenn der Job gruen bleibt. `if: always()`, damit
+      # er gerade dann laeuft, wenn vorher etwas schiefging. Muss VOR dem Commit stehen, sonst
+      # bleibt health/ auf der Runner-Platte liegen.
+      - name: 🩺 Lauf-Gesundheit (verschluckte Fehler sichtbar machen)
+        if: always()
+        continue-on-error: true
+        # Self-hosted Mac: kein setup-python, deshalb der oben gefundene Interpreter.
+        run: ${{ env.POLY_PYTHON || 'python3' }} run_health.py --slug liga-poly
+        env:
+          GITHUB_TOKEN:            ${{ secrets.GITHUB_TOKEN }}
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
       - name: 🛡️ Wipe-Check (kein leerer Datensatz darf committet werden)
         run: ${{ env.POLY_PYTHON }} check_not_wiped.py
 
@@ -157,7 +173,8 @@ jobs:
             liga-poly-history.json liga_book_health.json liga_kill_switch.json \
             liga-data.json liga-odds-history.json \
             liga_results.json liga_pick_calibration.json \
-            liga_poly_book_probe.json liga_poly_slugs.json; do
+            liga_poly_book_probe.json liga_poly_slugs.json \
+            health/liga-poly.json; do
             [ -f "$f" ] && git add "$f"
           done
           if git diff --staged --quiet; then
