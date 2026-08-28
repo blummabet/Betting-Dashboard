@@ -387,6 +387,17 @@ def days_until(date_str: str) -> int | None:
         return None
 
 
+def _anpfiff_feld(fix) -> str:
+    """Bestes verfuegbares Anpfiff-Feld eines Fixtures: `kickoff` (mit Uhrzeit), sonst `date`.
+
+    Getrennte Funktion, damit die Wahl an EINER Stelle steht und testbar ist — der Fehler
+    vom 28.08.2026 war genau ein falsch gewaehltes Feld an einer einzigen Zeile.
+    """
+    if not isinstance(fix, dict):
+        return ""
+    return str(fix.get("kickoff") or fix.get("date") or "")
+
+
 def hours_until(date_str: str) -> float | None:
     """Stunden bis zum Anpfiff (negativ = bereits angepfiffen)."""
     if not date_str:
@@ -498,7 +509,16 @@ def find_trigger_candidates(fixtures: list, placed_keys: set) -> list:
             continue
 
         # Feineres Timing: kein Kauf wenn Anpfiff in < MIN_HOURS_BEFORE_MATCH Stunden
-        h = hours_until(fix.get("date", ""))
+        # 28.08.2026 (Lucas' Runner-Log) — 🔴 DAS FENSTER HAT NIE EXISTIERT. Hier stand
+        # `hours_until(fix["date"])`, also das reine DATUM ("2026-08-28") → geparst als
+        # Mitternacht. Im Log standen deshalb fuenf verschiedene Spiele mit exakt derselben
+        # Zahl: „Zu nah am Anpfiff (-17.6h)" — das ist der Abstand des Laufs (17:34) zu 00:00,
+        # nicht zum Anpfiff. Folge: JEDES Spiel galt ab 02:00 Uhr frueh an seinem eigenen
+        # Spieltag als laengst angepfiffen und wurde uebersprungen, obwohl
+        # min_days_until_game=0 und min_hours_before_match=2 genau das Gegenteil sagen.
+        # Der Anpfiff steht als `kickoff` im Fixture (fetch_wm_poly_prices schreibt ihn aus
+        # Polymarket dorthin); `date` bleibt der Fallback fuer Fixtures ohne Uhrzeit.
+        h = hours_until(_anpfiff_feld(fix))
         if h is not None and h < MIN_HOURS_BEFORE_MATCH:
             print(f"  ⏰ Zu nah am Anpfiff ({h:.1f}h): {fix.get('home')} vs {fix.get('away')} — übersprungen")
             continue

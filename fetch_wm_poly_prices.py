@@ -522,6 +522,93 @@ def fetch_clob_depth(token_id: str) -> dict | None:
         return None
 
 
+# Wie weit darf ein Poly-Datum den Spielplan-Eintrag verschieben? Siehe Kommentar am
+# Kickoff-Patch weiter unten.
+KO_PATCH_MAX_DRIFT_D = 14
+
+
+def _tage_auseinander(a, b):
+    """|a - b| in Tagen, None wenn eines der Daten nicht lesbar ist (dann nicht urteilen)."""
+    from datetime import date as _date
+    try:
+        return abs((_date.fromisoformat(a) - _date.fromisoformat(b)).days)
+    except Exception:
+        return None
+
+
+# ── Gegenprobe gegen den Spielplan (28.08.2026) ──────────────────────────────
+# Der PSG-Fall zeigt die Luecke im Resolver: bei GENAU EINEM Fuzzy-Treffer greift die
+# Mehrdeutigkeits-Bremse nicht, auch wenn dieser eine Treffer das falsche Team ist. Ein
+# Namensvergleich kann das prinzipiell nicht ausschliessen — der Spielplan aber schon:
+# eine Paarung, die es an dem Datum gar nicht gibt, ist falsch aufgeloest. Fail-closed,
+# aber nur dort, wo wir ueberhaupt urteilen koennen (siehe `daten_bekannt`).
+_SPIELPLAN_CACHE = {}
+
+
+def spielplan_paare(pfad=None) -> tuple:
+    """({(home,away,datum)}, {datum}) aus dem Fixture-Datensatz.
+
+    Zweites Element sind die Daten, fuer die wir ueberhaupt Fixtures haben. Nur an diesen
+    Tagen darf eine unbekannte Paarung als Fehler gelten — sonst wuerde ein luckenhafter
+    Spielplan gute Poly-Daten wegwerfen.
+    """
+    pfad = pfad or WM_FILE
+    if pfad in _SPIELPLAN_CACHE:
+        return _SPIELPLAN_CACHE[pfad]
+    paare, tage = set(), set()
+    try:
+        with open(pfad, encoding="utf-8") as f:
+            wm = json.load(f)
+        fixtures = []
+        for g in (wm.get("groups") or {}).values():
+            fixtures.extend((g or {}).get("fixtures") or [])
+        fixtures.extend(wm.get("koFixtures") or [])
+        for fx in fixtures:
+            d = str(fx.get("date") or (fx.get("kickoff") or ""))[:10]
+            if len(d) != 10:
+                continue
+            h, a = str(fx.get("home")), str(fx.get("away"))
+            paare.add((h, a, d))
+            tage.add(d)
+    except Exception as e:
+        print(f"  ⚠️  Spielplan fuer die Gegenprobe nicht lesbar: {e}")
+        return (set(), set())        # nichts bekannt → nie urteilen
+    _SPIELPLAN_CACHE[pfad] = (paare, tage)
+    return (paare, tage)
+
+
+def paarung_im_spielplan(home_id, away_id, datum, paare=None, tage=None):
+    """True = passt, False = existiert nicht, None = koennen wir nicht beurteilen.
+
+    Polymarket spiegelt Paarungen, deshalb zaehlt auch die umgekehrte Reihenfolge. Und ein
+    Datum um einen Tag daneben (Zeitzone/Anpfiff nach Mitternacht) gilt als Treffer.
+    """
+    if paare is None or tage is None:
+        paare, tage = spielplan_paare()
+    if not paare or not datum:
+        return None
+    from datetime import date as _date
+    try:
+        d0 = _date.fromisoformat(datum)
+    except Exception:
+        return None
+    # Wenn wir fuer den Tag selbst einen Spielplan haben, zaehlt NUR das exakte Datum. Die
+    # Nachbartage sind der Notnagel fuer Zeitzonen-Faelle an Tagen, an denen wir sonst gar
+    # nichts wissen — als Toleranz im Normalfall haben sie den PSG-Fehler durchgewunken.
+    if datum in tage:
+        nachbarn = [datum]
+    else:
+        nachbarn = [(d0 - timedelta(days=1)).isoformat(),
+                    (d0 + timedelta(days=1)).isoformat()]
+        if not any(t in tage for t in nachbarn):
+            return None              # fuer diese Tage haben wir gar keinen Spielplan
+    h, a = str(home_id), str(away_id)
+    for t in nachbarn:
+        if (h, a, t) in paare or (a, h, t) in paare:
+            return True
+    return False
+
+
 def _build_name_map_from_data() -> dict:
     """Non-WM (Liga/MLS): Name→ID-Map aus den Team-Namen des Datensatzes (Polymarket nennt Klubs,
     nicht Länder → die hartkodierte WM-Ländermap greift nicht). 29.06.2026."""
@@ -556,6 +643,15 @@ _POLY_NAME_ALIASES = {
     "Stade Rennais FC 1901":      "94",   # Rennes — Jahreszahl + Rechtsform, kein Token-Treffer
     "ES Troyes AC":              "110",   # Estac Troyes
     "RC Deportivo A Coruña":     "544",   # Deportivo La Coruna (A Coruña vs La Coruna)
+    # 28.08.2026, aus dem ersten Lauf mit dem Abdeckungs-Alarm — und der schlimmste Fall bisher:
+    # „Paris Saint-Germain FC" loeste auf 114 = PARIS FC auf. Nicht mehrdeutig, sondern EINDEUTIG
+    # FALSCH: gegen „Paris Saint Germain" (85) scheitert der Token-Match am Bindestrich, gegen
+    # „Paris FC" trifft er — genau ein Treffer, also greift die Mehrdeutigkeits-Bremse nicht und
+    # der Resolver liefert selbstbewusst das falsche Team. Folge: der Lille-PSG-Markt mit
+    # 367.924 $ Volumen lag unter Paris FC, PSGs echte Paarung hatte gar keine Poly-Daten, und
+    # eine Edge aus 114 verglich Paris-FC-Quoten mit PSG-Preisen. Beide Namen jetzt exakt.
+    "Paris Saint-Germain FC":     "85",   # NICHT 114 — das ist Paris FC
+    "Paris FC":                  "114",
 }
 _ACTIVE_NAME_MAP = (_build_name_map_from_data() if D.is_liga() else dict(POLY_NAME_TO_ID))
 if D.is_liga():
@@ -886,6 +982,17 @@ def main():
 
         result = parse_event(ev)
         if result:
+            # Gegenprobe: gibt es diese Paarung an dem Tag ueberhaupt? Ein Namensfehler faellt
+            # hier auf, den kein Namensvergleich finden kann (PSG → Paris FC, 28.08.2026).
+            _ok = paarung_im_spielplan(result["homeId"], result["awayId"],
+                                       str(result.get("date") or "")[:10])
+            if _ok is False:
+                print(f"  🛑 SKIP {result['slug']}: {result['homeName']} vs {result['awayName']} "
+                      f"→ [{result['homeId']}-{result['awayId']}] steht am "
+                      f"{str(result.get('date'))[:10]} NICHT im Spielplan — Namensaufloesung "
+                      f"vermutlich falsch (lieber keine Daten als die des falschen Teams).")
+                skip += 1
+                continue
             key  = f"{result['homeId']}-{result['awayId']}"
             slug = result["slug"]
 
@@ -998,9 +1105,28 @@ def main():
         # vergangenem Anpfiff aus; mit der echten Zeit zeigt er Spätspiele korrekt
         # als heute-Abend statt sie fälschlich zu verstecken/als Mitternacht.
         ko_patched = 0
+        ko_verweigert = []
         for gdata in wm.get("groups", {}).values():
             for fx in gdata.get("fixtures", []):
                 p = prices.get(f"{fx.get('home')}-{fx.get('away')}")
+                # 28.08.2026 — DIESE Stelle hat den PSG-Fehler in den Spielplan geschrieben.
+                # „Paris Saint-Germain FC" loeste auf 114 (Paris FC) auf, der Lille-PSG-Markt
+                # landete unter dem Key 79-114, und der Patch unten stempelte dessen Anpfiff
+                # (28.08. 18:45) auf Lille–Paris FC, ein Spiel vom 17. Spieltag. Danach standen
+                # zwei Lille-Spiele am selben Tag im Spielplan — und die Gegenprobe, die genau
+                # solche Fehler finden soll, bestaetigte den falschen Treffer mit den eigenen
+                # kaputten Daten. Ein Namensfehler, der sich selbst plausibel macht.
+                # Deshalb: Poly darf einen Anpfiff praezisieren, aber ein Spiel nicht in einen
+                # anderen Monat verschieben. 14 Tage lassen die legitime Seed-Korrektur zu
+                # (12.06.2026: Seed-Datum ~5 Tage zu frueh), stoppen aber den Sprung ueber
+                # Spieltage hinweg.
+                if p and p.get("date") and fx.get("date"):
+                    _drift = _tage_auseinander(str(fx["date"])[:10], str(p["date"])[:10])
+                    if _drift is not None and _drift > KO_PATCH_MAX_DRIFT_D:
+                        ko_verweigert.append(
+                            f"{fx.get('home')}-{fx.get('away')} ({fx['date']} → "
+                            f"{str(p['date'])[:10]}, {_drift} Tage)")
+                        continue
                 if p and p.get("kickoff"):
                     fx["kickoff"] = p["kickoff"]
                     _t = _vienna_hhmm(p["kickoff"])
@@ -1015,6 +1141,10 @@ def main():
                         fx["date"] = pd
                     ko_patched += 1
         print(f"   ⏰ {ko_patched} Fixture-Kickoff-Zeiten aus Polymarket gesetzt")
+        if ko_verweigert:
+            print(f"   🛑 {len(ko_verweigert)} Kickoff-Patch(es) verweigert — Poly wollte ein "
+                  f"Spiel um mehr als {KO_PATCH_MAX_DRIFT_D} Tage verschieben (Namensfehler?): "
+                  + "; ".join(ko_verweigert[:5]))
 
     if wm is not None:
         # FORMAT-FIX (12.07.2026, Lucas' 1. MLS-Poly-Lauf: „38552 deletions"): Dieser Writer war der
