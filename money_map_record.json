@@ -1,15 +1,15 @@
 {
-"generatedAt": "2026-08-28T19:46:17.543458+00:00",
+"generatedAt": "2026-08-28T20:01:06.220323+00:00",
 "byVerdict": {
 "konsens": {
-"n": 528,
-"wins": 428,
-"hitRate": 0.8106,
-"polyN": 494,
-"polyWins": 389,
-"polyHitRate": 0.7874,
-"pinnN": 38,
-"pinnHitRate": 0.7368
+"n": 531,
+"wins": 431,
+"hitRate": 0.8117,
+"polyN": 497,
+"polyWins": 392,
+"polyHitRate": 0.7887,
+"pinnN": 40,
+"pinnHitRate": 0.75
 },
 "uneinig": {
 "n": 177,
@@ -98,20 +98,25 @@
 "wins": 11,
 "hitRate": 0.6875
 },
+"Saudi Professional League": {
+"n": 15,
+"wins": 12,
+"hitRate": 0.8
+},
 "CONMEBOL Copa Libertadores": {
 "n": 14,
 "wins": 6,
 "hitRate": 0.4286
 },
-"Saudi Professional League": {
-"n": 14,
-"wins": 11,
-"hitRate": 0.7857
-},
 "Turkish Super League": {
 "n": 14,
 "wins": 9,
 "hitRate": 0.6429
+},
+"Dutch Eredivisie": {
+"n": 13,
+"wins": 11,
+"hitRate": 0.8462
 },
 "Elite Friendlies": {
 "n": 13,
@@ -127,11 +132,6 @@
 "n": 13,
 "wins": 10,
 "hitRate": 0.7692
-},
-"Dutch Eredivisie": {
-"n": 12,
-"wins": 10,
-"hitRate": 0.8333
 },
 "Japanese J League": {
 "n": 12,
@@ -168,6 +168,11 @@
 "wins": 7,
 "hitRate": 0.7
 },
+"Danish Superliga": {
+"n": 10,
+"wins": 8,
+"hitRate": 0.8
+},
 "English Premier League": {
 "n": 10,
 "wins": 8,
@@ -192,11 +197,6 @@
 "n": 9,
 "wins": 5,
 "hitRate": 0.5556
-},
-"Danish Superliga": {
-"n": 9,
-"wins": 7,
-"hitRate": 0.7778
 },
 "Bolivian Liga de Futbol Profesional": {
 "n": 8,
@@ -516,14 +516,14 @@
 },
 "byStrength": {
 "strong": {
-"n": 411,
-"wins": 334,
-"hitRate": 0.8127
+"n": 413,
+"wins": 336,
+"hitRate": 0.8136
 },
 "weak": {
-"n": 266,
-"wins": 132,
-"hitRate": 0.4962
+"n": 267,
+"wins": 133,
+"hitRate": 0.4981
 }
 },
 "divergence": {
@@ -535,6 +535,63 @@
 "polyRate": 0.3145
 },
 "recent": [
+{
+"matchId": "35984822",
+"home": "Al Nassr",
+"away": "Al-Taawoun Buraidah",
+"league": "Saudi Professional League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Al Nassr",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-08-28T18:00:00Z",
+"settledAt": "2026-08-28T20:01:06.055308+00:00"
+},
+{
+"matchId": "35974212",
+"home": "FC Groningen",
+"away": "Fortuna Sittard",
+"league": "Dutch Eredivisie",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Fortuna Sittard",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+3
+],
+"kickoff": "2026-08-28T18:00:00Z",
+"settledAt": "2026-08-28T20:01:06.055308+00:00"
+},
+{
+"matchId": "35978493",
+"home": "AC Horsens",
+"away": "Viborg",
+"league": "Danish Superliga",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Viborg",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+3
+],
+"kickoff": "2026-08-28T17:00:00Z",
+"settledAt": "2026-08-28T20:01:06.055308+00:00"
+},
 {
 "matchId": "35951835",
 "home": "Bochum",
@@ -1237,69 +1294,12 @@
 ],
 "kickoff": "2026-08-26T19:00:00Z",
 "settledAt": "2026-08-26T22:11:19.783100+00:00"
-},
-{
-"matchId": "35979523",
-"home": "San Antonio Bulo Bulo",
-"away": "The Strongest",
-"league": "Bolivian Liga de Futbol Profesional",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "The Strongest",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-3
-],
-"kickoff": "2026-08-26T19:00:00Z",
-"settledAt": "2026-08-26T22:11:19.783100+00:00"
-},
-{
-"matchId": "35928162",
-"home": "Bradford",
-"away": "Burnley",
-"league": "English Football League Cup",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Burnley",
-"polySide": "away",
-"winner": "home",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-08-26T18:45:00Z",
-"settledAt": "2026-08-26T21:56:18.952918+00:00"
-},
-{
-"matchId": "35957324",
-"home": "AEK Athens",
-"away": "PFC Levski Sofia",
-"league": "UEFA Champions League Qualifiers",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "AEK Athens",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-4,
-0
-],
-"kickoff": "2026-08-26T19:00:00Z",
-"settledAt": "2026-08-26T20:56:19.675193+00:00"
 }
 ],
 "global": {
-"n": 710,
-"wins": 484,
-"hitRate": 0.6817
+"n": 713,
+"wins": 487,
+"hitRate": 0.683
 },
-"pending": 24
+"pending": 21
 }
