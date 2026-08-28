@@ -305,7 +305,49 @@
   }
 
   // ── Daten-Extraktion ──────────────────────────────────────────────────────
+  // 28.08.2026 (Lucas: „der Triple-Konsens ist immer leer"): Der Walker suchte Objekte, die
+  // SELBST ein picks-Array tragen. In liga-data.json / mls-data.json haengen die Picks aber gar
+  // nicht am Fixture — sie liegen in einer eigenen Map unter `picks`, verschluesselt als
+  // `<LIGA>-<Spieltag>-<homeId>-<awayId>`. Ergebnis: der Walker fand NULL Fixtures, und zwar in
+  // allen drei Datensaetzen. Damit lagen nicht nur der Triple-Konsens brach, sondern alles, was
+  // auf allFixtures() steht: beste Cards, Sharp-Moves, „Jetzt" und die Engine-Kandidaten.
+  //
+  // Die Daten waren die ganze Zeit da: 92 Picks mit consensus-Feld, davon 67 „konsens" und
+  // 3 „divergenz". Nur zusammengefuehrt hat sie niemand. (Verdrahtung ist nicht Ankunft.)
+  function _mdJoinPicks(data) {
+    if (!data || typeof data !== 'object') return [];
+    var picks = data.picks || {}, out = [];
+    var add = function (code, fx) {
+      if (!fx || typeof fx !== 'object') return;
+      var key = code + '-' + fx.matchday + '-' + fx.home + '-' + fx.away;
+      var ps = picks[key];
+      // Kopie statt Mutation: die Rohdaten bleiben unberuehrt, sonst haengen die Picks nach
+      // einem Refresh doppelt dran.
+      out.push(Object.assign({}, fx, {
+        picks: Array.isArray(ps) ? ps : [],
+        leagueName: fx.leagueName || code,
+        group: code,
+      }));
+    };
+    var groups = data.groups || {};
+    for (var code in groups) {
+      var fxs = (groups[code] || {}).fixtures || [];
+      for (var i = 0; i < fxs.length; i++) add(code, fxs[i]);
+    }
+    // KO-Spiele liegen in koFixtures, nicht in groups — das hat schon mehrfach Picks gekostet.
+    var ko = data.koFixtures || [];
+    for (var j = 0; j < ko.length; j++) add(String(ko[j] && ko[j].round || 'KO'), ko[j]);
+    return out;
+  }
+
   function fixtures(data) {
+    var joined = _mdJoinPicks(data);
+    // Nur uebernehmen, wenn der Join auch WIRKLICH Picks gefunden hat. `joined.length` allein
+    // reichte nicht: bei einem Format, in dem die Picks am Fixture haengen, lieferte der Join
+    // Fixtures mit LEEREN Pick-Arrays — und verdraengte damit den Fallback, der sie gefunden
+    // haette. Fehlende Daten sahen aus wie „nichts da".
+    if (joined.some(function (f) { return f.picks && f.picks.length; })) return joined;
+    // Fallback fuer aeltere/andere Formate, in denen die Picks doch am Fixture haengen.
     var out = [];
     (function walk(o) {
       if (!o || typeof o !== 'object') return;
