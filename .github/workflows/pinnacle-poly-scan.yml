@@ -5,7 +5,11 @@ name: 📊 Pinnacle × Poly Lag-Scanner
 # Nach der Auswertung (1–2 Wochen) einfach deaktivieren. Takt/Kosten frei justierbar.
 on:
   schedule:
-    - cron: '*/30 * * * *'   # alle 30 Min — Lag messen braucht dichte Snapshots
+    # 28.08.2026 (Lucas: „Last senken"): von */30 auf stündlich, -24 Läufe/Tag. Der gemessene
+    # Poly-Lag gegenüber Pinnacle bewegt sich in Stunden, nicht in halben — für die Lag-Statistik
+    # reicht ein Snapshot pro Stunde. Minute 25 statt 0: weg von der vollen Stunde, auf der
+    # repo-weit bis zu 11 Jobs gleichzeitig starten.
+    - cron: '25 * * * *'     # stündlich, versetzt zur vollen Stunde
   workflow_dispatch:
 
 permissions:

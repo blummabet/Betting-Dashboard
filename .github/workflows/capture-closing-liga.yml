@@ -9,8 +9,15 @@ name: 🔒 Liga Closing-Capture (nah am Anpfiff)
 # nie Picks/Daten). resolve_wm_results liest liga_closing_lines.json bevorzugt.
 on:
   schedule:
-    - cron: '*/15 11-23 * * *'   # Nachmittags-/Abend-Anpfiffe EU + MLS-Vorlauf (UTC)
-    - cron: '*/15 0-4 * * *'     # späte MLS-Anpfiffe (US-Abend = UTC-Nacht)
+    # 28.08.2026 (Lucas: „Last senken") — Fenster gegen die ECHTEN Anpfiff-Zeiten gelegt.
+    # Alle Top-5-Anpfiffe in liga-data.json liegen zwischen 10:00 und 20:00 UTC (Verteilung:
+    # 10h:2, 11h:7, 12h:1, 13h:140, 14h:268, 15h:443, 16h:490, 17h:233, 18h:50, 19h:67, 20h:51).
+    # Vorher lief das Fenster 11-23 + 0-4 = 72 Läufe/Tag. Die Blöcke 21-23 und 0-4 (32 Läufe)
+    # konnten nie etwas einfangen — der 0-4-Block kam per Copy-Paste aus capture-closing-mls
+    # („späte MLS-Anpfiffe"), MLS hat aber sein eigenes Capture. Umgekehrt begann das Fenster
+    # erst um 11:00, sodass die 9 Fixtures mit Anpfiff 10:00/11:00 nie eine saubere
+    # Closing-Linie bekamen. 9-21 behebt beides: -20 Läufe/Tag UND die Lücke zu.
+    - cron: '*/15 9-21 * * *'    # Top-5-Anpfiffe 10-20 UTC, mit Vorlauf ab 09:00
   workflow_dispatch:
 
 permissions:

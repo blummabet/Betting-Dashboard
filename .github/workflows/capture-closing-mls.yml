@@ -13,7 +13,9 @@ on:
     # gegen eine TOTE Closing-Linie → CLV dort wertlos. Der interne _has_imminent_kickoff-Guard
     # macht Läufe ohne nahen Anpfiff zum No-Op → Quota-neutral.
     - cron: '*/15 16-23 * * *'   # US-Nachmittag + Abend (UTC)
-    - cron: '*/15 0-5 * * *'     # US-Abend/-Nacht-Anpfiffe (UTC)
+    # 28.08.2026: MLS-Anpfiffe in mls-data.json enden um 03:00 UTC (00h:119, 01h:60, 02h:70,
+    # 03h:6, danach nichts bis 17h). 4-5 Uhr fing nie etwas ein → -8 Läufe/Tag.
+    - cron: '*/15 0-3 * * *'     # US-Abend/-Nacht-Anpfiffe (UTC)
   workflow_dispatch:
 
 permissions:

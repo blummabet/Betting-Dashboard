@@ -8,7 +8,10 @@ name: 🐋 Poly Global-Scan (alle Sportarten, häufig)
 # Läuft self-hosted auf dem Mac (Polymarket geoblockt Rechenzentrums-IPs → nur Wohn-IP).
 on:
   schedule:
-    - cron: '15,45 * * * *'    # alle 30 Min, ganztags — versetzt zu den :00/:30 MLS-Läufen
+    # 28.08.2026 (Lucas: „Last senken"): von 2x auf 1x pro Stunde, -24 Läufe/Tag. Läuft auf dem
+    # Mac-Runner, der sich die Kapazität mit betfair (alle 10 Min) teilt — das entspannt dort
+    # zusätzlich die Warteschlange. :15 bleibt, also weiterhin versetzt zu den :00/:30-Läufen.
+    - cron: '15 * * * *'       # stündlich, versetzt zu den :00/:30 MLS-Läufen
   workflow_dispatch:
 
 permissions:
