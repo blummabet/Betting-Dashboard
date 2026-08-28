@@ -13,11 +13,9 @@
       "id": "picks_resolved",
       "label": "Picks aufgelöst",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "47 gespielte Matches älter als 3 Tage sind unaufgelöst (ältestes 2026-08-15) — resolve_picks.py läuft nicht durch"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Ein Rückstand von ein paar Spielen ist normal. Dreistellig heißt: der Resolver stirbt still, und alles was auf Ergebnissen aufbaut lernt nichts mehr."
     },
     {
@@ -105,9 +103,11 @@
       "id": "odds_sane",
       "label": "Pinnacle-1X2 vollständig + plausibel",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "1604-9569: 1X2 unvollständig hw=None dr=None aw=None"
+      ],
       "note": "Quelle für Modell-Baseline + Edge."
     },
     {
@@ -542,5 +542,5 @@
     }
   ],
   "nFail": 4,
-  "generatedAt": "2026-08-27T18:28:29.194738+00:00"
+  "generatedAt": "2026-08-28T02:30:49.628576+00:00"
 }
