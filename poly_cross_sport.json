@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-28T00:25:21.330976+00:00",
+ "generatedAt": "2026-08-28T20:49:57.054768+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,29 +9,142 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 513,
- "pinnKeys": 321,
- "matched": 203,
- "footballRows": 171,
- "crossRows": 342,
- "footballSkippedStale": 89,
+ "polyRowsSeen": 543,
+ "pinnKeys": 351,
+ "matched": 249,
+ "footballRows": 195,
+ "crossRows": 348,
+ "footballSkippedStale": 81,
  "seenBySport": {
-  "americanfootball_nfl": 154,
-  "baseball_mlb": 80,
-  "icehockey_nhl": 58,
+  "americanfootball_nfl": 148,
+  "baseball_mlb": 78,
+  "icehockey_nhl": 72,
   "boxing_boxing": 50,
   "soccer_mls": 45,
-  "soccer_liga": 126
+  "soccer_liga": 150
  },
  "matchedBySport": {
-  "baseball_mlb": 10,
-  "boxing_boxing": 22,
+  "baseball_mlb": 30,
+  "boxing_boxing": 24,
   "soccer_mls": 45,
-  "soccer_liga": 126
+  "soccer_liga": 150
  },
  "trackRecord": {
-  "tracked": 215,
+  "tracked": 219,
   "converged": 51
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|chicagocubs-cincinnatireds|cincinnatireds",
+   "sport": "baseball_mlb",
+   "event": "Cincinnati Reds vs Chicago Cubs",
+   "market": "Moneyline",
+   "outcome": "Cincinnati Reds",
+   "polyPP": 97.9,
+   "pinnPP": 36.4,
+   "gapPP": 61.42,
+   "vol": 876093,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-28T20:49:57.054168+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagocubs-cincinnatireds|chicagocubs",
+   "sport": "baseball_mlb",
+   "event": "Cincinnati Reds vs Chicago Cubs",
+   "market": "Moneyline",
+   "outcome": "Chicago Cubs",
+   "polyPP": 2.1,
+   "pinnPP": 63.6,
+   "gapPP": -61.42,
+   "vol": 876093,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-28T20:49:57.054168+00:00"
+  },
+  {
+   "id": "baseball_mlb|losangelesangels-philadelphiaphillies|philadelphiaphillies",
+   "sport": "baseball_mlb",
+   "event": "Philadelphia Phillies vs Los Angeles Angels",
+   "market": "Moneyline",
+   "outcome": "Philadelphia Phillies",
+   "polyPP": 53.5,
+   "pinnPP": 66.7,
+   "gapPP": -13.17,
+   "vol": 31345,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-28T20:49:57.054168+00:00"
+  },
+  {
+   "id": "baseball_mlb|losangelesangels-philadelphiaphillies|losangelesangels",
+   "sport": "baseball_mlb",
+   "event": "Philadelphia Phillies vs Los Angeles Angels",
+   "market": "Moneyline",
+   "outcome": "Los Angeles Angels",
+   "polyPP": 46.5,
+   "pinnPP": 33.3,
+   "gapPP": 13.17,
+   "vol": 31345,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-28T20:49:57.054168+00:00"
+  },
+  {
+   "id": "baseball_mlb|miamimarlins-washingtonnationals|miamimarlins",
+   "sport": "baseball_mlb",
+   "event": "Miami Marlins vs Washington Nationals",
+   "market": "Moneyline",
+   "outcome": "Miami Marlins",
+   "polyPP": 56.5,
+   "pinnPP": 50.0,
+   "gapPP": 6.5,
+   "vol": 108079,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 25.01,
+   "firstSeen": "2026-08-22T01:50:45.312877+00:00"
+  },
+  {
+   "id": "baseball_mlb|miamimarlins-washingtonnationals|washingtonnationals",
+   "sport": "baseball_mlb",
+   "event": "Miami Marlins vs Washington Nationals",
+   "market": "Moneyline",
+   "outcome": "Washington Nationals",
+   "polyPP": 43.5,
+   "pinnPP": 50.0,
+   "gapPP": -6.5,
+   "vol": 108079,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 25.01,
+   "firstSeen": "2026-08-22T01:50:45.312877+00:00"
+  },
+  {
+   "id": "baseball_mlb|milwaukeebrewers-texasrangers|texasrangers",
+   "sport": "baseball_mlb",
+   "event": "Texas Rangers vs Milwaukee Brewers",
+   "market": "Moneyline",
+   "outcome": "Texas Rangers",
+   "polyPP": 33.5,
+   "pinnPP": 39.8,
+   "gapPP": -6.3,
+   "vol": 211916,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-28T20:49:57.054168+00:00"
+  },
+  {
+   "id": "baseball_mlb|milwaukeebrewers-texasrangers|milwaukeebrewers",
+   "sport": "baseball_mlb",
+   "event": "Texas Rangers vs Milwaukee Brewers",
+   "market": "Moneyline",
+   "outcome": "Milwaukee Brewers",
+   "polyPP": 66.5,
+   "pinnPP": 60.2,
+   "gapPP": 6.3,
+   "vol": 211916,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-28T20:49:57.054168+00:00"
+  }
+ ]
 }
