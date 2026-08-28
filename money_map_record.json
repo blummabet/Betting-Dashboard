@@ -1,23 +1,23 @@
 {
-"generatedAt": "2026-08-27T13:57:58.811572+00:00",
+"generatedAt": "2026-08-28T06:44:52.457222+00:00",
 "byVerdict": {
 "konsens": {
-"n": 509,
-"wins": 411,
-"hitRate": 0.8075,
-"polyN": 477,
-"polyWins": 374,
-"polyHitRate": 0.7841,
+"n": 525,
+"wins": 425,
+"hitRate": 0.8095,
+"polyN": 493,
+"polyWins": 388,
+"polyHitRate": 0.787,
 "pinnN": 37,
 "pinnHitRate": 0.7297
 },
 "uneinig": {
-"n": 169,
-"wins": 51,
-"hitRate": 0.3018,
-"polyN": 151,
-"polyWins": 49,
-"polyHitRate": 0.3245,
+"n": 177,
+"wins": 55,
+"hitRate": 0.3107,
+"polyN": 159,
+"polyWins": 50,
+"polyHitRate": 0.3145,
 "pinnN": 87,
 "pinnHitRate": 0.5862
 },
@@ -33,15 +33,20 @@
 }
 },
 "byLeague": {
+"UEFA Europa Conference Qualifiers": {
+"n": 48,
+"wins": 28,
+"hitRate": 0.5833
+},
 "US MLS": {
 "n": 39,
 "wins": 22,
 "hitRate": 0.5641
 },
-"UEFA Europa Conference Qualifiers": {
-"n": 34,
-"wins": 17,
-"hitRate": 0.5
+"English Football League Cup": {
+"n": 22,
+"wins": 18,
+"hitRate": 0.8182
 },
 "English Sky Bet Championship": {
 "n": 21,
@@ -53,20 +58,20 @@
 "wins": 18,
 "hitRate": 0.8571
 },
-"English Football League Cup": {
+"Spanish La Liga": {
 "n": 20,
-"wins": 16,
-"hitRate": 0.8
+"wins": 12,
+"hitRate": 0.6
+},
+"UEFA Europa League Qualifiers": {
+"n": 19,
+"wins": 15,
+"hitRate": 0.7895
 },
 "Brazilian Serie A": {
 "n": 18,
 "wins": 10,
 "hitRate": 0.5556
-},
-"Spanish La Liga": {
-"n": 18,
-"wins": 11,
-"hitRate": 0.6111
 },
 "Argentinian Primera Division": {
 "n": 17,
@@ -107,11 +112,6 @@
 "n": 14,
 "wins": 9,
 "hitRate": 0.6429
-},
-"UEFA Europa League Qualifiers": {
-"n": 14,
-"wins": 11,
-"hitRate": 0.7857
 },
 "Elite Friendlies": {
 "n": 13,
@@ -418,6 +418,11 @@
 "wins": 1,
 "hitRate": 1.0
 },
+"English National League": {
+"n": 1,
+"wins": 0,
+"hitRate": 0.0
+},
 "Estonian Premier League": {
 "n": 1,
 "wins": 1,
@@ -511,25 +516,481 @@
 },
 "byStrength": {
 "strong": {
-"n": 397,
-"wins": 322,
-"hitRate": 0.8111
+"n": 410,
+"wins": 333,
+"hitRate": 0.8122
 },
 "weak": {
-"n": 253,
-"wins": 123,
-"hitRate": 0.4862
+"n": 264,
+"wins": 130,
+"hitRate": 0.4924
 }
 },
 "divergence": {
-"n": 169,
-"betfairWins": 51,
-"betfairRate": 0.3018,
-"polyN": 151,
-"polyWins": 49,
-"polyRate": 0.3245
+"n": 177,
+"betfairWins": 55,
+"betfairRate": 0.3107,
+"polyN": 159,
+"polyWins": 50,
+"polyRate": 0.3145
 },
 "recent": [
+{
+"matchId": "35780320",
+"home": "Barcelona",
+"away": "Athletic Bilbao",
+"league": "Spanish La Liga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Barcelona",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-08-27T19:00:00Z",
+"settledAt": "2026-08-27T22:14:00.425454+00:00"
+},
+{
+"matchId": "35969023",
+"home": "Partizan Belgrade",
+"away": "Getafe",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Partizan Belgrade",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-08-27T19:00:00Z",
+"settledAt": "2026-08-27T22:14:00.425454+00:00"
+},
+{
+"matchId": "35969022",
+"home": "Larne",
+"away": "Lincoln Red Imps",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Lincoln Red Imps",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+3
+],
+"kickoff": "2026-08-27T19:00:00Z",
+"settledAt": "2026-08-27T22:14:00.425454+00:00"
+},
+{
+"matchId": "35965058",
+"home": "Rijeka",
+"away": "Midtjylland",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Midtjylland",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+4
+],
+"kickoff": "2026-08-27T18:45:00Z",
+"settledAt": "2026-08-27T21:58:53.325205+00:00"
+},
+{
+"matchId": "35969967",
+"home": "Boreham Wood",
+"away": "Boston Utd",
+"league": "English National League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Boston Utd",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-08-27T18:45:00Z",
+"settledAt": "2026-08-27T21:58:53.325205+00:00"
+},
+{
+"matchId": "35964586",
+"home": "Austria Wien",
+"away": "Braga",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-08-27T18:30:00Z",
+"settledAt": "2026-08-27T21:43:54.887633+00:00"
+},
+{
+"matchId": "35969276",
+"home": "Ajax",
+"away": "Sion",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Ajax",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+5,
+3
+],
+"kickoff": "2026-08-27T18:00:00Z",
+"settledAt": "2026-08-27T21:13:51.690698+00:00"
+},
+{
+"matchId": "35967945",
+"home": "Hapoel Tel Aviv",
+"away": "Atalanta",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Atalanta",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-08-27T18:00:00Z",
+"settledAt": "2026-08-27T21:13:51.690698+00:00"
+},
+{
+"matchId": "35964571",
+"home": "CSKA Sofia",
+"away": "OFI",
+"league": "UEFA Europa League Qualifiers",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "OFI",
+"polySide": "home",
+"winner": "away",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-08-27T18:00:00Z",
+"settledAt": "2026-08-27T21:13:51.690698+00:00"
+},
+{
+"matchId": "35931570",
+"home": "Fulham",
+"away": "AFC Wimbledon",
+"league": "English Football League Cup",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Fulham",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+0
+],
+"kickoff": "2026-08-27T19:00:00Z",
+"settledAt": "2026-08-27T20:58:51.313854+00:00"
+},
+{
+"matchId": "35964596",
+"home": "Hibernian",
+"away": "Gent",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Hibernian",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+3
+],
+"kickoff": "2026-08-27T19:00:00Z",
+"settledAt": "2026-08-27T20:58:51.313854+00:00"
+},
+{
+"matchId": "35938787",
+"home": "Celta Vigo",
+"away": "Osasuna",
+"league": "Spanish La Liga",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Celta Vigo",
+"polySide": "away",
+"winner": "away",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-08-27T18:30:00Z",
+"settledAt": "2026-08-27T20:29:13.871248+00:00"
+},
+{
+"matchId": "35928173",
+"home": "Chelsea",
+"away": "Luton",
+"league": "English Football League Cup",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Chelsea",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-08-27T18:30:00Z",
+"settledAt": "2026-08-27T20:29:13.871248+00:00"
+},
+{
+"matchId": "35967941",
+"home": "Red Bull Salzburg",
+"away": "Mjallby",
+"league": "UEFA Europa League Qualifiers",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Red Bull Salzburg",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+0
+],
+"kickoff": "2026-08-27T17:00:00Z",
+"settledAt": "2026-08-27T20:13:42.030369+00:00"
+},
+{
+"matchId": "35969259",
+"home": "Monaco",
+"away": "Gornik Zabrze",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Monaco",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+1
+],
+"kickoff": "2026-08-27T16:45:00Z",
+"settledAt": "2026-08-27T19:58:42.349959+00:00"
+},
+{
+"matchId": "35971324",
+"home": "Qarabag FK",
+"away": "FC Twente",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "FC Twente",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+4
+],
+"kickoff": "2026-08-27T16:15:00Z",
+"settledAt": "2026-08-27T19:28:48.335913+00:00"
+},
+{
+"matchId": "35966047",
+"home": "FC Iberia 1999",
+"away": "Jagiellonia Bialystock",
+"league": "UEFA Europa League Qualifiers",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Jagiellonia Bialystock",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-08-27T16:00:00Z",
+"settledAt": "2026-08-27T19:13:37.215060+00:00"
+},
+{
+"matchId": "35978662",
+"home": "Brann",
+"away": "PAOK",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Brann",
+"polySide": "away",
+"winner": "home",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+3,
+2
+],
+"kickoff": "2026-08-27T17:00:00Z",
+"settledAt": "2026-08-27T18:58:33.771635+00:00"
+},
+{
+"matchId": "35971285",
+"home": "Rakow Czestochowa",
+"away": "Hajduk Split",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Rakow Czestochowa",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-08-27T17:00:00Z",
+"settledAt": "2026-08-27T18:58:33.771635+00:00"
+},
+{
+"matchId": "35964559",
+"home": "Plzen",
+"away": "Crvena Zvezda",
+"league": "UEFA Europa League Qualifiers",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Plzen",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+1
+],
+"kickoff": "2026-08-27T17:00:00Z",
+"settledAt": "2026-08-27T18:58:33.771635+00:00"
+},
+{
+"matchId": "35969017",
+"home": "Freiburg",
+"away": "Motherwell",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Freiburg",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+1
+],
+"kickoff": "2026-08-27T16:45:00Z",
+"settledAt": "2026-08-27T18:43:32.461608+00:00"
+},
+{
+"matchId": "35969024",
+"home": "FK Jablonec",
+"away": "Rangers",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "FK Jablonec",
+"polySide": "away",
+"winner": "home",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-08-27T16:00:00Z",
+"settledAt": "2026-08-27T18:28:32.594258+00:00"
+},
+{
+"matchId": "35969021",
+"home": "Maccabi Tel Aviv",
+"away": "Lugano",
+"league": "UEFA Europa Conference Qualifiers",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Maccabi Tel Aviv",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-27T16:00:00Z",
+"settledAt": "2026-08-27T17:58:28.006423+00:00"
+},
+{
+"matchId": "35964597",
+"home": "Ararat Armenia",
+"away": "Universitatea Craiova",
+"league": "UEFA Europa League Qualifiers",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-08-27T16:00:00Z",
+"settledAt": "2026-08-27T17:58:28.006423+00:00"
+},
 {
 "matchId": "35978829",
 "home": "CF America",
@@ -833,468 +1294,12 @@
 ],
 "kickoff": "2026-08-26T17:45:00Z",
 "settledAt": "2026-08-26T20:56:19.675193+00:00"
-},
-{
-"matchId": "35928667",
-"home": "Tottenham",
-"away": "Charlton",
-"league": "English Football League Cup",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Tottenham",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-5,
-1
-],
-"kickoff": "2026-08-26T18:45:00Z",
-"settledAt": "2026-08-26T20:41:56.936292+00:00"
-},
-{
-"matchId": "35931576",
-"home": "Newcastle",
-"away": "West Brom",
-"league": "English Football League Cup",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Newcastle",
-"polySide": null,
-"winner": "home",
-"moneyWin": true,
-"polyWin": null,
-"ftScore": [
-3,
-2
-],
-"kickoff": "2026-08-26T18:45:00Z",
-"settledAt": "2026-08-26T20:41:56.936292+00:00"
-},
-{
-"matchId": "35957284",
-"home": "Stabaek",
-"away": "Ranheim IL",
-"league": "Norwegian 1st Division",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Stabaek",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-4,
-2
-],
-"kickoff": "2026-08-26T17:00:00Z",
-"settledAt": "2026-08-26T20:11:12.210131+00:00"
-},
-{
-"matchId": "35957282",
-"home": "Moss",
-"away": "Sogndal",
-"league": "Norwegian 1st Division",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Moss",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-08-26T17:00:00Z",
-"settledAt": "2026-08-26T20:11:12.210131+00:00"
-},
-{
-"matchId": "35967438",
-"home": "National Bank",
-"away": "Zamalek",
-"league": "Egyptian Premier",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Zamalek",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-3
-],
-"kickoff": "2026-08-26T17:00:00Z",
-"settledAt": "2026-08-26T20:11:12.210131+00:00"
-},
-{
-"matchId": "35978407",
-"home": "Al Faisaly ( KSA )",
-"away": "Al-Fateh (KSA)",
-"league": "Saudi Professional League",
-"verdict": "konsens",
-"moneySide": "draw",
-"moneyName": "The Draw",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-08-26T16:00:00Z",
-"settledAt": "2026-08-26T19:11:07.209898+00:00"
-},
-{
-"matchId": "35978187",
-"home": "Lokomotiv Tashkent",
-"away": "Bunyodkor",
-"league": "Uzbekistan Super League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Lokomotiv Tashkent",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-4,
-1
-],
-"kickoff": "2026-08-26T14:00:00Z",
-"settledAt": "2026-08-26T17:10:56.723624+00:00"
-},
-{
-"matchId": "35982271",
-"home": "Smouha",
-"away": "Asyut Petroleum",
-"league": "Egyptian Premier",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Smouha",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-08-26T14:00:00Z",
-"settledAt": "2026-08-26T17:10:56.723624+00:00"
-},
-{
-"matchId": "35978196",
-"home": "Qizilqum Zarafshon",
-"away": "Nasaf",
-"league": "Uzbekistan Super League",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Nasaf",
-"polySide": "home",
-"winner": "home",
-"moneyWin": false,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-08-26T15:00:00Z",
-"settledAt": "2026-08-26T16:56:20.141720+00:00"
-},
-{
-"matchId": "35970392",
-"home": "Vietnam",
-"away": "Thailand",
-"league": "Other Competitions Soccer",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Thailand",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-08-26T13:00:00Z",
-"settledAt": "2026-08-26T16:10:45.302120+00:00"
-},
-{
-"matchId": "35978163",
-"home": "Mash al Mubarek",
-"away": "FK Navbahor Namangan",
-"league": "Uzbekistan Super League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "FK Navbahor Namangan",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-2
-],
-"kickoff": "2026-08-26T14:00:00Z",
-"settledAt": "2026-08-26T15:57:01.173488+00:00"
-},
-{
-"matchId": "35973448",
-"home": "Gangwon",
-"away": "Gwangju FC",
-"league": "South Korean K1 League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Gwangju FC",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-08-26T10:30:00Z",
-"settledAt": "2026-08-26T13:40:22.366779+00:00"
-},
-{
-"matchId": "35973446",
-"home": "FC Anyang",
-"away": "Incheon Utd",
-"league": "South Korean K1 League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Incheon Utd",
-"polySide": "away",
-"winner": "home",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-08-26T10:30:00Z",
-"settledAt": "2026-08-26T13:40:22.366779+00:00"
-},
-{
-"matchId": "35978424",
-"home": "Leon",
-"away": "Real Salt Lake",
-"league": "North American Leagues Cup",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Leon",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-0
-],
-"kickoff": "2026-08-26T02:30:00Z",
-"settledAt": "2026-08-26T05:39:33.431870+00:00"
-},
-{
-"matchId": "35957667",
-"home": "Independiente (Ecu)",
-"away": "Tolima",
-"league": "CONMEBOL Copa Libertadores",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Independiente (Ecu)",
-"polySide": null,
-"winner": "home",
-"moneyWin": true,
-"polyWin": null,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-08-26T00:30:00Z",
-"settledAt": "2026-08-26T03:39:15.007638+00:00"
-},
-{
-"matchId": "35978423",
-"home": "Monterrey",
-"away": "Chicago Fire",
-"league": "North American Leagues Cup",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Monterrey",
-"polySide": "away",
-"winner": "home",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-08-26T00:30:00Z",
-"settledAt": "2026-08-26T02:39:09.836811+00:00"
-},
-{
-"matchId": "35961638",
-"home": "Deportivo Madryn",
-"away": "Godoy Cruz",
-"league": "Argentinian Primera Nacional",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Deportivo Madryn",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-08-25T22:00:00Z",
-"settledAt": "2026-08-26T01:09:01.544195+00:00"
-},
-{
-"matchId": "35979502",
-"home": "Universitario de Vinto",
-"away": "Nacional Potosi",
-"league": "Bolivian Liga de Futbol Profesional",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Universitario de Vinto",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-08-25T23:00:00Z",
-"settledAt": "2026-08-26T00:53:58.840363+00:00"
-},
-{
-"matchId": "35974921",
-"home": "Boca Juniors de Cali",
-"away": "Bogota",
-"league": "Colombian Primera B",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Bogota",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-08-25T20:30:00Z",
-"settledAt": "2026-08-25T22:24:07.480556+00:00"
-},
-{
-"matchId": "35962154",
-"home": "LASK Linz",
-"away": "Celtic",
-"league": "UEFA Champions League Qualifiers",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "LASK Linz",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-5,
-1
-],
-"kickoff": "2026-08-25T19:00:00Z",
-"settledAt": "2026-08-25T22:08:53.830193+00:00"
-},
-{
-"matchId": "35930607",
-"home": "Blackpool",
-"away": "Lincoln",
-"league": "English Football League Cup",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Lincoln",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-4
-],
-"kickoff": "2026-08-25T18:45:00Z",
-"settledAt": "2026-08-25T21:49:21.027196+00:00"
-},
-{
-"matchId": "35928732",
-"home": "Walsall",
-"away": "Leyton Orient",
-"league": "English Football League Cup",
-"verdict": "konsens",
-"moneySide": "draw",
-"moneyName": "The Draw",
-"polySide": "away",
-"winner": "away",
-"moneyWin": false,
-"polyWin": true,
-"ftScore": [
-4,
-5
-],
-"kickoff": "2026-08-25T18:45:00Z",
-"settledAt": "2026-08-25T21:49:21.027196+00:00"
-},
-{
-"matchId": "35928175",
-"home": "Cardiff",
-"away": "Norwich",
-"league": "English Football League Cup",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Norwich",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-08-25T18:00:00Z",
-"settledAt": "2026-08-25T21:08:39.800037+00:00"
-},
-{
-"matchId": "35780315",
-"home": "Valencia",
-"away": "Betis",
-"league": "Spanish La Liga",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Betis",
-"polySide": "draw",
-"winner": "away",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-08-25T19:00:00Z",
-"settledAt": "2026-08-25T21:08:39.800037+00:00"
 }
 ],
 "global": {
-"n": 683,
-"wins": 463,
-"hitRate": 0.6779
+"n": 707,
+"wins": 481,
+"hitRate": 0.6803
 },
-"pending": 12
+"pending": 7
 }
