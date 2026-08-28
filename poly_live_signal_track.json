@@ -1,15 +1,15 @@
 {
-"updatedAt": "2026-08-28T05:50:43.902000+00:00",
+"updatedAt": "2026-08-28T06:05:42.954794+00:00",
 "record": {
-"updatedAt": "2026-08-28T05:50:43.902000+00:00",
-"settled": 2999,
-"open": 1,
+"updatedAt": "2026-08-28T06:05:42.954794+00:00",
+"settled": 2995,
+"open": 5,
 "buckets": {
 "alle": {
-"n": 2999,
-"posRate": 0.426,
-"avgClv": -0.68,
-"avgClv30": -0.85
+"n": 2995,
+"posRate": 0.427,
+"avgClv": -0.65,
+"avgClv30": -0.82
 },
 "sharp": {
 "n": 144,
@@ -24,9 +24,9 @@
 "avgClv30": -0.66
 },
 "mature": {
-"n": 1877,
+"n": 1875,
 "posRate": 0.409,
-"avgClv": -0.84,
+"avgClv": -0.85,
 "avgClv30": -1.19
 },
 "notChasing": {
@@ -36,21 +36,15 @@
 "avgClv30": -0.84
 },
 "chasing": {
-"n": 1122,
-"posRate": 0.392,
-"avgClv": 0.19,
-"avgClv30": -0.87
+"n": 1118,
+"posRate": 0.393,
+"avgClv": 0.27,
+"avgClv30": -0.8
 },
 "bySize": {
-"2-5k": {
-"n": 1341,
-"posRate": 0.43,
-"avgClv": -0.48,
-"avgClv30": -1.17
-},
 "5-10k": {
-"n": 712,
-"posRate": 0.445,
+"n": 710,
+"posRate": 0.446,
 "avgClv": -0.06,
 "avgClv30": -0.45
 },
@@ -59,6 +53,12 @@
 "posRate": 0.412,
 "avgClv": -0.64,
 "avgClv30": -0.58
+},
+"2-5k": {
+"n": 1339,
+"posRate": 0.43,
+"avgClv": -0.41,
+"avgClv30": -1.11
 },
 "25k+": {
 "n": 332,
@@ -70,110 +70,6 @@
 }
 },
 "ledger": [
-{
-"sig": "es2-gra-rm-2026-08-24|0x0346afae2603313d2bbee96b628536c8cbe352a5",
-"key": "es2-gra-rm-2026-08-24",
-"side": "Granada CF",
-"wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
-"usd": 2051,
-"league": "SOCCER",
-"entryPrice": 0.93,
-"totalUsd": 39495,
-"movePP": 32.5,
-"flags": {
-"valueZone": false,
-"mature": false,
-"notChasing": false,
-"sharp": false,
-"sizeBand": "2-5k"
-},
-"firstTs": "2026-08-24T21:14:58.270475+00:00",
-"status": "settled",
-"latestPrice": 0.9995,
-"clvPP": 7.0,
-"clv30": 7.0,
-"updatedAt": "2026-08-24T21:29:56.522279+00:00",
-"finalClvPP": 7.0,
-"settledAt": "2026-08-24T21:29:56.522279+00:00"
-},
-{
-"sig": "es2-gra-rm-2026-08-24-more-markets|0x204f72f35326db932158cba6adff0b9a1da95e14",
-"key": "es2-gra-rm-2026-08-24-more-markets",
-"side": "Under",
-"wallet": "0x204f72f35326db932158cba6adff0b9a1da95e14",
-"usd": 2904,
-"league": "SOCCER",
-"entryPrice": 0.947,
-"totalUsd": 12074,
-"movePP": 18.2,
-"flags": {
-"valueZone": false,
-"mature": false,
-"notChasing": false,
-"sharp": false,
-"sizeBand": "2-5k"
-},
-"firstTs": "2026-08-24T21:14:58.270475+00:00",
-"status": "settled",
-"latestPrice": 0.0005,
-"clvPP": -94.7,
-"clv30": -94.7,
-"updatedAt": "2026-08-24T21:29:56.522279+00:00",
-"finalClvPP": -94.7,
-"settledAt": "2026-08-24T21:29:56.522279+00:00"
-},
-{
-"sig": "lal-mala-dep-2026-08-24|0x0353aaf82abbd3e69c00059df0a825bc198fc2ff",
-"key": "lal-mala-dep-2026-08-24",
-"side": "Draw (Málaga CF vs. RC Deportivo A Coruña)",
-"wallet": "0x0353aaf82abbd3e69c00059df0a825bc198fc2ff",
-"usd": 9995,
-"league": "SOCCER",
-"entryPrice": 0.9995,
-"totalUsd": 1377825,
-"movePP": 42.5,
-"flags": {
-"valueZone": false,
-"mature": true,
-"notChasing": false,
-"sharp": false,
-"sizeBand": "5-10k"
-},
-"firstTs": "2026-08-24T21:29:56.522279+00:00",
-"status": "settled",
-"latestPrice": 0.9995,
-"clvPP": 0.0,
-"clv30": 0.0,
-"updatedAt": "2026-08-24T21:29:56.522279+00:00",
-"finalClvPP": 0.0,
-"settledAt": "2026-08-24T21:29:56.522279+00:00"
-},
-{
-"sig": "lal-mala-dep-2026-08-24|0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-"key": "lal-mala-dep-2026-08-24",
-"side": "Draw (Málaga CF vs. RC Deportivo A Coruña)",
-"wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-"usd": 7996,
-"league": "SOCCER",
-"entryPrice": 0.9995,
-"totalUsd": 1377825,
-"movePP": 42.5,
-"flags": {
-"valueZone": false,
-"mature": true,
-"notChasing": false,
-"sharp": false,
-"sizeBand": "5-10k"
-},
-"firstTs": "2026-08-24T21:29:56.522279+00:00",
-"status": "settled",
-"latestPrice": 0.9995,
-"clvPP": 0.0,
-"clv30": 0.0,
-"updatedAt": "2026-08-24T21:29:56.522279+00:00",
-"finalClvPP": 0.0,
-"settledAt": "2026-08-24T21:29:56.522279+00:00"
-},
 {
 "sig": "lal-mala-dep-2026-08-24|0xaacac528e8af87ca25809824b384e169b558f5d5",
 "key": "lal-mala-dep-2026-08-24",
@@ -78063,10 +77959,106 @@
 },
 "firstTs": "2026-08-28T05:50:43.902000+00:00",
 "status": "open",
-"latestPrice": 0.48,
+"latestPrice": 0.335,
+"clvPP": -14.5,
+"clv30": null,
+"updatedAt": "2026-08-28T06:05:42.954794+00:00"
+},
+{
+"sig": "lol-edg-nip-2026-08-28|0xc1c7bb8761105f6d33fc8d71dec31b5688a0f0a7",
+"key": "lol-edg-nip-2026-08-28",
+"side": "Ninjas in Pyjamas",
+"wallet": "0xc1c7bb8761105f6d33fc8d71dec31b5688a0f0a7",
+"usd": 19148,
+"league": "ESPORTS",
+"entryPrice": 0.735,
+"totalUsd": 213787,
+"movePP": null,
+"flags": {
+"valueZone": true,
+"mature": true,
+"notChasing": true,
+"sharp": false,
+"sizeBand": "10-25k"
+},
+"firstTs": "2026-08-28T06:05:42.954794+00:00",
+"status": "open",
+"latestPrice": 0.735,
 "clvPP": 0.0,
 "clv30": null,
-"updatedAt": "2026-08-28T05:50:43.902000+00:00"
+"updatedAt": "2026-08-28T06:05:42.954794+00:00"
+},
+{
+"sig": "lol-edg-nip-2026-08-28|0xd9670ea74384c1e1b9dc1e4267ffadaf4cdd1409",
+"key": "lol-edg-nip-2026-08-28",
+"side": "Ninjas in Pyjamas",
+"wallet": "0xd9670ea74384c1e1b9dc1e4267ffadaf4cdd1409",
+"usd": 13835,
+"league": "ESPORTS",
+"entryPrice": 0.735,
+"totalUsd": 213787,
+"movePP": null,
+"flags": {
+"valueZone": true,
+"mature": true,
+"notChasing": true,
+"sharp": false,
+"sizeBand": "10-25k"
+},
+"firstTs": "2026-08-28T06:05:42.954794+00:00",
+"status": "open",
+"latestPrice": 0.735,
+"clvPP": 0.0,
+"clv30": null,
+"updatedAt": "2026-08-28T06:05:42.954794+00:00"
+},
+{
+"sig": "lol-edg-nip-2026-08-28|0xe015b5a2a299167be835a2fd1e86f09c49e06ffd",
+"key": "lol-edg-nip-2026-08-28",
+"side": "Ninjas in Pyjamas",
+"wallet": "0xe015b5a2a299167be835a2fd1e86f09c49e06ffd",
+"usd": 11962,
+"league": "ESPORTS",
+"entryPrice": 0.735,
+"totalUsd": 213787,
+"movePP": null,
+"flags": {
+"valueZone": true,
+"mature": true,
+"notChasing": true,
+"sharp": false,
+"sizeBand": "10-25k"
+},
+"firstTs": "2026-08-28T06:05:42.954794+00:00",
+"status": "open",
+"latestPrice": 0.735,
+"clvPP": 0.0,
+"clv30": null,
+"updatedAt": "2026-08-28T06:05:42.954794+00:00"
+},
+{
+"sig": "lol-edg-nip-2026-08-28|0xd76b66e681121da7da268eaabf436954631ce9d5",
+"key": "lol-edg-nip-2026-08-28",
+"side": "Ninjas in Pyjamas",
+"wallet": "0xd76b66e681121da7da268eaabf436954631ce9d5",
+"usd": 10125,
+"league": "ESPORTS",
+"entryPrice": 0.735,
+"totalUsd": 213787,
+"movePP": null,
+"flags": {
+"valueZone": true,
+"mature": true,
+"notChasing": true,
+"sharp": false,
+"sizeBand": "10-25k"
+},
+"firstTs": "2026-08-28T06:05:42.954794+00:00",
+"status": "open",
+"latestPrice": 0.735,
+"clvPP": 0.0,
+"clv30": null,
+"updatedAt": "2026-08-28T06:05:42.954794+00:00"
 }
 ]
 }
