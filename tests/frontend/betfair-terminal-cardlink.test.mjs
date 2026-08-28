@@ -26,15 +26,27 @@ function games() {
       kickoff: iso(150 * 60e3), moneySide: 'home', moneyName: 'Epsilon', moneyOdd: 1.9,
       moneyDir: 'in', totVol: 40000, pinn: { home: 0.55, draw: 0.25, away: 0.20, fav: 'home' },
       verdict: 'konsens', pinnMovePP: 0.2, poly: null },
+    { matchId: 'D', home: 'Jota', away: 'Kappa', league: 'Test Liga', live: false,
+      kickoff: iso(180 * 60e3), moneySide: 'home', moneyName: 'Jota', moneyOdd: 1.7,
+      moneyDir: 'in', totVol: 30000, pinn: { home: 0.60, draw: 0.22, away: 0.18, fav: 'home' },
+      verdict: 'konsens', pinnMovePP: 0.3, poly: null },
   ] };
 }
 const LINKS = { links: {
-  A: { market: 'Heimsieg', marketKey: 'homeWin', odds: 1.62, sc: 0.81, icon: '🏠',
+  // sc = convictionScore aus liga-data.json, Skala 0-10 (NICHT 0-1).
+  A: { market: 'Heimsieg', odds: 1.62, sc: 8, icon: '🏠', verdict: 'BET',
        sides: ['home'], moneySide: 'home', agree: true, nPicks: 2, matchedBy: 'exakt' },
-  B: { market: 'Heimsieg', marketKey: 'homeWin', odds: 2.10, sc: 0.63, icon: '🏠',
+  B: { market: 'Heimsieg', odds: 2.10, sc: 6, icon: '🏠', verdict: 'ABWÄGEN',
        sides: ['home'], moneySide: 'away', agree: false, nPicks: 1, matchedBy: 'bruecke' },
-  C: { market: 'Über 2.5 Tore', marketKey: 'over25', odds: 1.85, sc: 0.7, icon: '⚽',
-       sides: [], moneySide: 'home', agree: null, nPicks: 1, matchedBy: 'exakt' },
+  // 28.08.2026: Tor-Picks werden gegen den Boersen-Tormarkt geprueft statt uebergangen.
+  C: { market: 'Über 3.5 Tore', odds: 1.50, sc: 6, icon: '⚽', verdict: 'ABWÄGEN',
+       sides: [], moneySide: 'home', agree: true, nPicks: 1, matchedBy: 'exakt',
+       achse: 'tor', torMarkt: 'Over/Under 3.5 Goals', torSeite: 'Over',
+       torEur: 7039, torSharePct: 87 },
+  D: { market: 'Unter 2.5 Tore', odds: 2.10, sc: 5, icon: '🛡', verdict: 'ABWÄGEN',
+       sides: [], moneySide: 'home', agree: true, nPicks: 1, matchedBy: 'exakt',
+       achse: 'tor', torMarkt: 'Over/Under 2.5 Goals', torSeite: 'Under',
+       torEur: 40, torSharePct: 90 },
 } };
 
 function boot(cardLink) {
@@ -64,7 +76,8 @@ test('Unser Pick steht in der Zeile — nicht nur der Betfair-Runner', () => {
   const h = panel(boot(LINKS));
   assert.match(h, /Heimsieg/, 'unser Pick-Name erscheint');
   assert.match(h, /@1\.62/, 'unsere Quote, nicht die Boersenquote');
-  assert.match(h, /Konviktion 81%/, 'Konviktion der Card');
+  assert.match(h, /Konviktion 8\/10/, 'Konviktion auf der 0-10-Skala, nicht als Prozent');
+  assert.doesNotMatch(h, /Konviktion \d00%/, 'sc*100 waere „Konviktion 800%" gewesen');
 });
 
 test('Zustimmung und Widerspruch sind unterscheidbar', () => {
@@ -73,10 +86,19 @@ test('Zustimmung und Widerspruch sind unterscheidbar', () => {
   assert.match(h, /Geld steht gegen unsere Card/, 'Widerspruch wird benannt');
 });
 
-test('Andere Achse bekommt KEIN Urteil (Tore sind nicht mit 1X2 vergleichbar)', () => {
+test('Tor-Pick wird gegen den Boersen-Tormarkt beurteilt, nicht uebergangen', () => {
   const h = panel(boot(LINKS));
-  assert.match(h, /Über 2\.5 Tore/, 'der Tor-Pick wird trotzdem angezeigt');
-  assert.match(h, /nicht vergleichbar/, 'aber ausdruecklich ohne Zustimmung/Widerspruch');
+  assert.match(h, /Über 3\.5 Tore/, 'der Tor-Pick wird angezeigt');
+  assert.match(h, /Over\/Under 3\.5 Goals Over: 87%/, 'die Basis des Urteils steht dran');
+});
+
+test('duenner Tormarkt wird als duenn gekennzeichnet', () => {
+  // 87 % von 7.039 EUR ist eine andere Aussage als 90 % von 40 EUR.
+  const h = panel(boot(LINKS));
+  assert.match(h, /\(dünn\)/, 'der 40-EUR-Markt wird als duenn markiert');
+  const idxDuenn = h.indexOf('(dünn)');
+  const idxUeber = h.indexOf('Über 3.5 Tore');
+  assert.ok(idxDuenn > idxUeber, 'der dicke 7k-Markt bekommt KEIN duenn-Label');
 });
 
 test('Ohne Card-Link bleibt das Terminal heil und sagt es ehrlich', () => {

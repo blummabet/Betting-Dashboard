@@ -1,43 +1,113 @@
-"""26.08.2026 — „unsere Card sagt X, und das Geld?"
+"""26.08.2026 — „unsere Card sagt X, und das Geld?" · 28.08.2026 — Quelle korrigiert (Lucas)
 
-Das Terminal zeigte in der Pick-Spalte immer die GELD-Seite von Betfair, nie unseren eigenen
-Pick — man konnte also nicht sehen, ob die Börse mit uns oder gegen uns steht. Der Kartenlink
-schließt das. Er urteilt NICHT: die Engine bleibt die einzige Instanz, die Picks bewertet.
+Das Terminal zeigte in der Pick-Spalte immer die GELD-Seite von Betfair, nie unseren Pick.
+
+⚠️ Der Kartenlink las zuerst `picks_output.json` — das ALTE breite 20-Ligen-System. Im Terminal
+stand bei Bayern–Stuttgart deshalb „1. HZ: Over 0.5 Tore", ein Markt, den wir gar nicht mehr
+anbieten, während die echte Card „Über 3.5 Tore @1.50" sagt. Es gibt ZWEI parallele Pick-Systeme
+im Repo; die National-Cards kommen aus `liga-data.json`. Diese Tests halten die Quelle fest.
 """
 import betfair_card_link as L
 
 
-def _ev(home="Real Madrid", away="Real Sociedad", date="2026-08-26", picks=None):
+def _fx(home="Real Madrid", away="Real Sociedad", date="2026-08-26", picks=None):
     return {"home": home, "away": away, "dateIso": date,
             "picks": picks if picks is not None else [
-                {"market": "Heimsieg", "marketKey": "homeWin", "odds": 1.5, "sc": 0.8, "conf": "high"}]}
+                {"market": "Heimsieg", "odds": 1.5, "verdict": "ABWÄGEN", "convictionScore": 6}]}
 
 
 def _game(mid="1", home="Real Madrid", away="Real Sociedad", side="home", ko="2026-08-26T19:00:00Z"):
     return {"matchId": mid, "home": home, "away": away, "moneySide": side, "kickoff": ko}
 
 
-class TestSeiten:
-    def test_eindeutige_maerkte(self):
-        assert L.sides_of("homeWin") == ("home",)
-        assert L.sides_of("awayWin") == ("away",)
+class TestSeitenAusDemLabel:
+    """liga-data.json führt nur das deutsche Label, keinen marketKey."""
 
-    def test_doppelte_chance_deckt_zwei_seiten(self):
-        assert set(L.sides_of("dc1X")) == {"home", "draw"}
-        assert set(L.sides_of("dcX2")) == {"draw", "away"}
+    def test_eindeutige_maerkte(self):
+        assert L.sides_of("Heimsieg") == ("home",)
+        assert L.sides_of("Auswärtssieg") == ("away",)
+        assert L.sides_of("Unentschieden") == ("draw",)
+
+    def test_doppelte_chance_mit_gedankenstrich(self):
+        assert set(L.sides_of("Doppelte Chance — 1X")) == {"home", "draw"}
+        assert set(L.sides_of("Doppelte Chance — X2")) == {"draw", "away"}
 
     def test_handicap_ist_richtungs_eindeutig(self):
-        assert L.sides_of("ah_home:-0.75") == ("home",)
-        assert L.sides_of("ah_away:+1.0") == ("away",)
+        assert L.sides_of("AH Heim −1.25") == ("home",)
+        assert L.sides_of("AH Auswärts −0.25") == ("away",)
 
-    def test_andere_achse_gibt_leer(self):
-        """Tore, Ecken, BTTS, Halbzeit liegen NICHT auf der 1X2-Achse — lieber kein Urteil
-        als ein erfundenes."""
-        for k in ("over25", "under25", "btts", "noBtts", "corners_over:9.5", "ht_over05"):
-            assert L.sides_of(k) == (), k
+    def test_andere_achse_bekommt_kein_urteil(self):
+        for m in ("Über 3.5 Tore", "Unter 2.5 Tore", "Beide Teams treffen — Ja",
+                  "Beide Teams treffen — Nein", "1. HZ: Over 0.5 Tore"):
+            assert L.sides_of(m) == (), m
 
-    def test_unbekannt_gibt_leer(self):
-        assert L.sides_of(None) == () and L.sides_of("voellig_neu") == ()
+    def test_muell_wirft_nicht(self):
+        for m in (None, "", 5, "voellig neu"):
+            assert L.sides_of(m) == ()
+
+
+class TestBesterPick:
+    def test_nobet_ist_kein_pick(self):
+        """140 von 172 Picks in liga-data sind NOBET — die dürfen nie als „unsere Card" gelten."""
+        assert L.best_pick([{"market": "Heimsieg", "verdict": "NOBET", "convictionScore": 9}]) is None
+
+    def test_bet_schlaegt_abwaegen(self):
+        p = L.best_pick([{"market": "A", "verdict": "ABWÄGEN", "convictionScore": 9},
+                         {"market": "B", "verdict": "BET", "convictionScore": 3}])
+        assert p["market"] == "B"
+
+    def test_dann_hoehere_conviction(self):
+        p = L.best_pick([{"market": "A", "verdict": "ABWÄGEN", "convictionScore": 4},
+                         {"market": "B", "verdict": "ABWÄGEN", "convictionScore": 7}])
+        assert p["market"] == "B"
+
+    def test_bei_gleichstand_die_vergleichbare_achse(self):
+        p = L.best_pick([{"market": "Über 2.5 Tore", "verdict": "ABWÄGEN", "convictionScore": 6},
+                         {"market": "Heimsieg", "verdict": "ABWÄGEN", "convictionScore": 6}])
+        assert p["market"] == "Heimsieg"
+
+    def test_kaputte_conviction_wirft_nicht(self):
+        p = L.best_pick([{"market": "A", "verdict": "ABWÄGEN", "convictionScore": "x"},
+                         {"market": "B", "verdict": "ABWÄGEN", "convictionScore": 2}])
+        assert p["market"] == "B"
+
+    def test_leer(self):
+        assert L.best_pick([]) is None and L.best_pick(None) is None
+        assert L.best_pick([None, "x"]) is None
+
+
+class TestFixturesIndex:
+    DATA = {
+        "groups": {"GER": {"fixtures": [
+            {"home": "157", "away": "172", "homeName": "Bayern München", "awayName": "VfB Stuttgart",
+             "date": "2026-08-28", "matchday": 1}]}},
+        "koFixtures": [{"home": "1", "away": "2", "homeName": "A", "awayName": "B",
+                        "date": "2026-09-01", "matchday": 30, "round": "R16"}],
+        "picks": {"GER-1-157-172": [{"market": "Über 3.5 Tore", "odds": 1.5,
+                                     "verdict": "ABWÄGEN", "convictionScore": 6}],
+                  "R16-30-1-2": [{"market": "Heimsieg", "odds": 2.0,
+                                  "verdict": "BET", "convictionScore": 8}]},
+    }
+
+    def test_der_echte_fall_bayern_stuttgart(self):
+        """Nicht „1. HZ: Over 0.5" aus dem alten System, sondern die echte Card."""
+        idx = L.fixtures_index(self.DATA)
+        b = next(f for f in idx if f["home"] == "Bayern München")
+        assert [p["market"] for p in b["picks"]] == ["Über 3.5 Tore"]
+
+    def test_ko_fixtures_kommen_mit(self):
+        """KO-Spiele liegen in koFixtures, nicht in groups — das hat schon mehrfach Picks gekostet."""
+        idx = L.fixtures_index(self.DATA)
+        ko = next(f for f in idx if f["home"] == "A")
+        assert ko["picks"] and ko["picks"][0]["verdict"] == "BET"
+
+    def test_fixture_ohne_picks_bleibt_drin_aber_leer(self):
+        d = {"groups": {"GER": {"fixtures": [{"home": "9", "away": "8", "date": "2026-09-01", "matchday": 2}]}}}
+        assert L.fixtures_index(d)[0]["picks"] == []
+
+    def test_muell_wirft_nicht(self):
+        assert L.fixtures_index(None) == []
+        assert L.fixtures_index({"groups": {"X": {"fixtures": [None, "y"]}}}) == []
 
 
 class TestUrteil:
@@ -47,76 +117,42 @@ class TestUrteil:
     def test_geld_dagegen(self):
         assert L.verdict(("home",), "away") is False
 
-    def test_doppelte_chance_trifft_auch_das_remis(self):
-        assert L.verdict(("home", "draw"), "draw") is True
-
     def test_nicht_vergleichbar_ist_none_nicht_false(self):
-        """None heißt „andere Achse", False heißt „das Geld steht gegen uns". Die zu
-        verwechseln würde im Terminal einen Widerspruch anzeigen, den es nicht gibt."""
+        """None heißt „andere Achse", False heißt „das Geld steht gegen uns"."""
         assert L.verdict((), "home") is None
         assert L.verdict(("home",), None) is None
 
 
-class TestBesterPick:
-    def test_hoechste_konviktion_gewinnt(self):
-        p = L.best_pick([{"marketKey": "over25", "sc": 0.4}, {"marketKey": "homeWin", "sc": 0.9}])
-        assert p["marketKey"] == "homeWin"
-
-    def test_bei_gleichstand_gewinnt_die_vergleichbare_achse(self):
-        p = L.best_pick([{"marketKey": "over25", "sc": 0.8}, {"marketKey": "homeWin", "sc": 0.8}])
-        assert p["marketKey"] == "homeWin"
-
-    def test_kaputte_konviktion_wirft_nicht(self):
-        p = L.best_pick([{"marketKey": "over25", "sc": "kaputt"}, {"marketKey": "homeWin", "sc": 0.5}])
-        assert p["marketKey"] == "homeWin"
-
-    def test_leer(self):
-        assert L.best_pick([]) is None and L.best_pick(None) is None
-
-    def test_muell_wird_uebersprungen(self):
-        assert L.best_pick([None, "x", {"marketKey": "homeWin", "sc": 0.3}])["marketKey"] == "homeWin"
-
-
 class TestLink:
     def test_exakter_treffer(self):
-        r = L.link([_game()], [_ev()])
-        assert r["nExact"] == 1 and r["nBridge"] == 0
+        r = L.link([_game()], [_fx()])
+        assert r["nExact"] == 1
         row = r["links"]["1"]
-        assert row["agree"] is True and row["market"] == "Heimsieg" and row["matchedBy"] == "exakt"
+        assert row["agree"] is True and row["market"] == "Heimsieg" and row["sc"] == 6
 
     def test_namens_bruecke(self):
-        """Betwatch schreibt „Betis", unsere Fixtures „Real Betis"."""
-        r = L.link([_game(home="Valencia", away="Betis", side="away")],
-                   [_ev(home="Valencia", away="Real Betis",
-                        picks=[{"market": "Auswärtssieg", "marketKey": "awayWin", "sc": 0.6}])])
+        """Betwatch schreibt „Stuttgart", unsere Fixtures „VfB Stuttgart"."""
+        r = L.link([_game(home="Bayern Munich", away="Stuttgart", side="home", ko="2026-08-28T18:30:00Z")],
+                   [_fx(home="Bayern München", away="VfB Stuttgart", date="2026-08-28")])
         assert r["nBridge"] == 1 and r["links"]["1"]["agree"] is True
 
-    def test_ohne_card_kein_eintrag(self):
-        """Pokal- und Auslandsspiele haben keine Card — die Zeile bleibt wie bisher."""
-        assert L.link([_game(home="Barnsley", away="Crewe")], [_ev()])["links"] == {}
+    def test_nur_nobet_ergibt_keinen_link(self):
+        r = L.link([_game()], [_fx(picks=[{"market": "Heimsieg", "verdict": "NOBET", "convictionScore": 9}])])
+        assert r["links"] == {}
 
-    def test_event_ohne_picks_wird_uebersprungen(self):
-        assert L.link([_game()], [_ev(picks=[])])["links"] == {}
-
-    def test_spiel_ohne_matchid_wird_uebersprungen(self):
-        g = _game(); g["matchId"] = ""
-        assert L.link([g], [_ev()])["links"] == {}
-
-    def test_geld_gegen_uns_wird_als_false_gemeldet(self):
-        r = L.link([_game(side="away")], [_ev()])
-        assert r["links"]["1"]["agree"] is False
-
-    def test_andere_achse_bleibt_ohne_urteil(self):
-        r = L.link([_game()], [_ev(picks=[{"market": "Über 2.5", "marketKey": "over25", "sc": 0.7}])])
+    def test_tor_pick_bleibt_ohne_urteil(self):
+        r = L.link([_game()], [_fx(picks=[{"market": "Über 3.5 Tore", "odds": 1.5,
+                                           "verdict": "ABWÄGEN", "convictionScore": 6}])])
         row = r["links"]["1"]
-        assert row["agree"] is None and row["market"] == "Über 2.5"
+        assert row["agree"] is None and row["market"] == "Über 3.5 Tore"
+
+    def test_ohne_card_kein_eintrag(self):
+        assert L.link([_game(home="Barnsley", away="Crewe")], [_fx()])["links"] == {}
 
     def test_zwei_kandidaten_am_selben_tag_geben_keinen_treffer(self):
-        """Lieber kein Link als der falsche — ein falscher haengt einem Spiel fremdes Geld an."""
-        evs = [_ev(home="Athletic Club", away="Real Sociedad"),
-               _ev(home="Athletic Bilbao", away="Real Sociedad")]
-        r = L.link([_game(home="Athletic", away="Sociedad")], evs)
-        assert r["links"] == {}
+        evs = [_fx(home="Athletic Club", away="Real Sociedad"),
+               _fx(home="Athletic Bilbao", away="Real Sociedad")]
+        assert L.link([_game(home="Athletic", away="Sociedad")], evs)["links"] == {}
 
     def test_muell_wirft_nicht(self):
         assert L.link([None, "x"], [None, 5])["links"] == {}
@@ -124,21 +160,98 @@ class TestLink:
 
 
 class TestKandidaten:
-    """„0 verlinkt" muss von „0 verlinkbar" unterscheidbar sein — sonst sieht ein kaputter Link
-    aus wie ein ruhiger Dienstag ohne Top-5-Spiele."""
-
     def test_gleicher_tag_zaehlt_als_kandidat(self):
-        assert L.candidates([_game()], [_ev(date="2026-08-26")]) == 1
+        assert L.candidates([_game()], [_fx(date="2026-08-26")]) == 1
 
     def test_anderer_tag_ist_kein_kandidat(self):
-        assert L.candidates([_game()], [_ev(date="2026-09-30")]) == 0
-
-    def test_ohne_cards_keine_kandidaten(self):
-        assert L.candidates([_game()], []) == 0
-
-    def test_leeres_datum_zaehlt_nicht(self):
-        g = _game(); g["kickoff"] = ""
-        assert L.candidates([g], [_ev(date="")]) == 0
+        assert L.candidates([_game()], [_fx(date="2026-09-30")]) == 0
 
     def test_muell_wirft_nicht(self):
         assert L.candidates([None, "x"], [None, 3]) == 0
+
+
+# ── Tor-/BTTS-Achse (28.08.2026, Lucas) ─────────────────────────────────────
+# „Wieso wird ein Über-Pick nicht mit der Over-Seite verglichen? Da liegt was oben."
+# Zu Recht: der Roh-Snapshot hat die ganze Leiter. Bayern–Stuttgart, Ü/U 3.5: 7.039 € gematcht,
+# davon 6.140 auf Over — 87 % auf unserer Seite. Diese Aussage wurde vorher verschenkt.
+
+def _snap(markets):
+    return {"matchId": "1", "home": "Bayern Munich", "away": "Stuttgart", "markets": markets}
+
+
+def _ou(linie, under_vol, over_vol):
+    return {"Over/Under %s Goals" % linie: {"runners": [
+        {"name": "Under %s Goals" % linie, "vol": under_vol},
+        {"name": "Over %s Goals" % linie, "vol": over_vol}]}}
+
+
+class TestBoersenZiel:
+    def test_ueber_unter_wird_auf_die_leiter_abgebildet(self):
+        assert L.betfair_target("Über 3.5 Tore") == ("Over/Under 3.5 Goals", "Over")
+        assert L.betfair_target("Unter 2.5 Tore") == ("Over/Under 2.5 Goals", "Under")
+
+    def test_btts(self):
+        assert L.betfair_target("Beide Teams treffen — Ja") == ("Both teams to Score?", "Yes")
+        assert L.betfair_target("Beide Teams treffen — Nein") == ("Both teams to Score?", "No")
+
+    def test_1x2_hat_hier_nichts_zu_suchen(self):
+        for m in ("Heimsieg", "Auswärtssieg", "AH Heim −1.25", "Doppelte Chance — X2"):
+            assert L.betfair_target(m) is None, m
+
+    def test_muell(self):
+        for m in (None, "", "Über Tore", 5):
+            assert L.betfair_target(m) is None
+
+
+class TestTorGeld:
+    def test_der_echte_fall_bayern_stuttgart(self):
+        r = L.goal_market_money(_snap(_ou("3.5", 898, 6140)), "Über 3.5 Tore")
+        assert r["eur"] == 7038 and r["sharePct"] == 87 and r["agree"] is True
+        assert r["marketName"] == "Over/Under 3.5 Goals" and r["side"] == "Over"
+
+    def test_geld_gegen_uns(self):
+        r = L.goal_market_money(_snap(_ou("2.5", 4000, 1000)), "Über 2.5 Tore")
+        assert r["agree"] is False and r["sharePct"] == 20
+
+    def test_unter_seite_wird_richtig_gezaehlt(self):
+        r = L.goal_market_money(_snap(_ou("2.5", 4000, 1000)), "Unter 2.5 Tore")
+        assert r["agree"] is True and r["sharePct"] == 80
+
+    def test_falsche_linie_zaehlt_nicht_mit(self):
+        """Ü/U 2.5 und Ü/U 3.5 sind verschiedene Märkte — hier darf nichts durchrutschen."""
+        assert L.goal_market_money(_snap(_ou("2.5", 100, 900)), "Über 3.5 Tore") is None
+
+    def test_markt_ohne_geld_gibt_kein_urteil(self):
+        assert L.goal_market_money(_snap(_ou("3.5", 0, 0)), "Über 3.5 Tore") is None
+
+    def test_fehlender_snapshot(self):
+        assert L.goal_market_money(None, "Über 3.5 Tore") is None
+        assert L.goal_market_money({}, "Über 3.5 Tore") is None
+
+    def test_muell_wirft_nicht(self):
+        snap = _snap({"Over/Under 3.5 Goals": {"runners": [None, {"name": None, "vol": "x"}]}})
+        assert L.goal_market_money(snap, "Über 3.5 Tore") is None
+
+
+class TestLinkMitTorAchse:
+    def test_tor_pick_bekommt_jetzt_ein_urteil(self):
+        fx = _fx(home="Bayern München", away="VfB Stuttgart", date="2026-08-28",
+                 picks=[{"market": "Über 3.5 Tore", "odds": 1.5,
+                         "verdict": "ABWÄGEN", "convictionScore": 6}])
+        g = _game(home="Bayern Munich", away="Stuttgart", ko="2026-08-28T18:30:00Z")
+        r = L.link([g], [fx], {"1": _snap(_ou("3.5", 898, 6140))})
+        row = r["links"]["1"]
+        assert row["agree"] is True and row["achse"] == "tor"
+        assert row["torSharePct"] == 87 and row["torEur"] == 7038
+
+    def test_ohne_snapshot_bleibt_es_ohne_urteil(self):
+        fx = _fx(picks=[{"market": "Über 3.5 Tore", "odds": 1.5,
+                         "verdict": "ABWÄGEN", "convictionScore": 6}])
+        r = L.link([_game()], [fx], {})
+        assert r["links"]["1"]["agree"] is None and r["links"]["1"]["achse"] is None
+
+    def test_1x2_bleibt_die_1x2_achse(self):
+        """Der neue Pfad darf den alten nicht überschreiben."""
+        r = L.link([_game(side="home")], [_fx()], {"1": _snap(_ou("3.5", 900, 6000))})
+        row = r["links"]["1"]
+        assert row["achse"] == "1X2" and row["agree"] is True and row["torMarkt"] is None

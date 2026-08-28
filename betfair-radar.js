@@ -1229,16 +1229,33 @@
   // da gibt es nichts zu vergleichen und wir behaupten auch nichts.
   function _tCardMark(c){
     if(!c) return {t:'',col:C.dim,txt:''};
-    if(c.agree===true)  return {t:'\u25cf',col:'#2ee08a',txt:'Geld auf unserer Seite'};
-    if(c.agree===false) return {t:'\u25cf',col:'#ff5d5d',txt:'Geld steht gegen unsere Card'};
-    return {t:'\u25cb',col:C.dim,txt:'andere Achse \u2014 nicht vergleichbar'};
+    // 28.08.2026 (Lucas: „wieso wird ein Ue/U-Pick nicht mit der Over-Seite verglichen?"):
+    // Tor- und BTTS-Picks werden jetzt gegen den passenden Boersen-Markt geprueft, nicht mehr
+    // achselzuckend uebergangen. Im Text steht, WORAUF sich das Urteil stuetzt — 87 % von
+    // 7.039 EUR ist eine andere Aussage als 87 % von 30 EUR.
+    var basis = '';
+    if(c.achse==='tor' && c.torMarkt){
+      basis = ' \u00b7 ' + c.torMarkt + ' ' + (c.torSeite||'') + ': ' + (c.torSharePct!=null?c.torSharePct+'% von ':'')
+            + (c.torEur!=null?_tEur(c.torEur):'?');
+    } else if(c.achse==='1X2'){
+      basis = ' \u00b7 1X2-Geldseite';
+    }
+    if(c.agree===true)  return {t:'\u25cf',col:'#2ee08a',txt:'Geld auf unserer Seite'+basis};
+    if(c.agree===false) return {t:'\u25cf',col:'#ff5d5d',txt:'Geld steht gegen unsere Card'+basis};
+    return {t:'\u25cb',col:C.dim,txt:'kein Boersen-Markt zum Vergleichen'};
   }
   function _tCardCell(g){
     var c=_tCardLink(g);
     if(!c) return '<span style="color:'+C.dim+';font-size:10.5px">keine Card</span>';
     var mk=_tCardMark(c);
     var odd=(c.odds!=null)?(' <span style="color:#5eead4">@'+c.odds+'</span>'):'';
-    var sc=(typeof c.sc==='number')?('<div style="font-size:9.5px;color:'+C.dim+'">Konviktion '+Math.round(c.sc*100)+'%'+(c.nPicks>1?(' \u00b7 +'+(c.nPicks-1)+' weitere'):'')+'</div>'):'';
+    // 28.08.2026: `sc` kommt aus liga-data.json und ist der convictionScore auf der 0-10-Skala,
+    // KEIN Anteil. `*100` haette daraus „Konviktion 600%" gemacht.
+    // Duenner Tor-Markt: „87 % des Geldes" heisst bei 40 EUR wenig. Sichtbar machen statt
+    // so zu tun, als waere jede Mehrheit gleich viel wert.
+    var duenn=(c.achse==='tor' && typeof c.torEur==='number' && c.torEur<500)
+      ? ' <span style="color:'+C.dim+'" title="nur '+_tEur(c.torEur)+' im Tor-Markt">(d\u00fcnn)</span>' : '';
+    var sc=(typeof c.sc==='number')?('<div style="font-size:9.5px;color:'+C.dim+'">Konviktion '+c.sc+'/10'+(c.verdict?(' \u00b7 '+esc(c.verdict)):'')+(c.nPicks>1?(' \u00b7 +'+(c.nPicks-1)+' weitere'):'')+duenn+'</div>'):'';
     return '<span title="'+esc(mk.txt)+'" style="color:'+mk.col+';margin-right:4px">'+mk.t+'</span>'
       +'<span style="font-family:monospace">'+esc(c.icon||'')+' '+esc(c.market||'')+odd+'</span>'+sc;
   }
