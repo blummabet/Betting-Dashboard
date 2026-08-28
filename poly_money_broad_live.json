@@ -78,7 +78,7 @@
  "wta-starodu-mertens-2026-08-27": {
   "shares": {
    "Yulia Starodubtseva": 64.17798571299997,
-   "Elise Mertens": 128292.2918699475
+   "Elise Mertens": 128292.28140218399
   },
   "prices": {
    "Yulia Starodubtseva": 0.0005,
@@ -88,7 +88,7 @@
    {
     "wallet": "0x9909dfa7a317343039193b349909e2094b59311c",
     "side": "Elise Mertens",
-    "usd": 23959
+    "usd": 24424
    },
    {
     "wallet": "0x6f3e7f25baa7d2d49e15e2d2957ff3dec62cbcf8",
@@ -108,15 +108,23 @@
   ],
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 188449,
-  "hoursToKickoff": -1.82,
-  "capturedAt": "2026-08-28T05:20:41.346047+00:00",
+  "totalUsd": 188928,
+  "hoursToKickoff": -2.07,
+  "capturedAt": "2026-08-28T05:35:43.319109+00:00",
   "live": true,
   "tokens": {
    "Yulia Starodubtseva": "45186678686923450359583725687517718876830671079349189797550661687477277756210",
    "Elise Mertens": "26813058424417369959483733276788351171323856049652870109751488821442372805612"
   },
   "trades": [
+   {
+    "wallet": "0x6982049c65e98606f65a0ce71fdb9b61296da165",
+    "action": "SELL",
+    "side": "Elise Mertens",
+    "price": 0.999,
+    "usd": 454,
+    "ts": 1787894830
+   },
    {
     "wallet": "0xa0dc7ee1f7a230a1a20163271717f8f8752b586c",
     "action": "SELL",
@@ -174,5 +182,106 @@
     "ts": 1787893401
    }
   ]
+ },
+ "itf-fergus-jian-2026-08-28": {
+  "shares": {
+   "Chase Ferguson": 4840.476668325,
+   "Fumin Jiang": 2549.6001747299997
+  },
+  "prices": {
+   "Chase Ferguson": 0.655,
+   "Fumin Jiang": 0.345
+  },
+  "whales": [
+   {
+    "wallet": "0x9a8c93d5f11dc64b4ceef882f151a54c7079ba13",
+    "side": "Fumin Jiang",
+    "usd": 1504
+   },
+   {
+    "wallet": "0x0828e2ab9f76708970ad6fa20f457f8cc6d0a1a6",
+    "side": "Chase Ferguson",
+    "usd": 1347
+   },
+   {
+    "wallet": "0xbbac81bb1c0e3ec89ea86f1067ecdbb93bc838d0",
+    "side": "Chase Ferguson",
+    "usd": 707
+   },
+   {
+    "wallet": "0x370575b7acf3d84ebb9cb003c2d470346cea9677",
+    "side": "Fumin Jiang",
+    "usd": 335
+   }
+  ],
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 12778,
+  "hoursToKickoff": -2.07,
+  "capturedAt": "2026-08-28T05:35:43.319109+00:00",
+  "live": true,
+  "tokens": {
+   "Chase Ferguson": "29841505816146545992050306400622826306625515066959895759574319064853010572722",
+   "Fumin Jiang": "113431544338532074147753170774642888234410285569994090855442099382797188350539"
+  },
+  "book": {
+   "side": "Chase Ferguson",
+   "bid": 0.43,
+   "ask": 0.45,
+   "spreadC": 2.0,
+   "spreadPct": 4.44,
+   "bids": [
+    [
+     0.43,
+     2015
+    ],
+    [
+     0.42,
+     673
+    ],
+    [
+     0.41,
+     347
+    ],
+    [
+     0.4,
+     1957
+    ],
+    [
+     0.39,
+     1144
+    ],
+    [
+     0.35,
+     29
+    ]
+   ],
+   "asks": [
+    [
+     0.45,
+     1748
+    ],
+    [
+     0.46,
+     2078
+    ],
+    [
+     0.47,
+     476
+    ],
+    [
+     0.48,
+     300
+    ],
+    [
+     0.49,
+     298
+    ],
+    [
+     0.5,
+     108
+    ]
+   ]
+  }
  }
 }
