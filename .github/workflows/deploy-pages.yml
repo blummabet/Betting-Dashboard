@@ -65,9 +65,24 @@ jobs:
         # „Error: Deployment cancelled". Fix: alles rauswerfen, was die STATISCHE Seite nicht braucht
         # (nur im ephemeren Runner-Checkout — das Repo bleibt unberührt). BEHALTEN: *.html/js/css, alle
         # Wurzel-*.json (Daten), matches/ (Event-Pages), icons/, manifest.json, sw.js.
+        #
+        # 28.08.2026 (Lucas: „auf der Seite ist nichts") — DIESELBE KRANKHEIT, GRÖSSERE DOSIS.
+        # Der Fix oben warf `daily-tiktok` raus. Danach kamen die datensatz-eigenen Varianten
+        # dazu — `mls_daily-tiktok` (35,7 MB) und `liga_daily-tiktok` (12,3 MB) — und die kannte
+        # diese Liste nicht. Damit lud jeder Deploy wieder 48 MB PNGs hoch, die keine einzige
+        # HTML- oder JS-Datei je anfasst (nachgeprüft: null Referenzen). Artefakt zuletzt
+        # 198 MB alle 15 Minuten. Deshalb jetzt ein GLOB statt einer Namensliste: die nächste
+        # `<datensatz>_daily-tiktok` fällt automatisch mit raus, statt in einem halben Jahr
+        # wieder still den Deploy auszubremsen.
         run: |
-          rm -rf daily-tiktok wm_live_story_outputs studio_templates outputs \
+          # `studio_templates` steht hier bewusst NICHT mehr drin: tiktok-studio.js laedt
+          # daraus zur Laufzeit `studio_templates/_common.css` und die Template-HTMLs. Der
+          # Ordner ist 52 KB — er wurde geloescht, seit die Liste existiert, und die
+          # TikTok-Studio-Seite lief live seither in 404er. Gefunden am 28.08.2026 von dem
+          # Test, der prueft, ob der Deploy etwas wegwirft, was das Frontend fetcht.
+          rm -rf *daily-tiktok wm_live_story_outputs outputs \
                  archive tests sharp_signals wm_story_angles || true
+          echo "Artefakt-Größe nach dem Aufräumen:"
           du -sh . || true
 
       - name: 📦 Seiten hochladen
