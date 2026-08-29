@@ -295,7 +295,11 @@
     };
     return Promise.all([jf('liga-data.json'), jf('mls-data.json'), jf('liga_streaks.json'),
       jf('mls_streaks.json'), jf('betfair_prices.json'), jf('poly_money_broad_close.json'), jf('dashboard_pulse.json'),
-      jf('betfair_overview.json'), jf('betfair_direction.json'), jf('money_map.json')]);
+      jf('betfair_overview.json'), jf('betfair_direction.json'), jf('money_map.json'),
+      // 29.08.2026 (Lucas: „das müsste man auf der Übersicht auch anpassen"): der Betfair-Track.
+      // Die Poly-Zeilen tragen ihre Conviction und ziehen deshalb bei jeder Neugewichtung
+      // automatisch mit — die Betfair-Zeilen hingen an festen Konstanten und bewegten sich nie.
+      jf('betfair_track_record.json')]);
   }
   function _mdLoad(force) {
     if (_md.loading) return;
@@ -305,7 +309,7 @@
     var p = document.getElementById('mainDashPanel');
     if (p && !_md.data) { p.classList.add('mdash'); p.innerHTML = _head() + '<div class="md-empty" style="text-align:center;padding:52px 0;">⏳ Übersicht wird geladen …</div>'; }
     _mdFetch().then(function (a) {
-      _md.data = { liga: a[0], mls: a[1], ligaStreaks: a[2], mlsStreaks: a[3], betfair: a[4], whales: a[5], pulse: a[6], bfOverview: a[7], bfDir: a[8], moneyMap: a[9] };
+      _md.data = { liga: a[0], mls: a[1], ligaStreaks: a[2], mlsStreaks: a[3], betfair: a[4], whales: a[5], pulse: a[6], bfOverview: a[7], bfDir: a[8], moneyMap: a[9], bfTrack: a[10] };
       _md.loading = false; _mdRender();
     });
   }
@@ -449,6 +453,22 @@
     if (dir === 'in') return ' <span title="Quote kürzer → Geld kommt als Back" style="font-size:9px;font-weight:800;color:#3fb950;border:1px solid rgba(63,185,80,.45);border-radius:4px;padding:0 3px">Back ✓</span>';
     if (dir === 'out') return ' <span title="Quote driftet raus → kein echter Back-Rückhalt" style="font-size:9px;font-weight:800;color:#e3b341;border:1px solid rgba(227,179,65,.45);border-radius:4px;padding:0 3px">driftet</span>';
     return '';
+  }
+  // ── Betfair-Track auf der Übersicht (29.08.2026) ────────────────────────────────────────
+  // Dieselben drei Schwellen wie in sharp_signals/betfair_money.py und im Radar. Sie stehen hier
+  // zum dritten Mal — deshalb prüft tests/frontend/uebersicht-bftrack.test.mjs alle drei Dateien
+  // gegeneinander. In den Cards dreht ein verlierender Liga×Markt das Signal um (Fade). Auf der
+  // Übersicht gibt es nichts umzudrehen: eine Zeile in „Top-Wetten jetzt" ist eine Empfehlung,
+  // und eine Empfehlung aus einem Eimer, in dem dem Geld zu folgen historisch verliert, gehört
+  // nicht in die Liste. Also fliegt sie raus statt gedreht zu werden.
+  var MD_BFTR_MIN_N = 15, MD_BFTR_FADE = -0.10, MD_BFTR_BOOST = 0.05;
+  function _mdBfTrack(league, market) {
+    try {
+      var blm = (_md.data.bfTrack || {}).byLeagueMarket || {};
+      var v = blm[String(league) + '|' + String(market)];
+      if (!v || (v.n || 0) < MD_BFTR_MIN_N || typeof v.roi !== 'number') return null;
+      return { roi: v.roi, n: v.n, traegt: v.roi >= MD_BFTR_BOOST, verliert: v.roi <= MD_BFTR_FADE };
+    } catch (e) { return null; }
   }
   // ⚡ Sharpe Bewegungen: Vor-Anpfiff-Quotenbewegung (pp). +pp = Quote fällt = Geld drauf, −pp = driftet.
   function _mdBfSteamBody() {
@@ -1394,10 +1414,14 @@
       var pp = +x.pp || 0, app = Math.abs(pp);
       if (app < 1.5 || app > 25) return;           // <1.5 kein Signal · >25pp = Platzhalter-Artefakt
       var moneyIn = pp > 0, ex = exoticLg(x.league, false);  // pp>0 = Quote fiel = Geld rein
+      // Steam wird immer aus den Match Odds gerechnet (steam_list liest `mo`) -> Eimer ist
+      // Liga × Match Odds.
+      var trS = _mdBfTrack(x.league, 'Match Odds');
+      if (trS && trS.verliert) return;   // dem Geld hier zu folgen verliert historisch -> keine Empfehlung
       put({ id: 'b' + mid(x.home, x.away, x.matchId), k: x.kickoff ? Date.parse(String(x.kickoff).replace('Z', '+00:00')) : NaN,
-        exotic: ex, src: 'bf', odd: x.odd, pp: pp, moneyIn: moneyIn,
+        exotic: ex, src: 'bf', odd: x.odd, pp: pp, moneyIn: moneyIn, tr: trS,
         match: esc(team(x.home)) + vsp + esc(team(x.away)), pick: esc(short(x.sideName || '') || '—'),
-        score: 42 + Math.min(app, 22) - (moneyIn ? 0 : 8), badge: '💷 Steam', bc: A.bf });
+        score: 42 + Math.min(app, 22) - (moneyIn ? 0 : 8) + (trS && trS.traegt ? 10 : 0), badge: '💷 Steam', bc: A.bf });
     });
     // 3b) Betfair „Frisches Geld" (€) — wo wirklich Geld reinkippt (15.08.2026 Lucas: Steam PLUS Geld).
     ((_md.data.bfOverview && _md.data.bfOverview.flow) || []).forEach(function (x) {
@@ -1406,6 +1430,8 @@
       if (od != null && (+od < 1.30 || +od > 15)) return;      // Lock/Longshot raus (wie _mdBfFlowBody)
       if (x.dir === 'out') return;                             // 16.08.2026 (Lucas): driftet = kein Back-Rückhalt → nicht als Geld-Top-Wette (bleibt im Frisches-Geld-Radar, dort als „driftet" markiert)
       var ex = exoticLg(x.league, false);
+      var trF = _mdBfTrack(x.league, x.market);
+      if (trF && trF.verliert) return;   // s.o. — verlierender Eimer gehört nicht in die Empfehlung
       // 29.08.2026 (Lucas-Checkup): hier stand `k: now`, weil der Zufluss-Feed keinen Anpfiff
       // mitlieferte. Folge: JEDE Betfair-Geld-Zeile zeigte „⏱ 0m" — Liverpool–Forest stand als
       // „Anpfiff jetzt" in der Liste, waehrend der Poly-Block daneben korrekt „in 2h" sagte.
@@ -1416,7 +1442,7 @@
         live: !!_mdBfLiveById(x.matchId),
         exotic: ex, src: 'bfflow', odd: od, deltaEur: dv, nowEur: +x.nowEur || 0, sideName: x.sideName, dir: x.dir,
         match: esc(team(x.home)) + vsp + esc(team(x.away)), pick: esc(short(x.sideName || '') || '—'),
-        score: 46 + Math.min(dv / 3000, 20), badge: '💷 Geld', bc: A.bf });
+        score: 46 + Math.min(dv / 3000, 20) + (trF && trF.traegt ? 10 : 0), tr: trF, badge: '💷 Geld', bc: A.bf });
     });
     // 4) Money-Map — NUR echte Divergenz (starke Fehlbepreisung).
     ((_md.data.moneyMap && _md.data.moneyMap.rows) || []).forEach(function (r) {
@@ -1438,6 +1464,10 @@
       var take = function (x) { if (x && !used[x.id]) { used[x.id] = 1; pick.push(x); } };
       var firstOf = function (s, ok) { for (var i = 0; i < _all.length; i++) { var x = _all[i]; if (x.src === s && (!ok || ok(x))) return x; } return null; };
       // 15.08.2026 (Lucas): Betfair nur reservieren, wenn's was taugt — sonst kein €9K-Draw / duenner Exoten-Steam.
+      // 29.08.2026: der garantierte Platz war bedingungslos — eine Betfair-Zeile kam auch dann in
+      // die Top-Wetten, wenn ihr Eimer nie etwas getragen hat. Jetzt wird er verdient: reserviert
+      // nur, wenn der Liga×Markt-Track ihn stützt ODER (mangels Stichprobe) noch nichts dagegen
+      // spricht. Ein Eimer mit belegtem Minus ist oben schon rausgeflogen.
       var reserve = [
         firstOf('bf', function (x) { return !x.exotic && Math.abs(+x.pp || 0) >= 3; }),   // ordentlicher Steam (nicht exotisch, >=3pp)
         firstOf('bfflow', function (x) { return (+x.deltaEur || 0) >= 30000; }),           // echter Geld-Zufluss (>=EUR30K), kein Mini-Draw
@@ -1458,11 +1488,11 @@
       if (o.src === 'bf') {
         var ap = Math.min(Math.abs(+o.pp || 0), 25), val = ((o.pp > 0) ? '+' : '') + (+o.pp).toFixed(1) + 'pp';
         var sub = o.moneyIn ? ('Quote zieht rein' + (o.odd != null ? ' · @' + (+o.odd).toFixed(2) : '')) : 'Quote driftet → Geld auf Gegenseite';
-        return '<div class="md-sig">' + _mdSigCell('Betfair-Geld', val, A.bf, ap / 25 * 100, sub) + '</div>';
+        return '<div class="md-sig">' + _mdSigCell('Betfair-Geld', val, A.bf, ap / 25 * 100, sub) + _mdTrCell(o.tr) + '</div>';
       }
       if (o.src === 'bfflow') {
         var dv = +o.deltaEur || 0, nv = +o.nowEur || 0;
-        return '<div class="md-sig">' + _mdSigCell('Betfair-Geld', '+' + eur(dv), A.bf, _bfFlowMax ? dv / _bfFlowMax * 100 : 60, 'jetzt ' + eur(nv) + (o.odd != null ? ' @' + (+o.odd).toFixed(2) : '')) + '</div>';
+        return '<div class="md-sig">' + _mdSigCell('Betfair-Geld', '+' + eur(dv), A.bf, _bfFlowMax ? dv / _bfFlowMax * 100 : 60, 'jetzt ' + eur(nv) + (o.odd != null ? ' @' + (+o.odd).toFixed(2) : '')) + _mdTrCell(o.tr) + '</div>';
       }
       if (o.src === 'mm') {
         var bs = Math.round((o.bf && o.bf.sharePct) || 0), ps = Math.round((o.pl && o.pl.sharePct) || 0);
@@ -1471,6 +1501,13 @@
       }
       var cv = +o.conv || 0;   // card
       return '<div class="md-sig">' + _mdSigCell('Conviction', cv + '/10', A.good, cv * 10, 'Engine-Pick · Verdikt-Gate') + '</div>';
+    };
+    var _mdTrCell = function (tr) {
+      // Was der Track ueber diesen Liga×Markt sagt — dieselbe Sprache wie im Radar.
+      if (!tr) return _mdSigMuted('Liga-Track', 'noch zu wenig Historie');
+      return _mdSigCell('Liga-Track', (tr.roi >= 0 ? '+' : '') + Math.round(tr.roi * 100) + '%',
+        tr.traegt ? A.good : A.gold, Math.min(100, Math.abs(tr.roi) * 400),
+        (tr.traegt ? '✅ trägt hier' : '➖ neutral') + ' · n' + tr.n);
     };
     var body = items.map(function (x, i) {
       // Kein Anpfiff bekannt -> gar keine Uhr. Vorher wurde aus NaN/`now` ein „0m", also eine
