@@ -1,25 +1,25 @@
 {
-"generatedAt": "2026-08-29T16:18:05.468912+00:00",
+"generatedAt": "2026-08-29T16:33:09.610687+00:00",
 "byVerdict": {
 "konsens": {
-"n": 560,
-"wins": 453,
-"hitRate": 0.8089,
-"polyN": 525,
-"polyWins": 413,
-"polyHitRate": 0.7867,
+"n": 561,
+"wins": 454,
+"hitRate": 0.8093,
+"polyN": 526,
+"polyWins": 414,
+"polyHitRate": 0.7871,
 "pinnN": 44,
 "pinnHitRate": 0.75
 },
 "uneinig": {
-"n": 188,
+"n": 189,
 "wins": 61,
-"hitRate": 0.3245,
-"polyN": 167,
+"hitRate": 0.3228,
+"polyN": 168,
 "polyWins": 52,
-"polyHitRate": 0.3114,
-"pinnN": 94,
-"pinnHitRate": 0.5638
+"polyHitRate": 0.3095,
+"pinnN": 95,
+"pinnHitRate": 0.5684
 },
 "teil": {
 "n": 5,
@@ -273,6 +273,11 @@
 "wins": 4,
 "hitRate": 0.8
 },
+"German Bundesliga": {
+"n": 5,
+"wins": 2,
+"hitRate": 0.4
+},
 "Saudi Kings Cup": {
 "n": 5,
 "wins": 4,
@@ -322,11 +327,6 @@
 "n": 3,
 "wins": 2,
 "hitRate": 0.6667
-},
-"German Bundesliga": {
-"n": 3,
-"wins": 1,
-"hitRate": 0.3333
 },
 "Qatari Stars League": {
 "n": 3,
@@ -526,9 +526,9 @@
 },
 "byStrength": {
 "strong": {
-"n": 442,
-"wins": 358,
-"hitRate": 0.81
+"n": 444,
+"wins": 359,
+"hitRate": 0.8086
 },
 "weak": {
 "n": 278,
@@ -537,14 +537,52 @@
 }
 },
 "divergence": {
-"n": 188,
+"n": 189,
 "betfairWins": 61,
-"betfairRate": 0.3245,
-"polyN": 167,
+"betfairRate": 0.3228,
+"polyN": 168,
 "polyWins": 52,
-"polyRate": 0.3114
+"polyRate": 0.3095
 },
 "recent": [
+{
+"matchId": "35785197",
+"home": "Elversberg",
+"away": "Leverkusen",
+"league": "German Bundesliga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Elversberg",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+2
+],
+"kickoff": "2026-08-29T13:30:00Z",
+"settledAt": "2026-08-29T16:33:09.434786+00:00"
+},
+{
+"matchId": "35785201",
+"home": "Mainz",
+"away": "Paderborn",
+"league": "German Bundesliga",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Mainz",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-08-29T13:30:00Z",
+"settledAt": "2026-08-29T16:33:09.434786+00:00"
+},
 {
 "matchId": "35966021",
 "home": "Bournemouth",
@@ -1266,50 +1304,12 @@
 ],
 "kickoff": "2026-08-28T18:30:00Z",
 "settledAt": "2026-08-28T20:31:07.557914+00:00"
-},
-{
-"matchId": "35974376",
-"home": "SC Austria Lustenau",
-"away": "WSG Wattens",
-"league": "Austrian Bundesliga",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "WSG Wattens",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-4
-],
-"kickoff": "2026-08-28T17:30:00Z",
-"settledAt": "2026-08-28T20:31:07.557914+00:00"
-},
-{
-"matchId": "35978588",
-"home": "Genclerbirligi",
-"away": "Erzurum BB",
-"league": "Turkish Super League",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Genclerbirligi",
-"polySide": null,
-"winner": "draw",
-"moneyWin": false,
-"polyWin": null,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-08-28T18:30:00Z",
-"settledAt": "2026-08-28T20:31:07.557914+00:00"
 }
 ],
 "global": {
-"n": 753,
-"wins": 515,
-"hitRate": 0.6839
+"n": 755,
+"wins": 516,
+"hitRate": 0.6834
 },
-"pending": 31
+"pending": 29
 }
