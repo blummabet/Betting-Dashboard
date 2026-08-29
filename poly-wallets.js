@@ -61,6 +61,23 @@ const PW_DATASETS = [
 // kein Polymarket (siehe registry.py-Gates), wäre als Default also dauerhaft leer.
 const PW_DEFAULT_DS = 'mls';
 let _pwDsId = PW_DEFAULT_DS;
+// 29.08.2026 (Lucas: „weder in Uebersicht noch im Polymarket-Wallets") — die Uebersicht kam nach
+// dem Deploy zurueck, die Wallets nicht. Grund: main-dashboard.js und betfair-radar.js holen ihre
+// JSONs seit jeher PRIMAER von raw.githubusercontent.com/main, diese Datei holte relativ — also
+// aus dem Pages-Snapshot, der am traegen Deploy haengt (real ~8 Republishes/Tag). Jetzt dieselbe
+// Reihenfolge wie ueberall: raw/main zuerst (commit-frisch), Snapshot als Rueckfall.
+const _PW_RAW_BASE = 'https://raw.githubusercontent.com/blummabet/Betting-Dashboard/main';
+
+function _pwJson(u, bust){
+  if(!u) return Promise.resolve(null);
+  const b = bust || ('?t=' + Date.now());
+  return fetch(_PW_RAW_BASE + '/' + u + b, {cache:'no-store'})
+    .then(r => { if(r.ok) return r.json(); throw 0; })
+    .catch(() => fetch(u + b, {cache:'no-store'})
+      .then(r => r.ok ? r.json() : null)
+      .catch(() => null));
+}
+
 function _pwDataset(){
   return PW_DATASETS.some(d=>d.id===_pwDsId) ? _pwDsId : PW_DEFAULT_DS;
 }
@@ -228,7 +245,7 @@ function initPolyWallets(){
   // 19.07.2026 — Poly-Edge-Dateien aus dem Preis-Dateinamen ableiten (wm_poly_prices → wm_poly_*).
   // Fehlen sie (Liga hat kein Poly, oder Detektor lief noch nicht) → null, sauber abgefangen.
   const _derive=(suffix)=>f.prices.replace('poly_prices','poly_'+suffix);
-  const jf=(url)=>url?fetch(url+b,{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null):Promise.resolve(null);
+  const jf=(url)=>url?_pwJson(url,b):Promise.resolve(null);
   const wmP=(typeof window!=='undefined' && window.WM2026_DATA && _pwDataset()==='wm')
     ? Promise.resolve(window.WM2026_DATA)
     : jf(f.data);   // E-Sport: f.data=null → null (kein Fixture-/Odds-Datensatz)
@@ -1773,7 +1790,7 @@ function _pwEnsurePlaysData(cb){
   if(_ready()){ cb&&cb(); return; }
   if(_pwPlaysLoadedTs && (Date.now()-_pwPlaysLoadedTs)<120000 && _ready()){ cb&&cb(); return; }
   const b='?t='+Date.now();
-  const jf=u=>fetch(u+b,{cache:'no-store'}).then(r=>r.ok?r.json():null).catch(()=>null);
+  const jf=u=>_pwJson(u,b);
   Promise.all([jf('poly_money_broad_close.json'),jf('poly_money_broad_history.json'),
                jf('poly_money_broad.json'),jf('poly_wallet_track.json'),jf('poly_cross_sport.json'),
                jf('poly_money_broad_live.json'),jf('poly_money_broad_live_history.json'),

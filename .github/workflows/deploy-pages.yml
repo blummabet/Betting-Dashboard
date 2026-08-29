@@ -15,12 +15,25 @@ on:
       - '.nojekyll'
       - '**.json'
 
-  # Universeller Sicherheitsnetz-Trigger: republisht main alle 15 Min, damit
-  # JEDES Bot-Daten-Update (Venues, Kickoffs, wm_status, Poly, Lineups …) auf
-  # der Live-Seite landet — ohne dass man jeden Daten-Workflow einzeln
-  # verdrahten muss. Deploy ist gratis (public repo) + concurrency-sicher.
+  # Sicherheitsnetz-Trigger: republisht main, damit Bot-Daten-Updates auch ohne Push-Trigger
+  # auf der Live-Seite landen (Bot-Commits mit GITHUB_TOKEN loesen per Rekursionsschutz keine
+  # Workflows aus). Deploy ist gratis (public repo) + concurrency-sicher.
+  #
+  # 29.08.2026 (Lucas: „muss es dann alle 15 min rennen?") — von `*/15` auf stuendlich.
+  # Gemessen an den echten Lauf-Zeiten der letzten drei Tage lieferte `*/15` NICHT alle 15
+  # Minuten, sondern im Median alle ~1,9 Stunden, mit Luecken bis 11 Stunden — 8 statt 96 Laeufe
+  # pro Tag. GitHub drosselt hochfrequente Schedules; genau das steht seit dem 12.08. in
+  # poly-live-scan.yml („*/5 lief real ~stuendlich … kein Cron-Tuning hilft"). Weniger verlangen
+  # liefert hier mehr: eine stuendliche Bitte haelt GitHub zuverlaessig ein.
+  #
+  # Dass die Seite dadurch nicht traeger wird, liegt an der Fetch-Strategie: main-dashboard.js,
+  # betfair-radar.js, polymarket-tab.js, status-checks.js und poly-wallets.js holen ihre JSONs
+  # PRIMAER von raw.githubusercontent.com/main — also commit-frisch, ohne auf den Deploy zu
+  # warten. Der Deploy liefert fuer diese Flaechen nur noch den Code aus.
+  #
+  # Minute 20 statt 0: auf der vollen Stunde starten repo-weit bis zu 11 Jobs gleichzeitig.
   schedule:
-    - cron: '*/15 * * * *'
+    - cron: '20 * * * *'
 
   # 01.07.2026 (Lucas: „Deploy failt die ganze Zeit"): der workflow_run-Trigger (nach JEDEM Daten-
   # Workflow, v.a. dem alle paar Minuten laufenden „Poly Positionen überwachen") feuerte so viele

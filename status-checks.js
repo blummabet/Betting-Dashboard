@@ -75,9 +75,27 @@ function _stAgo(d) {
 // weil NICHTS geprueft wurde. Ein Check, der nicht laufen konnte, ist kein bestandener Check.
 let _stUnloadable = [];
 
+// 29.08.2026 (Lucas: „auf der Seite ist nichts") — DAS MESSGERAET WAR DAS AELTESTE AUF DER SEITE.
+// _stGet holte relativ, also aus dem Pages-Snapshot. Der haengt am Deploy, und der lief real nur
+// ~8x am Tag statt alle 15 Minuten. Ergebnis: die Feed-Frische meldete „vor 8,6 Std", waehrend
+// dieselben Dateien nebenan in der Uebersicht live waren — main-dashboard.js und betfair-radar.js
+// holen naemlich seit jeher PRIMAER von raw.githubusercontent.com/main. Ein Diagnose-Panel, das
+// systematisch die eigene Auslieferung misst statt der Daten, schickt einen in jede falsche
+// Richtung; genau das ist am 28.08. einen halben Tag lang passiert.
+// Jetzt dieselbe Reihenfolge wie ueberall sonst: raw/main zuerst, Snapshot als Rueckfall.
+const _ST_RAW_BASE = 'https://raw.githubusercontent.com/blummabet/Betting-Dashboard/main';
+
 async function _stGet(f) {
+  const t = Date.now();
+  // 1) commit-frisch von raw/main
   try {
-    const r = await fetch(f + '?t=' + Date.now());
+    const r = await fetch(`${_ST_RAW_BASE}/${f}?t=${t}`, { cache: 'no-store' });
+    if (r.ok) return await r.json();
+  } catch (e) { /* raw nicht erreichbar → Rueckfall unten */ }
+  // 2) Pages-Snapshot / Offline-Cache. Erst wenn AUCH das scheitert, gilt die Datei als kaputt —
+  //    sonst meldete jede raw-Stoerung faelschlich das halbe Dashboard als unlesbar.
+  try {
+    const r = await fetch(`${f}?t=${t}`, { cache: 'no-store' });
     if (!r.ok) { _stUnloadable.push(`${f} (HTTP ${r.status})`); return null; }
     return await r.json();
   } catch (e) {
