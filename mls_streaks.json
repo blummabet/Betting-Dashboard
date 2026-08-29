@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "mls",
-    "generatedAt": "2026-08-29T13:00:27.941571+00:00",
+    "generatedAt": "2026-08-29T21:34:11.968856+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -3262,7 +3262,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 73,
-        "label": "Eigen 73% + Gegner 60% → 68%"
+        "label": "Eigen 73% + Gegner 60% → 68% · Signale bestätigen"
       },
       "ratePct": 73,
       "seq": [
@@ -3286,7 +3286,20 @@
         "oppRatePct": 60
       },
       "oppSupportPct": 60,
-      "matchupPct": 68
+      "matchupPct": 68,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 5,
+        "conviction": 5,
+        "names": [
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation",
+          "topscorer_momentum"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "1598",
@@ -3383,7 +3396,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 73,
-        "label": "Eigen 73% + Gegner 53% → 65%"
+        "label": "Eigen 73% + Gegner 53% → 65% · Signale bestätigen"
       },
       "ratePct": 73,
       "seq": [
@@ -3408,7 +3421,21 @@
         "oppRatePct": 53
       },
       "oppSupportPct": 53,
-      "matchupPct": 65
+      "matchupPct": 65,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 5,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "topscorer_momentum",
+          "betfair_money"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "1602",
@@ -5000,7 +5027,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 67,
-        "label": "Eigen 67% + Gegner 53% → 61%"
+        "label": "Eigen 67% + Gegner 53% → 61% · Signale bestätigen"
       },
       "ratePct": 67,
       "seq": [
@@ -5025,7 +5052,21 @@
         "oppRatePct": 53
       },
       "oppSupportPct": 53,
-      "matchupPct": 61
+      "matchupPct": 61,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 5,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "topscorer_momentum",
+          "betfair_money"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "1601",
@@ -5225,6 +5266,60 @@
       },
       "oppSupportPct": 87,
       "matchupPct": 79
+    },
+    {
+      "teamId": "1612",
+      "team": "Minnesota United FC",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1612.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 17,
+        "label": "Eigen 17% + Gegner 73% → 39% · Signale bestätigen"
+      },
+      "ratePct": 17,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 6,
+      "next": {
+        "oppId": "1598",
+        "oppName": "Orlando City SC",
+        "atHome": true,
+        "date": "2026-08-30",
+        "kickoff": "2026-08-30T00:30:00+00:00",
+        "oppRatePct": 73
+      },
+      "oppSupportPct": 73,
+      "matchupPct": 39,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 5,
+        "conviction": 5,
+        "names": [
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation",
+          "topscorer_momentum"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "1614",
@@ -6635,47 +6730,6 @@
       },
       "oppSupportPct": 33,
       "matchupPct": 28
-    },
-    {
-      "teamId": "1612",
-      "team": "Minnesota United FC",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1612.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 17,
-        "label": "Eigen 17% + Gegner 73% → 39%"
-      },
-      "ratePct": 17,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 6,
-      "next": {
-        "oppId": "1598",
-        "oppName": "Orlando City SC",
-        "atHome": true,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T00:30:00+00:00",
-        "oppRatePct": 73
-      },
-      "oppSupportPct": 73,
-      "matchupPct": 39
     },
     {
       "teamId": "1616",
