@@ -1,25 +1,25 @@
 {
-"generatedAt": "2026-08-29T12:17:39.479240+00:00",
+"generatedAt": "2026-08-29T14:17:53.423798+00:00",
 "byVerdict": {
 "konsens": {
-"n": 550,
-"wins": 446,
-"hitRate": 0.8109,
-"polyN": 515,
-"polyWins": 406,
-"polyHitRate": 0.7883,
+"n": 553,
+"wins": 449,
+"hitRate": 0.8119,
+"polyN": 518,
+"polyWins": 409,
+"polyHitRate": 0.7896,
 "pinnN": 43,
 "pinnHitRate": 0.7442
 },
 "uneinig": {
-"n": 183,
-"wins": 58,
-"hitRate": 0.3169,
-"polyN": 163,
+"n": 186,
+"wins": 60,
+"hitRate": 0.3226,
+"polyN": 165,
 "polyWins": 52,
-"polyHitRate": 0.319,
-"pinnN": 91,
-"pinnHitRate": 0.5824
+"polyHitRate": 0.3152,
+"pinnN": 93,
+"pinnHitRate": 0.5699
 },
 "teil": {
 "n": 5,
@@ -43,15 +43,15 @@
 "wins": 22,
 "hitRate": 0.5641
 },
+"English Sky Bet Championship": {
+"n": 24,
+"wins": 15,
+"hitRate": 0.625
+},
 "English Football League Cup": {
 "n": 22,
 "wins": 18,
 "hitRate": 0.8182
-},
-"English Sky Bet Championship": {
-"n": 22,
-"wins": 13,
-"hitRate": 0.5909
 },
 "Spanish La Liga": {
 "n": 22,
@@ -118,6 +118,11 @@
 "wins": 6,
 "hitRate": 0.4286
 },
+"South Korean K1 League": {
+"n": 14,
+"wins": 10,
+"hitRate": 0.7143
+},
 "Dutch Eredivisie": {
 "n": 13,
 "wins": 11,
@@ -128,15 +133,15 @@
 "wins": 9,
 "hitRate": 0.6923
 },
-"South Korean K1 League": {
-"n": 13,
-"wins": 9,
-"hitRate": 0.6923
-},
 "Swedish Allsvenskan": {
 "n": 13,
 "wins": 10,
 "hitRate": 0.7692
+},
+"English Premier League": {
+"n": 12,
+"wins": 9,
+"hitRate": 0.75
 },
 "Portuguese Primeira Liga": {
 "n": 12,
@@ -153,7 +158,7 @@
 "wins": 6,
 "hitRate": 0.5455
 },
-"English Premier League": {
+"German Bundesliga 2": {
 "n": 11,
 "wins": 9,
 "hitRate": 0.8182
@@ -178,12 +183,12 @@
 "wins": 7,
 "hitRate": 0.7
 },
-"Danish Superliga": {
+"Chinese Super League": {
 "n": 10,
-"wins": 8,
-"hitRate": 0.8
+"wins": 6,
+"hitRate": 0.6
 },
-"German Bundesliga 2": {
+"Danish Superliga": {
 "n": 10,
 "wins": 8,
 "hitRate": 0.8
@@ -192,11 +197,6 @@
 "n": 10,
 "wins": 7,
 "hitRate": 0.7
-},
-"Chinese Super League": {
-"n": 9,
-"wins": 5,
-"hitRate": 0.5556
 },
 "French Ligue 1": {
 "n": 9,
@@ -526,25 +526,139 @@
 },
 "byStrength": {
 "strong": {
-"n": 430,
-"wins": 351,
-"hitRate": 0.8163
+"n": 435,
+"wins": 355,
+"hitRate": 0.8161
 },
 "weak": {
-"n": 275,
-"wins": 136,
-"hitRate": 0.4945
+"n": 276,
+"wins": 137,
+"hitRate": 0.4964
 }
 },
 "divergence": {
-"n": 183,
-"betfairWins": 58,
-"betfairRate": 0.3169,
-"polyN": 163,
+"n": 186,
+"betfairWins": 60,
+"betfairRate": 0.3226,
+"polyN": 165,
 "polyWins": 52,
-"polyRate": 0.319
+"polyRate": 0.3152
 },
 "recent": [
+{
+"matchId": "35970012",
+"home": "Zhejiang Greentown",
+"away": "Yunnan Yukun",
+"league": "Chinese Super League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Zhejiang Greentown",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+6,
+0
+],
+"kickoff": "2026-08-29T11:00:00Z",
+"settledAt": "2026-08-29T14:03:04.188870+00:00"
+},
+{
+"matchId": "35951834",
+"home": "FC Heidenheim",
+"away": "Dynamo Dresden",
+"league": "German Bundesliga 2",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "FC Heidenheim",
+"polySide": null,
+"winner": "home",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+5,
+3
+],
+"kickoff": "2026-08-29T11:00:00Z",
+"settledAt": "2026-08-29T14:03:04.188870+00:00"
+},
+{
+"matchId": "35971071",
+"home": "Liverpool",
+"away": "Nottm Forest",
+"league": "English Premier League",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Liverpool",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-08-29T11:30:00Z",
+"settledAt": "2026-08-29T13:32:49.640326+00:00"
+},
+{
+"matchId": "35984343",
+"home": "Bucheon FC 1995",
+"away": "FC Anyang",
+"league": "South Korean K1 League",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-29T10:30:00Z",
+"settledAt": "2026-08-29T13:32:49.640326+00:00"
+},
+{
+"matchId": "35970848",
+"home": "Wolves",
+"away": "Stoke",
+"league": "English Sky Bet Championship",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Wolves",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+1
+],
+"kickoff": "2026-08-29T11:30:00Z",
+"settledAt": "2026-08-29T13:24:32.951699+00:00"
+},
+{
+"matchId": "35970861",
+"home": "Middlesbrough",
+"away": "West Brom",
+"league": "English Sky Bet Championship",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Middlesbrough",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-08-29T11:30:00Z",
+"settledAt": "2026-08-29T13:24:32.951699+00:00"
+},
 {
 "matchId": "35969791",
 "home": "G-Osaka",
@@ -1190,126 +1304,12 @@
 ],
 "kickoff": "2026-08-27T19:00:00Z",
 "settledAt": "2026-08-27T22:14:00.425454+00:00"
-},
-{
-"matchId": "35965058",
-"home": "Rijeka",
-"away": "Midtjylland",
-"league": "UEFA Europa Conference Qualifiers",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Midtjylland",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-4
-],
-"kickoff": "2026-08-27T18:45:00Z",
-"settledAt": "2026-08-27T21:58:53.325205+00:00"
-},
-{
-"matchId": "35969967",
-"home": "Boreham Wood",
-"away": "Boston Utd",
-"league": "English National League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Boston Utd",
-"polySide": "away",
-"winner": "home",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-08-27T18:45:00Z",
-"settledAt": "2026-08-27T21:58:53.325205+00:00"
-},
-{
-"matchId": "35964586",
-"home": "Austria Wien",
-"away": "Braga",
-"league": "UEFA Europa Conference Qualifiers",
-"verdict": "uneinig",
-"moneySide": "draw",
-"moneyName": "The Draw",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-08-27T18:30:00Z",
-"settledAt": "2026-08-27T21:43:54.887633+00:00"
-},
-{
-"matchId": "35969276",
-"home": "Ajax",
-"away": "Sion",
-"league": "UEFA Europa Conference Qualifiers",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Ajax",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-5,
-3
-],
-"kickoff": "2026-08-27T18:00:00Z",
-"settledAt": "2026-08-27T21:13:51.690698+00:00"
-},
-{
-"matchId": "35967945",
-"home": "Hapoel Tel Aviv",
-"away": "Atalanta",
-"league": "UEFA Europa Conference Qualifiers",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Atalanta",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-08-27T18:00:00Z",
-"settledAt": "2026-08-27T21:13:51.690698+00:00"
-},
-{
-"matchId": "35964571",
-"home": "CSKA Sofia",
-"away": "OFI",
-"league": "UEFA Europa League Qualifiers",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "OFI",
-"polySide": "home",
-"winner": "away",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-0,
-2
-],
-"kickoff": "2026-08-27T18:00:00Z",
-"settledAt": "2026-08-27T21:13:51.690698+00:00"
 }
 ],
 "global": {
-"n": 738,
-"wins": 505,
-"hitRate": 0.6843
+"n": 744,
+"wins": 510,
+"hitRate": 0.6855
 },
 "pending": 22
 }
