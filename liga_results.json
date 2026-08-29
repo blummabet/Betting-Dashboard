@@ -1,27 +1,80 @@
 {
-  "bets": [],
+  "bets": [
+    {
+      "betKey": "57-40-Under 2.5 Tore",
+      "home": "Ipswich",
+      "away": "Liverpool",
+      "homeId": "57",
+      "awayId": "40",
+      "market": "Under 2.5 Tore",
+      "stake": 5.5,
+      "polyPrice": 0.4,
+      "polyOdds": 2.5,
+      "pinnFair": 0.4474,
+      "pinnClose": null,
+      "clvPP": null,
+      "polyClose": null,
+      "polyClvPP": null,
+      "isSteamLag": false,
+      "result": "SOLD",
+      "pnl": 0.0,
+      "score": null,
+      "slug": "epl-ips-liv-2026-09-04-more-markets",
+      "source": "auto",
+      "placedAt": "2026-08-29T03:17:20.114457+00:00",
+      "resolvedAt": "2026-08-29T03:17:20.587438+00:00",
+      "sellPrice": null,
+      "sellReason": "manuell auf Polymarket geschlossen",
+      "competition": "epl",
+      "competitionLabel": "Premier League"
+    }
+  ],
   "summary": {
-    "totalBets": 0,
-    "resolved": 0,
+    "totalBets": 1,
+    "resolved": 1,
     "pending": 0,
-    "sold": 0,
+    "sold": 1,
     "wins": 0,
     "losses": 0,
     "voids": 0,
     "winRate": null,
-    "totalStaked": 0,
-    "totalPnl": 0,
+    "totalStaked": 5.5,
+    "totalPnl": 0.0,
     "roi": 0.0,
     "avgCLV": null,
     "sharpeEst": null,
     "postmortem": {
-      "closedN": 0,
-      "realizedPnl": 0,
+      "closedN": 1,
+      "realizedPnl": 0.0,
       "avgClv": null,
-      "clvCoverage": "0/0",
-      "byMarket": {},
-      "byExit": {},
-      "byCompetition": {},
+      "clvCoverage": "0/1",
+      "byMarket": {
+        "O/U": {
+          "n": 1,
+          "pnl": 0.0,
+          "avgClv": null,
+          "clvCoverage": "0/1"
+        }
+      },
+      "byExit": {
+        "Sell-sonstig": {
+          "n": 1,
+          "pnl": 0.0,
+          "avgClv": null,
+          "clvCoverage": "0/1"
+        }
+      },
+      "byCompetition": {
+        "epl": {
+          "label": "Premier League",
+          "n": 1,
+          "pnl": 0.0,
+          "staked": 5.5,
+          "roi": 0.0,
+          "avgClv": null,
+          "clvCoverage": "0/1"
+        }
+      },
       "heldToClose": {
         "n": 0,
         "exitBetter": 0,
@@ -30,5 +83,5 @@
       }
     }
   },
-  "updatedAt": "2026-08-28T21:09:04.307924+00:00"
+  "updatedAt": "2026-08-29T03:17:20.931531+00:00"
 }
