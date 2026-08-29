@@ -87,6 +87,14 @@ jobs:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
+      # 29.08.2026 (Lucas: „mach den Preispfad") — direkt NACH dem Sweep, damit der Punkt den
+      # Preis dieses Laufs traegt. Kostet keine einzige zusaetzliche API-Anfrage: die Preise
+      # stehen schon in poly_money_upcoming.json / _close.json, sie wurden bisher nur bei jedem
+      # Lauf ueberschrieben statt fortgeschrieben.
+      - name: 📉 Preispfad fortschreiben (gratis — nur Preise, keine Holder-Calls)
+        run: ${{ env.POLY_PYTHON }} poly_price_path.py
+        continue-on-error: true
+
       - name: 📈 Shortlist Paper-Track (Heute-wetten Track-Record, read-only)
         run: ${{ env.POLY_PYTHON }} poly_shortlist_track.py
         continue-on-error: true
@@ -148,6 +156,7 @@ jobs:
           git config user.email "bot@cocobet.local"
           for f in \
             poly_money_broad.json poly_money_broad_close.json poly_money_broad_history.json poly_money_upcoming.json poly_wallet_track.json \
+            poly_price_path.json \
             poly_resolutions.json poly_shortlist_track.json poly_status.json poly_football_tags.json \
             poly_direct_bets.json poly_whale_follow_track.json \
             poly_cross_sport.json poly_cross_sport_history.json poly_cross_sport_seen.json \

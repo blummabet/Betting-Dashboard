@@ -26,6 +26,11 @@ import { JSDOM } from 'jsdom';
 const ROOT = new URL('../../', import.meta.url);
 const SRC  = readFileSync(new URL('poly-wallets.js', ROOT), 'utf8');
 
+// 29.08.2026: die Engine-Version wird aus der QUELLE gelesen, nicht eingetippt. Beim ersten
+// echten Versionssprung (Säulen-Neugewichtung, '2026-08-29' -> '2026-08-29b') sind diese Tests
+// gekippt — nicht weil etwas kaputt war, sondern weil der Stempel genau seinen Job gemacht hat.
+const EV = /const PW_ENGINE_VERSION='([^']+)'/.exec(SRC)[1];
+
 const TRACK = (evs) => ({
   agg: { all: { roi: 0 } },
   settled: evs.map((ev, i) => ({
@@ -60,7 +65,7 @@ test('der schlanke Loader holt den Shortlist-Track — sonst lernt die Übersich
 });
 
 test('bf ist im Kalibrier-Kern — money+bf wird nicht mehr als money verbucht', async () => {
-  const w = boot({ 'poly_shortlist_track.json': TRACK(['2026-08-29', '2026-08-29']) });
+  const w = boot({ 'poly_shortlist_track.json': TRACK([EV, EV]) });
   await new Promise((res) => w._pwEnsurePlaysData(res));
   const agg = w._pwComboStatsAll();
   assert.ok(agg, 'Combo-Statistik ist leer');
@@ -69,7 +74,7 @@ test('bf ist im Kalibrier-Kern — money+bf wird nicht mehr als money verbucht',
 });
 
 test('Alt-Plays zählen halb, aktuelle voll', async () => {
-  const w = boot({ 'poly_shortlist_track.json': TRACK(['2026-08-29', null, 'irgendwas-altes']) });
+  const w = boot({ 'poly_shortlist_track.json': TRACK([EV, null, 'irgendwas-altes']) });
   await new Promise((res) => w._pwEnsurePlaysData(res));
   const a = w._pwComboStatsAll()['bf+money'];
   assert.strictEqual(a.nRoh, 3, 'die rohe Anzahl muss ehrlich bleiben');
@@ -79,7 +84,7 @@ test('Alt-Plays zählen halb, aktuelle voll', async () => {
 
 test('das Alt-Gewicht senkt das Vertrauen, nicht die ROI-Schätzung', async () => {
   const nur_alt  = boot({ 'poly_shortlist_track.json': TRACK([null, null, null, null]) });
-  const nur_neu  = boot({ 'poly_shortlist_track.json': TRACK(Array(4).fill('2026-08-29')) });
+  const nur_neu  = boot({ 'poly_shortlist_track.json': TRACK(Array(4).fill(EV)) });
   await new Promise((res) => nur_alt._pwEnsurePlaysData(res));
   await new Promise((res) => nur_neu._pwEnsurePlaysData(res));
   const a = nur_alt._pwComboStatsAll()['bf+money'];
@@ -89,7 +94,9 @@ test('das Alt-Gewicht senkt das Vertrauen, nicht die ROI-Schätzung', async () =
 });
 
 test('jeder Play trägt den Engine-Stempel — sonst kommt er nie im Track an', () => {
-  assert.match(SRC, /const PW_ENGINE_VERSION='\d{4}-\d{2}-\d{2}'/, 'Engine-Version fehlt');
+  // Datum plus optionaler Buchstabe: mehrere Gewichtungs-Wechsel an einem Tag brauchen
+  // unterscheidbare Stempel ('2026-08-29', '2026-08-29b', …).
+  assert.match(SRC, /const PW_ENGINE_VERSION='\d{4}-\d{2}-\d{2}[a-z]?'/, 'Engine-Version fehlt');
   assert.match(SRC, /ev:PW_ENGINE_VERSION/, '_pwShortlistScore gibt den Stempel nicht mit');
   const emit = readFileSync(new URL('scripts/emit_shortlist.mjs', ROOT), 'utf8');
   assert.match(emit, /ev: p\.ev \|\| null/, 'emit_shortlist reicht den Stempel nicht durch');

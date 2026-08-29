@@ -322,7 +322,11 @@ test('③ Shortlist: Edge (Geld schlägt Preis) → BET mit Conviction; reiner F
       'nba-c-d': { league: 'NBA', resolved: null, totalUsd: 100000,
         shares: { 'Lakers': 80000, 'Celtics': 20000 }, prices: { 'Lakers': 0.80, 'Celtics': 0.20 } },
     },
-    'poly_money_broad.json': { n: 100, byLeague: [{ league: 'MLB', verdict: 'geld_schaerfer' }] },
+    // 29.08.2026 (Säulen-Neugewichtung): das Liga-Urteil braucht jetzt eine Stichprobe. „Geld ist
+    // in dieser Liga schärfer" aus fünf Spielen ist eine Behauptung, keine Erkenntnis — deshalb
+    // wiegt ein belegtes Urteil (n>=PW_GVP_MIN_N) 1,5 und ein unbelegtes 1,0. Die Fixture trägt
+    // ihr n jetzt mit, so wie die echten byLeague-Einträge auch.
+    'poly_money_broad.json': { n: 100, byLeague: [{ league: 'MLB', verdict: 'geld_schaerfer', n: 24 }] },
   };
   const dom = new JSDOM('<!DOCTYPE html><body><div id="polyWalletsPanel"></div></body>',
     { url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
@@ -335,7 +339,10 @@ test('③ Shortlist: Edge (Geld schlägt Preis) → BET mit Conviction; reiner F
   const html = w.document.getElementById('polyWalletsPanel').innerHTML;
   assert.match(html, /Heute wetten/);
   assert.match(html, /BET/); assert.match(html, /Atlanta Braves/);
-  assert.match(html, /6\/10/, 'Conviction (Basis neu 2) = 2 + (Geld 1,5 @70% + geld_schaerfer 2) = 5,5 → 6');
+  // 29.08.2026 (Säulen-Neugewichtung): war 6/10, ist 5/10. Rechnung: Basis 2 + Geld 1,5 (@70%)
+  // + belegtes Liga-Urteil 1,5 (vorher 2,0) = 5. Der Test prüft, dass eine echte Kante als BET
+  // erscheint und ein reiner Favorit nicht — nicht die Kalibrierung der Gewichte.
+  assert.match(html, /5\/10/, 'Conviction = 2 + Geld 1,5 + geld_schaerfer 1,5 = 5');
   assert.ok(!/Lakers/.test(html), 'reiner Favorit ohne Edge darf nicht in der Shortlist stehen');
 });
 

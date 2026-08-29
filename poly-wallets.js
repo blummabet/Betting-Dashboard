@@ -1730,13 +1730,17 @@ function _pwSharpSideFor(m){
   let best=null,bmax=0; for(const s in bySide) if(bySide[s]>bmax){bmax=bySide[s];best=s;}
   return best;
 }
-function _pwLeagueMoneyVerdict(league){
+function _pwLeagueMoneyRow(league){
   const bl=_pwCache&&_pwCache.moneyBroad&&_pwCache.moneyBroad.byLeague;
   if(!Array.isArray(bl)||!league) return null;
   const up=String(league).toUpperCase();
-  const row=bl.find(x=>String(x.league||'').toUpperCase()===up);
-  return row?row.verdict:null;
+  return bl.find(x=>String(x.league||'').toUpperCase()===up) || null;
 }
+function _pwLeagueMoneyVerdict(league){ const r=_pwLeagueMoneyRow(league); return r?r.verdict:null; }
+// Ab so vielen ausgewerteten Spielen gilt ein Liga-Urteil („Geld schaerfer" / „Preis besser") als
+// belegt. Darunter ist es eine Behauptung — reale Eintraege haben teils n=5, und aus fuenf
+// Spielen laesst sich nicht ableiten, ob in einer Liga das Geld oder der Preis naeher dran ist.
+const PW_GVP_MIN_N=10;
 // (01.08.2026, Lucas) Wiederverwendbare Play-Rangliste — Kern für „🔥 Heute wetten" UND die
 // Übersicht-Box. limit=0 → alle. useSportPass steuert den Sport-Filter (Übersicht: aus).
 var PW_LIVE_MAX_PRICE = 0.77;   // 15.08.2026 (Lucas): wie Live-Watch — live > 77¢ (Quote <1.30) = fast entschieden, kein Value
@@ -2027,7 +2031,10 @@ let _pwComboCache=null, _pwComboRef=null;
 //
 // Diese Zeichenkette hochzaehlen, sobald sich an Gewichten, Schwellen oder dem Sharp-Gate etwas
 // aendert — sie ist die Grenze zwischen „das war dieselbe Maschine" und „das war eine andere".
-const PW_ENGINE_VERSION='2026-08-29';
+// 29.08.2026b: Saeulen-Neugewichtung (steam 3,0→2,5 · bf 1,5→2,0 · pinn 2,0→1,5 · gvp 2,0→1,0).
+// Der Stempel wandert mit — das ist sein einziger Zweck: die 500 Plays davor wurden unter
+// anderen Gewichten bewertet und zaehlen fuer den Kalibrierer ab jetzt nur noch halb.
+const PW_ENGINE_VERSION='2026-08-29b';
 // Alt-Plays fliegen NICHT raus, sie zaehlen halb. Grund: was ein Signal-MIX bringt, haengt nur
 // zum Teil an unseren Gewichten — dass `steam` allein -43% ROI macht, gilt auch unter der neuen
 // Engine. Was sich wirklich geaendert hat, ist die Bedeutung des `sharp`-Tags (das Gate). Halbes
@@ -2125,14 +2132,33 @@ function _pwShortlistScore(key,m){
   // worauf sich die % beziehen. total = Summe der Outcome-Shares = m.totalUsd (die "Vol"-Spalte).
   if(moneyPct>=PW_MONEY_MAJ) add(moneyFav, moneyPct>=0.70?1.5:1, 'großes Geld auf '+moneyFav+' ('+Math.round(moneyPct*100)+'%) → '+_pwUsd(m.totalUsd||total), 'money');
   // Geld vs Preis uneinig → liga-informiert entscheiden (sofort verfügbar aus broadLive)
+  // 29.08.2026: gvp hat in 500 abgerechneten UND 550 offenen Plays NULL mal gefeuert — und trug
+  // trotzdem bis zu 2,0. Der Grund ist strukturell, kein Bug: auf einem Prognosemarkt IST der
+  // Preis die Geldverteilung. Geld-Favorit und Preis-Favorit weichen nur in 15,7% der Maerkte
+  // voneinander ab, und das sind fast ausschliesslich Exakt-Ergebnis-Maerkte mit vielen
+  // Ausgaengen, wo „Favorit" nichts bedeutet und die ohnehin nie Play werden.
+  // Der Zweig bleibt (bei Buchmacher-Maerkten waere er sinnvoll), aber ein ungetesteter Pfad
+  // bekommt kein Gewicht, das schwerer waegt als die gemessenen Saeulen.
   if(priceFav&&priceFav!==moneyFav){
-    const lg=_pwLeagueMoneyVerdict(m.league);
-    if(lg==='geld_schaerfer') add(moneyFav,2,'Geld schlägt Preis in '+(m.league||'').toUpperCase(),'gvp');
-    else if(lg==='preis_besser') add(priceFav,2,'Preis schlägt Geld in '+(m.league||'').toUpperCase(),'gvp');
+    // Ein BELEGTES Liga-Urteil wiegt mehr als der Rueckfall „wir wissen es nicht" — aber beides
+    // weniger als frueher (2,0), weil dieser Zweig in 1.050 Plays kein einziges Mal gefeuert hat
+    // und deshalb ungetestet ist.
+    const _lgr=_pwLeagueMoneyRow(m.league);
+    const lg=_lgr?_lgr.verdict:null;
+    const _belegt=!!(_lgr && (_lgr.n||0)>=PW_GVP_MIN_N);
+    const _w=_belegt?1.5:1;
+    if(lg==='geld_schaerfer') add(moneyFav,_w,'Geld schlägt Preis in '+(m.league||'').toUpperCase()+(_belegt?' (n'+_lgr.n+')':''),'gvp');
+    else if(lg==='preis_besser') add(priceFav,_w,'Preis schlägt Geld in '+(m.league||'').toUpperCase()+(_belegt?' (n'+_lgr.n+')':''),'gvp');
     else add(priceFav,1,'Geld & Preis uneinig','gvp');
   }
+  // 29.08.2026 (Lucas: „das Heute-Spielenswert weiter optimieren") — Steam war das SCHWERSTE
+  // Einzelgewicht im Scorer (3,0) bei der zweitschlechtesten Leistung im Papier-Depot:
+  // n=127, ROI -7,9%, Untergrenze -19,4%. Und mit 3,0 kam es allein ueber die Play-Schwelle —
+  // die 18 Steam-Alleingaenge trafen zu 31,6% bei -40% ROI, die schlechteste Gruppe des Boards.
+  // Der Kalibrierer strafte sie hinterher mit -2 ab; besser ist, sie kommen gar nicht erst rein.
+  // 2,5 heisst: Steam bestaetigt, Steam traegt nicht mehr allein.
   const mv=_pwMoveFor(key);
-  if(mv&&mv.steam&&mv.move>=2) add(mv.side, mv.move>=4?3:2, 'Steam läuft rein (+'+mv.move.toFixed(1)+'pp)', 'steam');
+  if(mv&&mv.steam&&mv.move>=2) add(mv.side, mv.move>=4?2.5:1.5, 'Steam läuft rein (+'+mv.move.toFixed(1)+'pp)', 'steam');
   const sh=_pwSharpInfoForKey(key);
   if(sh){
     // 29.08.2026 (Lucas-Checkup, „D": Wallets sollen nicht so wichtig sein). Zwei Gruende, beide
@@ -2164,17 +2190,24 @@ function _pwShortlistScore(key,m){
   }
   // (01.08.2026, Lucas) Pinnacle-Kante einweben: de-viggte Pinnacle vs Poly-Preis. Konsens hebt
   // Conviction, deutliche Fehlbewertung = eigener Value-Play. Feuert nur wenn crossSport-Daten da.
+  // 29.08.2026: pinn hat acht abgerechnete Plays (ROI -41%, Untergrenze -88%). Acht Beobachtungen
+  // rechtfertigen kein Gewicht von 2 — das ist keine Abwertung des Signals, sondern der Respekt
+  // vor der Stichprobe. Waechst sie und traegt sie, holt der Kalibrierer es von selbst zurueck.
   const pe=_pwPinnEdgeFor(m,oc);
   if(pe){
-    const w=Math.abs(pe.gapPP)>=8?2:1;
+    const w=Math.abs(pe.gapPP)>=8?1.5:1;
     if(pe.back) add(pe.side,w,'Pinnacle: Poly '+Math.abs(pe.gapPP).toFixed(0)+'pp zu billig → Value','pinn');
     else if(pe.other) add(pe.other,w,'Pinnacle: Poly '+Math.abs(pe.gapPP).toFixed(0)+'pp zu teuer auf '+pe.side,'pinn');
   }
   // 21.08.2026 (Lucas): Betfair-Geld als Gegencheck. Liegt auf Betfair Geld (>=55%) auf einer Seite,
   // zaehlt das als Bestaetigung fuer die Seite (moderate Gewichtung, kippt gut gestuetzte Picks nicht).
+  // 29.08.2026: bf war Rang 1 nach Leistung und Rang 6 nach Gewicht — die einzige Saeule, deren
+  // Untergrenze nicht unter null liegt (n=43, ROI +20,5%, UG 0,0%). Rauf auf 1,5/2,0. Bewusst
+  // NICHT ueber die Play-Schwelle von 3: 43 Plays rechtfertigen mehr Stimme, aber keinen
+  // Alleingang. Ein zweites Signal muss weiterhin dazukommen.
   const _bf=_pwBfFav(oc);
   if(_bf && _bf.polySide && _bf.pct>=55){
-    add(_bf.polySide, _bf.pct>=70?1.5:1, '💷 Betfair-Geld bestätigt: '+_bf.pct+'% · '+_pwBfEur(_bf.eur), 'bf');
+    add(_bf.polySide, _bf.pct>=70?2:1.5, '💷 Betfair-Geld bestätigt: '+_bf.pct+'% · '+_pwBfEur(_bf.eur), 'bf');
   }
   let best=null,bs=0; for(const s in sides) if(sides[s]>bs){bs=sides[s];best=s;}
   const vol=m.totalUsd||0;
