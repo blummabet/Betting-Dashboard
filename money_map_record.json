@@ -1,13 +1,13 @@
 {
-"generatedAt": "2026-08-29T21:18:34.441006+00:00",
+"generatedAt": "2026-08-29T21:33:31.462798+00:00",
 "byVerdict": {
 "konsens": {
-"n": 589,
-"wins": 478,
-"hitRate": 0.8115,
-"polyN": 552,
-"polyWins": 431,
-"polyHitRate": 0.7808,
+"n": 591,
+"wins": 480,
+"hitRate": 0.8122,
+"polyN": 554,
+"polyWins": 433,
+"polyHitRate": 0.7816,
 "pinnN": 46,
 "pinnHitRate": 0.7391
 },
@@ -49,9 +49,9 @@
 "hitRate": 0.6207
 },
 "Spanish La Liga": {
-"n": 24,
-"wins": 16,
-"hitRate": 0.6667
+"n": 25,
+"wins": 17,
+"hitRate": 0.68
 },
 "English Football League Cup": {
 "n": 22,
@@ -163,6 +163,11 @@
 "wins": 7,
 "hitRate": 0.5833
 },
+"German Bundesliga 2": {
+"n": 12,
+"wins": 10,
+"hitRate": 0.8333
+},
 "Belgian Pro League": {
 "n": 11,
 "wins": 9,
@@ -172,11 +177,6 @@
 "n": 11,
 "wins": 6,
 "hitRate": 0.5455
-},
-"German Bundesliga 2": {
-"n": 11,
-"wins": 9,
-"hitRate": 0.8182
 },
 "Italian Coppa Italia": {
 "n": 11,
@@ -526,9 +526,9 @@
 },
 "byStrength": {
 "strong": {
-"n": 461,
-"wins": 373,
-"hitRate": 0.8091
+"n": 463,
+"wins": 375,
+"hitRate": 0.8099
 },
 "weak": {
 "n": 298,
@@ -545,6 +545,44 @@
 "polyRate": 0.3029
 },
 "recent": [
+{
+"matchId": "35965459",
+"home": "Sevilla",
+"away": "Atletico Madrid",
+"league": "Spanish La Liga",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Atletico Madrid",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+3
+],
+"kickoff": "2026-08-29T19:30:00Z",
+"settledAt": "2026-08-29T21:33:31.292617+00:00"
+},
+{
+"matchId": "35951832",
+"home": "Nurnberg",
+"away": "Arminia Bielefeld",
+"league": "German Bundesliga 2",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Nurnberg",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+1
+],
+"kickoff": "2026-08-29T18:30:00Z",
+"settledAt": "2026-08-29T21:33:31.292617+00:00"
+},
 {
 "matchId": "35971491",
 "home": "Zaglebie Lubin",
@@ -1266,50 +1304,12 @@
 ],
 "kickoff": "2026-08-29T13:30:00Z",
 "settledAt": "2026-08-29T16:33:09.434786+00:00"
-},
-{
-"matchId": "35785201",
-"home": "Mainz",
-"away": "Paderborn",
-"league": "German Bundesliga",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Mainz",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-08-29T13:30:00Z",
-"settledAt": "2026-08-29T16:33:09.434786+00:00"
-},
-{
-"matchId": "35966021",
-"home": "Bournemouth",
-"away": "Everton",
-"league": "English Premier League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Bournemouth",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-08-29T14:00:00Z",
-"settledAt": "2026-08-29T16:03:06.624592+00:00"
 }
 ],
 "global": {
-"n": 792,
-"wins": 541,
-"hitRate": 0.6831
+"n": 794,
+"wins": 543,
+"hitRate": 0.6839
 },
-"pending": 12
+"pending": 11
 }
