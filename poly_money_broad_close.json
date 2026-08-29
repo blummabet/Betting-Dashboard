@@ -107470,7 +107470,13 @@
     "usd": 1000,
     "ts": 1788018868
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Over": 1.0,
+   "Under": 0.0
+  },
+  "resolvedAt": "2026-08-29T19:17:28.646420+00:00"
  },
  "bun-dor-hsv-2026-08-29-more-markets": {
   "shares": {
@@ -107514,7 +107520,13 @@
   "tokens": {
    "Over": "568974369729545550020659355831165641281992038672753203223013844042687382515",
    "Under": "71091030929248597680263437704096570379857823149996525569727832798263183139138"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Over": 0.0,
+   "Under": 1.0
+  },
+  "resolvedAt": "2026-08-29T19:17:28.646420+00:00"
  },
  "bun-dor-hsv-2026-08-29": {
   "shares": {
@@ -107745,7 +107757,13 @@
   "tokens": {
    "HULIGANI": "74760451231867953078376320535798900488412708332247322277987890376339196973613",
    "Team Lynx": "10016480242791100682467863919923946527057778913979246471982673336021806409751"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "HULIGANI": 0.0,
+   "Team Lynx": 1.0
+  },
+  "resolvedAt": "2026-08-29T19:17:28.646420+00:00"
  },
  "elc-bol-lin-2026-08-29": {
   "shares": {
@@ -110510,55 +110528,181 @@
  },
  "lal-sev-mad-2026-08-29": {
   "shares": {
-   "Sevilla FC": 14679.202575600006,
-   "Draw (Sevilla FC vs. Club Atlético de Madrid)": 9313.377347450012,
-   "Club Atlético de Madrid": 207232.68277383503
+   "Sevilla FC": 26501.888301749983,
+   "Draw (Sevilla FC vs. Club Atlético de Madrid)": 9192.07559957501,
+   "Club Atlético de Madrid": 263363.90522755496
   },
   "prices": {
    "Sevilla FC": 0.225,
    "Draw (Sevilla FC vs. Club Atlético de Madrid)": 0.275,
-   "Club Atlético de Madrid": 0.505
+   "Club Atlético de Madrid": 0.495
   },
   "league": "LA-LIGA",
   "sport": "Fußball",
-  "totalUsd": 281489,
+  "totalUsd": 637110,
   "whales": [
    {
     "wallet": "0x3eb095d871501a1d7a3cb086a22d174b52356a68",
     "side": "Club Atlético de Madrid",
-    "usd": 101000,
+    "usd": 99000,
     "avgPrice": 0.51
    },
    {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
     "side": "Club Atlético de Madrid",
-    "usd": 25918,
+    "usd": 25405,
     "avgPrice": 0.4881
    },
    {
     "wallet": "0xfaebec08a9902669fc8da29e5568f9cf9217e98e",
     "side": "Club Atlético de Madrid",
-    "usd": 19096,
+    "usd": 18718,
     "avgPrice": 0.4599
    },
    {
-    "wallet": "0xc3c3b3ef304ddbea39fa2246e683a71da5d0eec8",
-    "side": "Club Atlético de Madrid",
-    "usd": 7575
+    "wallet": "0x3ea2cd9da75e99c7e6ef07206c341aad247de8e5",
+    "side": "Sevilla FC",
+    "usd": 12375,
+    "avgPrice": 0.22
    }
   ],
-  "hoursToKickoff": 0.76,
-  "capturedAt": "2026-08-29T18:46:44.180919+00:00",
+  "hoursToKickoff": 0.26,
+  "capturedAt": "2026-08-29T19:17:28.646420+00:00",
   "tokens": {
    "Sevilla FC": "77855171332843996792897232647102039399679867758004458170221164151058741481988",
    "Draw (Sevilla FC vs. Club Atlético de Madrid)": "45650699824787495382433262196433116613235780929973592600502787985857626312751",
    "Club Atlético de Madrid": "91363973968294857243146896075663728422757346982924406390240119561678032944144"
-  }
+  },
+  "book": {
+   "side": "Club Atlético de Madrid",
+   "bid": 0.49,
+   "ask": 0.5,
+   "spreadC": 1.0,
+   "spreadPct": 2.0,
+   "bids": [
+    [
+     0.49,
+     40767
+    ],
+    [
+     0.48,
+     151828
+    ],
+    [
+     0.47,
+     110214
+    ],
+    [
+     0.46,
+     129301
+    ],
+    [
+     0.45,
+     41501
+    ],
+    [
+     0.44,
+     74240
+    ]
+   ],
+   "asks": [
+    [
+     0.5,
+     804101
+    ],
+    [
+     0.51,
+     978757
+    ],
+    [
+     0.52,
+     648893
+    ],
+    [
+     0.53,
+     49725
+    ],
+    [
+     0.54,
+     85789
+    ],
+    [
+     0.55,
+     57589
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xf0318c32136c2db7fec88b84869aee6a1106c80c",
+    "action": "BUY",
+    "side": "No",
+    "price": 0.5,
+    "usd": 6043,
+    "ts": 1788030765
+   },
+   {
+    "wallet": "0x3b62c64ebaee15478e8b21765b9f940458655cc8",
+    "action": "BUY",
+    "side": "No",
+    "price": 0.5,
+    "usd": 7500,
+    "ts": 1788030445
+   },
+   {
+    "wallet": "0x443bcce588e26763987e9ae44b6b7845f09fe8bb",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.51,
+    "usd": 1020,
+    "ts": 1788030310
+   },
+   {
+    "wallet": "0x379ac19d17a045325c99afc2e0c86d61b03b5122",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.51,
+    "usd": 3060,
+    "ts": 1788030289
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "No",
+    "price": 0.5,
+    "usd": 750,
+    "ts": 1788030277
+   },
+   {
+    "wallet": "0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
+    "action": "BUY",
+    "side": "No",
+    "price": 0.49,
+    "usd": 36285,
+    "ts": 1788030277
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "No",
+    "price": 0.49,
+    "usd": 710,
+    "ts": 1788030276
+   },
+   {
+    "wallet": "0x6055af2b735b5840988c2d1025c74981dd2c5fde",
+    "action": "BUY",
+    "side": "No",
+    "price": 0.49,
+    "usd": 1000,
+    "ts": 1788030259
+   }
+  ]
  },
  "lal-sev-mad-2026-08-29-more-markets": {
   "shares": {
-   "Over": 15039.85944189,
-   "Under": 17303.6612735
+   "Over": 102860.87103136501,
+   "Under": 118345.15670704498
   },
   "prices": {
    "Over": 0.465,
@@ -110566,8 +110710,20 @@
   },
   "league": "LA-LIGA",
   "sport": "Fußball",
-  "totalUsd": 41770,
+  "totalUsd": 48048,
   "whales": [
+   {
+    "wallet": "0x34a1eed3f6bb10dd2f99b79cb4e8ca8749ae7622",
+    "side": "Under",
+    "usd": 95307,
+    "avgPrice": 0.5399
+   },
+   {
+    "wallet": "0xf0318c32136c2db7fec88b84869aee6a1106c80c",
+    "side": "Over",
+    "usd": 75943,
+    "avgPrice": 0.46
+   },
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
     "side": "Under",
@@ -110575,25 +110731,14 @@
     "avgPrice": 0.5199
    },
    {
-    "wallet": "0xc3c3b3ef304ddbea39fa2246e683a71da5d0eec8",
-    "side": "Under",
-    "usd": 2675
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "wallet": "0xe5f0ae9cc9aef77ae3c2a64c9e69caa3f335dc1d",
     "side": "Over",
-    "usd": 1972,
-    "avgPrice": 0.4648
-   },
-   {
-    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
-    "side": "Over",
-    "usd": 1861,
-    "avgPrice": 0.4512
+    "usd": 4650,
+    "avgPrice": 0.47
    }
   ],
-  "hoursToKickoff": 0.76,
-  "capturedAt": "2026-08-29T18:46:44.180919+00:00",
+  "hoursToKickoff": 0.26,
+  "capturedAt": "2026-08-29T19:17:28.646420+00:00",
   "tokens": {
    "Over": "29300831177454287897069594619582560795656030242787998675549242219874129003562",
    "Under": "106938688116233857755497420512665308995032982365348289537548049659967320605265"
@@ -110691,22 +110836,22 @@
  "lal-sev-mad-2026-08-29-exact-score": {
   "shares": {
    "Sevilla FC 0 - 0 Club Atlético de Madrid": 176.379,
-   "Sevilla FC 0 - 1 Club Atlético de Madrid": 186.40418462499997,
+   "Sevilla FC 0 - 1 Club Atlético de Madrid": 187.65418462499997,
    "Sevilla FC 1 - 0 Club Atlético de Madrid": 78.97949999999999,
    "Sevilla FC 0 - 2 Club Atlético de Madrid": 252.1775,
-   "Sevilla FC 1 - 1 Club Atlético de Madrid": 212.3634834,
-   "Sevilla FC 2 - 0 Club Atlético de Madrid": 54.079074756,
-   "Sevilla FC 0 - 3 Club Atlético de Madrid": 172.180578392,
-   "Sevilla FC 1 - 2 Club Atlético de Madrid": 149.074,
-   "Sevilla FC 2 - 1 Club Atlético de Madrid": 124.823809,
-   "Sevilla FC 3 - 0 Club Atlético de Madrid": 23.5441811745,
-   "Sevilla FC 1 - 3 Club Atlético de Madrid": 89.55703965,
-   "Sevilla FC 2 - 2 Club Atlético de Madrid": 96.24926640999999,
-   "Sevilla FC 3 - 1 Club Atlético de Madrid": 18.18,
-   "Sevilla FC 2 - 3 Club Atlético de Madrid": 134.673981454,
-   "Sevilla FC 3 - 2 Club Atlético de Madrid": 39.87375,
-   "Sevilla FC 3 - 3 Club Atlético de Madrid": 45.18818180099999,
-   "Any Other Score": 112.94278073999999
+   "Sevilla FC 1 - 1 Club Atlético de Madrid": 225.67062591,
+   "Sevilla FC 2 - 0 Club Atlético de Madrid": 199.325257856,
+   "Sevilla FC 0 - 3 Club Atlético de Madrid": 176.49505668049997,
+   "Sevilla FC 1 - 2 Club Atlético de Madrid": 172.824,
+   "Sevilla FC 2 - 1 Club Atlético de Madrid": 696.6969894300003,
+   "Sevilla FC 3 - 0 Club Atlético de Madrid": 22.403014551000002,
+   "Sevilla FC 1 - 3 Club Atlético de Madrid": 216.893261606,
+   "Sevilla FC 2 - 2 Club Atlético de Madrid": 191.55601624500005,
+   "Sevilla FC 3 - 1 Club Atlético de Madrid": 72.171558882,
+   "Sevilla FC 2 - 3 Club Atlético de Madrid": 168.604128498,
+   "Sevilla FC 3 - 2 Club Atlético de Madrid": 76.75631526400001,
+   "Sevilla FC 3 - 3 Club Atlético de Madrid": 51.03081815399999,
+   "Any Other Score": 272.35055946500006
   },
   "prices": {
    "Sevilla FC 0 - 0 Club Atlético de Madrid": 0.075,
@@ -110714,49 +110859,49 @@
    "Sevilla FC 1 - 0 Club Atlético de Madrid": 0.075,
    "Sevilla FC 0 - 2 Club Atlético de Madrid": 0.095,
    "Sevilla FC 1 - 1 Club Atlético de Madrid": 0.135,
-   "Sevilla FC 2 - 0 Club Atlético de Madrid": 0.0315,
-   "Sevilla FC 0 - 3 Club Atlético de Madrid": 0.046,
+   "Sevilla FC 2 - 0 Club Atlético de Madrid": 0.032,
+   "Sevilla FC 0 - 3 Club Atlético de Madrid": 0.0445,
    "Sevilla FC 1 - 2 Club Atlético de Madrid": 0.095,
-   "Sevilla FC 2 - 1 Club Atlético de Madrid": 0.055,
-   "Sevilla FC 3 - 0 Club Atlético de Madrid": 0.0105,
-   "Sevilla FC 1 - 3 Club Atlético de Madrid": 0.05,
+   "Sevilla FC 2 - 1 Club Atlético de Madrid": 0.065,
+   "Sevilla FC 3 - 0 Club Atlético de Madrid": 0.0095,
+   "Sevilla FC 1 - 3 Club Atlético de Madrid": 0.049,
    "Sevilla FC 2 - 2 Club Atlético de Madrid": 0.055,
    "Sevilla FC 3 - 1 Club Atlético de Madrid": 0.018,
-   "Sevilla FC 2 - 3 Club Atlético de Madrid": 0.0265,
-   "Sevilla FC 3 - 2 Club Atlético de Madrid": 0.0155,
+   "Sevilla FC 2 - 3 Club Atlético de Madrid": 0.026,
+   "Sevilla FC 3 - 2 Club Atlético de Madrid": 0.016,
    "Sevilla FC 3 - 3 Club Atlético de Madrid": 0.009,
-   "Any Other Score": 0.09
+   "Any Other Score": 0.085
   },
   "league": "LA-LIGA",
   "sport": "Fußball",
-  "totalUsd": 25733,
+  "totalUsd": 46321,
   "whales": [
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Sevilla FC 2 - 1 Club Atlético de Madrid",
+    "usd": 517,
+    "avgPrice": 0.0603
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Any Other Score",
+    "usd": 162,
+    "avgPrice": 0.0899
+   },
+   {
+    "wallet": "0x3ac26fbc537af4c2e4f023d4f3ffa06366e4f949",
+    "side": "Sevilla FC 2 - 0 Club Atlético de Madrid",
+    "usd": 141,
+    "avgPrice": 0.0339
+   },
    {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
     "side": "Sevilla FC 0 - 2 Club Atlético de Madrid",
     "usd": 121
-   },
-   {
-    "wallet": "0xfe9455e2cad5257b26547af62cbbfd75c8968a3d",
-    "side": "Sevilla FC 0 - 1 Club Atlético de Madrid",
-    "usd": 115,
-    "avgPrice": 0.0588
-   },
-   {
-    "wallet": "0x140284c868108be70fc65fe92d71899bcc804853",
-    "side": "Sevilla FC 0 - 3 Club Atlético de Madrid",
-    "usd": 100,
-    "avgPrice": 0.046
-   },
-   {
-    "wallet": "0x54f017c3ab1c9dfd169e62bb5e99d147ffa57725",
-    "side": "Sevilla FC 1 - 1 Club Atlético de Madrid",
-    "usd": 96,
-    "avgPrice": 0.1399
    }
   ],
-  "hoursToKickoff": 0.76,
-  "capturedAt": "2026-08-29T18:46:44.180919+00:00",
+  "hoursToKickoff": 0.26,
+  "capturedAt": "2026-08-29T19:17:28.646420+00:00",
   "tokens": {
    "Sevilla FC 0 - 0 Club Atlético de Madrid": "31996178864796149237625753484574580282032152004417741959171413074308944201153",
    "Sevilla FC 0 - 1 Club Atlético de Madrid": "111317652710801016086623469002796764676216080497070623283972917463668160470681",
@@ -110865,8 +111010,8 @@
  },
  "mlb-sd-tb-2026-08-29": {
   "shares": {
-   "Over": 67959.17888655003,
-   "Under": 61486.87613544999
+   "Over": 67962.15058395003,
+   "Under": 61489.56481404999
   },
   "prices": {
    "Over": 0.525,
@@ -110874,12 +111019,12 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 129557,
+  "totalUsd": 129562,
   "whales": [
    {
     "wallet": "0x3dfb153c197d4c19d3b31c1ecd2c7b6860eeabaf",
     "side": "Under",
-    "usd": 59354,
+    "usd": 59357,
     "avgPrice": 0.4946
    },
    {
@@ -110901,8 +111046,8 @@
     "avgPrice": 0.5164
    }
   ],
-  "hoursToKickoff": 1.42,
-  "capturedAt": "2026-08-29T18:46:44.180919+00:00",
+  "hoursToKickoff": 0.93,
+  "capturedAt": "2026-08-29T19:17:28.646420+00:00",
   "tokens": {
    "Over": "104317115926532286607022902452553369391665720985551957599557641641295114831868",
    "Under": "98123364667690971874264525323322710463155232900957961206210014169007037235054"
@@ -110910,8 +111055,8 @@
  },
  "atp-fery-buse-2026-08-29": {
   "shares": {
-   "Arthur Fery": 171035.326684775,
-   "Ignacio Buse": 142790.96363577514
+   "Arthur Fery": 171286.01631941998,
+   "Ignacio Buse": 143000.25174344017
   },
   "prices": {
    "Arthur Fery": 0.545,
@@ -110919,7 +111064,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 142395,
+  "totalUsd": 344303,
   "whales": [
    {
     "wallet": "0xdb859a551fcf56e49416160911476bea7307152f",
@@ -110946,17 +111091,102 @@
     "avgPrice": 0.5399
    }
   ],
-  "hoursToKickoff": 1.26,
-  "capturedAt": "2026-08-29T18:46:44.180919+00:00",
+  "hoursToKickoff": 0.77,
+  "capturedAt": "2026-08-29T19:17:28.646420+00:00",
   "tokens": {
    "Arthur Fery": "28684084971876522978566580308030262647057258483695867055739432443228164134825",
    "Ignacio Buse": "39092496359869685477601058444796782015652614058267551923222236958495875805617"
-  }
+  },
+  "book": {
+   "side": "Arthur Fery",
+   "bid": 0.54,
+   "ask": 0.55,
+   "spreadC": 1.0,
+   "spreadPct": 1.82,
+   "bids": [
+    [
+     0.54,
+     52616
+    ],
+    [
+     0.53,
+     33307
+    ],
+    [
+     0.52,
+     13679
+    ],
+    [
+     0.51,
+     7857
+    ],
+    [
+     0.5,
+     5165
+    ],
+    [
+     0.49,
+     3630
+    ]
+   ],
+   "asks": [
+    [
+     0.55,
+     15973
+    ],
+    [
+     0.56,
+     63037
+    ],
+    [
+     0.57,
+     39434
+    ],
+    [
+     0.58,
+     18802
+    ],
+    [
+     0.59,
+     3493
+    ],
+    [
+     0.6,
+     3471
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xcbef04dead0a5d75b28d2bb4ef149a222da10c11",
+    "action": "BUY",
+    "side": "Ignacio Buse",
+    "price": 0.46,
+    "usd": 300,
+    "ts": 1788030750
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Ignacio Buse",
+    "price": 0.46,
+    "usd": 690,
+    "ts": 1788030664
+   },
+   {
+    "wallet": "0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
+    "action": "BUY",
+    "side": "Ignacio Buse",
+    "price": 0.45,
+    "usd": 31856,
+    "ts": 1788028869
+   }
+  ]
  },
  "mlb-kc-cle-2026-08-29": {
   "shares": {
-   "Over": 45359.640463409996,
-   "Under": 37869.05763458998
+   "Over": 45373.1943747,
+   "Under": 37880.37328529998
   },
   "prices": {
    "Over": 0.545,
@@ -110964,12 +111194,12 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 86008,
+  "totalUsd": 86250,
   "whales": [
    {
     "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
     "side": "Over",
-    "usd": 43527,
+    "usd": 43541,
     "avgPrice": 0.5399
    },
    {
@@ -110991,8 +111221,8 @@
     "avgPrice": 0.5299
    }
   ],
-  "hoursToKickoff": 1.42,
-  "capturedAt": "2026-08-29T18:46:44.180919+00:00",
+  "hoursToKickoff": 0.93,
+  "capturedAt": "2026-08-29T19:17:28.646420+00:00",
   "tokens": {
    "Over": "32733266803223051852689658230603493408011408495159166621638732866588841044517",
    "Under": "65564536409425150886563528422711216749936899520587655063419152030887815964597"
@@ -111000,8 +111230,8 @@
  },
  "mlb-hou-nym-2026-08-29": {
   "shares": {
-   "Over": 38890.288890255,
-   "Under": 32468.037218434994
+   "Over": 38893.013890255,
+   "Under": 32470.312218434992
   },
   "prices": {
    "Over": 0.545,
@@ -111009,12 +111239,12 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 61822,
+  "totalUsd": 71500,
   "whales": [
    {
     "wallet": "0x3dfb153c197d4c19d3b31c1ecd2c7b6860eeabaf",
     "side": "Over",
-    "usd": 38036,
+    "usd": 38039,
     "avgPrice": 0.5399
    },
    {
@@ -111035,8 +111265,8 @@
     "avgPrice": 0.46
    }
   ],
-  "hoursToKickoff": 1.42,
-  "capturedAt": "2026-08-29T18:46:44.180919+00:00",
+  "hoursToKickoff": 0.93,
+  "capturedAt": "2026-08-29T19:17:28.646420+00:00",
   "tokens": {
    "Over": "73834858225843115574242263829912371154173414809300849270339565489453645732220",
    "Under": "27674421103794135640800993806617095698699354932234636459087211546967850546057"
@@ -111079,8 +111309,8 @@
     "avgPrice": 0.48
    }
   ],
-  "hoursToKickoff": 1.34,
-  "capturedAt": "2026-08-29T18:46:44.180919+00:00",
+  "hoursToKickoff": 0.84,
+  "capturedAt": "2026-08-29T19:17:28.646420+00:00",
   "tokens": {
    "Over": "51301115978748362147026673535688874500198562001203921457085011069665613933131",
    "Under": "80808975556422331992771870718245919602049535793438466896688916068422139053696"
@@ -111088,8 +111318,8 @@
  },
  "mlb-col-atl-2026-08-29": {
   "shares": {
-   "Over": 185700.88627494508,
-   "Under": 161403.44269839005
+   "Over": 185719.41772425006,
+   "Under": 161419.54950603005
   },
   "prices": {
    "Over": 0.535,
@@ -111097,7 +111327,7 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 351544,
+  "totalUsd": 352604,
   "whales": [
    {
     "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
@@ -111120,12 +111350,12 @@
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "Under",
-    "usd": 53500,
+    "usd": 53514,
     "avgPrice": 0.46
    }
   ],
-  "hoursToKickoff": 1.42,
-  "capturedAt": "2026-08-29T18:46:44.180919+00:00",
+  "hoursToKickoff": 0.93,
+  "capturedAt": "2026-08-29T19:17:28.646420+00:00",
   "tokens": {
    "Over": "54084639608287435180951496136785172260018471762515466788940340780566757546182",
    "Under": "13969248150882784375889035837324219036317358628452788340284896846680448892684"
@@ -111139,53 +111369,53 @@
    "bids": [
     [
      0.53,
-     359
+     42
     ],
     [
      0.52,
-     18741
+     20173
     ],
     [
      0.51,
-     48855
+     40957
     ],
     [
      0.5,
-     49975
+     42479
     ],
     [
      0.49,
-     12210
+     22160
     ],
     [
      0.48,
-     1853
+     2603
     ]
    ],
    "asks": [
     [
      0.54,
-     185137
+     183603
     ],
     [
      0.55,
-     111214
+     119787
     ],
     [
      0.56,
-     16579
+     15837
     ],
     [
      0.57,
-     10910
+     10
     ],
     [
      0.58,
-     1605
+     605
     ],
     [
      0.59,
-     1896
+     2646
     ]
    ]
   },
@@ -111307,7 +111537,7 @@
  "mls-sea-chi-2026-08-29": {
   "shares": {
    "Seattle Sounders FC": 77.53301023499998,
-   "Draw (Seattle Sounders FC vs. Chicago Fire FC)": 14.722218804999999,
+   "Draw (Seattle Sounders FC vs. Chicago Fire FC)": 17.662218805,
    "Chicago Fire FC": 5081.942695335001
   },
   "prices": {
@@ -111317,7 +111547,7 @@
   },
   "league": "MLS",
   "sport": "Fußball",
-  "totalUsd": 15742,
+  "totalUsd": 16981,
   "whales": [
    {
     "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
@@ -111342,8 +111572,8 @@
     "avgPrice": 0.42
    }
   ],
-  "hoursToKickoff": 1.76,
-  "capturedAt": "2026-08-29T18:46:44.180919+00:00",
+  "hoursToKickoff": 1.26,
+  "capturedAt": "2026-08-29T19:17:28.646420+00:00",
   "tokens": {
    "Seattle Sounders FC": "37061969827526727390550528750019356531565713056723161656762194347001230517447",
    "Draw (Seattle Sounders FC vs. Chicago Fire FC)": "82153476900337906309656325687000067198468864953821184361423412375402870611996",
@@ -111632,8 +111862,8 @@
  },
  "cs2-shin-isg-2026-08-29": {
   "shares": {
-   "ShindeN": 12554.958524640002,
-   "Isurus": 4526.47446633
+   "ShindeN": 12565.847412195004,
+   "Isurus": 4530.39911633
   },
   "prices": {
    "ShindeN": 0.735,
@@ -111641,7 +111871,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 18968,
+  "totalUsd": 18983,
   "whales": [
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
@@ -111667,8 +111897,8 @@
     "avgPrice": 0.73
    }
   ],
-  "hoursToKickoff": 2.26,
-  "capturedAt": "2026-08-29T18:46:44.180919+00:00",
+  "hoursToKickoff": 1.76,
+  "capturedAt": "2026-08-29T19:17:28.646420+00:00",
   "tokens": {
    "ShindeN": "29629870722741322853373061692702050228156411971343241162672528437507727826197",
    "Isurus": "72254800204667822874970591410812091824124890591681003564641494725779372959177"
@@ -111676,8 +111906,8 @@
  },
  "val-fur-g21-2026-08-29": {
   "shares": {
-   "FURIA Esports": 3952.453289865,
-   "G2 Esports": 11547.365233970004
+   "FURIA Esports": 4276.270139864996,
+   "G2 Esports": 12493.418383970002
   },
   "prices": {
    "FURIA Esports": 0.255,
@@ -111685,7 +111915,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 17372,
+  "totalUsd": 19025,
   "whales": [
    {
     "wallet": "0x17cd48439fad16167a032954c1c3691966327423",
@@ -111700,20 +111930,20 @@
     "avgPrice": 0.75
    },
    {
+    "wallet": "0x03f4bd4bd14e0dffa6f012d023387e1a327f7e44",
+    "side": "G2 Esports",
+    "usd": 1851,
+    "avgPrice": 0.74
+   },
+   {
     "wallet": "0x4980930da4ad1194d4f0fd5e29f17b70a42e5709",
     "side": "FURIA Esports",
     "usd": 1530,
     "avgPrice": 0.2675
-   },
-   {
-    "wallet": "0x59f4a4b19fcaa99a4df2e7cdda4919aa5afbc1f1",
-    "side": "FURIA Esports",
-    "usd": 1112,
-    "avgPrice": 0.25
    }
   ],
-  "hoursToKickoff": 2.26,
-  "capturedAt": "2026-08-29T18:46:44.180919+00:00",
+  "hoursToKickoff": 1.76,
+  "capturedAt": "2026-08-29T19:17:28.646420+00:00",
   "tokens": {
    "FURIA Esports": "85167798890699667103708698058045236568119179412841766457930984978102836304003",
    "G2 Esports": "101545919340757355107847564596671152716716643536153560418229094261030409943956"
@@ -111978,9 +112208,9 @@
  },
  "bra-cam-vit-2026-08-29": {
   "shares": {
-   "CA Mineiro": 17337.280530655,
-   "Draw (CA Mineiro vs. EC Vitória)": 43.967708675000004,
-   "EC Vitória": 56.823967395
+   "CA Mineiro": 17356.836761225,
+   "Draw (CA Mineiro vs. EC Vitória)": 47.40795867500001,
+   "EC Vitória": 71.058967395
   },
   "prices": {
    "CA Mineiro": 0.535,
@@ -111989,7 +112219,7 @@
   },
   "league": "BRAZIL-SERIE-A",
   "sport": "Fußball",
-  "totalUsd": 33657,
+  "totalUsd": 33669,
   "whales": [
    {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
@@ -112015,12 +112245,146 @@
     "avgPrice": 0.52
    }
   ],
-  "hoursToKickoff": 2.76,
-  "capturedAt": "2026-08-29T18:46:44.180919+00:00",
+  "hoursToKickoff": 2.26,
+  "capturedAt": "2026-08-29T19:17:28.646420+00:00",
   "tokens": {
    "CA Mineiro": "22922672609897399629547092741274034596305469574107591855439905804728847628238",
    "Draw (CA Mineiro vs. EC Vitória)": "110961440216403789700765714613260456875086482330243194686525644084674047215721",
    "EC Vitória": "91621567134299153700345243212574859273959031083901757921135397482238956928120"
+  }
+ },
+ "nfl-chi-ten-2026-08-29": {
+  "shares": {
+   "Bears": 15631.613357490003,
+   "Titans": 16598.573682400005
+  },
+  "prices": {
+   "Bears": 0.485,
+   "Titans": 0.515
+  },
+  "league": "NFL",
+  "sport": "US-Sport",
+  "totalUsd": 36780,
+  "whales": [
+   {
+    "wallet": "0xa080dadd87036ad01dbf5e9c254b0c3dbdba234f",
+    "side": "Titans",
+    "usd": 11859,
+    "avgPrice": 0.5587
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Bears",
+    "usd": 10928,
+    "avgPrice": 0.4457
+   },
+   {
+    "wallet": "0x3e04fbc51adb75418129f6ce2091ae633070564d",
+    "side": "Bears",
+    "usd": 2585,
+    "avgPrice": 0.4367
+   },
+   {
+    "wallet": "0xc3c3b3ef304ddbea39fa2246e683a71da5d0eec8",
+    "side": "Titans",
+    "usd": 2060
+   }
+  ],
+  "hoursToKickoff": 2.76,
+  "capturedAt": "2026-08-29T19:17:28.646420+00:00",
+  "tokens": {
+   "Bears": "99649113931594624965427167850929573561233558173441075029537721620044913480723",
+   "Titans": "80569464326212368394221988559147722580843013201518939014519400213619042559780"
+  }
+ },
+ "boxing-itauma-hrgovi-2026-08-29": {
+  "shares": {
+   "Moises Itauma": 23743.26240048,
+   "Filip Hrgovic": 4522.480225599999
+  },
+  "prices": {
+   "Moises Itauma": 0.84,
+   "Filip Hrgovic": 0.16
+  },
+  "league": "BOXING",
+  "sport": "Kampfsport",
+  "totalUsd": 36296,
+  "whales": [
+   {
+    "wallet": "0xfdff2d6e583b43f9882ec1984ca5bd119d744adc",
+    "side": "Moises Itauma",
+    "usd": 8389,
+    "avgPrice": 0.8858
+   },
+   {
+    "wallet": "0x83720820a8aa6c3f20ad71850e7a1a17d16c5223",
+    "side": "Moises Itauma",
+    "usd": 6830,
+    "avgPrice": 0.83
+   },
+   {
+    "wallet": "0x746295855be6f49fe2da2accd69ea34b3cf23ac3",
+    "side": "Moises Itauma",
+    "usd": 2622,
+    "avgPrice": 0.8399
+   },
+   {
+    "wallet": "0x6dd6314d1670f9f1ccccbd6746b0bf2f2fa0f5f4",
+    "side": "Moises Itauma",
+    "usd": 2099,
+    "avgPrice": 0.8323
+   }
+  ],
+  "hoursToKickoff": 2.74,
+  "capturedAt": "2026-08-29T19:17:28.646420+00:00",
+  "tokens": {
+   "Moises Itauma": "43095901265750789975790574217751938606123665552647743995142663382030552706607",
+   "Filip Hrgovic": "115261283818775154565925277710718574032265753672517019058611289549593610132898"
+  }
+ },
+ "lol-tl2-sr-2026-08-29": {
+  "shares": {
+   "Team Liquid": 7261.9103977199975,
+   "Shopify Rebellion": 943.6380780750001
+  },
+  "prices": {
+   "Team Liquid": 0.885,
+   "Shopify Rebellion": 0.115
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 7937,
+  "whales": [
+   {
+    "wallet": "0xe015b5a2a299167be835a2fd1e86f09c49e06ffd",
+    "side": "Team Liquid",
+    "usd": 5852,
+    "avgPrice": 0.88
+   },
+   {
+    "wallet": "0xaf21b89714840bfbb74f401bc0007710d065d34a",
+    "side": "Team Liquid",
+    "usd": 531,
+    "avgPrice": 0.88
+   },
+   {
+    "wallet": "0xfd144099a983b0cfdb88d0b89e0ca049fae22267",
+    "side": "Shopify Rebellion",
+    "usd": 383,
+    "avgPrice": 0.1199
+   },
+   {
+    "wallet": "0xda596a33c3da5d6497a8bcc67615274c8be36630",
+    "side": "Team Liquid",
+    "usd": 177,
+    "avgPrice": 0.89
+   }
+  ],
+  "hoursToKickoff": 0.76,
+  "capturedAt": "2026-08-29T19:17:28.646420+00:00",
+  "tokens": {
+   "Team Liquid": "44839260514589066323766884688538095954933103794180133453114860178889883772466",
+   "Shopify Rebellion": "43449967641164683309384272348871667598201069288989163910913034427959810342799"
   }
  }
 }
