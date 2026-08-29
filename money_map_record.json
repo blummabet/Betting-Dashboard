@@ -1,13 +1,13 @@
 {
-"generatedAt": "2026-08-29T20:33:28.948882+00:00",
+"generatedAt": "2026-08-29T20:48:30.225330+00:00",
 "byVerdict": {
 "konsens": {
-"n": 584,
-"wins": 474,
-"hitRate": 0.8116,
-"polyN": 548,
-"polyWins": 430,
-"polyHitRate": 0.7847,
+"n": 588,
+"wins": 477,
+"hitRate": 0.8112,
+"polyN": 551,
+"polyWins": 431,
+"polyHitRate": 0.7822,
 "pinnN": 45,
 "pinnHitRate": 0.7333
 },
@@ -22,14 +22,14 @@
 "pinnHitRate": 0.5545
 },
 "teil": {
-"n": 5,
+"n": 6,
 "wins": 1,
-"hitRate": 0.2,
-"polyN": 4,
+"hitRate": 0.1667,
+"polyN": 5,
 "polyWins": 1,
-"polyHitRate": 0.25,
-"pinnN": 5,
-"pinnHitRate": 0.2
+"polyHitRate": 0.2,
+"pinnN": 6,
+"pinnHitRate": 0.1667
 }
 },
 "byLeague": {
@@ -68,6 +68,11 @@
 "wins": 17,
 "hitRate": 0.85
 },
+"Argentinian Primera Division": {
+"n": 19,
+"wins": 9,
+"hitRate": 0.4737
+},
 "Mexican Liga MX": {
 "n": 19,
 "wins": 13,
@@ -77,11 +82,6 @@
 "n": 19,
 "wins": 15,
 "hitRate": 0.7895
-},
-"Argentinian Primera Division": {
-"n": 18,
-"wins": 9,
-"hitRate": 0.5
 },
 "Brazilian Serie A": {
 "n": 18,
@@ -118,6 +118,11 @@
 "wins": 10,
 "hitRate": 0.6667
 },
+"Italian Serie A": {
+"n": 15,
+"wins": 12,
+"hitRate": 0.8
+},
 "Portuguese Primeira Liga": {
 "n": 15,
 "wins": 12,
@@ -133,11 +138,6 @@
 "wins": 12,
 "hitRate": 0.8571
 },
-"Italian Serie A": {
-"n": 14,
-"wins": 11,
-"hitRate": 0.7857
-},
 "South Korean K1 League": {
 "n": 14,
 "wins": 10,
@@ -152,6 +152,11 @@
 "n": 13,
 "wins": 9,
 "hitRate": 0.6923
+},
+"French Ligue 1": {
+"n": 13,
+"wins": 6,
+"hitRate": 0.4615
 },
 "Chinese Super League": {
 "n": 12,
@@ -197,11 +202,6 @@
 "n": 10,
 "wins": 8,
 "hitRate": 0.8
-},
-"French Ligue 1": {
-"n": 10,
-"wins": 4,
-"hitRate": 0.4
 },
 "Uzbekistan Super League": {
 "n": 10,
@@ -526,13 +526,13 @@
 },
 "byStrength": {
 "strong": {
-"n": 459,
-"wins": 372,
-"hitRate": 0.8105
+"n": 460,
+"wins": 373,
+"hitRate": 0.8109
 },
 "weak": {
-"n": 293,
-"wins": 147,
+"n": 297,
+"wins": 149,
 "hitRate": 0.5017
 }
 },
@@ -545,6 +545,101 @@
 "polyRate": 0.3046
 },
 "recent": [
+{
+"matchId": "35965555",
+"home": "Juventus",
+"away": "Parma",
+"league": "Italian Serie A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Juventus",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-08-29T18:45:00Z",
+"settledAt": "2026-08-29T20:48:30.055533+00:00"
+},
+{
+"matchId": "35974971",
+"home": "Lorient",
+"away": "ESTAC Troyes",
+"league": "French Ligue 1",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "ESTAC Troyes",
+"polySide": "home",
+"winner": "away",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-08-29T18:45:00Z",
+"settledAt": "2026-08-29T20:48:30.055533+00:00"
+},
+{
+"matchId": "35974841",
+"home": "Auxerre",
+"away": "Angers",
+"league": "French Ligue 1",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Angers",
+"polySide": "home",
+"winner": "away",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+3
+],
+"kickoff": "2026-08-29T18:45:00Z",
+"settledAt": "2026-08-29T20:48:30.055533+00:00"
+},
+{
+"matchId": "35949494",
+"home": "Deportivo Riestra",
+"away": "Velez Sarsfield",
+"league": "Argentinian Primera Division",
+"verdict": "teil",
+"moneySide": "home",
+"moneyName": "Deportivo Riestra",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-29T17:45:00Z",
+"settledAt": "2026-08-29T20:48:30.055533+00:00"
+},
+{
+"matchId": "35975250",
+"home": "Brest",
+"away": "Toulouse",
+"league": "French Ligue 1",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Toulouse",
+"polySide": null,
+"winner": "draw",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-08-29T18:45:00Z",
+"settledAt": "2026-08-29T20:48:30.055533+00:00"
+},
 {
 "matchId": "35976838",
 "home": "Galatasaray",
@@ -1209,107 +1304,12 @@
 ],
 "kickoff": "2026-08-29T13:00:00Z",
 "settledAt": "2026-08-29T16:03:06.624592+00:00"
-},
-{
-"matchId": "35970844",
-"home": "Bolton",
-"away": "Lincoln",
-"league": "English Sky Bet Championship",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Lincoln",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-08-29T14:00:00Z",
-"settledAt": "2026-08-29T16:03:06.624592+00:00"
-},
-{
-"matchId": "35970639",
-"home": "Plymouth",
-"away": "Bradford",
-"league": "English Sky Bet League 1",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Plymouth",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-08-29T14:00:00Z",
-"settledAt": "2026-08-29T16:03:06.624592+00:00"
-},
-{
-"matchId": "35785249",
-"home": "Union Berlin",
-"away": "Eintracht Frankfurt",
-"league": "German Bundesliga",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Eintracht Frankfurt",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-3,
-3
-],
-"kickoff": "2026-08-29T13:30:00Z",
-"settledAt": "2026-08-29T15:33:02.188738+00:00"
-},
-{
-"matchId": "35785219",
-"home": "FC Koln",
-"away": "Hoffenheim",
-"league": "German Bundesliga",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Hoffenheim",
-"polySide": "away",
-"winner": "home",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-3,
-2
-],
-"kickoff": "2026-08-29T13:30:00Z",
-"settledAt": "2026-08-29T15:33:02.188738+00:00"
-},
-{
-"matchId": "35974069",
-"home": "Henan Songshan Longmen",
-"away": "Chongqing Tonglianglong",
-"league": "Chinese Super League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Henan Songshan Longmen",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-08-29T12:00:00Z",
-"settledAt": "2026-08-29T15:02:56.727096+00:00"
 }
 ],
 "global": {
-"n": 785,
-"wins": 537,
-"hitRate": 0.6841
+"n": 790,
+"wins": 540,
+"hitRate": 0.6835
 },
-"pending": 19
+"pending": 14
 }
