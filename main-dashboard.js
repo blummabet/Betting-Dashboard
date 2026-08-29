@@ -546,11 +546,21 @@
     return all;
   }
   function bestWhales() { return allWhales().slice(0, 5); }
+  // 29.08.2026 (Lucas-Checkup, „B"): Betfair-Steam wirft seit 13.08. alles ueber 25pp als
+  // Opening-/Platzhalter-Artefakt raus, die Pinnacle-Kachel hatte diesen Deckel nie. Deshalb
+  // standen dort +48,9pp auf @6.05 und +44,3pp auf @4.55 ganz oben — bei @6.05 sind 16,5%
+  // implizit, ein +48,9pp-Move kaeme also aus minus 32%. Unmoeglich. Schlimmer als die zwei
+  // falschen Zeilen war die Skalierung: shMax richtet sich nach dem groessten Wert, also
+  // schrumpften die echten 12-14pp-Moves darunter zu Stummeln. Median ueber alle 273 Picks: 3,9pp.
+  var SHARP_MAX_PP = 25;
   function allSharp() {
     var rows = [];
     allFixtures().forEach(function (f) {
       (f.picks || []).forEach(function (p) {
-        if (p.source === 'steam' && p.steamMovePP != null) rows.push({ f: f, p: p, mv: Math.abs(+p.steamMovePP || 0) });
+        if (p.source !== 'steam' || p.steamMovePP == null) return;
+        var mv = Math.abs(+p.steamMovePP || 0);
+        if (mv > SHARP_MAX_PP) return;
+        rows.push({ f: f, p: p, mv: mv });
       });
     });
     rows.sort(function (a, b) { return b.mv - a.mv; });
@@ -768,8 +778,15 @@
     var mp = Math.round((+r.moneyPct || 0) * 100), vol = +r.vol || 0, sh = r.sharp, inf = _mdPlayInflow(r);
     var c1 = _mdSigCell('Geld', mp + '%', A.money, mp, vol ? usd(vol) + ' Vol' : '—');
     var c2 = (sh && sh.n)
-      ? _mdSigCell('Wallets', Math.round(sh.hit * 100) + '%', A.blue, Math.round(sh.hit * 100), sh.wins + ' von ' + sh.n)
-      : _mdSigMuted('Wallets', 'keine');
+      // 29.08.2026 (Lucas-Checkup): stand als „Wallets 57% · 152 von 266" da und las sich als
+      // „152 von 266 Wallets stehen auf dieser Seite". Ist es nicht: sh.n/sh.wins sind die
+      // LEBENSLANGE Bilanz der scharfen Wallets auf dieser Seite (Summe ihrer abgerechneten
+      // Plays). Verraten hat es sich selbst — zwei voellig verschiedene Japan-Spiele zeigten
+      // exakt „152 von 266", weil dieselbe Wallet-Kohorte dahinter stand. Die Zahl der Wallets
+      // ist sh.count und stand nirgends. Jetzt beides, richtig benannt.
+      ? _mdSigCell('Wallet-Bilanz', Math.round(sh.hit * 100) + '%', A.blue, Math.round(sh.hit * 100),
+          (sh.count ? sh.count + (sh.count === 1 ? ' Wallet' : ' Wallets') + ' · ' : '') + sh.wins + '/' + sh.n + ' lifetime')
+      : _mdSigMuted('Wallet-Bilanz', 'keine');
     var c3 = (inf > 0)
       ? _mdSigCell('Zufluss', '+' + usd(inf), A.flow, maxInf ? (inf / maxInf * 100) : 0, 'seit Lauf')
       : _mdSigMuted('Zufluss', '—');
@@ -1023,7 +1040,7 @@
     var c = bestCards();
     var cardsBody = c.length ? c.map(function (x) {
       var f = x.f, p2 = x.p, conv = +x.conv || 0;
-      var sub = esc(short(p2.market)) + (fxLeague(f) ? ' · ' + esc(String(fxLeague(f)).slice(0, 20)) : '') + (p2.edgePP != null ? ' · +' + Math.round(+p2.edgePP) + 'pp' : '');
+      var sub = esc(short(p2.market)) + (fxLeague(f) ? ' · ' + esc(String(fxLeague(f)).slice(0, 20)) : '') + (p2.edgePP != null ? ' · ' + (Math.round(+p2.edgePP) > 0 ? '+' : '') + Math.round(+p2.edgePP) + 'pp' : '');
       return conv ? _mdRingRow(teamsOf(f), sub, conv, _mdConvCol(conv))
         : rowEl(teamsOf(f), (p2.odds != null ? '@' + (+p2.odds).toFixed(2) : ''), A.good, sub, '');
     }).join('') : empty('Keine BET-Cards gerade.');
@@ -1389,7 +1406,14 @@
       if (od != null && (+od < 1.30 || +od > 15)) return;      // Lock/Longshot raus (wie _mdBfFlowBody)
       if (x.dir === 'out') return;                             // 16.08.2026 (Lucas): driftet = kein Back-Rückhalt → nicht als Geld-Top-Wette (bleibt im Frisches-Geld-Radar, dort als „driftet" markiert)
       var ex = exoticLg(x.league, false);
-      put({ id: 'bf' + mid(x.home, x.away, x.matchId), k: now, live: !!_mdBfLiveById(x.matchId),
+      // 29.08.2026 (Lucas-Checkup): hier stand `k: now`, weil der Zufluss-Feed keinen Anpfiff
+      // mitlieferte. Folge: JEDE Betfair-Geld-Zeile zeigte „⏱ 0m" — Liverpool–Forest stand als
+      // „Anpfiff jetzt" in der Liste, waehrend der Poly-Block daneben korrekt „in 2h" sagte.
+      // Der Anpfiff kommt jetzt aus dem Feed (build_betfair_overview.flow_list); fehlt er,
+      // bleibt die Uhr-Chip weg statt eine Zeit zu erfinden.
+      put({ id: 'bf' + mid(x.home, x.away, x.matchId),
+        k: x.kickoff ? Date.parse(String(x.kickoff).replace('Z', '+00:00')) : NaN,
+        live: !!_mdBfLiveById(x.matchId),
         exotic: ex, src: 'bfflow', odd: od, deltaEur: dv, nowEur: +x.nowEur || 0, sideName: x.sideName, dir: x.dir,
         match: esc(team(x.home)) + vsp + esc(team(x.away)), pick: esc(short(x.sideName || '') || '—'),
         score: 46 + Math.min(dv / 3000, 20), badge: '💷 Geld', bc: A.bf });
@@ -1449,8 +1473,12 @@
       return '<div class="md-sig">' + _mdSigCell('Conviction', cv + '/10', A.good, cv * 10, 'Engine-Pick · Verdikt-Gate') + '</div>';
     };
     var body = items.map(function (x, i) {
-      var min = Math.max(0, Math.round((x.k - now) / 60000));
-      var ko = x.live ? 'live' : (min < 60 ? min + 'm' : Math.floor(min / 60) + 'h' + (min % 60 ? ' ' + (min % 60) + 'm' : ''));
+      // Kein Anpfiff bekannt -> gar keine Uhr. Vorher wurde aus NaN/`now` ein „0m", also eine
+      // erfundene Angabe an der Stelle, an der man am ehesten hinschaut.
+      var min = isFinite(x.k) ? Math.max(0, Math.round((x.k - now) / 60000)) : null;
+      var ko = x.live ? 'live'
+        : (min == null ? null
+          : (min < 60 ? min + 'm' : Math.floor(min / 60) + 'h' + (min % 60 ? ' ' + (min % 60) + 'm' : '')));
       var live = x.live ? '<span class="md-badge" style="background:rgba(229,83,75,.16);color:' + A.red + '">● LIVE</span>' : '';
       var chip = x.exotic ? '<span class="md-badge" style="background:rgba(201,133,0,.14);color:' + A.gold + '" title="dünner/exotischer Markt — Signal weniger verlässlich">dünn</span>' : '';
       var badge = '<span class="md-badge" style="background:rgba(120,130,150,.14);color:' + x.bc + '">' + x.badge + '</span>';
@@ -1461,7 +1489,7 @@
       return '<div class="md-jz-row md-jz-row3">' +
         '<div class="md-jz-l1"><span class="md-jz-n">' + (i + 1) + '</span>' +
         '<span class="md-jz-nm">' + x.match + '</span>' + badge + live + chip +
-        '<span class="md-jz-ko">⏱ ' + ko + '</span></div>' +
+        (ko ? '<span class="md-jz-ko">⏱ ' + ko + '</span>' : '') + '</div>' +
         pickLine + sigOf(x) + '</div>';
     }).join('');
     return '<section id="mdJetztBox" class="md-jetzt md-rise"><div class="md-jz-h"><span style="font-size:16px">🎯</span>' +

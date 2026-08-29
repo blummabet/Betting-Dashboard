@@ -17,6 +17,8 @@ from datetime import datetime, timezone, timedelta
 BASE = Path(__file__).resolve().parent
 LIVE_FILE   = BASE / "poly_money_broad_live.json"
 CLOSE_FILE  = BASE / "poly_money_broad_close.json"
+import sharp_gate as SG   # 29.08.2026: DIE Sharp-Definition, geteilt mit Whale-Watch + Frontend
+
 WTRACK_FILE = BASE / "poly_wallet_track.json"
 SEEN_FILE   = BASE / "poly_live_watch_seen.json"
 
@@ -27,9 +29,10 @@ LIVE_MIN_PRICE = float(os.environ.get("POLY_LIVE_MIN_PRICE") or 0.10)   # <= tot
 LIVE_MAX_POS_FRAC = float(os.environ.get("POLY_LIVE_MAX_POS_FRAC") or 0.5)   # 15.08.2026 (Lucas): eine EINZELNE Position > 50% des ganzen Spiel-Volumens ist kein frischer Einstieg, sondern Positionswert/Artefakt -> raus ($136K in $150K-Spiel = 91%)
 LIVE_CONTEST_MIN_USD = float(os.environ.get("POLY_LIVE_CONTEST_MIN_USD") or 25000)  # 12.08.2026 (Lucas): ab so viel je Seite = umkaempft -> gar kein Live-Signal (Gegenseiten-Krieg)
 SEEN_TTL_H   = float(os.environ.get("POLY_LIVE_SEEN_TTL_H") or 12)   # gemeldete Wallet+Markt so lange nicht erneut
-# Sharp-Definition — identisch zum Frontend: genug Historie UND profitabel UND schlaegt die Linie UND
-# (klar ueber Muenzwurf ODER deutliche Kante).
-SHARP_MIN_N, SHARP_MIN_HIT, SHARP_CLEAR_HIT, SHARP_STRONG_CLV = 4, 0.5, 0.55, 1.0
+# 29.08.2026 (Lucas-Audit): hier stand eine HANDKOPIERTE Klammer der Frontend-Konstanten
+# (4, 0.5, 0.55, 1.0) mit dem Kommentar „identisch zum Frontend". Genau so entsteht Drift: aendert
+# das Frontend seine Schwelle, merkt es diese Zeile nie. Jetzt aus der einen Quelle.
+SHARP_MIN_N = SG.SHARP_MIN_N
 
 _ICON = {"esports": "\U0001f3ae", "tennis": "\U0001f3be", "cricket": "\U0001f3cf", "soccer": "⚽",
          "mls": "⚽", "ucl": "⚽", "epl": "⚽", "laliga": "⚽", "bundesliga": "⚽",
@@ -50,20 +53,21 @@ def _now():
 
 
 def _score(scores, wallet):
+    """29.08.2026: `pnl` bleibt None, wenn unbekannt. Vorher machte `float(e.get("pnl") or 0)`
+    aus „nie abgefragt" eine harte 0 — und weil das Gate P&L>0 verlangte, war jede Wallet ohne
+    P&L-Wert automatisch unscharf. Bei 13% P&L-Abdeckung entschied damit das Fetch-Budget."""
     e = (scores or {}).get(wallet)
     if not isinstance(e, dict) or not e.get("n"):
         return None
     n = e["n"]
+    pnl = e.get("pnl")
     return {"n": n, "avgClv": (e.get("clvSumPP") or 0) / n,
-            "hit": (e.get("wins") or 0) / n, "pnl": float(e.get("pnl") or 0)}
+            "hit": (e.get("wins") or 0) / n, "wins": e.get("wins") or 0,
+            "pnl": float(pnl) if isinstance(pnl, (int, float)) else None}
 
 
 def is_sharp(sc) -> bool:
-    if not sc:
-        return False
-    if not (sc["n"] >= SHARP_MIN_N and sc["hit"] >= SHARP_MIN_HIT and sc["avgClv"] >= 0 and sc["pnl"] > 0):
-        return False
-    return sc["hit"] >= SHARP_CLEAR_HIT or sc["avgClv"] >= SHARP_STRONG_CLV
+    return SG.is_sharp(sc)
 
 
 def _pregame_wallets(close, key):

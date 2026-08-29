@@ -42,8 +42,14 @@ const BROAD = {
 const TRACK = {
   updatedAt: new Date().toISOString(),
   scores: {
-    // bewiesen scharf: n10, 70% Treffer, +CLV, +$150K lifetime
-    '0xSHARP': { n: 10, clvSumPP: 20, wins: 7, usd: 40000, pnl: 150000 },
+    // 29.08.2026: n von 10 auf 60 gehoben. Nicht um einen Test gruen zu bekommen, sondern weil die
+    // Fixture sonst das Falsche behauptet: seit der Wallet-Neugewichtung ist eine Historie aus 10
+    // abgerechneten Plays bewusst duenn (Konfidenzfaktor 0,5) und soll KEINEN Public-Kandidaten
+    // tragen. Diese Tests pruefen die Sportart-Sperre, nicht die Stichprobengroesse — also eine
+    // Wallet, die wirklich belegt ist: n60, 70% Treffer, +CLV, +$150K lifetime.
+    '0xSHARP': { n: 60, clvSumPP: 120, wins: 42, usd: 40000, pnl: 150000 },
+    // ... und dieselbe Qualitaet auf duenner Basis, fuer den Vergleich in #69.
+    '0xTHIN':  { n: 10, clvSumPP: 20,  wins: 7,  usd: 40000, pnl: 150000 },
   },
   open: [
     { wallet: '0xSHARP', key: 'mlb-braves-padres', side: 'Atlanta Braves', league: 'MLB',
@@ -76,20 +82,51 @@ test('#69 Sharp-Qualität: bewiesene Wallet hebt Conviction + Warum zeigt Record
     const info = w._pwSharpInfoForKey('mlb-braves-padres');
     assert.ok(info, 'Sharp-Info für den Key vorhanden');
     assert.strictEqual(info.side, 'Atlanta Braves');
-    assert.strictEqual(info.n, 10);
-    assert.strictEqual(info.wins, 7);
+    assert.strictEqual(info.n, 60);
+    assert.strictEqual(info.wins, 42);
     assert.ok(Math.abs(info.hit - 0.7) < 1e-9, 'Trefferquote 70%');
     assert.ok(info.pnl > 0, 'positive Lifetime-P&L');
 
     const r = w._pwShortlistScore('mlb-braves-padres', BROAD['mlb-braves-padres']);
     assert.strictEqual(r.verdict, 'BET');
     assert.strictEqual(r.side, 'Atlanta Braves');
-    // Geld 1 (65%) + Sharp 4 × Konfidenz(0,95 @n=10) = 3,8 → bs 4,8 → conv = round(2+4,8) = 7 (Basis neu 2)
-    assert.ok(r.conv >= 7, 'Conviction ≥7 durch Qualitäts-Sharp, war: ' + r.conv);
-    assert.ok(r.reasons.some(x => /scharfe Wallet \(7\/10, 70% · \+\$150K\)/.test(x)),
+    assert.ok(r.reasons.some(x => /scharfe Wallet \(42\/60, 70% · \+\$150K\)/.test(x)),
       'Warum zeigt den Wallet-Record: ' + JSON.stringify(r.reasons));
-    assert.ok(r.sharp && r.sharp.n === 10, 'Sharp-Record am Play angehängt');
+    assert.ok(r.sharp && r.sharp.n === 60, 'Sharp-Record am Play angehängt');
   });
+});
+
+// 29.08.2026 (Lucas-Checkup, „D"): Der Test darf nicht an einer festen Conviction haengen — genau
+// daran waere er beim Umgewichten gekippt, ohne dass etwas kaputt war. Was wirklich gelten muss,
+// ist die REIHENFOLGE: ohne Wallet-Beleg < duenne Historie < belegte Historie. Und der Abstand
+// zwischen duenn und belegt muss sichtbar sein, sonst ist der Konfidenzfaktor Dekoration.
+test('#69b Wallet-Gewicht skaliert mit der Historie, nicht nur mit der Trefferquote', async () => {
+  const mk = (scores, open) => new Promise((resolve) => {
+    const w = boot({
+      'poly_money_broad_close.json': BROAD, 'poly_money_broad_history.json': {},
+      'poly_money_broad.json': { n: 100, byLeague: [{ league: 'MLB', verdict: 'neutral' }] },
+      'poly_wallet_track.json': { updatedAt: new Date().toISOString(), scores, open },
+      'poly_cross_sport.json': { discrepancies: [] },
+    });
+    w._pwEnsurePlaysData(() => resolve(w._pwShortlistScore('mlb-braves-padres', BROAD['mlb-braves-padres'])));
+  });
+  const pos = (wallet) => [{ wallet, key: 'mlb-braves-padres', side: 'Atlanta Braves',
+    league: 'MLB', usd: 40000, entryPrice: 0.55, lastPrice: 0.62 }];
+
+  const ohne  = await mk({}, []);
+  const duenn = await mk({ '0xTHIN':  TRACK.scores['0xTHIN']  }, pos('0xTHIN'));
+  const dick  = await mk({ '0xSHARP': TRACK.scores['0xSHARP'] }, pos('0xSHARP'));
+
+  const c = (r) => (r && r.verdict !== 'SKIP') ? (r.conv || 0) : 0;
+  assert.ok(c(dick) > c(duenn),
+    `belegte Historie (n60) muss schwerer wiegen als duenne (n10): ${c(dick)} vs ${c(duenn)}`);
+  assert.ok(c(duenn) >= c(ohne),
+    `eine duenne Historie darf nie WENIGER zaehlen als gar keine: ${c(duenn)} vs ${c(ohne)}`);
+  // Und der Abstand muss wirken, nicht nur existieren: mit 65% Geld PLUS einer 10-Play-Historie
+  // reicht es seit der Neugewichtung nicht mehr ueber die Play-Schwelle — mit 60 Plays schon.
+  assert.strictEqual(dick.verdict, 'BET', 'belegte Wallet traegt den Play');
+  assert.strictEqual(duenn.verdict, 'SKIP',
+    'duenne Wallet + 65% Geld kommt nicht mehr ueber die Schwelle (genau das war der Cricket-Fall)');
 });
 
 test('#70 Public Top-Play: MLB fällt seit 24.08. aus dem Public-Gate (US-Sport gesperrt)', async () => {
@@ -98,7 +135,9 @@ test('#70 Public Top-Play: MLB fällt seit 24.08. aus dem Public-Gate (US-Sport 
   // öffentliche Track-Record ist das Produkt. Im Scan/Depot bleibt der Play (Beobachtung).
   await withData((w) => {
     const r = w._pwShortlistScore('mlb-braves-padres', BROAD['mlb-braves-padres']);
-    assert.ok(r.conv >= 7 && r.moneyPct >= 0.60 && r.sharp && r.sharp.n >= 8,
+    // 29.08.2026: nicht mehr gegen eine feste Zahl, sondern gegen das Gate selbst — sonst prueft
+    // der Test die Kalibrierung mit, obwohl es hier um die Sportart-Sperre geht.
+    assert.ok(r.conv >= w._pwPublicMinConv() && r.moneyPct >= 0.60 && r.sharp && r.sharp.n >= 8,
       'inhaltlich weiterhin ein starker Play: ' + JSON.stringify({ conv: r.conv, money: r.moneyPct }));
     assert.strictEqual(w._pwPublicTopPlays().length, 0, 'aber kein Public-Kandidat mehr');
     assert.ok(w._pwTopPlays(0, false, false).some(p => p.key === 'mlb-braves-padres'),
@@ -111,7 +150,9 @@ test('#70 Public Top-Play: dieselbe Konstellation in erlaubter Sportart → Kand
   const broad2 = { 'epl-arsenal-chelsea': market('EPL',
     { 'Arsenal': 65000, 'Chelsea': 35000 }, { 'Arsenal': 0.62, 'Chelsea': 0.38 }, 100000) };
   const track2 = { updatedAt: new Date().toISOString(),
-    scores: { '0xSHARP': { n: 10, clvSumPP: 20, wins: 7, usd: 40000, pnl: 150000 } },
+    // 29.08.2026: n10 -> n60, wie in der Haupt-Fixture. Der Test prueft die Sportart-Gegenprobe,
+    // nicht die Stichprobe; mit 10 Plays waere es seit der Neugewichtung zurecht kein Kandidat.
+    scores: { '0xSHARP': { n: 60, clvSumPP: 120, wins: 42, usd: 40000, pnl: 150000 } },
     open: [{ wallet: '0xSHARP', key: 'epl-arsenal-chelsea', side: 'Arsenal', league: 'EPL',
              usd: 40000, entryPrice: 0.55, lastPrice: 0.62 }] };
   const w = boot({

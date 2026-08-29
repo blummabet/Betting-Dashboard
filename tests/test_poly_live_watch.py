@@ -4,11 +4,15 @@ import poly_live_watch as W
 from datetime import datetime, timezone, timedelta
 
 NOW = datetime(2026, 8, 11, 12, 0, tzinfo=timezone.utc)
+# 29.08.2026 (Sharp-Gate vereinheitlicht): 0xsharp stand auf 13/20 = 65%. Roh sah das scharf aus,
+# die Wilson-Untergrenze liegt aber bei 46,6% — bei n=20 ist 65% nicht signifikant ueber Muenzwurf.
+# Diese Tests pruefen die Alarm-AUSWAHL (scharf ODER gross, pre-game raus, @100 raus), nicht die
+# Kalibrierung des Gates -> Fixtures auf Wallets, die den Test wirklich bestehen (28/40 = Wilson 57%).
 SCORES = {
-    "0xsharp": {"n": 20, "clvSumPP": 40, "wins": 13, "pnl": 5000},   # avgClv 2.0 / 65% / pnl+ -> scharf
+    "0xsharp": {"n": 40, "clvSumPP": 80, "wins": 28, "pnl": 5000},   # avgClv 2.0 / 70% bei n=40 -> scharf
     "0xweak":  {"n": 15, "clvSumPP": -10, "wins": 6, "pnl": -2000},  # negativ -> nicht scharf
     "0xthin":  {"n": 2, "clvSumPP": 10, "wins": 2, "pnl": 100},      # zu wenig Historie -> nicht scharf
-    "0xsharpdec": {"n": 30, "clvSumPP": 60, "wins": 20, "pnl": 8000},  # scharf, aber Ausgang @100
+    "0xsharpdec": {"n": 40, "clvSumPP": 80, "wins": 28, "pnl": 8000},  # scharf, aber Ausgang @100
 }
 
 

@@ -31,14 +31,19 @@ def test_poly_pulse_leer_ist_none():
 
 
 def test_best_bucket_haelt_schwelle_und_waehlt_hoechsten_roi():
-    buckets = {"7": {"n": 17, "roi": 0.05}, "8": {"n": 11, "roi": 0.107}, "9": {"n": 15, "roi": 0.20},
-               "10": {"n": 2, "roi": 0.9}}   # n<8 -> ignoriert trotz 90% ROI
+    # 29.08.2026: relativ zu STRIP_MIN_N formuliert. Die alte Fassung stand auf festen n=11..17
+    # und waere beim Anheben der Schwelle gekippt, ohne dass an der Logik etwas falsch war.
+    ok, knapp_drunter = bp.STRIP_MIN_N + 2, bp.STRIP_MIN_N - 1
+    buckets = {"7": {"n": ok, "roi": 0.05}, "8": {"n": ok, "roi": 0.107},
+               "9": {"n": ok, "roi": 0.20},
+               "10": {"n": knapp_drunter, "roi": 0.9}}   # unter der Schwelle -> ignoriert trotz 90% ROI
     out = bp._best_bucket(buckets)
-    assert out == {"key": "9", "roiPct": 20.0, "n": 15}
+    assert out == {"key": "9", "roiPct": 20.0, "n": ok}
 
 
 def test_best_bucket_none_wenn_alles_negativ_oder_zu_klein():
-    assert bp._best_bucket({"7": {"n": 17, "roi": -0.05}, "10": {"n": 2, "roi": 0.5}}) is None
+    assert bp._best_bucket({"7": {"n": bp.STRIP_MIN_N + 2, "roi": -0.05},
+                            "10": {"n": bp.STRIP_MIN_N - 1, "roi": 0.5}}) is None
     assert bp._best_bucket({}) is None
 
 

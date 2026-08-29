@@ -56,7 +56,13 @@ def _poly_pulse(track=None) -> dict | None:
             "openN": open_public}
 
 
-STRIP_MIN_N = 8   # ab so vielen Plays gilt eine Conviction-Stufe / ein Signal als belastbar (Auto-Bet-Kandidat)
+# 29.08.2026 (Lucas-Checkup, „C"): stand auf 8, waehrend poly-wallets.js fuer DIESELBE Datei
+# (_PW_TRACK_MIN_N) 20 als belastbar ansetzt. Folge: die Uebersicht warb prominent mit
+# „Beste Stufe Conv 9 · +40,8% ROI · n14", waehrend derselbe Track im Wallets-Tab bei n<20
+# „zu wenig Daten" sagt. Dazu ist _best_bucket ein Maximum ueber ~10 Buckets — bei n=8-14
+# gewinnt ueberwiegend das Rauschen. Mit 20 zeigt die Leiste Conv 6 (n=139, +4,3%) statt
+# Conv 9 (n=14, +40,8%); die Nachbarstufe Conv 8 hat n=21 bei -6,6% — das passt zusammen.
+STRIP_MIN_N = 20  # ab so vielen Plays gilt eine Conviction-Stufe / ein Signal als belastbar (Auto-Bet-Kandidat)
 
 
 def _moneymap_pulse(rec=None) -> dict | None:
