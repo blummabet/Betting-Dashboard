@@ -104,6 +104,29 @@
     return _loadCards();
   };
 
+  // 29.08.2026 (Lucas: „wenn es verbessert, zieh's nach"): Die Daten kamen bisher relativ, also
+  // aus dem GitHub-Pages-Snapshot. Der wird seit der Umstellung stuendlich neu veroeffentlicht —
+  // die Fetcher committen aber alle paar Minuten. Folge: die Cards zeigten bis zu eine Stunde
+  // alte Picks und Ergebnisse, waehrend die Uebersicht daneben (main-dashboard.js) auf EXAKT
+  // denselben Dateien (liga-data.json, mls-data.json) schon raw-frisch war. Ein Datensatz, zwei
+  // Staende, je nachdem welchen Tab man offen hatte.
+  // Reihenfolge wie in main-dashboard.js / status-checks.js: raw/main zuerst (commit-frisch),
+  // Pages-Snapshot nur als Rueckfall — sonst waere eine raw-Stoerung ein Totalausfall statt
+  // einer Verzoegerung, und offline (PWA/Service-Worker) ginge gar nichts mehr.
+  const _RAW_BASE = 'https://raw.githubusercontent.com/blummabet/Betting-Dashboard/main';
+  async function _rawFirst(datei) {
+    const t = Date.now();
+    try {
+      const r = await fetch(`${_RAW_BASE}/${datei}?t=${t}`, { cache: 'no-store' });
+      if (r.ok) return await r.json();
+    } catch (e) { /* raw nicht erreichbar -> Snapshot */ }
+    try {
+      const r = await fetch(`${datei}?t=${t}`, { cache: 'no-store' });
+      if (r.ok) return await r.json();
+    } catch (e) { /* offline oder kaputtes JSON -> null */ }
+    return null;
+  }
+
   // ─────────────────────────────────────────────────────
   //  SERIEN / STREAKS (28.06.2026, Lucas) — Content-Schicht, KEINE Quoten/€ (TikTok-safe).
   //  Liest {wm_,liga_}streaks.json (compute_streaks.py). Eigener Tab + Top-Sektion in den Cards.
@@ -114,11 +137,9 @@
     const ds = isLiga ? 'liga' : 'wm';
     if (_streaksCache[ds]) return Promise.resolve(_streaksCache[ds]);
     const f = isLiga ? 'liga_streaks.json' : 'wm_streaks.json';
-    const main = fetch(f + '?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null);
+    const main = _rawFirst(f);
     // 29.06.2026 (Lucas: MLS): im National-Modus MLS-Serien mit-laden + zusammenführen.
-    const extra = isLiga
-      ? fetch('mls_streaks.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null)
-      : Promise.resolve(null);
+    const extra = isLiga ? _rawFirst('mls_streaks.json') : Promise.resolve(null);
     return Promise.all([main, extra]).then(([j, m]) => {
       const streaks = ((j && j.streaks) || []).concat((m && m.streaks) || []);
       _streaksCache[ds] = { streaks };
@@ -454,41 +475,38 @@
       // (25.06.2026, Lucas: Liga auf WM-Stack) Im liga-Modus NUR liga-data.json laden —
       // WM-Sibling-JSONs (poly/travel/confidence/player-picks/odds-history) bleiben null/leer.
       const _isLiga = _mode === 'liga';
-      const [wmResp, polyResp, travelResp, confResp, ppResp, chgResp, histResp] = await Promise.all([
-        fetch(_dataFile + '?t=' + Date.now()),
-        _isLiga ? Promise.resolve(null) : fetch('wm_poly_prices.json?t=' + Date.now()).catch(() => null),
-        _isLiga ? Promise.resolve(null) : fetch('wm_travel_burden.json?t=' + Date.now()).catch(() => null),
-        _isLiga ? Promise.resolve(null) : fetch('pick_confidence_stats.json?t=' + Date.now()).catch(() => null),
-        _isLiga ? Promise.resolve(null) : fetch('wm2026-player-picks.json?t=' + Date.now()).catch(() => null),
-        _isLiga ? Promise.resolve(null) : fetch('pick_changes_log.json?t=' + Date.now()).catch(() => null),
-        _isLiga ? Promise.resolve(null) : fetch('wm2026-odds-history.json?t=' + Date.now()).catch(() => null),
+      const [wmDaten, polyRaw, travelRaw, confRaw, ppRaw, chgRaw, histRaw] = await Promise.all([
+        _rawFirst(_dataFile),
+        _isLiga ? Promise.resolve(null) : _rawFirst('wm_poly_prices.json'),
+        _isLiga ? Promise.resolve(null) : _rawFirst('wm_travel_burden.json'),
+        _isLiga ? Promise.resolve(null) : _rawFirst('pick_confidence_stats.json'),
+        _isLiga ? Promise.resolve(null) : _rawFirst('wm2026-player-picks.json'),
+        _isLiga ? Promise.resolve(null) : _rawFirst('pick_changes_log.json'),
+        _isLiga ? Promise.resolve(null) : _rawFirst('wm2026-odds-history.json'),
       ]);
-      if (!wmResp.ok) throw new Error('HTTP ' + wmResp.status);
-      _wmData = await wmResp.json();
+      if (!wmDaten) throw new Error(_dataFile + ' war weder ueber raw/main noch im Pages-Snapshot lesbar');
+      _wmData = wmDaten;
       // 29.06.2026 (Lucas: MLS „wie die anderen Ligen"): im National-Modus zusätzlich den
       // MLS-Datensatz (eigenes File + Profil + Lernen) laden und für die Anzeige mergen. Keys
       // kollidieren nicht (Gruppe „MLS", Picks „MLS-…", Odds nach Fixture-Key) → MLS taucht
       // automatisch als weitere Liga in der kuratierten Cards-Ansicht auf.
       if (_isLiga) {
         try {
-          const mlsResp = await fetch('mls-data.json?t=' + Date.now());
-          if (mlsResp && mlsResp.ok) {
-            const mls = await mlsResp.json();
-            // 12.07.2026 (Lucas: „Liga-Cards kaputt"): NUR mergen, wenn der MLS-Datensatz auch
-            // wirklich Fixtures hat. Als der API-Zugang ablief, schrieb build_liga_data leere
-            // groups (0 Teams/0 Fixtures), die picks-Leichen (292 Keys) blieben aber drin → der
-            // Merge zog verwaiste Picks auf nicht-existente Fixtures/Teams in die Liga-Ansicht
-            // und der Card-Bau kippte. Leerer/kaputter MLS-Stand wird jetzt schlicht ignoriert.
-            const mlsHasFixtures = !!(mls && mls.groups && Object.keys(mls.groups).length
-              && Object.values(mls.groups).some(g => ((g && g.fixtures) || []).length > 0));
-            if (mlsHasFixtures) {
-              _wmData.groups  = Object.assign({}, _wmData.groups  || {}, mls.groups);
-              _wmData.picks   = Object.assign({}, _wmData.picks   || {}, mls.picks   || {});
-              _wmData.odds    = Object.assign({}, _wmData.odds    || {}, mls.odds    || {});
-              _wmData.teamIds = Object.assign({}, _wmData.teamIds || {}, mls.teamIds || {});
-            } else if (mls && mls.groups) {
-              console.warn('MLS-Datensatz ohne Fixtures — Merge übersprungen (Liga-Cards bleiben intakt).');
-            }
+          const mls = await _rawFirst('mls-data.json');
+          // 12.07.2026 (Lucas: „Liga-Cards kaputt"): NUR mergen, wenn der MLS-Datensatz auch
+          // wirklich Fixtures hat. Als der API-Zugang ablief, schrieb build_liga_data leere
+          // groups (0 Teams/0 Fixtures), die picks-Leichen (292 Keys) blieben aber drin → der
+          // Merge zog verwaiste Picks auf nicht-existente Fixtures/Teams in die Liga-Ansicht
+          // und der Card-Bau kippte. Leerer/kaputter MLS-Stand wird jetzt schlicht ignoriert.
+          const mlsHasFixtures = !!(mls && mls.groups && Object.keys(mls.groups).length
+            && Object.values(mls.groups).some(g => ((g && g.fixtures) || []).length > 0));
+          if (mlsHasFixtures) {
+            _wmData.groups  = Object.assign({}, _wmData.groups  || {}, mls.groups);
+            _wmData.picks   = Object.assign({}, _wmData.picks   || {}, mls.picks   || {});
+            _wmData.odds    = Object.assign({}, _wmData.odds    || {}, mls.odds    || {});
+            _wmData.teamIds = Object.assign({}, _wmData.teamIds || {}, mls.teamIds || {});
+          } else if (mls && mls.groups) {
+            console.warn('MLS-Datensatz ohne Fixtures — Merge übersprungen (Liga-Cards bleiben intakt).');
           }
         } catch (e) { /* MLS optional — National läuft auch ohne */ }
       }
@@ -529,48 +547,36 @@
         } catch (_e) { window.NATIONAL_PICKS_FOR_POLY = []; }
       }
 
-      if (polyResp && polyResp.ok) {
-        const polyRaw = await polyResp.json();
+      if (polyRaw) {
         _polyLookup = {};
         for (const f of (polyRaw.allFixtures || [])) {
           _polyLookup[f.key] = f;
         }
       }
 
-      if (travelResp && travelResp.ok) {
-        const travelRaw = await travelResp.json();
+      if (travelRaw) {
         // travelRaw ist {TEAM_ID: {...}} — direkt als Lookup nutzbar
         _travelLookup = travelRaw || {};
         window._wmTravelBurden = _travelLookup;   // backward compat mit altem Code
       }
 
-      if (confResp && confResp.ok) {
-        _confidenceStats = await confResp.json();
+      if (confRaw) {
+        _confidenceStats = confRaw;
       }
 
       // Odds-History (Sparkline-Quelle für Pick-Cards)
-      if (histResp && histResp.ok) {
-        try {
-          _oddsHistoryLookup = await histResp.json();
-        } catch (e) { _oddsHistoryLookup = {}; }
+      if (histRaw) {
+        _oddsHistoryLookup = histRaw;
       }
 
       // Pick-Änderungen (Rolling-Log, max 200 Einträge / 7 Tage)
-      if (chgResp && chgResp.ok) {
-        try {
-          const chgRaw = await chgResp.json();
-          _wmData.pickChanges = chgRaw.changes || [];
-        } catch (e) { _wmData.pickChanges = []; }
-      } else {
-        _wmData.pickChanges = [];
-      }
+      _wmData.pickChanges = (chgRaw && chgRaw.changes) || [];
 
       // Spieler-Picks (separates File — kommt erst T-3 vor Anpfiff)
       // Format: { lastUpdate, picks: { "MEX-ZAF": [...] } }
       // Renderer erwartet aber Key-Format "GROUP-MD-HOME-AWAY" → mappen via Fixture-Liste
-      if (ppResp && ppResp.ok) {
+      if (ppRaw) {
         try {
-          const ppRaw = await ppResp.json();
           const ppByHa = ppRaw.picks || {};
           // Map ha-keys auf fixture-keys
           const mapped = {};

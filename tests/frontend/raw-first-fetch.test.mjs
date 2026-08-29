@@ -30,6 +30,12 @@ const DATEN_LADER = [
   'polymarket-tab.js',
   'status-checks.js',
   'poly-wallets.js',
+  // 29.08.2026 (Lucas: „wenn es verbessert, zieh's nach"): Cards + Card-Tracking lasen
+  // liga-data.json / mls-data.json relativ, also aus dem Pages-Snapshot — waehrend die
+  // Uebersicht dieselben zwei Dateien laengst raw-first holte. Ein Datensatz, zwei Staende,
+  // je nach Tab. Das ist schlimmer als ueberall gleich alt: die Tabs widersprachen sich.
+  'wm2026-renderer.js',
+  'wm2026-tracking.js',
 ];
 
 function src(f) {

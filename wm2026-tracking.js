@@ -29,6 +29,30 @@
     ? p.stake
     : ((p && p.verdict === 'BET') ? STAKE_BET : STAKE_ABW);
 
+  // 29.08.2026 (Lucas: „im Tracking der Cards seh ich die abgerechneten nicht"):
+  // Der Endstand stand nie da. _buildPicksTable las fx.scoreHome/fx.scoreAway — diese
+  // Felder gibt es in liga-data.json / mls-data.json / wm2026-data.json NICHT. Der Stand
+  // liegt unter fx.result = {status, home_score, away_score, stats:{xgHome,xgAway}}.
+  // Darum blieb jede abgerechnete Zeile ohne Ergebnis: Haken ja, Resultat nein.
+  // Beide Formen lesen (altes scoreHome zuerst, damit nichts kaputtgeht), sonst null.
+  function _fxScore(fx) {
+    if (!fx) return null;
+    if (fx.scoreHome != null && fx.scoreAway != null) {
+      return { h: fx.scoreHome, a: fx.scoreAway, xg: null };
+    }
+    const r = fx.result;
+    if (r && typeof r === 'object' && r.home_score != null && r.away_score != null) {
+      const st = r.stats || {};
+      // Feldnamen unterscheiden sich je Quelle: Gruppenspiele xgHome/xgAway, KO homeXg/awayXg.
+      const xh = st.xgHome != null ? st.xgHome : st.homeXg;
+      const xa = st.xgAway != null ? st.xgAway : st.awayXg;
+      const xg = (xh != null && xa != null)
+        ? `${(+xh).toFixed(2)} : ${(+xa).toFixed(2)}` : null;
+      return { h: r.home_score, a: r.away_score, xg, status: r.status || '' };
+    }
+    return null;
+  }
+
   // (25.06.2026, Lucas: KO-Runden) Reihenfolge + deutsche Labels der K.O.-Phase.
   const KO_ROUND_ORDER  = ['R32', 'R16', 'QF', 'SF', '3RD', 'F'];
   const KO_ROUND_LABELS = { R32: 'Sechzehntelfinale', R16: 'Achtelfinale', QF: 'Viertelfinale', SF: 'Halbfinale', '3RD': 'Spiel um Platz 3', F: 'Finale' };
@@ -39,6 +63,29 @@
   let _dataFile = 'wm2026-data.json';
   let _panelId  = 'intlTrackingPanel';
   let _mode     = 'wm';   // 'wm' | 'liga'
+
+  // 29.08.2026 (Lucas: „wenn es verbessert, zieh's nach"): Die Daten kamen bisher relativ, also
+  // aus dem GitHub-Pages-Snapshot. Der wird seit der Umstellung stuendlich neu veroeffentlicht —
+  // die Fetcher committen aber alle paar Minuten. Folge: das Card-Tracking zeigten bis zu eine Stunde
+  // alte Picks und Ergebnisse, waehrend die Uebersicht daneben (main-dashboard.js) auf EXAKT
+  // denselben Dateien (liga-data.json, mls-data.json) schon raw-frisch war. Ein Datensatz, zwei
+  // Staende, je nachdem welchen Tab man offen hatte.
+  // Reihenfolge wie in main-dashboard.js / status-checks.js: raw/main zuerst (commit-frisch),
+  // Pages-Snapshot nur als Rueckfall — sonst waere eine raw-Stoerung ein Totalausfall statt
+  // einer Verzoegerung, und offline (PWA/Service-Worker) ginge gar nichts mehr.
+  const _RAW_BASE = 'https://raw.githubusercontent.com/blummabet/Betting-Dashboard/main';
+  async function _rawFirst(datei) {
+    const t = Date.now();
+    try {
+      const r = await fetch(`${_RAW_BASE}/${datei}?t=${t}`, { cache: 'no-store' });
+      if (r.ok) return await r.json();
+    } catch (e) { /* raw nicht erreichbar -> Snapshot */ }
+    try {
+      const r = await fetch(`${datei}?t=${t}`, { cache: 'no-store' });
+      if (r.ok) return await r.json();
+    } catch (e) { /* offline oder kaputtes JSON -> null */ }
+    return null;
+  }
 
   // ── Module state ───────────────────────────────────────
   let _data      = null;
@@ -93,29 +140,24 @@
     try {
       // (25.06.2026, Lucas: Liga auf WM-Stack) Im liga-Modus kein WM-Validator-Report.
       const _isLiga = _mode === 'liga';
-      const [resp, valResp] = await Promise.all([
-        fetch(_dataFile + '?t=' + Date.now()),
-        _isLiga ? Promise.resolve(null) : fetch('pick_validation_report.json?t=' + Date.now()).catch(() => null),
+      const [daten, valReport] = await Promise.all([
+        _rawFirst(_dataFile),
+        _isLiga ? Promise.resolve(null) : _rawFirst('pick_validation_report.json'),
       ]);
-      if (!resp.ok) throw new Error('HTTP ' + resp.status);
-      _data   = await resp.json();
+      if (!daten) throw new Error(_dataFile + ' war weder ueber raw/main noch im Pages-Snapshot lesbar');
+      _data   = daten;
       // 29.06.2026 (Lucas: MLS „wie die anderen Ligen"): MLS-Datensatz mit-laden + mergen
       // (Gruppe „MLS"/Picks „MLS-…" kollisionsfrei) → MLS-Picks erscheinen im Tracking.
       if (_isLiga) {
         try {
-          const mlsResp = await fetch('mls-data.json?t=' + Date.now());
-          if (mlsResp && mlsResp.ok) {
-            const mls = await mlsResp.json();
-            if (mls && mls.groups) {
-              _data.groups = Object.assign({}, _data.groups || {}, mls.groups);
-              _data.picks  = Object.assign({}, _data.picks  || {}, mls.picks  || {});
-            }
+          const mls = await _rawFirst('mls-data.json');
+          if (mls && mls.groups) {
+            _data.groups = Object.assign({}, _data.groups || {}, mls.groups);
+            _data.picks  = Object.assign({}, _data.picks  || {}, mls.picks  || {});
           }
         } catch (e) { /* MLS optional */ }
       }
-      if (valResp && valResp.ok) {
-        try { _validationReport = await valResp.json(); } catch (e) {}
-      }
+      if (valReport) _validationReport = valReport;
       _loaded = true;
       _loadedFile = _dataFile;   // Dataset merken (Cache-Invalidierung WM↔Liga, 25.06.2026)
       _render();
@@ -237,7 +279,7 @@
           rows.push({
             fx: {
               home: kf.home, away: kf.away, round: kf.round,
-              matchday: kf.round, kickoff: kf.kickoff, date: koDate,
+              matchday: kf.round, kickoff: kf.kickoff, date: koDate, result: kf.result,
               time: (kf.kickoff ? new Date(kf.kickoff).toTimeString().slice(0, 5) : ''),
               groupKey: 'KO', isKO: true,
             },
@@ -518,12 +560,16 @@
       if (s === 'VOID') return '<span style="color:#8b949e">➖ Push</span>';
       return '<span style="color:#76819c">offen</span>';
     };
+    // 29.08.2026 (Lucas): 174 NOBET-Zeilen standen dauerhaft offen unter der Tabelle —
+    // reines Scroll-Futter. Gleiche Behandlung wie die abgerechneten Picks: eingeklappt,
+    // Anzahl in der Klappzeile, Inhalt auf Klick.
     let html = `
-      <div class="wm-trk-section-title" style="margin-top:18px;color:#76819c;">
-        🚫 Kein Bet — gesehen, aber kein Value
-        <span class="wm-trk-count">${rows.length}</span>
-      </div>
-      <div style="font-size:11px;color:#76819c;margin:0 0 8px;">War mal BET/ABWÄGEN, Edge dann gekippt. Schatten-Ergebnis rein informativ — zählt nicht in Quote/P&L.</div>
+      <details class="wm-trk-nobet" style="margin-top:18px">
+        <summary class="wm-trk-nobet-sum" style="cursor:pointer;padding:10px 12px;background:rgba(118,129,156,.08);border:1px solid rgba(118,129,156,.2);border-radius:8px;font-size:12px;font-weight:700;color:#76819c;user-select:none;display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+          <span>🚫 ${rows.length} Kein Bet — gesehen, aber kein Value</span>
+          <span style="margin-left:auto;font-weight:600">▼ aufklappen</span>
+        </summary>
+      <div style="font-size:11px;color:#76819c;margin:10px 0 8px;">War mal BET/ABWÄGEN, Edge dann gekippt. Schatten-Ergebnis rein informativ — zählt nicht in Quote/P&L.</div>
       <div style="display:flex;flex-direction:column;gap:6px;opacity:.85">`;
     for (const r of rows) {
       const fx = r._row && r._row.fx ? r._row.fx : {};
@@ -538,7 +584,7 @@
           <div style="font-size:12px;white-space:nowrap">${_shadow(r)}</div>
         </div>`;
     }
-    html += `</div>`;
+    html += `</div></details>`;
     return html;
   }
 
@@ -983,8 +1029,11 @@
             <span class="wm-trk-fx-meta">${lockIcon} ${groupStr} · ST${fx.matchday}${timeStr ? ' · ' + timeStr : ''}</span>
           </div>`;
 
-          if (fx.scoreHome != null && fx.scoreAway != null) {
-            out += `<div class="wm-trk-score">${fx.scoreHome} : ${fx.scoreAway}</div>`;
+          const _sc = _fxScore(fx);
+          if (_sc) {
+            out += `<div class="wm-trk-score">${_sc.h} : ${_sc.a}`
+                 + (_sc.xg ? `<div style="font-size:10px;font-weight:600;letter-spacing:normal;color:var(--muted);margin-top:1px">xG ${_sc.xg}</div>` : '')
+                 + `</div>`;
           }
 
           for (const p of fxPicks) out += _buildTrackingRow(p);
@@ -1006,10 +1055,26 @@
       html += `<div style="text-align:center;color:var(--muted,#8b949e);font-size:12px;padding:16px 8px">Keine offenen Picks — alle ausgewertet (unten aufklappen).</div>`;
     }
     if (resolved.length) {
+      // 29.08.2026 (Lucas): Die Klappe hiess nur „N ausgewertete Picks" — grau, nichtssagend,
+      // und man musste sie oeffnen um ueberhaupt zu sehen ob es gut oder schlecht lief. Jetzt
+      // steht die Bilanz IN der Klappzeile: Treffer, Fehlschlaege, P&L. Aufklappen bleibt Klick.
+      const _rw = resolved.filter(p => p.result === 'won').length;
+      const _rl = resolved.filter(p => p.result === 'lost').length;
+      const _rp = resolved.filter(p => p.result === 'push').length;
+      let _rpnl = resolved.reduce((sum, p) => sum
+        + (p.result === 'won'  ? ((p.odds || 1) - 1) * p._stake
+        :  p.result === 'lost' ? -p._stake : 0), 0);
+      _rpnl = Math.round(_rpnl * 100) / 100;
+      const _rcol = _rpnl >= 0 ? '#3fb950' : '#f85149';
       html += `
       <details class="wm-trk-resolved" style="margin-top:16px">
-        <summary style="cursor:pointer;padding:10px 12px;background:var(--surface2,#161b22);border:1px solid var(--border,#30363d);border-radius:8px;font-size:12px;font-weight:700;color:var(--muted,#8b949e);user-select:none">
-          📁 ${resolved.length} ausgewertete Picks — zum Ein-/Ausblenden klicken
+        <summary class="wm-trk-resolved-sum" style="cursor:pointer;padding:10px 12px;background:var(--surface2,#161b22);border:1px solid var(--border,#30363d);border-radius:8px;font-size:12px;font-weight:700;color:var(--muted,#8b949e);user-select:none;display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+          <span style="color:var(--text,#e6edf3)">📁 ${resolved.length} abgerechnete Picks</span>
+          <span style="color:#3fb950">${_rw} gewonnen</span>
+          <span style="color:#f85149">${_rl} verloren</span>
+          ${_rp ? `<span style="color:#8b949e">${_rp} Push</span>` : ''}
+          <span style="color:${_rcol}">${_rpnl >= 0 ? '+' : '−'}€${Math.abs(_rpnl).toFixed(2)}</span>
+          <span style="margin-left:auto;font-weight:600">▼ aufklappen</span>
         </summary>
         <div style="margin-top:10px">${_buildGroups(resolved)}</div>
       </details>`;
