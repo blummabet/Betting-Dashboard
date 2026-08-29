@@ -1,0 +1,76 @@
+{
+  "_doc": [
+    "29.08.2026 (Lucas: 'prinzipiell checken, welche Wallets wir tracken').",
+    "Der VERTRAG zwischen sharp_gate.py und _pwIsSharpScore in poly-wallets.js. Geteilten Code gibt",
+    "es ueber die Sprachgrenze nicht, einen geteilten Vertrag schon: pytest und node lesen dieselbe",
+    "Datei und pruefen ihre jeweilige Implementierung dagegen. Weicht eine ab, faellt es hier auf --",
+    "nicht erst, wenn die Seite etwas anderes 'scharf' nennt als der Push.",
+    "Die meisten Faelle sind ECHTE Wallets aus poly_wallet_track.json vom 29.08."
+  ],
+  "cases": [
+    { "name": "die grosse belegte Wallet (n266, 57%, +0.90pp, +$3.78M)",
+      "score": { "n": 266, "wins": 152, "clvSumPP": 239.4, "pnl": 3784024 },
+      "sharp": true,
+      "warum": "grosse Stichprobe, Wilson klar ueber 50%, CLV positiv" },
+
+    { "name": "$729-Hobby-Wallet 5/9 -- das alte JS-Gate nannte sie scharf",
+      "score": { "n": 9, "wins": 5, "clvSumPP": 0.27, "pnl": 729 },
+      "sharp": false,
+      "warum": "n unter 8 UND 55.6% roh sind bei n=9 nichts wert (Wilson-Untergrenze 30%)" },
+
+    { "name": "6/8 = 75% -- hohe Quote, aber Stichprobe traegt sie nicht",
+      "score": { "n": 8, "wins": 6, "clvSumPP": 5.04, "pnl": 110848 },
+      "sharp": false,
+      "warum": "Wilson-Untergrenze 46% -- nicht signifikant ueber Muenzwurf" },
+
+    { "name": "n=20, 15 Treffer (75%) -- gleiche Quote, genug Stichprobe",
+      "score": { "n": 20, "wins": 15, "clvSumPP": 10.0, "pnl": 50000 },
+      "sharp": true,
+      "warum": "bei n=20 traegt 75% den Wilson-Test" },
+
+    { "name": "P&L unbekannt, sonst belegt",
+      "score": { "n": 60, "wins": 42, "clvSumPP": 120.0 },
+      "sharp": true,
+      "warum": "unbekannter P&L ist kein Gegenbeweis -- 87% aller Wallets haben keinen" },
+
+    { "name": "bestaetigter Verlierer trotz Top-Quote",
+      "score": { "n": 60, "wins": 42, "clvSumPP": 120.0, "pnl": -7700000 },
+      "sharp": false,
+      "warum": "P&L bekannt UND negativ -- der einzige Job, den P&L im Gate hat" },
+
+    { "name": "P&L exakt 0 (bekannt)",
+      "score": { "n": 60, "wins": 42, "clvSumPP": 120.0, "pnl": 0 },
+      "sharp": true,
+      "warum": "0 ist kein Verlust -- frueher fiel das durch, weil P&L>0 verlangt war" },
+
+    { "name": "negativer CLV",
+      "score": { "n": 60, "wins": 42, "clvSumPP": -30.0, "pnl": 50000 },
+      "sharp": false,
+      "warum": "Quote ohne CLV ist Glueck (reale Tennis-Wallet 7/9 bei -70K)" },
+
+    { "name": "CLV exakt 0",
+      "score": { "n": 30, "wins": 22, "clvSumPP": 0.0, "pnl": 1000 },
+      "sharp": true,
+      "warum": ">= 0 ist die Bedingung, nicht > 0" },
+
+    { "name": "genau an der n-Schwelle, klar ueber Zufall",
+      "score": { "n": 8, "wins": 8, "clvSumPP": 4.0, "pnl": 1000 },
+      "sharp": true,
+      "warum": "8/8 haelt den Wilson-Test auch bei n=8" },
+
+    { "name": "n=7, perfekt -- eine unter der Schwelle",
+      "score": { "n": 7, "wins": 7, "clvSumPP": 4.0, "pnl": 1000 },
+      "sharp": false,
+      "warum": "unter SHARP_MIN_N wird gar nicht erst gerechnet" },
+
+    { "name": "Muenzwurf bei grosser Stichprobe",
+      "score": { "n": 200, "wins": 102, "clvSumPP": 40.0, "pnl": 5000 },
+      "sharp": false,
+      "warum": "51% sind auch bei n=200 nicht signifikant ueber 50%" },
+
+    { "name": "leer / kein Record",
+      "score": { "n": 0, "wins": 0, "clvSumPP": 0 },
+      "sharp": false,
+      "warum": "nichts zu bewerten" }
+  ]
+}

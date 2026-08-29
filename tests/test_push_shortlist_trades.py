@@ -15,9 +15,16 @@ def _play(key, side, conv, verdict="BET", price=0.6, league="UCL", htk=1.0, reas
 
 class TestSelect(unittest.TestCase):
     def test_conv_gate_and_sort_and_cap(self):
-        plays = [_play("a", "H", 7), _play("b", "H", 10), _play("c", "H", 8), _play("d", "H", 9)]
+        # 29.08.2026: relativ zu MIN_CONV formuliert. Vorher standen hier die festen 7/8/9/10 —
+        # beim Nachziehen der Skala (Wallet-Neugewichtung) waere der Test gekippt, obwohl an der
+        # Auswahl-Logik nichts falsch war. Geprueft gehoert: knapp drunter fliegt raus, der Rest
+        # kommt absteigend.
+        raus = P.MIN_CONV - 1
+        plays = [_play("a", "H", raus), _play("b", "H", P.MIN_CONV + 3),
+                 _play("c", "H", P.MIN_CONV + 1), _play("d", "H", P.MIN_CONV + 2)]
         sel = P.select(plays)
-        self.assertEqual([p["conv"] for p in sel], [10, 9, 8])   # 7 raus, absteigend
+        self.assertEqual([p["conv"] for p in sel],
+                         [P.MIN_CONV + 3, P.MIN_CONV + 2, P.MIN_CONV + 1])
         self.assertTrue(all(p["conv"] >= P.MIN_CONV for p in sel))
 
     def test_only_bet_and_fade(self):
@@ -77,3 +84,30 @@ class TestFormat(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestSperrliste(unittest.TestCase):
+    """29.08.2026 (Lucas-Audit: „welche Wallets kommen in den Push"). Der Trades-Push nahm
+    `_pwTopPlays(0,false,false)` roh entgegen und filterte auf Conviction, Verdict und Preis —
+    aber NICHT auf die Sperrliste. US-Sport und Kampfsport sind seit dem 24.08. vom Setzen und aus
+    dem oeffentlichen Schaufenster raus (78 Plays, -29,6% ROI im Papier-Depot); im Trades-Channel
+    liefen sie weiter. `cat` steht seit dem 24.08. an jedem Play, `blockedCats` im selben Emit —
+    verglichen wurde es nur nie."""
+
+    def test_gesperrte_kategorie_faellt_raus(self):
+        plays = [_play("mlb", "H", P.MIN_CONV + 2), _play("epl", "H", P.MIN_CONV)]
+        plays[0]["cat"] = "US-Sport"
+        plays[1]["cat"] = "Fussball"
+        sel = P.select(plays, ["US-Sport", "Kampfsport"])
+        self.assertEqual([p["key"] for p in sel], ["epl"])
+
+    def test_ohne_sperrliste_unveraendert(self):
+        plays = [_play("mlb", "H", P.MIN_CONV)]
+        plays[0]["cat"] = "US-Sport"
+        self.assertEqual(len(P.select(plays)), 1)          # kein Argument -> altes Verhalten
+        self.assertEqual(len(P.select(plays, [])), 1)      # leere Liste -> nichts gesperrt
+
+    def test_play_ohne_kategorie_bleibt(self):
+        # Nicht wissen ist kein Verbot: aeltere Emits ohne `cat` sollen nicht stumm verschwinden.
+        plays = [_play("alt", "H", P.MIN_CONV)]
+        self.assertEqual(len(P.select(plays, ["US-Sport"])), 1)

@@ -214,9 +214,18 @@ def flow_list(prices, hist, now, top=TOP_FLOW, direction=None):
                     "market": mkt, "sideName": (lead or {}).get("name"),
                     "odd": _num((lead or {}).get("odd")),
                     "thin": bool(_thin), "sharePct": round(_share * 100),   # 21.08.2026 (Lucas): Fix-Radar-Markierung
+                    "kickoff": m.get("kickoff"),   # 29.08.2026 (Lucas-Checkup): steam_list liefert den
+                    # Anpfiff seit je, flow_list nicht — deshalb stand in „Top-Wetten jetzt" bei jeder
+                    # Betfair-Geld-Zeile „0m". Der Wert liegt hier ohnehin vor (_is_over liest ihn).
                     "dir": (_d or {}).get("dir")})   # 'in'=Back (Quote kuerzer) · 'out'=driftet
         out.append(row)
-    out.sort(key=lambda r: (not r.get("thin"), -r["deltaEur"]))   # Duenn-Markt-Anomalien oben, dann groesstes Geld
+    # 29.08.2026 (Lucas-Checkup, „A"): sortierte bis heute Duenn-Markt-Anomalien VOR das Geld
+    # (21.08., Fix-Radar). Auf der Uebersicht kehrte das die Kachel um: sechs Zeilen mit
+    # EUR 2,4-9,3K standen ueber EUR 108.554 auf Liverpool, und weil der Balken auf das Maximum
+    # skaliert, sahen die oberen sechs aus wie nichts. Die Kachel heisst „Frisches Geld" — also
+    # sortiert sie nach Geld. Die Anomalien bleiben drin und behalten ihren 🔍-Chip (thin/sharePct),
+    # sie draengeln sich nur nicht mehr vor das Signal.
+    out.sort(key=lambda r: -r["deltaEur"])
     return out[:top]
 
 

@@ -1,3 +1,7 @@
+// 29.08.2026 (Sharp-Gate vereinheitlicht): die 0xSHARP-Fixtures standen auf n=6 mit 4/6.
+// Das war unter dem alten Gate „scharf" (roh 67%) und ist es unter dem neuen nicht mehr —
+// bei n=6 beweist keine Quote etwas (Wilson-Untergrenze 30%). Diese Tests pruefen Drilldown,
+// Sharp-Spalte und Ranking, nicht die Kalibrierung -> Fixture auf eine belegte Wallet (28/40).
 // tests/frontend/poly-money-accuracy.test.mjs
 // 19.07.2026 — Wallets-Tab „Liegt das Geld richtig?": empirischer Test, ob das Poly-Geld schärfer
 // ist als der Preis. Eigener View-Tab neben dem Edge-Board.
@@ -231,7 +235,7 @@ test('🔎 Drilldown-Overlay: Track-Record + offene Positionen der Wallet', asyn
     'mls-data.json': { groups: {} }, 'mls_poly_prices.json': { prices: {} },
     'mls_poly_wallets.json': { topPositionsAll: [], matches: {}, updatedAt: new Date().toISOString() },
     'poly_money_broad.json': { n: 0 },
-    'poly_wallet_track.json': { scores: { '0xSHARP': { n: 6, clvSumPP: 18, wins: 4, pnl: 500 } }, open: {
+    'poly_wallet_track.json': { scores: { '0xSHARP': { n: 40, clvSumPP: 120, wins: 28, pnl: 500 } }, open: {
       '0xSHARP|mlb-a-b|Braves': { wallet: '0xSHARP', key: 'mlb-a-b', side: 'Braves', league: 'MLB', firstPrice: 0.42, usd: 30000 },
       '0xSHARP|atp-x-y|Alcaraz': { wallet: '0xSHARP', key: 'atp-x-y', side: 'Alcaraz', league: 'TENNIS', firstPrice: 0.6, usd: 12000 },
       '0xOTHER|nba-c-d|Lakers': { wallet: '0xOTHER', key: 'nba-c-d', side: 'Lakers', league: 'NBA', firstPrice: 0.5, usd: 5000 } } },
@@ -287,7 +291,7 @@ test('🆕 Feed rendert Einstiege (🔥 scharf) + Favoriten-Flips', async () => 
     'mls-data.json': { groups: {} }, 'mls_poly_prices.json': { prices: {} },
     'mls_poly_wallets.json': { topPositionsAll: [], matches: {}, updatedAt: new Date().toISOString() },
     'poly_money_broad.json': { n: 0 },
-    'poly_wallet_track.json': { open: { 's|k1|A': { wallet: '0xSHARP', key: 'k1', side: 'A', league: 'MLB', firstPrice: 0.4, usd: 9000, firstTs: new Date(now - 3 * 3.6e6).toISOString() } }, scores: { '0xSHARP': { n: 6, clvSumPP: 18, wins: 4 } } },
+    'poly_wallet_track.json': { open: { 's|k1|A': { wallet: '0xSHARP', key: 'k1', side: 'A', league: 'MLB', firstPrice: 0.4, usd: 9000, firstTs: new Date(now - 3 * 3.6e6).toISOString() } }, scores: { '0xSHARP': { n: 40, clvSumPP: 120, wins: 28 } } },
     'poly_money_broad_history.json': { 'k2': [{ ts: '2026-07-24T12:00:00Z', p: { X: 0.6, Y: 0.4 }, league: 'NBA' }, { ts: '2026-07-24T13:00:00Z', p: { X: 0.4, Y: 0.6 }, league: 'NBA' }] },
   };
   const dom = new JSDOM('<!DOCTYPE html><body><div id="polyWalletsPanel"></div></body>',
@@ -409,7 +413,7 @@ test('② Sharp-Spalte: bewiesene Wallet zeigt CLV + 🔥, dünne zeigt „samme
     'poly_money_broad_close.json': {
       'mlb-a-b': { league: 'MLB', resolved: null, totalUsd: 400000, shares: { A: 1, B: 1 },
         whales: [{ wallet: '0xSHARP', side: 'A', usd: 50000 }, { wallet: '0xNEW', side: 'B', usd: 9000 }] } },
-    'poly_wallet_track.json': { scores: { '0xSHARP': { n: 6, clvSumPP: 18, wins: 4 }, '0xNEW': { n: 1, clvSumPP: 0.5, wins: 0 } } },
+    'poly_wallet_track.json': { scores: { '0xSHARP': { n: 40, clvSumPP: 120, wins: 28 }, '0xNEW': { n: 1, clvSumPP: 0.5, wins: 0 } } },
     'poly_money_broad.json': { n: 0 },
   };
   const dom = new JSDOM('<!DOCTYPE html><body><div id="polyWalletsPanel"></div></body>',

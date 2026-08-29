@@ -34,11 +34,14 @@ Ein HTML-Post je frischer Großposition in den Trades-Channel (TELEGRAM_TRADES_C
 poly_whale_seen.json {posKey → {usd, ts}}: je Position EINMAL alerten; erneut nur, wenn die
 Wallet signifikant aufstockt (≥ +50% USD) — dann als „aufgestockt".
 """
-import json, math, os, re as _re, urllib.request, urllib.error, html   # 25.08.2026: _re fuer sport_category (Spiegel von _pwSportCategory)
+import json, os, re as _re, urllib.request, urllib.error, html   # 25.08.2026: _re fuer sport_category (Spiegel von _pwSportCategory)
+# 29.08.2026: `math` ist raus — die Wilson-Rechnung wohnt jetzt in sharp_gate.py.
 from datetime import datetime, timezone
 from pathlib import Path
 
 BASE = Path(__file__).resolve().parent
+import sharp_gate as SG   # 29.08.2026: DIE Sharp-Definition, geteilt mit Live-Watch + Frontend
+
 TRACK_FILE = BASE / "poly_wallet_track.json"
 SEEN_FILE  = BASE / "poly_whale_seen.json"
 LOG_FILE   = BASE / "telegram-log.json"
@@ -82,55 +85,35 @@ PUB_TOP_N             = int(os.environ.get("WHALE_PUB_TOP_N")            or 10) 
 # 03.08.2026 (Lucas: „50% ist Münzwurf, kein Beweis"): „bewiesen" heißt jetzt STATISTISCH über
 # Münzwurf — die Wilson-Untergrenze der Trefferquote muss > 50% liegen, nicht bloß die rohe Quote
 # ≥ 50%. Passt sich an die Stichprobe an: 24/47 (51%) reicht nicht, 6/11 (55%) erst recht nicht.
-SIG_Z = float(os.environ.get("WHALE_SIG_Z") or 1.645)  # 1.645 = 95% EINSEITIG („signifikant über 50%“); 1.2816 = 90% (mehr Alerts), 1.96 = strenger
+# 29.08.2026: die Mathematik wohnt jetzt in sharp_gate.py — hier nur noch durchgereicht, damit
+# es EINE Implementierung gibt statt einer pro Datei. WHALE_SIG_Z bleibt als Ueberschreibung.
+SIG_Z = float(os.environ.get("WHALE_SIG_Z") or SG.SHARP_Z)  # 1.645 = 95% EINSEITIG; 1.2816 = 90% (mehr Alerts), 1.96 = strenger
+
 
 def _wilson_lb(wins, n, z=SIG_Z):
     """Untere Wilson-Grenze der Trefferquote (robuster als roh bei kleinem n)."""
-    if not n:
-        return 0.0
-    p = (wins or 0) / n
-    d = 1 + z * z / n
-    centre = (p + z * z / (2 * n)) / d
-    margin = z * math.sqrt(p * (1 - p) / n + z * z / (4 * n * n)) / d
-    return centre - margin
+    return SG.wilson_lb(wins, n, z)
+
 
 def _beats_coinflip(wins, n, z=SIG_Z):
     """Ist die Trefferquote SIGNIFIKANT über 50% (kein Münzwurf)? Wilson-Untergrenze > 0.5."""
-    return bool(n) and _wilson_lb(wins, n, z) > 0.5
+    return SG.beats_coinflip(wins, n, z)
 
 
 def _is_smart(s, min_tr=MIN_TR, min_hitrate=MIN_HITRATE):
     """„Bewiesen ordentliche" Wallet fürs niedrige Schwellen-Band UND das „bewiesen"-Label.
-    Record (n≥min_tr) UND ≥min_hitrate Treffer — plus (02.08.2026, Lucas, konservativ): ein
-    BESTÄTIGTER Verlierer (Lifetime-P&L bekannt UND < 0) zählt NICHT als smart. Eine hohe Trefferquote
-    bei Millionen-Verlust (gibt es real: 88% Treffer, −$7 Mio) ist kein Schärfe-Beweis. Unbekannter
-    P&L bleibt drin → Verhalten wie bisher, nur nachweisliche Verlierer fliegen raus."""
-    if not isinstance(s, dict):
-        return False
-    n = s.get("n") or 0
-    if n < min_tr:
-        return False
-    if not _beats_coinflip(s.get("wins") or 0, n):   # signifikant >50%, nicht bloß roh ≥50%
-        return False
-    # 12.08.2026 (Lucas): CLV-Gate. Eine hohe Trefferquote OHNE positiven CLV ist Glueck, kein Edge —
-    # reale Tennis-Wallet 7/9 (78%) aber Ø CLV negativ, lebenslang -70K. „Bewiesen" heisst: schlaegt
-    # AUCH die Linie (Ø CLV >= 0), nicht nur die Quote. clvSumPP fehlt -> 0 (neutral, bleibt drin).
-    if ((s.get("clvSumPP") or 0) / n) < 0:
-        return False
-    pnl = s.get("pnl")
-    if isinstance(pnl, (int, float)) and pnl < 0:
-        return False
-    return True
+    29.08.2026: delegiert an sharp_gate.is_sharp — dieselbe Definition, die jetzt auch Dashboard,
+    Shortlist, Push und Live-Watch benutzen. Inhaltlich unveraendert (n>=min_tr, Wilson >50%,
+    Ø CLV >= 0, kein bestaetigter Verlierer); `min_hitrate` ist seit dem Wilson-Gate vom 03.08.
+    ohne Wirkung und bleibt nur fuer Aufrufer in der Signatur stehen."""
+    return SG.is_sharp(s, min_n=min_tr, z=SIG_Z)
 
 
 def _is_confirmed_loser(s) -> bool:
     """02.08.2026 (Lucas: „ganz rausfiltern"): eine Wallet mit BEKANNTEM Lifetime-P&L < 0 ist ein
     nachgewiesener Verlierer und wird gar nicht mehr gepusht — auch nicht als großer Whale. Unbekannter
     P&L bleibt drin (nur nachweisliche Verlierer fliegen)."""
-    if not isinstance(s, dict):
-        return False
-    pnl = s.get("pnl")
-    return isinstance(pnl, (int, float)) and pnl < 0
+    return SG.is_confirmed_loser(s)
 PUB_CHAT   = (os.environ.get("TELEGRAM_CHAT_ID") or "").strip()
 PUB_SEEN_FILE = BASE / "poly_whale_public_seen.json"
 BROAD_FILE    = BASE / "poly_money_broad_close.json"

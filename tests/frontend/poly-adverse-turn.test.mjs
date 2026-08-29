@@ -22,7 +22,10 @@ function load(files) {
 
 // Wallet-Track mit EINER bewaehrten Wallet, offen auf FAV → Sharp-Signal (zusammen mit Geld-Mehrheit
 // ergibt das einen sauberen BET, auf den wir dann die Umkehr legen).
-const WT = { scores: { W1: { n: 10, clvSumPP: 20, wins: 7, pnl: 500 } },
+// 29.08.2026 (Sharp-Gate vereinheitlicht): W1 stand auf n=10 mit 7/10 — 70% roh, aber
+// Wilson-Untergrenze 44%, also kein Beweis. Dieser Test prueft den Umkehr-Riegel, nicht die
+// Kalibrierung des Sharp-Gates -> eine Wallet, die wirklich belegt ist (28/40, Wilson 57%).
+const WT = { scores: { W1: { n: 40, clvSumPP: 80, wins: 28, pnl: 500 } },
   open: [{ key: 'lol-kill', side: 'FAV', usd: 1000, wallet: 'W1' },
          { key: 'lol-warn', side: 'FAV', usd: 1000, wallet: 'W1' },
          { key: 'lol-fav',  side: 'FAV', usd: 1000, wallet: 'W1' }] };

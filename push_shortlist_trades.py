@@ -25,7 +25,12 @@ from poly_shortlist_track import load_emit
 BASE = Path(__file__).resolve().parent
 SEEN_FILE = BASE / "shortlist_push_seen.json"
 
-MIN_CONV = int(os.environ.get("SHORTLIST_PUSH_MIN_CONV") or 8)
+# 29.08.2026 (Lucas-Checkup, „D"): Default 8 → 7. Nicht weil die Latte sinken soll, sondern weil
+# die Skala darunter weggerutscht ist: die Wallet-Neugewichtung nimmt gewichteten Plays rund einen
+# Punkt. 8 auf der neuen Skala waere das alte 9 — also eine stille Verschaerfung, die niemand
+# beschlossen hat. 7 haelt die Strenge, die vorher 8 war. Ueber SHORTLIST_PUSH_MIN_CONV weiter
+# ueberschreibbar; zurueck auf die alte Zahl heisst: diese 7 wieder auf 8 setzen.
+MIN_CONV = int(os.environ.get("SHORTLIST_PUSH_MIN_CONV") or 7)
 MAX_PLAYS = int(os.environ.get("SHORTLIST_PUSH_MAX") or 6)
 MAX_PRICE = float(os.environ.get("SHORTLIST_PUSH_MAX_PRICE") or 0.92)   # Quasi-Locks raus (kein handelbarer Raum)
 SEEN_TTL_DAYS = 3
@@ -76,13 +81,29 @@ def _save(path, data):
     Path(path).write_text(json.dumps(data, ensure_ascii=False, indent=1), encoding="utf-8")
 
 
-def select(plays):
-    """Top-Plays der Shortlist: Conviction >= MIN_CONV, staerkste zuerst, gedeckelt. REIN/testbar."""
+def select(plays, blocked_cats=None):
+    """Top-Plays der Shortlist: Conviction >= MIN_CONV, staerkste zuerst, gedeckelt. REIN/testbar.
+
+    29.08.2026 (Lucas-Audit): die Sperrliste fehlte hier komplett. US-Sport und Kampfsport sind
+    seit dem 24.08. vom Setzen und aus dem oeffentlichen Schaufenster ausgeschlossen — im
+    Papier-Depot brachten sie ueber 78 Plays -29,6% ROI. Der Trades-Push zog sie trotzdem weiter,
+    weil er `_pwTopPlays(0,false,false)` roh uebernahm. Die Kategorie steht seit dem 24.08. als
+    `cat` an jedem Play und die Sperrliste als `blockedCats` im selben Emit — es wurde nur nie
+    verglichen. Fehlt `cat` (aeltere Emits), bleibt der Play drin: nicht wissen ist kein Verbot,
+    aber wir wissen es hier praktisch immer."""
+    blocked = {str(c) for c in (blocked_cats or []) if c}
+
     def _ok_price(p):
         pr = p.get("price")
         return not (isinstance(pr, (int, float)) and pr >= MAX_PRICE)
+
+    def _erlaubt(p):
+        cat = p.get("cat")
+        return not (cat and str(cat) in blocked)
+
     out = [p for p in (plays or []) if isinstance(p, dict)
-           and (p.get("conv") or 0) >= MIN_CONV and p.get("verdict") in ("BET", "FADE") and _ok_price(p)]
+           and (p.get("conv") or 0) >= MIN_CONV and p.get("verdict") in ("BET", "FADE")
+           and _ok_price(p) and _erlaubt(p)]
     out.sort(key=lambda p: -(p.get("conv") or 0))
     return out[:MAX_PLAYS]
 
@@ -128,7 +149,7 @@ def main() -> int:
     if not emit:
         print("  ℹ️  kein Emit — Shortlist-Push uebersprungen (nicht fatal).")
         return 0
-    sel = select(emit.get("plays") or [])
+    sel = select(emit.get("plays") or [], emit.get("blockedCats"))
     if not sel:
         print("  ℹ️  keine Plays >= conv %d." % MIN_CONV)
         return 0

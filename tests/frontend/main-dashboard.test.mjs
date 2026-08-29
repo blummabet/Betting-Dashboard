@@ -103,7 +103,9 @@ const PREV_FILES = {
   'poly_money_broad_history.json': {},
   'poly_money_broad.json': { n: 100, byLeague: [] },
   'poly_wallet_track.json': { updatedAt: iso,
-    scores: { '0xSHARP': { n: 10, clvSumPP: 20, wins: 7, usd: 40000, pnl: 150000 } },
+    // 29.08.2026 (Wallet-Neugewichtung): n10 traegt seit heute bewusst keinen Public-Kandidaten mehr
+    // (Konfidenzfaktor 0,5). Diese Box prueft das Rendern, nicht die Stichprobe -> belegte Wallet.
+    scores: { '0xSHARP': { n: 60, clvSumPP: 120, wins: 42, usd: 40000, pnl: 150000 } },
     open: [
       { wallet: '0xSHARP', key: 'mlb-braves-padres', side: 'Atlanta Braves', league: 'MLB', usd: 40000, entryPrice: 0.55, lastPrice: 0.62 },
       { wallet: '0xWHALE', key: 'nba-lakers-celtics', side: 'Lakers', league: 'NBA', usd: 120000, entryPrice: 0.50, lastPrice: 0.55 },

@@ -926,21 +926,52 @@ function _pwGlobalWhales(live){
 
 // ② Sharp-Wallet (25.07.2026, Lucas): CLV/Treffer je Wallet aus poly_wallet_track.json — trennt
 // „scharf" (schlägt die Linie) von „bloß groß". Ab PW_SHARP_MIN_N aufgelösten Positionen bewertbar.
-const PW_SHARP_MIN_N=4;
-const PW_SHARP_MIN_HIT=0.5;    // 07.08.2026 (Lucas): Treffer-Floor — BEIDE Achsen muessen stimmen, nicht CLV ODER Treffer
-const PW_SHARP_CLEAR_HIT=0.55; // 08.08.2026 (Lucas: „52% ist Muenzwurf"): ab hier klar ueber Zufall -> zaehlt allein
-const PW_SHARP_STRONG_CLV=1.0; // ... bei marginalem Treffer (0.50-0.55) nur scharf, wenn die Linie DEUTLICH geschlagen wird (>=1pp Ø CLV)
+// 29.08.2026 (Lucas: „prinzipiell checken, welche Wallets wir tracken") — DIE Definition steht
+// jetzt in sharp_gate.py; das hier ist ihr Spiegel. Der Vertrag zwischen beiden liegt in
+// tests/fixtures/sharp_gate_cases.json und wird von pytest UND node geprueft.
+//
+// Was sich geaendert hat und warum (Zahlen vom 29.08.):
+//  · n>=4 -> n>=8. Die 4 war ohnehin Dekoration: P&L wird erst ab n>=5 geholt, das Gate verlangte
+//    P&L>0 — von 131 Wallets mit exakt n=4 hatte KEINE einen Wert. n>=4 und n>=8 lieferten
+//    dasselbe Ergebnis. Jetzt steht die echte Schwelle da, statt dass ein Fetch-Budget sie setzt.
+//  · rohe Quote >=55% -> Wilson-Untergrenze >50%. 5/9 sind 55,6% und beweisen nichts (Wilson 30%).
+//    27 der 42 „scharfen" Wallets bestanden diesen Test nicht.
+//  · P&L>0 zwingend -> P&L ist nur noch ein AUSSCHLUSS. Er ist bei 87% der Wallets unbekannt, und
+//    er misst die gesamte Poly-Lebensbilanz (Wahlen, Krypto), waehrend die Trefferquote nur unsere
+//    beobachteten Positionen misst. Zwei Welten, nicht ein Beweis.
+const PW_SHARP_MIN_N=8;
+const PW_SHARP_Z=1.645;        // 95% einseitig — identisch zu sharp_gate.SHARP_Z
+function _pwWilsonLb(wins,n,z){
+  n=n||0; if(n<=0) return 0;
+  z=(z==null?PW_SHARP_Z:z);
+  const p=(wins||0)/n, d=1+z*z/n;
+  const centre=(p+z*z/(2*n))/d;
+  const margin=z*Math.sqrt(p*(1-p)/n+z*z/(4*n*n))/d;
+  return centre-margin;
+}
+function _pwBeatsCoinflip(wins,n,z){ return !!n && _pwWilsonLb(wins,n,z)>0.5; }
 const PW_SHARP_MIN_USD=250;    // 07.08.2026 (Lucas): $2-6-Positionen sind kein Signal — raus aus der Liste
-function _pwIsSharpScore(sc){  // scharf = genug Historie UND profitabel UND schlaegt die Linie UND (klar >Muenzwurf ODER deutliche Kante)
-  if(!(!!sc && sc.n>=PW_SHARP_MIN_N && (sc.hit||0)>=PW_SHARP_MIN_HIT && (sc.avgClv||0)>=0 && (sc.pnl||0)>0)) return false;
-  return (sc.hit||0)>=PW_SHARP_CLEAR_HIT || (sc.avgClv||0)>=PW_SHARP_STRONG_CLV;
+function _pwIsSharpScore(sc){
+  if(!sc) return false;
+  const n=sc.n||0;
+  if(n<PW_SHARP_MIN_N) return false;
+  // wins bevorzugt direkt; sonst aus der Quote rekonstruieren (aeltere Aufrufer geben nur hit).
+  const wins=(typeof sc.wins==='number')?sc.wins:Math.round((sc.hit||0)*n);
+  if(!_pwBeatsCoinflip(wins,n)) return false;
+  if((sc.avgClv||0)<0) return false;
+  if(sc.pnlKnown && (sc.pnl||0)<0) return false;   // bestaetigter Verlierer raus, unbekannt bleibt
+  return true;
 }
 const PW_MONEY_MAJ=0.60;   // (01.08.2026, Lucas) „großes Geld" erst ab echter Mehrheit — 50–55% ist Münzwurf, kein Signal
 function _pwWalletScore(wallet){
   const s=_pwCache&&_pwCache.walletTrack&&_pwCache.walletTrack.scores;
   const e=s&&s[wallet];
   if(!e||!e.n) return null;
-  return {n:e.n, avgClv:e.clvSumPP/e.n, hit:(e.wins||0)/e.n, pnl:Number(e.pnl)||0};
+  // 29.08.2026: pnlKnown trennt „unbekannt" von „0". Vorher machte `Number(e.pnl)||0` aus beidem
+  // dieselbe Null — und weil das Gate P&L>0 verlangte, flogen 318 Wallets raus, ueber die wir
+  // schlicht nichts wussten. wins wandert mit, damit das Gate Wilson rechnen kann.
+  return {n:e.n, avgClv:e.clvSumPP/e.n, hit:(e.wins||0)/e.n, wins:(e.wins||0),
+          pnl:Number(e.pnl)||0, pnlKnown:(typeof e.pnl==='number' && isFinite(e.pnl))};
 }
 function _pwSharpCell(wallet){
   const sc=_pwWalletScore(wallet);
@@ -1745,13 +1776,23 @@ function _pwTopPlays(limit, live, useSportPass){
 // (01.08.2026, Lucas) PUBLIC-KANDIDAT „Top-Play" — hart gegatet, NUR Vorschau (sendet nicht).
 // Nur was wir öffentlich vertreten würden: Conviction≥7 (Skala neu, = altes ≥9) + bewiesene Wallet (n≥8 & ≥55% Treffer)
 // + echte Geld-Mehrheit ≥60% + Sport. Sport-Filter der View wird ignoriert (public = alle Sportarten).
+const PW_PUBLIC_MIN_CONV=6;   // 29.08.2026: 7 → 6, siehe unten (Wallet-Neugewichtung, „D")
+// Zugriff fuer Tests/Diagnose: ein `const` im Skript-Scope ist keine window-Property, eine
+// Funktionsdeklaration schon. Damit koennen Tests gegen das Gate pruefen statt gegen eine Zahl.
+function _pwPublicMinConv(){ return PW_PUBLIC_MIN_CONV; }
 function _pwPublicTopPlays(){
   // 24.08.2026 (Lucas): gesperrte Sportarten fliegen HIER raus, nicht erst beim Setzen — der
   // oeffentliche Track-Record ist das Produkt. Bisher gingen 13 MLB-Plays als Public-Kandidat
   // durch. Im Scan/Papier-Depot bleiben sie (Beobachtung), nur nicht mehr im Schaufenster.
+  // 29.08.2026 (Lucas-Checkup, „D"): war ≥7. Die Wallet-Neugewichtung nimmt der Skala rund einen
+  // Punkt — und zwar genau dort, wo die Wallet den Score getragen hat. Bliebe das Gate auf 7, waere
+  // aus „Wallets zaehlen weniger" unbemerkt „das Schaufenster bleibt leer" geworden: gemessen am
+  // Stand von heute fielen alle drei Public-Kandidaten weg (INOX, Kashima, MOUZ — 7 → 6). Mit 6
+  // stehen exakt dieselben drei drin, nur setzt sich ihr Score jetzt anders zusammen. Die Strenge
+  // bleibt, die Gewichtung aendert sich — das war der Auftrag.
   return _pwTopPlays(0,false,false).filter(r=>
     !_pwBetBlocked(r) &&
-    r.conv>=7 && r.moneyPct>=0.60 && r.sharp && r.sharp.n>=8 && r.sharp.hit>=0.55);   // 09.08.2026: ≥7 nach Basis-4→2-Umstellung = gleiche effektive Stärke wie vorher ≥9
+    r.conv>=PW_PUBLIC_MIN_CONV && r.moneyPct>=0.60 && r.sharp && r.sharp.n>=8 && r.sharp.hit>=0.55);
 }
 
 // (01.08.2026, Lucas) PUBLIC-KANDIDAT „Whale-Watch" — repliziert das Public-Gate von poly_whale_watch.py
@@ -1896,7 +1937,9 @@ function _pwSharpInfoForKey(key){
     const usd=Number(pos.usd)||0; if(usd<PW_SHARP_MIN_USD) continue;   // 07.08.2026 (Lucas): Mini-Einsaetze ($2-6) raus
     const raw=sc[pos.wallet]; if(!raw||!raw.n||raw.n<PW_SHARP_MIN_N) continue;
     const avgClv=raw.clvSumPP/raw.n, hit=(raw.wins||0)/raw.n;
-    if(!_pwIsSharpScore({n:raw.n,avgClv:avgClv,hit:hit,pnl:Number(raw.pnl)||0})) continue;   // 07.08.2026 (Lucas): beide Achsen streng   // 06.08.2026 (Lucas): kein "scharf" bei Minus-PnL           // bewährt: schlägt Linie ODER gewinnt
+    if(!_pwIsSharpScore({n:raw.n,avgClv:avgClv,hit:hit,wins:(raw.wins||0),
+                         pnl:Number(raw.pnl)||0,
+                         pnlKnown:(typeof raw.pnl==='number' && isFinite(raw.pnl))})) continue;   // 07.08.2026 (Lucas): beide Achsen streng   // 06.08.2026 (Lucas): kein "scharf" bei Minus-PnL           // bewährt: schlägt Linie ODER gewinnt
     const b=bySide[pos.side]||(bySide[pos.side]={usd:0,n:0,wins:0,pnl:0,clvUsd:0,count:0});
     b.usd+=usd; b.n+=raw.n; b.wins+=(raw.wins||0); b.pnl+=(Number(raw.pnl)||0);
     b.clvUsd+=avgClv*usd; b.count++;
@@ -2049,18 +2092,32 @@ function _pwShortlistScore(key,m){
   if(mv&&mv.steam&&mv.move>=2) add(mv.side, mv.move>=4?3:2, 'Steam läuft rein (+'+mv.move.toFixed(1)+'pp)', 'steam');
   const sh=_pwSharpInfoForKey(key);
   if(sh){
-    // Qualitätsskalierte Gewichtung: Basis 2,5; +0,5 bei ≥60% Treffer, +0,5 bei ≥70%, +0,5 wenn lifetime P&L>0.
-    let w=2.5; if(sh.hit>=0.6)w+=0.5; if(sh.hit>=0.7)w+=0.5; if(sh.pnl>0)w+=0.5;
-    // 09.08.2026 (Lucas): nach Stichprobe skalieren — n=8 darf nicht wie n=30 zählen. Konfidenzfaktor
-    // 0,7..1,0 (voll ab ~n=12), damit dünne Stichproben weniger ins Gewicht ziehen.
-    w *= Math.min(1, 0.7 + (sh.n||0)/40);
+    // 29.08.2026 (Lucas-Checkup, „D": Wallets sollen nicht so wichtig sein). Zwei Gruende, beide
+    // gemessen statt geschaetzt:
+    //  1. Basis war 2,5 — damit war die Wallet das SCHWERSTE Einzelsignal auf dem Board, schwerer
+    //     als „grosses Geld >=70%" (1,5). Die Signal-Bilanz sagt das Gegenteil: sharp n=352 bringt
+    //     +1,2% ROI, bf n=41 bringt +26,4%. Ein Signal mit +1,2% darf nicht das Ruder fuehren.
+    //  2. Der Konfidenzfaktor hatte einen Boden von 0,7 und war ab n=12 voll. Eine Wallet-Historie
+    //     aus 9 abgerechneten Plays bekam also 92,5% des Gewichts einer aus 266 — der Grund, warum
+    //     ein Cricket-Spiel mit 9 Plays Historie und 54% Geld auf Platz 2 der Top-Wetten stand.
+    // Jetzt: Basis 1,8 (Boni unveraendert) und ein Faktor, der wirklich beisst — 0,30 bei n=4,
+    // 0,48 bei n=9, 0,94 bei n=32, voll erst ab n=35.
+    // 29.08.2026 (Punkt 5): der P&L-Bonus (+0,5 bei pnl>0) ist raus. P&L ist die Poly-Gesamtbilanz
+    // ueber alle Maerkte — Wahlen, Krypto, alles. Ihn als Schaerfe-BEWEIS zu verrechnen, mischt
+    // zwei verschiedene Welten. Er bleibt, was er belegen kann: ein Ausschluss im Gate oben.
+    let w=1.8; if(sh.hit>=0.6)w+=0.5; if(sh.hit>=0.7)w+=0.5;
+    w *= Math.min(1, 0.3 + (sh.n||0)/50);
     // 10.08.2026 (Lucas): Lebenszeit-P&L der Wallet über _pwUsd formatieren → rollt ab 1M sauber auf "M"
     // (z.B. +$3.44M statt des hässlichen "3440K"). _pwUsd trägt das '$', Vorzeichen kommt davor.
     const pnlTxt=(sh.pnl>=0?'+':'-')+_pwUsd(Math.abs(sh.pnl));
     add(sh.side,w,'🔥 scharfe Wallet ('+sh.wins+'/'+sh.n+', '+Math.round(sh.hit*100)+'% · '+pnlTxt+')', 'sharp');
   } else {
+    // 29.08.2026 (Lucas-Checkup, „D"): Dieser Zweig greift, wenn wir zwar eine scharfe Wallet
+    // sehen, aber KEINE Bilanz zu ihr haben — und vergab dafuer 2,5, also exakt so viel wie eine
+    // belegte Historie oben. Kein Wissen ist keine Bestaetigung: jetzt 1,0, ein Hinweis statt
+    // eines Arguments.
     const sharp=_pwSharpSideForKey(key) || _pwSharpSideFor(m);
-    if(sharp) add(sharp,2.5,'🔥 scharfe Wallet drin', 'sharp');
+    if(sharp) add(sharp,1.0,'🔥 scharfe Wallet drin (ohne Bilanz)', 'sharp');
   }
   // (01.08.2026, Lucas) Pinnacle-Kante einweben: de-viggte Pinnacle vs Poly-Preis. Konsens hebt
   // Conviction, deutliche Fehlbewertung = eigener Value-Play. Feuert nur wenn crossSport-Daten da.
