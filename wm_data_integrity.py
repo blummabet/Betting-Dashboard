@@ -856,10 +856,34 @@ def _far_future_keys(ctx, tage: int = 7):
     return out
 
 
+def _angepfiffen_keys(ctx):
+    """29.08.2026 (Lucas-Checkup, Dauergelb Teil 2): Spiele, deren Anpfiff DURCH ist.
+
+    `_finished_keys` verlangt result.status in FT/AET/... — das schreibt der Resolver aber erst
+    nach Abpfiff. Dazwischen liegt die ganze Spieldauer, und in dieser Zeit hat der Buchmacher
+    seine Vor-Spiel-Quoten laengst abgeraeumt: hw/dr/aw sind None, waehrend die Poly-Felder noch
+    dastehen. Genau das flaggte der 1X2-Guard — gemessen an Liverpool-Nottm Forest (Anpfiff
+    11:30, geprueft 14:30): „1X2 unvollstaendig hw=None dr=None aw=None". Es ist nichts kaputt,
+    das Spiel laeuft. Ein Guard, der jeden Spieltagnachmittag gelb wird, ist genau die Sorte
+    Dauergelb, die man sich abgewoehnt anzuschauen."""
+    out = set()
+    for _g, fx in ctx.fixtures:
+        ko = fx.get("kickoff")
+        if not ko:
+            continue
+        try:
+            t = datetime.fromisoformat(str(ko).replace("Z", "+00:00"))
+        except ValueError:
+            continue
+        if t <= ctx.now:
+            out.add(f"{fx.get('home')}-{fx.get('away')}")
+    return out
+
+
 @integrity_check
 def check_odds_sane(ctx):
     real = _real_match_keys(ctx)
-    finished = _finished_keys(ctx)
+    finished = _finished_keys(ctx) | _angepfiffen_keys(ctx)
     zu_frueh = _far_future_keys(ctx) | _nie_eroeffnet_keys(ctx)
     fails = []
     for mk, o in ctx.odds.items():

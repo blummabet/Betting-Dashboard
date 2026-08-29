@@ -290,8 +290,16 @@ test('Confidence-Badge am Markt in der Liste, wenn Track-Record belastbar', () =
     },
   };
   const html = w._renderBetfairRadar();   // Live-View: Kairat (UEFA, Match Odds) trägt das Badge
-  assert.match(html, /🎯/);
-  assert.match(html, /🎯 60% · \+10%/);
+  // 29.08.2026 (Lucas: „was trägt, was trägt nicht"): der Chip zeigte die ZAHL (60% · +10% · n30).
+  // Was er nie zeigte, ist die KONSEQUENZ — bei +10% ROI und n>=15 verstärkt der Track das
+  // Card-Signal Betfair-Geld, bei <=-10% dreht er es um. Genau das steht jetzt drin; die Zahl
+  // bleibt daneben stehen.
+  assert.match(html, /✅ trägt/, 'der Chip nennt die Wirkung nicht');
+  assert.match(html, /\+10%/, 'der ROI ist aus dem Chip verschwunden');
+  assert.match(html, /n30/, 'die Stichprobe ist aus dem Chip verschwunden');
+  // Die ausführliche Begründung sitzt im Tooltip — der Chip in der Spielliste bleibt schmal.
+  assert.match(html, /das Card-Signal wird verstärkt/,
+    'der Tooltip erklärt nicht, was der Track in den Cards auslöst');
 });
 
 

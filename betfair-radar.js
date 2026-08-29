@@ -999,15 +999,46 @@
   function _clvCol(x) { return x == null ? C.dim : x > 0 ? C.back : x < 0 ? C.lay : C.mut; }
   function _roiTxt(x) { return x == null ? '—' : (x >= 0 ? '+' : '') + Math.round(x * 100) + '%'; }
   function _roiCol(x) { return x == null ? C.dim : x > 0.05 ? C.back : x < -0.08 ? C.lay : C.mut; }
-  // Kleine Confidence-Chip an einem Markt in der Spielliste (nur wenn belastbare Stichprobe da).
+  // ── Was der Track-Record WIRKLICH auslöst (29.08.2026, Lucas: „was trägt, was trägt nicht") ──
+  // Diese drei Zahlen sind die Spiegelung von sharp_signals/betfair_money.py. Dort entscheidet der
+  // Liga×Markt-Track seit dem 29.07. über die confidence des Card-Signals — und dreht es bei
+  // klarem Minus sogar UM (dem Geld dort zu folgen verliert → Fade). Sichtbar war davon nichts:
+  // die Konsequenz stand als Textfragment in der Evidence-Zeile eines Picks, nirgends auf einer
+  // Karte. Man sah die Zahl, aber nicht, was sie anrichtet.
+  // Die Werte müssen mit betfair_money.py übereinstimmen — tests/frontend/betfair-lernboard.test.mjs
+  // vergleicht beide Dateien, damit sie nicht auseinanderlaufen.
+  var BF_TR_MIN_N = 15;       // = MIN_TR_N
+  var BF_TR_FADE  = -0.10;    // = TR_FADE_ROI  → Signal wird umgedreht
+  var BF_TR_BOOST = 0.05;     // = TR_BOOST_ROI → Signal wird verstärkt
+  function bfTrackWirkung(v) {
+    if (!v || !v.n || typeof v.roi !== 'number') return null;
+    if (v.n < BF_TR_MIN_N) return { art: 'sammelt', txt: '⏳ sammelt', sub: 'n' + v.n + '/' + BF_TR_MIN_N, col: C.dim };
+    if (v.roi <= BF_TR_FADE) return { art: 'fade', txt: '⚠️ verliert hier', sub: 'Card fadet', col: C.lay };
+    if (v.roi >= BF_TR_BOOST) return { art: 'boost', txt: '✅ trägt', sub: 'Card verstärkt', col: C.back };
+    return { art: 'neutral', txt: '➖ neutral', sub: 'ohne Wirkung', col: C.mut };
+  }
+
+  // Kleine Confidence-Chip an einem Markt in der Spielliste.
   function confBadge(league, marketId) {
     var v = trackFor(league, marketId);
-    if (!v || !v.n || v.n < 12) return '';   // 08.08.2026 (Lucas): n<12 ist statistisch fast nichts (3/6 ist Zufall) — nicht als Badge zeigen, sonst klebt dieselbe Mini-Zahl auf 20 Karten derselben Liga. Ab n=12 gedimmt, ab MIN_CONF_N solid.
-    var solid = v.n >= MIN_CONF_N, col = _roiCol(v.roi);
+    var w = bfTrackWirkung(v);
+    // 29.08.2026: unter n=12 stand hier gar nichts — man konnte „noch keine Daten" nicht von
+    // „nie hingeschaut" unterscheiden. Jetzt zeigt auch der leere Zustand seinen Fortschritt.
+    if (!w) return '';
+    if (w.art === 'sammelt' && v.n < 6) return '';   // unter 6 Spielen ist auch der Fortschritt Rauschen
+    var stark = (w.art === 'fade' || w.art === 'boost');
     var tip = 'Track-Record ' + league + ' · ' + (MK_ID[marketId] ? MK_ID[marketId].label : marketId) +
-      ': ' + _pctTxt(v.hitRate) + ' Trefferquote · ROI ' + _roiTxt(v.roi) + ' · n=' + v.n +
-      (solid ? '' : ' (noch dünn)');
-    return '<span title="' + esc(tip) + '" style="display:inline-flex;gap:4px;align-items:center;padding:1px 7px;border-radius:20px;background:' + (solid ? 'rgba(63,185,80,.10)' : 'transparent') + ';border:1px solid ' + (solid ? 'rgba(63,185,80,.3)' : C.bd) + ';font-size:10px;font-weight:700;color:' + col + ';opacity:' + (solid ? 1 : 0.6) + '">🎯 ' + _pctTxt(v.hitRate) + ' · ' + _roiTxt(v.roi) + ' <span style="color:' + C.dim + ';font-weight:600">n' + v.n + '</span></span>';
+      ': ' + _pctTxt(v.hitRate) + ' Trefferquote · ROI ' + _roiTxt(v.roi) + ' · n=' + v.n + ' — ' +
+      (w.art === 'fade' ? 'dem Geld hier zu folgen verliert historisch; das Card-Signal wird umgedreht'
+       : w.art === 'boost' ? 'dem Geld hier zu folgen trägt; das Card-Signal wird verstärkt'
+       : w.art === 'neutral' ? 'weder klar tragend noch verlierend — das Card-Signal bleibt unverändert'
+       : 'erst ab n=' + BF_TR_MIN_N + ' wirkt der Track auf das Card-Signal');
+    return '<span title="' + esc(tip) + '" style="display:inline-flex;gap:5px;align-items:center;padding:1px 7px;border-radius:20px;background:'
+      + (stark ? (w.art === 'boost' ? 'rgba(63,185,80,.10)' : 'rgba(248,81,73,.10)') : 'transparent')
+      + ';border:1px solid ' + (stark ? (w.art === 'boost' ? 'rgba(63,185,80,.3)' : 'rgba(248,81,73,.3)') : C.bd)
+      + ';font-size:10px;font-weight:700;color:' + w.col + ';opacity:' + (stark ? 1 : 0.65) + '">'
+      + w.txt + (typeof v.roi === 'number' && w.art !== 'sammelt' ? ' ' + _roiTxt(v.roi) : '')
+      + ' <span style="color:' + C.dim + ';font-weight:600">' + (w.art === 'sammelt' ? w.sub : 'n' + v.n) + '</span></span>';
   }
 
   // 17.08.2026 (Lucas): 🖥️ TERMINAL — dichtes Profi-Board + Drilldown. Rein lesend & additiv.
@@ -1395,6 +1426,82 @@
       + mkTable + '</div>';
   }
 
+  // ═══════════════════════════════════════════════════════════════════════════════════════
+  //  🧭 LERN-BOARD BETFAIR (29.08.2026, Lucas: „im Betfair-Radar sieht man alle Ligen — dort
+  //  wissen wir dann auch, was trägt und was nicht. Ich will schon wissen, wo viel Geld
+  //  reinfließt, aber auch: in dieser Liga ist das zwar okay, aber nicht gewinnbringend.")
+  //
+  //  Die Tabelle darunter zeigt seit je Trefferquote und ROI je Liga×Markt. Was sie nie zeigte:
+  //  welche Zeile tatsächlich etwas AUSLÖST. Genau das ist hier die Aussage — die zwei
+  //  Schwellen aus betfair_money.py sind als Linien eingezeichnet, und jede Zeile steht
+  //  sichtbar links oder rechts davon.
+  //
+  //  Form: divergierender Balken um 0% ROI. Die Frage ist Polarität (trägt / trägt nicht),
+  //  nicht Größe. Farbe trägt die Aussage nie allein — Richtung ab der Mittellinie, Vorzeichen
+  //  und ein Wort ("trägt" / "verliert hier") sagen dasselbe noch dreimal; grün/rot ist für
+  //  Rot-Grün-Blinde praktisch ununterscheidbar (ΔE 2,2 deutan).
+  var BF_LB_HALF = 150;   // halbe Balkenbreite in px
+  function renderBfLernBoard() {
+    var t = _bf.track;
+    var src = (t && t.byLeagueMarket) || {};
+    var rows = Object.keys(src).map(function (k) {
+      var p = k.split('|'), v = src[k];
+      return { lg: p[0], mid: p[1], label: MK_ID[p[1]] ? MK_ID[p[1]].label : p[1], v: v,
+               w: bfTrackWirkung(v) };
+    }).filter(function (r) { return r.w && r.w.art !== 'sammelt'; });
+    if (!rows.length) {
+      return '<div style="background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:14px;padding:18px;margin:0 0 14px;color:' + C.mut + ';font-size:12.5px;line-height:1.6">'
+        + '<b style="color:' + C.ink + '">🧭 Lern-Board — noch nichts aktiv.</b><br>Kein Liga×Markt hat die '
+        + BF_TR_MIN_N + ' abgerechneten Spiele erreicht, ab denen der Track-Record auf das Card-Signal wirkt. '
+        + 'Bis dahin zählt das Geld-Signal überall gleich stark.</div>';
+    }
+    var ORD = { fade: 0, boost: 1, neutral: 2 };
+    rows.sort(function (a, b) { return (b.v.n - a.v.n); });
+    var span = Math.max(0.15, Math.max.apply(null, rows.map(function (r) { return Math.abs(r.v.roi); })));
+    var nF = rows.filter(function (r) { return r.w.art === 'fade'; }).length;
+    var nB = rows.filter(function (r) { return r.w.art === 'boost'; }).length;
+    var nN = rows.length - nF - nB;
+    var CAP = 24;
+    var px = function (roi) { return Math.max(3, Math.round(Math.abs(roi) / span * BF_LB_HALF)); };
+    // Die zwei Entscheidungslinien als feine Marken im Track — die Regel wird sichtbar.
+    var mark = function (roi, col) {
+      var off = Math.round(roi / span * BF_LB_HALF);
+      return '<div style="position:absolute;left:calc(50% + ' + off + 'px);top:-3px;bottom:-3px;width:1px;background:' + col + ';opacity:.45"></div>';
+    };
+    var body = rows.slice(0, CAP).map(function (r) {
+      var pos = r.v.roi >= 0, col = r.w.art === 'boost' ? C.back : r.w.art === 'fade' ? C.lay : C.mut;
+      var bar = '<div style="position:relative;height:10px">'
+        + '<div style="position:absolute;left:50%;top:-4px;bottom:-4px;width:1px;background:rgba(255,255,255,.18)"></div>'
+        + mark(BF_TR_FADE, C.lay) + mark(BF_TR_BOOST, C.back)
+        + '<div style="position:absolute;top:0;height:10px;' + (pos ? 'left:50%;border-radius:0 4px 4px 0' : 'right:50%;border-radius:4px 0 0 4px')
+        + ';width:' + px(r.v.roi) + 'px;background:' + col + (r.w.art === 'neutral' ? ';opacity:.45' : '') + '"></div></div>';
+      return '<div style="display:grid;grid-template-columns:minmax(150px,1.2fr) 310px 74px minmax(96px,auto);gap:14px;align-items:center;'
+        + 'background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:12px;padding:9px 13px">'
+        + '<div style="min-width:0"><div style="font-size:12.5px;font-weight:700;color:' + C.ink + ';white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + esc(r.lg) + '</div>'
+        + '<div style="font-size:11px;color:' + C.mut + '">' + esc(r.label) + '</div></div>'
+        + '<div>' + bar + '</div>'
+        + '<div style="text-align:right;font-family:ui-monospace,monospace;font-size:13px;font-weight:800;color:' + C.ink + ';font-variant-numeric:tabular-nums">'
+        + _roiTxt(r.v.roi) + '<div style="font-size:9.5px;font-weight:600;color:' + C.dim + ';font-family:inherit">n' + r.v.n + '</div></div>'
+        + '<div style="text-align:right;font-size:11px;font-weight:700;color:' + col + ';white-space:nowrap">' + r.w.txt
+        + '<div style="font-size:10px;font-weight:600;color:' + C.dim + '">' + r.w.sub + '</div></div>'
+        + '</div>';
+    }).join('');
+    return '<div style="margin:0 0 16px">'
+      + '<div style="font-size:13px;font-weight:800;color:' + C.ink + ';margin-bottom:4px">🧭 Lern-Board — was das Geld-Signal in den Cards auslöst</div>'
+      + '<div style="font-size:11.5px;color:' + C.mut + ';line-height:1.55;margin-bottom:10px">Ab <b style="color:' + C.ink + '">' + BF_TR_MIN_N + '</b> abgerechneten Spielen wirkt der Track-Record je Liga×Markt auf das Card-Signal <i>Betfair-Geld</i>: '
+      + '<b style="color:' + C.back + '">ab ' + Math.round(BF_TR_BOOST * 100) + '% ROI verstärkt</b> es, '
+      + '<b style="color:' + C.lay + '">ab ' + Math.round(BF_TR_FADE * 100) + '% dreht es um</b> (dem Geld dort zu folgen verliert → Fade). '
+      + 'Die zwei feinen Linien im Balken sind genau diese Schwellen.</div>'
+      + '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;font-size:11px">'
+      + '<span style="padding:3px 9px;border-radius:7px;border:1px solid rgba(63,185,80,.3);color:' + C.back + ';font-weight:700">' + nB + '× verstärkt</span>'
+      + '<span style="padding:3px 9px;border-radius:7px;border:1px solid rgba(248,81,73,.3);color:' + C.lay + ';font-weight:700">' + nF + '× gefadet</span>'
+      + '<span style="padding:3px 9px;border-radius:7px;border:1px solid ' + C.bd + ';color:' + C.mut + ';font-weight:700">' + nN + '× ohne Wirkung</span>'
+      + '</div>'
+      + '<div style="display:flex;flex-direction:column;gap:6px">' + body + '</div>'
+      + (rows.length > CAP ? '<div style="font-size:10.5px;color:' + C.dim + ';margin-top:8px">Top ' + CAP + ' nach Stichprobe · ' + rows.length + ' Kombinationen wirken insgesamt</div>' : '')
+      + '</div>';
+  }
+
   function renderTrackBoard() {
     var t = _bf.track, isTeam = _bf.trackBy === 'team';
     var byBtn = function (id, lbl) { var on = _bf.trackBy === id; return '<button onclick="_bfSetTrackBy(\'' + id + '\')" style="padding:5px 12px;border:1px solid ' + (on ? C.gold : C.bd) + ';background:' + (on ? 'rgba(255,184,12,.12)' : 'transparent') + ';color:' + (on ? C.gold : C.mut) + ';font-size:11.5px;font-weight:700;cursor:pointer">' + lbl + '</button>'; };
@@ -1429,7 +1536,7 @@
         td(v.hitRateInflow != null ? _pctTxt(v.hitRateInflow) + ' <span style="color:' + C.dim + ';font-weight:600">' + v.nInflow + '</span>' : '—', v.hitRateInflow != null ? C.ink : C.dim) +
         '</tr>';
     }).join('');
-    return head + trackHeadline(t) + '<div style="font-size:11px;color:' + C.dim + ';margin-bottom:8px">' + t.n + ' abgerechnete Signale · ' + total + ' ' + (isTeam ? 'Team' : 'Liga') + '×Markt-Kombinationen' + (total > CAP ? ' · Top ' + CAP + ' gezeigt' : '') + ' · Stand ' + (t.generatedAt ? new Date(t.generatedAt).toLocaleString('de-AT') : '—') + '</div>' +
+    return head + trackHeadline(t) + (isTeam ? '' : renderBfLernBoard()) + '<div style="font-size:11px;color:' + C.dim + ';margin-bottom:8px">' + t.n + ' abgerechnete Signale · ' + total + ' ' + (isTeam ? 'Team' : 'Liga') + '×Markt-Kombinationen' + (total > CAP ? ' · Top ' + CAP + ' gezeigt' : '') + ' · Stand ' + (t.generatedAt ? new Date(t.generatedAt).toLocaleString('de-AT') : '—') + '</div>' +
       '<div style="overflow-x:auto;background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:14px"><table style="width:100%;border-collapse:collapse;min-width:560px"><thead>' + head2 + '</thead><tbody>' + body + '</tbody></table></div>' +
       '<div style="font-size:10.5px;color:' + C.dim + ';margin-top:8px">Blasse Zeilen: Stichprobe noch zu klein (n&lt;' + MIN_CONF_N + ').' + (isTeam ? ' Team-Ebene: früh, viele Buckets mit n=1.' : '') + '</div>';
   }

@@ -104,3 +104,30 @@ class TestEchteDatenSindRuhig:
             wm = json.load(f)
         c = W.check_odds_sane(W.IntegrityCtx(wm=wm, poly={}, schedule=[], venues={}))
         assert c["ok"], f"{datensatz}: noch {c['nFail']} Fehler — {c['failures'][:3]}"
+
+
+# 29.08.2026 (Dauergelb, Teil 2): zwischen Anpfiff und Abpfiff raeumt der Buchmacher seine
+# Vor-Spiel-Quoten ab. `_finished_keys` greift da noch nicht (result.status kommt erst nach
+# Abpfiff), also flaggte der 1X2-Guard jedes laufende Spiel als „unvollstaendig". Gemessen an
+# Liverpool-Nottm Forest: Anpfiff 11:30, Pruefung 14:30, hw/dr/aw=None — nichts kaputt, Spiel laeuft.
+class TestLaufendeSpieleSindKeinFehler:
+    def _ctx(self, ko_iso, jetzt):
+        wm = {"groups": {"ENG": {"fixtures": [
+            {"home": "40", "away": "65", "kickoff": ko_iso, "date": ko_iso[:10], "matchday": 2}]}}}
+        ctx = W.IntegrityCtx(wm=wm, poly={}, schedule=[], venues={})
+        ctx.odds = {"40-65": {"poly_dr": 1.0, "poly_hw": 0.0, "poly_aw": 0.0005}}
+        ctx.now = jetzt
+        return ctx
+
+    def test_angepfiffenes_spiel_ohne_1x2_ist_kein_fehler(self):
+        from datetime import datetime, timezone
+        jetzt = datetime(2026, 8, 29, 14, 30, tzinfo=timezone.utc)
+        c = W.check_odds_sane(self._ctx("2026-08-29T11:30:00Z", jetzt))
+        assert c["ok"], c.get("failures")
+
+    def test_kommendes_spiel_ohne_1x2_wird_weiter_geflaggt(self):
+        # Der Guard soll nicht stumm werden — ein Spiel VOR Anpfiff ohne Quoten ist echt kaputt.
+        from datetime import datetime, timezone
+        jetzt = datetime(2026, 8, 29, 9, 0, tzinfo=timezone.utc)
+        c = W.check_odds_sane(self._ctx("2026-08-29T11:30:00Z", jetzt))
+        assert not c["ok"] and "1X2" in c["failures"][0]
