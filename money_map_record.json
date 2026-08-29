@@ -1,13 +1,13 @@
 {
-"generatedAt": "2026-08-29T22:48:51.398724+00:00",
+"generatedAt": "2026-08-29T23:03:45.000915+00:00",
 "byVerdict": {
 "konsens": {
-"n": 591,
-"wins": 480,
-"hitRate": 0.8122,
-"polyN": 554,
-"polyWins": 433,
-"polyHitRate": 0.7816,
+"n": 592,
+"wins": 481,
+"hitRate": 0.8125,
+"polyN": 555,
+"polyWins": 434,
+"polyHitRate": 0.782,
 "pinnN": 46,
 "pinnHitRate": 0.7391
 },
@@ -22,14 +22,14 @@
 "pinnHitRate": 0.5631
 },
 "teil": {
-"n": 6,
-"wins": 1,
-"hitRate": 0.1667,
-"polyN": 5,
+"n": 7,
+"wins": 2,
+"hitRate": 0.2857,
+"polyN": 6,
 "polyWins": 1,
-"polyHitRate": 0.2,
-"pinnN": 6,
-"pinnHitRate": 0.1667
+"polyHitRate": 0.1667,
+"pinnN": 7,
+"pinnHitRate": 0.2857
 }
 },
 "byLeague": {
@@ -63,15 +63,15 @@
 "wins": 18,
 "hitRate": 0.8571
 },
+"Argentinian Primera Division": {
+"n": 20,
+"wins": 10,
+"hitRate": 0.5
+},
 "Spanish Segunda Division": {
 "n": 20,
 "wins": 17,
 "hitRate": 0.85
-},
-"Argentinian Primera Division": {
-"n": 19,
-"wins": 9,
-"hitRate": 0.4737
 },
 "Mexican Liga MX": {
 "n": 19,
@@ -288,6 +288,11 @@
 "wins": 3,
 "hitRate": 0.75
 },
+"Brazilian Serie C": {
+"n": 4,
+"wins": 2,
+"hitRate": 0.5
+},
 "Chilean Primera B": {
 "n": 4,
 "wins": 1,
@@ -307,11 +312,6 @@
 "n": 3,
 "wins": 3,
 "hitRate": 1.0
-},
-"Brazilian Serie C": {
-"n": 3,
-"wins": 1,
-"hitRate": 0.3333
 },
 "Canadian Premier League": {
 "n": 3,
@@ -526,14 +526,14 @@
 },
 "byStrength": {
 "strong": {
-"n": 463,
-"wins": 375,
-"hitRate": 0.8099
+"n": 464,
+"wins": 376,
+"hitRate": 0.8103
 },
 "weak": {
-"n": 300,
-"wins": 151,
-"hitRate": 0.5033
+"n": 301,
+"wins": 152,
+"hitRate": 0.505
 }
 },
 "divergence": {
@@ -545,6 +545,44 @@
 "polyRate": 0.3011
 },
 "recent": [
+{
+"matchId": "35949500",
+"home": "Rosario Central",
+"away": "Gimnasia La Plata",
+"league": "Argentinian Primera Division",
+"verdict": "teil",
+"moneySide": "away",
+"moneyName": "Gimnasia La Plata",
+"polySide": "home",
+"winner": "away",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-08-29T20:00:00Z",
+"settledAt": "2026-08-29T23:03:44.835153+00:00"
+},
+{
+"matchId": "35987137",
+"home": "Barra FC",
+"away": "Volta Redonda",
+"league": "Brazilian Serie C",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Barra FC",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-08-29T20:00:00Z",
+"settledAt": "2026-08-29T23:03:44.835153+00:00"
+},
 {
 "matchId": "35987253",
 "home": "Padova",
@@ -1266,50 +1304,12 @@
 ],
 "kickoff": "2026-08-29T14:00:00Z",
 "settledAt": "2026-08-29T17:03:12.327676+00:00"
-},
-{
-"matchId": "35979263",
-"home": "Kilmarnock",
-"away": "Dundee Utd",
-"league": "Scottish Premiership",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Dundee Utd",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-4
-],
-"kickoff": "2026-08-29T14:00:00Z",
-"settledAt": "2026-08-29T17:03:12.327676+00:00"
-},
-{
-"matchId": "35980159",
-"home": "Sabadell",
-"away": "Almeria",
-"league": "Spanish Segunda Division",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Sabadell",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-08-29T15:00:00Z",
-"settledAt": "2026-08-29T17:03:12.327676+00:00"
 }
 ],
 "global": {
-"n": 796,
-"wins": 544,
-"hitRate": 0.6834
+"n": 798,
+"wins": 546,
+"hitRate": 0.6842
 },
-"pending": 17
+"pending": 16
 }
