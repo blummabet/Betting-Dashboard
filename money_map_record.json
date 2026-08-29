@@ -1,25 +1,25 @@
 {
-"generatedAt": "2026-08-29T15:18:01.941207+00:00",
+"generatedAt": "2026-08-29T15:33:02.349377+00:00",
 "byVerdict": {
 "konsens": {
-"n": 554,
+"n": 555,
 "wins": 449,
-"hitRate": 0.8105,
-"polyN": 519,
+"hitRate": 0.809,
+"polyN": 520,
 "polyWins": 409,
-"polyHitRate": 0.7881,
+"polyHitRate": 0.7865,
 "pinnN": 43,
 "pinnHitRate": 0.7442
 },
 "uneinig": {
-"n": 187,
+"n": 188,
 "wins": 61,
-"hitRate": 0.3262,
-"polyN": 166,
+"hitRate": 0.3245,
+"polyN": 167,
 "polyWins": 52,
-"polyHitRate": 0.3133,
-"pinnN": 93,
-"pinnHitRate": 0.5699
+"polyHitRate": 0.3114,
+"pinnN": 94,
+"pinnHitRate": 0.5638
 },
 "teil": {
 "n": 5,
@@ -323,6 +323,11 @@
 "wins": 2,
 "hitRate": 0.6667
 },
+"German Bundesliga": {
+"n": 3,
+"wins": 1,
+"hitRate": 0.3333
+},
 "Qatari Stars League": {
 "n": 3,
 "wins": 1,
@@ -433,11 +438,6 @@
 "wins": 1,
 "hitRate": 1.0
 },
-"German Bundesliga": {
-"n": 1,
-"wins": 1,
-"hitRate": 1.0
-},
 "German Super Cup": {
 "n": 1,
 "wins": 1,
@@ -526,9 +526,9 @@
 },
 "byStrength": {
 "strong": {
-"n": 436,
+"n": 438,
 "wins": 355,
-"hitRate": 0.8142
+"hitRate": 0.8105
 },
 "weak": {
 "n": 277,
@@ -537,14 +537,52 @@
 }
 },
 "divergence": {
-"n": 187,
+"n": 188,
 "betfairWins": 61,
-"betfairRate": 0.3262,
-"polyN": 166,
+"betfairRate": 0.3245,
+"polyN": 167,
 "polyWins": 52,
-"polyRate": 0.3133
+"polyRate": 0.3114
 },
 "recent": [
+{
+"matchId": "35785249",
+"home": "Union Berlin",
+"away": "Eintracht Frankfurt",
+"league": "German Bundesliga",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Eintracht Frankfurt",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+3,
+3
+],
+"kickoff": "2026-08-29T13:30:00Z",
+"settledAt": "2026-08-29T15:33:02.188738+00:00"
+},
+{
+"matchId": "35785219",
+"home": "FC Koln",
+"away": "Hoffenheim",
+"league": "German Bundesliga",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Hoffenheim",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+3,
+2
+],
+"kickoff": "2026-08-29T13:30:00Z",
+"settledAt": "2026-08-29T15:33:02.188738+00:00"
+},
 {
 "matchId": "35974069",
 "home": "Henan Songshan Longmen",
@@ -1266,50 +1304,12 @@
 ],
 "kickoff": "2026-08-28T17:00:00Z",
 "settledAt": "2026-08-28T19:01:00.478452+00:00"
-},
-{
-"matchId": "35947164",
-"home": "Braunschweig",
-"away": "Hertha Berlin",
-"league": "German Bundesliga 2",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Hertha Berlin",
-"polySide": null,
-"winner": "away",
-"moneyWin": true,
-"polyWin": null,
-"ftScore": [
-3,
-5
-],
-"kickoff": "2026-08-28T16:30:00Z",
-"settledAt": "2026-08-28T18:30:57.442433+00:00"
-},
-{
-"matchId": "35780320",
-"home": "Barcelona",
-"away": "Athletic Bilbao",
-"league": "Spanish La Liga",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Barcelona",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-08-27T19:00:00Z",
-"settledAt": "2026-08-27T22:14:00.425454+00:00"
 }
 ],
 "global": {
-"n": 746,
+"n": 748,
 "wins": 511,
-"hitRate": 0.685
+"hitRate": 0.6832
 },
-"pending": 30
+"pending": 31
 }
