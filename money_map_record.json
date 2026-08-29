@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-08-29T13:24:33.096353+00:00",
+"generatedAt": "2026-08-29T13:32:49.806882+00:00",
 "byVerdict": {
 "konsens": {
 "n": 552,
@@ -12,14 +12,14 @@
 "pinnHitRate": 0.7442
 },
 "uneinig": {
-"n": 183,
-"wins": 58,
-"hitRate": 0.3169,
-"polyN": 163,
+"n": 185,
+"wins": 59,
+"hitRate": 0.3189,
+"polyN": 165,
 "polyWins": 52,
-"polyHitRate": 0.319,
-"pinnN": 91,
-"pinnHitRate": 0.5824
+"polyHitRate": 0.3152,
+"pinnN": 92,
+"pinnHitRate": 0.5761
 },
 "teil": {
 "n": 5,
@@ -118,6 +118,11 @@
 "wins": 6,
 "hitRate": 0.4286
 },
+"South Korean K1 League": {
+"n": 14,
+"wins": 10,
+"hitRate": 0.7143
+},
 "Dutch Eredivisie": {
 "n": 13,
 "wins": 11,
@@ -128,15 +133,15 @@
 "wins": 9,
 "hitRate": 0.6923
 },
-"South Korean K1 League": {
-"n": 13,
-"wins": 9,
-"hitRate": 0.6923
-},
 "Swedish Allsvenskan": {
 "n": 13,
 "wins": 10,
 "hitRate": 0.7692
+},
+"English Premier League": {
+"n": 12,
+"wins": 9,
+"hitRate": 0.75
 },
 "Portuguese Primeira Liga": {
 "n": 12,
@@ -152,11 +157,6 @@
 "n": 11,
 "wins": 6,
 "hitRate": 0.5455
-},
-"English Premier League": {
-"n": 11,
-"wins": 9,
-"hitRate": 0.8182
 },
 "Italian Coppa Italia": {
 "n": 11,
@@ -526,9 +526,9 @@
 },
 "byStrength": {
 "strong": {
-"n": 432,
-"wins": 353,
-"hitRate": 0.8171
+"n": 434,
+"wins": 354,
+"hitRate": 0.8157
 },
 "weak": {
 "n": 275,
@@ -537,14 +537,52 @@
 }
 },
 "divergence": {
-"n": 183,
-"betfairWins": 58,
-"betfairRate": 0.3169,
-"polyN": 163,
+"n": 185,
+"betfairWins": 59,
+"betfairRate": 0.3189,
+"polyN": 165,
 "polyWins": 52,
-"polyRate": 0.319
+"polyRate": 0.3152
 },
 "recent": [
+{
+"matchId": "35971071",
+"home": "Liverpool",
+"away": "Nottm Forest",
+"league": "English Premier League",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Liverpool",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-08-29T11:30:00Z",
+"settledAt": "2026-08-29T13:32:49.640326+00:00"
+},
+{
+"matchId": "35984343",
+"home": "Bucheon FC 1995",
+"away": "FC Anyang",
+"league": "South Korean K1 League",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-29T10:30:00Z",
+"settledAt": "2026-08-29T13:32:49.640326+00:00"
+},
 {
 "matchId": "35970848",
 "home": "Wolves",
@@ -1266,50 +1304,12 @@
 ],
 "kickoff": "2026-08-27T18:45:00Z",
 "settledAt": "2026-08-27T21:58:53.325205+00:00"
-},
-{
-"matchId": "35964586",
-"home": "Austria Wien",
-"away": "Braga",
-"league": "UEFA Europa Conference Qualifiers",
-"verdict": "uneinig",
-"moneySide": "draw",
-"moneyName": "The Draw",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-08-27T18:30:00Z",
-"settledAt": "2026-08-27T21:43:54.887633+00:00"
-},
-{
-"matchId": "35969276",
-"home": "Ajax",
-"away": "Sion",
-"league": "UEFA Europa Conference Qualifiers",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Ajax",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-5,
-3
-],
-"kickoff": "2026-08-27T18:00:00Z",
-"settledAt": "2026-08-27T21:13:51.690698+00:00"
 }
 ],
 "global": {
-"n": 740,
-"wins": 507,
-"hitRate": 0.6851
+"n": 742,
+"wins": 508,
+"hitRate": 0.6846
 },
-"pending": 24
+"pending": 22
 }
