@@ -278,3 +278,35 @@ def test_update_track_faellt_auf_letzten_stand_zurueck_wenn_emitter_leer():
     out = st.update_track({"blockedCats": BLOCKED}, {"plays": []}, {}, {}, now=now)
     assert out["blockedCats"] == BLOCKED
 
+
+
+# ── Engine-Stempel (29.08.2026, Lucas: „soll man das mit lernen und neu gewichten") ──────────
+# Der Cards-Lernloop lernt seit dem 04.07. nur auf der AKTUELLEN Engine-Version — „so vergiftet
+# ein Fix den Ledger nicht". Der Poly-Track hatte das nicht: die 500 abgerechneten Plays wurden
+# alle unter den alten Gewichten bewertet (Wallet-Basis 2,5 statt 1,8, Sharp-Gate n>=4 mit roher
+# Quote statt n>=8 mit Wilson). Der Kalibrierer warf beide Welten in denselben Topf.
+# `ev` muss deshalb vom Emit bis in die abgerechnete Zeile durchlaufen.
+
+def test_engine_stempel_landet_am_offenen_play():
+    emit = _emit([{"key": "epl-a-b", "side": "A", "verdict": "BET", "conv": 7,
+                   "league": "EPL", "price": 0.55, "ev": "2026-08-29"}])
+    t = st.update_track({}, emit, {}, {}, now=NOW)
+    assert t["open"]["epl-a-b|A"]["ev"] == "2026-08-29"
+
+
+def test_engine_stempel_ueberlebt_die_abrechnung():
+    prev = {"open": {"epl-a-b|A": {"key": "epl-a-b", "side": "A", "verdict": "BET", "conv": 7,
+            "league": "EPL", "entryPrice": 0.55, "lastPrice": 0.6, "stake": 10.0,
+            "ev": "2026-08-29", "firstTs": NOW.isoformat()}}}
+    res = {"epl-a-b": {"winner": "A", "ts": NOW.isoformat()}}
+    t = st.update_track(prev, _emit([]), {}, res, now=NOW)
+    assert t["settled"][0]["ev"] == "2026-08-29"
+
+
+def test_alt_emit_ohne_stempel_bleibt_none():
+    # Nicht raten: ein Play ohne `ev` stammt aus einer aelteren Engine und wird als solche
+    # behandelt (halbes Gewicht in der Kalibrierung), nicht stillschweigend als aktuell verbucht.
+    emit = _emit([{"key": "epl-c-d", "side": "C", "verdict": "BET", "conv": 7,
+                   "league": "EPL", "price": 0.55}])
+    t = st.update_track({}, emit, {}, {}, now=NOW)
+    assert t["open"]["epl-c-d|C"]["ev"] is None

@@ -1832,11 +1832,23 @@ function _pwEnsurePlaysData(cb){
   if(_pwPlaysLoadedTs && (Date.now()-_pwPlaysLoadedTs)<120000 && _ready()){ cb&&cb(); return; }
   const b='?t='+Date.now();
   const jf=u=>_pwJson(u,b);
+  // 29.08.2026 (Lucas: „soll man das mit lernen und neu gewichten") — poly_shortlist_track.json
+  // FEHLTE hier. Der schlanke Loader bedient die Uebersichts-Kachel „Heute spielenswert" UND
+  // scripts/emit_shortlist.mjs (also das Papier-Depot und den Telegram-Push). Ohne den Track gab
+  // _pwComboFor() null zurueck -> _pwCalibConv stieg stumm aus -> die Kalibrierung lief AUSSCHLIESSLICH
+  // im Wallets-Tab, wo der grosse Loader sie mitlaedt.
+  //
+  // Zwei Folgen, beide unsichtbar: derselbe Play trug auf der Uebersicht eine andere Conviction als
+  // im Wallets-Tab daneben. Und der Steam-Alleingang, den der Lerner mit -3 abstraft (n=19, -43% ROI),
+  // ging ungebremst ins Papier-Depot und in den Push — genau dorthin, wo es zaehlt.
+  //
+  // Rueckkopplung ist unkritisch: die calib+/calib--Tags landen zwar in signals, aber _PW_CALIB_CORE
+  // filtert sie beim Eimer-Bau raus. Der Lerner faerbt seine eigene Datenbasis also nicht ein.
   Promise.all([jf('poly_money_broad_close.json'),jf('poly_money_broad_history.json'),
                jf('poly_money_broad.json'),jf('poly_wallet_track.json'),jf('poly_cross_sport.json'),
                jf('poly_money_broad_live.json'),jf('poly_money_broad_live_history.json'),
-               jf('money_map.json')])
-   .then(([broadLive,broadHist,moneyBroad,walletTrack,crossSport,broadLiveNow,broadLiveHist,moneyMap])=>{
+               jf('money_map.json'),jf('poly_shortlist_track.json')])
+   .then(([broadLive,broadHist,moneyBroad,walletTrack,crossSport,broadLiveNow,broadLiveHist,moneyMap,shortlistTrack])=>{
      if(!_pwCache) _pwCache={};
      if(!_pwCache.broadLive)     _pwCache.broadLive=broadLive;
      if(!_pwCache.broadHist)     _pwCache.broadHist=broadHist;
@@ -1846,6 +1858,7 @@ function _pwEnsurePlaysData(cb){
      if(!_pwCache.broadLiveNow)  _pwCache.broadLiveNow=broadLiveNow;
      if(!_pwCache.broadLiveHist) _pwCache.broadLiveHist=broadLiveHist;
      if(!_pwCache.moneyMap)      _pwCache.moneyMap=moneyMap;   // 21.08.2026 (Lucas): Betfair-Geld-Gegencheck
+     if(!_pwCache.shortlistTrack)_pwCache.shortlistTrack=shortlistTrack;   // 29.08.2026: Lern-Basis der Kalibrierung
      _pwPlaysLoadedTs=Date.now();
      cb&&cb();
    }).catch(()=>{ cb&&cb(); });
@@ -2004,7 +2017,29 @@ function _pwPlayLabel(key,oc){
 // die reale Performance JE SIGNAL-MIX rechnen und historisch klar -EV Mixe abwerten. Kern-Erkenntnis:
 // sharp/steam ALLEIN verlieren stark (-12%/-38% ROI), nur MIT money gewinnen sie.
 let _pwComboCache=null, _pwComboRef=null;
-const _PW_CALIB_CORE=['money','sharp','steam','pinn','gvp'];
+// 29.08.2026 (Lucas: „soll man das mit lernen und neu gewichten") — DER STEMPEL.
+// Der Cards-Lernloop weigert sich, ueber Engine-Versionen hinweg zu lernen (update_signal_weights.py:
+// „nur auf der AKTUELLEN Engine-Version lernen ... so vergiftet ein Fix den Ledger nicht"). Der
+// Poly-Track hatte das nicht: die 500 abgerechneten Plays wurden alle unter den ALTEN Gewichten
+// bewertet — Wallet-Basis 2,5 statt 1,8, Sharp-Gate n>=4 mit roher Quote statt n>=8 mit Wilson.
+// Ohne Stempel wirft der Kalibrierer beide Welten in denselben Topf und lernt aus einer Engine,
+// die es nicht mehr gibt.
+//
+// Diese Zeichenkette hochzaehlen, sobald sich an Gewichten, Schwellen oder dem Sharp-Gate etwas
+// aendert — sie ist die Grenze zwischen „das war dieselbe Maschine" und „das war eine andere".
+const PW_ENGINE_VERSION='2026-08-29';
+// Alt-Plays fliegen NICHT raus, sie zaehlen halb. Grund: was ein Signal-MIX bringt, haengt nur
+// zum Teil an unseren Gewichten — dass `steam` allein -43% ROI macht, gilt auch unter der neuen
+// Engine. Was sich wirklich geaendert hat, ist die Bedeutung des `sharp`-Tags (das Gate). Halbes
+// Gewicht laesst den ROI-Schaetzer stehen und senkt nur das Vertrauen (conf = n/(n+25)) — und der
+// Alt-Anteil verwaessert sich von selbst, weil seine n eingefroren ist und die neue waechst.
+// Harte Alternative waere n=0 fuer Wochen; das haette die Kalibrierung stillgelegt.
+const PW_CALIB_LEGACY_W=0.5;
+// 29.08.2026: 'bf' war NICHT im Kern — ausgerechnet das beste Signal im ganzen Track (+26,4% ROI
+// ueber n=41). Folge: der Eimer „money" (n=33, +21,1% ROI) war in Wahrheit groesstenteils
+// money+bf — `money` allein kommt gewichtsmaessig gar nicht ueber die Schwelle von 3. Der Lerner
+// schrieb den Erfolg also dem falschen Signal zu und hat ihn nie dort gesucht, wo er herkam.
+const _PW_CALIB_CORE=['money','sharp','steam','pinn','gvp','bf'];
 function _pwComboStatsAll(){
   const st=_pwCache&&_pwCache.shortlistTrack&&_pwCache.shortlistTrack.settled;
   if(!st) return null;
@@ -2013,8 +2048,15 @@ function _pwComboStatsAll(){
   for(const x of st){
     const sigs=(x.signals||[]).filter(t=>core.has(t)).slice().sort();
     const k=sigs.join('+')||'(none)';
-    const a=agg[k]||(agg[k]={n:0,wins:0,stake:0,pnl:0});
-    a.n++; if(x.result==='win')a.wins++; a.stake+=Number(x.stake)||0; a.pnl+=Number(x.pnl)||0;
+    const a=agg[k]||(agg[k]={n:0,nRoh:0,nAlt:0,wins:0,stake:0,pnl:0});
+    // Gewicht nach Engine-Version: was unter der aktuellen Maschine entstand, zaehlt voll; was
+    // davor lief, halb. nRoh/nAlt bleiben roh mitgezaehlt, damit die Anzeige ehrlich sagen kann,
+    // wie viele Plays wirklich dahinterstehen und wie viele davon aus der alten Welt stammen.
+    const alt=(x.ev||null)!==PW_ENGINE_VERSION;
+    const w=alt?PW_CALIB_LEGACY_W:1;
+    a.n+=w; a.nRoh++; if(alt)a.nAlt++;
+    if(x.result==='win')a.wins+=w;
+    a.stake+=(Number(x.stake)||0)*w; a.pnl+=(Number(x.pnl)||0)*w;
   }
   for(const k in agg){ const a=agg[k]; a.roi=a.stake?a.pnl/a.stake:0; a.hit=a.n?a.wins/a.n:0; }
   _pwComboCache=agg; _pwComboRef=st; return agg;
@@ -2046,7 +2088,8 @@ function _pwCalibConv(sigs, conv){
   if(nc===conv) return {conv, reason:null, tag:null};
   const up=nc>conv;
   return { conv:nc,
-    reason:(up?'📈':'📉')+' Signal-Mix real '+Math.round(cb.roi*100)+'% ROI (n'+cb.n+') → '+(up?'+':'')+(nc-conv)+' Konv',
+    reason:(up?'📈':'📉')+' Signal-Mix real '+Math.round(cb.roi*100)+'% ROI (n'+(cb.nRoh||Math.round(cb.n))
+          +(cb.nAlt?', '+cb.nAlt+' aus alter Engine':'')+') → '+(up?'+':'')+(nc-conv)+' Konv',
     tag: up?'calib+':'calib-' };
 }
 
@@ -2178,6 +2221,8 @@ function _pwShortlistScore(key,m){
   // Sportart-Sperre. Beides rein additiv — bestehende Verbraucher ignorieren die Felder.
   return {key,match:_pwPlayLabel(key,oc),verdict:(best===moneyFav?'BET':'FADE'),side:best,
     conv,reasons,signals:sigs,vol,htk:_pwRealHtk(m),league:m.league,sport:m.sport,turned,
+    ev:PW_ENGINE_VERSION,   // 29.08.2026: Engine-Stempel -> Papier-Depot -> Kalibrierung
+
     token:((m.tokens||{})[best]||null),
     moneyPct,sharp:(sh&&sh.side===best)?sh:null,price:(typeof pr[best]==='number'?pr[best]:null),bf};
 }
@@ -2311,7 +2356,7 @@ function _pwTrackOpen(open){
   }).join('');
   return head+'<div style="margin-bottom:6px">'+body+'</div>';
 }
-const _PW_SIG_LABEL={sharp:'🔥 Scharfe Wallet',steam:'📈 Steam',money:'💰 Geld-Mehrheit',gvp:'⚖️ Geld vs Preis',pinn:'🎯 Pinnacle-Value'};
+const _PW_SIG_LABEL={sharp:'🔥 Scharfe Wallet',steam:'📈 Steam',money:'💰 Geld-Mehrheit',gvp:'⚖️ Geld vs Preis',pinn:'🎯 Pinnacle-Value',bf:'💷 Betfair-Geld'};   // 29.08.2026: bf ergaenzt — seit heute im Kalibrier-Kern
 // 05.08.2026 (Lucas): welches Signal traegt die Kante? Trefferquote/ROI/CLV je Ausloeser-Signal.
 // Ein Play kann mehrere Signale haben (zaehlt dann in mehreren Zeilen) - so wird sichtbar, welches
 // Signal wirklich Geld bringt und welches Ballast ist. Fuellt sich mit neu abgerechneten Plays.
@@ -2345,9 +2390,102 @@ function _pwTrackRecord(track){
     +_pwTrackBlocked(agg, track.reentry, track.blockedCats)
     +_pwTrackKpis(agg.public||{n:0}, '◆ Public-Kandidaten', '(hart gegated: Conv≥7 + bewiesene Wallet + Mehrheit)')
     +_pwTrackConvTable(agg.byConv)
+    +_pwCalibBoard()          // 29.08.2026: warum eine Stufe hoeher/tiefer — sichtbar statt Blackbox
     +_pwTrackSignalTable(agg.bySignal)
     +_pwTrackOpen(track.open)
     +_pwTrackSettled(track.settled);
+}
+
+// ═══════════════════════════════════════════════════════════════════════════════════════
+//  🧭 LERN-BOARD — was die Kalibrierung aus dem Papier-Depot gelernt hat (29.08.2026, Lucas:
+//  „das ist sehr wichtig, es optisch cool darzustellen").
+//
+//  Bis heute war _pwCalibConv eine Blackbox: sie verschob Conviction um bis zu drei Stufen und
+//  die einzige Spur davon war eine Zeile im „Warum". Einem Lerner, den man nicht sehen kann,
+//  sollte man nicht glauben — und bei „warum hat der Play nur 4?" gab es keine Antwort.
+//
+//  Form: DIVERGIERENDER BALKEN. Die Frage ist Polaritaet (liegt dieser Signal-Mix ueber oder
+//  unter dem Schnitt der ganzen Shortlist), nicht Groesse — also ein Balken, der aus einer
+//  Mittellinie nach links oder rechts waechst, nicht aus dem Nullpunkt.
+//
+//  Farbe: gruen/rot ist die Sprache des ganzen Dashboards (P&L, CLV, Trefferquote) und bleibt.
+//  ABER: das Paar hat fuer Rot-Gruen-Blinde einen Abstand von ΔE 2,2 (deutan) — praktisch
+//  ununterscheidbar. Deshalb traegt die Farbe hier NIE die Aussage allein: Richtung ab der
+//  Mittellinie, Vorzeichen und ein ↑/↓ sagen dasselbe noch dreimal. Wer die Farben nicht
+//  trennen kann, liest die Zeile trotzdem.
+const _PW_CAL_BAR_W=190;   // halbe Balkenbreite je Richtung
+function _pwCalMixLabel(k){
+  if(k==='(none)') return '<span class="pw-mut" style="font-size:12px">ohne Kern-Signal</span>';
+  return k.split('+').map(t=>'<span class="pw-cal-chip">'+(_PW_SIG_LABEL[t]||_pwEsc(t))+'</span>').join('');
+}
+function _pwCalibBoard(){
+  const agg=_pwComboStatsAll();
+  const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🧭 Lern-Board — was die Kalibrierung gelernt hat</span>'
+    +'<span class="pw-sec-note">Jeder Play trägt einen Signal-Mix. Der Lerner misst je Mix den <b>echten ROI</b> des Papier-Depots und verschiebt die Conviction sanft dorthin — nach oben wie nach unten, gewichtet nach Stichprobe. Kein Signal fliegt raus.</span></div>';
+  if(!agg||!Object.keys(agg).length){
+    return intro+'<div class="pw-none">Noch nichts gelernt — der Lerner braucht abgerechnete Plays aus dem Papier-Depot.</div></section>';
+  }
+  const base=_pwComboBaselineRoi();
+  const rows=Object.entries(agg).map(([k,a])=>({k,...a,d:a.roi-base})).sort((x,y)=>y.nRoh-x.nRoh);
+  const span=Math.max(0.05, ...rows.map(r=>Math.abs(r.d)));
+  const nRoh=rows.reduce((s,r)=>s+r.nRoh,0), nAlt=rows.reduce((s,r)=>s+r.nAlt,0);
+  const pc=v=>(v>=0?'+':'−')+Math.abs(v*100).toFixed(1)+'%';
+
+  const kpi=(v,l,sub,col)=>'<div class="pw-cal-kpi"><div class="pw-cal-kpi-v" style="color:'+col+'">'+v+'</div>'
+    +'<div class="pw-cal-kpi-l">'+l+'</div><div class="pw-cal-kpi-s">'+sub+'</div></div>';
+  const head='<div class="pw-cal-kpis">'
+    +kpi(_pwEsc(PW_ENGINE_VERSION),'Engine-Version','Stempel an jedem Play','#5eead4')
+    +kpi(pc(base),'Basis-ROI der Shortlist','die Mittellinie im Balken','#e6edf3')
+    +kpi(nRoh+' Plays','Lern-Basis',(nAlt===nRoh?'alle aus älterer Engine — zählen halb'
+        :nAlt?nAlt+' aus älterer Engine — zählen halb':'alle aus der aktuellen Engine'),'#e6edf3')
+    +'</div>';
+
+  // Die Skala gehoert UEBER die Plot-Spalte, nicht ueber die ganze Zeile — sonst steht „Schnitt"
+  // irgendwo, nur nicht ueber der Mittellinie. Gleiches Raster wie die Zeilen.
+  const skala='<div class="pw-cal-row pw-cal-legend"><div></div><div class="pw-cal-plot">'
+    +'<div class="pw-cal-scale"><span>schlechter</span><span class="pw-cal-scale-mid">Schnitt</span><span>besser</span></div>'
+    +'</div><div></div><div></div><div></div></div>';
+
+  const body=rows.map(r=>{
+    const stark=r.n>=8;
+    const conf=r.n/(r.n+25);
+    const adj=stark?Math.max(-3,Math.min(2,r.d*15*conf)):0;
+    const stufen=Math.round(adj);
+    const pos=r.d>=0;
+    const w=Math.max(3, Math.round(Math.abs(r.d)/span*_PW_CAL_BAR_W));
+    const col=pos?'#3fb950':'#f85149';
+    const bar='<div class="pw-cal-track"><div class="pw-cal-mid"></div>'
+      +'<div class="pw-cal-bar" style="'+(pos?'left:50%;border-radius:0 4px 4px 0':'right:50%;border-radius:4px 0 0 4px')
+      +';width:'+w+'px;background:'+col+(stark?'':';opacity:.42')+'"></div></div>';
+    const chip=!stark
+      ? '<span class="pw-cal-adj pw-cal-adj-off">sammelt · n&lt;8</span>'
+      : (stufen===0
+        ? '<span class="pw-cal-adj pw-cal-adj-off">keine Anpassung</span>'
+        : '<span class="pw-cal-adj" style="color:'+(stufen>0?'#3fb950':'#f85149')+';border-color:'+(stufen>0?'rgba(63,185,80,.4)':'rgba(248,81,73,.4)')+'">'
+          +(stufen>0?'↑ +':'↓ −')+Math.abs(stufen)+' Stufe'+(Math.abs(stufen)===1?'':'n')+'</span>');
+    // ROI und Abstand sind ZWEI Zahlen. Der Pfeil gehoert zum Abstand (das zeigt der Balken),
+    // nicht zum ROI — sonst stuende bei -0,5% ROI ein ↑, weil es ueber dem Schnitt von -1,5% liegt.
+    const val='<div class="pw-cal-val"><b>'+pc(r.roi)+'</b><i>ROI im Depot</i></div>';
+    const dist='<div class="pw-cal-dist" style="color:'+(stark?col:'#5b667e')+'">'
+      +(pos?'↑ ':'↓ ')+Math.abs(r.d*100).toFixed(1)+'pp'
+      +'<i>'+(pos?'über':'unter')+' Schnitt</i></div>';
+    const basis=r.nRoh+' Play'+(r.nRoh===1?'':'s')
+      +(r.nAlt===r.nRoh?' · alle aus älterer Engine':(r.nAlt?' · '+r.nAlt+' älter':''))
+      +(r.nAlt?'<i>zählt wie '+r.n.toFixed(1).replace('.0','')+'</i>':'');
+    const tip='Signal-Mix '+r.k+' — ROI '+(r.roi*100).toFixed(1)+'%, Schnitt '+(base*100).toFixed(1)
+      +'%, Abstand '+(r.d*100).toFixed(1)+'pp, Vertrauen '+Math.round(conf*100)+'% (gewichtete n '+r.n.toFixed(1)+')';
+    return '<div class="pw-cal-row'+(stark?'':' pw-cal-row-thin')+'" title="'+_pwEsc(tip)+'">'
+      +'<div class="pw-cal-mix">'+_pwCalMixLabel(r.k)+'</div>'
+      +'<div class="pw-cal-plot">'+bar+dist+'</div>'
+      +val
+      +'<div class="pw-cal-n">'+basis+'</div>'
+      +'<div class="pw-cal-out">'+chip+'</div></div>';
+  }).join('');
+
+  const fuss='<div class="pw-sec-p" style="margin-top:12px">Die Anpassung wächst mit dem Abstand zum Schnitt <i>und</i> mit der Stichprobe (Vertrauen = n/(n+25)), '
+    +'ist auf <b>−3 bis +2 Stufen</b> geklammert — mehr Abwertung als Boost — und wirkt erst ab acht gewichteten Plays. '
+    +'Plays aus einer älteren Engine zählen halb: ihre ROI-Schätzung bleibt, nur das Vertrauen sinkt.</div>';
+  return intro+head+skala+'<div class="pw-cal-board">'+body+'</div>'+fuss+'</section>';
 }
 
 // 18.08.2026 (Lucas): 🖥️ TERMINAL — dichtes Board als Aufsatz auf „Heute wetten" (_pwTopPlays, UNVERAENDERT).
@@ -2370,7 +2508,7 @@ function _pwTermMuted(r){
   if((+r.conv||0)<=4) return {m:true,reason:'Konv≤4 dünn'};
   return {m:false,reason:''};
 }
-function _pwTermIsPublic(r){ return !!(r.conv>=7 && r.moneyPct>=0.60 && r.sharp && r.sharp.n>=8 && r.sharp.hit>=0.55); }
+function _pwTermIsPublic(r){ return !!(r.conv>=PW_PUBLIC_MIN_CONV && r.moneyPct>=0.60 && r.sharp && r.sharp.n>=8 && r.sharp.hit>=0.55); }   // 29.08.2026: stand hier noch hart auf 7
 
 // 18.08.2026 (Lucas) Slice 2 — Drilldown: Preis-Kurve (Variante A: Poly vs faire Pinnacle + Kante-Fläche),
 // Konviktions-Aufschlüsselung, Whale-Tape, ½-Kelly. Rein lesend & additiv.
@@ -3173,6 +3311,54 @@ function _pwInjectStyle(){
   #polyWalletsPanel .pw-chip{background:rgba(94,234,212,.1);color:#5eead4;font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;white-space:nowrap}
   #polyWalletsPanel .pw-wl{color:#a78bfa;text-decoration:none;font-family:ui-monospace,monospace;font-size:12px}
   #polyWalletsPanel .pw-wl:hover{text-decoration:underline}
+  /* 🧭 Lern-Board (29.08.2026) — divergierender Balken je Signal-Mix. Marken bewusst duenn:
+     10px Balken, 1px Mittellinie, gerundetes Datenende, eckig an der Linie. Die Daten sind das
+     einzige, was laut sein darf. */
+  #polyWalletsPanel .pw-cal-kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin:2px 0 16px}
+  #polyWalletsPanel .pw-cal-kpi{background:linear-gradient(145deg,#13203a,#0d1524);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:12px 14px}
+  #polyWalletsPanel .pw-cal-kpi-v{font-size:19px;font-weight:800;font-family:ui-monospace,monospace;line-height:1.15}
+  #polyWalletsPanel .pw-cal-kpi-l{font-size:11px;color:#8a95ad;margin-top:4px;font-weight:600}
+  #polyWalletsPanel .pw-cal-kpi-s{font-size:10px;color:#5b667e;margin-top:2px}
+  #polyWalletsPanel .pw-cal-board{display:flex;flex-direction:column;gap:7px}
+  #polyWalletsPanel .pw-cal-row{display:grid;grid-template-columns:minmax(160px,1.05fr) 390px 92px minmax(112px,.7fr) 134px;   /* letzte Spalte FEST: sonst sitzt die Skala-Zeile (leere Zelle) anders als die Datenzeilen und „Schnitt" steht neben statt ueber der Mittellinie */
+    gap:16px;align-items:center;background:linear-gradient(180deg,#111a2b,#0e1524);
+    border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:11px 16px}
+  #polyWalletsPanel .pw-cal-row-thin{opacity:.6}
+  #polyWalletsPanel .pw-cal-legend{background:none;border:0;padding:0 16px;margin-bottom:2px;align-items:end}
+  #polyWalletsPanel .pw-cal-scale{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:8px;
+    font-size:10px;color:#5b667e;text-transform:uppercase;letter-spacing:.6px}
+  #polyWalletsPanel .pw-cal-scale span:first-child{text-align:right}
+  #polyWalletsPanel .pw-cal-scale-mid{color:#8a95ad;font-weight:700}
+  #polyWalletsPanel .pw-cal-mix{display:flex;flex-wrap:wrap;gap:5px}
+  #polyWalletsPanel .pw-cal-chip{background:rgba(255,255,255,.05);color:#c9d2e3;font-size:11px;font-weight:600;
+    padding:2px 8px;border-radius:6px;white-space:nowrap}
+  #polyWalletsPanel .pw-cal-plot{min-width:0}
+  #polyWalletsPanel .pw-cal-track{position:relative;height:10px}
+  #polyWalletsPanel .pw-cal-mid{position:absolute;left:50%;top:-5px;bottom:-5px;width:1px;background:rgba(255,255,255,.18)}
+  #polyWalletsPanel .pw-cal-bar{position:absolute;top:0;height:10px}
+  #polyWalletsPanel .pw-cal-dist{margin-top:7px;text-align:center;font-size:11px;font-weight:700;
+    font-variant-numeric:tabular-nums}
+  #polyWalletsPanel .pw-cal-dist i{font-style:normal;font-weight:600;color:#5b667e;margin-left:5px}
+  #polyWalletsPanel .pw-cal-val{text-align:right;white-space:nowrap}
+  #polyWalletsPanel .pw-cal-val b{display:block;font-family:ui-monospace,monospace;font-size:15px;font-weight:800;
+    color:#e6edf3;font-variant-numeric:tabular-nums}
+  #polyWalletsPanel .pw-cal-val i{display:block;font-style:normal;font-size:9.5px;font-weight:600;color:#5b667e;
+    letter-spacing:.4px;margin-top:2px}
+  #polyWalletsPanel .pw-cal-n{font-size:11px;color:#76819c;line-height:1.45}
+  #polyWalletsPanel .pw-cal-n i{display:block;font-style:normal;color:#5b667e}
+  #polyWalletsPanel .pw-cal-out{text-align:right}
+  #polyWalletsPanel .pw-cal-adj{display:inline-block;font-size:11px;font-weight:700;white-space:nowrap;
+    padding:4px 10px;border-radius:7px;border:1px solid rgba(255,255,255,.12)}
+  #polyWalletsPanel .pw-cal-adj-off{color:#5b667e}
+  @media (max-width:980px){
+    #polyWalletsPanel .pw-cal-kpis{grid-template-columns:1fr}
+    #polyWalletsPanel .pw-cal-legend{display:none}
+    #polyWalletsPanel .pw-cal-row{grid-template-columns:1fr auto;gap:10px}
+    #polyWalletsPanel .pw-cal-plot{grid-column:1/-1;order:3}
+    #polyWalletsPanel .pw-cal-val{text-align:left;order:2}
+    #polyWalletsPanel .pw-cal-n{grid-column:1/-1;order:4}
+    #polyWalletsPanel .pw-cal-out{grid-column:1/-1;order:5;text-align:left}
+  }
   #polyWalletsPanel .pw-chartwrap{background:linear-gradient(145deg,#111a2b,#0d1420);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:14px;height:340px}
   #polyWalletsPanel .pw-chartwrap-sm{height:180px;padding:8px}
   #polyWalletsPanel .pw-board{display:flex;flex-direction:column;gap:9px}

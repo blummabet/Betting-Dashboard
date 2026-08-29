@@ -251,6 +251,10 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE, blocked=
             "lastPrice": round(float(price), 4), "lastTs": now.isoformat(),
             "htkAtEntry": pl.get("htk"), "public": bool(pl.get("public")),
             "reasons": (pl.get("reasons") or [])[:3], "signals": list(pl.get("signals") or []), "stake": stake,
+            # 29.08.2026 (Lucas): Engine-Version des Emits mitfuehren. Der Kalibrierer gewichtet
+            # damit Plays aus einer aelteren Engine niedriger, statt sie fuer bare Muenze zu nehmen.
+            # Fehlt der Wert (Alt-Emit), bleibt er None -> gilt als Alt-Engine.
+            "ev": pl.get("ev"),
         }
 
     # 2) lastPrice aller offenen Plays aus dem Close-File nachziehen (beste Schluss-Referenz für CLV)
@@ -280,6 +284,7 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE, blocked=
             "result": "win" if win else "loss", "winner": winner,
             "pnl": round(pnl, 2), "clvPP": clv, "stake": st,
             "public": bool(e.get("public")), "signals": list(e.get("signals") or []), "firstTs": e.get("firstTs"),
+            "ev": e.get("ev"),   # 29.08.2026: Engine-Stempel ueberlebt die Abrechnung
             "settledTs": now.isoformat(), "resolvedTs": (r or {}).get("ts"),
         })
         del open_[ok]

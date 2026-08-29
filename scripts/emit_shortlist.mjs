@@ -72,6 +72,10 @@ const out = {
     price: (typeof p.price === 'number' ? p.price : null),
     reasons: p.reasons || [],
     signals: p.signals || [],
+    // 29.08.2026: Engine-Stempel mitgeben. Ohne ihn kann das Papier-Depot spaeter nicht sagen,
+    // unter welchen Gewichten ein Play bewertet wurde — und der Kalibrierer lernt quer ueber
+    // Engine-Wechsel hinweg (genau das, was der Cards-Lernloop seit dem 04.07. verhindert).
+    ev: p.ev || null,
     sharpN: (p.sharp && p.sharp.n) || 0,
     sharpHit: (p.sharp && typeof p.sharp.hit === 'number') ? p.sharp.hit : null,
     public: publicKeys.includes(p.key + '|' + p.side),
