@@ -1,25 +1,25 @@
 {
-"generatedAt": "2026-08-29T18:48:24.821793+00:00",
+"generatedAt": "2026-08-29T19:03:32.872972+00:00",
 "byVerdict": {
 "konsens": {
-"n": 575,
-"wins": 466,
-"hitRate": 0.8104,
-"polyN": 539,
-"polyWins": 423,
-"polyHitRate": 0.7848,
+"n": 578,
+"wins": 468,
+"hitRate": 0.8097,
+"polyN": 542,
+"polyWins": 425,
+"polyHitRate": 0.7841,
 "pinnN": 45,
 "pinnHitRate": 0.7333
 },
 "uneinig": {
-"n": 193,
-"wins": 61,
-"hitRate": 0.3161,
-"polyN": 171,
+"n": 194,
+"wins": 62,
+"hitRate": 0.3196,
+"polyN": 172,
 "polyWins": 52,
-"polyHitRate": 0.3041,
-"pinnN": 99,
-"pinnHitRate": 0.5657
+"polyHitRate": 0.3023,
+"pinnN": 100,
+"pinnHitRate": 0.56
 },
 "teil": {
 "n": 5,
@@ -49,9 +49,9 @@
 "hitRate": 0.6207
 },
 "Spanish La Liga": {
-"n": 23,
-"wins": 15,
-"hitRate": 0.6522
+"n": 24,
+"wins": 16,
+"hitRate": 0.6667
 },
 "English Football League Cup": {
 "n": 22,
@@ -109,9 +109,14 @@
 "hitRate": 0.8125
 },
 "Turkish Super League": {
+"n": 16,
+"wins": 10,
+"hitRate": 0.625
+},
+"Portuguese Primeira Liga": {
 "n": 15,
-"wins": 9,
-"hitRate": 0.6
+"wins": 12,
+"hitRate": 0.8
 },
 "CONMEBOL Copa Libertadores": {
 "n": 14,
@@ -124,11 +129,6 @@
 "hitRate": 0.6429
 },
 "Italian Serie A": {
-"n": 14,
-"wins": 11,
-"hitRate": 0.7857
-},
-"Portuguese Primeira Liga": {
 "n": 14,
 "wins": 11,
 "hitRate": 0.7857
@@ -198,15 +198,15 @@
 "wins": 4,
 "hitRate": 0.4
 },
+"Italian Serie B": {
+"n": 10,
+"wins": 4,
+"hitRate": 0.4
+},
 "Uzbekistan Super League": {
 "n": 10,
 "wins": 7,
 "hitRate": 0.7
-},
-"Italian Serie B": {
-"n": 9,
-"wins": 4,
-"hitRate": 0.4444
 },
 "Bolivian Liga de Futbol Profesional": {
 "n": 8,
@@ -526,25 +526,101 @@
 },
 "byStrength": {
 "strong": {
-"n": 453,
-"wins": 366,
-"hitRate": 0.8079
+"n": 455,
+"wins": 368,
+"hitRate": 0.8088
 },
 "weak": {
-"n": 287,
-"wins": 144,
+"n": 289,
+"wins": 145,
 "hitRate": 0.5017
 }
 },
 "divergence": {
-"n": 193,
-"betfairWins": 61,
-"betfairRate": 0.3161,
-"polyN": 171,
+"n": 194,
+"betfairWins": 62,
+"betfairRate": 0.3196,
+"polyN": 172,
 "polyWins": 52,
-"polyRate": 0.3041
+"polyRate": 0.3023
 },
 "recent": [
+{
+"matchId": "35974056",
+"home": "Real Sociedad",
+"away": "Espanyol",
+"league": "Spanish La Liga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Real Sociedad",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-08-29T17:00:00Z",
+"settledAt": "2026-08-29T19:03:32.704832+00:00"
+},
+{
+"matchId": "35978589",
+"home": "Konyaspor",
+"away": "Kocaelispor",
+"league": "Turkish Super League",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Kocaelispor",
+"polySide": "home",
+"winner": "away",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-08-29T16:00:00Z",
+"settledAt": "2026-08-29T19:03:32.704832+00:00"
+},
+{
+"matchId": "35979521",
+"home": "Academico de Viseu",
+"away": "Porto",
+"league": "Portuguese Primeira Liga",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Porto",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+3
+],
+"kickoff": "2026-08-29T17:00:00Z",
+"settledAt": "2026-08-29T19:03:32.704832+00:00"
+},
+{
+"matchId": "35987231",
+"home": "Sampdoria",
+"away": "Juve Stabia",
+"league": "Italian Serie B",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Sampdoria",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-08-29T17:00:00Z",
+"settledAt": "2026-08-29T19:03:32.704832+00:00"
+},
 {
 "matchId": "35785188",
 "home": "Dortmund",
@@ -1228,88 +1304,12 @@
 ],
 "kickoff": "2026-08-29T09:00:00Z",
 "settledAt": "2026-08-29T12:02:41.229543+00:00"
-},
-{
-"matchId": "35969792",
-"home": "Tokyo-V",
-"away": "Kashima",
-"league": "Japanese J League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Kashima",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-2
-],
-"kickoff": "2026-08-29T10:00:00Z",
-"settledAt": "2026-08-29T12:02:41.229543+00:00"
-},
-{
-"matchId": "35989098",
-"home": "Tochigi Uva FC",
-"away": "Iwata",
-"league": "Japanese J League 2",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Iwata",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-3
-],
-"kickoff": "2026-08-29T09:00:00Z",
-"settledAt": "2026-08-29T12:02:41.229543+00:00"
-},
-{
-"matchId": "35969787",
-"home": "Kawasaki",
-"away": "Jef Utd Chiba",
-"league": "Japanese J League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Kawasaki",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-4,
-2
-],
-"kickoff": "2026-08-29T10:00:00Z",
-"settledAt": "2026-08-29T12:02:41.229543+00:00"
-},
-{
-"matchId": "35969790",
-"home": "Kyoto",
-"away": "Fukuoka",
-"league": "Japanese J League",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Kyoto",
-"polySide": "away",
-"winner": "home",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-08-29T10:00:00Z",
-"settledAt": "2026-08-29T12:02:41.229543+00:00"
 }
 ],
 "global": {
-"n": 773,
-"wins": 528,
-"hitRate": 0.6831
+"n": 777,
+"wins": 531,
+"hitRate": 0.6834
 },
-"pending": 27
+"pending": 23
 }
