@@ -1,6 +1,7 @@
 {
- "updatedAt": "2026-08-29T15:47:41.611107+00:00",
- "open": [
+ "updatedAt": "2026-08-29T16:17:58.221927+00:00",
+ "open": [],
+ "settled": [
   {
    "betId": "0xa411a6254178c165706a2daae64640a3f7bbc2bea66ee1ff93fe9b140b57ca69",
    "key": "bun-mai-scp-2026-08-29-more-markets",
@@ -12,8 +13,13 @@
    "sport": "",
    "conv": null,
    "match": "FSV Mainz 05 vs SC Paderborn 07",
+   "result": "loss",
+   "winner": "Under",
    "closePrice": null,
-   "ageDays": 0.1
+   "clvPP": 0.0,
+   "pnl": -5.0,
+   "settledTs": "2026-08-29T16:17:58.221927+00:00",
+   "resolvedTs": "2026-08-29T16:17:38.781300+00:00"
   },
   {
    "betId": "0xf68c6158bb5b7bf9976573b815502d4ceb82ada3ad09a954919b0ae942488157",
@@ -26,11 +32,14 @@
    "sport": "",
    "conv": null,
    "match": "Union Berlin vs Eintracht Frankfurt",
+   "result": "win",
+   "winner": "Over",
    "closePrice": null,
-   "ageDays": 0.1
-  }
- ],
- "settled": [
+   "clvPP": 0.0,
+   "pnl": 3.55,
+   "settledTs": "2026-08-29T16:17:58.221927+00:00",
+   "resolvedTs": "2026-08-29T16:17:38.781300+00:00"
+  },
   {
    "betId": "0x71f7bf6e54c28dea0172e13b7f10199cd2d65435acba5ce7d5c656c31e136064",
    "key": "atp-rocha-mmoh-2026-08-25",
@@ -52,15 +61,24 @@
   }
  ],
  "agg": {
-  "n": 1,
-  "wins": 1,
-  "hit": 1.0,
-  "pnl": 3.7,
-  "stake": 5.0,
-  "roi": 0.74,
-  "clvAvg": 3.0
+  "n": 3,
+  "wins": 2,
+  "hit": 0.6667,
+  "pnl": 2.25,
+  "stake": 15.0,
+  "roi": 0.15,
+  "clvAvg": 1.0
  },
  "bySport": {
+  "?": {
+   "n": 2,
+   "wins": 1,
+   "hit": 0.5,
+   "pnl": -1.45,
+   "stake": 10.0,
+   "roi": -0.145,
+   "clvAvg": 0.0
+  },
   "Tennis": {
    "n": 1,
    "wins": 1,
@@ -73,13 +91,13 @@
  },
  "byConv": {
   "?": {
-   "n": 1,
-   "wins": 1,
-   "hit": 1.0,
-   "pnl": 3.7,
-   "stake": 5.0,
-   "roi": 0.74,
-   "clvAvg": 3.0
+   "n": 3,
+   "wins": 2,
+   "hit": 0.6667,
+   "pnl": 2.25,
+   "stake": 15.0,
+   "roi": 0.15,
+   "clvAvg": 1.0
   }
  }
 }
