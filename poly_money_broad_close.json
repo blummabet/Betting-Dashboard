@@ -111043,7 +111043,13 @@
   "tokens": {
    "Over": "29300831177454287897069594619582560795656030242787998675549242219874129003562",
    "Under": "106938688116233857755497420512665308995032982365348289537548049659967320605265"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Over": 0.0,
+   "Under": 1.0
+  },
+  "resolvedAt": "2026-08-29T21:59:30.071886+00:00"
  },
  "por-acv-por-2026-08-29-exact-score": {
   "shares": {
@@ -112620,108 +112626,140 @@
  },
  "nfl-chi-ten-2026-08-29": {
   "shares": {
-   "Bears": 31738.833377524996,
-   "Titans": 31110.331007250003
+   "Bears": 35619.8163972,
+   "Titans": 32227.44301897499
   },
   "prices": {
-   "Bears": 0.505,
-   "Titans": 0.495
+   "Bears": 0.525,
+   "Titans": 0.475
   },
   "league": "NFL",
   "sport": "US-Sport",
-  "totalUsd": 67213,
+  "totalUsd": 72086,
   "whales": [
    {
     "wallet": "0xa080dadd87036ad01dbf5e9c254b0c3dbdba234f",
     "side": "Titans",
-    "usd": 20666,
+    "usd": 19831,
     "avgPrice": 0.5368
    },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "Bears",
-    "usd": 12080,
+    "usd": 12834,
     "avgPrice": 0.4547
    },
    {
     "wallet": "0xabb89972b21b304c1bed2bf26f35c8741ac9bba3",
     "side": "Bears",
-    "usd": 11682,
+    "usd": 12144,
     "avgPrice": 0.4899
    },
    {
     "wallet": "0x3e04fbc51adb75418129f6ce2091ae633070564d",
     "side": "Bears",
-    "usd": 2691,
+    "usd": 2798,
     "avgPrice": 0.4367
    }
   ],
-  "hoursToKickoff": 0.25,
-  "capturedAt": "2026-08-29T21:46:47.955295+00:00",
+  "hoursToKickoff": 0.04,
+  "capturedAt": "2026-08-29T21:59:30.071886+00:00",
   "tokens": {
    "Bears": "99649113931594624965427167850929573561233558173441075029537721620044913480723",
    "Titans": "80569464326212368394221988559147722580843013201518939014519400213619042559780"
   },
   "book": {
    "side": "Bears",
-   "bid": 0.51,
-   "ask": 0.52,
+   "bid": 0.52,
+   "ask": 0.53,
    "spreadC": 1.0,
-   "spreadPct": 1.92,
+   "spreadPct": 1.89,
    "bids": [
     [
+     0.52,
+     34352
+    ],
+    [
      0.51,
-     92562
+     94793
     ],
     [
      0.5,
-     58973
+     51259
     ],
     [
      0.49,
-     26672
+     11272
     ],
     [
      0.48,
-     16641
+     10037
     ],
     [
      0.47,
-     1668
-    ],
-    [
-     0.46,
-     1180
+     1202
     ]
    ],
    "asks": [
     [
-     0.52,
-     25357
-    ],
-    [
      0.53,
-     7460
+     19728
     ],
     [
      0.54,
-     9125
+     12117
     ],
     [
      0.55,
-     16366
+     11368
     ],
     [
      0.56,
-     766
+     9933
     ],
     [
      0.57,
-     2562
+     100
+    ],
+    [
+     0.58,
+     1262
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x7d92fd69504bfd391162e1442cb784c0af408676",
+    "action": "BUY",
+    "side": "Bears",
+    "price": 0.52,
+    "usd": 831,
+    "ts": 1788039997
+   },
+   {
+    "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
+    "action": "BUY",
+    "side": "Bears",
+    "price": 0.52,
+    "usd": 1158,
+    "ts": 1788039945
+   },
+   {
+    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
+    "action": "BUY",
+    "side": "Bears",
+    "price": 0.51,
+    "usd": 711,
+    "ts": 1788039889
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Bears",
+    "price": 0.51,
+    "usd": 765,
+    "ts": 1788039850
+   },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "action": "BUY",
@@ -112753,21 +112791,13 @@
     "price": 0.5,
     "usd": 1050,
     "ts": 1788037849
-   },
-   {
-    "wallet": "0xabb89972b21b304c1bed2bf26f35c8741ac9bba3",
-    "action": "BUY",
-    "side": "Bears",
-    "price": 0.49,
-    "usd": 11335,
-    "ts": 1788031293
    }
   ]
  },
  "boxing-itauma-hrgovi-2026-08-29": {
   "shares": {
-   "Moises Itauma": 42218.235780975,
-   "Filip Hrgovic": 7159.776125534997
+   "Moises Itauma": 84181.67216464499,
+   "Filip Hrgovic": 14276.353779005
   },
   "prices": {
    "Moises Itauma": 0.855,
@@ -112775,12 +112805,18 @@
   },
   "league": "BOXING",
   "sport": "Kampfsport",
-  "totalUsd": 73708,
+  "totalUsd": 74914,
   "whales": [
+   {
+    "wallet": "0xe015b5a2a299167be835a2fd1e86f09c49e06ffd",
+    "side": "Moises Itauma",
+    "usd": 42750,
+    "avgPrice": 0.85
+   },
    {
     "wallet": "0x83720820a8aa6c3f20ad71850e7a1a17d16c5223",
     "side": "Moises Itauma",
-    "usd": 8887,
+    "usd": 8888,
     "avgPrice": 0.83
    },
    {
@@ -112794,16 +112830,10 @@
     "side": "Moises Itauma",
     "usd": 5985,
     "avgPrice": 0.8499
-   },
-   {
-    "wallet": "0x33287eae7e55b86c9b4cf4c53444f062d2dbe6b8",
-    "side": "Moises Itauma",
-    "usd": 5365,
-    "avgPrice": 0.8599
    }
   ],
-  "hoursToKickoff": 0.24,
-  "capturedAt": "2026-08-29T21:46:47.955295+00:00",
+  "hoursToKickoff": 0.02,
+  "capturedAt": "2026-08-29T21:59:30.071886+00:00",
   "tokens": {
    "Moises Itauma": "43095901265750789975790574217751938606123665552647743995142663382030552706607",
    "Filip Hrgovic": "115261283818775154565925277710718574032265753672517019058611289549593610132898"
@@ -112856,8 +112886,8 @@
  },
  "lol-c9-ly-2026-08-29": {
   "shares": {
-   "Cloud9": 31983.17012136002,
-   "LYON": 63488.990826905
+   "Cloud9": 32668.12012046502,
+   "LYON": 64848.6676908
   },
   "prices": {
    "Cloud9": 0.335,
@@ -112865,19 +112895,19 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 103532,
+  "totalUsd": 104378,
   "whales": [
    {
     "wallet": "0xe015b5a2a299167be835a2fd1e86f09c49e06ffd",
     "side": "LYON",
-    "usd": 22594,
-    "avgPrice": 0.6511
+    "usd": 23240,
+    "avgPrice": 0.6513
    },
    {
     "wallet": "0x43372356634781eea88d61bbdd7824cdce958882",
     "side": "Cloud9",
-    "usd": 8433,
-    "avgPrice": 0.3476
+    "usd": 8793,
+    "avgPrice": 0.3469
    },
    {
     "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
@@ -112892,18 +112922,119 @@
     "avgPrice": 0.64
    }
   ],
-  "hoursToKickoff": 1.25,
-  "capturedAt": "2026-08-29T21:46:47.955295+00:00",
+  "hoursToKickoff": 1.04,
+  "capturedAt": "2026-08-29T21:59:30.071886+00:00",
   "tokens": {
    "Cloud9": "115644003553270637810064516429370494056897844022785237990037260221243031023299",
    "LYON": "87703719477319978223973252456772197392102106380481059857435291446064484103640"
-  }
+  },
+  "book": {
+   "side": "LYON",
+   "bid": 0.66,
+   "ask": 0.67,
+   "spreadC": 1.0,
+   "spreadPct": 1.49,
+   "bids": [
+    [
+     0.66,
+     14385
+    ],
+    [
+     0.65,
+     62792
+    ],
+    [
+     0.64,
+     46840
+    ],
+    [
+     0.63,
+     6630
+    ],
+    [
+     0.62,
+     11365
+    ],
+    [
+     0.61,
+     3350
+    ]
+   ],
+   "asks": [
+    [
+     0.67,
+     33547
+    ],
+    [
+     0.68,
+     13714
+    ],
+    [
+     0.69,
+     10382
+    ],
+    [
+     0.7,
+     4620
+    ],
+    [
+     0.71,
+     1251
+    ],
+    [
+     0.72,
+     401
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xca5e612678e2adb5851e5b1b8e4a33ba31044af1",
+    "action": "BUY",
+    "side": "Cloud9",
+    "price": 0.34,
+    "usd": 330,
+    "ts": 1788040393
+   },
+   {
+    "wallet": "0xdbbb5ad5bfeb8c38f66c364974191a2a16c23df5",
+    "action": "BUY",
+    "side": "LYON",
+    "price": 0.67,
+    "usd": 536,
+    "ts": 1788040084
+   },
+   {
+    "wallet": "0x52b7fc8a97df5f18974c06a83909f60c81010aa1",
+    "action": "BUY",
+    "side": "Cloud9",
+    "price": 0.34,
+    "usd": 952,
+    "ts": 1788037030
+   },
+   {
+    "wallet": "0xfabe8b484a5eed1861d5bdea3800443e9d69f1c9",
+    "action": "SELL",
+    "side": "LYON",
+    "price": 0.66,
+    "usd": 320,
+    "ts": 1788037020
+   },
+   {
+    "wallet": "0x98d52b88dc228a4b49e2514f8d368b4e6c582ec4",
+    "action": "BUY",
+    "side": "LYON",
+    "price": 0.67,
+    "usd": 2670,
+    "ts": 1788036964
+   }
+  ]
  },
  "bra-sao-bra-2026-08-29": {
   "shares": {
    "São Paulo FC": 5047.863370165,
    "Draw (São Paulo FC vs. Red Bull Bragantino)": 105.59508273,
-   "Red Bull Bragantino": 274.42098914
+   "Red Bull Bragantino": 375.34853913999996
   },
   "prices": {
    "São Paulo FC": 0.385,
@@ -112912,7 +113043,7 @@
   },
   "league": "BRAZIL-SERIE-A",
   "sport": "Fußball",
-  "totalUsd": 18273,
+  "totalUsd": 19273,
   "whales": [
    {
     "wallet": "0x851b1719f70a23f081427a5ded1e534de699961e",
@@ -112923,7 +113054,8 @@
    {
     "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
     "side": "São Paulo FC",
-    "usd": 863
+    "usd": 863,
+    "avgPrice": 0.4242
    },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
@@ -112938,8 +113070,8 @@
     "avgPrice": 0.39
    }
   ],
-  "hoursToKickoff": 1.25,
-  "capturedAt": "2026-08-29T21:46:47.955295+00:00",
+  "hoursToKickoff": 1.04,
+  "capturedAt": "2026-08-29T21:59:30.071886+00:00",
   "tokens": {
    "São Paulo FC": "27930626182691088225823816493486778529999129419581881935052818132318006798354",
    "Draw (São Paulo FC vs. Red Bull Bragantino)": "10263014381571515557776609685742466715342625642625487982589650156398434639084",
@@ -112948,8 +113080,8 @@
  },
  "criccpl-tri-jam-2026-08-29": {
   "shares": {
-   "Trinbago Knight Riders": 4678.62005625,
-   "Jamaica Kingsmen": 2807.0088795000006
+   "Trinbago Knight Riders": 4743.460801875,
+   "Jamaica Kingsmen": 2845.913326875
   },
   "prices": {
    "Trinbago Knight Riders": 0.625,
@@ -112957,13 +113089,13 @@
   },
   "league": "CRICKET",
   "sport": "Cricket",
-  "totalUsd": 11807,
+  "totalUsd": 11897,
   "whales": [
    {
     "wallet": "0x191f77486cb1c5af42e54734621804936a204a8d",
     "side": "Trinbago Knight Riders",
-    "usd": 2146,
-    "avgPrice": 0.6068
+    "usd": 2201,
+    "avgPrice": 0.6071
    },
    {
     "wallet": "0x4ec3268a1f507c911c003962d5989c1f810c016a",
@@ -112984,8 +113116,8 @@
     "avgPrice": 0.6099
    }
   ],
-  "hoursToKickoff": 1.25,
-  "capturedAt": "2026-08-29T21:46:47.955295+00:00",
+  "hoursToKickoff": 1.04,
+  "capturedAt": "2026-08-29T21:59:30.071886+00:00",
   "tokens": {
    "Trinbago Knight Riders": "77303584498883465709301272219496301683689945392681914213232697108810560650061",
    "Jamaica Kingsmen": "92502777348938676203859928171339646553149040640823845724433728852712738507619"
@@ -112993,8 +113125,8 @@
  },
  "mlb-bos-nyy-2026-08-29": {
   "shares": {
-   "Boston Red Sox": 48875.196877049995,
-   "New York Yankees": 63481.58187802503
+   "Boston Red Sox": 48872.14828960499,
+   "New York Yankees": 63477.61696736003
   },
   "prices": {
    "Boston Red Sox": 0.435,
@@ -113002,7 +113134,7 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 129328,
+  "totalUsd": 129363,
   "whales": [
    {
     "wallet": "0x2dc13c6bda81b202281e796953a7323de675b33c",
@@ -113029,8 +113161,8 @@
     "avgPrice": 0.5699
    }
   ],
-  "hoursToKickoff": 1.5,
-  "capturedAt": "2026-08-29T21:46:47.955295+00:00",
+  "hoursToKickoff": 1.29,
+  "capturedAt": "2026-08-29T21:59:30.071886+00:00",
   "tokens": {
    "Boston Red Sox": "80055182219905426135556813002820015378016095372276059681440845864439520254115",
    "New York Yankees": "90917025575167789663308999178563806605189979828996549445887109478452331478086"
@@ -113044,15 +113176,15 @@
    "bids": [
     [
      0.56,
-     19333
+     37259
     ],
     [
      0.55,
-     85170
+     54137
     ],
     [
      0.54,
-     18294
+     126848
     ],
     [
      0.53,
@@ -113070,19 +113202,19 @@
    "asks": [
     [
      0.57,
-     45449
+     46410
     ],
     [
      0.58,
-     29290
+     105202
     ],
     [
      0.59,
-     98203
+     23839
     ],
     [
      0.6,
-     10755
+     10690
     ],
     [
      0.61,
@@ -113090,7 +113222,7 @@
     ],
     [
      0.62,
-     1760
+     755
     ]
    ]
   },
@@ -113139,8 +113271,8 @@
  },
  "mlb-tex-mil-2026-08-29": {
   "shares": {
-   "Texas Rangers": 24325.058168565,
-   "Milwaukee Brewers": 38857.39231087501
+   "Texas Rangers": 24346.620602535,
+   "Milwaukee Brewers": 38891.836513170005
   },
   "prices": {
    "Texas Rangers": 0.385,
@@ -113148,18 +113280,18 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 63524,
+  "totalUsd": 63566,
   "whales": [
    {
     "wallet": "0xdb859a551fcf56e49416160911476bea7307152f",
     "side": "Milwaukee Brewers",
-    "usd": 32832,
+    "usd": 32838,
     "avgPrice": 0.6099
    },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Texas Rangers",
-    "usd": 5903,
+    "usd": 5925,
     "avgPrice": 0.3897
    },
    {
@@ -113175,8 +113307,8 @@
     "avgPrice": 0.39
    }
   ],
-  "hoursToKickoff": 1.5,
-  "capturedAt": "2026-08-29T21:46:47.955295+00:00",
+  "hoursToKickoff": 1.29,
+  "capturedAt": "2026-08-29T21:59:30.071886+00:00",
   "tokens": {
    "Texas Rangers": "77853552077689540982113039311165470786384469267532142965360774731244841893933",
    "Milwaukee Brewers": "55209963879714212017260322147334549766881733971691729837754506161643266466070"
@@ -113184,8 +113316,8 @@
  },
  "wta-parry-mertens-2026-08-29": {
   "shares": {
-   "Diane Parry": 32641.639873875032,
-   "Elise Mertens": 54402.72900249999
+   "Diane Parry": 32704.257703125033,
+   "Elise Mertens": 54507.09407749999
   },
   "prices": {
    "Diane Parry": 0.375,
@@ -113193,7 +113325,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 121859,
+  "totalUsd": 127760,
   "whales": [
    {
     "wallet": "0x1610db79f753a80207e1d66716be9e91e627ae49",
@@ -113219,8 +113351,8 @@
     "avgPrice": 0.3799
    }
   ],
-  "hoursToKickoff": 1.75,
-  "capturedAt": "2026-08-29T21:46:47.955295+00:00",
+  "hoursToKickoff": 1.54,
+  "capturedAt": "2026-08-29T21:59:30.071886+00:00",
   "tokens": {
    "Diane Parry": "6103586629260467033720758829490369582745796531403141005824464943682385224295",
    "Elise Mertens": "93769040743172047339588248932573813895566421724751059615944719609167763567974"
@@ -113234,23 +113366,23 @@
    "bids": [
     [
      0.62,
-     22109
+     3902
     ],
     [
      0.61,
-     14027
+     21874
     ],
     [
      0.6,
-     7010
+     9513
     ],
     [
      0.59,
-     895
+     2254
     ],
     [
      0.58,
-     84
+     106
     ],
     [
      0.57,
@@ -113260,31 +113392,39 @@
    "asks": [
     [
      0.63,
-     21122
+     21276
     ],
     [
      0.64,
-     53975
+     53662
     ],
     [
      0.65,
-     48526
+     42270
     ],
     [
      0.66,
-     12643
+     12648
     ],
     [
      0.67,
-     3776
+     3531
     ],
     [
      0.68,
-     4214
+     4814
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x240a1e22b913099a96acd7221a09ade7684f814c",
+    "action": "BUY",
+    "side": "Diane Parry",
+    "price": 0.38,
+    "usd": 765,
+    "ts": 1788040174
+   },
    {
     "wallet": "0xe004d275622e574842cfa9f31427f213e387d87c",
     "action": "BUY",
@@ -113324,7 +113464,7 @@
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Charlotte FC",
-    "usd": 514,
+    "usd": 512,
     "avgPrice": 0.36
    },
    {
@@ -113334,8 +113474,8 @@
     "avgPrice": 0.34
    }
   ],
-  "hoursToKickoff": 1.75,
-  "capturedAt": "2026-08-29T21:46:47.955295+00:00",
+  "hoursToKickoff": 1.54,
+  "capturedAt": "2026-08-29T21:59:30.071886+00:00",
   "tokens": {
    "Atlanta United FC": "3895596093412299206329263059515463991135365451365448345293499858876815683267",
    "Draw (Atlanta United FC vs. Charlotte FC)": "35158946325731097421268833441861703613168633388189448131416557959025006478169",
@@ -113344,9 +113484,9 @@
  },
  "mls-mia-mim-2026-08-29": {
   "shares": {
-   "Inter Miami CF": 7071.860314489996,
+   "Inter Miami CF": 7094.970184134996,
    "Draw (Inter Miami CF vs. CF Montréal)": 710.393266575,
-   "CF Montréal": 596.8746648550001
+   "CF Montréal": 607.77684293
   },
   "prices": {
    "Inter Miami CF": 0.695,
@@ -113355,7 +113495,7 @@
   },
   "league": "MLS",
   "sport": "Fußball",
-  "totalUsd": 19253,
+  "totalUsd": 21155,
   "whales": [
    {
     "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
@@ -113381,8 +113521,8 @@
     "avgPrice": 0.6999
    }
   ],
-  "hoursToKickoff": 1.75,
-  "capturedAt": "2026-08-29T21:46:47.955295+00:00",
+  "hoursToKickoff": 1.54,
+  "capturedAt": "2026-08-29T21:59:30.071886+00:00",
   "tokens": {
    "Inter Miami CF": "89112602262562020918930309918843293007618562019313797985103872354228719556439",
    "Draw (Inter Miami CF vs. CF Montréal)": "55438231477306943497762848566820593747106168735838508400087180793923887474066",
@@ -113391,8 +113531,8 @@
  },
  "val-mibr-eg2-2026-08-29": {
   "shares": {
-   "MIBR": 7969.609829450001,
-   "Evil Geniuses": 3022.771391200001
+   "MIBR": 9171.300713025,
+   "Evil Geniuses": 3478.585174625001
   },
   "prices": {
    "MIBR": 0.725,
@@ -113415,20 +113555,20 @@
     "avgPrice": 0.2599
    },
    {
+    "wallet": "0xd619b68e64f256f8ddd185b261c8679eacf0c461",
+    "side": "MIBR",
+    "usd": 1187,
+    "avgPrice": 0.7211
+   },
+   {
     "wallet": "0xcda7957a9247a537184acf7035dbc5d3ae26af42",
     "side": "MIBR",
     "usd": 937,
     "avgPrice": 0.7349
-   },
-   {
-    "wallet": "0xfdc0bd67fbd71aa8edd00121eb2a7fcbddc34b85",
-    "side": "MIBR",
-    "usd": 816,
-    "avgPrice": 0.7299
    }
   ],
-  "hoursToKickoff": 2.25,
-  "capturedAt": "2026-08-29T21:46:47.955295+00:00",
+  "hoursToKickoff": 2.04,
+  "capturedAt": "2026-08-29T21:59:30.071886+00:00",
   "tokens": {
    "MIBR": "28097916685461123911992250846539647260075782789554999553385233447639203972349",
    "Evil Geniuses": "102800533151592476475330709640279565566989682951183548187463637706106464082807"
@@ -113536,7 +113676,7 @@
   },
   "league": "MLS",
   "sport": "Fußball",
-  "totalUsd": 8365,
+  "totalUsd": 8531,
   "whales": [
    {
     "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
@@ -113562,8 +113702,8 @@
     "avgPrice": 0.5099
    }
   ],
-  "hoursToKickoff": 1.75,
-  "capturedAt": "2026-08-29T21:46:47.955295+00:00",
+  "hoursToKickoff": 1.54,
+  "capturedAt": "2026-08-29T21:59:30.071886+00:00",
   "tokens": {
    "D.C. United SC": "115267183633944806224357467672791589579254982723520116433052629213629861597093",
    "Draw (D.C. United SC vs. Los Angeles FC)": "2036303298152800439873826235043752876348547119552615808606578652550607435994",
@@ -113572,8 +113712,8 @@
  },
  "atp-mayo-andrade-2026-08-29": {
   "shares": {
-   "Aidan Mayo": 26737.084738305024,
-   "Andres Andrade": 39280.40844269501
+   "Aidan Mayo": 26759.791737225023,
+   "Andres Andrade": 39313.768107775
   },
   "prices": {
    "Aidan Mayo": 0.405,
@@ -113581,7 +113721,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 44089,
+  "totalUsd": 66737,
   "whales": [
    {
     "wallet": "0x1610db79f753a80207e1d66716be9e91e627ae49",
@@ -113608,8 +113748,8 @@
     "avgPrice": 0.4101
    }
   ],
-  "hoursToKickoff": 1.25,
-  "capturedAt": "2026-08-29T21:46:47.955295+00:00",
+  "hoursToKickoff": 1.04,
+  "capturedAt": "2026-08-29T21:59:30.071886+00:00",
   "tokens": {
    "Aidan Mayo": "40281829520970512010469865052060627951561591905754629116508215003345314626040",
    "Andres Andrade": "96485219848876732921636497585479181764922841128497928515299449448612414060604"
@@ -113628,7 +113768,7 @@
   },
   "league": "BRAZIL-SERIE-A",
   "sport": "Fußball",
-  "totalUsd": 36974,
+  "totalUsd": 40307,
   "whales": [
    {
     "wallet": "0x4956f69ada024c5cb23ed4f38f0dc4c04d2ee2c7",
@@ -113654,8 +113794,8 @@
     "avgPrice": 0.3333
    }
   ],
-  "hoursToKickoff": 2.59,
-  "capturedAt": "2026-08-29T21:46:47.955295+00:00",
+  "hoursToKickoff": 2.37,
+  "capturedAt": "2026-08-29T21:59:30.071886+00:00",
   "tokens": {
    "CR Vasco da Gama": "14124563057513610310809383535989211944753271803042556129734203285268236528616",
    "Draw (CR Vasco da Gama vs. Cruzeiro EC)": "2410126157339925535696319084246352060396347322817281833347171117791409287087",
@@ -113664,9 +113804,9 @@
  },
  "mls-skc-vwh-2026-08-29": {
   "shares": {
-   "Sporting Kansas City": 137.64624786000002,
+   "Sporting Kansas City": 142.766937315,
    "Draw (Sporting Kansas City vs. Vancouver Whitecaps FC)": 63.063440099999994,
-   "Vancouver Whitecaps FC": 8367.00583045
+   "Vancouver Whitecaps FC": 9172.918892749998
   },
   "prices": {
    "Sporting Kansas City": 0.135,
@@ -113686,8 +113826,8 @@
    {
     "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
     "side": "Vancouver Whitecaps FC",
-    "usd": 1510,
-    "avgPrice": 0.6931
+    "usd": 2312,
+    "avgPrice": 0.6955
    },
    {
     "wallet": "0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
@@ -113700,8 +113840,8 @@
     "usd": 371
    }
   ],
-  "hoursToKickoff": 2.75,
-  "capturedAt": "2026-08-29T21:46:47.955295+00:00",
+  "hoursToKickoff": 2.54,
+  "capturedAt": "2026-08-29T21:59:30.071886+00:00",
   "tokens": {
    "Sporting Kansas City": "52722464569354812252106793306736693568263388693980473847401843706639159798544",
    "Draw (Sporting Kansas City vs. Vancouver Whitecaps FC)": "20798752656452242997720853793848118578627578064412423061213314535407057018090",
@@ -113710,18 +113850,18 @@
  },
  "mls-hou-sje-2026-08-29": {
   "shares": {
-   "Houston Dynamo": 7219.345536700001,
+   "Houston Dynamo": 7220.337339215001,
    "Draw (Houston Dynamo vs. San Jose Earthquakes)": 133.805049835,
-   "San Jose Earthquakes": 212.53364287
+   "San Jose Earthquakes": 210.85029035999997
   },
   "prices": {
    "Houston Dynamo": 0.605,
    "Draw (Houston Dynamo vs. San Jose Earthquakes)": 0.215,
-   "San Jose Earthquakes": 0.185
+   "San Jose Earthquakes": 0.18
   },
   "league": "MLS",
   "sport": "Fußball",
-  "totalUsd": 13700,
+  "totalUsd": 14322,
   "whales": [
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
@@ -113747,12 +113887,56 @@
     "usd": 325
    }
   ],
-  "hoursToKickoff": 2.75,
-  "capturedAt": "2026-08-29T21:46:47.955295+00:00",
+  "hoursToKickoff": 2.54,
+  "capturedAt": "2026-08-29T21:59:30.071886+00:00",
   "tokens": {
    "Houston Dynamo": "10058663353114475679511089828715304993796355678850832692411923391203027556705",
    "Draw (Houston Dynamo vs. San Jose Earthquakes)": "32471737593250698435334967064167866235555064756082332234769403377616849605868",
    "San Jose Earthquakes": "55042742092753050035535960116575525146691653517511702207652807715946060043154"
+  }
+ },
+ "mls-atl-clt-2026-08-29-more-markets": {
+  "shares": {
+   "Over": 4217.611839164999,
+   "Under": 6196.244553834998
+  },
+  "prices": {
+   "Over": 0.405,
+   "Under": 0.595
+  },
+  "league": "MLS",
+  "sport": "Fußball",
+  "totalUsd": 12117,
+  "whales": [
+   {
+    "wallet": "0x4f423d4ad987215b20b95f788f83c250e9628bbc",
+    "side": "Over",
+    "usd": 2502,
+    "avgPrice": 0.4046
+   },
+   {
+    "wallet": "0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
+    "side": "Under",
+    "usd": 2151
+   },
+   {
+    "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+    "side": "Under",
+    "usd": 1394,
+    "avgPrice": 0.5951
+   },
+   {
+    "wallet": "0x56acab44cfca2e88bb9b3406890aea7bfa0cd77e",
+    "side": "Over",
+    "usd": 1277,
+    "avgPrice": 0.39
+   }
+  ],
+  "hoursToKickoff": 1.54,
+  "capturedAt": "2026-08-29T21:59:30.071886+00:00",
+  "tokens": {
+   "Over": "45951108771725098046754648044555356293730220807344232938795345306840184135171",
+   "Under": "59752954648910543344207151437248512227410652027773929293592036397293762353689"
   }
  }
 }
