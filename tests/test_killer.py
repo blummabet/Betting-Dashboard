@@ -1,0 +1,202 @@
+"""tests/test_killer.py — 29.08.2026
+
+Das Konjunktions-Element. Lucas' Anforderung war „dort kommst halt nur rein wenn" — also ist
+das Wichtigste an diesen Tests nicht, WAS reinkommt, sondern was NICHT reinkommt.
+
+Ein Test bewusst nicht: eine feste Trefferzahl fuer den heutigen Slate. Die waere morgen falsch
+und wuerde nur die Fixture einbetonieren.
+"""
+import unittest
+from datetime import datetime, timedelta, timezone
+
+import killer
+import betfair_track_record as BTR
+
+
+NOW = datetime(2026, 8, 29, 12, 0, tzinfo=timezone.utc)
+KO = (NOW + timedelta(hours=3)).isoformat().replace("+00:00", "Z")
+
+
+def sig(**kw):
+    d = {"fav": "H", "share": 0.74, "odd": 1.80, "entryOdd": 1.78,
+         "pinnClose": None, "pinnFair": None, "conc": True, "inflow": True, "dir": "in"}
+    d.update(kw)
+    return d
+
+
+def state(signals=None, **kw):
+    e = {"league": "English Premier League", "home": "Arsenal", "away": "Chelsea",
+         "country": "GB", "kickoff": KO, "signals": signals or {"Match Odds": sig()}}
+    e.update(kw)
+    return {"pending": {"1": e}}
+
+
+def cons(**kw):
+    g = {"matchId": "1", "home": "Arsenal", "away": "Chelsea", "moneySide": "home",
+         "poly": {"sharePct": 71, "vol": 40000, "odd": 1.75},
+         "pinn": {"home": 0.58, "draw": 0.24, "away": 0.18, "fav": "home"},
+         "pinnMove": {"movePP": 2.4, "stepPP": 0.6, "n": 5, "move": True, "laeuft": True},
+         "verdict": "konsens"}
+    g.update(kw)
+    return {"games": [g]}
+
+
+class Tor(unittest.TestCase):
+    def test_schwellen_sind_gespiegelt_nicht_nachgebaut(self):
+        # Laufen sie auseinander, empfiehlt die Sektion eine andere Menge, als spaeter
+        # abgerechnet wird — genau der Fehler, den sharp_gate.py fuer die Wallets behoben hat.
+        self.assertEqual(killer.CONC_THRESHOLD, BTR.CONC_THRESHOLD)
+        self.assertEqual(killer.INFLOW_MIN_EUR, BTR.INFLOW_MIN_EUR)
+
+    def test_alle_drei_bedingungen_noetig(self):
+        self.assertTrue(killer.kern_ok(sig()))
+        for weg in ({"conc": False}, {"inflow": False}, {"dir": "out"}, {"dir": "flat"}, {"dir": None}):
+            self.assertFalse(killer.kern_ok(sig(**weg)), weg)
+
+    def test_fehlende_angabe_ist_kein_ja(self):
+        self.assertFalse(killer.kern_ok(None))
+        self.assertFalse(killer.kern_ok({}))
+        self.assertFalse(killer.kern_ok(sig(odd=None)))
+
+    def test_quotenband(self):
+        self.assertFalse(killer.kern_ok(sig(odd=1.10)), "unter 1.30 zahlt keine Kante die Varianz")
+        self.assertFalse(killer.kern_ok(sig(odd=40.0)), "das ist eine Lotterie, kein Geld-Signal")
+        self.assertTrue(killer.kern_ok(sig(odd=1.30)))
+        self.assertTrue(killer.kern_ok(sig(odd=15.0)))
+
+
+class Auswahl(unittest.TestCase):
+    def test_stufe1_braucht_poly_und_pinnacle(self):
+        out = killer.baue(state(), cons(), {}, {"streaks": []}, now=NOW)
+        self.assertEqual(len(out["stufe1"]), 1)
+        self.assertEqual(out["stufe1"][0]["name"], "Arsenal")
+
+    def test_ohne_poly_nur_stufe2(self):
+        out = killer.baue(state(), cons(poly=None), {}, {"streaks": []}, now=NOW)
+        self.assertEqual(len(out["stufe1"]), 0)
+        self.assertEqual(len(out["stufe2"]), 1)
+        self.assertIsNone(out["stufe2"][0]["poly"])
+
+    def test_poly_auf_der_anderen_seite_zaehlt_nicht(self):
+        out = killer.baue(state(), cons(moneySide="away"), {}, {"streaks": []}, now=NOW)
+        self.assertEqual(len(out["stufe1"]), 0, "Poly-Geld auf der Gegenseite ist keine Deckung")
+
+    def test_poly_zu_duenn_zaehlt_nicht(self):
+        c = cons(poly={"sharePct": 52, "vol": 40000, "odd": 1.9})
+        out = killer.baue(state(), c, {}, {"streaks": []}, now=NOW)
+        self.assertEqual(len(out["stufe1"]), 0)
+
+    def test_angepfiffene_spiele_fliegen_raus(self):
+        # Der Track erfasst NUR vor Anpfiff. Waere ein laufendes Spiel drin, wuerde die Sektion
+        # etwas empfehlen, das nie in ihre eigene Messung eingeht.
+        st = state()
+        st["pending"]["1"]["kickoff"] = (NOW - timedelta(minutes=5)).isoformat().replace("+00:00", "Z")
+        out = killer.baue(st, cons(), {}, {"streaks": []}, now=NOW)
+        self.assertEqual(out["stufe1"] + out["stufe2"], [])
+
+    def test_verlierender_liga_eimer_fliegt_raus(self):
+        tr = {"byLeagueMarket": {"English Premier League|Match Odds": {"n": 40, "roi": -0.22}}}
+        out = killer.baue(state(), cons(), tr, {"streaks": []}, now=NOW)
+        self.assertEqual(out["stufe1"] + out["stufe2"], [],
+                         "belegt verlierender Eimer gehoert nicht in eine Empfehlung")
+
+    def test_duenner_liga_eimer_blockiert_nicht(self):
+        tr = {"byLeagueMarket": {"English Premier League|Match Odds": {"n": 6, "roi": -0.9}}}
+        out = killer.baue(state(), cons(), tr, {"streaks": []}, now=NOW)
+        self.assertEqual(len(out["stufe1"]), 1, "unter n=15 gibt es kein Urteil, also auch kein Veto")
+
+    def test_nur_match_odds(self):
+        st = state(signals={"Over/Under 2.5 Goals": sig(fav="OVER")})
+        out = killer.baue(st, cons(), {}, {"streaks": []}, now=NOW)
+        self.assertEqual(out["stufe1"] + out["stufe2"], [])
+
+
+class Verstaerker(unittest.TestCase):
+    def test_pinnacle_bewegung_wird_zum_chip(self):
+        out = killer.baue(state(), cons(), {}, {"streaks": []}, now=NOW)
+        arten = [v["art"] for v in out["stufe1"][0]["verstaerker"]]
+        self.assertIn("pinnMove", arten)
+
+    def test_rauschen_ist_kein_chip(self):
+        c = cons(pinnMove={"movePP": 0.3, "stepPP": 0.1, "n": 5, "move": False, "laeuft": True})
+        out = killer.baue(state(), c, {}, {"streaks": []}, now=NOW)
+        self.assertNotIn("pinnMove", [v["art"] for v in out["stufe1"][0]["verstaerker"]])
+
+    def test_serie_nur_wenn_intakt_und_fuer_die_gespielte_seite(self):
+        streaks = {"streaks": [
+            {"team": "Arsenal", "market": "Ungeschlagen", "length": 9,
+             "continuation": {"state": "intakt", "ratePct": 80}, "leagueName": "Premier League"},
+            {"team": "Chelsea", "market": "Ungeschlagen", "length": 12,
+             "continuation": {"state": "gebrochen"}, "leagueName": "Premier League"}]}
+        out = killer.baue(state(), cons(), {}, streaks, now=NOW)
+        z = out["stufe1"][0]
+        self.assertEqual(z["streak"]["laenge"], 9)
+        out2 = killer.baue(state(), cons(moneySide="home"), {},
+                           {"streaks": [streaks["streaks"][1]]}, now=NOW)
+        self.assertIsNone(out2["stufe1"][0]["streak"], "eine gebrochene Serie ist kein Verstaerker")
+
+    def test_verstaerker_heben_den_rang(self):
+        viel = killer.baue(state(), cons(), {}, {"streaks": []}, now=NOW)["stufe1"][0]
+        wenig = killer.baue(state(), cons(poly=None, pinn=None, pinnMove=None), {},
+                            {"streaks": []}, now=NOW)["stufe2"][0]
+        self.assertGreater(viel["rang"], wenig["rang"])
+
+    def test_preis_wird_mitgeschrieben_aber_nicht_gefiltert(self):
+        # 29.08.2026: die Preis-Bedingung (pinnFair x Quote >= 1) stand in den Daten ANDERSHERUM
+        # (Wert>=0: -29,4% n=30 · Wert<0: +16,1% n=83). Also nur protokollieren.
+        st = state(signals={"Match Odds": sig(pinnFair=0.50)})   # 0.50 x 1.80 - 1 = -0.10
+        out = killer.baue(st, cons(), {}, {"streaks": []}, now=NOW)
+        self.assertEqual(len(out["stufe1"]), 1, "negativer Wert darf NICHT filtern")
+        self.assertAlmostEqual(out["stufe1"][0]["wertVsPinn"], -0.10, places=2)
+
+
+class Schublade(unittest.TestCase):
+    def rows(self, n, win_ab=0, **kw):
+        d = {"market": "Match Odds", "conc": True, "inflow": True, "dir": "in",
+             "odd": 2.0, "clvBf": 1.0, "settledAt": "2026-08-29T12:00:00Z"}
+        d.update(kw)
+        return [dict(d, win=(i >= win_ab)) for i in range(n)]
+
+    def test_nur_die_konjunktion_zaehlt(self):
+        rows = self.rows(10) + self.rows(10, conc=False) + self.rows(10, dir="out") \
+            + self.rows(10, inflow=False) + self.rows(10, market="Half Time")
+        s = killer.schublade(rows)
+        self.assertEqual(len(s["renditen"]), 10)
+
+    def test_closing_quote_nicht_einstiegsquote(self):
+        # entryOdd waere Look-ahead: das Signal steht am SCHLUSS fest, der Einstiegspreis war
+        # vorher. Wer so rechnet, kauft sich einen Vorteil, den es nicht gab.
+        s = killer.schublade(self.rows(4, odd=2.0, entryOdd=5.0))
+        self.assertTrue(all(abs(r - 1.0) < 1e-9 for r in s["renditen"]))
+
+    def test_clv_kommt_roh_mit(self):
+        s = killer.schublade(self.rows(5, clvBf=2.5))
+        self.assertEqual(s["clvs"], [2.5] * 5)
+
+    def test_quotenband_gilt_auch_rueckwaerts(self):
+        self.assertEqual(killer.schublade(self.rows(5, odd=1.05))["renditen"], [])
+
+    def test_leere_eingabe(self):
+        s = killer.schublade([])
+        self.assertEqual((s["renditen"], s["clvs"], s["letzter"]), ([], [], None))
+
+
+class Register(unittest.TestCase):
+    def test_schublade_landet_im_freigabe_register(self):
+        import freigabe
+        rows = [dict(market="Match Odds", conc=True, inflow=True, dir="in", odd=2.0,
+                     clvBf=1.0, win=(i % 3 != 0), settledAt="2026-08-29T12:00:00Z")
+                for i in range(40)]
+        z = freigabe.killer_schublade(rows, now=datetime(2026, 8, 29, 18, tzinfo=timezone.utc))
+        self.assertEqual(len(z), 1)
+        self.assertEqual(z[0]["schublade"], "Konjunktion · Betfair-Kern")
+        self.assertEqual(z[0]["n"], 40)
+        self.assertIsNotNone(z[0]["clvLb"], "anders als die Aggregat-Schubladen hat diese CLV")
+
+    def test_ohne_zeilen_keine_schublade(self):
+        import freigabe
+        self.assertEqual(freigabe.killer_schublade([]), [])
+
+
+if __name__ == "__main__":
+    unittest.main()

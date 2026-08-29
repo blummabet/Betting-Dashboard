@@ -69,6 +69,20 @@ jobs:
       - name: 📊 Track-Record aktualisieren (Trefferquote je Liga×Markt)
         run: ${{ env.BETFAIR_PY }} betfair_track_record.py
 
+      # 29.08.2026 (Lucas: „sowas könnte man schon als super killer Element bauen"): die
+      # Konjunktions-Sektion. Läuft NACH betfair_track_record.py und betfair_consensus.py,
+      # weil sie beider Ausgaben liest (Signal-Stand + Poly/Pinnacle je Spiel).
+      - name: 🔒 Konjunktion (nur wo mehrere Geldströme gleichzeitig zustimmen)
+        run: ${{ env.BETFAIR_PY }} killer.py
+        continue-on-error: true
+
+      # Das Freigabe-Register lief bisher gar nicht im Takt — freigabe.json wurde einmal von
+      # Hand erzeugt und war seitdem alt. Damit die Sektion oben ihren eigenen Stand ehrlich
+      # zeigen kann, muss das Register mitlaufen.
+      - name: ✅ Freigabe-Register neu bewerten
+        run: ${{ env.BETFAIR_PY }} freigabe.py
+        continue-on-error: true
+
       - name: 📚 Liga-Basis lernen (was ist ueblich fuer Liga X in Phase Y — Basis fuers x-Norm-Badge)
         run: ${{ env.BETFAIR_PY }} betfair_league_norm.py
         continue-on-error: true
@@ -122,7 +136,7 @@ jobs:
           # Workflow geschrieben, deshalb kann sie mit keinem anderen kollidieren.
           git add health/betfair.json 2>/dev/null || true
           git add betfair_coherence_watch.json 2>/dev/null || true   # ab wann liegt Geld in den Tormaerkten
-          git add betfair_prices.json betfair_history.json betfair_overview.json betfair_track_state.json betfair_track_results.json betfair_track_record.json betfair_league_norm.json betfair_league_norm_state.json betfair_direction.json betfair_draw_state.json betfair_draw_results.json betfair_draw_record.json betfair_alerts_seen.json betfair_public_seen.json betfair_public_ledger.json betfair_public_record.json betfair_consensus.json betfair_consensus_history.json betfair_status.json money_map.json money_map_ledger.json money_map_record.json 2>/dev/null || true
+          git add betfair_prices.json betfair_history.json betfair_overview.json betfair_track_state.json betfair_track_results.json betfair_track_record.json betfair_league_norm.json betfair_league_norm_state.json betfair_direction.json betfair_draw_state.json betfair_draw_results.json betfair_draw_record.json betfair_alerts_seen.json betfair_public_seen.json betfair_public_ledger.json betfair_public_record.json betfair_consensus.json betfair_consensus_history.json betfair_status.json money_map.json money_map_ledger.json money_map_record.json killer.json freigabe.json 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "keine Änderung — nichts zu committen"
             exit 0

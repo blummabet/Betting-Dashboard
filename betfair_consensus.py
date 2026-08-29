@@ -40,7 +40,12 @@ except Exception:
 ODDS_KEY       = os.environ.get("ODDS_API_KEY") or "16154a94ee84482dcd5a4af88d521d73"   # leerer Secret-String -> App-Key
 ODDS_BASE      = "https://api.the-odds-api.com/v4"
 REGIONS        = "eu,uk,us"     # Pinnacle liegt in eu; Soft-Books ueber uk/us breiter erfasst
-HIST_KEEP      = 8              # letzte n Snapshots je Spiel behalten
+HIST_KEEP      = 24             # letzte n Snapshots je Spiel behalten
+# 29.08.2026: 8 Snapshots × ~15 Min = ein Zwei-Stunden-Fenster, und bei Doppelläufen lagen
+# zwei davon vier Minuten auseinander. Pinnacle schärft sich über Stunden, nicht über Minuten.
+# Gleiche Lösung wie in poly_price_path.py: Mindestabstand statt jeden Lauf mitschreiben.
+# 24 × ≥20 Min ≈ 8 Stunden Fenster bei kleinerer Datei als vorher pro Stunde.
+SNAP_MIN_ABSTAND_MIN = 20      # näher beieinander liegende Snapshots nicht mitschreiben
 MATCH_MIN      = 0.60          # Namens-Match-Schwelle (beide Teams muessen teilen)
 # 09.08.2026 (Lucas): EXAKT dieselben Spiele wie die Betfair-Radar-Liste (betfair-radar.js qualifies()):
 # tier-basiert — groesster FT-Markt >= 20K (Top/Int) / 15K (Rest) ODER groesster HT-Markt >= 10K / 5K.
@@ -716,6 +721,67 @@ def mm_summary(ledger, now=None, recent_keep=40):
             "pending": sum(1 for e in (ledger or []) if isinstance(e, dict) and e.get("status") == "pending")}
 
 
+# ── Pinnacle-Bewegung ────────────────────────────────────────────────────────
+# 29.08.2026 (Lucas: „Pini move da" als Bedingung fürs Killer-Element):
+# Die Bewegung wurde gegen den UNMITTELBAR vorigen Snapshot gerechnet. Der Scan läuft alle
+# ~15 Minuten, gelegentlich zweimal in vier Minuten — zwischen zwei Läufen bewegt Pinnacle
+# sich praktisch nie. Ergebnis: über 40 Spiele gab es genau ZWEI verschiedene Werte (−0.0
+# und 1.2). Die Bewegung war faktisch tot und als Bedingung wertlos.
+# Gemessen wird jetzt über das FENSTER (ältester bis aktueller Snapshot) — genau so, wie es
+# _pwMoveFor in poly-wallets.js für die Poly-Preise längst macht. Aus der echten Historie:
+# 0.658 → 0.544 = −11.4pp über zwei Stunden, vorher unsichtbar.
+#
+# Drei Regeln müssen mit:
+#  · Nur VOR Anpfiff. Ein Live-Repricing nach einem Tor (in der Historie: 0.50 → 0.69
+#    innerhalb eines Laufs) ist ein Spielstand, keine Sharp-Bewegung.
+#  · Snapshots ohne `pinn` werden ÜBERSPRUNGEN, nicht als 0 gelesen — fehlende Information
+#    ist keine Bewegung.
+#  · `stepPP` ist der letzte ECHTE Schritt (identische Nachbar-Snapshots aus einem Doppel-
+#    lauf werden übersprungen). Zieht er in dieselbe Richtung wie das Fenster, läuft die
+#    Bewegung noch — dieselbe Definition wie beim Poly-Steam.
+PINN_MOVE_MIN_PP = 1.0     # darunter Rauschen, kein Move
+
+
+def _ts(x):
+    try:
+        return datetime.fromisoformat(str(x).replace("Z", "+00:00"))
+    except (ValueError, TypeError, AttributeError):
+        return None
+
+
+def pinn_move(prevlist, pinn, side, kickoff=None, live=False):
+    """Bewegung der Pinnacle-Wahrscheinlichkeit der Geld-Seite über das Snapshot-Fenster. REIN."""
+    i = {"home": 0, "draw": 1, "away": 2}.get(side)
+    if i is None or not pinn or len(pinn) <= i or live:
+        return None
+    if isinstance(prevlist, dict):      # Rückwärts-kompatibel: ein einzelner Snapshot
+        prevlist = [prevlist]
+    ko = _ts(kickoff)
+    hist = []
+    for snap in (prevlist or []):
+        if not isinstance(snap, dict):
+            continue
+        p = snap.get("pinn")
+        if not isinstance(p, (list, tuple)) or len(p) <= i or not isinstance(p[i], (int, float)):
+            continue
+        ts = _ts(snap.get("ts"))
+        if ko and ts and ts >= ko:
+            continue                    # nach Anpfiff: Spielstand, nicht Sharp-Geld
+        hist.append(float(p[i]))
+    if not hist:
+        return None
+    jetzt = float(pinn[i])
+    move = (jetzt - hist[0]) * 100.0
+    step = (jetzt - hist[-1]) * 100.0
+    for v in reversed(hist):            # letzter Schritt, der überhaupt einer war
+        if abs(jetzt - v) > 1e-9:
+            step = (jetzt - v) * 100.0
+            break
+    return {"movePP": round(move, 1), "stepPP": round(step, 1), "n": len(hist) + 1,
+            "move": abs(move) >= PINN_MOVE_MIN_PP,
+            "laeuft": (step > 0) == (move > 0) and abs(step) >= 0.2}
+
+
 def build_game(m, ev, prev, direction, poly=None, totals_ev=None) -> dict:
     """Ein Spiel: Betfair-Geld-Seite + (falls Anker) Pinnacle/Soft-Probs+Quoten, Poly-Odd+Volumen,
     Bewegung, Verdikt. REIN (Netz passiert vorher)."""
@@ -738,7 +804,8 @@ def build_game(m, ev, prev, direction, poly=None, totals_ev=None) -> dict:
         "softOdd": (round(ev["softOdds"][i], 2) if (ev and ev.get("softOdds") and i is not None) else None),
         "softN": ev.get("nSoft") if ev else None,
         "poly": poly,
-        "pinn": None, "soft": None, "pinnMovePP": None, "verdict": "no_anchor", "agree": None,
+        "pinn": None, "soft": None, "pinnMovePP": None, "pinnMove": None,
+        "verdict": "no_anchor", "agree": None,
        "pinnTotals": None,
     }
     pinn = ev.get("pinn") if ev else None
@@ -748,13 +815,12 @@ def build_game(m, ev, prev, direction, poly=None, totals_ev=None) -> dict:
     if soft:
         out["soft"] = {"home": _r(soft[0]), "draw": _r(soft[1]), "away": _r(soft[2]),
                        "fav": _fav(soft), "n": ev.get("nSoft")}
-    # Bewegung: Pinnacle-Prob der Geld-Seite gegen den letzten Snapshot
-    if pinn and ms and prev and prev.get("pinn"):
-        i = idx[ms["side"]]
-        try:
-            out["pinnMovePP"] = round((pinn[i] - prev["pinn"][i]) * 100, 1)
-        except (TypeError, IndexError):
-            pass
+    # Bewegung: Pinnacle-Prob der Geld-Seite über das Snapshot-Fenster (s. pinn_move oben)
+    if pinn and ms:
+        pm = pinn_move(prev, pinn, ms.get("side"), m.get("kickoff"), live=out["live"])
+        if pm:
+            out["pinnMovePP"] = pm["movePP"]
+            out["pinnMove"] = pm
     # Verdikt
     ref = pinn or soft
     if ms and ref:
@@ -888,7 +954,9 @@ def main():
         _isl = bool(_li.get("time")) and not _li.get("finished")
         poly = pick_poly(m, money_side(m), _isl, poly_entries, poly_live_entries, poly_upcoming_entries)
         prevlist = hist.get(mid) or []
-        prev = prevlist[-1] if prevlist else None
+        # 29.08.2026: build_game bekommt die GANZE Fenster-Historie, nicht mehr nur den
+        # letzten Snapshot — sonst misst pinn_move zwei Läufe im Abstand von Minuten.
+        prev = prevlist
         g = build_game(m, ev, prev, direction, poly, totals_ev=tev)
         games.append(g)
         # Money-Map Poly-Pool (12.08.2026, Lucas): live (laufend) > close (<=3h, mit Shares) >
@@ -913,7 +981,13 @@ def main():
         if ev and ev.get("pinn"):
             snap["pinn"] = [round(x, 4) for x in ev["pinn"]]
         if snap.get("pinn") or prevlist:
-            new_hist[mid] = (prevlist + [snap])[-HIST_KEEP:]
+            _letzte = _ts((prevlist[-1] or {}).get("ts")) if prevlist else None
+            _jetzt = _ts(now)
+            _zu_dicht = bool(_letzte and _jetzt
+                             and (_jetzt - _letzte).total_seconds() < SNAP_MIN_ABSTAND_MIN * 60)
+            # Zu dicht am letzten Eintrag: NICHT anhängen (sonst schiebt ein Doppellauf das
+            # Fenster weg und der letzte Schritt misst vier Minuten statt zwanzig).
+            new_hist[mid] = (prevlist if _zu_dicht else (prevlist + [snap]))[-HIST_KEEP:]
 
     games.sort(key=lambda g: (g.get("verdict") != "no_anchor", g.get("totVol") or 0), reverse=True)
     covered = sum(1 for g in games if g.get("verdict") != "no_anchor")

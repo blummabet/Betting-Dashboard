@@ -295,13 +295,34 @@ def betfair_schubladen(rec=None, min_n=None) -> list:
     return out
 
 
+def killer_schublade(results=None, now=None) -> list:
+    """Die Konjunktion aus killer.py als eigene Schublade.
+
+    29.08.2026: die übrigen Betfair-Schubladen rechnen auf Aggregaten und können deshalb nie
+    über „geprueft" hinauskommen — im Aggregat steht kein CLV je Signal. Die Konjunktion
+    rechnet auf den Rohzeilen von betfair_track_results.json, dort liegt clvBf je Zeile.
+    Sie kann also wirklich freigegeben werden. Genau das ist der Punkt: die Sektion, die Lucas
+    blind spielen können soll, muss sich selbst freigeben statt behauptet zu werden."""
+    try:
+        from killer import schublade
+    except Exception:
+        return []
+    s = schublade(results)
+    if not s["renditen"]:
+        return []
+    e = bewerte("Konjunktion · Betfair-Kern", "betfair", s["renditen"], s["clvs"],
+                {"art": "konjunktion", "quelle": "killer.py"}, s["letzter"], now)
+    return [e]
+
+
 # ── Zusammenbau ─────────────────────────────────────────────────────────────────────────
 RANG = {"freigegeben": 0, "kandidat": 1, "geprueft": 2, "sammelt": 3, "ruht": 4}
 
 
 def baue(engine=None, track=None, cards=None, betfair=None, now=None) -> dict:
     now = now or _now()
-    zeilen = (poly_schubladen(track, engine) + card_schubladen(cards) + betfair_schubladen(betfair))
+    zeilen = (poly_schubladen(track, engine) + card_schubladen(cards)
+              + betfair_schubladen(betfair) + killer_schublade(now=now))
     zeilen.sort(key=lambda r: (RANG.get(r["status"], 9), -(r.get("roiLb") or -9), -r["n"]))
     frei = [r for r in zeilen if r["status"] == "freigegeben"]
     kand = [r for r in zeilen if r["status"] == "kandidat"]

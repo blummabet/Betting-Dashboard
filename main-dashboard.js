@@ -254,6 +254,26 @@
       '.md-jz-div{font-size:12.5px;font-weight:700;line-height:1.3;}',
       '.md-jz-mv{font-family:"JetBrains Mono",monospace;font-size:12px;font-weight:800;white-space:nowrap;text-align:right;min-width:52px;}',
       '.md-badge{display:inline-block;font-size:9.5px;font-weight:800;padding:1px 6px;border-radius:5px;margin-left:6px;vertical-align:1px;}',
+      // 29.08.2026 (Lucas): das Konjunktions-Element. Bewusst anders als „Top-Wetten jetzt":
+      // dunkler, ruhiger, weniger Zeilen. Die Sektion soll aussehen, als koste jede Zeile etwas.
+      '.md-kl{background:radial-gradient(130% 150% at 0% 0%,rgba(76,194,255,.10),transparent 58%),var(--m1);border:1px solid rgba(76,194,255,.26);border-radius:14px;padding:13px 15px 10px;margin-top:12px;}',
+      '.md-kl-h{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}',
+      '.md-kl-t{font-weight:800;font-size:13.5px;color:var(--mi);}',
+      '.md-kl-s{font-size:11px;color:var(--mi2);}',
+      '.md-kl-st{margin-left:auto;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;white-space:nowrap;}',
+      '.md-kl-grp{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--mi3);margin:12px 0 2px;display:flex;align-items:center;gap:7px;}',
+      '.md-kl-grp i{height:1px;flex:1;background:var(--mln);font-style:normal;}',
+      '.md-kl-row{padding:9px 0;border-top:1px solid var(--mln);}',
+      '.md-kl-l1{display:flex;align-items:center;gap:6px;}',
+      '.md-kl-nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;font-weight:600;color:var(--mi2);}',
+      '.md-kl-pick{font-size:14.5px;font-weight:800;color:var(--mi);margin-top:5px;line-height:1.25;}',
+      '.md-kl-pick b{color:#4cc2ff;}',
+      '.md-kl-pick .q{color:var(--mi3);font-weight:700;font-size:12px;}',
+      '.md-kl-ch{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px;}',
+      '.md-kl-c{font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;background:rgba(120,130,150,.13);color:var(--mi2);white-space:nowrap;}',
+      '.md-kl-c.on{background:rgba(76,194,255,.15);color:#4cc2ff;}',
+      '.md-kl-c.off{opacity:.45;}',
+      '.md-kl-foot{font-size:10.5px;color:var(--mi3);margin-top:11px;line-height:1.5;border-top:1px solid var(--mln);padding-top:9px;}',
       '.mpc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}',
       '@media(max-width:760px){.mpc-grid{grid-template-columns:repeat(2,1fr);}}',
       '.mpc{position:relative;overflow:hidden;text-align:left;font:inherit;color:var(--mi);cursor:pointer;background:var(--m2);border:1px solid var(--mln);border-radius:12px;padding:11px 12px 10px;display:block;transition:transform .15s,border-color .15s;}',
@@ -299,7 +319,12 @@
       // 29.08.2026 (Lucas: „das müsste man auf der Übersicht auch anpassen"): der Betfair-Track.
       // Die Poly-Zeilen tragen ihre Conviction und ziehen deshalb bei jeder Neugewichtung
       // automatisch mit — die Betfair-Zeilen hingen an festen Konstanten und bewegten sich nie.
-      jf('betfair_track_record.json')]);
+      jf('betfair_track_record.json'),
+      // 29.08.2026 (Lucas: „sowas könnte man schon als super killer Element bauen"): die
+      // Konjunktions-Sektion + das Freigabe-Register, das ihr Urteil trägt. Beides muss hier
+      // rein, weil die Sektion NICHT behaupten darf, sie sei spielbar — sie zeigt ihren
+      // eigenen Stand aus freigabe.json.
+      jf('killer.json'), jf('freigabe.json')]);
   }
   function _mdLoad(force) {
     if (_md.loading) return;
@@ -309,7 +334,7 @@
     var p = document.getElementById('mainDashPanel');
     if (p && !_md.data) { p.classList.add('mdash'); p.innerHTML = _head() + '<div class="md-empty" style="text-align:center;padding:52px 0;">⏳ Übersicht wird geladen …</div>'; }
     _mdFetch().then(function (a) {
-      _md.data = { liga: a[0], mls: a[1], ligaStreaks: a[2], mlsStreaks: a[3], betfair: a[4], whales: a[5], pulse: a[6], bfOverview: a[7], bfDir: a[8], moneyMap: a[9], bfTrack: a[10] };
+      _md.data = { liga: a[0], mls: a[1], ligaStreaks: a[2], mlsStreaks: a[3], betfair: a[4], whales: a[5], pulse: a[6], bfOverview: a[7], bfDir: a[8], moneyMap: a[9], bfTrack: a[10], killer: a[11], freigabe: a[12] };
       _md.loading = false; _mdRender();
     });
   }
@@ -1135,7 +1160,7 @@
       '<div id="md-cell-live" class="md-cell">' + _mdLiveWidePlaceholder() + '</div>' +
       '</div>';
 
-    p.innerHTML = _head() + _mdPulse() + _mdSignalBoard() + _mdNobetBoard() + _mdJetzt() + _kpis() + _mdHero() + grid +
+    p.innerHTML = _head() + _mdPulse() + _mdKiller() + _mdSignalBoard() + _mdNobetBoard() + _mdJetzt() + _kpis() + _mdHero() + grid +
       '<div class="md-foot">Kuratierter Überblick · tippe „alle →" für den vollen Bereich</div>';
     _mdFillPlays();
     _mdFillPubPreview();
@@ -1366,6 +1391,76 @@
   // 13.08.2026 (Lucas): EINE unified "Top-Wetten jetzt"-Box — das Beste ueber ALLE Flaechen
   // (Engine-Cards, Poly-Lag, Betfair-Steam, Money-Map), gerankt nach einem gemeinsamen Signal-Score
   // statt chronologisch. Exoten bleiben drin, aber markiert + heruntergestuft. Artefakt-Moves raus.
+  // ── Konjunktion: nur wo mehrere Ströme GLEICHZEITIG zustimmen ────────────────
+  // 29.08.2026 (Lucas): „dort kommst halt nur rein wenn Pini move da / Betfair geld oben und
+  // quoten mitziehen / Poly geld oben". Die Auswahl trifft killer.py — das Frontend zeigt sie
+  // nur. Wichtig dabei: die Sektion behauptet NICHT, sie sei spielbar. Sie liest ihren eigenen
+  // Stand aus freigabe.json und schreibt ihn oben rechts hin. Solange die ROI-Untergrenze nicht
+  // über null liegt, steht dort „beobachten", nicht „spielen".
+  function _mdKillerStand() {
+    var f = _md.data && _md.data.freigabe;
+    var zeilen = (f && (f.alle || f.zeilen)) || [];
+    for (var i = 0; i < zeilen.length; i++) {
+      if (String(zeilen[i].schublade || '').indexOf('Konjunktion') === 0) return zeilen[i];
+    }
+    return null;
+  }
+  function _mdKillerBadge(st) {
+    if (!st) return { txt: 'sammelt noch', col: A.gold, bg: 'rgba(201,133,0,.14)' };
+    if (st.status === 'freigegeben') return { txt: '✅ freigegeben · n' + st.n, col: A.good, bg: 'rgba(46,160,67,.16)' };
+    var roi = (st.roi != null) ? ((st.roi >= 0 ? '+' : '') + Math.round(st.roi * 100) + '%') : '—';
+    var ug = (st.roiLb != null) ? ((st.roiLb >= 0 ? '+' : '') + Math.round(st.roiLb * 100) + '%') : '—';
+    return { txt: '👀 beobachten · n' + st.n + ' · ROI ' + roi + ' (Untergrenze ' + ug + ')',
+             col: A.gold, bg: 'rgba(201,133,0,.14)' };
+  }
+  function _mdKiller() {
+    var k = _md.data && _md.data.killer;
+    var s1 = (k && k.stufe1) || [], s2 = (k && k.stufe2) || [];
+    var st = _mdKillerStand(), bad = _mdKillerBadge(st);
+    var kopf = '<div class="md-kl-h"><span style="font-size:16px">🔒</span>' +
+      '<span class="md-kl-t">Mehrfach gedeckt</span>' +
+      '<span class="md-kl-s">nur Spiele, hinter denen mehrere Geldströme gleichzeitig stehen</span>' +
+      '<span class="md-kl-st" style="background:' + bad.bg + ';color:' + bad.col + '">' + bad.txt + '</span></div>';
+    if (!s1.length && !s2.length) {
+      var regel = (k && k.regeln && k.regeln.text) || 'Geldanteil, frischer Zufluss und mitziehende Quote müssen zusammenfallen.';
+      return '<section class="md-kl md-rise" style="border-color:var(--mln)">' + kopf +
+        '<div class="md-kl-foot" style="border-top:0;padding-top:10px">Gerade deckt sich nichts. ' +
+        esc(regel) + '</div></section>';
+    }
+    var now = Date.now();
+    var row = function (x) {
+      var k2 = x.kickoff ? Date.parse(String(x.kickoff).replace('Z', '+00:00')) : NaN;
+      var min = isFinite(k2) ? Math.max(0, Math.round((k2 - now) / 60000)) : null;
+      var ko = (min == null) ? null : (min < 60 ? min + 'm' : Math.floor(min / 60) + 'h' + (min % 60 ? ' ' + (min % 60) + 'm' : ''));
+      // Die drei Kern-Bedingungen stehen IMMER da — auch als Beleg, dass sie erfüllt sind.
+      var chips = ['<span class="md-kl-c on">Geld ' + (x.anteilPct || 0) + '%</span>',
+                   '<span class="md-kl-c on">frischer Zufluss</span>',
+                   '<span class="md-kl-c on">Quote zieht mit</span>'];
+      (x.verstaerker || []).forEach(function (v) { chips.push('<span class="md-kl-c on">' + esc(v.text) + '</span>'); });
+      // Was FEHLT, wird auch gezeigt — sonst sieht Stufe 2 aus wie Stufe 1.
+      if (!x.poly) chips.push('<span class="md-kl-c off">kein Poly-Markt</span>');
+      var oddTxt = (x.odd != null) ? ' <span class="q">@' + (+x.odd).toFixed(2) + '</span>' : '';
+      return '<div class="md-kl-row"><div class="md-kl-l1">' +
+        '<span class="md-kl-nm">' + esc(team(x.home)) + ' <span style="color:var(--mi3);font-weight:400">v</span> ' + esc(team(x.away)) + '</span>' +
+        (ko ? '<span class="md-jz-ko">⏱ ' + ko + '</span>' : '') + '</div>' +
+        '<div class="md-kl-pick"><span style="color:var(--mi3)">→</span> <b>' + esc(x.name || '—') + '</b>' + oddTxt + '</div>' +
+        '<div class="md-kl-ch">' + chips.join('') + '</div></div>';
+    };
+    var grp = function (titel, arr) {
+      if (!arr.length) return '';
+      return '<div class="md-kl-grp">' + titel + '<i></i></div>' + arr.map(row).join('');
+    };
+    var fuss = st && st.status !== 'freigegeben'
+      ? 'Das Tor ist gemessen (' + (st.n || 0) + ' abgerechnete Zeilen, CLV ' +
+        (st.clv != null ? (st.clv >= 0 ? '+' : '') + st.clv.toFixed(1) + 'pp' : '—') +
+        '), aber die ROI-Untergrenze liegt noch nicht über null. Bis dahin ist das hier eine Beobachtungsliste, keine Freigabe.'
+      : 'Freigegeben nach denselben Regeln wie jede andere Schublade: ROI-Untergrenze über null, CLV nicht negativ, frisch.';
+    return '<section class="md-kl md-rise">' + kopf +
+      grp('🔒 Voll gedeckt — Betfair · Poly · Pinnacle', s1) +
+      grp('💷 Betfair-Kern — das gemessene Tor', s2) +
+      '<div class="md-kl-foot">' + esc(fuss) + '</div></section>';
+  }
+
   function _mdJetzt(polyPlays) {
     var now = Date.now(), soon = now + 12 * 3600e3, floor = now - 30 * 60000;
     var vsp = ' <span style="color:var(--mi3);font-weight:400">v</span> ';
@@ -1413,6 +1508,11 @@
     ((_md.data.bfOverview && _md.data.bfOverview.steam) || []).forEach(function (x) {
       var pp = +x.pp || 0, app = Math.abs(pp);
       if (app < 1.5 || app > 25) return;           // <1.5 kein Signal · >25pp = Platzhalter-Artefakt
+      // 29.08.2026 (Lucas-Dump: „Sao Paulo @2.60 · −5,4pp · Quote driftet“ stand als Top-Wette Nr. 3):
+      // pp<0 heißt, die Quote LÄUFT WEG — das Geld liegt auf der GEGENSEITE. Für den Frisches-Geld-Block
+      // hat Lucas das am 16.08. entschieden (dir==='out' fliegt raus); der Steam-Block hatte dieselbe
+      // Regel nie bekommen und empfahl weiter die verlassene Seite. Jetzt gleich an beiden Stellen.
+      if (pp < 0) return;                          // driftet = kein Back-Rueckhalt -> keine Top-Wette
       var moneyIn = pp > 0, ex = exoticLg(x.league, false);  // pp>0 = Quote fiel = Geld rein
       // Steam wird immer aus den Match Odds gerechnet (steam_list liest `mo`) -> Eimer ist
       // Liga × Match Odds.
@@ -1469,7 +1569,7 @@
       // nur, wenn der Liga×Markt-Track ihn stützt ODER (mangels Stichprobe) noch nichts dagegen
       // spricht. Ein Eimer mit belegtem Minus ist oben schon rausgeflogen.
       var reserve = [
-        firstOf('bf', function (x) { return !x.exotic && Math.abs(+x.pp || 0) >= 3; }),   // ordentlicher Steam (nicht exotisch, >=3pp)
+        firstOf('bf', function (x) { return !x.exotic && (+x.pp || 0) >= 3; }),   // ordentlicher Steam: >=3pp REIN (Betrag hätte auch Drift reserviert)
         firstOf('bfflow', function (x) { return (+x.deltaEur || 0) >= 30000; }),           // echter Geld-Zufluss (>=EUR30K), kein Mini-Draw
         firstOf('mm')
       ].filter(Boolean);
