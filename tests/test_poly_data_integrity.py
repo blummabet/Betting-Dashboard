@@ -153,7 +153,11 @@ def test_proven_wallets_all_profitable_is_ok():
 
 def test_proven_wallets_flags_pnl_blind_spot():
     # viele „bewiesene" Wallets ohne pnl-Feld -> Confirmed-Loser-Gate ist für sie blind
-    scores = {f"0x{i}": {"n": 5, "wins": 3} for i in range(10)}
+    # 29.08.2026: n an PROVEN_MIN_TR gekoppelt statt hart 5. Die Schwelle folgt jetzt dem echten
+    # Push-Gate (poly_whale_watch.MIN_TR, seit 02.08. = 8); mit festem n=5 galt hier plötzlich
+    # kein Wallet mehr als „bewiesen" und der Test wurde grün, ohne etwas zu prüfen.
+    n = pdi.PROVEN_MIN_TR + 2
+    scores = {f"0x{i}": {"n": n, "wins": int(n * 0.6)} for i in range(10)}
     c = pdi.check_proven_wallets_profitable(pdi.PolyCtx(now=NOW, wallet_track={"scores": scores}))
     assert not c["ok"] and any("ohne P&L" in f for f in c["failures"])
 

@@ -776,6 +776,64 @@ def _real_match_keys(ctx):
     return keys
 
 
+# Wie nah muss ein Anpfiff sein, damit „Pinnacle hat noch gar nicht eroeffnet" als Fehler gilt?
+# Innerhalb dieser Frist ist es einer: ein Spiel uebermorgen ohne Pinnacle-Linie ist nicht
+# handelbar, und das gehoert gemeldet. Davor ist es nur der normale Lauf der Dinge.
+NICHT_EROEFFNET_FRIST_D = 3
+
+
+def _pinnacle_nie_eroeffnet(o) -> bool:
+    """True, wenn zu diesem Spiel NOCH GAR KEINE Pinnacle-Zahl geschrieben wurde.
+
+    Unterscheidet die zwei Faelle, die der Guard bisher in einen Topf warf:
+      * kein hw/dr/aw UND kein bookmaker  → der Fetcher hat nie etwas gefunden (noch nicht eroeffnet)
+      * ein Teil davon da                 → halber Eintrag, das ist ein echter Fehler
+    Felder anderer Quellen (poly_*, bf_*, ah*) zaehlen bewusst NICHT als Pinnacle-Eroeffnung —
+    Betfair und die AH-Leiter listen frueher als Pinnacle.
+    """
+    if not isinstance(o, dict):
+        return True
+    if o.get("bookmaker"):
+        return False
+    return not any(isinstance(o.get(x), (int, float)) for x in ("hw", "dr", "aw"))
+
+
+def _nie_eroeffnet_keys(ctx, tage: int = NICHT_EROEFFNET_FRIST_D):
+    """Keys, die man nicht bemaengeln kann: weiter als `tage` weg UND von Pinnacle nie eroeffnet.
+
+    29.08.2026 (Lucas, Status-Tab): der 1X2- und der Public-Guard standen dauerhaft auf Gelb —
+    11 Liga- und 13 MLS-„Fehler", allesamt Spiele 5,5 bis 7,7 Tage in der Zukunft, zu denen
+    Polymarket laengst listet und Pinnacle noch nicht. Der bestehende 7-Tage-Deckel griff dafuer
+    nicht: gemessen reichen bepreiste Anpfiffe bis 9,5 Tage, unbepreiste beginnen schon bei 5,5 —
+    die Zonen ueberlappen, ein reiner Tages-Schwellenwert kann sie also gar nicht trennen.
+    Das Kriterium ist nicht die Entfernung, sondern ob ueberhaupt schon jemand bepreist hat.
+    Dauer-Gelb ist nicht harmlos: es erzieht dazu, die Statusseite zu ueberblaettern — und genau
+    das hat am 28.08. einen halben Tag gekostet.
+    """
+    jetzt = ctx.now if getattr(ctx, "now", None) else datetime.now(timezone.utc)
+    grenze = jetzt + timedelta(days=tage)
+    out = set()
+    fx_by_key = {}
+    for _g, fx in ctx.fixtures:
+        fx_by_key[f"{fx.get('home')}-{fx.get('away')}"] = fx
+    for mk, o in (ctx.odds or {}).items():
+        if not _pinnacle_nie_eroeffnet(o):
+            continue
+        fx = fx_by_key.get(mk)
+        ko = (fx or {}).get("kickoff")
+        if not ko:
+            continue
+        try:
+            t = datetime.fromisoformat(str(ko).replace("Z", "+00:00"))
+        except ValueError:
+            continue
+        if t.tzinfo is None:
+            t = t.replace(tzinfo=timezone.utc)
+        if t > grenze:
+            out.add(mk)
+    return out
+
+
 def _far_future_keys(ctx, tage: int = 7):
     """Fixtures, deren Anpfiff weiter als `tage` entfernt ist.
 
@@ -802,7 +860,7 @@ def _far_future_keys(ctx, tage: int = 7):
 def check_odds_sane(ctx):
     real = _real_match_keys(ctx)
     finished = _finished_keys(ctx)
-    zu_frueh = _far_future_keys(ctx)
+    zu_frueh = _far_future_keys(ctx) | _nie_eroeffnet_keys(ctx)
     fails = []
     for mk, o in ctx.odds.items():
         if mk not in real or mk in finished or mk in zu_frueh:
@@ -1557,7 +1615,7 @@ def check_public_consensus(ctx):
     real = _real_match_keys(ctx)
     # 14.07.2026: weit entfernte Anpfiffe raus — Softbooks eröffnen erst ~1 Woche vorher,
     # Polymarket listet früher. Sonst Dauer-Gelb für Spiele, die schlicht noch niemand bepreist hat.
-    _zu_frueh = _far_future_keys(ctx)
+    _zu_frueh = _far_future_keys(ctx) | _nie_eroeffnet_keys(ctx)
     fails = [f"{mk}: kein public_hw" for mk, o in ctx.odds.items()
              if mk in real and mk not in _zu_frueh and not o.get("public_hw")]
     return _chk("public_consensus", "Public-Konsens (Soft-Books) vorhanden", "warn", fails,

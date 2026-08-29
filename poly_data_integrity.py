@@ -61,7 +61,14 @@ STAMP_MISS_MAX   = int(os.environ.get("POLY_STAMP_MISS_MAX")  or 20)    # so vie
 DIRECT_OPEN_MAX_D= float(os.environ.get("POLY_DIRECT_OPEN_MAX_D") or 3) # echte Direkt-Wette so lange ohne Auflösung = Alarm
 OVERLAP_FLOOR    = float(os.environ.get("POLY_OVERLAP_FLOOR")  or 0.60) # Auflösungs-Trefferquote je Liga
 OVERLAP_MIN_N    = int(os.environ.get("POLY_OVERLAP_MIN_N")    or 8)    # Liga erst ab so vielen fälligen Keys bewerten
-PROVEN_MIN_TR    = int(os.environ.get("POLY_PROVEN_MIN_TR")    or 3)    # = poly_whale_watch MIN_TR
+# 29.08.2026: Der Kommentar „= poly_whale_watch MIN_TR" stimmte nicht mehr. Lucas hat das
+# echte Push-Gate am 02.08. von 3 auf 8 gehoben („2/3 ist kein Beweis"); diese Zahl blieb
+# auf 3 stehen. Der Guard maß damit 457 Wallets, von denen nur 159 ueberhaupt gepusht
+# werden koennen — und meldete entsprechend aufgeblasene 408 „blinde". Jetzt liest er
+# dieselbe Umgebungsvariable wie poly_whale_watch, damit die beiden nicht wieder
+# auseinanderlaufen. POLY_PROVEN_MIN_TR ueberschreibt weiterhin explizit.
+PROVEN_MIN_TR    = int(os.environ.get("POLY_PROVEN_MIN_TR")
+                       or os.environ.get("WHALE_MIN_TR") or 8)   # = poly_whale_watch.MIN_TR
 PROVEN_MIN_HIT   = float(os.environ.get("POLY_PROVEN_MIN_HIT") or 0.50) # = poly_whale_watch MIN_HITRATE
 PROVEN_NEG_FLOOR = float(os.environ.get("POLY_PROVEN_NEG_FLOOR")or 0.25)# Anteil netto-negativer „bewiesener" Wallets, ab dem es gelb wird
 BACKTEST_MIN_N   = int(os.environ.get("POLY_BACKTEST_MIN_N")   or 30)   # Genauigkeits-Stichprobe darf nicht kollabieren

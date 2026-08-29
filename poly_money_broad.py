@@ -704,8 +704,16 @@ def enrich_wallet_pnl(scores, get, budget, min_n=5):
     behält seinen vorherigen pnl (aus prev — update_wallet_track kopiert prev-scores). REIN/testbar."""
     if not isinstance(scores, dict):
         return 0
+    # 29.08.2026 (Lucas, Status-Tab: „408 'bewiesene' Wallets ohne P&L-Daten") — 🔴 DAS BUDGET
+    # WURDE JEDEN LAUF AN DIESELBEN WALLETS VERFUETTERT. Sortiert wurde rein nach Historie (-n),
+    # also holte jeder Lauf erneut die Top-60 nach n — und wer auf Platz 61 stand, bekam nie einen
+    # P&L. Gemessen: von 159 Wallets oberhalb des echten Push-Gates hatten 48 einen Wert und 111
+    # keinen, und daran haette sich durch blosses Weiterlaufen nichts geaendert.
+    # Jetzt zuerst die, zu denen wir noch KEIN pnl kennen; erst danach werden bekannte
+    # aufgefrischt. Damit ist die Abdeckung nach zwei, drei Laeufen vollstaendig statt nie.
     cand = sorted((w for w, sc in scores.items() if isinstance(sc, dict) and (sc.get("n") or 0) >= min_n),
-                  key=lambda w: -(scores[w].get("n") or 0))
+                  key=lambda w: (isinstance(scores[w].get("pnl"), (int, float)),
+                                 -(scores[w].get("n") or 0)))
     n = 0
     for w in cand:
         if budget[0] <= 0:
