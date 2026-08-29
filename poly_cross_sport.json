@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-29T17:14:25.028807+00:00",
+ "generatedAt": "2026-08-29T17:44:18.482984+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,8 +10,8 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 558,
- "pinnKeys": 322,
- "matched": 250,
+ "pinnKeys": 318,
+ "matched": 246,
  "footballRows": 204,
  "crossRows": 354,
  "footballSkippedStale": 70,
@@ -25,13 +25,42 @@
  },
  "matchedBySport": {
   "baseball_mlb": 28,
-  "boxing_boxing": 18,
+  "boxing_boxing": 14,
   "soccer_mls": 45,
   "soccer_liga": 159
  },
  "trackRecord": {
-  "tracked": 228,
+  "tracked": 230,
   "converged": 52
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|bostonredsox-newyorkyankees|bostonredsox",
+   "sport": "baseball_mlb",
+   "event": "Boston Red Sox vs New York Yankees",
+   "market": "Moneyline",
+   "outcome": "Boston Red Sox",
+   "polyPP": 68.0,
+   "pinnPP": 44.9,
+   "gapPP": 23.05,
+   "vol": 1631074,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-29T17:44:18.482667+00:00"
+  },
+  {
+   "id": "baseball_mlb|bostonredsox-newyorkyankees|newyorkyankees",
+   "sport": "baseball_mlb",
+   "event": "Boston Red Sox vs New York Yankees",
+   "market": "Moneyline",
+   "outcome": "New York Yankees",
+   "polyPP": 32.0,
+   "pinnPP": 55.1,
+   "gapPP": -23.05,
+   "vol": 1631074,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-29T17:44:18.482667+00:00"
+  }
+ ]
 }
