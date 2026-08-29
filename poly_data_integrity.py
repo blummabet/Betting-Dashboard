@@ -222,6 +222,77 @@ def check_shortlist_tracker_writes(ctx):
                 "nach, schreibt er nicht — die Auto-Bet-Entscheidung liefe auf Blindflug.")
 
 
+# Wie lange darf die Shortlist ohne EINEN neuen Kandidaten in den nicht gesperrten Kategorien
+# bleiben? Historisch lieferten Fussball/E-Sport/Tennis 16-43 pro Tag (18.-26.08.2026), also
+# ist ein ganzer Tag ohne einen einzigen ein sicheres Zeichen und kein ruhiger Tag.
+SHORTLIST_SUPPLY_STALE_H = 24
+
+
+def _neuester_kandidat(shortlist, now):
+    """(Alter in Stunden, Kategorie-Zaehlung) des juengsten Kandidaten ausserhalb der Sperren.
+
+    None, wenn gar kein datierter Eintrag existiert — dann urteilt der Guard nicht.
+    """
+    gesperrt = {str(c) for c in (shortlist.get("blockedCats") or [])}
+    eintraege = []
+    op = shortlist.get("open")
+    eintraege += list(op.values()) if isinstance(op, dict) else list(op or [])
+    eintraege += list(shortlist.get("settled") or [])
+    juengste, kats = None, {}
+    for e in eintraege:
+        if not isinstance(e, dict):
+            continue
+        kat = str(e.get("cat") or e.get("league") or "")
+        if kat in gesperrt:
+            continue
+        t = _parse_ts(e.get("firstTs") or e.get("ts"))
+        if t is None:
+            continue
+        kats[kat] = kats.get(kat, 0) + 1
+        if juengste is None or t > juengste:
+            juengste = t
+    if juengste is None:
+        return None, kats
+    return (now - juengste).total_seconds() / 3600.0, kats
+
+
+@poly_check
+def check_shortlist_nachschub(ctx):
+    """29.08.2026 (Lucas: „die heute spielenswert liefern nichts mehr").
+
+    Der Tracker-Check daneben prueft, ob die Datei GESCHRIEBEN wird — das tat sie die ganze
+    Zeit. Was aufhoerte, war der Nachschub: neue Kandidaten. Kandidaten pro Tag in den nicht
+    gesperrten Kategorien (Fussball, E-Sport, Tennis):
+
+        18.08. 16 · 19.08. 30 · 20.08. 21 · 21.08. 23 · 22.08. 43
+        23.08. 30 · 24.08. 35 · 25.08. 22 · 26.08. 29 · 27.08. 3 · danach nichts
+
+    Ursache war der ausgehungerte poly-global-scan (30 Laeufe/Tag → 2). Sichtbar wurde es erst
+    drei Tage spaeter, weil die Oberflaeche einfach leerlief und kein Guard den Zufluss mass.
+    Absichtlich gesperrte Kategorien (US-Sport, Kampfsport) zaehlen NICHT mit — deren Stille
+    ist gewollt und darf den Alarm nicht dauerhaft rot faerben.
+    """
+    alter, kats = _neuester_kandidat(ctx.shortlist, ctx.now)
+    newest_close = ctx.newest_close_capture()
+    close_age = None if newest_close is None else (ctx.now - newest_close).total_seconds() / 3600.0
+    feed_fresh = close_age is not None and close_age <= FRESH_WARN_H
+    fails = []
+    if alter is None:
+        if feed_fresh:
+            fails.append("Kein einziger datierter Kandidat ausserhalb der Sperren — "
+                         "liefert der Scan ueberhaupt noch?")
+    elif alter > SHORTLIST_SUPPLY_STALE_H:
+        # Nur die haeufigsten Kategorien nennen — die volle Liste hat 20+ Eintraege und
+        # macht die Meldung unlesbar.
+        offen = ", ".join(k for k, _ in sorted(kats.items(), key=lambda x: -x[1])[:4]) or "—"
+        fails.append(f"Juengster Kandidat ist {alter:.0f} h alt (Grenze {SHORTLIST_SUPPLY_STALE_H} h) "
+                     f"— seit einem Tag kein Nachschub in {offen}")
+    return _chk("shortlist_nachschub", "Shortlist bekommt Nachschub", "error", fails,
+                "Misst den ZUFLUSS, nicht das Schreiben: die Datei kann stuendlich aktualisiert "
+                "werden und trotzdem seit Tagen keinen neuen Kandidaten enthalten. Gesperrte "
+                "Kategorien sind ausgenommen.")
+
+
 @poly_check
 def check_settlement_alive(ctx):
     """Offene Paper-Positionen, deren Spiel längst gelaufen ist, die aber nie abrechnen — das
