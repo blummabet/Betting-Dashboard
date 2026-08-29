@@ -178,8 +178,10 @@ class TestNieDenLaufKaputtmachen:
 class TestVerdrahtungInDenWorkflows:
     """Ein Waechter, der in keinem Workflow steht, ueberwacht nichts (Audit-Befund 07)."""
 
+    # 29.08.2026: poly-global-scan dazu — der Workflow hinter Whales, Wallets, Cross-Sport und
+    # dem Integritaets-Report, und der letzte, der noch 3 Laeufe in 28 Stunden schaffte.
     DATEIEN = ["update-liga.yml", "manage-liga-poly.yml", "fetch-liga-odds-dense.yml",
-               "betfair.yml", "capture-closing-liga.yml"]
+               "betfair.yml", "capture-closing-liga.yml", "poly-global-scan.yml"]
 
     def _src(self, datei):
         with open(os.path.join(REPO, ".github", "workflows", datei), encoding="utf-8") as f:

@@ -155,10 +155,11 @@ class TestSpielplanIstHeil:
     Datensatz stehen, und schuetzt danach vor der Wiederkehr.
     """
 
-    @pytest.mark.xfail(reason="liga-data.json traegt noch die zwei vom PSG-Fehler verschobenen "
-                              "Fixtures (FRA MD17 Lille-Paris FC, FRA MD9 Paris FC-Monaco). "
-                              "Faellt weg, sobald der Spielplan repariert ist.",
-                       strict=False)
+    # 29.08.2026: geheilt. Der naechste volle Daten-Lauf hat die beiden Fixtures neu geseedet —
+    # Lille–Paris FC steht wieder am 23.01.2027 (17. Spieltag), Paris FC–Monaco am 31.10.2026.
+    # Der Test stand einen Tag als xfail hier und ist jetzt ein echter Waechter: der Drift-Guard
+    # im Kickoff-Patch soll verhindern, dass so etwas ueberhaupt wieder entsteht — dieser Test
+    # merkt es, falls er es doch nicht tut.
     def test_kein_team_spielt_zweimal_am_selben_tag(self):
         import collections
         with open(os.path.join(REPO, "liga-data.json"), encoding="utf-8") as f:

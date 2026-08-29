@@ -16,6 +16,7 @@ on:
 
 permissions:
   contents: write
+  actions: read          # run_health.py liest die Steps DIESES Laufs
 
 concurrency:
   group: poly-global-scan
@@ -123,6 +124,20 @@ jobs:
         run: ${{ env.POLY_PYTHON }} poly_data_integrity.py
         continue-on-error: true
 
+      # 29.08.2026 — dieser Workflow ist der letzte Problemfall: geplant stuendlich, tatsaechlich
+      # 3 Laeufe in 28 Stunden (00:28, 20:53, 03:11). Er beliefert Whales, Wallets, Cross-Sport
+      # und den Integritaets-Report — also genau die Kacheln, die Lucas dauernd als „vor 8 Std"
+      # sieht. Elf seiner zwoelf Arbeitsschritte stehen auf continue-on-error; ob die Laeufe
+      # scheitern oder gar nicht erst starten, war bisher nicht unterscheidbar. Ab jetzt schon.
+      - name: 🩺 Lauf-Gesundheit (verschluckte Fehler sichtbar machen)
+        if: always()
+        continue-on-error: true
+        run: ${{ env.POLY_PYTHON || 'python3' }} run_health.py --slug poly-global
+        env:
+          GITHUB_TOKEN:            ${{ secrets.GITHUB_TOKEN }}
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+
       - name: 💾 Poly-Global-Dateien committen
         run: |
           git config user.name "CocoBet Bot"
@@ -134,7 +149,8 @@ jobs:
             poly_cross_sport.json poly_cross_sport_history.json poly_cross_sport_seen.json \
             poly_whale_seen.json poly_whale_public_seen.json \
             shortlist_push_seen.json \
-            esports_poly_prices.json esports_poly_wallets.json esports_poly_smartmoney.json esports_poly_coherence.json esports_poly_status.json; do
+            esports_poly_prices.json esports_poly_wallets.json esports_poly_smartmoney.json esports_poly_coherence.json esports_poly_status.json \
+            health/poly-global.json; do
             [ -f "$f" ] && git add "$f"
           done
           if git diff --staged --quiet; then
