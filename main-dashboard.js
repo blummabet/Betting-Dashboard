@@ -840,7 +840,31 @@
     var c3 = (inf > 0)
       ? _mdSigCell('Zufluss', '+' + usd(inf), A.flow, maxInf ? (inf / maxInf * 100) : 0, 'seit Lauf')
       : _mdSigMuted('Zufluss', '—');
-    return '<div class="md-sig">' + c1 + c2 + c3 + '</div>';
+    // 30.08.2026 (Lucas: „heute spielenswert ist mehr polymarket getrieben richtig?") — ja, und
+    // genau das war das Problem an dieser Zeile: Geld · Wallet-Bilanz · Zufluss lesen ALLE
+    // DIESELBE Quelle. Drei Blickwinkel auf Polymarket sahen aus wie drei Belege. Die einzige
+    // wirklich fremde Stimme im Scorer ist Betfair — und sie ist die einzige Untergruppe im
+    // Papier-Depot mit positivem ROI (n=57, +6,5%; der Mix bf+money +5,1%). Sie stand nirgends.
+    //
+    // Bewusst KEIN fester Platz wie in „Mehrfach gedeckt": dort sind alle Ströme grundsätzlich
+    // möglich, hier gibt es für Tennis/Esports gar keinen Betfair-Markt. Ein leerer Slot auf
+    // 89% der Zeilen wäre kein fehlendes Signal, sondern eine fehlende Fläche — also erscheint
+    // die Zelle nur, wenn es wirklich etwas zu vergleichen gibt.
+    //
+    // Und sie zeigt BEIDE Richtungen. Liegt das Betfair-Geld auf der Gegenseite, ist das eine
+    // Warnung, keine Leerstelle — der Scorer rechnet das ohnehin (r.bf.agree), verschwiegen hat
+    // es nur die Anzeige. Farbe entscheidet nichts: „bestätigt" bzw. „dagegen" steht als Wort da.
+    var b = r.bf, c4 = '';
+    if (b && b.pct != null) {
+      c4 = b.agree
+        ? _mdSigCell('Betfair', b.pct + '%', A.bf, b.pct, 'bestätigt' + (b.eur ? ' · ' + eur(b.eur) : ''))
+        // Balkenlänge = Rückhalt. Im Gegenfall gibt es keinen — die 64% gehören der ANDEREN
+        // Seite. Ein gefüllter Balken hätte genau das Gegenteil erzählt, deshalb bleibt die
+        // Spur leer und die Zahl trägt die Aussage.
+        : _mdSigCell('Betfair', b.pct + '%', A.gold, 0,
+            'dagegen — Geld auf ' + esc(short(String(b.name || 'Gegenseite'))));
+    }
+    return '<div class="md-sig">' + c1 + c2 + c3 + c4 + '</div>';
   }
   function _mdPlayRow(r, maxInf) {
     var vcol = r.verdict === 'BET' ? A.good : A.gold, conv = +r.conv || 0;
