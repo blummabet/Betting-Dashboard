@@ -1,23 +1,23 @@
 {
-"generatedAt": "2026-08-30T05:19:22.415286+00:00",
+"generatedAt": "2026-08-30T05:34:23.763100+00:00",
 "byVerdict": {
 "konsens": {
-"n": 609,
-"wins": 493,
-"hitRate": 0.8095,
-"polyN": 571,
-"polyWins": 445,
-"polyHitRate": 0.7793,
+"n": 610,
+"wins": 494,
+"hitRate": 0.8098,
+"polyN": 572,
+"polyWins": 446,
+"polyHitRate": 0.7797,
 "pinnN": 46,
 "pinnHitRate": 0.7391
 },
 "uneinig": {
-"n": 208,
-"wins": 64,
-"hitRate": 0.3077,
-"polyN": 185,
+"n": 209,
+"wins": 65,
+"hitRate": 0.311,
+"polyN": 186,
 "polyWins": 55,
-"polyHitRate": 0.2973,
+"polyHitRate": 0.2957,
 "pinnN": 106,
 "pinnHitRate": 0.5755
 },
@@ -34,9 +34,9 @@
 },
 "byLeague": {
 "US MLS": {
-"n": 50,
-"wins": 29,
-"hitRate": 0.58
+"n": 52,
+"wins": 31,
+"hitRate": 0.5962
 },
 "UEFA Europa Conference Qualifiers": {
 "n": 48,
@@ -526,25 +526,63 @@
 },
 "byStrength": {
 "strong": {
-"n": 480,
-"wins": 387,
-"hitRate": 0.8063
+"n": 481,
+"wins": 388,
+"hitRate": 0.8067
 },
 "weak": {
-"n": 311,
-"wins": 154,
-"hitRate": 0.4952
+"n": 312,
+"wins": 155,
+"hitRate": 0.4968
 }
 },
 "divergence": {
-"n": 208,
-"betfairWins": 64,
-"betfairRate": 0.3077,
-"polyN": 185,
+"n": 209,
+"betfairWins": 65,
+"betfairRate": 0.311,
+"polyN": 186,
 "polyWins": 55,
-"polyRate": 0.2973
+"polyRate": 0.2957
 },
 "recent": [
+{
+"matchId": "35972288",
+"home": "Portland Timbers",
+"away": "Austin FC",
+"league": "US MLS",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Austin FC",
+"polySide": "home",
+"winner": "away",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-08-30T02:30:00Z",
+"settledAt": "2026-08-30T05:34:23.616943+00:00"
+},
+{
+"matchId": "35972286",
+"home": "San Diego FC",
+"away": "LA Galaxy",
+"league": "US MLS",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "San Diego FC",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-08-30T02:30:00Z",
+"settledAt": "2026-08-30T05:34:23.616943+00:00"
+},
 {
 "matchId": "35972287",
 "home": "Colorado",
@@ -1266,50 +1304,12 @@
 ],
 "kickoff": "2026-08-29T17:45:00Z",
 "settledAt": "2026-08-29T20:48:30.055533+00:00"
-},
-{
-"matchId": "35975250",
-"home": "Brest",
-"away": "Toulouse",
-"league": "French Ligue 1",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Toulouse",
-"polySide": null,
-"winner": "draw",
-"moneyWin": false,
-"polyWin": null,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-08-29T18:45:00Z",
-"settledAt": "2026-08-29T20:48:30.055533+00:00"
-},
-{
-"matchId": "35976838",
-"home": "Galatasaray",
-"away": "Goztepe",
-"league": "Turkish Super League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Galatasaray",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-2
-],
-"kickoff": "2026-08-29T18:30:00Z",
-"settledAt": "2026-08-29T20:33:28.794484+00:00"
 }
 ],
 "global": {
-"n": 824,
-"wins": 559,
-"hitRate": 0.6784
+"n": 826,
+"wins": 561,
+"hitRate": 0.6792
 },
 "pending": 11
 }
