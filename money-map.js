@@ -97,7 +97,7 @@
         +'<span class="'+((bf&&bf.side==='home')?'mm-oc':'')+'"><b>1</b> '+_fair(pn.home)+'</span>'
         +'<span class="'+((bf&&bf.side==='draw')?'mm-oc':'')+'"><b>X</b> '+_fair(pn.draw)+'</span>'
         +'<span class="'+((bf&&bf.side==='away')?'mm-oc':'')+'"><b>2</b> '+_fair(pn.away)+'</span></div>'):'')
-      +'<div class="mm-foot"><span class="mm-verd '+(konS?'k':(divS?'d':'p'))+'">'+vtxt+'</span><span class="mm-vsub">'+vsub+'</span><span class="mm-src">'+(r.nSources||0)+' / 3</span></div>'
+      +'<div class="mm-foot"><span class="mm-verd '+(konS?'k':(divS?'d':'p'))+'">'+vtxt+'</span><span class="mm-vsub">'+vsub+'</span><span class="mm-src"'+(r.polyGeld===false?' title="Poly liefert hier nur einen d\u00fcnnen Preis, kein Geld \u2014 z\u00e4hlt deshalb nicht als Quelle"':'')+'>'+(r.nSources||0)+' / 3'+(r.polyGeld===false?' \u00b7 Poly nur Preis':'')+'</span></div>'
       +'</div>';
   }
 

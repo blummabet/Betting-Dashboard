@@ -6,7 +6,9 @@ name: 📈 Liga Odds Refresh (dicht)
 # (WM). Kein voller Pipeline-Lauf (keine Form/xG/Lineups). Kosten: ~6 Ligen × 1 Bulk-Call/Lauf.
 on:
   schedule:
-    - cron: '0 */2 * * *'   # alle 2h; die 06/18-Vollläufe (update-liga) laufen mit derselben Gruppe
+    # 30.08.2026: von :00 auf :17 — Begründung s. fetch-mls-odds-dense.yml. Der eigene
+    # Gesundheits-Log dieses Workflows ist der Beleg: 2h-Takt bestellt, 3–7h geliefert.
+    - cron: '17 */2 * * *'   # alle 2h, bewusst NICHT auf der vollen Stunde
   workflow_dispatch:
 
 permissions:
