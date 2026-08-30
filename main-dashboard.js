@@ -55,16 +55,37 @@
       .replace('Half Time', 'HZ1').replace('Correct Score', 'Exakt').replace('Draw no Bet', 'DNB');
   }
   function clamp(v, lo, hi) { return v < lo ? lo : v > hi ? hi : v; }
+  // 30.08.2026 (Lucas-Checkup): las nur _meta.generatedAt/updated_at. Die Card-Datensätze
+  // stempeln aber picksUpdatedAt/oddsUpdatedAt, und Money-Map/Konsens stempeln generatedAt auf
+  // OBERSTER Ebene — für die drei kam nie ein Alter zurück, also stand nirgends „Stand vor X".
   function _ageMin(obj) {
-    var g = obj && obj._meta && (obj._meta.generatedAt || obj._meta.updated_at);
+    if (!obj) return null;
+    var m = obj._meta || {};
+    var g = m.picksUpdatedAt || m.generatedAt || m.updated_at || m.oddsUpdatedAt || m.dataUpdatedAt
+      || obj.generatedAt || obj.updatedAt;
     if (!g) return null;
-    var t = Date.parse(g); return isNaN(t) ? null : Math.max(0, (Date.now() - t) / 60000);
+    var t = Date.parse(String(g).replace(' ', 'T')); 
+    return isNaN(t) ? null : Math.max(0, (Date.now() - t) / 60000);
   }
+  // Alle geladenen Quellen mit ihrem echten Alter — und die älteste davon.
+  // Der Kopf zeigte bisher die BROWSER-UHR („Stand 10:56"). Die sagt nichts über die Daten:
+  // am 30.08. war Betfair 12 Minuten alt, die Cards 5,9 Stunden und die Serien 12,1 Stunden —
+  // die Seite behauptete für alles dieselbe Frische.
+  function _mdQuellenAlter() {
+    var d = _md.data || {};
+    var q = [['Cards', d.liga], ['Cards MLS', d.mls], ['Serien', d.ligaStreaks],
+             ['Betfair', d.betfair], ['Börse', d.bfOverview], ['Money-Map', d.moneyMap],
+             ['Puls', d.pulse], ['Poly', d.whales]];
+    var out = [];
+    q.forEach(function (x) { var a = _ageMin(x[1]); if (a != null) out.push({ n: x[0], min: a }); });
+    out.sort(function (a, b) { return b.min - a.min; });
+    return out;
+  }
+  function _ageTxt(m) { return m >= 90 ? (m / 60).toFixed(1).replace('.', ',') + ' h' : Math.round(m) + ' Min'; }
   function _ageStr(obj) {
     var m = _ageMin(obj); if (m == null) return '';
     var col = m > 35 ? '#f2a6a6' : m > 15 ? 'var(--gold)' : 'var(--mi3)';
-    var txt = m >= 90 ? Math.round(m / 60) + 'h' : Math.round(m) + ' Min';
-    return '<div style="text-align:right;font-size:10px;color:' + col + ';padding:6px 0 2px">Stand vor ' + txt + '</div>';
+    return '<div style="text-align:right;font-size:10px;color:' + col + ';padding:6px 0 2px">Stand vor ' + _ageTxt(m) + '</div>';
   }
 
   // ── Länderflaggen ─────────────────────────────────────────────────────────────
@@ -527,8 +548,12 @@
     var mx = rows[0].score || 1;
     return rows.map(function (r) {
       var t = r.top || {};
+      // 30.08.2026: die Zahl rechts war eine nackte „1" — in jeder anderen Kachel steht dort
+      // €/pp/%. Sie zählt harte Abweichungen, also gehört das auch dran.
       return _mdWarnRow(_bfTeams(r.m) + _mdBfLive(r.m),
-        esc(String(t.k || 'Abweichung')) + (t.mkt ? ' · ' + esc(String(t.mkt).slice(0, 26)) : ''), r.nHard);
+        esc(String(t.k || 'Abweichung')) + (t.mkt ? ' · ' + esc(String(t.mkt).slice(0, 26)) : ''),
+        r.nHard + '<span style="font-size:9px;font-weight:700;color:var(--mi3);margin-left:3px">' +
+        (r.nHard === 1 ? 'Bruch' : 'Brüche') + '</span>');
     }).join('') + _ageStr(_md.data.betfair);
   }
   // 💸 Frisches Geld: größter Zufluss (€) je Spiel seit dem letzten Snapshot.
@@ -603,10 +628,20 @@
     try { var d = new Date(); return ('0' + d.getHours()).slice(-2) + ':' + ('0' + d.getMinutes()).slice(-2); } catch (e) { return '—'; }
   }
   function _head() {
+    // Nicht die Uhr, sondern die ÄLTESTE Quelle: die Seite ist nur so frisch wie ihr trägster
+    // Feed. Steht dort „Cards vor 5,9 h", weiß man sofort, dass die Card-Kacheln von heute Nacht
+    // sind, während Betfair daneben 12 Minuten alt ist.
+    var q = _mdQuellenAlter(), a = q.length ? q[0] : null;
+    var col = !a ? 'var(--mi3)' : a.min > 180 ? '#f2a6a6' : a.min > 60 ? 'var(--gold)' : 'var(--mi3)';
+    var titel = q.map(function (x) { return x.n + ': ' + _ageTxt(x.min); }).join(' · ');
+    var stand = a
+      ? '<span title="' + esc(titel) + '">älteste Quelle <b style="color:' + col + '">' +
+        esc(a.n) + ' vor ' + _ageTxt(a.min) + '</b></span>'
+      : 'Stand <b>' + _clock() + '</b>';
     return '<div class="md-top md-rise">' +
       '<div><h1 class="md-h1">Übersicht</h1>' +
       '<p class="md-sub">Die stärksten Signale aller Engines — kuratiert, auf einen Blick.</p></div>' +
-      '<div class="md-asof"><span class="md-dot"></span>Stand <b>' + _clock() + '</b></div></div>';
+      '<div class="md-asof"><span class="md-dot" style="background:' + col + '"></span>' + stand + '</div></div>';
   }
 
   function kpi(val, label, hint, color) {
@@ -1003,10 +1038,22 @@
     var c = bestCards();
     var cardsBody = c.length ? c.map(function (x) {
       var f = x.f, p2 = x.p, conv = +x.conv || 0;
-      var sub = esc(short(p2.market)) + (fxLeague(f) ? ' · ' + esc(String(fxLeague(f)).slice(0, 20)) : '') + (p2.edgePP != null ? ' · ' + (Math.round(+p2.edgePP) > 0 ? '+' : '') + Math.round(+p2.edgePP) + 'pp' : '');
+      // 30.08.2026 (Lucas-Checkup): hier stand nackt „-3pp" an einer Conviction-8-BET-Card.
+      // Das liest sich wie ein Widerspruch, ist aber keiner: ein Steam-Folger kauft bewusst NACH
+      // der Bewegung — die Quote ist dann schlechter als die eigene Fair-Linie, der Grund ist
+      // das gefolgte Geld, nicht der Preis. Also wird der Grund dazugeschrieben statt die Zahl
+      // zu verstecken; ein negativer Edge OHNE Steam bleibt weiter nackt sichtbar (dort wäre er
+      // wirklich ein Widerspruch).
+      var _st = (p2.source === 'steam');
+      var _edge = (p2.edgePP != null) ? ' · ' + (Math.round(+p2.edgePP) > 0 ? '+' : '') + Math.round(+p2.edgePP) + 'pp' : '';
+      if (_st && p2.edgePP != null && +p2.edgePP < 0) {
+        _edge += ' <span title="Steam-Folger: wir kaufen nach der Bewegung, deshalb liegt die Quote unter der eigenen Fair-Linie. Der Grund ist das Geld, nicht der Preis." style="color:var(--mi3)">(Steam-Folger'
+          + (p2.lateEntry ? ', spät' : '') + ')</span>';
+      }
+      var sub = esc(short(p2.market)) + (fxLeague(f) ? ' · ' + esc(String(fxLeague(f)).slice(0, 20)) : '') + _edge;
       return conv ? _mdRingRow(teamsOf(f), sub, conv, _mdConvCol(conv))
         : rowEl(teamsOf(f), (p2.odds != null ? '@' + (+p2.odds).toFixed(2) : ''), A.good, sub, '');
-    }).join('') : empty('Keine BET-Cards gerade.');
+    }).join('') + _ageStr(_md.data.liga) : empty('Keine BET-Cards gerade.');
 
     // Streaks — Pips (Länge)
     var st = bestStreaks();
@@ -1018,7 +1065,7 @@
       var len = +s.length || 0;
       return rowEl(fl(_flagFrom(s.country, s.league, s.leagueName)) + esc(team(s.team)) + ' <span style="color:var(--mi3);font-weight:400">·</span> ' + esc(s.market || s.type || ''),
         len + '×', A.gold, sub, pips(Math.min(len, 10), 10));
-    }).join('') : empty('Keine langen Serien.');
+    }).join('') + _ageStr(_md.data.ligaStreaks) : empty('Keine langen Serien.');
 
     // Betfair — Anteilsbalken
     var bf = bestBetfair();
@@ -1053,7 +1100,7 @@
       var divb = '<div class="md-div"><div class="md-div-mid"></div><i style="' + (mv >= 0 ? 'left:50%;' : 'right:50%;') + 'width:' + w + '%;background:' + col + ';"></i></div>';
       return rowEl(teamsOf(f), (mv > 0 ? '+' : '') + mv.toFixed(1) + 'pp', col,
         esc(short(p2.market)) + (p2.odds != null ? ' · @' + (+p2.odds).toFixed(2) : ''), divb);
-    }).join('') : empty('Keine Steam-Moves.');
+    }).join('') + _ageStr(_md.data.liga) : empty('Keine Steam-Moves.');
 
     var grid = '<div class="md-grid">' +
       // Reihe 1 — unsere Picks
