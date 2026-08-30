@@ -495,6 +495,28 @@ def _poly_has_any_overlap(m, pools) -> bool:
     return False
 
 
+def _poly_ist_geld(pl) -> bool:
+    """Zaehlt diese Poly-Seite als GELDQUELLE — oder ist sie nur ein Preis?
+
+    30.08.2026 (Lucas-Checkup der Uebersicht): _mm_money_ok schliesst src=="scan" seit dem
+    23.08. bewusst aus (ein Scan-Poly liefert nur den fairen Preis, kein echtes Geld) und das
+    Frontend beschriftet ihn als „Poly · Preis (duenn)". nSources, mmStrong und der
+    no_anchor-Rueckfall haben diese Entscheidung nie mitbekommen und zaehlten ihn voll mit.
+    Folge auf der Uebersicht: Chelsea–Brighton stand als „✅ knapp einig · 3 / 3" da — die
+    dritte Quelle waren $1.410 neben €328.000 Betfair-Geld. Napoli–Como genauso mit $1.787.
+    Eine Bestaetigung, die aus einem einzelnen Ticket besteht, ist keine.
+
+    EINE Definition, hier. _mm_money_ok ruft sie ebenfalls auf."""
+    if not pl:
+        return False
+    if pl.get("src") == "scan":
+        return False
+    try:
+        return float(pl.get("usd") or 0) > 0
+    except (TypeError, ValueError):
+        return False
+
+
 def money_map_row(g, pf):
     """11.08.2026 (Lucas Money-Map): build_game-Output g + poly_fav pf -> bubble-fertige Zeile.
     Betfair-Geld (EUR) + Poly-Geld (USD, eigene Seite) + Pinnacle-Probs + Verdikt + nSources. REIN/testbar."""
@@ -514,14 +536,18 @@ def money_map_row(g, pf):
     # Pinnacle ist nur Anker. Fehlt der Anker (z.B. UEFA Super Cup / Pokal - nicht in den 22 Odds-Ligen),
     # aber Betfair UND Poly liegen vor, dann Konsens/Divergenz aus Betfair-Seite vs Poly-Seite ableiten
     # (2/3, "ehrlich"). Nur Betfair allein bleibt no_anchor (nichts zum Vergleichen).
-    if row["verdict"] == "no_anchor" and row["betfair"] and row["poly"]:
+    _pl_geld = _poly_ist_geld(row["poly"])
+    if row["verdict"] == "no_anchor" and row["betfair"] and _pl_geld:
         row["verdict"] = "konsens" if row["betfair"]["side"] == row["poly"]["side"] else "uneinig"
     # 13.08.2026 (Lucas-Audit): Magnitude. "stark" nur, wenn BEIDE Geld-Seiten eine klare Mehrheit
     # (>= MM_STRONG_PCT) zeigen -> das Frontend daempft schwache 54/46-Faelle (kein Signal).
     _bfm = (row.get("betfair") or {}).get("sharePct") or 0
     _plm = (row.get("poly") or {}).get("sharePct") or 0
-    row["mmStrong"] = bool(row.get("betfair") and row.get("poly") and _bfm >= MM_STRONG_PCT and _plm >= MM_STRONG_PCT)
-    row["nSources"] = sum(1 for x in (row["betfair"], row["poly"], row["pinn"]) if x)
+    row["mmStrong"] = bool(row.get("betfair") and _pl_geld and _bfm >= MM_STRONG_PCT and _plm >= MM_STRONG_PCT)
+    # 30.08.2026: ein reiner Scan-Preis fuellt die Poly-SEITE (er bleibt sichtbar), zaehlt aber
+    # nicht als Quelle. `polyGeld` sagt dem Frontend, warum aus 3 eine 2 wurde.
+    row["polyGeld"] = _pl_geld
+    row["nSources"] = sum(1 for x in (row["betfair"], (row["poly"] if _pl_geld else None), row["pinn"]) if x)
     return row
 
 
@@ -536,7 +562,7 @@ def _mm_money_ok(row, single_min=MM_SINGLE_MIN):
     pl = float(_pl.get("usd") or 0)
     # 23.08.2026 (Lucas): ein Scan-Poly (nur fairer Preis, ~kein echtes Geld) füllt die Poly-SEITE,
     # zählt aber NICHT als Geldquelle — sonst würde ein dünner Preis einen schwachen Betfair-Row retten.
-    pl_money = pl if _pl.get("src") != "scan" else 0.0
+    pl_money = pl if _poly_ist_geld(_pl) else 0.0
     n_money = (1 if bf > 0 else 0) + (1 if pl_money > 0 else 0)
     if n_money >= 2:
         return True

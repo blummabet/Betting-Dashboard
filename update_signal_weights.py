@@ -47,6 +47,40 @@ PRIOR_ALPHA = 2.0
 PRIOR_BETA  = 2.0
 MIN_OBS_FOR_TRUST = 10  # davor: konservatives Update (50% weight zur Prior)
 
+# ── Wogegen wird gemessen? (30.08.2026, Lucas-Checkup) ──────────────────────────────────
+# Das Gewicht war `posterior_mean / 0.5` — der Massstab war der MUENZWURF. Unsere Picks sind
+# aber keine Muenzwuerfe: sie gewinnen im Schnitt 55,6% (WM+MLS+Liga zusammen, 248 aufgeloeste
+# Picks). Damit belohnte der Loop den Hausvorteil statt den Beitrag des Signals:
+#
+#   · Ein Signal, das auf genau durchschnittlichen Picks feuert (55,6%), bekam Gewicht 1,11 —
+#     einen Bonus dafuer, nichts beizutragen.
+#   · topscorer_momentum feuerte auf Picks mit 48,4% — sieben Punkte UNTER dem Hausschnitt —
+#     und stand trotzdem bei 0,974, also praktisch unbestraft, weil 48% ungefaehr 50% ist.
+#
+# Gemessen wird jetzt gegen die eigene Trefferquote. Zwei Feinheiten, ohne die es falsch waere:
+#
+#  1. Der CLV-Strom hat einen ANDEREN neutralen Punkt. _clv_outcome_score bildet CLV=0 auf 0,5
+#     ab — 0,5 ist dort per Konstruktion „Linie stand still", nicht „Muenzwurf". Diese
+#     Beobachtungen bleiben deshalb gegen 0,5 gemessen; nur der Ergebnis-Strom (inkl.
+#     Backtest-Prior) wird gegen die Trefferquote gemessen. Der effektive Nullpunkt ist das
+#     mit den Stroemen gewichtete Mittel.
+#  2. Unter BASIS_MIN_N ist die eigene Quote selbst zu verrauscht, um Massstab zu sein — dann
+#     bleibt es beim Muenzwurf. Und sie wird gedeckelt: eine Basis von 80% aus einer Gluecks-
+#     serie wuerde sonst jedes Signal unter Wasser druecken.
+BASIS_MIN_N = 40      # darunter ist die eigene Trefferquote kein belastbarer Massstab
+BASIS_MIN   = 0.45    # Deckel nach unten
+BASIS_MAX   = 0.70    # Deckel nach oben — Glueckssträhnen sollen den Massstab nicht kippen
+
+
+def basisquote(picks):
+    """(quote, n) — Anteil gewonnener aufgeloester Picks. (0.5, n) wenn zu duenn."""
+    werte = [_process_outcome_score(p) for p in (picks or [])]
+    werte = [w for w in werte if w is not None]
+    n = len(werte)
+    if n < BASIS_MIN_N:
+        return 0.5, n
+    return max(BASIS_MIN, min(BASIS_MAX, sum(werte) / n)), n
+
 # 23.06.2026 (Lucas): Runde 1 (alte Engine) aus dem Lern-Loop ausschließen — die ST1-Picks liefen
 # teils auf alter Engine und würden die neuen Gewichte verwässern. Ledger behält die Historie
 # (Audit), aber das Lernen startet ab Matchday 2. Höher setzen, um Slate weiter einzuschränken.
@@ -267,6 +301,9 @@ def update_weights() -> dict:
             predicted_win = score > 0
             counts[name]["predicted_correctly"] += o if predicted_win else (1.0 - o)
 
+    # Der Massstab: unsere eigene Trefferquote, nicht der Muenzwurf (30.08.2026, s. Kopf).
+    basis, basis_n = basisquote(picks)
+
     # Backtest-Prior (nur Liga): Pseudo-Beobachtungen, die zu den Live-Counts addiert werden.
     # Signale ganz ohne Live-Trigger bekommen trotzdem ihren Prior-Vorsprung.
     priors = _load_priors()
@@ -291,8 +328,12 @@ def update_weights() -> dict:
         losses      = n - wins
         # Posterior Mean mit Prior
         post_mean   = (PRIOR_ALPHA + wins) / (PRIOR_ALPHA + PRIOR_BETA + n)
-        # Neutrale Erwartung = 0.5 → Weight relativ dazu
-        raw_weight  = post_mean / 0.5
+        # Neutrale Erwartung: Ergebnis-Beobachtungen gegen die eigene Trefferquote, CLV-
+        # Beobachtungen gegen 0.5 (dort heisst 0.5 „Linie stand still"). Siehe Kopf.
+        _n_erg = n_live + n_prior
+        neutral = ((_n_erg * basis + n_clv * 0.5) / n) if n > 0 else basis
+        neutral = max(0.30, min(0.80, neutral))     # kein Nullpunkt jenseits des Sinnvollen
+        raw_weight  = post_mean / neutral
 
         # Sanity-Bound: weight ∈ [0.3, 1.7] damit ein einzelnes Signal das
         # System nie komplett dominiert oder neutralisiert
@@ -316,6 +357,10 @@ def update_weights() -> dict:
             "wins_when_triggered": round(wins, 2),       # fraktional (Live + Prior)
             "losses_when_triggered": round(losses, 2),
             "posterior_mean":      round(post_mean, 3),
+            # Wogegen wurde gemessen? Ohne das ist ein Gewicht nicht nachrechenbar.
+            "basis":               round(basis, 3),
+            "basisN":              basis_n,
+            "neutral":             round(neutral, 3),
             "last_updated":        now_iso,
             "notes":               prev.get("notes") or "",
         }

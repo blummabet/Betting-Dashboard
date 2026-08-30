@@ -908,6 +908,26 @@ def _steam_edge_pp(model_odds, entry_odds):
     return round(((1.0 / model_odds) * MODEL_MARGIN - (1.0 / entry_odds)) * 100)
 
 
+# 30.08.2026 (Lucas-Checkup der Übersicht): Deckel für unplausible Eröffnungsquoten.
+# Gefunden über den Bestand: drei Picks trugen einen Pinnacle-Move über 25pp — 5.64→1.50 (48,9pp),
+# 4.38→1.49 (44,3pp) und 1.56→1.11 (28,0pp, davon einer ein BET). Ein echter Vor-Anpfiff-Move
+# dieser Größe existiert praktisch nicht; was da steht, ist ein STEHENGEBLIEBENER Opener (das Spiel
+# wurde zwischendurch komplett neu bepreist). Die Übersicht filtert solche Zeilen seit dem 25.07.
+# im Frontend (SHARP_MAX_PP = 25) — die Engine hat den Wert bis heute trotzdem verarbeitet, in die
+# Card geschrieben („Sharp-Money-Drop +48.9pp") und der sharp_money-Familie ihren Trigger gegeben.
+# Der Deckel steht jetzt an der Quelle, mit demselben Wert: nicht klemmen, sondern den Pick gar
+# nicht erst bauen — bei einem unglaubwürdigen Opener ist der Move keine kleinere Zahl, sondern
+# keine Information. Fail-closed, wie überall sonst.
+STEAM_MAX_MOVE_PP = 25.0
+
+
+def _steam_move_plausibel(move) -> bool:
+    """False, wenn der Move nur aus einem stehengebliebenen Opener kommen kann."""
+    if not isinstance(move, (int, float)):
+        return False
+    return abs(move) <= STEAM_MAX_MOVE_PP
+
+
 def _steam_card_pick(snap, pick):
     """Ein steam_engine-Pick → Card-Dict im Standard-Format (Signal/Conviction-Stufe
     hängt danach signals/convictionScore an)."""
@@ -1263,6 +1283,11 @@ def generate_steam_picks_for_fixture(fx, snap, today_iso, drift=None):
         picks_are_incompatible = lambda a, b: False  # noqa: E731
     cards = []
     for p in picks:
+        _mv = (p.get("trigger") or {}).get("move_pp")
+        if not _steam_move_plausibel(_mv):
+            print(f"  ⚠️  Steam-Pick verworfen: Move {_mv}pp über {STEAM_MAX_MOVE_PP:g}pp "
+                  f"— Eröffnungsquote unglaubwürdig ({p.get('market')})")
+            continue
         card = _steam_card_pick(snap, p)
         # Phase 1 (17.06.2026): riskante Linie → sichere Linie ableiten (Floor 1.35).
         card = _derive_safer_steam_line(card, snap)
