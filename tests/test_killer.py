@@ -126,18 +126,55 @@ class Verstaerker(unittest.TestCase):
         out = killer.baue(state(), c, {}, {"streaks": []}, now=NOW, latch_state=LEER)
         self.assertNotIn("pinnMove", [v["art"] for v in out["stufe1"][0]["verstaerker"]])
 
+    def _serie(self, **kw):
+        d = {"team": "Arsenal", "market": "Ungeschlagen", "length": 9,
+             "continuation": {"state": "intakt", "ratePct": 80}, "leagueName": "Premier League"}
+        d.update(kw)
+        return d
+
     def test_serie_nur_wenn_intakt_und_fuer_die_gespielte_seite(self):
-        streaks = {"streaks": [
-            {"team": "Arsenal", "market": "Ungeschlagen", "length": 9,
-             "continuation": {"state": "intakt", "ratePct": 80}, "leagueName": "Premier League"},
-            {"team": "Chelsea", "market": "Ungeschlagen", "length": 12,
-             "continuation": {"state": "gebrochen"}, "leagueName": "Premier League"}]}
+        streaks = {"streaks": [self._serie(),
+                               self._serie(team="Chelsea", length=12,
+                                           continuation={"state": "gebrochen"})]}
         out = killer.baue(state(), cons(), {}, streaks, now=NOW, latch_state=LEER)
-        z = out["stufe1"][0]
-        self.assertEqual(z["streak"]["laenge"], 9)
+        self.assertEqual(out["stufe1"][0]["streak"]["laenge"], 9)
         out2 = killer.baue(state(), cons(moneySide="home"), {},
                            {"streaks": [streaks["streaks"][1]]}, now=NOW, latch_state=LEER)
         self.assertIsNone(out2["stufe1"][0]["streak"], "eine gebrochene Serie ist kein Verstaerker")
+
+    # 30.08.2026 (Lucas-Checkup, dritte Runde): an der Chelsea-SIEGWETTE hing „Ueber 3,5 Karten
+    # x7" als Verstaerker. Eine Kartenserie sagt nichts darueber, wer gewinnt.
+    def test_serie_muss_vom_ausgang_handeln(self):
+        for markt in ("Über 3,5 Karten", "Über 2,5 Tore", "Beide Teams treffen",
+                      "Über 9,5 Ecken", "Team trifft"):
+            out = killer.baue(state(), cons(), {},
+                              {"streaks": [self._serie(market=markt, length=15)]},
+                              now=NOW, latch_state=LEER)
+            self.assertIsNone(out["stufe1"][0]["streak"], markt)
+        for markt in ("Ungeschlagen", "Sieg-Serie", "Zu null"):
+            out = killer.baue(state(), cons(), {},
+                              {"streaks": [self._serie(market=markt)]}, now=NOW, latch_state=LEER)
+            self.assertIsNotNone(out["stufe1"][0]["streak"], markt)
+
+    def test_team_trifft_ist_tapete_keine_serie(self):
+        # Von 205 „Team trifft"-Serien in liga+mls sind 192 intakt — 94%. Ein Chip, der bei fast
+        # jedem Team feuert, traegt keine Information; dieselbe Lehre wie beim Torjaeger-Signal.
+        self.assertNotIn("team trifft", killer.SERIEN_MAERKTE)
+
+    def test_kurze_serie_zaehlt_nicht(self):
+        # Lazio trug „Team trifft x3" bei Grundrate 67%. Die Serien-Kachel filtert bei >= 4.
+        out = killer.baue(state(), cons(), {},
+                          {"streaks": [self._serie(length=3)]}, now=NOW, latch_state=LEER)
+        self.assertIsNone(out["stufe1"][0]["streak"])
+        self.assertEqual(killer.SERIEN_MIN_LAENGE, 4)
+
+    def test_die_laengste_serie_gewinnt_nicht_die_erste(self):
+        # Inter hat „Ungeschlagen x15" UND „Team trifft x15"; angezeigt wurde, was zufaellig
+        # zuerst im Array stand.
+        streaks = {"streaks": [self._serie(market="Sieg-Serie", length=5),
+                               self._serie(market="Ungeschlagen", length=11)]}
+        out = killer.baue(state(), cons(), {}, streaks, now=NOW, latch_state=LEER)
+        self.assertEqual(out["stufe1"][0]["streak"]["laenge"], 11)
 
     def test_verstaerker_heben_den_rang(self):
         viel = killer.baue(state(), cons(), {}, {"streaks": []}, now=NOW, latch_state=LEER)["stufe1"][0]
@@ -183,6 +220,62 @@ class Schublade(unittest.TestCase):
     def test_leere_eingabe(self):
         s = killer.schublade([])
         self.assertEqual((s["renditen"], s["clvs"], s["letzter"]), ([], [], None))
+
+
+class Bilanz(unittest.TestCase):
+    """30.08.2026 (Lucas: „damit ich seh wie gut es performt"). Die Bilanz DER SEKTION —
+    nicht die des Betfair-Tracks, aus dem der Badge bisher seine Zahl bezog."""
+
+    def zeile(self, **kw):
+        d = {"k": "x", "dataset": "wm", "status": "abgerechnet", "stufe": 2,
+             "haltePreis": 2.0, "schlussPreis": 1.8, "win": True, "name": "Team",
+             "liga": "EPL", "settledAt": "2026-08-30T12:00:00Z"}
+        d.update(kw)
+        return d
+
+    def test_zum_haltepreis_nicht_zur_schlussquote(self):
+        # Der Haltepreis ist der einzige, der tatsaechlich nehmbar war.
+        b = killer.bilanz([self.zeile(haltePreis=2.5, schlussPreis=1.2, win=True)])
+        self.assertAlmostEqual(b["gesamt"]["einheiten"], 1.5, 2)
+
+    def test_gewinn_und_verlust_werden_getrennt_gezaehlt(self):
+        b = killer.bilanz([self.zeile(k="a", win=True), self.zeile(k="b", win=False)])
+        g = b["gesamt"]
+        self.assertEqual((g["n"], g["gewonnen"], g["verloren"]), (2, 1, 1))
+        self.assertAlmostEqual(g["einheiten"], 0.0, 2)
+        self.assertAlmostEqual(g["roi"], 0.0, 3)
+
+    def test_je_stufe_getrennt(self):
+        # Die zwei Stufen sind der ganze Punkt der Sektion — sie muessen einzeln ablesbar sein.
+        b = killer.bilanz([self.zeile(k="a", stufe=1, win=True),
+                           self.zeile(k="b", stufe=2, win=False)])
+        self.assertEqual(b["jeStufe"]["1"]["gewonnen"], 1)
+        self.assertEqual(b["jeStufe"]["2"]["verloren"], 1)
+
+    def test_offene_zeilen_zaehlen_nicht_mit_aber_werden_gezaehlt(self):
+        b = killer.bilanz([self.zeile(k="a"), self.zeile(k="b", status="offen")])
+        self.assertEqual(b["gesamt"]["n"], 1)
+        self.assertEqual(b["offen"], 1)
+
+    def test_void_ist_weder_treffer_noch_fehlschlag(self):
+        b = killer.bilanz([self.zeile(status="void", win=None)])
+        self.assertEqual(b["gesamt"]["n"], 0)
+        self.assertEqual(b["offen"], 0)
+
+    def test_unbrauchbare_quote_fliegt_raus(self):
+        for o in (None, 1.0, 0, 40.0):
+            self.assertEqual(killer.bilanz([self.zeile(haltePreis=o)])["gesamt"]["n"], 0, o)
+
+    def test_leeres_buch_erfindet_nichts(self):
+        b = killer.bilanz([])
+        self.assertEqual(b["gesamt"]["n"], 0)
+        self.assertIsNone(b["gesamt"]["roi"])
+        self.assertEqual(b["zeilen"], [])
+
+    def test_juengste_zeilen_zuerst(self):
+        b = killer.bilanz([self.zeile(k="alt", settledAt="2026-08-29T10:00:00Z", name="Alt"),
+                           self.zeile(k="neu", settledAt="2026-08-30T10:00:00Z", name="Neu")])
+        self.assertEqual([z["name"] for z in b["zeilen"]], ["Neu", "Alt"])
 
 
 class Register(unittest.TestCase):

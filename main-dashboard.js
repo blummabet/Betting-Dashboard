@@ -280,6 +280,18 @@
       '.md-kl-c.on{background:rgba(76,194,255,.15);color:#4cc2ff;}',
       '.md-kl-c.off{opacity:.45;}',
       '.md-kl-foot{font-size:10.5px;color:var(--mi3);margin-top:11px;line-height:1.5;border-top:1px solid var(--mln);padding-top:9px;}',
+      '.md-kl-det{margin-top:9px;border-top:1px solid var(--mln);padding-top:8px;}',
+      '.md-kl-sum{display:flex;align-items:center;gap:8px;flex-wrap:wrap;cursor:pointer;font-size:11px;font-weight:700;color:var(--mi2);list-style:none;}',
+      '.md-kl-sum::-webkit-details-marker{display:none;}',
+      '.md-kl-sum::before{content:"▸";color:var(--mi3);font-size:9px;}',
+      '.md-kl-det[open] .md-kl-sum::before{content:"▾";}',
+      '.md-kl-bliste{margin-top:8px;display:flex;flex-direction:column;gap:1px;}',
+      '.md-kl-bz{display:flex;align-items:center;gap:8px;font-size:11px;padding:3px 0;border-top:1px solid var(--mln);}',
+      '.md-kl-bz:first-child{border-top:0;}',
+      '.md-kl-bn{font-weight:700;color:var(--mi);min-width:0;flex:0 1 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+      '.md-kl-bl{color:var(--mi3);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+      '.md-kl-bo{font-family:"JetBrains Mono",monospace;color:var(--mi2);white-space:nowrap;}',
+      '.md-kl-bs{font-size:9px;font-weight:800;color:var(--mi3);}',
       '.mpc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}',
       '@media(max-width:760px){.mpc-grid{grid-template-columns:repeat(2,1fr);}}',
       '.mpc{position:relative;overflow:hidden;text-align:left;font:inherit;color:var(--mi);cursor:pointer;background:var(--m2);border:1px solid var(--mln);border-radius:12px;padding:11px 12px 10px;display:block;transition:transform .15s,border-color .15s;}',
@@ -1388,13 +1400,68 @@
     }
     return null;
   }
-  function _mdKillerBadge(st) {
-    if (!st) return { txt: 'sammelt noch', col: A.gold, bg: 'rgba(201,133,0,.14)' };
-    if (st.status === 'freigegeben') return { txt: '✅ freigegeben · n' + st.n, col: A.good, bg: 'rgba(46,160,67,.16)' };
+  // 30.08.2026 (Lucas: „sollten wir das nicht mittracken, damit ich seh wie gut es performt?"):
+  // Der Badge zeigte die Zahl der SCHLUSS-Definition aus dem Betfair-Track (n=70) — eine
+  // verwandte, aber andere Menge als das, was in dieser Sektion wirklich stand. Sobald das
+  // eigene Buch genug abgerechnete Zeilen hat, zählt das eigene; bis dahin steht dran, dass
+  // die Zahl von woanders kommt und wie weit das eigene Buch ist.
+  var KL_EIGEN_MIN_N = 20;
+  function _mdKillerBadge(st, bil) {
+    var g = (bil && bil.gesamt) || null;
+    if (g && g.n >= KL_EIGEN_MIN_N) {
+      var r = g.roi == null ? null : Math.round(g.roi * 100);
+      return { txt: 'eigene Bilanz · ' + g.gewonnen + '–' + g.verloren + ' · ROI ' +
+                    (r == null ? '—' : (r >= 0 ? '+' : '') + r + '%'),
+               col: r != null && r > 0 ? A.good : A.gold,
+               bg: r != null && r > 0 ? 'rgba(46,160,67,.16)' : 'rgba(201,133,0,.14)' };
+    }
+    var fort = g ? (' · eigenes Buch ' + g.n + '/' + KL_EIGEN_MIN_N +
+                    (bil.offen ? ' (' + bil.offen + ' offen)' : '')) : '';
+    if (!st) return { txt: 'sammelt noch' + fort, col: A.gold, bg: 'rgba(201,133,0,.14)' };
+    if (st.status === 'freigegeben') return { txt: '✅ freigegeben · n' + st.n + fort, col: A.good, bg: 'rgba(46,160,67,.16)' };
     var roi = (st.roi != null) ? ((st.roi >= 0 ? '+' : '') + Math.round(st.roi * 100) + '%') : '—';
     var ug = (st.roiLb != null) ? ((st.roiLb >= 0 ? '+' : '') + Math.round(st.roiLb * 100) + '%') : '—';
-    return { txt: '👀 beobachten · n' + st.n + ' · ROI ' + roi + ' (Untergrenze ' + ug + ')',
+    return { txt: '👀 beobachten · Tor n' + st.n + ' · ROI ' + roi + ' (UG ' + ug + ')' + fort,
              col: A.gold, bg: 'rgba(201,133,0,.14)' };
+  }
+  // Die Bilanz DER SEKTION: was sie gezeigt hat und wie es ausging — zum Haltepreis gerechnet,
+  // also zu dem Preis, der dastand, als die Zeile erschien. Aufklappbar wie im Card-Tracking.
+  function _mdKlBilanz(bil) {
+    if (!bil || !bil.gesamt) return '';
+    var g = bil.gesamt, z = bil.zeilen || [];
+    if (!g.n && !bil.offen) return '';
+    var stufe = function (nr) {
+      var b = (bil.jeStufe || {})[String(nr)] || {};
+      if (!b.n) return '';
+      var r = b.roi == null ? null : Math.round(b.roi * 100);
+      return '<span class="md-kl-c">Stufe ' + nr + ': ' + b.gewonnen + '–' + b.verloren +
+        ' · ' + (r == null ? '—' : (r >= 0 ? '+' : '') + r + '%') + '</span>';
+    };
+    if (!g.n) {
+      return '<div class="md-kl-foot">📁 Noch nichts abgerechnet — ' + bil.offen +
+        ' Zeile' + (bil.offen === 1 ? '' : 'n') + ' warten auf ihr Ergebnis. ' +
+        'Gerechnet wird zum Haltepreis, also zu dem Preis, der beim Treffer dastand.</div>';
+    }
+    var r = g.roi == null ? null : Math.round(g.roi * 100);
+    var kopf = '📁 ' + g.n + ' abgerechnet · ' + g.gewonnen + ' gewonnen · ' + g.verloren +
+      ' verloren · ' + (g.einheiten >= 0 ? '+' : '') + (+g.einheiten).toFixed(2) + ' Einheiten' +
+      (r == null ? '' : ' (ROI ' + (r >= 0 ? '+' : '') + r + '%)') +
+      (bil.offen ? ' · ' + bil.offen + ' offen' : '');
+    var liste = z.map(function (x) {
+      var col = x.win ? A.good : A.red;
+      return '<div class="md-kl-bz"><span style="color:' + col + ';font-weight:800">' +
+        (x.win ? '✓' : '✗') + '</span><span class="md-kl-bn">' + esc(x.name || '—') + '</span>' +
+        '<span class="md-kl-bl">' + esc(String(x.liga || '').slice(0, 22)) + '</span>' +
+        '<span class="md-kl-bo">@' + (+x.haltePreis).toFixed(2) +
+        (x.schlussPreis != null && Math.abs(+x.schlussPreis - +x.haltePreis) >= 0.02
+          ? ' <i style="color:var(--mi3);font-style:normal">→' + (+x.schlussPreis).toFixed(2) + '</i>' : '') +
+        '</span><span class="md-kl-bs">S' + (x.stufe || 2) + '</span></div>';
+    }).join('');
+    return '<details class="md-kl-det"><summary class="md-kl-sum">' + kopf +
+      '<span class="md-kl-ch" style="margin-left:auto">' + stufe(1) + stufe(2) + '</span></summary>' +
+      '<div class="md-kl-bliste">' + liste + '</div>' +
+      '<div class="md-kl-foot" style="border-top:0;padding-top:6px">Zum Haltepreis gerechnet — dem Preis, ' +
+      'der beim Treffer dastand. Flach eine Einheit je Zeile.</div></details>';
   }
   // 30.08.2026 (Lucas-Checkup, zweite Runde): die Sektion zeigte FC Utrecht v PSV mit „⏱ 1m",
   // während die Betfair-HT-Kachel daneben schon „● LIVE" schrieb — das Spiel lief bereits.
@@ -1415,7 +1482,7 @@
   function _mdKiller() {
     var k = _md.data && _md.data.killer;
     var s1 = ((k && k.stufe1) || []).filter(_klSichtbar), s2 = ((k && k.stufe2) || []).filter(_klSichtbar);
-    var st = _mdKillerStand(), bad = _mdKillerBadge(st);
+    var st = _mdKillerStand(), bil = (k && k.bilanz) || null, bad = _mdKillerBadge(st, bil);
     var kopf = '<div class="md-kl-h"><span style="font-size:16px">🔒</span>' +
       '<span class="md-kl-t">Mehrfach gedeckt</span>' +
       '<span class="md-kl-s">nur Spiele, hinter denen mehrere Geldströme gleichzeitig stehen — Treffer bleiben bis zum Anpfiff stehen</span>' +
@@ -1424,7 +1491,7 @@
       var regel = (k && k.regeln && k.regeln.text) || 'Geldanteil, frischer Zufluss und mitziehende Quote müssen zusammenfallen.';
       return '<section class="md-kl md-rise" style="border-color:var(--mln)">' + kopf +
         '<div class="md-kl-foot" style="border-top:0;padding-top:10px">Gerade deckt sich nichts. ' +
-        esc(regel) + '</div></section>';
+        esc(regel) + '</div>' + _mdKlBilanz(bil) + '</section>';
     }
     var now = Date.now();
     var uhr = function (iso) {
@@ -1480,7 +1547,7 @@
     return '<section class="md-kl md-rise">' + kopf +
       grp('🔒 Voll gedeckt — Betfair · Poly · Pinnacle', s1) +
       grp('💷 Betfair-Kern — das gemessene Tor', s2) +
-      '<div class="md-kl-foot">' + esc(fuss) + '</div></section>';
+      '<div class="md-kl-foot">' + esc(fuss) + '</div>' + _mdKlBilanz(bil) + '</section>';
   }
 
   function _mdJetzt(polyPlays) {

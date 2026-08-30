@@ -132,17 +132,43 @@ def _track_urteil(track, league, market):
             "traegt": roi >= 0.05, "verliert": roi <= -0.10}
 
 
+# 30.08.2026 (Lucas-Checkup, dritte Runde) — der Serien-Chip war in drei Punkten falsch:
+#
+#  1. KEIN MARKTBEZUG. An der Chelsea-SIEGWETTE hing „Über 3,5 Karten ×7". Eine Kartenserie
+#     sagt nichts darüber, wer gewinnt. Die Funktion nahm einfach die erste intakte Serie des
+#     Teams, egal welcher Markt.
+#  2. KEINE MINDESTLÄNGE. Lazio trug „Team trifft ×3" — eine Dreier-Serie mit Grundrate 67%.
+#     Die Serien-Kachel auf derselben Seite filtert seit jeher bei length >= 4.
+#  3. DIE ERSTE STATT DER STÄRKSTEN. Inter hat „Ungeschlagen ×15" UND „Team trifft ×15";
+#     angezeigt wurde, was zufällig zuerst im Array stand.
+#
+# Der Markt-Filter ist der wichtigste Teil. Gezählt über liga_streaks + mls_streaks sind von
+# 205 „Team trifft"-Serien 192 intakt — 94%. Ein Chip, der bei fast jedem Team feuert, ist kein
+# Verstärker, sondern Tapete; dieselbe Lehre wie beim Torjäger-Signal. Übrig bleibt, was
+# wirklich vom AUSGANG handelt.
+SERIEN_MAERKTE = ("ungeschlagen", "sieg-serie", "zu null")   # nur ausgangsbezogene Serien
+SERIEN_MIN_LAENGE = 4                                        # wie in der Serien-Kachel
+
+
 def _streak(streaks, team):
-    """Serie/Form — liegt nur für die Top-5 + MLS vor. Fehlt sie, ist das kein Minus."""
+    """Längste intakte, AUSGANGSBEZOGENE Serie des Teams. Fehlt sie, ist das kein Minus."""
+    treffer = []
     for s in ((streaks or {}).get("streaks") or []):
         if str(s.get("team") or "").lower() != str(team or "").lower():
             continue
-        fort = s.get("continuation") or {}
-        if fort.get("state") != "intakt":
+        if (s.get("continuation") or {}).get("state") != "intakt":
             continue
-        return {"art": s.get("market"), "laenge": s.get("length"),
-                "quote": fort.get("ratePct"), "liga": s.get("leagueName")}
-    return None
+        markt = str(s.get("market") or "").lower()
+        if not any(m in markt for m in SERIEN_MAERKTE):
+            continue                       # Tore/Karten/Ecken sagen nichts über den Sieger
+        if (s.get("length") or 0) < SERIEN_MIN_LAENGE:
+            continue
+        treffer.append(s)
+    if not treffer:
+        return None
+    s = max(treffer, key=lambda x: x.get("length") or 0)
+    return {"art": s.get("market"), "laenge": s.get("length"),
+            "quote": (s.get("continuation") or {}).get("ratePct"), "liga": s.get("leagueName")}
 
 
 def zeile(mid, eintrag, sig, cons_game, track, streaks):
@@ -276,6 +302,53 @@ def _ledger_fortschreiben(ledger: list, angepfiffen: list, results=None, now=Non
     return ledger[-2000:]
 
 
+def bilanz(ledger=None, letzte=25):
+    """Die eigene Bilanz der Sektion — was sie gezeigt hat und wie es ausging.
+
+    30.08.2026 (Lucas: „sollten wir das nicht mittracken, damit ich seh wie gut es performt?").
+    Das Buch lief seit gestern mit, war aber nirgends sichtbar: der Badge oben rechts zeigte die
+    Zahl der SCHLUSS-Definition aus betfair_track_record (n=70) — eine verwandte, aber andere
+    Menge als das, was in der Sektion wirklich stand. Wer wissen will, ob die Sektion trägt,
+    braucht die Bilanz DER SEKTION.
+
+    Gerechnet wird zum HALTEPREIS, also zu dem Preis, der dastand, als die Zeile erschien —
+    nicht zur Schlussquote. Nur der ist tatsächlich nehmbar gewesen. Einsatz: flach 1 Einheit
+    je Zeile, damit die Zahl nicht von einer Staking-Entscheidung abhängt, die es hier nicht gibt.
+    """
+    rows = ledger if ledger is not None else _load(LEDGER_FILE, [])
+
+    def leer():
+        return {"n": 0, "gewonnen": 0, "verloren": 0, "einheiten": 0.0, "roi": None}
+
+    def zu(b, r, o):
+        b["n"] += 1
+        if r.get("win"):
+            b["gewonnen"] += 1; b["einheiten"] += (o - 1.0)
+        else:
+            b["verloren"] += 1; b["einheiten"] -= 1.0
+
+    gesamt, je_stufe, zeilen, offen = leer(), {"1": leer(), "2": leer()}, [], 0
+    for r in (rows or []):
+        if r.get("status") == "offen":
+            offen += 1
+            continue
+        if r.get("status") != "abgerechnet":
+            continue                      # void zählt weder als Treffer noch als Fehlschlag
+        o = r.get("haltePreis")
+        if not isinstance(o, (int, float)) or not (MIN_QUOTE <= o <= MAX_QUOTE):
+            continue
+        zu(gesamt, r, o)
+        zu(je_stufe.get(str(r.get("stufe")), je_stufe["2"]), r, o)
+        zeilen.append({"name": r.get("name"), "liga": r.get("liga"), "stufe": r.get("stufe"),
+                       "haltePreis": o, "schlussPreis": r.get("schlussPreis"),
+                       "win": bool(r.get("win")), "settledAt": r.get("settledAt")})
+    for b in [gesamt] + list(je_stufe.values()):
+        b["roi"] = round(b["einheiten"] / b["n"], 4) if b["n"] else None
+        b["einheiten"] = round(b["einheiten"], 2)
+    zeilen.sort(key=lambda z: z.get("settledAt") or "", reverse=True)
+    return {"gesamt": gesamt, "jeStufe": je_stufe, "offen": offen, "zeilen": zeilen[:letzte]}
+
+
 def schublade_gehalten(ledger=None):
     """ROI der GEHALTENEN Treffer zum Haltepreis — die Menge, die die Sektion wirklich zeigt.
 
@@ -385,6 +458,11 @@ def main():
                                    encoding="utf-8")
     led = _ledger_fortschreiben(_load(LEDGER_FILE, []), angepfiffen)
     (BASE / LEDGER_FILE).write_text(json.dumps(led, ensure_ascii=False, indent=1), encoding="utf-8")
+    # Die eigene Bilanz reist mit der Sektion mit — sonst müsste das Frontend ein zweites Buch
+    # laden, nur um sagen zu können, wie gut das hier läuft. Sie wird NACH dem Fortschreiben
+    # gerechnet: baue() lief vorher und kannte die Zeilen dieses Laufs noch nicht, die Bilanz
+    # wäre sonst dauerhaft einen Lauf alt (aufgefallen als „offen 4" bei 11 Zeilen im Buch).
+    out["bilanz"] = bilanz(led)
     (BASE / OUT_FILE).write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
     ab = sum(1 for r in led if r.get("status") == "abgerechnet")
     print("killer: Stufe1=%d Stufe2=%d · gehalten %d · Ledger %d (%d abgerechnet)"

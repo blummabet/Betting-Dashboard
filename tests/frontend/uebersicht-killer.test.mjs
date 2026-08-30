@@ -149,3 +149,60 @@ test('faellt dadurch alles weg, sagt die Sektion das ehrlich', () => {
     REG('geprueft'));
   assert.match(html, /Gerade deckt sich nichts/);
 });
+
+// 30.08.2026 (Lucas: „sollten wir das nicht mittracken, damit ich seh wie gut es performt?").
+// Das Buch lief seit gestern mit, war aber nirgends sichtbar — der Badge zeigte die Zahl der
+// SCHLUSS-Definition aus dem Betfair-Track (n=70), also eine verwandte, aber ANDERE Menge als
+// das, was in dieser Sektion wirklich stand.
+const bilanz = (o = {}) => ({
+  gesamt: { n: 0, gewonnen: 0, verloren: 0, einheiten: 0, roi: null },
+  jeStufe: { 1: { n: 0, gewonnen: 0, verloren: 0, einheiten: 0, roi: null },
+             2: { n: 0, gewonnen: 0, verloren: 0, einheiten: 0, roi: null } },
+  offen: 0, zeilen: [], ...o,
+});
+const KL = { stufe1: [], stufe2: [zeile('Arsenal')] };
+
+test('solange das eigene Buch dünn ist, steht dran WOHER die Zahl kommt', () => {
+  const html = render({ ...KL, bilanz: bilanz({ offen: 4 }) }, REG('geprueft'));
+  assert.match(html, /Tor n70/, 'die fremde Zahl wird als „Tor" benannt, nicht als eigene');
+  assert.match(html, /eigenes Buch 0\/20 \(4 offen\)/);
+});
+
+test('ab genug eigenen Zeilen zählt die eigene Bilanz', () => {
+  const g = { n: 24, gewonnen: 15, verloren: 9, einheiten: 4.8, roi: 0.2 };
+  const html = render({ ...KL, bilanz: bilanz({ gesamt: g }) }, REG('geprueft'));
+  assert.match(html, /eigene Bilanz · 15–9 · ROI \+20%/);
+  assert.doesNotMatch(html, /Tor n70/, 'die eigene Zahl ersetzt die fremde');
+});
+
+test('die Bilanz ist aufklappbar und listet, was gezeigt wurde', () => {
+  const html = render({ ...KL, bilanz: bilanz({
+    gesamt: { n: 2, gewonnen: 1, verloren: 1, einheiten: 0.52, roi: 0.26 },
+    jeStufe: { 1: { n: 1, gewonnen: 1, verloren: 0, einheiten: 1.52, roi: 1.52 },
+               2: { n: 1, gewonnen: 0, verloren: 1, einheiten: -1, roi: -1 } },
+    zeilen: [{ name: 'PSV', liga: 'Eredivisie', stufe: 1, haltePreis: 2.52, schlussPreis: 2.4, win: true },
+             { name: 'Heracles', liga: 'Eerste Divisie', stufe: 2, haltePreis: 1.62, schlussPreis: 1.62, win: false }],
+  }) }, REG('geprueft'));
+  assert.match(html, /2 abgerechnet · 1 gewonnen · 1 verloren/);
+  assert.match(html, /\+0\.52 Einheiten/);
+  assert.match(html, /Stufe 1: 1–0/);
+  assert.match(html, /Stufe 2: 0–1/);
+  assert.match(html, /PSV/);
+  assert.match(html, /@2\.52/);
+  assert.match(html, /→2\.40/, 'die Schlussquote gehoert daneben');
+});
+
+test('ohne abgerechnete Zeilen wird keine Bilanz erfunden', () => {
+  const html = render({ ...KL, bilanz: bilanz({ offen: 3 }) }, REG('geprueft'));
+  assert.match(html, /Noch nichts abgerechnet — 3 Zeilen/);
+  assert.doesNotMatch(html, /Einheiten/);
+});
+
+test('auch eine leere Sektion zeigt ihre Bilanz', () => {
+  // Sonst verschwindet der Leistungsnachweis genau dann, wenn gerade nichts ansteht.
+  const html = render({ stufe1: [], stufe2: [], regeln: { text: 'x' },
+    bilanz: bilanz({ gesamt: { n: 5, gewonnen: 3, verloren: 2, einheiten: 1.1, roi: 0.22 } }) },
+    REG('geprueft'));
+  assert.match(html, /Gerade deckt sich nichts/);
+  assert.match(html, /5 abgerechnet · 3 gewonnen · 2 verloren/);
+});
