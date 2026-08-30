@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-30T02:14:57.899431+00:00",
+ "generatedAt": "2026-08-30T02:45:01.538954+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,29 +9,86 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 531,
- "pinnKeys": 265,
- "matched": 199,
- "footballRows": 177,
+ "polyRowsSeen": 516,
+ "pinnKeys": 250,
+ "matched": 184,
+ "footballRows": 162,
  "crossRows": 354,
- "footballSkippedStale": 56,
+ "footballSkippedStale": 59,
  "seenBySport": {
   "americanfootball_nfl": 130,
   "baseball_mlb": 92,
   "icehockey_nhl": 72,
   "boxing_boxing": 60,
-  "soccer_mls": 54,
+  "soccer_mls": 39,
   "soccer_liga": 123
  },
  "matchedBySport": {
   "baseball_mlb": 20,
   "boxing_boxing": 2,
-  "soccer_mls": 54,
+  "soccer_mls": 39,
   "soccer_liga": 123
  },
  "trackRecord": {
   "tracked": 248,
-  "converged": 58
+  "converged": 62
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|losangelesangels-philadelphiaphillies|philadelphiaphillies",
+   "sport": "baseball_mlb",
+   "event": "Philadelphia Phillies vs Los Angeles Angels",
+   "market": "Moneyline",
+   "outcome": "Philadelphia Phillies",
+   "polyPP": 74.0,
+   "pinnPP": 63.3,
+   "gapPP": 10.67,
+   "vol": 337627,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 2.5,
+   "firstSeen": "2026-08-28T20:49:57.054168+00:00"
+  },
+  {
+   "id": "baseball_mlb|losangelesangels-philadelphiaphillies|losangelesangels",
+   "sport": "baseball_mlb",
+   "event": "Philadelphia Phillies vs Los Angeles Angels",
+   "market": "Moneyline",
+   "outcome": "Los Angeles Angels",
+   "polyPP": 26.0,
+   "pinnPP": 36.7,
+   "gapPP": -10.67,
+   "vol": 337627,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 2.5,
+   "firstSeen": "2026-08-28T20:49:57.054168+00:00"
+  },
+  {
+   "id": "baseball_mlb|arizonadiamondbacks-sanfranciscogiants|arizonadiamondbacks",
+   "sport": "baseball_mlb",
+   "event": "Arizona Diamondbacks vs San Francisco Giants",
+   "market": "Moneyline",
+   "outcome": "Arizona Diamondbacks",
+   "polyPP": 49.5,
+   "pinnPP": 42.1,
+   "gapPP": 7.41,
+   "vol": 150693,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 16.21,
+   "firstSeen": "2026-08-29T03:09:37.150750+00:00"
+  },
+  {
+   "id": "baseball_mlb|arizonadiamondbacks-sanfranciscogiants|sanfranciscogiants",
+   "sport": "baseball_mlb",
+   "event": "Arizona Diamondbacks vs San Francisco Giants",
+   "market": "Moneyline",
+   "outcome": "San Francisco Giants",
+   "polyPP": 50.5,
+   "pinnPP": 57.9,
+   "gapPP": -7.41,
+   "vol": 150693,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 16.21,
+   "firstSeen": "2026-08-29T03:09:37.150750+00:00"
+  }
+ ]
 }
