@@ -206,10 +206,30 @@ test('solange das eigene Buch dünn ist, steht dran WOHER die Zahl kommt', () =>
 });
 
 test('ab genug eigenen Zeilen zählt die eigene Bilanz', () => {
-  const g = { n: 24, gewonnen: 15, verloren: 9, einheiten: 4.8, roi: 0.2 };
+  const g = { n: 24, gewonnen: 15, verloren: 9, einheiten: 4.8, roi: 0.2, roiLb: 0.03 };
   const html = render({ ...KL, bilanz: bilanz({ gesamt: g }) }, REG('geprueft'));
-  assert.match(html, /eigene Bilanz · 15–9 · ROI \+20%/);
+  assert.match(html, /eigene Bilanz · 15–9 · ROI \+20% \(UG \+3%\)/);
   assert.doesNotMatch(html, /Tor n70/, 'die eigene Zahl ersetzt die fremde');
+});
+
+// 30.08.2026: der Badge sprang auf GRÜN, sobald der ROI-Punktschätzer über null lag — bei n=32
+// und einer Untergrenze von −20%. Zwei Zeilen tiefer sagte dieselbe Sektion „keine Freigabe".
+// Grün darf nur werden, was denselben Richter besteht wie die Freigabe.
+test('ein positiver ROI mit negativer Untergrenze wird NICHT grün', () => {
+  const g = { n: 32, gewonnen: 19, verloren: 13, einheiten: 2.31, roi: 0.072, roiLb: -0.201 };
+  const html = render({ ...KL, bilanz: bilanz({ gesamt: g }) }, REG('geprueft'));
+  const badge = html.slice(html.indexOf('md-kl-st'), html.indexOf('md-kl-st') + 300);
+  assert.match(badge, /👀/, 'beobachten, nicht spielen');
+  assert.match(badge, /UG −?-?20%/, 'die Untergrenze steht dabei');
+  assert.doesNotMatch(badge, /46,160,67/, 'kein grüner Hintergrund');
+});
+
+test('ohne Untergrenze bleibt der Badge gelb — fehlende Information ist keine Erlaubnis', () => {
+  const g = { n: 40, gewonnen: 25, verloren: 15, einheiten: 9, roi: 0.225 };   // altes killer.json
+  const html = render({ ...KL, bilanz: bilanz({ gesamt: g }) }, REG('geprueft'));
+  const badge = html.slice(html.indexOf('md-kl-st'), html.indexOf('md-kl-st') + 300);
+  assert.match(badge, /UG —/);
+  assert.doesNotMatch(badge, /46,160,67/);
 });
 
 test('die Bilanz ist aufklappbar und listet, was gezeigt wurde', () => {

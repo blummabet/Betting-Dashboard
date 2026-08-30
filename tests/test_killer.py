@@ -299,5 +299,53 @@ class Register(unittest.TestCase):
         self.assertEqual([r for r in z if r["schublade"] == "Konjunktion · Schluss-Stand"], [])
 
 
+class BilanzUntergrenze(unittest.TestCase):
+    """30.08.2026: der Badge wurde gruen, sobald der ROI-PUNKTSCHAETZER ueber null lag.
+
+    Bei n=32 / ROI +7,2% lag die einseitige 95%-Untergrenze bei -20,1% — waehrend die Fusszeile
+    derselben Sektion weiter „keine Freigabe" sagte. Die Bilanz liefert die Untergrenze jetzt
+    mit, damit die Anzeige denselben Richter benutzt wie freigabe.py.
+    """
+
+    @staticmethod
+    def _led(gewinne, verluste, odd=2.0):
+        z = []
+        for i in range(gewinne + verluste):
+            z.append({"status": "abgerechnet", "haltePreis": odd, "win": i < gewinne,
+                      "stufe": 2, "name": f"T{i}", "liga": "L", "settledAt": "2026-08-29T12:00:00Z"})
+        return z
+
+    def test_untergrenze_liegt_unter_dem_punktschaetzer(self):
+        b = killer.bilanz(self._led(19, 13))["gesamt"]
+        self.assertGreater(b["roi"], 0)
+        self.assertIsNotNone(b["roiLb"])
+        self.assertLess(b["roiLb"], b["roi"])
+
+    def test_ein_duennes_buch_belegt_nichts(self):
+        # 32 Zeilen bei Quote 2.0 und 19 Treffern: +18,75% Punktschaetzer, Untergrenze klar negativ.
+        b = killer.bilanz(self._led(19, 13))["gesamt"]
+        self.assertLess(b["roiLb"], 0, "so duenn ist nichts belegt")
+
+    def test_bei_klarer_kante_wird_die_untergrenze_positiv(self):
+        b = killer.bilanz(self._led(160, 40))["gesamt"]
+        self.assertGreater(b["roiLb"], 0)
+
+    def test_unter_zwei_zeilen_gibt_es_keine_untergrenze(self):
+        self.assertIsNone(killer.bilanz(self._led(1, 0))["gesamt"]["roiLb"])
+        self.assertIsNone(killer.bilanz([])["gesamt"]["roiLb"])
+
+    def test_je_stufe_hat_eigene_untergrenze(self):
+        led = self._led(5, 1)
+        for r in led:
+            r["stufe"] = 1
+        b = killer.bilanz(led + self._led(14, 12))
+        self.assertIsNotNone(b["jeStufe"]["1"]["roiLb"])
+        self.assertIsNotNone(b["jeStufe"]["2"]["roiLb"])
+
+    def test_die_rohwerte_bleiben_draussen(self):
+        # Die Renditeliste ist ein Zwischenschritt, kein Feld fuer killer.json.
+        self.assertNotIn("renditen", killer.bilanz(self._led(3, 2))["gesamt"])
+
+
 if __name__ == "__main__":
     unittest.main()
