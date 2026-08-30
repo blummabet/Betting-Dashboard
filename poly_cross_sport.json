@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-30T16:46:15.999019+00:00",
+ "generatedAt": "2026-08-30T17:16:13.943302+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,7 +10,7 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 527,
- "pinnKeys": 297,
+ "pinnKeys": 301,
  "matched": 227,
  "footballRows": 207,
  "crossRows": 320,
@@ -31,7 +31,36 @@
  },
  "trackRecord": {
   "tracked": 255,
-  "converged": 62
+  "converged": 64
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|miamimarlins-washingtonnationals|miamimarlins",
+   "sport": "baseball_mlb",
+   "event": "Miami Marlins vs Washington Nationals",
+   "market": "Moneyline",
+   "outcome": "Miami Marlins",
+   "polyPP": 44.5,
+   "pinnPP": 52.2,
+   "gapPP": -7.72,
+   "vol": 318804,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 23.79,
+   "firstSeen": "2026-08-22T01:50:45.312877+00:00"
+  },
+  {
+   "id": "baseball_mlb|miamimarlins-washingtonnationals|washingtonnationals",
+   "sport": "baseball_mlb",
+   "event": "Miami Marlins vs Washington Nationals",
+   "market": "Moneyline",
+   "outcome": "Washington Nationals",
+   "polyPP": 55.5,
+   "pinnPP": 47.8,
+   "gapPP": 7.72,
+   "vol": 318804,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 23.79,
+   "firstSeen": "2026-08-22T01:50:45.312877+00:00"
+  }
+ ]
 }
