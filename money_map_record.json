@@ -1,35 +1,35 @@
 {
-"generatedAt": "2026-08-30T15:20:42.852264+00:00",
+"generatedAt": "2026-08-30T15:30:37.664879+00:00",
 "byVerdict": {
 "konsens": {
-"n": 617,
-"wins": 501,
-"hitRate": 0.812,
-"polyN": 579,
-"polyWins": 453,
-"polyHitRate": 0.7824,
+"n": 618,
+"wins": 502,
+"hitRate": 0.8123,
+"polyN": 580,
+"polyWins": 454,
+"polyHitRate": 0.7828,
 "pinnN": 47,
 "pinnHitRate": 0.7447
 },
 "uneinig": {
-"n": 215,
+"n": 216,
 "wins": 67,
-"hitRate": 0.3116,
-"polyN": 192,
+"hitRate": 0.3102,
+"polyN": 193,
 "polyWins": 56,
-"polyHitRate": 0.2917,
-"pinnN": 108,
-"pinnHitRate": 0.5833
+"polyHitRate": 0.2902,
+"pinnN": 109,
+"pinnHitRate": 0.5872
 },
 "teil": {
-"n": 7,
+"n": 8,
 "wins": 2,
-"hitRate": 0.2857,
-"polyN": 6,
+"hitRate": 0.25,
+"polyN": 7,
 "polyWins": 1,
-"polyHitRate": 0.1667,
-"pinnN": 7,
-"pinnHitRate": 0.2857
+"polyHitRate": 0.1429,
+"pinnN": 8,
+"pinnHitRate": 0.25
 }
 },
 "byLeague": {
@@ -98,6 +98,11 @@
 "wins": 13,
 "hitRate": 0.7222
 },
+"Dutch Eredivisie": {
+"n": 17,
+"wins": 13,
+"hitRate": 0.7647
+},
 "South Korean K1 League": {
 "n": 17,
 "wins": 12,
@@ -117,11 +122,6 @@
 "n": 16,
 "wins": 11,
 "hitRate": 0.6875
-},
-"Dutch Eredivisie": {
-"n": 15,
-"wins": 13,
-"hitRate": 0.8667
 },
 "English Premier League": {
 "n": 15,
@@ -278,6 +278,11 @@
 "wins": 4,
 "hitRate": 0.6667
 },
+"Norwegian Eliteserien": {
+"n": 5,
+"wins": 3,
+"hitRate": 0.6
+},
 "Saudi Kings Cup": {
 "n": 5,
 "wins": 4,
@@ -299,11 +304,6 @@
 "hitRate": 0.25
 },
 "Finnish Veikkausliiga": {
-"n": 4,
-"wins": 2,
-"hitRate": 0.5
-},
-"Norwegian Eliteserien": {
 "n": 4,
 "wins": 2,
 "hitRate": 0.5
@@ -526,25 +526,82 @@
 },
 "byStrength": {
 "strong": {
-"n": 491,
-"wins": 396,
-"hitRate": 0.8065
+"n": 492,
+"wins": 397,
+"hitRate": 0.8069
 },
 "weak": {
-"n": 315,
+"n": 317,
 "wins": 156,
-"hitRate": 0.4952
+"hitRate": 0.4921
 }
 },
 "divergence": {
-"n": 215,
+"n": 216,
 "betfairWins": 67,
-"betfairRate": 0.3116,
-"polyN": 192,
+"betfairRate": 0.3102,
+"polyN": 193,
 "polyWins": 56,
-"polyRate": 0.2917
+"polyRate": 0.2902
 },
 "recent": [
+{
+"matchId": "35974792",
+"home": "Feyenoord",
+"away": "ADO Den Haag",
+"league": "Dutch Eredivisie",
+"verdict": "teil",
+"moneySide": "home",
+"moneyName": "Feyenoord",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-08-30T12:30:00Z",
+"settledAt": "2026-08-30T15:30:37.488968+00:00"
+},
+{
+"matchId": "35957196",
+"home": "Bodo Glimt",
+"away": "Rosenborg",
+"league": "Norwegian Eliteserien",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Bodo Glimt",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+2
+],
+"kickoff": "2026-08-30T12:30:00Z",
+"settledAt": "2026-08-30T15:30:37.488968+00:00"
+},
+{
+"matchId": "35974786",
+"home": "Willem II",
+"away": "Heerenveen",
+"league": "Dutch Eredivisie",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Heerenveen",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-08-30T12:30:00Z",
+"settledAt": "2026-08-30T15:30:37.488968+00:00"
+},
 {
 "matchId": "35974855",
 "home": "Paris FC",
@@ -1247,69 +1304,12 @@
 ],
 "kickoff": "2026-08-29T21:30:00Z",
 "settledAt": "2026-08-30T00:34:00.096381+00:00"
-},
-{
-"matchId": "35984351",
-"home": "Jaguares de Cordoba",
-"away": "America de Cali S.A",
-"league": "Colombian Primera A",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Jaguares de Cordoba",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-08-29T21:25:00Z",
-"settledAt": "2026-08-30T00:34:00.096381+00:00"
-},
-{
-"matchId": "35982383",
-"home": "Botafogo SP",
-"away": "Cuiaba",
-"league": "Brazilian Serie B",
-"verdict": "uneinig",
-"moneySide": "draw",
-"moneyName": "The Draw",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-08-29T21:30:00Z",
-"settledAt": "2026-08-30T00:34:00.096381+00:00"
-},
-{
-"matchId": "35977346",
-"home": "Guayaquil City",
-"away": "LDU",
-"league": "Ecuadorian Serie A",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "LDU",
-"polySide": "away",
-"winner": "home",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-08-29T21:00:00Z",
-"settledAt": "2026-08-30T00:03:49.556645+00:00"
 }
 ],
 "global": {
-"n": 839,
-"wins": 570,
-"hitRate": 0.6794
+"n": 842,
+"wins": 571,
+"hitRate": 0.6781
 },
-"pending": 25
+"pending": 23
 }
