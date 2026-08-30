@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-30T14:15:55.280669+00:00",
+ "generatedAt": "2026-08-30T14:45:59.665614+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,10 +9,10 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 511,
- "pinnKeys": 285,
- "matched": 211,
- "footballRows": 195,
+ "polyRowsSeen": 523,
+ "pinnKeys": 297,
+ "matched": 223,
+ "footballRows": 207,
  "crossRows": 316,
  "footballSkippedStale": 64,
  "seenBySport": {
@@ -21,17 +21,88 @@
   "icehockey_nhl": 72,
   "boxing_boxing": 32,
   "soccer_mls": 39,
-  "soccer_liga": 156
+  "soccer_liga": 168
  },
  "matchedBySport": {
   "baseball_mlb": 14,
   "boxing_boxing": 2,
   "soccer_mls": 39,
-  "soccer_liga": 156
+  "soccer_liga": 168
  },
  "trackRecord": {
-  "tracked": 250,
+  "tracked": 255,
   "converged": 62
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|brentford-leeds|aw",
+   "sport": "soccer_liga",
+   "event": "Leeds vs Brentford",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 17.5,
+   "pinnPP": 75.4,
+   "gapPP": -57.9,
+   "vol": 2209185,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-30T14:45:59.665164+00:00"
+  },
+  {
+   "id": "soccer_liga|brentford-leeds|dr",
+   "sport": "soccer_liga",
+   "event": "Leeds vs Brentford",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 61.0,
+   "pinnPP": 20.0,
+   "gapPP": 41.05,
+   "vol": 2209185,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-30T14:45:59.665164+00:00"
+  },
+  {
+   "id": "soccer_liga|brentford-leeds|hw",
+   "sport": "soccer_liga",
+   "event": "Leeds vs Brentford",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 20.2,
+   "pinnPP": 4.7,
+   "gapPP": 15.6,
+   "vol": 2209185,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-30T14:45:59.665164+00:00"
+  },
+  {
+   "id": "soccer_liga|brighton-chelsea|hw",
+   "sport": "soccer_liga",
+   "event": "Chelsea vs Brighton",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 97.9,
+   "pinnPP": 85.8,
+   "gapPP": 12.03,
+   "vol": 3994296,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-30T14:45:59.665164+00:00"
+  },
+  {
+   "id": "soccer_liga|brighton-chelsea|dr",
+   "sport": "soccer_liga",
+   "event": "Chelsea vs Brighton",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 2.2,
+   "pinnPP": 10.2,
+   "gapPP": -7.97,
+   "vol": 3994296,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-30T14:45:59.665164+00:00"
+  }
+ ]
 }
