@@ -196,7 +196,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "60/60 mit AH · 60/60 mit Public-O/U."
+      "note": "101/101 mit AH · 101/101 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -265,15 +265,9 @@
       "id": "lineup_present",
       "label": "Aufstellung da vor Anpfiff (T-90min)",
       "severity": "warn",
-      "ok": false,
-      "nFail": 5,
-      "failures": [
-        "49-51: Anpfiff in 49min, KEINE Aufstellung",
-        "63-55: Anpfiff in 49min, KEINE Aufstellung",
-        "746-36: Anpfiff in 49min, KEINE Aufstellung",
-        "160-162: Anpfiff in 79min, KEINE Aufstellung",
-        "114-84: Anpfiff in 49min, KEINE Aufstellung"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "lineup_signal braucht die Startelf. War leer wegen Namens-Match + Wien-Zeit-Bug."
     },
     {
@@ -281,11 +275,12 @@
       "label": "Public-Konsens (Soft-Books) vorhanden",
       "severity": "warn",
       "ok": false,
-      "nFail": 3,
+      "nFail": 4,
       "failures": [
         "531-536: kein public_hw",
         "65-63: kein public_hw",
-        "116-108: kein public_hw"
+        "116-108: kein public_hw",
+        "538-531: kein public_hw"
       ],
       "note": "Ohne public_* feuert public_static_bias nicht."
     },
@@ -357,19 +352,10 @@
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
       "ok": false,
-      "nFail": 11,
+      "nFail": 2,
       "failures": [
-        "49-51 Unter 2.5 Tore @2.14: sichere Linie Unter 3.5 Tore @1.52 verfügbar (≥1.35), nicht abgeleitet",
-        "63-55 Unter 2.5 Tore @1.92: sichere Linie Unter 3.5 Tore @1.38 verfügbar (≥1.35), nicht abgeleitet",
-        "63-55 Heimsieg @2.75: sichere Linie Doppelte Chance — 1X @1.591 verfügbar (≥1.35), nicht abgeleitet",
-        "66-42 Unter 2.5 Tore @1.88: sichere Linie Unter 3.5 Tore @1.4 verfügbar (≥1.35), nicht abgeleitet",
-        "487-495 Über 2.5 Tore @2.33: sichere Linie Über 1.5 Tore @1.51 verfügbar (≥1.35), nicht abgeleitet",
-        "538-531 Über 2.5 Tore @2.07: sichere Linie Über 1.5 Tore @1.38 verfügbar (≥1.35), nicht abgeleitet",
-        "544-532 Über 2.5 Tore @2.3: sichere Linie Über 1.5 Tore @1.47 verfügbar (≥1.35), nicht abgeleitet",
-        "160-162 Unter 2.5 Tore @2.05: sichere Linie Unter 3.5 Tore @1.46 verfügbar (≥1.35), nicht abgeleitet",
-        "160-162 Auswärtssieg @3.5: sichere Linie Doppelte Chance — X2 @2.074 verfügbar (≥1.35), nicht abgeleitet",
-        "170-174 Unter 2.5 Tore @2.23: sichere Linie Unter 3.5 Tore @1.45 verfügbar (≥1.35), nicht abgeleitet",
-        "185-160 Heimsieg @2.75: sichere Linie Doppelte Chance — 1X @1.504 verfügbar (≥1.35), nicht abgeleitet"
+        "66-42 Unter 2.5 Tore @1.88: sichere Linie Unter 3.5 Tore @1.39 verfügbar (≥1.35), nicht abgeleitet",
+        "185-160 Heimsieg @2.75: sichere Linie Doppelte Chance — 1X @1.736 verfügbar (≥1.35), nicht abgeleitet"
       ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
@@ -554,6 +540,6 @@
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-08-30T12:10:10.701270+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-08-30T22:01:51.361053+00:00"
 }
