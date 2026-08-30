@@ -1,10 +1,10 @@
 {
-"generatedAt": "2026-08-30T00:18:50.266184+00:00",
+"generatedAt": "2026-08-30T00:34:00.263755+00:00",
 "byVerdict": {
 "konsens": {
-"n": 593,
-"wins": 481,
-"hitRate": 0.8111,
+"n": 594,
+"wins": 482,
+"hitRate": 0.8114,
 "polyN": 556,
 "polyWins": 434,
 "polyHitRate": 0.7806,
@@ -12,14 +12,14 @@
 "pinnHitRate": 0.7391
 },
 "uneinig": {
-"n": 200,
+"n": 202,
 "wins": 63,
-"hitRate": 0.315,
-"polyN": 177,
+"hitRate": 0.3119,
+"polyN": 179,
 "polyWins": 53,
-"polyHitRate": 0.2994,
-"pinnN": 103,
-"pinnHitRate": 0.5631
+"polyHitRate": 0.2961,
+"pinnN": 104,
+"pinnHitRate": 0.5673
 },
 "teil": {
 "n": 7,
@@ -73,6 +73,11 @@
 "wins": 17,
 "hitRate": 0.85
 },
+"Brazilian Serie A": {
+"n": 19,
+"wins": 11,
+"hitRate": 0.5789
+},
 "Mexican Liga MX": {
 "n": 19,
 "wins": 13,
@@ -83,20 +88,15 @@
 "wins": 15,
 "hitRate": 0.7895
 },
-"Brazilian Serie A": {
+"Brazilian Serie B": {
 "n": 18,
-"wins": 10,
-"hitRate": 0.5556
+"wins": 11,
+"hitRate": 0.6111
 },
 "Saudi Professional League": {
 "n": 18,
 "wins": 13,
 "hitRate": 0.7222
-},
-"Brazilian Serie B": {
-"n": 17,
-"wins": 11,
-"hitRate": 0.6471
 },
 "Turkish Super League": {
 "n": 17,
@@ -208,15 +208,15 @@
 "wins": 7,
 "hitRate": 0.7
 },
+"Colombian Primera A": {
+"n": 9,
+"wins": 4,
+"hitRate": 0.4444
+},
 "Bolivian Liga de Futbol Profesional": {
 "n": 8,
 "wins": 7,
 "hitRate": 0.875
-},
-"Colombian Primera A": {
-"n": 8,
-"wins": 4,
-"hitRate": 0.5
 },
 "Dutch Eerste Divisie": {
 "n": 8,
@@ -526,25 +526,82 @@
 },
 "byStrength": {
 "strong": {
-"n": 464,
+"n": 465,
 "wins": 376,
-"hitRate": 0.8103
+"hitRate": 0.8086
 },
 "weak": {
-"n": 303,
-"wins": 152,
-"hitRate": 0.5017
+"n": 305,
+"wins": 153,
+"hitRate": 0.5016
 }
 },
 "divergence": {
-"n": 200,
+"n": 202,
 "betfairWins": 63,
-"betfairRate": 0.315,
-"polyN": 177,
+"betfairRate": 0.3119,
+"polyN": 179,
 "polyWins": 53,
-"polyRate": 0.2994
+"polyRate": 0.2961
 },
 "recent": [
+{
+"matchId": "35953384",
+"home": "Atletico MG",
+"away": "EC Vitoria Salvador",
+"league": "Brazilian Serie A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Atletico MG",
+"polySide": null,
+"winner": "home",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-08-29T21:30:00Z",
+"settledAt": "2026-08-30T00:34:00.096381+00:00"
+},
+{
+"matchId": "35984351",
+"home": "Jaguares de Cordoba",
+"away": "America de Cali S.A",
+"league": "Colombian Primera A",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Jaguares de Cordoba",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-08-29T21:25:00Z",
+"settledAt": "2026-08-30T00:34:00.096381+00:00"
+},
+{
+"matchId": "35982383",
+"home": "Botafogo SP",
+"away": "Cuiaba",
+"league": "Brazilian Serie B",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-08-29T21:30:00Z",
+"settledAt": "2026-08-30T00:34:00.096381+00:00"
+},
 {
 "matchId": "35977346",
 "home": "Guayaquil City",
@@ -1247,69 +1304,12 @@
 ],
 "kickoff": "2026-08-29T14:00:00Z",
 "settledAt": "2026-08-29T17:03:12.327676+00:00"
-},
-{
-"matchId": "35970883",
-"home": "Watford",
-"away": "West Ham",
-"league": "English Sky Bet Championship",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "West Ham",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-08-29T14:00:00Z",
-"settledAt": "2026-08-29T17:03:12.327676+00:00"
-},
-{
-"matchId": "35970889",
-"home": "Norwich",
-"away": "Burnley",
-"league": "English Sky Bet Championship",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Norwich",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-4,
-1
-],
-"kickoff": "2026-08-29T14:00:00Z",
-"settledAt": "2026-08-29T17:03:12.327676+00:00"
-},
-{
-"matchId": "35970881",
-"home": "Cardiff",
-"away": "Sheff Utd",
-"league": "English Sky Bet Championship",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Cardiff",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-08-29T14:00:00Z",
-"settledAt": "2026-08-29T17:03:12.327676+00:00"
 }
 ],
 "global": {
-"n": 800,
-"wins": 546,
-"hitRate": 0.6825
+"n": 803,
+"wins": 547,
+"hitRate": 0.6812
 },
-"pending": 21
+"pending": 19
 }
