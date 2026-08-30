@@ -1,3 +1,8 @@
 requests>=2.31.0
 py-clob-client>=0.19.0
 anthropic>=0.25.0
+# 30.08.2026: tests/test_run_health.py parst die Workflow-YAML (Textsuche war zu brüchig).
+# Stand bisher nur als `pip install pyyaml || true` in tests.yml — ci-tests.yml hatte es
+# nie, und ein fehlender Import bricht bei pytest die GANZE Sammlung ab, nicht nur das
+# eine Modul. Also eine deklarierte Abhängigkeit statt eines verschluckten Installs.
+PyYAML>=6.0

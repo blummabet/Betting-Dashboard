@@ -18,8 +18,14 @@ import os
 import re
 import sys
 import json
-import yaml
 import pytest
+
+# 30.08.2026: `import yaml` stand hier nackt. In ci-tests.yml ist PyYAML nie installiert worden
+# (nur tests.yml hatte ein `pip install pyyaml || true`, und selbst das verschluckte Fehler) —
+# ein ImportError beim Sammeln reisst bei pytest die KOMPLETTE Suite mit, nicht nur dieses Modul:
+# aus 3.295 gruenen Tests wurde „1 error in 4.07s". PyYAML ist jetzt in requirements.txt; falls
+# es doch einmal fehlt, kostet das diese acht Tests statt aller.
+yaml = pytest.importorskip("yaml", reason="PyYAML fehlt — Workflow-YAML-Prüfungen übersprungen")
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, REPO)

@@ -144,19 +144,46 @@ class TestLastBleibtImRahmen:
                     for c in crons(f))
         assert summe <= 540, f"{summe:.0f} geplante Läufe/Tag — vorher 585, Ziel <= 540"
 
-    def test_digest_startet_nicht_auf_der_vollen_stunde(self):
+    # 30.08.2026: beide Prüfungen galten nur für die LIGA. Genau diese Lücke hat die MLS
+    # driften lassen — dort blieben :00-Crons und die geteilte Gruppe stehen, während die Liga
+    # am 28.08. beides bekam. Jetzt gelten sie für beide Vollläufe, und zusätzlich für die
+    # dichten Läufe: deren eigener Gesundheits-Log zeigte für '0 */2' tatsächliche Abstände von
+    # 4,93h · 3,10h · 4,18h · 6,36h · 7,17h bei durchweg ok:true — sie scheiterten nicht,
+    # sie wurden gar nicht erst gestartet.
+    @pytest.mark.parametrize("datei", ["update-liga.yml", "update-mls.yml",
+                                       "fetch-liga-odds-dense.yml", "fetch-mls-odds-dense.yml"])
+    def test_startet_nicht_auf_der_vollen_stunde(self, datei):
         """:00 ist repo-weit UND GitHub-global die vollste Minute."""
-        for c in crons("update-liga.yml"):
-            assert minuten(c) != {0}, f"update-liga läuft auf :00 ({c})"
+        for c in crons(datei):
+            assert minuten(c) != {0}, f"{datei} läuft auf :00 ({c})"
 
-    def test_digest_hat_eine_eigene_concurrency_gruppe(self):
-        """Geteilte Gruppe = wartende Läufe werden gecancelt; der seltenste verliert."""
+    @pytest.mark.parametrize("datei", ["update-liga.yml", "update-mls.yml"])
+    def test_volllauf_hat_eine_eigene_concurrency_gruppe(self, datei):
+        """Geteilte Gruppe = wartende Läufe werden gecancelt; der seltenste verliert.
+
+        Der Volllauf trägt Digest und Recap und ist mit 2 von ~40 Läufen der seltenste
+        Teilnehmer — also strukturell der Verlierer. Ein manuell gestarteter Backtest darf
+        die Gruppe teilen (er schreibt dieselben Prior-Dateien und MUSS serialisiert sein);
+        ein GETAKTETER Workflow darf es nicht."""
         gruppe = re.search(r"^concurrency:.*?^\s*group:\s*(\S+)",
-                           lies("update-liga.yml"), re.M | re.S).group(1)
+                           lies(datei), re.M | re.S).group(1)
         andere = [f for f in os.listdir(WF)
-                  if f.endswith((".yml", ".yaml")) and f != "update-liga.yml"
-                  and re.search(rf"^\s*group:\s*{re.escape(gruppe)}\s*$", lies(f), re.M)]
-        assert not andere, f"Gruppe '{gruppe}' wird auch von {andere} benutzt"
+                  if f.endswith((".yml", ".yaml")) and f != datei
+                  and re.search(rf"^\s*group:\s*{re.escape(gruppe)}\b", lies(f), re.M)
+                  and crons(f)]
+        assert not andere, f"{datei}: Gruppe '{gruppe}' wird auch von getakteten {andere} benutzt"
+
+    @pytest.mark.parametrize("datei", ["update-liga.yml", "fetch-liga-odds-dense.yml",
+                                       "update-mls.yml", "fetch-mls-odds-dense.yml"])
+    def test_getakteter_lauf_meldet_seine_gesundheit(self, datei):
+        """Lucas am 30.08.: „was soll ich mir bei MLS in den Actions anschauen?"
+
+        Die ehrliche Antwort war: nichts. run_health.py lief in beiden LIGA-Workflows und in
+        keinem MLS-Workflow — deshalb existierte nie eine health/mls*.json, und ob ein Lauf
+        stattfand, scheiterte oder gecancelt wurde, stand nirgends."""
+        src = lies(datei)
+        assert "run_health.py --slug" in src, f"{datei}: kein Gesundheits-Wächter"
+        assert "actions: read" in src, f"{datei}: run_health.py braucht actions:read"
 
 
 class TestMacRunnerDisziplin:
@@ -175,13 +202,16 @@ class TestMacRunnerDisziplin:
 
     @staticmethod
     def _jobs(datei):
-        import yaml
+        # 30.08.2026: lokaler Import mit Netz — ohne PyYAML sollen diese vier Prüfungen
+        # übersprungen werden, nicht scheitern. PyYAML steht jetzt in requirements.txt;
+        # das hier ist die Rückfallebene, falls der Install einmal ausfällt.
+        yaml = pytest.importorskip('yaml', reason='PyYAML fehlt')
         with open(os.path.join(WF, datei), encoding="utf-8") as f:
             return list((yaml.safe_load(f).get("jobs") or {}).values())
 
     @staticmethod
     def _self_hosted():
-        import yaml
+        yaml = pytest.importorskip('yaml', reason='PyYAML fehlt')
         raus = []
         for f in sorted(os.listdir(WF)):
             if not f.endswith((".yml", ".yaml")):
@@ -215,7 +245,8 @@ class TestMacRunnerDisziplin:
 
     def test_poly_manager_teilen_ihre_spur_nicht_mit_ubuntu_workflows(self):
         """Mac und ubuntu teilen keine Dateien — die gemeinsame Spur kostete nur Laeufe."""
-        import yaml, re as _re
+        yaml = pytest.importorskip('yaml', reason='PyYAML fehlt')
+        import re as _re
         for datei in ("manage-liga-poly.yml", "manage-mls-poly.yml"):
             with open(os.path.join(WF, datei), encoding="utf-8") as f:
                 src = f.read()
@@ -233,7 +264,7 @@ class TestMacRunnerDisziplin:
     def test_clob_client_wird_nicht_bei_jedem_lauf_neu_gebaut(self):
         """Der Preis-Fetch nutzt nur urllib. Ein Netz-Schluckauf beim CLOB-Build darf den
         Daten-Pfad nicht mitreissen — genau daran ist der Poly-Lauf gestorben."""
-        import yaml
+        yaml = pytest.importorskip('yaml', reason='PyYAML fehlt')
         for datei in ("manage-liga-poly.yml", "manage-mls-poly.yml"):
             with open(os.path.join(WF, datei), encoding="utf-8") as f:
                 wf = yaml.safe_load(f)

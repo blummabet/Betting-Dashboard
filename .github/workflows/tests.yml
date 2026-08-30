@@ -76,10 +76,11 @@ jobs:
 
       - name: 📦 Dependencies installieren
         run: |
+          # 30.08.2026: hier stand `pip install pyyaml 2>/dev/null || true` — ein Install, dessen
+          # Scheitern verschluckt wurde, mit dem Kommentar „brauchen wir nicht für Tests".
+          # Gebraucht wurde es seit dem 29.08. sehr wohl (test_run_health.py parst Workflow-YAML).
+          # PyYAML steht jetzt in requirements.txt, wo ein fehlgeschlagener Install auffällt.
           pip install -r requirements.txt
-          # PyYAML brauchen wir nicht für Tests, aber wenn jemand später
-          # YAML-Validierung dazu nimmt, ist es schon da
-          pip install pyyaml 2>/dev/null || true
 
       - name: ✅ Tests laufen lassen
         run: |
