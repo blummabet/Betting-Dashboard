@@ -2,7 +2,7 @@
  * „Großer Design-Sprung": kuratiertes Cockpit als Einstieg. Eigenes, in sich geschlossenes
  * Design-System (md-*), injiziert per <style>. Farben CVD-validiert (dataviz-Skill):
  *   Pinnacle #3987e5 · Betfair #d95926 · Poly #199e70 · Soft #c98500.
- * Bausteine: KPI-Leiste · Triple-Konsens-Hero mit 4-Quellen-Zustimmungsbalken · Signal-Kacheln
+ * Bausteine: „Mehrfach gedeckt" (Konjunktion) · KPI-Leiste · Signal-Kacheln
  * mit Mini-Visualisierungen (Conviction-Meter, Anteilsbalken, Steam-Divergenzbalken).
  * Lädt die Datendateien selbst (cache-gebustet). Jede Kachel führt per Klick in den vollen Bereich.
  * ────────────────────────────────────────────────────────────────────────────────────── */
@@ -136,30 +136,15 @@
       '.md-kpi-v{font-family:"JetBrains Mono","SF Mono",Menlo,monospace;font-size:23px;font-weight:800;line-height:1;letter-spacing:-.02em;color:var(--mi);}',
       '.md-kpi-l{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--mi3);margin-top:7px;}',
       '.md-kpi-h{font-size:10.5px;color:var(--mi2);margin-top:3px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
-      /* hero */
-      '.md-hero{background:radial-gradient(120% 140% at 0% 0%,rgba(57,135,229,.10),transparent 55%),var(--m1);border:1px solid var(--mln2);border-radius:16px;padding:16px 18px;margin-top:14px;}',
-      '.md-hero-top{display:flex;align-items:center;gap:10px;flex-wrap:wrap;}',
-      '.md-hero-ic{width:30px;height:30px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:16px;background:rgba(57,135,229,.14);border:1px solid rgba(57,135,229,.3);}',
-      '.md-hero-t{font-weight:800;font-size:16px;letter-spacing:-.01em;color:var(--mi);}',
-      '.md-hero-s{font-size:11.5px;color:var(--mi2);}',
-      '.md-legend{display:flex;gap:13px;flex-wrap:wrap;margin-left:auto;}',
-      '.md-lg{display:flex;align-items:center;gap:5px;font-size:11px;color:var(--mi2);font-weight:600;}',
-      '.md-lg i{width:9px;height:9px;border-radius:50%;display:inline-block;}',
-      '.md-cols{display:flex;gap:20px;flex-wrap:wrap;margin-top:12px;}',
-      '.md-col{flex:1;min-width:250px;}',
-      '.md-col-h{font-size:10.5px;font-weight:800;letter-spacing:.05em;text-transform:uppercase;margin:0 0 4px;display:flex;align-items:center;gap:6px;}',
-      '.md-arow{padding:10px 0;border-top:1px solid var(--mln);}',
-      '.md-arow:first-of-type{border-top:0;}',
-      '.md-arow-t{font-size:12.5px;color:var(--mi);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
-      '.md-arow-m{font-size:11px;color:var(--mi2);margin-top:2px;}',
-      /* agreement bar */
-      '.md-agree{position:relative;height:22px;margin:8px 0 2px;}',
-      '.md-agree-track{position:absolute;left:0;right:0;top:10px;height:2px;border-radius:2px;background:var(--mln2);}',
-      '.md-agree-band{position:absolute;top:8px;height:6px;border-radius:3px;background:rgba(46,160,67,.22);border:1px solid rgba(46,160,67,.4);}',
-      '.md-agree-band.div{background:rgba(201,133,0,.18);border-color:rgba(201,133,0,.4);}',
-      '.md-agree-dot{position:absolute;top:4px;width:9px;height:9px;border-radius:50%;transform:translateX(-50%);box-shadow:0 0 0 2px var(--m1);}',
-      '.md-agree-dot.out{top:2px;width:13px;height:13px;box-shadow:0 0 0 2px var(--m1),0 0 0 4px rgba(201,133,0,.35);}',
-      '.md-agree-sc{position:absolute;top:0;font-family:"JetBrains Mono",monospace;font-size:9px;color:var(--mi3);transform:translateX(-50%);}',
+      // 30.08.2026 (Lucas: „was aber dann mit dem tripple konsens? ist das nicht teils redundant?“):
+      // Der Triple-Konsens ist RAUS. Nicht wegen Redundanz zum Konjunktions-Element — die Universen
+      // überschneiden sich nur zu 7% (63 von 68 Konjunktions-Zeilen liegen in Ligen, in denen es gar
+      // keine Card gibt). Sondern weil das Panel für sich genommen nichts trug: die Spalte „Einig“
+      // sortierte nach der KLEINSTEN Spanne zwischen den Quellen, wählte also per Konstruktion die
+      // Spiele mit fertigem Preis; von 139 Zeilen waren 91 NOBET und nur 2 BET; und in der
+      // Ausreißer-Spalte scherte durchgehend „Soft“ aus — dass die langsamen Buchmacher hinterher-
+      // hinken, deckt steam_lag in den Cards längst ab. Die Regeln .md-hero* .md-agree* .md-arow*
+      // .md-cols .md-col* .md-legend .md-lg gingen mit dem Markup; keine andere Sektion nutzte sie.
       /* tiles */
       '.md-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px;}',
       '.md-cell{display:contents;}',
@@ -653,77 +638,10 @@
       '</div>';
   }
   
-  var _SIDE = { home: 'Heim', away: 'Ausw.' };
-  var _SRC = { pinnacle: 'Pinnacle', betfair: 'Betfair', poly: 'Poly', soft: 'Soft' };
-  var _SRC_ORDER = ['pinnacle', 'betfair', 'poly', 'soft'];
-  var _SRC_COL = { pinnacle: A.pinn, betfair: A.bf, poly: A.poly, soft: A.soft };
-
-  function consensusRows() {
-    var out = [];
-    allFixtures().forEach(function (f) {
-      (f.picks || []).forEach(function (p) { if (p.consensus && p.consensus.kind) out.push({ f: f, p: p, c: p.consensus }); });
-    });
-    return out;
-  }
-  // 4-Quellen-Zustimmungsbalken: Punkt je Quelle an ihrer Wahrscheinlichkeit, Konsens-Band, Ausreißer hervorgehoben
-  function agreeBar(c) {
-    var src = c.sources || {}, vals = [];
-    _SRC_ORDER.forEach(function (k) { var v = src[k]; if (typeof v === 'number') vals.push(v); });
-    if (!vals.length) return '';
-    var lo = Math.min.apply(null, vals), hi = Math.max.apply(null, vals);
-    // Skala: um das Cluster herum, mind. 24pp Fenster, damit enge Konsense nicht auf 0 kollabieren
-    var mid = (lo + hi) / 2, half = Math.max(0.12, (hi - lo) / 2 + 0.06);
-    var min = clamp(mid - half, 0, 1), max = clamp(mid + half, 0, 1), span = (max - min) || 1;
-    var pos = function (v) { return clamp((v - min) / span, 0, 1) * 100; };
-    var band = '<div class="md-agree-band' + (c.kind === 'divergenz' ? ' div' : '') + '" style="left:' + pos(lo) + '%;width:' + (pos(hi) - pos(lo)) + '%;"></div>';
-    var dots = '';
-    _SRC_ORDER.forEach(function (k) {
-      var v = src[k]; if (typeof v !== 'number') return;
-      var out = (c.kind === 'divergenz' && c.outlier === k);
-      dots += '<div class="md-agree-dot' + (out ? ' out' : '') + '" style="left:' + pos(v) + '%;background:' + _SRC_COL[k] + ';" title="' + _SRC[k] + ' ' + Math.round(v * 100) + '%"></div>';
-    });
-    return '<div class="md-agree"><div class="md-agree-track"></div>' + band + dots + '</div>';
-  }
-  function _legend() {
-    return '<div class="md-legend">' + _SRC_ORDER.map(function (k) {
-      return '<span class="md-lg"><i style="background:' + _SRC_COL[k] + ';"></i>' + _SRC[k] + '</span>';
-    }).join('') + '</div>';
-  }
-  function _mdHero() {
-    var teams = function (f) { return fl(fxFlag(f)) + esc(fxTeam(f, 'home')) + ' <span style="color:var(--mi3);font-weight:400">v</span> ' + esc(fxTeam(f, 'away')); };
-    var top = '<div class="md-hero-top"><span class="md-hero-ic">⚖️</span>' +
-      '<div><div class="md-hero-t">Triple-Konsens</div>' +
-      '<div class="md-hero-s">wo Pinnacle · Betfair · Poly · Soft einig sind — und wo einer ausschert</div></div>' +
-      _legend() + '</div>';
-    var rows = consensusRows();
-    if (!rows.length) {
-      return '<section class="md-hero md-rise">' + top +
-        '<div class="md-empty" style="max-width:780px;margin-top:12px;">Füllt sich beim nächsten Pick-Lauf: dann stehen hier die Spiele, wo sich die Quellen einig sind (hohe Konfidenz, größer setzen) und wo eine ausschert (Value-Kandidat). Poly deckt jetzt alle Top-5-Ligen ab (Premier League, La Liga, Serie A, Ligue 1, Bundesliga) — Spiele ohne Poly-Markt zeigen „3/4".</div></section>';
-    }
-    var kon = rows.filter(function (x) { return x.c.kind === 'konsens'; }).sort(function (a, b) { return a.c.spreadPP - b.c.spreadPP; }).slice(0, 5);
-    var div = rows.filter(function (x) { return x.c.kind === 'divergenz'; }).sort(function (a, b) { return b.c.outlierGapPP - a.c.outlierGapPP; }).slice(0, 5);
-    var konRow = function (x) {
-      var c = x.c;
-      return '<div class="md-arow"><div class="md-arow-t">' + teams(x.f) + ' · <b>' + _SIDE[c.side] + '</b></div>' +
-        agreeBar(c) +
-        '<div class="md-arow-m"><b style="color:' + A.good + '">' + c.n + '/4 einig</b> · Ø ' + c.medianPP + '% · Spanne ' + c.spreadPP + 'pp</div></div>';
-    };
-    var divRow = function (x) {
-      var c = x.c, o = c.outlier, ov = (c.sources && c.sources[o] != null ? Math.round(c.sources[o] * 100) : '?');
-      return '<div class="md-arow"><div class="md-arow-t">' + teams(x.f) + ' · <b>' + _SIDE[c.side] + '</b></div>' +
-        agreeBar(c) +
-        '<div class="md-arow-m"><b style="color:' + A.gold + '">' + (_SRC[o] || o) + ' schert aus</b>: ' + ov + '% vs Ø ' + c.medianPP + '% (' + c.outlierGapPP + 'pp)</div></div>';
-    };
-    var col = function (title, tint, list, rowFn, emptyTxt) {
-      return '<div class="md-col"><div class="md-col-h" style="color:' + tint + ';">' + title + '</div>' +
-        (list.length ? list.map(rowFn).join('') : '<div class="md-empty">' + emptyTxt + '</div>') + '</div>';
-    };
-    return '<section class="md-hero md-rise">' + top +
-      '<div class="md-cols">' +
-        col('✅ Einig — hohe Konfidenz', A.good, kon, konRow, 'gerade keine enge Übereinstimmung') +
-        col('⚡ Ausreißer — Value-Kandidat', A.gold, div, divRow, 'gerade kein klarer Ausreißer') +
-      '</div></section>';
-  }
+  // 30.08.2026: hier standen _SIDE/_SRC/consensusRows/agreeBar/_legend/_mdHero — der
+  // Triple-Konsens-Hero. Entfernt, Begründung oben im CSS-Block. `pick.consensus` schreibt
+  // generate_wm_picks weiter mit (additiv, try/except) und liegt damit bereit, falls die Frage
+  // später doch gemessen statt eingeschätzt werden soll — gezeigt wird es nur nicht mehr.
 
   function tile(icon, title, accent, tintBg, tintBr, moreView, moreLbl, bodyHtml, delay) {
     var more = moreView ? '<button class="md-more" style="--ta:' + accent + ';" onclick="showView(\'' + moreView + '\')">' + (moreLbl || 'alle') + ' →</button>' : '';
@@ -1160,7 +1078,7 @@
       '<div id="md-cell-live" class="md-cell">' + _mdLiveWidePlaceholder() + '</div>' +
       '</div>';
 
-    p.innerHTML = _head() + _mdPulse() + _mdKiller() + _mdSignalBoard() + _mdNobetBoard() + _mdJetzt() + _kpis() + _mdHero() + grid +
+    p.innerHTML = _head() + _mdPulse() + _mdKiller() + _mdSignalBoard() + _mdNobetBoard() + _mdJetzt() + _kpis() + grid +
       '<div class="md-foot">Kuratierter Überblick · tippe „alle →" für den vollen Bereich</div>';
     _mdFillPlays();
     _mdFillPubPreview();

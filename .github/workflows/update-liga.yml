@@ -273,6 +273,12 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python notify_new_picks.py || true
 
+      # 30.08.2026 (Lucas): Schattenbuch zum Gegensignal-Filter. Schreibt JEDEN announce-faehigen
+      # Pick mit — den gesendeten wie den aussortierten — und rechnet beide ab. Muss NACH der Noti
+      # laufen (gleicher Stand) und VOR dem Commit.
+      - name: 📓 Push-Schattenbuch fortschreiben
+        run: python pick_push_ledger.py || true
+
       # Serien-Watch pre-match (PRE-Lauf 06:00) + Recap post-match (POST-Lauf 18:00).
       - name: 🔥 Liga Serien-Watch (PRE-Match)
         if: github.event.schedule == '7 6 * * *' || github.event_name == 'workflow_dispatch'
@@ -340,6 +346,7 @@ jobs:
           git add liga_tiktok_sent.json liga-telegram-log.json 2>/dev/null || true
           git add money_map_sent.json 2>/dev/null || true              # Money-Map-Public-Dedup (matchId, 21.08.2026 Lucas)
           git add liga_pick_announce_state.json 2>/dev/null || true
+          git add liga_pick_push_ledger.json 2>/dev/null || true
           git add liga_streak_watch.json 2>/dev/null || true
           git add liga_poly_prices.json 2>/dev/null || true          # Poly-Preise (Trading-Lag)
           git add liga-poly-history.json 2>/dev/null || true         # Poly-Preis-Historie

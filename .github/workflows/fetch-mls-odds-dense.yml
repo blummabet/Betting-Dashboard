@@ -97,6 +97,12 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python notify_new_picks.py || true
 
+      # 30.08.2026 (Lucas): Schattenbuch zum Gegensignal-Filter. Schreibt JEDEN announce-faehigen
+      # Pick mit — den gesendeten wie den aussortierten — und rechnet beide ab. Muss NACH der Noti
+      # laufen (gleicher Stand) und VOR dem Commit.
+      - name: 📓 Push-Schattenbuch fortschreiben
+        run: python pick_push_ledger.py || true
+
       - name: 💾 Odds + Snapshots + Closing committen
         run: |
           git config user.name  "CocoBet Bot"
@@ -109,6 +115,7 @@ jobs:
           git add mls_sharp_moves_log.json 2>/dev/null || true
           git add mls_sharp_dedup.json 2>/dev/null || true
           git add mls_pick_announce_state.json 2>/dev/null || true
+          git add mls_pick_push_ledger.json 2>/dev/null || true
           git add mls_poly_prices.json mls_poly_smartmoney.json mls_poly_wallets.json 2>/dev/null || true
           git add mls_poly_wallet_ledger.json 2>/dev/null || true
           git add mls_poly_coherence.json mls_poly_settlement.json mls_poly_markout.json 2>/dev/null || true

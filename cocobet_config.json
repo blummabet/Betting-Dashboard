@@ -381,6 +381,7 @@
         "series_id": "10188,10193,10194,10195,10203",
         "smartmoney_min_usd": 100
       },
+      "_comment_signale": "30.08.2026 (Lucas: „Feuern und kalibrieren sich nach Spiel und lernen?\") — Audit der Liga-Signale. Von 26 fuer die Liga aktiven Signalen feuerten 22. mls_travel kam neu auf die Sperrliste: es liest die MLS-Venue-Tabelle und kann in den Top-5 per Konstruktion nichts liefern, wurde aber je Pick ausgewertet. game_state_openness und betfair_coherence bleiben bewusst AKTIV, obwohl sie gerade auch nicht feuern: game_state_openness braucht ein Team, das nichts mehr zu spielen hat (Saisonende, am 3. Spieltag gibt es das nicht), und betfair_coherence sucht Inkohaerenz in der Ue/U-Leiter — gemessen liegt die groesste Abweichung zwischen Poisson-Fit und Markt in den liquiden Top-5-Maerkten bei 0,53pp gegen eine Schwelle von 4pp, in duennen Ligen erreicht sie 11pp. Beide sind also korrekt stumm, nicht kaputt.",
       "disabled_signals": [
         "incentive_signal",
         "altitude_signal",
@@ -389,11 +390,13 @@
         "smart_money",
         "polymarket_sharp",
         "pressure_index",
-        "steam_lag"
+        "steam_lag",
+        "mls_travel"
       ],
+      "_comment_nt_xg": "30.08.2026 (Lucas): fetch_player_stats von false auf true. Es war die im Test test_cocobet_config.TestPlayerStatsPerProfile als „eigene Quota-Entscheidung, separat zu treffen\" vermerkte offene Frage — sie war nie getroffen worden. Folge bis hierher: ratingAvg und keyPassesForAvg waren fuer ALLE 96 Liga-Teams null, form_rating konnte deshalb nie feuern, nie Beobachtungen sammeln und nie Gewicht verdienen, und chance_creation rechnete nur mit der halben Formel (shotsInside ohne keyPasses) und feuerte 3x. Nebeneffekt: der Frische-Guard in fetch_liga_xg ueberspringt ein Team nur, wenn keyPassesForAvg gesetzt ist — bei abgeschalteten Spielerstats war das nie der Fall, der Fetcher arbeitete jeden Lauf die volle Liste ab und kam trotzdem nur bei 33 von 96 Teams zur Anreicherung. Mit true greift der Guard wieder.",
       "nt_xg": {
         "lookback_fixtures": 6,
-        "fetch_player_stats": false,
+        "fetch_player_stats": true,
         "request_delay_sec": 0.4
       },
       "edge": {

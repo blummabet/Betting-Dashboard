@@ -242,6 +242,12 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python notify_new_picks.py || true
 
+      # 30.08.2026 (Lucas): Schattenbuch zum Gegensignal-Filter. Schreibt JEDEN announce-faehigen
+      # Pick mit — den gesendeten wie den aussortierten — und rechnet beide ab. Muss NACH der Noti
+      # laufen (gleicher Stand) und VOR dem Commit.
+      - name: 📓 Push-Schattenbuch fortschreiben
+        run: python pick_push_ledger.py || true
+
       # Serien-Watch pre-match (PRE-Lauf, vor den US-Abendspielen) + Recap post-match (POST-Lauf).
       - name: 🔥 MLS Serien-Watch (PRE-Match)
         if: github.event.schedule == '0 19 * * *' || github.event_name == 'workflow_dispatch'
@@ -293,6 +299,7 @@ jobs:
           git add mls_daily-tiktok 2>/dev/null || true   # gerenderte TikTok-Cards (Archiv)
           git add mls_tiktok_sent.json mls-telegram-log.json 2>/dev/null || true
           git add mls_pick_announce_state.json 2>/dev/null || true
+          git add mls_pick_push_ledger.json 2>/dev/null || true
           git add mls_streak_watch.json 2>/dev/null || true
           # Polymarket-MLS (12.07.2026): Preise/Smart-Money/Wallets speisen Signale + 🐋-Tab.
           git add mls_poly_prices.json 2>/dev/null || true

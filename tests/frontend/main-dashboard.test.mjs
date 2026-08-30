@@ -26,12 +26,11 @@ function seed(w) {
   };
 }
 
-test('Dashboard rendert alle Kacheln + Triple-Hero', () => {
+test('Dashboard rendert alle Kacheln', () => {
   const w = load(); seed(w);
   w._renderMainDash();
   const html = w.document.getElementById('mainDashPanel').innerHTML;
   assert.match(html, /Übersicht/);
-  assert.match(html, /Triple-Konsens/);
   assert.match(html, /Beste Cards/);   assert.match(html, /Bayern/);
   assert.match(html, /Beste Streaks/); assert.match(html, /Bournemouth/);
   assert.match(html, /Betfair-Kohle/); assert.match(html, /Kairat/);
@@ -59,23 +58,28 @@ test('leere Daten → freundliche Leer-Hinweise, kein Crash', () => {
 });
 
 
-test('Triple-Hero zeigt Konsens (einig) und Divergenz (Ausreißer)', () => {
+// 30.08.2026 (Lucas: „was aber dann mit dem tripple konsens? ist das nicht teils redundant?"):
+// Der Hero ist raus. Der Test dreht sich mit um: er hielt fest, DASS das Panel rendert — jetzt
+// hält er fest, dass es nicht wiederkommt. Begründung im Kopf von main-dashboard.js: die Spalte
+// „Einig" sortierte nach der kleinsten Spanne und wählte damit die Spiele mit fertigem Preis;
+// 91 von 139 Zeilen waren NOBET; und der Ausreißer war praktisch immer „Soft", was steam_lag
+// in den Cards schon abdeckt. Die Auswahl nach GELD statt nach Preis macht „Mehrfach gedeckt".
+test('der Triple-Konsens-Hero ist entfernt und kommt nicht durch die Hintertür zurück', () => {
   const w = load();
   w._mdState.data = {
     liga: { groups: { g: { fixtures: [
       { home:'Bayern', away:'Dortmund', league:'Bundesliga', picks:[
         { market:'Heimsieg', verdict:'BET', consensus:{ side:'home', n:4, spreadPP:3.0, medianPP:58, kind:'konsens',
-          sources:{pinnacle:0.58,betfair:0.585,poly:0.60,soft:0.575}, outlier:null, outlierGapPP:2.0 } } ] },
-      { home:'Leipzig', away:'Koeln', league:'Bundesliga', picks:[
-        { market:'Auswärtssieg', verdict:'ABWÄGEN', consensus:{ side:'away', n:4, spreadPP:14, medianPP:40, kind:'divergenz',
-          sources:{pinnacle:0.40,betfair:0.41,poly:0.28,soft:0.42}, outlier:'poly', outlierGapPP:12 } } ] } ] } } },
+          sources:{pinnacle:0.58,betfair:0.585,poly:0.60,soft:0.575}, outlier:null, outlierGapPP:2.0 } } ] } ] } } },
     mls:null, ligaStreaks:null, mlsStreaks:null, betfair:null, whales:null,
   };
   w._renderMainDash();
   const html = w.document.getElementById('mainDashPanel').innerHTML;
-  assert.match(html, /Triple-Konsens/);
-  assert.match(html, /Einig/);           assert.match(html, /4\/4 einig/);   assert.match(html, /Bayern/);
-  assert.match(html, /Ausreißer/);       assert.match(html, /Poly schert aus/); assert.match(html, /Leipzig/);
+  assert.doesNotMatch(html, /Triple-Konsens/);
+  assert.doesNotMatch(html, /md-agree|md-arow|md-hero/, 'auch das Markup muss weg sein');
+  assert.doesNotMatch(html, /4\/4 einig|schert aus/);
+  // Die Card selbst bleibt sichtbar — entfernt wurde die Konsens-Anzeige, nicht der Pick.
+  assert.match(html, /Bayern/);
 });
 
 

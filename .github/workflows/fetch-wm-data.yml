@@ -398,6 +398,12 @@ jobs:
       - name: 🆕 WM Neuer-Pick-Noti (Intraday)
         if: always()
         run: python notify_new_picks.py
+
+      # 30.08.2026 (Lucas): Schattenbuch zum Gegensignal-Filter. Schreibt JEDEN announce-faehigen
+      # Pick mit — den gesendeten wie den aussortierten — und rechnet beide ab. Muss NACH der Noti
+      # laufen (gleicher Stand) und VOR dem Commit.
+      - name: 📓 Push-Schattenbuch fortschreiben
+        run: python pick_push_ledger.py || true
         continue-on-error: true
         env:
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
@@ -440,6 +446,7 @@ jobs:
           git add player_streaks.json 2>/dev/null || true   # Spieler-Serien-Content (06.07.2026)
           git add signal_check.json 2>/dev/null || true      # Signal-Check „Analyse"-Tab (06.07.2026)
           git add pick_announce_state.json 2>/dev/null || true   # Neuer-Pick-Noti-Basis (03.07.2026)
+          git add pick_push_ledger.json 2>/dev/null || true   # Neuer-Pick-Noti-Basis (03.07.2026)
           git add streak_watch.json 2>/dev/null || true          # Serien-Watch-State (04.07.2026)
           # Diagnose: was ist staged? (im Log sichtbar, kein stilles Versagen mehr)
           echo "📋 Staged für Commit:"; git diff --staged --name-only | sed 's/^/   /' || true

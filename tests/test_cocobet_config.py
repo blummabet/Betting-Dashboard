@@ -138,7 +138,10 @@ class TestPlayerStatsPerProfile(unittest.TestCase):
     Geprueft wird der AUFGELOESTE CFG, den aggregate_team_stats real nutzt
     (fetch_wm_nt_xg._load_cfg ueber den Profil-Merge), nicht der JSON-Wortlaut — im Subprozess,
     weil CFG ein Modul-Singleton ist (Import-Zeitpunkt) und ENV die Suite sonst verschmutzt.
-    liga_default bleibt bewusst aus (eigene Quota-Entscheidung, separat zu treffen)."""
+    30.08.2026 (Lucas: „Feuern und kalibrieren sich nach Spiel und lernen?"): die offene
+    Quota-Entscheidung fuer liga_default ist getroffen — an. Vorher waren ratingAvg und
+    keyPassesForAvg fuer ALLE 96 Liga-Teams null: form_rating feuerte auf keinem einzigen von
+    193 Liga-Picks, chance_creation nur 3x (halbe Formel)."""
 
     def _resolved(self, profile: str) -> str:
         repo = Path(__file__).parent.parent
@@ -156,6 +159,11 @@ class TestPlayerStatsPerProfile(unittest.TestCase):
 
     def test_wm_zieht_spielerstats(self):
         self.assertEqual(self._resolved("wm2026"), "True")
+
+    def test_liga_zieht_spielerstats(self):
+        self.assertEqual(self._resolved("liga_default"), "True",
+            "ohne /fixtures/players bleibt form_rating in den Top-5 dauerhaft tot — "
+            "es feuert nie, sammelt nie Beobachtungen und kann nie Gewicht verdienen")
 
 
 if __name__ == "__main__":
