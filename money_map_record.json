@@ -1,23 +1,23 @@
 {
-"generatedAt": "2026-08-30T19:51:06.047501+00:00",
+"generatedAt": "2026-08-30T20:05:57.523610+00:00",
 "byVerdict": {
 "konsens": {
-"n": 635,
-"wins": 518,
-"hitRate": 0.8157,
-"polyN": 596,
-"polyWins": 469,
-"polyHitRate": 0.7869,
+"n": 639,
+"wins": 522,
+"hitRate": 0.8169,
+"polyN": 600,
+"polyWins": 472,
+"polyHitRate": 0.7867,
 "pinnN": 51,
 "pinnHitRate": 0.7647
 },
 "uneinig": {
-"n": 220,
-"wins": 68,
-"hitRate": 0.3091,
-"polyN": 197,
+"n": 221,
+"wins": 69,
+"hitRate": 0.3122,
+"polyN": 198,
 "polyWins": 56,
-"polyHitRate": 0.2843,
+"polyHitRate": 0.2828,
 "pinnN": 111,
 "pinnHitRate": 0.5946
 },
@@ -68,6 +68,11 @@
 "wins": 14,
 "hitRate": 0.6364
 },
+"Spanish Segunda Division": {
+"n": 22,
+"wins": 19,
+"hitRate": 0.8636
+},
 "Brazilian Serie A": {
 "n": 21,
 "wins": 13,
@@ -77,11 +82,6 @@
 "n": 21,
 "wins": 18,
 "hitRate": 0.8571
-},
-"Spanish Segunda Division": {
-"n": 20,
-"wins": 17,
-"hitRate": 0.85
 },
 "English Premier League": {
 "n": 19,
@@ -138,15 +138,15 @@
 "wins": 11,
 "hitRate": 0.6875
 },
+"Portuguese Primeira Liga": {
+"n": 16,
+"wins": 13,
+"hitRate": 0.8125
+},
 "German Bundesliga 2": {
 "n": 15,
 "wins": 13,
 "hitRate": 0.8667
-},
-"Portuguese Primeira Liga": {
-"n": 15,
-"wins": 12,
-"hitRate": 0.8
 },
 "Swedish Allsvenskan": {
 "n": 15,
@@ -157,6 +157,11 @@
 "n": 14,
 "wins": 6,
 "hitRate": 0.4286
+},
+"Italian Serie B": {
+"n": 14,
+"wins": 7,
+"hitRate": 0.5
 },
 "Belgian Pro League": {
 "n": 13,
@@ -172,11 +177,6 @@
 "n": 12,
 "wins": 7,
 "hitRate": 0.5833
-},
-"Italian Serie B": {
-"n": 12,
-"wins": 5,
-"hitRate": 0.4167
 },
 "CONMEBOL Copa Sudamericana": {
 "n": 11,
@@ -526,25 +526,120 @@
 },
 "byStrength": {
 "strong": {
-"n": 504,
-"wins": 408,
-"hitRate": 0.8095
+"n": 506,
+"wins": 410,
+"hitRate": 0.8103
 },
 "weak": {
-"n": 327,
-"wins": 163,
-"hitRate": 0.4985
+"n": 330,
+"wins": 166,
+"hitRate": 0.503
 }
 },
 "divergence": {
-"n": 220,
-"betfairWins": 68,
-"betfairRate": 0.3091,
-"polyN": 197,
+"n": 221,
+"betfairWins": 69,
+"betfairRate": 0.3122,
+"polyN": 198,
 "polyWins": 56,
-"polyRate": 0.2843
+"polyRate": 0.2828
 },
 "recent": [
+{
+"matchId": "35987262",
+"home": "Mantova",
+"away": "Empoli",
+"league": "Italian Serie B",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Mantova",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-08-30T17:00:00Z",
+"settledAt": "2026-08-30T20:05:57.306123+00:00"
+},
+{
+"matchId": "35987260",
+"home": "Arezzo",
+"away": "Palermo",
+"league": "Italian Serie B",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Palermo",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+3
+],
+"kickoff": "2026-08-30T17:00:00Z",
+"settledAt": "2026-08-30T20:05:57.306123+00:00"
+},
+{
+"matchId": "35979533",
+"home": "Casa Pia",
+"away": "Moreirense",
+"league": "Portuguese Primeira Liga",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Moreirense",
+"polySide": "home",
+"winner": "away",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-08-30T17:00:00Z",
+"settledAt": "2026-08-30T20:05:57.306123+00:00"
+},
+{
+"matchId": "35975917",
+"home": "Cadiz",
+"away": "Valladolid",
+"league": "Spanish Segunda Division",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-30T17:00:00Z",
+"settledAt": "2026-08-30T20:05:57.306123+00:00"
+},
+{
+"matchId": "35980203",
+"home": "Mallorca",
+"away": "AD Ceuta FC",
+"league": "Spanish Segunda Division",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Mallorca",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+0
+],
+"kickoff": "2026-08-30T17:00:00Z",
+"settledAt": "2026-08-30T20:05:57.306123+00:00"
+},
 {
 "matchId": "35979743",
 "home": "Zemun",
@@ -1209,107 +1304,12 @@
 ],
 "kickoff": "2026-08-30T10:30:00Z",
 "settledAt": "2026-08-30T13:35:27.787264+00:00"
-},
-{
-"matchId": "35984352",
-"home": "Jeju Utd",
-"away": "Daejeon Citizen",
-"league": "South Korean K1 League",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Jeju Utd",
-"polySide": "away",
-"winner": "home",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-08-30T10:30:00Z",
-"settledAt": "2026-08-30T13:35:27.787264+00:00"
-},
-{
-"matchId": "35974232",
-"home": "FC Utrecht",
-"away": "PSV",
-"league": "Dutch Eredivisie",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "PSV",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-6
-],
-"kickoff": "2026-08-30T10:15:00Z",
-"settledAt": "2026-08-30T13:20:18.629155+00:00"
-},
-{
-"matchId": "35979302",
-"home": "Aberdeen",
-"away": "Rangers",
-"league": "Scottish Premiership",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Rangers",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-08-30T11:00:00Z",
-"settledAt": "2026-08-30T13:05:16.053792+00:00"
-},
-{
-"matchId": "35972288",
-"home": "Portland Timbers",
-"away": "Austin FC",
-"league": "US MLS",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Austin FC",
-"polySide": "home",
-"winner": "away",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-08-30T02:30:00Z",
-"settledAt": "2026-08-30T05:34:23.616943+00:00"
-},
-{
-"matchId": "35972286",
-"home": "San Diego FC",
-"away": "LA Galaxy",
-"league": "US MLS",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "San Diego FC",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-08-30T02:30:00Z",
-"settledAt": "2026-08-30T05:34:23.616943+00:00"
 }
 ],
 "global": {
-"n": 864,
-"wins": 589,
-"hitRate": 0.6817
+"n": 869,
+"wins": 594,
+"hitRate": 0.6835
 },
-"pending": 21
+"pending": 16
 }
