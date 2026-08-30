@@ -1,14 +1,14 @@
 {
-"updatedAt": "2026-08-30T07:19:10.401581+00:00",
+"updatedAt": "2026-08-30T07:34:50.909447+00:00",
 "record": {
-"updatedAt": "2026-08-30T07:19:10.401581+00:00",
-"settled": 2993,
-"open": 7,
+"updatedAt": "2026-08-30T07:34:50.909447+00:00",
+"settled": 2997,
+"open": 3,
 "buckets": {
 "alle": {
-"n": 2993,
+"n": 2997,
 "posRate": 0.381,
-"avgClv": -0.61,
+"avgClv": -0.62,
 "avgClv30": -0.73
 },
 "sharp": {
@@ -20,34 +20,28 @@
 "valueZone": {
 "n": 1413,
 "posRate": 0.447,
-"avgClv": -1.38,
-"avgClv30": -1.39
+"avgClv": -1.41,
+"avgClv30": -1.4
 },
 "mature": {
-"n": 2084,
+"n": 2082,
 "posRate": 0.366,
-"avgClv": -0.94,
+"avgClv": -0.96,
 "avgClv30": -0.93
 },
 "notChasing": {
 "n": 2151,
 "posRate": 0.397,
-"avgClv": -0.66,
+"avgClv": -0.67,
 "avgClv30": -0.67
 },
 "chasing": {
-"n": 842,
+"n": 846,
 "posRate": 0.34,
-"avgClv": -0.5,
-"avgClv30": -0.89
+"avgClv": -0.48,
+"avgClv30": -0.87
 },
 "bySize": {
-"25k+": {
-"n": 454,
-"posRate": 0.372,
-"avgClv": -2.42,
-"avgClv30": -0.89
-},
 "10-25k": {
 "n": 634,
 "posRate": 0.413,
@@ -55,73 +49,27 @@
 "avgClv30": 0.91
 },
 "2-5k": {
-"n": 1250,
-"posRate": 0.355,
-"avgClv": -1.78,
-"avgClv30": -2.28
+"n": 1255,
+"posRate": 0.356,
+"avgClv": -1.76,
+"avgClv30": -2.27
 },
 "5-10k": {
-"n": 655,
-"posRate": 0.406,
+"n": 656,
+"posRate": 0.405,
 "avgClv": 1.43,
 "avgClv30": 0.74
+},
+"25k+": {
+"n": 452,
+"posRate": 0.372,
+"avgClv": -2.51,
+"avgClv30": -0.9
 }
 }
 }
 },
 "ledger": [
-{
-"sig": "lal-val-bet-2026-08-25|0x14c7111afa871fb215339f365043d7b2837b9ccf",
-"key": "lal-val-bet-2026-08-25",
-"side": "Real Betis Balompié",
-"wallet": "0x14c7111afa871fb215339f365043d7b2837b9ccf",
-"usd": 105543,
-"league": "SOCCER",
-"entryPrice": 0.335,
-"totalUsd": 1934114,
-"movePP": null,
-"flags": {
-"valueZone": true,
-"mature": true,
-"notChasing": true,
-"sharp": false,
-"sizeBand": "25k+"
-},
-"firstTs": "2026-08-25T19:10:45.630985+00:00",
-"status": "settled",
-"latestPrice": 0.9995,
-"clvPP": 66.5,
-"clv30": -3.0,
-"updatedAt": "2026-08-25T21:13:18.979552+00:00",
-"finalClvPP": 66.5,
-"settledAt": "2026-08-25T21:13:18.979552+00:00"
-},
-{
-"sig": "lal-val-bet-2026-08-25|0xcd65c3279408a33866a9129bed6943064cb6ee96",
-"key": "lal-val-bet-2026-08-25",
-"side": "Draw (Valencia CF vs. Real Betis Balompié)",
-"wallet": "0xcd65c3279408a33866a9129bed6943064cb6ee96",
-"usd": 29534,
-"league": "SOCCER",
-"entryPrice": 0.305,
-"totalUsd": 1934114,
-"movePP": null,
-"flags": {
-"valueZone": true,
-"mature": true,
-"notChasing": true,
-"sharp": false,
-"sizeBand": "25k+"
-},
-"firstTs": "2026-08-25T19:10:45.630985+00:00",
-"status": "settled",
-"latestPrice": 0.0005,
-"clvPP": -30.4,
-"clv30": 7.0,
-"updatedAt": "2026-08-25T21:13:18.979552+00:00",
-"finalClvPP": -30.4,
-"settledAt": "2026-08-25T21:13:18.979552+00:00"
-},
 {
 "sig": "wta-kubka-penick-2026-08-25|0x6f3e7f25baa7d2d49e15e2d2957ff3dec62cbcf8",
 "key": "wta-kubka-penick-2026-08-25",
@@ -77906,11 +77854,13 @@
 "sizeBand": "2-5k"
 },
 "firstTs": "2026-08-30T06:34:49.681396+00:00",
-"status": "open",
-"latestPrice": 0.05,
-"clvPP": -22.5,
+"status": "settled",
+"latestPrice": 0.0045,
+"clvPP": -27.1,
 "clv30": -22.5,
-"updatedAt": "2026-08-30T07:19:10.401581+00:00"
+"updatedAt": "2026-08-30T07:34:50.909447+00:00",
+"finalClvPP": -27.1,
+"settledAt": "2026-08-30T07:34:50.909447+00:00"
 },
 {
 "sig": "dota2-clo-yb1-2026-08-30|0xdbaf488fd5e23fced831a80472b50a9f0018f5d1",
@@ -77930,11 +77880,13 @@
 "sizeBand": "2-5k"
 },
 "firstTs": "2026-08-30T06:34:49.681396+00:00",
-"status": "open",
-"latestPrice": 0.95,
-"clvPP": 22.5,
+"status": "settled",
+"latestPrice": 0.9955,
+"clvPP": 27.1,
 "clv30": 22.5,
-"updatedAt": "2026-08-30T07:19:10.401581+00:00"
+"updatedAt": "2026-08-30T07:34:50.909447+00:00",
+"finalClvPP": 27.1,
+"settledAt": "2026-08-30T07:34:50.909447+00:00"
 },
 {
 "sig": "boxing-martin-planti-2026-08-30|0x664a25f165a0150ce687410470f3352f5783fc5f",
@@ -77958,7 +77910,7 @@
 "latestPrice": 0.88,
 "clvPP": 2.0,
 "clv30": 2.0,
-"updatedAt": "2026-08-30T07:19:10.401581+00:00"
+"updatedAt": "2026-08-30T07:34:50.909447+00:00"
 },
 {
 "sig": "atp-park-isomura-2026-08-30|0x1610db79f753a80207e1d66716be9e91e627ae49",
@@ -77982,7 +77934,7 @@
 "latestPrice": 0.62,
 "clvPP": 0.5,
 "clv30": 0.5,
-"updatedAt": "2026-08-30T07:19:10.401581+00:00"
+"updatedAt": "2026-08-30T07:34:50.909447+00:00"
 },
 {
 "sig": "atp-park-isomura-2026-08-30|0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
@@ -78006,7 +77958,7 @@
 "latestPrice": 0.38,
 "clvPP": -0.5,
 "clv30": -0.5,
-"updatedAt": "2026-08-30T07:19:10.401581+00:00"
+"updatedAt": "2026-08-30T07:34:50.909447+00:00"
 },
 {
 "sig": "dota2-clo-yb1-2026-08-30|0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
@@ -78026,11 +77978,13 @@
 "sizeBand": "2-5k"
 },
 "firstTs": "2026-08-30T07:19:10.401581+00:00",
-"status": "open",
-"latestPrice": 0.95,
-"clvPP": 0.0,
-"clv30": null,
-"updatedAt": "2026-08-30T07:19:10.401581+00:00"
+"status": "settled",
+"latestPrice": 0.9955,
+"clvPP": 4.6,
+"clv30": 4.6,
+"updatedAt": "2026-08-30T07:34:50.909447+00:00",
+"finalClvPP": 4.6,
+"settledAt": "2026-08-30T07:34:50.909447+00:00"
 },
 {
 "sig": "dota2-clo-yb1-2026-08-30|0xfdc8ce613812090420010e8193507160fd8dc678",
@@ -78050,11 +78004,65 @@
 "sizeBand": "2-5k"
 },
 "firstTs": "2026-08-30T07:19:10.401581+00:00",
-"status": "open",
-"latestPrice": 0.95,
+"status": "settled",
+"latestPrice": 0.9955,
+"clvPP": 4.6,
+"clv30": 4.6,
+"updatedAt": "2026-08-30T07:34:50.909447+00:00",
+"finalClvPP": 4.6,
+"settledAt": "2026-08-30T07:34:50.909447+00:00"
+},
+{
+"sig": "dota2-clo-yb1-2026-08-30|0x59229282121256ed2d629ce5adf0e04cc7fb3388",
+"key": "dota2-clo-yb1-2026-08-30",
+"side": "Yakult Brothers",
+"wallet": "0x59229282121256ed2d629ce5adf0e04cc7fb3388",
+"usd": 6469,
+"league": "ESPORTS",
+"entryPrice": 0.9955,
+"totalUsd": 43517,
+"movePP": 24.6,
+"flags": {
+"valueZone": false,
+"mature": false,
+"notChasing": false,
+"sharp": false,
+"sizeBand": "5-10k"
+},
+"firstTs": "2026-08-30T07:34:50.909447+00:00",
+"status": "settled",
+"latestPrice": 0.9955,
 "clvPP": 0.0,
-"clv30": null,
-"updatedAt": "2026-08-30T07:19:10.401581+00:00"
+"clv30": 0.0,
+"updatedAt": "2026-08-30T07:34:50.909447+00:00",
+"finalClvPP": 0.0,
+"settledAt": "2026-08-30T07:34:50.909447+00:00"
+},
+{
+"sig": "dota2-clo-yb1-2026-08-30|0x9055a9e36aa73274e3a92dc2dbb081bb4d9e756a",
+"key": "dota2-clo-yb1-2026-08-30",
+"side": "Yakult Brothers",
+"wallet": "0x9055a9e36aa73274e3a92dc2dbb081bb4d9e756a",
+"usd": 2541,
+"league": "ESPORTS",
+"entryPrice": 0.9955,
+"totalUsd": 43517,
+"movePP": 24.6,
+"flags": {
+"valueZone": false,
+"mature": false,
+"notChasing": false,
+"sharp": false,
+"sizeBand": "2-5k"
+},
+"firstTs": "2026-08-30T07:34:50.909447+00:00",
+"status": "settled",
+"latestPrice": 0.9955,
+"clvPP": 0.0,
+"clv30": 0.0,
+"updatedAt": "2026-08-30T07:34:50.909447+00:00",
+"finalClvPP": 0.0,
+"settledAt": "2026-08-30T07:34:50.909447+00:00"
 }
 ]
 }
