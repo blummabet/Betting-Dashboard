@@ -66,22 +66,58 @@ test('ohne Freigabe-Datei wird nichts behauptet', () => {
   assert.match(html, /sammelt noch/);
 });
 
-test('die drei Kern-Bedingungen stehen als Beleg an der Zeile', () => {
+// 30.08.2026 (Lucas: „glaub da ist noch mehr drin"): die Chip-Kette ist einem Deckungs-Profil
+// mit FESTEN Plätzen je Geldstrom gewichen — man zählt leuchtende Blöcke, statt Text zu lesen.
+// Diese Tests prüfen jetzt die Eigenschaft (welcher Strom trägt?), nicht mehr den Chip-Wortlaut.
+test('die drei Betfair-Belege sind als volle Marken sichtbar', () => {
   const html = render({ stufe1: [], stufe2: [zeile('Arsenal')] }, REG('geprueft'));
-  assert.match(html, /Geld 74%/);
-  assert.match(html, /frischer Zufluss/);
-  assert.match(html, /Quote zieht mit/);
+  const bf = html.slice(html.indexOf('md-kl-str'), html.indexOf('>BF '));
+  assert.equal((bf.match(/class="md-kl-pip"/g) || []).length, 3, 'Anteil · Zufluss · Richtung');
+  assert.doesNotMatch(bf, /md-kl-pip leer/, 'das Tor ist bei jeder gezeigten Zeile voll');
+  assert.match(html, /Geldanteil 74% · frischer Zufluss · Quote zieht mit/, 'im Titel nachlesbar');
 });
 
-test('Stufe 2 zeigt, was ihr fehlt — sonst sieht sie aus wie Stufe 1', () => {
+test('der Zähler sagt, wie viele Ströme tragen', () => {
+  const nackt = render({ stufe1: [], stufe2: [zeile('Arsenal')] }, REG('geprueft'));
+  assert.match(nackt, /class="md-kl-cnt"[^>]*>3<i>\/7<\/i>/, 'nur das Betfair-Tor');
+  const voll = render({ stufe1: [], stufe2: [zeile('Arsenal', {
+    poly: { anteilPct: 71 },
+    verstaerker: [{ art: 'pinn', text: 'Pinnacle stimmt zu' },
+                  { art: 'pinnMove', text: 'Pinnacle zieht mit +2.0pp' },
+                  { art: 'streak', text: 'Ungeschlagen ×9' }] })] }, REG('geprueft'));
+  assert.match(voll, /class="md-kl-cnt"[^>]*>7<i>\/7<\/i>/);
+});
+
+test('der Geldanteil steht als Zahl am Betfair-Block, nicht als Balken', () => {
+  // Erst stand hier ein Meter. Über die echten Zeilen lag der Anteil bei 74–84%: vier fast
+  // identische Balken, die Schwellenmarke kaum sichtbar. Ein Verhältnis, das nie nennenswert
+  // schwankt, ist als Balken Rauschen — dataviz: bei genau EINEM Wert schlägt die
+  // Direktbeschriftung die Marke.
+  const html = render({ stufe1: [], stufe2: [zeile('Arsenal')],
+    regeln: { minAnteil: 0.65, text: 'x' } }, REG('geprueft'));
+  assert.doesNotMatch(html, /md-kl-mtr/, 'kein Meter mehr');
+  const bf = html.slice(html.indexOf('md-kl-deck'));
+  assert.match(bf.slice(0, bf.indexOf('PIN')), /BF 74%/, 'die Zahl hängt am BF-Block');
+});
+
+test('ein fehlender Strom bleibt als LEERER Platz sichtbar', () => {
+  // Der Kern der Idee: feste Plätze. Ein fehlender Poly-Markt verschwindet nicht, er bleibt
+  // als unbelegte Marke stehen — sonst sähe Stufe 2 aus wie Stufe 1, nur kürzer.
   const voll = zeile('Chelsea', { stufe: 1, poly: { anteilPct: 71, usd: 40000, odd: 1.75 },
-    verstaerker: [{ art: 'poly', text: 'Poly 71%', gewicht: 12 },
-                  { art: 'pinn', text: 'Pinnacle stimmt zu', gewicht: 10 }] });
+    verstaerker: [{ art: 'poly', text: 'Poly 71%' }, { art: 'pinn', text: 'Pinnacle stimmt zu' }] });
   const html = render({ stufe1: [voll], stufe2: [zeile('Arsenal')] }, REG('geprueft'));
   assert.match(html, /Voll gedeckt/);
   assert.match(html, /Betfair-Kern/);
-  assert.match(html, /Poly 71%/);
-  assert.match(html, /kein Poly-Markt/, 'der Betfair-Kern muss seine Lücke zeigen');
+  assert.match(html, /Poly-Geld 71% auf derselben Seite/);
+  assert.match(html, /kein Poly-Markt/, 'die Lücke wird benannt, nicht weggelassen');
+  assert.match(html, /md-kl-pip leer/, 'und sie bleibt als unbelegte Marke stehen');
+});
+
+test('kein Strom wird allein durch Farbe unterschieden', () => {
+  // Gold↔Grün liegen unter Tritanopie bei ΔE 4,0 — jeder Block MUSS sein Kürzel tragen.
+  const html = render({ stufe1: [], stufe2: [zeile('Arsenal')] }, REG('geprueft'));
+  // BF trägt zusätzlich seinen Anteil, die anderen nur das Kürzel — beide Formen sind Text.
+  ['BF', 'PIN', 'POLY', 'FORM'].forEach(k => assert.match(html, new RegExp('>' + k + '[< ]')));
 });
 
 test('leer heißt leer — keine erfundene Zeile, aber die Regel bleibt lesbar', () => {
@@ -101,9 +137,10 @@ test('eine laufende Zeile ist von einer gehaltenen unterscheidbar', () => {
     zeile('Arsenal'),
     zeile('Chelsea', { aktiv: false, zuletztAktiv: alt, gehaltenSeit: alt }),
   ] }, REG('geprueft'));
-  assert.match(html, /läuft gerade/);
+  assert.match(html, /md-kl-live/);
+  assert.match(html, /md-kl-halt/);
   assert.match(html, /gehalten seit/);
-  assert.match(html, /zuletzt aktiv/);
+  assert.match(html, /zuletzt /);
 });
 
 test('der Haltepreis bleibt stehen, die weggelaufene Quote steht daneben', () => {

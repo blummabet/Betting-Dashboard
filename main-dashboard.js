@@ -269,13 +269,29 @@
       '.md-kl-st{margin-left:auto;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;white-space:nowrap;}',
       '.md-kl-grp{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--mi3);margin:12px 0 2px;display:flex;align-items:center;gap:7px;}',
       '.md-kl-grp i{height:1px;flex:1;background:var(--mln);font-style:normal;}',
-      '.md-kl-row{padding:9px 0;border-top:1px solid var(--mln);}',
-      '.md-kl-l1{display:flex;align-items:center;gap:6px;}',
+      '.md-kl-row{padding:11px 0;border-top:1px solid var(--mln);}',
+      '.md-kl-l1{display:flex;align-items:center;gap:7px;}',
       '.md-kl-nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;font-weight:600;color:var(--mi2);}',
-      '.md-kl-pick{font-size:14.5px;font-weight:800;color:var(--mi);margin-top:5px;line-height:1.25;}',
+      '.md-kl-pick{font-size:16px;font-weight:800;color:var(--mi);margin-top:4px;line-height:1.2;letter-spacing:-.01em;}',
       '.md-kl-pick b{color:#4cc2ff;}',
       '.md-kl-pick .q{color:var(--mi3);font-weight:700;font-size:12px;}',
       '.md-kl-ch{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px;}',
+      // Deckungs-Profil (30.08.2026). Feste Plätze je Quelle → zwei Zeilen sind vergleichbar.
+      // Marken bewusst dünn (dataviz: thin marks), 4px gerundetes Datenende, 2px Luft dazwischen.
+      '.md-kl-deck{display:flex;align-items:center;gap:12px;margin-top:9px;flex-wrap:wrap;}',
+      '.md-kl-str{display:flex;align-items:center;gap:5px;}',
+      '.md-kl-str.aus{opacity:.4;}',
+      '.md-kl-pips{display:flex;gap:2px;}',                       /* 2px Untergrund-Luft zwischen Fuellungen */
+      '.md-kl-pip{width:10px;height:5px;border-radius:4px;display:block;}',   /* 4px gerundetes Datenende */
+      '.md-kl-pip.leer{background:var(--mln2);}',
+      '.md-kl-lbl{font-size:9px;font-weight:800;letter-spacing:.04em;color:var(--mi3);}',
+      /* Zaehler zuerst gelesen: die Kennzahl der Zeile, nicht ein Anhaengsel am Ende. */
+      '.md-kl-cnt{font-family:"JetBrains Mono",monospace;font-size:17px;font-weight:800;color:var(--mi);line-height:1;min-width:38px;}',
+      '.md-kl-cnt i{font-style:normal;font-size:11px;font-weight:700;color:var(--mi3);}',
+      '.md-kl-live{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:var(--good);white-space:nowrap;}',
+      '.md-kl-live>i{width:5px;height:5px;border-radius:50%;background:var(--good);display:block;}',
+      '.md-kl-halt{font-size:10px;color:var(--mi3);white-space:nowrap;}',
+      '.md-kl-row.ruht{opacity:.72;}',
       '.md-kl-c{font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;background:rgba(120,130,150,.13);color:var(--mi2);white-space:nowrap;}',
       '.md-kl-c.on{background:rgba(76,194,255,.15);color:#4cc2ff;}',
       '.md-kl-c.off{opacity:.45;}',
@@ -1498,27 +1514,80 @@
       var t = iso ? new Date(String(iso).replace('Z', '+00:00')) : null;
       return t && isFinite(t) ? ('0' + t.getHours()).slice(-2) + ':' + ('0' + t.getMinutes()).slice(-2) : null;
     };
+    // ── Deckungs-Profil (30.08.2026, Lucas: „glaub da ist noch mehr drin") ──────────────
+    // Vorher war jede Zeile eine Kette gleich aussehender Chips: die drei Pflicht-Bedingungen
+    // sahen aus wie die optionalen Verstärker, und eine Zeile mit fünf Strömen war auf einen
+    // Blick nicht von einer mit zweien zu unterscheiden. Das ist ausgerechnet die Frage, die
+    // die Sektion beantworten soll.
+    //
+    // Jetzt: FESTE Plätze je Geldstrom, immer in derselben Reihenfolge, belegt oder leer. Man
+    // zählt die leuchtenden Blöcke, statt Text zu lesen — und weil die Plätze fest sind, sind
+    // zwei Zeilen untereinander vergleichbar. Gruppiert wird nach QUELLE, nicht nach Bedingung:
+    // Betfair trägt drei Belege, Pinnacle zwei, Poly und Form je einen. Damit bleiben es vier
+    // Farben statt sieben (dataviz: Farben nie über acht, und hier sind es Identitäten).
+    //
+    // Palette gegen den dunklen Untergrund #151b24 mit scripts/validate_palette.js geprüft:
+    // alle vier bestehen Helligkeitsband, Chroma, Kontrast und CVD-Trennung (schlechtestes
+    // Paar Gold↔Grün ΔE 8,4 protan). Unter Tritanopie liegt dasselbe Paar bei 4,0 — deshalb
+    // trägt JEDER Block zusätzlich sein Kürzel. Farbe allein entscheidet hier nichts.
+    var KL_STROEME = [
+      { k: 'bf',   kurz: 'BF',   name: 'Betfair',  col: A.bf,   n: 3 },
+      { k: 'pinn', kurz: 'PIN',  name: 'Pinnacle', col: A.pinn, n: 2 },
+      { k: 'poly', kurz: 'POLY', name: 'Poly',     col: A.poly, n: 1 },
+      { k: 'form', kurz: 'FORM', name: 'Form',     col: A.gold, n: 1 }
+    ];
+    function _klDeckung(x) {
+      var v = {};
+      (x.verstaerker || []).forEach(function (a) { v[a.art] = a; });
+      // Belegt/unbelegt je Strom. Die drei Betfair-Plätze sind das Tor selbst — sie sind bei
+      // jeder gezeigten Zeile voll; sichtbar bleiben sie trotzdem, weil sie der Beleg sind.
+      var belegt = {
+        bf: [true, true, true],
+        pinn: [!!v.pinn, !!v.pinnMove],
+        poly: [!!x.poly],
+        form: [!!v.streak || !!v.track]
+      };
+      var titel = {
+        bf: 'Betfair: Geldanteil ' + (x.anteilPct || 0) + '% · frischer Zufluss · Quote zieht mit',
+        pinn: 'Pinnacle: ' + (v.pinn ? 'stimmt zu' : 'keine Zustimmung') + ' · ' +
+              (v.pinnMove ? v.pinnMove.text : 'keine Bewegung'),
+        poly: x.poly ? ('Poly-Geld ' + x.poly.anteilPct + '% auf derselben Seite') : 'kein Poly-Markt',
+        form: v.streak ? v.streak.text : (v.track ? v.track.text : 'keine Form-/Liga-Stütze')
+      };
+      var n = 0, moeglich = 0;
+      var bloecke = KL_STROEME.map(function (st) {
+        var b = belegt[st.k] || [], an = b.filter(Boolean).length;
+        n += an; moeglich += st.n;
+        var pips = b.map(function (voll) {
+          return '<i class="md-kl-pip' + (voll ? '' : ' leer') + '"' +
+            (voll ? ' style="background:' + st.col + '"' : '') + '></i>';
+        }).join('');
+        var zahl = (st.k === 'bf' && x.anteilPct != null) ? ' ' + x.anteilPct + '%' : '';
+        return '<span class="md-kl-str' + (an ? '' : ' aus') + '" title="' + esc(titel[st.k]) + '">' +
+          '<span class="md-kl-pips">' + pips + '</span>' +
+          '<span class="md-kl-lbl"' + (an ? ' style="color:' + st.col + '"' : '') + '>' + st.kurz + zahl + '</span></span>';
+      }).join('');
+      return { html: bloecke, n: n, moeglich: moeglich };
+    }
+    // Ein Meter für den Geldanteil stand hier zuerst — und ist wieder rausgeflogen. Über vier
+    // Zeilen lag er bei 74–84%: vier fast identische Balken, die Schwellenmarke kaum sichtbar.
+    // Ein Verhältnis, das nie nennenswert schwankt, ist als Balken Rauschen. Die Zahl steht
+    // jetzt direkt am Betfair-Block (dataviz: selektive Direktbeschriftung schlägt eine Marke,
+    // wenn es genau EIN Wert ist).
     var row = function (x) {
       var k2 = x.kickoff ? Date.parse(String(x.kickoff).replace('Z', '+00:00')) : NaN;
       var min = isFinite(k2) ? Math.max(0, Math.round((k2 - now) / 60000)) : null;
       var ko = (min == null) ? null : (min < 60 ? min + 'm' : Math.floor(min / 60) + 'h' + (min % 60 ? ' ' + (min % 60) + 'm' : ''));
-      // Die drei Kern-Bedingungen stehen IMMER da — auch als Beleg, dass sie erfüllt sind.
-      var chips = ['<span class="md-kl-c on">Geld ' + (x.anteilPct || 0) + '%</span>',
-                   '<span class="md-kl-c on">frischer Zufluss</span>',
-                   '<span class="md-kl-c on">Quote zieht mit</span>'];
-      (x.verstaerker || []).forEach(function (v) { chips.push('<span class="md-kl-c on">' + esc(v.text) + '</span>'); });
-      // Was FEHLT, wird auch gezeigt — sonst sieht Stufe 2 aus wie Stufe 1.
-      if (!x.poly) chips.push('<span class="md-kl-c off">kein Poly-Markt</span>');
+      var deck = _klDeckung(x);
       // 30.08.2026 (Lucas: „vorhin stand da Inter und Freiburg, jetzt Man Utd, und nun wieder
       // Inter — das wechselt auch ohne dass ich die Seite aktualisiere"): der Treffer wird jetzt
       // bis zum Anpfiff gehalten. Damit das nicht wie ein eingefrorener Fehler aussieht, steht
       // dran, SEIT WANN er steht und ob die Bedingungen gerade noch anliegen.
       var seit = uhr(x.gehaltenSeit);
       var stand = x.aktiv
-        ? '<span class="md-kl-c on">● läuft gerade' + (seit ? ' · seit ' + seit : '') + '</span>'
-        : '<span class="md-kl-c">gehalten' + (seit ? ' seit ' + seit : '') +
-          (uhr(x.zuletztAktiv) ? ' · zuletzt aktiv ' + uhr(x.zuletztAktiv) : '') + '</span>';
-      chips.unshift(stand);
+        ? '<span class="md-kl-live"><i></i>läuft' + (seit ? ' · seit ' + seit : '') + '</span>'
+        : '<span class="md-kl-halt">gehalten' + (seit ? ' seit ' + seit : '') +
+          (uhr(x.zuletztAktiv) ? ' · zuletzt ' + uhr(x.zuletztAktiv) : '') + '</span>';
       // Der Haltepreis ist der Preis, den die Sektion gezeigt hat. Läuft die Quote seither weg,
       // gehört das dazu — sonst empfiehlt sie einen Preis, den es nicht mehr gibt.
       var hp = x.haltePreis, jetzt = x.odd, oddTxt = '';
@@ -1529,11 +1598,18 @@
             (+jetzt).toFixed(2) + ')</span>';
         }
       }
-      return '<div class="md-kl-row"' + (x.aktiv ? '' : ' style="opacity:.78"') + '><div class="md-kl-l1">' +
-        '<span class="md-kl-nm">' + esc(team(x.home)) + ' <span style="color:var(--mi3);font-weight:400">v</span> ' + esc(team(x.away)) + '</span>' +
-        (ko ? '<span class="md-jz-ko">⏱ ' + ko + '</span>' : '') + '</div>' +
+      // Aufbau der Zeile: Spiel + Uhr · dann der PICK als lauteste Zeile (er ist das Produkt) ·
+      // darunter das Deckungs-Profil mit dem Zähler, und rechts der Meter für den Geldanteil
+      // gegen sein Tor. Der Zustand (läuft/gehalten) steht als ruhiger Text daneben, nicht mehr
+      // als Chip zwischen lauter gleich aussehenden Chips.
+      return '<div class="md-kl-row' + (x.aktiv ? '' : ' ruht') + '">' +
+        '<div class="md-kl-l1">' +
+          '<span class="md-kl-nm">' + esc(team(x.home)) + ' <span style="color:var(--mi3);font-weight:400">v</span> ' + esc(team(x.away)) + '</span>' +
+          stand + (ko ? '<span class="md-jz-ko">⏱ ' + ko + '</span>' : '') + '</div>' +
         '<div class="md-kl-pick"><span style="color:var(--mi3)">→</span> <b>' + esc(x.name || '—') + '</b>' + oddTxt + '</div>' +
-        '<div class="md-kl-ch">' + chips.join('') + '</div></div>';
+        '<div class="md-kl-deck">' +
+          '<span class="md-kl-cnt" title="belegte Ströme von möglichen">' + deck.n + '<i>/' + deck.moeglich + '</i></span>' +
+          deck.html + '</div></div>';
     };
     var grp = function (titel, arr) {
       if (!arr.length) return '';

@@ -242,8 +242,17 @@ class TestVerdrahtungInDenWorkflows:
 
     @pytest.mark.parametrize("datei", DATEIEN)
     def test_waechter_steht_vor_dem_commit(self, datei):
-        """Laeuft er nach dem Commit, bleibt health/<slug>.json auf der Runner-Platte."""
+        """Laeuft er nach dem Commit, bleibt health/<slug>.json auf der Runner-Platte.
+
+        30.08.2026: dieser Test suchte den ERSTEN Schritt mit `git add` — eine Abkuerzung, die
+        nur solange stimmte, wie es genau einen Commit im Job gab. Als update-liga/-mls eine
+        Zwischensicherung fuer den Digest-Zustand bekamen (drei kleine Dateien direkt nach dem
+        Versand, ohne health/), schlug er an, obwohl die gepruefte Eigenschaft unberuehrt war.
+        Geprueft wird jetzt, was der Docstring sagt: der Waechter muss vor dem Commit stehen,
+        der health/ WIRKLICH mitnimmt."""
         steps = self._steps(datei)
         i_w = next(i for i, s in enumerate(steps) if "run_health.py" in str(s.get("run") or ""))
-        i_c = next(i for i, s in enumerate(steps) if "git add" in str(s.get("run") or ""))
-        assert i_w < i_c, f"{datei}: Waechter laeuft nach dem Commit"
+        i_c = next((i for i, s in enumerate(steps) if "health/" in str(s.get("run") or "")
+                    and "git add" in str(s.get("run") or "") and i != i_w), None)
+        assert i_c is not None, f"{datei}: kein Commit-Schritt, der health/ staged"
+        assert i_w < i_c, f"{datei}: Waechter laeuft nach dem Commit, der health/ mitnimmt"
