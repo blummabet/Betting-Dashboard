@@ -37,6 +37,7 @@ TG_WM_MODE     = os.environ.get("TG_WM_MODE", "morning")
 # per Dataset (WM = telegram-log.json unverändert, mls/liga eigenes Log → keine Kreuz-Kontamination).
 import cocobet_dataset as D  # noqa: E402
 import telegram_i18n as I18N  # noqa: E402  (04.07.2026, Lucas: DE+EN Public-Picks)
+import pick_announce_state as _PA  # noqa: E402  (30.08.2026: EINE Push-Definition)
 
 # Public-Sprachen: erst DE, dann EN (beide in denselben Channel). Via env override-bar.
 TG_LANGS = [s.strip() for s in os.environ.get("TG_LANGS", "de,en").split(",") if s.strip()]
@@ -234,14 +235,20 @@ def _stake_str(p) -> str:
 
 
 def _is_posted(p) -> bool:
-    """Zeigt/wertet Telegram diesen Pick? EXAKT dieselbe Auswahl wie die Dashboard-Card
-    (wm2026-renderer._livePicks): BET/ABWÄGEN, nicht trackingExcluded, nicht boldAlt (Safer-Line-
-    Alternative wird inline gezeigt, kein eigener Pick). KEIN Conviction-Floor — die Card hat auch
-    keinen. (07.07.2026, Lucas: „posten alles auf Telegram was auch in der Card ist" → Morning-Card,
-    Recap und kumulative Bilanz nutzen dieselbe Auswahl → nie mehr „gewertet aber nicht gepostet".)"""
-    if not p or p.get("trackingExcluded") or p.get("boldAlt"):
-        return False
-    return p.get("verdict") in ("BET", "ABWÄGEN")
+    """Zeigt/wertet Telegram diesen Pick?
+
+    07.07.2026 (Lucas: „posten alles auf Telegram was auch in der Card ist"): Morning-Card,
+    Recap und kumulative Bilanz nutzen dieselbe Auswahl → nie mehr „gewertet aber nicht gepostet".
+
+    30.08.2026: die Auswahl stand ZWEIMAL im Repo — hier und als ANNOUNCE_VERDICTS in
+    pick_announce_state (für die Intraday-Noti), und sie war bereits auseinandergelaufen: boldAlt
+    filterte nur diese Stelle. Jetzt gibt es eine Definition, pick_announce_state.push_ok, und
+    sie trägt zusätzlich den Gegensignal-Filter für ABWÄGEN (Begründung dort).
+
+    Die öffentliche Bilanz bleibt davon unberührt: sie wertet ohnehin NUR verdict == "BET"
+    (31.07.2026, Lucas), und BET geht durch push_ok unverändert durch. Der Filter kann die
+    gezeigte Bilanz also nicht rückwirkend umschreiben."""
+    return _PA.push_ok(p)
 
 
 def bilanz_footer(wm: dict, lang: str = "de") -> str:

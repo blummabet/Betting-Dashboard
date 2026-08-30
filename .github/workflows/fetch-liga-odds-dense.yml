@@ -73,6 +73,12 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
         run: python notify_new_picks.py || true
 
+      # 30.08.2026 (Lucas): Schattenbuch zum Gegensignal-Filter. Schreibt JEDEN announce-faehigen
+      # Pick mit — den gesendeten wie den aussortierten — und rechnet beide ab. Muss NACH der Noti
+      # laufen (gleicher Stand) und VOR dem Commit.
+      - name: 📓 Push-Schattenbuch fortschreiben
+        run: python pick_push_ledger.py || true
+
       # 28.08.2026 (Lucas: „Fehler, die wir gar nicht mitkriegen") — 135 Steps stehen repo-weit
       # auf continue-on-error. Dieser Waechter fragt ueber die GitHub-API die Steps DIESES Laufs
       # ab und meldet jeden gescheiterten, auch wenn der Job gruen bleibt. `if: always()`, damit
@@ -102,6 +108,7 @@ jobs:
           git add liga_sharp_moves_log.json 2>/dev/null || true
           git add liga_sharp_dedup.json 2>/dev/null || true
           git add liga_pick_announce_state.json 2>/dev/null || true
+          git add liga_pick_push_ledger.json 2>/dev/null || true
           # Poly-Wallets (25.08.2026, Audit-Befund 07) — ohne diese Zeilen bleibt der
           # 2h-Snapshot auf dem Runner liegen und die Historie entsteht trotzdem nicht.
           git add liga_poly_wallets.json liga_poly_smartmoney.json 2>/dev/null || true

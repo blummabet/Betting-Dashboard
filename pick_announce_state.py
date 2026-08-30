@@ -27,6 +27,55 @@ STATE_FILE = BASE / f"{D.prefix()}pick_announce_state.json"
 # Nur diese Verdicts sind „Picks", die man ankündigt (NOBET/SKIP nie).
 ANNOUNCE_VERDICTS = {"BET", "ABWÄGEN"}
 
+# ── Der Gegensignal-Filter (30.08.2026, Lucas) ──────────────────────────────────────────
+# Lucas: „ich schick bei ABWÄGEN nicht die 1X2-Märkte, weil die schwächer sind" — die Vermutung
+# war, der MARKT trennt. Gemessen an 220 abgerechneten ABWÄGEN trennt er nicht: pro Markt liegen
+# nur 17–46 Zeilen vor, die Fehlerspanne ist ±25–35pp ROI, und 1X2 kippt je nach Ausschnitt von
+# +8,8% auf −1,5%. Das Vorzeichen wechselt mit der Auswahl — das ist Rauschen, kein Befund.
+#
+# Was sauber trennt, ist die SIGNAL-ZUSAMMENSETZUNG:
+#     kein einziges Gegensignal   n=47   78,7% Treffer   ROI +40,0%   Untergrenze +19,3%
+#     positive UND negative       n=143  49,7%           ROI −11,7%   Untergrenze −24,9%
+#     keine oder nur negative     n=30   43,3%           ROI −12,6%   Untergrenze −46,5%
+# Das hält in JEDEM Markt einzeln (Ü/U 87,5 vs 55,1 · 1X2 85,7 vs 41,0 · BTTS 68,8 vs 27,3) und
+# in Ligen wie WM getrennt. Bootstrap: 0 von 4.000 Resamples unter null. Ausgerechnet 1X2 hat
+# die beste saubere Teilmenge — Lucas' ursprünglicher Filter hätte sie weggeworfen.
+#
+# Ein BET ist davon NICHT betroffen: dort hat das Verdikt-Gate schon entschieden.
+# Die aussortierten ABWÄGEN laufen im Schattenbuch (pick_push_ledger.py) weiter mit und werden
+# abgerechnet — dieser Schnitt muss sich vor freigabe.py verantworten wie jede andere Regel.
+def _sig_zahlen(p: dict):
+    """(positive, negative) Signalzahl. Fehlen die Zähler, aus der Signal-Liste rekonstruieren."""
+    pos, neg = p.get("signalCountPos"), p.get("signalCountNeg")
+    if isinstance(pos, int) and isinstance(neg, int):
+        return pos, neg
+    sig = p.get("signals") or []
+    return (sum(1 for s in sig if (s or {}).get("score", 0) > 0),
+            sum(1 for s in sig if (s or {}).get("score", 0) < 0))
+
+
+def hat_gegensignal(p: dict) -> bool:
+    """Widerspricht dem Pick mindestens ein Signal? Ohne jede Signal-Angabe: ja (fail-closed —
+    keine Information ist keine Erlaubnis, dieselbe Regel wie im Freigabe-Register)."""
+    pos, neg = _sig_zahlen(p)
+    return neg > 0 or pos == 0
+
+
+def push_ok(p: dict) -> bool:
+    """DIE eine Antwort auf „geht dieser Pick raus?" — für Digest UND Intraday-Noti.
+
+    Vorher gab es zwei Definitionen (ANNOUNCE_VERDICTS hier, _is_posted in telegram_wm) und sie
+    unterschieden sich bereits (boldAlt). Genau dieses Auseinanderlaufen hat sharp_gate.py für
+    die Wallets beseitigt; hier gilt dasselbe Prinzip: eine Definition, eine Datei."""
+    if not p or p.get("trackingExcluded") or p.get("boldAlt"):
+        return False
+    v = p.get("verdict")
+    if v not in ANNOUNCE_VERDICTS:
+        return False
+    if v == "BET":
+        return True
+    return not hat_gegensignal(p)
+
 _KO_LABELS = {"R32": "Sechzehntelfinale", "R16": "Achtelfinale", "QF": "Viertelfinale",
               "SF": "Halbfinale", "F": "Finale", "3P": "Spiel um Platz 3"}
 
@@ -76,11 +125,14 @@ def _fixture_upcoming(fx, now) -> bool:
     return True   # ohne kickoff/Ergebnis vorsichtshalber als offen behandeln
 
 
-def iter_pick_units(wm: dict, now=None):
+def iter_pick_units(wm: dict, now=None, alle: bool = False):
     """Yield ein dict pro announce-fähigem Pick auf einem KOMMENDEN Spiel.
 
     Genau EINE Quelle für Digest-Seeding und die Noti → keine Drift. Liefert Anzeige-
     Felder gleich mit (Namen/Flaggen/Runde), damit die Noti nichts nachschlagen muss.
+
+    `alle=True` liefert AUCH die vom Gegensignal-Filter aussortierten Picks (jede Zeile trägt
+    `push`). Das braucht nur das Schattenbuch — gesendet wird nie daraus.
     """
     now = now or _now()
     groups = wm.get("groups", {})
@@ -96,16 +148,20 @@ def iter_pick_units(wm: dict, now=None):
         home_t = all_teams.get(home, {})
         away_t = all_teams.get(away, {})
         for p in picks.get(pick_key, []):
-            if p.get("verdict") not in ANNOUNCE_VERDICTS:
+            if p.get("verdict") not in ANNOUNCE_VERDICTS or p.get("trackingExcluded"):
                 continue
-            if p.get("trackingExcluded"):
+            raus = push_ok(p)
+            if not (raus or alle):
                 continue
+            pos, neg = _sig_zahlen(p)
             market = p.get("market") or ""
             yield {
                 "id": f"{pick_key}|{market}",
                 "pick_key": pick_key,
                 "market": market,
                 "verdict": p.get("verdict"),
+                "push": raus, "sigPos": pos, "sigNeg": neg,
+                "odds": p.get("odds"), "result": p.get("result"),
                 "convictionScore": p.get("convictionScore"),
                 "source": p.get("source"),
                 "home": home, "away": away,

@@ -315,6 +315,30 @@ def killer_schublade(results=None, now=None) -> list:
     return [e]
 
 
+def push_schubladen(ledger=None, now=None) -> list:
+    """Das Schattenbuch des Card-Pushes: „ABWÄGEN · gepusht" gegen „ABWÄGEN · aussortiert".
+
+    30.08.2026 (Lucas): der Gegensignal-Filter schneidet rund vier Fünftel der ABWÄGEN aus dem
+    Public-Push. Damit dieser Schnitt sich nicht selbst bestätigt, laufen die Aussortierten im
+    Schattenbuch weiter mit — und stehen hier nebeneinander. Wären sie in Wahrheit die besseren,
+    stünde es in dieser Tabelle.
+
+    Ohne CLV je Pick bleibt beides höchstens „geprueft" — die Cards führen keinen. Das ist
+    gewollt: der Schnitt darf sichtbar besser dastehen, ohne allein deshalb freigegeben zu sein."""
+    try:
+        from pick_push_ledger import schubladen
+    except Exception:
+        return []
+    out = []
+    for name, d in sorted((schubladen(ledger) or {}).items()):
+        if not d["renditen"]:
+            continue
+        out.append(bewerte(name, "cards", d["renditen"], [],
+                           {"art": "push_filter", "quelle": "pick_push_ledger.py"},
+                           d["letzter"], now))
+    return out
+
+
 # ── Zusammenbau ─────────────────────────────────────────────────────────────────────────
 RANG = {"freigegeben": 0, "kandidat": 1, "geprueft": 2, "sammelt": 3, "ruht": 4}
 
@@ -322,7 +346,8 @@ RANG = {"freigegeben": 0, "kandidat": 1, "geprueft": 2, "sammelt": 3, "ruht": 4}
 def baue(engine=None, track=None, cards=None, betfair=None, now=None) -> dict:
     now = now or _now()
     zeilen = (poly_schubladen(track, engine) + card_schubladen(cards)
-              + betfair_schubladen(betfair) + killer_schublade(now=now))
+              + betfair_schubladen(betfair) + killer_schublade(now=now)
+              + push_schubladen(now=now))
     zeilen.sort(key=lambda r: (RANG.get(r["status"], 9), -(r.get("roiLb") or -9), -r["n"]))
     frei = [r for r in zeilen if r["status"] == "freigegeben"]
     kand = [r for r in zeilen if r["status"] == "kandidat"]
