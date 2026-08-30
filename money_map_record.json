@@ -1,13 +1,13 @@
 {
-"generatedAt": "2026-08-30T18:20:51.119597+00:00",
+"generatedAt": "2026-08-30T18:35:59.586442+00:00",
 "byVerdict": {
 "konsens": {
-"n": 629,
-"wins": 513,
-"hitRate": 0.8156,
-"polyN": 590,
-"polyWins": 464,
-"polyHitRate": 0.7864,
+"n": 631,
+"wins": 514,
+"hitRate": 0.8146,
+"polyN": 592,
+"polyWins": 465,
+"polyHitRate": 0.7855,
 "pinnN": 50,
 "pinnHitRate": 0.76
 },
@@ -83,6 +83,11 @@
 "wins": 17,
 "hitRate": 0.85
 },
+"English Premier League": {
+"n": 19,
+"wins": 13,
+"hitRate": 0.6842
+},
 "UEFA Europa League Qualifiers": {
 "n": 19,
 "wins": 15,
@@ -97,11 +102,6 @@
 "n": 18,
 "wins": 14,
 "hitRate": 0.7778
-},
-"English Premier League": {
-"n": 18,
-"wins": 12,
-"hitRate": 0.6667
 },
 "Saudi Professional League": {
 "n": 18,
@@ -248,6 +248,11 @@
 "wins": 5,
 "hitRate": 0.625
 },
+"Polish Ekstraklasa": {
+"n": 8,
+"wins": 4,
+"hitRate": 0.5
+},
 "Austrian Bundesliga": {
 "n": 7,
 "wins": 6,
@@ -257,11 +262,6 @@
 "n": 7,
 "wins": 6,
 "hitRate": 0.8571
-},
-"Polish Ekstraklasa": {
-"n": 7,
-"wins": 4,
-"hitRate": 0.5714
 },
 "Romanian Liga I": {
 "n": 7,
@@ -526,14 +526,14 @@
 },
 "byStrength": {
 "strong": {
-"n": 501,
-"wins": 405,
-"hitRate": 0.8084
+"n": 502,
+"wins": 406,
+"hitRate": 0.8088
 },
 "weak": {
-"n": 323,
+"n": 324,
 "wins": 160,
-"hitRate": 0.4954
+"hitRate": 0.4938
 }
 },
 "divergence": {
@@ -545,6 +545,44 @@
 "polyRate": 0.2857
 },
 "recent": [
+{
+"matchId": "35971122",
+"home": "Man Utd",
+"away": "Ipswich",
+"league": "English Premier League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Man Utd",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+5,
+2
+],
+"kickoff": "2026-08-30T15:30:00Z",
+"settledAt": "2026-08-30T18:35:59.421442+00:00"
+},
+{
+"matchId": "35974835",
+"home": "Gornik Zabrze",
+"away": "GKS Katowice",
+"league": "Polish Ekstraklasa",
+"verdict": "konsens",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+3
+],
+"kickoff": "2026-08-30T15:30:00Z",
+"settledAt": "2026-08-30T18:35:59.421442+00:00"
+},
 {
 "matchId": "35957273",
 "home": "Start",
@@ -1266,50 +1304,12 @@
 ],
 "kickoff": "2026-08-30T00:30:00Z",
 "settledAt": "2026-08-30T03:34:08.433038+00:00"
-},
-{
-"matchId": "35972040",
-"home": "Nashville SC",
-"away": "FC Cincinnati",
-"league": "US MLS",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Nashville SC",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-4,
-0
-],
-"kickoff": "2026-08-30T00:30:00Z",
-"settledAt": "2026-08-30T03:34:08.433038+00:00"
-},
-{
-"matchId": "35976951",
-"home": "Alianza Lima",
-"away": "Deportivo Garcilaso",
-"league": "Peruvian Primera Division",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Alianza Lima",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-08-30T00:30:00Z",
-"settledAt": "2026-08-30T03:34:08.433038+00:00"
 }
 ],
 "global": {
-"n": 857,
-"wins": 583,
-"hitRate": 0.6803
+"n": 859,
+"wins": 584,
+"hitRate": 0.6799
 },
-"pending": 20
+"pending": 18
 }
