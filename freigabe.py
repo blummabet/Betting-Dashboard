@@ -307,12 +307,28 @@ def killer_schublade(results=None, now=None) -> list:
         from killer import schublade
     except Exception:
         return []
+    out = []
     s = schublade(results)
-    if not s["renditen"]:
-        return []
-    e = bewerte("Konjunktion · Betfair-Kern", "betfair", s["renditen"], s["clvs"],
-                {"art": "konjunktion", "quelle": "killer.py"}, s["letzter"], now)
-    return [e]
+    if s["renditen"]:
+        out.append(bewerte("Konjunktion · Schluss-Stand", "betfair", s["renditen"], s["clvs"],
+                           {"art": "konjunktion", "quelle": "killer.py"}, s["letzter"], now))
+    # 30.08.2026 (Lucas: „das wechselt auch ohne dass ich die Seite aktualisiere"): die Sektion
+    # HÄLT ihre Treffer jetzt bis zum Anpfiff, weil `inflow` ein Intervall-Delta ist und sonst
+    # im Minutentakt blinkt. Das ist eine andere Menge als die oben gemessene (dort zählt der
+    # letzte Vor-Anpfiff-Schnappschuss), und sie wird zum HALTEPREIS abgerechnet — dem Preis,
+    # den die Sektion wirklich gezeigt hat. Beide stehen nebeneinander, damit sichtbar wird,
+    # ob das Halten die Kante kostet.
+    try:
+        from killer import schublade_gehalten
+        g = schublade_gehalten()
+        if g["renditen"]:
+            out.append(bewerte("Konjunktion · gehalten (Haltepreis)", "betfair",
+                               g["renditen"], g["clvs"],
+                               {"art": "konjunktion_gehalten", "quelle": "killer_ledger.json"},
+                               g["letzter"], now))
+    except Exception:
+        pass
+    return out
 
 
 def push_schubladen(ledger=None, now=None) -> list:

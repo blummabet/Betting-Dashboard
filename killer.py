@@ -52,6 +52,30 @@ from pathlib import Path
 
 BASE = Path(__file__).resolve().parent
 OUT_FILE = "killer.json"
+STATE_FILE = "killer_state.json"      # gehaltene Treffer bis zum Anpfiff
+LEDGER_FILE = "killer_ledger.json"    # abgerechnete gehaltene Treffer (eigene Messung)
+
+# ── Warum gehalten wird (30.08.2026, Lucas: „das wechselt auch ohne dass ich die Seite
+# aktualisiere") ──────────────────────────────────────────────────────────────────────────
+# Die Sektion zeigte die Bedingungen LIVE. `inflow` ist aber kein Zustand, sondern ein
+# Intervall-Delta: „seit dem letzten Scan sind ≥2.000 € in den Markt geflossen". Kommt das Geld
+# in Schüben — und so kommt es —, steht das Flag einen Lauf an und den nächsten aus, obwohl das
+# Geld weiter im Markt liegt. Gemessen über 40 Läufe (~10 Stunden):
+#
+#     · in mehr als der Hälfte der Läufe war die Sektion LEER
+#     · 15 verschiedene Spiele haben irgendwann getroffen
+#     · 6 davon (40%) waren in GENAU EINEM Lauf sichtbar, also ~15 Minuten
+#     · Chelsea–Brighton traf 13-mal, aber nicht am Stück — es blinkte
+#
+# Für eine Sektion, aus der man blind spielen soll, ist das unbrauchbar: eine Empfehlung, die
+# drei Minuten später weg ist, kann man nicht setzen. Also wird gehalten: hat ein Spiel die drei
+# Bedingungen vor Anpfiff EINMAL gleichzeitig erfüllt, bleibt es bis zum Anpfiff stehen — mit
+# dem Preis von damals und dem Zeitpunkt.
+#
+# Das ist bewusst eine ANDERE Menge als die, die betfair_track_record abrechnet (dort zählt der
+# letzte Vor-Anpfiff-Schnappschuss). Deshalb bekommt sie ihr eigenes Buch: killer_ledger.json
+# rechnet die gehaltenen Treffer zum Preis ab, der beim Halten wirklich dastand — dem einzigen
+# Preis, den man tatsächlich hätte nehmen können.
 
 # ── Schwellen: gespiegelt, nicht nachgebaut ─────────────────────────────────────────────
 try:
@@ -64,6 +88,7 @@ MIN_QUOTE = 1.30            # darunter zahlt keine Kante die Varianz
 MAX_QUOTE = 15.0            # darüber ist es eine Lotterie, kein Geld-Signal
 POLY_MIN_ANTEIL = 60        # „Poly Geld oben" — Anteil in Prozent
 PINN_MIN_MOVE_PP = 1.0      # Verstärker: ab so viel pp gilt die Pinnacle-Bewegung als Bewegung
+AKTIV_FENSTER_MIN = 25      # so lange nach dem letzten Treffer gilt eine Zeile noch als „läuft gerade"
 
 SEITE = {"H": "home", "D": "draw", "A": "away"}
 
@@ -179,8 +204,103 @@ def zeile(mid, eintrag, sig, cons_game, track, streaks):
     }
 
 
-def baue(state=None, consensus=None, track=None, streaks=None, now=None) -> dict:
+def _halten(latch: dict, zeilen: list, now) -> dict:
+    """Treffer aufnehmen bzw. auffrischen. Der Preis wird beim ERSTEN Halten festgeschrieben —
+    er ist der Preis, den die Sektion gezeigt hat. Verstärker dürfen dazukommen (sie machen die
+    Zeile stärker, nie schwächer); der Kern-Beleg bleibt der vom ersten Mal."""
+    out = dict(latch or {})
+    for z in zeilen:
+        k = "%s|%s" % (z["matchId"], z["markt"])
+        alt = out.get(k)
+        if alt is None:
+            z = dict(z)
+            z["gehaltenSeit"] = now.isoformat()
+            z["zuletztAktiv"] = now.isoformat()
+            z["haltePreis"] = z.get("odd")
+            out[k] = z
+        else:
+            alt["zuletztAktiv"] = now.isoformat()
+            alt["odd"] = z.get("odd")            # aktueller Preis, zum Vergleich mit haltePreis
+            alt["kickoff"] = z.get("kickoff") or alt.get("kickoff")
+            if len(z.get("verstaerker") or []) > len(alt.get("verstaerker") or []):
+                alt["verstaerker"] = z["verstaerker"]
+                alt["stufe"] = min(alt.get("stufe", 2), z.get("stufe", 2))
+                alt["poly"] = z.get("poly") or alt.get("poly")
+                alt["rang"] = max(alt.get("rang", 0), z.get("rang", 0))
+    return out
+
+
+def _faellig(latch: dict, now):
+    """(bleibt, angepfiffen) — angepfiffene Zeilen wandern ins Ledger."""
+    bleibt, weg = {}, []
+    for k, z in (latch or {}).items():
+        ko = _ts(z.get("kickoff"))
+        (weg.append(z) if (ko and ko <= now) else bleibt.setdefault(k, z))
+    return bleibt, weg
+
+
+def _ledger_fortschreiben(ledger: list, angepfiffen: list, results=None, now=None) -> list:
+    """Angepfiffene Halte-Zeilen eintragen und aus dem Betfair-Ergebnis abrechnen.
+
+    Gewinn/Verlust kommt aus betfair_track_results (dieselbe Abrechnung, die auch das
+    Liga×Markt-Ergebnis speist) — aber zum HALTEPREIS, nicht zur Schlussquote. Wer der Sektion
+    folgt, setzt zu dem Preis, der dastand."""
     now = now or _now()
+    ledger = [dict(r) for r in (ledger or [])]
+    bekannt = {r["k"] for r in ledger}
+    for z in angepfiffen:
+        k = "%s|%s" % (z["matchId"], z["markt"])
+        if k in bekannt:
+            continue
+        ledger.append({"k": k, "matchId": z["matchId"], "markt": z["markt"],
+                       "liga": z.get("league"), "seite": z.get("seite"), "name": z.get("name"),
+                       "haltePreis": z.get("haltePreis"), "schlussPreis": z.get("odd"),
+                       "stufe": z.get("stufe"), "gehaltenSeit": z.get("gehaltenSeit"),
+                       "zuletztAktiv": z.get("zuletztAktiv"), "kickoff": z.get("kickoff"),
+                       "status": "offen", "win": None, "settledAt": None})
+        bekannt.add(k)
+    if results is None:
+        results = _load("betfair_track_results.json", [])
+    erg = {}
+    for r in (results or []):
+        if r.get("matchId") and r.get("market"):
+            erg["%s|%s" % (r["matchId"], r["market"])] = r
+    for r in ledger:
+        if r.get("status") != "offen":
+            continue
+        e = erg.get(r["k"])
+        if e is not None and isinstance(e.get("win"), bool):
+            r.update(status="abgerechnet", win=e["win"], settledAt=now.isoformat())
+            if r.get("schlussPreis") is None:
+                r["schlussPreis"] = e.get("odd")
+    return ledger[-2000:]
+
+
+def schublade_gehalten(ledger=None):
+    """ROI der GEHALTENEN Treffer zum Haltepreis — die Menge, die die Sektion wirklich zeigt.
+
+    Getrennt von schublade(): die misst die Schluss-Definition von betfair_track_record. Beide
+    nebeneinander im Freigabe-Register beantworten die Frage, ob das Halten die Kante kostet."""
+    rows = ledger if ledger is not None else _load(LEDGER_FILE, [])
+    renditen, letzter = [], None
+    for r in (rows or []):
+        if r.get("status") != "abgerechnet":
+            continue
+        o = r.get("haltePreis")
+        if not isinstance(o, (int, float)) or not (MIN_QUOTE <= o <= MAX_QUOTE):
+            continue
+        renditen.append((o - 1.0) if r.get("win") else -1.0)
+        s = r.get("settledAt")
+        if s and (letzter is None or s > letzter):
+            letzter = s
+    return {"renditen": renditen, "clvs": [], "letzter": letzter}
+
+
+def baue(state=None, consensus=None, track=None, streaks=None, now=None,
+         latch_state=None) -> dict:
+    now = now or _now()
+    if latch_state is None:
+        latch_state = _load(STATE_FILE, {})
     state = state if state is not None else _load("betfair_track_state.json")
     cons = consensus if consensus is not None else _load("betfair_consensus.json")
     track = track if track is not None else _load("betfair_track_record.json")
@@ -203,15 +323,25 @@ def baue(state=None, consensus=None, track=None, streaks=None, now=None) -> dict
             continue                       # belegt verlierender Eimer gehört nicht in eine Empfehlung
         zeilen.append(z)
 
-    zeilen.sort(key=lambda r: (r["stufe"], -r["rang"]))
+    # Halten statt live zeigen — Begründung oben bei STATE_FILE.
+    latch = _halten((latch_state or {}).get("latch") or {}, zeilen, now)
+    latch, angepfiffen = _faellig(latch, now)
+
+    gezeigt = sorted(latch.values(), key=lambda r: (r["stufe"], -(r.get("rang") or 0)))
+    for z in gezeigt:
+        za = _ts(z.get("zuletztAktiv"))
+        z["aktiv"] = bool(za and (now - za).total_seconds() <= AKTIV_FENSTER_MIN * 60)
     return {
         "generatedAt": now.isoformat(),
-        "stufe1": [z for z in zeilen if z["stufe"] == 1],
-        "stufe2": [z for z in zeilen if z["stufe"] == 2],
+        "stufe1": [z for z in gezeigt if z["stufe"] == 1],
+        "stufe2": [z for z in gezeigt if z["stufe"] == 2],
+        "_latch": latch, "_angepfiffen": angepfiffen,
         "regeln": {
             "markt": MARKT, "minAnteil": CONC_THRESHOLD, "minZuflussEur": INFLOW_MIN_EUR,
             "quote": [MIN_QUOTE, MAX_QUOTE], "polyMinAnteilPct": POLY_MIN_ANTEIL,
-            "text": "Stufe 2 = Geldanteil ≥%d%% UND frischer Zufluss ≥€%d UND Quote zieht mit. "
+            "haeltBisAnpfiff": True,
+            "text": "Stufe 2 = Geldanteil ≥%d%% UND frischer Zufluss ≥€%d UND Quote zieht mit — "
+                    "einmal erfüllt, bleibt der Treffer bis zum Anpfiff stehen. "
                     "Stufe 1 = zusätzlich Poly-Geld ≥%d%% und Pinnacle-Favorit auf derselben Seite."
                     % (round(CONC_THRESHOLD * 100), INFLOW_MIN_EUR, POLY_MIN_ANTEIL),
         },
@@ -249,8 +379,16 @@ def schublade(results=None):
 
 def main():
     out = baue()
+    latch = out.pop("_latch", {})
+    angepfiffen = out.pop("_angepfiffen", [])
+    (BASE / STATE_FILE).write_text(json.dumps({"latch": latch}, ensure_ascii=False, indent=1),
+                                   encoding="utf-8")
+    led = _ledger_fortschreiben(_load(LEDGER_FILE, []), angepfiffen)
+    (BASE / LEDGER_FILE).write_text(json.dumps(led, ensure_ascii=False, indent=1), encoding="utf-8")
     (BASE / OUT_FILE).write_text(json.dumps(out, ensure_ascii=False, indent=1), encoding="utf-8")
-    print("killer: Stufe1=%d Stufe2=%d" % (len(out["stufe1"]), len(out["stufe2"])))
+    ab = sum(1 for r in led if r.get("status") == "abgerechnet")
+    print("killer: Stufe1=%d Stufe2=%d · gehalten %d · Ledger %d (%d abgerechnet)"
+          % (len(out["stufe1"]), len(out["stufe2"]), len(latch), len(led), ab))
 
 
 if __name__ == "__main__":

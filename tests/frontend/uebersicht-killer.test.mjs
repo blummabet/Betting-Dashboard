@@ -32,11 +32,13 @@ function render(killer, freigabe) {
 }
 
 const ko = () => new Date(Date.now() + 2 * 3600e3).toISOString();
+const jetzt = new Date().toISOString();
 const zeile = (home, extra = {}) => ({
   matchId: 'm' + home, home, away: 'Gegner', league: 'English Premier League', kickoff: ko(),
-  markt: 'Match Odds', seite: 'home', name: home, odd: 1.8, anteilPct: 74,
+  markt: 'Match Odds', seite: 'home', name: home, odd: 1.8, haltePreis: 1.8, anteilPct: 74,
   stufe: 2, verstaerker: [], rang: 55, track: null, streak: null, poly: null,
-  pinnMovePP: null, wertVsPinn: null, ...extra,
+  pinnMovePP: null, wertVsPinn: null,
+  gehaltenSeit: jetzt, zuletztAktiv: jetzt, aktiv: true, ...extra,
 });
 
 const REG = (status, extra = {}) => ({
@@ -88,4 +90,31 @@ test('leer heißt leer — keine erfundene Zeile, aber die Regel bleibt lesbar',
     REG('geprueft'));
   assert.match(html, /Gerade deckt sich nichts/);
   assert.match(html, /≥65%/);
+});
+
+// 30.08.2026 (Lucas: „das wechselt auch ohne dass ich die Seite aktualisiere"): der Treffer
+// wird bis zum Anpfiff gehalten. Damit das nicht wie ein eingefrorener Fehler aussieht, muss
+// die Zeile zeigen, seit wann sie steht und ob die Bedingungen gerade noch anliegen.
+test('eine laufende Zeile ist von einer gehaltenen unterscheidbar', () => {
+  const alt = new Date(Date.now() - 90 * 60000).toISOString();
+  const html = render({ stufe1: [], stufe2: [
+    zeile('Arsenal'),
+    zeile('Chelsea', { aktiv: false, zuletztAktiv: alt, gehaltenSeit: alt }),
+  ] }, REG('geprueft'));
+  assert.match(html, /läuft gerade/);
+  assert.match(html, /gehalten seit/);
+  assert.match(html, /zuletzt aktiv/);
+});
+
+test('der Haltepreis bleibt stehen, die weggelaufene Quote steht daneben', () => {
+  const html = render({ stufe1: [], stufe2: [zeile('Arsenal', { haltePreis: 1.80, odd: 2.40 })] },
+    REG('geprueft'));
+  assert.match(html, /@1\.80/, 'gezeigt wurde der Preis beim Treffer');
+  assert.match(html, /jetzt 2\.40/, 'dass die Quote weggelaufen ist, darf nicht verschwiegen werden');
+});
+
+test('steht die Quote noch, wird kein Zweitpreis danebengeklebt', () => {
+  const html = render({ stufe1: [], stufe2: [zeile('Arsenal', { haltePreis: 1.80, odd: 1.81 })] },
+    REG('geprueft'));
+  assert.doesNotMatch(html, /jetzt 1\.81/);
 });

@@ -1319,7 +1319,7 @@
     var f = _md.data && _md.data.freigabe;
     var zeilen = (f && (f.alle || f.zeilen)) || [];
     for (var i = 0; i < zeilen.length; i++) {
-      if (String(zeilen[i].schublade || '').indexOf('Konjunktion') === 0) return zeilen[i];
+      if (String(zeilen[i].schublade || '').indexOf('Konjunktion') === 0) return zeilen[i];   // Schluss-Stand ODER gehalten — die erste passt
     }
     return null;
   }
@@ -1337,7 +1337,7 @@
     var st = _mdKillerStand(), bad = _mdKillerBadge(st);
     var kopf = '<div class="md-kl-h"><span style="font-size:16px">🔒</span>' +
       '<span class="md-kl-t">Mehrfach gedeckt</span>' +
-      '<span class="md-kl-s">nur Spiele, hinter denen mehrere Geldströme gleichzeitig stehen</span>' +
+      '<span class="md-kl-s">nur Spiele, hinter denen mehrere Geldströme gleichzeitig stehen — Treffer bleiben bis zum Anpfiff stehen</span>' +
       '<span class="md-kl-st" style="background:' + bad.bg + ';color:' + bad.col + '">' + bad.txt + '</span></div>';
     if (!s1.length && !s2.length) {
       var regel = (k && k.regeln && k.regeln.text) || 'Geldanteil, frischer Zufluss und mitziehende Quote müssen zusammenfallen.';
@@ -1346,6 +1346,10 @@
         esc(regel) + '</div></section>';
     }
     var now = Date.now();
+    var uhr = function (iso) {
+      var t = iso ? new Date(String(iso).replace('Z', '+00:00')) : null;
+      return t && isFinite(t) ? ('0' + t.getHours()).slice(-2) + ':' + ('0' + t.getMinutes()).slice(-2) : null;
+    };
     var row = function (x) {
       var k2 = x.kickoff ? Date.parse(String(x.kickoff).replace('Z', '+00:00')) : NaN;
       var min = isFinite(k2) ? Math.max(0, Math.round((k2 - now) / 60000)) : null;
@@ -1357,8 +1361,27 @@
       (x.verstaerker || []).forEach(function (v) { chips.push('<span class="md-kl-c on">' + esc(v.text) + '</span>'); });
       // Was FEHLT, wird auch gezeigt — sonst sieht Stufe 2 aus wie Stufe 1.
       if (!x.poly) chips.push('<span class="md-kl-c off">kein Poly-Markt</span>');
-      var oddTxt = (x.odd != null) ? ' <span class="q">@' + (+x.odd).toFixed(2) + '</span>' : '';
-      return '<div class="md-kl-row"><div class="md-kl-l1">' +
+      // 30.08.2026 (Lucas: „vorhin stand da Inter und Freiburg, jetzt Man Utd, und nun wieder
+      // Inter — das wechselt auch ohne dass ich die Seite aktualisiere"): der Treffer wird jetzt
+      // bis zum Anpfiff gehalten. Damit das nicht wie ein eingefrorener Fehler aussieht, steht
+      // dran, SEIT WANN er steht und ob die Bedingungen gerade noch anliegen.
+      var seit = uhr(x.gehaltenSeit);
+      var stand = x.aktiv
+        ? '<span class="md-kl-c on">● läuft gerade' + (seit ? ' · seit ' + seit : '') + '</span>'
+        : '<span class="md-kl-c">gehalten' + (seit ? ' seit ' + seit : '') +
+          (uhr(x.zuletztAktiv) ? ' · zuletzt aktiv ' + uhr(x.zuletztAktiv) : '') + '</span>';
+      chips.unshift(stand);
+      // Der Haltepreis ist der Preis, den die Sektion gezeigt hat. Läuft die Quote seither weg,
+      // gehört das dazu — sonst empfiehlt sie einen Preis, den es nicht mehr gibt.
+      var hp = x.haltePreis, jetzt = x.odd, oddTxt = '';
+      if (hp != null) {
+        oddTxt = ' <span class="q">@' + (+hp).toFixed(2) + '</span>';
+        if (jetzt != null && Math.abs(+jetzt - +hp) >= 0.02) {
+          oddTxt += ' <span class="q" style="color:' + ((+jetzt > +hp) ? A.good : A.gold) + '">(jetzt ' +
+            (+jetzt).toFixed(2) + ')</span>';
+        }
+      }
+      return '<div class="md-kl-row"' + (x.aktiv ? '' : ' style="opacity:.78"') + '><div class="md-kl-l1">' +
         '<span class="md-kl-nm">' + esc(team(x.home)) + ' <span style="color:var(--mi3);font-weight:400">v</span> ' + esc(team(x.away)) + '</span>' +
         (ko ? '<span class="md-jz-ko">⏱ ' + ko + '</span>' : '') + '</div>' +
         '<div class="md-kl-pick"><span style="color:var(--mi3)">→</span> <b>' + esc(x.name || '—') + '</b>' + oddTxt + '</div>' +
