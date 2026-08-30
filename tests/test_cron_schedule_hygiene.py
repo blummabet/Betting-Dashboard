@@ -191,6 +191,80 @@ class TestLastBleibtImRahmen:
         assert "actions: read" in src, f"{datei}: run_health.py braucht actions:read"
 
 
+class TestDigestZustandUeberlebtDenLauf:
+    """30.08.2026 (Lucas-Checkup): der Digest ging raus, aber `lastDigestDate` blieb auf dem
+    Vortag stehen — der Lauf starb, bevor er am Jobende committen konnte. Der Versand steht
+    frueh im Job, der Commit ganz hinten; alles dazwischen ist Risiko.
+
+    Die Folge war nicht kosmetisch: notify_new_picks prueft `lastDigestDate == heute`. Steht dort
+    ein alter Tag, haelt es sich fuer VOR dem Digest, setzt stumm die Basis und sendet den ganzen
+    Tag nichts — genau die Luecke, fuer die die Intraday-Noti gebaut wurde.
+
+    Dieselbe Lehre wie am 27.08. („Digest kam heute frueh nicht"), eine Ebene hoeher: damals
+    fehlte die Datei in der Commit-Liste, jetzt kam die Commit-Liste zu spaet."""
+
+    DATEIEN = ["update-liga.yml", "update-mls.yml"]
+
+    def _steps(self, datei):
+        yaml = pytest.importorskip('yaml', reason='PyYAML fehlt')
+        with open(os.path.join(WF, datei), encoding="utf-8") as f:
+            jobs = (yaml.safe_load(f).get("jobs") or {}).values()
+        raus = []
+        for job in jobs:
+            raus.extend((job or {}).get("steps") or [])
+        return raus
+
+    @staticmethod
+    def _sendet(step):
+        """Ruft dieser Step telegram_wm.py wirklich AUF? Ein Treffer im Kommentar zaehlt nicht —
+        der Kommentar vom 27.08. steht ausgerechnet im finalen Commit-Step."""
+        for zeile in str(step.get("run") or "").splitlines():
+            z = zeile.strip()
+            if z.startswith("#"):
+                continue
+            if re.match(r"^python3? telegram_wm\.py\b", z):
+                return True
+        return False
+
+    @pytest.mark.parametrize("datei", DATEIEN)
+    def test_nach_jedem_versand_wird_der_zustand_gesichert(self, datei):
+        steps = self._steps(datei)
+        sender = [i for i, s in enumerate(steps) if self._sendet(s)]
+        assert sender, f"{datei}: kein telegram_wm.py-Versand gefunden — Test zeigt ins Leere"
+        for i in sender:
+            folge = steps[i + 1] if i + 1 < len(steps) else {}
+            assert "Digest-Zustand sofort sichern" in str(folge.get("name") or ""), (
+                f"{datei}: nach '{steps[i].get('name')}' folgt '{folge.get('name')}' statt der "
+                f"Zustands-Sicherung — ein Abbruch danach kostet die Intraday-Noti fuer den Tag")
+
+    @pytest.mark.parametrize("datei", DATEIEN)
+    def test_die_sicherung_laeuft_auch_nach_einem_fehler(self, datei):
+        """Ohne `if: always()` liefe sie genau dann nicht, wenn der Versand geknirscht hat."""
+        for s in self._steps(datei):
+            if "Digest-Zustand sofort sichern" in str(s.get("name") or ""):
+                assert str(s.get("if", "")).strip() == "always()", \
+                    f"{datei}: Zustands-Sicherung ohne `if: always()`"
+
+    @pytest.mark.parametrize("datei", DATEIEN)
+    def test_die_sicherung_macht_den_lauf_nicht_rot(self, datei):
+        for s in self._steps(datei):
+            if "Digest-Zustand sofort sichern" in str(s.get("name") or ""):
+                assert s.get("continue-on-error") is True, \
+                    f"{datei}: ein fehlgeschlagener Push darf den Lauf nicht kippen"
+
+    @pytest.mark.parametrize("datei", DATEIEN)
+    def test_gesichert_wird_genau_der_zustand_der_verloren_ging(self, datei):
+        pre = "liga" if "liga" in datei else "mls"
+        for s in self._steps(datei):
+            if "Digest-Zustand sofort sichern" in str(s.get("name") or ""):
+                run = str(s.get("run") or "")
+                assert f"{pre}_pick_announce_state.json" in run, "lastDigestDate war der Verlust"
+                assert f"{pre}_telegram_sent.json" in run, "sonst droht ein Doppel-Post"
+                assert f"{pre}-telegram-log.json" in run
+                return
+        pytest.fail(f"{datei}: keine Zustands-Sicherung gefunden")
+
+
 class TestMacRunnerDisziplin:
     """28.08.2026 (Lucas: „mmn ist polymarket tot").
 

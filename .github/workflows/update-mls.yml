@@ -220,6 +220,39 @@ jobs:
           TG_WM_MODE:       morning
         run: python telegram_wm.py || true
 
+      # 30.08.2026 (Lucas-Checkup): der Digest ging heute früh RAUS, aber `lastDigestDate` blieb
+      # auf dem 29.08. stehen — der Lauf starb, bevor er am Jobende committen konnte. Der
+      # Versand steht früh im Job, der Commit ganz hinten; alles dazwischen ist Risiko.
+      #
+      # Die Folge ist nicht kosmetisch: notify_new_picks prüft `lastDigestDate == heute`. Steht
+      # dort ein alter Tag, hält es sich für VOR dem Digest, setzt stumm die Basis und sendet
+      # den ganzen Tag nichts. Genau die Lücke, für die die Intraday-Noti gebaut wurde.
+      #
+      # Das ist dieselbe Lehre wie am 27.08. („Digest kam heute früh nicht"), eine Ebene höher:
+      # damals fehlte die Datei in der Commit-Liste, jetzt kommt die Commit-Liste zu spät.
+      # Deshalb: die drei kleinen Zustandsdateien direkt nach dem Senden sichern. `if: always()`,
+      # damit ein Fehler im Sende-Schritt den Zustand nicht mitreißt.
+      - name: 💾 Digest-Zustand sofort sichern (Digest)
+        if: always()
+        continue-on-error: true
+        run: |
+          git add mls_pick_announce_state.json 2>/dev/null || true
+          git add mls_telegram_sent.json 2>/dev/null || true
+          git add mls-telegram-log.json 2>/dev/null || true
+          git diff --staged --quiet && exit 0
+          git commit -m "mls: Digest-Zustand (Digest) [skip ci]" || exit 0
+          for attempt in 1 2 3; do
+            git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+            CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null)
+            if [ -n "$CONFLICTS" ]; then
+              echo "$CONFLICTS" | while read cf; do git checkout --ours -- "$cf"; git add "$cf"; done
+              git diff --staged --quiet || git commit -m "auto-resolve merge conflicts"
+            fi
+            git push 2>&1 && exit 0
+            echo "  Push $attempt fehlgeschlagen — retry…"; sleep $((attempt * 3))
+          done
+          echo "  Digest-Zustand konnte nicht gepusht werden — der Jobende-Commit versucht es erneut."
+
       - name: 🎬 MLS TikTok Preview-Cards (PRE-Match)
         if: github.event.schedule == '11 19 * * *' || github.event_name == 'workflow_dispatch'
         env:
@@ -237,6 +270,39 @@ jobs:
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
           TG_WM_MODE:       recap
         run: python telegram_wm.py || true
+
+      # 30.08.2026 (Lucas-Checkup): der Digest ging heute früh RAUS, aber `lastDigestDate` blieb
+      # auf dem 29.08. stehen — der Lauf starb, bevor er am Jobende committen konnte. Der
+      # Versand steht früh im Job, der Commit ganz hinten; alles dazwischen ist Risiko.
+      #
+      # Die Folge ist nicht kosmetisch: notify_new_picks prüft `lastDigestDate == heute`. Steht
+      # dort ein alter Tag, hält es sich für VOR dem Digest, setzt stumm die Basis und sendet
+      # den ganzen Tag nichts. Genau die Lücke, für die die Intraday-Noti gebaut wurde.
+      #
+      # Das ist dieselbe Lehre wie am 27.08. („Digest kam heute früh nicht"), eine Ebene höher:
+      # damals fehlte die Datei in der Commit-Liste, jetzt kommt die Commit-Liste zu spät.
+      # Deshalb: die drei kleinen Zustandsdateien direkt nach dem Senden sichern. `if: always()`,
+      # damit ein Fehler im Sende-Schritt den Zustand nicht mitreißt.
+      - name: 💾 Digest-Zustand sofort sichern (Recap)
+        if: always()
+        continue-on-error: true
+        run: |
+          git add mls_pick_announce_state.json 2>/dev/null || true
+          git add mls_telegram_sent.json 2>/dev/null || true
+          git add mls-telegram-log.json 2>/dev/null || true
+          git diff --staged --quiet && exit 0
+          git commit -m "mls: Digest-Zustand (Recap) [skip ci]" || exit 0
+          for attempt in 1 2 3; do
+            git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+            CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null)
+            if [ -n "$CONFLICTS" ]; then
+              echo "$CONFLICTS" | while read cf; do git checkout --ours -- "$cf"; git add "$cf"; done
+              git diff --staged --quiet || git commit -m "auto-resolve merge conflicts"
+            fi
+            git push 2>&1 && exit 0
+            echo "  Push $attempt fehlgeschlagen — retry…"; sleep $((attempt * 3))
+          done
+          echo "  Digest-Zustand konnte nicht gepusht werden — der Jobende-Commit versucht es erneut."
 
       - name: 🎬 MLS TikTok Review-Cards (POST-Match)
         if: github.event.schedule == '11 7 * * *'
