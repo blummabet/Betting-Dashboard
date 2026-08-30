@@ -1,25 +1,25 @@
 {
-"generatedAt": "2026-08-30T20:51:01.285416+00:00",
+"generatedAt": "2026-08-30T21:51:15.709398+00:00",
 "byVerdict": {
 "konsens": {
-"n": 644,
-"wins": 525,
-"hitRate": 0.8152,
-"polyN": 603,
-"polyWins": 474,
-"polyHitRate": 0.7861,
-"pinnN": 51,
-"pinnHitRate": 0.7647
+"n": 648,
+"wins": 529,
+"hitRate": 0.8164,
+"polyN": 607,
+"polyWins": 477,
+"polyHitRate": 0.7858,
+"pinnN": 52,
+"pinnHitRate": 0.7692
 },
 "uneinig": {
-"n": 221,
+"n": 222,
 "wins": 69,
-"hitRate": 0.3122,
-"polyN": 198,
+"hitRate": 0.3108,
+"polyN": 199,
 "polyWins": 56,
-"polyHitRate": 0.2828,
-"pinnN": 111,
-"pinnHitRate": 0.5946
+"polyHitRate": 0.2814,
+"pinnN": 112,
+"pinnHitRate": 0.5982
 },
 "teil": {
 "n": 9,
@@ -49,14 +49,19 @@
 "hitRate": 0.6207
 },
 "Spanish La Liga": {
-"n": 27,
-"wins": 19,
-"hitRate": 0.7037
+"n": 28,
+"wins": 20,
+"hitRate": 0.7143
 },
 "Argentinian Primera Division": {
 "n": 22,
 "wins": 10,
 "hitRate": 0.4545
+},
+"Brazilian Serie A": {
+"n": 22,
+"wins": 14,
+"hitRate": 0.6364
 },
 "English Football League Cup": {
 "n": 22,
@@ -73,20 +78,25 @@
 "wins": 19,
 "hitRate": 0.8636
 },
-"Brazilian Serie A": {
-"n": 21,
-"wins": 13,
-"hitRate": 0.619
-},
 "German Cup": {
 "n": 21,
 "wins": 18,
 "hitRate": 0.8571
 },
+"Dutch Eredivisie": {
+"n": 19,
+"wins": 15,
+"hitRate": 0.7895
+},
 "English Premier League": {
 "n": 19,
 "wins": 13,
 "hitRate": 0.6842
+},
+"Turkish Super League": {
+"n": 19,
+"wins": 12,
+"hitRate": 0.6316
 },
 "UEFA Europa League Qualifiers": {
 "n": 19,
@@ -98,11 +108,6 @@
 "wins": 11,
 "hitRate": 0.6111
 },
-"Dutch Eredivisie": {
-"n": 18,
-"wins": 14,
-"hitRate": 0.7778
-},
 "Italian Serie A": {
 "n": 18,
 "wins": 15,
@@ -113,15 +118,15 @@
 "wins": 13,
 "hitRate": 0.7222
 },
-"Turkish Super League": {
-"n": 18,
-"wins": 11,
-"hitRate": 0.6111
-},
 "French Ligue 1": {
 "n": 17,
 "wins": 9,
 "hitRate": 0.5294
+},
+"Portuguese Primeira Liga": {
+"n": 17,
+"wins": 13,
+"hitRate": 0.7647
 },
 "South Korean K1 League": {
 "n": 17,
@@ -137,11 +142,6 @@
 "n": 16,
 "wins": 11,
 "hitRate": 0.6875
-},
-"Portuguese Primeira Liga": {
-"n": 16,
-"wins": 13,
-"hitRate": 0.8125
 },
 "German Bundesliga 2": {
 "n": 15,
@@ -526,25 +526,120 @@
 },
 "byStrength": {
 "strong": {
-"n": 507,
-"wins": 411,
-"hitRate": 0.8107
+"n": 508,
+"wins": 412,
+"hitRate": 0.811
 },
 "weak": {
-"n": 334,
-"wins": 168,
-"hitRate": 0.503
+"n": 338,
+"wins": 171,
+"hitRate": 0.5059
 }
 },
 "divergence": {
-"n": 221,
+"n": 222,
 "betfairWins": 69,
-"betfairRate": 0.3122,
-"polyN": 198,
+"betfairRate": 0.3108,
+"polyN": 199,
 "polyWins": 56,
-"polyRate": 0.2828
+"polyRate": 0.2814
 },
 "recent": [
+{
+"matchId": "35965983",
+"home": "Celta Vigo",
+"away": "Athletic Bilbao",
+"league": "Spanish La Liga",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Athletic Bilbao",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-08-30T19:30:00Z",
+"settledAt": "2026-08-30T21:36:02.233356+00:00"
+},
+{
+"matchId": "35976837",
+"home": "Samsunspor",
+"away": "Fenerbahce",
+"league": "Turkish Super League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Fenerbahce",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-08-30T18:30:00Z",
+"settledAt": "2026-08-30T21:36:02.233356+00:00"
+},
+{
+"matchId": "35979539",
+"home": "Famalicao",
+"away": "Gil Vicente",
+"league": "Portuguese Primeira Liga",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Famalicao",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-08-30T19:30:00Z",
+"settledAt": "2026-08-30T21:21:03.937854+00:00"
+},
+{
+"matchId": "35965458",
+"home": "Cambuur Leeuwarden",
+"away": "FC Twente",
+"league": "Dutch Eredivisie",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "FC Twente",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+4
+],
+"kickoff": "2026-08-30T18:00:00Z",
+"settledAt": "2026-08-30T21:06:09.517990+00:00"
+},
+{
+"matchId": "35953356",
+"home": "Corinthians",
+"away": "Santos",
+"league": "Brazilian Serie A",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Santos",
+"polySide": "home",
+"winner": "away",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-08-30T19:00:00Z",
+"settledAt": "2026-08-30T21:06:09.517990+00:00"
+},
 {
 "matchId": "35975243",
 "home": "Monaco",
@@ -1209,107 +1304,12 @@
 ],
 "kickoff": "2026-08-30T12:30:00Z",
 "settledAt": "2026-08-30T15:30:37.488968+00:00"
-},
-{
-"matchId": "35974855",
-"home": "Paris FC",
-"away": "Nice",
-"league": "French Ligue 1",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Paris FC",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-0
-],
-"kickoff": "2026-08-30T13:00:00Z",
-"settledAt": "2026-08-30T15:05:31.117914+00:00"
-},
-{
-"matchId": "35974597",
-"home": "AIK",
-"away": "Hammarby",
-"league": "Swedish Allsvenskan",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Hammarby",
-"polySide": "home",
-"winner": "home",
-"moneyWin": false,
-"polyWin": true,
-"ftScore": [
-3,
-2
-],
-"kickoff": "2026-08-30T12:00:00Z",
-"settledAt": "2026-08-30T15:05:31.117914+00:00"
-},
-{
-"matchId": "35965486",
-"home": "Silkeborg",
-"away": "Midtjylland",
-"league": "Danish Superliga",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Midtjylland",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-08-30T12:00:00Z",
-"settledAt": "2026-08-30T15:05:31.117914+00:00"
-},
-{
-"matchId": "35974355",
-"home": "Sion",
-"away": "Lugano",
-"league": "Swiss Super League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Lugano",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-08-30T12:00:00Z",
-"settledAt": "2026-08-30T15:05:31.117914+00:00"
-},
-{
-"matchId": "35951848",
-"home": "St Pauli",
-"away": "Kaiserslautern",
-"league": "German Bundesliga 2",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Kaiserslautern",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-08-30T11:30:00Z",
-"settledAt": "2026-08-30T14:35:27.885297+00:00"
 }
 ],
 "global": {
-"n": 874,
-"wins": 597,
-"hitRate": 0.6831
+"n": 879,
+"wins": 601,
+"hitRate": 0.6837
 },
-"pending": 12
+"pending": 10
 }
