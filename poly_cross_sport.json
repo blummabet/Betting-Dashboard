@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-30T19:46:22.118483+00:00",
+ "generatedAt": "2026-08-30T20:16:25.083007+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,15 +9,15 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 524,
- "pinnKeys": 298,
+ "polyRowsSeen": 526,
+ "pinnKeys": 296,
  "matched": 224,
  "footballRows": 204,
- "crossRows": 320,
+ "crossRows": 322,
  "footballSkippedStale": 60,
  "seenBySport": {
   "americanfootball_nfl": 128,
-  "baseball_mlb": 86,
+  "baseball_mlb": 88,
   "icehockey_nhl": 74,
   "boxing_boxing": 32,
   "soccer_mls": 39,
@@ -30,10 +30,38 @@
   "soccer_liga": 165
  },
  "trackRecord": {
-  "tracked": 259,
-  "converged": 62
+  "tracked": 251,
+  "converged": 60
  },
  "discrepancies": [
+  {
+   "id": "baseball_mlb|atlantabraves-coloradorockies|coloradorockies",
+   "sport": "baseball_mlb",
+   "event": "Colorado Rockies vs Atlanta Braves",
+   "market": "Moneyline",
+   "outcome": "Colorado Rockies",
+   "polyPP": 14.5,
+   "pinnPP": 39.8,
+   "gapPP": -25.3,
+   "vol": 436518,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -12.06,
+   "firstSeen": "2026-08-29T21:57:34.364963+00:00"
+  },
+  {
+   "id": "baseball_mlb|atlantabraves-coloradorockies|atlantabraves",
+   "sport": "baseball_mlb",
+   "event": "Colorado Rockies vs Atlanta Braves",
+   "market": "Moneyline",
+   "outcome": "Atlanta Braves",
+   "polyPP": 85.5,
+   "pinnPP": 60.2,
+   "gapPP": 25.3,
+   "vol": 436518,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -12.06,
+   "firstSeen": "2026-08-29T21:57:34.364963+00:00"
+  },
   {
    "id": "soccer_liga|marseille-monaco|hw",
    "sport": "soccer_liga",
@@ -131,34 +159,6 @@
    "richtung": "Poly zu hoch → faden",
    "convergePP": 0.0,
    "firstSeen": "2026-08-30T19:27:48.586694+00:00"
-  },
-  {
-   "id": "baseball_mlb|atlantabraves-coloradorockies|coloradorockies",
-   "sport": "baseball_mlb",
-   "event": "Colorado Rockies vs Atlanta Braves",
-   "market": "Moneyline",
-   "outcome": "Colorado Rockies",
-   "polyPP": 30.5,
-   "pinnPP": 24.3,
-   "gapPP": 6.18,
-   "vol": 389852,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": 7.06,
-   "firstSeen": "2026-08-29T21:57:34.364963+00:00"
-  },
-  {
-   "id": "baseball_mlb|atlantabraves-coloradorockies|atlantabraves",
-   "sport": "baseball_mlb",
-   "event": "Colorado Rockies vs Atlanta Braves",
-   "market": "Moneyline",
-   "outcome": "Atlanta Braves",
-   "polyPP": 69.5,
-   "pinnPP": 75.7,
-   "gapPP": -6.18,
-   "vol": 389852,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": 7.06,
-   "firstSeen": "2026-08-29T21:57:34.364963+00:00"
   }
  ]
 }
