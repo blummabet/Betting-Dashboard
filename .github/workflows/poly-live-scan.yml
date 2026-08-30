@@ -17,6 +17,7 @@ on:
 
 permissions:
   contents: write
+  actions: read          # run_health.py liest die Steps DIESES Laufs
 
 concurrency:
   group: poly-live-scan
@@ -105,3 +106,28 @@ jobs:
             sleep "$SLEEP"
           done
           echo "Loop beendet nach $ITER Iterationen — naechster stuendlicher Trigger uebernimmt."
+
+      # 30.08.2026 (Lucas-Checkup): die Übersicht meldete selbst „letzte Erfassung vor 3 h — der
+      # Live-Scan (Mac-Runner) lief zuletzt nicht", und im Repo stand nichts, woran man sähe warum:
+      # run_health.py lief hier nie — derselbe blinde Fleck wie bei den MLS-Workflows.
+      #
+      # Dieser Workflow committet INNERHALB der Loop-Schleife, es gibt also keinen eigenen
+      # Commit-Step, vor den der Wächter passen würde. Er hängt deshalb hinten dran und schreibt
+      # seine Datei selbst weg. `if: always()` ist hier besonders wichtig: der Loop wird vom
+      # nächsten stündlichen Start planmäßig GECANCELT (cancel-in-progress) und läuft auch in den
+      # 72-Minuten-Backstop — genau die Fälle, über die wir sonst nie etwas erfahren.
+      - name: 🩺 Lauf-Gesundheit (verschluckte Fehler sichtbar machen)
+        if: always()
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN:            ${{ secrets.GITHUB_TOKEN }}
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+        run: |
+          "${POLY_PYTHON:-python3}" run_health.py --slug poly-live-scan || true
+          git add health/poly-live-scan.json 2>/dev/null || true
+          git diff --staged --quiet || {
+            git commit -m "🩺 Live-Scan-Gesundheit $(date -u +'%d.%m.%Y %H:%M') UTC [skip ci]" || true
+            git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+            git push 2>&1 || echo "  Push der Gesundheitsdatei fehlgeschlagen — nicht kritisch"
+          }

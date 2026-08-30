@@ -12,10 +12,13 @@ function load() {
   w.eval(readFileSync(MOD, 'utf8'));
   return w;
 }
+// 30.08.2026: die Fixtures brauchen jetzt einen Anpfiff. Vorher zeigten „Beste Cards" und
+// „Pinnacle-Steam" auch Spiele, die seit Tagen gespielt waren (FC Cincinnati: 179 Stunden her);
+// die Filter sind fail-closed — ohne Zeitangabe wird nicht geraten.
 function seed(w) {
   w._mdState.data = {
     liga: { groups: { g: { fixtures: [
-      { home: 'Bayern', away: 'Dortmund', league: 'Bundesliga', picks: [
+      { home: 'Bayern', away: 'Dortmund', league: 'Bundesliga', kickoff: new Date(Date.now() + 4 * 3600e3).toISOString(), picks: [
         { market: 'Heimsieg', verdict: 'BET', convictionScore: 8, edgePP: 5, odds: 1.8, source: 'steam', steamMovePP: 4.2 } ] } ] } } },
     mls: null,
     ligaStreaks: { streaks: [ { team: 'Bournemouth', market: 'Ungeschlagen', length: 15, continuation: { state: 'intakt', ratePct: 100 }, leagueName: 'Premier League' } ] },
@@ -68,7 +71,7 @@ test('der Triple-Konsens-Hero ist entfernt und kommt nicht durch die Hintertür 
   const w = load();
   w._mdState.data = {
     liga: { groups: { g: { fixtures: [
-      { home:'Bayern', away:'Dortmund', league:'Bundesliga', picks:[
+      { home:'Bayern', away:'Dortmund', league:'Bundesliga', kickoff: new Date(Date.now() + 4 * 3600e3).toISOString(), picks:[
         { market:'Heimsieg', verdict:'BET', consensus:{ side:'home', n:4, spreadPP:3.0, medianPP:58, kind:'konsens',
           sources:{pinnacle:0.58,betfair:0.585,poly:0.60,soft:0.575}, outlier:null, outlierGapPP:2.0 } } ] } ] } } },
     mls:null, ligaStreaks:null, mlsStreaks:null, betfair:null, whales:null,

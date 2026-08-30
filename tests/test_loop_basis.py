@@ -83,16 +83,17 @@ class ClvStrom(unittest.TestCase):
 
 class Nachvollziehbar(unittest.TestCase):
     def test_der_massstab_steht_im_gewicht_drin(self):
-        # Ein Gewicht ohne seinen Nullpunkt ist nicht nachrechenbar.
-        import json
-        from pathlib import Path
-        f = Path(__file__).parent.parent / "mls_signal_weights.json"
-        if not f.exists():
-            self.skipTest("keine MLS-Gewichte im Baum")
-        w = json.loads(f.read_text(encoding="utf-8"))
-        eintrag = next(v for k, v in w.items() if isinstance(v, dict) and "weight" in v)
-        for feld in ("basis", "basisN", "neutral"):
-            self.assertIn(feld, eintrag)
+        """Ein Gewicht ohne seinen Nullpunkt ist nicht nachrechenbar.
+
+        30.08.2026: dieser Test las zuerst mls_signal_weights.json — eine Datei, die die
+        Pipeline im Minutentakt ueberschreibt. Er schlug prompt fehl, sobald ein Runner mit
+        aelterem Stand die Datei neu schrieb. Ein Test darf nicht davon abhaengen, welche
+        Code-Version zuletzt auf einem fremden Rechner lief; geprueft wird der CODE."""
+        import inspect
+        quelle = inspect.getsource(U)
+        for feld in ('"basis":', '"basisN":', '"neutral":'):
+            self.assertIn(feld, quelle,
+                          f"{feld} wird nicht ins Gewicht geschrieben — nicht nachrechenbar")
 
 
 if __name__ == "__main__":

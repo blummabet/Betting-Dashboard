@@ -173,8 +173,13 @@ class TestLastBleibtImRahmen:
                   and crons(f)]
         assert not andere, f"{datei}: Gruppe '{gruppe}' wird auch von getakteten {andere} benutzt"
 
+    # 30.08.2026 (zweiter Checkup): poly-live-scan dazu. Die Übersicht meldete selbst „letzte
+    # Erfassung vor 3 h — der Live-Scan (Mac-Runner) lief zuletzt nicht", und im Repo stand
+    # nichts, woran man sähe warum. Der Workflow committet innerhalb seiner Loop-Schleife, hat
+    # also keinen eigenen Commit-Step — der Wächter hängt hinten dran.
     @pytest.mark.parametrize("datei", ["update-liga.yml", "fetch-liga-odds-dense.yml",
-                                       "update-mls.yml", "fetch-mls-odds-dense.yml"])
+                                       "update-mls.yml", "fetch-mls-odds-dense.yml",
+                                       "poly-live-scan.yml"])
     def test_getakteter_lauf_meldet_seine_gesundheit(self, datei):
         """Lucas am 30.08.: „was soll ich mir bei MLS in den Actions anschauen?"
 

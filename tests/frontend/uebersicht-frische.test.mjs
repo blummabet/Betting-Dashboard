@@ -58,7 +58,7 @@ test('ohne jede Zeitangabe fällt der Kopf auf die Uhr zurück statt zu schweige
 test('die Card-Kachel trägt ihr eigenes Alter', () => {
   const html = render({
     liga: { _meta: { picksUpdatedAt: vor(354) },
-      groups: { g: { fixtures: [{ home: 'Bayern', away: 'Dortmund', league: 'Bundesliga', picks: [
+      groups: { g: { fixtures: [{ home: 'Bayern', away: 'Dortmund', league: 'Bundesliga', kickoff: new Date(Date.now() + 4 * 3600e3).toISOString(), picks: [
         { market: 'Heimsieg', verdict: 'BET', convictionScore: 8, odds: 1.8 }] }] } }, picks: {} },
   });
   const kachel = html.slice(html.indexOf('Beste Cards'), html.indexOf('Beste Streaks'));
@@ -68,7 +68,7 @@ test('die Card-Kachel trägt ihr eigenes Alter', () => {
 test('ein negativer Edge am Steam-Folger wird erklärt, nicht versteckt', () => {
   const mk = (extra) => ({ _meta: { picksUpdatedAt: vor(10) },
     groups: { g: { fixtures: [{ home: 'Bayern', away: 'Dortmund', league: 'Bundesliga',
-      picks: [Object.assign({ market: 'Heimsieg', verdict: 'BET', convictionScore: 8,
+      kickoff: new Date(Date.now() + 4 * 3600e3).toISOString(), picks: [Object.assign({ market: 'Heimsieg', verdict: 'BET', convictionScore: 8,
         odds: 1.67, edgePP: -4 }, extra)] }] } }, picks: {} });
   const mitSteam = render({ liga: mk({ source: 'steam', lateEntry: true }) });
   assert.match(mitSteam, /-4pp/, 'die Zahl bleibt sichtbar');

@@ -31,7 +31,7 @@ function render(killer, freigabe) {
   return html.slice(Math.max(0, von - 400), html.indexOf('md-kl-foot') + 900);
 }
 
-const ko = () => new Date(Date.now() + 2 * 3600e3).toISOString();
+const ko = (h = 2) => new Date(Date.now() + h * 3600e3).toISOString();
 const jetzt = new Date().toISOString();
 const zeile = (home, extra = {}) => ({
   matchId: 'm' + home, home, away: 'Gegner', league: 'English Premier League', kickoff: ko(),
@@ -117,4 +117,35 @@ test('steht die Quote noch, wird kein Zweitpreis danebengeklebt', () => {
   const html = render({ stufe1: [], stufe2: [zeile('Arsenal', { haltePreis: 1.80, odd: 1.81 })] },
     REG('geprueft'));
   assert.doesNotMatch(html, /jetzt 1\.81/);
+});
+
+// 30.08.2026 (Lucas-Checkup, zweite Runde): die Sektion zeigte „FC Utrecht v PSV ⏱ 1m", während
+// die Betfair-Kachel daneben schon „● LIVE" schrieb. killer.py entfernt angepfiffene Zeilen
+// korrekt — aber killer.json ist bis zu 15 Minuten alt, und dazwischen pfeift ein Spiel an.
+// Ein Feed-Zeitstempel ist kein Ereignis-Zeitstempel.
+test('ein bereits angepfiffenes Spiel verschwindet, auch wenn der Feed es noch führt', () => {
+  const html = render({ stufe1: [], stufe2: [
+    zeile('Laeuft', { kickoff: ko(-0.2) }),
+    zeile('Kommt', { kickoff: ko(3) }),
+  ] }, REG('geprueft'));
+  assert.match(html, /Kommt/);
+  assert.doesNotMatch(html, /Laeuft/);
+});
+
+// „Lecce v Roma ⏱ 30h 16m" stand in einer Sektion, die beantworten soll, was JETZT spielbar ist.
+// Der gehaltene Preis von heute Mittag gilt morgen Abend nicht mehr.
+test('ausserhalb des 12-Stunden-Fensters wird nichts empfohlen', () => {
+  const html = render({ stufe1: [], stufe2: [
+    zeile('Morgen', { kickoff: ko(30) }),
+    zeile('Bald', { kickoff: ko(5) }),
+  ] }, REG('geprueft'));
+  assert.match(html, /Bald/);
+  assert.doesNotMatch(html, /Morgen/);
+});
+
+test('faellt dadurch alles weg, sagt die Sektion das ehrlich', () => {
+  const html = render({ stufe1: [], stufe2: [zeile('Morgen', { kickoff: ko(30) })],
+    regeln: { text: 'Geldanteil ≥65% UND frischer Zufluss ≥€2000 UND Quote zieht mit.' } },
+    REG('geprueft'));
+  assert.match(html, /Gerade deckt sich nichts/);
 });

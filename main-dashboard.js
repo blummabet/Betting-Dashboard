@@ -426,11 +426,28 @@
     return out;
   }
   function allFixtures() { return fixtures(_md.data.liga).concat(fixtures(_md.data.mls)); }
+  // 30.08.2026 (Lucas-Checkup): „Beste Cards" zeigte FC Cincinnati — Anpfiff 179 Stunden her,
+  // also seit siebeneinhalb Tagen gespielt. Die Pinnacle-Steam-Kachel zeigte drei von fünf
+  // Zeilen auf bereits gespielten Partien, die oberste seit 331 Stunden (14 Tage). Von 299
+  // Steam-Picks im Bestand sind 192 vorbei — zwei Drittel.
+  //
+  // Ursache: betPicks() und allSharp() liefen über ALLE Fixtures, ohne den Anpfiff zu prüfen.
+  // Jede andere Kachel tut das (Top-Wetten hat ein Fenster, Betfair prüft live) — diese zwei
+  // sind nie nachgezogen worden. Deshalb standen dort auch dieselben Zahlen wie am Vortag: die
+  // Spiele waren durch, die Werte konnten sich gar nicht mehr bewegen.
+  var MD_FIX_MAX_H = 72;   // weiter draußen ist es keine Empfehlung mehr, sondern ein Ausblick
+  function _fxKommend(f, maxH) {
+    var t = Date.parse(String(f && (f.kickoff || f.date) || '').replace('Z', '+00:00'));
+    if (!isFinite(t)) return false;          // ohne Anpfiff nicht raten — fail-closed
+    var h = (t - Date.now()) / 3.6e6;
+    return h > -2 && h <= (maxH || MD_FIX_MAX_H);   // 2h Nachlauf: laufende Spiele bleiben sichtbar
+  }
   function fxLeague(f) { return f.leagueName || f.league || (f.group || ''); }
 
   function betPicks() {
     var rows = [];
     allFixtures().forEach(function (f) {
+      if (!_fxKommend(f)) return;   // s. _fxKommend — gespielte Karten sind keine Empfehlung
       (f.picks || []).forEach(function (p) {
         if (p.verdict === 'BET') rows.push({ f: f, p: p, conv: +p.convictionScore || 0 });
       });
@@ -611,6 +628,7 @@
   function allSharp() {
     var rows = [];
     allFixtures().forEach(function (f) {
+      if (!_fxKommend(f)) return;   // s. _fxKommend — ein Move auf ein gespieltes Spiel ist Historie
       (f.picks || []).forEach(function (p) {
         if (p.source !== 'steam' || p.steamMovePP == null) return;
         var mv = Math.abs(+p.steamMovePP || 0);
@@ -1378,9 +1396,25 @@
     return { txt: '👀 beobachten · n' + st.n + ' · ROI ' + roi + ' (Untergrenze ' + ug + ')',
              col: A.gold, bg: 'rgba(201,133,0,.14)' };
   }
+  // 30.08.2026 (Lucas-Checkup, zweite Runde): die Sektion zeigte FC Utrecht v PSV mit „⏱ 1m",
+  // während die Betfair-HT-Kachel daneben schon „● LIVE" schrieb — das Spiel lief bereits.
+  // killer.py entfernt angepfiffene Zeilen korrekt, aber killer.json ist bis zu 15 Minuten alt;
+  // dazwischen pfeift ein Spiel an und die Zeile steht weiter da. Ein Feed-Zeitstempel ist kein
+  // Ereignis-Zeitstempel — das Frontend muss selbst rechnen.
+  //
+  // Und ein Fenster: „Lecce v Roma ⏱ 30h 16m" stand in einer Sektion, die beantworten soll, was
+  // JETZT spielbar ist. Der gehaltene Preis von heute Mittag gilt morgen Abend nicht mehr.
+  // 12 Stunden, dasselbe Fenster wie nebenan in „Top-Wetten jetzt".
+  var KL_FENSTER_H = 12;
+  function _klSichtbar(z) {
+    var t = Date.parse(String(z && z.kickoff || '').replace('Z', '+00:00'));
+    if (!isFinite(t)) return false;
+    var h = (t - Date.now()) / 3.6e6;
+    return h > 0 && h <= KL_FENSTER_H;
+  }
   function _mdKiller() {
     var k = _md.data && _md.data.killer;
-    var s1 = (k && k.stufe1) || [], s2 = (k && k.stufe2) || [];
+    var s1 = ((k && k.stufe1) || []).filter(_klSichtbar), s2 = ((k && k.stufe2) || []).filter(_klSichtbar);
     var st = _mdKillerStand(), bad = _mdKillerBadge(st);
     var kopf = '<div class="md-kl-h"><span style="font-size:16px">🔒</span>' +
       '<span class="md-kl-t">Mehrfach gedeckt</span>' +
