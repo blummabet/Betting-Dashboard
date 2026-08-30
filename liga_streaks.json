@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "liga",
-    "generatedAt": "2026-08-30T11:52:31.256103+00:00",
+    "generatedAt": "2026-08-30T21:43:43.390983+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -3239,9 +3239,9 @@
         "names": [
           "lead_lag_bias",
           "form_trend",
+          "h2h_pattern",
           "xg_strength",
           "freshness_leg",
-          "topscorer_momentum",
           "move_following"
         ],
         "market": "Über 2.5 Tore"
@@ -3890,9 +3890,9 @@
       "matchupPct": 89
     },
     {
-      "teamId": "49",
-      "team": "Chelsea",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/49.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "40",
+      "team": "Liverpool",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/40.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ENG",
       "leagueName": "Premier League",
       "type": "cards",
@@ -3902,10 +3902,10 @@
       "strong": true,
       "continuation": {
         "state": "intakt",
-        "ratePct": 89,
-        "label": "Eigen 89% + Gegner 42% → 70%"
+        "ratePct": 70,
+        "label": "Eigen 70% + Gegner 67% → 69%"
       },
-      "ratePct": 89,
+      "ratePct": 70,
       "seq": [
         true,
         true,
@@ -3918,35 +3918,35 @@
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 2,
+      "preN": 3,
       "next": {
-        "oppId": "51",
-        "oppName": "Brighton",
-        "atHome": true,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T13:00:00+00:00",
-        "oppRatePct": 42
+        "oppId": "57",
+        "oppName": "Ipswich",
+        "atHome": false,
+        "date": "2026-09-04",
+        "kickoff": "2026-09-04T19:00:00+00:00",
+        "oppRatePct": 67
       },
-      "oppSupportPct": 42,
-      "matchupPct": 70
+      "oppSupportPct": 67,
+      "matchupPct": 69
     },
     {
-      "teamId": "84",
-      "team": "Nice",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/84.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
+      "teamId": "548",
+      "team": "Real Sociedad",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/548.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "cards",
+      "market": "Über 3,5 Karten",
       "length": 7,
       "venue": "all",
       "strong": true,
       "continuation": {
         "state": "intakt",
-        "ratePct": 73,
-        "label": "Eigen 73% + Gegner 80% → 76%"
+        "ratePct": 88,
+        "label": "Eigen 88% + Gegner 30% → 65%"
       },
-      "ratePct": 73,
+      "ratePct": 88,
       "seq": [
         true,
         true,
@@ -3959,17 +3959,17 @@
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 4,
+      "preN": 1,
       "next": {
-        "oppId": "114",
-        "oppName": "Paris FC",
-        "atHome": false,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T13:00:00+00:00",
-        "oppRatePct": 80
+        "oppId": "538",
+        "oppName": "Celta Vigo",
+        "atHome": true,
+        "date": "2026-09-03",
+        "kickoff": "2026-09-03T19:00:00+00:00",
+        "oppRatePct": 30
       },
-      "oppSupportPct": 80,
-      "matchupPct": 76
+      "oppSupportPct": 30,
+      "matchupPct": 65
     },
     {
       "teamId": "36",
@@ -6023,11 +6023,50 @@
       "matchupPct": 65
     },
     {
-      "teamId": "40",
-      "team": "Liverpool",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/40.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "51",
+      "team": "Brighton",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/51.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ENG",
       "leagueName": "Premier League",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
+      "length": 6,
+      "venue": "A",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 56% → 63%"
+      },
+      "ratePct": 67,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 0,
+      "next": {
+        "oppId": "49",
+        "oppName": "Chelsea",
+        "atHome": false,
+        "date": "2026-08-30",
+        "kickoff": "2026-08-30T13:00:00+00:00",
+        "oppRatePct": 56
+      },
+      "oppSupportPct": 56,
+      "matchupPct": 63
+    },
+    {
+      "teamId": "81",
+      "team": "Marseille",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/81.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
       "type": "cards",
       "market": "Über 3,5 Karten",
       "length": 6,
@@ -6050,141 +6089,18 @@
         false
       ],
       "xgBacked": null,
-      "basis": "pure",
-      "preN": 4,
+      "basis": "prior",
+      "preN": 5,
       "next": {
-        "oppId": "57",
-        "oppName": "Ipswich",
+        "oppId": "91",
+        "oppName": "Monaco",
         "atHome": false,
-        "date": "2026-09-04",
-        "kickoff": "2026-09-04T19:00:00+00:00",
+        "date": "2026-08-30",
+        "kickoff": "2026-08-30T18:45:00+00:00",
         "oppRatePct": 67
       },
       "oppSupportPct": 67,
       "matchupPct": 63
-    },
-    {
-      "teamId": "502",
-      "team": "Fiorentina",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/502.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 6,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 89,
-        "label": "Eigen 89% + Gegner 67% → 80%"
-      },
-      "ratePct": 89,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 3,
-      "next": {
-        "oppId": "503",
-        "oppName": "Torino",
-        "atHome": true,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T13:00:00+00:00",
-        "oppRatePct": 33
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 80
-    },
-    {
-      "teamId": "79",
-      "team": "Lille",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/79.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "cards",
-      "market": "Über 3,5 Karten",
-      "length": 6,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 80,
-        "label": "Eigen 80% + Gegner 50% → 68%"
-      },
-      "ratePct": 80,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 4,
-      "next": {
-        "oppId": "96",
-        "oppName": "Toulouse",
-        "atHome": false,
-        "date": "2026-09-03",
-        "kickoff": "2026-09-03T18:45:00+00:00",
-        "oppRatePct": 50
-      },
-      "oppSupportPct": 50,
-      "matchupPct": 68
-    },
-    {
-      "teamId": "548",
-      "team": "Real Sociedad",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/548.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "cards",
-      "market": "Über 3,5 Karten",
-      "length": 6,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 88,
-        "label": "Eigen 88% + Gegner 40% → 69%"
-      },
-      "ratePct": 88,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 2,
-      "next": {
-        "oppId": "538",
-        "oppName": "Celta Vigo",
-        "atHome": true,
-        "date": "2026-09-03",
-        "kickoff": "2026-09-03T19:00:00+00:00",
-        "oppRatePct": 40
-      },
-      "oppSupportPct": 40,
-      "matchupPct": 69
     },
     {
       "teamId": "42",
@@ -6634,47 +6550,6 @@
       "matchupPct": 56
     },
     {
-      "teamId": "499",
-      "team": "Atalanta",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/499.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 6,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 40,
-        "label": "Eigen 40% + Gegner 67% → 51%"
-      },
-      "ratePct": 40,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 5,
-      "next": {
-        "oppId": "500",
-        "oppName": "Bologna",
-        "atHome": true,
-        "date": "2026-08-31",
-        "kickoff": "2026-08-31T18:45:00+00:00",
-        "oppRatePct": 33
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 51
-    },
-    {
       "teamId": "50",
       "team": "Manchester City",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/50.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -6697,12 +6572,11 @@
         true,
         true,
         true,
-        true,
-        false
+        true
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 1,
+      "preN": 0,
       "next": {
         "oppId": "1346",
         "oppName": "Coventry",
@@ -6715,121 +6589,45 @@
       "matchupPct": 53
     },
     {
-      "teamId": "51",
-      "team": "Brighton",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/51.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "55",
+      "team": "Brentford",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/55.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ENG",
       "leagueName": "Premier League",
       "type": "cornersOver",
       "market": "Über 9,5 Ecken",
       "length": 6,
-      "venue": "A",
+      "venue": "all",
       "strong": true,
       "continuation": {
         "state": "neutral",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 44% → 58%"
+        "ratePct": 29,
+        "label": "Eigen 29% + Gegner 70% → 45%"
       },
-      "ratePct": 67,
+      "ratePct": 29,
       "seq": [
         true,
         true,
         true,
         true,
         true,
+        true,
+        false,
         true
       ],
       "xgBacked": null,
-      "basis": "pure",
-      "preN": 0,
+      "basis": "prior",
+      "preN": 7,
       "next": {
-        "oppId": "49",
-        "oppName": "Chelsea",
+        "oppId": "63",
+        "oppName": "Leeds",
         "atHome": false,
         "date": "2026-08-30",
         "kickoff": "2026-08-30T13:00:00+00:00",
-        "oppRatePct": 44
+        "oppRatePct": 70
       },
-      "oppSupportPct": 44,
-      "matchupPct": 58
-    },
-    {
-      "teamId": "64",
-      "team": "Hull City",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/64.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 6,
-      "venue": "H",
-      "strong": true,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 44% → 54%"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 0,
-      "next": {
-        "oppId": "66",
-        "oppName": "Aston Villa",
-        "atHome": true,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T16:30:00+00:00",
-        "oppRatePct": 56
-      },
-      "oppSupportPct": 44,
-      "matchupPct": 54
-    },
-    {
-      "teamId": "170",
-      "team": "FC Augsburg",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/170.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "GER",
-      "leagueName": "Bundesliga",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
-      "length": 6,
-      "venue": "A",
-      "strong": true,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 70,
-        "label": "Eigen 70% + Gegner 29% → 54%"
-      },
-      "ratePct": 70,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 0,
-      "next": {
-        "oppId": "174",
-        "oppName": "FC Schalke 04",
-        "atHome": true,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T15:30:00+00:00",
-        "oppRatePct": 29
-      },
-      "oppSupportPct": 29,
-      "matchupPct": 54
+      "oppSupportPct": 70,
+      "matchupPct": 45
     },
     {
       "teamId": "57",
@@ -8670,7 +8468,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 78,
-        "label": "Eigen 78% + Gegner 50% → 67%"
+        "label": "Eigen 78% + Gegner 60% → 71%"
       },
       "ratePct": 78,
       "seq": [
@@ -8689,28 +8487,28 @@
         "atHome": true,
         "date": "2026-09-05",
         "kickoff": "2026-09-05T11:30:00+00:00",
-        "oppRatePct": 50
+        "oppRatePct": 60
       },
-      "oppSupportPct": 50,
-      "matchupPct": 67
+      "oppSupportPct": 60,
+      "matchupPct": 71
     },
     {
-      "teamId": "36",
-      "team": "Fulham",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/36.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "47",
+      "team": "Tottenham",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/47.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ENG",
       "leagueName": "Premier League",
-      "type": "cards",
-      "market": "Über 3,5 Karten",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
       "length": 5,
       "venue": "H",
       "strong": true,
       "continuation": {
         "state": "intakt",
-        "ratePct": 56,
-        "label": "Eigen 56% + Gegner 67% → 60%"
+        "ratePct": 89,
+        "label": "Eigen 89% + Gegner 17% → 60%"
       },
-      "ratePct": 56,
+      "ratePct": 89,
       "seq": [
         true,
         true,
@@ -8722,14 +8520,14 @@
       "basis": "pure",
       "preN": 0,
       "next": {
-        "oppId": "746",
-        "oppName": "Sunderland",
+        "oppId": "65",
+        "oppName": "Nottingham Forest",
         "atHome": false,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T13:00:00+00:00",
-        "oppRatePct": 67
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T14:00:00+00:00",
+        "oppRatePct": 17
       },
-      "oppSupportPct": 67,
+      "oppSupportPct": 17,
       "matchupPct": 60
     },
     {
@@ -8745,10 +8543,48 @@
       "strong": true,
       "continuation": {
         "state": "intakt",
-        "ratePct": 73,
-        "label": "Eigen 73% + Gegner 44% → 61%"
+        "ratePct": 82,
+        "label": "Eigen 82% + Gegner 44% → 67%"
       },
-      "ratePct": 73,
+      "ratePct": 82,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 0,
+      "next": {
+        "oppId": "496",
+        "oppName": "Juventus",
+        "atHome": false,
+        "date": "2026-09-06",
+        "kickoff": "2026-09-06T18:45:00+00:00",
+        "oppRatePct": 56
+      },
+      "oppSupportPct": 44,
+      "matchupPct": 67
+    },
+    {
+      "teamId": "503",
+      "team": "Torino",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/503.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ITA",
+      "leagueName": "Serie A",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 5,
+      "venue": "A",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 78% → 71%"
+      },
+      "ratePct": 67,
       "seq": [
         true,
         true,
@@ -8761,53 +8597,15 @@
       "basis": "pure",
       "preN": 1,
       "next": {
-        "oppId": "496",
-        "oppName": "Juventus",
+        "oppId": "502",
+        "oppName": "Fiorentina",
         "atHome": false,
-        "date": "2026-09-06",
-        "kickoff": "2026-09-06T18:45:00+00:00",
-        "oppRatePct": 56
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T13:00:00+00:00",
+        "oppRatePct": 22
       },
-      "oppSupportPct": 44,
-      "matchupPct": 61
-    },
-    {
-      "teamId": "49",
-      "team": "Chelsea",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/49.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "cards",
-      "market": "Über 3,5 Karten",
-      "length": 5,
-      "venue": "H",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 89,
-        "label": "Eigen 89% + Gegner 42% → 70%"
-      },
-      "ratePct": 89,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 0,
-      "next": {
-        "oppId": "51",
-        "oppName": "Brighton",
-        "atHome": true,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T13:00:00+00:00",
-        "oppRatePct": 42
-      },
-      "oppSupportPct": 42,
-      "matchupPct": 70
+      "oppSupportPct": 78,
+      "matchupPct": 71
     },
     {
       "teamId": "512",
@@ -8832,12 +8630,11 @@
         true,
         true,
         true,
-        false,
-        true
+        false
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 2,
+      "preN": 1,
       "next": {
         "oppId": "517",
         "oppName": "Venezia",
@@ -8850,22 +8647,22 @@
       "matchupPct": 72
     },
     {
-      "teamId": "81",
-      "team": "Marseille",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/81.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "cards",
-      "market": "Über 3,5 Karten",
+      "teamId": "55",
+      "team": "Brentford",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/55.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
       "length": 5,
-      "venue": "all",
+      "venue": "A",
       "strong": true,
       "continuation": {
         "state": "intakt",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 67% → 67%"
+        "ratePct": 62,
+        "label": "Eigen 62% + Gegner 70% → 65%"
       },
-      "ratePct": 67,
+      "ratePct": 62,
       "seq": [
         true,
         true,
@@ -8873,22 +8670,59 @@
         true,
         true,
         false,
-        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 2,
+      "next": {
+        "oppId": "63",
+        "oppName": "Leeds",
+        "atHome": false,
+        "date": "2026-08-30",
+        "kickoff": "2026-08-30T13:00:00+00:00",
+        "oppRatePct": 70
+      },
+      "oppSupportPct": 70,
+      "matchupPct": 65
+    },
+    {
+      "teamId": "94",
+      "team": "Rennes",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/94.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
+      "length": 5,
+      "venue": "H",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 100,
+        "label": "Eigen 100% + Gegner 25% → 70%"
+      },
+      "ratePct": 100,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
         true
       ],
       "xgBacked": null,
-      "basis": "prior",
-      "preN": 6,
+      "basis": "pure",
+      "preN": 0,
       "next": {
-        "oppId": "91",
-        "oppName": "Monaco",
-        "atHome": false,
+        "oppId": "1298",
+        "oppName": "Le Mans",
+        "atHome": true,
         "date": "2026-08-30",
-        "kickoff": "2026-08-30T18:45:00+00:00",
-        "oppRatePct": 67
+        "kickoff": "2026-08-30T15:15:00+00:00",
+        "oppRatePct": 25
       },
-      "oppSupportPct": 67,
-      "matchupPct": 67
+      "oppSupportPct": 25,
+      "matchupPct": 70
     },
     {
       "teamId": "4665",
@@ -8903,10 +8737,10 @@
       "strong": true,
       "continuation": {
         "state": "intakt",
-        "ratePct": 80,
-        "label": "Eigen 80% + Gegner 64% → 74%"
+        "ratePct": 70,
+        "label": "Eigen 70% + Gegner 64% → 68%"
       },
-      "ratePct": 80,
+      "ratePct": 70,
       "seq": [
         true,
         true,
@@ -8926,83 +8760,6 @@
         "oppRatePct": 64
       },
       "oppSupportPct": 64,
-      "matchupPct": 74
-    },
-    {
-      "teamId": "538",
-      "team": "Celta Vigo",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/538.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 5,
-      "venue": "H",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 80,
-        "label": "Eigen 80% + Gegner 33% → 61%"
-      },
-      "ratePct": 80,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 0,
-      "next": {
-        "oppId": "531",
-        "oppName": "Athletic Club",
-        "atHome": true,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T19:30:00+00:00",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 33,
-      "matchupPct": 61
-    },
-    {
-      "teamId": "797",
-      "team": "Elche",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/797.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 5,
-      "venue": "A",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 64,
-        "label": "Eigen 64% + Gegner 75% → 68%"
-      },
-      "ratePct": 64,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 1,
-      "next": {
-        "oppId": "548",
-        "oppName": "Real Sociedad",
-        "atHome": true,
-        "date": "2026-09-07",
-        "kickoff": "2026-09-07T19:30:00+00:00",
-        "oppRatePct": 25
-      },
-      "oppSupportPct": 75,
       "matchupPct": 68
     },
     {
@@ -9042,6 +8799,47 @@
       },
       "oppSupportPct": 33,
       "matchupPct": 60
+    },
+    {
+      "teamId": "1660",
+      "team": "SV Elversberg",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1660.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "GER",
+      "leagueName": "Bundesliga",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 5,
+      "venue": "all",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 75,
+        "label": "Eigen 75% + Gegner 56% → 67%"
+      },
+      "ratePct": 75,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 3,
+      "next": {
+        "oppId": "163",
+        "oppName": "Borussia Mönchengladbach",
+        "atHome": false,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T13:30:00+00:00",
+        "oppRatePct": 44
+      },
+      "oppSupportPct": 56,
+      "matchupPct": 67
     },
     {
       "teamId": "1579",
@@ -9813,61 +9611,59 @@
       "matchupPct": 57
     },
     {
-      "teamId": "55",
-      "team": "Brentford",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/55.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "1346",
+      "team": "Coventry",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1346.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ENG",
       "leagueName": "Premier League",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
       "length": 5,
-      "venue": "all",
+      "venue": "H",
       "strong": true,
       "continuation": {
         "state": "neutral",
-        "ratePct": 38,
-        "label": "Eigen 38% + Gegner 70% → 51%"
+        "ratePct": 83,
+        "label": "Eigen 83% + Gegner 23% → 59%"
       },
-      "ratePct": 38,
+      "ratePct": 83,
       "seq": [
         true,
         true,
         true,
         true,
         true,
-        false,
-        true,
-        true
+        false
       ],
       "xgBacked": null,
-      "basis": "prior",
-      "preN": 8,
+      "basis": "pure",
+      "preN": 1,
       "next": {
-        "oppId": "63",
-        "oppName": "Leeds",
+        "oppId": "50",
+        "oppName": "Manchester City",
         "atHome": false,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T13:00:00+00:00",
-        "oppRatePct": 70
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T14:00:00+00:00",
+        "oppRatePct": 77
       },
-      "oppSupportPct": 70,
-      "matchupPct": 51
+      "oppSupportPct": 23,
+      "matchupPct": 59
     },
     {
-      "teamId": "95",
-      "team": "Strasbourg",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/95.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
+      "teamId": "64",
+      "team": "Hull City",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/64.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
       "length": 5,
       "venue": "H",
       "strong": true,
       "continuation": {
         "state": "neutral",
         "ratePct": 60,
-        "label": "Eigen 60% + Gegner 33% → 49%"
+        "label": "Eigen 60% + Gegner 44% → 54%"
       },
       "ratePct": 60,
       "seq": [
@@ -9881,56 +9677,53 @@
       "basis": "pure",
       "preN": 0,
       "next": {
-        "oppId": "110",
-        "oppName": "Estac Troyes",
-        "atHome": false,
-        "date": "2026-09-06",
-        "kickoff": "2026-09-06T13:00:00+00:00",
-        "oppRatePct": 33
+        "oppId": "66",
+        "oppName": "Aston Villa",
+        "atHome": true,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T16:30:00+00:00",
+        "oppRatePct": 56
       },
-      "oppSupportPct": 33,
-      "matchupPct": 49
+      "oppSupportPct": 44,
+      "matchupPct": 54
     },
     {
-      "teamId": "797",
-      "team": "Elche",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/797.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
+      "teamId": "170",
+      "team": "FC Augsburg",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/170.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "GER",
+      "leagueName": "Bundesliga",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
       "length": 5,
-      "venue": "all",
+      "venue": "A",
       "strong": true,
       "continuation": {
         "state": "neutral",
-        "ratePct": 33,
-        "label": "Eigen 33% + Gegner 75% → 50%"
+        "ratePct": 70,
+        "label": "Eigen 70% + Gegner 38% → 57%"
       },
-      "ratePct": 33,
+      "ratePct": 70,
       "seq": [
         true,
         true,
         true,
         true,
-        true,
-        false,
-        true,
         true
       ],
       "xgBacked": null,
-      "basis": "prior",
-      "preN": 6,
+      "basis": "pure",
+      "preN": 0,
       "next": {
-        "oppId": "548",
-        "oppName": "Real Sociedad",
+        "oppId": "174",
+        "oppName": "FC Schalke 04",
         "atHome": true,
-        "date": "2026-09-07",
-        "kickoff": "2026-09-07T19:30:00+00:00",
-        "oppRatePct": 25
+        "date": "2026-08-30",
+        "kickoff": "2026-08-30T15:30:00+00:00",
+        "oppRatePct": 38
       },
-      "oppSupportPct": 75,
-      "matchupPct": 50
+      "oppSupportPct": 38,
+      "matchupPct": 57
     },
     {
       "teamId": "1579",
@@ -12899,469 +12692,13 @@
       "matchupPct": 79
     },
     {
-      "teamId": "499",
-      "team": "Atalanta",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/499.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 73,
-        "label": "Eigen 73% + Gegner 67% → 71%"
-      },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 2,
-      "next": {
-        "oppId": "500",
-        "oppName": "Bologna",
-        "atHome": true,
-        "date": "2026-08-31",
-        "kickoff": "2026-08-31T18:45:00+00:00",
-        "oppRatePct": 33
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 71
-    },
-    {
-      "teamId": "500",
-      "team": "Bologna",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/500.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 4,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 73% → 69%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 0,
-      "next": {
-        "oppId": "499",
-        "oppName": "Atalanta",
-        "atHome": false,
-        "date": "2026-08-31",
-        "kickoff": "2026-08-31T18:45:00+00:00",
-        "oppRatePct": 27
-      },
-      "oppSupportPct": 73,
-      "matchupPct": 69
-    },
-    {
-      "teamId": "502",
-      "team": "Fiorentina",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/502.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 4,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 89,
-        "label": "Eigen 89% + Gegner 67% → 80%"
-      },
-      "ratePct": 89,
-      "seq": [
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 0,
-      "next": {
-        "oppId": "503",
-        "oppName": "Torino",
-        "atHome": true,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T13:00:00+00:00",
-        "oppRatePct": 33
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 80
-    },
-    {
-      "teamId": "503",
-      "team": "Torino",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/503.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 4,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 89% → 76%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 1,
-      "next": {
-        "oppId": "502",
-        "oppName": "Fiorentina",
-        "atHome": false,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T13:00:00+00:00",
-        "oppRatePct": 11
-      },
-      "oppSupportPct": 89,
-      "matchupPct": 76
-    },
-    {
-      "teamId": "523",
-      "team": "Parma",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/523.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 58,
-        "label": "Eigen 58% + Gegner 73% → 64%"
-      },
-      "ratePct": 58,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 3,
-      "next": {
-        "oppId": "1579",
-        "oppName": "Monza",
-        "atHome": true,
-        "date": "2026-09-06",
-        "kickoff": "2026-09-06T13:00:00+00:00",
-        "oppRatePct": 27
-      },
-      "oppSupportPct": 73,
-      "matchupPct": 64
-    },
-    {
-      "teamId": "55",
-      "team": "Brentford",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/55.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
-      "length": 4,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 62,
-        "label": "Eigen 62% + Gegner 70% → 65%"
-      },
-      "ratePct": 62,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 3,
-      "next": {
-        "oppId": "63",
-        "oppName": "Leeds",
-        "atHome": false,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T13:00:00+00:00",
-        "oppRatePct": 70
-      },
-      "oppSupportPct": 70,
-      "matchupPct": 65
-    },
-    {
-      "teamId": "746",
-      "team": "Sunderland",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/746.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 4,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 78,
-        "label": "Eigen 78% + Gegner 33% → 60%"
-      },
-      "ratePct": 78,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 1,
-      "next": {
-        "oppId": "36",
-        "oppName": "Fulham",
-        "atHome": true,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T13:00:00+00:00",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 33,
-      "matchupPct": 60
-    },
-    {
-      "teamId": "79",
-      "team": "Lille",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/79.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "110",
+      "team": "Estac Troyes",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/110.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "FRA",
       "leagueName": "Ligue 1",
-      "type": "cards",
-      "market": "Über 3,5 Karten",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 80,
-        "label": "Eigen 80% + Gegner 50% → 68%"
-      },
-      "ratePct": 80,
-      "seq": [
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 0,
-      "next": {
-        "oppId": "96",
-        "oppName": "Toulouse",
-        "atHome": false,
-        "date": "2026-09-03",
-        "kickoff": "2026-09-03T18:45:00+00:00",
-        "oppRatePct": 50
-      },
-      "oppSupportPct": 50,
-      "matchupPct": 68
-    },
-    {
-      "teamId": "84",
-      "team": "Nice",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/84.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 73,
-        "label": "Eigen 73% + Gegner 80% → 76%"
-      },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 1,
-      "next": {
-        "oppId": "114",
-        "oppName": "Paris FC",
-        "atHome": false,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T13:00:00+00:00",
-        "oppRatePct": 80
-      },
-      "oppSupportPct": 80,
-      "matchupPct": 76
-    },
-    {
-      "teamId": "94",
-      "team": "Rennes",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/94.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 100,
-        "label": "Eigen 100% + Gegner 25% → 70%"
-      },
-      "ratePct": 100,
-      "seq": [
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 0,
-      "next": {
-        "oppId": "1298",
-        "oppName": "Le Mans",
-        "atHome": true,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T15:15:00+00:00",
-        "oppRatePct": 25
-      },
-      "oppSupportPct": 25,
-      "matchupPct": 70
-    },
-    {
-      "teamId": "94",
-      "team": "Rennes",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/94.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
-      "length": 4,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 100,
-        "label": "Eigen 100% + Gegner 25% → 70%"
-      },
-      "ratePct": 100,
-      "seq": [
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 0,
-      "next": {
-        "oppId": "1298",
-        "oppName": "Le Mans",
-        "atHome": true,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T15:15:00+00:00",
-        "oppRatePct": 25
-      },
-      "oppSupportPct": 25,
-      "matchupPct": 70
-    },
-    {
-      "teamId": "97",
-      "team": "Lorient",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/97.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
-      "length": 4,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 60% → 64%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 1,
-      "next": {
-        "oppId": "116",
-        "oppName": "Lens",
-        "atHome": false,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T15:15:00+00:00",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 64
-    },
-    {
-      "teamId": "533",
-      "team": "Villarreal",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/533.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
       "length": 4,
       "venue": "H",
       "strong": false,
@@ -13381,33 +12718,33 @@
       "basis": "pure",
       "preN": 0,
       "next": {
-        "oppId": "544",
-        "oppName": "Deportivo La Coruna",
+        "oppId": "95",
+        "oppName": "Strasbourg",
         "atHome": true,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T19:00:00+00:00",
+        "date": "2026-09-06",
+        "kickoff": "2026-09-06T13:00:00+00:00",
         "oppRatePct": 50
       },
       "oppSupportPct": 50,
       "matchupPct": 60
     },
     {
-      "teamId": "541",
-      "team": "Real Madrid",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/541.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "cards",
-      "market": "Über 3,5 Karten",
+      "teamId": "1579",
+      "team": "Monza",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1579.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ITA",
+      "leagueName": "Serie A",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
       "length": 4,
-      "venue": "A",
+      "venue": "H",
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 60% → 60%"
+        "ratePct": 73,
+        "label": "Eigen 73% + Gegner 50% → 64%"
       },
-      "ratePct": 60,
+      "ratePct": 73,
       "seq": [
         true,
         true,
@@ -13420,33 +12757,187 @@
       "basis": "pure",
       "preN": 2,
       "next": {
-        "oppId": "535",
-        "oppName": "Malaga",
-        "atHome": true,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T15:00:00+00:00",
-        "oppRatePct": 60
+        "oppId": "523",
+        "oppName": "Parma",
+        "atHome": false,
+        "date": "2026-09-06",
+        "kickoff": "2026-09-06T13:00:00+00:00",
+        "oppRatePct": 50
       },
-      "oppSupportPct": 60,
-      "matchupPct": 60
+      "oppSupportPct": 50,
+      "matchupPct": 64
     },
     {
-      "teamId": "544",
-      "team": "Deportivo La Coruna",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/544.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
+      "teamId": "40",
+      "team": "Liverpool",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/40.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
       "type": "cards",
       "market": "Über 3,5 Karten",
+      "length": 4,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 70,
+        "label": "Eigen 70% + Gegner 67% → 69%"
+      },
+      "ratePct": 70,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 2,
+      "next": {
+        "oppId": "57",
+        "oppName": "Ipswich",
+        "atHome": false,
+        "date": "2026-09-04",
+        "kickoff": "2026-09-04T19:00:00+00:00",
+        "oppRatePct": 67
+      },
+      "oppSupportPct": 67,
+      "matchupPct": 69
+    },
+    {
+      "teamId": "489",
+      "team": "AC Milan",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/489.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ITA",
+      "leagueName": "Serie A",
+      "type": "cards",
+      "market": "Über 3,5 Karten",
+      "length": 4,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 64,
+        "label": "Eigen 64% + Gegner 67% → 65%"
+      },
+      "ratePct": 64,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 2,
+      "next": {
+        "oppId": "496",
+        "oppName": "Juventus",
+        "atHome": false,
+        "date": "2026-09-06",
+        "kickoff": "2026-09-06T18:45:00+00:00",
+        "oppRatePct": 67
+      },
+      "oppSupportPct": 67,
+      "matchupPct": 65
+    },
+    {
+      "teamId": "495",
+      "team": "Genoa",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/495.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ITA",
+      "leagueName": "Serie A",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
       "length": 4,
       "venue": "A",
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 88,
-        "label": "Eigen 88% + Gegner 75% → 83%"
+        "ratePct": 70,
+        "label": "Eigen 70% + Gegner 60% → 66%"
       },
-      "ratePct": 88,
+      "ratePct": 70,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 1,
+      "next": {
+        "oppId": "487",
+        "oppName": "Lazio",
+        "atHome": false,
+        "date": "2026-08-30",
+        "kickoff": "2026-08-30T18:45:00+00:00",
+        "oppRatePct": 40
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 66
+    },
+    {
+      "teamId": "499",
+      "team": "Atalanta",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/499.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ITA",
+      "leagueName": "Serie A",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 4,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 64,
+        "label": "Eigen 64% + Gegner 67% → 65%"
+      },
+      "ratePct": 64,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 1,
+      "next": {
+        "oppId": "500",
+        "oppName": "Bologna",
+        "atHome": true,
+        "date": "2026-08-31",
+        "kickoff": "2026-08-31T18:45:00+00:00",
+        "oppRatePct": 33
+      },
+      "oppSupportPct": 67,
+      "matchupPct": 65
+    },
+    {
+      "teamId": "500",
+      "team": "Bologna",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/500.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ITA",
+      "leagueName": "Serie A",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 4,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 64% → 66%"
+      },
+      "ratePct": 67,
       "seq": [
         true,
         true,
@@ -13457,15 +12948,436 @@
       "basis": "pure",
       "preN": 0,
       "next": {
-        "oppId": "532",
-        "oppName": "Valencia",
+        "oppId": "499",
+        "oppName": "Atalanta",
+        "atHome": false,
+        "date": "2026-08-31",
+        "kickoff": "2026-08-31T18:45:00+00:00",
+        "oppRatePct": 36
+      },
+      "oppSupportPct": 64,
+      "matchupPct": 66
+    },
+    {
+      "teamId": "502",
+      "team": "Fiorentina",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/502.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ITA",
+      "leagueName": "Serie A",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 4,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 78,
+        "label": "Eigen 78% + Gegner 67% → 74%"
+      },
+      "ratePct": 78,
+      "seq": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 0,
+      "next": {
+        "oppId": "503",
+        "oppName": "Torino",
+        "atHome": true,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T13:00:00+00:00",
+        "oppRatePct": 33
+      },
+      "oppSupportPct": 67,
+      "matchupPct": 74
+    },
+    {
+      "teamId": "512",
+      "team": "Frosinone",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/512.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ITA",
+      "leagueName": "Serie A",
+      "type": "cards",
+      "market": "Über 3,5 Karten",
+      "length": 4,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 60% → 64%"
+      },
+      "ratePct": 67,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 6,
+      "next": {
+        "oppId": "517",
+        "oppName": "Venezia",
+        "atHome": true,
+        "date": "2026-09-06",
+        "kickoff": "2026-09-06T13:00:00+00:00",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 64
+    },
+    {
+      "teamId": "746",
+      "team": "Sunderland",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/746.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 4,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 80,
+        "label": "Eigen 80% + Gegner 44% → 66%"
+      },
+      "ratePct": 80,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 5,
+      "next": {
+        "oppId": "36",
+        "oppName": "Fulham",
         "atHome": true,
         "date": "2026-08-30",
-        "kickoff": "2026-08-30T17:30:00+00:00",
-        "oppRatePct": 75
+        "kickoff": "2026-08-30T13:00:00+00:00",
+        "oppRatePct": 56
       },
-      "oppSupportPct": 75,
-      "matchupPct": 83
+      "oppSupportPct": 44,
+      "matchupPct": 66
+    },
+    {
+      "teamId": "746",
+      "team": "Sunderland",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/746.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 4,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 89,
+        "label": "Eigen 89% + Gegner 44% → 71%"
+      },
+      "ratePct": 89,
+      "seq": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 0,
+      "next": {
+        "oppId": "36",
+        "oppName": "Fulham",
+        "atHome": true,
+        "date": "2026-08-30",
+        "kickoff": "2026-08-30T13:00:00+00:00",
+        "oppRatePct": 56
+      },
+      "oppSupportPct": 44,
+      "matchupPct": 71
+    },
+    {
+      "teamId": "84",
+      "team": "Nice",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/84.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
+      "length": 4,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 73,
+        "label": "Eigen 73% + Gegner 70% → 72%"
+      },
+      "ratePct": 73,
+      "seq": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 0,
+      "next": {
+        "oppId": "114",
+        "oppName": "Paris FC",
+        "atHome": false,
+        "date": "2026-08-30",
+        "kickoff": "2026-08-30T13:00:00+00:00",
+        "oppRatePct": 70
+      },
+      "oppSupportPct": 70,
+      "matchupPct": 72
+    },
+    {
+      "teamId": "91",
+      "team": "Monaco",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/91.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
+      "length": 4,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 55% → 62%"
+      },
+      "ratePct": 67,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 1,
+      "next": {
+        "oppId": "81",
+        "oppName": "Marseille",
+        "atHome": true,
+        "date": "2026-08-30",
+        "kickoff": "2026-08-30T18:45:00+00:00",
+        "oppRatePct": 55
+      },
+      "oppSupportPct": 55,
+      "matchupPct": 62
+    },
+    {
+      "teamId": "97",
+      "team": "Lorient",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/97.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
+      "length": 4,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 50% → 60%"
+      },
+      "ratePct": 67,
+      "seq": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 0,
+      "next": {
+        "oppId": "116",
+        "oppName": "Lens",
+        "atHome": false,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T15:15:00+00:00",
+        "oppRatePct": 50
+      },
+      "oppSupportPct": 50,
+      "matchupPct": 60
+    },
+    {
+      "teamId": "533",
+      "team": "Villarreal",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/533.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
+      "length": 4,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 78,
+        "label": "Eigen 78% + Gegner 50% → 67%"
+      },
+      "ratePct": 78,
+      "seq": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 0,
+      "next": {
+        "oppId": "544",
+        "oppName": "Deportivo La Coruna",
+        "atHome": true,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T19:00:00+00:00",
+        "oppRatePct": 50
+      },
+      "oppSupportPct": 50,
+      "matchupPct": 67
+    },
+    {
+      "teamId": "536",
+      "team": "Sevilla",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/536.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "cards",
+      "market": "Über 3,5 Karten",
+      "length": 4,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 67% → 67%"
+      },
+      "ratePct": 67,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 1,
+      "next": {
+        "oppId": "540",
+        "oppName": "Espanyol",
+        "atHome": false,
+        "date": "2026-09-06",
+        "kickoff": "2026-09-06T19:00:00+00:00",
+        "oppRatePct": 67
+      },
+      "oppSupportPct": 67,
+      "matchupPct": 67
+    },
+    {
+      "teamId": "546",
+      "team": "Getafe",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/546.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "cards",
+      "market": "Über 3,5 Karten",
+      "length": 4,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 80,
+        "label": "Eigen 80% + Gegner 50% → 68%"
+      },
+      "ratePct": 80,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 5,
+      "next": {
+        "oppId": "727",
+        "oppName": "Osasuna",
+        "atHome": false,
+        "date": "2026-08-31",
+        "kickoff": "2026-08-31T17:30:00+00:00",
+        "oppRatePct": 50
+      },
+      "oppSupportPct": 50,
+      "matchupPct": 68
+    },
+    {
+      "teamId": "546",
+      "team": "Getafe",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/546.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "cards",
+      "market": "Über 3,5 Karten",
+      "length": 4,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 89,
+        "label": "Eigen 89% + Gegner 50% → 73%"
+      },
+      "ratePct": 89,
+      "seq": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 0,
+      "next": {
+        "oppId": "727",
+        "oppName": "Osasuna",
+        "atHome": false,
+        "date": "2026-08-31",
+        "kickoff": "2026-08-31T17:30:00+00:00",
+        "oppRatePct": 50
+      },
+      "oppSupportPct": 50,
+      "matchupPct": 73
     },
     {
       "teamId": "548",
@@ -13481,7 +13393,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 88,
-        "label": "Eigen 88% + Gegner 40% → 69%"
+        "label": "Eigen 88% + Gegner 30% → 65%"
       },
       "ratePct": 88,
       "seq": [
@@ -13489,22 +13401,21 @@
         true,
         true,
         true,
-        false,
-        true
+        false
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 2,
+      "preN": 1,
       "next": {
         "oppId": "538",
         "oppName": "Celta Vigo",
         "atHome": true,
         "date": "2026-09-03",
         "kickoff": "2026-09-03T19:00:00+00:00",
-        "oppRatePct": 40
+        "oppRatePct": 30
       },
-      "oppSupportPct": 40,
-      "matchupPct": 69
+      "oppSupportPct": 30,
+      "matchupPct": 65
     },
     {
       "teamId": "163",
@@ -13519,10 +13430,10 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 88,
-        "label": "Eigen 88% + Gegner 50% → 73%"
+        "ratePct": 78,
+        "label": "Eigen 78% + Gegner 50% → 67%"
       },
-      "ratePct": 88,
+      "ratePct": 78,
       "seq": [
         true,
         true,
@@ -13541,7 +13452,44 @@
         "oppRatePct": 50
       },
       "oppSupportPct": 50,
-      "matchupPct": 73
+      "matchupPct": 67
+    },
+    {
+      "teamId": "165",
+      "team": "Borussia Dortmund",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/165.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "GER",
+      "leagueName": "Bundesliga",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 4,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 78,
+        "label": "Eigen 78% + Gegner 33% → 60%"
+      },
+      "ratePct": 78,
+      "seq": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 0,
+      "next": {
+        "oppId": "167",
+        "oppName": "1899 Hoffenheim",
+        "atHome": false,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T13:30:00+00:00",
+        "oppRatePct": 67
+      },
+      "oppSupportPct": 33,
+      "matchupPct": 60
     },
     {
       "teamId": "1660",
@@ -13552,37 +13500,34 @@
       "type": "cornersUnder",
       "market": "Unter 9,5 Ecken",
       "length": 4,
-      "venue": "all",
+      "venue": "H",
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 62,
-        "label": "Eigen 62% + Gegner 62% → 62%"
+        "ratePct": 75,
+        "label": "Eigen 75% + Gegner 56% → 67%"
       },
-      "ratePct": 62,
+      "ratePct": 75,
       "seq": [
         true,
         true,
         true,
         true,
-        false,
-        true,
-        false,
         false
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 4,
+      "preN": 1,
       "next": {
         "oppId": "163",
         "oppName": "Borussia Mönchengladbach",
         "atHome": false,
         "date": "2026-09-05",
         "kickoff": "2026-09-05T13:30:00+00:00",
-        "oppRatePct": 38
+        "oppRatePct": 44
       },
-      "oppSupportPct": 62,
-      "matchupPct": 62
+      "oppSupportPct": 56,
+      "matchupPct": 67
     },
     {
       "teamId": "167",
@@ -13634,10 +13579,10 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 75,
-        "label": "Eigen 75% + Gegner 83% → 78%"
+        "ratePct": 62,
+        "label": "Eigen 62% + Gegner 67% → 64%"
       },
-      "ratePct": 75,
+      "ratePct": 62,
       "seq": [
         true,
         true,
@@ -13653,47 +13598,10 @@
         "atHome": true,
         "date": "2026-09-05",
         "kickoff": "2026-09-05T13:30:00+00:00",
-        "oppRatePct": 83
+        "oppRatePct": 67
       },
-      "oppSupportPct": 83,
-      "matchupPct": 78
-    },
-    {
-      "teamId": "175",
-      "team": "Hamburger SV",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/175.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "GER",
-      "leagueName": "Bundesliga",
-      "type": "cards",
-      "market": "Über 3,5 Karten",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 70,
-        "label": "Eigen 70% + Gegner 50% → 62%"
-      },
-      "ratePct": 70,
-      "seq": [
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 0,
-      "next": {
-        "oppId": "164",
-        "oppName": "FSV Mainz 05",
-        "atHome": true,
-        "date": "2026-09-06",
-        "kickoff": "2026-09-06T13:30:00+00:00",
-        "oppRatePct": 50
-      },
-      "oppSupportPct": 50,
-      "matchupPct": 62
+      "oppSupportPct": 67,
+      "matchupPct": 64
     },
     {
       "teamId": "36",
@@ -14880,12 +14788,11 @@
         true,
         true,
         true,
-        true,
-        false
+        true
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 1,
+      "preN": 0,
       "next": {
         "oppId": "111",
         "oppName": "Le Havre",
@@ -14895,43 +14802,6 @@
         "oppRatePct": 56
       },
       "oppSupportPct": 56,
-      "matchupPct": 56
-    },
-    {
-      "teamId": "110",
-      "team": "Estac Troyes",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/110.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 40% → 56%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 0,
-      "next": {
-        "oppId": "95",
-        "oppName": "Strasbourg",
-        "atHome": true,
-        "date": "2026-09-06",
-        "kickoff": "2026-09-06T13:00:00+00:00",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 40,
       "matchupPct": 56
     },
     {
@@ -14972,43 +14842,45 @@
       "matchupPct": 58
     },
     {
-      "teamId": "1346",
-      "team": "Coventry",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1346.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
+      "teamId": "1579",
+      "team": "Monza",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1579.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ITA",
+      "leagueName": "Serie A",
       "type": "cornersUnder",
       "market": "Unter 9,5 Ecken",
       "length": 4,
-      "venue": "H",
+      "venue": "all",
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 83,
-        "label": "Eigen 83% + Gegner 23% → 59%"
+        "ratePct": 57,
+        "label": "Eigen 57% + Gegner 50% → 54%"
       },
-      "ratePct": 83,
+      "ratePct": 57,
       "seq": [
         true,
         true,
         true,
         true,
         false,
-        true
+        true,
+        true,
+        false
       ],
       "xgBacked": null,
-      "basis": "pure",
-      "preN": 2,
+      "basis": "prior",
+      "preN": 7,
       "next": {
-        "oppId": "50",
-        "oppName": "Manchester City",
+        "oppId": "523",
+        "oppName": "Parma",
         "atHome": false,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T14:00:00+00:00",
-        "oppRatePct": 77
+        "date": "2026-09-06",
+        "kickoff": "2026-09-06T13:00:00+00:00",
+        "oppRatePct": 50
       },
-      "oppSupportPct": 23,
-      "matchupPct": 59
+      "oppSupportPct": 50,
+      "matchupPct": 54
     },
     {
       "teamId": "1579",
@@ -15049,22 +14921,22 @@
       "matchupPct": 52
     },
     {
-      "teamId": "34",
-      "team": "Newcastle",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/34.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "47",
+      "team": "Tottenham",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/47.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ENG",
       "leagueName": "Premier League",
-      "type": "cards",
-      "market": "Über 3,5 Karten",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
       "length": 4,
       "venue": "all",
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 50% → 56%"
+        "ratePct": 80,
+        "label": "Eigen 80% + Gegner 17% → 55%"
       },
-      "ratePct": 60,
+      "ratePct": 80,
       "seq": [
         true,
         true,
@@ -15079,43 +14951,6 @@
       "basis": "prior",
       "preN": 5,
       "next": {
-        "oppId": "35",
-        "oppName": "Bournemouth",
-        "atHome": true,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T11:30:00+00:00",
-        "oppRatePct": 50
-      },
-      "oppSupportPct": 50,
-      "matchupPct": 56
-    },
-    {
-      "teamId": "47",
-      "team": "Tottenham",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/47.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 78,
-        "label": "Eigen 78% + Gegner 17% → 54%"
-      },
-      "ratePct": 78,
-      "seq": [
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 0,
-      "next": {
         "oppId": "65",
         "oppName": "Nottingham Forest",
         "atHome": false,
@@ -15124,46 +14959,48 @@
         "oppRatePct": 17
       },
       "oppSupportPct": 17,
-      "matchupPct": 54
+      "matchupPct": 55
     },
     {
-      "teamId": "50",
-      "team": "Manchester City",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/50.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "cards",
-      "market": "Über 3,5 Karten",
+      "teamId": "488",
+      "team": "Sassuolo",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/488.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ITA",
+      "leagueName": "Serie A",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
       "length": 4,
-      "venue": "A",
+      "venue": "all",
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 62,
-        "label": "Eigen 62% + Gegner 33% → 50%"
+        "ratePct": 33,
+        "label": "Eigen 33% + Gegner 67% → 47%"
       },
-      "ratePct": 62,
+      "ratePct": 33,
       "seq": [
         true,
         true,
         true,
         true,
         false,
-        true
+        false,
+        true,
+        false
       ],
       "xgBacked": null,
-      "basis": "pure",
-      "preN": 2,
+      "basis": "prior",
+      "preN": 6,
       "next": {
-        "oppId": "1346",
-        "oppName": "Coventry",
-        "atHome": true,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T14:00:00+00:00",
+        "oppId": "500",
+        "oppName": "Bologna",
+        "atHome": false,
+        "date": "2026-09-06",
+        "kickoff": "2026-09-06T16:00:00+00:00",
         "oppRatePct": 33
       },
-      "oppSupportPct": 33,
-      "matchupPct": 50
+      "oppSupportPct": 67,
+      "matchupPct": 47
     },
     {
       "teamId": "502",
@@ -15203,6 +15040,46 @@
       "matchupPct": 47
     },
     {
+      "teamId": "523",
+      "team": "Parma",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/523.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ITA",
+      "leagueName": "Serie A",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 4,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 50,
+        "label": "Eigen 50% + Gegner 73% → 59%"
+      },
+      "ratePct": 50,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 3,
+      "next": {
+        "oppId": "1579",
+        "oppName": "Monza",
+        "atHome": true,
+        "date": "2026-09-06",
+        "kickoff": "2026-09-06T13:00:00+00:00",
+        "oppRatePct": 27
+      },
+      "oppSupportPct": 73,
+      "matchupPct": 59
+    },
+    {
       "teamId": "57",
       "team": "Ipswich",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/57.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -15240,41 +15117,43 @@
       "matchupPct": 56
     },
     {
-      "teamId": "64",
-      "team": "Hull City",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/64.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "65",
+      "team": "Nottingham Forest",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/65.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ENG",
       "leagueName": "Premier League",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
       "length": 4,
-      "venue": "A",
+      "venue": "all",
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 40,
-        "label": "Eigen 40% + Gegner 56% → 46%"
+        "ratePct": 83,
+        "label": "Eigen 83% + Gegner 11% → 54%"
       },
-      "ratePct": 40,
+      "ratePct": 83,
       "seq": [
         true,
         true,
         true,
+        true,
+        false,
         true
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 0,
+      "preN": 2,
       "next": {
-        "oppId": "66",
-        "oppName": "Aston Villa",
+        "oppId": "47",
+        "oppName": "Tottenham",
         "atHome": true,
         "date": "2026-09-05",
-        "kickoff": "2026-09-05T16:30:00+00:00",
-        "oppRatePct": 56
+        "kickoff": "2026-09-05T14:00:00+00:00",
+        "oppRatePct": 89
       },
-      "oppSupportPct": 56,
-      "matchupPct": 46
+      "oppSupportPct": 11,
+      "matchupPct": 54
     },
     {
       "teamId": "65",
@@ -15290,7 +15169,7 @@
       "continuation": {
         "state": "neutral",
         "ratePct": 83,
-        "label": "Eigen 83% + Gegner 22% → 59%"
+        "label": "Eigen 83% + Gegner 11% → 54%"
       },
       "ratePct": 83,
       "seq": [
@@ -15308,10 +15187,10 @@
         "atHome": true,
         "date": "2026-09-05",
         "kickoff": "2026-09-05T14:00:00+00:00",
-        "oppRatePct": 78
+        "oppRatePct": 89
       },
-      "oppSupportPct": 22,
-      "matchupPct": 59
+      "oppSupportPct": 11,
+      "matchupPct": 54
     },
     {
       "teamId": "867",
@@ -15351,45 +15230,6 @@
       "matchupPct": 58
     },
     {
-      "teamId": "91",
-      "team": "Monaco",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/91.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
-      "length": 4,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 46% → 59%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 2,
-      "next": {
-        "oppId": "81",
-        "oppName": "Marseille",
-        "atHome": true,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T18:45:00+00:00",
-        "oppRatePct": 46
-      },
-      "oppSupportPct": 46,
-      "matchupPct": 59
-    },
-    {
       "teamId": "95",
       "team": "Strasbourg",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/95.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -15402,10 +15242,10 @@
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 40,
-        "label": "Eigen 40% + Gegner 67% → 51%"
+        "ratePct": 50,
+        "label": "Eigen 50% + Gegner 67% → 57%"
       },
-      "ratePct": 40,
+      "ratePct": 50,
       "seq": [
         true,
         true,
@@ -15425,85 +15265,83 @@
         "oppRatePct": 33
       },
       "oppSupportPct": 67,
-      "matchupPct": 51
+      "matchupPct": 57
     },
     {
-      "teamId": "538",
-      "team": "Celta Vigo",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/538.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "541",
+      "team": "Real Madrid",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/541.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ESP",
       "leagueName": "La Liga",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
+      "type": "cards",
+      "market": "Über 3,5 Karten",
       "length": 4,
-      "venue": "all",
+      "venue": "A",
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 33% → 53%"
+        "ratePct": 50,
+        "label": "Eigen 50% + Gegner 50% → 50%"
       },
-      "ratePct": 67,
+      "ratePct": 50,
       "seq": [
         true,
         true,
         true,
         true,
-        false,
-        true,
-        false,
-        true
+        false
       ],
       "xgBacked": null,
-      "basis": "prior",
-      "preN": 6,
+      "basis": "pure",
+      "preN": 1,
       "next": {
-        "oppId": "531",
-        "oppName": "Athletic Club",
+        "oppId": "535",
+        "oppName": "Malaga",
         "atHome": true,
         "date": "2026-08-30",
-        "kickoff": "2026-08-30T19:30:00+00:00",
-        "oppRatePct": 67
+        "kickoff": "2026-08-30T15:00:00+00:00",
+        "oppRatePct": 50
       },
-      "oppSupportPct": 33,
-      "matchupPct": 53
+      "oppSupportPct": 50,
+      "matchupPct": 50
     },
     {
-      "teamId": "165",
-      "team": "Borussia Dortmund",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/165.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "167",
+      "team": "1899 Hoffenheim",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/167.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "GER",
       "leagueName": "Bundesliga",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
       "length": 4,
       "venue": "A",
       "strong": false,
       "continuation": {
         "state": "neutral",
         "ratePct": 67,
-        "label": "Eigen 67% + Gegner 44% → 58%"
+        "label": "Eigen 67% + Gegner 22% → 49%"
       },
       "ratePct": 67,
       "seq": [
         true,
         true,
         true,
-        true
+        true,
+        false
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 0,
+      "preN": 1,
       "next": {
-        "oppId": "167",
-        "oppName": "1899 Hoffenheim",
-        "atHome": false,
+        "oppId": "165",
+        "oppName": "Borussia Dortmund",
+        "atHome": true,
         "date": "2026-09-05",
         "kickoff": "2026-09-05T13:30:00+00:00",
-        "oppRatePct": 56
+        "oppRatePct": 22
       },
-      "oppSupportPct": 44,
-      "matchupPct": 58
+      "oppSupportPct": 22,
+      "matchupPct": 49
     },
     {
       "teamId": "174",
@@ -15518,10 +15356,10 @@
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 71,
-        "label": "Eigen 71% + Gegner 30% → 55%"
+        "ratePct": 62,
+        "label": "Eigen 62% + Gegner 30% → 49%"
       },
-      "ratePct": 71,
+      "ratePct": 62,
       "seq": [
         true,
         true,
@@ -15540,7 +15378,48 @@
         "oppRatePct": 70
       },
       "oppSupportPct": 30,
-      "matchupPct": 55
+      "matchupPct": 49
+    },
+    {
+      "teamId": "192",
+      "team": "1. FC Köln",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/192.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "GER",
+      "leagueName": "Bundesliga",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
+      "length": 4,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 38,
+        "label": "Eigen 38% + Gegner 78% → 54%"
+      },
+      "ratePct": 38,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 8,
+      "next": {
+        "oppId": "172",
+        "oppName": "VfB Stuttgart",
+        "atHome": false,
+        "date": "2026-09-04",
+        "kickoff": "2026-09-04T18:30:00+00:00",
+        "oppRatePct": 78
+      },
+      "oppSupportPct": 78,
+      "matchupPct": 54
     },
     {
       "teamId": "494",
@@ -15666,13 +15545,12 @@
       "matchupPct": 60,
       "signalInfo": {
         "state": "contradict",
-        "count": 4,
+        "count": 3,
         "conviction": 4,
         "names": [
           "form_trend",
           "h2h_pattern",
-          "transfer_shift",
-          "move_following"
+          "transfer_shift"
         ],
         "market": "Unter 3.5 Tore"
       }
@@ -15718,13 +15596,12 @@
       "matchupPct": 65,
       "signalInfo": {
         "state": "contradict",
-        "count": 4,
+        "count": 3,
         "conviction": 4,
         "names": [
           "form_trend",
           "h2h_pattern",
-          "transfer_shift",
-          "move_following"
+          "transfer_shift"
         ],
         "market": "Unter 3.5 Tore"
       }
@@ -16183,6 +16060,81 @@
       "matchupPct": 44
     },
     {
+      "teamId": "106",
+      "team": "Stade Brestois 29",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/106.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 4,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 44,
+        "label": "Eigen 44% + Gegner 44% → 44%"
+      },
+      "ratePct": 44,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 1,
+      "next": {
+        "oppId": "111",
+        "oppName": "Le Havre",
+        "atHome": false,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T18:45:00+00:00",
+        "oppRatePct": 56
+      },
+      "oppSupportPct": 44,
+      "matchupPct": 44
+    },
+    {
+      "teamId": "116",
+      "team": "Lens",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/116.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
+      "type": "cards",
+      "market": "Über 3,5 Karten",
+      "length": 4,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 22% → 45%"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 0,
+      "next": {
+        "oppId": "97",
+        "oppName": "Lorient",
+        "atHome": true,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T15:15:00+00:00",
+        "oppRatePct": 22
+      },
+      "oppSupportPct": 22,
+      "matchupPct": 45
+    },
+    {
       "teamId": "1298",
       "team": "Le Mans",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1298.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -16220,6 +16172,162 @@
       "matchupPct": 45
     },
     {
+      "teamId": "36",
+      "team": "Fulham",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/36.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
+      "length": 4,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 56,
+        "label": "Eigen 56% + Gegner 11% → 38%"
+      },
+      "ratePct": 56,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 1,
+      "next": {
+        "oppId": "746",
+        "oppName": "Sunderland",
+        "atHome": false,
+        "date": "2026-08-30",
+        "kickoff": "2026-08-30T13:00:00+00:00",
+        "oppRatePct": 11
+      },
+      "oppSupportPct": 11,
+      "matchupPct": 38
+    },
+    {
+      "teamId": "51",
+      "team": "Brighton",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/51.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 4,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 33,
+        "label": "Eigen 33% + Gegner 44% → 37%"
+      },
+      "ratePct": 33,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 2,
+      "next": {
+        "oppId": "49",
+        "oppName": "Chelsea",
+        "atHome": false,
+        "date": "2026-08-30",
+        "kickoff": "2026-08-30T13:00:00+00:00",
+        "oppRatePct": 56
+      },
+      "oppSupportPct": 44,
+      "matchupPct": 37
+    },
+    {
+      "teamId": "52",
+      "team": "Crystal Palace",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/52.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 4,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 40,
+        "label": "Eigen 40% + Gegner 44% → 42%"
+      },
+      "ratePct": 40,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 5,
+      "next": {
+        "oppId": "36",
+        "oppName": "Fulham",
+        "atHome": false,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T14:00:00+00:00",
+        "oppRatePct": 56
+      },
+      "oppSupportPct": 44,
+      "matchupPct": 42
+    },
+    {
+      "teamId": "523",
+      "team": "Parma",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/523.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ITA",
+      "leagueName": "Serie A",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
+      "length": 4,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 50,
+        "label": "Eigen 50% + Gegner 27% → 41%"
+      },
+      "ratePct": 50,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 1,
+      "next": {
+        "oppId": "1579",
+        "oppName": "Monza",
+        "atHome": true,
+        "date": "2026-09-06",
+        "kickoff": "2026-09-06T13:00:00+00:00",
+        "oppRatePct": 27
+      },
+      "oppSupportPct": 27,
+      "matchupPct": 41
+    },
+    {
       "teamId": "727",
       "team": "Osasuna",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/727.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -16233,7 +16341,7 @@
       "continuation": {
         "state": "wackelt",
         "ratePct": 50,
-        "label": "Eigen 50% + Gegner 22% → 39%"
+        "label": "Eigen 50% + Gegner 33% → 43%"
       },
       "ratePct": 50,
       "seq": [
@@ -16253,10 +16361,51 @@
         "atHome": true,
         "date": "2026-08-31",
         "kickoff": "2026-08-31T17:30:00+00:00",
+        "oppRatePct": 33
+      },
+      "oppSupportPct": 33,
+      "matchupPct": 43
+    },
+    {
+      "teamId": "167",
+      "team": "1899 Hoffenheim",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/167.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "GER",
+      "leagueName": "Bundesliga",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
+      "length": 4,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 40,
+        "label": "Eigen 40% + Gegner 22% → 33%"
+      },
+      "ratePct": 40,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 5,
+      "next": {
+        "oppId": "165",
+        "oppName": "Borussia Dortmund",
+        "atHome": true,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T13:30:00+00:00",
         "oppRatePct": 22
       },
       "oppSupportPct": 22,
-      "matchupPct": 39
+      "matchupPct": 33
     },
     {
       "teamId": "106",
@@ -16739,13 +16888,12 @@
       "matchupPct": 67,
       "signalInfo": {
         "state": "confirm",
-        "count": 4,
+        "count": 3,
         "conviction": 4,
         "names": [
           "form_trend",
           "h2h_pattern",
-          "xg_strength",
-          "betfair_money"
+          "xg_strength"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -18212,100 +18360,20 @@
       "matchupPct": 65
     },
     {
-      "teamId": "1579",
-      "team": "Monza",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1579.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 62,
-        "label": "Eigen 62% + Gegner 58% → 60%"
-      },
-      "ratePct": 62,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 8,
-      "next": {
-        "oppId": "523",
-        "oppName": "Parma",
-        "atHome": false,
-        "date": "2026-09-06",
-        "kickoff": "2026-09-06T13:00:00+00:00",
-        "oppRatePct": 42
-      },
-      "oppSupportPct": 58,
-      "matchupPct": 60
-    },
-    {
-      "teamId": "1579",
-      "team": "Monza",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1579.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 73,
-        "label": "Eigen 73% + Gegner 58% → 67%"
-      },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 3,
-      "next": {
-        "oppId": "523",
-        "oppName": "Parma",
-        "atHome": false,
-        "date": "2026-09-06",
-        "kickoff": "2026-09-06T13:00:00+00:00",
-        "oppRatePct": 42
-      },
-      "oppSupportPct": 58,
-      "matchupPct": 67
-    },
-    {
-      "teamId": "40",
-      "team": "Liverpool",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/40.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "cards",
-      "market": "Über 3,5 Karten",
+      "teamId": "108",
+      "team": "Auxerre",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/108.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
       "length": 3,
       "venue": "H",
       "strong": false,
       "continuation": {
         "state": "intakt",
         "ratePct": 60,
-        "label": "Eigen 60% + Gegner 67% → 63%"
+        "label": "Eigen 60% + Gegner 78% → 67%"
       },
       "ratePct": 60,
       "seq": [
@@ -18319,15 +18387,52 @@
       "basis": "pure",
       "preN": 2,
       "next": {
-        "oppId": "57",
-        "oppName": "Ipswich",
+        "oppId": "80",
+        "oppName": "Lyon",
         "atHome": false,
         "date": "2026-09-04",
-        "kickoff": "2026-09-04T19:00:00+00:00",
-        "oppRatePct": 67
+        "kickoff": "2026-09-04T17:00:00+00:00",
+        "oppRatePct": 78
       },
-      "oppSupportPct": 67,
-      "matchupPct": 63
+      "oppSupportPct": 78,
+      "matchupPct": 67
+    },
+    {
+      "teamId": "36",
+      "team": "Fulham",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/36.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 44,
+        "label": "Eigen 44% + Gegner 89% → 62%"
+      },
+      "ratePct": 44,
+      "seq": [
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 1,
+      "next": {
+        "oppId": "746",
+        "oppName": "Sunderland",
+        "atHome": false,
+        "date": "2026-08-30",
+        "kickoff": "2026-08-30T13:00:00+00:00",
+        "oppRatePct": 11
+      },
+      "oppSupportPct": 89,
+      "matchupPct": 62
     },
     {
       "teamId": "40",
@@ -18342,20 +18447,19 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 67% → 63%"
+        "ratePct": 70,
+        "label": "Eigen 70% + Gegner 67% → 69%"
       },
-      "ratePct": 60,
+      "ratePct": 70,
       "seq": [
         true,
         true,
         true,
-        false,
         false
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 2,
+      "preN": 1,
       "next": {
         "oppId": "57",
         "oppName": "Ipswich",
@@ -18365,45 +18469,7 @@
         "oppRatePct": 67
       },
       "oppSupportPct": 67,
-      "matchupPct": 63
-    },
-    {
-      "teamId": "489",
-      "team": "AC Milan",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/489.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
-      "type": "cards",
-      "market": "Über 3,5 Karten",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 64,
-        "label": "Eigen 64% + Gegner 67% → 65%"
-      },
-      "ratePct": 64,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 2,
-      "next": {
-        "oppId": "496",
-        "oppName": "Juventus",
-        "atHome": false,
-        "date": "2026-09-06",
-        "kickoff": "2026-09-06T18:45:00+00:00",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 65
+      "matchupPct": 69
     },
     {
       "teamId": "49",
@@ -18425,12 +18491,11 @@
       "seq": [
         true,
         true,
-        true,
-        false
+        true
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 1,
+      "preN": 0,
       "next": {
         "oppId": "51",
         "oppName": "Brighton",
@@ -18443,83 +18508,82 @@
       "matchupPct": 70
     },
     {
-      "teamId": "502",
-      "team": "Fiorentina",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/502.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 89,
-        "label": "Eigen 89% + Gegner 67% → 80%"
-      },
-      "ratePct": 89,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 2,
-      "next": {
-        "oppId": "503",
-        "oppName": "Torino",
-        "atHome": true,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T13:00:00+00:00",
-        "oppRatePct": 33
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 80
-    },
-    {
-      "teamId": "512",
-      "team": "Frosinone",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/512.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "496",
+      "team": "Juventus",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/496.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ITA",
       "leagueName": "Serie A",
       "type": "cards",
       "market": "Über 3,5 Karten",
       "length": 3,
-      "venue": "all",
+      "venue": "H",
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 71,
-        "label": "Eigen 71% + Gegner 60% → 67%"
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 64% → 66%"
       },
-      "ratePct": 71,
+      "ratePct": 67,
       "seq": [
-        true,
-        true,
-        true,
-        false,
         true,
         true,
         true,
         false
       ],
       "xgBacked": null,
-      "basis": "prior",
-      "preN": 7,
+      "basis": "pure",
+      "preN": 1,
       "next": {
-        "oppId": "517",
-        "oppName": "Venezia",
+        "oppId": "489",
+        "oppName": "AC Milan",
         "atHome": true,
         "date": "2026-09-06",
-        "kickoff": "2026-09-06T13:00:00+00:00",
-        "oppRatePct": 60
+        "kickoff": "2026-09-06T18:45:00+00:00",
+        "oppRatePct": 64
       },
-      "oppSupportPct": 60,
-      "matchupPct": 67
+      "oppSupportPct": 64,
+      "matchupPct": 66
+    },
+    {
+      "teamId": "503",
+      "team": "Torino",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/503.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ITA",
+      "leagueName": "Serie A",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 56,
+        "label": "Eigen 56% + Gegner 78% → 65%"
+      },
+      "ratePct": 56,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 9,
+      "next": {
+        "oppId": "502",
+        "oppName": "Fiorentina",
+        "atHome": false,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T13:00:00+00:00",
+        "oppRatePct": 22
+      },
+      "oppSupportPct": 78,
+      "matchupPct": 65
     },
     {
       "teamId": "79",
@@ -18543,12 +18607,11 @@
         true,
         true,
         false,
-        true,
-        false
+        true
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 3,
+      "preN": 2,
       "next": {
         "oppId": "96",
         "oppName": "Toulouse",
@@ -18559,6 +18622,47 @@
       },
       "oppSupportPct": 50,
       "matchupPct": 68
+    },
+    {
+      "teamId": "80",
+      "team": "Lyon",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/80.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 60% → 64%"
+      },
+      "ratePct": 67,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 6,
+      "next": {
+        "oppId": "108",
+        "oppName": "Auxerre",
+        "atHome": true,
+        "date": "2026-09-04",
+        "kickoff": "2026-09-04T17:00:00+00:00",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 64
     },
     {
       "teamId": "81",
@@ -18600,9 +18704,47 @@
       "matchupPct": 76
     },
     {
-      "teamId": "84",
-      "team": "Nice",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/84.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "81",
+      "team": "Marseille",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/81.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
+      "type": "cards",
+      "market": "Über 3,5 Karten",
+      "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 82,
+        "label": "Eigen 82% + Gegner 67% → 76%"
+      },
+      "ratePct": 82,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 2,
+      "next": {
+        "oppId": "91",
+        "oppName": "Monaco",
+        "atHome": false,
+        "date": "2026-08-30",
+        "kickoff": "2026-08-30T18:45:00+00:00",
+        "oppRatePct": 67
+      },
+      "oppSupportPct": 67,
+      "matchupPct": 76
+    },
+    {
+      "teamId": "94",
+      "team": "Rennes",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/94.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "FRA",
       "leagueName": "Ligue 1",
       "type": "cornersOver",
@@ -18612,49 +18754,10 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 73,
-        "label": "Eigen 73% + Gegner 80% → 76%"
+        "ratePct": 100,
+        "label": "Eigen 100% + Gegner 25% → 70%"
       },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 3,
-      "next": {
-        "oppId": "114",
-        "oppName": "Paris FC",
-        "atHome": false,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T13:00:00+00:00",
-        "oppRatePct": 80
-      },
-      "oppSupportPct": 80,
-      "matchupPct": 76
-    },
-    {
-      "teamId": "91",
-      "team": "Monaco",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/91.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "cards",
-      "market": "Über 3,5 Karten",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 82% → 73%"
-      },
-      "ratePct": 67,
+      "ratePct": 100,
       "seq": [
         true,
         true,
@@ -18664,20 +18767,94 @@
       "basis": "pure",
       "preN": 0,
       "next": {
-        "oppId": "81",
-        "oppName": "Marseille",
+        "oppId": "1298",
+        "oppName": "Le Mans",
         "atHome": true,
         "date": "2026-08-30",
-        "kickoff": "2026-08-30T18:45:00+00:00",
-        "oppRatePct": 82
+        "kickoff": "2026-08-30T15:15:00+00:00",
+        "oppRatePct": 25
       },
-      "oppSupportPct": 82,
-      "matchupPct": 73
+      "oppSupportPct": 25,
+      "matchupPct": 70
     },
     {
-      "teamId": "536",
-      "team": "Sevilla",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/536.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "532",
+      "team": "Valencia",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/532.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "cards",
+      "market": "Über 3,5 Karten",
+      "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 75,
+        "label": "Eigen 75% + Gegner 88% → 80%"
+      },
+      "ratePct": 75,
+      "seq": [
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 0,
+      "next": {
+        "oppId": "544",
+        "oppName": "Deportivo La Coruna",
+        "atHome": false,
+        "date": "2026-08-30",
+        "kickoff": "2026-08-30T17:30:00+00:00",
+        "oppRatePct": 88
+      },
+      "oppSupportPct": 88,
+      "matchupPct": 80
+    },
+    {
+      "teamId": "533",
+      "team": "Villarreal",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/533.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "cards",
+      "market": "Über 3,5 Karten",
+      "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 56,
+        "label": "Eigen 56% + Gegner 88% → 69%"
+      },
+      "ratePct": 56,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 2,
+      "next": {
+        "oppId": "544",
+        "oppName": "Deportivo La Coruna",
+        "atHome": true,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T19:00:00+00:00",
+        "oppRatePct": 88
+      },
+      "oppSupportPct": 88,
+      "matchupPct": 69
+    },
+    {
+      "teamId": "542",
+      "team": "Alaves",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/542.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ESP",
       "leagueName": "La Liga",
       "type": "cards",
@@ -18688,33 +18865,36 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 67,
-        "label": "Eigen 67% + Gegner 67% → 67%"
+        "label": "Eigen 67% + Gegner 50% → 60%"
       },
       "ratePct": 67,
       "seq": [
         true,
         true,
         true,
-        false
+        false,
+        true,
+        false,
+        true
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 1,
+      "preN": 4,
       "next": {
-        "oppId": "540",
-        "oppName": "Espanyol",
-        "atHome": false,
+        "oppId": "727",
+        "oppName": "Osasuna",
+        "atHome": true,
         "date": "2026-09-06",
-        "kickoff": "2026-09-06T19:00:00+00:00",
-        "oppRatePct": 67
+        "kickoff": "2026-09-06T16:30:00+00:00",
+        "oppRatePct": 50
       },
-      "oppSupportPct": 67,
-      "matchupPct": 67
+      "oppSupportPct": 50,
+      "matchupPct": 60
     },
     {
-      "teamId": "546",
-      "team": "Getafe",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/546.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "544",
+      "team": "Deportivo La Coruna",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/544.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ESP",
       "leagueName": "La Liga",
       "type": "cards",
@@ -18724,10 +18904,10 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 83,
-        "label": "Eigen 83% + Gegner 60% → 74%"
+        "ratePct": 80,
+        "label": "Eigen 80% + Gegner 75% → 78%"
       },
-      "ratePct": 83,
+      "ratePct": 80,
       "seq": [
         true,
         true,
@@ -18740,22 +18920,22 @@
       ],
       "xgBacked": null,
       "basis": "prior",
-      "preN": 6,
+      "preN": 5,
       "next": {
-        "oppId": "727",
-        "oppName": "Osasuna",
-        "atHome": false,
-        "date": "2026-08-31",
-        "kickoff": "2026-08-31T17:30:00+00:00",
-        "oppRatePct": 60
+        "oppId": "532",
+        "oppName": "Valencia",
+        "atHome": true,
+        "date": "2026-08-30",
+        "kickoff": "2026-08-30T17:30:00+00:00",
+        "oppRatePct": 75
       },
-      "oppSupportPct": 60,
-      "matchupPct": 74
+      "oppSupportPct": 75,
+      "matchupPct": 78
     },
     {
-      "teamId": "546",
-      "team": "Getafe",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/546.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "544",
+      "team": "Deportivo La Coruna",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/544.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ESP",
       "leagueName": "La Liga",
       "type": "cards",
@@ -18765,10 +18945,10 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 89,
-        "label": "Eigen 89% + Gegner 60% → 77%"
+        "ratePct": 88,
+        "label": "Eigen 88% + Gegner 75% → 83%"
       },
-      "ratePct": 89,
+      "ratePct": 88,
       "seq": [
         true,
         true,
@@ -18778,91 +18958,51 @@
       "basis": "pure",
       "preN": 0,
       "next": {
-        "oppId": "727",
-        "oppName": "Osasuna",
-        "atHome": false,
-        "date": "2026-08-31",
-        "kickoff": "2026-08-31T17:30:00+00:00",
-        "oppRatePct": 60
+        "oppId": "532",
+        "oppName": "Valencia",
+        "atHome": true,
+        "date": "2026-08-30",
+        "kickoff": "2026-08-30T17:30:00+00:00",
+        "oppRatePct": 75
       },
-      "oppSupportPct": 60,
-      "matchupPct": 77
+      "oppSupportPct": 75,
+      "matchupPct": 83
     },
     {
-      "teamId": "797",
-      "team": "Elche",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/797.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "548",
+      "team": "Real Sociedad",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/548.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ESP",
       "leagueName": "La Liga",
       "type": "cards",
       "market": "Über 3,5 Karten",
       "length": 3,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 64,
-        "label": "Eigen 64% + Gegner 88% → 74%"
-      },
-      "ratePct": 64,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 3,
-      "next": {
-        "oppId": "548",
-        "oppName": "Real Sociedad",
-        "atHome": true,
-        "date": "2026-09-07",
-        "kickoff": "2026-09-07T19:30:00+00:00",
-        "oppRatePct": 88
-      },
-      "oppSupportPct": 88,
-      "matchupPct": 74
-    },
-    {
-      "teamId": "1660",
-      "team": "SV Elversberg",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1660.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "GER",
-      "leagueName": "Bundesliga",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 3,
       "venue": "H",
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 62,
-        "label": "Eigen 62% + Gegner 62% → 62%"
+        "ratePct": 88,
+        "label": "Eigen 88% + Gegner 30% → 65%"
       },
-      "ratePct": 62,
+      "ratePct": 88,
       "seq": [
         true,
         true,
-        true,
-        false
+        true
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 1,
+      "preN": 0,
       "next": {
-        "oppId": "163",
-        "oppName": "Borussia Mönchengladbach",
-        "atHome": false,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T13:30:00+00:00",
-        "oppRatePct": 38
+        "oppId": "538",
+        "oppName": "Celta Vigo",
+        "atHome": true,
+        "date": "2026-09-03",
+        "kickoff": "2026-09-03T19:00:00+00:00",
+        "oppRatePct": 30
       },
-      "oppSupportPct": 62,
-      "matchupPct": 62
+      "oppSupportPct": 30,
+      "matchupPct": 65
     },
     {
       "teamId": "169",
@@ -18877,10 +19017,10 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 83,
-        "label": "Eigen 83% + Gegner 70% → 78%"
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 70% → 68%"
       },
-      "ratePct": 83,
+      "ratePct": 67,
       "seq": [
         true,
         true,
@@ -18898,7 +19038,7 @@
         "oppRatePct": 70
       },
       "oppSupportPct": 70,
-      "matchupPct": 78
+      "matchupPct": 68
     },
     {
       "teamId": "172",
@@ -18913,19 +19053,18 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 58% → 63%"
+        "ratePct": 78,
+        "label": "Eigen 78% + Gegner 58% → 70%"
       },
-      "ratePct": 67,
+      "ratePct": 78,
       "seq": [
         true,
         true,
-        true,
-        false
+        true
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 1,
+      "preN": 0,
       "next": {
         "oppId": "192",
         "oppName": "1. FC Köln",
@@ -18935,46 +19074,7 @@
         "oppRatePct": 58
       },
       "oppSupportPct": 58,
-      "matchupPct": 63
-    },
-    {
-      "teamId": "182",
-      "team": "Union Berlin",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/182.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "GER",
-      "leagueName": "Bundesliga",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 83,
-        "label": "Eigen 83% + Gegner 75% → 80%"
-      },
-      "ratePct": 83,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 3,
-      "next": {
-        "oppId": "168",
-        "oppName": "Bayer Leverkusen",
-        "atHome": false,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T13:30:00+00:00",
-        "oppRatePct": 75
-      },
-      "oppSupportPct": 75,
-      "matchupPct": 80
+      "matchupPct": 70
     },
     {
       "teamId": "182",
@@ -18989,10 +19089,10 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 83,
-        "label": "Eigen 83% + Gegner 75% → 80%"
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 62% → 65%"
       },
-      "ratePct": 83,
+      "ratePct": 67,
       "seq": [
         true,
         true,
@@ -19007,10 +19107,10 @@
         "atHome": false,
         "date": "2026-09-05",
         "kickoff": "2026-09-05T13:30:00+00:00",
-        "oppRatePct": 75
+        "oppRatePct": 62
       },
-      "oppSupportPct": 75,
-      "matchupPct": 80
+      "oppSupportPct": 62,
+      "matchupPct": 65
     },
     {
       "teamId": "106",
@@ -20709,44 +20809,6 @@
       "matchupPct": 45
     },
     {
-      "teamId": "36",
-      "team": "Fulham",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/36.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 22% → 49%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 2,
-      "next": {
-        "oppId": "746",
-        "oppName": "Sunderland",
-        "atHome": false,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T13:00:00+00:00",
-        "oppRatePct": 22
-      },
-      "oppSupportPct": 22,
-      "matchupPct": 49
-    },
-    {
       "teamId": "42",
       "team": "Arsenal",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/42.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -20784,9 +20846,9 @@
       "matchupPct": 58
     },
     {
-      "teamId": "47",
-      "team": "Tottenham",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/47.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "49",
+      "team": "Chelsea",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/49.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ENG",
       "leagueName": "Premier League",
       "type": "cornersOver",
@@ -20796,90 +20858,49 @@
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 17% → 47%"
+        "ratePct": 33,
+        "label": "Eigen 33% + Gegner 67% → 47%"
       },
-      "ratePct": 67,
+      "ratePct": 33,
       "seq": [
         true,
         true,
         true,
         false,
-        true,
-        true,
-        true,
+        false,
+        false,
+        false,
         true
       ],
       "xgBacked": null,
       "basis": "prior",
       "preN": 6,
       "next": {
-        "oppId": "65",
-        "oppName": "Nottingham Forest",
-        "atHome": false,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T14:00:00+00:00",
-        "oppRatePct": 17
+        "oppId": "51",
+        "oppName": "Brighton",
+        "atHome": true,
+        "date": "2026-08-30",
+        "kickoff": "2026-08-30T13:00:00+00:00",
+        "oppRatePct": 67
       },
-      "oppSupportPct": 17,
+      "oppSupportPct": 67,
       "matchupPct": 47
     },
     {
-      "teamId": "488",
-      "team": "Sassuolo",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/488.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "492",
+      "team": "Napoli",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/492.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ITA",
       "leagueName": "Serie A",
       "type": "cornersUnder",
       "market": "Unter 9,5 Ecken",
       "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 43,
-        "label": "Eigen 43% + Gegner 67% → 53%"
-      },
-      "ratePct": 43,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 7,
-      "next": {
-        "oppId": "500",
-        "oppName": "Bologna",
-        "atHome": false,
-        "date": "2026-09-06",
-        "kickoff": "2026-09-06T16:00:00+00:00",
-        "oppRatePct": 33
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 53
-    },
-    {
-      "teamId": "495",
-      "team": "Genoa",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/495.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 3,
-      "venue": "A",
+      "venue": "H",
       "strong": false,
       "continuation": {
         "state": "neutral",
         "ratePct": 60,
-        "label": "Eigen 60% + Gegner 50% → 56%"
+        "label": "Eigen 60% + Gegner 54% → 58%"
       },
       "ratePct": 60,
       "seq": [
@@ -20887,21 +20908,22 @@
         true,
         true,
         false,
-        false
+        false,
+        true
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 2,
+      "preN": 3,
       "next": {
-        "oppId": "487",
-        "oppName": "Lazio",
-        "atHome": false,
+        "oppId": "895",
+        "oppName": "Como",
+        "atHome": true,
         "date": "2026-08-30",
-        "kickoff": "2026-08-30T18:45:00+00:00",
-        "oppRatePct": 50
+        "kickoff": "2026-08-30T16:30:00+00:00",
+        "oppRatePct": 46
       },
-      "oppSupportPct": 50,
-      "matchupPct": 56
+      "oppSupportPct": 54,
+      "matchupPct": 58
     },
     {
       "teamId": "497",
@@ -20943,22 +20965,22 @@
       "matchupPct": 56
     },
     {
-      "teamId": "505",
-      "team": "Inter",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/505.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
+      "teamId": "52",
+      "team": "Crystal Palace",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/52.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
       "type": "cornersUnder",
       "market": "Unter 9,5 Ecken",
       "length": 3,
-      "venue": "A",
+      "venue": "H",
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 45,
-        "label": "Eigen 45% + Gegner 58% → 50%"
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 44% → 58%"
       },
-      "ratePct": 45,
+      "ratePct": 67,
       "seq": [
         true,
         true,
@@ -20970,184 +20992,22 @@
       "basis": "pure",
       "preN": 2,
       "next": {
-        "oppId": "490",
-        "oppName": "Cagliari",
-        "atHome": false,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T18:45:00+00:00",
-        "oppRatePct": 42
-      },
-      "oppSupportPct": 58,
-      "matchupPct": 50
-    },
-    {
-      "teamId": "523",
-      "team": "Parma",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/523.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 44,
-        "label": "Eigen 44% + Gegner 73% → 56%"
-      },
-      "ratePct": 44,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 9,
-      "next": {
-        "oppId": "1579",
-        "oppName": "Monza",
-        "atHome": true,
-        "date": "2026-09-06",
-        "kickoff": "2026-09-06T13:00:00+00:00",
-        "oppRatePct": 27
-      },
-      "oppSupportPct": 73,
-      "matchupPct": 56
-    },
-    {
-      "teamId": "57",
-      "team": "Ipswich",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/57.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 50,
-        "label": "Eigen 50% + Gegner 40% → 46%"
-      },
-      "ratePct": 50,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 6,
-      "next": {
-        "oppId": "33",
-        "oppName": "Manchester United",
-        "atHome": false,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T15:30:00+00:00",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 40,
-      "matchupPct": 46
-    },
-    {
-      "teamId": "65",
-      "team": "Nottingham Forest",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/65.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 83,
-        "label": "Eigen 83% + Gegner 22% → 59%"
-      },
-      "ratePct": 83,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 3,
-      "next": {
-        "oppId": "47",
-        "oppName": "Tottenham",
-        "atHome": true,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T14:00:00+00:00",
-        "oppRatePct": 78
-      },
-      "oppSupportPct": 22,
-      "matchupPct": 59
-    },
-    {
-      "teamId": "746",
-      "team": "Sunderland",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/746.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 33% → 53%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 6,
-      "next": {
         "oppId": "36",
         "oppName": "Fulham",
-        "atHome": true,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T13:00:00+00:00",
-        "oppRatePct": 67
+        "atHome": false,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T14:00:00+00:00",
+        "oppRatePct": 56
       },
-      "oppSupportPct": 33,
-      "matchupPct": 53
+      "oppSupportPct": 44,
+      "matchupPct": 58
     },
     {
-      "teamId": "91",
-      "team": "Monaco",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/91.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
+      "teamId": "4665",
+      "team": "Racing Santander",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/4665.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
       "type": "cornersOver",
       "market": "Über 9,5 Ecken",
       "length": 3,
@@ -21155,8 +21015,204 @@
       "strong": false,
       "continuation": {
         "state": "neutral",
+        "ratePct": 43,
+        "label": "Eigen 43% + Gegner 55% → 48%"
+      },
+      "ratePct": 43,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 7,
+      "next": {
+        "oppId": "728",
+        "oppName": "Rayo Vallecano",
+        "atHome": false,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T16:30:00+00:00",
+        "oppRatePct": 55
+      },
+      "oppSupportPct": 55,
+      "matchupPct": 48
+    },
+    {
+      "teamId": "529",
+      "team": "Barcelona",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/529.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 55% → 58%"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 1,
+      "next": {
+        "oppId": "728",
+        "oppName": "Rayo Vallecano",
+        "atHome": true,
+        "date": "2026-08-31",
+        "kickoff": "2026-08-31T19:30:00+00:00",
+        "oppRatePct": 55
+      },
+      "oppSupportPct": 55,
+      "matchupPct": 58
+    },
+    {
+      "teamId": "531",
+      "team": "Athletic Club",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/531.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 30% → 52%"
+      },
+      "ratePct": 67,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 3,
+      "next": {
+        "oppId": "538",
+        "oppName": "Celta Vigo",
+        "atHome": false,
+        "date": "2026-08-30",
+        "kickoff": "2026-08-30T19:30:00+00:00",
+        "oppRatePct": 30
+      },
+      "oppSupportPct": 30,
+      "matchupPct": 52
+    },
+    {
+      "teamId": "533",
+      "team": "Villarreal",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/533.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "cards",
+      "market": "Über 3,5 Karten",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 33,
+        "label": "Eigen 33% + Gegner 88% → 55%"
+      },
+      "ratePct": 33,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 6,
+      "next": {
+        "oppId": "544",
+        "oppName": "Deportivo La Coruna",
+        "atHome": true,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T19:00:00+00:00",
+        "oppRatePct": 88
+      },
+      "oppSupportPct": 88,
+      "matchupPct": 55
+    },
+    {
+      "teamId": "536",
+      "team": "Sevilla",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/536.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 44% → 58%"
+      },
+      "ratePct": 67,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 2,
+      "next": {
+        "oppId": "540",
+        "oppName": "Espanyol",
+        "atHome": false,
+        "date": "2026-09-06",
+        "kickoff": "2026-09-06T19:00:00+00:00",
+        "oppRatePct": 56
+      },
+      "oppSupportPct": 44,
+      "matchupPct": 58
+    },
+    {
+      "teamId": "536",
+      "team": "Sevilla",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/536.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "cards",
+      "market": "Über 3,5 Karten",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
         "ratePct": 50,
-        "label": "Eigen 50% + Gegner 46% → 48%"
+        "label": "Eigen 50% + Gegner 67% → 57%"
       },
       "ratePct": 50,
       "seq": [
@@ -21167,30 +21223,30 @@
         true,
         false,
         true,
-        true
+        false
       ],
       "xgBacked": null,
       "basis": "prior",
       "preN": 6,
       "next": {
-        "oppId": "81",
-        "oppName": "Marseille",
-        "atHome": true,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T18:45:00+00:00",
-        "oppRatePct": 46
+        "oppId": "540",
+        "oppName": "Espanyol",
+        "atHome": false,
+        "date": "2026-09-06",
+        "kickoff": "2026-09-06T19:00:00+00:00",
+        "oppRatePct": 67
       },
-      "oppSupportPct": 46,
-      "matchupPct": 48
+      "oppSupportPct": 67,
+      "matchupPct": 57
     },
     {
-      "teamId": "531",
-      "team": "Athletic Club",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/531.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "539",
+      "team": "Levante",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/539.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ESP",
       "leagueName": "La Liga",
-      "type": "cards",
-      "market": "Über 3,5 Karten",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
       "length": 3,
       "venue": "H",
       "strong": false,
@@ -21209,56 +21265,15 @@
       "basis": "pure",
       "preN": 0,
       "next": {
-        "oppId": "538",
-        "oppName": "Celta Vigo",
+        "oppId": "535",
+        "oppName": "Malaga",
         "atHome": false,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T19:30:00+00:00",
+        "date": "2026-09-06",
+        "kickoff": "2026-09-06T16:30:00+00:00",
         "oppRatePct": 40
       },
       "oppSupportPct": 40,
       "matchupPct": 56
-    },
-    {
-      "teamId": "535",
-      "team": "Malaga",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/535.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "cards",
-      "market": "Über 3,5 Karten",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 43,
-        "label": "Eigen 43% + Gegner 60% → 50%"
-      },
-      "ratePct": 43,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 7,
-      "next": {
-        "oppId": "541",
-        "oppName": "Real Madrid",
-        "atHome": false,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T15:00:00+00:00",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 50
     },
     {
       "teamId": "540",
@@ -21336,22 +21351,22 @@
       "matchupPct": 53
     },
     {
-      "teamId": "544",
-      "team": "Deportivo La Coruna",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/544.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "543",
+      "team": "Real Betis",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/543.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ESP",
       "leagueName": "La Liga",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
       "length": 3,
-      "venue": "H",
+      "venue": "A",
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 50,
-        "label": "Eigen 50% + Gegner 62% → 55%"
+        "ratePct": 57,
+        "label": "Eigen 57% + Gegner 60% → 58%"
       },
-      "ratePct": 50,
+      "ratePct": 57,
       "seq": [
         true,
         true,
@@ -21362,15 +21377,15 @@
       "basis": "pure",
       "preN": 1,
       "next": {
-        "oppId": "532",
-        "oppName": "Valencia",
+        "oppId": "541",
+        "oppName": "Real Madrid",
         "atHome": true,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T17:30:00+00:00",
-        "oppRatePct": 38
+        "date": "2026-09-04",
+        "kickoff": "2026-09-04T19:00:00+00:00",
+        "oppRatePct": 60
       },
-      "oppSupportPct": 62,
-      "matchupPct": 55
+      "oppSupportPct": 60,
+      "matchupPct": 58
     },
     {
       "teamId": "728",
@@ -21424,7 +21439,7 @@
       "continuation": {
         "state": "neutral",
         "ratePct": 64,
-        "label": "Eigen 64% + Gegner 50% → 58%"
+        "label": "Eigen 64% + Gegner 40% → 54%"
       },
       "ratePct": 64,
       "seq": [
@@ -21444,48 +21459,10 @@
         "atHome": false,
         "date": "2026-08-31",
         "kickoff": "2026-08-31T19:30:00+00:00",
-        "oppRatePct": 50
+        "oppRatePct": 40
       },
-      "oppSupportPct": 50,
-      "matchupPct": 58
-    },
-    {
-      "teamId": "167",
-      "team": "1899 Hoffenheim",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/167.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "GER",
-      "leagueName": "Bundesliga",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
-      "length": 3,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 56,
-        "label": "Eigen 56% + Gegner 33% → 47%"
-      },
-      "ratePct": 56,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 2,
-      "next": {
-        "oppId": "165",
-        "oppName": "Borussia Dortmund",
-        "atHome": true,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T13:30:00+00:00",
-        "oppRatePct": 33
-      },
-      "oppSupportPct": 33,
-      "matchupPct": 47
+      "oppSupportPct": 40,
+      "matchupPct": 54
     },
     {
       "teamId": "170",
@@ -21493,26 +21470,26 @@
       "flag": "<img src=\"https://media.api-sports.io/football/teams/170.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "GER",
       "leagueName": "Bundesliga",
-      "type": "cards",
-      "market": "Über 3,5 Karten",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
       "length": 3,
       "venue": "all",
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 43,
-        "label": "Eigen 43% + Gegner 57% → 49%"
+        "ratePct": 57,
+        "label": "Eigen 57% + Gegner 38% → 49%"
       },
-      "ratePct": 43,
+      "ratePct": 57,
       "seq": [
         true,
         true,
         true,
         false,
-        false,
-        false,
         true,
-        true
+        true,
+        true,
+        false
       ],
       "xgBacked": null,
       "basis": "prior",
@@ -21523,51 +21500,121 @@
         "atHome": true,
         "date": "2026-08-30",
         "kickoff": "2026-08-30T15:30:00+00:00",
-        "oppRatePct": 57
+        "oppRatePct": 38
       },
-      "oppSupportPct": 57,
+      "oppSupportPct": 38,
       "matchupPct": 49
     },
     {
-      "teamId": "192",
-      "team": "1. FC Köln",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/192.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "175",
+      "team": "Hamburger SV",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/175.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "GER",
       "leagueName": "Bundesliga",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
+      "type": "cards",
+      "market": "Über 3,5 Karten",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 70,
+        "label": "Eigen 70% + Gegner 33% → 55%"
+      },
+      "ratePct": 70,
+      "seq": [
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 0,
+      "next": {
+        "oppId": "164",
+        "oppName": "FSV Mainz 05",
+        "atHome": true,
+        "date": "2026-09-06",
+        "kickoff": "2026-09-06T13:30:00+00:00",
+        "oppRatePct": 33
+      },
+      "oppSupportPct": 33,
+      "matchupPct": 55
+    },
+    {
+      "teamId": "182",
+      "team": "Union Berlin",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/182.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "GER",
+      "leagueName": "Bundesliga",
+      "type": "cards",
+      "market": "Über 3,5 Karten",
       "length": 3,
       "venue": "all",
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 44,
-        "label": "Eigen 44% + Gegner 67% → 53%"
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 25% → 50%"
       },
-      "ratePct": 44,
+      "ratePct": 67,
       "seq": [
         true,
         true,
         true,
         false,
-        false,
-        true,
         true,
         false
       ],
       "xgBacked": null,
-      "basis": "prior",
-      "preN": 9,
+      "basis": "pure",
+      "preN": 3,
       "next": {
-        "oppId": "172",
-        "oppName": "VfB Stuttgart",
+        "oppId": "168",
+        "oppName": "Bayer Leverkusen",
         "atHome": false,
-        "date": "2026-09-04",
-        "kickoff": "2026-09-04T18:30:00+00:00",
-        "oppRatePct": 67
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T13:30:00+00:00",
+        "oppRatePct": 25
       },
-      "oppSupportPct": 67,
-      "matchupPct": 53
+      "oppSupportPct": 25,
+      "matchupPct": 50
+    },
+    {
+      "teamId": "182",
+      "team": "Union Berlin",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/182.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "GER",
+      "leagueName": "Bundesliga",
+      "type": "cards",
+      "market": "Über 3,5 Karten",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 25% → 50%"
+      },
+      "ratePct": 67,
+      "seq": [
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 0,
+      "next": {
+        "oppId": "168",
+        "oppName": "Bayer Leverkusen",
+        "atHome": false,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T13:30:00+00:00",
+        "oppRatePct": 25
+      },
+      "oppSupportPct": 25,
+      "matchupPct": 50
     },
     {
       "teamId": "114",
@@ -23246,52 +23293,179 @@
       "matchupPct": 21
     },
     {
-      "teamId": "106",
-      "team": "Stade Brestois 29",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/106.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "114",
+      "team": "Paris FC",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/114.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "FRA",
       "leagueName": "Ligue 1",
       "type": "cornersUnder",
       "market": "Unter 9,5 Ecken",
       "length": 3,
-      "venue": "H",
+      "venue": "all",
       "strong": false,
       "continuation": {
         "state": "wackelt",
-        "ratePct": 44,
-        "label": "Eigen 44% + Gegner 44% → 44%"
+        "ratePct": 0,
+        "label": "Eigen 0% + Gegner 27% → 11%"
       },
-      "ratePct": 44,
+      "ratePct": 0,
       "seq": [
         true,
         true,
         true,
+        false,
+        false,
+        false,
+        false,
         false
       ],
       "xgBacked": null,
-      "basis": "pure",
-      "preN": 1,
+      "basis": "prior",
+      "preN": 7,
       "next": {
-        "oppId": "111",
-        "oppName": "Le Havre",
-        "atHome": false,
+        "oppId": "84",
+        "oppName": "Nice",
+        "atHome": true,
+        "date": "2026-08-30",
+        "kickoff": "2026-08-30T13:00:00+00:00",
+        "oppRatePct": 73
+      },
+      "oppSupportPct": 27,
+      "matchupPct": 11
+    },
+    {
+      "teamId": "496",
+      "team": "Juventus",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/496.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ITA",
+      "leagueName": "Serie A",
+      "type": "cornersOver",
+      "market": "Über 9,5 Ecken",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 33,
+        "label": "Eigen 33% + Gegner 18% → 27%"
+      },
+      "ratePct": 33,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 6,
+      "next": {
+        "oppId": "489",
+        "oppName": "AC Milan",
+        "atHome": true,
+        "date": "2026-09-06",
+        "kickoff": "2026-09-06T18:45:00+00:00",
+        "oppRatePct": 18
+      },
+      "oppSupportPct": 18,
+      "matchupPct": 27
+    },
+    {
+      "teamId": "64",
+      "team": "Hull City",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/64.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 43,
+        "label": "Eigen 43% + Gegner 44% → 43%"
+      },
+      "ratePct": 43,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 7,
+      "next": {
+        "oppId": "66",
+        "oppName": "Aston Villa",
+        "atHome": true,
         "date": "2026-09-05",
-        "kickoff": "2026-09-05T18:45:00+00:00",
+        "kickoff": "2026-09-05T16:30:00+00:00",
         "oppRatePct": 56
       },
       "oppSupportPct": 44,
-      "matchupPct": 44
+      "matchupPct": 43
     },
     {
-      "teamId": "116",
-      "team": "Lens",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/116.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "94",
+      "team": "Rennes",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/94.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "FRA",
       "leagueName": "Ligue 1",
       "type": "cards",
       "market": "Über 3,5 Karten",
       "length": 3,
-      "venue": "A",
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 20,
+        "label": "Eigen 20% + Gegner 50% → 32%"
+      },
+      "ratePct": 20,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 5,
+      "next": {
+        "oppId": "1298",
+        "oppName": "Le Mans",
+        "atHome": true,
+        "date": "2026-08-30",
+        "kickoff": "2026-08-30T15:15:00+00:00",
+        "oppRatePct": 50
+      },
+      "oppSupportPct": 50,
+      "matchupPct": 32
+    },
+    {
+      "teamId": "530",
+      "team": "Atletico Madrid",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/530.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "cornersUnder",
+      "market": "Unter 9,5 Ecken",
+      "length": 3,
+      "venue": "all",
       "strong": false,
       "continuation": {
         "state": "wackelt",
@@ -23302,262 +23476,67 @@
       "seq": [
         true,
         true,
+        true,
+        false,
+        false,
+        false,
+        false,
         true
       ],
       "xgBacked": null,
-      "basis": "pure",
-      "preN": 0,
+      "basis": "prior",
+      "preN": 8,
       "next": {
-        "oppId": "97",
-        "oppName": "Lorient",
-        "atHome": true,
+        "oppId": "531",
+        "oppName": "Athletic Club",
+        "atHome": false,
         "date": "2026-09-05",
-        "kickoff": "2026-09-05T15:15:00+00:00",
-        "oppRatePct": 33
+        "kickoff": "2026-09-05T14:15:00+00:00",
+        "oppRatePct": 67
       },
       "oppSupportPct": 33,
       "matchupPct": 43
     },
     {
-      "teamId": "51",
-      "team": "Brighton",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/51.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 33,
-        "label": "Eigen 33% + Gegner 56% → 42%"
-      },
-      "ratePct": 33,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 3,
-      "next": {
-        "oppId": "49",
-        "oppName": "Chelsea",
-        "atHome": false,
-        "date": "2026-08-30",
-        "kickoff": "2026-08-30T13:00:00+00:00",
-        "oppRatePct": 44
-      },
-      "oppSupportPct": 56,
-      "matchupPct": 42
-    },
-    {
-      "teamId": "52",
-      "team": "Crystal Palace",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/52.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 33,
-        "label": "Eigen 33% + Gegner 33% → 33%"
-      },
-      "ratePct": 33,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 6,
-      "next": {
-        "oppId": "36",
-        "oppName": "Fulham",
-        "atHome": false,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T14:00:00+00:00",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 33,
-      "matchupPct": 33
-    },
-    {
-      "teamId": "523",
-      "team": "Parma",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/523.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ITA",
-      "leagueName": "Serie A",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
-      "length": 3,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 42,
-        "label": "Eigen 42% + Gegner 27% → 36%"
-      },
-      "ratePct": 42,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 2,
-      "next": {
-        "oppId": "1579",
-        "oppName": "Monza",
-        "atHome": true,
-        "date": "2026-09-06",
-        "kickoff": "2026-09-06T13:00:00+00:00",
-        "oppRatePct": 27
-      },
-      "oppSupportPct": 27,
-      "matchupPct": 36
-    },
-    {
-      "teamId": "96",
-      "team": "Toulouse",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/96.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 11,
-        "label": "Eigen 11% + Gegner 50% → 27%"
-      },
-      "ratePct": 11,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 9,
-      "next": {
-        "oppId": "79",
-        "oppName": "Lille",
-        "atHome": true,
-        "date": "2026-09-03",
-        "kickoff": "2026-09-03T18:45:00+00:00",
-        "oppRatePct": 50
-      },
-      "oppSupportPct": 50,
-      "matchupPct": 27
-    },
-    {
-      "teamId": "540",
-      "team": "Espanyol",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/540.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "530",
+      "team": "Atletico Madrid",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/530.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ESP",
       "leagueName": "La Liga",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
+      "type": "cards",
+      "market": "Über 3,5 Karten",
       "length": 3,
       "venue": "all",
       "strong": false,
       "continuation": {
         "state": "wackelt",
-        "ratePct": 17,
-        "label": "Eigen 17% + Gegner 67% → 37%"
+        "ratePct": 25,
+        "label": "Eigen 25% + Gegner 33% → 28%"
       },
-      "ratePct": 17,
+      "ratePct": 25,
       "seq": [
         true,
         true,
         true,
         false,
         false,
+        true,
         false,
-        false,
-        true
+        false
       ],
       "xgBacked": null,
       "basis": "prior",
-      "preN": 6,
+      "preN": 8,
       "next": {
-        "oppId": "536",
-        "oppName": "Sevilla",
-        "atHome": true,
-        "date": "2026-09-06",
-        "kickoff": "2026-09-06T19:00:00+00:00",
-        "oppRatePct": 33
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 37
-    },
-    {
-      "teamId": "167",
-      "team": "1899 Hoffenheim",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/167.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "GER",
-      "leagueName": "Bundesliga",
-      "type": "cornersOver",
-      "market": "Über 9,5 Ecken",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 33,
-        "label": "Eigen 33% + Gegner 33% → 33%"
-      },
-      "ratePct": 33,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 6,
-      "next": {
-        "oppId": "165",
-        "oppName": "Borussia Dortmund",
-        "atHome": true,
+        "oppId": "531",
+        "oppName": "Athletic Club",
+        "atHome": false,
         "date": "2026-09-05",
-        "kickoff": "2026-09-05T13:30:00+00:00",
+        "kickoff": "2026-09-05T14:15:00+00:00",
         "oppRatePct": 33
       },
       "oppSupportPct": 33,
-      "matchupPct": 33
+      "matchupPct": 28
     }
   ]
 }
