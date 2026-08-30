@@ -1,15 +1,15 @@
 {
-"generatedAt": "2026-08-30T19:21:06.589639+00:00",
+"generatedAt": "2026-08-30T19:36:06.500306+00:00",
 "byVerdict": {
 "konsens": {
-"n": 633,
-"wins": 516,
-"hitRate": 0.8152,
-"polyN": 594,
-"polyWins": 467,
-"polyHitRate": 0.7862,
-"pinnN": 50,
-"pinnHitRate": 0.76
+"n": 635,
+"wins": 518,
+"hitRate": 0.8157,
+"polyN": 596,
+"polyWins": 469,
+"polyHitRate": 0.7869,
+"pinnN": 51,
+"pinnHitRate": 0.7647
 },
 "uneinig": {
 "n": 219,
@@ -49,9 +49,9 @@
 "hitRate": 0.6207
 },
 "Spanish La Liga": {
-"n": 26,
-"wins": 18,
-"hitRate": 0.6923
+"n": 27,
+"wins": 19,
+"hitRate": 0.7037
 },
 "Argentinian Primera Division": {
 "n": 22,
@@ -123,6 +123,11 @@
 "wins": 8,
 "hitRate": 0.5
 },
+"Italian Serie A": {
+"n": 16,
+"wins": 13,
+"hitRate": 0.8125
+},
 "Japanese J League": {
 "n": 16,
 "wins": 12,
@@ -137,11 +142,6 @@
 "n": 15,
 "wins": 13,
 "hitRate": 0.8667
-},
-"Italian Serie A": {
-"n": 15,
-"wins": 12,
-"hitRate": 0.8
 },
 "Portuguese Primeira Liga": {
 "n": 15,
@@ -526,14 +526,14 @@
 },
 "byStrength": {
 "strong": {
-"n": 503,
-"wins": 407,
-"hitRate": 0.8091
+"n": 504,
+"wins": 408,
+"hitRate": 0.8095
 },
 "weak": {
-"n": 325,
-"wins": 161,
-"hitRate": 0.4954
+"n": 326,
+"wins": 162,
+"hitRate": 0.4969
 }
 },
 "divergence": {
@@ -545,6 +545,44 @@
 "polyRate": 0.2857
 },
 "recent": [
+{
+"matchId": "35965480",
+"home": "Napoli",
+"away": "Como",
+"league": "Italian Serie A",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Como",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-08-30T16:30:00Z",
+"settledAt": "2026-08-30T19:36:06.308597+00:00"
+},
+{
+"matchId": "35965477",
+"home": "Deportivo",
+"away": "Valencia",
+"league": "Spanish La Liga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Deportivo",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-08-30T17:30:00Z",
+"settledAt": "2026-08-30T19:36:06.308597+00:00"
+},
 {
 "matchId": "35974323",
 "home": "Botev Plovdiv",
@@ -1266,50 +1304,12 @@
 ],
 "kickoff": "2026-08-30T01:30:00Z",
 "settledAt": "2026-08-30T04:34:25.062317+00:00"
-},
-{
-"matchId": "35989129",
-"home": "Alianza FC Valledupar",
-"away": "Atletico Nacional Medellin",
-"league": "Colombian Primera A",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Atletico Nacional Medellin",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-5
-],
-"kickoff": "2026-08-30T01:30:00Z",
-"settledAt": "2026-08-30T04:34:25.062317+00:00"
-},
-{
-"matchId": "35970238",
-"home": "CF America",
-"away": "Puebla",
-"league": "Mexican Liga MX",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "CF America",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-08-30T01:05:00Z",
-"settledAt": "2026-08-30T04:19:22.128087+00:00"
 }
 ],
 "global": {
-"n": 861,
-"wins": 586,
-"hitRate": 0.6806
+"n": 863,
+"wins": 588,
+"hitRate": 0.6813
 },
-"pending": 20
+"pending": 22
 }
