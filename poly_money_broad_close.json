@@ -113045,54 +113045,6 @@
   },
   "resolvedAt": "2026-08-30T02:17:36.888918+00:00"
  },
- "col1-cjf-isf-2026-08-29": {
-  "shares": {
-   "CDP Junior FC": 32836.472821599986,
-   "Draw (CDP Junior FC vs. Independiente Santa Fe)": 8.288735630000001,
-   "Independiente Santa Fe": 166.36320540000003
-  },
-  "prices": {
-   "CDP Junior FC": 0.595,
-   "Draw (CDP Junior FC vs. Independiente Santa Fe)": 0.245,
-   "Independiente Santa Fe": 0.175
-  },
-  "league": "SOCCER",
-  "sport": "Fußball",
-  "totalUsd": 35314,
-  "whales": [
-   {
-    "wallet": "0x7ad71d79a3bb90d0a87a06500fa0fe11663842aa",
-    "side": "CDP Junior FC",
-    "usd": 29506,
-    "avgPrice": 0.5884
-   },
-   {
-    "wallet": "0x448861155279dbf833d041b963e3ac854599e319",
-    "side": "CDP Junior FC",
-    "usd": 1190,
-    "avgPrice": 0.58
-   },
-   {
-    "wallet": "0x162ca4c5249987872fea1e15c846d7fe80316c47",
-    "side": "CDP Junior FC",
-    "usd": 918,
-    "avgPrice": 0.5299
-   },
-   {
-    "wallet": "0xa71da74194b53b1ec39a5c3eb3cd6ddcca3b9854",
-    "side": "CDP Junior FC",
-    "usd": 322,
-    "avgPrice": 0.5399
-   }
-  ],
-  "hoursToKickoff": 0.25,
-  "capturedAt": "2026-08-29T23:17:34.281773+00:00",
-  "tokens": {
-   "CDP Junior FC": "82854795846491972908078928860201626912048441326492140263634403487778786007063",
-   "Draw (CDP Junior FC vs. Independiente Santa Fe)": "60401619869324949775583740332275676765953384991964373242473372629264670008280",
-   "Independiente Santa Fe": "43381150095357185959718367100630604962312866068302008089896705128960343839724"
-  }
- },
  "mlb-bal-oak-2026-08-29": {
   "shares": {
    "Over": 44873.44181144998,
@@ -113886,7 +113838,13 @@
     "usd": 414,
     "ts": 1788051981
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Philadelphia Phillies": 1.0,
+   "Los Angeles Angels": 0.0
+  },
+  "resolvedAt": "2026-08-30T05:47:15.814381+00:00"
  },
  "boxing-valenz-white-2026-08-29": {
   "shares": {
@@ -114296,8 +114254,8 @@
  },
  "lol-dk-kt-2026-08-30": {
   "shares": {
-   "Dplus KIA": 81672.65264574993,
-   "KT Rolster": 23711.417957474998
+   "Dplus KIA": 85688.3201080749,
+   "KT Rolster": 24877.251900224997
   },
   "prices": {
    "Dplus KIA": 0.775,
@@ -114305,12 +114263,12 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 111627,
+  "totalUsd": 116438,
   "whales": [
    {
     "wallet": "0xe015b5a2a299167be835a2fd1e86f09c49e06ffd",
     "side": "Dplus KIA",
-    "usd": 41854,
+    "usd": 42267,
     "avgPrice": 0.7699
    },
    {
@@ -114332,8 +114290,8 @@
     "avgPrice": 0.7599
    }
   ],
-  "hoursToKickoff": 2.75,
-  "capturedAt": "2026-08-30T05:17:19.771743+00:00",
+  "hoursToKickoff": 2.25,
+  "capturedAt": "2026-08-30T05:47:15.814381+00:00",
   "tokens": {
    "Dplus KIA": "102821988932241692706326278964452061768149621100764965458094273168870397992280",
    "KT Rolster": "36975184129470499474197953454259475250777262677919077351081495638594211713471"
@@ -114347,45 +114305,45 @@
    "bids": [
     [
      0.77,
-     81909
+     81375
     ],
     [
      0.76,
-     382854
+     382875
     ],
     [
      0.75,
-     78909
+     79254
     ],
     [
      0.74,
-     34612
+     33612
     ],
     [
      0.73,
-     2220
+     1220
     ],
     [
      0.72,
-     1481
+     481
     ]
    ],
    "asks": [
     [
      0.78,
-     94912
+     67374
     ],
     [
      0.79,
-     48054
+     28567
     ],
     [
      0.8,
-     30991
+     11459
     ],
     [
      0.81,
-     14866
+     15866
     ],
     [
      0.82,
@@ -114393,11 +114351,35 @@
     ],
     [
      0.83,
-     9813
+     4813
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xfb67e3f646a4ee6faf1abdf56d046dc060e9fd46",
+    "action": "SELL",
+    "side": "KT Rolster",
+    "price": 0.22,
+    "usd": 462,
+    "ts": 1788068502
+   },
+   {
+    "wallet": "0x4d4815122c826e1ca6bc5d63f36e3b3a0c5c66ab",
+    "action": "BUY",
+    "side": "Dplus KIA",
+    "price": 0.78,
+    "usd": 418,
+    "ts": 1788067378
+   },
+   {
+    "wallet": "0xd3faf1906cc31e75d1dfa0d7b57e8f97d33da26c",
+    "action": "BUY",
+    "side": "Dplus KIA",
+    "price": 0.78,
+    "usd": 3000,
+    "ts": 1788067225
+   },
    {
     "wallet": "0xee46244ad537c04587140becf8418eccc18ffaa0",
     "action": "BUY",
@@ -114413,45 +114395,13 @@
     "price": 0.23,
     "usd": 1300,
     "ts": 1788065698
-   },
-   {
-    "wallet": "0x62771058d17ed999f028d53fa660a960b3ab5a3f",
-    "action": "BUY",
-    "side": "KT Rolster",
-    "price": 0.23,
-    "usd": 446,
-    "ts": 1788063145
-   },
-   {
-    "wallet": "0xf6f2dc0dc941ee5440a017b03b8f1a37de6fb422",
-    "action": "BUY",
-    "side": "Dplus KIA",
-    "price": 0.78,
-    "usd": 1000,
-    "ts": 1788062104
-   },
-   {
-    "wallet": "0xbc651060abb7c5f99988c352c8f4f8b2fb2696c8",
-    "action": "BUY",
-    "side": "KT Rolster",
-    "price": 0.23,
-    "usd": 354,
-    "ts": 1788061276
-   },
-   {
-    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
-    "action": "BUY",
-    "side": "KT Rolster",
-    "price": 0.23,
-    "usd": 397,
-    "ts": 1788060837
    }
   ]
  },
  "val-m8gc-g2-2026-08-30": {
   "shares": {
-   "Gentle Mates GC": 9015.267027195001,
-   "G2 Gozen": 9197.393633805
+   "Gentle Mates GC": 9718.64843895,
+   "G2 Gozen": 9914.98477105
   },
   "prices": {
    "Gentle Mates GC": 0.495,
@@ -114459,13 +114409,13 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 18042,
+  "totalUsd": 20434,
   "whales": [
    {
     "wallet": "0x7e5e420a5cde8a322f3b5b93a12a164827f47315",
     "side": "G2 Gozen",
-    "usd": 4506,
-    "avgPrice": 0.4965
+    "usd": 5201,
+    "avgPrice": 0.497
    },
    {
     "wallet": "0x0aa4d88d10e87350c70e0b8e943f057b48235dc8",
@@ -114486,72 +114436,80 @@
     "avgPrice": 0.46
    }
   ],
-  "hoursToKickoff": 2.75,
-  "capturedAt": "2026-08-30T05:17:19.771743+00:00",
+  "hoursToKickoff": 2.25,
+  "capturedAt": "2026-08-30T05:47:15.814381+00:00",
   "tokens": {
    "Gentle Mates GC": "49520556786347998600610756503835256909297941656130665493482756162274367196350",
    "G2 Gozen": "83265647314988683661859217527369110355223211748433224077723331814641378897688"
   },
   "book": {
    "side": "G2 Gozen",
-   "bid": 0.5,
-   "ask": 0.51,
+   "bid": 0.49,
+   "ask": 0.5,
    "spreadC": 1.0,
-   "spreadPct": 1.96,
+   "spreadPct": 2.0,
    "bids": [
     [
-     0.5,
-     1619
-    ],
-    [
      0.49,
-     3475
+     3218
     ],
     [
      0.48,
-     329
+     2295
     ],
     [
      0.47,
-     2729
+     98
     ],
     [
      0.46,
-     2553
+     2655
     ],
     [
      0.45,
-     305
+     516
+    ],
+    [
+     0.44,
+     190
     ]
    ],
    "asks": [
     [
+     0.5,
+     20
+    ],
+    [
      0.51,
-     1263
+     1387
     ],
     [
      0.52,
-     2750
+     2672
     ],
     [
      0.53,
-     1148
+     986
     ],
     [
      0.54,
-     604
+     1543
     ],
     [
      0.55,
-     1050
-    ],
-    [
-     0.56,
-     4013
+     3804
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xb5527654d309c6617addabbb64e47931cf35b70c",
+    "action": "BUY",
+    "side": "Gentle Mates GC",
+    "price": 0.5,
+    "usd": 565,
+    "ts": 1788067584
+   },
    {
     "wallet": "0x81d12e02d411ea6784d14af0538c72ecf8bb4806",
     "action": "BUY",
@@ -114564,8 +114522,8 @@
  },
  "lol-tsw-cfo-2026-08-30": {
   "shares": {
-   "Team Secret Whales": 6621.196113965,
-   "CTBC Flying Oyster": 1502.9688910799996
+   "Team Secret Whales": 6890.092782809999,
+   "CTBC Flying Oyster": 1564.0067852350003
   },
   "prices": {
    "Team Secret Whales": 0.815,
@@ -114573,7 +114531,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 8824,
+  "totalUsd": 8846,
   "whales": [
    {
     "wallet": "0xee46244ad537c04587140becf8418eccc18ffaa0",
@@ -114600,68 +114558,68 @@
     "avgPrice": 0.7898
    }
   ],
-  "hoursToKickoff": 2.75,
-  "capturedAt": "2026-08-30T05:17:19.771743+00:00",
+  "hoursToKickoff": 2.25,
+  "capturedAt": "2026-08-30T05:47:15.814381+00:00",
   "tokens": {
    "Team Secret Whales": "28726192675225452990352759837419500612660704688198310886636559853442952694226",
    "CTBC Flying Oyster": "83872817899647419700069576431976704882656462305465249463197316581458048721969"
   },
   "book": {
    "side": "Team Secret Whales",
-   "bid": 0.81,
-   "ask": 0.82,
+   "bid": 0.8,
+   "ask": 0.81,
    "spreadC": 1.0,
-   "spreadPct": 1.22,
+   "spreadPct": 1.23,
    "bids": [
     [
-     0.81,
-     17
-    ],
-    [
      0.8,
-     2385
+     2752
     ],
     [
      0.79,
-     8073
+     8279
     ],
     [
      0.78,
-     863
+     5939
     ],
     [
      0.77,
-     304
+     182
     ],
     [
      0.76,
-     45
+     20
+    ],
+    [
+     0.74,
+     71
     ]
    ],
    "asks": [
     [
+     0.81,
+     118
+    ],
+    [
      0.82,
-     24026
+     24259
     ],
     [
      0.83,
-     1140
+     1052
     ],
     [
      0.84,
-     5449
+     5737
     ],
     [
      0.85,
-     8583
+     11600
     ],
     [
      0.86,
-     107
-    ],
-    [
-     0.87,
-     975
+     435
     ]
    ]
   },
@@ -114697,14 +114655,144 @@
     "price": 0.7897,
     "usd": 450,
     "ts": 1788024678
+   }
+  ]
+ },
+ "crickcl-koc-cal-2026-08-30": {
+  "shares": {
+   "Kochi Blue Tigers": 1328.0943298349998,
+   "Calicut Globstars": 1590.7517911700004
+  },
+  "prices": {
+   "Kochi Blue Tigers": 0.455,
+   "Calicut Globstars": 0.545
+  },
+  "league": "CRICKET",
+  "sport": "Cricket",
+  "totalUsd": 12028,
+  "whales": [
+   {
+    "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
+    "side": "Kochi Blue Tigers",
+    "usd": 791,
+    "avgPrice": 0.7193
    },
    {
-    "wallet": "0xee46244ad537c04587140becf8418eccc18ffaa0",
+    "wallet": "0x61f621ed129a8b64f0d2abbef50d23cd52d1e497",
+    "side": "Calicut Globstars",
+    "usd": 439,
+    "avgPrice": 0.3576
+   },
+   {
+    "wallet": "0xeface9902242b0399856f981600b907dcc9bc9a1",
+    "side": "Calicut Globstars",
+    "usd": 262,
+    "avgPrice": 0.3887
+   },
+   {
+    "wallet": "0xc2f2d01b227948e59f25aeb3d49564b8975d0ff7",
+    "side": "Calicut Globstars",
+    "usd": 241,
+    "avgPrice": 0.25
+   }
+  ],
+  "hoursToKickoff": 2.75,
+  "capturedAt": "2026-08-30T05:47:15.814381+00:00",
+  "tokens": {
+   "Kochi Blue Tigers": "5712666633465683246647290164296468088614814112474963102858264480479709986128",
+   "Calicut Globstars": "97307592491133082481280103819953727049379534707469969361756042721896075511413"
+  },
+  "book": {
+   "side": "Calicut Globstars",
+   "bid": 0.54,
+   "ask": 0.55,
+   "spreadC": 1.0,
+   "spreadPct": 1.82,
+   "bids": [
+    [
+     0.54,
+     1784
+    ],
+    [
+     0.46,
+     133
+    ],
+    [
+     0.44,
+     19
+    ],
+    [
+     0.43,
+     42
+    ],
+    [
+     0.33,
+     530
+    ],
+    [
+     0.28,
+     191
+    ]
+   ],
+   "asks": [
+    [
+     0.55,
+     0
+    ],
+    [
+     0.57,
+     60
+    ],
+    [
+     0.58,
+     15
+    ],
+    [
+     0.59,
+     5
+    ],
+    [
+     0.6,
+     105
+    ],
+    [
+     0.61,
+     33
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xc0f89d4e30b3ab40ab1f1979ebdcf8a02c39ae2e",
     "action": "BUY",
-    "side": "Team Secret Whales",
-    "price": 0.7899,
-    "usd": 440,
-    "ts": 1788024579
+    "side": "Calicut Globstars",
+    "price": 0.27,
+    "usd": 405,
+    "ts": 1788033862
+   },
+   {
+    "wallet": "0xc0f89d4e30b3ab40ab1f1979ebdcf8a02c39ae2e",
+    "action": "BUY",
+    "side": "Kochi Blue Tigers",
+    "price": 0.37,
+    "usd": 555,
+    "ts": 1788026806
+   },
+   {
+    "wallet": "0xc0f89d4e30b3ab40ab1f1979ebdcf8a02c39ae2e",
+    "action": "BUY",
+    "side": "Kochi Blue Tigers",
+    "price": 0.3998,
+    "usd": 612,
+    "ts": 1788025930
+   },
+   {
+    "wallet": "0xc0f89d4e30b3ab40ab1f1979ebdcf8a02c39ae2e",
+    "action": "BUY",
+    "side": "Calicut Globstars",
+    "price": 0.1863,
+    "usd": 331,
+    "ts": 1788021762
    }
   ]
  }
