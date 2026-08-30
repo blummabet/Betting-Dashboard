@@ -302,6 +302,22 @@ def _ledger_fortschreiben(ledger: list, angepfiffen: list, results=None, now=Non
     return ledger[-2000:]
 
 
+# 30.08.2026: der Badge oben rechts sprang auf GRUEN, sobald das eigene Buch 20 Zeilen hatte und
+# der ROI-Punktschaetzer ueber null lag — waehrend die Fusszeile direkt darunter weiter
+# „Beobachtungsliste, keine Freigabe" sagte. Bei n=32 / ROI +7,2% liegt die einseitige
+# 95%-Untergrenze bei -20,1%: das ist kein Beleg, das ist Rauschen mit Vorzeichen. Genau der
+# Fehler, den ich hier schon zweimal gemacht habe (+12,9% wurde +2,4%). Die Sektion liefert die
+# Untergrenze jetzt mit, damit die Anzeige denselben Richter benutzt wie freigabe.py.
+def _untergrenze(renditen, z: float = 1.645):
+    """Einseitige 95%-Untergrenze des mittleren ROI (Normalapproximation). None unter n=2."""
+    n = len(renditen)
+    if n < 2:
+        return None
+    m = sum(renditen) / n
+    var = sum((x - m) ** 2 for x in renditen) / (n - 1)
+    return round(m - z * (var ** 0.5) / (n ** 0.5), 4)
+
+
 def bilanz(ledger=None, letzte=25):
     """Die eigene Bilanz der Sektion — was sie gezeigt hat und wie es ausging.
 
@@ -318,14 +334,15 @@ def bilanz(ledger=None, letzte=25):
     rows = ledger if ledger is not None else _load(LEDGER_FILE, [])
 
     def leer():
-        return {"n": 0, "gewonnen": 0, "verloren": 0, "einheiten": 0.0, "roi": None}
+        return {"n": 0, "gewonnen": 0, "verloren": 0, "einheiten": 0.0, "roi": None,
+                "roiLb": None, "renditen": []}
 
     def zu(b, r, o):
         b["n"] += 1
         if r.get("win"):
-            b["gewonnen"] += 1; b["einheiten"] += (o - 1.0)
+            b["gewonnen"] += 1; b["einheiten"] += (o - 1.0); b["renditen"].append(o - 1.0)
         else:
-            b["verloren"] += 1; b["einheiten"] -= 1.0
+            b["verloren"] += 1; b["einheiten"] -= 1.0; b["renditen"].append(-1.0)
 
     gesamt, je_stufe, zeilen, offen = leer(), {"1": leer(), "2": leer()}, [], 0
     for r in (rows or []):
@@ -344,6 +361,7 @@ def bilanz(ledger=None, letzte=25):
                        "win": bool(r.get("win")), "settledAt": r.get("settledAt")})
     for b in [gesamt] + list(je_stufe.values()):
         b["roi"] = round(b["einheiten"] / b["n"], 4) if b["n"] else None
+        b["roiLb"] = _untergrenze(b.pop("renditen"))
         b["einheiten"] = round(b["einheiten"], 2)
     zeilen.sort(key=lambda z: z.get("settledAt") or "", reverse=True)
     return {"gesamt": gesamt, "jeStufe": je_stufe, "offen": offen, "zeilen": zeilen[:letzte]}

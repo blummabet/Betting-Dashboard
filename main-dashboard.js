@@ -260,6 +260,12 @@
       '.md-jz-div{font-size:12.5px;font-weight:700;line-height:1.3;}',
       '.md-jz-mv{font-family:"JetBrains Mono",monospace;font-size:12px;font-weight:800;white-space:nowrap;text-align:right;min-width:52px;}',
       '.md-badge{display:inline-block;font-size:9.5px;font-weight:800;padding:1px 6px;border-radius:5px;margin-left:6px;vertical-align:1px;}',
+      // 30.08.2026 (Lucas: „wir müssen hier noch rausarbeiten was der Unterschied ist"): zwei
+      // geldgetriebene Sektionen standen untereinander und sahen aus wie zweimal dasselbe.
+      // Sie sind aber gegensätzlich gebaut — die eine ist ein FILTER (alle Bedingungen
+      // gleichzeitig, kann leer sein), die andere eine RANGLISTE (bestes Einzelsignal, ist nie
+      // leer). Das steht jetzt als erstes Wort in beiden Köpfen, in derselben Form.
+      '.md-mech{font-size:9px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;padding:2px 6px;border-radius:5px;border:1px solid;white-space:nowrap;}',
       // 29.08.2026 (Lucas): das Konjunktions-Element. Bewusst anders als „Top-Wetten jetzt":
       // dunkler, ruhiger, weniger Zeilen. Die Sektion soll aussehen, als koste jede Zeile etwas.
       '.md-kl{background:radial-gradient(130% 150% at 0% 0%,rgba(76,194,255,.10),transparent 58%),var(--m1);border:1px solid rgba(76,194,255,.26);border-radius:14px;padding:13px 15px 10px;margin-top:12px;}',
@@ -1425,11 +1431,19 @@
   function _mdKillerBadge(st, bil) {
     var g = (bil && bil.gesamt) || null;
     if (g && g.n >= KL_EIGEN_MIN_N) {
+      // 30.08.2026: hier stand `r > 0` — der nackte Punktschätzer. Bei n=32 / ROI +7% war der
+      // Badge damit GRÜN, während die Fußzeile zwei Zeilen tiefer „Beobachtungsliste, keine
+      // Freigabe" sagte. Die einseitige 95%-Untergrenze lag bei −20%. Grün darf nur werden, was
+      // denselben Richter besteht wie die Freigabe: die UNTERGRENZE über null. Fehlt sie (altes
+      // killer.json vor diesem Lauf), bleibt es gelb — fehlende Information ist keine Erlaubnis.
       var r = g.roi == null ? null : Math.round(g.roi * 100);
-      return { txt: 'eigene Bilanz · ' + g.gewonnen + '–' + g.verloren + ' · ROI ' +
-                    (r == null ? '—' : (r >= 0 ? '+' : '') + r + '%'),
-               col: r != null && r > 0 ? A.good : A.gold,
-               bg: r != null && r > 0 ? 'rgba(46,160,67,.16)' : 'rgba(201,133,0,.14)' };
+      var lb = (g.roiLb == null) ? null : Math.round(g.roiLb * 100);
+      var belegt = lb != null && lb > 0;
+      return { txt: (belegt ? '✅ ' : '👀 ') + 'eigene Bilanz · ' + g.gewonnen + '–' + g.verloren +
+                    ' · ROI ' + (r == null ? '—' : (r >= 0 ? '+' : '') + r + '%') +
+                    ' (UG ' + (lb == null ? '—' : (lb >= 0 ? '+' : '') + lb + '%') + ')',
+               col: belegt ? A.good : A.gold,
+               bg: belegt ? 'rgba(46,160,67,.16)' : 'rgba(201,133,0,.14)' };
     }
     var fort = g ? (' · eigenes Buch ' + g.n + '/' + KL_EIGEN_MIN_N +
                     (bil.offen ? ' (' + bil.offen + ' offen)' : '')) : '';
@@ -1495,13 +1509,29 @@
     var h = (t - Date.now()) / 3.6e6;
     return h > 0 && h <= KL_FENSTER_H;
   }
+  // Die Brücke zwischen den beiden Sektionen. Steht ein Spiel in BEIDEN, ist das keine
+  // Doppelung, sondern die stärkste Aussage, die das Portal machen kann: das stärkste
+  // Einzelsignal fällt mit der vollen Konjunktion zusammen. Ohne Markierung sah es aus wie
+  // zweimal dieselbe Zeile untereinander. Nur MARKIEREN, nicht ranken — der Score in den
+  // Top-Wetten bleibt unverändert, weil eine Rang-Änderung eine Auswahl-Entscheidung wäre.
+  function _klKeys() {
+    var k = _md.data && _md.data.killer, m = {};
+    [].concat((k && k.stufe1) || [], (k && k.stufe2) || []).forEach(function (z) {
+      if (!_klSichtbar(z)) return;
+      if (z.matchId) m['id:' + String(z.matchId)] = z.stufe || 2;
+      if (z.home && z.away) m['tm:' + team(z.home) + team(z.away)] = z.stufe || 2;
+    });
+    return m;
+  }
   function _mdKiller() {
     var k = _md.data && _md.data.killer;
     var s1 = ((k && k.stufe1) || []).filter(_klSichtbar), s2 = ((k && k.stufe2) || []).filter(_klSichtbar);
     var st = _mdKillerStand(), bil = (k && k.bilanz) || null, bad = _mdKillerBadge(st, bil);
     var kopf = '<div class="md-kl-h"><span style="font-size:16px">🔒</span>' +
       '<span class="md-kl-t">Mehrfach gedeckt</span>' +
-      '<span class="md-kl-s">nur Spiele, hinter denen mehrere Geldströme gleichzeitig stehen — Treffer bleiben bis zum Anpfiff stehen</span>' +
+      '<span class="md-mech" style="color:' + A.blue + ';border-color:rgba(76,194,255,.45)" ' +
+      'title="Konjunktion: Geldanteil UND frischer Zufluss UND mitziehende Quote — fehlt eine Bedingung, fällt die Zeile raus.">Filter</span>' +
+      '<span class="md-kl-s">alle Geld-Bedingungen gleichzeitig — fehlt eine, ist die Zeile raus · gehalten bis zum Anpfiff · leer heißt leer</span>' +
       '<span class="md-kl-st" style="background:' + bad.bg + ';color:' + bad.col + '">' + bad.txt + '</span></div>';
     if (!s1.length && !s2.length) {
       var regel = (k && k.regeln && k.regeln.text) || 'Geldanteil, frischer Zufluss und mitziehende Quote müssen zusammenfallen.';
@@ -1635,10 +1665,13 @@
     var mid = function (h, a, id) { return id || (team(h) + team(a)); };
     var _polyMaxInf = (polyPlays || []).reduce(function (a, p) { return Math.max(a, _mdPlayInflow(p)); }, 1);
     var _bfFlowMax = ((_md.data.bfOverview && _md.data.bfOverview.flow) || []).reduce(function (a, x) { return Math.max(a, +x.deltaEur || 0); }, 1);
+    var _klk = _klKeys();
     var cand = {};
     var put = function (o) {
       if (isNaN(o.k) || o.k < floor || o.k > soon) return;
       if (o.exotic) o.score -= 14;                 // duenner/exotischer Markt: Signal weniger verlaesslich
+      // Deckungs-Abgleich: über matchId ODER Teamnamen — die Flächen liefern nicht dieselbe ID.
+      o.gedeckt = o.mk ? (_klk['id:' + o.mk] || _klk['tm:' + o.mk] || 0) : 0;
       var e = cand[o.id];
       if (!e || o.score > e.score) cand[o.id] = o;  // dedup je Spiel: staerkstes Signal gewinnt
     };
@@ -1650,7 +1683,7 @@
         var lag = (p.signals || []).some(function (s) { return s && s.name === 'steam_lag' && (+s.score || 0) > 0; });
         if (!bet && !lag) return;
         var conv = +p.convictionScore || 0;
-        var o = { id: 'x' + mid(f.home, f.away, f.matchId), k: k, exotic: false, src: 'card', conv: conv, odd: p.odds,
+        var o = { id: 'x' + mid(f.home, f.away, f.matchId), mk: mid(f.home, f.away, f.matchId), k: k, exotic: false, src: 'card', conv: conv, odd: p.odds,
                   match: esc(fxTeam(f, 'home')) + vsp + esc(fxTeam(f, 'away')), pick: esc(short(p.market || '') || 'Pick') };
         if (bet) { o.score = 60 + conv * 3.5; o.badge = 'BET' + (conv ? ' ' + conv : ''); o.bc = A.good; }
         else { o.score = 48 + conv * 2; o.badge = '⚡ Poly-Lag'; o.bc = A.blue; }
@@ -1683,7 +1716,8 @@
       // Liga × Match Odds.
       var trS = _mdBfTrack(x.league, 'Match Odds');
       if (trS && trS.verliert) return;   // dem Geld hier zu folgen verliert historisch -> keine Empfehlung
-      put({ id: 'b' + mid(x.home, x.away, x.matchId), k: x.kickoff ? Date.parse(String(x.kickoff).replace('Z', '+00:00')) : NaN,
+      put({ id: 'b' + mid(x.home, x.away, x.matchId), mk: mid(x.home, x.away, x.matchId),
+        k: x.kickoff ? Date.parse(String(x.kickoff).replace('Z', '+00:00')) : NaN,
         exotic: ex, src: 'bf', odd: x.odd, pp: pp, moneyIn: moneyIn, tr: trS,
         match: esc(team(x.home)) + vsp + esc(team(x.away)), pick: esc(short(x.sideName || '') || '—'),
         score: 42 + Math.min(app, 22) - (moneyIn ? 0 : 8) + (trS && trS.traegt ? 10 : 0), badge: '💷 Steam', bc: A.bf });
@@ -1702,7 +1736,7 @@
       // „Anpfiff jetzt" in der Liste, waehrend der Poly-Block daneben korrekt „in 2h" sagte.
       // Der Anpfiff kommt jetzt aus dem Feed (build_betfair_overview.flow_list); fehlt er,
       // bleibt die Uhr-Chip weg statt eine Zeit zu erfinden.
-      put({ id: 'bf' + mid(x.home, x.away, x.matchId),
+      put({ id: 'bf' + mid(x.home, x.away, x.matchId), mk: mid(x.home, x.away, x.matchId),
         k: x.kickoff ? Date.parse(String(x.kickoff).replace('Z', '+00:00')) : NaN,
         live: !!_mdBfLiveById(x.matchId),
         exotic: ex, src: 'bfflow', odd: od, deltaEur: dv, nowEur: +x.nowEur || 0, sideName: x.sideName, dir: x.dir,
@@ -1716,7 +1750,8 @@
       if (strong === undefined) { var bs0 = (r.betfair && r.betfair.sharePct) || 0, ps0 = (r.poly && r.poly.sharePct) || 0; strong = bs0 >= 55 && ps0 >= 55; }
       if (!strong) return;
       var ex = !r.pinn;
-      put({ id: 'm' + mid(r.home, r.away, r.matchId), k: r.kickoff ? Date.parse(String(r.kickoff).replace('Z', '+00:00')) : NaN,
+      put({ id: 'm' + mid(r.home, r.away, r.matchId), mk: mid(r.home, r.away, r.matchId),
+        k: r.kickoff ? Date.parse(String(r.kickoff).replace('Z', '+00:00')) : NaN,
         exotic: ex, live: r.live, src: 'mm', odd: null, bf: r.betfair, pl: r.poly,
         match: esc(team(r.home)) + vsp + esc(team(r.away)), pick: 'Divergenz',
         score: 50, badge: '🔗 Divergenz', bc: A.flow });
@@ -1746,6 +1781,8 @@
     })();
     if (!items.length) return '<section id="mdJetztBox" class="md-jetzt md-rise" style="border-color:var(--mln);background:var(--m1);padding-bottom:13px">' +
       '<div class="md-jz-h"><span style="font-size:16px;opacity:.55">🎯</span><span class="md-jz-t" style="color:var(--mi2)">Top-Wetten jetzt</span>' +
+      '<span class="md-mech" style="color:var(--mi3);border-color:var(--mln2)" ' +
+      'title="Disjunktion: das stärkste Einzelsignal über alle Flächen. EINE Quelle genügt.">Rangliste</span>' +
       '<span class="md-jz-s">gerade kein spielbares Signal in den nächsten Stunden — meldet sich automatisch.</span></div></section>';
     // Signal-Balken je Quelle (gleicher Stil wie "Heute spielenswert")
     var sigOf = function (o) {
@@ -1783,6 +1820,9 @@
           : (min < 60 ? min + 'm' : Math.floor(min / 60) + 'h' + (min % 60 ? ' ' + (min % 60) + 'm' : '')));
       var live = x.live ? '<span class="md-badge" style="background:rgba(229,83,75,.16);color:' + A.red + '">● LIVE</span>' : '';
       var chip = x.exotic ? '<span class="md-badge" style="background:rgba(201,133,0,.14);color:' + A.gold + '" title="dünner/exotischer Markt — Signal weniger verlässlich">dünn</span>' : '';
+      var deck = x.gedeckt ? '<span class="md-badge" style="background:rgba(76,194,255,.16);color:#4cc2ff" ' +
+        'title="Steht auch oben in Mehrfach gedeckt (Stufe ' + x.gedeckt +
+        ') — alle Geld-Bedingungen liegen gleichzeitig an.">🔒 gedeckt</span>' : '';
       var badge = '<span class="md-badge" style="background:rgba(120,130,150,.14);color:' + x.bc + '">' + x.badge + '</span>';
       var oddTxt = (x.odd != null) ? ' <span class="q">@' + (+x.odd).toFixed(2) + '</span>' : '';
       var pickLine = (x.src === 'mm')
@@ -1790,12 +1830,15 @@
         : '<div class="md-jz-pick"><span style="color:var(--mi3)">→</span> <b>' + (x.pick || '—') + '</b>' + oddTxt + ((x.src === 'bfflow') ? _bfReactiveChip(x.sideName, x.live) : '') + '</div>';
       return '<div class="md-jz-row md-jz-row3">' +
         '<div class="md-jz-l1"><span class="md-jz-n">' + (i + 1) + '</span>' +
-        '<span class="md-jz-nm">' + x.match + '</span>' + badge + live + chip +
+        '<span class="md-jz-nm">' + x.match + '</span>' + badge + deck + live + chip +
         (ko ? '<span class="md-jz-ko">⏱ ' + ko + '</span>' : '') + '</div>' +
         pickLine + sigOf(x) + '</div>';
     }).join('');
     return '<section id="mdJetztBox" class="md-jetzt md-rise"><div class="md-jz-h"><span style="font-size:16px">🎯</span>' +
-      '<span class="md-jz-t">Top-Wetten jetzt</span><span class="md-jz-s">das Beste aus Cards · Poly · Betfair · Money-Map — nach Signal-Stärke</span></div>' + body + '</section>';
+      '<span class="md-jz-t">Top-Wetten jetzt</span>' +
+      '<span class="md-mech" style="color:var(--mi2);border-color:var(--mln2)" ' +
+      'title="Disjunktion: das stärkste Einzelsignal über alle Flächen. EINE Quelle genügt — deshalb steht hier auch an einem schwachen Tag etwas.">Rangliste</span>' +
+      '<span class="md-jz-s">bestes Einzelsignal je Fläche — eine Quelle genügt, kein UND</span></div>' + body + '</section>';
   }
   // 13.08.2026 (Lucas): Poly-Public-Plays sind erst async da → Box nach dem Laden mit ihnen neu ranken
   // (ersetzt die synchrone Version ohne Poly). So landen Andres Andrade & Co. korrekt oben.
