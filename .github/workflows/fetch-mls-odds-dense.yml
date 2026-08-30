@@ -7,11 +7,17 @@ name: 📈 MLS Odds Refresh (dicht)
 # COCOBET_DATASET=mls ausschließlich MLS (Ligen ohne Fixtures werden übersprungen).
 on:
   schedule:
-    - cron: '0 */2 * * *'   # alle 2h; die 07/19-Vollläufe (update-mls) teilen die Gruppe
+    # 30.08.2026: von :00 auf :23. Beleg aus health/liga-odds-dense.json (derselbe Cron):
+    # die tatsächlichen Abstände waren 4,93h · 3,10h · 4,18h · 6,36h · 7,17h gegen einen
+    # 2h-Takt — bei durchweg `ok: true` und null Fehlern. Die Läufe scheitern nicht, sie
+    # werden gar nicht erst gestartet: GitHub verwirft geplante Läufe unter Last, und :00
+    # ist global die vollste Minute. Dieselbe Lehre wie beim Digest am 28.08. (:00 -> :07).
+    - cron: '23 */2 * * *'   # alle 2h, bewusst NICHT auf der vollen Stunde
   workflow_dispatch:
 
 permissions:
   contents: write
+  actions: read          # run_health.py liest die Steps DIESES Laufs
 
 # Teilt die Gruppe mit update-mls → kein gleichzeitiges Schreiben/Pushen von mls-data.json.
 concurrency:
@@ -100,6 +106,20 @@ jobs:
       # 30.08.2026 (Lucas): Schattenbuch zum Gegensignal-Filter. Schreibt JEDEN announce-faehigen
       # Pick mit — den gesendeten wie den aussortierten — und rechnet beide ab. Muss NACH der Noti
       # laufen (gleicher Stand) und VOR dem Commit.
+
+      # 30.08.2026 (Lucas: „was soll ich mir bei MLS in den Actions anschauen?") — die Antwort war
+      # bis hier: nichts, es gibt nichts zu sehen. Der Waechter lief in beiden LIGA-Workflows,
+      # aber in keinem MLS-Workflow — deshalb existierte nie eine health/mls*.json, und ob ein
+      # Lauf stattfand, scheiterte oder gecancelt wurde, stand nirgends. Gleiche Verdrahtung wie
+      # bei der Liga: `if: always()`, VOR dem Commit, damit health/ nicht auf der Platte bleibt.
+      - name: 🩺 Lauf-Gesundheit (verschluckte Fehler sichtbar machen)
+        if: always()
+        continue-on-error: true
+        run: python3 run_health.py --slug mls-odds-dense
+        env:
+          GITHUB_TOKEN:            ${{ secrets.GITHUB_TOKEN }}
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
       - name: 📓 Push-Schattenbuch fortschreiben
         run: python pick_push_ledger.py || true
 
@@ -108,6 +128,7 @@ jobs:
           git config user.name  "CocoBet Bot"
           git config user.email "bot@cocobet.local"
           python build_dashboard_pulse.py || true   # 14.08.2026 (Lucas): Puls oefter frisch (gegen "Stand vor 3h")
+          git add health/mls-odds-dense.json 2>/dev/null || true
           git add dashboard_pulse.json 2>/dev/null || true
           git add mls-data.json 2>/dev/null || true
           git add mls-odds-history.json 2>/dev/null || true

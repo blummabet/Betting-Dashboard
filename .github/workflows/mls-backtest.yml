@@ -29,7 +29,11 @@ permissions:
   contents: write
 
 concurrency:
-  group: update-mls        # teilt mls_signal_weights/-priors mit update-mls
+  # 30.08.2026: update-mls ist auf eine eigene Gruppe gezogen (update-mls-main), weil sich dort
+  # drei Workflows drängten und ein wartender Lauf vom nächsten gecancelt wird. Dieser Backtest
+  # muss MIT dem Volllauf serialisiert bleiben — er schreibt mls_signal_priors.json, aus dem
+  # update_signal_weights.py dann liest — also zieht er mit um. Er läuft ohnehin nur manuell.
+  group: update-mls-main
   cancel-in-progress: false
 
 jobs:

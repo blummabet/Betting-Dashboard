@@ -9,15 +9,27 @@ name: ⚽ MLS aktualisieren (Brücken-Liga)
 on:
   schedule:
     # GETRENNT (nicht '0 7,19') — nur so unterscheidet github.event.schedule PRE- vs POST-Match:
-    - cron: '0 19 * * *'   # PRE-Match: Abends CET, vor den US-Abendspielen (Digest + Previews)
-    - cron: '0 7 * * *'    # POST-Match: Morgens CET, nach den Nachtspielen (Recap + Reviews)
+    # 30.08.2026: von :00 auf :11 — gleiche Lehre wie beim Liga-Digest am 28.08. (:00 -> :07):
+    # auf der vollen Stunde starten repo-weit die meisten Jobs, und :00 ist auch GitHub-global
+    # die vollste Minute; geplante Läufe werden dort unter Last verworfen. Die beiden Crons
+    # bleiben GETRENNT (nicht '11 7,19'), weil nur so github.event.schedule PRE von POST
+    # unterscheidet.
+    - cron: '11 19 * * *'   # PRE-Match: Abends CET, vor den US-Abendspielen (Digest + Previews)
+    - cron: '11 7 * * *'    # POST-Match: Morgens CET, nach den Nachtspielen (Recap + Reviews)
   workflow_dispatch:
 
 permissions:
   contents: write
+  actions: read          # run_health.py liest die Steps DIESES Laufs
 
 concurrency:
-  group: update-mls
+  # 30.08.2026: EIGENE Gruppe. Vorher teilten sich update-mls, fetch-mls-odds-dense und
+  # mls-backtest die Gruppe „update-mls" — genau die Konstellation, die am 28.08. für die Liga
+  # als Ursache erkannt und dort behoben wurde (update-liga -> update-liga-main), für die MLS
+  # aber nie nachgezogen. Ein WARTENDER Lauf wird vom nächsten Ankömmling GECANCELT, nicht
+  # verschoben; der seltenste Teilnehmer (hier der 07/19-Volllauf mit Digest und Recap) ist
+  # damit strukturell der Verlierer.
+  group: update-mls-main
   cancel-in-progress: false
 
 env:
@@ -201,7 +213,7 @@ jobs:
         run: python generate_wm_ai_preview.py || true
 
       - name: 📣 MLS Pick-Digest → Public (PRE-Match)
-        if: github.event.schedule == '0 19 * * *' || github.event_name == 'workflow_dispatch'
+        if: github.event.schedule == '11 19 * * *' || github.event_name == 'workflow_dispatch'
         env:
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -209,7 +221,7 @@ jobs:
         run: python telegram_wm.py || true
 
       - name: 🎬 MLS TikTok Preview-Cards (PRE-Match)
-        if: github.event.schedule == '0 19 * * *' || github.event_name == 'workflow_dispatch'
+        if: github.event.schedule == '11 19 * * *' || github.event_name == 'workflow_dispatch'
         env:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
@@ -219,7 +231,7 @@ jobs:
         run: python generate_daily_tiktok.py || true
 
       - name: 📊 MLS Recap → Public (POST-Match)
-        if: github.event.schedule == '0 7 * * *'
+        if: github.event.schedule == '11 7 * * *'
         env:
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -227,7 +239,7 @@ jobs:
         run: python telegram_wm.py || true
 
       - name: 🎬 MLS TikTok Review-Cards (POST-Match)
-        if: github.event.schedule == '0 7 * * *'
+        if: github.event.schedule == '11 7 * * *'
         env:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
@@ -245,12 +257,26 @@ jobs:
       # 30.08.2026 (Lucas): Schattenbuch zum Gegensignal-Filter. Schreibt JEDEN announce-faehigen
       # Pick mit — den gesendeten wie den aussortierten — und rechnet beide ab. Muss NACH der Noti
       # laufen (gleicher Stand) und VOR dem Commit.
+
+      # 30.08.2026 (Lucas: „was soll ich mir bei MLS in den Actions anschauen?") — die Antwort war
+      # bis hier: nichts, es gibt nichts zu sehen. Der Waechter lief in beiden LIGA-Workflows,
+      # aber in keinem MLS-Workflow — deshalb existierte nie eine health/mls*.json, und ob ein
+      # Lauf stattfand, scheiterte oder gecancelt wurde, stand nirgends. Gleiche Verdrahtung wie
+      # bei der Liga: `if: always()`, VOR dem Commit, damit health/ nicht auf der Platte bleibt.
+      - name: 🩺 Lauf-Gesundheit (verschluckte Fehler sichtbar machen)
+        if: always()
+        continue-on-error: true
+        run: python3 run_health.py --slug update-mls
+        env:
+          GITHUB_TOKEN:            ${{ secrets.GITHUB_TOKEN }}
+          TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
       - name: 📓 Push-Schattenbuch fortschreiben
         run: python pick_push_ledger.py || true
 
       # Serien-Watch pre-match (PRE-Lauf, vor den US-Abendspielen) + Recap post-match (POST-Lauf).
       - name: 🔥 MLS Serien-Watch (PRE-Match)
-        if: github.event.schedule == '0 19 * * *' || github.event_name == 'workflow_dispatch'
+        if: github.event.schedule == '11 19 * * *' || github.event_name == 'workflow_dispatch'
         env:
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -258,7 +284,7 @@ jobs:
         run: python telegram_streak_watch.py || true
 
       - name: 📊 MLS Serien-Recap (POST-Match)
-        if: github.event.schedule == '0 7 * * *'
+        if: github.event.schedule == '11 7 * * *'
         env:
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -277,6 +303,7 @@ jobs:
           git config user.name  "CocoBet Bot"
           git config user.email "bot@cocobet.local"
           # EINZELN stagen (atomar — nicht-existente Pfade dürfen den add nicht killen).
+          git add health/update-mls.json 2>/dev/null || true
           git add mls-data.json || true
           git add mls-odds-history.json 2>/dev/null || true
           git add mls_lineups.json 2>/dev/null || true

@@ -55,9 +55,33 @@ class TestEvaluate(unittest.TestCase):
     def test_no_data_none(self):
         self.assertIsNone(SIG.evaluate({"market": "Heimsieg"}, self._ctx({})))
 
-    def test_under_skipped(self):
+    def test_unter_bekommt_das_gegenvorzeichen(self):
+        # 30.08.2026 (Lucas-Checkup): „under" lieferte immer None. Damit konnte das Signal auf
+        # der Tor-Achse nur zustimmen, nie widersprechen — und ein Signal, das nie Nein sagt,
+        # traegt keine Richtungsinformation. Gemessen: wo es stuetzte 48,4% gegen 55,6% Basis,
+        # und je hoeher der Score, desto schlechter (starke Haelfte 37,5%).
         ts = {"H": {"goals": 16, "appearances": 20}, "A": {"goals": 15, "appearances": 20}}
-        self.assertIsNone(SIG.evaluate({"market": "Unter 2.5 Tore"}, self._ctx(ts)))
+        ue = SIG.evaluate({"market": "Über 2.5 Tore"}, self._ctx(ts))
+        un = SIG.evaluate({"market": "Unter 2.5 Tore"}, self._ctx(ts))
+        self.assertIsNotNone(un)
+        self.assertLess(un.score, 0)
+        self.assertAlmostEqual(un.score, -ue.score, 2)
+
+    def test_staerkerer_gegner_dreht_das_signal(self):
+        # Vorher zaehlte der gegnerische Stuermer nur HALB — das Signal war ein fast
+        # bedingungsloses „dieses Team hat einen Torjaeger -> drauf".
+        ts = {"H": {"goals": 4, "appearances": 10}, "A": {"goals": 16, "appearances": 20}}
+        res = SIG.evaluate({"market": "Heimsieg"}, self._ctx(ts))
+        self.assertIsNotNone(res)
+        self.assertLess(res.score, 0, "der klar bessere Gegner-Stuermer muss dagegen sprechen")
+        self.assertIn("gegen Heim", res.evidence)
+
+    def test_kleine_stichprobe_zaehlt_nicht_als_elite(self):
+        # 3 Tore in 4 Spielen lasen sich als „100% elite" — genau die Faelle liefen bei 37,5%.
+        import sharp_signals.topscorer_momentum as T
+        self.assertGreaterEqual(T.MIN_APPS, 6)
+        self.assertEqual(T.threat({"goals": 3, "appearances": 4}), 0.0)
+        self.assertGreater(T.threat({"goals": 5, "appearances": 8}), 0.0)
 
 
 if __name__ == "__main__":
