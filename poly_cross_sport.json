@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-30T19:16:24.977756+00:00",
+ "generatedAt": "2026-08-30T20:16:25.083007+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,58 +9,72 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 527,
- "pinnKeys": 309,
- "matched": 233,
- "footballRows": 207,
- "crossRows": 320,
- "footballSkippedStale": 69,
+ "polyRowsSeen": 526,
+ "pinnKeys": 296,
+ "matched": 224,
+ "footballRows": 204,
+ "crossRows": 322,
+ "footballSkippedStale": 60,
  "seenBySport": {
   "americanfootball_nfl": 128,
-  "baseball_mlb": 86,
+  "baseball_mlb": 88,
   "icehockey_nhl": 74,
   "boxing_boxing": 32,
   "soccer_mls": 39,
-  "soccer_liga": 168
+  "soccer_liga": 165
  },
  "matchedBySport": {
-  "baseball_mlb": 18,
+  "baseball_mlb": 12,
   "boxing_boxing": 8,
   "soccer_mls": 39,
-  "soccer_liga": 168
+  "soccer_liga": 165
  },
  "trackRecord": {
-  "tracked": 254,
-  "converged": 62
+  "tracked": 251,
+  "converged": 60
  },
  "discrepancies": [
   {
-   "id": "soccer_liga|como-napoli|aw",
-   "sport": "soccer_liga",
-   "event": "Napoli vs Como",
-   "market": "1X2",
-   "outcome": "Auswärts",
-   "polyPP": 62.5,
-   "pinnPP": 90.3,
-   "gapPP": -27.83,
-   "vol": 3049256,
+   "id": "baseball_mlb|atlantabraves-coloradorockies|coloradorockies",
+   "sport": "baseball_mlb",
+   "event": "Colorado Rockies vs Atlanta Braves",
+   "market": "Moneyline",
+   "outcome": "Colorado Rockies",
+   "polyPP": 14.5,
+   "pinnPP": 39.8,
+   "gapPP": -25.3,
+   "vol": 436518,
    "richtung": "Poly zu niedrig → backen",
-   "convergePP": 0.0,
-   "firstSeen": "2026-08-30T18:46:16.289543+00:00"
+   "convergePP": -12.06,
+   "firstSeen": "2026-08-29T21:57:34.364963+00:00"
   },
   {
-   "id": "soccer_liga|como-napoli|dr",
-   "sport": "soccer_liga",
-   "event": "Napoli vs Como",
-   "market": "1X2",
-   "outcome": "Remis",
-   "polyPP": 29.5,
-   "pinnPP": 9.6,
-   "gapPP": 19.93,
-   "vol": 3049256,
+   "id": "baseball_mlb|atlantabraves-coloradorockies|atlantabraves",
+   "sport": "baseball_mlb",
+   "event": "Colorado Rockies vs Atlanta Braves",
+   "market": "Moneyline",
+   "outcome": "Atlanta Braves",
+   "polyPP": 85.5,
+   "pinnPP": 60.2,
+   "gapPP": 25.3,
+   "vol": 436518,
    "richtung": "Poly zu hoch → faden",
+   "convergePP": -12.06,
+   "firstSeen": "2026-08-29T21:57:34.364963+00:00"
+  },
+  {
+   "id": "soccer_liga|marseille-monaco|hw",
+   "sport": "soccer_liga",
+   "event": "Monaco vs Marseille",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 43.5,
+   "pinnPP": 65.2,
+   "gapPP": -21.7,
+   "vol": 161354,
+   "richtung": "Poly zu niedrig → backen",
    "convergePP": 0.0,
-   "firstSeen": "2026-08-30T18:46:16.289543+00:00"
+   "firstSeen": "2026-08-30T19:27:48.586694+00:00"
   },
   {
    "id": "soccer_liga|deportivolacoruna-valencia|hw",
@@ -77,6 +91,34 @@
    "firstSeen": "2026-08-30T18:46:16.289543+00:00"
   },
   {
+   "id": "soccer_liga|marseille-monaco|aw",
+   "sport": "soccer_liga",
+   "event": "Monaco vs Marseille",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 30.5,
+   "pinnPP": 12.5,
+   "gapPP": 18.04,
+   "vol": 161354,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-30T19:27:48.586694+00:00"
+  },
+  {
+   "id": "soccer_liga|cagliari-inter|aw",
+   "sport": "soccer_liga",
+   "event": "Cagliari vs Inter",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 69.5,
+   "pinnPP": 84.1,
+   "gapPP": -14.56,
+   "vol": 182754,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-30T19:27:48.586694+00:00"
+  },
+  {
    "id": "soccer_liga|deportivolacoruna-valencia|dr",
    "sport": "soccer_liga",
    "event": "Deportivo La Coruna vs Valencia",
@@ -91,46 +133,32 @@
    "firstSeen": "2026-08-30T18:46:16.289543+00:00"
   },
   {
-   "id": "soccer_liga|como-napoli|hw",
+   "id": "soccer_liga|cagliari-inter|hw",
    "sport": "soccer_liga",
-   "event": "Napoli vs Como",
+   "event": "Cagliari vs Inter",
    "market": "1X2",
    "outcome": "Heim",
-   "polyPP": 10.0,
-   "pinnPP": 0.1,
-   "gapPP": 9.9,
-   "vol": 3049256,
+   "polyPP": 11.0,
+   "pinnPP": 3.5,
+   "gapPP": 7.55,
+   "vol": 182754,
    "richtung": "Poly zu hoch → faden",
    "convergePP": 0.0,
-   "firstSeen": "2026-08-30T18:46:16.289543+00:00"
+   "firstSeen": "2026-08-30T19:27:48.586694+00:00"
   },
   {
-   "id": "baseball_mlb|milwaukeebrewers-texasrangers|texasrangers",
-   "sport": "baseball_mlb",
-   "event": "Texas Rangers vs Milwaukee Brewers",
-   "market": "Moneyline",
-   "outcome": "Texas Rangers",
-   "polyPP": 38.5,
-   "pinnPP": 30.9,
-   "gapPP": 7.63,
-   "vol": 342532,
+   "id": "soccer_liga|cagliari-inter|dr",
+   "sport": "soccer_liga",
+   "event": "Cagliari vs Inter",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 19.5,
+   "pinnPP": 12.5,
+   "gapPP": 7.01,
+   "vol": 182754,
    "richtung": "Poly zu hoch → faden",
-   "convergePP": -1.33,
-   "firstSeen": "2026-08-28T20:49:57.054168+00:00"
-  },
-  {
-   "id": "baseball_mlb|milwaukeebrewers-texasrangers|milwaukeebrewers",
-   "sport": "baseball_mlb",
-   "event": "Texas Rangers vs Milwaukee Brewers",
-   "market": "Moneyline",
-   "outcome": "Milwaukee Brewers",
-   "polyPP": 61.5,
-   "pinnPP": 69.1,
-   "gapPP": -7.63,
-   "vol": 342532,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": -1.33,
-   "firstSeen": "2026-08-28T20:49:57.054168+00:00"
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-30T19:27:48.586694+00:00"
   }
  ]
 }
