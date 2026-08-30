@@ -1,23 +1,23 @@
 {
-"generatedAt": "2026-08-30T02:19:04.157420+00:00",
+"generatedAt": "2026-08-30T02:34:02.112406+00:00",
 "byVerdict": {
 "konsens": {
-"n": 597,
-"wins": 484,
-"hitRate": 0.8107,
-"polyN": 559,
-"polyWins": 436,
-"polyHitRate": 0.78,
+"n": 600,
+"wins": 486,
+"hitRate": 0.81,
+"polyN": 562,
+"polyWins": 438,
+"polyHitRate": 0.7794,
 "pinnN": 46,
 "pinnHitRate": 0.7391
 },
 "uneinig": {
-"n": 203,
-"wins": 63,
-"hitRate": 0.3103,
-"polyN": 180,
-"polyWins": 54,
-"polyHitRate": 0.3,
+"n": 205,
+"wins": 64,
+"hitRate": 0.3122,
+"polyN": 182,
+"polyWins": 55,
+"polyHitRate": 0.3022,
 "pinnN": 104,
 "pinnHitRate": 0.5673
 },
@@ -39,9 +39,9 @@
 "hitRate": 0.5833
 },
 "US MLS": {
-"n": 41,
-"wins": 23,
-"hitRate": 0.561
+"n": 45,
+"wins": 26,
+"hitRate": 0.5778
 },
 "English Sky Bet Championship": {
 "n": 29,
@@ -198,6 +198,11 @@
 "wins": 7,
 "hitRate": 0.7
 },
+"Colombian Primera A": {
+"n": 10,
+"wins": 4,
+"hitRate": 0.4
+},
 "Danish Superliga": {
 "n": 10,
 "wins": 8,
@@ -207,11 +212,6 @@
 "n": 10,
 "wins": 7,
 "hitRate": 0.7
-},
-"Colombian Primera A": {
-"n": 9,
-"wins": 4,
-"hitRate": 0.4444
 },
 "Bolivian Liga de Futbol Profesional": {
 "n": 8,
@@ -526,9 +526,9 @@
 },
 "byStrength": {
 "strong": {
-"n": 467,
-"wins": 378,
-"hitRate": 0.8094
+"n": 472,
+"wins": 381,
+"hitRate": 0.8072
 },
 "weak": {
 "n": 307,
@@ -537,14 +537,109 @@
 }
 },
 "divergence": {
-"n": 203,
-"betfairWins": 63,
-"betfairRate": 0.3103,
-"polyN": 180,
-"polyWins": 54,
-"polyRate": 0.3
+"n": 205,
+"betfairWins": 64,
+"betfairRate": 0.3122,
+"polyN": 182,
+"polyWins": 55,
+"polyRate": 0.3022
 },
 "recent": [
+{
+"matchId": "35971987",
+"home": "Inter Miami CF",
+"away": "CF Montreal",
+"league": "US MLS",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Inter Miami CF",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+7,
+1
+],
+"kickoff": "2026-08-29T23:30:00Z",
+"settledAt": "2026-08-30T02:34:01.954390+00:00"
+},
+{
+"matchId": "35984357",
+"home": "Junior FC Barranquilla",
+"away": "Santa Fe",
+"league": "Colombian Primera A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Junior FC Barranquilla",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-29T23:30:00Z",
+"settledAt": "2026-08-30T02:34:01.954390+00:00"
+},
+{
+"matchId": "35973472",
+"home": "Atlanta Utd",
+"away": "Charlotte FC",
+"league": "US MLS",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Charlotte FC",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-08-29T23:30:00Z",
+"settledAt": "2026-08-30T02:34:01.954390+00:00"
+},
+{
+"matchId": "35972282",
+"home": "DC Utd",
+"away": "Los Angeles FC",
+"league": "US MLS",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Los Angeles FC",
+"polySide": "draw",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-08-29T23:30:00Z",
+"settledAt": "2026-08-30T02:34:01.954390+00:00"
+},
+{
+"matchId": "35973470",
+"home": "Toronto FC",
+"away": "New York City",
+"league": "US MLS",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-29T23:30:00Z",
+"settledAt": "2026-08-30T02:34:01.954390+00:00"
+},
 {
 "matchId": "35953447",
 "home": "Sao Paulo",
@@ -1209,107 +1304,12 @@
 ],
 "kickoff": "2026-08-29T16:30:00Z",
 "settledAt": "2026-08-29T18:33:22.056694+00:00"
-},
-{
-"matchId": "35974061",
-"home": "Halmstads",
-"away": "Kalmar FF",
-"league": "Swedish Allsvenskan",
-"verdict": "konsens",
-"moneySide": "draw",
-"moneyName": "The Draw",
-"polySide": "away",
-"winner": "home",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-08-29T15:30:00Z",
-"settledAt": "2026-08-29T18:33:22.056694+00:00"
-},
-{
-"matchId": "35974458",
-"home": "Fiorentina",
-"away": "Frosinone",
-"league": "Italian Serie A",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Frosinone",
-"polySide": null,
-"winner": "away",
-"moneyWin": true,
-"polyWin": null,
-"ftScore": [
-0,
-3
-],
-"kickoff": "2026-08-29T16:30:00Z",
-"settledAt": "2026-08-29T18:33:22.056694+00:00"
-},
-{
-"matchId": "35974445",
-"home": "AC Monza",
-"away": "Udinese",
-"league": "Italian Serie A",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Udinese",
-"polySide": "home",
-"winner": "away",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-2,
-3
-],
-"kickoff": "2026-08-29T16:30:00Z",
-"settledAt": "2026-08-29T18:33:22.056694+00:00"
-},
-{
-"matchId": "35974485",
-"home": "Sassuolo",
-"away": "Torino",
-"league": "Italian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Sassuolo",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-08-29T16:30:00Z",
-"settledAt": "2026-08-29T18:33:22.056694+00:00"
-},
-{
-"matchId": "35979497",
-"home": "Arouca",
-"away": "Maritimo",
-"league": "Portuguese Primeira Liga",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Arouca",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-08-29T14:30:00Z",
-"settledAt": "2026-08-29T17:33:21.768671+00:00"
 }
 ],
 "global": {
-"n": 807,
-"wins": 549,
-"hitRate": 0.6803
+"n": 812,
+"wins": 552,
+"hitRate": 0.6798
 },
-"pending": 25
+"pending": 20
 }
