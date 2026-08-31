@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-31T01:16:53.807524+00:00",
+ "generatedAt": "2026-08-31T01:47:57.600146+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,8 +10,8 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 506,
- "pinnKeys": 294,
- "matched": 228,
+ "pinnKeys": 296,
+ "matched": 230,
  "footballRows": 198,
  "crossRows": 308,
  "footballSkippedStale": 65,
@@ -24,7 +24,7 @@
   "soccer_liga": 150
  },
  "matchedBySport": {
-  "baseball_mlb": 22,
+  "baseball_mlb": 24,
   "boxing_boxing": 8,
   "soccer_mls": 48,
   "soccer_liga": 150
@@ -33,5 +33,34 @@
   "tracked": 241,
   "converged": 60
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|chicagocubs-cincinnatireds|cincinnatireds",
+   "sport": "baseball_mlb",
+   "event": "Cincinnati Reds vs Chicago Cubs",
+   "market": "Moneyline",
+   "outcome": "Cincinnati Reds",
+   "polyPP": 84.5,
+   "pinnPP": 76.9,
+   "gapPP": 7.63,
+   "vol": 1215973,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 53.79,
+   "firstSeen": "2026-08-28T20:49:57.054168+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagocubs-cincinnatireds|chicagocubs",
+   "sport": "baseball_mlb",
+   "event": "Cincinnati Reds vs Chicago Cubs",
+   "market": "Moneyline",
+   "outcome": "Chicago Cubs",
+   "polyPP": 15.5,
+   "pinnPP": 23.1,
+   "gapPP": -7.63,
+   "vol": 1215973,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 53.79,
+   "firstSeen": "2026-08-28T20:49:57.054168+00:00"
+  }
+ ]
 }
