@@ -47,12 +47,44 @@ test('_pwComboFor auf echten Daten: verdrahtet und plausibel — ohne Aussage ue
   for (const combo of [['sharp'], ['money','sharp']]) {
     const r = w._pwComboFor(combo);
     assert.ok(r, combo.join('+') + ' liefert kein Ergebnis');
-    assert.ok(r.n >= 50, combo.join('+') + '-Combo zu duenn (n=' + r.n + ')');
+    // ⚠️ 31.08.2026, DRITTE Runde desselben Fehlers in dieser Datei: hier stand `r.n >= 50`, und
+    // der Build wurde rot mit „sharp-Combo zu duenn (n=47)". Niemand hatte Code angefasst.
+    // `n` ist die GEWICHTETE Zahl — Plays aus einer aelteren Engine-Version zaehlen halb
+    // (PW_CALIB_LEGACY_W). Beim Versionssprung auf 2026-08-29b halbierte sich der Bestand
+    // schlagartig und waechst seitdem wieder. Eine Stichprobengroesse, die per Konstruktion
+    // schrumpft und nachwaechst, ist niemals eine Invariante.
+    // Auf echten Daten wird deshalb nur noch geprueft, dass der Eimer ueberhaupt existiert und
+    // die Zahlen physikalisch moeglich sind. „Genug Daten zum Kalibrieren?" ist eine Frage an
+    // die Anzeige, nicht an den Build ([[feedback_tests_no_live_data_thresholds]]).
+    assert.ok(r.nRoh > 0, combo.join('+') + '-Combo kommt in den echten Daten gar nicht vor');
+    assert.ok(r.n > 0, combo.join('+') + '-Combo hat kein Gewicht (n=' + r.n + ')');
     assert.ok(typeof r.roi === 'number' && Number.isFinite(r.roi), 'ROI ist eine endliche Zahl');
     assert.ok(r.roi > -1 && r.roi < 5, 'ROI in einem physikalisch moeglichen Band');
   }
   // Darf nicht werfen, egal wo die Zahlen gerade stehen.
   assert.ok(typeof w._pwTermMuted({ conv:6, signals:['sharp'] }).m === 'boolean');
+});
+
+// 31.08.2026: DAS ist der Mechanismus, an dem die Zahl oben gewandert ist — und im Gegensatz zur
+// Stichprobengroesse steht er fest. Alt-Plays zaehlen im Gewicht halb, in der Roh-Zahl voll. Wer
+// beides verwechselt, baut wieder einen Test, der von selbst kippt.
+test('_pwComboStats: Alt-Plays zaehlen halb im Gewicht, voll in nRoh', () => {
+  // Die beiden Konstanten sind `const` im Modul-Scope und landen NICHT auf window — hier also
+  // aus der Quelle gelesen statt hart getippt. So wandert der Test beim naechsten
+  // Versions-Sprung von selbst mit, statt still das Falsche zu pruefen.
+  const SRC = readFileSync(new URL('../../poly-wallets.js', import.meta.url), 'utf8');
+  const EV = /const PW_ENGINE_VERSION\s*=\s*'([^']+)'/.exec(SRC)[1];
+  const LEG = Number(/const PW_CALIB_LEGACY_W\s*=\s*([0-9.]+)/.exec(SRC)[1]);
+  const zeile = (ev, result) => ({ signals: ['sharp'], result, pnl: result === 'win' ? 10 : -10,
+                                   stake: 10, clvPP: 0, conv: 6, ev });
+  const w2 = load({ settled: [zeile(EV, 'win'), zeile(EV, 'loss'),
+                              zeile('uralt', 'win'), zeile('uralt', 'loss')],
+                    agg: { all: { n: 4, roi: 0 } } });
+  const r = w2._pwComboFor(['sharp']);
+  assert.equal(r.nRoh, 4, 'nRoh zaehlt jeden Play einmal');
+  assert.equal(r.nAlt, 2, 'nAlt zaehlt die Plays aus der alten Engine');
+  assert.equal(r.n, 2 + 2 * LEG, `gewichtet: 2 volle + 2 halbe = ${2 + 2 * LEG}`);
+  assert.ok(r.n < r.nRoh, 'das Gewicht liegt unter der Roh-Zahl, solange Alt-Plays dabei sind');
 });
 
 test('_pwComboFor: money+sharp schlaegt sharp-allein — am synthetischen Track', () => {
