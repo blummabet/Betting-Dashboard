@@ -83,16 +83,35 @@ class TestMainRunsEndToEnd(unittest.TestCase):
     """Engine läuft komplett durch (auch wenn aktuell 0 Stories)."""
 
     def test_main_does_not_crash(self):
-        """End-to-End: main() läuft durch ohne Exception."""
+        """End-to-End: main() läuft durch ohne Exception.
+
+        ⚠️ 31.08.2026: dieser Test lief bis dahin OHNE DRY_RUN und schrieb dabei echte Dateien
+        ins Repo — `wm_live_story_state.json`, `wm_story_proposals.json`, `telegram-log.json`
+        plus HTML nach `wm_live_story_outputs/`. Jeder Testlauf hinterliess einen gedirtyten
+        Working Tree, und das ist die Vorstufe eines Merge-Konflikts mit den Bot-Commits
+        ([[feedback_no_local_data_regen]]). `DRY_RUN` gibt es in der Engine seit jeher — der
+        Test hat sie nur nie gesetzt. Wird VOR dem reload gesetzt, weil das Modul die Variable
+        beim Import in eine Konstante liest.
+        """
         import generate_wm_live_story
-        importlib.reload(generate_wm_live_story)
-        # Lauf simulieren — fängt das gegebenenfalls leere Resultat ab
+        alt = os.environ.get("DRY_RUN")
+        os.environ["DRY_RUN"] = "true"
         try:
-            generate_wm_live_story.main()
-        except SystemExit:
-            pass  # erlaubt
-        except Exception as e:
-            self.fail(f"main() crashed: {type(e).__name__}: {e}")
+            importlib.reload(generate_wm_live_story)
+            self.assertTrue(generate_wm_live_story.DRY_RUN,
+                            "DRY_RUN nicht aktiv — der Test wuerde ins Repo schreiben")
+            try:
+                generate_wm_live_story.main()
+            except SystemExit:
+                pass  # erlaubt
+            except Exception as e:
+                self.fail(f"main() crashed: {type(e).__name__}: {e}")
+        finally:
+            if alt is None:
+                os.environ.pop("DRY_RUN", None)
+            else:
+                os.environ["DRY_RUN"] = alt
+            importlib.reload(generate_wm_live_story)
 
 
 class TestEngineFindsProposalsWhenDataAvailable(unittest.TestCase):

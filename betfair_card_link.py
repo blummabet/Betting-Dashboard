@@ -35,7 +35,19 @@ from safe_write import write_json_atomic
 BASE = Path(__file__).resolve().parent
 CONSENSUS_FILE = BASE / "betfair_consensus.json"
 SNAP_FILE      = BASE / "betfair_prices.json"   # Roh-Snapshot mit der ganzen Markt-Leiter
-PICKS_FILE     = Path(str(D.data_file()))   # liga-data.json — die Quelle der National-Cards
+# ⚠️ 31.08.2026 — der zweite, schwerere Bruch: `D.data_file()` haengt an `COCOBET_DATASET`,
+# und `betfair.yml` setzt die Variable nirgends. Der Kartenlink las also `wm2026-data.json` —
+# die WM ist seit Juli vorbei, die Datei hat keine kommenden Fixtures mehr. Damit war
+# `nCandidates` immer 0, und genau deshalb schwieg auch die Warnung „Kandidaten, aber kein
+# Treffer": es gab keine Kandidaten, weil ueberhaupt keine Cards gelesen wurden.
+# Die Boerse ist nicht datensatz-gebunden — ein Betfair-Lauf sieht Top-5 UND MLS am selben Tag.
+# Also liest der Kartenlink beide Klub-Datensaetze fest, statt von einer Env abzuhaengen, die
+# in diesem Workflow niemand setzt. Fehlt eine Datei, ist das kein Fehler (MLS-Pause).
+PICKS_FILES = [BASE / "liga-data.json", BASE / "mls-data.json"]
+_aktiv = Path(str(D.data_file()))
+if _aktiv not in PICKS_FILES:
+    PICKS_FILES.append(_aktiv)          # laeuft der Job doch mal unter einem Datensatz: mitnehmen
+PICKS_FILE     = PICKS_FILES[0]         # bleibt als Einzelname stehen (Doku/Tests)
 OUT_FILE       = BASE / "betfair_card_link.json"
 
 # Welche Seite des 1X2 behauptet ein Pick? `liga-data.json` fuehrt nur das deutsche Label,
@@ -188,12 +200,21 @@ def link(games, fixtures, snaps_by_id=None, now=None) -> dict:
     Ohne Treffer steht das Spiel schlicht nicht drin — das Terminal zeigt die Zeile dann wie
     bisher. Ein falscher Treffer waere schlimmer als keiner, deshalb ist die Bruecke eng.
     """
-    snaps, fuzzy = {}, {}
+    # ⚠️ 31.08.2026: der Index lief ueber das Team-PAAR allein — und `event_key` ist
+    # reihenfolge-unabhaengig, also fallen Hin- und Rueckspiel auf DENSELBEN Schluessel. Ueber
+    # eine ganze Saison ist damit jeder Schluessel doppelt belegt (gemessen: 876 von 876);
+    # gewonnen hat der zuletzt eingelesene — meist das Rueckspiel im Fruehjahr, und das hat
+    # noch keine Picks. Der exakte Pfad konnte strukturell NIE treffen: verlinkt wurde nur, was
+    # die (datumsbewusste) Namens-Bruecke auffing, also ausgerechnet die Spiele, deren Namen
+    # NICHT exakt passen. Am 31.08. linkte 1 von 12 Boersen-Spielen. Der Schluessel traegt
+    # jetzt den Tag.
+    tages_snaps, fuzzy = {}, {}
     for ev in (fixtures or []):
         if not isinstance(ev, dict):
             continue
-        snaps[BR.event_key(ev.get("home"), ev.get("away"))] = ev
-        fuzzy.setdefault(str(ev.get("dateIso") or "")[:10], []).append(ev)
+        tag = str(ev.get("dateIso") or "")[:10]
+        tages_snaps.setdefault(tag, {})[BR.event_key(ev.get("home"), ev.get("away"))] = ev
+        fuzzy.setdefault(tag, []).append(ev)
 
     out, n_exact, n_bridge = {}, 0, 0
     for g in (games or []):
@@ -203,6 +224,12 @@ def link(games, fixtures, snaps_by_id=None, now=None) -> dict:
         if not mid:
             continue
         day = str(g.get("kickoff") or "")[:10]
+        # Nur die Fixtures um diesen Anpfiff herum. `days_around` liefert [Tag, -1, +1] —
+        # rueckwaerts eingespielt, damit der Spieltag selbst die Nachbartage ueberschreibt und
+        # nicht umgekehrt.
+        snaps = {}
+        for tag in reversed(BR.days_around(day)):
+            snaps.update(tages_snaps.get(tag) or {})
         exact = snaps.get(BR.event_key(g.get("home"), g.get("away")))
         ev = exact or BR.find(snaps, fuzzy, g.get("home"), g.get("away"), day)
         if not ev:
@@ -265,9 +292,20 @@ def main() -> int:
     if err:
         print("ℹ️  %s: %s — kein Kartenlink." % (CONSENSUS_FILE.name, err))
         return 0
-    pk, err = _load(PICKS_FILE)
-    if err:
-        print("ℹ️  %s: %s — kein Kartenlink." % (PICKS_FILE.name, err))
+    fixtures, gelesen = [], []
+    for f in PICKS_FILES:
+        pk, err = _load(f)
+        if err == "fehlt":
+            continue                     # MLS-Pause o.ae. — kein Fehler
+        if err:
+            # Eine kaputte Card-Datei darf nicht als „keine Cards" durchgehen.
+            print("⚠️  %s: %s — dieser Datensatz fehlt im Kartenlink." % (f.name, err))
+            continue
+        fixtures.extend(fixtures_index(pk))
+        gelesen.append(f.name)
+    if not gelesen:
+        print("ℹ️  keine Card-Datei lesbar (%s) — kein Kartenlink."
+              % ", ".join(f.name for f in PICKS_FILES))
         return 0
 
     snap, snap_err = _load(SNAP_FILE)
@@ -279,13 +317,16 @@ def main() -> int:
                    if isinstance(m, dict) and m.get("matchId")}
 
     games = (cx or {}).get("games") or []
-    fixtures = fixtures_index(pk)
     res = link(games, fixtures, snaps_by_id)
     links = res["links"]
+    # 31.08.2026: `candidates()` gab es seit dem 26.08., aber nur als Log-Zeile — in der Datei
+    # stand sie nicht, also konnte weder das Terminal noch ein Guard „0 verlinkt" von
+    # „0 verlinkbar" unterscheiden. Genau die Verwechslung, gegen die sie gebaut wurde.
+    n_cand = candidates(games, fixtures)
 
     write_json_atomic(OUT_FILE, {
         "generatedAt": datetime.now(timezone.utc).isoformat(),
-        "nGames": len(games), "nLinked": len(links),
+        "nGames": len(games), "nCandidates": n_cand, "nLinked": len(links),
         "nExact": res["nExact"], "nBridge": res["nBridge"],
         "links": links,
     }, indent=1)
@@ -293,12 +334,11 @@ def main() -> int:
     agree = sum(1 for v in links.values() if v.get("agree") is True)
     against = sum(1 for v in links.values() if v.get("agree") is False)
     print("🔗 Terminal-Kartenlink: %d von %d Börsen-Spielen haben eine Card "
-          "(%d exakt, %d über die Namens-Brücke)"
-          % (len(links), len(games), res["nExact"], res["nBridge"]))
+          "(%d exakt, %d über die Namens-Brücke) · Cards aus %s"
+          % (len(links), len(games), res["nExact"], res["nBridge"], ", ".join(gelesen)))
     n_tor = sum(1 for v in links.values() if v.get("achse") == "tor")
     print("   Geld auf unserer Seite: %d · dagegen: %d · ohne Urteil: %d   (davon %d über den Tor-Markt beurteilt)"
           % (agree, against, len(links) - agree - against, n_tor))
-    n_cand = candidates(games, fixtures)
     if n_cand and not links:
         # Es gab Spiele am selben Tag wie unsere Cards, aber keinen einzigen Treffer. Das ist
         # kein ruhiger Dienstag, das ist ein Bruch — laut sagen statt still leer bleiben.

@@ -2470,6 +2470,43 @@ def check_streaks_fresh(ctx):
                 "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo.")
 
 
+@integrity_check
+def check_card_link_alive(ctx):
+    """NEU 31.08.2026: der Terminal-Kartenlink (`betfair_card_link.json`) muss ANKOMMEN.
+
+    Am 31.08. stand die Datei auf nGames 12 / nLinked 0 — und sah damit aus wie ein ruhiger Tag
+    ohne Top-5-Spiele. Tatsaechlich war der Fixture-Index nur nach dem Team-PAAR geschluesselt;
+    `event_key` ist reihenfolge-unabhaengig, also ueberschrieb das pickfreie Rueckspiel im
+    Fruehjahr das heutige Spiel. Der Bruch war seit dem 26.08. unsichtbar, weil die Zahl, die
+    ihn zeigt (`nCandidates`), nur im Log stand.
+
+    Regel: lagen Boersen-Spiele am selben Tag wie unsere Cards und wurde KEINES verlinkt, ist
+    das ein Bruch, kein leerer Tag. Und wer die Datei nicht lesen kann, meldet ❔ statt gruen
+    ([[project_audit_stille_fehler_25_08]] — fehlende Information ist keine Erlaubnis)."""
+    fname = "betfair_card_link.json"
+    data = _lazy(fname)
+    if fname in _LAZY_FAILED:
+        return _chk("card_link_alive", "Terminal-Kartenlink kommt an", "warn",
+                    [f"❔ {fname} nicht lesbar — Kartenlink UNBEKANNT, nicht gruen."],
+                    "Datei pruefen; betfair.yml schreibt sie am Ende des Radar-Laufs.")
+    if not data:
+        return _chk("card_link_alive", "Terminal-Kartenlink kommt an", "warn",
+                    [f"{fname} fehlt/leer — betfair_card_link.py lief nicht."],
+                    "Laeuft in .github/workflows/betfair.yml nach dem Konsens-Schritt.")
+    cand = data.get("nCandidates")
+    linked = data.get("nLinked")
+    if cand is None or linked is None:
+        return _chk("card_link_alive", "Terminal-Kartenlink kommt an", "warn",
+                    ["❔ nCandidates/nLinked fehlen — alte Datei, Aussage UNBEKANNT."],
+                    "betfair_card_link.py ab 31.08.2026 schreibt beide Zahlen mit.")
+    fails = []
+    if cand and not linked:
+        fails.append(f"{cand} Boersen-Spiele lagen am selben Tag wie unsere Cards, verlinkt "
+                     f"wurde KEINES — Namens-Bruecke oder Fixture-Index gebrochen.")
+    return _chk("card_link_alive", "Terminal-Kartenlink kommt an", "error", fails,
+                "0 von 0 ist ein ruhiger Tag. 0 von N ist ein Bruch.")
+
+
 # ── Runner ───────────────────────────────────────────────────────────────────
 def run_checks(wm, poly, schedule, venues, lineups=None, now=None,
                auto_bets=None, history=None, streaks=None):

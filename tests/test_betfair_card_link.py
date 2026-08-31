@@ -255,3 +255,100 @@ class TestLinkMitTorAchse:
         r = L.link([_game(side="home")], [_fx()], {"1": _snap(_ou("3.5", 900, 6000))})
         row = r["links"]["1"]
         assert row["achse"] == "1X2" and row["agree"] is True and row["torMarkt"] is None
+
+
+class TestHinUndRueckspiel:
+    """⚠️ 31.08.2026 — der Bug, der den exakten Pfad unmöglich machte.
+
+    `event_key` ist reihenfolge-unabhängig: Hin- und Rückspiel derselben Paarung ergeben
+    denselben Schlüssel. Der Index lief nur über dieses Paar, also überschrieb das zuletzt
+    eingelesene Fixture — über eine Saison praktisch immer das Rückspiel im Frühjahr, das noch
+    keine Picks hat. Gemessen am 31.08.: 876 von 876 Schlüsseln doppelt belegt, 1 von 12
+    Börsen-Spielen verlinkt. Der Schlüssel trägt seitdem den Tag.
+    """
+
+    def _paarung(self):
+        heute = _fx(home="Aston Villa", away="Arsenal", date="2026-08-31",
+                    picks=[{"market": "Auswärtssieg", "odds": 2.4,
+                            "verdict": "ABWÄGEN", "convictionScore": 5}])
+        rueck = _fx(home="Arsenal", away="Aston Villa", date="2027-04-17", picks=[])
+        return heute, rueck
+
+    def test_rueckspiel_ueberschreibt_das_heutige_spiel_nicht(self):
+        heute, rueck = self._paarung()
+        g = _game(home="Aston Villa", away="Arsenal", side="away",
+                  ko="2026-08-31T19:00:00Z")
+        r = L.link([g], [heute, rueck], {})
+        assert r["links"]["1"]["market"] == "Auswärtssieg"
+        assert r["nExact"] == 1 and r["nBridge"] == 0
+
+    def test_reihenfolge_im_index_ist_egal(self):
+        """Vorher hing das Ergebnis daran, welches Fixture zuletzt gelesen wurde."""
+        heute, rueck = self._paarung()
+        g = _game(home="Aston Villa", away="Arsenal", side="away",
+                  ko="2026-08-31T19:00:00Z")
+        a = L.link([g], [heute, rueck], {})
+        b = L.link([g], [rueck, heute], {})
+        assert a["links"].keys() == b["links"].keys()
+        assert a["links"]["1"]["market"] == b["links"]["1"]["market"] == "Auswärtssieg"
+
+    def test_das_rueckspiel_zieht_seinen_eigenen_tag(self):
+        """Umgekehrt darf das Hinspiel nicht auf das Rückspiel durchschlagen."""
+        heute, rueck = self._paarung()
+        g = _game(home="Arsenal", away="Aston Villa", side="home",
+                  ko="2027-04-17T14:00:00Z")
+        r = L.link([g], [heute, rueck], {})
+        assert r["links"] == {}          # Rückspiel hat (noch) keine Picks
+
+    def test_anpfiff_kippt_ueber_mitternacht(self):
+        """Anpfiff 00:15 UTC am Folgetag — das Fixture von gestern muss trotzdem greifen."""
+        fx = _fx(home="Estudiantes", away="Newells", date="2026-08-31",
+                 picks=[{"market": "Heimsieg", "odds": 1.9,
+                         "verdict": "BET", "convictionScore": 7}])
+        g = _game(home="Estudiantes", away="Newells", side="home",
+                  ko="2026-09-01T00:15:00Z")
+        r = L.link([g], [fx], {})
+        assert r["links"]["1"]["market"] == "Heimsieg"
+
+
+class TestKandidatenZahlWirdGemeldet:
+    """`candidates()` gab es seit dem 26.08. — aber nur als Log-Zeile. Ohne sie in der Datei
+    kann niemand „0 verlinkt" von „0 verlinkbar" unterscheiden, und genau daran blieb der
+    Hin-/Rückspiel-Bug fünf Tage unsichtbar."""
+
+    def test_kandidat_ohne_link_ist_nicht_dasselbe_wie_kein_kandidat(self):
+        fx = _fx(home="Aston Villa", away="Arsenal", date="2026-08-31", picks=[])
+        g = _game(home="Aston Villa", away="Arsenal", ko="2026-08-31T19:00:00Z")
+        assert L.candidates([g], [fx]) == 1
+        assert L.link([g], [fx], {})["links"] == {}
+
+
+class TestCardQuellen:
+    """⚠️ 31.08.2026 — der zweite Bruch, und der schwerere.
+
+    `PICKS_FILE` hing an `D.data_file()`, also an `COCOBET_DATASET` — und `betfair.yml` setzt
+    die Variable nicht. Gelesen wurde damit `wm2026-data.json`; die WM ist seit Juli vorbei,
+    die Datei hat keine kommenden Fixtures. `nCandidates` war deshalb immer 0, und die Warnung
+    „Kandidaten, aber kein Treffer" konnte gar nicht anschlagen. Die Börse ist nicht
+    datensatz-gebunden: ein Radar-Lauf sieht Top-5 und MLS am selben Tag.
+    """
+
+    def test_beide_klub_datensaetze_werden_gelesen(self):
+        namen = [f.name for f in L.PICKS_FILES]
+        assert "liga-data.json" in namen and "mls-data.json" in namen
+
+    def test_quellen_haengen_nicht_an_der_env(self, monkeypatch=None):
+        """Ohne COCOBET_DATASET darf die WM-Datei nicht die einzige Quelle sein."""
+        import os
+        alt = os.environ.pop("COCOBET_DATASET", None)
+        try:
+            import importlib
+            m = importlib.reload(L)
+            namen = [f.name for f in m.PICKS_FILES]
+            assert "liga-data.json" in namen and "mls-data.json" in namen
+            assert namen[0] != "wm2026-data.json"
+        finally:
+            if alt is not None:
+                os.environ["COCOBET_DATASET"] = alt
+            import importlib
+            importlib.reload(L)
