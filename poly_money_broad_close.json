@@ -121687,7 +121687,13 @@
   "tokens": {
    "Leviatán Esports": "94719593732190996354434987604826451149202902271302962879336550541746114860528",
    "G2 Esports": "68105884261254451841705020136138355088041921496143498608852987617306084691631"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Leviatán Esports": 0.0,
+   "G2 Esports": 1.0
+  },
+  "resolvedAt": "2026-08-31T00:39:27.654490+00:00"
  },
  "cs2-fxw7-shin-2026-08-30": {
   "shares": {
@@ -122530,7 +122536,13 @@
   "tokens": {
    "Elina Svitolina": "6662806913863924193284517106556634188362434731040406138316873291152542970721",
    "Solana Sierra": "75260303688285758029225624382687344304978209096864670838693301196600762503015"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Elina Svitolina": 1.0,
+   "Solana Sierra": 0.0
+  },
+  "resolvedAt": "2026-08-31T00:39:27.654490+00:00"
  },
  "atp-navone-djokovi-2026-08-30": {
   "shares": {
@@ -123468,8 +123480,8 @@
  },
  "wta-william-kenin-2026-08-30": {
   "shares": {
-   "Venus Williams": 7195.460074964998,
-   "Sofia Kenin": 46104.19891599001
+   "Venus Williams": 7235.960074964998,
+   "Sofia Kenin": 46363.69891599001
   },
   "prices": {
    "Venus Williams": 0.135,
@@ -123477,7 +123489,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 54269,
+  "totalUsd": 56973,
   "whales": [
    {
     "wallet": "0xec981ed70ae69c5cbcac08c1ba063e734f6bafcd",
@@ -123488,7 +123500,7 @@
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Sofia Kenin",
-    "usd": 5452,
+    "usd": 5451,
     "avgPrice": 0.8527
    },
    {
@@ -123504,57 +123516,267 @@
     "avgPrice": 0.857
    }
   ],
-  "hoursToKickoff": 0.72,
-  "capturedAt": "2026-08-31T00:19:16.293081+00:00",
+  "hoursToKickoff": 0.38,
+  "capturedAt": "2026-08-31T00:39:27.654490+00:00",
   "tokens": {
    "Venus Williams": "49869838353322281659632990644403324317712120387955400314903469776362314274854",
    "Sofia Kenin": "58223527634450104768298736025387258062861897594910837697626005484668501671629"
-  }
+  },
+  "book": {
+   "side": "Sofia Kenin",
+   "bid": 0.86,
+   "ask": 0.87,
+   "spreadC": 1.0,
+   "spreadPct": 1.15,
+   "bids": [
+    [
+     0.86,
+     6470
+    ],
+    [
+     0.85,
+     4069
+    ],
+    [
+     0.84,
+     6233
+    ],
+    [
+     0.83,
+     2241
+    ],
+    [
+     0.82,
+     28
+    ],
+    [
+     0.81,
+     2615
+    ]
+   ],
+   "asks": [
+    [
+     0.87,
+     6563
+    ],
+    [
+     0.88,
+     27710
+    ],
+    [
+     0.89,
+     49723
+    ],
+    [
+     0.9,
+     10751
+    ],
+    [
+     0.91,
+     4542
+    ],
+    [
+     0.92,
+     5760
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x56acab44cfca2e88bb9b3406890aea7bfa0cd77e",
+    "action": "BUY",
+    "side": "Venus Williams",
+    "price": 0.14,
+    "usd": 1056,
+    "ts": 1788134283
+   },
+   {
+    "wallet": "0x0e604be17c231a33dc01e38a722c7fe3984e3bad",
+    "action": "BUY",
+    "side": "Venus Williams",
+    "price": 0.15,
+    "usd": 404,
+    "ts": 1788133936
+   },
+   {
+    "wallet": "0x0e604be17c231a33dc01e38a722c7fe3984e3bad",
+    "action": "BUY",
+    "side": "Venus Williams",
+    "price": 0.15,
+    "usd": 651,
+    "ts": 1788133729
+   },
+   {
+    "wallet": "0x55f544a537f6b9f50a8d27e662c250e93418e2a0",
+    "action": "BUY",
+    "side": "Sofia Kenin",
+    "price": 0.86,
+    "usd": 2200,
+    "ts": 1788133372
+   },
+   {
+    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+    "action": "BUY",
+    "side": "Sofia Kenin",
+    "price": 0.86,
+    "usd": 1226,
+    "ts": 1788133353
+   },
+   {
+    "wallet": "0xe54d37c9c12e5fd3d684ff4d193ef1f44dabfdec",
+    "action": "BUY",
+    "side": "Sofia Kenin",
+    "price": 0.87,
+    "usd": 1044,
+    "ts": 1788132417
+   },
+   {
+    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+    "action": "BUY",
+    "side": "Sofia Kenin",
+    "price": 0.86,
+    "usd": 808,
+    "ts": 1788131059
+   },
+   {
+    "wallet": "0xafe65d1671a61dfaab2b463257450ec7f1fe8192",
+    "action": "BUY",
+    "side": "Venus Williams",
+    "price": 0.14,
+    "usd": 568,
+    "ts": 1788131059
+   }
+  ]
  },
  "cs2-voc-mars-2026-08-30": {
   "shares": {
-   "Voca": 15770.627822830003,
-   "Marsborne": 8306.892452955004
+   "Voca": 16561.556840400004,
+   "Marsborne": 8917.766539150005
   },
   "prices": {
-   "Voca": 0.655,
-   "Marsborne": 0.345
+   "Voca": 0.65,
+   "Marsborne": 0.35
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 26285,
+  "totalUsd": 27094,
   "whales": [
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "Voca",
-    "usd": 7263,
-    "avgPrice": 0.6278
+    "usd": 7755,
+    "avgPrice": 0.6294
    },
    {
     "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
     "side": "Voca",
-    "usd": 1822,
+    "usd": 1808,
     "avgPrice": 0.6358
    },
    {
     "wallet": "0x513587a2f36a8cb29333052a6a479091ef8a7217",
     "side": "Marsborne",
-    "usd": 1500,
+    "usd": 1521,
     "avgPrice": 0.3934
    },
    {
     "wallet": "0x4959cf0d907b5bbd903573c3d216fed122d3f2d0",
     "side": "Voca",
-    "usd": 1330,
+    "usd": 1319,
     "avgPrice": 0.637
    }
   ],
-  "hoursToKickoff": 0.72,
-  "capturedAt": "2026-08-31T00:19:16.293081+00:00",
+  "hoursToKickoff": 0.38,
+  "capturedAt": "2026-08-31T00:39:27.654490+00:00",
   "tokens": {
    "Voca": "23890842805553773725178825982188236936102248889726100791540954628641888120133",
    "Marsborne": "47531393637145071982243197297078458319409055597267332581833461785625270553133"
-  }
+  },
+  "book": {
+   "side": "Voca",
+   "bid": 0.64,
+   "ask": 0.66,
+   "spreadC": 2.0,
+   "spreadPct": 3.03,
+   "bids": [
+    [
+     0.64,
+     150
+    ],
+    [
+     0.63,
+     10
+    ],
+    [
+     0.62,
+     130
+    ],
+    [
+     0.61,
+     700
+    ],
+    [
+     0.6,
+     367
+    ],
+    [
+     0.59,
+     855
+    ]
+   ],
+   "asks": [
+    [
+     0.66,
+     2
+    ],
+    [
+     0.67,
+     2660
+    ],
+    [
+     0.68,
+     83
+    ],
+    [
+     0.69,
+     691
+    ],
+    [
+     0.7,
+     48
+    ],
+    [
+     0.71,
+     448
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "action": "BUY",
+    "side": "Voca",
+    "price": 0.65,
+    "usd": 492,
+    "ts": 1788136200
+   },
+   {
+    "wallet": "0xd6966eb1ae7b52320ba7ab1016680198c9e08a49",
+    "action": "BUY",
+    "side": "Marsborne",
+    "price": 0.35,
+    "usd": 410,
+    "ts": 1788129066
+   },
+   {
+    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "action": "BUY",
+    "side": "Voca",
+    "price": 0.65,
+    "usd": 1247,
+    "ts": 1788129006
+   }
+  ]
  },
  "mls-stl-dal-2026-08-30-more-markets": {
   "shares": {
@@ -123736,50 +123958,119 @@
  },
  "mex-mon1-asl-2026-08-30": {
   "shares": {
-   "CF Monterrey": 20290.199092869985,
-   "Draw (CF Monterrey vs. Atlético San Luis)": 698.2428775650001,
-   "Atlético San Luis": 49.647324274999995
+   "CF Monterrey": 28588.419116594985,
+   "Draw (CF Monterrey vs. Atlético San Luis)": 915.5789499599998,
+   "Atlético San Luis": 52.33096342499999
   },
   "prices": {
-   "CF Monterrey": 0.595,
+   "CF Monterrey": 0.585,
    "Draw (CF Monterrey vs. Atlético San Luis)": 0.215,
-   "Atlético San Luis": 0.185
+   "Atlético San Luis": 0.195
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 29921,
+  "totalUsd": 55565,
   "whales": [
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "CF Monterrey",
-    "usd": 6967,
-    "avgPrice": 0.6137
+    "usd": 12135,
+    "avgPrice": 0.6034
+   },
+   {
+    "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
+    "side": "CF Monterrey",
+    "usd": 4992,
+    "avgPrice": 0.593
    },
    {
     "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
     "side": "CF Monterrey",
-    "usd": 3796
+    "usd": 3733
    },
    {
     "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
     "side": "CF Monterrey",
-    "usd": 1948,
+    "usd": 1915,
     "avgPrice": 0.62
-   },
-   {
-    "wallet": "0x1f624696c102b99bea92c75a502fa7e4a6d676f6",
-    "side": "CF Monterrey",
-    "usd": 1468,
-    "avgPrice": 0.6035
    }
   ],
-  "hoursToKickoff": 1.89,
-  "capturedAt": "2026-08-31T00:19:16.293081+00:00",
+  "hoursToKickoff": 1.55,
+  "capturedAt": "2026-08-31T00:39:27.654490+00:00",
   "tokens": {
    "CF Monterrey": "14713073856318408966301109587468730890026887268999555241274233380553321022728",
    "Draw (CF Monterrey vs. Atlético San Luis)": "44051112408683443371061499479351679390021539600074716481140515172883633997327",
    "Atlético San Luis": "26651538304245700741135085979246408080161994302727731658122290761086508468305"
-  }
+  },
+  "book": {
+   "side": "CF Monterrey",
+   "bid": 0.58,
+   "ask": 0.59,
+   "spreadC": 1.0,
+   "spreadPct": 1.69,
+   "bids": [
+    [
+     0.58,
+     10874
+    ],
+    [
+     0.57,
+     49039
+    ],
+    [
+     0.56,
+     21367
+    ],
+    [
+     0.55,
+     21787
+    ],
+    [
+     0.54,
+     3957
+    ],
+    [
+     0.53,
+     8193
+    ]
+   ],
+   "asks": [
+    [
+     0.59,
+     53106
+    ],
+    [
+     0.6,
+     28411
+    ],
+    [
+     0.61,
+     25980
+    ],
+    [
+     0.62,
+     25194
+    ],
+    [
+     0.63,
+     5912
+    ],
+    [
+     0.64,
+     2650
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.59,
+    "usd": 336,
+    "ts": 1788136477
+   }
+  ]
  },
  "mex-tol-jua-2026-08-30-more-markets": {
   "shares": {
