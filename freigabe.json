@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-31T22:53:45.331761+00:00",
+ "generatedAt": "2026-08-31T23:08:56.794295+00:00",
  "engine": null,
  "regeln": {
   "minN": 30,
@@ -10,6 +10,21 @@
  },
  "freigegeben": [],
  "kandidaten": [
+  {
+   "schublade": "ABWÄGEN · aussortiert",
+   "strom": "cards",
+   "n": 12,
+   "status": "kandidat",
+   "grund": "12 von 30 Plays — noch 18",
+   "roi": 0.2092,
+   "roiLb": -0.1473,
+   "clv": null,
+   "clvLb": null,
+   "fehltN": 18,
+   "alterTage": 0.0,
+   "art": "push_filter",
+   "quelle": "pick_push_ledger.py"
+  },
   {
    "schublade": "Conviction 9",
    "strom": "poly",
@@ -39,21 +54,6 @@
    "alterTage": 1.1,
    "art": "mix",
    "wert": "sharp+steam"
-  },
-  {
-   "schublade": "ABWÄGEN · aussortiert",
-   "strom": "cards",
-   "n": 10,
-   "status": "kandidat",
-   "grund": "10 von 30 Plays — noch 20",
-   "roi": 0.118,
-   "roiLb": -0.294,
-   "clv": null,
-   "clvLb": null,
-   "fehltN": 20,
-   "alterTage": 0.3,
-   "art": "push_filter",
-   "quelle": "pick_push_ledger.py"
   },
   {
    "schublade": "Conviction 8",
@@ -103,6 +103,21 @@
  ],
  "alle": [
   {
+   "schublade": "ABWÄGEN · aussortiert",
+   "strom": "cards",
+   "n": 12,
+   "status": "kandidat",
+   "grund": "12 von 30 Plays — noch 18",
+   "roi": 0.2092,
+   "roiLb": -0.1473,
+   "clv": null,
+   "clvLb": null,
+   "fehltN": 18,
+   "alterTage": 0.0,
+   "art": "push_filter",
+   "quelle": "pick_push_ledger.py"
+  },
+  {
    "schublade": "Conviction 9",
    "strom": "poly",
    "n": 12,
@@ -131,21 +146,6 @@
    "alterTage": 1.1,
    "art": "mix",
    "wert": "sharp+steam"
-  },
-  {
-   "schublade": "ABWÄGEN · aussortiert",
-   "strom": "cards",
-   "n": 10,
-   "status": "kandidat",
-   "grund": "10 von 30 Plays — noch 20",
-   "roi": 0.118,
-   "roiLb": -0.294,
-   "clv": null,
-   "clvLb": null,
-   "fehltN": 20,
-   "alterTage": 0.3,
-   "art": "push_filter",
-   "quelle": "pick_push_ledger.py"
   },
   {
    "schublade": "Conviction 8",
@@ -193,6 +193,22 @@
    "wert": "money+sharp+steam"
   },
   {
+   "schublade": "Liga · ABWÄGEN",
+   "strom": "cards",
+   "n": 44,
+   "status": "geprueft",
+   "grund": "CLV negativ belegt — der ROI kam aus der Varianz, nicht aus einer Kante",
+   "roi": 0.2536,
+   "roiLb": 0.0443,
+   "clv": -1.588,
+   "clvLb": -2.322,
+   "fehltN": 0,
+   "alterTage": 0.5,
+   "art": "verdict",
+   "wert": "ABWÄGEN",
+   "datensatz": "Liga"
+  },
+  {
    "schublade": "Half Time",
    "strom": "betfair",
    "n": 950,
@@ -208,22 +224,6 @@
    "naeherung": true
   },
   {
-   "schublade": "Liga · ABWÄGEN",
-   "strom": "cards",
-   "n": 40,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.21,
-   "roiLb": -0.0166,
-   "clv": -1.619,
-   "clvLb": -2.422,
-   "fehltN": 0,
-   "alterTage": 1.5,
-   "art": "verdict",
-   "wert": "ABWÄGEN",
-   "datensatz": "Liga"
-  },
-  {
    "schublade": "Mix bf+money",
    "strom": "poly",
    "n": 60,
@@ -234,7 +234,7 @@
    "clv": 0.233,
    "clvLb": -0.055,
    "fehltN": 0,
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "mix",
    "wert": "bf+money"
   },
@@ -323,7 +323,7 @@
    "clv": -0.197,
    "clvLb": -0.705,
    "fehltN": 0,
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "conviction",
    "wert": 7
   },
@@ -495,6 +495,21 @@
    "wert": "bf+money+sharp"
   },
   {
+   "schublade": "ABWÄGEN · gepusht",
+   "strom": "cards",
+   "n": 6,
+   "status": "sammelt",
+   "grund": "6 von 30 Plays",
+   "roi": 0.3033,
+   "roiLb": -0.1514,
+   "clv": null,
+   "clvLb": null,
+   "fehltN": 24,
+   "alterTage": 0.0,
+   "art": "push_filter",
+   "quelle": "pick_push_ledger.py"
+  },
+  {
    "schublade": "Konjunktion · Top-5 + MLS",
    "strom": "betfair",
    "n": 9,
@@ -509,21 +524,6 @@
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "top5"
-  },
-  {
-   "schublade": "ABWÄGEN · gepusht",
-   "strom": "cards",
-   "n": 4,
-   "status": "sammelt",
-   "grund": "4 von 30 Plays",
-   "roi": 0.0975,
-   "roiLb": -0.5112,
-   "clv": null,
-   "clvLb": null,
-   "fehltN": 26,
-   "alterTage": 1.0,
-   "art": "push_filter",
-   "quelle": "pick_push_ledger.py"
   },
   {
    "schublade": "Mix money+pinn",
