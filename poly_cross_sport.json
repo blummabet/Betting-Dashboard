@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-31T20:04:38.082439+00:00",
+ "generatedAt": "2026-08-31T20:18:18.833051+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,29 +9,100 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 532,
- "pinnKeys": 312,
- "matched": 236,
- "footballRows": 204,
+ "polyRowsSeen": 529,
+ "pinnKeys": 309,
+ "matched": 233,
+ "footballRows": 201,
  "crossRows": 328,
- "footballSkippedStale": 81,
+ "footballSkippedStale": 80,
  "seenBySport": {
   "americanfootball_nfl": 154,
   "baseball_mlb": 72,
   "icehockey_nhl": 74,
   "boxing_boxing": 28,
   "soccer_mls": 45,
-  "soccer_liga": 159
+  "soccer_liga": 156
  },
  "matchedBySport": {
   "baseball_mlb": 24,
   "boxing_boxing": 8,
   "soccer_mls": 45,
-  "soccer_liga": 159
+  "soccer_liga": 156
  },
  "trackRecord": {
-  "tracked": 241,
+  "tracked": 246,
   "converged": 60
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|atalanta-bologna|dr",
+   "sport": "soccer_liga",
+   "event": "Atalanta vs Bologna",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 26.5,
+   "pinnPP": 48.9,
+   "gapPP": -22.35,
+   "vol": 39466,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-31T20:18:18.832716+00:00"
+  },
+  {
+   "id": "soccer_liga|atalanta-bologna|hw",
+   "sport": "soccer_liga",
+   "event": "Atalanta vs Bologna",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 49.5,
+   "pinnPP": 27.9,
+   "gapPP": 21.65,
+   "vol": 39466,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-31T20:18:18.832716+00:00"
+  },
+  {
+   "id": "soccer_liga|arsenal-astonvilla|dr",
+   "sport": "soccer_liga",
+   "event": "Aston Villa vs Arsenal",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 21.5,
+   "pinnPP": 31.8,
+   "gapPP": -10.3,
+   "vol": 2664155,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-31T20:18:18.832716+00:00"
+  },
+  {
+   "id": "soccer_liga|arsenal-astonvilla|aw",
+   "sport": "soccer_liga",
+   "event": "Aston Villa vs Arsenal",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 64.5,
+   "pinnPP": 55.0,
+   "gapPP": 9.54,
+   "vol": 2664155,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-31T20:18:18.832716+00:00"
+  },
+  {
+   "id": "soccer_liga|barcelona-rayovallecano|hw",
+   "sport": "soccer_liga",
+   "event": "Barcelona vs Rayo Vallecano",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 88.5,
+   "pinnPP": 95.2,
+   "gapPP": -6.67,
+   "vol": 1169104,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-08-31T20:18:18.832716+00:00"
+  }
+ ]
 }
