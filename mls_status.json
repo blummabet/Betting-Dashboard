@@ -555,8 +555,26 @@
       "nFail": 0,
       "failures": [],
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
+    },
+    {
+      "id": "live_scan_laeuft",
+      "label": "Poly-Live-Scan taktet",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Erwartet alle 15 Min; Alarm ab 90 Min. Live-Preise sind die Schluss-Referenz fuer den CLV — fehlen sie, misst der Nordstern nicht."
+    },
+    {
+      "id": "card_link_alive",
+      "label": "Terminal-Kartenlink kommt an",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "0 von 0 ist ein ruhiger Tag. 0 von N ist ein Bruch."
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-08-31T15:08:54.310048+00:00"
+  "generatedAt": "2026-08-31T23:19:40.699394+00:00"
 }
