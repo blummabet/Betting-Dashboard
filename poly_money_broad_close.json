@@ -122629,7 +122629,13 @@
     "usd": 70144,
     "ts": 1788131218
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Cincinnati Reds": 1.0,
+   "Chicago Cubs": 0.0
+  },
+  "resolvedAt": "2026-08-31T03:18:59.366328+00:00"
  },
  "mls-stl-dal-2026-08-30": {
   "shares": {
@@ -123190,108 +123196,140 @@
  },
  "wta-william-kenin-2026-08-30": {
   "shares": {
-   "Venus Williams": 5801.057251249998,
-   "Sofia Kenin": 40607.38912212501
+   "Venus Williams": 6956.100333764996,
+   "Sofia Kenin": 44570.53641704002
   },
   "prices": {
-   "Venus Williams": 0.125,
-   "Sofia Kenin": 0.875
+   "Venus Williams": 0.135,
+   "Sofia Kenin": 0.865
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 75111,
+  "totalUsd": 95837,
   "whales": [
    {
     "wallet": "0xec981ed70ae69c5cbcac08c1ba063e734f6bafcd",
     "side": "Sofia Kenin",
-    "usd": 7077,
+    "usd": 6996,
     "avgPrice": 0.86
    },
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
     "side": "Sofia Kenin",
-    "usd": 5354,
+    "usd": 5187,
     "avgPrice": 0.85
    },
    {
     "wallet": "0x9c3ce009c9b039956665cecc4cd14de862b5e8c9",
     "side": "Sofia Kenin",
-    "usd": 5087,
+    "usd": 5029,
     "avgPrice": 0.86
    },
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Sofia Kenin",
-    "usd": 3885,
-    "avgPrice": 0.8527
+    "usd": 3866,
+    "avgPrice": 0.8539
    }
   ],
   "hoursToKickoff": 0.22,
-  "capturedAt": "2026-08-31T00:48:54.125111+00:00",
+  "capturedAt": "2026-08-31T03:18:59.366328+00:00",
   "tokens": {
    "Venus Williams": "49869838353322281659632990644403324317712120387955400314903469776362314274854",
    "Sofia Kenin": "58223527634450104768298736025387258062861897594910837697626005484668501671629"
   },
   "book": {
    "side": "Sofia Kenin",
-   "bid": 0.87,
-   "ask": 0.88,
+   "bid": 0.86,
+   "ask": 0.87,
    "spreadC": 1.0,
-   "spreadPct": 1.14,
+   "spreadPct": 1.15,
    "bids": [
     [
-     0.87,
-     12154
-    ],
-    [
      0.86,
-     8089
+     26761
     ],
     [
      0.85,
-     4995
+     59897
     ],
     [
      0.84,
-     4364
+     5861
     ],
     [
      0.83,
-     752
+     4180
     ],
     [
      0.82,
-     2593
+     116
+    ],
+    [
+     0.81,
+     2576
     ]
    ],
    "asks": [
     [
+     0.87,
+     15439
+    ],
+    [
      0.88,
-     12559
+     27701
     ],
     [
      0.89,
-     34445
+     69274
     ],
     [
      0.9,
-     17802
+     14666
     ],
     [
      0.91,
-     7265
+     5732
     ],
     [
      0.92,
-     4270
-    ],
-    [
-     0.93,
-     2723
+     6129
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xe3d4dee2427b98042822543f8e1e8ab7bafb2bac",
+    "action": "BUY",
+    "side": "Sofia Kenin",
+    "price": 0.87,
+    "usd": 1984,
+    "ts": 1788145609
+   },
+   {
+    "wallet": "0x565c09cd32dbbde32d5b4fcd6c49d55dd84f878d",
+    "action": "SELL",
+    "side": "Venus Williams",
+    "price": 0.1301,
+    "usd": 903,
+    "ts": 1788139773
+   },
+   {
+    "wallet": "0x8165f885f94e120a28c4d38396acfe4b871b97b8",
+    "action": "BUY",
+    "side": "Sofia Kenin",
+    "price": 0.87,
+    "usd": 1405,
+    "ts": 1788139414
+   },
+   {
+    "wallet": "0xeaac36f714563e13d88db7a4f0a0898388f2d71d",
+    "action": "BUY",
+    "side": "Venus Williams",
+    "price": 0.14,
+    "usd": 750,
+    "ts": 1788138718
+   },
    {
     "wallet": "0x0e604be17c231a33dc01e38a722c7fe3984e3bad",
     "action": "SELL",
@@ -123323,38 +123361,6 @@
     "price": 0.14,
     "usd": 1056,
     "ts": 1788134283
-   },
-   {
-    "wallet": "0x0e604be17c231a33dc01e38a722c7fe3984e3bad",
-    "action": "BUY",
-    "side": "Venus Williams",
-    "price": 0.15,
-    "usd": 404,
-    "ts": 1788133936
-   },
-   {
-    "wallet": "0x0e604be17c231a33dc01e38a722c7fe3984e3bad",
-    "action": "BUY",
-    "side": "Venus Williams",
-    "price": 0.15,
-    "usd": 651,
-    "ts": 1788133729
-   },
-   {
-    "wallet": "0x55f544a537f6b9f50a8d27e662c250e93418e2a0",
-    "action": "BUY",
-    "side": "Sofia Kenin",
-    "price": 0.86,
-    "usd": 2200,
-    "ts": 1788133372
-   },
-   {
-    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
-    "action": "BUY",
-    "side": "Sofia Kenin",
-    "price": 0.86,
-    "usd": 1226,
-    "ts": 1788133353
    }
   ]
  },
@@ -124184,8 +124190,8 @@
  },
  "lol-ktc-drxc-2026-08-31": {
   "shares": {
-   "KT Rolster Challengers": 12308.041409984997,
-   "Kiwoom DRX Challengers": 4212.823516425002
+   "KT Rolster Challengers": 13597.314717494997,
+   "Kiwoom DRX Challengers": 4654.118406915001
   },
   "prices": {
    "KT Rolster Challengers": 0.745,
@@ -124193,7 +124199,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 18652,
+  "totalUsd": 20181,
   "whales": [
    {
     "wallet": "0x8adc5aceb4718b2972e34dfffa45d58b56b5bafc",
@@ -124204,7 +124210,7 @@
    {
     "wallet": "0x16602a38e8fb4498ffee0ea81e08d2b421825598",
     "side": "Kiwoom DRX Challengers",
-    "usd": 3378,
+    "usd": 3398,
     "avgPrice": 0.2498
    },
    {
@@ -124220,8 +124226,8 @@
     "avgPrice": 0.7496
    }
   ],
-  "hoursToKickoff": 2.22,
-  "capturedAt": "2026-08-31T02:49:11.277568+00:00",
+  "hoursToKickoff": 1.72,
+  "capturedAt": "2026-08-31T03:18:59.366328+00:00",
   "tokens": {
    "KT Rolster Challengers": "46006794210076788964783922967317207310635920694626635234405438921397109436936",
    "Kiwoom DRX Challengers": "84447032040573630325973314130962009118035995034995285393347090351354626433959"
@@ -124235,19 +124241,19 @@
    "bids": [
     [
      0.74,
-     14435
+     12995
     ],
     [
      0.73,
-     1030
+     1102
     ],
     [
      0.72,
-     2334
+     2769
     ],
     [
      0.71,
-     1439
+     1499
     ],
     [
      0.7,
@@ -124261,31 +124267,39 @@
    "asks": [
     [
      0.75,
-     6903
+     6880
     ],
     [
      0.76,
-     5436
+     5913
     ],
     [
      0.77,
-     2908
+     2901
     ],
     [
      0.78,
-     2243
+     1983
     ],
     [
      0.79,
-     1570
+     1540
     ],
     [
      0.8,
-     4020
+     3345
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x59847267e2a004e3886d7a02ac53778c5ea176eb",
+    "action": "BUY",
+    "side": "Kiwoom DRX Challengers",
+    "price": 0.26,
+    "usd": 375,
+    "ts": 1788145179
+   },
    {
     "wallet": "0x9b963178d3b8765cfc5af94c00550d6ec6c54389",
     "action": "BUY",
