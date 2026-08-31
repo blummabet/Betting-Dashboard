@@ -1,10 +1,10 @@
 {
-"generatedAt": "2026-08-31T00:21:18.244462+00:00",
+"generatedAt": "2026-08-31T00:36:19.436978+00:00",
 "byVerdict": {
 "konsens": {
-"n": 652,
-"wins": 532,
-"hitRate": 0.816,
+"n": 653,
+"wins": 533,
+"hitRate": 0.8162,
 "polyN": 610,
 "polyWins": 479,
 "polyHitRate": 0.7852,
@@ -12,14 +12,14 @@
 "pinnHitRate": 0.7692
 },
 "uneinig": {
-"n": 222,
+"n": 223,
 "wins": 69,
-"hitRate": 0.3108,
-"polyN": 199,
+"hitRate": 0.3094,
+"polyN": 200,
 "polyWins": 56,
-"polyHitRate": 0.2814,
-"pinnN": 112,
-"pinnHitRate": 0.5982
+"polyHitRate": 0.28,
+"pinnN": 113,
+"pinnHitRate": 0.6018
 },
 "teil": {
 "n": 9,
@@ -53,15 +53,15 @@
 "wins": 20,
 "hitRate": 0.7143
 },
+"Brazilian Serie A": {
+"n": 25,
+"wins": 16,
+"hitRate": 0.64
+},
 "Argentinian Primera Division": {
 "n": 23,
 "wins": 11,
 "hitRate": 0.4783
-},
-"Brazilian Serie A": {
-"n": 23,
-"wins": 15,
-"hitRate": 0.6522
 },
 "Spanish Segunda Division": {
 "n": 23,
@@ -531,20 +531,58 @@
 "hitRate": 0.8118
 },
 "weak": {
-"n": 340,
-"wins": 172,
-"hitRate": 0.5059
+"n": 342,
+"wins": 173,
+"hitRate": 0.5058
 }
 },
 "divergence": {
-"n": 222,
+"n": 223,
 "betfairWins": 69,
-"betfairRate": 0.3108,
-"polyN": 199,
+"betfairRate": 0.3094,
+"polyN": 200,
 "polyWins": 56,
-"polyRate": 0.2814
+"polyRate": 0.28
 },
 "recent": [
+{
+"matchId": "35953433",
+"home": "Mirassol",
+"away": "SE Palmeiras",
+"league": "Brazilian Serie A",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "SE Palmeiras",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-30T21:30:00Z",
+"settledAt": "2026-08-31T00:36:19.282739+00:00"
+},
+{
+"matchId": "35953351",
+"home": "Gremio",
+"away": "Chapecoense",
+"league": "Brazilian Serie A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Gremio",
+"polySide": null,
+"winner": "home",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-08-30T21:30:00Z",
+"settledAt": "2026-08-31T00:36:19.282739+00:00"
+},
 {
 "matchId": "35973473",
 "home": "Columbus",
@@ -1266,50 +1304,12 @@
 ],
 "kickoff": "2026-08-30T13:00:00Z",
 "settledAt": "2026-08-30T16:05:35.769900+00:00"
-},
-{
-"matchId": "35971134",
-"home": "Sunderland",
-"away": "Fulham",
-"league": "English Premier League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Sunderland",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-08-30T13:00:00Z",
-"settledAt": "2026-08-30T16:05:35.769900+00:00"
-},
-{
-"matchId": "35966635",
-"home": "Chelsea",
-"away": "Brighton",
-"league": "English Premier League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Chelsea",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-4,
-3
-],
-"kickoff": "2026-08-30T13:00:00Z",
-"settledAt": "2026-08-30T16:05:35.769900+00:00"
 }
 ],
 "global": {
-"n": 883,
-"wins": 604,
-"hitRate": 0.684
+"n": 885,
+"wins": 605,
+"hitRate": 0.6836
 },
-"pending": 9
+"pending": 8
 }
