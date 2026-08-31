@@ -308,10 +308,19 @@ def killer_schublade(results=None, now=None) -> list:
     except Exception:
         return []
     out = []
-    s = schublade(results)
-    if s["renditen"]:
-        out.append(bewerte("Konjunktion · Schluss-Stand", "betfair", s["renditen"], s["clvs"],
-                           {"art": "konjunktion", "quelle": "killer.py"}, s["letzter"], now))
+    # 31.08.2026 (Lucas: „nur die Top 5 lassen oder erweitert?"): statt einer Schublade ueber
+    # alle Ligen zwei getrennte. Gemessen war die Frage nicht entscheidbar — Top-5 hat den
+    # besseren ROI-Punktschaetzer (n=10), der Rest den einzigen CLV mit Untergrenze ueber null
+    # (n=70). Getrennt qualifiziert sich jede selbst, und keine Zeile geht verloren.
+    # Beide Zuschnitte werden IMMER gemeldet, auch leer — „Top-5 sammelt noch" ist eine
+    # Aussage, ein fehlender Eintrag waere keine.
+    for scope, name in (("top5", "Konjunktion · Top-5 + MLS"),
+                        ("rest", "Konjunktion · übrige Ligen")):
+        s = schublade(results, scope=scope)
+        if s["renditen"]:
+            out.append(bewerte(name, "betfair", s["renditen"], s["clvs"],
+                               {"art": "konjunktion", "quelle": "killer.py", "zuschnitt": scope},
+                               s["letzter"], now))
     # 30.08.2026 (Lucas: „das wechselt auch ohne dass ich die Seite aktualisiere"): die Sektion
     # HÄLT ihre Treffer jetzt bis zum Anpfiff, weil `inflow` ein Intervall-Delta ist und sonst
     # im Minutentakt blinkt. Das ist eine andere Menge als die oben gemessene (dort zählt der

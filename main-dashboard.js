@@ -1441,10 +1441,18 @@
   function _mdKillerStand() {
     var f = _md.data && _md.data.freigabe;
     var zeilen = (f && (f.alle || f.zeilen)) || [];
+    // 31.08.2026: seit dem Ligen-Zuschnitt gibt es MEHRERE Konjunktions-Schubladen
+    // („Top-5 + MLS", „übrige Ligen", „gehalten"). Vorher genügte die erste — jetzt wäre das
+    // zufällig die kleinste. Genommen wird die mit den meisten abgerechneten Plays: der Badge
+    // ist ein Ersatz, solange das eigene Buch zu dünn ist, und dafür zählt die breiteste
+    // Stichprobe. Welche es war, steht im Badge, damit die Zahl nicht anonym bleibt.
+    var best = null;
     for (var i = 0; i < zeilen.length; i++) {
-      if (String(zeilen[i].schublade || '').indexOf('Konjunktion') === 0) return zeilen[i];   // Schluss-Stand ODER gehalten — die erste passt
+      var z = zeilen[i];
+      if (String(z.schublade || '').indexOf('Konjunktion') !== 0) continue;
+      if (!best || (+z.n || 0) > (+best.n || 0)) best = z;
     }
-    return null;
+    return best;
   }
   // 30.08.2026 (Lucas: „sollten wir das nicht mittracken, damit ich seh wie gut es performt?"):
   // Der Badge zeigte die Zahl der SCHLUSS-Definition aus dem Betfair-Track (n=70) — eine
@@ -1475,7 +1483,9 @@
     if (st.status === 'freigegeben') return { txt: '✅ freigegeben · n' + st.n + fort, col: A.good, bg: 'rgba(46,160,67,.16)' };
     var roi = (st.roi != null) ? ((st.roi >= 0 ? '+' : '') + Math.round(st.roi * 100) + '%') : '—';
     var ug = (st.roiLb != null) ? ((st.roiLb >= 0 ? '+' : '') + Math.round(st.roiLb * 100) + '%') : '—';
-    return { txt: '👀 beobachten · Tor n' + st.n + ' · ROI ' + roi + ' (UG ' + ug + ')' + fort,
+    var wo = String(st.schublade || '').split('·').slice(1).join('·').trim();   // „Top-5 + MLS" / „übrige Ligen"
+    return { txt: '👀 beobachten · Tor n' + st.n + (wo ? ' (' + wo + ')' : '') +
+                  ' · ROI ' + roi + ' (UG ' + ug + ')' + fort,
              col: A.gold, bg: 'rgba(201,133,0,.14)' };
   }
   // Die Bilanz DER SEKTION: was sie gezeigt hat und wie es ausging — zum Haltepreis gerechnet,

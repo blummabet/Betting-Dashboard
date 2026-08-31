@@ -440,8 +440,43 @@ def baue(state=None, consensus=None, track=None, streaks=None, now=None,
 
 
 # ── Freigabe-Schublade: rechnet sich aus DEMSELBEN Ledger, das die Zeilen abrechnet ──────
-def schublade(results=None):
+# ── Ligen-Zuschnitt (31.08.2026, Lucas: „nur die Top 5 lassen oder erweitert?") ─────────────
+# Gemessen über die 8.000 abgerechneten Track-Zeilen, Konjunktion auf Match Odds:
+#
+#   Top-5 + MLS   n= 10   ROI +21,8% (UG -25,1%)   CLV +1,65pp (UG -0,12)
+#   uebrige Ligen n= 70   ROI  -3,1% (UG -21,1%)   CLV +3,61pp (UG +2,76)
+#
+# Zwei Dinge, die gegen ein schnelles Urteil sprechen: die Konjunktion feuert in den Top-5
+# DREIMAL haeufiger (16,1% der Match-Odds-Zeilen gegen 5,9%) — Einschraenken hungert die Sektion
+# also weniger aus als gedacht. Aber der einzige Beleg, dessen Untergrenze ueber null liegt,
+# sitzt im Rest. Bei n=10 gegen n=70 ist das heute nicht entscheidbar.
+#
+# Also nicht einschraenken, sondern TRENNEN: zwei Schubladen, die sich getrennt qualifizieren.
+# In ein paar Wochen beantwortet die Frage sich selbst — und bis dahin wird nichts weggeworfen
+# ([[feedback_blocked_segments_observe]]: sperren, nie loeschen).
+#
+# ⚠️ Das sind die BETFAIR-Schreibweisen, nicht die Codes aus stats_scope.json. Dieselbe Liga
+# heisst hier „US MLS" und dort „MLS" — die beiden Listen haben verschiedene Aufgaben und
+# duerfen NICHT zusammengelegt werden: stats_scope entscheidet ueber die CARD-Bilanz, diese
+# hier ueber den Zuschnitt einer Geld-Sektion.
+TOP5_LIGEN = frozenset({
+    "English Premier League", "Spanish La Liga", "German Bundesliga",
+    "Italian Serie A", "French Ligue 1", "US MLS",
+})
+
+
+def im_zuschnitt(liga, scope) -> bool:
+    """Gehoert diese Liga in den Zuschnitt? `scope` None = alles, 'top5', 'rest'. REIN."""
+    if scope is None:
+        return True
+    drin = str(liga or "") in TOP5_LIGEN
+    return drin if scope == "top5" else (not drin)
+
+
+def schublade(results=None, scope=None):
     """ROI und CLV je Zeile für die Konjunktion — Rohwerte, damit freigabe.bewerte urteilen kann.
+
+    `scope`: None = alle Ligen, 'top5' = Top-5 + MLS, 'rest' = alles andere (s. TOP5_LIGEN).
 
     Der grosse Unterschied zu den bisherigen Betfair-Schubladen: die rechnen auf Aggregaten
     (byLeagueMarket) und kommen deshalb nie über „geprueft" hinaus, weil dort kein CLV je
@@ -453,6 +488,8 @@ def schublade(results=None):
         if r.get("market") != MARKT:
             continue
         if not (r.get("conc") and r.get("inflow") and r.get("dir") == "in"):
+            continue
+        if not im_zuschnitt(r.get("league"), scope):
             continue
         odd = r.get("odd")               # Closing-Quote: Signal und Preis im selben Moment
         if not isinstance(odd, (int, float)) or odd <= 1:

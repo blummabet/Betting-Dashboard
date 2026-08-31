@@ -5,14 +5,29 @@ name: ⚡ Poly Live-Scan (nur laufende Spiele, schnell)
 # schweren Vor-Spiel-Teil des Global-Scans. Poly ist geoblockt (Rechenzentrums-IP) -> nur self-hosted.
 #
 # 12.08.2026 (Lucas): GitHubs Cron DROSSELT hochfrequente Schedules (*/5 lief real ~stuendlich statt
-# alle 5 Min — Scheduler-Throttling, KEIN Runner-Problem, kein Cron-Tuning hilft). Loesung: stuendlich
-# starten (das haelt GitHub zuverlaessig) und INTERN alle 15 Min scannen, gut eine Stunde lang. Der Job
-# belegt durchgehend EINEN self-hosted Runner -> dafuer der 2. Mac-Runner; Betfair laeuft auf dem anderen.
-# So bekommen wir garantierte 15-Min-Taktung an GitHubs Scheduler vorbei. cancel-in-progress sorgt dafuer,
-# dass der naechste stuendliche Start den noch laufenden Loop nahtlos ersetzt (kein Ueberlappen, keine Luecke).
+# alle 5 Min). Loesung damals: stuendlich starten und INTERN alle 15 Min scannen, gut eine Stunde lang.
+# Der Job belegt dafuer durchgehend EINEN self-hosted Runner -> gedacht war der 2. Mac-Runner.
+#
+# ⚠️ 31.08.2026 — GEMESSEN, und die Annahme hielt nicht. Ist-Laeufe je Tag aus der Commit-Historie
+# (26.-31.08.), erwartet 96 bei 15-Min-Takt:
+#
+#   Live-Scan  (70-Min-Loop, stuendlich)   8 · 12 · 10 · 25 · 28 · 12   =  8-29%, Luecken 3-12 STUNDEN
+#   Global-Scan (kurz, alle 30 Min)                   38 · 54 · 38      =  79-112%, groesste Luecke 31 Min
+#   Betfair-Radar (kurz, */10)                        99 · 90 · 102     =  ~100%, groesste Luecke 15-17 Min
+#
+# Auf DERSELBEN Maschine erreichen die kurzen Jobs volle Abdeckung. Der Runner ist also gesund —
+# der lang haltende Job ist das Problem: er will den Runner ueber eine Stunde exklusiv, kommt gegen
+# die kurzen Jobs kaum dran, und `cancel-in-progress` raeumt den wartenden Lauf beim naechsten
+# stuendlichen Start ab, bevor er je startet. Aus Warten wird so Aushungern.
+#
+# Deshalb jetzt: KURZER Einzeldurchlauf im 15-Min-Takt (4,19,34,49 — versetzt zu Betfair auf */10
+# und zum Global-Scan auf :15/:45, und weg von :00, wo repo-weit alles gleichzeitig startet).
+# Gleiche Ziel-Taktung wie vorher, nur ueber den Scheduler statt gegen ihn. cancel-in-progress ist
+# AUS: ein Lauf von wenigen Minuten muss seinen Vorgaenger nicht verdraengen, und genau das
+# Verdraengen war Teil der Krankheit.
 on:
   schedule:
-    - cron: '9 * * * *'   # stuendlich (zuverlaessig); der Job loopt intern alle 15 Min
+    - cron: '4,19,34,49 * * * *'   # 15-Min-Takt, versetzt zu Betfair (*/10) und Global-Scan (:15/:45)
   workflow_dispatch:
 
 permissions:
@@ -21,12 +36,12 @@ permissions:
 
 concurrency:
   group: poly-live-scan
-  cancel-in-progress: true   # neuer stuendlicher Start ersetzt den noch laufenden Loop -> nahtlos, kein Ueberlappen
+  cancel-in-progress: false   # 31.08.2026: kurzer Lauf — Verdraengen brachte nur Aushungern (s. Kopf)
 
 jobs:
   live:
     runs-on: [self-hosted, macOS]
-    timeout-minutes: 72   # Backstop; der Loop beendet sich nach ~70 Min selbst (oder wird vom naechsten Start ersetzt)
+    timeout-minutes: 12   # Backstop fuer EINEN Durchlauf; laenger heisst haengt, nicht arbeitet
     steps:
       - name: 📥 Repo auschecken
         uses: actions/checkout@v4
@@ -44,7 +59,7 @@ jobs:
           echo "POLY_PYTHON=$PYTHON" >> $GITHUB_ENV
           $PYTHON -m pip install --break-system-packages requests --quiet 2>/dev/null || true
 
-      - name: ⚡ Live-Scan-Loop (alle 15 Min, gut eine Stunde lang)
+      - name: ⚡ Live-Scan (ein Durchlauf)
         env:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
@@ -59,14 +74,8 @@ jobs:
           git merge --abort 2>/dev/null || true
           git rebase --abort 2>/dev/null || true
 
-          INTERVAL=$((15 * 60))     # 15-Min-Takt (wie Betfair)
-          RUN_FOR=$((70 * 60))      # gut ueber die Stunde laufen -> auch ein leicht verspaeteter Trigger ueberbrueckt (kein Gap); der naechste Start ersetzt den Loop
-          END=$(( $(date +%s) + RUN_FOR ))
-          ITER=0
-
           run_once () {
-            ITER=$((ITER + 1))
-            echo "──── Iteration $ITER · $(date -u +'%H:%M:%S') UTC ────"
+            echo "──── Live-Scan · $(date -u +'%H:%M:%S') UTC ────"
             git pull origin main --no-rebase -X ours --autostash 2>&1 || true
             "${POLY_PYTHON}" poly_money_broad.py --live-only || echo "  ⚠️ live-only Fehler (Loop laeuft weiter)"
             "${POLY_PYTHON}" poly_live_watch.py           || echo "  ⚠️ live-watch Fehler (Loop laeuft weiter)"
@@ -92,30 +101,17 @@ jobs:
             echo "  Push nach 5 Versuchen fehlgeschlagen — naechste Iteration versucht es erneut."
           }
 
-          while :; do
-            START=$(date +%s)
-            run_once
-            NOW=$(date +%s)
-            [ "$NOW" -ge "$END" ] && break
-            ELAPSED=$((NOW - START))
-            SLEEP=$((INTERVAL - ELAPSED))
-            [ "$SLEEP" -lt 5 ] && SLEEP=5
-            REMAIN=$((END - NOW))
-            [ "$SLEEP" -gt "$REMAIN" ] && break
-            echo "  … schlafe ${SLEEP}s bis zum naechsten Scan"
-            sleep "$SLEEP"
-          done
-          echo "Loop beendet nach $ITER Iterationen — naechster stuendlicher Trigger uebernimmt."
+          run_once
+          echo "Durchlauf fertig — der naechste Trigger uebernimmt in ~15 Min."
 
       # 30.08.2026 (Lucas-Checkup): die Übersicht meldete selbst „letzte Erfassung vor 3 h — der
       # Live-Scan (Mac-Runner) lief zuletzt nicht", und im Repo stand nichts, woran man sähe warum:
       # run_health.py lief hier nie — derselbe blinde Fleck wie bei den MLS-Workflows.
       #
-      # Dieser Workflow committet INNERHALB der Loop-Schleife, es gibt also keinen eigenen
+      # Dieser Workflow committet INNERHALB des Scan-Schritts, es gibt also keinen eigenen
       # Commit-Step, vor den der Wächter passen würde. Er hängt deshalb hinten dran und schreibt
-      # seine Datei selbst weg. `if: always()` ist hier besonders wichtig: der Loop wird vom
-      # nächsten stündlichen Start planmäßig GECANCELT (cancel-in-progress) und läuft auch in den
-      # 72-Minuten-Backstop — genau die Fälle, über die wir sonst nie etwas erfahren.
+      # seine Datei selbst weg. `if: always()` bleibt wichtig: ein Lauf, der in den Backstop läuft
+      # oder mittendrin stirbt, ist genau der Fall, über den wir sonst nie etwas erfahren.
       - name: 🩺 Lauf-Gesundheit (verschluckte Fehler sichtbar machen)
         if: always()
         continue-on-error: true

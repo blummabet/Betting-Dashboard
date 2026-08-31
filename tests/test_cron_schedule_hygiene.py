@@ -357,3 +357,40 @@ class TestMacRunnerDisziplin:
                 f"{datei}: CLOB-Bau ohne timeout — kann den Runner blockieren"
             assert "from py_clob_client_v2.client import ClobClient" in str(schritt.get("run")), \
                 f"{datei}: CLOB-Bau prueft nicht erst, ob der Client schon da ist"
+
+
+class TestPreMatchNachzuegler:
+    """31.08.2026 — der Morgen-Digest fiel WIEDER aus (kein update-liga-Lauf, kein Eintrag in
+    liga_telegram_sent.json). Gegen einen verschluckten Cron hilft kein besserer Cron, nur ein
+    zweiter Versuch. Damit der Nachzügler nicht selbst still verschwindet, wird hier festgehalten:
+
+      · er existiert,
+      · JEDER Schritt, der auf den PRE-Cron hört, hört auch auf ihn (sonst läuft der Nachzügler
+        durch und tut genau das Falsche: alles außer dem Digest),
+      · er liegt vor den frühesten Top-5-Anpfiffen.
+    """
+
+    PRE = "7 6 * * *"
+    NACH = "37 7 * * *"
+
+    def test_nachzuegler_ist_deklariert(self):
+        assert self.NACH in crons("update-liga.yml"), (
+            "Der PRE-Match-Nachzügler fehlt — ein ausgefallener 06:07-Lauf wird dann nicht "
+            "mehr aufgefangen.")
+
+    def test_jeder_pre_schritt_hoert_auch_auf_den_nachzuegler(self):
+        src = lies("update-liga.yml")
+        zeilen = [z for z in src.splitlines()
+                  if "github.event.schedule" in z and self.PRE in z]
+        assert zeilen, "keine PRE-Bedingung gefunden — Struktur geändert?"
+        ohne = [z.strip() for z in zeilen if self.NACH not in z]
+        assert not ohne, (
+            "Diese PRE-Schritte kennen den Nachzügler nicht und laufen bei ihm NICHT: "
+            f"{ohne}. Cron und if müssen zusammen wandern.")
+
+    def test_nachzuegler_liegt_vor_den_fruehesten_anpfiffen(self):
+        stunde = int(self.NACH.split()[1])
+        fruehester = min(kickoff_stunden("liga-data.json") or {10: 1})
+        assert stunde < fruehester, (
+            f"Nachzügler um {stunde}:xx UTC liegt nicht mehr vor dem frühesten Anpfiff "
+            f"({fruehester}:00 UTC) — ein Digest nach Anpfiff ist wertlos.")

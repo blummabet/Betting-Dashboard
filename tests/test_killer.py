@@ -288,15 +288,33 @@ class Register(unittest.TestCase):
         # 30.08.2026: die Sektion haelt ihre Treffer jetzt bis zum Anpfiff. Das ist eine andere
         # Menge als der Schluss-Stand, den betfair_track_record abrechnet — deshalb kann hier
         # eine zweite Zeile („gehalten", zum Haltepreis) danebenstehen.
-        schluss = [r for r in z if r["schublade"] == "Konjunktion · Schluss-Stand"]
-        self.assertEqual(len(schluss), 1, [r["schublade"] for r in z])
-        self.assertEqual(schluss[0]["n"], 40)
-        self.assertIsNotNone(schluss[0]["clvLb"], "anders als die Aggregat-Schubladen hat diese CLV")
+        # 31.08.2026: der Schluss-Stand ist in zwei Zuschnitte geteilt. Diese Zeilen tragen
+        # keine Liga, gehoeren also alle in „uebrige Ligen" — eine unbekannte Liga darf nicht
+        # als Top-5 durchgehen.
+        rest = [r for r in z if r["schublade"] == "Konjunktion · übrige Ligen"]
+        self.assertEqual(len(rest), 1, [r["schublade"] for r in z])
+        self.assertEqual(rest[0]["n"], 40)
+        self.assertIsNotNone(rest[0]["clvLb"], "anders als die Aggregat-Schubladen hat diese CLV")
+        self.assertEqual([r for r in z if r["schublade"] == "Konjunktion · Top-5 + MLS"], [])
+
+    def test_beide_zuschnitte_erscheinen_getrennt(self):
+        """31.08.2026: Top-5 und Rest qualifizieren sich getrennt — je eine eigene Zeile."""
+        import freigabe
+        def row(liga, i):
+            return dict(market="Match Odds", league=liga, conc=True, inflow=True, dir="in",
+                        odd=2.0, clvBf=1.0, win=(i % 3 != 0), settledAt="2026-08-29T12:00:00Z")
+        rows = ([row("English Premier League", i) for i in range(12)]
+                + [row("Ukrainian Premier League", i) for i in range(30)])
+        z = freigabe.killer_schublade(rows, now=datetime(2026, 8, 29, 18, tzinfo=timezone.utc))
+        namen = {r["schublade"]: r["n"] for r in z}
+        self.assertEqual(namen.get("Konjunktion · Top-5 + MLS"), 12)
+        self.assertEqual(namen.get("Konjunktion · übrige Ligen"), 30)
 
     def test_ohne_zeilen_keine_schluss_schublade(self):
         import freigabe
         z = freigabe.killer_schublade([])
-        self.assertEqual([r for r in z if r["schublade"] == "Konjunktion · Schluss-Stand"], [])
+        self.assertEqual([r for r in z if str(r["schublade"]).startswith("Konjunktion · ")
+                          and "gehalten" not in r["schublade"]], [])
 
 
 class BilanzUntergrenze(unittest.TestCase):
@@ -349,3 +367,50 @@ class BilanzUntergrenze(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestLigenZuschnitt(unittest.TestCase):
+    """31.08.2026 (Lucas: „nur die Top 5 lassen oder erweitert?").
+
+    Gemessen war die Frage nicht entscheidbar: Top-5 hatte den besseren ROI-Punktschätzer
+    (n=10), die übrigen Ligen den einzigen CLV mit Untergrenze über null (n=70). Statt zu
+    raten werden beide Zuschnitte getrennt qualifiziert — hier wird festgehalten, dass der
+    Filter wirklich trennt und keine Zeile doppelt oder gar nicht zählt.
+    """
+
+    def _rows(self):
+        def r(liga, win, odd=2.0):
+            return {"market": "Match Odds", "league": liga, "conc": True, "inflow": True,
+                    "dir": "in", "odd": odd, "win": win, "clvBf": 1.0,
+                    "settledAt": "2026-08-30T12:00:00+00:00"}
+        return [r("English Premier League", True), r("US MLS", False),
+                r("Ukrainian Premier League", True), r("Chilean Primera Division", False),
+                r("Mexican Liga MX", True)]
+
+    def test_top5_nimmt_nur_top5_und_mls(self):
+        self.assertEqual(len(killer.schublade(self._rows(), scope="top5")["renditen"]), 2)
+
+    def test_rest_nimmt_den_ganzen_rest(self):
+        self.assertEqual(len(killer.schublade(self._rows(), scope="rest")["renditen"]), 3)
+
+    def test_zusammen_ergeben_sie_wieder_das_ganze(self):
+        """Kein Zuschnitt darf Zeilen verlieren oder doppelt zählen."""
+        ganz = killer.schublade(self._rows())
+        a = killer.schublade(self._rows(), scope="top5")
+        b = killer.schublade(self._rows(), scope="rest")
+        self.assertEqual(len(a["renditen"]) + len(b["renditen"]), len(ganz["renditen"]))
+        self.assertAlmostEqual(sum(a["renditen"]) + sum(b["renditen"]), sum(ganz["renditen"]))
+
+    def test_unbekannte_liga_landet_im_rest_nicht_im_nichts(self):
+        """Eine neue Liga darf nicht stillschweigend aus BEIDEN Zuschnitten fallen."""
+        self.assertTrue(killer.im_zuschnitt("Irgendeine Neue Liga", "rest"))
+        self.assertFalse(killer.im_zuschnitt("Irgendeine Neue Liga", "top5"))
+
+    def test_ohne_scope_bleibt_alles(self):
+        self.assertTrue(killer.im_zuschnitt("Was auch immer", None))
+        self.assertEqual(len(killer.schublade(self._rows())["renditen"]), 5)
+
+    def test_leere_liga_kippt_nicht(self):
+        for liga in (None, "", 5):
+            self.assertFalse(killer.im_zuschnitt(liga, "top5"))
+            self.assertTrue(killer.im_zuschnitt(liga, "rest"))

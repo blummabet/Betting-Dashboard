@@ -19,6 +19,15 @@ on:
     # 27.08. kam erst am 28.08. um 02:00 an.
     # GETRENNT (nicht '7 6,18') — nur so unterscheidet github.event.schedule PRE- vs POST-Match.
     - cron: '7 6 * * *'    # PRE-Match: Morgens CET, vor den Nachmittags-Anpfiffen (Digest + Previews)
+    # 31.08.2026 (Lucas: der Morgen-Digest fehlte schon wieder) — NACHZUEGLER.
+    # Der :07-Slot war die Antwort auf drei ausgefallene 06:00-Laeufe im August; am 31.08.
+    # fiel auch er aus (kein Lauf, kein Eintrag in liga_telegram_sent.json). Gegen einen
+    # verschluckten Cron hilft kein besserer Cron, nur ein zweiter Versuch.
+    # Das ist NUR sicher, seit `liga_telegram_sent.json` committet wird (27.08.): der
+    # Marker `morning_card:<datum>` haelt den Digest zurueck, wenn der 06:07-Lauf ihn
+    # schon geschickt hat. Ohne diesen Marker waere das hier ein Doppelpost-Generator.
+    # 07:37 UTC = 09:37 CEST, immer noch vor den fruehesten Top-5-Anpfiffen (10:00 UTC).
+    - cron: '37 7 * * *'   # PRE-Match Nachzuegler: faengt einen verschluckten 06:07-Lauf auf
     - cron: '7 18 * * *'   # POST-Match: Abends CET (Recap + Reviews decken den Vortag ab)
   workflow_dispatch:
 
@@ -225,7 +234,7 @@ jobs:
         run: python generate_wm_ai_preview.py || true
 
       - name: 📣 Liga Pick-Digest → Public (PRE-Match)
-        if: github.event.schedule == '7 6 * * *' || github.event_name == 'workflow_dispatch'
+        if: github.event.schedule == '7 6 * * *' || github.event.schedule == '37 7 * * *' || github.event_name == 'workflow_dispatch'
         env:
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
@@ -266,7 +275,7 @@ jobs:
           echo "  Digest-Zustand konnte nicht gepusht werden — der Jobende-Commit versucht es erneut."
 
       - name: 🎬 Liga TikTok Preview-Cards (PRE-Match)
-        if: github.event.schedule == '7 6 * * *' || github.event_name == 'workflow_dispatch'
+        if: github.event.schedule == '7 6 * * *' || github.event.schedule == '37 7 * * *' || github.event_name == 'workflow_dispatch'
         env:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
@@ -347,7 +356,7 @@ jobs:
 
       # Serien-Watch pre-match (PRE-Lauf 06:00) + Recap post-match (POST-Lauf 18:00).
       - name: 🔥 Liga Serien-Watch (PRE-Match)
-        if: github.event.schedule == '7 6 * * *' || github.event_name == 'workflow_dispatch'
+        if: github.event.schedule == '7 6 * * *' || github.event.schedule == '37 7 * * *' || github.event_name == 'workflow_dispatch'
         env:
           TELEGRAM_TOKEN:   ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}

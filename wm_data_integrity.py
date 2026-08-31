@@ -2470,6 +2470,56 @@ def check_streaks_fresh(ctx):
                 "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo.")
 
 
+LIVE_SCAN_STALE_MIN = 90
+
+
+@integrity_check
+def check_live_scan_laeuft(ctx):
+    """NEU 31.08.2026: laeuft der Poly-Live-Scan ueberhaupt?
+
+    Gemessen ueber die Commit-Historie 26.-31.08.: der Live-Scan erreichte **8 bis 29%** seiner
+    Soll-Laeufe, mit Luecken von drei bis zwoelf Stunden — sechs Tage lang, ohne dass irgendwo
+    etwas rot wurde. Auf derselben Maschine liegen Betfair-Radar und Global-Scan bei ~100%; der
+    Runner war nie das Problem, der lang haltende Loop war es.
+
+    Warum die Datei und nicht die Daten: `poly_money_broad_live.json` steht auch dann still,
+    wenn schlicht kein Spiel laeuft — ein Alters-Guard darauf wuerde jede ruhige Nacht anschlagen.
+    `health/<slug>.json` dagegen schreibt run_health bei JEDEM Lauf (`if: always()`), auch wenn
+    es nichts zu committen gab. Sie beantwortet damit genau die Frage, die sechs Tage lang
+    niemand gestellt hat: ist der Job ueberhaupt gestartet.
+
+    Ein Guard im Live-Job selbst kann das nicht leisten — ein Lauf, der nie startet, schreibt
+    nichts ([[project_card_link_zwei_brueche]]: eine Warnung mit Vorbedingung ist erst dann eine
+    Warnung, wenn die Vorbedingung eintritt). Deshalb sitzt er hier, in einer Batterie, die aus
+    anderen Workflows heraus laeuft."""
+    fname = "health/poly-live-scan.json"
+    data = _lazy(fname)
+    if fname in _LAZY_FAILED:
+        return _chk("live_scan_laeuft", "Poly-Live-Scan taktet", "warn",
+                    [f"❔ {fname} nicht lesbar — Live-Scan-Takt UNBEKANNT, nicht gruen."],
+                    "run_health.py schreibt sie am Ende jedes Live-Scan-Laufs.")
+    ts = (data or {}).get("updatedAt")
+    if not ts:
+        return _chk("live_scan_laeuft", "Poly-Live-Scan taktet", "warn",
+                    [f"{fname} fehlt/ohne updatedAt — der Live-Scan hat noch nie gemeldet."],
+                    "Erster Lauf schreibt sie an; danach ist Schweigen ein Befund.")
+    try:
+        t = datetime.fromisoformat(str(ts).replace("Z", "+00:00"))
+        if t.tzinfo is None:
+            t = t.replace(tzinfo=timezone.utc)
+        alter_min = (ctx.now - t).total_seconds() / 60
+    except Exception:
+        return _chk("live_scan_laeuft", "Poly-Live-Scan taktet", "warn",
+                    [f"❔ updatedAt unlesbar ({ts!r}) — Takt UNBEKANNT."], "")
+    fails = []
+    if alter_min > LIVE_SCAN_STALE_MIN:
+        fails.append(f"Letzter Live-Scan vor {alter_min/60:.1f}h (Takt: 15 Min) — der Job "
+                     f"startet nicht. Runner belegt? Workflow deaktiviert?")
+    return _chk("live_scan_laeuft", "Poly-Live-Scan taktet", "error", fails,
+                f"Erwartet alle 15 Min; Alarm ab {LIVE_SCAN_STALE_MIN} Min. Live-Preise sind die "
+                f"Schluss-Referenz fuer den CLV — fehlen sie, misst der Nordstern nicht.")
+
+
 @integrity_check
 def check_card_link_alive(ctx):
     """NEU 31.08.2026: der Terminal-Kartenlink (`betfair_card_link.json`) muss ANKOMMEN.
