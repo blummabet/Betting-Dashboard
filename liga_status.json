@@ -275,12 +275,11 @@
       "label": "Public-Konsens (Soft-Books) vorhanden",
       "severity": "warn",
       "ok": false,
-      "nFail": 4,
+      "nFail": 3,
       "failures": [
         "531-536: kein public_hw",
         "65-63: kein public_hw",
-        "116-108: kein public_hw",
-        "538-531: kein public_hw"
+        "116-108: kein public_hw"
       ],
       "note": "Ohne public_* feuert public_static_bias nicht."
     },
@@ -352,10 +351,11 @@
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
       "ok": false,
-      "nFail": 2,
+      "nFail": 3,
       "failures": [
         "66-42 Unter 2.5 Tore @1.88: sichere Linie Unter 3.5 Tore @1.39 verfügbar (≥1.35), nicht abgeleitet",
-        "185-160 Heimsieg @2.75: sichere Linie Doppelte Chance — 1X @1.736 verfügbar (≥1.35), nicht abgeleitet"
+        "185-160 Heimsieg @2.75: sichere Linie Doppelte Chance — 1X @1.785 verfügbar (≥1.35), nicht abgeleitet",
+        "164-169 Heimsieg @2.2: sichere Linie Doppelte Chance — 1X @1.35 verfügbar (≥1.35), nicht abgeleitet"
       ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
@@ -435,9 +435,11 @@
       "id": "soft_opening_captured",
       "label": "Soft-Eröffnung echt erfasst",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "1660-157: Soft bewegte sich 14.0→15.0, aber Opening==Jetzt (15.0) — nicht eingefroren"
+      ],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
     },
     {
@@ -540,6 +542,6 @@
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-08-30T22:01:51.361053+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-08-31T13:45:58.357306+00:00"
 }

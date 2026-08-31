@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-08-30T22:01:50Z",
-    "total_records": 42
+    "updated_at": "2026-08-31T13:45:57Z",
+    "total_records": 43
   },
   "records": [
     {
@@ -666,6 +666,41 @@
       "engineVersion": "v1",
       "clvPP": 2.59,
       "processVerdict": "LUCKY"
+    },
+    {
+      "key": "ESP-3-538-531|Über 1.5 Tore",
+      "matchKey": "ESP-3-538-531",
+      "market": "Über 1.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "injury",
+          "score": -1.0
+        },
+        {
+          "name": "form_trend",
+          "score": 6.0
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 2.6
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.97
+        },
+        {
+          "name": "opener_move",
+          "score": 0.49
+        }
+      ],
+      "resolvedAt": "2026-08-31T13:45:56Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -6.69,
+      "processVerdict": "JUSTIFIED"
     },
     {
       "key": "ESP-3-539-543|Doppelte Chance — X2",

@@ -1,19 +1,18 @@
 {
 "_meta": {
 "description": "Übersicht-Puls: letzte 30 abgerechnete Picks (CLV/Trefferquote).",
-"generatedAt": "2026-08-31T05:50:32Z",
-"updated_at": "2026-08-31T05:50:32Z"
+"generatedAt": "2026-08-31T14:12:13Z",
+"updated_at": "2026-08-31T14:12:13Z"
 },
 "n": 30,
 "nClv": 30,
 "nGraded": 29,
-"avgClvPP": -1.97,
+"avgClvPP": -2.06,
 "pctBeatClose": 13.3,
-"winPct": 62.1,
-"wins": 18,
-"losses": 11,
+"winPct": 65.5,
+"wins": 19,
+"losses": 10,
 "series": [
--3.99,
 0.0,
 -3.74,
 -3.11,
@@ -42,13 +41,14 @@
 0.94,
 0.0,
 0.0,
-1.55
+1.55,
+-6.69
 ],
 "oldest": "2026-08-29T21:06:51Z",
-"newest": "2026-08-30T22:14:45Z",
+"newest": "2026-08-31T13:45:56Z",
 "betfair": {
 "n": 8000,
-"hitPct": 52.8,
+"hitPct": 52.9,
 "roiPct": -0.7
 },
 "poly": {
@@ -56,52 +56,62 @@
 "hitPct": 66.1,
 "roiPct": 1.5,
 "clvAvg": -0.2,
-"openN": 3
+"openN": 4
 },
 "moneymap": {
 "n": 891,
 "hitPct": 68.3,
 "konHitPct": 81.5,
 "konN": 658,
-"openN": 7
+"openN": 10
 },
 "strip": {
 "bestConv": null,
 "bestSignal": {
 "key": "bf",
-"roiPct": 14.3,
-"n": 66
+"roiPct": 12.1,
+"n": 69
 },
 "inflight": {
-"poly": 11,
+"poly": 19,
 "betfair": 0,
 "cards": 0
 }
 },
 "signalBoard": {
-"n": 96,
-"baseWinPct": 61,
+"n": 97,
+"baseWinPct": 62,
 "minFire": 6,
 "rows": [
 {
 "name": "form_trend",
-"fire": 77,
-"supp": 63,
-"suppWinPct": 63,
+"fire": 78,
+"supp": 64,
+"suppWinPct": 64,
 "opp": 14,
 "oppWinPct": 43,
-"edge": 20,
-"clvAvg": -1.97
+"edge": 21,
+"clvAvg": -2.03
 },
 {
 "name": "xg_strength",
-"fire": 58,
-"supp": 52,
-"suppWinPct": 71,
+"fire": 59,
+"supp": 53,
+"suppWinPct": 72,
 "opp": 6,
 "oppWinPct": 33,
-"edge": 38,
-"clvAvg": -1.6
+"edge": 39,
+"clvAvg": -1.68
+},
+{
+"name": "h2h_pattern",
+"fire": 48,
+"supp": 40,
+"suppWinPct": 72,
+"opp": 8,
+"oppWinPct": 75,
+"edge": -3,
+"clvAvg": -1.76
 },
 {
 "name": "betfair_money",
@@ -112,16 +122,6 @@
 "oppWinPct": 55,
 "edge": 10,
 "clvAvg": -2.32
-},
-{
-"name": "h2h_pattern",
-"fire": 47,
-"supp": 39,
-"suppWinPct": 72,
-"opp": 8,
-"oppWinPct": 75,
-"edge": -3,
-"clvAvg": -1.66
 },
 {
 "name": "topscorer_momentum",
@@ -145,13 +145,13 @@
 },
 {
 "name": "injury",
-"fire": 37,
+"fire": 38,
 "supp": 21,
 "suppWinPct": 62,
-"opp": 16,
-"oppWinPct": 56,
-"edge": 6,
-"clvAvg": -2.82
+"opp": 17,
+"oppWinPct": 59,
+"edge": 3,
+"clvAvg": -2.92
 },
 {
 "name": "form_rating",
@@ -215,13 +215,13 @@
 },
 {
 "name": "opener_move",
-"fire": 18,
+"fire": 19,
 "supp": 17,
 "suppWinPct": 71,
 "opp": 0,
 "oppWinPct": null,
 "edge": null,
-"clvAvg": -1.64
+"clvAvg": -1.9
 },
 {
 "name": "move_following",
@@ -326,19 +326,19 @@
 ]
 },
 "nobetBoard": {
-"n": 164,
+"n": 165,
 "wins": 84,
 "winPct": 51,
-"clvAvg": -4.64,
+"clvAvg": -4.67,
 "minFire": 6,
 "clvBand": 1.0,
 "rows": [
 {
 "reason": "Conviction zu dünn",
-"n": 115,
+"n": 116,
 "wins": 52,
 "winPct": 45,
-"clvAvg": -4.62
+"clvAvg": -4.65
 },
 {
 "reason": "Engine gegen den Pick",
