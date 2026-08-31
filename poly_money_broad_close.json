@@ -123133,52 +123133,6 @@
   },
   "resolvedAt": "2026-08-31T01:50:16.839367+00:00"
  },
- "mex-tol-jua-2026-08-30": {
-  "shares": {
-   "Deportivo Toluca FC": 9080.473140309998,
-   "Draw (Deportivo Toluca FC vs. FC Juárez)": 235.078733505,
-   "FC Juárez": 820.5771765449999
-  },
-  "prices": {
-   "Deportivo Toluca FC": 0.715,
-   "Draw (Deportivo Toluca FC vs. FC Juárez)": 0.165,
-   "FC Juárez": 0.105
-  },
-  "league": "SOCCER",
-  "sport": "Fußball",
-  "totalUsd": 22119,
-  "whales": [
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "side": "Deportivo Toluca FC",
-    "usd": 5177,
-    "avgPrice": 0.7297
-   },
-   {
-    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
-    "side": "Deportivo Toluca FC",
-    "usd": 756
-   },
-   {
-    "wallet": "0xb4eea1c82f0c4cf7e02e69212bd447a63314cc59",
-    "side": "Deportivo Toluca FC",
-    "usd": 720,
-    "avgPrice": 0.7599
-   },
-   {
-    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
-    "side": "Deportivo Toluca FC",
-    "usd": 340
-   }
-  ],
-  "hoursToKickoff": 0.22,
-  "capturedAt": "2026-08-30T23:49:09.187323+00:00",
-  "tokens": {
-   "Deportivo Toluca FC": "87350383564257443084549995579927552095490914811990537451698001061555690946444",
-   "Draw (Deportivo Toluca FC vs. FC Juárez)": "113917996858239413970293380901252185673131869675636301976751478443113090913645",
-   "FC Juárez": "95497493489954787866762224583341128620452538129103573174532289838984510012243"
-  }
- },
  "arg-riv1-rac-2026-08-30": {
   "shares": {
    "CS Independiente Rivadavia": 4701.391258409999,
@@ -123756,7 +123710,13 @@
     "usd": 625,
     "ts": 1788139510
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Over": 1.0,
+   "Under": 0.0
+  },
+  "resolvedAt": "2026-08-31T06:15:17.490162+00:00"
  },
  "mex-mon1-asl-2026-08-30-halftime-result": {
   "shares": {
@@ -123936,8 +123896,8 @@
  },
  "lol-nsea-dnsc-2026-08-31": {
   "shares": {
-   "Nongshim Esports Academy": 11290.634675260011,
-   "DN SOOPers Challengers": 8693.11302084
+   "Nongshim Esports Academy": 13072.46199042001,
+   "DN SOOPers Challengers": 10064.962369680003
   },
   "prices": {
    "Nongshim Esports Academy": 0.565,
@@ -123945,7 +123905,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 21802,
+  "totalUsd": 23034,
   "whales": [
    {
     "wallet": "0x6e9f61710b1703bb7e0ef7ebe1323c443a1d0eae",
@@ -123966,14 +123926,14 @@
     "avgPrice": 0.55
    },
    {
-    "wallet": "0xd0e952c49e2f8251350fbabeea8eaf3eb0a067ff",
-    "side": "Nongshim Esports Academy",
-    "usd": 1130,
-    "avgPrice": 0.57
+    "wallet": "0x1316ebb019094a2267a27a697ecee08b5c5948a4",
+    "side": "DN SOOPers Challengers",
+    "usd": 1902,
+    "avgPrice": 0.43
    }
   ],
-  "hoursToKickoff": 2.21,
-  "capturedAt": "2026-08-31T05:49:07.520466+00:00",
+  "hoursToKickoff": 1.78,
+  "capturedAt": "2026-08-31T06:15:17.490162+00:00",
   "tokens": {
    "Nongshim Esports Academy": "30940085070141389599445382061656029000582411578323237939675248501205314034651",
    "DN SOOPers Challengers": "22371687836548929244782203301626957309282616892075202799873414925022024573553"
@@ -123987,57 +123947,73 @@
    "bids": [
     [
      0.56,
-     36965
+     53459
     ],
     [
      0.55,
-     19134
+     19228
     ],
     [
      0.54,
-     411
+     749
     ],
     [
      0.53,
-     45
+     105
     ],
     [
      0.52,
-     7217
+     6905
     ],
     [
-     0.51,
-     243
+     0.49,
+     375
     ]
    ],
    "asks": [
     [
      0.57,
-     2684
+     766
     ],
     [
      0.58,
-     1580
+     1444
     ],
     [
      0.59,
-     3755
+     4315
     ],
     [
      0.6,
-     2617
+     1558
     ],
     [
      0.61,
-     1330
+     2473
     ],
     [
      0.62,
-     2283
+     2080
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
+    "action": "BUY",
+    "side": "Nongshim Esports Academy",
+    "price": 0.57,
+    "usd": 955,
+    "ts": 1788156046
+   },
+   {
+    "wallet": "0xb81405b237a512488519237ddd186c742c316faf",
+    "action": "BUY",
+    "side": "DN SOOPers Challengers",
+    "price": 0.44,
+    "usd": 488,
+    "ts": 1788155674
+   },
    {
     "wallet": "0xd0e952c49e2f8251350fbabeea8eaf3eb0a067ff",
     "action": "BUY",
@@ -124182,6 +124158,467 @@
     "price": 0.4196,
     "usd": 698,
     "ts": 1788149896
+   }
+  ]
+ },
+ "cs2-ts7-furia-2026-08-30": {
+  "shares": {
+   "Spirit": 292448.45588514506,
+   "FURIA": 147452.52872962985
+  },
+  "prices": {
+   "Spirit": 0.665,
+   "FURIA": 0.335
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 438771,
+  "whales": [
+   {
+    "wallet": "0xdb859a551fcf56e49416160911476bea7307152f",
+    "side": "Spirit",
+    "usd": 218267,
+    "avgPrice": 0.6599
+   },
+   {
+    "wallet": "0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
+    "side": "FURIA",
+    "usd": 55014,
+    "avgPrice": 0.3391
+   },
+   {
+    "wallet": "0x8e74984fb998be82444627906740dc1a19c35972",
+    "side": "FURIA",
+    "usd": 20100,
+    "avgPrice": 0.34
+   },
+   {
+    "wallet": "0x5c3a1a602848565bb16165fcd460b00c3d43020b",
+    "side": "FURIA",
+    "usd": 16750,
+    "avgPrice": 0.34
+   }
+  ],
+  "hoursToKickoff": 2.78,
+  "capturedAt": "2026-08-31T06:15:17.490162+00:00",
+  "tokens": {
+   "Spirit": "62899248955256441351038908095922914800805182962366617731926013994930507988325",
+   "FURIA": "19074916244024633129941756610536614771246938716397402973180274477337023529472"
+  },
+  "book": {
+   "side": "Spirit",
+   "bid": 0.66,
+   "ask": 0.67,
+   "spreadC": 1.0,
+   "spreadPct": 1.49,
+   "bids": [
+    [
+     0.66,
+     467771
+    ],
+    [
+     0.65,
+     11137
+    ],
+    [
+     0.64,
+     38888
+    ],
+    [
+     0.63,
+     16724
+    ],
+    [
+     0.62,
+     15552
+    ],
+    [
+     0.61,
+     32742
+    ]
+   ],
+   "asks": [
+    [
+     0.67,
+     330280
+    ],
+    [
+     0.68,
+     48711
+    ],
+    [
+     0.69,
+     27500
+    ],
+    [
+     0.7,
+     14900
+    ],
+    [
+     0.71,
+     1525
+    ],
+    [
+     0.72,
+     1057
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xb7753f1d4693a2a62fd6828184fad25ac7ea36f5",
+    "action": "BUY",
+    "side": "Spirit",
+    "price": 0.67,
+    "usd": 372,
+    "ts": 1788156174
+   },
+   {
+    "wallet": "0xfb8f2d1cd6636fbe404d671a7350f571f42d842b",
+    "action": "BUY",
+    "side": "Spirit",
+    "price": 0.67,
+    "usd": 3500,
+    "ts": 1788156106
+   },
+   {
+    "wallet": "0x2470d17d03f24ed7304aaf7b3ff7ccc840d4dc4d",
+    "action": "BUY",
+    "side": "Spirit",
+    "price": 0.67,
+    "usd": 500,
+    "ts": 1788155880
+   },
+   {
+    "wallet": "0x4d3535835bca4dd40853647272e9faecb4b5b406",
+    "action": "BUY",
+    "side": "FURIA",
+    "price": 0.34,
+    "usd": 503,
+    "ts": 1788155743
+   },
+   {
+    "wallet": "0xcf609d3256f0f37f0595e5dc64012fa3a8fea6f5",
+    "action": "BUY",
+    "side": "Spirit",
+    "price": 0.67,
+    "usd": 402,
+    "ts": 1788155422
+   },
+   {
+    "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
+    "action": "BUY",
+    "side": "FURIA",
+    "price": 0.34,
+    "usd": 11900,
+    "ts": 1788154581
+   }
+  ]
+ },
+ "cs2-hotu-sparta-2026-08-31": {
+  "shares": {
+   "HOTU": 39219.10740305999,
+   "SPARTA": 20657.173465019998
+  },
+  "prices": {
+   "HOTU": 0.655,
+   "SPARTA": 0.345
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 60420,
+  "whales": [
+   {
+    "wallet": "0x73e3fec494611d73c170cb2f23850fd998b21be9",
+    "side": "HOTU",
+    "usd": 26200,
+    "avgPrice": 0.65
+   },
+   {
+    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "side": "SPARTA",
+    "usd": 14210,
+    "avgPrice": 0.3474
+   },
+   {
+    "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
+    "side": "HOTU",
+    "usd": 5346,
+    "avgPrice": 0.6499
+   },
+   {
+    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
+    "side": "SPARTA",
+    "usd": 1322,
+    "avgPrice": 0.3456
+   }
+  ],
+  "hoursToKickoff": 2.78,
+  "capturedAt": "2026-08-31T06:15:17.490162+00:00",
+  "tokens": {
+   "HOTU": "84620288488756644826545952135363757447140247459782752077293947022221526288958",
+   "SPARTA": "35692458148904972440209561738538713899492812150570549477235210488002729815137"
+  },
+  "book": {
+   "side": "HOTU",
+   "bid": 0.65,
+   "ask": 0.66,
+   "spreadC": 1.0,
+   "spreadPct": 1.52,
+   "bids": [
+    [
+     0.65,
+     29374
+    ],
+    [
+     0.64,
+     16549
+    ],
+    [
+     0.63,
+     556
+    ],
+    [
+     0.62,
+     289
+    ],
+    [
+     0.61,
+     40
+    ],
+    [
+     0.5,
+     400
+    ]
+   ],
+   "asks": [
+    [
+     0.66,
+     12304
+    ],
+    [
+     0.67,
+     13
+    ],
+    [
+     0.68,
+     3345
+    ],
+    [
+     0.69,
+     3796
+    ],
+    [
+     0.7,
+     45
+    ],
+    [
+     0.71,
+     1538
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "action": "BUY",
+    "side": "SPARTA",
+    "price": 0.35,
+    "usd": 1849,
+    "ts": 1788154686
+   },
+   {
+    "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
+    "action": "BUY",
+    "side": "HOTU",
+    "price": 0.65,
+    "usd": 1855,
+    "ts": 1788154335
+   },
+   {
+    "wallet": "0xc34b4901be324718c176100e350211d97b199296",
+    "action": "BUY",
+    "side": "SPARTA",
+    "price": 0.35,
+    "usd": 359,
+    "ts": 1788154087
+   },
+   {
+    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "action": "BUY",
+    "side": "SPARTA",
+    "price": 0.35,
+    "usd": 1847,
+    "ts": 1788153315
+   },
+   {
+    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "action": "BUY",
+    "side": "SPARTA",
+    "price": 0.35,
+    "usd": 1826,
+    "ts": 1788152416
+   },
+   {
+    "wallet": "0xbe6c717bb08e69c2b646d3a6fe8caaa874e3a2c3",
+    "action": "BUY",
+    "side": "SPARTA",
+    "price": 0.35,
+    "usd": 500,
+    "ts": 1788152194
+   },
+   {
+    "wallet": "0x59847267e2a004e3886d7a02ac53778c5ea176eb",
+    "action": "BUY",
+    "side": "SPARTA",
+    "price": 0.35,
+    "usd": 375,
+    "ts": 1788152175
+   },
+   {
+    "wallet": "0x4a3f86ed9ce6b3dac5b66e2d5478a6bf38cc4333",
+    "action": "BUY",
+    "side": "SPARTA",
+    "price": 0.35,
+    "usd": 412,
+    "ts": 1788151548
+   }
+  ]
+ },
+ "cs2-echo-blackp-2026-08-31": {
+  "shares": {
+   "ECHO": 16924.82587911,
+   "Black Phoenix": 7782.950895929999
+  },
+  "prices": {
+   "ECHO": 0.685,
+   "Black Phoenix": 0.315
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 27343,
+  "whales": [
+   {
+    "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
+    "side": "ECHO",
+    "usd": 13490,
+    "avgPrice": 0.6799
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Black Phoenix",
+    "usd": 6238,
+    "avgPrice": 0.3198
+   },
+   {
+    "wallet": "0x513587a2f36a8cb29333052a6a479091ef8a7217",
+    "side": "ECHO",
+    "usd": 1712,
+    "avgPrice": 0.6843
+   },
+   {
+    "wallet": "0x52b7fc8a97df5f18974c06a83909f60c81010aa1",
+    "side": "Black Phoenix",
+    "usd": 624
+   }
+  ],
+  "hoursToKickoff": 1.78,
+  "capturedAt": "2026-08-31T06:15:17.490162+00:00",
+  "tokens": {
+   "ECHO": "62082236695801858230499618794042299015452640103731512236740686742982996560086",
+   "Black Phoenix": "79767189835767244455300097302262561569091694848159691203324764546940661382573"
+  },
+  "book": {
+   "side": "ECHO",
+   "bid": 0.68,
+   "ask": 0.69,
+   "spreadC": 1.0,
+   "spreadPct": 1.45,
+   "bids": [
+    [
+     0.68,
+     5539
+    ],
+    [
+     0.65,
+     46
+    ],
+    [
+     0.63,
+     30
+    ],
+    [
+     0.62,
+     20
+    ],
+    [
+     0.61,
+     5
+    ],
+    [
+     0.49,
+     500
+    ]
+   ],
+   "asks": [
+    [
+     0.69,
+     450
+    ],
+    [
+     0.7,
+     793
+    ],
+    [
+     0.71,
+     655
+    ],
+    [
+     0.72,
+     420
+    ],
+    [
+     0.73,
+     2520
+    ],
+    [
+     0.79,
+     1619
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Black Phoenix",
+    "price": 0.3199,
+    "usd": 3130,
+    "ts": 1788155644
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Black Phoenix",
+    "price": 0.3197,
+    "usd": 3197,
+    "ts": 1788155551
+   },
+   {
+    "wallet": "0x6b97ebe911d7f2e5e3e8c4a0faad4a5c7c0b8d30",
+    "action": "BUY",
+    "side": "Black Phoenix",
+    "price": 0.31,
+    "usd": 373,
+    "ts": 1788152266
+   },
+   {
+    "wallet": "0x8765ac28912e6286a7b21a0d2b80ca72ee21b372",
+    "action": "SELL",
+    "side": "Black Phoenix",
+    "price": 0.2713,
+    "usd": 612,
+    "ts": 1788148111
    }
   ]
  }
