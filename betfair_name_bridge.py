@@ -64,13 +64,20 @@ def pair_matches(home, away, cand_home, cand_away) -> bool:
             or (compatible(home, cand_away) and compatible(away, cand_home)))
 
 
-def _days_around(date) -> list:
-    """Der Spieltag plus ±1 Tag — Anpfiff und unsere Datumsangabe können in der Zeitzone kippen."""
+def days_around(date) -> list:
+    """Der Spieltag plus ±1 Tag — Anpfiff und unsere Datumsangabe können in der Zeitzone kippen.
+
+    31.08.2026 oeffentlich gemacht: wer einen Index nach TAG baut (statt nur nach Team-Paar),
+    braucht exakt dieselbe Tages-Logik wie die Bruecke hier. Zwei Kopien driften auseinander.
+    """
     try:
         d0 = _date.fromisoformat(str(date)[:10])
         return [str(d0 + _td(days=k)) for k in (0, -1, 1)]
     except Exception:
         return [str(date)[:10]]
+
+
+_days_around = days_around          # Rueckwaerts-Kompatibilitaet, gleiche Funktion
 
 
 def find(snaps, fuzzy, home, away, date=None):
