@@ -41,7 +41,7 @@ SPA `season-finish-v2.html`, Weiche `showView()` in `ui.js` (`panelMap`). `seaso
 | `analyse` | `signal-check.js` | Fremden Tipp gegen alle Signale prüfen; isoliert, gibt nie ein Verdict |
 | `intl-studio` | `tiktok-studio.js` | Manueller TikTok-Card-Generator |
 | `status` | `status-checks.js` | Ops-Health: Browser-Checks + Server-Readiness aus `{ds}_status.json` |
-| `heart` | inline | Showcase/Technik-Doku |
+| `heart` | inline in `season-finish-v2.html` | Showcase/Technik-Doku, zwei Zonen (✨ Showcase / ⚙️ Technik). **31.08.2026 inhaltlich neu geschrieben** — 2.100 → 1.363 Zeilen: WM-Ballast raus, Übersicht/Freigabe, Betfair, Poly-Intelligence und Betrieb rein, oben eine Kurzfassung „Die zehn wichtigsten Dinge". ⚠️ Zählungen (Signale/Guards/Tests/Workflows) sind ein **Stand**, kein Live-Wert; Live-Kennzahlen stehen bewusst NICHT drin (eine Doku, die ROI einfriert, wird stillschweigend falsch). Bei Struktur-Änderungen `sw.js`-VERSION hochzählen. |
 
 **Geteilte Frontend-Logik:** `pick-verdict.js` (`computeVerdict()` — **einzige Quelle** für BET/ABWÄGEN/SKIP, nie duplizieren), `pick-engine.js` (Linienwahl, DNB/DC, Poisson), `_pick_helpers.js` (JS-Spiegel von `pick_helpers.py`), `validator.js`, `share.js`, `sw.js` (PWA, network-first).
 

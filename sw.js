@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v193';   // 25.08.2026 (Audit 13/15): nicht ladbare Status-Dateien werden gemeldet; Kill-Switch und Position-Health zeigen UNBEKANNT statt gruen.
+const VERSION = 'cocobet-v194';   // 31.08.2026: Heart-Tab inhaltlich neu — Top-Features-Kurzfassung oben, Technik auf den Stand von Ende August (Uebersicht/Freigabe, Betfair, Poly-Intelligence, Betrieb).
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
