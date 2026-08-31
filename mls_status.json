@@ -205,7 +205,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "19/25 mit AH · 19/25 mit Public-O/U."
+      "note": "25/26 mit AH · 26/26 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -274,11 +274,9 @@
       "id": "lineup_present",
       "label": "Aufstellung da vor Anpfiff (T-90min)",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "20787-1597: Anpfiff in 45min, KEINE Aufstellung"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "lineup_signal braucht die Startelf. War leer wegen Namens-Match + Wien-Zeit-Bug."
     },
     {
@@ -303,14 +301,12 @@
       "label": "Public = Multi-Book-Konsens (nicht Einzel-Book)",
       "severity": "warn",
       "ok": false,
-      "nFail": 6,
+      "nFail": 4,
       "failures": [
         "1598-9569: public aus Einzel-Book 'betfair_ex_eu' statt Konsens",
         "25484-1597: public aus Einzel-Book 'betfair_ex_eu' statt Konsens",
         "1616-1611: public aus Einzel-Book 'williamhill' statt Konsens",
-        "1596-1605: public aus Einzel-Book 'williamhill' statt Konsens",
-        "1601-9569: public aus Einzel-Book 'winamax_de' statt Konsens",
-        "1612-1597: public aus Einzel-Book 'winamax_de' statt Konsens"
+        "1596-1605: public aus Einzel-Book 'williamhill' statt Konsens"
       ],
       "note": "public_static_bias soll auf Median-Konsens laufen, nicht 1 verrauschtem Soft-Book. Single-Book = fetch_wm_multibook_odds hat (noch) nicht geschrieben."
     },
@@ -372,11 +368,9 @@
       "id": "safer_line_applied",
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "20787-1597 Heimsieg @1.93: sichere Linie Doppelte Chance — 1X @1.374 verfügbar (≥1.35), nicht abgeleitet"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
     {
@@ -563,6 +557,6 @@
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
     }
   ],
-  "nFail": 5,
-  "generatedAt": "2026-08-30T22:14:45.592932+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-08-31T15:08:54.310048+00:00"
 }
