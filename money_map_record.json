@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-08-31T21:38:35.861199+00:00",
+"generatedAt": "2026-08-31T21:53:35.265549+00:00",
 "byVerdict": {
 "konsens": {
 "n": 665,
@@ -12,14 +12,14 @@
 "pinnHitRate": 0.7736
 },
 "uneinig": {
-"n": 227,
-"wins": 72,
-"hitRate": 0.3172,
-"polyN": 204,
-"polyWins": 58,
-"polyHitRate": 0.2843,
-"pinnN": 115,
-"pinnHitRate": 0.5913
+"n": 228,
+"wins": 73,
+"hitRate": 0.3202,
+"polyN": 205,
+"polyWins": 59,
+"polyHitRate": 0.2878,
+"pinnN": 116,
+"pinnHitRate": 0.5862
 },
 "teil": {
 "n": 9,
@@ -88,6 +88,11 @@
 "wins": 13,
 "hitRate": 0.619
 },
+"Italian Serie A": {
+"n": 20,
+"wins": 17,
+"hitRate": 0.85
+},
 "Dutch Eredivisie": {
 "n": 19,
 "wins": 15,
@@ -97,11 +102,6 @@
 "n": 19,
 "wins": 13,
 "hitRate": 0.6842
-},
-"Italian Serie A": {
-"n": 19,
-"wins": 16,
-"hitRate": 0.8421
 },
 "UEFA Europa League Qualifiers": {
 "n": 19,
@@ -526,9 +526,9 @@
 },
 "byStrength": {
 "strong": {
-"n": 520,
-"wins": 422,
-"hitRate": 0.8115
+"n": 521,
+"wins": 423,
+"hitRate": 0.8119
 },
 "weak": {
 "n": 348,
@@ -537,14 +537,33 @@
 }
 },
 "divergence": {
-"n": 227,
-"betfairWins": 72,
-"betfairRate": 0.3172,
-"polyN": 204,
-"polyWins": 58,
-"polyRate": 0.2843
+"n": 228,
+"betfairWins": 73,
+"betfairRate": 0.3202,
+"polyN": 205,
+"polyWins": 59,
+"polyRate": 0.2878
 },
 "recent": [
+{
+"matchId": "35974474",
+"home": "Atalanta",
+"away": "Bologna",
+"league": "Italian Serie A",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Atalanta",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-08-31T18:45:00Z",
+"settledAt": "2026-08-31T21:53:35.103295+00:00"
+},
 {
 "matchId": "35978597",
 "home": "Besiktas",
@@ -1285,31 +1304,12 @@
 ],
 "kickoff": "2026-08-30T16:30:00Z",
 "settledAt": "2026-08-30T19:36:06.308597+00:00"
-},
-{
-"matchId": "35965477",
-"home": "Deportivo",
-"away": "Valencia",
-"league": "Spanish La Liga",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Deportivo",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-08-30T17:30:00Z",
-"settledAt": "2026-08-30T19:36:06.308597+00:00"
 }
 ],
 "global": {
-"n": 901,
-"wins": 617,
-"hitRate": 0.6848
+"n": 902,
+"wins": 618,
+"hitRate": 0.6851
 },
 "pending": 6
 }
