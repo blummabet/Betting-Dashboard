@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-08-31T14:38:00.360017+00:00",
+ "generatedAt": "2026-08-31T16:08:08.810727+00:00",
  "engine": null,
  "regeln": {
   "minN": 30,
@@ -41,6 +41,21 @@
    "wert": "sharp+steam"
   },
   {
+   "schublade": "ABWÄGEN · aussortiert",
+   "strom": "cards",
+   "n": 10,
+   "status": "kandidat",
+   "grund": "10 von 30 Plays — noch 20",
+   "roi": 0.118,
+   "roiLb": -0.294,
+   "clv": null,
+   "clvLb": null,
+   "fehltN": 20,
+   "alterTage": 0.0,
+   "art": "push_filter",
+   "quelle": "pick_push_ledger.py"
+  },
+  {
    "schublade": "Mix money+sharp+steam",
    "strom": "poly",
    "n": 14,
@@ -81,7 +96,7 @@
    "clv": -0.3,
    "clvLb": -1.69,
    "fehltN": 15,
-   "alterTage": 1.9,
+   "alterTage": 2.0,
    "art": "mix",
    "wert": "steam"
   }
@@ -118,6 +133,21 @@
    "wert": "sharp+steam"
   },
   {
+   "schublade": "ABWÄGEN · aussortiert",
+   "strom": "cards",
+   "n": 10,
+   "status": "kandidat",
+   "grund": "10 von 30 Plays — noch 20",
+   "roi": 0.118,
+   "roiLb": -0.294,
+   "clv": null,
+   "clvLb": null,
+   "fehltN": 20,
+   "alterTage": 0.0,
+   "art": "push_filter",
+   "quelle": "pick_push_ledger.py"
+  },
+  {
    "schublade": "Mix money+sharp+steam",
    "strom": "poly",
    "n": 14,
@@ -158,18 +188,18 @@
    "clv": -0.3,
    "clvLb": -1.69,
    "fehltN": 15,
-   "alterTage": 1.9,
+   "alterTage": 2.0,
    "art": "mix",
    "wert": "steam"
   },
   {
    "schublade": "Both teams to Score?",
    "strom": "betfair",
-   "n": 1103,
+   "n": 1104,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0373,
-   "roiLb": -0.0095,
+   "roi": 0.0346,
+   "roiLb": -0.0122,
    "clv": null,
    "clvLb": null,
    "fehltN": 0,
@@ -188,7 +218,7 @@
    "clv": -1.619,
    "clvLb": -2.422,
    "fehltN": 0,
-   "alterTage": 1.1,
+   "alterTage": 1.2,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "Liga"
@@ -196,11 +226,26 @@
   {
    "schublade": "Over/Under 2.5 Goals",
    "strom": "betfair",
-   "n": 1268,
+   "n": 1267,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0084,
-   "roiLb": -0.0323,
+   "roi": 0.0107,
+   "roiLb": -0.03,
+   "clv": null,
+   "clvLb": null,
+   "fehltN": 0,
+   "alterTage": null,
+   "art": "markt",
+   "naeherung": true
+  },
+  {
+   "schublade": "Half Time",
+   "strom": "betfair",
+   "n": 968,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0307,
+   "roiLb": -0.0359,
    "clv": null,
    "clvLb": null,
    "fehltN": 0,
@@ -214,23 +259,8 @@
    "n": 1257,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0089,
-   "roiLb": -0.0381,
-   "clv": null,
-   "clvLb": null,
-   "fehltN": 0,
-   "alterTage": null,
-   "art": "markt",
-   "naeherung": true
-  },
-  {
-   "schublade": "Half Time",
-   "strom": "betfair",
-   "n": 969,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0278,
-   "roiLb": -0.0388,
+   "roi": 0.0033,
+   "roiLb": -0.0436,
    "clv": null,
    "clvLb": null,
    "fehltN": 0,
@@ -244,8 +274,8 @@
    "n": 1023,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0085,
-   "roiLb": -0.0419,
+   "roi": 0.0013,
+   "roiLb": -0.0491,
    "clv": null,
    "clvLb": null,
    "fehltN": 0,
@@ -288,8 +318,8 @@
    "n": 1172,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0591,
-   "roiLb": -0.0963,
+   "roi": -0.0595,
+   "roiLb": -0.0967,
    "clv": null,
    "clvLb": null,
    "fehltN": 0,
@@ -315,7 +345,7 @@
   {
    "schublade": "Over/Under 3.5 Goals",
    "strom": "betfair",
-   "n": 1208,
+   "n": 1209,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
    "roi": -0.0773,
@@ -338,25 +368,9 @@
    "clv": -0.233,
    "clvLb": -0.732,
    "fehltN": 0,
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "mix",
    "wert": "money+sharp"
-  },
-  {
-   "schublade": "MLS · ABWÄGEN",
-   "strom": "cards",
-   "n": 49,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.0586,
-   "roiLb": -0.1469,
-   "clv": -2.848,
-   "clvLb": -4.01,
-   "fehltN": 0,
-   "alterTage": 1.1,
-   "art": "verdict",
-   "wert": "ABWÄGEN",
-   "datensatz": "MLS"
   },
   {
    "schublade": "Konjunktion · gehalten (Haltepreis)",
@@ -369,7 +383,7 @@
    "clv": null,
    "clvLb": null,
    "fehltN": 0,
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "konjunktion_gehalten",
    "quelle": "killer_ledger.json"
   },
@@ -384,9 +398,25 @@
    "clv": -0.197,
    "clvLb": -0.491,
    "fehltN": 0,
-   "alterTage": 0.6,
+   "alterTage": 0.7,
    "art": "mix",
    "wert": "money+steam"
+  },
+  {
+   "schublade": "MLS · ABWÄGEN",
+   "strom": "cards",
+   "n": 52,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0313,
+   "roiLb": -0.1691,
+   "clv": -2.914,
+   "clvLb": -4.027,
+   "fehltN": 0,
+   "alterTage": 1.2,
+   "art": "verdict",
+   "wert": "ABWÄGEN",
+   "datensatz": "MLS"
   },
   {
    "schublade": "Conviction 6",
@@ -399,7 +429,7 @@
    "clv": 0.026,
    "clvLb": -0.209,
    "fehltN": 0,
-   "alterTage": 0.6,
+   "alterTage": 0.7,
    "art": "conviction",
    "wert": 6
   },
@@ -429,7 +459,7 @@
    "clv": 3.663,
    "clvLb": 2.678,
    "fehltN": 0,
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "konjunktion",
    "quelle": "killer.py"
   },
@@ -447,21 +477,6 @@
    "alterTage": 1.8,
    "art": "mix",
    "wert": "sharp"
-  },
-  {
-   "schublade": "ABWÄGEN · aussortiert",
-   "strom": "cards",
-   "n": 7,
-   "status": "sammelt",
-   "grund": "7 von 30 Plays",
-   "roi": 0.3457,
-   "roiLb": -0.0451,
-   "clv": null,
-   "clvLb": null,
-   "fehltN": 23,
-   "alterTage": 0.0,
-   "art": "push_filter",
-   "quelle": "pick_push_ledger.py"
   },
   {
    "schublade": "Mix bf+money+sharp",
@@ -489,7 +504,7 @@
    "clv": null,
    "clvLb": null,
    "fehltN": 26,
-   "alterTage": 0.7,
+   "alterTage": 0.8,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
   },
@@ -504,7 +519,7 @@
    "clv": 0.0,
    "clvLb": 0.0,
    "fehltN": 22,
-   "alterTage": 5.3,
+   "alterTage": 5.4,
    "art": "mix",
    "wert": "money+pinn"
   },
@@ -549,7 +564,7 @@
    "clv": -0.705,
    "clvLb": null,
    "fehltN": 28,
-   "alterTage": 1.1,
+   "alterTage": 1.2,
    "art": "verdict",
    "wert": "BET",
    "datensatz": "MLS"
@@ -581,7 +596,7 @@
    "clv": 0.0,
    "clvLb": null,
    "fehltN": 29,
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "conviction",
    "wert": 4
   },
@@ -596,7 +611,7 @@
    "clv": 0.0,
    "clvLb": null,
    "fehltN": 29,
-   "alterTage": 0.7,
+   "alterTage": 0.8,
    "art": "mix",
    "wert": "money+pinn+sharp"
   },
@@ -626,7 +641,7 @@
    "clv": -0.609,
    "clvLb": -1.514,
    "fehltN": 0,
-   "alterTage": 58.1,
+   "alterTage": 58.2,
    "art": "verdict",
    "wert": "BET",
    "datensatz": "WM"
@@ -642,7 +657,7 @@
    "clv": -2.199,
    "clvLb": -2.679,
    "fehltN": 0,
-   "alterTage": 43.1,
+   "alterTage": 43.2,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "WM"
@@ -651,7 +666,7 @@
  "zusammenfassung": {
   "schubladen": 37,
   "freigegeben": 0,
-  "kandidaten": 5,
+  "kandidaten": 6,
   "ruhend": 2,
   "naechsteFreigabe": 11
  }
