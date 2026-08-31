@@ -1,25 +1,25 @@
 {
-"generatedAt": "2026-08-31T16:08:06.697354+00:00",
+"generatedAt": "2026-08-31T18:23:32.891231+00:00",
 "byVerdict": {
 "konsens": {
-"n": 658,
-"wins": 536,
-"hitRate": 0.8146,
-"polyN": 615,
-"polyWins": 482,
-"polyHitRate": 0.7837,
+"n": 659,
+"wins": 537,
+"hitRate": 0.8149,
+"polyN": 616,
+"polyWins": 483,
+"polyHitRate": 0.7841,
 "pinnN": 52,
 "pinnHitRate": 0.7692
 },
 "uneinig": {
-"n": 224,
-"wins": 70,
-"hitRate": 0.3125,
-"polyN": 201,
-"polyWins": 56,
-"polyHitRate": 0.2786,
-"pinnN": 113,
-"pinnHitRate": 0.6018
+"n": 226,
+"wins": 72,
+"hitRate": 0.3186,
+"polyN": 203,
+"polyWins": 57,
+"polyHitRate": 0.2808,
+"pinnN": 114,
+"pinnHitRate": 0.5965
 },
 "teil": {
 "n": 9,
@@ -283,6 +283,11 @@
 "wins": 4,
 "hitRate": 0.6667
 },
+"Finnish Veikkausliiga": {
+"n": 5,
+"wins": 3,
+"hitRate": 0.6
+},
 "Saudi Kings Cup": {
 "n": 5,
 "wins": 4,
@@ -303,10 +308,10 @@
 "wins": 1,
 "hitRate": 0.25
 },
-"Finnish Veikkausliiga": {
+"Egyptian Premier": {
 "n": 4,
-"wins": 2,
-"hitRate": 0.5
+"wins": 3,
+"hitRate": 0.75
 },
 "Scottish Premiership": {
 "n": 4,
@@ -338,10 +343,10 @@
 "wins": 2,
 "hitRate": 0.6667
 },
-"Egyptian Premier": {
+"English National League": {
 "n": 3,
-"wins": 2,
-"hitRate": 0.6667
+"wins": 1,
+"hitRate": 0.3333
 },
 "English Sky Bet League 2": {
 "n": 3,
@@ -382,11 +387,6 @@
 "n": 2,
 "wins": 2,
 "hitRate": 1.0
-},
-"English National League": {
-"n": 2,
-"wins": 0,
-"hitRate": 0.0
 },
 "French Ligue 2": {
 "n": 2,
@@ -526,25 +526,82 @@
 },
 "byStrength": {
 "strong": {
-"n": 515,
-"wins": 417,
-"hitRate": 0.8097
+"n": 517,
+"wins": 419,
+"hitRate": 0.8104
 },
 "weak": {
-"n": 343,
-"wins": 174,
-"hitRate": 0.5073
+"n": 344,
+"wins": 175,
+"hitRate": 0.5087
 }
 },
 "divergence": {
-"n": 224,
-"betfairWins": 70,
-"betfairRate": 0.3125,
-"polyN": 201,
-"polyWins": 56,
-"polyRate": 0.2786
+"n": 226,
+"betfairWins": 72,
+"betfairRate": 0.3186,
+"polyN": 203,
+"polyWins": 57,
+"polyRate": 0.2808
 },
 "recent": [
+{
+"matchId": "35979467",
+"home": "IFK Mariehamn",
+"away": "Jaro",
+"league": "Finnish Veikkausliiga",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "IFK Mariehamn",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-08-31T16:00:00Z",
+"settledAt": "2026-08-31T17:53:30.394091+00:00"
+},
+{
+"matchId": "35995693",
+"home": "Sutton Utd",
+"away": "Wealdstone",
+"league": "English National League",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Wealdstone",
+"polySide": "home",
+"winner": "away",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-08-31T14:00:00Z",
+"settledAt": "2026-08-31T17:08:13.233144+00:00"
+},
+{
+"matchId": "36009906",
+"home": "Asyut Petroleum",
+"away": "National Bank",
+"league": "Egyptian Premier",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "National Bank",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-08-31T14:00:00Z",
+"settledAt": "2026-08-31T17:08:13.233144+00:00"
+},
 {
 "matchId": "35970078",
 "home": "Monterrey",
@@ -1247,69 +1304,12 @@
 ],
 "kickoff": "2026-08-30T15:00:00Z",
 "settledAt": "2026-08-30T18:05:56.116591+00:00"
-},
-{
-"matchId": "35965548",
-"home": "Rapid Vienna",
-"away": "Sturm Graz",
-"league": "Austrian Bundesliga",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Rapid Vienna",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-08-30T15:00:00Z",
-"settledAt": "2026-08-30T18:05:56.116591+00:00"
-},
-{
-"matchId": "35965511",
-"home": "SC Telstar",
-"away": "Ajax",
-"league": "Dutch Eredivisie",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Ajax",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-4
-],
-"kickoff": "2026-08-30T14:45:00Z",
-"settledAt": "2026-08-30T17:50:52.047063+00:00"
-},
-{
-"matchId": "35785202",
-"home": "Augsburg",
-"away": "Schalke 04",
-"league": "German Bundesliga",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Augsburg",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-0
-],
-"kickoff": "2026-08-30T15:30:00Z",
-"settledAt": "2026-08-30T17:35:44.891346+00:00"
 }
 ],
 "global": {
-"n": 891,
-"wins": 609,
-"hitRate": 0.6835
+"n": 894,
+"wins": 612,
+"hitRate": 0.6846
 },
-"pending": 14
+"pending": 12
 }
