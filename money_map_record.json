@@ -1,23 +1,23 @@
 {
-"generatedAt": "2026-08-31T02:51:33.629931+00:00",
+"generatedAt": "2026-08-31T03:06:32.077203+00:00",
 "byVerdict": {
 "konsens": {
-"n": 655,
-"wins": 534,
-"hitRate": 0.8153,
-"polyN": 612,
-"polyWins": 480,
-"polyHitRate": 0.7843,
+"n": 656,
+"wins": 535,
+"hitRate": 0.8155,
+"polyN": 613,
+"polyWins": 481,
+"polyHitRate": 0.7847,
 "pinnN": 52,
 "pinnHitRate": 0.7692
 },
 "uneinig": {
-"n": 223,
-"wins": 69,
-"hitRate": 0.3094,
-"polyN": 200,
+"n": 224,
+"wins": 70,
+"hitRate": 0.3125,
+"polyN": 201,
 "polyWins": 56,
-"polyHitRate": 0.28,
+"polyHitRate": 0.2786,
 "pinnN": 113,
 "pinnHitRate": 0.6018
 },
@@ -63,6 +63,11 @@
 "wins": 11,
 "hitRate": 0.4783
 },
+"Mexican Liga MX": {
+"n": 23,
+"wins": 15,
+"hitRate": 0.6522
+},
 "Spanish Segunda Division": {
 "n": 23,
 "wins": 19,
@@ -72,11 +77,6 @@
 "n": 22,
 "wins": 18,
 "hitRate": 0.8182
-},
-"Mexican Liga MX": {
-"n": 22,
-"wins": 14,
-"hitRate": 0.6364
 },
 "German Cup": {
 "n": 21,
@@ -208,6 +208,11 @@
 "wins": 7,
 "hitRate": 0.7
 },
+"Peruvian Primera Division": {
+"n": 10,
+"wins": 6,
+"hitRate": 0.6
+},
 "Uzbekistan Super League": {
 "n": 10,
 "wins": 7,
@@ -217,11 +222,6 @@
 "n": 9,
 "wins": 6,
 "hitRate": 0.6667
-},
-"Peruvian Primera Division": {
-"n": 9,
-"wins": 5,
-"hitRate": 0.5556
 },
 "Bolivian Liga de Futbol Profesional": {
 "n": 8,
@@ -526,25 +526,63 @@
 },
 "byStrength": {
 "strong": {
-"n": 512,
-"wins": 415,
-"hitRate": 0.8105
+"n": 513,
+"wins": 416,
+"hitRate": 0.8109
 },
 "weak": {
-"n": 342,
-"wins": 173,
-"hitRate": 0.5058
+"n": 343,
+"wins": 174,
+"hitRate": 0.5073
 }
 },
 "divergence": {
-"n": 223,
-"betfairWins": 69,
-"betfairRate": 0.3094,
-"polyN": 200,
+"n": 224,
+"betfairWins": 70,
+"betfairRate": 0.3125,
+"polyN": 201,
 "polyWins": 56,
-"polyRate": 0.28
+"polyRate": 0.2786
 },
 "recent": [
+{
+"matchId": "35970044",
+"home": "Toluca",
+"away": "FC Juarez",
+"league": "Mexican Liga MX",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Toluca",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+0
+],
+"kickoff": "2026-08-31T00:00:00Z",
+"settledAt": "2026-08-31T03:06:31.918702+00:00"
+},
+{
+"matchId": "35977088",
+"home": "Cienciano",
+"away": "Cusco FC",
+"league": "Peruvian Primera Division",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Cusco FC",
+"polySide": "home",
+"winner": "away",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-08-31T00:00:00Z",
+"settledAt": "2026-08-31T03:06:31.918702+00:00"
+},
 {
 "matchId": "35973486",
 "home": "St Louis City SC",
@@ -1266,50 +1304,12 @@
 ],
 "kickoff": "2026-08-30T15:15:00Z",
 "settledAt": "2026-08-30T17:20:46.545231+00:00"
-},
-{
-"matchId": "35974099",
-"home": "Real Madrid",
-"away": "Malaga",
-"league": "Spanish La Liga",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Real Madrid",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-4,
-0
-],
-"kickoff": "2026-08-30T15:00:00Z",
-"settledAt": "2026-08-30T17:05:43.861838+00:00"
-},
-{
-"matchId": "35974522",
-"home": "Antwerp",
-"away": "Sint Truiden",
-"league": "Belgian Pro League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Sint Truiden",
-"polySide": null,
-"winner": "away",
-"moneyWin": true,
-"polyWin": null,
-"ftScore": [
-1,
-4
-],
-"kickoff": "2026-08-30T14:00:00Z",
-"settledAt": "2026-08-30T17:05:43.861838+00:00"
 }
 ],
 "global": {
-"n": 887,
-"wins": 606,
-"hitRate": 0.6832
+"n": 889,
+"wins": 608,
+"hitRate": 0.6839
 },
-"pending": 9
+"pending": 7
 }
