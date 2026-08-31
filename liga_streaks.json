@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "liga",
-    "generatedAt": "2026-08-31T13:35:16.149160+00:00",
+    "generatedAt": "2026-08-31T22:46:42.566730+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -7501,7 +7501,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 60,
-        "label": "Eigen 60% + Gegner 60% → 60%"
+        "label": "Eigen 60% + Gegner 60% → 60% · Signale bestätigen"
       },
       "ratePct": 60,
       "seq": [
@@ -7525,7 +7525,20 @@
         "oppRatePct": 60
       },
       "oppSupportPct": 60,
-      "matchupPct": 60
+      "matchupPct": 60,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 3,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "541",
@@ -11782,6 +11795,60 @@
       "matchupPct": 60
     },
     {
+      "teamId": "541",
+      "team": "Real Madrid",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/541.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 4,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 45,
+        "label": "Eigen 45% + Gegner 60% → 51% · Signale bestätigen"
+      },
+      "ratePct": 45,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 11,
+      "next": {
+        "oppId": "543",
+        "oppName": "Real Betis",
+        "atHome": false,
+        "date": "2026-09-04",
+        "kickoff": "2026-09-04T19:00:00+00:00",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 51,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 3,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation"
+        ],
+        "market": "Über 2.5 Tore"
+      }
+    },
+    {
       "teamId": "542",
       "team": "Alaves",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/542.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -14172,22 +14239,22 @@
       "matchupPct": 51
     },
     {
-      "teamId": "541",
-      "team": "Real Madrid",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/541.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "teamId": "727",
+      "team": "Osasuna",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/727.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ESP",
       "leagueName": "La Liga",
       "type": "over25",
       "market": "Über 2,5 Tore",
       "length": 4,
-      "venue": "all",
+      "venue": "A",
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 45,
-        "label": "Eigen 45% + Gegner 60% → 51%"
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 40% → 52%"
       },
-      "ratePct": 45,
+      "ratePct": 60,
       "seq": [
         true,
         true,
@@ -14195,22 +14262,21 @@
         true,
         false,
         true,
-        true,
-        true
+        false
       ],
       "xgBacked": null,
-      "basis": "prior",
-      "preN": 11,
+      "basis": "pure",
+      "preN": 3,
       "next": {
-        "oppId": "543",
-        "oppName": "Real Betis",
-        "atHome": false,
-        "date": "2026-09-04",
-        "kickoff": "2026-09-04T19:00:00+00:00",
-        "oppRatePct": 60
+        "oppId": "546",
+        "oppName": "Getafe",
+        "atHome": true,
+        "date": "2026-08-31",
+        "kickoff": "2026-08-31T17:30:00+00:00",
+        "oppRatePct": 40
       },
-      "oppSupportPct": 60,
-      "matchupPct": 51
+      "oppSupportPct": 40,
+      "matchupPct": 52
     },
     {
       "teamId": "727",
@@ -15741,58 +15807,6 @@
       },
       "oppSupportPct": 40,
       "matchupPct": 44
-    },
-    {
-      "teamId": "727",
-      "team": "Osasuna",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/727.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 4,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 40% → 52% · Linie/Signale dagegen"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 3,
-      "next": {
-        "oppId": "546",
-        "oppName": "Getafe",
-        "atHome": true,
-        "date": "2026-08-31",
-        "kickoff": "2026-08-31T17:30:00+00:00",
-        "oppRatePct": 40
-      },
-      "oppSupportPct": 40,
-      "matchupPct": 52,
-      "signalInfo": {
-        "state": "contradict",
-        "count": 4,
-        "conviction": 4,
-        "names": [
-          "injury",
-          "transfer_shift",
-          "move_following",
-          "betfair_money"
-        ],
-        "market": "Unter 2.5 Tore"
-      }
     },
     {
       "teamId": "170",
@@ -17779,59 +17793,6 @@
       },
       "oppSupportPct": 87,
       "matchupPct": 65
-    },
-    {
-      "teamId": "727",
-      "team": "Osasuna",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/727.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "under25",
-      "market": "Unter 2,5 Tore",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 20,
-        "label": "Eigen 20% + Gegner 60% → 36% · Signale bestätigen"
-      },
-      "ratePct": 20,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        false,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 5,
-      "next": {
-        "oppId": "546",
-        "oppName": "Getafe",
-        "atHome": true,
-        "date": "2026-08-31",
-        "kickoff": "2026-08-31T17:30:00+00:00",
-        "oppRatePct": 40
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 36,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 4,
-        "conviction": 4,
-        "names": [
-          "injury",
-          "transfer_shift",
-          "move_following",
-          "betfair_money"
-        ],
-        "market": "Unter 2.5 Tore"
-      }
     },
     {
       "teamId": "157",
@@ -21465,7 +21426,7 @@
       "continuation": {
         "state": "wackelt",
         "ratePct": 33,
-        "label": "Eigen 33% + Gegner 53% → 41%"
+        "label": "Eigen 33% + Gegner 53% → 41% · Linie/Signale dagegen"
       },
       "ratePct": 33,
       "seq": [
@@ -21490,7 +21451,19 @@
         "oppRatePct": 53
       },
       "oppSupportPct": 53,
-      "matchupPct": 41
+      "matchupPct": 41,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 3,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "h2h_pattern",
+          "chance_creation",
+          "transfer_shift"
+        ],
+        "market": "Unter 2.5 Tore"
+      }
     },
     {
       "teamId": "523",
@@ -22123,6 +22096,47 @@
       },
       "oppSupportPct": 53,
       "matchupPct": 41
+    },
+    {
+      "teamId": "727",
+      "team": "Osasuna",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/727.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "under25",
+      "market": "Unter 2,5 Tore",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 20,
+        "label": "Eigen 20% + Gegner 60% → 36%"
+      },
+      "ratePct": 20,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 5,
+      "next": {
+        "oppId": "546",
+        "oppName": "Getafe",
+        "atHome": true,
+        "date": "2026-08-31",
+        "kickoff": "2026-08-31T17:30:00+00:00",
+        "oppRatePct": 40
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 36
     },
     {
       "teamId": "727",
