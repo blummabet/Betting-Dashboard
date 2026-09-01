@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v197';   // 01.09.2026: Uebersicht — Register, Konjunktion und Rangliste sind jetzt DREI EBENEN einer Sektion („Was kann ich spielen?").
+const VERSION = 'cocobet-v199';   // 01.09.2026: Uebersicht — Lesebreite gedeckelt, Spiele ab 1040px zweispaltig; Money-Map-Rendite.
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
