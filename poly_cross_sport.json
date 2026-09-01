@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-01T22:50:36.673728+00:00",
+ "generatedAt": "2026-09-01T23:20:38.853308+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -30,8 +30,93 @@
   "soccer_liga": 147
  },
  "trackRecord": {
-  "tracked": 260,
-  "converged": 60
+  "tracked": 264,
+  "converged": 62
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|pittsburghpirates-sanfranciscogiants|sanfranciscogiants",
+   "sport": "baseball_mlb",
+   "event": "San Francisco Giants vs Pittsburgh Pirates",
+   "market": "Moneyline",
+   "outcome": "San Francisco Giants",
+   "polyPP": 38.5,
+   "pinnPP": 73.5,
+   "gapPP": -34.97,
+   "vol": 127982,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-01T23:20:38.852880+00:00"
+  },
+  {
+   "id": "baseball_mlb|pittsburghpirates-sanfranciscogiants|pittsburghpirates",
+   "sport": "baseball_mlb",
+   "event": "San Francisco Giants vs Pittsburgh Pirates",
+   "market": "Moneyline",
+   "outcome": "Pittsburgh Pirates",
+   "polyPP": 61.5,
+   "pinnPP": 26.5,
+   "gapPP": 34.97,
+   "vol": 127982,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-01T23:20:38.852880+00:00"
+  },
+  {
+   "id": "baseball_mlb|newyorkmets-tampabayrays|newyorkmets",
+   "sport": "baseball_mlb",
+   "event": "New York Mets vs Tampa Bay Rays",
+   "market": "Moneyline",
+   "outcome": "New York Mets",
+   "polyPP": 53.5,
+   "pinnPP": 35.1,
+   "gapPP": 18.42,
+   "vol": 368253,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 6.78,
+   "firstSeen": "2026-09-01T00:18:40.073229+00:00"
+  },
+  {
+   "id": "baseball_mlb|newyorkmets-tampabayrays|tampabayrays",
+   "sport": "baseball_mlb",
+   "event": "New York Mets vs Tampa Bay Rays",
+   "market": "Moneyline",
+   "outcome": "Tampa Bay Rays",
+   "polyPP": 46.5,
+   "pinnPP": 64.9,
+   "gapPP": -18.42,
+   "vol": 368253,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 6.78,
+   "firstSeen": "2026-09-01T00:18:40.073229+00:00"
+  },
+  {
+   "id": "baseball_mlb|atlantabraves-washingtonnationals|atlantabraves",
+   "sport": "baseball_mlb",
+   "event": "Atlanta Braves vs Washington Nationals",
+   "market": "Moneyline",
+   "outcome": "Atlanta Braves",
+   "polyPP": 57.5,
+   "pinnPP": 64.0,
+   "gapPP": -6.51,
+   "vol": 39178,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-01T23:20:38.852880+00:00"
+  },
+  {
+   "id": "baseball_mlb|atlantabraves-washingtonnationals|washingtonnationals",
+   "sport": "baseball_mlb",
+   "event": "Atlanta Braves vs Washington Nationals",
+   "market": "Moneyline",
+   "outcome": "Washington Nationals",
+   "polyPP": 42.5,
+   "pinnPP": 36.0,
+   "gapPP": 6.51,
+   "vol": 39178,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-01T23:20:38.852880+00:00"
+  }
+ ]
 }
