@@ -351,10 +351,13 @@
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
       "ok": false,
-      "nFail": 3,
+      "nFail": 6,
       "failures": [
-        "34-35 Unter 2.5 Tore @2.25: sichere Linie Unter 3.5 Tore @1.57 verfügbar (≥1.35), nicht abgeleitet",
-        "185-160 Heimsieg @2.75: sichere Linie Doppelte Chance — 1X @1.815 verfügbar (≥1.35), nicht abgeleitet",
+        "34-35 Unter 2.5 Tore @2.25: sichere Linie Unter 3.5 Tore @1.61 verfügbar (≥1.35), nicht abgeleitet",
+        "55-746 Unter 2.5 Tore @1.88: sichere Linie Unter 3.5 Tore @1.38 verfügbar (≥1.35), nicht abgeleitet",
+        "64-66 Unter 2.5 Tore @1.94: sichere Linie Unter 3.5 Tore @1.37 verfügbar (≥1.35), nicht abgeleitet",
+        "185-160 Heimsieg @2.75: sichere Linie Doppelte Chance — 1X @1.82 verfügbar (≥1.35), nicht abgeleitet",
+        "185-160 Unter 2.5 Tore @2.17: sichere Linie Unter 3.5 Tore @1.5 verfügbar (≥1.35), nicht abgeleitet",
         "164-169 Heimsieg @2.2: sichere Linie Doppelte Chance — 1X @1.35 verfügbar (≥1.35), nicht abgeleitet"
       ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
@@ -435,11 +438,9 @@
       "id": "soft_opening_captured",
       "label": "Soft-Eröffnung echt erfasst",
       "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "1660-157: Soft bewegte sich 14.0→15.0, aber Opening==Jetzt (15.0) — nicht eingefroren"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Wenn die Soft-Zeitreihe sich bewegt hat, darf public_*_open nicht == aktuelle Soft-Quote sein. fetch_wm_odds.carry_soft_open muss es wie odds_open übernehmen (sonst re-initialisiert fetch_wm_multibook_odds das Opening je Lauf auf Jetzt)."
     },
     {
@@ -551,6 +552,15 @@
       "note": "Erwartet alle 15 Min; Alarm ab 90 Min. Live-Preise sind die Schluss-Referenz fuer den CLV — fehlen sie, misst der Nordstern nicht."
     },
     {
+      "id": "poly_vorfenster",
+      "label": "Poly-Vorfenster liefert Anteile",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "15 von 15 Vor-Kandidaten mit Anteilen (15 Calls) · 0 ohne Geld-Split · 0 ueber Budget · 0 nachgelegt. Leeres Fenster ist kein Fehler; Kandidaten ohne einen einzigen Anteil schon."
+    },
+    {
       "id": "killer_push_buch",
       "label": "Trades-Push fuehrt sein Buch",
       "severity": "error",
@@ -569,6 +579,6 @@
       "note": "0 von 0 ist ein ruhiger Tag. 0 von N ist ein Bruch."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-09-01T12:54:22.749958+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-09-01T21:12:32.416227+00:00"
 }
