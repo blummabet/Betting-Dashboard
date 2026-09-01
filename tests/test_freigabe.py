@@ -75,8 +75,16 @@ class TestPolyEngineFilter:
         track = {"settled": _plays(40, 0.25, 1.2, ev="alt") + _plays(5, 0.25, 1.2, ev="neu")}
         nur_neu = F.poly_schubladen(track, engine="neu")
         assert all(e["n"] == 5 for e in nur_neu if e["art"] == "conviction")
-        ohne_filter = F.poly_schubladen(track, engine=None)
+        # ⚠️ 01.09.2026: hier stand `engine=None` als „kein Filter". Die Bedeutung hat sich
+        # umgedreht — None heisst jetzt „aus den Daten bestimmen", weil der Filter sonst wieder
+        # nie greift (die Env, an der er hing, hat nie jemand gesetzt). Ausdruecklich NICHT
+        # filtern heisst jetzt `engine=False`.
+        ohne_filter = F.poly_schubladen(track, engine=False)
         assert any(e["n"] == 45 for e in ohne_filter if e["art"] == "conviction")
+        # Und die Gegenprobe: der Default filtert wirklich.
+        default = F.poly_schubladen(track)
+        assert all(e["n"] == 5 for e in default if e["art"] == "conviction"), \
+            "Default muss die aktuelle Engine erkennen (Mehrheit der juengsten Plays)"
 
 
 class TestBetfair:
@@ -171,3 +179,109 @@ class TestLebendig:
         wm = [e for e in F.card_schubladen() if e.get("datensatz") == "WM"]
         assert wm, "keine WM-Schublade gefunden"
         assert not [e for e in wm if e["status"] in ("freigegeben", "kandidat")], wm
+
+
+# ── Engine-Trennung (01.09.2026) ─────────────────────────────────────────────
+# Der Filter existierte seit dem 29.08., hing aber an FREIGABE_ENGINE — und die Variable wurde
+# nirgends gesetzt. Das Register mischte deshalb Engine-Versionen: die staerkste Schublade
+# („Conviction 9") bestand ausschliesslich aus Plays einer Engine, die es nicht mehr gab.
+# Jetzt kommt die Engine aus den Daten, und Alt-Plays zaehlen nicht mehr fuer die Freigabe —
+# verschwinden aber auch nicht, sonst sieht „veraltete Datenbasis" aus wie „gab es nie".
+
+def _play(ev, conv=9, pnl=5.0, clv=1.0, ts="2026-09-01T10:00:00+00:00"):
+    return {"conv": conv, "pnl": pnl, "stake": 10.0, "clvPP": clv, "ev": ev,
+            "settledTs": ts, "signals": ["money"]}
+
+
+def _track(rows, offen=None):
+    return {"settled": rows, "open": offen or []}
+
+
+class TestAktuelleEngine:
+    def test_mehrheit_der_juengsten_plays_entscheidet(self):
+        t = _track([_play("alt")] * 40 + [_play("neu")] * 20)
+        assert F.aktuelle_engine(t) == "neu"
+
+    def test_eine_ausreisser_zeile_kippt_das_register_nicht(self):
+        # Genau der Grund fuer Mehrheit statt „letzte Zeile".
+        t = _track([_play("neu")] * 24 + [_play("muell")])
+        assert F.aktuelle_engine(t) == "neu"
+
+    def test_ohne_stempel_faellt_sie_auf_die_offenen_zurueck(self):
+        t = _track([{"conv": 7, "pnl": 1, "stake": 10}], offen=[{"ev": "neu"}])
+        assert F.aktuelle_engine(t) == "neu"
+
+    def test_gar_kein_stempel_heisst_nicht_filtern(self):
+        # Eine alte Datei ohne Stempel darf das Register nicht leeren.
+        assert F.aktuelle_engine(_track([{"conv": 7, "pnl": 1, "stake": 10}])) is None
+
+
+class TestEngineTrennung:
+    def test_alt_plays_zaehlen_nicht_fuer_die_freigabe(self):
+        t = _track([_play("alt")] * 40 + [_play("neu")] * 25)
+        z = [r for r in F.poly_schubladen(t) if r["schublade"] == "Conviction 9"][0]
+        assert z["n"] == 25, "nur die aktuelle Engine zaehlt"
+        assert z["nAlt"] == 40
+        assert z["status"] != "freigegeben", "25 < 30 -> keine Freigabe"
+
+    def test_reine_alt_schublade_verschwindet_nicht_sondern_erklaert_sich(self):
+        t = _track([_play("alt")] * 12 + [_play("neu", conv=5)] * 30)
+        z = [r for r in F.poly_schubladen(t) if r["schublade"] == "Conviction 9"]
+        assert len(z) == 1, "die Schublade muss sichtbar bleiben"
+        assert z[0]["n"] == 0 and z[0]["nAlt"] == 12
+        assert "frueheren" in z[0]["grund"], "der Grund muss die veraltete Datenbasis benennen"
+
+    def test_alt_kennzahlen_stehen_als_kontext_daneben(self):
+        t = _track([_play("alt", pnl=8.0)] * 10 + [_play("neu")] * 5)
+        z = [r for r in F.poly_schubladen(t) if r["schublade"] == "Conviction 9"][0]
+        assert abs(z["roiAlt"] - 0.8) < 1e-6, "Alt-ROI wird berichtet, nur nicht gewertet"
+        assert z["engineAlt"] is True
+
+    def test_ohne_filter_zaehlt_wieder_alles(self):
+        t = _track([_play("alt")] * 40 + [_play("neu")] * 25)
+        z = [r for r in F.poly_schubladen(t, engine=False) if r["schublade"] == "Conviction 9"][0]
+        assert z["n"] == 65 and "nAlt" not in z
+
+    def test_default_filtert_wirklich(self):
+        """Der eigentliche Bug: der Filter war da und griff nie."""
+        t = _track([_play("alt")] * 40 + [_play("neu")] * 25)
+        ohne = [r for r in F.poly_schubladen(t, engine=False) if r["schublade"] == "Conviction 9"][0]
+        mit = [r for r in F.poly_schubladen(t) if r["schublade"] == "Conviction 9"][0]
+        assert mit["n"] < ohne["n"], "ohne diesen Unterschied ist der Filter wieder tot"
+
+
+def test_umschalten_direkt_nach_einem_versionssprung():
+    """Der Grund fuer „juengster mit Belegen" statt „Mehrheit".
+
+    Direkt nach einem Sprung ist die Mehrheit im Fenster noch der ALTE Stempel. Wuerde das
+    Register ihm folgen, zaehlte es einen halben Tag lang genau die Plays als aktuell, die es
+    gerade aussortieren soll — und eine Schublade koennte in diesem Fenster auf alter Datenbasis
+    freigegeben werden.
+    """
+    t = _track([_play("alt")] * 22 + [_play("neu")] * 3)
+    assert F.aktuelle_engine(t) == "neu", "drei frische Plays reichen zum Umschalten"
+    knapp = _track([_play("alt")] * 23 + [_play("neu")] * 2)
+    assert F.aktuelle_engine(knapp) == "alt", "zwei sind noch kein Beleg"
+
+
+class TestDateiSagtWoraufSieGefiltertHat:
+    """Eine Datei, die ueber ihre eigene Filterung schweigt, ist der Grund, warum der tote
+    Filter monatelang niemandem auffiel: `freigabe.json` trug `engine: null` — und das sah aus
+    wie „nicht gefiltert", war aber schlicht der durchgereichte Parameter."""
+
+    def _t(self):
+        return _track([_play("alt")] * 40 + [_play("neu")] * 25)
+
+    def test_default_meldet_die_erkannte_engine(self):
+        d = F.baue(track=self._t())
+        assert d["engine"] == "neu"
+        assert d["engineGefiltert"] is True
+
+    def test_bewusst_ohne_filter_meldet_das_auch(self):
+        d = F.baue(engine=False, track=self._t())
+        assert d["engine"] is None
+        assert d["engineGefiltert"] is False
+
+    def test_erzwungene_engine_wird_gemeldet(self):
+        d = F.baue(engine="alt", track=self._t())
+        assert d["engine"] == "alt" and d["engineGefiltert"] is True

@@ -1207,7 +1207,7 @@
       '<div id="md-cell-live" class="md-cell">' + _mdLiveWidePlaceholder() + '</div>' +
       '</div>';
 
-    p.innerHTML = _head() + _mdPulse() + _mdKiller() + _mdSignalBoard() + _mdNobetBoard() + _mdJetzt() + _kpis() + grid +
+    p.innerHTML = _head() + _mdPulse() + _mdFreigabe() + _mdKiller() + _mdSignalBoard() + _mdNobetBoard() + _mdJetzt() + _kpis() + grid +
       '<div class="md-foot">Kuratierter Überblick · tippe „alle →" für den vollen Bereich</div>';
     _mdFillPlays();
     _mdFillPubPreview();
@@ -1563,6 +1563,101 @@
     });
     return m;
   }
+  // ══ FREIGABE-REGISTER (01.09.2026, Lucas: „wo bauen wir das im Frontend ein?") ══════════════
+  // Ort: direkt nach dem Puls, VOR „Mehrfach gedeckt". Das Register ist die Meta-Antwort ueber
+  // allen Sektionen darunter — „darf ich hiervon ueberhaupt etwas blind spielen?". Steht es
+  // weiter unten, liest man erst die Empfehlungen und danach die Einschraenkung; das ist die
+  // falsche Reihenfolge. Lucas' Satz („ich muss wissen, was ich blind nachspielen kann, weil das
+  // System es sagt") ist die erste Frage der Seite, also gehoert die Antwort nach oben.
+  //
+  // Bewusst KEINE Rangliste der besten Plays: das Register urteilt ueber SCHUBLADEN, nicht ueber
+  // einzelne Zeilen. Und es darf leer ausgehen — dann sagt es, wie weit die naechste noch ist.
+  var FG_BAR_MAX = 30;   // nur fuer die Balkenbreite; die echte Schwelle kommt aus regeln.minN
+  function _mdFgZahl(v, suffix, stellen) {
+    if (v == null) return '—';
+    var x = (stellen === 1) ? (+v).toFixed(1) : Math.round(v);
+    return (v >= 0 ? '+' : '') + x + (suffix || '');
+  }
+  function _mdFgZeile(r, minN) {
+    // Eine Schublade als Zeile: Name, Stichprobe, ROI und CLV IMMER mit Untergrenze daneben
+    // (feedback_punktschaetzer_kein_beleg — der Punktschaetzer allein hat hier nichts verloren).
+    var frei = r.status === 'freigegeben';
+    var col = frei ? A.good : (r.status === 'ruht' ? A.ink3 : A.gold);
+    var n = +r.n || 0, ziel = minN || FG_BAR_MAX;
+    var pct = Math.max(0, Math.min(100, Math.round(n / ziel * 100)));
+    var alt = (r.nAlt ? '<span class="md-kl-c" title="Plays aus einer früheren Engine-Version — sie zählen NICHT für die Freigabe, stehen hier nur als Kontext">'
+      + '+' + r.nAlt + ' alt (' + _mdFgZahl(r.roiAlt == null ? null : r.roiAlt * 100, '%') + ')</span>' : '');
+    return '<div class="md-kl-bz" style="align-items:center">'
+      + '<span style="color:' + col + ';font-weight:800;flex-shrink:0">' + (frei ? '✓' : r.status === 'ruht' ? '·' : '◔') + '</span>'
+      + '<span class="md-kl-bn">' + esc(String(r.schublade || '—')) + '</span>'
+      + '<span class="md-kl-bl" style="min-width:74px">'
+      +   '<span style="display:inline-block;width:52px;height:4px;border-radius:2px;background:var(--mln2);vertical-align:middle;overflow:hidden">'
+      +     '<span style="display:block;height:4px;width:' + pct + '%;background:' + col + '"></span></span>'
+      +   ' <span style="font-size:10px;color:var(--mi3)">' + n + '/' + ziel + '</span></span>'
+      + '<span class="md-kl-bo" title="ROI mit einseitiger 95%-Untergrenze">'
+      +   'ROI ' + _mdFgZahl(r.roi == null ? null : r.roi * 100, '%')
+      +   ' <i style="color:var(--mi3);font-style:normal">(UG ' + _mdFgZahl(r.roiLb == null ? null : r.roiLb * 100, '%') + ')</i></span>'
+      + '<span class="md-kl-bs" title="CLV mit Untergrenze — bei kleinem n belastbarer als der ROI">'
+      +   'CLV ' + _mdFgZahl(r.clv, 'pp', 1) + '</span>' + alt + '</div>';
+  }
+  function _mdFreigabe() {
+    var f = _md.data && _md.data.freigabe;
+    var kopfBasis = '<div class="md-kl-h"><span style="font-size:16px">🔓</span>'
+      + '<span class="md-kl-t">Blind spielbar</span>'
+      + '<span class="md-mech" style="color:' + A.good + ';border-color:rgba(46,160,71,.45)" '
+      + 'title="Register: beurteilt SCHUBLADEN, nicht einzelne Plays. Freigegeben wird eine Schublade erst, wenn ihre Untergrenze über null liegt.">Register</span>'
+      + '<span class="md-kl-s">nicht der einzelne Tipp wird freigegeben, sondern die Schublade, aus der er kommt</span>';
+    // ❔ statt gruen: eine fehlende oder unlesbare Datei ist keine Aussage über die Freigabe.
+    if (!f || !f.zusammenfassung) {
+      return '<section class="md-kl md-rise" style="border-color:var(--mln)">' + kopfBasis
+        + '<span class="md-kl-st" style="background:rgba(201,133,0,.14);color:' + A.gold + '">❔ unbekannt</span></div>'
+        + '<div class="md-kl-foot" style="border-top:0;padding-top:10px">freigabe.json fehlt oder ist nicht lesbar — '
+        + 'ob etwas freigegeben ist, lässt sich gerade <b>nicht</b> sagen. Das ist ausdrücklich nicht dasselbe wie „nichts freigegeben".</div></section>';
+    }
+    var z = f.zusammenfassung || {}, minN = (f.regeln && f.regeln.minN) || FG_BAR_MAX;
+    var frei = f.freigegeben || [], kand = (f.kandidaten || []).slice(0, 3);
+    var bad = frei.length
+      ? { txt: '✅ ' + frei.length + ' freigegeben', col: A.good, bg: 'rgba(46,160,71,.16)' }
+      : { txt: '👀 nichts freigegeben' + (z.naechsteFreigabe != null ? ' · nächste in ' + z.naechsteFreigabe + ' Plays' : ''),
+          col: A.gold, bg: 'rgba(201,133,0,.14)' };
+    var kopf = kopfBasis + '<span class="md-kl-st" style="background:' + bad.bg + ';color:' + bad.col + '">' + bad.txt + '</span></div>';
+
+    var body;
+    if (frei.length) {
+      body = frei.map(function (r) { return _mdFgZeile(r, minN); }).join('');
+    } else {
+      body = '<div class="md-kl-foot" style="border-top:0;padding-top:9px;padding-bottom:2px">'
+        + 'Keine Schublade hat ihre Untergrenze über null — <b>heute gibt es nichts, dem man blind folgen darf</b>. '
+        + 'Das ist ein Ergebnis, kein Fehler. Am nächsten dran:</div>'
+        + (kand.length ? kand.map(function (r) { return _mdFgZeile(r, minN); }).join('')
+                       : '<div class="md-kl-foot" style="border-top:0">Noch nicht einmal ein Kandidat — die Bücher sammeln.</div>');
+    }
+
+    // Engine-Zeile: seit 01.09. zählt für eine Freigabe nur die aktuelle Engine-Version.
+    var eng;
+    if (f.engineGefiltert === true) {
+      eng = 'Gerechnet auf Engine <b>' + esc(String(f.engine)) + '</b> — Plays älterer Versionen zählen nicht für eine Freigabe und stehen nur als „alt" daneben.';
+    } else if (f.engineGefiltert === false) {
+      eng = '⚠️ Ohne Engine-Filter gerechnet — Plays aus älteren Bewertungen zählen mit.';
+    } else {
+      eng = '❔ Ob auf eine Engine-Version gefiltert wurde, sagt die Datei nicht (alte Fassung).';
+    }
+    var regel = (f.regeln && f.regeln.text) || '';
+
+    var alle = (f.alle || []).slice().sort(function (a, b) { return (+b.n || 0) - (+a.n || 0); });
+    var det = alle.length ? '<details class="md-kl-det"><summary class="md-kl-sum">📁 Alle '
+      + alle.length + ' Schubladen ansehen<span class="md-kl-ch" style="margin-left:auto">'
+      + '<span class="md-kl-c">' + (z.kandidaten || 0) + ' Kandidaten</span>'
+      + '<span class="md-kl-c">' + (z.ruhend || 0) + ' ruhend</span></span></summary>'
+      + '<div class="md-kl-bliste">' + alle.map(function (r) { return _mdFgZeile(r, minN); }).join('') + '</div>'
+      + '<div class="md-kl-foot" style="border-top:0;padding-top:6px">' + esc(regel) + '</div></details>' : '';
+
+    return '<section class="md-kl md-rise" style="border-color:rgba(46,160,71,.26);'
+      + 'background:radial-gradient(130% 150% at 0% 0%,rgba(46,160,71,.10),transparent 58%),var(--m1)">'
+      + kopf + body
+      + '<div class="md-kl-foot">' + eng + '</div>' + det + '</section>';
+  }
+
   function _mdKiller() {
     var k = _md.data && _md.data.killer;
     var s1 = ((k && k.stufe1) || []).filter(_klSichtbar), s2 = ((k && k.stufe2) || []).filter(_klSichtbar);

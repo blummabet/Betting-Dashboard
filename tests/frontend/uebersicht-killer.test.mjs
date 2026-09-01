@@ -27,8 +27,13 @@ function render(killer, freigabe) {
   };
   w._renderMainDash();
   const html = w.document.getElementById('mainDashPanel').innerHTML;
+  // Seit 01.09. steht das Freigabe-Register VOR dieser Sektion. Ein Fenster aus festen
+  // Offsets („ab dem ersten md-kl-foot") liest seitdem die falsche Sektion. Deshalb wird
+  // hier auf die <section> von „Mehrfach gedeckt" zugeschnitten — und nur auf sie.
   const von = html.indexOf('Mehrfach gedeckt');
-  return html.slice(Math.max(0, von - 400), html.indexOf('md-kl-foot') + 900);
+  assert.ok(von > 0, 'Killer-Sektion wird gar nicht gerendert');
+  const ab = html.lastIndexOf('<section', von), bis = html.indexOf('</section>', von);
+  return html.slice(ab >= 0 ? ab : Math.max(0, von - 400), bis > 0 ? bis + 10 : html.length);
 }
 
 const ko = (h = 2) => new Date(Date.now() + h * 3600e3).toISOString();
