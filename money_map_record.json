@@ -1,36 +1,36 @@
 {
-"generatedAt": "2026-09-01T14:10:29.151439+00:00",
+"generatedAt": "2026-09-01T14:55:33.678606+00:00",
 "byVerdict": {
 "konsens": {
-"n": 672,
-"wins": 549,
-"hitRate": 0.817,
-"polyN": 627,
-"polyWins": 491,
-"polyHitRate": 0.7831,
+"n": 674,
+"wins": 551,
+"hitRate": 0.8175,
+"polyN": 629,
+"polyWins": 493,
+"polyHitRate": 0.7838,
 "pinnN": 56,
 "pinnHitRate": 0.7857,
-"nRoi": 0,
-"roi": null,
-"roiLb": null,
-"nClv": 0,
-"clv": null,
-"clvLb": null
+"nRoi": 2,
+"roi": 0.38,
+"roiLb": -0.0313,
+"nClv": 2,
+"clv": 15.9,
+"clvLb": 7.0335
 },
 "uneinig": {
-"n": 231,
-"wins": 74,
-"hitRate": 0.3203,
-"polyN": 206,
+"n": 232,
+"wins": 75,
+"hitRate": 0.3233,
+"polyN": 207,
 "polyWins": 59,
-"polyHitRate": 0.2864,
+"polyHitRate": 0.285,
 "pinnN": 118,
 "pinnHitRate": 0.5932,
-"nRoi": 0,
-"roi": null,
+"nRoi": 1,
+"roi": 0.17,
 "roiLb": null,
-"nClv": 0,
-"clv": null,
+"nClv": 1,
+"clv": 0.0,
 "clvLb": null
 },
 "teil": {
@@ -356,6 +356,11 @@
 "wins": 2,
 "hitRate": 0.6667
 },
+"Chinese Cup": {
+"n": 3,
+"wins": 3,
+"hitRate": 1.0
+},
 "Colombian Primera B": {
 "n": 3,
 "wins": 2,
@@ -544,37 +549,94 @@
 },
 "byStrength": {
 "strong": {
-"n": 524,
-"wins": 426,
-"hitRate": 0.813,
-"nRoi": 0,
-"roi": null,
-"roiLb": null,
-"nClv": 0,
-"clv": null,
-"clvLb": null
+"n": 526,
+"wins": 428,
+"hitRate": 0.8137,
+"nRoi": 2,
+"roi": 0.38,
+"roiLb": -0.0313,
+"nClv": 2,
+"clv": 15.9,
+"clvLb": 7.0335
 },
 "weak": {
-"n": 355,
-"wins": 182,
-"hitRate": 0.5127,
-"nRoi": 0,
-"roi": null,
+"n": 356,
+"wins": 183,
+"hitRate": 0.514,
+"nRoi": 1,
+"roi": 0.17,
 "roiLb": null,
-"nClv": 0,
-"clv": null,
+"nClv": 1,
+"clv": 0.0,
 "clvLb": null
 }
 },
 "divergence": {
-"n": 231,
-"betfairWins": 74,
-"betfairRate": 0.3203,
-"polyN": 206,
+"n": 232,
+"betfairWins": 75,
+"betfairRate": 0.3233,
+"polyN": 207,
 "polyWins": 59,
-"polyRate": 0.2864
+"polyRate": 0.285
 },
 "recent": [
+{
+"matchId": "36015841",
+"home": "Dalian Yingbo",
+"away": "Shanghai Shenhua",
+"league": "Chinese Cup",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Dalian Yingbo",
+"polySide": "away",
+"winner": "home",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-09-01T11:35:00Z",
+"settledAt": "2026-09-01T14:40:30.670049+00:00"
+},
+{
+"matchId": "36016131",
+"home": "Beijing Guoan",
+"away": "Lanzhou Longyuan Athletic",
+"league": "Chinese Cup",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Beijing Guoan",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+1
+],
+"kickoff": "2026-09-01T11:35:00Z",
+"settledAt": "2026-09-01T14:40:30.670049+00:00"
+},
+{
+"matchId": "35998086",
+"home": "Shandong Taishan",
+"away": "Shanghai Port FC",
+"league": "Chinese Cup",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Shanghai Port FC",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+3
+],
+"kickoff": "2026-09-01T11:35:00Z",
+"settledAt": "2026-09-01T14:40:30.670049+00:00"
+},
 {
 "matchId": "35949535",
 "home": "Instituto",
@@ -1277,75 +1339,18 @@
 ],
 "kickoff": "2026-08-30T18:00:00Z",
 "settledAt": "2026-08-30T21:06:09.517990+00:00"
-},
-{
-"matchId": "35953356",
-"home": "Corinthians",
-"away": "Santos",
-"league": "Brazilian Serie A",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Santos",
-"polySide": "home",
-"winner": "away",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-08-30T19:00:00Z",
-"settledAt": "2026-08-30T21:06:09.517990+00:00"
-},
-{
-"matchId": "35975243",
-"home": "Monaco",
-"away": "Marseille",
-"league": "French Ligue 1",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Monaco",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-08-30T18:45:00Z",
-"settledAt": "2026-08-30T20:51:01.121700+00:00"
-},
-{
-"matchId": "35965464",
-"home": "Lazio",
-"away": "Genoa",
-"league": "Italian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Lazio",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-08-30T18:45:00Z",
-"settledAt": "2026-08-30T20:51:01.121700+00:00"
 }
 ],
 "global": {
-"n": 912,
-"wins": 626,
-"hitRate": 0.6864,
-"nRoi": 0,
-"roi": null,
-"roiLb": null,
-"nClv": 0,
-"clv": null,
-"clvLb": null
+"n": 915,
+"wins": 629,
+"hitRate": 0.6874,
+"nRoi": 3,
+"roi": 0.31,
+"roiLb": 0.0461,
+"nClv": 3,
+"clv": 10.6,
+"clvLb": 0.4897
 },
-"pending": 13
+"pending": 11
 }
