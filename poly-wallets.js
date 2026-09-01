@@ -1213,7 +1213,8 @@ function _pwSharpRanking() {
 function _pwRankRowsPnl(scores) {
   return Object.keys(scores).map(function (w) {
     const v = scores[w]; if (!v || typeof v.pnl !== 'number' || (v.n || 0) < PW_RANK_MIN_N_PNL) return null;
-    return { wallet: w, pnl: v.pnl, n: v.n || 0, avgClv: v.n ? (v.clvSumPP || 0) / v.n : 0, hit: v.n ? (v.wins || 0) / v.n : 0, usd: Number(v.usd) || 0 };
+    return { wallet: w, pnl: v.pnl, n: v.n || 0, avgClv: v.n ? (v.clvSumPP || 0) / v.n : 0, hit: v.n ? (v.wins || 0) / v.n : 0, usd: Number(v.usd) || 0,
+             lastTs: v.lastTs || null, recent: v.recent || null };
   }).filter(Boolean)
     // 09.08.2026 (Lucas): Schärfe-Floor — wer genug getrackt ist (n≥FLOOR_N) und den Close NICHT schlägt
     // (Ø CLV<0) oder klar unter Münzwurf trifft (Treffer<45 %), gehört nicht in die „Schärfste"-Liste,
@@ -1221,6 +1222,37 @@ function _pwRankRowsPnl(scores) {
     .filter(function (r) { return r.n < PW_RANK_FLOOR_N || (r.avgClv >= PW_RANK_FLOOR_CLV && r.hit >= PW_RANK_FLOOR_HIT); })
     .filter(function (r) { return !_pwRankBigOnly || (r.n > 0 && r.usd / r.n >= PW_RANK_MIN_AVG_USD); })   // 4-stellig-Filter (Lucas)
     .sort(function (a, b) { return b.pnl - a.pnl; }).slice(0, 20);
+}
+// 01.09.2026 (Lucas: „die Whale-Wallets aendern sich eh, sobald eine bessere erscheint, oder?").
+// Ja — der Pool waechst automatisch (2.956 Wallets), und wer den Close nicht mehr schlaegt, faellt
+// ueber den Schaerfe-Floor wieder raus. ABER: sortiert wird nach LEBENSZEIT-P&L, nicht nach
+// Aktivitaet — 15 der Top-20 hatten keine offene Position, und ob sie seit zwei Tagen oder zwei
+// Monaten still sind, war nicht feststellbar. Der Track trug keinen einzigen Zeitstempel.
+// Seit heute schreibt poly_money_broad.py `lastTs` und ein Fenster der letzten Auflösungen mit.
+// ⚠️ Ohne Zeitstempel steht hier „—", nie „frisch": eine fehlende Angabe ist keine Aktivitaet.
+function _pwStilleTage(lastTs){
+  if(!lastTs) return null;
+  const t=Date.parse(String(lastTs)+'T12:00:00Z');
+  if(!isFinite(t)) return null;
+  return Math.max(0, Math.round((Date.now()-t)/86400000));
+}
+function _pwStilleZelle(r){
+  const d=_pwStilleTage(r.lastTs);
+  if(d==null) return '<span class="pw-mut" title="Zeitstempel wird erst seit 01.09.2026 mitgeschrieben — Vergangenheit laesst sich nicht nachtragen.">—</span>';
+  const col = d<=3 ? '#3fb950' : d<=14 ? '#e3b341' : '#8b949e';
+  const txt = d===0 ? 'heute' : d===1 ? 'gestern' : d+'d';
+  // Das FENSTER daneben, sobald es genug enthaelt: was die Wallet ZULETZT geliefert hat, gegen
+  // ihren Lebenszeit-Schnitt. Bewusst nur Anzeige — es bewertet und filtert (noch) nichts.
+  var fen='';
+  const rec=r.recent||[];
+  if(rec.length>=5){
+    const clv=rec.reduce(function(a,x){return a+(Number(x[1])||0);},0)/rec.length;
+    const dif=clv-r.avgClv;
+    fen=' <i style="font-style:normal;font-size:9px;color:'+(dif>=0?'#3fb950':'#f85149')+'" '
+      +'title="Letzte '+rec.length+' Auflösungen: Ø CLV '+clv.toFixed(1)+'pp gegen '+r.avgClv.toFixed(1)+'pp über die ganze Historie.">'
+      +(dif>=0?'▲':'▼')+'</i>';
+  }
+  return '<span style="color:'+col+';font-size:11px;white-space:nowrap">'+txt+'</span>'+fen;
 }
 function _pwRankByPnl(scores, openMap, kick) {
   const rows = _pwRankRowsPnl(scores);
@@ -1237,16 +1269,18 @@ function _pwRankByPnl(scores, openMap, kick) {
       + '<td class="pw-cn pw-mut">' + r.n + '</td>'
       + '<td class="pw-cn pw-mut">' + _pwUsd(r.usd) + '</td>'
       + '<td class="pw-cn" style="font-weight:700">' + _pwUsd(r.n ? r.usd / r.n : 0) + '</td>'
+      + '<td class="pw-cn">' + _pwStilleZelle(r) + '</td>'
       + '<td>' + _pwNowCell(openMap, r.wallet) + '</td></tr>';
   }).join('');
   return intro + '<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
-    + '<th>#</th><th>Wallet</th><th>Poly-P&amp;L</th><th>Ø CLV</th><th>Treffer</th><th>n</th><th>Einsatz</th><th>Ø/Wette</th><th>setzt gerade auf</th>'
+    + '<th>#</th><th>Wallet</th><th>Poly-P&amp;L</th><th>Ø CLV</th><th>Treffer</th><th>n</th><th>Einsatz</th><th>Ø/Wette</th><th title="Wie lange die letzte Auflösung her ist. ▲/▼ vergleicht die letzten Auflösungen mit dem Lebenszeit-CLV.">zuletzt</th><th>setzt gerade auf</th>'
     + '</tr></thead><tbody>' + body + '</tbody></table></div></section>';
 }
 function _pwRankRowsClv(scores) {
   return Object.keys(scores).map(function (w) {
     const v = scores[w]; if (!v || !v.n || v.n < PW_RANK_MIN_N) return null;
-    const sc = { wallet: w, n: v.n, avgClv: (v.clvSumPP || 0) / v.n, hit: (v.wins || 0) / v.n, pnl: Number(v.pnl) || 0, usd: Number(v.usd) || 0 };
+    const sc = { wallet: w, n: v.n, avgClv: (v.clvSumPP || 0) / v.n, hit: (v.wins || 0) / v.n, pnl: Number(v.pnl) || 0, usd: Number(v.usd) || 0,
+                 lastTs: v.lastTs || null, recent: v.recent || null };
     sc.score = _pwWalletKombi(sc); return sc;
   }).filter(Boolean)
     .filter(function (r) { return !_pwRankBigOnly || (r.n > 0 && r.usd / r.n >= PW_RANK_MIN_AVG_USD); })   // 4-stellig-Filter (Lucas)
@@ -1268,10 +1302,11 @@ function _pwRankByClv(scores, openMap, kick) {
       + '<td class="pw-cn pw-mut">' + r.n + '</td>'
       + '<td class="pw-cn pw-mut">' + _pwUsd(r.usd) + '</td>'
       + '<td class="pw-cn" style="font-weight:700">' + _pwUsd(r.n ? r.usd / r.n : 0) + '</td>'
+      + '<td class="pw-cn">' + _pwStilleZelle(r) + '</td>'
       + '<td>' + _pwNowCell(openMap, r.wallet) + '</td></tr>';
   }).join('');
   return intro + '<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
-    + '<th>#</th><th>Wallet</th><th>CLV-Score</th><th>Ø CLV</th><th>Treffer</th><th>n</th><th>Einsatz</th><th>Ø/Wette</th><th>setzt gerade auf</th>'
+    + '<th>#</th><th>Wallet</th><th>CLV-Score</th><th>Ø CLV</th><th>Treffer</th><th>n</th><th>Einsatz</th><th>Ø/Wette</th><th title="Wie lange die letzte Auflösung her ist. ▲/▼ vergleicht die letzten Auflösungen mit dem Lebenszeit-CLV.">zuletzt</th><th>setzt gerade auf</th>'
     + '</tr></thead><tbody>' + body + '</tbody></table></div></section>';
 }
 if (typeof window !== 'undefined') window._pwSharpRanking = _pwSharpRanking;

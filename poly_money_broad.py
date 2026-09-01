@@ -704,6 +704,69 @@ def _lifetime_pnl(data):
         return None
 
 
+# ── Gedaechtnis je Wallet (01.09.2026) ────────────────────────────────────────────────────────
+# Lucas: „die Whales Wallets aendern sich eh, sobald z.B. eine bessere erscheinen wuerde, oder?"
+# Ja — der Pool waechst automatisch (2.956 Wallets, jede neue Grossposition legt eine an). Beim
+# Nachsehen fiel aber auf, was der Track NICHT konnte: `{n, wins, clvSumPP, usd, pnl}` trug keinen
+# einzigen Zeitstempel. Folgen:
+#   · Man konnte nicht sagen, WANN eine gerankte Wallet zuletzt aktiv war (15 der Top-20 hatten
+#     keine offene Position — ob seit zwei Tagen oder zwei Monaten still, war nicht feststellbar).
+#   · Und das Urteil hatte kein Gedaechtnis: eine Wallet mit n=622 wird auf ihrer gesamten
+#     Lebenszeit beurteilt. Wer im Juni brillant war und seit August mittelmaessig, behaelt seinen
+#     guten Schnitt — die schwache Phase geht im Mittel unter. Genau der Fehler, den das
+#     rollierende Fenster bei der Conviction-Tabelle schon behebt.
+# Deshalb ab jetzt: firstTs/lastTs und ein gleitendes Fenster der letzten Auflösungen.
+#
+# ⚠️ Das Fenster ist heute LEER und fuellt sich erst mit neuen Auflösungen — Vergangenheit laesst
+# sich nicht nachtragen, die Einzelergebnisse wurden nie gespeichert. Es wird deshalb vorerst nur
+# MITGESCHRIEBEN, nicht bewertet (dieselbe Doktrin wie `wertVsPinn` im Killer). Wer es spaeter
+# auswertet, muss `wnRoh` pruefen: ein Fenster mit 3 Eintraegen ist kein Urteil.
+WALLET_FENSTER = int(os.environ.get("WALLET_FENSTER") or 30)   # so viele Auflösungen behaelt das Fenster
+WALLET_FENSTER_AB_N = int(os.environ.get("WALLET_FENSTER_AB_N") or 8)   # erst ab Ranglisten-Reife sammeln
+
+
+def _wallet_zeit(s: dict, clv: float, win: bool, now) -> dict:
+    """Zeitstempel und gleitendes Fenster einer Wallet fortschreiben. REIN/testbar.
+
+    `recent` haelt die letzten WALLET_FENSTER Auflösungen als kompakte Tripel
+    [ISO-Datum, CLV in pp, 1/0] — lesbar genug zum Debuggen, klein genug fuers Repo. Gesammelt
+    wird erst ab WALLET_FENSTER_AB_N, weil nur ranglistenreife Wallets ein Fenster brauchen und
+    2.573 Wallets mit n<8 die Datei sonst verdreifachen wuerden.
+    """
+    tag = (now.isoformat()[:10] if hasattr(now, "isoformat") else str(now)[:10])
+    if not s.get("firstTs"):
+        s["firstTs"] = tag
+    s["lastTs"] = tag
+    if (s.get("n") or 0) < WALLET_FENSTER_AB_N:
+        return s
+    # WICHTIG: neue Liste statt in-place. update_wallet_track kopiert die scores nur flach
+    # (dict(s)) — die Liste waere sonst dieselbe wie in `prev` und wuerde rueckwirkend mutiert.
+    fenster = list(s.get("recent") or [])
+    fenster.append([tag, round(float(clv), 2), 1 if win else 0])
+    s["recent"] = fenster[-WALLET_FENSTER:]
+    return s
+
+
+def fenster_bilanz(s: dict) -> dict | None:
+    """Was die Wallet in ihren letzten Auflösungen geliefert hat — None, wenn das Fenster leer ist.
+
+    Bewusst KEIN Urteil: liefert nur die Zahlen samt `n`, damit der Aufrufer selbst entscheidet,
+    ab wann er sie ernst nimmt."""
+    r = (s or {}).get("recent") or []
+    # Nur wohlgeformte Tripel zaehlen. `von`/`bis` kommen aus DIESEN Eintraegen, nicht blind aus
+    # r[0]/r[-1] — sonst kippt eine einzige kaputte Zeile in der Datei die ganze Bilanz.
+    gut = [x for x in r if isinstance(x, (list, tuple)) and len(x) >= 3]
+    if not gut:
+        return None
+    try:
+        clv = [float(x[1]) for x in gut]
+    except (TypeError, ValueError):
+        return None
+    wins = sum(1 for x in gut if x[2])
+    return {"n": len(clv), "clv": round(sum(clv) / len(clv), 2),
+            "hit": round(wins / len(clv), 4), "von": gut[0][0], "bis": gut[-1][0]}
+
+
 def enrich_wallet_pnl(scores, get, budget, min_n=5):
     """Lebenszeit-P&L je bewertetem Wallet nachziehen → scores[w]['pnl'] (USD). Priorisiert Wallets mit
     der meisten getrackten Historie, hart per budget[0] (Mutable-Counter) gedeckelt. Wer nicht drankommt,
@@ -1164,7 +1227,8 @@ def update_wallet_track(prev, markets, now=None, keep_h=HIST_KEEP_H, frozen=None
     beobachteter Preis, als der Wal auftauchte); bei Markt-Auflösung wird die Position gewertet:
       clvPP = (Close − Einstieg)·100   (positiv = früh billig rein, Linie geschlagen → scharf)
       win   = Seite == Gewinner
-    Rückgabe {open, scores{wallet:{n,clvSumPP,wins,usd}}, updatedAt}. Global über alle Sportarten."""
+    Rückgabe {open, scores{wallet:{n,clvSumPP,wins,usd,firstTs,lastTs,recent}}, updatedAt}.
+    Global über alle Sportarten."""
     now = now or _now()
     prev = prev or {}
     openp = {k: dict(v) for k, v in (prev.get("open") or {}).items()}
@@ -1222,9 +1286,11 @@ def update_wallet_track(prev, markets, now=None, keep_h=HIST_KEEP_H, frozen=None
         s = scores.setdefault(e["wallet"], {"n": 0, "clvSumPP": 0.0, "wins": 0, "usd": 0})
         s["n"] += 1
         s["clvSumPP"] = round(s["clvSumPP"] + clv, 2)
-        if winners[e["key"]] and e["side"] == winners[e["key"]]:
+        _win = bool(winners[e["key"]] and e["side"] == winners[e["key"]])
+        if _win:
             s["wins"] += 1
         s["usd"] += e.get("usd") or 0
+        _wallet_zeit(s, clv, _win, now)
         del openp[ok]
 
     # 3) verwaiste offene Positionen prunen (Markt seit keep_h nicht mehr gesehen)
