@@ -162,24 +162,103 @@ def bewerte(name: str, strom: str, renditen, clvs, meta=None, letzter=None, now=
 
 
 # ── Strom 1: Poly-Shortlist (Papier-Depot) ──────────────────────────────────────────────
+_ENGINE_PROBE = 25       # so viele juengste Plays entscheiden, welche Engine gerade laeuft
+_ENGINE_MIN_BELEG = 3    # so oft muss ein Stempel darin vorkommen, um zu zaehlen
+
+
+def aktuelle_engine(track) -> str | None:
+    """Welcher Engine-Stempel laeuft gerade? Aus den DATEN gelesen, nicht aus einer Env. REIN.
+
+    ⚠️ 01.09.2026 — der Grund fuer diese Funktion: `poly_schubladen` konnte schon immer auf eine
+    Engine-Version filtern, aber der Schalter hing an `FREIGABE_ENGINE`, und die Variable wurde
+    NIRGENDS gesetzt (`freigabe.json` trug `engine: null`). Das Register mischte deshalb
+    monatelang Engine-Versionen — die staerkste Schublade („Conviction 9", n=12, ROI +16%)
+    bestand ausschliesslich aus Plays einer Engine, die es nicht mehr gibt. Sie konnte n=30 nie
+    erreichen und schrumpfte stattdessen aus dem rollierenden Fenster heraus.
+    Dieselbe Bauform wie beim x-Norm-Badge: eingebaut, feuert nie.
+
+    Eine Env, die jemand setzen MUSS, ist keine Quelle — die Daten sind eine.
+
+    Die Regel: der JUENGSTE Stempel, der im Fenster mindestens `_ENGINE_MIN_BELEG` mal vorkommt.
+    Nicht die Mehrheit — die waere direkt nach einem Versionssprung noch beim ALTEN Stempel, und
+    das Register wuerde einen halben Tag lang genau die Plays als aktuell zaehlen, die es gerade
+    aussortieren soll. Nicht die letzte Zeile — eine einzelne Ausreisser-Zeile darf das Register
+    nicht umschalten. Ein paar Belege sind der Kompromiss: umschalten, sobald der neue Stempel
+    wirklich laeuft, und nicht wegen eines Zufalls.
+
+    Findet sich gar kein Stempel, gibt es None: dann wird NICHT gefiltert — eine alte Datei ohne
+    Stempel soll das Register nicht leeren.
+    """
+    st = (track or {}).get("settled") or []
+    st = list(st.values()) if isinstance(st, dict) else list(st)
+    kandidaten = [str(x.get("ev")) for x in st[-_ENGINE_PROBE:] if isinstance(x, dict) and x.get("ev")]
+    if not kandidaten:
+        op = (track or {}).get("open") or {}
+        op = list(op.values()) if isinstance(op, dict) else list(op)
+        kandidaten = [str(x.get("ev")) for x in op if isinstance(x, dict) and x.get("ev")]
+    if not kandidaten:
+        return None
+    from collections import Counter
+    zaehler = Counter(kandidaten)
+    for ev in reversed(kandidaten):                     # von der juengsten Zeile rueckwaerts
+        if zaehler[ev] >= _ENGINE_MIN_BELEG:
+            return ev
+    return zaehler.most_common(1)[0][0]                  # niemand hat genug Belege -> haeufigster
+
+
 def poly_schubladen(track=None, engine=None) -> list:
-    """Conviction-Buckets und Signal-Mixe. `engine` filtert auf eine Engine-Version: Plays aus
-    einer aelteren Gewichtung sind fuer eine FREIGABE keine Zeugen — anders als beim Kalibrierer,
-    der sie halb gewichtet weiterlaufen laesst. Hier geht es um eine Erlaubnis, nicht um eine
-    Rangfolge; da ist Halbwissen keine Grundlage."""
+    """Conviction-Buckets und Signal-Mixe.
+
+    Plays aus einer aelteren Gewichtung sind fuer eine FREIGABE keine Zeugen — anders als beim
+    Kalibrierer, der sie halb gewichtet weiterlaufen laesst. Hier geht es um eine Erlaubnis, nicht
+    um eine Rangfolge; da ist Halbwissen keine Grundlage.
+
+    ⚠️ Sie werden trotzdem NICHT verschwiegen. Wuerde man sie einfach wegfiltern, verschwaende die
+    Schublade komplett aus dem Register und saehe aus wie „gab es nie" statt wie „die Datenbasis
+    ist veraltet". Deshalb: das URTEIL rechnet nur auf der aktuellen Engine, die Alt-Plays laufen
+    als Kontext mit (`nAlt`, `roiAlt`, `clvAlt`, `engineAlt`).
+
+    `engine=None` -> aus den Daten bestimmen (s. `aktuelle_engine`). `engine=False` -> gar nicht
+    filtern (fuer Tests und Rueckblicke)."""
     d = track if track is not None else _load("poly_shortlist_track.json")
     st = (d or {}).get("settled") or []
     st = list(st.values()) if isinstance(st, dict) else st
-    if engine:
-        st = [x for x in st if x.get("ev") == engine]
+    if engine is None:
+        engine = aktuelle_engine(d)
     out = []
 
-    def _rows(rows, name, meta=None):
+    def _teile(rows):
+        """(aktuell, alt) — ohne Filter zaehlt alles als aktuell."""
+        if not engine:
+            return list(rows), []
+        akt = [x for x in rows if x.get("ev") == engine]
+        return akt, [x for x in rows if x.get("ev") != engine]
+
+    def _kennzahlen(rows):
         r = [float(x.get("pnl") or 0) / float(x["stake"]) for x in rows if x.get("stake")]
         c = [float(x["clvPP"]) for x in rows if isinstance(x.get("clvPP"), (int, float))]
-        letzter = max((str(x.get("settledTs") or "") for x in rows), default="") or None
-        if r:
-            out.append(bewerte(name, "poly", r, c, meta, letzter=letzter))
+        return r, c
+
+    def _rows(rows, name, meta=None):
+        akt, alt = _teile(rows)
+        r, c = _kennzahlen(akt)
+        ra, ca = _kennzahlen(alt)
+        if not r and not ra:
+            return
+        letzter = max((str(x.get("settledTs") or "") for x in akt), default="") or None
+        z = bewerte(name, "poly", r, c, meta, letzter=letzter)
+        if ra:
+            z["nAlt"] = len(ra)
+            z["roiAlt"] = round(sum(ra) / len(ra), 4)
+            z["clvAlt"] = round(sum(ca) / len(ca), 3) if ca else None
+            z["engineAlt"] = True
+            if not r:
+                # Die ganze Datenbasis ist alt. Das ist etwas anderes als „noch keine Daten" —
+                # und der Unterschied gehoert in den Grund, nicht in eine Fussnote.
+                z["grund"] = ("0 von %d Plays auf der aktuellen Engine — die %d vorhandenen "
+                              "stammen aus einer frueheren Bewertung und zaehlen nicht"
+                              % (MIN_N, len(ra)))
+        out.append(z)
 
     for conv in sorted({x.get("conv") for x in st if x.get("conv") is not None}, reverse=True):
         _rows([x for x in st if x.get("conv") == conv], f"Conviction {conv}",
@@ -370,6 +449,15 @@ RANG = {"freigegeben": 0, "kandidat": 1, "geprueft": 2, "sammelt": 3, "ruht": 4}
 
 def baue(engine=None, track=None, cards=None, betfair=None, now=None) -> dict:
     now = now or _now()
+    # 01.09.2026: die Datei muss sagen, WORAUF sie gefiltert hat. Vorher stand hier der rohe
+    # Parameter — bei `engine=None` also `null`, obwohl gefiltert wurde. Eine Datei, die ueber
+    # ihre eigene Filterung schweigt, ist genau der Grund, warum der tote Filter monatelang
+    # niemandem auffiel.
+    if engine is None:
+        _t = track if track is not None else _load("poly_shortlist_track.json")
+        engine_benutzt = aktuelle_engine(_t)
+    else:
+        engine_benutzt = engine or None          # False (= bewusst nicht filtern) -> null
     zeilen = (poly_schubladen(track, engine) + card_schubladen(cards)
               + betfair_schubladen(betfair) + killer_schublade(now=now)
               + push_schubladen(now=now))
@@ -378,7 +466,8 @@ def baue(engine=None, track=None, cards=None, betfair=None, now=None) -> dict:
     kand = [r for r in zeilen if r["status"] == "kandidat"]
     return {
         "generatedAt": now.isoformat(),
-        "engine": engine,
+        "engine": engine_benutzt,
+        "engineGefiltert": bool(engine_benutzt),
         "regeln": {"minN": MIN_N, "z": Z, "kandidatAbN": KANDIDAT_N,
                    "maxAlterTage": MAX_ALTER_TAGE,
                    "text": "freigegeben = n>=%d UND ROI-Untergrenze>0 UND CLV-Untergrenze>=0 UND "
@@ -397,7 +486,12 @@ def baue(engine=None, track=None, cards=None, betfair=None, now=None) -> dict:
 
 def main() -> int:
     from safe_write import write_json_atomic
-    ev = os.environ.get("FREIGABE_ENGINE") or None
+    # 01.09.2026: Default ist NICHT mehr „kein Filter". Die Engine kommt aus den Daten
+    # (s. aktuelle_engine); `FREIGABE_ENGINE=<stempel>` erzwingt eine bestimmte, `=off` schaltet
+    # das Filtern ab. Vorher war der Default „gar nicht filtern", und weil die Variable nirgends
+    # gesetzt wurde, mischte das Register monatelang Engine-Versionen.
+    _ev = os.environ.get("FREIGABE_ENGINE")
+    ev = False if str(_ev).lower() == "off" else (_ev or None)
     d = baue(engine=ev)
     write_json_atomic(BASE / OUT_FILE, d, indent=1)
     z = d["zusammenfassung"]
