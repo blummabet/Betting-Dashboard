@@ -26,14 +26,12 @@ function render(killer, freigabe) {
     killer, freigabe,
   };
   w._renderMainDash();
-  const html = w.document.getElementById('mainDashPanel').innerHTML;
-  // Seit 01.09. steht das Freigabe-Register VOR dieser Sektion. Ein Fenster aus festen
-  // Offsets („ab dem ersten md-kl-foot") liest seitdem die falsche Sektion. Deshalb wird
-  // hier auf die <section> von „Mehrfach gedeckt" zugeschnitten — und nur auf sie.
-  const von = html.indexOf('Mehrfach gedeckt');
-  assert.ok(von > 0, 'Killer-Sektion wird gar nicht gerendert');
-  const ab = html.lastIndexOf('<section', von), bis = html.indexOf('</section>', von);
-  return html.slice(ab >= 0 ? ab : Math.max(0, von - 400), bis > 0 ? bis + 10 : html.length);
+  // 01.09.2026: die drei Fragen stehen jetzt als EBENEN in EINER Sektion („Was kann ich
+  // spielen?"). Zugeschnitten wird deshalb per DOM auf Ebene 2 — nicht per Offsets und nicht
+  // per Ueberschrift-Text: beides ist beim naechsten Umbau wieder falsch.
+  const n = w.document.querySelector('.md-eb-n.e2');
+  assert.ok(n, 'Ebene 2 (Konjunktion) wird gar nicht gerendert');
+  return n.closest('.md-eb').outerHTML;
 }
 
 const ko = (h = 2) => new Date(Date.now() + h * 3600e3).toISOString();
@@ -51,24 +49,27 @@ const REG = (status, extra = {}) => ({
            roi: 0.117, roiLb: -0.058, clv: 3.51, clvLb: 2.72, ...extra }],
 });
 
-test('solange die Untergrenze unter null liegt, sagt die Sektion „beobachten"', () => {
+// 01.09.2026 (Lucas: „das wirkt jetzt schon sehr oft quasi redundant, oder?"). Bis dahin sprach
+// DIESE Ebene das Urteil des Freigabe-Registers mit aus — dieselbe Zahl aus derselben Datei, die
+// Ebene 1 direkt darüber schon nennt. Das war die einzige echte Doppelung der Übersicht.
+// Der Vertrag ist jetzt umgekehrt: Ebene 2 darf über Freigabe GAR NICHTS sagen.
+test('Ebene 2 spricht kein Freigabe-Urteil aus — das gehört Ebene 1', () => {
   const html = render({ stufe1: [], stufe2: [zeile('Arsenal')] }, REG('geprueft'));
-  assert.match(html, /beobachten/);
-  assert.doesNotMatch(html, /freigegeben/i, 'nichts darf hier nach Freigabe aussehen');
-  assert.match(html, /Untergrenze/, 'die Untergrenze gehört sichtbar dazu, nicht nur der ROI');
-  assert.match(html, /Beobachtungsliste, keine Freigabe/);
+  assert.doesNotMatch(html, /freigegeben/i, 'kein Freigabe-Wort auf dieser Ebene');
+  assert.doesNotMatch(html, /Tor n70/, 'die Register-Zahl gehört nicht in diesen Badge');
+  assert.match(html, /Ebene 1/, 'stattdessen wird nach oben verwiesen');
 });
 
-test('freigegeben wird auch so benannt', () => {
+test('auch eine freigegebene Schublade ändert an Ebene 2 nichts', () => {
   const html = render({ stufe1: [], stufe2: [zeile('Arsenal')] },
     REG('freigegeben', { roiLb: 0.04 }));
-  assert.match(html, /freigegeben · n70/);
-  assert.doesNotMatch(html, /Beobachtungsliste/);
+  assert.doesNotMatch(html, /freigegeben · n70/, 'sonst stünde dasselbe Urteil zweimal auf der Seite');
+  assert.match(html, /eigenes Buch/, 'diese Ebene spricht nur über ihr eigenes Buch');
 });
 
 test('ohne Freigabe-Datei wird nichts behauptet', () => {
   const html = render({ stufe1: [], stufe2: [zeile('Arsenal')] }, null);
-  assert.match(html, /sammelt noch/);
+  assert.match(html, /eigenes Buch 0\/20/, 'ohne Register bleibt der eigene Stand die Aussage');
 });
 
 // 30.08.2026 (Lucas: „glaub da ist noch mehr drin"): die Chip-Kette ist einem Deckungs-Profil
@@ -204,10 +205,13 @@ const bilanz = (o = {}) => ({
 });
 const KL = { stufe1: [], stufe2: [zeile('Arsenal')] };
 
-test('solange das eigene Buch dünn ist, steht dran WOHER die Zahl kommt', () => {
+// 01.09.2026: früher borgte sich dieser Badge bei dünnem eigenem Buch die Zahl des Registers
+// („Tor n70"). Seit die Ebene darüber genau das sagt, borgt er nichts mehr — er zeigt den
+// eigenen Fortschritt und sonst nichts.
+test('dünnes eigenes Buch borgt keine fremde Zahl mehr', () => {
   const html = render({ ...KL, bilanz: bilanz({ offen: 4 }) }, REG('geprueft'));
-  assert.match(html, /Tor n70/, 'die fremde Zahl wird als „Tor" benannt, nicht als eigene');
-  assert.match(html, /eigenes Buch 0\/20 \(4 offen\)/);
+  assert.match(html, /eigenes Buch 0\/20 · 4 offen/);
+  assert.doesNotMatch(html, /Tor n70/, 'die fremde Zahl steht eine Ebene höher');
 });
 
 test('ab genug eigenen Zeilen zählt die eigene Bilanz', () => {
@@ -223,7 +227,7 @@ test('ab genug eigenen Zeilen zählt die eigene Bilanz', () => {
 test('ein positiver ROI mit negativer Untergrenze wird NICHT grün', () => {
   const g = { n: 32, gewonnen: 19, verloren: 13, einheiten: 2.31, roi: 0.072, roiLb: -0.201 };
   const html = render({ ...KL, bilanz: bilanz({ gesamt: g }) }, REG('geprueft'));
-  const badge = html.slice(html.indexOf('md-kl-st'), html.indexOf('md-kl-st') + 300);
+  const badge = html.slice(html.indexOf('md-eb-st'), html.indexOf('md-eb-st') + 300);
   assert.match(badge, /👀/, 'beobachten, nicht spielen');
   assert.match(badge, /UG −?-?20%/, 'die Untergrenze steht dabei');
   assert.doesNotMatch(badge, /46,160,67/, 'kein grüner Hintergrund');
@@ -232,7 +236,7 @@ test('ein positiver ROI mit negativer Untergrenze wird NICHT grün', () => {
 test('ohne Untergrenze bleibt der Badge gelb — fehlende Information ist keine Erlaubnis', () => {
   const g = { n: 40, gewonnen: 25, verloren: 15, einheiten: 9, roi: 0.225 };   // altes killer.json
   const html = render({ ...KL, bilanz: bilanz({ gesamt: g }) }, REG('geprueft'));
-  const badge = html.slice(html.indexOf('md-kl-st'), html.indexOf('md-kl-st') + 300);
+  const badge = html.slice(html.indexOf('md-eb-st'), html.indexOf('md-eb-st') + 300);
   assert.match(badge, /UG —/);
   assert.doesNotMatch(badge, /46,160,67/);
 });

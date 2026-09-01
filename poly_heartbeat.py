@@ -194,7 +194,11 @@ def main():
 
     msg_lines += [
         "",
-        f"<i>Dashboard: cocobet.github.io/Betting-Dashboard/season-finish-v2.html</i>",
+        # 01.09.2026: stand hier als „cocobet.github.io" — diesen Pages-Host gibt es nicht.
+        # Der Pages-Host kommt vom Kontonamen, und das Repo ist blummabet/Betting-Dashboard;
+        # jede andere Stelle im Projekt (results-v2.js, polymarket-tab.js, season-finish-v2.html)
+        # nutzt blummabet.github.io. Der Hinweis lief also seit jeher ins Leere.
+        f"<i>Dashboard: blummabet.github.io/Betting-Dashboard/season-finish-v2.html</i>",
     ]
 
     msg = "\n".join(msg_lines)
