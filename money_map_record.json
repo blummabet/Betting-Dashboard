@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-09-01T01:24:07.106183+00:00",
+"generatedAt": "2026-09-01T01:38:57.509178+00:00",
 "byVerdict": {
 "konsens": {
 "n": 670,
@@ -12,14 +12,14 @@
 "pinnHitRate": 0.7818
 },
 "uneinig": {
-"n": 229,
+"n": 230,
 "wins": 73,
-"hitRate": 0.3188,
+"hitRate": 0.3174,
 "polyN": 205,
 "polyWins": 59,
 "polyHitRate": 0.2878,
-"pinnN": 117,
-"pinnHitRate": 0.5897
+"pinnN": 118,
+"pinnHitRate": 0.5932
 },
 "teil": {
 "n": 9,
@@ -98,6 +98,11 @@
 "wins": 17,
 "hitRate": 0.85
 },
+"Brazilian Serie B": {
+"n": 19,
+"wins": 11,
+"hitRate": 0.5789
+},
 "Dutch Eredivisie": {
 "n": 19,
 "wins": 15,
@@ -107,11 +112,6 @@
 "n": 19,
 "wins": 15,
 "hitRate": 0.7895
-},
-"Brazilian Serie B": {
-"n": 18,
-"wins": 11,
-"hitRate": 0.6111
 },
 "Portuguese Primeira Liga": {
 "n": 18,
@@ -531,20 +531,39 @@
 "hitRate": 0.8126
 },
 "weak": {
-"n": 352,
+"n": 353,
 "wins": 180,
-"hitRate": 0.5114
+"hitRate": 0.5099
 }
 },
 "divergence": {
-"n": 229,
+"n": 230,
 "betfairWins": 73,
-"betfairRate": 0.3188,
+"betfairRate": 0.3174,
 "polyN": 205,
 "polyWins": 59,
 "polyRate": 0.2878
 },
 "recent": [
+{
+"matchId": "35981064",
+"home": "Fortaleza EC",
+"away": "Operario PR",
+"league": "Brazilian Serie B",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Fortaleza EC",
+"polySide": null,
+"winner": "draw",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-08-31T22:30:00Z",
+"settledAt": "2026-09-01T01:38:57.355522+00:00"
+},
 {
 "matchId": "35980983",
 "home": "Union La Calera",
@@ -1285,31 +1304,12 @@
 ],
 "kickoff": "2026-08-30T17:15:00Z",
 "settledAt": "2026-08-30T20:21:08.318832+00:00"
-},
-{
-"matchId": "35987262",
-"home": "Mantova",
-"away": "Empoli",
-"league": "Italian Serie B",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Mantova",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-08-30T17:00:00Z",
-"settledAt": "2026-08-30T20:05:57.306123+00:00"
 }
 ],
 "global": {
-"n": 908,
+"n": 909,
 "wins": 623,
-"hitRate": 0.6861
+"hitRate": 0.6854
 },
-"pending": 5
+"pending": 4
 }
