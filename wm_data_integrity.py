@@ -2520,6 +2520,69 @@ def check_live_scan_laeuft(ctx):
                 f"Schluss-Referenz fuer den CLV — fehlen sie, misst der Nordstern nicht.")
 
 
+# 01.09.2026 (Lucas: „damit ich aktiv drauf aufmerksam werde … und tracken wir da alles, damit
+# wir wissen ob's funktioniert?"). Ein Push-Kanal ist die eine Sorte Fehler, die sich als GUTE
+# Nachricht tarnt: bleibt er stumm, sieht das aus wie „gerade nichts los" — und genau so sah der
+# Live-Scan sechs Tage lang aus. Deshalb wird nicht geprueft, ob Nachrichten kommen (das darf
+# ruhig tagelang nichts sein), sondern ob es zu einem gepushten Spiel spaeter auch ein ERGEBNIS
+# gibt. Ein Buch, das nur waechst und nie abrechnet, ist kein Buch.
+KILLER_PUSH_OFFEN_MAX_H = 48
+
+
+@integrity_check
+def check_killer_push_buch(ctx):
+    """Das Schattenbuch des Trades-Pushes muss abrechnen, nicht nur sammeln.
+
+    `killer_push_ledger.json` haelt fest, was WIRKLICH in den Channel ging — zum Preis, der in
+    der Nachricht stand (`pushPreis`), nicht zum Haltepreis der Flaeche. Zwei Arten, wie das
+    still kaputtgeht:
+      · Die Abrechnung findet den Treffer nicht (Markt-/ID-Schreibweise driftet gegen
+        `betfair_track_results`) → Zeilen bleiben ewig „offen".
+      · `pushPreis` fehlt → die Zeile zaehlt nie in die Bilanz, das Buch sieht kleiner aus als
+        es ist und niemand merkt es.
+    Fehlt die Datei ganz, ist das KEIN Fehler: solange nie ein Stufe-1-Treffer im Fenster lag,
+    gibt es nichts zu schreiben. Dann ❔, nie gruen und nie rot."""
+    fname = "killer_push_ledger.json"
+    rows = _lazy(fname)
+    if fname in _LAZY_FAILED:
+        return _chk("killer_push_buch", "Trades-Push fuehrt sein Buch", "warn",
+                    [f"❔ {fname} nicht lesbar — ob der Push-Track stimmt, ist UNBEKANNT."],
+                    "killer_push.py schreibt sie bei jedem Lauf.")
+    if rows is None:
+        return _chk("killer_push_buch", "Trades-Push fuehrt sein Buch", "warn",
+                    [f"❔ {fname} fehlt — noch nie ein Stufe-1-Treffer gepusht, oder der Job "
+                     f"laeuft nicht. Nicht unterscheidbar, also nicht gruen."],
+                    "Erster Push legt sie an.")
+    if not isinstance(rows, list):
+        return _chk("killer_push_buch", "Trades-Push fuehrt sein Buch", "error",
+                    [f"{fname} ist kein Array."], "")
+    fails = []
+    ohne_preis = [r for r in rows if isinstance(r, dict) and r.get("pushPreis") in (None, 0)]
+    if ohne_preis:
+        fails.append(f"{len(ohne_preis)} Zeile(n) ohne pushPreis — sie zaehlen nie in die "
+                     f"Bilanz, das Buch waere still zu klein.")
+    lange_offen = []
+    for r in rows:
+        if not isinstance(r, dict) or r.get("status") != "offen":
+            continue
+        ko = r.get("kickoff")
+        try:
+            t = datetime.fromisoformat(str(ko).replace("Z", "+00:00"))
+            if t.tzinfo is None:
+                t = t.replace(tzinfo=timezone.utc)
+        except Exception:
+            continue
+        if (ctx.now - t).total_seconds() / 3600 > KILLER_PUSH_OFFEN_MAX_H:
+            lange_offen.append(r.get("k"))
+    if lange_offen:
+        fails.append(f"{len(lange_offen)} gepushte Zeile(n) seit ueber {KILLER_PUSH_OFFEN_MAX_H}h "
+                     f"angepfiffen und immer noch 'offen' (z.B. {lange_offen[0]}) — die "
+                     f"Abrechnung findet sie nicht in betfair_track_results.")
+    return _chk("killer_push_buch", "Trades-Push fuehrt sein Buch", "error", fails,
+                "Was gepusht wurde, muss abgerechnet werden — sonst weiss niemand, ob der "
+                "Channel traegt. Gerechnet wird zum pushPreis, nicht zum Haltepreis.")
+
+
 @integrity_check
 def check_card_link_alive(ctx):
     """NEU 31.08.2026: der Terminal-Kartenlink (`betfair_card_link.json`) muss ANKOMMEN.

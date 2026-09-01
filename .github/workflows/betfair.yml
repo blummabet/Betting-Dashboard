@@ -83,6 +83,30 @@ jobs:
         run: ${{ env.BETFAIR_PY }} freigabe.py
         continue-on-error: true
 
+      # 01.09.2026 (Lucas: „damit ich aktiv drauf aufmerksam werde"): zwei Pushes in den
+      # TRADES-Channel, bewusst schmal geschnitten.
+      #   · Konjunktion NUR Stufe 1 (~5/Tag). Alles zu pushen waeren 20-58/Tag, und Stufe 2
+      #     traegt im eigenen Buch nur +0,2%. Der Median-Abstand Latch→Anpfiff liegt bei 48
+      #     Minuten — deshalb muss das hier im 15-Minuten-Takt mitlaufen, sonst ist die
+      #     Nachricht wertlos, wenn sie ankommt.
+      #   · Freigabe-Wechsel: selten, aber das wichtigste Ereignis im System. Auch die
+      #     RUECKNAHME wird gemeldet.
+      # Beide fuehren ihr EIGENES Buch (killer_push_ledger.json) — zum Preis, der in der
+      # Nachricht stand, nicht zum Haltepreis der Flaeche.
+      - name: 📣 Konjunktion Stufe 1 → Trades-Channel
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+        run: ${{ env.BETFAIR_PY }} killer_push.py
+        continue-on-error: true
+
+      - name: 🔓 Freigabe-Wechsel → Trades-Channel
+        env:
+          TELEGRAM_TOKEN: ${{ secrets.TELEGRAM_TOKEN }}
+          TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
+        run: ${{ env.BETFAIR_PY }} freigabe_push.py
+        continue-on-error: true
+
       - name: 📚 Liga-Basis lernen (was ist ueblich fuer Liga X in Phase Y — Basis fuers x-Norm-Badge)
         run: ${{ env.BETFAIR_PY }} betfair_league_norm.py
         continue-on-error: true
@@ -136,7 +160,7 @@ jobs:
           # Workflow geschrieben, deshalb kann sie mit keinem anderen kollidieren.
           git add health/betfair.json 2>/dev/null || true
           git add betfair_coherence_watch.json 2>/dev/null || true   # ab wann liegt Geld in den Tormaerkten
-          git add betfair_prices.json betfair_history.json betfair_overview.json betfair_track_state.json betfair_track_results.json betfair_track_record.json betfair_league_norm.json betfair_league_norm_state.json betfair_direction.json betfair_draw_state.json betfair_draw_results.json betfair_draw_record.json betfair_alerts_seen.json betfair_public_seen.json betfair_public_ledger.json betfair_public_record.json betfair_consensus.json betfair_consensus_history.json betfair_status.json money_map.json money_map_ledger.json money_map_record.json killer.json killer_state.json killer_ledger.json freigabe.json 2>/dev/null || true
+          git add betfair_prices.json betfair_history.json betfair_overview.json betfair_track_state.json betfair_track_results.json betfair_track_record.json betfair_league_norm.json betfair_league_norm_state.json betfair_direction.json betfair_draw_state.json betfair_draw_results.json betfair_draw_record.json betfair_alerts_seen.json betfair_public_seen.json betfair_public_ledger.json betfair_public_record.json betfair_consensus.json betfair_consensus_history.json betfair_status.json money_map.json money_map_ledger.json money_map_record.json killer.json killer_state.json killer_ledger.json freigabe.json killer_push_seen.json killer_push_ledger.json freigabe_push_state.json 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "keine Änderung — nichts zu committen"
             exit 0

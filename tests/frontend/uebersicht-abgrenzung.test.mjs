@@ -46,15 +46,22 @@ function render({ killer = null, flowRows = [] } = {}) {
   w._renderMainDash();
   const html = w.document.getElementById('mainDashPanel').innerHTML;
   const box = w.document.getElementById('mdJetztBox');
-  return { html, jetzt: box ? box.innerHTML : '' };
+  // 01.09.2026: beide sind jetzt Ebenen EINER Sektion — per DOM greifbar, nicht per Textstelle.
+  const ebene = (nr) => {
+    const n = w.document.querySelector('.md-eb-n.e' + nr);
+    return n ? n.closest('.md-eb').outerHTML : '';
+  };
+  return { html, jetzt: box ? box.innerHTML : '', ebene };
 }
 
-test('beide Köpfe sagen, wie sie gebaut sind — Filter gegen Rangliste', () => {
-  const { html } = render({ killer: { stufe1: [], stufe2: [klZeile('1', 'Arsenal', 'Gegner')] } });
-  const kl = html.slice(html.indexOf('Mehrfach gedeckt'));
-  assert.match(kl.slice(0, 400), /class="md-mech"[^>]*>Filter</, 'die Konjunktion heißt Filter');
-  const jz = html.slice(html.indexOf('Top-Wetten jetzt'));
-  assert.match(jz.slice(0, 400), /class="md-mech"[^>]*>Rangliste</, 'die Disjunktion heißt Rangliste');
+// 01.09.2026 (Lucas: „das wirkt jetzt schon sehr oft quasi redundant, oder?"): die beiden stehen
+// seither als Ebene 2 und 3 EINER Sektion untereinander. Damit wiegt die Abgrenzung noch schwerer
+// als vorher — untereinander in einem Rahmen muss jede Ebene sagen, warum sie nicht die andere ist.
+test('beide Ebenen sagen, wie sie gebaut sind — Filter gegen Rangliste', () => {
+  const { ebene } = render({ killer: { stufe1: [], stufe2: [klZeile('1', 'Arsenal', 'Gegner')] } });
+  assert.match(ebene(2), /class="md-mech"[^>]*>Filter</, 'die Konjunktion heißt Filter');
+  assert.match(ebene(3), /class="md-mech"[^>]*>Rangliste</, 'die Disjunktion heißt Rangliste');
+  assert.doesNotMatch(ebene(2), />Rangliste</, 'die Bauarten dürfen sich nicht vermischen');
 });
 
 test('die Köpfe nennen die Folge, nicht nur den Namen', () => {

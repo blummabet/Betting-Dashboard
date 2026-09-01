@@ -239,10 +239,6 @@
       '.md-spk-mid{position:absolute;left:0;right:0;top:50%;height:1px;background:var(--mln2);}',
       '.md-spk-col{position:relative;width:3px;}',
       '.md-spk-b{position:absolute;left:0;width:100%;border-radius:1.5px;min-height:1px;}',
-      '.md-jetzt{background:radial-gradient(120% 140% at 100% 0%,rgba(217,89,38,.10),transparent 55%),var(--m1);border:1px solid rgba(217,89,38,.3);border-radius:14px;padding:13px 15px 8px;margin-top:12px;}',
-      '.md-jz-h{display:flex;align-items:center;gap:8px;margin-bottom:2px;}',
-      '.md-jz-t{font-weight:800;font-size:13.5px;color:var(--mi);}',
-      '.md-jz-s{font-size:11px;color:var(--mi2);}',
       '.md-jz-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--mln);}',
       '.md-jz-row:first-of-type{border-top:0;}',
       '.md-jz-main{min-width:0;flex:1;}',
@@ -266,13 +262,36 @@
       // gleichzeitig, kann leer sein), die andere eine RANGLISTE (bestes Einzelsignal, ist nie
       // leer). Das steht jetzt als erstes Wort in beiden Köpfen, in derselben Form.
       '.md-mech{font-size:9px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;padding:2px 6px;border-radius:5px;border:1px solid;white-space:nowrap;}',
+      // 01.09.2026 (Lucas: „das wirkt jetzt schon sehr oft quasi redundant, oder?"). Gemessen war
+      // die Ueberschneidung null — die drei Sektionen zeigten NIE dasselbe Spiel. Redundant war
+      // nicht der Inhalt, sondern die FORM: drei gleich gebaute Koepfe mit je eigenem Badge,
+      // eigener Bauart-Pille und eigenem Erklaersatz, untereinander, die alle nach „was soll ich
+      // spielen?" klingen. Drei Antworten sehen aus wie dreimal dieselbe Frage, wenn nichts sagt,
+      // wie sie zusammenhaengen.
+      //
+      // Jetzt: EIN Rahmen, EINE Ueberschrift, drei nummerierte Ebenen von streng nach breit.
+      // Die Nummer ist die Aussage — man liest eine Leiter hinab, nicht drei Konkurrenten
+      // nebeneinander. Deshalb auch bewusst KEIN eigener Rahmen/Farbverlauf je Ebene mehr.
+      // (Die eigenen Rahmen/Koepfe von „Mehrfach gedeckt" und „Top-Wetten jetzt" — .md-jetzt,
+      //  .md-jz-h/-t/-s, .md-kl-h/-t/-s/-st — sind am 01.09. entfallen: beide sind jetzt Ebenen
+      //  EINER Sektion und teilen sich deren Kopf. Zeilen-, Chip- und Bilanz-Klassen bleiben.)
+      '.md-sp{background:radial-gradient(130% 150% at 0% 0%,rgba(46,160,71,.09),transparent 55%),var(--m1);border:1px solid var(--mln);border-radius:14px;padding:13px 15px 10px;margin-top:12px;}',
+      '.md-sp-h{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}',
+      '.md-sp-t{font-weight:800;font-size:14.5px;color:var(--mi);letter-spacing:-.01em;}',
+      '.md-sp-s{font-size:11px;color:var(--mi2);width:100%;margin-top:3px;line-height:1.5;}',
+      '.md-eb{margin-top:13px;padding-top:11px;border-top:1px solid var(--mln);}',
+      '.md-eb-h{display:flex;align-items:center;gap:8px;flex-wrap:wrap;}',
+      '.md-eb-n{font-family:"JetBrains Mono",monospace;font-size:10px;font-weight:800;color:var(--mi3);border:1px solid var(--mln2);border-radius:5px;padding:1px 6px;flex-shrink:0;}',
+      '.md-eb-q{font-weight:800;font-size:12.5px;color:var(--mi);}',
+      '.md-eb-st{margin-left:auto;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;white-space:nowrap;}',
+      '.md-eb-s{font-size:10.5px;color:var(--mi3);width:100%;line-height:1.45;margin-top:2px;}',
+      // Die Ebenen-Nummer traegt die Strenge: 1 ist das engste Tor, 3 das weiteste.
+      '.md-eb-n.e1{color:#2ea047;border-color:rgba(46,160,71,.45);}',
+      '.md-eb-n.e2{color:#4cc2ff;border-color:rgba(76,194,255,.45);}',
+      '.md-eb-n.e3{color:#d95926;border-color:rgba(217,89,38,.45);}',
       // 29.08.2026 (Lucas): das Konjunktions-Element. Bewusst anders als „Top-Wetten jetzt":
       // dunkler, ruhiger, weniger Zeilen. Die Sektion soll aussehen, als koste jede Zeile etwas.
       '.md-kl{background:radial-gradient(130% 150% at 0% 0%,rgba(76,194,255,.10),transparent 58%),var(--m1);border:1px solid rgba(76,194,255,.26);border-radius:14px;padding:13px 15px 10px;margin-top:12px;}',
-      '.md-kl-h{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap;}',
-      '.md-kl-t{font-weight:800;font-size:13.5px;color:var(--mi);}',
-      '.md-kl-s{font-size:11px;color:var(--mi2);}',
-      '.md-kl-st{margin-left:auto;font-size:10px;font-weight:700;padding:2px 7px;border-radius:6px;white-space:nowrap;}',
       '.md-kl-grp{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--mi3);margin:12px 0 2px;display:flex;align-items:center;gap:7px;}',
       '.md-kl-grp i{height:1px;flex:1;background:var(--mln);font-style:normal;}',
       '.md-kl-row{padding:11px 0;border-top:1px solid var(--mln);}',
@@ -1207,7 +1226,7 @@
       '<div id="md-cell-live" class="md-cell">' + _mdLiveWidePlaceholder() + '</div>' +
       '</div>';
 
-    p.innerHTML = _head() + _mdPulse() + _mdFreigabe() + _mdKiller() + _mdSignalBoard() + _mdNobetBoard() + _mdJetzt() + _kpis() + grid +
+    p.innerHTML = _head() + _mdPulse() + _mdSpielbar() + _mdSignalBoard() + _mdNobetBoard() + _kpis() + grid +
       '<div class="md-foot">Kuratierter Überblick · tippe „alle →" für den vollen Bereich</div>';
     _mdFillPlays();
     _mdFillPubPreview();
@@ -1483,16 +1502,14 @@
                col: belegt ? A.good : A.gold,
                bg: belegt ? 'rgba(46,160,67,.16)' : 'rgba(201,133,0,.14)' };
     }
-    var fort = g ? (' · eigenes Buch ' + g.n + '/' + KL_EIGEN_MIN_N +
-                    (bil.offen ? ' (' + bil.offen + ' offen)' : '')) : '';
-    if (!st) return { txt: 'sammelt noch' + fort, col: A.gold, bg: 'rgba(201,133,0,.14)' };
-    if (st.status === 'freigegeben') return { txt: '✅ freigegeben · n' + st.n + fort, col: A.good, bg: 'rgba(46,160,67,.16)' };
-    var roi = (st.roi != null) ? ((st.roi >= 0 ? '+' : '') + Math.round(st.roi * 100) + '%') : '—';
-    var ug = (st.roiLb != null) ? ((st.roiLb >= 0 ? '+' : '') + Math.round(st.roiLb * 100) + '%') : '—';
-    var wo = String(st.schublade || '').split('·').slice(1).join('·').trim();   // „Top-5 + MLS" / „übrige Ligen"
-    return { txt: '👀 beobachten · Tor n' + st.n + (wo ? ' (' + wo + ')' : '') +
-                  ' · ROI ' + roi + ' (UG ' + ug + ')' + fort,
-             col: A.gold, bg: 'rgba(201,133,0,.14)' };
+    // 01.09.2026 (Lucas: „das wirkt schon sehr oft redundant"): hier stand frueher das URTEIL
+    // aus dem Freigabe-Register — dieselbe Zahl aus derselben Datei, die die Ebene direkt
+    // darueber schon ausspricht. Das war die einzige echte Doppelung der Uebersicht.
+    // Jetzt sagt dieser Badge nur noch, wie weit das EIGENE Buch dieser Ebene ist; das Urteil
+    // gehoert Ebene 1 und wird nicht wiederholt.
+    var fort = g ? (g.n + '/' + KL_EIGEN_MIN_N + (bil.offen ? ' · ' + bil.offen + ' offen' : ''))
+                 : ('0/' + KL_EIGEN_MIN_N);
+    return { txt: '👀 eigenes Buch ' + fort, col: A.gold, bg: 'rgba(201,133,0,.14)' };
   }
   // Die Bilanz DER SEKTION: was sie gezeigt hat und wie es ausging — zum Haltepreis gerechnet,
   // also zu dem Preis, der dastand, als die Zeile erschien. Aufklappbar wie im Card-Tracking.
@@ -1600,19 +1617,36 @@
       + '<span class="md-kl-bs" title="CLV mit Untergrenze — bei kleinem n belastbarer als der ROI">'
       +   'CLV ' + _mdFgZahl(r.clv, 'pp', 1) + '</span>' + alt + '</div>';
   }
+  // Eine Ebene der Spielbar-Sektion. Alle drei bekommen denselben Kopf, damit man sie
+  // uebereinander VERGLEICHEN kann: Nummer (Strenge) · Frage · Bauart · eigener Stand.
+  // Vorher hatte jede Sektion ihren eigenen Kopfbau — deshalb sahen drei Antworten aus wie
+  // dreimal dieselbe Frage.
+  function _mdEbene(nr, frage, mech, mechCol, mechTitel, unter, badge, inhalt) {
+    var rand = mechCol === A.good ? 'rgba(46,160,71,.45)' : mechCol === A.blue ? 'rgba(76,194,255,.45)' : 'var(--mln2)';
+    if (!mechCol) mechCol = 'var(--mi2)';   // Ebene 3 traegt bewusst KEINE Signalfarbe: sie belegt nichts.
+    return '<div class="md-eb">'
+      + '<div class="md-eb-h"><span class="md-eb-n e' + nr + '">' + nr + '</span>'
+      + '<span class="md-eb-q">' + frage + '</span>'
+      + '<span class="md-mech" style="color:' + mechCol + ';border-color:' + rand + '" title="'
+      + mechTitel + '">' + mech + '</span>'
+      + (badge ? '<span class="md-eb-st" style="background:' + badge.bg + ';color:' + badge.col + '">' + badge.txt + '</span>' : '')
+      + '<span class="md-eb-s">' + unter + '</span></div>' + inhalt + '</div>';
+  }
+  // ── Ebene 1: das Freigabe-Register ────────────────────────────────────────────────────
+  // Beurteilt SCHUBLADEN ueber Wochen, nicht einzelne Spiele heute. Das ist der Grund, warum
+  // sie ganz oben steht und warum sie kein einziges Spiel zeigt: sie sagt, wie ernst man die
+  // beiden Ebenen darunter nehmen darf.
   function _mdFreigabe() {
     var f = _md.data && _md.data.freigabe;
-    var kopfBasis = '<div class="md-kl-h"><span style="font-size:16px">🔓</span>'
-      + '<span class="md-kl-t">Blind spielbar</span>'
-      + '<span class="md-mech" style="color:' + A.good + ';border-color:rgba(46,160,71,.45)" '
-      + 'title="Register: beurteilt SCHUBLADEN, nicht einzelne Plays. Freigegeben wird eine Schublade erst, wenn ihre Untergrenze über null liegt.">Register</span>'
-      + '<span class="md-kl-s">nicht der einzelne Tipp wird freigegeben, sondern die Schublade, aus der er kommt</span>';
+    var frage = 'Darf ich ueberhaupt blind spielen?'.replace('ueberhaupt', 'überhaupt');
+    var mechT = 'Register: beurteilt SCHUBLADEN ueber Wochen, nicht einzelne Spiele. Freigegeben wird eine Schublade erst, wenn ihre Untergrenze ueber null liegt.';
+    var unter = 'nicht der einzelne Tipp wird freigegeben, sondern die Schublade, aus der er kommt';
     // ❔ statt gruen: eine fehlende oder unlesbare Datei ist keine Aussage über die Freigabe.
     if (!f || !f.zusammenfassung) {
-      return '<section class="md-kl md-rise" style="border-color:var(--mln)">' + kopfBasis
-        + '<span class="md-kl-st" style="background:rgba(201,133,0,.14);color:' + A.gold + '">❔ unbekannt</span></div>'
-        + '<div class="md-kl-foot" style="border-top:0;padding-top:10px">freigabe.json fehlt oder ist nicht lesbar — '
-        + 'ob etwas freigegeben ist, lässt sich gerade <b>nicht</b> sagen. Das ist ausdrücklich nicht dasselbe wie „nichts freigegeben".</div></section>';
+      return _mdEbene(1, frage, 'Register', A.good, mechT, unter,
+        { txt: '❔ unbekannt', col: A.gold, bg: 'rgba(201,133,0,.14)' },
+        '<div class="md-kl-foot" style="border-top:0;padding-top:8px">freigabe.json fehlt oder ist nicht lesbar — '
+        + 'ob etwas freigegeben ist, lässt sich gerade <b>nicht</b> sagen. Das ist ausdrücklich nicht dasselbe wie „nichts freigegeben".</div>');
     }
     var z = f.zusammenfassung || {}, minN = (f.regeln && f.regeln.minN) || FG_BAR_MAX;
     var frei = f.freigegeben || [], kand = (f.kandidaten || []).slice(0, 3);
@@ -1620,15 +1654,14 @@
       ? { txt: '✅ ' + frei.length + ' freigegeben', col: A.good, bg: 'rgba(46,160,71,.16)' }
       : { txt: '👀 nichts freigegeben' + (z.naechsteFreigabe != null ? ' · nächste in ' + z.naechsteFreigabe + ' Plays' : ''),
           col: A.gold, bg: 'rgba(201,133,0,.14)' };
-    var kopf = kopfBasis + '<span class="md-kl-st" style="background:' + bad.bg + ';color:' + bad.col + '">' + bad.txt + '</span></div>';
 
     var body;
     if (frei.length) {
       body = frei.map(function (r) { return _mdFgZeile(r, minN); }).join('');
     } else {
-      body = '<div class="md-kl-foot" style="border-top:0;padding-top:9px;padding-bottom:2px">'
-        + 'Keine Schublade hat ihre Untergrenze über null — <b>heute gibt es nichts, dem man blind folgen darf</b>. '
-        + 'Das ist ein Ergebnis, kein Fehler. Am nächsten dran:</div>'
+      body = '<div class="md-kl-foot" style="border-top:0;padding-top:8px;padding-bottom:2px">'
+        + '<b>Heute gibt es nichts, dem man blind folgen darf</b> — keine Schublade hat ihre Untergrenze über null. '
+        + 'Das ist ein Ergebnis, kein Fehler, und es gilt für alles darunter. Am nächsten dran:</div>'
         + (kand.length ? kand.map(function (r) { return _mdFgZeile(r, minN); }).join('')
                        : '<div class="md-kl-foot" style="border-top:0">Noch nicht einmal ein Kandidat — die Bücher sammeln.</div>');
     }
@@ -1652,27 +1685,27 @@
       + '<div class="md-kl-bliste">' + alle.map(function (r) { return _mdFgZeile(r, minN); }).join('') + '</div>'
       + '<div class="md-kl-foot" style="border-top:0;padding-top:6px">' + esc(regel) + '</div></details>' : '';
 
-    return '<section class="md-kl md-rise" style="border-color:rgba(46,160,71,.26);'
-      + 'background:radial-gradient(130% 150% at 0% 0%,rgba(46,160,71,.10),transparent 58%),var(--m1)">'
-      + kopf + body
-      + '<div class="md-kl-foot">' + eng + '</div>' + det + '</section>';
+    return _mdEbene(1, frage, 'Register', A.good, mechT, unter, bad,
+      body + '<div class="md-kl-foot">' + eng + '</div>' + det);
   }
 
   function _mdKiller() {
     var k = _md.data && _md.data.killer;
     var s1 = ((k && k.stufe1) || []).filter(_klSichtbar), s2 = ((k && k.stufe2) || []).filter(_klSichtbar);
     var st = _mdKillerStand(), bil = (k && k.bilanz) || null, bad = _mdKillerBadge(st, bil);
-    var kopf = '<div class="md-kl-h"><span style="font-size:16px">🔒</span>' +
-      '<span class="md-kl-t">Mehrfach gedeckt</span>' +
-      '<span class="md-mech" style="color:' + A.blue + ';border-color:rgba(76,194,255,.45)" ' +
-      'title="Konjunktion: Geldanteil UND frischer Zufluss UND mitziehende Quote — fehlt eine Bedingung, fällt die Zeile raus.">Filter</span>' +
-      '<span class="md-kl-s">alle Geld-Bedingungen gleichzeitig — fehlt eine, ist die Zeile raus · gehalten bis zum Anpfiff · leer heißt leer</span>' +
-      '<span class="md-kl-st" style="background:' + bad.bg + ';color:' + bad.col + '">' + bad.txt + '</span></div>';
+    // 01.09.2026: der Kopf heißt weiter „Mehrfach gedeckt", ist aber Ebene 2 EINER Sektion.
+    // Der Badge spricht seit heute nur noch über das EIGENE Buch — das Urteil über die
+    // Schublade steht eine Ebene höher und muss hier nicht ein zweites Mal stehen.
+    var ebene = function (inhalt) {
+      return _mdEbene(2, 'Wo fällt gerade alles zusammen?', 'Filter', A.blue,
+        'Konjunktion: Geldanteil UND frischer Zufluss UND mitziehende Quote — fehlt eine Bedingung, fällt die Zeile raus.',
+        'alle Geld-Bedingungen gleichzeitig — fehlt eine, ist die Zeile raus · gehalten bis zum Anpfiff · leer heißt leer',
+        bad, inhalt);
+    };
     if (!s1.length && !s2.length) {
       var regel = (k && k.regeln && k.regeln.text) || 'Geldanteil, frischer Zufluss und mitziehende Quote müssen zusammenfallen.';
-      return '<section class="md-kl md-rise" style="border-color:var(--mln)">' + kopf +
-        '<div class="md-kl-foot" style="border-top:0;padding-top:10px">Gerade deckt sich nichts. ' +
-        esc(regel) + '</div>' + _mdKlBilanz(bil) + '</section>';
+      return ebene('<div class="md-kl-foot" style="border-top:0;padding-top:8px">Gerade deckt sich nichts. ' +
+        esc(regel) + '</div>' + _mdKlBilanz(bil));
     }
     var now = Date.now();
     var uhr = function (iso) {
@@ -1780,15 +1813,15 @@
       if (!arr.length) return '';
       return '<div class="md-kl-grp">' + titel + '<i></i></div>' + arr.map(row).join('');
     };
-    var fuss = st && st.status !== 'freigegeben'
-      ? 'Das Tor ist gemessen (' + (st.n || 0) + ' abgerechnete Zeilen, CLV ' +
-        (st.clv != null ? (st.clv >= 0 ? '+' : '') + st.clv.toFixed(1) + 'pp' : '—') +
-        '), aber die ROI-Untergrenze liegt noch nicht über null. Bis dahin ist das hier eine Beobachtungsliste, keine Freigabe.'
-      : 'Freigegeben nach denselben Regeln wie jede andere Schublade: ROI-Untergrenze über null, CLV nicht negativ, frisch.';
-    return '<section class="md-kl md-rise">' + kopf +
+    // Die Fusszeile sagt, was DIESE Ebene beitraegt — nicht noch einmal, ob freigegeben ist.
+    var fuss = 'Hier steht, wo heute alle Geld-Bedingungen gleichzeitig anliegen. Ob man einer solchen '
+      + 'Zeile blind folgen darf, beantwortet Ebene 1 — nicht diese Liste.'
+      + (st && st.clv != null ? ' Gemessenes Tor: ' + (st.n || 0) + ' abgerechnete Zeilen, CLV '
+          + (st.clv >= 0 ? '+' : '') + st.clv.toFixed(1) + 'pp.' : '');
+    return ebene(
       grp('🔒 Voll gedeckt — Betfair · Poly · Pinnacle', s1) +
       grp('💷 Betfair-Kern — das gemessene Tor', s2) +
-      '<div class="md-kl-foot">' + esc(fuss) + '</div>' + _mdKlBilanz(bil) + '</section>';
+      '<div class="md-kl-foot">' + esc(fuss) + '</div>' + _mdKlBilanz(bil));
   }
 
   function _mdJetzt(polyPlays) {
@@ -1914,11 +1947,13 @@
       for (var j = 0; j < _all.length && pick.length < N; j++) take(_all[j]);          // Rest auffuellen
       return pick.sort(function (a, b) { return b.score - a.score || a.k - b.k; });
     })();
-    if (!items.length) return '<section id="mdJetztBox" class="md-jetzt md-rise" style="border-color:var(--mln);background:var(--m1);padding-bottom:13px">' +
-      '<div class="md-jz-h"><span style="font-size:16px;opacity:.55">🎯</span><span class="md-jz-t" style="color:var(--mi2)">Top-Wetten jetzt</span>' +
-      '<span class="md-mech" style="color:var(--mi3);border-color:var(--mln2)" ' +
-      'title="Disjunktion: das stärkste Einzelsignal über alle Flächen. EINE Quelle genügt.">Rangliste</span>' +
-      '<span class="md-jz-s">gerade kein spielbares Signal in den nächsten Stunden — meldet sich automatisch.</span></div></section>';
+    // Leer heisst leer — aber die Ebene verschwindet NICHT. Eine fehlende dritte Sprosse laesst
+    // die Leiter unvollstaendig aussehen und man sucht nach der Sektion, statt die Aussage zu lesen.
+    if (!items.length) return '<div id="mdJetztBox">' + _mdEbene(3, 'Was ist gerade das Stärkste?',
+      'Rangliste', null,
+      'Disjunktion: das stärkste Einzelsignal über alle Flächen. EINE Quelle genügt.',
+      'bestes Einzelsignal je Fläche — eine Quelle genügt, kein UND', null,
+      '<div class="md-kl-foot" style="border-top:0;padding-top:8px">Gerade kein spielbares Signal in den nächsten Stunden — meldet sich automatisch.</div>') + '</div>';
     // Signal-Balken je Quelle (gleicher Stil wie "Heute spielenswert")
     var sigOf = function (o) {
       if (o.src === 'poly' && o.poly) return _mdSigStrip(o.poly, _polyMaxInf);
@@ -1969,11 +2004,36 @@
         (ko ? '<span class="md-jz-ko">⏱ ' + ko + '</span>' : '') + '</div>' +
         pickLine + sigOf(x) + '</div>';
     }).join('');
-    return '<section id="mdJetztBox" class="md-jetzt md-rise"><div class="md-jz-h"><span style="font-size:16px">🎯</span>' +
-      '<span class="md-jz-t">Top-Wetten jetzt</span>' +
-      '<span class="md-mech" style="color:var(--mi2);border-color:var(--mln2)" ' +
-      'title="Disjunktion: das stärkste Einzelsignal über alle Flächen. EINE Quelle genügt — deshalb steht hier auch an einem schwachen Tag etwas.">Rangliste</span>' +
-      '<span class="md-jz-s">bestes Einzelsignal je Fläche — eine Quelle genügt, kein UND</span></div>' + body + '</section>';
+    // 01.09.2026: Ebene 3 derselben Sektion. Der Kasten behaelt seine id, weil _mdFillJetzt ihn
+    // nach dem Poly-Nachladen per outerHTML ersetzt — er muss also allein austauschbar bleiben.
+    return '<div id="mdJetztBox">' + _mdEbene(3, 'Was ist gerade das Stärkste?', 'Rangliste', null,
+      'Disjunktion: das stärkste Einzelsignal über alle Flächen. EINE Quelle genügt — deshalb steht hier auch an einem schwachen Tag etwas.',
+      'bestes Einzelsignal je Fläche — eine Quelle genügt, kein UND · <b>nicht</b> geprüft, nur sortiert',
+      null, body) + '</div>';
+  }
+  // ── Die Klammer: „Was kann ich spielen?" ──────────────────────────────────────────────
+  // 01.09.2026, Lucas: „jetzt haben wir blindspielbar, mehrfach gedeckt darunter und top wetten
+  // jetzt auch darunter … das wirkt jetzt schon sehr oft quasi redundant, oder?"
+  //
+  // Nachgemessen war die Ueberschneidung NULL: die drei Flaechen zeigten kein einziges gemeinsames
+  // Spiel (Register 0 Spiele — es beurteilt Schubladen —, Konjunktion 1, Rangliste 3, Schnitt 0).
+  // Redundant war also nicht der Inhalt, sondern der AUFBAU: drei gleich gebaute Sektionen mit je
+  // eigenem Kopf, Badge, Bauart-Pille und Erklaersatz, die alle nach derselben Frage klingen.
+  //
+  // Die drei Antworten unterscheiden sich in DREI Achsen gleichzeitig, und genau das stand nirgends:
+  //   Einheit  — Ebene 1 beurteilt Schubladen, Ebene 2+3 einzelne Spiele
+  //   Zeit     — Ebene 1 blickt ueber Wochen zurueck, Ebene 2+3 auf die naechsten 12 Stunden
+  //   Logik    — Ebene 1 urteilt, Ebene 2 ist ein UND, Ebene 3 ein ODER
+  // Deshalb jetzt eine Leiter von streng nach breit unter EINER Ueberschrift. Die Reihenfolge ist
+  // die Aussage: je weiter unten, desto mehr steht da — und desto weniger ist es belegt.
+  function _mdSpielbar(polyPlays) {
+    return '<section class="md-sp md-rise">'
+      + '<div class="md-sp-h"><span style="font-size:16px">🎯</span>'
+      + '<span class="md-sp-t">Was kann ich spielen?</span>'
+      + '<span class="md-sp-s">Drei Ebenen von streng nach breit — <b>je weiter unten, desto mehr steht da '
+      + 'und desto weniger ist belegt</b>. Ebene 1 sagt, wie ernst man die beiden darunter nehmen darf.</span></div>'
+      + _mdFreigabe() + _mdKiller() + _mdJetzt(polyPlays)
+      + '</section>';
   }
   // 13.08.2026 (Lucas): Poly-Public-Plays sind erst async da → Box nach dem Laden mit ihnen neu ranken
   // (ersetzt die synchrone Version ohne Poly). So landen Andres Andrade & Co. korrekt oben.

@@ -27,10 +27,12 @@ function render(freigabe) {
     killer: null, freigabe,
   };
   w._renderMainDash();
-  const html = w.document.getElementById('mainDashPanel').innerHTML;
-  const von = html.indexOf('Blind spielbar');
-  assert.ok(von > 0, 'Freigabe-Sektion wird gar nicht gerendert');
-  return html.slice(Math.max(0, von - 300), von + 3200);
+  // 01.09.2026: das Register ist Ebene 1 der Sektion „Was kann ich spielen?". Zugeschnitten
+  // wird per DOM auf genau diese Ebene — nicht per Zeichenabstand (das las beim letzten Umbau
+  // die Nachbarsektion mit) und nicht per Überschrift-Text (der darf sich ändern dürfen).
+  const n = w.document.querySelector('.md-eb-n.e1');
+  assert.ok(n, 'Ebene 1 (Register) wird gar nicht gerendert');
+  return n.closest('.md-eb').outerHTML;
 }
 
 const schublade = (over = {}) => ({
@@ -61,11 +63,7 @@ test('fehlende Datei meldet ❔ UNBEKANNT — niemals „nichts freigegeben"', (
   // Gemeint ist: die Sektion darf es nicht BEHAUPTEN. Der Satz, der die beiden Fälle
   // gegeneinander stellt, muss die Phrase zitieren dürfen — sonst erklärt er nichts.
   // Also wird getrennt geprüft: was im Badge steht, und was der Fließtext behauptet.
-  // nur bis zum Ende DIESER Sektion — dahinter beginnt „Mehrfach gedeckt" mit eigenem Badge.
-  const ab = h.indexOf('Blind spielbar');
-  const bis = h.indexOf('</section>', ab);
-  const sekt = h.slice(ab, bis > 0 ? bis : h.length);
-  const badges = [...sekt.matchAll(/class="md-kl-st"[^>]*>([\s\S]*?)<\/span>/g)].map(m => m[1].trim());
+  const badges = [...h.matchAll(/class="md-eb-st"[^>]*>([\s\S]*?)<\/span>/g)].map(m => m[1].trim());
   assert.deepEqual(badges, ['❔ unbekannt'], 'ohne Datei darf im Badge nur „unbekannt" stehen');
   const behauptung = h.replace(/nicht dasselbe wie [„"»]?nichts freigegeben/g, '');
   assert.ok(!/nichts freigegeben/.test(behauptung), 'ohne Datei darf die Sektion nichts behaupten');
@@ -104,7 +102,10 @@ test('alte Datei ohne Filter-Auskunft meldet ❔ statt etwas zu behaupten', () =
   assert.match(render(alt), /sagt die Datei nicht/);
 });
 
-test('das Register steht VOR „Mehrfach gedeckt"', () => {
+// 01.09.2026 (Lucas: „das wirkt jetzt schon sehr oft quasi redundant"): die drei Fragen stehen
+// jetzt als nummerierte Ebenen in EINER Sektion. Die Reihenfolge ist damit nicht mehr Geschmack,
+// sondern die Aussage der Sektion — von streng nach breit. Deshalb wird sie hier festgehalten.
+test('die drei Ebenen stehen in EINER Sektion, von streng nach breit', () => {
   const dom = new JSDOM('<!DOCTYPE html><body><div id="mainDashPanel"></div></body>',
     { url: 'https://x.com/', runScripts: 'outside-only' });
   const w = dom.window;
@@ -113,7 +114,28 @@ test('das Register steht VOR „Mehrfach gedeckt"', () => {
   w._mdState.data = { liga: null, mls: null, ligaStreaks: null, mlsStreaks: null, betfair: null,
     whales: null, killer: { stufe1: [], stufe2: [], bilanz: null }, freigabe: reg() };
   w._renderMainDash();
-  const html = w.document.getElementById('mainDashPanel').innerHTML;
-  assert.ok(html.indexOf('Blind spielbar') < html.indexOf('Mehrfach gedeckt'),
-    'die Meta-Antwort muss vor den Empfehlungen stehen, nicht danach');
+  const doc = w.document;
+  const sek = [...doc.querySelectorAll('section.md-sp')];
+  assert.equal(sek.length, 1, 'genau EINE Sektion — sonst konkurrieren wieder drei Köpfe');
+  const nummern = [...sek[0].querySelectorAll('.md-eb-n')].map(x => x.textContent.trim());
+  assert.deepEqual(nummern, ['1', '2', '3'], 'Register → Konjunktion → Rangliste, in dieser Folge');
+  // Die Klammer muss den Zusammenhang AUSSPRECHEN — ohne sie sehen drei Antworten aus
+  // wie dreimal dieselbe Frage. Genau das war Lucas' Eindruck.
+  const kopf = sek[0].querySelector('.md-sp-s').textContent;
+  assert.match(kopf, /streng/, 'der Kopf muss sagen, wonach die Ebenen geordnet sind');
+  assert.match(kopf, /Ebene 1/, 'und wozu die oberste Ebene gut ist');
+});
+
+test('jede Ebene sagt, wie sie gebaut ist — Register, Filter, Rangliste', () => {
+  const dom = new JSDOM('<!DOCTYPE html><body><div id="mainDashPanel"></div></body>',
+    { url: 'https://x.com/', runScripts: 'outside-only' });
+  const w = dom.window;
+  w.fetch = () => Promise.resolve({ ok: true, json: () => Promise.resolve(null) });
+  w.eval(readFileSync(MOD, 'utf8'));
+  w._mdState.data = { liga: null, mls: null, ligaStreaks: null, mlsStreaks: null, betfair: null,
+    whales: null, killer: { stufe1: [], stufe2: [], bilanz: null }, freigabe: reg() };
+  w._renderMainDash();
+  const pillen = [...w.document.querySelectorAll('section.md-sp .md-mech')].map(x => x.textContent.trim());
+  assert.deepEqual(pillen, ['Register', 'Filter', 'Rangliste'],
+    'drei verschiedene Bauarten — genau deshalb sind es drei Ebenen und keine Wiederholung');
 });
