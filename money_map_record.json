@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-09-01T15:55:40.388247+00:00",
+"generatedAt": "2026-09-01T16:10:41.966001+00:00",
 "byVerdict": {
 "konsens": {
 "n": 674,
@@ -18,20 +18,20 @@
 "clvLb": 7.0335
 },
 "uneinig": {
-"n": 232,
-"wins": 75,
-"hitRate": 0.3233,
-"polyN": 207,
+"n": 233,
+"wins": 76,
+"hitRate": 0.3262,
+"polyN": 208,
 "polyWins": 59,
-"polyHitRate": 0.285,
+"polyHitRate": 0.2837,
 "pinnN": 118,
 "pinnHitRate": 0.5932,
-"nRoi": 1,
-"roi": 0.17,
-"roiLb": null,
-"nClv": 1,
-"clv": 0.0,
-"clvLb": null
+"nRoi": 2,
+"roi": 0.625,
+"roiLb": -0.1235,
+"nClv": 2,
+"clv": 24.98,
+"clvLb": -16.1121
 },
 "teil": {
 "n": 9,
@@ -431,6 +431,11 @@
 "wins": 2,
 "hitRate": 1.0
 },
+"Turkish 1 Lig": {
+"n": 2,
+"wins": 2,
+"hitRate": 1.0
+},
 "UAE Arabian Gulf League": {
 "n": 2,
 "wins": 1,
@@ -521,11 +526,6 @@
 "wins": 0,
 "hitRate": 0.0
 },
-"Turkish 1 Lig": {
-"n": 1,
-"wins": 1,
-"hitRate": 1.0
-},
 "UEFA (W) Champions League Qualifiers": {
 "n": 1,
 "wins": 1,
@@ -549,15 +549,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 526,
-"wins": 428,
-"hitRate": 0.8137,
-"nRoi": 2,
-"roi": 0.38,
-"roiLb": -0.0313,
-"nClv": 2,
-"clv": 15.9,
-"clvLb": 7.0335
+"n": 527,
+"wins": 429,
+"hitRate": 0.814,
+"nRoi": 3,
+"roi": 0.6133,
+"roiLb": 0.162,
+"nClv": 3,
+"clv": 27.25,
+"clvLb": 7.8882
 },
 "weak": {
 "n": 356,
@@ -572,14 +572,33 @@
 }
 },
 "divergence": {
-"n": 232,
-"betfairWins": 75,
-"betfairRate": 0.3233,
-"polyN": 207,
+"n": 233,
+"betfairWins": 76,
+"betfairRate": 0.3262,
+"polyN": 208,
 "polyWins": 59,
-"polyRate": 0.285
+"polyRate": 0.2837
 },
 "recent": [
+{
+"matchId": "35991046",
+"home": "Bandirmaspor",
+"away": "Antalyaspor",
+"league": "Turkish 1 Lig",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Antalyaspor",
+"polySide": "home",
+"winner": "away",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-09-01T13:00:00Z",
+"settledAt": "2026-09-01T16:10:41.792818+00:00"
+},
 {
 "matchId": "36015841",
 "home": "Dalian Yingbo",
@@ -1320,37 +1339,18 @@
 ],
 "kickoff": "2026-08-30T19:30:00Z",
 "settledAt": "2026-08-30T21:21:03.937854+00:00"
-},
-{
-"matchId": "35965458",
-"home": "Cambuur Leeuwarden",
-"away": "FC Twente",
-"league": "Dutch Eredivisie",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "FC Twente",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-4
-],
-"kickoff": "2026-08-30T18:00:00Z",
-"settledAt": "2026-08-30T21:06:09.517990+00:00"
 }
 ],
 "global": {
-"n": 915,
-"wins": 629,
-"hitRate": 0.6874,
-"nRoi": 3,
-"roi": 0.31,
-"roiLb": 0.0461,
-"nClv": 3,
-"clv": 10.6,
-"clvLb": 0.4897
+"n": 916,
+"wins": 630,
+"hitRate": 0.6878,
+"nRoi": 4,
+"roi": 0.5025,
+"roiLb": 0.135,
+"nClv": 4,
+"clv": 20.44,
+"clvLb": 2.7448
 },
-"pending": 12
+"pending": 11
 }
