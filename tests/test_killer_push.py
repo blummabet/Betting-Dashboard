@@ -135,13 +135,27 @@ class TestEigenesBuch:
 
 class TestSendeFehler:
     """Ein fehlgeschlagener Send darf weder als gesendet gelten noch im Buch stehen —
-    sonst misst der Channel Zeilen, die nie jemand gesehen hat."""
+    sonst misst der Channel Zeilen, die nie jemand gesehen hat.
+
+    ⚠️ 01.09.2026: Diese beiden Tests rufen `KP.main()` auf, und main() liest die ECHTE Uhr.
+    Ein Fixture mit fest verdrahtetem Anpfiff (2026-09-01 13:30) lief deshalb nur bis 13:30 und
+    war danach „angepfiffen" → keine Auswahl mehr, Test rot. Klassische Zeitbombe
+    ([[feedback_injected_now_not_wallclock]]). Der Anpfiff wird hier deshalb aus der echten
+    Gegenwart gebaut — nur DIESE Tests brauchen das, alle anderen prüfen reine Funktionen mit
+    injiziertem `now`."""
+
+    @staticmethod
+    def _echte_zeile(mid="a"):
+        jetzt = datetime.now(timezone.utc)
+        z = zeile(mid)
+        z["kickoff"] = (jetzt + timedelta(minutes=90)).isoformat().replace("+00:00", "Z")
+        return z
 
     def test_fehlgeschlagener_send_vermerkt_nichts(self, tmp_path, monkeypatch):
         monkeypatch.setattr(KP, "SEEN_FILE", tmp_path / "seen.json")
         monkeypatch.setattr(KP, "LEDGER_FILE", tmp_path / "led.json")
         monkeypatch.setattr(KP, "BASE", tmp_path)
-        (tmp_path / "killer.json").write_text(json.dumps(kd(zeile("a"))), encoding="utf-8")
+        (tmp_path / "killer.json").write_text(json.dumps(kd(self._echte_zeile())), encoding="utf-8")
         monkeypatch.setattr(KP.TG, "send_trades_message", lambda *a, **k: False)
         monkeypatch.setattr(KP.killer, "bilanz", lambda *a, **k: {"gesamt": {"n": 0}})
         monkeypatch.delenv("DRY_RUN", raising=False)
@@ -153,7 +167,7 @@ class TestSendeFehler:
         monkeypatch.setattr(KP, "SEEN_FILE", tmp_path / "seen.json")
         monkeypatch.setattr(KP, "LEDGER_FILE", tmp_path / "led.json")
         monkeypatch.setattr(KP, "BASE", tmp_path)
-        (tmp_path / "killer.json").write_text(json.dumps(kd(zeile("a"))), encoding="utf-8")
+        (tmp_path / "killer.json").write_text(json.dumps(kd(self._echte_zeile())), encoding="utf-8")
         monkeypatch.setattr(KP.TG, "send_trades_message", lambda *a, **k: True)
         monkeypatch.setattr(KP.killer, "bilanz", lambda *a, **k: {"gesamt": {"n": 0}})
         monkeypatch.delenv("DRY_RUN", raising=False)
