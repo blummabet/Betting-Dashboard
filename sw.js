@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v199';   // 01.09.2026: Uebersicht — Lesebreite gedeckelt, Spiele ab 1040px zweispaltig; Money-Map-Rendite.
+const VERSION = 'cocobet-v200';   // 01.09.2026: Conviction-Kalibrierung beobachtet nur noch (PW_CALIB_AKTIV=false) — out of sample anti-praediktiv.
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

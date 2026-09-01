@@ -2122,6 +2122,38 @@ function _pwComboBaselineRoi(){
 // und weiter gewichten, Signale nicht ganz raus"). Verschiebt conv sanft Richtung realer Mix-Performance,
 // gewichtet nach Stichprobe (conf = n/(n+25) → kleine n zaehlen wenig, kein Overfit). Asymmetrisch
 // geklammert: mehr Abwertung (-3) als Boost (+2) erlaubt (Risiko-vorsichtig). Gibt {conv,reason,tag}.
+// ⚠️ 01.09.2026 — DER LERNER BEOBACHTET NUR NOCH. Lucas: „schau dir das mal an, ob der Lerneffekt
+// dort eh greift." Antwort nach Messung: er greift (32% aller Plays wurden angefasst), aber er
+// traegt nicht. Walk-Forward ueber `poly_shortlist_track` (jeder Play lernt nur aus seiner eigenen
+// Vergangenheit), ab sechs verschiedenen Startpunkten:
+//
+//     ab Play  ↑ hochgestuft   ↓ abgestuft
+//        100    +1,4% (n92)     +8,4% (n53)
+//        150    −1,7% (n72)     +8,4% (n39)
+//        200    +4,7% (n59)     +6,4% (n38)
+//        250    +9,4% (n53)    +12,3% (n30)
+//        300   +10,2% (n42)    +25,6% (n21)
+//        350    +6,7% (n36)    +38,7% (n10)
+//
+// SECHS von sechs: die abgestuften Plays schlagen die hochgestuften. Der Grund ist nicht, dass die
+// Eimer nichts wissen — ihre REIHENFOLGE haelt ueber die Zeit. Was nicht haelt, ist die GROESSE:
+//     bf+money  +52,2% → +9,2%   ·  sharp  −12,3% → −2,5%
+// `bf+money` bekam auf Basis von +52% zwei Konviktionsstufen; der wahre Vorwaertswert war +9%,
+// richtig waeren ~0,2 Stufen gewesen. Die Formel bemass sich am rohen Punktschaetzer, und
+// conf=n/(n+25) daempft nach STICHPROBENGROESSE, nicht danach, wie viel der beobachteten Kante
+// Rauschen ist — bei n=60 daempft sie auf 0,7, also praktisch gar nicht.
+//
+// Die naheliegende Reparatur (Untergrenze statt Punktschaetzer) wurde mitgetestet und hilft NICHT:
+// dann stuft der Lerner 318 von 328 Plays ab, weil eine Untergrenze auf verrauschtem ROI fast immer
+// unter der Basis liegt. 0/5 in beiden Varianten.
+//
+// ⭐ Deshalb dieselbe Doktrin wie bei `wertVsPinn` in killer.py: MITSCHREIBEN, NICHT FILTERN.
+// Das Lern-Board bleibt vollstaendig — es ist informativ und zeigt, welcher Mix wie laeuft. Aber
+// die Conviction wird nicht mehr bewegt, solange nicht belegt ist, dass es hilft. `reason` und
+// `tag` bleiben erhalten, damit die Oberflaeche weiter anzeigen KANN, was der Lerner denken wuerde.
+// Wiederholbar messen: scripts/calib_walkforward.py — vor jedem Wiedereinschalten laufen lassen.
+const PW_CALIB_AKTIV = false;   // auf true erst, wenn der Walk-Forward „hoch schlaegt runter" zeigt
+
 function _pwCalibConv(sigs, conv){
   const cb=_pwComboFor(sigs);
   if(!cb || cb.n<8) return {conv, reason:null, tag:null};
@@ -2131,10 +2163,13 @@ function _pwCalibConv(sigs, conv){
   const nc=Math.max(1, Math.min(10, Math.round(conv+adj)));
   if(nc===conv) return {conv, reason:null, tag:null};
   const up=nc>conv;
-  return { conv:nc,
-    reason:(up?'📈':'📉')+' Signal-Mix real '+Math.round(cb.roi*100)+'% ROI (n'+(cb.nRoh||Math.round(cb.n))
-          +(cb.nAlt?', '+cb.nAlt+' aus alter Engine':'')+') → '+(up?'+':'')+(nc-conv)+' Konv',
-    tag: up?'calib+':'calib-' };
+  const grund=(up?'📈':'📉')+' Signal-Mix real '+Math.round(cb.roi*100)+'% ROI (n'+(cb.nRoh||Math.round(cb.n))
+          +(cb.nAlt?', '+cb.nAlt+' aus alter Engine':'')+') → '+(up?'+':'')+(nc-conv)+' Konv';
+  // Beobachtet, aber nicht angewendet: conv bleibt, was die Engine gerechnet hat. Der Hinweis
+  // wird als `hinweis` mitgegeben — kein `tag`, damit calib+/calib- nicht in die Signal-Eimer,
+  // ins Papier-Depot oder ins Public-Gate sickert.
+  if(!PW_CALIB_AKTIV) return {conv, reason:null, tag:null, hinweis:grund, wuerde:nc};
+  return { conv:nc, reason:grund, tag: up?'calib+':'calib-' };
 }
 
 function _pwBfEur(v){ const n=Number(v)||0; return n>=1e6?'€'+(n/1e6).toFixed(1)+'M':n>=1e3?'€'+Math.round(n/1e3)+'K':'€'+Math.round(n); }

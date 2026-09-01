@@ -112,15 +112,29 @@ test('Ohne Track-Daten kein Combo-Effekt (graceful)', () => {
 });
 
 // 21.08.2026 (Lucas): kontinuierliche/symmetrische Variante — conv sanft in BEIDE Richtungen.
-test('_pwCalibConv: sharp-allein wird abgewertet, money+sharp aufgewertet', () => {
+// ⚠️ 01.09.2026 SEMANTIK GEWANDERT: Der Walk-Forward (scripts/calib_walkforward.py) zeigte über
+// sechs Startpunkte, dass die ABGESTUFTEN Plays die hochgestuften schlagen — der Lerner ist out of
+// sample anti-prädiktiv. Seither steht `PW_CALIB_AKTIV=false`: er beobachtet, bewegt aber kein
+// `conv` mehr. Die ABSICHT dieses Tests bleibt gültig und wird weiter geprüft — money+sharp muss
+// besser dastehen als sharp-allein —, sie steht jetzt nur in `wuerde` statt in `conv`.
+test('_pwCalibConv: die Rangfolge bleibt sichtbar, wird aber nicht mehr angewendet', () => {
   const w = load(synth());
   const sharp = w._pwCalibConv(['sharp'], 6);
   const ms    = w._pwCalibConv(['money','sharp'], 6);
-  assert.ok(sharp.conv <= 6, `sharp-allein sollte nicht hochgehen, war ${sharp.conv}`);
-  assert.ok(ms.conv >= 6, `money+sharp sollte nicht runtergehen, war ${ms.conv}`);
-  assert.ok(ms.conv > sharp.conv, 'money+sharp muss hoehere Konviktion bekommen als sharp-allein');
-  if (sharp.conv < 6) { assert.match(sharp.reason, /📉/); assert.equal(sharp.tag, 'calib-'); }
-  if (ms.conv > 6)    { assert.match(ms.reason, /📈/);    assert.equal(ms.tag, 'calib+'); }
+
+  // 1) Angewendet wird nichts mehr.
+  assert.equal(sharp.conv, 6, 'conv bleibt unveraendert');
+  assert.equal(ms.conv, 6, 'conv bleibt unveraendert');
+  assert.equal(sharp.tag, null, 'kein calib--Tag — er wuerde in die Signal-Eimer zurueckwirken');
+  assert.equal(ms.tag, null, 'kein calib+-Tag');
+
+  // 2) Die Beobachtung bleibt — und traegt weiter dieselbe Rangfolge wie vorher.
+  assert.ok(sharp.wuerde <= 6, `sharp-allein wuerde nicht hochgehen, war ${sharp.wuerde}`);
+  assert.ok(ms.wuerde >= 6, `money+sharp wuerde nicht runtergehen, war ${ms.wuerde}`);
+  assert.ok(ms.wuerde > sharp.wuerde,
+    'money+sharp muss in der Beobachtung hoeher stehen als sharp-allein');
+  if (sharp.wuerde < 6) assert.match(sharp.hinweis, /📉/);
+  if (ms.wuerde > 6)    assert.match(ms.hinweis, /📈/);
 });
 
 test('_pwCalibConv: bleibt in [1..10] und ist bei duenner Stichprobe zahm', () => {
@@ -129,10 +143,11 @@ test('_pwCalibConv: bleibt in [1..10] und ist bei duenner Stichprobe zahm', () =
     const r = w._pwCalibConv(['sharp'], c);
     assert.ok(r.conv >= 1 && r.conv <= 10);
   }
-  // unbekannter/duenner Mix → keine Aenderung
+  // unbekannter/duenner Mix → keine Aenderung und auch keine Beobachtung
   const thin = w._pwCalibConv(['pinn'], 7);   // pinn-allein kommt im synthetischen Track nicht vor
   assert.equal(thin.conv, 7);
   assert.equal(thin.reason, null);
+  assert.equal(thin.hinweis, undefined, 'unter n=8 wird gar nichts behauptet');
 });
 
 test('_pwCalibConv: ohne Track-Daten unveraendert', () => {
