@@ -563,9 +563,18 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "Letzter Live-Scan vor 5.7h (Takt: 15 Min) — der Job startet nicht. Runner belegt? Workflow deaktiviert?"
+        "Letzter Live-Scan vor 1.8h (Takt: 15 Min) — der Job startet nicht. Runner belegt? Workflow deaktiviert?"
       ],
       "note": "Erwartet alle 15 Min; Alarm ab 90 Min. Live-Preise sind die Schluss-Referenz fuer den CLV — fehlen sie, misst der Nordstern nicht."
+    },
+    {
+      "id": "poly_vorfenster",
+      "label": "Poly-Vorfenster liefert Anteile",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "7 von 7 Vor-Kandidaten mit Anteilen (7 Calls) · 0 ohne Geld-Split · 0 ueber Budget · 0 nachgelegt. Leeres Fenster ist kein Fehler; Kandidaten ohne einen einzigen Anteil schon."
     },
     {
       "id": "killer_push_buch",
@@ -587,5 +596,5 @@
     }
   ],
   "nFail": 4,
-  "generatedAt": "2026-09-01T12:36:31.397075+00:00"
+  "generatedAt": "2026-09-01T21:46:05.562106+00:00"
 }
