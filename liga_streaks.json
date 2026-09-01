@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "liga",
-    "generatedAt": "2026-09-01T11:34:03.283387+00:00",
+    "generatedAt": "2026-09-01T12:44:20.320444+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -1578,7 +1578,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 67,
-        "label": "Eigen 67% + Gegner 73% → 69%"
+        "label": "Eigen 67% + Gegner 73% → 69% · Signale bestätigen"
       },
       "ratePct": 67,
       "seq": [
@@ -1603,7 +1603,19 @@
         "oppRatePct": 73
       },
       "oppSupportPct": 73,
-      "matchupPct": 69
+      "matchupPct": 69,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 3,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "xg_strength",
+          "streak_momentum"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "34",
@@ -3318,15 +3330,14 @@
       "matchupPct": 59,
       "signalInfo": {
         "state": "confirm",
-        "count": 5,
+        "count": 4,
         "conviction": 6,
         "names": [
           "form_trend",
           "h2h_pattern",
           "xg_strength",
           "chance_creation",
-          "freshness_leg",
-          "move_following"
+          "freshness_leg"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -6835,7 +6846,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 60,
-        "label": "Eigen 60% + Gegner 60% → 60%"
+        "label": "Eigen 60% + Gegner 60% → 60% · Signale bestätigen"
       },
       "ratePct": 60,
       "seq": [
@@ -6860,7 +6871,19 @@
         "oppRatePct": 60
       },
       "oppSupportPct": 60,
-      "matchupPct": 60
+      "matchupPct": 60,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 3,
+        "conviction": 3,
+        "names": [
+          "public_static_bias",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "63",
@@ -7630,15 +7653,14 @@
       "matchupPct": 39,
       "signalInfo": {
         "state": "confirm",
-        "count": 5,
+        "count": 4,
         "conviction": 6,
         "names": [
           "form_trend",
           "h2h_pattern",
           "xg_strength",
           "chance_creation",
-          "freshness_leg",
-          "move_following"
+          "freshness_leg"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -10237,7 +10259,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 73,
-        "label": "Eigen 73% + Gegner 67% → 71%"
+        "label": "Eigen 73% + Gegner 67% → 71% · Signale bestätigen"
       },
       "ratePct": 73,
       "seq": [
@@ -10262,7 +10284,19 @@
         "oppRatePct": 67
       },
       "oppSupportPct": 67,
-      "matchupPct": 71
+      "matchupPct": 71,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 3,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "xg_strength",
+          "streak_momentum"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "35",
@@ -10359,7 +10393,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 60,
-        "label": "Eigen 60% + Gegner 73% → 65%"
+        "label": "Eigen 60% + Gegner 73% → 65% · Signale bestätigen"
       },
       "ratePct": 60,
       "seq": [
@@ -10380,7 +10414,19 @@
         "oppRatePct": 73
       },
       "oppSupportPct": 73,
-      "matchupPct": 65
+      "matchupPct": 65,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 3,
+        "conviction": 3,
+        "names": [
+          "public_static_bias",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "40",
@@ -14445,43 +14491,6 @@
       "matchupPct": 58
     },
     {
-      "teamId": "1298",
-      "team": "Le Mans",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1298.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "FRA",
-      "leagueName": "Ligue 1",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 4,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 75,
-        "label": "Eigen 75% + Gegner 27% → 56%"
-      },
-      "ratePct": 75,
-      "seq": [
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 0,
-      "next": {
-        "oppId": "84",
-        "oppName": "Nice",
-        "atHome": false,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T18:45:00+00:00",
-        "oppRatePct": 73
-      },
-      "oppSupportPct": 27,
-      "matchupPct": 56
-    },
-    {
       "teamId": "1579",
       "team": "Monza",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1579.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -14885,7 +14894,7 @@
       "continuation": {
         "state": "neutral",
         "ratePct": 73,
-        "label": "Eigen 73% + Gegner 25% → 54%"
+        "label": "Eigen 73% + Gegner 38% → 59%"
       },
       "ratePct": 73,
       "seq": [
@@ -14903,10 +14912,10 @@
         "atHome": true,
         "date": "2026-09-05",
         "kickoff": "2026-09-05T18:45:00+00:00",
-        "oppRatePct": 25
+        "oppRatePct": 38
       },
-      "oppSupportPct": 25,
-      "matchupPct": 54
+      "oppSupportPct": 38,
+      "matchupPct": 59
     },
     {
       "teamId": "91",
@@ -15821,15 +15830,14 @@
       "matchupPct": 45,
       "signalInfo": {
         "state": "contradict",
-        "count": 5,
+        "count": 4,
         "conviction": 6,
         "names": [
           "form_trend",
           "h2h_pattern",
           "xg_strength",
           "chance_creation",
-          "freshness_leg",
-          "move_following"
+          "freshness_leg"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -17053,7 +17061,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 73,
-        "label": "Eigen 73% + Gegner 60% → 68%"
+        "label": "Eigen 73% + Gegner 60% → 68% · Signale bestätigen"
       },
       "ratePct": 73,
       "seq": [
@@ -17077,7 +17085,72 @@
         "oppRatePct": 60
       },
       "oppSupportPct": 60,
-      "matchupPct": 68
+      "matchupPct": 68,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 3,
+        "conviction": 3,
+        "names": [
+          "public_static_bias",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength"
+        ],
+        "market": "Über 2.5 Tore"
+      }
+    },
+    {
+      "teamId": "57",
+      "team": "Ipswich",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/57.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 40,
+        "label": "Eigen 40% + Gegner 60% → 48% · Signale bestätigen"
+      },
+      "ratePct": 40,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 5,
+      "next": {
+        "oppId": "40",
+        "oppName": "Liverpool",
+        "atHome": true,
+        "date": "2026-09-04",
+        "kickoff": "2026-09-04T19:00:00+00:00",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 48,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 3,
+        "conviction": 3,
+        "names": [
+          "public_static_bias",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "64",
@@ -19816,47 +19889,6 @@
       "flag": "<img src=\"https://media.api-sports.io/football/teams/57.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ENG",
       "leagueName": "Premier League",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 40,
-        "label": "Eigen 40% + Gegner 60% → 48%"
-      },
-      "ratePct": 40,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 5,
-      "next": {
-        "oppId": "40",
-        "oppName": "Liverpool",
-        "atHome": true,
-        "date": "2026-09-04",
-        "kickoff": "2026-09-04T19:00:00+00:00",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 48
-    },
-    {
-      "teamId": "57",
-      "team": "Ipswich",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/57.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
       "type": "bttsYes",
       "market": "Beide Teams treffen",
       "length": 3,
@@ -20498,6 +20530,43 @@
       },
       "oppSupportPct": 53,
       "matchupPct": 45
+    },
+    {
+      "teamId": "1298",
+      "team": "Le Mans",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1298.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "FRA",
+      "leagueName": "Ligue 1",
+      "type": "cards",
+      "market": "Über 3,5 Karten",
+      "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 50,
+        "label": "Eigen 50% + Gegner 46% → 48%"
+      },
+      "ratePct": 50,
+      "seq": [
+        true,
+        true,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 1,
+      "next": {
+        "oppId": "84",
+        "oppName": "Nice",
+        "atHome": false,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T18:45:00+00:00",
+        "oppRatePct": 46
+      },
+      "oppSupportPct": 46,
+      "matchupPct": 48
     },
     {
       "teamId": "36",

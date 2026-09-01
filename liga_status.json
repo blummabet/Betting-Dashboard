@@ -351,9 +351,10 @@
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
       "ok": false,
-      "nFail": 2,
+      "nFail": 3,
       "failures": [
-        "185-160 Heimsieg @2.75: sichere Linie Doppelte Chance — 1X @1.809 verfügbar (≥1.35), nicht abgeleitet",
+        "34-35 Unter 2.5 Tore @2.25: sichere Linie Unter 3.5 Tore @1.57 verfügbar (≥1.35), nicht abgeleitet",
+        "185-160 Heimsieg @2.75: sichere Linie Doppelte Chance — 1X @1.815 verfügbar (≥1.35), nicht abgeleitet",
         "164-169 Heimsieg @2.2: sichere Linie Doppelte Chance — 1X @1.35 verfügbar (≥1.35), nicht abgeleitet"
       ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
@@ -544,12 +545,19 @@
       "id": "live_scan_laeuft",
       "label": "Poly-Live-Scan taktet",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "Letzter Live-Scan vor 4.9h (Takt: 15 Min) — der Job startet nicht. Runner belegt? Workflow deaktiviert?"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Erwartet alle 15 Min; Alarm ab 90 Min. Live-Preise sind die Schluss-Referenz fuer den CLV — fehlen sie, misst der Nordstern nicht."
+    },
+    {
+      "id": "killer_push_buch",
+      "label": "Trades-Push fuehrt sein Buch",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Was gepusht wurde, muss abgerechnet werden — sonst weiss niemand, ob der Channel traegt. Gerechnet wird zum pushPreis, nicht zum Haltepreis."
     },
     {
       "id": "card_link_alive",
@@ -561,6 +569,6 @@
       "note": "0 von 0 ist ein ruhiger Tag. 0 von N ist ein Bruch."
     }
   ],
-  "nFail": 4,
-  "generatedAt": "2026-09-01T11:45:21.476267+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-09-01T12:54:22.749958+00:00"
 }
