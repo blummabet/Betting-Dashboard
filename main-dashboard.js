@@ -295,8 +295,19 @@
       '.md-kl-grp{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.05em;color:var(--mi3);margin:12px 0 2px;display:flex;align-items:center;gap:7px;}',
       '.md-kl-grp i{height:1px;flex:1;background:var(--mln);font-style:normal;}',
       '.md-kl-row{padding:11px 0;border-top:1px solid var(--mln);}',
+      // Die EBENEN bleiben untereinander (die Reihenfolge streng→breit ist die Aussage), aber die
+      // SPIELE innerhalb einer Ebene sind untereinander gleichrangig — die duerfen nebeneinander.
+      // Erst ab 1040px: darunter passt das Deckungs-Profil (sieben feste Bloecke) nicht in eine
+      // halbe Spalte, und dann zaehlt man keine Bloecke mehr, sondern liest Text.
+      '@media(min-width:1040px){',
+      '  .md-kl-paar{display:grid;grid-template-columns:1fr 1fr;gap:0 26px;}',
+      '  .md-kl-paar>.md-kl-row:nth-child(-n+2){border-top:0;}',
+      '  .md-jz-paar{display:grid;grid-template-columns:1fr 1fr;gap:0 26px;}',
+      '  .md-jz-paar>.md-jz-row3:nth-child(-n+2){border-top:0;}',
+      '}',
       '.md-kl-l1{display:flex;align-items:center;gap:7px;}',
-      '.md-kl-nm{flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;font-weight:600;color:var(--mi2);}',
+      '.md-kl-nm{flex:0 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-size:12px;font-weight:600;color:var(--mi2);}',
+      '.md-kl-l1>.md-kl-halt,.md-kl-l1>.md-kl-live{margin-left:auto;}',
       '.md-kl-pick{font-size:16px;font-weight:800;color:var(--mi);margin-top:4px;line-height:1.2;letter-spacing:-.01em;}',
       '.md-kl-pick b{color:#4cc2ff;}',
       '.md-kl-pick .q{color:var(--mi3);font-weight:700;font-size:12px;}',
@@ -330,7 +341,15 @@
       '.md-kl-bz{display:flex;align-items:center;gap:8px;font-size:11px;padding:3px 0;border-top:1px solid var(--mln);}',
       '.md-kl-bz:first-child{border-top:0;}',
       '.md-kl-bn{font-weight:700;color:var(--mi);min-width:0;flex:0 1 auto;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
-      '.md-kl-bl{color:var(--mi3);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+      // 01.09.2026 (Lucas: braucht das am Desktop die gesamte Breite?). Nein — und schuld war
+      // nicht das Layout der Ebenen, sondern dieses flex:1. Die mittlere Zelle frass allen
+      // Restplatz und drueckte ROI/CLV an den aeussersten Rand: bei 1200px wanderte das Auge die
+      // volle Breite, um „Mix bf+money" mit „+29%" zusammenzubringen. Jetzt waechst die Zeile nur
+      // bis zu einem Maass; was uebrig bleibt, bleibt leer — Leerraum rechts ist billiger als eine
+      // Zeile, die man nicht mehr in einem Blick zusammenbekommt.
+      '.md-kl-bl{color:var(--mi3);flex:0 1 auto;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
+      '.md-kl-bz{max-width:820px;}',
+      '.md-kl-bz>.md-kl-bo{margin-left:auto;}',
       '.md-kl-bo{font-family:"JetBrains Mono",monospace;color:var(--mi2);white-space:nowrap;}',
       '.md-kl-bs{font-size:9px;font-weight:800;color:var(--mi3);}',
       '.mpc-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;}',
@@ -1811,7 +1830,9 @@
     };
     var grp = function (titel, arr) {
       if (!arr.length) return '';
-      return '<div class="md-kl-grp">' + titel + '<i></i></div>' + arr.map(row).join('');
+      // .md-kl-paar wird erst ab 1040px zum Zweispalter (s. CSS); darunter aendert der Wrapper nichts.
+      return '<div class="md-kl-grp">' + titel + '<i></i></div>'
+        + '<div class="md-kl-paar">' + arr.map(row).join('') + '</div>';
     };
     // Die Fusszeile sagt, was DIESE Ebene beitraegt — nicht noch einmal, ob freigegeben ist.
     var fuss = 'Hier steht, wo heute alle Geld-Bedingungen gleichzeitig anliegen. Ob man einer solchen '
@@ -2009,7 +2030,7 @@
     return '<div id="mdJetztBox">' + _mdEbene(3, 'Was ist gerade das Stärkste?', 'Rangliste', null,
       'Disjunktion: das stärkste Einzelsignal über alle Flächen. EINE Quelle genügt — deshalb steht hier auch an einem schwachen Tag etwas.',
       'bestes Einzelsignal je Fläche — eine Quelle genügt, kein UND · <b>nicht</b> geprüft, nur sortiert',
-      null, body) + '</div>';
+      null, '<div class="md-jz-paar">' + body + '</div>') + '</div>';
   }
   // ── Die Klammer: „Was kann ich spielen?" ──────────────────────────────────────────────
   // 01.09.2026, Lucas: „jetzt haben wir blindspielbar, mehrfach gedeckt darunter und top wetten

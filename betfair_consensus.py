@@ -525,8 +525,15 @@ def money_map_row(g, pf):
     row = {"matchId": g.get("matchId"), "home": g.get("home"), "away": g.get("away"),
            "league": g.get("league"), "live": g.get("live"), "kickoff": g.get("kickoff"),
            "verdict": g.get("verdict"),
+           # 01.09.2026 (Lucas: „was macht das besser als die Money Map?"). Beim Vergleich fiel auf:
+           # die Map schrieb `moneyWin` mit, aber NIE eine Quote. Ihre 81% Trefferquote bei „stark"
+           # sagen deshalb nichts ueber Geld — das Geld liegt auf Favoriten, eine hohe Trefferquote
+           # ist dort der Normalfall. Ohne Preis ist die Map nicht widerlegbar, und was nicht
+           # widerlegbar ist, belegt auch nichts. `moneyOdd` gab es in build_game() bereits, sie kam
+           # nur nie hier an.
            "betfair": ({"side": bf_side, "name": g.get("moneyName"),
-                        "sharePct": g.get("moneySharePct"), "eur": g.get("totVol")} if bf_side else None),
+                        "sharePct": g.get("moneySharePct"), "eur": g.get("totVol"),
+                        "odd": g.get("moneyOdd")} if bf_side else None),
            "poly": ({"side": pf["side"], "name": pf["name"], "sharePct": pf["sharePct"], "usd": pf["usd"],
                      "src": pf.get("src")}
                     if pf else None),
@@ -587,9 +594,23 @@ def update_mm_ledger(prev, rows, now=None, keep=2000):
         if e and e.get("status") not in (None, "pending"):
             continue                              # schon abgerechnet -> nicht ueberschreiben
         bf, pinn, poly = r.get("betfair") or {}, r.get("pinn") or {}, r.get("poly") or {}
+        # ZWEI Preise, und zwar bewusst:
+        #   moneyOddFirst — die Quote, als die Zeile ZUERST auftauchte. Nur die haette man nehmen
+        #                   koennen; sie ist die ehrliche Basis fuers ROI (wie killer.haltePreis).
+        #   moneyOddLast  — die zuletzt gesehene Quote vor Anpfiff. Erst sie macht CLV moeglich,
+        #                   und CLV ist bei kleinem n belastbarer als ROI.
+        # Die erste wird NIE ueberschrieben, die zweite bei jedem Lauf.
+        _odd = bf.get("odd")
+        _first = (e or {}).get("moneyOddFirst")
+        _alte_seite = (e or {}).get("moneySide")
+        if _alte_seite is not None and _alte_seite != bf.get("side"):
+            _first = None                          # Seite gewechselt -> das ist eine ANDERE Wette,
+                                                   # der alte Einstiegspreis gilt dafuer nicht
         led[mid] = {"matchId": mid, "home": r.get("home"), "away": r.get("away"), "league": r.get("league"),
                     "kickoff": r.get("kickoff"), "verdict": r.get("verdict"), "nSources": r.get("nSources"),
                     "moneySide": bf.get("side"), "moneyName": bf.get("name"),
+                    "moneyOddFirst": _first if _first is not None else _odd,
+                    "moneyOddLast": _odd if _odd is not None else (e or {}).get("moneyOddLast"),
                     "pinnFav": pinn.get("fav"), "polySide": poly.get("side"), "mmStrong": r.get("mmStrong"),
                     "firstSeen": (e or {}).get("firstSeen") or now, "updatedAt": now, "status": "pending"}
     return list(led.values())[-keep:]
@@ -683,13 +704,32 @@ def mm_summary(ledger, now=None, recent_keep=40):
     polySide vs Endstand berechnet -> funktioniert auch fuer schon abgerechnete Alt-Zeilen. REIN/testbar."""
     buckets, leagues, strength = {}, {}, {}
     gn = gw = 0
+    # 01.09.2026: Trefferquote UND Rendite — und beide streng getrennt gezaehlt. Zeilen aus der Zeit
+    # vor dem 01.09. tragen keine Quote; sie zaehlen in die Trefferquote, aber NICHT in den ROI.
+    # Deshalb ein eigenes `nRoi` je Eimer: eine Rendite aus 12 von 900 Zeilen darf nicht aussehen
+    # wie eine aus 900.
+    grend, gclv = [], []
+
+    def _leer():
+        return {"n": 0, "wins": 0, "polyN": 0, "polyWins": 0, "pinnN": 0, "pinnWins": 0,
+                "rend": [], "clv": []}
+
+    def _geld(b, e):
+        """Rendite zum EINSTIEGSPREIS (nur der war nehmbar) und CLV Einstieg→letzte Quote."""
+        o1, o2 = e.get("moneyOddFirst"), e.get("moneyOddLast")
+        if isinstance(o1, (int, float)) and o1 > 1:
+            b["rend"].append((o1 - 1.0) if e.get("moneyWin") else -1.0)
+            if isinstance(o2, (int, float)) and o2 > 1:
+                b["clv"].append(round((1.0 / o2 - 1.0 / o1) * 100.0, 2))
+
     settled = [e for e in (ledger or []) if isinstance(e, dict) and e.get("status") in ("won", "lost")]
     for e in settled:
         w = e.get("winner")
         v = e.get("verdict") or "?"
-        b = buckets.setdefault(v, {"n": 0, "wins": 0, "polyN": 0, "polyWins": 0, "pinnN": 0, "pinnWins": 0})
+        b = buckets.setdefault(v, _leer())
         b["n"] += 1
         b["wins"] += 1 if e.get("moneyWin") else 0
+        _geld(b, e)
         ps = e.get("polySide")
         if ps and w:
             b["polyN"] += 1
@@ -702,22 +742,53 @@ def mm_summary(ledger, now=None, recent_keep=40):
         L["wins"] += 1 if e.get("moneyWin") else 0
         st = e.get("mmStrong")
         if st is not None:
-            SB = strength.setdefault(bool(st), {"n": 0, "wins": 0})
+            SB = strength.setdefault(bool(st), {"n": 0, "wins": 0, "rend": [], "clv": []})
             SB["n"] += 1
             SB["wins"] += 1 if e.get("moneyWin") else 0
+            _geld(SB, e)
         gn += 1
         gw += 1 if e.get("moneyWin") else 0
+        o1, o2 = e.get("moneyOddFirst"), e.get("moneyOddLast")
+        if isinstance(o1, (int, float)) and o1 > 1:
+            grend.append((o1 - 1.0) if e.get("moneyWin") else -1.0)
+            if isinstance(o2, (int, float)) and o2 > 1:
+                gclv.append(round((1.0 / o2 - 1.0 / o1) * 100.0, 2))
 
     def _rate(x, n):
         return round(x / n, 4) if n else None
 
+    def _ug(v, z=1.645):
+        """Einseitige 95%-Untergrenze. Derselbe Richter wie im Freigabe-Register und im Killer —
+        ein Punktschaetzer ist kein Beleg ([[feedback_punktschaetzer_kein_beleg]])."""
+        n = len(v)
+        if n < 2:
+            return None
+        m = sum(v) / n
+        var = sum((x - m) ** 2 for x in v) / (n - 1)
+        return round(m - z * (var ** 0.5) / (n ** 0.5), 4)
+
+    def _geldfin(b):
+        r, c = b.get("rend") or [], b.get("clv") or []
+        return {"nRoi": len(r),
+                "roi": round(sum(r) / len(r), 4) if r else None,
+                "roiLb": _ug(r),
+                "nClv": len(c),
+                "clv": round(sum(c) / len(c), 2) if c else None,
+                "clvLb": _ug(c)}
+
     def _fin(b):
-        return {"n": b["n"], "wins": b["wins"], "hitRate": _rate(b["wins"], b["n"]),
-                "polyN": b["polyN"], "polyWins": b["polyWins"], "polyHitRate": _rate(b["polyWins"], b["polyN"]),
-                "pinnN": b["pinnN"], "pinnHitRate": _rate(b["pinnWins"], b["pinnN"])}
+        d = {"n": b["n"], "wins": b["wins"], "hitRate": _rate(b["wins"], b["n"]),
+             "polyN": b["polyN"], "polyWins": b["polyWins"], "polyHitRate": _rate(b["polyWins"], b["polyN"]),
+             "pinnN": b["pinnN"], "pinnHitRate": _rate(b["pinnWins"], b["pinnN"])}
+        d.update(_geldfin(b))
+        return d
 
     def _sfin(s):
-        return {"n": s["n"], "wins": s["wins"], "hitRate": _rate(s["wins"], s["n"])} if s else None
+        if not s:
+            return None
+        d = {"n": s["n"], "wins": s["wins"], "hitRate": _rate(s["wins"], s["n"])}
+        d.update(_geldfin(s))
+        return d
 
     dv = buckets.get("uneinig") or {"n": 0, "wins": 0, "polyN": 0, "polyWins": 0}
     divergence = {"n": dv["n"], "betfairWins": dv["wins"], "betfairRate": _rate(dv["wins"], dv["n"]),
@@ -743,7 +814,8 @@ def mm_summary(ledger, now=None, recent_keep=40):
             "byStrength": {"strong": _sfin(strength.get(True)), "weak": _sfin(strength.get(False))},
             "divergence": divergence,
             "recent": recent,
-            "global": {"n": gn, "wins": gw, "hitRate": _rate(gw, gn)},
+            "global": dict({"n": gn, "wins": gw, "hitRate": _rate(gw, gn)},
+                           **_geldfin({"rend": grend, "clv": gclv})),
             "pending": sum(1 for e in (ledger or []) if isinstance(e, dict) and e.get("status") == "pending")}
 
 
