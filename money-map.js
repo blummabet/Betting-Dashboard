@@ -107,10 +107,26 @@
     var lab={konsens:'✅ Konsens',teil:'➖ teils einig',uneinig:'⚠️ Divergenz'};
     var P=function(x){return x!=null?Math.round(x*100)+'%':'—';};
     var C=function(x){return x!=null?(x>=0.55?'#3fb950':x<0.45?'#f85149':'#e3b341'):'#8b949e';};
+    // 01.09.2026 (Lucas: „was macht das besser als die Money Map?"). Beim Vergleich mit der
+    // Konjunktion fiel auf: diese Tabelle zeigte NUR Trefferquoten. „81% bei stark" klingt
+    // grossartig und sagt nichts ueber Geld — das Geld liegt auf Favoriten, eine hohe
+    // Trefferquote ist dort der Normalfall. Seit 01.09. schreibt der Ledger die Quote der
+    // Geld-Seite mit (Einstieg + letzte), also steht hier die RENDITE daneben — immer mit
+    // Untergrenze, nie als nackter Punktschaetzer.
+    // Alt-Zeilen tragen keine Quote: `nRoi` sagt, auf wie vielen Zeilen die Rendite wirklich
+    // steht. Ohne diese Zahl saehe ein ROI aus 4 Zeilen aus wie einer aus 900.
+    var R=function(x){return x!=null?((x>=0?'+':'')+Math.round(x*100)+'%'):'—';};
+    var RC=function(lb){return lb==null?'#8b949e':(lb>0?'#3fb950':'#e3b341');};
+    var geld=function(b){
+      if(!b.nRoi) return '<td class="mm-cn mm-mut" title="Zeilen von vor dem 01.09.2026 tragen keine Quote — sie zaehlen in die Trefferquote, aber nicht in die Rendite.">sammelt</td>';
+      return '<td class="mm-cn" style="color:'+RC(b.roiLb)+';font-weight:800" title="Rendite zum Einstiegspreis, mit einseitiger 95%-Untergrenze. Gruen erst, wenn die Untergrenze ueber null liegt.">'
+        +R(b.roi)+' <span class="mm-mut" style="font-size:10px;font-weight:600">UG '+R(b.roiLb)+' · n'+b.nRoi+'</span></td>';
+    };
     var rows=['konsens','teil','uneinig'].filter(function(k){return rec.byVerdict[k];}).map(function(k){
       var b=rec.byVerdict[k];
       return '<tr><td>'+lab[k]+'</td><td class="mm-cn">'+b.n+'</td>'
         +'<td class="mm-cn" style="color:'+C(b.hitRate)+';font-weight:800">'+P(b.hitRate)+'</td>'
+        +geld(b)
         +'<td class="mm-cn" style="color:'+C(b.polyHitRate)+'">'+P(b.polyHitRate)+(b.polyN?' <span class="mm-mut" style="font-size:10px">n'+b.polyN+'</span>':'')+'</td>'
         +'<td class="mm-cn mm-mut">'+P(b.pinnHitRate)+'</td></tr>';
     }).join('');
@@ -153,9 +169,9 @@
     }).join('');
     var gmSec=gms?('<div style="font-size:12px;font-weight:700;color:#9aa4b1;margin:20px 0 8px">🕐 Letzte Spiele <span class="mm-mut" style="font-weight:400">('+(rec.recent||[]).length+')</span></div><div>'+gms+'</div>'):'';
     var g=rec.global||{};
-    return '<div class="mm-trk-intro">Folgt man der <b>Betfair-Geld-Seite</b>: schlägt <b>Konsens</b> die uneinigen Fälle? <b>Poly</b> = Trefferquote der Poly-Seite, <b>Pinn</b> = die des scharfen Favoriten (wo ein Odds-Anker da ist).</div>'
+    return '<div class="mm-trk-intro">Folgt man der <b>Betfair-Geld-Seite</b>: schlägt <b>Konsens</b> die uneinigen Fälle? <b>Poly</b> = Trefferquote der Poly-Seite, <b>Pinn</b> = die des scharfen Favoriten (wo ein Odds-Anker da ist).<br><b>„trifft" ist nicht „zahlt":</b> das Geld liegt auf Favoriten, eine hohe Trefferquote ist dort normal. Erst die <b>Rendite</b> (zum Einstiegspreis, mit Untergrenze) sagt, ob Folgen sich lohnt — sie sammelt seit 01.09.2026.</div>'
       +duel
-      +'<table class="mm-tbl"><thead><tr><th>Verdikt</th><th class="mm-cn">n</th><th class="mm-cn">Geld</th><th class="mm-cn">Poly</th><th class="mm-cn">Pinn</th></tr></thead><tbody>'+rows+'</tbody></table>'
+      +'<table class="mm-tbl"><thead><tr><th>Verdikt</th><th class="mm-cn">n</th><th class="mm-cn">trifft</th><th class="mm-cn">Rendite</th><th class="mm-cn">Poly</th><th class="mm-cn">Pinn</th></tr></thead><tbody>'+rows+'</tbody></table>'
       +bsSec+lgSec+gmSec
       +'<div class="mm-trk-foot">Gesamt: '+(g.n||0)+' abgerechnet · '+(rec.pending||0)+' offen · Poly-Seite = die von Polymarket favorisierte Seite</div>';
   }

@@ -139,3 +139,45 @@ test('jede Ebene sagt, wie sie gebaut ist — Register, Filter, Rangliste', () =
   assert.deepEqual(pillen, ['Register', 'Filter', 'Rangliste'],
     'drei verschiedene Bauarten — genau deshalb sind es drei Ebenen und keine Wiederholung');
 });
+
+// 01.09.2026 (Lucas: „brauch das im Desktop die gesamte Breite? reicht es nicht, wenn 3 Kacheln
+// nebeneinander stehen?"). Antwort: die EBENEN bleiben untereinander — nebeneinander liest sich als
+// gleichrangig, und genau das war der Eindruck, den die Leiter beseitigt hat. Die SPIELE innerhalb
+// einer Ebene sind dagegen untereinander gleichrangig und stehen ab 1040px zu zweit.
+// Diese beiden Regeln werden hier festgehalten, weil sie beim naechsten Layout-Umbau als Erstes
+// aufgeweicht werden.
+test('die Ebenen bleiben untereinander, die Spiele duerfen nebeneinander', () => {
+  const dom = new JSDOM('<!DOCTYPE html><body><div id="mainDashPanel"></div></body>',
+    { url: 'https://x.com/', runScripts: 'outside-only' });
+  const w = dom.window;
+  w.fetch = () => Promise.resolve({ ok: true, json: () => Promise.resolve(null) });
+  w.eval(readFileSync(MOD, 'utf8'));
+  const ko = new Date(Date.now() + 2 * 3600e3).toISOString();
+  const sp = (h) => ({ matchId: h, home: h, away: 'Gegner', league: 'English Premier League',
+    kickoff: ko, markt: 'Match Odds', seite: 'home', name: h, odd: 1.8, haltePreis: 1.8,
+    anteilPct: 74, stufe: 2, verstaerker: [], rang: 55, aktiv: true,
+    gehaltenSeit: new Date().toISOString(), zuletztAktiv: new Date().toISOString() });
+  w._mdState.data = { liga: null, mls: null, ligaStreaks: null, mlsStreaks: null, betfair: null,
+    whales: null, killer: { stufe1: [], stufe2: [sp('Arsenal'), sp('Chelsea')], bilanz: null },
+    freigabe: reg() };
+  w._renderMainDash();
+  const doc = w.document, sek = doc.querySelector('section.md-sp');
+  const css = doc.getElementById('mdash-css').textContent;
+
+  // Die Ebenen selbst bekommen NIE ein Spaltenraster.
+  assert.ok(!/\.md-eb\{[^}]*grid-template-columns/.test(css),
+    'die Leiter darf nicht in Spalten zerfallen — die Reihenfolge ist die Aussage');
+  assert.deepEqual([...sek.querySelectorAll('.md-eb-n')].map(x => x.textContent.trim()),
+    ['1', '2', '3'], 'und sie bleibt streng → breit');
+
+  // Die Spiele stehen in einem Container, der erst ab 1040px zweispaltig wird.
+  assert.equal(sek.querySelectorAll('.md-kl-paar > .md-kl-row').length, 2,
+    'die Spiele liegen im Paar-Container');
+  assert.match(css, /@media\(min-width:1040px\)/,
+    'zweispaltig erst, wenn das Deckungs-Profil in eine halbe Spalte passt');
+
+  // Und die Zeile hat ein Maass: der Balken darf ROI/CLV nicht an den Rand druecken.
+  assert.match(css, /\.md-kl-bz\{max-width:\d+px/, 'die Datenzeile braucht eine Lesebreite');
+  assert.ok(!/\.md-kl-bl\{[^}]*flex:1[;}]/.test(css),
+    'der Fortschrittsbalken darf den Restplatz nicht mehr fressen');
+});
