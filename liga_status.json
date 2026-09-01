@@ -196,7 +196,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "101/101 mit AH · 101/101 mit Public-O/U."
+      "note": "96/96 mit AH · 96/96 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -351,9 +351,8 @@
       "label": "Safer-Line abgeleitet wo verfügbar (≥1.35)",
       "severity": "warn",
       "ok": false,
-      "nFail": 3,
+      "nFail": 2,
       "failures": [
-        "66-42 Unter 2.5 Tore @1.88: sichere Linie Unter 3.5 Tore @1.39 verfügbar (≥1.35), nicht abgeleitet",
         "185-160 Heimsieg @2.75: sichere Linie Doppelte Chance — 1X @1.785 verfügbar (≥1.35), nicht abgeleitet",
         "164-169 Heimsieg @2.2: sichere Linie Doppelte Chance — 1X @1.35 verfügbar (≥1.35), nicht abgeleitet"
       ],
@@ -540,8 +539,28 @@
       "nFail": 0,
       "failures": [],
       "note": "compute_streaks schreibt {wm_,liga_,mls_}streaks.json mit ratePct/venue/next/signalInfo."
+    },
+    {
+      "id": "live_scan_laeuft",
+      "label": "Poly-Live-Scan taktet",
+      "severity": "error",
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "Letzter Live-Scan vor 8.4h (Takt: 15 Min) — der Job startet nicht. Runner belegt? Workflow deaktiviert?"
+      ],
+      "note": "Erwartet alle 15 Min; Alarm ab 90 Min. Live-Preise sind die Schluss-Referenz fuer den CLV — fehlen sie, misst der Nordstern nicht."
+    },
+    {
+      "id": "card_link_alive",
+      "label": "Terminal-Kartenlink kommt an",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "0 von 0 ist ein ruhiger Tag. 0 von N ist ein Bruch."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-08-31T13:45:58.357306+00:00"
+  "nFail": 4,
+  "generatedAt": "2026-08-31T23:02:22.823903+00:00"
 }

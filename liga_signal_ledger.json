@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-08-31T13:45:57Z",
-    "total_records": 43
+    "updated_at": "2026-08-31T23:02:17Z",
+    "total_records": 47
   },
   "records": [
     {
@@ -237,6 +237,49 @@
       "lateEntry": true,
       "engineVersion": "v1",
       "clvPP": 0.0,
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "ENG-2-66-42|Auswärtssieg",
+      "matchKey": "ENG-2-66-42",
+      "market": "Auswärtssieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "injury",
+          "score": 1.2
+        },
+        {
+          "name": "form_trend",
+          "score": 1.0
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 0.6
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.64
+        },
+        {
+          "name": "apif_predictions",
+          "score": -2.99
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "betfair_money",
+          "score": 4.0
+        }
+      ],
+      "resolvedAt": "2026-08-31T23:02:13Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -2.84,
       "processVerdict": "JUSTIFIED"
     },
     {
@@ -627,6 +670,53 @@
       "engineVersion": "v1",
       "clvPP": -0.12,
       "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "ESP-3-529-728|AH Heim −1.75",
+      "matchKey": "ESP-3-529-728",
+      "market": "AH Heim −1.75",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "injury",
+          "score": -1.3
+        },
+        {
+          "name": "form_trend",
+          "score": 3.57
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.37
+        },
+        {
+          "name": "fixture_congestion",
+          "score": -0.38
+        },
+        {
+          "name": "opener_move",
+          "score": 1.76
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "venue_form",
+          "score": 2.29
+        },
+        {
+          "name": "betfair_money",
+          "score": 1.34
+        }
+      ],
+      "resolvedAt": "2026-08-31T23:02:13Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 0.0,
+      "processVerdict": "LUCKY"
     },
     {
       "key": "ESP-3-536-530|Auswärtssieg",
@@ -1521,6 +1611,68 @@
       "lateEntry": true,
       "engineVersion": "v1",
       "clvPP": -1.35,
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "ITA-2-867-497|Auswärtssieg",
+      "matchKey": "ITA-2-867-497",
+      "market": "Auswärtssieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 2.53
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 1.6
+        },
+        {
+          "name": "xg_strength",
+          "score": 3.65
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "venue_form",
+          "score": 0.94
+        },
+        {
+          "name": "betfair_money",
+          "score": 4.0
+        }
+      ],
+      "resolvedAt": "2026-08-31T23:02:13Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -1.76,
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "ITA-2-867-497|Über 2.5 Tore",
+      "matchKey": "ITA-2-867-497",
+      "market": "Über 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 2.0
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        }
+      ],
+      "resolvedAt": "2026-08-31T23:02:13Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -0.51,
       "processVerdict": "JUSTIFIED"
     }
   ]
