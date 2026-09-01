@@ -958,7 +958,13 @@
       try { over = _pwOverNormTop(5) || []; } catch (e) { over = []; }
       var note = '<div style="font-size:10px;color:var(--mi3);margin:-2px 0 8px">🧪 Vorschau — sendet nicht · ein paar Tage beobachten</div>';
       var topBody = note + (tops.length ? tops.slice(0, 5).map(_mdPubTopRow).join('')
-        : empty('Kein Top-Play über der Schwelle — Conv≥7, bewiesene Wallet (n≥8, ≥55%), Geld-Mehrheit ≥60%. Normalfall.'));
+        // 01.09.2026: hier stand „Conv≥7" fest getippt, die Schwelle steht aber seit dem 29.08.
+        // auf 6. Ein Leertext, der eine falsche Schwelle nennt, ist eine kleine Lüge über das
+        // eigene System — jetzt aus der Konstante gezogen. „Bewiesen" heißt seit dem Regler
+        // ausdrücklich: volle Wilson-Untergrenze, nicht bloß vielversprechend.
+        : empty('Kein Top-Play über der Schwelle — Conv≥'
+                + (typeof PW_PUBLIC_MIN_CONV === 'number' ? PW_PUBLIC_MIN_CONV : 6)
+                + ', bewiesene Wallet (n≥8, ≥55%, Beleg voll), Geld-Mehrheit ≥60%. Normalfall.'));
       var overBody = _mdOverNormBody(over);
       if (t) t.innerHTML = tile('🎯', 'Top-Play', A.good, 'rgba(46,160,67,.14)', 'rgba(46,160,67,.32)', 'polywallets', 'Wallets', topBody, 0);
       if (w) w.innerHTML = tile('💰', 'Volumen über Norm', A.poly, 'rgba(25,158,112,.14)', 'rgba(25,158,112,.32)', 'polywallets', 'Wallets', overBody, 0);

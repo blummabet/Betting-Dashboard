@@ -110,6 +110,62 @@ def is_sharp(score, min_n: int = SHARP_MIN_N, z: float = SHARP_Z) -> bool:
     return True
 
 
+# ── Der Regler (01.09.2026) ──────────────────────────────────────────────────
+# Gemessen, warum das binaere Gate allein zu teuer ist: Wallets auf dem Stand 25.08.
+# klassifiziert und danach ausgewertet, was sie WIRKLICH getan haben (Delta der Aggregate
+# in poly_wallet_track.json — reine Vorwaerts-Leistung, kein Rueckblick):
+#
+#   z=1.645 (dieses Gate)  16 Wallets  ->  n=180  54,4% Treffer (UG 48,3%)  Ø CLV +0,26pp
+#   z=1.282                24 Wallets  ->  n=251  55,8%         (UG 50,6%)  Ø CLV +0,55pp
+#   z=1.036                33 Wallets  ->  n=290  55,2%         (UG 50,3%)  Ø CLV +0,61pp
+#
+#   die ausgeschlossene Bande (rohe Quote >=55%, Wilson-UG <=50%, CLV>=0):
+#                          35 Wallets  ->  n=136  52,2%                     Ø CLV +0,94pp
+#
+# Die strengste Einstellung liefert die SCHLECHTESTE Vorwaerts-Leistung auf jeder Achse.
+# Die Strenge kauft keine Treffsicherheit, sie kauft eine kleinere, verrauschtere Auswahl.
+#
+# ⚠️ Der Fehler lag nicht in der Schwelle, sondern in der FORM: `is_sharp` ist ein Schalter.
+# Eine Wallet mit 60% aus 65 Plays (Wilson-UG 49,8% — zwei Zehntel zu wenig) trug dieselbe
+# Null bei wie eine mit 30% aus 8. Genau drei solcher Wallets lieferten danach +1,28 / +1,89 /
+# +1,91pp CLV.
+#
+# Deshalb: fuer Zwecke, die ABWAEGEN (die Conviction), ein Regler statt eines Schalters.
+# Fuer Zwecke, die VEROEFFENTLICHEN (der Public-Push), bleibt der Schalter — dort kostet ein
+# Fehlalarm Glaubwuerdigkeit, und Strenge ist der richtige Preis dafuer.
+#
+# ⚠️ NICHT auf den Sieger getunt: vier z-Werte auf EINEM Wochenfenster, da ist der Beste
+# teilweise Zufall. Belegt ist nur, dass 1,645 nicht besser ist als lockerer. Die Rampe
+# umgeht die Frage, statt sie zu beantworten — sie braucht keinen zweiten Schwellenwert.
+GRADE_FLOOR_LB = float(os.environ.get("SHARP_GRADE_FLOOR") or 0.40)
+
+
+def sharp_grade(score, min_n: int = SHARP_MIN_N, z: float = SHARP_Z,
+                floor: float = GRADE_FLOOR_LB) -> float:
+    """Wie gut ist diese Wallet BELEGT? 0.0 (gar nicht) bis 1.0 (bewiesen). REIN.
+
+    Die harten Ausschluesse sind dieselben wie in `is_sharp` — zu wenig Plays, negativer CLV,
+    bestaetigter Verlierer geben 0.0. Dazwischen laeuft die Wilson-Untergrenze linear:
+    bei >50% voll, bei <=`floor` null. Kein Sprung an der 50%-Klippe.
+
+    Damit gilt per Konstruktion `is_sharp(s) == (sharp_grade(s) >= 1.0)` — eine Definition,
+    zwei Lesarten. Der Test haelt das fest.
+    """
+    n, wins, avg_clv, pnl = _felder(score)
+    if n < min_n:
+        return 0.0
+    if avg_clv < 0:
+        return 0.0
+    if pnl is not None and pnl < 0:
+        return 0.0
+    lb = wilson_lb(wins, n, z)
+    if lb > 0.5:
+        return 1.0
+    if lb <= floor or floor >= 0.5:
+        return 0.0
+    return (lb - floor) / (0.5 - floor)
+
+
 def is_confirmed_loser(score) -> bool:
     """P&L bekannt UND negativ. Unbekannt ist KEIN Verlierer-Nachweis."""
     if not isinstance(score, dict):

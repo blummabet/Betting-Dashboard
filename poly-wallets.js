@@ -962,6 +962,30 @@ function _pwIsSharpScore(sc){
   if(sc.pnlKnown && (sc.pnl||0)<0) return false;   // bestaetigter Verlierer raus, unbekannt bleibt
   return true;
 }
+// ── Der Regler (01.09.2026) — Spiegel von sharp_gate.sharp_grade ─────────────────────────────
+// Gemessen (Wallets am 25.08. klassifiziert, danach ausgewertet was sie WIRKLICH taten):
+//   dieses Gate (z=1.645)  16 Wallets -> n=180  54,4% (UG 48,3%)  Ø CLV +0,26pp
+//   lockerer (z=1.282)     24 Wallets -> n=251  55,8% (UG 50,6%)  Ø CLV +0,55pp
+//   die ausgeschlossene Bande (>=55% roh, UG<=50%, CLV>=0): n=136, Ø CLV +0,94pp — der beste Wert.
+// Die strengste Einstellung lieferte die SCHLECHTESTE Vorwaerts-Leistung. Der Fehler lag nicht in
+// der Schwelle, sondern in der FORM: ein Schalter gibt einer Wallet mit 60% aus 65 Plays
+// (UG 49,8%) dieselbe Null wie einer mit 30% aus 8. Deshalb hier ein Regler statt eines Schalters —
+// aber NUR fuer die Conviction, die abwaegt. Wo veroeffentlicht wird (Public-Push, das 🔥-Badge,
+// _pwSharpSideForKey), bleibt der strenge Schalter: dort kostet ein Fehlalarm Glaubwuerdigkeit.
+const PW_SHARP_GRADE_FLOOR=0.40;   // UG <=40% => 0 · UG >50% => 1 · dazwischen linear
+const PW_SHARP_TAG_MIN_GRADE=0.5;  // ab hier heisst der Play auch 'sharp' (Eimer-Schutz, s. unten)
+function _pwSharpGrade(sc){
+  if(!sc) return 0;
+  const n=sc.n||0;
+  if(n<PW_SHARP_MIN_N) return 0;
+  if((sc.avgClv||0)<0) return 0;
+  if(sc.pnlKnown && (sc.pnl||0)<0) return 0;
+  const wins=(typeof sc.wins==='number')?sc.wins:Math.round((sc.hit||0)*n);
+  const lb=_pwWilsonLb(wins,n);
+  if(lb>0.5) return 1;
+  if(lb<=PW_SHARP_GRADE_FLOOR) return 0;
+  return (lb-PW_SHARP_GRADE_FLOOR)/(0.5-PW_SHARP_GRADE_FLOOR);
+}
 const PW_MONEY_MAJ=0.60;   // (01.08.2026, Lucas) „großes Geld" erst ab echter Mehrheit — 50–55% ist Münzwurf, kein Signal
 function _pwWalletScore(wallet){
   const s=_pwCache&&_pwCache.walletTrack&&_pwCache.walletTrack.scores;
@@ -1794,9 +1818,8 @@ function _pwPublicTopPlays(){
   // Stand von heute fielen alle drei Public-Kandidaten weg (INOX, Kashima, MOUZ — 7 → 6). Mit 6
   // stehen exakt dieselben drei drin, nur setzt sich ihr Score jetzt anders zusammen. Die Strenge
   // bleibt, die Gewichtung aendert sich — das war der Auftrag.
-  return _pwTopPlays(0,false,false).filter(r=>
-    !_pwBetBlocked(r) &&
-    r.conv>=PW_PUBLIC_MIN_CONV && r.moneyPct>=0.60 && r.sharp && r.sharp.n>=8 && r.sharp.hit>=0.55);
+  // 01.09.2026: die Bedingung stand hier ausgeschrieben UND in _pwTermIsPublic. Eine Quelle.
+  return _pwTopPlays(0,false,false).filter(r=> !_pwBetBlocked(r) && _pwTermIsPublic(r));
 }
 
 // (01.08.2026, Lucas) PUBLIC-KANDIDAT „Whale-Watch" — repliziert das Public-Gate von poly_whale_watch.py
@@ -1954,18 +1977,23 @@ function _pwSharpInfoForKey(key){
     const usd=Number(pos.usd)||0; if(usd<PW_SHARP_MIN_USD) continue;   // 07.08.2026 (Lucas): Mini-Einsaetze ($2-6) raus
     const raw=sc[pos.wallet]; if(!raw||!raw.n||raw.n<PW_SHARP_MIN_N) continue;
     const avgClv=raw.clvSumPP/raw.n, hit=(raw.wins||0)/raw.n;
-    if(!_pwIsSharpScore({n:raw.n,avgClv:avgClv,hit:hit,wins:(raw.wins||0),
-                         pnl:Number(raw.pnl)||0,
-                         pnlKnown:(typeof raw.pnl==='number' && isFinite(raw.pnl))})) continue;   // 07.08.2026 (Lucas): beide Achsen streng   // 06.08.2026 (Lucas): kein "scharf" bei Minus-PnL           // bewährt: schlägt Linie ODER gewinnt
-    const b=bySide[pos.side]||(bySide[pos.side]={usd:0,n:0,wins:0,pnl:0,clvUsd:0,count:0});
+    // 01.09.2026: hier stand `if(!_pwIsSharpScore(...)) continue;` — der Schalter. Jetzt der
+    // Regler: unbelegt (0) faellt weiterhin raus, alles darueber traegt anteilig bei.
+    const grade=_pwSharpGrade({n:raw.n,avgClv:avgClv,hit:hit,wins:(raw.wins||0),
+                               pnl:Number(raw.pnl)||0,
+                               pnlKnown:(typeof raw.pnl==='number' && isFinite(raw.pnl))});
+    if(grade<=0) continue;
+    const b=bySide[pos.side]||(bySide[pos.side]={usd:0,n:0,wins:0,pnl:0,clvUsd:0,count:0,gradeUsd:0});
     b.usd+=usd; b.n+=raw.n; b.wins+=(raw.wins||0); b.pnl+=(Number(raw.pnl)||0);
-    b.clvUsd+=avgClv*usd; b.count++;
+    b.clvUsd+=avgClv*usd; b.gradeUsd+=grade*usd; b.count++;
   }
   let side=null,smax=0; for(const sd in bySide) if(bySide[sd].usd>smax){smax=bySide[sd].usd;side=sd;}
   if(!side) return null;
   const b=bySide[side];
   return {side, usd:b.usd, n:b.n, wins:b.wins, hit:b.n?b.wins/b.n:0,
-          clv:b.usd?b.clvUsd/b.usd:0, pnl:b.pnl, count:b.count};
+          clv:b.usd?b.clvUsd/b.usd:0, pnl:b.pnl, count:b.count,
+          // usd-gewichteter Beleggrad der Seite: 1 = alle bewiesen, <1 = vielversprechend
+          grade:b.usd?Math.max(0,Math.min(1,b.gradeUsd/b.usd)):0};
 }
 
 // Pinnacle-Kante für einen Markt aus poly_cross_sport.discrepancies (01.08.2026, Lucas).
@@ -2034,7 +2062,16 @@ let _pwComboCache=null, _pwComboRef=null;
 // 29.08.2026b: Saeulen-Neugewichtung (steam 3,0→2,5 · bf 1,5→2,0 · pinn 2,0→1,5 · gvp 2,0→1,0).
 // Der Stempel wandert mit — das ist sein einziger Zweck: die 500 Plays davor wurden unter
 // anderen Gewichten bewertet und zaehlen fuer den Kalibrierer ab jetzt nur noch halb.
-const PW_ENGINE_VERSION='2026-08-29b';
+// ⚠️ WANN DER STEMPEL SPRINGT (Regel, 01.09.2026) — er springt bei Aenderungen, die die AUSWAHL
+// oder die Bewertung verschieben: Saeulen-Gewichte, Gates, Schwellen, neue Signale. Er springt
+// NICHT bei Refactorings, Umbenennungen, UI- oder Textaenderungen. Grund: jeder Sprung setzt die
+// Schubladen im Freigabe-Register faktisch zurueck (Alt-Plays zaehlen halb), und eine Schublade
+// braucht n=30. Springt der Stempel monatlich, erreicht sie diese 30 nie — dann misst das Register
+// dauerhaft nichts. Im Zweifel: NICHT springen und stattdessen messen, ob sich die Verteilung
+// ueberhaupt verschoben hat.
+// 01.09.2026: springt, weil der Sharp-Beitrag von einem Schalter auf einen Regler umgestellt wurde
+// (s. _pwSharpGrade) — das ist eine echte Bewertungsaenderung, keine Kosmetik.
+const PW_ENGINE_VERSION='2026-09-01';
 // Alt-Plays fliegen NICHT raus, sie zaehlen halb. Grund: was ein Signal-MIX bringt, haengt nur
 // zum Teil an unseren Gewichten — dass `steam` allein -43% ROI macht, gilt auch unter der neuen
 // Engine. Was sich wirklich geaendert hat, ist die Bedeutung des `sharp`-Tags (das Gate). Halbes
@@ -2176,10 +2213,25 @@ function _pwShortlistScore(key,m){
     // zwei verschiedene Welten. Er bleibt, was er belegen kann: ein Ausschluss im Gate oben.
     let w=1.8; if(sh.hit>=0.6)w+=0.5; if(sh.hit>=0.7)w+=0.5;
     w *= Math.min(1, 0.3 + (sh.n||0)/50);
+    // 01.09.2026: Beleggrad statt Schalter. Eine bewiesene Wallet (Wilson-UG >50%) traegt wie
+    // bisher voll; eine vielversprechende anteilig. Vorher trug letztere GAR NICHT bei — und
+    // genau diese Bande lieferte out of sample den besten CLV (+0,94pp, s. _pwSharpGrade).
+    const _gr=(typeof sh.grade==='number')?sh.grade:1;
+    w *= _gr;
     // 10.08.2026 (Lucas): Lebenszeit-P&L der Wallet über _pwUsd formatieren → rollt ab 1M sauber auf "M"
     // (z.B. +$3.44M statt des hässlichen "3440K"). _pwUsd trägt das '$', Vorzeichen kommt davor.
     const pnlTxt=(sh.pnl>=0?'+':'-')+_pwUsd(Math.abs(sh.pnl));
-    add(sh.side,w,'🔥 scharfe Wallet ('+sh.wins+'/'+sh.n+', '+Math.round(sh.hit*100)+'% · '+pnlTxt+')', 'sharp');
+    // Der Text sagt, was die Zahl sagt: „scharf" nur bei bewiesenen Wallets, sonst ehrlich
+    // „vielversprechend". Ein halber Beleg darf nicht wie ein ganzer klingen.
+    const _lbl=_gr>=1?'🔥 scharfe Wallet':'🔎 vielversprechende Wallet (noch nicht belegt)';
+    // ⚠️ Der TAG ist nicht dasselbe wie das GEWICHT. Das Gewicht darf beliebig fein sein — der Tag
+    // bildet die Eimer, in denen `_pwCalibConv` und das Freigabe-Register rechnen. Liefe jeder
+    // 0,1-Beitrag als 'sharp' mit, stuende ein Play mit 0,23 Gewicht im selben Eimer wie eines mit
+    // 2,8 — und der Eimer misst dann nichts mehr. Deshalb traegt nur ein halbwegs belegter Beitrag
+    // das Etikett; darunter zaehlt die Wallet mit, benennt den Play aber nicht.
+    add(sh.side,w,_lbl+' ('+sh.wins+'/'+sh.n+', '+Math.round(sh.hit*100)+'% · '+pnlTxt+')'
+        +(_gr>=1?'':' · zählt '+Math.round(_gr*100)+'%'),
+        _gr>=PW_SHARP_TAG_MIN_GRADE?'sharp':null);
   } else {
     // 29.08.2026 (Lucas-Checkup, „D"): Dieser Zweig greift, wenn wir zwar eine scharfe Wallet
     // sehen, aber KEINE Bilanz zu ihr haben — und vergab dafuer 2,5, also exakt so viel wie eine
@@ -2541,7 +2593,20 @@ function _pwTermMuted(r){
   if((+r.conv||0)<=4) return {m:true,reason:'Konv≤4 dünn'};
   return {m:false,reason:''};
 }
-function _pwTermIsPublic(r){ return !!(r.conv>=PW_PUBLIC_MIN_CONV && r.moneyPct>=0.60 && r.sharp && r.sharp.n>=8 && r.sharp.hit>=0.55); }   // 29.08.2026: stand hier noch hart auf 7
+// ⚠️ 01.09.2026 — EINE Definition. Dieselbe Bedingung stand an zwei Stellen (hier und in
+// _pwPublicTopPlays); als der Sharp-Beitrag zum Regler wurde, haette man beide anfassen muessen
+// und genau so entstehen zwei Wahrheiten. Jetzt ruft die andere Stelle diese Funktion auf.
+//
+// Der Zusatz `grade>=1` ist der eigentliche Punkt: `r.sharp` existierte frueher NUR fuer bewiesene
+// Wallets — der Regler laesst jetzt auch vielversprechende durch. Fuers Abwaegen ist das gewollt,
+// fuer den OEFFENTLICHEN Kanal nicht: dort kostet ein Fehlalarm Glaubwuerdigkeit. Ohne diese Zeile
+// haette die Lockerung still die Public-Schwelle mitgesenkt — die Bauform „eine Aenderung sickert
+// in eine Flaeche, fuer die sie nie gedacht war".
+function _pwTermIsPublic(r){
+  return !!(r && r.conv>=PW_PUBLIC_MIN_CONV && r.moneyPct>=0.60
+            && r.sharp && r.sharp.n>=8 && r.sharp.hit>=0.55
+            && (r.sharp.grade==null || r.sharp.grade>=1));   // nur BEWIESEN geht oeffentlich
+}
 
 // 18.08.2026 (Lucas) Slice 2 — Drilldown: Preis-Kurve (Variante A: Poly vs faire Pinnacle + Kante-Fläche),
 // Konviktions-Aufschlüsselung, Whale-Tape, ½-Kelly. Rein lesend & additiv.

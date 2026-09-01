@@ -221,3 +221,57 @@ test('#71 Whale-Public: tracked-Schwelle greift bei $25K', async () => {
   const mid = c.find(x => x.side === 'Celtics');
   assert.ok(mid && mid.tracked, 'getrackte $30K-Position ist Kandidat (Schwelle $25K)');
 });
+
+// ── 01.09.2026: der Regler darf nicht in den öffentlichen Kanal sickern ──────────────────────
+// Als der Sharp-Beitrag von einem Schalter auf einen Regler umgestellt wurde, existierte
+// `r.sharp` plötzlich auch für NICHT bewiesene Wallets. Das Public-Gate prüfte aber nur
+// `r.sharp && n>=8 && hit>=0.55` — die Lockerung hätte damit still die öffentliche Schwelle
+// mitgesenkt. Genau die Bauform „eine Änderung sickert in eine Fläche, für die sie nie gedacht war".
+function ladePublicGate() {
+  const src = readFileSync(PW, 'utf8');
+  const von = src.indexOf('const PW_PUBLIC_MIN_CONV=');
+  const bisZeile = src.indexOf('\n', von);
+  const fnVon = src.indexOf('function _pwTermIsPublic');
+  const fnBis = src.indexOf('\n}', fnVon) + 2;
+  assert.ok(von > 0 && fnVon > 0, 'Public-Gate in poly-wallets.js nicht gefunden');
+  const g = {};
+  // eslint-disable-next-line no-new-func
+  new Function('exp', src.slice(von, bisZeile) + '\n' + src.slice(fnVon, fnBis)
+    + '\nexp.isPublic=_pwTermIsPublic; exp.minConv=PW_PUBLIC_MIN_CONV;')(g);
+  return g;
+}
+const PG = ladePublicGate();
+const play = (over = {}) => ({ conv: PG.minConv, moneyPct: 0.7,
+  sharp: { n: 20, hit: 0.6, grade: 1 }, ...over });
+
+test('Public-Gate: bewiesene Wallet kommt durch', () => {
+  assert.strictEqual(PG.isPublic(play()), true);
+});
+
+test('Public-Gate: NUR vielversprechende Wallet kommt NICHT durch', () => {
+  // Genau der Fall, den der Regler neu erzeugt: Beleg 0,98 — fürs Abwägen fast voll,
+  // für den öffentlichen Kanal trotzdem nicht bewiesen.
+  assert.strictEqual(PG.isPublic(play({ sharp: { n: 65, hit: 0.6, grade: 0.98 } })), false,
+    'ein Play mit unbewiesener Wallet darf nie öffentlich werden');
+  assert.strictEqual(PG.isPublic(play({ sharp: { n: 65, hit: 0.6, grade: 0.5 } })), false);
+});
+
+test('Public-Gate: alte Objekte ohne grade bleiben gültig', () => {
+  // Rückwärts-Kompatibilität: ein sharp-Objekt aus einer älteren Datei hat kein grade-Feld.
+  assert.strictEqual(PG.isPublic(play({ sharp: { n: 20, hit: 0.6 } })), true);
+});
+
+test('Public-Gate: die harten Schwellen gelten weiter', () => {
+  assert.strictEqual(PG.isPublic(play({ conv: PG.minConv - 1 })), false, 'Conviction zu niedrig');
+  assert.strictEqual(PG.isPublic(play({ moneyPct: 0.5 })), false, 'Geld-Mehrheit zu dünn');
+  assert.strictEqual(PG.isPublic(play({ sharp: { n: 7, hit: 0.9, grade: 1 } })), false, 'Stichprobe zu klein');
+  assert.strictEqual(PG.isPublic(play({ sharp: { n: 20, hit: 0.5, grade: 1 } })), false, 'Trefferquote zu niedrig');
+  assert.strictEqual(PG.isPublic(play({ sharp: null })), false, 'ohne Wallet gar nicht');
+});
+
+test('Public-Gate ist EINE Quelle — nicht zweimal ausgeschrieben', () => {
+  const src = readFileSync(PW, 'utf8');
+  const treffer = src.match(/r\.sharp\.n>=8 && r\.sharp\.hit>=0\.55/g) || [];
+  assert.strictEqual(treffer.length, 1,
+    'die Public-Bedingung steht wieder an mehreren Stellen — sie läuft dann auseinander');
+});

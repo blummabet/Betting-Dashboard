@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v194';   // 31.08.2026: Heart-Tab inhaltlich neu — Top-Features-Kurzfassung oben, Technik auf den Stand von Ende August (Uebersicht/Freigabe, Betfair, Poly-Intelligence, Betrieb).
+const VERSION = 'cocobet-v195';   // 01.09.2026: Sharp-Beitrag als Regler statt Schalter (poly-wallets.js), Engine-Stempel 2026-09-01.
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.
