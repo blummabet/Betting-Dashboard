@@ -93,6 +93,38 @@ LIVE_HIST_KEEP_H      = 12.0
 # GRATIS. Diese Datei haelt je Sport-Markt bis UPCOMING_WINDOW_H nur {league, htk, totalUsd, prices}
 # (KEIN Holder-Call, KEINE Shares/Whales) -> die Money Map zeigt die Poly-Blase (Seite via Preis) auch
 # weit vor Anpfiff. Getrennt vom Close-Freeze (der bleibt die Auswertungs-Basis).
+# ── Vor-Fenster (01.09.2026) ──────────────────────────────────────────────────────────────────
+# Lucas: „poly taucht da mmn nie aktiv auf?" Ursache war, dass Holder-Anteile NUR fuer Maerkte
+# innerhalb PMA.CAPTURE_WINDOW_H (3h) geholt werden — die Konjunktion latcht aber bei 22% ihrer
+# Zeilen frueher. Fuer die konnte Poly nie zustimmen.
+#
+# ⚠️ NICHT geloest durch Aufbohren von CAPTURE_WINDOW_H. Zwei Gruende:
+#   · Das Holder-Budget (90) wird nach VOLUMEN vergeben. Ein weiteres Fenster laesst weit
+#     entfernte Maerkte um dieselben 90 Calls konkurrieren — nahe Maerkte wuerden verdraengt und
+#     der Close-Freeze duenner. Der ist aber die AUSWERTUNGS-Basis (poly_money_accuracy).
+#   · Der Freeze bedeutet „Geldverteilung kurz vor Anpfiff". Weitet man ihn, aendert sich
+#     rueckwirkend, was die Zahlen heissen.
+# Stattdessen ein EIGENES, kleines Budget mit eigenem Fenster, dessen Ergebnis in die
+# upcoming-Datei geschrieben wird — genau die Quelle, auf die `pick_poly` ausserhalb des Freeze
+# zurueckfaellt. Der Close-Freeze bleibt unberuehrt.
+VOR_WINDOW_H          = float(os.environ.get("POLY_VOR_WINDOW_H") or 8.0)
+MAX_HOLDER_CALLS_VOR  = int(os.environ.get("POLY_MAX_HOLDER_CALLS_VOR") or 22)
+# ⭐ Und das Budget wird GEZIELT ausgegeben. Gemessen am 01.09.: von 58 Maerkten im Vor-Fenster
+# sind nur 20 Fussball — der Rest ist Tennis/Esport/US-Sport. Nach reinem Volumen sortiert gingen
+# 13 der 25 Calls an Tennis, also an Maerkte, die die Konjunktion NIE benutzt (killer.py sieht
+# ausschliesslich Betfair-Fussball-Match-Odds; Tennis/Esport bekommen ihre Anteile ohnehin im
+# 3h-Freeze, und ihre Events sind kurz). Fussball zuerst, dann Volumen — damit deckt ein
+# kleineres Budget ALLE relevanten Maerkte ab statt der Haelfte.
+_VOR_FUSS_LIGEN = ("EPL", "LIGA", "BUNDESLIGA", "SERIE", "LIGUE", "CHAMPIONSHIP", "MLS", "UCL",
+                   "UEL", "EREDIVISIE", "PRIMEIRA", "CUP", "EFL", "SPL")
+
+
+def _vor_ist_fussball(league, sport) -> bool:
+    """Grobe, absichtlich grosszuegige Fussball-Erkennung fuers Vor-Budget. Im Zweifel JA — ein
+    Call zu viel kostet wenig, ein fehlender kostet die Poly-Bedingung. REIN/testbar."""
+    s, lg = str(sport or "").upper(), str(league or "").upper()
+    return "SOCCER" in s or "SOCCER" in lg or any(x in lg for x in _VOR_FUSS_LIGEN)
+
 UPCOMING_FILE         = "poly_money_upcoming.json"
 UPCOMING_WINDOW_H     = float(os.environ.get("POLY_UPCOMING_WINDOW_H") or 120.0)
 # 25.08.2026 (Lucas zeigte den Poly-Link auf Barcelona–Athletic, den wir „nicht gelistet" genannt
@@ -486,6 +518,10 @@ def _capture_class(htk):
         return "pre"
     if -LIVE_TAIL_H < h <= 0:
         return "live"
+    # 01.09.2026: „vor" — jenseits des Freeze, aber nah genug, dass die Konjunktion dort latcht.
+    # Eigenes Budget, eigener Speicher (upcoming); der Close-Freeze nimmt sie NICHT auf.
+    if PMA.CAPTURE_WINDOW_H < h <= VOR_WINDOW_H:
+        return "vor"
     return None
 
 
@@ -878,6 +914,21 @@ def fetch_markets(live_only=False):
                     continue
                 htk = _hours_to_ko(ev, now)
                 cls = _capture_class(htk)
+                # 01.09.2026: „vor"-Maerkte bekommen wie bisher ihren Preis/Volumen-Eintrag in
+                # upcoming — und ZUSAETZLICH eine Chance auf den Holder-Call (eigenes Budget unten).
+                # Reihenfolge wichtig: erst der gratis Eintrag, dann der Kandidat. Faellt der Call
+                # aus (Budget leer), bleibt die Zeile trotzdem mit Preis+Volumen stehen.
+                if cls == "vor" and not live_only:
+                    uvol0 = float(ev.get("volume") or 0)
+                    if uvol0 >= min_vol:
+                        uoc0 = _outcomes(ev)
+                        if len(uoc0) >= 2 and not _is_exhibition(uoc0):
+                            up0 = {o["label"]: o["price"] for o in uoc0 if o["price"] is not None}
+                            umv0 = _market_volume(ev, uoc0, uvol0)
+                            if up0 and (key not in upcoming or umv0 > upcoming[key]["totalUsd"]):
+                                upcoming[key] = {"league": league_of(ev, key), "sport": sport_of(ev, key),
+                                                 "hoursToKickoff": round(htk, 2),
+                                                 "totalUsd": round(umv0), "prices": up0}
                 if cls is None:
                     # Money-Map (12.08.2026, Lucas): Sport-Markt weiter draussen (bis UPCOMING_WINDOW_H)
                     # GRATIS mit Preis+Vol mitnehmen -> Poly-Blase auch 12h vor Anpfiff, ohne Holder-Budget.
@@ -904,7 +955,7 @@ def fetch_markets(live_only=False):
                     continue                 # 15.08.2026 (Lucas): Legenden-/Show-Match = kein Signal
                 seen.add((key, False))
                 mvol = _market_volume(ev, oc, vol)   # 15.08.2026 (Lucas): Markt- statt Event-Volumen
-                candidates.append((vol, key, league_of(ev, key), sport_of(ev, key), htk, oc, cls == "live", mvol))
+                candidates.append((vol, key, league_of(ev, key), sport_of(ev, key), htk, oc, cls == "live", mvol, cls))
             except Exception:
                 continue
 
@@ -945,7 +996,8 @@ def fetch_markets(live_only=False):
     # near-kickoff-Märkte zuerst, EGAL welche Sportart. Vorher lief es in Tag-Reihenfolge → die
     # täglichen Ligen (MLB/Tennis/Esport) fraßen die 60 Calls, ein UFC-Main-Event am Listen-Ende
     # bekam nie einen Geld-Split. Jetzt kriegt der wertvollste Markt jeder Sportart seine Chance.
-    candidates.sort(key=lambda c: -c[0])
+    # Nicht-„vor" wie bisher rein nach Volumen. „vor" zusaetzlich mit Fussball-Vorrang — s. oben.
+    candidates.sort(key=lambda c: (0 if c[8] != "vor" else (0 if _vor_ist_fussball(c[2], c[3]) else 1), -c[0]))
     holder_calls = 0
     live_calls = 0     # 11.08.2026 (Lucas Stufe 1): eigener Live-Deckel, additiv zu pre
     # Ø-Einstieg-Anreicherung (CLV-Fix): eine /positions-Abfrage je Wallet, marktübergreifend gecacht,
@@ -964,11 +1016,14 @@ def fetch_markets(live_only=False):
             from fetch_wm_poly_smartmoney import _http_get as _avg_get
         except Exception:
             _avg_get = None
-    for vol, key, league, sport, htk, oc, is_live, mvol in candidates:
+    vor_calls = 0
+    for vol, key, league, sport, htk, oc, is_live, mvol, _cls in candidates:
         # 15.08.2026 (Lucas): Budget erschoepft ODER kein Geld-Split -> trotzdem Preis+Vol-Zeile fuer die
         # Money-Map (ohne Whale-Split). Sonst verschwindet ein near-KO-Spiel wie Sevilla-Rayo komplett,
         # obwohl Poly den Markt hat (fiel nur aus dem 90er-Holder-Budget). REIN additiv.
-        _over = (live_calls >= MAX_HOLDER_CALLS_LIVE) if is_live else (holder_calls >= MAX_HOLDER_CALLS)
+        _over = (live_calls >= MAX_HOLDER_CALLS_LIVE) if is_live \
+            else (vor_calls >= MAX_HOLDER_CALLS_VOR) if _cls == "vor" \
+            else (holder_calls >= MAX_HOLDER_CALLS)
         if _over:
             _pv = {o["label"]: o["price"] for o in oc if o["price"] is not None}
             if _pv:
@@ -982,6 +1037,8 @@ def fetch_markets(live_only=False):
             mm = None
         if is_live:
             live_calls += 1
+        elif _cls == "vor":
+            vor_calls += 1          # eigenes Budget — kann den Close-Freeze nicht aushungern
         else:
             holder_calls += 1
         if not mm:
@@ -994,6 +1051,17 @@ def fetch_markets(live_only=False):
         shares = mm["shares"]
         prices = {o["label"]: o["price"] for o in oc if o["price"] is not None}
         _whales = mm.get("whales") or []
+        # 01.09.2026 — „vor"-Markt: die Anteile gehen NUR in die upcoming-Datei, nicht in `markets`.
+        # `markets` speist Close-Freeze, Live-Store und Historie; ein Markt 5h vor Anpfiff hat dort
+        # nichts verloren (der Freeze wuerde ihn ohnehin verwerfen, aber die anderen Verbraucher
+        # nicht). So bleibt die Aenderung auf genau die Quelle beschraenkt, aus der `pick_poly`
+        # ausserhalb des Freeze liest — minimale Angriffsflaeche.
+        if _cls == "vor":
+            _u = upcoming.get(key)
+            if _u is not None:
+                _u["shares"] = shares
+                _u["whales"] = _whales[:12]     # gedeckelt: die Datei wird committet
+            continue
         if _avg_get and _whales:
             try:
                 _enrich_whales_avg(_whales, {o["label"]: o.get("token") for o in oc if o.get("token")},

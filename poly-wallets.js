@@ -784,6 +784,15 @@ function _pwMoneyBroad(broad){
 
   // Highlight-Kacheln nur, wenn es überhaupt einen NENNENSWERTEN Unterschied gibt — sonst ist
   // „am schärfsten/dümmsten" bei quasi-gleichauf-Daten irreführend (aktuell alles ~gleichauf).
+  // 🔴 01.09.2026 (Lucas: „kannst du da auch mal checken"). Die Kachel „🏆 Masse weiß am meisten"
+  // stand GRUEN auf MLB — waehrend dieselbe Ansicht MLB in der Tabelle darunter als
+  // „🔴 Preis besser" fuehrte. Ursache: der Filter `Math.abs(edge)>=0.01` sortiert nach BETRAG,
+  // nicht nach VORZEICHEN. Wenn alle uebrig bleibenden Ligen negativ sind (heute: 12 von 12,
+  // beste −0,0273), ist `s[0]` der am wenigsten schlechte Verlierer — und wurde als Sieger
+  // gekroent. Ein Maximum ist kein Beleg, solange es unter null liegt.
+  // Jetzt: die Sieger-Kachel erscheint nur bei edge>0, die Verlierer-Kachel nur bei edge<0.
+  // Ausserdem nannte die Bildunterschrift die Trefferquote (58%), ausgewaehlt wurde aber nach
+  // Brier-Vorsprung — zwei verschiedene Masse in einer Kachel. Steht jetzt beides dran.
   let highlight='';
   const spread=leagues.filter(l=>Math.abs(l.edge)>=0.01);
   if(spread.length>=2){
@@ -792,9 +801,20 @@ function _pwMoneyBroad(broad){
     const tile=(t,l,col)=>'<div style="flex:1;min-width:200px;background:'+col+'14;border:1px solid '+col+'44;border-radius:12px;padding:12px 14px">'
       +'<div style="font-size:11px;color:#8b949e;text-transform:uppercase;letter-spacing:.5px">'+t+'</div>'
       +'<div style="font-size:17px;font-weight:800;color:'+col+';margin-top:2px">'+_pwCatOf(l.league)[1]+' '+_pwEsc(l.league)+'</div>'
-      +'<div style="font-size:12px;color:#8b949e">Geld trifft '+Math.round(l.moneyHitRate*100)+'% · '+l.n+' Spiele</div></div>';
-    highlight='<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">'
-      +tile('🏆 Masse weiß am meisten',best,'#3fb950')+tile('🃏 Masse liegt am öftesten daneben',worst,'#f85149')+'</div>';
+      +'<div style="font-size:12px;color:#8b949e">Geld trifft '+Math.round(l.moneyHitRate*100)+'% · '+l.n+' Spiele'
+      +' · Vorsprung '+(l.edge>=0?'+':'')+l.edge.toFixed(3)+'</div></div>';
+    const kacheln=(best.edge>0?tile('🏆 Masse weiß am meisten',best,'#3fb950'):'')
+                 +(worst.edge<0?tile('🃏 Masse liegt am öftesten daneben',worst,'#f85149'):'');
+    // Keine einzige Liga, in der das Geld schaerfer ist: das ist die Nachricht, nicht eine
+    // fehlende Kachel. Sie wird ausgesprochen, statt stillschweigend zu verschwinden.
+    const keinSieger=(best.edge<=0)
+      ? '<div style="flex:1;min-width:200px;background:#e3b34114;border:1px solid #e3b34144;border-radius:12px;padding:12px 14px">'
+        +'<div style="font-size:11px;color:#8b949e;text-transform:uppercase;letter-spacing:.5px">🏆 Masse weiß am meisten</div>'
+        +'<div style="font-size:15px;font-weight:800;color:#e3b341;margin-top:2px">keine Liga</div>'
+        +'<div style="font-size:12px;color:#8b949e">In <b>keiner</b> Liga ist das Geld schärfer als der Preis. '
+        +'Am nächsten dran: '+_pwEsc(best.league)+' ('+best.edge.toFixed(3)+').</div></div>'
+      : '';
+    highlight='<div style="display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px">'+keinSieger+kacheln+'</div>';
   }
 
   // Nach Kategorie gruppieren (Ordnung). Trefferquote als Balken + Klartext-Urteil statt Brier-Zahlen.
@@ -1577,10 +1597,28 @@ function _pwMoneyLive(live){
   const rows=all.filter(x=>_pwSportPass(x.m.league, x.m.sport))
     .sort((a,b)=>(b.m.totalUsd||0)-(a.m.totalUsd||0)).slice(0,30);
   const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">💰 Wo liegt das große Geld — alle Sportarten</span>'
-    +'<span class="pw-sec-note">kommende Spiele nach Poly-Volumen · auf welche Seite hat die Masse gesetzt · zum Folgen</span></div>';
+    +'<span class="pw-sec-note">kommende Spiele nach Poly-Volumen · auf welche Seite hat die Masse gesetzt · <b>das Urteil der Liga steht an der Zeile</b> (Rückblick unten)</span></div>';
   if(!rows.length) return intro+'<div class="pw-none">'+_pwStaleMsg(_pwSportFilter==='all'
     ?'Gerade kein nennenswertes Geld auf kommenden Märkten (füllt sich nah am Anpfiff, läuft am Mac-Runner).'
     :'Keine kommenden '+_pwSportFilter+'-Märkte gerade — Filter „Alle" zeigt wieder alles.')+'</div></section>';
+  // 🔴 01.09.2026 (Lucas-Check): Diese Tabelle sagt in ihrer Unterzeile „zum Folgen" und listet 30
+  // Maerkte — waehrend der Rueckblick DIREKT DARUNTER fuer 12 von 17 Ligen „🔴 Preis besser" zeigt
+  // und fuer KEINE einzige „🟢 Geld schaerfer". Die Anleitung oben sagt zwar „nur folgen, wo der
+  // Rueckblick gruen ist", aber die Zeile, an der man handelt, trug das Urteil nicht mit — man
+  // haette scrollen und die Liga selbst nachschlagen muessen. Jetzt steht es an der Zeile.
+  const _urteil=(()=>{
+    const bl=(_pwCache&&_pwCache.moneyBroad&&_pwCache.moneyBroad.byLeague)||[];
+    const m={}; bl.forEach(l=>{ if(l&&l.league) m[String(l.league).toUpperCase()]={v:l.verdict,n:l.n}; });
+    return m;
+  })();
+  const _urteilChip=lg=>{
+    const u=_urteil[String(lg||'').toUpperCase()];
+    // Keine Historie = kein Urteil. Nicht „unbedenklich".
+    if(!u) return '<span class="pw-mut" style="font-size:9px" title="Für diese Liga liegt noch kein Rückblick vor — das ist kein Freibrief.">?</span>';
+    const V={geld_schaerfer:['🟢','#3fb950','folgen'],preis_besser:['🔴','#f85149','faden'],gleichauf:['⚪','#8b949e','neutral']};
+    const f=V[u.v]||V.gleichauf;
+    return '<span style="font-size:9px;font-weight:800;color:'+f[1]+'" title="Rückblick über '+u.n+' aufgelöste Spiele dieser Liga: '+f[2]+'">'+f[0]+' '+f[2]+'</span>';
+  };
   const body=rows.map(({k,m})=>{
     const oc=Object.entries(m.shares||{}).map(([name,usd])=>({name,usd:Number(usd)||0}));
     const total=oc.reduce((s,o)=>s+o.usd,0)||1; oc.sort((a,b)=>b.usd-a.usd);
@@ -1596,7 +1634,7 @@ function _pwMoneyLive(live){
     const cols=['#4cc2ff','#f5c518','#ff5d5d'];
     const seg=oc.slice(0,3).map((o,i)=>'<i style="display:inline-block;height:100%;width:'+Math.round(o.usd/total*100)+'%;background:'+cols[i]+'" title="'+_pwEsc(o.name)+' '+Math.round(o.usd/total*100)+'%"></i>').join('');
     return '<tr>'
-      +'<td style="white-space:nowrap">'+ic+' <span class="pw-mut" style="font-size:11px">'+lg+'</span></td>'
+      +'<td style="white-space:nowrap">'+ic+' <span class="pw-mut" style="font-size:11px">'+lg+'</span><br>'+_urteilChip(m.league)+'</td>'
       +'<td>'+match+'</td>'
       +'<td style="min-width:110px"><div style="height:9px;border-radius:5px;overflow:hidden;background:#161b22;display:flex">'+seg+'</div></td>'
       +'<td class="pw-cm" style="white-space:nowrap"><b style="color:#4cc2ff">'+_pwEsc(fav.name)+'</b> '+favPct+'% <span class="pw-mut">('+favPrice+')</span></td>'
@@ -2293,13 +2331,25 @@ function _pwShortlistScore(key,m){
     const pnlTxt=(sh.pnl>=0?'+':'-')+_pwUsd(Math.abs(sh.pnl));
     // Der Text sagt, was die Zahl sagt: „scharf" nur bei bewiesenen Wallets, sonst ehrlich
     // „vielversprechend". Ein halber Beleg darf nicht wie ein ganzer klingen.
-    const _lbl=_gr>=1?'🔥 scharfe Wallet':'🔎 vielversprechende Wallet (noch nicht belegt)';
+    // 01.09.2026 (Lucas-Checkup): der Satz war in drei Punkten irrefuehrend.
+    //  · SINGULAR, obwohl _pwSharpInfoForKey die Wallets EINER Seite zusammenfasst (`count` lag
+    //    vor und wurde nie gezeigt). Im geprueften Fall waren es zwei.
+    //  · „(128/213, 60%)" liest sich wie die Bilanz EINER Wallet, ist aber die Summe ueber
+    //    mehrere — n=213 sind nicht 213 Wetten eines Akteurs. Steht jetzt als „zusammen" dran.
+    //  · „noch nicht belegt" bei Beleggrad 99,8%: dort war eine Wallet bewiesen (Wilson-UG 0,532)
+    //    und die zweite verfehlte die Schwelle um 0,0005. Das als „nicht belegt" zu etikettieren
+    //    ist formal richtig und praktisch Unsinn. Ab 95% heisst es jetzt „faktisch belegt".
+    const _mehr=(sh.count||1)>1;
+    const _lbl=_gr>=1 ? (_mehr?'🔥 scharfe Wallets':'🔥 scharfe Wallet')
+             : _gr>=0.95 ? (_mehr?'🔥 scharfe Wallets (faktisch belegt)':'🔥 scharfe Wallet (faktisch belegt)')
+             : (_mehr?'🔎 vielversprechende Wallets (noch nicht belegt)':'🔎 vielversprechende Wallet (noch nicht belegt)');
     // ⚠️ Der TAG ist nicht dasselbe wie das GEWICHT. Das Gewicht darf beliebig fein sein — der Tag
     // bildet die Eimer, in denen `_pwCalibConv` und das Freigabe-Register rechnen. Liefe jeder
     // 0,1-Beitrag als 'sharp' mit, stuende ein Play mit 0,23 Gewicht im selben Eimer wie eines mit
     // 2,8 — und der Eimer misst dann nichts mehr. Deshalb traegt nur ein halbwegs belegter Beitrag
     // das Etikett; darunter zaehlt die Wallet mit, benennt den Play aber nicht.
-    add(sh.side,w,_lbl+' ('+sh.wins+'/'+sh.n+', '+Math.round(sh.hit*100)+'% · '+pnlTxt+')'
+    add(sh.side,w,_lbl+' ('+(_mehr?sh.count+' Wallets, zusammen ':'')+sh.wins+'/'+sh.n+', '
+        +Math.round(sh.hit*100)+'% · '+pnlTxt+')'
         +(_gr>=1?'':' · zählt '+Math.round(_gr*100)+'%'),
         _gr>=PW_SHARP_TAG_MIN_GRADE?'sharp':null);
   } else {
@@ -2650,6 +2700,25 @@ let _pwTermHideMuted=false;
 function _pwTermMute(v){ _pwTermHideMuted=!!v; _pwRender(); }
 if(typeof window!=='undefined') window._pwTermMute=_pwTermMute;
 
+// 01.09.2026 — die Untergrenze fuers Terminal. agg.public/agg.all tragen nur den Punktschaetzer;
+// die Einzel-Renditen stehen aber in `settled` und lassen sich hier ausrechnen. Einseitige
+// 95%-Untergrenze, derselbe Richter wie im Freigabe-Register, im Killer und in der Money Map.
+function _pwSegUg(nurPublic){
+  const st=(_pwCache&&_pwCache.shortlistTrack&&_pwCache.shortlistTrack.settled)||null;
+  if(!st) return null;
+  const rows=(Array.isArray(st)?st:Object.values(st)).filter(x=>x&&(!nurPublic||x.public));
+  const r=[];
+  for(const x of rows){ const s=Number(x.stake)||0; if(s>0) r.push((Number(x.pnl)||0)/s); }
+  if(r.length<2) return null;
+  const m=r.reduce((a,b)=>a+b,0)/r.length;
+  const va=r.reduce((a,b)=>a+(b-m)*(b-m),0)/(r.length-1);
+  return m-1.645*Math.sqrt(va)/Math.sqrt(r.length);
+}
+function _pwUgTxt(ug){ return ug==null?'—':((ug>=0?'+':'')+Math.round(ug*100)+'%'); }
+// Gruen NUR, wenn die Untergrenze ueber null liegt. Fehlt sie, bleibt es neutral —
+// fehlende Information ist keine Erlaubnis.
+function _pwUgFarbe(ug,roi){ return ug==null?'#8b949e':(ug>0?'#3fb950':(roi>=0?'#e3b341':'#f85149')); }
+
 function _pwTermBucket(conv){
   const bc=(_pwCache&&_pwCache.shortlistTrack&&_pwCache.shortlistTrack.agg&&_pwCache.shortlistTrack.agg.byConv)||{};
   return bc[String(conv)]||null;
@@ -2938,9 +3007,14 @@ function _pwTerminal(){
   const kpi=(v,lbl,col,sub)=>'<div style="flex:1;min-width:128px;background:#0d1117;border:1px solid #21262d;border-left:3px solid '+col+';border-radius:10px;padding:11px 13px"><div style="font-size:20px;font-weight:900;color:'+col+';line-height:1.1">'+v+'</div><div style="font-size:10px;color:#8b949e;text-transform:uppercase;letter-spacing:.4px;margin-top:4px">'+lbl+'</div>'+(sub?'<div style="font-size:10px;color:#6e7681;margin-top:1px">'+sub+'</div>':'')+'</div>';
   const pctS=x=>x==null?'—':(x>=0?'+':'')+(Math.round(x*1000)/10)+'%';
   const kpiBand=isK?('<div style="display:flex;gap:10px;flex-wrap:wrap;margin:2px 0 14px">'
-    +kpi(pctS(pub.roi),'ROI Public-Segment',(pub.roi>=0?'#3fb950':'#f85149'),'n'+(pub.n||0)+' · CLV '+((pub.clvAvg!=null)?(pub.clvAvg>=0?'+':'')+pub.clvAvg:'—'))
-    +kpi(pctS(allA.roi),'ROI ganze Shortlist',(allA.roi>=0?'#3fb950':'#f85149'),'n'+(allA.n||0)+' · Rauschen inkl.')
-    +kpi(String(rows.length-nMuted),'handelbare Plays jetzt','#a78bfa',nMuted?(nMuted+' gemutet'):'nichts gemutet')+'</div>'):'';
+    // 01.09.2026: stand hier als nackter Punktschaetzer („+2,3%") — die letzte Stelle im Terminal
+    // ohne Untergrenze, waehrend Freigabe-Register, Killer und Money-Map laengst alle dieselbe
+    // pruefen. Bei n=180 und dieser Streuung ist +2,3% von 0 nicht zu unterscheiden; gruen darf
+    // die Zahl deshalb erst sein, wenn die Untergrenze ueber null liegt.
+    // ([[feedback_punktschaetzer_kein_beleg]])
+    +kpi(pctS(pub.roi),'ROI Public-Segment',_pwUgFarbe(_pwSegUg(true),pub.roi),'n'+(pub.n||0)+' · UG '+_pwUgTxt(_pwSegUg(true))+' · CLV '+((pub.clvAvg!=null)?(pub.clvAvg>=0?'+':'')+pub.clvAvg:'—'))
+    +kpi(pctS(allA.roi),'ROI ganze Shortlist',_pwUgFarbe(_pwSegUg(false),allA.roi),'n'+(allA.n||0)+' · UG '+_pwUgTxt(_pwSegUg(false))+' · Rauschen inkl.')
+    +kpi(String(rows.length-nMuted),((rows.length-nMuted)===1?'handelbarer Play jetzt':'handelbare Plays jetzt'),'#a78bfa',nMuted?(nMuted+' gemutet'):'nichts gemutet')+'</div>'):'';
 
   const th=(t,a)=>'<th style="font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:#484f58;font-weight:700;text-align:'+(a||'right')+';padding:7px 9px;border-bottom:1px solid #21262d;white-space:nowrap">'+t+'</th>';
   let out='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🖥️ Terminal — '+_lensDef[lens][0].replace(/^\S+\s/,'')+'</span>'
@@ -2951,7 +3025,11 @@ function _pwTerminal(){
 
   const flHead=lens==='bewegung'?'Steam':'Geld / Fluss';
   out+='<div class="pw-tw"><table class="pw-tbl" style="width:100%"><thead><tr>'
-    +th('Anpfiff','left')+th('Spiel','left')+th('Pick','left')+th('Konviktion')+th(flHead)+th('CLV-Bucket')+th('Einstieg')+'</tr></thead><tbody>';
+    // 01.09.2026 (Lucas: „check mal, ob im Poly-Terminal alles passt"). Passte nicht: die Spalte
+    // hiess „CLV-Bucket" und zeigte den ROI. Bei Konv 7 (n=175) stehen ROI +1,3% und CLV −0,2pp —
+    // die beiden widersprechen sich dort im VORZEICHEN, die Ueberschrift log also genau da, wo es
+    // zaehlt. `clvAvg` lag in agg.byConv die ganze Zeit vor und wurde nie gelesen.
+    +th('Anpfiff','left')+th('Spiel','left')+th('Pick','left')+th('Konviktion')+th(flHead)+th('Stufen-Bilanz')+th('Einstieg')+'</tr></thead><tbody>';
   let mutedStarted=false;
   shown.forEach(x=>{
     const r=x.r; const open=(String(_pwTermRow)===String(r.key));
@@ -2960,7 +3038,7 @@ function _pwTerminal(){
     const meter=_pwTermMeter(r.conv);
     const b=(r.conv!=null)?_pwTermBucket(r.conv):null;
     const clv=(b&&b.n>=20)
-      ? '<span style="font-family:ui-monospace,monospace;font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:5px;color:'+(b.roi>0?'#3fb950':b.roi<0?'#f85149':'#8b949e')+';background:'+(b.roi>0?'rgba(63,185,80,.1)':b.roi<0?'rgba(248,81,73,.1)':'transparent')+'">'+(b.roi>0?'🟢':b.roi<0?'🔴':'⚪')+' '+(b.roi>=0?'+':'')+Math.round(b.roi*100)+'% · n'+b.n+'</span>'
+      ? '<span style="font-family:ui-monospace,monospace;font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:5px;color:'+(b.roi>0?'#3fb950':b.roi<0?'#f85149':'#8b949e')+';background:'+(b.roi>0?'rgba(63,185,80,.1)':b.roi<0?'rgba(248,81,73,.1)':'transparent')+'" title="Wie diese Conviction-Stufe im Paper-Track wirklich lief. ROI und CLV getrennt — bei kleinem n ist der CLV belastbarer.">'+(b.roi>0?'🟢':b.roi<0?'🔴':'⚪')+' ROI '+(b.roi>=0?'+':'')+Math.round(b.roi*100)+'%'+((typeof b.clvAvg==='number')?' · CLV '+(b.clvAvg>=0?'+':'')+b.clvAvg.toFixed(1)+'pp':'')+' · n'+b.n+'</span>'
       : '<span style="color:#484f58;font-size:10px">'+(b?('dünn n'+b.n):'—')+'</span>';
     const htk=r.htk!=null?(r.htk<0?'<span style="color:#f85149;font-weight:700">● LIVE</span>':r.htk<1?'<1h':Math.round(r.htk)+'h'):'—';
     const price=(r.price!=null)?Math.round(r.price*100)+'¢':'—';

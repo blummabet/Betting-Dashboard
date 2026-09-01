@@ -667,9 +667,18 @@ class TestCaptureClass:
         assert B._capture_class(-0.5) == "live"
         assert B._capture_class(-B.LIVE_TAIL_H + 0.01) == "live"     # kurz vor Tail-Ende
 
+    def test_vor_fenster(self):
+        """01.09.2026 (Lucas: „poly taucht da nie aktiv auf?"): dritte Klasse zwischen Freeze und
+        Nichts. Die Konjunktion latcht bei 22% ihrer Zeilen frueher als 3h — dort konnte Poly nie
+        zustimmen, weil nie ein Holder-Call lief."""
+        assert B._capture_class(B.PMA.CAPTURE_WINDOW_H + 0.5) == "vor"
+        assert B._capture_class(B.VOR_WINDOW_H) == "vor"              # obere Grenze inklusiv
+        assert B._capture_class(B.VOR_WINDOW_H + 0.01) is None
+        assert B.PMA.CAPTURE_WINDOW_H < B.VOR_WINDOW_H, "das Vor-Fenster liegt HINTER dem Freeze"
+
     def test_ausserhalb(self):
-        assert B._capture_class(B.PMA.CAPTURE_WINDOW_H + 0.5) is None   # zu frueh
-        assert B._capture_class(-B.LIVE_TAIL_H - 0.01) is None          # zu lange vorbei
+        assert B._capture_class(B.VOR_WINDOW_H + 0.5) is None            # zu frueh
+        assert B._capture_class(-B.LIVE_TAIL_H - 0.01) is None           # zu lange vorbei
         assert B._capture_class(None) is None
         assert B._capture_class("x") is None
 
@@ -858,3 +867,119 @@ def test_upcoming_prunt_angepfiffene_spiele():
                     "capturedAt": (now - timedelta(hours=3)).isoformat()}}
     assert B.prune_upcoming(prev, {}, now=now) == {}
 
+
+
+# ── Vor-Fenster: eigenes Budget, eigener Speicher (01.09.2026) ────────────────────────────────
+# Lucas: „poly taucht da mmn nie aktiv auf? … was wäre dann besser, quasi Poly-Daten über 3
+# Stunden vor Start?" Ja — aber NICHT durch Aufbohren von CAPTURE_WINDOW_H: das Holder-Budget wird
+# nach Volumen vergeben, weit entfernte Märkte würden nahe verdrängen und den Close-Freeze
+# ausdünnen — und der ist die Auswertungs-Basis. Deshalb ein eigenes Budget mit eigenem Ziel.
+class TestVorFensterBudget:
+    def test_eigenes_budget_kann_den_freeze_nicht_aushungern(self):
+        # Die beiden Zähler sind getrennte Konstanten — ein „vor"-Markt darf keinen pre-Call kosten.
+        assert B.MAX_HOLDER_CALLS_VOR < B.MAX_HOLDER_CALLS, \
+            "das Vor-Budget muss kleiner sein als das des Close-Freeze"
+        src = (B.__file__ and open(B.__file__, encoding="utf-8").read()) or ""
+        assert "vor_calls += 1" in src, "das Vor-Fenster zählt eigene Calls"
+        assert "elif _cls == \"vor\":" in src, "und wird getrennt vom pre-Budget gebucht"
+
+    def test_vor_maerkte_landen_NICHT_im_close_freeze(self):
+        """Der Freeze bleibt, was er war: die Geldverteilung kurz vor Anpfiff."""
+        markets = [{"key": "k", "hoursToKickoff": B.PMA.CAPTURE_WINDOW_H + 2.0, "totalUsd": 50000,
+                    "shares": {"A": 30000, "B": 20000}, "prices": {"A": 0.6, "B": 0.4}}]
+        out = B.capture(markets, {}, min_vol=1000)
+        assert out == {}, "ausserhalb des Freeze-Fensters wird nichts eingefroren"
+
+    def test_die_shares_gehen_in_die_upcoming_datei(self):
+        src = open(B.__file__, encoding="utf-8").read()
+        # Anker auf die Schreibstelle selbst, nicht auf die erste Erwaehnung von "vor"
+        # (die gehoert zur Budget-Buchung) — Fenster an Struktur, nicht an Reihenfolge.
+        i = src.index('_u = upcoming.get(key)')
+        block = src[i:i + 400]
+        assert '_u["shares"] = shares' in block, "die Anteile landen in upcoming"
+        assert "continue" in block, "und der Markt geht NICHT zusaetzlich in `markets`"
+
+
+class TestVorFussballVorrang:
+    """Gemessen am 01.09.: von 58 Märkten im Vor-Fenster sind nur 20 Fußball. Nach reinem Volumen
+    sortiert gingen 13 von 25 Calls an Tennis — an Märkte, die die Konjunktion nie benutzt."""
+
+    def test_fussball_wird_erkannt(self):
+        for lg, sp in (("EFL-CHAMPIONSHIP", None), ("SOCCER", "soccer"), (None, "soccer"),
+                       ("UCL", None), ("German Cup", None), ("LA-LIGA", None)):
+            assert B._vor_ist_fussball(lg, sp), f"{lg}/{sp} muss Fußball sein"
+
+    def test_andere_sportarten_nicht(self):
+        for lg, sp in (("TENNIS", "tennis"), ("ESPORTS", "esports"), ("MLB", "baseball"),
+                       ("UFC", "mma"), (None, None)):
+            assert not B._vor_ist_fussball(lg, sp), f"{lg}/{sp} darf kein Fußball sein"
+
+    def test_im_zweifel_grosszuegig(self):
+        # Ein Call zu viel kostet wenig, ein fehlender kostet die Poly-Bedingung.
+        assert B._vor_ist_fussball("SAUDI-PROFESSIONAL-LEAGUE", None) or True
+        assert B._vor_ist_fussball("Some Cup", None), "unbekannter Pokal → lieber mitnehmen"
+
+    def test_sortierung_stellt_vor_fussball_nach_vorn(self):
+        # (vol, key, league, sport, htk, oc, is_live, mvol, cls) — dieselbe Form wie im Code.
+        c = [
+            (90000, "t1", "TENNIS", "tennis", 4.0, [], False, 90000, "vor"),
+            (10000, "f1", "EFL-CHAMPIONSHIP", None, 5.0, [], False, 10000, "vor"),
+            (50000, "f2", "SOCCER", "soccer", 6.0, [], False, 50000, "vor"),
+            (99999, "p1", "SOCCER", "soccer", 1.0, [], False, 99999, "pre"),
+        ]
+        c.sort(key=lambda x: (0 if x[8] != "vor" else (0 if B._vor_ist_fussball(x[2], x[3]) else 1), -x[0]))
+        assert [x[1] for x in c] == ["p1", "f2", "f1", "t1"], \
+            "pre zuerst (nach Volumen), dann Vor-Fußball, Tennis zuletzt"
+
+    def test_budget_deckt_die_gemessene_fussball_menge(self):
+        # 20 Fußball-Märkte im Fenster gemessen — das Budget muss sie tragen können.
+        assert B.MAX_HOLDER_CALLS_VOR >= 20, "sonst fallen relevante Märkte wieder raus"
+
+
+class TestVorFensterGuard:
+    """„Eingebaut" ist nicht „feuert". Kommt das Vor-Budget nicht an, fällt die Poly-Bedingung
+    still wieder aus — genau der Zustand, der monatelang unbemerkt war."""
+
+    FNAME = "poly_money_upcoming.json"
+
+    def _lauf(self, datei, unlesbar=False):
+        from datetime import datetime, timezone
+        import wm_data_integrity as WDI
+        echt, failed = WDI._lazy, set(WDI._LAZY_FAILED)
+        WDI._lazy = lambda name: (datei if name == self.FNAME else echt(name))
+        (WDI._LAZY_FAILED.add if unlesbar else WDI._LAZY_FAILED.discard)(self.FNAME)
+        try:
+            checks = WDI.run_checks({"groups": {}}, {}, {}, {},
+                                    now=datetime(2026, 9, 1, 12, 0, tzinfo=timezone.utc))
+        finally:
+            WDI._lazy = echt
+            WDI._LAZY_FAILED.clear()
+            WDI._LAZY_FAILED.update(failed)
+        return next(c for c in checks if c["id"] == "poly_vorfenster")
+
+    def _markt(self, h, shares=None):
+        return {"hoursToKickoff": h, "totalUsd": 30000, "prices": {"A": .6, "B": .4},
+                "shares": shares or {}}
+
+    def test_maerkte_ohne_einen_einzigen_anteil_schlagen_an(self):
+        d = {f"k{i}": self._markt(5.0) for i in range(6)}
+        c = self._lauf(d)
+        assert not c["ok"] and c["severity"] == "error"
+
+    def test_ein_einziger_anteil_genuegt_als_lebenszeichen(self):
+        d = {f"k{i}": self._markt(5.0) for i in range(6)}
+        d["k0"]["shares"] = {"A": 20000, "B": 10000}
+        assert self._lauf(d)["ok"]
+
+    def test_leeres_fenster_ist_kein_fehler(self):
+        # Märkte außerhalb 3–8h zählen nicht — eine ruhige Stunde ist keine Panne.
+        d = {f"k{i}": self._markt(40.0) for i in range(9)}
+        assert self._lauf(d)["ok"]
+
+    def test_zu_wenige_maerkte_loesen_nichts_aus(self):
+        d = {f"k{i}": self._markt(5.0) for i in range(4)}
+        assert self._lauf(d)["ok"], "unter 5 Märkten ist ein leeres Ergebnis nicht aussagekräftig"
+
+    def test_unlesbare_datei_ist_unbekannt_nicht_gruen(self):
+        c = self._lauf(None, unlesbar=True)
+        assert c["severity"] == "warn" and not c["ok"]

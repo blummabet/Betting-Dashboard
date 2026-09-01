@@ -2529,6 +2529,51 @@ def check_live_scan_laeuft(ctx):
 KILLER_PUSH_OFFEN_MAX_H = 48
 
 
+# 01.09.2026 (Lucas: „poly taucht da mmn nie aktiv auf?"). Antwort war: die Holder-Anteile werden
+# nur fuer Maerkte <=3h vor Anpfiff geholt, die Konjunktion latcht bei 22% ihrer Zeilen frueher.
+# Seither gibt es ein Vor-Fenster (3-8h) mit eigenem, fussball-priorisiertem Budget, dessen Ergebnis
+# in poly_money_upcoming.json landet. Dieser Guard prueft, ob dort tatsaechlich Anteile ANKOMMEN —
+# „eingebaut" ist nicht „feuert" ([[project_betfair_norm_league_basis]]).
+VOR_ANTEILE_MIN = 1     # mindestens so viele Vor-Maerkte muessen shares tragen, wenn es welche gibt
+
+
+@integrity_check
+def check_poly_vorfenster(ctx):
+    """Kommen im Vor-Fenster wirklich Geld-Anteile an?
+
+    Die Datei traegt Maerkte bis 120h vor Anpfiff; nur die im Vor-Fenster (3-8h) bekommen einen
+    Holder-Call. Sind dort Maerkte, aber KEINER mit `shares`, ist das Budget nicht angekommen —
+    dann faellt die Poly-Bedingung der Konjunktion still wieder aus, so wie monatelang zuvor.
+    Keine Maerkte im Fenster = ruhige Stunde, kein Fehler."""
+    fname = "poly_money_upcoming.json"
+    data = _lazy(fname)
+    if fname in _LAZY_FAILED:
+        return _chk("poly_vorfenster", "Poly-Vorfenster liefert Anteile", "warn",
+                    [f"❔ {fname} nicht lesbar — ob Anteile ankommen, ist UNBEKANNT."], "")
+    if not isinstance(data, dict) or not data:
+        return _chk("poly_vorfenster", "Poly-Vorfenster liefert Anteile", "warn",
+                    [f"❔ {fname} fehlt/leer — nicht unterscheidbar von „gerade nichts im Fenster\"."],
+                    "poly_money_broad.py schreibt sie bei jedem Lauf.")
+    im_fenster, mit_anteilen = 0, 0
+    for v in data.values():
+        if not isinstance(v, dict):
+            continue
+        h = v.get("hoursToKickoff")
+        if not isinstance(h, (int, float)) or not (3.0 < h <= 8.0):
+            continue
+        im_fenster += 1
+        if v.get("shares"):
+            mit_anteilen += 1
+    fails = []
+    if im_fenster >= 5 and mit_anteilen < VOR_ANTEILE_MIN:
+        fails.append(f"{im_fenster} Maerkte im Vor-Fenster (3-8h), aber KEINER mit Geld-Anteilen — "
+                     f"das Vor-Budget kommt nicht an. Die Poly-Bedingung der Konjunktion faellt "
+                     f"damit still aus.")
+    return _chk("poly_vorfenster", "Poly-Vorfenster liefert Anteile", "error", fails,
+                f"{mit_anteilen} von {im_fenster} Vor-Maerkten mit Anteilen. Leeres Fenster ist "
+                f"kein Fehler; Maerkte ohne einen einzigen Anteil schon.")
+
+
 @integrity_check
 def check_killer_push_buch(ctx):
     """Das Schattenbuch des Trades-Pushes muss abrechnen, nicht nur sammeln.

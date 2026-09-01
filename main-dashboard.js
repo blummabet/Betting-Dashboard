@@ -1768,21 +1768,38 @@
         bf: 'Betfair: Geldanteil ' + (x.anteilPct || 0) + '% · frischer Zufluss · Quote zieht mit',
         pinn: 'Pinnacle: ' + (v.pinn ? 'stimmt zu' : 'keine Zustimmung') + ' · ' +
               (v.pinnMove ? v.pinnMove.text : 'keine Bewegung'),
-        poly: x.poly ? ('Poly-Geld ' + x.poly.anteilPct + '% auf derselben Seite') : 'kein Poly-Markt',
+        // 01.09.2026 (Lucas: „poly taucht da mmn nie aktiv auf?"): der Titel behauptete bei jedem
+        // leeren Block „kein Poly-Markt" — dabei ist der haeufigste Fall, dass es den Markt sehr
+        // wohl gibt, aber die Holder-Anteile ausserhalb des ~3h-Freeze schlicht nicht erhoben sind.
+        poly: x.poly ? ('Poly-Geld ' + x.poly.anteilPct + '% auf derselben Seite')
+              : x.polyStatus === 'nein' ? 'Poly-Geld liegt NICHT (ausreichend) auf dieser Seite'
+              : 'Poly-Anteil unbekannt — die Holder-Anteile werden erst ab ca. 3h vor Anpfiff erhoben. Das ist kein Nein.',
         form: v.streak ? v.streak.text : (v.track ? v.track.text : 'keine Form-/Liga-Stütze')
       };
       var n = 0, moeglich = 0;
       var bloecke = KL_STROEME.map(function (st) {
         var b = belegt[st.k] || [], an = b.filter(Boolean).length;
-        n += an; moeglich += st.n;
+        // Ein NICHT ERHOBENER Strom zaehlt auch nicht ins Moegliche — sonst liest sich „3/7" wie
+        // „vier Bedingungen fehlen", obwohl eine davon nie gepruefet wurde. Aus 3/7 wird 3/6.
+        n += an;
+        moeglich += (st.k === 'poly' && !((belegt.poly || [])[0]) && x.polyStatus !== 'nein') ? 0 : st.n;
         var pips = b.map(function (voll) {
           return '<i class="md-kl-pip' + (voll ? '' : ' leer') + '"' +
             (voll ? ' style="background:' + st.col + '"' : '') + '></i>';
         }).join('');
         var zahl = (st.k === 'bf' && x.anteilPct != null) ? ' ' + x.anteilPct + '%' : '';
+        // ❔ statt Leere: ein unbekannter Strom darf nicht aussehen wie ein abgelehnter. Bisher
+        // war der POLY-Block in beiden Faellen identisch dunkel — man las ein Nein, wo niemand
+        // gefragt hatte. Gilt nur fuer Poly; Betfair ist per Konstruktion immer da, und bei
+        // Pinnacle/Form heisst leer wirklich „liegt nicht vor".
+        // Auch eine ALTE killer.json ohne `polyStatus` gilt als unbekannt — wir behaupten kein
+        // Nein, das wir nicht belegen koennen (dieselbe Richtung wie ueberall sonst).
+        var unbekannt = (st.k === 'poly' && !an && x.polyStatus !== 'nein');
         return '<span class="md-kl-str' + (an ? '' : ' aus') + '" title="' + esc(titel[st.k]) + '">' +
           '<span class="md-kl-pips">' + pips + '</span>' +
-          '<span class="md-kl-lbl"' + (an ? ' style="color:' + st.col + '"' : '') + '>' + st.kurz + zahl + '</span></span>';
+          '<span class="md-kl-lbl"' + (an ? ' style="color:' + st.col + '"' : '') + '>' + st.kurz + zahl +
+          (unbekannt ? ' <i style="font-style:normal;color:var(--mi3)" title="nicht erhoben">❔</i>' : '') +
+          '</span></span>';
       }).join('');
       return { html: bloecke, n: n, moeglich: moeglich };
     }

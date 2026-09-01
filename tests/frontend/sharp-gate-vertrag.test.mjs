@@ -105,8 +105,13 @@ test('Regler: JS und Python teilen den Boden', () => {
 test('Der Beleggrad haengt wirklich im Konviktions-Gewicht', () => {
   // Sonst ist der Regler eingebaut und feuert nie — die Bauform, die uns schon mehrfach
   // Wochen gekostet hat (Fix da, Wirkung null).
+  // 01.09.2026: hier stand `SRC.slice(von, von + 2000)`. Ein neuer Kommentar im Scorer hat den
+  // gesuchten Ausdruck aus dem Fenster geschoben — dritter Fall desselben Musters an einem Tag.
+  // Das Fenster endet jetzt am ENDE DES ZWEIGS (`} else {`), nicht nach n Zeichen.
   const von = SRC.indexOf('let w=1.8;');
-  const scorer = SRC.slice(von, von + 2000);
+  assert.ok(von > 0, 'Scorer-Zweig nicht gefunden');
+  const _bis = SRC.indexOf('} else {', von);
+  const scorer = SRC.slice(von, _bis > von ? _bis : SRC.length);
   assert.ok(/w\s*\*=\s*_gr/.test(scorer),
     'das Konviktions-Gewicht multipliziert den Beleggrad nicht mehr');
   assert.ok(/vielversprechende Wallet/.test(scorer),
@@ -117,8 +122,13 @@ test('Das Etikett ist strenger als das Gewicht — sonst verwaessern die Eimer',
   // Gewicht darf fein abgestuft sein; der TAG bildet die Eimer, in denen _pwCalibConv und das
   // Freigabe-Register rechnen. Liefe jeder 0,1-Beitrag als 'sharp' mit, stuende ein Play mit
   // 0,23 Gewicht im selben Eimer wie eines mit 2,8 — der Eimer misst dann nichts mehr.
+  // 01.09.2026: hier stand `SRC.slice(von, von + 2000)`. Ein neuer Kommentar im Scorer hat den
+  // gesuchten Ausdruck aus dem Fenster geschoben — dritter Fall desselben Musters an einem Tag.
+  // Das Fenster endet jetzt am ENDE DES ZWEIGS (`} else {`), nicht nach n Zeichen.
   const von = SRC.indexOf('let w=1.8;');
-  const scorer = SRC.slice(von, von + 2000);
+  assert.ok(von > 0, 'Scorer-Zweig nicht gefunden');
+  const _bis = SRC.indexOf('} else {', von);
+  const scorer = SRC.slice(von, _bis > von ? _bis : SRC.length);
   assert.ok(/_gr>=PW_SHARP_TAG_MIN_GRADE\?'sharp':null/.test(scorer.replace(/\s+/g, '')),
     'der Tag haengt nicht mehr an einer eigenen Schwelle');
   const m = /const PW_SHARP_TAG_MIN_GRADE=([\d.]+)/.exec(SRC);

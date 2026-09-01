@@ -186,7 +186,25 @@ def zeile(mid, eintrag, sig, cons_game, track, streaks):
     # Poly zählt nur, wenn es DIESELBE Seite meint. Die Konsens-Zeile hat das schon geprüft
     # (verdict konsens/teil = Anker und Geld sehen dieselbe Seite vorn); zusätzlich muss die
     # Betfair-Geld-Seite dieselbe sein wie die, auf der unser Signal steht.
-    poly_gleich = bool(poly) and g.get("moneySide") == seite and (poly.get("sharePct") or 0) >= POLY_MIN_ANTEIL
+    # 🔴 01.09.2026 (Lucas: „poly taucht da mmn nie aktiv auf?"). Er hatte recht, und der Grund war
+    # ein Doktrin-Verstoss mitten im Geld-Pfad: hier stand `(poly.get("sharePct") or 0) >= 60`.
+    # Das `or 0` macht aus einem UNBEKANNTEN Anteil eine 0 — also ein NEIN.
+    #
+    # Unbekannt ist er oefter, als man denkt: die Holder-Anteile kommen aus
+    # `poly_money_broad_close.json`, und dieser Freeze reicht nur bis ~2,8h vor Anpfiff (Median
+    # 0,3h). Weiter draussen faellt `pick_poly` auf `poly_money_upcoming.json` zurueck — und die
+    # Datei hat ueberhaupt kein `shares`-Feld (0 von 120 Eintraegen), nur Preis und Volumen.
+    # Folge: bei 22% der gelatchten Zeilen KANN Poly nicht zustimmen, weil niemand gefragt hat —
+    # angezeigt wurde das identisch zu „Poly ist dagegen".
+    #
+    # Drei Zustaende statt zwei. Stufe 1 verlangt weiterhin ein echtes JA (fehlende Information ist
+    # keine Erlaubnis) — aber die Zeile sagt jetzt, ob sie ein Nein oder ein Achselzucken ist.
+    _poly_anteil = (poly or {}).get("sharePct")
+    _poly_bekannt = isinstance(_poly_anteil, (int, float))
+    poly_status = ("unbekannt" if not (poly and _poly_bekannt)
+                   else "ja" if (g.get("moneySide") == seite and _poly_anteil >= POLY_MIN_ANTEIL)
+                   else "nein")
+    poly_gleich = poly_status == "ja"
     pinn_gleich = bool(pinn) and pinn.get("fav") == seite
 
     verst = []
@@ -223,6 +241,8 @@ def zeile(mid, eintrag, sig, cons_game, track, streaks):
         "track": tr, "streak": st,
         "poly": ({"anteilPct": round(poly.get("sharePct") or 0), "usd": poly.get("vol"),
                   "odd": poly.get("odd")} if poly_gleich else None),
+        # Damit die Oberflaeche „dagegen" von „nicht gefragt" unterscheiden kann.
+        "polyStatus": poly_status,
         "pinnMovePP": pm.get("movePP"),
         # nur mitschreiben, nicht filtern — s. Kopf, Punkt 4
         "wertVsPinn": (round(sig["pinnFair"] * sig["odd"] - 1, 4)

@@ -414,3 +414,47 @@ class TestLigenZuschnitt(unittest.TestCase):
         for liga in (None, "", 5):
             self.assertFalse(killer.im_zuschnitt(liga, "top5"))
             self.assertTrue(killer.im_zuschnitt(liga, "rest"))
+
+
+# ── 01.09.2026 (Lucas: „poly taucht da mmn nie aktiv auf? nur betfair und pini") ───────────────
+# Er hatte recht. `(poly.get("sharePct") or 0) >= 60` machte aus einem UNBEKANNTEN Anteil eine 0,
+# also ein Nein. Unbekannt ist er systematisch: die Holder-Anteile stehen nur im ~3h-Close-Freeze;
+# weiter draussen liefert `poly_money_upcoming.json` Preis und Volumen, aber KEIN `shares`-Feld
+# (0 von 120 Eintraegen). Bei 22% der gelatchten Zeilen konnte Poly deshalb gar nicht zustimmen —
+# angezeigt identisch zu „Poly ist dagegen".
+class TestPolyDreiZustaende(unittest.TestCase):
+    def _zeile(self, poly, seite="home"):
+        sig = {"fav": "H", "odd": 2.0, "conc": True, "inflow": True, "dir": "in", "share": 0.8}
+        eintrag = {"home": "A", "away": "B", "league": "L", "kickoff": "2026-09-02T18:00:00Z"}
+        cons = {"moneySide": seite, "poly": poly, "pinn": {"fav": "home"}}
+        return killer.zeile("1", eintrag, sig, cons, None, None)
+
+    def test_poly_stimmt_zu(self):
+        z = self._zeile({"sharePct": 71, "vol": 9000, "odd": 1.5})
+        self.assertEqual(z["polyStatus"], "ja")
+        self.assertIsNotNone(z["poly"])
+        self.assertEqual(z["stufe"], 1, "Poly + Pinnacle = Stufe 1")
+
+    def test_poly_ist_bekannt_aber_zu_duenn(self):
+        z = self._zeile({"sharePct": 48, "vol": 9000, "odd": 1.5})
+        self.assertEqual(z["polyStatus"], "nein", "48% ist ein echtes Nein")
+        self.assertIsNone(z["poly"])
+        self.assertEqual(z["stufe"], 2)
+
+    def test_poly_auf_der_ANDEREN_seite_ist_ein_nein(self):
+        z = self._zeile({"sharePct": 80, "vol": 9000, "odd": 1.5}, seite="away")
+        self.assertEqual(z["polyStatus"], "nein")
+
+    def test_unbekannter_anteil_ist_KEIN_nein(self):
+        # Der Kern: sharePct None (Spiel ausserhalb des Close-Freeze) darf nicht wie 0% wirken.
+        z = self._zeile({"sharePct": None, "vol": 36373, "odd": 2.06})
+        self.assertEqual(z["polyStatus"], "unbekannt")
+        self.assertIsNone(z["poly"])
+
+    def test_gar_kein_poly_markt_ist_auch_unbekannt(self):
+        self.assertEqual(self._zeile(None)["polyStatus"], "unbekannt")
+
+    def test_unbekannt_oeffnet_KEINE_stufe_1(self):
+        # Fehlende Information ist keine Erlaubnis — das bleibt. Sichtbar wird nur der Unterschied.
+        z = self._zeile({"sharePct": None, "vol": 36373, "odd": 2.06})
+        self.assertEqual(z["stufe"], 2, "ohne echtes Ja keine Stufe 1")

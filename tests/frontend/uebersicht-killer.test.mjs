@@ -84,13 +84,18 @@ test('die drei Betfair-Belege sind als volle Marken sichtbar', () => {
 });
 
 test('der Zähler sagt, wie viele Ströme tragen', () => {
+  // ⚠️ 01.09.2026: eine Zeile OHNE `polyStatus` gilt jetzt als „Poly nicht erhoben" — der Platz
+  // zählt dann nicht ins Mögliche (3/6 statt 3/7). „Vier Bedingungen fehlen" wäre falsch, wenn
+  // eine davon nie geprüft wurde. Mit ausdrücklichem `polyStatus:'nein'` bleiben es 7.
   const nackt = render({ stufe1: [], stufe2: [zeile('Arsenal')] }, REG('geprueft'));
-  assert.match(nackt, /class="md-kl-cnt"[^>]*>3<i>\/7<\/i>/, 'nur das Betfair-Tor');
+  assert.match(nackt, /class="md-kl-cnt"[^>]*>3<i>\/6<\/i>/, 'nur das Betfair-Tor, Poly nicht erhoben');
+  const abgelehnt = render({ stufe1: [], stufe2: [zeile('Arsenal', { polyStatus: 'nein' })] }, REG('geprueft'));
+  assert.match(abgelehnt, /class="md-kl-cnt"[^>]*>3<i>\/7<\/i>/, 'ein echtes Nein bleibt ein möglicher Platz');
   const voll = render({ stufe1: [], stufe2: [zeile('Arsenal', {
     poly: { anteilPct: 71 },
     verstaerker: [{ art: 'pinn', text: 'Pinnacle stimmt zu' },
                   { art: 'pinnMove', text: 'Pinnacle zieht mit +2.0pp' },
-                  { art: 'streak', text: 'Ungeschlagen ×9' }] })] }, REG('geprueft'));
+                  { art: 'streak', text: 'Ungeschlagen ×9' }], polyStatus: 'ja' })] }, REG('geprueft'));
   assert.match(voll, /class="md-kl-cnt"[^>]*>7<i>\/7<\/i>/);
 });
 
@@ -115,7 +120,10 @@ test('ein fehlender Strom bleibt als LEERER Platz sichtbar', () => {
   assert.match(html, /Voll gedeckt/);
   assert.match(html, /Betfair-Kern/);
   assert.match(html, /Poly-Geld 71% auf derselben Seite/);
-  assert.match(html, /kein Poly-Markt/, 'die Lücke wird benannt, nicht weggelassen');
+  // ⚠️ 01.09.2026 SEMANTIK GEWANDERT: hier stand `/kein Poly-Markt/`. Genau diese Behauptung war
+  // falsch — meistens GIBT es den Markt, nur die Holder-Anteile werden ausserhalb des ~3h-Freeze
+  // nicht erhoben. Die ABSICHT des Tests bleibt: die Lücke wird benannt, nicht weggelassen.
+  assert.match(html, /unbekannt|nicht erhoben/, 'die Lücke wird benannt, nicht weggelassen');
   assert.match(html, /md-kl-pip leer/, 'und sie bleibt als unbelegte Marke stehen');
 });
 
@@ -271,4 +279,34 @@ test('auch eine leere Sektion zeigt ihre Bilanz', () => {
     REG('geprueft'));
   assert.match(html, /Gerade deckt sich nichts/);
   assert.match(html, /5 abgerechnet · 3 gewonnen · 2 verloren/);
+});
+
+// 01.09.2026 (Lucas: „poly taucht da mmn nie aktiv auf?"). Der POLY-Block sah bei „Poly ist
+// dagegen" und bei „Poly-Anteil gar nicht erhoben" identisch aus — man las ein Nein, wo niemand
+// gefragt hatte. Die Anteile stehen nur im ~3h-Close-Freeze; weiter draussen gibt es sie nicht.
+test('ein NICHT ERHOBENER Poly-Anteil sieht anders aus als ein Nein', () => {
+  const unb = render({ stufe1: [], stufe2: [zeile('Arsenal', { polyStatus: 'unbekannt' })] },
+                     REG('geprueft'));
+  const nein = render({ stufe1: [], stufe2: [zeile('Chelsea', { polyStatus: 'nein' })] },
+                      REG('geprueft'));
+  assert.match(unb, /❔/, 'unbekannt wird als ❔ markiert');
+  assert.doesNotMatch(nein, /❔/, 'ein echtes Nein bleibt schlicht leer');
+  assert.match(unb, /nicht erhoben|erst ab ca. 3h/, 'und der Titel sagt, warum');
+});
+
+test('der Zähler wertet einen unerhobenen Strom nicht als Fehlschlag', () => {
+  // Sonst liest sich „3/7" wie „vier Bedingungen fehlen", obwohl eine nie geprüft wurde.
+  const unb = render({ stufe1: [], stufe2: [zeile('Arsenal', { polyStatus: 'unbekannt' })] },
+                     REG('geprueft'));
+  const nein = render({ stufe1: [], stufe2: [zeile('Arsenal', { polyStatus: 'nein' })] },
+                      REG('geprueft'));
+  assert.match(unb, /class="md-kl-cnt"[^>]*>3<i>\/6<\/i>/, 'unbekannt → aus 7 werden 6');
+  assert.match(nein, /class="md-kl-cnt"[^>]*>3<i>\/7<\/i>/, 'ein Nein bleibt ein möglicher Platz');
+});
+
+test('ein zustimmender Poly-Anteil leuchtet weiterhin', () => {
+  const h = render({ stufe1: [], stufe2: [zeile('Arsenal', { polyStatus: 'ja', poly: { anteilPct: 71 } })] },
+                   REG('geprueft'));
+  assert.match(h, /Poly-Geld 71% auf derselben Seite/);
+  assert.doesNotMatch(h, /❔/);
 });
