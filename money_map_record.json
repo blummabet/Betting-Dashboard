@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-09-01T19:56:09.181631+00:00",
+"generatedAt": "2026-09-01T20:11:10.662709+00:00",
 "byVerdict": {
 "konsens": {
 "n": 676,
@@ -18,20 +18,20 @@
 "clvLb": 10.1797
 },
 "uneinig": {
-"n": 234,
+"n": 235,
 "wins": 76,
-"hitRate": 0.3248,
-"polyN": 209,
+"hitRate": 0.3234,
+"polyN": 210,
 "polyWins": 59,
-"polyHitRate": 0.2823,
+"polyHitRate": 0.281,
 "pinnN": 118,
 "pinnHitRate": 0.5932,
-"nRoi": 3,
-"roi": 0.0833,
-"roiLb": -0.907,
-"nClv": 3,
-"clv": 16.65,
-"clvLb": -10.7414
+"nRoi": 4,
+"roi": -0.1875,
+"roiLb": -1.0175,
+"nClv": 4,
+"clv": 25.73,
+"clvLb": 1.2724
 },
 "teil": {
 "n": 9,
@@ -271,6 +271,11 @@
 "wins": 4,
 "hitRate": 0.5
 },
+"Swedish Superettan": {
+"n": 8,
+"wins": 3,
+"hitRate": 0.375
+},
 "Austrian Bundesliga": {
 "n": 7,
 "wins": 6,
@@ -290,11 +295,6 @@
 "n": 7,
 "wins": 4,
 "hitRate": 0.5714
-},
-"Swedish Superettan": {
-"n": 7,
-"wins": 3,
-"hitRate": 0.4286
 },
 "Other Competitions Soccer": {
 "n": 6,
@@ -554,15 +554,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 529,
+"n": 530,
 "wins": 431,
-"hitRate": 0.8147,
-"nRoi": 5,
-"roi": 0.53,
-"roiLb": 0.2395,
-"nClv": 5,
-"clv": 26.01,
-"clvLb": 13.5574
+"hitRate": 0.8132,
+"nRoi": 6,
+"roi": 0.275,
+"roiLb": -0.2069,
+"nClv": 6,
+"clv": 30.51,
+"clvLb": 17.9344
 },
 "weak": {
 "n": 357,
@@ -577,14 +577,33 @@
 }
 },
 "divergence": {
-"n": 234,
+"n": 235,
 "betfairWins": 76,
-"betfairRate": 0.3248,
-"polyN": 209,
+"betfairRate": 0.3234,
+"polyN": 210,
 "polyWins": 59,
-"polyRate": 0.2823
+"polyRate": 0.281
 },
 "recent": [
+{
+"matchId": "35984871",
+"home": "Helsingborgs",
+"away": "Orebro",
+"league": "Swedish Superettan",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Orebro",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-01T17:00:00Z",
+"settledAt": "2026-09-01T20:11:10.472300+00:00"
+},
 {
 "matchId": "35994435",
 "home": "NFC Volos",
@@ -1325,37 +1344,18 @@
 ],
 "kickoff": "2026-08-30T19:30:00Z",
 "settledAt": "2026-08-30T22:36:19.046901+00:00"
-},
-{
-"matchId": "35953415",
-"home": "Flamengo",
-"away": "Botafogo FR",
-"league": "Brazilian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Flamengo",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-0
-],
-"kickoff": "2026-08-30T19:00:00Z",
-"settledAt": "2026-08-30T22:06:05.859181+00:00"
 }
 ],
 "global": {
-"n": 919,
+"n": 920,
 "wins": 632,
-"hitRate": 0.6877,
-"nRoi": 7,
-"roi": 0.26,
-"roiLb": -0.148,
-"nClv": 7,
-"clv": 18.58,
-"clvLb": 6.912
+"hitRate": 0.687,
+"nRoi": 8,
+"roi": 0.1025,
+"roiLb": -0.3357,
+"nClv": 8,
+"clv": 22.88,
+"clvLb": 10.5458
 },
-"pending": 27
+"pending": 26
 }
