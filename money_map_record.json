@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-01T15:55:40.388247+00:00",
+"generatedAt": "2026-09-01T17:55:54.750229+00:00",
 "byVerdict": {
 "konsens": {
-"n": 674,
-"wins": 551,
-"hitRate": 0.8175,
-"polyN": 629,
-"polyWins": 493,
-"polyHitRate": 0.7838,
+"n": 676,
+"wins": 553,
+"hitRate": 0.818,
+"polyN": 631,
+"polyWins": 495,
+"polyHitRate": 0.7845,
 "pinnN": 56,
 "pinnHitRate": 0.7857,
-"nRoi": 2,
-"roi": 0.38,
-"roiLb": -0.0313,
-"nClv": 2,
-"clv": 15.9,
-"clvLb": 7.0335
+"nRoi": 4,
+"roi": 0.3925,
+"roiLb": 0.1571,
+"nClv": 4,
+"clv": 20.03,
+"clvLb": 10.1797
 },
 "uneinig": {
-"n": 232,
-"wins": 75,
-"hitRate": 0.3233,
-"polyN": 207,
+"n": 233,
+"wins": 76,
+"hitRate": 0.3262,
+"polyN": 208,
 "polyWins": 59,
-"polyHitRate": 0.285,
+"polyHitRate": 0.2837,
 "pinnN": 118,
 "pinnHitRate": 0.5932,
-"nRoi": 1,
-"roi": 0.17,
-"roiLb": null,
-"nClv": 1,
-"clv": 0.0,
-"clvLb": null
+"nRoi": 2,
+"roi": 0.625,
+"roiLb": -0.1235,
+"nClv": 2,
+"clv": 24.98,
+"clvLb": -16.1121
 },
 "teil": {
 "n": 9,
@@ -206,17 +206,17 @@
 "wins": 9,
 "hitRate": 0.75
 },
+"Italian Coppa Italia": {
+"n": 12,
+"wins": 9,
+"hitRate": 0.75
+},
 "CONMEBOL Copa Sudamericana": {
 "n": 11,
 "wins": 6,
 "hitRate": 0.5455
 },
 "Chilean Primera Division": {
-"n": 11,
-"wins": 8,
-"hitRate": 0.7273
-},
-"Italian Coppa Italia": {
 "n": 11,
 "wins": 8,
 "hitRate": 0.7273
@@ -431,10 +431,20 @@
 "wins": 2,
 "hitRate": 1.0
 },
+"Turkish 1 Lig": {
+"n": 2,
+"wins": 2,
+"hitRate": 1.0
+},
 "UAE Arabian Gulf League": {
 "n": 2,
 "wins": 1,
 "hitRate": 0.5
+},
+"UEFA (W) Champions League Qualifiers": {
+"n": 2,
+"wins": 2,
+"hitRate": 1.0
 },
 "Chinese League 2": {
 "n": 1,
@@ -521,16 +531,6 @@
 "wins": 0,
 "hitRate": 0.0
 },
-"Turkish 1 Lig": {
-"n": 1,
-"wins": 1,
-"hitRate": 1.0
-},
-"UEFA (W) Champions League Qualifiers": {
-"n": 1,
-"wins": 1,
-"hitRate": 1.0
-},
 "UEFA Super Cup": {
 "n": 1,
 "wins": 1,
@@ -549,15 +549,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 526,
-"wins": 428,
-"hitRate": 0.8137,
-"nRoi": 2,
-"roi": 0.38,
-"roiLb": -0.0313,
-"nClv": 2,
-"clv": 15.9,
-"clvLb": 7.0335
+"n": 529,
+"wins": 431,
+"hitRate": 0.8147,
+"nRoi": 5,
+"roi": 0.53,
+"roiLb": 0.2395,
+"nClv": 5,
+"clv": 26.01,
+"clvLb": 13.5574
 },
 "weak": {
 "n": 356,
@@ -572,14 +572,71 @@
 }
 },
 "divergence": {
-"n": 232,
-"betfairWins": 75,
-"betfairRate": 0.3233,
-"polyN": 207,
+"n": 233,
+"betfairWins": 76,
+"betfairRate": 0.3262,
+"polyN": 208,
 "polyWins": 59,
-"polyRate": 0.285
+"polyRate": 0.2837
 },
 "recent": [
+{
+"matchId": "36006953",
+"home": "Parma",
+"away": "US Cremonese",
+"league": "Italian Coppa Italia",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "US Cremonese",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-09-01T16:00:00Z",
+"settledAt": "2026-09-01T17:55:54.558226+00:00"
+},
+{
+"matchId": "36015998",
+"home": "FK Austria Wien (W)",
+"away": "SK Brann (W)",
+"league": "UEFA (W) Champions League Qualifiers",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "FK Austria Wien (W)",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+0
+],
+"kickoff": "2026-09-01T16:00:00Z",
+"settledAt": "2026-09-01T17:55:54.558226+00:00"
+},
+{
+"matchId": "35991046",
+"home": "Bandirmaspor",
+"away": "Antalyaspor",
+"league": "Turkish 1 Lig",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Antalyaspor",
+"polySide": "home",
+"winner": "away",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-09-01T13:00:00Z",
+"settledAt": "2026-09-01T16:10:41.792818+00:00"
+},
 {
 "matchId": "36015841",
 "home": "Dalian Yingbo",
@@ -1282,75 +1339,18 @@
 ],
 "kickoff": "2026-08-30T19:30:00Z",
 "settledAt": "2026-08-30T21:36:02.233356+00:00"
-},
-{
-"matchId": "35976837",
-"home": "Samsunspor",
-"away": "Fenerbahce",
-"league": "Turkish Super League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Fenerbahce",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-2
-],
-"kickoff": "2026-08-30T18:30:00Z",
-"settledAt": "2026-08-30T21:36:02.233356+00:00"
-},
-{
-"matchId": "35979539",
-"home": "Famalicao",
-"away": "Gil Vicente",
-"league": "Portuguese Primeira Liga",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Famalicao",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-08-30T19:30:00Z",
-"settledAt": "2026-08-30T21:21:03.937854+00:00"
-},
-{
-"matchId": "35965458",
-"home": "Cambuur Leeuwarden",
-"away": "FC Twente",
-"league": "Dutch Eredivisie",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "FC Twente",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-4
-],
-"kickoff": "2026-08-30T18:00:00Z",
-"settledAt": "2026-08-30T21:06:09.517990+00:00"
 }
 ],
 "global": {
-"n": 915,
-"wins": 629,
-"hitRate": 0.6874,
-"nRoi": 3,
-"roi": 0.31,
-"roiLb": 0.0461,
-"nClv": 3,
-"clv": 10.6,
-"clvLb": 0.4897
+"n": 918,
+"wins": 632,
+"hitRate": 0.6885,
+"nRoi": 6,
+"roi": 0.47,
+"roiLb": 0.2131,
+"nClv": 6,
+"clv": 21.68,
+"clvLb": 9.2561
 },
-"pending": 12
+"pending": 14
 }
