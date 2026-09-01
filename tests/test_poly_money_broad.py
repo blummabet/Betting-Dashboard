@@ -890,14 +890,43 @@ class TestVorFensterBudget:
         out = B.capture(markets, {}, min_vol=1000)
         assert out == {}, "ausserhalb des Freeze-Fensters wird nichts eingefroren"
 
-    def test_die_shares_gehen_in_die_upcoming_datei(self):
-        src = open(B.__file__, encoding="utf-8").read()
-        # Anker auf die Schreibstelle selbst, nicht auf die erste Erwaehnung von "vor"
-        # (die gehoert zur Budget-Buchung) — Fenster an Struktur, nicht an Reihenfolge.
-        i = src.index('_u = upcoming.get(key)')
-        block = src[i:i + 400]
-        assert '_u["shares"] = shares' in block, "die Anteile landen in upcoming"
-        assert "continue" in block, "und der Markt geht NICHT zusaetzlich in `markets`"
+    # 01.09.2026: dieser Test las frueher den Quelltext in einem Fenster fester Breite
+    # (src[i:i+400]) und fiel um, sobald der Zweig laenger wurde — dieselbe Fehlerklasse, die an
+    # EINEM Tag schon dreimal zugeschlagen hat. Der Zweig ist jetzt die reine Funktion
+    # `vor_zeile`, also wird das Verhalten geprueft statt der Text.
+
+    def test_die_shares_landen_in_der_upcoming_zeile(self):
+        alt = {"league": "L", "sport": "Fussball", "hoursToKickoff": 5.0,
+               "totalUsd": 30000, "prices": {"A": 0.6, "B": 0.4}}
+        z, neu = B.vor_zeile(alt, "X", "Y", 9.9, 1, {"Z": 1}, {"A": 20000, "B": 10000}, [{"w": 1}])
+        assert z["shares"] == {"A": 20000, "B": 10000}
+        assert not neu
+        assert (z["league"], z["prices"]) == ("L", {"A": 0.6, "B": 0.4}), \
+            "der vorhandene Gratis-Eintrag wird ergaenzt, nicht ueberschrieben"
+
+    def test_ohne_gratis_eintrag_wird_die_zeile_angelegt_statt_verworfen(self):
+        """Der Holder-Call ist zu diesem Zeitpunkt schon bezahlt. Ihn wegzuwerfen, weil eine
+        Vorgaenger-Zeile fehlt, war ein stiller No-Op ohne Spur in irgendeiner Datei."""
+        z, neu = B.vor_zeile(None, "Serie C", "Fussball", 5.04, 12345.6,
+                             {"A": 0.6}, {"A": 20000}, [{"w": 1}])
+        assert neu, "der Aufrufer muss erfahren, dass der Ingest-Pfad nichts geliefert hat"
+        assert z["shares"] == {"A": 20000}
+        assert (z["league"], z["hoursToKickoff"], z["totalUsd"]) == ("Serie C", 5.04, 12346)
+
+    def test_die_zeile_beruehrt_den_uebergebenen_eintrag_nicht(self):
+        """`upcoming` wird waehrend des Laufs noch gelesen — eine Mutation waere ein Fernschuss."""
+        alt = {"league": "L", "prices": {"A": 0.6}}
+        B.vor_zeile(alt, "X", "Y", 5.0, 1, {}, {"A": 1}, [])
+        assert "shares" not in alt
+
+    def test_die_wale_sind_gedeckelt(self):
+        """Die Datei wird alle 30 Minuten committet — eine unbegrenzte Liste waere Repo-Ballast."""
+        z, _ = B.vor_zeile(None, "L", "S", 5.0, 1, {}, {"A": 1}, [{"w": i} for i in range(50)])
+        assert len(z["whales"]) == 12
+
+    def test_fehlende_wale_ergeben_eine_leere_liste_keinen_absturz(self):
+        z, _ = B.vor_zeile(None, "L", "S", 5.0, 1, {}, {"A": 1}, None)
+        assert z["whales"] == []
 
 
 class TestVorFussballVorrang:
@@ -937,10 +966,16 @@ class TestVorFussballVorrang:
 
 
 class TestVorFensterGuard:
-    """„Eingebaut" ist nicht „feuert". Kommt das Vor-Budget nicht an, fällt die Poly-Bedingung
-    still wieder aus — genau der Zustand, der monatelang unbemerkt war."""
+    """„Eingebaut" ist nicht „feuert". Kommt das Vor-Budget nicht an, faellt die Poly-Bedingung
+    still wieder aus — genau der Zustand, der monatelang unbemerkt war.
 
-    FNAME = "poly_money_upcoming.json"
+    01.09.2026, zweite Fassung: der Waechter liest nicht mehr poly_money_upcoming.json, sondern die
+    Zaehler `vorStats`, die der Lauf selbst mitfuehrt. Grund war ein eigener Messfehler — das
+    gespeicherte `hoursToKickoff` ist ein Snapshot und wurde als aktueller Abstand gelesen, was aus
+    22 echten Vor-Maerkten 63 machte. Und „keiner mit Anteilen" nannte nur das Symptom: drei
+    verschiedene Defekte sehen von aussen gleich aus."""
+
+    FNAME = "poly_money_broad.json"
 
     def _lauf(self, datei, unlesbar=False):
         from datetime import datetime, timezone
@@ -957,28 +992,45 @@ class TestVorFensterGuard:
             WDI._LAZY_FAILED.update(failed)
         return next(c for c in checks if c["id"] == "poly_vorfenster")
 
-    def _markt(self, h, shares=None):
-        return {"hoursToKickoff": h, "totalUsd": 30000, "prices": {"A": .6, "B": .4},
-                "shares": shares or {}}
+    def _bericht(self, **st):
+        basis = {"kandidaten": 0, "mitAnteilen": 0, "ohneGeldSplit": 0, "budgetLeer": 0,
+                 "nachgelegt": 0, "calls": 0}
+        basis.update(st)
+        return {"n": 100, "vorStats": basis}
 
-    def test_maerkte_ohne_einen_einzigen_anteil_schlagen_an(self):
-        d = {f"k{i}": self._markt(5.0) for i in range(6)}
-        c = self._lauf(d)
+    def test_kandidaten_ohne_einen_einzigen_anteil_schlagen_an(self):
+        c = self._lauf(self._bericht(kandidaten=9, ohneGeldSplit=9, calls=9))
         assert not c["ok"] and c["severity"] == "error"
 
+    def test_der_schuldige_zweig_wird_benannt(self):
+        """„Keine Anteile" ist keine Diagnose. Leerer Holders-Endpoint und erschoepftes Budget
+        brauchen voellig verschiedene Reparaturen."""
+        c = self._lauf(self._bericht(kandidaten=9, ohneGeldSplit=9, calls=9))
+        assert "Geld-Split" in c["failures"][0]
+        c = self._lauf(self._bericht(kandidaten=9, budgetLeer=9))
+        assert "Budget" in c["failures"][0]
+
     def test_ein_einziger_anteil_genuegt_als_lebenszeichen(self):
-        d = {f"k{i}": self._markt(5.0) for i in range(6)}
-        d["k0"]["shares"] = {"A": 20000, "B": 10000}
-        assert self._lauf(d)["ok"]
+        assert self._lauf(self._bericht(kandidaten=9, mitAnteilen=1, ohneGeldSplit=8, calls=9))["ok"]
 
     def test_leeres_fenster_ist_kein_fehler(self):
-        # Märkte außerhalb 3–8h zählen nicht — eine ruhige Stunde ist keine Panne.
-        d = {f"k{i}": self._markt(40.0) for i in range(9)}
-        assert self._lauf(d)["ok"]
+        assert self._lauf(self._bericht(kandidaten=0))["ok"], "eine ruhige Stunde ist keine Panne"
 
-    def test_zu_wenige_maerkte_loesen_nichts_aus(self):
-        d = {f"k{i}": self._markt(5.0) for i in range(4)}
-        assert self._lauf(d)["ok"], "unter 5 Märkten ist ein leeres Ergebnis nicht aussagekräftig"
+    def test_zu_wenige_kandidaten_loesen_nichts_aus(self):
+        c = self._lauf(self._bericht(kandidaten=4, ohneGeldSplit=4, calls=4))
+        assert c["ok"], "unter 5 Kandidaten ist ein leeres Ergebnis nicht aussagekraeftig"
+
+    def test_wenn_alles_nachgelegt_werden_muss_ist_der_ingest_pfad_kaputt(self):
+        """Es LAEUFT dann — aber nur, weil der Notnagel greift. Genau die Sorte Halb-Defekt, die
+        sonst gruen meldet, bis der Notnagel auch faellt."""
+        c = self._lauf(self._bericht(kandidaten=9, mitAnteilen=6, nachgelegt=6, calls=9))
+        assert not c["ok"]
+        assert "nachgelegt" in c["failures"][0]
+
+    def test_fehlende_zaehler_sind_unbekannt_nicht_gruen(self):
+        """Ein Bericht ohne `vorStats` (alter Lauf, oder Zweig entfernt) hat NICHTS gemessen."""
+        c = self._lauf({"n": 100})
+        assert c["severity"] == "warn" and not c["ok"]
 
     def test_unlesbare_datei_ist_unbekannt_nicht_gruen(self):
         c = self._lauf(None, unlesbar=True)

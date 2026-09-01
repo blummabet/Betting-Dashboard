@@ -1376,6 +1376,17 @@
   // 05.08.2026 (Lucas: wissen wir, ob die Kohle erfolgreich war?): DIE Gesamt-Bilanz. Bisher gab es
   // nur Liga×Markt-Buckets (je winzig → sagt einzeln nichts). Diese Kopfzeile rollt ALLE abgerechneten
   // Signale auf: hat das Geld-folgen überhaupt Gewinn gebracht — und in WELCHEM Markt steckt die Kante.
+  // 01.09.2026 (Lucas: „kann es sein dass da schon ewig 8000 steht"). Konnte es: der Ledger war auf
+  // 8000 Zeilen gedeckelt, das waren bei ~1.300 Abrechnungen/Tag exakt SECHS Tage — die Zahl sah nach
+  // Gesamthistorie aus und war ein rollendes Fenster. Seit dem 01.09. steht neben der Zahl immer, wie
+  // viele Tage sie abdeckt. Fehlt `fenster` (Aggregat noch aus der Zeit davor), steht dort nichts
+  // Erfundenes, sondern gar nichts.
+  function _fensterTxt(t) {
+    var f = t && t.fenster; if (!f || typeof f.tage !== 'number') return '';
+    var d = function (iso) { return iso ? new Date(iso).toLocaleDateString('de-AT', { day: '2-digit', month: '2-digit' }) : '?'; };
+    return f.tage.toFixed(f.tage < 10 ? 1 : 0) + ' Tage · ' + d(f.von) + '–' + d(f.bis);
+  }
+
   function trackHeadline(t) {
     var g = t && t.global; if (!g || !g.n) return '';
     var kpi = function (lbl, val, col, sub) {
@@ -1385,7 +1396,7 @@
         + (sub ? '<div style="font-size:9.5px;color:' + C.dim + ';margin-top:1px">' + sub + '</div>' : '') + '</div>';
     };
     var kpis = '<div style="display:flex;gap:9px;flex-wrap:wrap;margin-bottom:10px">'
-      + kpi('Signale', g.n, C.ink, g.wins + ' getroffen')
+      + kpi('Signale', g.n, C.ink, g.wins + ' getroffen' + (_fensterTxt(t) ? ' · ' + _fensterTxt(t) : ''))
       + kpi('Trefferquote', _pctTxt(g.hitRate), g.hitRate != null && g.hitRate >= 0.5 ? C.back : C.lay)
       + kpi('ROI — Geld backen', _roiTxt(g.roi), _roiCol(g.roi), 'zu den Quoten')
       + kpi('Konzentration ≥65%', _roiTxt(g.roiConc), _roiCol(g.roiConc), _pctTxt(g.hitRateConc) + ' · n' + g.nConc)
@@ -1420,7 +1431,8 @@
         + '<th style="text-align:right;padding:6px 8px;font-size:10.5px;color:' + C.dim + '">ROI</th></tr></thead><tbody>' + tr + '</tbody></table></div>';
     }
     return '<div style="background:linear-gradient(180deg,rgba(255,184,12,.06),transparent);border:1px solid ' + C.bd + ';border-radius:14px;padding:12px 13px;margin:0 0 14px">'
-      + '<div style="font-size:13px;font-weight:800;color:' + C.ink + ';margin-bottom:9px">🎯 War die Kohle erfolgreich? — Gesamt-Bilanz über alle abgerechneten Signale</div>'
+      + '<div style="font-size:13px;font-weight:800;color:' + C.ink + ';margin-bottom:9px">🎯 War die Kohle erfolgreich? — Bilanz über alle abgerechneten Signale'
+      + (_fensterTxt(t) ? '<span style="font-weight:600;color:' + C.mut + ';font-size:11px"> · rollendes Fenster, ' + _fensterTxt(t) + '</span>' : '') + '</div>'
       + kpis
       + '<div style="font-size:11.5px;color:' + C.mut + ';line-height:1.5;margin-bottom:12px">' + verdict + '</div>'
       + mkTable + '</div>';
@@ -1444,11 +1456,17 @@
   function renderBfLernBoard() {
     var t = _bf.track;
     var src = (t && t.byLeagueMarket) || {};
-    var rows = Object.keys(src).map(function (k) {
+    // 01.09.2026 (Lucas: „hat das einen Grund?" — dass oben nur ein paar Ligen stehen und unten alle).
+    // Ja: hier stehen nur Kombinationen, die WIRKEN (n≥15, die Schwelle aus sharp_signals/betfair_money.py).
+    // Nur stand nirgends, wie viele das von wie vielen sind — gemessen am 01.09.: 60 von 1.418, und davon
+    // waren 24 sichtbar. Beide Zahlen stehen jetzt da, sonst liest sich der Ausschnitt wie das Ganze.
+    var alle = Object.keys(src).map(function (k) {
       var p = k.split('|'), v = src[k];
       return { lg: p[0], mid: p[1], label: MK_ID[p[1]] ? MK_ID[p[1]].label : p[1], v: v,
                w: bfTrackWirkung(v) };
-    }).filter(function (r) { return r.w && r.w.art !== 'sammelt'; });
+    });
+    var nAlle = alle.length;
+    var rows = alle.filter(function (r) { return r.w && r.w.art !== 'sammelt'; });
     if (!rows.length) {
       return '<div style="background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:14px;padding:18px;margin:0 0 14px;color:' + C.mut + ';font-size:12.5px;line-height:1.6">'
         + '<b style="color:' + C.ink + '">🧭 Lern-Board — noch nichts aktiv.</b><br>Kein Liga×Markt hat die '
@@ -1492,13 +1510,19 @@
       + '<b style="color:' + C.back + '">ab ' + Math.round(BF_TR_BOOST * 100) + '% ROI verstärkt</b> es, '
       + '<b style="color:' + C.lay + '">ab ' + Math.round(BF_TR_FADE * 100) + '% dreht es um</b> (dem Geld dort zu folgen verliert → Fade). '
       + 'Die zwei feinen Linien im Balken sind genau diese Schwellen.</div>'
+      + '<div style="font-size:11px;color:' + C.dim + ';line-height:1.5;margin:-6px 0 10px">Deshalb stehen hier weniger Ligen als in der Tabelle darunter: '
+      + '<b style="color:' + C.mut + '">' + rows.length + ' von ' + nAlle + '</b> Liga×Markt-Kombinationen haben die ' + BF_TR_MIN_N + ' Spiele erreicht — '
+      + 'der Rest sammelt noch und zählt überall gleich. Die Tabelle unten zeigt alle, auch die sammelnden.</div>'
       + '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px;font-size:11px">'
       + '<span style="padding:3px 9px;border-radius:7px;border:1px solid rgba(63,185,80,.3);color:' + C.back + ';font-weight:700">' + nB + '× verstärkt</span>'
       + '<span style="padding:3px 9px;border-radius:7px;border:1px solid rgba(248,81,73,.3);color:' + C.lay + ';font-weight:700">' + nF + '× gefadet</span>'
       + '<span style="padding:3px 9px;border-radius:7px;border:1px solid ' + C.bd + ';color:' + C.mut + ';font-weight:700">' + nN + '× ohne Wirkung</span>'
       + '</div>'
       + '<div style="display:flex;flex-direction:column;gap:6px">' + body + '</div>'
-      + (rows.length > CAP ? '<div style="font-size:10.5px;color:' + C.dim + ';margin-top:8px">Top ' + CAP + ' nach Stichprobe · ' + rows.length + ' Kombinationen wirken insgesamt</div>' : '')
+      + '<div style="font-size:10.5px;color:' + C.dim + ';margin-top:8px">'
+      + (rows.length > CAP ? '⚠️ Nur die Top ' + CAP + ' nach Stichprobengröße gezeigt — ' + (rows.length - CAP) + ' weitere wirkende Kombinationen sind hier NICHT sichtbar (in der Tabelle unten schon).'
+                           : 'Alle ' + rows.length + ' wirkenden Kombinationen gezeigt.')
+      + '</div>'
       + '</div>';
   }
 

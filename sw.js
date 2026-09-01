@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v205';   // 01.09.2026: Poly-Vorfenster (3-8h) mit eigenem, fussball-priorisiertem Holder-Budget.
+const VERSION = 'cocobet-v206';   // 01.09.2026: Betfair-Ledger 8000 -> 40000 Zeilen (kompaktes Format), Fensterdauer im Radar sichtbar.
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

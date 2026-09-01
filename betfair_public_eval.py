@@ -14,6 +14,7 @@ from __future__ import annotations
 import json
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
+import betfair_track_store as _store   # 01.09.2026: Ledger liegt kompakt, load() nimmt beide Formate
 
 # Grading aus dem bestehenden Track-Record wiederverwenden (kein Duplikat).
 from betfair_track_record import fav_token, winning_token, grade, MARKETS, RESULTS_MIN_H, CORRECTION_WINDOW_H, _clv_pp
@@ -325,9 +326,7 @@ def main():
     ledger = capture_ht(ledger, prices)
     # 07.08.2026: zuerst die Abrechnungen des breiten Tracks erben (realer Endstand, auch fuer Spiele,
     # die DIESER Feed nie als „finished" gesehen hat), dann der eigene Feed-Pfad + TTL-Verfall.
-    track_results = _load(TRACK_RESULTS_FILE, [])
-    if not isinstance(track_results, list):
-        track_results = []
+    track_results = _store.load(TRACK_RESULTS_FILE)   # 01.09.2026: kompaktes Format, load() nimmt beide
     ledger = settle_from_track(ledger, track_results)
     ledger = settle(ledger, prices, results_fetch=_fetch_results)
     ledger = verify_settled(ledger, results_fetch=_fetch_results)   # 11.08.2026: autoritative Nachkontrolle (Plymouth-Fall)

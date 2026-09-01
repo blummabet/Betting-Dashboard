@@ -42,6 +42,8 @@ from pathlib import Path
 
 BASE = Path(__file__).resolve().parent
 
+import betfair_track_store as _store   # 01.09.2026: Ledger liegt kompakt, load() nimmt beide Formate
+
 # ── Datei-Namen (alle read-only ausser betfair_status.json) ──────────────────
 PRICES_FILE     = "betfair_prices.json"        # {_meta:{generatedAt,n,live}, matches:[snapshot…]}
 HISTORY_FILE    = "betfair_history.json"        # {matchId:[{ts,totalVol,mo,kickoff,mkv,min}…]}
@@ -545,7 +547,7 @@ def build_ctx_from_disk(now=None):
         direction=_load(DIRECTION_FILE),
         consensus=_load(CONSENSUS_FILE),
         record=_load(RECORD_FILE),
-        results=_load(RESULTS_FILE),
+        results=_store.load(BASE / RESULTS_FILE),   # 01.09.2026: kompaktes Ledger-Format
         state=_load(STATE_FILE),
         overview=_load(OVERVIEW_FILE),
         pubrec=_load(PUBREC_FILE),

@@ -525,6 +525,25 @@ def _capture_class(htk):
     return None
 
 
+def vor_zeile(alt, league, sport, htk, mvol, prices, shares, whales, deckel=12):
+    """Der upcoming-Eintrag eines Vor-Markts MIT Geld-Anteilen. REIN/testbar.
+
+    `alt` ist der Gratis-Eintrag aus dem Ingest (Preis+Volumen) oder None. Frueher war ein fehlendes
+    `alt` ein stiller No-Op: der Holder-Call war bereits BEZAHLT, sein Ergebnis fiel auf den Boden und
+    hinterliess in keiner Datei eine Spur. Jetzt wird die Zeile angelegt — die Anteile sind das
+    Teurere von beidem, und alles Noetige liegt an der Stelle vor.
+
+    Gibt (zeile, nachgelegt) zurueck; `nachgelegt` sagt dem Zaehler, dass der Ingest-Pfad die Zeile
+    nicht geliefert hat. Das ist ein Halb-Defekt, der sonst gruen meldet: es LAEUFT, aber nur ueber
+    den Notnagel. 01.09.2026."""
+    z = dict(alt) if isinstance(alt, dict) else {
+        "league": league, "sport": sport, "hoursToKickoff": round(htk, 2),
+        "totalUsd": round(mvol), "prices": prices}
+    z["shares"] = shares
+    z["whales"] = (whales or [])[:deckel]     # gedeckelt: die Datei wird committet
+    return z, not isinstance(alt, dict)
+
+
 import re as _re
 
 _MAP_PROP_RE = _re.compile(
@@ -1017,6 +1036,13 @@ def fetch_markets(live_only=False):
         except Exception:
             _avg_get = None
     vor_calls = 0
+    # 01.09.2026 (Lucas fragte: haben wir da schon eine Loesung, wieso Poly fehlt?). Der Vor-Zweig lief,
+    # aber in poly_money_upcoming.json stand bei KEINEM Markt ein Geld-Anteil — und von aussen war nicht
+    # zu unterscheiden, ob (a) gar kein Vor-Kandidat ankam, (b) der Holder-Call nichts lieferte oder
+    # (c) das Ergebnis unten am `if _u is not None` verpuffte. Genau diese Unterscheidung fehlte, also
+    # zaehlt der Lauf sie jetzt mit und schreibt sie in poly_money_broad.json (`vorStats`).
+    _vor = {"kandidaten": sum(1 for c in candidates if c[8] == "vor"),
+            "budgetLeer": 0, "ohneGeldSplit": 0, "nachgelegt": 0, "mitAnteilen": 0}
     for vol, key, league, sport, htk, oc, is_live, mvol, _cls in candidates:
         # 15.08.2026 (Lucas): Budget erschoepft ODER kein Geld-Split -> trotzdem Preis+Vol-Zeile fuer die
         # Money-Map (ohne Whale-Split). Sonst verschwindet ein near-KO-Spiel wie Sevilla-Rayo komplett,
@@ -1025,6 +1051,8 @@ def fetch_markets(live_only=False):
             else (vor_calls >= MAX_HOLDER_CALLS_VOR) if _cls == "vor" \
             else (holder_calls >= MAX_HOLDER_CALLS)
         if _over:
+            if _cls == "vor":
+                _vor["budgetLeer"] += 1
             _pv = {o["label"]: o["price"] for o in oc if o["price"] is not None}
             if _pv:
                 markets.append({"key": key, "league": league, "sport": sport, "hoursToKickoff": htk,
@@ -1042,6 +1070,8 @@ def fetch_markets(live_only=False):
         else:
             holder_calls += 1
         if not mm:
+            if _cls == "vor":
+                _vor["ohneGeldSplit"] += 1
             _pv = {o["label"]: o["price"] for o in oc if o["price"] is not None}
             if _pv:
                 markets.append({"key": key, "league": league, "sport": sport, "hoursToKickoff": htk,
@@ -1057,10 +1087,10 @@ def fetch_markets(live_only=False):
         # nicht). So bleibt die Aenderung auf genau die Quelle beschraenkt, aus der `pick_poly`
         # ausserhalb des Freeze liest — minimale Angriffsflaeche.
         if _cls == "vor":
-            _u = upcoming.get(key)
-            if _u is not None:
-                _u["shares"] = shares
-                _u["whales"] = _whales[:12]     # gedeckelt: die Datei wird committet
+            upcoming[key], _neu = vor_zeile(upcoming.get(key), league, sport, htk, mvol,
+                                            prices, shares, _whales)
+            _vor["nachgelegt"] += 1 if _neu else 0
+            _vor["mitAnteilen"] += 1
             continue
         if _avg_get and _whales:
             try:
@@ -1082,11 +1112,16 @@ def fetch_markets(live_only=False):
     fetch_markets.sweep_stats = {"sweepOpen": len(sweep_open), "sweepClosed": len(sweep_closed),
                                  "sweepAdded": sweep_added}
     fetch_markets.upcoming = upcoming
+    _vor["calls"] = vor_calls
+    fetch_markets.vor_stats = _vor
 
     live = {t: n for t, n in raw_by_tag.items() if n}
     _sw = fetch_markets.sweep_stats
     print(f"  Gamma: {len(markets)} Markt-Zeilen über {len(tags)} Tags + Volumen-Sweep · "
-          f"{len(candidates)} near-KO-Kandidaten · {holder_calls} Pre- + {live_calls} Live-Holders-Calls (nach Volumen)")
+          f"{len(candidates)} near-KO-Kandidaten · {holder_calls} Pre- + {live_calls} Live- + {vor_calls} Vor-Holders-Calls")
+    print(f"  Vor-Fenster ({PMA.CAPTURE_WINDOW_H:.0f}-{VOR_WINDOW_H:.0f}h): {_vor['kandidaten']} Kandidaten · "
+          f"{_vor['mitAnteilen']} mit Anteilen · {_vor['ohneGeldSplit']} ohne Geld-Split · "
+          f"{_vor['budgetLeer']} ueber Budget (Deckel {MAX_HOLDER_CALLS_VOR}) · {_vor['nachgelegt']} nachgelegt")
     print(f"  Roh-Events je Tag (nur >0): {live}")
     print(f"  Volumen-Sweep (tag-los): {_sw['sweepOpen']} offen · {_sw['sweepClosed']} aufgelöst "
           f"· {_sw['sweepAdded']} zusätzlich gefunden (Ligen, die kein Tag abdeckte)")
@@ -1564,6 +1599,9 @@ def main() -> int:
     # 21.07.2026: welche Sport-Tags liefern überhaupt Events (statt zu raten, welche Poly hat)?
     rep["rawByTag"] = getattr(fetch_markets, "raw_by_tag", {})
     rep["sweepStats"] = getattr(fetch_markets, "sweep_stats", {})
+    # 01.09.2026: die Vor-Fenster-Bilanz gehoert IN die Datei, nicht ins Log — ein Log, das niemand
+    # liest, hat die tote Poly-Bedingung monatelang gedeckt. Der Waechter liest sie hier.
+    rep["vorStats"] = getattr(fetch_markets, "vor_stats", {})
     write_json_atomic((BASE / OUT_FILE), rep, indent=1)
 
     # Money-Map (12.08.2026, Lucas): breitere upcoming-Erfassung schreiben (Preis+Vol, kein Holder-Call)

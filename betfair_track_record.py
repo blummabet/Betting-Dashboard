@@ -23,9 +23,11 @@ Reiner Kern (fav_token, winning_token, grade, capture, settle, aggregate) ist ne
   schreibt betfair_track_record.json — Aggregat fürs Dashboard
 """
 import json
+import os
 from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from safe_write import write_json_atomic   # 25.08.2026: temp+replace statt halber Datei
+import betfair_track_store as _store       # 01.09.2026: kompaktes Ledger-Format (liest Altformat mit)
 
 BASE = Path(__file__).resolve().parent
 PRICES_FILE = BASE / "betfair_prices.json"
@@ -49,7 +51,13 @@ except Exception:   # Modul/Netz optional — ohne bleibt die finished/vanish-Lo
 
 CONC_THRESHOLD = 0.65     # Geld-Favorit gilt als „konzentriert" ab so viel Marktanteil
 INFLOW_MIN_EUR = 2000     # Markt gilt als „frischer Zufluss" ab so viel € Delta (prices sind €)
-RESULTS_KEEP = 8000       # Ledger-Kappung
+RESULTS_KEEP = int(os.environ.get("BF_RESULTS_KEEP") or 40000)   # Ledger-Kappung
+# 01.09.2026 (Lucas: „kann es sein dass da schon ewig 8000 steht"). Ja — und zwar seit dem Tag,
+# an dem der Ledger einmal voll war. Bei ~1.300 Abrechnungen taeglich hielten 8000 Zeilen genau
+# SECHS Tage; jeder Liga×Markt-Bucket war damit auf n≈24 gedeckelt, waehrend das Lern-Board ab
+# n=15 Card-Signale umdreht. 40.000 sind ~6 Wochen. Moeglich wird das nur durch das kompakte
+# Format in betfair_track_store.py (105 statt 392 B/Zeile) — im alten Format waeren das 15,7 MB
+# alle 10 Minuten ins Git.
 PENDING_TTL_H = 60        # pending ohne Settlement nach so vielen h nach Anpfiff verwerfen
 RESULTS_MIN_H = 3.0       # Anpfiff so lange her → Spiel sicher vorbei → autoritatives Ergebnis (POST /results) abfragbar
 CORRECTION_WINDOW_H = 30  # so lange nach dem Settle darf /results eine per Live-Feed abgerechnete Zeile noch
@@ -508,7 +516,7 @@ def _load(p, default):
 
 
 def _write(p, data):
-    """Atomar (25.08.2026, Audit) — der Ledger traegt 8000 abgerechnete Signale."""
+    """Atomar (25.08.2026, Audit)."""
     write_json_atomic(p, data, indent=None)
 
 
@@ -520,7 +528,7 @@ def main():
         return 0
     history = _load(HISTORY_FILE, {})
     state = _load(STATE_FILE, {})
-    results = _load(RESULTS_FILE, [])
+    results = _store.load(RESULTS_FILE)          # nimmt Alt- wie Neuformat
     direction = _load(DIRECTION_FILE, {})
     if not isinstance(results, list):
         results = []
@@ -532,10 +540,12 @@ def main():
     results = verify_settled(results, now=now, results_fetch=_fetch_results)
     record = aggregate(results, now=now)
     _write(STATE_FILE, state)
-    _write(RESULTS_FILE, results)
+    _store.dump(RESULTS_FILE, results)
+    record["fenster"] = _store.fenster(results)   # damit die UI die 40.000 nicht wieder fuer „alles" haelt
     _write(RECORD_FILE, record)
-    print("  ✅  %d pending · %d abgerechnet · %d Liga×Markt · %d Team×Markt"
-          % (len(state.get("pending", {})), len(results),
+    _f = record["fenster"]
+    print("  ✅  %d pending · %d abgerechnet (%s Tage Fenster, Deckel %d) · %d Liga×Markt · %d Team×Markt"
+          % (len(state.get("pending", {})), len(results), _f.get("tage"), RESULTS_KEEP,
              len(record["byLeagueMarket"]), len(record["byTeamMarket"])))
     return 0
 

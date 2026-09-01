@@ -49,6 +49,7 @@ from __future__ import annotations
 import json
 from datetime import datetime, timezone
 from pathlib import Path
+import betfair_track_store as _store   # 01.09.2026: Ledger liegt kompakt, load() nimmt beide Formate
 
 BASE = Path(__file__).resolve().parent
 OUT_FILE = "killer.json"
@@ -306,7 +307,7 @@ def _ledger_fortschreiben(ledger: list, angepfiffen: list, results=None, now=Non
                        "status": "offen", "win": None, "settledAt": None})
         bekannt.add(k)
     if results is None:
-        results = _load("betfair_track_results.json", [])
+        results = _store.load(BASE / "betfair_track_results.json")
     erg = {}
     for r in (results or []):
         if r.get("matchId") and r.get("market"):
@@ -502,7 +503,7 @@ def schublade(results=None, scope=None):
     (byLeagueMarket) und kommen deshalb nie über „geprueft" hinaus, weil dort kein CLV je
     Signal steht. Hier liegen die Rohzeilen vor — inklusive clvBf. Damit kann diese Schublade
     tatsächlich freigegeben werden, statt es nur zu behaupten."""
-    rows = results if results is not None else _load("betfair_track_results.json", [])
+    rows = results if results is not None else _store.load(BASE / "betfair_track_results.json")
     renditen, clvs, letzter = [], [], None
     for r in (rows or []):
         if r.get("market") != MARKT:

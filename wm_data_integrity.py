@@ -2534,44 +2534,63 @@ KILLER_PUSH_OFFEN_MAX_H = 48
 # Seither gibt es ein Vor-Fenster (3-8h) mit eigenem, fussball-priorisiertem Budget, dessen Ergebnis
 # in poly_money_upcoming.json landet. Dieser Guard prueft, ob dort tatsaechlich Anteile ANKOMMEN —
 # „eingebaut" ist nicht „feuert" ([[project_betfair_norm_league_basis]]).
-VOR_ANTEILE_MIN = 1     # mindestens so viele Vor-Maerkte muessen shares tragen, wenn es welche gibt
+VOR_ANTEILE_MIN = 1        # so viele Vor-Kandidaten muessen Anteile tragen, wenn es Kandidaten gibt
+VOR_KANDIDATEN_MIN = 5     # darunter ist eine leere Bilanz einfach eine ruhige Stunde
 
 
 @integrity_check
 def check_poly_vorfenster(ctx):
-    """Kommen im Vor-Fenster wirklich Geld-Anteile an?
+    """Kommen im Vor-Fenster (3-8h) wirklich Geld-Anteile an — und wenn nicht, WO gehen sie verloren?
 
-    Die Datei traegt Maerkte bis 120h vor Anpfiff; nur die im Vor-Fenster (3-8h) bekommen einen
-    Holder-Call. Sind dort Maerkte, aber KEINER mit `shares`, ist das Budget nicht angekommen —
-    dann faellt die Poly-Bedingung der Konjunktion still wieder aus, so wie monatelang zuvor.
-    Keine Maerkte im Fenster = ruhige Stunde, kein Fehler."""
-    fname = "poly_money_upcoming.json"
+    01.09.2026, zweite Fassung. Die erste zaehlte Maerkte in poly_money_upcoming.json mit
+    `3 < hoursToKickoff <= 8` und meldete 63 Maerkte ohne einen einzigen Anteil. Beide Zahlen waren
+    irrefuehrend:
+
+      · `hoursToKickoff` ist ein SNAPSHOT vom Erfassungszeitpunkt und wird nie fortgeschrieben. Ein
+        zwei Stunden alter Eintrag mit gespeicherten 3,2h steht in Wahrheit 1,2h vor Anpfiff. Von den
+        63 lagen tatsaechlich 22 im Fenster — der Rest war Karteileiche (prune_upcoming rechnet genau
+        deshalb `real_htk`; der Waechter tat es nicht). Dieselbe Klasse Fehler wie eine gedeckelte
+        Zahl ohne ihren Deckel: ein gespeicherter Zeitabstand ohne sein Alter luegt.
+      · „keiner mit Anteilen" nannte das Symptom, nicht die Ursache. Drei voellig verschiedene
+        Defekte sehen von aussen gleich aus: kein Kandidat kam an · der Holder-Call lieferte nichts ·
+        das Ergebnis verpuffte beim Zurueckschreiben.
+
+    Darum liest dieser Waechter jetzt `vorStats` aus poly_money_broad.json — die Zaehler, die der Lauf
+    selbst mitfuehrt — und benennt den Zweig. Fehlt `vorStats`, ist der Zustand UNBEKANNT, nicht gruen."""
+    fname = "poly_money_broad.json"
     data = _lazy(fname)
     if fname in _LAZY_FAILED:
         return _chk("poly_vorfenster", "Poly-Vorfenster liefert Anteile", "warn",
                     [f"❔ {fname} nicht lesbar — ob Anteile ankommen, ist UNBEKANNT."], "")
     if not isinstance(data, dict) or not data:
         return _chk("poly_vorfenster", "Poly-Vorfenster liefert Anteile", "warn",
-                    [f"❔ {fname} fehlt/leer — nicht unterscheidbar von „gerade nichts im Fenster\"."],
-                    "poly_money_broad.py schreibt sie bei jedem Lauf.")
-    im_fenster, mit_anteilen = 0, 0
-    for v in data.values():
-        if not isinstance(v, dict):
-            continue
-        h = v.get("hoursToKickoff")
-        if not isinstance(h, (int, float)) or not (3.0 < h <= 8.0):
-            continue
-        im_fenster += 1
-        if v.get("shares"):
-            mit_anteilen += 1
+                    [f"❔ {fname} fehlt/leer — poly_money_broad.py schreibt sie bei jedem Lauf."], "")
+    st = data.get("vorStats")
+    if not isinstance(st, dict) or not st:
+        return _chk("poly_vorfenster", "Poly-Vorfenster liefert Anteile", "warn",
+                    ["❔ Kein `vorStats` im Bericht — entweder lief noch kein Lauf mit der Zaehlung "
+                     "(01.09.2026), oder der Vor-Zweig wurde entfernt. Unbekannt, nicht gruen."],
+                    "poly_money_broad.py setzt rep['vorStats'] am Ende jedes vollen Laufs.")
+    kand = st.get("kandidaten") or 0
+    mit = st.get("mitAnteilen") or 0
+    ohne = st.get("ohneGeldSplit") or 0
+    budget = st.get("budgetLeer") or 0
+    nach = st.get("nachgelegt") or 0
     fails = []
-    if im_fenster >= 5 and mit_anteilen < VOR_ANTEILE_MIN:
-        fails.append(f"{im_fenster} Maerkte im Vor-Fenster (3-8h), aber KEINER mit Geld-Anteilen — "
-                     f"das Vor-Budget kommt nicht an. Die Poly-Bedingung der Konjunktion faellt "
-                     f"damit still aus.")
+    if kand >= VOR_KANDIDATEN_MIN and mit < VOR_ANTEILE_MIN:
+        grund = (f"{ohne} lieferten keinen Geld-Split (Holders-Endpoint leer/abgelehnt)" if ohne >= kand // 2
+                 else f"{budget} fielen ueber das Budget (Deckel MAX_HOLDER_CALLS_VOR)" if budget >= kand // 2
+                 else f"{ohne} ohne Geld-Split, {budget} ueber Budget — keiner der beiden Zweige erklaert es allein")
+        fails.append(f"{kand} Vor-Kandidaten, aber KEINER mit Geld-Anteilen: {grund}. "
+                     f"Die Poly-Bedingung der Konjunktion faellt damit still aus, genau wie vor dem 01.09.")
+    if nach and nach == mit:
+        fails.append(f"Alle {nach} Vor-Ergebnisse mussten nachgelegt werden — der Gratis-Eintrag in "
+                     f"`upcoming` entsteht also auf dem Ingest-Pfad gar nicht mehr. Laeuft, aber der "
+                     f"Pfad ist kaputt und die Zeilen tragen nur, was der Holder-Call hergab.")
     return _chk("poly_vorfenster", "Poly-Vorfenster liefert Anteile", "error", fails,
-                f"{mit_anteilen} von {im_fenster} Vor-Maerkten mit Anteilen. Leeres Fenster ist "
-                f"kein Fehler; Maerkte ohne einen einzigen Anteil schon.")
+                f"{mit} von {kand} Vor-Kandidaten mit Anteilen ({st.get('calls', 0)} Calls) · "
+                f"{ohne} ohne Geld-Split · {budget} ueber Budget · {nach} nachgelegt. "
+                f"Leeres Fenster ist kein Fehler; Kandidaten ohne einen einzigen Anteil schon.")
 
 
 @integrity_check
