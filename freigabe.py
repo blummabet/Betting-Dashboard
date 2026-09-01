@@ -447,6 +447,81 @@ def push_schubladen(ledger=None, now=None) -> list:
 RANG = {"freigegeben": 0, "kandidat": 1, "geprueft": 2, "sammelt": 3, "ruht": 4}
 
 
+# ── Strom 6: vorangemeldete Kandidaten ──────────────────────────────────────────────────
+def vorregistrierte_schubladen(track=None, reg=None, now=None, schreiben=True) -> list:
+    """Zuschnitte, die VOR der Messung festgeschrieben wurden — s. vorregistrierung.py.
+
+    Der Unterschied zu jeder anderen Schublade hier: das Urteil zaehlt ausschliesslich Plays, die
+    NACH der Anmeldung abgerechnet wurden. Der Rueckblick, aus dem die Idee stammt, laeuft als
+    `rueckblick`/`nDavor` mit — sichtbar, aber ausdruecklich nicht als Beleg. Ein Ausschnitt, den
+    man nachtraeglich schneidet, weil er gut aussieht, sieht immer gut aus.
+
+    Die Anmeldung passiert beim ERSTEN Lauf von selbst (mit dem Rueckblick als Anlass) und wird nie
+    ueberschrieben — der Zeitstempel ist der ganze Wert der Datei."""
+    try:
+        import vorregistrierung as VR
+    except Exception:
+        return []
+    now = now or _now()
+    d = track if track is not None else _load("poly_shortlist_track.json")
+    st = (d or {}).get("settled") or []
+    st = list(st.values()) if isinstance(st, dict) else st
+    # Je Zuschnitt die eigene Quelle. Der Poly-Zuschnitt rechnet auf dem Shortlist-Depot, der
+    # Buecher-Score auf punkte_ledger.json — zwei verschiedene Buecher, ein Register.
+    _quellen = {"poly_bf_bestaetigt": st,
+                "buecher_score_hoch": [x for x in (_load("punkte_ledger.json") or [])
+                                       if isinstance(x, dict)]}
+    reg = VR.laden() if reg is None else dict(reg)
+    vorher = dict(reg)
+    out = []
+    for kennung, z in VR.ZUSCHNITTE.items():
+        if kennung not in reg:
+            # Anlass festhalten: die Zahl, die zur Anmeldung gefuehrt hat — als Kontext, nie als Beleg.
+            _alt = [x for x in _quellen.get(kennung, st) if isinstance(x, dict) and z["pruef"](x)]
+            _r, _c = VR.kennzahlen(_alt)
+            reg = VR.anmelden(reg, kennung, now=now, rueckblick={
+                "n": len(_r), "roi": round(_mittel(_r), 4) if _r else None,
+                "roiLb": round(untergrenze(_r), 4) if _r else None,
+                "clv": round(_mittel(_c), 3) if _c else None,
+                "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"})
+        e = reg[kennung]
+        name = "🔒 " + z["name"]
+        if VR.signatur_bruch(reg, kennung):
+            out.append({"schublade": name, "strom": z["strom"], "n": 0, "status": "ruht",
+                        "grund": "Zuschnitt seit der Anmeldung geändert — die Vorregistrierung ist "
+                                 "ungültig. Neu anmelden (und damit bei null anfangen) oder den "
+                                 "alten Zuschnitt wiederherstellen.",
+                        "roi": None, "roiLb": None, "clv": None, "clvLb": None,
+                        "fehltN": 0, "art": "vorangemeldet", "ungueltig": True})
+            continue
+        seit, davor = VR.teilen(_quellen.get(kennung, st), kennung, e)
+        r, c = VR.kennzahlen(seit)
+        rd, _ = VR.kennzahlen(davor)
+        letzter = max((str(x.get("settledTs") or x.get("settledAt") or "") for x in seit),
+                      default="") or None
+        ziel = e.get("zielN") or MIN_N
+        z_row = bewerte(name, z["strom"], r, c,
+                        {"art": "vorangemeldet", "angemeldet": e.get("angemeldet"),
+                         "zielN": ziel, "warum": z.get("warum"), "quelle": z.get("quelle")},
+                        letzter=letzter, now=now)
+        # Eigenes Ziel-n: der Zuschnitt hat seines bei der Anmeldung genannt, damit niemand aufhoert
+        # zu messen, sobald die Zahl gefaellt.
+        if len(r) < ziel and z_row["status"] not in ("ruht",):
+            z_row["status"] = "sammelt" if len(r) < KANDIDAT_N else "kandidat"
+            z_row["grund"] = ("%d von %d Plays SEIT der Anmeldung (%s) — vorher abgerechnete zählen "
+                              "nicht" % (len(r), ziel, str(e.get("angemeldet"))[:10]))
+            z_row["fehltN"] = ziel - len(r)
+        z_row["nDavor"] = len(rd)
+        z_row["rueckblick"] = e.get("rueckblick")
+        out.append(z_row)
+    if schreiben and reg != vorher:
+        try:
+            VR.schreiben(reg)
+        except Exception:
+            pass          # Register ist Beiwerk; das Urteil dieses Laufs steht trotzdem
+    return out
+
+
 def baue(engine=None, track=None, cards=None, betfair=None, now=None) -> dict:
     now = now or _now()
     # 01.09.2026: die Datei muss sagen, WORAUF sie gefiltert hat. Vorher stand hier der rohe
@@ -460,7 +535,7 @@ def baue(engine=None, track=None, cards=None, betfair=None, now=None) -> dict:
         engine_benutzt = engine or None          # False (= bewusst nicht filtern) -> null
     zeilen = (poly_schubladen(track, engine) + card_schubladen(cards)
               + betfair_schubladen(betfair) + killer_schublade(now=now)
-              + push_schubladen(now=now))
+              + push_schubladen(now=now) + vorregistrierte_schubladen(track, now=now))
     zeilen.sort(key=lambda r: (RANG.get(r["status"], 9), -(r.get("roiLb") or -9), -r["n"]))
     frei = [r for r in zeilen if r["status"] == "freigegeben"]
     kand = [r for r in zeilen if r["status"] == "kandidat"]

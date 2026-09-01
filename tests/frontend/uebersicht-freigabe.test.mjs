@@ -136,7 +136,10 @@ test('jede Ebene sagt, wie sie gebaut ist — Register, Filter, Rangliste', () =
     whales: null, killer: { stufe1: [], stufe2: [], bilanz: null }, freigabe: reg() };
   w._renderMainDash();
   const pillen = [...w.document.querySelectorAll('section.md-sp .md-mech')].map(x => x.textContent.trim());
-  assert.deepEqual(pillen, ['Register', 'Filter', 'Rangliste'],
+  // 01.09.2026: aus „Filter" wurde „Punktestand" — die Ebene sortiert Spiele jetzt nach der Zahl
+  // der zustimmenden BÜCHER, statt sie hart auszusortieren. Drei verschiedene Bauarten bleibt der
+  // Punkt: Urteil über Schubladen · Gewichtung über Bücher · Sortierung über Einzelsignale.
+  assert.deepEqual(pillen, ['Register', 'Punktestand', 'Rangliste'],
     'drei verschiedene Bauarten — genau deshalb sind es drei Ebenen und keine Wiederholung');
 });
 

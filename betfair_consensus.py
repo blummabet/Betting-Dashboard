@@ -84,6 +84,12 @@ LEAGUE_ODDS_KEY = {
     "German Bundesliga":            "soccer_germany_bundesliga",
     "Italian Serie A":              "soccer_italy_serie_a",
     "French Ligue 1":               "soccer_france_ligue_one",
+    # 🔴 01.09.2026 (Lucas: „Pinnacle haben wir zu tausend Prozent der Spiele"): hatten wir NICHT —
+    # fuer MLS ueberhaupt nicht. Der Eintrag stand seit jeher da, aber der Betfair-Feed schreibt die
+    # Liga „US MLS", nicht „Major League Soccer". 105 MLS-Zeilen im Ledger, davon 0 mit Pinnacle-
+    # Anker. Wieder „eingebaut, feuert aber nie" — diesmal an einem Schreibweisen-Unterschied.
+    # Beide Schreibweisen bleiben stehen: ein Key, der nie trifft, schadet nicht, ein fehlender schon.
+    "US MLS":                       "soccer_usa_mls",
     "Major League Soccer":          "soccer_usa_mls",
     # 13.08.2026 (Lucas): internationale Klub-Wettbewerbe (im Feed aktiv). Falscher/fehlender Key schadet
     # nicht (dann bleibt der Anker leer). UEFA-Gruppenphase kann hier genauso ergaenzt werden, sobald die
@@ -99,6 +105,64 @@ LEAGUE_ODDS_KEY = {
     "Swedish Allsvenskan":          "soccer_sweden_allsvenskan",
     "Saudi Professional League":    "soccer_saudi_arabia_pro_league",
 }
+
+
+# ── Automatische Ligen-Entdeckung (01.09.2026) ───────────────────────────────
+# Lucas: „ich akzeptier keine andere Meinung, da wir extra die OddsAPI mit fuenf Millionen API-Calls
+# zur Verfuegung haben. Da koennen wir so viel Pinnacle abfragen, bis die Tuer nicht mehr zugeht."
+#
+# Er hat recht, und die Messung gab ihm recht: MORGEN haben 1 von 57 Betfair-Spielen einen
+# Pinnacle-Anker (2%). Ueber den ganzen Ledger kommt Pinnacle in 23 von 212 Ligen an — 9% der
+# Zeilen. Der Grund war NIE die Quota, sondern die Handliste `LEAGUE_ODDS_KEY` oben: 30 Ligen
+# gegen 229 Ligastrings im Feed. Was nicht drinstand, bekam gar keinen Anker.
+#
+# Ab jetzt: /sports einmal je Lauf abfragen (dieser Endpunkt kostet KEIN Kontingent) und ALLE
+# aktiven Fussball-Wettbewerbe holen. Die Handliste bleibt — sie ist die schnelle, sichere Zuordnung
+# Liga->Key. Neu ist der zweite Anlauf: findet die Handliste nichts, wird im GLOBALEN Pool gesucht.
+#
+# ⚠️ Der globale Pool braucht eine Anpfiff-Schranke. `match_event` vergleicht nur Teamnamen; ueber
+# 70 Wettbewerbe hinweg trifft dasselbe Klubpaar sonst auch in Pokal, Liga und Reserve gleichzeitig.
+# Mit +-ANPFIFF_FENSTER_H ist die Verwechslung praktisch ausgeschlossen — zwei Klubs spielen nicht
+# zweimal in derselben Stunde. Ohne lesbare Anpfiffzeit auf BEIDEN Seiten gilt der Treffer NICHT:
+# fehlende Information ist keine Erlaubnis, auch beim Zuordnen nicht.
+SPORTS_FILE      = "odds_sports.json"     # Abzug von /sports, damit der Lauf nicht bei Netzfehler blind wird
+ANPFIFF_FENSTER_H = 2.0                   # Schranke fuer den globalen Pool
+MAX_ODDS_KEYS    = int(os.environ.get("BF_MAX_ODDS_KEYS") or 90)   # Laufzeit-Deckel, nicht Quota-Deckel
+
+
+def aktive_fussball_keys(sports, max_keys=MAX_ODDS_KEYS):
+    """/sports-Antwort -> Liste aktiver Fussball-sport_keys. REIN/testbar.
+
+    Gefiltert auf `group == "Soccer"` und `active`. Ausserdem raus: Outright-/Winner-Maerkte
+    (`has_outrights`), die keine Einzelspiele fuehren und nur Calls kosten."""
+    out = []
+    for x in (sports or []):
+        if not isinstance(x, dict):
+            continue
+        if str(x.get("group") or "").lower() != "soccer":
+            continue
+        if not x.get("active") or x.get("has_outrights"):
+            continue
+        k = x.get("key")
+        if isinstance(k, str) and k:
+            out.append(k)
+    return sorted(set(out))[:max_keys]
+
+
+def _stunden(a, b):
+    """|a-b| in Stunden, None wenn eine Seite fehlt/unlesbar. REIN."""
+    if not a or not b:
+        return None
+    try:
+        ta = datetime.fromisoformat(str(a).replace("Z", "+00:00"))
+        tb = datetime.fromisoformat(str(b).replace("Z", "+00:00"))
+    except (TypeError, ValueError):
+        return None
+    if ta.tzinfo is None:
+        ta = ta.replace(tzinfo=timezone.utc)
+    if tb.tzinfo is None:
+        tb = tb.replace(tzinfo=timezone.utc)
+    return abs((ta - tb).total_seconds()) / 3600.0
 
 
 # ── I/O ──────────────────────────────────────────────────────────────────────
@@ -343,9 +407,22 @@ def match_poly(m, ms, poly_entries):
     price = prices.get(key) if key else None
     tot = sum(v for v in shares.values() if isinstance(v, (int, float))) if shares else 0
     share_pct = round(shares.get(key) / tot * 100) if (key and tot and isinstance(shares.get(key), (int, float))) else None
+    # 01.09.2026 (Lucas: „Poly Top Wallet drauf"): die Wale des Poly-Marktes bis in die Konsens-Zeile
+    # durchreichen — GEFILTERT auf unsere Seite, damit der Buecher-Score sie bewerten kann, ohne den
+    # Markt ein zweites Mal zu joinen. Wer auf der GEGENSEITE steht, ist kein Verstaerker und faellt
+    # hier raus; die Zeile traegt nur, was fuer die eigene Seite spricht.
+    _w = [w for w in (pe.get("whales") or []) if isinstance(w, dict)]
+    _unsere = [w for w in _w if key and str(w.get("side")) == str(key)] if key else []
     return {"vol": round(pe.get("totalUsd") or 0),
             "odd": round(1.0 / price, 2) if (isinstance(price, (int, float)) and price > 0) else None,
-            "sharePct": share_pct}
+            "sharePct": share_pct,
+            "key": pe.get("key"),
+            # None (= nicht erhoben) und [] (= erhoben, keine Wale auf unserer Seite) sind
+            # verschiedene Dinge. Ohne diese Trennung wuerde der Score ein fehlendes Holder-Fenster
+            # als „kein Wal dafuer" lesen — derselbe Fehler wie das `or 0` bei sharePct.
+            "whales": ([{"wallet": w.get("wallet"), "usd": w.get("usd")} for w in _unsere[:6]]
+                       if _w else None),
+            "whaleUsd": (round(sum(w.get("usd") or 0 for w in _unsere)) if _w else None)}
 
 
 
@@ -361,8 +438,12 @@ def pick_poly(m, ms, is_live, poly_close, poly_live, poly_upcoming):
         poly = match_poly(m, ms, poly_upcoming)
     return poly
 
-def match_event(m, evs):
-    """Bestes Odds-Event zum Betfair-Spiel, orientiert auf dessen Heim/Auswaerts. None wenn kein Match."""
+def match_event(m, evs, max_h=None):
+    """Bestes Odds-Event zum Betfair-Spiel, orientiert auf dessen Heim/Auswaerts. None wenn kein Match.
+
+    `max_h` setzt eine Anpfiff-Schranke (fuer den globalen Pool, s. Kopf): liegen die Anpfiffzeiten
+    weiter auseinander, zaehlt der Namenstreffer nicht. Fehlt eine der beiden Zeiten, zaehlt er
+    ebenfalls nicht — ein Treffer, den wir nicht pruefen koennen, ist keiner."""
     home, away = m.get("home"), m.get("away")
     best, best_sc = None, MATCH_MIN
     for ev in evs:
@@ -374,6 +455,10 @@ def match_event(m, evs):
             sc, cand = s, _flip(ev)
         else:
             continue
+        if max_h is not None:
+            d = _stunden(m.get("kickoff"), ev.get("commence"))
+            if d is None or d > max_h:
+                continue
         if sc > best_sc:
             best, best_sc = cand, sc
     return best
@@ -954,6 +1039,23 @@ def fetch_odds(sport_key):
         return []
 
 
+def fetch_sports():
+    """/sports — die Liste aller Wettbewerbe. Kostet KEIN Kontingent (the-odds-api zaehlt nur
+    /odds-Calls). Faellt der Call aus, greift der letzte Abzug von Platte: der Lauf soll durch einen
+    Netzfehler nicht seine halbe Abdeckung verlieren."""
+    if not ODDS_KEY:
+        return []
+    url = "%s/sports?apiKey=%s" % (ODDS_BASE, ODDS_KEY)
+    try:
+        req = urllib.request.Request(url, headers={"User-Agent": "cocobet-consensus"})
+        with urllib.request.urlopen(req, timeout=20) as r:
+            data = json.load(r)
+        return data if isinstance(data, list) else []
+    except Exception as e:
+        print("sports-fetch: %s" % e)
+        return []
+
+
 def fetch_totals(sport_key):
     """Pinnacle Over/Under, VOLLE Leiter (18.08.2026, Lucas): separater Call, nur eu-Region (dort liegt
     Pinnacle) + markets=totals,alternate_totals. So kostet es nur die Totals-Maerkte in EINER Region
@@ -993,8 +1095,25 @@ def main():
         if k:
             need.setdefault(k, []).append(m)
 
-    events_by_key = {k: [parse_event(e) for e in (fetch_odds(k) or [])] for k in need}
+    # 01.09.2026: die Handliste ist nur noch die SCHNELLE Zuordnung, nicht mehr das Tor. Zusaetzlich
+    # werden ALLE aktiven Fussball-Wettbewerbe geholt (Quota ist da, Laufzeit ist der Deckel).
+    _sports = fetch_sports()
+    if _sports:
+        _dump(SPORTS_FILE, {"generatedAt": _now_iso(), "sports": _sports})
+    else:
+        _sports = (_load(SPORTS_FILE, {}) or {}).get("sports") or []   # letzter Abzug statt blind
+    _alle_keys = aktive_fussball_keys(_sports)
+    hol = list(dict.fromkeys(list(need.keys()) + _alle_keys))[:MAX_ODDS_KEYS]
+    print("odds: %d Ligen aus der Handliste + %d aktive Fussball-Wettbewerbe -> %d Calls"
+          % (len(need), len(_alle_keys), len(hol)))
+
+    events_by_key = {k: [parse_event(e) for e in (fetch_odds(k) or [])] for k in hol}
+    # Totals nur fuer die kuratierten Keys: die O/U-Leiter wird ausschliesslich im Poly-Terminal
+    # verbraucht, und jeder weitere Call kostet Laufzeit auf einem Runner mit 12-Minuten-Deckel.
     totals_by_key = {k: [parse_totals(e) for e in (fetch_totals(k) or [])] for k in need}
+    # Globaler Pool fuer den zweiten Anlauf — nur die Keys, die NICHT schon in der Handliste stehen,
+    # damit ein kuratierter Treffer immer Vorrang behaelt.
+    _global_pool = [e for k, evs in events_by_key.items() if k not in need for e in evs]
 
     # Poly (globaler Broad-Scan, committet vom Poly-Workflow): nur Basis-Moneylines (kein
     # more-markets/exact-score/total), damit wir die Team-Preise + Volumen matchen koennen.
@@ -1043,6 +1162,10 @@ def main():
         mid = str(m.get("matchId"))
         k = LEAGUE_ODDS_KEY.get(m.get("league"))
         ev = match_event(m, events_by_key.get(k, [])) if k else None
+        if ev is None:
+            # Zweiter Anlauf im globalen Pool — MIT Anpfiff-Schranke. So bekommen auch Pokal- und
+            # Kleinligaspiele einen Anker, ohne dass die Handliste sie kennen muss.
+            ev = match_event(m, _global_pool, max_h=ANPFIFF_FENSTER_H)
         tev = match_event(m, totals_by_key.get(k, [])) if k else None
         # Poly-Quelle je nach Phase (18.08.2026, Lucas): LAUFENDES Spiel -> FRISCHE Live-Poly hat Vorrang,
         # sonst zeigte der Terminal auf einem Live-Spiel die eingefrorene Pre-Match-Quote aus dem Close-Pool.
@@ -1090,7 +1213,12 @@ def main():
     games.sort(key=lambda g: (g.get("verdict") != "no_anchor", g.get("totVol") or 0), reverse=True)
     covered = sum(1 for g in games if g.get("verdict") != "no_anchor")
     out = {"generatedAt": now, "count": len(games), "covered": covered,
-           "leaguesCovered": sorted(set(LEAGUE_ODDS_KEY.values())), "games": games}
+           "leaguesCovered": sorted(set(LEAGUE_ODDS_KEY.values())),
+           # Was WIRKLICH geholt wurde — die Handliste allein sagt das seit dem 01.09. nicht mehr.
+           "oddsKeysFetched": len(events_by_key),
+           "ankerQuote": (round(sum(1 for g in games if g.get("pinn")) / len(games), 3)
+                          if games else None),
+           "games": games}
     _dump(OUT_FILE, out)
     _dump(HIST_FILE, new_hist)
     # Money-Map (11.08.2026, Lucas): bubble-fertiger Feed + Konsens-Ledger fuers Tracking. Additiv.

@@ -323,6 +323,13 @@
       '.md-kl-lbl{font-size:9px;font-weight:800;letter-spacing:.04em;color:var(--mi3);}',
       /* Zaehler zuerst gelesen: die Kennzahl der Zeile, nicht ein Anhaengsel am Ende. */
       '.md-kl-cnt{font-family:"JetBrains Mono",monospace;font-size:17px;font-weight:800;color:var(--mi);line-height:1;min-width:38px;}',
+      // 01.09.2026 — Buecher-Punktestand. Die grosse Zahl traegt die Aussage, die Bloecke sagen
+      // WOHER sie kommt. Jeder Block nennt sein Buch im Klartext (BF/POLY/PIN/ZEIT), damit die
+      // Farbe nie allein entscheidet — dieselbe Regel wie beim Deckungs-Profil darunter.
+      '.md-pk-b{display:inline-flex;align-items:center;gap:5px;padding:2px 7px;border:1px solid var(--mi3);border-radius:7px;font-size:10.5px;line-height:1.5;white-space:nowrap}',
+      '.md-pk-b b{font-weight:800;letter-spacing:.3px}',
+      '.md-pk-b i{font-style:normal;font-family:"JetBrains Mono",monospace;color:var(--mi2);font-weight:700}',
+      '.md-pk-d{font-size:10.5px;color:var(--mi2);white-space:nowrap;padding:2px 0}',
       '.md-kl-cnt i{font-style:normal;font-size:11px;font-weight:700;color:var(--mi3);}',
       '.md-kl-live{display:inline-flex;align-items:center;gap:4px;font-size:10px;font-weight:700;color:var(--good);white-space:nowrap;}',
       '.md-kl-live>i{width:5px;height:5px;border-radius:50%;background:var(--good);display:block;}',
@@ -1716,9 +1723,9 @@
     // Der Badge spricht seit heute nur noch über das EIGENE Buch — das Urteil über die
     // Schublade steht eine Ebene höher und muss hier nicht ein zweites Mal stehen.
     var ebene = function (inhalt) {
-      return _mdEbene(2, 'Wo fällt gerade alles zusammen?', 'Filter', A.blue,
-        'Konjunktion: Geldanteil UND frischer Zufluss UND mitziehende Quote — fehlt eine Bedingung, fällt die Zeile raus.',
-        'alle Geld-Bedingungen gleichzeitig — fehlt eine, ist die Zeile raus · gehalten bis zum Anpfiff · leer heißt leer',
+      return _mdEbene(2, 'Wie viele Bücher sind sich einig?', 'Punktestand', A.blue,
+        'Je zustimmendem Buch 2 Punkte, 1 für Tiefe im selben Buch, 1 wenn es schon ≥3h vor Anpfiff steht. Nicht erhobene Bücher senken den Nenner — sie kosten keine Punkte.',
+        'Betfair · Polymarket · Pinnacle im Vergleich · gehalten bis zum Anpfiff · leer heißt leer',
         bad, inhalt);
     };
     if (!s1.length && !s2.length) {
@@ -1808,11 +1815,45 @@
     // Ein Verhältnis, das nie nennenswert schwankt, ist als Balken Rauschen. Die Zahl steht
     // jetzt direkt am Betfair-Block (dataviz: selektive Direktbeschriftung schlägt eine Marke,
     // wenn es genau EIN Wert ist).
+    // ── Bücher-Punktestand (01.09.2026) ────────────────────────────────────────────────
+    // Lucas: „ich will die Bücher alle im Vergleich mit den Kriterien, wie viel erfüllt wird, mit
+    // einer Punkteanzeige … das Maximum ist zehn von zehn." Und: „ich sitze nicht zehn Stunden am
+    // Dashboard" — die Zahl muss in einer Sekunde lesbar sein, die Details liegen in den Terminals.
+    //
+    // Das Deckungs-Profil darunter zählte Betfair mit DREI und Pinnacle mit ZWEI Plätzen. „6/7 voll
+    // gedeckt" las sich wie sechs Zeugen und waren zweieinhalb. Der Punktestand zählt stattdessen
+    // BÜCHER: zustimmendes Buch 2, Tiefe im selben Buch 1, Dauer 1 — die Gewichtung kommt aus der
+    // Messung vom 01.09. (Bücher addieren +11,5%; Signale stapeln −1,1%), nicht aus dem Bauch.
+    //
+    // ⚠️ Ein nicht erhobenes Buch senkt den NENNER, es kostet keine Punkte: „5/7", nicht „5/10".
+    var PKT_COL = function (p, m) {
+      if (!m) return 'var(--mi3)';
+      var q = p / m;
+      return q >= 0.8 ? A.good : q >= 0.55 ? A.gold : 'var(--mi2)';
+    };
+    function _klPunkte(x) {
+      var pk = x && x.punkte;
+      if (!pk || typeof pk.punkte !== 'number' || !pk.moeglich) return null;   // altes killer.json
+      var bloecke = (pk.teile || []).map(function (t) {
+        var un = t.status === 'unbekannt';
+        var an = t.punkte > 0;
+        var col = un ? 'var(--mi3)' : an ? A.good : 'var(--mi2)';
+        var tip = un ? (t.name + ' — nicht erhoben, zählt nicht in den Nenner')
+                     : (t.name + ': ' + (t.grund ? t.grund.text : '') +
+                        (t.tiefe && t.tiefe.ok ? ' · ' + t.tiefe.text : ''));
+        return '<span class="md-pk-b" title="' + esc(tip) + '" style="border-color:' + col + '">' +
+          '<b style="color:' + col + '">' + esc(t.buch) + '</b>' +
+          '<i>' + (un ? '❔' : t.punkte + '/' + t.moeglich) + '</i></span>';
+      }).join('');
+      return { html: bloecke, punkte: pk.punkte, moeglich: pk.moeglich, dauerH: pk.dauerH };
+    }
+
     var row = function (x) {
       var k2 = x.kickoff ? Date.parse(String(x.kickoff).replace('Z', '+00:00')) : NaN;
       var min = isFinite(k2) ? Math.max(0, Math.round((k2 - now) / 60000)) : null;
       var ko = (min == null) ? null : (min < 60 ? min + 'm' : Math.floor(min / 60) + 'h' + (min % 60 ? ' ' + (min % 60) + 'm' : ''));
-      var deck = _klDeckung(x);
+      var pkt = _klPunkte(x);
+      var deck = pkt ? null : _klDeckung(x);   // Rueckfall fuer ein killer.json von vor dem 01.09.
       // 30.08.2026 (Lucas: „vorhin stand da Inter und Freiburg, jetzt Man Utd, und nun wieder
       // Inter — das wechselt auch ohne dass ich die Seite aktualisiere"): der Treffer wird jetzt
       // bis zum Anpfiff gehalten. Damit das nicht wie ein eingefrorener Fehler aussieht, steht
@@ -1842,18 +1883,37 @@
           stand + (ko ? '<span class="md-jz-ko">⏱ ' + ko + '</span>' : '') + '</div>' +
         '<div class="md-kl-pick"><span style="color:var(--mi3)">→</span> <b>' + esc(x.name || '—') + '</b>' + oddTxt + '</div>' +
         '<div class="md-kl-deck">' +
-          '<span class="md-kl-cnt" title="belegte Ströme von möglichen">' + deck.n + '<i>/' + deck.moeglich + '</i></span>' +
-          deck.html + '</div></div>';
+          (pkt
+            ? '<span class="md-kl-cnt" title="Punkte von möglichen — nicht erhobene Bücher senken den Nenner"'
+              + ' style="color:' + PKT_COL(pkt.punkte, pkt.moeglich) + '">' + pkt.punkte + '<i>/' + pkt.moeglich + '</i></span>' + pkt.html
+              + (pkt.dauerH != null && pkt.dauerH >= 3 ? '<span class="md-pk-d" title="so lange steht die Übereinstimmung schon vor Anpfiff">⏳ ' + pkt.dauerH.toFixed(1) + 'h</span>' : '')
+            : '<span class="md-kl-cnt" title="belegte Ströme von möglichen">' + deck.n + '<i>/' + deck.moeglich + '</i></span>' + deck.html)
+          + '</div></div>';
+    };
+    // Sortiert wird nach PUNKTEN, nicht mehr nach Stufe/Rang: die Frage der Sektion ist „wie viele
+    // Bücher sind sich einig", und die Antwort gehört nach oben. Bei Gleichstand entscheidet der
+    // Anteil am Möglichen (eine 5/6 ist mehr wert als eine 5/10), dann der Vorlauf.
+    var _pktSort = function (arr) {
+      return arr.slice().sort(function (a, b) {
+        var pa = (a.punkte || {}), pb = (b.punkte || {});
+        var d = (pb.punkte || 0) - (pa.punkte || 0);
+        if (d) return d;
+        var qa = pa.moeglich ? pa.punkte / pa.moeglich : 0, qb = pb.moeglich ? pb.punkte / pb.moeglich : 0;
+        if (qb !== qa) return qb - qa;
+        return (pb.dauerH || 0) - (pa.dauerH || 0);
+      });
     };
     var grp = function (titel, arr) {
       if (!arr.length) return '';
+      arr = _pktSort(arr);
       // .md-kl-paar wird erst ab 1040px zum Zweispalter (s. CSS); darunter aendert der Wrapper nichts.
       return '<div class="md-kl-grp">' + titel + '<i></i></div>'
         + '<div class="md-kl-paar">' + arr.map(row).join('') + '</div>';
     };
     // Die Fusszeile sagt, was DIESE Ebene beitraegt — nicht noch einmal, ob freigegeben ist.
-    var fuss = 'Hier steht, wo heute alle Geld-Bedingungen gleichzeitig anliegen. Ob man einer solchen '
-      + 'Zeile blind folgen darf, beantwortet Ebene 1 — nicht diese Liste.'
+    var fuss = 'Ein Buch, das zustimmt, zählt hier doppelt so viel wie ein weiteres Kriterium im selben Buch — '
+      + 'gemessen am 01.09. an 500 Plays: Bücher addieren trug (+11,5%), Signale stapeln nicht (−1,1%). '
+      + 'Ob man einer Zeile blind folgen darf, beantwortet Ebene 1 — nicht diese Liste.'
       + (st && st.clv != null ? ' Gemessenes Tor: ' + (st.n || 0) + ' abgerechnete Zeilen, CLV '
           + (st.clv >= 0 ? '+' : '') + st.clv.toFixed(1) + 'pp.' : '');
     return ebene(

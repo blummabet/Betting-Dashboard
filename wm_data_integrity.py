@@ -2593,6 +2593,230 @@ def check_poly_vorfenster(ctx):
                 f"Leeres Fenster ist kein Fehler; Kandidaten ohne einen einzigen Anteil schon.")
 
 
+# 01.09.2026: eine Vorregistrierung, die jeden Lauf neu angelegt wird, ist keine. Dann steht das
+# Anmeldedatum immer auf „heute", das Fenster ist immer leer, und der Vorwaerts-Test kann nie
+# abschliessen — waehrend im Register munter „0 von 60 seit der Anmeldung" steht und alles gesund
+# aussieht. Genau die Sorte Defekt, die sich als Geduld tarnt.
+VORREG_STILL_TAGE = 21     # so lange ohne einen einzigen Play seit der Anmeldung = der Filter greift nicht
+
+
+# 01.09.2026 — der Buecher-Punktestand. Er kann auf zwei Arten wertlos werden, ohne kaputt
+# auszusehen: gar nicht gerechnet (dann fehlt `alleBewertet`), oder gerechnet, aber nie mit mehr
+# als Betfair im Nenner — dann ist es ein Ein-Buch-Score mit Punkteanzeige. Genau der Zustand
+# herrscht beim Bau: von 43 bewerteten Spielen hatte EINES mehr als Betfair+Dauer.
+PKT_FREMD_MIN_NENNER = 7    # >= das heisst: mindestens ein fremdes Buch war erhoben
+PKT_MIN_SPIELE = 10         # darunter ist eine leere Bilanz einfach eine ruhige Stunde
+
+
+# 01.09.2026 (Lucas: „kann es sein dass da schon ewig 8000 steht"). Konnte es — der Ledger war auf
+# 8000 Zeilen gedeckelt und hielt damit sechs Tage. Der Deckel steht jetzt auf 40.000 (~6 Wochen),
+# moeglich durch das kompakte Format in betfair_track_store.py. Zwei Arten, wie das still kaputtgeht,
+# und beide sehen von aussen wie „laeuft" aus:
+#   · Das Format wird nicht mehr gelesen (Spaltenreihenfolge verschoben, Woerterbuch weg) -> load()
+#     gibt [] zurueck, die Aggregate sind leer, das Dashboard zeigt „sammelt Daten" statt eines Fehlers.
+#   · Der Ledger stagniert wieder an einem Deckel, ohne dass jemand ihn gesetzt hat.
+# Der Waechter prueft deshalb nicht den Inhalt, sondern ob ueberhaupt gelesen wird und wie lang das
+# Fenster wirklich ist. Ein kurzes Fenster ist am Anfang normal — der Deckel greift erst in Wochen.
+#
+# ⚠️ Dieser Block wurde am 01.09. abends von einem eigenen Patch-Skript geloescht: eine Ersetzung
+# per Index-Bereich (s[:dek] + neu + s[alt_end:]) reichte ueber den NACHBARBLOCK hinweg. Dieselbe
+# Fehlerklasse wie ein Testfenster fester Breite, nur im Werkzeug statt im Test. Wer hier per Slice
+# ersetzt, prueft vorher, was zwischen den beiden Ankern noch liegt.
+LEDGER_FENSTER_WARN_TAGE = 3.0   # kuerzer als das + voller Deckel = der Deckel beisst wieder
+
+
+@integrity_check
+def check_betfair_ledger(ctx):
+    """Ist der Betfair-Ledger lesbar, und wie lang ist sein Gedaechtnis wirklich?
+
+    Die Zeilenzahl allein sagt nichts: 8000 sah lange nach „viel" aus und waren sechs Tage. Darum
+    meldet dieser Guard immer die FENSTERDAUER mit — und schlaegt an, wenn der Ledger am Deckel
+    klebt und das Fenster trotzdem kurz ist. Unlesbar ist nicht gruen."""
+    fname = "betfair_track_results.json"
+    pfad = _BASE / fname
+    if not pfad.exists():
+        return _chk("betfair_ledger", "Betfair-Ledger lesbar + Fenstertiefe", "warn",
+                    [f"❔ {fname} fehlt — wie tief der Track zurueckreicht, ist UNBEKANNT."],
+                    "betfair_track_record.py schreibt sie bei jedem Radar-Lauf.")
+    try:
+        import betfair_track_store as _bstore
+        import betfair_track_record as _brec
+        zeilen = _bstore.load(pfad)
+        deckel = _brec.RESULTS_KEEP
+    except Exception as e:
+        return _chk("betfair_ledger", "Betfair-Ledger lesbar + Fenstertiefe", "warn",
+                    [f"❔ Ledger nicht lesbar ({e}) — Track-Record und Lern-Board pruefen sich "
+                     f"gerade an NICHTS. Unbekannt, nicht gruen."], "")
+    if not zeilen:
+        roh = pfad.stat().st_size
+        return _chk("betfair_ledger", "Betfair-Ledger lesbar + Fenstertiefe", "error",
+                    [f"Ledger-Datei ist {roh} Byte gross, aber entpacken() liefert 0 Zeilen — das "
+                     f"Format wird nicht mehr verstanden. Aggregate, Lern-Board und die Konjunktions-"
+                     f"Schublade rechnen ab jetzt auf leer."], "")
+    f = _bstore.fenster(zeilen)
+    tage = f.get("tage")
+    fails = []
+    if len(zeilen) >= deckel and isinstance(tage, (int, float)) and tage < LEDGER_FENSTER_WARN_TAGE:
+        fails.append(f"Ledger steht am Deckel ({len(zeilen)}/{deckel}) und deckt trotzdem nur "
+                     f"{tage} Tage ab — der Deckel beisst wie vor dem 01.09. Jeder Liga×Markt-Bucket "
+                     f"ist damit wieder auf eine Wochenstichprobe begrenzt, waehrend das Lern-Board "
+                     f"ab n=15 Card-Signale umdreht. RESULTS_KEEP anheben oder die Frequenz pruefen.")
+    return _chk("betfair_ledger", "Betfair-Ledger lesbar + Fenstertiefe", "error", fails,
+                f"{len(zeilen)}/{deckel} Zeilen · {tage} Tage Fenster ({str(f.get('von'))[:10]} bis "
+                f"{str(f.get('bis'))[:10]}). Kurzes Fenster bei freiem Deckel ist normal (der Track "
+                f"fuellt sich); kurzes Fenster AM Deckel ist der Fehler.")
+
+
+# 01.09.2026 — die Pinnacle-Ankerkarte. `LEAGUE_ODDS_KEY` ist eine HANDGEPFLEGTE Liste (30 Ligen)
+# gegen 229 Ligastrings im Betfair-Feed. Ein Eintrag mit falscher Schreibweise sieht aus wie
+# vorhanden und trifft nie — genau so hatte MLS 105 Zeilen und null Pinnacle-Anker („US MLS" im
+# Feed gegen „Major League Soccer" in der Karte). Das faellt sonst niemandem auf, weil ein fehlender
+# Anker sich exakt wie „Pinnacle fuehrt das Spiel nicht" anfuehlt.
+ANKER_TOT_WARN = 1     # ab so vielen nie treffenden Karten-Eintraegen wird gemeldet
+
+
+@integrity_check
+def check_pinn_anker(ctx):
+    """Trifft jeder Eintrag der Pinnacle-Ankerkarte auch wirklich einen Betfair-Ligastring?
+
+    Prüft NICHT, ob die Abdeckung hoch ist — sie ist bewusst auf gepflegte Ligen begrenzt. Geprüft
+    wird, ob ein EINGETRAGENER Anker tot ist: dann verspricht die Karte etwas, das nie ankommt."""
+    prices = _lazy("betfair_prices.json")
+    if "betfair_prices.json" in _LAZY_FAILED:
+        return _chk("pinn_anker", "Pinnacle-Ankerkarte trifft den Feed", "warn",
+                    ["❔ betfair_prices.json nicht lesbar — die Ankerkarte ist ungeprüft."], "")
+    try:
+        import betfair_consensus as _bc
+        karte = dict(_bc.LEAGUE_ODDS_KEY)
+    except Exception as e:
+        return _chk("pinn_anker", "Pinnacle-Ankerkarte trifft den Feed", "warn",
+                    [f"❔ Ankerkarte nicht lesbar ({e}) — unbekannt, nicht grün."], "")
+    ligen = {m.get("league") for m in ((prices or {}).get("matches") or []) if isinstance(m, dict)}
+    try:
+        import betfair_track_store as _bs
+        ligen |= {r.get("league") for r in _bs.load(_BASE / "betfair_track_results.json")}
+    except Exception:
+        pass
+    ligen.discard(None)
+    if not ligen:
+        return _chk("pinn_anker", "Pinnacle-Ankerkarte trifft den Feed", "warn",
+                    ["❔ Keine Ligastrings im Feed gefunden — nicht prüfbar."], "")
+    # Doppelte Ziele (zwei Schreibweisen auf denselben sport_key) sind Absicht: solange EINE trifft,
+    # ist der Anker lebendig. Gemeldet wird nur ein sport_key, den KEINE Schreibweise erreicht.
+    je_key = {}
+    for lg, key in karte.items():
+        je_key.setdefault(key, []).append(lg)
+    tot = [(k, v) for k, v in je_key.items() if not any(lg in ligen for lg in v)]
+    fails = []
+    if len(tot) >= ANKER_TOT_WARN:
+        for k, v in tot[:6]:
+            fails.append(f"Anker `{k}` trifft keinen Ligastring im Feed (eingetragen als "
+                         f"{', '.join(repr(x) for x in v)}). Zwei Ursachen sehen von hier identisch "
+                         f"aus — falsche Schreibweise (dann ist der Anker tot, wie MLS bis zum "
+                         f"01.09.) oder Liga ausser Saison (dann ist alles in Ordnung). Einmal "
+                         f"gegen den echten Feed pruefen, dann ist es entschieden.")
+    getroffen = len(je_key) - len(tot)
+    # WARN, nicht ERROR: der Waechter kann „falsch geschrieben" nicht von „ausser Saison"
+    # unterscheiden. Er meldet, was ein Mensch einmal ansehen soll — und behauptet nicht mehr,
+    # als er weiss.
+    # 01.09.2026: seit der automatischen Ligen-Entdeckung ist die Handliste nur noch die schnelle
+    # Zuordnung — die WIRKLICHE Abdeckung steht in betfair_consensus.json und gehoert hierher, sonst
+    # misst der Waechter weiter die alte Welt.
+    cons = _lazy("betfair_consensus.json")
+    extra = ""
+    if isinstance(cons, dict) and cons:
+        quote, geholt = cons.get("ankerQuote"), cons.get("oddsKeysFetched")
+        if quote is not None:
+            extra = f" · Anker liegt auf {round(quote * 100)}% der Radar-Spiele"
+            if geholt:
+                extra += f" (aus {geholt} geholten Wettbewerben)"
+        else:
+            extra = " · ❔ noch keine `ankerQuote` in der Konsens-Datei (Lauf von vor dem 01.09.)"
+    return _chk("pinn_anker", "Pinnacle-Ankerkarte trifft den Feed", "warn", fails,
+                f"{getroffen} von {len(je_key)} Ankern der Handliste treffen den Feed · "
+                f"{len(ligen)} Ligastrings gesehen{extra}. Eine niedrige Abdeckung der HANDLISTE ist "
+                f"kein Fehler mehr (der globale Pool faengt den Rest); ein toter Eintrag schon.")
+
+
+@integrity_check
+def check_buecher_punkte(ctx):
+    """Wird der Bücher-Score gerechnet — und sieht er je mehr als EIN Buch?
+
+    Der ganze Zweck ist der Vergleich dreier Bücher. Kommen Poly und Pinnacle nie an, rechnet er
+    brav weiter und zeigt „3/4" — formal korrekt, inhaltlich ein Betfair-Score mit Zeremonie."""
+    fname = "killer.json"
+    data = _lazy(fname)
+    if fname in _LAZY_FAILED:
+        return _chk("buecher_punkte", "Bücher-Punktestand sieht mehr als ein Buch", "warn",
+                    [f"❔ {fname} nicht lesbar — der Punktestand ist UNBEKANNT."], "")
+    if not isinstance(data, dict) or not data:
+        return _chk("buecher_punkte", "Bücher-Punktestand sieht mehr als ein Buch", "warn",
+                    [f"❔ {fname} fehlt/leer — killer.py schreibt sie bei jedem Betfair-Lauf."], "")
+    bew = data.get("alleBewertet")
+    if bew is None:
+        return _chk("buecher_punkte", "Bücher-Punktestand sieht mehr als ein Buch", "warn",
+                    ["❔ Kein `alleBewertet` in killer.json — entweder lief noch kein Lauf mit dem "
+                     "Punktestand (01.09.2026), oder er wurde entfernt. Unbekannt, nicht grün."], "")
+    rows = [r for r in bew if isinstance(r, dict)]
+    mit_fremd = [r for r in rows if (r.get("moeglich") or 0) >= PKT_FREMD_MIN_NENNER]
+    fails = []
+    if len(rows) >= PKT_MIN_SPIELE and not mit_fremd:
+        fails.append(f"{len(rows)} Spiele bewertet, aber bei KEINEM war ein zweites Buch erhoben "
+                     f"(Nenner überall < {PKT_FREMD_MIN_NENNER}). Der Punktestand misst dann nur "
+                     f"Betfair gegen sich selbst — genau die Bauform, die gemessen NICHT trägt. "
+                     f"Poly-Vorfenster und Pinnacle-Abdeckung prüfen.")
+    return _chk("buecher_punkte", "Bücher-Punktestand sieht mehr als ein Buch", "error", fails,
+                f"{len(rows)} Spiele bewertet · {len(mit_fremd)} mit mindestens einem fremden Buch · "
+                f"beste Punktzahl {max((r.get('punkte') or 0) for r in rows) if rows else 0}. "
+                f"Ein leeres Fenster ist kein Fehler; ein dauerhaft einsamer Betfair-Score schon.")
+
+
+@integrity_check
+def check_vorregistrierung(ctx):
+    """Laeuft der Vorwaerts-Test wirklich — oder faengt er jeden Tag neu an?
+
+    Drei Arten, wie eine Vorregistrierung still wertlos wird, und keine sieht von aussen kaputt aus:
+      · Die Datei wird nicht committet -> jeder Lauf meldet neu an, das Fenster bleibt ewig leer.
+      · Der Zuschnitt wurde nachtraeglich geaendert -> gemessen wird etwas anderes als angemeldet.
+        (Dagegen die Signatur; der Waechter meldet den Bruch, statt ihn nur im Register zu vermerken.)
+      · Der Filter trifft schlicht nie zu -> wochenlang null Plays, ohne dass jemand nachsieht."""
+    fname = "freigabe.json"
+    data = _lazy(fname)
+    if fname in _LAZY_FAILED:
+        return _chk("vorregistrierung", "Vorangemeldete Kandidaten laufen", "warn",
+                    [f"❔ {fname} nicht lesbar — ob der Vorwaerts-Test laeuft, ist UNBEKANNT."], "")
+    if not isinstance(data, dict) or not data:
+        return _chk("vorregistrierung", "Vorangemeldete Kandidaten laufen", "warn",
+                    [f"❔ {fname} fehlt/leer — freigabe.py schreibt sie bei jedem Betfair-Lauf."], "")
+    rows = [r for r in (data.get("alle") or []) if isinstance(r, dict) and r.get("art") == "vorangemeldet"]
+    if not rows:
+        return _chk("vorregistrierung", "Vorangemeldete Kandidaten laufen", "warn",
+                    ["❔ Keine vorangemeldete Schublade im Register — entweder ist vorregistrierung.py "
+                     "nicht eingehaengt, oder der Import faellt aus. Unbekannt, nicht gruen."],
+                    "freigabe.baue() ruft vorregistrierte_schubladen().")
+    now = ctx.now if ctx is not None and getattr(ctx, "now", None) else _now()
+    fails = []
+    teile = []
+    for r in rows:
+        name = r.get("schublade") or "?"
+        if r.get("ungueltig"):
+            fails.append(f"„{name}“: der Zuschnitt wurde seit der Anmeldung geaendert — der "
+                         f"Vorwaerts-Test misst nicht mehr das, was angemeldet wurde.")
+            continue
+        n = r.get("n") or 0
+        # _alter_h ist der vorhandene, defensive Zeit-Helfer dieses Moduls (None bei kaputtem
+        # Stempel) — kein eigener Parser daneben, sonst driften zwei Auslegungen auseinander.
+        _h = _alter_h(r.get("angemeldet"), now)
+        tage = (_h / 24.0) if _h is not None else None
+        teile.append(f"{name}: {n}/{r.get('zielN') or '?'}" + (f" seit {tage:.0f}d" if tage is not None else ""))
+        if tage is not None and tage > VORREG_STILL_TAGE and n == 0:
+            fails.append(f"„{name}“: seit {tage:.0f} Tagen angemeldet und KEIN einziger Play "
+                         f"dazugekommen. Entweder wird vorregistrierung.json nicht committet (dann "
+                         f"meldet jeder Lauf neu an), oder der Zuschnitt trifft nie zu.")
+    return _chk("vorregistrierung", "Vorangemeldete Kandidaten laufen", "error", fails,
+                " · ".join(teile) or "keine Angaben")
+
+
 @integrity_check
 def check_killer_push_buch(ctx):
     """Das Schattenbuch des Trades-Pushes muss abrechnen, nicht nur sammeln.

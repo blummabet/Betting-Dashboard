@@ -57,9 +57,12 @@ function render({ killer = null, flowRows = [] } = {}) {
 // 01.09.2026 (Lucas: „das wirkt jetzt schon sehr oft quasi redundant, oder?"): die beiden stehen
 // seither als Ebene 2 und 3 EINER Sektion untereinander. Damit wiegt die Abgrenzung noch schwerer
 // als vorher — untereinander in einem Rahmen muss jede Ebene sagen, warum sie nicht die andere ist.
-test('beide Ebenen sagen, wie sie gebaut sind — Filter gegen Rangliste', () => {
+// 01.09.2026, zweite Fassung: aus dem harten Filter wurde ein PUNKTESTAND (Lucas: „die Bücher alle
+// im Vergleich … mit einer Punkteanzeige"). Die Abgrenzung zur Rangliste bleibt damit bestehen und
+// wird sogar schärfer — Ebene 2 wiegt BÜCHER, Ebene 3 sortiert Einzelsignale.
+test('beide Ebenen sagen, wie sie gebaut sind — Punktestand gegen Rangliste', () => {
   const { ebene } = render({ killer: { stufe1: [], stufe2: [klZeile('1', 'Arsenal', 'Gegner')] } });
-  assert.match(ebene(2), /class="md-mech"[^>]*>Filter</, 'die Konjunktion heißt Filter');
+  assert.match(ebene(2), /class="md-mech"[^>]*>Punktestand</, 'die Bücher-Ebene heißt Punktestand');
   assert.match(ebene(3), /class="md-mech"[^>]*>Rangliste</, 'die Disjunktion heißt Rangliste');
   assert.doesNotMatch(ebene(2), />Rangliste</, 'die Bauarten dürfen sich nicht vermischen');
 });
@@ -69,7 +72,9 @@ test('die Köpfe nennen die Folge, nicht nur den Namen', () => {
   // eine leere Sektion ist dort eine Aussage — unten genügt EINE Quelle.
   const { html } = render({ killer: { stufe1: [], stufe2: [klZeile('1', 'Arsenal', 'Gegner')] },
     flowRows: [flow('99', 'Everton', 'Fulham')] });
-  assert.match(html, /fehlt eine, ist die Zeile raus/);
+  // Ebene 2 sagt jetzt, WIE gewichtet wird (Buch schlägt Kriterium) und dass ein nicht erhobenes
+  // Buch den Nenner senkt statt Punkte zu kosten — das ist die Aussage, die beim Nachspielen zählt.
+  assert.match(html, /senken den Nenner/);
   assert.match(html, /leer heißt leer/);
   assert.match(html, /eine Quelle genügt, kein UND/);
 });
