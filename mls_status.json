@@ -560,10 +560,21 @@
       "id": "live_scan_laeuft",
       "label": "Poly-Live-Scan taktet",
       "severity": "error",
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "Letzter Live-Scan vor 5.7h (Takt: 15 Min) — der Job startet nicht. Runner belegt? Workflow deaktiviert?"
+      ],
+      "note": "Erwartet alle 15 Min; Alarm ab 90 Min. Live-Preise sind die Schluss-Referenz fuer den CLV — fehlen sie, misst der Nordstern nicht."
+    },
+    {
+      "id": "killer_push_buch",
+      "label": "Trades-Push fuehrt sein Buch",
+      "severity": "error",
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Erwartet alle 15 Min; Alarm ab 90 Min. Live-Preise sind die Schluss-Referenz fuer den CLV — fehlen sie, misst der Nordstern nicht."
+      "note": "Was gepusht wurde, muss abgerechnet werden — sonst weiss niemand, ob der Channel traegt. Gerechnet wird zum pushPreis, nicht zum Haltepreis."
     },
     {
       "id": "card_link_alive",
@@ -575,6 +586,6 @@
       "note": "0 von 0 ist ein ruhiger Tag. 0 von N ist ein Bruch."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-08-31T23:19:40.699394+00:00"
+  "nFail": 4,
+  "generatedAt": "2026-09-01T12:36:31.397075+00:00"
 }
