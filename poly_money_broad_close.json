@@ -131653,7 +131653,13 @@
     "usd": 400,
     "ts": 1788210564
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "New York Mets": 1.0,
+   "Tampa Bay Rays": 0.0
+  },
+  "resolvedAt": "2026-09-01T01:50:12.709978+00:00"
  },
  "mlb-sea-bos-2026-08-31": {
   "shares": {
@@ -131927,7 +131933,13 @@
      17936
     ]
    ]
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "San Diego Padres": 1.0,
+   "Cincinnati Reds": 0.0
+  },
+  "resolvedAt": "2026-09-01T01:50:12.709978+00:00"
  },
  "atp-borges-tien-2026-08-30": {
   "shares": {
@@ -133412,8 +133424,8 @@
  },
  "wta-osaka-zakharo-2026-08-30": {
   "shares": {
-   "Naomi Osaka": 7484.104384579995,
-   "Anastasia Zakharova": 878.0243330249998
+   "Naomi Osaka": 12088.736166679992,
+   "Anastasia Zakharova": 1418.2325204249998
   },
   "prices": {
    "Naomi Osaka": 0.895,
@@ -133421,8 +133433,14 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 9284,
+  "totalUsd": 14814,
   "whales": [
+   {
+    "wallet": "0x85fb1b29bc068bee293923cc7e072dff890889ba",
+    "side": "Naomi Osaka",
+    "usd": 2685,
+    "avgPrice": 0.9
+   },
    {
     "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
     "side": "Naomi Osaka",
@@ -133440,16 +133458,10 @@
     "side": "Naomi Osaka",
     "usd": 996,
     "avgPrice": 0.8985
-   },
-   {
-    "wallet": "0x7e5972bfc25819775ee5a9d4f191919375487b8b",
-    "side": "Naomi Osaka",
-    "usd": 895,
-    "avgPrice": 0.87
    }
   ],
-  "hoursToKickoff": 0.69,
-  "capturedAt": "2026-09-01T01:20:52.095213+00:00",
+  "hoursToKickoff": 0.35,
+  "capturedAt": "2026-09-01T01:50:12.709978+00:00",
   "tokens": {
    "Naomi Osaka": "22675894224569870278728013796989412873912264610449402790294769833762746304066",
    "Anastasia Zakharova": "67609144627239591335401623809640532489389948220312542799030648128396133787596"
@@ -133884,8 +133896,8 @@
  },
  "itf-oconnel-sure-2026-09-01": {
   "shares": {
-   "Benjamin O'Connell": 27339.577308354998,
-   "Keerthivassan Suresh": 5014.98810659
+   "Benjamin O'Connell": 27594.708357774998,
+   "Keerthivassan Suresh": 5061.787293169999
   },
   "prices": {
    "Benjamin O'Connell": 0.845,
@@ -133893,7 +133905,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 34234,
+  "totalUsd": 34546,
   "whales": [
    {
     "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
@@ -133904,7 +133916,7 @@
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Keerthivassan Suresh",
-    "usd": 3960,
+    "usd": 3958,
     "avgPrice": 0.135
    },
    {
@@ -133914,23 +133926,148 @@
     "avgPrice": 0.154
    },
    {
-    "wallet": "0x6407a638ff11e090d5b6978b50916ca1c487d360",
-    "side": "Keerthivassan Suresh",
-    "usd": 221,
-    "avgPrice": 0.14
+    "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
+    "side": "Benjamin O'Connell",
+    "usd": 254,
+    "avgPrice": 0.84
    }
   ],
-  "hoursToKickoff": 1.69,
-  "capturedAt": "2026-09-01T01:20:52.095213+00:00",
+  "hoursToKickoff": 1.19,
+  "capturedAt": "2026-09-01T01:50:12.709978+00:00",
   "tokens": {
    "Benjamin O'Connell": "61588553257145478162907756477126515693066085874163597822813958001115344061264",
    "Keerthivassan Suresh": "89895348207913711287281334604462496152172052653564091912322295454275541547770"
-  }
+  },
+  "book": {
+   "side": "Benjamin O'Connell",
+   "bid": 0.84,
+   "ask": 0.85,
+   "spreadC": 1.0,
+   "spreadPct": 1.18,
+   "bids": [
+    [
+     0.84,
+     554
+    ],
+    [
+     0.83,
+     231
+    ],
+    [
+     0.82,
+     773
+    ],
+    [
+     0.81,
+     14462
+    ],
+    [
+     0.8,
+     10150
+    ],
+    [
+     0.79,
+     5531
+    ]
+   ],
+   "asks": [
+    [
+     0.85,
+     979
+    ],
+    [
+     0.86,
+     1408
+    ],
+    [
+     0.87,
+     11270
+    ],
+    [
+     0.88,
+     30718
+    ],
+    [
+     0.89,
+     26811
+    ],
+    [
+     0.9,
+     11340
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
+    "action": "BUY",
+    "side": "Benjamin OConnell",
+    "price": 0.87,
+    "usd": 2431,
+    "ts": 1788209484
+   },
+   {
+    "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
+    "action": "BUY",
+    "side": "Benjamin OConnell",
+    "price": 0.8688,
+    "usd": 4344,
+    "ts": 1788209356
+   },
+   {
+    "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
+    "action": "BUY",
+    "side": "Benjamin OConnell",
+    "price": 0.86,
+    "usd": 774,
+    "ts": 1788209329
+   },
+   {
+    "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
+    "action": "BUY",
+    "side": "Benjamin OConnell",
+    "price": 0.86,
+    "usd": 774,
+    "ts": 1788209292
+   },
+   {
+    "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
+    "action": "BUY",
+    "side": "Benjamin OConnell",
+    "price": 0.86,
+    "usd": 580,
+    "ts": 1788209250
+   },
+   {
+    "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
+    "action": "BUY",
+    "side": "Benjamin OConnell",
+    "price": 0.86,
+    "usd": 1978,
+    "ts": 1788209208
+   },
+   {
+    "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
+    "action": "BUY",
+    "side": "Benjamin OConnell",
+    "price": 0.85,
+    "usd": 526,
+    "ts": 1788209200
+   },
+   {
+    "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
+    "action": "BUY",
+    "side": "Benjamin OConnell",
+    "price": 0.85,
+    "usd": 574,
+    "ts": 1788209127
+   }
+  ]
  },
  "atp-casteln-dellave-2026-08-30": {
   "shares": {
-   "Luca Castelnuovo": 1364.5694328749996,
-   "Matthew Dellavedova": 2274.5781543749995
+   "Luca Castelnuovo": 1404.665041875,
+   "Matthew Dellavedova": 2341.4041693749996
   },
   "prices": {
    "Luca Castelnuovo": 0.375,
@@ -133938,7 +134075,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 7548,
+  "totalUsd": 7576,
   "whales": [
    {
     "wallet": "0xc0f89d4e30b3ab40ab1f1979ebdcf8a02c39ae2e",
@@ -133965,8 +134102,8 @@
     "avgPrice": 0.3579
    }
   ],
-  "hoursToKickoff": 1.69,
-  "capturedAt": "2026-09-01T01:20:52.095213+00:00",
+  "hoursToKickoff": 1.19,
+  "capturedAt": "2026-09-01T01:50:12.709978+00:00",
   "tokens": {
    "Luca Castelnuovo": "89118931881599033799835044310558894590784356891138975697244831722500552445711",
    "Matthew Dellavedova": "49285428254965125549839891810692666942898711403583267175966324074842663570104"
