@@ -1,7 +1,7 @@
 {
- "updatedAt": "2026-09-01T06:52:13.446849+00:00",
+ "updatedAt": "2026-09-01T07:21:34.440975+00:00",
  "stake": 10.0,
- "expired": 0,
+ "expired": 1,
  "blockedCats": [
   "US-Sport",
   "Kampfsport"
@@ -38,7 +38,7 @@
    "entryPrice": 0.68,
    "firstTs": "2026-08-21T11:45:56.952462+00:00",
    "lastPrice": 0.69,
-   "lastTs": "2026-09-01T06:52:13.446849+00:00",
+   "lastTs": "2026-09-01T07:21:34.440975+00:00",
    "htkAtEntry": 2.278193611111111,
    "public": true,
    "reasons": [
@@ -61,7 +61,7 @@
    "entryPrice": 0.715,
    "firstTs": "2026-08-27T14:49:55.824552+00:00",
    "lastPrice": 0.715,
-   "lastTs": "2026-09-01T06:52:13.446849+00:00",
+   "lastTs": "2026-09-01T07:21:34.440975+00:00",
    "htkAtEntry": 1.71763,
    "public": true,
    "reasons": [
@@ -73,30 +73,6 @@
     "sharp"
    ],
    "stake": 10.0
-  },
-  "ere-utr-psv-2026-08-30|PSV": {
-   "key": "ere-utr-psv-2026-08-30",
-   "side": "PSV",
-   "verdict": "BET",
-   "conv": 6,
-   "league": "SOCCER",
-   "cat": "Fußball",
-   "entryPrice": 0.645,
-   "firstTs": "2026-08-30T07:17:45.529195+00:00",
-   "lastPrice": 0.655,
-   "lastTs": "2026-08-30T15:49:10.952484+00:00",
-   "htkAtEntry": 2.985685277777778,
-   "public": false,
-   "reasons": [
-    "großes Geld auf PSV (78%) → $35K",
-    "💷 Betfair-Geld bestätigt: 76% · €19K"
-   ],
-   "signals": [
-    "money",
-    "bf"
-   ],
-   "stake": 10.0,
-   "ev": "2026-08-29b"
   },
   "ere-fey-ado-2026-08-30|Feyenoord Rotterdam": {
    "key": "ere-fey-ado-2026-08-30",
@@ -142,30 +118,6 @@
    "signals": [
     "steam",
     "sharp"
-   ],
-   "stake": 10.0,
-   "ev": "2026-08-29b"
-  },
-  "cs2-mm1-sement-2026-08-31|Mansão Maromba": {
-   "key": "cs2-mm1-sement-2026-08-31",
-   "side": "Mansão Maromba",
-   "verdict": "BET",
-   "conv": 5,
-   "league": "ESPORTS",
-   "cat": "E-Sport",
-   "entryPrice": 0.725,
-   "firstTs": "2026-08-31T19:51:57.527657+00:00",
-   "lastPrice": 0.745,
-   "lastTs": "2026-09-01T03:51:32.361476+00:00",
-   "htkAtEntry": 2.186834722222222,
-   "public": false,
-   "reasons": [
-    "großes Geld auf Mansão Maromba (73%) → $24K",
-    "Steam läuft rein (+3.5pp)"
-   ],
-   "signals": [
-    "money",
-    "steam"
    ],
    "stake": 10.0,
    "ev": "2026-08-29b"
@@ -251,8 +203,8 @@
    "cat": "E-Sport",
    "entryPrice": 0.725,
    "firstTs": "2026-09-01T05:09:33.171670+00:00",
-   "lastPrice": 0.735,
-   "lastTs": "2026-09-01T06:52:13.446849+00:00",
+   "lastPrice": 0.715,
+   "lastTs": "2026-09-01T07:21:34.440975+00:00",
    "htkAtEntry": 2.8784402777777776,
    "public": true,
    "reasons": [
@@ -268,27 +220,6 @@
   }
  },
  "settled": [
-  {
-   "key": "sud-cie-bot-2026-08-13",
-   "side": "CS Cienciano",
-   "verdict": "BET",
-   "conv": 6,
-   "league": "SOCCER",
-   "entryPrice": 0.375,
-   "closePrice": 0.375,
-   "result": "win",
-   "winner": "CS Cienciano",
-   "pnl": 16.67,
-   "clvPP": 0.0,
-   "stake": 10.0,
-   "public": false,
-   "signals": [
-    "sharp"
-   ],
-   "firstTs": "2026-08-13T23:26:22.808725+00:00",
-   "settledTs": "2026-08-14T05:11:11.285034+00:00",
-   "resolvedTs": "2026-08-14T05:11:10.567146+00:00"
-  },
   {
    "key": "wta-mcnally-kessler-2026-08-13",
    "side": "Caty McNally",
@@ -11501,6 +11432,30 @@
    "ev": "2026-08-29b",
    "settledTs": "2026-09-01T06:22:20.981464+00:00",
    "resolvedTs": "2026-09-01T06:22:19.768561+00:00"
+  },
+  {
+   "key": "cs2-mm1-sement-2026-08-31",
+   "side": "Mansão Maromba",
+   "verdict": "BET",
+   "conv": 5,
+   "league": "ESPORTS",
+   "cat": "E-Sport",
+   "entryPrice": 0.725,
+   "closePrice": 0.745,
+   "result": "win",
+   "winner": "Mansão Maromba",
+   "pnl": 3.79,
+   "clvPP": 2.0,
+   "stake": 10.0,
+   "public": false,
+   "signals": [
+    "money",
+    "steam"
+   ],
+   "firstTs": "2026-08-31T19:51:57.527657+00:00",
+   "ev": "2026-08-29b",
+   "settledTs": "2026-09-01T07:21:34.440975+00:00",
+   "resolvedTs": "2026-09-01T07:21:33.328093+00:00"
   }
  ],
  "agg": {
@@ -11508,9 +11463,9 @@
    "n": 500,
    "wins": 303,
    "hit": 0.606,
-   "pnl": -101.55,
+   "pnl": -114.43,
    "stake": 5000.0,
-   "roi": -0.0203,
+   "roi": -0.0229,
    "clvAvg": 0.01
   },
   "public": {
@@ -11526,9 +11481,9 @@
    "n": 437,
    "wins": 280,
    "hit": 0.6407,
-   "pnl": 159.7,
+   "pnl": 146.82,
    "stake": 4370.0,
-   "roi": 0.0365,
+   "roi": 0.0336,
    "clvAvg": 0.11
   },
   "blocked": {
@@ -11551,21 +11506,21 @@
     "clvAvg": 0.5
    },
    "E-Sport": {
-    "n": 132,
-    "wins": 98,
-    "hit": 0.7424,
-    "pnl": 127.11,
-    "stake": 1320.0,
-    "roi": 0.0963,
-    "clvAvg": 0.22
+    "n": 133,
+    "wins": 99,
+    "hit": 0.7444,
+    "pnl": 130.9,
+    "stake": 1330.0,
+    "roi": 0.0984,
+    "clvAvg": 0.24
    },
    "Fußball": {
-    "n": 209,
-    "wins": 118,
-    "hit": 0.5646,
-    "pnl": 51.46,
-    "stake": 2090.0,
-    "roi": 0.0246,
+    "n": 208,
+    "wins": 117,
+    "hit": 0.5625,
+    "pnl": 34.79,
+    "stake": 2080.0,
+    "roi": 0.0167,
     "clvAvg": -0.01
    },
    "Kampfsport": {
@@ -11607,21 +11562,21 @@
     "clvAvg": 0.0
    },
    "5": {
-    "n": 154,
-    "wins": 82,
-    "hit": 0.5325,
-    "pnl": -87.02,
-    "stake": 1540.0,
-    "roi": -0.0565,
-    "clvAvg": 0.07
+    "n": 155,
+    "wins": 83,
+    "hit": 0.5355,
+    "pnl": -83.23,
+    "stake": 1550.0,
+    "roi": -0.0537,
+    "clvAvg": 0.08
    },
    "6": {
-    "n": 136,
-    "wins": 85,
-    "hit": 0.625,
-    "pnl": -16.94,
-    "stake": 1360.0,
-    "roi": -0.0125,
+    "n": 135,
+    "wins": 84,
+    "hit": 0.6222,
+    "pnl": -33.61,
+    "stake": 1350.0,
+    "roi": -0.0249,
     "clvAvg": 0.09
    },
    "7": {
@@ -11666,9 +11621,9 @@
     "n": 500,
     "wins": 303,
     "hit": 0.606,
-    "pnl": -101.55,
+    "pnl": -114.43,
     "stake": 5000.0,
-    "roi": -0.0203,
+    "roi": -0.0229,
     "clvAvg": 0.01
    }
   },
@@ -11701,13 +11656,13 @@
     "clvAvg": 0.0
    },
    "money": {
-    "n": 385,
-    "wins": 247,
-    "hit": 0.6416,
-    "pnl": -45.41,
-    "stake": 3850.0,
-    "roi": -0.0118,
-    "clvAvg": 0.08
+    "n": 386,
+    "wins": 248,
+    "hit": 0.6425,
+    "pnl": -41.62,
+    "stake": 3860.0,
+    "roi": -0.0108,
+    "clvAvg": 0.09
    },
    "pinn": {
     "n": 10,
@@ -11719,22 +11674,22 @@
     "clvAvg": 0.0
    },
    "sharp": {
-    "n": 318,
-    "wins": 190,
-    "hit": 0.5975,
-    "pnl": -69.43,
-    "stake": 3180.0,
-    "roi": -0.0218,
+    "n": 317,
+    "wins": 189,
+    "hit": 0.5962,
+    "pnl": -86.1,
+    "stake": 3170.0,
+    "roi": -0.0272,
     "clvAvg": -0.06
    },
    "steam": {
-    "n": 135,
-    "wins": 83,
-    "hit": 0.6148,
-    "pnl": -94.35,
-    "stake": 1350.0,
-    "roi": -0.0699,
-    "clvAvg": 0.04
+    "n": 136,
+    "wins": 84,
+    "hit": 0.6176,
+    "pnl": -90.56,
+    "stake": 1360.0,
+    "roi": -0.0666,
+    "clvAvg": 0.05
    }
   }
  }
