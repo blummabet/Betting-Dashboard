@@ -95,16 +95,13 @@ jobs:
           # Test, der prueft, ob der Deploy etwas wegwirft, was das Frontend fetcht.
           rm -rf *daily-tiktok wm_live_story_outputs outputs \
                  archive tests sharp_signals wm_story_angles || true
-          # 02.09.2026 (Lucas-Audit): das Artefakt stand bei 169,3 von 170 MB — 99,6% des Budgets,
-          # und der Deploy hat diese Krankheit schon zweimal gehabt (01.07., 28.08.). Diese acht
-          # Wurzel-JSONs sind die groessten, die KEINE HTML- oder JS-Datei je fetcht (nachgeprueft:
-          # null Referenzen, und die Dateinamen stehen im Frontend ausnahmslos als Literale, es gibt
-          # also keine dynamisch gebauten Namen, die die Suche uebersehen koennte). Sie sind reine
-          # Producer-Daten, ~24 MB. Der Test tests/test_pages_artifact_size.py haelt beides fest:
-          # das Budget und die Gegenprobe, dass hier nichts rausfliegt, was das Frontend laedt.
-          rm -f betfair_coherence_watch.json mls-poly-history.json betfair_draw_results.json \
-                poly_resolutions.json liga-poly-history.json player_form_ledger.json \
-                mls_player_form_ledger.json poly_price_path.json || true
+          # 02.09.2026 (Lucas: „was nun mit diesem MB Groessen Problem"): das Artefakt stand bei
+          # 169,3 von 170 MB. Ein erster Anlauf zaehlte die groessten unbenutzten JSONs namentlich
+          # auf — also genau die Bauart, die am 28.08. still veraltet ist und den Deploy gekippt
+          # hat. Jetzt entscheidet eine REGEL: ein Wurzel-JSON, das keine ausgelieferte HTML/JS-
+          # Datei erwaehnt, wird nicht ausgeliefert. Das gilt auch fuer die naechste Datei, die
+          # jemand anlegt, ohne dass sie hier eingetragen werden muss.
+          python3 scripts/pages_ballast.py --loeschen || true
           echo "Artefakt-Größe nach dem Aufräumen:"
           du -sh . || true
 

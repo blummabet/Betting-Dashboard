@@ -6,8 +6,9 @@
 // Konnte man. Beide Flächen behaupteten Dinge, die ihre Daten nicht trugen:
 //
 //  · Geld-Split: bei zwei Ausgängen ist der Geld-Anteil rechnerisch der Preis (gemessen an
-//    1.262 Märkten: Abweichung Median 0,0pp), bei drei Ausgängen deckt der Holders-Abruf im
-//    Median nur 36% des Marktvolumens ab — der „Favorit" war dort ein Artefakt der Lücke.
+//    1.262 Märkten: Abweichung Median 0,0pp); bei drei Ausgängen holte /holders genau EINE Seite
+//    je Ausgang, ohne mitzuschreiben, ob das alle waren — der „Favorit" konnte dort eine
+//    abgeschnittene Liste sein (Osasuna 44,5¢ $745.597 gegen Getafe 22,5¢ $13.006).
 //  · Bewegung: gemessen wurde gegen den ältesten Snapshot (Fenster 0,1h bis 29,2h, trotzdem
 //    gegeneinander sortiert), und „Steam vs dreht" las EINEN Tick — 65% davon waren exakt 0,00pp.
 //
@@ -33,9 +34,8 @@ function schneide(vonMarke, bisMarke) {
 function ladeSplit() {
   const g = {};
   // eslint-disable-next-line no-new-func
-  new Function('exp', schneide('const PW_SPLIT_ABDECKUNG_MIN', 'function _pwNormStage')
-    .replace(/try\{ window\.[^\n]*\n/, '')
-    + '\nexp.guete=_pwSplitGuete; exp.seite=_pwGeldSeite; exp.MIN=PW_SPLIT_ABDECKUNG_MIN;'
+  new Function('exp', schneide('const PW_SPLIT_ARTEN', 'function _pwNormStage')
+    + '\nexp.guete=_pwSplitGuete; exp.seite=_pwGeldSeite; exp.ARTEN=PW_SPLIT_ARTEN;'
     + '\nfunction _pwEsc(s){return String(s);}')(g);
   return g;
 }
@@ -57,15 +57,21 @@ test('zwei Ausgänge werden als Preis-Echo erkannt, nicht als Mehrheit', () => {
   assert.strictEqual(S.guete({ shares: { A: 60, B: 40 }, totalUsd: 100 }).art, 'preis_echo');
 });
 
-test('drei Ausgänge mit dünner Erfassung sind nicht belastbar', () => {
-  // Der echte Osasuna-Fall: 43% des Volumens erfasst, angeblich 96,6% auf einer Seite bei 44,5¢.
-  const g = S.guete({ shares: { O: 745597, D: 13100, G: 13006 }, totalUsd: 1796655 });
-  assert.strictEqual(g.art, 'duenn');
-  assert.ok(g.abdeckung < 0.5, 'Abdeckung: ' + g.abdeckung);
+test('drei Ausgänge mit abgeschnittener Halter-Liste sind nicht belastbar', () => {
+  const g = S.guete({ shares: { O: 745597, D: 13100, G: 13006 }, totalUsd: 1796655,
+                      splitGuete: { art: 'abgeschnitten', trunc: true } });
+  assert.strictEqual(g.art, 'abgeschnitten');
 });
 
-test('drei Ausgänge mit guter Erfassung sind belastbar', () => {
-  assert.strictEqual(S.guete({ shares: { A: 60, B: 20, C: 5 }, totalUsd: 100 }).art, 'belastbar');
+test('drei Ausgänge ohne Vollständigkeits-Angabe sind „unbekannt", nie belastbar', () => {
+  // Der Kern: das Backend-Feld fehlt (Alt-Bestand). Die Client-Notrechnung darf daraus KEIN
+  // „belastbar" machen — sie kann die Vollständigkeit gar nicht kennen.
+  assert.strictEqual(S.guete({ shares: { A: 60, B: 20, C: 5 }, totalUsd: 100 }).art, 'unbekannt');
+});
+
+test('drei Ausgänge mit vollständiger Halter-Liste sind belastbar', () => {
+  assert.strictEqual(S.guete({ shares: { A: 60, B: 20, C: 5 }, totalUsd: 100,
+                               splitGuete: { art: 'belastbar', trunc: false } }).art, 'belastbar');
 });
 
 test('das Backend-Urteil hat Vorrang vor der Client-Rechnung', () => {
@@ -73,9 +79,11 @@ test('das Backend-Urteil hat Vorrang vor der Client-Rechnung', () => {
   assert.strictEqual(S.guete(m).art, 'belastbar');
 });
 
-test('unbekanntes Volumen führt NICHT zu belastbar', () => {
-  for (const tot of [0, null, undefined, -3]) {
-    assert.strictEqual(S.guete({ shares: { A: 6, B: 2, C: 1 }, totalUsd: tot }).art, 'duenn',
+test('das Volumen entscheidet NICHT über die Güte', () => {
+  // Die Kernkorrektur: `totalUsd` ist gehandeltes Volumen, nicht offene Position. Ein umsatz-
+  // starker Markt darf allein deswegen nicht schlechter dastehen.
+  for (const tot of [0, null, undefined, -3, 1e9]) {
+    assert.strictEqual(S.guete({ shares: { A: 6, B: 2, C: 1 }, totalUsd: tot }).art, 'unbekannt',
       'totalUsd=' + tot);
   }
 });
@@ -86,15 +94,22 @@ test('bei einem Zwei-Wege-Markt steht der Preis da, nicht ein Prozentsatz als Si
   assert.ok(!/60%/.test(html), 'gibt den Anteil weiter als eigene Aussage aus: ' + html);
 });
 
-test('bei dünner Erfassung wird KEINE Seite behauptet, sondern die Lücke benannt', () => {
-  const html = S.seite({ shares: { O: 96, D: 2, G: 2 }, totalUsd: 1000 }, 'Osasuna', 96, '45¢', false);
-  assert.match(html, /nicht belastbar/, html);
+test('bei abgeschnittener Liste wird KEINE Seite behauptet', () => {
+  const html = S.seite({ shares: { O: 96, D: 2, G: 2 }, totalUsd: 1000,
+                         splitGuete: { art: 'abgeschnitten', trunc: true } }, 'Osasuna', 96, '45¢', false);
+  assert.match(html, /unvollständig/, html);
   assert.ok(!/Osasuna/.test(html), 'nennt trotzdem eine Seite: ' + html);
-  assert.match(html, /10% des Volumens erfasst/, 'beziffert die Lücke nicht: ' + html);
+});
+
+test('bei ungeprüftem Split wird KEINE Seite behauptet', () => {
+  const html = S.seite({ shares: { O: 96, D: 2, G: 2 }, totalUsd: 1000 }, 'Osasuna', 96, '45¢', false);
+  assert.match(html, /ungeprüft/, html);
+  assert.ok(!/Osasuna/.test(html), 'nennt trotzdem eine Seite: ' + html);
 });
 
 test('bei belastbarem Split steht die Seite ganz normal da', () => {
-  const html = S.seite({ shares: { H: 60, D: 20, A: 5 }, totalUsd: 100 }, 'Bayern', 70, '65¢', false);
+  const html = S.seite({ shares: { H: 60, D: 20, A: 5 }, totalUsd: 100,
+                         splitGuete: { art: 'belastbar', trunc: false } }, 'Bayern', 70, '65¢', false);
   assert.match(html, /Bayern/);
   assert.match(html, /70%/);
 });
@@ -118,7 +133,8 @@ test('der Rückblick beziffert, wovon er lebt', () => {
   const block = schneide('const gueteZeile', 'const zuDuenn');
   assert.match(block, /belastbar/);
   assert.match(block, /preis_echo/);
-  assert.match(block, /duenn/);
+  assert.match(block, /abgeschnitten/);
+  assert.match(block, /unbekannt/);
 });
 
 // ── Bewegung ─────────────────────────────────────────────────────────────────

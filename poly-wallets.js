@@ -863,9 +863,10 @@ function _pwMoneyBroad(broad){
   const _g=b.guete||null;
   const gueteZeile=_g?('<div class="pw-none" style="margin:2px 0 8px;border:1px solid #30363d;background:#0f141b;padding:7px 10px;border-radius:8px">'
     +'<b style="color:#e6edf3">Wovon dieses Urteil lebt:</b> '
-    +'<b style="color:#3fb950">'+(_g.belastbar||0)+'</b> Märkte mit belastbarem Geld-Split · '
+    +'<b style="color:#3fb950">'+(_g.belastbar||0)+'</b> Märkte mit vollständigem Geld-Split · '
     +'<b>'+(_g.preis_echo||0)+'</b> Zwei-Wege-Märkte (Geld-Anteil <i>ist</i> dort der Preis, sagt also nichts Eigenes) · '
-    +'<b>'+(_g.duenn||0)+'</b> mit zu dünner Erfassung (&lt; '+Math.round((window.PW_SPLIT_ABDECKUNG_MIN||0.7)*100)+'% des Volumens im Split)'
+    +'<b>'+(_g.abgeschnitten||0)+'</b> mit abgeschnittener Halter-Liste'
+    +((_g.unbekannt||0)?' · <b>'+_g.unbekannt+'</b> vor der Vollständigkeits-Prüfung erfasst (ungeprüft)':'')
     +(_g.leer?' · <b>'+_g.leer+'</b> ohne Aufteilung':'')
     +'. Gewertet wird nur die erste Gruppe.</div>'):'';
   const zuDuenn=(b.verdict==='zu wenig Daten');
@@ -1664,49 +1665,52 @@ function _pwSideMarket(k,m){
   for(var i=0;i<names.length;i++){ var u=Number(m.shares[names[i]])||0; if(u>best){best=u;fav=names[i];} }
   return !_PW_SCORE_RX.test(String(fav||''));
 }
-// ── Güte des Geld-Splits (02.09.2026, Lucas-Audit „Großes Geld") ───────────────
+// ── Güte des Geld-Splits (02.09.2026, Lucas-Audit „Großes Geld") ─────────────
 // Nachgemessen über 1.912 Märkte aus poly_money_broad_close.json:
 //   · 2 Ausgänge (Tennis, E-Sport, MLB, O/U), n=1.262 → |Geld% − Preis| Median 0,0pp;
 //     1262 von 1262 unter 1pp. Struktur, kein Zufall: komplementäre Tokens, also ist der
 //     Wert-Anteil zwangsläufig p/(1−p). „Geld auf X 68% (69¢)" ist EINE Zahl, zweimal gesagt.
-//   · 3 Ausgänge (Fußball 1X2), n=650 → Abdeckung sum(shares)/totalUsd im Median 36%,
-//     bei 79% unter 50%. Der Split ist dort ein Artefakt der Erfassungslücke, keine Mehrheit.
-// Deshalb behauptet die Anzeige nur noch eine Seite, wo der Split das auch tragen kann.
-// Backend liefert `splitGuete`; für Altdaten rechnet dieselbe Regel hier nochmal.
-const PW_SPLIT_ABDECKUNG_MIN = 0.70;
-try{ window.PW_SPLIT_ABDECKUNG_MIN = PW_SPLIT_ABDECKUNG_MIN; }catch(_e){}
+//   · 3 Ausgänge (Fußball 1X2) → Splits, die kein Preis hergibt (Osasuna 44,5¢ mit $745.597
+//     gegen Getafe 22,5¢ mit $13.006).
+// ⚠️ Der erste Anlauf maß die Güte als sum(shares)/totalUsd. `totalUsd` ist aber das gehandelte
+// VOLUMEN, nicht die offene Position — die Zahl hätte plausibel ausgesehen und nichts gemessen.
+// Jetzt entscheidet, was der Abruf wirklich weiß: war seine Halter-Liste zu Ende (`trunc`)?
+const PW_SPLIT_ARTEN = ['leer', 'preis_echo', 'belastbar', 'abgeschnitten', 'unbekannt'];
 function _pwSplitGuete(m){
   const g = m && m.splitGuete;
   if(g && g.art) return g;
+  // Rückfall für Altdaten: was ohne das Backend-Feld noch entscheidbar ist.
   const sh = (m && m.shares) || {};
   const namen = Object.keys(sh).filter(k => typeof sh[k] === 'number');
-  if(namen.length < 2) return { art: 'leer', abdeckung: null };
-  const summe = namen.reduce((a, k) => a + sh[k], 0);
-  if(!(summe > 0)) return { art: 'leer', abdeckung: null };
-  if(namen.length === 2) return { art: 'preis_echo', abdeckung: null };
-  const tot = Number(m && m.totalUsd) || 0;
-  if(!(tot > 0)) return { art: 'duenn', abdeckung: null };   // unbekannt ist nicht belastbar
-  const ab = summe / tot;
-  return { art: ab >= PW_SPLIT_ABDECKUNG_MIN ? 'belastbar' : 'duenn', abdeckung: ab };
+  if(namen.length < 2) return { art: 'leer', trunc: null };
+  if(!(namen.reduce((a, k) => a + sh[k], 0) > 0)) return { art: 'leer', trunc: null };
+  if(namen.length === 2) return { art: 'preis_echo', trunc: null };
+  return { art: 'unbekannt', trunc: null };   // nie „belastbar" auf Verdacht
 }
 // Eine Zeile „auf welcher Seite liegt das Geld" — oder die ehrliche Auskunft, dass es die nicht gibt.
 // `kurz` für die engen ×-Norm-Kacheln, lang für die Tabelle.
 function _pwGeldSeite(m, favName, favPct, favPreis, kurz){
-  const g = _pwSplitGuete(m);
-  if(g.art === 'leer')
+  const art = _pwSplitGuete(m).art;
+  if(art === 'leer')
     return '<span class="pw-mut" title="Für diesen Markt liegt keine Seiten-Aufteilung vor.">keine Seiten-Aufteilung</span>';
-  if(g.art === 'preis_echo'){
+  if(art === 'preis_echo'){
     const t = 'Zwei-Wege-Markt: der Geld-Anteil ist hier rechnerisch der Preis (komplementäre Tokens). '
             + 'Gemessen an 1.262 Märkten: Abweichung Median 0,0pp. Als eigenes Signal also wertlos.';
     return '<b style="color:#4cc2ff">' + _pwEsc(favName) + '</b> <span class="pw-mut" title="' + t + '">'
          + (favPreis || '—') + ' <span style="font-size:9px">= Preis</span></span>';
   }
-  if(g.art === 'duenn'){
-    const pct = (g.abdeckung != null) ? Math.round(g.abdeckung * 100) + '% des Volumens erfasst' : 'Abdeckung unbekannt';
-    const t = 'Der Holders-Abruf hat nur einen Teil des Marktgeldes eingefangen (' + pct + '). '
-            + 'Eine Seite zu behaupten hiesse, die Lücke als „da liegt nichts" zu lesen.';
-    return '<span class="pw-mut" title="' + t + '">Split nicht belastbar'
-         + (kurz ? '' : ' <span style="font-size:9px">(' + pct + ')</span>') + '</span>';
+  if(art === 'abgeschnitten'){
+    const t = 'Mindestens eine Halter-Liste kam abgeschnitten zurück — es liegt mehr Geld im Markt, '
+            + 'als in diesem Split steckt. Eine Seite zu behaupten hieße, das Fehlende als '
+            + '„da liegt nichts" zu lesen.';
+    return '<span class="pw-mut" title="' + t + '">Split unvollständig'
+         + (kurz ? '' : ' <span style="font-size:9px">(Halter-Liste abgeschnitten)</span>') + '</span>';
+  }
+  if(art === 'unbekannt'){
+    const t = 'Dieser Markt wurde erfasst, bevor der Abruf mitschrieb, ob seine Halter-Liste zu Ende '
+            + 'war. Ob der Split vollständig ist, wissen wir nicht — und Nichtwissen ist keine Seite.';
+    return '<span class="pw-mut" title="' + t + '">Split ungeprüft'
+         + (kurz ? '' : ' <span style="font-size:9px">(vor der Vollständigkeits-Prüfung erfasst)</span>') + '</span>';
   }
   return '<b style="color:#4cc2ff">' + _pwEsc(favName) + '</b> ' + favPct + '%'
        + (favPreis ? ' <span class="pw-mut">(' + favPreis + ')</span>' : '');

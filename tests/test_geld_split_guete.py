@@ -7,11 +7,17 @@ oben drueber stand. Gemessen ueber 1.912 Maerkte aus poly_money_broad_close.json
 
   · ZWEI Ausgaenge (n=1.262): |Geld% − Preis| Median 0,0pp, 1262 von 1262 unter 1pp. Struktur:
     komplementaere Tokens -> Wert-Anteil = p/(1−p). Der Split IST der Preis.
-  · DREI Ausgaenge (n=650): Abdeckung sum(shares)/totalUsd Median 36%, bei 79% unter 50%. Der
-    Split ist ein Artefakt der Erfassungsluecke — ein leerer Holders-Abruf landete als 0.
+  · DREI Ausgaenge (n=650): Splits, die kein Preis hergibt — Osasuna 44,5¢ mit $745.597 gegen
+    Getafe 22,5¢ mit $13.006. /holders lieferte genau EINE Seite je Ausgang, und niemand schrieb
+    mit, ob das alle waren.
+
+⚠️ Der erste Anlauf mass die Guete als sum(shares)/totalUsd und nannte das Abdeckung. `totalUsd`
+ist aber das gehandelte VOLUMEN (kumulierter Umsatz), nicht die offene Position — die Zahl haette
+plausibel ausgesehen und nichts gemessen. Geprueft wird jetzt, was der Abruf wirklich weiss: ob
+seine Halter-Liste zu Ende war.
 
 Diese Tests nageln fest, dass die Anzeige das sagt, statt eine Seite zu behaupten. Sie sind
-bewusst hart bei der einen Frage, um die es hier geht: darf aus fehlender Erfassung eine
+bewusst hart bei der einen Frage, um die es hier geht: darf aus fehlender Information eine
 Aussage werden? Nein.
 """
 import os
@@ -32,21 +38,33 @@ class SplitGueteTest(unittest.TestCase):
         """Auch bei 100% Abdeckung sagt ein Zwei-Wege-Split nichts Eigenes — er ist der Preis."""
         self.assertEqual(PMA.split_guete({"A": 60.0, "B": 40.0}, 100)["art"], "preis_echo")
 
-    def test_drei_ausgaenge_gut_erfasst_sind_belastbar(self):
-        g = PMA.split_guete({"A": 60.0, "B": 20.0, "C": 5.0}, 100)
+    def test_drei_ausgaenge_mit_vollstaendiger_halterliste_sind_belastbar(self):
+        g = PMA.split_guete({"A": 60.0, "B": 20.0, "C": 5.0}, 100, False)
         self.assertEqual(g["art"], "belastbar")
-        self.assertAlmostEqual(g["abdeckung"], 0.85)
 
-    def test_drei_ausgaenge_duenn_erfasst_sind_nicht_belastbar(self):
-        """Der Osasuna-Fall: 43% erfasst, 96,6% angeblich auf einer Seite bei 44,5¢."""
-        g = PMA.split_guete({"Osasuna": 745597.0, "Draw": 13100.0, "Getafe": 13006.0}, 1796655)
-        self.assertEqual(g["art"], "duenn")
-        self.assertLess(g["abdeckung"], 0.5)
+    def test_abgeschnittene_halterliste_ist_nicht_belastbar(self):
+        """Der Osasuna-Fall: 96,6% angeblich auf einer Seite bei 44,5¢, Liste nicht zu Ende."""
+        g = PMA.split_guete({"Osasuna": 745597.0, "Draw": 13100.0, "Getafe": 13006.0},
+                            1796655, True)
+        self.assertEqual(g["art"], "abgeschnitten")
 
-    def test_unbekanntes_volumen_ist_nicht_belastbar(self):
-        """Ohne Nenner ist die Abdeckung unbekannt — und unbekannt ist kein Freibrief."""
-        for tot in (0, None, "", -5):
-            self.assertEqual(PMA.split_guete({"A": 1.0, "B": 1.0, "C": 1.0}, tot)["art"], "duenn")
+    def test_ohne_trunc_angabe_bleibt_es_unbekannt_nicht_belastbar(self):
+        """Alt-Bestand: erfasst, bevor der Abruf die Vollstaendigkeit mitschrieb."""
+        g = PMA.split_guete({"A": 60.0, "B": 20.0, "C": 5.0}, 100, None)
+        self.assertEqual(g["art"], "unbekannt")
+
+    def test_das_volumen_entscheidet_NICHT_mehr_ueber_die_guete(self):
+        """Die Kernkorrektur: derselbe Split mit voellig anderem Umsatz ist dieselbe Guete.
+        Frueher haette ein umsatzstarker Markt allein deswegen als „duenn" gegolten."""
+        sh = {"A": 60.0, "B": 20.0, "C": 5.0}
+        for tot in (100, 1_000_000, 0, None):
+            self.assertEqual(PMA.split_guete(sh, tot, False)["art"], "belastbar", f"tot={tot}")
+            self.assertEqual(PMA.split_guete(sh, tot, True)["art"], "abgeschnitten", f"tot={tot}")
+
+    def test_normalisierte_anteile_bleiben_belastbar(self):
+        """capture() friert fertige Anteile ein (Summe 1) — die sind per Konstruktion vollstaendig."""
+        g = PMA.split_guete({"home": 0.6, "draw": 0.2, "away": 0.2}, 40000)
+        self.assertEqual(g["art"], "belastbar")
 
     def test_leerer_oder_einseitiger_split(self):
         self.assertEqual(PMA.split_guete({}, 100)["art"], "leer")
@@ -56,11 +74,67 @@ class SplitGueteTest(unittest.TestCase):
     def test_nicht_numerische_werte_fliegen_raus(self):
         self.assertEqual(PMA.split_guete({"A": "viel", "B": 5.0}, 100)["art"], "leer")
 
-    def test_schwelle_ist_die_dokumentierte(self):
-        self.assertEqual(PMA.SPLIT_ABDECKUNG_MIN, 0.70)
-        knapp_drunter = PMA.split_guete({"A": 60.0, "B": 5.0, "C": 4.0}, 100)
-        self.assertEqual(knapp_drunter["art"], "duenn")
 
+class HolderBlaetternTest(unittest.TestCase):
+    """02.09.2026: /holders liefert seitenweise. Der Abruf holte genau EINE Seite und wusste nicht,
+    ob das alle waren. Hier ist festgenagelt, wann das Blaettern „fertig" sagen darf — und wann
+    es zugeben muss, dass es abgeschnitten hat."""
+
+    @staticmethod
+    def _parse(d, _t):
+        return d
+
+    def _seiten(self, seitenfolge):
+        """Gibt eine http_get-Attrappe zurueck, die die vorgegebenen Seiten liefert."""
+        def get(url):
+            off = int(url.split("offset=")[1])
+            idx = off // PMB.HOLDERS_LIMIT
+            return seitenfolge[idx] if idx < len(seitenfolge) else []
+        return get
+
+    def test_kurze_seite_heisst_vollstaendig(self):
+        rows, trunc = PMB._alle_holder("c", "t", self._seiten([[("w%d" % i, 1.0) for i in range(50)]]),
+                                       self._parse)
+        self.assertEqual(len(rows), 50)
+        self.assertFalse(trunc)
+
+    def test_es_wird_geblaettert_bis_die_seite_kurz_ist(self):
+        L = PMB.HOLDERS_LIMIT
+        seiten = [[("p%d" % (s * L + i), 1.0) for i in range(L)] for s in range(2)]
+        seiten.append([("rest%d" % i, 1.0) for i in range(10)])
+        rows, trunc = PMB._alle_holder("c", "t", self._seiten(seiten), self._parse)
+        self.assertEqual(len(rows), 2 * L + 10)
+        self.assertFalse(trunc)
+
+    def test_ignoriertes_offset_wird_erkannt_und_gemeldet(self):
+        """Liefert die API immer dieselbe Seite, ist mehr ueber diesen Weg nicht zu holen —
+        aber dann ist der Split abgeschnitten und darf nicht als vollstaendig gelten."""
+        L = PMB.HOLDERS_LIMIT
+        gleiche = [("same%d" % i, 1.0) for i in range(L)]
+        rows, trunc = PMB._alle_holder("c", "t", lambda u: gleiche, self._parse)
+        self.assertEqual(len(rows), L)
+        self.assertTrue(trunc)
+
+    def test_leerer_abruf_ist_nicht_null_halter_sondern_unbekannt(self):
+        rows, trunc = PMB._alle_holder("c", "t", lambda u: None, self._parse)
+        self.assertEqual(rows, [])
+        self.assertTrue(trunc)
+
+    def test_am_seiten_deckel_wird_abgeschnitten_gemeldet(self):
+        L = PMB.HOLDERS_LIMIT
+        def get(url):
+            off = int(url.split("offset=")[1])
+            return [("q%d" % (off + i), 1.0) for i in range(L)]
+        rows, trunc = PMB._alle_holder("c", "t", get, self._parse)
+        self.assertEqual(len(rows), PMB.HOLDERS_MAX_SEITEN * L)
+        self.assertTrue(trunc)
+
+    def test_die_url_traegt_ein_offset(self):
+        self.assertIn("offset=", PMB.HOLDERS)
+        self.assertIn("limit=%d" % PMB.HOLDERS_LIMIT, PMB.HOLDERS)
+
+
+class SplitQuelleTest(unittest.TestCase):
     def test_broad_reicht_dieselbe_funktion_durch(self):
         """Eine Quelle für die Güte — sonst driften Producer und Auswertung auseinander."""
         self.assertIs(PMB.split_guete, PMA.split_guete)
@@ -76,7 +150,8 @@ class EvaluateGattertTest(unittest.TestCase):
         for i in range(n_belastbar):
             k = "bel%d" % i
             f[k] = {"shares": {"H": 80.0, "D": 10.0, "A": 5.0}, "totalUsd": 100,
-                    "prices": {"H": 0.5, "D": 0.3, "A": 0.2}, "league": "TESTLIGA"}
+                    "prices": {"H": 0.5, "D": 0.3, "A": 0.2}, "league": "TESTLIGA",
+                    "splitGuete": {"art": "belastbar", "trunc": False}}
             res[k] = "H"
         for i in range(n_echo):
             k = "echo%d" % i
@@ -86,7 +161,8 @@ class EvaluateGattertTest(unittest.TestCase):
         for i in range(n_duenn):
             k = "dnn%d" % i
             f[k] = {"shares": {"H": 20.0, "D": 1.0, "A": 1.0}, "totalUsd": 100,
-                    "prices": {"H": 0.5, "D": 0.3, "A": 0.2}, "league": "TESTLIGA"}
+                    "prices": {"H": 0.5, "D": 0.3, "A": 0.2}, "league": "TESTLIGA",
+                    "splitGuete": {"art": "abgeschnitten", "trunc": True}}
             res[k] = "H"
         return f, res
 
@@ -95,7 +171,7 @@ class EvaluateGattertTest(unittest.TestCase):
         rep = PMA.evaluate(f, res, min_odds=1.35)
         self.assertEqual(rep["n"], 2)
         self.assertEqual(rep["guete"]["preis_echo"], 5)
-        self.assertEqual(rep["guete"]["duenn"], 7)
+        self.assertEqual(rep["guete"]["abgeschnitten"], 7)
         self.assertEqual(rep["guete"]["belastbar"], 2)
 
     def test_unter_der_mindeststichprobe_gibt_es_kein_urteil(self):
@@ -146,7 +222,8 @@ class LigaAusSlugTest(unittest.TestCase):
 
     def test_evaluate_loest_soccer_auf(self):
         f = {"lal-x-2026-01-01": {"shares": {"H": 80.0, "D": 10.0, "A": 5.0}, "totalUsd": 100,
-                                  "prices": {"H": 0.5, "D": 0.3, "A": 0.2}, "league": "SOCCER"}}
+                                  "prices": {"H": 0.5, "D": 0.3, "A": 0.2}, "league": "SOCCER",
+                                  "splitGuete": {"art": "belastbar", "trunc": False}}}
         for i in range(PMA.LIGA_MIN_BELEGE):
             f["lal-lehr%d-2026-01-01" % i] = {"shares": {"H": 1.0, "A": 1.0}, "totalUsd": 100,
                                               "prices": {"H": 0.5, "A": 0.5}, "league": "LA-LIGA"}

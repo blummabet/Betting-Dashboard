@@ -44,7 +44,7 @@ DIRECT_FILE     = "poly_direct_bets.json"           # 24.08.2026: echte „Heute
 PUB_LEDGER_FILE = "poly_whale_public_ledger.json"   # 02.09.2026: jeder öffentliche Whale-Push, abgerechnet
 PUB_SEEN_FILE   = "poly_whale_public_seen.json"      # der aeltere Dedup-Stempel — Gegenprobe fuers Buch
 PUB_PENDING_MAX_D = 3.0                             # Push so lange offen, obwohl aufgeloest = Key-Mismatch
-SPLIT_ABDECKUNG_WARN = 0.25                         # 02.09.2026 gemessen: Median 36% — darunter bricht etwas
+SPLIT_TRUNC_MAX = 0.30                              # 02.09.2026: mehr abgeschnittene Splits = das Blaettern kommt nicht durch
 RES_FILE        = "poly_resolutions.json"           # {key:{winner,ts}}
 WALLET_FILE     = "poly_wallet_track.json"          # {open,scores:{addr:{n,wins,usd,pnl?}},updatedAt}
 SHORTLIST_FILE  = "poly_shortlist_track.json"       # {updatedAt,open,settled,agg,stake}
@@ -364,57 +364,59 @@ def check_public_push_buch(ctx):
 
 
 @poly_check
-def check_split_abdeckung(ctx):
-    """Der Geld-Split muss sagen, wie viel Markt er ueberhaupt gesehen hat.
+def check_split_vollstaendig(ctx):
+    """Der Geld-Split muss wissen, ob seine Halter-Listen zu Ende waren.
 
-    02.09.2026 (Lucas-Audit „Großes Geld"). Der Split wurde jahrelang als Aussage ausgegeben,
-    ohne dass irgendwo stand, worauf er beruht. Nachgemessen: bei Drei-Wege-Maerkten deckte
-    sum(shares) im Median 36% von totalUsd ab; ein leerer Holders-Abruf landete als 0 im Split
-    und las sich dann wie „auf dieser Seite liegt kein Geld". Daraus wurde ein „🔴 faden"-Urteil.
+    02.09.2026 (Lucas-Audit „Großes Geld"). /holders liefert seitenweise; der Abruf holte genau
+    eine Seite und hatte keine Ahnung, ob das alle waren. Ein Drei-Wege-Fussballmarkt stand danach
+    mit Osasuna (44,5¢) $745.597 gegen Getafe (22,5¢) $13.006 da — ein Verhaeltnis, das kein Preis
+    hergibt. Seitdem blaettert `_alle_holder` und schreibt `trunc` mit.
 
-    Dieser Waechter prueft zwei Dinge, die still kaputtgehen koennen:
-      · `splitGuete` fehlt in den frisch eingefrorenen Maerkten → der Producer schreibt sie nicht
-        mehr, und die Oberflaeche faellt auf ihre eigene Notrechnung zurueck, ohne dass es auffaellt.
-      · Die Abdeckung im Fussball bricht weiter ein → der Holders-Abruf verliert Ausgaenge
-        (Quota, API-Wechsel). Das waere unsichtbar, weil der Split ja trotzdem eine Zahl liefert.
+    ⚠️ Ein frueherer Entwurf dieses Waechters mass sum(shares)/totalUsd als „Abdeckung".
+    `totalUsd` ist das gehandelte VOLUMEN, nicht die offene Position — die Zahl haette plausibel
+    ausgesehen und nichts gemessen. Geprueft wird deshalb die Beobachtung, nicht die Herleitung.
+
+    Zwei Arten, wie das still kaputtgeht:
+      · Frisch eingefrorene Maerkte tragen kein `splitGuete` → der Producer schreibt es nicht (mehr).
+      · Der Anteil abgeschnittener Splits steigt → das Blaettern kommt nicht mehr durch (Quota,
+        API-Wechsel, `offset` wird ignoriert). Ohne diesen Waechter faellt das nicht auf, weil der
+        Split ja trotzdem eine Zahl liefert.
     """
     close = ctx.close if isinstance(ctx.close, dict) else {}
     if not close:
-        return _chk("split_abdeckung", "Geld-Split weiss, was er nicht sieht", "warn",
-                    ["❔ Close-Datei leer — Abdeckung UNBEKANNT."],
+        return _chk("split_vollstaendig", "Geld-Split kennt seine Vollständigkeit", "warn",
+                    ["❔ Close-Datei leer — Vollständigkeit UNBEKANNT."],
                     "poly_money_broad.py schreibt sie bei jedem Lauf.")
-    ohne, mehrweg, summe = 0, 0, 0.0
+    ohne, mehrweg, abgeschnitten = 0, 0, 0
     for m in close.values():
         if not isinstance(m, dict):
             continue
         sh = {k: v for k, v in (m.get("shares") or {}).items() if isinstance(v, (int, float))}
         if len(sh) < 2:
             continue
-        # Nur FRISCH eingefrorene Maerkte zaehlen. Der Bestand von vor der Einfuehrung des
-        # Feldes ist kein Fehler, sondern Vergangenheit — sonst stuende der Waechter ab Tag eins
-        # gelb da und man gewoehnt sich an sein Gelb.
+        g = m.get("splitGuete")
         cap = _parse_ts(m.get("capturedAt"))
-        if cap is not None and (ctx.now - cap).total_seconds() / 3600.0 <= 24 \
-                and not isinstance(m.get("splitGuete"), dict):
+        frisch = cap is not None and (ctx.now - cap).total_seconds() / 3600.0 <= 24
+        if frisch and not isinstance(g, dict):
             ohne += 1
-        if len(sh) > 2:
-            tot = float(m.get("totalUsd") or 0)
-            if tot > 0:
-                mehrweg += 1
-                summe += sum(sh.values()) / tot
+        if len(sh) > 2 and isinstance(g, dict) and g.get("art") in ("belastbar", "abgeschnitten"):
+            mehrweg += 1
+            if g["art"] == "abgeschnitten":
+                abgeschnitten += 1
     fails = []
     if ohne:
-        fails.append(f"{ohne} frisch eingefrorene(r) Markt/Maerkte (letzte 24h) ohne `splitGuete` — der Producer "
-                     f"schreibt das Feld nicht (mehr); die Oberflaeche raet dann selbst.")
-    schnitt = (summe / mehrweg) if mehrweg else None
-    if mehrweg >= 20 and schnitt is not None and schnitt < SPLIT_ABDECKUNG_WARN:
-        fails.append(f"Mehrweg-Maerkte (Fussball 1X2): Abdeckung im Schnitt nur "
-                     f"{schnitt*100:.0f}% (n={mehrweg}) — unter {SPLIT_ABDECKUNG_WARN*100:.0f}%. "
-                     f"Der Holders-Abruf verliert Ausgaenge; jede Seiten-Aussage darauf waere "
-                     f"ein Artefakt.")
-    note = (f"Mehrweg-Abdeckung Ø {schnitt*100:.0f}% ueber {mehrweg} Maerkte"
-            if schnitt is not None else "keine Mehrweg-Maerkte im Bestand")
-    return _chk("split_abdeckung", "Geld-Split weiss, was er nicht sieht", "warn", fails, note)
+        fails.append(f"{ohne} frisch eingefrorene(r) Markt/Maerkte (letzte 24h) ohne `splitGuete` — "
+                     f"der Producer schreibt das Feld nicht (mehr); die Oberflaeche raet dann selbst.")
+    anteil = (abgeschnitten / mehrweg) if mehrweg else None
+    if mehrweg >= 20 and anteil is not None and anteil > SPLIT_TRUNC_MAX:
+        fails.append(f"{abgeschnitten} von {mehrweg} Mehrweg-Splits abgeschnitten "
+                     f"({anteil*100:.0f}% > {SPLIT_TRUNC_MAX*100:.0f}%) — das Blaettern kommt nicht "
+                     f"durch. Jede Seiten-Aussage darauf waere unvollstaendig.")
+    if mehrweg == 0:
+        note = "noch kein geprueftes Mehrweg-Ergebnis (der naechste Scan stempelt sie)"
+    else:
+        note = f"{mehrweg} geprueft, davon {abgeschnitten} abgeschnitten"
+    return _chk("split_vollstaendig", "Geld-Split kennt seine Vollständigkeit", "warn", fails, note)
 
 
 @poly_check

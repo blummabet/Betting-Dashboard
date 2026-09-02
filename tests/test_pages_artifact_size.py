@@ -16,9 +16,13 @@ Aufraeumen uebrig bleibt, hat ein Budget.
 """
 import os
 import re
+import sys
 import subprocess
 import collections
 import pytest
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
+import pages_ballast as BALLAST
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 WF = os.path.join(REPO, ".github", "workflows", "deploy-pages.yml")
@@ -29,9 +33,19 @@ WF = os.path.join(REPO, ".github", "workflows", "deploy-pages.yml")
 # 02.09.2026 (Lucas-Audit): gemessen 169,3 MB — 99,6% des Budgets. Der Deckel hat also nur noch
 # knapp gehalten, ohne dass es jemandem aufgefallen waere; ein Test, der bei 99,6% gruen ist,
 # warnt nicht mehr, er beruhigt. Deshalb fliegen jetzt zusaetzlich die groessten Wurzel-JSONs
-# raus, die keine HTML/JS-Datei fetcht (~24 MB), und das Budget geht auf 150 runter, damit der
-# gewonnene Platz nicht sofort wieder stillschweigend zuwaechst.
-ARTEFAKT_BUDGET_MB = 150
+# raus, die keine HTML/JS-Datei fetcht (Regel in scripts/pages_ballast.py, ~21 MB), und das
+# Budget geht runter, damit der gewonnene Platz nicht sofort wieder stillschweigend zuwaechst.
+#
+# 160 statt 150: gemessen bleiben 148,3 MB, ein Budget von 150 haette 1,7 MB Luft gelassen und
+# waere in wenigen Tagen an normalem Datenwachstum gescheitert. Ein Test, der bei Routine-
+# Wachstum rot wird, wird weggeklickt statt gelesen — dann warnt er beim echten Problem nicht mehr.
+#
+# ⚠️ Was hier NICHT mehr rauszuholen ist, ohne eine Entscheidung: die 148 MB sind zu je etwa der
+# Haelfte `matches/` (125 Event-Seiten, ~550 KB pro Stueck) und referenzierte Wurzel-JSONs. Beide
+# werden von der Seite gebraucht — die JSONs allerdings nur als RUECKFALL, denn geholt wird
+# primaer von raw.githubusercontent.com/main. Wer den Rueckfall aufgibt, spart auf einen Schlag
+# ~79 MB; das ist eine Produktentscheidung (Verhalten bei raw-Ausfall), keine Aufraeumarbeit.
+ARTEFAKT_BUDGET_MB = 160
 
 
 def _tracked():
@@ -49,13 +63,13 @@ def _cleanup_muster():
 
 
 def _geloeschte_dateien():
-    """Die EINZELNEN Dateien, die der Ballast-Schritt loescht (rm -f, seit 02.09.2026)."""
-    with open(WF, encoding="utf-8") as f:
-        src = f.read()
-    m = re.search(r"rm -f (.+?)\|\| true", src, re.S)
-    if not m:
-        return []
-    return [t for t in m.group(1).replace("\\\n", " ").split() if t not in ("||", "true")]
+    """Die EINZELNEN Dateien, die der Ballast-Schritt loescht.
+
+    Seit 02.09.2026 keine Namensliste im Workflow mehr, sondern eine Regel in
+    scripts/pages_ballast.py — genau weil eine Liste am 28.08. still veraltet ist und den Deploy
+    gekippt hat. Der Test faehrt DIESELBE Regel, nicht eine nachgebaute.
+    """
+    return BALLAST.unbenutzte_wurzel_jsons(_tracked(), REPO)
 
 
 def _passt(top, muster):
@@ -112,13 +126,12 @@ class TestNichtsNoetigesWirdGeloescht:
         assert noetig in _groessen_nach_cleanup(), f"{noetig} fehlt im Artefakt"
 
     def test_geloeschte_einzeldateien_werden_von_keiner_seite_gefetcht(self):
-        """02.09.2026: dieselbe Gegenprobe fuer die per `rm -f` entfernten Wurzel-JSONs.
+        """Gegenprobe zur Ballast-Regel: nichts Geloeschtes darf irgendwo referenziert sein.
 
-        Die Dateinamen stehen im Frontend ausnahmslos als Literale (keine dynamisch gebauten
-        Namen), also findet eine Textsuche sie zuverlaessig. Taucht einer wieder auf, weil jemand
-        die Datei spaeter doch fetcht, faellt dieser Test — und nicht die Live-Seite."""
+        Faellt jemandem spaeter ein, eine dieser Dateien doch zu fetchen, faellt dieser Test —
+        und nicht die Live-Seite."""
         dateien = _geloeschte_dateien()
-        assert dateien, "Der rm -f-Schritt ist verschwunden — dann waechst das Artefakt wieder"
+        assert dateien, "Die Ballast-Regel findet nichts mehr — dann waechst das Artefakt wieder"
         quellen = [f for f in _tracked()
                    if f.endswith((".js", ".html")) and not f.startswith("tests/")]
         text = ""
@@ -131,6 +144,22 @@ class TestNichtsNoetigesWirdGeloescht:
         referenziert = [d for d in dateien if d in text]
         assert not referenziert, (
             f"Der Deploy loescht Dateien, die das Frontend laedt: {referenziert}")
+
+    def test_dynamisch_gebaute_namen_ueberleben(self):
+        """`poly-wallets.js` baut `ds + '_poly_prices.json'` zusammen — der volle Name steht nirgends.
+        Die Regel sucht deshalb auch Namens-Endstuecke ab einem Unterstrich."""
+        raus = set(_geloeschte_dateien())
+        for f in ("mls_poly_prices.json", "liga_poly_wallets.json", "wm_poly_prices.json"):
+            if os.path.exists(os.path.join(REPO, f)):
+                assert f not in raus, f"{f} wird geloescht, obwohl der Name dynamisch gebaut wird"
+
+    def test_die_regel_steht_im_workflow_nicht_als_namensliste(self):
+        """Der Rueckfall, den es zu verhindern gilt: wieder eine Handliste im Workflow."""
+        with open(WF, encoding="utf-8") as f:
+            src = f.read()
+        assert "scripts/pages_ballast.py" in src, "Der Workflow ruft die Ballast-Regel nicht auf"
+        assert not re.search(r"rm -f .*\.json", src), \
+            "Im Workflow steht wieder eine Namensliste — genau die veraltet still"
 
     def test_geloeschte_ordner_werden_von_keiner_seite_gefetcht(self):
         """Was rausfliegt, darf in keiner HTML/JS-Datei referenziert sein."""

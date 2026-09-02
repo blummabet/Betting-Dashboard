@@ -118,58 +118,61 @@ def capture(smartmoney: dict, prices: dict, frozen: dict, now=None) -> dict:
 
 # ── Güte des Geld-Splits ───────────────────────────────────────────────────────
 # 02.09.2026 (Lucas-Audit „Großes Geld"). Der Split wurde bis heute ungeprüft als Aussage
-# ausgegeben. Nachgemessen über 1.912 Märkte zerfällt er in zwei Hälften, und keine davon war
-# das, was oben drüberstand:
+# ausgegeben. Nachgemessen zerfällt er in zwei Hälften, und keine war das, was oben drüberstand:
 #
 #   · ZWEI Ausgänge (Tennis, E-Sport, MLB, Over/Under), n=1.262: |Geld% − Preis| Median 0,0pp,
-#     1262 von 1262 unter 1pp. Das ist kein Zufall, sondern Struktur: bei komplementären Tokens
-#     hält jede Ja-Aktie eine Nein-Aktie als Gegenstück, also ist Wert_A/Wert_B zwangsläufig
-#     p/(1−p). „Geld liegt auf X 68% (69¢)" sagt dieselbe Zahl zweimal.
-#   · DREI Ausgänge (Fußball 1X2), n=650: Abdeckung sum(shares)/totalUsd im Median 36%, bei 79%
-#     der Märkte unter 50%. Der Holders-Abruf trifft auf der Favoritenseite die Wale und fällt
-#     auf den anderen Seiten unter die Kante — ein leerer Abruf landet als 0 im Split. Ein Markt,
-#     der Getafe mit 22,5¢ bepreist, stand so mit 0,7% Geld auf Getafe da.
+#     1262 von 1262 unter 1pp. Struktur, kein Zufall: bei komplementären Tokens hält jede
+#     Ja-Aktie eine Nein-Aktie als Gegenstück, also ist Wert_A/Wert_B zwangsläufig p/(1−p).
+#     „Geld liegt auf X 68% (69¢)" sagt dieselbe Zahl zweimal.
+#   · DREI Ausgänge (Fußball 1X2): grob schiefe Splits, die kein Preis hergibt — `lal-osa-get`
+#     hatte Osasuna (44,5¢) mit $745.597 gegen Getafe (22,5¢) mit $13.006.
 #
-# Beides ist behebbar, indem der Split sagt, was er ist. Deshalb faehrt jeder Markt seine Guete
-# mit, und die Anzeige entscheidet daran — statt eine Zahl auszugeben, hinter der nichts steht.
-SPLIT_ABDECKUNG_MIN = 0.70   # darunter ist der Split zu unvollstaendig, um eine Seite zu behaupten
+# ⚠️ KORREKTUR am selben Tag, bevor daraus eine Kennzahl wurde: der erste Anlauf maß die „Güte"
+# als sum(shares)/totalUsd und nannte das Abdeckung. `totalUsd` ist aber das gehandelte VOLUMEN
+# (volumeNum, kumulierter Umsatz), nicht die offene Position — die beiden stehen in keinem festen
+# Verhältnis, und ein Markt mit viel Hin und Her sähe automatisch „schlecht erfasst" aus. Die
+# Zahl hätte plausibel ausgesehen und nichts gemessen. Genau die Sorte Kennzahl, die dieses
+# Projekt sonst überall verbietet.
+#
+# Was der Abruf WIRKLICH weiß: ob seine Halter-Liste zu Ende war. /holders liefert seitenweise;
+# eine volle letzte Seite heißt „da ist noch mehr". Das schreibt _alle_holder als `trunc` mit —
+# eine direkte Beobachtung statt einer hergeleiteten Quote.
+#
+#   art = "leer"        → keine Seiten-Aufteilung vorhanden
+#         "preis_echo"  → zwei Ausgänge; der Geld-Anteil IST der Preis
+#         "belastbar"   → Halter-Listen vollständig (oder bereits normalisierte Anteile)
+#         "abgeschnitten" → mindestens ein Ausgang war abgeschnitten; der Split ist unvollständig
+#         "unbekannt"   → aus der Zeit vor `trunc`; wir wissen es schlicht nicht
+#
+# „unbekannt" ist bewusst NICHT „belastbar". Fehlende Information ist keine Erlaubnis.
 
 
-def split_guete(shares, total_usd):
-    """Wie belastbar ist der Geld-Split dieses Marktes? REIN/testbar.
-
-    → {"abdeckung": float|None, "art": "leer"|"preis_echo"|"belastbar"|"duenn"}
-
-    `abdeckung` ist der Anteil des Marktvolumens, der ueberhaupt im Split steckt. Ohne bekanntes
-    Volumen bleibt sie None — und None fuehrt zu "duenn", nicht zu "belastbar": unbekannte
-    Abdeckung ist kein Freibrief.
-    """
+def split_guete(shares, total_usd=None, trunc=None):
+    """Wie belastbar ist der Geld-Split dieses Marktes? REIN/testbar."""
     sh = {k: v for k, v in (shares or {}).items() if isinstance(v, (int, float))}
     if len(sh) < 2:
-        return {"abdeckung": None, "art": "leer"}
+        return {"art": "leer", "trunc": trunc}
     summe = float(sum(sh.values()))
     if summe <= 0:
-        return {"abdeckung": None, "art": "leer"}
+        return {"art": "leer", "trunc": trunc}
     if len(sh) == 2:
-        # Strukturell identisch mit dem Preis — als eigenes Signal wertlos, aber nicht falsch.
-        return {"abdeckung": None, "art": "preis_echo"}
+        return {"art": "preis_echo", "trunc": trunc}
+    # Zwei Konventionen fuettern dieselbe Funktion: capture() hier friert bereits NORMALISIERTE
+    # Anteile ein (Summe 1, kommt fertig aus dem Smartmoney-Feed und ist per Konstruktion
+    # vollstaendig), poly_money_broad friert Dollar-Werte aus /holders ein. Eine Summe von ~1 bei
+    # einem vierstelligen Marktvolumen kann keine Dollar-Summe sein — daran sind sie sicher zu
+    # trennen.
     try:
         tot = float(total_usd or 0)
     except (TypeError, ValueError):
         tot = 0.0
-    if tot <= 0:
-        return {"abdeckung": None, "art": "duenn"}
-    # ⚠️ Zwei Konventionen fuettern dieselbe Funktion, und das ist kein Versehen, sondern
-    # gewachsen: capture() hier friert `shares` als bereits NORMALISIERTE Anteile ein (Summe 1,
-    # kommt fertig aus dem Smartmoney-Feed), poly_money_broad friert sie in DOLLAR ein (Summe
-    # kleiner als totalUsd, weil der Holders-Abruf nur einen Teil sieht). Nur im zweiten Fall
-    # gibt es ueberhaupt eine Erfassungsluecke. Eine Summe von ~1 bei einem vierstelligen
-    # Marktvolumen kann keine Dollar-Summe sein — daran sind die beiden sicher zu trennen.
     if abs(summe - 1.0) < 0.02 and tot > 10:
-        return {"abdeckung": 1.0, "art": "belastbar"}
-    ab = summe / tot
-    return {"abdeckung": round(ab, 4),
-            "art": "belastbar" if ab >= SPLIT_ABDECKUNG_MIN else "duenn"}
+        return {"art": "belastbar", "trunc": False}
+    if trunc is True:
+        return {"art": "abgeschnitten", "trunc": True}
+    if trunc is False:
+        return {"art": "belastbar", "trunc": False}
+    return {"art": "unbekannt", "trunc": None}
 
 
 # ── Liga aus dem Slug lernen (02.09.2026, Lucas-Audit) ────────────────────────
@@ -275,7 +278,7 @@ def evaluate(frozen: dict, results: dict, min_odds: float = 1.0, leagues: dict |
     by_league = {}
     # 02.09.2026 (Lucas-Audit): mitschreiben, WARUM ein Markt nicht gewertet wurde. Ein Urteil,
     # das auf einem Bruchteil der Maerkte steht, muss sagen, wie gross der Bruchteil war.
-    guete = {"belastbar": 0, "preis_echo": 0, "duenn": 0, "leer": 0}
+    guete = {"belastbar": 0, "preis_echo": 0, "abgeschnitten": 0, "unbekannt": 0, "leer": 0}
 
     for key, f in (frozen or {}).items():
         winner = results.get(key)
@@ -297,11 +300,11 @@ def evaluate(frozen: dict, results: dict, min_odds: float = 1.0, leagues: dict |
         #   · preis_echo (2 Ausgaenge): Geld-Anteil ist rechnerisch der Preis. Beide gegeneinander
         #     zu messen ist keine Messung, sondern eine Tautologie — sie zieht das Gesamturteil
         #     mechanisch Richtung „gleichauf" und verwaessert die Maerkte, wo es zaehlt.
-        #   · duenn (3 Ausgaenge, Abdeckung < 70%): der Split ist ein Erfassungs-Artefakt. Gemessen
-        #     lag die Abdeckung im Fussball im Median bei 36%; genau daher kamen die 22–42%
-        #     Trefferquoten, die als „Masse liegt daneben" gelesen wurden. Sie sagen nichts ueber
-        #     die Masse, nur ueber die Luecke.
-        g = split_guete(shares_d, f.get("totalUsd"))
+        #   · abgeschnitten: mindestens eine Halter-Liste war nicht zu Ende. Der Split ist dann
+        #     unvollstaendig, und das Fehlende sitzt nicht zufaellig verteilt.
+        #   · unbekannt: erfasst, bevor der Abruf die Vollstaendigkeit mitschrieb. Nichtwissen
+        #     ist keine Erlaubnis — solche Zeilen zaehlen mit, aber sie urteilen nicht.
+        g = split_guete(shares_d, f.get("totalUsd"), (f.get("splitGuete") or {}).get("trunc"))
         guete[g["art"]] = guete.get(g["art"], 0) + 1
         if g["art"] != "belastbar":
             continue

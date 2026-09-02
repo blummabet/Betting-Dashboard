@@ -33,7 +33,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import poly_money_accuracy as PMA
-from poly_money_accuracy import split_guete, SPLIT_ABDECKUNG_MIN   # 02.09.2026: eine Quelle fuer die Split-Guete
+from poly_money_accuracy import split_guete   # 02.09.2026: eine Quelle fuer die Split-Guete
 from safe_write import write_json_atomic   # 25.08.2026: temp+replace statt halber Datei
 
 BASE = Path(__file__).resolve().parent
@@ -220,7 +220,16 @@ SPORT_TAGS = ["nba", "nfl", "mlb", "nhl", "mls", "epl", "soccer", "tennis", "ucl
               "esports", "cs2", "lol", "dota", "valorant",
               "ufc", "mma", "boxing", "golf", "f1", "cricket"]
 GAMMA = "https://gamma-api.polymarket.com/events"
-HOLDERS = "https://data-api.polymarket.com/holders?market={cond}&limit=200"
+# 02.09.2026 (Lucas-Audit): der Abruf holte GENAU eine Seite mit 200 Haltern je Ausgang und hatte
+# keine Ahnung, ob das alle waren. Bei einem Drei-Wege-Fussballmarkt stand danach Osasuna (44,5¢) mit
+# $745.597 gegen Getafe (22,5¢) mit $13.006 — ein Verhaeltnis, das kein Preis hergibt. Ob das an einer
+# abgeschnittenen Liste lag, war nicht feststellbar, weil niemand mitschrieb, ob die Seite voll war.
+# Jetzt: blaettern, solange eine Seite VOLL zurueckkommt, und festhalten, wenn das Blaettern selbst
+# an seine Grenze stoesst. Eine volle letzte Seite heisst „da ist noch mehr" — und das darf nicht
+# als vollstaendiger Geld-Split durchgehen.
+HOLDERS_LIMIT = 200
+HOLDERS = "https://data-api.polymarket.com/holders?market={cond}&limit=%d&offset={off}" % HOLDERS_LIMIT
+HOLDERS_MAX_SEITEN = 5      # bis 1.000 Halter je Ausgang; darueber gilt der Split als abgeschnitten
 _HTTP_TIMEOUT = 12
 MAX_HOLDER_CALLS = 90   # Deckel gegen API-Last: die VOLUMENSTÄRKSTEN near-KO-Märkte bekommen den Geld-Split
 # 28.07.2026 (Lucas: „CLV misst 0"): der Whale-EINSTIEGSPREIS. /holders liefert nur AKTUELLE Shares →
@@ -720,6 +729,43 @@ def _is_exhibition(oc):
 WHALES_PER_MARKET = 4   # 25.07.2026 (Lucas: „was setzen einzelne Wale") — Top-N je Markt mitschreiben
 
 
+def _alle_holder(cond, token, http_get, parse):
+    """Alle Halter EINES Ausgangs — blaetternd. → ([(wallet, amount)], abgeschnitten: bool)
+
+    REIN im Sinne des Projekts: die beiden Netz-/Parse-Funktionen kommen als Argumente rein, damit
+    das Blaettern ohne Netz testbar ist.
+
+    Drei Abbruchgruende, und nur EINER davon ist harmlos:
+      · eine Seite kommt NICHT voll zurueck  → das war die letzte, alles da (abgeschnitten=False)
+      · eine Seite bringt nur schon bekannte Wallets → die API ignoriert `offset`; dann haben wir,
+        was eine Seite hergibt, und mehr ist ueber diesen Weg nicht zu holen (abgeschnitten=True)
+      · HOLDERS_MAX_SEITEN erreicht → es gibt mehr, wir hoeren nur auf (abgeschnitten=True)
+    Ein leerer oder fehlgeschlagener erster Abruf ist NICHT „keine Halter": dann wissen wir nichts,
+    und Nichtwissen faellt hier als abgeschnitten heraus, nie als vollstaendige Null.
+    """
+    alle, gesehen, abgeschnitten = [], set(), False
+    for seite in range(HOLDERS_MAX_SEITEN):
+        data = http_get(HOLDERS.format(cond=cond, off=seite * HOLDERS_LIMIT))
+        if not data:
+            # Leer oder fehlgeschlagen. Auf Seite 0 wissen wir gar nichts, auf spaeteren Seiten
+            # kann noch etwas fehlen — beides ist „abgeschnitten", nie „das war alles".
+            abgeschnitten = True
+            break
+        rows = parse(data, token)
+        neu = [(w, a) for w, a in rows if w not in gesehen]
+        for w, _a in neu:
+            gesehen.add(w)
+        alle.extend(neu)
+        if len(rows) < HOLDERS_LIMIT:
+            break                      # letzte Seite — vollstaendig
+        if not neu:
+            abgeschnitten = True       # `offset` wirkt nicht; mehr geht ueber diesen Weg nicht
+            break
+        if seite == HOLDERS_MAX_SEITEN - 1:
+            abgeschnitten = True       # es gibt mehr, wir hoeren nur auf
+    return alle, abgeschnitten
+
+
 def _market_money(outcomes):
     """Aus EINEM Holders-Fetch je Ausgang beides ableiten (quota-schonend):
       shares = Geld-Split {label: usd} (Shares × Preis)
@@ -730,11 +776,12 @@ def _market_money(outcomes):
     except Exception:
         return None
     usd, whales = {}, []
+    trunc = False
     for o in outcomes:
         if not (o.get("cond") and o.get("token") and isinstance(o.get("price"), (int, float)) and o["price"] > 0):
             continue
-        data = _http_get(HOLDERS.format(cond=o["cond"]))
-        holders = _holders_for_token(data, o["token"]) if data else []
+        holders, o_trunc = _alle_holder(o["cond"], o["token"], _http_get, _holders_for_token)
+        trunc = trunc or o_trunc
         price = float(o["price"])
         usd[o["label"]] = sum(a for _, a in holders) * price
         for w, a in holders:
@@ -742,7 +789,7 @@ def _market_money(outcomes):
     if sum(usd.values()) <= 0:
         return None
     whales.sort(key=lambda x: -x["usd"])
-    return {"shares": usd, "whales": whales[:WHALES_PER_MARKET]}
+    return {"shares": usd, "whales": whales[:WHALES_PER_MARKET], "trunc": trunc}
 
 
 def _money_shares(outcomes):
@@ -1188,6 +1235,10 @@ def fetch_markets(live_only=False):
                                 "live": is_live, "resolved": False, "resolvedPrices": {}, "tokens": _tokens_of(oc)})
             continue
         shares = mm["shares"]
+        # 02.09.2026: kam mindestens eine Halter-Liste abgeschnitten zurueck? Dann ist der Split
+        # unvollstaendig, und das muss an den Markt — nicht als Quote hergeleitet, sondern als
+        # Beobachtung des Abrufs. `None` heisst „aelterer Aufrufer hat es nicht gemeldet".
+        _split_trunc = mm.get("trunc")
         prices = {o["label"]: o["price"] for o in oc if o["price"] is not None}
         _whales = mm.get("whales") or []
         # 01.09.2026 — „vor"-Markt: die Anteile gehen NUR in die upcoming-Datei, nicht in `markets`.
@@ -1210,7 +1261,7 @@ def fetch_markets(live_only=False):
         _mrow = {"key": key, "league": league, "sport": sport,
                  "hoursToKickoff": htk, "totalUsd": round(mvol),
                  "shares": shares, "prices": prices, "whales": _whales,
-                 "splitGuete": split_guete(shares, mvol),
+                 "splitGuete": split_guete(shares, mvol, _split_trunc),
                  "live": is_live,
                  "resolved": False, "resolvedPrices": {}, "tokens": _tokens_of(oc)}
         if _bt_get and _book_budget[0] > 0:
@@ -1319,7 +1370,8 @@ def capture(markets, frozen, now=None, min_vol=MIN_VOL_USD, grace_h=GHOST_GRACE_
         if prev is not None and prev.get("hoursToKickoff", 99) <= htk:
             continue
         out[key] = {"shares": m.get("shares") or {}, "prices": m.get("prices") or {},
-                    "splitGuete": m.get("splitGuete") or split_guete(m.get("shares"), m.get("totalUsd")),
+                    "splitGuete": m.get("splitGuete") or split_guete(
+                        m.get("shares"), m.get("totalUsd"), (m.get("splitGuete") or {}).get("trunc")),
                     "league": m.get("league"), "sport": m.get("sport"), "totalUsd": round(float(m.get("totalUsd") or 0)),
                     "whales": m.get("whales") or [],   # 25.07.2026 (Lucas): Einzel-Wale je Markt (c)
                     "hoursToKickoff": round(htk, 2), "capturedAt": now.isoformat(),
@@ -1376,7 +1428,8 @@ def capture_live(markets, prev, now=None, min_vol=MIN_VOL_USD, keep_h=LIVE_KEEP_
             continue
         htk = m.get("hoursToKickoff")
         out[key] = {"shares": m.get("shares") or {}, "prices": m.get("prices") or {},
-                    "splitGuete": m.get("splitGuete") or split_guete(m.get("shares"), m.get("totalUsd")),
+                    "splitGuete": m.get("splitGuete") or split_guete(
+                        m.get("shares"), m.get("totalUsd"), (m.get("splitGuete") or {}).get("trunc")),
                     "whales": m.get("whales") or [], "league": m.get("league"), "sport": m.get("sport"),
                     "totalUsd": round(float(m.get("totalUsd") or 0)),
                     "hoursToKickoff": round(float(htk), 2) if isinstance(htk, (int, float)) else None,
