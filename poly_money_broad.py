@@ -1731,7 +1731,12 @@ def main() -> int:
     rep["vorStats"] = getattr(fetch_markets, "vor_stats", {})
     # Welche Markt-Universen halten unsere Wale, die wir gar nicht scannen? (Lucas, 02.09.)
     _inv = sport_inventar(getattr(fetch_markets, "pos_cache", {}) or {},
-                          set(_load(CLOSE_FILE, {}) or {}) | set(getattr(fetch_markets, "upcoming", {}) or {}))
+                          # ⚠️ 02.09.2026: hier stand `_load(CLOSE_FILE, {})`. `_load` hat in DIESEM
+                          # Modul nur EIN Argument (in killer.py zwei) — ich hatte die Signatur aus
+                          # einem anderen Modul angenommen. Der TypeError flog am ENDE von main(),
+                          # nach der ganzen Arbeit und VOR jedem Schreibvorgang: der Lauf war rot,
+                          # `poly_money_broad.json` blieb stehen und alles Nachgelagerte hungerte.
+                          set(_load(CLOSE_FILE) or {}) | set(getattr(fetch_markets, "upcoming", {}) or {}))
     rep["whaleAusserhalb"] = dict(list(_inv.items())[:20])
     if _inv:
         print("Sport-Inventar: %d Markt-Universen ausserhalb unseres Scans — %s"

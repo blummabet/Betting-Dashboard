@@ -619,7 +619,12 @@ def _consensus_block(a, cidx) -> str:
         parts.append("Poly @%.2f %s" % (poly["odd"], _usd(poly.get("vol"))))
     if not parts:
         return ""
-    verd = {"konsens": "✅ Konsens — alle sehen dieselbe Seite vorn",
+    # 02.09.2026 (Lucas: „bei Konsens der grüne Haken sollte auch weg"): ✅/❌ sind in DIESEM Channel
+    # SEINE Auswertungs-Marker — er hängt sie nach Abpfiff per Hand an die Nachricht. Ein ✅ mitten
+    # im Text ist damit kein Schmuck, sondern eine Verwechslungsquelle beim Zählen. Dieselbe Regel
+    # steht seit 08.08. eine Ebene tiefer bei „Quote bestätigt — Back" („NICHT ✅"); sie galt nur
+    # hier noch nicht. Jetzt trägt das Verdikt ein neutrales Zeichen.
+    verd = {"konsens": "🧩 Konsens — alle sehen dieselbe Seite vorn",
             "teil": "➖ teils einig",
             "uneinig": "⚠️ uneinig — Buchmacher sehen die andere Seite vorn"}.get(g.get("verdict"), "")
     if live:
