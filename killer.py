@@ -616,7 +616,7 @@ def punkte_bilanz(ledger=None):
 
 
 def baue(state=None, consensus=None, track=None, streaks=None, now=None,
-         latch_state=None) -> dict:
+         latch_state=None, anker=None) -> dict:
     now = now or _now()
     if latch_state is None:
         latch_state = _load(STATE_FILE, {})
@@ -628,6 +628,15 @@ def baue(state=None, consensus=None, track=None, streaks=None, now=None,
                    + (_load("mls_streaks.json").get("streaks") or [])}
 
     spiele = {str(g.get("matchId")): g for g in ((cons or {}).get("games") or [])}
+    # 02.09.2026 (Lucas: „Wieso gibt es kein Pini? Das Spiel ist zu 100% bei Pinnacle"): `games` ist
+    # die RADAR-Liste und damit auf >=15.000 EUR Marktvolumen gefiltert. Sassuolo–Frosinone lag bei
+    # 10.289 und bekam deshalb nie eine Pinnacle-Abfrage — der Punktestand sah kein zweites Buch.
+    # `betfair_anker.json` traegt dieselben Zweitmeinungen OHNE diese Schwelle. Radar-Zeilen behalten
+    # Vorrang (sie sind vollstaendiger); der Anker fuellt nur, was dort fehlt.
+    _ank = anker if anker is not None else _load("betfair_anker.json")
+    for _mid, _a in ((_ank or {}).get("anker") or {}).items():
+        if isinstance(_a, dict):
+            spiele.setdefault(str(_mid), _a)
     # Bewiesene Wallets einmal je Lauf — nicht je Zeile (2.968 Eintraege).
     _wallets = _bewiesene_wallets(_load("poly_wallet_track.json"))
     _latch_vor = (latch_state or {}).get("latch") or {}

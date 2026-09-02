@@ -482,10 +482,31 @@ _SPORT_BY_TAG = {
 }
 _FOOT_TAGS = ("soccer", "football", "epl", "ucl", "uel", "mls", "la-liga", "laliga", "bundesliga",
               "serie-a", "ligue-1", "primeira-liga", "eredivisie", "super-lig", "brazil-serie-a", "brasileirao")
-def _tag_category(tag):
-    """Kategorie des Sport-Tags, unter dem der Markt geholt wurde. SPORT_TAGS + entdeckte Liga-Registry
-    sind bis auf die _SPORT_BY_TAG-Liste alle Fußball -> Default Fußball."""
-    return _SPORT_BY_TAG.get(str(tag or "").lower().strip(), "Fußball")
+# 🔴 02.09.2026 — hier stand `_SPORT_BY_TAG.get(tag, "Fußball")`: JEDER unbekannte Tag wurde zu
+# Fußball. Gemessen im Close-Freeze: sechs `lec-*`-Maerkte (League of Legends EMEA Championship,
+# $63.563 im groessten) standen als `sport: Fußball`. Rugby, Handball, Volleyball, Tischtennis,
+# Darts — alles, was Poly unter einem uns unbekannten Tag fuehrt, landete stillschweigend im
+# Fussball-Topf und damit in den Fussball-Flaechen und im Sperr-Abgleich.
+# Fehlende Information ist keine Erlaubnis: unbekannt heisst jetzt unbekannt.
+_FOOT_REGISTRY_HINT = ("league", "liga", "cup", "pokal", "serie", "division", "eredivisie",
+                       "bundesliga", "ligue", "primeira", "superliga", "allsvenskan")
+
+
+def _tag_category(tag, fussball_registry=None):
+    """Kategorie des Sport-Tags, unter dem der Markt geholt wurde. REIN.
+
+    Bekannter Sport-Tag -> seine Kategorie. Tag aus der Fussball-Registry (SPORT_TAGS/entdeckte
+    Ligen) -> Fußball. Alles andere -> None = unbekannt, NICHT Fußball."""
+    t = str(tag or "").lower().strip()
+    if t in _SPORT_BY_TAG:
+        return _SPORT_BY_TAG[t]
+    if t in _FOOT_TAGS:
+        return "Fußball"
+    if fussball_registry and t in {str(x).lower() for x in fussball_registry}:
+        return "Fußball"
+    if any(h in t for h in _FOOT_REGISTRY_HINT):
+        return "Fußball"
+    return None
 def _event_sport(ev):
     """Sport eines Events aus SEINEN Tags (fuer den tag-losen Volumen-Sweep). Bekannter Sport-Tag ->
     Kategorie; Fußball-Tag -> Fußball; sonst None (Politik/Krypto -> Frontend entscheidet = Sonstige)."""
@@ -802,6 +823,40 @@ def _wallet_zeit(s: dict, clv: float, win: bool, now) -> dict:
     return s
 
 
+def _wallet_sport(s, sport, clv, win):
+    """Score je Sportart mitschreiben. REIN (mutiert s).
+
+    OHNE Sportart wird NICHTS verbucht — ein Eimer „unbekannt" waere schlimmer als keiner, weil er
+    sich wie eine Sportart laese. Der globale Score bleibt davon unberuehrt."""
+    if not sport:
+        return
+    d = s.setdefault("bySport", {})
+    b = d.setdefault(str(sport), {"n": 0, "clvSumPP": 0.0, "wins": 0})
+    b["n"] += 1
+    b["clvSumPP"] = round(b["clvSumPP"] + clv, 2)
+    if win:
+        b["wins"] += 1
+
+
+VORLAUF_FRUEH_H = 6.0    # ab so viel Vorlauf gilt ein Einstieg als „frueh" (Killer-Buch, 01.09.)
+
+
+def _wallet_vorlauf(s, htk, clv, win):
+    """CLV nach Vorlauf trennen: frueh drin (Information) gegen spaet drin (Mitlaeufer). REIN.
+
+    Ohne bekannten Vorlauf wird nichts verbucht — beide Eimer sollen nur zaehlen, was wirklich
+    gemessen wurde. Bewertet wird hier NICHTS; erst die Auswertung sagt, ob der Vorlauf trennt."""
+    if not isinstance(htk, (int, float)):
+        return
+    d = s.setdefault("vorlauf", {})
+    b = d.setdefault("frueh" if htk >= VORLAUF_FRUEH_H else "spaet",
+                     {"n": 0, "clvSumPP": 0.0, "wins": 0})
+    b["n"] += 1
+    b["clvSumPP"] = round(b["clvSumPP"] + clv, 2)
+    if win:
+        b["wins"] += 1
+
+
 def fenster_bilanz(s: dict) -> dict | None:
     """Was die Wallet in ihren letzten Auflösungen geliefert hat — None, wenn das Fenster leer ist.
 
@@ -870,6 +925,52 @@ def _enrich_whales_avg(whales, label_token, cache, get, budget):
     return whales
 
 
+def _slug_von_position(p):
+    """Markt-Slug einer /positions-Zeile — Poly benennt das Feld je nach Endpunkt anders. REIN."""
+    for f in ("eventSlug", "slug", "marketSlug", "market_slug", "title", "eventTitle"):
+        v = (p or {}).get(f) if isinstance(p, dict) else None
+        if isinstance(v, str) and v:
+            return v
+    return None
+
+
+def sport_inventar(cache, bekannte_keys, min_usd=1000.0):
+    """Was halten unsere Wale in Maerkten, die wir NIE scannen? REIN/testbar.
+
+    02.09.2026 (Lucas: „check ob irgendwelche Sportarten bespielt werden, die wir nicht drin haben,
+    die relevant sind von den Whales her"). Aus unseren eigenen Dateien laesst sich das nicht
+    beantworten — `open` entsteht ja AUS unserem Scan, ist also per Konstruktion vollstaendig. Die
+    Antwort steckt in den /positions-Antworten, die wir fuer den Ø-Einstieg ohnehin schon holen:
+    dort stehen ALLE Positionen einer Wallet, auch die aus Maerkten ausserhalb unseres Universums.
+
+    Kostet keinen einzigen zusaetzlichen Call — nur Auswerten, was schon im Cache liegt.
+    Rueckgabe: {praefix: {"n": …, "usd": …, "beispiel": slug}} absteigend nach USD.
+    """
+    bekannt = {str(k).split("-")[0].lower() for k in (bekannte_keys or set()) if k}
+    out = {}
+    for _w, daten in (cache or {}).items():
+        for pos in (daten or []):
+            if not isinstance(pos, dict):
+                continue
+            slug = _slug_von_position(pos)
+            if not slug:
+                continue
+            pre = str(slug).split("-")[0].lower()
+            if not pre or pre in bekannt:
+                continue                      # dieses Markt-Universum scannen wir bereits
+            try:
+                usd = abs(float(pos.get("currentValue") or pos.get("initialValue")
+                                or pos.get("size") or 0))
+            except (TypeError, ValueError):
+                usd = 0.0
+            if usd < min_usd:
+                continue                      # Kleinkram sagt nichts ueber eine fehlende Sportart
+            e = out.setdefault(pre, {"n": 0, "usd": 0.0, "beispiel": slug})
+            e["n"] += 1
+            e["usd"] = round(e["usd"] + usd)
+    return dict(sorted(out.items(), key=lambda kv: -kv[1]["usd"]))
+
+
 RESOLVE_LOOKUP_MAX = int(os.environ.get("POLY_RESOLVE_LOOKUP_MAX") or 60)
 
 
@@ -915,6 +1016,9 @@ def fetch_markets(live_only=False):
     tags = _tags()
     # 16.08.2026 (Lucas): entdeckte Fussball-Ligen mitfetchen -> JEDE Liga voll erfasst, nicht nur hartkodierte.
     _discovered = set()
+    # Die entdeckten Ligen SIND Fussball (so wurden sie gefunden) — der Kategorie-Zuordner muss das
+    # wissen, sonst faellt jede neu entdeckte Liga auf „unbekannt" statt auf Fußball.
+    _foot_reg = set(_load_league_registry()) | set(_tags())
     tags = list(dict.fromkeys(list(tags) + sorted(_load_league_registry())))
     markets = []
     raw_by_tag = {}                      # je Tag: wie viele ROH-Events kamen (offen+aufgelöst)
@@ -999,7 +1103,7 @@ def fetch_markets(live_only=False):
         open_evs = _gamma_events(tag, closed=False)
         closed_evs = _gamma_events(tag, closed=True)
         raw_by_tag[tag] = len(open_evs) + len(closed_evs)
-        _ingest(open_evs, closed_evs, lambda ev, key, _t=tag: _t.upper(), lambda ev, key, _t=tag: _tag_category(_t))
+        _ingest(open_evs, closed_evs, lambda ev, key, _t=tag: _t.upper(), lambda ev, key, _t=tag: _tag_category(_t, _foot_reg))
         _discovered |= _discover_football_tags(open_evs) | _discover_football_tags(closed_evs)
 
     # B) Tag-LOSER Volumen-Sweep — fängt JEDE Sportart mit Volumen ein, auch ohne kuratierten Tag
@@ -1112,6 +1216,9 @@ def fetch_markets(live_only=False):
     fetch_markets.sweep_stats = {"sweepOpen": len(sweep_open), "sweepClosed": len(sweep_closed),
                                  "sweepAdded": sweep_added}
     fetch_markets.upcoming = upcoming
+    # 02.09.2026: der /positions-Cache wird fuer das Sport-Inventar weitergereicht — dieselben
+    # Antworten, die wir fuer den Ø-Einstieg ohnehin geholt haben.
+    fetch_markets.pos_cache = _pos_cache
     _vor["calls"] = vor_calls
     fetch_markets.vor_stats = _vor
 
@@ -1354,15 +1461,29 @@ def update_wallet_track(prev, markets, now=None, keep_h=HIST_KEEP_H, frozen=None
             _avg = round(float(_avg), 4) if isinstance(_avg, (int, float)) and 0 < _avg < 1 else None
             e = openp.get(ok)
             if e is None:
+                # 02.09.2026: Sportart und VORLAUF beim ERSTEN Sehen festhalten.
+                # · Sportart, weil ein global gemittelter Score LoL, Tennis, MLB und Fussball
+                #   zusammenruehrt — wer in Esport scharf ist, muss es in der Serie B nicht sein.
+                # · Vorlauf, weil „frueh drin, und der Markt kommt nach" etwas anderes ist als
+                #   „spaet drin, nachdem er sich bewegt hat". Im Killer-Buch war das der staerkste
+                #   Trenner (>=6h Vorlauf: +48,9%, UG +7,6%).
+                # Beides kostet nichts — die Werte liegen am Markt schon vor.
+                _htk = m.get("hoursToKickoff")
                 openp[ok] = {"wallet": w, "key": key, "side": side, "league": m.get("league"),
+                             "sport": m.get("sport"),
                              "firstPrice": round(float(price), 4), "firstTs": now.isoformat(),
-                             "lastPrice": round(float(price), 4), "usd": round(float(wh.get("usd") or 0))}
+                             "lastPrice": round(float(price), 4), "usd": round(float(wh.get("usd") or 0)),
+                             "htkFirst": round(float(_htk), 2) if isinstance(_htk, (int, float)) else None}
                 if _avg is not None:
                     openp[ok]["entryPrice"] = _avg
             else:
                 e["lastPrice"] = round(float(price), 4)
                 e["usd"] = round(float(wh.get("usd") or 0))
                 e["league"] = m.get("league")
+                e.setdefault("sport", m.get("sport"))
+                # htkFirst wird NICHT aufgefrischt — der Vorlauf ist der beim ERSTEN Sehen. Sonst
+                # schrumpft er mit jedem Lauf gegen null und jede Position saehe am Ende wie ein
+                # Last-Minute-Einstieg aus.
                 if _avg is not None:
                     e["entryPrice"] = _avg   # Ø-Einstieg mitziehen (Wal stockt evtl. auf)
 
@@ -1389,11 +1510,17 @@ def update_wallet_track(prev, markets, now=None, keep_h=HIST_KEEP_H, frozen=None
         s = scores.setdefault(e["wallet"], {"n": 0, "clvSumPP": 0.0, "wins": 0, "usd": 0})
         s["n"] += 1
         s["clvSumPP"] = round(s["clvSumPP"] + clv, 2)
+        # 02.09.2026: Quadratsumme mitschreiben, damit sich die STREUUNG und damit eine echte
+        # CLV-Untergrenze rechnen laesst. Ohne sie kennt die Rangliste nur den Punktschaetzer —
+        # und ein Punktschaetzer ist kein Beleg. Kostet ein Feld, kein Call.
+        s["clvSqSum"] = round((s.get("clvSqSum") or 0.0) + clv * clv, 2)
         _win = bool(winners[e["key"]] and e["side"] == winners[e["key"]])
         if _win:
             s["wins"] += 1
         s["usd"] += e.get("usd") or 0
         _wallet_zeit(s, clv, _win, now)
+        _wallet_sport(s, e.get("sport"), clv, _win)
+        _wallet_vorlauf(s, e.get("htkFirst"), clv, _win)
         del openp[ok]
 
     # 3) verwaiste offene Positionen prunen (Markt seit keep_h nicht mehr gesehen)
@@ -1602,6 +1729,13 @@ def main() -> int:
     # 01.09.2026: die Vor-Fenster-Bilanz gehoert IN die Datei, nicht ins Log — ein Log, das niemand
     # liest, hat die tote Poly-Bedingung monatelang gedeckt. Der Waechter liest sie hier.
     rep["vorStats"] = getattr(fetch_markets, "vor_stats", {})
+    # Welche Markt-Universen halten unsere Wale, die wir gar nicht scannen? (Lucas, 02.09.)
+    _inv = sport_inventar(getattr(fetch_markets, "pos_cache", {}) or {},
+                          set(_load(CLOSE_FILE, {}) or {}) | set(getattr(fetch_markets, "upcoming", {}) or {}))
+    rep["whaleAusserhalb"] = dict(list(_inv.items())[:20])
+    if _inv:
+        print("Sport-Inventar: %d Markt-Universen ausserhalb unseres Scans — %s"
+              % (len(_inv), ", ".join("%s ($%s)" % (k, f"{v['usd']:,.0f}") for k, v in list(_inv.items())[:6])))
     write_json_atomic((BASE / OUT_FILE), rep, indent=1)
 
     # Money-Map (12.08.2026, Lucas): breitere upcoming-Erfassung schreiben (Preis+Vol, kein Holder-Call)

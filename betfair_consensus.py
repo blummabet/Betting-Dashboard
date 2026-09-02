@@ -125,6 +125,7 @@ LEAGUE_ODDS_KEY = {
 # Mit +-ANPFIFF_FENSTER_H ist die Verwechslung praktisch ausgeschlossen — zwei Klubs spielen nicht
 # zweimal in derselben Stunde. Ohne lesbare Anpfiffzeit auf BEIDEN Seiten gilt der Treffer NICHT:
 # fehlende Information ist keine Erlaubnis, auch beim Zuordnen nicht.
+ANKER_FILE       = "betfair_anker.json"   # Zweitmeinungen OHNE die Radar-Volumenschwelle
 SPORTS_FILE      = "odds_sports.json"     # Abzug von /sports, damit der Lauf nicht bei Netzfehler blind wird
 ANPFIFF_FENSTER_H = 2.0                   # Schranke fuer den globalen Pool
 MAX_ODDS_KEYS    = int(os.environ.get("BF_MAX_ODDS_KEYS") or 90)   # Laufzeit-Deckel, nicht Quota-Deckel
@@ -1184,6 +1185,32 @@ def main():
             "prices": {_home: _poly[0], "Draw": _poly[1], _away: _poly[2]},
             "shares": {}, "totalUsd": (_last or {}).get("vol") or 0, "src": "scan"})
 
+    # ── Anker-Pool (02.09.2026) ──────────────────────────────────────────────────────────
+    # Lucas: „Wieso gibt es kein Pini? Das Spiel ist zu 100% bei Pinnacle." Er hatte recht, und die
+    # Ursache war unsere eigene: `games` entsteht nur aus `live_pool`, und der ist mit
+    # `qualifies_radar()` auf >=15.000 EUR im groessten FT-Markt gefiltert — dieselbe Schwelle wie
+    # die Radar-LISTE. Sassuolo–Frosinone (Coppa Italia, in der Ankerkarte!) lag bei 10.289 EUR,
+    # fiel raus, und damit fragte NIEMAND Pinnacle fuer dieses Spiel. Der Buecher-Punktestand sah
+    # kein zweites Buch und meldete korrekt ❔ — die Luecke war zwei Schichten tiefer.
+    #
+    # ⭐ Eine Schwelle, die entscheidet WAS ANGEZEIGT wird, darf nicht entscheiden, OB WIR FRAGEN.
+    # Der Anker-Pool trennt beides: `games` bleibt exakt die Radar-Liste (unveraendert), und
+    # `betfair_anker.json` traegt Zweitmeinungen fuer JEDES noch nicht beendete Spiel. Kostet keinen
+    # einzigen zusaetzlichen API-Call — die Events sind laengst geholt, es ist nur Zuordnen.
+    def _anker_zeile(m):
+        _li = m.get("liveInfo") or {}
+        _isl = bool(_li.get("time")) and not _li.get("finished")
+        _ms = money_side(m)
+        _k = LEAGUE_ODDS_KEY.get(m.get("league"))
+        _ev = match_event(m, events_by_key.get(_k, [])) if _k else None
+        if _ev is None:
+            _ev = match_event(m, _global_pool, max_h=ANPFIFF_FENSTER_H)
+        _poly = pick_poly(m, _ms, _isl, poly_entries, poly_live_entries, poly_upcoming_entries)
+        _g = build_game(m, _ev, hist.get(str(m.get("matchId"))) or [], direction, _poly)
+        # Nur die Felder, die der Buecher-Score liest — die Datei wird alle 15 Minuten committet.
+        return {kk: _g.get(kk) for kk in ("moneySide", "moneyName", "poly", "pinn", "pinnMove",
+                                          "league", "kickoff", "verdict")}
+
     now = _now_iso()
     games, new_hist, mm_rows, mm_name_misses = [], {}, [], []
     for m in live_pool:
@@ -1247,6 +1274,34 @@ def main():
            "ankerQuote": (round(sum(1 for g in games if g.get("pinn")) / len(games), 3)
                           if games else None),
            "games": games}
+    # Anker fuer ALLE noch offenen Spiele — auch die unter der Radar-Schwelle. Die Spiele aus
+    # `games` sind bereits vollstaendig, deshalb hier nur die uebrigen (kein Duplikat).
+    _im_radar = {str(g.get("matchId")) for g in games}
+    anker = {}
+    for m in matches:
+        _mid = str(m.get("matchId"))
+        if _mid in _im_radar or (m.get("liveInfo") or {}).get("finished"):
+            continue
+        if not (m.get("markets") or {}).get("Match Odds"):
+            continue
+        try:
+            anker[_mid] = _anker_zeile(m)
+        except Exception:
+            continue          # ein einzelnes Spiel darf den Pool nicht kosten
+    _mit_pinn = sum(1 for v in anker.values() if v.get("pinn")) + sum(1 for g in games if g.get("pinn"))
+    _n_ges = len(anker) + len(games)
+    _dump(ANKER_FILE, {"generatedAt": now, "n": len(anker),
+                       "hinweis": "Zweitmeinungen OHNE die Radar-Volumenschwelle — Quelle fuer den "
+                                  "Buecher-Punktestand. `games` in betfair_consensus.json bleibt die "
+                                  "Radar-Liste.",
+                       "anker": anker})
+    print("anker: %d Spiele ausserhalb der Radar-Schwelle · Pinnacle auf %d von %d offenen Spielen (%.0f%%)"
+          % (len(anker), _mit_pinn, _n_ges, (_mit_pinn / _n_ges * 100) if _n_ges else 0))
+    # ⚠️ 02.09.2026: `ankerQuote` mass vorher gegen `games` — also gegen den bereits auf >=15.000 EUR
+    # gefilterten Pool. „100%" hiess dann „100% von drei Spielen", waehrend keines der Spiele im
+    # Punktestand einen Anker hatte. Der richtige Nenner sind ALLE offenen Spiele.
+    out["ankerQuote"] = round(_mit_pinn / _n_ges, 3) if _n_ges else None
+    out["ankerN"] = _n_ges
     _dump(OUT_FILE, out)
     _dump(HIST_FILE, new_hist)
     # Money-Map (11.08.2026, Lucas): bubble-fertiger Feed + Konsens-Ledger fuers Tracking. Additiv.

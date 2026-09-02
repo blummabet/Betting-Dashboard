@@ -10,7 +10,7 @@
  *
  * Cache-Version bei jedem Hüllen-Update hochzählen → alte Caches werden beim activate gelöscht.
  */
-const VERSION = 'cocobet-v207';   // 01.09.2026: Buecher-Punktestand (0..10) als Ebene 2 + Gradienten-Buch.
+const VERSION = 'cocobet-v208';   // 02.09.2026: Whale-Rangliste nach CLV-Untergrenze, Sport-/Aktivitaets-Zuschnitt, Anker-Pool.
 
 // App-Hülle (entspricht dem Script-Loader in season-finish-v2.html). Relative Pfade,
 // weil die App in einem GitHub-Pages-Unterpfad (/Betting-Dashboard/) liegt.

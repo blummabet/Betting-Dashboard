@@ -74,15 +74,37 @@ const PNL_TRACK = {
   open: {},
 };
 
-test('P&L-Modus: rankt nach echter Bilanz — −800K-Wallet trotz Top-CLV ganz unten', async () => {
+// 🔄 02.09.2026 — der Vertrag hat sich geaendert, und zwar gemessen. Sortiert wurde nach `pnl`;
+// ueber die echten Daten trug das NULL Information ueber die Kante:
+//     Median Ø-CLV der Top-20  0,59pp   ==   Median Ø-CLV aller 86 Qualifizierten  0,60pp
+//     Korrelation P&L ~ Ø CLV  0,06     |    Korrelation P&L ~ Einsatzgroesse  0,04
+// Der Grund: `pnl` ist die PLATTFORMWEITE Lebenszeit-Bilanz (Wahlen, Krypto), nicht unser Sport-
+// Track. CLV dagegen persistiert (getrennte Fenster, r=0,78). Sortiert wird jetzt nach der
+// CLV-UNTERGRENZE; die P&L bleibt als Kontext-Spalte stehen.
+//
+// ⚠️ Die Lehre vom 31.07.2026 (ein n=9-Wallet mit Traum-CLV stand auf #1 und war ein grosser
+// Verlierer) bleibt gueltig — sie haengt aber am kleinen n, nicht an der P&L. Deshalb prueft der
+// zweite Test unten, dass duenne Stichproben weiterhin draussen bleiben, solange nur der
+// Schrumpf-Schaetzer verfuegbar ist.
+test('rankt nach CLV-Untergrenze, nicht nach Vermoegen', async () => {
   const h = await renderWhales(PNL_TRACK);
   const rank = rankSlice(h);
-  assert.match(rank, /Poly-P&/, 'P&L-Spalte da');
-  assert.match(rank, /echter Poly-Gesamt-Bilanz/, 'Label auf echte Bilanz');
-  const i1 = rank.indexOf('0xP1'), i2 = rank.indexOf('0xP2'), i3 = rank.indexOf('0xP3');
-  assert.ok(i1 < i3 && i3 < i2, 'Reihenfolge nach P&L: +50K > +12K > −800K');
-  assert.match(rank, /−\$800K/, 'Verlust negativ dargestellt');
-  assert.doesNotMatch(rank, /0xP4/, 'n<8 im P&L-Modus ausgeschlossen');
+  assert.match(rank, /CLV-UG/, 'die Untergrenze ist eine eigene Spalte');
+  assert.match(rank, /Poly-P&/, 'die P&L bleibt als Kontext sichtbar');
+  assert.match(rank, /CLV-Untergrenze/, 'das Label nennt das Rang-Kriterium');
+  assert.doesNotMatch(rank, /sortiert nach <b>echter Poly-Gesamt-Bilanz/,
+    'die alte Zusage darf nicht stehenbleiben');
+  // Das −800K-Wallet taucht nicht mehr auf — nicht wegen seiner Bilanz, sondern weil es mit n=10
+  // unter dem strengeren Gate liegt, solange die Streuung fehlt. Genau so soll es sein.
+  assert.doesNotMatch(rank, /0xP2/, 'n=10 ohne gemessene Streuung ist noch kein Beleg');
+});
+
+test('eine duenne Stichprobe kommt nicht nach oben, auch mit Traum-CLV', async () => {
+  // 0xP4: n=5, Ø CLV +8pp. Genau der Fall vom 31.07.2026. Ohne Streuung im Track greift das
+  // strengere n-Gate (PW_RANK_MIN_N=12), damit Zufall nicht geadelt wird.
+  const rank = rankSlice(await renderWhales(PNL_TRACK));
+  assert.doesNotMatch(rank, /0xP4/, 'n=5 gehoert nicht in die Rangliste');
+  assert.doesNotMatch(rank, /0xP2/, 'n=10 ohne gemessene Streuung ebenfalls nicht');
 });
 
 // ── 4-stellig-Einsatz-Filter (23.08.2026, Lucas: „hundert-Euro-Beträge interessieren nicht") ──

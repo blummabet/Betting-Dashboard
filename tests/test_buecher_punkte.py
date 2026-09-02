@@ -212,3 +212,56 @@ class TestGradient(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestAnkerPool(unittest.TestCase):
+    """02.09.2026 (Lucas: „Wieso gibt es kein Pini? Das Spiel ist zu 100% bei Pinnacle").
+
+    Er hatte recht, und die Ursache lag zwei Schichten tiefer: `betfair_consensus.games` ist die
+    RADAR-Liste und mit `qualifies_radar()` auf ≥15.000 € Marktvolumen gefiltert. Sassuolo–Frosinone
+    (Coppa Italia — in der Ankerkarte!) lag bei 10.289 € und bekam deshalb **nie eine Pinnacle-
+    Abfrage**. Der Punktestand meldete korrekt ❔ — nur war die Lücke nicht bei Pinnacle.
+
+    ⭐ Eine Schwelle, die entscheidet WAS ANGEZEIGT wird, darf nicht entscheiden, OB WIR FRAGEN.
+    `betfair_anker.json` trägt die Zweitmeinungen ohne diese Schwelle.
+    """
+
+    def _pending(self):
+        return {"pending": {"77": {
+            "home": "Sassuolo", "away": "Frosinone", "league": "Italian Coppa Italia",
+            "kickoff": (JETZT + timedelta(hours=8)).isoformat(),
+            "signals": {"Match Odds": sig()}}}}
+
+    def _baue(self, cons, anker):
+        return K.baue(state=self._pending(), consensus=cons, track={}, streaks={"streaks": []},
+                      now=JETZT, latch_state={}, anker=anker)
+
+    def test_ohne_anker_bleibt_es_bei_betfair_allein(self):
+        d = self._baue({"games": []}, {"anker": {}})
+        z = d["alleBewertet"][0]
+        self.assertEqual((z["punkte"], z["moeglich"]), (4, 4), "nur Betfair + Dauer im Nenner")
+
+    def test_der_anker_bringt_das_zweite_und_dritte_buch(self):
+        anker = {"anker": {"77": {"moneySide": "home", "pinn": {"fav": "home"},
+                                  "pinnMove": {"move": True, "movePP": 3.0},
+                                  "poly": {"sharePct": 71, "whales": []}}}}
+        z = self._baue({"games": []}, anker)["alleBewertet"][0]
+        self.assertEqual(z["moeglich"], 10, "beide fremden Buecher sind jetzt erhoben")
+        self.assertGreaterEqual(z["punkte"], 8)
+
+    def test_die_radar_zeile_hat_vorrang_vor_dem_anker(self):
+        """Die Konsens-Zeile ist vollständiger (Totals, Soft-Bücher). Der Anker füllt nur Lücken."""
+        cons = {"games": [{"matchId": "77", "moneySide": "home", "pinn": {"fav": "away"},
+                           "poly": {"sharePct": 10}}]}
+        anker = {"anker": {"77": {"moneySide": "home", "pinn": {"fav": "home"},
+                                  "poly": {"sharePct": 90}}}}
+        z = self._baue(cons, anker)["alleBewertet"][0]
+        teile = {t["buch"]: t for t in K.buecher_punkte(
+            sig(), cons["games"][0], "home", gehalten_seit=JETZT.isoformat(),
+            kickoff=(JETZT + timedelta(hours=8)).isoformat(), now=JETZT)["teile"]}
+        self.assertEqual(teile["PIN"]["status"], "nein", "Radar-Zeile sagt: Pinnacle sieht die andere Seite")
+        self.assertLess(z["punkte"], 8, "der guenstigere Anker darf die Radar-Zeile nicht ueberschreiben")
+
+    def test_kaputter_anker_wirft_nicht(self):
+        for a in (None, {}, {"anker": None}, {"anker": {"77": "kaputt"}}, {"anker": []}):
+            self.assertTrue(self._baue({"games": []}, a)["alleBewertet"])

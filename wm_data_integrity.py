@@ -2785,7 +2785,11 @@ def check_pinn_anker(ctx):
     if isinstance(cons, dict) and cons:
         quote, geholt = cons.get("ankerQuote"), cons.get("oddsKeysFetched")
         if quote is not None:
-            extra = f" · Anker liegt auf {round(quote * 100)}% der Radar-Spiele"
+            # 02.09.2026: der Nenner sind jetzt ALLE offenen Spiele (`ankerN`), nicht mehr nur die
+            # Radar-Liste. „100%" hiess vorher „100% von drei Spielen".
+            _n = cons.get("ankerN")
+            extra = (f" · Anker liegt auf {round(quote * 100)}% von {_n} offenen Spielen" if _n
+                     else f" · Anker liegt auf {round(quote * 100)}% der Spiele")
             if geholt:
                 extra += f" (aus {geholt} geholten Wettbewerben)"
         else:
