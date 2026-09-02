@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-09-02T18:44:06.166405+00:00",
+"generatedAt": "2026-09-02T18:59:08.852373+00:00",
 "byVerdict": {
 "konsens": {
-"n": 700,
-"wins": 572,
-"hitRate": 0.8171,
-"polyN": 655,
-"polyWins": 513,
-"polyHitRate": 0.7832,
+"n": 702,
+"wins": 574,
+"hitRate": 0.8177,
+"polyN": 657,
+"polyWins": 515,
+"polyHitRate": 0.7839,
 "pinnN": 59,
 "pinnHitRate": 0.7966,
-"nRoi": 28,
-"roi": 0.3557,
-"roiLb": 0.1173,
-"nClv": 28,
-"clv": 15.19,
-"clvLb": 5.3664
+"nRoi": 30,
+"roi": 0.3653,
+"roiLb": 0.1421,
+"nClv": 30,
+"clv": 16.04,
+"clvLb": 6.8124
 },
 "uneinig": {
 "n": 244,
@@ -251,6 +251,11 @@
 "wins": 7,
 "hitRate": 0.875
 },
+"Bulgarian A League": {
+"n": 8,
+"wins": 8,
+"hitRate": 1.0
+},
 "Dutch Eerste Divisie": {
 "n": 8,
 "wins": 6,
@@ -286,11 +291,6 @@
 "wins": 6,
 "hitRate": 0.8571
 },
-"Bulgarian A League": {
-"n": 7,
-"wins": 7,
-"hitRate": 1.0
-},
 "Romanian Liga I": {
 "n": 7,
 "wins": 4,
@@ -305,6 +305,11 @@
 "n": 6,
 "wins": 4,
 "hitRate": 0.6667
+},
+"Egyptian Premier": {
+"n": 5,
+"wins": 4,
+"hitRate": 0.8
 },
 "Finnish Veikkausliiga": {
 "n": 5,
@@ -340,11 +345,6 @@
 "n": 4,
 "wins": 4,
 "hitRate": 1.0
-},
-"Egyptian Premier": {
-"n": 4,
-"wins": 3,
-"hitRate": 0.75
 },
 "Scottish Premiership": {
 "n": 4,
@@ -554,15 +554,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 550,
-"wins": 446,
-"hitRate": 0.8109,
-"nRoi": 26,
-"roi": 0.3358,
-"roiLb": 0.0653,
-"nClv": 26,
-"clv": 14.56,
-"clvLb": 3.0795
+"n": 552,
+"wins": 448,
+"hitRate": 0.8116,
+"nRoi": 28,
+"roi": 0.3475,
+"roiLb": 0.0956,
+"nClv": 28,
+"clv": 15.52,
+"clvLb": 4.7962
 },
 "weak": {
 "n": 370,
@@ -585,6 +585,44 @@
 "polyRate": 0.2844
 },
 "recent": [
+{
+"matchId": "35940566",
+"home": "Slavia Sofia",
+"away": "PFC Levski Sofia",
+"league": "Bulgarian A League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "PFC Levski Sofia",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-09-02T17:00:00Z",
+"settledAt": "2026-09-02T18:59:08.687825+00:00"
+},
+{
+"matchId": "35995459",
+"home": "Ceramica Cleopatra",
+"away": "Modern Sport FC",
+"league": "Egyptian Premier",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Ceramica Cleopatra",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-09-02T17:00:00Z",
+"settledAt": "2026-09-02T18:59:08.687825+00:00"
+},
 {
 "matchId": "36006914",
 "home": "Udinese",
@@ -1306,56 +1344,18 @@
 ],
 "kickoff": "2026-09-01T13:00:00Z",
 "settledAt": "2026-09-01T16:10:41.792818+00:00"
-},
-{
-"matchId": "36015841",
-"home": "Dalian Yingbo",
-"away": "Shanghai Shenhua",
-"league": "Chinese Cup",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Dalian Yingbo",
-"polySide": "away",
-"winner": "home",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-09-01T11:35:00Z",
-"settledAt": "2026-09-01T14:40:30.670049+00:00"
-},
-{
-"matchId": "36016131",
-"home": "Beijing Guoan",
-"away": "Lanzhou Longyuan Athletic",
-"league": "Chinese Cup",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Beijing Guoan",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-09-01T11:35:00Z",
-"settledAt": "2026-09-01T14:40:30.670049+00:00"
 }
 ],
 "global": {
-"n": 953,
-"wins": 655,
-"hitRate": 0.6873,
-"nRoi": 40,
-"roi": 0.185,
-"roiLb": -0.032,
-"nClv": 40,
-"clv": 12.56,
-"clvLb": 4.2921
+"n": 955,
+"wins": 657,
+"hitRate": 0.688,
+"nRoi": 42,
+"roi": 0.2,
+"roiLb": -0.0077,
+"nClv": 42,
+"clv": 13.29,
+"clvLb": 5.3672
 },
 "pending": 25
 }
