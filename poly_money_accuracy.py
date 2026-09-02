@@ -116,6 +116,130 @@ def capture(smartmoney: dict, prices: dict, frozen: dict, now=None) -> dict:
     return out
 
 
+# ── Güte des Geld-Splits ───────────────────────────────────────────────────────
+# 02.09.2026 (Lucas-Audit „Großes Geld"). Der Split wurde bis heute ungeprüft als Aussage
+# ausgegeben. Nachgemessen über 1.912 Märkte zerfällt er in zwei Hälften, und keine davon war
+# das, was oben drüberstand:
+#
+#   · ZWEI Ausgänge (Tennis, E-Sport, MLB, Over/Under), n=1.262: |Geld% − Preis| Median 0,0pp,
+#     1262 von 1262 unter 1pp. Das ist kein Zufall, sondern Struktur: bei komplementären Tokens
+#     hält jede Ja-Aktie eine Nein-Aktie als Gegenstück, also ist Wert_A/Wert_B zwangsläufig
+#     p/(1−p). „Geld liegt auf X 68% (69¢)" sagt dieselbe Zahl zweimal.
+#   · DREI Ausgänge (Fußball 1X2), n=650: Abdeckung sum(shares)/totalUsd im Median 36%, bei 79%
+#     der Märkte unter 50%. Der Holders-Abruf trifft auf der Favoritenseite die Wale und fällt
+#     auf den anderen Seiten unter die Kante — ein leerer Abruf landet als 0 im Split. Ein Markt,
+#     der Getafe mit 22,5¢ bepreist, stand so mit 0,7% Geld auf Getafe da.
+#
+# Beides ist behebbar, indem der Split sagt, was er ist. Deshalb faehrt jeder Markt seine Guete
+# mit, und die Anzeige entscheidet daran — statt eine Zahl auszugeben, hinter der nichts steht.
+SPLIT_ABDECKUNG_MIN = 0.70   # darunter ist der Split zu unvollstaendig, um eine Seite zu behaupten
+
+
+def split_guete(shares, total_usd):
+    """Wie belastbar ist der Geld-Split dieses Marktes? REIN/testbar.
+
+    → {"abdeckung": float|None, "art": "leer"|"preis_echo"|"belastbar"|"duenn"}
+
+    `abdeckung` ist der Anteil des Marktvolumens, der ueberhaupt im Split steckt. Ohne bekanntes
+    Volumen bleibt sie None — und None fuehrt zu "duenn", nicht zu "belastbar": unbekannte
+    Abdeckung ist kein Freibrief.
+    """
+    sh = {k: v for k, v in (shares or {}).items() if isinstance(v, (int, float))}
+    if len(sh) < 2:
+        return {"abdeckung": None, "art": "leer"}
+    summe = float(sum(sh.values()))
+    if summe <= 0:
+        return {"abdeckung": None, "art": "leer"}
+    if len(sh) == 2:
+        # Strukturell identisch mit dem Preis — als eigenes Signal wertlos, aber nicht falsch.
+        return {"abdeckung": None, "art": "preis_echo"}
+    try:
+        tot = float(total_usd or 0)
+    except (TypeError, ValueError):
+        tot = 0.0
+    if tot <= 0:
+        return {"abdeckung": None, "art": "duenn"}
+    # ⚠️ Zwei Konventionen fuettern dieselbe Funktion, und das ist kein Versehen, sondern
+    # gewachsen: capture() hier friert `shares` als bereits NORMALISIERTE Anteile ein (Summe 1,
+    # kommt fertig aus dem Smartmoney-Feed), poly_money_broad friert sie in DOLLAR ein (Summe
+    # kleiner als totalUsd, weil der Holders-Abruf nur einen Teil sieht). Nur im zweiten Fall
+    # gibt es ueberhaupt eine Erfassungsluecke. Eine Summe von ~1 bei einem vierstelligen
+    # Marktvolumen kann keine Dollar-Summe sein — daran sind die beiden sicher zu trennen.
+    if abs(summe - 1.0) < 0.02 and tot > 10:
+        return {"abdeckung": 1.0, "art": "belastbar"}
+    ab = summe / tot
+    return {"abdeckung": round(ab, 4),
+            "art": "belastbar" if ab >= SPLIT_ABDECKUNG_MIN else "duenn"}
+
+
+# ── Liga aus dem Slug lernen (02.09.2026, Lucas-Audit) ────────────────────────
+# `SOCCER` war mit 318 von 819 Zeilen (39%) der groesste Eimer der Liga-Tabelle — und traegt
+# keinen Liganamen. Die wichtigste Zeile sagte damit nichts. Die Slugs kennen die Liga aber
+# (`lal-…`, `elc-…`, `ucl-…`), und wir muessen sie nicht raten: dieselben Praefixe tauchen
+# anderswo im Datensatz MIT gesetztem Liga-Label auf. Also lernen wir die Zuordnung aus den
+# eigenen Daten statt aus einer handgepflegten Liste, die still veraltet.
+#
+# Zwei Sicherungen, damit aus dem Lernen kein Raten wird: mindestens LIGA_MIN_BELEGE Belege und
+# eine klare Mehrheit. Was das nicht erfuellt, bleibt getrennt, aber unbenannt ("SOCCER:MEX") —
+# getrennt und ehrlich ist besser als zusammengeworfen oder falsch benannt.
+LIGA_GENERISCH = {"SOCCER", "FOOTBALL", ""}
+LIGA_MIN_BELEGE = 3
+LIGA_MIN_ANTEIL = 0.6
+
+
+def _slug_praefix(key):
+    t = str(key or "").split("-")
+    return t[0].lower() if t and t[0] else ""
+
+
+def liga_lernen(eintraege):
+    """{praefix: LIGA} aus allen Eintraegen mit spezifischem Liga-Label. REIN/testbar.
+
+    `eintraege` ist iterierbar ueber (key, label). Nur Praefixe mit genug Belegen und klarer
+    Mehrheit werden gelernt.
+    """
+    zaehler = {}
+    for key, lg in eintraege:
+        lg = str(lg or "").upper()
+        if not lg or lg in LIGA_GENERISCH:
+            continue
+        pre = _slug_praefix(key)
+        if not pre:
+            continue
+        zaehler.setdefault(pre, {})
+        zaehler[pre][lg] = zaehler[pre].get(lg, 0) + 1
+    out = {}
+    for pre, c in zaehler.items():
+        gesamt = sum(c.values())
+        top, n = max(c.items(), key=lambda kv: kv[1])
+        if n >= LIGA_MIN_BELEGE and n / gesamt >= LIGA_MIN_ANTEIL:
+            out[pre] = top
+    return out
+
+
+def liga_label(key, league, gelernt=None):
+    """Das Liga-Label fuer eine Zeile — spezifisch, wenn es eins gibt. REIN/testbar."""
+    lg = str(league or "").upper()
+    if lg and lg not in LIGA_GENERISCH:
+        return lg
+    pre = _slug_praefix(key)
+    if not pre:
+        return lg or None
+    gel = (gelernt or {}).get(pre)
+    if gel:
+        return gel
+    return (lg or "SOCCER") + ":" + pre.upper()
+
+
+# 02.09.2026 (Lucas-Audit): seit der Güte-Schranke werden nur noch Märkte gewertet, deren Split
+# überhaupt etwas anderes sagen kann als der Preis — statt 1.426 sind das aktuell 27. Auf so einer
+# Stichprobe ist ein Brier-Vergleich ein Punktschätzer, und ein Punktschätzer ist kein Beleg.
+# Darum bekommt das Urteil eine Mindest-Stichprobe, global wie je Liga. Darunter steht „noch kein
+# Urteil" — nicht „gleichauf", denn gleichauf wäre eine Aussage.
+URTEIL_MIN_N = 30          # global
+URTEIL_MIN_N_LIGA = 20     # je Liga
+
+
 def _verdict(bm, bp):
     """Brier-Vergleich → Urteil. Niedriger = besser; Marge, damit Rauschen nichts auslöst."""
     if bm < bp - 0.01:
@@ -139,12 +263,19 @@ def evaluate(frozen: dict, results: dict, min_odds: float = 1.0, leagues: dict |
               per Konstruktion immer leer. Die Liga kommt jetzt beim Auswerten aus den Fixtures
               dazu — damit wird auch die BEREITS eingefrorene Historie rückwirkend nutzbar."""
     fav_prob_cap = 1.0 / max(min_odds, 1e-9)   # Favorit-Wahrscheinlichkeit darüber = zu klar
+    # 02.09.2026: Praefix→Liga aus dem GANZEN eingefrorenen Bestand lernen, nicht nur aus den
+    # gewerteten Zeilen — sonst kennt die Zuordnung genau die Ligen nicht, die sie aufloesen soll.
+    _gelernt = liga_lernen(((k, (v or {}).get("league") or (leagues or {}).get(k))
+                            for k, v in (frozen or {}).items() if isinstance(v, dict)))
     n = 0
     money_hit = price_hit = 0
     brier_money = brier_price = 0.0
     disagree = {"n": 0, "moneyWon": 0, "priceWon": 0, "neither": 0}
     rows = []
     by_league = {}
+    # 02.09.2026 (Lucas-Audit): mitschreiben, WARUM ein Markt nicht gewertet wurde. Ein Urteil,
+    # das auf einem Bruchteil der Maerkte steht, muss sagen, wie gross der Bruchteil war.
+    guete = {"belastbar": 0, "preis_echo": 0, "duenn": 0, "leer": 0}
 
     for key, f in (frozen or {}).items():
         winner = results.get(key)
@@ -160,6 +291,20 @@ def evaluate(frozen: dict, results: dict, min_odds: float = 1.0, leagues: dict |
             continue
         if max(pp.values()) > fav_prob_cap:
             continue                       # Favorit zu klar (Quote < min_odds) → nicht aussagekräftig
+
+        # 02.09.2026 (Lucas-Audit „Großes Geld"): Nur Maerkte werten, deren Geld-Split ueberhaupt
+        # etwas anderes sagen KANN als der Preis.
+        #   · preis_echo (2 Ausgaenge): Geld-Anteil ist rechnerisch der Preis. Beide gegeneinander
+        #     zu messen ist keine Messung, sondern eine Tautologie — sie zieht das Gesamturteil
+        #     mechanisch Richtung „gleichauf" und verwaessert die Maerkte, wo es zaehlt.
+        #   · duenn (3 Ausgaenge, Abdeckung < 70%): der Split ist ein Erfassungs-Artefakt. Gemessen
+        #     lag die Abdeckung im Fussball im Median bei 36%; genau daher kamen die 22–42%
+        #     Trefferquoten, die als „Masse liegt daneben" gelesen wurden. Sie sagen nichts ueber
+        #     die Masse, nur ueber die Luecke.
+        g = split_guete(shares_d, f.get("totalUsd"))
+        guete[g["art"]] = guete.get(g["art"], 0) + 1
+        if g["art"] != "belastbar":
+            continue
 
         n += 1
         onehot = {k: (1.0 if k == winner else 0.0) for k in keys}
@@ -177,7 +322,7 @@ def evaluate(frozen: dict, results: dict, min_odds: float = 1.0, leagues: dict |
             disagree["n"] += 1
             disagree["moneyWon" if m_ok else "priceWon" if p_ok else "neither"] += 1
 
-        lg = f.get("league") or (leagues or {}).get(key)
+        lg = liga_label(key, f.get("league") or (leagues or {}).get(key), _gelernt)
         if lg:
             b = by_league.setdefault(lg, {"n": 0, "moneyHit": 0, "bm": 0.0, "bp": 0.0})
             b["n"] += 1; b["moneyHit"] += m_ok; b["bm"] += bm_i; b["bp"] += bp_i
@@ -188,12 +333,13 @@ def evaluate(frozen: dict, results: dict, min_odds: float = 1.0, leagues: dict |
                      "moneyOK": m_ok, "priceOK": p_ok, "totalUsd": f.get("totalUsd")})
 
     if n == 0:
-        return {"n": 0, "verdict": "zu wenig Daten", "minOdds": min_odds, "byLeague": []}
+        return {"n": 0, "verdict": "zu wenig Daten", "minOdds": min_odds, "byLeague": [],
+                "guete": guete}
 
     bm, bp = brier_money / n, brier_price / n
     league_rows = []
     for lg, b in by_league.items():
-        if b["n"] < 5:
+        if b["n"] < URTEIL_MIN_N_LIGA:
             continue                       # zu dünn für ein Liga-Urteil
         lbm, lbp = b["bm"] / b["n"], b["bp"] / b["n"]
         league_rows.append({"league": lg, "n": b["n"], "moneyHitRate": round(b["moneyHit"] / b["n"], 3),
@@ -209,8 +355,10 @@ def evaluate(frozen: dict, results: dict, min_odds: float = 1.0, leagues: dict |
         "brierMoney": round(bm, 4),
         "brierPrice": round(bp, 4),
         "disagree": disagree,
-        "verdict": _verdict(bm, bp),
+        "verdict": _verdict(bm, bp) if n >= URTEIL_MIN_N else "zu wenig Daten",
+        "urteilMinN": URTEIL_MIN_N,
         "byLeague": league_rows,
+        "guete": guete,
         "rows": sorted(rows, key=lambda r: -(r.get("totalUsd") or 0))[:40],
     }
 

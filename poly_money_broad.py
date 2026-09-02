@@ -33,6 +33,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import poly_money_accuracy as PMA
+from poly_money_accuracy import split_guete, SPLIT_ABDECKUNG_MIN   # 02.09.2026: eine Quelle fuer die Split-Guete
 from safe_write import write_json_atomic   # 25.08.2026: temp+replace statt halber Datei
 
 BASE = Path(__file__).resolve().parent
@@ -834,6 +835,10 @@ def _wallet_sport(s, sport, clv, win):
     b = d.setdefault(str(sport), {"n": 0, "clvSumPP": 0.0, "wins": 0})
     b["n"] += 1
     b["clvSumPP"] = round(b["clvSumPP"] + clv, 2)
+    # 02.09.2026: hier ist die Quadratsumme unproblematisch — `bySport` faengt am selben Tag an
+    # wie sie, n und Quadratsumme decken also dieselben Auflösungen ab. Genau deshalb braucht der
+    # globale Score sein eigenes Fenster (clvFenN/clvFenSum) und dieser hier nicht.
+    b["clvSqSum"] = round((b.get("clvSqSum") or 0.0) + clv * clv, 2)
     if win:
         b["wins"] += 1
 
@@ -1205,6 +1210,7 @@ def fetch_markets(live_only=False):
         _mrow = {"key": key, "league": league, "sport": sport,
                  "hoursToKickoff": htk, "totalUsd": round(mvol),
                  "shares": shares, "prices": prices, "whales": _whales,
+                 "splitGuete": split_guete(shares, mvol),
                  "live": is_live,
                  "resolved": False, "resolvedPrices": {}, "tokens": _tokens_of(oc)}
         if _bt_get and _book_budget[0] > 0:
@@ -1313,6 +1319,7 @@ def capture(markets, frozen, now=None, min_vol=MIN_VOL_USD, grace_h=GHOST_GRACE_
         if prev is not None and prev.get("hoursToKickoff", 99) <= htk:
             continue
         out[key] = {"shares": m.get("shares") or {}, "prices": m.get("prices") or {},
+                    "splitGuete": m.get("splitGuete") or split_guete(m.get("shares"), m.get("totalUsd")),
                     "league": m.get("league"), "sport": m.get("sport"), "totalUsd": round(float(m.get("totalUsd") or 0)),
                     "whales": m.get("whales") or [],   # 25.07.2026 (Lucas): Einzel-Wale je Markt (c)
                     "hoursToKickoff": round(htk, 2), "capturedAt": now.isoformat(),
@@ -1369,6 +1376,7 @@ def capture_live(markets, prev, now=None, min_vol=MIN_VOL_USD, keep_h=LIVE_KEEP_
             continue
         htk = m.get("hoursToKickoff")
         out[key] = {"shares": m.get("shares") or {}, "prices": m.get("prices") or {},
+                    "splitGuete": m.get("splitGuete") or split_guete(m.get("shares"), m.get("totalUsd")),
                     "whales": m.get("whales") or [], "league": m.get("league"), "sport": m.get("sport"),
                     "totalUsd": round(float(m.get("totalUsd") or 0)),
                     "hoursToKickoff": round(float(htk), 2) if isinstance(htk, (int, float)) else None,
@@ -1513,7 +1521,18 @@ def update_wallet_track(prev, markets, now=None, keep_h=HIST_KEEP_H, frozen=None
         # 02.09.2026: Quadratsumme mitschreiben, damit sich die STREUUNG und damit eine echte
         # CLV-Untergrenze rechnen laesst. Ohne sie kennt die Rangliste nur den Punktschaetzer —
         # und ein Punktschaetzer ist kein Beleg. Kostet ein Feld, kein Call.
+        #
+        # 02.09.2026, KORREKTUR am selben Tag: die Quadratsumme allein reicht NICHT. `n` zaehlt
+        # alle Auflösungen seit jeher, `clvSqSum` erst die seit heute. Wer beides in dieselbe
+        # Varianzformel steckt, rechnet Sum(x²) einer kleinen Stichprobe gegen n·Ø² einer grossen —
+        # das Ergebnis wird negativ und (auf 0 geklemmt) zu „null Streuung", also zu MAXIMALER
+        # Sicherheit. Gemessen: 72 von 127 Wallets im UG-Modus hatten genau das. Wallets mit den
+        # WENIGSTEN Daten waeren nach oben gerankt — die Umkehrung dessen, wozu die UG da ist.
+        # Deshalb ein in sich geschlossenes Fenster: Anzahl, Summe und Quadratsumme derselben
+        # Auflösungen. Die Untergrenze rechnet nur darauf; bis es traegt, wird geschrumpft.
         s["clvSqSum"] = round((s.get("clvSqSum") or 0.0) + clv * clv, 2)
+        s["clvFenN"] = (s.get("clvFenN") or 0) + 1
+        s["clvFenSum"] = round((s.get("clvFenSum") or 0.0) + clv, 2)
         _win = bool(winners[e["key"]] and e["side"] == winners[e["key"]])
         if _win:
             s["wins"] += 1

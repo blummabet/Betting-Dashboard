@@ -162,9 +162,13 @@ const _PW_VIEW_INTRO = {
   move: ['📈 Bewegung — was sich GERADE auf Poly bewegt (Steam vs Reversal)',
     'Nicht wo Geld LIEGT, sondern wohin der Poly-Preis zieht: der stärkste Move je Markt über die letzten Stunden, alle Sportarten. Steam ▲ = zieht weiter, dreht ▼ = kehrt um.',
     'Einem beschleunigenden Steam auf der scharfen Seite folgen (dein Steam-Modell); bei einem Reversal vorsichtig sein — das Geld korrigiert. Füllt sich über die nächsten Runner-Läufe.'],
+  // 02.09.2026 (Lucas-Audit): der Text versprach eine Seiten-Aussage, die der Datensatz für die
+  // meisten Märkte nicht hergibt. Zwei-Wege-Märkte liefern rechnerisch den Preis, Drei-Wege-Märkte
+  // im Median nur 36% Abdeckung. Was bleibt und trägt: WIE VIEL Geld auf einem Markt liegt und
+  // wie viel frisch dazukommt — das ist vom Split unabhängig gemessen (Δ Gesamt-Volumen).
   money: ['💰 Das große Geld — alle Sportarten inkl. E-Sport',
-    'Oben: auf welche Seite die Masse bei KOMMENDEN Spielen gesetzt hat (zum Folgen). Unten: der Rückblick — hatte die Masse bei aufgelösten Spielen recht?',
-    'Kommenden Märkten mit klarer Geld-Mehrheit folgen — aber nur dort, wo der Rückblick unten 🟢 „Geld schärfer\" zeigt. Wo 🔴 „Preis besser\" steht, liegt die Masse daneben → faden.'],
+    'Wo ungewöhnlich viel Geld liegt und wo frisches nachkommt — je Spiel gegen den Median vergleichbarer Spiele. Auf welche SEITE es liegt, steht nur da, wo der Split das trägt: bei Zwei-Wege-Märkten ist der Geld-Anteil rechnerisch der Preis, bei Drei-Wege-Märkten fängt der Abruf oft nur einen Bruchteil ein.',
+    'Ungewöhnlichen Zufluss als Anlass zum Hinschauen nehmen, nicht als Richtung. Die Seite kommt aus 📈 Bewegung, 🐋 Whales oder dem Betfair-Konsens — nicht aus dem Geld-Split.'],
 };
 // 25.07.2026 (Lucas: „Ligen oben weg, statt dessen ein Filter je Tab damit ich besser suchen kann").
 // Globaler Sport-Filter über alle Sektionen (a/b/d). Kategorie robust aus Liga-Label ODER Sport-Key.
@@ -755,6 +759,10 @@ const PW_LEAGUE_CAT={
   golf:['Golf','⛳'],f1:['Motorsport','🏎'],cricket:['Cricket','🏏'],
 };
 function _pwCatOf(league, sport){
+  // 02.09.2026: _pwCatOf bleibt die KATEGORIE-Funktion (Gruppierung + Kategorie-Icon, z.B. 🇺🇸
+  // US-Sport als Abschnitts-Überschrift). Das liga-genaue Icon (⚾ statt 🏀 für MLB) macht
+  // _pwSportIcon — das ist die Funktion für ZEILEN. Beides zu vermischen hätte die
+  // Abschnitts-Überschriften mitgeändert.
   if(sport && _PW_CAT_ICON[sport]) return [sport, _PW_CAT_ICON[sport]];   // 16.08.2026 (Lucas): gestempelter Sport zuerst
   const c=PW_LEAGUE_CAT[String(league||'').toLowerCase()];
   if(c) return c;
@@ -848,12 +856,28 @@ function _pwMoneyBroad(broad){
     +'<span>⚪ <b style="color:#8b949e">gleichauf</b> — steckt schon im Preis</span>'
     +'<span>🔴 <b style="color:#f85149">Preis besser</b> — Masse faden</span></div>';
   const note='nur Spiele mit Volumen ≥ '+_pwUsd(b.minVolUsd||0)+' und Quote ≥ '+(b.minOdds||'—')+' (klare Favoriten fliegen raus) · '+(b.n||0)+' aufgelöste Spiele';
+  // 02.09.2026 (Lucas-Audit): der Rückblick sagt jetzt dazu, wie viele Märkte er überhaupt
+  // beurteilen KONNTE. Vorher stand ein „🔴 faden"-Urteil über 848 Spielen, von denen die
+  // allermeisten gar keinen auswertbaren Geld-Split hatten — ein Zwei-Wege-Markt liefert
+  // rechnerisch den Preis, ein Drei-Wege-Markt mit 36% Abdeckung ein Artefakt.
+  const _g=b.guete||null;
+  const gueteZeile=_g?('<div class="pw-none" style="margin:2px 0 8px;border:1px solid #30363d;background:#0f141b;padding:7px 10px;border-radius:8px">'
+    +'<b style="color:#e6edf3">Wovon dieses Urteil lebt:</b> '
+    +'<b style="color:#3fb950">'+(_g.belastbar||0)+'</b> Märkte mit belastbarem Geld-Split · '
+    +'<b>'+(_g.preis_echo||0)+'</b> Zwei-Wege-Märkte (Geld-Anteil <i>ist</i> dort der Preis, sagt also nichts Eigenes) · '
+    +'<b>'+(_g.duenn||0)+'</b> mit zu dünner Erfassung (&lt; '+Math.round((window.PW_SPLIT_ABDECKUNG_MIN||0.7)*100)+'% des Volumens im Split)'
+    +(_g.leer?' · <b>'+_g.leer+'</b> ohne Aufteilung':'')
+    +'. Gewertet wird nur die erste Gruppe.</div>'):'';
+  const zuDuenn=(b.verdict==='zu wenig Daten');
+  const duennZeile=zuDuenn?('<div class="pw-none" style="margin:2px 0 8px;border:1px solid #7d4b16;background:#2b1d0e;color:#e3b341;padding:7px 10px;border-radius:8px">'
+    +'⚖️ <b>Noch kein Urteil.</b> Es sind '+(b.n||0)+' belastbare Märkte zusammen, nötig sind '+(b.urteilMinN||30)+'. '
+    +'Solange steht hier bewusst nichts — <b>kein Urteil ist nicht dasselbe wie „gleichauf"</b>.</div>'):'';
   return '<div class="pw-sec" style="margin-top:6px"><div class="pw-sec-head">'
     +'<span class="pw-kicker">🌐 Alle Poly-Ligen — trifft die Seite mit dem meisten Geld?</span>'
     +'<span class="pw-sec-note">'+note+'</span></div>'
     +'<div class="pw-sec-p" style="margin:2px 0 10px">Für jede Liga: <b>gewinnt die Seite, auf der am meisten Geld liegt</b> — und liegt das Geld damit <b>öfter richtig als der reine Preis</b>? Grün = ja, dem großen Geld folgen lohnt.</div>'
-    +legend+highlight
-    +(blocks||'<div class="pw-sec-p">Noch keine Liga mit genug aufgelösten Spielen (min. 5). Sammelt sich über die nächsten Tage.</div>')
+    +gueteZeile+duennZeile+legend+highlight
+    +(blocks||'<div class="pw-sec-p">Noch keine Liga mit genug belastbaren Spielen. Sammelt sich über die nächsten Tage.</div>')
     +'</div>';
 }
 
@@ -1111,14 +1135,37 @@ const PW_RANK_MIN_AVG_USD = 1000;
 // keine Untergrenze und heißt im Tooltip auch nicht so.
 const PW_CLV_Z = 1.645;        // einseitige 95%-Schranke, derselbe Richter wie überall
 const PW_CLV_SHRINK_K = 25;    // Interim ohne Streuung: zieht kleine Stichproben Richtung null
+// 02.09.2026, KORREKTUR: hier stand `varianz = Math.max(0, (clvSqSum - n*avg*avg)/(n-1))` mit
+// dem GLOBALEN n. `n` zaehlt alle Auflösungen seit jeher, `clvSqSum` erst die seit dem 02.09. —
+// eine kleine Quadratsumme gegen ein grosses n·Ø² ergibt eine negative Rohvarianz, die der
+// Math.max-Clamp in „null Streuung" verwandelt. Null Streuung heisst Untergrenze = Mittelwert,
+// also maximale Sicherheit. Gemessen am echten Bestand: 72 von 127 Wallets im UG-Modus lagen
+// genau so — die mit den WENIGSTEN Daten waeren nach oben gerankt. Fehlende Information hatte
+// sich als Gewissheit ausgegeben, der Fehler, den dieses Projekt nirgends durchgehen laesst.
+//
+// Jetzt rechnet die Untergrenze nur auf einem in sich geschlossenen Fenster: clvFenN, clvFenSum
+// und clvSqSum decken DIESELBEN Auflösungen ab. Reicht das Fenster nicht (< PW_CLV_UG_MIN_N), wird
+// wie bisher auf der vollen Historie geschrumpft — und heisst dann auch nicht Untergrenze.
+const PW_CLV_UG_MIN_N = 5;     // unter fuenf Auflösungen ist eine Streuungsschaetzung Zierde
 function _pwClvUg(v){
   const n = v && v.n || 0;
   if(!n) return { wert: 0, art: 'keine' };
   const avg = (v.clvSumPP || 0) / n;
-  const q = v.clvSqSum;
-  if(typeof q === 'number' && n >= 3){
-    const varianz = Math.max(0, (q - n * avg * avg) / (n - 1));
-    return { wert: avg - PW_CLV_Z * Math.sqrt(varianz / n), art: 'ug', avg: avg };
+  // Fenster: bevorzugt die eigenen Zaehler; bySport-Zeilen sind schon in sich geschlossen und
+  // liefern n/clvSumPP selbst.
+  const fn  = (typeof v.clvFenN === 'number') ? v.clvFenN : (v.clvSqSelbst ? n : 0);
+  const fs  = (typeof v.clvFenSum === 'number') ? v.clvFenSum : (v.clvSqSelbst ? (v.clvSumPP || 0) : 0);
+  const q   = v.clvSqSum;
+  if(typeof q === 'number' && fn >= PW_CLV_UG_MIN_N){
+    const favg = fs / fn;
+    const roh = (q - fn * favg * favg) / (fn - 1);
+    // Eine nennenswert negative Rohvarianz kann es rechnerisch nicht geben — sie bedeutet, dass
+    // Zaehler und Quadratsumme NICHT dieselben Zeilen abdecken. Dann ist das Fenster kaputt und
+    // wir schrumpfen, statt eine Scheinsicherheit auszugeben.
+    if(roh >= -1e-6){
+      const varianz = Math.max(0, roh);
+      return { wert: favg - PW_CLV_Z * Math.sqrt(varianz / fn), art: 'ug', avg: avg, ugN: fn };
+    }
   }
   return { wert: avg * n / (n + PW_CLV_SHRINK_K), art: 'schrumpf', avg: avg };
 }
@@ -1141,7 +1188,9 @@ function _pwScoreFuerSport(v){
   if(!_pwRankSport) return { v: v, global: true };
   const b = v && v.bySport && v.bySport[_pwRankSport];
   if(!b || !b.n) return null;               // in DIESER Sportart nichts vorzuweisen → nicht ranken
-  return { v: { n: b.n, clvSumPP: b.clvSumPP, wins: b.wins, clvSqSum: b.clvSqSum,
+  // `clvSqSelbst`: bySport zaehlt seit demselben Tag wie seine Quadratsumme, n und Quadratsumme
+  // decken hier also dieselben Zeilen ab — anders als beim globalen Score.
+  return { v: { n: b.n, clvSumPP: b.clvSumPP, wins: b.wins, clvSqSum: b.clvSqSum, clvSqSelbst: true,
                 usd: v.usd, pnl: v.pnl, lastTs: v.lastTs, recent: v.recent }, global: false };
 }
 let _pwRankBigOnly = true;
@@ -1499,9 +1548,14 @@ function _pwGlobalWhaleLeaderboard(live){
 // Kriterium (Lücke schließt sich über Tage → echt; steht → Artefakt). Dieselbe Daten wie Poly-Radar.
 const _PW_SPORT_ICON={soccer:'⚽',basketball:'🏀',americanfootball:'🏈',baseball:'⚾',icehockey:'🏒',
   mma:'🥊',boxing:'🥊',tennis:'🎾',cricket:'🏏',golf:'⛳',esports:'🎮'};
+// 02.09.2026 (Lucas-Audit): MLB bekam 🏀, weil das Icon an der KATEGORIE („US-Sport") hing und
+// nicht an der Liga. Baseball ist kein Basketball. Liga schlaegt Kategorie, wo wir sie kennen.
+const _PW_LIGA_ICON={MLB:'⚾',NFL:'🏈',NBA:'🏀',WNBA:'🏀',NCAAF:'🏈',NCAAB:'🏀',NHL:'🏒',UFC:'🥊',MMA:'🥊',ATP:'🎾',WTA:'🎾'};
 function _pwSportIcon(sport){
   // 18.08.2026 (Lucas: „für Fußball dieses komische Pfeil-Icon"): frueher grobe Eigen-Map -> Fallback 🎯
   // fuer La-Liga/Serie/Ligue etc. Jetzt ueber den robusten _pwSportCategory (kennt alle Liga-Muster).
+  const lg=String(sport||'').toUpperCase();
+  if(_PW_LIGA_ICON[lg]) return _PW_LIGA_ICON[lg];
   if(sport && _PW_CAT_ICON[sport]) return _PW_CAT_ICON[sport];   // schon eine Kategorie ('Fußball' …)
   return _PW_CAT_ICON[_pwSportCategory(sport)] || '🎯';
 }
@@ -1610,6 +1664,53 @@ function _pwSideMarket(k,m){
   for(var i=0;i<names.length;i++){ var u=Number(m.shares[names[i]])||0; if(u>best){best=u;fav=names[i];} }
   return !_PW_SCORE_RX.test(String(fav||''));
 }
+// ── Güte des Geld-Splits (02.09.2026, Lucas-Audit „Großes Geld") ───────────────
+// Nachgemessen über 1.912 Märkte aus poly_money_broad_close.json:
+//   · 2 Ausgänge (Tennis, E-Sport, MLB, O/U), n=1.262 → |Geld% − Preis| Median 0,0pp;
+//     1262 von 1262 unter 1pp. Struktur, kein Zufall: komplementäre Tokens, also ist der
+//     Wert-Anteil zwangsläufig p/(1−p). „Geld auf X 68% (69¢)" ist EINE Zahl, zweimal gesagt.
+//   · 3 Ausgänge (Fußball 1X2), n=650 → Abdeckung sum(shares)/totalUsd im Median 36%,
+//     bei 79% unter 50%. Der Split ist dort ein Artefakt der Erfassungslücke, keine Mehrheit.
+// Deshalb behauptet die Anzeige nur noch eine Seite, wo der Split das auch tragen kann.
+// Backend liefert `splitGuete`; für Altdaten rechnet dieselbe Regel hier nochmal.
+const PW_SPLIT_ABDECKUNG_MIN = 0.70;
+try{ window.PW_SPLIT_ABDECKUNG_MIN = PW_SPLIT_ABDECKUNG_MIN; }catch(_e){}
+function _pwSplitGuete(m){
+  const g = m && m.splitGuete;
+  if(g && g.art) return g;
+  const sh = (m && m.shares) || {};
+  const namen = Object.keys(sh).filter(k => typeof sh[k] === 'number');
+  if(namen.length < 2) return { art: 'leer', abdeckung: null };
+  const summe = namen.reduce((a, k) => a + sh[k], 0);
+  if(!(summe > 0)) return { art: 'leer', abdeckung: null };
+  if(namen.length === 2) return { art: 'preis_echo', abdeckung: null };
+  const tot = Number(m && m.totalUsd) || 0;
+  if(!(tot > 0)) return { art: 'duenn', abdeckung: null };   // unbekannt ist nicht belastbar
+  const ab = summe / tot;
+  return { art: ab >= PW_SPLIT_ABDECKUNG_MIN ? 'belastbar' : 'duenn', abdeckung: ab };
+}
+// Eine Zeile „auf welcher Seite liegt das Geld" — oder die ehrliche Auskunft, dass es die nicht gibt.
+// `kurz` für die engen ×-Norm-Kacheln, lang für die Tabelle.
+function _pwGeldSeite(m, favName, favPct, favPreis, kurz){
+  const g = _pwSplitGuete(m);
+  if(g.art === 'leer')
+    return '<span class="pw-mut" title="Für diesen Markt liegt keine Seiten-Aufteilung vor.">keine Seiten-Aufteilung</span>';
+  if(g.art === 'preis_echo'){
+    const t = 'Zwei-Wege-Markt: der Geld-Anteil ist hier rechnerisch der Preis (komplementäre Tokens). '
+            + 'Gemessen an 1.262 Märkten: Abweichung Median 0,0pp. Als eigenes Signal also wertlos.';
+    return '<b style="color:#4cc2ff">' + _pwEsc(favName) + '</b> <span class="pw-mut" title="' + t + '">'
+         + (favPreis || '—') + ' <span style="font-size:9px">= Preis</span></span>';
+  }
+  if(g.art === 'duenn'){
+    const pct = (g.abdeckung != null) ? Math.round(g.abdeckung * 100) + '% des Volumens erfasst' : 'Abdeckung unbekannt';
+    const t = 'Der Holders-Abruf hat nur einen Teil des Marktgeldes eingefangen (' + pct + '). '
+            + 'Eine Seite zu behaupten hiesse, die Lücke als „da liegt nichts" zu lesen.';
+    return '<span class="pw-mut" title="' + t + '">Split nicht belastbar'
+         + (kurz ? '' : ' <span style="font-size:9px">(' + pct + ')</span>') + '</span>';
+  }
+  return '<b style="color:#4cc2ff">' + _pwEsc(favName) + '</b> ' + favPct + '%'
+       + (favPreis ? ' <span class="pw-mut">(' + favPreis + ')</span>' : '');
+}
 function _pwNormStage(m){ var h=_pwRealHtk(m); if(h==null) return 'pre'; if(h<0) return 'live'; if(h<=3) return 'soon'; return 'pre'; }
 function _pwNormKey(m){ return _pwSportCategory(m.league, m.sport)+'|'+_pwNormStage(m); }
 // Frischer Zufluss = Δ Gesamt-Volumen zwischen den letzten zwei History-Punkten (Poly-Volumen
@@ -1654,7 +1755,7 @@ function _pwNormRow(it,mx,mode){
   var badge='<span class="pwn-badge" style="color:'+col+';border-color:'+col+'">×'+it.ratio.toFixed(1)+' Norm</span>';
   return '<div class="pwn-row '+(red?'pwn-over2':'pwn-over')+'"><i class="pwn-fill" style="width:'+w+'%;background:'+(red?'rgba(248,81,73,.16)':'rgba(245,197,24,.14)')+'"></i>'
     +'<div class="pwn-in"><div class="pwn-l"><div class="pwn-g">'+ic+' <span class="pwn-lg">'+lg+'</span> · '+nameHtml+'</div>'
-    +'<div class="pwn-side">Geld auf <b style="color:#4cc2ff">'+_pwEsc(fav.n)+'</b> '+favPct+'%</div></div>'
+    +'<div class="pwn-side">'+_pwGeldSeite(m, fav.n, favPct, null, true)+'</div></div>'
     +'<div class="pwn-r"><span class="pwn-v">'+val+'</span>'+badge+'</div></div></div>';
 }
 function _pwNormBlock(title,note,items,mode){
@@ -1722,7 +1823,7 @@ function _pwMoneyLive(live){
   const rows=all.filter(x=>_pwSportPass(x.m.league, x.m.sport))
     .sort((a,b)=>(b.m.totalUsd||0)-(a.m.totalUsd||0)).slice(0,30);
   const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">💰 Wo liegt das große Geld — alle Sportarten</span>'
-    +'<span class="pw-sec-note">kommende Spiele nach Poly-Volumen · auf welche Seite hat die Masse gesetzt · <b>das Urteil der Liga steht an der Zeile</b> (Rückblick unten)</span></div>';
+    +'<span class="pw-sec-note">kommende Spiele nach Poly-Volumen · <b>die Seite steht nur, wo der Split sie trägt</b> — sonst „= Preis" (Zwei-Wege-Markt) oder „nicht belastbar" (zu dünn erfasst) · das Liga-Urteil steht an der Zeile</span></div>';
   if(!rows.length) return intro+'<div class="pw-none">'+_pwStaleMsg(_pwSportFilter==='all'
     ?'Gerade kein nennenswertes Geld auf kommenden Märkten (füllt sich nah am Anpfiff, läuft am Mac-Runner).'
     :'Keine kommenden '+_pwSportFilter+'-Märkte gerade — Filter „Alle" zeigt wieder alles.')+'</div></section>';
@@ -1741,7 +1842,10 @@ function _pwMoneyLive(live){
     // Keine Historie = kein Urteil. Nicht „unbedenklich".
     if(!u) return '<span class="pw-mut" style="font-size:9px" title="Für diese Liga liegt noch kein Rückblick vor — das ist kein Freibrief.">?</span>';
     const V={geld_schaerfer:['🟢','#3fb950','folgen'],preis_besser:['🔴','#f85149','faden'],gleichauf:['⚪','#8b949e','neutral']};
-    const f=V[u.v]||V.gleichauf;
+    // 02.09.2026: hier stand `|| V.gleichauf` — ein unbekanntes oder ausgesetztes Verdikt
+    // („zu wenig Daten") wurde damit als ⚪ neutral angezeigt. Das ist eine Aussage, wo keine ist.
+    const f=V[u.v];
+    if(!f) return '<span class="pw-mut" style="font-size:9px" title="Für diese Liga reicht die Zahl belastbarer Spiele noch nicht für ein Urteil.">? kein Urteil</span>';
     return '<span style="font-size:9px;font-weight:800;color:'+f[1]+'" title="Rückblick über '+u.n+' aufgelöste Spiele dieser Liga: '+f[2]+'">'+f[0]+' '+f[2]+'</span>';
   };
   const body=rows.map(({k,m})=>{
@@ -1753,7 +1857,7 @@ function _pwMoneyLive(live){
     const matchTxt=_pwEventLabel(k, oc.map(o=>o.name), m.league);
     const match=k?('<a href="https://polymarket.com/event/'+encodeURIComponent(k)+'" target="_blank" rel="noopener" '
       +'style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Auf Polymarket öffnen ↗">'+matchTxt+' <span style="color:#a78bfa">↗</span></a>'):matchTxt;
-    const ic=_pwCatOf(m.league, m.sport)[1], lg=(m.league||'').toUpperCase();
+    const ic=_pwSportIcon(m.league||m.sport), lg=(m.league||'').toUpperCase();   // 02.09.2026: liga-genau (⚾ MLB), nicht Kategorie-Icon
     const _rh=_pwRealHtk(m); const htk=_rh!=null?(_rh<0?'live':_rh<1?'<1h':Math.round(_rh)+'h'):'—';
     // Split-Balken (bis 3 Ausgänge)
     const cols=['#4cc2ff','#f5c518','#ff5d5d'];
@@ -1762,7 +1866,7 @@ function _pwMoneyLive(live){
       +'<td style="white-space:nowrap">'+ic+' <span class="pw-mut" style="font-size:11px">'+lg+'</span><br>'+_urteilChip(m.league)+'</td>'
       +'<td>'+match+'</td>'
       +'<td style="min-width:110px"><div style="height:9px;border-radius:5px;overflow:hidden;background:#161b22;display:flex">'+seg+'</div></td>'
-      +'<td class="pw-cm" style="white-space:nowrap"><b style="color:#4cc2ff">'+_pwEsc(fav.name)+'</b> '+favPct+'% <span class="pw-mut">('+favPrice+')</span></td>'
+      +'<td class="pw-cm" style="white-space:nowrap">'+_pwGeldSeite(m, fav.name, favPct, favPrice, false)+'</td>'
       +'<td class="pw-cn pw-mut">'+_pwUsd(m.totalUsd)+'</td>'
       +'<td class="pw-cn pw-mut">'+htk+'</td></tr>';
   }).join('');
@@ -1878,7 +1982,7 @@ function _pwLiveCard(x){
   return '<div style="background:var(--card,#161b22);border:1px solid #21262d;border-radius:12px;padding:12px 14px;margin-bottom:10px">'
     +'<div style="font-size:13.5px;font-weight:700;margin-bottom:7px">'+ic+' '+match+liveBadge+'</div>'
     +'<div style="height:9px;border-radius:5px;overflow:hidden;background:#0d1117;display:flex;margin-bottom:6px">'+seg+'</div>'
-    +'<div style="font-size:12px;color:var(--muted);margin-bottom:'+(wh?'9px':'0')+'">Geld auf <b style="color:#4cc2ff">'+_pwEsc(fav.name)+'</b> '+favPct+'% <span style="color:#6e7681">('+favPrice+')</span> · '+_pwUsd(m.totalUsd)+(inflow?' · '+inflow:'')+'</div>'
+    +'<div style="font-size:12px;color:var(--muted);margin-bottom:'+(wh?'9px':'0')+'">'+_pwGeldSeite(m, fav.name, favPct, favPrice, false)+' · '+_pwUsd(m.totalUsd)+(inflow?' · '+inflow:'')+'</div>'
     +(wh?'<div style="border-top:1px solid #21262d;padding-top:7px">'+wh+'</div>':'')
     +'</div>';
 }
@@ -1916,17 +2020,33 @@ function _pwLiveWhales(){
   return intro+kpi+fresh+body+'</section>';
 }
 
+// 02.09.2026 (Lucas-Audit): hier stand dieselbe Rechnung wie in der Bewegungs-Tabelle — Basis
+// arr[0] (Fenster 0,1h bis 29,2h) und `steam` aus EINEM Tick gegen eine 0,3-pp-Schwelle bei einem
+// 0,5¢-Preisraster. Das wog schwerer als die Tabelle: _pwMoveFor speist die Conviction der
+// Shortlist, also die BET/FADE-Empfehlung. Jetzt dasselbe feste Fenster und dieselbe Steigung
+// ueber den juengeren Teil wie in _pwMomentum — eine Definition von „Steam" im ganzen Tab.
 function _pwMoveFor(key){
   const arr=_pwCache&&_pwCache.broadHist&&_pwCache.broadHist[key];
-  if(!Array.isArray(arr)||arr.length<2) return null;
-  const latest=arr[arr.length-1], base=arr[0], prev=arr[arr.length-2];
+  const fenster=_pwFensterPunkte(arr, PW_MOVE_FENSTER_H);
+  if(fenster.length<2) return null;
+  const latest=fenster[fenster.length-1], base=fenster[0];
+  const spanH=(Date.parse(latest.ts)-Date.parse(base.ts))/3.6e6;
   let best=null;
   for(const s in (latest.p||{})){ const p1=base.p&&base.p[s], p2=latest.p[s];
     if(typeof p1!=='number'||typeof p2!=='number') continue;
-    const move=(p2-p1)*100, step=(prev&&typeof prev.p[s]==='number')?(p2-prev.p[s])*100:move;
-    if(!best||move>best.move) best={side:s,move,step}; }
+    const move=(p2-p1)*100;
+    if(!best||move>best.move) best={side:s,move}; }
   if(!best) return null;
-  best.steam=(best.step>0)===(best.move>0)&&Math.abs(best.step)>=0.3;
+  const t0=Date.parse(base.ts), punkte=[];
+  for(const sn of fenster){ const y=sn.p&&sn.p[best.side], t=Date.parse(sn.ts);
+    if(typeof y==='number'&&!isNaN(t)) punkte.push([(t-t0)/3.6e6, y*100]); }
+  const stg=(punkte.length>=PW_MOVE_TREND_N)?_pwTrendSteigung(_pwTrendSchwanz(punkte)):null;
+  best.spanH=spanH>0?spanH:null;
+  best.tempo=best.spanH?best.move/Math.max(best.spanH,0.25):null;
+  best.steigung=stg;
+  // Steam nur, wenn eine Steigung ueberhaupt messbar ist. Ohne genug Punkte ist es KEIN Steam —
+  // vorher war es eines, sobald der letzte Tick zufaellig in dieselbe Richtung zeigte.
+  best.steam=(stg!=null)&&Math.abs(stg)>=PW_MOVE_TREND_MIN&&((stg>0)===(best.move>0));
   return best;
 }
 // 07.08.2026 (Lucas: „wenn der Poly-Preis nach dem Alert gegen uns dreht, muss der Tick raus"): Umkehr-
@@ -3219,63 +3339,152 @@ function _pwShortlist(live){
 }
 
 // ① Momentum (25.07.2026, Lucas): was bewegt sich GERADE — aus der globalen Poly-Preis-Zeitreihe
-// (poly_money_broad_history.json). Je Markt der stärkste Preis-Move einer Seite über das erfasste
-// Fenster; Steam ▲ = letzter Schritt zieht weiter, dreht ▼ = letzter Schritt kehrt um.
+// (poly_money_broad_history.json).
+//
+// 02.09.2026, Lucas-Audit. Drei Dinge stimmten hier nicht, alle gemessen:
+//
+//  1. `base = arr[0]` — gemessen wurde gegen den ÄLTESTEN noch vorhandenen Snapshot. Über 563
+//     Märkte: Fensterlänge Median 2,5h, Spanne 0,1h bis 29,2h. Sortiert wurde dann nach absolutem
+//     Move — ein 26-pp-Drift über 29h stand über einem 3-pp-Ruck über 1h, obwohl der zehnmal
+//     schneller ist. Die Tabelle sortierte faktisch nach „wie lange steht der Markt in der
+//     History". Jetzt: festes Fenster, und sortiert wird nach TEMPO (pp/h).
+//  2. Die Signal-Spalte las EINEN Tick (letzter gegen vorletzten Snapshot, Schwelle 0,3pp bei
+//     einem 0,5¢-Preisraster). Gemessen über 1.884 Schritte: 65% waren exakt 0,00pp → „flach",
+//     der Rest bekam „Steam" oder „dreht" aus einem einzelnen 0,5–2-pp-Tick. Deshalb stand bei
+//     +26,0pp „flach" und bei +37,0pp „dreht". Jetzt: Steigung der Ausgleichsgeraden über alle
+//     Punkte im Fenster, und unter drei Punkten sagt die Spalte „zu kurz" statt zu raten.
+//  3. Die Anpfiff-Spalte zeigte `latest.htk`, den Wert ZUM SNAPSHOT — bei laufenden Spielen stand
+//     dort „<1h". Jetzt wird die Zeit seit dem Snapshot abgezogen.
+//
+// Dazu: ein Preis-Move im laufenden Spiel ist zu einem guten Teil der Spielstand (Burnley–Boro
+// stand mit 3¢→51¢ und „▲ Steam" oben — das waren drei Tore). Solche Zeilen bleiben, tragen aber
+// ein Live-Kennzeichen, damit niemand sie für Vorab-Geld hält.
+const PW_MOVE_FENSTER_H = 6;      // festes Rückschau-Fenster
+const PW_MOVE_MIN_PP    = 2;      // darunter Rauschen (Preisraster 0,5¢ → 1pp sind zwei Ticks)
+// Vier Punkte, nicht drei: bei genau drei Punkten IST der Schwanz die ganze Reihe, und eine
+// Gerade durch drei Punkte wird vom ersten Schritt dominiert — [60,66,63] steigt dann rechnerisch,
+// obwohl der Preis zuletzt faellt. Mit vier Punkten sieht der Schwanz zwei echte Intervalle.
+// Darunter sagt die Spalte "zu kurz". Lieber keine Richtung als eine, die man nicht sehen kann.
+const PW_MOVE_TREND_N   = 4;      // so viele Punkte braucht eine Steigung
+const PW_MOVE_TREND_MIN = 0.25;   // pp/h, darunter heißt es flach
+
+// Die Snapshots der letzten `stunden` — EINE Definition von „Fenster" für den ganzen Tab.
+// Kein Rückfall auf den ältesten Punkt: ein Markt ohne frische Snapshots hat sich nicht bewegt,
+// er wurde nur lange beobachtet.
+function _pwFensterPunkte(arr, stunden){
+  if(!Array.isArray(arr)) return [];
+  const ab = Date.now() - stunden*3.6e6;
+  return arr.filter(sn => { const t = Date.parse(sn && sn.ts); return !isNaN(t) && t >= ab; });
+}
+
+// Für „zieht weiter oder dreht" zählt der JÜNGERE Teil des Fensters. Über alle Punkte gerechnet
+// würde ein grosser Sprung ganz am Anfang die Gerade bis zum Schluss nach oben ziehen: [10,30,25,22]
+// hat Gesamt-Move +12 und über alles eine Steigung von +3,1 pp/h — obwohl der Preis seit dem
+// Sprung nur noch fällt. Auf dem Schwanz (die letzten drei bzw. die jüngere Hälfte) kommt −4
+// heraus, also „dreht". Genau das soll die Spalte sagen.
+function _pwTrendSchwanz(punkte){
+  const k = Math.max(3, Math.ceil(punkte.length/2));   // nie unter drei Punkten = zwei Intervallen
+  return punkte.slice(-k);
+}
+
+// Steigung der Ausgleichsgeraden in pp pro Stunde. null, wenn zu wenige Punkte oder keine Zeitspanne.
+function _pwTrendSteigung(punkte){
+  const n = punkte.length;
+  if(n < 3) return null;
+  let sx=0, sy=0, sxx=0, sxy=0;
+  for(const [x,y] of punkte){ sx+=x; sy+=y; sxx+=x*x; sxy+=x*y; }
+  const nenner = n*sxx - sx*sx;
+  if(!(Math.abs(nenner) > 1e-9)) return null;
+  return (n*sxy - sx*sy) / nenner;
+}
+
 function _pwMomentum(hist){
   const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">📈 Was sich gerade bewegt — alle Sportarten</span>'
-    +'<span class="pw-sec-note">stärkster Poly-Preis-Move je Markt über die letzten Stunden · ▲ Steam (zieht weiter) vs ▼ dreht (kehrt um) · Klick → Markt</span></div>';
+    +'<span class="pw-sec-note">stärkster Poly-Preis-Move je Markt über die letzten '+PW_MOVE_FENSTER_H+'h · sortiert nach <b>Tempo</b> (pp/h), nicht nach Gesamt-Move · ▲ Steam = Steigung zieht weiter, ▼ dreht = kehrt um · Klick → Markt</span></div>';
   const rows=[];
+  const jetzt=Date.now();
   for(const [key,arr] of Object.entries(hist||{})){
     if(!Array.isArray(arr)||arr.length<2) continue;
-    const latest=arr[arr.length-1], base=arr[0], prev=arr[arr.length-2];
-    const league=latest.league||base.league;
+    const league=arr[arr.length-1].league||arr[0].league;
     if(!_pwSportPass(league)) continue;
+    // Nur Snapshots im Fenster. KEIN Rückfall auf arr[0] — ein Markt ohne frische Punkte hat
+    // sich nicht bewegt, er wurde nur lange beobachtet.
+    const fenster=arr.filter(sn=>{ const t=Date.parse(sn.ts); return !isNaN(t) && (jetzt-t) <= PW_MOVE_FENSTER_H*3.6e6; });
+    if(fenster.length<2) continue;
+    const latest=fenster[fenster.length-1], base=fenster[0];
     // 27.07.2026 (Lucas: „was kommt oder live — fertige Spiele raus"): echten Anpfiff aus dem
-    // letzten Snapshot rekonstruieren (ts + htk). >4h nach Anpfiff = Spiel fertig → nicht mehr
-    // „was sich GERADE bewegt". History-Retention (96h Steam-Fenster) bleibt, nur die Anzeige filtert.
+    // letzten Snapshot rekonstruieren. >4h nach Anpfiff = Spiel fertig.
+    let htk=null;
     if(latest.htk != null){
-      const koMs = Date.parse(latest.ts) + latest.htk * 3.6e6;
-      if(!isNaN(koMs) && (Date.now() - koMs) > 4 * 3.6e6) continue;
+      const tsMs=Date.parse(latest.ts);
+      const koMs=tsMs + latest.htk*3.6e6;
+      if(!isNaN(koMs) && (jetzt-koMs) > 4*3.6e6) continue;
+      // Anpfiff-Rest von JETZT aus, nicht vom Snapshot aus (das war Punkt 3 oben).
+      if(!isNaN(tsMs)) htk = latest.htk - (jetzt-tsMs)/3.6e6;
     }
+    const spanH=(Date.parse(latest.ts)-Date.parse(base.ts))/3.6e6;
+    if(!(spanH>0)) continue;
     let best=null;
     for(const side of Object.keys(latest.p||{})){
       const p1=base.p&&base.p[side], p2=latest.p[side];
       if(typeof p1!=='number'||typeof p2!=='number') continue;
+      if(_PW_SCORE_RX.test(String(side))) continue;   // Exact-Score-Zeilen sind keine Seite
       const move=(p2-p1)*100;
-      const step=(prev&&typeof prev.p[side]==='number')?(p2-prev.p[side])*100:move;
-      // die STEIGENDE Seite zeigen (wohin das Geld strömt) — größter positiver Move gewinnt.
-      if(!best||move>best.move) best={side,from:p1,to:p2,move,step};
+      // Die STEIGENDE Seite zeigen (wohin das Geld strömt) — grösster positiver Move gewinnt.
+      // 02.09.2026: hier stand kurzzeitig |move|, das zeigte in Zwei-Wege-Märkten die fallende
+      // Spiegelseite ("Padres 50¢→42¢") statt der Seite, in die das Geld läuft.
+      if(!best||move>best.move) best={side,from:p1,to:p2,move};
     }
-    if(!best||Math.abs(best.move)<1) continue;   // <1pp = Rauschen
-    const spanH=(Date.parse(latest.ts)-Date.parse(base.ts))/3.6e6;
-    rows.push({key,league,spanH,htk:latest.htk,vol:latest.v,match:_pwPlayLabel(key,Object.keys(latest.p).map(s=>({s}))),   // 16.08.2026 (Lucas): Prop-aware Label (kein Exact-Score-Zeilen-Leak, kein rohes "Over vs Under")
-      side:best.side,from:best.from,to:best.to,move:best.move,step:best.step});
+    if(!best||Math.abs(best.move)<PW_MOVE_MIN_PP) continue;
+    // Steigung über ALLE Punkte des Fensters für genau diese Seite.
+    const t0=Date.parse(base.ts);
+    const punkte=[];
+    for(const sn of fenster){
+      const y=sn.p&&sn.p[best.side];
+      const t=Date.parse(sn.ts);
+      if(typeof y==='number'&&!isNaN(t)) punkte.push([(t-t0)/3.6e6, y*100]);
+    }
+    rows.push({key,league,spanH,htk,vol:latest.v,
+      match:_pwPlayLabel(key,Object.keys(latest.p).map(s=>({s}))),
+      side:best.side,from:best.from,to:best.to,move:best.move,
+      tempo:best.move/Math.max(spanH,0.25),
+      steigung:(punkte.length>=PW_MOVE_TREND_N)?_pwTrendSteigung(_pwTrendSchwanz(punkte)):null,
+      punkteN:punkte.length});
   }
-  rows.sort((a,b)=>Math.abs(b.move)-Math.abs(a.move));
+  // Sortiert nach Tempo — schnell schlägt lange.
+  rows.sort((a,b)=>Math.abs(b.tempo)-Math.abs(a.tempo));
   if(!rows.length) return intro+'<div class="pw-none">'+_pwStaleMsg(_pwSportFilter==='all'
-    ?'Noch keine Bewegung erfasst — die Preis-Zeitreihe füllt sich über die nächsten Runner-Läufe (min. 2 Snapshots je Markt).'
+    ?'Keine Bewegung in den letzten '+PW_MOVE_FENSTER_H+'h (min. '+PW_MOVE_MIN_PP+'pp, zwei Snapshots im Fenster). Die Preis-Zeitreihe füllt sich über die nächsten Runner-Läufe.'
     :'Keine '+_pwSportFilter+'-Bewegung gerade — Filter „Alle" zeigt wieder alles.')+'</div></section>';
   const body=rows.slice(0,30).map(r=>{
     const up=r.move>=0;
-    const mCol=Math.abs(r.move)>=5?'#f85149':Math.abs(r.move)>=3?'#e3b341':'#8b949e';
-    const cont=(r.step>0)===(r.move>0)&&Math.abs(r.step)>=0.3;
-    const tag=Math.abs(r.step)<0.3?'<span class="pw-mut">→ flach</span>'
-      :cont?'<span style="color:#3fb950;font-weight:700">▲ Steam</span>'
-      :'<span style="color:#f85149;font-weight:700">▼ dreht</span>';
+    const tCol=Math.abs(r.tempo)>=3?'#f85149':Math.abs(r.tempo)>=1?'#e3b341':'#8b949e';
+    let tag;
+    if(r.steigung==null)
+      tag='<span class="pw-mut" title="Nur '+r.punkteN+' Snapshot(s) im Fenster — für eine Richtung braucht es '+PW_MOVE_TREND_N+'.">— zu kurz</span>';
+    else if(Math.abs(r.steigung)<PW_MOVE_TREND_MIN)
+      tag='<span class="pw-mut" title="Steigung '+r.steigung.toFixed(2)+' pp/h — der Move steht, er zieht nicht.">→ flach</span>';
+    else if((r.steigung>0)===(r.move>0))
+      tag='<span style="color:#3fb950;font-weight:700" title="Steigung '+r.steigung.toFixed(2)+' pp/h über '+r.punkteN+' Punkte — zieht weiter.">▲ Steam</span>';
+    else
+      tag='<span style="color:#f85149;font-weight:700" title="Steigung '+r.steigung.toFixed(2)+' pp/h gegen den Gesamt-Move über '+r.punkteN+' Punkte — kehrt um.">▼ dreht</span>';
     const mk='<a href="https://polymarket.com/event/'+encodeURIComponent(r.key)+'" target="_blank" rel="noopener" onclick="event.stopPropagation()" style="color:inherit;text-decoration:none;border-bottom:1px dotted #6e7681" title="Markt öffnen ↗">'+_pwEsc(r.match)+' <span style="color:#a78bfa">↗</span></a>';
-    const htk=r.htk!=null?(r.htk<0?'live':r.htk<1?'<1h':Math.round(r.htk)+'h'):'—';
+    const live=(r.htk!=null&&r.htk<0);
+    const htk=r.htk!=null?(live?'live':r.htk<1?'<1h':Math.round(r.htk)+'h'):'—';
+    const liveBadge=live?' <span style="font-size:9px;color:#e3b341;border:1px solid #7d4b16;border-radius:5px;padding:0 4px" title="Laufendes Spiel — ein Preis-Move enthält hier den Spielstand, nicht nur Geld.">Spielstand drin</span>':'';
     return '<tr>'
       +'<td style="white-space:nowrap">'+_pwSportIcon(r.league)+' <span class="pw-mut" style="font-size:11px">'+_pwEsc((r.league||'').toUpperCase())+'</span></td>'
-      +'<td>'+mk+'</td>'
+      +'<td>'+mk+liveBadge+'</td>'
       +'<td class="pw-cm"><b style="color:#4cc2ff">'+_pwEsc(r.side)+'</b></td>'
       +'<td class="pw-cn pw-mut">'+Math.round(r.from*100)+'¢→'+Math.round(r.to*100)+'¢</td>'
-      +'<td class="pw-cn" style="font-weight:800;color:'+mCol+'">'+(up?'+':'')+r.move.toFixed(1)+'pp</td>'
+      +'<td class="pw-cn" style="font-weight:800;color:'+tCol+'">'+(up?'+':'')+r.tempo.toFixed(1)+'</td>'
+      +'<td class="pw-cn pw-mut">'+(up?'+':'')+r.move.toFixed(1)+'pp</td>'
       +'<td class="pw-cm">'+tag+'</td>'
-      +'<td class="pw-cn pw-mut">'+(r.spanH>=1?Math.round(r.spanH)+'h':'<1h')+'</td>'
+      +'<td class="pw-cn pw-mut">'+(r.spanH>=1?r.spanH.toFixed(1)+'h':'<1h')+'</td>'
       +'<td class="pw-cn pw-mut">'+htk+'</td></tr>';
   }).join('');
   return intro+'<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
-    +'<th>Sport</th><th>Spiel</th><th>Seite</th><th>von→zu</th><th>Move</th><th>Signal</th><th>über</th><th>Anpfiff</th>'
+    +'<th>Sport</th><th>Spiel</th><th>Seite</th><th>von→zu</th><th title="Tempo: Move geteilt durch die Zeitspanne">pp/h</th><th>Move</th><th>Signal</th><th>über</th><th>Anpfiff</th>'
     +'</tr></thead><tbody>'+body+'</tbody></table></div></section>';
 }
 
@@ -3327,12 +3536,16 @@ function _pwNewEntries(track, hours, live){
   }
   return rows.sort((a,b)=>b.usd-a.usd||b.ts-a.ts);            // größte zuerst
 }
+// 02.09.2026 (Lucas-Audit): auch hier war die Basis arr[0]. „Der Favorit ist gekippt" ueber ein
+// 29-Stunden-Fenster ist keine Neuigkeit, sondern die halbe Vorgeschichte des Marktes. Der Feed
+// heisst „was ist gerade passiert" — also dasselbe feste Fenster wie ueberall.
 function _pwFlips(hist){
   const lead=o=>{let s=null,m=-1;for(const k in (o.p||{}))if(typeof o.p[k]==='number'&&o.p[k]>m){m=o.p[k];s=k;}return s;};
   const rows=[];
   for(const [key,arr] of Object.entries(hist||{})){
-    if(!Array.isArray(arr)||arr.length<2) continue;
-    const base=arr[0], latest=arr[arr.length-1];
+    const fenster=_pwFensterPunkte(arr, PW_MOVE_FENSTER_H);
+    if(fenster.length<2) continue;
+    const base=fenster[0], latest=fenster[fenster.length-1];
     if(!_pwSportPass(latest.league||base.league)) continue;
     if(latest.htk!=null){ const koMs=Date.parse(latest.ts)+latest.htk*3.6e6;   // 03.08.2026 (Lucas): fertige Spiele raus
       if(!isNaN(koMs)&&(Date.now()-koMs)>4*3.6e6) continue; }

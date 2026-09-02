@@ -47,7 +47,11 @@ class TestSportScore(unittest.TestCase):
         B._wallet_sport(s, "Fußball", 2.0, True)
         B._wallet_sport(s, "Fußball", -1.0, False)
         B._wallet_sport(s, "E-Sport", 5.0, True)
-        self.assertEqual(s["bySport"]["Fußball"], {"n": 2, "clvSumPP": 1.0, "wins": 1})
+        # 02.09.2026: `clvSqSum` kam dazu. Bei bySport ist sie unproblematisch, weil der Eimer am
+        # selben Tag anfängt wie sie — n und Quadratsumme decken dieselben Auflösungen ab. Genau
+        # deshalb braucht der GLOBALE Score sein eigenes Fenster (clvFenN/clvFenSum) und dieser nicht.
+        self.assertEqual(s["bySport"]["Fußball"],
+                         {"n": 2, "clvSumPP": 1.0, "wins": 1, "clvSqSum": 5.0})
         self.assertEqual(s["bySport"]["E-Sport"]["n"], 1)
 
     def test_ohne_sportart_wird_NICHTS_verbucht(self):
@@ -107,6 +111,30 @@ class TestTrackFuehrtDieNeuenFelder(unittest.TestCase):
         self.assertIn("Fußball", s["bySport"])
         self.assertIn("frueh", s["vorlauf"])
         self.assertIsInstance(s["clvSqSum"], float)
+        self.assertEqual(s["clvFenN"], 1)          # das Fenster zaehlt dieselbe Zeile mit
+        self.assertIsInstance(s["clvFenSum"], float)
+
+    def test_fenster_zaehler_decken_dieselben_zeilen_wie_die_quadratsumme(self):
+        """02.09.2026, Korrektur am selben Tag. `n` zählt alle Auflösungen seit jeher,
+        `clvSqSum` erst die seit der Einführung. Beides in dieselbe Varianzformel zu stecken
+        ergibt eine negative Rohvarianz, die geklemmt zu „null Streuung" wird — also zu
+        MAXIMALER Sicherheit für die Wallets mit den WENIGSTEN Daten. Gemessen: 72 von 127.
+        Deshalb ein in sich geschlossenes Fenster."""
+        s = {"n": 40, "clvSumPP": 120.0, "wins": 25, "usd": 0}   # Alt-Bestand ohne Fenster
+        for clv in (2.0, -2.0, 4.0):
+            s["n"] += 1
+            s["clvSumPP"] = round(s["clvSumPP"] + clv, 2)
+            s["clvSqSum"] = round((s.get("clvSqSum") or 0.0) + clv * clv, 2)
+            s["clvFenN"] = (s.get("clvFenN") or 0) + 1
+            s["clvFenSum"] = round((s.get("clvFenSum") or 0.0) + clv, 2)
+        self.assertEqual(s["clvFenN"], 3)
+        self.assertLess(s["clvFenN"], s["n"])          # genau die Lage, die den Bug ausloeste
+        # Auf dem Fenster gerechnet ist die Varianz positiv — auf n gerechnet waere sie negativ.
+        f_mittel = s["clvFenSum"] / s["clvFenN"]
+        f_var = (s["clvSqSum"] - s["clvFenN"] * f_mittel ** 2) / (s["clvFenN"] - 1)
+        self.assertGreater(f_var, 0)
+        global_mittel = s["clvSumPP"] / s["n"]
+        self.assertLess(s["clvSqSum"] - s["n"] * global_mittel ** 2, 0)
 
     def test_quadratsumme_erlaubt_die_streuung(self):
         """Ohne sie kennt die Rangliste nur den Punktschätzer — und der ist kein Beleg."""

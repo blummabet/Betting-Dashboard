@@ -276,13 +276,20 @@ test('🔀 Flips: führende Seite gewechselt wird erkannt, stabile nicht', () =>
   const dom = new JSDOM('<!DOCTYPE html><body></body>', { url: 'https://example.com/', runScripts: 'outside-only' });
   const { window: w } = dom;
   w.eval(readFileSync(PW, 'utf8'));
-  const t = (m) => new Date(Date.UTC(2026, 6, 24, 12, m)).toISOString();
+  // 02.09.2026: relativ zu jetzt. _pwFlips misst seit dem Audit über dasselbe feste Fenster wie
+  // die Bewegung — vorher war die Basis arr[0], und „der Favorit ist gekippt" über 29 Stunden ist
+  // keine Neuigkeit, sondern die halbe Vorgeschichte des Marktes.
+  const t = (m) => new Date(Date.now() - (120 - m) * 60000).toISOString();
   const hist = {
     'k': [{ ts: t(0), p: { A: 0.6, B: 0.4 }, league: 'MLB' }, { ts: t(60), p: { A: 0.45, B: 0.55 }, league: 'MLB' }],
     'stable': [{ ts: t(0), p: { A: 0.6, B: 0.4 }, league: 'MLB' }, { ts: t(60), p: { A: 0.62, B: 0.38 }, league: 'MLB' }],
+    // ausserhalb des Fensters: gekippt, aber nicht mehr „gerade passiert"
+    'alt': [{ ts: new Date(Date.now() - 30 * 3600e3).toISOString(), p: { A: 0.7, B: 0.3 }, league: 'MLB' },
+            { ts: new Date(Date.now() - 29 * 3600e3).toISOString(), p: { A: 0.3, B: 0.7 }, league: 'MLB' }],
   };
   const f = w._pwFlips(hist);
-  assert.equal(f.length, 1); assert.equal(f[0].from, 'A'); assert.equal(f[0].to, 'B');
+  assert.equal(f.length, 1, 'nur der frische Flip'); assert.equal(f[0].from, 'A'); assert.equal(f[0].to, 'B');
+  assert.equal(f[0].key, 'k');
 });
 
 test('🆕 Feed rendert Einstiege (🔥 scharf) + Favoriten-Flips', async () => {
@@ -292,7 +299,8 @@ test('🆕 Feed rendert Einstiege (🔥 scharf) + Favoriten-Flips', async () => 
     'mls_poly_wallets.json': { topPositionsAll: [], matches: {}, updatedAt: new Date().toISOString() },
     'poly_money_broad.json': { n: 0 },
     'poly_wallet_track.json': { open: { 's|k1|A': { wallet: '0xSHARP', key: 'k1', side: 'A', league: 'MLB', firstPrice: 0.4, usd: 9000, firstTs: new Date(now - 3 * 3.6e6).toISOString() } }, scores: { '0xSHARP': { n: 40, clvSumPP: 120, wins: 28 } } },
-    'poly_money_broad_history.json': { 'k2': [{ ts: '2026-07-24T12:00:00Z', p: { X: 0.6, Y: 0.4 }, league: 'NBA' }, { ts: '2026-07-24T13:00:00Z', p: { X: 0.4, Y: 0.6 }, league: 'NBA' }] },
+    // 02.09.2026: relativ zu jetzt — _pwFlips schaut nur noch ins feste Fenster.
+    'poly_money_broad_history.json': { 'k2': [{ ts: new Date(now - 2 * 3.6e6).toISOString(), p: { X: 0.6, Y: 0.4 }, league: 'NBA' }, { ts: new Date(now - 1 * 3.6e6).toISOString(), p: { X: 0.4, Y: 0.6 }, league: 'NBA' }] },
   };
   const dom = new JSDOM('<!DOCTYPE html><body><div id="polyWalletsPanel"></div></body>',
     { url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
@@ -355,33 +363,48 @@ test('③ Shortlist leer → „kein Signal ist auch ein Ergebnis" (nicht wetten
 
 // 25.07.2026 (Lucas ① Momentum): „was bewegt sich gerade" — stärkster Poly-Preis-Move je Markt,
 // Steam (zieht weiter) vs Reversal (dreht), aus der globalen Preis-Zeitreihe.
-test('Momentum (①): stärkster Move je Markt, Steam vs Reversal, nach Größe sortiert', () => {
+test('Momentum (①): Tempo statt Gesamt-Move, Trend statt Ein-Tick, „zu kurz" wenn zu kurz', () => {
+  // 02.09.2026, Lucas-Audit. Dieser Test trug den alten Vertrag: Basis war der ÄLTESTE Snapshot
+  // (Fenster 0,1h–29,2h, trotzdem gegeneinander sortiert), und „Steam vs dreht" kam aus EINEM
+  // Tick — gemessen waren 65% dieser Ticks exakt 0,00pp. Jetzt: festes 6h-Fenster, Sortierung
+  // nach pp/h, Richtung aus der Steigung über den jüngeren Teil, und unter vier Punkten sagt
+  // die Spalte „zu kurz" statt zu raten.
   const dom = new JSDOM('<!DOCTYPE html><body></body>', { url: 'https://example.com/', runScripts: 'outside-only' });
   const { window: w } = dom;
   w.eval(readFileSync(PW, 'utf8'));
-  // 27.07.2026: relativ zu jetzt — der Momentum-Anpfiff-Filter (htk) verwirft sonst fixe
-  // Vergangenheits-Timestamps. Letzter Snapshot ~jetzt, htk positiv → Anpfiff in Zukunft → bleibt.
-  const _base = Date.now() - 60 * 60000;
+  const _base = Date.now() - 120 * 60000;
   const t = (min) => new Date(_base + min * 60000).toISOString();
   const hist = {
-    'mlb-a-b': [
-      { ts: t(0),  p: { Braves: 0.50, Padres: 0.50 }, v: 200000, htk: 3,   league: 'MLB' },
-      { ts: t(30), p: { Braves: 0.54, Padres: 0.46 }, v: 210000, htk: 2.5, league: 'MLB' },
-      { ts: t(60), p: { Braves: 0.58, Padres: 0.42 }, v: 220000, htk: 2,   league: 'MLB' }],   // +8pp, letzter Schritt zieht weiter → Steam
-    'atp-x-y': [
-      { ts: t(0),  p: { Alcaraz: 0.60 }, v: 80000, htk: 4,   league: 'TENNIS' },
-      { ts: t(30), p: { Alcaraz: 0.66 }, v: 85000, htk: 3.5, league: 'TENNIS' },
-      { ts: t(60), p: { Alcaraz: 0.63 }, v: 86000, htk: 3,   league: 'TENNIS' }],              // +3pp gesamt, letzter Schritt runter → dreht
-    'flat-x': [
-      { ts: t(0),  p: { A: 0.50 },    v: 90000, league: 'MLB' },
-      { ts: t(30), p: { A: 0.5005 },  v: 90000, league: 'MLB' }],                              // <1pp → Rauschen, raus
+    'mlb-a-b': [   // stetig hoch, +8pp über 2h → Steam
+      { ts: t(0),   p: { Braves: 0.50, Padres: 0.50 }, v: 200000, htk: 4,   league: 'MLB' },
+      { ts: t(40),  p: { Braves: 0.52, Padres: 0.48 }, v: 205000, htk: 3.3, league: 'MLB' },
+      { ts: t(80),  p: { Braves: 0.55, Padres: 0.45 }, v: 210000, htk: 2.6, league: 'MLB' },
+      { ts: t(120), p: { Braves: 0.58, Padres: 0.42 }, v: 220000, htk: 2,   league: 'MLB' }],
+    'atp-x-y': [   // hoch, dann zurück: Gesamt +4pp, Schwanz fällt → dreht
+      { ts: t(0),   p: { Alcaraz: 0.50 }, v: 80000, htk: 5,   league: 'TENNIS' },
+      { ts: t(40),  p: { Alcaraz: 0.60 }, v: 82000, htk: 4.3, league: 'TENNIS' },
+      { ts: t(80),  p: { Alcaraz: 0.58 }, v: 85000, htk: 3.6, league: 'TENNIS' },
+      { ts: t(120), p: { Alcaraz: 0.54 }, v: 86000, htk: 3,   league: 'TENNIS' }],
+    'kurz-x': [    // nur zwei Punkte, aber deutlicher Move → Zeile bleibt, Richtung nicht
+      { ts: t(60),  p: { A: 0.40 }, v: 90000, htk: 3, league: 'MLB' },
+      { ts: t(120), p: { A: 0.47 }, v: 90000, htk: 2, league: 'MLB' }],
+    'flat-x': [    // unter der Rauschkante → raus
+      { ts: t(60),  p: { A: 0.50 },   v: 90000, htk: 3, league: 'MLB' },
+      { ts: t(120), p: { A: 0.505 },  v: 90000, htk: 2, league: 'MLB' }],
+    'alt-x': [     // ausserhalb des 6h-Fensters → raus, KEIN Rückfall auf arr[0]
+      { ts: new Date(Date.now() - 30 * 3600e3).toISOString(), p: { A: 0.10 }, v: 99000, htk: 26, league: 'MLB' },
+      { ts: new Date(Date.now() - 29 * 3600e3).toISOString(), p: { A: 0.60 }, v: 99000, htk: 25, league: 'MLB' }],
   };
   const h = w._pwMomentum(hist);
   assert.match(h, /Was sich gerade bewegt/);
-  assert.match(h, /Braves/); assert.match(h, /\+8\.0pp/); assert.match(h, /▲ Steam/);
-  assert.match(h, /▼ dreht/, 'Tennis-Reversal muss als „dreht" markiert sein');
-  assert.ok(!/flat-x/.test(h), 'unter 1pp Bewegung = Rauschen, raus');
-  assert.ok(h.indexOf('Braves') < h.indexOf('Alcaraz'), 'nach |Move| sortiert (8pp vor 3pp)');
+  assert.match(h, /Braves/);
+  assert.match(h, /\+8\.0pp/, 'der Gesamt-Move steht weiter da');
+  assert.match(h, /▲ Steam/, 'stetiger Anstieg über vier Punkte = Steam');
+  assert.match(h, /▼ dreht/, 'Anstieg mit fallendem Schwanz = dreht');
+  assert.match(h, /zu kurz/, 'zwei Punkte tragen keine Richtung');
+  assert.ok(!/flat-x/.test(h), 'unter der Rauschkante = raus');
+  assert.ok(!/alt-x/.test(h), 'ausserhalb des Fensters darf NICHT über arr[0] zurückkommen');
+  assert.ok(h.indexOf('Braves') < h.indexOf('Alcaraz'), 'nach Tempo sortiert (4 pp/h vor 2 pp/h)');
 });
 
 test('Momentum leer → ehrlicher Sammel-Hinweis (füllt sich über Läufe)', () => {

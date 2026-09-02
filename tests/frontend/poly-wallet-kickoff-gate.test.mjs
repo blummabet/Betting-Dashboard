@@ -56,7 +56,9 @@ test('_pwGlobalWhaleLeaderboard: Einsätze fertiger Spiele zählen nicht mehr mi
 
 test('_pwFlips: Favorit-Flip auf fertigem Spiel wird nicht als „neu" gezeigt', () => {
   const w = boot();
-  const t0 = new Date(Date.now() - 6 * 3600e3).toISOString();
+  // 02.09.2026: 5h statt exakt 6h — _pwFlips schaut seit dem Audit in ein 6h-Fenster, und
+  // ein Zeitstempel genau auf der Kante fällt je nach Millisekunde mal rein, mal raus.
+  const t0 = new Date(Date.now() - 5 * 3600e3).toISOString();
   const tN = new Date(Date.now() - 30 * 60e3).toISOString();
   w._th = {
     'mlb-doneflip-2026-08-02': [   // Führung A→B, aber Anpfiff war vor ~8h (tN + htk -8)

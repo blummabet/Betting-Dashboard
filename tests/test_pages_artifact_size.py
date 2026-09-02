@@ -25,7 +25,13 @@ WF = os.path.join(REPO, ".github", "workflows", "deploy-pages.yml")
 
 # Budget fuer das Pages-Artefakt. 198 MB waren zu viel; nach dem Fix sind es ~150 MB.
 # 170 laesst Luft fuers Wachsen der Daten, schlaegt aber an, bevor der Deploy wieder kippt.
-ARTEFAKT_BUDGET_MB = 170
+#
+# 02.09.2026 (Lucas-Audit): gemessen 169,3 MB — 99,6% des Budgets. Der Deckel hat also nur noch
+# knapp gehalten, ohne dass es jemandem aufgefallen waere; ein Test, der bei 99,6% gruen ist,
+# warnt nicht mehr, er beruhigt. Deshalb fliegen jetzt zusaetzlich die groessten Wurzel-JSONs
+# raus, die keine HTML/JS-Datei fetcht (~24 MB), und das Budget geht auf 150 runter, damit der
+# gewonnene Platz nicht sofort wieder stillschweigend zuwaechst.
+ARTEFAKT_BUDGET_MB = 150
 
 
 def _tracked():
@@ -34,11 +40,21 @@ def _tracked():
 
 
 def _cleanup_muster():
-    """Die Pfade, die der Ballast-Schritt loescht — direkt aus dem Workflow gelesen."""
+    """Die Ordner-Muster, die der Ballast-Schritt loescht — direkt aus dem Workflow gelesen."""
     with open(WF, encoding="utf-8") as f:
         src = f.read()
     m = re.search(r"rm -rf (.+?)\|\| true", src, re.S)
     assert m, "Ballast-Schritt (rm -rf …) nicht gefunden"
+    return [t for t in m.group(1).replace("\\\n", " ").split() if t not in ("||", "true")]
+
+
+def _geloeschte_dateien():
+    """Die EINZELNEN Dateien, die der Ballast-Schritt loescht (rm -f, seit 02.09.2026)."""
+    with open(WF, encoding="utf-8") as f:
+        src = f.read()
+    m = re.search(r"rm -f (.+?)\|\| true", src, re.S)
+    if not m:
+        return []
     return [t for t in m.group(1).replace("\\\n", " ").split() if t not in ("||", "true")]
 
 
@@ -56,6 +72,12 @@ def _groessen_nach_cleanup():
             continue
         try:
             gr[top] += os.path.getsize(os.path.join(REPO, f))
+        except OSError:
+            pass
+    # Einzeln geloeschte Wurzel-Dateien (rm -f) abziehen.
+    for f in _geloeschte_dateien():
+        try:
+            gr["(Wurzel)"] -= os.path.getsize(os.path.join(REPO, f))
         except OSError:
             pass
     return gr
@@ -88,6 +110,27 @@ class TestNichtsNoetigesWirdGeloescht:
     @pytest.mark.parametrize("noetig", ["matches", "icons", "(Wurzel)"])
     def test_wichtige_pfade_ueberleben(self, noetig):
         assert noetig in _groessen_nach_cleanup(), f"{noetig} fehlt im Artefakt"
+
+    def test_geloeschte_einzeldateien_werden_von_keiner_seite_gefetcht(self):
+        """02.09.2026: dieselbe Gegenprobe fuer die per `rm -f` entfernten Wurzel-JSONs.
+
+        Die Dateinamen stehen im Frontend ausnahmslos als Literale (keine dynamisch gebauten
+        Namen), also findet eine Textsuche sie zuverlaessig. Taucht einer wieder auf, weil jemand
+        die Datei spaeter doch fetcht, faellt dieser Test — und nicht die Live-Seite."""
+        dateien = _geloeschte_dateien()
+        assert dateien, "Der rm -f-Schritt ist verschwunden — dann waechst das Artefakt wieder"
+        quellen = [f for f in _tracked()
+                   if f.endswith((".js", ".html")) and not f.startswith("tests/")]
+        text = ""
+        for f in quellen:
+            try:
+                with open(os.path.join(REPO, f), encoding="utf-8", errors="replace") as fh:
+                    text += fh.read()
+            except OSError:
+                pass
+        referenziert = [d for d in dateien if d in text]
+        assert not referenziert, (
+            f"Der Deploy loescht Dateien, die das Frontend laedt: {referenziert}")
 
     def test_geloeschte_ordner_werden_von_keiner_seite_gefetcht(self):
         """Was rausfliegt, darf in keiner HTML/JS-Datei referenziert sein."""

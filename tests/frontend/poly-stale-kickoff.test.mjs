@@ -31,8 +31,15 @@ test('_pwRealHtk rekonstruiert echten Rest bis Anpfiff aus capturedAt', () => {
   assert.equal(w._pwRealHtk({}), null, 'ohne htk → null');
 });
 
-// Preis-Move +10pp auf Seite A, letzter Schritt zieht weiter → Steam ▲ (liefert das Shortlist-Signal)
-const steamHist = () => [{ p: { A: 0.40, B: 0.60 } }, { p: { A: 0.45, B: 0.55 } }, { p: { A: 0.50, B: 0.50 } }];
+// Preis-Move +10pp auf Seite A, Steigung zieht weiter → Steam ▲ (liefert das Shortlist-Signal)
+// 02.09.2026 (Lucas-Audit): die Snapshots brauchen jetzt `ts`. _pwMoveFor misst seit dem Audit
+// über ein festes 6h-Fenster statt gegen den ältesten Punkt und liest die Richtung aus der
+// Steigung über mindestens vier Punkte — nicht mehr aus einem einzelnen Tick. Ein Snapshot ohne
+// Zeitstempel fällt damit aus dem Fenster, und das ist richtig so: ohne Zeit kein Tempo.
+const steamHist = () => [0.40, 0.44, 0.47, 0.50].map((a, i) => ({
+  ts: new Date(Date.now() - (180 - i * 45) * 60000).toISOString(),
+  p: { A: a, B: 1 - a },
+}));
 const mkt = (capMsAgo, htk) => ({
   league: 'TENNIS', shares: { A: 60000, B: 40000 }, prices: { A: 0.5, B: 0.5 },
   totalUsd: 133000, hoursToKickoff: htk, capturedAt: iso(capMsAgo),

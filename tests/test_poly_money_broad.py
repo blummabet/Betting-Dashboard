@@ -65,23 +65,26 @@ class TestByLeague:
                 "prices": {"home": 0.5, "draw": 0.25, "away": 0.25}, "totalUsd": 30000,
                 "league": league} for i in range(n)}
 
-    def test_liga_breakdown_ab_5(self):
-        frozen = self._many("NBA", 6, "home")
+    def test_liga_breakdown_ab_der_mindeststichprobe(self):
+        # 02.09.2026: die Schwelle stand auf 5 und steht jetzt auf URTEIL_MIN_N_LIGA — seit der
+        # Güte-Schranke bleiben je Liga so wenige wertbare Märkte übrig, dass fünf davon kein
+        # Urteil tragen.
+        frozen = self._many("NBA", PMA.URTEIL_MIN_N_LIGA, "home")
         r = PMA.evaluate(frozen, {k: "home" for k in frozen}, min_odds=1.2)
         nba = [l for l in r["byLeague"] if l["league"] == "NBA"]
-        assert nba and nba[0]["n"] == 6
+        assert nba and nba[0]["n"] == PMA.URTEIL_MIN_N_LIGA
 
     def test_zu_duenne_liga_kein_urteil(self):
-        frozen = self._many("NHL", 3, "home")   # < 5
+        frozen = self._many("NHL", PMA.URTEIL_MIN_N_LIGA - 1, "home")
         r = PMA.evaluate(frozen, {k: "home" for k in frozen}, min_odds=1.2)
         assert all(l["league"] != "NHL" for l in r["byLeague"])
 
     def test_sortiert_wo_geld_am_meisten_schlaegt(self):
         # Liga A: Geld trifft (schärfer); Liga B: Geld daneben
         fa = {f"A-{i}": {"shares": {"home": 0.7, "draw": 0.15, "away": 0.15},
-              "prices": {"home": 0.5, "draw": 0.25, "away": 0.25}, "totalUsd": 30000, "league": "A"} for i in range(6)}
+              "prices": {"home": 0.5, "draw": 0.25, "away": 0.25}, "totalUsd": 30000, "league": "A"} for i in range(PMA.URTEIL_MIN_N_LIGA)}
         fb = {f"B-{i}": {"shares": {"home": 0.2, "draw": 0.2, "away": 0.6},
-              "prices": {"home": 0.5, "draw": 0.25, "away": 0.25}, "totalUsd": 30000, "league": "B"} for i in range(6)}
+              "prices": {"home": 0.5, "draw": 0.25, "away": 0.25}, "totalUsd": 30000, "league": "B"} for i in range(PMA.URTEIL_MIN_N_LIGA)}
         frozen = {**fa, **fb}
         res = {**{k: "home" for k in fa}, **{k: "home" for k in fb}}
         r = PMA.evaluate(frozen, res, min_odds=1.2)
