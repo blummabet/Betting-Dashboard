@@ -2692,45 +2692,72 @@ ANKER_TOT_WARN = 1     # ab so vielen nie treffenden Karten-Eintraegen wird geme
 GRUEN_TOT_H = 2.5     # so lange darf der Job laufen, ohne dass Daten ankommen
 
 
-@integrity_check
-def check_betfair_liefert(ctx):
-    """Läuft der Betfair-Job UND kommen auch Daten an?
+# 02.09.2026, abends — DERSELBE ZUSTAND ZUM ZWEITEN MAL, diesmal bei Poly: `health/poly-global.json`
+# meldete einen Lauf um 18:26 (ok, keine Fehler), `poly_money_broad.json` stand auf 11:24. Sieben
+# Stunden frischer Job auf alten Daten. Beim Betfair-Ausfall am Morgen war es der `git add`; beim
+# Poly-Workflow nutzt der Commit-Schritt schon die sichere Schleifenform, es ist also eine ANDERE
+# Ursache — aber dieselbe Signatur. Deshalb ist der Waechter jetzt allgemein und deckt beide ab.
+# ⭐ Ein Fehlerbild, das zweimal in zwoelf Stunden auftritt, verdient keinen zweiten Spezialfall,
+# sondern eine Verallgemeinerung.
+LIEFERT = (
+    ("betfair", "health/betfair.json", "Betfair",
+     ("betfair_prices.json", "betfair_consensus.json", "betfair_track_record.json", "killer.json")),
+    ("poly_global", "health/poly-global.json", "Poly-Global-Scan",
+     ("poly_money_broad.json", "poly_money_broad_close.json", "poly_wallet_track.json")),
+)
 
-    Nicht „ist die Datei alt" — sondern „der Job meldet sich frisch, die Daten aber nicht". Das ist
-    der Zustand, den ein grüner Workflow erzeugt, wenn der Commit nichts staged."""
-    health = _lazy("health/betfair.json")
-    if "health/betfair.json" in _LAZY_FAILED:
-        return _chk("betfair_liefert", "Betfair-Job liefert auch Daten", "warn",
-                    ["❔ health/betfair.json nicht lesbar — ob der Job liefert, ist UNBEKANNT."], "")
+
+def _liefert_check(slug, health_datei, label, dateien, ctx):
+    """Läuft der Job UND kommen auch Daten an? REIN bis auf _lazy.
+
+    Nicht „ist die Datei alt" — sondern „der Job meldet sich frisch, die Daten aber nicht". Ein
+    alter Job mit alten Daten ist ein Job-Ausfall und gehört dem Lauf-Wächter; ein FRISCHER Job mit
+    alten Daten ist ein stiller Schreib- oder Commit-Fehler und wäre sonst unsichtbar."""
+    cid, titel = slug + "_liefert", label + "-Job liefert auch Daten"
+    health = _lazy(health_datei)
+    if health_datei in _LAZY_FAILED:
+        return _chk(cid, titel, "warn",
+                    [f"❔ {health_datei} nicht lesbar — ob der Job liefert, ist UNBEKANNT."], "")
     if not isinstance(health, dict) or not health.get("updatedAt"):
-        return _chk("betfair_liefert", "Betfair-Job liefert auch Daten", "warn",
-                    ["❔ Keine Lauf-Gesundheit für Betfair — nicht prüfbar."], "")
+        return _chk(cid, titel, "warn", [f"❔ Keine Lauf-Gesundheit für {label} — nicht prüfbar."], "")
     now = ctx.now if getattr(ctx, "now", None) else datetime.now(timezone.utc)
     lauf_h = _alter_h(health.get("updatedAt"), now)
-    daten = {}
-    for f in ("betfair_prices.json", "betfair_consensus.json", "betfair_track_record.json",
-              "killer.json"):
+    bekannt = {}
+    for f in dateien:
         d = _lazy(f)
-        ts = (d or {}).get("generatedAt") or ((d or {}).get("_meta") or {}).get("generatedAt") \
-            if isinstance(d, dict) else None
-        daten[f] = _alter_h(ts, now)
-    bekannt = {f: h for f, h in daten.items() if h is not None}
+        if not isinstance(d, dict):
+            continue
+        ts = d.get("generatedAt") or d.get("updatedAt") or (d.get("_meta") or {}).get("generatedAt")
+        h = _alter_h(ts, now)
+        if h is not None:
+            bekannt[f] = h
     if lauf_h is None or not bekannt:
-        return _chk("betfair_liefert", "Betfair-Job liefert auch Daten", "warn",
-                    ["❔ Lauf- oder Datenzeitstempel nicht lesbar — nicht prüfbar."], "")
+        return _chk(cid, titel, "warn", ["❔ Lauf- oder Datenzeitstempel nicht lesbar — nicht prüfbar."], "")
     juengste = min(bekannt.values())
     fails = []
     if lauf_h <= GRUEN_TOT_H and juengste > GRUEN_TOT_H:
-        alt = ", ".join(f"{f.split('.')[0]} {h:.1f}h" for f, h in sorted(bekannt.items(),
-                                                                        key=lambda x: -x[1])[:3])
-        fails.append(f"Der Job lief vor {lauf_h:.1f}h, aber die jüngste Betfair-Datei ist "
-                     f"{juengste:.1f}h alt ({alt}). Der Workflow läuft und liefert NICHTS — "
-                     f"typischerweise scheitert `git add` an einem fehlenden Pfad und staged dann "
-                     f"gar nichts (02.09.2026, sechs Stunden lang, bei grünem Lauf).")
-    return _chk("betfair_liefert", "Betfair-Job liefert auch Daten", "error", fails,
+        alt = ", ".join(f"{f.split('.')[0]} {h:.1f}h" for f, h in
+                        sorted(bekannt.items(), key=lambda x: -x[1])[:3])
+        fails.append(f"Der Job lief vor {lauf_h:.1f}h, aber die jüngste {label}-Datei ist "
+                     f"{juengste:.1f}h alt ({alt}). Der Workflow läuft und liefert NICHTS — am "
+                     f"02.09.2026 zweimal passiert: morgens scheiterte `git add` an einem fehlenden "
+                     f"Pfad (staged dann gar nichts), abends beim Poly-Scan aus anderer Ursache.")
+    return _chk(cid, titel, "error", fails,
                 f"Job vor {lauf_h:.1f}h · jüngste Daten vor {juengste:.1f}h. "
                 f"Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); "
-                f"ein FRISCHER Job mit alten Daten ist ein stiller Commit-Fehler.")
+                f"ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler.")
+
+
+@integrity_check
+def check_betfair_liefert(ctx):
+    """Betfair: läuft der Job UND kommen Daten an? (s. _liefert_check)"""
+    return _liefert_check(*LIEFERT[0], ctx)
+
+
+@integrity_check
+def check_poly_liefert(ctx):
+    """Poly-Global-Scan: läuft der Job UND kommen Daten an? (s. _liefert_check)"""
+    return _liefert_check(*LIEFERT[1], ctx)
 
 
 @integrity_check

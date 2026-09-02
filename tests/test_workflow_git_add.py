@@ -110,6 +110,15 @@ class TestGruenAberTot(unittest.TestCase):
             WDI._lazy = echt
             WDI._LAZY_FAILED.clear(); WDI._LAZY_FAILED.update(failed)
 
+    def test_der_waechter_deckt_beide_jobs_ab(self):
+        """02.09.2026 zweimal in zwoelf Stunden: morgens Betfair (git add), abends Poly (andere
+        Ursache, gleiche Signatur). Ein Fehlerbild, das sich wiederholt, verdient keine zweite
+        Sonderloesung — deshalb eine Tabelle statt zwei kopierter Checks."""
+        import wm_data_integrity as WDI
+        ids = {c["id"] for c in WDI.run_checks({"groups": {}}, {}, {}, {})}
+        self.assertIn("betfair_liefert", ids)
+        self.assertIn("poly_global_liefert", ids)
+
     def test_frischer_job_mit_alten_daten_schlaegt_an(self):
         c = self._lauf(lauf_h=0.2, daten_h=6.0)
         self.assertFalse(c["ok"])
