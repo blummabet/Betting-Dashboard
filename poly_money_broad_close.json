@@ -139118,50 +139118,6 @@
   },
   "resolvedAt": "2026-09-01T22:24:14.985005+00:00"
  },
- "wta-bartunk-sherif-2026-08-30": {
-  "shares": {
-   "Nikola Bartunkova": 15363.509407950001,
-   "Mayar Sherif": 3258.921546300001
-  },
-  "prices": {
-   "Nikola Bartunkova": 0.825,
-   "Mayar Sherif": 0.175
-  },
-  "league": "TENNIS",
-  "sport": "Tennis",
-  "totalUsd": 18740,
-  "whales": [
-   {
-    "wallet": "0x49e0265d1a3636870df298e2ef5e681e246e9af1",
-    "side": "Nikola Bartunkova",
-    "usd": 9980,
-    "avgPrice": 0.81
-   },
-   {
-    "wallet": "0xc3c3b3ef304ddbea39fa2246e683a71da5d0eec8",
-    "side": "Nikola Bartunkova",
-    "usd": 2887
-   },
-   {
-    "wallet": "0x9b11866433281ade9f2811dbde8acdefc45f5375",
-    "side": "Nikola Bartunkova",
-    "usd": 1430,
-    "avgPrice": 0.8098
-   },
-   {
-    "wallet": "0xbc43c8bfbc4d77c2fc9011adad38ba43b88996d3",
-    "side": "Mayar Sherif",
-    "usd": 1154,
-    "avgPrice": 0.2
-   }
-  ],
-  "hoursToKickoff": 0.16,
-  "capturedAt": "2026-09-01T18:55:05.828379+00:00",
-  "tokens": {
-   "Nikola Bartunkova": "70893015637149664806224907996220750215013470260480673888270620578594268178798",
-   "Mayar Sherif": "35408780033507035706379520404189908474348990855484490448244511499848887535265"
-  }
- },
  "elc-sto-nor-2026-09-01": {
   "shares": {
    "Stoke City FC": 16123.411953,
@@ -142105,7 +142061,13 @@
   "tokens": {
    "Zeynep Sonmez": "102082869179866301120539678194989751657542439206664045912874914248234504296985",
    "Coco Gauff": "43043614376390384123608836671055908470451747834861595665997878907631103478304"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Zeynep Sonmez": 0.0,
+   "Coco Gauff": 1.0
+  },
+  "resolvedAt": "2026-09-02T01:25:26.582789+00:00"
  },
  "bra2-lon-juv-2026-09-01": {
   "shares": {
@@ -143162,7 +143124,13 @@
   "tokens": {
    "Liam McCracken": "23214556935889077415809063648575971319409037700985559325224607743672903728650",
    "Silvestre Sanchez": "23969133216105907092980947229544118700560536134373625252302546850688181854117"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Liam McCracken": 0.0,
+   "Silvestre Sanchez": 1.0
+  },
+  "resolvedAt": "2026-09-02T01:25:26.582789+00:00"
  },
  "col2-bar-boc-2026-09-01": {
   "shares": {
@@ -143351,8 +143319,8 @@
  },
  "mlb-nyy-laa-2026-09-01": {
   "shares": {
-   "New York Yankees": 18871.480689375006,
-   "Los Angeles Angels": 11322.889426125003
+   "New York Yankees": 20641.138931874997,
+   "Los Angeles Angels": 12384.684371625
   },
   "prices": {
    "New York Yankees": 0.625,
@@ -143360,12 +143328,12 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 35394,
+  "totalUsd": 38461,
   "whales": [
    {
     "wallet": "0xc430e5b17128df7ce78d69fa28bc7de038641ebf",
     "side": "Los Angeles Angels",
-    "usd": 7051,
+    "usd": 8093,
     "avgPrice": 0.3699
    },
    {
@@ -143387,21 +143355,114 @@
     "avgPrice": 0.64
    }
   ],
-  "hoursToKickoff": 0.78,
-  "capturedAt": "2026-09-02T00:57:45.103226+00:00",
+  "hoursToKickoff": 0.29,
+  "capturedAt": "2026-09-02T01:25:26.582789+00:00",
   "tokens": {
    "New York Yankees": "2424251464246946387338690366050315503710477147803659239775803845314388150971",
    "Los Angeles Angels": "58083394672806553018109307466026297177298546539672545107859319643084061159416"
-  }
+  },
+  "book": {
+   "side": "New York Yankees",
+   "bid": 0.62,
+   "ask": 0.63,
+   "spreadC": 1.0,
+   "spreadPct": 1.59,
+   "bids": [
+    [
+     0.62,
+     62544
+    ],
+    [
+     0.61,
+     120120
+    ],
+    [
+     0.6,
+     50875
+    ],
+    [
+     0.59,
+     23768
+    ],
+    [
+     0.58,
+     3781
+    ],
+    [
+     0.54,
+     1880
+    ]
+   ],
+   "asks": [
+    [
+     0.63,
+     160350
+    ],
+    [
+     0.64,
+     121315
+    ],
+    [
+     0.65,
+     40376
+    ],
+    [
+     0.66,
+     19183
+    ],
+    [
+     0.67,
+     158
+    ],
+    [
+     0.68,
+     1880
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xae817ddfed1c3b37ad23b5e9397cd270ae94f04b",
+    "action": "BUY",
+    "side": "New York Yankees",
+    "price": 0.63,
+    "usd": 641,
+    "ts": 1788311565
+   },
+   {
+    "wallet": "0x7b3193adf8249df2284c18a6fdbfe931c3fc3e10",
+    "action": "BUY",
+    "side": "New York Yankees",
+    "price": 0.63,
+    "usd": 400,
+    "ts": 1788310960
+   },
+   {
+    "wallet": "0xfb20c7b499b536121fc3cbe8aa6256cbf2ca3b5c",
+    "action": "BUY",
+    "side": "New York Yankees",
+    "price": 0.63,
+    "usd": 500,
+    "ts": 1788309787
+   },
+   {
+    "wallet": "0x70dbec635412c1568b36174b039f621bcc20f73f",
+    "action": "BUY",
+    "side": "Los Angeles Angels",
+    "price": 0.38,
+    "usd": 300,
+    "ts": 1788302139
+   }
+  ]
  },
  "mlb-phi-ari-2026-09-01": {
   "shares": {
-   "Over": 16360.86301051,
-   "Under": 17372.875135405004
+   "Over": 29738.815221554996,
+   "Under": 30339.599367444996
   },
   "prices": {
-   "Over": 0.485,
-   "Under": 0.515
+   "Over": 0.495,
+   "Under": 0.505
   },
   "league": "MLB",
   "sport": "US-Sport",
@@ -143410,34 +143471,135 @@
    {
     "wallet": "0x684baa57c338c2549aec0aa3f034f695d72a8409",
     "side": "Over",
-    "usd": 14550,
+    "usd": 14850,
     "avgPrice": 0.5099
+   },
+   {
+    "wallet": "0xc8075693f48668a264b9fa313b47f52712fcc12b",
+    "side": "Under",
+    "usd": 13350,
+    "avgPrice": 0.5
+   },
+   {
+    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
+    "side": "Over",
+    "usd": 12863,
+    "avgPrice": 0.4997
    },
    {
     "wallet": "0x09b540739cfa17ba6b61f4351000583cd6397e72",
     "side": "Under",
-    "usd": 11274,
+    "usd": 11055,
     "avgPrice": 0.4899
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "side": "Under",
-    "usd": 5514,
-    "avgPrice": 0.49
-   },
-   {
-    "wallet": "0x4dd24f21b6c8adc8a059dca1a0346a3aa99214c2",
-    "side": "Over",
-    "usd": 582,
-    "avgPrice": 0.51
    }
   ],
-  "hoursToKickoff": 0.82,
-  "capturedAt": "2026-09-02T00:57:45.103226+00:00",
+  "hoursToKickoff": 0.32,
+  "capturedAt": "2026-09-02T01:25:26.582789+00:00",
   "tokens": {
    "Over": "21547618652635760935268284836498008029963174758150454167019724439267807315763",
    "Under": "39089082584239079240229112393202649665741354161161685715765815091705646675814"
-  }
+  },
+  "book": {
+   "side": "Under",
+   "bid": 0.5,
+   "ask": 0.51,
+   "spreadC": 1.0,
+   "spreadPct": 1.96,
+   "bids": [
+    [
+     0.5,
+     82425
+    ],
+    [
+     0.49,
+     31632
+    ],
+    [
+     0.48,
+     29413
+    ],
+    [
+     0.47,
+     3008
+    ],
+    [
+     0.46,
+     705
+    ],
+    [
+     0.45,
+     1550
+    ]
+   ],
+   "asks": [
+    [
+     0.51,
+     4384
+    ],
+    [
+     0.52,
+     128286
+    ],
+    [
+     0.53,
+     48980
+    ],
+    [
+     0.54,
+     17938
+    ],
+    [
+     0.55,
+     955
+    ],
+    [
+     0.56,
+     755
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.5,
+    "usd": 6288,
+    "ts": 1788312021
+   },
+   {
+    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.5,
+    "usd": 6742,
+    "ts": 1788312018
+   },
+   {
+    "wallet": "0x09b540739cfa17ba6b61f4351000583cd6397e72",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.49,
+    "usd": 10727,
+    "ts": 1788280425
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.49,
+    "usd": 2450,
+    "ts": 1788280384
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.49,
+    "usd": 2450,
+    "ts": 1788280317
+   }
+  ]
  },
  "wta-jovic-frech-2026-08-30": {
   "shares": {
@@ -143486,8 +143648,8 @@
  },
  "mlb-stl-lad-2026-09-01": {
   "shares": {
-   "St. Louis Cardinals": 21335.257022025005,
-   "Los Angeles Dodgers": 38764.03704415501
+   "St. Louis Cardinals": 21541.334997725004,
+   "Los Angeles Dodgers": 39138.465821295016
   },
   "prices": {
    "St. Louis Cardinals": 0.355,
@@ -143495,7 +143657,7 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 64465,
+  "totalUsd": 64811,
   "whales": [
    {
     "wallet": "0x31706006a0ef88b2b8f6d093efbc83b359fbc6a0",
@@ -143522,8 +143684,8 @@
     "avgPrice": 0.6199
    }
   ],
-  "hoursToKickoff": 1.32,
-  "capturedAt": "2026-09-02T00:57:45.103226+00:00",
+  "hoursToKickoff": 0.82,
+  "capturedAt": "2026-09-02T01:25:26.582789+00:00",
   "tokens": {
    "St. Louis Cardinals": "33893351491475976027382434393348435361629878415675760152193624228134036503467",
    "Los Angeles Dodgers": "43057366147971465861499232044357247038532051898999093287080044258426201729901"
@@ -143537,23 +143699,23 @@
    "bids": [
     [
      0.64,
-     193071
+     39685
     ],
     [
      0.63,
-     72773
+     100169
     ],
     [
      0.62,
-     57212
+     57039
     ],
     [
      0.61,
-     21934
+     22139
     ],
     [
      0.6,
-     1232
+     1124
     ],
     [
      0.59,
@@ -143563,23 +143725,23 @@
    "asks": [
     [
      0.65,
-     28844
+     58123
     ],
     [
      0.66,
-     125213
+     113895
     ],
     [
      0.67,
-     42095
+     39465
     ],
     [
      0.68,
-     7731
+     7682
     ],
     [
      0.69,
-     1353
+     1253
     ],
     [
      0.7,
@@ -143611,22 +143773,6 @@
     "price": 0.36,
     "usd": 9575,
     "ts": 1788283263
-   },
-   {
-    "wallet": "0xe922473e81dbd20e3fffd7b64b51f057a9b839b3",
-    "action": "BUY",
-    "side": "Los Angeles Dodgers",
-    "price": 0.65,
-    "usd": 600,
-    "ts": 1788280791
-   },
-   {
-    "wallet": "0x31706006a0ef88b2b8f6d093efbc83b359fbc6a0",
-    "action": "BUY",
-    "side": "Los Angeles Dodgers",
-    "price": 0.64,
-    "usd": 1017,
-    "ts": 1788279517
    }
   ]
  },
@@ -143719,6 +143865,51 @@
    "Fortaleza CEIF": "16029736853616177462377423995664925978593251270359511160642818117734469334116",
    "Draw (Fortaleza CEIF vs. Once Caldas)": "45143615358094039496827266980221965915974473558117340705188816869079657406382",
    "Once Caldas": "30034726211714601163825402141473974393601922877866066575064418982592795253623"
+  }
+ },
+ "itf-tam-purcel-2026-09-02": {
+  "shares": {
+   "Kristjan Tamm": 14694.196776930003,
+   "Max Purcell": 14991.04923707
+  },
+  "prices": {
+   "Kristjan Tamm": 0.495,
+   "Max Purcell": 0.505
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 16253,
+  "whales": [
+   {
+    "wallet": "0xf95b7145734ec1929104538c0c5c591d6d194b96",
+    "side": "Kristjan Tamm",
+    "usd": 14267,
+    "avgPrice": 0.465
+   },
+   {
+    "wallet": "0xe91171f655be1568e4c63f29663c0028649e3d4e",
+    "side": "Max Purcell",
+    "usd": 13744,
+    "avgPrice": 0.535
+   },
+   {
+    "wallet": "0x6b25c5c4d1e681d2203297803793ad8c732b7a69",
+    "side": "Max Purcell",
+    "usd": 484,
+    "avgPrice": 0.5339
+   },
+   {
+    "wallet": "0xfd3e6449d0c1e807501dcc17c0d9447201f35a7a",
+    "side": "Max Purcell",
+    "usd": 393,
+    "avgPrice": 0.5335
+   }
+  ],
+  "hoursToKickoff": 0.15,
+  "capturedAt": "2026-09-02T01:25:26.582789+00:00",
+  "tokens": {
+   "Kristjan Tamm": "43930326448394742423481062041961458060815227332949480748313767829277899123798",
+   "Max Purcell": "37718340482558394137939915470153349821219823650249338008348124242941593638001"
   }
  }
 }
