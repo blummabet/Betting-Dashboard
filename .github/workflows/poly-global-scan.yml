@@ -114,6 +114,13 @@ jobs:
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
           TELEGRAM_CHAT_ID:        ${{ secrets.TELEGRAM_CHAT_ID }}
 
+      # 02.09.2026 (Lucas): „Schaffst du die Polymarket pushes auch auszuwerten?" — direkt NACH
+      # dem Whale-Watch, damit ein soeben gesendeter Push im selben Lauf im Ledger landet und
+      # faellige Pushs gegen den Slug-Sieger abgerechnet werden.
+      - name: 🐋 Public-Whale-Pushs abrechnen (Slug → Trefferquote/ROI/CLV)
+        run: ${{ env.POLY_PYTHON }} poly_public_eval.py
+        continue-on-error: true
+
       - name: ⚖️ Cross-Sport-Edge-Alert (Poly vs Pinnacle, konvergierend)
         run: ${{ env.POLY_PYTHON }} poly_cross_sport_watch.py
         continue-on-error: true
@@ -159,6 +166,7 @@ jobs:
             poly_price_path.json \
             poly_resolutions.json poly_shortlist_track.json poly_status.json poly_football_tags.json \
             poly_direct_bets.json poly_whale_follow_track.json \
+            poly_whale_public_ledger.json poly_public_record.json \
             poly_cross_sport.json poly_cross_sport_history.json poly_cross_sport_seen.json \
             poly_whale_seen.json poly_whale_public_seen.json \
             shortlist_push_seen.json \

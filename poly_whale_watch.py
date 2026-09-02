@@ -116,6 +116,7 @@ def _is_confirmed_loser(s) -> bool:
     return SG.is_confirmed_loser(s)
 PUB_CHAT   = (os.environ.get("TELEGRAM_CHAT_ID") or "").strip()
 PUB_SEEN_FILE = BASE / "poly_whale_public_seen.json"
+PUB_LEDGER_FILE = BASE / "poly_whale_public_ledger.json"   # 02.09.2026 (Lucas): jeder Public-Push wird abgerechnet
 BROAD_FILE    = BASE / "poly_money_broad_close.json"
 SHORTLIST_FILE = BASE / "poly_shortlist_track.json"   # 25.08.2026: traegt blockedCats — die EINE Sperrliste
 
@@ -634,6 +635,62 @@ def build_public_card(pos: dict, scores: dict, restock: bool, broad: dict) -> st
     return "\n".join(lines)
 
 
+
+# ── Public-Ledger ──────────────────────────────────────────────────────────────
+# 02.09.2026 (Lucas: „Schaffst du irgendwie die Polymarket pushes auch auszuwerten die in diesen
+# Channel kommen?"). Bis heute hielt poly_whale_public_seen.json nur einen Dedup-Stempel
+# ({usd, ts}) — ohne Preis, ohne Seite als Feld, ohne Abrechnung. Rueckwirkend war deshalb bloss
+# eine Trefferquote rekonstruierbar, kein ROI. Ab jetzt gilt hier dieselbe Regel wie bei Betfair:
+# wer pusht, misst den Push. Der Ledger haelt den Preis FEST, zu dem ein Leser im Moment des
+# Pushs haette einsteigen koennen (lastPrice; sonst firstPrice) — nicht den guenstigeren
+# Whale-Einstieg, der oft Stunden aelter ist. poly_public_eval.py rechnet gegen den Slug-Sieger ab.
+PUB_LEDGER_KEEP = 800
+
+
+def _push_price(pos) -> float | None:
+    """Der fuer einen LESER im Moment des Pushs erreichbare Preis. lastPrice ist der aktuelle Stand
+    des Marktes, firstPrice der (aeltere, meist bessere) Einstieg der Wallet. Wir schreiben den
+    teureren, ehrlichen der beiden — sonst misst der Ledger einen Preis, den niemand bekam."""
+    for f in ("lastPrice", "firstPrice"):
+        try:
+            v = float(pos.get(f))
+        except (TypeError, ValueError):
+            continue
+        if 0.0 < v < 1.0:
+            return round(v, 4)
+    return None
+
+
+def _log_public_push(pkey, pos, scores, restock, ts) -> None:
+    """Einen gesendeten Public-Push festhalten. Ein Eintrag je posKey (wallet|key|side) — derselbe
+    Dedup-Schluessel wie poly_whale_public_seen.json, also kein Doppelzaehlen bei Aufstockung."""
+    led = _load(PUB_LEDGER_FILE, [])
+    if not isinstance(led, list):
+        led = []
+    if any(isinstance(e, dict) and e.get("k") == pkey for e in led):
+        return
+    rank = None
+    try:
+        rank = _sharp_rank_map(scores).get(pos.get("wallet"))
+    except Exception:
+        pass
+    led.append({
+        "k": pkey, "key": pos.get("key"), "side": pos.get("side"),
+        "wallet": pos.get("wallet"), "league": pos.get("league"),
+        "cat": sport_category(pos.get("league")),
+        "usd": round(float(pos.get("usd") or 0), 2),
+        "pushPrice": _push_price(pos),
+        "whaleEntry": (round(float(pos["firstPrice"]), 4)
+                       if isinstance(pos.get("firstPrice"), (int, float)) else None),
+        "walletRank": rank, "restock": bool(restock),
+        "sentAt": ts, "status": "pending",
+    })
+    try:
+        _save(PUB_LEDGER_FILE, led[-PUB_LEDGER_KEEP:])
+    except Exception as e:
+        print("Public-Ledger-Schreibfehler:", e)
+
+
 def _tg_public(text: str) -> bool:
     """An den ÖFFENTLICHEN CocoBet-Channel (TELEGRAM_CHAT_ID). Ohne Token/Chat → Vorschau."""
     if not TELEGRAM_TOKEN or not PUB_CHAT:
@@ -785,6 +842,7 @@ def main():
         if _tg_public(build_public_card(pos, scores, restock, broad)):
             pub_sent += 1
             pub_seen[pkey] = {"usd": float(pos.get("usd") or 0), "ts": now_iso}
+            _log_public_push(pkey, pos, scores, restock, now_iso)
     _save(PUB_SEEN_FILE, pub_seen)
     print(f"  🐋 Public-Whale: {len(pub_cand)} Kandidat(en), {pub_sent} gesendet.")
 

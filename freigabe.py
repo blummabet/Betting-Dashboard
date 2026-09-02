@@ -97,6 +97,11 @@ def _mittel(werte):
     return (sum(werte) / len(werte)) if werte else None
 
 
+def _rnd(v, n):
+    """Runden, aber None bleibt None. Eine fehlende Kennzahl ist keine 0."""
+    return round(v, n) if isinstance(v, (int, float)) else None
+
+
 def _alter_tage(letzter, now):
     """Tage seit dem juengsten abgerechneten Play. None, wenn kein Zeitstempel da ist —
     und None wird wie „unbekannt alt" behandelt, nicht wie „frisch"."""
@@ -480,9 +485,12 @@ def vorregistrierte_schubladen(track=None, reg=None, now=None, schreiben=True) -
             _alt = [x for x in _quellen.get(kennung, st) if isinstance(x, dict) and z["pruef"](x)]
             _r, _c = VR.kennzahlen(_alt)
             reg = VR.anmelden(reg, kennung, now=now, rueckblick={
-                "n": len(_r), "roi": round(_mittel(_r), 4) if _r else None,
-                "roiLb": round(untergrenze(_r), 4) if _r else None,
-                "clv": round(_mittel(_c), 3) if _c else None,
+                # 02.09.2026: untergrenze() gibt unter drei Werten bewusst None zurueck (keine
+                # Streuungsschaetzung = keine erfundene Zahl). round(None) sprengte dann die
+                # allererste Anmeldung eines Zuschnitts — genau den Lauf, der das Register anlegt.
+                "n": len(_r), "roi": _rnd(_mittel(_r), 4),
+                "roiLb": _rnd(untergrenze(_r), 4),
+                "clv": _rnd(_mittel(_c), 3),
                 "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"})
         e = reg[kennung]
         name = "🔒 " + z["name"]

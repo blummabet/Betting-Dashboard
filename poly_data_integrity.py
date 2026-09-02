@@ -41,6 +41,9 @@ BASE = Path(__file__).resolve().parent
 # ── Datei-Namen (alle read-only außer poly_status.json) ─────────────────────
 CLOSE_FILE      = "poly_money_broad_close.json"     # {key:{prices,league,capturedAt,hoursToKickoff,…}}
 DIRECT_FILE     = "poly_direct_bets.json"           # 24.08.2026: echte „Heute"-Wetten, über den Slug abgerechnet
+PUB_LEDGER_FILE = "poly_whale_public_ledger.json"   # 02.09.2026: jeder öffentliche Whale-Push, abgerechnet
+PUB_SEEN_FILE   = "poly_whale_public_seen.json"      # der aeltere Dedup-Stempel — Gegenprobe fuers Buch
+PUB_PENDING_MAX_D = 3.0                             # Push so lange offen, obwohl aufgeloest = Key-Mismatch
 RES_FILE        = "poly_resolutions.json"           # {key:{winner,ts}}
 WALLET_FILE     = "poly_wallet_track.json"          # {open,scores:{addr:{n,wins,usd,pnl?}},updatedAt}
 SHORTLIST_FILE  = "poly_shortlist_track.json"       # {updatedAt,open,settled,agg,stake}
@@ -113,7 +116,8 @@ def _chk(cid, label, severity, failures, note=""):
 class PolyCtx:
     """Einmal gebaut, an jeden Guard gereicht. Alles bereits geladen/getrimmt."""
     def __init__(self, now=None, close=None, resolutions=None, wallet_track=None,
-                 shortlist=None, broad=None, cross_sport=None, trader=None, direct_bets=None):
+                 shortlist=None, broad=None, cross_sport=None, trader=None, direct_bets=None,
+                 pub_ledger=None):
         self.now = now or datetime.now(timezone.utc)
         self.close = close if isinstance(close, dict) else {}
         self.resolutions = resolutions if isinstance(resolutions, dict) else {}
@@ -125,6 +129,9 @@ class PolyCtx:
         # 24.08.2026: echte Wetten aus dem „Heute"-Tab (poly_direct_bets.json) — die haben kein
         # Fixture und werden ueber den Slug abgerechnet, brauchen also einen eigenen Guard.
         self.direct_bets = direct_bets if isinstance(direct_bets, dict) else {}
+        # 02.09.2026 (Lucas): der oeffentliche Channel ist das Produkt — was dort gepusht wird,
+        # muss abgerechnet werden. Liste, nicht dict.
+        self.pub_ledger = pub_ledger if isinstance(pub_ledger, list) else []
 
     def age_h(self, ts_str):
         """Alter in Stunden eines ISO-Zeitstempels; None wenn nicht parsbar."""
@@ -298,6 +305,61 @@ def check_shortlist_nachschub(ctx):
                 "Misst den ZUFLUSS, nicht das Schreiben: die Datei kann stuendlich aktualisiert "
                 "werden und trotzdem seit Tagen keinen neuen Kandidaten enthalten. Gesperrte "
                 "Kategorien sind ausgenommen.")
+
+
+@poly_check
+def check_public_push_buch(ctx):
+    """Der öffentliche Whale-Push muss ein Buch führen — und das Buch muss abrechnen.
+
+    Bis 02.09.2026 hielt `poly_whale_public_seen.json` nur einen Dedup-Stempel: kein Preis, keine
+    Abrechnung. Rückwirkend blieb davon eine Trefferquote und sonst nichts. Seitdem schreibt
+    poly_whale_watch.py jeden gesendeten Push nach `poly_whale_public_ledger.json`, und
+    poly_public_eval.py rechnet ihn gegen den Slug-Sieger ab. Drei Arten, wie das still kaputtgeht:
+
+      · Der Ledger wächst nicht mehr, obwohl der Dedup-Stempel neue Pushs zeigt → der Schreib-Pfad
+        im Whale-Watch ist tot, gemessen wird ab dann nichts mehr.
+      · Vorwärts-Zeilen ohne `pushPrice` → sie zählen nie in ROI/CLV, das Buch sieht heil aus und
+        ist es nicht.
+      · Zeilen bleiben ewig `pending`, obwohl der Markt längst aufgelöst ist → Key-Mismatch gegen
+        poly_resolutions (dasselbe Symptom wie bei den Paper-Positionen).
+
+    Fehlt der Ledger ganz, ist das KEIN Fehler: solange seit der Einführung nichts gepusht wurde,
+    gibt es nichts zu schreiben. Dann ❔, nie grün und nie rot."""
+    rows = ctx.pub_ledger
+    seen = _load(PUB_SEEN_FILE) or {}
+    if not rows:
+        return _chk("public_push_buch", "Öffentlicher Push führt sein Buch", "warn",
+                    ([f"❔ {PUB_LEDGER_FILE} leer/fehlt, aber {len(seen)} Push(s) im Dedup-Stempel — "
+                      f"entweder seit der Einführung nichts gesendet, oder der Schreib-Pfad ist tot. "
+                      f"Nicht unterscheidbar, also nicht grün."] if seen else []),
+                    "poly_whale_watch.py legt ihn beim ersten Push an.")
+    vor = [r for r in rows if isinstance(r, dict) and r.get("quelle") != "retro"]
+    fails = []
+    ohne_preis = [r for r in vor if r.get("pushPrice") in (None, 0)]
+    if ohne_preis:
+        fails.append(f"{len(ohne_preis)} Vorwärts-Zeile(n) ohne pushPrice — sie zählen nie in "
+                     f"ROI/CLV, das Buch wäre still zu klein (z.B. {ohne_preis[0].get('k')}).")
+    haengt = []
+    for r in vor:
+        if r.get("status") != "pending":
+            continue
+        ts = _parse_ts(r.get("sentAt"))
+        if ts is None:
+            continue
+        if (ctx.now - ts).total_seconds() / 86400.0 > PUB_PENDING_MAX_D and r.get("key") in ctx.resolutions:
+            haengt.append(r.get("key"))
+    if haengt:
+        fails.append(f"{len(haengt)} gepushte Zeile(n) seit über {PUB_PENDING_MAX_D:.0f} Tagen "
+                     f"'pending', obwohl eine Auflösung existiert (z.B. {haengt[0]}) — "
+                     f"Key-Mismatch gegen poly_resolutions.")
+    if seen:
+        fehlt = [k for k in seen if not any(r.get("k") == k for r in rows)]
+        if fehlt:
+            fails.append(f"{len(fehlt)} Push(s) stehen im Dedup-Stempel, aber nicht im Ledger — "
+                         f"gesendet und nicht gemessen (z.B. {fehlt[0]}).")
+    return _chk("public_push_buch", "Öffentlicher Push führt sein Buch", "error", fails,
+                "Wer pusht, misst den Push. Gerechnet wird zum Preis im Moment des Pushs, nicht "
+                "zum älteren Einstieg der Wallet.")
 
 
 @poly_check
@@ -513,6 +575,7 @@ def build_ctx_from_disk(now=None):
         cross_sport=_load(CROSS_FILE),
         trader=_load(TRADER_FILE),
         direct_bets=_load(DIRECT_FILE),
+        pub_ledger=_load(PUB_LEDGER_FILE),
     )
 
 
