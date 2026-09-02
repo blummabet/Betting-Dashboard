@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "liga",
-    "generatedAt": "2026-09-01T21:01:46.056767+00:00",
+    "generatedAt": "2026-09-02T11:10:11.611103+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -786,6 +786,47 @@
       "matchupPct": 60
     },
     {
+      "teamId": "66",
+      "team": "Aston Villa",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/66.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 10,
+      "venue": "A",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 93,
+        "label": "Eigen 93% + Gegner 40% → 72%"
+      },
+      "ratePct": 93,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 0,
+      "next": {
+        "oppId": "64",
+        "oppName": "Hull City",
+        "atHome": false,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T16:30:00+00:00",
+        "oppRatePct": 40
+      },
+      "oppSupportPct": 40,
+      "matchupPct": 72
+    },
+    {
       "teamId": "94",
       "team": "Rennes",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/94.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -948,61 +989,6 @@
       },
       "oppSupportPct": 60,
       "matchupPct": 60
-    },
-    {
-      "teamId": "66",
-      "team": "Aston Villa",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/66.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 10,
-      "venue": "A",
-      "strong": true,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 93,
-        "label": "Eigen 93% + Gegner 40% → 72% · Linie/Signale dagegen"
-      },
-      "ratePct": 93,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 0,
-      "next": {
-        "oppId": "64",
-        "oppName": "Hull City",
-        "atHome": false,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T16:30:00+00:00",
-        "oppRatePct": 40
-      },
-      "oppSupportPct": 40,
-      "matchupPct": 72,
-      "signalInfo": {
-        "state": "contradict",
-        "count": 6,
-        "conviction": 4,
-        "names": [
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength",
-          "chance_creation",
-          "transfer_shift",
-          "streak_momentum"
-        ],
-        "market": "Unter 3.5 Tore"
-      }
     },
     {
       "teamId": "163",
@@ -1592,7 +1578,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 67,
-        "label": "Eigen 67% + Gegner 73% → 69% · Signale bestätigen"
+        "label": "Eigen 67% + Gegner 73% → 69%"
       },
       "ratePct": 67,
       "seq": [
@@ -1617,19 +1603,7 @@
         "oppRatePct": 73
       },
       "oppSupportPct": 73,
-      "matchupPct": 69,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 3,
-        "conviction": 4,
-        "names": [
-          "injury",
-          "form_trend",
-          "xg_strength",
-          "streak_momentum"
-        ],
-        "market": "Über 2.5 Tore"
-      }
+      "matchupPct": 69
     },
     {
       "teamId": "34",
@@ -3466,15 +3440,15 @@
       "matchupPct": 59,
       "signalInfo": {
         "state": "confirm",
-        "count": 6,
+        "count": 5,
         "conviction": 6,
         "names": [
-          "lead_lag_bias",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
           "chance_creation",
-          "freshness_leg"
+          "freshness_leg",
+          "move_following"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -5451,15 +5425,15 @@
       "matchupPct": 39,
       "signalInfo": {
         "state": "confirm",
-        "count": 6,
+        "count": 5,
         "conviction": 6,
         "names": [
-          "lead_lag_bias",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
           "chance_creation",
-          "freshness_leg"
+          "freshness_leg",
+          "move_following"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -7064,61 +7038,6 @@
       },
       "oppSupportPct": 47,
       "matchupPct": 71
-    },
-    {
-      "teamId": "64",
-      "team": "Hull City",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/64.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "under25",
-      "market": "Unter 2,5 Tore",
-      "length": 5,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 40,
-        "label": "Eigen 40% + Gegner 7% → 27% · Signale bestätigen"
-      },
-      "ratePct": 40,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 10,
-      "next": {
-        "oppId": "66",
-        "oppName": "Aston Villa",
-        "atHome": true,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T16:30:00+00:00",
-        "oppRatePct": 93
-      },
-      "oppSupportPct": 7,
-      "matchupPct": 27,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 6,
-        "conviction": 4,
-        "names": [
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength",
-          "chance_creation",
-          "transfer_shift",
-          "streak_momentum"
-        ],
-        "market": "Unter 3.5 Tore"
-      }
     },
     {
       "teamId": "746",
@@ -9865,6 +9784,47 @@
       "matchupPct": 44
     },
     {
+      "teamId": "64",
+      "team": "Hull City",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/64.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "under25",
+      "market": "Unter 2,5 Tore",
+      "length": 5,
+      "venue": "all",
+      "strong": true,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 40,
+        "label": "Eigen 40% + Gegner 7% → 27%"
+      },
+      "ratePct": 40,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 10,
+      "next": {
+        "oppId": "66",
+        "oppName": "Aston Villa",
+        "atHome": true,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T16:30:00+00:00",
+        "oppRatePct": 93
+      },
+      "oppSupportPct": 7,
+      "matchupPct": 27
+    },
+    {
       "teamId": "84",
       "team": "Nice",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/84.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -10361,7 +10321,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 73,
-        "label": "Eigen 73% + Gegner 67% → 71% · Signale bestätigen"
+        "label": "Eigen 73% + Gegner 67% → 71%"
       },
       "ratePct": 73,
       "seq": [
@@ -10386,19 +10346,7 @@
         "oppRatePct": 67
       },
       "oppSupportPct": 67,
-      "matchupPct": 71,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 3,
-        "conviction": 4,
-        "names": [
-          "injury",
-          "form_trend",
-          "xg_strength",
-          "streak_momentum"
-        ],
-        "market": "Über 2.5 Tore"
-      }
+      "matchupPct": 71
     },
     {
       "teamId": "35",
@@ -11145,59 +11093,6 @@
       },
       "oppSupportPct": 67,
       "matchupPct": 71
-    },
-    {
-      "teamId": "64",
-      "team": "Hull City",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/64.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "under25",
-      "market": "Unter 2,5 Tore",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 7% → 39% · Signale bestätigen"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 2,
-      "next": {
-        "oppId": "66",
-        "oppName": "Aston Villa",
-        "atHome": true,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T16:30:00+00:00",
-        "oppRatePct": 93
-      },
-      "oppSupportPct": 7,
-      "matchupPct": 39,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 6,
-        "conviction": 4,
-        "names": [
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength",
-          "chance_creation",
-          "transfer_shift",
-          "streak_momentum"
-        ],
-        "market": "Unter 3.5 Tore"
-      }
     },
     {
       "teamId": "79",
@@ -15502,6 +15397,45 @@
       "flag": "<img src=\"https://media.api-sports.io/football/teams/64.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "ENG",
       "leagueName": "Premier League",
+      "type": "under25",
+      "market": "Unter 2,5 Tore",
+      "length": 4,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 7% → 39%"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 2,
+      "next": {
+        "oppId": "66",
+        "oppName": "Aston Villa",
+        "atHome": true,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T16:30:00+00:00",
+        "oppRatePct": 93
+      },
+      "oppSupportPct": 7,
+      "matchupPct": 39
+    },
+    {
+      "teamId": "64",
+      "team": "Hull City",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/64.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
       "type": "bttsNo",
       "market": "Beide treffen — Nein",
       "length": 4,
@@ -15853,15 +15787,15 @@
       "matchupPct": 45,
       "signalInfo": {
         "state": "contradict",
-        "count": 6,
+        "count": 5,
         "conviction": 6,
         "names": [
-          "lead_lag_bias",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
           "chance_creation",
-          "freshness_leg"
+          "freshness_leg",
+          "move_following"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -17273,61 +17207,6 @@
       },
       "oppSupportPct": 60,
       "matchupPct": 68
-    },
-    {
-      "teamId": "64",
-      "team": "Hull City",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/64.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ENG",
-      "leagueName": "Premier League",
-      "type": "under25",
-      "market": "Unter 2,5 Tore",
-      "length": 3,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 17,
-        "label": "Eigen 17% + Gegner 7% → 13% · Signale bestätigen"
-      },
-      "ratePct": 17,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 6,
-      "next": {
-        "oppId": "66",
-        "oppName": "Aston Villa",
-        "atHome": true,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T16:30:00+00:00",
-        "oppRatePct": 93
-      },
-      "oppSupportPct": 7,
-      "matchupPct": 13,
-      "signalInfo": {
-        "state": "confirm",
-        "count": 6,
-        "conviction": 4,
-        "names": [
-          "form_trend",
-          "h2h_pattern",
-          "xg_strength",
-          "chance_creation",
-          "transfer_shift",
-          "streak_momentum"
-        ],
-        "market": "Unter 3.5 Tore"
-      }
     },
     {
       "teamId": "64",
@@ -22068,6 +21947,47 @@
       },
       "oppSupportPct": 27,
       "matchupPct": 36
+    },
+    {
+      "teamId": "64",
+      "team": "Hull City",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/64.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ENG",
+      "leagueName": "Premier League",
+      "type": "under25",
+      "market": "Unter 2,5 Tore",
+      "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 17,
+        "label": "Eigen 17% + Gegner 7% → 13%"
+      },
+      "ratePct": 17,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 6,
+      "next": {
+        "oppId": "66",
+        "oppName": "Aston Villa",
+        "atHome": true,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T16:30:00+00:00",
+        "oppRatePct": 93
+      },
+      "oppSupportPct": 7,
+      "matchupPct": 13
     },
     {
       "teamId": "64",
