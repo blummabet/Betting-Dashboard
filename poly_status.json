@@ -50,7 +50,7 @@
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
       "ok": false,
-      "nFail": 7,
+      "nFail": 8,
       "failures": [
         "cs2-ruby1-hs2-2026-08-21: seit 12.7 Tagen offen — keine Auflösung gefunden",
         "atp-virtane-dimitro-2026-08-27: seit 6.7 Tagen offen — keine Auflösung gefunden",
@@ -58,7 +58,8 @@
         "atp-basavar-schoolk-2026-08-30: seit 3.7 Tagen offen — keine Auflösung gefunden",
         "atp-fery-musetti-2026-08-30: seit 3.7 Tagen offen — keine Auflösung gefunden",
         "wta-stoiana-eala-2026-08-30: seit 3.7 Tagen offen — keine Auflösung gefunden",
-        "wta-kasatki-badosa-2026-08-30: seit 3.7 Tagen offen — keine Auflösung gefunden"
+        "wta-kasatki-badosa-2026-08-30: seit 3.7 Tagen offen — keine Auflösung gefunden",
+        "atp-jong-passaro-2026-08-30: seit 3.7 Tagen offen — keine Auflösung gefunden"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -80,8 +81,8 @@
       "failures": [
         "79/192 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (41%) — Trefferquote allein trügt",
         "   0x84cfffc3f1… n=65 Treffer 52% P&L $-7,749,600",
-        "   0xc3c3b3ef30… n=325 Treffer 51% P&L $-3,936,617",
-        "   0xa0f21e6d35… n=66 Treffer 65% P&L $-2,648,064",
+        "   0xc3c3b3ef30… n=325 Treffer 51% P&L $-3,936,464",
+        "   0xa0f21e6d35… n=66 Treffer 65% P&L $-2,642,592",
         "   0xabb89972b2… n=26 Treffer 69% P&L $-2,563,982"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
@@ -93,7 +94,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "Backtest: jüngster Stand vor 4.5 h (> 3 h erwartet)"
+        "Backtest: jüngster Stand vor 5.0 h (> 3 h erwartet)"
       ],
       "note": "poly_money_broad muss frisch sein und n groß genug, sonst ist 'folgt dem Geld' Zufall."
     },
@@ -126,5 +127,5 @@
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-09-02T15:57:28.074729+00:00"
+  "generatedAt": "2026-09-02T16:25:45.706742+00:00"
 }

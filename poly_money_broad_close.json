@@ -144738,7 +144738,13 @@
   "tokens": {
    "Kenny De Schepper": "51457806783145357097362480656882552605228878763215270080624157795914527232141",
    "Stefan Seifert": "28502667462378028250504208002975959602493629141861817072014073180994297878808"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Kenny De Schepper": 1.0,
+   "Stefan Seifert": 0.0
+  },
+  "resolvedAt": "2026-09-02T16:25:20.437847+00:00"
  },
  "jap-zel-kaw-2026-09-02": {
   "shares": {
@@ -148339,8 +148345,8 @@
  },
  "mlb-sd-cin-2026-09-02": {
   "shares": {
-   "Over": 96605.65080589498,
-   "Under": 98557.128952445
+   "Over": 141608.94059663994,
+   "Under": 144470.010459665
   },
   "prices": {
    "Over": 0.495,
@@ -148348,13 +148354,19 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 201575,
+  "totalUsd": 294419,
   "whales": [
    {
     "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
     "side": "Over",
-    "usd": 55090,
-    "avgPrice": 0.4831
+    "usd": 100968,
+    "avgPrice": 0.4908
+   },
+   {
+    "wallet": "0x684baa57c338c2549aec0aa3f034f695d72a8409",
+    "side": "Under",
+    "usd": 45450,
+    "avgPrice": 0.5055
    },
    {
     "wallet": "0x16bb9951a36fce71e2ef57890b786145e0ba8492",
@@ -148363,20 +148375,14 @@
     "avgPrice": 0.52
    },
    {
-    "wallet": "0x684baa57c338c2549aec0aa3f034f695d72a8409",
-    "side": "Under",
-    "usd": 25312,
-    "avgPrice": 0.5099
-   },
-   {
     "wallet": "0x3dfb153c197d4c19d3b31c1ecd2c7b6860eeabaf",
     "side": "Over",
     "usd": 22000,
     "avgPrice": 0.49
    }
   ],
-  "hoursToKickoff": 0.79,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 0.3,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Over": "103683876918062622358759080257589723466089565494661920860504421563356982292449",
    "Under": "29162847052096558503916892380169295865244889850137185752302679036407261239763"
@@ -148390,57 +148396,65 @@
    "bids": [
     [
      0.5,
-     113504
+     41756
     ],
     [
      0.49,
-     51588
+     55365
     ],
     [
      0.48,
-     39762
+     43340
     ],
     [
      0.47,
-     16194
+     21011
     ],
     [
      0.46,
-     1010
+     60
     ],
     [
-     0.45,
-     798
+     0.41,
+     750
     ]
    ],
    "asks": [
     [
      0.51,
-     125249
+     86929
     ],
     [
      0.52,
-     30435
+     45034
     ],
     [
      0.53,
-     56303
+     55250
     ],
     [
      0.54,
-     23862
+     28377
     ],
     [
      0.55,
-     13287
+     1437
     ],
     [
      0.56,
-     1961
+     863
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.5,
+    "usd": 46200,
+    "ts": 1788364767
+   },
    {
     "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
     "action": "BUY",
@@ -148456,21 +148470,13 @@
     "price": 0.49,
     "usd": 494,
     "ts": 1788362073
-   },
-   {
-    "wallet": "0x8a8685a792c184e5c2ee8c7d4d4baba7c2c94998",
-    "action": "BUY",
-    "side": "Over",
-    "price": 0.49,
-    "usd": 15000,
-    "ts": 1788358599
    }
   ]
  },
  "atp-molcan-bonzi-2026-08-30": {
   "shares": {
-   "Alex Molcan": 37089.14507805,
-   "Benjamin Bonzi": 77031.12265087504
+   "Alex Molcan": 37362.90882805,
+   "Benjamin Bonzi": 77599.70890087505
   },
   "prices": {
    "Alex Molcan": 0.325,
@@ -148478,7 +148484,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 194709,
+  "totalUsd": 195726,
   "whales": [
    {
     "wallet": "0xdb859a551fcf56e49416160911476bea7307152f",
@@ -148505,8 +148511,8 @@
     "avgPrice": 0.59
    }
   ],
-  "hoursToKickoff": 0.62,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 0.13,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Alex Molcan": "79930163370399765691405506811717175679727433197409011980183231933402105988382",
    "Benjamin Bonzi": "16990845494901367559156925270709186516013999268339226644670678396182506830809"
@@ -148520,53 +148526,53 @@
    "bids": [
     [
      0.67,
-     4556
+     1238
     ],
     [
      0.66,
-     4298
+     3339
     ],
     [
      0.65,
-     63578
+     64041
     ],
     [
      0.64,
-     1510
+     2345
     ],
     [
      0.63,
-     180
+     85
     ],
     [
      0.62,
-     174
+     10
     ]
    ],
    "asks": [
     [
      0.68,
-     880
+     2838
     ],
     [
      0.69,
-     5776
+     2786
     ],
     [
      0.7,
-     70002
+     60417
     ],
     [
      0.71,
-     6173
+     8025
     ],
     [
      0.72,
-     5336
+     376
     ],
     [
      0.73,
-     198
+     36
     ]
    ]
   },
@@ -148591,107 +148597,115 @@
  },
  "atp-giron-buse-2026-08-30": {
   "shares": {
-   "Marcos Giron": 72130.36529690503,
-   "Ignacio Buse": 110478.2595529799
+   "Marcos Giron": 71586.67884098504,
+   "Ignacio Buse": 114350.86486121993
   },
   "prices": {
-   "Marcos Giron": 0.395,
-   "Ignacio Buse": 0.605
+   "Marcos Giron": 0.385,
+   "Ignacio Buse": 0.615
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 189423,
+  "totalUsd": 192547,
   "whales": [
    {
     "wallet": "0xdb859a551fcf56e49416160911476bea7307152f",
     "side": "Ignacio Buse",
-    "usd": 60500,
+    "usd": 61500,
     "avgPrice": 0.5999
    },
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
     "side": "Marcos Giron",
-    "usd": 16659,
+    "usd": 16237,
     "avgPrice": 0.4005
    },
    {
     "wallet": "0x979fc186184ae75754d32c4ef68d8ca00f744032",
     "side": "Ignacio Buse",
-    "usd": 11975,
+    "usd": 12173,
     "avgPrice": 0.6011
    },
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
     "side": "Marcos Giron",
-    "usd": 11804
+    "usd": 11505
    }
   ],
-  "hoursToKickoff": 0.62,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 0.13,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Marcos Giron": "43829816221088024019477571876810945207357020645933928220017589048399347273776",
    "Ignacio Buse": "17261470005725534654298503216879421296488404573353457102496738506808615187917"
   },
   "book": {
    "side": "Ignacio Buse",
-   "bid": 0.6,
-   "ask": 0.61,
+   "bid": 0.61,
+   "ask": 0.62,
    "spreadC": 1.0,
-   "spreadPct": 1.64,
+   "spreadPct": 1.61,
    "bids": [
     [
+     0.61,
+     27531
+    ],
+    [
      0.6,
-     39116
+     34019
     ],
     [
      0.59,
-     69385
+     69006
     ],
     [
      0.58,
-     2780
+     10090
     ],
     [
      0.57,
-     1207
+     2076
     ],
     [
      0.56,
-     813
-    ],
-    [
-     0.55,
-     172
+     2204
     ]
    ],
    "asks": [
     [
-     0.61,
-     782
-    ],
-    [
      0.62,
-     42004
+     35610
     ],
     [
      0.63,
-     40061
+     25249
     ],
     [
      0.64,
-     82526
+     75993
     ],
     [
      0.65,
-     11587
+     9522
     ],
     [
      0.66,
-     1133
+     746
+    ],
+    [
+     0.75,
+     584
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x8c0fb6a33590f06b9eb283f787f59e4e7a4bae40",
+    "action": "BUY",
+    "side": "Ignacio Buse",
+    "price": 0.6192,
+    "usd": 1709,
+    "ts": 1788365800
+   },
    {
     "wallet": "0x75e1e9f8adf1c25e948b4b739e668b7b4320b2b1",
     "action": "BUY",
@@ -148720,8 +148734,8 @@
  },
  "atp-svajda-altmaie-2026-08-30": {
   "shares": {
-   "Zachary Svajda": 31263.303003074987,
-   "Daniel Altmaier": 22178.119486624993
+   "Zachary Svajda": 31385.03871671999,
+   "Daniel Altmaier": 22264.479009979994
   },
   "prices": {
    "Zachary Svajda": 0.585,
@@ -148729,7 +148743,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 68775,
+  "totalUsd": 69746,
   "whales": [
    {
     "wallet": "0x7523cafcee7bcf2db9a79d80e0d79b88a9a54c4c",
@@ -148755,8 +148769,8 @@
     "avgPrice": 0.4
    }
   ],
-  "hoursToKickoff": 0.62,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 0.13,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Zachary Svajda": "44485627102046418459324575309567028017767084610944765219546417639271807898755",
    "Daniel Altmaier": "52423507721894364315489486553366878109531013768510716353495651745257246503078"
@@ -148764,8 +148778,8 @@
  },
  "atp-etcheve-fearnle-2026-09-02": {
   "shares": {
-   "Tomas Etcheverry": 13793.170772644995,
-   "Jacob Fearnley": 10619.350573949998
+   "Tomas Etcheverry": 13764.959855389996,
+   "Jacob Fearnley": 10597.616712014998
   },
   "prices": {
    "Tomas Etcheverry": 0.565,
@@ -148773,7 +148787,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 27506,
+  "totalUsd": 28118,
   "whales": [
    {
     "wallet": "0xbdc3e475821b3512b1ae1a492f89d15323e4c0ea",
@@ -148799,8 +148813,8 @@
     "usd": 1279
    }
   ],
-  "hoursToKickoff": 0.62,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 0.13,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Tomas Etcheverry": "85829336049492088730777688977764034783648985037793460517126358590683892333249",
    "Jacob Fearnley": "73756807300131893708004260869760512146787023929686193268284274149136197480714"
@@ -148808,8 +148822,8 @@
  },
  "atp-jodar-bu-2026-09-01": {
   "shares": {
-   "Rafael Jodar": 198071.81572770994,
-   "Yunchaokete Bu": 20792.074623759992
+   "Rafael Jodar": 201304.8954431799,
+   "Yunchaokete Bu": 21131.459676939994
   },
   "prices": {
    "Rafael Jodar": 0.905,
@@ -148817,7 +148831,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 254847,
+  "totalUsd": 260459,
   "whales": [
    {
     "wallet": "0xccd81fbd3395dc43a0531f8484b21c2462daf4de",
@@ -148844,8 +148858,8 @@
     "avgPrice": 0.9081
    }
   ],
-  "hoursToKickoff": 1.12,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 0.38,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Rafael Jodar": "84478983857065961422510397787739359630739944262821395736390969130168991982451",
    "Yunchaokete Bu": "78829539034466989639374913369045054720420668463939913666545126870806157881017"
@@ -148859,57 +148873,73 @@
    "bids": [
     [
      0.9,
-     19809
+     23118
     ],
     [
      0.89,
-     69910
+     425925
     ],
     [
      0.88,
-     1084
+     2511
     ],
     [
      0.87,
-     559
+     2464
     ],
     [
      0.86,
-     230
+     261
     ],
     [
-     0.78,
-     35
+     0.74,
+     229
     ]
    ],
    "asks": [
     [
      0.91,
-     5539
+     2571
     ],
     [
      0.92,
-     42712
+     446696
     ],
     [
      0.93,
-     94183
+     93040
     ],
     [
      0.94,
-     12427
+     7529
     ],
     [
      0.95,
-     46761
+     54005
     ],
     [
      0.96,
-     56778
+     56211
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x198fa74120438fb7cabccb61aa824c6720dfc419",
+    "action": "BUY",
+    "side": "Rafael Jodar",
+    "price": 0.91,
+    "usd": 400,
+    "ts": 1788365799
+   },
+   {
+    "wallet": "0x9cb990f1862568a63d8601efeebe0304225c32f2",
+    "action": "BUY",
+    "side": "Rafael Jodar",
+    "price": 0.91,
+    "usd": 2730,
+    "ts": 1788365787
+   },
    {
     "wallet": "0x0dd60a6ddeea6f93659789cac7af6a9d12835f62",
     "action": "BUY",
@@ -148922,8 +148952,8 @@
  },
  "mlb-atl-wsh-2026-09-02": {
   "shares": {
-   "Over": 128106.04276800001,
-   "Under": 130694.04363200003
+   "Over": 154473.32161799993,
+   "Under": 157593.994782
   },
   "prices": {
    "Over": 0.495,
@@ -148931,13 +148961,13 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 258649,
+  "totalUsd": 311966,
   "whales": [
    {
     "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
     "side": "Over",
-    "usd": 100544,
-    "avgPrice": 0.4863
+    "usd": 101732,
+    "avgPrice": 0.4865
    },
    {
     "wallet": "0x16bb9951a36fce71e2ef57890b786145e0ba8492",
@@ -148958,72 +148988,88 @@
     "avgPrice": 0.52
    }
   ],
-  "hoursToKickoff": 1.21,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 0.71,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Over": "46584313717276392289352910236833809558570981785887473135901869832739073369040",
    "Under": "6741538758410347685201441513160265088666517020195210799232437720540172365203"
   },
   "book": {
    "side": "Under",
-   "bid": 0.5,
-   "ask": 0.51,
+   "bid": 0.51,
+   "ask": 0.52,
    "spreadC": 1.0,
-   "spreadPct": 1.96,
+   "spreadPct": 1.92,
    "bids": [
     [
+     0.51,
+     152
+    ],
+    [
      0.5,
-     140997
+     116903
     ],
     [
      0.49,
-     49064
+     43507
     ],
     [
      0.48,
-     36675
+     25994
     ],
     [
      0.47,
-     6055
+     1060
     ],
     [
      0.46,
-     1005
-    ],
-    [
-     0.45,
-     798
+     1750
     ]
    ],
    "asks": [
     [
-     0.51,
-     5825
-    ],
-    [
      0.52,
-     21145
+     27303
     ],
     [
      0.53,
-     71832
+     72290
     ],
     [
      0.54,
-     20045
+     51040
     ],
     [
      0.55,
-     21188
+     9003
     ],
     [
      0.56,
-     6892
+     1105
+    ],
+    [
+     0.57,
+     755
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.5,
+    "usd": 1200,
+    "ts": 1788364791
+   },
+   {
+    "wallet": "0x8a8685a792c184e5c2ee8c7d4d4baba7c2c94998",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.5,
+    "usd": 25000,
+    "ts": 1788364707
+   },
    {
     "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
     "action": "BUY",
@@ -149055,37 +149101,13 @@
     "price": 0.51,
     "usd": 324,
     "ts": 1788362500
-   },
-   {
-    "wallet": "0x63835d2726f2de0ebd571ed36465b025f8d66e28",
-    "action": "BUY",
-    "side": "Under",
-    "price": 0.51,
-    "usd": 1544,
-    "ts": 1788362485
-   },
-   {
-    "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
-    "action": "BUY",
-    "side": "Over",
-    "price": 0.49,
-    "usd": 40513,
-    "ts": 1788362485
-   },
-   {
-    "wallet": "0x2792fc28811277f12a54e32bd8188be02c2dc4f6",
-    "action": "BUY",
-    "side": "Under",
-    "price": 0.51,
-    "usd": 1544,
-    "ts": 1788362485
    }
   ]
  },
  "atp-marozsa-zheng-2026-08-30": {
   "shares": {
-   "Fabian Marozsan": 56662.123894530036,
-   "Michael Zheng": 90512.20623296993
+   "Fabian Marozsan": 55515.266395050035,
+   "Michael Zheng": 88680.21308444992
   },
   "prices": {
    "Fabian Marozsan": 0.385,
@@ -149093,7 +149115,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 226915,
+  "totalUsd": 233881,
   "whales": [
    {
     "wallet": "0x3dfb153c197d4c19d3b31c1ecd2c7b6860eeabaf",
@@ -149104,7 +149126,7 @@
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "Michael Zheng",
-    "usd": 9776,
+    "usd": 7943,
     "avgPrice": 0.6199
    },
    {
@@ -149120,8 +149142,8 @@
     "avgPrice": 0.5699
    }
   ],
-  "hoursToKickoff": 1.12,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 0.63,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Fabian Marozsan": "7598660967953168943300921615516251040835895307516184668897316101118383268278",
    "Michael Zheng": "40041162928897271460983540687344914067016764633622302095533949605145110760422"
@@ -149135,19 +149157,19 @@
    "bids": [
     [
      0.61,
-     9311
+     4616
     ],
     [
      0.6,
-     15874
+     2403
     ],
     [
      0.59,
-     7017
+     12252
     ],
     [
      0.58,
-     6264
+     68500
     ],
     [
      0.57,
@@ -149155,37 +149177,53 @@
     ],
     [
      0.55,
-     111
+     5
     ]
    ],
    "asks": [
     [
      0.62,
-     43449
+     392650
     ],
     [
      0.63,
-     87728
+     83028
     ],
     [
      0.64,
-     28832
+     48163
     ],
     [
      0.65,
-     10129
+     12200
     ],
     [
      0.66,
-     3301
+     3933
     ],
     [
      0.67,
-     3747
+     3585
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "action": "BUY",
+    "side": "Fabian Marozsan",
+    "price": 0.39,
+    "usd": 920,
+    "ts": 1788365286
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Fabian Marozsan",
+    "price": 0.39,
+    "usd": 1098,
+    "ts": 1788365083
+   },
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "action": "BUY",
@@ -149209,21 +149247,13 @@
     "price": 0.39,
     "usd": 1210,
     "ts": 1788359340
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "action": "BUY",
-    "side": "Fabian Marozsan",
-    "price": 0.39,
-    "usd": 536,
-    "ts": 1788359316
    }
   ]
  },
  "atp-shelton-hurkacz-2026-09-02": {
   "shares": {
-   "Ben Shelton": 65427.24667542997,
-   "Hubert Hurkacz": 28712.90103831001
+   "Ben Shelton": 65806.87927276496,
+   "Hubert Hurkacz": 28879.50336601001
   },
   "prices": {
    "Ben Shelton": 0.695,
@@ -149231,7 +149261,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 100684,
+  "totalUsd": 101321,
   "whales": [
    {
     "wallet": "0xdb859a551fcf56e49416160911476bea7307152f",
@@ -149258,8 +149288,8 @@
     "avgPrice": 0.6999
    }
   ],
-  "hoursToKickoff": 1.12,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 0.63,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Ben Shelton": "45860814968968900992060338412487249185443240754121378118012790870514175889362",
    "Hubert Hurkacz": "114850867143492551593115339368215834782832254280175296630803438252964434409906"
@@ -149267,8 +149297,8 @@
  },
  "cs2-is-9ine-2026-09-02": {
   "shares": {
-   "Iberian Soul": 33520.77022801,
-   "9INE": 29134.875057990008
+   "Iberian Soul": 34355.918018790006,
+   "9INE": 29860.751175210004
   },
   "prices": {
    "Iberian Soul": 0.535,
@@ -149276,7 +149306,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 59709,
+  "totalUsd": 64844,
   "whales": [
    {
     "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
@@ -149287,8 +149317,8 @@
    {
     "wallet": "0x73e3fec494611d73c170cb2f23850fd998b21be9",
     "side": "9INE",
-    "usd": 9535,
-    "avgPrice": 0.434
+    "usd": 10118,
+    "avgPrice": 0.4355
    },
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
@@ -149303,8 +149333,8 @@
     "avgPrice": 0.56
    }
   ],
-  "hoursToKickoff": 1.12,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 0.63,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Iberian Soul": "112652576497487014856830015020591806488047278965646450367134436428114462812381",
    "9INE": "17713366383640831520527930486340421912927194141660660965757725376472380341731"
@@ -149326,8 +149356,7 @@
    {
     "wallet": "0xb8e32d575b8d360f90bcc95596e9a0bee444aaf2",
     "side": "Giovanni Oradini",
-    "usd": 12065,
-    "avgPrice": 0.6411
+    "usd": 12065
    },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
@@ -149347,8 +149376,8 @@
     "usd": 201
    }
   ],
-  "hoursToKickoff": 1.12,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 0.63,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Marcello Serafini": "97326745480726650877624366381736387785431964987757284273577283421665914553499",
    "Giovanni Oradini": "83575912409953078848797132538521388269528420695433655388633574720547007527360"
@@ -149356,8 +149385,8 @@
  },
  "wta-kostyuk-stephen-2026-09-02": {
   "shares": {
-   "Marta Kostyuk": 12387.684242790001,
-   "Sloane Stephens": 1933.3384182
+   "Marta Kostyuk": 13687.284230969997,
+   "Sloane Stephens": 2136.16616202
   },
   "prices": {
    "Marta Kostyuk": 0.865,
@@ -149365,7 +149394,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 14446,
+  "totalUsd": 15431,
   "whales": [
    {
     "wallet": "0xb0e3fcbe0d7f17168fdce93f89c0168d3fa329eb",
@@ -149376,23 +149405,23 @@
    {
     "wallet": "0x3dfb153c197d4c19d3b31c1ecd2c7b6860eeabaf",
     "side": "Sloane Stephens",
-    "usd": 1712,
+    "usd": 1736,
     "avgPrice": 0.1299
    },
    {
     "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
     "side": "Marta Kostyuk",
-    "usd": 1298,
-    "avgPrice": 0.87
+    "usd": 1419,
+    "avgPrice": 0.8691
    },
    {
-    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
     "side": "Marta Kostyuk",
-    "usd": 503
+    "usd": 622
    }
   ],
-  "hoursToKickoff": 1.12,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 0.63,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Marta Kostyuk": "103021573687344275419292243628767756979157342262283198476149761832728230591044",
    "Sloane Stephens": "95888704084039979989258830723137009667459791065317773478155494275159879460509"
@@ -149400,8 +149429,8 @@
  },
  "wta-navarro-mcnally-2026-09-02": {
   "shares": {
-   "Emma Navarro": 15972.239237535001,
-   "Caty McNally": 12806.275162685006
+   "Emma Navarro": 17509.023137535,
+   "Caty McNally": 14038.471262685005
   },
   "prices": {
    "Emma Navarro": 0.555,
@@ -149409,18 +149438,19 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 25743,
+  "totalUsd": 30473,
   "whales": [
    {
     "wallet": "0x2ce8505aa641791eb8460f6ac6bf5c0511e34527",
     "side": "Emma Navarro",
-    "usd": 10602,
+    "usd": 12101,
     "avgPrice": 0.55
    },
    {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
     "side": "Caty McNally",
-    "usd": 5380
+    "usd": 6448,
+    "avgPrice": 0.4499
    },
    {
     "wallet": "0x1a9567b6373a835a7425381406e1a952ccf73a16",
@@ -149431,12 +149461,12 @@
    {
     "wallet": "0x5b624e3e0426f7aa2ca57f7451fbcea4b125d87f",
     "side": "Caty McNally",
-    "usd": 1235,
+    "usd": 1266,
     "avgPrice": 0.44
    }
   ],
-  "hoursToKickoff": 1.12,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 0.63,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Emma Navarro": "3961703741587794733845772544977001180770181282005915667295527669343557774307",
    "Caty McNally": "43093588027462330529931156277278314254606686109718405896479975265746806502151"
@@ -149621,40 +149651,40 @@
  },
  "cs2-3dmax-wal2-2026-09-02": {
   "shares": {
-   "3DMAX": 5738.613126030002,
-   "Walczaki": 3158.3329147799986
+   "3DMAX": 8042.155621009999,
+   "Walczaki": 6191.590616879999
   },
   "prices": {
-   "3DMAX": 0.645,
-   "Walczaki": 0.355
+   "3DMAX": 0.565,
+   "Walczaki": 0.435
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 9999,
+  "totalUsd": 15128,
   "whales": [
    {
-    "wallet": "0xcd300069721b481c8be9b2f6323583bf8c74fc9b",
-    "side": "3DMAX",
-    "usd": 1595
+    "wallet": "0x051c8654802b0a0f2fdd165033ba6cf07610ca3f",
+    "side": "Walczaki",
+    "usd": 2124
    },
    {
     "wallet": "0x513587a2f36a8cb29333052a6a479091ef8a7217",
     "side": "3DMAX",
-    "usd": 1421
+    "usd": 1721
    },
    {
-    "wallet": "0x051c8654802b0a0f2fdd165033ba6cf07610ca3f",
-    "side": "Walczaki",
-    "usd": 689
+    "wallet": "0xcd300069721b481c8be9b2f6323583bf8c74fc9b",
+    "side": "3DMAX",
+    "usd": 1397
    },
    {
-    "wallet": "0x7ddeb72e6b8726b146d085c20a90bb64158030b1",
+    "wallet": "0x1bcddab836d0406761f46c2981339d8f365c0a69",
     "side": "Walczaki",
-    "usd": 431
+    "usd": 650
    }
   ],
-  "hoursToKickoff": 1.12,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 0.63,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "3DMAX": "36879810307929366987532954290144353541043220721432419968916979309163558367150",
    "Walczaki": "63636494515099446766711657880410272801121697081679628120768012062810384102742"
@@ -149662,29 +149692,29 @@
  },
  "uwcl-psg-ef-2026-09-02": {
   "shares": {
-   "Paris Saint-Germain FC": 4392.9099322050015,
-   "Draw (Paris Saint-Germain FC vs. Eintracht Frankfurt)": 46.840042340000004,
-   "Eintracht Frankfurt": 367.253696915
+   "Paris Saint-Germain FC": 4920.017646855,
+   "Draw (Paris Saint-Germain FC vs. Eintracht Frankfurt)": 53.307126450000005,
+   "Eintracht Frankfurt": 382.43391318999994
   },
   "prices": {
    "Paris Saint-Germain FC": 0.555,
-   "Draw (Paris Saint-Germain FC vs. Eintracht Frankfurt)": 0.23,
+   "Draw (Paris Saint-Germain FC vs. Eintracht Frankfurt)": 0.225,
    "Eintracht Frankfurt": 0.235
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 11609,
+  "totalUsd": 14103,
   "whales": [
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "Paris Saint-Germain FC",
-    "usd": 2040,
+    "usd": 2071,
     "avgPrice": 0.5632
    },
    {
     "wallet": "0xaff389b0c6e066057c44c25fae7277880b276ecc",
     "side": "Paris Saint-Germain FC",
-    "usd": 853
+    "usd": 872
    },
    {
     "wallet": "0x6e9fbbfe99e5e50db067a1c58e2e9ab0441e6561",
@@ -149692,13 +149722,14 @@
     "usd": 500
    },
    {
-    "wallet": "0x8ca3b962921c6af06af99e5e88afb3210be62d23",
-    "side": "Eintracht Frankfurt",
-    "usd": 283
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Paris Saint-Germain FC",
+    "usd": 478,
+    "avgPrice": 0.5667
    }
   ],
-  "hoursToKickoff": 0.62,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 0.13,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Paris Saint-Germain FC": "8543012749544036988488947377266082632640216887358076219915985932464508721537",
    "Draw (Paris Saint-Germain FC vs. Eintracht Frankfurt)": "64603296389428842136267173248649965178497724599999497312186819020701368032136",
@@ -149707,61 +149738,57 @@
  },
  "atp-bergs-taberne-2026-08-30": {
   "shares": {
-   "Zizou Bergs": 79542.72568160592,
-   "Carlos Taberner": 4451.689332814998
+   "Zizou Bergs": 79739.23700135695,
+   "Carlos Taberner": 4507.167627312499
   },
   "prices": {
-   "Zizou Bergs": 0.947,
-   "Carlos Taberner": 0.053
+   "Zizou Bergs": 0.9465,
+   "Carlos Taberner": 0.0535
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 157719,
+  "totalUsd": 158277,
   "whales": [
    {
     "wallet": "0xa2c908ce8b8386bc8c5471120c5a662551332c23",
     "side": "Zizou Bergs",
-    "usd": 14204,
+    "usd": 14197,
     "avgPrice": 0.9299
    },
    {
     "wallet": "0xf28e42d20e4826f2b10a24bc952001697947cab2",
     "side": "Zizou Bergs",
-    "usd": 13195,
+    "usd": 13188,
     "avgPrice": 0.8249
    },
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
     "side": "Zizou Bergs",
-    "usd": 6843
+    "usd": 6840
    },
    {
     "wallet": "0xe54d37c9c12e5fd3d684ff4d193ef1f44dabfdec",
     "side": "Zizou Bergs",
-    "usd": 4926,
+    "usd": 4923,
     "avgPrice": 0.8942
    }
   ],
-  "hoursToKickoff": 2.62,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 2.13,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Zizou Bergs": "110334369605162196616292631222266004349704549736879975738589148901279635262811",
    "Carlos Taberner": "84389974994845205763572616613471164110866218539252819064701631277280878191894"
   },
   "book": {
    "side": "Zizou Bergs",
-   "bid": 0.944,
+   "bid": 0.943,
    "ask": 0.95,
-   "spreadC": 0.6,
-   "spreadPct": 0.63,
+   "spreadC": 0.7,
+   "spreadPct": 0.74,
    "bids": [
     [
-     0.944,
-     302
-    ],
-    [
      0.943,
-     479
+     273
     ],
     [
      0.941,
@@ -149772,38 +149799,42 @@
      60000
     ],
     [
-     0.888,
-     83
+     0.93,
+     2000
     ],
     [
-     0.887,
-     3000
+     0.92,
+     153
+    ],
+    [
+     0.9,
+     30
     ]
    ],
    "asks": [
     [
      0.95,
-     15
+     137
+    ],
+    [
+     0.951,
+     189
+    ],
+    [
+     0.952,
+     1259
+    ],
+    [
+     0.953,
+     91
     ],
     [
      0.954,
-     178
+     15
     ],
     [
      0.955,
-     165
-    ],
-    [
-     0.956,
      5
-    ],
-    [
-     0.966,
-     5
-    ],
-    [
-     0.967,
-     85
     ]
    ]
   },
@@ -149856,8 +149887,8 @@
     "avgPrice": 0.4699
    }
   ],
-  "hoursToKickoff": 2.62,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 2.13,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Over": "62223116488524458900744552550559615303549751845460045593279521747328801203104",
    "Under": "16468037711526009515484808017875030650612694973331800230914331036347385538905"
@@ -149865,43 +149896,43 @@
  },
  "wta-jovic-frech-2026-08-30": {
   "shares": {
-   "Iva Jovic": 23669.09345300502,
-   "Magdalena Frech": 9460.269202979991
+   "Iva Jovic": 24026.98069584002,
+   "Magdalena Frech": 9374.44086151999
   },
   "prices": {
-   "Iva Jovic": 0.715,
-   "Magdalena Frech": 0.285
+   "Iva Jovic": 0.72,
+   "Magdalena Frech": 0.28
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 71820,
+  "totalUsd": 72573,
   "whales": [
    {
     "wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
     "side": "Iva Jovic",
-    "usd": 7122,
+    "usd": 7172,
     "avgPrice": 0.5844
    },
    {
     "wallet": "0xb4d250f58c26840e09723a83ce9c8149aa32ce99",
     "side": "Magdalena Frech",
-    "usd": 2850,
+    "usd": 2800,
     "avgPrice": 0.265
    },
    {
     "wallet": "0x03f4bd4bd14e0dffa6f012d023387e1a327f7e44",
     "side": "Iva Jovic",
-    "usd": 2145,
+    "usd": 2160,
     "avgPrice": 0.74
    },
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
     "side": "Iva Jovic",
-    "usd": 1952
+    "usd": 1965
    }
   ],
-  "hoursToKickoff": 2.62,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 2.13,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Iva Jovic": "112266548668982349152016434224268667227187412627567111587473138524127508694962",
    "Magdalena Frech": "105988465688122173031957912408132156461080835896379859168829949841381944716376"
@@ -149954,8 +149985,8 @@
  },
  "atp-shapova-assche-2026-09-02": {
   "shares": {
-   "Denis Shapovalov": 38616.17785506004,
-   "Luca Van Assche": 27394.396650685
+   "Denis Shapovalov": 38859.19871242502,
+   "Luca Van Assche": 27566.79606232001
   },
   "prices": {
    "Denis Shapovalov": 0.585,
@@ -149963,7 +149994,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 70340,
+  "totalUsd": 70476,
   "whales": [
    {
     "wallet": "0xdb859a551fcf56e49416160911476bea7307152f",
@@ -149980,7 +150011,7 @@
    {
     "wallet": "0xc430e5b17128df7ce78d69fa28bc7de038641ebf",
     "side": "Luca Van Assche",
-    "usd": 3269,
+    "usd": 3458,
     "avgPrice": 0.4099
    },
    {
@@ -149989,8 +150020,8 @@
     "usd": 3069
    }
   ],
-  "hoursToKickoff": 2.62,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 2.13,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Denis Shapovalov": "52828828095211100414387440421879321050898530655496178435691689163356900385809",
    "Luca Van Assche": "58251810113195971731243244074575287868590667390031430848179160199108856794691"
@@ -150043,43 +150074,43 @@
  },
  "wta-bartunk-sherif-2026-08-30": {
   "shares": {
-   "Nikola Bartunkova": 22577.34422416,
-   "Mayar Sherif": 1963.246790720001
+   "Nikola Bartunkova": 22271.794194649996,
+   "Mayar Sherif": 2202.677320590001
   },
   "prices": {
-   "Nikola Bartunkova": 0.92,
-   "Mayar Sherif": 0.08
+   "Nikola Bartunkova": 0.91,
+   "Mayar Sherif": 0.09
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 29307,
+  "totalUsd": 29404,
   "whales": [
    {
     "wallet": "0x49e0265d1a3636870df298e2ef5e681e246e9af1",
     "side": "Nikola Bartunkova",
-    "usd": 11130,
+    "usd": 11009,
     "avgPrice": 0.81
    },
    {
     "wallet": "0xc3c3b3ef304ddbea39fa2246e683a71da5d0eec8",
     "side": "Nikola Bartunkova",
-    "usd": 3220
+    "usd": 3185
    },
    {
     "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
     "side": "Nikola Bartunkova",
-    "usd": 1963,
+    "usd": 1942,
     "avgPrice": 0.8223
    },
    {
     "wallet": "0x9b11866433281ade9f2811dbde8acdefc45f5375",
     "side": "Nikola Bartunkova",
-    "usd": 1595,
+    "usd": 1577,
     "avgPrice": 0.8098
    }
   ],
-  "hoursToKickoff": 2.12,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 1.63,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Nikola Bartunkova": "70893015637149664806224907996220750215013470260480673888270620578594268178798",
    "Mayar Sherif": "35408780033507035706379520404189908474348990855484490448244511499848887535265"
@@ -150087,46 +150118,46 @@
  },
  "den-agf-mid-2026-09-02": {
   "shares": {
-   "Aarhus GF": 232.56770013,
+   "Aarhus GF": 235.65192310499998,
    "Draw (Aarhus GF vs. FC Midtjylland)": 64.67155724999999,
-   "FC Midtjylland": 9447.770499190003
+   "FC Midtjylland": 9875.712359695002
   },
   "prices": {
    "Aarhus GF": 0.285,
    "Draw (Aarhus GF vs. FC Midtjylland)": 0.255,
-   "FC Midtjylland": 0.445
+   "FC Midtjylland": 0.455
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 24871,
+  "totalUsd": 26417,
   "whales": [
    {
     "wallet": "0x52d93dcf81444f793dda7fedc370f7a35101fb1a",
     "side": "FC Midtjylland",
-    "usd": 1271,
+    "usd": 1299,
     "avgPrice": 0.43
-   },
-   {
-    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
-    "side": "FC Midtjylland",
-    "usd": 1139,
-    "avgPrice": 0.4315
    },
    {
     "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
     "side": "FC Midtjylland",
-    "usd": 1129,
+    "usd": 985,
     "avgPrice": 0.4307
+   },
+   {
+    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+    "side": "FC Midtjylland",
+    "usd": 956,
+    "avgPrice": 0.4315
    },
    {
     "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
     "side": "FC Midtjylland",
-    "usd": 887,
+    "usd": 907,
     "avgPrice": 0.43
    }
   ],
-  "hoursToKickoff": 2.12,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 1.63,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Aarhus GF": "20660593810248732182015397345789803016248060013107729787471534384300262624379",
    "Draw (Aarhus GF vs. FC Midtjylland)": "92687745725904355727969930660299664159647546526551166052749051954280053045830",
@@ -150135,8 +150166,8 @@
  },
  "lol-tos-fcn2-2026-08-27": {
   "shares": {
-   "The Otter Side": 14228.827185999999,
-   "Francesinhas": 2811.6885686999995
+   "The Otter Side": 14491.26632829,
+   "Francesinhas": 2863.5487001550005
   },
   "prices": {
    "The Otter Side": 0.835,
@@ -150144,13 +150175,13 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 22099,
+  "totalUsd": 22412,
   "whales": [
    {
     "wallet": "0x58f8f1138be2192696378629fc9aa23c7910dc70",
     "side": "The Otter Side",
-    "usd": 11608,
-    "avgPrice": 0.8598
+    "usd": 11900,
+    "avgPrice": 0.8591
    },
    {
     "wallet": "0xf5a3504ad3a8b079974620b3aa4fcca3f7579e12",
@@ -150171,8 +150202,8 @@
     "avgPrice": 0.7
    }
   ],
-  "hoursToKickoff": 2.12,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 1.63,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "The Otter Side": "110470339872470685821699072036050642613529140248472916177364972788130871002132",
    "Francesinhas": "98285144357609253252619931514446228321341843448469714413166827504974062173678"
@@ -150189,7 +150220,7 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 21313,
+  "totalUsd": 21318,
   "whales": [
    {
     "wallet": "0x684baa57c338c2549aec0aa3f034f695d72a8409",
@@ -150215,8 +150246,8 @@
     "usd": 1404
    }
   ],
-  "hoursToKickoff": 2.71,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 2.21,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Over": "98062480161764986649658765917348184218511754700646858993251627968164530352466",
    "Under": "92781805193887341936221222521106633818735976083631529209688998543491575338745"
@@ -150233,7 +150264,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 13175,
+  "totalUsd": 13177,
   "whales": [
    {
     "wallet": "0x454bd9b0655c03e38b08f8e45a01bb68de355b8b",
@@ -150258,8 +150289,8 @@
     "avgPrice": 0.4034
    }
   ],
-  "hoursToKickoff": 2.62,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 2.13,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Over": "19006422572653692266857364125088884083410528870901758323233394861273967284892",
    "Under": "108666201506863566740201553311981135870282378969562023501830485154299671447315"
@@ -150313,8 +150344,8 @@
  },
  "wta-linette-jones-2026-08-30": {
   "shares": {
-   "Magda Linette": 2613.143170575,
-   "Francesca Jones": 9001.064207674997
+   "Magda Linette": 2614.9431705750003,
+   "Francesca Jones": 9007.264207674998
   },
   "prices": {
    "Magda Linette": 0.225,
@@ -150322,7 +150353,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 14240,
+  "totalUsd": 14770,
   "whales": [
    {
     "wallet": "0x081e14554b92ee3dc53a21bd5b01f306692ef76e",
@@ -150345,8 +150376,8 @@
     "usd": 663
    }
   ],
-  "hoursToKickoff": 2.12,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 1.63,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Magda Linette": "17902173918187777600490165205216368008946742922721581656081810474723876762499",
    "Francesca Jones": "18673986040502506421591111337542082899135767119565488147750955957021804241776"
@@ -150399,46 +150430,46 @@
  },
  "scop-cel-abe-2026-09-02": {
   "shares": {
-   "Celtic FC": 79619.78004062996,
+   "Celtic FC": 83136.37834874497,
    "Draw (Celtic FC vs. Aberdeen FC)": 462.035065815,
    "Aberdeen FC": 751.0233798750002
   },
   "prices": {
-   "Celtic FC": 0.79,
+   "Celtic FC": 0.785,
    "Draw (Celtic FC vs. Aberdeen FC)": 0.135,
    "Aberdeen FC": 0.075
   },
   "league": "SCOTTISH-PREMIERSHIP",
   "sport": "Fußball",
-  "totalUsd": 131955,
+  "totalUsd": 147303,
   "whales": [
    {
     "wallet": "0x29b15e8557b2cb5b5ba1ec8b5cbba479ee26f737",
     "side": "Celtic FC",
-    "usd": 58569,
+    "usd": 58198,
     "avgPrice": 0.7997
-   },
-   {
-    "wallet": "0x64e93f87d8a0c1b2cde6f20d71f211372a95eb4c",
-    "side": "Celtic FC",
-    "usd": 3950,
-    "avgPrice": 0.79
    },
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "Celtic FC",
-    "usd": 3937,
+    "usd": 4038,
     "avgPrice": 0.7901
    },
    {
-    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+    "wallet": "0x64e93f87d8a0c1b2cde6f20d71f211372a95eb4c",
     "side": "Celtic FC",
-    "usd": 1267,
-    "avgPrice": 0.7878
+    "usd": 3925,
+    "avgPrice": 0.79
+   },
+   {
+    "wallet": "0xe8c4d68aff65b38cac46987b9b65e01eb47d395d",
+    "side": "Celtic FC",
+    "usd": 1684,
+    "avgPrice": 0.7899
    }
   ],
-  "hoursToKickoff": 2.87,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 2.38,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Celtic FC": "107938794072297296415203870569154847601647946217722607234618802073400010333899",
    "Draw (Celtic FC vs. Aberdeen FC)": "35708962414221425944161956158953895139061994497259031860489297187352216900885",
@@ -150447,43 +150478,44 @@
  },
  "atp-lehecka-samuel-2026-09-02": {
   "shares": {
-   "Jiri Lehecka": 28520.110574475002,
-   "Toby Samuel": 10817.938148599998
+   "Jiri Lehecka": 29585.246560869997,
+   "Toby Samuel": 11792.684562734996
   },
   "prices": {
-   "Jiri Lehecka": 0.725,
-   "Toby Samuel": 0.275
+   "Jiri Lehecka": 0.715,
+   "Toby Samuel": 0.285
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 41112,
+  "totalUsd": 43165,
   "whales": [
    {
     "wallet": "0x9bb1bc70c9e098f2f297416d06a0aa3992534dbe",
     "side": "Jiri Lehecka",
-    "usd": 26825,
+    "usd": 26455,
     "avgPrice": 0.73
    },
    {
     "wallet": "0x9f15613ebf1f36d4bc679e1211d1fc567cf9bdb3",
     "side": "Toby Samuel",
-    "usd": 4149,
+    "usd": 4300,
     "avgPrice": 0.27
+   },
+   {
+    "wallet": "0xb21ccb71b958c8eb0d25f4286592f45c31e43aed",
+    "side": "Jiri Lehecka",
+    "usd": 1430,
+    "avgPrice": 0.72
    },
    {
     "wallet": "0xfb07f48542d2b655e9d0bf1cc92a8a6feee8e2cc",
     "side": "Toby Samuel",
-    "usd": 1375,
+    "usd": 1425,
     "avgPrice": 0.27
-   },
-   {
-    "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
-    "side": "Toby Samuel",
-    "usd": 1293
    }
   ],
-  "hoursToKickoff": 2.87,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 2.38,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Jiri Lehecka": "35513236040532731348309109203118657243140307611850497725813955352823757430911",
    "Toby Samuel": "91058946699712224310948858580519087347078659621402057526776176319043259711584"
@@ -150491,9 +150523,9 @@
  },
  "elc-wba-cha-2026-09-02": {
   "shares": {
-   "West Bromwich Albion FC": 14346.509675174999,
-   "Draw (West Bromwich Albion FC vs. Charlton Athletic FC)": 606.5762488800002,
-   "Charlton Athletic FC": 909.3511475999998
+   "West Bromwich Albion FC": 14654.870602149998,
+   "Draw (West Bromwich Albion FC vs. Charlton Athletic FC)": 704.5762488800001,
+   "Charlton Athletic FC": 934.9038905499998
   },
   "prices": {
    "West Bromwich Albion FC": 0.575,
@@ -150502,13 +150534,18 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 30084,
+  "totalUsd": 32416,
   "whales": [
    {
     "wallet": "0xe4a785280932b1de883176e17284a4ad19194a1d",
     "side": "West Bromwich Albion FC",
     "usd": 9807,
     "avgPrice": 0.5699
+   },
+   {
+    "wallet": "0xd48a81db62f742c4e42d86dfc23a7ee345366e90",
+    "side": "West Bromwich Albion FC",
+    "usd": 904
    },
    {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
@@ -150519,15 +150556,10 @@
     "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
     "side": "West Bromwich Albion FC",
     "usd": 768
-   },
-   {
-    "wallet": "0xd48a81db62f742c4e42d86dfc23a7ee345366e90",
-    "side": "West Bromwich Albion FC",
-    "usd": 604
    }
   ],
-  "hoursToKickoff": 2.87,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 2.38,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "West Bromwich Albion FC": "106301378765586806299865231897857192275250054920760858020738684748358235655111",
    "Draw (West Bromwich Albion FC vs. Charlton Athletic FC)": "21908926208252375894580672529927352194834073160677638265593756974059743598028",
@@ -150536,9 +150568,9 @@
  },
  "elc-mil-wre-2026-09-02": {
   "shares": {
-   "Millwall FC": 8604.232417645004,
-   "Draw (Millwall FC vs. Wrexham AFC)": 190.16729994,
-   "Wrexham AFC": 739.81105301
+   "Millwall FC": 10966.319730300002,
+   "Draw (Millwall FC vs. Wrexham AFC)": 295.921954395,
+   "Wrexham AFC": 859.535554275
   },
   "prices": {
    "Millwall FC": 0.415,
@@ -150547,13 +150579,19 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 29201,
+  "totalUsd": 31518,
   "whales": [
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "Millwall FC",
     "usd": 3873,
     "avgPrice": 0.4284
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "Millwall FC",
+    "usd": 2699,
+    "avgPrice": 0.4223
    },
    {
     "wallet": "0x448861155279dbf833d041b963e3ac854599e319",
@@ -150566,16 +150604,10 @@
     "side": "Millwall FC",
     "usd": 977,
     "avgPrice": 0.4199
-   },
-   {
-    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-    "side": "Millwall FC",
-    "usd": 800,
-    "avgPrice": 0.4223
    }
   ],
-  "hoursToKickoff": 2.87,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 2.38,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Millwall FC": "62544221614780626896206863687978194255476495933133247942020090452561822553759",
    "Draw (Millwall FC vs. Wrexham AFC)": "40525349192655136860493794187006875613949776232457181080778698344848192510513",
@@ -150584,8 +150616,8 @@
  },
  "elc-qpr-car-2026-09-02-more-markets": {
   "shares": {
-   "Over": 6550.8617191799985,
-   "Under": 3765.5666266750004
+   "Over": 6614.093828554999,
+   "Under": 3801.9126423000007
   },
   "prices": {
    "Over": 0.635,
@@ -150593,7 +150625,7 @@
   },
   "league": "EFL-CHAMPIONSHIP",
   "sport": "Fußball",
-  "totalUsd": 11091,
+  "totalUsd": 11207,
   "whales": [
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -150609,7 +150641,7 @@
    {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
     "side": "Over",
-    "usd": 1103
+    "usd": 1096
    },
    {
     "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
@@ -150618,8 +150650,8 @@
     "avgPrice": 0.6001
    }
   ],
-  "hoursToKickoff": 2.87,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 2.38,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Over": "88244613857051340152177369249812587309357282521198836379455689605422283956360",
    "Under": "44131712767884893620574470743016596432829714892243232877235938988853273021040"
@@ -150627,9 +150659,9 @@
  },
  "elc-qpr-car-2026-09-02": {
   "shares": {
-   "Queens Park Rangers FC": 7039.615859325,
-   "Draw (Queens Park Rangers FC vs. Cardiff City FC)": 94.25060494000002,
-   "Cardiff City FC": 895.6683822300004
+   "Queens Park Rangers FC": 12598.8038547,
+   "Draw (Queens Park Rangers FC vs. Cardiff City FC)": 95.26893796000002,
+   "Cardiff City FC": 896.6867152500004
   },
   "prices": {
    "Queens Park Rangers FC": 0.525,
@@ -150638,18 +150670,18 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 19732,
+  "totalUsd": 22716,
   "whales": [
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "Queens Park Rangers FC",
-    "usd": 2452,
+    "usd": 7051,
     "avgPrice": 0.5296
    },
    {
     "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
     "side": "Queens Park Rangers FC",
-    "usd": 1374,
+    "usd": 1384,
     "avgPrice": 0.5295
    },
    {
@@ -150663,8 +150695,8 @@
     "usd": 577
    }
   ],
-  "hoursToKickoff": 2.87,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 2.38,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Queens Park Rangers FC": "13150853377279544242314281850192315720012813012249280877570829210887260553714",
    "Draw (Queens Park Rangers FC vs. Cardiff City FC)": "92523083365993823577893853749316940211332456545108729990845964785561038714085",
@@ -150679,15 +150711,15 @@
    "Queens Park Rangers FC 0 - 2 Cardiff City FC": 0.0,
    "Queens Park Rangers FC 1 - 1 Cardiff City FC": 10.079999684999999,
    "Queens Park Rangers FC 2 - 0 Cardiff City FC": 38.33925,
-   "Queens Park Rangers FC 0 - 3 Cardiff City FC": 1.08,
-   "Queens Park Rangers FC 1 - 2 Cardiff City FC": 8.84,
+   "Queens Park Rangers FC 0 - 3 Cardiff City FC": 1.04,
+   "Queens Park Rangers FC 1 - 2 Cardiff City FC": 8.459999999999999,
    "Queens Park Rangers FC 2 - 1 Cardiff City FC": 221.121217905,
    "Queens Park Rangers FC 3 - 0 Cardiff City FC": 38.4959307795,
-   "Queens Park Rangers FC 1 - 3 Cardiff City FC": 9.31,
+   "Queens Park Rangers FC 1 - 3 Cardiff City FC": 8.93,
    "Queens Park Rangers FC 2 - 2 Cardiff City FC": 17.728914135999997,
    "Queens Park Rangers FC 3 - 1 Cardiff City FC": 86.21126410000001,
-   "Queens Park Rangers FC 2 - 3 Cardiff City FC": 35.663166626999995,
-   "Queens Park Rangers FC 3 - 2 Cardiff City FC": 68.375133749,
+   "Queens Park Rangers FC 2 - 3 Cardiff City FC": 34.264611073000005,
+   "Queens Park Rangers FC 3 - 2 Cardiff City FC": 69.20897684350001,
    "Queens Park Rangers FC 3 - 3 Cardiff City FC": 44.19011289599999,
    "Any Other Score": 0.0
   },
@@ -150695,24 +150727,24 @@
    "Queens Park Rangers FC 0 - 0 Cardiff City FC": 0.045,
    "Queens Park Rangers FC 0 - 1 Cardiff City FC": 0.045,
    "Queens Park Rangers FC 1 - 0 Cardiff City FC": 0.075,
-   "Queens Park Rangers FC 0 - 2 Cardiff City FC": 0.031,
+   "Queens Park Rangers FC 0 - 2 Cardiff City FC": 0.0305,
    "Queens Park Rangers FC 1 - 1 Cardiff City FC": 0.105,
    "Queens Park Rangers FC 2 - 0 Cardiff City FC": 0.075,
-   "Queens Park Rangers FC 0 - 3 Cardiff City FC": 0.0135,
-   "Queens Park Rangers FC 1 - 2 Cardiff City FC": 0.065,
+   "Queens Park Rangers FC 0 - 3 Cardiff City FC": 0.013,
+   "Queens Park Rangers FC 1 - 2 Cardiff City FC": 0.06,
    "Queens Park Rangers FC 2 - 1 Cardiff City FC": 0.105,
    "Queens Park Rangers FC 3 - 0 Cardiff City FC": 0.0505,
-   "Queens Park Rangers FC 1 - 3 Cardiff City FC": 0.0245,
+   "Queens Park Rangers FC 1 - 3 Cardiff City FC": 0.0235,
    "Queens Park Rangers FC 2 - 2 Cardiff City FC": 0.071,
    "Queens Park Rangers FC 3 - 1 Cardiff City FC": 0.065,
-   "Queens Park Rangers FC 2 - 3 Cardiff City FC": 0.0255,
-   "Queens Park Rangers FC 3 - 2 Cardiff City FC": 0.041,
+   "Queens Park Rangers FC 2 - 3 Cardiff City FC": 0.0245,
+   "Queens Park Rangers FC 3 - 2 Cardiff City FC": 0.0415,
    "Queens Park Rangers FC 3 - 3 Cardiff City FC": 0.018,
    "Any Other Score": 0.16
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 11597,
+  "totalUsd": 12694,
   "whales": [
    {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
@@ -150729,7 +150761,7 @@
    {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
     "side": "Queens Park Rangers FC 3 - 2 Cardiff City FC",
-    "usd": 51
+    "usd": 52
    },
    {
     "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
@@ -150737,8 +150769,8 @@
     "usd": 48
    }
   ],
-  "hoursToKickoff": 2.87,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 2.38,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "Queens Park Rangers FC 0 - 0 Cardiff City FC": "28900781359601031221277136204429314031223612494946612918895532311420021384925",
    "Queens Park Rangers FC 0 - 1 Cardiff City FC": "1464004319751939740839265363078414335640819576150005366995179782737503054959",
@@ -150764,16 +150796,16 @@
    "West Bromwich Albion FC 0 - 0 Charlton Athletic FC": 29.9299,
    "West Bromwich Albion FC 0 - 1 Charlton Athletic FC": 25.3253,
    "West Bromwich Albion FC 1 - 0 Charlton Athletic FC": 54.75751519,
-   "West Bromwich Albion FC 0 - 2 Charlton Athletic FC": 10.82081,
+   "West Bromwich Albion FC 0 - 2 Charlton Athletic FC": 10.59058,
    "West Bromwich Albion FC 1 - 1 Charlton Athletic FC": 75.40665000000001,
    "West Bromwich Albion FC 2 - 0 Charlton Athletic FC": 194.69099999999997,
    "West Bromwich Albion FC 0 - 3 Charlton Athletic FC": 3.72368,
-   "West Bromwich Albion FC 1 - 2 Charlton Athletic FC": 22.10208,
+   "West Bromwich Albion FC 1 - 2 Charlton Athletic FC": 22.79277,
    "West Bromwich Albion FC 2 - 1 Charlton Athletic FC": 136.45045879499997,
    "West Bromwich Albion FC 3 - 0 Charlton Athletic FC": 95.85810000000001,
    "West Bromwich Albion FC 1 - 3 Charlton Athletic FC": 6.44644,
    "West Bromwich Albion FC 2 - 2 Charlton Athletic FC": 63.454765,
-   "West Bromwich Albion FC 3 - 1 Charlton Athletic FC": 111.98169828,
+   "West Bromwich Albion FC 3 - 1 Charlton Athletic FC": 112.914879099,
    "West Bromwich Albion FC 2 - 3 Charlton Athletic FC": 11.703028218000002,
    "West Bromwich Albion FC 3 - 2 Charlton Athletic FC": 20.3526099525,
    "West Bromwich Albion FC 3 - 3 Charlton Athletic FC": 14.593773624000002,
@@ -150783,16 +150815,16 @@
    "West Bromwich Albion FC 0 - 0 Charlton Athletic FC": 0.065,
    "West Bromwich Albion FC 0 - 1 Charlton Athletic FC": 0.055,
    "West Bromwich Albion FC 1 - 0 Charlton Athletic FC": 0.115,
-   "West Bromwich Albion FC 0 - 2 Charlton Athletic FC": 0.0235,
+   "West Bromwich Albion FC 0 - 2 Charlton Athletic FC": 0.023,
    "West Bromwich Albion FC 1 - 1 Charlton Athletic FC": 0.115,
    "West Bromwich Albion FC 2 - 0 Charlton Athletic FC": 0.105,
    "West Bromwich Albion FC 0 - 3 Charlton Athletic FC": 0.008,
-   "West Bromwich Albion FC 1 - 2 Charlton Athletic FC": 0.048,
+   "West Bromwich Albion FC 1 - 2 Charlton Athletic FC": 0.0495,
    "West Bromwich Albion FC 2 - 1 Charlton Athletic FC": 0.105,
    "West Bromwich Albion FC 3 - 0 Charlton Athletic FC": 0.065,
    "West Bromwich Albion FC 1 - 3 Charlton Athletic FC": 0.014,
    "West Bromwich Albion FC 2 - 2 Charlton Athletic FC": 0.0505,
-   "West Bromwich Albion FC 3 - 1 Charlton Athletic FC": 0.06,
+   "West Bromwich Albion FC 3 - 1 Charlton Athletic FC": 0.0605,
    "West Bromwich Albion FC 2 - 3 Charlton Athletic FC": 0.014,
    "West Bromwich Albion FC 3 - 2 Charlton Athletic FC": 0.0285,
    "West Bromwich Albion FC 3 - 3 Charlton Athletic FC": 0.0085,
@@ -150800,7 +150832,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 8187,
+  "totalUsd": 9033,
   "whales": [
    {
     "wallet": "0x9f3de29575e01e29172348351bf42d59ab16d65d",
@@ -150820,11 +150852,11 @@
    {
     "wallet": "0x9f3de29575e01e29172348351bf42d59ab16d65d",
     "side": "West Bromwich Albion FC 3 - 1 Charlton Athletic FC",
-    "usd": 69
+    "usd": 70
    }
   ],
-  "hoursToKickoff": 2.87,
-  "capturedAt": "2026-09-02T15:57:04.358543+00:00",
+  "hoursToKickoff": 2.38,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
   "tokens": {
    "West Bromwich Albion FC 0 - 0 Charlton Athletic FC": "89596536243471118493472108481588785210582713881271115782332671494304867226786",
    "West Bromwich Albion FC 0 - 1 Charlton Athletic FC": "54835947374071296135356517801103493713383810830522370467233672100786227071508",
@@ -150843,6 +150875,709 @@
    "West Bromwich Albion FC 3 - 2 Charlton Athletic FC": "21639705949905827526171725950842860430668095503543870919699336571773919312816",
    "West Bromwich Albion FC 3 - 3 Charlton Athletic FC": "69931519334375612343374492105272207611605441055546080935429375716334937364262",
    "Any Other Score": "51351124241092977154302115271102029371345387200016759392486797925461047479487"
+  }
+ },
+ "atp-jong-passaro-2026-08-30": {
+  "shares": {
+   "Jesper de Jong": 53931.356454464985,
+   "Francesco Passaro": 117261.61319430002
+  },
+  "prices": {
+   "Jesper de Jong": 0.315,
+   "Francesco Passaro": 0.685
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 334399,
+  "whales": [
+   {
+    "wallet": "0xdb859a551fcf56e49416160911476bea7307152f",
+    "side": "Jesper de Jong",
+    "usd": 23440,
+    "avgPrice": 0.5699
+   },
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "side": "Francesco Passaro",
+    "usd": 19092
+   },
+   {
+    "wallet": "0x664a25f165a0150ce687410470f3352f5783fc5f",
+    "side": "Francesco Passaro",
+    "usd": 16838,
+    "avgPrice": 0.5999
+   },
+   {
+    "wallet": "0x5f659bccbc353dbf7bcdffdee73bee60bb482036",
+    "side": "Jesper de Jong",
+    "usd": 11430,
+    "avgPrice": 0.5181
+   }
+  ],
+  "hoursToKickoff": 2.63,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
+  "tokens": {
+   "Jesper de Jong": "29798959263918011102017342838447015426884806920071888841562982551130680990430",
+   "Francesco Passaro": "14390247060850454485293074821954744157850387029620999258269413974380955652251"
+  },
+  "book": {
+   "side": "Francesco Passaro",
+   "bid": 0.67,
+   "ask": 0.69,
+   "spreadC": 2.0,
+   "spreadPct": 2.9,
+   "bids": [
+    [
+     0.67,
+     386
+    ],
+    [
+     0.66,
+     15531
+    ],
+    [
+     0.65,
+     278
+    ],
+    [
+     0.64,
+     60070
+    ],
+    [
+     0.63,
+     91
+    ],
+    [
+     0.62,
+     45
+    ]
+   ],
+   "asks": [
+    [
+     0.69,
+     5525
+    ],
+    [
+     0.7,
+     2361
+    ],
+    [
+     0.71,
+     336
+    ],
+    [
+     0.72,
+     3037
+    ],
+    [
+     0.73,
+     4062
+    ],
+    [
+     0.74,
+     50
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "action": "BUY",
+    "side": "Francesco Passaro",
+    "price": 0.68,
+    "usd": 341,
+    "ts": 1788365490
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "action": "BUY",
+    "side": "Francesco Passaro",
+    "price": 0.68,
+    "usd": 342,
+    "ts": 1788365479
+   },
+   {
+    "wallet": "0xdeff55f3132a313985035c34539e94da7b9178f8",
+    "action": "SELL",
+    "side": "Francesco Passaro",
+    "price": 0.67,
+    "usd": 1465,
+    "ts": 1788365374
+   }
+  ]
+ },
+ "wta-maria-ostapen-2026-08-30": {
+  "shares": {
+   "Tatjana Maria": 33183.31231330998,
+   "Jelena Ostapenko": 35235.60738783001
+  },
+  "prices": {
+   "Tatjana Maria": 0.485,
+   "Jelena Ostapenko": 0.515
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 151097,
+  "whales": [
+   {
+    "wallet": "0x0cdff1e562faf5ece704ef15f6a9fc4232e7ec9e",
+    "side": "Jelena Ostapenko",
+    "usd": 4430,
+    "avgPrice": 0.6161
+   },
+   {
+    "wallet": "0x081cd40e9d1a90896612c189bf470b4fbae4f010",
+    "side": "Jelena Ostapenko",
+    "usd": 4014,
+    "avgPrice": 0.5699
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "Tatjana Maria",
+    "usd": 4000,
+    "avgPrice": 0.4909
+   },
+   {
+    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
+    "side": "Jelena Ostapenko",
+    "usd": 3856,
+    "avgPrice": 0.6063
+   }
+  ],
+  "hoursToKickoff": 2.63,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
+  "tokens": {
+   "Tatjana Maria": "51995270902292090099420536181056934295136758963946836650220506837203181978318",
+   "Jelena Ostapenko": "82044786838163810749920441956330490924718343771571018717104447979520404846440"
+  },
+  "book": {
+   "side": "Jelena Ostapenko",
+   "bid": 0.51,
+   "ask": 0.52,
+   "spreadC": 1.0,
+   "spreadPct": 1.92,
+   "bids": [
+    [
+     0.51,
+     19478
+    ],
+    [
+     0.5,
+     2218
+    ],
+    [
+     0.49,
+     702
+    ],
+    [
+     0.48,
+     2590
+    ],
+    [
+     0.47,
+     794
+    ],
+    [
+     0.46,
+     94
+    ]
+   ],
+   "asks": [
+    [
+     0.52,
+     2289
+    ],
+    [
+     0.53,
+     6915
+    ],
+    [
+     0.54,
+     1084
+    ],
+    [
+     0.55,
+     389
+    ],
+    [
+     0.56,
+     1244
+    ],
+    [
+     0.64,
+     5
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "action": "BUY",
+    "side": "Tatjana Maria",
+    "price": 0.49,
+    "usd": 428,
+    "ts": 1788365725
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "action": "BUY",
+    "side": "Jelena Ostapenko",
+    "price": 0.52,
+    "usd": 489,
+    "ts": 1788364746
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "action": "BUY",
+    "side": "Jelena Ostapenko",
+    "price": 0.52,
+    "usd": 489,
+    "ts": 1788362703
+   }
+  ]
+ },
+ "mlb-bal-col-2026-09-02": {
+  "shares": {
+   "Baltimore Orioles": 13048.828302619997,
+   "Colorado Rockies": 8519.48294138
+  },
+  "prices": {
+   "Baltimore Orioles": 0.605,
+   "Colorado Rockies": 0.395
+  },
+  "league": "MLB",
+  "sport": "US-Sport",
+  "totalUsd": 22264,
+  "whales": [
+   {
+    "wallet": "0x3dfb153c197d4c19d3b31c1ecd2c7b6860eeabaf",
+    "side": "Baltimore Orioles",
+    "usd": 11817,
+    "avgPrice": 0.5999
+   },
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "side": "Colorado Rockies",
+    "usd": 5922
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Colorado Rockies",
+    "usd": 725,
+    "avgPrice": 0.39
+   },
+   {
+    "wallet": "0xdc9ec0e38b7b5bd6d91953bcc2e3676fcf5e5a9e",
+    "side": "Baltimore Orioles",
+    "usd": 347,
+    "avgPrice": 0.6099
+   }
+  ],
+  "hoursToKickoff": 2.8,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
+  "tokens": {
+   "Baltimore Orioles": "20190100817657204895751437211196779522201228552007873967615244810750139450793",
+   "Colorado Rockies": "50135494459113921767904290780640950314845755972507347806085137545425882834831"
+  }
+ },
+ "atp-berrett-navone-2026-09-02": {
+  "shares": {
+   "Matteo Berrettini": 22194.338636189994,
+   "Mariano Navone": 13894.168944810008
+  },
+  "prices": {
+   "Matteo Berrettini": 0.615,
+   "Mariano Navone": 0.385
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 54244,
+  "whales": [
+   {
+    "wallet": "0xc430e5b17128df7ce78d69fa28bc7de038641ebf",
+    "side": "Mariano Navone",
+    "usd": 10772,
+    "avgPrice": 0.37
+   },
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "side": "Matteo Berrettini",
+    "usd": 6615
+   },
+   {
+    "wallet": "0x9c3ce009c9b039956665cecc4cd14de862b5e8c9",
+    "side": "Matteo Berrettini",
+    "usd": 4881,
+    "avgPrice": 0.63
+   },
+   {
+    "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
+    "side": "Matteo Berrettini",
+    "usd": 3286
+   }
+  ],
+  "hoursToKickoff": 2.88,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
+  "tokens": {
+   "Matteo Berrettini": "40567498723942978624429202490469405972596768887092883274052727913684999757411",
+   "Mariano Navone": "12103108553432236582883385690639803798601945935410823667521131620520441812578"
+  }
+ },
+ "elc-bur-mid-2026-09-02": {
+  "shares": {
+   "Burnley FC": 1898.08746335,
+   "Draw (Burnley FC vs. Middlesbrough FC)": 274.4886922900001,
+   "Middlesbrough FC": 11553.217041320002
+  },
+  "prices": {
+   "Burnley FC": 0.325,
+   "Draw (Burnley FC vs. Middlesbrough FC)": 0.265,
+   "Middlesbrough FC": 0.415
+  },
+  "league": "EFL-CHAMPIONSHIP",
+  "sport": "Fußball",
+  "totalUsd": 45720,
+  "whales": [
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "Middlesbrough FC",
+    "usd": 2945,
+    "avgPrice": 0.4066
+   },
+   {
+    "wallet": "0x59091e6a5e24c64242e31b240fda56f57eeff7ca",
+    "side": "Burnley FC",
+    "usd": 1625,
+    "avgPrice": 0.34
+   },
+   {
+    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
+    "side": "Middlesbrough FC",
+    "usd": 1273,
+    "avgPrice": 0.4156
+   },
+   {
+    "wallet": "0x448861155279dbf833d041b963e3ac854599e319",
+    "side": "Middlesbrough FC",
+    "usd": 1245,
+    "avgPrice": 0.39
+   }
+  ],
+  "hoursToKickoff": 2.63,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
+  "tokens": {
+   "Burnley FC": "26895960245416282560552441716770858177821214317474687384794648199763166614628",
+   "Draw (Burnley FC vs. Middlesbrough FC)": "22889720970568672892005651811732341076517518980084739919858209746748693805554",
+   "Middlesbrough FC": "36779598198302067380904327797593019173134403217759949479991620780037378018103"
+  }
+ },
+ "elc-bur-mid-2026-09-02-more-markets": {
+  "shares": {
+   "Over": 6156.901224375,
+   "Under": 10261.499261874995
+  },
+  "prices": {
+   "Over": 0.375,
+   "Under": 0.625
+  },
+  "league": "EFL-CHAMPIONSHIP",
+  "sport": "Fußball",
+  "totalUsd": 16100,
+  "whales": [
+   {
+    "wallet": "0xc72d7dcdb23597d143a83536fb97b1d7db7efc21",
+    "side": "Under",
+    "usd": 5880,
+    "avgPrice": 0.63
+   },
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "side": "Over",
+    "usd": 3656
+   },
+   {
+    "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+    "side": "Under",
+    "usd": 1219
+   },
+   {
+    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
+    "side": "Over",
+    "usd": 1062
+   }
+  ],
+  "hoursToKickoff": 2.63,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
+  "tokens": {
+   "Over": "67983446656753950283481548430335959785408755991065745096994640501078769586718",
+   "Under": "69067978453107879651796285575605385298154513207380255478540077016102416108195"
+  }
+ },
+ "wta-boulter-muchova-2026-09-01": {
+  "shares": {
+   "Katie Boulter": 3880.748752065,
+   "Karolina Muchova": 21156.34041456
+  },
+  "prices": {
+   "Katie Boulter": 0.155,
+   "Karolina Muchova": 0.845
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 29605,
+  "whales": [
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "Karolina Muchova",
+    "usd": 6932,
+    "avgPrice": 0.8499
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Karolina Muchova",
+    "usd": 4094,
+    "avgPrice": 0.8499
+   },
+   {
+    "wallet": "0x3dfb153c197d4c19d3b31c1ecd2c7b6860eeabaf",
+    "side": "Katie Boulter",
+    "usd": 3600,
+    "avgPrice": 0.1499
+   },
+   {
+    "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
+    "side": "Karolina Muchova",
+    "usd": 2535,
+    "avgPrice": 0.85
+   }
+  ],
+  "hoursToKickoff": 2.38,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
+  "tokens": {
+   "Katie Boulter": "108442257732329959204074527933450058845160025968638212071734362003317670051087",
+   "Karolina Muchova": "92614862096077218451789439027828426210817049744564922054101451040894854680181"
+  }
+ },
+ "aut-fak-wsg-2026-09-02": {
+  "shares": {
+   "FK Austria Wien": 4085.2627360300007,
+   "Draw (FK Austria Wien vs. WSG Tirol)": 82.22821124000001,
+   "WSG Tirol": 4589.768452475
+  },
+  "prices": {
+   "FK Austria Wien": 0.515,
+   "Draw (FK Austria Wien vs. WSG Tirol)": 0.245,
+   "WSG Tirol": 0.235
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 29122,
+  "whales": [
+   {
+    "wallet": "0x59091e6a5e24c64242e31b240fda56f57eeff7ca",
+    "side": "FK Austria Wien",
+    "usd": 2575,
+    "avgPrice": 0.5299
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "WSG Tirol",
+    "usd": 1270,
+    "avgPrice": 0.2255
+   },
+   {
+    "wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
+    "side": "WSG Tirol",
+    "usd": 1175
+   },
+   {
+    "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+    "side": "WSG Tirol",
+    "usd": 576,
+    "avgPrice": 0.2248
+   }
+  ],
+  "hoursToKickoff": 0.13,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
+  "tokens": {
+   "FK Austria Wien": "45752886945313173895978889591820757124914606599391211430497274032790636235380",
+   "Draw (FK Austria Wien vs. WSG Tirol)": "113694148528305663948718998525489094895001211892284645465971993517802335716560",
+   "WSG Tirol": "18926005134405104550116485354651312249275958298893084999355312650267593964721"
+  }
+ },
+ "elc-bur-mid-2026-09-02-exact-score": {
+  "shares": {
+   "Burnley FC 0 - 0 Middlesbrough FC": 67.49600000000001,
+   "Burnley FC 0 - 1 Middlesbrough FC": 2.8125,
+   "Burnley FC 1 - 0 Middlesbrough FC": 5.302142755,
+   "Burnley FC 0 - 2 Middlesbrough FC": 12.44008315,
+   "Burnley FC 1 - 1 Middlesbrough FC": 80.527499375,
+   "Burnley FC 2 - 0 Middlesbrough FC": 0.0,
+   "Burnley FC 0 - 3 Middlesbrough FC": 0.0,
+   "Burnley FC 1 - 2 Middlesbrough FC": 96.46489401000001,
+   "Burnley FC 2 - 1 Middlesbrough FC": 7.003125,
+   "Burnley FC 3 - 0 Middlesbrough FC": 1.53,
+   "Burnley FC 1 - 3 Middlesbrough FC": 115.331583272,
+   "Burnley FC 2 - 2 Middlesbrough FC": 53.324999999999996,
+   "Burnley FC 3 - 1 Middlesbrough FC": 48.025969999999994,
+   "Burnley FC 2 - 3 Middlesbrough FC": 49.956176424,
+   "Burnley FC 3 - 2 Middlesbrough FC": 89.13527583,
+   "Burnley FC 3 - 3 Middlesbrough FC": 87.695558982,
+   "Any Other Score": 185.92625
+  },
+  "prices": {
+   "Burnley FC 0 - 0 Middlesbrough FC": 0.055,
+   "Burnley FC 0 - 1 Middlesbrough FC": 0.075,
+   "Burnley FC 1 - 0 Middlesbrough FC": 0.065,
+   "Burnley FC 0 - 2 Middlesbrough FC": 0.055,
+   "Burnley FC 1 - 1 Middlesbrough FC": 0.125,
+   "Burnley FC 2 - 0 Middlesbrough FC": 0.045,
+   "Burnley FC 0 - 3 Middlesbrough FC": 0.031,
+   "Burnley FC 1 - 2 Middlesbrough FC": 0.085,
+   "Burnley FC 2 - 1 Middlesbrough FC": 0.075,
+   "Burnley FC 3 - 0 Middlesbrough FC": 0.024,
+   "Burnley FC 1 - 3 Middlesbrough FC": 0.046,
+   "Burnley FC 2 - 2 Middlesbrough FC": 0.075,
+   "Burnley FC 3 - 1 Middlesbrough FC": 0.0365,
+   "Burnley FC 2 - 3 Middlesbrough FC": 0.033,
+   "Burnley FC 3 - 2 Middlesbrough FC": 0.03,
+   "Burnley FC 3 - 3 Middlesbrough FC": 0.018,
+   "Any Other Score": 0.125
+  },
+  "league": "EFL-CHAMPIONSHIP",
+  "sport": "Fußball",
+  "totalUsd": 19400,
+  "whales": [
+   {
+    "wallet": "0x9f3de29575e01e29172348351bf42d59ab16d65d",
+    "side": "Any Other Score",
+    "usd": 185
+   },
+   {
+    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+    "side": "Burnley FC 0 - 0 Middlesbrough FC",
+    "usd": 63
+   },
+   {
+    "wallet": "0x9f3de29575e01e29172348351bf42d59ab16d65d",
+    "side": "Burnley FC 1 - 3 Middlesbrough FC",
+    "usd": 57
+   },
+   {
+    "wallet": "0xb6dd8a264ee0b57e11ea6839cb8f53bfeb597af9",
+    "side": "Burnley FC 1 - 2 Middlesbrough FC",
+    "usd": 51
+   }
+  ],
+  "hoursToKickoff": 2.63,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
+  "tokens": {
+   "Burnley FC 0 - 0 Middlesbrough FC": "58420188162266159640621203304759602053347754246588266375123798909599898818630",
+   "Burnley FC 0 - 1 Middlesbrough FC": "108032269974166944144291473694170166449515264081277020083693853447630620392904",
+   "Burnley FC 1 - 0 Middlesbrough FC": "25389830747979796807598754115367440229224018741900895429161579324508551723030",
+   "Burnley FC 0 - 2 Middlesbrough FC": "12980741711333512140735655299869038141275886619941021185921002096728643508721",
+   "Burnley FC 1 - 1 Middlesbrough FC": "96130041222069603137686013082676618071857198276695318925161522196724344715110",
+   "Burnley FC 2 - 0 Middlesbrough FC": "21916980101750115208124311970608830719470300191082629427786981961709318303820",
+   "Burnley FC 0 - 3 Middlesbrough FC": "57987101515978940640897904178513225946387835993324576892818124590377881007201",
+   "Burnley FC 1 - 2 Middlesbrough FC": "42532718003516381150946423527330681365093140120180289563718859520034377059377",
+   "Burnley FC 2 - 1 Middlesbrough FC": "96599531640395625873599473812209720591568476894264830453105338325070606339844",
+   "Burnley FC 3 - 0 Middlesbrough FC": "25939637635415864337385975363478827263717136316058015772466458509305410165821",
+   "Burnley FC 1 - 3 Middlesbrough FC": "4714391988338649217320690712151209951177121490246368052442252244698291714285",
+   "Burnley FC 2 - 2 Middlesbrough FC": "4075533186043176137670826876906274936244374851408432282746512681742396125799",
+   "Burnley FC 3 - 1 Middlesbrough FC": "24099739752871404307428777575840947246351531147947468437908927304639457892832",
+   "Burnley FC 2 - 3 Middlesbrough FC": "96426150536835790600310484972488384784919037807555303422203611312374505762747",
+   "Burnley FC 3 - 2 Middlesbrough FC": "77755720466700615754441223829796853043590840246806437253925038473469594022337",
+   "Burnley FC 3 - 3 Middlesbrough FC": "43724795565966329032391035718318752517919191296598055761663419953056154637682",
+   "Any Other Score": "48091823632472183041677995974528262164989509446823749089064777017628687266669"
+  }
+ },
+ "uwcl-rso-che-2026-09-02": {
+  "shares": {
+   "Real Sociedad de Fútbol": 149.929186275,
+   "Draw (Real Sociedad de Fútbol vs. Chelsea FC)": 22.04085,
+   "Chelsea FC": 5824.14468572
+  },
+  "prices": {
+   "Real Sociedad de Fútbol": 0.135,
+   "Draw (Real Sociedad de Fútbol vs. Chelsea FC)": 0.195,
+   "Chelsea FC": 0.695
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 9830,
+  "whales": [
+   {
+    "wallet": "0x2ce00a557986c7484857152e91b2af9e004597af",
+    "side": "Chelsea FC",
+    "usd": 3983
+   },
+   {
+    "wallet": "0x78698dddbc712aa621d0a1816cf4f729fd762233",
+    "side": "Chelsea FC",
+    "usd": 493
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "Chelsea FC",
+    "usd": 465,
+    "avgPrice": 0.6865
+   },
+   {
+    "wallet": "0x0bcd68e4735f566c2b2e2c2ac3f817f4b03a5df4",
+    "side": "Chelsea FC",
+    "usd": 250
+   }
+  ],
+  "hoursToKickoff": 0.63,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
+  "tokens": {
+   "Real Sociedad de Fútbol": "30142193510270905217122858955325918460981743841924061759351743542152415694864",
+   "Draw (Real Sociedad de Fútbol vs. Chelsea FC)": "88936629232262431102310442225768621587671756448690481007701016178157192522895",
+   "Chelsea FC": "70887286768666227928720704406127828026151523165051709011131916831686556396362"
+  }
+ },
+ "scop-fal-ran-2026-09-02": {
+  "shares": {
+   "Falkirk FC": 48.64797036000001,
+   "Draw (Falkirk FC vs. Rangers FC)": 91.75771505,
+   "Rangers FC": 3595.0011670950007
+  },
+  "prices": {
+   "Falkirk FC": 0.165,
+   "Draw (Falkirk FC vs. Rangers FC)": 0.215,
+   "Rangers FC": 0.615
+  },
+  "league": "SCOTTISH-PREMIERSHIP",
+  "sport": "Fußball",
+  "totalUsd": 8978,
+  "whales": [
+   {
+    "wallet": "0x3f855d2724d398bb53a8bfd885823829d96a3364",
+    "side": "Rangers FC",
+    "usd": 1008
+   },
+   {
+    "wallet": "0x65b57f3444e1dba0487c65d2618d3b0c0e0baa71",
+    "side": "Rangers FC",
+    "usd": 740
+   },
+   {
+    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
+    "side": "Rangers FC",
+    "usd": 214
+   },
+   {
+    "wallet": "0x1ce5000f228a6a392306217670468778cb6117f9",
+    "side": "Rangers FC",
+    "usd": 198
+   }
+  ],
+  "hoursToKickoff": 2.63,
+  "capturedAt": "2026-09-02T16:25:20.437847+00:00",
+  "tokens": {
+   "Falkirk FC": "33540042786413522494629756033965024503116787673310388931535201648276834828226",
+   "Draw (Falkirk FC vs. Rangers FC)": "79033033255950319830043402441076955609203016950442857755384042613188676093824",
+   "Rangers FC": "26283656237296712912969062821124226861607597912899775171422106792410069203096"
   }
  }
 }
