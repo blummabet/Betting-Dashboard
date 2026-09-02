@@ -59,15 +59,13 @@
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
       "ok": false,
-      "nFail": 7,
+      "nFail": 5,
       "failures": [
         "cs2-ruby1-hs2-2026-08-21: seit 13.0 Tagen offen — keine Auflösung gefunden",
         "atp-virtane-dimitro-2026-08-27: seit 7.0 Tagen offen — keine Auflösung gefunden",
         "atp-basavar-schoolk-2026-08-30: seit 4.0 Tagen offen — keine Auflösung gefunden",
         "atp-fery-musetti-2026-08-30: seit 4.0 Tagen offen — keine Auflösung gefunden",
-        "wta-stoiana-eala-2026-08-30: seit 4.0 Tagen offen — keine Auflösung gefunden",
-        "atp-jong-passaro-2026-08-30: seit 4.0 Tagen offen — keine Auflösung gefunden",
-        "atp-bergs-taberne-2026-08-30: seit 4.0 Tagen offen — keine Auflösung gefunden"
+        "wta-stoiana-eala-2026-08-30: seit 4.0 Tagen offen — keine Auflösung gefunden"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -87,9 +85,9 @@
       "ok": false,
       "nFail": 5,
       "failures": [
-        "80/197 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (41%) — Trefferquote allein trügt",
-        "   0x84cfffc3f1… n=81 Treffer 56% P&L $-7,693,297",
-        "   0xc3c3b3ef30… n=327 Treffer 51% P&L $-3,944,960",
+        "81/200 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (40%) — Trefferquote allein trügt",
+        "   0x84cfffc3f1… n=85 Treffer 55% P&L $-7,693,297",
+        "   0xc3c3b3ef30… n=329 Treffer 51% P&L $-3,944,960",
         "   0xa0f21e6d35… n=66 Treffer 65% P&L $-2,642,592",
         "   0xabb89972b2… n=26 Treffer 69% P&L $-2,563,982"
       ],
@@ -133,5 +131,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-09-02T22:57:12.810305+00:00"
+  "generatedAt": "2026-09-02T23:27:00.993411+00:00"
 }
