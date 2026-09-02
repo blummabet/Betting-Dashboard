@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-01T22:20:35.059483+00:00",
+ "generatedAt": "2026-09-02T04:51:05.761033+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,29 +9,58 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 552,
- "pinnKeys": 318,
- "matched": 236,
+ "polyRowsSeen": 550,
+ "pinnKeys": 298,
+ "matched": 224,
  "footballRows": 192,
- "crossRows": 360,
+ "crossRows": 358,
  "footballSkippedStale": 83,
  "seenBySport": {
   "americanfootball_nfl": 158,
-  "baseball_mlb": 86,
+  "baseball_mlb": 84,
   "icehockey_nhl": 74,
   "boxing_boxing": 42,
   "soccer_mls": 45,
   "soccer_liga": 147
  },
  "matchedBySport": {
-  "baseball_mlb": 30,
+  "baseball_mlb": 18,
   "boxing_boxing": 14,
   "soccer_mls": 45,
   "soccer_liga": 147
  },
  "trackRecord": {
-  "tracked": 260,
-  "converged": 60
+  "tracked": 272,
+  "converged": 64
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|chicagocubs-milwaukeebrewers|milwaukeebrewers",
+   "sport": "baseball_mlb",
+   "event": "Milwaukee Brewers vs Chicago Cubs",
+   "market": "Moneyline",
+   "outcome": "Milwaukee Brewers",
+   "polyPP": 38.5,
+   "pinnPP": 58.8,
+   "gapPP": -20.31,
+   "vol": 521411,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.87,
+   "firstSeen": "2026-09-02T00:51:01.258414+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagocubs-milwaukeebrewers|chicagocubs",
+   "sport": "baseball_mlb",
+   "event": "Milwaukee Brewers vs Chicago Cubs",
+   "market": "Moneyline",
+   "outcome": "Chicago Cubs",
+   "polyPP": 61.5,
+   "pinnPP": 41.2,
+   "gapPP": 20.31,
+   "vol": 521411,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.87,
+   "firstSeen": "2026-09-02T00:51:01.258414+00:00"
+  }
+ ]
 }
