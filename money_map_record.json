@@ -1,31 +1,31 @@
 {
-"generatedAt": "2026-09-02T12:58:26.481503+00:00",
+"generatedAt": "2026-09-02T13:13:27.543010+00:00",
 "byVerdict": {
 "konsens": {
-"n": 697,
-"wins": 569,
-"hitRate": 0.8164,
-"polyN": 652,
+"n": 698,
+"wins": 570,
+"hitRate": 0.8166,
+"polyN": 653,
 "polyWins": 511,
-"polyHitRate": 0.7837,
+"polyHitRate": 0.7825,
 "pinnN": 59,
 "pinnHitRate": 0.7966,
-"nRoi": 25,
-"roi": 0.2816,
-"roiLb": 0.0251,
-"nClv": 25,
-"clv": 12.33,
-"clvLb": 1.7159
+"nRoi": 26,
+"roi": 0.3046,
+"roiLb": 0.0553,
+"nClv": 26,
+"clv": 13.61,
+"clvLb": 3.2025
 },
 "uneinig": {
-"n": 242,
+"n": 243,
 "wins": 80,
-"hitRate": 0.3306,
-"polyN": 216,
+"hitRate": 0.3292,
+"polyN": 217,
 "polyWins": 62,
-"polyHitRate": 0.287,
-"pinnN": 124,
-"pinnHitRate": 0.5887,
+"polyHitRate": 0.2857,
+"pinnN": 125,
+"pinnHitRate": 0.592,
 "nRoi": 11,
 "roi": -0.1418,
 "roiLb": -0.5821,
@@ -101,6 +101,11 @@
 "wins": 19,
 "hitRate": 0.8636
 },
+"Japanese J League": {
+"n": 22,
+"wins": 16,
+"hitRate": 0.7273
+},
 "Turkish Super League": {
 "n": 21,
 "wins": 13,
@@ -115,11 +120,6 @@
 "n": 20,
 "wins": 17,
 "hitRate": 0.85
-},
-"Japanese J League": {
-"n": 20,
-"wins": 15,
-"hitRate": 0.75
 },
 "Brazilian Serie B": {
 "n": 19,
@@ -554,20 +554,20 @@
 },
 "byStrength": {
 "strong": {
-"n": 546,
-"wins": 443,
-"hitRate": 0.8114,
-"nRoi": 22,
-"roi": 0.3095,
-"roiLb": 0.0177,
-"nClv": 22,
-"clv": 13.17,
-"clvLb": 0.3818
+"n": 547,
+"wins": 444,
+"hitRate": 0.8117,
+"nRoi": 23,
+"roi": 0.3343,
+"roiLb": 0.0525,
+"nClv": 23,
+"clv": 14.59,
+"clvLb": 2.1489
 },
 "weak": {
-"n": 369,
+"n": 370,
 "wins": 191,
-"hitRate": 0.5176,
+"hitRate": 0.5162,
 "nRoi": 14,
 "roi": -0.095,
 "roiLb": -0.4375,
@@ -577,14 +577,52 @@
 }
 },
 "divergence": {
-"n": 242,
+"n": 243,
 "betfairWins": 80,
-"betfairRate": 0.3306,
-"polyN": 216,
+"betfairRate": 0.3292,
+"polyN": 217,
 "polyWins": 62,
-"polyRate": 0.287
+"polyRate": 0.2857
 },
 "recent": [
+{
+"matchId": "35997693",
+"home": "Cerezo Osaka",
+"away": "Kashiwa",
+"league": "Japanese J League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Cerezo Osaka",
+"polySide": "away",
+"winner": "home",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-09-02T10:00:00Z",
+"settledAt": "2026-09-02T13:13:27.345655+00:00"
+},
+{
+"matchId": "35997900",
+"home": "Yokohama FM",
+"away": "Kyoto",
+"league": "Japanese J League",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Yokohama FM",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-02T10:00:00Z",
+"settledAt": "2026-09-02T13:13:27.345655+00:00"
+},
 {
 "matchId": "35997764",
 "home": "Hiroshima",
@@ -1306,56 +1344,18 @@
 ],
 "kickoff": "2026-09-01T00:15:00Z",
 "settledAt": "2026-09-01T03:24:14.017160+00:00"
-},
-{
-"matchId": "35993040",
-"home": "Deportivo Pasto",
-"away": "Deportivo Pereira",
-"league": "Colombian Primera A",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Deportivo Pereira",
-"polySide": "home",
-"winner": "away",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-08-31T23:00:00Z",
-"settledAt": "2026-09-01T02:08:59.766322+00:00"
-},
-{
-"matchId": "35981064",
-"home": "Fortaleza EC",
-"away": "Operario PR",
-"league": "Brazilian Serie B",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Fortaleza EC",
-"polySide": null,
-"winner": "draw",
-"moneyWin": false,
-"polyWin": null,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-08-31T22:30:00Z",
-"settledAt": "2026-09-01T01:38:57.355522+00:00"
 }
 ],
 "global": {
-"n": 948,
-"wins": 652,
-"hitRate": 0.6878,
-"nRoi": 36,
-"roi": 0.1522,
-"roiLb": -0.074,
-"nClv": 36,
-"clv": 11.49,
-"clvLb": 2.7528
+"n": 950,
+"wins": 653,
+"hitRate": 0.6874,
+"nRoi": 37,
+"roi": 0.1719,
+"roiLb": -0.0505,
+"nClv": 37,
+"clv": 12.41,
+"clvLb": 3.784
 },
-"pending": 12
+"pending": 10
 }
