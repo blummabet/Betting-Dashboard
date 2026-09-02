@@ -58,10 +58,20 @@ jobs:
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
           # Refactor 2026-06-06: State-Files aus state_files_registry.json
-          git add $(python32>/dev/null || true
-          git add state_files_registry.py2>/dev/null || true
-          git add --bash-list2>/dev/null || true
-          git add daily_wm_story)2>/dev/null || true
+          # 02.09.2026: hier stand eine zerschredderte Kommando-Substitution:
+          #     git add $(python3            2>/dev/null || true
+          #     git add state_files_registry.py 2>/dev/null || true
+          #     git add --bash-list          2>/dev/null || true
+          #     git add <job>)               2>/dev/null || true
+          # Gemeint war EINE Zeile: `git add $(python3 state_files_registry.py --bash-list <job>)`.
+          # Ein frueherer „eine Datei pro git add"-Umbau hat sie an den Leerzeichen zerlegt —
+          # seitdem lief das offene $( ueber vier Zeilen und `python3` ohne Argumente las stdin.
+          # Gestaged wurde dabei nichts Verlaessliches. Jetzt die Registry EINMAL auswerten und
+          # dann Datei fuer Datei stagen: eine fehlende Datei kostet dann genau sich selbst,
+          # nicht den ganzen Commit (die Lehre aus dem sechsstuendigen Betfair-Ausfall).
+          for f in $(python3 state_files_registry.py --bash-list daily_wm_story 2>/dev/null); do
+            [ -e "$f" ] && git add "$f"
+          done
           if git diff --staged --quiet; then
             echo "Keine Änderungen — kein Commit."
           else

@@ -69,9 +69,14 @@ jobs:
           git config user.email "bot@cocobet.local"
           git add picks_history.json
           # dataset-aware: platzierte Bets landen je Datensatz in eigener Datei
-          git add wm_auto_bets_placed.json2>/dev/null || true
-          git add mls_auto_bets_placed.json2>/dev/null || true
-          git add liga_auto_bets_placed.json2>/dev/null || true
+          # 02.09.2026: hier stand `git add <pfad>2>/dev/null` OHNE Leerzeichen. Die Shell liest
+          # das als Pfad `<pfad>2` — eine Datei, die es nicht gibt. `|| true` schluckt den Fehler,
+          # danach ist NICHTS gestaged, der Commit-Schritt meldet „keine Änderung" und der Job wird
+          # gruen. Genau die Signatur „frischer Job, alte Daten", die uns schon den sechsstuendigen
+          # Betfair-Ausfall gekostet hat. 83 solche Zeilen in 18 Workflows, alle mit Leerzeichen.
+          git add wm_auto_bets_placed.json 2>/dev/null || true
+          git add mls_auto_bets_placed.json 2>/dev/null || true
+          git add liga_auto_bets_placed.json 2>/dev/null || true
           # Only commit if there are actual changes
           git diff --staged --quiet && { echo "nichts zu committen"; exit 0; }
           git commit -m "poly: log placed bets [skip ci]"

@@ -82,10 +82,15 @@ jobs:
           # (merge_closing_lines hat das Closing schon dort gespiegelt). So clobbert der 15min-Job
           # NIEMALS die Picks/Daten der Haupt-Pipeline.
           git checkout -- liga-data.json 2>/dev/null || true
-          git add liga_closing_lines.json2>/dev/null || true
-          git add liga-odds-history.json2>/dev/null || true
-          git add liga_sharp_moves_log.json2>/dev/null || true
-          git add liga_sharp_dedup.json2>/dev/null || true
+          # 02.09.2026: hier stand `git add <pfad>2>/dev/null` OHNE Leerzeichen. Die Shell liest
+          # das als Pfad `<pfad>2` — eine Datei, die es nicht gibt. `|| true` schluckt den Fehler,
+          # danach ist NICHTS gestaged, der Commit-Schritt meldet „keine Änderung" und der Job wird
+          # gruen. Genau die Signatur „frischer Job, alte Daten", die uns schon den sechsstuendigen
+          # Betfair-Ausfall gekostet hat. 83 solche Zeilen in 18 Workflows, alle mit Leerzeichen.
+          git add liga_closing_lines.json 2>/dev/null || true
+          git add liga-odds-history.json 2>/dev/null || true
+          git add liga_sharp_moves_log.json 2>/dev/null || true
+          git add liga_sharp_dedup.json 2>/dev/null || true
           # 28.08.2026: eigene Zeile, eigener Pfad — health/<slug>.json wird NUR von diesem
           # Workflow geschrieben, deshalb kann sie mit keinem anderen kollidieren.
           git add health/closing-liga.json 2>/dev/null || true

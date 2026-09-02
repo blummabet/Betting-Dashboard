@@ -100,6 +100,11 @@ jobs:
           git config user.name  "CocoBet Bot"
           git config user.email "bot@cocobet.local"
           python build_dashboard_pulse.py || true   # 14.08.2026 (Lucas): Puls oefter frisch (gegen "Stand vor 3h")
+          # 02.09.2026: hier stand `git add <pfad>2>/dev/null` OHNE Leerzeichen. Die Shell liest
+          # das als Pfad `<pfad>2` — eine Datei, die es nicht gibt. `|| true` schluckt den Fehler,
+          # danach ist NICHTS gestaged, der Commit-Schritt meldet „keine Änderung" und der Job wird
+          # gruen. Genau die Signatur „frischer Job, alte Daten", die uns schon den sechsstuendigen
+          # Betfair-Ausfall gekostet hat. 83 solche Zeilen in 18 Workflows, alle mit Leerzeichen.
           git add dashboard_pulse.json 2>/dev/null || true
           # 28.08.2026: eigene Zeile, eigener Pfad — health/<slug>.json wird NUR von diesem
           # Workflow geschrieben, deshalb kann sie mit keinem anderen kollidieren.
@@ -113,8 +118,8 @@ jobs:
           git add liga_pick_push_ledger.json 2>/dev/null || true
           # Poly-Wallets (25.08.2026, Audit-Befund 07) — ohne diese Zeilen bleibt der
           # 2h-Snapshot auf dem Runner liegen und die Historie entsteht trotzdem nicht.
-          git add liga_poly_wallets.json2>/dev/null || true
-          git add liga_poly_smartmoney.json2>/dev/null || true
+          git add liga_poly_wallets.json 2>/dev/null || true
+          git add liga_poly_smartmoney.json 2>/dev/null || true
           git add liga_poly_wallet_ledger.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Änderung — nichts zu committen."; exit 0

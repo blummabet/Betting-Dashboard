@@ -128,6 +128,11 @@ jobs:
           git config user.name  "CocoBet Bot"
           git config user.email "bot@cocobet.local"
           python build_dashboard_pulse.py || true   # 14.08.2026 (Lucas): Puls oefter frisch (gegen "Stand vor 3h")
+          # 02.09.2026: hier stand `git add <pfad>2>/dev/null` OHNE Leerzeichen. Die Shell liest
+          # das als Pfad `<pfad>2` — eine Datei, die es nicht gibt. `|| true` schluckt den Fehler,
+          # danach ist NICHTS gestaged, der Commit-Schritt meldet „keine Änderung" und der Job wird
+          # gruen. Genau die Signatur „frischer Job, alte Daten", die uns schon den sechsstuendigen
+          # Betfair-Ausfall gekostet hat. 83 solche Zeilen in 18 Workflows, alle mit Leerzeichen.
           git add health/mls-odds-dense.json 2>/dev/null || true
           git add dashboard_pulse.json 2>/dev/null || true
           git add mls-data.json 2>/dev/null || true
@@ -137,17 +142,17 @@ jobs:
           git add mls_sharp_dedup.json 2>/dev/null || true
           git add mls_pick_announce_state.json 2>/dev/null || true
           git add mls_pick_push_ledger.json 2>/dev/null || true
-          git add mls_poly_prices.json2>/dev/null || true
-          git add mls_poly_smartmoney.json2>/dev/null || true
-          git add mls_poly_wallets.json2>/dev/null || true
+          git add mls_poly_prices.json 2>/dev/null || true
+          git add mls_poly_smartmoney.json 2>/dev/null || true
+          git add mls_poly_wallets.json 2>/dev/null || true
           git add mls_poly_wallet_ledger.json 2>/dev/null || true
-          git add mls_poly_coherence.json2>/dev/null || true
-          git add mls_poly_settlement.json2>/dev/null || true
-          git add mls_poly_markout.json2>/dev/null || true
-          git add mls_poly_money_close.json2>/dev/null || true
-          git add mls_poly_money_accuracy.json2>/dev/null || true
-          git add mls-poly-history.json2>/dev/null || true
-          git add mls_edge_alert_dedup.json2>/dev/null || true
+          git add mls_poly_coherence.json 2>/dev/null || true
+          git add mls_poly_settlement.json 2>/dev/null || true
+          git add mls_poly_markout.json 2>/dev/null || true
+          git add mls_poly_money_close.json 2>/dev/null || true
+          git add mls_poly_money_accuracy.json 2>/dev/null || true
+          git add mls-poly-history.json 2>/dev/null || true
+          git add mls_edge_alert_dedup.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Änderung — nichts zu committen."; exit 0
           fi

@@ -79,9 +79,14 @@ jobs:
           # git add -u (11.06.2026): staged ALLE getrackten Änderungen — also auch
           # wm2026-data.json aus der Pick-Regenerierung oben, nicht nur die Lineups.
           # Sonst käme das Lineup-Signal zwar in die Picks, aber nicht ins Repo.
+          # 02.09.2026: hier stand `git add <pfad>2>/dev/null` OHNE Leerzeichen. Die Shell liest
+          # das als Pfad `<pfad>2` — eine Datei, die es nicht gibt. `|| true` schluckt den Fehler,
+          # danach ist NICHTS gestaged, der Commit-Schritt meldet „keine Änderung" und der Job wird
+          # gruen. Genau die Signatur „frischer Job, alte Daten", die uns schon den sechsstuendigen
+          # Betfair-Ausfall gekostet hat. 83 solche Zeilen in 18 Workflows, alle mit Leerzeichen.
           git add -u 2>/dev/null || true
-          git add wm_lineups.json2>/dev/null || true
-          git add wm_lineup_alerts.json2>/dev/null || true
+          git add wm_lineups.json 2>/dev/null || true
+          git add wm_lineup_alerts.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Änderungen — sauberer Exit"
           else

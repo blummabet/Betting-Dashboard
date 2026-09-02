@@ -236,6 +236,11 @@ jobs:
         if: always()
         continue-on-error: true
         run: |
+          # 02.09.2026: hier stand `git add <pfad>2>/dev/null` OHNE Leerzeichen. Die Shell liest
+          # das als Pfad `<pfad>2` — eine Datei, die es nicht gibt. `|| true` schluckt den Fehler,
+          # danach ist NICHTS gestaged, der Commit-Schritt meldet „keine Änderung" und der Job wird
+          # gruen. Genau die Signatur „frischer Job, alte Daten", die uns schon den sechsstuendigen
+          # Betfair-Ausfall gekostet hat. 83 solche Zeilen in 18 Workflows, alle mit Leerzeichen.
           git add mls_pick_announce_state.json 2>/dev/null || true
           git add mls_telegram_sent.json 2>/dev/null || true
           git add mls-telegram-log.json 2>/dev/null || true
@@ -382,18 +387,18 @@ jobs:
           git add mls_status.json 2>/dev/null || true
           git add mls_sharp_moves_log.json 2>/dev/null || true
           git add mls_sharp_dedup.json 2>/dev/null || true
-          git add matches/mls-index.json2>/dev/null || true
-          git add matches/data/mls-*.json2>/dev/null || true
+          git add matches/mls-index.json 2>/dev/null || true
+          git add matches/data/mls-*.json 2>/dev/null || true
           git add mls_match_stats_cache.json 2>/dev/null || true
           git add mls_apif_predictions.json 2>/dev/null || true
-          git add mls_player_form.json2>/dev/null || true
-          git add mls_player_form_ledger.json2>/dev/null || true
+          git add mls_player_form.json 2>/dev/null || true
+          git add mls_player_form_ledger.json 2>/dev/null || true
           # 15.07.2026: Datenbasis für Player-TikTok-Cards + Wochen-Digest — ohne Commit nach
           # jedem Lauf weg, der Wochen-Digest fände dann nichts.
           git add mls_player_streaks.json 2>/dev/null || true
           git add mls_daily-tiktok 2>/dev/null || true   # gerenderte TikTok-Cards (Archiv)
-          git add mls_tiktok_sent.json2>/dev/null || true
-          git add mls-telegram-log.json2>/dev/null || true
+          git add mls_tiktok_sent.json 2>/dev/null || true
+          git add mls-telegram-log.json 2>/dev/null || true
           git add mls_pick_announce_state.json 2>/dev/null || true
           git add mls_pick_push_ledger.json 2>/dev/null || true
           git add mls_streak_watch.json 2>/dev/null || true
@@ -402,17 +407,17 @@ jobs:
           git add mls_poly_smartmoney.json 2>/dev/null || true
           git add mls_poly_wallets.json 2>/dev/null || true
           git add mls_poly_wallet_ledger.json 2>/dev/null || true
-          git add mls_poly_coherence.json2>/dev/null || true
-          git add mls_poly_settlement.json2>/dev/null || true
-          git add mls_poly_markout.json2>/dev/null || true
-          git add mls_poly_money_close.json2>/dev/null || true
-          git add mls_poly_money_accuracy.json2>/dev/null || true
+          git add mls_poly_coherence.json 2>/dev/null || true
+          git add mls_poly_settlement.json 2>/dev/null || true
+          git add mls_poly_markout.json 2>/dev/null || true
+          git add mls_poly_money_close.json 2>/dev/null || true
+          git add mls_poly_money_accuracy.json 2>/dev/null || true
           git add mls-poly-history.json 2>/dev/null || true
           git add mls_edge_alert_dedup.json 2>/dev/null || true
           # 13.07.2026 (MLS-Audit): wurden geschrieben, aber nie committet → Swap-Guard ohne
           # Gedächtnis, Telegram-Tagesmarker wirkungslos (Doppelpost-Risiko).
-          git add mls_swap_history.json2>/dev/null || true
-          git add mls_telegram_sent.json2>/dev/null || true
+          git add mls_swap_history.json 2>/dev/null || true
+          git add mls_telegram_sent.json 2>/dev/null || true
           git diff --staged --quiet || git commit -m "mls: Daten + Quoten + Picks + Resolve + Lernen [skip ci]"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           # Remote kann sich zwischenzeitlich bewegt haben (paralleler Workflow) → rebasen, dann push.

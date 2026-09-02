@@ -436,12 +436,27 @@ jobs:
           # committet → GitHub blieb tagelang auf altem Stand ("STALE" im Dashboard).
           # git add -u staged JEDE Änderung an bereits getrackten Dateien (Odds,
           # Picks, History …) unabhängig vom Registry-Script.
+          # 02.09.2026: hier stand `git add <pfad>2>/dev/null` OHNE Leerzeichen. Die Shell liest
+          # das als Pfad `<pfad>2` — eine Datei, die es nicht gibt. `|| true` schluckt den Fehler,
+          # danach ist NICHTS gestaged, der Commit-Schritt meldet „keine Änderung" und der Job wird
+          # gruen. Genau die Signatur „frischer Job, alte Daten", die uns schon den sechsstuendigen
+          # Betfair-Ausfall gekostet hat. 83 solche Zeilen in 18 Workflows, alle mit Leerzeichen.
           git add -u 2>/dev/null || true
           # Registry zusätzlich für NEUE (untracked) Files (z.B. neue match-pages).
-          git add $(python32>/dev/null || true
-          git add state_files_registry.py2>/dev/null || true
-          git add --bash-list2>/dev/null || true
-          git add fetch_wm_data)2>/dev/null || true
+          # 02.09.2026: hier stand eine zerschredderte Kommando-Substitution:
+          #     git add $(python3            2>/dev/null || true
+          #     git add state_files_registry.py 2>/dev/null || true
+          #     git add --bash-list          2>/dev/null || true
+          #     git add <job>)               2>/dev/null || true
+          # Gemeint war EINE Zeile: `git add $(python3 state_files_registry.py --bash-list <job>)`.
+          # Ein frueherer „eine Datei pro git add"-Umbau hat sie an den Leerzeichen zerlegt —
+          # seitdem lief das offene $( ueber vier Zeilen und `python3` ohne Argumente las stdin.
+          # Gestaged wurde dabei nichts Verlaessliches. Jetzt die Registry EINMAL auswerten und
+          # dann Datei fuer Datei stagen: eine fehlende Datei kostet dann genau sich selbst,
+          # nicht den ganzen Commit (die Lehre aus dem sechsstuendigen Betfair-Ausfall).
+          for f in $(python3 state_files_registry.py --bash-list fetch_wm_data 2>/dev/null); do
+            [ -e "$f" ] && git add "$f"
+          done
           # wm_status.json (Status-Seite Single Source of Truth) explizit — neu/untracked,
           # wird von git add -u nicht erfasst.
           git add wm_status.json 2>/dev/null || true

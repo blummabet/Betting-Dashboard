@@ -51,6 +51,77 @@ class TestGitAddEinzeln(unittest.TestCase):
                               f"und der Lauf endet gruen ohne Commit.")
         self.assertEqual(fehler, [], "\n" + "\n".join(fehler))
 
+    def test_kein_git_add_klebt_am_umleitungs_operator(self):
+        """🔴 02.09.2026, DRITTES Mal dieselbe Krankheit — diesmal ein fehlendes Leerzeichen.
+
+        `git add mls_daily-tiktok2>/dev/null || true` liest die Shell als Pfad
+        `mls_daily-tiktok2`. Den gibt es nicht, `git add` scheitert, `|| true` schluckt es,
+        danach ist NICHTS gestaged, `git diff --staged --quiet` meldet „keine Änderung" und der
+        Job endet gruen. Gefunden waren **83 solche Zeilen in 18 Workflows** — darunter
+        `mls_track_record_state.json`, `liga_closing_lines.json`, `wm2026-odds-history.json`.
+        Dieselbe Signatur wie der sechsstuendige Betfair-Ausfall: frischer Job, alte Daten.
+
+        Die Regel ist trivial und mechanisch pruefbar: zwischen Pfad und `2>` gehoert ein
+        Leerzeichen. Ohne diesen Test faellt so etwas erst auf, wenn jemand die Datei vermisst.
+        """
+        fehler = []
+        klebt = re.compile(r"git add\s+\S*[0-9]>")
+        for wf in sorted(WF.glob("*.yml")):
+            for nr, zeile in enumerate(wf.read_text(encoding="utf-8").split("\n"), 1):
+                if zeile.lstrip().startswith("#"):
+                    continue                      # Kommentare duerfen den Fehler beschreiben
+                if klebt.search(zeile):
+                    fehler.append(f"{wf.name}:{nr}: {zeile.strip()}")
+        self.assertEqual(fehler, [], "\nPfad klebt am Umleitungs-Operator — git staged dann eine "
+                         "Datei, die es nicht gibt, und der Lauf wird still gruen:\n"
+                         + "\n".join(fehler))
+
+    def test_kein_git_add_haengt_in_einer_offenen_kommando_substitution(self):
+        """🔴 02.09.2026, der schwerste Fund des Tages.
+
+        In fuenf Workflows stand:
+
+            git add $(python3            2>/dev/null || true
+            git add state_files_registry.py 2>/dev/null || true
+            git add --bash-list          2>/dev/null || true
+            git add <job>)               2>/dev/null || true
+
+        Gemeint war EINE Zeile — `git add $(python3 state_files_registry.py --bash-list <job>)`.
+        Ein frueherer „eine Datei pro git add"-Umbau hat sie an den Leerzeichen zerlegt. Seitdem
+        lief ein offenes `$(` ueber vier Zeilen, `python3` startete ohne Argumente und las stdin,
+        und was am Ende gestaged wurde, war Zufall. Betroffen: daily-tiktok, daily-wm-story,
+        fetch-wm-data, manage-wm-poly, track-record-card — also genau die Jobs, deren Ausgaben
+        immer wieder „alt" aussahen.
+
+        Der Test prueft mechanisch, was die Ursache war: eine `git add`-Zeile darf keine
+        unbalancierten Klammern hinterlassen.
+        """
+        fehler = []
+        for wf in sorted(WF.glob("*.yml")):
+            for nr, zeile in enumerate(wf.read_text(encoding="utf-8").split("\n"), 1):
+                if not SAMMEL.match(zeile) or zeile.lstrip().startswith("#"):
+                    continue
+                kern = zeile.split("#")[0]
+                if kern.count("(") != kern.count(")"):
+                    fehler.append(f"{wf.name}:{nr}: {zeile.strip()}")
+        self.assertEqual(fehler, [], "\n`git add` mit unbalancierten Klammern — eine ueber mehrere "
+                         "Zeilen offene Kommando-Substitution staged nicht, was dasteht:\n"
+                         + "\n".join(fehler))
+
+    def test_die_registry_wird_datei_fuer_datei_gestaged(self):
+        """Gegenprobe: die Registry muss weiterhin ausgewertet werden — nur eben in einer Schleife,
+        damit eine fehlende Datei nicht den ganzen Commit kostet."""
+        gefunden = 0
+        for wf in sorted(WF.glob("*.yml")):
+            txt = wf.read_text(encoding="utf-8")
+            if "--bash-list" not in txt:
+                continue
+            gefunden += 1
+            self.assertIn("for f in $(python3 state_files_registry.py --bash-list", txt,
+                          f"{wf.name} wertet die Registry nicht mehr in einer Schleife aus")
+            self.assertIn('git add "$f"', txt, f"{wf.name} staged die Registry-Dateien nicht einzeln")
+        self.assertGreaterEqual(gefunden, 5, "die Registry-Staging-Zeilen sind verschwunden")
+
     def test_die_betfair_datei_addiert_ueberhaupt_etwas(self):
         """Gegenprobe: der Test oben waere auch dann gruen, wenn jemand alle git-add-Zeilen loescht."""
         txt = (WF / "betfair.yml").read_text(encoding="utf-8")

@@ -45,8 +45,13 @@ jobs:
           # wm_closing_lines.json (merge_closing_lines hat das Closing schon dort gespiegelt).
           # So clobbert dieser 15min-Job NIEMALS die Picks/Daten der Haupt-Pipeline.
           git checkout -- wm2026-data.json 2>/dev/null || true
-          git add wm_closing_lines.json2>/dev/null || true
-          git add wm2026-odds-history.json2>/dev/null || true
+          # 02.09.2026: hier stand `git add <pfad>2>/dev/null` OHNE Leerzeichen. Die Shell liest
+          # das als Pfad `<pfad>2` — eine Datei, die es nicht gibt. `|| true` schluckt den Fehler,
+          # danach ist NICHTS gestaged, der Commit-Schritt meldet „keine Änderung" und der Job wird
+          # gruen. Genau die Signatur „frischer Job, alte Daten", die uns schon den sechsstuendigen
+          # Betfair-Ausfall gekostet hat. 83 solche Zeilen in 18 Workflows, alle mit Leerzeichen.
+          git add wm_closing_lines.json 2>/dev/null || true
+          git add wm2026-odds-history.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Closing-Änderung — nichts zu committen."
             exit 0

@@ -72,10 +72,31 @@ jobs:
           git config user.email "actions@github.com"
           mkdir -p daily-tiktok
           # Refactor 2026-06-06: State-Files aus state_files_registry.json
-          git add $(python32>/dev/null || true
-          git add state_files_registry.py2>/dev/null || true
-          git add --bash-list2>/dev/null || true
-          git add daily_tiktok)2>/dev/null || true
+          # 02.09.2026: hier stand eine zerschredderte Kommando-Substitution:
+          #     git add $(python3            2>/dev/null || true
+          #     git add state_files_registry.py 2>/dev/null || true
+          #     git add --bash-list          2>/dev/null || true
+          #     git add <job>)               2>/dev/null || true
+          # Gemeint war EINE Zeile: `git add $(python3 state_files_registry.py --bash-list <job>)`.
+          # Ein frueherer „eine Datei pro git add"-Umbau hat sie an den Leerzeichen zerlegt —
+          # seitdem lief das offene $( ueber vier Zeilen und `python3` ohne Argumente las stdin.
+          # Gestaged wurde dabei nichts Verlaessliches. Jetzt die Registry EINMAL auswerten und
+          # dann Datei fuer Datei stagen: eine fehlende Datei kostet dann genau sich selbst,
+          # nicht den ganzen Commit (die Lehre aus dem sechsstuendigen Betfair-Ausfall).
+          for f in $(python3 state_files_registry.py --bash-list daily_tiktok 2>/dev/null); do
+            [ -e "$f" ] && git add "$f"
+          done
+          # 02.09.2026 (Lucas: „Haben diese Tik Tok … auch da ein Speicher Problem"): ja —
+          # 145 MB im Arbeitsbaum, alles in git, und nirgends eine Aufraeum-Logik. Zuwachs ~2,2
+          # MB/Tag. Niemand liest alte Karten: der Dedup in generate_daily_tiktok schaut nur auf
+          # Dateien von HEUTE. Die Regel raeumt Karten aelter als 14 Tage und Match-Daten, die
+          # weder eine Event-Seite noch einen Index-Eintrag haben und aelter als 7 Tage sind.
+          # Die Event-SEITEN selbst bleiben unangetastet — das ist der SEO-Bestand.
+          # `git add -A` je Ordner, damit auch die LOESCHUNGEN in den Commit kommen.
+          python3 scripts/archiv_aufraeumen.py --loeschen || true
+          for d in daily-tiktok mls_daily-tiktok liga_daily-tiktok matches/data; do
+            [ -d "$d" ] && git add -A "$d"
+          done
           if git diff --staged --quiet; then
             echo "Keine neuen Files."
           else
