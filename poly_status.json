@@ -46,11 +46,20 @@
       "note": "Misst den ZUFLUSS, nicht das Schreiben: die Datei kann stuendlich aktualisiert werden und trotzdem seit Tagen keinen neuen Kandidaten enthalten. Gesperrte Kategorien sind ausgenommen."
     },
     {
+      "id": "public_push_buch",
+      "label": "Öffentlicher Push führt sein Buch",
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
+      "note": "Wer pusht, misst den Push. Gerechnet wird zum Preis im Moment des Pushs, nicht zum älteren Einstieg der Wallet."
+    },
+    {
       "id": "settlement_alive",
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
       "ok": false,
-      "nFail": 9,
+      "nFail": 8,
       "failures": [
         "cs2-ruby1-hs2-2026-08-21: seit 12.8 Tagen offen — keine Auflösung gefunden",
         "atp-virtane-dimitro-2026-08-27: seit 6.8 Tagen offen — keine Auflösung gefunden",
@@ -59,7 +68,6 @@
         "atp-fery-musetti-2026-08-30: seit 3.8 Tagen offen — keine Auflösung gefunden",
         "wta-stoiana-eala-2026-08-30: seit 3.8 Tagen offen — keine Auflösung gefunden",
         "atp-jong-passaro-2026-08-30: seit 3.8 Tagen offen — keine Auflösung gefunden",
-        "wta-bartunk-sherif-2026-08-30: seit 3.8 Tagen offen — keine Auflösung gefunden",
         "atp-bergs-taberne-2026-08-30: seit 3.8 Tagen offen — keine Auflösung gefunden"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
@@ -81,8 +89,8 @@
       "nFail": 5,
       "failures": [
         "77/191 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (40%) — Trefferquote allein trügt",
-        "   0x84cfffc3f1… n=68 Treffer 53% P&L $-7,725,746",
-        "   0xc3c3b3ef30… n=325 Treffer 51% P&L $-3,940,754",
+        "   0x84cfffc3f1… n=69 Treffer 54% P&L $-7,706,758",
+        "   0xc3c3b3ef30… n=326 Treffer 51% P&L $-3,940,754",
         "   0xa0f21e6d35… n=66 Treffer 65% P&L $-2,642,592",
         "   0xabb89972b2… n=26 Treffer 69% P&L $-2,563,982"
       ],
@@ -126,5 +134,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-09-02T19:25:48.244456+00:00"
+  "generatedAt": "2026-09-02T20:00:41.085262+00:00"
 }

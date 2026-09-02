@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-02T19:22:27.697456+00:00",
+ "generatedAt": "2026-09-02T19:52:59.316019+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,22 +9,22 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 558,
- "pinnKeys": 298,
- "matched": 228,
+ "polyRowsSeen": 560,
+ "pinnKeys": 300,
+ "matched": 230,
  "footballRows": 192,
- "crossRows": 366,
+ "crossRows": 368,
  "footballSkippedStale": 86,
  "seenBySport": {
   "americanfootball_nfl": 158,
-  "baseball_mlb": 88,
+  "baseball_mlb": 90,
   "icehockey_nhl": 78,
   "boxing_boxing": 42,
   "soccer_mls": 45,
   "soccer_liga": 147
  },
  "matchedBySport": {
-  "baseball_mlb": 22,
+  "baseball_mlb": 24,
   "boxing_boxing": 14,
   "soccer_mls": 45,
   "soccer_liga": 147
@@ -33,5 +33,34 @@
   "tracked": 270,
   "converged": 64
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|atlantabraves-washingtonnationals|atlantabraves",
+   "sport": "baseball_mlb",
+   "event": "Atlanta Braves vs Washington Nationals",
+   "market": "Moneyline",
+   "outcome": "Atlanta Braves",
+   "polyPP": 68.5,
+   "pinnPP": 62.5,
+   "gapPP": 6.0,
+   "vol": 1074569,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.51,
+   "firstSeen": "2026-09-01T23:20:38.852880+00:00"
+  },
+  {
+   "id": "baseball_mlb|atlantabraves-washingtonnationals|washingtonnationals",
+   "sport": "baseball_mlb",
+   "event": "Atlanta Braves vs Washington Nationals",
+   "market": "Moneyline",
+   "outcome": "Washington Nationals",
+   "polyPP": 31.5,
+   "pinnPP": 37.5,
+   "gapPP": -6.0,
+   "vol": 1074569,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.51,
+   "firstSeen": "2026-09-01T23:20:38.852880+00:00"
+  }
+ ]
 }
