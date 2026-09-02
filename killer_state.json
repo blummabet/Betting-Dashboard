@@ -145,7 +145,7 @@
    "markt": "Match Odds",
    "seite": "home",
    "name": "West Brom",
-   "odd": 1.72,
+   "odd": 1.73,
    "entryOdd": 1.75,
    "anteilPct": 79,
    "stufe": 2,
@@ -185,13 +185,13 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 79% auf der Seite"
+       "text": "Geld 76% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
-      "text": "Geld 79% auf der Seite"
+      "text": "Geld 76% auf der Seite"
      },
      {
       "buch": "POLY",
@@ -215,7 +215,7 @@
       },
       "tiefe": {
        "ok": false,
-       "text": "kein Move gemessen"
+       "text": "Move -1.3pp in unsere Richtung"
       },
       "text": "hat dieselbe Seite als Favorit"
      },
@@ -236,9 +236,9 @@
    },
    "wertVsPinn": -0.0021,
    "gehaltenSeit": "2026-09-02T15:43:48.775453+00:00",
-   "zuletztAktiv": "2026-09-02T17:14:14.889947+00:00",
+   "zuletztAktiv": "2026-09-02T17:59:01.273095+00:00",
    "haltePreis": 1.72,
-   "aktiv": false
+   "aktiv": true
   },
   "36006252|Match Odds": {
    "matchId": "36006252",
@@ -249,26 +249,35 @@
    "markt": "Match Odds",
    "seite": "away",
    "name": "St Gallen",
-   "odd": 1.7,
+   "odd": 1.68,
    "entryOdd": 1.8,
    "anteilPct": 76,
-   "stufe": 2,
+   "stufe": 1,
    "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly 95%",
+     "gewicht": 12
+    },
     {
      "art": "pinn",
      "text": "Pinnacle stimmt zu",
      "gewicht": 10
     }
    ],
-   "rang": 67.6,
+   "rang": 80.8,
    "track": null,
    "streak": null,
-   "poly": null,
+   "poly": {
+    "anteilPct": 95,
+    "usd": 7883,
+    "odd": 1.68
+   },
    "polyStatus": "unbekannt",
    "pinnMovePP": null,
    "punkte": {
-    "punkte": 5,
-    "moeglich": 7,
+    "punkte": 8,
+    "moeglich": 10,
     "dauerH": 1.08,
     "teile": [
      {
@@ -279,23 +288,29 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 86% auf der Seite"
+       "text": "Geld 88% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
-      "text": "Geld 86% auf der Seite"
+      "text": "Geld 88% auf der Seite"
      },
      {
       "buch": "POLY",
       "name": "Polymarket",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "text": "Polymarket nicht erhoben"
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Geld 95% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "1 bewiesene Wallet drauf"
+      },
+      "text": "Poly-Geld 95% auf derselben Seite"
      },
      {
       "buch": "PIN",
@@ -330,7 +345,7 @@
    },
    "wertVsPinn": null,
    "gehaltenSeit": "2026-09-02T17:25:04.501758+00:00",
-   "zuletztAktiv": "2026-09-02T17:44:01.663248+00:00",
+   "zuletztAktiv": "2026-09-02T17:59:01.273095+00:00",
    "haltePreis": 1.74,
    "aktiv": true
   },
@@ -426,6 +441,110 @@
    "gehaltenSeit": "2026-09-02T17:44:01.663248+00:00",
    "zuletztAktiv": "2026-09-02T17:44:01.663248+00:00",
    "haltePreis": 2.12,
+   "aktiv": true
+  },
+  "35999930|Match Odds": {
+   "matchId": "35999930",
+   "home": "Reading",
+   "away": "Mansfield",
+   "league": "English Sky Bet League 1",
+   "kickoff": "2026-09-02T19:00:00Z",
+   "markt": "Match Odds",
+   "seite": "home",
+   "name": "Reading",
+   "odd": 2.1,
+   "entryOdd": 2.12,
+   "anteilPct": 73,
+   "stufe": 2,
+   "verstaerker": [
+    {
+     "art": "pinn",
+     "text": "Pinnacle stimmt zu",
+     "gewicht": 10
+    },
+    {
+     "art": "track",
+     "text": "Liga trägt (+16% · n18)",
+     "gewicht": 10
+    }
+   ],
+   "rang": 77.3,
+   "track": {
+    "n": 18,
+    "roi": 0.1606,
+    "traegt": true,
+    "verliert": false
+   },
+   "streak": null,
+   "poly": null,
+   "polyStatus": "unbekannt",
+   "pinnMovePP": null,
+   "punkte": {
+    "punkte": 5,
+    "moeglich": 7,
+    "dauerH": 1.02,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 73% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "text": "Geld 73% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "text": "Polymarket nicht erhoben"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "hat dieselbe Seite als Favorit"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein Move gemessen"
+      },
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "nein",
+      "punkte": 0,
+      "moeglich": 1,
+      "grund": {
+       "ok": false,
+       "text": "steht seit 1.0h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 1.0h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": null,
+   "gehaltenSeit": "2026-09-02T17:59:01.273095+00:00",
+   "zuletztAktiv": "2026-09-02T17:59:01.273095+00:00",
+   "haltePreis": 2.1,
    "aktiv": true
   }
  }
