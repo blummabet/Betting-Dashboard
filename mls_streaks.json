@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "mls",
-    "generatedAt": "2026-09-01T21:43:46.599251+00:00",
+    "generatedAt": "2026-09-02T12:08:00.003887+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -1805,6 +1805,61 @@
       "matchupPct": 95
     },
     {
+      "teamId": "1610",
+      "team": "Colorado Rapids",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1610.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "under25",
+      "market": "Unter 2,5 Tore",
+      "length": 6,
+      "venue": "H",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 73,
+        "label": "Eigen 73% + Gegner 33% → 57% · Signale bestätigen"
+      },
+      "ratePct": 73,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 3,
+      "next": {
+        "oppId": "1613",
+        "oppName": "Columbus Crew",
+        "atHome": false,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T23:30:00+00:00",
+        "oppRatePct": 67
+      },
+      "oppSupportPct": 33,
+      "matchupPct": 57,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 5,
+        "conviction": 5,
+        "names": [
+          "injury",
+          "form_trend",
+          "xg_strength",
+          "chance_creation",
+          "transfer_shift",
+          "reverse_line_move"
+        ],
+        "market": "Unter 3.5 Tore"
+      }
+    },
+    {
       "teamId": "1612",
       "team": "Minnesota United FC",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1612.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -2051,47 +2106,6 @@
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1610.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
       "league": "MLS",
       "leagueName": "Major League Soccer",
-      "type": "under25",
-      "market": "Unter 2,5 Tore",
-      "length": 6,
-      "venue": "H",
-      "strong": true,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 73,
-        "label": "Eigen 73% + Gegner 33% → 57%"
-      },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 3,
-      "next": {
-        "oppId": "1613",
-        "oppName": "Columbus Crew",
-        "atHome": false,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T23:30:00+00:00",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 33,
-      "matchupPct": 57
-    },
-    {
-      "teamId": "1610",
-      "team": "Colorado Rapids",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1610.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
       "type": "unbeaten",
       "market": "Ungeschlagen",
       "length": 6,
@@ -2126,47 +2140,6 @@
       },
       "oppSupportPct": 67,
       "matchupPct": 59
-    },
-    {
-      "teamId": "1613",
-      "team": "Columbus Crew",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1613.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 6,
-      "venue": "H",
-      "strong": true,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 27% → 51%"
-      },
-      "ratePct": 67,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 3,
-      "next": {
-        "oppId": "1610",
-        "oppName": "Colorado Rapids",
-        "atHome": true,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T23:30:00+00:00",
-        "oppRatePct": 27
-      },
-      "oppSupportPct": 27,
-      "matchupPct": 51
     },
     {
       "teamId": "1603",
@@ -2208,6 +2181,61 @@
       },
       "oppSupportPct": 21,
       "matchupPct": 46
+    },
+    {
+      "teamId": "1613",
+      "team": "Columbus Crew",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1613.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 6,
+      "venue": "H",
+      "strong": true,
+      "continuation": {
+        "state": "wackelt",
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 27% → 51% · Linie/Signale dagegen"
+      },
+      "ratePct": 67,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 3,
+      "next": {
+        "oppId": "1610",
+        "oppName": "Colorado Rapids",
+        "atHome": true,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T23:30:00+00:00",
+        "oppRatePct": 27
+      },
+      "oppSupportPct": 27,
+      "matchupPct": 51,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 5,
+        "conviction": 5,
+        "names": [
+          "injury",
+          "form_trend",
+          "xg_strength",
+          "chance_creation",
+          "transfer_shift",
+          "reverse_line_move"
+        ],
+        "market": "Unter 3.5 Tore"
+      }
     },
     {
       "teamId": "1616",

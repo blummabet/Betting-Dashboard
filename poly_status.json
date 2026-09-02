@@ -50,14 +50,17 @@
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
       "ok": false,
-      "nFail": 6,
+      "nFail": 9,
       "failures": [
-        "cs2-ruby1-hs2-2026-08-21: seit 12.5 Tagen offen — keine Auflösung gefunden",
-        "atp-virtane-dimitro-2026-08-27: seit 6.5 Tagen offen — keine Auflösung gefunden",
-        "wta-joint-samsono-2026-08-30: seit 3.5 Tagen offen — keine Auflösung gefunden",
-        "atp-basavar-schoolk-2026-08-30: seit 3.5 Tagen offen — keine Auflösung gefunden",
-        "atp-fery-musetti-2026-08-30: seit 3.5 Tagen offen — keine Auflösung gefunden",
-        "wta-stoiana-eala-2026-08-30: seit 3.5 Tagen offen — keine Auflösung gefunden"
+        "cs2-ruby1-hs2-2026-08-21: seit 12.8 Tagen offen — keine Auflösung gefunden",
+        "atp-virtane-dimitro-2026-08-27: seit 6.8 Tagen offen — keine Auflösung gefunden",
+        "wta-joint-samsono-2026-08-30: seit 3.8 Tagen offen — keine Auflösung gefunden",
+        "atp-basavar-schoolk-2026-08-30: seit 3.8 Tagen offen — keine Auflösung gefunden",
+        "atp-fery-musetti-2026-08-30: seit 3.8 Tagen offen — keine Auflösung gefunden",
+        "wta-stoiana-eala-2026-08-30: seit 3.8 Tagen offen — keine Auflösung gefunden",
+        "atp-jong-passaro-2026-08-30: seit 3.8 Tagen offen — keine Auflösung gefunden",
+        "wta-bartunk-sherif-2026-08-30: seit 3.8 Tagen offen — keine Auflösung gefunden",
+        "atp-bergs-taberne-2026-08-30: seit 3.8 Tagen offen — keine Auflösung gefunden"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -77,10 +80,10 @@
       "ok": false,
       "nFail": 5,
       "failures": [
-        "78/190 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (41%) — Trefferquote allein trügt",
-        "   0x84cfffc3f1… n=65 Treffer 52% P&L $-7,749,600",
-        "   0xc3c3b3ef30… n=325 Treffer 51% P&L $-3,935,644",
-        "   0xa0f21e6d35… n=66 Treffer 65% P&L $-2,651,091",
+        "78/192 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (41%) — Trefferquote allein trügt",
+        "   0x84cfffc3f1… n=68 Treffer 53% P&L $-7,725,746",
+        "   0xc3c3b3ef30… n=325 Treffer 51% P&L $-3,940,312",
+        "   0xa0f21e6d35… n=66 Treffer 65% P&L $-2,642,592",
         "   0xabb89972b2… n=26 Treffer 69% P&L $-2,563,982"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
@@ -88,10 +91,12 @@
     {
       "id": "accuracy_backtest_fresh",
       "label": "Genauigkeits-Backtest frisch & belastbar",
-      "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "severity": "warn",
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "Backtest: jüngster Stand vor 7.7 h (> 3 h erwartet)"
+      ],
       "note": "poly_money_broad muss frisch sein und n groß genug, sonst ist 'folgt dem Geld' Zufall."
     },
     {
@@ -122,6 +127,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-09-02T11:25:06.718976+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-09-02T19:04:37.066290+00:00"
 }
