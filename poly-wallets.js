@@ -1087,9 +1087,102 @@ const PW_RANK_FLOOR_HIT = 0.45; // und Trefferquote ≥ 45 %
 // ab 4-stellig aufwärts"). Rangliste standardmäßig auf Wallets mit ernsthaftem Ø-Einsatz filtern.
 // Umschaltbar (Chip) falls man doch alle sehen will.
 const PW_RANK_MIN_AVG_USD = 1000;
+
+// ── Rang-Schlüssel: CLV-Untergrenze statt Lebenszeit-P&L (02.09.2026) ────────────────────
+// Lucas: „hast du Ideen, wie wir bessere Whales rausfinden?" — gemessen war der Befund eindeutig:
+//
+//   Median Ø-CLV der angezeigten Top-20  : 0,59 pp
+//   Median Ø-CLV aller 86 Qualifizierten : 0,60 pp
+//   Korrelation P&L ~ Ø CLV              : 0,06
+//
+// Die Sortierung nach `pnl` trug damit NULL Information über die Kante — sie pickte den REICHSTEN
+// der Qualifizierten, nicht den schärfsten. Der Grund steht in poly_money_broad.enrich_wallet_pnl:
+// `pnl` ist die POLYMARKET-WEITE Lebenszeit-P&L (Wahlen, Krypto, alles), nicht unsere getrackten
+// Sportwetten. Jemand kann mit Wahlmärkten Millionen gemacht haben und im Sport nichts können.
+//
+// CLV dagegen PERSISTIERT: getrennte Fenster (recent gegen den Rest, disjunkt, je ≥5 Auflösungen)
+// ergaben r = 0,78 — obere Hälfte +0,64pp → +0,18pp, untere −0,50pp → −1,22pp. Bei n=21 Wallets
+// noch dünn, aber die erste klare Persistenz im Projekt.
+//
+// Sortiert wird deshalb nach der einseitigen 95%-UNTERGRENZE des Ø CLV, nicht nach dem
+// Punktschätzer: sonst schlägt n=8 mit +2pp ein n=154 mit +0,72pp, obwohl die kleine Stichprobe
+// alles sein kann. `clvSqSum` (seit 02.09. mitgeschrieben) liefert die Streuung dafür.
+// ⚠️ Solange sie fehlt (Alt-Bestand), wird GESCHRUMPFT statt geraten: avgClv·n/(n+K). Das ist
+// keine Untergrenze und heißt im Tooltip auch nicht so.
+const PW_CLV_Z = 1.645;        // einseitige 95%-Schranke, derselbe Richter wie überall
+const PW_CLV_SHRINK_K = 25;    // Interim ohne Streuung: zieht kleine Stichproben Richtung null
+function _pwClvUg(v){
+  const n = v && v.n || 0;
+  if(!n) return { wert: 0, art: 'keine' };
+  const avg = (v.clvSumPP || 0) / n;
+  const q = v.clvSqSum;
+  if(typeof q === 'number' && n >= 3){
+    const varianz = Math.max(0, (q - n * avg * avg) / (n - 1));
+    return { wert: avg - PW_CLV_Z * Math.sqrt(varianz / n), art: 'ug', avg: avg };
+  }
+  return { wert: avg * n / (n + PW_CLV_SHRINK_K), art: 'schrumpf', avg: avg };
+}
+
+// Aktivitäts-Filter: ein seit Monaten stilles Wallet rankt sonst auf alter Kante. `lastTs` gibt es
+// erst seit 01.09. — wer keinen Zeitstempel hat, ist NICHT „inaktiv", sondern unbekannt und bleibt
+// drin (fehlende Information ist keine Erlaubnis, aber auch kein Urteil).
+const PW_RANK_STILL_TAGE = 21;
+let _pwRankNurAktiv = false;
+function _pwSetRankNurAktiv(v){ if(v===_pwRankNurAktiv) return; _pwRankNurAktiv=v; _pwRender(); }
+if(typeof window!=='undefined') window._pwSetRankNurAktiv=_pwSetRankNurAktiv;
+
+// Sport-Zuschnitt der Rangliste: ein globaler Score mischt LoL, Tennis, MLB und Fußball. Wer in
+// Esport scharf ist, muss es in der Serie B nicht sein. `bySport` wird seit 02.09. mitgeschrieben;
+// ohne Eintrag fällt die Zeile auf den globalen Score zurück UND wird als solche gekennzeichnet.
+let _pwRankSport = null;
+function _pwSetRankSport(v){ if(v===_pwRankSport) return; _pwRankSport=v; _pwRender(); }
+if(typeof window!=='undefined') window._pwSetRankSport=_pwSetRankSport;
+function _pwScoreFuerSport(v){
+  if(!_pwRankSport) return { v: v, global: true };
+  const b = v && v.bySport && v.bySport[_pwRankSport];
+  if(!b || !b.n) return null;               // in DIESER Sportart nichts vorzuweisen → nicht ranken
+  return { v: { n: b.n, clvSumPP: b.clvSumPP, wins: b.wins, clvSqSum: b.clvSqSum,
+                usd: v.usd, pnl: v.pnl, lastTs: v.lastTs, recent: v.recent }, global: false };
+}
 let _pwRankBigOnly = true;
 function _pwSetRankBigOnly(v){ if(v===_pwRankBigOnly) return; _pwRankBigOnly=v; _pwRender(); }
 if(typeof window!=='undefined') window._pwSetRankBigOnly=_pwSetRankBigOnly;
+// 02.09.2026 — zwei Zuschnitte fuer die Rangliste, beide opt-in und beide ohne Urteil ueber das,
+// was sie ausblenden.
+//
+// Sportart: ein globaler Score mischt LoL, Tennis, MLB und Fussball. Wer in Esport scharf ist, muss
+// es in der Serie B nicht sein. Gezeigt werden nur Sportarten, zu denen ueberhaupt Historie
+// vorliegt — eine leere Auswahl waere eine Behauptung.
+function _pwRankSportLeiste(scores){
+  const zaehl = {};
+  Object.values(scores || {}).forEach(function(v){
+    const bs = v && v.bySport; if(!bs) return;
+    Object.keys(bs).forEach(function(k){ if((bs[k]||{}).n) zaehl[k] = (zaehl[k]||0) + 1; });
+  });
+  const arten = Object.keys(zaehl).filter(function(k){ return zaehl[k] >= 3; }).sort();
+  if(!arten.length) return '';        // `bySport` wird erst seit 02.09. gefuellt
+  const chip=(v,label)=>{const on=_pwRankSport===v;
+    return '<button onclick="_pwSetRankSport('+(v===null?'null':"'"+v+"'")+')" style="padding:4px 11px;border-radius:16px;border:1px solid '
+      +(on?'#5eead4':'var(--border)')+';background:'+(on?'rgba(94,234,212,.16)':'transparent')+';color:'+(on?'#5eead4':'var(--muted)')
+      +';font-size:11.5px;font-weight:'+(on?700:500)+';cursor:pointer;font-family:inherit">'+label+'</button>';};
+  return '<div style="max-width:1000px;margin:2px auto 8px;display:flex;gap:7px;flex-wrap:wrap;align-items:center">'
+    +'<span class="pw-mut" style="font-size:11px;font-weight:700;margin-right:2px">Sportart:</span>'
+    +chip(null,'alle')+arten.map(function(a){return chip(a,a+' ('+zaehl[a]+')');}).join('')+'</div>';
+}
+
+// Aktivitaet: ein seit Monaten stilles Wallet rankt sonst auf alter Kante. Wer KEINEN Zeitstempel
+// hat (Alt-Bestand vor dem 01.09.), bleibt drin — unbekannt ist kein Urteil.
+function _pwRankAktivChip(){
+  const chip=(v,label)=>{const on=_pwRankNurAktiv===v;
+    return '<button onclick="_pwSetRankNurAktiv('+(v?'true':'false')+')" style="padding:4px 11px;border-radius:16px;border:1px solid '
+      +(on?'#5eead4':'var(--border)')+';background:'+(on?'rgba(94,234,212,.16)':'transparent')+';color:'+(on?'#5eead4':'var(--muted)')
+      +';font-size:11.5px;font-weight:'+(on?700:500)+';cursor:pointer;font-family:inherit">'+label+'</button>';};
+  return '<div style="max-width:1000px;margin:2px auto 12px;display:flex;gap:7px;flex-wrap:wrap;align-items:center">'
+    +'<span class="pw-mut" style="font-size:11px;font-weight:700;margin-right:2px">Aktivität:</span>'
+    +chip(false,'alle')+chip(true,'⏱ nur aktiv (≤ '+PW_RANK_STILL_TAGE+' Tage)')
+    +'<span class="pw-mut" style="font-size:10.5px">Wallets ohne Zeitstempel bleiben drin — unbekannt ist kein Urteil.</span></div>';
+}
+
 function _pwRankToggle(){
   const chip=(v,label)=>{const on=_pwRankBigOnly===v;
     return '<button onclick="_pwSetRankBigOnly('+(v?'true':'false')+')" style="padding:4px 11px;border-radius:16px;border:1px solid '
@@ -1232,16 +1325,40 @@ function _pwSharpRanking() {
 // ein zweites, nachgebautes Ranking wäre genau die Sorte Drift, die uns schon dreimal erwischt hat.
 function _pwRankRowsPnl(scores) {
   return Object.keys(scores).map(function (w) {
-    const v = scores[w]; if (!v || typeof v.pnl !== 'number' || (v.n || 0) < PW_RANK_MIN_N_PNL) return null;
-    return { wallet: w, pnl: v.pnl, n: v.n || 0, avgClv: v.n ? (v.clvSumPP || 0) / v.n : 0, hit: v.n ? (v.wins || 0) / v.n : 0, usd: Number(v.usd) || 0,
-             lastTs: v.lastTs || null, recent: v.recent || null };
+    const roh = scores[w];
+    if (!roh || typeof roh.pnl !== 'number') return null;
+    // 02.09.2026: je nach Sport-Zuschnitt wird der globale oder der Sport-Score bewertet.
+    const sel = _pwScoreFuerSport(roh);
+    if (!sel) return null;
+    const v = sel.v;
+    const ug = _pwClvUg(v);
+    // 31.07.2026 bleibt gueltig: ein Wallet mit n=9 und Traum-CLV stand auf #1 und war in Wahrheit
+    // ein grosser Verlierer — CLV auf neun Wetten misst Timing, nicht Koennen. Diese Lehre haengt
+    // aber am KLEINEN n, nicht an der P&L. Eine echte Untergrenze bestraft die duenne Stichprobe
+    // selbst (sie kennt die Streuung); der Schrumpf-Interim kann das nicht. Also: solange nur
+    // geschrumpft wird, gilt das strengere Gate.
+    const minN = (ug.art === 'ug') ? PW_RANK_MIN_N_PNL : PW_RANK_MIN_N;
+    if ((v.n || 0) < minN) return null;
+    return { wallet: w, pnl: roh.pnl, n: v.n || 0, avgClv: v.n ? (v.clvSumPP || 0) / v.n : 0,
+             hit: v.n ? (v.wins || 0) / v.n : 0, usd: Number(roh.usd) || 0,
+             clvUg: ug.wert, clvArt: ug.art, sportScore: !sel.global,
+             lastTs: roh.lastTs || null, recent: roh.recent || null };
   }).filter(Boolean)
+    // Aktivitäts-Filter (opt-in): unbekannter Zeitstempel bleibt drin — unbekannt ist kein Urteil.
+    .filter(function (r) {
+      if (!_pwRankNurAktiv) return true;
+      const d = _pwStilleTage(r.lastTs);
+      return d == null || d <= PW_RANK_STILL_TAGE;
+    })
     // 09.08.2026 (Lucas): Schärfe-Floor — wer genug getrackt ist (n≥FLOOR_N) und den Close NICHT schlägt
     // (Ø CLV<0) oder klar unter Münzwurf trifft (Treffer<45 %), gehört nicht in die „Schärfste"-Liste,
     // egal wie hoch die Lifetime-P&L. Zu dünn getrackte (n<FLOOR_N) bleiben (können wir noch nicht beurteilen).
     .filter(function (r) { return r.n < PW_RANK_FLOOR_N || (r.avgClv >= PW_RANK_FLOOR_CLV && r.hit >= PW_RANK_FLOOR_HIT); })
     .filter(function (r) { return !_pwRankBigOnly || (r.n > 0 && r.usd / r.n >= PW_RANK_MIN_AVG_USD); })   // 4-stellig-Filter (Lucas)
-    .sort(function (a, b) { return b.pnl - a.pnl; }).slice(0, 20);
+    // 🔴 Hier stand `b.pnl - a.pnl`. Gemessen trug das null Information ueber die Kante (s. Kopf).
+    // Sortiert wird jetzt nach der CLV-UNTERGRENZE; bei Gleichstand entscheidet die groessere
+    // Stichprobe, nicht das groessere Vermoegen.
+    .sort(function (a, b) { return (b.clvUg - a.clvUg) || (b.n - a.n); }).slice(0, 20);
 }
 // 01.09.2026 (Lucas: „die Whale-Wallets aendern sich eh, sobald eine bessere erscheint, oder?").
 // Ja — der Pool waechst automatisch (2.956 Wallets), und wer den Close nicht mehr schlaegt, faellt
@@ -1277,23 +1394,31 @@ function _pwStilleZelle(r){
 function _pwRankByPnl(scores, openMap, kick) {
   const rows = _pwRankRowsPnl(scores);
   const intro = '<section class="pw-sec"><div class="pw-sec-head">' + kick
-    + '<span class="pw-sec-note">Wallets, die den Close schlagen (Ø CLV ≥ 0 &amp; Treffer ≥ 45 % bei genug n), sortiert nach <b>echter Poly-Gesamt-Bilanz</b> (data-api /positions) · 🔥 = profitabel · nur Wallets ab $1.000 Ø-Einsatz</span></div>' + _pwRankToggle();
+    + '<span class="pw-sec-note">Wallets, die den Close schlagen (Ø CLV ≥ 0 &amp; Treffer ≥ 45 % bei genug n), sortiert nach der <b>CLV-Untergrenze</b> — nicht nach Vermögen. '
+    + 'Gemessen am 02.09.2026 trug die alte P&amp;L-Sortierung <b>null</b> Information über die Kante (Median-CLV der Top-20 = Median aller Qualifizierten, r=0,06); '
+    + 'die Poly-P&amp;L ist plattformweit (Wahlen, Krypto), nicht Sport. · nur Wallets ab $1.000 Ø-Einsatz</span></div>'
+    + _pwRankToggle() + _pwRankSportLeiste(scores) + _pwRankAktivChip();
   if (!rows.length) return intro + '<div class="pw-none">Noch keine Wallet mit P&amp;L-Historie erfasst.</div></section>';
   const body = rows.map(function (r, i) {
     const pcol = r.pnl >= 0 ? '#3fb950' : '#f85149', clvCol = r.avgClv >= 0 ? '#3fb950' : '#f85149';
     return '<tr><td class="pw-cn" style="font-weight:800">' + _pwMedal(i) + '</td>'
       + '<td style="white-space:nowrap">' + (r.pnl > 0 ? '🔥 ' : '') + _pwWalletChip(r.wallet) + '</td>'
-      + '<td class="pw-cn" style="font-weight:900;color:' + pcol + '">' + _pwPnl(r.pnl) + '</td>'
-      + '<td class="pw-cn" style="color:' + clvCol + '">' + (r.avgClv >= 0 ? '+' : '') + r.avgClv.toFixed(1) + 'pp</td>'
+      + '<td class="pw-cn" style="font-weight:900;color:' + (r.clvUg >= 0 ? '#3fb950' : '#e3b341') + '" title="'
+      + (r.clvArt === 'ug' ? 'Einseitige 95%-Untergrenze des Ø CLV über ' + r.n + ' Auflösungen.'
+                           : 'Geschrumpfter Ø CLV (n/(n+25)) — die Streuung wird erst seit 02.09.2026 mitgeschrieben; eine echte Untergrenze gibt es hier noch nicht.')
+      + '">' + (r.clvUg >= 0 ? '+' : '') + r.clvUg.toFixed(2) + (r.clvArt === 'ug' ? '' : '<i style="font-style:normal;opacity:.6">*</i>') + '</td>'
+      + '<td class="pw-cn" style="color:' + clvCol + '">' + (r.avgClv >= 0 ? '+' : '') + r.avgClv.toFixed(1) + 'pp'
+      + (r.sportScore ? '' : '<i style="font-style:normal;color:#8b949e;font-size:9px" title="global über alle Sportarten — für diese Sportart liegt noch nichts vor"> ⌀</i>') + '</td>'
       + '<td class="pw-cn">' + Math.round(r.hit * 100) + '%</td>'
       + '<td class="pw-cn pw-mut">' + r.n + '</td>'
       + '<td class="pw-cn pw-mut">' + _pwUsd(r.usd) + '</td>'
       + '<td class="pw-cn" style="font-weight:700">' + _pwUsd(r.n ? r.usd / r.n : 0) + '</td>'
+      + '<td class="pw-cn pw-mut" style="color:' + pcol + '" title="Plattformweite Poly-Bilanz — Kontext, NICHT das Rang-Kriterium.">' + _pwPnl(r.pnl) + '</td>'
       + '<td class="pw-cn">' + _pwStilleZelle(r) + '</td>'
       + '<td>' + _pwNowCell(openMap, r.wallet) + '</td></tr>';
   }).join('');
   return intro + '<div class="pw-tw"><table class="pw-tbl"><thead><tr>'
-    + '<th>#</th><th>Wallet</th><th>Poly-P&amp;L</th><th>Ø CLV</th><th>Treffer</th><th>n</th><th>Einsatz</th><th>Ø/Wette</th><th title="Wie lange die letzte Auflösung her ist. ▲/▼ vergleicht die letzten Auflösungen mit dem Lebenszeit-CLV.">zuletzt</th><th>setzt gerade auf</th>'
+    + '<th>#</th><th>Wallet</th><th title="Einseitige 95%-Untergrenze des Ø CLV — das Rang-Kriterium. * = geschrumpfter Schätzer, solange die Streuung fehlt.">CLV-UG</th><th>Ø CLV</th><th>Treffer</th><th>n</th><th>Einsatz</th><th>Ø/Wette</th><th title="Plattformweite Poly-Bilanz (Wahlen, Krypto inklusive) — nur Kontext.">Poly-P&amp;L</th><th title="Wie lange die letzte Auflösung her ist. ▲/▼ vergleicht die letzten Auflösungen mit dem Lebenszeit-CLV.">zuletzt</th><th>setzt gerade auf</th>'
     + '</tr></thead><tbody>' + body + '</tbody></table></div></section>';
 }
 function _pwRankRowsClv(scores) {
