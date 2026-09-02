@@ -160,7 +160,49 @@ jobs:
           # Workflow geschrieben, deshalb kann sie mit keinem anderen kollidieren.
           git add health/betfair.json 2>/dev/null || true
           git add betfair_coherence_watch.json 2>/dev/null || true   # ab wann liegt Geld in den Tormaerkten
-          git add betfair_prices.json betfair_history.json betfair_overview.json betfair_track_state.json betfair_track_results.json betfair_track_record.json betfair_league_norm.json betfair_league_norm_state.json betfair_direction.json betfair_draw_state.json betfair_draw_results.json betfair_draw_record.json betfair_alerts_seen.json betfair_public_seen.json betfair_public_ledger.json betfair_public_record.json betfair_consensus.json betfair_consensus_history.json odds_sports.json betfair_status.json money_map.json money_map_ledger.json money_map_record.json killer.json killer_state.json killer_ledger.json punkte_state.json punkte_ledger.json freigabe.json vorregistrierung.json killer_push_seen.json killer_push_ledger.json freigabe_push_state.json 2>/dev/null || true
+          # 🔴 02.09.2026 — DIE ZWEITE RUNDE DERSELBEN FALLE. `git add a b c` staged NICHTS,
+          # sobald EIN Pfad nicht existiert (fatal: pathspec). Mit `2>/dev/null || true`
+          # sieht man den Fehler nicht, danach ist der Index leer, `git diff --cached --quiet`
+          # meldet „keine Aenderung" und der Lauf endet GRUEN — sechs Stunden lang, waehrend
+          # `betfair_card_link.json`, `health/betfair.json` und `betfair_coherence_watch.json`
+          # weiter aktualisiert wurden, weil sie ihre EIGENE Zeile haben. Genau daran war der
+          # Ausfall vom 01.09. 22:30 UTC zu erkennen: drei Dateien lebten, dreiunddreissig nicht.
+          # Ausloeser diesmal: neue Dateien (punkte_*, vorregistrierung, odds_sports), die es auf
+          # dem Runner noch gar nicht gab. Ab jetzt bekommt JEDE Datei ihre eigene Zeile —
+          # eine fehlende kostet dann genau sich selbst und nicht den ganzen Lauf.
+          git add betfair_prices.json 2>/dev/null || true
+          git add betfair_history.json 2>/dev/null || true
+          git add betfair_overview.json 2>/dev/null || true
+          git add betfair_track_state.json 2>/dev/null || true
+          git add betfair_track_results.json 2>/dev/null || true
+          git add betfair_track_record.json 2>/dev/null || true
+          git add betfair_league_norm.json 2>/dev/null || true
+          git add betfair_league_norm_state.json 2>/dev/null || true
+          git add betfair_direction.json 2>/dev/null || true
+          git add betfair_draw_state.json 2>/dev/null || true
+          git add betfair_draw_results.json 2>/dev/null || true
+          git add betfair_draw_record.json 2>/dev/null || true
+          git add betfair_alerts_seen.json 2>/dev/null || true
+          git add betfair_public_seen.json 2>/dev/null || true
+          git add betfair_public_ledger.json 2>/dev/null || true
+          git add betfair_public_record.json 2>/dev/null || true
+          git add betfair_consensus.json 2>/dev/null || true
+          git add betfair_consensus_history.json 2>/dev/null || true
+          git add odds_sports.json 2>/dev/null || true
+          git add betfair_status.json 2>/dev/null || true
+          git add money_map.json 2>/dev/null || true
+          git add money_map_ledger.json 2>/dev/null || true
+          git add money_map_record.json 2>/dev/null || true
+          git add killer.json 2>/dev/null || true
+          git add killer_state.json 2>/dev/null || true
+          git add killer_ledger.json 2>/dev/null || true
+          git add punkte_state.json 2>/dev/null || true
+          git add punkte_ledger.json 2>/dev/null || true
+          git add freigabe.json 2>/dev/null || true
+          git add vorregistrierung.json 2>/dev/null || true
+          git add killer_push_seen.json 2>/dev/null || true
+          git add killer_push_ledger.json 2>/dev/null || true
+          git add freigabe_push_state.json 2>/dev/null || true
           if git diff --cached --quiet; then
             echo "keine Änderung — nichts zu committen"
             exit 0

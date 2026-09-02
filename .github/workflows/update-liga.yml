@@ -412,13 +412,16 @@ jobs:
           git add liga_status.json 2>/dev/null || true
           git add liga_sharp_moves_log.json 2>/dev/null || true
           git add liga_sharp_dedup.json 2>/dev/null || true
-          git add matches/liga-index.json matches/data/liga-*.json 2>/dev/null || true
+          git add matches/liga-index.json2>/dev/null || true
+          git add matches/data/liga-*.json2>/dev/null || true
           git add liga_match_stats_cache.json 2>/dev/null || true
           git add liga_apif_predictions.json 2>/dev/null || true
-          git add liga_player_form.json liga_player_form_ledger.json 2>/dev/null || true
+          git add liga_player_form.json2>/dev/null || true
+          git add liga_player_form_ledger.json2>/dev/null || true
           git add liga_player_streaks.json 2>/dev/null || true
           git add liga_daily-tiktok 2>/dev/null || true
-          git add liga_tiktok_sent.json liga-telegram-log.json 2>/dev/null || true
+          git add liga_tiktok_sent.json2>/dev/null || true
+          git add liga-telegram-log.json2>/dev/null || true
           git add money_map_sent.json 2>/dev/null || true              # Money-Map-Public-Dedup (matchId, 21.08.2026 Lucas)
           git add liga_pick_announce_state.json 2>/dev/null || true
           git add liga_pick_push_ledger.json 2>/dev/null || true
@@ -442,10 +445,13 @@ jobs:
           git add liga_steam_lag_sell_dedup.json 2>/dev/null || true # Sell-Alert Dedup
           # Poly-Analyseschicht (25.08.2026, Audit-Befund 07) — ohne diese Zeilen laeuft der
           # Schritt oben zwar, aber sein Ergebnis verlaesst den Runner nie.
-          git add liga_poly_wallets.json liga_poly_smartmoney.json 2>/dev/null || true
+          git add liga_poly_wallets.json2>/dev/null || true
+          git add liga_poly_smartmoney.json2>/dev/null || true
           git add liga_poly_wallet_ledger.json 2>/dev/null || true
-          git add liga_poly_coherence.json liga_poly_settlement.json 2>/dev/null || true
-          git add liga_poly_markout.json liga_poly_money_accuracy.json 2>/dev/null || true
+          git add liga_poly_coherence.json2>/dev/null || true
+          git add liga_poly_settlement.json2>/dev/null || true
+          git add liga_poly_markout.json2>/dev/null || true
+          git add liga_poly_money_accuracy.json2>/dev/null || true
           git add liga_poly_money_close.json 2>/dev/null || true
           git diff --staged --quiet || git commit -m "liga: Daten + Quoten + Picks + Resolve + Lernen [skip ci]"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"

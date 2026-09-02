@@ -45,7 +45,8 @@ jobs:
           # wm_closing_lines.json (merge_closing_lines hat das Closing schon dort gespiegelt).
           # So clobbert dieser 15min-Job NIEMALS die Picks/Daten der Haupt-Pipeline.
           git checkout -- wm2026-data.json 2>/dev/null || true
-          git add wm_closing_lines.json wm2026-odds-history.json 2>/dev/null || true
+          git add wm_closing_lines.json2>/dev/null || true
+          git add wm2026-odds-history.json2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Closing-Änderung — nichts zu committen."
             exit 0

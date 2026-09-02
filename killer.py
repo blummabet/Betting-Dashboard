@@ -792,8 +792,12 @@ def main():
     # Fussballspiel ab, nicht nur die Tor-Passierer, und zur angezeigten Quote. Nur so laesst sich
     # sagen, ob eine 8 wirklich besser ist als eine 4 — oder nur seltener.
     _bew = out.get("alleBewertet") or []
+    # ⚠️ 02.09.2026: hier stand `_load(...)`. Der Ledger liegt seit dem 01.09. im kompakten
+    # Spaltenformat — `_load` liefert dann ein DICT, die Abrechnungsschleife iterierte seine
+    # SCHLUESSEL und starb an `'str' object has no attribute 'get'`. Der Ledger wird ausschliesslich
+    # ueber `_store.load()` gelesen, nie roh.
     _pst, _zug = punkte_fortschreiben(_load(PUNKTE_STATE_FILE, {}), _bew,
-                                      _load("betfair_track_results.json"), _now())
+                                      _store.load(BASE / "betfair_track_results.json"), _now())
     (BASE / PUNKTE_STATE_FILE).write_text(json.dumps(_pst, ensure_ascii=False, indent=1),
                                           encoding="utf-8")
     _pled = (_load(PUNKTE_LEDGER_FILE, []) + _zug)[-PUNKTE_KEEP:]

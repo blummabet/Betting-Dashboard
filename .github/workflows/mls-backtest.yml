@@ -85,7 +85,9 @@ jobs:
         run: |
           git config user.name "CocoBet Bot"
           git config user.email "bot@cocobet.local"
-          git add mls_backtest_report.json mls_signal_priors.json mls_backtest_cache.json 2>/dev/null || true
+          git add mls_backtest_report.json2>/dev/null || true
+          git add mls_signal_priors.json2>/dev/null || true
+          git add mls_backtest_cache.json2>/dev/null || true
           if git diff --staged --quiet; then echo "Keine Änderungen."; exit 0; fi
           git commit -m "🧪 MLS-Backtest → Signal-Priors $(date -u +'%d.%m.%Y %H:%M') UTC"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"

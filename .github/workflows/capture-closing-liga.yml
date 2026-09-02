@@ -82,8 +82,10 @@ jobs:
           # (merge_closing_lines hat das Closing schon dort gespiegelt). So clobbert der 15min-Job
           # NIEMALS die Picks/Daten der Haupt-Pipeline.
           git checkout -- liga-data.json 2>/dev/null || true
-          git add liga_closing_lines.json liga-odds-history.json 2>/dev/null || true
-          git add liga_sharp_moves_log.json liga_sharp_dedup.json 2>/dev/null || true
+          git add liga_closing_lines.json2>/dev/null || true
+          git add liga-odds-history.json2>/dev/null || true
+          git add liga_sharp_moves_log.json2>/dev/null || true
+          git add liga_sharp_dedup.json2>/dev/null || true
           # 28.08.2026: eigene Zeile, eigener Pfad — health/<slug>.json wird NUR von diesem
           # Workflow geschrieben, deshalb kann sie mit keinem anderen kollidieren.
           git add health/closing-liga.json 2>/dev/null || true

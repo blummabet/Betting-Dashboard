@@ -58,7 +58,10 @@ jobs:
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
           # Refactor 2026-06-06: State-Files aus state_files_registry.json
-          git add $(python3 state_files_registry.py --bash-list daily_wm_story) 2>/dev/null || true
+          git add $(python32>/dev/null || true
+          git add state_files_registry.py2>/dev/null || true
+          git add --bash-list2>/dev/null || true
+          git add daily_wm_story)2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Änderungen — kein Commit."
           else

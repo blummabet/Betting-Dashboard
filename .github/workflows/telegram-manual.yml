@@ -63,7 +63,8 @@ jobs:
         run: |
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
-          git add telegram-log.json wm2026-data.json 2>/dev/null || true
+          git add telegram-log.json2>/dev/null || true
+          git add wm2026-data.json2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Log-Änderungen."
           else

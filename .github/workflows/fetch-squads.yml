@@ -56,7 +56,8 @@ jobs:
         run: |
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
-          git add squad_cache.json xg_cache.json
+          git add squad_cache.json
+          git add xg_cache.json
           if git diff --staged --quiet; then
             echo "Keine Änderungen — kein Commit nötig."
           else

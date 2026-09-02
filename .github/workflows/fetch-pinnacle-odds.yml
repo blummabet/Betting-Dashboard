@@ -50,7 +50,10 @@ jobs:
         run: |
           git config user.name  "CocoBet Bot"
           git config user.email "bot@cocobet.local"
-          git add wm2026-data.json wm2026-odds-history.json wm_sharp_moves_log.json wm_sharp_dedup.json 2>/dev/null || true
+          git add wm2026-data.json2>/dev/null || true
+          git add wm2026-odds-history.json2>/dev/null || true
+          git add wm_sharp_moves_log.json2>/dev/null || true
+          git add wm_sharp_dedup.json2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Änderung — nichts zu committen."; exit 0
           fi

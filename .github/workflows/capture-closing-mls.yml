@@ -63,8 +63,10 @@ jobs:
           git config user.email "bot@cocobet.local"
           # mls-data.json bewusst VERWERFEN — der CLV-Resolver liest primär mls_closing_lines.json.
           git checkout -- mls-data.json 2>/dev/null || true
-          git add mls_closing_lines.json mls-odds-history.json 2>/dev/null || true
-          git add mls_sharp_moves_log.json mls_sharp_dedup.json 2>/dev/null || true
+          git add mls_closing_lines.json2>/dev/null || true
+          git add mls-odds-history.json2>/dev/null || true
+          git add mls_sharp_moves_log.json2>/dev/null || true
+          git add mls_sharp_dedup.json2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Closing-Änderung — nichts zu committen."; exit 0
           fi

@@ -113,7 +113,8 @@ jobs:
           git add liga_pick_push_ledger.json 2>/dev/null || true
           # Poly-Wallets (25.08.2026, Audit-Befund 07) — ohne diese Zeilen bleibt der
           # 2h-Snapshot auf dem Runner liegen und die Historie entsteht trotzdem nicht.
-          git add liga_poly_wallets.json liga_poly_smartmoney.json 2>/dev/null || true
+          git add liga_poly_wallets.json2>/dev/null || true
+          git add liga_poly_smartmoney.json2>/dev/null || true
           git add liga_poly_wallet_ledger.json 2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Änderung — nichts zu committen."; exit 0

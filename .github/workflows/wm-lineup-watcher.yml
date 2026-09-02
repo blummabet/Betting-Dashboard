@@ -80,7 +80,8 @@ jobs:
           # wm2026-data.json aus der Pick-Regenerierung oben, nicht nur die Lineups.
           # Sonst käme das Lineup-Signal zwar in die Picks, aber nicht ins Repo.
           git add -u 2>/dev/null || true
-          git add wm_lineups.json wm_lineup_alerts.json 2>/dev/null || true
+          git add wm_lineups.json2>/dev/null || true
+          git add wm_lineup_alerts.json2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Änderungen — sauberer Exit"
           else

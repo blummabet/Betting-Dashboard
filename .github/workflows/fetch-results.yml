@@ -84,7 +84,9 @@ jobs:
         run: |
           git config user.name "Dashboard Bot"
           git config user.email "actions@github.com"
-          git add results-cache.json picks_history.json \
+          git add results-cache.json
+          git add picks_history.json
+          git add \
                   wm2026-data.json wm_results.json \
                   pick_confidence_stats.json wm2026-poly-history.json \
                   wm_clv_summary.json

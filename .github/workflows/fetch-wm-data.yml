@@ -438,7 +438,10 @@ jobs:
           # Picks, History …) unabhängig vom Registry-Script.
           git add -u 2>/dev/null || true
           # Registry zusätzlich für NEUE (untracked) Files (z.B. neue match-pages).
-          git add $(python3 state_files_registry.py --bash-list fetch_wm_data) 2>/dev/null || true
+          git add $(python32>/dev/null || true
+          git add state_files_registry.py2>/dev/null || true
+          git add --bash-list2>/dev/null || true
+          git add fetch_wm_data)2>/dev/null || true
           # wm_status.json (Status-Seite Single Source of Truth) explizit — neu/untracked,
           # wird von git add -u nicht erfasst.
           git add wm_status.json 2>/dev/null || true

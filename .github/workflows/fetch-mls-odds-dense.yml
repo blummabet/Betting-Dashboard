@@ -137,11 +137,17 @@ jobs:
           git add mls_sharp_dedup.json 2>/dev/null || true
           git add mls_pick_announce_state.json 2>/dev/null || true
           git add mls_pick_push_ledger.json 2>/dev/null || true
-          git add mls_poly_prices.json mls_poly_smartmoney.json mls_poly_wallets.json 2>/dev/null || true
+          git add mls_poly_prices.json2>/dev/null || true
+          git add mls_poly_smartmoney.json2>/dev/null || true
+          git add mls_poly_wallets.json2>/dev/null || true
           git add mls_poly_wallet_ledger.json 2>/dev/null || true
-          git add mls_poly_coherence.json mls_poly_settlement.json mls_poly_markout.json 2>/dev/null || true
-          git add mls_poly_money_close.json mls_poly_money_accuracy.json 2>/dev/null || true
-          git add mls-poly-history.json mls_edge_alert_dedup.json 2>/dev/null || true
+          git add mls_poly_coherence.json2>/dev/null || true
+          git add mls_poly_settlement.json2>/dev/null || true
+          git add mls_poly_markout.json2>/dev/null || true
+          git add mls_poly_money_close.json2>/dev/null || true
+          git add mls_poly_money_accuracy.json2>/dev/null || true
+          git add mls-poly-history.json2>/dev/null || true
+          git add mls_edge_alert_dedup.json2>/dev/null || true
           if git diff --staged --quiet; then
             echo "Keine Änderung — nichts zu committen."; exit 0
           fi

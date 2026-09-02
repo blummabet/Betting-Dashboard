@@ -2675,6 +2675,64 @@ def check_betfair_ledger(ctx):
 ANKER_TOT_WARN = 1     # ab so vielen nie treffenden Karten-Eintraegen wird gemeldet
 
 
+# 🔴 02.09.2026 — sechs Stunden gruener Ausfall. Der Betfair-Workflow lief alle 15 Minuten durch,
+# meldete `ok: true` und 22 Schritte ohne Fehler — und aktualisierte trotzdem KEINE einzige
+# Betfair-Datei, weil `git add` mit 33 Pfaden an einer fehlenden Datei scheiterte und damit NICHTS
+# staged. Danach ist der Index leer, `git diff --cached --quiet` meldet „keine Aenderung", der Lauf
+# endet gruen.
+#
+# `betfair_data_integrity.py` HAETTE es gemerkt (FRESH_ERR_H=3.0 auf den Preisen) — nur schreibt es
+# sein Urteil nach `betfair_status.json`, und die konnte aus demselben Grund nicht committet werden.
+# ⭐ Ein Waechter, der im selben Job sitzt wie das, was er ueberwacht, faellt mit ihm aus. Deshalb
+# steht dieser hier, in der Guard-Batterie eines ANDEREN Workflows.
+#
+# Der Trick ist der VERGLEICH statt reiner Frische: die Gesundheitsdatei sagt, wann der Job zuletzt
+# lief; die Datendateien sagen, wann zuletzt etwas ankam. Klaffen die auseinander, laeuft der Job
+# und liefert nichts — ein Zustand, den blosse Staleness nicht von „Workflow steht" unterscheidet.
+GRUEN_TOT_H = 2.5     # so lange darf der Job laufen, ohne dass Daten ankommen
+
+
+@integrity_check
+def check_betfair_liefert(ctx):
+    """Läuft der Betfair-Job UND kommen auch Daten an?
+
+    Nicht „ist die Datei alt" — sondern „der Job meldet sich frisch, die Daten aber nicht". Das ist
+    der Zustand, den ein grüner Workflow erzeugt, wenn der Commit nichts staged."""
+    health = _lazy("health/betfair.json")
+    if "health/betfair.json" in _LAZY_FAILED:
+        return _chk("betfair_liefert", "Betfair-Job liefert auch Daten", "warn",
+                    ["❔ health/betfair.json nicht lesbar — ob der Job liefert, ist UNBEKANNT."], "")
+    if not isinstance(health, dict) or not health.get("updatedAt"):
+        return _chk("betfair_liefert", "Betfair-Job liefert auch Daten", "warn",
+                    ["❔ Keine Lauf-Gesundheit für Betfair — nicht prüfbar."], "")
+    now = ctx.now if getattr(ctx, "now", None) else datetime.now(timezone.utc)
+    lauf_h = _alter_h(health.get("updatedAt"), now)
+    daten = {}
+    for f in ("betfair_prices.json", "betfair_consensus.json", "betfair_track_record.json",
+              "killer.json"):
+        d = _lazy(f)
+        ts = (d or {}).get("generatedAt") or ((d or {}).get("_meta") or {}).get("generatedAt") \
+            if isinstance(d, dict) else None
+        daten[f] = _alter_h(ts, now)
+    bekannt = {f: h for f, h in daten.items() if h is not None}
+    if lauf_h is None or not bekannt:
+        return _chk("betfair_liefert", "Betfair-Job liefert auch Daten", "warn",
+                    ["❔ Lauf- oder Datenzeitstempel nicht lesbar — nicht prüfbar."], "")
+    juengste = min(bekannt.values())
+    fails = []
+    if lauf_h <= GRUEN_TOT_H and juengste > GRUEN_TOT_H:
+        alt = ", ".join(f"{f.split('.')[0]} {h:.1f}h" for f, h in sorted(bekannt.items(),
+                                                                        key=lambda x: -x[1])[:3])
+        fails.append(f"Der Job lief vor {lauf_h:.1f}h, aber die jüngste Betfair-Datei ist "
+                     f"{juengste:.1f}h alt ({alt}). Der Workflow läuft und liefert NICHTS — "
+                     f"typischerweise scheitert `git add` an einem fehlenden Pfad und staged dann "
+                     f"gar nichts (02.09.2026, sechs Stunden lang, bei grünem Lauf).")
+    return _chk("betfair_liefert", "Betfair-Job liefert auch Daten", "error", fails,
+                f"Job vor {lauf_h:.1f}h · jüngste Daten vor {juengste:.1f}h. "
+                f"Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); "
+                f"ein FRISCHER Job mit alten Daten ist ein stiller Commit-Fehler.")
+
+
 @integrity_check
 def check_pinn_anker(ctx):
     """Trifft jeder Eintrag der Pinnacle-Ankerkarte auch wirklich einen Betfair-Ligastring?
