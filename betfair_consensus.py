@@ -128,6 +128,15 @@ LEAGUE_ODDS_KEY = {
 SPORTS_FILE      = "odds_sports.json"     # Abzug von /sports, damit der Lauf nicht bei Netzfehler blind wird
 ANPFIFF_FENSTER_H = 2.0                   # Schranke fuer den globalen Pool
 MAX_ODDS_KEYS    = int(os.environ.get("BF_MAX_ODDS_KEYS") or 90)   # Laufzeit-Deckel, nicht Quota-Deckel
+# ⚠️ 02.09.2026 — der Deckel allein reicht NICHT. Der Job hat `timeout-minutes: 8` und laeuft alle
+# 10 Minuten; 90 Fetches nacheinander mit je 20s Socket-Timeout sind im schlechtesten Fall 30
+# Minuten. Dann killt GitHub den Job mitten im Konsens, und ALLES danach (Track-Record, Konjunktion,
+# Freigabe, Commit) laeuft nie — derselbe stille Totalausfall wie beim `git add`, nur mit anderer
+# Ursache. Deshalb zusaetzlich eine WANDUHR-Schranke: die kuratierten Ligen stehen in `hol` vorne
+# und werden immer geholt, die entdeckten Extras nur, solange das Budget reicht.
+ODDS_BUDGET_S    = float(os.environ.get("BF_ODDS_BUDGET_S") or 100)  # Wanduhr fuer die Entdeckungs-Extras
+ODDS_TIMEOUT_S   = float(os.environ.get("BF_ODDS_TIMEOUT_S") or 8)   # je Call; 20s war fuer 90 Calls zu lang
+ODDS_GESAMT_S    = float(os.environ.get("BF_ODDS_GESAMT_S") or 240)  # harte Schranke fuer die GANZE Netzphase
 
 
 def aktive_fussball_keys(sports, max_keys=MAX_ODDS_KEYS):
@@ -1031,7 +1040,7 @@ def fetch_odds(sport_key):
            % (ODDS_BASE, sport_key, ODDS_KEY, REGIONS))
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "cocobet-consensus"})
-        with urllib.request.urlopen(req, timeout=20) as r:
+        with urllib.request.urlopen(req, timeout=ODDS_TIMEOUT_S) as r:
             data = json.load(r)
         return data if isinstance(data, list) else []
     except Exception as e:
@@ -1066,7 +1075,7 @@ def fetch_totals(sport_key):
            % (ODDS_BASE, sport_key, ODDS_KEY))
     try:
         req = urllib.request.Request(url, headers={"User-Agent": "cocobet-consensus"})
-        with urllib.request.urlopen(req, timeout=20) as r:
+        with urllib.request.urlopen(req, timeout=ODDS_TIMEOUT_S) as r:
             data = json.load(r)
         return data if isinstance(data, list) else []
     except Exception as e:
@@ -1107,10 +1116,29 @@ def main():
     print("odds: %d Ligen aus der Handliste + %d aktive Fussball-Wettbewerbe -> %d Calls"
           % (len(need), len(_alle_keys), len(hol)))
 
-    events_by_key = {k: [parse_event(e) for e in (fetch_odds(k) or [])] for k in hol}
+    # Kuratierte Keys IMMER, Entdeckungs-Extras nur solange die Wanduhr reicht. Ein abgebrochener
+    # Lauf waere teurer als ein paar fehlende Anker: ohne Konsens laeuft die halbe Kette nicht.
+    import time as _time
+    _t0, events_by_key, _abbruch = _time.monotonic(), {}, 0
+    for k in hol:
+        if k not in need and (_time.monotonic() - _t0) > ODDS_BUDGET_S:
+            _abbruch += 1
+            continue
+        events_by_key[k] = [parse_event(e) for e in (fetch_odds(k) or [])]
+    if _abbruch:
+        print("odds: Zeitbudget %.0fs erschoepft -> %d entdeckte Wettbewerbe diesmal ausgelassen "
+              "(kuratierte sind vollstaendig)" % (ODDS_BUDGET_S, _abbruch))
     # Totals nur fuer die kuratierten Keys: die O/U-Leiter wird ausschliesslich im Poly-Terminal
     # verbraucht, und jeder weitere Call kostet Laufzeit auf einem Runner mit 12-Minuten-Deckel.
-    totals_by_key = {k: [parse_totals(e) for e in (fetch_totals(k) or [])] for k in need}
+    # Totals ebenfalls an die Wanduhr: 30 kuratierte Keys mit je 8s Timeout waeren allein schon
+    # 4 Minuten. Die O/U-Leiter ist Komfort (Poly-Terminal) — der Konsens ist es nicht.
+    totals_by_key = {}
+    for k in need:
+        if (_time.monotonic() - _t0) > ODDS_GESAMT_S:
+            print("odds: Gesamtbudget %.0fs erreicht -> Totals fuer %d Ligen ausgelassen"
+                  % (ODDS_GESAMT_S, len(need) - len(totals_by_key)))
+            break
+        totals_by_key[k] = [parse_totals(e) for e in (fetch_totals(k) or [])]
     # Globaler Pool fuer den zweiten Anlauf — nur die Keys, die NICHT schon in der Handliste stehen,
     # damit ein kuratierter Treffer immer Vorrang behaelt.
     _global_pool = [e for k, evs in events_by_key.items() if k not in need for e in evs]
