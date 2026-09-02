@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-02T21:44:26.652751+00:00",
+"generatedAt": "2026-09-02T21:59:21.854123+00:00",
 "byVerdict": {
 "konsens": {
-"n": 713,
-"wins": 585,
-"hitRate": 0.8205,
-"polyN": 667,
-"polyWins": 521,
-"polyHitRate": 0.7811,
+"n": 715,
+"wins": 587,
+"hitRate": 0.821,
+"polyN": 669,
+"polyWins": 523,
+"polyHitRate": 0.7818,
 "pinnN": 61,
 "pinnHitRate": 0.8033,
-"nRoi": 41,
-"roi": 0.4122,
-"roiLb": 0.2238,
-"nClv": 41,
-"clv": 17.11,
-"clvLb": 9.8235
+"nRoi": 43,
+"roi": 0.4177,
+"roiLb": 0.2381,
+"nClv": 43,
+"clv": 17.88,
+"clvLb": 10.8759
 },
 "uneinig": {
-"n": 249,
+"n": 250,
 "wins": 83,
-"hitRate": 0.3333,
+"hitRate": 0.332,
 "polyN": 223,
 "polyWins": 64,
 "polyHitRate": 0.287,
-"pinnN": 130,
-"pinnHitRate": 0.5923,
-"nRoi": 17,
-"roi": -0.1706,
-"roiLb": -0.5163,
-"nClv": 17,
-"clv": 1.66,
-"clvLb": -10.5936
+"pinnN": 131,
+"pinnHitRate": 0.5954,
+"nRoi": 18,
+"roi": -0.2167,
+"roiLb": -0.5513,
+"nClv": 18,
+"clv": -0.83,
+"clvLb": -13.0771
 },
 "teil": {
 "n": 9,
@@ -62,9 +62,9 @@
 "hitRate": 0.5833
 },
 "English Sky Bet Championship": {
-"n": 39,
+"n": 40,
 "wins": 25,
-"hitRate": 0.641
+"hitRate": 0.625
 },
 "Spanish La Liga": {
 "n": 30,
@@ -156,6 +156,11 @@
 "wins": 12,
 "hitRate": 0.7059
 },
+"English Sky Bet League 1": {
+"n": 16,
+"wins": 12,
+"hitRate": 0.75
+},
 "North American Leagues Cup": {
 "n": 16,
 "wins": 11,
@@ -180,11 +185,6 @@
 "n": 14,
 "wins": 6,
 "hitRate": 0.4286
-},
-"English Sky Bet League 1": {
-"n": 14,
-"wins": 10,
-"hitRate": 0.7143
 },
 "Italian Serie B": {
 "n": 14,
@@ -564,37 +564,94 @@
 },
 "byStrength": {
 "strong": {
-"n": 564,
-"wins": 458,
-"hitRate": 0.8121,
-"nRoi": 40,
-"roi": 0.3543,
-"roiLb": 0.1357,
-"nClv": 40,
-"clv": 14.22,
-"clvLb": 5.7197
+"n": 566,
+"wins": 460,
+"hitRate": 0.8127,
+"nRoi": 42,
+"roi": 0.3626,
+"roiLb": 0.1543,
+"nClv": 42,
+"clv": 15.15,
+"clvLb": 6.9815
 },
 "weak": {
-"n": 374,
+"n": 375,
 "wins": 195,
-"hitRate": 0.5214,
-"nRoi": 18,
-"roi": -0.0094,
-"roiLb": -0.2821,
-"nClv": 18,
-"clv": 8.93,
-"clvLb": 0.4655
+"hitRate": 0.52,
+"nRoi": 19,
+"roi": -0.0616,
+"roiLb": -0.3334,
+"nClv": 19,
+"clv": 6.2,
+"clvLb": -2.9893
 }
 },
 "divergence": {
-"n": 249,
+"n": 250,
 "betfairWins": 83,
-"betfairRate": 0.3333,
+"betfairRate": 0.332,
 "polyN": 223,
 "polyWins": 64,
 "polyRate": 0.287
 },
 "recent": [
+{
+"matchId": "35999942",
+"home": "Luton",
+"away": "Stockport",
+"league": "English Sky Bet League 1",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Luton",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-09-02T18:45:00Z",
+"settledAt": "2026-09-02T21:59:21.680957+00:00"
+},
+{
+"matchId": "35998054",
+"home": "West Brom",
+"away": "Charlton",
+"league": "English Sky Bet Championship",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "West Brom",
+"polySide": null,
+"winner": "draw",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-02T18:45:00Z",
+"settledAt": "2026-09-02T21:59:21.680957+00:00"
+},
+{
+"matchId": "35999929",
+"home": "Burton Albion",
+"away": "AFC Wimbledon",
+"league": "English Sky Bet League 1",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Burton Albion",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+4,
+1
+],
+"kickoff": "2026-09-02T18:45:00Z",
+"settledAt": "2026-09-02T21:59:21.680957+00:00"
+},
 {
 "matchId": "36006252",
 "home": "Grasshoppers Zurich",
@@ -1297,75 +1354,18 @@
 ],
 "kickoff": "2026-09-01T18:00:00Z",
 "settledAt": "2026-09-01T21:11:26.262906+00:00"
-},
-{
-"matchId": "35998053",
-"home": "Birmingham",
-"away": "Southampton",
-"league": "English Sky Bet Championship",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Southampton",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-09-01T19:00:00Z",
-"settledAt": "2026-09-01T20:56:11.683331+00:00"
-},
-{
-"matchId": "35998071",
-"home": "Stoke",
-"away": "Norwich",
-"league": "English Sky Bet Championship",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Stoke",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-09-01T19:00:00Z",
-"settledAt": "2026-09-01T20:56:11.683331+00:00"
-},
-{
-"matchId": "35998041",
-"home": "West Ham",
-"away": "Wolves",
-"league": "English Sky Bet Championship",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "West Ham",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-4,
-2
-],
-"kickoff": "2026-09-01T18:45:00Z",
-"settledAt": "2026-09-01T20:41:11.651678+00:00"
 }
 ],
 "global": {
-"n": 971,
-"wins": 671,
+"n": 974,
+"wins": 673,
 "hitRate": 0.691,
-"nRoi": 58,
-"roi": 0.2414,
-"roiLb": 0.066,
-"nClv": 58,
-"clv": 12.58,
-"clvLb": 6.1752
+"nRoi": 61,
+"roi": 0.2305,
+"roiLb": 0.06,
+"nClv": 61,
+"clv": 12.36,
+"clvLb": 6.0324
 },
-"pending": 13
+"pending": 10
 }
