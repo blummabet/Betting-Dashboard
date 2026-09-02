@@ -80,7 +80,7 @@
       "ok": false,
       "nFail": 5,
       "failures": [
-        "78/192 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (41%) — Trefferquote allein trügt",
+        "77/191 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (40%) — Trefferquote allein trügt",
         "   0x84cfffc3f1… n=68 Treffer 53% P&L $-7,725,746",
         "   0xc3c3b3ef30… n=325 Treffer 51% P&L $-3,940,312",
         "   0xa0f21e6d35… n=66 Treffer 65% P&L $-2,642,592",
@@ -91,12 +91,10 @@
     {
       "id": "accuracy_backtest_fresh",
       "label": "Genauigkeits-Backtest frisch & belastbar",
-      "severity": "warn",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "Backtest: jüngster Stand vor 7.7 h (> 3 h erwartet)"
-      ],
+      "severity": "error",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "poly_money_broad muss frisch sein und n groß genug, sonst ist 'folgt dem Geld' Zufall."
     },
     {
@@ -127,6 +125,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-09-02T19:04:37.066290+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-09-02T19:20:09.558800+00:00"
 }
