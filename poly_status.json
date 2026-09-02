@@ -80,8 +80,8 @@
       "failures": [
         "79/190 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (42%) — Trefferquote allein trügt",
         "   0x84cfffc3f1… n=65 Treffer 52% P&L $-7,749,600",
-        "   0xc3c3b3ef30… n=325 Treffer 51% P&L $-3,935,562",
-        "   0xa0f21e6d35… n=66 Treffer 65% P&L $-2,649,299",
+        "   0xc3c3b3ef30… n=325 Treffer 51% P&L $-3,936,617",
+        "   0xa0f21e6d35… n=66 Treffer 65% P&L $-2,648,539",
         "   0xabb89972b2… n=26 Treffer 69% P&L $-2,563,982"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
@@ -89,10 +89,12 @@
     {
       "id": "accuracy_backtest_fresh",
       "label": "Genauigkeits-Backtest frisch & belastbar",
-      "severity": "error",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "severity": "warn",
+      "ok": false,
+      "nFail": 1,
+      "failures": [
+        "Backtest: jüngster Stand vor 3.0 h (> 3 h erwartet)"
+      ],
       "note": "poly_money_broad muss frisch sein und n groß genug, sonst ist 'folgt dem Geld' Zufall."
     },
     {
@@ -123,6 +125,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-09-02T13:56:11.518153+00:00"
+  "nFail": 3,
+  "generatedAt": "2026-09-02T14:25:37.664632+00:00"
 }
