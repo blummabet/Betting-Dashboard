@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-02T21:29:29.283074+00:00",
+"generatedAt": "2026-09-02T21:44:26.652751+00:00",
 "byVerdict": {
 "konsens": {
-"n": 712,
-"wins": 584,
-"hitRate": 0.8202,
-"polyN": 666,
+"n": 713,
+"wins": 585,
+"hitRate": 0.8205,
+"polyN": 667,
 "polyWins": 521,
-"polyHitRate": 0.7823,
+"polyHitRate": 0.7811,
 "pinnN": 61,
 "pinnHitRate": 0.8033,
-"nRoi": 40,
-"roi": 0.42,
-"roiLb": 0.2273,
-"nClv": 40,
-"clv": 17.36,
-"clvLb": 9.9003
+"nRoi": 41,
+"roi": 0.4122,
+"roiLb": 0.2238,
+"nClv": 41,
+"clv": 17.11,
+"clvLb": 9.8235
 },
 "uneinig": {
-"n": 247,
-"wins": 82,
-"hitRate": 0.332,
-"polyN": 221,
-"polyWins": 63,
-"polyHitRate": 0.2851,
-"pinnN": 128,
-"pinnHitRate": 0.5938,
-"nRoi": 15,
-"roi": -0.1933,
-"roiLb": -0.5514,
-"nClv": 15,
-"clv": 5.62,
-"clvLb": -7.3615
+"n": 249,
+"wins": 83,
+"hitRate": 0.3333,
+"polyN": 223,
+"polyWins": 64,
+"polyHitRate": 0.287,
+"pinnN": 130,
+"pinnHitRate": 0.5923,
+"nRoi": 17,
+"roi": -0.1706,
+"roiLb": -0.5163,
+"nClv": 17,
+"clv": 1.66,
+"clvLb": -10.5936
 },
 "teil": {
 "n": 9,
@@ -301,6 +301,11 @@
 "wins": 4,
 "hitRate": 0.5714
 },
+"Swiss Super League": {
+"n": 7,
+"wins": 7,
+"hitRate": 1.0
+},
 "English Sky Bet League 2": {
 "n": 6,
 "wins": 4,
@@ -326,11 +331,6 @@
 "wins": 4,
 "hitRate": 0.8
 },
-"Swiss Super League": {
-"n": 5,
-"wins": 5,
-"hitRate": 1.0
-},
 "Argentinian Primera Nacional": {
 "n": 4,
 "wins": 3,
@@ -355,6 +355,11 @@
 "n": 4,
 "wins": 4,
 "hitRate": 1.0
+},
+"UEFA (W) Champions League Qualifiers": {
+"n": 4,
+"wins": 3,
+"hitRate": 0.75
 },
 "Argentinian Cup": {
 "n": 3,
@@ -387,11 +392,6 @@
 "hitRate": 0.3333
 },
 "Slovenian Premier League": {
-"n": 3,
-"wins": 3,
-"hitRate": 1.0
-},
-"UEFA (W) Champions League Qualifiers": {
 "n": 3,
 "wins": 3,
 "hitRate": 1.0
@@ -564,15 +564,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 561,
-"wins": 456,
-"hitRate": 0.8128,
-"nRoi": 37,
-"roi": 0.3803,
-"roiLb": 0.154,
-"nClv": 37,
-"clv": 16.7,
-"clvLb": 7.9344
+"n": 564,
+"wins": 458,
+"hitRate": 0.8121,
+"nRoi": 40,
+"roi": 0.3543,
+"roiLb": 0.1357,
+"nClv": 40,
+"clv": 14.22,
+"clvLb": 5.7197
 },
 "weak": {
 "n": 374,
@@ -587,14 +587,71 @@
 }
 },
 "divergence": {
-"n": 247,
-"betfairWins": 82,
-"betfairRate": 0.332,
-"polyN": 221,
-"polyWins": 63,
-"polyRate": 0.2851
+"n": 249,
+"betfairWins": 83,
+"betfairRate": 0.3333,
+"polyN": 223,
+"polyWins": 64,
+"polyRate": 0.287
 },
 "recent": [
+{
+"matchId": "36006252",
+"home": "Grasshoppers Zurich",
+"away": "St Gallen",
+"league": "Swiss Super League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Grasshoppers Zurich",
+"polySide": "away",
+"winner": "home",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-09-02T18:30:00Z",
+"settledAt": "2026-09-02T21:44:26.485743+00:00"
+},
+{
+"matchId": "36015290",
+"home": "Luzern",
+"away": "FC Vaduz",
+"league": "Swiss Super League",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Luzern",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-09-02T18:30:00Z",
+"settledAt": "2026-09-02T21:44:26.485743+00:00"
+},
+{
+"matchId": "36020289",
+"home": "Juventus FC (W)",
+"away": "SKN St. Polten (W)",
+"league": "UEFA (W) Champions League Qualifiers",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Juventus FC (W)",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-02T18:30:00Z",
+"settledAt": "2026-09-02T21:44:26.485743+00:00"
+},
 {
 "matchId": "35988338",
 "home": "AGF",
@@ -1297,75 +1354,18 @@
 ],
 "kickoff": "2026-09-01T18:45:00Z",
 "settledAt": "2026-09-01T20:41:11.651678+00:00"
-},
-{
-"matchId": "35998056",
-"home": "Sheff Utd",
-"away": "Bolton",
-"league": "English Sky Bet Championship",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Sheff Utd",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-2
-],
-"kickoff": "2026-09-01T18:45:00Z",
-"settledAt": "2026-09-01T20:41:11.651678+00:00"
-},
-{
-"matchId": "35998040",
-"home": "Portsmouth",
-"away": "Derby",
-"league": "English Sky Bet Championship",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Derby",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-2
-],
-"kickoff": "2026-09-01T18:45:00Z",
-"settledAt": "2026-09-01T20:41:11.651678+00:00"
-},
-{
-"matchId": "35998066",
-"home": "Swansea",
-"away": "Watford",
-"league": "English Sky Bet Championship",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Swansea",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-09-01T18:45:00Z",
-"settledAt": "2026-09-01T20:41:11.651678+00:00"
 }
 ],
 "global": {
-"n": 968,
-"wins": 669,
-"hitRate": 0.6911,
-"nRoi": 55,
-"roi": 0.2527,
-"roiLb": 0.073,
-"nClv": 55,
-"clv": 14.16,
-"clvLb": 7.638
+"n": 971,
+"wins": 671,
+"hitRate": 0.691,
+"nRoi": 58,
+"roi": 0.2414,
+"roiLb": 0.066,
+"nClv": 58,
+"clv": 12.58,
+"clvLb": 6.1752
 },
-"pending": 15
+"pending": 13
 }
