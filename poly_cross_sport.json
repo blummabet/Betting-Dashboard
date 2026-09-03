@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-03T03:53:12.483159+00:00",
+ "generatedAt": "2026-09-03T04:23:24.625589+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,14 +9,14 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 560,
- "pinnKeys": 304,
- "matched": 234,
+ "polyRowsSeen": 556,
+ "pinnKeys": 302,
+ "matched": 232,
  "footballRows": 204,
- "crossRows": 356,
+ "crossRows": 352,
  "footballSkippedStale": 82,
  "seenBySport": {
-  "americanfootball_nfl": 158,
+  "americanfootball_nfl": 154,
   "baseball_mlb": 78,
   "icehockey_nhl": 78,
   "boxing_boxing": 42,
@@ -24,7 +24,7 @@
   "soccer_liga": 147
  },
  "matchedBySport": {
-  "baseball_mlb": 16,
+  "baseball_mlb": 14,
   "boxing_boxing": 14,
   "soccer_mls": 57,
   "soccer_liga": 147
@@ -35,6 +35,34 @@
  },
  "discrepancies": [
   {
+   "id": "baseball_mlb|losangelesangels-newyorkyankees|newyorkyankees",
+   "sport": "baseball_mlb",
+   "event": "New York Yankees vs Los Angeles Angels",
+   "market": "Moneyline",
+   "outcome": "New York Yankees",
+   "polyPP": 95.0,
+   "pinnPP": 57.0,
+   "gapPP": 38.04,
+   "vol": 843429,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -30.46,
+   "firstSeen": "2026-08-31T22:18:36.752527+00:00"
+  },
+  {
+   "id": "baseball_mlb|losangelesangels-newyorkyankees|losangelesangels",
+   "sport": "baseball_mlb",
+   "event": "New York Yankees vs Los Angeles Angels",
+   "market": "Moneyline",
+   "outcome": "Los Angeles Angels",
+   "polyPP": 5.0,
+   "pinnPP": 43.0,
+   "gapPP": -38.04,
+   "vol": 843429,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -30.46,
+   "firstSeen": "2026-08-31T22:18:36.752527+00:00"
+  },
+  {
    "id": "baseball_mlb|losangelesdodgers-stlouiscardinals|stlouiscardinals",
    "sport": "baseball_mlb",
    "event": "St. Louis Cardinals vs Los Angeles Dodgers",
@@ -43,7 +71,7 @@
    "polyPP": 17.5,
    "pinnPP": 28.5,
    "gapPP": -11.01,
-   "vol": 587813,
+   "vol": 729077,
    "richtung": "Poly zu niedrig → backen",
    "convergePP": 31.0,
    "firstSeen": "2026-09-02T02:50:56.871142+00:00"
@@ -57,38 +85,10 @@
    "polyPP": 82.5,
    "pinnPP": 71.5,
    "gapPP": 11.01,
-   "vol": 587813,
+   "vol": 729077,
    "richtung": "Poly zu hoch → faden",
    "convergePP": 31.0,
    "firstSeen": "2026-09-02T02:50:56.871142+00:00"
-  },
-  {
-   "id": "baseball_mlb|losangelesangels-newyorkyankees|newyorkyankees",
-   "sport": "baseball_mlb",
-   "event": "New York Yankees vs Los Angeles Angels",
-   "market": "Moneyline",
-   "outcome": "New York Yankees",
-   "polyPP": 58.5,
-   "pinnPP": 50.5,
-   "gapPP": 7.98,
-   "vol": 769548,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": -0.4,
-   "firstSeen": "2026-08-31T22:18:36.752527+00:00"
-  },
-  {
-   "id": "baseball_mlb|losangelesangels-newyorkyankees|losangelesangels",
-   "sport": "baseball_mlb",
-   "event": "New York Yankees vs Los Angeles Angels",
-   "market": "Moneyline",
-   "outcome": "Los Angeles Angels",
-   "polyPP": 41.5,
-   "pinnPP": 49.5,
-   "gapPP": -7.98,
-   "vol": 769548,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": -0.4,
-   "firstSeen": "2026-08-31T22:18:36.752527+00:00"
   }
  ]
 }
