@@ -914,6 +914,11 @@
   // Alle drei sind Größenvergleiche mit EINER Serie, also ein Farbton und ein Balken je
   // Zeile. Ein Farbverlauf nach Größe würde die Balkenlänge doppelt kodieren.
   var A_STAKE = '#67cc91';
+  // 03.09.2026 (Lucas): derselbe Boden wie in der Pick-Engine — aber hier nur fuer die
+  // ANZEIGE. Gemessen an 445 Wetten tragen die unter 1,35 zwar 35% des Einsatzes, aber nur
+  // 3% des moeglichen Gewinns; auf einer Uebersicht ist das Rauschen, das die echten
+  // Kandidaten verdeckt. Gesammelt und ausgewertet wird weiter alles.
+  var MD_STAKE_MIN_QUOTE = 1.35;
 
   function _mdStakeBalken(anteil) {
     return '<div class="md-sbar"><i style="width:' + clamp(anteil * 100, 2, 100) +
@@ -943,6 +948,8 @@
     return (d.wetten || []).filter(function (w) {
       if (w.einsatzUsd == null) return false;
       var t = Date.parse(w.ts); if (!t || t < ab) return false;
+      // Ohne Quote wird nicht gefiltert — unbekannt ist nicht dasselbe wie niedrig.
+      if (w.quote != null && w.quote < MD_STAKE_MIN_QUOTE) return false;
       return sperr.indexOf(_mdStakeKat(w)) < 0;
     });
   }
@@ -953,10 +960,14 @@
     var m = {};
     wetten.forEach(function (w) {
       var k = w.eventId || ((w.event || '?') + '|' + (w.liga || ''));
-      if (!m[k]) m[k] = { key: k, event: w.event, liga: w.liga, anpfiff: w.anpfiff, n: 0, geld: 0, groesster: 0, seiten: {} };
+      if (!m[k]) m[k] = { key: k, event: w.event, liga: w.liga, anpfiff: w.anpfiff,
+                          n: 0, geld: 0, gewinn: 0, groesster: 0, seiten: {} };
       var g = m[k]; g.n++;
       if (!w.kombi) {
         g.geld += w.einsatzUsd;
+        var gw = w.gewinnUsd != null ? w.gewinnUsd
+               : (w.quote != null && w.quote > 1 ? w.einsatzUsd * (w.quote - 1) : 0);
+        g.gewinn = (g.gewinn || 0) + (gw || 0);
         if (w.einsatzUsd > g.groesster) { g.groesster = w.einsatzUsd; g.top = w; }
         var s = (w.markt ? w.markt + ': ' : '') + (w.auswahl || '?');
         g.seiten[s] = (g.seiten[s] || 0) + w.einsatzUsd;
@@ -1002,7 +1013,8 @@
       return rowEl(esc(g.event || '—') + ' ' + _mdStakeKo(g),
         usd(g.geld), A_STAKE,
         esc(g.liga || '') + ' · ' + g.n + (g.n === 1 ? ' Wette' : ' Wetten') +
-          (g.seite ? ' · meist ' + esc(g.seite) : ''),
+          (g.gewinn ? ' · zu gewinnen ' + usd(g.gewinn) : '') +
+          (g.seite ? ' · ' + esc(g.seite) : ''),
         _mdStakeBalken(g.geld / max));
     }).join('');
   }

@@ -426,3 +426,45 @@ test('Karten lassen sich aufklappen, ohne dass die Seite neu laedt', () => {
   assert.ok(/window\._srAufklappen/.test(CODE));
   assert.ok(/SR_OFFEN\[g\.key\]/.test(CODE));
 });
+
+// ── Quotenschwelle (03.09.2026, Lucas: „@1,03 und 1,2 ist schon relativ low") ──
+test('der Quotenregler startet bei 1,35 — dem Boden, den das Projekt schon hat', () => {
+  assert.ok(/var SR_MIN_QUOTE = 1\.35;/.test(JS));
+  assert.ok(/SR_QUOTEN = \[1\.0, 1\.20, 1\.35, 1\.60, 2\.00\]/.test(JS),
+    'und „alle" muss erreichbar bleiben');
+});
+
+test('eine Wette OHNE Quote wird nicht weggefiltert', () => {
+  // Unbekannt ist nicht dasselbe wie niedrig — dieselbe Regel wie beim USD-Wert.
+  const block = schneide('var sperr = _srGesperrt()', 'var gruppen =');
+  assert.ok(/w\.quote != null && w\.quote < SR_MIN_QUOTE/.test(block),
+    'ohne Quote darf der Filter nicht greifen');
+});
+
+test('der Quotenfilter zaehlt, was er weglaesst', () => {
+  const block = schneide('var sperr = _srGesperrt()', 'var gruppen =');
+  assert.ok(/nQuote\+\+/.test(block));
+  const anzeige = schneide('var treffer =', 'var koerper =');
+  assert.ok(/unter Quote/.test(anzeige));
+});
+
+test('der Regler blendet aus, er urteilt nicht — und sagt das', () => {
+  assert.ok(/blendet aus, er urteilt nicht/.test(JS),
+    'ob niedrige Quoten schlechter informiert sind, ist NICHT gemessen');
+});
+
+test('möglicher Gewinn steht neben dem Einsatz und laesst sich sortieren', () => {
+  assert.ok(/SR_SORT === 'gewinn'/.test(CODE));
+  assert.ok(/'zu gewinnen'/.test(CODE), 'als Sortier-Option');
+  const gruppen = schneide('function _srGruppen', 'function _srCtrl');
+  assert.ok(/g\.gewinnUsd =/.test(gruppen));
+  assert.ok(/w\.quote - 1/.test(gruppen), 'alte Zeilen ohne gewinnUsd muessen nachgerechnet werden');
+});
+
+test('die Bilanz nennt fuer den ROI die ABGERECHNETEN Wetten, nicht alle', () => {
+  // Zwei Grundgesamtheiten: einsatzUsd/gewinnUsd sind alle Einzelwetten, der ROI rechnet
+  // nur auf den abgerechneten. Eine Rendite neben der falschen Zahl waere irrefuehrend.
+  const block = schneide('function _srBilanz', 'function _srKpi');
+  assert.ok(/abgerechnetN/.test(block));
+  assert.ok(/abgerechnet</.test(block));
+});

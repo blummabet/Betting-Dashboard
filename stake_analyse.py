@@ -67,11 +67,34 @@ NORM_MIN_N = int(os.environ.get("STAKE_NORM_MIN_N") or 15)   # darunter keine Li
 KLEINE_LIGA_MAX = int(os.environ.get("STAKE_KLEINE_LIGA_MAX") or 25)
 AUFFAELLIG_FAKTOR = float(os.environ.get("STAKE_AUFFAELLIG_FAKTOR") or 5.0)
 
+# Quotenbänder für die Auswertung. Nicht als Filter gedacht, sondern als Frage: trägt eine
+# Wette bei 1,10 genauso viel Information wie eine bei 2,50? Das entscheidet die Abrechnung.
+QUOTEN_BAENDER = [
+    ("bis_120", 1.0, 1.20),
+    ("120_135", 1.20, 1.35),
+    ("135_160", 1.35, 1.60),
+    ("160_200", 1.60, 2.00),
+    ("200_350", 2.00, 3.50),
+    ("ab_350", 3.50, 1e9),
+]
+
 
 # ── Hilfen ───────────────────────────────────────────────────────────────────
 def _kat(w: dict) -> str:
     """Sportart-Kategorie. Aus dem Feld, sonst nachgerechnet — alte Zeilen haben es nicht."""
     return w.get("kat") or SH.sport_kategorie(w.get("sport"), w.get("liga"))
+
+
+def _gewinn(w: dict):
+    """Was diese Wette gewinnen wuerde. Aus dem Feld, sonst gerechnet — Zeilen von vor dem
+    03.09. haben es nicht, und ohne Rueckfall staende in jeder Schublade eine 0. Eine 0 waere
+    hier besonders schaedlich: sie sieht aus wie 'nichts zu gewinnen', nicht wie 'nicht erfasst'."""
+    if w.get("gewinnUsd") is not None:
+        return w["gewinnUsd"]
+    e, q = w.get("einsatzUsd"), w.get("quote")
+    if e is None or q is None or q <= 1:
+        return None
+    return round(e * (q - 1), 2)
 
 
 def _erlaubt(w: dict) -> bool:
@@ -134,23 +157,48 @@ def _quote(treffer: int, n: int) -> dict:
 
 
 def _schublade(wetten: list) -> dict:
+    """Eine Schublade zählt ZWEI verschiedene Grundgesamtheiten, und das muss aus den Namen
+    hervorgehen — sonst steht eine Zahl neben einer anderen, die etwas anderes meint:
+
+      · einsatzUsd / gewinnUsd  → ALLE Einzelwetten der Schublade (auch offene).
+        Was gerade auf dem Tisch liegt und was es gewinnen würde.
+      · abgerechnetUsd / roi    → nur die ABGERECHNETEN Einzelwetten.
+        Nur darauf lässt sich eine Rendite rechnen.
+
+    03.09.2026: hier hiess beides erst `einsatzUsd` — die eine Zahl zählte abgerechnete
+    Wetten, die andere alle. Der Test hat es gefunden, bevor irgendwo eine Rendite auf der
+    falschen Basis stand.
+    """
     tr = n = 0
-    einsatz = pnl = 0.0
-    n_einzel = 0
+    abgerechnet = pnl = 0.0
+    einsatz = gewinn = 0.0
+    n_einzel = n_offen = 0
     for w in wetten:
+        if not w.get("kombi"):
+            if w.get("einsatzUsd"):
+                n_offen += 1
+                einsatz += w["einsatzUsd"]
+            g = _gewinn(w)
+            if g:
+                gewinn += g
         for b in _gewertete_beine(w):
             n += 1
             tr += 1 if b["treffer"] else 0
         a = w.get("abrechnung") or {}
         if a.get("pnlUsd") is not None and w.get("einsatzUsd"):
             n_einzel += 1
-            einsatz += w["einsatzUsd"]
+            abgerechnet += w["einsatzUsd"]
             pnl += a["pnlUsd"]
     d = _quote(tr, n)
     d["wetten"] = len(wetten)
-    d["einzelN"] = n_einzel
-    d["roi"] = round(pnl / einsatz, 4) if einsatz else None
+    d["einzelN"] = n_offen
     d["einsatzUsd"] = round(einsatz, 2)
+    # Der Einsatz allein bevorzugt Favoritenschieber ($264k auf 1,20 für $53k), der mögliche
+    # Gewinn allein Lottoscheine ($3.260 auf 298,98). Beide Zahlen stehen nebeneinander.
+    d["gewinnUsd"] = round(gewinn, 2)
+    d["abgerechnetN"] = n_einzel
+    d["abgerechnetUsd"] = round(abgerechnet, 2)
+    d["roi"] = round(pnl / abgerechnet, 4) if abgerechnet else None
     return d
 
 
@@ -293,6 +341,19 @@ def vorregistrieren(jetzt: str) -> dict:
             "warum": "Lucas: genug kleine Ligen, wo Leute mit guten Infos setzen.",
             "zielN": 60,
         },
+        "quote_ab_135": {
+            "signatur": "quote >= 1.35 | Bein-Trefferquote | Wilson-UG > 50%",
+            "warum": ("Der Projekt-Boden aus der Pick-Engine, hier auf FREMDE Wetten "
+                      "angewandt. Offene Frage, kein feststehender Wert."),
+            "zielN": 200,
+        },
+        "quote_unter_135": {
+            "signatur": "quote < 1.35",
+            "warum": ("Die Gegenprobe. 32% der Wetten und 35% des Einsatzes liegen hier, "
+                      "aber nur 3% des moeglichen Gewinns — trotzdem ist unbewiesen, dass "
+                      "diese Wetten schlechter INFORMIERT sind."),
+            "zielN": 150,
+        },
         "live_frueh": {
             "signatur": "phase=='live' und Spielminute <= 30",
             "warum": ("Live ist 83% des Feeds, aber spaet im Spiel wertlos (Hapoel-Fall). "
@@ -337,6 +398,21 @@ def auswerten(led: dict, jetzt: str) -> dict:
         "ueber_liga_norm": _schublade(filt(
             lambda w: (auffaellig(w, norm)["faktor"] or 0) >= AUFFAELLIG_FAKTOR)),
     }
+
+    # 03.09.2026 (Lucas: „glaub Odds-Schwelle sollten wir auch bauen ... wollen wir die 1,35
+    # wieder als Minimum?"). Die 1,35 ist im Projekt schon der Boden (pick-engine.js, „Cheap
+    # ML filter") — aber DORT geht es um unsere eigenen Wetten, wo bei 1,20 die Marge den Wert
+    # frisst. Hier geht es um die Meinung eines ANDEREN, und ob die bei 1,20 weniger wert ist,
+    # ist bisher nicht gemessen. Also: Bänder als eigene Schubladen, gemessen statt gesetzt.
+    # Zur Einordnung, an 445 Wetten: unter 1,35 liegen 32% der Wetten und 35% des Einsatzes,
+    # aber nur 3% des möglichen Gewinns.
+    for name, lo, hi in QUOTEN_BAENDER:
+        schubladen["quote_" + name] = _schublade(filt(
+            lambda w, lo=lo, hi=hi: w.get("quote") is not None and lo <= w["quote"] < hi))
+    schubladen["quote_ab_135"] = _schublade(filt(
+        lambda w: (w.get("quote") or 0) >= 1.35))
+    schubladen["quote_unter_135"] = _schublade(filt(
+        lambda w: w.get("quote") is not None and w["quote"] < 1.35))
 
     je_liga = defaultdict(list)
     je_markt = defaultdict(list)

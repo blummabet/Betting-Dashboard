@@ -851,3 +851,46 @@ def test_die_sicht_nennt_die_sperrliste():
     jetzt = datetime.now(timezone.utc)
     s = M.sicht_bauen(_ledger_mit(1, 0, jetzt), jetzt, "ok", "u", "f", "")
     assert s["gesperrt"] == sorted(M.GESPERRT), "eine Quelle fuer Tab und Auswertung"
+
+
+# ── Quote und moeglicher Gewinn ──────────────────────────────────────────────
+# 03.09.2026 (Lucas: '@1,03 und 1,2 ist schon relativ low'). Gemessen an 445 Wetten: die 32%
+# unter Quote 1,35 tragen 35% des EINSATZES, aber nur 3% des MOEGLICHEN GEWINNS. Eine Liste
+# nach Einsatz sortiert deshalb systematisch Favoritenschieber nach oben.
+
+def test_gewinn_wird_mitgerechnet():
+    """Der Sakkari-Fall: $263.775 auf 1,20 riskiert eine Viertelmillion fuer $52.755."""
+    roh = {"id": "x", "bet": {"amount": 263775, "currency": "usdt",
+                              "potentialMultiplier": 1.20, "outcomes": [{}]}}
+    n = M.normalisiere(roh)
+    assert n["einsatzUsd"] == 263775.0
+    assert n["gewinnUsd"] == 52755.0
+
+
+def test_hoher_einsatz_niedrige_quote_gewinnt_wenig():
+    klein = M.normalisiere({"id": "a", "bet": {"amount": 3260, "currency": "usdt",
+                                               "potentialMultiplier": 298.98, "outcomes": [{}]}})
+    gross = M.normalisiere({"id": "b", "bet": {"amount": 263775, "currency": "usdt",
+                                               "potentialMultiplier": 1.20, "outcomes": [{}]}})
+    assert gross["einsatzUsd"] > klein["einsatzUsd"] * 80
+    assert klein["gewinnUsd"] > gross["gewinnUsd"] * 18, (
+        "der moegliche Gewinn dreht die Reihenfolge komplett um — deshalb ersetzt keine "
+        "der beiden Zahlen die andere")
+
+
+def test_ohne_quote_kein_gewinn():
+    n = M.normalisiere({"id": "x", "bet": {"amount": 1000, "currency": "usdt", "outcomes": [{}]}})
+    assert n["einsatzUsd"] == 1000.0
+    assert n["gewinnUsd"] is None, "ohne Quote wird nichts behauptet, auch keine 0"
+
+
+def test_ohne_usd_wert_kein_gewinn():
+    n = M.normalisiere({"id": "x", "bet": {"amount": 5, "currency": "btc",
+                                           "potentialMultiplier": 2.0, "outcomes": [{}]}})
+    assert n["einsatzUsd"] is None and n["gewinnUsd"] is None
+
+
+def test_quote_eins_ergibt_keinen_gewinn():
+    n = M.normalisiere({"id": "x", "bet": {"amount": 1000, "currency": "usdt",
+                                           "potentialMultiplier": 1.0, "outcomes": [{}]}})
+    assert n["gewinnUsd"] is None

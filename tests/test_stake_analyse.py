@@ -297,3 +297,61 @@ def test_liga_norm_liest_den_gelernten_stand(tmp_path, monkeypatch):
 def test_ohne_stand_und_ohne_wetten_gibt_es_keine_norm(tmp_path, monkeypatch):
     monkeypatch.setattr(A, "NORM_FILE", tmp_path / "weg.json")
     assert A.liga_norm(None) == {}
+
+
+# ── Quotenbänder ─────────────────────────────────────────────────────────────
+def test_quotenbaender_sind_schubladen_keine_filter():
+    """Die 1,35 aus der Pick-Engine gilt fuer UNSERE Wetten. Ob eine fremde Wette bei 1,20
+    schlechter informiert ist, ist nicht gemessen — also wird beides gezaehlt."""
+    ws = ([dict(w(wid="tief%d" % i), quote=1.10) for i in range(5)]
+          + [dict(w(wid="hoch%d" % i), quote=2.50) for i in range(7)])
+    a = A.auswerten({"wetten": ws}, "jetzt")
+    assert a["schubladen"]["quote_bis_120"]["wetten"] == 5
+    assert a["schubladen"]["quote_200_350"]["wetten"] == 7
+    assert a["schubladen"]["quote_unter_135"]["wetten"] == 5
+    assert a["schubladen"]["quote_ab_135"]["wetten"] == 7
+    assert a["schubladen"]["gesamt"]["wetten"] == 12, "gefiltert wird nichts"
+
+
+def test_moeglicher_gewinn_steht_neben_dem_einsatz():
+    ws = [dict(w(wid="a", usd=100000), quote=1.20),
+          dict(w(wid="b", usd=10000), quote=5.00)]
+    s = A._schublade(ws)
+    assert s["einsatzUsd"] == 110000.0
+    assert s["gewinnUsd"] == 20000.0 + 40000.0
+
+
+def test_gewinn_wird_fuer_alte_zeilen_nachgerechnet():
+    """Zeilen von vor dem 03.09. haben gewinnUsd nicht. Eine 0 saehe aus wie
+    'nichts zu gewinnen' statt 'nicht erfasst'."""
+    assert A._gewinn({"einsatzUsd": 1000, "quote": 2.5}) == 1500.0
+    assert A._gewinn({"gewinnUsd": 7, "einsatzUsd": 1000, "quote": 2.5}) == 7
+    assert A._gewinn({"einsatzUsd": 1000}) is None
+    assert A._gewinn({"quote": 2.5}) is None
+
+
+def test_einsatz_und_abgerechnet_sind_zwei_verschiedene_zahlen():
+    """03.09.2026: beides hiess erst einsatzUsd — die eine Zahl zaehlte abgerechnete Wetten,
+    die andere alle. Eine Rendite auf der falschen Basis waere nicht aufgefallen."""
+    ws = [
+        dict(w(wid="offen", usd=1000), quote=2.0),
+        dict(w(wid="fertig", usd=500), quote=3.0,
+             abrechnung={"endstand": True, "beine": [{"treffer": True}], "pnlUsd": 1000}),
+    ]
+    s = A._schublade(ws)
+    assert s["einsatzUsd"] == 1500.0, "alle Einzelwetten"
+    assert s["abgerechnetUsd"] == 500.0, "nur die abgerechneten"
+    assert s["roi"] == 2.0, "die Rendite rechnet auf der abgerechneten Basis"
+    assert s["einzelN"] == 2 and s["abgerechnetN"] == 1
+
+
+def test_kombis_zaehlen_nicht_in_den_gewinn():
+    ws = [dict(w(wid="k", usd=10000, kombi=True), quote=5.0)]
+    assert A._schublade(ws)["gewinnUsd"] == 0.0
+
+
+def test_quotenbaender_sind_vorregistriert(tmp_path, monkeypatch):
+    monkeypatch.setattr(A, "REG_FILE", tmp_path / "reg.json")
+    reg = A.vorregistrieren("2026-09-03T22:00:00Z")
+    assert "quote_ab_135" in reg and "quote_unter_135" in reg
+    assert reg["quote_unter_135"]["zielN"] >= 100
