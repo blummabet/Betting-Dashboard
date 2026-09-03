@@ -198,7 +198,10 @@ test('Regler filtern nur die Anzeige, sie schreiben nichts zurueck', () => {
     assert.ok(CODE.includes('window.' + setter), 'Regler fehlt: ' + setter);
   }
   assert.ok(!/fetch\([^)]*POST/i.test(CODE), 'der Tab darf nichts senden');
-  assert.ok((CODE.match(/fetch\(/g) || []).length === 1, 'genau ein Lesezugriff, sonst nichts');
+  // 03.09.2026: zwei Lesezugriffe, seit das Terminal die Auswertung mitlaedt. Was zaehlt,
+  // ist NUR-lesen — und dass nichts anderes gelesen wird als diese beiden Dateien.
+  const gelesen = [...CODE.matchAll(/fetch\('([^']+)'/g)].map(m => m[1].split('?')[0]);
+  assert.deepEqual(gelesen.sort(), ['stake_auswertung.json', 'stake_highroller.json']);
 });
 
 test('gelesen wird die Sicht, nie das Ledger', () => {
@@ -217,4 +220,129 @@ test('alles aus dem Feed wird escaped, bevor es ins HTML geht', () => {
 test('die Nutzer-Spalte ist weg — der Feed liefert dort nie etwas', () => {
   const karte = schneide('function _srKarte', 'function _srRender');
   assert.ok(!/sr-bu/.test(karte), 'eine Spalte, die immer leer bleibt, ist kein Platzhalter wert');
+});
+
+// ── Schwellen (03.09.2026, Lucas: „die gehören mal etwas höher") ────────────
+test('die Anzeige startet bei $5.000, nicht bei $1.000', () => {
+  // Im ersten echten Ledger lagen 68 von 93 Wetten über $1.000 — das ist keine Auswahl.
+  // Gesammelt wird weiter alles; das hier ist nur der Startwert der Anzeige.
+  assert.ok(/var SR_MIN_USD = 5000;/.test(JS));
+  assert.ok(/SR_STAKE_LIMITS = \[1000, 2500, 5000, 10000, 25000\]/.test(JS),
+    'die Regler-Stufen müssen mitgewachsen sein');
+});
+
+test('die Regler können wieder runter — eine Schwelle ist kein Filter der Sammlung', () => {
+  const von = JS.indexOf('SR_STAKE_LIMITS');
+  const zeile = JS.slice(von, JS.indexOf('\n', von));
+  assert.ok(zeile.includes('1000'), 'die niedrigste Stufe bleibt erreichbar');
+});
+
+test('ein umgerechneter Betrag sagt, dass er umgerechnet ist', () => {
+  // 27% der ersten 93 Wetten liefen in eth/sol/btc/cad/try/ltc/xrp/aed. Die zählen jetzt
+  // mit — aber ein Kurswert ist kein gemessener Dollarbetrag und wird als solcher markiert.
+  const karte = schneide('function _srKarte', 'function _srRender');
+  assert.ok(/usdGrund/.test(karte), 'die Herkunft des Betrags muss geprüft werden');
+  assert.ok(/sr-um/.test(karte), 'und sichtbar markiert sein');
+});
+
+test('der Kursstand steht im Kopf', () => {
+  const basis = schneide('var basis =', 'var warn =');
+  assert.ok(/kurse/.test(basis), 'auch ein umgerechneter Wert nennt seine Basis');
+});
+
+// ── Terminal (03.09.2026, Lucas: „kannst ja gleich so ein Terminal bauen") ───
+test('vier Ansichten, und die Weiche kennt alle', () => {
+  for (const t of ['spiele', 'auffaellig', 'bilanz', 'norm']) {
+    assert.ok(CODE.includes("'" + t + "'"), 'Reiter fehlt: ' + t);
+  }
+  assert.ok(/window\._srTab/.test(CODE), 'der Reiter-Wechsel muss aufrufbar sein');
+});
+
+test('eine Quote ohne Untergrenze wird als „kein Urteil" gezeigt, nicht als Zahl', () => {
+  assert.equal(API._srBasis({ n: 5, quote: 0.8, ug: null, belegt: false }).includes('kein Urteil'), true);
+  assert.ok(!API._srBasis({ n: 0 }).includes('%'), 'ohne n gibt es gar keinen Prozentwert');
+});
+
+test('eine belegte Quote wird als solche markiert', () => {
+  const s = API._srBasis({ n: 200, quote: 0.62, ug: 0.55, belegt: true });
+  assert.ok(s.includes('UG'));
+  assert.ok(s.includes('sr-ok'), 'belegt bekommt eine eigene Farbe');
+});
+
+test('jede Quote nennt ihr n', () => {
+  assert.ok(API._srBasis({ n: 42, quote: 0.5, ug: null }).includes('n42'));
+});
+
+test('Prozente ohne Wert sind ein Strich, keine 0', () => {
+  assert.equal(API._srPct(null), '—');
+  assert.equal(API._srPct(undefined), '—');
+  assert.equal(API._srPct(NaN), '—');
+  assert.equal(API._srPct(0), '0.0%');
+});
+
+test('fehlt die Auswertung, steht das da statt einer leeren Tabelle', () => {
+  const block = schneide('if (SR_TAB !== ', 'window.initStakeRadar');
+  assert.ok(/nicht lesbar/.test(block));
+  assert.ok(/nichts gefunden/.test(block), 'der Unterschied muss benannt sein');
+});
+
+test('die Bilanz erklaert, warum sie Beine zaehlt und nicht Wetten', () => {
+  const block = schneide('function _srBilanz', 'function _srKpi');
+  assert.ok(/Beine/.test(block) && /Einzelwetten/.test(block));
+  assert.ok(/[Aa]nnullierte/.test(block), 'auch, was mit annullierten Beinen passiert');
+});
+
+test('die Norm-Ansicht trennt gelernt von zu duenn', () => {
+  const block = schneide('function _srNorm', '  // ── Render');
+  assert.ok(/gelernt/.test(block));
+  assert.ok(/ohne Norm/.test(block));
+  assert.ok(/etwas anderes als/.test(block),
+    'nichts wissen ist nicht dasselbe wie ein gemessenes Nein — das muss dastehen');
+});
+
+// ── Gesperrte Sportarten (03.09.2026, Lucas: „Ganze US-Sport brauch ich aktuell mal nicht") ──
+test('US-Sport wird als solcher erkannt — ueber Slug und ueber Liganamen', () => {
+  assert.equal(API._srKat({ kat: 'US-Sport' }), 'US-Sport');
+  assert.equal(API._srKat({ sport: 'baseball', liga: 'MLB' }), 'US-Sport');
+  assert.equal(API._srKat({ sport: 'american-football', liga: 'NFL' }), 'US-Sport');
+  assert.equal(API._srKat({ sport: null, liga: 'NBA Summer League' }), 'US-Sport');
+  assert.equal(API._srKat({ sport: null, liga: 'NHL Preseason' }), 'US-Sport');
+});
+
+test('Fussball und Tennis bleiben unangetastet', () => {
+  assert.equal(API._srKat({ sport: 'soccer', liga: 'La Liga' }), 'Fußball');
+  assert.equal(API._srKat({ sport: 'soccer', liga: 'MLS' }), 'Fußball');
+  // Ohne Slug fiel MLS erst auf 'Sonstige' — gefunden vom Python-Zwilling dieses Tests.
+  assert.equal(API._srKat({ sport: null, liga: 'MLS' }), 'Fußball');
+  assert.equal(API._srKat({ sport: 'tennis', liga: 'US Open Men Singles' }), 'Tennis');
+});
+
+test('das gestempelte Feld schlaegt die Rueckfall-Erkennung', () => {
+  assert.equal(API._srKat({ kat: 'Fußball', sport: 'baseball' }), 'Fußball');
+});
+
+test('die Sperrliste wird nicht zweimal definiert', () => {
+  // Sie kommt aus stake_highroller.json (dort GESPERRT in stake_highroller_fetch.py).
+  // Der Rueckfall im Frontend darf nur greifen, wenn die Datei sie nicht mitschickt.
+  assert.ok(/function _srGesperrt/.test(CODE));
+  assert.ok(/d\.gesperrt && d\.gesperrt\.length/.test(CODE),
+    'die Datei hat Vorrang vor der eingebauten Liste');
+});
+
+test('der Filter ist nicht still — er zaehlt, was er weglaesst', () => {
+  const block = schneide('var jetzt = Date.now()', 'var gruppen =');
+  assert.ok(/nGesperrt\+\+/.test(block), 'weggelassene Wetten muessen gezaehlt werden');
+  const anzeige = schneide('var treffer =', 'var koerper =');
+  assert.ok(/ausgeblendet/.test(anzeige), 'und die Zahl muss auf der Flaeche stehen');
+});
+
+test('gesperrte Sportarten verschwinden nicht aus der Bilanz, nur aus dem Urteil', () => {
+  const block = schneide('function _srGesperrteSchubladen', 'function _srKpi');
+  assert.ok(/mitgeschrieben, nicht mitgez/.test(block));
+  assert.ok(/gesperrteSchubladen/.test(block));
+});
+
+test('der Sport-Regler bietet gesperrte Sportarten gar nicht erst an', () => {
+  const block = schneide('function _srSports', 'window._srSetMin');
+  assert.ok(/sperr\.indexOf/.test(block));
 });

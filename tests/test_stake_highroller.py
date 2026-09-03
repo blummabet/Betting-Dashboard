@@ -97,6 +97,88 @@ def test_kein_betrag_ist_none():
     assert usd is None and grund == "kein_betrag"
 
 
+# ── Kurse: die 27%-Luecke ────────────────────────────────────────────────────
+# 03.09.2026 — im ersten echten Ledger hatten 25 von 93 Wetten keinen USD-Wert (eth, sol, btc,
+# cad, try, ltc, xrp, aed), darunter keine Kleinbetraege. Die Kurse liegen bei derselben Quelle:
+# currencyConfiguration(isAcp:false){currencies{name rates{currency rate}}}. Gemessen an dem Tag:
+# btc 81433,23 · eth 2511,93 · sol 105,41 · cad 0,7252.
+KURSE = {"usd": {"btc": 81433.23, "eth": 2511.93, "sol": 105.4074, "cad": 0.7252447},
+         "geholt": None, "quelle": "live"}
+
+
+def _frisch(tab):
+    from datetime import datetime, timezone
+    return dict(tab, geholt=datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"))
+
+
+def test_krypto_wird_mit_kurs_umgerechnet():
+    usd, grund = M._usd(0.5, "btc", {}, _frisch(KURSE))
+    assert round(usd) == 40717
+    assert grund == "kurs"
+
+
+def test_fiat_wird_mit_kurs_umgerechnet():
+    usd, grund = M._usd(2000, "cad", {}, _frisch(KURSE))
+    assert round(usd) == 1450
+    assert grund == "kurs"
+
+
+def test_ohne_kurs_bleibt_es_unbekannt():
+    usd, grund = M._usd(5, "doge", {}, _frisch(KURSE))
+    assert usd is None
+    assert grund == "kurs_fehlt:doge"
+
+
+def test_ein_alter_kurs_gibt_sich_nicht_als_frisch_aus():
+    """Ein Kurs von gestern taugt fuer eine Groessenordnung — aber er muss sein Alter nennen."""
+    from datetime import datetime, timezone, timedelta
+    alt = dict(KURSE, geholt=(datetime.now(timezone.utc) - timedelta(hours=30))
+               .isoformat().replace("+00:00", "Z"))
+    usd, grund = M._usd(0.5, "btc", {}, alt)
+    assert round(usd) == 40717, "gerechnet wird trotzdem"
+    assert grund.startswith("kurs_alt_"), grund
+
+
+def test_stablecoin_braucht_keinen_kurs():
+    usd, grund = M._usd(2360, "usdc", {}, None)
+    assert usd == 2360.0 and grund == "stablecoin"
+
+
+def test_kurse_holen_zieht_die_usd_zeile(monkeypatch):
+    antwort = {"data": {"currencyConfiguration": {"currencies": [
+        {"name": "btc", "rates": [{"currency": "eur", "rate": 69987.9},
+                                  {"currency": "usd", "rate": 81433.23}]},
+        {"name": "eth", "rates": [{"currency": "usd", "rate": 2511.93}]},
+        {"name": "kaputt", "rates": [{"currency": "eur", "rate": 1.0}]},
+    ]}}}
+    monkeypatch.setattr(M, "_post", lambda u, b, timeout=25: (200, antwort, None))
+    k = M.kurse_holen("http://test")
+    assert k["usd"] == {"btc": 81433.23, "eth": 2511.93}, "ohne USD-Zeile kein Kurs"
+    assert k["quelle"] == "live"
+
+
+def test_kurse_holen_haelt_den_letzten_stand_wenn_der_abruf_scheitert(monkeypatch):
+    monkeypatch.setattr(M, "_post", lambda u, b, timeout=25: (403, None, "HTTP 403"))
+    k = M.kurse_holen("http://test", {"usd": {"btc": 80000.0}, "geholt": "2026-09-03T10:00:00Z"})
+    assert k["usd"] == {"btc": 80000.0}
+    assert k["quelle"] == "cache", "ein Ausfall darf die Kurse nicht auf null setzen"
+    assert k["geholt"] == "2026-09-03T10:00:00Z", "und das Alter muss erhalten bleiben"
+
+
+def test_kurse_holen_ohne_alles_ist_leer_und_sagt_es(monkeypatch):
+    monkeypatch.setattr(M, "_post", lambda u, b, timeout=25: (403, None, "HTTP 403"))
+    k = M.kurse_holen("http://test")
+    assert k["usd"] == {}
+    assert k["quelle"] == "leer"
+
+
+def test_normalisiere_reicht_die_kurse_durch():
+    roh = {"id": "x", "bet": {"amount": 0.5, "currency": "btc",
+                              "createdAt": "Thu, 03 Sep 2026 19:12:06 GMT", "outcomes": []}}
+    n = M.normalisiere(roh, _frisch(KURSE))
+    assert round(n["einsatzUsd"]) == 40717
+
+
 # ── Normalisierung am ECHTEN Feed ────────────────────────────────────────────
 # 03.09.2026: dieser Datensatz ist nicht erfunden — er stammt eins zu eins aus der Antwort,
 # die stake.com/_api/graphql auf die Abfrage der eigenen Highroller-Seite gibt.
@@ -657,3 +739,101 @@ def test_quelltext_bewertet_nicht():
     for wort in ("strong", "Strong", "medium", "weak", "verdacht", "fixed"):
         assert wort not in code, (
             "'%s' im Code: eine Bewertung ohne gemessene Trefferquote gehört hier nicht rein" % wort)
+
+
+# ── Lücken: was wir NICHT geholt haben ───────────────────────────────────────
+# 03.09.2026, erster echter Lauf: 50 Wetten (Stakes Deckel) deckten 12 Minuten ab, der Job lief
+# alle 15. Rund 3 Minuten je Zyklus hat niemand gesehen — und ausgerechnet dann, wenn viel los
+# ist, wird die Lücke größer, nicht kleiner. Eine Lücke, die niemand misst, geht später als
+# „an dem Abend war halt wenig los" durch.
+
+def test_luecke_erkannt_wenn_der_aelteste_neue_juenger_ist_als_der_letzte_alte():
+    alt = {"wetten": [{"id": "1", "ts": "2026-09-03T19:00:00Z"}]}
+    neu = [{"id": "2", "ts": "2026-09-03T19:05:00Z"},
+           {"id": "3", "ts": "2026-09-03T19:12:00Z"}]
+    r = M.luecke_messen(alt, neu)
+    assert r["luecke"] is True
+    assert r["lueckeMin"] == 5.0
+    assert r["abdeckungMin"] == 7.0
+
+
+def test_keine_luecke_bei_ueberlappung():
+    alt = {"wetten": [{"id": "1", "ts": "2026-09-03T19:10:00Z"}]}
+    neu = [{"id": "2", "ts": "2026-09-03T19:05:00Z"},
+           {"id": "3", "ts": "2026-09-03T19:12:00Z"}]
+    r = M.luecke_messen(alt, neu)
+    assert r["luecke"] is False
+    assert r["abdeckungMin"] == 7.0
+
+
+def test_erster_lauf_ist_keine_luecke():
+    r = M.luecke_messen({}, [{"id": "1", "ts": "2026-09-03T19:00:00Z"}])
+    assert r["luecke"] is None
+    assert "erster" in r["grund"]
+
+
+def test_leerer_abruf_meldet_keine_falsche_luecke():
+    r = M.luecke_messen({"wetten": [{"id": "1", "ts": "2026-09-03T19:00:00Z"}]}, [])
+    assert r["luecke"] is None
+
+
+def test_luecke_faehrt_in_der_sicht_mit():
+    jetzt = datetime.now(timezone.utc)
+    led = _ledger_mit(2, 0, jetzt)
+    led["luecke"] = {"luecke": True, "lueckeMin": 3.0}
+    s = M.sicht_bauen(led, jetzt, "ok", "u", "f", "")
+    assert s["luecke"]["luecke"] is True
+    assert s["luecke"]["lueckeMin"] == 3.0
+
+
+# ── Sportarten sperren (03.09.2026, Lucas: 'Ganze US-Sport brauch ich aktuell mal nicht') ──
+# Gesperrt heisst AUSGEBLENDET, nicht ungesammelt. Dieselbe Entscheidung wie im Poly-Fall vom
+# 24.08.: das Mitschreiben ist gratis und die einzige Art, je zu merken, dass eine Sportart
+# dreht. Der Sammler darf deshalb nichts wegwerfen.
+
+def test_us_sport_ueber_den_slug():
+    for slug in ("baseball", "basketball", "ice-hockey", "american-football"):
+        assert M.sport_kategorie(slug) == "US-Sport", slug
+
+
+def test_us_sport_ueber_den_liganamen_wenn_der_slug_fehlt():
+    assert M.sport_kategorie(None, "NBA Summer League") == "US-Sport"
+    assert M.sport_kategorie(None, "NHL Preseason") == "US-Sport"
+    assert M.sport_kategorie("", "MLB") == "US-Sport"
+
+
+def test_mls_ist_fussball_und_nicht_us_sport():
+    """MLS wird im Projekt getradet — sie darf nicht mit dem US-Sport-Block untergehen."""
+    assert M.sport_kategorie("soccer", "MLS") == "Fußball"
+    assert M.sport_kategorie(None, "MLS") == "Fußball"
+
+
+def test_die_ueblichen_verdaechtigen_bleiben_frei():
+    assert M.sport_kategorie("soccer", "La Liga") == "Fußball"
+    assert M.sport_kategorie("tennis", "US Open Men Singles") == "Tennis"
+    assert M.sport_kategorie("counter-strike", "NODWIN") == "E-Sport"
+
+
+def test_unbekanntes_ist_sonstige_und_nicht_gesperrt():
+    assert M.sport_kategorie(None, None) == "Sonstige"
+    assert "Sonstige" not in M.GESPERRT
+
+
+def test_die_kategorie_wird_beim_sammeln_gestempelt():
+    roh = {"id": "x", "bet": {"amount": 100, "currency": "usdt", "outcomes": [{
+        "fixture": {"tournament": {"name": "MLB",
+                                   "category": {"sport": {"slug": "baseball"}}}}}]}}
+    assert M.normalisiere(roh)["kat"] == "US-Sport"
+
+
+def test_der_sammler_wirft_gesperrte_sportarten_NICHT_weg():
+    """Waere sie hier schon raus, koennte man nie merken, dass sie dreht."""
+    a = M.ledger_mischen({}, [{"id": "1", "ts": "2026-09-03T10:00:00Z", "kat": "US-Sport"}],
+                         "jetzt")
+    assert a["n"] == 1
+
+
+def test_die_sicht_nennt_die_sperrliste():
+    jetzt = datetime.now(timezone.utc)
+    s = M.sicht_bauen(_ledger_mit(1, 0, jetzt), jetzt, "ok", "u", "f", "")
+    assert s["gesperrt"] == sorted(M.GESPERRT), "eine Quelle fuer Tab und Auswertung"
