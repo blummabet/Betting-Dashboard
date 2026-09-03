@@ -61,8 +61,11 @@
   function _ageMin(obj) {
     if (!obj) return null;
     var m = obj._meta || {};
+    // 03.09.2026: `asof` dazu. Die Stake-Dateien stempeln so, und ohne diesen Namen haette
+    // _ageMin fuer sie immer null geliefert — der Frische-Guard waere erfuellt gewesen (das
+    // Feld steht in der Liste), das Alter aber nie berechnet worden. Erfuellt ist nicht gemessen.
     var g = m.picksUpdatedAt || m.generatedAt || m.updated_at || m.oddsUpdatedAt || m.dataUpdatedAt
-      || obj.generatedAt || obj.updatedAt;
+      || obj.generatedAt || obj.updatedAt || obj.asof;
     if (!g) return null;
     var t = Date.parse(String(g).replace(' ', 'T')); 
     return isNaN(t) ? null : Math.max(0, (Date.now() - t) / 60000);
@@ -88,7 +91,11 @@
              ['Betfair', d.betfair], ['Börse', d.bfOverview], ['Richtung', d.bfDir],
              ['Betfair-Track', d.bfTrack], ['Money-Map', d.moneyMap],
              ['Puls', d.pulse], ['Poly', d.whales],
-             ['Konjunktion', d.killer], ['Register', d.freigabe]];
+             ['Konjunktion', d.killer], ['Register', d.freigabe],
+             // 03.09.2026: neu dazu, und der Guard hat es sofort eingefordert — eine Quelle,
+             // die geladen wird, aber nicht in die Frische-Rechnung eingeht, kann beliebig
+             // alt sein, ohne dass die Übersicht es sagt.
+             ['Stake', d.stake], ['Stake-Auswertung', d.stakeAus]];
     var out = [];
     q.forEach(function (x) { var a = _ageMin(x[1]); if (a != null) out.push({ n: x[0], min: a }); });
     // Poly-LIVE fuehrt seine eigene Rechnung (dieselbe, die die Kachel unten anzeigt).
@@ -218,6 +225,8 @@
       '.md-more:hover{opacity:.7;}',
       '.md-r{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--mln);}',
       '.md-r-main{min-width:0;flex:1;}',
+      '.md-sbar{height:4px;border-radius:2px;background:var(--mln);margin-top:6px;overflow:hidden;}',
+      '.md-sbar i{display:block;height:100%;border-radius:0 3px 3px 0;}',
       '.md-r-t{font-size:13px;font-weight:600;color:var(--mi);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
       '.md-r-s{font-size:11px;color:var(--mi2);margin-top:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}',
       '.md-r-v{font-family:"JetBrains Mono","SF Mono",Menlo,monospace;font-size:12.5px;font-weight:800;white-space:nowrap;text-align:right;}',
@@ -429,7 +438,10 @@
       // Konjunktions-Sektion + das Freigabe-Register, das ihr Urteil trägt. Beides muss hier
       // rein, weil die Sektion NICHT behaupten darf, sie sei spielbar — sie zeigt ihren
       // eigenen Stand aus freigabe.json.
-      jf('killer.json'), jf('freigabe.json')]);
+      jf('killer.json'), jf('freigabe.json'),
+      // 03.09.2026 (Lucas): die Stake-Sammlung fuer die drei Kacheln. Beide Dateien
+      // duerfen fehlen — die Kacheln sagen dann, dass nichts da ist, statt leer zu bleiben.
+      jf('stake_highroller.json'), jf('stake_auswertung.json')]);
   }
   function _mdLoad(force) {
     if (_md.loading) return;
@@ -439,7 +451,7 @@
     var p = document.getElementById('mainDashPanel');
     if (p && !_md.data) { p.classList.add('mdash'); p.innerHTML = _head() + '<div class="md-empty" style="text-align:center;padding:52px 0;">⏳ Übersicht wird geladen …</div>'; }
     _mdFetch().then(function (a) {
-      _md.data = { liga: a[0], mls: a[1], ligaStreaks: a[2], mlsStreaks: a[3], betfair: a[4], whales: a[5], pulse: a[6], bfOverview: a[7], bfDir: a[8], moneyMap: a[9], bfTrack: a[10], killer: a[11], freigabe: a[12] };
+      _md.data = { liga: a[0], mls: a[1], ligaStreaks: a[2], mlsStreaks: a[3], betfair: a[4], whales: a[5], pulse: a[6], bfOverview: a[7], bfDir: a[8], moneyMap: a[9], bfTrack: a[10], killer: a[11], freigabe: a[12], stake: a[13], stakeAus: a[14] };
       _md.loading = false; _mdRender();
     });
   }
@@ -889,6 +901,153 @@
       (val ? '<div class="md-r-v" style="color:' + (valColor || 'var(--mi)') + ';">' + val + '</div>' : '') +
     '</div>';
   }
+  // ── Stake: drei Kacheln (03.09.2026, Lucas) ─────────────────────────────────
+  // „eine Kachel mit den Top-Spielen über alles der höchsten Beträge, eine wo wir über der
+  // Norm sind, und eine dritte — vielleicht hast du eine gute Idee."
+  //
+  // Die dritte ist „noch spielbar", und zwar aus einem Grund: die ersten beiden zeigen fast
+  // immer Spiele, die schon laufen oder durch sind. 77 von 93 Wetten im ersten echten Ledger
+  // waren live gesetzt. Eine Übersicht, in der drei Kacheln dasselbe abgelaufene Spiel
+  // zeigen, ist hübsch und nutzlos — die dritte beantwortet als einzige „und worauf könnte
+  // ich jetzt noch schauen?".
+  //
+  // Alle drei sind Größenvergleiche mit EINER Serie, also ein Farbton und ein Balken je
+  // Zeile. Ein Farbverlauf nach Größe würde die Balkenlänge doppelt kodieren.
+  var A_STAKE = '#67cc91';
+
+  function _mdStakeBalken(anteil) {
+    return '<div class="md-sbar"><i style="width:' + clamp(anteil * 100, 2, 100) +
+      '%;background:' + A_STAKE + ';"></i></div>';
+  }
+
+  /** Wetten aus stake_highroller.json, gefiltert wie im Terminal: gesperrte Sportarten raus,
+      Fenster, und nur was einen bekannten USD-Wert hat. */
+  // Die Kategorie steht seit dem 03.09. an jeder Wette. Zeilen, die VORHER gesammelt wurden,
+  // haben sie nicht — und ohne diesen Rückfall rutschen sie durch den Filter, nur weil sie
+  // älter sind. Genau das ist im ersten Testlauf passiert: „Chicago Cubs – Milwaukee Brewers"
+  // stand in der Kachel, obwohl MLB gesperrt ist. Spiegel von _srKat im Stake-Terminal.
+  function _mdStakeKat(w) {
+    if (w.kat) return w.kat;
+    var x = ' ' + String((w.sport || '') + ' ' + (w.liga || '')).toLowerCase() + ' ';
+    if (/\b(nba|mlb|nfl|nhl|wnba|ncaa)\b|basketball|baseball|ice-?hockey|american[- ]?football/.test(x)) return 'US-Sport';
+    if (/tennis| wta | atp /.test(x)) return 'Tennis';
+    if (/esport|cs2|csgo| lol |dota|valorant|counter-strike|league-of-legends|fifa/.test(x)) return 'E-Sport';
+    if (/soccer|liga|ligue|serie|premier|bundesliga|eredivisie| mls | epl | ucl | uel /.test(x)) return 'Fußball';
+    return 'Sonstige';
+  }
+
+  function _mdStakeWetten(stundenZurueck) {
+    var d = _md.data.stake || {};
+    var sperr = d.gesperrt || ['US-Sport'];
+    var ab = Date.now() - (stundenZurueck || 24) * 3600000;
+    return (d.wetten || []).filter(function (w) {
+      if (w.einsatzUsd == null) return false;
+      var t = Date.parse(w.ts); if (!t || t < ab) return false;
+      return sperr.indexOf(_mdStakeKat(w)) < 0;
+    });
+  }
+
+  /** Nach Spiel gruppieren. Kombis zählen nicht ins Spielgeld — ihr Einsatz hängt an
+      mehreren Spielen und gehört keinem davon. */
+  function _mdStakeSpiele(wetten) {
+    var m = {};
+    wetten.forEach(function (w) {
+      var k = w.eventId || ((w.event || '?') + '|' + (w.liga || ''));
+      if (!m[k]) m[k] = { key: k, event: w.event, liga: w.liga, anpfiff: w.anpfiff, n: 0, geld: 0, groesster: 0, seiten: {} };
+      var g = m[k]; g.n++;
+      if (!w.kombi) {
+        g.geld += w.einsatzUsd;
+        if (w.einsatzUsd > g.groesster) { g.groesster = w.einsatzUsd; g.top = w; }
+        var s = (w.markt ? w.markt + ': ' : '') + (w.auswahl || '?');
+        g.seiten[s] = (g.seiten[s] || 0) + w.einsatzUsd;
+      }
+      if (!g.anpfiff && w.anpfiff) g.anpfiff = w.anpfiff;
+    });
+    return Object.keys(m).map(function (k) {
+      var g = m[k];
+      var seiten = Object.keys(g.seiten).sort(function (a, b) { return g.seiten[b] - g.seiten[a]; });
+      g.seite = seiten[0] || null;
+      g.seiteGeld = seiten.length ? g.seiten[seiten[0]] : 0;
+      return g;
+    }).filter(function (g) { return g.geld > 0; });
+  }
+
+  function _mdStakeKo(g) {
+    if (!g.anpfiff) return '';
+    var m = Math.round((Date.parse(g.anpfiff) - Date.now()) / 60000);
+    if (isNaN(m)) return '';
+    if (m > 0) {
+      var h = Math.floor(m / 60);
+      return '<span class="md-badge" style="background:rgba(57,135,229,.14);color:' + A.blue +
+        '">⏱ ' + (h ? h + ' h' : m + ' min') + '</span>';
+    }
+    return '<span class="md-badge" style="background:rgba(229,83,75,.14);color:' + A.red +
+      '">● ' + (-m) + '. Min</span>';
+  }
+
+  function _mdStakeLeer(txt) {
+    var d = _md.data.stake;
+    if (!d) return empty('Stake-Sammlung noch nicht geladen.');
+    if (d.status && d.status !== 'ok') return empty('Kein Stake-Feed: ' + esc(d.notiz || d.status));
+    return empty(txt);
+  }
+
+  // Kachel 1 — größtes Geld
+  function _mdStakeGeldBody() {
+    var spiele = _mdStakeSpiele(_mdStakeWetten(24))
+      .sort(function (a, b) { return b.geld - a.geld; }).slice(0, 4);
+    if (!spiele.length) return _mdStakeLeer('In 24 h kein Spiel mit bekanntem Einsatz.');
+    var max = spiele[0].geld || 1;
+    return spiele.map(function (g) {
+      return rowEl(esc(g.event || '—') + ' ' + _mdStakeKo(g),
+        usd(g.geld), A_STAKE,
+        esc(g.liga || '') + ' · ' + g.n + (g.n === 1 ? ' Wette' : ' Wetten') +
+          (g.seite ? ' · meist ' + esc(g.seite) : ''),
+        _mdStakeBalken(g.geld / max));
+    }).join('');
+  }
+
+  // Kachel 2 — über der Norm der eigenen Liga
+  function _mdStakeNormBody() {
+    var a = _md.data.stakeAus || {};
+    var rows = (a.auffaellige || []).slice(0, 4);
+    if (!rows.length) {
+      var n = a.ligaNorm ? Object.keys(a.ligaNorm).filter(function (k) {
+        return a.ligaNorm[k].basis === 'gelernt'; }).length : 0;
+      return empty(n ? 'Aktuell nichts über der Norm.'
+                     : 'Noch keine Liga-Norm — die entsteht ab 15 Wetten je Liga.');
+    }
+    var max = Math.max.apply(null, rows.map(function (r) { return r.faktor || 1; }));
+    return rows.map(function (r) {
+      // Ohne gelernte Norm gibt es keinen Faktor — dann trägt die Zeile den schwächeren
+      // Grund („kleine Liga"), und das steht auch dran statt einer erfundenen Zahl.
+      var wert = r.faktor != null ? '×' + r.faktor.toFixed(1) : usd(r.einsatzUsd);
+      return rowEl(esc(r.event || '—'), wert, A.soft,
+        esc(r.liga || '') + ' · ' + usd(r.einsatzUsd) +
+          (r.auswahl ? ' auf ' + esc(r.auswahl) : '') + ' · ' + esc(r.grund || ''),
+        _mdStakeBalken((r.faktor || 1) / max));
+    }).join('');
+  }
+
+  // Kachel 3 — noch spielbar
+  function _mdStakeSpielbarBody() {
+    var spiele = _mdStakeSpiele(_mdStakeWetten(12)).filter(function (g) {
+      if (!g.anpfiff) return false;
+      var m = (Date.parse(g.anpfiff) - Date.now()) / 60000;
+      return !isNaN(m) && m > -30;          // noch nicht angepfiffen oder max. 30 Min drin
+    }).sort(function (a, b) { return b.geld - a.geld; }).slice(0, 4);
+    if (!spiele.length) return _mdStakeLeer('Gerade läuft alles schon zu lange.');
+    var max = spiele[0].geld || 1;
+    return spiele.map(function (g) {
+      var anteil = g.geld ? g.seiteGeld / g.geld : 0;
+      return rowEl(esc(g.event || '—') + ' ' + _mdStakeKo(g),
+        usd(g.geld), A_STAKE,
+        (g.seite ? esc(g.seite) + ' · ' + Math.round(anteil * 100) + ' % des Geldes' : esc(g.liga || '')) +
+          ' · ' + g.n + (g.n === 1 ? ' Wette' : ' Wetten'),
+        _mdStakeBalken(g.geld / max));
+    }).join('');
+  }
+
   function meter(pct, color) {
     return '<div class="md-meter"><i style="width:' + clamp(pct, 0, 100) + '%;background:' + color + ';"></i></div>';
   }
@@ -1300,6 +1459,16 @@
       tile('🐋', 'Poly Whale-Bets', A.poly, 'rgba(25,158,112,.14)', 'rgba(25,158,112,.32)', 'polywallets', 'Wallets', whBody, 160) +
       '<div id="md-cell-top" class="md-cell">' + tile('🎯', 'Top-Play', A.good, 'rgba(46,160,67,.14)', 'rgba(46,160,67,.32)', 'polywallets', 'Wallets', empty('lädt …'), 170) + '</div>' +
       '<div id="md-cell-whale" class="md-cell">' + tile('💰', 'Volumen über Norm', A.poly, 'rgba(25,158,112,.14)', 'rgba(25,158,112,.32)', 'polywallets', 'Wallets', empty('lädt …'), 180) + '</div>' +
+      // Reihe 4.7 — Stake (03.09.2026, Lucas): Geld · Norm · noch spielbar.
+      // Die dritte Kachel ist die wichtigste: die ersten beiden zeigen fast immer Spiele,
+      // die schon laufen oder durch sind (77 von 93 Wetten im ersten Ledger waren live
+      // gesetzt) — nur diese eine beantwortet „worauf koennte ich JETZT noch schauen".
+      tile('🎰', 'Stake · größtes Geld', A_STAKE, 'rgba(103,204,145,.14)', 'rgba(103,204,145,.32)',
+           'stakeradar', 'Radar', _mdStakeGeldBody(), 185) +
+      tile('🚩', 'Stake · über der Norm', A.soft, 'rgba(201,133,0,.14)', 'rgba(201,133,0,.32)',
+           'stakeradar', 'Auffällig', _mdStakeNormBody(), 190) +
+      tile('⏱', 'Stake · noch spielbar', A.blue, 'rgba(57,135,229,.14)', 'rgba(57,135,229,.32)',
+           'stakeradar', 'Spiele', _mdStakeSpielbarBody(), 195) +
       // Reihe 4.5 — Polymarket LIVE (Vollbreite): laufende Wallets + frischer Zufluss
       '<div id="md-cell-live" class="md-cell">' + _mdLiveWidePlaceholder() + '</div>' +
       '</div>';

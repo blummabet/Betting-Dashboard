@@ -802,6 +802,20 @@ def test_us_sport_ueber_den_liganamen_wenn_der_slug_fehlt():
     assert M.sport_kategorie("", "MLB") == "US-Sport"
 
 
+def test_liganamen_mit_satzzeichen_rutschen_nicht_durch():
+    """03.09.2026: die Liga hiess 'NCAA, Regular'. Der Rueckfall suchte nach ' ncaa ' mit
+    Leerzeichen — das Komma hat ihn ins Leere laufen lassen. Aufgefallen ist es in der
+    Uebersicht: 'Illinois Fighting Illini - UAB Blazers' stand in einer Kachel."""
+    assert M.sport_kategorie(None, "NCAA, Regular") == "US-Sport"
+    assert M.sport_kategorie(None, "NFL - Preseason") == "US-Sport"
+    assert M.sport_kategorie(None, "NCAA Football") == "US-Sport"
+
+
+def test_american_football_auch_ohne_slug():
+    assert M.sport_kategorie(None, "American Football League") == "US-Sport"
+    assert M.sport_kategorie("american-football", None) == "US-Sport"
+
+
 def test_mls_ist_fussball_und_nicht_us_sport():
     """MLS wird im Projekt getradet — sie darf nicht mit dem US-Sport-Block untergehen."""
     assert M.sport_kategorie("soccer", "MLS") == "Fußball"

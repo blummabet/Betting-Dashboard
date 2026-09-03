@@ -56,6 +56,7 @@ import stake_highroller_fetch as SH
 from sharp_gate import wilson_lb
 
 LEDGER_FILE = BASE / "stake_bet_ledger.json"
+NORM_FILE = BASE / "stake_league_norm.json"
 OUT_FILE = BASE / "stake_auswertung.json"
 REG_FILE = BASE / "stake_vorregistrierung.json"
 
@@ -154,15 +155,31 @@ def _schublade(wetten: list) -> dict:
 
 
 # ── 1. Liga-Norm ─────────────────────────────────────────────────────────────
-def liga_norm(wetten: list) -> dict:
-    """Was ist in DIESER Liga ein grosser Einsatz? Aus den eigenen Daten, nicht ausgedacht.
+def liga_norm(wetten: list = None) -> dict:
+    """Die gelernte Norm je Liga — aus stake_league_norm.json, NICHT aus dem Ledger.
 
-    Unter NORM_MIN_N Wetten gibt es keine Norm — dann ist 'auffällig' nicht entscheidbar,
-    und das steht auch so da (`basis: "zu duenn"`), statt eine Zahl zu erfinden.
+    03.09.2026: anfangs wurde sie hier bei jedem Lauf frisch aus dem Ledger gerechnet. Das
+    Ledger ist auf 20.000 Wetten gedeckelt und laeuft bei gemessenen 4,3 Wetten/Minute nach
+    rund 3,2 Tagen ueber — die Norm sah also immer nur ein rollendes Drei-Tage-Fenster, und
+    eine Liga, die einmal pro Woche spielt, haette darin NIE die 15 Wetten erreicht. Also
+    ausgerechnet die kleinen Ligen, um die es geht, waeren dauerhaft ohne Basis geblieben.
+
+    Derselbe Fehler wie im Betfair-Badge am 24.08. („die Basis kam aus dem MOMENT statt aus
+    der ZEIT"). Deshalb fuehrt stake_league_norm.py jetzt einen wachsenden Stichprobenstand,
+    und hier wird er nur noch gelesen.
+
+    Der Parameter `wetten` bleibt fuer Tests und als Rueckfall: liegt kein Stand vor, wird
+    aus dem Uebergebenen gerechnet — mit demselben MIN_N, damit nichts leiser durchrutscht.
     """
+    datei = SH._lade(NORM_FILE, {})
+    ligen = datei.get("ligen")
+    if ligen:
+        return ligen
+    if wetten is None:
+        return {}
     je = defaultdict(list)
     for w in wetten:
-        if w.get("einsatzUsd") and w.get("liga"):
+        if w.get("einsatzUsd") and w.get("liga") and not w.get("kombi"):
             je[w["liga"]].append(float(w["einsatzUsd"]))
     out = {}
     for liga, betraege in je.items():
@@ -171,12 +188,10 @@ def liga_norm(wetten: list) -> dict:
         if n < NORM_MIN_N:
             out[liga] = {"n": n, "basis": "zu duenn", "median": None, "p90": None}
             continue
-        out[liga] = {
-            "n": n, "basis": "gelernt",
-            "median": round(statistics.median(betraege), 2),
-            "p90": round(betraege[min(n - 1, int(round(0.9 * (n - 1))))], 2),
-            "max": round(betraege[-1], 2),
-        }
+        out[liga] = {"n": n, "basis": "gelernt",
+                     "median": round(statistics.median(betraege), 2),
+                     "p90": round(betraege[min(n - 1, int(round(0.9 * (n - 1))))], 2),
+                     "max": round(betraege[-1], 2)}
     return out
 
 

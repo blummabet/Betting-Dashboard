@@ -60,7 +60,13 @@ jobs:
         continue-on-error: true
         run: ${{ env.BETFAIR_PY }} stake_settle.py || echo "  ⚠️ Stake-Abrechnung fehlgeschlagen"
 
-      - name: 📐 Stake auswerten (Liga-Norm, Schubladen, Auffaellige)
+      # Die Norm MUSS vor der Auswertung laufen — sie waechst ueber die Zeit und wird von
+      # stake_analyse.py nur noch gelesen (das Ledger reicht nur ~3 Tage zurueck).
+      - name: 📊 Liga-Norm nachtragen (waechst mit)
+        continue-on-error: true
+        run: ${{ env.BETFAIR_PY }} stake_league_norm.py || echo "  ⚠️ Stake-Norm fehlgeschlagen"
+
+      - name: 📐 Stake auswerten (Schubladen, Auffaellige)
         continue-on-error: true
         run: ${{ env.BETFAIR_PY }} stake_analyse.py || echo "  ⚠️ Stake-Auswertung fehlgeschlagen"
 
@@ -199,6 +205,8 @@ jobs:
           git add stake_kurse.json 2>/dev/null || true
           git add stake_auswertung.json 2>/dev/null || true
           git add stake_vorregistrierung.json 2>/dev/null || true
+          git add stake_league_norm.json 2>/dev/null || true
+          git add stake_league_norm_state.json 2>/dev/null || true
           git add betfair_prices.json 2>/dev/null || true
           git add betfair_history.json 2>/dev/null || true
           git add betfair_overview.json 2>/dev/null || true

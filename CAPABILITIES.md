@@ -621,6 +621,90 @@ nicht im Betrieb.
 
 ---
 
+### 📊 Die Liga-Norm muss aus der ZEIT kommen, nicht aus dem Fenster (03.09.2026)
+
+Lucas: *„das heißt wir lernen jetzt auch schon mit, was normale Einsätze für eine Liga sind und
+was dann höher ist, je mehr Daten wir sammeln?"* — die Frage hat einen Defekt aufgedeckt, den
+niemand gemeldet hätte.
+
+Die Norm wurde bei jedem Lauf frisch aus `stake_bet_ledger.json` gerechnet. Das Ledger ist auf
+20.000 Wetten gedeckelt, und gemessen laufen **4,3 Wetten pro Minute** ein — der Deckel reicht
+also **rund 3,2 Tage** zurück. Die Norm sah damit immer nur ein rollendes Drei-Tage-Fenster, und
+eine Liga, die einmal pro Woche spielt, erreicht darin **nie** die 15 Wetten für eine Norm.
+Ausgerechnet die kleinen Ligen — die, um die es überhaupt geht — wären dauerhaft ohne Basis
+geblieben und immer auf das schwächere Ersatzkriterium durchgefallen.
+
+Das ist **derselbe Fehler wie im Betfair-Badge am 24.08.**, wo die Basis aus dem Moment statt aus
+der Zeit kam und Fulham–Chelsea mit „×80,6 Norm" dastand, obwohl es gegen echte EPL-Spiele bei
+×0,6 lag. Die Lehre steht dort im Dateikopf: *„Das Badge war nicht ungenau, es war invertiert."*
+
+`stake_league_norm.py` führt jetzt denselben Bautyp wie `betfair_league_norm_state.json`: einen
+wachsenden Stichprobenstand je Liga, dedupliziert über die Wett-ID, je Liga bis 600 Proben und
+120 Tage. Kombis und gesperrte Sportarten kommen gar nicht erst hinein. `stake_analyse.py` liest
+den Stand nur noch — die Rechnung aus dem Ledger bleibt als Rückfall, mit demselben MIN_N, damit
+nichts leiser durchrutscht.
+
+**Antwort auf die Frage, präzise:** ja, und ab jetzt wirklich — die Norm wächst weiter, solange
+der Job läuft, statt alle drei Tage zu vergessen.
+
+### 🎰 Stake-Terminal, zweiter Ausbau
+
+| | Warum |
+|---|---|
+| **×N Norm** auf der Spielkarte | Der **größte einzelne** Einsatz gegen den Median der Liga — nicht die Summe. Zehn Wetten à $2.000 sind ein normaler Abend, **eine** über $30.000 ist das Ereignis |
+| **⚔️ umkämpft** | Liegen ≥ 30 % des Geldes auf einer zweiten Seite, ist der Markt uneinig — das ist kein einheitlicher Fluss. Der Poly-Tab unterdrückt solche Fälle seit dem 12.08. im öffentlichen Kanal; hier werden sie wenigstens markiert |
+| **Anpfiff / Spielminute** je Karte | „🔴 63. Min" statt eines nackten LIVE — die Lehre aus dem Hapoel-Push, diesmal vorbeugend |
+| **„noch spielbar"** als Schalter | Nur was nicht angepfiffen ist oder höchstens 30 Minuten läuft; die weggelassenen werden gezählt |
+| **Sortierung × Norm** | Nach Auffälligkeit statt nach Größe — der eigentliche Blick |
+| **Lücke in der Kopfzeile** | Stakes 50er-Deckel kann Zeit verschlucken. Das gehört auf die Fläche, nicht nur ins JSON |
+| **Karten aufklappbar** | Über sechs Wetten hinaus, ohne Neuladen |
+
+---
+
+### 🎨 Stake grafisch — vier Bilder, jedes mit einer Aufgabe (03.09.2026)
+
+Lucas: *„das Terminal würd ich gern noch so pimpen, dass es grafisch vielleicht mit Graphen
+optisch einfach cooler aussieht."* Vier Bilder, und **jedes hat genau eine Serie, also eine
+Farbe** — wo nur eine Größe dargestellt wird, ist ein zweiter Farbton kein Informationsgewinn,
+sondern ein verbrannter Kanal. Ein Farbverlauf nach Balkenlänge wäre die Länge doppelt kodiert.
+
+| Bild | Aufgabe | Form |
+|---|---|---|
+| **Geld je Stunde** (Spiele-Reiter) | Verlauf über Zeit | Säulen, 4px runde Datenkante, eckiger Fuß, 2px Lücke |
+| **Norm-Streifen** (Auffällig-Reiter) | ein Wert an einer Grenze | Meter mit Median-Marke, log-Skala (Einsätze streuen über Größenordnungen — steht im Tooltip) |
+| **Median je Liga** (Norm-Reiter) | Größenvergleich | liegende Balken, heller Teil = 90 %-Punkt |
+| **Zeitachse** (aufgeklappte Karte) | wann kam das Geld | Punkte, **Fläche** ~ Einsatz (Radius über die Wurzel, sonst sieht doppelt wie vierfach aus), Anpfiff markiert |
+
+Beschriftet wird sparsam — eine Zahl an jedem Punkt liest niemand; die Tooltips (`<title>` im
+SVG, also auch für Screenreader) tragen den Rest.
+
+### 🎰 Drei Stake-Kacheln in der Übersicht
+
+**größtes Geld** · **über der Norm** · **noch spielbar**. Die dritte war Lucas' offene Frage,
+und sie ist die wichtigste: die ersten beiden zeigen fast immer Spiele, die schon laufen oder
+durch sind — 77 von 93 Wetten im ersten Ledger waren live gesetzt. Eine Übersicht, in der drei
+Kacheln dasselbe abgelaufene Spiel zeigen, ist hübsch und nutzlos. Nur die dritte beantwortet
+*„und worauf könnte ich jetzt noch schauen?"*.
+
+**Drei Fehler, alle vom Ausprobieren gefunden, keiner vom Nachdenken:**
+
+1. **US-Sport in der Kachel.** „Chicago Cubs – Milwaukee Brewers" stand da, obwohl MLB gesperrt
+   ist: Zeilen von vor dem Kategorie-Stempel haben kein `kat`, und der Filter las
+   `w.kat || ''`. Behoben mit demselben Rückfall wie im Terminal.
+2. **„NCAA, Regular" rutschte durch.** Das Rückfall-Muster suchte `" ncaa "` mit Leerzeichen —
+   das Komma ließ es ins Leere laufen, und `american-football` fehlte ganz. Jetzt Wortgrenzen
+   (`\b`), und `american[- ]?football` fängt auch „American Football League" mit Leerzeichen.
+   Ein Test vergleicht die Muster in Terminal und Übersicht **gegeneinander** statt sie
+   nachzubauen — ein Test, der die Regel noch einmal formuliert, prüft nur sich selbst.
+3. **Erfüllt ist nicht gemessen.** Der Frische-Guard vom Vormittag hat sofort verlangt, dass die
+   neuen Datensätze in `_mdQuellenAlter` stehen — das war richtig und hat gegriffen. Er prüft
+   aber nur, ob eine Quelle in der Liste *steht*, nicht ob `_ageMin` sie *lesen* kann. Die
+   Stake-Dateien stempeln mit `asof`, das der Leser nicht kannte: Liste erfüllt, Alter immer
+   `null`. `asof` ist jetzt drin, und ein zweiter Test prüft, dass jeder benutzte Stempelname
+   auch wirklich ein Alter ergibt.
+
+---
+
 ## 8. Harte Arbeitsregeln
 
 - **Push nur über GitHub Desktop**, nie CLI.

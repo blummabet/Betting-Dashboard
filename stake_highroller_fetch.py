@@ -147,8 +147,13 @@ def sport_kategorie(sport, liga=None) -> str:
     if sl in _KAT_SLUG:
         return _KAT_SLUG[sl]
     x = " %s %s " % (sl, (liga or "").strip().lower())
-    if any(t in x for t in (" nba ", " mlb ", " nfl ", " nhl ", " wnba ", " ncaa ",
-                            "basketball", "baseball", "ice hockey", "icehockey")):
+    # 03.09.2026 — Wortgrenzen, keine Leerzeichen: die Liga hiess "NCAA, Regular", und
+    # " ncaa " passt darauf nicht (Komma statt Leerzeichen). Der Slug hat den Fall hier zwar
+    # schon gefangen, aber der Rueckfall darf sich nicht auf den Slug verlassen — genau dafuer
+    # ist er da. Im Frontend fehlte zusaetzlich american-football ganz, und dort ist es
+    # aufgefallen: "Illinois Fighting Illini - UAB Blazers" stand in einer Kachel.
+    if re.search(r"\b(nba|mlb|nfl|nhl|wnba|ncaa)\b|basketball|baseball|ice-?hockey"
+                 r"|american[- ]?football", x):
         return "US-Sport"
     if any(t in x for t in ("esport", "cs2", "csgo", " lol ", "dota", "valorant")):
         return "E-Sport"
