@@ -83,26 +83,107 @@ def _moneymap_pulse(rec=None) -> dict | None:
             "openN": d.get("pending") or 0}
 
 
-def _best_bucket(buckets) -> dict | None:
-    """Stufe/Signal mit dem hoechsten ROI, der >0 ist und >= STRIP_MIN_N Plays hat. REIN/testbar."""
-    best = None
-    for name, b in (buckets or {}).items():
-        if not isinstance(b, dict):
+# 03.09.2026 (Lucas-Checkup der Uebersicht). Zwei Dinge stimmten an dieser Leiste nicht, und
+# beide standen direkt UEBER dem Register, das es besser weiss:
+#
+#  1. `agg.byConv` aggregiert den GANZEN Bestand — 500 abgerechnete Plays ueber mehrere
+#     Engine-Versionen (`ev`: 70x 2026-09-01, 76x 2026-08-29b, 8x 2026-08-29, 346 ohne Stempel).
+#     Die Leiste warb mit „Beste Stufe Conv 7 · +2.5% ROI · n149", waehrend Ebene 1 fuer dieselbe
+#     Stufe `4/30` zeigt und ausdruecklich sagt: „Plays aelterer Versionen zaehlen nicht fuer eine
+#     Freigabe". Zwei Flaechen, zwei Regeln, eine davon in der Kopfzeile.
+#  2. `_best_bucket` nimmt das MAXIMUM ueber ~10 Buckets und zeigt einen Punktschaetzer. Ein
+#     Maximum ueber viele Buckets ist selbst eine Auswahl — ohne Untergrenze steht dort die
+#     glucklichste Stufe, nicht die beste.
+#
+# Beides behoben: gerechnet wird auf der aktuellen Engine, und ob das Ergebnis TRAEGT, entscheidet
+# dieselbe Untergrenze wie im Register. Traegt es nicht, steht es weiter da — aber als
+# „nicht belegt", nicht als Empfehlung.
+def _aktuelle_zeilen(track):
+    """Die abgerechneten Plays der AKTUELLEN Engine-Version. → (zeilen, stempel). REIN/testbar.
+
+    Ohne erkennbaren Stempel wird NICHT gefiltert (wie im Register: eine alte Datei ohne Stempel
+    soll die Leiste nicht leeren) — der Rueckgabewert sagt dann `None`, damit der Aufrufer es
+    kennzeichnen kann.
+    """
+    st = (track or {}).get("settled") or []
+    st = list(st.values()) if isinstance(st, dict) else list(st)
+    st = [r for r in st if isinstance(r, dict)]
+    try:
+        from freigabe import aktuelle_engine
+        ev = aktuelle_engine(track)
+    except Exception:
+        ev = None
+    if not ev:
+        return st, None
+    return [r for r in st if r.get("ev") == ev], ev
+
+
+def _rendite(r):
+    """Rendite je Play (pnl/stake) — dieselbe Groesse, auf der das Register rechnet."""
+    try:
+        stake = float(r.get("stake") or 0)
+        return float(r.get("pnl") or 0) / stake if stake else None
+    except (TypeError, ValueError):
+        return None
+
+
+def _bucket_renditen(rows, art):
+    """{bucket: [rendite, …]} nach denselben Regeln wie poly_shortlist_track.aggregate:
+    `conv` per int-Gleichheit, `signals` per Mitgliedschaft (ein Play zaehlt in mehreren).
+    REIN/testbar."""
+    out = {}
+    for r in (rows or []):
+        w = _rendite(r)
+        if w is None:
             continue
-        n, roi = b.get("n") or 0, b.get("roi")
-        if n >= STRIP_MIN_N and isinstance(roi, (int, float)) and roi > 0 and (best is None or roi > best[1]):
-            best = (name, roi, n)
-    return {"key": best[0], "roiPct": round(100.0 * best[1], 1), "n": best[2]} if best else None
+        if art == "conv":
+            try:
+                out.setdefault(str(int(r.get("conv") or 0)), []).append(w)
+            except (TypeError, ValueError):
+                continue
+        else:
+            for tg in (r.get("signals") or []):
+                out.setdefault(str(tg), []).append(w)
+    return out
+
+
+def _best_bucket(buckets) -> dict | None:
+    """Stufe/Signal mit dem hoechsten ROI, der >0 ist und >= STRIP_MIN_N Plays hat.
+
+    `buckets` ist {name: [rendite, …]}. `belegt` sagt, ob die Untergrenze ueber null liegt —
+    dieselbe Funktion und dieselbe Mindest-Stichprobe wie im Freigabe-Register. REIN/testbar.
+    """
+    try:
+        from freigabe import untergrenze
+    except Exception:
+        untergrenze = lambda w: None            # noqa: E731 — ohne Register keine Untergrenze
+    best = None
+    for name, werte in (buckets or {}).items():
+        n = len(werte or [])
+        if n < STRIP_MIN_N:
+            continue
+        roi = sum(werte) / n
+        if roi <= 0 or (best is not None and roi <= best[1]):
+            continue
+        best = (name, roi, n, untergrenze(werte))
+    if not best:
+        return None
+    name, roi, n, ug = best
+    return {"key": name, "roiPct": round(100.0 * roi, 1), "n": n,
+            "roiUgPct": (round(100.0 * ug, 1) if ug is not None else None),
+            "belegt": bool(ug is not None and ug > 0)}
 
 
 def _strip(track=None, bf_ledger=None, cards_open=0) -> dict:
     """Leiste unter dem Puls: wo lohnt sich Setzen (beste Stufe/Signal) + was laeuft gerade."""
     t = track if track is not None else _load("poly_shortlist_track.json")
     bl = bf_ledger if bf_ledger is not None else _load("betfair_public_ledger.json")
-    a = (t or {}).get("agg") or {}
+    zeilen, stempel = _aktuelle_zeilen(t)
     return {
-        "bestConv": _best_bucket(a.get("byConv")),
-        "bestSignal": _best_bucket(a.get("bySignal")),
+        "engine": stempel,
+        "engineGefiltert": bool(stempel),
+        "bestConv": _best_bucket(_bucket_renditen(zeilen, "conv")),
+        "bestSignal": _best_bucket(_bucket_renditen(zeilen, "signal")),
         "inflight": {
             "poly": len((t or {}).get("open") or {}),
             "betfair": sum(1 for x in (bl or []) if isinstance(x, dict) and x.get("status") == "pending"),
@@ -237,7 +318,17 @@ def build() -> dict:
     recs.sort(key=lambda r: str(r.get("resolvedAt")), reverse=True)
     last = recs[:N]
     last_chrono = list(reversed(last))                    # alt→neu für die Sparkline
-    clvs = [r.get("clvPP") for r in last_chrono if isinstance(r.get("clvPP"), (int, float))]
+    # 03.09.2026 (Lucas-Checkup): `clvPP` steht auf jedem Pick — angelegt mit 0.0, gefuellt erst
+    # mit einer Closing-Linie. Ohne `clvResolved` zaehlten die Platzhalter-Nullen voll mit: sie
+    # zogen den Ø CLV Richtung null (die Zahl sah BESSER aus als sie ist) und sassen im Nenner
+    # von „schlaegt Close", wo sie per Konstruktion nie zaehlen koennen. Im Fenster vom 03.09.
+    # waren 7 von 30 Werten exakt 0.0; ueber den ganzen Bestand 61 von 281.
+    # Dieselbe Regel wie in compute_clv_summary — dort steht sie seit jeher: „kein Closing
+    # erfasst → zaehlt nur in die Abdeckung". Aeltere Ledger-Zeilen ohne das Feld gelten als
+    # unbelegt: nicht wissen ist keine Erlaubnis (nach einem Lauf von build_signal_ledger tragen
+    # alle Zeilen den Stempel).
+    clvs = [r.get("clvPP") for r in last_chrono
+            if isinstance(r.get("clvPP"), (int, float)) and r.get("clvResolved")]
     wins = sum(1 for r in last if str(r.get("result")).upper() == "WIN")
     losses = sum(1 for r in last if str(r.get("result")).upper() == "LOSS")
     graded = wins + losses

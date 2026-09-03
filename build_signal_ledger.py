@@ -152,6 +152,16 @@ def collect_observations(wm: dict) -> list[dict]:
                 # Pick-Zahl, deutlich mehr Information. Muss hier durchgereicht werden, sonst
                 # sieht der Updater es nie (der liest NUR den Ledger, nicht die Picks).
                 "clvPP":            p.get("clvPP"),
+                # 03.09.2026 (Lucas-Checkup der Uebersicht): `clvPP` steht auf JEDEM Pick — es
+                # wird mit 0.0 angelegt und erst gefuellt, wenn eine Closing-Linie da ist. Ohne
+                # `clvResolved` ist eine 0.0 im Ledger nicht von einer gemessenen Null zu
+                # unterscheiden. Gemessen an den Pick-Dateien: 122 von 264 Liga-Picks tragen
+                # clvPP==0, und davon hat KEIN EINZIGER clvResolved. compute_clv_summary kennt die
+                # Unterscheidung seit jeher („kein Closing erfasst → zaehlt nur in die Abdeckung"),
+                # der Ledger reichte sie nur nie durch — und der Uebersichts-Puls rechnete die
+                # Platzhalter-Nullen deshalb voll in den Ø CLV und in den Nenner von
+                # „schlaegt Close". Eine Datei, die nur die Haelfte weiss, darf nicht so tun.
+                "clvResolved":      bool(p.get("clvResolved")),
             }
             if _process_verdict:
                 pv = _process_verdict(market, result, _lookup_stats(stats_lookup, match_key))

@@ -30,21 +30,30 @@ def test_poly_pulse_leer_ist_none():
     assert bp._poly_pulse({"agg": {"public": {"n": 0}}}) is None
 
 
+# 03.09.2026 (Lucas-Checkup): `_best_bucket` bekommt keine fertigen Aggregate mehr, sondern die
+# RENDITEN je Play — nur so laesst sich eine Untergrenze rechnen. Ein Maximum ueber ~10 Buckets
+# ist selbst eine Auswahl; ohne Schranke stand in der Kopfzeile die gluecklichste Stufe.
+# Die Aussage der beiden Tests bleibt, die Eingabe ist eine andere.
 def test_best_bucket_haelt_schwelle_und_waehlt_hoechsten_roi():
-    # 29.08.2026: relativ zu STRIP_MIN_N formuliert. Die alte Fassung stand auf festen n=11..17
-    # und waere beim Anheben der Schwelle gekippt, ohne dass an der Logik etwas falsch war.
     ok, knapp_drunter = bp.STRIP_MIN_N + 2, bp.STRIP_MIN_N - 1
-    buckets = {"7": {"n": ok, "roi": 0.05}, "8": {"n": ok, "roi": 0.107},
-               "9": {"n": ok, "roi": 0.20},
-               "10": {"n": knapp_drunter, "roi": 0.9}}   # unter der Schwelle -> ignoriert trotz 90% ROI
+    buckets = {"7": [0.05] * ok, "8": [0.107] * ok, "9": [0.20] * ok,
+               "10": [0.9] * knapp_drunter}   # unter der Schwelle -> ignoriert trotz 90% ROI
     out = bp._best_bucket(buckets)
-    assert out == {"key": "9", "roiPct": 20.0, "n": ok}
+    assert out["key"] == "9" and out["roiPct"] == 20.0 and out["n"] == ok
 
 
 def test_best_bucket_none_wenn_alles_negativ_oder_zu_klein():
-    assert bp._best_bucket({"7": {"n": bp.STRIP_MIN_N + 2, "roi": -0.05},
-                            "10": {"n": bp.STRIP_MIN_N - 1, "roi": 0.5}}) is None
+    assert bp._best_bucket({"7": [-0.05] * (bp.STRIP_MIN_N + 2),
+                            "10": [0.5] * (bp.STRIP_MIN_N - 1)}) is None
     assert bp._best_bucket({}) is None
+
+
+def test_best_bucket_sagt_ob_das_ergebnis_traegt():
+    """Neu am 03.09.: die Leiste stand ueber dem Register und behauptete mehr als es."""
+    eng = bp._best_bucket({"7": [0.30, 0.32, 0.28] * 20})
+    assert eng["belegt"] is True and eng["roiUgPct"] > 0
+    duenn = bp._best_bucket({"7": [0.2] * (bp.STRIP_MIN_N + 2)})   # < UG_MIN_N
+    assert duenn["belegt"] is False and duenn["roiUgPct"] is None
 
 
 # 22.08.2026 (Lucas): Signal-Bilanz — pro-Signal Win% dafür/dagegen + Edge.
