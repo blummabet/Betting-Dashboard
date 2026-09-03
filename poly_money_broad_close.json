@@ -168677,7 +168677,13 @@
     "usd": 661,
     "ts": 1788464949
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Benjamin Bonzi": 1.0,
+   "Ignacio Buse": 0.0
+  },
+  "resolvedAt": "2026-09-03T23:58:54.866170+00:00"
  },
  "sui-fcb-sio-2026-09-03": {
   "shares": {
@@ -170527,12 +170533,12 @@
  },
  "mlb-tb-tex-2026-09-03": {
   "shares": {
-   "Tampa Bay Rays": 125015.61850784998,
-   "Texas Rangers": 113109.38835890003
+   "Tampa Bay Rays": 139824.76220110498,
+   "Texas Rangers": 121529.94392254506
   },
   "prices": {
-   "Tampa Bay Rays": 0.525,
-   "Texas Rangers": 0.475
+   "Tampa Bay Rays": 0.535,
+   "Texas Rangers": 0.465
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -170540,125 +170546,173 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 245132,
+  "totalUsd": 292016,
   "whales": [
    {
     "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
     "side": "Texas Rangers",
-    "usd": 76734,
-    "avgPrice": 0.4664
+    "usd": 84674,
+    "avgPrice": 0.4668
+   },
+   {
+    "wallet": "0xb7271c112cbd83eb4c1ef1b554ff963604ae2a9d",
+    "side": "Tampa Bay Rays",
+    "usd": 20121,
+    "avgPrice": 0.5299
    },
    {
     "wallet": "0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
     "side": "Tampa Bay Rays",
-    "usd": 19653,
+    "usd": 20027,
     "avgPrice": 0.53
    },
    {
     "wallet": "0xdb859a551fcf56e49416160911476bea7307152f",
     "side": "Texas Rangers",
-    "usd": 19000,
+    "usd": 18600,
     "avgPrice": 0.4699
-   },
-   {
-    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
-    "side": "Tampa Bay Rays",
-    "usd": 17116,
-    "avgPrice": 0.5349
    }
   ],
-  "hoursToKickoff": 0.67,
-  "capturedAt": "2026-09-03T23:33:50.139349+00:00",
+  "hoursToKickoff": 0.17,
+  "capturedAt": "2026-09-03T23:58:54.866170+00:00",
   "tokens": {
    "Tampa Bay Rays": "110718597523187048179863068063629791924787124325434567274842971041941822482213",
    "Texas Rangers": "78255924055606435915660021392557019116444017900063934242852041831759298731329"
   },
   "book": {
    "side": "Tampa Bay Rays",
-   "bid": 0.52,
-   "ask": 0.53,
+   "bid": 0.53,
+   "ask": 0.54,
    "spreadC": 1.0,
-   "spreadPct": 1.89,
+   "spreadPct": 1.85,
    "bids": [
     [
+     0.53,
+     2103
+    ],
+    [
      0.52,
-     347258
+     268791
     ],
     [
      0.51,
-     354544
+     144632
     ],
     [
      0.5,
-     26874
+     49309
     ],
     [
      0.49,
-     18613
+     16101
     ],
     [
      0.48,
-     26170
-    ],
-    [
-     0.47,
-     7232
+     2125
     ]
    ],
    "asks": [
     [
-     0.53,
-     39653
-    ],
-    [
      0.54,
-     69298
+     75041
     ],
     [
      0.55,
-     207537
+     181457
     ],
     [
      0.56,
-     62326
+     58842
     ],
     [
      0.57,
-     11037
+     28196
     ],
     [
      0.58,
-     8732
+     327
+    ],
+    [
+     0.59,
+     2236
     ]
    ]
   },
   "trades": [
    {
-    "wallet": "0xa0f21e6d351baa9185716b5c00c2925ed9621848",
+    "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
     "action": "BUY",
     "side": "Tampa Bay Rays",
-    "price": 0.53,
-    "usd": 943,
-    "ts": 1788477660
+    "price": 0.54,
+    "usd": 1800,
+    "ts": 1788479547
    },
    {
-    "wallet": "0xa0f21e6d351baa9185716b5c00c2925ed9621848",
+    "wallet": "0xfb88f6a86b877d2704328fc9f1ed63b41f8b0e4c",
     "action": "BUY",
+    "side": "Texas Rangers",
+    "price": 0.47,
+    "usd": 481,
+    "ts": 1788479437
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "action": "SELL",
     "side": "Tampa Bay Rays",
     "price": 0.53,
-    "usd": 943,
-    "ts": 1788477630
+    "usd": 1060,
+    "ts": 1788479164
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "action": "SELL",
+    "side": "Tampa Bay Rays",
+    "price": 0.53,
+    "usd": 1060,
+    "ts": 1788479164
+   },
+   {
+    "wallet": "0x1b8ffdb4ff99b4622f099465c486e4f75751cca7",
+    "action": "BUY",
+    "side": "Texas Rangers",
+    "price": 0.47,
+    "usd": 611,
+    "ts": 1788479110
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "action": "SELL",
+    "side": "Tampa Bay Rays",
+    "price": 0.53,
+    "usd": 471,
+    "ts": 1788479103
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "action": "SELL",
+    "side": "Tampa Bay Rays",
+    "price": 0.53,
+    "usd": 1060,
+    "ts": 1788479103
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "action": "SELL",
+    "side": "Tampa Bay Rays",
+    "price": 0.53,
+    "usd": 1060,
+    "ts": 1788479091
    }
   ]
  },
  "atp-zverev-halys-2026-09-03": {
   "shares": {
-   "Alexander Zverev": 94882.72286746504,
-   "Quentin Halys": 17404.525173830003
+   "Alexander Zverev": 98941.44976911003,
+   "Quentin Halys": 16779.546025295003
   },
   "prices": {
-   "Alexander Zverev": 0.845,
-   "Quentin Halys": 0.155
+   "Alexander Zverev": 0.855,
+   "Quentin Halys": 0.145
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -170666,35 +170720,35 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 132890,
+  "totalUsd": 137891,
   "whales": [
    {
     "wallet": "0x0609a2d052f288ae3b42814a68c94e4f2bd7b093",
     "side": "Alexander Zverev",
-    "usd": 34668,
+    "usd": 35078,
     "avgPrice": 0.853
    },
    {
     "wallet": "0xf3b04dd038fcf191692927c0aa5a38018ea323a1",
     "side": "Alexander Zverev",
-    "usd": 17091,
+    "usd": 17293,
     "avgPrice": 0.8499
    },
    {
     "wallet": "0x3a1b7e2d598359231870824cb7468c9b0c994c4d",
     "side": "Alexander Zverev",
-    "usd": 11165,
+    "usd": 11297,
     "avgPrice": 0.8499
    },
    {
     "wallet": "0xd08b8a7f8326ab8d5df747b88c0dab04b6f78916",
     "side": "Alexander Zverev",
-    "usd": 6715,
+    "usd": 6795,
     "avgPrice": 0.8399
    }
   ],
-  "hoursToKickoff": 1.25,
-  "capturedAt": "2026-09-03T23:33:50.139349+00:00",
+  "hoursToKickoff": 0.83,
+  "capturedAt": "2026-09-03T23:58:54.866170+00:00",
   "tokens": {
    "Alexander Zverev": "34397574656059404129684572103759634972857321473106697911428547533582938361264",
    "Quentin Halys": "111677288788322716285721802321462214269337893592189338144026898987337904380415"
@@ -170708,57 +170762,65 @@
    "bids": [
     [
      0.85,
-     3841
+     8344
     ],
     [
      0.84,
-     46835
+     50350
     ],
     [
      0.83,
-     7578
+     7506
     ],
     [
      0.82,
-     6878
+     4037
     ],
     [
      0.81,
-     2273
+     263
     ],
     [
      0.8,
-     2738
+     2723
     ]
    ],
    "asks": [
     [
      0.86,
-     31065
+     20921
     ],
     [
      0.87,
-     58558
+     69798
     ],
     [
      0.88,
-     34880
+     27258
     ],
     [
      0.89,
-     68814
+     66983
     ],
     [
      0.9,
-     11018
+     16018
     ],
     [
      0.91,
-     13024
+     8024
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xe54d37c9c12e5fd3d684ff4d193ef1f44dabfdec",
+    "action": "BUY",
+    "side": "Alexander Zverev",
+    "price": 0.86,
+    "usd": 2580,
+    "ts": 1788478851
+   },
    {
     "wallet": "0x1e67fdb5044f6d29808a2fbb2336fe317fb0f4a7",
     "action": "BUY",
@@ -170897,8 +170959,8 @@
  },
  "wta-maneiro-rybakin-2026-09-03": {
   "shares": {
-   "Jessica Bouzas Maneiro": 15683.928076075,
-   "Elena Rybakina": 73939.25877689998
+   "Jessica Bouzas Maneiro": 18864.195567175004,
+   "Elena Rybakina": 88931.94837779998
   },
   "prices": {
    "Jessica Bouzas Maneiro": 0.175,
@@ -170910,7 +170972,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 122369,
+  "totalUsd": 130595,
   "whales": [
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
@@ -170921,24 +170983,24 @@
    {
     "wallet": "0xb0e3fcbe0d7f17168fdce93f89c0168d3fa329eb",
     "side": "Elena Rybakina",
-    "usd": 11723,
-    "avgPrice": 0.827
+    "usd": 16498,
+    "avgPrice": 0.8249
    },
    {
-    "wallet": "0xc785252b25901a591e9d962e09f4342468444ef2",
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Elena Rybakina",
-    "usd": 4754,
-    "avgPrice": 0.8299
+    "usd": 5711,
+    "avgPrice": 0.8274
    },
    {
-    "wallet": "0x2ce8505aa641791eb8460f6ac6bf5c0511e34527",
-    "side": "Jessica Bouzas Maneiro",
-    "usd": 4683,
-    "avgPrice": 0.1586
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Elena Rybakina",
+    "usd": 5181,
+    "avgPrice": 0.8275
    }
   ],
-  "hoursToKickoff": 1.75,
-  "capturedAt": "2026-09-03T23:33:50.139349+00:00",
+  "hoursToKickoff": 1.25,
+  "capturedAt": "2026-09-03T23:58:54.866170+00:00",
   "tokens": {
    "Jessica Bouzas Maneiro": "43765704781876033989650403793753235471099612943688515781180487198546658850528",
    "Elena Rybakina": "51352104655872087376957279959907927115649226085878664873746964098128684627456"
@@ -170952,19 +171014,19 @@
    "bids": [
     [
      0.82,
-     24700
+     15254
     ],
     [
      0.81,
-     3695
+     4879
     ],
     [
      0.8,
-     1165
+     2111
     ],
     [
      0.79,
-     482
+     1422
     ],
     [
      0.78,
@@ -170978,31 +171040,55 @@
    "asks": [
     [
      0.83,
-     39975
+     19489
     ],
     [
      0.84,
-     61647
+     61744
     ],
     [
      0.85,
-     36725
+     42392
     ],
     [
      0.86,
-     50141
+     55359
     ],
     [
      0.87,
-     20309
+     19642
     ],
     [
      0.88,
-     16988
+     57894
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x565c09cd32dbbde32d5b4fcd6c49d55dd84f878d",
+    "action": "BUY",
+    "side": "Jessica Bouzas Maneiro",
+    "price": 0.18,
+    "usd": 2000,
+    "ts": 1788479692
+   },
+   {
+    "wallet": "0x03f4bd4bd14e0dffa6f012d023387e1a327f7e44",
+    "action": "BUY",
+    "side": "Elena Rybakina",
+    "price": 0.83,
+    "usd": 3320,
+    "ts": 1788479346
+   },
+   {
+    "wallet": "0xd47bd0d1a398f00a01c7ed792527776c443835d7",
+    "action": "BUY",
+    "side": "Elena Rybakina",
+    "price": 0.83,
+    "usd": 1898,
+    "ts": 1788478747
+   },
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
     "action": "BUY",
@@ -171026,29 +171112,13 @@
     "price": 0.84,
     "usd": 14220,
     "ts": 1788472953
-   },
-   {
-    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
-    "action": "BUY",
-    "side": "Elena Rybakina",
-    "price": 0.83,
-    "usd": 8020,
-    "ts": 1788472126
-   },
-   {
-    "wallet": "0x04e6840687847a98f9ecfbb512a8c8b98d073914",
-    "action": "BUY",
-    "side": "Jessica Bouzas Maneiro",
-    "price": 0.18,
-    "usd": 546,
-    "ts": 1788472081
    }
   ]
  },
  "mlb-oak-sea-2026-09-03": {
   "shares": {
-   "Over": 57774.08406824999,
-   "Under": 63855.56483617501
+   "Over": 57783.33667162499,
+   "Under": 63865.79139780002
   },
   "prices": {
    "Over": 0.475,
@@ -171060,12 +171130,12 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 123257,
+  "totalUsd": 123276,
   "whales": [
    {
     "wallet": "0x3dfb153c197d4c19d3b31c1ecd2c7b6860eeabaf",
     "side": "Under",
-    "usd": 51485,
+    "usd": 51495,
     "avgPrice": 0.5199
    },
    {
@@ -171087,8 +171157,8 @@
     "avgPrice": 0.5379
    }
   ],
-  "hoursToKickoff": 2.25,
-  "capturedAt": "2026-09-03T23:33:50.139349+00:00",
+  "hoursToKickoff": 1.75,
+  "capturedAt": "2026-09-03T23:58:54.866170+00:00",
   "tokens": {
    "Over": "108404610667392745108384926002025990891638272827960157265158488886021950330792",
    "Under": "84141814658068632324692109153749766907307729333218857146541964734899037679855"
@@ -171102,23 +171172,23 @@
    "bids": [
     [
      0.52,
-     102712
+     101456
     ],
     [
      0.51,
-     62003
+     78919
     ],
     [
      0.5,
-     70503
+     75986
     ],
     [
      0.49,
-     25214
+     28139
     ],
     [
      0.48,
-     7805
+     34931
     ],
     [
      0.47,
@@ -171128,19 +171198,19 @@
    "asks": [
     [
      0.53,
-     77550
+     178077
     ],
     [
      0.54,
-     187401
+     112745
     ],
     [
      0.55,
-     20090
+     22498
     ],
     [
      0.56,
-     26042
+     26454
     ],
     [
      0.57,
@@ -171148,7 +171218,7 @@
     ],
     [
      0.58,
-     803
+     24429
     ]
    ]
   },
@@ -171297,8 +171367,8 @@
  },
  "mlb-stl-lad-2026-09-03": {
   "shares": {
-   "St. Louis Cardinals": 41694.93910802994,
-   "Los Angeles Dodgers": 104603.08814812994
+   "St. Louis Cardinals": 42102.88492087494,
+   "Los Angeles Dodgers": 105626.53118445992
   },
   "prices": {
    "St. Louis Cardinals": 0.285,
@@ -171310,7 +171380,7 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 157030,
+  "totalUsd": 157081,
   "whales": [
    {
     "wallet": "0xa71093cafc0c099b4ccab24c3cb8018d817923c4",
@@ -171336,8 +171406,8 @@
     "usd": 3818
    }
   ],
-  "hoursToKickoff": 2.75,
-  "capturedAt": "2026-09-03T23:33:50.139349+00:00",
+  "hoursToKickoff": 2.25,
+  "capturedAt": "2026-09-03T23:58:54.866170+00:00",
   "tokens": {
    "St. Louis Cardinals": "87611915246726889049777175962416583517519235020589402804483422412154788438007",
    "Los Angeles Dodgers": "74447326403544426054708228884477948647584073991822540214323945688419277307557"
@@ -171351,57 +171421,65 @@
    "bids": [
     [
      0.71,
-     125922
+     118119
     ],
     [
      0.7,
-     184073
+     187977
     ],
     [
      0.69,
-     56146
+     55774
     ],
     [
      0.68,
-     4064
+     19620
     ],
     [
      0.67,
-     33221
+     32572
     ],
     [
      0.66,
-     2306
+     2270
     ]
    ],
    "asks": [
     [
      0.72,
-     105260
+     107553
     ],
     [
      0.73,
-     127653
+     124714
     ],
     [
      0.74,
-     136884
+     133596
     ],
     [
      0.75,
-     76560
+     58424
     ],
     [
      0.76,
-     4544
+     35814
     ],
     [
      0.77,
-     7756
+     7751
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xcb9f5c1b3dc335f6f4740be193062271b759a6c0",
+    "action": "BUY",
+    "side": "St. Louis Cardinals",
+    "price": 0.29,
+    "usd": 336,
+    "ts": 1788479220
+   },
    {
     "wallet": "0x4a3f86ed9ce6b3dac5b66e2d5478a6bf38cc4333",
     "action": "BUY",
@@ -171425,14 +171503,6 @@
     "price": 0.72,
     "usd": 93218,
     "ts": 1788475435
-   },
-   {
-    "wallet": "0x3dfb153c197d4c19d3b31c1ecd2c7b6860eeabaf",
-    "action": "BUY",
-    "side": "St. Louis Cardinals",
-    "price": 0.28,
-    "usd": 2714,
-    "ts": 1788475104
    }
   ]
  }

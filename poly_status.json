@@ -68,11 +68,10 @@
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
       "ok": false,
-      "nFail": 3,
+      "nFail": 2,
       "failures": [
         "cs2-ruby1-hs2-2026-08-21: seit 14.0 Tagen offen — keine Auflösung gefunden",
-        "atp-virtane-dimitro-2026-08-27: seit 8.0 Tagen offen — keine Auflösung gefunden",
-        "wta-stoiana-eala-2026-08-30: seit 5.0 Tagen offen — keine Auflösung gefunden"
+        "atp-virtane-dimitro-2026-08-27: seit 8.0 Tagen offen — keine Auflösung gefunden"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -92,8 +91,8 @@
       "ok": false,
       "nFail": 5,
       "failures": [
-        "87/215 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (40%) — Trefferquote allein trügt",
-        "   0x84cfffc3f1… n=111 Treffer 57% P&L $-7,647,374",
+        "86/214 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (40%) — Trefferquote allein trügt",
+        "   0x84cfffc3f1… n=112 Treffer 56% P&L $-7,647,374",
         "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,975,228",
         "   0xa0f21e6d35… n=72 Treffer 64% P&L $-2,622,266",
         "   0xabb89972b2… n=26 Treffer 69% P&L $-2,563,982"
@@ -140,5 +139,5 @@
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-09-03T23:34:22.152203+00:00"
+  "generatedAt": "2026-09-03T23:59:34.900218+00:00"
 }
