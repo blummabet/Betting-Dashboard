@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "liga",
-    "generatedAt": "2026-09-03T11:22:03.898690+00:00",
+    "generatedAt": "2026-09-03T12:14:26.953320+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -7081,13 +7081,12 @@
       "matchupPct": 60,
       "signalInfo": {
         "state": "confirm",
-        "count": 4,
+        "count": 3,
         "conviction": 5,
         "names": [
           "form_trend",
           "h2h_pattern",
-          "xg_strength",
-          "move_following"
+          "xg_strength"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -10634,13 +10633,12 @@
       "matchupPct": 65,
       "signalInfo": {
         "state": "confirm",
-        "count": 4,
+        "count": 3,
         "conviction": 5,
         "names": [
           "form_trend",
           "h2h_pattern",
-          "xg_strength",
-          "move_following"
+          "xg_strength"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -17075,13 +17073,12 @@
       "matchupPct": 68,
       "signalInfo": {
         "state": "confirm",
-        "count": 4,
+        "count": 3,
         "conviction": 5,
         "names": [
           "form_trend",
           "h2h_pattern",
-          "xg_strength",
-          "move_following"
+          "xg_strength"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -17128,13 +17125,12 @@
       "matchupPct": 48,
       "signalInfo": {
         "state": "confirm",
-        "count": 4,
+        "count": 3,
         "conviction": 5,
         "names": [
           "form_trend",
           "h2h_pattern",
-          "xg_strength",
-          "move_following"
+          "xg_strength"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -17817,6 +17813,61 @@
       },
       "oppSupportPct": 93,
       "matchupPct": 87
+    },
+    {
+      "teamId": "797",
+      "team": "Elche",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/797.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "ESP",
+      "leagueName": "La Liga",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 33,
+        "label": "Eigen 33% + Gegner 60% → 44% · Signale bestätigen"
+      },
+      "ratePct": 33,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 6,
+      "next": {
+        "oppId": "548",
+        "oppName": "Real Sociedad",
+        "atHome": true,
+        "date": "2026-09-07",
+        "kickoff": "2026-09-07T19:30:00+00:00",
+        "oppRatePct": 60
+      },
+      "oppSupportPct": 60,
+      "matchupPct": 44,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 6,
+        "conviction": 6,
+        "names": [
+          "lead_lag_bias",
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "157",
@@ -22105,47 +22156,6 @@
       },
       "oppSupportPct": 53,
       "matchupPct": 41
-    },
-    {
-      "teamId": "797",
-      "team": "Elche",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/797.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "ESP",
-      "leagueName": "La Liga",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 33,
-        "label": "Eigen 33% + Gegner 60% → 44%"
-      },
-      "ratePct": 33,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 6,
-      "next": {
-        "oppId": "548",
-        "oppName": "Real Sociedad",
-        "atHome": true,
-        "date": "2026-09-07",
-        "kickoff": "2026-09-07T19:30:00+00:00",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 44
     },
     {
       "teamId": "163",
