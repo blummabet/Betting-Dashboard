@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-03T20:54:39.719081+00:00",
+ "generatedAt": "2026-09-03T21:01:49.125115+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,10 +9,10 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 558,
- "pinnKeys": 294,
- "matched": 226,
- "footballRows": 204,
+ "polyRowsSeen": 555,
+ "pinnKeys": 291,
+ "matched": 223,
+ "footballRows": 201,
  "crossRows": 354,
  "footballSkippedStale": 89,
  "seenBySport": {
@@ -21,17 +21,60 @@
   "icehockey_nhl": 78,
   "boxing_boxing": 42,
   "soccer_mls": 57,
-  "soccer_liga": 147
+  "soccer_liga": 144
  },
  "matchedBySport": {
   "baseball_mlb": 12,
   "boxing_boxing": 10,
   "soccer_mls": 57,
-  "soccer_liga": 147
+  "soccer_liga": 144
  },
  "trackRecord": {
-  "tracked": 262,
+  "tracked": 265,
   "converged": 70
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|celtavigo-realsociedad|dr",
+   "sport": "soccer_liga",
+   "event": "Real Sociedad vs Celta Vigo",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 89.5,
+   "pinnPP": 26.2,
+   "gapPP": 63.26,
+   "vol": 300061,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-03T21:01:49.124544+00:00"
+  },
+  {
+   "id": "soccer_liga|celtavigo-realsociedad|hw",
+   "sport": "soccer_liga",
+   "event": "Real Sociedad vs Celta Vigo",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 7.5,
+   "pinnPP": 52.2,
+   "gapPP": -44.69,
+   "vol": 300061,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-03T21:01:49.124544+00:00"
+  },
+  {
+   "id": "soccer_liga|celtavigo-realsociedad|aw",
+   "sport": "soccer_liga",
+   "event": "Real Sociedad vs Celta Vigo",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 4.5,
+   "pinnPP": 21.6,
+   "gapPP": -17.07,
+   "vol": 300061,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-03T21:01:49.124544+00:00"
+  }
+ ]
 }
