@@ -490,6 +490,20 @@ und nicht auf `User` — „Cannot query field amount on type User" strich also 
 seither trägt jeder Knoten seinen Typ und es wird **nach Typ** gestrichen. Gegen echte Endpunkte
 hätte man das als „findet nichts" abgehakt.
 
+Und ein zweiter, derselben Familie: der erste Lernlauf gegen Stake meldete *„Endpunkt antwortet
+nicht"*, obwohl der Server präzise geantwortet hatte. GraphQL beantwortet **Validierungsfehler mit
+HTTP 400 und trotzdem einem gültigen `errors`-Body** — und genau der ist die Auskunft, aus der
+gelernt wird. `_post` warf ihn wegen des Statuscodes weg und ersetzte ihn durch einen Textschnipsel.
+Ein Statuscode ist kein Grund, den Inhalt nicht zu lesen. Zwei Tests halten beide Richtungen fest:
+ein lesbarer `errors`-Body ist kein Transportfehler, eine Cloudflare-Seite bleibt einer.
+
+Dazu kam die Beobachtung, dass Apollo *„Did you mean"* in Produktion ausblendet und ohnehin nur
+lexikalisch nahe Namen vorschlägt — von `highroller` zu `highrollerSportBets` ist es zu weit.
+Deshalb wird eine Liste von Schreibweisen probiert. Das ist kein Raten auf gut Glück: ein Treffer
+gilt erst, wenn der Server mit *„must have a selection of subfields"* bestätigt, dass es das Feld
+gibt und dass es Objekte liefert — und was es tatsächlich liefert, steht vor dem ersten Sammeln
+im Sonden-Protokoll und wird angeschaut.
+
 Grenze: Union-/Interface-Felder brauchen Inline-Fragmente, die der Lernweg nicht baut — solche
 Zweige fallen weg statt halb zu entstehen, und was fehlt, steht in `stake_schema_probe.json`.
 `--sonde` prüft die Schnittstelle und verändert nichts.

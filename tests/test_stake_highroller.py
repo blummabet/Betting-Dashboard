@@ -403,7 +403,54 @@ def test_feld_raten_meldet_wenn_der_server_nichts_verraet(monkeypatch):
     monkeypatch.setattr(M, "_post", stumm)
     feld, typ, grund = M._feld_raten("http://test")
     assert feld is None
-    assert "Vorschl" in grund or "verrät" in grund or "verraet" in grund
+    assert "Schreibweisen" in grund and "schlaegt nichts vor" in grund, grund
+
+
+def test_post_liest_den_json_body_auch_bei_http_400(monkeypatch):
+    """03.09.2026 — der Fehler, der den Lernweg lahmlegte: GraphQL antwortet auf
+    Validierungsfehler mit HTTP 400 UND einem gueltigen errors-Body. Genau der ist die
+    Auskunft. Ein Statuscode ist kein Grund, den Inhalt nicht zu lesen."""
+    import io, urllib.error
+
+    def wirft(req, timeout=25):
+        raise urllib.error.HTTPError(
+            "u", 400, "Bad Request", {},
+            io.BytesIO(b'{"errors":[{"message":"Cannot query field \\"x\\" on type \\"Query\\"."}]}'))
+
+    monkeypatch.setattr(M.urllib.request, "urlopen", wirft)
+    st, d, err = M._post("http://test", {"query": "{ x }"})
+    assert st == 400
+    assert err is None, "ein lesbarer errors-Body ist kein Transportfehler"
+    assert d["errors"][0]["message"].startswith("Cannot query field")
+
+
+def test_post_meldet_echten_transportfehler_weiter(monkeypatch):
+    import io, urllib.error
+
+    def wirft(req, timeout=25):
+        raise urllib.error.HTTPError("u", 403, "Forbidden", {},
+                                     io.BytesIO(b"<html>Just a moment...</html>"))
+
+    monkeypatch.setattr(M.urllib.request, "urlopen", wirft)
+    st, d, err = M._post("http://test", {"query": "{ x }"})
+    assert st == 403 and d is None
+    assert "403" in err, "eine Cloudflare-Seite ist kein Schema — der Fehler muss sichtbar bleiben"
+
+
+def test_feld_raten_gibt_bei_lauter_transportfehlern_frueh_auf(monkeypatch):
+    """Ein 403 auf jede Schreibweise ist ein toter Endpunkt, kein Schema-Rätsel —
+    da lohnt es nicht, alle Kandidaten durchzuprobieren."""
+    rufe = []
+
+    def tot(url, body, timeout=25):
+        rufe.append(body)
+        return 403, None, "HTTP 403 Just a moment..."
+
+    monkeypatch.setattr(M, "_post", tot)
+    feld, _t, grund = M._feld_raten("http://test")
+    assert feld is None
+    assert "antwortet nicht" in grund
+    assert len(rufe) < len(M.QUERY_SAAT), "nicht die ganze Liste gegen eine Wand fahren"
 
 
 def test_schema_lernen_konvergiert_auf_eine_gueltige_abfrage(monkeypatch):

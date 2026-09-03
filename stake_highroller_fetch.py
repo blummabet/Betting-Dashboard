@@ -112,10 +112,24 @@ def _post(url: str, body: dict, timeout: int = 25):
             except Exception:
                 return r.status, None, "kein JSON: " + roh[:200].decode("utf-8", "replace")
     except urllib.error.HTTPError as e:
+        # 03.09.2026 — mein Fehler, und er hat den ganzen Lernweg lahmgelegt: GraphQL-Server
+        # antworten auf VALIDIERUNGSFEHLER mit HTTP 400 und trotzdem mit einem gueltigen
+        # JSON-Body voller "errors". Genau dieser Body IST die Auskunft, aus der wir lernen.
+        # Hier wurde er weggeworfen und durch "HTTP 400 <Textschnipsel>" ersetzt — die Sonde
+        # meldete daraufhin "Endpunkt antwortet nicht", obwohl der Server praezise geantwortet
+        # hatte ("Cannot query field \"highroller\" on type \"Query\"."). Ein Statuscode ist
+        # kein Grund, den Inhalt nicht zu lesen.
         try:
-            txt = e.read()[:300].decode("utf-8", "replace")
+            roh = e.read()
         except Exception:
-            txt = ""
+            roh = b""
+        txt = roh[:300].decode("utf-8", "replace")
+        try:
+            d = json.loads(roh.decode("utf-8", "replace"))
+            if isinstance(d, dict) and ("errors" in d or "data" in d):
+                return e.code, d, None
+        except Exception:
+            pass
         return e.code, None, "HTTP %s %s" % (e.code, txt)
     except Exception as e:
         return None, None, str(e)
@@ -155,7 +169,10 @@ def _typ_name(t: dict) -> str:
 def _query_felder(url: str):
     st, d, err = _post(url, {"query": INTRO_QUERY})
     if not d or d.get("errors") or not d.get("data"):
-        return None, err or (json.dumps(d)[:200] if d else "keine Antwort")
+        grund = err
+        if not grund and d and d.get("errors"):
+            grund = str((d["errors"][0] or {}).get("message") or "")[:160]
+        return None, grund or "keine Antwort"
     qt = ((d.get("data") or {}).get("__schema") or {}).get("queryType") or {}
     return qt.get("fields") or [], None
 
@@ -175,6 +192,9 @@ def _waehle_feld(felder: list):
 
 
 SKALAR = {"SCALAR", "ENUM"}
+
+# Was die Sonde bei der Feldsuche gehoert hat — landet in stake_schema_probe.json.
+_PROTOKOLL: list = []
 
 
 def _selektion(url: str, typname: str, tiefe: int, cache: dict, pfad: tuple = ()):
@@ -251,8 +271,17 @@ RX_ARG_PFLICHT = re.compile(r'Field "([^"]+)" argument "([^"]+)"')
 
 # Saatwörter für das Query-Feld. Sie müssen nicht stimmen — sie müssen nur NAH genug sein,
 # damit graphql-js seinen „Did you mean"-Vorschlag mitschickt.
-QUERY_SAAT = ["highroller", "highrollerBets", "highRollerBets", "highrollerSportBets",
-              "sportBets", "bets", "highrollers"]
+# 03.09.2026: „highroller" allein brachte nichts — graphql-js schlaegt nur vor, was LEXIKALISCH
+# nah dran ist, und von „highroller" zu „highrollerSportBets" ist es zu weit. Deshalb mehrere
+# Schreibweisen dicht am erwarteten Namen. Das ist kein Raten auf gut Glueck: ein Treffer wird
+# daran erkannt, dass der Server „must have a selection of subfields" sagt — also bestaetigt,
+# dass es das Feld gibt und dass es eine Liste von Objekten liefert. Was es dann wirklich
+# liefert, steht vor dem ersten Sammeln in stake_schema_probe.json und wird angeschaut.
+QUERY_SAAT = [
+    "highrollerSportBets", "highrollerBets", "highRollerSportBets", "highRollerBets",
+    "highrollerSports", "highrollers", "highRollers", "highroller",
+    "sportBets", "sportsBets", "bets", "latestBets", "recentBets", "bigBets",
+]
 
 # Kandidaten je Ebene. Ein Name, den es nicht gibt, kostet nichts außer einer Zeile Fehlertext.
 FELD_SAAT = [
@@ -289,13 +318,27 @@ def _nackt(typ: str) -> str:
     return (typ or "").strip("[]!")
 
 
-def _feld_raten(url: str):
-    """-> (feldName, typName, notiz). Findet das Query-Feld über Apollos eigene Vorschläge."""
+def _feld_raten(url: str, protokoll: list = None):
+    """-> (feldName, typName, notiz). Findet das Query-Feld über die Auskunft des Servers.
+
+    Zwei Wege, beide aus derselben Quelle: „must have a selection of subfields" beweist, dass
+    es das Feld GIBT und dass es Objekte liefert; „Did you mean ..." nennt Namen, auf die wir
+    von allein nicht kommen. Apollo blendet die Vorschläge in Produktion oft aus — dann trägt
+    der erste Weg allein, und deshalb steht dort eine Liste von Schreibweisen statt einer.
+    """
     vorschlaege: dict = {}
+    tot = 0
     for saat in QUERY_SAAT:
         msgs, _d, err = _fehlertexte(url, "{ %s }" % saat)
+        if protokoll is not None:
+            protokoll.append({"saat": saat, "fehler": msgs[:3] or None,
+                              "transport": err[:160] if err else None})
         if err and not msgs:
-            return None, None, "Endpunkt antwortet nicht: %s" % err
+            # Transportfehler (403, 404, Timeout) — nicht die Antwort des Schemas.
+            tot += 1
+            if tot >= 3:
+                return None, None, "Endpunkt antwortet nicht: %s" % err
+            continue
         for m in msgs:
             t = RX_BRAUCHT_SUB.search(m)
             if t and t.group(1) == saat:
@@ -303,7 +346,9 @@ def _feld_raten(url: str):
             for v in _meinten(m):
                 vorschlaege[v] = vorschlaege.get(v, 0) + 1
     if not vorschlaege:
-        return None, None, "keine Vorschlaege — Server verraet keine Feldnamen"
+        return None, None, ("keine der %d Schreibweisen existiert, und der Server schlaegt "
+                            "nichts vor (Apollo blendet 'Did you mean' in Produktion aus)"
+                            % len(QUERY_SAAT))
     # Highroller schlägt alles, Sport schlägt Casino, danach der häufigste Vorschlag.
     def rang(n):
         k = n.lower()
@@ -455,7 +500,7 @@ def schema_finden(url: str, tiefe: int = 4):
             f["name"], "(%s: $limit)" % argname if argname else "", sel)
         return f["name"], kopf, "Introspection, Typ %s" % tn
 
-    feld, typ, notiz = _feld_raten(url)
+    feld, typ, notiz = _feld_raten(url, _PROTOKOLL)
     if not feld:
         return None, None, "Introspection aus (%s); %s" % ((err or "?")[:120], notiz)
     arg = _limit_arg(url, feld)
@@ -669,7 +714,10 @@ def holen(sonde: bool = False):
                             "; ".join("%s: %s" % (v["url"], v["notiz"]) for v in versuche))
         if sonde:
             _schreibe(PROBE_FILE, {"asof": jetzt_s, "status": "schema_unbekannt",
-                                   "versuche": versuche})
+                                   "versuche": versuche, "feldsuche": _PROTOKOLL[:40]})
+            print("\n──── was der Server auf jede Schreibweise sagt ────")
+            for e in _PROTOKOLL[:40]:
+                print(" %-22s %s" % (e["saat"], (e["fehler"] or [e["transport"] or "—"])[0][:150]))
             print(json.dumps(versuche, ensure_ascii=False, indent=2))
             return 1
         _schreibe(VIEW_FILE, sicht)
@@ -693,6 +741,7 @@ def holen(sonde: bool = False):
             "nRoh": len(roh), "beispielRoh": roh[:2],
             "beispielNormalisiert": [normalisiere(r) for r in roh[:5]],
             "graphqlFehler": (d or {}).get("errors"),
+            "feldsuche": _PROTOKOLL[:40],
         })
         print("Endpunkt : %s\nFeld     : %s\nHTTP     : %s\nEinträge : %d"
               % (url_ok, feld, st, len(roh)))
