@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-09-03T15:00:07Z",
-    "total_records": 47
+    "updated_at": "2026-09-03T21:09:54Z",
+    "total_records": 49
   },
   "records": [
     {
@@ -975,6 +975,62 @@
       "clvResolved": true
     },
     {
+      "key": "ESP-6-548-538|Heimsieg",
+      "matchKey": "ESP-6-548-538",
+      "market": "Heimsieg",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": 2.91
+        },
+        {
+          "name": "form_trend",
+          "score": -1.5
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 0.6
+        },
+        {
+          "name": "apif_predictions",
+          "score": -1.33
+        },
+        {
+          "name": "chance_creation",
+          "score": 3.0
+        },
+        {
+          "name": "form_rating",
+          "score": -1.25
+        },
+        {
+          "name": "fixture_congestion",
+          "score": 0.38
+        },
+        {
+          "name": "transfer_shift",
+          "score": 1.2
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "betfair_money",
+          "score": 4.0
+        }
+      ],
+      "resolvedAt": "2026-09-03T21:09:51Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 0.14,
+      "clvResolved": true,
+      "processVerdict": "UNLUCKY"
+    },
+    {
       "key": "FRA-1-1298-106|Unter 3.5 Tore",
       "matchKey": "FRA-1-1298-106",
       "market": "Unter 3.5 Tore",
@@ -1041,6 +1097,58 @@
       "clvPP": 0.12,
       "processVerdict": "JUSTIFIED",
       "clvResolved": true
+    },
+    {
+      "key": "FRA-3-96-79|Auswärtssieg",
+      "matchKey": "FRA-3-96-79",
+      "market": "Auswärtssieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": 6.0
+        },
+        {
+          "name": "form_trend",
+          "score": 4.27
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 1.0
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.17
+        },
+        {
+          "name": "transfer_shift",
+          "score": 0.48
+        },
+        {
+          "name": "opener_move",
+          "score": 1.08
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "venue_form",
+          "score": 2.67
+        },
+        {
+          "name": "betfair_money",
+          "score": 3.67
+        }
+      ],
+      "resolvedAt": "2026-09-03T21:09:51Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 3.96,
+      "clvResolved": true,
+      "processVerdict": "LUCKY"
     },
     {
       "key": "GER-1-157-172|Über 3.5 Tore",
