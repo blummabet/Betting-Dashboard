@@ -58,7 +58,9 @@
 '.sr-bets{margin:11px 0 0;padding-top:10px;border-top:1px solid #242c38;display:flex;flex-direction:column;gap:4px}',
 '.sr-bet{display:flex;gap:9px;align-items:baseline;font-size:11px;color:#76819c;font-variant-numeric:tabular-nums}',
 '.sr-bet .sr-bt{width:44px;flex:none;color:#5c6577}',
-'.sr-bet .sr-bu{width:96px;flex:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}',
+'.sr-bet .sr-bm{width:110px;flex:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#5c6577}',
+'.sr-bet.sr-kombi{opacity:.62}',
+'.sr-kb{font-size:9px;font-weight:800;color:#e3b341;border:1px solid rgba(201,133,0,.4);border-radius:5px;padding:1px 5px;margin-left:4px}',
 '.sr-bet .sr-bs{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#9aa4b1}',
 '.sr-bet .sr-bo{width:46px;flex:none;text-align:right}',
 '.sr-bet .sr-bg{width:64px;flex:none;text-align:right;color:#c2ccd8;font-weight:700}',
@@ -112,7 +114,9 @@
   }
 
   function _srKey(w) {
-    return (w.event || '?') + '|' + (w.liga || '');
+    // Die Fixture-ID des Feeds ist eindeutig; der Anzeigename ist es nicht (dasselbe
+    // Paar kann in Liga und Pokal stehen). Nur ohne ID faellt es auf Name+Liga zurueck.
+    return w.eventId || ((w.event || '?') + '|' + (w.liga || ''));
   }
 
   function _srGruppen(wetten) {
@@ -126,16 +130,21 @@
       var g = m[k];
       g.wetten.sort(function (a, b) { return (_srMs(b.ts) || 0) - (_srMs(a.ts) || 0); });
       g.n = g.wetten.length;
+      // Eine Kombi ueber vier Spiele ist keine Wette auf DIESES Spiel — ihr Einsatz haengt
+      // an allen Beinen zugleich. Sie bleibt sichtbar, zaehlt aber nicht ins Spielgeld.
+      g.nKombi = g.wetten.filter(function (w) { return w.kombi; }).length;
+      var einzel = g.wetten.filter(function (w) { return !w.kombi; });
       // Geld nur aus Wetten mit bekanntem USD-Wert. Unbekannt wird GEZÄHLT, nicht als 0 addiert.
-      var bek = g.wetten.filter(function (w) { return w.einsatzUsd != null; });
+      var bek = einzel.filter(function (w) { return w.einsatzUsd != null; });
       g.geldUsd = bek.reduce(function (s, w) { return s + w.einsatzUsd; }, 0);
       g.nGeldBekannt = bek.length;
-      g.nGeldUnbekannt = g.n - bek.length;
+      g.nEinzel = einzel.length;
+      g.nGeldUnbekannt = einzel.length - bek.length;
       g.letzte = g.wetten[0] && g.wetten[0].ts;
       g.dichte = _srDichte(g.wetten);
       var seiten = {};
-      g.wetten.forEach(function (w) {
-        var s = (w.auswahl || w.markt || '?');
+      einzel.forEach(function (w) {
+        var s = w.auswahl ? ((w.markt ? w.markt + ': ' : '') + w.auswahl) : (w.markt || '?');
         if (!seiten[s]) seiten[s] = { name: s, n: 0, geld: 0, qMin: null, qMax: null };
         var o = seiten[s]; o.n++;
         if (w.einsatzUsd != null) o.geld += w.einsatzUsd;
@@ -196,15 +205,22 @@
         '<span class="sr-sq">' + (q ? '@ ' + q : '') + ' · ' + s.n + '×</span></div>';
     }).join('');
 
+    // Der Feed nennt keinen Nutzer — `user` ist bei Stake immer null. Statt einer Spalte
+    // mit lauter Strichen steht dort das, was der Feed wirklich hergibt: Markt und Auswahl.
     var bets = g.wetten.slice(0, 6).map(function (w) {
       var geld = w.einsatzUsd != null
         ? '<span class="sr-bg">' + _srUsd(w.einsatzUsd) + '</span>'
         : '<span class="sr-bg sr-unk" title="Einsatz in ' + _srEsc(w.waehrung || '?') +
           ' — kein USD-Kurs im Feed, deshalb nicht mitgerechnet">? ' + _srEsc(w.waehrung || '') + '</span>';
-      return '<div class="sr-bet"><span class="sr-bt">' + _srZeit(w.ts) + '</span>' +
-        '<span class="sr-bu">' + _srEsc(w.user || '—') + '</span>' +
-        '<span class="sr-bs">' + _srEsc(w.auswahl || w.markt || '') + '</span>' +
-        '<span class="sr-bo">' + (w.quote != null ? w.quote.toFixed(2) : '—') + '</span>' + geld + '</div>';
+      var q = w.kombi ? (w.beinQuote != null ? w.beinQuote : w.quote) : w.quote;
+      return '<div class="sr-bet' + (w.kombi ? ' sr-kombi' : '') + '">' +
+        '<span class="sr-bt">' + _srZeit(w.ts) + '</span>' +
+        '<span class="sr-bm">' + _srEsc(w.markt || '—') + '</span>' +
+        '<span class="sr-bs">' + _srEsc(w.auswahl || '—') +
+          (w.kombi ? ' <span class="sr-kb" title="Kombi ueber ' + (w.nBeine || '?') +
+            ' Spiele — der Einsatz haengt an allen Beinen, deshalb zaehlt er nicht ins Spielgeld">' +
+            (w.nBeine || '?') + 'er-Kombi</span>' : '') + '</span>' +
+        '<span class="sr-bo">' + (q != null ? Number(q).toFixed(2) : '—') + '</span>' + geld + '</div>';
     }).join('');
 
     var dichte = g.dichte
@@ -214,16 +230,20 @@
     var unbek = g.nGeldUnbekannt
       ? '<span class="sr-tag" title="Einsatz in einer Währung ohne USD-Kurs im Feed">' +
         g.nGeldUnbekannt + ' ohne $-Wert</span>' : '';
+    var komb = g.nKombi
+      ? '<span class="sr-tag" title="Kombiwetten: der Einsatz haengt an mehreren Spielen und ist ' +
+        'diesem hier nicht zurechenbar — sie werden gezeigt, aber nicht mitgerechnet">' +
+        g.nKombi + ' Kombi</span>' : '';
 
     return '<div class="sr-card">' +
       '<div class="sr-ch"><span class="sr-ev">' + _srEsc(g.event || '—') + '</span>' +
       '<span class="sr-lg">' + _srEsc(g.liga || g.sport || '') + '</span></div>' +
       '<div class="sr-meta">' +
         '<span class="sr-geld">Geld <b>' + _srUsd(g.geldUsd) + '</b>' +
-          (g.nGeldUnbekannt ? ' <span style="color:#6b7480">aus ' + g.nGeldBekannt + '/' + g.n + '</span>' : '') + '</span>' +
-        '<span><b>' + g.n + '</b> Wetten</span>' +
+          (g.nGeldBekannt !== g.n ? ' <span style="color:#6b7480">aus ' + g.nGeldBekannt + '/' + g.n + '</span>' : '') + '</span>' +
+        '<span><b>' + g.nEinzel + '</b> Einzelwetten</span>' +
         (dichte ? '<span>' + dichte + '</span>' : '') +
-        '<span>zuletzt ' + _srZeit(g.letzte) + '</span>' + unbek +
+        '<span>zuletzt ' + _srZeit(g.letzte) + '</span>' + unbek + komb +
       '</div>' +
       '<div class="sr-seiten">' + seiten + '</div>' +
       '<div class="sr-bets">' + bets +
@@ -262,9 +282,13 @@
       (d.nEinsatzUnbekannt ? '<span style="color:#e3b341">ohne $-Wert <b>' + d.nEinsatzUnbekannt + '</b></span>' : '') +
       '<span>Stand <b>' + _srZeit(d.asof) + '</b></span></div>';
 
-    var warn = '<div class="sr-warn">Stake hat eine „Wetten verbergen"-Einstellung. Wer sie nutzt, ' +
-      'taucht hier nicht auf — die Liste ist also <b>eine Auswahl, keine Grundgesamtheit</b>. ' +
-      'Bevor daraus ein Signal wird, muss der Fluss gegen den Pinnacle-Schlusskurs gemessen werden.</div>';
+    var warn = '<div class="sr-warn">Der Feed ist <b>anonym</b> — Stake nennt zu keiner Wette ein ' +
+      'Konto. Ein Track-Record je Spieler, wie ihn die Poly-Wallets tragen, ist hier also ' +
+      'unmöglich; es gibt nur aggregierten Fluss. Dazu kommt die „Wetten verbergen"-Einstellung: ' +
+      'wer sie nutzt, taucht gar nicht erst auf. ' +
+      'Die Liste ist damit <b>eine Auswahl, keine Grundgesamtheit</b>. ' +
+      'Bevor daraus ein Signal wird, muss der Fluss gegen den ' +
+      'Pinnacle-Schlusskurs gemessen werden.</div>';
 
     var jetzt = Date.now(), ab = jetzt - SR_FENSTER_H * 3600000;
     var roh = (d.wetten || []).filter(function (w) {

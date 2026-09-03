@@ -462,46 +462,38 @@ Grundgesamtheit**, und die Auswahl geht systematisch in die falsche Richtung (we
 meist einen Grund). Deshalb: erst gegen den **Pinnacle-Schlusskurs** messen (CLV, aussagekräftig
 ab n≈200, ohne auf Ergebnisse zu warten), dann über ein Vorwärtsbuch reden.
 
-**Wie das Schema gefunden wird, obwohl Introspection zu ist.** Die Sonde auf dem Mac-Runner
-brachte am 03.09. drei Antworten: `stake.com/_api/graphql` → HTTP 400 *„GraphQL introspection is
-not allowed by Apollo Server"*, `api.stake.com/graphql` → 404, `stake.bet` → Cloudflare-Challenge.
-Der erste Treffer ist die gute Nachricht: der Endpunkt lebt, ist vom Mac aus erreichbar, kein
-Block — nur nachschlagen darf man nicht.
+**Woher die Abfrage kommt.** Endpunkt `https://stake.com/_api/graphql`, Feld
+`highrollerSportBets`, ohne Anmeldung. Die Abfrage ist am 03.09. aus der Netzwerkanfrage
+**mitgelesen**, die Stakes eigene Highroller-Seite stellt — nicht geraten. Introspection ist
+dort abgeschaltet (HTTP 400, Apollo) und die „Did you mean"-Vorschläge sind es auch; für den
+Tag, an dem Stake umbaut, liegt darunter ein Lernweg, der die Selektion aus den
+Validierungsfehlern des Servers rekonstruiert (graphql-js meldet alle Verstöße eines Dokuments
+gemeinsam, eine Ebene kostet also eine Anfrage). Reihenfolge: `stake_query.json` → verifizierte
+Abfrage → lernen.
 
-Raten wäre jetzt die naheliegende und die falsche Antwort; ein geratener Feldname, der zufällig
-existiert und das Falsche liefert, ist genau die Klasse stiller Fehler aus Abschnitt 7. Also wird
-weiter gefragt, nur anders: **graphql-js validiert das ganze Dokument, bevor es etwas ausführt,
-und schreibt in die Fehler, was es stattdessen kennt.**
+**Vier Fallen, alle am echten Feed gefunden, keine davon hätte geknallt:**
 
-```
-Cannot query field "amont" on type "SportBet". Did you mean "amount"?
-Field "highrollerSportBets" of type "[SportBet!]!" must have a selection of subfields.
-```
+| Falle | Was passiert wäre |
+|---|---|
+| **HTTP 400 ist eine Antwort.** GraphQL beantwortet Validierungsfehler mit 400 *und* gültigem `errors`-Body — genau der ist die Auskunft. `_post` warf ihn wegen des Statuscodes weg | Sonde meldete „Endpunkt antwortet nicht", obwohl der Server präzise geantwortet hatte |
+| **Zeitstempel sind RFC-1123** (`Thu, 03 Sep 2026 19:12:06 GMT`), nicht ISO. `fromisoformat` scheitert daran | Eine vollständig gefüllte Sammlung wäre im Dashboard als „keine großen Wetten im Fenster" erschienen — der stillste Fehler des ganzen Features |
+| **`limit=51` liefert kommentarlos 0 Einträge** (50 ist der Deckel), ohne Fehler oder Warnung | Ein zu hoch gesetzter Wert hätte den Feed abgewürgt und ausgesehen wie ein ruhiger Tag. Jetzt hart gedeckelt, Env kann ihn nicht überschreiben |
+| **Typbewusstsein im Lernweg.** Erkenntnisse wurden global nach Feldnamen angewandt; `amount` gibt es auf `SportBet` und nicht auf `User`, also strich „Cannot query field amount on type User" auch das gültige `amount` an der Wurzel | Der Kandidatenbaum lief Runde für Runde leer. Gefunden hat es ein nachgebauter Apollo-Server im Test, nicht der echte Endpunkt — dort hätte es „findet nichts" geheißen |
 
-Damit ist der Server sein eigenes Verzeichnis, und weil alle Verstöße gemeinsam zurückkommen,
-kostet eine ganze Ebene genau **eine** Anfrage: Kandidaten-Vokabular hinschicken, streichen was
-es nicht gibt, aufklappen was Unterfelder braucht, nächste Runde. Gelernt wird einmal; das
-Ergebnis liegt in `stake_query.json` und gilt, bis es bricht.
+**Was der Feed hergibt** — pro Wette: `iid` (die Nummer vom Wettschein), Betrag + Währung,
+Gesamtquote, Zeit, und je Bein Quote, **Markt** („Winner"), **Auswahl** („Taylor Fritz"),
+Fixture-ID, Anpfiff, Turnier und Sportart. Also mehr als die Website selbst anzeigt.
 
-Ein Denkfehler dabei ist erst durch einen nachgebauten Apollo-Server im Test aufgefallen: die
-Erkenntnisse wurden zuerst **global nach Feldnamen** angewandt. `amount` gibt es auf `SportBet`
-und nicht auf `User` — „Cannot query field amount on type User" strich also auch das gültige
-`amount` an der Wurzel, Runde für Runde, bis der Baum leer war. Die Fehlermeldung nennt den Typ;
-seither trägt jeder Knoten seinen Typ und es wird **nach Typ** gestrichen. Gegen echte Endpunkte
-hätte man das als „findet nichts" abgehakt.
+**Was er nicht hergibt, und das ändert den Plan:** `user` ist bei **jeder** Wette `null` —
+Stake anonymisiert die Highroller-Liste vollständig. Ein Track-Record je Konto, wie ihn die
+Poly-Wallets tragen, ist hier **unmöglich**. Es bleibt aggregierter Fluss, nie „dieser Spieler
+hat schon wieder recht behalten". Das Feld wird trotzdem mitgeführt und die Fläche sagt es
+laut, damit niemand später darauf plant.
 
-Grenze: Union-/Interface-Felder brauchen Inline-Fragmente, die der Lernweg nicht baut — solche
-Zweige fallen weg statt halb zu entstehen, und was fehlt, steht in `stake_schema_probe.json`.
-`--sonde` prüft die Schnittstelle und verändert nichts.
-
-**Kein eigener Cron.** Ein 10-Minuten-Takt hätte die repo-weite Schedule-Last von 534 auf 678
-gehoben (Deckel 540, weil GitHub bei 585 anfing zu verschlucken) — selbst stündlich passte nicht
-mehr. Das Sammeln hängt an `poly-live-scan.yml`, das ohnehin alle 15 Minuten auf demselben
-Mac-Runner läuft: 96 Läufe/Tag zum Preis von null neuen Schedules.
-
-Nebenbefund beim Bauen: das Web-Dropdown und das mobile Sheet wurden nur **gezählt**, nicht
-verglichen — der neue Tab landete zuerst nur im Dropdown und war mobil unerreichbar. `pwa-nav`
-vergleicht jetzt beide Flächen gegeneinander.
+**Kombis zählen nicht.** Ein 2.000-$-Vierer hängt an vier Spielen und gehört keinem davon.
+Kombiwetten bleiben sichtbar (ausgegraut, mit Beinzahl), aber weder ihr Geld noch ihre Seite
+geht in die Spielsumme. Gruppiert wird über die Fixture-ID, nicht über den Namen — dasselbe
+Paar kann in Liga und Pokal stehen.
 
 ---
 

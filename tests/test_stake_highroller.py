@@ -97,35 +97,104 @@ def test_kein_betrag_ist_none():
     assert usd is None and grund == "kein_betrag"
 
 
-# ── Normalisierung über Feldnamen ────────────────────────────────────────────
+# ── Normalisierung am ECHTEN Feed ────────────────────────────────────────────
+# 03.09.2026: dieser Datensatz ist nicht erfunden — er stammt eins zu eins aus der Antwort,
+# die stake.com/_api/graphql auf die Abfrage der eigenen Highroller-Seite gibt.
 ROH = {
-    "id": "648139990",
-    "createdAt": "2026-09-03T18:12:00.000Z",
-    "amount": 9000.0,
-    "currency": "usdt",
-    "user": {"name": "JoseSldnkp"},
+    "__typename": "Bet", "id": "2f57628a-6127-432e-84ce-b3c374ed4246",
+    "iid": "sport:648201156",
     "bet": {
-        "odds": 1.53,
+        "__typename": "SportBet", "id": "2f57628a", "customBet": False,
+        "createdAt": "Thu, 03 Sep 2026 19:12:06 GMT",
+        "updatedAt": "Thu, 03 Sep 2026 19:12:20 GMT",
+        "potentialMultiplier": 1.01, "amount": 2360, "currency": "usdc",
+        "user": None,
         "outcomes": [{
-            "outcome": {"name": "VfB Stuttgart"},
-            "market": {"name": "1x2"},
+            "id": "19588d59", "odds": 1.01, "status": "pending",
+            "fixtureName": "Taylor Fritz - Bellucci, Mattia",
+            "fixtureAbreviation": "FRI - BEL",
+            "outcome": {"id": "19588d59", "name": "Taylor Fritz"},
+            "market": {"id": "6a0adba7", "name": "Winner"},
             "fixture": {
-                "name": "VfB Stuttgart - Bayern",
-                "startingAt": "2026-09-03T18:30:00.000Z",
-                "tournament": {"name": "Bundesliga", "category": {"sport": {"name": "soccer"}}},
+                "id": "7a9c210e", "startTime": "Thu, 03 Sep 2026 18:10:00 GMT",
+                "tournament": {"id": "a1897704", "name": "US Open Men Singles",
+                               "slug": "us-open-men-singles",
+                               "category": {"sport": {"slug": "tennis", "name": "Tennis"}}},
             },
         }],
     },
 }
 
+KOMBI = {
+    "id": "9d650dff", "iid": "sport:648199979",
+    "bet": {"__typename": "SportBet", "amount": 2000, "currency": "cad",
+            "createdAt": "Thu, 03 Sep 2026 19:10:10 GMT",
+            "potentialMultiplier": 3.976, "customBet": False, "user": None,
+            "outcomes": [
+                {"id": "23d7afb8", "odds": 3.55, "fixtureName": "Schoolkate - Cobolli",
+                 "outcome": {"name": "Tristan Schoolkate"}, "market": {"name": "Winner"},
+                 "fixture": {"id": "4bcf221a", "startTime": "Thu, 03 Sep 2026 20:00:00 GMT",
+                             "tournament": {"name": "US Open", "slug": "us-open",
+                                            "category": {"sport": {"slug": "tennis"}}}}},
+                {"id": "3b1970ba", "odds": 1.12, "fixtureName": "Oliynykova - Eala",
+                 "outcome": {"name": "Alexandra Eala"}, "market": {"name": "Winner"},
+                 "fixture": {"id": "d74fea51", "startTime": "Thu, 03 Sep 2026 21:00:00 GMT",
+                             "tournament": {"name": "US Open", "slug": "us-open",
+                                            "category": {"sport": {"slug": "tennis"}}}}},
+            ]},
+}
 
-def test_normalisiere_findet_die_felder_in_der_tiefe():
+
+def test_normalisiere_zieht_alles_aus_dem_echten_datensatz():
     n = M.normalisiere(ROH)
-    assert n["id"] == "648139990"
-    assert n["einsatzUsd"] == 9000.0
-    assert n["quote"] == 1.53
-    assert n["user"] == "JoseSldnkp"
-    assert n["ts"].startswith("2026-09-03T18:12")
+    assert n["id"] == "sport:648201156", "die iid ist die Nummer vom Wettschein"
+    assert n["einsatzUsd"] == 2360.0
+    assert n["waehrung"] == "usdc"
+    assert n["quote"] == 1.01
+    assert n["markt"] == "Winner"
+    assert n["auswahl"] == "Taylor Fritz"
+    assert n["liga"] == "US Open Men Singles"
+    assert n["sport"] == "tennis"
+    assert n["eventId"] == "7a9c210e"
+    assert n["kombi"] is False
+
+
+def test_rfc1123_zeitstempel_werden_zu_iso():
+    """Stake liefert 'Thu, 03 Sep 2026 19:12:06 GMT', nicht ISO. Ohne diese Umrechnung
+    haette das Fenster keine einzige Wette einordnen koennen — eine volle Sammlung waere
+    im Dashboard als 'keine grossen Wetten' erschienen."""
+    n = M.normalisiere(ROH)
+    assert n["ts"] == "2026-09-03T19:12:06Z"
+    assert n["anpfiff"] == "2026-09-03T18:10:00Z"
+    ab = datetime(2026, 9, 3, tzinfo=timezone.utc)
+    assert M._im_fenster(n, ab) is True, "und sie muss danach auch wirklich ins Fenster fallen"
+
+
+def test_zeit_faellt_auf_none_statt_auf_jetzt():
+    assert M._zeit("voelliger Unsinn") is None
+    assert M._zeit(None) is None
+    assert M._zeit("") is None
+
+
+def test_zeit_nimmt_auch_iso_an():
+    assert M._zeit("2026-09-03T19:12:06Z") == "2026-09-03T19:12:06Z"
+
+
+def test_user_ist_immer_leer_und_das_bleibt_sichtbar():
+    """Stake anonymisiert die Liste vollstaendig. Das Feld bleibt im Datensatz, damit
+    niemand spaeter einen Track-Record je Konto darauf plant."""
+    n = M.normalisiere(ROH)
+    assert "user" in n
+    assert n["user"] is None
+
+
+def test_kombi_wird_als_solche_erkannt():
+    n = M.normalisiere(KOMBI)
+    assert n["kombi"] is True
+    assert n["nBeine"] == 2
+    assert n["einsatzUsd"] is None, "cad hat keinen Kurs im Feed — unbekannt, nicht null"
+    assert n["quote"] == 3.976
+    assert n["beinQuote"] == 3.55, "die Quote des ersten Beins bleibt getrennt von der Gesamtquote"
 
 
 def test_normalisiere_ueberlebt_fehlende_felder():
@@ -133,12 +202,36 @@ def test_normalisiere_ueberlebt_fehlende_felder():
     assert n["id"] == "x"
     assert n["einsatzUsd"] is None
     assert n["quote"] is None
+    assert n["kombi"] is False
 
 
 def test_normalisiere_setzt_keinen_default_auf_null():
-    n = M.normalisiere({"id": "x", "amount": 5.0, "currency": "btc"})
+    n = M.normalisiere({"id": "x", "bet": {"amount": 5.0, "currency": "btc"}})
     assert n["betrag"] == 5.0
     assert n["einsatzUsd"] is None, "unbekannter USD-Wert darf nicht 0 werden"
+
+
+def test_normalisiere_faellt_auf_die_tiefensuche_zurueck():
+    """Baut Stake um, soll wenigstens der Betrag noch ankommen statt still zu fehlen."""
+    n = M.normalisiere({"id": "x", "irgendwo": {"tief": {"amount": 4200, "currency": "usdt"}}})
+    assert n["einsatzUsd"] == 4200.0
+
+
+def test_die_verifizierte_abfrage_holt_die_felder_die_wir_auswerten():
+    q = M.QUERY_BEKANNT
+    for feld in ("iid", "amount", "currency", "potentialMultiplier", "createdAt",
+                 "customBet", "outcomes", "outcome", "market", "fixtureName",
+                 "startTime", "tournament", "sport"):
+        assert feld in q, "%s fehlt in der verifizierten Abfrage" % feld
+    assert M.FELD_BEKANNT == "highrollerSportBets"
+
+
+def test_limit_ist_hart_gedeckelt():
+    """Am 03.09. gemessen: limit=50 liefert 50 Eintraege, limit=51 liefert KOMMENTARLOS 0.
+    Kein Fehler, keine Warnung — im Dashboard sieht das aus wie ein ruhiger Tag."""
+    assert M.MAX_LIMIT == 50
+    m = _modul(STAKE_LIMIT=500)
+    assert min(m.ABRUF_LIMIT, m.MAX_LIMIT) == 50, "eine zu hohe Env darf den Feed nicht abwuergen"
 
 
 # ── Ledger ───────────────────────────────────────────────────────────────────
@@ -403,7 +496,54 @@ def test_feld_raten_meldet_wenn_der_server_nichts_verraet(monkeypatch):
     monkeypatch.setattr(M, "_post", stumm)
     feld, typ, grund = M._feld_raten("http://test")
     assert feld is None
-    assert "Vorschl" in grund or "verrät" in grund or "verraet" in grund
+    assert "Schreibweisen" in grund and "schlaegt nichts vor" in grund, grund
+
+
+def test_post_liest_den_json_body_auch_bei_http_400(monkeypatch):
+    """03.09.2026 — der Fehler, der den Lernweg lahmlegte: GraphQL antwortet auf
+    Validierungsfehler mit HTTP 400 UND einem gueltigen errors-Body. Genau der ist die
+    Auskunft. Ein Statuscode ist kein Grund, den Inhalt nicht zu lesen."""
+    import io, urllib.error
+
+    def wirft(req, timeout=25):
+        raise urllib.error.HTTPError(
+            "u", 400, "Bad Request", {},
+            io.BytesIO(b'{"errors":[{"message":"Cannot query field \\"x\\" on type \\"Query\\"."}]}'))
+
+    monkeypatch.setattr(M.urllib.request, "urlopen", wirft)
+    st, d, err = M._post("http://test", {"query": "{ x }"})
+    assert st == 400
+    assert err is None, "ein lesbarer errors-Body ist kein Transportfehler"
+    assert d["errors"][0]["message"].startswith("Cannot query field")
+
+
+def test_post_meldet_echten_transportfehler_weiter(monkeypatch):
+    import io, urllib.error
+
+    def wirft(req, timeout=25):
+        raise urllib.error.HTTPError("u", 403, "Forbidden", {},
+                                     io.BytesIO(b"<html>Just a moment...</html>"))
+
+    monkeypatch.setattr(M.urllib.request, "urlopen", wirft)
+    st, d, err = M._post("http://test", {"query": "{ x }"})
+    assert st == 403 and d is None
+    assert "403" in err, "eine Cloudflare-Seite ist kein Schema — der Fehler muss sichtbar bleiben"
+
+
+def test_feld_raten_gibt_bei_lauter_transportfehlern_frueh_auf(monkeypatch):
+    """Ein 403 auf jede Schreibweise ist ein toter Endpunkt, kein Schema-Rätsel —
+    da lohnt es nicht, alle Kandidaten durchzuprobieren."""
+    rufe = []
+
+    def tot(url, body, timeout=25):
+        rufe.append(body)
+        return 403, None, "HTTP 403 Just a moment..."
+
+    monkeypatch.setattr(M, "_post", tot)
+    feld, _t, grund = M._feld_raten("http://test")
+    assert feld is None
+    assert "antwortet nicht" in grund
+    assert len(rufe) < len(M.QUERY_SAAT), "nicht die ganze Liste gegen eine Wand fahren"
 
 
 def test_schema_lernen_konvergiert_auf_eine_gueltige_abfrage(monkeypatch):
