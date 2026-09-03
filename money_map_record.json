@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-03T21:17:03.719953+00:00",
+"generatedAt": "2026-09-03T21:32:06.480544+00:00",
 "byVerdict": {
 "konsens": {
-"n": 732,
-"wins": 602,
-"hitRate": 0.8224,
-"polyN": 682,
+"n": 733,
+"wins": 603,
+"hitRate": 0.8226,
+"polyN": 683,
 "polyWins": 534,
-"polyHitRate": 0.783,
+"polyHitRate": 0.7818,
 "pinnN": 65,
 "pinnHitRate": 0.8154,
-"nRoi": 60,
-"roi": 0.4152,
-"roiLb": 0.2674,
-"nClv": 60,
-"clv": 18.52,
-"clvLb": 12.7584
+"nRoi": 61,
+"roi": 0.4164,
+"roiLb": 0.2711,
+"nClv": 61,
+"clv": 18.66,
+"clvLb": 12.9915
 },
 "uneinig": {
-"n": 254,
-"wins": 85,
-"hitRate": 0.3346,
-"polyN": 226,
-"polyWins": 65,
-"polyHitRate": 0.2876,
-"pinnN": 134,
-"pinnHitRate": 0.5896,
-"nRoi": 22,
-"roi": -0.1109,
-"roiLb": -0.4642,
-"nClv": 22,
-"clv": 1.52,
-"clvLb": -11.1175
+"n": 256,
+"wins": 87,
+"hitRate": 0.3398,
+"polyN": 228,
+"polyWins": 66,
+"polyHitRate": 0.2895,
+"pinnN": 136,
+"pinnHitRate": 0.5809,
+"nRoi": 24,
+"roi": -0.0483,
+"roiLb": -0.3836,
+"nClv": 24,
+"clv": 0.16,
+"clvLb": -11.6038
 },
 "teil": {
 "n": 10,
@@ -176,15 +176,15 @@
 "wins": 12,
 "hitRate": 0.75
 },
+"Belgian Pro League": {
+"n": 15,
+"wins": 12,
+"hitRate": 0.8
+},
 "German Bundesliga 2": {
 "n": 15,
 "wins": 13,
 "hitRate": 0.8667
-},
-"Belgian Pro League": {
-"n": 14,
-"wins": 11,
-"hitRate": 0.7857
 },
 "CONMEBOL Copa Libertadores": {
 "n": 14,
@@ -256,6 +256,11 @@
 "wins": 9,
 "hitRate": 1.0
 },
+"Swiss Super League": {
+"n": 9,
+"wins": 9,
+"hitRate": 1.0
+},
 "Austrian Bundesliga": {
 "n": 8,
 "wins": 7,
@@ -300,11 +305,6 @@
 "n": 7,
 "wins": 4,
 "hitRate": 0.5714
-},
-"Swiss Super League": {
-"n": 7,
-"wins": 7,
-"hitRate": 1.0
 },
 "English Sky Bet League 2": {
 "n": 6,
@@ -564,37 +564,94 @@
 },
 "byStrength": {
 "strong": {
-"n": 579,
-"wins": 470,
-"hitRate": 0.8117,
-"nRoi": 55,
-"roi": 0.36,
-"roiLb": 0.1763,
-"nClv": 55,
-"clv": 15.31,
-"clvLb": 8.1403
+"n": 580,
+"wins": 471,
+"hitRate": 0.8121,
+"nRoi": 56,
+"roi": 0.3623,
+"roiLb": 0.1819,
+"nClv": 56,
+"clv": 15.53,
+"clvLb": 8.4737
 },
 "weak": {
-"n": 384,
-"wins": 202,
-"hitRate": 0.526,
-"nRoi": 28,
-"roi": 0.0596,
-"roiLb": -0.1887,
-"nClv": 28,
-"clv": 10.8,
-"clvLb": 2.621
+"n": 386,
+"wins": 204,
+"hitRate": 0.5285,
+"nRoi": 30,
+"roi": 0.0983,
+"roiLb": -0.1411,
+"nClv": 30,
+"clv": 9.09,
+"clvLb": 1.1307
 }
 },
 "divergence": {
-"n": 254,
-"betfairWins": 85,
-"betfairRate": 0.3346,
-"polyN": 226,
-"polyWins": 65,
-"polyRate": 0.2876
+"n": 256,
+"betfairWins": 87,
+"betfairRate": 0.3398,
+"polyN": 228,
+"polyWins": 66,
+"polyRate": 0.2895
 },
 "recent": [
+{
+"matchId": "36005214",
+"home": "Lugano",
+"away": "Servette",
+"league": "Swiss Super League",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Lugano",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-09-03T18:30:00Z",
+"settledAt": "2026-09-03T21:32:06.318149+00:00"
+},
+{
+"matchId": "36015356",
+"home": "Anderlecht",
+"away": "Kortrijk",
+"league": "Belgian Pro League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Anderlecht",
+"polySide": "away",
+"winner": "home",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-09-03T18:30:00Z",
+"settledAt": "2026-09-03T21:32:06.318149+00:00"
+},
+{
+"matchId": "36005215",
+"home": "FC Basel",
+"away": "Sion",
+"league": "Swiss Super League",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Sion",
+"polySide": "home",
+"winner": "away",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-09-03T18:30:00Z",
+"settledAt": "2026-09-03T21:32:06.318149+00:00"
+},
 {
 "matchId": "35999671",
 "home": "Real Sociedad",
@@ -1297,75 +1354,18 @@
 ],
 "kickoff": "2026-09-02T18:45:00Z",
 "settledAt": "2026-09-02T20:44:16.964315+00:00"
-},
-{
-"matchId": "36020281",
-"home": "Real Sociedad (W)",
-"away": "Chelsea (W)",
-"league": "UEFA (W) Champions League Qualifiers",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Chelsea (W)",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-09-02T17:00:00Z",
-"settledAt": "2026-09-02T20:03:04.581777+00:00"
-},
-{
-"matchId": "35939843",
-"home": "Bohemians 1905",
-"away": "FK Jablonec",
-"league": "Czech 1 Liga",
-"verdict": "uneinig",
-"moneySide": "draw",
-"moneyName": "The Draw",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-09-02T18:00:00Z",
-"settledAt": "2026-09-02T20:03:04.581777+00:00"
-},
-{
-"matchId": "35974437",
-"home": "Austria Wien",
-"away": "WSG Wattens",
-"league": "Austrian Bundesliga",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "WSG Wattens",
-"polySide": "home",
-"winner": "away",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-09-02T16:30:00Z",
-"settledAt": "2026-09-02T19:44:12.843230+00:00"
 }
 ],
 "global": {
-"n": 996,
-"wins": 690,
-"hitRate": 0.6928,
-"nRoi": 83,
-"roi": 0.2587,
-"roiLb": 0.1096,
-"nClv": 83,
-"clv": 13.79,
-"clvLb": 8.3112
+"n": 999,
+"wins": 693,
+"hitRate": 0.6937,
+"nRoi": 86,
+"roi": 0.2702,
+"roiLb": 0.1252,
+"nClv": 86,
+"clv": 13.28,
+"clvLb": 7.9153
 },
-"pending": 18
+"pending": 15
 }
