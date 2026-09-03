@@ -346,3 +346,59 @@ test('der Sport-Regler bietet gesperrte Sportarten gar nicht erst an', () => {
   const block = schneide('function _srSports', 'window._srSetMin');
   assert.ok(/sperr\.indexOf/.test(block));
 });
+
+// ── Terminal, zweiter Ausbau (03.09.2026, Lucas: „gleich wirklich top funktionell") ──
+test('umkaempft: grosses Geld auf zwei Seiten ist kein einheitlicher Fluss', () => {
+  const einig = { geldUsd: 10000, seiten: [{ geld: 9000 }, { geld: 1000 }] };
+  const strittig = { geldUsd: 10000, seiten: [{ geld: 6000 }, { geld: 4000 }] };
+  assert.equal(API._srUmkaempft(einig), false, '10 % auf der Gegenseite ist Rauschen');
+  assert.equal(API._srUmkaempft(strittig), true, '40 % dagegen ist Uneinigkeit');
+});
+
+test('ein Spiel mit nur einer Seite ist nie umkaempft', () => {
+  assert.equal(API._srUmkaempft({ geldUsd: 5000, seiten: [{ geld: 5000 }] }), false);
+  assert.equal(API._srUmkaempft({ geldUsd: 0, seiten: [] }), false);
+});
+
+test('Anpfiff: Minuten davor positiv, danach negativ', () => {
+  const inEinerStunde = new Date(Date.now() + 3600000).toISOString();
+  const vorEinerStunde = new Date(Date.now() - 3600000).toISOString();
+  assert.ok(Math.abs(API._srBisAnpfiff({ anpfiff: inEinerStunde }) - 60) <= 1);
+  assert.ok(Math.abs(API._srBisAnpfiff({ anpfiff: vorEinerStunde }) + 60) <= 1);
+  assert.equal(API._srBisAnpfiff({}), null, 'ohne Anpfiff wird nichts behauptet');
+});
+
+test('der Norm-Faktor nimmt den groessten EINZELNEN Einsatz, nicht die Summe', () => {
+  // Zehn Wetten a $2.000 sind ein normaler Abend, EINE ueber $30.000 ist das Ereignis.
+  const block = schneide('function _srNormFaktor', 'function _srUmkaempft');
+  assert.ok(/groesster/.test(block));
+  assert.ok(!/geldUsd/.test(block), 'die Spielsumme waere hier das falsche Mass');
+  assert.ok(/basis !== 'gelernt'/.test(block), 'ohne gelernte Norm gibt es keinen Faktor');
+});
+
+test('Kombis zaehlen auch beim Norm-Faktor nicht', () => {
+  const block = schneide('function _srNormFaktor', 'function _srUmkaempft');
+  assert.ok(/!w\.kombi/.test(block));
+});
+
+test('der Spielbar-Filter laesst 30 Minuten Live zu und sagt, was er weglaesst', () => {
+  const block = schneide('if (SR_NUR_SPIELBAR)', 'gruppen.sort');
+  assert.ok(/m > -30/.test(block));
+  assert.ok(/zu weit im Spiel/.test(CODE), 'die weggelassenen muessen gezaehlt werden');
+});
+
+test('nach × Norm laesst sich sortieren', () => {
+  assert.ok(/SR_SORT === 'norm'/.test(CODE));
+  assert.ok(/'× Norm'/.test(CODE));
+});
+
+test('eine Sammel-Luecke steht auf der Flaeche, nicht nur im JSON', () => {
+  const basis = schneide('var basis =', 'var warn =');
+  assert.ok(/Lücke/.test(basis));
+  assert.ok(/nicht gesehen/.test(basis), 'und sie muss erklaert sein');
+});
+
+test('Karten lassen sich aufklappen, ohne dass die Seite neu laedt', () => {
+  assert.ok(/window\._srAufklappen/.test(CODE));
+  assert.ok(/SR_OFFEN\[g\.key\]/.test(CODE));
+});

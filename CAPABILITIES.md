@@ -621,6 +621,46 @@ nicht im Betrieb.
 
 ---
 
+### 📊 Die Liga-Norm muss aus der ZEIT kommen, nicht aus dem Fenster (03.09.2026)
+
+Lucas: *„das heißt wir lernen jetzt auch schon mit, was normale Einsätze für eine Liga sind und
+was dann höher ist, je mehr Daten wir sammeln?"* — die Frage hat einen Defekt aufgedeckt, den
+niemand gemeldet hätte.
+
+Die Norm wurde bei jedem Lauf frisch aus `stake_bet_ledger.json` gerechnet. Das Ledger ist auf
+20.000 Wetten gedeckelt, und gemessen laufen **4,3 Wetten pro Minute** ein — der Deckel reicht
+also **rund 3,2 Tage** zurück. Die Norm sah damit immer nur ein rollendes Drei-Tage-Fenster, und
+eine Liga, die einmal pro Woche spielt, erreicht darin **nie** die 15 Wetten für eine Norm.
+Ausgerechnet die kleinen Ligen — die, um die es überhaupt geht — wären dauerhaft ohne Basis
+geblieben und immer auf das schwächere Ersatzkriterium durchgefallen.
+
+Das ist **derselbe Fehler wie im Betfair-Badge am 24.08.**, wo die Basis aus dem Moment statt aus
+der Zeit kam und Fulham–Chelsea mit „×80,6 Norm" dastand, obwohl es gegen echte EPL-Spiele bei
+×0,6 lag. Die Lehre steht dort im Dateikopf: *„Das Badge war nicht ungenau, es war invertiert."*
+
+`stake_league_norm.py` führt jetzt denselben Bautyp wie `betfair_league_norm_state.json`: einen
+wachsenden Stichprobenstand je Liga, dedupliziert über die Wett-ID, je Liga bis 600 Proben und
+120 Tage. Kombis und gesperrte Sportarten kommen gar nicht erst hinein. `stake_analyse.py` liest
+den Stand nur noch — die Rechnung aus dem Ledger bleibt als Rückfall, mit demselben MIN_N, damit
+nichts leiser durchrutscht.
+
+**Antwort auf die Frage, präzise:** ja, und ab jetzt wirklich — die Norm wächst weiter, solange
+der Job läuft, statt alle drei Tage zu vergessen.
+
+### 🎰 Stake-Terminal, zweiter Ausbau
+
+| | Warum |
+|---|---|
+| **×N Norm** auf der Spielkarte | Der **größte einzelne** Einsatz gegen den Median der Liga — nicht die Summe. Zehn Wetten à $2.000 sind ein normaler Abend, **eine** über $30.000 ist das Ereignis |
+| **⚔️ umkämpft** | Liegen ≥ 30 % des Geldes auf einer zweiten Seite, ist der Markt uneinig — das ist kein einheitlicher Fluss. Der Poly-Tab unterdrückt solche Fälle seit dem 12.08. im öffentlichen Kanal; hier werden sie wenigstens markiert |
+| **Anpfiff / Spielminute** je Karte | „🔴 63. Min" statt eines nackten LIVE — die Lehre aus dem Hapoel-Push, diesmal vorbeugend |
+| **„noch spielbar"** als Schalter | Nur was nicht angepfiffen ist oder höchstens 30 Minuten läuft; die weggelassenen werden gezählt |
+| **Sortierung × Norm** | Nach Auffälligkeit statt nach Größe — der eigentliche Blick |
+| **Lücke in der Kopfzeile** | Stakes 50er-Deckel kann Zeit verschlucken. Das gehört auf die Fläche, nicht nur ins JSON |
+| **Karten aufklappbar** | Über sechs Wetten hinaus, ohne Neuladen |
+
+---
+
 ## 8. Harte Arbeitsregeln
 
 - **Push nur über GitHub Desktop**, nie CLI.

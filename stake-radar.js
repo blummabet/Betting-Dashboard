@@ -28,6 +28,8 @@
   // Die Sperrliste kommt aus stake_highroller.json (dort: GESPERRT in stake_highroller_fetch.py),
   // damit sie NICHT zweimal definiert ist — dieselbe Konstruktion wie PW_BLOCKED_BET_CATS im
   // Poly-Tab. Der Rückfall greift nur, wenn die Datei sie nicht mitschickt.
+  var SR_OFFEN = {};          // welche Karten aufgeklappt sind
+  var SR_NUR_SPIELBAR = false;  // nur was noch nicht (oder kaum) läuft
   var SR_GESPERRT_FALLBACK = ['US-Sport'];
   function _srGesperrt() {
     var d = SR.daten || {};
@@ -112,7 +114,15 @@
 '.sr-kv{font-size:19px;font-weight:800;color:#e6ebf5;font-variant-numeric:tabular-nums}',
 '.sr-kl{font-size:10.5px;color:#6b7480;text-transform:uppercase;letter-spacing:.03em;margin-top:2px}',
 '.sr-h3{font-size:13px;font-weight:800;margin:18px 0 8px;color:#c2ccd8}',
-'.sr-note{margin:12px 0 0;font-size:11.5px;line-height:1.6;color:#76819c}'
+'.sr-note{margin:12px 0 0;font-size:11.5px;line-height:1.6;color:#76819c}',
+'.sr-bad{font-size:9.5px;font-weight:800;letter-spacing:.3px;padding:2px 7px;border-radius:6px;white-space:nowrap}',
+'.sr-bad.sr-norm{color:#f2c14e;border:1px solid rgba(234,185,56,.45);background:rgba(234,185,56,.10)}',
+'.sr-bad.sr-konf{color:#e3b341;border:1px solid rgba(201,133,0,.42)}',
+'.sr-card.sr-card-norm{border-color:rgba(234,185,56,.38)}',
+'.sr-ko{color:#8fc0ff;font-weight:700}.sr-live{color:#ff7a70;font-weight:700}',
+'.sr-warnz{color:#e3b341;font-weight:700}',
+'.sr-btn{background:none;border:0;color:#5c6577;font:inherit;font-size:10.5px;cursor:pointer;padding:4px 0 0;text-align:left}',
+'.sr-btn:hover{color:#9aa4b1}'
     ].join('\n');
     var s = document.createElement('style'); s.textContent = css; document.head.appendChild(s);
   }
@@ -159,6 +169,45 @@
     return best;
   }
 
+  /** Der groesste EINZELNE Einsatz auf dieses Spiel, gemessen an der Norm seiner Liga.
+      Nicht die Summe: zehn Wetten a $2.000 sind ein normaler Abend, EINE ueber $30.000 ist
+      das Ereignis. Ohne gelernte Norm gibt es keinen Faktor — nicht 1.0, nicht 0. */
+  function _srNormFaktor(g) {
+    var n = (SR_AUS && SR_AUS.ligaNorm && SR_AUS.ligaNorm[g.liga]) || null;
+    if (!n || n.basis !== 'gelernt' || !n.median) return null;
+    var groesster = 0;
+    g.wetten.forEach(function (w) {
+      if (!w.kombi && w.einsatzUsd != null && w.einsatzUsd > groesster) groesster = w.einsatzUsd;
+    });
+    if (!groesster) return null;
+    return { faktor: groesster / n.median, median: n.median, n: n.n, groesster: groesster };
+  }
+
+  /** Grosses Geld auf ZWEI Seiten heisst: der Markt ist sich uneinig, nicht dass jemand
+      Bescheid weiss. Der Poly-Tab markiert genau das seit dem 12.08. als „umkaempft" und
+      unterdrueckt solche Faelle im oeffentlichen Kanal — hier wird es wenigstens markiert. */
+  var SR_UMKAEMPFT_ANTEIL = 0.30;
+  function _srUmkaempft(g) {
+    if (!g.geldUsd || g.seiten.length < 2) return false;
+    var zweit = g.seiten[1];
+    return (zweit.geld / g.geldUsd) >= SR_UMKAEMPFT_ANTEIL;
+  }
+
+  /** Minuten bis Anpfiff (negativ = laeuft). null, wenn kein Anpfiff bekannt ist. */
+  function _srBisAnpfiff(g) {
+    var t = _srMs(g.anpfiff);
+    return t == null ? null : Math.round((t - Date.now()) / 60000);
+  }
+  function _srAnpfiffText(g) {
+    var m = _srBisAnpfiff(g);
+    if (m == null) return '';
+    if (m > 0) {
+      var h = Math.floor(m / 60);
+      return '<span class="sr-ko">⏱ ' + (h ? h + ' h ' + (m % 60) + ' min' : m + ' min') + '</span>';
+    }
+    return '<span class="sr-live">🔴 ' + (-m) + '. Min</span>';
+  }
+
   function _srKey(w) {
     // Die Fixture-ID des Feeds ist eindeutig; der Anzeigename ist es nicht (dasselbe
     // Paar kann in Liga und Pokal stehen). Nur ohne ID faellt es auf Name+Liga zurueck.
@@ -187,6 +236,7 @@
       g.nEinzel = einzel.length;
       g.nGeldUnbekannt = einzel.length - bek.length;
       g.letzte = g.wetten[0] && g.wetten[0].ts;
+      g.anpfiff = g.anpfiff || (g.wetten.find(function (w) { return w.anpfiff; }) || {}).anpfiff;
       g.dichte = _srDichte(g.wetten);
       var seiten = {};
       einzel.forEach(function (w) {
@@ -220,9 +270,16 @@
       grp('ab Wetten', [1, 2, 3, 5], SR_MIN_N, '_srSetN', function (v) { return v + '×'; }) +
       grp('Fenster', SR_FENSTER, SR_FENSTER_H, '_srSetFenster', function (v) { return v + 'h'; }) +
       (sports.length > 1 ? grp('Sport', sports, SR_SPORT, '_srSetSport', function (v) { return _srEsc(v); }) : '') +
-      grp('sortiert', ['geld', 'dichte', 'zeit'], SR_SORT, '_srSetSort', function (v) {
-        return { geld: 'Geld', dichte: 'Dichte', zeit: 'zuletzt' }[v];
+      grp('sortiert', ['geld', 'norm', 'dichte', 'zeit'], SR_SORT, '_srSetSort', function (v) {
+        return { geld: 'Geld', norm: '× Norm', dichte: 'Dichte', zeit: 'zuletzt' }[v];
       }) +
+      // Der praktische Filter: was noch nicht angepfiffen ist oder gerade erst läuft.
+      // Ein Einsatz in der 85. Minute auf den Führenden ist kein Signal — dieselbe Lehre
+      // wie beim Hapoel-Push, hier als Schalter statt als harte Grenze.
+      '<div class="sr-cg"><span class="sr-cl">Zeitpunkt</span>' +
+      '<button class="sr-fb' + (SR_NUR_SPIELBAR ? ' on' : '') + '" onclick="_srSetSpielbar()" ' +
+      'title="Nur Spiele, die noch nicht angepfiffen sind oder erst seit höchstens 30 Minuten laufen">' +
+      (SR_NUR_SPIELBAR ? '✓ ' : '') + 'noch spielbar</button></div>' +
       '</div>';
   }
 
@@ -234,6 +291,8 @@
     return Object.keys(s).sort().slice(0, 8);
   }
 
+  window._srAufklappen = function (k) { SR_OFFEN[k] = !SR_OFFEN[k]; _srRender(); };
+  window._srSetSpielbar = function () { SR_NUR_SPIELBAR = !SR_NUR_SPIELBAR; _srRender(); };
   window._srSetMin = function (v) { SR_MIN_USD = v; _srRender(); };
   window._srSetN = function (v) { SR_MIN_N = v; _srRender(); };
   window._srSetFenster = function (v) { SR_FENSTER_H = v; _srRender(); };
@@ -255,7 +314,8 @@
 
     // Der Feed nennt keinen Nutzer — `user` ist bei Stake immer null. Statt einer Spalte
     // mit lauter Strichen steht dort das, was der Feed wirklich hergibt: Markt und Auswahl.
-    var bets = g.wetten.slice(0, 6).map(function (w) {
+    var alleZeigen = SR_OFFEN[g.key];
+    var bets = g.wetten.slice(0, alleZeigen ? 40 : 6).map(function (w) {
       var umger = w.einsatzUsd != null && String(w.usdGrund || '').indexOf('kurs') === 0;
       var geld = w.einsatzUsd != null
         ? '<span class="sr-bg"' + (umger ? ' title="' + _srEsc(w.betrag) + ' ' +
@@ -286,9 +346,18 @@
         'diesem hier nicht zurechenbar — sie werden gezeigt, aber nicht mitgerechnet">' +
         g.nKombi + ' Kombi</span>' : '';
 
-    return '<div class="sr-card">' +
-      '<div class="sr-ch"><span class="sr-ev">' + _srEsc(g.event || '—') + '</span>' +
-      '<span class="sr-lg">' + _srEsc(g.liga || g.sport || '') + '</span></div>' +
+    var nf = _srNormFaktor(g);
+    var badges =
+      (nf && nf.faktor >= 3 ? '<span class="sr-bad sr-norm" title="Größter Einzeleinsatz ' +
+        _srUsd(nf.groesster) + ' gegen den Median dieser Liga (' + _srUsd(nf.median) +
+        ', aus n' + nf.n + ')">×' + nf.faktor.toFixed(1) + ' Norm</span>' : '') +
+      (_srUmkaempft(g) ? '<span class="sr-bad sr-konf" title="Mindestens 30 % des Geldes ' +
+        'liegen auf einer zweiten Seite — der Markt ist sich uneinig, das ist kein ' +
+        'einheitlicher Fluss">⚔️ umkämpft</span>' : '');
+
+    return '<div class="sr-card' + (nf && nf.faktor >= 3 ? ' sr-card-norm' : '') + '">' +
+      '<div class="sr-ch"><span class="sr-ev">' + _srEsc(g.event || '—') + '</span>' + badges +
+      '<span class="sr-lg">' + _srAnpfiffText(g) + ' · ' + _srEsc(g.liga || g.sport || '') + '</span></div>' +
       '<div class="sr-meta">' +
         '<span class="sr-geld">Geld <b>' + _srUsd(g.geldUsd) + '</b>' +
           (g.nGeldBekannt !== g.n ? ' <span style="color:#6b7480">aus ' + g.nGeldBekannt + '/' + g.n + '</span>' : '') + '</span>' +
@@ -298,7 +367,9 @@
       '</div>' +
       '<div class="sr-seiten">' + seiten + '</div>' +
       '<div class="sr-bets">' + bets +
-        (g.n > 6 ? '<div class="sr-mehr">+ ' + (g.n - 6) + ' weitere</div>' : '') +
+        (g.n > 6 ? '<button class="sr-mehr sr-btn" onclick="_srAufklappen(\'' +
+          _srEsc(g.key).replace(/'/g, '') + '\')">' +
+          (alleZeigen ? '▴ weniger' : '▾ + ' + (g.n - 6) + ' weitere') + '</button>' : '') +
       '</div></div>';
   }
 
@@ -516,7 +587,17 @@
       (d.kurse && d.kurse.quelle
         ? '<span title="Nicht-USD-Einsätze werden mit Stakes eigenen Kursen umgerechnet">Kurse <b>' +
           _srEsc(d.kurse.quelle === 'live' ? 'frisch' : d.kurse.quelle) + '</b></span>' : '') +
-      '<span>Stand <b>' + _srZeit(d.asof) + '</b></span></div>';
+      '<span>Stand <b>' + _srZeit(d.asof) + '</b></span>' +
+      // Stakes Deckel liegt bei 50 Einträgen je Abruf. Deckt ein Abruf weniger Zeit ab als
+      // der Abstand zum nächsten, fehlt dazwischen alles — und zwar am ehesten dann, wenn
+      // viel los ist. Das gehört auf die Fläche, nicht nur ins JSON.
+      (d.luecke && d.luecke.luecke
+        ? '<span class="sr-warnz" title="Zwischen zwei Abrufen lagen mehr Wetten, als der Feed ' +
+          'auf einmal hergibt (50). Was dazwischen lag, haben wir nicht gesehen.">⚠ Lücke ' +
+          d.luecke.lueckeMin + ' min</span>'
+        : (d.luecke && d.luecke.abdeckungMin != null
+            ? '<span class="sr-mut">Abruf deckt ' + d.luecke.abdeckungMin + ' min</span>' : '')) +
+      '</div>';
 
     var warn = '<div class="sr-warn">Der Feed ist <b>anonym</b> — Stake nennt zu keiner Wette ein ' +
       'Konto. Ein Track-Record je Spieler, wie ihn die Poly-Wallets tragen, ist hier also ' +
@@ -539,7 +620,18 @@
     });
 
     var gruppen = _srGruppen(roh).filter(function (g) { return g.n >= SR_MIN_N; });
+    var vorSpielbar = gruppen.length;
+    if (SR_NUR_SPIELBAR) {
+      gruppen = gruppen.filter(function (g) {
+        var m = _srBisAnpfiff(g);
+        return m == null || m > -30;      // noch nicht angepfiffen oder max. 30 Min drin
+      });
+    }
     gruppen.sort(function (a, b) {
+      if (SR_SORT === 'norm') {
+        var fa = _srNormFaktor(a), fb = _srNormFaktor(b);
+        return (fb ? fb.faktor : -1) - (fa ? fa.faktor : -1);
+      }
       if (SR_SORT === 'dichte') {
         var bn = b.dichte ? b.dichte.n : 0, an = a.dichte ? a.dichte.n : 0;
         if (bn !== an) return bn - an;
@@ -551,6 +643,8 @@
 
     var treffer = '<div class="sr-basis"><span><b>' + gruppen.length + '</b> Spiele über den Reglern' +
       ' — aus <b>' + roh.length + '</b> Wetten ab ' + _srUsd(SR_MIN_USD) + ' in ' + SR_FENSTER_H + 'h</span>' +
+      (SR_NUR_SPIELBAR && vorSpielbar > gruppen.length
+        ? '<span class="sr-mut">' + (vorSpielbar - gruppen.length) + ' zu weit im Spiel</span>' : '') +
       (nGesperrt ? '<span class="sr-mut" title="' + _srEsc(sperr.join(', ')) + ' ist ausgeblendet. ' +
         'Gesammelt und abgerechnet wird weiter — sonst könnte man nie merken, wenn eine ' +
         'Sportart dreht.">' + nGesperrt + ' ausgeblendet (' + _srEsc(sperr.join(', ')) + ')</span>' : '') +
@@ -594,6 +688,7 @@
   // Für Tests
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = { _srGruppen: _srGruppen, _srDichte: _srDichte, _srUsd: _srUsd,
-                   _srBasis: _srBasis, _srPct: _srPct, _srKat: _srKat };
+                   _srBasis: _srBasis, _srPct: _srPct, _srKat: _srKat,
+                   _srUmkaempft: _srUmkaempft, _srBisAnpfiff: _srBisAnpfiff };
   }
 })();
