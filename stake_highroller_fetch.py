@@ -109,6 +109,65 @@ KOPF = {
 # „war klein".
 STABLE = {"usdt", "usdc", "busd", "dai", "usd", "tusd", "usdp"}
 
+# ── Sportarten ───────────────────────────────────────────────────────────────
+# 03.09.2026 (Lucas: „Ganze US-Sport brauch ich aktuell mal nicht. Ähnlich Poly. Das würd ich
+# entfernen: NBA MLB NHL NFL"). Dieselben Kategorienamen wie im Poly-Tab (_pwSportCategory),
+# damit eine Sperre in beiden Flaechen dasselbe heisst.
+#
+# GESPERRT heisst AUSGEBLENDET, nicht ungesammelt — und das ist die schon getroffene
+# Entscheidung aus dem Poly-Fall vom 24.08. ("sollen wir die dann ganz rausnehmen? was wenn sie
+# besser werden?"): das Mitschreiben ist gratis und die EINZIGE Art, je zu merken, dass eine
+# Sportart dreht. Der Sammler sammelt also weiter alles; die Auswertung fuehrt gesperrte
+# Sportarten in einer eigenen Schublade, und der Tab zeigt sie nicht, sagt aber wie viele
+# er weglaesst. Ein stiller Filter waere genau die Sorte Fehler, die wir hier ausraeumen.
+GESPERRT = {"US-Sport"}
+
+_KAT_SLUG = {
+    "soccer": "Fußball", "football": "Fußball",
+    "tennis": "Tennis",
+    "baseball": "US-Sport", "basketball": "US-Sport", "ice-hockey": "US-Sport",
+    "icehockey": "US-Sport", "american-football": "US-Sport", "americanfootball": "US-Sport",
+    "counter-strike": "E-Sport", "league-of-legends": "E-Sport", "dota-2": "E-Sport",
+    "dota2": "E-Sport", "valorant": "E-Sport", "rainbow-six": "E-Sport",
+    "starcraft": "E-Sport", "fifa": "E-Sport", "efootball-bots": "E-Sport",
+    "call-of-duty": "E-Sport", "rocket-league": "E-Sport", "king-of-glory": "E-Sport",
+    "mma": "Kampfsport", "boxing": "Kampfsport",
+    "golf": "Golf", "motorsport": "Motorsport", "formula-1": "Motorsport",
+    "cricket": "Cricket", "table-tennis": "Tischtennis", "volleyball": "Volleyball",
+    "handball": "Handball", "darts": "Darts", "snooker": "Snooker", "rugby": "Rugby",
+    "aussie-rules": "Rugby", "badminton": "Badminton",
+}
+
+def sport_kategorie(sport, liga=None) -> str:
+    """Slug zuerst, Liganame als Rueckfall — nie geraten, wo der Slug es weiss.
+
+    MLS ist bewusst NICHT US-Sport: es ist Fussball und wird im Projekt getradet.
+    """
+    sl = (sport or "").strip().lower()
+    if sl in _KAT_SLUG:
+        return _KAT_SLUG[sl]
+    x = " %s %s " % (sl, (liga or "").strip().lower())
+    if any(t in x for t in (" nba ", " mlb ", " nfl ", " nhl ", " wnba ", " ncaa ",
+                            "basketball", "baseball", "ice hockey", "icehockey")):
+        return "US-Sport"
+    if any(t in x for t in ("esport", "cs2", "csgo", " lol ", "dota", "valorant")):
+        return "E-Sport"
+    if any(t in x for t in ("tennis", " wta ", " atp ")):
+        return "Tennis"
+    if any(t in x for t in ("mma", "ufc", "boxing")):
+        return "Kampfsport"
+    if "cricket" in x:
+        return "Cricket"
+    if "golf" in x:
+        return "Golf"
+    # MLS steht bewusst hier und NICHT beim US-Sport: sie ist Fussball und wird im Projekt
+    # getradet. Ohne Slug fiel sie vorher auf "Sonstige" — der Test hat es gefunden.
+    if any(t in x for t in ("soccer", "fussball", "liga", "ligue", "serie", "premier",
+                            "bundesliga", "eredivisie", "championship", " mls ", " epl ",
+                            " ucl ", " uel ", "allsven", "primeira", "super lig", "superlig")):
+        return "Fußball"
+    return "Sonstige"
+
 # 03.09.2026 — im ersten echten Ledger hatten 25 von 93 Wetten (27%) keinen USD-Wert: eth, sol,
 # btc, cad, try, ltc, xrp, aed. Ein Viertel des Flusses unsichtbar, und darunter waren keine
 # Kleinbeträge. Die Kurse liegen bei derselben Quelle:
@@ -768,6 +827,8 @@ def normalisiere(rec: dict, kurse: dict = None) -> dict:
         "nBeine": len(beine) or None,
         "eigenbau": bool(b.get("customBet")),
         "sport": _pfad(erst, "fixture", "tournament", "category", "sport", "slug"),
+        "kat": sport_kategorie(_pfad(erst, "fixture", "tournament", "category", "sport", "slug"),
+                               _pfad(erst, "fixture", "tournament", "name")),
         "liga": _pfad(erst, "fixture", "tournament", "name"),
         "ligaSlug": _pfad(erst, "fixture", "tournament", "slug"),
         "event": erst.get("fixtureName") or _erst(rec, {"fixturename", "eventname"}, str),
@@ -897,6 +958,8 @@ def sicht_bauen(ledger: dict, jetzt: datetime, status: str, endpunkt: str,
         "nUeberSchwelle": len(ueber),
         "nEinsatzUnbekannt": len(unklar),
         "kurse": {k: v for k, v in (kurse or {}).items() if k != "usd"},
+        # Eine Quelle fuer Tab und Auswertung — der Filter wird nicht zweimal definiert.
+        "gesperrt": sorted(GESPERRT),
         "luecke": ledger.get("luecke") or {},
         # Die Sicht trägt die ROHEN Wetten im Fenster — gruppiert und gefiltert wird
         # im Frontend, damit Lucas die Schwellen live drehen kann.

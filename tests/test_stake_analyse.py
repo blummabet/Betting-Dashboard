@@ -228,3 +228,38 @@ def test_auswerten_ueberlebt_ein_leeres_ledger():
 def test_auswertung_nennt_die_anonymitaet_der_quelle():
     a = A.auswerten({"wetten": []}, "jetzt")
     assert "anonym" in a["hinweis"], "kein Track-Record je Konto — das muss im Artefakt stehen"
+
+
+# ── Gesperrte Sportarten ─────────────────────────────────────────────────────
+def test_gesperrte_sportart_faellt_aus_dem_urteil():
+    ws = ([w(liga="La Liga", wid="f%d" % i) for i in range(3)]
+          + [dict(w(liga="MLB", wid="m%d" % i), kat="US-Sport") for i in range(2)])
+    a = A.auswerten({"wetten": ws}, "jetzt")
+    assert a["nWetten"] == 3, "die Auswertung rechnet ohne die gesperrten"
+    assert a["nGesamt"] == 5
+    assert a["nGesperrt"] == 2
+    assert a["gesperrt"] == ["US-Sport"]
+
+
+def test_gesperrte_bekommen_ihre_eigene_schublade():
+    """Weiter mitgeschrieben, nur nicht mitgezaehlt — sonst merkt man nie, wenn eine dreht."""
+    ws = [dict(w(liga="MLB", wid="m%d" % i), kat="US-Sport",
+               abrechnung={"endstand": True, "beine": [{"treffer": True}], "pnlUsd": None})
+          for i in range(4)]
+    a = A.auswerten({"wetten": ws}, "jetzt")
+    assert "US-Sport" in a["gesperrteSchubladen"]
+    assert a["gesperrteSchubladen"]["US-Sport"]["n"] == 4
+    assert a["schubladen"]["gesamt"]["n"] == 0, "aber nicht im Hauptbuch"
+
+
+def test_gesperrte_zaehlen_nicht_in_die_liga_norm():
+    ws = ([w(liga="L", usd=1000, wid="a%d" % i) for i in range(20)]
+          + [dict(w(liga="L", usd=99999, wid="us"), kat="US-Sport")])
+    a = A.auswerten({"wetten": ws}, "jetzt")
+    assert a["ligaNorm"]["L"]["n"] == 20, "eine gesperrte Wette darf die Norm nicht verziehen"
+
+
+def test_kategorie_wird_fuer_alte_zeilen_nachgerechnet():
+    assert A._kat({"sport": "baseball", "liga": "MLB"}) == "US-Sport"
+    assert A._erlaubt({"sport": "baseball"}) is False
+    assert A._erlaubt({"sport": "soccer", "liga": "La Liga"}) is True

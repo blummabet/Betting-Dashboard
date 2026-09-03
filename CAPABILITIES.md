@@ -604,6 +604,21 @@ statt dass „an dem Abend war wenig los" unbemerkt „wir haben nicht hingescha
 **Terminal** unter „⋯ Mehr → 🎰 Stake Radar": Spiele · Auffällig · Bilanz · Norm. Jede Quote
 nennt ihr n und ihre Wilson-Untergrenze; unter n=30 steht „kein Urteil" statt einer Zahl.
 
+**US-Sport gesperrt** (Lucas: *„Ganze US-Sport brauch ich aktuell mal nicht. Ähnlich Poly"*) —
+NBA, MLB, NHL, NFL, dazu NCAA/WNBA über dieselbe Kategorie. Gesperrt heißt **ausgeblendet, nicht
+ungesammelt**: das ist die schon getroffene Entscheidung aus dem Poly-Fall vom 24.08.
+(*„was wenn sie besser werden?"*) — das Mitschreiben ist gratis und die einzige Art, je zu
+merken, dass eine Sportart dreht. Deshalb sammelt und **rechnet** der Sammler weiter alles ab,
+die Auswertung führt sie in `gesperrteSchubladen`, und der Bilanz-Reiter zeigt sie unter
+„ausgeblendet — mitgeschrieben, nicht mitgezählt".
+
+Die Liste steht **einmal** (`GESPERRT` in `stake_highroller_fetch.py`) und reist über
+`stake_highroller.json` zum Tab — dieselbe Konstruktion wie `PW_BLOCKED_BET_CATS` im Poly-Tab.
+Der Spiele-Reiter zählt sichtbar mit, wie viele Wetten er weglässt; ein stiller Filter wäre
+genau die Klasse Fehler, die Abschnitt 7 auflistet. **MLS bleibt Fußball** — sie wird getradet
+und darf nicht mit untergehen; ohne Sport-Slug fiel sie erst auf „Sonstige", gefunden vom Test,
+nicht im Betrieb.
+
 ---
 
 ## 8. Harte Arbeitsregeln

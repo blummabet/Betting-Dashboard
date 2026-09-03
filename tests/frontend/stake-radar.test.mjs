@@ -299,3 +299,50 @@ test('die Norm-Ansicht trennt gelernt von zu duenn', () => {
   assert.ok(/etwas anderes als/.test(block),
     'nichts wissen ist nicht dasselbe wie ein gemessenes Nein — das muss dastehen');
 });
+
+// ── Gesperrte Sportarten (03.09.2026, Lucas: „Ganze US-Sport brauch ich aktuell mal nicht") ──
+test('US-Sport wird als solcher erkannt — ueber Slug und ueber Liganamen', () => {
+  assert.equal(API._srKat({ kat: 'US-Sport' }), 'US-Sport');
+  assert.equal(API._srKat({ sport: 'baseball', liga: 'MLB' }), 'US-Sport');
+  assert.equal(API._srKat({ sport: 'american-football', liga: 'NFL' }), 'US-Sport');
+  assert.equal(API._srKat({ sport: null, liga: 'NBA Summer League' }), 'US-Sport');
+  assert.equal(API._srKat({ sport: null, liga: 'NHL Preseason' }), 'US-Sport');
+});
+
+test('Fussball und Tennis bleiben unangetastet', () => {
+  assert.equal(API._srKat({ sport: 'soccer', liga: 'La Liga' }), 'Fußball');
+  assert.equal(API._srKat({ sport: 'soccer', liga: 'MLS' }), 'Fußball');
+  // Ohne Slug fiel MLS erst auf 'Sonstige' — gefunden vom Python-Zwilling dieses Tests.
+  assert.equal(API._srKat({ sport: null, liga: 'MLS' }), 'Fußball');
+  assert.equal(API._srKat({ sport: 'tennis', liga: 'US Open Men Singles' }), 'Tennis');
+});
+
+test('das gestempelte Feld schlaegt die Rueckfall-Erkennung', () => {
+  assert.equal(API._srKat({ kat: 'Fußball', sport: 'baseball' }), 'Fußball');
+});
+
+test('die Sperrliste wird nicht zweimal definiert', () => {
+  // Sie kommt aus stake_highroller.json (dort GESPERRT in stake_highroller_fetch.py).
+  // Der Rueckfall im Frontend darf nur greifen, wenn die Datei sie nicht mitschickt.
+  assert.ok(/function _srGesperrt/.test(CODE));
+  assert.ok(/d\.gesperrt && d\.gesperrt\.length/.test(CODE),
+    'die Datei hat Vorrang vor der eingebauten Liste');
+});
+
+test('der Filter ist nicht still — er zaehlt, was er weglaesst', () => {
+  const block = schneide('var jetzt = Date.now()', 'var gruppen =');
+  assert.ok(/nGesperrt\+\+/.test(block), 'weggelassene Wetten muessen gezaehlt werden');
+  const anzeige = schneide('var treffer =', 'var koerper =');
+  assert.ok(/ausgeblendet/.test(anzeige), 'und die Zahl muss auf der Flaeche stehen');
+});
+
+test('gesperrte Sportarten verschwinden nicht aus der Bilanz, nur aus dem Urteil', () => {
+  const block = schneide('function _srGesperrteSchubladen', 'function _srKpi');
+  assert.ok(/mitgeschrieben, nicht mitgez/.test(block));
+  assert.ok(/gesperrteSchubladen/.test(block));
+});
+
+test('der Sport-Regler bietet gesperrte Sportarten gar nicht erst an', () => {
+  const block = schneide('function _srSports', 'window._srSetMin');
+  assert.ok(/sperr\.indexOf/.test(block));
+});

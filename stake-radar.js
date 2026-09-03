@@ -24,6 +24,27 @@
   var SR_SPORT = 'alle';
   var SR_SORT = 'geld';       // geld | dichte | zeit
 
+  // 03.09.2026 (Lucas: „Ganze US-Sport brauch ich aktuell mal nicht. Ähnlich Poly").
+  // Die Sperrliste kommt aus stake_highroller.json (dort: GESPERRT in stake_highroller_fetch.py),
+  // damit sie NICHT zweimal definiert ist — dieselbe Konstruktion wie PW_BLOCKED_BET_CATS im
+  // Poly-Tab. Der Rückfall greift nur, wenn die Datei sie nicht mitschickt.
+  var SR_GESPERRT_FALLBACK = ['US-Sport'];
+  function _srGesperrt() {
+    var d = SR.daten || {};
+    return (d.gesperrt && d.gesperrt.length) ? d.gesperrt : SR_GESPERRT_FALLBACK;
+  }
+  // Kategorie einer Wette. Aus dem Feld, sonst grob nachgerechnet — Zeilen aus der Zeit
+  // vor dem Feld sollen nicht durch den Filter rutschen, nur weil sie älter sind.
+  function _srKat(w) {
+    if (w.kat) return w.kat;
+    var x = ' ' + String((w.sport || '') + ' ' + (w.liga || '')).toLowerCase() + ' ';
+    if (/ nba | mlb | nfl | nhl | wnba | ncaa |basketball|baseball|ice-?hockey/.test(x)) return 'US-Sport';
+    if (/tennis| wta | atp /.test(x)) return 'Tennis';
+    if (/esport|cs2|csgo| lol |dota|valorant|counter-strike|league-of-legends|fifa/.test(x)) return 'E-Sport';
+    if (/soccer|liga|ligue|serie|premier|bundesliga|eredivisie| mls | epl | ucl | uel /.test(x)) return 'Fußball';
+    return 'Sonstige';
+  }
+
   var SR_STAKE_LIMITS = [1000, 2500, 5000, 10000, 25000];
   var SR_FENSTER = [6, 12, 24, 48];
 
@@ -206,8 +227,10 @@
   }
 
   function _srSports() {
-    var s = {}, w = (SR.daten && SR.daten.wetten) || [];
-    w.forEach(function (b) { if (b.sport) s[b.sport] = 1; });
+    var s = {}, w = (SR.daten && SR.daten.wetten) || [], sperr = _srGesperrt();
+    w.forEach(function (b) {
+      if (b.sport && sperr.indexOf(_srKat(b)) < 0) s[b.sport] = 1;
+    });
     return Object.keys(s).sort().slice(0, 8);
   }
 
@@ -404,10 +427,27 @@
       (ligen ? '<h3 class="sr-h3">Je Liga</h3><div class="sr-tw"><table class="sr-t"><thead><tr>' +
         '<th>Liga</th><th class="sr-r">Beine</th><th>Trefferquote</th></tr></thead><tbody>' +
         ligen + '</tbody></table></div>' : '') +
+      _srGesperrteSchubladen() +
       '<div class="sr-note">Die Trefferquote zählt <b>Beine</b>, nicht Wetten — ein Bein ist ' +
       'eine Meinung zu einem Spiel. Der ROI zählt nur <b>Einzelwetten</b>: bei einer Kombi ' +
       'hängt der Einsatz an mehreren Spielen und ist keinem davon zurechenbar. Annullierte ' +
       'Beine fallen aus der Quote heraus, statt als Fehlschlag zu zählen.</div>';
+  }
+
+  /** Gesperrte Sportarten stehen weiter da — nur getrennt und ohne ins Urteil zu zählen.
+      Sonst könnte man nie merken, dass eine davon dreht; ein Wiedereintritt braucht Zahlen. */
+  function _srGesperrteSchubladen() {
+    var g = (SR_AUS && SR_AUS.gesperrteSchubladen) || {};
+    var keys = Object.keys(g);
+    if (!keys.length) return '';
+    return '<h3 class="sr-h3">Ausgeblendet — mitgeschrieben, nicht mitgezählt</h3>' +
+      '<div class="sr-tw"><table class="sr-t"><thead><tr><th>Sportart</th>' +
+      '<th class="sr-r">Wetten</th><th class="sr-r">Beine</th><th>Trefferquote</th>' +
+      '</tr></thead><tbody>' + keys.map(function (k) {
+        var d = g[k];
+        return '<tr><td>' + _srEsc(k) + '</td><td class="sr-r">' + d.wetten + '</td>' +
+          '<td class="sr-r">' + d.n + '</td><td>' + _srBasis(d) + '</td></tr>';
+      }).join('') + '</tbody></table></div>';
   }
 
   function _srKpi(v, l) {
@@ -487,9 +527,13 @@
       'Pinnacle-Schlusskurs gemessen werden.</div>';
 
     var jetzt = Date.now(), ab = jetzt - SR_FENSTER_H * 3600000;
+    var sperr = _srGesperrt(), nGesperrt = 0;
     var roh = (d.wetten || []).filter(function (w) {
       if (w.einsatzUsd == null || w.einsatzUsd < SR_MIN_USD) return false;
       var t = _srMs(w.ts); if (t == null || t < ab) return false;
+      // Ein stiller Filter ist genau die Sorte Fehler, die wir hier ausräumen — deshalb
+      // wird gezählt, was weggelassen wird, und die Zahl steht unten drunter.
+      if (sperr.indexOf(_srKat(w)) >= 0) { nGesperrt++; return false; }
       if (SR_SPORT !== 'alle' && w.sport !== SR_SPORT) return false;
       return true;
     });
@@ -506,7 +550,11 @@
     });
 
     var treffer = '<div class="sr-basis"><span><b>' + gruppen.length + '</b> Spiele über den Reglern' +
-      ' — aus <b>' + roh.length + '</b> Wetten ab ' + _srUsd(SR_MIN_USD) + ' in ' + SR_FENSTER_H + 'h</span></div>';
+      ' — aus <b>' + roh.length + '</b> Wetten ab ' + _srUsd(SR_MIN_USD) + ' in ' + SR_FENSTER_H + 'h</span>' +
+      (nGesperrt ? '<span class="sr-mut" title="' + _srEsc(sperr.join(', ')) + ' ist ausgeblendet. ' +
+        'Gesammelt und abgerechnet wird weiter — sonst könnte man nie merken, wenn eine ' +
+        'Sportart dreht.">' + nGesperrt + ' ausgeblendet (' + _srEsc(sperr.join(', ')) + ')</span>' : '') +
+      '</div>';
 
     var koerper = gruppen.length
       ? '<div class="sr-grid">' + gruppen.slice(0, 60).map(_srKarte).join('') + '</div>'
@@ -546,6 +594,6 @@
   // Für Tests
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = { _srGruppen: _srGruppen, _srDichte: _srDichte, _srUsd: _srUsd,
-                   _srBasis: _srBasis, _srPct: _srPct };
+                   _srBasis: _srBasis, _srPct: _srPct, _srKat: _srKat };
   }
 })();

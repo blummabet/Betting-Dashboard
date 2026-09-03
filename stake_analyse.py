@@ -68,6 +68,15 @@ AUFFAELLIG_FAKTOR = float(os.environ.get("STAKE_AUFFAELLIG_FAKTOR") or 5.0)
 
 
 # ── Hilfen ───────────────────────────────────────────────────────────────────
+def _kat(w: dict) -> str:
+    """Sportart-Kategorie. Aus dem Feld, sonst nachgerechnet — alte Zeilen haben es nicht."""
+    return w.get("kat") or SH.sport_kategorie(w.get("sport"), w.get("liga"))
+
+
+def _erlaubt(w: dict) -> bool:
+    return _kat(w) not in SH.GESPERRT
+
+
 def _phase(w: dict) -> str:
     """vor | live | unbekannt.
 
@@ -288,7 +297,13 @@ def vorregistrieren(jetzt: str) -> dict:
 
 # ── Hauptlauf ────────────────────────────────────────────────────────────────
 def auswerten(led: dict, jetzt: str) -> dict:
-    wetten = led.get("wetten") or []
+    alle = led.get("wetten") or []
+    # 03.09.2026 (Lucas): US-Sport ist gesperrt — aber nur fuer die Anzeige und das Urteil.
+    # Gesammelt und ABGERECHNET wird weiter alles, und die gesperrten Sportarten bekommen ihre
+    # eigene Schublade. Sonst koennte man nie merken, dass eine davon dreht; genau diese
+    # Entscheidung steht im Poly-Fall vom 24.08. schon so im Code.
+    wetten = [w for w in alle if _erlaubt(w)]
+    gesperrt = [w for w in alle if not _erlaubt(w)]
     norm = liga_norm(wetten)
 
     def filt(f):
@@ -324,11 +339,21 @@ def auswerten(led: dict, jetzt: str) -> dict:
                 out[k] = s
         return dict(sorted(out.items(), key=lambda kv: -kv[1]["n"])[:25])
 
+    je_gesperrt = defaultdict(list)
+    for w in gesperrt:
+        je_gesperrt[_kat(w)].append(w)
+
     b = led.get("bilanz") or {}
     return {
         "asof": jetzt,
         "seit": led.get("seit"),
         "nWetten": len(wetten),
+        "nGesamt": len(alle),
+        "gesperrt": sorted(SH.GESPERRT),
+        "nGesperrt": len(gesperrt),
+        # Weiter mitgeschrieben, nur nicht mitgezaehlt: so faellt auf, wenn eine gesperrte
+        # Sportart auf einmal traegt. Ein Wiedereintritt braucht Zahlen, keine Meinung.
+        "gesperrteSchubladen": {k: _schublade(v) for k, v in je_gesperrt.items()},
         "bilanz": b,
         "reif": bool(b.get("gewertet", 0) >= MIN_N),
         "urteilAb": MIN_N,
@@ -356,7 +381,8 @@ def main() -> int:
     SH._schreibe(OUT_FILE, a)
 
     b = a["bilanz"]
-    print("  Ledger %d Wetten seit %s" % (a["nWetten"], (a.get("seit") or "?")[:16]))
+    print("  Ledger %d Wetten seit %s (%d gesperrt: %s)"
+          % (a["nWetten"], (a.get("seit") or "?")[:16], a["nGesperrt"], ", ".join(a["gesperrt"])))
     print("  Beine gewertet: %d (offen %d, unaufloesbar %d)"
           % (b.get("gewertet", 0), b.get("offen", 0), b.get("unaufloesbar", 0)))
     if not a["reif"]:

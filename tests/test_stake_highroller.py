@@ -784,3 +784,56 @@ def test_luecke_faehrt_in_der_sicht_mit():
     s = M.sicht_bauen(led, jetzt, "ok", "u", "f", "")
     assert s["luecke"]["luecke"] is True
     assert s["luecke"]["lueckeMin"] == 3.0
+
+
+# ── Sportarten sperren (03.09.2026, Lucas: 'Ganze US-Sport brauch ich aktuell mal nicht') ──
+# Gesperrt heisst AUSGEBLENDET, nicht ungesammelt. Dieselbe Entscheidung wie im Poly-Fall vom
+# 24.08.: das Mitschreiben ist gratis und die einzige Art, je zu merken, dass eine Sportart
+# dreht. Der Sammler darf deshalb nichts wegwerfen.
+
+def test_us_sport_ueber_den_slug():
+    for slug in ("baseball", "basketball", "ice-hockey", "american-football"):
+        assert M.sport_kategorie(slug) == "US-Sport", slug
+
+
+def test_us_sport_ueber_den_liganamen_wenn_der_slug_fehlt():
+    assert M.sport_kategorie(None, "NBA Summer League") == "US-Sport"
+    assert M.sport_kategorie(None, "NHL Preseason") == "US-Sport"
+    assert M.sport_kategorie("", "MLB") == "US-Sport"
+
+
+def test_mls_ist_fussball_und_nicht_us_sport():
+    """MLS wird im Projekt getradet — sie darf nicht mit dem US-Sport-Block untergehen."""
+    assert M.sport_kategorie("soccer", "MLS") == "Fußball"
+    assert M.sport_kategorie(None, "MLS") == "Fußball"
+
+
+def test_die_ueblichen_verdaechtigen_bleiben_frei():
+    assert M.sport_kategorie("soccer", "La Liga") == "Fußball"
+    assert M.sport_kategorie("tennis", "US Open Men Singles") == "Tennis"
+    assert M.sport_kategorie("counter-strike", "NODWIN") == "E-Sport"
+
+
+def test_unbekanntes_ist_sonstige_und_nicht_gesperrt():
+    assert M.sport_kategorie(None, None) == "Sonstige"
+    assert "Sonstige" not in M.GESPERRT
+
+
+def test_die_kategorie_wird_beim_sammeln_gestempelt():
+    roh = {"id": "x", "bet": {"amount": 100, "currency": "usdt", "outcomes": [{
+        "fixture": {"tournament": {"name": "MLB",
+                                   "category": {"sport": {"slug": "baseball"}}}}}]}}
+    assert M.normalisiere(roh)["kat"] == "US-Sport"
+
+
+def test_der_sammler_wirft_gesperrte_sportarten_NICHT_weg():
+    """Waere sie hier schon raus, koennte man nie merken, dass sie dreht."""
+    a = M.ledger_mischen({}, [{"id": "1", "ts": "2026-09-03T10:00:00Z", "kat": "US-Sport"}],
+                         "jetzt")
+    assert a["n"] == 1
+
+
+def test_die_sicht_nennt_die_sperrliste():
+    jetzt = datetime.now(timezone.utc)
+    s = M.sicht_bauen(_ledger_mit(1, 0, jetzt), jetzt, "ok", "u", "f", "")
+    assert s["gesperrt"] == sorted(M.GESPERRT), "eine Quelle fuer Tab und Auswertung"
