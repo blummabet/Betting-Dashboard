@@ -2,20 +2,8 @@
  "_meta": {
   "description": "Übersicht-Sidecar: Vor-Anpfiff-Steam + frischer Zufluss (leicht, damit der erste Menüpunkt schnell bleibt). Fehlbepreisung rechnet die Übersicht client-seitig über _bfCoherence."
  },
- "generatedAt": "2026-09-03T16:46:40.045537+00:00",
+ "generatedAt": "2026-09-03T17:01:37.098895+00:00",
  "steam": [
-  {
-   "matchId": 36016542,
-   "home": "Beroe Stara Za",
-   "away": "Montana",
-   "country": "BG",
-   "league": "Bulgarian B League",
-   "side": "hw",
-   "sideName": "Beroe Stara Za",
-   "pp": -20.1,
-   "odd": 2.36,
-   "kickoff": "2026-09-03T17:00:00Z"
-  },
   {
    "matchId": 35993817,
    "home": "JS El Biar",
@@ -24,8 +12,8 @@
    "league": "Algerian Ligue 1",
    "side": "hw",
    "sideName": "JS El Biar",
-   "pp": -11.9,
-   "odd": 2.66,
+   "pp": -12.5,
+   "odd": 2.7,
    "kickoff": "2026-09-03T20:00:00Z"
   },
   {
@@ -36,9 +24,33 @@
    "league": "Romanian Cup",
    "side": "aw",
    "sideName": "Rapid Bucharest",
-   "pp": 11.4,
-   "odd": 1.5,
+   "pp": 10.0,
+   "odd": 1.46,
    "kickoff": "2026-09-03T17:30:00Z"
+  },
+  {
+   "matchId": 36010969,
+   "home": "Hapoel Tel Aviv",
+   "away": "Beitar Jerusalem",
+   "country": "IL",
+   "league": "Israeli Premier League",
+   "side": "hw",
+   "sideName": "Hapoel Tel Aviv",
+   "pp": 8.9,
+   "odd": 2.1,
+   "kickoff": "2026-09-03T17:30:00Z"
+  },
+  {
+   "matchId": 36005518,
+   "home": "Toulouse",
+   "away": "Lille",
+   "country": "FR",
+   "league": "French Ligue 1",
+   "side": "aw",
+   "sideName": "Lille",
+   "pp": 6.8,
+   "odd": 1.93,
+   "kickoff": "2026-09-03T18:45:00Z"
   },
   {
    "matchId": 36016518,
@@ -51,18 +63,6 @@
    "pp": -6.7,
    "odd": 2.1,
    "kickoff": "2026-09-03T18:30:00Z"
-  },
-  {
-   "matchId": 36010969,
-   "home": "Hapoel Tel Aviv",
-   "away": "Beitar Jerusalem",
-   "country": "IL",
-   "league": "Israeli Premier League",
-   "side": "hw",
-   "sideName": "Hapoel Tel Aviv",
-   "pp": 6.3,
-   "odd": 2.22,
-   "kickoff": "2026-09-03T17:30:00Z"
   }
  ],
  "flow": [
@@ -72,15 +72,15 @@
    "away": "Gornik Zabrze",
    "country": "PL",
    "league": "Polish Ekstraklasa",
-   "deltaEur": 110165,
-   "nowEur": 216657,
+   "deltaEur": 36415,
+   "nowEur": 253072,
    "market": "Over/Under 3.5 Goals",
    "sideName": "Under 3.5 Goals",
-   "odd": 1.88,
+   "odd": 1.79,
    "thin": false,
-   "sharePct": 51,
+   "sharePct": 14,
    "kickoff": "2026-09-03T16:00:00Z",
-   "dir": "out"
+   "dir": "in"
   },
   {
    "matchId": 35995576,
@@ -88,30 +88,62 @@
    "away": "Al-Khaleej Saihat",
    "country": "SA",
    "league": "Saudi Professional League",
-   "deltaEur": 23923,
-   "nowEur": 42441,
+   "deltaEur": 14269,
+   "nowEur": 56710,
    "market": "Match Odds",
    "sideName": "NEOM Sports Club",
-   "odd": 1.93,
+   "odd": 1.94,
    "thin": false,
-   "sharePct": 56,
+   "sharePct": 25,
    "kickoff": "2026-09-03T16:30:00Z",
    "dir": "out"
   },
   {
-   "matchId": 35999836,
-   "home": "Al Sailiya",
-   "away": "Al Arabi (QAT)",
-   "country": "QA",
-   "league": "Qatari Stars League",
-   "deltaEur": 5304,
-   "nowEur": 12472,
-   "market": "Over/Under 3.5 Goals",
-   "sideName": "Under 3.5 Goals",
-   "odd": 1.34,
+   "matchId": 35974468,
+   "home": "Ipswich",
+   "away": "Liverpool",
+   "country": "GB",
+   "league": "English Premier League",
+   "deltaEur": 11863,
+   "nowEur": 90615,
+   "market": "Match Odds",
+   "sideName": "Liverpool",
+   "odd": 1.56,
+   "thin": false,
+   "sharePct": 13,
+   "kickoff": "2026-09-04T19:00:00Z",
+   "dir": "in"
+  },
+  {
+   "matchId": 35999671,
+   "home": "Real Sociedad",
+   "away": "Celta Vigo",
+   "country": "ES",
+   "league": "Spanish La Liga",
+   "deltaEur": 10306,
+   "nowEur": 305089,
+   "market": "Match Odds",
+   "sideName": "Real Sociedad",
+   "odd": 1.85,
+   "thin": false,
+   "sharePct": 3,
+   "kickoff": "2026-09-03T19:00:00Z",
+   "dir": "flat"
+  },
+  {
+   "matchId": 36016542,
+   "home": "Beroe Stara Za",
+   "away": "Montana",
+   "country": "BG",
+   "league": "Bulgarian B League",
+   "deltaEur": 3489,
+   "nowEur": 4735,
+   "market": "Over/Under 2.5 Goals",
+   "sideName": "Over 2.5 Goals",
+   "odd": 1.82,
    "thin": true,
-   "sharePct": 43,
-   "kickoff": "2026-09-03T16:15:00Z",
+   "sharePct": 74,
+   "kickoff": "2026-09-03T17:00:00Z",
    "dir": "in"
   }
  ]
