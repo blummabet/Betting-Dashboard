@@ -45,6 +45,21 @@ test('der Poly-LIVE-Feed zählt mit, obwohl er kein Feld in _md.data hat', () =>
     'Genau der Feed, der sich unten selbst als 2 h alt meldet, fehlt oben wieder');
 });
 
+test('jede Quelle in der Frische-Liste kann ihr Alter auch WIRKLICH nennen', () => {
+  // 03.09.2026: der Guard darueber prueft, dass eine geladene Quelle in der Liste STEHT.
+  // Er prueft nicht, ob _ageMin sie lesen kann. Die Stake-Dateien stempeln mit `asof` —
+  // ohne diesen Namen waere die Liste erfuellt und das Alter trotzdem immer null gewesen.
+  const g = {};
+  // eslint-disable-next-line no-new-func
+  new Function('exp', schneide('function _ageMin', 'function _mdQuellenAlter') + '\nexp.f=_ageMin;')(g);
+  const jetzt = new Date().toISOString();
+  for (const stempel of ['generatedAt', 'updatedAt', 'asof']) {
+    const o = {}; o[stempel] = jetzt;
+    assert.ok(g.f(o) != null, 'unlesbarer Zeitstempel: ' + stempel);
+  }
+  assert.ok(g.f({ _meta: { generatedAt: jetzt } }) != null);
+});
+
 test('eine Quelle ohne lesbaren Zeitstempel gibt sich nicht als frisch aus', () => {
   const g = {};
   // eslint-disable-next-line no-new-func

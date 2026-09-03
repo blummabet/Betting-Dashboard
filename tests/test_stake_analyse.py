@@ -18,9 +18,23 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT))
 
+import pytest
+
 spec = importlib.util.spec_from_file_location("stake_analyse_t", ROOT / "stake_analyse.py")
 A = importlib.util.module_from_spec(spec)
 spec.loader.exec_module(A)
+
+
+@pytest.fixture(autouse=True)
+def _ohne_gelernte_norm(tmp_path, monkeypatch):
+    """Diese Tests pruefen die RECHNUNG, nicht den gelernten Stand.
+
+    Seit dem 03.09. liest liga_norm() zuerst stake_league_norm.json — den wachsenden Stand aus
+    stake_league_norm.py. Ohne diese Fixture wuerden die Tests gegen die echte Datei im Repo
+    laufen und je nach Sammelstand mal so und mal anders ausgehen. Der Weg ueber die Datei
+    hat unten einen eigenen Test.
+    """
+    monkeypatch.setattr(A, "NORM_FILE", tmp_path / "gibt-es-nicht.json")
 
 
 def w(liga="La Liga", usd=2000, ts="2026-09-03T18:00:00Z", ko="2026-09-03T19:00:00Z",
@@ -263,3 +277,23 @@ def test_kategorie_wird_fuer_alte_zeilen_nachgerechnet():
     assert A._kat({"sport": "baseball", "liga": "MLB"}) == "US-Sport"
     assert A._erlaubt({"sport": "baseball"}) is False
     assert A._erlaubt({"sport": "soccer", "liga": "La Liga"}) is True
+
+
+# ── Der gelernte Stand hat Vorrang ───────────────────────────────────────────
+def test_liga_norm_liest_den_gelernten_stand(tmp_path, monkeypatch):
+    """Das Ledger reicht nur ~3 Tage zurueck; die Norm muss aus stake_league_norm.json kommen,
+    sonst haetten genau die kleinen Ligen nie eine Basis."""
+    import json
+    datei = tmp_path / "norm.json"
+    datei.write_text(json.dumps({"ligen": {"Aus der Datei": {
+        "n": 99, "basis": "gelernt", "median": 4242.0, "p90": 9000.0}}}), encoding="utf-8")
+    monkeypatch.setattr(A, "NORM_FILE", datei)
+    n = A.liga_norm([w(liga="Aus dem Ledger", usd=1) for _ in range(50)])
+    assert "Aus der Datei" in n
+    assert n["Aus der Datei"]["median"] == 4242.0
+    assert "Aus dem Ledger" not in n, "der gelernte Stand hat Vorrang vor dem Ledger"
+
+
+def test_ohne_stand_und_ohne_wetten_gibt_es_keine_norm(tmp_path, monkeypatch):
+    monkeypatch.setattr(A, "NORM_FILE", tmp_path / "weg.json")
+    assert A.liga_norm(None) == {}
