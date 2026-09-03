@@ -673,6 +673,11 @@
     }).join('') + _ageStr(_md.data.betfair);
   }
   // 💸 Frisches Geld: größter Zufluss (€) je Spiel seit dem letzten Snapshot.
+  // 03.09.2026 (Lucas-Checkup): „→ Real Sociedad · jetzt €148K @1.92" las sich wie das Geld auf
+  // DIESER Auswahl. `nowEur` ist aber das Volumen des ganzen Marktes (nachgerechnet: 230.853 =
+  // Summe aller Match-Odds-Runner), waehrend die Kachel „Betfair-Kohle" daneben `b.vol` zeigt —
+  // das Geld auf der fuehrenden AUSWAHL. Zwei richtige Zahlen, zwei verschiedene Dinge, und
+  // nichts sagte welches. Beide tragen ihren Bezug jetzt im Text.
   function _mdBfFlowBody() {
     // 04.08.2026 (Lucas: "@1.01 ist sinnfrei"): Geld auf Quasi-Lock-Quoten (< 1.30, meist live/
     // entschieden) ist kein Zufluss-Signal - raus, wie im Radar (MIN_ODD_SHOW). Fehlende Quote -> drin.
@@ -685,7 +690,7 @@
     return items.map(function (x) {
       var _thinB = x.thin ? ' <span title="Zufluss macht ' + (x.sharePct != null ? x.sharePct + '% ' : '') + 'des gesamten Marktgeldes aus — dünner Markt, oft nicht beim Buchmacher spielbar. Anomalie/Fix-Kandidat." style="font-size:9px;font-weight:800;color:#f2c14e;border:1px solid rgba(234,185,56,.5);border-radius:4px;padding:0 4px">🔍 dünner Markt</span>' : '';
       return rowEl(_bfTeams(x) + _mdBfLiveById(x.matchId) + _thinB, '+' + eur(x.deltaEur), A.good,
-        '→ ' + esc(x.sideName || '') + _bfReactiveChip(x.sideName, !!_mdBfLiveById(x.matchId)) + _mdDirBadge(x.dir) + ' · jetzt ' + eur(x.nowEur) + (x.odd != null ? ' @' + (+x.odd).toFixed(2) : ''),
+        '→ ' + esc(x.sideName || '') + _bfReactiveChip(x.sideName, !!_mdBfLiveById(x.matchId)) + _mdDirBadge(x.dir) + ' · jetzt ' + eur(x.nowEur) + ' im Markt' + (x.odd != null ? ' @' + (+x.odd).toFixed(2) : ''),
         meter(mx ? (+x.deltaEur / mx * 100) : 0, A.good));
     }).join('') + _ageStr(_md.data.betfair);
   }
@@ -772,6 +777,8 @@
       '<span title="' + esc(q.map(function (x) { return x.n + ': ' + _ageTxt(x.min); }).join(' · ')) + '">' +
       'älteste Quelle <b style="color:' + col + '">' + esc(a.n) + ' vor ' + _ageTxt(a.min) + '</b></span>';
   }
+
+  var PK_PREIS_STALE_MIN = 20;   // ab so viel Rueckstand traegt der Preis seinen Stand mit
 
   function kpi(val, label, hint, color) {
     return '<div class="md-kpi" style="--kc:' + color + ';">' +
@@ -1243,7 +1250,9 @@
       var m = x.m, b = x.b, pct = Math.round(b.share * 100);
       // 05.08.2026 (Lucas): Führungsquote dazu, dann ist die Kachel immer eindeutig (@1.74 vs @1.06).
       var od = (b.lead && b.lead.odd != null && +b.lead.odd > 1) ? ' <span style="color:var(--mi3)">@' + (+b.lead.odd).toFixed(2) + '</span>' : '';
-      return _mdDonutRow(teamsOf(m) + _mdBfLive(m), esc(short(b.name)) + ' → ' + esc(b.lead.name) + _bfReactiveChip(b.lead.name, !!_mdBfLive(m)) + od + _mdDirBadge(_mdDirOf(m.matchId, b.name, b.lead.name)), eur(b.vol), A.bf, pct, A.bf);
+      // 03.09.2026: `b.vol` ist das Geld auf der FUEHRENDEN AUSWAHL (der Donut zeigt ihren
+      // Anteil am Markt) — nicht das Marktvolumen, das die Zufluss-Kachel daneben nennt.
+      return _mdDonutRow(teamsOf(m) + _mdBfLive(m), esc(short(b.name)) + ' → ' + esc(b.lead.name) + _bfReactiveChip(b.lead.name, !!_mdBfLive(m)) + od + _mdDirBadge(_mdDirOf(m.matchId, b.name, b.lead.name)), '<span title="Geld auf dieser Auswahl — die Zufluss-Kachel nennt daneben das Volumen des ganzen Marktes">' + eur(b.vol) + '</span>', A.bf, pct, A.bf);
     }).join('') : empty('Kein großes Betfair-Geld.');
     bfBody += _ageStr(_md.data.betfair);
 
@@ -1404,6 +1413,7 @@
       +'.sb-dot{width:9px;height:9px;border-radius:50%}'
       +'.sb-nm{font-weight:700;color:var(--mi);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}'
       +'.sb-fire{color:var(--mi3);font-variant-numeric:tabular-nums;text-align:right}'
+      +'.sb-n{font-style:normal;font-size:8.5px;color:var(--mi3);margin-left:1px;font-weight:600}'
       +'.sb-cell{color:var(--mi2);font-variant-numeric:tabular-nums;white-space:nowrap}'
       +'.sb-cell i{color:var(--mi3);font-style:normal;font-size:9px;margin-left:2px}'
       +'.sb-edge{font-weight:800;text-align:right;font-variant-numeric:tabular-nums}';
@@ -1436,6 +1446,19 @@
       return sy-sx;
     });
     var pct=function(v){return v==null?'—':Math.round(v)+'%';};
+    // 03.09.2026 (Lucas-Checkup): „🥅 Torjäger n47 · 46% dafür · 75% gegen · −16% ⌀" — die 75%
+    // waren drei von vier Fällen, und genau deshalb stand das ⌀ da (der Edge fällt auf
+    // „dafür vs. Ø" zurück, wenn die Gegen-Seite unter 5 liegt). Sichtbar war das nur im
+    // Tooltip. Jede Quote trägt ihre Basis jetzt im Text — dieselbe Regel wie beim Puls,
+    // wo „n30" über einer Quote auf 27 stand.
+    var quote=function(v,n){
+      if(v==null) return '—' + (n ? '<i class="sb-n">·' + n + '</i>' : '');
+      return Math.round(v)+'%<i class="sb-n">·'+n+'</i>';
+    };
+    // Zeilen unter der Feuer-Schwelle sagen ohnehin „zu wenig Daten" — sie stehen aber mit
+    // demselben Gewicht zwischen Zeilen mit n=85. Sie wandern in eine Sammelzeile.
+    var duenn=rows.filter(function(r){return (r.fire||0)<(d.signals&&d.signals.minFire||0);});
+    rows=rows.filter(function(r){return (r.fire||0)>=(d.signals&&d.signals.minFire||0);});
     var lines=rows.map(function(r){
       var L=_sigLabel(r.name), tg=tier(r), st=strength(r);
       var viaBase=!(r.supp>=8&&r.opp>=5&&r.edge!=null)&&r.supp>=10;
@@ -1444,11 +1467,19 @@
         +'<span class="sb-dot" style="background:'+tg.c+'"></span>'
         +'<span class="sb-nm">'+L.ic+' '+esc(L.lb)+'</span>'
         +'<span class="sb-fire">n'+r.fire+'</span>'
-        +'<span class="sb-cell" title="Win% wenn das Signal den Pick STÜTZT ('+r.supp+' Fälle)">'+pct(r.suppWinPct)+' <i>dafür</i></span>'
-        +'<span class="sb-cell" title="Win% wenn das Signal GEGEN den Pick steht ('+r.opp+' Fälle)">'+pct(r.oppWinPct)+' <i>gegen</i></span>'
+        +'<span class="sb-cell" title="Win% wenn das Signal den Pick STÜTZT ('+r.supp+' Fälle)">'+quote(r.suppWinPct,r.supp)+' <i>dafür</i></span>'
+        +'<span class="sb-cell" title="Win% wenn das Signal GEGEN den Pick steht ('+r.opp+' Fälle)">'+quote(r.oppWinPct,r.opp)+' <i>gegen</i></span>'
         +'<span class="sb-edge" style="color:'+tg.c+'">'+edgeTxt+'</span>'
         +'</div>';
     }).join('');
+    if(duenn.length){
+      lines += '<div class="sb-row" style="opacity:.55">'
+        +'<span class="sb-dot" style="background:var(--mi3)"></span>'
+        +'<span class="sb-nm" title="'+esc(duenn.map(function(r){return _sigLabel(r.name).lb+' (n'+r.fire+')';}).join(' · '))+'">'
+        +'… '+duenn.length+' Signal'+(duenn.length===1?'':'e')+' unter n'+(d.signals&&d.signals.minFire||0)+'</span>'
+        +'<span class="sb-fire">—</span><span class="sb-cell">—</span><span class="sb-cell">—</span>'
+        +'<span class="sb-edge" style="color:var(--mi3)">zu wenig Daten</span></div>';
+    }
     return '<details class="md-pulse md-rise sb-wrap">'
       +'<summary class="sb-sum"><span class="md-pulse-h" style="margin:0">🧪 Signal-Bilanz</span>'
       +'<span class="mpc-hint">funktionieren die Signale? · '+b.n+' Picks · Ø '+Math.round(base)+'% Win</span></summary>'
@@ -1893,6 +1924,13 @@
       var q = p / m;
       return q >= 0.8 ? A.good : q >= 0.55 ? A.gold : 'var(--mi2)';
     };
+    // Wie weit hinkt die Preis-Quelle dieser Sektion hinter dem frischesten Betfair-Stand her?
+    // null = nicht feststellbar (dann behaupten wir nichts).
+    function _mdPreisAlterMin() {
+      var k = _ageMin(_md.data.killer), b = _ageMin(_md.data.betfair);
+      if (k == null) return null;
+      return (b == null || k > b) ? k : null;
+    }
     function _klPunkte(x) {
       var pk = x && x.punkte;
       if (!pk || typeof pk.punkte !== 'number' || !pk.moeglich) return null;   // altes killer.json
@@ -1927,12 +1965,24 @@
           (uhr(x.zuletztAktiv) ? ' · zuletzt ' + uhr(x.zuletztAktiv) : '') + '</span>';
       // Der Haltepreis ist der Preis, den die Sektion gezeigt hat. Läuft die Quote seither weg,
       // gehört das dazu — sonst empfiehlt sie einen Preis, den es nicht mehr gibt.
+      // 03.09.2026 (Lucas-Checkup): die Zeile zeigte „→ Rapid Bucharest @1.64" ohne „(jetzt …)",
+      // waehrend die Rangliste eine Ebene tiefer @1.57 fuer dieselbe Auswahl fuehrte. Kein
+      // Anzeigefehler: killer.json trug fuer diese Zeile `odd == haltePreis == 1.64`, war aber
+      // aelter als der Betfair-Feed, aus dem die Rangliste liest. Ein Preis ist nur so aktuell
+      // wie die Datei, aus der er kommt — und wenn die spuerbar hinterherhinkt, darf „@1.64"
+      // nicht wie der Kurs von jetzt dastehen.
       var hp = x.haltePreis, jetzt = x.odd, oddTxt = '';
       if (hp != null) {
         oddTxt = ' <span class="q">@' + (+hp).toFixed(2) + '</span>';
         if (jetzt != null && Math.abs(+jetzt - +hp) >= 0.02) {
           oddTxt += ' <span class="q" style="color:' + ((+jetzt > +hp) ? A.good : A.gold) + '">(jetzt ' +
             (+jetzt).toFixed(2) + ')</span>';
+        } else {
+          var _alt = _mdPreisAlterMin();
+          if (_alt != null && _alt > PK_PREIS_STALE_MIN) {
+            oddTxt += ' <span class="q" style="color:var(--mi3)" title="Der Preis dieser Sektion kommt aus killer.json und ist ' +
+              _ageTxt(_alt) + ' alt — der Betfair-Feed daneben ist frischer. Was gerade wirklich zu haben ist, steht in der Rangliste.">(Stand ' + _ageTxt(_alt) + ')</span>';
+          }
         }
       }
       // Aufbau der Zeile: Spiel + Uhr · dann der PICK als lauteste Zeile (er ist das Produkt) ·
@@ -1942,13 +1992,17 @@
       return '<div class="md-kl-row' + (x.aktiv ? '' : ' ruht') + '">' +
         '<div class="md-kl-l1">' +
           '<span class="md-kl-nm">' + esc(team(x.home)) + ' <span style="color:var(--mi3);font-weight:400">v</span> ' + esc(team(x.away)) + '</span>' +
-          stand + (ko ? '<span class="md-jz-ko">⏱ ' + ko + '</span>' : '') + '</div>' +
+          // 03.09.2026 (Lucas-Checkup): in einer Zeile standen „läuft · seit 00:29", „⏱ 5h 41m" und
+        // „⏳ 20.5h" — drei Zeitangaben, drei Bedeutungen, zwei fast gleiche Symbole und keine
+        // Beschriftung. ⏱ ist der Anpfiff, ⏳ die Dauer der Übereinstimmung, „seit" der Beginn
+        // der Haltung. Jetzt steht es dran statt im Tooltip.
+        stand + (ko ? '<span class="md-jz-ko" title="bis Anpfiff">⏱ Anpfiff ' + ko + '</span>' : '') + '</div>' +
         '<div class="md-kl-pick"><span style="color:var(--mi3)">→</span> <b>' + esc(x.name || '—') + '</b>' + oddTxt + '</div>' +
         '<div class="md-kl-deck">' +
           (pkt
             ? '<span class="md-kl-cnt" title="Punkte von möglichen — nicht erhobene Bücher senken den Nenner"'
               + ' style="color:' + PKT_COL(pkt.punkte, pkt.moeglich) + '">' + pkt.punkte + '<i>/' + pkt.moeglich + '</i></span>' + pkt.html
-              + (pkt.dauerH != null && pkt.dauerH >= 3 ? '<span class="md-pk-d" title="so lange steht die Übereinstimmung schon vor Anpfiff">⏳ ' + pkt.dauerH.toFixed(1) + 'h</span>' : '')
+              + (pkt.dauerH != null && pkt.dauerH >= 3 ? '<span class="md-pk-d" title="so lange steht die Übereinstimmung schon vor Anpfiff">⏳ einig seit ' + pkt.dauerH.toFixed(1) + 'h</span>' : '')
             : '<span class="md-kl-cnt" title="belegte Ströme von möglichen">' + deck.n + '<i>/' + deck.moeglich + '</i></span>' + deck.html)
           + '</div></div>';
     };

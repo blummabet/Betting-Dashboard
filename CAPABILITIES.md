@@ -224,6 +224,31 @@ Fix in zwei Teilen. (1) `_alle_holder()` **blättert** jetzt durch `/holders` (`
 
 **🐋 Whale-Rangliste — eigener Fehler, am selben Tag korrigiert:** `_pwClvUg` rechnete die Varianz aus `clvSqSum` gegen das **globale** `n`. `n` zählt alle Auflösungen seit jeher, `clvSqSum` erst die seit dem 02.09. — die Rohvarianz wird negativ, und `Math.max(0, …)` machte daraus „null Streuung", also **maximale Sicherheit**. Gemessen: **72 von 127** Wallets im UG-Modus. Die mit den **wenigsten** Daten wären nach oben gerankt worden — die Umkehrung dessen, wozu eine Untergrenze da ist. Jetzt ein in sich geschlossenes Fenster (`clvFenN`/`clvFenSum`/`clvSqSum`, min. 5), sonst wird geschrumpft; eine nennenswert negative Rohvarianz heißt „Fenster kaputt" und führt zum Schrumpfen, nicht zu einer Scheinsicherheit.
 
+### 📐 Anzeige-Regeln (03.09.2026, Lucas: „damit wir alle Probleme mit der Zeit und bei jedem neuen Checkup reduzieren")
+
+Der Checkup vom 03.09. brachte acht Befunde, und es waren nicht acht Fehler — es war **einer, achtmal**: eine Zahl ohne ihre Basis, oder eine Behauptung, die breiter war als ihr Beleg.
+
+| Was dastand | Was es war |
+|---|---|
+| „🎯 Cards **n30** · 78 % Treffer 21–6" | Quote auf 27 (3 VOIDs), n war das Fenster |
+| „Mix bf+money+sharp 3/30 · ROI +135 % **(UG +74 %)**" | Mittelwert mit Etikett — drei ähnliche Ergebnisse haben keine Streuung |
+| „**7 Konsens** · BF × Poly × Pinn" | 2 Zeilen ohne Poly-Geld, eine davon $74 |
+| „Ø CLV **−2,62 pp** · schlägt Close 13,3 %" | 7 von 30 Werten waren Platzhalter-Nullen (belegt: −3,41 / 17,4 %) |
+| „Beste Stufe Conv 7 · +2,5 % · **n149**" | drei Engine-Versionen, aktuell davon 4 |
+| „**älteste Quelle** Serien vor 64 Min" | 8 von 13 Feeds geprüft, Poly-LIVE gar nicht |
+| „→ Real Sociedad · **jetzt €148K**" | Volumen des ganzen Marktes, nicht der Auswahl |
+| „🥅 Torjäger · 46 % dafür · **75 % gegen**" | drei von vier Fällen |
+
+Daraus fünf Regeln, an denen sich jede neue Fläche messen lassen muss:
+
+1. **Jede Quote nennt ihren Nenner** — nicht im Tooltip, im Text. Weichen mehrere Basen in derselben Kachel voneinander ab (Fenster / gewertet / mit CLV), stehen alle drei da.
+2. **Eine Untergrenze gibt es erst ab `UG_MIN_N = 30`.** Darunter steht der Punktschätzer allein und „nicht belegt". Eine kleine Stichprobe ohne Spreizung ist keine Gewissheit — sie sieht nur so aus (`untergrenze([1.35]*3) → +1.35`).
+3. **Eine Aussage über mehrere Quellen zählt die, die wirklich beitragen** — nicht die Verdikte. `nSources`/`polyGeld` stehen in der Zeile; wer sie ignoriert, behauptet drei Bücher, wo zwei sind.
+4. **Jeder Betrag nennt seinen Bezug** (Auswahl oder Markt), jede Zeitangabe ihre Bedeutung (Anpfiff / Dauer der Übereinstimmung / Beginn der Haltung).
+5. **Ein Wert ist nur so aktuell wie seine Datei.** Hinkt die Quelle hinter einem frischeren Feed auf derselben Seite her, trägt der Wert seinen Stand mit — sonst liest sich ein alter Preis wie der von jetzt.
+
+Mechanisch gesichert, wo es geht: `uebersicht-frische-und-basis.test.mjs` (14) liest die Ladezeile `_md.data = {…}` als Wahrheit darüber, welche Feeds es gibt, und schlägt an, sobald einer nicht in die Frische-Rechnung eingeht — **die Regel wächst also mit, ohne dass jemand daran denken muss.** Dazu `test_freigabe.py` (Schwelle == Gate-Schwelle), `test_puls_leiste_und_clv.py` (Engine-Filter, Bucket-Regeln gegen `poly_shortlist_track.aggregate`, `clvResolved`), `test_poly_preis_abweichung.py`.
+
 **Die zwei offenen Punkte aus dem Checkup (03.09.2026, Lucas: „na dann schau dir die 2 an"):**
 
 - 🔴 **Die Puls-Leiste maß nach anderen Regeln als das Register direkt darunter.** `agg.byConv` aggregiert den **ganzen** Bestand: 500 abgerechnete Plays über mehrere Engine-Versionen (`ev`: 70× `2026-09-01`, 76× `2026-08-29b`, 8× `2026-08-29`, **346 ohne Stempel**). Die Kopfzeile warb mit „Beste Stufe Conv 7 · +2.5 % ROI · **n149**", während Ebene 1 für dieselbe Stufe `4/30` zeigt und sagt: *„Plays älterer Versionen zählen nicht für eine Freigabe"*. Dazu nimmt `_best_bucket` das **Maximum über ~10 Buckets** und zeigte einen Punktschätzer — ein Maximum über viele Buckets ist selbst eine Auswahl. `_strip` rechnet jetzt auf `_aktuelle_zeilen()` (dieselbe Regel wie `freigabe.aktuelle_engine`) und `_best_bucket` bekommt die **Renditen je Play** statt fertiger Aggregate, damit `freigabe.untergrenze` greifen kann. Ergebnis auf den echten Daten: statt „Conv 7 · +2.5 % · n149" steht dort **„Conv 6 · +0.5 % · n30 · nicht belegt (UG −24.1 %)"**, statt „bf · +17.0 % · n93" **„sharp · +15.0 % · n41 · nicht belegt (UG −3.0 %)"** — was zu „nichts freigegeben" eine Ebene tiefer passt. Ein Test hält die Bucket-Regeln gegen `poly_shortlist_track.aggregate`, damit die beiden Flächen nicht auseinanderdriften.
@@ -403,6 +428,53 @@ Jede hat einen Guard. Wer eine ähnliche Änderung baut, prüft hier zuerst.
 10. **MLS-Event-Pages komplett leer** (19.07.): MLS rendert im Frontend unter `_mode='liga'`, also baute der Renderer die Event-Page-Slugs mit Prefix `liga-…`. Die JSONs schreibt `generate_wm_match_pages` aber mit dem **Datensatz**-Prefix `mls-…` → 404 → leere Seite. Wieder die `is_liga()`-gilt-auch-für-MLS-Familie, nur im Frontend. → `_mpPrefix(fx)` leitet den Prefix pro Fixture aus der Gruppe ab (`groupKey==='MLS'` → `mls-`), Test `mls-event-page-slug.test.mjs`. Die generierten Seiten decken nur das aktuelle Fenster (≈ letzte/nächste 2 Wochen) ab — ferne/vergangene Spieltage haben bewusst keine, genau wie Liga.
 11. **Poly-Fläche „fertig", liefert aber NIE Daten** (20.07.): Audit fand zwei verdrahtete Poly-Features, die seit Bau 0 Commits hatten. **Cross-Sport-Radar**: `fetch_poly_rows()` war ein Stub `return []` (`TODO(Runner)` nie umgesetzt) → Radar konnte sich nie füllen, zeigte aber „füllt sich am Runner". **E-Sport-Tab**: stieg bei 0 Events STILL aus (keine Datei, kein Grund). Exakt die CLV-tot-Klasse: verdrahtet, Frontend liest, hinten kommt nie was an, kein Guard sah hin. → (a) `fetch_poly_rows` echt gebaut (Gamma, `event_key` reihenfolge-unabhängig), (b) E-Sport schreibt `esports_poly_status.json` mit `rawEventsByTag`/`reason` statt still, (c) **Guard `check_poly_surfaces_alive`** in der Integritäts-Batterie: rot, wenn eine Fläche STEHT (nie/>30h keine Ausgabe) — leer-aber-frisch bleibt grün. Regel geschärft: **ein „fertiges" Feature muss beweisen, dass hinten Daten ankommen — Verdrahtung ≠ Ankunft.**
 12. **Fehlende Information ist keine Erlaubnis** (25.08.): Code-Audit über den ganzen Stack, **16 Befunde, keiner davon knallt** — alle sehen im Log wie Normalbetrieb aus. Eine Bauform: eine Sicherung, die bei kaputten Eingangsdaten den harmlosesten Wert zurückgibt (`except: pass`, `.get(x, default)`, `mkt_k="hw"`), sodass der Aufrufer „nichts gefunden" nicht von „fehlgeschlagen" unterscheiden kann — und dann über Geld entscheidet. → (a) alle Geld-Schreiber atomar (`safe_write.write_json_atomic`, temp→fsync→replace), (b) vier Loader merken sich Lesefehler (`_LOAD_FAILED`/`_LAZY_FAILED`/`_UNREADABLE`/`_stUnloadable`) und melden „❔ unbekannt" statt grün, (c) `polymarket_bet` bricht bei kaputter Wett-Datei ab (ohne sie greift KEIN Cap), (d) E-Sport-`clustersAll`/`matches` echt gebaut + Guard `check_wallet_clusters`, (e) `byLeague` beim **Konsumenten** repariert, nicht beim Producer — der kennt die Liga gar nicht, und so wird die alte Historie rückwirkend nutzbar. Offen: vier **tote Signale** (unerreichbare Schwellen) — das ist eine Entscheidung, keine Reparatur. Bericht: [[project_audit_stille_fehler_25_08]].
+
+---
+
+### 🎰 Stake Radar (03.09.2026, Lucas: „ich würde gerne nur im Dashboard einen Bereich mit den Spielen sehen … dann rein und wir sammeln das")
+
+Vierte Quelle, und die einzige, die **einen einzelnen Einsatz mit Betrag** nennt: Stake zeigt große
+Wetten öffentlich (Event, User, Zeit, Quote, Einsatz). Betfair gibt Matched-Volumen, Poly gibt
+Preis-als-Geldanteil, Pinnacle gibt den Anker — keine davon nennt eine einzelne Wette.
+
+Das ist der eigentliche Grund, das zu bauen, und er steht in unserer eigenen Messung vom 01.09.
+auf 500 Plays: **Bücher addieren (+11,5 %), Signale innerhalb eines Buchs stapeln nicht (−1,1 %)**.
+Stake bringt eine neue Achse (Einsatz*fluss*), nicht ein weiteres Preissignal — Stakes Quoten
+kommen aus einem eingekauften Feed und sind preisseitig gar nicht unabhängig.
+
+**Status: Sammlung, kein Signal.** Für Stake-Einsatzfluss ist im Projekt weder eine Trefferquote
+noch ein CLV gemessen. Die Anregung dazu kam mit einer fertigen Bewertungstabelle („4–5 Wetten in
+1 Minute 🟢 Strong"), die keine Trefferquote, keinen CLV und kein n nennt — genau die Klasse
+Behauptung, die der Checkup vom selben Tag achtmal aus der Übersicht geräumt hat. Sie kommt
+deshalb weder in den Sammler noch in den Tab; beide Testdateien prüfen ihre **Abwesenheit**.
+
+Drei Dinge, die die Fläche nicht darf, jeweils mit Test:
+
+| Verbot | Warum |
+|---|---|
+| unbekannten Einsatz als 0 führen | Wetten laufen in BTC/ETH ohne USD-Kurs im Feed. Unbekannt ≠ klein → `einsatzUsd: null` + sichtbarer Zähler „ohne $-Wert" (*fehlende Information ist keine Erlaubnis*) |
+| einen Feed-Fehler als leere Liste zeigen | Stake sitzt hinter Cloudflare. Ein 403 sähe sonst aus wie „heute keine großen Wetten" → `status: fehler/schema_unbekannt` + Grund auf der Fläche |
+| Wetten ohne ID mitzählen | ohne ID keine Deduplizierung, und doppelt gezähltes Geld ist schlimmer als eine fehlende Wette → `ohneIdVerworfen` |
+
+**Bekannte Schwäche der Quelle, und sie steht auf der Fläche:** Stake hat eine „Wetten
+verbergen"-Einstellung. Wer sie nutzt, taucht nicht auf — die Liste ist **eine Auswahl, keine
+Grundgesamtheit**, und die Auswahl geht systematisch in die falsche Richtung (wer verbirgt, hat
+meist einen Grund). Deshalb: erst gegen den **Pinnacle-Schlusskurs** messen (CLV, aussagekräftig
+ab n≈200, ohne auf Ergebnisse zu warten), dann über ein Vorwärtsbuch reden.
+
+Technisch: Stakes GraphQL-Schema ist undokumentiert und wandert. `stake_highroller_fetch.py`
+**rät keine Feldnamen** — es fragt per Introspection, welches Query-Feld die Highroller liefert,
+baut die Selektion aus dem Schema und zieht die Werte über Feldnamen statt Positionen.
+`--sonde` prüft die Schnittstelle, ohne zu sammeln.
+
+**Kein eigener Cron.** Ein 10-Minuten-Takt hätte die repo-weite Schedule-Last von 534 auf 678
+gehoben (Deckel 540, weil GitHub bei 585 anfing zu verschlucken) — selbst stündlich passte nicht
+mehr. Das Sammeln hängt an `poly-live-scan.yml`, das ohnehin alle 15 Minuten auf demselben
+Mac-Runner läuft: 96 Läufe/Tag zum Preis von null neuen Schedules.
+
+Nebenbefund beim Bauen: das Web-Dropdown und das mobile Sheet wurden nur **gezählt**, nicht
+verglichen — der neue Tab landete zuerst nur im Dropdown und war mobil unerreichbar. `pwa-nav`
+vergleicht jetzt beide Flächen gegeneinander.
 
 ---
 

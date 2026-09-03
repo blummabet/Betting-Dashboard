@@ -1,0 +1,118 @@
+name: 🎰 Stake Radar (große Einzelwetten sammeln)
+
+# 03.09.2026 (Lucas: „ich würde gerne nur im Dashboard einen Bereich mit den Spielen sehen,
+# mit Schwellen die wir definieren, dann rein und wir sammeln das").
+#
+# Stake zeigt große Einzelwetten öffentlich an. Dieser Job holt sie und legt sie ab — er
+# bewertet nichts, pusht nichts nach Telegram, erzeugt kein Signal. Für Stake-Einsatzfluss
+# gibt es im Projekt noch keine gemessene Trefferquote und keinen gemessenen CLV; bis die
+# vorliegen, ist das hier eine Sammlung und sonst nichts.
+#
+# ⚠️ NUR self-hosted (Mac). Stake sitzt hinter Cloudflare und blockt Rechenzentrums-IPs —
+# derselbe Grund, aus dem der Poly-Scan nicht auf ubuntu-latest läuft. Ein ubuntu-Lauf würde
+# nicht „nichts finden", er würde 403 kassieren, und das sähe im Dashboard aus wie „heute
+# keine großen Wetten". Genau das soll nicht passieren: der Sammler schreibt deshalb
+# status="fehler"/"schema_unbekannt" statt einer leeren Liste.
+#
+# 03.09.2026 — KEIN eigener Cron. Ein 10-Minuten-Takt hätte 144 Läufe/Tag gekostet und die
+# repo-weite Schedule-Last von 534 auf 678 gehoben; der Deckel steht bei 540, und er steht dort,
+# weil GitHub bei 585 anfing, Schedules zu verzögern und zu verschlucken (test_cron_schedule_hygiene).
+# Selbst stündlich hätte nicht mehr gepasst — das Budget ist voll.
+#
+# Das Sammeln hängt deshalb an poly-live-scan.yml, das ohnehin alle 15 Minuten auf demselben
+# Mac-Runner läuft: 96 Läufe/Tag zum Preis von null neuen Schedules. Dieser Workflow hier bleibt
+# für die Sonde und für einen Lauf von Hand.
+on:
+  workflow_dispatch:
+    inputs:
+      sonde:
+        description: 'Nur Schnittstelle prüfen (nichts sammeln)'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+
+concurrency:
+  group: stake-radar
+  cancel-in-progress: false
+
+jobs:
+  sammeln:
+    runs-on: [self-hosted, macOS]
+    timeout-minutes: 8
+    steps:
+      - name: 📥 Repo auschecken
+        uses: actions/checkout@v4
+        with:
+          clean: false
+
+      - name: 🐍 Python einrichten (Mac)
+        run: |
+          PYTHON=""
+          for PY in /opt/homebrew/bin/python3.13 /opt/homebrew/bin/python3.12 /opt/homebrew/bin/python3.11 /usr/local/bin/python3.13 /usr/local/bin/python3.12 /usr/local/bin/python3.11 /usr/bin/python3; do
+            if "$PY" --version >/dev/null 2>&1; then PYTHON="$PY"; break; fi
+          done
+          if [ -z "$PYTHON" ]; then echo "Kein Python gefunden"; exit 1; fi
+          echo "$PYTHON ($($PYTHON --version))"
+          echo "STAKE_PYTHON=$PYTHON" >> $GITHUB_ENV
+
+      - name: 🔎 Sonde (nur bei manuellem Lauf mit Haken)
+        if: ${{ inputs.sonde }}
+        run: |
+          "${STAKE_PYTHON}" stake_highroller_fetch.py --sonde || true
+          echo "──── stake_schema_probe.json ────"
+          cat stake_schema_probe.json 2>/dev/null | head -c 4000 || echo "(keine Probe geschrieben)"
+
+      - name: 🎰 Sammeln
+        if: ${{ !inputs.sonde }}
+        env:
+          GITHUB_TOKEN:  ${{ secrets.GITHUB_TOKEN }}
+          STAKE_MIN_USD: '1000'
+        run: |
+          set +e
+          git config user.name "CocoBet Bot"
+          git config user.email "bot@cocobet.local"
+          git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
+          git config --local credential.helper "" 2>/dev/null || true
+          git merge --abort 2>/dev/null || true
+          git rebase --abort 2>/dev/null || true
+
+          bash scripts/ci_pull.sh main || true
+          "${STAKE_PYTHON}" stake_highroller_fetch.py
+          RC=$?
+          echo "Sammler rc=$RC (1 = nichts geholt; die Sicht sagt warum)"
+
+          for f in stake_highroller.json stake_bet_ledger.json; do
+            [ -f "$f" ] && git add "$f"
+          done
+          if git diff --staged --quiet; then
+            echo "Keine Änderungen — kein Commit."
+            exit 0
+          fi
+          git commit -m "🎰 Stake Radar $(date -u +'%d.%m.%Y %H:%M') UTC [skip ci]" || exit 0
+          for attempt in 1 2 3 4 5; do
+            bash scripts/ci_pull.sh main || true
+            CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null)
+            if [ -n "$CONFLICTS" ]; then
+              echo "$CONFLICTS" | while read cf; do git checkout --ours -- "$cf"; git add "$cf"; done
+              git diff --staged --quiet || git commit -m "auto-resolve merge conflicts"
+            fi
+            if git push 2>&1; then echo "Push OK (Versuch $attempt)"; exit 0; fi
+            echo "Push $attempt fehlgeschlagen — retry…"; sleep $((attempt * 3))
+          done
+          echo "Push nach 5 Versuchen fehlgeschlagen — der nächste Lauf holt es nach."
+
+      - name: 🩺 Lauf-Gesundheit
+        if: always()
+        continue-on-error: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          "${STAKE_PYTHON:-python3}" run_health.py --slug stake-radar || true
+          git add health/stake-radar.json 2>/dev/null || true
+          git diff --staged --quiet || {
+            git commit -m "🩺 Stake-Radar-Gesundheit $(date -u +'%d.%m.%Y %H:%M') UTC [skip ci]" || true
+            bash scripts/ci_pull.sh main || true
+            git push 2>&1 || echo "  Push der Gesundheitsdatei fehlgeschlagen — nicht kritisch"
+          }
