@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "mls",
-    "generatedAt": "2026-09-03T12:19:45.039899+00:00",
+    "generatedAt": "2026-09-03T21:42:13.951465+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -540,15 +540,15 @@
       "matchupPct": 79,
       "signalInfo": {
         "state": "confirm",
-        "count": 7,
+        "count": 8,
         "conviction": 4,
         "names": [
+          "injury",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
           "chance_creation",
-          "topscorer_momentum",
-          "streak_momentum"
+          "topscorer_momentum"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -1951,6 +1951,47 @@
       "matchupPct": 89
     },
     {
+      "teamId": "1614",
+      "team": "CF Montreal",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1614.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 6,
+      "venue": "all",
+      "strong": true,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 56,
+        "label": "Eigen 56% + Gegner 87% → 68%"
+      },
+      "ratePct": 56,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 9,
+      "next": {
+        "oppId": "1599",
+        "oppName": "Philadelphia Union",
+        "atHome": false,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T23:30:00+00:00",
+        "oppRatePct": 87
+      },
+      "oppSupportPct": 87,
+      "matchupPct": 68
+    },
+    {
       "teamId": "1615",
       "team": "DC United",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1615.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -2153,6 +2194,47 @@
       },
       "oppSupportPct": 67,
       "matchupPct": 59
+    },
+    {
+      "teamId": "1614",
+      "team": "CF Montreal",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1614.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "bttsYes",
+      "market": "Beide Teams treffen",
+      "length": 6,
+      "venue": "all",
+      "strong": true,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 44,
+        "label": "Eigen 44% + Gegner 73% → 56%"
+      },
+      "ratePct": 44,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 9,
+      "next": {
+        "oppId": "1599",
+        "oppName": "Philadelphia Union",
+        "atHome": false,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T23:30:00+00:00",
+        "oppRatePct": 73
+      },
+      "oppSupportPct": 73,
+      "matchupPct": 56
     },
     {
       "teamId": "1603",
@@ -2529,47 +2611,6 @@
       },
       "oppSupportPct": 93,
       "matchupPct": 89
-    },
-    {
-      "teamId": "1614",
-      "team": "CF Montreal",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1614.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "scored",
-      "market": "Team trifft",
-      "length": 5,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 87% → 71%"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 10,
-      "next": {
-        "oppId": "1599",
-        "oppName": "Philadelphia Union",
-        "atHome": false,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T23:30:00+00:00",
-        "oppRatePct": 87
-      },
-      "oppSupportPct": 87,
-      "matchupPct": 71
     },
     {
       "teamId": "20787",
@@ -2974,47 +3015,6 @@
       "matchupPct": 47
     },
     {
-      "teamId": "1614",
-      "team": "CF Montreal",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1614.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "bttsYes",
-      "market": "Beide Teams treffen",
-      "length": 5,
-      "venue": "all",
-      "strong": true,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 40,
-        "label": "Eigen 40% + Gegner 73% → 53%"
-      },
-      "ratePct": 40,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 10,
-      "next": {
-        "oppId": "1599",
-        "oppName": "Philadelphia Union",
-        "atHome": false,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T23:30:00+00:00",
-        "oppRatePct": 73
-      },
-      "oppSupportPct": 73,
-      "matchupPct": 53
-    },
-    {
       "teamId": "20787",
       "team": "St. Louis City",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/20787.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -3272,7 +3272,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 64,
-        "label": "Eigen 64% + Gegner 60% → 62%"
+        "label": "Eigen 64% + Gegner 67% → 65%"
       },
       "ratePct": 64,
       "seq": [
@@ -3294,10 +3294,10 @@
         "atHome": true,
         "date": "2026-09-05",
         "kickoff": "2026-09-05T23:30:00+00:00",
-        "oppRatePct": 60
+        "oppRatePct": 67
       },
-      "oppSupportPct": 60,
-      "matchupPct": 62
+      "oppSupportPct": 67,
+      "matchupPct": 65
     },
     {
       "teamId": "1599",
@@ -3313,7 +3313,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 73,
-        "label": "Eigen 73% + Gegner 80% → 76%"
+        "label": "Eigen 73% + Gegner 87% → 79%"
       },
       "ratePct": 73,
       "seq": [
@@ -3335,10 +3335,51 @@
         "atHome": true,
         "date": "2026-09-05",
         "kickoff": "2026-09-05T23:30:00+00:00",
-        "oppRatePct": 80
+        "oppRatePct": 87
       },
-      "oppSupportPct": 80,
-      "matchupPct": 76
+      "oppSupportPct": 87,
+      "matchupPct": 79
+    },
+    {
+      "teamId": "1599",
+      "team": "Philadelphia Union",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1599.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "unbeaten",
+      "market": "Ungeschlagen",
+      "length": 4,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 55,
+        "label": "Eigen 55% + Gegner 73% → 62%"
+      },
+      "ratePct": 55,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 11,
+      "next": {
+        "oppId": "1614",
+        "oppName": "CF Montreal",
+        "atHome": true,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T23:30:00+00:00",
+        "oppRatePct": 73
+      },
+      "oppSupportPct": 73,
+      "matchupPct": 62
     },
     {
       "teamId": "1602",
@@ -3576,10 +3617,11 @@
       "matchupPct": 55,
       "signalInfo": {
         "state": "confirm",
-        "count": 4,
-        "conviction": 4,
+        "count": 6,
+        "conviction": 5,
         "names": [
           "lead_lag_bias",
+          "public_static_bias",
           "injury",
           "h2h_pattern",
           "xg_strength",
@@ -3710,15 +3752,15 @@
       "matchupPct": 47,
       "signalInfo": {
         "state": "confirm",
-        "count": 7,
+        "count": 8,
         "conviction": 4,
         "names": [
+          "injury",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
           "chance_creation",
-          "topscorer_momentum",
-          "streak_momentum"
+          "topscorer_momentum"
         ],
         "market": "Über 2.5 Tore"
       }
@@ -4162,47 +4204,6 @@
       "matchupPct": 63
     },
     {
-      "teamId": "1599",
-      "team": "Philadelphia Union",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1599.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "unbeaten",
-      "market": "Ungeschlagen",
-      "length": 4,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 55,
-        "label": "Eigen 55% + Gegner 67% → 60%"
-      },
-      "ratePct": 55,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 11,
-      "next": {
-        "oppId": "1614",
-        "oppName": "CF Montreal",
-        "atHome": true,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T23:30:00+00:00",
-        "oppRatePct": 67
-      },
-      "oppSupportPct": 67,
-      "matchupPct": 60
-    },
-    {
       "teamId": "1608",
       "team": "Atlanta United FC",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1608.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -4568,47 +4569,6 @@
       },
       "oppSupportPct": 80,
       "matchupPct": 56
-    },
-    {
-      "teamId": "1603",
-      "team": "Vancouver Whitecaps",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1603.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "bttsNo",
-      "market": "Beide treffen — Nein",
-      "length": 4,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 27,
-        "label": "Eigen 27% + Gegner 27% → 27%"
-      },
-      "ratePct": 27,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 11,
-      "next": {
-        "oppId": "20787",
-        "oppName": "St. Louis City",
-        "atHome": true,
-        "date": "2026-09-06",
-        "kickoff": "2026-09-06T02:30:00+00:00",
-        "oppRatePct": 73
-      },
-      "oppSupportPct": 27,
-      "matchupPct": 27
     },
     {
       "teamId": "1616",
@@ -4987,7 +4947,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 73,
-        "label": "Eigen 73% + Gegner 60% → 68%"
+        "label": "Eigen 73% + Gegner 67% → 71%"
       },
       "ratePct": 73,
       "seq": [
@@ -5008,10 +4968,10 @@
         "atHome": true,
         "date": "2026-09-05",
         "kickoff": "2026-09-05T23:30:00+00:00",
-        "oppRatePct": 60
+        "oppRatePct": 67
       },
-      "oppSupportPct": 60,
-      "matchupPct": 68
+      "oppSupportPct": 67,
+      "matchupPct": 71
     },
     {
       "teamId": "1599",
@@ -5027,7 +4987,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 80,
-        "label": "Eigen 80% + Gegner 80% → 80%"
+        "label": "Eigen 80% + Gegner 87% → 83%"
       },
       "ratePct": 80,
       "seq": [
@@ -5048,10 +5008,10 @@
         "atHome": true,
         "date": "2026-09-05",
         "kickoff": "2026-09-05T23:30:00+00:00",
-        "oppRatePct": 80
+        "oppRatePct": 87
       },
-      "oppSupportPct": 80,
-      "matchupPct": 80
+      "oppSupportPct": 87,
+      "matchupPct": 83
     },
     {
       "teamId": "1599",
@@ -5067,7 +5027,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 67,
-        "label": "Eigen 67% + Gegner 67% → 67%"
+        "label": "Eigen 67% + Gegner 73% → 69%"
       },
       "ratePct": 67,
       "seq": [
@@ -5088,10 +5048,10 @@
         "atHome": true,
         "date": "2026-09-05",
         "kickoff": "2026-09-05T23:30:00+00:00",
-        "oppRatePct": 67
+        "oppRatePct": 73
       },
-      "oppSupportPct": 67,
-      "matchupPct": 67
+      "oppSupportPct": 73,
+      "matchupPct": 69
     },
     {
       "teamId": "1601",
@@ -5172,6 +5132,47 @@
       },
       "oppSupportPct": 87,
       "matchupPct": 87
+    },
+    {
+      "teamId": "1603",
+      "team": "Vancouver Whitecaps",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1603.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 80% → 72%"
+      },
+      "ratePct": 67,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 12,
+      "next": {
+        "oppId": "20787",
+        "oppName": "St. Louis City",
+        "atHome": true,
+        "date": "2026-09-06",
+        "kickoff": "2026-09-06T02:30:00+00:00",
+        "oppRatePct": 80
+      },
+      "oppSupportPct": 80,
+      "matchupPct": 72
     },
     {
       "teamId": "1605",
@@ -5297,18 +5298,57 @@
       "matchupPct": 70,
       "signalInfo": {
         "state": "confirm",
-        "count": 7,
+        "count": 8,
         "conviction": 4,
         "names": [
+          "injury",
           "form_trend",
           "h2h_pattern",
           "xg_strength",
           "chance_creation",
-          "topscorer_momentum",
-          "streak_momentum"
+          "topscorer_momentum"
         ],
         "market": "Über 2.5 Tore"
       }
+    },
+    {
+      "teamId": "1614",
+      "team": "CF Montreal",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1614.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "bttsYes",
+      "market": "Beide Teams treffen",
+      "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 73% → 69%"
+      },
+      "ratePct": 67,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 3,
+      "next": {
+        "oppId": "1599",
+        "oppName": "Philadelphia Union",
+        "atHome": false,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T23:30:00+00:00",
+        "oppRatePct": 73
+      },
+      "oppSupportPct": 73,
+      "matchupPct": 69
     },
     {
       "teamId": "1614",
@@ -5323,10 +5363,10 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 57,
-        "label": "Eigen 57% + Gegner 87% → 69%"
+        "ratePct": 50,
+        "label": "Eigen 50% + Gegner 87% → 65%"
       },
-      "ratePct": 57,
+      "ratePct": 50,
       "seq": [
         true,
         true,
@@ -5339,7 +5379,7 @@
       ],
       "xgBacked": null,
       "basis": "prior",
-      "preN": 7,
+      "preN": 6,
       "next": {
         "oppId": "1599",
         "oppName": "Philadelphia Union",
@@ -5349,7 +5389,46 @@
         "oppRatePct": 87
       },
       "oppSupportPct": 87,
-      "matchupPct": 69
+      "matchupPct": 65
+    },
+    {
+      "teamId": "1614",
+      "team": "CF Montreal",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1614.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "scored",
+      "market": "Team trifft",
+      "length": 3,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 73,
+        "label": "Eigen 73% + Gegner 87% → 79%"
+      },
+      "ratePct": 73,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 3,
+      "next": {
+        "oppId": "1599",
+        "oppName": "Philadelphia Union",
+        "atHome": false,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T23:30:00+00:00",
+        "oppRatePct": 87
+      },
+      "oppSupportPct": 87,
+      "matchupPct": 79
     },
     {
       "teamId": "1614",
@@ -5364,10 +5443,10 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 71,
-        "label": "Eigen 71% + Gegner 60% → 67%"
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 60% → 64%"
       },
-      "ratePct": 71,
+      "ratePct": 67,
       "seq": [
         true,
         true,
@@ -5380,7 +5459,7 @@
       ],
       "xgBacked": null,
       "basis": "prior",
-      "preN": 7,
+      "preN": 6,
       "next": {
         "oppId": "1599",
         "oppName": "Philadelphia Union",
@@ -5390,7 +5469,7 @@
         "oppRatePct": 60
       },
       "oppSupportPct": 60,
-      "matchupPct": 67
+      "matchupPct": 64
     },
     {
       "teamId": "2242",
@@ -5757,14 +5836,55 @@
       "type": "unbeaten",
       "market": "Ungeschlagen",
       "length": 3,
+      "venue": "all",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 58,
+        "label": "Eigen 58% + Gegner 40% → 51%"
+      },
+      "ratePct": 58,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        false,
+        false,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 12,
+      "next": {
+        "oppId": "20787",
+        "oppName": "St. Louis City",
+        "atHome": true,
+        "date": "2026-09-06",
+        "kickoff": "2026-09-06T02:30:00+00:00",
+        "oppRatePct": 40
+      },
+      "oppSupportPct": 40,
+      "matchupPct": 51
+    },
+    {
+      "teamId": "1603",
+      "team": "Vancouver Whitecaps",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1603.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "unbeaten",
+      "market": "Ungeschlagen",
+      "length": 3,
       "venue": "A",
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 67,
-        "label": "Eigen 67% + Gegner 40% → 56%"
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 40% → 52%"
       },
-      "ratePct": 67,
+      "ratePct": 60,
       "seq": [
         true,
         true,
@@ -5777,7 +5897,7 @@
       ],
       "xgBacked": null,
       "basis": "prior",
-      "preN": 6,
+      "preN": 5,
       "next": {
         "oppId": "20787",
         "oppName": "St. Louis City",
@@ -5787,48 +5907,7 @@
         "oppRatePct": 40
       },
       "oppSupportPct": 40,
-      "matchupPct": 56
-    },
-    {
-      "teamId": "1614",
-      "team": "CF Montreal",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1614.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 3,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 50,
-        "label": "Eigen 50% + Gegner 60% → 54%"
-      },
-      "ratePct": 50,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 12,
-      "next": {
-        "oppId": "1599",
-        "oppName": "Philadelphia Union",
-        "atHome": false,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T23:30:00+00:00",
-        "oppRatePct": 60
-      },
-      "oppSupportPct": 60,
-      "matchupPct": 54
+      "matchupPct": 52
     },
     {
       "teamId": "1614",
@@ -5843,10 +5922,10 @@
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 29,
-        "label": "Eigen 29% + Gegner 73% → 47%"
+        "ratePct": 33,
+        "label": "Eigen 33% + Gegner 73% → 49%"
       },
-      "ratePct": 29,
+      "ratePct": 33,
       "seq": [
         true,
         true,
@@ -5859,7 +5938,7 @@
       ],
       "xgBacked": null,
       "basis": "prior",
-      "preN": 7,
+      "preN": 6,
       "next": {
         "oppId": "1599",
         "oppName": "Philadelphia Union",
@@ -5869,7 +5948,7 @@
         "oppRatePct": 73
       },
       "oppSupportPct": 73,
-      "matchupPct": 47
+      "matchupPct": 49
     },
     {
       "teamId": "20787",
@@ -6325,10 +6404,10 @@
       "strong": false,
       "continuation": {
         "state": "wackelt",
-        "ratePct": 17,
-        "label": "Eigen 17% + Gegner 27% → 21%"
+        "ratePct": 20,
+        "label": "Eigen 20% + Gegner 27% → 23%"
       },
-      "ratePct": 17,
+      "ratePct": 20,
       "seq": [
         true,
         true,
@@ -6341,7 +6420,7 @@
       ],
       "xgBacked": null,
       "basis": "prior",
-      "preN": 6,
+      "preN": 5,
       "next": {
         "oppId": "20787",
         "oppName": "St. Louis City",
@@ -6351,7 +6430,7 @@
         "oppRatePct": 73
       },
       "oppSupportPct": 27,
-      "matchupPct": 21
+      "matchupPct": 23
     },
     {
       "teamId": "1603",
@@ -6382,7 +6461,7 @@
       ],
       "xgBacked": null,
       "basis": "prior",
-      "preN": 6,
+      "preN": 5,
       "next": {
         "oppId": "20787",
         "oppName": "St. Louis City",
