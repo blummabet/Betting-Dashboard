@@ -224,6 +224,18 @@ Fix in zwei Teilen. (1) `_alle_holder()` **blättert** jetzt durch `/holders` (`
 
 **🐋 Whale-Rangliste — eigener Fehler, am selben Tag korrigiert:** `_pwClvUg` rechnete die Varianz aus `clvSqSum` gegen das **globale** `n`. `n` zählt alle Auflösungen seit jeher, `clvSqSum` erst die seit dem 02.09. — die Rohvarianz wird negativ, und `Math.max(0, …)` machte daraus „null Streuung", also **maximale Sicherheit**. Gemessen: **72 von 127** Wallets im UG-Modus. Die mit den **wenigsten** Daten wären nach oben gerankt worden — die Umkehrung dessen, wozu eine Untergrenze da ist. Jetzt ein in sich geschlossenes Fenster (`clvFenN`/`clvFenSum`/`clvSqSum`, min. 5), sonst wird geschrumpft; eine nennenswert negative Rohvarianz heißt „Fenster kaputt" und führt zum Schrumpfen, nicht zu einer Scheinsicherheit.
 
+**Der Fix legte einen zweiten Fehler frei (03.09.2026, Lucas: „ein poly scan von vorhin ging schief"):** der Poly-Global-Scan um 05:09 UTC committete lokal und kam dann **fünfmal** nicht durch —
+
+```
+error: The following untracked working tree files would be overwritten by merge:
+        wm_poly_slugs.json
+Aborting → Merge with strategy ort failed → push rejected (non-fast-forward)
+```
+
+`--autostash` legt nur **getrackte** Änderungen weg. Eine **untrackte** Datei, die der eingehende Commit NEU mitbringt, blockiert den Merge — git überschreibt nichts, was es nicht kennt. Und warum ausgerechnet jetzt: `wm_poly_slugs.json` schreibt `fetch_wm_poly_prices.py` seit jeher, committet wurde sie **nie**, weil die Registry-Staging-Zeile die zerschredderte Kommando-Substitution war. Seit deren Reparatur landet sie erstmals auf origin (`3618d5daf`, 03.09. 07:09) — und auf jedem selbst-gehosteten Runner, der sie schon einmal erzeugt hatte, liegt sie untracked im Weg. **Ein Fix hat einen zweiten Fehler freigelegt, der die ganze Zeit da war.** Blast-Radius geprüft: von 54 Registry-Dateien war genau diese eine betroffen, `wm_poly_resting_orders.json` ist die letzte verbleibende Kandidatin.
+
+`scripts/ci_pull.sh` ersetzt in **allen 43** Pull-Stellen den rohen `git pull`. Statt die Fehlermeldung zu parsen wird die Kollision **vorher** berechnet: welche Dateien bringt der eingehende Stand neu mit (`git diff --diff-filter=A HEAD FETCH_HEAD` — gegen FETCH_HEAD, weil `origin/main` auf einem frischen Checkout nicht zwingend existiert), und welche davon liegen lokal untracked herum? Genau die wandern nach `.ci_kollisionen/` (gitignored) — **verschoben, nicht gelöscht**: sie waren nicht Teil unseres Commits, origins Fassung gewinnt, der nächste Lauf erzeugt sie ohnehin neu. Zwei Workflows rebasen bewusst statt zu mergen (`pinnacle-poly-scan`, `liga-backtest`) — dafür nimmt das Skript einen zweiten Parameter, die Merge-Strategie bleibt unangetastet. Tests (`test_ci_pull.py`, 10) bauen zwei echte Klone eines Bare-Repos und prüfen beide Hälften: dass der alte Pull an der Kollision **scheitert** (ohne diesen Beweis sagt der Rest nichts), dass das Skript sie auflöst — und dass es **nichts anfasst**, was ihm nicht gehört: untrackte Dateien ohne Kollision bleiben liegen, getrackte lokale Änderungen gewinnen weiter per `-X ours`. Dazu ein Wächter, dass kein Workflow wieder direkt `git pull` ruft.
+
 **Archiv-Wachstum + 83 stille `git add`-Fehler (02.09.2026, Lucas: „Haben diese Tik Tok … auch da ein Speicher Problem / Und die Event Seiten, kann man die vergangenen … löschen?"):**
 
 - 🔴 **TikTok-Karten: ja, und ohne jede Bremse.** 145 MB im Arbeitsbaum, alles in git, **nirgends eine Aufräum-Logik**, Zuwachs ~2,2 MB/Tag. `daily-tiktok` (83 MB) war seit dem **20.07. tot** — sechs Wochen keine neue Datei. Niemand liest alte Karten: der Dedup in `generate_daily_tiktok` prüft nur Dateien von HEUTE (`OUTPUT_DIR.glob(f"{today_iso}_*.png")`).

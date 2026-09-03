@@ -211,7 +211,7 @@ jobs:
           git commit -m "🟡 Betfair Radar Update $(date -u '+%Y-%m-%d %H:%M UTC') [skip ci]"
           MINE=$(git rev-parse HEAD)   # 16.08.2026 (Lucas): unsere frische Version, um den reinen Snapshot betfair_prices.json nach dem Merge zu erzwingen
           for attempt in 1 2 3 4 5; do
-            git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+            bash scripts/ci_pull.sh main || true   # 03.09.2026: raeumt untrackte Kollisionen weg (s. Skript)
             CONFLICTS=$(git diff --name-only --diff-filter=U)
             if [ -n "$CONFLICTS" ]; then
               echo "$CONFLICTS" | while read f; do git checkout --ours -- "$f"; git add "$f"; done

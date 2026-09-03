@@ -70,7 +70,7 @@ jobs:
           git commit -m "📊 MLS Track-Record-State $(date -u +'%d.%m.%Y %H:%M') UTC [skip ci]"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           for attempt in 1 2 3; do
-            git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+            bash scripts/ci_pull.sh main || true   # 03.09.2026: raeumt untrackte Kollisionen weg (s. Skript)
             if git push 2>&1; then echo "✅ State-Commit (Versuch $attempt)"; break; fi
             sleep $((attempt * 3))
           done

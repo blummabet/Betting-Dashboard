@@ -268,7 +268,7 @@ jobs:
           git diff --staged --quiet && exit 0
           git commit -m "liga: Digest-Zustand (Digest) [skip ci]" || exit 0
           for attempt in 1 2 3; do
-            git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+            bash scripts/ci_pull.sh main || true   # 03.09.2026: raeumt untrackte Kollisionen weg (s. Skript)
             CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null)
             if [ -n "$CONFLICTS" ]; then
               echo "$CONFLICTS" | while read cf; do git checkout --ours -- "$cf"; git add "$cf"; done
@@ -326,7 +326,7 @@ jobs:
           git diff --staged --quiet && exit 0
           git commit -m "liga: Digest-Zustand (Recap) [skip ci]" || exit 0
           for attempt in 1 2 3; do
-            git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+            bash scripts/ci_pull.sh main || true   # 03.09.2026: raeumt untrackte Kollisionen weg (s. Skript)
             CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null)
             if [ -n "$CONFLICTS" ]; then
               echo "$CONFLICTS" | while read cf; do git checkout --ours -- "$cf"; git add "$cf"; done
@@ -472,7 +472,7 @@ jobs:
           # -X ours loest die meisten Konflikte automatisch zugunsten der frisch generierten Runner-Daten;
           # verbleibende behalten wir per --ours und committen sie. Robust gegen Parallel-Bot-Push-Races.
           for attempt in 1 2 3 4 5; do
-            git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+            bash scripts/ci_pull.sh main || true   # 03.09.2026: raeumt untrackte Kollisionen weg (s. Skript)
             CONFLICTS=$(git diff --name-only --diff-filter=U)
             if [ -n "$CONFLICTS" ]; then
               echo "$CONFLICTS" | while read f; do git checkout --ours -- "$f"; git add "$f"; done

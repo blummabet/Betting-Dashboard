@@ -480,7 +480,7 @@ jobs:
             # Bei Push-Fail: erneut pullen + push (max 5 Versuche).
             PUSHED=0
             for attempt in 1 2 3 4 5; do
-              git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+              bash scripts/ci_pull.sh main || true   # 03.09.2026: raeumt untrackte Kollisionen weg (s. Skript)
               # Verbleibende Konfliktmarker (ours) auflösen
               CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null)
               if [ -n "$CONFLICTS" ]; then

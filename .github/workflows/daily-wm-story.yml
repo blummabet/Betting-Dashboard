@@ -79,7 +79,7 @@ jobs:
             git commit -m "🎬 WM Live-Story ${TIMESTAMP} UTC [skip ci]"
             git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
             for attempt in 1 2 3; do
-              git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+              bash scripts/ci_pull.sh main || true   # 03.09.2026: raeumt untrackte Kollisionen weg (s. Skript)
               if git push 2>&1; then
                 echo "✅ Push erfolgreich (Versuch $attempt)"
                 break

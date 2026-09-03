@@ -52,7 +52,7 @@ jobs:
           # auf main → origin bewegt sich zwischen pull --rebase und push → "fetch first". Darum in
           # einer Schleife rebasen+pushen bis es klappt (max 6 Versuche, wachsender Backoff).
           for i in 1 2 3 4 5 6; do
-            git pull --rebase --autostash origin main || true
+            bash scripts/ci_pull.sh main rebase || true   # 03.09.2026: raeumt untrackte Kollisionen weg
             if git push; then echo "push ok (Versuch $i)"; break; fi
             echo "push abgewiesen (Versuch $i) — neu rebasen …"; sleep $((i * 3))
           done

@@ -47,7 +47,7 @@ jobs:
           git diff --staged --quiet || git commit -m "liga-backtest: Report + Prior + xG-Cache [skip ci]"
           git remote set-url origin "https://x-access-token:${GITHUB_TOKEN}@github.com/${GITHUB_REPOSITORY}.git"
           # Remote kann sich zwischenzeitlich bewegt haben (paralleler Workflow) → rebasen, dann push.
-          git pull --rebase origin main || true
+          bash scripts/ci_pull.sh main rebase || true   # 03.09.2026: raeumt untrackte Kollisionen weg
           git push
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

@@ -76,7 +76,7 @@ jobs:
 
           run_once () {
             echo "──── Live-Scan · $(date -u +'%H:%M:%S') UTC ────"
-            git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+            bash scripts/ci_pull.sh main || true   # 03.09.2026: raeumt untrackte Kollisionen weg (s. Skript)
             "${POLY_PYTHON}" poly_money_broad.py --live-only || echo "  ⚠️ live-only Fehler (Loop laeuft weiter)"
             "${POLY_PYTHON}" poly_live_watch.py           || echo "  ⚠️ live-watch Fehler (Loop laeuft weiter)"
             "${POLY_PYTHON}" poly_live_signal_track.py    || echo "  ⚠️ live-signal-track Fehler (Loop laeuft weiter)"
@@ -89,7 +89,7 @@ jobs:
             fi
             git commit -m "⚡ Poly Live-Scan $(date -u +'%d.%m.%Y %H:%M') UTC" || return 0
             for attempt in 1 2 3 4 5; do
-              git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+              bash scripts/ci_pull.sh main || true   # 03.09.2026: raeumt untrackte Kollisionen weg (s. Skript)
               CONFLICTS=$(git diff --name-only --diff-filter=U 2>/dev/null)
               if [ -n "$CONFLICTS" ]; then
                 echo "$CONFLICTS" | while read cf; do git checkout --ours -- "$cf"; git add "$cf"; done
@@ -124,6 +124,6 @@ jobs:
           git add health/poly-live-scan.json 2>/dev/null || true
           git diff --staged --quiet || {
             git commit -m "🩺 Live-Scan-Gesundheit $(date -u +'%d.%m.%Y %H:%M') UTC [skip ci]" || true
-            git pull origin main --no-rebase -X ours --autostash 2>&1 || true
+            bash scripts/ci_pull.sh main || true   # 03.09.2026: raeumt untrackte Kollisionen weg (s. Skript)
             git push 2>&1 || echo "  Push der Gesundheitsdatei fehlgeschlagen — nicht kritisch"
           }
