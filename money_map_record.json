@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-09-03T19:31:54.077858+00:00",
+"generatedAt": "2026-09-03T20:01:56.178542+00:00",
 "byVerdict": {
 "konsens": {
-"n": 726,
-"wins": 596,
-"hitRate": 0.8209,
+"n": 728,
+"wins": 598,
+"hitRate": 0.8214,
 "polyN": 680,
 "polyWins": 532,
 "polyHitRate": 0.7824,
-"pinnN": 63,
-"pinnHitRate": 0.8095,
-"nRoi": 54,
-"roi": 0.3928,
-"roiLb": 0.2326,
-"nClv": 54,
-"clv": 17.61,
-"clvLb": 11.3717
+"pinnN": 64,
+"pinnHitRate": 0.8125,
+"nRoi": 56,
+"roi": 0.3968,
+"roiLb": 0.2409,
+"nClv": 56,
+"clv": 17.82,
+"clvLb": 11.7232
 },
 "uneinig": {
 "n": 253,
@@ -106,6 +106,11 @@
 "wins": 16,
 "hitRate": 0.7273
 },
+"Saudi Professional League": {
+"n": 21,
+"wins": 16,
+"hitRate": 0.7619
+},
 "Turkish Super League": {
 "n": 21,
 "wins": 13,
@@ -120,11 +125,6 @@
 "n": 20,
 "wins": 17,
 "hitRate": 0.85
-},
-"Saudi Professional League": {
-"n": 20,
-"wins": 15,
-"hitRate": 0.75
 },
 "Brazilian Serie B": {
 "n": 19,
@@ -161,6 +161,11 @@
 "wins": 12,
 "hitRate": 0.7059
 },
+"Swedish Allsvenskan": {
+"n": 17,
+"wins": 12,
+"hitRate": 0.7059
+},
 "English Sky Bet League 1": {
 "n": 16,
 "wins": 12,
@@ -170,11 +175,6 @@
 "n": 16,
 "wins": 12,
 "hitRate": 0.75
-},
-"Swedish Allsvenskan": {
-"n": 16,
-"wins": 11,
-"hitRate": 0.6875
 },
 "German Bundesliga 2": {
 "n": 15,
@@ -575,15 +575,15 @@
 "clvLb": 8.826
 },
 "weak": {
-"n": 378,
-"wins": 197,
-"hitRate": 0.5212,
-"nRoi": 22,
-"roi": 0.0077,
-"roiLb": -0.282,
-"nClv": 22,
-"clv": 8.19,
-"clvLb": -1.4413
+"n": 380,
+"wins": 199,
+"hitRate": 0.5237,
+"nRoi": 24,
+"roi": 0.0492,
+"roiLb": -0.2245,
+"nClv": 24,
+"clv": 9.47,
+"clvLb": 0.2394
 }
 },
 "divergence": {
@@ -595,6 +595,44 @@
 "polyRate": 0.2889
 },
 "recent": [
+{
+"matchId": "36015334",
+"home": "Mjallby",
+"away": "Djurgardens",
+"league": "Swedish Allsvenskan",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Djurgardens",
+"polySide": null,
+"winner": "away",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-09-03T17:00:00Z",
+"settledAt": "2026-09-03T20:01:55.962530+00:00"
+},
+{
+"matchId": "36020509",
+"home": "Al Draih",
+"away": "Al-Quadisiya (KSA)",
+"league": "Saudi Professional League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Al-Quadisiya (KSA)",
+"polySide": null,
+"winner": "away",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-09-03T18:00:00Z",
+"settledAt": "2026-09-03T20:01:55.962530+00:00"
+},
 {
 "matchId": "35995576",
 "home": "NEOM Sports Club",
@@ -1316,56 +1354,18 @@
 ],
 "kickoff": "2026-09-02T13:00:00Z",
 "settledAt": "2026-09-02T14:59:49.357149+00:00"
-},
-{
-"matchId": "35997693",
-"home": "Cerezo Osaka",
-"away": "Kashiwa",
-"league": "Japanese J League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Cerezo Osaka",
-"polySide": "away",
-"winner": "home",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-2,
-0
-],
-"kickoff": "2026-09-02T10:00:00Z",
-"settledAt": "2026-09-02T13:13:27.345655+00:00"
-},
-{
-"matchId": "35997900",
-"home": "Yokohama FM",
-"away": "Kyoto",
-"league": "Japanese J League",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Yokohama FM",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-09-02T10:00:00Z",
-"settledAt": "2026-09-02T13:13:27.345655+00:00"
 }
 ],
 "global": {
-"n": 988,
-"wins": 684,
-"hitRate": 0.6923,
-"nRoi": 75,
-"roi": 0.2636,
-"roiLb": 0.1062,
-"nClv": 75,
-"clv": 13.71,
-"clvLb": 7.8999
+"n": 990,
+"wins": 686,
+"hitRate": 0.6929,
+"nRoi": 77,
+"roi": 0.2699,
+"roiLb": 0.1156,
+"nClv": 77,
+"clv": 13.97,
+"clvLb": 8.2545
 },
-"pending": 25
+"pending": 23
 }
