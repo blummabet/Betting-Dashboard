@@ -40,7 +40,7 @@
   function _srKat(w) {
     if (w.kat) return w.kat;
     var x = ' ' + String((w.sport || '') + ' ' + (w.liga || '')).toLowerCase() + ' ';
-    if (/ nba | mlb | nfl | nhl | wnba | ncaa |basketball|baseball|ice-?hockey/.test(x)) return 'US-Sport';
+    if (/\b(nba|mlb|nfl|nhl|wnba|ncaa)\b|basketball|baseball|ice-?hockey|american[- ]?football/.test(x)) return 'US-Sport';
     if (/tennis| wta | atp /.test(x)) return 'Tennis';
     if (/esport|cs2|csgo| lol |dota|valorant|counter-strike|league-of-legends|fifa/.test(x)) return 'E-Sport';
     if (/soccer|liga|ligue|serie|premier|bundesliga|eredivisie| mls | epl | ucl | uel /.test(x)) return 'Fußball';
@@ -122,7 +122,24 @@
 '.sr-ko{color:#8fc0ff;font-weight:700}.sr-live{color:#ff7a70;font-weight:700}',
 '.sr-warnz{color:#e3b341;font-weight:700}',
 '.sr-btn{background:none;border:0;color:#5c6577;font:inherit;font-size:10.5px;cursor:pointer;padding:4px 0 0;text-align:left}',
-'.sr-btn:hover{color:#9aa4b1}'
+'.sr-btn:hover{color:#9aa4b1}',
+'.sr-chart{background:#131922;border:1px solid #242c38;border-radius:12px;padding:11px 13px 9px;margin:0 0 14px}',
+'.sr-chart-h{display:flex;align-items:baseline;gap:10px;margin-bottom:9px;flex-wrap:wrap}',
+'.sr-chart-t{font-size:11px;font-weight:800;letter-spacing:.03em;text-transform:uppercase;color:#8a95ad}',
+'.sr-chart-s{font-size:10.5px;color:#5c6577;margin-left:auto}',
+'.sr-meter{vertical-align:middle}',
+'.sr-lbs{display:flex;flex-direction:column;gap:5px}',
+'.sr-lb{display:flex;align-items:center;gap:9px;font-size:11.5px;font-variant-numeric:tabular-nums}',
+'.sr-lb-n{width:190px;flex:none;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:#c2ccd8}',
+'.sr-lb-t{flex:1;min-width:60px;height:9px;position:relative;background:#1c232e;border-radius:2px;overflow:hidden}',
+'.sr-lb-t i{position:absolute;left:0;top:0;height:100%;border-radius:0 4px 4px 0}',
+'.sr-lb-p90{background:rgba(103,204,145,.28)}',
+'.sr-lb-med{background:#67cc91}',
+'.sr-lb-v{width:60px;text-align:right;flex:none;color:#67cc91;font-weight:800}',
+'.sr-lb-n2{width:38px;text-align:right;flex:none;color:#5c6577}',
+'.sr-tl{margin:11px 0 0;padding-top:10px;border-top:1px solid #242c38}',
+'.sr-tl-l{display:flex;justify-content:space-between;gap:8px;font-size:9.5px;color:#5c6577;margin-top:3px}',
+'@media(max-width:600px){.sr-lb-n{width:120px}}'
     ].join('\n');
     var s = document.createElement('style'); s.textContent = css; document.head.appendChild(s);
   }
@@ -366,11 +383,173 @@
         '<span>zuletzt ' + _srZeit(g.letzte) + '</span>' + unbek + komb +
       '</div>' +
       '<div class="sr-seiten">' + seiten + '</div>' +
+      (alleZeigen ? _srZeitachse(g) : '') +
       '<div class="sr-bets">' + bets +
         (g.n > 6 ? '<button class="sr-mehr sr-btn" onclick="_srAufklappen(\'' +
           _srEsc(g.key).replace(/'/g, '') + '\')">' +
           (alleZeigen ? '▴ weniger' : '▾ + ' + (g.n - 6) + ' weitere') + '</button>' : '') +
       '</div></div>';
+  }
+
+  // ══ GRAFIK ═════════════════════════════════════════════════════════════════
+  // 03.09.2026 (Lucas: „das Terminal würd ich gern noch so pimpen, dass es grafisch
+  // vielleicht mit Graphen optisch einfach cooler aussieht").
+  //
+  // Vier Bilder, jedes mit genau einer Aufgabe — und jedes mit EINER Serie, also einer
+  // Farbe. Keine bunte Palette: wo nur eine Größe dargestellt wird, ist ein zweiter Farbton
+  // kein Informationsgewinn, sondern verbrannter Kanal.
+  //
+  //   Tagesverlauf   Geld je Stunde          → Säulen, eine Farbe (Verlauf über Zeit)
+  //   Norm-Streifen  ein Einsatz vs. Liga    → Meter mit Median-Marke (ein Wert an einer Grenze)
+  //   Liga-Balken    Median je Liga          → liegende Balken, eine Farbe (Größenvergleich)
+  //   Zeitachse      wann kam das Geld       → Punkte auf einer Zeitachse, Größe = Einsatz
+  //
+  // Maße nach denselben Regeln wie im Rest: Balken höchstens 24px dick mit 4px runder
+  // Datenkante und eckigem Fuß, 2px Lücke in Flächenfarbe zwischen benachbarten Balken
+  // (die Lücke trennt, nicht ein Rahmen), Gitterlinien haarfein und zurückgenommen,
+  // Punkte mindestens 8px mit 2px Ring in Flächenfarbe. Beschriftet wird sparsam —
+  // eine Zahl an jedem Punkt liest niemand.
+
+  var SR_FLAECHE = '#131922';
+  var SR_HUE = '#67cc91';        // die eine Farbe für Geld
+  var SR_MARK = '#e3b341';       // Referenzlinie (Norm), kein Serienton
+  var SR_GITTER = '#242c38';
+
+  function _srSvgTip(t) { return '<title>' + _srEsc(t) + '</title>'; }
+
+  /** Geld je Stunde über das gewählte Fenster. Verlauf über Zeit, eine Serie. */
+  function _srVerlauf(wetten, fensterH) {
+    if (!wetten.length) return '';
+    var jetzt = Date.now(), stunden = Math.max(6, Math.min(48, fensterH));
+    var eimer = new Array(stunden).fill(0), zahl = new Array(stunden).fill(0);
+    wetten.forEach(function (w) {
+      var t = _srMs(w.ts); if (t == null || w.einsatzUsd == null) return;
+      var alt = Math.floor((jetzt - t) / 3600000);
+      var i = stunden - 1 - alt;
+      if (i >= 0 && i < stunden) { eimer[i] += w.einsatzUsd; zahl[i]++; }
+    });
+    var max = Math.max.apply(null, eimer) || 1;
+    var B = 260, H = 54, luecke = 2;
+    var breite = Math.max(3, Math.min(24, (B - (stunden - 1) * luecke) / stunden));
+    var schritt = breite + luecke;
+    var innenB = stunden * schritt - luecke;
+
+    var saeulen = eimer.map(function (v, i) {
+      var h = v > 0 ? Math.max(2, v / max * H) : 0;
+      var x = i * schritt, y = H - h;
+      var std = new Date(jetzt - (stunden - 1 - i) * 3600000).getHours();
+      var tip = ('0' + std).slice(-2) + ':00 · ' + _srUsd(v) + ' aus ' + zahl[i] +
+                (zahl[i] === 1 ? ' Wette' : ' Wetten');
+      if (!h) return '<rect x="' + x + '" y="' + (H - 2) + '" width="' + breite + '" height="2" ' +
+        'rx="1" fill="' + SR_GITTER + '">' + _srSvgTip(tip) + '</rect>';
+      // 4px runde Datenkante oben, eckiger Fuß auf der Grundlinie: zwei Formen statt
+      // eines rx auf dem ganzen Rechteck, sonst rundet auch der Fuß.
+      var r = Math.min(4, breite / 2, h);
+      return '<g>' + _srSvgTip(tip) +
+        '<path d="M' + x + ' ' + H + ' L' + x + ' ' + (y + r) +
+        ' Q' + x + ' ' + y + ' ' + (x + r) + ' ' + y +
+        ' L' + (x + breite - r) + ' ' + y +
+        ' Q' + (x + breite) + ' ' + y + ' ' + (x + breite) + ' ' + (y + r) +
+        ' L' + (x + breite) + ' ' + H + ' Z" fill="' + SR_HUE + '"/></g>';
+    }).join('');
+
+    var summe = eimer.reduce(function (a, b) { return a + b; }, 0);
+    return '<div class="sr-chart">' +
+      '<div class="sr-chart-h"><span class="sr-chart-t">Geld je Stunde</span>' +
+      '<span class="sr-chart-s">' + _srUsd(summe) + ' in ' + stunden + ' h · Spitze ' +
+      _srUsd(max) + '</span></div>' +
+      '<svg viewBox="0 0 ' + innenB + ' ' + (H + 1) + '" width="100%" height="' + (H + 1) + '" ' +
+      'preserveAspectRatio="none" role="img" aria-label="Eingesetztes Geld je Stunde">' +
+      '<line x1="0" y1="' + (H + 0.5) + '" x2="' + innenB + '" y2="' + (H + 0.5) + '" ' +
+      'stroke="' + SR_GITTER + '" stroke-width="1"/>' + saeulen + '</svg></div>';
+  }
+
+  /** Ein einzelner Einsatz gegen die Verteilung seiner Liga. Ein Wert an einer Grenze
+      → Meter, nicht Diagramm. Die Skala ist logarithmisch, weil Einsätze über
+      Größenordnungen streuen; das steht auch dran. */
+  function _srNormMeter(usd, norm) {
+    if (!norm || norm.basis !== 'gelernt' || !norm.median) return '';
+    var ober = Math.max(usd, norm.max || norm.p90 || norm.median * 4, norm.median * 4);
+    var lg = function (v) { return Math.log10(Math.max(1, v)); };
+    var pos = function (v) { return Math.max(0, Math.min(1, (lg(v) - lg(norm.median / 4)) /
+                                                            (lg(ober) - lg(norm.median / 4)))); };
+    var B = 100, H = 8;
+    var xm = pos(norm.median) * B, xp = pos(norm.p90 || norm.median) * B, xw = pos(usd) * B;
+    return '<svg class="sr-meter" viewBox="0 0 ' + B + ' ' + (H + 6) + '" width="112" height="' +
+      (H + 6) + '" role="img" aria-label="Einsatz gegen die Norm dieser Liga">' +
+      _srSvgTip('Median ' + _srUsd(norm.median) + ' · 90%-Punkt ' + _srUsd(norm.p90) +
+                ' · diese Wette ' + _srUsd(usd) + ' (n' + norm.n + ', log-Skala)') +
+      '<rect x="0" y="' + (H / 2) + '" width="' + B + '" height="3" rx="1.5" fill="' + SR_GITTER + '"/>' +
+      '<rect x="0" y="' + (H / 2) + '" width="' + xw + '" height="3" rx="1.5" fill="' + SR_HUE + '"/>' +
+      '<line x1="' + xm + '" y1="1" x2="' + xm + '" y2="' + (H + 2) + '" stroke="' + SR_MARK +
+      '" stroke-width="1.5"/>' +
+      '<line x1="' + xp + '" y1="3" x2="' + xp + '" y2="' + H + '" stroke="#6b7480" stroke-width="1"/>' +
+      '<circle cx="' + xw + '" cy="' + (H / 2 + 1.5) + '" r="4" fill="' + SR_HUE +
+      '" stroke="' + SR_FLAECHE + '" stroke-width="2"/></svg>';
+  }
+
+  /** Median je Liga als liegende Balken. Größenvergleich, eine Serie, eine Farbe —
+      ein Farbverlauf nach Größe würde die Balkenlänge doppelt kodieren. */
+  function _srLigaBalken(ligen) {
+    var rows = Object.keys(ligen)
+      .filter(function (k) { return ligen[k].basis === 'gelernt'; })
+      .sort(function (a, b) { return ligen[b].median - ligen[a].median; })
+      .slice(0, 14);
+    if (!rows.length) return '';
+    var max = Math.max.apply(null, rows.map(function (k) { return ligen[k].max || ligen[k].p90; })) || 1;
+    var zeilen = rows.map(function (k) {
+      var d = ligen[k];
+      var wMed = Math.max(2, d.median / max * 100), wP90 = Math.max(wMed, (d.p90 || d.median) / max * 100);
+      return '<div class="sr-lb">' +
+        '<span class="sr-lb-n" title="' + _srEsc(k) + '">' + _srEsc(k) + '</span>' +
+        '<span class="sr-lb-t" title="Median ' + _srUsd(d.median) + ' · 90%-Punkt ' +
+          _srUsd(d.p90) + ' · größter ' + _srUsd(d.max) + ' (n' + d.n + ')">' +
+          '<i class="sr-lb-p90" style="width:' + wP90 + '%"></i>' +
+          '<i class="sr-lb-med" style="width:' + wMed + '%"></i></span>' +
+        '<span class="sr-lb-v">' + _srUsd(d.median) + '</span>' +
+        '<span class="sr-lb-n2">n' + d.n + '</span></div>';
+    }).join('');
+    return '<div class="sr-chart"><div class="sr-chart-h">' +
+      '<span class="sr-chart-t">Median-Einsatz je Liga</span>' +
+      '<span class="sr-chart-s">heller Balken = 90 %-Punkt</span></div>' +
+      '<div class="sr-lbs">' + zeilen + '</div></div>';
+  }
+
+  /** Wann kam das Geld — Punkte auf einer Zeitachse, Fläche ~ Einsatz.
+      Ein Schwall zehn Minuten vor Anpfiff sieht anders aus als ein Rinnsal. */
+  function _srZeitachse(g) {
+    var mit = g.wetten.filter(function (w) { return _srMs(w.ts) != null; });
+    if (mit.length < 2) return '';
+    var ts = mit.map(function (w) { return _srMs(w.ts); });
+    var von = Math.min.apply(null, ts), bis = Math.max.apply(null, ts);
+    if (bis - von < 60000) return '';
+    var ko = _srMs(g.anpfiff);
+    var B = 100, H = 26;
+    var x = function (t) { return (t - von) / (bis - von) * B; };
+    var maxE = Math.max.apply(null, mit.map(function (w) { return w.einsatzUsd || 0; })) || 1;
+    var punkte = mit.map(function (w) {
+      var e = w.einsatzUsd || 0;
+      // Fläche proportional zum Einsatz, Radius also über die Wurzel — sonst wächst die
+      // wahrgenommene Größe quadratisch und ein doppelter Einsatz sieht vierfach aus.
+      var r = 2.5 + 3.5 * Math.sqrt(e / maxE);
+      return '<circle cx="' + x(_srMs(w.ts)).toFixed(2) + '" cy="' + (H / 2) + '" r="' + r.toFixed(2) +
+        '" fill="' + (w.kombi ? '#6b7480' : SR_HUE) + '" fill-opacity="' + (w.kombi ? .5 : .85) +
+        '" stroke="' + SR_FLAECHE + '" stroke-width="1.5">' +
+        _srSvgTip(_srZeit(w.ts) + ' · ' + (w.einsatzUsd == null ? '? ' + (w.waehrung || '') : _srUsd(e)) +
+                  ' · ' + (w.auswahl || w.markt || '')) + '</circle>';
+    }).join('');
+    var kolinie = (ko != null && ko >= von && ko <= bis)
+      ? '<line x1="' + x(ko).toFixed(2) + '" y1="2" x2="' + x(ko).toFixed(2) + '" y2="' + (H - 2) +
+        '" stroke="' + SR_MARK + '" stroke-width="1" stroke-opacity=".8">' +
+        _srSvgTip('Anpfiff') + '</line>' : '';
+    return '<div class="sr-tl"><svg viewBox="0 0 ' + B + ' ' + H + '" width="100%" height="' + H +
+      '" preserveAspectRatio="none" role="img" aria-label="Zeitpunkte der Wetten">' +
+      '<line x1="0" y1="' + (H / 2) + '" x2="' + B + '" y2="' + (H / 2) + '" stroke="' + SR_GITTER +
+      '" stroke-width="1"/>' + kolinie + punkte + '</svg>' +
+      '<div class="sr-tl-l"><span>' + _srZeit(new Date(von).toISOString()) + '</span>' +
+      '<span>' + (ko != null && ko >= von && ko <= bis ? 'Anpfiff markiert · ' : '') +
+      'Punktfläche = Einsatz</span>' +
+      '<span>' + _srZeit(new Date(bis).toISOString()) + '</span></div></div>';
   }
 
   // ══ TERMINAL ═══════════════════════════════════════════════════════════════
@@ -432,7 +611,8 @@
     }
     return '<div class="sr-tw"><table class="sr-t"><thead><tr>' +
       '<th>Zeit</th><th>Liga</th><th>Spiel</th><th>Auswahl</th>' +
-      '<th class="sr-r">Einsatz</th><th class="sr-r">Quote</th><th>Warum auffällig</th><th>Ausgang</th>' +
+      '<th class="sr-r">Einsatz</th><th>gegen die Liga</th><th class="sr-r">Quote</th>' +
+      '<th>Warum auffällig</th><th>Ausgang</th>' +
       '</tr></thead><tbody>' +
       rows.map(function (r) {
         var aus = r.ausgang === 'won' ? '<span class="sr-w">Treffer</span>'
@@ -443,6 +623,8 @@
           '<td>' + _srEsc(r.event || '—') + '</td>' +
           '<td>' + _srEsc(((r.markt ? r.markt + ': ' : '') + (r.auswahl || '—'))) + '</td>' +
           '<td class="sr-r sr-geldz">' + _srUsd(r.einsatzUsd) + '</td>' +
+          '<td>' + _srNormMeter(r.einsatzUsd,
+            (SR_AUS && SR_AUS.ligaNorm && SR_AUS.ligaNorm[r.liga]) || null) + '</td>' +
           '<td class="sr-r">' + (r.quote != null ? Number(r.quote).toFixed(2) : '—') + '</td>' +
           '<td class="sr-mut">' + _srEsc(r.grund) + '</td>' +
           '<td>' + aus + '</td></tr>';
@@ -536,6 +718,7 @@
       'Einsatz ist, wird aus unseren eigenen Daten gelernt — nicht festgelegt. $9.000 auf ' +
       'La Liga ist Dienstag, $9.000 in einer ruhigen Liga ein Ereignis. Unter 15 Wetten gibt ' +
       'es keine Norm, und dann steht dort auch keine Zahl.</div>' +
+      _srLigaBalken(n) +
       '<div class="sr-tw"><table class="sr-t"><thead><tr><th>Liga</th><th class="sr-r">Wetten</th>' +
       '<th class="sr-r">Median</th><th class="sr-r">90 %-Punkt</th><th class="sr-r">größter</th>' +
       '</tr></thead><tbody>' +
@@ -655,7 +838,7 @@
       : '<div class="sr-empty">Kein Spiel über diesen Schwellen im Fenster.<br>' +
         'Regler runter, oder der Feed hat gerade nichts Großes.</div>';
 
-    var spiele = _srCtrl() + treffer + koerper;
+    var spiele = _srCtrl() + _srVerlauf(roh, SR_FENSTER_H) + treffer + koerper;
     var inhalt = SR_TAB === 'spiele' ? spiele
                : SR_TAB === 'auffaellig' ? _srAuffaellig()
                : SR_TAB === 'bilanz' ? _srBilanz()
@@ -689,6 +872,8 @@
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = { _srGruppen: _srGruppen, _srDichte: _srDichte, _srUsd: _srUsd,
                    _srBasis: _srBasis, _srPct: _srPct, _srKat: _srKat,
-                   _srUmkaempft: _srUmkaempft, _srBisAnpfiff: _srBisAnpfiff };
+                   _srUmkaempft: _srUmkaempft, _srBisAnpfiff: _srBisAnpfiff,
+                   _srVerlauf: _srVerlauf, _srNormMeter: _srNormMeter,
+                   _srLigaBalken: _srLigaBalken, _srZeitachse: _srZeitachse };
   }
 })();

@@ -307,6 +307,30 @@ test('US-Sport wird als solcher erkannt — ueber Slug und ueber Liganamen', () 
   assert.equal(API._srKat({ sport: 'american-football', liga: 'NFL' }), 'US-Sport');
   assert.equal(API._srKat({ sport: null, liga: 'NBA Summer League' }), 'US-Sport');
   assert.equal(API._srKat({ sport: null, liga: 'NHL Preseason' }), 'US-Sport');
+  // 03.09.2026: die Liga hiess 'NCAA, Regular' — ein Muster mit Leerzeichen statt
+  // Wortgrenzen lief daran vorbei, und american-football fehlte im Rueckfall ganz.
+  assert.equal(API._srKat({ sport: null, liga: 'NCAA, Regular' }), 'US-Sport');
+  assert.equal(API._srKat({ sport: 'american-football', liga: 'NCAA, Regular' }), 'US-Sport');
+  assert.equal(API._srKat({ sport: null, liga: 'NFL - Preseason' }), 'US-Sport');
+});
+
+test('das Rueckfall-Muster steht in Terminal und Uebersicht gleich', () => {
+  // Zwei Flaechen, dasselbe Urteil — sonst zeigt die eine, was die andere sperrt.
+  // Verglichen wird der Mustertext selbst, nicht ein nachgebautes Regex: ein Test, der die
+  // Regel noch einmal formuliert, prueft nur sich selbst.
+  const uebersicht = readFileSync(new URL('main-dashboard.js', ROOT), 'utf8');
+  const holen = (src) => {
+    const i = src.indexOf("return 'US-Sport';");
+    assert.ok(i > 0, 'US-Sport-Zweig nicht gefunden');
+    const zeile = src.slice(src.lastIndexOf('\n', i), i);
+    const m = zeile.match(/\/(.+)\/\.test/);
+    assert.ok(m, 'kein Muster in der Zeile: ' + zeile.trim());
+    return m[1];
+  };
+  assert.equal(holen(JS), holen(uebersicht),
+    'Terminal und Uebersicht muessen dieselben Sportarten sperren');
+  assert.ok(holen(JS).includes('american'), 'american football muss drin sein');
+  assert.ok(holen(JS).includes('ncaa'), 'ncaa muss drin sein');
 });
 
 test('Fussball und Tennis bleiben unangetastet', () => {

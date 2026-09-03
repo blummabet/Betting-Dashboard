@@ -661,6 +661,50 @@ der Job läuft, statt alle drei Tage zu vergessen.
 
 ---
 
+### 🎨 Stake grafisch — vier Bilder, jedes mit einer Aufgabe (03.09.2026)
+
+Lucas: *„das Terminal würd ich gern noch so pimpen, dass es grafisch vielleicht mit Graphen
+optisch einfach cooler aussieht."* Vier Bilder, und **jedes hat genau eine Serie, also eine
+Farbe** — wo nur eine Größe dargestellt wird, ist ein zweiter Farbton kein Informationsgewinn,
+sondern ein verbrannter Kanal. Ein Farbverlauf nach Balkenlänge wäre die Länge doppelt kodiert.
+
+| Bild | Aufgabe | Form |
+|---|---|---|
+| **Geld je Stunde** (Spiele-Reiter) | Verlauf über Zeit | Säulen, 4px runde Datenkante, eckiger Fuß, 2px Lücke |
+| **Norm-Streifen** (Auffällig-Reiter) | ein Wert an einer Grenze | Meter mit Median-Marke, log-Skala (Einsätze streuen über Größenordnungen — steht im Tooltip) |
+| **Median je Liga** (Norm-Reiter) | Größenvergleich | liegende Balken, heller Teil = 90 %-Punkt |
+| **Zeitachse** (aufgeklappte Karte) | wann kam das Geld | Punkte, **Fläche** ~ Einsatz (Radius über die Wurzel, sonst sieht doppelt wie vierfach aus), Anpfiff markiert |
+
+Beschriftet wird sparsam — eine Zahl an jedem Punkt liest niemand; die Tooltips (`<title>` im
+SVG, also auch für Screenreader) tragen den Rest.
+
+### 🎰 Drei Stake-Kacheln in der Übersicht
+
+**größtes Geld** · **über der Norm** · **noch spielbar**. Die dritte war Lucas' offene Frage,
+und sie ist die wichtigste: die ersten beiden zeigen fast immer Spiele, die schon laufen oder
+durch sind — 77 von 93 Wetten im ersten Ledger waren live gesetzt. Eine Übersicht, in der drei
+Kacheln dasselbe abgelaufene Spiel zeigen, ist hübsch und nutzlos. Nur die dritte beantwortet
+*„und worauf könnte ich jetzt noch schauen?"*.
+
+**Drei Fehler, alle vom Ausprobieren gefunden, keiner vom Nachdenken:**
+
+1. **US-Sport in der Kachel.** „Chicago Cubs – Milwaukee Brewers" stand da, obwohl MLB gesperrt
+   ist: Zeilen von vor dem Kategorie-Stempel haben kein `kat`, und der Filter las
+   `w.kat || ''`. Behoben mit demselben Rückfall wie im Terminal.
+2. **„NCAA, Regular" rutschte durch.** Das Rückfall-Muster suchte `" ncaa "` mit Leerzeichen —
+   das Komma ließ es ins Leere laufen, und `american-football` fehlte ganz. Jetzt Wortgrenzen
+   (`\b`), und `american[- ]?football` fängt auch „American Football League" mit Leerzeichen.
+   Ein Test vergleicht die Muster in Terminal und Übersicht **gegeneinander** statt sie
+   nachzubauen — ein Test, der die Regel noch einmal formuliert, prüft nur sich selbst.
+3. **Erfüllt ist nicht gemessen.** Der Frische-Guard vom Vormittag hat sofort verlangt, dass die
+   neuen Datensätze in `_mdQuellenAlter` stehen — das war richtig und hat gegriffen. Er prüft
+   aber nur, ob eine Quelle in der Liste *steht*, nicht ob `_ageMin` sie *lesen* kann. Die
+   Stake-Dateien stempeln mit `asof`, das der Leser nicht kannte: Liste erfüllt, Alter immer
+   `null`. `asof` ist jetzt drin, und ein zweiter Test prüft, dass jeder benutzte Stempelname
+   auch wirklich ein Alter ergibt.
+
+---
+
 ## 8. Harte Arbeitsregeln
 
 - **Push nur über GitHub Desktop**, nie CLI.
