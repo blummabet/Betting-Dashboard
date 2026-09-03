@@ -14,6 +14,7 @@ Loeschskript, das im Zweifel zuschlaegt, ist gefaehrlicher als ein volles Repo.
 """
 import json
 import os
+import pathlib
 import sys
 import unittest
 from datetime import date
@@ -52,10 +53,43 @@ class KartenTest(_Baum):
         self._karte("daily-tiktok", "2026-06-02_story_hook.png")
         self.assertEqual(A.alte_karten(HEUTE, self.tmp), ["daily-tiktok/2026-06-02_story_hook.png"])
 
-    def test_frische_karten_bleiben(self):
+    def test_der_doppelsende_schutz_liest_wirklich_die_pngs_von_heute(self):
+        """Gegenprobe zur Begruendung oben: aendert jemand den Guard, faellt dieser Test und
+        nicht erst der Channel mit doppelten Posts."""
+        import re
+        quelle = (pathlib.Path(__file__).resolve().parent.parent / "generate_daily_tiktok.py")
+        txt = quelle.read_text(encoding="utf-8")
+        self.assertRegex(txt, r'OUTPUT_DIR\.glob\(f"\{today_iso\}_\*\.png"\)',
+                         "Der Backup-Cron-Guard liest die PNGs von heute nicht mehr — dann darf "
+                         "die Aufraeum-Regel sie auch nicht mehr schonen (oder muss anders greifen).")
+        self.assertIn("_today_done and _existing_pngs", txt)
+
+    def test_die_karten_von_HEUTE_bleiben_immer(self):
+        """🔴 Der Grund ist nicht Vorsicht, sondern Mechanik. generate_daily_tiktok prueft:
+
+            _existing_pngs = list(OUTPUT_DIR.glob(f"{today_iso}_*.png"))
+            if _today_done and _existing_pngs:   -> Backup-Cron skipt
+
+        Primaerer Cron 04:00 UTC, Backup 05:30. Waeren die PNGs von heute schon weg, faende der
+        Backup-Lauf keine, der Doppel-Sende-Schutz griffe NICHT — und der oeffentliche Channel
+        bekaeme dieselben Karten zweimal. Wer KARTEN_TAGE auf -1 dreht, bricht genau das.
+        """
         self._karte("liga_daily-tiktok", "2026-09-02_moneymap_36006990.png")
-        self._karte("liga_daily-tiktok", "2026-08-25_review_1_2.png")   # 8 Tage — im Fenster
+        self._karte("liga_daily-tiktok", "2026-09-02_review_1_2.html")
         self.assertEqual(A.alte_karten(HEUTE, self.tmp), [])
+
+    def test_karten_von_gestern_fliegen_raus(self):
+        """Lucas: „brauch ich ja danach nicht mehr … sind eh auf telegram gepusht"."""
+        self._karte("liga_daily-tiktok", "2026-09-01_moneymap_1.png")
+        self.assertEqual(A.alte_karten(HEUTE, self.tmp), ["liga_daily-tiktok/2026-09-01_moneymap_1.png"])
+
+    def test_karten_mit_zukunftsdatum_bleiben(self):
+        """Eine Karte, die auf ein kommendes Spiel datiert ist, darf nicht vor dem Posten sterben."""
+        self._karte("liga_daily-tiktok", "2026-09-05_preview_9.png")
+        self.assertEqual(A.alte_karten(HEUTE, self.tmp), [])
+
+    def test_die_voreinstellung_ist_alles_ausser_heute(self):
+        self.assertEqual(A.KARTEN_TAGE, 0)
 
     def test_kompaktes_datumsformat_wird_erkannt(self):
         """`track_record_20260901_1427.png` — ohne Bindestriche."""

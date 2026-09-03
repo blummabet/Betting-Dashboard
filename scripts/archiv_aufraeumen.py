@@ -18,7 +18,9 @@ Gemessen am 02.09.2026:
 Was hier geloescht wird, ist deshalb NICHT „alles Alte", sondern nur, was nachweislich
 niemand mehr anfasst:
 
-  TikTok  → Karten aelter als KARTEN_TAGE. Nichts liest sie, der Dedup schaut nur auf heute.
+  TikTok  → alles ausser den Karten von HEUTE. Lucas: „brauch ich ja danach nicht mehr … sind
+             eh auf telegram gepusht und dort gespeichert". Die von heute bleiben, weil der
+             Backup-Cron ihre Existenz als Doppel-Sende-Schutz liest (s. KARTEN_TAGE).
   Matches → eine `matches/data/<slug>.json` NUR, wenn alle drei zutreffen:
               (a) kein `matches/<slug>.html` existiert  → keine Event-Seite braucht sie,
               (b) kein `matches/*index*.json` nennt den Slug → das Dashboard laedt sie nicht,
@@ -45,7 +47,21 @@ from datetime import date, datetime, timezone
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 KARTEN_ORDNER = ("daily-tiktok", "mls_daily-tiktok", "liga_daily-tiktok")
-KARTEN_TAGE = 14      # so viel Rueckschau reicht fuer „was haben wir letzte Woche gepostet"
+# 02.09.2026 (Lucas: „die Tik Tok die wir erstellen brauch ich ja danach nicht mehr / die
+# koennen wir ja loeschen weil sie eh auf telegram gepusht wurden und dort gespeichert sind").
+# 0 heisst: alles, was NICHT von heute ist. Die Karten von HEUTE bleiben absichtlich liegen,
+# und zwar nicht aus Vorsicht, sondern weil sie gebraucht werden:
+#
+#   generate_daily_tiktok.py, Zeile ~1253:
+#       _existing_pngs = list(OUTPUT_DIR.glob(f"{today_iso}_*.png"))
+#       if _today_done and _existing_pngs:  -> Backup-Cron skipt
+#
+# Der primaere Cron laeuft 04:00 UTC, der Backup-Cron 05:30. Waeren die PNGs schon weg,
+# faende der Backup-Lauf keine — der Doppel-Sende-Schutz griffe nicht und der oeffentliche
+# Channel bekaeme dieselben Karten zweimal. Ein zweiter Grund, sie den Tag ueber zu behalten:
+# scheitert der Telegram-Versand, ist die Karte noch da statt schon geloescht.
+# Ab dem naechsten Tag sind sie in Telegram und hier ueberfluessig.
+KARTEN_TAGE = 0       # alles ausser heute
 DATEN_TAGE = 7        # Lucas: „die vergangenen die aelter wie eine Woche sind"
 
 _DATUM = re.compile(r"(20\d\d)-?(\d\d)-?(\d\d)")

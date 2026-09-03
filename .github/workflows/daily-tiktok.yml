@@ -86,12 +86,15 @@ jobs:
           for f in $(python3 state_files_registry.py --bash-list daily_tiktok 2>/dev/null); do
             [ -e "$f" ] && git add "$f"
           done
-          # 02.09.2026 (Lucas: „Haben diese Tik Tok … auch da ein Speicher Problem"): ja —
-          # 145 MB im Arbeitsbaum, alles in git, und nirgends eine Aufraeum-Logik. Zuwachs ~2,2
-          # MB/Tag. Niemand liest alte Karten: der Dedup in generate_daily_tiktok schaut nur auf
-          # Dateien von HEUTE. Die Regel raeumt Karten aelter als 14 Tage und Match-Daten, die
-          # weder eine Event-Seite noch einen Index-Eintrag haben und aelter als 7 Tage sind.
+          # 02.09.2026 (Lucas: „Haben diese Tik Tok … auch da ein Speicher Problem" / „brauch ich
+          # ja danach nicht mehr … sind eh auf telegram gepusht und dort gespeichert"): 145 MB im
+          # Arbeitsbaum, alles in git, nirgends eine Aufraeum-Logik, ~2,2 MB/Tag Zuwachs.
+          # Geraeumt wird deshalb ALLES ausser den Karten von HEUTE — die bleiben, weil der
+          # Backup-Cron um 05:30 ihre Existenz als Doppel-Sende-Schutz liest (sonst posten wir
+          # dieselben Karten zweimal) und weil eine Karte bei fehlgeschlagenem Versand noch da
+          # sein muss. Dazu Match-Daten ohne Event-Seite und ohne Index-Eintrag, aelter als 7 Tage.
           # Die Event-SEITEN selbst bleiben unangetastet — das ist der SEO-Bestand.
+          # Dieser Schritt steht bewusst NACH dem Generieren und Senden.
           # `git add -A` je Ordner, damit auch die LOESCHUNGEN in den Commit kommen.
           python3 scripts/archiv_aufraeumen.py --loeschen || true
           for d in daily-tiktok mls_daily-tiktok liga_daily-tiktok matches/data; do
