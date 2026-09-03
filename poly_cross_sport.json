@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-03T19:54:34.141620+00:00",
+ "generatedAt": "2026-09-03T20:24:37.070295+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -33,5 +33,62 @@
   "tracked": 262,
   "converged": 70
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|chicagowhitesox-houstonastros|chicagowhitesox",
+   "sport": "baseball_mlb",
+   "event": "Chicago White Sox vs Houston Astros",
+   "market": "Moneyline",
+   "outcome": "Chicago White Sox",
+   "polyPP": 21.0,
+   "pinnPP": 6.5,
+   "gapPP": 14.54,
+   "vol": 273155,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -8.28,
+   "firstSeen": "2026-09-02T01:26:37.514171+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagowhitesox-houstonastros|houstonastros",
+   "sport": "baseball_mlb",
+   "event": "Chicago White Sox vs Houston Astros",
+   "market": "Moneyline",
+   "outcome": "Houston Astros",
+   "polyPP": 79.0,
+   "pinnPP": 93.5,
+   "gapPP": -14.54,
+   "vol": 273155,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -8.28,
+   "firstSeen": "2026-09-02T01:26:37.514171+00:00"
+  },
+  {
+   "id": "baseball_mlb|clevelandguardians-torontobluejays|torontobluejays",
+   "sport": "baseball_mlb",
+   "event": "Toronto Blue Jays vs Cleveland Guardians",
+   "market": "Moneyline",
+   "outcome": "Toronto Blue Jays",
+   "polyPP": 78.5,
+   "pinnPP": 90.9,
+   "gapPP": -12.4,
+   "vol": 235815,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -3.33,
+   "firstSeen": "2026-09-02T22:52:45.497014+00:00"
+  },
+  {
+   "id": "baseball_mlb|clevelandguardians-torontobluejays|clevelandguardians",
+   "sport": "baseball_mlb",
+   "event": "Toronto Blue Jays vs Cleveland Guardians",
+   "market": "Moneyline",
+   "outcome": "Cleveland Guardians",
+   "polyPP": 21.5,
+   "pinnPP": 9.1,
+   "gapPP": 12.4,
+   "vol": 235815,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -3.33,
+   "firstSeen": "2026-09-02T22:52:45.497014+00:00"
+  }
+ ]
 }
