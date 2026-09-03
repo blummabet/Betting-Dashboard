@@ -462,10 +462,37 @@ Grundgesamtheit**, und die Auswahl geht systematisch in die falsche Richtung (we
 meist einen Grund). Deshalb: erst gegen den **Pinnacle-Schlusskurs** messen (CLV, aussagekräftig
 ab n≈200, ohne auf Ergebnisse zu warten), dann über ein Vorwärtsbuch reden.
 
-Technisch: Stakes GraphQL-Schema ist undokumentiert und wandert. `stake_highroller_fetch.py`
-**rät keine Feldnamen** — es fragt per Introspection, welches Query-Feld die Highroller liefert,
-baut die Selektion aus dem Schema und zieht die Werte über Feldnamen statt Positionen.
-`--sonde` prüft die Schnittstelle, ohne zu sammeln.
+**Wie das Schema gefunden wird, obwohl Introspection zu ist.** Die Sonde auf dem Mac-Runner
+brachte am 03.09. drei Antworten: `stake.com/_api/graphql` → HTTP 400 *„GraphQL introspection is
+not allowed by Apollo Server"*, `api.stake.com/graphql` → 404, `stake.bet` → Cloudflare-Challenge.
+Der erste Treffer ist die gute Nachricht: der Endpunkt lebt, ist vom Mac aus erreichbar, kein
+Block — nur nachschlagen darf man nicht.
+
+Raten wäre jetzt die naheliegende und die falsche Antwort; ein geratener Feldname, der zufällig
+existiert und das Falsche liefert, ist genau die Klasse stiller Fehler aus Abschnitt 7. Also wird
+weiter gefragt, nur anders: **graphql-js validiert das ganze Dokument, bevor es etwas ausführt,
+und schreibt in die Fehler, was es stattdessen kennt.**
+
+```
+Cannot query field "amont" on type "SportBet". Did you mean "amount"?
+Field "highrollerSportBets" of type "[SportBet!]!" must have a selection of subfields.
+```
+
+Damit ist der Server sein eigenes Verzeichnis, und weil alle Verstöße gemeinsam zurückkommen,
+kostet eine ganze Ebene genau **eine** Anfrage: Kandidaten-Vokabular hinschicken, streichen was
+es nicht gibt, aufklappen was Unterfelder braucht, nächste Runde. Gelernt wird einmal; das
+Ergebnis liegt in `stake_query.json` und gilt, bis es bricht.
+
+Ein Denkfehler dabei ist erst durch einen nachgebauten Apollo-Server im Test aufgefallen: die
+Erkenntnisse wurden zuerst **global nach Feldnamen** angewandt. `amount` gibt es auf `SportBet`
+und nicht auf `User` — „Cannot query field amount on type User" strich also auch das gültige
+`amount` an der Wurzel, Runde für Runde, bis der Baum leer war. Die Fehlermeldung nennt den Typ;
+seither trägt jeder Knoten seinen Typ und es wird **nach Typ** gestrichen. Gegen echte Endpunkte
+hätte man das als „findet nichts" abgehakt.
+
+Grenze: Union-/Interface-Felder brauchen Inline-Fragmente, die der Lernweg nicht baut — solche
+Zweige fallen weg statt halb zu entstehen, und was fehlt, steht in `stake_schema_probe.json`.
+`--sonde` prüft die Schnittstelle und verändert nichts.
 
 **Kein eigener Cron.** Ein 10-Minuten-Takt hätte die repo-weite Schedule-Last von 534 auf 678
 gehoben (Deckel 540, weil GitHub bei 585 anfing zu verschlucken) — selbst stündlich passte nicht

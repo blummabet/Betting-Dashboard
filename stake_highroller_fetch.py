@@ -22,17 +22,26 @@ Stake hat eine „Wetten verbergen"-Einstellung. Wer sie nutzt, taucht hier nich
 Liste ist also nicht „die großen Einsätze", sondern „die großen Einsätze der Konten, die
 sich zeigen". Das ist eine Auswahl, keine Grundgesamtheit.
 
-## Schema-Findung
-Stakes GraphQL-Schema ist nicht dokumentiert und ändert sich. Deshalb rät dieses Skript
-NICHT: es fragt per Introspection, welches Query-Feld die Highroller liefert, baut daraus
-die Selektion und speichert das gefundene Schema. Geht Introspection nicht, fällt es auf
-eine Kandidatenliste zurück. Findet es nichts, schreibt es status="schema_unbekannt" —
-und NICHT eine leere Liste, die wie „heute keine großen Wetten" aussähe.
+## Schema-Findung — geraten wird nicht
+Stakes GraphQL-Schema ist nicht dokumentiert, ändert sich, und Introspection ist zu
+(gemessen am 03.09.2026: HTTP 400 „introspection is not allowed by Apollo Server").
+Ein geratener Feldname, der zufällig existiert und das Falsche liefert, wäre genau die
+Sorte stiller Fehler, die uns hier schon zweimal Geld gekostet hat.
+
+Deshalb wird trotzdem gefragt, nur anders: graphql-js validiert das ganze Dokument, bevor
+es etwas ausführt, und schreibt in die Fehler, was es stattdessen kennt („Did you mean
+\"amount\"?", „of type \"[SportBet!]!\" must have a selection of subfields"). Der Server ist
+damit sein eigenes Verzeichnis, und weil alle Verstöße gemeinsam zurückkommen, kostet eine
+ganze Ebene genau eine Anfrage. Gelernt wird einmal, das Ergebnis liegt in stake_query.json.
+
+Findet es nichts, schreibt es status="schema_unbekannt" — und NICHT eine leere Liste, die
+wie „heute keine großen Wetten" aussähe.
 
 ## Ausgabe
   stake_highroller.json  — aktuelle Sicht fürs Dashboard (Wetten im Fenster, roh)
   stake_bet_ledger.json  — die Sammlung (dedupliziert über Wett-ID, gedeckelt)
   stake_schema_probe.json— was die Sonde über das Schema gelernt hat (nur --sonde)
+  stake_query.json       — die gelernte Abfrage, damit nicht jeder Lauf neu lernt
 
 ## Env
   STAKE_MIN_USD        Mindesteinsatz in USD (Default 1000)
@@ -49,6 +58,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import sys
 import urllib.request
 import urllib.error
@@ -60,6 +70,7 @@ BASE = Path(__file__).resolve().parent
 VIEW_FILE   = BASE / "stake_highroller.json"
 LEDGER_FILE = BASE / "stake_bet_ledger.json"
 PROBE_FILE  = BASE / "stake_schema_probe.json"
+QUERY_FILE  = BASE / "stake_query.json"
 
 ENDPUNKTE = [
     "https://stake.com/_api/graphql",
@@ -204,30 +215,254 @@ def _selektion(url: str, typname: str, tiefe: int, cache: dict, pfad: tuple = ()
     return "{ " + " ".join(teile) + " }"
 
 
-def schema_finden(url: str, tiefe: int = 4):
-    """-> (feldName, queryText, notiz) oder (None, None, grund)"""
-    felder, err = _query_felder(url)
-    if felder is None:
-        return None, None, "Introspection aus (%s)" % (err or "?")
-    f = _waehle_feld(felder)
-    if not f:
-        namen = [x.get("name") for x in felder][:400]
-        return None, None, "kein Highroller-Feld unter %d Query-Feldern" % len(namen)
-    tn = _typ_name(f.get("type") or {})
-    cache: dict = {}
-    sel = _selektion(url, tn, tiefe, cache)
-    if not sel:
-        return None, None, "Rückgabetyp %s ohne lesbare Felder" % tn
-    args = f.get("args") or []
-    hat_limit = any((a.get("name") or "").lower() in ("limit", "first") for a in args)
-    argname = next((a["name"] for a in args
-                    if (a.get("name") or "").lower() in ("limit", "first")), None)
-    kopf = "query HR($limit: Int) { %s%s %s }" % (
-        f["name"],
-        "(%s: $limit)" % argname if hat_limit else "",
-        sel)
-    return f["name"], kopf, "Typ %s, Tiefe %d" % (tn, tiefe)
 
+# ── Schema lernen, wenn Introspection aus ist ────────────────────────────────
+# 03.09.2026 — die Sonde auf dem Mac-Runner hat geliefert:
+#
+#   stake.com/_api/graphql   HTTP 400  "GraphQL introspection is not allowed by Apollo Server"
+#   api.stake.com/graphql    HTTP 404  Cannot POST /graphql
+#   stake.bet/_api/graphql   HTTP 403  Cloudflare-Challenge
+#
+# Der erste Treffer ist die gute Nachricht: der Endpunkt lebt, ist vom Mac aus erreichbar und
+# antwortet als Apollo-Server mit sauberem JSON. Nur nachschlagen dürfen wir nicht.
+#
+# Raten wäre jetzt die naheliegende und die falsche Antwort — ein geratener Feldname, der zufällig
+# existiert, aber das Falsche liefert, wäre genau die Sorte stiller Fehler, die uns hier schon
+# zweimal Geld gekostet hat. Stattdessen wird gefragt, nur anders: graphql-js VALIDIERT das ganze
+# Dokument, bevor es irgendetwas ausführt, und schreibt in die Fehler, was es stattdessen kennt.
+#
+#   Cannot query field "amont" on type "SportBet". Did you mean "amount"?
+#   Field "highrollerSportBets" of type "[SportBet!]!" must have a selection of subfields.
+#   Field "user" argument "id" of type "String!" is required, but it was not provided.
+#
+# Damit ist der Server sein eigenes Schema-Verzeichnis. Und weil die Validierung ALLE Fehler eines
+# Dokuments auf einmal zurückgibt, kostet eine ganze Ebene genau EINE Anfrage: ein Kandidaten-
+# Vokabular hinschicken, aus den Fehlern streichen, was es nicht gibt, aufklappen, was Unterfelder
+# braucht, weitermachen. Nach drei bis vier Runden steht die Abfrage.
+#
+# Gelernt wird einmal; das Ergebnis liegt in stake_query.json und wird wiederverwendet, bis es
+# bricht. Erst dann wird neu gelernt — nicht bei jedem Lauf.
+
+RX_UNBEKANNT = re.compile(r'Cannot query field "([^"]+)" on type "([^"]+)"')
+RX_BRAUCHT_SUB = re.compile(r'Field "([^"]+)" of type "([^"]+)" must have a selection of subfields')
+RX_KEIN_SUB = re.compile(r'Field "([^"]+)" must not have a selection')
+RX_MEINTEN = re.compile(r'Did you mean ([^?]+)\?')
+RX_ARG_PFLICHT = re.compile(r'Field "([^"]+)" argument "([^"]+)"')
+
+# Saatwörter für das Query-Feld. Sie müssen nicht stimmen — sie müssen nur NAH genug sein,
+# damit graphql-js seinen „Did you mean"-Vorschlag mitschickt.
+QUERY_SAAT = ["highroller", "highrollerBets", "highRollerBets", "highrollerSportBets",
+              "sportBets", "bets", "highrollers"]
+
+# Kandidaten je Ebene. Ein Name, den es nicht gibt, kostet nichts außer einer Zeile Fehlertext.
+FELD_SAAT = [
+    "id", "iid", "amount", "amountUsd", "currency", "value", "payout", "payoutMultiplier",
+    "potentialMultiplier", "odds", "createdAt", "updatedAt", "placedAt", "status", "active",
+    "user", "bet", "game", "outcomes", "outcome", "market", "fixture", "tournament",
+    "category", "sport", "name", "slug", "startingAt", "type", "count",
+]
+
+LERN_RUNDEN = 8
+LERN_TIEFE = 4
+
+# Bekannte Grenze: Union- und Interface-Typen (etwa ein `bet`, das SportBet ODER CasinoBet sein
+# kann) brauchen Inline-Fragmente, die dieser Lernweg nicht baut — solche Zweige fallen weg
+# statt halb zu entstehen. Was oben liegt (Betrag, Waehrung, Quote, Zeit, Nutzer) reicht fuer
+# die Sammlung; was fehlt, steht in stake_schema_probe.json und ist damit sichtbar, nicht still.
+
+
+def _fehlertexte(url: str, query: str):
+    st, d, err = _post(url, {"query": query})
+    if d and d.get("errors"):
+        return [str(e.get("message") or "") for e in d["errors"]], d, None
+    return [], d, err
+
+
+def _meinten(msg: str):
+    """Die Namen aus 'Did you mean "a", "b", or "c"?'."""
+    m = RX_MEINTEN.search(msg or "")
+    return re.findall(r'"([^"]+)"', m.group(1)) if m else []
+
+
+def _nackt(typ: str) -> str:
+    """[SportBet!]! -> SportBet"""
+    return (typ or "").strip("[]!")
+
+
+def _feld_raten(url: str):
+    """-> (feldName, typName, notiz). Findet das Query-Feld über Apollos eigene Vorschläge."""
+    vorschlaege: dict = {}
+    for saat in QUERY_SAAT:
+        msgs, _d, err = _fehlertexte(url, "{ %s }" % saat)
+        if err and not msgs:
+            return None, None, "Endpunkt antwortet nicht: %s" % err
+        for m in msgs:
+            t = RX_BRAUCHT_SUB.search(m)
+            if t and t.group(1) == saat:
+                return saat, t.group(2), "direkt getroffen"
+            for v in _meinten(m):
+                vorschlaege[v] = vorschlaege.get(v, 0) + 1
+    if not vorschlaege:
+        return None, None, "keine Vorschlaege — Server verraet keine Feldnamen"
+    # Highroller schlägt alles, Sport schlägt Casino, danach der häufigste Vorschlag.
+    def rang(n):
+        k = n.lower()
+        return (0 if "highroller" in k else 1, 0 if "sport" in k else 1, -vorschlaege[n], len(n))
+    for name in sorted(vorschlaege, key=rang):
+        msgs, _d, _e = _fehlertexte(url, "{ %s }" % name)
+        for m in msgs:
+            t = RX_BRAUCHT_SUB.search(m)
+            if t and t.group(1) == name:
+                return name, t.group(2), "ueber Vorschlag gefunden"
+    return None, None, "Vorschlaege %s, keiner liefert eine Liste" % sorted(vorschlaege)
+
+
+def _knoten(typ: str) -> dict:
+    """Ein Kandidaten-Knoten: welcher Typ, und welche Feldnamen wir dort probieren."""
+    return {"typ": typ, "felder": {x: None for x in FELD_SAAT}}
+
+
+def _baue(feld: str, knoten: dict, arg: str = "") -> str:
+    def sel(k):
+        teile = []
+        for n in sorted(k["felder"]):
+            kind = k["felder"][n]
+            teile.append(n + (" " + sel(kind) if kind else ""))
+        return "{ " + " ".join(teile) + " }"
+    return "query HR($limit: Int) { %s%s %s }" % (
+        feld, "(%s: $limit)" % arg if arg else "", sel(knoten))
+
+
+def _anwenden(knoten: dict, weg: dict, auf: dict, zu_flach: set, tiefe: int, ahnen: tuple = ()):
+    """Eine Runde Erkenntnis in den Kandidatenbaum einarbeiten.
+
+    03.09.2026 — hier steckte ein Denkfehler, den der nachgebaute Apollo-Server aufgedeckt hat:
+    zuerst wurden die Fehler GLOBAL nach Feldnamen angewandt. `amount` ist auf SportBet gültig
+    und auf User nicht, also strich „Cannot query field amount on type User" auch das gültige
+    amount am Wurzelknoten — Runde für Runde, bis der Baum leer war und die Abfrage gar keine
+    Selektion mehr hatte. Die Fehlermeldung nennt den TYP; also wird nach Typ gestrichen, und
+    jeder Knoten weiß, welcher er ist.
+
+    weg:       {typ: {feldname}}      nicht vorhanden auf diesem Typ
+    auf:       {feldname: typname}    braucht Unterfelder, und zwar von diesem Typ
+    zu_flach:  {feldname}             hat gar keine Unterfelder — Block wieder einklappen
+    """
+    t = knoten["typ"]
+    for n in list(knoten["felder"]):
+        if n in weg.get(t, ()):
+            del knoten["felder"][n]
+            continue
+        kind = knoten["felder"][n]
+        if kind is None:
+            if n in auf:
+                zt = _nackt(auf[n])
+                # Zyklen (User -> bet -> user -> ...) und zu tiefe Zweige werden weggelassen,
+                # nicht halb gebaut: eine ungültige Abfrage lernt nichts mehr dazu.
+                if len(ahnen) + 1 < tiefe and zt not in ahnen and zt != t:
+                    knoten["felder"][n] = _knoten(zt)
+                else:
+                    del knoten["felder"][n]
+        else:
+            if n in zu_flach:
+                knoten["felder"][n] = None
+                continue
+            _anwenden(kind, weg, auf, zu_flach, tiefe, ahnen + (t,))
+            if not kind["felder"]:
+                del knoten["felder"][n]
+
+
+def _zaehle(knoten: dict) -> int:
+    return sum(1 + (_zaehle(v) if v else 0) for v in knoten["felder"].values())
+
+
+def schema_lernen(url: str, feld: str, typ: str, arg: str = ""):
+    """Baut die Selektion über die Validierungsfehler des Servers auf.
+
+    Rückgabe: (queryText, notiz). Eine Ebene kostet EINE Anfrage, egal wie breit sie ist —
+    graphql-js meldet alle Verstöße eines Dokuments gemeinsam.
+    """
+    wurzel = _knoten(_nackt(typ))
+    fremd = []
+    for runde in range(LERN_RUNDEN):
+        if not wurzel["felder"]:
+            return None, "Kandidatenbaum leer nach %d Runden — Saatliste passt nicht zum Schema" % runde
+        q = _baue(feld, wurzel, arg)
+        msgs, d, err = _fehlertexte(url, q)
+        if not msgs:
+            if err:
+                return None, "Endpunkt bricht ab: %s" % err
+            return q, "gelernt in %d Runde(n), %d Felder" % (runde + 1, _zaehle(wurzel))
+        weg: dict = {}
+        auf: dict = {}
+        flach: set = set()
+        for m in msgs:
+            u = RX_UNBEKANNT.search(m)
+            if u:
+                weg.setdefault(u.group(2), set()).add(u.group(1))
+                continue
+            s = RX_BRAUCHT_SUB.search(m)
+            if s and s.group(1) != feld:
+                auf[s.group(1)] = s.group(2)
+                continue
+            f = RX_KEIN_SUB.search(m)
+            if f:
+                flach.add(f.group(1))
+                continue
+            a = RX_ARG_PFLICHT.search(m)
+            if a:
+                weg.setdefault(wurzel["typ"], set()).add(a.group(1))
+                continue
+            fremd.append(m[:140])
+        if not (weg or auf or flach):
+            # Fehler, die nichts mit der Struktur zu tun haben (Auth, Rate-Limit): abbrechen,
+            # statt weiterzuprobieren und die Ursache zu verschleiern.
+            return None, "unklarer Fehler: " + " | ".join(fremd[:3])
+        _anwenden(wurzel, weg, auf, flach, LERN_TIEFE)
+    return None, "nach %d Runden nicht konvergiert: %s" % (LERN_RUNDEN, " | ".join(fremd[:3]))
+
+
+def _limit_arg(url: str, feld: str) -> str:
+    """Nimmt der Server ein limit/first? Ohne Argument holt er sonst seinen Default."""
+    for arg in ("limit", "first"):
+        msgs, _d, _e = _fehlertexte(url, "query HR($limit: Int) { %s(%s: $limit) { __typename } }"
+                                    % (feld, arg))
+        if not any('Unknown argument "%s"' % arg in m for m in msgs):
+            return arg
+    return ""
+
+def schema_finden(url: str, tiefe: int = 4):
+    """-> (feldName, queryText, notiz) oder (None, None, grund)
+
+    Zwei Wege, in dieser Reihenfolge:
+      1. Introspection — der saubere. Stake hat sie zu (Apollo, 03.09.2026); ein anderer
+         Endpunkt oder ein spaeteres Stake koennen sie wieder offen haben.
+      2. Ueber die Validierungsfehler des Servers lernen (s. Block darueber).
+    Geraten wird auf keinem der beiden Wege.
+    """
+    felder, err = _query_felder(url)
+    if felder is not None:
+        f = _waehle_feld(felder)
+        if not f:
+            return None, None, "kein Highroller-Feld unter %d Query-Feldern" % len(felder)
+        tn = _typ_name(f.get("type") or {})
+        sel = _selektion(url, tn, tiefe, {})
+        if not sel:
+            return None, None, "Rueckgabetyp %s ohne lesbare Felder" % tn
+        args = f.get("args") or []
+        argname = next((a["name"] for a in args
+                        if (a.get("name") or "").lower() in ("limit", "first")), None)
+        kopf = "query HR($limit: Int) { %s%s %s }" % (
+            f["name"], "(%s: $limit)" % argname if argname else "", sel)
+        return f["name"], kopf, "Introspection, Typ %s" % tn
+
+    feld, typ, notiz = _feld_raten(url)
+    if not feld:
+        return None, None, "Introspection aus (%s); %s" % ((err or "?")[:120], notiz)
+    arg = _limit_arg(url, feld)
+    query, notiz2 = schema_lernen(url, feld, typ, arg)
+    if not query:
+        return None, None, "Feld %s vom Typ %s gefunden, Selektion nicht: %s" % (feld, typ, notiz2)
+    return feld, query, "aus Fehlermeldungen gelernt (%s -> %s), %s" % (feld, typ, notiz2)
 
 # ── Normalisierung ───────────────────────────────────────────────────────────
 def _sammle(obj, schluessel: set, tiefe: int = 8):
@@ -407,12 +642,27 @@ def holen(sonde: bool = False):
     versuche = []
     feld = query = None
     url_ok = ""
-    for url in urls:
-        f, q, notiz = schema_finden(url)
-        versuche.append({"url": url, "feld": f, "notiz": notiz})
-        if f:
-            feld, query, url_ok = f, q, url
-            break
+
+    # Gelernt wird EINMAL, nicht alle 15 Minuten: Lernen kostet ein gutes Dutzend Anfragen,
+    # das Ergebnis haelt, bis Stake das Schema umbaut. Der Cache wird deshalb zuerst probiert
+    # und erst verworfen, wenn er wirklich nicht mehr traegt.
+    cache = _lade(QUERY_FILE, {})
+    if not sonde and cache.get("query") and cache.get("url") in urls:
+        st, d, err = _post(cache["url"], {"query": cache["query"],
+                                          "variables": {"limit": ABRUF_LIMIT}})
+        if d and not d.get("errors") and (d.get("data") or {}).get(cache.get("feld")) is not None:
+            feld, query, url_ok = cache["feld"], cache["query"], cache["url"]
+            versuche.append({"url": url_ok, "feld": feld, "notiz": "aus stake_query.json"})
+
+    if not feld:
+        for url in urls:
+            f, q, notiz = schema_finden(url)
+            versuche.append({"url": url, "feld": f, "notiz": notiz})
+            if f:
+                feld, query, url_ok = f, q, url
+                _schreibe(QUERY_FILE, {"url": url, "feld": f, "query": q,
+                                       "gelernt": jetzt_s, "notiz": notiz})
+                break
 
     if not feld:
         sicht = sicht_bauen(_lade(LEDGER_FILE, {}), jetzt, "schema_unbekannt", "", "",

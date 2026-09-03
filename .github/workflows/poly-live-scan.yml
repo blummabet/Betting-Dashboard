@@ -86,7 +86,7 @@ jobs:
             # self-hosted Mac wie Poly. Faellt der Abruf aus, schreibt der Sammler status="fehler"
             # in die Sicht — eine leere Liste, die wie ein ruhiger Tag aussaehe, gibt es dort nicht.
             STAKE_MIN_USD=1000 "${POLY_PYTHON}" stake_highroller_fetch.py || echo "  ⚠️ stake Fehler (Loop laeuft weiter)"
-            for f in poly_money_broad_live.json poly_money_broad_live_history.json poly_live_watch_seen.json poly_live_signal_track.json poly_football_tags.json stake_highroller.json stake_bet_ledger.json; do
+            for f in poly_money_broad_live.json poly_money_broad_live_history.json poly_live_watch_seen.json poly_live_signal_track.json poly_football_tags.json stake_highroller.json stake_bet_ledger.json stake_query.json; do
               [ -f "$f" ] && git add "$f"
             done
             if git diff --staged --quiet; then

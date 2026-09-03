@@ -63,6 +63,8 @@ jobs:
           "${STAKE_PYTHON}" stake_highroller_fetch.py --sonde || true
           echo "──── stake_schema_probe.json ────"
           cat stake_schema_probe.json 2>/dev/null | head -c 4000 || echo "(keine Probe geschrieben)"
+          echo ""
+          echo "(Die Sonde schreibt bewusst KEIN stake_query.json — sie prueft, sie veraendert nichts.)"
 
       - name: 🎰 Sammeln
         if: ${{ !inputs.sonde }}
