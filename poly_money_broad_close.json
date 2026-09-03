@@ -163924,7 +163924,13 @@
   "tokens": {
    "Diletta Cherubini": "102514805388929914855916098922073266009102676494513522009720190954249235755299",
    "Vivian Wolff": "60978310121546259113684185186269745648840217013087728057891398178918400948909"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Diletta Cherubini": 1.0,
+   "Vivian Wolff": 0.0
+  },
+  "resolvedAt": "2026-09-03T14:27:23.877406+00:00"
  },
  "itf-bilardo-mazza-2026-09-03": {
   "shares": {
@@ -165555,12 +165561,12 @@
  },
  "cs2-nip-sng2-2026-09-03": {
   "shares": {
-   "NIP": 38453.45807650001,
-   "Sangal": 11164.097554425005
+   "NIP": 53458.19875534497,
+   "Sangal": 16421.997665784987
   },
   "prices": {
-   "NIP": 0.775,
-   "Sangal": 0.225
+   "NIP": 0.765,
+   "Sangal": 0.235
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -165568,39 +165574,156 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 51996,
+  "totalUsd": 66884,
   "whales": [
    {
     "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
     "side": "NIP",
-    "usd": 19578,
+    "usd": 19325,
     "avgPrice": 0.7658
    },
    {
     "wallet": "0x821d04c64ccb8f46f5a6f7d7bf1c51e99518ba1d",
     "side": "NIP",
-    "usd": 4962,
+    "usd": 10434,
     "avgPrice": 0.7699
    },
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "Sangal",
-    "usd": 4478,
-    "avgPrice": 0.2298
+    "usd": 6528,
+    "avgPrice": 0.2299
    },
    {
-    "wallet": "0xe4a7b5c3b60bbbaf33e4cf6d0fb5ddc3e3a2dc87",
+    "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
     "side": "NIP",
-    "usd": 4160,
-    "avgPrice": 0.76
+    "usd": 5292,
+    "avgPrice": 0.7595
    }
   ],
-  "hoursToKickoff": 0.6,
-  "capturedAt": "2026-09-03T13:57:34.354294+00:00",
+  "hoursToKickoff": 0.1,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
   "tokens": {
    "NIP": "92054471301228682471698058018693026982567543831702486446607433392869246736493",
    "Sangal": "3699031840503450952323826936667158720675412030956894742239270481135624277522"
-  }
+  },
+  "book": {
+   "side": "NIP",
+   "bid": 0.76,
+   "ask": 0.77,
+   "spreadC": 1.0,
+   "spreadPct": 1.3,
+   "bids": [
+    [
+     0.76,
+     34119
+    ],
+    [
+     0.75,
+     27847
+    ],
+    [
+     0.74,
+     988
+    ],
+    [
+     0.73,
+     40
+    ],
+    [
+     0.72,
+     40
+    ],
+    [
+     0.69,
+     9040
+    ]
+   ],
+   "asks": [
+    [
+     0.77,
+     10664
+    ],
+    [
+     0.78,
+     2650
+    ],
+    [
+     0.79,
+     14740
+    ],
+    [
+     0.8,
+     4622
+    ],
+    [
+     0.81,
+     3718
+    ],
+    [
+     0.82,
+     211
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xc34b4901be324718c176100e350211d97b199296",
+    "action": "BUY",
+    "side": "Sangal",
+    "price": 0.24,
+    "usd": 518,
+    "ts": 1788445504
+   },
+   {
+    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
+    "action": "BUY",
+    "side": "Sangal",
+    "price": 0.24,
+    "usd": 720,
+    "ts": 1788445179
+   },
+   {
+    "wallet": "0x7e1827a86edfc58e31bb38e86d4e892bb471872e",
+    "action": "BUY",
+    "side": "Sangal",
+    "price": 0.24,
+    "usd": 1300,
+    "ts": 1788444636
+   },
+   {
+    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
+    "action": "BUY",
+    "side": "Sangal",
+    "price": 0.23,
+    "usd": 1812,
+    "ts": 1788444633
+   },
+   {
+    "wallet": "0x821d04c64ccb8f46f5a6f7d7bf1c51e99518ba1d",
+    "action": "BUY",
+    "side": "NIP",
+    "price": 0.77,
+    "usd": 4927,
+    "ts": 1788442915
+   },
+   {
+    "wallet": "0xe4a7b5c3b60bbbaf33e4cf6d0fb5ddc3e3a2dc87",
+    "action": "BUY",
+    "side": "NIP",
+    "price": 0.76,
+    "usd": 3821,
+    "ts": 1788442294
+   },
+   {
+    "wallet": "0xf4ec03081af3116b77f0d52c109c6828ff0ec574",
+    "action": "BUY",
+    "side": "NIP",
+    "price": 0.76,
+    "usd": 1680,
+    "ts": 1788438942
+   }
+  ]
  },
  "cs2-hero-color-2026-09-03": {
   "shares": {
@@ -165692,8 +165815,8 @@
     "avgPrice": 0.31
    }
   ],
-  "hoursToKickoff": 0.6,
-  "capturedAt": "2026-09-03T13:57:34.354294+00:00",
+  "hoursToKickoff": 0.1,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
   "tokens": {
    "Eric Von Marton Martins": "60943594948451220557788860310844755605417537335038605592459480548258125580470",
    "Gabriel Schenekenberg": "2971049526448778036072180369466268449485493055241082165885977953083232766052"
@@ -165701,8 +165824,8 @@
  },
  "atp-struff-cerundo-2026-09-02": {
   "shares": {
-   "Jan-Lennard Struff": 67372.06091356,
-   "Francisco Cerundolo": 103190.74559469499
+   "Jan-Lennard Struff": 67393.15437610498,
+   "Francisco Cerundolo": 103223.05531900997
   },
   "prices": {
    "Jan-Lennard Struff": 0.395,
@@ -165714,7 +165837,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 179606,
+  "totalUsd": 193787,
   "whales": [
    {
     "wallet": "0xdb859a551fcf56e49416160911476bea7307152f",
@@ -165741,8 +165864,8 @@
     "avgPrice": 0.6
    }
   ],
-  "hoursToKickoff": 1.27,
-  "capturedAt": "2026-09-03T13:57:34.354294+00:00",
+  "hoursToKickoff": 0.76,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
   "tokens": {
    "Jan-Lennard Struff": "4511286798931479105117553546108487718456066053992226106682937921777179660044",
    "Francisco Cerundolo": "90191808209659663073184571439264564756851942222275169951952216516345964759886"
@@ -165756,57 +165879,73 @@
    "bids": [
     [
      0.6,
-     12309
+     19369
     ],
     [
      0.59,
-     11526
+     5047
     ],
     [
      0.58,
-     5458
+     2983
     ],
     [
      0.57,
-     530
+     2022
     ],
     [
      0.56,
-     1137
+     1114
     ],
     [
      0.55,
-     2637
+     2653
     ]
    ],
    "asks": [
     [
      0.61,
-     20543
+     6536
     ],
     [
      0.62,
-     43069
+     38419
     ],
     [
      0.63,
-     43427
+     23232
     ],
     [
      0.64,
-     38810
+     63437
     ],
     [
      0.65,
-     9280
+     36633
     ],
     [
      0.66,
-     31827
+     16013
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "action": "SELL",
+    "side": "Jan-Lennard Struff",
+    "price": 0.39,
+    "usd": 546,
+    "ts": 1788445425
+   },
+   {
+    "wallet": "0xd3faf1906cc31e75d1dfa0d7b57e8f97d33da26c",
+    "action": "BUY",
+    "side": "Jan-Lennard Struff",
+    "price": 0.4,
+    "usd": 3000,
+    "ts": 1788445068
+   },
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
     "action": "BUY",
@@ -165846,41 +165985,17 @@
     "price": 0.4,
     "usd": 382,
     "ts": 1788437694
-   },
-   {
-    "wallet": "0x8a8685a792c184e5c2ee8c7d4d4baba7c2c94998",
-    "action": "BUY",
-    "side": "Francisco Cerundolo",
-    "price": 0.61,
-    "usd": 2234,
-    "ts": 1788436821
-   },
-   {
-    "wallet": "0x8a8685a792c184e5c2ee8c7d4d4baba7c2c94998",
-    "action": "BUY",
-    "side": "Francisco Cerundolo",
-    "price": 0.6024,
-    "usd": 12766,
-    "ts": 1788436821
-   },
-   {
-    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-    "action": "BUY",
-    "side": "Jan-Lennard Struff",
-    "price": 0.41,
-    "usd": 1199,
-    "ts": 1788433395
    }
   ]
  },
  "wta-swiatek-podoros-2026-09-02": {
   "shares": {
-   "Iga Swiatek": 78307.97404232003,
-   "Nadia Podoroska": 1679.740018299001
+   "Iga Swiatek": 83470.49765335153,
+   "Nadia Podoroska": 1834.0455673710005
   },
   "prices": {
-   "Iga Swiatek": 0.979,
-   "Nadia Podoroska": 0.021
+   "Iga Swiatek": 0.9785,
+   "Nadia Podoroska": 0.0215
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -165888,35 +166003,35 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 102181,
+  "totalUsd": 111642,
   "whales": [
    {
     "wallet": "0xb7cb8bb29780840e3589c2d86320a6057c8ae02f",
     "side": "Iga Swiatek",
-    "usd": 30691,
+    "usd": 30676,
     "avgPrice": 0.9753
    },
    {
     "wallet": "0xf3b04dd038fcf191692927c0aa5a38018ea323a1",
     "side": "Iga Swiatek",
-    "usd": 9997,
+    "usd": 9992,
     "avgPrice": 0.9792
    },
    {
     "wallet": "0x2f4beded4082ff033f1c0b7efbde9962220def55",
     "side": "Iga Swiatek",
-    "usd": 8570,
+    "usd": 8566,
     "avgPrice": 0.975
    },
    {
     "wallet": "0x9cb48ddd4185f3e947edf596589e40e574588285",
     "side": "Iga Swiatek",
-    "usd": 5151,
+    "usd": 5149,
     "avgPrice": 0.9459
    }
   ],
-  "hoursToKickoff": 1.27,
-  "capturedAt": "2026-09-03T13:57:34.354294+00:00",
+  "hoursToKickoff": 0.76,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
   "tokens": {
    "Iga Swiatek": "67354015976731059092049001351945909872839737034802260504222547808932339804219",
    "Nadia Podoroska": "99921898838093701969631818749055096031222083907999791389256529450856342106791"
@@ -165924,63 +166039,71 @@
   "book": {
    "side": "Iga Swiatek",
    "bid": 0.977,
-   "ask": 0.981,
-   "spreadC": 0.4,
-   "spreadPct": 0.41,
+   "ask": 0.98,
+   "spreadC": 0.3,
+   "spreadPct": 0.31,
    "bids": [
     [
      0.977,
-     4490
+     5050
     ],
     [
      0.976,
-     728
+     35
     ],
     [
      0.975,
-     781
+     25
+    ],
+    [
+     0.974,
+     82
     ],
     [
      0.973,
-     313
+     1639
     ],
     [
      0.972,
      1988
-    ],
-    [
-     0.971,
-     50
     ]
    ],
    "asks": [
     [
-     0.981,
-     1553
+     0.98,
+     11
     ],
     [
      0.982,
-     1328
+     4430
     ],
     [
      0.983,
-     10
+     323
     ],
     [
      0.984,
-     15
+     100
     ],
     [
      0.985,
-     5706
+     67
     ],
     [
      0.986,
-     5
+     1100
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x89d63b7bf6e68e5796546d712d0101770be5c3c5",
+    "action": "BUY",
+    "side": "Iga Swiatek",
+    "price": 0.9814,
+    "usd": 500,
+    "ts": 1788444619
+   },
    {
     "wallet": "0xb7cb8bb29780840e3589c2d86320a6057c8ae02f",
     "action": "BUY",
@@ -166033,8 +166156,8 @@
  },
  "atp-darderi-svrcina-2026-09-02": {
   "shares": {
-   "Luciano Darderi": 52471.15284162506,
-   "Dalibor Svrcina": 38783.194120425
+   "Luciano Darderi": 54845.95448755007,
+   "Dalibor Svrcina": 40538.482293500005
   },
   "prices": {
    "Luciano Darderi": 0.575,
@@ -166046,7 +166169,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 113584,
+  "totalUsd": 123911,
   "whales": [
    {
     "wallet": "0xdb859a551fcf56e49416160911476bea7307152f",
@@ -166067,14 +166190,14 @@
     "avgPrice": 0.4381
    },
    {
-    "wallet": "0x45e40dbee6f546c7b318498f8c9778560f5a7e20",
-    "side": "Dalibor Svrcina",
-    "usd": 4273,
-    "avgPrice": 0.4299
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "Luciano Darderi",
+    "usd": 4761,
+    "avgPrice": 0.57
    }
   ],
-  "hoursToKickoff": 1.27,
-  "capturedAt": "2026-09-03T13:57:34.354294+00:00",
+  "hoursToKickoff": 0.76,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
   "tokens": {
    "Luciano Darderi": "42696162895146078367980857323546116317214085537138654988197861056658099057841",
    "Dalibor Svrcina": "37950814475756213324861871416610343680165009368193151835242706345216631508266"
@@ -166088,57 +166211,81 @@
    "bids": [
     [
      0.57,
-     5022
+     44156
     ],
     [
      0.56,
-     16265
+     15501
     ],
     [
      0.55,
-     21998
+     13607
     ],
     [
      0.54,
-     16190
+     13890
     ],
     [
      0.53,
-     6968
+     6153
     ],
     [
      0.52,
-     2730
+     2598
     ]
    ],
    "asks": [
     [
      0.58,
-     29939
+     28703
     ],
     [
      0.59,
-     50450
+     53170
     ],
     [
      0.6,
-     23185
+     17404
     ],
     [
      0.61,
-     38604
+     15829
     ],
     [
      0.62,
-     9206
+     9018
     ],
     [
      0.63,
-     6579
+     6477
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xc33a100b8362bc732e78cce28c99739f173b3da3",
+    "action": "BUY",
+    "side": "Luciano Darderi",
+    "price": 0.58,
+    "usd": 590,
+    "ts": 1788445455
+   },
+   {
+    "wallet": "0xfb88f6a86b877d2704328fc9f1ed63b41f8b0e4c",
+    "action": "BUY",
+    "side": "Luciano Darderi",
+    "price": 0.58,
+    "usd": 1000,
+    "ts": 1788443919
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "action": "BUY",
+    "side": "Luciano Darderi",
+    "price": 0.58,
+    "usd": 491,
+    "ts": 1788443878
+   },
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "action": "BUY",
@@ -166154,45 +166301,13 @@
     "price": 0.44,
     "usd": 1000,
     "ts": 1788442201
-   },
-   {
-    "wallet": "0x521c0f496be19476a885ae380f18652bb9cef4aa",
-    "action": "BUY",
-    "side": "Luciano Darderi",
-    "price": 0.57,
-    "usd": 300,
-    "ts": 1788442129
-   },
-   {
-    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
-    "action": "BUY",
-    "side": "Luciano Darderi",
-    "price": 0.56,
-    "usd": 9666,
-    "ts": 1788440287
-   },
-   {
-    "wallet": "0x67ae7f41158f2c4a65a89f9959da663c3d2f1e53",
-    "action": "BUY",
-    "side": "Luciano Darderi",
-    "price": 0.56,
-    "usd": 547,
-    "ts": 1788439675
-   },
-   {
-    "wallet": "0x545d337df3962904469b6bb540c74be3a5d6c122",
-    "action": "BUY",
-    "side": "Dalibor Svrcina",
-    "price": 0.45,
-    "usd": 300,
-    "ts": 1788437775
    }
   ]
  },
  "cs2-ntr-ef1-2026-09-03": {
   "shares": {
-   "Nuclear TigeRES": 46238.66437680001,
-   "Eternal Fire": 41835.09897739997
+   "Nuclear TigeRES": 54575.39371515,
+   "Eternal Fire": 49377.853590974955
   },
   "prices": {
    "Nuclear TigeRES": 0.525,
@@ -166204,7 +166319,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 90546,
+  "totalUsd": 94874,
   "whales": [
    {
     "wallet": "0x86e99faea12fccd8925de5d9f052471baf7a4cdf",
@@ -166231,8 +166346,8 @@
     "avgPrice": 0.4792
    }
   ],
-  "hoursToKickoff": 1.1,
-  "capturedAt": "2026-09-03T13:57:34.354294+00:00",
+  "hoursToKickoff": 0.6,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
   "tokens": {
    "Nuclear TigeRES": "64549801326394587662422322995945098863777006984224313858259757999141283893657",
    "Eternal Fire": "57781662645565698332701217778761767239741077873135912144959182961896528787839"
@@ -166246,95 +166361,119 @@
    "bids": [
     [
      0.52,
-     12451
+     3389
     ],
     [
      0.51,
-     107815
+     117805
     ],
     [
      0.5,
-     6346
+     467
     ],
     [
      0.49,
-     26041
+     17354
     ],
     [
      0.48,
-     16651
+     7704
     ],
     [
      0.47,
-     11261
+     10830
     ]
    ],
    "asks": [
     [
      0.53,
-     56373
+     51737
     ],
     [
      0.54,
-     19711
+     24486
     ],
     [
      0.55,
-     14011
+     6599
     ],
     [
      0.56,
-     3740
+     4805
     ],
     [
      0.57,
-     20
+     2420
     ],
     [
      0.58,
-     2006
+     6
     ]
    ]
   },
   "trades": [
    {
-    "wallet": "0xaebf3acc7c9add4928bd218f96de5cf64987e1ca",
-    "action": "BUY",
-    "side": "Nuclear TigeRES",
-    "price": 0.53,
-    "usd": 2650,
-    "ts": 1788442968
-   },
-   {
-    "wallet": "0xedc35944a67658dc37d4e8de948cea2a7fa3f923",
+    "wallet": "0xff34c2cc46e7624310f3549ea355540d57a4694b",
     "action": "BUY",
     "side": "Eternal Fire",
     "price": 0.48,
-    "usd": 381,
-    "ts": 1788438928
+    "usd": 480,
+    "ts": 1788445398
    },
    {
-    "wallet": "0x2a28bb9a58081413a091b109f92c63fd86cbff8c",
+    "wallet": "0x57b258499f7a4cfc5043ceae57a51f7e6f529da2",
+    "action": "BUY",
+    "side": "Eternal Fire",
+    "price": 0.48,
+    "usd": 960,
+    "ts": 1788445398
+   },
+   {
+    "wallet": "0xbca08c1bc204a34f2fddbe47b438b9bd42ac9705",
     "action": "BUY",
     "side": "Eternal Fire",
     "price": 0.48,
     "usd": 300,
-    "ts": 1788438292
+    "ts": 1788445395
    },
    {
-    "wallet": "0xe46d6a82a1e68193dbc11f0db5aaac423fc27e4d",
+    "wallet": "0x82dca3851445e005b8f21a2814db1439189f5700",
+    "action": "BUY",
+    "side": "Eternal Fire",
+    "price": 0.48,
+    "usd": 1440,
+    "ts": 1788445395
+   },
+   {
+    "wallet": "0xb6ce76828a51b382f7e88cbb9baa0f03f9c17a7d",
+    "action": "BUY",
+    "side": "Eternal Fire",
+    "price": 0.48,
+    "usd": 1440,
+    "ts": 1788445393
+   },
+   {
+    "wallet": "0xc48feb66addbe8cbdd93a36c93bb9ebed60b7527",
     "action": "BUY",
     "side": "Nuclear TigeRES",
-    "price": 0.52,
-    "usd": 1023,
-    "ts": 1788435880
+    "price": 0.53,
+    "usd": 500,
+    "ts": 1788444294
+   },
+   {
+    "wallet": "0x98fc21b64d321cf5e8c69e9d9a575aa42385a4a2",
+    "action": "BUY",
+    "side": "Nuclear TigeRES",
+    "price": 0.53,
+    "usd": 1000,
+    "ts": 1788444123
    }
   ]
  },
  "cs2-b8-hotu-2026-09-03": {
   "shares": {
-   "B8": 41899.45298485504,
-   "HOTU": 32258.874410429995
+   "B8": 55857.93220725503,
+   "HOTU": 43005.66814802999
   },
   "prices": {
    "B8": 0.565,
@@ -166346,13 +166485,13 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 80730,
+  "totalUsd": 87263,
   "whales": [
    {
     "wallet": "0xf5592765133941c40c77e52bc56bbe7ec167f462",
     "side": "B8",
-    "usd": 7788,
-    "avgPrice": 0.5599
+    "usd": 17999,
+    "avgPrice": 0.5656
    },
    {
     "wallet": "0x9368eb0e0e2ff384095a88960c5a494fed1580a3",
@@ -166361,20 +166500,20 @@
     "avgPrice": 0.5599
    },
    {
+    "wallet": "0x620b63c93967e79585d903072f5fe98fb2512e9f",
+    "side": "HOTU",
+    "usd": 5655,
+    "avgPrice": 0.43
+   },
+   {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "B8",
     "usd": 5117,
     "avgPrice": 0.5473
-   },
-   {
-    "wallet": "0x8f69269039b9a401de28a38c2f1c3001364b7df1",
-    "side": "HOTU",
-    "usd": 4350,
-    "avgPrice": 0.4479
    }
   ],
-  "hoursToKickoff": 1.1,
-  "capturedAt": "2026-09-03T13:57:34.354294+00:00",
+  "hoursToKickoff": 0.6,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
   "tokens": {
    "B8": "38092310335912794671404212391926774507562544114256732390084735038257595398211",
    "HOTU": "81079048629719632505321338705488092649798377654993346505018061040750637911715"
@@ -166388,57 +166527,89 @@
    "bids": [
     [
      0.56,
-     2085
+     22316
     ],
     [
      0.55,
-     89915
+     80775
     ],
     [
      0.54,
-     9227
+     9247
     ],
     [
      0.53,
-     10885
+     10736
     ],
     [
      0.52,
-     7818
+     8011
     ],
     [
      0.51,
-     790
+     1446
     ]
    ],
    "asks": [
     [
      0.57,
-     35329
+     4046
     ],
     [
      0.58,
-     19622
+     17082
     ],
     [
      0.59,
-     9295
+     17930
     ],
     [
      0.6,
-     13509
+     10685
     ],
     [
      0.61,
-     551
+     8508
     ],
     [
      0.62,
-     11460
+     20000
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xf5592765133941c40c77e52bc56bbe7ec167f462",
+    "action": "BUY",
+    "side": "B8",
+    "price": 0.57,
+    "usd": 10302,
+    "ts": 1788445321
+   },
+   {
+    "wallet": "0xa9312259cdaceddc72d94ac67c29b855ec2f1387",
+    "action": "BUY",
+    "side": "HOTU",
+    "price": 0.44,
+    "usd": 500,
+    "ts": 1788445011
+   },
+   {
+    "wallet": "0x7c7051404409bd31d977bdc9e43ad5c151d29a6c",
+    "action": "BUY",
+    "side": "B8",
+    "price": 0.57,
+    "usd": 316,
+    "ts": 1788444975
+   },
+   {
+    "wallet": "0x9b963178d3b8765cfc5af94c00550d6ec6c54389",
+    "action": "BUY",
+    "side": "B8",
+    "price": 0.57,
+    "usd": 855,
+    "ts": 1788444393
+   },
    {
     "wallet": "0xaebf3acc7c9add4928bd218f96de5cf64987e1ca",
     "action": "BUY",
@@ -166446,61 +166617,13 @@
     "price": 0.56,
     "usd": 1879,
     "ts": 1788443158
-   },
-   {
-    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-    "action": "BUY",
-    "side": "B8",
-    "price": 0.56,
-    "usd": 351,
-    "ts": 1788439554
-   },
-   {
-    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-    "action": "BUY",
-    "side": "B8",
-    "price": 0.56,
-    "usd": 1657,
-    "ts": 1788439554
-   },
-   {
-    "wallet": "0x8056189d56833ce5b3945dea9149b62c5111b64d",
-    "action": "BUY",
-    "side": "B8",
-    "price": 0.56,
-    "usd": 377,
-    "ts": 1788437362
-   },
-   {
-    "wallet": "0x674bb26ff20ebc5117d854c1a800acc6363b8284",
-    "action": "BUY",
-    "side": "HOTU",
-    "price": 0.45,
-    "usd": 465,
-    "ts": 1788435058
-   },
-   {
-    "wallet": "0x89eb83948d44d7b9b5e2c58fb49167b563a3cff9",
-    "action": "BUY",
-    "side": "B8",
-    "price": 0.56,
-    "usd": 1000,
-    "ts": 1788433284
-   },
-   {
-    "wallet": "0x9368eb0e0e2ff384095a88960c5a494fed1580a3",
-    "action": "BUY",
-    "side": "B8",
-    "price": 0.56,
-    "usd": 6402,
-    "ts": 1788433125
    }
   ]
  },
  "atp-augeral-khachan-2026-09-02": {
   "shares": {
-   "Felix Auger-Aliassime": 24907.803022599983,
-   "Karen Khachanov": 9447.792804175
+   "Felix Auger-Aliassime": 35325.46965134998,
+   "Karen Khachanov": 13399.323848624996
   },
   "prices": {
    "Felix Auger-Aliassime": 0.725,
@@ -166512,8 +166635,14 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 54167,
+  "totalUsd": 54342,
   "whales": [
+   {
+    "wallet": "0x5ba61105b276b4e793d0b5a5d773b78186720f07",
+    "side": "Felix Auger-Aliassime",
+    "usd": 8018,
+    "avgPrice": 0.7299
+   },
    {
     "wallet": "0xd84949634cf9aac74cab066cb978ac33ac676ac7",
     "side": "Felix Auger-Aliassime",
@@ -166531,24 +166660,144 @@
     "side": "Felix Auger-Aliassime",
     "usd": 4966,
     "avgPrice": 0.73
-   },
-   {
-    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
-    "side": "Karen Khachanov",
-    "usd": 2191
    }
   ],
-  "hoursToKickoff": 1.27,
-  "capturedAt": "2026-09-03T13:57:34.354294+00:00",
+  "hoursToKickoff": 0.76,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
   "tokens": {
    "Felix Auger-Aliassime": "38226581517504205456084154992241753953072626454345692551835417973287173620006",
    "Karen Khachanov": "38081706584938174128863941023630868125797549808606136525922923536176001065774"
-  }
+  },
+  "book": {
+   "side": "Felix Auger-Aliassime",
+   "bid": 0.73,
+   "ask": 0.74,
+   "spreadC": 1.0,
+   "spreadPct": 1.35,
+   "bids": [
+    [
+     0.73,
+     1645
+    ],
+    [
+     0.72,
+     26728
+    ],
+    [
+     0.71,
+     16959
+    ],
+    [
+     0.7,
+     2503
+    ],
+    [
+     0.69,
+     4271
+    ],
+    [
+     0.68,
+     164
+    ]
+   ],
+   "asks": [
+    [
+     0.74,
+     54126
+    ],
+    [
+     0.75,
+     53409
+    ],
+    [
+     0.76,
+     21791
+    ],
+    [
+     0.77,
+     13483
+    ],
+    [
+     0.78,
+     3047
+    ],
+    [
+     0.79,
+     8183
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xce203519c2db8a050042ded95f9c6bde2ac80b7b",
+    "action": "BUY",
+    "side": "Felix Auger-Aliassime",
+    "price": 0.73,
+    "usd": 1543,
+    "ts": 1788445410
+   },
+   {
+    "wallet": "0xe54d37c9c12e5fd3d684ff4d193ef1f44dabfdec",
+    "action": "BUY",
+    "side": "Felix Auger-Aliassime",
+    "price": 0.73,
+    "usd": 730,
+    "ts": 1788445285
+   },
+   {
+    "wallet": "0x5ba61105b276b4e793d0b5a5d773b78186720f07",
+    "action": "BUY",
+    "side": "Felix Auger-Aliassime",
+    "price": 0.73,
+    "usd": 8073,
+    "ts": 1788444970
+   },
+   {
+    "wallet": "0x5f3017816537dcc354da8f2494ed98c047153aee",
+    "action": "BUY",
+    "side": "Felix Auger-Aliassime",
+    "price": 0.73,
+    "usd": 1273,
+    "ts": 1788442657
+   },
+   {
+    "wallet": "0xbc9fee0e1699e3dacf6589af1615f1b23d1321f7",
+    "action": "BUY",
+    "side": "Felix Auger-Aliassime",
+    "price": 0.73,
+    "usd": 453,
+    "ts": 1788435753
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "action": "BUY",
+    "side": "Felix Auger-Aliassime",
+    "price": 0.73,
+    "usd": 5627,
+    "ts": 1788433393
+   },
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "action": "BUY",
+    "side": "Karen Khachanov",
+    "price": 0.27,
+    "usd": 4570,
+    "ts": 1788432385
+   },
+   {
+    "wallet": "0x9cb48ddd4185f3e947edf596589e40e574588285",
+    "action": "BUY",
+    "side": "Felix Auger-Aliassime",
+    "price": 0.74,
+    "usd": 1628,
+    "ts": 1788430782
+   }
+  ]
  },
  "wta-timofee-mertens-2026-09-03": {
   "shares": {
-   "Maria Timofeeva": 4909.68717957,
-   "Elise Mertens": 14343.983069750004
+   "Maria Timofeeva": 5210.913481905,
+   "Elise Mertens": 15224.036384415002
   },
   "prices": {
    "Maria Timofeeva": 0.255,
@@ -166560,7 +166809,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 19298,
+  "totalUsd": 20456,
   "whales": [
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -166585,8 +166834,8 @@
     "avgPrice": 0.25
    }
   ],
-  "hoursToKickoff": 1.27,
-  "capturedAt": "2026-09-03T13:57:34.354294+00:00",
+  "hoursToKickoff": 0.76,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
   "tokens": {
    "Maria Timofeeva": "113257625695564298400058023890425870639047269325302323364277107680609875560844",
    "Elise Mertens": "15551231825682785769029352477187305540470914775362704200664863612192968770976"
@@ -166594,8 +166843,8 @@
  },
  "wta-potapov-jeanjea-2026-09-03": {
   "shares": {
-   "Anastasia Potapova": 5944.172449625001,
-   "Leolia Jeanjean": 1725.7274853749998
+   "Anastasia Potapova": 6758.726454774999,
+   "Leolia Jeanjean": 1962.2109062250001
   },
   "prices": {
    "Anastasia Potapova": 0.775,
@@ -166607,7 +166856,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 7682,
+  "totalUsd": 8721,
   "whales": [
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
@@ -166626,14 +166875,14 @@
     "usd": 887
    },
    {
-    "wallet": "0xa0f21e6d351baa9185716b5c00c2925ed9621848",
-    "side": "Leolia Jeanjean",
-    "usd": 253,
-    "avgPrice": 0.23
+    "wallet": "0x3957fb024ae4314fafd2fae943965fdebeda35f0",
+    "side": "Anastasia Potapova",
+    "usd": 795,
+    "avgPrice": 0.7799
    }
   ],
-  "hoursToKickoff": 1.27,
-  "capturedAt": "2026-09-03T13:57:34.354294+00:00",
+  "hoursToKickoff": 0.76,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
   "tokens": {
    "Anastasia Potapova": "75091956140024758795901423316189860291304365181039091204910477601047531321145",
    "Leolia Jeanjean": "6266239881818656652374839410322104614460703507312568625096548936019308288463"
@@ -166641,8 +166890,8 @@
  },
  "wta-osaka-siniako-2026-09-02": {
   "shares": {
-   "Naomi Osaka": 18650.407643874983,
-   "Katerina Siniakova": 5108.073431124999
+   "Naomi Osaka": 19944.481032494983,
+   "Katerina Siniakova": 5462.501174504999
   },
   "prices": {
    "Naomi Osaka": 0.785,
@@ -166654,7 +166903,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 23298,
+  "totalUsd": 25459,
   "whales": [
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -166679,8 +166928,8 @@
     "usd": 2150
    }
   ],
-  "hoursToKickoff": 1.77,
-  "capturedAt": "2026-09-03T13:57:34.354294+00:00",
+  "hoursToKickoff": 1.26,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
   "tokens": {
    "Naomi Osaka": "1292106469825617228051791462963328866240148923332558065720241003844260257706",
    "Katerina Siniakova": "107595739834920983964310343017771639772743994318461049195293458556097245266312"
@@ -166688,14 +166937,14 @@
  },
  "spl-fay-kho-2026-09-03": {
   "shares": {
-   "Al Fayha Saudi Club": 1324.6619669099996,
-   "Draw (Al Fayha Saudi Club vs. Al Kholood Saudi Club)": 1012.567430445,
-   "Al Kholood Saudi Club": 12203.299878899998
+   "Al Fayha Saudi Club": 1525.3511239949996,
+   "Draw (Al Fayha Saudi Club vs. Al Kholood Saudi Club)": 1014.582084615,
+   "Al Kholood Saudi Club": 13571.138099304995
   },
   "prices": {
    "Al Fayha Saudi Club": 0.285,
    "Draw (Al Fayha Saudi Club vs. Al Kholood Saudi Club)": 0.285,
-   "Al Kholood Saudi Club": 0.435
+   "Al Kholood Saudi Club": 0.445
   },
   "splitGuete": {
    "art": "belastbar",
@@ -166703,43 +166952,144 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 45835,
+  "totalUsd": 66505,
   "whales": [
    {
     "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
     "side": "Al Kholood Saudi Club",
-    "usd": 4429,
+    "usd": 4531,
     "avgPrice": 0.4027
    },
    {
     "wallet": "0xe8c4d68aff65b38cac46987b9b65e01eb47d395d",
     "side": "Al Kholood Saudi Club",
-    "usd": 1914,
+    "usd": 1958,
     "avgPrice": 0.4199
    },
    {
     "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
     "side": "Al Kholood Saudi Club",
-    "usd": 1166
+    "usd": 1192
    },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "Al Kholood Saudi Club",
-    "usd": 1113,
+    "usd": 1139,
     "avgPrice": 0.4167
    }
   ],
-  "hoursToKickoff": 2.02,
-  "capturedAt": "2026-09-03T13:57:34.354294+00:00",
+  "hoursToKickoff": 1.51,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
   "tokens": {
    "Al Fayha Saudi Club": "32832049178767554105257215521399500743327431008249963428410092883511528279390",
    "Draw (Al Fayha Saudi Club vs. Al Kholood Saudi Club)": "41075670656658016312545651059586144708774540942940017063068685229273747204419",
    "Al Kholood Saudi Club": "72435761410834098409753095054710564838389387389992542541788075803854753538600"
-  }
+  },
+  "book": {
+   "side": "Al Kholood Saudi Club",
+   "bid": 0.44,
+   "ask": 0.45,
+   "spreadC": 1.0,
+   "spreadPct": 2.22,
+   "bids": [
+    [
+     0.44,
+     13270
+    ],
+    [
+     0.43,
+     14816
+    ],
+    [
+     0.42,
+     18636
+    ],
+    [
+     0.41,
+     8233
+    ],
+    [
+     0.4,
+     12527
+    ],
+    [
+     0.39,
+     2785
+    ]
+   ],
+   "asks": [
+    [
+     0.45,
+     1871
+    ],
+    [
+     0.46,
+     13710
+    ],
+    [
+     0.47,
+     21279
+    ],
+    [
+     0.48,
+     20956
+    ],
+    [
+     0.49,
+     12380
+    ],
+    [
+     0.5,
+     17488
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x28141e92bc3523f3e8dd6d2baaa074f268137cd4",
+    "action": "SELL",
+    "side": "Yes",
+    "price": 0.44,
+    "usd": 505,
+    "ts": 1788444624
+   },
+   {
+    "wallet": "0x28141e92bc3523f3e8dd6d2baaa074f268137cd4",
+    "action": "SELL",
+    "side": "Yes",
+    "price": 0.44,
+    "usd": 2021,
+    "ts": 1788444561
+   },
+   {
+    "wallet": "0x28141e92bc3523f3e8dd6d2baaa074f268137cd4",
+    "action": "SELL",
+    "side": "Yes",
+    "price": 0.45,
+    "usd": 1425,
+    "ts": 1788444478
+   },
+   {
+    "wallet": "0x28141e92bc3523f3e8dd6d2baaa074f268137cd4",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.45,
+    "usd": 3813,
+    "ts": 1788444240
+   },
+   {
+    "wallet": "0x3be2fc97e913079f0f6d563c7a5f01fc349591a0",
+    "action": "BUY",
+    "side": "No",
+    "price": 0.58,
+    "usd": 400,
+    "ts": 1788442527
+   }
+  ]
  },
  "itc-pal-man-2026-09-03": {
   "shares": {
-   "Palermo FC": 5875.815279555004,
+   "Palermo FC": 6016.141619280005,
    "Draw (Palermo FC vs. Mantova 1911)": 71.15338554,
    "Mantova 1911": 2640.2235405000006
   },
@@ -166754,7 +167104,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 32071,
+  "totalUsd": 32784,
   "whales": [
    {
     "wallet": "0xb00cf07e6fa25034175f7da649524c23b08fdfa2",
@@ -166780,8 +167130,8 @@
     "avgPrice": 0.5916
    }
   ],
-  "hoursToKickoff": 2.1,
-  "capturedAt": "2026-09-03T13:57:34.354294+00:00",
+  "hoursToKickoff": 1.6,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
   "tokens": {
    "Palermo FC": "22801107831228713836882478145559311954777521464419871121686525875057453048618",
    "Draw (Palermo FC vs. Mantova 1911)": "7747207556597800281579932526248647228982383841809216525452283033122528061177",
@@ -166839,12 +167189,12 @@
  },
  "lol-big1-khk-2026-09-03": {
   "shares": {
-   "BIG": 11851.208401349997,
-   "Kaufland Hangry Knights": 3845.7563774699993
+   "BIG": 12623.486420070003,
+   "Kaufland Hangry Knights": 3877.803026389998
   },
   "prices": {
-   "BIG": 0.755,
-   "Kaufland Hangry Knights": 0.245
+   "BIG": 0.765,
+   "Kaufland Hangry Knights": 0.235
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -166852,35 +167202,35 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 16130,
+  "totalUsd": 16907,
   "whales": [
    {
     "wallet": "0x1316ebb019094a2267a27a697ecee08b5c5948a4",
     "side": "BIG",
-    "usd": 3775,
+    "usd": 3825,
     "avgPrice": 0.76
    },
    {
     "wallet": "0x6918ea182d963b1fb7888860b8a8b8bcfba5782b",
     "side": "BIG",
-    "usd": 3624,
+    "usd": 3672,
     "avgPrice": 0.7499
    },
    {
     "wallet": "0x7e5e420a5cde8a322f3b5b93a12a164827f47315",
     "side": "Kaufland Hangry Knights",
-    "usd": 2267,
+    "usd": 2175,
     "avgPrice": 0.2432
    },
    {
     "wallet": "0xf5a3504ad3a8b079974620b3aa4fcca3f7579e12",
     "side": "BIG",
-    "usd": 1007,
+    "usd": 1020,
     "avgPrice": 0.75
    }
   ],
-  "hoursToKickoff": 1.1,
-  "capturedAt": "2026-09-03T13:57:34.354294+00:00",
+  "hoursToKickoff": 0.6,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
   "tokens": {
    "BIG": "87107099803977341948622190329200123580157477725590239710846890281083875321748",
    "Kaufland Hangry Knights": "28715157633357257963388265467270403930411720539106046374862776413710599590155"
@@ -166889,12 +167239,12 @@
  "pol-cze-gor-2026-09-03": {
   "shares": {
    "RKS Rakow Czestochowa": 88.12763325,
-   "Draw (RKS Rakow Czestochowa vs. Gornik Zabrze)": 30.652173089999998,
+   "Draw (RKS Rakow Czestochowa vs. Gornik Zabrze)": 30.084540254999997,
    "Gornik Zabrze": 3351.7507879150003
   },
   "prices": {
    "RKS Rakow Czestochowa": 0.375,
-   "Draw (RKS Rakow Czestochowa vs. Gornik Zabrze)": 0.27,
+   "Draw (RKS Rakow Czestochowa vs. Gornik Zabrze)": 0.265,
    "Gornik Zabrze": 0.365
   },
   "splitGuete": {
@@ -166903,7 +167253,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 9648,
+  "totalUsd": 9653,
   "whales": [
    {
     "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
@@ -166930,8 +167280,8 @@
     "avgPrice": 0.42
    }
   ],
-  "hoursToKickoff": 2.1,
-  "capturedAt": "2026-09-03T13:57:34.354294+00:00",
+  "hoursToKickoff": 1.6,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
   "tokens": {
    "RKS Rakow Czestochowa": "6266908319670896298013775408033684609061764748378799380957655644333758972514",
    "Draw (RKS Rakow Czestochowa vs. Gornik Zabrze)": "42969724734518750988712101193406093920902475136535374731827406143661549429364",
@@ -166940,8 +167290,8 @@
  },
  "wta-keys-bondar-2026-09-02": {
   "shares": {
-   "Madison Keys": 8148.138271814996,
-   "Anna Bondar": 1271.6748234450004
+   "Madison Keys": 19868.26138988,
+   "Anna Bondar": 3100.826986379999
   },
   "prices": {
    "Madison Keys": 0.865,
@@ -166953,8 +167303,14 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 8945,
+  "totalUsd": 23914,
   "whales": [
+   {
+    "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
+    "side": "Madison Keys",
+    "usd": 8088,
+    "avgPrice": 0.86
+   },
    {
     "wallet": "0x9913d9fced638b96e5e212b7dab6e44c5be55973",
     "side": "Madison Keys",
@@ -166968,20 +167324,14 @@
     "avgPrice": 0.8759
    },
    {
-    "wallet": "0xec981ed70ae69c5cbcac08c1ba063e734f6bafcd",
-    "side": "Madison Keys",
-    "usd": 865,
-    "avgPrice": 0.87
-   },
-   {
-    "wallet": "0x796fc6fda8f8e03c03e2a2d012155989960300f6",
-    "side": "Madison Keys",
-    "usd": 827,
-    "avgPrice": 0.86
+    "wallet": "0x565c09cd32dbbde32d5b4fcd6c49d55dd84f878d",
+    "side": "Anna Bondar",
+    "usd": 1825,
+    "avgPrice": 0.1399
    }
   ],
-  "hoursToKickoff": 1.27,
-  "capturedAt": "2026-09-03T13:57:34.354294+00:00",
+  "hoursToKickoff": 0.76,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
   "tokens": {
    "Madison Keys": "86426908867248660644518243942019779917307933038449715138863454017661559273814",
    "Anna Bondar": "75813854111503834827951904398594364055531116755361012665122678230208796969121"
@@ -167040,12 +167390,12 @@
  },
  "mlb-sf-pit-2026-09-03": {
   "shares": {
-   "Over": 21426.921958575003,
-   "Under": 17888.537095064996
+   "Over": 23345.648197785005,
+   "Under": 18718.588577774997
   },
   "prices": {
-   "Over": 0.545,
-   "Under": 0.455
+   "Over": 0.555,
+   "Under": 0.445
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -167053,99 +167403,107 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 40089,
+  "totalUsd": 40451,
   "whales": [
    {
     "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
     "side": "Over",
-    "usd": 8352,
-    "avgPrice": 0.5399
+    "usd": 9926,
+    "avgPrice": 0.5414
    },
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "Over",
-    "usd": 5187,
+    "usd": 5282,
     "avgPrice": 0.5359
    },
    {
     "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
     "side": "Under",
-    "usd": 4101,
+    "usd": 4023,
     "avgPrice": 0.4599
    },
    {
     "wallet": "0x5811c8ad5dc5990528357ecf1a6d03311d6c0976",
     "side": "Under",
-    "usd": 2774,
+    "usd": 2713,
     "avgPrice": 0.459
    }
   ],
-  "hoursToKickoff": 2.68,
-  "capturedAt": "2026-09-03T13:57:34.354294+00:00",
+  "hoursToKickoff": 2.18,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
   "tokens": {
    "Over": "61897231364199341319724316143719413176580009306286892964741088790056131721461",
    "Under": "945984951985809553411888156694177299831798809281246391275004881533096035374"
   },
   "book": {
    "side": "Over",
-   "bid": 0.54,
-   "ask": 0.55,
+   "bid": 0.55,
+   "ask": 0.56,
    "spreadC": 1.0,
-   "spreadPct": 1.82,
+   "spreadPct": 1.79,
    "bids": [
     [
+     0.55,
+     62782
+    ],
+    [
      0.54,
-     20802
+     30214
     ],
     [
      0.53,
-     44251
+     55829
     ],
     [
      0.52,
-     32314
+     31910
     ],
     [
      0.51,
-     17205
+     17769
     ],
     [
      0.5,
-     5155
-    ],
-    [
-     0.49,
-     808
+     953
     ]
    ],
    "asks": [
     [
-     0.55,
-     649
-    ],
-    [
      0.56,
-     23381
+     44805
     ],
     [
      0.57,
-     23479
+     46249
     ],
     [
      0.58,
-     42487
+     38348
     ],
     [
      0.59,
-     15093
+     15356
     ],
     [
      0.6,
-     13566
+     12672
+    ],
+    [
+     0.61,
+     15778
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.55,
+    "usd": 1407,
+    "ts": 1788444921
+   },
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
     "action": "BUY",
@@ -167198,7 +167556,7 @@
  },
  "spl-neo-kha-2026-09-03": {
   "shares": {
-   "NEOM SC": 13412.053626624993,
+   "NEOM SC": 20754.10819804999,
    "Draw (NEOM SC vs. Al Khaleej Saudi Club)": 192.717879035,
    "Al Khaleej Saudi Club": 1295.00390175
   },
@@ -167213,8 +167571,14 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 36673,
+  "totalUsd": 50057,
   "whales": [
+   {
+    "wallet": "0x28141e92bc3523f3e8dd6d2baaa074f268137cd4",
+    "side": "NEOM SC",
+    "usd": 5757,
+    "avgPrice": 0.5799
+   },
    {
     "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
     "side": "NEOM SC",
@@ -167231,16 +167595,10 @@
     "side": "NEOM SC",
     "usd": 2297,
     "avgPrice": 0.5483
-   },
-   {
-    "wallet": "0x9913d9fced638b96e5e212b7dab6e44c5be55973",
-    "side": "NEOM SC",
-    "usd": 1461,
-    "avgPrice": 0.58
    }
   ],
-  "hoursToKickoff": 2.6,
-  "capturedAt": "2026-09-03T13:57:34.354294+00:00",
+  "hoursToKickoff": 2.1,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
   "tokens": {
    "NEOM SC": "101673967192797127882788363022604956330698230302920761790712640542623660843713",
    "Draw (NEOM SC vs. Al Khaleej Saudi Club)": "85592559629642629035489222317342234112224901349234509328223572810194234137988",
@@ -167249,8 +167607,8 @@
  },
  "cs2-bhe-meiano-2026-09-03": {
   "shares": {
-   "Bounty Hunters Esports": 6942.366597010003,
-   "MEIA NOITE": 1273.454055015
+   "Bounty Hunters Esports": 7071.648380940003,
+   "MEIA NOITE": 1297.1690550150001
   },
   "prices": {
    "Bounty Hunters Esports": 0.845,
@@ -167262,7 +167620,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 8354,
+  "totalUsd": 8464,
   "whales": [
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
@@ -167289,8 +167647,8 @@
     "avgPrice": 0.1686
    }
   ],
-  "hoursToKickoff": 2.1,
-  "capturedAt": "2026-09-03T13:57:34.354294+00:00",
+  "hoursToKickoff": 1.6,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
   "tokens": {
    "Bounty Hunters Esports": "74022579492061942787926749172633955310732656328092985372449013954135669555178",
    "MEIA NOITE": "90517798061845602887169993613959126697399954392304184425103121481098547178790"
@@ -167298,8 +167656,8 @@
  },
  "wta-tagger-anisimo-2026-09-02": {
   "shares": {
-   "Lilli Tagger": 2876.504524410001,
-   "Amanda Anisimova": 14556.850795410008
+   "Lilli Tagger": 3302.374901265,
+   "Amanda Anisimova": 16712.018409675
   },
   "prices": {
    "Lilli Tagger": 0.165,
@@ -167311,7 +167669,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 21249,
+  "totalUsd": 25339,
   "whales": [
    {
     "wallet": "0x13851a686e88f8007445d348a3efe4cab3cbdb91",
@@ -167325,19 +167683,20 @@
     "usd": 5008
    },
    {
+    "wallet": "0xf5a3504ad3a8b079974620b3aa4fcca3f7579e12",
+    "side": "Amanda Anisimova",
+    "usd": 2012,
+    "avgPrice": 0.83
+   },
+   {
     "wallet": "0x7e5972bfc25819775ee5a9d4f191919375487b8b",
     "side": "Amanda Anisimova",
     "usd": 1149,
     "avgPrice": 0.79
-   },
-   {
-    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
-    "side": "Amanda Anisimova",
-    "usd": 1031
    }
   ],
-  "hoursToKickoff": 2.6,
-  "capturedAt": "2026-09-03T13:57:34.354294+00:00",
+  "hoursToKickoff": 2.1,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
   "tokens": {
    "Lilli Tagger": "47441023824466833585973553142299561253257372437891717683737806055130377993219",
    "Amanda Anisimova": "67496600682673910519876524116733383003106684888554765044810013425062795255440"
@@ -167345,12 +167704,12 @@
  },
  "atp-sweeny-musetti-2026-09-02": {
   "shares": {
-   "Dane Sweeny": 472.88032512000007,
-   "Lorenzo Musetti": 7408.464459799999
+   "Dane Sweeny": 998.3485747950001,
+   "Lorenzo Musetti": 14360.866269035007
   },
   "prices": {
-   "Dane Sweeny": 0.06,
-   "Lorenzo Musetti": 0.94
+   "Dane Sweeny": 0.065,
+   "Lorenzo Musetti": 0.935
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -167358,37 +167717,575 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 9313,
+  "totalUsd": 20957,
   "whales": [
    {
     "wallet": "0xa0f21e6d351baa9185716b5c00c2925ed9621848",
     "side": "Lorenzo Musetti",
-    "usd": 3454,
+    "usd": 3436,
     "avgPrice": 0.94
+   },
+   {
+    "wallet": "0x9913d9fced638b96e5e212b7dab6e44c5be55973",
+    "side": "Lorenzo Musetti",
+    "usd": 2863,
+    "avgPrice": 0.93
    },
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Lorenzo Musetti",
-    "usd": 1345,
-    "avgPrice": 0.9394
+    "usd": 2273,
+    "avgPrice": 0.9355
    },
    {
-    "wallet": "0xeb76f82d4443c35028c662eebf001cd52c8c7ffe",
+    "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
     "side": "Lorenzo Musetti",
-    "usd": 368,
-    "avgPrice": 0.92
-   },
-   {
-    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
-    "side": "Lorenzo Musetti",
-    "usd": 353
+    "usd": 1106,
+    "avgPrice": 0.931
    }
   ],
-  "hoursToKickoff": 2.6,
-  "capturedAt": "2026-09-03T13:57:34.354294+00:00",
+  "hoursToKickoff": 2.1,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
   "tokens": {
    "Dane Sweeny": "9986228599335524733036601516772922957214545874213634166583856492228042519548",
    "Lorenzo Musetti": "18212716584708002223248676248329915755436256040284027221206899404829333777958"
+  }
+ },
+ "atp-fritz-bellucc-2026-09-02": {
+  "shares": {
+   "Taylor Fritz": 104698.26985718502,
+   "Mattia Bellucci": 12283.035463964998
+  },
+  "prices": {
+   "Taylor Fritz": 0.895,
+   "Mattia Bellucci": 0.105
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 119169,
+  "whales": [
+   {
+    "wallet": "0xa8caf30a6a9c6e670f5602827f4e435d1d4cd535",
+    "side": "Taylor Fritz",
+    "usd": 50281,
+    "avgPrice": 0.8899
+   },
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "side": "Taylor Fritz",
+    "usd": 16413
+   },
+   {
+    "wallet": "0xf3b04dd038fcf191692927c0aa5a38018ea323a1",
+    "side": "Taylor Fritz",
+    "usd": 15211,
+    "avgPrice": 0.8825
+   },
+   {
+    "wallet": "0xe8c4d68aff65b38cac46987b9b65e01eb47d395d",
+    "side": "Taylor Fritz",
+    "usd": 12042,
+    "avgPrice": 0.8899
+   }
+  ],
+  "hoursToKickoff": 2.6,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
+  "tokens": {
+   "Taylor Fritz": "64279132045358123376276929238345142617947361460902418753165119485708172882508",
+   "Mattia Bellucci": "15214437712540243418227108828980185246088245552536289888549402830844482526301"
+  },
+  "book": {
+   "side": "Taylor Fritz",
+   "bid": 0.89,
+   "ask": 0.9,
+   "spreadC": 1.0,
+   "spreadPct": 1.11,
+   "bids": [
+    [
+     0.89,
+     9064
+    ],
+    [
+     0.88,
+     32044
+    ],
+    [
+     0.87,
+     3090
+    ],
+    [
+     0.86,
+     6373
+    ],
+    [
+     0.85,
+     231
+    ],
+    [
+     0.84,
+     3661
+    ]
+   ],
+   "asks": [
+    [
+     0.9,
+     89594
+    ],
+    [
+     0.91,
+     29662
+    ],
+    [
+     0.92,
+     22064
+    ],
+    [
+     0.93,
+     17465
+    ],
+    [
+     0.94,
+     14385
+    ],
+    [
+     0.95,
+     7752
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
+    "action": "BUY",
+    "side": "Mattia Bellucci",
+    "price": 0.11,
+    "usd": 368,
+    "ts": 1788442575
+   },
+   {
+    "wallet": "0x317149007acf6c4ac806df15ad95b2fa41aeb991",
+    "action": "BUY",
+    "side": "Taylor Fritz",
+    "price": 0.9,
+    "usd": 1080,
+    "ts": 1788439725
+   },
+   {
+    "wallet": "0x2396babfc88a7a7dcc0390262ab747d7cbad9485",
+    "action": "BUY",
+    "side": "Taylor Fritz",
+    "price": 0.9,
+    "usd": 1851,
+    "ts": 1788436545
+   },
+   {
+    "wallet": "0xe8c4d68aff65b38cac46987b9b65e01eb47d395d",
+    "action": "BUY",
+    "side": "Taylor Fritz",
+    "price": 0.89,
+    "usd": 6103,
+    "ts": 1788436536
+   },
+   {
+    "wallet": "0x6888e548e47cfc9dc629376d86a41018add64c79",
+    "action": "BUY",
+    "side": "Taylor Fritz",
+    "price": 0.89,
+    "usd": 653,
+    "ts": 1788436041
+   },
+   {
+    "wallet": "0x747cd6e935a57e25c4590bbfbea308751063443b",
+    "action": "BUY",
+    "side": "Taylor Fritz",
+    "price": 0.89,
+    "usd": 1000,
+    "ts": 1788436035
+   },
+   {
+    "wallet": "0xa8caf30a6a9c6e670f5602827f4e435d1d4cd535",
+    "action": "BUY",
+    "side": "Taylor Fritz",
+    "price": 0.89,
+    "usd": 50000,
+    "ts": 1788435789
+   },
+   {
+    "wallet": "0xf3b04dd038fcf191692927c0aa5a38018ea323a1",
+    "action": "BUY",
+    "side": "Taylor Fritz",
+    "price": 0.89,
+    "usd": 5000,
+    "ts": 1788432463
+   }
+  ]
+ },
+ "wta-zhen-putints-2026-09-02": {
+  "shares": {
+   "Qinwen Zheng": 40032.13836795,
+   "Yulia Putintseva": 16750.938196774994
+  },
+  "prices": {
+   "Qinwen Zheng": 0.705,
+   "Yulia Putintseva": 0.295
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 102830,
+  "whales": [
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Qinwen Zheng",
+    "usd": 7373,
+    "avgPrice": 0.6905
+   },
+   {
+    "wallet": "0xb0e3fcbe0d7f17168fdce93f89c0168d3fa329eb",
+    "side": "Qinwen Zheng",
+    "usd": 5483,
+    "avgPrice": 0.7
+   },
+   {
+    "wallet": "0x3e856790872025b26922999651992ea70bfe788b",
+    "side": "Yulia Putintseva",
+    "usd": 4112,
+    "avgPrice": 0.3316
+   },
+   {
+    "wallet": "0x9cb48ddd4185f3e947edf596589e40e574588285",
+    "side": "Qinwen Zheng",
+    "usd": 3717,
+    "avgPrice": 0.677
+   }
+  ],
+  "hoursToKickoff": 2.6,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
+  "tokens": {
+   "Qinwen Zheng": "8138927759818388694000495498081321702357907148920294029396860271138446377325",
+   "Yulia Putintseva": "82264464220572542016572500418195216449755338217649653490518067233733157471587"
+  },
+  "book": {
+   "side": "Qinwen Zheng",
+   "bid": 0.7,
+   "ask": 0.71,
+   "spreadC": 1.0,
+   "spreadPct": 1.41,
+   "bids": [
+    [
+     0.7,
+     3783
+    ],
+    [
+     0.69,
+     16001
+    ],
+    [
+     0.68,
+     6331
+    ],
+    [
+     0.67,
+     530
+    ],
+    [
+     0.66,
+     175
+    ],
+    [
+     0.65,
+     2653
+    ]
+   ],
+   "asks": [
+    [
+     0.71,
+     75065
+    ],
+    [
+     0.72,
+     34685
+    ],
+    [
+     0.73,
+     17585
+    ],
+    [
+     0.74,
+     13716
+    ],
+    [
+     0.75,
+     4130
+    ],
+    [
+     0.76,
+     13077
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "action": "BUY",
+    "side": "Yulia Putintseva",
+    "price": 0.3,
+    "usd": 3810,
+    "ts": 1788438022
+   }
+  ]
+ },
+ "mlb-tor-cle-2026-09-03": {
+  "shares": {
+   "Toronto Blue Jays": 12015.907591545001,
+   "Cleveland Guardians": 12258.670821935006
+  },
+  "prices": {
+   "Toronto Blue Jays": 0.495,
+   "Cleveland Guardians": 0.505
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "MLB",
+  "sport": "US-Sport",
+  "totalUsd": 28293,
+  "whales": [
+   {
+    "wallet": "0xd9425013c71600448b32e9c2dd6bc7eb30bdf9d3",
+    "side": "Cleveland Guardians",
+    "usd": 4530,
+    "avgPrice": 0.5077
+   },
+   {
+    "wallet": "0x16bb9951a36fce71e2ef57890b786145e0ba8492",
+    "side": "Cleveland Guardians",
+    "usd": 3147,
+    "avgPrice": 0.5
+   },
+   {
+    "wallet": "0xc3c3b3ef304ddbea39fa2246e683a71da5d0eec8",
+    "side": "Toronto Blue Jays",
+    "usd": 2475
+   },
+   {
+    "wallet": "0xaa5d3b9a5ed0eb5c0672aa908ed14696e9007e90",
+    "side": "Toronto Blue Jays",
+    "usd": 2044,
+    "avgPrice": 0.5099
+   }
+  ],
+  "hoursToKickoff": 2.76,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
+  "tokens": {
+   "Toronto Blue Jays": "76707183707928870842544799008737154929784240389156762187233897121006449222052",
+   "Cleveland Guardians": "101109020247528646480073784482816782847461955105453593635236311182333128606585"
+  }
+ },
+ "wta-oliynyk-eala-2026-09-03": {
+  "shares": {
+   "Oleksandra Oliynykova": 3868.3783765999992,
+   "Alexandra Eala": 29769.685752345
+  },
+  "prices": {
+   "Oleksandra Oliynykova": 0.115,
+   "Alexandra Eala": 0.885
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 42191,
+  "whales": [
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "side": "Alexandra Eala",
+    "usd": 16197
+   },
+   {
+    "wallet": "0x49e0265d1a3636870df298e2ef5e681e246e9af1",
+    "side": "Alexandra Eala",
+    "usd": 4972,
+    "avgPrice": 0.8899
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "Alexandra Eala",
+    "usd": 1552,
+    "avgPrice": 0.8799
+   },
+   {
+    "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
+    "side": "Alexandra Eala",
+    "usd": 1440,
+    "avgPrice": 0.8759
+   }
+  ],
+  "hoursToKickoff": 2.6,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
+  "tokens": {
+   "Oleksandra Oliynykova": "31303148988602837398544082988298547981125241554193777911671461497815703230943",
+   "Alexandra Eala": "38060629527887258942821081369436748886910079796638402945005197533380755821370"
+  }
+ },
+ "atp-blockx-trungel-2026-09-02": {
+  "shares": {
+   "Alexander Blockx": 19375.91242673501,
+   "Marco Trungelliti": 3828.7732970850006
+  },
+  "prices": {
+   "Alexander Blockx": 0.835,
+   "Marco Trungelliti": 0.165
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 23538,
+  "whales": [
+   {
+    "wallet": "0xf3b04dd038fcf191692927c0aa5a38018ea323a1",
+    "side": "Alexander Blockx",
+    "usd": 10060,
+    "avgPrice": 0.8299
+   },
+   {
+    "wallet": "0x33c96d86e23e971777e9a0b59f4e21cc9e546f9a",
+    "side": "Alexander Blockx",
+    "usd": 5030,
+    "avgPrice": 0.8299
+   },
+   {
+    "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
+    "side": "Alexander Blockx",
+    "usd": 1608,
+    "avgPrice": 0.8277
+   },
+   {
+    "wallet": "0xf1528f12e645462c344799b62b1b421a6a4c64aa",
+    "side": "Alexander Blockx",
+    "usd": 1164,
+    "avgPrice": 0.82
+   }
+  ],
+  "hoursToKickoff": 2.6,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
+  "tokens": {
+   "Alexander Blockx": "46364735747534235553073073990429157847940825035843864613325829072930560300962",
+   "Marco Trungelliti": "13023323709967486377550476477762618879775352475017254865194314475611866143801"
+  }
+ },
+ "egy1-eas-sms-2026-09-01": {
+  "shares": {
+   "El Ahly SC": 9401.509516985005,
+   "Draw (El Ahly SC vs. Smouha SC)": 93.902420025,
+   "Smouha SC": 247.57369832500004
+  },
+  "prices": {
+   "El Ahly SC": 0.695,
+   "Draw (El Ahly SC vs. Smouha SC)": 0.225,
+   "Smouha SC": 0.085
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 17632,
+  "whales": [
+   {
+    "wallet": "0x64e93f87d8a0c1b2cde6f20d71f211372a95eb4c",
+    "side": "El Ahly SC",
+    "usd": 3607,
+    "avgPrice": 0.6803
+   },
+   {
+    "wallet": "0x511a5239644e88fbde60d9fd56aa3e87b3da9745",
+    "side": "El Ahly SC",
+    "usd": 3066,
+    "avgPrice": 0.7235
+   },
+   {
+    "wallet": "0x78698dddbc712aa621d0a1816cf4f729fd762233",
+    "side": "El Ahly SC",
+    "usd": 869,
+    "avgPrice": 0.7198
+   },
+   {
+    "wallet": "0x0b3f3c6a82e2a0637d81b6fded1501bed1e75a9f",
+    "side": "El Ahly SC",
+    "usd": 483,
+    "avgPrice": 0.7199
+   }
+  ],
+  "hoursToKickoff": 2.6,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
+  "tokens": {
+   "El Ahly SC": "104884834131243005502648189414262201319401113051858063669705250613081237958393",
+   "Draw (El Ahly SC vs. Smouha SC)": "22997269940311325374954818893830449522312814981811802807415428567296163054413",
+   "Smouha SC": "38172567453255822101294741806382798482055854133312476356542800283992123708061"
+  }
+ },
+ "crint-hon5-ind3-2026-09-03": {
+  "shares": {
+   "Hong Kong, China": 111.83692606849998,
+   "India": 7601.054132731501
+  },
+  "prices": {
+   "Hong Kong, China": 0.0145,
+   "India": 0.9855
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "CRICKET",
+  "sport": "Cricket",
+  "totalUsd": 8022,
+  "whales": [
+   {
+    "wallet": "0xd34881fce61c3ef3ece1745f238818eedea20265",
+    "side": "India",
+    "usd": 6789,
+    "avgPrice": 0.983
+   },
+   {
+    "wallet": "0xb8f6c79e452d7247d0cf47d16eaf7911953c4f7f",
+    "side": "India",
+    "usd": 492,
+    "avgPrice": 0.9797
+   },
+   {
+    "wallet": "0xbebc1d6b68637138aa50933ee99b593871acec02",
+    "side": "India",
+    "usd": 99,
+    "avgPrice": 0.9965
+   },
+   {
+    "wallet": "0x64a8f371e602fc3ddeb4942f01c356caf3fa7719",
+    "side": "India",
+    "usd": 90,
+    "avgPrice": 0.9799
+   }
+  ],
+  "hoursToKickoff": 0.1,
+  "capturedAt": "2026-09-03T14:27:23.877406+00:00",
+  "tokens": {
+   "Hong Kong, China": "48455211200583975513102451015141615487576782313905273300568190178118378439482",
+   "India": "8128587945228155599470278871048575709757683198402348322736209948777512779980"
   }
  }
 }
