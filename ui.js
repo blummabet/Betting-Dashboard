@@ -38,7 +38,7 @@ const _ALL_PANELS = [
   'intlCardsPanel', 'intlTrackingPanel', 'intlWm2026Panel', 'intlTelegramPanel',
   'tiktokStudioPanel', 'streaksPanel',
   'polymarketPanel', 'polyTraderPanel', 'polyWalletsPanel', 'betfairRadarPanel', 'moneyMapPanel',
-  'heartPanel', 'statusPanel', 'signalCheckPanel',
+  'heartPanel', 'statusPanel', 'signalCheckPanel', 'stakeRadarPanel',
 ];
 
 // Top-nav button IDs (Heart/Status seit 28.06.2026 im „Mehr"-Dropdown, nicht mehr hier)
@@ -79,6 +79,7 @@ function showView(view) {
     'betfair':           'betfairRadarPanel',
     'moneymap':          'moneyMapPanel',
     'analyse':           'signalCheckPanel',
+    'stakeradar':        'stakeRadarPanel',
     'heart':             'heartPanel',
     'status':            'statusPanel',
   };
@@ -182,6 +183,7 @@ function showView(view) {
   }
   if (view === 'moneymap'     && typeof initMoneyMap === 'function') initMoneyMap();
   if (view === 'analyse'      && typeof initSignalCheck === 'function') initSignalCheck();
+  if (view === 'stakeradar'   && typeof initStakeRadar === 'function') initStakeRadar();
   // (25.06.2026, Lucas: Liga auf WM-Stack) National-Views laufen jetzt auf dem
   // bewährten WM-Renderer/Tracking (liest liga-data.json) statt statischem
   // renderer.js-Output bzw. initResultsV2.

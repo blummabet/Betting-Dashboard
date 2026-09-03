@@ -431,6 +431,53 @@ Jede hat einen Guard. Wer eine ähnliche Änderung baut, prüft hier zuerst.
 
 ---
 
+### 🎰 Stake Radar (03.09.2026, Lucas: „ich würde gerne nur im Dashboard einen Bereich mit den Spielen sehen … dann rein und wir sammeln das")
+
+Vierte Quelle, und die einzige, die **einen einzelnen Einsatz mit Betrag** nennt: Stake zeigt große
+Wetten öffentlich (Event, User, Zeit, Quote, Einsatz). Betfair gibt Matched-Volumen, Poly gibt
+Preis-als-Geldanteil, Pinnacle gibt den Anker — keine davon nennt eine einzelne Wette.
+
+Das ist der eigentliche Grund, das zu bauen, und er steht in unserer eigenen Messung vom 01.09.
+auf 500 Plays: **Bücher addieren (+11,5 %), Signale innerhalb eines Buchs stapeln nicht (−1,1 %)**.
+Stake bringt eine neue Achse (Einsatz*fluss*), nicht ein weiteres Preissignal — Stakes Quoten
+kommen aus einem eingekauften Feed und sind preisseitig gar nicht unabhängig.
+
+**Status: Sammlung, kein Signal.** Für Stake-Einsatzfluss ist im Projekt weder eine Trefferquote
+noch ein CLV gemessen. Die Anregung dazu kam mit einer fertigen Bewertungstabelle („4–5 Wetten in
+1 Minute 🟢 Strong"), die keine Trefferquote, keinen CLV und kein n nennt — genau die Klasse
+Behauptung, die der Checkup vom selben Tag achtmal aus der Übersicht geräumt hat. Sie kommt
+deshalb weder in den Sammler noch in den Tab; beide Testdateien prüfen ihre **Abwesenheit**.
+
+Drei Dinge, die die Fläche nicht darf, jeweils mit Test:
+
+| Verbot | Warum |
+|---|---|
+| unbekannten Einsatz als 0 führen | Wetten laufen in BTC/ETH ohne USD-Kurs im Feed. Unbekannt ≠ klein → `einsatzUsd: null` + sichtbarer Zähler „ohne $-Wert" (*fehlende Information ist keine Erlaubnis*) |
+| einen Feed-Fehler als leere Liste zeigen | Stake sitzt hinter Cloudflare. Ein 403 sähe sonst aus wie „heute keine großen Wetten" → `status: fehler/schema_unbekannt` + Grund auf der Fläche |
+| Wetten ohne ID mitzählen | ohne ID keine Deduplizierung, und doppelt gezähltes Geld ist schlimmer als eine fehlende Wette → `ohneIdVerworfen` |
+
+**Bekannte Schwäche der Quelle, und sie steht auf der Fläche:** Stake hat eine „Wetten
+verbergen"-Einstellung. Wer sie nutzt, taucht nicht auf — die Liste ist **eine Auswahl, keine
+Grundgesamtheit**, und die Auswahl geht systematisch in die falsche Richtung (wer verbirgt, hat
+meist einen Grund). Deshalb: erst gegen den **Pinnacle-Schlusskurs** messen (CLV, aussagekräftig
+ab n≈200, ohne auf Ergebnisse zu warten), dann über ein Vorwärtsbuch reden.
+
+Technisch: Stakes GraphQL-Schema ist undokumentiert und wandert. `stake_highroller_fetch.py`
+**rät keine Feldnamen** — es fragt per Introspection, welches Query-Feld die Highroller liefert,
+baut die Selektion aus dem Schema und zieht die Werte über Feldnamen statt Positionen.
+`--sonde` prüft die Schnittstelle, ohne zu sammeln.
+
+**Kein eigener Cron.** Ein 10-Minuten-Takt hätte die repo-weite Schedule-Last von 534 auf 678
+gehoben (Deckel 540, weil GitHub bei 585 anfing zu verschlucken) — selbst stündlich passte nicht
+mehr. Das Sammeln hängt an `poly-live-scan.yml`, das ohnehin alle 15 Minuten auf demselben
+Mac-Runner läuft: 96 Läufe/Tag zum Preis von null neuen Schedules.
+
+Nebenbefund beim Bauen: das Web-Dropdown und das mobile Sheet wurden nur **gezählt**, nicht
+verglichen — der neue Tab landete zuerst nur im Dropdown und war mobil unerreichbar. `pwa-nav`
+vergleicht jetzt beide Flächen gegeneinander.
+
+---
+
 ## 8. Harte Arbeitsregeln
 
 - **Push nur über GitHub Desktop**, nie CLI.

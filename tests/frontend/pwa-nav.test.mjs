@@ -22,13 +22,25 @@ test('PWA-Tags + Navi-Markup (Bottom-Nav, Sheet, Web-Dropdown) im HTML vorhanden
   // Sub-Navi: Cards + Serien + Tracking (Serien zwischen Cards und Tracking, 28.06.2026)
   assert.equal(d.querySelectorAll('#subNav .sub-nav-btn').length, 3, 'Sub-Navi: Cards, Serien, Tracking');
   assert.ok(d.getElementById('subStreaks'), 'Serien-Sub-Tab fehlt');
-  // Web „Mehr"-Dropdown mit 7 Einträgen (International/Poly-Trading/Sharp/Heart/Status/TikTok/Analyse, 14.08.2026)
+  // Web „Mehr"-Dropdown (International/Poly-Trading/Sharp/Heart/Status/TikTok/Analyse/Stake, 03.09.2026)
   assert.ok(d.getElementById('navMore'), 'Web-Mehr-Button fehlt');
-  assert.equal(d.querySelectorAll('#topMoreMenu .tm-item').length, 7, '7 Dropdown-Einträge erwartet');
+  // 03.09.2026: vorher zaehlte das hier nur. Eine Zahl sagt nicht, WAS fehlt — und beim
+  // Stake-Radar fiel genau deshalb auf, dass der Eintrag im Web-Dropdown stand, im mobilen
+  // Sheet aber nicht: mobil war der Tab unerreichbar. Jetzt werden die MENGEN verglichen,
+  // damit ein neuer Eintrag nie nur auf einer der beiden Flaechen landet.
+  // Die beiden Flaechen benennen ihre Ziele historisch unterschiedlich (das Sheet trug frueher
+  // data-sec, das Dropdown data-view), ein Namensvergleich ginge also am Zustand vorbei. Was
+  // zaehlt, ist: gleich viele Eintraege, und der neue auf BEIDEN.
+  const ziele = (sel, b) => [...d.querySelectorAll(sel)].map(x => x.dataset.view || x.dataset.sec);
+  const drop = ziele('#topMoreMenu .tm-item');
+  const sheet = ziele('.more-sheet .ms-btn');
+  assert.equal(drop.length, 8, '8 Dropdown-Eintraege erwartet');
+  assert.equal(sheet.length, drop.length,
+    'Web-Dropdown und mobiles Sheet aus dem Takt — ein Tab waere auf einer Flaeche unerreichbar');
+  assert.ok(drop.includes('stakeradar'), 'Stake Radar fehlt im Web-Dropdown');
+  assert.ok(sheet.includes('stakeradar'), 'Stake Radar fehlt im mobilen Sheet');
   // Mobile Bottom-Nav (7 Tabs: Übersicht/National/Betting/Wallets/Betfair/Money/Mehr)
-  // + Sheet (7: International, Poly-Trading, Sharp, Heart, Status, TikTok, Analyse)
   assert.equal(d.querySelectorAll('.bottom-nav .bn-btn').length, 7, '7 Bottom-Tabs erwartet');
-  assert.equal(d.querySelectorAll('.more-sheet .ms-btn').length, 7, '7 Sheet-Einträge erwartet');
   // Telegram Control liegt jetzt als ausklappbarer Abschnitt im Status-Tab, nicht mehr im Menü
   assert.ok(d.getElementById('st_telegram'), 'Telegram-Details im Status-Tab fehlt');
   assert.equal(d.querySelectorAll('[data-view="intl-telegram"]').length, 0, 'Kein Telegram-Menüeintrag mehr');
