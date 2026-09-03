@@ -218,3 +218,31 @@ test('die Nutzer-Spalte ist weg — der Feed liefert dort nie etwas', () => {
   const karte = schneide('function _srKarte', 'function _srRender');
   assert.ok(!/sr-bu/.test(karte), 'eine Spalte, die immer leer bleibt, ist kein Platzhalter wert');
 });
+
+// ── Schwellen (03.09.2026, Lucas: „die gehören mal etwas höher") ────────────
+test('die Anzeige startet bei $5.000, nicht bei $1.000', () => {
+  // Im ersten echten Ledger lagen 68 von 93 Wetten über $1.000 — das ist keine Auswahl.
+  // Gesammelt wird weiter alles; das hier ist nur der Startwert der Anzeige.
+  assert.ok(/var SR_MIN_USD = 5000;/.test(JS));
+  assert.ok(/SR_STAKE_LIMITS = \[1000, 2500, 5000, 10000, 25000\]/.test(JS),
+    'die Regler-Stufen müssen mitgewachsen sein');
+});
+
+test('die Regler können wieder runter — eine Schwelle ist kein Filter der Sammlung', () => {
+  const von = JS.indexOf('SR_STAKE_LIMITS');
+  const zeile = JS.slice(von, JS.indexOf('\n', von));
+  assert.ok(zeile.includes('1000'), 'die niedrigste Stufe bleibt erreichbar');
+});
+
+test('ein umgerechneter Betrag sagt, dass er umgerechnet ist', () => {
+  // 27% der ersten 93 Wetten liefen in eth/sol/btc/cad/try/ltc/xrp/aed. Die zählen jetzt
+  // mit — aber ein Kurswert ist kein gemessener Dollarbetrag und wird als solcher markiert.
+  const karte = schneide('function _srKarte', 'function _srRender');
+  assert.ok(/usdGrund/.test(karte), 'die Herkunft des Betrags muss geprüft werden');
+  assert.ok(/sr-um/.test(karte), 'und sichtbar markiert sein');
+});
+
+test('der Kursstand steht im Kopf', () => {
+  const basis = schneide('var basis =', 'var warn =');
+  assert.ok(/kurse/.test(basis), 'auch ein umgerechneter Wert nennt seine Basis');
+});

@@ -50,6 +50,7 @@ aggregierten Fluss, nie "dieser Spieler hat schon wieder recht behalten".
   stake_bet_ledger.json  — die Sammlung (dedupliziert über Wett-ID, gedeckelt)
   stake_schema_probe.json— was die Sonde über das Schema gelernt hat (nur --sonde)
   stake_query.json       — die gelernte Abfrage, damit nicht jeder Lauf neu lernt
+  stake_kurse.json       — USD-Kurse je Waehrung (aus derselben Quelle), mit Stand
 
 ## Env
   STAKE_MIN_USD        Mindesteinsatz in USD (Default 1000)
@@ -80,6 +81,7 @@ VIEW_FILE   = BASE / "stake_highroller.json"
 LEDGER_FILE = BASE / "stake_bet_ledger.json"
 PROBE_FILE  = BASE / "stake_schema_probe.json"
 QUERY_FILE  = BASE / "stake_query.json"
+KURS_FILE   = BASE / "stake_kurse.json"
 
 ENDPUNKTE = [
     "https://stake.com/_api/graphql",
@@ -102,10 +104,57 @@ KOPF = {
     "referer": "https://stake.com/sports/highrollers",
 }
 
-# Stablecoins rechnen 1:1. Alles andere ohne mitgelieferten USD-Wert bleibt None —
-# eine unbekannte Größe darf NICHT als 0 durchgehen, sonst sieht „weiß ich nicht"
-# aus wie „war klein".
+# Stablecoins rechnen 1:1. Alles andere braucht einen Kurs; ohne Kurs bleibt der Wert None —
+# eine unbekannte Größe darf NICHT als 0 durchgehen, sonst sieht „weiß ich nicht" aus wie
+# „war klein".
 STABLE = {"usdt", "usdc", "busd", "dai", "usd", "tusd", "usdp"}
+
+# 03.09.2026 — im ersten echten Ledger hatten 25 von 93 Wetten (27%) keinen USD-Wert: eth, sol,
+# btc, cad, try, ltc, xrp, aed. Ein Viertel des Flusses unsichtbar, und darunter waren keine
+# Kleinbeträge. Die Kurse liegen bei derselben Quelle:
+#
+#   currencyConfiguration(isAcp: false) { currencies { name rates { currency rate } } }
+#
+# 174 Währungen, je Währung ein Kurs gegen jede andere; wir nehmen die Zeile currency=="usd".
+# Gemessen am 03.09.: btc 81433,23 · eth 2511,93 · sol 105,41 · cad 0,7252.
+#
+# Der Kurs wird EINMAL je Lauf geholt und in stake_kurse.json abgelegt. Schlägt der Abruf fehl,
+# gilt der letzte bekannte Kurs weiter — mit seinem Alter, das im Datensatz mitfährt. Ein alter
+# Kurs ist für die Größenordnung einer Wette brauchbar, ein stillschweigend alter nicht.
+KURS_QUERY = ("query K($a: Boolean!) { currencyConfiguration(isAcp: $a) "
+              "{ currencies { name rates { currency rate } } } }")
+KURS_MAX_ALTER_H = 24
+
+
+def kurse_holen(url: str, alt: dict = None) -> dict:
+    """-> {"usd": {waehrung: kurs}, "geholt": iso, "quelle": "live"|"cache"|"leer"}"""
+    st, d, err = _post(url, {"query": KURS_QUERY, "variables": {"a": False}})
+    rows = _pfad(d, "data", "currencyConfiguration", "currencies")
+    tab = {}
+    for r in rows or []:
+        name = (r.get("name") or "").lower()
+        for x in (r.get("rates") or []):
+            if (x.get("currency") or "").lower() == "usd" and isinstance(x.get("rate"), (int, float)):
+                tab[name] = float(x["rate"])
+                break
+    if tab:
+        return {"usd": tab, "geholt": datetime.now(timezone.utc).isoformat().replace("+00:00", "Z"),
+                "quelle": "live", "n": len(tab)}
+    behalten = (alt or {}).get("usd") or {}
+    return {"usd": behalten, "geholt": (alt or {}).get("geholt"),
+            "quelle": "cache" if behalten else "leer", "n": len(behalten),
+            "fehler": err or "keine Kurse in der Antwort"}
+
+
+def _kurs_alter_h(kurse: dict):
+    g = (kurse or {}).get("geholt")
+    if not g:
+        return None
+    try:
+        d = datetime.fromisoformat(str(g).replace("Z", "+00:00"))
+    except Exception:
+        return None
+    return (datetime.now(timezone.utc) - d).total_seconds() / 3600.0
 
 
 # ── HTTP ─────────────────────────────────────────────────────────────────────
@@ -630,7 +679,7 @@ def _zeit(s):
     return d.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
 
 
-def _usd(betrag, waehrung, roh) -> tuple:
+def _usd(betrag, waehrung, roh, kurse: dict = None) -> tuple:
     """-> (usd:float|None, grund:str). None heißt unbekannt, NICHT null."""
     direkt = _erst(roh, {"amountusd", "usdamount", "amountindollars", "usdvalue"}, float)
     if direkt is not None:
@@ -640,10 +689,18 @@ def _usd(betrag, waehrung, roh) -> tuple:
     w = (waehrung or "").lower()
     if w in STABLE:
         return float(betrag), "stablecoin"
+    k = ((kurse or {}).get("usd") or {}).get(w)
+    if isinstance(k, (int, float)) and k > 0:
+        alter = _kurs_alter_h(kurse)
+        if alter is not None and alter > KURS_MAX_ALTER_H:
+            # Ein Kurs von gestern taugt fuer eine Groessenordnung, aber er soll sich nicht
+            # als frisch ausgeben — der Grund traegt das Alter mit.
+            return float(betrag) * float(k), "kurs_alt_%dh" % round(alter)
+        return float(betrag) * float(k), "kurs"
     return None, "kurs_fehlt:" + (w or "?")
 
 
-def normalisiere(rec: dict) -> dict:
+def normalisiere(rec: dict, kurse: dict = None) -> dict:
     """Aus einem rohen Highroller-Eintrag die Felder ziehen, die wir brauchen.
 
     Erst über den bekannten Pfad (verifiziert am echten Feed), dann als Netz über
@@ -672,7 +729,7 @@ def normalisiere(rec: dict) -> dict:
     except Exception:
         quote = None
 
-    usd, usd_grund = _usd(betrag, waehrung, rec)
+    usd, usd_grund = _usd(betrag, waehrung, rec, kurse)
     kombi = len(beine) > 1
 
     return {
@@ -719,6 +776,38 @@ def _schreibe(pfad: Path, daten):
     tmp.replace(pfad)
 
 
+def luecke_messen(alt: dict, neu: list) -> dict:
+    """Haben wir zwischen zwei Abrufen Wetten verpasst?
+
+    03.09.2026 — erster echter Lauf: 50 Wetten deckten 12 Minuten ab, der Job lief alle 15.
+    Der Feed gibt hoechstens 50 Eintraege her (MAX_LIMIT); ist der aelteste davon JUENGER als
+    der juengste des letzten Laufs, liegt dazwischen ein Loch, aus dem wir nichts gesehen haben.
+    Das passiert genau dann, wenn viel los ist — also wenn es am meisten zaehlt.
+
+    Gemessen wird es, weil eine Luecke, die niemand sieht, spaeter als "an dem Abend war halt
+    wenig los" durchgeht.
+    """
+    vorher = [w.get("ts") for w in (alt.get("wetten") or []) if w.get("ts")]
+    frisch = [w.get("ts") for w in neu if w.get("ts")]
+    if not vorher or not frisch:
+        return {"luecke": None, "grund": "erster Lauf"}
+    juengster_alt = max(vorher)
+    aeltester_neu = min(frisch)
+    if aeltester_neu <= juengster_alt:
+        return {"luecke": False, "abdeckungMin": _minuten(min(frisch), max(frisch))}
+    return {"luecke": True, "lueckeMin": _minuten(juengster_alt, aeltester_neu),
+            "abdeckungMin": _minuten(min(frisch), max(frisch))}
+
+
+def _minuten(a, b):
+    try:
+        da = datetime.fromisoformat(str(a).replace("Z", "+00:00"))
+        db = datetime.fromisoformat(str(b).replace("Z", "+00:00"))
+        return round((db - da).total_seconds() / 60.0, 1)
+    except Exception:
+        return None
+
+
 def ledger_mischen(alt: dict, neu: list, jetzt: str) -> dict:
     """Dedupliziert über die Wett-ID. Einträge ohne ID werden verworfen —
     ohne ID kann man nicht deduplizieren, und doppelt gezähltes Geld ist
@@ -763,7 +852,7 @@ def _im_fenster(w: dict, ab: datetime) -> bool:
 
 
 def sicht_bauen(ledger: dict, jetzt: datetime, status: str, endpunkt: str,
-                feld: str, notiz: str) -> dict:
+                feld: str, notiz: str, kurse: dict = None) -> dict:
     ab = jetzt - timedelta(hours=FENSTER_H)
     im_fenster = [w for w in (ledger.get("wetten") or []) if _im_fenster(w, ab)]
     ueber = [w for w in im_fenster
@@ -782,6 +871,8 @@ def sicht_bauen(ledger: dict, jetzt: datetime, status: str, endpunkt: str,
         "nFenster": len(im_fenster),
         "nUeberSchwelle": len(ueber),
         "nEinsatzUnbekannt": len(unklar),
+        "kurse": {k: v for k, v in (kurse or {}).items() if k != "usd"},
+        "luecke": ledger.get("luecke") or {},
         # Die Sicht trägt die ROHEN Wetten im Fenster — gruppiert und gefiltert wird
         # im Frontend, damit Lucas die Schwellen live drehen kann.
         "wetten": im_fenster[:VIEW_KEEP],
@@ -872,7 +963,8 @@ def holen(sonde: bool = False):
             "asof": jetzt_s, "status": "ok" if roh else "leer", "endpunkt": url_ok,
             "feld": feld, "query": query, "httpStatus": st, "fehler": err,
             "nRoh": len(roh), "beispielRoh": roh[:2],
-            "beispielNormalisiert": [normalisiere(r) for r in roh[:5]],
+            "beispielNormalisiert": [normalisiere(r, kurse_holen(url_ok, _lade(KURS_FILE, {})))
+                                     for r in roh[:5]],
             "graphqlFehler": (d or {}).get("errors"),
             "feldsuche": _PROTOKOLL[:40],
         })
@@ -885,13 +977,25 @@ def holen(sonde: bool = False):
             print("Fehler:", err, (d or {}).get("errors"))
         return 0 if roh else 1
 
-    neu = [normalisiere(r) for r in roh]
-    ledger = ledger_mischen(_lade(LEDGER_FILE, {}), neu, jetzt_s)
+    # Kurse einmal je Lauf; scheitert der Abruf, gilt der letzte bekannte weiter (mit Alter).
+    kurse = kurse_holen(url_ok, _lade(KURS_FILE, {}))
+    if kurse.get("usd"):
+        _schreibe(KURS_FILE, kurse)
+    neu = [normalisiere(r, kurse) for r in roh]
+    vorher = _lade(LEDGER_FILE, {})
+    luecke = luecke_messen(vorher, neu)
+    ledger = ledger_mischen(vorher, neu, jetzt_s)
+    ledger["luecke"] = luecke
     _schreibe(LEDGER_FILE, ledger)
     status = "ok" if roh else ("leer" if not err else "fehler")
-    _schreibe(VIEW_FILE, sicht_bauen(ledger, jetzt, status, url_ok, feld, err or ""))
+    _schreibe(VIEW_FILE, sicht_bauen(ledger, jetzt, status, url_ok, feld, err or "", kurse))
     print("Stake: %d geholt, %d neu, Ledger %d, Fenster %dh, Schwelle $%.0f"
           % (len(roh), ledger["zugangLetzterLauf"], ledger["n"], FENSTER_H, MIN_USD))
+    if luecke.get("luecke"):
+        print("  ⚠️  Luecke: %s Min ungesehen (dieser Abruf deckt %s Min ab, %d Eintraege = Deckel)"
+              % (luecke.get("lueckeMin"), luecke.get("abdeckungMin"), len(roh)))
+    elif luecke.get("abdeckungMin") is not None:
+        print("  Abdeckung dieses Abrufs: %s Min" % luecke["abdeckungMin"])
     return 0 if roh else 1
 
 

@@ -13,13 +13,18 @@
    Liest stake_highroller.json (vom Runner, stake_highroller_fetch.py). Reine Anzeige. */
 (function () {
   var SR = { daten: null, geladen: false, styled: false };
-  var SR_MIN_USD = 1000;      // Regler: Mindesteinsatz je Wette
+  // 03.09.2026 (Lucas, nach dem ersten echten Ledger): „müssen uns nur etwas mehr an den
+  // Schwellen rumspielen, die gehören mal etwas höher". Im ersten Lauf lagen 68 von 93 Wetten
+  // über $1.000 — das ist keine Auswahl mehr, das ist die Liste. $5.000 lässt die Handvoll
+  // übrig, bei der die Größe selbst schon etwas heißt. Der Sammler sammelt weiter ALLES;
+  // hier wird nur angezeigt, die Regler gehen jederzeit wieder runter.
+  var SR_MIN_USD = 5000;      // Regler: Mindesteinsatz je Wette
   var SR_MIN_N = 2;           // Regler: ab wie vielen Wetten ein Spiel gezeigt wird
   var SR_FENSTER_H = 24;      // Regler: Zeitfenster
   var SR_SPORT = 'alle';
   var SR_SORT = 'geld';       // geld | dichte | zeit
 
-  var SR_STAKE_LIMITS = [500, 1000, 2500, 5000, 10000];
+  var SR_STAKE_LIMITS = [1000, 2500, 5000, 10000, 25000];
   var SR_FENSTER = [6, 12, 24, 48];
 
   function _srStyle() {
@@ -65,6 +70,7 @@
 '.sr-bet .sr-bo{width:46px;flex:none;text-align:right}',
 '.sr-bet .sr-bg{width:64px;flex:none;text-align:right;color:#c2ccd8;font-weight:700}',
 '.sr-bet .sr-bg.sr-unk{color:#e3b341;font-weight:600}',
+'.sr-um{color:#5c6577;font-weight:600;margin-left:2px}',
 '.sr-mehr{margin-top:6px;font-size:10.5px;color:#5c6577}',
 '.sr-tag{font-size:9px;font-weight:800;letter-spacing:.4px;padding:2px 7px;border-radius:6px;text-transform:uppercase;color:#e3b341;border:1px solid rgba(201,133,0,.42)}'
     ].join('\n');
@@ -208,8 +214,11 @@
     // Der Feed nennt keinen Nutzer — `user` ist bei Stake immer null. Statt einer Spalte
     // mit lauter Strichen steht dort das, was der Feed wirklich hergibt: Markt und Auswahl.
     var bets = g.wetten.slice(0, 6).map(function (w) {
+      var umger = w.einsatzUsd != null && String(w.usdGrund || '').indexOf('kurs') === 0;
       var geld = w.einsatzUsd != null
-        ? '<span class="sr-bg">' + _srUsd(w.einsatzUsd) + '</span>'
+        ? '<span class="sr-bg"' + (umger ? ' title="' + _srEsc(w.betrag) + ' ' +
+            _srEsc((w.waehrung || '').toUpperCase()) + ', umgerechnet mit Stakes Kurs"' : '') + '>' +
+          _srUsd(w.einsatzUsd) + (umger ? '<span class="sr-um">≈</span>' : '') + '</span>'
         : '<span class="sr-bg sr-unk" title="Einsatz in ' + _srEsc(w.waehrung || '?') +
           ' — kein USD-Kurs im Feed, deshalb nicht mitgerechnet">? ' + _srEsc(w.waehrung || '') + '</span>';
       var q = w.kombi ? (w.beinQuote != null ? w.beinQuote : w.quote) : w.quote;
@@ -280,6 +289,9 @@
       '<span>im Ledger <b>' + (d.nLedger || 0) + '</b> Wetten</span>' +
       '<span>im Feed-Fenster <b>' + (d.nFenster || 0) + '</b></span>' +
       (d.nEinsatzUnbekannt ? '<span style="color:#e3b341">ohne $-Wert <b>' + d.nEinsatzUnbekannt + '</b></span>' : '') +
+      (d.kurse && d.kurse.quelle
+        ? '<span title="Nicht-USD-Einsätze werden mit Stakes eigenen Kursen umgerechnet">Kurse <b>' +
+          _srEsc(d.kurse.quelle === 'live' ? 'frisch' : d.kurse.quelle) + '</b></span>' : '') +
       '<span>Stand <b>' + _srZeit(d.asof) + '</b></span></div>';
 
     var warn = '<div class="sr-warn">Der Feed ist <b>anonym</b> — Stake nennt zu keiner Wette ein ' +

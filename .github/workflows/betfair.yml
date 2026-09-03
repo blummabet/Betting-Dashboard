@@ -41,6 +41,18 @@ jobs:
           echo "✅ $PYTHON ($($PYTHON --version))"
           echo "BETFAIR_PY=$PYTHON" >> $GITHUB_ENV
 
+      # 03.09.2026 — der Stake-Sammler reist hier mit, nicht mehr beim Poly-Live-Scan.
+      # Grund: der erste echte Lauf zeigte, dass 50 Eintraege (Stakes Deckel) nur 12 Minuten
+      # abdecken. Bei einem 15-Minuten-Takt fehlten damit rund 3 Minuten je Zyklus — und zwar
+      # genau dann, wenn viel los ist. Dieser Job laeuft */10, also mit 2 Minuten Ueberlappung.
+      # Reicht auch das nicht, sagt es der Sammler selbst: er misst die Luecke und schreibt sie
+      # ins Ledger, statt sie als ruhigen Abend durchgehen zu lassen.
+      - name: 🎰 Stake Highroller sammeln
+        continue-on-error: true
+        env:
+          STAKE_MIN_USD: '1000'
+        run: ${{ env.BETFAIR_PY }} stake_highroller_fetch.py || echo "  ⚠️ Stake-Abruf fehlgeschlagen (Betfair laeuft weiter)"
+
       - name: 🟡 Betfair/Betwatch fetchen
         run: ${{ env.BETFAIR_PY }} fetch_betfair_betwatch.py
         env:
@@ -170,6 +182,10 @@ jobs:
           # Ausloeser diesmal: neue Dateien (punkte_*, vorregistrierung, odds_sports), die es auf
           # dem Runner noch gar nicht gab. Ab jetzt bekommt JEDE Datei ihre eigene Zeile —
           # eine fehlende kostet dann genau sich selbst und nicht den ganzen Lauf.
+          git add stake_highroller.json 2>/dev/null || true
+          git add stake_bet_ledger.json 2>/dev/null || true
+          git add stake_query.json 2>/dev/null || true
+          git add stake_kurse.json 2>/dev/null || true
           git add betfair_prices.json 2>/dev/null || true
           git add betfair_history.json 2>/dev/null || true
           git add betfair_overview.json 2>/dev/null || true
