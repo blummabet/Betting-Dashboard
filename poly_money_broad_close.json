@@ -164316,7 +164316,13 @@
     "usd": 3074,
     "ts": 1788426198
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "FOKUS": 1.0,
+   "Sinners": 0.0
+  },
+  "resolvedAt": "2026-09-03T15:59:37.926326+00:00"
  },
  "itf-milanes-voracek-2026-09-03": {
   "shares": {
@@ -164787,7 +164793,13 @@
     "usd": 428,
     "ts": 1788432387
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "magic": 1.0,
+   "BIG": 0.0
+  },
+  "resolvedAt": "2026-09-03T15:59:37.926326+00:00"
  },
  "crint-nam-zwe-2026-09-03": {
   "shares": {
@@ -166543,14 +166555,14 @@
  },
  "spl-fay-kho-2026-09-03": {
   "shares": {
-   "Al Fayha Saudi Club": 8178.106094950004,
-   "Draw (Al Fayha Saudi Club vs. Al Kholood Saudi Club)": 1579.45187457,
-   "Al Kholood Saudi Club": 15107.110365010001
+   "Al Fayha Saudi Club": 7483.705183625003,
+   "Draw (Al Fayha Saudi Club vs. Al Kholood Saudi Club)": 2545.230638225001,
+   "Al Kholood Saudi Club": 22116.91006070001
   },
   "prices": {
    "Al Fayha Saudi Club": 0.275,
-   "Draw (Al Fayha Saudi Club vs. Al Kholood Saudi Club)": 0.285,
-   "Al Kholood Saudi Club": 0.445
+   "Draw (Al Fayha Saudi Club vs. Al Kholood Saudi Club)": 0.275,
+   "Al Kholood Saudi Club": 0.455
   },
   "splitGuete": {
    "art": "belastbar",
@@ -166558,35 +166570,35 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 87112,
+  "totalUsd": 115482,
   "whales": [
    {
     "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
     "side": "Al Kholood Saudi Club",
-    "usd": 4531,
+    "usd": 4632,
     "avgPrice": 0.4027
-   },
-   {
-    "wallet": "0xe8c4d68aff65b38cac46987b9b65e01eb47d395d",
-    "side": "Al Kholood Saudi Club",
-    "usd": 1958,
-    "avgPrice": 0.4199
    },
    {
     "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
     "side": "Al Kholood Saudi Club",
-    "usd": 1567,
-    "avgPrice": 0.4247
+    "usd": 3592,
+    "avgPrice": 0.4422
    },
    {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "side": "Al Fayha Saudi Club",
-    "usd": 1289,
-    "avgPrice": 0.2708
+    "wallet": "0xc3ed109b65de5026da25cf80ce91779dfc2c9f79",
+    "side": "Al Kholood Saudi Club",
+    "usd": 2895,
+    "avgPrice": 0.4715
+   },
+   {
+    "wallet": "0xe8c4d68aff65b38cac46987b9b65e01eb47d395d",
+    "side": "Al Kholood Saudi Club",
+    "usd": 2002,
+    "avgPrice": 0.4199
    }
   ],
-  "hoursToKickoff": 0.51,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 0.01,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "Al Fayha Saudi Club": "32832049178767554105257215521399500743327431008249963428410092883511528279390",
    "Draw (Al Fayha Saudi Club vs. Al Kholood Saudi Club)": "41075670656658016312545651059586144708774540942940017063068685229273747204419",
@@ -166594,100 +166606,92 @@
   },
   "book": {
    "side": "Al Kholood Saudi Club",
-   "bid": 0.44,
-   "ask": 0.45,
-   "spreadC": 1.0,
-   "spreadPct": 2.22,
+   "bid": 0.4,
+   "ask": 0.44,
+   "spreadC": 4.0,
+   "spreadPct": 9.09,
    "bids": [
     [
-     0.44,
-     21277
-    ],
-    [
-     0.43,
-     28746
-    ],
-    [
-     0.42,
-     20239
-    ],
-    [
-     0.41,
-     13126
-    ],
-    [
      0.4,
-     6095
+     22
     ],
     [
      0.39,
-     1560
+     25
+    ],
+    [
+     0.38,
+     50
+    ],
+    [
+     0.37,
+     25
+    ],
+    [
+     0.35,
+     22
+    ],
+    [
+     0.32,
+     77
     ]
    ],
    "asks": [
     [
+     0.44,
+     1559
+    ],
+    [
      0.45,
-     1271
+     4607
     ],
     [
      0.46,
-     59060
+     1637
     ],
     [
      0.47,
-     16539
+     1510
     ],
     [
      0.48,
-     28324
+     10
     ],
     [
      0.49,
-     17271
-    ],
-    [
-     0.5,
-     20105
+     73
     ]
    ]
   },
   "trades": [
    {
-    "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.46,
+    "usd": 472,
+    "ts": 1788450865
+   },
+   {
+    "wallet": "0x6055af2b735b5840988c2d1025c74981dd2c5fde",
     "action": "BUY",
     "side": "Yes",
     "price": 0.45,
-    "usd": 361,
-    "ts": 1788448341
-   },
-   {
-    "wallet": "0x98fc21b64d321cf5e8c69e9d9a575aa42385a4a2",
-    "action": "BUY",
-    "side": "No",
-    "price": 0.56,
-    "usd": 1000,
-    "ts": 1788447490
-   },
-   {
-    "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
-    "action": "BUY",
-    "side": "Yes",
-    "price": 0.45,
-    "usd": 952,
-    "ts": 1788446527
+    "usd": 370,
+    "ts": 1788449655
    }
   ]
  },
  "itc-pal-man-2026-09-03": {
   "shares": {
-   "Palermo FC": 17999.551448789996,
-   "Draw (Palermo FC vs. Mantova 1911)": 143.76804009000003,
-   "Mantova 1911": 5560.663076215002
+   "Palermo FC": 20932.253970810005,
+   "Draw (Palermo FC vs. Mantova 1911)": 364.2278783,
+   "Mantova 1911": 6161.725769085001
   },
   "prices": {
-   "Palermo FC": 0.485,
-   "Draw (Palermo FC vs. Mantova 1911)": 0.265,
-   "Mantova 1911": 0.235
+   "Palermo FC": 0.455,
+   "Draw (Palermo FC vs. Mantova 1911)": 0.275,
+   "Mantova 1911": 0.255
   },
   "splitGuete": {
    "art": "belastbar",
@@ -166695,34 +166699,34 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 63202,
+  "totalUsd": 88494,
   "whales": [
    {
     "wallet": "0x6d11cd749eb59c8ffa6d38be80ad0ad0a255c449",
     "side": "Palermo FC",
-    "usd": 4088,
+    "usd": 5539,
     "avgPrice": 0.47
    },
    {
-    "wallet": "0xfb07f48542d2b655e9d0bf1cc92a8a6feee8e2cc",
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "Palermo FC",
-    "usd": 1455,
-    "avgPrice": 0.56
+    "usd": 2126,
+    "avgPrice": 0.4875
    },
    {
     "wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
     "side": "Mantova 1911",
-    "usd": 1410
+    "usd": 1530
    },
    {
-    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+    "wallet": "0xfb07f48542d2b655e9d0bf1cc92a8a6feee8e2cc",
     "side": "Palermo FC",
-    "usd": 1325,
-    "avgPrice": 0.5285
+    "usd": 1365,
+    "avgPrice": 0.56
    }
   ],
-  "hoursToKickoff": 0.6,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 0.1,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "Palermo FC": "22801107831228713836882478145559311954777521464419871121686525875057453048618",
    "Draw (Palermo FC vs. Mantova 1911)": "7747207556597800281579932526248647228982383841809216525452283033122528061177",
@@ -166829,13 +166833,13 @@
  },
  "pol-cze-gor-2026-09-03": {
   "shares": {
-   "RKS Rakow Czestochowa": 134.49373870999997,
-   "Draw (RKS Rakow Czestochowa vs. Gornik Zabrze)": 32.03768804,
-   "Gornik Zabrze": 4373.628014625
+   "RKS Rakow Czestochowa": 150.843877695,
+   "Draw (RKS Rakow Czestochowa vs. Gornik Zabrze)": 48.676869450000005,
+   "Gornik Zabrze": 4943.9840647500005
   },
   "prices": {
-   "RKS Rakow Czestochowa": 0.355,
-   "Draw (RKS Rakow Czestochowa vs. Gornik Zabrze)": 0.265,
+   "RKS Rakow Czestochowa": 0.345,
+   "Draw (RKS Rakow Czestochowa vs. Gornik Zabrze)": 0.275,
    "Gornik Zabrze": 0.375
   },
   "splitGuete": {
@@ -166844,7 +166848,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 12415,
+  "totalUsd": 13019,
   "whales": [
    {
     "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
@@ -166860,18 +166864,18 @@
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "Gornik Zabrze",
-    "usd": 305,
-    "avgPrice": 0.363
+    "usd": 359,
+    "avgPrice": 0.3655
    },
    {
-    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-    "side": "RKS Rakow Czestochowa",
-    "usd": 35,
-    "avgPrice": 0.4041
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "Gornik Zabrze",
+    "usd": 188,
+    "avgPrice": 0.3799
    }
   ],
-  "hoursToKickoff": 0.6,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 0.1,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "RKS Rakow Czestochowa": "6266908319670896298013775408033684609061764748378799380957655644333758972514",
    "Draw (RKS Rakow Czestochowa vs. Gornik Zabrze)": "42969724734518750988712101193406093920902475136535374731827406143661549429364",
@@ -166980,12 +166984,12 @@
  },
  "mlb-sf-pit-2026-09-03": {
   "shares": {
-   "Over": 52940.97198630998,
-   "Under": 40759.87023198
+   "Over": 77619.74411398503,
+   "Under": 64801.81222742498
   },
   "prices": {
-   "Over": 0.565,
-   "Under": 0.435
+   "Over": 0.545,
+   "Under": 0.455
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -166993,98 +166997,138 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 94780,
+  "totalUsd": 152218,
   "whales": [
    {
     "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
     "side": "Over",
-    "usd": 38579,
-    "avgPrice": 0.5551
+    "usd": 63274,
+    "avgPrice": 0.5571
+   },
+   {
+    "wallet": "0x56acab44cfca2e88bb9b3406890aea7bfa0cd77e",
+    "side": "Under",
+    "usd": 12541,
+    "avgPrice": 0.44
+   },
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "side": "Under",
+    "usd": 9617
    },
    {
     "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
     "side": "Under",
-    "usd": 8546,
+    "usd": 8939,
     "avgPrice": 0.4493
-   },
-   {
-    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
-    "side": "Under",
-    "usd": 7118
-   },
-   {
-    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-    "side": "Over",
-    "usd": 5377,
-    "avgPrice": 0.5359
    }
   ],
-  "hoursToKickoff": 1.18,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 0.68,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "Over": "61897231364199341319724316143719413176580009306286892964741088790056131721461",
    "Under": "945984951985809553411888156694177299831798809281246391275004881533096035374"
   },
   "book": {
    "side": "Over",
-   "bid": 0.56,
-   "ask": 0.57,
+   "bid": 0.54,
+   "ask": 0.55,
    "spreadC": 1.0,
-   "spreadPct": 1.75,
+   "spreadPct": 1.82,
    "bids": [
     [
-     0.56,
-     55876
-    ],
-    [
-     0.55,
-     22855
-    ],
-    [
      0.54,
-     61507
+     51691
     ],
     [
      0.53,
-     30033
+     41142
     ],
     [
      0.52,
-     21216
+     21162
     ],
     [
      0.51,
-     7858
+     4260
+    ],
+    [
+     0.5,
+     10
+    ],
+    [
+     0.49,
+     803
     ]
    ],
    "asks": [
     [
+     0.55,
+     203766
+    ],
+    [
+     0.56,
+     5907
+    ],
+    [
      0.57,
-     75200
+     62690
     ],
     [
      0.58,
-     60598
+     39881
     ],
     [
      0.59,
-     25492
+     8236
     ],
     [
      0.6,
-     9789
-    ],
-    [
-     0.61,
-     10150
-    ],
-    [
-     0.62,
-     803
+     923
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x2396babfc88a7a7dcc0390262ab747d7cbad9485",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.4453,
+    "usd": 620,
+    "ts": 1788449994
+   },
+   {
+    "wallet": "0x56acab44cfca2e88bb9b3406890aea7bfa0cd77e",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.44,
+    "usd": 12127,
+    "ts": 1788449985
+   },
+   {
+    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.44,
+    "usd": 1408,
+    "ts": 1788449514
+   },
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.44,
+    "usd": 9300,
+    "ts": 1788449511
+   },
+   {
+    "wallet": "0x9b6618bea83cb0ddb3126de9773fccb5ff54336a",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.44,
+    "usd": 1000,
+    "ts": 1788449430
+   },
    {
     "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
     "action": "BUY",
@@ -167092,51 +167136,19 @@
     "price": 0.57,
     "usd": 320,
     "ts": 1788447234
-   },
-   {
-    "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
-    "action": "BUY",
-    "side": "Over",
-    "price": 0.56,
-    "usd": 27945,
-    "ts": 1788446280
-   },
-   {
-    "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
-    "action": "BUY",
-    "side": "Over",
-    "price": 0.55,
-    "usd": 1407,
-    "ts": 1788444921
-   },
-   {
-    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
-    "action": "BUY",
-    "side": "Over",
-    "price": 0.55,
-    "usd": 2144,
-    "ts": 1788440623
-   },
-   {
-    "wallet": "0xc3c3b3ef304ddbea39fa2246e683a71da5d0eec8",
-    "action": "BUY",
-    "side": "Over",
-    "price": 0.54,
-    "usd": 1434,
-    "ts": 1788437703
    }
   ]
  },
  "spl-neo-kha-2026-09-03": {
   "shares": {
-   "NEOM SC": 24516.623424150002,
+   "NEOM SC": 25084.729854405003,
    "Draw (NEOM SC vs. Al Khaleej Saudi Club)": 226.909204035,
-   "Al Khaleej Saudi Club": 1297.17425175
+   "Al Khaleej Saudi Club": 1239.455787035
   },
   "prices": {
    "NEOM SC": 0.585,
    "Draw (NEOM SC vs. Al Khaleej Saudi Club)": 0.235,
-   "Al Khaleej Saudi Club": 0.195
+   "Al Khaleej Saudi Club": 0.185
   },
   "splitGuete": {
    "art": "belastbar",
@@ -167144,7 +167156,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 56943,
+  "totalUsd": 61968,
   "whales": [
    {
     "wallet": "0x28141e92bc3523f3e8dd6d2baaa074f268137cd4",
@@ -167170,8 +167182,8 @@
     "usd": 2340
    }
   ],
-  "hoursToKickoff": 1.1,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 0.6,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "NEOM SC": "101673967192797127882788363022604956330698230302920761790712640542623660843713",
    "Draw (NEOM SC vs. Al Khaleej Saudi Club)": "85592559629642629035489222317342234112224901349234509328223572810194234137988",
@@ -167180,8 +167192,8 @@
  },
  "cs2-bhe-meiano-2026-09-03": {
   "shares": {
-   "Bounty Hunters Esports": 7071.648380940003,
-   "MEIA NOITE": 1297.1690550150001
+   "Bounty Hunters Esports": 8292.242864425005,
+   "MEIA NOITE": 1521.0650845300004
   },
   "prices": {
    "Bounty Hunters Esports": 0.845,
@@ -167193,7 +167205,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 8517,
+  "totalUsd": 8534,
   "whales": [
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
@@ -167214,14 +167226,13 @@
     "avgPrice": 0.83
    },
    {
-    "wallet": "0x513587a2f36a8cb29333052a6a479091ef8a7217",
-    "side": "MEIA NOITE",
-    "usd": 454,
-    "avgPrice": 0.1686
+    "wallet": "0xc34b4901be324718c176100e350211d97b199296",
+    "side": "Bounty Hunters Esports",
+    "usd": 674
    }
   ],
-  "hoursToKickoff": 0.6,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 0.1,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "Bounty Hunters Esports": "74022579492061942787926749172633955310732656328092985372449013954135669555178",
    "MEIA NOITE": "90517798061845602887169993613959126697399954392304184425103121481098547178790"
@@ -167229,8 +167240,8 @@
  },
  "wta-tagger-anisimo-2026-09-02": {
   "shares": {
-   "Lilli Tagger": 3734.36056805,
-   "Amanda Anisimova": 17604.842648250007
+   "Lilli Tagger": 3899.249456724999,
+   "Amanda Anisimova": 18382.175980575004
   },
   "prices": {
    "Lilli Tagger": 0.175,
@@ -167242,7 +167253,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 26619,
+  "totalUsd": 27682,
   "whales": [
    {
     "wallet": "0x13851a686e88f8007445d348a3efe4cab3cbdb91",
@@ -167264,12 +167275,12 @@
    {
     "wallet": "0x9c3ce009c9b039956665cecc4cd14de862b5e8c9",
     "side": "Amanda Anisimova",
-    "usd": 1210,
-    "avgPrice": 0.8169
+    "usd": 1987,
+    "avgPrice": 0.8181
    }
   ],
-  "hoursToKickoff": 1.1,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 0.6,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "Lilli Tagger": "47441023824466833585973553142299561253257372437891717683737806055130377993219",
    "Amanda Anisimova": "67496600682673910519876524116733383003106684888554765044810013425062795255440"
@@ -167277,8 +167288,8 @@
  },
  "atp-sweeny-musetti-2026-09-02": {
   "shares": {
-   "Dane Sweeny": 969.28639912,
-   "Lorenzo Musetti": 13942.826062660008
+   "Dane Sweeny": 1006.5676132850001,
+   "Lorenzo Musetti": 14479.101989495008
   },
   "prices": {
    "Dane Sweeny": 0.065,
@@ -167290,7 +167301,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 22170,
+  "totalUsd": 22936,
   "whales": [
    {
     "wallet": "0xa0f21e6d351baa9185716b5c00c2925ed9621848",
@@ -167307,8 +167318,8 @@
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Lorenzo Musetti",
-    "usd": 1651,
-    "avgPrice": 0.9355
+    "usd": 1486,
+    "avgPrice": 0.935
    },
    {
     "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
@@ -167317,8 +167328,8 @@
     "avgPrice": 0.931
    }
   ],
-  "hoursToKickoff": 1.1,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 0.6,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "Dane Sweeny": "9986228599335524733036601516772922957214545874213634166583856492228042519548",
    "Lorenzo Musetti": "18212716584708002223248676248329915755436256040284027221206899404829333777958"
@@ -167326,12 +167337,12 @@
  },
  "atp-fritz-bellucc-2026-09-02": {
   "shares": {
-   "Taylor Fritz": 110234.12948754,
-   "Mattia Bellucci": 14324.20696491
+   "Taylor Fritz": 123488.99833550001,
+   "Mattia Bellucci": 17641.282241625002
   },
   "prices": {
-   "Taylor Fritz": 0.885,
-   "Mattia Bellucci": 0.115
+   "Taylor Fritz": 0.875,
+   "Mattia Bellucci": 0.125
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -167339,98 +167350,106 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 128553,
+  "totalUsd": 149888,
   "whales": [
    {
     "wallet": "0xa8caf30a6a9c6e670f5602827f4e435d1d4cd535",
     "side": "Taylor Fritz",
-    "usd": 49719,
+    "usd": 49157,
     "avgPrice": 0.8899
    },
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
     "side": "Taylor Fritz",
-    "usd": 16229
+    "usd": 16046
    },
    {
     "wallet": "0xe8c4d68aff65b38cac46987b9b65e01eb47d395d",
     "side": "Taylor Fritz",
-    "usd": 16218,
+    "usd": 16035,
     "avgPrice": 0.8899
    },
    {
     "wallet": "0xf3b04dd038fcf191692927c0aa5a38018ea323a1",
     "side": "Taylor Fritz",
-    "usd": 15041,
+    "usd": 14871,
     "avgPrice": 0.8825
    }
   ],
-  "hoursToKickoff": 1.6,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 1.1,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "Taylor Fritz": "64279132045358123376276929238345142617947361460902418753165119485708172882508",
    "Mattia Bellucci": "15214437712540243418227108828980185246088245552536289888549402830844482526301"
   },
   "book": {
    "side": "Taylor Fritz",
-   "bid": 0.88,
-   "ask": 0.89,
+   "bid": 0.87,
+   "ask": 0.88,
    "spreadC": 1.0,
-   "spreadPct": 1.12,
+   "spreadPct": 1.14,
    "bids": [
     [
-     0.88,
-     21893
-    ],
-    [
      0.87,
-     17601
+     23029
     ],
     [
      0.86,
-     6301
+     9535
     ],
     [
      0.85,
-     2241
+     9523
     ],
     [
      0.84,
-     1000
+     3975
     ],
     [
      0.83,
-     2642
+     10
+    ],
+    [
+     0.82,
+     2579
     ]
    ],
    "asks": [
     [
+     0.88,
+     23674
+    ],
+    [
      0.89,
-     6640
+     73838
     ],
     [
      0.9,
-     56161
+     40137
     ],
     [
      0.91,
-     51735
+     33422
     ],
     [
      0.92,
-     32880
+     56611
     ],
     [
      0.93,
-     43374
-    ],
-    [
-     0.94,
-     17005
+     14975
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x56acab44cfca2e88bb9b3406890aea7bfa0cd77e",
+    "action": "BUY",
+    "side": "Mattia Bellucci",
+    "price": 0.12,
+    "usd": 2350,
+    "ts": 1788449985
+   },
    {
     "wallet": "0x01c78f8873c0c86d6b6b92ff627e3802237ee995",
     "action": "BUY",
@@ -167462,21 +167481,13 @@
     "price": 0.9,
     "usd": 1080,
     "ts": 1788439725
-   },
-   {
-    "wallet": "0x2396babfc88a7a7dcc0390262ab747d7cbad9485",
-    "action": "BUY",
-    "side": "Taylor Fritz",
-    "price": 0.9,
-    "usd": 1851,
-    "ts": 1788436545
    }
   ]
  },
  "wta-zhen-putints-2026-09-02": {
   "shares": {
-   "Qinwen Zheng": 46871.331969679966,
-   "Yulia Putintseva": 20569.61944453999
+   "Qinwen Zheng": 45859.528938874995,
+   "Yulia Putintseva": 20125.59132747998
   },
   "prices": {
    "Qinwen Zheng": 0.695,
@@ -167488,7 +167499,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 116742,
+  "totalUsd": 117161,
   "whales": [
    {
     "wallet": "0xb0e3fcbe0d7f17168fdce93f89c0168d3fa329eb",
@@ -167505,7 +167516,7 @@
    {
     "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
     "side": "Yulia Putintseva",
-    "usd": 3810,
+    "usd": 3809,
     "avgPrice": 0.2999
    },
    {
@@ -167515,8 +167526,8 @@
     "avgPrice": 0.677
    }
   ],
-  "hoursToKickoff": 1.6,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 1.1,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "Qinwen Zheng": "8138927759818388694000495498081321702357907148920294029396860271138446377325",
    "Yulia Putintseva": "82264464220572542016572500418195216449755338217649653490518067233733157471587"
@@ -167530,23 +167541,23 @@
    "bids": [
     [
      0.69,
-     17560
+     10394
     ],
     [
      0.68,
-     14252
+     14542
     ],
     [
      0.67,
-     2070
+     2555
     ],
     [
      0.66,
-     1392
+     1192
     ],
     [
      0.65,
-     1349
+     1248
     ],
     [
      0.64,
@@ -167556,31 +167567,47 @@
    "asks": [
     [
      0.7,
-     27135
+     35829
     ],
     [
      0.71,
-     52101
+     49120
     ],
     [
      0.72,
-     51742
+     35505
     ],
     [
      0.73,
-     38103
+     29126
     ],
     [
      0.74,
-     11316
+     8891
     ],
     [
      0.75,
-     35855
+     6085
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x3e856790872025b26922999651992ea70bfe788b",
+    "action": "SELL",
+    "side": "Yulia Putintseva",
+    "price": 0.3,
+    "usd": 825,
+    "ts": 1788450514
+   },
+   {
+    "wallet": "0x3e856790872025b26922999651992ea70bfe788b",
+    "action": "SELL",
+    "side": "Yulia Putintseva",
+    "price": 0.3,
+    "usd": 800,
+    "ts": 1788450397
+   },
    {
     "wallet": "0x3663ed135115e034de3a9ad8cdca8493e8d68950",
     "action": "BUY",
@@ -167593,8 +167620,8 @@
  },
  "mlb-tor-cle-2026-09-03": {
   "shares": {
-   "Toronto Blue Jays": 75908.04014375998,
-   "Cleveland Guardians": 77441.70871524009
+   "Toronto Blue Jays": 76682.87336902498,
+   "Cleveland Guardians": 78232.19513697509
   },
   "prices": {
    "Toronto Blue Jays": 0.495,
@@ -167606,7 +167633,7 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 43401,
+  "totalUsd": 169263,
   "whales": [
    {
     "wallet": "0xc8075693f48668a264b9fa313b47f52712fcc12b",
@@ -167633,17 +167660,94 @@
     "avgPrice": 0.5079
    }
   ],
-  "hoursToKickoff": 1.76,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 1.26,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "Toronto Blue Jays": "76707183707928870842544799008737154929784240389156762187233897121006449222052",
    "Cleveland Guardians": "101109020247528646480073784482816782847461955105453593635236311182333128606585"
-  }
+  },
+  "book": {
+   "side": "Cleveland Guardians",
+   "bid": 0.5,
+   "ask": 0.51,
+   "spreadC": 1.0,
+   "spreadPct": 1.96,
+   "bids": [
+    [
+     0.5,
+     235306
+    ],
+    [
+     0.49,
+     155122
+    ],
+    [
+     0.48,
+     76384
+    ],
+    [
+     0.47,
+     10480
+    ],
+    [
+     0.46,
+     230
+    ],
+    [
+     0.45,
+     21836
+    ]
+   ],
+   "asks": [
+    [
+     0.51,
+     50920
+    ],
+    [
+     0.52,
+     76921
+    ],
+    [
+     0.53,
+     94639
+    ],
+    [
+     0.54,
+     49681
+    ],
+    [
+     0.55,
+     25676
+    ],
+    [
+     0.56,
+     2185
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xc8075693f48668a264b9fa313b47f52712fcc12b",
+    "action": "BUY",
+    "side": "Toronto Blue Jays",
+    "price": 0.49,
+    "usd": 61172,
+    "ts": 1788448782
+   },
+   {
+    "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
+    "action": "BUY",
+    "side": "Cleveland Guardians",
+    "price": 0.51,
+    "usd": 379,
+    "ts": 1788446151
+   }
+  ]
  },
  "wta-oliynyk-eala-2026-09-03": {
   "shares": {
-   "Oleksandra Oliynykova": 3922.0028176050005,
-   "Alexandra Eala": 30182.361635550005
+   "Oleksandra Oliynykova": 4081.2153636350013,
+   "Alexandra Eala": 31407.60601152
   },
   "prices": {
    "Oleksandra Oliynykova": 0.115,
@@ -167655,7 +167759,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 45073,
+  "totalUsd": 46456,
   "whales": [
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -167681,8 +167785,8 @@
     "avgPrice": 0.8759
    }
   ],
-  "hoursToKickoff": 1.6,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 1.1,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "Oleksandra Oliynykova": "31303148988602837398544082988298547981125241554193777911671461497815703230943",
    "Alexandra Eala": "38060629527887258942821081369436748886910079796638402945005197533380755821370"
@@ -167690,8 +167794,8 @@
  },
  "atp-blockx-trungel-2026-09-02": {
   "shares": {
-   "Alexander Blockx": 19425.614804745008,
-   "Marco Trungelliti": 3838.594725075001
+   "Alexander Blockx": 19430.62480474501,
+   "Marco Trungelliti": 3839.5847250750007
   },
   "prices": {
    "Alexander Blockx": 0.835,
@@ -167703,7 +167807,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 24235,
+  "totalUsd": 24255,
   "whales": [
    {
     "wallet": "0xf3b04dd038fcf191692927c0aa5a38018ea323a1",
@@ -167730,8 +167834,8 @@
     "avgPrice": 0.82
    }
   ],
-  "hoursToKickoff": 1.6,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 1.1,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "Alexander Blockx": "46364735747534235553073073990429157847940825035843864613325829072930560300962",
    "Marco Trungelliti": "13023323709967486377550476477762618879775352475017254865194314475611866143801"
@@ -167739,13 +167843,13 @@
  },
  "egy1-eas-sms-2026-09-01": {
   "shares": {
-   "El Ahly SC": 9957.157121715005,
-   "Draw (El Ahly SC vs. Smouha SC)": 89.728979135,
+   "El Ahly SC": 10109.823919965003,
+   "Draw (El Ahly SC vs. Smouha SC)": 93.902420025,
    "Smouha SC": 247.57369832500004
   },
   "prices": {
    "El Ahly SC": 0.705,
-   "Draw (El Ahly SC vs. Smouha SC)": 0.215,
+   "Draw (El Ahly SC vs. Smouha SC)": 0.225,
    "Smouha SC": 0.085
   },
   "splitGuete": {
@@ -167754,7 +167858,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 18381,
+  "totalUsd": 18698,
   "whales": [
    {
     "wallet": "0x64e93f87d8a0c1b2cde6f20d71f211372a95eb4c",
@@ -167777,12 +167881,11 @@
    {
     "wallet": "0x0b3f3c6a82e2a0637d81b6fded1501bed1e75a9f",
     "side": "El Ahly SC",
-    "usd": 490,
-    "avgPrice": 0.7199
+    "usd": 490
    }
   ],
-  "hoursToKickoff": 1.6,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 1.1,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "El Ahly SC": "104884834131243005502648189414262201319401113051858063669705250613081237958393",
    "Draw (El Ahly SC vs. Smouha SC)": "22997269940311325374954818893830449522312814981811802807415428567296163054413",
@@ -167840,8 +167943,8 @@
  },
  "cs2-vp-fnc-2026-09-03": {
   "shares": {
-   "Virtus.pro": 31428.00049885999,
-   "fnatic": 44302.12374334503
+   "Virtus.pro": 31615.10855421999,
+   "fnatic": 44565.87847198503
   },
   "prices": {
    "Virtus.pro": 0.415,
@@ -167853,7 +167956,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 76746,
+  "totalUsd": 77197,
   "whales": [
    {
     "wallet": "0x73e3fec494611d73c170cb2f23850fd998b21be9",
@@ -167880,99 +167983,22 @@
     "avgPrice": 0.5899
    }
   ],
-  "hoursToKickoff": 2.1,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 1.6,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "Virtus.pro": "48781692263465221748016961787861726401760528674038965531028080395026293776317",
    "fnatic": "16616254178243928556545188505297824364464754788747508502237525652769998146186"
-  },
-  "book": {
-   "side": "fnatic",
-   "bid": 0.58,
-   "ask": 0.59,
-   "spreadC": 1.0,
-   "spreadPct": 1.69,
-   "bids": [
-    [
-     0.58,
-     18395
-    ],
-    [
-     0.57,
-     34830
-    ],
-    [
-     0.56,
-     13336
-    ],
-    [
-     0.55,
-     1172
-    ],
-    [
-     0.54,
-     500
-    ],
-    [
-     0.52,
-     192
-    ]
-   ],
-   "asks": [
-    [
-     0.59,
-     28560
-    ],
-    [
-     0.6,
-     19742
-    ],
-    [
-     0.61,
-     9138
-    ],
-    [
-     0.62,
-     8257
-    ],
-    [
-     0.63,
-     14425
-    ],
-    [
-     0.64,
-     1495
-    ]
-   ]
-  },
-  "trades": [
-   {
-    "wallet": "0x90aa1d6aeeb57121944bafb49da6c21eb8670dca",
-    "action": "BUY",
-    "side": "Virtus.pro",
-    "price": 0.43,
-    "usd": 21620,
-    "ts": 1788442303
-   },
-   {
-    "wallet": "0x183f8b17cfb09c9115d068b2da3033b54f4c85e3",
-    "action": "BUY",
-    "side": "fnatic",
-    "price": 0.58,
-    "usd": 2610,
-    "ts": 1788425094
-   }
-  ]
+  }
  },
  "isr-hta-bei-2026-09-03": {
   "shares": {
-   "Hapoel Tel Aviv FC": 2603.30798994,
-   "Draw (Hapoel Tel Aviv FC vs. Beitar Jerusalem FC)": 1000.4560492500001,
-   "Beitar Jerusalem FC": 349.28876934000004
+   "Hapoel Tel Aviv FC": 2671.5335282749998,
+   "Draw (Hapoel Tel Aviv FC vs. Beitar Jerusalem FC)": 1025.669654625,
+   "Beitar Jerusalem FC": 158.66059041
   },
   "prices": {
-   "Hapoel Tel Aviv FC": 0.42,
-   "Draw (Hapoel Tel Aviv FC vs. Beitar Jerusalem FC)": 0.27,
+   "Hapoel Tel Aviv FC": 0.425,
+   "Draw (Hapoel Tel Aviv FC vs. Beitar Jerusalem FC)": 0.275,
    "Beitar Jerusalem FC": 0.315
   },
   "splitGuete": {
@@ -167981,34 +168007,34 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 19616,
+  "totalUsd": 19627,
   "whales": [
    {
     "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
     "side": "Hapoel Tel Aviv FC",
-    "usd": 1122,
+    "usd": 1135,
     "avgPrice": 0.4116
    },
    {
     "wallet": "0x425bd6cda7899e50bd2570d832ec100b590518f1",
     "side": "Hapoel Tel Aviv FC",
-    "usd": 1108,
+    "usd": 1121,
     "avgPrice": 0.3964
    },
    {
     "wallet": "0xc3c3b3ef304ddbea39fa2246e683a71da5d0eec8",
     "side": "Draw (Hapoel Tel Aviv FC vs. Beitar Jerusalem FC)",
-    "usd": 769
+    "usd": 783
    },
    {
-    "wallet": "0x1b134e9e315f005e2ecc5280353120977b9eade2",
-    "side": "Beitar Jerusalem FC",
-    "usd": 204,
-    "avgPrice": 0.3399
+    "wallet": "0xf229578d71cb74c794dfa9c47b5d63f1afcf8583",
+    "side": "Hapoel Tel Aviv FC",
+    "usd": 111,
+    "avgPrice": 0.4183
    }
   ],
-  "hoursToKickoff": 2.1,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 1.6,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "Hapoel Tel Aviv FC": "114195508347327318888406955921334359109245929463349737555929322091614153842745",
    "Draw (Hapoel Tel Aviv FC vs. Beitar Jerusalem FC)": "76264821923339777756322827162638383375991557821201509206163029008603170980015",
@@ -168020,26 +168046,26 @@
    "Hapoel Tel Aviv FC 0 - 0 Beitar Jerusalem FC": 8.9244,
    "Hapoel Tel Aviv FC 0 - 1 Beitar Jerusalem FC": 8.75198616,
    "Hapoel Tel Aviv FC 1 - 0 Beitar Jerusalem FC": 11.136087675,
-   "Hapoel Tel Aviv FC 0 - 2 Beitar Jerusalem FC": 174.35554000000002,
+   "Hapoel Tel Aviv FC 0 - 2 Beitar Jerusalem FC": 172.85247500000003,
    "Hapoel Tel Aviv FC 1 - 1 Beitar Jerusalem FC": 146.34374962500002,
    "Hapoel Tel Aviv FC 2 - 0 Beitar Jerusalem FC": 18.871015082,
    "Hapoel Tel Aviv FC 0 - 3 Beitar Jerusalem FC": 0.35625,
    "Hapoel Tel Aviv FC 1 - 2 Beitar Jerusalem FC": 189.34080000000003,
-   "Hapoel Tel Aviv FC 2 - 1 Beitar Jerusalem FC": 267.42728361,
+   "Hapoel Tel Aviv FC 2 - 1 Beitar Jerusalem FC": 271.94928361,
    "Hapoel Tel Aviv FC 3 - 0 Beitar Jerusalem FC": 0.676875,
    "Hapoel Tel Aviv FC 1 - 3 Beitar Jerusalem FC": 0.83125,
    "Hapoel Tel Aviv FC 2 - 2 Beitar Jerusalem FC": 92.11792198000002,
    "Hapoel Tel Aviv FC 3 - 1 Beitar Jerusalem FC": 6.0494710815,
    "Hapoel Tel Aviv FC 2 - 3 Beitar Jerusalem FC": 0.6174999999999999,
    "Hapoel Tel Aviv FC 3 - 2 Beitar Jerusalem FC": 4.704050431,
-   "Hapoel Tel Aviv FC 3 - 3 Beitar Jerusalem FC": 13.125291637500002,
+   "Hapoel Tel Aviv FC 3 - 3 Beitar Jerusalem FC": 11.250249975,
    "Any Other Score": 2.0187500000000003
   },
   "prices": {
    "Hapoel Tel Aviv FC 0 - 0 Beitar Jerusalem FC": 0.06,
    "Hapoel Tel Aviv FC 0 - 1 Beitar Jerusalem FC": 0.06,
    "Hapoel Tel Aviv FC 1 - 0 Beitar Jerusalem FC": 0.075,
-   "Hapoel Tel Aviv FC 0 - 2 Beitar Jerusalem FC": 0.058,
+   "Hapoel Tel Aviv FC 0 - 2 Beitar Jerusalem FC": 0.0575,
    "Hapoel Tel Aviv FC 1 - 1 Beitar Jerusalem FC": 0.125,
    "Hapoel Tel Aviv FC 2 - 0 Beitar Jerusalem FC": 0.062,
    "Hapoel Tel Aviv FC 0 - 3 Beitar Jerusalem FC": 0.015,
@@ -168051,7 +168077,7 @@
    "Hapoel Tel Aviv FC 3 - 1 Beitar Jerusalem FC": 0.0495,
    "Hapoel Tel Aviv FC 2 - 3 Beitar Jerusalem FC": 0.026,
    "Hapoel Tel Aviv FC 3 - 2 Beitar Jerusalem FC": 0.0365,
-   "Hapoel Tel Aviv FC 3 - 3 Beitar Jerusalem FC": 0.0175,
+   "Hapoel Tel Aviv FC 3 - 3 Beitar Jerusalem FC": 0.015,
    "Any Other Score": 0.085
   },
   "splitGuete": {
@@ -168060,35 +168086,31 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 13613,
+  "totalUsd": 13661,
   "whales": [
    {
     "wallet": "0x140284c868108be70fc65fe92d71899bcc804853",
     "side": "Hapoel Tel Aviv FC 2 - 1 Beitar Jerusalem FC",
-    "usd": 265,
-    "avgPrice": 0.111
+    "usd": 265
    },
    {
     "wallet": "0xfe0c8cabe3bd6479855fa874f2e6f927b90004b6",
     "side": "Hapoel Tel Aviv FC 1 - 2 Beitar Jerusalem FC",
-    "usd": 176,
-    "avgPrice": 0.0985
+    "usd": 176
    },
    {
     "wallet": "0xfe0c8cabe3bd6479855fa874f2e6f927b90004b6",
     "side": "Hapoel Tel Aviv FC 0 - 2 Beitar Jerusalem FC",
-    "usd": 173,
-    "avgPrice": 0.0723
+    "usd": 171
    },
    {
     "wallet": "0x140284c868108be70fc65fe92d71899bcc804853",
     "side": "Hapoel Tel Aviv FC 1 - 1 Beitar Jerusalem FC",
-    "usd": 93,
-    "avgPrice": 0.1347
+    "usd": 93
    }
   ],
-  "hoursToKickoff": 2.1,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 1.6,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "Hapoel Tel Aviv FC 0 - 0 Beitar Jerusalem FC": "64338701358891318273977310258276273468020084951353935374448538627134253999581",
    "Hapoel Tel Aviv FC 0 - 1 Beitar Jerusalem FC": "94626903918013710001077606945162695789145607315069421453197258344545488808640",
@@ -168111,12 +168133,12 @@
  },
  "spl-fay-kho-2026-09-03-more-markets": {
   "shares": {
-   "Over": 3849.90018355,
-   "Under": 4255.1541564
+   "Over": 5455.816033155002,
+   "Under": 5793.262039045001
   },
   "prices": {
-   "Over": 0.475,
-   "Under": 0.525
+   "Over": 0.485,
+   "Under": 0.515
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -168124,34 +168146,35 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 8399,
+  "totalUsd": 13713,
   "whales": [
    {
     "wallet": "0x4ab63100557a68de74621197dc31add2e0abfad4",
     "side": "Under",
-    "usd": 2800,
+    "usd": 2747,
     "avgPrice": 0.5399
+   },
+   {
+    "wallet": "0x12d9a4302be53dd8c9f13aabfbdf3518f1c001bb",
+    "side": "Over",
+    "usd": 1973,
+    "avgPrice": 0.4855
    },
    {
     "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
     "side": "Over",
-    "usd": 1129,
-    "avgPrice": 0.46
+    "usd": 1205,
+    "avgPrice": 0.4608
    },
    {
     "wallet": "0x65b57f3444e1dba0487c65d2618d3b0c0e0baa71",
     "side": "Under",
-    "usd": 978,
+    "usd": 960,
     "avgPrice": 0.5536
-   },
-   {
-    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
-    "side": "Over",
-    "usd": 531
    }
   ],
-  "hoursToKickoff": 0.51,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 0.01,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "Over": "2495236426554720169576529916851805950536044756319471284926564613046611514145",
    "Under": "62988045569172382842438331211397914726080921584089031615420720681057957528310"
@@ -168159,12 +168182,12 @@
  },
  "atp-ajdukov-ma-2026-09-03": {
   "shares": {
-   "Duje Ajdukovic": 9187.298731489998,
-   "Juan Martin": 5997.923171085
+   "Duje Ajdukovic": 9353.671042920001,
+   "Juan Martin": 5855.164350805001
   },
   "prices": {
-   "Duje Ajdukovic": 0.605,
-   "Juan Martin": 0.395
+   "Duje Ajdukovic": 0.615,
+   "Juan Martin": 0.385
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -168172,35 +168195,33 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 16175,
+  "totalUsd": 16176,
   "whales": [
    {
     "wallet": "0x78becf0a4e4f2640380af0c19ad32e2557e6bde0",
     "side": "Duje Ajdukovic",
-    "usd": 8837,
+    "usd": 8984,
     "avgPrice": 0.6203
    },
    {
     "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
     "side": "Juan Martin",
-    "usd": 2067,
+    "usd": 2010,
     "avgPrice": 0.382
    },
    {
     "wallet": "0xd9e0aaca471f489be338fd0f91a26e8669a805f2",
     "side": "Juan Martin",
-    "usd": 1030,
-    "avgPrice": 0.3938
+    "usd": 1004
    },
    {
     "wallet": "0x99f0d31fdced5b3a0e5ee2867730a6644a6c9495",
     "side": "Juan Martin",
-    "usd": 892,
-    "avgPrice": 0.3594
+    "usd": 869
    }
   ],
-  "hoursToKickoff": 0.1,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 0.01,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "Duje Ajdukovic": "102167563184257582967517262466053572186684392844470665134356997266480502274800",
    "Juan Martin": "96453940515550962243457853765661017997645877503331193525404159091000759749675"
@@ -168208,12 +168229,12 @@
  },
  "cs2-omega1-qua1-2026-09-03": {
   "shares": {
-   "Omega": 3076.0238651000004,
-   "QUAZAR": 3836.268039075
+   "Omega": 3296.42738425,
+   "QUAZAR": 3948.104545035
   },
   "prices": {
-   "Omega": 0.445,
-   "QUAZAR": 0.555
+   "Omega": 0.455,
+   "QUAZAR": 0.545
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -168221,33 +168242,33 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 7764,
+  "totalUsd": 8092,
   "whales": [
    {
     "wallet": "0xd6771bf957cab6a10fcb8e2c8c6db9713cf37579",
     "side": "QUAZAR",
-    "usd": 1210
+    "usd": 1189
    },
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "Omega",
-    "usd": 869,
-    "avgPrice": 0.4406
+    "usd": 1017,
+    "avgPrice": 0.4418
    },
    {
     "wallet": "0x513587a2f36a8cb29333052a6a479091ef8a7217",
     "side": "Omega",
-    "usd": 748,
+    "usd": 764,
     "avgPrice": 0.4347
    },
    {
     "wallet": "0x3881ababc5e2bc1e6741a8b2690404426a19804e",
     "side": "QUAZAR",
-    "usd": 534
+    "usd": 605
    }
   ],
-  "hoursToKickoff": 1.6,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 1.1,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "Omega": "55473753253525378659655764707020345701695986539174907433042395669947358012275",
    "QUAZAR": "106090720130601732092775917939188352696618645444472948013707507741012244461665"
@@ -168304,12 +168325,12 @@
  },
  "lol-sec-myth-2026-09-03": {
   "shares": {
-   "Senshi Esports Club": 4033.2108756500006,
-   "Myth Esports": 3299.6651386500016
+   "Senshi Esports Club": 4116.27395754,
+   "Myth Esports": 3506.2157099000015
   },
   "prices": {
-   "Senshi Esports Club": 0.55,
-   "Myth Esports": 0.45
+   "Senshi Esports Club": 0.54,
+   "Myth Esports": 0.46
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -168322,26 +168343,26 @@
    {
     "wallet": "0xce0871a82a7799ace36ab2fcd08f95b21cdf510b",
     "side": "Senshi Esports Club",
-    "usd": 1099
+    "usd": 1079
    },
    {
     "wallet": "0x9b963178d3b8765cfc5af94c00550d6ec6c54389",
     "side": "Senshi Esports Club",
-    "usd": 825
+    "usd": 810
    },
    {
     "wallet": "0xcefda2f799dc8849adb83cb846c08b9d1feed6aa",
     "side": "Myth Esports",
-    "usd": 753
+    "usd": 769
    },
    {
     "wallet": "0xc4fe817476491890086330a639ac417d51bf601f",
     "side": "Senshi Esports Club",
-    "usd": 746
+    "usd": 733
    }
   ],
-  "hoursToKickoff": 0.6,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 0.1,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "Senshi Esports Club": "61783128074647592568938023878149000938823100505973806207105131549140301905963",
    "Myth Esports": "36395638343045484208416181569312908559325347322954110705192174718382695792081"
@@ -168349,8 +168370,8 @@
  },
  "mlb-cws-hou-2026-09-03": {
   "shares": {
-   "Chicago White Sox": 56700.156624029965,
-   "Houston Astros": 83300.22706984995
+   "Chicago White Sox": 56709.70335976497,
+   "Houston Astros": 83314.26906984996
   },
   "prices": {
    "Chicago White Sox": 0.405,
@@ -168362,7 +168383,7 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 140527,
+  "totalUsd": 142794,
   "whales": [
    {
     "wallet": "0x3dfb153c197d4c19d3b31c1ecd2c7b6860eeabaf",
@@ -168389,8 +168410,8 @@
     "avgPrice": 0.4
    }
   ],
-  "hoursToKickoff": 2.76,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 2.26,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "Chicago White Sox": "67213103372309717395520069830351019959509688948646983872640183448006667678440",
    "Houston Astros": "110135173469599049257814221679406080449508322880318410361063616314491299961482"
@@ -168404,19 +168425,19 @@
    "bids": [
     [
      0.59,
-     109829
+     70097
     ],
     [
      0.58,
-     92245
+     88340
     ],
     [
      0.57,
-     65848
+     48258
     ],
     [
      0.56,
-     21208
+     26256
     ],
     [
      0.55,
@@ -168430,19 +168451,19 @@
    "asks": [
     [
      0.6,
-     71349
+     64678
     ],
     [
      0.61,
-     121040
+     244908
     ],
     [
      0.62,
-     29557
+     51729
     ],
     [
      0.63,
-     27713
+     30738
     ],
     [
      0.64,
@@ -168483,8 +168504,8 @@
  },
  "atp-popyrin-tabilo-2026-09-02": {
   "shares": {
-   "Alexei Popyrin": 37091.54425992002,
-   "Alejandro Tabilo": 56809.909009645016
+   "Alexei Popyrin": 37880.94780992003,
+   "Alejandro Tabilo": 58018.995459645026
   },
   "prices": {
    "Alexei Popyrin": 0.395,
@@ -168496,7 +168517,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 101719,
+  "totalUsd": 102413,
   "whales": [
    {
     "wallet": "0xdb859a551fcf56e49416160911476bea7307152f",
@@ -168522,118 +168543,17 @@
     "avgPrice": 0.58
    }
   ],
-  "hoursToKickoff": 2.6,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 2.1,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "Alexei Popyrin": "15143211692571055173615444147763361544551727220777722979973375535153009438035",
    "Alejandro Tabilo": "105320236072577930924621095744267150789721432846850907015146019507542540235940"
-  },
-  "book": {
-   "side": "Alejandro Tabilo",
-   "bid": 0.6,
-   "ask": 0.61,
-   "spreadC": 1.0,
-   "spreadPct": 1.64,
-   "bids": [
-    [
-     0.6,
-     11618
-    ],
-    [
-     0.59,
-     34384
-    ],
-    [
-     0.58,
-     6916
-    ],
-    [
-     0.57,
-     2427
-    ],
-    [
-     0.56,
-     5846
-    ],
-    [
-     0.55,
-     2742
-    ]
-   ],
-   "asks": [
-    [
-     0.61,
-     6426
-    ],
-    [
-     0.62,
-     38199
-    ],
-    [
-     0.63,
-     48907
-    ],
-    [
-     0.64,
-     20967
-    ],
-    [
-     0.65,
-     48301
-    ],
-    [
-     0.66,
-     11092
-    ]
-   ]
-  },
-  "trades": [
-   {
-    "wallet": "0x1f08255a13ac12875f77e70fd7a6ba6dea5ec518",
-    "action": "BUY",
-    "side": "Alexei Popyrin",
-    "price": 0.4,
-    "usd": 360,
-    "ts": 1788447544
-   },
-   {
-    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
-    "action": "BUY",
-    "side": "Alejandro Tabilo",
-    "price": 0.6,
-    "usd": 3405,
-    "ts": 1788439267
-   },
-   {
-    "wallet": "0xc3c3b3ef304ddbea39fa2246e683a71da5d0eec8",
-    "action": "BUY",
-    "side": "Alexei Popyrin",
-    "price": 0.4,
-    "usd": 2210,
-    "ts": 1788438145
-   },
-   {
-    "wallet": "0xdc16718af9f04590b38a8e8aa32dedcd034740a5",
-    "action": "BUY",
-    "side": "Alexei Popyrin",
-    "price": 0.4,
-    "usd": 400,
-    "ts": 1788434967
-   },
-   {
-    "wallet": "0xc1e7185dcbffbbe22e7760cf2c3e26bd67e7223a",
-    "action": "BUY",
-    "side": "Alejandro Tabilo",
-    "price": 0.6,
-    "usd": 400,
-    "ts": 1788433275
-   }
-  ]
+  }
  },
  "atp-schoolk-cobolli-2026-09-02": {
   "shares": {
-   "Tristan Schoolkate": 11666.506754955002,
-   "Flavio Cobolli": 48161.742112960026
+   "Tristan Schoolkate": 11676.235087335002,
+   "Flavio Cobolli": 48201.902664580026
   },
   "prices": {
    "Tristan Schoolkate": 0.195,
@@ -168670,8 +168590,8 @@
     "usd": 3195
    }
   ],
-  "hoursToKickoff": 2.6,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 2.1,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "Tristan Schoolkate": "100421381800657868637593872176140251808216884438506706393101035288182893038924",
    "Flavio Cobolli": "3472263932018966760040271931012503290438095480057510444628368013055367597262"
@@ -168679,12 +168599,12 @@
  },
  "lol-domi-drm-2026-09-03": {
   "shares": {
-   "Dominion Goblins": 15927.567685829996,
-   "Dream Esports": 9970.631709115001
+   "Dominion Goblins": 20161.849077414998,
+   "Dream Esports": 11588.925513534998
   },
   "prices": {
-   "Dominion Goblins": 0.615,
-   "Dream Esports": 0.385
+   "Dominion Goblins": 0.635,
+   "Dream Esports": 0.365
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -168692,35 +168612,35 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 34355,
+  "totalUsd": 43777,
   "whales": [
    {
     "wallet": "0x65eee471b846b9585d9109fa14e649b0e3deee19",
     "side": "Dominion Goblins",
-    "usd": 6716,
+    "usd": 6934,
     "avgPrice": 0.3261
    },
    {
     "wallet": "0x58f8f1138be2192696378629fc9aa23c7910dc70",
     "side": "Dream Esports",
-    "usd": 3895,
-    "avgPrice": 0.6281
+    "usd": 3738,
+    "avgPrice": 0.6253
    },
    {
     "wallet": "0x9641bd013d7d5405668da7cb8a830c9b802936ee",
     "side": "Dominion Goblins",
-    "usd": 2207,
+    "usd": 2279,
     "avgPrice": 0.5168
    },
    {
-    "wallet": "0x7e5972bfc25819775ee5a9d4f191919375487b8b",
+    "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
     "side": "Dream Esports",
-    "usd": 1739,
-    "avgPrice": 0.4894
+    "usd": 2245,
+    "avgPrice": 0.37
    }
   ],
-  "hoursToKickoff": 2.6,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 2.1,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "Dominion Goblins": "104541500873882109696342103548089199450036774268708400045158669820092170937830",
    "Dream Esports": "80416135244664461328309527658109942875542386138072816660580768187699954281221"
@@ -168741,7 +168661,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 8040,
+  "totalUsd": 8231,
   "whales": [
    {
     "wallet": "0x448861155279dbf833d041b963e3ac854599e319",
@@ -168767,8 +168687,8 @@
     "avgPrice": 0.3242
    }
   ],
-  "hoursToKickoff": 2.6,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 2.1,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "Over": "15753335794019209437983499190069561175287610186794979390683739313604110998683",
    "Under": "52220963545650315758913024382163882204076204987565693866021216889270534342566"
@@ -168776,14 +168696,14 @@
  },
  "spl-dir-qad-2026-09-03": {
   "shares": {
-   "Al Diraiyah Saudi Club": 204.78908295,
+   "Al Diraiyah Saudi Club": 193.84702124999998,
    "Draw (Al Diraiyah Saudi Club vs. Al Qadisiyah Saudi Club)": 40.721820474999994,
-   "Al Qadisiyah Saudi Club": 7259.398641194997
+   "Al Qadisiyah Saudi Club": 7910.014515974998
   },
   "prices": {
-   "Al Diraiyah Saudi Club": 0.135,
+   "Al Diraiyah Saudi Club": 0.125,
    "Draw (Al Diraiyah Saudi Club vs. Al Qadisiyah Saudi Club)": 0.175,
-   "Al Qadisiyah Saudi Club": 0.695
+   "Al Qadisiyah Saudi Club": 0.715
   },
   "splitGuete": {
    "art": "belastbar",
@@ -168791,35 +168711,35 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 23406,
+  "totalUsd": 25024,
   "whales": [
    {
     "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
     "side": "Al Qadisiyah Saudi Club",
-    "usd": 2746,
+    "usd": 2830,
     "avgPrice": 0.6702
    },
    {
     "wallet": "0x9e3ed7b661a903fc97afcf49e0f014ebe869f882",
     "side": "Al Qadisiyah Saudi Club",
-    "usd": 1641,
-    "avgPrice": 0.6784
+    "usd": 1734,
+    "avgPrice": 0.6794
    },
    {
     "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
     "side": "Al Qadisiyah Saudi Club",
-    "usd": 632,
+    "usd": 650,
     "avgPrice": 0.6845
    },
    {
     "wallet": "0x78698dddbc712aa621d0a1816cf4f729fd762233",
     "side": "Al Qadisiyah Saudi Club",
-    "usd": 535,
+    "usd": 550,
     "avgPrice": 0.6499
    }
   ],
-  "hoursToKickoff": 2.6,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 2.1,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "Al Diraiyah Saudi Club": "54430881061983332558580172473409728008188743354372611801002290137639529150415",
    "Draw (Al Diraiyah Saudi Club vs. Al Qadisiyah Saudi Club)": "48196880397647547705621757102977611378385897481139968813565903431768219339041",
@@ -168828,12 +168748,12 @@
  },
  "dota2-4iki-pr1-2026-09-03": {
   "shares": {
-   "4ikibamboni": 3153.40620325,
-   "Power Rangers": 8746.24353057
+   "4ikibamboni": 3064.40029275,
+   "Power Rangers": 8952.855766190001
   },
   "prices": {
-   "4ikibamboni": 0.265,
-   "Power Rangers": 0.735
+   "4ikibamboni": 0.255,
+   "Power Rangers": 0.745
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -168841,35 +168761,33 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 13754,
+  "totalUsd": 13915,
   "whales": [
    {
     "wallet": "0x1944ec2927cb2a86fcad6e555ef25ea65ec98088",
     "side": "4ikibamboni",
-    "usd": 3054,
-    "avgPrice": 0.2644
+    "usd": 2939
    },
    {
     "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
     "side": "Power Rangers",
-    "usd": 2386,
+    "usd": 2328,
     "avgPrice": 0.7314
    },
    {
     "wallet": "0x5556aa398ba264f83ad75a95294bdbab23e82759",
     "side": "Power Rangers",
-    "usd": 1305,
-    "avgPrice": 0.7498
+    "usd": 1322
    },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Power Rangers",
-    "usd": 1105,
+    "usd": 1120,
     "avgPrice": 0.7299
    }
   ],
-  "hoursToKickoff": 2.6,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 2.1,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "4ikibamboni": "25996317617397674520479815411477769499631821944202497923984729068940302721346",
    "Power Rangers": "61365761344385465298661353790400027153389386410060834714794026496250283429925"
@@ -168877,8 +168795,8 @@
  },
  "wta-bucsa-sakatsu-2026-09-02": {
   "shares": {
-   "Cristina Bucsa": 4521.871309935,
-   "Himeno Sakatsume": 2599.22897209
+   "Cristina Bucsa": 4523.58752507,
+   "Himeno Sakatsume": 2600.2154579549997
   },
   "prices": {
    "Cristina Bucsa": 0.635,
@@ -168890,7 +168808,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 11710,
+  "totalUsd": 11760,
   "whales": [
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
@@ -168901,8 +168819,7 @@
    {
     "wallet": "0xfd4fb07f091e6a6d212f6e4876bd2ebc91bca4d3",
     "side": "Cristina Bucsa",
-    "usd": 1224,
-    "avgPrice": 0.6699
+    "usd": 1224
    },
    {
     "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
@@ -168913,12 +168830,11 @@
    {
     "wallet": "0x18617ddf82e34b96963a9afc8fdae202dd88408d",
     "side": "Cristina Bucsa",
-    "usd": 810,
-    "avgPrice": 0.633
+    "usd": 810
    }
   ],
-  "hoursToKickoff": 2.6,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 2.1,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "Cristina Bucsa": "89283035112091175155052031780293154833637242691448867890595709043637546159282",
    "Himeno Sakatsume": "24749774156857167587141469482510885264666678605639396617896120774506511503122"
@@ -168939,13 +168855,12 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 10634,
+  "totalUsd": 10663,
   "whales": [
    {
     "wallet": "0x7e5972bfc25819775ee5a9d4f191919375487b8b",
     "side": "Jakub Mensik",
-    "usd": 1489,
-    "avgPrice": 0.84
+    "usd": 1489
    },
    {
     "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
@@ -168956,7 +168871,7 @@
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "side": "Jakub Mensik",
-    "usd": 423
+    "usd": 398
    },
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
@@ -168964,8 +168879,8 @@
     "usd": 260
    }
   ],
-  "hoursToKickoff": 2.6,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 2.1,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "Jakub Mensik": "83847941150326586178071013167556154248923576384033954610797853316316026598794",
    "Jurij Rodionov": "48967217418556462785253183544550523144307163640062580296638487977071276679056"
@@ -168973,7 +168888,7 @@
  },
  "den-kob-nor-2026-09-03": {
   "shares": {
-   "FC København": 3040.8516622900015,
+   "FC København": 3096.8326622900013,
    "Draw (FC København vs. FC Nordsjælland)": 78.31687934,
    "FC Nordsjælland": 760.3590541049999
   },
@@ -168988,7 +168903,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 10065,
+  "totalUsd": 10344,
   "whales": [
    {
     "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
@@ -169013,12 +168928,810 @@
     "usd": 299
    }
   ],
-  "hoursToKickoff": 2.6,
-  "capturedAt": "2026-09-03T15:27:25.871978+00:00",
+  "hoursToKickoff": 2.1,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
   "tokens": {
    "FC København": "110238023086970424700474776720154949114005432675002921651852300157154117478904",
    "Draw (FC København vs. FC Nordsjælland)": "58951328154857809855504436298117962598039680866675358577261420782983112353619",
    "FC Nordsjælland": "101102769536026060949211056851620443693171596231896031525438101166541703571821"
+  }
+ },
+ "fl1-tou-lil-2026-09-03-more-markets": {
+  "shares": {
+   "Over": 9896.28385122,
+   "Under": 9319.80532034
+  },
+  "prices": {
+   "Over": 0.515,
+   "Under": 0.485
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 25019,
+  "whales": [
+   {
+    "wallet": "0x457f89ae6fb64ace63f595378c0a2959cb422a64",
+    "side": "Over",
+    "usd": 3208,
+    "avgPrice": 0.4783
+   },
+   {
+    "wallet": "0xec9f344ac6b942bf2a8bb36ebc0294a73cd9e57b",
+    "side": "Over",
+    "usd": 3061,
+    "avgPrice": 0.5099
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Under",
+    "usd": 1945,
+    "avgPrice": 0.4903
+   },
+   {
+    "wallet": "0xc3c3b3ef304ddbea39fa2246e683a71da5d0eec8",
+    "side": "Over",
+    "usd": 1288
+   }
+  ],
+  "hoursToKickoff": 2.85,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
+  "tokens": {
+   "Over": "67811236591092848645116848931712006675169516630821833030503902347463325638934",
+   "Under": "985571659040251239188314305608700783391438146263947042914647449608292208963"
+  },
+  "book": {
+   "side": "Over",
+   "bid": 0.51,
+   "ask": 0.52,
+   "spreadC": 1.0,
+   "spreadPct": 1.92,
+   "bids": [
+    [
+     0.51,
+     23285
+    ],
+    [
+     0.5,
+     58977
+    ],
+    [
+     0.49,
+     34874
+    ],
+    [
+     0.48,
+     7177
+    ],
+    [
+     0.47,
+     37679
+    ],
+    [
+     0.46,
+     75370
+    ]
+   ],
+   "asks": [
+    [
+     0.52,
+     4738
+    ],
+    [
+     0.53,
+     36734
+    ],
+    [
+     0.54,
+     36215
+    ],
+    [
+     0.55,
+     39598
+    ],
+    [
+     0.56,
+     38067
+    ],
+    [
+     0.57,
+     8104
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xd48a81db62f742c4e42d86dfc23a7ee345366e90",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.49,
+    "usd": 1000,
+    "ts": 1788447205
+   },
+   {
+    "wallet": "0x7b3193adf8249df2284c18a6fdbfe931c3fc3e10",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.51,
+    "usd": 500,
+    "ts": 1788442986
+   },
+   {
+    "wallet": "0xec9f344ac6b942bf2a8bb36ebc0294a73cd9e57b",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.51,
+    "usd": 3032,
+    "ts": 1788440391
+   },
+   {
+    "wallet": "0xc3c3b3ef304ddbea39fa2246e683a71da5d0eec8",
+    "action": "BUY",
+    "side": "Over",
+    "price": 0.51,
+    "usd": 1275,
+    "ts": 1788439021
+   }
+  ]
+ },
+ "fl1-tou-lil-2026-09-03": {
+  "shares": {
+   "Toulouse FC": 2573.9633909250015,
+   "Draw (Toulouse FC vs. Lille OSC)": 3599.5593279550008,
+   "Lille OSC": 92355.00462640003
+  },
+  "prices": {
+   "Toulouse FC": 0.225,
+   "Draw (Toulouse FC vs. Lille OSC)": 0.265,
+   "Lille OSC": 0.505
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 240290,
+  "whales": [
+   {
+    "wallet": "0xdb859a551fcf56e49416160911476bea7307152f",
+    "side": "Lille OSC",
+    "usd": 20200,
+    "avgPrice": 0.4899
+   },
+   {
+    "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
+    "side": "Lille OSC",
+    "usd": 10152,
+    "avgPrice": 0.4775
+   },
+   {
+    "wallet": "0xac4773707daddd3792efed5a91f5ec7651a7d234",
+    "side": "Lille OSC",
+    "usd": 10100,
+    "avgPrice": 0.51
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "Lille OSC",
+    "usd": 8555,
+    "avgPrice": 0.5006
+   }
+  ],
+  "hoursToKickoff": 2.85,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
+  "tokens": {
+   "Toulouse FC": "85498010505222366584230222789320025034402977099578782664674084957829441904210",
+   "Draw (Toulouse FC vs. Lille OSC)": "100744540628056600705811416516331550754468128129791033411949421914579878695211",
+   "Lille OSC": "73033917830581632797745880522857181548281265106937123722877217949484580376939"
+  },
+  "book": {
+   "side": "Lille OSC",
+   "bid": 0.5,
+   "ask": 0.51,
+   "spreadC": 1.0,
+   "spreadPct": 1.96,
+   "bids": [
+    [
+     0.5,
+     143359
+    ],
+    [
+     0.49,
+     67695
+    ],
+    [
+     0.48,
+     40365
+    ],
+    [
+     0.47,
+     20170
+    ],
+    [
+     0.46,
+     28437
+    ],
+    [
+     0.45,
+     7496
+    ]
+   ],
+   "asks": [
+    [
+     0.51,
+     13559
+    ],
+    [
+     0.52,
+     56213
+    ],
+    [
+     0.53,
+     43229
+    ],
+    [
+     0.54,
+     40241
+    ],
+    [
+     0.55,
+     62904
+    ],
+    [
+     0.56,
+     60876
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xe6bf45da92f7d318f2d7ee28f6d5dd02038016b9",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.51,
+    "usd": 300,
+    "ts": 1788450739
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.51,
+    "usd": 978,
+    "ts": 1788450555
+   }
+  ]
+ },
+ "itc-pal-man-2026-09-03-more-markets": {
+  "shares": {
+   "Over": 5534.365233185003,
+   "Under": 4620.3543003800005
+  },
+  "prices": {
+   "Over": 0.545,
+   "Under": 0.455
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 10458,
+  "whales": [
+   {
+    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+    "side": "Under",
+    "usd": 1409
+   },
+   {
+    "wallet": "0x1f90e8becb783e981036ae76bdd226bd9d597f51",
+    "side": "Over",
+    "usd": 1267,
+    "avgPrice": 0.5499
+   },
+   {
+    "wallet": "0x30d4bc53279f8a0e0dc11da5f0b9a4c815a7ac6c",
+    "side": "Over",
+    "usd": 978,
+    "avgPrice": 0.557
+   },
+   {
+    "wallet": "0xd48a81db62f742c4e42d86dfc23a7ee345366e90",
+    "side": "Over",
+    "usd": 974
+   }
+  ],
+  "hoursToKickoff": 0.1,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
+  "tokens": {
+   "Over": "22747669404015782627414001955145069036001171053837913470580375720419537603190",
+   "Under": "26979681325948399496507254115098418022429194395908179605557286347936826792803"
+  }
+ },
+ "fl1-tou-lil-2026-09-03-exact-score": {
+  "shares": {
+   "Toulouse FC 0 - 0 Lille OSC": 112.59771675,
+   "Toulouse FC 0 - 1 Lille OSC": 409.116147225,
+   "Toulouse FC 1 - 0 Lille OSC": 91.179836605,
+   "Toulouse FC 0 - 2 Lille OSC": 501.352740935,
+   "Toulouse FC 1 - 1 Lille OSC": 325.13585887500005,
+   "Toulouse FC 2 - 0 Lille OSC": 76.02689438499999,
+   "Toulouse FC 0 - 3 Lille OSC": 143.848278582,
+   "Toulouse FC 1 - 2 Lille OSC": 501.171510735,
+   "Toulouse FC 2 - 1 Lille OSC": 193.02890977500002,
+   "Toulouse FC 3 - 0 Lille OSC": 34.216951787999996,
+   "Toulouse FC 1 - 3 Lille OSC": 192.97863837,
+   "Toulouse FC 2 - 2 Lille OSC": 126.24251167000001,
+   "Toulouse FC 3 - 1 Lille OSC": 35.1867312,
+   "Toulouse FC 2 - 3 Lille OSC": 54.993123052,
+   "Toulouse FC 3 - 2 Lille OSC": 40.950495102,
+   "Toulouse FC 3 - 3 Lille OSC": 45.6357687685,
+   "Any Other Score": 140.80102150000002
+  },
+  "prices": {
+   "Toulouse FC 0 - 0 Lille OSC": 0.075,
+   "Toulouse FC 0 - 1 Lille OSC": 0.115,
+   "Toulouse FC 1 - 0 Lille OSC": 0.065,
+   "Toulouse FC 0 - 2 Lille OSC": 0.095,
+   "Toulouse FC 1 - 1 Lille OSC": 0.125,
+   "Toulouse FC 2 - 0 Lille OSC": 0.0325,
+   "Toulouse FC 0 - 3 Lille OSC": 0.0505,
+   "Toulouse FC 1 - 2 Lille OSC": 0.105,
+   "Toulouse FC 2 - 1 Lille OSC": 0.065,
+   "Toulouse FC 3 - 0 Lille OSC": 0.012,
+   "Toulouse FC 1 - 3 Lille OSC": 0.0525,
+   "Toulouse FC 2 - 2 Lille OSC": 0.055,
+   "Toulouse FC 3 - 1 Lille OSC": 0.018,
+   "Toulouse FC 2 - 3 Lille OSC": 0.029,
+   "Toulouse FC 3 - 2 Lille OSC": 0.0165,
+   "Toulouse FC 3 - 3 Lille OSC": 0.0115,
+   "Any Other Score": 0.1
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 28304,
+  "whales": [
+   {
+    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+    "side": "Toulouse FC 1 - 1 Lille OSC",
+    "usd": 170,
+    "avgPrice": 0.0588
+   },
+   {
+    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+    "side": "Toulouse FC 0 - 1 Lille OSC",
+    "usd": 156,
+    "avgPrice": 0.0588
+   },
+   {
+    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+    "side": "Toulouse FC 1 - 2 Lille OSC",
+    "usd": 143,
+    "avgPrice": 0.0588
+   },
+   {
+    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+    "side": "Any Other Score",
+    "usd": 136,
+    "avgPrice": 0.0588
+   }
+  ],
+  "hoursToKickoff": 2.85,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
+  "tokens": {
+   "Toulouse FC 0 - 0 Lille OSC": "98191175209375218601211016028030973328563747518518843229346667178173156694254",
+   "Toulouse FC 0 - 1 Lille OSC": "14708549628239710586573970881799992317288665583248065391270595513706791866487",
+   "Toulouse FC 1 - 0 Lille OSC": "83749346895729044510659169484907776634815521807912611348215927643530463771917",
+   "Toulouse FC 0 - 2 Lille OSC": "67828440824774736929469176521948506007524209405253830497737472780149153385191",
+   "Toulouse FC 1 - 1 Lille OSC": "65365282133121844302764705486353363836185897327002487522959591323183443944274",
+   "Toulouse FC 2 - 0 Lille OSC": "45987531165724766849536398276009560208367943724724788333552749305093033028086",
+   "Toulouse FC 0 - 3 Lille OSC": "67546858590808814274474216193805689340888311896081263765685973205883641305817",
+   "Toulouse FC 1 - 2 Lille OSC": "296513748608431821735978836602146570810658009069786388624280338917431870928",
+   "Toulouse FC 2 - 1 Lille OSC": "29599631864489599208168328021933313310863910451803821113240923857760535452744",
+   "Toulouse FC 3 - 0 Lille OSC": "89932480366257449600538135687774788768899338732708337034757148908353546710704",
+   "Toulouse FC 1 - 3 Lille OSC": "20708603277952525712487118106674225331752273544818461564168248803972317973826",
+   "Toulouse FC 2 - 2 Lille OSC": "97014880366063525980582128195624991563514220174954236595624514618514052105767",
+   "Toulouse FC 3 - 1 Lille OSC": "104410563037793166190065000517750415765468384610430447938194184619433339432749",
+   "Toulouse FC 2 - 3 Lille OSC": "10551122574898862185681448611204334938332578989765893195186925943615780026862",
+   "Toulouse FC 3 - 2 Lille OSC": "51537860943000305704837799380391770735860538646577659990033712875490619971820",
+   "Toulouse FC 3 - 3 Lille OSC": "78968158386251966241069693838266755800500772325867564311966159734658413370672",
+   "Any Other Score": "11933130442010361265320116855994107425066907398226301101834134198098090020537"
+  }
+ },
+ "spl-neo-kha-2026-09-03-more-markets": {
+  "shares": {
+   "Over": 3973.86686865,
+   "Under": 3595.4014236249996
+  },
+  "prices": {
+   "Over": 0.525,
+   "Under": 0.475
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 9548,
+  "whales": [
+   {
+    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
+    "side": "Under",
+    "usd": 2608,
+    "avgPrice": 0.4599
+   },
+   {
+    "wallet": "0xb8ef617fd5d960e61e56c50d2971697300b32864",
+    "side": "Over",
+    "usd": 1171,
+    "avgPrice": 0.53
+   },
+   {
+    "wallet": "0xcf7379b4b891c06d88807f6f70efa75378120215",
+    "side": "Over",
+    "usd": 788
+   },
+   {
+    "wallet": "0x2d6ac4f70307102ac46e9e6ded67f3838ddf8add",
+    "side": "Over",
+    "usd": 788
+   }
+  ],
+  "hoursToKickoff": 0.6,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
+  "tokens": {
+   "Over": "98329836269672580361421675950602779777093321145448719080856814236168099354363",
+   "Under": "102185384933713396738692970235612952132389935014332655895897484973133363067233"
+  }
+ },
+ "sui-lug-ser-2026-09-03-more-markets": {
+  "shares": {
+   "Over": 12519.495749139996,
+   "Under": 9638.89974918
+  },
+  "prices": {
+   "Over": 0.565,
+   "Under": 0.435
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 25314,
+  "whales": [
+   {
+    "wallet": "0x3f3aa7005f8006bfcc367d43a25cde25509fe8fd",
+    "side": "Under",
+    "usd": 5199,
+    "avgPrice": 0.4389
+   },
+   {
+    "wallet": "0x454bd9b0655c03e38b08f8e45a01bb68de355b8b",
+    "side": "Over",
+    "usd": 4639,
+    "avgPrice": 0.6199
+   },
+   {
+    "wallet": "0x191f77486cb1c5af42e54734621804936a204a8d",
+    "side": "Over",
+    "usd": 3834,
+    "avgPrice": 0.56
+   },
+   {
+    "wallet": "0xc3c3b3ef304ddbea39fa2246e683a71da5d0eec8",
+    "side": "Over",
+    "usd": 1977
+   }
+  ],
+  "hoursToKickoff": 2.6,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
+  "tokens": {
+   "Over": "67709864334322234217877452473287437648015828243783290304024535834043432369001",
+   "Under": "114810577310821718443698186290953917527635281655839427865037420690100363576152"
+  }
+ },
+ "bel1-rsc-kor-2026-09-03": {
+  "shares": {
+   "RSC Anderlecht": 4315.485502124996,
+   "Draw (RSC Anderlecht vs. KV Kortrijk)": 111.36263502,
+   "KV Kortrijk": 2201.1175693749988
+  },
+  "prices": {
+   "RSC Anderlecht": 0.675,
+   "Draw (RSC Anderlecht vs. KV Kortrijk)": 0.195,
+   "KV Kortrijk": 0.125
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 24143,
+  "whales": [
+   {
+    "wallet": "0x3f855d2724d398bb53a8bfd885823829d96a3364",
+    "side": "RSC Anderlecht",
+    "usd": 2032,
+    "avgPrice": 0.6642
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "KV Kortrijk",
+    "usd": 435,
+    "avgPrice": 0.1199
+   },
+   {
+    "wallet": "0x1ce5000f228a6a392306217670468778cb6117f9",
+    "side": "RSC Anderlecht",
+    "usd": 298,
+    "avgPrice": 0.6799
+   },
+   {
+    "wallet": "0x8ae599cc1fdeb17c95e2af00bd75a38034bd4f22",
+    "side": "RSC Anderlecht",
+    "usd": 297,
+    "avgPrice": 0.68
+   }
+  ],
+  "hoursToKickoff": 2.6,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
+  "tokens": {
+   "RSC Anderlecht": "20969238383769586315453818031875745782544856303205954391299297303739928702724",
+   "Draw (RSC Anderlecht vs. KV Kortrijk)": "44109537665689857937535120952313023340410920782452030707888002705174247471078",
+   "KV Kortrijk": "36752808591760987315928699732858317401830456980618396054760438161962625084451"
+  }
+ },
+ "wta-andreev-lys-2026-09-02": {
+  "shares": {
+   "Mirra Andreeva": 14177.64402319,
+   "Eva Lys": 1488.261672965
+  },
+  "prices": {
+   "Mirra Andreeva": 0.905,
+   "Eva Lys": 0.095
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 18584,
+  "whales": [
+   {
+    "wallet": "0x8bd3a7b9a1b58ebc3f243d2eb05327163ea3f69a",
+    "side": "Mirra Andreeva",
+    "usd": 5028,
+    "avgPrice": 0.8999
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Mirra Andreeva",
+    "usd": 2675,
+    "avgPrice": 0.889
+   },
+   {
+    "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
+    "side": "Mirra Andreeva",
+    "usd": 1992,
+    "avgPrice": 0.9
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Mirra Andreeva",
+    "usd": 1457,
+    "avgPrice": 0.8899
+   }
+  ],
+  "hoursToKickoff": 2.6,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
+  "tokens": {
+   "Mirra Andreeva": "43005763430364465276851316592198937272476619215226278721800613292250288583995",
+   "Eva Lys": "100010038381388055513094180126824731040486436687934733110200878849688202345528"
+  }
+ },
+ "itc-pal-man-2026-09-03-exact-score": {
+  "shares": {
+   "Palermo FC 0 - 0 Mantova 1911": 50.14285692000001,
+   "Palermo FC 0 - 1 Mantova 1911": 4.815728839999999,
+   "Palermo FC 1 - 0 Mantova 1911": 3.5999999999999996,
+   "Palermo FC 0 - 2 Mantova 1911": 37.23,
+   "Palermo FC 1 - 1 Mantova 1911": 522.844543625,
+   "Palermo FC 2 - 0 Mantova 1911": 4.1666665499999995,
+   "Palermo FC 0 - 3 Mantova 1911": 4.483965976,
+   "Palermo FC 1 - 2 Mantova 1911": 78.74976263,
+   "Palermo FC 2 - 1 Mantova 1911": 60.009089800000005,
+   "Palermo FC 3 - 0 Mantova 1911": 4.0,
+   "Palermo FC 1 - 3 Mantova 1911": 1.256666632,
+   "Palermo FC 2 - 2 Mantova 1911": 43.03928531500001,
+   "Palermo FC 3 - 1 Mantova 1911": 10.70833325,
+   "Palermo FC 2 - 3 Mantova 1911": 7.888931598,
+   "Palermo FC 3 - 2 Mantova 1911": 8.5015872,
+   "Palermo FC 3 - 3 Mantova 1911": 20.455607042,
+   "Any Other Score": 0.0
+  },
+  "prices": {
+   "Palermo FC 0 - 0 Mantova 1911": 0.065,
+   "Palermo FC 0 - 1 Mantova 1911": 0.065,
+   "Palermo FC 1 - 0 Mantova 1911": 0.09,
+   "Palermo FC 0 - 2 Mantova 1911": 0.0365,
+   "Palermo FC 1 - 1 Mantova 1911": 0.125,
+   "Palermo FC 2 - 0 Mantova 1911": 0.075,
+   "Palermo FC 0 - 3 Mantova 1911": 0.014,
+   "Palermo FC 1 - 2 Mantova 1911": 0.07,
+   "Palermo FC 2 - 1 Mantova 1911": 0.1,
+   "Palermo FC 3 - 0 Mantova 1911": 0.04,
+   "Palermo FC 1 - 3 Mantova 1911": 0.026,
+   "Palermo FC 2 - 2 Mantova 1911": 0.065,
+   "Palermo FC 3 - 1 Mantova 1911": 0.05,
+   "Palermo FC 2 - 3 Mantova 1911": 0.023,
+   "Palermo FC 3 - 2 Mantova 1911": 0.032,
+   "Palermo FC 3 - 3 Mantova 1911": 0.013,
+   "Any Other Score": 0.105
+  },
+  "splitGuete": {
+   "art": "abgeschnitten",
+   "trunc": true
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 10254,
+  "whales": [
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Palermo FC 1 - 1 Mantova 1911",
+    "usd": 472,
+    "avgPrice": 0.1199
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Palermo FC 1 - 2 Mantova 1911",
+    "usd": 77,
+    "avgPrice": 0.0634
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Palermo FC 0 - 2 Mantova 1911",
+    "usd": 37,
+    "avgPrice": 0.0359
+   },
+   {
+    "wallet": "0x51ce4780f5a17e67f3394ea1f78888e5ec8b43fa",
+    "side": "Palermo FC 1 - 1 Mantova 1911",
+    "usd": 31
+   }
+  ],
+  "hoursToKickoff": 0.1,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
+  "tokens": {
+   "Palermo FC 0 - 0 Mantova 1911": "55202165183509843171225206590092496722164180377804251364969516040575533997577",
+   "Palermo FC 0 - 1 Mantova 1911": "24786565525439950605145504428716423294662184348666619617994882722089693597593",
+   "Palermo FC 1 - 0 Mantova 1911": "88746002033433336823725485597829983003974243721522114108440040989252417891238",
+   "Palermo FC 0 - 2 Mantova 1911": "36964624879240848414146662069889558449676833106035599547381458792577133586089",
+   "Palermo FC 1 - 1 Mantova 1911": "11912293661737181211886679189643232264701482290537680928050852993215567832923",
+   "Palermo FC 2 - 0 Mantova 1911": "37318316182096538636533764841715021210731356235120977592078565284604427159000",
+   "Palermo FC 0 - 3 Mantova 1911": "86653757587393716335963843067555331058022468654899220069977869384041043842152",
+   "Palermo FC 1 - 2 Mantova 1911": "15003345552054426064805539833492567235601113610215727617864915551336877061607",
+   "Palermo FC 2 - 1 Mantova 1911": "44913643149431495016446882417899553509003965615137209204665714932802552054616",
+   "Palermo FC 3 - 0 Mantova 1911": "88719275099591331681201862205556606649898261592717202792302979149057686566807",
+   "Palermo FC 1 - 3 Mantova 1911": "22769633192929077653095550485092863492221517636409737244451090172239088260362",
+   "Palermo FC 2 - 2 Mantova 1911": "72028493759924976075319664854116319705227083600733082664282524162400912603231",
+   "Palermo FC 3 - 1 Mantova 1911": "31151619867454855981506648702530475386563708785785764999016512593906806659903",
+   "Palermo FC 2 - 3 Mantova 1911": "7670496791679829832190933834693565843184619271424050549749914366477508427463",
+   "Palermo FC 3 - 2 Mantova 1911": "69636013147403966286894247744061470459195759587717801975892924583898241844904",
+   "Palermo FC 3 - 3 Mantova 1911": "80130878845116528477816646763934565837907810271091831988088058305455412428885",
+   "Any Other Score": "4738489709014470877371193891061111462984091092609634706993293847217321813188"
+  }
+ },
+ "sui-lug-ser-2026-09-03": {
+  "shares": {
+   "FC Lugano": 3167.2091824100003,
+   "Draw (FC Lugano vs. Servette Geneva)": 36.297847755,
+   "Servette Geneva": 24.7578474
+  },
+  "prices": {
+   "FC Lugano": 0.455,
+   "Draw (FC Lugano vs. Servette Geneva)": 0.255,
+   "Servette Geneva": 0.285
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 8630,
+  "whales": [
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "side": "FC Lugano",
+    "usd": 585,
+    "avgPrice": 0.464
+   },
+   {
+    "wallet": "0xec5c8d5ba82458ae5c02d886f090d71f5985ce46",
+    "side": "FC Lugano",
+    "usd": 496
+   },
+   {
+    "wallet": "0xe954ddb021c19495f1c556f59dadbd1494821ef1",
+    "side": "FC Lugano",
+    "usd": 462
+   },
+   {
+    "wallet": "0x191f77486cb1c5af42e54734621804936a204a8d",
+    "side": "FC Lugano",
+    "usd": 390
+   }
+  ],
+  "hoursToKickoff": 2.6,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
+  "tokens": {
+   "FC Lugano": "31630681015369495589359965679364473280238720314093416272704207572172723740379",
+   "Draw (FC Lugano vs. Servette Geneva)": "48800779883376663633429743093451401160283939614461623530255364336748195894097",
+   "Servette Geneva": "110884502107635950953719563434478772522208063312618968536496517707392036858087"
+  }
+ },
+ "scop-hib-hmi-2026-09-03": {
+  "shares": {
+   "Hibernian FC": 1693.208244645,
+   "Draw (Hibernian FC vs. Heart of Midlothian FC)": 51.112768025,
+   "Heart of Midlothian FC": 950.9217694100003
+  },
+  "prices": {
+   "Hibernian FC": 0.395,
+   "Draw (Hibernian FC vs. Heart of Midlothian FC)": 0.275,
+   "Heart of Midlothian FC": 0.335
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 7606,
+  "whales": [
+   {
+    "wallet": "0x0a39b3b29ab3b7dd753aa96fde4ecab3f2dbb0b9",
+    "side": "Hibernian FC",
+    "usd": 1582
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Heart of Midlothian FC",
+    "usd": 476,
+    "avgPrice": 0.3394
+   },
+   {
+    "wallet": "0x1f624696c102b99bea92c75a502fa7e4a6d676f6",
+    "side": "Heart of Midlothian FC",
+    "usd": 168
+   },
+   {
+    "wallet": "0x0d2d845a6ff64e31e04a70afce8a573940767ff5",
+    "side": "Heart of Midlothian FC",
+    "usd": 140
+   }
+  ],
+  "hoursToKickoff": 2.85,
+  "capturedAt": "2026-09-03T15:59:37.926326+00:00",
+  "tokens": {
+   "Hibernian FC": "1612661997615991800974999809673321527086638162385687242038192688845778677640",
+   "Draw (Hibernian FC vs. Heart of Midlothian FC)": "63613621641151661189676641100835638807000106064524017333980563172017913500805",
+   "Heart of Midlothian FC": "25141953858088761477564652447725753881251529924144813807689698683526300158241"
   }
  }
 }
