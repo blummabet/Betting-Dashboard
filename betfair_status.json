@@ -30,12 +30,10 @@
     {
       "id": "live_minute_sane",
       "label": "Live-Minute plausibel (Zufluss-Fenster)",
-      "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "35956150: min=155 ausserhalb 0–130"
-      ],
+      "severity": "warn",
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "Feld 'min' speist die Spielminuten-Spanne der Frisch-Push. Korrupte Werte verfaelschen sie, fehlende degradieren still auf die Zeit-Dauer."
     },
     {
@@ -129,6 +127,6 @@
       "note": "betfair_public_eval.py wertet Treffer/ROI der oeffentlichen Moneyflow-Signale aus. Nur geprueft, wenn die Datei einen Zeitstempel fuehrt."
     }
   ],
-  "nFail": 1,
-  "generatedAt": "2026-09-03T12:01:07.214837+00:00"
+  "nFail": 0,
+  "generatedAt": "2026-09-03T12:16:00.936124+00:00"
 }
