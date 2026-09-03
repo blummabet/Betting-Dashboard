@@ -145,6 +145,39 @@ test('der Kopf sagt, dass nichts gemessen ist', () => {
 test('die Auswahl-Schwaeche der Quelle steht auf der Flaeche', () => {
   assert.ok(/verbergen/.test(JS), '„Wetten verbergen" muss erklaert werden');
   assert.ok(/Auswahl, keine Grundgesamtheit/.test(JS));
+  // 03.09.2026, am echten Feed geprueft: `user` ist bei JEDER Wette null. Wer hier spaeter
+  // einen Track-Record je Konto plant, muss das auf der Flaeche lesen koennen.
+  assert.ok(/anonym/i.test(JS), 'dass der Feed anonym ist, muss dastehen');
+  assert.ok(/Track-Record je Spieler/.test(JS) || /Track-Record/.test(JS));
+});
+
+test('Kombis zaehlen nicht ins Geld eines einzelnen Spiels', () => {
+  const [g] = API._srGruppen([
+    { event: 'A - B', eventId: 'f1', ts: T(0), einsatzUsd: 5000, auswahl: 'A' },
+    { event: 'A - B', eventId: 'f1', ts: T(1), einsatzUsd: 9000, auswahl: 'A', kombi: true, nBeine: 4 },
+  ]);
+  assert.equal(g.n, 2, 'die Kombi bleibt sichtbar');
+  assert.equal(g.nKombi, 1);
+  assert.equal(g.nEinzel, 1);
+  assert.equal(g.geldUsd, 5000, 'ihr Einsatz haengt an vier Spielen — er gehoert keinem davon');
+  assert.equal(g.seiten.reduce((s, x) => s + x.geld, 0), 5000, 'auch die Seiten bleiben sauber');
+});
+
+test('gruppiert wird ueber die Fixture-ID, nicht ueber den Namen', () => {
+  const g = API._srGruppen([
+    { event: 'A - B', eventId: 'liga', liga: 'BL', ts: T(0), einsatzUsd: 1000 },
+    { event: 'A - B', eventId: 'pokal', liga: 'BL', ts: T(1), einsatzUsd: 1000 },
+  ]);
+  assert.equal(g.length, 2, 'dasselbe Paar in zwei Wettbewerben sind zwei Spiele');
+});
+
+test('die Seite traegt Markt UND Auswahl', () => {
+  const [g] = API._srGruppen([
+    { event: 'A - B', eventId: 'f1', ts: T(0), einsatzUsd: 1000, markt: 'Winner', auswahl: 'A' },
+    { event: 'A - B', eventId: 'f1', ts: T(1), einsatzUsd: 1000, markt: 'Total', auswahl: 'Over 2.5' },
+  ]);
+  assert.equal(g.seiten.length, 2, '"Winner: A" und "Total: Over 2.5" sind nicht dieselbe Seite');
+  assert.ok(g.seiten.some(s => s.name === 'Winner: A'));
 });
 
 test('ein Feed-Fehler zeigt keine alten Zahlen als aktuell', () => {
@@ -174,8 +207,14 @@ test('gelesen wird die Sicht, nie das Ledger', () => {
     'das Ledger bleibt auf dem Runner — es gehoert nicht ins Pages-Artefakt');
 });
 
-test('Nutzernamen und Eventnamen werden escaped', () => {
+test('alles aus dem Feed wird escaped, bevor es ins HTML geht', () => {
   const karte = schneide('function _srKarte', 'function _srRender');
-  assert.ok(/_srEsc\(w\.user/.test(karte));
-  assert.ok(/_srEsc\(g\.event/.test(karte));
+  for (const feld of ['w.markt', 'w.auswahl', 'g.event', 's.name', 'w.waehrung']) {
+    assert.ok(karte.includes('_srEsc(' + feld), 'nicht escaped: ' + feld);
+  }
+});
+
+test('die Nutzer-Spalte ist weg — der Feed liefert dort nie etwas', () => {
+  const karte = schneide('function _srKarte', 'function _srRender');
+  assert.ok(!/sr-bu/.test(karte), 'eine Spalte, die immer leer bleibt, ist kein Platzhalter wert');
 });

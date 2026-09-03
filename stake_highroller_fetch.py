@@ -22,20 +22,28 @@ Stake hat eine „Wetten verbergen"-Einstellung. Wer sie nutzt, taucht hier nich
 Liste ist also nicht „die großen Einsätze", sondern „die großen Einsätze der Konten, die
 sich zeigen". Das ist eine Auswahl, keine Grundgesamtheit.
 
-## Schema-Findung — geraten wird nicht
-Stakes GraphQL-Schema ist nicht dokumentiert, ändert sich, und Introspection ist zu
-(gemessen am 03.09.2026: HTTP 400 „introspection is not allowed by Apollo Server").
-Ein geratener Feldname, der zufällig existiert und das Falsche liefert, wäre genau die
+## Woher die Abfrage kommt — geraten wird nicht
+Endpunkt: https://stake.com/_api/graphql, Feld `highrollerSportBets`, ohne Anmeldung.
+Die Abfrage ist am 03.09.2026 aus der Netzwerkanfrage MITGELESEN, die Stakes eigene
+Highroller-Seite selbst stellt. Introspection ist dort abgeschaltet (HTTP 400, Apollo),
+und die "Did you mean"-Vorschlaege sind es auch — beides waere aber kein Grund zu raten:
+ein geratener Feldname, der zufaellig existiert und das Falsche liefert, ist genau die
 Sorte stiller Fehler, die uns hier schon zweimal Geld gekostet hat.
 
-Deshalb wird trotzdem gefragt, nur anders: graphql-js validiert das ganze Dokument, bevor
-es etwas ausführt, und schreibt in die Fehler, was es stattdessen kennt („Did you mean
-\"amount\"?", „of type \"[SportBet!]!\" must have a selection of subfields"). Der Server ist
-damit sein eigenes Verzeichnis, und weil alle Verstöße gemeinsam zurückkommen, kostet eine
-ganze Ebene genau eine Anfrage. Gelernt wird einmal, das Ergebnis liegt in stake_query.json.
+Drei Wege, in dieser Reihenfolge:
+  1. die zuletzt funktionierende Abfrage aus stake_query.json
+  2. die verifizierte Abfrage (QUERY_BEKANNT, s.u.)
+  3. aus den Validierungsfehlern des Servers lernen — das Netz fuer den Tag, an dem Stake
+     umbaut. graphql-js validiert das ganze Dokument, bevor es etwas ausfuehrt, und schreibt
+     in die Fehler, was es stattdessen kennt; weil alle Verstoesse gemeinsam zurueckkommen,
+     kostet eine ganze Ebene genau eine Anfrage.
+Findet keiner etwas, steht status="schema_unbekannt" da — und NICHT eine leere Liste, die
+wie "heute keine grossen Wetten" aussaehe.
 
-Findet es nichts, schreibt es status="schema_unbekannt" — und NICHT eine leere Liste, die
-wie „heute keine großen Wetten" aussähe.
+## Was der Feed NICHT hergibt
+`user` ist immer null: Stake anonymisiert die Highroller-Liste vollstaendig. Ein
+Track-Record je Konto, wie ihn die Poly-Wallets tragen, ist hier unmoeglich. Es gibt
+aggregierten Fluss, nie "dieser Spieler hat schon wieder recht behalten".
 
 ## Ausgabe
   stake_highroller.json  — aktuelle Sicht fürs Dashboard (Wetten im Fenster, roh)
@@ -63,6 +71,7 @@ import sys
 import urllib.request
 import urllib.error
 from datetime import datetime, timezone, timedelta
+from email.utils import parsedate_to_datetime
 from pathlib import Path
 
 BASE = Path(__file__).resolve().parent
@@ -509,6 +518,52 @@ def schema_finden(url: str, tiefe: int = 4):
         return None, None, "Feld %s vom Typ %s gefunden, Selektion nicht: %s" % (feld, typ, notiz2)
     return feld, query, "aus Fehlermeldungen gelernt (%s -> %s), %s" % (feld, typ, notiz2)
 
+# ── Die verifizierte Abfrage ─────────────────────────────────────────────────
+# 03.09.2026 — nicht geraten und nicht erschlossen, sondern MITGELESEN: Stakes eigene
+# Highroller-Seite schickt genau diese Anfrage an genau diesen Endpunkt. Damit ist der
+# Lernweg unten nur noch das Netz für den Tag, an dem Stake umbaut.
+#
+# Was der Feed hergibt (an einem echten Datensatz geprüft):
+#   iid              "sport:648201156"   ← die Wett-Nummer, die auch auf dem Wettschein steht
+#   amount/currency  2360 / "usdc"       ← in der Währung der Wette, nicht in USD
+#   potentialMultiplier                  ← Gesamtquote der Wette
+#   outcomes[]       je Bein: odds, outcome.name ("Taylor Fritz"), market.name ("Winner"),
+#                    fixtureName, fixture.startTime, tournament.name, sport.slug
+#
+# Und drei Dinge, die man wissen muss, bevor man daraus etwas ableitet:
+#
+#  1. `user` ist IMMER null. Stake anonymisiert die Highroller-Liste vollständig. Ein
+#     Track-Record je Konto — das, was die Poly-Wallets tragen — ist hier unmöglich.
+#     Es gibt nur aggregierten Fluss, nie „dieser Spieler hat wieder recht behalten".
+#  2. limit ist bei 50 gedeckelt, und 51 liefert STILL eine leere Liste. Kein Fehler,
+#     keine Warnung — genau die Sorte Antwort, die im Dashboard wie ein ruhiger Tag
+#     aussieht. Deshalb wird hier hart gedeckelt und eine leere Antwort als „leer"
+#     ausgewiesen, nicht als „ok".
+#  3. Zeitstempel kommen als RFC-1123 ("Thu, 03 Sep 2026 19:11:23 GMT"), nicht als ISO.
+#     datetime.fromisoformat scheitert daran — jede Wette wäre stumm aus dem Fenster
+#     gefallen und das Dashboard hätte „keine großen Wetten" gezeigt.
+FELD_BEKANNT = "highrollerSportBets"
+MAX_LIMIT = 50          # 51 gibt kommentarlos 0 Einträge zurück
+QUERY_BEKANNT = """query HR($limit: Int) {
+  highrollerSportBets(limit: $limit) {
+    __typename id iid
+    bet {
+      __typename
+      ... on SportBet {
+        id customBet createdAt updatedAt potentialMultiplier amount currency
+        user { id name }
+        outcomes {
+          id odds status fixtureName fixtureAbreviation
+          outcome { id name }
+          market { id name }
+          fixture { id startTime tournament { id name slug category { sport { slug name } } } }
+        }
+      }
+    }
+  }
+}"""
+
+
 # ── Normalisierung ───────────────────────────────────────────────────────────
 def _sammle(obj, schluessel: set, tiefe: int = 8):
     """Sucht rekursiv nach Schlüsseln (klein geschrieben) und gibt alle Treffer."""
@@ -541,6 +596,40 @@ def _erst(obj, schluessel: set, typ=None):
     return None
 
 
+def _pfad(obj, *namen):
+    """Ein Wert entlang eines bekannten Pfades. Fehlt ein Glied, ist es None —
+    kein Default, kein Ersatzwert."""
+    k = obj
+    for n in namen:
+        if not isinstance(k, dict):
+            return None
+        k = k.get(n)
+    return k
+
+
+def _zeit(s):
+    """Stakes Zeitstempel sind RFC-1123, nicht ISO. Rückgabe: ISO-UTC oder None.
+
+    03.09.2026 — hier hätte der stillste Fehler des ganzen Features gesessen: der Sammler
+    hätte 'Thu, 03 Sep 2026 19:11:23 GMT' gespeichert, das Fenster hätte per fromisoformat
+    keine einzige Wette einordnen können, und das Dashboard hätte eine vollständig gefüllte
+    Sammlung als 'keine großen Wetten im Fenster' gezeigt."""
+    if not s or not isinstance(s, str):
+        return None
+    try:
+        d = datetime.fromisoformat(s.replace("Z", "+00:00"))
+    except Exception:
+        try:
+            d = parsedate_to_datetime(s)
+        except Exception:
+            return None
+    if d is None:
+        return None
+    if d.tzinfo is None:
+        d = d.replace(tzinfo=timezone.utc)
+    return d.astimezone(timezone.utc).isoformat().replace("+00:00", "Z")
+
+
 def _usd(betrag, waehrung, roh) -> tuple:
     """-> (usd:float|None, grund:str). None heißt unbekannt, NICHT null."""
     direkt = _erst(roh, {"amountusd", "usdamount", "amountindollars", "usdvalue"}, float)
@@ -556,35 +645,61 @@ def _usd(betrag, waehrung, roh) -> tuple:
 
 def normalisiere(rec: dict) -> dict:
     """Aus einem rohen Highroller-Eintrag die Felder ziehen, die wir brauchen.
-    Über Feldnamen, nicht über Positionen — das überlebt Schema-Umbauten."""
-    wid = _erst(rec, {"id", "iid", "betid"}, str)
-    ts = _erst(rec, {"createdat", "placedat", "timestamp", "updatedat"}, str)
-    betrag = _erst(rec, {"amount", "wager", "stake", "betamount"}, float)
-    waehrung = _erst(rec, {"currency", "currencyname"}, str)
-    quote = _erst(rec, {"odds", "totalodds", "payoutmultiplier", "potentialmultiplier"}, float)
-    user = _erst(rec, {"name", "username"}, str)
-    event = _erst(rec, {"fixturename", "eventname", "matchname", "name"}, str)
-    liga = _erst(rec, {"tournamentname", "leaguename", "competition", "tournament"}, str)
-    sport = _erst(rec, {"sportname", "sport", "category"}, str)
-    markt = _erst(rec, {"marketname", "market", "bettype"}, str)
-    auswahl = _erst(rec, {"outcomename", "outcome", "selection", "pick"}, str)
-    anpfiff = _erst(rec, {"startingat", "starttime", "kickoff", "scheduledat"}, str)
+
+    Erst über den bekannten Pfad (verifiziert am echten Feed), dann als Netz über
+    Feldnamen irgendwo in der Tiefe — falls Stake umbaut, soll wenigstens der Betrag
+    noch ankommen, statt dass die Zeile still leer wird.
+    """
+    b = rec.get("bet") if isinstance(rec.get("bet"), dict) else {}
+    beine = b.get("outcomes") if isinstance(b.get("outcomes"), list) else []
+    erst = beine[0] if beine and isinstance(beine[0], dict) else {}
+
+    wid = rec.get("iid") or rec.get("id") or _erst(rec, {"id", "iid", "betid"}, str)
+    ts = _zeit(b.get("createdAt")) or _zeit(_erst(rec, {"createdat", "placedat", "timestamp"}, str))
+    betrag = b.get("amount")
+    if betrag is None:
+        betrag = _erst(rec, {"amount", "wager", "stake", "betamount"}, float)
+    try:
+        betrag = float(betrag) if betrag is not None else None
+    except Exception:
+        betrag = None
+    waehrung = b.get("currency") or _erst(rec, {"currency", "currencyname"}, str)
+    quote = b.get("potentialMultiplier")
+    if quote is None:
+        quote = _erst(rec, {"odds", "totalodds", "potentialmultiplier"}, float)
+    try:
+        quote = float(quote) if quote is not None else None
+    except Exception:
+        quote = None
+
     usd, usd_grund = _usd(betrag, waehrung, rec)
+    kombi = len(beine) > 1
+
     return {
         "id": str(wid) if wid is not None else None,
         "ts": ts,
-        "user": user,
+        # Stake anonymisiert die Liste vollstaendig — das Feld bleibt, damit sichtbar ist,
+        # DASS es leer ist, statt dass jemand spaeter einen Track-Record darauf plant.
+        "user": _pfad(b, "user", "name"),
         "betrag": betrag,
         "waehrung": (waehrung or "").lower() or None,
         "einsatzUsd": usd,
         "usdGrund": usd_grund,
         "quote": quote,
-        "sport": sport,
-        "liga": liga,
-        "event": event,
-        "markt": markt,
-        "auswahl": auswahl,
-        "anpfiff": anpfiff,
+        "kombi": kombi,
+        "nBeine": len(beine) or None,
+        "eigenbau": bool(b.get("customBet")),
+        "sport": _pfad(erst, "fixture", "tournament", "category", "sport", "slug"),
+        "liga": _pfad(erst, "fixture", "tournament", "name"),
+        "ligaSlug": _pfad(erst, "fixture", "tournament", "slug"),
+        "event": erst.get("fixtureName") or _erst(rec, {"fixturename", "eventname"}, str),
+        "eventId": _pfad(erst, "fixture", "id"),
+        "markt": _pfad(erst, "market", "name"),
+        "auswahl": _pfad(erst, "outcome", "name"),
+        "auswahlId": _pfad(erst, "outcome", "id") or erst.get("id"),
+        "beinQuote": erst.get("odds"),
+        "status": erst.get("status"),
+        "anpfiff": _zeit(_pfad(erst, "fixture", "startTime")),
     }
 
 
@@ -694,11 +809,28 @@ def holen(sonde: bool = False):
     cache = _lade(QUERY_FILE, {})
     if not sonde and cache.get("query") and cache.get("url") in urls:
         st, d, err = _post(cache["url"], {"query": cache["query"],
-                                          "variables": {"limit": ABRUF_LIMIT}})
+                                          "variables": {"limit": min(ABRUF_LIMIT, MAX_LIMIT)}})
         if d and not d.get("errors") and (d.get("data") or {}).get(cache.get("feld")) is not None:
             feld, query, url_ok = cache["feld"], cache["query"], cache["url"]
             versuche.append({"url": url_ok, "feld": feld, "notiz": "aus stake_query.json"})
 
+    # Zweiter Weg: die verifizierte Abfrage. Sie stammt aus der Netzwerkanfrage, die Stakes
+    # eigene Seite stellt — kein Raten, und billiger als jedes Lernen.
+    if not feld:
+        for url in urls:
+            st, d, err = _post(url, {"query": QUERY_BEKANNT,
+                                     "variables": {"limit": min(ABRUF_LIMIT, MAX_LIMIT)}})
+            if d and not d.get("errors") and isinstance((d.get("data") or {}).get(FELD_BEKANNT), list):
+                feld, query, url_ok = FELD_BEKANNT, QUERY_BEKANNT, url
+                versuche.append({"url": url, "feld": feld, "notiz": "verifizierte Abfrage"})
+                if not sonde:
+                    _schreibe(QUERY_FILE, {"url": url, "feld": feld, "query": query,
+                                           "gelernt": jetzt_s, "notiz": "verifizierte Abfrage"})
+                break
+            versuche.append({"url": url, "feld": None, "notiz": "verifizierte Abfrage greift nicht: %s"
+                             % (err or json.dumps((d or {}).get("errors"))[:160])})
+
+    # Dritter Weg: aus den Fehlermeldungen lernen — das Netz fuer den Tag, an dem Stake umbaut.
     if not feld:
         for url in urls:
             f, q, notiz = schema_finden(url)
@@ -724,7 +856,8 @@ def holen(sonde: bool = False):
         print("kein Schema gefunden:", json.dumps(versuche, ensure_ascii=False))
         return 1
 
-    st, d, err = _post(url_ok, {"query": query, "variables": {"limit": ABRUF_LIMIT}})
+    st, d, err = _post(url_ok, {"query": query,
+                                "variables": {"limit": min(ABRUF_LIMIT, MAX_LIMIT)}})
     roh = ((d or {}).get("data") or {}).get(feld)
     if isinstance(roh, dict):
         for k in ("data", "results", "items", "edges", "nodes"):
