@@ -75,3 +75,27 @@ test('stimmen alle Basen überein, wird nichts Zusätzliches angezeigt', () => {
   assert.match(block, /d\.nGraded !== d\.n/);
   assert.match(block, /d\.nClv !== d\.n/);
 });
+
+// ── 3. Die Money-Map-Kachel behauptet nicht mehr drei Bücher für alle ────────
+// 03.09.2026 (Lucas: „Was fehlt dann noch von Poly bei dem Betis - Real Madrid Beispiel?"):
+// die Kachel schrieb „7 Konsens · BF × Poly × Pinn". Bei Betis–Real Madrid bestand die dritte
+// Quelle aus $74 Umsatz und einem Preis, der 21pp neben dem Anker lag. Die Zeile selbst schreibt
+// das korrekt mit (`polyGeld:false`, `nSources:2`) — die Kachel las es nur nie.
+test('die Money-Map-Kachel zählt echte Drei-Bücher-Zeilen, nicht Verdikte', () => {
+  // Auf CODE (ohne Kommentare) prüfen: der Kommentar zitiert absichtlich die alte Behauptung.
+  const von = CODE.indexOf('var kon = mmRows.filter'), bis = CODE.indexOf("A.flow, 'moneymap')");
+  assert.ok(von > 0 && bis > von, 'Anker weg');
+  const block = CODE.slice(von, bis);
+  assert.match(block, /nSources \|\| 0\) >= 3/, 'die Kachel prüft die echten Quellen nicht');
+  assert.match(block, /polyGeld === false/, 'die Kachel kennt die Zeilen ohne Poly-Geld nicht');
+  assert.ok(!/BF × Poly × Pinn/.test(block),
+    'die pauschale Drei-Bücher-Behauptung ist zurück');
+});
+
+test('die Karte benennt einen Preis, der dem Anker widerspricht', () => {
+  const MM = readFileSync(new URL('money-map.js', ROOT), 'utf8');
+  assert.match(MM, /polyPreisWeit/, 'die Karte kennt die Abweichung nicht');
+  assert.match(MM, /polyPreisAbwPP/, 'die Abweichung wird nicht beziffert');
+  // Der Preis verschwindet NICHT — er bleibt sichtbar, nur ohne den Anschein von Zustimmung.
+  assert.match(MM, /Preis \(dünn\)/, 'der normale Dünn-Preis-Fall ist weggefallen');
+});

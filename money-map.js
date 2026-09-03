@@ -91,13 +91,13 @@
       +'<div class="mm-ch"><span>⚽</span><span class="mm-t">'+_esc(r.home)+' <span class="mm-vs">vs</span> '+_esc(r.away)+'</span>'+live+'<span class="mm-lg">'+_esc(r.league||'')+'</span></div>'
       +'<div class="mm-axis"><div class="mm-ends"><span>'+_esc(r.home)+'</span><span>'+_esc(r.away)+'</span></div>'
         +'<div class="mm-lane mm-lbf"></div><div class="mm-ll mm-lbf">Betfair</div>'
-        +'<div class="mm-lane mm-lpoly"></div><div class="mm-ll mm-lpoly"'+(poly?'':' style="opacity:.4"')+'>Poly'+(poly?(poly.src==='scan'?' · Preis (dünn)':(poly.src==='upcoming'?' · früh':'')):' · kein Markt')+'</div>'
+        +'<div class="mm-lane mm-lpoly"></div><div class="mm-ll mm-lpoly"'+(poly?'':' style="opacity:.4"')+'>Poly'+(poly?(poly.src==='scan'?(r.polyPreisWeit?' · Preis liegt '+(r.polyPreisAbwPP||0).toFixed(0)+'pp neben dem Anker':' · Preis (dünn)'):(poly.src==='upcoming'?' · früh':'')):' · kein Markt')+'</div>'
         +bub+'</div>'
       +(pn?('<div class="mm-odds"><span class="mm-om">Faire Quote · Pinnacle</span>'
         +'<span class="'+((bf&&bf.side==='home')?'mm-oc':'')+'"><b>1</b> '+_fair(pn.home)+'</span>'
         +'<span class="'+((bf&&bf.side==='draw')?'mm-oc':'')+'"><b>X</b> '+_fair(pn.draw)+'</span>'
         +'<span class="'+((bf&&bf.side==='away')?'mm-oc':'')+'"><b>2</b> '+_fair(pn.away)+'</span></div>'):'')
-      +'<div class="mm-foot"><span class="mm-verd '+(konS?'k':(divS?'d':'p'))+'">'+vtxt+'</span><span class="mm-vsub">'+vsub+'</span><span class="mm-src"'+(r.polyGeld===false?' title="Poly liefert hier nur einen d\u00fcnnen Preis, kein Geld \u2014 z\u00e4hlt deshalb nicht als Quelle"':'')+'>'+(r.nSources||0)+' / 3'+(r.polyGeld===false?' \u00b7 Poly nur Preis':'')+'</span></div>'
+      +'<div class="mm-foot"><span class="mm-verd '+(konS?'k':(divS?'d':'p'))+'">'+vtxt+'</span><span class="mm-vsub">'+vsub+'</span><span class="mm-src"'+(r.polyGeld===false?' title="'+(r.polyPreisWeit?'Poly liefert hier nur einen Preis, kein Geld \u2014 und dieser Preis liegt '+(r.polyPreisAbwPP||0).toFixed(0)+'pp neben dem Pinnacle-Anker. Ein Markt, den niemand angefasst hat, stimmt hier nicht zu, er steht nur zuf\u00e4llig in derselben Richtung.':'Poly liefert hier nur einen d\u00fcnnen Preis, kein Geld \u2014 z\u00e4hlt deshalb nicht als Quelle')+'"':'')+'>'+(r.nSources||0)+' / 3'+(r.polyGeld===false?(r.polyPreisWeit?' \u00b7 Poly-Preis widerspricht ('+(r.polyPreisAbwPP||0).toFixed(0)+'pp)':' \u00b7 Poly nur Preis'):'')+'</span></div>'
       +'</div>';
   }
 
