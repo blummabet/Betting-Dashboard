@@ -72,7 +72,26 @@
 '.sr-bet .sr-bg.sr-unk{color:#e3b341;font-weight:600}',
 '.sr-um{color:#5c6577;font-weight:600;margin-left:2px}',
 '.sr-mehr{margin-top:6px;font-size:10.5px;color:#5c6577}',
-'.sr-tag{font-size:9px;font-weight:800;letter-spacing:.4px;padding:2px 7px;border-radius:6px;text-transform:uppercase;color:#e3b341;border:1px solid rgba(201,133,0,.42)}'
+'.sr-tag{font-size:9px;font-weight:800;letter-spacing:.4px;padding:2px 7px;border-radius:6px;text-transform:uppercase;color:#e3b341;border:1px solid rgba(201,133,0,.42)}',
+'.sr-nav{display:flex;gap:6px;margin:16px 0 14px;flex-wrap:wrap}',
+'.sr-nb{background:#151b24;border:1px solid #242c38;color:#9aa4b1;font:inherit;font-size:12.5px;font-weight:700;padding:7px 15px;border-radius:9px;cursor:pointer}',
+'.sr-nb.on{background:rgba(103,204,145,.16);border-color:rgba(103,204,145,.42);color:#67cc91}',
+'.sr-tw{overflow-x:auto;border:1px solid #242c38;border-radius:12px;background:#131922}',
+'.sr-t{width:100%;border-collapse:collapse;font-size:12px;font-variant-numeric:tabular-nums}',
+'.sr-t th{text-align:left;font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;color:#6b7480;padding:9px 11px;border-bottom:1px solid #242c38;white-space:nowrap}',
+'.sr-t td{padding:8px 11px;border-bottom:1px solid #1c232e;vertical-align:top}',
+'.sr-t tr:last-child td{border-bottom:0}',
+'.sr-t .sr-r{text-align:right}',
+'.sr-t .sr-geldz{color:#67cc91;font-weight:800}',
+'.sr-mut{color:#6b7480}.sr-sm{font-size:10.5px;line-height:1.45;margin-top:2px;max-width:340px}',
+'.sr-ug{color:#8a95ad;font-weight:700}.sr-ug.sr-ok{color:#4ade80}',
+'.sr-w{color:#4ade80;font-weight:700}.sr-l{color:#e5534b;font-weight:700}',
+'.sr-kpi{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 14px}',
+'.sr-k{flex:1;min-width:120px;background:#131922;border:1px solid #242c38;border-radius:11px;padding:10px 13px}',
+'.sr-kv{font-size:19px;font-weight:800;color:#e6ebf5;font-variant-numeric:tabular-nums}',
+'.sr-kl{font-size:10.5px;color:#6b7480;text-transform:uppercase;letter-spacing:.03em;margin-top:2px}',
+'.sr-h3{font-size:13px;font-weight:800;margin:18px 0 8px;color:#c2ccd8}',
+'.sr-note{margin:12px 0 0;font-size:11.5px;line-height:1.6;color:#76819c}'
     ].join('\n');
     var s = document.createElement('style'); s.textContent = css; document.head.appendChild(s);
   }
@@ -260,6 +279,171 @@
       '</div></div>';
   }
 
+  // ══ TERMINAL ═══════════════════════════════════════════════════════════════
+  // 03.09.2026 (Lucas: „in Wahrheit kannst ja gleich so ein Terminal bauen oder wie bei
+  // Betfair und Polymarket"). Dichtes Board statt Karten: vier Ansichten auf dieselbe
+  // Sammlung, jede mit ihrer Basis in der Kopfzeile.
+  //
+  //   Spiele      — was gerade laeuft, gruppiert (die Kartenansicht von vorher)
+  //   Auffaellig  — Einsatz gegen die NORM SEINER LIGA, nicht gegen eine erfundene Zahl
+  //   Bilanz      — Trefferquote je Schublade, immer mit Wilson-Untergrenze
+  //   Norm        — was in welcher Liga ueberhaupt ein grosser Einsatz ist
+  //
+  // Die letzten drei lesen stake_auswertung.json (vom Runner, stake_analyse.py). Fehlt die
+  // Datei, steht das da — und nicht eine leere Tabelle, die wie „nichts gefunden" aussaehe.
+
+  var SR_TAB = 'spiele';
+  var SR_AUS = null;         // stake_auswertung.json
+  var SR_AUS_STATUS = 'lädt';
+
+  function _srPct(x, stellen) {
+    return (x == null || !isFinite(x)) ? '—' : (x * 100).toFixed(stellen == null ? 1 : stellen) + '%';
+  }
+
+  function _srNav() {
+    var tabs = [['spiele', '⚽ Spiele'], ['auffaellig', '🚩 Auffällig'],
+                ['bilanz', '🧾 Bilanz'], ['norm', '📐 Norm']];
+    return '<div class="sr-nav">' + tabs.map(function (t) {
+      return '<button class="sr-nb' + (SR_TAB === t[0] ? ' on' : '') +
+        '" onclick="_srTab(\'' + t[0] + '\')">' + t[1] + '</button>';
+    }).join('') + '</div>';
+  }
+  window._srTab = function (t) { SR_TAB = t; _srRender(); };
+
+  /** Eine Zahl ohne Basis ist im Rest des Boards verboten — hier auch. */
+  function _srBasis(s) {
+    if (!s || !s.n) return '<span class="sr-mut">keine Basis</span>';
+    var q = _srPct(s.quote), ug = s.ug == null ? null : _srPct(s.ug);
+    return '<b>' + q + '</b> <span class="sr-mut">· n' + s.n + '</span>' +
+      (ug ? ' <span class="sr-ug' + (s.belegt ? ' sr-ok' : '') + '">UG ' + ug + '</span>'
+          : ' <span class="sr-mut" title="Unter n=' + (SR_AUS ? SR_AUS.urteilAb : 30) +
+            ' geben wir keine Untergrenze aus — ein Punktschätzer ist kein Beleg">kein Urteil</span>');
+  }
+
+  function _srUnreif(was) {
+    var b = (SR_AUS && SR_AUS.bilanz) || {};
+    return '<div class="sr-empty"><b>' + was + ' braucht abgerechnete Wetten.</b><br>' +
+      'Bisher: ' + (b.gewertet || 0) + ' gewertete Beine, ' + (b.offen || 0) + ' noch offen.<br>' +
+      '<span class="sr-mut">Stake rechnet selbst ab — jede Wette wird ein paar Stunden nach ' +
+      'Anpfiff nachgefragt. Ein Urteil gibt es ab n=' + (SR_AUS ? SR_AUS.urteilAb : 30) + '.</span></div>';
+  }
+
+  // ── Auffällig ───────────────────────────────────────────────────────────────
+  function _srAuffaellig() {
+    var rows = (SR_AUS && SR_AUS.auffaellige) || [];
+    if (!rows.length) {
+      return '<div class="sr-empty">Noch nichts über der Norm.<br><span class="sr-mut">' +
+        'Eine Liga-Norm entsteht ab 15 Wetten in derselben Liga — vorher ist „auffällig" ' +
+        'nicht entscheidbar.</span></div>';
+    }
+    return '<div class="sr-tw"><table class="sr-t"><thead><tr>' +
+      '<th>Zeit</th><th>Liga</th><th>Spiel</th><th>Auswahl</th>' +
+      '<th class="sr-r">Einsatz</th><th class="sr-r">Quote</th><th>Warum auffällig</th><th>Ausgang</th>' +
+      '</tr></thead><tbody>' +
+      rows.map(function (r) {
+        var aus = r.ausgang === 'won' ? '<span class="sr-w">Treffer</span>'
+                : r.ausgang === 'lost' ? '<span class="sr-l">daneben</span>'
+                : '<span class="sr-mut">offen</span>';
+        return '<tr><td class="sr-mut">' + _srZeit(r.ts) + '</td>' +
+          '<td>' + _srEsc(r.liga || '—') + '</td>' +
+          '<td>' + _srEsc(r.event || '—') + '</td>' +
+          '<td>' + _srEsc(((r.markt ? r.markt + ': ' : '') + (r.auswahl || '—'))) + '</td>' +
+          '<td class="sr-r sr-geldz">' + _srUsd(r.einsatzUsd) + '</td>' +
+          '<td class="sr-r">' + (r.quote != null ? Number(r.quote).toFixed(2) : '—') + '</td>' +
+          '<td class="sr-mut">' + _srEsc(r.grund) + '</td>' +
+          '<td>' + aus + '</td></tr>';
+      }).join('') + '</tbody></table></div>' +
+      '<div class="sr-note">Zwei verschiedene Gründe, absichtlich nicht vermischt: ' +
+      '<b>× Median der Liga</b> ist gemessen — die Liga hat genug Wetten für eine Norm. ' +
+      '<b>kleine Liga</b> ist schwächer — dort gibt es keine Norm, nur wenige Wetten und einen ' +
+      'Einsatz über dem globalen 90 %-Punkt.</div>';
+  }
+
+  // ── Bilanz ──────────────────────────────────────────────────────────────────
+  var _SR_SCHUBLADEN = [
+    ['vor_anpfiff', 'vor Anpfiff', 'Nur hier ist CLV gegen den Schlusskurs überhaupt möglich.'],
+    ['live', 'live', '83 % des Feeds — aber ohne Schlusskurs, also nur über die Abrechnung messbar.'],
+    ['live_frueh', 'live, ≤ 30. Min', 'Wenn Live etwas taugt, dann früh.'],
+    ['live_spaet', 'live, > 60. Min', 'Späte Einsätze auf den Führenden sind kein Signal — Gegenprobe.'],
+    ['einsatz_ab_10k', 'ab $10k', 'Trägt Größe allein etwas? Die Vorlage behauptet ja, ohne Beleg.'],
+    ['einsatz_1k_10k', '$1k – $10k', 'Die Vergleichsgruppe dazu.'],
+    ['ueber_liga_norm', 'über Liga-Norm', 'Die eigentliche These: auffällig ist relativ.'],
+  ];
+
+  function _srBilanz() {
+    if (!SR_AUS) return '<div class="sr-empty">stake_auswertung.json fehlt noch.</div>';
+    var b = SR_AUS.bilanz || {};
+    if (!b.gewertet) return _srUnreif('Die Bilanz');
+    var s = SR_AUS.schubladen || {};
+    var zeilen = _SR_SCHUBLADEN.filter(function (x) { return s[x[0]]; }).map(function (x) {
+      var d = s[x[0]];
+      return '<tr><td><b>' + x[1] + '</b><div class="sr-mut sr-sm">' + x[2] + '</div></td>' +
+        '<td class="sr-r">' + d.wetten + '</td>' +
+        '<td class="sr-r">' + d.n + '</td>' +
+        '<td>' + _srBasis(d) + '</td>' +
+        '<td class="sr-r">' + (d.roi == null ? '—' : _srPct(d.roi)) +
+          (d.einzelN ? '<div class="sr-mut sr-sm">' + d.einzelN + ' Einzelwetten</div>' : '') +
+        '</td></tr>';
+    }).join('');
+
+    var ligen = Object.keys(SR_AUS.jeLiga || {}).map(function (k) {
+      var d = SR_AUS.jeLiga[k];
+      return '<tr><td>' + _srEsc(k) + '</td><td class="sr-r">' + d.n + '</td><td>' + _srBasis(d) + '</td></tr>';
+    }).join('');
+
+    return '<div class="sr-kpi">' +
+        _srKpi(b.gewertet, 'Beine gewertet') +
+        _srKpi(b.treffer + ' / ' + b.daneben, 'Treffer / daneben') +
+        _srKpi(b.quote == null ? '—' : _srPct(b.quote), 'rohe Quote') +
+        _srKpi(b.offen, 'noch offen') +
+        _srKpi(b.unaufloesbar, 'unauflösbar') +
+      '</div>' +
+      '<div class="sr-tw"><table class="sr-t"><thead><tr><th>Schublade</th>' +
+      '<th class="sr-r">Wetten</th><th class="sr-r">Beine</th><th>Trefferquote</th>' +
+      '<th class="sr-r">ROI</th></tr></thead><tbody>' + zeilen + '</tbody></table></div>' +
+      (ligen ? '<h3 class="sr-h3">Je Liga</h3><div class="sr-tw"><table class="sr-t"><thead><tr>' +
+        '<th>Liga</th><th class="sr-r">Beine</th><th>Trefferquote</th></tr></thead><tbody>' +
+        ligen + '</tbody></table></div>' : '') +
+      '<div class="sr-note">Die Trefferquote zählt <b>Beine</b>, nicht Wetten — ein Bein ist ' +
+      'eine Meinung zu einem Spiel. Der ROI zählt nur <b>Einzelwetten</b>: bei einer Kombi ' +
+      'hängt der Einsatz an mehreren Spielen und ist keinem davon zurechenbar. Annullierte ' +
+      'Beine fallen aus der Quote heraus, statt als Fehlschlag zu zählen.</div>';
+  }
+
+  function _srKpi(v, l) {
+    return '<div class="sr-k"><div class="sr-kv">' + v + '</div><div class="sr-kl">' + l + '</div></div>';
+  }
+
+  // ── Norm ────────────────────────────────────────────────────────────────────
+  function _srNorm() {
+    var n = (SR_AUS && SR_AUS.ligaNorm) || {};
+    var keys = Object.keys(n);
+    if (!keys.length) return '<div class="sr-empty">Noch keine Liga-Daten.</div>';
+    var gelernt = keys.filter(function (k) { return n[k].basis === 'gelernt'; });
+    var duenn = keys.filter(function (k) { return n[k].basis !== 'gelernt'; });
+    return '<div class="sr-note" style="margin-top:0">Was in welcher Liga ein <b>großer</b> ' +
+      'Einsatz ist, wird aus unseren eigenen Daten gelernt — nicht festgelegt. $9.000 auf ' +
+      'La Liga ist Dienstag, $9.000 in einer ruhigen Liga ein Ereignis. Unter 15 Wetten gibt ' +
+      'es keine Norm, und dann steht dort auch keine Zahl.</div>' +
+      '<div class="sr-tw"><table class="sr-t"><thead><tr><th>Liga</th><th class="sr-r">Wetten</th>' +
+      '<th class="sr-r">Median</th><th class="sr-r">90 %-Punkt</th><th class="sr-r">größter</th>' +
+      '</tr></thead><tbody>' +
+      gelernt.map(function (k) {
+        var d = n[k];
+        return '<tr><td>' + _srEsc(k) + '</td><td class="sr-r">' + d.n + '</td>' +
+          '<td class="sr-r sr-geldz">' + _srUsd(d.median) + '</td>' +
+          '<td class="sr-r">' + _srUsd(d.p90) + '</td>' +
+          '<td class="sr-r sr-mut">' + _srUsd(d.max) + '</td></tr>';
+      }).join('') + '</tbody></table></div>' +
+      (duenn.length ? '<div class="sr-note"><b>' + duenn.length + ' Ligen ohne Norm</b> ' +
+        '(unter 15 Wetten): ' + duenn.slice(0, 20).map(function (k) {
+          return _srEsc(k) + ' <span class="sr-mut">' + n[k].n + '</span>';
+        }).join(' · ') + (duenn.length > 20 ? ' …' : '') +
+        '<br><span class="sr-mut">Über diese ist nichts bekannt — das ist etwas anderes als ' +
+        '„unauffällig". Genau hier sitzt aber der Fall, den wir suchen, deshalb greift für sie ' +
+        'das schwächere Kriterium auf dem Auffällig-Reiter.</span></div>' : '');
+  }
+
   // ── Render ────────────────────────────────────────────────────────────────
   function _srRender() {
     var el = document.getElementById('stakeRadarPanel');
@@ -329,7 +513,18 @@
       : '<div class="sr-empty">Kein Spiel über diesen Schwellen im Fenster.<br>' +
         'Regler runter, oder der Feed hat gerade nichts Großes.</div>';
 
-    el.innerHTML = kopf + basis + warn + _srCtrl() + treffer + koerper;
+    var spiele = _srCtrl() + treffer + koerper;
+    var inhalt = SR_TAB === 'spiele' ? spiele
+               : SR_TAB === 'auffaellig' ? _srAuffaellig()
+               : SR_TAB === 'bilanz' ? _srBilanz()
+               : _srNorm();
+    if (SR_TAB !== 'spiele' && !SR_AUS) {
+      inhalt = '<div class="sr-empty">' + (SR_AUS_STATUS === 'lädt' ? 'lädt …' :
+        '<b>stake_auswertung.json nicht lesbar.</b><br><span class="sr-mut">Die Auswertung ' +
+        'entsteht auf dem Runner (stake_analyse.py) — bis dahin steht hier nichts, statt einer ' +
+        'leeren Tabelle, die wie „nichts gefunden" aussähe.</span>') + '</div>';
+    }
+    el.innerHTML = kopf + basis + warn + _srNav() + inhalt;
   }
 
   // ── Einstieg ──────────────────────────────────────────────────────────────
@@ -342,10 +537,15 @@
       .then(function (r) { return r.ok ? r.json() : null; })
       .then(function (j) { SR.daten = j || { status: 'fehler', notiz: 'stake_highroller.json nicht lesbar' }; _srRender(); })
       .catch(function () { SR.daten = { status: 'fehler', notiz: 'stake_highroller.json nicht erreichbar' }; _srRender(); });
+    fetch('stake_auswertung.json?t=' + Date.now())
+      .then(function (r) { return r.ok ? r.json() : null; })
+      .then(function (j) { SR_AUS = j; SR_AUS_STATUS = j ? 'da' : 'fehlt'; _srRender(); })
+      .catch(function () { SR_AUS = null; SR_AUS_STATUS = 'fehlt'; _srRender(); });
   };
 
   // Für Tests
   if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { _srGruppen: _srGruppen, _srDichte: _srDichte, _srUsd: _srUsd };
+    module.exports = { _srGruppen: _srGruppen, _srDichte: _srDichte, _srUsd: _srUsd,
+                   _srBasis: _srBasis, _srPct: _srPct };
   }
 })();

@@ -534,6 +534,78 @@ Das ist die allgemeine Lehre aus dem Fall und der Grund, live strenger zu gaten 
 
 ---
 
+### 🎰 Stake als vierte Quelle — messbar gemacht (03.09.2026)
+
+Lucas: *„bitte alles umsetzen … anhand der Daten dort kriegen wir genug kleine Ligen, wo Leute
+mit guten Infos setzen. Und bei den Mainstream-Ligen kriegen wir für unsere anderen Features
+ein weiteres Signal."*
+
+**Der Fund, der alles ändert: die Abrechnung kostet nichts.** `bet(iid:)` liefert zu jeder
+gesammelten Wette `status`, `payout` und je Bein `won`/`lost` — geprüft am echten Endpunkt:
+
+```
+sport:648199979  settled   payout 0        Beine ["won","lost"]   (2er-Kombi)
+sport:648200455  confirmed payout 0        Beine ["pending"]      ← laeuft noch
+sport:648200459  settled   payout 2373.5   Beine ["won"]
+```
+
+Damit braucht der Stake-Fluss **keine Ergebnis-Pipeline und kein Namens-Matching**: die Wahrheit
+kommt aus derselben Quelle wie die Wette. Bei Betfair und Poly müssen wir Ergebnisse selbst
+beschaffen und Namen brücken. Bis zu 25 Wetten je Anfrage über GraphQL-Aliase — 300 Wetten
+kosten zwölf Anfragen, nicht 300.
+
+`"confirmed"` heißt **angenommen, nicht abgerechnet** und wäre fast durchgerutscht. Die Liste in
+`stake_settle.py` führt deshalb das OFFENE auf, nicht das Fertige: ein morgen neu auftauchender
+Zwischenzustand gilt als offen und wird weiter nachgefragt, statt stillschweigend als
+abgerechnet zu zählen.
+
+**Was gezählt wird — und was nicht.** Messeinheit ist das **Bein** (ein Bein = eine Meinung zu
+einem Spiel), nicht die Wette. Trefferquote über alle Beine, Kombi-Beine eingeschlossen; **Geld
+und ROI nur über Einzelwetten**, denn bei einer Kombi hängt der Einsatz an mehreren Spielen und
+ist keinem davon zurechenbar. Annulliert (`void`/`cancelled`/`push`) ist weder Treffer noch
+Fehlschlag und fällt aus der Quote, statt sie nach unten zu ziehen. Wetten, die nach fünf Tagen
+noch offen sind, bleiben als `unaufloesbar` sichtbar — eine Wette, die verschwindet, fälscht
+jede Quote nach oben.
+
+**Zwei Bücher, nicht eins.** Im ersten echten Ledger waren **77 von 93 Wetten live gesetzt**, nur
+16 vor Anpfiff. Das sind verschiedene Dinge: vor Anpfiff ist CLV gegen den Pinnacle-Schlusskurs
+möglich, live gibt es keinen Schlusskurs — dort zählt nur die Abrechnung, und die Spielminute,
+denn ein Einsatz in der 85. auf den Führenden ist kein Signal (siehe Hapoel-Fall eine Sektion
+weiter oben). `phase` und `spielminute` sind seither erstklassige Felder; alte Zeilen werden in
+der Auswertung aus `ts` und `anpfiff` nachgerechnet statt als „unbekannt" zu verschwinden.
+
+**„Auffällig" ist relativ, nicht absolut.** Eine feste Schwelle findet keine kleinen Ligen, sie
+findet nur große Zahlen — und die stehen fast immer bei La Liga und im US Open. Die Norm je Liga
+wird deshalb aus den eigenen Daten gelernt (Median und 90 %-Punkt, ab 15 Wetten), und auffällig
+heißt „das x-fache dessen, was hier sonst durchgeht". Aus den ersten 93 Wetten:
+
+| Liga | n | Median | 90 %-Punkt | größter |
+|---|---|---|---|---|
+| US Open Men Singles | 21 | $2.000 | $10.000 | $17.862 |
+| La Liga | 17 | $2.900 | $6.000 | $33.750 |
+
+Ligen unter 15 Wetten bekommen **keine Norm und keinen Faktor** — nicht 1.0, nicht 0. Über sie
+ist nichts bekannt, und das ist etwas anderes als ein gemessenes Nein. Für genau sie greift ein
+ausdrücklich **schwächeres** zweites Kriterium (kleine Liga + Einsatz über dem globalen
+90 %-Punkt), und die beiden Gründe werden auf der Fläche nie vermischt. Der erste Treffer daraus:
+**$39.999 auf ein US-Open-Doppel** — die einzige Wette dieser Liga im Ledger.
+
+**Vorwärts angemeldet.** Fünf Schubladen stehen in `stake_vorregistrierung.json`, geschrieben
+bevor die Zahlen da waren: `vor_anpfiff_alle` (Ziel n=200), `vor_anpfiff_gross`, `ueber_liga_norm`,
+`kleine_liga`, `live_frueh`. Ein Anmeldedatum wandert nicht, ein später angemeldeter Trigger
+startet bei n=0.
+
+**Der Sampling-Deckel bleibt das Risiko.** 50 Einträge je Abruf deckten 12 Minuten ab; der
+Sammler lief alle 15. Er hängt jetzt an `betfair.yml` (*/10) und **misst seine Lücken**: ist der
+älteste Eintrag eines Abrufs jünger als der jüngste des letzten, steht das als `luecke`/`lueckeMin`
+im Ledger. Bei Vollprogramm am Wochenende wird auch */10 nicht reichen — dann sagt es das Ledger,
+statt dass „an dem Abend war wenig los" unbemerkt „wir haben nicht hingeschaut" bedeutet.
+
+**Terminal** unter „⋯ Mehr → 🎰 Stake Radar": Spiele · Auffällig · Bilanz · Norm. Jede Quote
+nennt ihr n und ihre Wilson-Untergrenze; unter n=30 steht „kein Urteil" statt einer Zahl.
+
+---
+
 ## 8. Harte Arbeitsregeln
 
 - **Push nur über GitHub Desktop**, nie CLI.

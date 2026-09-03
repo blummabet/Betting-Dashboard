@@ -732,6 +732,27 @@ def normalisiere(rec: dict, kurse: dict = None) -> dict:
     usd, usd_grund = _usd(betrag, waehrung, rec, kurse)
     kombi = len(beine) > 1
 
+    # 03.09.2026 — im ersten echten Ledger waren 77 von 93 Wetten LIVE gesetzt, nur 16 vor
+    # Anpfiff. Das sind zwei verschiedene Dinge und muessen getrennt gemessen werden:
+    #   · vor Anpfiff → CLV gegen den Pinnacle-Schlusskurs ist moeglich
+    #   · live        → es gibt keinen Schlusskurs; hier zaehlt nur die Abrechnung, UND die
+    #                   Spielminute, denn ein Einsatz in der 85. Minute auf den Fuehrenden ist
+    #                   kein Signal, sondern jemand, der 1,05 einsammelt (Hapoel-Fall).
+    # Ohne Anpfiff-Angabe bleibt die Phase "unbekannt" — nicht "vor", nicht "live".
+    ts_iso, ko_iso = ts, _zeit(_pfad(erst, "fixture", "startTime"))
+    phase, minute = "unbekannt", None
+    if ts_iso and ko_iso:
+        try:
+            t_bet = datetime.fromisoformat(ts_iso.replace("Z", "+00:00"))
+            t_ko = datetime.fromisoformat(ko_iso.replace("Z", "+00:00"))
+            delta = (t_bet - t_ko).total_seconds() / 60.0
+            if delta > 0:
+                phase, minute = "live", int(round(delta))
+            else:
+                phase, minute = "vor", None
+        except Exception:
+            pass
+
     return {
         "id": str(wid) if wid is not None else None,
         "ts": ts,
@@ -756,7 +777,11 @@ def normalisiere(rec: dict, kurse: dict = None) -> dict:
         "auswahlId": _pfad(erst, "outcome", "id") or erst.get("id"),
         "beinQuote": erst.get("odds"),
         "status": erst.get("status"),
-        "anpfiff": _zeit(_pfad(erst, "fixture", "startTime")),
+        "anpfiff": ko_iso,
+        "phase": phase,
+        # Minuten seit Anpfiff. Nicht die offizielle Spielminute (die kennt der Feed nicht) —
+        # verstrichene Zeit, inklusive Halbzeit. Fuer „frueh oder spaet" reicht das.
+        "spielminute": minute,
     }
 
 

@@ -53,6 +53,17 @@ jobs:
           STAKE_MIN_USD: '1000'
         run: ${{ env.BETFAIR_PY }} stake_highroller_fetch.py || echo "  ⚠️ Stake-Abruf fehlgeschlagen (Betfair laeuft weiter)"
 
+      # Abrechnung und Auswertung haengen direkt hinter dem Sammeln. Beide sind billig:
+      # settle fragt nur Wetten nach, die reif und noch nicht abgerechnet sind (jede genau
+      # einmal), analyse rechnet lokal. Beide duerfen scheitern, ohne Betfair mitzureissen.
+      - name: 🧾 Stake-Wetten abrechnen
+        continue-on-error: true
+        run: ${{ env.BETFAIR_PY }} stake_settle.py || echo "  ⚠️ Stake-Abrechnung fehlgeschlagen"
+
+      - name: 📐 Stake auswerten (Liga-Norm, Schubladen, Auffaellige)
+        continue-on-error: true
+        run: ${{ env.BETFAIR_PY }} stake_analyse.py || echo "  ⚠️ Stake-Auswertung fehlgeschlagen"
+
       - name: 🟡 Betfair/Betwatch fetchen
         run: ${{ env.BETFAIR_PY }} fetch_betfair_betwatch.py
         env:
@@ -186,6 +197,8 @@ jobs:
           git add stake_bet_ledger.json 2>/dev/null || true
           git add stake_query.json 2>/dev/null || true
           git add stake_kurse.json 2>/dev/null || true
+          git add stake_auswertung.json 2>/dev/null || true
+          git add stake_vorregistrierung.json 2>/dev/null || true
           git add betfair_prices.json 2>/dev/null || true
           git add betfair_history.json 2>/dev/null || true
           git add betfair_overview.json 2>/dev/null || true

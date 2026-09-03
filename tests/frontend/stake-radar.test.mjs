@@ -198,7 +198,10 @@ test('Regler filtern nur die Anzeige, sie schreiben nichts zurueck', () => {
     assert.ok(CODE.includes('window.' + setter), 'Regler fehlt: ' + setter);
   }
   assert.ok(!/fetch\([^)]*POST/i.test(CODE), 'der Tab darf nichts senden');
-  assert.ok((CODE.match(/fetch\(/g) || []).length === 1, 'genau ein Lesezugriff, sonst nichts');
+  // 03.09.2026: zwei Lesezugriffe, seit das Terminal die Auswertung mitlaedt. Was zaehlt,
+  // ist NUR-lesen — und dass nichts anderes gelesen wird als diese beiden Dateien.
+  const gelesen = [...CODE.matchAll(/fetch\('([^']+)'/g)].map(m => m[1].split('?')[0]);
+  assert.deepEqual(gelesen.sort(), ['stake_auswertung.json', 'stake_highroller.json']);
 });
 
 test('gelesen wird die Sicht, nie das Ledger', () => {
@@ -245,4 +248,54 @@ test('ein umgerechneter Betrag sagt, dass er umgerechnet ist', () => {
 test('der Kursstand steht im Kopf', () => {
   const basis = schneide('var basis =', 'var warn =');
   assert.ok(/kurse/.test(basis), 'auch ein umgerechneter Wert nennt seine Basis');
+});
+
+// ── Terminal (03.09.2026, Lucas: „kannst ja gleich so ein Terminal bauen") ───
+test('vier Ansichten, und die Weiche kennt alle', () => {
+  for (const t of ['spiele', 'auffaellig', 'bilanz', 'norm']) {
+    assert.ok(CODE.includes("'" + t + "'"), 'Reiter fehlt: ' + t);
+  }
+  assert.ok(/window\._srTab/.test(CODE), 'der Reiter-Wechsel muss aufrufbar sein');
+});
+
+test('eine Quote ohne Untergrenze wird als „kein Urteil" gezeigt, nicht als Zahl', () => {
+  assert.equal(API._srBasis({ n: 5, quote: 0.8, ug: null, belegt: false }).includes('kein Urteil'), true);
+  assert.ok(!API._srBasis({ n: 0 }).includes('%'), 'ohne n gibt es gar keinen Prozentwert');
+});
+
+test('eine belegte Quote wird als solche markiert', () => {
+  const s = API._srBasis({ n: 200, quote: 0.62, ug: 0.55, belegt: true });
+  assert.ok(s.includes('UG'));
+  assert.ok(s.includes('sr-ok'), 'belegt bekommt eine eigene Farbe');
+});
+
+test('jede Quote nennt ihr n', () => {
+  assert.ok(API._srBasis({ n: 42, quote: 0.5, ug: null }).includes('n42'));
+});
+
+test('Prozente ohne Wert sind ein Strich, keine 0', () => {
+  assert.equal(API._srPct(null), '—');
+  assert.equal(API._srPct(undefined), '—');
+  assert.equal(API._srPct(NaN), '—');
+  assert.equal(API._srPct(0), '0.0%');
+});
+
+test('fehlt die Auswertung, steht das da statt einer leeren Tabelle', () => {
+  const block = schneide('if (SR_TAB !== ', 'window.initStakeRadar');
+  assert.ok(/nicht lesbar/.test(block));
+  assert.ok(/nichts gefunden/.test(block), 'der Unterschied muss benannt sein');
+});
+
+test('die Bilanz erklaert, warum sie Beine zaehlt und nicht Wetten', () => {
+  const block = schneide('function _srBilanz', 'function _srKpi');
+  assert.ok(/Beine/.test(block) && /Einzelwetten/.test(block));
+  assert.ok(/[Aa]nnullierte/.test(block), 'auch, was mit annullierten Beinen passiert');
+});
+
+test('die Norm-Ansicht trennt gelernt von zu duenn', () => {
+  const block = schneide('function _srNorm', '  // ── Render');
+  assert.ok(/gelernt/.test(block));
+  assert.ok(/ohne Norm/.test(block));
+  assert.ok(/etwas anderes als/.test(block),
+    'nichts wissen ist nicht dasselbe wie ein gemessenes Nein — das muss dastehen');
 });
