@@ -239,26 +239,35 @@
    "markt": "Match Odds",
    "seite": "home",
    "name": "CF America",
-   "odd": 2.18,
+   "odd": 2.2,
    "entryOdd": 2.18,
    "anteilPct": 67,
-   "stufe": 2,
+   "stufe": 1,
    "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly 96%",
+     "gewicht": 12
+    },
     {
      "art": "pinn",
      "text": "Pinnacle stimmt zu",
      "gewicht": 10
     }
    ],
-   "rang": 66.7,
+   "rang": 78.8,
    "track": null,
    "streak": null,
-   "poly": null,
+   "poly": {
+    "anteilPct": 96,
+    "usd": 49249,
+    "odd": 2.2
+   },
    "polyStatus": "unbekannt",
    "pinnMovePP": null,
    "punkte": {
-    "punkte": 6,
-    "moeglich": 7,
+    "punkte": 9,
+    "moeglich": 10,
     "dauerH": 4.26,
     "teile": [
      {
@@ -269,23 +278,29 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 67% auf der Seite"
+       "text": "Geld 68% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
-      "text": "Geld 67% auf der Seite"
+      "text": "Geld 68% auf der Seite"
      },
      {
       "buch": "POLY",
       "name": "Polymarket",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "text": "Polymarket nicht erhoben"
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Geld 96% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "2 bewiesene Wallets drauf"
+      },
+      "text": "Poly-Geld 96% auf derselben Seite"
      },
      {
       "buch": "PIN",
@@ -320,9 +335,9 @@
    },
    "wertVsPinn": null,
    "gehaltenSeit": "2026-09-02T23:14:35.481473+00:00",
-   "zuletztAktiv": "2026-09-02T23:14:35.481473+00:00",
+   "zuletztAktiv": "2026-09-03T02:44:53.897475+00:00",
    "haltePreis": 2.18,
-   "aktiv": false
+   "aktiv": true
   }
  }
 }
