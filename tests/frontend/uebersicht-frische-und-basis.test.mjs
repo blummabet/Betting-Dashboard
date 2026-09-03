@@ -99,3 +99,58 @@ test('die Karte benennt einen Preis, der dem Anker widerspricht', () => {
   // Der Preis verschwindet NICHT — er bleibt sichtbar, nur ohne den Anschein von Zustimmung.
   assert.match(MM, /Preis \(dünn\)/, 'der normale Dünn-Preis-Fall ist weggefallen');
 });
+
+// ── 4. Die Kosmetik-Liste aus dem Checkup — jede Zahl sagt, was sie ist ──────
+// 03.09.2026 (Lucas: „ja mach damit wir alle probleme mit der zeit und bei jedem neuen
+// checkup reduzieren"). Es sind keine Rechenfehler, sondern Zahlen ohne Bezug — und genau
+// die kommen bei jedem Checkup neu hoch, wenn man sie nicht festnagelt.
+test('die beiden Betfair-Beträge sagen, worauf sie sich beziehen', () => {
+  // „Betfair-Kohle €119K" ist das Geld auf der AUSWAHL, „Frisches Geld · jetzt €231K" das
+  // Volumen des ganzen MARKTES (nachgerechnet: Summe aller Match-Odds-Runner). Zwei richtige
+  // Zahlen, zwei verschiedene Dinge — und nichts sagte welches.
+  const flow = schneide('function _mdBfFlowBody', 'function _mdRealHtk');
+  assert.match(flow, /jetzt ' \+ eur\(x\.nowEur\) \+ ' im Markt'/, 'der Zufluss nennt seinen Bezug nicht');
+  const kohle = schneide('var bfBody = bf.length', 'bfBody += _ageStr');
+  assert.match(kohle, /Geld auf dieser Auswahl/, 'die Kohle-Kachel nennt ihren Bezug nicht');
+});
+
+test('die Signal-Bilanz zeigt zu jeder Quote ihre Fallzahl', () => {
+  // „🥅 Torjäger n47 · 46% dafür · 75% gegen · −16% ⌀" — die 75% waren drei von vier Fällen,
+  // und genau deshalb stand das ⌀ da. Sichtbar war das nur im Tooltip.
+  const block = schneide('var quote=function', 'if(duenn.length)');
+  assert.match(block, /quote\(r\.suppWinPct,r\.supp\)/, 'die Dafür-Quote trägt ihre Basis nicht');
+  assert.match(block, /quote\(r\.oppWinPct,r\.opp\)/, 'die Gegen-Quote trägt ihre Basis nicht');
+});
+
+test('Signale unter der Feuer-Schwelle stehen nicht mit vollem Gewicht in der Liste', () => {
+  const block = schneide('var duenn=rows.filter', 'return \'<details class="md-pulse md-rise sb-wrap">\'');
+  assert.match(block, /minFire/, 'die Schwelle kommt nicht aus den Daten');
+  assert.match(block, /zu wenig Daten/, 'die Sammelzeile sagt nicht, warum sie da ist');
+});
+
+test('die drei Zeitangaben in Ebene 2 sind beschriftet', () => {
+  const block = schneide('function _klPunkte', 'var _pktSort');
+  assert.match(block, /⏱ Anpfiff/, 'die Anpfiff-Uhr ist wieder unbeschriftet');
+  assert.match(block, /⏳ einig seit/, 'die Dauer der Übereinstimmung ist wieder unbeschriftet');
+});
+
+test('ein Preis aus einer hinterherhinkenden Datei trägt seinen Stand', () => {
+  // killer.json trug für Rapid Bucharest odd == haltePreis == 1.64, während die Rangliste
+  // eine Ebene tiefer @1.57 führte — kein Anzeigefehler, sondern eine ältere Quelle.
+  assert.match(CODE, /function _mdPreisAlterMin/, 'die Alters-Prüfung fehlt');
+  const block = schneide('var hp = x.haltePreis', 'Aufbau der Zeile');
+  assert.match(block, /PK_PREIS_STALE_MIN/, 'der Preis prüft sein Alter nicht');
+  assert.match(block, /\(Stand/, 'der Stand wird nicht angezeigt');
+});
+
+test('die Alters-Prüfung behauptet nichts, wenn sie nichts weiß', () => {
+  const g = {};
+  // eslint-disable-next-line no-new-func
+  new Function('exp', schneide('function _mdPreisAlterMin', 'function _klPunkte')
+    + '\nexp.f=_mdPreisAlterMin;'
+    + '\nfunction _ageMin(o){return o&&o._alter!=null?o._alter:null;}')(g);
+  // Wir können die Funktion nicht ohne _md aufrufen — geprüft wird die Regel im Quelltext:
+  const block = schneide('function _mdPreisAlterMin', 'function _klPunkte');
+  assert.match(block, /if \(k == null\) return null/, 'ohne eigenes Alter wird trotzdem geurteilt');
+  assert.match(block, /k > b/, 'es wird nicht gegen den frischeren Feed verglichen');
+});

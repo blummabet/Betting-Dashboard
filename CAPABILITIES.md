@@ -224,6 +224,31 @@ Fix in zwei Teilen. (1) `_alle_holder()` **blättert** jetzt durch `/holders` (`
 
 **🐋 Whale-Rangliste — eigener Fehler, am selben Tag korrigiert:** `_pwClvUg` rechnete die Varianz aus `clvSqSum` gegen das **globale** `n`. `n` zählt alle Auflösungen seit jeher, `clvSqSum` erst die seit dem 02.09. — die Rohvarianz wird negativ, und `Math.max(0, …)` machte daraus „null Streuung", also **maximale Sicherheit**. Gemessen: **72 von 127** Wallets im UG-Modus. Die mit den **wenigsten** Daten wären nach oben gerankt worden — die Umkehrung dessen, wozu eine Untergrenze da ist. Jetzt ein in sich geschlossenes Fenster (`clvFenN`/`clvFenSum`/`clvSqSum`, min. 5), sonst wird geschrumpft; eine nennenswert negative Rohvarianz heißt „Fenster kaputt" und führt zum Schrumpfen, nicht zu einer Scheinsicherheit.
 
+### 📐 Anzeige-Regeln (03.09.2026, Lucas: „damit wir alle Probleme mit der Zeit und bei jedem neuen Checkup reduzieren")
+
+Der Checkup vom 03.09. brachte acht Befunde, und es waren nicht acht Fehler — es war **einer, achtmal**: eine Zahl ohne ihre Basis, oder eine Behauptung, die breiter war als ihr Beleg.
+
+| Was dastand | Was es war |
+|---|---|
+| „🎯 Cards **n30** · 78 % Treffer 21–6" | Quote auf 27 (3 VOIDs), n war das Fenster |
+| „Mix bf+money+sharp 3/30 · ROI +135 % **(UG +74 %)**" | Mittelwert mit Etikett — drei ähnliche Ergebnisse haben keine Streuung |
+| „**7 Konsens** · BF × Poly × Pinn" | 2 Zeilen ohne Poly-Geld, eine davon $74 |
+| „Ø CLV **−2,62 pp** · schlägt Close 13,3 %" | 7 von 30 Werten waren Platzhalter-Nullen (belegt: −3,41 / 17,4 %) |
+| „Beste Stufe Conv 7 · +2,5 % · **n149**" | drei Engine-Versionen, aktuell davon 4 |
+| „**älteste Quelle** Serien vor 64 Min" | 8 von 13 Feeds geprüft, Poly-LIVE gar nicht |
+| „→ Real Sociedad · **jetzt €148K**" | Volumen des ganzen Marktes, nicht der Auswahl |
+| „🥅 Torjäger · 46 % dafür · **75 % gegen**" | drei von vier Fällen |
+
+Daraus fünf Regeln, an denen sich jede neue Fläche messen lassen muss:
+
+1. **Jede Quote nennt ihren Nenner** — nicht im Tooltip, im Text. Weichen mehrere Basen in derselben Kachel voneinander ab (Fenster / gewertet / mit CLV), stehen alle drei da.
+2. **Eine Untergrenze gibt es erst ab `UG_MIN_N = 30`.** Darunter steht der Punktschätzer allein und „nicht belegt". Eine kleine Stichprobe ohne Spreizung ist keine Gewissheit — sie sieht nur so aus (`untergrenze([1.35]*3) → +1.35`).
+3. **Eine Aussage über mehrere Quellen zählt die, die wirklich beitragen** — nicht die Verdikte. `nSources`/`polyGeld` stehen in der Zeile; wer sie ignoriert, behauptet drei Bücher, wo zwei sind.
+4. **Jeder Betrag nennt seinen Bezug** (Auswahl oder Markt), jede Zeitangabe ihre Bedeutung (Anpfiff / Dauer der Übereinstimmung / Beginn der Haltung).
+5. **Ein Wert ist nur so aktuell wie seine Datei.** Hinkt die Quelle hinter einem frischeren Feed auf derselben Seite her, trägt der Wert seinen Stand mit — sonst liest sich ein alter Preis wie der von jetzt.
+
+Mechanisch gesichert, wo es geht: `uebersicht-frische-und-basis.test.mjs` (14) liest die Ladezeile `_md.data = {…}` als Wahrheit darüber, welche Feeds es gibt, und schlägt an, sobald einer nicht in die Frische-Rechnung eingeht — **die Regel wächst also mit, ohne dass jemand daran denken muss.** Dazu `test_freigabe.py` (Schwelle == Gate-Schwelle), `test_puls_leiste_und_clv.py` (Engine-Filter, Bucket-Regeln gegen `poly_shortlist_track.aggregate`, `clvResolved`), `test_poly_preis_abweichung.py`.
+
 **Die zwei offenen Punkte aus dem Checkup (03.09.2026, Lucas: „na dann schau dir die 2 an"):**
 
 - 🔴 **Die Puls-Leiste maß nach anderen Regeln als das Register direkt darunter.** `agg.byConv` aggregiert den **ganzen** Bestand: 500 abgerechnete Plays über mehrere Engine-Versionen (`ev`: 70× `2026-09-01`, 76× `2026-08-29b`, 8× `2026-08-29`, **346 ohne Stempel**). Die Kopfzeile warb mit „Beste Stufe Conv 7 · +2.5 % ROI · **n149**", während Ebene 1 für dieselbe Stufe `4/30` zeigt und sagt: *„Plays älterer Versionen zählen nicht für eine Freigabe"*. Dazu nimmt `_best_bucket` das **Maximum über ~10 Buckets** und zeigte einen Punktschätzer — ein Maximum über viele Buckets ist selbst eine Auswahl. `_strip` rechnet jetzt auf `_aktuelle_zeilen()` (dieselbe Regel wie `freigabe.aktuelle_engine`) und `_best_bucket` bekommt die **Renditen je Play** statt fertiger Aggregate, damit `freigabe.untergrenze` greifen kann. Ergebnis auf den echten Daten: statt „Conv 7 · +2.5 % · n149" steht dort **„Conv 6 · +0.5 % · n30 · nicht belegt (UG −24.1 %)"**, statt „bf · +17.0 % · n93" **„sharp · +15.0 % · n41 · nicht belegt (UG −3.0 %)"** — was zu „nichts freigegeben" eine Ebene tiefer passt. Ein Test hält die Bucket-Regeln gegen `poly_shortlist_track.aggregate`, damit die beiden Flächen nicht auseinanderdriften.
