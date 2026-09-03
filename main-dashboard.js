@@ -71,13 +71,33 @@
   // Der Kopf zeigte bisher die BROWSER-UHR („Stand 10:56"). Die sagt nichts über die Daten:
   // am 30.08. war Betfair 12 Minuten alt, die Cards 5,9 Stunden und die Serien 12,1 Stunden —
   // die Seite behauptete für alles dieselbe Frische.
+  // 03.09.2026 (Lucas-Checkup): hier standen 8 von 13 geladenen Datensaetzen. `mlsStreaks`,
+  // `bfDir`, `bfTrack`, `killer` und `freigabe` fehlten — und der Polymarket-LIVE-Feed hat gar
+  // kein Feld in `_md.data`, er kommt ueber `_pwCache.broadLiveNow`. Folge: oben stand
+  // „aelteste Quelle Serien vor 64 Min", waehrend dieselbe Seite unten „letzte Erfassung vor
+  // 2 h" meldete. Der Kommentar in _head() verspricht ausdruecklich das Gegenteil („die Seite
+  // ist nur so frisch wie ihr traegster Feed") — jetzt stimmt er wieder.
+  //
+  // Eine Quelle OHNE lesbaren Zeitstempel taucht bewusst nicht auf: _ageMin gibt dann null
+  // zurueck, und ein unbekanntes Alter darf sich nicht als frisch ausgeben (es faellt aber auch
+  // nicht als „aelteste" ins Gewicht — dafuer ist der Datei-Waechter zustaendig, nicht diese Zeile).
   function _mdQuellenAlter() {
     var d = _md.data || {};
-    var q = [['Cards', d.liga], ['Cards MLS', d.mls], ['Serien', d.ligaStreaks],
-             ['Betfair', d.betfair], ['Börse', d.bfOverview], ['Money-Map', d.moneyMap],
-             ['Puls', d.pulse], ['Poly', d.whales]];
+    var q = [['Cards', d.liga], ['Cards MLS', d.mls],
+             ['Serien', d.ligaStreaks], ['Serien MLS', d.mlsStreaks],
+             ['Betfair', d.betfair], ['Börse', d.bfOverview], ['Richtung', d.bfDir],
+             ['Betfair-Track', d.bfTrack], ['Money-Map', d.moneyMap],
+             ['Puls', d.pulse], ['Poly', d.whales],
+             ['Konjunktion', d.killer], ['Register', d.freigabe]];
     var out = [];
     q.forEach(function (x) { var a = _ageMin(x[1]); if (a != null) out.push({ n: x[0], min: a }); });
+    // Poly-LIVE fuehrt seine eigene Rechnung (dieselbe, die die Kachel unten anzeigt).
+    try {
+      if (typeof _pwLiveStaleMin === 'function') {
+        var lm = _pwLiveStaleMin();
+        if (lm != null && isFinite(lm)) out.push({ n: 'Poly LIVE', min: lm });
+      }
+    } catch (e) { /* Poly-Cache noch nicht geladen — dann eben ohne */ }
     out.sort(function (a, b) { return b.min - a.min; });
     return out;
   }
@@ -738,7 +758,19 @@
     return '<div class="md-top md-rise">' +
       '<div><h1 class="md-h1">Übersicht</h1>' +
       '<p class="md-sub">Die stärksten Signale aller Engines — kuratiert, auf einen Blick.</p></div>' +
-      '<div class="md-asof"><span class="md-dot" style="background:' + col + '"></span>' + stand + '</div></div>';
+      '<div class="md-asof" id="md-asof"><span class="md-dot" style="background:' + col + '"></span>' + stand + '</div></div>';
+  }
+
+  // Der Kopf wird EINMAL gerendert, der Poly-LIVE-Cache kommt aber erst spaeter (lazy, s.
+  // _mdFillLive). Ohne dieses Nachziehen bliebe die aelteste Quelle auf dem Stand VOR dem
+  // Laden stehen — also genau wieder zu optimistisch.
+  function _mdRefreshAsof() {
+    var el = document.getElementById('md-asof'); if (!el) return;
+    var q = _mdQuellenAlter(), a = q.length ? q[0] : null; if (!a) return;
+    var col = a.min > 180 ? '#f2a6a6' : a.min > 60 ? 'var(--gold)' : 'var(--mi3)';
+    el.innerHTML = '<span class="md-dot" style="background:' + col + '"></span>' +
+      '<span title="' + esc(q.map(function (x) { return x.n + ': ' + _ageTxt(x.min); }).join(' · ')) + '">' +
+      'älteste Quelle <b style="color:' + col + '">' + esc(a.n) + ' vor ' + _ageTxt(a.min) + '</b></span>';
   }
 
   function kpi(val, label, hint, color) {
@@ -1129,6 +1161,7 @@
       try { whales = _pwLiveTopWhales(5) || []; } catch (e) { whales = []; }
       try { inflow = _pwLiveTopInflow(5) || []; } catch (e) { inflow = []; }
       b.innerHTML = _mdLiveHtml(whales, inflow);
+      try { _mdRefreshAsof(); } catch (e) { /* Kopf bleibt, wie er war */ }
     });
   }
 
@@ -1282,8 +1315,15 @@
     if (d.n) {
       var clv = d.avgClvPP, clvTxt = clv == null ? '—' : (clv > 0 ? '+' : '') + (+clv).toFixed(1) + 'pp', beat = d.pctBeatClose;
       cards.push('<button class="mpc" style="--ac:' + A.blue + '" onclick="showView(\'national-cards\')" title="→ Betting-Cards">' +
-        '<span class="mpc-h">🎯 Cards<b>n' + d.n + '</b></span>' +
-        '<div class="mpc-big" style="color:' + col0(clv) + '">' + clvTxt + '</div><div class="mpc-cap">Ø CLV</div>' +
+        // 03.09.2026 (Lucas-Checkup): hier stand nur `n30` — daneben aber „78% Treffer 21–6",
+        // also eine Quote auf 27. `n` ist die Fenstergroesse (alle abgerechneten Picks),
+        // `nGraded` = wins+losses; Picks, deren Ergebnis weder WIN noch LOSS ist, fallen aus der
+        // Quote und blieben trotzdem im angezeigten n. Jetzt traegt jede Zahl ihre eigene Basis.
+        '<span class="mpc-h">🎯 Cards<b>n' + d.n +
+          (d.nGraded != null && d.nGraded !== d.n ? ' · ' + d.nGraded + ' gew.' : '') + '</b></span>' +
+        '<div class="mpc-big" style="color:' + col0(clv) + '">' + clvTxt + '</div>' +
+        '<div class="mpc-cap"' + (d.nClv != null && d.nClv !== d.n ? ' title="Ø über ' + d.nClv + ' Picks mit CLV"' : '') +
+          '>Ø CLV' + (d.nClv != null && d.nClv !== d.n ? ' · n' + d.nClv : '') + '</div>' +
         _spark(d.series) +
         '<div class="mpc-subs">' + sub(beat == null ? '—' : Math.round(beat) + '%', 'schlägt Close', beat == null ? 'var(--mi3)' : beat >= 50 ? A.good : beat >= 33 ? A.gold : A.red) +
         sub(d.winPct == null ? '—' : Math.round(d.winPct) + '%', 'Treffer ' + (d.wins || 0) + '–' + (d.losses || 0), 'var(--mi)') + '</div></button>');

@@ -26,12 +26,35 @@ class TestUntergrenze:
         assert abs(F.untergrenze([0.2] * 40) - 0.2) < 1e-9
 
     def test_mehr_stichprobe_hebt_die_untergrenze(self):
-        klein = F.untergrenze([0.4, -0.1, 0.3, -0.2, 0.5])
-        gross = F.untergrenze([0.4, -0.1, 0.3, -0.2, 0.5] * 20)
+        # 03.09.2026: vorher n=5 gegen n=100. Unter UG_MIN_N gibt es gar keine Untergrenze mehr,
+        # also wird jetzt an der Schwelle verglichen — die Aussage bleibt dieselbe.
+        muster = [0.4, -0.1, 0.3, -0.2, 0.5]
+        klein = F.untergrenze(muster * 6)     # n=30
+        gross = F.untergrenze(muster * 120)   # n=600
         assert klein < gross
 
     def test_unter_drei_werten_wird_nicht_geraten(self):
         assert F.untergrenze([0.5, 0.5]) is None
+
+    def test_unter_dreissig_werten_gibt_es_keine_untergrenze(self):
+        """🔴 Der Befund aus dem Uebersicht-Checkup: `untergrenze([1.35, 1.35, 1.35])` gab +1.35
+        zurueck — den Mittelwert mit einem Etikett. In der Uebersicht stand daraufhin
+        „Mix bf+money+sharp 3/30 · ROI +135% (UG +74%)": 74% Rendite „belegt" aus drei Plays.
+        Drei aehnliche Ergebnisse haben eine Streuung nahe null, und ohne Streuung faellt die
+        Schranke auf den Punktschaetzer zusammen."""
+        assert F.untergrenze([1.35, 1.35, 1.35]) is None
+        assert F.untergrenze([0.1] * (F.UG_MIN_N - 1)) is None
+        assert F.untergrenze([0.1] * F.UG_MIN_N) is not None
+
+    def test_die_schwelle_ist_die_des_freigabe_gates(self):
+        """Sie muss dieselbe sein: das Gate fragt die Untergrenze erst ab MIN_N ab. Waere UG_MIN_N
+        groesser, koennte eine Schublade das Gate erreichen und dort an einer fehlenden Zahl
+        scheitern, die es haette geben muessen."""
+        assert F.UG_MIN_N == F.MIN_N
+
+    def test_die_schwelle_laesst_sich_benennen_statt_umgehen(self):
+        assert F.untergrenze([1.35, 1.35, 1.35], min_n=3) is not None
+        assert F.untergrenze([1.35, 1.35], min_n=1) is None   # unter drei bleibt es None
 
 
 class TestBewertung:
