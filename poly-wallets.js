@@ -2091,6 +2091,73 @@ const PW_GVP_MIN_N=10;
 // Übersicht-Box. limit=0 → alle. useSportPass steuert den Sport-Filter (Übersicht: aus).
 var PW_LIVE_MAX_PRICE = 0.77;   // 15.08.2026 (Lucas): wie Live-Watch — live > 77¢ (Quote <1.30) = fast entschieden, kein Value
 var PW_LIVE_FRESH_MAX_MIN = 45;   // 16.08.2026 (Lucas): Live-Snapshot älter als das = der Scan führt das Spiel nicht mehr -> vorbei/eingefroren -> nicht als Live-Play zeigen (fertige Esport-Spiele hingen 1h+ in den Top-Wetten)
+// ── Live-Plays: die Zahlen müssen aus dem laufenden Spiel kommen ─────────────
+// 03.09.2026 (Lucas): „🔥 Heute spielenswert … 8/10 · BET · Hapoel Tel Aviv vs Beitar 🔴 LIVE
+// → Hapoel @48¢ · großes Geld (74%) → $22K · Steam läuft rein (+6.0pp)" — gepusht um 19:28,
+// da stand es 3:0 und lief in der 92. Minute. Lucas: „die 48 Cent gab es ewig zuvor, aber da
+// kam nie ne Push."
+//
+// Nachgesehen, und es waren drei Sachen auf einmal:
+//
+//  1. Die Zahlen waren gar nicht live. _pwTopPlays bewertet `m` aus broadLive — dem
+//     CLOSE-Schnappschuss. Für dieses Spiel: capturedAt 17:27, hoursToKickoff 0.09, also
+//     fünf Minuten VOR Anpfiff. 48¢, 74% und $22K sind allesamt Vorspiel-Werte, und die
+//     Zeile klebte ein „🔴 LIVE" davor. broadLiveNow wurde nur gefragt, OB das Spiel noch
+//     läuft — nie, wie es gerade steht.
+//  2. Der Live-Schnappschuss hatte für dieses Spiel prices {0.5, 0.5, 0.5}. Drei sich
+//     ausschließende Ausgänge, Summe 1,5 — das ist kein Preis, das ist ein leeres Orderbuch,
+//     dessen Mittelwert auf 0,5 zurückfällt. Im Live-File betrifft das 34% der Märkte
+//     (21 von 62), im Close-File 0,2%. Niemand hat je geprüft, ob ein Preis überhaupt einer ist.
+//  3. Nach Anpfiff gab es keine Spielbarkeitsgrenze. PW_STALE_AFTER_KO_H_FOOTBALL = 2.5h
+//     beantwortet „ist dieser Markt noch echt?", nicht „kann man das noch spielen?" — in der
+//     92. Minute liegt man mit 1,6h komfortabel darunter.
+//
+// Punkt 1 und 2 sind Fehler, Punkt 3 ist ein fehlendes Urteil. Alle drei sind unten geschlossen;
+// jeder für sich hätte diesen Push verhindert.
+
+// Ein Preis muss ein Preis sein. Sich ausschließende Ausgänge summieren sich auf 1 — tun sie
+// das nicht, oder stehen alle exakt auf 0,500, ist das Buch leer und der „Preis" nur der
+// Rückfallwert. Beides muss geprüft werden: bei zwei Ausgängen summiert sich 0,5/0,5 sauber
+// auf 1,0 und käme durch die Summenprüfung glatt durch.
+var PW_PREIS_SUMME_TOL = 0.10;
+function _pwPreisBrauchbar(prices){
+  var v=[]; for(var k in (prices||{})) if(typeof prices[k]==='number') v.push(prices[k]);
+  if(v.length<2) return false;
+  if(v.every(function(x){ return Math.abs(x-0.5)<1e-9; })) return false;
+  var s=v.reduce(function(a,b){return a+b;},0);
+  return Math.abs(s-1) <= PW_PREIS_SUMME_TOL;
+}
+
+// Ein laufendes Spiel wird mit den laufenden Zahlen bewertet. Stammdaten (Liga, Sport,
+// Anpfiff-Stempel) bleiben aus dem Close-Satz — die ändern sich nicht und der Live-Scan
+// führt sie nicht immer mit.
+function _pwLiveMerge(close, now){
+  var m={}; for(var k in close) m[k]=close[k];
+  ['prices','shares','totalUsd','whales','splitGuete','tokens'].forEach(function(f){
+    if(now && now[f]!=null) m[f]=now[f];
+  });
+  m.preisQuelle='live';
+  m.liveAlterMin=(typeof _pwLiveAge==='function')?_pwLiveAge(now):null;
+  return m;
+}
+
+// Wie lange nach Anpfiff ein LIVE-Play noch als spielbar gilt. Das ist ein Urteil, keine
+// Messung — für Stake-artigen Live-Fluss liegt im Projekt keine Trefferquote vor. Begründung:
+// ein Fußball-Siegermarkt ist nach der regulären Zeit in der Sache entschieden, und wer in der
+// 92. Minute noch einsteigt, handelt nicht mehr gegen eine Prognose. 75 Minuten lassen die
+// Schlussphase bewusst aus. Über PW_LIVE_SPIELBAR_H änderbar; die 2,5h daneben bleiben, was
+// sie sind — die Frage, ob der Markt überhaupt noch echt ist.
+var PW_LIVE_SPIELBAR_H_FOOTBALL = 1.25;   // 75 Minuten
+var PW_LIVE_SPIELBAR_H = 2.0;             // Tennis/eSport/Cricket laufen legitim länger
+function _pwLiveSpielbarCutoff(m){
+  return _pwSportCategory(m&&m.league, m&&m.sport)==='Fußball'
+    ? PW_LIVE_SPIELBAR_H_FOOTBALL : PW_LIVE_SPIELBAR_H;
+}
+function _pwLiveZuSpaet(m){
+  var r=_pwRealHtk(m);
+  return r!=null && r < -_pwLiveSpielbarCutoff(m);
+}
+
 function _pwLiveGone(m){ var a=(typeof _pwLiveAge==='function')?_pwLiveAge(m):null; return a!=null && a>PW_LIVE_FRESH_MAX_MIN; }
 var PW_LIVE_FLIP_GAP = 0.20;   // 16.08.2026 (Lucas): live gekippt — Shares-Seite liegt >=20pp hinter dem Preis-Favoriten => Markt gegen die Positionsmehrheit, Play raus
 function _pwTopPlays(limit, live, useSportPass){
@@ -2100,10 +2167,17 @@ function _pwTopPlays(limit, live, useSportPass){
     if(!m||m.resolved!=null||_pwKoStale(m)) continue;
     // 16.08.2026 (Lucas): fertiges Live-Spiel raus. Ein laut close-Freeze schon laufendes Spiel (realHtk<0)
     // gilt nur als aktuell, wenn der LIVE-Scan es noch FRISCH führt — sonst vorbei/eingefroren (blockierte Platz).
-    if((_pwRealHtk(m)||0)<0){ var _lnm=_pwCache&&_pwCache.broadLiveNow&&_pwCache.broadLiveNow[k]; if(!_lnm||_pwLiveGone(_lnm)) continue; }
+    let _mBewert=m;
+    if((_pwRealHtk(m)||0)<0){
+      var _lnm=_pwCache&&_pwCache.broadLiveNow&&_pwCache.broadLiveNow[k]; if(!_lnm||_pwLiveGone(_lnm)) continue;
+      if(_pwLiveZuSpaet(m)) continue;                     // 03.09.2026: 92. Minute ist kein Play
+      _mBewert=_pwLiveMerge(m,_lnm);                      // ... und bewertet wird das LAUFENDE Spiel
+      if(!_pwPreisBrauchbar(_mBewert.prices)) continue;   // leeres Buch (alle 0,5) ist kein Preis
+    }
     if(_pwSportCategory(m.league, m.sport)==='Sonstige') continue;   // kein Politik/Krypto/Sonstiges in die Play-Liste
     if(useSportPass && !_pwSportPass(m.league, m.sport)) continue;
-    const r=_pwShortlistScore(k,m);
+    const r=_pwShortlistScore(k,_mBewert);
+    if(r) r.preisQuelle=(_mBewert===m)?'close':'live';
     if(r&&r.verdict==='BET'){
       const _lv=(r.htk!=null&&r.htk<0);   // 15.08.2026 (Lucas): live fast entschieden (>77¢) = kein Value, wie Live-Watch
       if(_lv&&typeof r.price==='number'&&r.price>PW_LIVE_MAX_PRICE) continue;

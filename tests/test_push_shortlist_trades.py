@@ -111,3 +111,43 @@ class TestSperrliste(unittest.TestCase):
         # Nicht wissen ist kein Verbot: aeltere Emits ohne `cat` sollen nicht stumm verschwinden.
         plays = [_play("alt", "H", P.MIN_CONV)]
         self.assertEqual(len(P.select(plays, ["US-Sport"])), 1)
+
+
+# ── Die Minute gehört in die Zeile ───────────────────────────────────────────
+# 03.09.2026 (Lucas): „nur da war das Spiel schon 3:0 und in der 92. Minute oder so … eher
+# wertlos oder?" — das eigentliche Loch sitzt in poly-wallets.js (ein LIVE-Play wurde mit den
+# Zahlen VOR Anpfiff bewertet, s. tests/frontend/live-play-basis.test.mjs). Hier geht es nur
+# darum, dass die Nachricht selbst nicht mehr verschweigt, wie weit das Spiel ist.
+
+def test_spielminute_aus_htk():
+    assert P._spielminute(-1.55) == 93
+    assert P._spielminute(-0.5) == 30
+    assert P._spielminute(-1.0) == 60
+
+
+def test_spielminute_vor_anpfiff_ist_none():
+    assert P._spielminute(0.5) is None
+    assert P._spielminute(0) is None
+    assert P._spielminute(None) is None
+    assert P._spielminute("gleich") is None
+
+
+def test_zeile_nennt_die_spielminute():
+    z = P._line({"conv": 8, "verdict": "BET", "match": "A vs B", "side": "A",
+                 "price": 0.48, "htk": -1.55, "league": "SOCCER", "preisQuelle": "live"})
+    assert "93. Min" in z, z
+    assert "LIVE" in z
+
+
+def test_zeile_warnt_wenn_der_preis_aus_dem_vorspiel_stammt():
+    z = P._line({"conv": 8, "verdict": "BET", "match": "A vs B", "side": "A",
+                 "price": 0.48, "htk": -1.55, "league": "SOCCER", "preisQuelle": "close"})
+    assert "Vorspiel" in z, ("ein Live-Play mit Vorspiel-Preis muss das sagen — genau diese "
+                             "Kombination war der Hapoel-Push")
+
+
+def test_zeile_vor_anpfiff_bleibt_ohne_live_marker():
+    z = P._line({"conv": 8, "verdict": "BET", "match": "A vs B", "side": "A",
+                 "price": 0.48, "htk": 3.0, "league": "SOCCER"})
+    assert "LIVE" not in z
+    assert "Min" not in z

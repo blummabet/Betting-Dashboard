@@ -497,6 +497,43 @@ Paar kann in Liga und Pokal stehen.
 
 ---
 
+### 🔴 Live-Plays: die Zahlen müssen aus dem laufenden Spiel kommen (03.09.2026)
+
+Lucas im Trades-Channel: *„8/10 · BET · Hapoel Tel Aviv vs Beitar 🔴 LIVE → Hapoel @48¢ · großes
+Geld (74%) → $22K · Steam läuft rein (+6.0pp)"* — gepusht um 19:28, da stand es **3:0 in der 92.
+Minute**. Und: *„die 48 Cent gab es ewig zuvor, aber da kam nie ne Push."*
+
+Drei Fehler auf einmal, nachgesehen an den echten Dateien:
+
+| | Was dastand | Was es war |
+|---|---|---|
+| 1 | „🔴 LIVE → @48¢ · 74% · $22K" | **Vorspiel-Zahlen.** `_pwTopPlays` bewertet `m` aus `broadLive` — dem **Close**-Satz. Für dieses Spiel: `capturedAt 17:27:50`, `hoursToKickoff 0.09`, also fünf Minuten *vor* Anpfiff. `broadLiveNow` wurde nur gefragt, **ob** das Spiel noch läuft, nie **wie es steht**. Die Geldquote beweist es: 3507,9 / 4756,0 = **74%** im Close-Satz, 3692,6 / 5975,5 = **62%** im Live-Satz |
+| 2 | Der Live-Satz hätte auch nicht getragen | Er führte `prices {Hapoel 0.5, Draw 0.5, Beitar 0.5}` — drei sich ausschließende Ausgänge, Summe **1,5**. Das ist kein Preis, sondern ein **leeres Orderbuch**, dessen Mittelwert auf 0,5 zurückfällt. Betroffen: **21 von 62 Live-Märkten (34%)** gegenüber 4 von 2002 im Close-Satz (0,2%). Geprüft hat das nie jemand |
+| 3 | Kein Halt nach Anpfiff | `PW_STALE_AFTER_KO_H_FOOTBALL = 2.5h` beantwortet *„ist dieser Markt noch echt?"*, nicht *„kann man das noch spielen?"*. In der 92. Minute liegt man mit 1,6h komfortabel darunter |
+
+Punkt 1 und 2 sind Fehler, Punkt 3 ist ein **fehlendes Urteil**. Alle drei sind zu; jeder für sich
+hätte diesen Push verhindert.
+
+- **`_pwLiveMerge(close, now)`** — läuft ein Spiel, werden Preis, Geld und Volumen aus dem
+  Live-Satz genommen; Stammdaten (Liga, Sport, Anpfiff-Stempel) bleiben aus dem Close-Satz, weil
+  der Live-Scan sie nicht immer mitführt. Jeder Play trägt seither `preisQuelle`.
+- **`_pwPreisBrauchbar(prices)`** — ≥2 Preise, nicht alle exakt 0,500, Summe innerhalb von 10pp
+  um 1. **Beide** Regeln sind nötig: bei zwei Ausgängen summiert sich 0,5/0,5 sauber auf 1,0 und
+  käme durch die Summenprüfung glatt durch — und genau das waren die meisten der 21 Fälle.
+- **`_pwLiveZuSpaet(m)`** — Fußball 75 Minuten, sonst 2h. Das ist ausdrücklich ein **Urteil, keine
+  Messung**: ein Siegermarkt ist nach der regulären Zeit in der Sache entschieden. Die 2,5h daneben
+  bleiben, was sie sind — die Frage nach der Echtheit des Marktes, nicht nach der Spielbarkeit.
+- Die Push-Zeile nennt jetzt die **Spielminute** („🔴 LIVE · 93. Min") und warnt, wenn ein
+  Live-Play seinen Preis doch aus dem Vorspiel-Satz zieht.
+
+Warum es *vorher nie* gepusht wurde, obwohl es die 48¢ „ewig zuvor" gab: `fresh_plays` schickt
+einen Play, wenn seine Conviction **steigt**. Sie stieg erst, als das Spiel praktisch vorbei war —
+Geldanteil und Steam härten in einem laufenden Markt genau dann aus, wenn der Ausgang feststeht.
+Das ist die allgemeine Lehre aus dem Fall und der Grund, live strenger zu gaten als vor Anpfiff:
+**die Flusssignale werden am stärksten, wenn sie am wenigsten wert sind.**
+
+---
+
 ## 8. Harte Arbeitsregeln
 
 - **Push nur über GitHub Desktop**, nie CLI.

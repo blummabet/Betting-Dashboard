@@ -70,6 +70,9 @@ const out = {
     cat: p.cat || null, htk: (p.htk == null ? null : p.htk),
     moneyPct: (p.moneyPct == null ? null : p.moneyPct),
     price: (typeof p.price === 'number' ? p.price : null),
+    // 03.09.2026: woher der Preis stammt. Ein live gepushter Play, dessen Zahlen aus dem
+    // Close-Satz kamen, war genau der Fehler vom Hapoel-Push — jetzt faehrt die Basis mit.
+    preisQuelle: p.preisQuelle || null,
     reasons: p.reasons || [],
     signals: p.signals || [],
     // 29.08.2026: Engine-Stempel mitgeben. Ohne ihn kann das Papier-Depot spaeter nicht sagen,

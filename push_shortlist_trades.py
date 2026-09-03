@@ -124,9 +124,25 @@ def fresh_plays(sel, seen):
     return out
 
 
+def _spielminute(htk):
+    """Aus den Stunden bis Anpfiff die gelaufene Spielzeit. htk ist negativ, wenn angepfiffen."""
+    if not isinstance(htk, (int, float)) or htk >= 0:
+        return None
+    return int(round(-htk * 60))
+
+
 def _line(p) -> str:
     conv = p.get("conv") or 0
-    live = " 🔴 <b>LIVE</b>" if isinstance(p.get("htk"), (int, float)) and p["htk"] < 0 else ""
+    # 03.09.2026 (Lucas): „nur da war das Spiel schon 3:0 und in der 92. Minute oder so".
+    # Ein blosses „🔴 LIVE" sagt nicht, ob gerade angepfiffen wurde oder nachgespielt wird.
+    # Die Minute steht jetzt dran — und wo der Preis herkommt auch, denn genau das war der
+    # Fehler: die Zahlen jener Nachricht stammten aus dem Close-Satz VOR Anpfiff.
+    _min = _spielminute(p.get("htk"))
+    live = ""
+    if _min is not None:
+        live = " 🔴 <b>LIVE</b> · %d. Min" % _min
+        if p.get("preisQuelle") and p["preisQuelle"] != "live":
+            live += " <i>(Preis aus dem Vorspiel-Satz)</i>"
     match = _esc(p.get("match") or p.get("key") or "?")
     price = _cents(p.get("price"))
     price_txt = (" @%s" % price) if price else ""
