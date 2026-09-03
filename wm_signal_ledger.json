@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-07-19T07:47:58Z",
-    "total_records": 173
+    "updated_at": "2026-09-03T05:09:17Z",
+    "total_records": 176
   },
   "records": [
     {
@@ -3615,6 +3615,99 @@
       "clvPP": -0.37
     },
     {
+      "key": "KO-F-ESP-ARG|Beide Teams treffen — Ja",
+      "matchKey": "KO-F-ESP-ARG",
+      "market": "Beide Teams treffen — Ja",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "public_static_bias",
+          "score": -1.6
+        },
+        {
+          "name": "form_trend",
+          "score": -2.0
+        },
+        {
+          "name": "xg_strength",
+          "score": 6.0
+        }
+      ],
+      "resolvedAt": "2026-07-20T01:13:14Z",
+      "source": "steam",
+      "convictionScore": 3,
+      "lateEntry": false,
+      "engineVersion": "v2",
+      "clvPP": 1.6,
+      "processVerdict": "DESERVED_LOSS"
+    },
+    {
+      "key": "KO-F-ESP-ARG|Doppelte Chance — X2",
+      "matchKey": "KO-F-ESP-ARG",
+      "market": "Doppelte Chance — X2",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 0.86
+        },
+        {
+          "name": "xg_strength",
+          "score": -0.93
+        },
+        {
+          "name": "lineup_signal",
+          "score": 2.55
+        },
+        {
+          "name": "chance_creation",
+          "score": -1.37
+        },
+        {
+          "name": "form_rating",
+          "score": -1.04
+        },
+        {
+          "name": "smart_money",
+          "score": -1.43
+        }
+      ],
+      "resolvedAt": "2026-07-20T01:13:14Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "engineVersion": "v2",
+      "clvPP": -1.36,
+      "processVerdict": "LUCKY"
+    },
+    {
+      "key": "KO-F-ESP-ARG|Über 2.5 Tore",
+      "matchKey": "KO-F-ESP-ARG",
+      "market": "Über 2.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "pressure_index",
+          "score": -1.0
+        },
+        {
+          "name": "lineup_signal",
+          "score": -4.21
+        },
+        {
+          "name": "chance_creation",
+          "score": 3.69
+        }
+      ],
+      "resolvedAt": "2026-07-20T01:13:14Z",
+      "source": "steam",
+      "convictionScore": 3,
+      "lateEntry": false,
+      "engineVersion": "v2",
+      "clvPP": -1.28,
+      "processVerdict": "DESERVED_LOSS"
+    },
+    {
       "key": "KO-F-ESP-BEL|Unter 3.5 Tore",
       "matchKey": "KO-F-ESP-BEL",
       "market": "Unter 3.5 Tore",
@@ -3650,7 +3743,8 @@
       "convictionScore": 5,
       "lateEntry": false,
       "engineVersion": "v2",
-      "clvPP": 0.0
+      "clvPP": 0.0,
+      "processVerdict": "JUSTIFIED"
     },
     {
       "key": "KO-QF-ARG-SUI|Unter 2.5 Tore",
@@ -4451,7 +4545,7 @@
           "score": -5.78
         }
       ],
-      "resolvedAt": "2026-07-19T07:47:58Z",
+      "resolvedAt": "2026-09-03T05:09:17Z",
       "source": "steam",
       "convictionScore": 4,
       "lateEntry": true,
@@ -4477,7 +4571,7 @@
           "score": -1.8
         }
       ],
-      "resolvedAt": "2026-07-19T07:47:58Z",
+      "resolvedAt": "2026-09-03T05:09:17Z",
       "source": "steam",
       "convictionScore": 2,
       "lateEntry": false,
