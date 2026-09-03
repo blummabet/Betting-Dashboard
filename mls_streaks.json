@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "mls",
-    "generatedAt": "2026-09-02T21:46:04.569997+00:00",
+    "generatedAt": "2026-09-03T12:19:45.039899+00:00",
     "minLen": 3,
     "strongLen": 5
   },
@@ -1860,15 +1860,14 @@
       "matchupPct": 57,
       "signalInfo": {
         "state": "confirm",
-        "count": 5,
-        "conviction": 5,
+        "count": 4,
+        "conviction": 4,
         "names": [
           "injury",
           "form_trend",
           "xg_strength",
           "chance_creation",
-          "transfer_shift",
-          "reverse_line_move"
+          "transfer_shift"
         ],
         "market": "Unter 3.5 Tore"
       }
@@ -2168,10 +2167,10 @@
       "strong": true,
       "continuation": {
         "state": "neutral",
-        "ratePct": 62,
-        "label": "Eigen 62% + Gegner 21% → 46%"
+        "ratePct": 58,
+        "label": "Eigen 58% + Gegner 29% → 46%"
       },
-      "ratePct": 62,
+      "ratePct": 58,
       "seq": [
         true,
         true,
@@ -2179,21 +2178,20 @@
         true,
         true,
         true,
-        false,
-        true
+        false
       ],
       "xgBacked": null,
       "basis": "pure",
-      "preN": 2,
+      "preN": 1,
       "next": {
         "oppId": "20787",
         "oppName": "St. Louis City",
         "atHome": true,
         "date": "2026-09-06",
         "kickoff": "2026-09-06T02:30:00+00:00",
-        "oppRatePct": 79
+        "oppRatePct": 71
       },
-      "oppSupportPct": 21,
+      "oppSupportPct": 29,
       "matchupPct": 46
     },
     {
@@ -2238,15 +2236,14 @@
       "matchupPct": 51,
       "signalInfo": {
         "state": "contradict",
-        "count": 5,
-        "conviction": 5,
+        "count": 4,
+        "conviction": 4,
         "names": [
           "injury",
           "form_trend",
           "xg_strength",
           "chance_creation",
-          "transfer_shift",
-          "reverse_line_move"
+          "transfer_shift"
         ],
         "market": "Unter 3.5 Tore"
       }
@@ -3221,45 +3218,6 @@
       "matchupPct": 41
     },
     {
-      "teamId": "1609",
-      "team": "New England Revolution",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1609.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "cornersUnder",
-      "market": "Unter 9,5 Ecken",
-      "length": 5,
-      "venue": "A",
-      "strong": true,
-      "continuation": {
-        "state": "wackelt",
-        "ratePct": 43,
-        "label": "Eigen 43% + Gegner 31% → 38%"
-      },
-      "ratePct": 43,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 1,
-      "next": {
-        "oppId": "1605",
-        "oppName": "Los Angeles Galaxy",
-        "atHome": false,
-        "date": "2026-09-06",
-        "kickoff": "2026-09-06T01:30:00+00:00",
-        "oppRatePct": 69
-      },
-      "oppSupportPct": 31,
-      "matchupPct": 38
-    },
-    {
       "teamId": "1598",
       "team": "Orlando City SC",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1598.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -3577,6 +3535,58 @@
       },
       "oppSupportPct": 87,
       "matchupPct": 75
+    },
+    {
+      "teamId": "1609",
+      "team": "New England Revolution",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1609.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 4,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 60,
+        "label": "Eigen 60% + Gegner 47% → 55% · Signale bestätigen"
+      },
+      "ratePct": 60,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 2,
+      "next": {
+        "oppId": "1605",
+        "oppName": "Los Angeles Galaxy",
+        "atHome": false,
+        "date": "2026-09-06",
+        "kickoff": "2026-09-06T01:30:00+00:00",
+        "oppRatePct": 47
+      },
+      "oppSupportPct": 47,
+      "matchupPct": 55,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 4,
+        "conviction": 4,
+        "names": [
+          "lead_lag_bias",
+          "injury",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "1609",
@@ -4072,47 +4082,6 @@
       "matchupPct": 77
     },
     {
-      "teamId": "1597",
-      "team": "FC Dallas",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1597.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "cards",
-      "market": "Über 3,5 Karten",
-      "length": 4,
-      "venue": "all",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 73,
-        "label": "Eigen 73% + Gegner 47% → 63%"
-      },
-      "ratePct": 73,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 11,
-      "next": {
-        "oppId": "1611",
-        "oppName": "Sporting Kansas City",
-        "atHome": true,
-        "date": "2026-09-06",
-        "kickoff": "2026-09-06T00:30:00+00:00",
-        "oppRatePct": 47
-      },
-      "oppSupportPct": 47,
-      "matchupPct": 63
-    },
-    {
       "teamId": "1608",
       "team": "Atlanta United FC",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1608.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -4151,46 +4120,6 @@
         "oppRatePct": 57
       },
       "oppSupportPct": 57,
-      "matchupPct": 60
-    },
-    {
-      "teamId": "1611",
-      "team": "Sporting Kansas City",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1611.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "cards",
-      "market": "Über 3,5 Karten",
-      "length": 4,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 47,
-        "label": "Eigen 47% + Gegner 80% → 60%"
-      },
-      "ratePct": 47,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 3,
-      "next": {
-        "oppId": "1597",
-        "oppName": "FC Dallas",
-        "atHome": false,
-        "date": "2026-09-06",
-        "kickoff": "2026-09-06T00:30:00+00:00",
-        "oppRatePct": 80
-      },
-      "oppSupportPct": 80,
       "matchupPct": 60
     },
     {
@@ -4312,45 +4241,6 @@
         "oppRatePct": 87
       },
       "oppSupportPct": 87,
-      "matchupPct": 55
-    },
-    {
-      "teamId": "1609",
-      "team": "New England Revolution",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1609.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 4,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 60,
-        "label": "Eigen 60% + Gegner 47% → 55%"
-      },
-      "ratePct": 60,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 2,
-      "next": {
-        "oppId": "1605",
-        "oppName": "Los Angeles Galaxy",
-        "atHome": false,
-        "date": "2026-09-06",
-        "kickoff": "2026-09-06T01:30:00+00:00",
-        "oppRatePct": 47
-      },
-      "oppSupportPct": 47,
       "matchupPct": 55
     },
     {
@@ -4559,47 +4449,6 @@
       "matchupPct": 56
     },
     {
-      "teamId": "1597",
-      "team": "FC Dallas",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1597.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "cards",
-      "market": "Über 3,5 Karten",
-      "length": 4,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 62,
-        "label": "Eigen 62% + Gegner 47% → 56%"
-      },
-      "ratePct": 62,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        true,
-        false,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 8,
-      "next": {
-        "oppId": "1611",
-        "oppName": "Sporting Kansas City",
-        "atHome": true,
-        "date": "2026-09-06",
-        "kickoff": "2026-09-06T00:30:00+00:00",
-        "oppRatePct": 47
-      },
-      "oppSupportPct": 47,
-      "matchupPct": 56
-    },
-    {
       "teamId": "1598",
       "team": "Orlando City SC",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1598.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -4638,6 +4487,46 @@
       },
       "oppSupportPct": 47,
       "matchupPct": 49
+    },
+    {
+      "teamId": "1611",
+      "team": "Sporting Kansas City",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1611.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "cards",
+      "market": "Über 3,5 Karten",
+      "length": 4,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 47,
+        "label": "Eigen 47% + Gegner 73% → 57%"
+      },
+      "ratePct": 47,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 3,
+      "next": {
+        "oppId": "1597",
+        "oppName": "FC Dallas",
+        "atHome": false,
+        "date": "2026-09-06",
+        "kickoff": "2026-09-06T00:30:00+00:00",
+        "oppRatePct": 73
+      },
+      "oppSupportPct": 73,
+      "matchupPct": 57
     },
     {
       "teamId": "1612",
@@ -5636,10 +5525,10 @@
       "strong": false,
       "continuation": {
         "state": "intakt",
-        "ratePct": 80,
-        "label": "Eigen 80% + Gegner 47% → 67%"
+        "ratePct": 73,
+        "label": "Eigen 73% + Gegner 47% → 63%"
       },
-      "ratePct": 80,
+      "ratePct": 73,
       "seq": [
         true,
         true,
@@ -5657,7 +5546,7 @@
         "oppRatePct": 47
       },
       "oppSupportPct": 47,
-      "matchupPct": 67
+      "matchupPct": 63
     },
     {
       "teamId": "1599",
@@ -5698,45 +5587,6 @@
       },
       "oppSupportPct": 67,
       "matchupPct": 63
-    },
-    {
-      "teamId": "1605",
-      "team": "Los Angeles Galaxy",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1605.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "cards",
-      "market": "Über 3,5 Karten",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 77,
-        "label": "Eigen 77% + Gegner 36% → 61%"
-      },
-      "ratePct": 77,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 3,
-      "next": {
-        "oppId": "1609",
-        "oppName": "New England Revolution",
-        "atHome": true,
-        "date": "2026-09-06",
-        "kickoff": "2026-09-06T01:30:00+00:00",
-        "oppRatePct": 36
-      },
-      "oppSupportPct": 36,
-      "matchupPct": 61
     },
     {
       "teamId": "1607",
@@ -5815,46 +5665,6 @@
       },
       "oppSupportPct": 64,
       "matchupPct": 74
-    },
-    {
-      "teamId": "20787",
-      "team": "St. Louis City",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/20787.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "cards",
-      "market": "Über 3,5 Karten",
-      "length": 3,
-      "venue": "H",
-      "strong": false,
-      "continuation": {
-        "state": "intakt",
-        "ratePct": 71,
-        "label": "Eigen 71% + Gegner 62% → 67%"
-      },
-      "ratePct": 71,
-      "seq": [
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        true
-      ],
-      "xgBacked": null,
-      "basis": "pure",
-      "preN": 4,
-      "next": {
-        "oppId": "1603",
-        "oppName": "Vancouver Whitecaps",
-        "atHome": false,
-        "date": "2026-09-06",
-        "kickoff": "2026-09-06T02:30:00+00:00",
-        "oppRatePct": 62
-      },
-      "oppSupportPct": 62,
-      "matchupPct": 67
     },
     {
       "teamId": "1595",
@@ -6197,10 +6007,10 @@
       "strong": false,
       "continuation": {
         "state": "neutral",
-        "ratePct": 73,
-        "label": "Eigen 73% + Gegner 40% → 60%"
+        "ratePct": 67,
+        "label": "Eigen 67% + Gegner 40% → 56%"
       },
-      "ratePct": 73,
+      "ratePct": 67,
       "seq": [
         true,
         true,
@@ -6218,7 +6028,7 @@
         "oppRatePct": 40
       },
       "oppSupportPct": 40,
-      "matchupPct": 60
+      "matchupPct": 56
     },
     {
       "teamId": "1598",
@@ -6260,6 +6070,45 @@
       },
       "oppSupportPct": 53,
       "matchupPct": 60
+    },
+    {
+      "teamId": "1605",
+      "team": "Los Angeles Galaxy",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1605.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "cards",
+      "market": "Über 3,5 Karten",
+      "length": 3,
+      "venue": "H",
+      "strong": false,
+      "continuation": {
+        "state": "neutral",
+        "ratePct": 77,
+        "label": "Eigen 77% + Gegner 29% → 58%"
+      },
+      "ratePct": 77,
+      "seq": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "xgBacked": null,
+      "basis": "pure",
+      "preN": 3,
+      "next": {
+        "oppId": "1609",
+        "oppName": "New England Revolution",
+        "atHome": true,
+        "date": "2026-09-06",
+        "kickoff": "2026-09-06T01:30:00+00:00",
+        "oppRatePct": 29
+      },
+      "oppSupportPct": 29,
+      "matchupPct": 58
     },
     {
       "teamId": "1608",

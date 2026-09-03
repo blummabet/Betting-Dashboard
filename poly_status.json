@@ -61,20 +61,18 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "noch kein geprueftes Mehrweg-Ergebnis (der naechste Scan stempelt sie)"
+      "note": "5 geprueft, davon 0 abgeschnitten"
     },
     {
       "id": "settlement_alive",
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
       "ok": false,
-      "nFail": 5,
+      "nFail": 3,
       "failures": [
-        "cs2-ruby1-hs2-2026-08-21: seit 13.2 Tagen offen — keine Auflösung gefunden",
-        "atp-virtane-dimitro-2026-08-27: seit 7.2 Tagen offen — keine Auflösung gefunden",
-        "atp-basavar-schoolk-2026-08-30: seit 4.2 Tagen offen — keine Auflösung gefunden",
-        "atp-fery-musetti-2026-08-30: seit 4.2 Tagen offen — keine Auflösung gefunden",
-        "wta-stoiana-eala-2026-08-30: seit 4.2 Tagen offen — keine Auflösung gefunden"
+        "cs2-ruby1-hs2-2026-08-21: seit 13.6 Tagen offen — keine Auflösung gefunden",
+        "atp-virtane-dimitro-2026-08-27: seit 7.6 Tagen offen — keine Auflösung gefunden",
+        "wta-stoiana-eala-2026-08-30: seit 4.6 Tagen offen — keine Auflösung gefunden"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -95,9 +93,9 @@
       "nFail": 5,
       "failures": [
         "83/204 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (41%) — Trefferquote allein trügt",
-        "   0x84cfffc3f1… n=92 Treffer 55% P&L $-7,630,982",
-        "   0xc3c3b3ef30… n=331 Treffer 51% P&L $-3,955,574",
-        "   0xa0f21e6d35… n=67 Treffer 66% P&L $-2,642,592",
+        "   0x84cfffc3f1… n=94 Treffer 56% P&L $-7,669,256",
+        "   0xc3c3b3ef30… n=332 Treffer 51% P&L $-3,955,994",
+        "   0xa0f21e6d35… n=70 Treffer 66% P&L $-2,622,611",
         "   0xabb89972b2… n=26 Treffer 69% P&L $-2,563,982"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
@@ -142,5 +140,5 @@
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-09-03T05:56:45.735930+00:00"
+  "generatedAt": "2026-09-03T13:58:10.909380+00:00"
 }
