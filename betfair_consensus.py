@@ -612,6 +612,44 @@ def _poly_ist_geld(pl) -> bool:
         return False
 
 
+# 03.09.2026 (Lucas: „Was fehlt dann noch von Poly bei dem Betis - Real Madrid Beispiel?").
+# Antwort: das Geld, komplett. Die Zeile kam aus dem pinnacle_poly_scan (src="scan"), der nur ein
+# Preis-Tripel und ein `vol` liefert — `shares` ist dort per Konstruktion leer. Fuer
+# Betis–Real Madrid stand da `vol: 74.0`. Vierundsiebzig Dollar. Der Geld-Scan hatte den Markt
+# nicht, weil er zwei Bedingungen verfehlt: Anpfiff in ~36h (Fenster: 3h) und $74 Volumen
+# (Schwelle: $7.500). Beides voellig normal so frueh — der Markt fuellt sich noch.
+#
+# Was dabei auffiel und der eigentliche Grund fuer diese Funktion ist: der Poly-PREIS lag bei
+# 47,5¢ fuer Real Madrid, waehrend Pinnacle 69% und Betfair 92% Geldanteil bei Quote 1,41 (~71%)
+# sagten. Gut zwanzig Punkte daneben. Das ist keine abweichende Meinung, das ist ein Markt, den
+# niemand angefasst hat — der Eroeffnungskurs steht noch da. Und die „Zustimmung" bestand darin,
+# dass 47,5¢ (Real) knapp ueber 45¢ (Betis) lag: zweieinhalb Cent Abstand bei $74 Umsatz.
+# Rauschen, das zufaellig in dieselbe Richtung zeigt.
+#
+# Ein solcher Preis darf die Poly-Seite nicht so fuellen, als lehnte sich dort jemand an. Er
+# bleibt sichtbar (die Karte zeigt ihn weiter als „Preis (duenn)"), traegt aber ab jetzt seine
+# Abweichung mit, damit die Oberflaeche ihn kennzeichnen kann statt ihn als Zustimmung zu lesen.
+POLY_PREIS_MAX_ABW_PP = 15.0   # Scan-Preis weiter als das vom Anker weg = keine Anlehnung
+
+
+def poly_preis_abweichung(pl, pinn):
+    """Wie weit liegt ein reiner Scan-PREIS vom Pinnacle-Anker? → Abweichung in Prozentpunkten
+    oder None. REIN/testbar.
+
+    None heisst „nicht pruefbar", nicht „in Ordnung": ohne Anker oder ohne Preis gibt es keine
+    Abweichung zu messen, und der Aufrufer entscheidet, was er daraus macht. Fuer eine Poly-Seite
+    aus echtem Geld (src != "scan") ist die Frage gegenstandslos — dort misst sharePct Geld, nicht
+    einen Preis, und die beiden sind nicht vergleichbar.
+    """
+    if not pl or not pinn or pl.get("src") != "scan":
+        return None
+    pct = pl.get("sharePct")
+    anker = pinn.get(pl.get("side"))
+    if not isinstance(pct, (int, float)) or not isinstance(anker, (int, float)):
+        return None
+    return round(abs(float(pct) - float(anker) * 100.0), 1)
+
+
 def money_map_row(g, pf):
     """11.08.2026 (Lucas Money-Map): build_game-Output g + poly_fav pf -> bubble-fertige Zeile.
     Betfair-Geld (EUR) + Poly-Geld (USD, eigene Seite) + Pinnacle-Probs + Verdikt + nSources. REIN/testbar."""
@@ -650,6 +688,11 @@ def money_map_row(g, pf):
     # nicht als Quelle. `polyGeld` sagt dem Frontend, warum aus 3 eine 2 wurde.
     row["polyGeld"] = _pl_geld
     row["nSources"] = sum(1 for x in (row["betfair"], (row["poly"] if _pl_geld else None), row["pinn"]) if x)
+    # 03.09.2026: Abweichung eines reinen Scan-Preises vom Anker mitschreiben (s. oben).
+    _abw = poly_preis_abweichung(row["poly"], row["pinn"])
+    if _abw is not None:
+        row["polyPreisAbwPP"] = _abw
+        row["polyPreisWeit"] = _abw > POLY_PREIS_MAX_ABW_PP
     return row
 
 

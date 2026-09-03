@@ -785,6 +785,14 @@
     var mmRows = (_md.data.moneyMap && _md.data.moneyMap.rows) || [];
     var kon = mmRows.filter(function (r) { return r.verdict === 'konsens'; }).length;
     var mmAnch = mmRows.filter(function (r) { return r.pinn; }).length;   // 13.08.2026 (Lucas): echter Pinnacle-Anker vorhanden?
+    // 03.09.2026 (Lucas: „Was fehlt dann noch von Poly bei dem Betis - Real Madrid Beispiel?"):
+    // die Kachel schrieb „7 Konsens · BF × Poly × Pinn" — eine Behauptung ueber DREI Buecher fuer
+    // ALLE sieben Zeilen. Bei Betis–Real Madrid bestand die dritte Quelle aus $74 Umsatz und
+    // einem Preis, der 21pp neben dem Anker lag; die Zeile selbst schreibt das korrekt mit
+    // (`polyGeld:false`, `nSources:2`), nur die Kachel las es nie. Jetzt zaehlt sie, wie viele
+    // Zeilen wirklich alle drei tragen — und benennt den Rest, statt ihn mitzuzaehlen.
+    var drei = mmRows.filter(function (r) { return (r.nSources || 0) >= 3; }).length;
+    var ohnePoly = mmRows.filter(function (r) { return r.polyGeld === false; }).length;
     var st = ((_md.data.bfOverview && _md.data.bfOverview.steam) || []).filter(function (x) { return Math.abs(+x.pp || 0) <= 25; });   // Artefakt-Moves raus
     var fl = (_md.data.bfOverview && _md.data.bfOverview.flow) || [];
     var bigPp = st.reduce(function (m, x) { var q = +x.pp || 0; return Math.abs(q) > Math.abs(m) ? q : m; }, 0);
@@ -798,7 +806,9 @@
       K(bets.length, '🎯 BET-Cards', bets.length ? 'Top ' + topConv + '/10' : 'keine offen', bets.length ? 'Conviction-Setz-Kandidaten' : 'Conviction ≥ Schwelle · sammelt', A.blue, 'national-cards') +
       K((pl.openN || 0), '🔥 Heiße Spiele Poly', 'Top-Plays offen', 'Heute Spielenswert ' + (pl.hitPct == null ? '—' : Math.round(pl.hitPct) + '%') + (pl.n ? ' (' + pl.n + ')' : ''), A.poly, 'polywallets') +
       K(st.length, '💷 Betfair heiß', st.length ? 'Märkte mit Zug' : 'ruhig', st.length ? 'größter ' + (bigPp > 0 ? '+' : '') + bigPp.toFixed(1) + 'pp' + (fl.length ? ' · +' + fl.length + ' Zufluss' : '') : '—', A.bf, 'betfair') +
-      K(mmRows.length, '🔗 Money Map', mmRows.length ? 'Spiele im Bild' : 'ruhig', kon + ' Konsens · ' + (mmAnch ? 'BF × Poly × Pinn' : 'BF + Poly (kein Anker)'), A.flow, 'moneymap') +
+      K(mmRows.length, '🔗 Money Map', mmRows.length ? 'Spiele im Bild' : 'ruhig',
+        kon + ' Konsens · ' + drei + '× alle drei' + (ohnePoly ? ' · ' + ohnePoly + ' ohne Poly-Geld' : '')
+          + (mmAnch ? '' : ' · kein Anker'), A.flow, 'moneymap') +
       '</div>';
   }
   
@@ -1493,9 +1503,21 @@
       return '<span style="display:inline-flex;gap:5px;align-items:baseline"><b style="color:var(--mi3);font-weight:600">' + lab + '</b>' + val + (sub ? ' <i style="color:var(--mi3);font-style:normal">' + sub + '</i>' : '') + '</span>';
     };
     var roi = function (b) { return '<b style="color:' + (b.roiPct > 0 ? A.good : b.roiPct < 0 ? A.red : 'var(--mi2)') + '">' + (b.roiPct > 0 ? '+' : '') + (+b.roiPct).toFixed(1) + '% ROI</b>'; };
+    // 03.09.2026 (Lucas-Checkup): die Leiste warb mit „Beste Stufe Conv 7 · +2.5% ROI · n149" —
+    // aus dem GANZEN Bestand über mehrere Engine-Versionen, während Ebene 1 direkt darunter für
+    // dieselbe Stufe `4/30` zeigt und sagt, dass alte Plays nicht zählen. Jetzt rechnet der Puls
+    // auf der aktuellen Engine und trägt seine Untergrenze mit. Was sie nicht hält, steht weiter
+    // da — aber als „nicht belegt", nicht als Empfehlung.
+    var sub = function (b) {
+      var t = 'n' + b.n;
+      if (b.belegt) return t + ' · UG ' + (b.roiUgPct > 0 ? '+' : '') + (+b.roiUgPct).toFixed(1) + '%';
+      return t + ' · <span style="color:' + A.gold + '">nicht belegt'
+        + (b.roiUgPct != null ? ' (UG ' + (b.roiUgPct > 0 ? '+' : '') + (+b.roiUgPct).toFixed(1) + '%)' : '')
+        + '</span>';
+    };
     var parts = [];
-    if (s.bestConv) parts.push(it('Beste Stufe', 'Conv ' + esc(s.bestConv.key) + ' · ' + roi(s.bestConv), 'n' + s.bestConv.n));
-    if (s.bestSignal) parts.push(it('Bestes Signal', esc(s.bestSignal.key) + ' · ' + roi(s.bestSignal), 'n' + s.bestSignal.n));
+    if (s.bestConv) parts.push(it('Beste Stufe', 'Conv ' + esc(s.bestConv.key) + ' · ' + roi(s.bestConv), sub(s.bestConv)));
+    if (s.bestSignal) parts.push(it('Bestes Signal', esc(s.bestSignal.key) + ' · ' + roi(s.bestSignal), sub(s.bestSignal)));
     var inf = s.inflight || {}, live = [];
     if (inf.poly) live.push(inf.poly + ' Poly');
     if (inf.betfair) live.push(inf.betfair + ' Betfair');
