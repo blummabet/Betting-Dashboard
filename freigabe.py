@@ -79,14 +79,41 @@ def _load(name, default=None):
         return {} if default is None else default
 
 
-def untergrenze(werte, z: float = Z):
+UG_MIN_N = 30   # unter so vielen Werten geben wir gar keine Untergrenze aus — siehe unten
+
+
+def untergrenze(werte, z: float = Z, min_n: int = None):
     """Einseitige 95%-Untergrenze des Mittelwerts (Normalapproximation).
 
     Bewusst simpel: bei n>=30 ist die Approximation gutmuetig genug, und die Alternative
-    (Bootstrap) macht das Ergebnis nicht belastbarer, nur schwerer nachzurechnen. Unter drei
-    Werten gibt es keine Streuungsschaetzung -> None statt einer erfundenen Zahl."""
+    (Bootstrap) macht das Ergebnis nicht belastbarer, nur schwerer nachzurechnen.
+
+    🔴 03.09.2026 (Lucas-Checkup der Uebersicht). Die Grenze stand bei drei Werten, und was
+    darueber herauskam, war keine Untergrenze, sondern der Mittelwert mit einem Etikett:
+
+        untergrenze([1.35, 1.35, 1.35]) -> +1.35
+
+    Drei aehnliche Ergebnisse ergeben eine Streuung nahe null, und ohne Streuung faellt die
+    Schranke auf den Punktschaetzer zusammen. In der Uebersicht stand deshalb
+    „Mix bf+money+sharp 3/30 · ROI +135% (UG +74%)" — 74% Rendite „belegt" aus drei Plays.
+    Dieselbe Krankheit wie die geklemmte Varianz in der Whale-Rangliste am 02.09.: eine kleine
+    Stichprobe gibt sich als Gewissheit aus. Ein Punktschaetzer ist kein Beleg, und ein
+    Punktschaetzer mit „UG" davor ist schlimmer als einer ohne.
+
+    Ab jetzt ist die Grenze dort, wo die Approximation laut eigenem Anspruch traegt: n>=30 —
+    dieselbe Zahl, die auch das Freigabe-Gate verlangt. Die 17 Schubladen unter 30 zeigen
+    weiterhin ihren ROI, aber „UG —" statt einer Zahl, hinter der nichts steht.
+
+    Am GATE aendert das nichts: `bewerte` fragt die Untergrenze erst ab n>=MIN_N (30) ueberhaupt
+    ab. Was sich aendert, ist die CLV-Seite — ein clvLb aus 10 CLV-Werten neben 40 Renditen gibt
+    es nicht mehr, und ohne clvLb bleibt die Schublade „geprueft". Auch das ist gewollt: die
+    CLV-Bedingung existiert genau deshalb, weil sie Glueck von Kante trennt.
+
+    `min_n` ist ueberschreibbar, damit Tests die Grenze benennen koennen statt sie zu umgehen.
+    """
     n = len(werte)
-    if n < 3:
+    grenze = UG_MIN_N if min_n is None else min_n
+    if n < max(3, grenze):
         return None
     m = sum(werte) / n
     var = sum((x - m) ** 2 for x in werte) / (n - 1)
