@@ -1054,6 +1054,49 @@ von `compute_streaks.py` gilt unverändert.
 
 ---
 
+### 🪞 Warum die Übersicht immer wieder Fehler hat (04.09.2026)
+
+Lucas: *„Bin gespannt, wann wir die Übersicht mal fehlerfrei haben."* — Die drei Funde des Tages
+waren nicht drei Zufälle, sondern dreimal dieselbe Bauart, und **zwei davon waren Korrekturen,
+die am selben Tag woanders schon gemacht waren**:
+
+| Fund | woanders korrigiert | in der Übersicht |
+|---|---|---|
+| Serien nach Länge statt Seltenheit | morgens, `compute_streaks.py` + Serien-Tab | eigene `allStreaks()` — nicht mitgekommen |
+| „Poly Public" = Vorschau, sendet nicht | morgens, Track-Record | eigene Kachel — hieß weiter so |
+| `basis === 'pure'` | Wert existiert nicht mehr | toter Zweig, wählte still das falsche Label |
+
+**Die Ursache ist strukturell, nicht schlampig.** Die Übersicht fasst elf Engines zusammen und
+**baut deren Logik nach, statt sie zu lesen**: eigene Serien-Sortierung, eigene
+Betfair-Schwellen (`MD_BFTR_*`), eigene Sportart-Zuordnung, eigene Kachel-Texte. Jede Korrektur
+anderswo muss von Hand gespiegelt werden. `main-dashboard.js` trägt inzwischen **73 Kommentare,
+die einen früheren Fehler dokumentieren** — die Datei wird ständig repariert und produziert
+trotzdem weiter dieselbe Fehlerklasse.
+
+Dazu kommt die zweite Bauart: **fest getippte Sätze, die eine Zahl behaupten.** „keine Schublade
+hat ihre Untergrenze über null", „Grundrate X %", „Poly Public" — zum Schreibzeitpunkt richtig,
+danach still veraltet.
+
+**Was dagegen gebaut wurde** (`tests/frontend/vertrag-produzent-uebersicht.test.mjs`): kein
+Frontend darf auf einen Feldwert prüfen, den sein Produzent nicht (mehr) erzeugen kann. Das hätte
+`basis === 'pure'` sofort gefangen — gegengeprüft: baut man den toten Zweig ein, schlägt der Test
+mit *„main-dashboard.js prüft auf basis === 'pure', aber compute_streaks.py kann nur
+prior/liga/unbelegt schreiben — toter Zweig"* an. Dazu Tests, die Übersicht und Serien-Tab an
+dasselbe Sortierkriterium binden und die alten Behauptungs-Sätze verbieten.
+
+Vorbild ist der bestehende Test *„die Schwellen stehen an drei Stellen — und überall gleich"*
+(`uebersicht-bftrack.test.mjs`) — der hat heute funktioniert: er hat angeschlagen, als die
+Betfair-Schwellen auf die Untergrenze umgestellt wurden. Genau diese Idee gehört auf jedes
+Duplikat ausgeweitet.
+
+**Ehrlich zur Ausgangsfrage:** „fehlerfrei" wird die Übersicht nicht, solange sie elf Engines
+zusammenfasst — jede Engine-Änderung kann dort einen Satz falsch machen. Was schließbar ist, ist
+die *Klasse*: dass eine Korrektur woanders hier nicht ankommt. Der richtige Weg ist weniger
+Nachbau (die Übersicht sollte lesen, was der Produzent entschieden hat) und für jedes verbleibende
+Duplikat ein Test, der bei Divergenz anschlägt.
+
+---
+
 ### 🧭 Übersicht-Check: drei Sätze, die etwas anderes sagten als die Zahlen (04.09.2026)
 
 **1. Die Serien-Kachel sortierte weiter nach Länge.** Der Serien-Umbau vom selben Tag
