@@ -89,14 +89,40 @@ class TestStreaks(unittest.TestCase):
         self.assertEqual(over["continuation"]["ratePct"], 0)          # Vorlauf 0/8 Über
         self.assertEqual(over["continuation"]["state"], "wackelt")
 
-    def test_pure_streak_flagged_when_no_prelude(self):
-        # Serie füllt das ganze Fenster → keine unabhängige Basis → basis "pure" (Fallback Roh-Rate).
-        wm = _wm({"42": {"o25Seq": [True] * 15, "over25Rate": 1.0, "bttsRate": 0.4}})
+    def test_ohne_vorlauf_urteilt_die_liga_nicht_die_serie(self):
+        """🔴 04.09.2026 (Lucas-Serien-Check) — dieser Test stand vorher andersherum.
+
+        Er nagelte den Fallback auf die ROH-Rate fest (basis „pure"). Fuellt die Serie aber das
+        15-Spiele-Fenster, IST die Roh-Rate die Serie — also 100 %. Der Kommentar ueber
+        `_pre_streak_rate` warnt sogar davor („tautologische 100 %"), und der Fallback tat es
+        trotzdem. Gemessen: 457 von 733 Serien ohne unabhaengige Basis, 345 davon als „intakt"
+        ausgewiesen, und ALLE 25 der Top-25 nach Laenge urteilten ueber sich selbst.
+
+        Es gibt aber eine unabhaengige Zahl: die Grundrate des MARKTES ueber alle Teams.
+        """
+        wm = _wm({"42": {"o25Seq": [True] * 15, "over25Rate": 1.0, "bttsRate": 0.4},
+                  "50": {"over25Rate": 0.4, "bttsRate": 0.4}})
         out = S.build_streaks(wm)
         over = next(s for s in out["streaks"] if s["type"] == "over25" and s["venue"] == "all")
         self.assertEqual(over["length"], 15)
-        self.assertEqual(over["basis"], "pure")
+        self.assertEqual(over["basis"], "liga", "keine eigene Vorgeschichte → Liga-Massstab")
         self.assertEqual(over["preN"], 0)
+        self.assertEqual(over["continuation"]["ratePct"], 70, "Mittel aus 100% und 40%")
+        self.assertNotEqual(over["continuation"]["ratePct"], 100, "die Serie darf sich nicht selbst belegen")
+        self.assertIn("Liga-Grundrate", over["continuation"]["label"])
+
+    def test_die_seltenheit_haengt_am_markt_nicht_nur_an_der_laenge(self):
+        """Der Kern: 15x „Team trifft" ist harmloser als eine kurze Zu-null-Serie."""
+        wm = _wm({"42": {"o25Seq": [True] * 15, "scoredSeq": [True] * 15, "csSeq": [True] * 4,
+                         "over25Rate": 0.9, "scoredRate": 0.9, "cleanSheetRate": 0.2,
+                         "bttsRate": 0.4}})
+        out = S.build_streaks(wm)
+        trifft = next(s for s in out["streaks"] if s["type"] == "scored" and s["venue"] == "all")
+        zunull = next(s for s in out["streaks"] if s["type"] == "cleanSheet" and s["venue"] == "all")
+        self.assertGreater(trifft["length"], zunull["length"], "die Trifft-Serie ist laenger")
+        self.assertLess(zunull["zufallPct"], trifft["zufallPct"], "aber die Zu-null-Serie ist seltener")
+        self.assertLess(out["streaks"].index(zunull), out["streaks"].index(trifft),
+                        "und steht deshalb weiter oben")
 
     def test_card_streak_from_cornersform(self):
         wm = _wm({})
@@ -125,13 +151,18 @@ class TestStreaks(unittest.TestCase):
         # → kombiniert 0.6*0.8 + 0.4*0.2 = 0.56 → „neutral" (lebendiger Status, 29.06.2026).
         from datetime import date, timedelta
         fut = (date.today() + timedelta(days=2)).isoformat()
-        wm = _wm({"42": {"o25Seq": [True, True, True, True], "over25Rate": 0.8, "bttsRate": 0.4},
+        # 04.09.2026: Der Vorlauf muss lang genug sein (>=5 Spiele), sonst kommt die
+        # Eigentendenz gar nicht mehr vom Team, sondern aus der Liga-Grundrate — und der Test
+        # hier prueft die Gegner-Gewichtung, nicht die Basis-Wahl.
+        wm = _wm({"42": {"o25Seq": [True] * 4 + [False] + [True] * 4,
+                         "over25Rate": 0.8, "bttsRate": 0.4},
                   "50": {"over25Rate": 0.20}})
         wm["groups"]["ENG"]["fixtures"] = [{"home": "42", "away": "50", "date": fut,
                                             "kickoff": fut + "T15:00:00Z"}]
         out = S.build_streaks(wm)
         over = next(s for s in out["streaks"] if s["type"] == "over25" and s["venue"] == "all")
-        self.assertEqual(over["ratePct"], 80)                 # Eigentendenz unverändert
+        self.assertEqual(over["basis"], "prior")
+        self.assertEqual(over["ratePct"], 80)                 # Eigentendenz aus dem Vorlauf (4/5)
         self.assertEqual(over["oppSupportPct"], 20)           # Gegner stützt nur 20%
         self.assertEqual(over["matchupPct"], 56)              # kombiniert
         self.assertEqual(over["continuation"]["state"], "neutral")   # von intakt → offen gedämpft

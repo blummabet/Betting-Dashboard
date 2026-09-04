@@ -23,6 +23,8 @@ Tunebar: cocobet_config.json → profiles.<profil>.streak_momentum.
 """
 from __future__ import annotations
 
+import math
+
 import json
 import os
 from pathlib import Path
@@ -140,6 +142,51 @@ def _pick_team_streak(streaks_for_team, stype, pref_venue):
     return best
 
 
+# ═══════════════════════════════════════════════════════════════════════════════
+#  🔴 04.09.2026 (Lucas-Serien-Check) — DIE STAERKE KAM AUS DER SERIE SELBST
+#
+#  `rate_strength` las `ratePct`. Bis heute war das bei jeder Serie, die das
+#  15-Spiele-Formfenster fuellt, die Serie SELBST — also 100 %, also maximale
+#  Staerke. Gemessen ueber 733 aktive Serien:
+#
+#      466 Serien passierten das Signal-Gate (len>=3, rate>=55)
+#      davon 307 (zwei Drittel) mit einer tautologischen Eigenrate
+#      allein 141-mal „Team trifft" — der Markt mit 81 % Liga-Grundrate
+#
+#  `compute_streaks.py` liefert seit heute stattdessen die LIGA-Grundrate des
+#  Marktes (`basis: "liga"`) — eine unabhaengige Zahl. Nur darf man sie nicht
+#  durch dasselbe Gate schicken: `min_rate_pct = 55` ist fuer eine TEAM-Rate
+#  gedacht („das Team macht das ueblicherweise"). Auf eine Liga-Norm angewandt
+#  wuerde es alle Maerkte unter 55 % rauswerfen — Zu null (28 %), Unter 2,5
+#  (39 %), Sieg-Serie (47 %) —, also ausgerechnet die aussagekraeftigsten.
+#
+#  Deshalb zwei Wege:
+#    · basis="prior": unveraendert. Es gibt eine echte Vorgeschichte des Teams.
+#    · basis="liga":  kein Raten-Gate, dafuer speist sich die Staerke aus der
+#      SELTENHEIT des Laufs (wie unwahrscheinlich waere er bei einem
+#      Durchschnittsteam) und wird gedaempft — „ungewoehnlich fuer den Markt"
+#      ist schwaecheres Wissen als „typisch fuer dieses Team".
+LIGA_DAEMPFUNG = 0.6     # eine Liga-Basis kann nie so stark wiegen wie Team-Historie
+LIGA_BITS_VOLL = 12.0    # ~1 zu 4096 gilt als volle Seltenheits-Staerke
+
+
+def staerke(s: dict, cfg: dict):
+    """(rate_strength|None) — None heisst: diese Serie traegt das Signal nicht. REIN/testbar."""
+    length = s.get("length") or 0
+    if length < cfg["min_length"]:
+        return None
+    rate = s.get("ratePct")
+    if s.get("basis") == "liga":
+        z = s.get("zufallPct")
+        if not isinstance(z, (int, float)) or z <= 0 or z >= 100:
+            return None
+        bits = math.log(100.0 / z, 2)
+        return max(0.0, min(1.0, bits / LIGA_BITS_VOLL)) * LIGA_DAEMPFUNG
+    if rate is None or rate < cfg["min_rate_pct"]:
+        return None
+    return max(0.0, min(1.0, (rate - 50) / 50.0))   # 50%→0, 100%→1
+
+
 def _opp_factor(s: dict, stype: str, cfg: dict) -> float:
     """Gegner-Normalisierung: trägt der nächste Gegner die Serien-Richtung mit? (roh, kein Zirkel)."""
     opp = (s.get("next") or {}).get("oppRatePct")
@@ -192,10 +239,9 @@ class StreakMomentumSignal(Signal):
                 if not s:
                     continue
                 length = s.get("length") or 0
-                rate = s.get("ratePct")
-                if length < cfg["min_length"] or rate is None or rate < cfg["min_rate_pct"]:
+                rate_strength = staerke(s, cfg)
+                if rate_strength is None:
                     continue
-                rate_strength = max(0.0, min(1.0, (rate - 50) / 50.0))   # 50%→0, 100%→1
                 xgf = _xg_factor(s, cfg)
                 oppf = _opp_factor(s, stype, cfg)
                 pmul = persist.get(stype, 0.5)
@@ -246,10 +292,9 @@ class StreakMomentumSignal(Signal):
             if not s:
                 continue
             length = s.get("length") or 0
-            rate = s.get("ratePct")
-            if length < cfg["min_length"] or rate is None or rate < cfg["min_rate_pct"]:
+            rate_strength = staerke(s, cfg)
+            if rate_strength is None:
                 continue
-            rate_strength = max(0.0, min(1.0, (rate - 50) / 50.0))
             oppf = _opp_factor(s, stype, cfg)
             pmul = persist.get(stype, 0.4)
             score += sign * min(length, 8) * cfg["per_streak"] * rate_strength * pmul * oppf

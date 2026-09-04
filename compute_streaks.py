@@ -87,6 +87,71 @@ FORM_MARKETS = [
 ]
 
 
+# ═══════════════════════════════════════════════════════════════════════════════
+#  📏 LIGA-GRUNDRATE & SELTENHEIT (04.09.2026, Lucas: „sind die wirklich optimal
+#     dargestellt, oder kann man die Serien schlauer und wichtiger machen?")
+#
+#  Gemessen am 04.09. über 733 aktive Serien — zwei Zahlen erklären fast alles:
+#
+#      Markt            Liga-Grundrate    5er-Serie rein zufällig
+#      Team trifft            74 %                22,7 %
+#      Über 2,5               65 %                11,2 %
+#      Ungeschlagen           53 %                 4,2 %
+#      Sieg-Serie             31 %                 0,3 %
+#      Zu null                17 %                 0,01 %
+#
+#  Das Board sortierte nach LÄNGE. Länge ist aber über Märkte hinweg nicht
+#  vergleichbar: „Team trifft" passiert in drei von vier Spielen, „Zu null" in
+#  einem von sechs. Folge: **17 der Top-25 waren „Team trifft"** — der
+#  langweiligste Markt im Angebot —, während Inters 15er-Ungeschlagen-Serie
+#  (0,007 % Zufall) UNTER sechs „Team trifft 15×"-Einträgen stand, die 160-mal
+#  wahrscheinlicher sind. Barcelonas 8er-Siegesserie kam gar nicht vor.
+#
+#  Deshalb bekommt jede Serie ihre **Zufallswahrscheinlichkeit**: wie oft käme
+#  genau dieser Lauf bei einem Durchschnittsteam dieses Marktes vor (p^Länge).
+#  Danach wird sortiert. Eine 4er-Zu-null-Serie schlägt damit eine 15er-
+#  Trifft-Serie — zu Recht, sie ist rund hundertmal unwahrscheinlicher.
+#
+#  Die Grundrate kommt aus DIESEM Lauf über ALLE Teams des Datensatzes, nicht
+#  aus den Serien selbst (die sind durch ihre Existenz nach oben verzerrt).
+_RATE_UNTERGRENZE, _RATE_OBERGRENZE = 0.04, 0.96
+
+
+def liga_grundraten(form: dict, cf: dict) -> dict:
+    """{marktKey: p} — Grundrate je Markt über alle Teams. REIN/testbar.
+
+    p ist immer die Rate IN RICHTUNG der Serie: bei „Unter 2,5" also 1 − over25Rate.
+    Ohne Daten für einen Markt fehlt der Schlüssel — dann gibt es keine Seltenheit
+    und auch keine erfundene."""
+    out = {}
+    for key, _sf, _t, _m, ratefield, target_false in FORM_MARKETS:
+        werte = [v.get(ratefield) for v in (form or {}).values() if isinstance(v, dict)]
+        werte = [float(x) for x in werte if isinstance(x, (int, float))]
+        if not werte:
+            continue
+        p = sum(werte) / len(werte)
+        out[key] = 1.0 - p if target_false else p
+    for key, ratefield, target_false in (("cornersOver", "overLineRate", False),
+                                         ("cornersUnder", "overLineRate", True),
+                                         ("cards", "cardOverRate", False)):
+        werte = [v.get(ratefield) for v in (cf or {}).values() if isinstance(v, dict)]
+        werte = [float(x) for x in werte if isinstance(x, (int, float))]
+        if werte:
+            p = sum(werte) / len(werte)
+            out[key] = 1.0 - p if target_false else p
+    return {k: max(_RATE_UNTERGRENZE, min(_RATE_OBERGRENZE, v)) for k, v in out.items()}
+
+
+def zufall_pct(p, length: int):
+    """Wie wahrscheinlich ist dieser Lauf bei einem Durchschnittsteam? In Prozent. REIN.
+
+    Bewusst KEIN Signal — nur ein Maßstab, der Märkte vergleichbar macht. Eine seltene
+    Serie ist nicht deshalb eine gute Wette; sie ist nur die, über die zu reden lohnt."""
+    if p is None or not length:
+        return None
+    return round((p ** length) * 100, 5)
+
+
 def _lead_run(seq: list, target: bool) -> int:
     """Länge der führenden (jüngsten) Serie, in der seq[i] == target."""
     n = 0
@@ -284,6 +349,39 @@ def _next_match_signal(picks, pick_key, streak_type):
     return None
 
 
+# ═══════════════════════════════════════════════════════════════════════════════
+#  🧩 LOGISCH EINGESCHLOSSENE SERIEN (04.09.2026, Lucas-Serien-Check)
+#
+#  Wer gewinnt, ist zwangslaeufig ungeschlagen. Wer zu null spielt, hat
+#  zwangslaeufig „beide treffen — Nein". Sind beide Serien GLEICH LANG, beschreiben
+#  sie exakt dieselben Spiele — die zweite traegt dann null zusaetzliche Information.
+#
+#  Gemessen am 04.09.: bei 8 von 14 Teams mit Siegesserie war die Ungeschlagen-Serie
+#  exakt gleich lang (Bayern 7/7, Freiburg 7/7, Arsenal 3/3, Juventus 3/3,
+#  Barcelona 5/5, Monaco 4/4, AC Milan 3/3, Nashville 4/4). Auf dem Board standen
+#  sie als zwei Eintraege, im Signal zaehlten sie als zwei Bestaetigungen — dieselben
+#  Spiele, doppelt gezaehlt. Juventus trug fuenf Serien ueber DREI Spiele.
+#
+#  Laengere Ungeschlagen-Serien bleiben natuerlich eigenstaendig (Inter: Sieg 4x,
+#  ungeschlagen 15x — die 11 Remis-Spiele sind eine echte Zusatzaussage).
+_IMPLIZIERT_VON = {"unbeaten": "win", "bttsNo": "cleanSheet"}
+
+
+def markiere_impliziert(streaks: list) -> list:
+    """`impliziertVon` setzen, wo eine Serie exakt dieselben Spiele beschreibt wie eine
+    striktere. Loescht nichts — Konsumenten entscheiden selbst. REIN/testbar."""
+    nach_team = {}
+    for s in streaks:
+        nach_team.setdefault((s.get("teamId"), s.get("venue")), {})[s.get("type")] = s
+    for (_tid, _v), typen in nach_team.items():
+        for weit, streng in _IMPLIZIERT_VON.items():
+            a, b = typen.get(weit), typen.get(streng)
+            if a and b and a.get("length") == b.get("length"):
+                a["impliziertVon"] = streng
+                a["impliziertLabel"] = b.get("market")
+    return streaks
+
+
 def build_streaks(wm: dict) -> dict:
     form = wm.get("form") or {}
     cf = wm.get("cornersForm") or {}
@@ -297,6 +395,7 @@ def build_streaks(wm: dict) -> dict:
     next_fx = _next_fixtures(wm)
     picks = wm.get("picks") or {}   # Stufe 2: Signale/Linie des nächsten Spiels
     xg_totals = _team_xg_totals(wm)  # 04.07.2026: xG-Deckung pro Team (most-recent-first)
+    grundraten = liga_grundraten(form, cf)   # 04.09.2026: unabhaengiger Massstab je Markt
     streaks = []
 
     def _emit(tid, seq, venue_seq, target, market, rate, target_false, key):
@@ -309,10 +408,35 @@ def build_streaks(wm: dict) -> dict:
             length = _lead_run(fseq, target)
             if length < MIN_LEN:
                 continue
-            # Grundrate OHNE die Serie (echte Basis); wenn kein Vorlauf: Fallback Roh-Rate + Flag „reine Serie".
+            # Grundrate OHNE die Serie (echte Basis).
+            #
+            # 🔴 04.09.2026 (Lucas-Serien-Check). Der Fallback war eine Tautologie, und der
+            # Kommentar ueber `_pre_streak_rate` warnt sogar davor: fuellt die Serie das
+            # 15er-Fenster, ist die Roh-Rate die Serie SELBST — also 100 %. Gemessen:
+            #
+            #     733 Serien · 457 ohne unabhaengige Grundrate · davon 345 als „intakt"
+            #     ausgewiesen · und ALLE 25 der Top-25 nach Laenge urteilten ueber sich selbst.
+            #
+            # „Bournemouth Team trifft 15x — Eigen 100 % + Gegner 87 % → 95 % → Serie intakt":
+            # die 100 % sind kein Beleg, sie SIND die Serie. Die gruene Plakette am Kopf des
+            # Boards stand damit auf nichts.
+            #
+            # Es gibt aber eine unabhaengige Zahl: die Grundrate des MARKTES ueber alle Teams.
+            # Gegen die gemessen heisst „Team trifft 15x" 74 % Basis (unauffaellig fuer ein
+            # starkes Team), waehrend „Zu null 4x" gegen 17 % laeuft. Das ist ein Urteil aus
+            # Daten statt aus sich selbst.
             base, pre_n = _pre_streak_rate(fseq, target, length)
             has_prior = base is not None
-            cont = _continuation(base, False, length) if has_prior else _continuation(rate, target_false, length)
+            liga_p = grundraten.get(key)
+            if has_prior:
+                cont, basis_art = _continuation(base, False, length), "prior"
+            elif liga_p is not None:
+                cont, basis_art = _continuation(liga_p, False, length), "liga"
+                cont["label"] = f"Liga-Grundrate {cont['ratePct']}% (keine eigene Vorgeschichte)"
+            else:
+                # Weder Vorlauf noch Liga-Basis: dann gibt es KEIN Urteil, keine Ersatzzahl.
+                cont, basis_art = {"state": "unbelegt", "ratePct": None,
+                                   "label": "keine unabhaengige Basis"}, "keine"
             # seqViz: letzte ~8 Spiele dieser Richtung als Punkte (True=Treffer), most-recent-first.
             # Führende True = die aktuelle Serie, das erste False zeigt, wo sie begann.
             seq_viz = [bool(x) == target for x in fseq[:8]]
@@ -324,7 +448,11 @@ def build_streaks(wm: dict) -> dict:
                 "type": key, "market": market, "length": length, "venue": venue,
                 "strong": length >= STRONG_LEN, "continuation": cont,
                 "ratePct": cont["ratePct"], "seq": seq_viz, "xgBacked": xgb,
-                "basis": "prior" if has_prior else "pure", "preN": pre_n,
+                "basis": basis_art, "preN": pre_n,
+                # Wie unwahrscheinlich ist dieser Lauf bei einem Durchschnittsteam dieses
+                # Marktes? Der Massstab, der Maerkte vergleichbar macht — siehe zufall_pct.
+                "zufallPct": zufall_pct(grundraten.get(key), length),
+                "ligaBasisPct": (round(grundraten[key] * 100) if key in grundraten else None),
             }
             nf = next_fx.get(str(tid))
             if nf:
@@ -377,12 +505,21 @@ def build_streaks(wm: dict) -> dict:
         if kseq:
             _emit(tid, kseq, kvenue, True, f"Über {kl_s} Karten", krate, False, "cards")
 
-    # längste zuerst; bei Gleichstand „intakt" vor dem Rest
-    _order = {"intakt": 0, "neutral": 1, "wackelt": 2}
-    streaks.sort(key=lambda s: (-s["length"], _order.get(s["continuation"]["state"], 1)))
+    markiere_impliziert(streaks)
+
+    # 04.09.2026: SELTENSTE zuerst, nicht laengste. Laenge ist ueber Maerkte hinweg nicht
+    # vergleichbar (siehe liga_grundraten); die Zufallswahrscheinlichkeit ist es. Serien ohne
+    # Massstab landen hinten und behalten dort ihre Laengen-Sortierung — kein Urteil ohne Basis.
+    _order = {"intakt": 0, "neutral": 1, "wackelt": 2, "unbelegt": 3}
+    streaks.sort(key=lambda s: (s.get("zufallPct") is None,
+                                s.get("zufallPct") if s.get("zufallPct") is not None else 0.0,
+                                -s["length"],
+                                _order.get(s["continuation"]["state"], 1)))
     return {
         "_meta": {"dataset": D.active_dataset(), "generatedAt": datetime.now(timezone.utc).isoformat(),
-                  "minLen": MIN_LEN, "strongLen": STRONG_LEN},
+                  "minLen": MIN_LEN, "strongLen": STRONG_LEN,
+                  "sortiert": "zufallPct",
+                  "ligaGrundraten": {k: round(v * 100) for k, v in sorted(grundraten.items())}},
         "streaks": streaks,
     }
 

@@ -247,13 +247,25 @@
     const oppPct = (s.next && s.next.oppRatePct != null) ? s.next.oppRatePct : null;
     const oppSup = (s.oppSupportPct != null) ? s.oppSupportPct : oppPct;   // färbt nach Stütze FÜR die Serie
     let bars = '';
-    if (ownPct != null) bars += _miniBar('Eigen', ownPct, _rateColor(ownPct));
+    // 04.09.2026: Das Balken-Label hieß immer „Eigen" — auch dort, wo die Zahl gar nicht vom
+    // Team kam. Bei 362 von 571 Serien gibt es keine eigene Vorgeschichte (die Serie füllt das
+    // 15er-Fenster), dort steht jetzt die LIGA-Grundrate. Sie „Eigen" zu nennen wäre die alte
+    // Tautologie mit neuem Inhalt.
+    const basisLbl = s.basis === 'liga' ? 'Liga' : 'Vorher';
+    if (ownPct != null) bars += _miniBar(basisLbl, ownPct, _rateColor(ownPct));
     if (oppPct != null) bars += _miniBar('Gegner', oppPct, _rateColor(oppSup));
+    const seltenTxt = _streakSeltenTxt(s);
+    const selten = seltenTxt
+      ? `<div style="font-size:10.5px;color:var(--muted);margin-top:2px;">🎲 ${seltenTxt}</div>` : '';
+    const impl = s.impliziertVon
+      ? `<div style="font-size:10.5px;color:var(--muted);margin-top:2px;">↳ dieselben Spiele wie <strong>${s.impliziertLabel || s.impliziertVon}</strong> — keine zusätzliche Aussage</div>` : '';
     return `<div style="display:flex;align-items:flex-start;gap:11px;padding:14px 6px;border-bottom:1px solid var(--border);">
       ${logo ? `<img src="${logo}" style="width:30px;height:30px;object-fit:contain;flex-shrink:0;margin-top:2px;" loading="lazy" alt="">` : ''}
       <div style="flex:1;min-width:0;">
         <div style="font-size:15px;font-weight:800;color:var(--text);overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${s.team} <span style="font-size:11px;color:var(--muted);font-weight:600;">${s.leagueName || s.league || ''}</span></div>
         <div style="font-size:12.5px;color:var(--text);margin-top:3px;">${ic} ${s.market}${venue} · <strong style="color:${c.col};">${s.length} in Folge</strong> ${_streakDotsHtml(s.seq, c.col)}</div>
+        ${selten}
+        ${impl}
         ${_streakNextHtml(s)}
         ${_streakSignalHtml(s)}
       </div>
@@ -282,14 +294,44 @@
   window.wmSetStreakVenue  = (v) => { _streakVenueF = v; _renderStreaksInto(); };
   window.wmSetStreakHot    = () => { _streakHotOnly = !_streakHotOnly; _renderStreaksInto(); };
 
-  // Heat-Score: Länge + Status (intakt/wackelt) + Signal-Bestätigung. Treibt Hero + „Heiß"-Filter.
+  // 🔴 04.09.2026 (Lucas: „sind die Serien wirklich optimal dargestellt?"). Der Heat-Score
+  // war die LÄNGE — und Länge ist über Märkte hinweg nicht vergleichbar. Gemessen über 733
+  // aktive Serien: „Team trifft" hat 81 % Liga-Grundrate, „Zu null" 28 %. Eine 5er-Serie ist
+  // damit im einen Markt in jedem vierten Fall reiner Zufall, im anderen praktisch nie.
+  //
+  // Folge: 17 der Top-25 waren „Team trifft" — der langweiligste Markt im Angebot —, während
+  // Barcelonas 8er-Siegesserie gar nicht auftauchte und Inters 15er-Ungeschlagen-Serie unter
+  // sechs „Team trifft 15×" stand, die zigfach wahrscheinlicher sind.
+  //
+  // Jetzt zählt die SELTENHEIT: `zufallPct` ist die Wahrscheinlichkeit, dass ein
+  // Durchschnittsteam dieses Marktes genau diesen Lauf hinlegt. In Bits ausgedrückt
+  // (log2(1/p)) landet sie im selben Zahlenbereich wie vorher die Länge, die Schwellen unten
+  // bleiben also lesbar: 5 ≈ „einer von 32", 6 ≈ „einer von 64".
+  //
+  // Ohne Maßstab (Markt ohne Grundrate) bleibt es bei der Länge — kein Urteil ohne Basis.
+  function _streakSeltenheit(s) {
+    const z = s.zufallPct;
+    if (typeof z !== 'number' || z <= 0) return null;
+    return Math.log2(100 / z);
+  }
   function _streakHeat(s) {
-    let h = s.length || 0;
+    const sel = _streakSeltenheit(s);
+    let h = (sel != null) ? sel : (s.length || 0);
     const st = (s.continuation || {}).state;
     if (st === 'intakt') h += 2; else if (st === 'wackelt') h -= 3;
+    // Eine Serie, die exakt dieselben Spiele beschreibt wie eine striktere (Ungeschlagen ==
+    // Sieg-Serie), ist keine zweite Nachricht — sie gehört nicht ins Spotlight.
+    if (s.impliziertVon) h -= 6;
     const si = s.signalInfo;
     if (si) h += (si.state === 'confirm' ? (si.count || 0) : -(si.count || 0));
     return h;
+  }
+  // „Wie selten ist das?" in Worten — eine Zahl wie 0,0217 % liest niemand.
+  function _streakSeltenTxt(s) {
+    const z = s.zufallPct;
+    if (typeof z !== 'number' || z <= 0) return '';
+    const eins = Math.round(100 / z);
+    return eins >= 2 ? `1 von ${eins.toLocaleString('de-DE')} bei Liga-Schnitt` : '';
   }
   const _streakIsHot = (s) => (s.continuation || {}).state === 'intakt' && _streakHeat(s) >= 6;
 
@@ -311,6 +353,7 @@
         <span style="font-size:12px;color:var(--muted);">${ic} ${s.market}${venue}</span>
       </div>
       <div style="margin-top:8px;">${_streakDotsHtml(s.seq, c.col)}</div>
+      ${_streakSeltenTxt(s) ? `<div style="margin-top:5px;font-size:10.5px;color:var(--muted);">🎲 ${_streakSeltenTxt(s)}</div>` : ''}
       <div style="margin-top:6px;font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;color:${c.col};">${c.label}</div>
       ${sigBadge}
     </div>`;
@@ -372,7 +415,7 @@
       + groups.map(g => _fbtn(_streakTypeF === g, _STREAK_GROUP_LABEL[g], `wmSetStreakType('${g}')`)).join('')
       + `<button onclick="wmSetStreakHot()" style="background:${_streakHotOnly ? '#f0883e' : 'transparent'};color:${_streakHotOnly ? '#000' : '#f0883e'};border:1px solid #f0883e;border-radius:8px;padding:5px 11px;font-size:12px;font-weight:800;cursor:pointer;margin:0 4px 6px 0;">🔥 Nur heiße</button></div>`;
 
-    html += `<div style="font-size:11px;color:var(--muted);margin:0 2px 12px;line-height:1.5;">🟢 „Serie intakt" = Tendenz + Gegner + Signale stützen die Strähne · 🟡 „wackelt" = läuft gegen die Stütze (eher Zufall). Reiner Content — keine Wett-Garantie.</div>`;
+    html += `<div style="font-size:11px;color:var(--muted);margin:0 2px 12px;line-height:1.5;">Sortiert nach <b>Seltenheit</b>, nicht nach Länge: „Team trifft" gelingt im Liga-Schnitt in 81 % der Spiele, „Zu null" in 28 % — eine gleich lange Serie heißt dort etwas ganz anderes. 🟢 „Serie intakt" = Tendenz + Gegner + Signale stützen die Strähne · 🟡 „wackelt" = läuft gegen die Stütze (eher Zufall). Reiner Content — keine Wett-Garantie.</div>`;
 
     // Hero-Spotlight: die heißesten Serien groß oben.
     if (hero.length) {

@@ -997,6 +997,63 @@ Registry, und Abgeschnittenes steht als „+N weitere" mit Namen und Werten im T
 
 ---
 
+### 🔥 Serien: Länge war der falsche Maßstab (04.09.2026)
+
+Lucas: *„sind die Serien wirklich optimal dargestellt, oder kann man da was verbessern, um sie
+schlauer und wichtiger zu machen?"* — Gemessen über 733 aktive Serien: drei Sachen, und die
+erste erklärt fast alles.
+
+**1. Länge ist über Märkte hinweg nicht vergleichbar.** Die Liga-Grundraten liegen weit
+auseinander:
+
+| Markt | Liga-Grundrate | 5er-Serie rein zufällig |
+|---|---|---|
+| Team trifft | 81 % | 35 % |
+| Über 2,5 | 61 % | 8 % |
+| Ungeschlagen | 69 % | 16 % |
+| Sieg-Serie | 47 % | 2,3 % |
+| Zu null | 28 % | 0,17 % |
+
+Das Board sortierte nach **Länge**. Folge: **17 der Top-25 waren „Team trifft"** — der
+häufigste Markt im Angebot —, während Inters 15er-Ungeschlagen-Serie *unter* sechs „Team trifft
+15×"-Einträgen stand und Barcelonas 8er-Siegesserie gar nicht vorkam. Jede Serie trägt jetzt
+ihre **Zufallswahrscheinlichkeit** (`zufallPct` = p^Länge gegen die Liga-Grundrate des Marktes),
+und danach wird sortiert. Die neue Spitze: Parma 9× Unter 2,5 (1 zu 4.613), Colorado 5× Zu null
+(1 zu 3.702) — beide vorher unsichtbar.
+
+**2. Die grüne Plakette urteilte über sich selbst.** Füllt eine Serie das 15-Spiele-Formfenster,
+war die „Eigentendenz" die Serie selbst — 100 %. Der Kommentar über `_pre_streak_rate` warnt seit
+dem 08.08. wörtlich vor der *„tautologischen 100 %"*, und der Fallback tat es trotzdem:
+
+> **457 von 733** Serien ohne unabhängige Basis · **345** davon als „intakt" ausgewiesen ·
+> **alle 25** der Top-25 nach Länge urteilten über sich selbst.
+
+*„Bournemouth Team trifft 15× — Eigen 100 % + Gegner 87 % → 95 % → Serie intakt"*: die 100 % sind
+kein Beleg, sie **sind** die Serie. Jetzt tritt an die Stelle die Liga-Grundrate des Marktes
+(`basis: "liga"`) — eine unabhängige Zahl —, und der Balken heißt dort auch „Liga" statt „Eigen".
+`basis: "pure"` gibt es nicht mehr.
+
+**Das wirkte bis ins Signal.** `streak_momentum` las dieselbe Rate als Stärke: **307 von 466**
+Serien, die das Signal-Gate passierten, taten das mit einer tautologischen 100 %-Rate — allein
+141-mal „Team trifft". Die Liga-Rate darf aber nicht durch dasselbe Gate (`min_rate_pct = 55` ist
+für eine *Team*-Rate gedacht; auf eine Liga-Norm angewandt fielen Zu null 28 %, Unter 2,5 39 % und
+Sieg-Serie 47 % komplett heraus — die aussagekräftigsten Märkte). Deshalb zwei Wege: mit
+Team-Vorgeschichte wie bisher, ohne sie speist sich die Stärke aus der **Seltenheit** des Laufs
+und ist auf 0,6 gedeckelt — „ungewöhnlich für den Markt" ist schwächeres Wissen als „typisch für
+dieses Team".
+
+**3. Gleich lange Sieg- und Ungeschlagen-Serien sind dieselben Spiele.** Bei **8 von 14** Teams
+mit Siegesserie war die Ungeschlagen-Serie exakt gleich lang (Bayern 7/7, Freiburg 7/7, Arsenal
+3/3, Barcelona 5/5 …) — zwei Einträge, eine Nachricht. Juventus trug fünf Serien über drei Spiele.
+`impliziertVon` markiert das jetzt (auch Zu null → „beide treffen — Nein"); längere
+Ungeschlagen-Serien bleiben eigenständig, weil die Remis-Spiele echte Zusatzinfo sind.
+
+**Was ausdrücklich NICHT passiert ist:** die Seltenheit ist kein Signal und keine Wettempfehlung.
+Eine seltene Serie ist nur die, über die zu reden lohnt — die Gambler's-Fallacy-Warnung im Kopf
+von `compute_streaks.py` gilt unverändert.
+
+---
+
 ### 🧭 Das Lern-Gedächtnis war 18 Tage lang (04.09.2026)
 
 Lucas: *„der Bereich wo quasi gelernt wird steht immer noch mit 500 Plays — ist das eh kein hard
