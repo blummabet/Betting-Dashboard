@@ -1054,6 +1054,46 @@ von `compute_streaks.py` gilt unverändert.
 
 ---
 
+### 📋 Arbeitsvereinbarung: Übersicht-Checks (04.09.2026)
+
+Lucas: *„Und wir machen weiterhin Übersicht-Checks und du besserst es dann immer so aus, dass es
+nachhaltig ist."* — Damit das nicht nur in einem Chatverlauf steht, hier die Regel, nach der an
+diesem Tag sechsmal gearbeitet wurde (Stake, Poly-Pushs, Betfair, Cards, Serien, Übersicht):
+
+**1. Erst messen, dann behaupten.** Zweimal an dem Tag war meine erste Diagnose falsch — die
+„Pokalspiele" in der Premier League waren ein echter Spieltag (20 Teams, 10 Paarungen), und die
+„unmögliche Eigenrate" bei Mönchengladbach war die absichtliche Vor-Serien-Rate. Beide Male hätte
+ein Fix ohne Nachrechnen Schaden angerichtet. **Ein Befund ohne Zahl ist eine Vermutung.**
+
+**2. Die Klasse schließen, nicht die Instanz.** Jeder Fund bekommt die Frage: *wieso konnte das
+entstehen, und wo kann dasselbe noch entstehen?* Der Serien-Fund war nicht „eine Kachel sortiert
+falsch", sondern „Länge ist kein marktübergreifender Maßstab" — und traf sechs Stellen. Der
+Übersicht-Fund war nicht „drei Sätze sind falsch", sondern „die Übersicht baut Logik nach, statt
+sie zu lesen".
+
+**3. Das Urteil gehört dorthin, wo die Zahl entsteht.** Vergleicht ein Frontend selbst gegen eine
+Schwelle, gibt es die Schwelle zweimal. Produzenten schreiben ihr Urteil ins Artefakt
+(`urteil`, `belegt`, `basis`, `zufallPct`), Frontends lesen es.
+
+**4. Jeder Fix braucht seinen Gegenbeweis.** Ein Wächter, den man nicht zum Anschlagen gebracht
+hat, ist Dekoration. Bei jedem Guard dieses Tages wurde der Fehler versuchsweise wieder eingebaut
+und geprüft, dass er gefangen wird.
+
+**5. Tests fangen, was jemand zu testen dachte — Batterien fangen den echten Zustand.** Deshalb
+läuft `uebersicht_integrity.py` bei jedem Durchgang gegen die Live-Artefakte. Der erste Lauf fand
+sofort eine **Rollout-Lücke**, die kein Unit-Test sehen konnte: der Code war korrigiert, die
+Artefakte auf der Platte noch alt.
+
+**6. Fehlende Information ist keine Erlaubnis.** Kein Urteil ist etwas anderes als ein gemessenes
+Nein. Unbekannt darf nie als harmloser Default rendern (`null`, nicht `0`) und nie an einer Sperre
+vorbeirutschen.
+
+**7. Der Commit nennt den Vorfall.** Nicht „Bug gefixt", sondern die konkrete Zeile vom Board und
+die Zahl dahinter. Sonst weiß in drei Wochen niemand mehr, warum die Regel so ist — und baut sie
+zurück.
+
+---
+
 ### 🧭 Guard-Batterie für die Übersicht (04.09.2026)
 
 Lucas: *„mir wäre es wichtig fehlerfrei zu sein, weil sonst ist die ganze Arbeit in Wahrheit
