@@ -156,6 +156,58 @@ def test_kombis_zaehlen_nicht_als_auffaelliger_einsatz():
 
 
 # ── Quoten: nie ohne Untergrenze ─────────────────────────────────────────────
+# ── Das Urteil haengt an der Rendite, nicht an der Trefferquote ──────────────
+# 04.09.2026, der wichtigste Fund des Tages: `belegt` hing an „Trefferquote ueber 50%". Das
+# ist aus der Wallet-Logik uebernommen, wo Maerkte nahe bei Muenzwurf liegen. Bei Wetten mit
+# unterschiedlichen Quoten sagt es nichts — 63,9% Treffer bei Ø-Quote 1,72 ergaben auf 950
+# Beinen einen ROI von -6,8%. Wer bei 1,20 setzt, braucht 83% zum Nullpunkt.
+
+def _bein(treffer, quote):
+    return {"treffer": treffer, "quote": quote}
+
+
+def test_hohe_trefferquote_bei_niedrigen_quoten_traegt_NICHT():
+    """80% Treffer bei Quote 1,20 ist ein Verlustgeschaeft: 0,8*0,2 - 0,2 = -0,04."""
+    ws = [w(wid="t%d" % i, beine=[_bein(i < 80, 1.20)]) for i in range(100)]
+    s = A._schublade(ws)
+    assert s["quote"] == 0.8, "die Trefferquote steht weiter da"
+    assert s["beinRoi"] is not None and s["beinRoi"] < 0
+    assert s["belegt"] is False, "eine Trefferquote ueber 50% ist hier kein Beleg"
+
+
+def test_niedrige_trefferquote_bei_hohen_quoten_kann_tragen():
+    """40% Treffer bei Quote 3,50: 0,4*2,5 - 0,6 = +0,40. Die Trefferquote allein saehe
+    schlecht aus — sie liegt weit unter dem Muenzwurf, den das alte Kriterium verlangte."""
+    ws = [w(wid="t%d" % i, beine=[_bein(i < 80, 3.50)]) for i in range(200)]
+    s = A._schublade(ws)
+    assert s["quote"] == 0.4
+    assert abs(s["beinRoi"] - 0.4) < 1e-9
+    assert s["belegt"] is True
+
+
+def test_ohne_quote_kein_renditeurteil():
+    ws = [w(wid="t%d" % i, beine=[{"treffer": True}]) for i in range(100)]
+    s = A._schublade(ws)
+    assert s["n"] == 100, "die Trefferquote laesst sich zaehlen"
+    assert s["beinN"] == 0
+    assert s["beinRoi"] is None
+    assert s["belegt"] is False, "ohne Quote gibt es kein Urteil, auch bei 100% Treffern"
+
+
+def test_zu_wenige_beine_geben_kein_urteil():
+    ws = [w(wid="t%d" % i, beine=[_bein(True, 5.0)]) for i in range(5)]
+    s = A._schublade(ws)
+    assert s["beinRoi"] == 4.0
+    assert s["beinRoiUg"] is None
+    assert s["belegt"] is False, "+400% auf n=5 ist kein Beleg"
+
+
+def test_durchschnittsquote_faehrt_mit():
+    """Eine Trefferquote ohne die Quoten, auf die sie sich bezieht, ist nicht lesbar."""
+    ws = [w(wid="a", beine=[_bein(True, 2.0)]), w(wid="b", beine=[_bein(True, 3.0)])]
+    assert A._schublade(ws)["oQuote"] == 2.5
+
+
 def test_kleine_stichprobe_bekommt_keine_untergrenze():
     q = A._quote(4, 5)
     assert q["quote"] == 0.8
@@ -167,13 +219,13 @@ def test_grosse_stichprobe_bekommt_eine_untergrenze():
     q = A._quote(70, 100)
     assert q["ug"] is not None
     assert q["ug"] < q["quote"], "die Untergrenze liegt unter dem Punktschaetzer"
-    assert q["belegt"] is True
+    assert q["belegt"] is False, ("_quote urteilt nicht mehr — das Urteil kommt aus der "
+                                  "Rendite, siehe _schublade")
 
 
-def test_belegt_verlangt_mehr_als_muenzwurf():
-    q = A._quote(51, 100)
-    assert q["quote"] == 0.51
-    assert q["belegt"] is False, "51% auf n=100 ist kein Beleg"
+def test_die_trefferquote_setzt_kein_belegt_mehr():
+    for treffer in (51, 70, 95):
+        assert A._quote(treffer, 100)["belegt"] is False
 
 
 def test_ohne_daten_keine_quote():

@@ -604,14 +604,31 @@
   }
   window._srTab = function (t) { SR_TAB = t; _srRender(); };
 
-  /** Eine Zahl ohne Basis ist im Rest des Boards verboten — hier auch. */
+  /** Trefferquote — als Beschreibung. Sie entscheidet NICHTS mehr.
+      04.09.2026: `belegt` hing hier an „Trefferquote über 50 %". Bei Wetten mit
+      unterschiedlichen Quoten sagt das nichts: 63,9 % Treffer bei Ø-Quote 1,72 ergaben in
+      den ersten 950 Beinen einen ROI von −6,8 %. Wer bei 1,20 setzt, braucht 83 %. */
   function _srBasis(s) {
     if (!s || !s.n) return '<span class="sr-mut">keine Basis</span>';
-    var q = _srPct(s.quote), ug = s.ug == null ? null : _srPct(s.ug);
-    return '<b>' + q + '</b> <span class="sr-mut">· n' + s.n + '</span>' +
-      (ug ? ' <span class="sr-ug' + (s.belegt ? ' sr-ok' : '') + '">UG ' + ug + '</span>'
-          : ' <span class="sr-mut" title="Unter n=' + (SR_AUS ? SR_AUS.urteilAb : 30) +
-            ' geben wir keine Untergrenze aus — ein Punktschätzer ist kein Beleg">kein Urteil</span>');
+    return '<b>' + _srPct(s.quote) + '</b> <span class="sr-mut">· n' + s.n +
+      (s.oQuote ? ' · Ø ' + Number(s.oQuote).toFixed(2) : '') + '</span>';
+  }
+
+  /** Das eigentliche Urteil: Rendite je Bein mit einseitiger 95 %-Untergrenze.
+      Nur wenn die über null liegt, trägt die Schublade. */
+  function _srRendite(s) {
+    if (!s || !s.beinN) return '<span class="sr-mut">keine Basis</span>';
+    var roi = s.beinRoi == null ? '—' : (s.beinRoi > 0 ? '+' : '') + _srPct(s.beinRoi);
+    if (s.beinRoiUg == null) {
+      return '<b>' + roi + '</b> <span class="sr-mut" title="Unter n=' +
+        (SR_AUS ? SR_AUS.urteilAb : 30) + ' geben wir keine Untergrenze aus — ein ' +
+        'Punktschätzer ist kein Beleg">· kein Urteil</span>';
+    }
+    var ug = (s.beinRoiUg > 0 ? '+' : '') + _srPct(s.beinRoiUg);
+    return '<b class="' + (s.belegt ? 'sr-w' : '') + '">' + roi + '</b> ' +
+      '<span class="sr-ug' + (s.belegt ? ' sr-ok' : '') + '" title="Einseitige 95 %-Untergrenze ' +
+      'der Rendite bei flachem Einsatz je Bein. Nur über null trägt die Schublade.">UG ' + ug +
+      '</span>' + (s.belegt ? ' <span class="sr-w">trägt</span>' : '');
   }
 
   function _srUnreif(was) {
@@ -678,6 +695,7 @@
         '<td class="sr-r">' + d.wetten + '</td>' +
         '<td class="sr-r">' + d.n + '</td>' +
         '<td>' + _srBasis(d) + '</td>' +
+        '<td>' + _srRendite(d) + '</td>' +
         '<td class="sr-r sr-geldz">' + (d.einsatzUsd ? _srUsd(d.einsatzUsd) : '—') +
           (d.gewinnUsd ? '<div class="sr-mut sr-sm">zu gewinnen ' + _srUsd(d.gewinnUsd) + '</div>' : '') +
         '</td>' +
@@ -696,18 +714,28 @@
     return '<div class="sr-kpi">' +
         _srKpi(b.gewertet, 'Beine gewertet') +
         _srKpi(b.treffer + ' / ' + b.daneben, 'Treffer / daneben') +
-        _srKpi(b.quote == null ? '—' : _srPct(b.quote), 'rohe Quote') +
+        _srKpi(b.quote == null ? '—' : _srPct(b.quote), 'rohe Trefferquote') +
+        _srKpi((SR_AUS.schubladen && SR_AUS.schubladen.gesamt &&
+                SR_AUS.schubladen.gesamt.beinRoi != null)
+               ? (SR_AUS.schubladen.gesamt.beinRoi > 0 ? '+' : '') +
+                 _srPct(SR_AUS.schubladen.gesamt.beinRoi) : '—', 'Rendite je Bein') +
         _srKpi(b.offen, 'noch offen') +
         _srKpi(b.unaufloesbar, 'unauflösbar') +
       '</div>' +
       '<div class="sr-tw"><table class="sr-t"><thead><tr><th>Schublade</th>' +
       '<th class="sr-r">Wetten</th><th class="sr-r">Beine</th><th>Trefferquote</th>' +
-      '<th class="sr-r">Einsatz</th><th class="sr-r">ROI</th></tr></thead><tbody>' +
+      '<th>Rendite je Bein</th><th class="sr-r">Einsatz</th>' +
+      '<th class="sr-r">ROI Geld</th></tr></thead><tbody>' +
       zeilen + '</tbody></table></div>' +
       (ligen ? '<h3 class="sr-h3">Je Liga</h3><div class="sr-tw"><table class="sr-t"><thead><tr>' +
         '<th>Liga</th><th class="sr-r">Beine</th><th>Trefferquote</th></tr></thead><tbody>' +
         ligen + '</tbody></table></div>' : '') +
       _srGesperrteSchubladen() +
+      '<div class="sr-note"><b>Eine Trefferquote über 50 % ist hier kein gutes Zeichen.</b> ' +
+      'Gemessen an den ersten 950 abgerechneten Beinen: 63,9 % Treffer bei Ø-Quote 1,72 — und ' +
+      'trotzdem <b>−6,8 % Rendite</b>. Wer bei Quote 1,20 setzt, braucht 83 % zum Nullpunkt. ' +
+      'Das Urteil („trägt") hängt deshalb an der <b>Rendite-Untergrenze</b>, nicht an der ' +
+      'Trefferquote — dieselbe Rechnung wie im Freigabe-Register.</div>' +
       '<div class="sr-note">Die Trefferquote zählt <b>Beine</b>, nicht Wetten — ein Bein ist ' +
       'eine Meinung zu einem Spiel. Der ROI zählt nur <b>Einzelwetten</b>: bei einer Kombi ' +
       'hängt der Einsatz an mehreren Spielen und ist keinem davon zurechenbar. Annullierte ' +
@@ -907,7 +935,7 @@
   // Für Tests
   if (typeof module !== 'undefined' && module.exports) {
     module.exports = { _srGruppen: _srGruppen, _srDichte: _srDichte, _srUsd: _srUsd,
-                   _srBasis: _srBasis, _srPct: _srPct, _srKat: _srKat,
+                   _srBasis: _srBasis, _srRendite: _srRendite, _srPct: _srPct, _srKat: _srKat,
                    _srUmkaempft: _srUmkaempft, _srBisAnpfiff: _srBisAnpfiff,
                    _srVerlauf: _srVerlauf, _srNormMeter: _srNormMeter,
                    _srLigaBalken: _srLigaBalken, _srZeitachse: _srZeitachse };

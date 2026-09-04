@@ -54,6 +54,7 @@ sys.path.insert(0, str(BASE))
 
 import stake_highroller_fetch as SH
 from sharp_gate import wilson_lb
+from freigabe import untergrenze
 
 LEDGER_FILE = BASE / "stake_bet_ledger.json"
 NORM_FILE = BASE / "stake_league_norm.json"
@@ -146,14 +147,27 @@ def _gewertete_beine(w: dict):
 
 
 def _quote(treffer: int, n: int) -> dict:
-    """Immer beides: der rohe Punkt UND die Untergrenze. Ein Punktschätzer ist kein Beleg."""
+    """Trefferquote mit Wilson-Untergrenze — als BESCHREIBUNG, nicht als Urteil.
+
+    04.09.2026 — hier stand ein echter Denkfehler von mir: `belegt` hing an „Trefferquote
+    signifikant über 50%". Das ist aus der Wallet-Logik übernommen, wo Märkte nahe bei
+    Münzwurf liegen. Bei Wetten mit unterschiedlichen Quoten sagt es GAR NICHTS.
+
+    Gemessen an den ersten 950 abgerechneten Beinen: Trefferquote 63,9% bei Ø-Quote 1,72 —
+    und trotzdem **ROI −6,8%**. Jede Schublade, die nach dem alten Kriterium „BELEGT" hiess,
+    verlor in Wirklichkeit Geld. Wer bei Quote 1,20 setzt, braucht 83% zum Nullpunkt.
+
+    Das Urteil hängt seither an der RENDITE-Untergrenze (freigabe.untergrenze, dieselbe wie
+    im Rest des Projekts), nicht an der Trefferquote. Die Quote bleibt stehen, weil sie die
+    Zahl ist, die man lesen will — sie entscheidet nur nichts mehr.
+    """
     if not n:
         return {"n": 0, "treffer": 0, "quote": None, "ug": None, "belegt": False}
     ug = wilson_lb(treffer, n, Z)
     return {"n": n, "treffer": treffer,
             "quote": round(treffer / n, 4),
             "ug": round(ug, 4) if n >= MIN_N else None,
-            "belegt": bool(n >= MIN_N and ug > 0.5)}
+            "belegt": False}          # wird in _schublade aus der Rendite gesetzt
 
 
 def _schublade(wetten: list) -> dict:
@@ -170,6 +184,7 @@ def _schublade(wetten: list) -> dict:
     falschen Basis stand.
     """
     tr = n = 0
+    renditen = []          # je Bein: (Quote-1) bei Treffer, sonst -1 — flacher Einsatz
     abgerechnet = pnl = 0.0
     einsatz = gewinn = 0.0
     n_einzel = n_offen = 0
@@ -184,6 +199,9 @@ def _schublade(wetten: list) -> dict:
         for b in _gewertete_beine(w):
             n += 1
             tr += 1 if b["treffer"] else 0
+            q = b.get("quote")
+            if q and q > 1:
+                renditen.append((q - 1) if b["treffer"] else -1.0)
         a = w.get("abrechnung") or {}
         if a.get("pnlUsd") is not None and w.get("einsatzUsd"):
             n_einzel += 1
@@ -199,6 +217,17 @@ def _schublade(wetten: list) -> dict:
     d["abgerechnetN"] = n_einzel
     d["abgerechnetUsd"] = round(abgerechnet, 2)
     d["roi"] = round(pnl / abgerechnet, 4) if abgerechnet else None
+
+    # Das eigentliche Urteil: Rendite je Bein bei flachem Einsatz, mit einseitiger
+    # 95%-Untergrenze. Nur wenn die ÜBER null liegt, trägt die Schublade — eine
+    # Trefferquote über 50% tut das nachweislich nicht (s. _quote).
+    d["beinN"] = len(renditen)
+    d["beinRoi"] = round(sum(renditen) / len(renditen), 4) if renditen else None
+    ug_r = untergrenze(renditen) if renditen else None
+    d["beinRoiUg"] = round(ug_r, 4) if ug_r is not None else None
+    d["belegt"] = bool(ug_r is not None and ug_r > 0)
+    d["oQuote"] = (round(sum(r + 1 for r in renditen if r > -1) / max(1, sum(1 for r in renditen if r > -1)), 3)
+                   if any(r > -1 for r in renditen) else None)
     return d
 
 
@@ -454,8 +483,11 @@ def auswerten(led: dict, jetzt: str) -> dict:
         "ligaNorm": dict(sorted(norm.items(), key=lambda kv: -kv[1]["n"])[:60]),
         "auffaellige": kleine_liga_gross(wetten, norm)[:60],
         "abdeckung": abdeckung(led),
-        "hinweis": ("Rohe Quoten sind Punktschaetzer. Ein Urteil steht nur da, wo n >= %d "
-                    "UND die Wilson-Untergrenze ueber 50%% liegt. Der Feed ist anonym — es "
+        "hinweis": ("Das Urteil haengt an der RENDITE-Untergrenze, nicht an der Trefferquote: "
+                    "gemessen an den ersten 950 Beinen liegt die Trefferquote bei 63,9%%, die "
+                    "Durchschnittsquote bei 1,72 — und der ROI trotzdem bei -6,8%%. Wer bei 1,20 "
+                    "setzt, braucht 83%% zum Nullpunkt. Eine Schublade traegt nur, wenn ihre "
+                    "Rendite-Untergrenze (n >= %d) ueber null liegt. Der Feed ist anonym — es "
                     "gibt aggregierten Fluss, nie einen Track-Record je Konto." % MIN_N),
     }
 
@@ -481,11 +513,12 @@ def main() -> int:
     for name in ("vor_anpfiff", "live", "live_frueh", "ueber_liga_norm"):
         s = a["schubladen"][name]
         if s["n"]:
-            print("   %-16s n=%-4d Quote %s  UG %s  %s"
+            print("   %-16s n=%-4d Treffer %s  ROI %s  UG %s  %s"
                   % (name, s["n"],
                      ("%.1f%%" % (s["quote"] * 100)) if s["quote"] is not None else "—",
-                     ("%.1f%%" % (s["ug"] * 100)) if s["ug"] is not None else "—",
-                     "BELEGT" if s["belegt"] else ""))
+                     ("%+.1f%%" % (s["beinRoi"] * 100)) if s.get("beinRoi") is not None else "—",
+                     ("%+.1f%%" % (s["beinRoiUg"] * 100)) if s.get("beinRoiUg") is not None else "—",
+                     "TRAEGT" if s["belegt"] else ""))
     n_auf = len(a["auffaellige"])
     print("  Auffaellige Einsaetze (ueber Liga-Norm oder kleine Liga): %d" % n_auf)
     ligen = sum(1 for v in a["ligaNorm"].values() if v["basis"] == "gelernt")

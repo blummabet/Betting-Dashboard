@@ -751,6 +751,47 @@ die abgerechneten), und der Bilanz-Reiter schreibt die abgerechnete Zahl neben d
 
 ---
 
+### ⚠️ Eine Trefferquote ohne die Quoten ist keine Zahl (04.09.2026)
+
+Nach 8,7 Stunden Sammeln lagen **1.309 Wetten und 1.026 abgerechnete Beine** vor — die erste
+echte Messung. Und sie hat vor allem einen Fehler in **meinem eigenen Urteilskriterium**
+aufgedeckt.
+
+`stake_analyse.py` setzte `belegt`, wenn die **Wilson-Untergrenze der Trefferquote über 50 %**
+lag. Das ist aus der Poly-Wallet-Logik übernommen, wo Märkte nahe am Münzwurf liegen. Bei
+Wetten mit unterschiedlichen Quoten sagt es **gar nichts**:
+
+| Schublade | n | Treffer | Ø-Quote | **Rendite je Bein** | UG (95 %) |
+|---|---|---|---|---|---|
+| gesamt | 950 | 63,9 % | 1,72 | **−6,8 %** | −11,5 % |
+| vor Anpfiff | 139 | 70,5 % | 1,58 | **−4,2 %** | −14,2 % |
+| live | 811 | 62,8 % | 1,74 | **−7,2 %** | −12,4 % |
+| Einsatz ≥ $10k | 85 | 67,1 % | 1,51 | **−9,6 %** | −22,3 % |
+| über 5× Liga-Norm | 72 | — | — | **−4,1 %** | −18,5 % |
+| Quote < 1,35 | 273 | 93,0 % | 1,09 | **+0,8 %** | −2,1 % |
+
+**Jede Schublade, die nach dem alten Kriterium „BELEGT" hieß, verlor Geld.** Wer bei Quote 1,20
+setzt, braucht 83 % zum Nullpunkt — 70 % Treffer sind dort ein Desaster, nicht ein Erfolg.
+
+Das Urteil hängt seither an der **Rendite-Untergrenze** (`freigabe.untergrenze`, dieselbe
+Rechnung wie im Freigabe-Register), nie an der Trefferquote. Die Quote bleibt sichtbar, weil man
+sie lesen will — sie entscheidet nur nichts mehr, und sie steht jetzt immer neben der
+**Durchschnittsquote**, ohne die sie nicht interpretierbar ist. Der Bilanz-Reiter sagt das auch
+laut: *„Eine Trefferquote über 50 % ist hier kein gutes Zeichen."*
+
+**Der Zwischenstand selbst, ehrlich gelesen:** −6,8 % über alles ist ungefähr die Marge des
+Buchmachers. Das ist genau das Ergebnis, das man erwartet, wenn im aggregierten Fluss **keine
+Information** steckt — die Kunden verlieren den Hold. Keine einzige Teilmenge trägt bisher, auch
+nicht die interessanten (über Liga-Norm −4,1 %, kleine Liga −2,1 %, Fußball +4,5 % bei
+UG −12,0 %). Alles im Rauschen.
+
+**Was das noch nicht heißt.** 8,7 Stunden, dominiert von US-Open-Tennis (618 von 1.091) und zu
+83 % Live. Genau die Teilmengen, um die es geht — kleine Ligen tagsüber, Fußball vor Anpfiff —
+haben n=10 bis n=178. Das ist der Grund, warum die Vorregistrierung Ziel-n von 150 bis 200 je
+Schublade nennt. Bis dahin ist die richtige Aussage: *noch nichts gefunden*, nicht *nichts da*.
+
+---
+
 ## 8. Harte Arbeitsregeln
 
 - **Push nur über GitHub Desktop**, nie CLI.

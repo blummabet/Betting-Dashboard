@@ -258,15 +258,43 @@ test('vier Ansichten, und die Weiche kennt alle', () => {
   assert.ok(/window\._srTab/.test(CODE), 'der Reiter-Wechsel muss aufrufbar sein');
 });
 
-test('eine Quote ohne Untergrenze wird als „kein Urteil" gezeigt, nicht als Zahl', () => {
-  assert.equal(API._srBasis({ n: 5, quote: 0.8, ug: null, belegt: false }).includes('kein Urteil'), true);
-  assert.ok(!API._srBasis({ n: 0 }).includes('%'), 'ohne n gibt es gar keinen Prozentwert');
+test('ohne n gibt es gar keinen Prozentwert', () => {
+  assert.ok(!API._srBasis({ n: 0 }).includes('%'));
+  assert.ok(!API._srRendite({ beinN: 0 }).includes('%'));
 });
 
-test('eine belegte Quote wird als solche markiert', () => {
-  const s = API._srBasis({ n: 200, quote: 0.62, ug: 0.55, belegt: true });
-  assert.ok(s.includes('UG'));
-  assert.ok(s.includes('sr-ok'), 'belegt bekommt eine eigene Farbe');
+// 04.09.2026 — der wichtigste Fund des Tages, und er betraf diesen Code:
+// `belegt` hing an „Trefferquote ueber 50%". Bei Wetten mit unterschiedlichen Quoten sagt das
+// NICHTS. Gemessen an 950 abgerechneten Beinen: 63,9% Treffer bei Ø-Quote 1,72 — und trotzdem
+// ROI −6,8%. Wer bei 1,20 setzt, braucht 83% zum Nullpunkt.
+test('die Trefferquote urteilt nicht mehr', () => {
+  const s = API._srBasis({ n: 950, quote: 0.639, oQuote: 1.72 });
+  assert.ok(s.includes('63.9%'), 'sie wird weiter gezeigt');
+  assert.ok(!/>trägt</.test(s), 'aber sie entscheidet nichts');
+  assert.ok(s.includes('1.72'), 'und nennt die Durchschnittsquote, ohne die sie bedeutungslos ist');
+});
+
+test('das Urteil haengt an der Rendite-Untergrenze', () => {
+  const verlust = API._srRendite({ beinN: 950, beinRoi: -0.068, beinRoiUg: -0.115, belegt: false });
+  assert.ok(verlust.includes('-6.8%'));
+  assert.ok(!/>trägt</.test(verlust), 'eine negative Untergrenze bekommt kein Abzeichen');
+
+  const traegt = API._srRendite({ beinN: 400, beinRoi: 0.09, beinRoiUg: 0.02, belegt: true });
+  assert.ok(traegt.includes('+9.0%'));
+  assert.ok(/>trägt</.test(traegt), 'eine positive Untergrenze bekommt eines');
+  assert.ok(traegt.includes('sr-ok'));
+});
+
+test('unter der Mindestzahl gibt es kein Urteil, auch bei gutem Punktwert', () => {
+  const d = API._srRendite({ beinN: 8, beinRoi: 0.5, beinRoiUg: null, belegt: false });
+  assert.ok(d.includes('kein Urteil'));
+  assert.ok(!/>trägt</.test(d), '+50% auf n=8 ist kein Beleg');
+});
+
+test('die Flaeche warnt, dass eine hohe Trefferquote nichts Gutes heisst', () => {
+  const block = schneide('function _srBilanz', 'function _srKpi');
+  assert.ok(/kein gutes Zeichen/.test(block));
+  assert.ok(/83/.test(block), 'das Gegenbeispiel (1,20 braucht 83%) muss dastehen');
 });
 
 test('jede Quote nennt ihr n', () => {
