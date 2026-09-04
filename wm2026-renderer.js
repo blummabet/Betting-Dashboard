@@ -1231,14 +1231,36 @@
   };
 
   // Engine-Signal-Grid (pos/neg/silent Kacheln) — gemeinsamer Renderer für Gruppen- + KO-Cards.
+  //
+  // 04.09.2026 (Lucas-Cards-Check, Nacharbeit). Auf der Elche-Card standen sechs Kacheln —
+  // Verletzungen −6,8 · Form +2,1 · H2H −1,0 · xG +1,3 · Chancen +1,1 · Frische +1,6 — und
+  // gar kein Netto. Drei Dinge liefen da zusammen, alle gleich verwirrend:
+  //
+  //   1. Das Netto war versteckt, weil |+0,17| < 0,5 galt als „nicht nennenswert". Damit fehlte
+  //      dem Leser der einzige Anker, und die Kacheln wirkten wie das ganze Ergebnis.
+  //   2. Die Kacheln summieren NICHT auf das Netto und sollen es auch nicht: `combined_score_pp`
+  //      ist ein mit Konfidenz und Gewicht gemittelter Wert (registry.py), die Kacheln zeigen
+  //      die rohen Scores. Sichtbar addiert Elche zu −0,44, das Netto steht bei +0,17. Beides
+  //      ist richtig — nebeneinander ohne Erklärung sieht es nach Rechenfehler aus.
+  //   3. `slice(0, 6)` schnitt in Registry-Reihenfolge ab, ohne Hinweis. Auf Elche fiel damit
+  //      `move_following +1,2` heraus — nicht weil es klein war, sondern weil es hinten stand.
+  //
+  // Deshalb: Netto immer zeigen (auch nahe null), als „Ø gewichtet" benennen statt als Summe,
+  // die stärksten Signale zuerst, und Abgeschnittenes ausweisen statt verschweigen.
   function _engineSignalGridHtml(heroPick) {
     const sigList = Array.isArray(heroPick.signals) ? heroPick.signals : [];
     if (!sigList.length) return '';
     const adj = heroPick.signalAdjustmentPP;
-    const adjLabel = (typeof adj === 'number' && Math.abs(adj) >= 0.5)
-      ? `<span class="cc-sig-adj ${adj > 0 ? 'pos' : 'neg'}">${adj > 0 ? '+' : ''}${adj.toFixed(1)}pp Netto</span>`
+    const roh = sigList.reduce((a, s) => a + (s.score || 0), 0);
+    const adjLabel = (typeof adj === 'number')
+      ? `<span class="cc-sig-adj ${adj > 0.05 ? 'pos' : adj < -0.05 ? 'neg' : ''}" title="Ø gewichtet nach Konfidenz und Signal-Gewicht — bewusst KEINE Summe der Kacheln (die ergäben ${roh > 0 ? '+' : ''}${roh.toFixed(1)}pp). Ein sicheres Signal zählt mehr als ein unsicheres.">${adj > 0 ? '+' : ''}${adj.toFixed(1)}pp Netto <span style="font-weight:600;opacity:.75">Ø gew.</span></span>`
       : '';
-    const tiles = sigList.slice(0, 6).map(s => {
+    // Nach Betrag sortiert: die Kacheln, die das Ergebnis tragen, stehen vorn. Die
+    // Registry-Reihenfolge sagt dem Leser nichts.
+    const sortiert = sigList.slice().sort((a, b) => Math.abs(b.score || 0) - Math.abs(a.score || 0));
+    const MAX = 6;
+    const rest = sortiert.slice(MAX);
+    const tiles = sortiert.slice(0, MAX).map(s => {
       const [ico, name] = _SIG_META[s.name] || ['•', (s.name || '').replace(/_/g, ' ')];
       const score = s.score || 0;
       const cls = score > 0.3 ? 'cc-sig-tile-pos' : score < -0.3 ? 'cc-sig-tile-neg' : 'cc-sig-tile-silent';
@@ -1249,9 +1271,15 @@
         <div class="cc-sig-tile-desc">${s.evidence || ''}</div>
       </div>`;
     }).join('');
+    // Abgeschnittenes benennen — mit Namen und Werten, damit „+2 weitere" nicht selbst
+    // wieder eine Lücke ist.
+    const restLabel = rest.length
+      ? `<div class="cc-sig-rest" style="font-size:10.5px;color:var(--muted);margin-top:6px;" title="${rest.map(s => `${(_SIG_META[s.name] || ['', s.name])[1]} ${(s.score || 0) > 0 ? '+' : ''}${(s.score || 0).toFixed(1)}pp`).join(' · ')}">+${rest.length} weitere${rest.length === 1 ? 's' : ''} Signal${rest.length === 1 ? '' : 'e'} — zählen mit, aber nicht abgebildet</div>`
+      : '';
     return `<div class="cc-signals">
       <div class="cc-signals-head">🧠 Engine-Signale ${adjLabel}</div>
       <div class="cc-sig-grid">${tiles}</div>
+      ${restLabel}
     </div>`;
   }
 

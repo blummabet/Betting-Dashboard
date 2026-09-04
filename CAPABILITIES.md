@@ -978,11 +978,22 @@ schloss den falschen Fall aber nie aus: `score = 2 / 1 / 0`, und die 0 gewann ge
 −1. Das betraf nicht nur die Box „Serien in diesem Spiel", sondern auch
 `streak_momentum._pick_team_streak` — also das **Signal, das in die Pick-Bewertung eingeht**.
 
-**Nebenbefund, nicht geändert:** die Engine-Kacheln zeigen rohe Scores, `signalAdjustmentPP` ist
-aber ein mit Konfidenz und Gewicht **gemitteltes** Ergebnis. Auf der Elche-Card summieren die
-sichtbaren Kacheln auf −0,44, das Netto steht bei +0,17. Das ist korrekt gerechnet, lädt aber zum
-Nachaddieren ein; außerdem kappt `slice(0, 6)` weitere Signale ohne Hinweis (dort fiel
-`move_following +1,2` heraus).
+**4. Das Kachel-Gitter log nicht, aber es lud zum Fehlschluss ein.** Auf der Elche-Card standen
+sechs Kacheln (−6,8 · +2,1 · −1,0 · +1,3 · +1,1 · +1,6) und **gar kein Netto**. Drei Dinge liefen
+zusammen:
+
+- Das Netto war **versteckt**, weil `|+0,17| < 0,5` als „nicht nennenswert" galt. Damit fehlte der
+  einzige Anker, und die Kacheln wirkten wie das ganze Ergebnis.
+- Die Kacheln **summieren nicht** auf das Netto und sollen es auch nicht: `combined_score_pp` ist
+  ein nach Konfidenz und Gewicht **gemittelter** Wert, die Kacheln zeigen rohe Scores. Sichtbar
+  ergibt Elche −0,44, das Netto +0,17. Beides richtig — nebeneinander ohne Erklärung sieht es nach
+  Rechenfehler aus.
+- `slice(0, 6)` schnitt in **Registry-Reihenfolge** ab, ohne Hinweis. Auf Elche fiel
+  `move_following +1,2` heraus — nicht weil es klein war, sondern weil es hinten stand.
+
+Seither: Netto immer sichtbar (auch nahe null, mit eigenem ruhigen Ton), als „Ø gew." benannt statt
+als Summe (der Titel nennt die Kachel-Summe zum Vergleich), Sortierung nach Betrag statt nach
+Registry, und Abgeschnittenes steht als „+N weitere" mit Namen und Werten im Titel.
 
 ---
 
