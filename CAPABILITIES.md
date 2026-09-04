@@ -792,6 +792,46 @@ Schublade nennt. Bis dahin ist die richtige Aussage: *noch nichts gefunden*, nic
 
 ---
 
+### 🧭 Das Lern-Gedächtnis war 18 Tage lang (04.09.2026)
+
+Lucas: *„der Bereich wo quasi gelernt wird steht immer noch mit 500 Plays — ist das eh kein hard
+cap sondern lernt weiter auch wenn 500 erreicht?"*
+
+Es lernt weiter, aber nur aus den letzten `SETTLED_KEEP` Plays (`settled[-KEEP:]`). Und 500 war
+ein engeres Fenster, als die Zahl aussehen lässt: bei gemessenen **27 abgerechneten Plays pro
+Tag** waren das genau **18,4 Tage** (16.08. – 04.09.).
+
+Für die häufigen Signal-Mixe ist das folgenlos — `money+sharp` (197), `money+steam` (91),
+`bf+money` (78) und `sharp` (65) sättigen das Vertrauensgewicht `n/(n+25)` ohnehin. Das Problem
+sind die **seltenen**:
+
+| Mix | n | Rate | 16 Roh-Plays bräuchten | Fenster |
+|---|---|---|---|---|
+| `bf+money+sharp` | 12 | 0,65/Tag | **25 Tage** | 18 |
+| `sharp+steam` | 11 | 0,60/Tag | **27 Tage** | 18 |
+| `steam` | 13 | 0,71/Tag | **23 Tage** | 18 |
+
+Sie sammeln langsamer, als das Fenster sie verdrängt — ein **Gleichgewicht knapp unter der
+Schwelle**, dauerhaft. Ausgerechnet `bf+money+sharp` stand dabei mit **+77,1 % ROI** als beste
+Zeile auf dem Lern-Board und hätte nie bestätigt werden können.
+
+**Das ist dieselbe Bauform wie der Register-Fund vom 01.09.** Dort stand es schon im Code:
+*„die stärkste Schublade (Conviction 9, n=12, ROI +16 %) … konnte n=30 nie erreichen und
+schrumpfte stattdessen aus dem rollierenden Fenster heraus."* Das Register bekam damals den Fix,
+das Lern-Board nicht.
+
+`SETTLED_KEEP = 2000` (≈ 75 Tage), über `SHORTLIST_SETTLED_KEEP` überschreibbar. Datei ~266 KB →
+~1 MB, gegen 122 MB Artefakt vernachlässigbar. **Kein Risiko für die Freigabe:**
+`freigabe.poly_schubladen` urteilt ohnehin nur auf der aktuellen Engine und führt Alt-Plays
+getrennt als Kontext; der Kalibrierer gewichtet sie halb (`PW_CALIB_LEGACY_W`). Beides hängt an
+der Engine-Version, nicht am Alter — mehr Historie verwässert also nichts, sie macht die
+seltenen Mixe nur erreichbar.
+
+Ein Test hält die Regel fest: das Gedächtnis muss länger sein als die langsamste Kombination
+braucht, sonst steht sie für immer bei n<8.
+
+---
+
 ## 8. Harte Arbeitsregeln
 
 - **Push nur über GitHub Desktop**, nie CLI.

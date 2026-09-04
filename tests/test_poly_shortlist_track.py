@@ -310,3 +310,35 @@ def test_alt_emit_ohne_stempel_bleibt_none():
                    "league": "EPL", "price": 0.55}])
     t = st.update_track({}, emit, {}, {}, now=NOW)
     assert t["open"]["epl-c-d|C"]["ev"] is None
+
+
+# ── Das Lern-Gedaechtnis (04.09.2026) ────────────────────────────────────────
+# Lucas: „ist das eh kein hard cap sondern lernt weiter auch wenn 500 erreicht?"
+# Es lernt weiter, aber nur aus den letzten SETTLED_KEEP Plays. Bei 27 abgerechneten Plays
+# pro Tag waren 500 genau 18,4 Tage — und seltene Signal-Mixe (0,6-0,7/Tag) sammeln langsamer,
+# als das Fenster sie verdraengt. bf+money+sharp stand mit +77,1% ROI als beste Zeile auf dem
+# Lern-Board und haette die Schwelle n>=8 nie erreicht.
+
+def test_gedaechtnis_reicht_fuer_seltene_signal_mixe():
+    """Ein Mix mit 0,6 Treffern/Tag braucht ~27 Tage fuer 16 Roh-Plays. Das Fenster muss
+    laenger sein als die langsamste Kombination, sonst steht sie fuer immer bei n<8."""
+    plays_pro_tag = 27
+    tage = st.SETTLED_KEEP / plays_pro_tag
+    assert tage >= 30, ("Gedaechtnis nur %.0f Tage — seltene Mixe erreichen die Schwelle nie" % tage)
+
+
+def test_gedeckelt_wird_am_ALTEN_ende():
+    """settled[-KEEP:] behaelt die juengsten. Andersherum waere das Lern-Board eingefroren."""
+    import inspect
+    quelle = inspect.getsource(st)
+    assert "settled[-SETTLED_KEEP:]" in quelle
+
+
+def test_das_gedaechtnis_bleibt_ueberschreibbar(monkeypatch):
+    monkeypatch.setenv("SHORTLIST_SETTLED_KEEP", "42")
+    m = importlib.reload(st)
+    try:
+        assert m.SETTLED_KEEP == 42
+    finally:
+        monkeypatch.delenv("SHORTLIST_SETTLED_KEEP", raising=False)
+        importlib.reload(st)

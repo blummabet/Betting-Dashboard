@@ -30,7 +30,26 @@ TRACK_FILE = "poly_shortlist_track.json"
 EMITTER = "scripts/emit_shortlist.mjs"
 
 STAKE = float(os.environ.get("SHORTLIST_STAKE") or 10.0)   # fixer Einsatz je Play (USD-Notional)
-SETTLED_KEEP = 500                                          # abgerechnete Plays behalten (rollierend)
+# 04.09.2026 (Lucas: „ist das eh kein hard cap sondern lernt weiter auch wenn 500 erreicht?").
+# Es lernt weiter — aber nur aus den letzten SETTLED_KEEP Plays, und das war ein engeres Fenster,
+# als die Zahl aussehen laesst: 500 abgerechnete Plays entsprachen bei gemessenen 27/Tag genau
+# **18,4 Tagen** (16.08. bis 04.09.).
+#
+# Fuer die haeufigen Signal-Mixe ist das egal — money+sharp (197), money+steam (91), bf+money (78)
+# und sharp (65) saettigen das Vertrauensgewicht n/(n+25) ohnehin. Das Problem sind die SELTENEN:
+#
+#   bf+money+sharp     n=12   0,65/Tag  →  16 Roh-Plays braeuchten 25 Tage   (Fenster: 18)
+#   sharp+steam        n=11   0,60/Tag  →                        27 Tage
+#   steam              n=13   0,71/Tag  →                        23 Tage
+#
+# Die sammeln langsamer, als das Fenster sie verdraengt, und stehen deshalb DAUERHAFT bei
+# „sammelt · n<8" — ein Gleichgewicht knapp unter der Schwelle. Ausgerechnet bf+money+sharp
+# stand dabei mit +77,1% ROI als beste Zeile auf dem Lern-Board und konnte nie bestaetigt werden.
+#
+# 2000 sind rund 75 Tage Gedaechtnis. Die Datei waechst von ~266 KB auf ~1 MB (gegen 122 MB
+# Artefakt vernachlaessigbar). Drift ist schon abgefangen: Plays aus einer aelteren Engine
+# zaehlen halb (PW_CALIB_LEGACY_W), das haengt an der Engine-Version, nicht am Alter.
+SETTLED_KEEP = int(os.environ.get("SHORTLIST_SETTLED_KEEP") or 2000)   # rollierend, ~75 Tage
 # 10.08.2026 (Lucas): Stale-Cleanup gegen ewig offene Plays. Ein Play, dessen Markt poly_money_broad
 # gar nicht trackt (nicht im close-file), bekommt NIE eine Auflösung → nach kurzer Frist verfallen
 # lassen. Getrackte-aber-ewig-unaufgelöste erst nach langem Backstop. KEIN Fake-Ergebnis.
