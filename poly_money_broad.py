@@ -685,6 +685,53 @@ def _outcomes(ev):
     return rows if len(rows) >= 2 else []
 
 
+def _markt_frage(ev, cond):
+    """Die Frage des Markts mit dieser conditionId — „Will there be over 2.5 goals…". REIN.
+
+    04.09.2026 (Lucas: „ja leider steht da nur Over und nicht welche Line"). Gamma liefert die
+    Frage bei jedem Markt mit; `_is_map_prop` liest sie sogar schon. Gespeichert wurde sie nie:
+    in poly_money_broad_close.json trug keiner von 2.000 Maerkten `title` oder `question`.
+    Deshalb stand im Push „$41K auf Over" ohne Linie, und die Abrechnung konnte Over 1,5 nicht
+    von Over 2,5 unterscheiden."""
+    for m in (ev.get("markets") or []):
+        if m.get("conditionId") and m.get("conditionId") == cond:
+            for f in ("question", "groupItemTitle", "title"):
+                v = str(m.get(f) or "").strip()
+                if v:
+                    return v
+            return None
+    return None
+
+
+def _cond_von(oc):
+    """Die conditionId der Ausgaenge — nur wenn ALLE aus demselben Markt stammen. REIN."""
+    conds = [o.get("cond") for o in (oc or []) if isinstance(o, dict) and o.get("cond")]
+    return conds[0] if conds and len(set(conds)) == 1 else None
+
+
+def _markt_id(ev, oc):
+    """(conditionId, Frage) des Markts, aus dem _outcomes die Ausgaenge gezogen hat. REIN.
+
+    Der Kern des Leeds-Brentford-Fehlers: `_outcomes` waehlt bei einem Buendel-Event den Markt
+    mit dem MEISTEN VOLUMEN — und `over/under` faellt in `_MAP_PROP_RE`, bei einem reinen
+    Totals-Buendel ist die Vorauswahl also leer und es entscheidet allein das Volumen. Volumen
+    verschiebt sich zwischen Erfassung und Auflösung, also konnte die Abrechnung einen ANDEREN
+    Markt erwischen als die Erfassung. Mit der conditionId ist der Markt festgenagelt."""
+    cond = _cond_von(oc)
+    return cond, (_markt_frage(ev, cond) if cond else None)
+
+
+def _outcomes_von_cond(ev, cond):
+    """Die Ausgaenge GENAU des Markts mit dieser conditionId — nicht „was heute das meiste
+    Volumen hat". REIN."""
+    if not cond:
+        return []
+    for m in (ev.get("markets") or []):
+        if m.get("conditionId") == cond:
+            return _market_rows(m)
+    return []
+
+
 def _market_volume(ev, oc, fallback):
     """15.08.2026 (Lucas): Volumen NUR der Markt(e), aus denen _outcomes die Ausgaenge zog (per
     conditionId) — statt des ganzen Event-Volumens. Ein Best-of-3-eSport-Event summiert Serie + Map1
@@ -1049,11 +1096,20 @@ def backfill_resolutions_by_slug(prev_close, seen_keys, get=_get, cap=RESOLVE_LO
             ev = page[0] if isinstance(page, list) and page else None
             if not isinstance(ev, dict):
                 continue
-            oc = _outcomes(ev)
+            # Genau den Markt aufloesen, aus dem die Erfassung ihre Preise gezogen hat.
+            # Ohne die conditionId waere das wieder „der mit dem meisten Volumen" — und damit
+            # bei einem Totals-Buendel eine andere Linie als beim Erfassen.
+            _cond = (prev_close.get(key) or {}).get("cond")
+            oc = _outcomes_von_cond(ev, _cond) or ([] if _cond else _outcomes(ev))
             rp = {o["label"]: o["price"] for o in oc if o.get("price") is not None}
-            if rp and winner_from_prices(rp):   # nur eindeutig aufgelöst (ein Preis ~1.00)
+            _sieger = winner_from_prices(rp) if rp else None
+            # Ein Buendel ohne festgenagelten Markt bleibt ungeloest — lieber offen als geraten.
+            if _sieger and not aufloesbar(key, _sieger, _sieger, cond=_cond):
+                continue
+            if rp and _sieger:   # nur eindeutig aufgelöst (ein Preis ~1.00)
                 out.append({"key": key, "league": _league_from_slug(key),
-                            "resolved": True, "resolvedPrices": rp,
+                            "resolved": True, "resolvedPrices": rp, "cond": _cond,
+                            "frage": (prev_close.get(key) or {}).get("frage"),
                             "hoursToKickoff": None, "totalUsd": 0, "shares": {}, "prices": {}})
         except Exception:
             continue
@@ -1077,6 +1133,8 @@ def fetch_markets(live_only=False):
     raw_by_tag = {}                      # je Tag: wie viele ROH-Events kamen (offen+aufgelöst)
     seen = set()                         # Dedup: ein Markt kann unter mehreren Tags liegen (cs2 ⊂ esports)
     candidates = []                      # near-kickoff 2-Wege-Kandidaten, VOR den Holders-Calls
+    _fragen = {}                         # conditionId -> Marktfrage (04.09.2026): die Linie,
+                                         # ohne die „Over" nichts bezeichnet
     upcoming = {}                        # money-map: weiter draussen liegende Sport-Maerkte, NUR Preis+Vol (kein Holder-Call)
 
     def _ingest(open_evs, closed_evs, league_of, sport_of):
@@ -1131,6 +1189,12 @@ def fetch_markets(live_only=False):
                     continue                 # 15.08.2026 (Lucas): Legenden-/Show-Match = kein Signal
                 seen.add((key, False))
                 mvol = _market_volume(ev, oc, vol)   # 15.08.2026 (Lucas): Markt- statt Event-Volumen
+                # 04.09.2026: die Marktfrage („over 2.5 goals") gibt es nur hier, solange das
+                # Event-Objekt vorliegt — unten in der Kandidatenschleife ist es weg. Die
+                # conditionId steckt ohnehin in `oc`, also reicht ein Merkzettel cond -> Frage.
+                _c0, _f0 = _markt_id(ev, oc)
+                if _c0 and _f0:
+                    _fragen[_c0] = _f0
                 candidates.append((vol, key, league_of(ev, key), sport_of(ev, key), htk, oc, cls == "live", mvol, cls))
             except Exception:
                 continue
@@ -1143,6 +1207,13 @@ def fetch_markets(live_only=False):
                     continue
                 oc = _outcomes(ev)
                 rp = {o["label"]: o["price"] for o in oc if o["price"] is not None}
+                # 04.09.2026: Hier ist der erfasste Markt NICHT bekannt (wir sehen das Event erst
+                # geschlossen). Ein Buendel mit Over/Under waere also wieder Volumen-Roulette —
+                # solche Keys ueberspringen; der Backfill unten holt sie mit der gespeicherten
+                # conditionId praezise nach.
+                _sieger = winner_from_prices(rp) if rp else None
+                if rp and not aufloesbar(key, _sieger, _sieger):
+                    continue
                 if rp and not _is_exhibition(oc):
                     seen.add((key, True))
                     markets.append({"key": key, "league": league_of(ev, key), "sport": sport_of(ev, key),
@@ -1212,9 +1283,11 @@ def fetch_markets(live_only=False):
                 _vor["budgetLeer"] += 1
             _pv = {o["label"]: o["price"] for o in oc if o["price"] is not None}
             if _pv:
+                _c = _cond_von(oc); _f = _fragen.get(_c)
                 markets.append({"key": key, "league": league, "sport": sport, "hoursToKickoff": htk,
                                 "totalUsd": round(mvol), "shares": {}, "prices": _pv, "whales": [],
-                                "live": is_live, "resolved": False, "resolvedPrices": {}, "tokens": _tokens_of(oc)})
+                                "live": is_live, "resolved": False, "resolvedPrices": {},
+                                "cond": _c, "frage": _f, "tokens": _tokens_of(oc)})
             continue
         try:
             mm = _market_money(oc)     # 25.07.2026: EIN Fetch → Shares + Einzel-Wale
@@ -1231,9 +1304,11 @@ def fetch_markets(live_only=False):
                 _vor["ohneGeldSplit"] += 1
             _pv = {o["label"]: o["price"] for o in oc if o["price"] is not None}
             if _pv:
+                _c = _cond_von(oc); _f = _fragen.get(_c)
                 markets.append({"key": key, "league": league, "sport": sport, "hoursToKickoff": htk,
                                 "totalUsd": round(mvol), "shares": {}, "prices": _pv, "whales": [],
-                                "live": is_live, "resolved": False, "resolvedPrices": {}, "tokens": _tokens_of(oc)})
+                                "live": is_live, "resolved": False, "resolvedPrices": {},
+                                "cond": _c, "frage": _f, "tokens": _tokens_of(oc)})
             continue
         shares = mm["shares"]
         # 02.09.2026: kam mindestens eine Halter-Liste abgeschnitten zurueck? Dann ist der Split
@@ -1259,12 +1334,14 @@ def fetch_markets(live_only=False):
                                    _pos_cache, _avg_get, _pos_budget)
             except Exception:
                 pass
+        _c = _cond_von(oc); _f = _fragen.get(_c)
         _mrow = {"key": key, "league": league, "sport": sport,
                  "hoursToKickoff": htk, "totalUsd": round(mvol),
                  "shares": shares, "prices": prices, "whales": _whales,
                  "splitGuete": split_guete(shares, mvol, _split_trunc),
                  "live": is_live,
-                 "resolved": False, "resolvedPrices": {}, "tokens": _tokens_of(oc)}
+                 "resolved": False, "resolvedPrices": {},
+                 "cond": _c, "frage": _f, "tokens": _tokens_of(oc)}
         if _bt_get and _book_budget[0] > 0:
             try:
                 _enrich_book_trades(_mrow, oc, _bt_get, _book_budget)
@@ -1376,6 +1453,11 @@ def capture(markets, frozen, now=None, min_vol=MIN_VOL_USD, grace_h=GHOST_GRACE_
                     "league": m.get("league"), "sport": m.get("sport"), "totalUsd": round(float(m.get("totalUsd") or 0)),
                     "whales": m.get("whales") or [],   # 25.07.2026 (Lucas): Einzel-Wale je Markt (c)
                     "hoursToKickoff": round(htk, 2), "capturedAt": now.isoformat(),
+                    # 04.09.2026 (Lucas: „leider steht da nur Over und nicht welche Line"):
+                    # conditionId nagelt den Markt fest (Abrechnung), die Frage nennt die Linie
+                    # (Push + Nachpruefbarkeit). Beide nur wenn vorhanden — kein leeres Feld.
+                    **({"cond": m["cond"]} if m.get("cond") else {}),
+                    **({"frage": m["frage"]} if m.get("frage") else {}),
                     # 24.08.2026: Token mitfrieren (Direkt-Order aus „Heute") — nur fuer offene
                     # Maerkte relevant, aufgeloeste Eintraege tragen ihn nie -> Datei bleibt schlank.
                     **({"tokens": m["tokens"]} if m.get("tokens") else {}),
@@ -1435,6 +1517,8 @@ def capture_live(markets, prev, now=None, min_vol=MIN_VOL_USD, keep_h=LIVE_KEEP_
                     "totalUsd": round(float(m.get("totalUsd") or 0)),
                     "hoursToKickoff": round(float(htk), 2) if isinstance(htk, (int, float)) else None,
                     "capturedAt": now.isoformat(), "live": True,
+                    **({"cond": m["cond"]} if m.get("cond") else {}),
+                    **({"frage": m["frage"]} if m.get("frage") else {}),
                     # 24.08.2026: Token auch live mitschreiben — Live-Plays sollen genauso
                     # direkt setzbar sein wie Vor-Spiel-Plays.
                     **({"tokens": m["tokens"]} if m.get("tokens") else {}),

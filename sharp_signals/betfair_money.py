@@ -29,9 +29,13 @@ MIN_MONEY_EUR = 3000.0    # Markt-Gesamtgeld mind. so hoch, sonst nicht handelba
 MIN_EDGE      = 0.06      # |Geld-Anteil − fairer Anteil| mind. so groß
 SCORE_SCALE   = 20.0      # Edge 0.10 → 2.0pp
 MAX_SIGNAL_PP = 4.0
-MIN_TR_N      = 15        # ab so vielen abgerechneten Spielen moduliert der Track-Record
-TR_FADE_ROI   = -0.10     # ROI ≤ das → Kombi verliert dem Geld zu folgen → Signal umdrehen (Fade)
-TR_BOOST_ROI  = 0.05      # ROI ≥ das → verstärken
+# 04.09.2026: Die Schwellen gelten seit dem Betfair-Checkup auf der RENDITE-UNTERGRENZE (roiUg),
+# nicht auf dem Punktschaetzer. Ein eigenes n-Gate braucht es damit nicht mehr — die Untergrenze
+# existiert erst ab n=30 (freigabe.UG_MIN_N) und ist unterhalb schlicht None. MIN_TR_N ist nur
+# noch Anzeige: „ab so vielen Spielen KANN es ein Urteil geben".
+MIN_TR_N      = 30        # = freigabe.UG_MIN_N; ab hier kann es ueberhaupt eine Untergrenze geben
+TR_FADE_ROI   = -0.10     # ROI-UG ≤ das → dem Geld zu folgen verliert belegt → Signal umdrehen (Fade)
+TR_BOOST_ROI  = 0.0       # ROI-UG > das → verstärken (eine Untergrenze ueber null ist der Beleg)
 
 
 def _tok(market_name: str, runner_name: str, home, away) -> Optional[str]:
@@ -134,15 +138,18 @@ class BetfairMoneySignal(Signal):
         # ── Track-Record-Modulation (Liga×Markt) ──
         tr = self._track_for(bf.get("league"), market_name)
         tr_note = ""
-        if tr and (tr.get("n") or 0) >= MIN_TR_N and isinstance(tr.get("roi"), (int, float)):
-            roi = tr["roi"]
+        # 04.09.2026: Urteil an der Rendite-UNTERGRENZE, nicht am Punktschaetzer. Median-n je
+        # Bucket ist 5; von 1.641 Buckets tragen 3 ueberhaupt eine Untergrenze. Was keine hat,
+        # verschiebt hier nichts mehr — weder nach oben noch nach unten.
+        if tr and isinstance(tr.get("roiUg"), (int, float)):
+            roi = tr["roiUg"]
             if roi <= TR_FADE_ROI:
                 score = -score                      # dem Geld folgen verliert hier → Fade
                 confidence = min(0.8, 0.5 + abs(roi))
-                tr_note = " · ⚠️ Liga×Markt verliert (ROI %+.0f%%, n%d) → gefadet" % (roi * 100, tr["n"])
-            elif roi >= TR_BOOST_ROI:
+                tr_note = " · ⚠️ Liga×Markt verliert (ROI-UG %+.0f%%, n%d) → gefadet" % (roi * 100, tr["n"])
+            elif roi > TR_BOOST_ROI:
                 confidence = min(0.92, confidence * (1.0 + min(0.3, roi)))
-                tr_note = " · ✅ Liga×Markt solide (ROI %+.0f%%, n%d)" % (roi * 100, tr["n"])
+                tr_note = " · ✅ Liga×Markt solide (ROI-UG %+.0f%%, n%d)" % (roi * 100, tr["n"])
         else:
             confidence *= 0.85                       # noch keine belastbare Historie → etwas vorsichtiger
 

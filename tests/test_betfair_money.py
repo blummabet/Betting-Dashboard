@@ -60,7 +60,7 @@ def test_zu_wenig_geld_kein_signal():
 
 def test_track_record_boost():
     sig = BetfairMoneySignal()
-    sig._track = {"byLeagueMarket": {"Ecuador Serie A|Match Odds": {"n": 30, "roi": 0.2}}}
+    sig._track = {"byLeagueMarket": {"Ecuador Serie A|Match Odds": {"n": 40, "roi": 0.2, "roiUg": 0.06}}}
     sig._loaded = True
     r = sig.evaluate({"market": "Heimsieg"}, ctx())
     assert r.score > 0 and "solide" in r.evidence
@@ -72,7 +72,7 @@ def test_track_record_boost():
 
 def test_track_record_fade_dreht_um():
     sig = BetfairMoneySignal()
-    sig._track = {"byLeagueMarket": {"Ecuador Serie A|Match Odds": {"n": 40, "roi": -0.18}}}
+    sig._track = {"byLeagueMarket": {"Ecuador Serie A|Match Odds": {"n": 40, "roi": -0.18, "roiUg": -0.14}}}
     sig._loaded = True
     r = sig.evaluate({"market": "Heimsieg"}, ctx())
     # Geld auf Heim, aber Liga×Markt verliert historisch → Signal dreht auf NEGATIV (Fade)
@@ -84,3 +84,25 @@ if __name__ == "__main__":
     fns = [v for k, v in dict(globals()).items() if k.startswith("test_") and isinstance(v, types.FunctionType)]
     for f in fns: f(); print("ok", f.__name__)
     print("\n%d tests passed" % len(fns))
+
+
+# ── 04.09.2026 (Lucas: „mach ma mal Betfair-Check") ───────────────────────────
+# Der Bucket verschob die Confidence bisher auf dem Punktschaetzer. Median-n je Liga×Markt ist
+# 5; von 1.641 Buckets tragen 3 ueberhaupt eine Untergrenze, davon 0 eine positive. Was keine
+# Untergrenze hat, darf nichts mehr verschieben — in keine Richtung.
+def test_ohne_untergrenze_verschiebt_der_bucket_nichts():
+    ohne = BetfairMoneySignal()
+    ohne._track = {"byLeagueMarket": {"Ecuador Serie A|Match Odds": {"n": 20, "roi": 0.42}}}
+    ohne._loaded = True
+    leer = BetfairMoneySignal(); leer._track = {"byLeagueMarket": {}}; leer._loaded = True
+    a, b = ohne.evaluate({"market": "Heimsieg"}, ctx()), leer.evaluate({"market": "Heimsieg"}, ctx())
+    assert a.confidence == b.confidence, "+42% ROI auf n=20 ist kein Grund, sicherer zu werden"
+    assert "solide" not in a.evidence
+
+
+def test_ein_schoener_punktschaetzer_ohne_untergrenze_fadet_auch_nicht():
+    sig = BetfairMoneySignal()
+    sig._track = {"byLeagueMarket": {"Ecuador Serie A|Match Odds": {"n": 22, "roi": -0.55}}}
+    sig._loaded = True
+    r = sig.evaluate({"market": "Heimsieg"}, ctx())
+    assert "verliert" not in r.evidence, "kein Urteil heisst nichts tun, nicht faden"

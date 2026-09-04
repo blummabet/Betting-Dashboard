@@ -115,3 +115,27 @@ class WalletRanglisteBleibtSauber(unittest.TestCase):
                          {"Newcastle United FC": 1.0, "Tottenham Hotspur FC": 0.0})])
         s = out["scores"]["0xw"]
         self.assertEqual((s["n"], s["wins"]), (1, 1))
+
+
+class MitFestgenageltemMarkt(unittest.TestCase):
+    """04.09.2026 (Lucas: „aber kriegt man jetzt over maerkte richtig?").
+
+    Die Sperre war die ehrliche Notloesung, nicht das Ziel. Der eigentliche Fehler war, dass
+    `_outcomes` bei einem Buendel den Markt mit dem MEISTEN VOLUMEN waehlt — und Volumen
+    verschiebt sich zwischen Erfassung und Abrechnung, also konnte die Auflösung eine ANDERE
+    Linie lesen als die Erfassung. Mit der conditionId ist derselbe Markt auf beiden Seiten
+    festgenagelt, und „Over" bezeichnet wieder etwas.
+    """
+
+    def test_mit_conditionid_ist_ein_buendel_wieder_abrechenbar(self):
+        self.assertTrue(U.aufloesbar(LEE_BRE, "Over", "Over", cond="0xabc"))
+
+    def test_ohne_conditionid_bleibt_es_gesperrt(self):
+        self.assertFalse(U.aufloesbar(LEE_BRE, "Over", "Over", cond=None))
+        self.assertFalse(U.aufloesbar(LEE_BRE, "Over", "Over", cond=""))
+
+    def test_alteintraege_ohne_conditionid_werden_nicht_nachtraeglich_freigegeben(self):
+        """Alles vor dem 04.09. hat keine conditionId — dort ist der Markt nicht rekonstruierbar
+        und bleibt unaufloesbar. Rueckwirkend „wird schon gepasst haben" waere genau der Fehler
+        noch einmal."""
+        self.assertFalse(U.aufloesbar("0xw|" + LEE_BRE + "|Under", "Under", "Under"))

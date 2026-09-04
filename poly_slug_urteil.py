@@ -56,12 +56,19 @@ def ist_buendel(key) -> bool:
     return any(k.endswith(e) or (e + "|") in k for e in BUENDEL)
 
 
-def aufloesbar(key, seite, sieger=None) -> bool:
+def aufloesbar(key, seite, sieger=None, cond=None) -> bool:
     """Darf dieser Slug-Sieger über eine Wette auf `seite` entscheiden? REIN.
 
     False genau dann, wenn der Slug ein Bündel ist UND die Bedeutung an einer Linie hängt, die
     im Namen nicht steht — dann ist „Over" gegen „Over" kein Vergleich, sondern ein Zufall.
+
+    `cond` ist der Ausweg: die conditionId nagelt EINEN Markt des Bündels fest. Ist sie da, wurde
+    bei der Erfassung und bei der Auflösung derselbe Markt gelesen, und „Over" bezeichnet
+    dieselbe Linie. Genau das war vorher nicht garantiert — `_outcomes` wählt den Markt mit dem
+    meisten Volumen, und Volumen verschiebt sich zwischen Anpfiff und Abrechnung.
     """
     if not ist_buendel(key):
+        return True
+    if cond:
         return True
     return not (ist_generisch(seite) or ist_generisch(sieger))

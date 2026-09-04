@@ -620,13 +620,20 @@
   // Übersicht gibt es nichts umzudrehen: eine Zeile in „Top-Wetten jetzt" ist eine Empfehlung,
   // und eine Empfehlung aus einem Eimer, in dem dem Geld zu folgen historisch verliert, gehört
   // nicht in die Liste. Also fliegt sie raus statt gedreht zu werden.
-  var MD_BFTR_MIN_N = 15, MD_BFTR_FADE = -0.10, MD_BFTR_BOOST = 0.05;
+  // 🔴 04.09.2026 (Lucas: „mach ma mal Betfair-Check"). Die Schwelle n>=15 auf dem Punktschätzer
+  // war zu schwach: die Liga×Markt-Buckets haben Median n=5, und von den 146, die n>=15
+  // erreichen, galten 52 als „trägt" und 57 als „verliert" — während über ALLE 1.641 Buckets
+  // ganze 3 überhaupt eine Rendite-Untergrenze tragen und davon keiner eine positive.
+  // 57 Zeilen sind also aus „Top-Wetten jetzt" geflogen, weil ein Eimer mit im Schnitt fünf
+  // Plays das so aussehen ließ. Ab jetzt entscheidet die Untergrenze; ohne sie kein Urteil.
+  var MD_BFTR_MIN_N = 30, MD_BFTR_FADE = -0.10, MD_BFTR_BOOST = 0;   // = MIN_TR_N / TR_FADE_ROI / TR_BOOST_ROI
   function _mdBfTrack(league, market) {
     try {
       var blm = (_md.data.bfTrack || {}).byLeagueMarket || {};
       var v = blm[String(league) + '|' + String(market)];
-      if (!v || (v.n || 0) < MD_BFTR_MIN_N || typeof v.roi !== 'number') return null;
-      return { roi: v.roi, n: v.n, traegt: v.roi >= MD_BFTR_BOOST, verliert: v.roi <= MD_BFTR_FADE };
+      if (!v || typeof v.roiUg !== 'number') return null;
+      return { roi: v.roi, roiUg: v.roiUg, n: v.n,
+               traegt: v.roiUg > MD_BFTR_BOOST, verliert: v.roiUg <= MD_BFTR_FADE };
     } catch (e) { return null; }
   }
   // ⚡ Sharpe Bewegungen: Vor-Anpfiff-Quotenbewegung (pp). +pp = Quote fällt = Geld drauf, −pp = driftet.

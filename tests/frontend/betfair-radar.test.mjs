@@ -285,7 +285,8 @@ test('Confidence-Badge am Markt in der Liste, wenn Track-Record belastbar', () =
   w._bfState.track = {
     n: 30, byLeagueMarket: {
       'UEFA Champions League Qualifiers|Match Odds': {
-        n: 30, wins: 18, hitRate: 0.6, roi: 0.1, nConc: 20, hitRateConc: 0.65, roiConc: 0.12, nInflow: 0, hitRateInflow: null, roiInflow: null,
+        // 04.09.2026: roiUg statt roi entscheidet — der Chip verstärkt erst ab belegter Kante.
+        n: 40, wins: 24, hitRate: 0.6, roi: 0.1, roiUg: 0.03, nConc: 20, hitRateConc: 0.65, roiConc: 0.12, nInflow: 0, hitRateInflow: null, roiInflow: null,
       },
     },
   };
@@ -296,7 +297,7 @@ test('Confidence-Badge am Markt in der Liste, wenn Track-Record belastbar', () =
   // bleibt daneben stehen.
   assert.match(html, /✅ trägt/, 'der Chip nennt die Wirkung nicht');
   assert.match(html, /\+10%/, 'der ROI ist aus dem Chip verschwunden');
-  assert.match(html, /n30/, 'die Stichprobe ist aus dem Chip verschwunden');
+  assert.match(html, /n40/, 'die Stichprobe ist aus dem Chip verschwunden');
   // Die ausführliche Begründung sitzt im Tooltip — der Chip in der Spielliste bleibt schmal.
   assert.match(html, /das Card-Signal wird verstärkt/,
     'der Tooltip erklärt nicht, was der Track in den Cards auslöst');

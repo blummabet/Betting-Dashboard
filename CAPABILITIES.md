@@ -908,10 +908,28 @@ bleibt abrechenbar, und „Draw" ist im Moneyline-Markt ein echter Ausgang.
   die Maschine `unaufloesbar` sagt — ein maschinelles Ergebnis kann sie nie überschreiben —, sie
   braucht `quelle` und `warum`, und der Report zählt sie getrennt (`korrigiert`).
 
-Nebenbefund: die Marktfrage wird gar nicht erst gesammelt. In `poly_money_broad_close.json` tragen
-**alle 2.000 Märkte** weder `title` noch `question`. Deshalb sperrt `_pub_seite_benennbar`
-generische Ausgänge für den Public-Kanal — ein Tipp, den der Leser nicht nachvollziehen kann, ist
-dort wertlos.
+**Und dann die Anschlussfrage** (*„aber kriegt man jetzt over Märkte richtig?"*) — berechtigt, denn
+bis hierhin war nur das Lügen abgestellt, nicht das Auflösen repariert.
+
+Die eigentliche Ursache saß eine Ebene tiefer: `_outcomes` wählt aus einem Event den Markt mit dem
+**meisten Volumen**, und `over/under` fällt in `_MAP_PROP_RE` — bei einem reinen Totals-Bündel ist
+die Vorauswahl also leer und es entscheidet allein das Volumen. Volumen verschiebt sich zwischen
+Anpfiff und Abrechnung, **also konnte die Auflösung einen anderen Markt lesen als die Erfassung.**
+Welchen, stand nirgends: `poly_money_broad_close.json` trug bei allen 2.000 Märkten weder `title`
+noch `question`, obwohl Gamma beides mitliefert und `_is_map_prop` die Frage sogar schon liest.
+
+Seit heute wird beides mitgeschrieben:
+
+- **`cond`** (conditionId) nagelt den Markt fest. Der Backfill löst nach der *gespeicherten*
+  conditionId auf statt nach „was heute das meiste Volumen hat" — damit lesen Erfassung und
+  Abrechnung denselben Markt, und `aufloesbar(..., cond=…)` gibt Bündel wieder frei.
+- **`frage`** nennt die Linie. Der Push zeigt jetzt `💰 $41K auf Over 2.5 goals` statt `auf Over`,
+  und `_pub_seite_benennbar` lässt generische Ausgänge wieder durch — **sobald** die Frage da ist.
+  Fehlt sie, bleibt der Push gesperrt.
+
+Alteinträge ohne conditionId werden **nicht** rückwirkend freigegeben: dort ist der Markt nicht
+rekonstruierbar, und „wird schon gepasst haben" wäre derselbe Fehler noch einmal. Sie bleiben
+`unaufloesbar`. Ab jetzt aufgenommene Over-Märkte rechnen korrekt ab.
 
 ---
 

@@ -424,13 +424,47 @@ class TestPubSeiteBenennbar(unittest.TestCase):
     oeffentlichen Kanal.
     """
 
+    LEE = "epl-lee-bre-2026-08-30-more-markets"
+    MIT_LINIE = {LEE: {"frage": "Will there be over 2.5 goals in Leeds vs Brentford?"}}
+
     def test_der_reale_fall_geht_nicht_mehr_raus(self):
-        self.assertFalse(P._pub_seite_benennbar(
-            {"key": "epl-lee-bre-2026-08-30-more-markets", "side": "Over"}))
+        self.assertFalse(P._pub_seite_benennbar({"key": self.LEE, "side": "Over"}))
 
     def test_alle_generischen_ausgaenge_fallen_raus(self):
         for seite in ("Over", "under", "Yes", "NO", "Ja", "Nein", "Draw", "Unentschieden", "Tie", "Über"):
             self.assertFalse(P._pub_seite_benennbar({"side": seite}), seite)
+
+    # ── Und der Weg zurueck: mit der Linie ist der Tipp wieder ein Tipp ──────
+    def test_mit_bekannter_linie_darf_over_wieder_raus(self):
+        """04.09.2026 (Lucas: „aber kriegt man jetzt over maerkte richtig?"). Die Sperre war nie
+        das Ziel — sie war die ehrliche Notloesung, solange die Linie fehlte. Seit sie erfasst
+        wird, ist „$41K auf Over 2.5 goals" ein nachvollziehbarer und nachpruefbarer Tipp."""
+        self.assertTrue(P._pub_seite_benennbar({"key": self.LEE, "side": "Over"}, self.MIT_LINIE))
+
+    def test_ohne_erfasste_frage_bleibt_es_gesperrt(self):
+        self.assertFalse(P._pub_seite_benennbar({"key": self.LEE, "side": "Over"}, {}))
+        self.assertFalse(P._pub_seite_benennbar({"key": self.LEE, "side": "Over"},
+                                                {self.LEE: {"frage": "   "}}))
+
+    def test_die_karte_nennt_die_linie_statt_nur_over(self):
+        pos = {"key": self.LEE, "side": "Over", "usd": 40686.0, "league": "EPL",
+               "firstPrice": 0.515, "wallet": "0xw"}
+        karte = P.build_public_card(pos, {}, False, self.MIT_LINIE)
+        self.assertIn("Over 2.5 goals", karte)
+        self.assertNotIn("auf <b>Over</b>", karte, 'das nackte Over darf nicht mehr dastehen')
+
+    def test_ohne_frage_bleibt_die_karte_beim_rohen_ausgang(self):
+        """Sie wird ohnehin nicht gesendet — aber sie darf keine Linie erfinden."""
+        pos = {"key": self.LEE, "side": "Over", "usd": 40686.0, "league": "EPL",
+               "firstPrice": 0.515, "wallet": "0xw"}
+        self.assertIn("auf <b>Over</b>", P.build_public_card(pos, {}, False, {}))
+
+    def test_linie_kurz_kuerzt_nur_was_eindeutig_ist(self):
+        self.assertEqual(P._linie_kurz("Will there be over 2.5 goals in X vs Y?"), "Over 2.5 goals")
+        self.assertEqual(P._linie_kurz("Total corners Under 9.5"), "Under 9.5")
+        # Keine Zahl an Over/Under -> lieber die ganze Frage als eine ungefaehre Kurzform.
+        self.assertEqual(P._linie_kurz("Will both teams score?"), "Will both teams score?")
+        self.assertIsNone(P._linie_kurz(None))
 
     def test_ein_team_oder_spielername_bleibt(self):
         for seite in ("Leeds United FC", "MIBR", "Alexandra Eala", "Brighton & Hove Albion FC"):
