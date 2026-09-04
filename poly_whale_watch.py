@@ -620,7 +620,13 @@ def build_public_card(pos: dict, scores: dict, restock: bool, broad: dict) -> st
     _tw = _rank_badge(scores, pos.get("wallet"), top=PUB_TOP_N)
     if _tw:
         lines.append(_tw)
-    lines += ["", "💰 <b>%s</b> auf <b>%s</b>" % (_usd(pos.get("usd") or 0), _esc(side))]
+    # 04.09.2026: bei einem generischen Ausgang die LINIE nennen, nicht nur „Over".
+    _label = side
+    if str(side).strip().lower() in _PUB_GENERISCH:
+        _lin = _linie_kurz(_markt_frage(key, broad))
+        if _lin:
+            _label = _lin
+    lines += ["", "💰 <b>%s</b> auf <b>%s</b>" % (_usd(pos.get("usd") or 0), _esc(_label))]
     pm = _price_move(pos)
     if pm:
         lines.append(pm)
@@ -752,14 +758,41 @@ _PUB_GENERISCH = {"over", "under", "über", "unter", "yes", "no", "ja", "nein", 
                   "draw", "the draw", "unentschieden"}
 
 
-def _pub_seite_benennbar(pos) -> bool:
-    """False, wenn die gesetzte Seite ohne die Marktfrage nichts aussagt. REIN/testbar."""
+def _markt_frage(key, broad):
+    """Die Frage des Markts („Will there be over 2.5 goals…") aus poly_money_broad_close.json.
+    04.09.2026: wird seit heute mitgeschrieben; fuer alles Aeltere fehlt sie. REIN/testbar."""
+    m = (broad or {}).get(key) if isinstance(broad, dict) else None
+    f = (m or {}).get("frage") if isinstance(m, dict) else None
+    return str(f).strip() if isinstance(f, str) and f.strip() else None
+
+
+def _linie_kurz(frage):
+    """Aus der Marktfrage die knappe Linie fuers Push-Label: „Over 2.5 goals". REIN/testbar.
+
+    Bewusst konservativ: nur wenn eine Zahl DIREKT an Over/Under haengt, wird gekuerzt. Sonst
+    steht die ganze Frage da — lieber laenger als ungefaehr, weil genau die Ungefaehrheit den
+    Leeds-Brentford-Fall verursacht hat."""
+    if not frage:
+        return None
+    m = _re.search(r"\b(over|under|ueber|über)\s*(\d+(?:[.,]\d+)?)\s*([a-zA-Zäöü]+)?", frage, _re.I)
+    if not m:
+        return frage
+    wort = (m.group(3) or "").strip()
+    return ("%s %s%s" % (m.group(1).title(), m.group(2).replace(",", "."),
+                         (" " + wort) if wort else "")).strip()
+
+
+def _pub_seite_benennbar(pos, broad=None) -> bool:
+    """Kann der Leser diesem Push folgen? REIN/testbar.
+
+    Ein generischer Ausgang („Over") ist erlaubt, SOBALD die Marktfrage die Linie nennt — dann
+    steht im Push „Over 2.5 goals" und der Tipp ist nachvollziehbar und nachpruefbar. Ohne
+    Frage bleibt er draussen: „$41K auf Over" ist kein Tipp, sondern ein Raetsel."""
     seite = str(pos.get("side") or "").strip().lower()
     if not seite:
         return False
     if seite in _PUB_GENERISCH:
-        return False
-    # „Over 2.5" waere benennbar — genau das fehlt heute, also faellt nur der nackte Fall raus.
+        return bool(_markt_frage(pos.get("key"), broad))
     return True
 
 
@@ -863,7 +896,7 @@ def main():
         print(f"  \U0001f6ab {_pre_blk - len(pub_cand)} Post(s) unterdrueckt — gesperrte(r) Sportart ({', '.join(_blocked)})")
     pub_cand = [c for c in pub_cand if _pub_min_odds_ok(c[1])]   # 22.08.2026 (Lucas): Public-Mindest-Quote (>=1.30) — kurze Favoriten raus
     _pre_gen = len(pub_cand)
-    pub_cand = [c for c in pub_cand if _pub_seite_benennbar(c[1])]   # 04.09.2026: „auf Over" ohne Linie ist kein Tipp
+    pub_cand = [c for c in pub_cand if _pub_seite_benennbar(c[1], broad)]   # 04.09.2026: „auf Over" ohne Linie ist kein Tipp
     if _pre_gen != len(pub_cand):
         print(f"  \U0001f4ad {_pre_gen - len(pub_cand)} Post(s) unterdrueckt — generischer Ausgang (Over/Under/Yes/No) ohne Marktfrage")
     _pre_contest = len(pub_cand)
