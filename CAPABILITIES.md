@@ -833,6 +833,43 @@ damit die Verwechslung nicht wiederkommt.
 
 ---
 
+### 💭 „$41K auf Over" — der Push, den niemand nachprüfen konnte (04.09.2026)
+
+Lucas' eigene Zwei-Wochen-Bilanz aus dem Channel: **12 Win, 2 Lost, E-Sport alles Win, 2 Premier
+League Lost.** Das Ledger zählt seit 21.08. genau **14 abgerechnete Pushs** — dieselbe Zahl, also
+sieht er dasselbe wie das Buch. Aber es zählt **13:1**, nicht 12:2.
+
+Die eine Abweichung ist Leeds–Brentford am 30.08. Der Push lautete:
+
+> 💰 **$41K** auf **Over**
+
+Endstand 1:1. **Over was?** Der Markt war `epl-lee-bre-2026-08-30-more-markets`, ein Totals-Markt
+ohne erfasste Linie: bei 1:1 gewinnt Over 1,5 und verliert Over 2,5. Lucas hat ihn als Verlust
+gebucht, unsere Auflösung als Treffer — und **keiner von beiden konnte es wissen**. In
+`poly_money_broad_close.json` tragen **alle 2.000 Märkte** weder `title` noch `question`; die
+Marktfrage wird nie mitgeschrieben. Von 230 `-more-markets`-Einträgen sind **213 Over/Under**.
+
+Ein Tipp, dem der Leser nicht folgen und den er nicht nachprüfen kann, gehört nicht in den
+öffentlichen Kanal — und ein Ergebnis, das wir selbst nicht eindeutig zuordnen können, verschmutzt
+das Buch. Seither sperrt `_pub_seite_benennbar` generische Ausgänge (Over/Under/Yes/No/Draw) für
+Public. Im Trades-Kanal bleiben sie, dort steht der Markt-Link daneben.
+
+**Die Bilanz selbst, ehrlich gelesen.** Der Break-even-Preis ist exakt die Trefferquote: 12 von 14
+= 85,7 %, also war es Gewinn, sofern der Ø-Einstieg darunter lag. Das ist er zwangsläufig — seit
+22.08. deckelt `PUB_MIN_ODDS = 1,30` jeden Push bei **76,9 ¢**. Selbst am Deckel:
+
+| Trefferbilanz | Ø-Preis 63,8 ¢ (die 3 bekannten) | 70 ¢ | 76,9 ¢ (Deckel) |
+|---|---|---|---|
+| 12:2 (Lucas) | +34,3 % | +22,4 % | **+11,5 %** |
+| 13:1 (Buch) | +45,5 % | +32,7 % | +20,8 % |
+
+Also ja, es hat verdient. Was es **nicht** ist: ein Beleg. Die Trefferquote-Untergrenze steht bei
+12/14 auf 64,7 %, eine Rendite-Untergrenze gibt es erst ab n=30, und vor allem stammen die
+vierzehn Pushs aus **genau zwei Wallets** — 9 der 10 E-Sport-Treffer von `0x29b5…`, alle vier
+übrigen von `0x076d…`. Zwei Wochen messen hier zwei Wallets, nicht ein Verfahren.
+
+---
+
 ### 🧭 Das Lern-Gedächtnis war 18 Tage lang (04.09.2026)
 
 Lucas: *„der Bereich wo quasi gelernt wird steht immer noch mit 500 Plays — ist das eh kein hard

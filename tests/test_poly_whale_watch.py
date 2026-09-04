@@ -411,6 +411,43 @@ class TestPubMinOdds(unittest.TestCase):
         self.assertFalse(P._pub_min_odds_ok({"firstPrice": None}))
 
 
+class TestPubSeiteBenennbar(unittest.TestCase):
+    """04.09.2026 — Lucas' Zwei-Wochen-Bilanz war 12:2, unser Buch sagte 13:1.
+
+    Die eine Abweichung ist Leeds–Brentford am 30.08. Der Push lautete „💰 $41K auf Over" und das
+    Spiel endete 1:1. Over WAS? Der Markt war `epl-lee-bre-2026-08-30-more-markets`, ein
+    Totals-Markt ohne erfasste Linie: bei 1:1 gewinnt Over 1,5 und verliert Over 2,5. Lucas hat
+    ihn als Verlust gebucht, unsere Aufloesung als Treffer — und keiner von beiden konnte es
+    wissen, weil in poly_money_broad_close.json bei allen 2000 Maerkten `title`/`question` fehlt.
+
+    Ein Tipp, dem der Leser nicht folgen und den er nicht nachpruefen kann, gehoert nicht in den
+    oeffentlichen Kanal.
+    """
+
+    def test_der_reale_fall_geht_nicht_mehr_raus(self):
+        self.assertFalse(P._pub_seite_benennbar(
+            {"key": "epl-lee-bre-2026-08-30-more-markets", "side": "Over"}))
+
+    def test_alle_generischen_ausgaenge_fallen_raus(self):
+        for seite in ("Over", "under", "Yes", "NO", "Ja", "Nein", "Draw", "Unentschieden", "Tie", "Über"):
+            self.assertFalse(P._pub_seite_benennbar({"side": seite}), seite)
+
+    def test_ein_team_oder_spielername_bleibt(self):
+        for seite in ("Leeds United FC", "MIBR", "Alexandra Eala", "Brighton & Hove Albion FC"):
+            self.assertTrue(P._pub_seite_benennbar({"side": seite}), seite)
+
+    def test_fehlende_seite_ist_keine_erlaubnis(self):
+        self.assertFalse(P._pub_seite_benennbar({}))
+        self.assertFalse(P._pub_seite_benennbar({"side": None}))
+        self.assertFalse(P._pub_seite_benennbar({"side": "  "}))
+
+    def test_die_sperre_haengt_an_der_seite_nicht_am_slug(self):
+        """Ein „-more-markets"-Markt mit einem echten Ausgang (z. B. Torschuetze) bleibt drin —
+        gesperrt wird, was unlesbar ist, nicht was einen bestimmten Slug hat."""
+        self.assertTrue(P._pub_seite_benennbar(
+            {"key": "epl-lee-bre-2026-08-30-more-markets", "side": "Kevin Schade"}))
+
+
 class TestTop20RankBadge(unittest.TestCase):
     # 23.08.2026 (Lucas): Top-20-Wallets im Trades-Push extra markieren (Rang der Sharp-Rangliste).
     def _scores(self):

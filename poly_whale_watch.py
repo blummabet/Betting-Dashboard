@@ -727,6 +727,42 @@ def _pub_min_odds_ok(pos) -> bool:
     return True
 
 
+# 04.09.2026 (Lucas' Zwei-Wochen-Bilanz: „12 Win, 2 lost — 2 Premier League lost").
+# Unser Buch zaehlte 13:1, Lucas 12:2. Die eine Abweichung ist Leeds–Brentford am 30.08., und
+# der Unterschied ist kein Zaehlfehler, sondern ein Fehler im PUSH:
+#
+#     💰 $41K auf Over        →  Leeds United FC v Brentford FC, Endstand 1:1
+#
+# „Over" WAS? Der Markt war `epl-lee-bre-2026-08-30-more-markets` — ein Totals-Markt, dessen Linie
+# nirgends steht. Bei 1:1 gewinnt Over 1,5 und verliert Over 2,5. Lucas hat den Push als Verlust
+# gebucht, unsere Aufloesung als Treffer, und BEIDE konnten es nicht wissen: in
+# poly_money_broad_close.json haben alle 2000 Maerkte weder `title` noch `question` — die
+# Marktfrage wird gar nicht erst mitgeschrieben. Von 230 „-more-markets" tragen 213 Over/Under.
+#
+# Ein Push, den der Leser nicht nachvollziehen kann, ist im oeffentlichen Kanal wertlos: er kann
+# ihm nicht folgen und er kann ihn nicht nachpruefen. Und ein Ergebnis, das wir selbst nicht
+# eindeutig zuordnen koennen, verschmutzt das Buch — es zaehlt als Treffer oder Fehlschlag, ohne
+# dass jemand sagen kann, worauf.
+#
+# Deshalb: generische Ausgaenge (Over/Under/Yes/No) gehen nicht mehr in den Public-Kanal, solange
+# die Linie nicht mitgeliefert wird. Im Trades-Kanal bleiben sie — dort entscheidet Lucas selbst
+# und sieht den Markt-Link. Das ist bewusst die Sperre und nicht ein Warnhinweis: „$41K auf Over"
+# mit Sternchen ist immer noch nicht spielbar.
+_PUB_GENERISCH = {"over", "under", "über", "unter", "yes", "no", "ja", "nein", "tie",
+                  "draw", "the draw", "unentschieden"}
+
+
+def _pub_seite_benennbar(pos) -> bool:
+    """False, wenn die gesetzte Seite ohne die Marktfrage nichts aussagt. REIN/testbar."""
+    seite = str(pos.get("side") or "").strip().lower()
+    if not seite:
+        return False
+    if seite in _PUB_GENERISCH:
+        return False
+    # „Over 2.5" waere benennbar — genau das fehlt heute, also faellt nur der nackte Fall raus.
+    return True
+
+
 def _pub_keep(pos, scores):
     """13.08.2026 (Lucas): Public NUR bewiesen scharfe Wallets — Record n>=PUB_MIN_TR, >=PUB_MIN_HITRATE
     Treffer, kein bestaetigter Verlierer (_is_smart). Grosse-aber-unbewiesene Wallets (frueher ab
@@ -826,6 +862,10 @@ def main():
     if _pre_blk != len(pub_cand):
         print(f"  \U0001f6ab {_pre_blk - len(pub_cand)} Post(s) unterdrueckt — gesperrte(r) Sportart ({', '.join(_blocked)})")
     pub_cand = [c for c in pub_cand if _pub_min_odds_ok(c[1])]   # 22.08.2026 (Lucas): Public-Mindest-Quote (>=1.30) — kurze Favoriten raus
+    _pre_gen = len(pub_cand)
+    pub_cand = [c for c in pub_cand if _pub_seite_benennbar(c[1])]   # 04.09.2026: „auf Over" ohne Linie ist kein Tipp
+    if _pre_gen != len(pub_cand):
+        print(f"  \U0001f4ad {_pre_gen - len(pub_cand)} Post(s) unterdrueckt — generischer Ausgang (Over/Under/Yes/No) ohne Marktfrage")
     _pre_contest = len(pub_cand)
     pub_cand = [c for c in pub_cand if not _contested_market(c[1].get("key"), broad)]   # 12.08.2026 (Lucas): Gegenseiten-Krieg raus — umkaempfte Spiele gar nicht posten
     if _pre_contest != len(pub_cand):
