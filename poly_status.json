@@ -61,7 +61,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "71 geprueft, davon 9 abgeschnitten"
+      "note": "73 geprueft, davon 9 abgeschnitten"
     },
     {
       "id": "settlement_alive",
@@ -70,7 +70,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "atp-virtane-dimitro-2026-08-27: seit 8.8 Tagen offen — keine Auflösung gefunden"
+        "atp-virtane-dimitro-2026-08-27: seit 8.9 Tagen offen — keine Auflösung gefunden"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -90,9 +90,9 @@
       "ok": false,
       "nFail": 5,
       "failures": [
-        "87/214 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (41%) — Trefferquote allein trügt",
-        "   0x84cfffc3f1… n=119 Treffer 58% P&L $-7,632,178",
-        "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,974,882",
+        "88/215 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (41%) — Trefferquote allein trügt",
+        "   0x84cfffc3f1… n=119 Treffer 58% P&L $-7,619,607",
+        "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,975,494",
         "   0xa0f21e6d35… n=72 Treffer 64% P&L $-2,635,720",
         "   0xabb89972b2… n=26 Treffer 69% P&L $-2,563,982"
       ],
@@ -102,11 +102,9 @@
       "id": "accuracy_backtest_fresh",
       "label": "Genauigkeits-Backtest frisch & belastbar",
       "severity": "error",
-      "ok": false,
-      "nFail": 1,
-      "failures": [
-        "Stichprobe auf n=27 geschrumpft (< 30) — Trefferquoten nicht belastbar"
-      ],
+      "ok": true,
+      "nFail": 0,
+      "failures": [],
       "note": "poly_money_broad muss frisch sein und n groß genug, sonst ist 'folgt dem Geld' Zufall."
     },
     {
@@ -137,6 +135,6 @@
       "note": "poly_direct_bets.py rechnet über poly_resolutions.json ab. Hängt ein Bet, kennt Poly den Ausgang nicht (Markt noch offen/obskur) oder der Slug passt nicht — dann fehlt echtes Geld in der Bilanz."
     }
   ],
-  "nFail": 3,
-  "generatedAt": "2026-09-04T20:01:04.755886+00:00"
+  "nFail": 2,
+  "generatedAt": "2026-09-04T21:00:30.909498+00:00"
 }
