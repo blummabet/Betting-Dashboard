@@ -425,17 +425,33 @@ test('Anpfiff: Minuten davor positiv, danach negativ', () => {
   assert.equal(API._srBisAnpfiff({}), null, 'ohne Anpfiff wird nichts behauptet');
 });
 
-test('der Norm-Faktor nimmt den groessten EINZELNEN Einsatz, nicht die Summe', () => {
-  // Zehn Wetten a $2.000 sind ein normaler Abend, EINE ueber $30.000 ist das Ereignis.
-  const block = schneide('function _srNormFaktor', 'function _srUmkaempft');
-  assert.ok(/groesster/.test(block));
-  assert.ok(!/geldUsd/.test(block), 'die Spielsumme waere hier das falsche Mass');
-  assert.ok(/basis !== 'gelernt'/.test(block), 'ohne gelernte Norm gibt es keinen Faktor');
+test('die Kachel rechnet die Auffaelligkeit NICHT selbst, sie schlaegt sie nach', () => {
+  // 04.09.2026. Vorher stand hier `groesster / n.median` — Erzeuger-Logik im Frontend, und
+  // dazu die falsche Groesse: `x Median` waechst mit der Stichprobengroesse (r = +0,68 ueber
+  // 31 Ligen), die Kachel haette also markiert, wo wir am laengsten gesammelt haben.
+  // Der groesste Einzeleinsatz und der Kombi-Ausschluss sind jetzt Sache von
+  // stake_analyse.py (test_kombis_zaehlen_nicht_als_auffaelliger_einsatz).
+  const block = schneide('function _srAuffIndex', 'function _srUmkaempft');
+  // Kommentare raus: der Kopf dieser Funktion ERKLAERT den alten Median-Fehler und darf
+  // ihn nennen. Geprueft wird der Code, nicht die Prosa (derselbe Fehler wie im
+  // Vertragstest am 03.09., wo Kommentarzeilen mitgematcht haben).
+  const nurCode = block.split('\n').filter((z) => !/^\s*(\/\/|\*|\/\*)/.test(z)).join('\n');
+  assert.ok(/SR_AUS\.auffaellige/.test(nurCode), 'die Quelle ist das Urteil des Erzeugers');
+  assert.ok(!/median/i.test(nurCode), 'kein Nenner im Frontend — sonst ist die Logik wieder doppelt');
+  assert.ok(!/\/\s*n\.median/.test(CODE), 'nirgends im Radar wird der Faktor neu gerechnet');
 });
 
-test('Kombis zaehlen auch beim Norm-Faktor nicht', () => {
-  const block = schneide('function _srNormFaktor', 'function _srUmkaempft');
-  assert.ok(/!w\.kombi/.test(block));
+test('gemessenes Urteil schlaegt den blossen Median-Faktor', () => {
+  const block = schneide('function _srAuffIndex', 'function _srUmkaempft');
+  assert.ok(/zufallPct != null && alt\.zufallPct == null/.test(block),
+    'eine Zeile mit Seltenheitsurteil muss eine ohne verdraengen, nie umgekehrt');
+});
+
+test('„zu duenn" sieht anders aus als „gemessen"', () => {
+  // Kein Urteil ist etwas anderes als ein gemessenes Nein — das muss man sehen koennen.
+  assert.ok(/sr-norm-schwach/.test(CODE));
+  assert.ok(/\(dünn\)/.test(CODE));
+  assert.ok(/% selten/.test(CODE), 'das gemessene Badge nennt die Seltenheit, kein Vielfaches');
 });
 
 test('der Spielbar-Filter laesst 30 Minuten Live zu und sagt, was er weglaesst', () => {

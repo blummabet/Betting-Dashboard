@@ -34,7 +34,13 @@ Dieses Modul führt einen eigenen, wachsenden Stichprobenstand je Liga — diese
     verziehen), Kombis auch nicht (ihr Einsatz gehört keinem Spiel allein).
 
 ## Was am Ende dasteht
-`stake_league_norm.json`: je Liga n, Median, 90 %-Punkt, Maximum, und ab wann gemessen wurde.
+`stake_league_norm.json`: je Liga n, Median, 90 %-Punkt, Maximum, und ab wann gemessen wurde —
+dazu die Schwanz-Fits (`schwanz`) fuer die n-korrigierte Auffaelligkeit.
+
+04.09.2026 — warum der Schwanz dazukam: `max/median` waechst mit der Stichprobengroesse
+(r = +0,68 ueber 31 Ligen), und die Liga-Mediane liegen ohnehin alle um 2.000. Die Rangliste
+sortierte damit nach Sammeldauer statt nach Auffaelligkeit. Die Begruendung steht vollstaendig
+im Kopf von `stake_seltenheit.py`.
 Unter MIN_N gibt es weiterhin **keine Norm** — nicht Median 0, nicht der globale Wert. Über
 eine Liga mit vier Wetten ist nichts bekannt, und das muss anders aussehen als ein gemessenes
 „unauffällig".
@@ -56,6 +62,7 @@ BASE = Path(__file__).resolve().parent
 sys.path.insert(0, str(BASE))
 
 import stake_highroller_fetch as SH
+from stake_seltenheit import schwanz
 
 LEDGER_FILE = BASE / "stake_bet_ledger.json"
 STATE_FILE = BASE / "stake_league_norm_state.json"
@@ -150,6 +157,12 @@ def norm_bauen(state: dict) -> dict:
                 "p90": round(betraege[min(n - 1, int(round(0.9 * (n - 1))))], 2),
                 "max": round(betraege[-1], 2),
             })
+            # Schwanz-Fits fuer die n-korrigierte Auffaelligkeit (stake_seltenheit).
+            # Getrennte Untergrenze: die Norm gibt es ab MIN_N, ein SCHAETZBARER Schwanz
+            # erst ab TAIL_MIN_N. Eine Liga kann also einen Median haben und trotzdem
+            # kein Seltenheitsurteil — das ist gewollt und muss unterscheidbar bleiben.
+            fits = schwanz(betraege)
+            eintrag["schwanz"] = fits          # None, wenn nicht schaetzbar. Kein Ersatzwert.
         zeiten = [p[0] for p in reihe if p[0]]
         if zeiten:
             eintrag["seit"] = (datetime.fromtimestamp(min(zeiten) / 1000.0, timezone.utc)

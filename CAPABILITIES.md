@@ -1351,6 +1351,70 @@ Venue-Matching und die Enge der Namensbrücke (Real Madrid ≠ Real Sociedad) fe
 
 ---
 
+### 04.09.2026 — die Rangliste sortierte nach Sammeldauer, nicht nach Auffälligkeit
+
+Lucas in der Übersicht: *„Ich seh da ein US Open Woman Single, da steht 129 mal so viel.
+Danach US Open Main Single 83 mal so viel. Das wird sich, glaub ich, eher glätten, umso länger
+die Bewerbe laufen."*
+
+**Es glättete sich nicht — es wuchs.** Über die 31 Ligen mit gelernter Norm: Korrelation
+zwischen `log(n)` und `log(max/median)` = **r = +0,68**.
+
+| Stichproben je Liga | Ligen | Median von max/median |
+|---|---|---|
+| 15–29 | 14 | 7× |
+| 30–59 | 9 | 5× |
+| 60–149 | 5 | 18× |
+| 150–399 | 2 | 91× |
+| 400+ | 1 | 83× |
+
+Mechanisch und ohne jeden Wett-Bezug: der **Median steht nach einem Tag still, das Maximum
+kann nur steigen**. `max/median` rankte damit *„wo haben wir am meisten gesammelt"*. US Open
+stand oben, weil US Open läuft.
+
+**Zweiter Befund:** die 31 Liga-Mediane liegen zwischen 1.300 und 4.500, dicht um 2.000 —
+eine Anzeigeschwelle von Stake, kein Liga-Merkmal. `× Norm` war praktisch *„Einsatz ÷ 2.000"*.
+Der p90 dagegen spannt 2.753 bis 40.000; die Liga-Information steckt im Schwanz, nicht in der
+Mitte.
+
+`stake_seltenheit.py` rechnet stattdessen: Schwanz-Index nach **Hill** aus den größten k
+Stichproben der Liga selbst, daraus `erwartetN = n · P(X ≥ x)` — *wie viele Wetten dieser
+Größe in dem, was wir gesehen haben, überhaupt zu erwarten waren.* Weil n in der Formel steht,
+wächst die Zahl nicht mehr mit der Sammeldauer.
+
+**Zwei Korrekturen, die erst die Messung erzwungen hat:**
+
+1. **Ein Schwanzausschnitt trägt nicht.** Die Caribbean Premier League stand mit k=7 auf
+   Platz 1 der ganzen Liste (22,1×), mit k=15 bei 1,2×. Ihre größten Werte sind
+   8.588 / 8.732 / 9.160 / 9.250 / 9.300 / 9.300 / 9.300 / 9.855 / 9.900 — ein **Plateau**,
+   darüber eine einzelne 15.580. Ein Hill-Schätzer im Plateau sieht keine Streuung, schätzt
+   alpha riesig und erklärt die nächstgrößere Wette für fast unmöglich. Geklemmte Varianz,
+   dieselbe Krankheit wie *„UG +74 % aus drei Plays"*. Jetzt wird über fünf k gerechnet und
+   der **konservativste** gewertet; `kSpanne` zeigt die Wackeligkeit mit.
+2. **Auch `ueberErwartung` allein ist kein Urteil.** Ein Test fand es: in einer sauberen
+   Stichprobe, in der per Konstruktion **nichts** auffällig ist, liegt das Maximum in
+   **23–31 % der Fälle** bei „2× über Erwartung". Der Median liegt bei 1,1 — die Eichung
+   stimmt —, aber der Nullschwanz ist breit. Schlimmer: der 90 %-Punkt der Nullverteilung
+   läuft selbst von 3,2 (n=100) auf 5,0 (n=600) — eine feste Schwelle hätte die große Liga
+   wieder bevorzugt, dieselbe Krankheit eine Etage höher. Deshalb `zufallPct` gegen eine
+   **simulierte Nullverteilung** (`NULL`, 6.000 Durchläufe je Stützstelle, in log n
+   interpoliert): *wie oft eine völlig unauffällige Liga dieser Größe so etwas hervorbringt.*
+   n-frei, dieselbe Größe wie `zufallPct` bei den Serien.
+
+**Wirkung am 04.09.:** von 55 gemeldeten Auffälligkeiten überlebt **eine** das gemessene
+Urteil — 199.000 $ auf Ipswich–Liverpool, 10 % selten. US Open Women (129× Median, 3,6× über
+Erwartung) fällt heraus: bei n=263 liegt der 90 %-Punkt der Nullverteilung bei 3,87. Der Rest
+steht dahinter mit dem schwächeren Kriterium und sagt das auch.
+
+**Drei unterscheidbare Zustände**, keiner rendert als harmlose Zahl: `n-korrigiert`
+(gemessenes Urteil, ab n=40) · `nur median` (Norm ja, Schwanz nicht schätzbar) · `keine Norm`.
+
+Nebenbei behoben: `stake-radar.js` rechnete `groesster / n.median` **selbst** — Erzeuger-Logik
+im Frontend, die Bug-Klasse aus Abschnitt 7. Die Kachel schlägt jetzt nur noch nach, und ein
+Vertragstest hält fest, dass im Radar kein Nenner mehr steht.
+
+---
+
 ## 8. Harte Arbeitsregeln
 
 - **Push nur über GitHub Desktop**, nie CLI.
