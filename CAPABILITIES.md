@@ -1054,6 +1054,46 @@ von `compute_streaks.py` gilt unverändert.
 
 ---
 
+### 🧭 Übersicht-Check: drei Sätze, die etwas anderes sagten als die Zahlen (04.09.2026)
+
+**1. Die Serien-Kachel sortierte weiter nach Länge.** Der Serien-Umbau vom selben Tag
+(`zufallPct` statt Länge) lief an der Übersicht vorbei — sie hat ihre eigene Sortierung. Das
+Ergebnis stand fünfmal untereinander:
+
+> 🇺🇸 Chicago Fire · Team trifft · **15×** · Grundrate 82 % · 🇺🇸 Inter Miami · Team trifft ·
+> **15×** · Grundrate 82 % · 🏴 Bournemouth · Team trifft · **15×** · Grundrate 81 % …
+
+Die Kachel schrieb die Grundrate selbst dazu **und rankte trotzdem danach, dass sie hoch ist.**
+Jetzt sortiert sie nach Seltenheit wie der Serien-Tab, blendet logisch eingeschlossene Serien aus
+und sagt beim Label, woher die Rate kommt („Liga-Schnitt 82 %" vs. „vorher 40 %") — vorher hieß
+beides „Grundrate".
+
+**2. Ebene 1 nannte den falschen Blocker.** Der Text lautete pauschal *„keine Schublade hat ihre
+Untergrenze über null"*. An dem Tag stimmte das nicht:
+
+| Schublade | n | ROI | ROI-UG | CLV-UG |
+|---|---|---|---|---|
+| **Liga · ABWÄGEN** | 46 | +24,4 % | **+3,7 %** | −2,16 |
+
+Die Rendite-Untergrenze lag sehr wohl über null — gescheitert ist die Schublade an der
+**CLV-Bedingung**. Wer nur den Satz liest, hält die Renditen für chancenlos, obwohl eine Hürde
+genommen war und eine andere blockierte. Der Grund wird jetzt aus den Zahlen bestimmt.
+
+Dabei fiel ein zweites auf: **7 der 18 reifen Schubladen tragen gar keinen CLV-Wert** — darunter
+Over/Under 2.5 (n=1668) und Match Odds (n=1654). „CLV-UG ≥ 0" ist mit einem fehlenden Wert nie
+erfüllbar; die sind **strukturell nicht freigebbar**, egal wie gut ihr ROI wird. Das steht jetzt
+dabei, statt als „noch nicht so weit" durchzugehen.
+
+**3. „🎮 Poly Public n155 · 70 % · +5,0 %" war die Vorschau, die nichts sendet.** Genau die
+Verwechslung, die Lucas am Morgen im Track-Record gemeldet hatte — hier stand sie noch, und zwar
+ganz oben im Puls, wo sie sich wie die Bilanz des öffentlichen Kanals liest. Die Kachel las
+`agg.public` aus dem Shortlist-Track; `poly-wallets.js` sagt an derselben Stelle selbst *„NUR
+Vorschau (sendet nicht)"*. Das echte Push-Buch stand bei **n=3**. Die Kachel heißt jetzt
+„Poly-Kandidaten · Vorschau, sendet nicht" und trägt die Zahl der wirklich gesendeten Pushs als
+eigenes Feld daneben; `sendet: False` ist im Producer hart verdrahtet.
+
+---
+
 ### 🧭 Das Lern-Gedächtnis war 18 Tage lang (04.09.2026)
 
 Lucas: *„der Bereich wo quasi gelernt wird steht immer noch mit 500 Plays — ist das eh kein hard
