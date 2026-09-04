@@ -1,5 +1,5 @@
 {
- "updatedAt": "2026-09-04T06:34:39.880115+00:00",
+ "updatedAt": "2026-09-04T06:57:57.768632+00:00",
  "stake": 10.0,
  "expired": 0,
  "blockedCats": [
@@ -38,7 +38,7 @@
    "entryPrice": 0.68,
    "firstTs": "2026-08-21T11:45:56.952462+00:00",
    "lastPrice": 0.69,
-   "lastTs": "2026-09-04T06:34:39.880115+00:00",
+   "lastTs": "2026-09-04T06:57:57.768632+00:00",
    "htkAtEntry": 2.278193611111111,
    "public": true,
    "reasons": [
@@ -61,7 +61,7 @@
    "entryPrice": 0.715,
    "firstTs": "2026-08-27T14:49:55.824552+00:00",
    "lastPrice": 0.715,
-   "lastTs": "2026-09-04T06:34:39.880115+00:00",
+   "lastTs": "2026-09-04T06:57:57.768632+00:00",
    "htkAtEntry": 1.71763,
    "public": true,
    "reasons": [
@@ -147,30 +147,6 @@
    "stake": 10.0,
    "ev": "2026-09-01"
   },
-  "atp-zverev-halys-2026-09-03|Alexander Zverev": {
-   "key": "atp-zverev-halys-2026-09-03",
-   "side": "Alexander Zverev",
-   "verdict": "BET",
-   "conv": 5,
-   "league": "TENNIS",
-   "cat": "Tennis",
-   "entryPrice": 0.865,
-   "firstTs": "2026-09-04T01:24:44.377518+00:00",
-   "lastPrice": 0.865,
-   "lastTs": "2026-09-04T06:34:39.880115+00:00",
-   "htkAtEntry": 0.04697833333333334,
-   "public": false,
-   "reasons": [
-    "großes Geld auf Alexander Zverev (86%) → $141K",
-    "Steam läuft rein (+2.0pp)"
-   ],
-   "signals": [
-    "money",
-    "steam"
-   ],
-   "stake": 10.0,
-   "ev": "2026-09-01"
-  },
   "cs2-mouzn-bw-2026-09-04|Bushido Wildcats": {
    "key": "cs2-mouzn-bw-2026-09-04",
    "side": "Bushido Wildcats",
@@ -180,8 +156,8 @@
    "cat": "E-Sport",
    "entryPrice": 0.775,
    "firstTs": "2026-09-04T05:28:28.621839+00:00",
-   "lastPrice": 0.765,
-   "lastTs": "2026-09-04T06:34:39.880115+00:00",
+   "lastPrice": 0.77,
+   "lastTs": "2026-09-04T06:57:57.768632+00:00",
    "htkAtEntry": 2.5608524999999998,
    "public": false,
    "reasons": [
@@ -205,12 +181,36 @@
    "entryPrice": 0.695,
    "firstTs": "2026-09-04T06:28:23.629803+00:00",
    "lastPrice": 0.695,
-   "lastTs": "2026-09-04T06:34:39.880115+00:00",
+   "lastTs": "2026-09-04T06:57:57.768632+00:00",
    "htkAtEntry": 2.570911388888889,
    "public": false,
    "reasons": [
     "großes Geld auf Nuclear TigeRES (70%) → $63K",
     "🔥 scharfe Wallets (faktisch belegt) (2 Wallets, zusammen 79/128, 62% · +$453K) · zählt 99%"
+   ],
+   "signals": [
+    "money",
+    "sharp"
+   ],
+   "stake": 10.0,
+   "ev": "2026-09-01"
+  },
+  "val-ns1-ge1-2026-09-04|Nongshim RedForce": {
+   "key": "val-ns1-ge1-2026-09-04",
+   "side": "Nongshim RedForce",
+   "verdict": "BET",
+   "conv": 5,
+   "league": "ESPORTS",
+   "cat": "E-Sport",
+   "entryPrice": 0.625,
+   "firstTs": "2026-09-04T06:57:57.768632+00:00",
+   "lastPrice": 0.625,
+   "lastTs": "2026-09-04T06:57:57.768632+00:00",
+   "htkAtEntry": 1.0764630555555557,
+   "public": false,
+   "reasons": [
+    "großes Geld auf Nongshim RedForce (62%) → $23K",
+    "🔥 scharfe Wallet (66/109, 61% · +$437K)"
    ],
    "signals": [
     "money",
@@ -11693,16 +11693,40 @@
    "ev": "2026-09-01",
    "settledTs": "2026-09-04T05:57:43.527225+00:00",
    "resolvedTs": "2026-09-04T05:57:42.378596+00:00"
+  },
+  {
+   "key": "atp-zverev-halys-2026-09-03",
+   "side": "Alexander Zverev",
+   "verdict": "BET",
+   "conv": 5,
+   "league": "TENNIS",
+   "cat": "Tennis",
+   "entryPrice": 0.865,
+   "closePrice": 0.865,
+   "result": "win",
+   "winner": "Alexander Zverev",
+   "pnl": 1.56,
+   "clvPP": 0.0,
+   "stake": 10.0,
+   "public": false,
+   "signals": [
+    "money",
+    "steam"
+   ],
+   "firstTs": "2026-09-04T01:24:44.377518+00:00",
+   "ev": "2026-09-01",
+   "settledTs": "2026-09-04T06:57:57.768632+00:00",
+   "resolvedTs": "2026-09-04T06:57:56.571344+00:00"
   }
  ],
  "agg": {
   "all": {
-   "n": 500,
-   "wins": 314,
-   "hit": 0.628,
-   "pnl": -24.62,
-   "stake": 5000.0,
-   "roi": -0.0049,
+   "n": 501,
+   "wins": 315,
+   "hit": 0.6287,
+   "pnl": -23.06,
+   "stake": 5010.0,
+   "roi": -0.0046,
    "clvAvg": -0.14
   },
   "public": {
@@ -11715,12 +11739,12 @@
    "clvAvg": -0.22
   },
   "bettable": {
-   "n": 449,
-   "wins": 295,
-   "hit": 0.657,
-   "pnl": 184.13,
-   "stake": 4490.0,
-   "roi": 0.041,
+   "n": 450,
+   "wins": 296,
+   "hit": 0.6578,
+   "pnl": 185.69,
+   "stake": 4500.0,
+   "roi": 0.0413,
    "clvAvg": -0.08
   },
   "blocked": {
@@ -11770,12 +11794,12 @@
     "clvAvg": -0.45
    },
    "Tennis": {
-    "n": 102,
-    "wins": 73,
-    "hit": 0.7157,
-    "pnl": -14.61,
-    "stake": 1020.0,
-    "roi": -0.0143,
+    "n": 103,
+    "wins": 74,
+    "hit": 0.7184,
+    "pnl": -13.05,
+    "stake": 1030.0,
+    "roi": -0.0127,
     "clvAvg": -0.18
    },
    "US-Sport": {
@@ -11808,12 +11832,12 @@
     "clvAvg": 0.0
    },
    "5": {
-    "n": 187,
-    "wins": 112,
-    "hit": 0.5989,
-    "pnl": -24.66,
-    "stake": 1870.0,
-    "roi": -0.0132,
+    "n": 188,
+    "wins": 113,
+    "hit": 0.6011,
+    "pnl": -23.1,
+    "stake": 1880.0,
+    "roi": -0.0123,
     "clvAvg": -0.21
    },
    "6": {
@@ -11864,12 +11888,12 @@
   },
   "byVerdict": {
    "BET": {
-    "n": 500,
-    "wins": 314,
-    "hit": 0.628,
-    "pnl": -24.62,
-    "stake": 5000.0,
-    "roi": -0.0049,
+    "n": 501,
+    "wins": 315,
+    "hit": 0.6287,
+    "pnl": -23.06,
+    "stake": 5010.0,
+    "roi": -0.0046,
     "clvAvg": -0.14
    }
   },
@@ -11902,12 +11926,12 @@
     "clvAvg": 0.0
    },
    "money": {
-    "n": 411,
-    "wins": 273,
-    "hit": 0.6642,
-    "pnl": 53.01,
-    "stake": 4110.0,
-    "roi": 0.0129,
+    "n": 412,
+    "wins": 274,
+    "hit": 0.665,
+    "pnl": 54.57,
+    "stake": 4120.0,
+    "roi": 0.0132,
     "clvAvg": -0.11
    },
    "pinn": {
@@ -11929,13 +11953,13 @@
     "clvAvg": -0.32
    },
    "steam": {
-    "n": 141,
-    "wins": 86,
-    "hit": 0.6099,
-    "pnl": -126.81,
-    "stake": 1410.0,
-    "roi": -0.0899,
-    "clvAvg": 0.14
+    "n": 142,
+    "wins": 87,
+    "hit": 0.6127,
+    "pnl": -125.25,
+    "stake": 1420.0,
+    "roi": -0.0882,
+    "clvAvg": 0.13
    },
    "turned": {
     "n": 1,
