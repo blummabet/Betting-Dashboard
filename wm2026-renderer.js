@@ -411,11 +411,22 @@
   // Per-Match-Serien-Box für eine Card (28.06.2026, Lucas): Serien von Heim/Auswärts dieses Spiels.
   // Pro (Team,Markt) genau EINE Serie wählen: bevorzugt die venue-passende (Heim-Serie fürs
   // Heimteam, Auswärts fürs Auswärtsteam), sonst die Gesamt-Serie. Verhindert H/A/Gesamt-Duplikate.
+  // 🔴 04.09.2026 (Lucas-Cards-Check). `score` gab der GEGENTEILIGEN Hälfte eine 0 — und 0 hat
+  // gereicht, weil es keine Untergrenze gab. Auf Werder Bremen (Heim) v RB Leipzig (Auswärts)
+  // standen deshalb beide Zeilen falschherum:
+  //
+  //     RB Leipzig · Ungeschlagen HEIM 6×        → Leipzig spielt hier auswärts
+  //     Werder Bremen · Über 9,5 Ecken AUSWÄRTS 5× → Werder spielt hier daheim
+  //
+  // In den Daten hat Werder ausschließlich Auswärts-Serien, Leipzig fast nur Heim-Serien. Die
+  // Box heißt „Serien in diesem Spiel"; eine Serie aus der anderen Hälfte gehört dort nicht
+  // hinein — sie wird auf dieses Spiel bezogen, obwohl sie darüber nichts sagt.
   function _streaksForTeam(list, teamId, prefVenue) {
     const byType = {};
-    const score = (v) => (v === prefVenue ? 2 : v === 'all' ? 1 : 0);
+    const score = (v) => (v === prefVenue ? 2 : (v === 'all' || !v) ? 1 : 0);
     for (const s of list) {
       if (s.teamId !== String(teamId)) continue;
+      if (!score(s.venue)) continue;            // andere Hälfte → gar nicht erst aufnehmen
       const cur = byType[s.type];
       if (!cur || score(s.venue) > score(cur.venue)) byType[s.type] = s;
     }
@@ -2140,6 +2151,35 @@
   //  ANGLE DERIVATION — übersetzt Pick + Daten in eine
   //  semantische "Angle"-Kategorie (wie National-Labels)
   // ─────────────────────────────────────────────────────
+  // ═══════════════════════════════════════════════════════════════════════════
+  //  🔴 04.09.2026 (Lucas-Cards-Check) — WM-GRUPPENLOGIK AUF LIGA-TABELLEN
+  //
+  //  Auf den Liga-Cards stand als BEGRÜNDUNG eines Picks:
+  //
+  //      ❌ Beide ausgeschieden — Friendly-Charakter, beide ohne Druck.      (Ipswich–Liverpool, ST 3)
+  //      Real Betis braucht zwingend Sieg + Schützenhilfe, Real Madrid bereits sicher.  (La Liga ST 4)
+  //      🔥 Aufstiegs-Druck                                                  (PSG–Monaco, Ligue 1 ST 3)
+  //
+  //  An Spieltag 3 einer Liga ist niemand ausgeschieden und niemand sicher. Die Ursache ist
+  //  eine WM-Gruppenregel, die auf eine Liga-Tabelle losgelassen wurde:
+  //
+  //      const hSafe = hPos <= 2, hOut = hPos > 3;
+  //
+  //  In einer Vierergruppe heißt das „durch" und „raus". In `standings['ESP']` stehen aber
+  //  ZWANZIG Teams (ENG 20, GER 18) — dort ist jedes Team ab Platz 4 „ausgeschieden" und jedes
+  //  auf Platz 1–2 „bereits sicher". Damit trug praktisch jede Liga-Card ab ST 3 einen
+  //  frei erfundenen Tabellen-Kontext.
+  //
+  //  Das ist nicht kosmetisch: der Satz steht im „Warum?" und begründet einen Einsatz. Bei
+  //  Ipswich–Liverpool stützte „beide ohne Druck" einen Über-2.5-Pick.
+  //
+  //  Ein WM-Gruppentisch hat vier Teams. Genau daran hängt die Logik ab jetzt — und wo es keine
+  //  Gruppe gibt, wird kein Ersatz-Kontext erzählt, sondern gar keiner.
+  const _GRUPPE_MAX = 4;
+  function _istGruppentabelle(standing) {
+    return Array.isArray(standing) && standing.length > 0 && standing.length <= _GRUPPE_MAX;
+  }
+
   function _deriveAngle(pick, fx, eloDiff, polyFix, homeForm, awayForm, standing) {
     // Special: WM-Eröffnungsspiel (BRA vs MAR, Gruppe C, ST 1, 12.06.2026)
     if (fx.groupKey === 'C' && fx.matchday === 1 && fx.home === 'BRA' && fx.away === 'MAR') {
@@ -2156,8 +2196,9 @@
       if (hL === 'eliminated' && aL === 'eliminated')  return { cls: 'cc-a-dead', icon: '❌', label: 'Beide ausgeschieden' };
       if (SAFE.includes(hL) && SAFE.includes(aL))      return { cls: 'cc-a-titel', icon: '🏆', label: 'Spiel um Gruppensieg' };
       if (DRUCK.includes(hL) || DRUCK.includes(aL))    return { cls: 'cc-a-druck', icon: '🔥', label: 'Aufstiegs-Druck' };
-    } else if (standing && standing.length && fx.matchday >= 3) {
-      // Fallback (alte Positions-Heuristik) bis qualHome/qualAway im Payload sind
+    } else if (_istGruppentabelle(standing) && fx.matchday >= 3) {
+      // Fallback (alte Positions-Heuristik) bis qualHome/qualAway im Payload sind — NUR in einer
+      // echten Vierergruppe, siehe _istGruppentabelle.
       const homePos = standing.findIndex(s => s.team === fx.home) + 1;
       const awayPos = standing.findIndex(s => s.team === fx.away) + 1;
       if (homePos > 3 && awayPos > 3) return { cls: 'cc-a-dead', icon: '❌', label: 'Beide ausgeschieden' };
@@ -2439,8 +2480,9 @@
         if (hp) sentences.push(`<strong>${hp}</strong>.`);
         if (ap) sentences.push(`<strong>${ap}</strong>.`);
       }
-    } else if (fx.matchday >= 3 && standing && standing.length) {
-      // Fallback (alte Positions-Heuristik) bis qualHome/qualAway im Payload sind
+    } else if (fx.matchday >= 3 && _istGruppentabelle(standing)) {
+      // Fallback (alte Positions-Heuristik) bis qualHome/qualAway im Payload sind — NUR in einer
+      // echten Vierergruppe. Auf einer 20er-Liga-Tabelle war „Platz > 3" = ausgeschieden.
       const hPos = standing.findIndex(s => s.team === fx.home) + 1;
       const aPos = standing.findIndex(s => s.team === fx.away) + 1;
       if (standing.find(s => s.team === fx.home) && standing.find(s => s.team === fx.away)) {
@@ -4135,7 +4177,10 @@
   function _buildScenario(home, away, eloDiff, matchday, standing, fx, isPlayed) {
     if (isPlayed) return null;
 
-    if (standing && standing.length > 0) {
+    // 04.09.2026: _standingScenario rechnet in Vierergruppen („Platz > 3 = ausgeschieden").
+    // Auf einer Liga-Tabelle mit 18–20 Zeilen ergibt das nur Unsinn — dann lieber der
+    // Elo-Satz darunter, der ohne Tabellenkontext auskommt.
+    if (_istGruppentabelle(standing)) {
       return _standingScenario(home, away, standing, matchday);
     }
 

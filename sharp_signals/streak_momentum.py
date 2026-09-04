@@ -107,13 +107,34 @@ def _market_family_dir(market: str):
 
 
 def _pick_team_streak(streaks_for_team, stype, pref_venue):
-    """Beste Serie eines Teams für einen Typ — venue-passend (Heim/Auswärts), sonst Gesamt."""
-    best, best_score = None, -1
+    """Beste Serie eines Teams für einen Typ — venue-passend (Heim/Auswärts), sonst Gesamt.
+
+    🔴 04.09.2026 (Lucas-Cards-Check). Die Praeferenz war richtig gedacht, aber sie hat den
+    falschen Fall nie AUSGESCHLOSSEN: `score = 2 / 1 / 0`, und 0 gewinnt immer noch gegen den
+    Startwert -1. Eine Serie aus der GEGENTEILIGEN Haelfte wurde also genommen, wenn es nichts
+    Besseres gab.
+
+    Der reale Fall auf der Card Werder Bremen (Heim) v RB Leipzig (Auswaerts):
+
+        RB Leipzig · Ungeschlagen HEIM 6x        -> Leipzig spielt hier auswaerts
+        Werder Bremen · Ueber 9,5 Ecken AUSWAERTS 5x  -> Werder spielt hier daheim
+
+    In den Daten hat Werder ueberhaupt nur Auswaerts-Serien und Leipzig fast nur Heim-Serien —
+    beide Zeilen der Box „Serien in diesem Spiel" beschrieben also die jeweils andere Haelfte.
+    Eine Heim-Serie sagt ueber ein Auswaertsspiel nichts; sie als Serie „in diesem Spiel" zu
+    zeigen ist schlechter als nichts, weil der Leser sie auf dieses Spiel bezieht.
+
+    Hier wiegt es schwerer als in der Anzeige: diese Funktion speist das SIGNAL, das in die
+    Pick-Bewertung eingeht. Eine Serie aus der falschen Haelfte ist ab jetzt kein Kandidat.
+    """
+    best, best_score = None, 0
     for s in (streaks_for_team or []):
         if s.get("type") != stype:
             continue
         v = s.get("venue")
-        score = 2 if v == pref_venue else (1 if v == "all" else 0)
+        if v not in (pref_venue, "all", None):
+            continue                       # andere Haelfte — sagt ueber dieses Spiel nichts
+        score = 2 if v == pref_venue else 1
         if score > best_score:
             best, best_score = s, score
     return best

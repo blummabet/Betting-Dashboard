@@ -148,8 +148,18 @@ class H2HPatternSignal(Signal):
                 return None
             confidence = min(0.75, 0.35 + 0.05 * min(games, 10))
             side_str = "Über" if ou_dir == +1 else "Unter"
+            # 🔴 04.09.2026 (Lucas-Cards-Check). Der Schluss-Satz kam aus der PICK-Richtung, nicht
+            # aus dem Ergebnis. Auf der Venezia-Card stand deshalb woertlich:
+            #
+            #     „im Schnitt 1.2 Tore (Linie 2.5) · in 25% fielen ueber 2.5 Tore
+            #      → spricht fuer Ueber 2.5."   —  daneben der Wert -3,5pp
+            #
+            # Die Zahlen waren richtig, der Satz sagte das Gegenteil. Wer nur die Begruendung
+            # liest — und dafuer ist sie da — bekam ein Argument FUER den Pick, wo das Signal
+            # dagegen sprach. Die Richtung kommt jetzt aus dem VORZEICHEN.
+            richtung = "spricht für" if score > 0 else "spricht gegen"
             ev = (f"⚔️ Aus den letzten {games} Duellen: " + " · ".join(ev_parts)
-                  + f" → spricht für {side_str} {ou_line}.")
+                  + f" → {richtung} {side_str} {ou_line}.")
             return SignalResult(
                 score=round(score, 2), confidence=round(confidence, 2), evidence=ev,
                 metadata={"games": games, "h2h_avg_goals": avg_goals,
@@ -171,8 +181,10 @@ class H2HPatternSignal(Signal):
                 return None
             confidence = min(0.70, 0.30 + 0.05 * min(games, 10))
             side_str = "Ja" if btts_dir == +1 else "Nein"
+            # Dieselbe Korrektur: „passt zu" galt auch dort, wo das Signal dagegen lief.
+            passung = "passt zu" if score > 0 else "spricht gegen"
             ev = (f"⚔️ In den {games} direkten Duellen trafen beide zu {btts_rate*100:.0f}% "
-                  f"— passt zu „Beide treffen {side_str}\".")
+                  f"— {passung} „Beide treffen {side_str}\".")
             return SignalResult(
                 score=round(score, 2), confidence=round(confidence, 2), evidence=ev,
                 metadata={"games": games, "h2h_btts_rate": btts_rate, "pick_side": f"BTTS-{side_str}"},

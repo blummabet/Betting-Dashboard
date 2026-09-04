@@ -933,6 +933,59 @@ rekonstruierbar, und „wird schon gepasst haben" wäre derselbe Fehler noch ein
 
 ---
 
+### 🃏 WM-Gruppenlogik auf Liga-Tabellen (04.09.2026)
+
+Lucas' Cards-Check förderte drei Defekte zutage, die alle dieselbe Form haben: **die Begründung
+sagte etwas anderes als die Daten.**
+
+**1. „Beide ausgeschieden" am 3. Spieltag.** Auf den Liga-Cards stand als Pick-Begründung:
+
+> ❌ **Beide ausgeschieden** — Friendly-Charakter, beide ohne Druck. *(Ipswich–Liverpool, PL ST 3)*
+> **Real Betis braucht zwingend Sieg + Schützenhilfe**, Real Madrid bereits sicher. *(La Liga ST 4)*
+> 🔥 **Aufstiegs-Druck** *(PSG–Monaco, Ligue 1 ST 3)*
+
+Die Ursache ist eine WM-Gruppenregel auf einer Liga-Tabelle:
+
+```js
+const hSafe = hPos <= 2, hOut = hPos > 3;
+```
+
+In einer Vierergruppe heißt das „durch" und „raus". In `standings['ESP']` stehen aber **20 Teams**
+(ENG 20, GER 18) — dort ist ab Platz 4 jeder „ausgeschieden" und auf Platz 1–2 jeder „bereits
+sicher". Praktisch jede Liga-Card ab ST 3 trug damit einen frei erfundenen Tabellen-Kontext, an
+**drei** Stellen (Kopfzeilen-Kategorie, Begründungstext, Szenario-Satz). Das ist nicht kosmetisch:
+bei Ipswich–Liverpool stützte „beide ohne Druck" einen Über-2.5-Pick. `_istGruppentabelle` (≤ 4
+Zeilen) schaltet die Gruppenlogik jetzt scharf; wo es keine Gruppe gibt, wird kein Ersatz-Kontext
+erzählt, sondern gar keiner.
+
+**2. Der H2H-Satz stimmte nie zu — er stimmte immer zu.** Auf der Venezia-Card:
+
+> ⚔️ Aus den letzten 4 Duellen: im Schnitt **1.2 Tore** (Linie 2.5) · in **25 %** fielen über 2.5
+> Tore → **spricht für Über 2.5.**   — daneben der Wert **−3,5pp**
+
+Die Zahlen waren richtig, der Satz sagte das Gegenteil. `side_str` kam aus der *Pick*-Richtung,
+nicht aus dem Vorzeichen des Scores, also war der Schluss-Satz unabhängig vom Ergebnis immer
+zustimmend (gleiche Krankheit im BTTS-Zweig: „passt zu"). Wer nur die Begründung liest — und
+dafür ist sie da — bekam ein Argument **für** den Pick, wo das Signal dagegen sprach.
+
+**3. Serien aus der falschen Hälfte.** Auf Werder Bremen (Heim) v RB Leipzig (Auswärts):
+
+> RB Leipzig · 🔥 Ungeschlagen **HEIM** 6× · Werder Bremen · 🚩 Über 9,5 Ecken **AUSWÄRTS** 5×
+
+Beide Zeilen beschrieben die jeweils andere Hälfte — in `liga_streaks.json` hat Werder
+ausschließlich Auswärts-Serien, Leipzig fast nur Heim-Serien. Die Präferenz war richtig gedacht,
+schloss den falschen Fall aber nie aus: `score = 2 / 1 / 0`, und die 0 gewann gegen den Startwert
+−1. Das betraf nicht nur die Box „Serien in diesem Spiel", sondern auch
+`streak_momentum._pick_team_streak` — also das **Signal, das in die Pick-Bewertung eingeht**.
+
+**Nebenbefund, nicht geändert:** die Engine-Kacheln zeigen rohe Scores, `signalAdjustmentPP` ist
+aber ein mit Konfidenz und Gewicht **gemitteltes** Ergebnis. Auf der Elche-Card summieren die
+sichtbaren Kacheln auf −0,44, das Netto steht bei +0,17. Das ist korrekt gerechnet, lädt aber zum
+Nachaddieren ein; außerdem kappt `slice(0, 6)` weitere Signale ohne Hinweis (dort fiel
+`move_following +1,2` heraus).
+
+---
+
 ### 🧭 Das Lern-Gedächtnis war 18 Tage lang (04.09.2026)
 
 Lucas: *„der Bereich wo quasi gelernt wird steht immer noch mit 500 Plays — ist das eh kein hard
