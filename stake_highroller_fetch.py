@@ -796,6 +796,18 @@ def normalisiere(rec: dict, kurse: dict = None) -> dict:
     usd, usd_grund = _usd(betrag, waehrung, rec, kurse)
     kombi = len(beine) > 1
 
+    # 03.09.2026 (Lucas: „@1,03 und 1,2 ist schon relativ low") — der Einsatz allein ist ein
+    # schiefes Mass. Gemessen an 445 Wetten: die 32%, die unter Quote 1,35 liegen, tragen 35%
+    # des EINSATZES, aber nur 3% des MOEGLICHEN GEWINNS. Eine Liste nach Einsatz sortiert
+    # deshalb systematisch Favoritenschieber nach oben — $264k auf Sakkari @1,20 riskiert eine
+    # Viertelmillion, um $53k zu gewinnen.
+    # Umgekehrt taugt der moegliche Gewinn allein auch nicht: an der Spitze steht dann $3.260
+    # @298,98 auf ein Tennis-Aussenseiterspiel, also ein Lottoschein. Deshalb faehrt beides mit
+    # und keins ersetzt das andere.
+    gewinn = None
+    if usd is not None and quote is not None and quote > 1:
+        gewinn = round(usd * (quote - 1), 2)
+
     # 03.09.2026 — im ersten echten Ledger waren 77 von 93 Wetten LIVE gesetzt, nur 16 vor
     # Anpfiff. Das sind zwei verschiedene Dinge und muessen getrennt gemessen werden:
     #   · vor Anpfiff → CLV gegen den Pinnacle-Schlusskurs ist moeglich
@@ -828,6 +840,7 @@ def normalisiere(rec: dict, kurse: dict = None) -> dict:
         "einsatzUsd": usd,
         "usdGrund": usd_grund,
         "quote": quote,
+        "gewinnUsd": gewinn,
         "kombi": kombi,
         "nBeine": len(beine) or None,
         "eigenbau": bool(b.get("customBet")),

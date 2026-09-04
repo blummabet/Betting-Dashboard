@@ -28,6 +28,14 @@
   // Die Sperrliste kommt aus stake_highroller.json (dort: GESPERRT in stake_highroller_fetch.py),
   // damit sie NICHT zweimal definiert ist — dieselbe Konstruktion wie PW_BLOCKED_BET_CATS im
   // Poly-Tab. Der Rückfall greift nur, wenn die Datei sie nicht mitschickt.
+  // 03.09.2026 (Lucas: „@1,03 und 1,2 ist schon relativ low ... wollen wir die 1,35 wieder
+  // als Minimum?"). 1,35 ist im Projekt schon der Boden (pick-engine.js, „Cheap ML filter"),
+  // deshalb steht er hier als Startwert — aber als REGLER, nicht als Gesetz. Dort geht es um
+  // unsere eigenen Wetten, wo bei 1,20 die Marge den Wert frisst; hier geht es um die Meinung
+  // eines anderen, und ob die bei 1,20 weniger wert ist, ist noch nicht gemessen. Die
+  // Auswertung führt beide Bänder als eigene Schubladen — der Regler blendet aus, er urteilt nicht.
+  var SR_MIN_QUOTE = 1.35;
+  var SR_QUOTEN = [1.0, 1.20, 1.35, 1.60, 2.00];
   var SR_OFFEN = {};          // welche Karten aufgeklappt sind
   var SR_NUR_SPIELBAR = false;  // nur was noch nicht (oder kaum) läuft
   var SR_GESPERRT_FALLBACK = ['US-Sport'];
@@ -249,6 +257,11 @@
       // Geld nur aus Wetten mit bekanntem USD-Wert. Unbekannt wird GEZÄHLT, nicht als 0 addiert.
       var bek = einzel.filter(function (w) { return w.einsatzUsd != null; });
       g.geldUsd = bek.reduce(function (s, w) { return s + w.einsatzUsd; }, 0);
+      g.gewinnUsd = bek.reduce(function (s, w) {
+        var gw = w.gewinnUsd != null ? w.gewinnUsd
+               : (w.quote != null && w.quote > 1 ? w.einsatzUsd * (w.quote - 1) : 0);
+        return s + (gw || 0);
+      }, 0);
       g.nGeldBekannt = bek.length;
       g.nEinzel = einzel.length;
       g.nGeldUnbekannt = einzel.length - bek.length;
@@ -284,11 +297,15 @@
     var sports = ['alle'].concat(_srSports());
     return '<div class="sr-ctrl">' +
       grp('ab Einsatz', SR_STAKE_LIMITS, SR_MIN_USD, '_srSetMin', function (v) { return _srUsd(v); }) +
+      grp('ab Quote', SR_QUOTEN, SR_MIN_QUOTE, '_srSetQuote', function (v) {
+        return v <= 1 ? 'alle' : v.toFixed(2).replace('.', ',');
+      }) +
       grp('ab Wetten', [1, 2, 3, 5], SR_MIN_N, '_srSetN', function (v) { return v + '×'; }) +
       grp('Fenster', SR_FENSTER, SR_FENSTER_H, '_srSetFenster', function (v) { return v + 'h'; }) +
       (sports.length > 1 ? grp('Sport', sports, SR_SPORT, '_srSetSport', function (v) { return _srEsc(v); }) : '') +
-      grp('sortiert', ['geld', 'norm', 'dichte', 'zeit'], SR_SORT, '_srSetSort', function (v) {
-        return { geld: 'Geld', norm: '× Norm', dichte: 'Dichte', zeit: 'zuletzt' }[v];
+      grp('sortiert', ['geld', 'gewinn', 'norm', 'dichte', 'zeit'], SR_SORT, '_srSetSort', function (v) {
+        return { geld: 'Einsatz', gewinn: 'zu gewinnen', norm: '× Norm',
+                 dichte: 'Dichte', zeit: 'zuletzt' }[v];
       }) +
       // Der praktische Filter: was noch nicht angepfiffen ist oder gerade erst läuft.
       // Ein Einsatz in der 85. Minute auf den Führenden ist kein Signal — dieselbe Lehre
@@ -310,6 +327,7 @@
 
   window._srAufklappen = function (k) { SR_OFFEN[k] = !SR_OFFEN[k]; _srRender(); };
   window._srSetSpielbar = function () { SR_NUR_SPIELBAR = !SR_NUR_SPIELBAR; _srRender(); };
+  window._srSetQuote = function (v) { SR_MIN_QUOTE = v; _srRender(); };
   window._srSetMin = function (v) { SR_MIN_USD = v; _srRender(); };
   window._srSetN = function (v) { SR_MIN_N = v; _srRender(); };
   window._srSetFenster = function (v) { SR_FENSTER_H = v; _srRender(); };
@@ -378,6 +396,9 @@
       '<div class="sr-meta">' +
         '<span class="sr-geld">Geld <b>' + _srUsd(g.geldUsd) + '</b>' +
           (g.nGeldBekannt !== g.n ? ' <span style="color:#6b7480">aus ' + g.nGeldBekannt + '/' + g.n + '</span>' : '') + '</span>' +
+        (g.gewinnUsd ? '<span title="Was diese Einsätze gewinnen würden. Der Einsatz allein ' +
+          'bevorzugt Favoritenschieber: $264k auf 1,20 riskiert eine Viertelmillion für $53k.">' +
+          'zu gewinnen <b>' + _srUsd(g.gewinnUsd) + '</b></span>' : '') +
         '<span><b>' + g.nEinzel + '</b> Einzelwetten</span>' +
         (dichte ? '<span>' + dichte + '</span>' : '') +
         '<span>zuletzt ' + _srZeit(g.letzte) + '</span>' + unbek + komb +
@@ -657,8 +678,13 @@
         '<td class="sr-r">' + d.wetten + '</td>' +
         '<td class="sr-r">' + d.n + '</td>' +
         '<td>' + _srBasis(d) + '</td>' +
+        '<td class="sr-r sr-geldz">' + (d.einsatzUsd ? _srUsd(d.einsatzUsd) : '—') +
+          (d.gewinnUsd ? '<div class="sr-mut sr-sm">zu gewinnen ' + _srUsd(d.gewinnUsd) + '</div>' : '') +
+        '</td>' +
+        // Die Rendite rechnet NUR auf abgerechneten Einzelwetten — deshalb steht deren Zahl
+        // daneben und nicht die aller Einzelwetten. Zwei Grundgesamtheiten, zwei Namen.
         '<td class="sr-r">' + (d.roi == null ? '—' : _srPct(d.roi)) +
-          (d.einzelN ? '<div class="sr-mut sr-sm">' + d.einzelN + ' Einzelwetten</div>' : '') +
+          '<div class="sr-mut sr-sm">' + (d.abgerechnetN || 0) + ' abgerechnet</div>' +
         '</td></tr>';
     }).join('');
 
@@ -676,7 +702,8 @@
       '</div>' +
       '<div class="sr-tw"><table class="sr-t"><thead><tr><th>Schublade</th>' +
       '<th class="sr-r">Wetten</th><th class="sr-r">Beine</th><th>Trefferquote</th>' +
-      '<th class="sr-r">ROI</th></tr></thead><tbody>' + zeilen + '</tbody></table></div>' +
+      '<th class="sr-r">Einsatz</th><th class="sr-r">ROI</th></tr></thead><tbody>' +
+      zeilen + '</tbody></table></div>' +
       (ligen ? '<h3 class="sr-h3">Je Liga</h3><div class="sr-tw"><table class="sr-t"><thead><tr>' +
         '<th>Liga</th><th class="sr-r">Beine</th><th>Trefferquote</th></tr></thead><tbody>' +
         ligen + '</tbody></table></div>' : '') +
@@ -791,13 +818,17 @@
       'Pinnacle-Schlusskurs gemessen werden.</div>';
 
     var jetzt = Date.now(), ab = jetzt - SR_FENSTER_H * 3600000;
-    var sperr = _srGesperrt(), nGesperrt = 0;
+    var sperr = _srGesperrt(), nGesperrt = 0, nQuote = 0;
     var roh = (d.wetten || []).filter(function (w) {
       if (w.einsatzUsd == null || w.einsatzUsd < SR_MIN_USD) return false;
       var t = _srMs(w.ts); if (t == null || t < ab) return false;
       // Ein stiller Filter ist genau die Sorte Fehler, die wir hier ausräumen — deshalb
       // wird gezählt, was weggelassen wird, und die Zahl steht unten drunter.
       if (sperr.indexOf(_srKat(w)) >= 0) { nGesperrt++; return false; }
+      // Bei einer Kombi zaehlt die Gesamtquote, bei einer Einzelwette die des Beins —
+      // beides steht als `quote` drin. Ohne Quote wird nicht gefiltert: unbekannt ist
+      // nicht dasselbe wie niedrig.
+      if (SR_MIN_QUOTE > 1 && w.quote != null && w.quote < SR_MIN_QUOTE) { nQuote++; return false; }
       if (SR_SPORT !== 'alle' && w.sport !== SR_SPORT) return false;
       return true;
     });
@@ -811,6 +842,7 @@
       });
     }
     gruppen.sort(function (a, b) {
+      if (SR_SORT === 'gewinn') return b.gewinnUsd - a.gewinnUsd;
       if (SR_SORT === 'norm') {
         var fa = _srNormFaktor(a), fb = _srNormFaktor(b);
         return (fb ? fb.faktor : -1) - (fa ? fa.faktor : -1);
@@ -826,6 +858,10 @@
 
     var treffer = '<div class="sr-basis"><span><b>' + gruppen.length + '</b> Spiele über den Reglern' +
       ' — aus <b>' + roh.length + '</b> Wetten ab ' + _srUsd(SR_MIN_USD) + ' in ' + SR_FENSTER_H + 'h</span>' +
+      (nQuote ? '<span class="sr-mut" title="Gemessen an 445 Wetten: unter Quote 1,35 liegen ' +
+        '32 % der Wetten und 35 % des Einsatzes — aber nur 3 % des möglichen Gewinns. Ob sie ' +
+        'deshalb schlechter informiert sind, ist nicht gemessen; der Regler blendet aus, er urteilt nicht.">' +
+        nQuote + ' unter Quote ' + SR_MIN_QUOTE.toFixed(2).replace('.', ',') + '</span>' : '') +
       (SR_NUR_SPIELBAR && vorSpielbar > gruppen.length
         ? '<span class="sr-mut">' + (vorSpielbar - gruppen.length) + ' zu weit im Spiel</span>' : '') +
       (nGesperrt ? '<span class="sr-mut" title="' + _srEsc(sperr.join(', ')) + ' ist ausgeblendet. ' +

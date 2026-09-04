@@ -705,6 +705,52 @@ Kacheln dasselbe abgelaufene Spiel zeigen, ist hübsch und nutzlos. Nur die drit
 
 ---
 
+### 🎯 Quotenschwelle — messen statt setzen (03.09.2026)
+
+Lucas: *„glaub Odds-Schwelle sollten wir auch bauen … weil @1,03 und 1,2 ist schon relativ low.
+Wollen wir die 1,35 wieder als Minimum?"* Anlass war ein Spiel, das mit **$271 K** ganz oben in
+der Liste stand: $264 K auf Sakkari **@1,20**.
+
+**Was die Daten sagen** (445 Wetten, US-Sport raus):
+
+| Quotenband | Wetten | Einsatz Σ | möglicher Gewinn Σ |
+|---|---|---|---|
+| bis 1,20 | 120 | $234.061 | **$27.852** |
+| 1,20–1,35 | 26 | $34.863 | $71.200 |
+| 1,35–1,60 | 73 | $79.290 | $170.309 |
+| 1,60–2,00 | 114 | $208.847 | $353.317 |
+| 2,00–3,50 | 83 | $122.854 | $374.002 |
+| ab 3,50 | 50 | $40.238 | $245.030 |
+
+**Unter 1,35 liegen 32 % der Wetten und 35 % des Einsatzes — aber nur 3 % des möglichen
+Gewinns.** Eine Liste nach Einsatz sortiert also systematisch Favoritenschieber nach oben.
+
+Aber die Umkehrung taugt auch nicht: nach möglichem Gewinn sortiert steht **$3.260 @ 298,98**
+an der Spitze — ein Lottoschein. **Keine der beiden Zahlen ersetzt die andere**, deshalb fahren
+beide mit (`einsatzUsd` und `gewinnUsd`), und beide sind sortierbar.
+
+**Warum die 1,35 trotzdem nicht als Wahrheit eingebaut ist.** Sie ist im Projekt schon der Boden
+(`pick-engine.js`, *Cheap ML filter*) — aber **dort** geht es um unsere eigenen Wetten, wo bei
+1,20 die Marge den Wert frisst. **Hier** geht es um die Meinung eines anderen, und ob die bei
+1,20 schlechter informiert ist, ist **nicht gemessen**. Also:
+
+- Terminal: Regler `alle · 1,20 · 1,35 · 1,60 · 2,00`, Start bei 1,35, mit sichtbarem Zähler
+  („n unter Quote 1,35") — er blendet aus, er urteilt nicht.
+- Übersicht: derselbe Boden für die Anzeige. Auf einer Übersicht ist das Rauschen, das die
+  echten Kandidaten verdeckt — Sakkari verschwand daraufhin aus der Geld-Kachel.
+- Auswertung: **sechs Quotenbänder als eigene Schubladen** plus `quote_ab_135` /
+  `quote_unter_135` **vorregistriert**, Ziel n=200 bzw. 150. In ein paar Wochen sagt die
+  Abrechnung, wo der Boden hingehört — oder ob es gar keinen braucht.
+- Ohne Quote wird **nicht** gefiltert: unbekannt ist nicht dasselbe wie niedrig.
+
+**Nebenbefund aus dem Test.** In der Schublade hießen zwei verschiedene Grundgesamtheiten fast
+gleich: `einsatzUsd` zählte nur *abgerechnete* Wetten (für den ROI), `gewinnUsd` *alle*. Der
+Test hat es gefunden, bevor irgendwo eine Rendite auf der falschen Basis stand. Jetzt heißen sie
+`einsatzUsd`/`gewinnUsd` (alle Einzelwetten) gegen `abgerechnetUsd`/`abgerechnetN`/`roi` (nur
+die abgerechneten), und der Bilanz-Reiter schreibt die abgerechnete Zahl neben den ROI.
+
+---
+
 ## 8. Harte Arbeitsregeln
 
 - **Push nur über GitHub Desktop**, nie CLI.
