@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-04T14:18:51.266968+00:00",
+ "generatedAt": "2026-09-04T14:33:51.935143+00:00",
  "stufe1": [],
  "stufe2": [
   {
@@ -312,7 +312,7 @@
    "gehaltenSeit": "2026-09-03T23:02:14.103379+00:00",
    "zuletztAktiv": "2026-09-04T14:03:54.531913+00:00",
    "haltePreis": 1.41,
-   "aktiv": true
+   "aktiv": false
   },
   {
    "matchId": "35974468",
@@ -418,6 +418,105 @@
      }
     ]
    }
+  },
+  {
+   "matchId": "36005510",
+   "home": "Lyon",
+   "away": "Auxerre",
+   "league": "French Ligue 1",
+   "kickoff": "2026-09-04T17:00:00Z",
+   "markt": "Match Odds",
+   "seite": "home",
+   "name": "Lyon",
+   "odd": 1.47,
+   "entryOdd": 1.56,
+   "anteilPct": 70,
+   "stufe": 2,
+   "verstaerker": [
+    {
+     "art": "pinn",
+     "text": "Pinnacle stimmt zu",
+     "gewicht": 10
+    },
+    {
+     "art": "pinnMove",
+     "text": "Pinnacle zieht mit +1.7pp",
+     "gewicht": 8
+    }
+   ],
+   "rang": 75.0,
+   "track": null,
+   "streak": null,
+   "poly": null,
+   "polyStatus": "unbekannt",
+   "pinnMovePP": 1.7,
+   "punkte": {
+    "punkte": 6,
+    "moeglich": 7,
+    "dauerH": 2.44,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 70% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "text": "Geld 70% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "text": "Polymarket nicht erhoben"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "hat dieselbe Seite als Favorit"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "Move +1.7pp in unsere Richtung"
+      },
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "nein",
+      "punkte": 0,
+      "moeglich": 1,
+      "grund": {
+       "ok": false,
+       "text": "steht seit 2.4h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 2.4h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": -0.0122,
+   "gehaltenSeit": "2026-09-04T14:33:51.935143+00:00",
+   "zuletztAktiv": "2026-09-04T14:33:51.935143+00:00",
+   "haltePreis": 1.47,
+   "aktiv": true
   },
   {
    "matchId": "35973555",
@@ -630,10 +729,23 @@
    "seite": "away",
    "odd": 1.55,
    "kickoff": "2026-09-04T19:00:00Z",
-   "punkte": 9,
+   "punkte": 8,
    "moeglich": 10,
    "dauerH": 71.34,
-   "torOk": true
+   "torOk": false
+  },
+  {
+   "matchId": "36014965",
+   "markt": "Match Odds",
+   "liga": "Norwegian Eliteserien",
+   "name": "Bodo Glimt",
+   "seite": "away",
+   "odd": 1.33,
+   "kickoff": "2026-09-04T17:00:00Z",
+   "punkte": 7,
+   "moeglich": 10,
+   "dauerH": 2.44,
+   "torOk": false
   },
   {
    "matchId": "36015199",
@@ -641,12 +753,38 @@
    "liga": "Turkish Super League",
    "name": "Galatasaray",
    "seite": "away",
-   "odd": 1.7,
+   "odd": 1.71,
    "kickoff": "2026-09-04T17:00:00Z",
    "punkte": 7,
    "moeglich": 10,
-   "dauerH": 2.69,
+   "dauerH": 2.44,
    "torOk": false
+  },
+  {
+   "matchId": "36014616",
+   "markt": "Match Odds",
+   "liga": "Danish Superliga",
+   "name": "Viborg",
+   "seite": "home",
+   "odd": 1.86,
+   "kickoff": "2026-09-04T17:00:00Z",
+   "punkte": 7,
+   "moeglich": 10,
+   "dauerH": 2.44,
+   "torOk": false
+  },
+  {
+   "matchId": "36005510",
+   "markt": "Match Odds",
+   "liga": "French Ligue 1",
+   "name": "Lyon",
+   "seite": "home",
+   "odd": 1.47,
+   "kickoff": "2026-09-04T17:00:00Z",
+   "punkte": 6,
+   "moeglich": 7,
+   "dauerH": 2.44,
+   "torOk": true
   },
   {
    "matchId": "35979405",
@@ -654,7 +792,7 @@
    "liga": "Italian Serie A",
    "name": "Como",
    "seite": "away",
-   "odd": 1.77,
+   "odd": 1.78,
    "kickoff": "2026-09-04T18:45:00Z",
    "punkte": 6,
    "moeglich": 7,
@@ -667,7 +805,7 @@
    "liga": "French Ligue 1",
    "name": "Paris St-G",
    "seite": "home",
-   "odd": 1.37,
+   "odd": 1.38,
    "kickoff": "2026-09-04T19:05:00Z",
    "punkte": 6,
    "moeglich": 7,
@@ -680,24 +818,11 @@
    "liga": "US MLS",
    "name": "Nashville SC",
    "seite": "away",
-   "odd": 2.5,
+   "odd": 2.48,
    "kickoff": "2026-09-04T23:30:00Z",
    "punkte": 6,
    "moeglich": 10,
-   "dauerH": 9.19,
-   "torOk": false
-  },
-  {
-   "matchId": "36005510",
-   "markt": "Match Odds",
-   "liga": "French Ligue 1",
-   "name": "Lyon",
-   "seite": "home",
-   "odd": 1.48,
-   "kickoff": "2026-09-04T17:00:00Z",
-   "punkte": 5,
-   "moeglich": 7,
-   "dauerH": 2.69,
+   "dauerH": 8.94,
    "torOk": false
   },
   {
@@ -719,11 +844,11 @@
    "liga": "German Bundesliga 2",
    "name": "Wolfsburg",
    "seite": "home",
-   "odd": 1.34,
+   "odd": 1.36,
    "kickoff": "2026-09-05T11:00:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 20.69,
+   "dauerH": 20.44,
    "torOk": false
   },
   {
@@ -732,11 +857,11 @@
    "liga": "English Premier League",
    "name": "Newcastle",
    "seite": "home",
-   "odd": 2.22,
+   "odd": 2.2,
    "kickoff": "2026-09-05T11:30:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 21.19,
+   "dauerH": 20.94,
    "torOk": false
   },
   {
@@ -762,7 +887,7 @@
    "kickoff": "2026-09-05T13:30:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 23.19,
+   "dauerH": 22.94,
    "torOk": false
   },
   {
@@ -775,7 +900,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 23.69,
+   "dauerH": 23.44,
    "torOk": false
   },
   {
@@ -788,7 +913,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 23.69,
+   "dauerH": 23.44,
    "torOk": false
   },
   {
@@ -801,7 +926,7 @@
    "kickoff": "2026-09-05T15:15:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 24.94,
+   "dauerH": 24.69,
    "torOk": false
   },
   {
@@ -810,11 +935,11 @@
    "liga": "Italian Serie A",
    "name": "Inter",
    "seite": "home",
-   "odd": 1.7,
+   "odd": 1.69,
    "kickoff": "2026-09-05T16:00:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 25.69,
+   "dauerH": 25.44,
    "torOk": false
   },
   {
@@ -827,7 +952,7 @@
    "kickoff": "2026-09-05T18:30:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 28.19,
+   "dauerH": 27.94,
    "torOk": false
   },
   {
@@ -840,7 +965,7 @@
    "kickoff": "2026-09-05T18:45:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 28.44,
+   "dauerH": 28.19,
    "torOk": false
   },
   {
@@ -853,7 +978,7 @@
    "kickoff": "2026-09-05T18:45:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 28.44,
+   "dauerH": 28.19,
    "torOk": false
   },
   {
@@ -866,7 +991,7 @@
    "kickoff": "2026-09-05T19:00:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 28.69,
+   "dauerH": 28.44,
    "torOk": false
   },
   {
@@ -879,7 +1004,7 @@
    "kickoff": "2026-09-05T23:30:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 33.19,
+   "dauerH": 32.94,
    "torOk": false
   },
   {
@@ -892,7 +1017,7 @@
    "kickoff": "2026-09-05T23:30:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 33.19,
+   "dauerH": 32.94,
    "torOk": false
   },
   {
@@ -905,7 +1030,7 @@
    "kickoff": "2026-09-05T23:30:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 33.19,
+   "dauerH": 32.94,
    "torOk": false
   },
   {
@@ -918,7 +1043,7 @@
    "kickoff": "2026-09-06T13:00:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 46.69,
+   "dauerH": 46.44,
    "torOk": false
   },
   {
@@ -931,7 +1056,7 @@
    "kickoff": "2026-09-06T14:15:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 47.94,
+   "dauerH": 47.69,
    "torOk": false
   },
   {
@@ -940,11 +1065,11 @@
    "liga": "Spanish La Liga",
    "name": "Malaga",
    "seite": "home",
-   "odd": 2.48,
+   "odd": 2.5,
    "kickoff": "2026-09-06T16:30:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 50.19,
+   "dauerH": 49.94,
    "torOk": false
   },
   {
@@ -957,7 +1082,7 @@
    "kickoff": "2026-09-06T18:45:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 52.44,
+   "dauerH": 52.19,
    "torOk": false
   },
   {
@@ -970,7 +1095,20 @@
    "kickoff": "2026-09-06T19:00:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 52.69,
+   "dauerH": 52.44,
+   "torOk": false
+  },
+  {
+   "matchId": "36015082",
+   "markt": "Match Odds",
+   "liga": "UAE Arabian Gulf League",
+   "name": "Al Wasl",
+   "seite": "home",
+   "odd": 1.36,
+   "kickoff": "2026-09-04T16:15:00Z",
+   "punkte": 4,
+   "moeglich": 7,
+   "dauerH": 1.69,
    "torOk": false
   },
   {
@@ -983,7 +1121,7 @@
    "kickoff": "2026-09-04T16:30:00Z",
    "punkte": 4,
    "moeglich": 7,
-   "dauerH": 2.19,
+   "dauerH": 1.94,
    "torOk": false
   },
   {
@@ -992,37 +1130,11 @@
    "liga": "Swedish Superettan",
    "name": "Norrkoping",
    "seite": "home",
-   "odd": 1.47,
+   "odd": 1.48,
    "kickoff": "2026-09-04T17:00:00Z",
    "punkte": 4,
    "moeglich": 7,
-   "dauerH": 2.69,
-   "torOk": false
-  },
-  {
-   "matchId": "36014965",
-   "markt": "Match Odds",
-   "liga": "Norwegian Eliteserien",
-   "name": "Bodo Glimt",
-   "seite": "away",
-   "odd": 1.34,
-   "kickoff": "2026-09-04T17:00:00Z",
-   "punkte": 4,
-   "moeglich": 7,
-   "dauerH": 2.69,
-   "torOk": false
-  },
-  {
-   "matchId": "36014616",
-   "markt": "Match Odds",
-   "liga": "Danish Superliga",
-   "name": "Viborg",
-   "seite": "home",
-   "odd": 1.84,
-   "kickoff": "2026-09-04T17:00:00Z",
-   "punkte": 4,
-   "moeglich": 7,
-   "dauerH": 2.69,
+   "dauerH": 2.44,
    "torOk": false
   },
   {
@@ -1035,7 +1147,7 @@
    "kickoff": "2026-09-05T11:00:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 20.69,
+   "dauerH": 20.44,
    "torOk": false
   },
   {
@@ -1048,7 +1160,7 @@
    "kickoff": "2026-09-05T13:00:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 22.69,
+   "dauerH": 22.44,
    "torOk": false
   },
   {
@@ -1061,7 +1173,7 @@
    "kickoff": "2026-09-05T13:30:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 23.19,
+   "dauerH": 22.94,
    "torOk": false
   },
   {
@@ -1074,7 +1186,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 23.69,
+   "dauerH": 23.44,
    "torOk": false
   },
   {
@@ -1083,11 +1195,11 @@
    "liga": "English Premier League",
    "name": "Fulham",
    "seite": "home",
-   "odd": 2.38,
+   "odd": 2.4,
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 23.69,
+   "dauerH": 23.44,
    "torOk": false
   },
   {
@@ -1096,11 +1208,11 @@
    "liga": "Spanish La Liga",
    "name": "Atletico Madrid",
    "seite": "away",
-   "odd": 2.42,
+   "odd": 2.44,
    "kickoff": "2026-09-05T14:15:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 23.94,
+   "dauerH": 23.69,
    "torOk": false
   },
   {
@@ -1113,7 +1225,7 @@
    "kickoff": "2026-09-05T16:30:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 26.19,
+   "dauerH": 25.94,
    "torOk": false
   },
   {
@@ -1126,7 +1238,7 @@
    "kickoff": "2026-09-05T16:30:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 26.19,
+   "dauerH": 25.94,
    "torOk": false
   },
   {
@@ -1139,7 +1251,7 @@
    "kickoff": "2026-09-05T11:00:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 20.69,
+   "dauerH": 20.44,
    "torOk": false
   },
   {
@@ -1152,7 +1264,7 @@
    "kickoff": "2026-09-05T23:30:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 33.19,
+   "dauerH": 32.94,
    "torOk": false
   },
   {
@@ -1165,7 +1277,7 @@
    "kickoff": "2026-09-05T23:30:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 33.19,
+   "dauerH": 32.94,
    "torOk": false
   },
   {
@@ -1178,7 +1290,7 @@
    "kickoff": "2026-09-05T23:30:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 33.19,
+   "dauerH": 32.94,
    "torOk": false
   },
   {
@@ -1191,7 +1303,7 @@
    "kickoff": "2026-09-06T00:30:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 34.19,
+   "dauerH": 33.94,
    "torOk": false
   },
   {
@@ -1204,7 +1316,7 @@
    "kickoff": "2026-09-06T00:30:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 34.19,
+   "dauerH": 33.94,
    "torOk": false
   },
   {
@@ -1217,7 +1329,7 @@
    "kickoff": "2026-09-06T01:30:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 35.19,
+   "dauerH": 34.94,
    "torOk": false
   },
   {
@@ -1230,7 +1342,7 @@
    "kickoff": "2026-09-06T11:30:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 45.19,
+   "dauerH": 44.94,
    "torOk": false
   },
   {
@@ -1243,7 +1355,7 @@
    "kickoff": "2026-09-06T11:30:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 45.19,
+   "dauerH": 44.94,
    "torOk": false
   },
   {
@@ -1256,7 +1368,7 @@
    "kickoff": "2026-09-06T13:00:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 46.69,
+   "dauerH": 46.44,
    "torOk": false
   },
   {
@@ -1269,7 +1381,7 @@
    "kickoff": "2026-09-06T13:00:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 46.69,
+   "dauerH": 46.44,
    "torOk": false
   },
   {
@@ -1282,7 +1394,7 @@
    "kickoff": "2026-09-06T13:30:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 47.19,
+   "dauerH": 46.94,
    "torOk": false
   },
   {
@@ -1295,7 +1407,7 @@
    "kickoff": "2026-09-06T15:15:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 48.94,
+   "dauerH": 48.69,
    "torOk": false
   },
   {
@@ -1308,7 +1420,7 @@
    "kickoff": "2026-09-06T15:30:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 49.19,
+   "dauerH": 48.94,
    "torOk": false
   },
   {
@@ -1321,7 +1433,7 @@
    "kickoff": "2026-09-06T16:30:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 50.19,
+   "dauerH": 49.94,
    "torOk": false
   },
   {
@@ -1330,63 +1442,11 @@
    "liga": "Saudi Professional League",
    "name": "Al-Ettifaq",
    "seite": "away",
-   "odd": 2.66,
+   "odd": 2.68,
    "kickoff": "2026-09-04T16:00:00Z",
    "punkte": 3,
    "moeglich": 10,
-   "dauerH": 1.69,
-   "torOk": false
-  },
-  {
-   "matchId": "36019279",
-   "markt": "Match Odds",
-   "liga": "South African Premier Division",
-   "name": "Remis",
-   "seite": "draw",
-   "odd": 2.68,
-   "kickoff": "2026-09-04T17:30:00Z",
-   "punkte": 3,
-   "moeglich": 4,
-   "dauerH": 3.19,
-   "torOk": false
-  },
-  {
-   "matchId": "36026439",
-   "markt": "Match Odds",
-   "liga": "Jordanian Premier League",
-   "name": "Remis",
-   "seite": "draw",
-   "odd": 3.1,
-   "kickoff": "2026-09-04T17:30:00Z",
-   "punkte": 3,
-   "moeglich": 4,
-   "dauerH": 3.19,
-   "torOk": false
-  },
-  {
-   "matchId": "36021498",
-   "markt": "Match Odds",
-   "liga": "Swiss Challenge League",
-   "name": "Stade Lausanne-Ouchy",
-   "seite": "away",
-   "odd": 2.06,
-   "kickoff": "2026-09-04T17:30:00Z",
-   "punkte": 3,
-   "moeglich": 4,
-   "dauerH": 3.19,
-   "torOk": false
-  },
-  {
-   "matchId": "36021497",
-   "markt": "Match Odds",
-   "liga": "Swiss Challenge League",
-   "name": "Aarau",
-   "seite": "home",
-   "odd": 1.72,
-   "kickoff": "2026-09-04T17:30:00Z",
-   "punkte": 3,
-   "moeglich": 4,
-   "dauerH": 3.19,
+   "dauerH": 1.44,
    "torOk": false
   },
   {
@@ -1395,11 +1455,11 @@
    "liga": "German Bundesliga 2",
    "name": "Hannover",
    "seite": "home",
-   "odd": 1.58,
+   "odd": 1.6,
    "kickoff": "2026-09-04T16:30:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 2.19,
+   "dauerH": 1.94,
    "torOk": false
   },
   {
@@ -1412,7 +1472,7 @@
    "kickoff": "2026-09-04T16:30:00Z",
    "punkte": 2,
    "moeglich": 7,
-   "dauerH": 2.19,
+   "dauerH": 1.94,
    "torOk": false
   },
   {
@@ -1425,7 +1485,7 @@
    "kickoff": "2026-09-04T15:35:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 1.27,
+   "dauerH": 1.02,
    "torOk": false
   },
   {
@@ -1438,7 +1498,7 @@
    "kickoff": "2026-09-04T16:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 1.69,
+   "dauerH": 1.44,
    "torOk": false
   },
   {
@@ -1451,7 +1511,7 @@
    "kickoff": "2026-09-04T16:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 1.69,
+   "dauerH": 1.44,
    "torOk": false
   },
   {
@@ -1460,11 +1520,11 @@
    "liga": "Danish 1st Division",
    "name": "Vejle",
    "seite": "home",
-   "odd": 1.43,
+   "odd": 1.45,
    "kickoff": "2026-09-04T16:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 1.69,
+   "dauerH": 1.44,
    "torOk": false
   },
   {
@@ -1473,11 +1533,11 @@
    "liga": "Slovenian 2 SNL",
    "name": "Ilirija Extra-Lux",
    "seite": "home",
-   "odd": 2.32,
+   "odd": 2.52,
    "kickoff": "2026-09-04T15:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 0.69,
+   "dauerH": 0.44,
    "torOk": false
   },
   {
@@ -1490,7 +1550,7 @@
    "kickoff": "2026-09-04T16:00:00Z",
    "punkte": 2,
    "moeglich": 7,
-   "dauerH": 1.69,
+   "dauerH": 1.44,
    "torOk": false
   },
   {
@@ -1499,24 +1559,11 @@
    "liga": "Czech 2 Liga",
    "name": "Vysocina Jihlava",
    "seite": "home",
-   "odd": 1.62,
+   "odd": 1.64,
    "kickoff": "2026-09-04T16:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 1.69,
-   "torOk": false
-  },
-  {
-   "matchId": "36023894",
-   "markt": "Match Odds",
-   "liga": "CAF Confederation Cup Qualifiers",
-   "name": "ES Zarzis",
-   "seite": "home",
-   "odd": 1.38,
-   "kickoff": "2026-09-04T14:30:00Z",
-   "punkte": 2,
-   "moeglich": 4,
-   "dauerH": 0.19,
+   "dauerH": 1.44,
    "torOk": false
   },
   {
@@ -1529,20 +1576,7 @@
    "kickoff": "2026-09-04T16:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 1.69,
-   "torOk": false
-  },
-  {
-   "matchId": "36015082",
-   "markt": "Match Odds",
-   "liga": "UAE Arabian Gulf League",
-   "name": "Al Wasl",
-   "seite": "home",
-   "odd": 1.38,
-   "kickoff": "2026-09-04T16:15:00Z",
-   "punkte": 2,
-   "moeglich": 7,
-   "dauerH": 1.94,
+   "dauerH": 1.44,
    "torOk": false
   },
   {
@@ -1551,11 +1585,11 @@
    "liga": "Azerbaijan Premier League",
    "name": "Remis",
    "seite": "draw",
-   "odd": 2.98,
+   "odd": 2.96,
    "kickoff": "2026-09-04T16:15:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 1.94,
+   "dauerH": 1.69,
    "torOk": false
   },
   {
@@ -1564,11 +1598,11 @@
    "liga": "Hungarian NB I",
    "name": "Vasas",
    "seite": "home",
-   "odd": 2.08,
+   "odd": 2.16,
    "kickoff": "2026-09-04T16:30:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 2.19,
+   "dauerH": 1.94,
    "torOk": false
   },
   {
@@ -1581,7 +1615,7 @@
    "kickoff": "2026-09-04T17:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 2.69,
+   "dauerH": 2.44,
    "torOk": false
   },
   {
@@ -1594,7 +1628,7 @@
    "kickoff": "2026-09-04T17:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 2.69,
+   "dauerH": 2.44,
    "torOk": false
   },
   {
@@ -1607,7 +1641,7 @@
    "kickoff": "2026-09-04T17:00:00Z",
    "punkte": 2,
    "moeglich": 7,
-   "dauerH": 2.69,
+   "dauerH": 2.44,
    "torOk": false
   },
   {
@@ -1620,7 +1654,7 @@
    "kickoff": "2026-09-04T17:00:00Z",
    "punkte": 2,
    "moeglich": 7,
-   "dauerH": 2.69,
+   "dauerH": 2.44,
    "torOk": false
   },
   {
@@ -1629,11 +1663,11 @@
    "liga": "Uzbekistan Super League",
    "name": "Pakhtakor",
    "seite": "home",
-   "odd": 1.65,
+   "odd": 1.56,
    "kickoff": "2026-09-04T15:15:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 0.94,
+   "dauerH": 0.69,
    "torOk": false
   },
   {
@@ -1646,7 +1680,20 @@
    "kickoff": "2026-09-04T16:15:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 1.94,
+   "dauerH": 1.69,
+   "torOk": false
+  },
+  {
+   "matchId": "36027689",
+   "markt": "Match Odds",
+   "liga": "Slovenian 2 SNL",
+   "name": "NK Dren Vrhnika",
+   "seite": "home",
+   "odd": 2.98,
+   "kickoff": "2026-09-04T15:00:00Z",
+   "punkte": 2,
+   "moeglich": 4,
+   "dauerH": 0.44,
    "torOk": false
   },
   {
@@ -1659,7 +1706,7 @@
    "kickoff": "2026-09-04T17:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 2.69,
+   "dauerH": 2.44,
    "torOk": false
   },
   {
@@ -1672,7 +1719,7 @@
    "kickoff": "2026-09-04T17:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 2.69,
+   "dauerH": 2.44,
    "torOk": false
   },
   {
@@ -1685,7 +1732,7 @@
    "kickoff": "2026-09-04T15:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 0.69,
+   "dauerH": 0.44,
    "torOk": false
   },
   {
@@ -1694,11 +1741,11 @@
    "liga": "Slovakian 2 Liga",
    "name": "Tatran Lip Mikulas",
    "seite": "home",
-   "odd": 1.86,
+   "odd": 2.04,
    "kickoff": "2026-09-04T16:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 1.69,
+   "dauerH": 1.44,
    "torOk": false
   },
   {
@@ -1711,7 +1758,46 @@
    "kickoff": "2026-09-04T17:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 2.69,
+   "dauerH": 2.44,
+   "torOk": false
+  },
+  {
+   "matchId": "36019279",
+   "markt": "Match Odds",
+   "liga": "South African Premier Division",
+   "name": "Remis",
+   "seite": "draw",
+   "odd": 2.68,
+   "kickoff": "2026-09-04T17:30:00Z",
+   "punkte": 2,
+   "moeglich": 4,
+   "dauerH": 2.94,
+   "torOk": false
+  },
+  {
+   "matchId": "36026439",
+   "markt": "Match Odds",
+   "liga": "Jordanian Premier League",
+   "name": "Remis",
+   "seite": "draw",
+   "odd": 3.05,
+   "kickoff": "2026-09-04T17:30:00Z",
+   "punkte": 2,
+   "moeglich": 7,
+   "dauerH": 2.94,
+   "torOk": false
+  },
+  {
+   "matchId": "36021497",
+   "markt": "Match Odds",
+   "liga": "Swiss Challenge League",
+   "name": "Aarau",
+   "seite": "home",
+   "odd": 1.68,
+   "kickoff": "2026-09-04T17:30:00Z",
+   "punkte": 2,
+   "moeglich": 4,
+   "dauerH": 2.94,
    "torOk": false
   },
   {
@@ -1724,7 +1810,7 @@
    "kickoff": "2026-09-05T13:30:00Z",
    "punkte": 1,
    "moeglich": 7,
-   "dauerH": 23.19,
+   "dauerH": 22.94,
    "torOk": false
   },
   {
@@ -1733,11 +1819,11 @@
    "liga": "German Bundesliga",
    "name": "Mgladbach",
    "seite": "home",
-   "odd": 1.97,
+   "odd": 1.98,
    "kickoff": "2026-09-05T13:30:00Z",
    "punkte": 1,
    "moeglich": 4,
-   "dauerH": 23.19,
+   "dauerH": 22.94,
    "torOk": false
   },
   {
@@ -1750,7 +1836,7 @@
    "kickoff": "2026-09-05T18:45:00Z",
    "punkte": 1,
    "moeglich": 7,
-   "dauerH": 28.44,
+   "dauerH": 28.19,
    "torOk": false
   },
   {
@@ -1763,7 +1849,7 @@
    "kickoff": "2026-09-05T23:30:00Z",
    "punkte": 1,
    "moeglich": 7,
-   "dauerH": 33.19,
+   "dauerH": 32.94,
    "torOk": false
   },
   {
@@ -1776,7 +1862,7 @@
    "kickoff": "2026-09-06T02:30:00Z",
    "punkte": 1,
    "moeglich": 7,
-   "dauerH": 36.19,
+   "dauerH": 35.94,
    "torOk": false
   },
   {
@@ -1785,11 +1871,11 @@
    "liga": "US MLS",
    "name": "Portland Timbers",
    "seite": "home",
-   "odd": 2.22,
+   "odd": 2.26,
    "kickoff": "2026-09-06T02:30:00Z",
    "punkte": 1,
    "moeglich": 4,
-   "dauerH": 36.19,
+   "dauerH": 35.94,
    "torOk": false
   },
   {
@@ -1802,7 +1888,7 @@
    "kickoff": "2026-09-06T01:30:00Z",
    "punkte": 1,
    "moeglich": 7,
-   "dauerH": 35.19,
+   "dauerH": 34.94,
    "torOk": false
   },
   {
@@ -1815,7 +1901,7 @@
    "kickoff": "2026-09-06T13:00:00Z",
    "punkte": 1,
    "moeglich": 7,
-   "dauerH": 46.69,
+   "dauerH": 46.44,
    "torOk": false
   },
   {
@@ -1828,7 +1914,7 @@
    "kickoff": "2026-09-06T00:30:00Z",
    "punkte": 1,
    "moeglich": 7,
-   "dauerH": 34.19,
+   "dauerH": 33.94,
    "torOk": false
   },
   {
@@ -1841,7 +1927,7 @@
    "kickoff": "2026-09-06T15:30:00Z",
    "punkte": 1,
    "moeglich": 7,
-   "dauerH": 49.19,
+   "dauerH": 48.94,
    "torOk": false
   },
   {
@@ -1854,7 +1940,7 @@
    "kickoff": "2026-09-06T16:00:00Z",
    "punkte": 1,
    "moeglich": 7,
-   "dauerH": 49.69,
+   "dauerH": 49.44,
    "torOk": false
   },
   {
@@ -1867,33 +1953,7 @@
    "kickoff": "2026-09-06T18:45:00Z",
    "punkte": 1,
    "moeglich": 7,
-   "dauerH": 52.44,
-   "torOk": false
-  },
-  {
-   "matchId": "36027759",
-   "markt": "Match Odds",
-   "liga": "Paraguayan Division Intermedia",
-   "name": "Independiente FBC",
-   "seite": "home",
-   "odd": 2.24,
-   "kickoff": "2026-09-04T17:30:00Z",
-   "punkte": 1,
-   "moeglich": 4,
-   "dauerH": 3.19,
-   "torOk": false
-  },
-  {
-   "matchId": "35973465",
-   "markt": "Match Odds",
-   "liga": "Romanian Liga I",
-   "name": "CFR Cluj",
-   "seite": "home",
-   "odd": 2.26,
-   "kickoff": "2026-09-04T17:30:00Z",
-   "punkte": 1,
-   "moeglich": 4,
-   "dauerH": 3.19,
+   "dauerH": 52.19,
    "torOk": false
   },
   {
@@ -1902,11 +1962,11 @@
    "liga": "Slovenian 2 SNL",
    "name": "Tabor Sezana",
    "seite": "away",
-   "odd": 1.8,
+   "odd": 1.57,
    "kickoff": "2026-09-04T15:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.69,
+   "dauerH": 0.44,
    "torOk": false
   },
   {
@@ -1915,11 +1975,11 @@
    "liga": "Estonian Esiliiga",
    "name": "Levadia Tallinn II",
    "seite": "home",
-   "odd": 2.46,
+   "odd": 2.44,
    "kickoff": "2026-09-04T15:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.69,
+   "dauerH": 0.44,
    "torOk": false
   },
   {
@@ -1932,7 +1992,7 @@
    "kickoff": "2026-09-04T15:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.69,
+   "dauerH": 0.44,
    "torOk": false
   },
   {
@@ -1941,11 +2001,11 @@
    "liga": "Finnish Ykkosliiga",
    "name": "JIPPO",
    "seite": "home",
-   "odd": 3.0,
+   "odd": 3.05,
    "kickoff": "2026-09-04T15:30:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 1.19,
+   "dauerH": 0.94,
    "torOk": false
   },
   {
@@ -1958,7 +2018,7 @@
    "kickoff": "2026-09-04T16:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 1.69,
+   "dauerH": 1.44,
    "torOk": false
   },
   {
@@ -1971,7 +2031,7 @@
    "kickoff": "2026-09-04T16:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 1.69,
+   "dauerH": 1.44,
    "torOk": false
   },
   {
@@ -1980,11 +2040,11 @@
    "liga": "Cypriot 1st Division",
    "name": "Omonia 29th May",
    "seite": "home",
-   "odd": 2.24,
+   "odd": 2.3,
    "kickoff": "2026-09-04T16:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 1.69,
+   "dauerH": 1.44,
    "torOk": false
   },
   {
@@ -1997,7 +2057,7 @@
    "kickoff": "2026-09-04T16:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 1.69,
+   "dauerH": 1.44,
    "torOk": false
   },
   {
@@ -2010,7 +2070,7 @@
    "kickoff": "2026-09-04T16:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 1.69,
+   "dauerH": 1.44,
    "torOk": false
   },
   {
@@ -2023,7 +2083,7 @@
    "kickoff": "2026-09-04T16:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 1.69,
+   "dauerH": 1.44,
    "torOk": false
   },
   {
@@ -2036,7 +2096,7 @@
    "kickoff": "2026-09-04T16:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 1.69,
+   "dauerH": 1.44,
    "torOk": false
   },
   {
@@ -2045,11 +2105,11 @@
    "liga": "CAF Confederation Cup Qualifiers",
    "name": "Rayon Sports FC",
    "seite": "away",
-   "odd": 3.3,
+   "odd": 3.2,
    "kickoff": "2026-09-04T15:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.69,
+   "dauerH": 0.44,
    "torOk": false
   },
   {
@@ -2062,7 +2122,7 @@
    "kickoff": "2026-09-04T16:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 1.69,
+   "dauerH": 1.44,
    "torOk": false
   },
   {
@@ -2075,7 +2135,7 @@
    "kickoff": "2026-09-04T16:30:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 2.19,
+   "dauerH": 1.94,
    "torOk": false
   },
   {
@@ -2088,7 +2148,7 @@
    "kickoff": "2026-09-04T17:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 2.69,
+   "dauerH": 2.44,
    "torOk": false
   },
   {
@@ -2101,7 +2161,7 @@
    "kickoff": "2026-09-04T17:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 2.69,
+   "dauerH": 2.44,
    "torOk": false
   },
   {
@@ -2114,7 +2174,7 @@
    "kickoff": "2026-09-04T17:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 2.69,
+   "dauerH": 2.44,
    "torOk": false
   },
   {
@@ -2127,7 +2187,7 @@
    "kickoff": "2026-09-04T16:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 1.69,
+   "dauerH": 1.44,
    "torOk": false
   },
   {
@@ -2140,7 +2200,7 @@
    "kickoff": "2026-09-04T16:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 1.69,
+   "dauerH": 1.44,
    "torOk": false
   },
   {
@@ -2149,24 +2209,11 @@
    "liga": "Austrian Cup",
    "name": "Remis",
    "seite": "draw",
-   "odd": 3.5,
+   "odd": 3.4,
    "kickoff": "2026-09-04T17:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 2.69,
-   "torOk": false
-  },
-  {
-   "matchId": "36027689",
-   "markt": "Match Odds",
-   "liga": "Slovenian 2 SNL",
-   "name": "Remis",
-   "seite": "draw",
-   "odd": 4.0,
-   "kickoff": "2026-09-04T15:00:00Z",
-   "punkte": 0,
-   "moeglich": 4,
-   "dauerH": 0.69,
+   "dauerH": 2.44,
    "torOk": false
   },
   {
@@ -2179,7 +2226,7 @@
    "kickoff": "2026-09-04T16:30:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 2.19,
+   "dauerH": 1.94,
    "torOk": false
   },
   {
@@ -2192,7 +2239,7 @@
    "kickoff": "2026-09-04T16:30:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 2.19,
+   "dauerH": 1.94,
    "torOk": false
   },
   {
@@ -2201,11 +2248,50 @@
    "liga": "Tanzanian Premier League",
    "name": "Dodoma FC",
    "seite": "home",
-   "odd": 2.4,
+   "odd": 2.42,
    "kickoff": "2026-09-04T16:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 1.69,
+   "dauerH": 1.44,
+   "torOk": false
+  },
+  {
+   "matchId": "36027759",
+   "markt": "Match Odds",
+   "liga": "Paraguayan Division Intermedia",
+   "name": "Independiente FBC",
+   "seite": "home",
+   "odd": 2.24,
+   "kickoff": "2026-09-04T17:30:00Z",
+   "punkte": 0,
+   "moeglich": 4,
+   "dauerH": 2.94,
+   "torOk": false
+  },
+  {
+   "matchId": "36021498",
+   "markt": "Match Odds",
+   "liga": "Swiss Challenge League",
+   "name": "Stade Lausanne-Ouchy",
+   "seite": "away",
+   "odd": 2.06,
+   "kickoff": "2026-09-04T17:30:00Z",
+   "punkte": 0,
+   "moeglich": 4,
+   "dauerH": 2.94,
+   "torOk": false
+  },
+  {
+   "matchId": "35973465",
+   "markt": "Match Odds",
+   "liga": "Romanian Liga I",
+   "name": "CFR Cluj",
+   "seite": "home",
+   "odd": 2.26,
+   "kickoff": "2026-09-04T17:30:00Z",
+   "punkte": 0,
+   "moeglich": 4,
+   "dauerH": 2.94,
    "torOk": false
   }
  ],
@@ -2636,9 +2722,9 @@
   {
    "punkte": 0,
    "moeglich": 4,
-   "n": 116,
-   "roi": 0.1205,
-   "roiLb": -0.1699
+   "n": 118,
+   "roi": 0.1148,
+   "roiLb": -0.1712
   }
  ]
 }
