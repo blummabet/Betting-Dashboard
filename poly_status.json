@@ -61,18 +61,17 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "24 geprueft, davon 1 abgeschnitten"
+      "note": "25 geprueft, davon 0 abgeschnitten"
     },
     {
       "id": "settlement_alive",
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
       "ok": false,
-      "nFail": 3,
+      "nFail": 2,
       "failures": [
-        "cs2-ruby1-hs2-2026-08-21: seit 13.9 Tagen offen — keine Auflösung gefunden",
-        "atp-virtane-dimitro-2026-08-27: seit 7.9 Tagen offen — keine Auflösung gefunden",
-        "wta-stoiana-eala-2026-08-30: seit 4.9 Tagen offen — keine Auflösung gefunden"
+        "cs2-ruby1-hs2-2026-08-21: seit 14.2 Tagen offen — keine Auflösung gefunden",
+        "atp-virtane-dimitro-2026-08-27: seit 8.2 Tagen offen — keine Auflösung gefunden"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -92,10 +91,10 @@
       "ok": false,
       "nFail": 5,
       "failures": [
-        "86/211 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (41%) — Trefferquote allein trügt",
-        "   0x84cfffc3f1… n=100 Treffer 57% P&L $-7,648,654",
-        "   0xc3c3b3ef30… n=333 Treffer 51% P&L $-3,972,400",
-        "   0xa0f21e6d35… n=70 Treffer 66% P&L $-2,622,117",
+        "86/214 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (40%) — Trefferquote allein trügt",
+        "   0x84cfffc3f1… n=115 Treffer 57% P&L $-7,659,513",
+        "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,975,492",
+        "   0xa0f21e6d35… n=72 Treffer 64% P&L $-2,634,032",
         "   0xabb89972b2… n=26 Treffer 69% P&L $-2,563,982"
       ],
       "note": "Whale-Pushes gehen nach Trefferquote. Hohe Quote ≠ Profit. Der Check zeigt, wie viele 'bewiesenen' Wallets in Wahrheit Geld verlieren bzw. gar keine P&L-Historie haben."
@@ -107,7 +106,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "Stichprobe auf n=7 geschrumpft (< 30) — Trefferquoten nicht belastbar"
+        "Stichprobe auf n=21 geschrumpft (< 30) — Trefferquoten nicht belastbar"
       ],
       "note": "poly_money_broad muss frisch sein und n groß genug, sonst ist 'folgt dem Geld' Zufall."
     },
@@ -140,5 +139,5 @@
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-09-03T22:30:16.365958+00:00"
+  "generatedAt": "2026-09-04T03:58:07.991459+00:00"
 }
