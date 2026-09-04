@@ -1310,6 +1310,47 @@ braucht, sonst steht sie für immer bei n<8.
 
 ---
 
+### 04.09.2026 — die Frage, die nie beantwortbar war: Serie beim Push
+
+Lucas: *„wenn wir einen Favoriten haben und der hat eine lange Serie zu Hause ungeschlagen, dann
+ist es ja okay, den zu pushen. Wenn wir auf den gar keine Serie haben, eher nicht. Aber das
+müssten wir alles haben, die Infos."*
+
+**Hatten wir nicht — und konnten sie auch rückwirkend nicht beschaffen.** `liga_streaks.json` ist
+eine Momentaufnahme des jeweiligen Laufs. Welche Serie ein Team an einem Push-Tag vor drei Wochen
+hatte, steht nirgends; der Push-Ledger schrieb davon nichts mit. Die Frage *„tragen Pushs mit
+intakter Serie besser als ohne?"* war damit **unbeantwortbar, egal wie lange man wartet** — kein
+Rechenfehler, sondern eine fehlende Messung. Das ist die stillste Bug-Klasse in diesem Repo: nicht
+eine falsche Zahl, sondern eine Zahl, die nie entsteht.
+
+`push_serie.py` stempelt die Serie des **gepushten Ausgangs** beim Senden in
+`betfair_public_ledger.json` (`serie`). Ab da wächst die Antwort mit; in ein paar Wochen lässt sich
+der Track Record sauber splitten. Kein Filter, kein Urteil, keine Änderung am Feed —
+**erst messen, dann entscheiden.**
+
+Vier hart verdrahtete Regeln:
+
+- **Kein Treffer ist kein Ergebnis.** `None` (Markt nicht abgebildet), `"kein Team-Treffer"`
+  (Namensbrücke greift nicht) und `"keine Serie"` (Team erkannt, aber ohne Serie) sind **drei
+  verschiedene Zustände**. Wer sie zu einem „ohne Serie" zusammenzieht, mischt Blindheit mit
+  Befund und misst später Unsinn. Gleiche Familie wie *„fehlende Information ist keine Erlaubnis"*.
+- **Die Serie muss zum Markt passen.** Bei „Match Odds → Real Madrid" zählen Sieg-/Ungeschlagen-/
+  Scored-Serien von Real — nicht die Über-2,5-Serie des Gegners. Bei O/U und BTTS zählen beide
+  Mannschaften, die Richtung kommt aus `leadName` (Over ↔ `over25`, „No" ↔ `bttsNo`).
+- **Die Serie muss zur Seite passen.** Eine Heim-Serie sagt über ein Auswärtsspiel nichts —
+  derselbe Fehler, der am selben Tag in der Card-Serien-Box korrigiert wurde. Gesamt-Serien
+  (`venue: all`) zählen mit, die der anderen Hälfte nie.
+- **Die aussagekräftigste gewinnt**, nicht die längste: sortiert nach `zufallPct` gegen die
+  Liga-Grundrate, Länge nur als Rückfall. Eine 6er-Serie in einer Liga, in der jeder Zweite eine
+  hat, ist weniger wert als eine 3er in einer, in der das selten ist.
+
+Eingehängt in `betfair_alerts.py::_log_public_push` — defensiv (`try/except`), damit ein fehlendes
+oder kaputtes Serien-Artefakt **niemals einen Push blockieren** kann. Der Stempel ist Beiwerk,
+der Push ist die Aufgabe. 15 Tests in `tests/test_push_serie.py` halten die drei Nicht-Fälle, das
+Venue-Matching und die Enge der Namensbrücke (Real Madrid ≠ Real Sociedad) fest.
+
+---
+
 ## 8. Harte Arbeitsregeln
 
 - **Push nur über GitHub Desktop**, nie CLI.

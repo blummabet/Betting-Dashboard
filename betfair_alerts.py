@@ -833,6 +833,34 @@ def _consensus_for_push(a, cidx) -> dict:
     return {"verdict": v, "agree": bool(g.get("agree"))}
 
 
+# 04.09.2026: Serien-Abdruck beim Senden. Bewusst defensiv — ein fehlendes/kaputtes
+# Serien-Artefakt darf NIE einen Push verhindern. Im Zweifel steht None im Ledger.
+_SERIEN_CACHE = None
+
+
+def _serien_laden():
+    global _SERIEN_CACHE
+    if _SERIEN_CACHE is None:
+        out = []
+        for datei in ("liga_streaks.json", "mls_streaks.json", "wm_streaks.json"):
+            try:
+                with open(datei, encoding="utf-8") as f:
+                    out += (json.load(f) or {}).get("streaks") or []
+            except Exception:
+                pass
+        _SERIEN_CACHE = out
+    return _SERIEN_CACHE
+
+
+def _serie_fuer_push(a):
+    try:
+        from push_serie import serie_fuer_push
+        return serie_fuer_push(a, _serien_laden())
+    except Exception as e:
+        print("  Serien-Stempel uebersprungen (nicht fatal):", e)
+        return None
+
+
 def _log_public_push(a, cidx=None) -> None:
     """Jeden GESENDETEN Public-Push in betfair_public_ledger.json festhalten → betfair_public_eval.py
     rechnet ihn später gegen den Endstand ab. Ein Eintrag je Spiel+Szenario+Markt (kein Doppelzählen).
@@ -851,7 +879,14 @@ def _log_public_push(a, cidx=None) -> None:
                 "home": a.get("home"), "away": a.get("away"),
                 "leadName": a.get("leadName"), "leadOdd": a.get("leadOdd"),
                 "value": a.get("value"), "sentAt": datetime.now(timezone.utc).isoformat(),
-                "status": "pending", "htScore": None, "consensus": _consensus_for_push(a, cidx)})
+                "status": "pending", "htScore": None, "consensus": _consensus_for_push(a, cidx),
+                # 04.09.2026 (Lucas): „wenn der Favorit eine lange Serie hat, ist es okay, den zu
+                # pushen — aber das muessten wir alles haben, die Infos." Hatten wir nicht: die
+                # Serien-Dateien sind Momentaufnahmen, welche Serie an einem vergangenen Push-Tag
+                # galt, stand nirgends. Deshalb hier stempeln, im Moment des Sendens.
+                # None = Markt nicht abgebildet; {"gefunden": False} = erkannt, aber ohne Serie
+                # bzw. kein Team-Treffer. Die drei Faelle sind beim Auswerten NICHT dasselbe.
+                "serie": _serie_fuer_push(a)})
     try:
         json.dump(led[-800:], open(PUB_LEDGER_FILE, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
     except Exception as e:
