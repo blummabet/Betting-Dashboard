@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-04T00:55:05.737064+00:00",
+ "generatedAt": "2026-09-04T01:22:07.094283+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -30,8 +30,37 @@
   "soccer_liga": 141
  },
  "trackRecord": {
-  "tracked": 265,
+  "tracked": 267,
   "converged": 72
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|tampabayrays-texasrangers|tampabayrays",
+   "sport": "baseball_mlb",
+   "event": "Tampa Bay Rays vs Texas Rangers",
+   "market": "Moneyline",
+   "outcome": "Tampa Bay Rays",
+   "polyPP": 7.5,
+   "pinnPP": 51.9,
+   "gapPP": -44.42,
+   "vol": 358568,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-04T01:22:07.093985+00:00"
+  },
+  {
+   "id": "baseball_mlb|tampabayrays-texasrangers|texasrangers",
+   "sport": "baseball_mlb",
+   "event": "Tampa Bay Rays vs Texas Rangers",
+   "market": "Moneyline",
+   "outcome": "Texas Rangers",
+   "polyPP": 92.5,
+   "pinnPP": 48.1,
+   "gapPP": 44.42,
+   "vol": 358568,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-04T01:22:07.093985+00:00"
+  }
+ ]
 }
