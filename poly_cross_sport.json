@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-04T00:55:05.737064+00:00",
+ "generatedAt": "2026-09-04T01:25:27.661382+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,8 +10,8 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 560,
- "pinnKeys": 302,
- "matched": 232,
+ "pinnKeys": 304,
+ "matched": 234,
  "footballRows": 198,
  "crossRows": 362,
  "footballSkippedStale": 84,
@@ -24,14 +24,71 @@
   "soccer_liga": 141
  },
  "matchedBySport": {
-  "baseball_mlb": 26,
+  "baseball_mlb": 28,
   "boxing_boxing": 8,
   "soccer_mls": 57,
   "soccer_liga": 141
  },
  "trackRecord": {
-  "tracked": 265,
+  "tracked": 267,
   "converged": 72
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|tampabayrays-texasrangers|tampabayrays",
+   "sport": "baseball_mlb",
+   "event": "Tampa Bay Rays vs Texas Rangers",
+   "market": "Moneyline",
+   "outcome": "Tampa Bay Rays",
+   "polyPP": 7.5,
+   "pinnPP": 51.9,
+   "gapPP": -44.42,
+   "vol": 358568,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-04T01:25:27.661101+00:00"
+  },
+  {
+   "id": "baseball_mlb|tampabayrays-texasrangers|texasrangers",
+   "sport": "baseball_mlb",
+   "event": "Tampa Bay Rays vs Texas Rangers",
+   "market": "Moneyline",
+   "outcome": "Texas Rangers",
+   "polyPP": 92.5,
+   "pinnPP": 48.1,
+   "gapPP": 44.42,
+   "vol": 358568,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-04T01:25:27.661101+00:00"
+  },
+  {
+   "id": "baseball_mlb|baltimoreorioles-bostonredsox|bostonredsox",
+   "sport": "baseball_mlb",
+   "event": "Boston Red Sox vs Baltimore Orioles",
+   "market": "Moneyline",
+   "outcome": "Boston Red Sox",
+   "polyPP": 89.5,
+   "pinnPP": 52.0,
+   "gapPP": 37.46,
+   "vol": 405366,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -29.49,
+   "firstSeen": "2026-09-03T23:24:51.492515+00:00"
+  },
+  {
+   "id": "baseball_mlb|baltimoreorioles-bostonredsox|baltimoreorioles",
+   "sport": "baseball_mlb",
+   "event": "Boston Red Sox vs Baltimore Orioles",
+   "market": "Moneyline",
+   "outcome": "Baltimore Orioles",
+   "polyPP": 10.5,
+   "pinnPP": 48.0,
+   "gapPP": -37.46,
+   "vol": 405366,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -29.49,
+   "firstSeen": "2026-09-03T23:24:51.492515+00:00"
+  }
+ ]
 }
