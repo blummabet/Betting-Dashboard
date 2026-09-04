@@ -286,7 +286,7 @@ test('Confidence-Badge am Markt in der Liste, wenn Track-Record belastbar', () =
     n: 30, byLeagueMarket: {
       'UEFA Champions League Qualifiers|Match Odds': {
         // 04.09.2026: roiUg statt roi entscheidet — der Chip verstärkt erst ab belegter Kante.
-        n: 40, wins: 24, hitRate: 0.6, roi: 0.1, roiUg: 0.03, nConc: 20, hitRateConc: 0.65, roiConc: 0.12, nInflow: 0, hitRateInflow: null, roiInflow: null,
+        n: 40, wins: 24, hitRate: 0.6, roi: 0.1, roiUg: 0.03, urteil: 'traegt', nConc: 20, hitRateConc: 0.65, roiConc: 0.12, nInflow: 0, hitRateInflow: null, roiInflow: null,
       },
     },
   };

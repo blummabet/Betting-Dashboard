@@ -1054,6 +1054,47 @@ von `compute_streaks.py` gilt unverändert.
 
 ---
 
+### 🧹 Die letzten Logik-Duplikate aufgelöst (04.09.2026)
+
+Lucas: *„Ja bitte"* — auf das Angebot, die verbleibenden Duplikate durchzugehen. Erste Korrektur
+an meiner eigenen Zahl: von den „vier" waren zwei die, die am selben Tag schon gefixt wurden.
+Echte Logik-Duplikate waren **zwei** — dafür hat jedes eine Überraschung mitgebracht.
+
+**1. Die Betfair-Schwellen standen an vier Stellen, nicht an drei.** Ein Test hielt drei davon
+gleich (`betfair_money.py`, `betfair-radar.js`, `main-dashboard.js`) — und hat heute funktioniert,
+er schlug beim Umbau an. Übersehen hatte er die vierte: **`_tMute` im Terminal fadete bei −0,05,
+während die drei „gleichen" bei −0,10 standen.** Ein Test, der Kopien synchron hält, findet nur
+die Kopien, die er kennt.
+
+Das Urteil fällt jetzt dort, wo die Zahl entsteht: `betfair_track_record.py` schreibt pro Bucket
+`urteil: "traegt" | "verliert" | "neutral" | null`, die Schwellen kommen per Import aus dem Signal
+(eine Quelle), und die drei Frontends **lesen nur noch**. Auch die Badge-Farbe folgt dem Urteil
+statt einem eigenen Vorzeichen-Vergleich — sonst kann das Badge grün stehen, während das Mute rot
+urteilt. Der Test heißt jetzt *„die Schwelle steht an EINER Stelle"* und verbietet jeden Vergleich
+von `roiUg` mit einer Schwelle im JS.
+
+**2. Die Stake-Sportart stand dreimal — und keine Kopie war deckungsgleich.** Ein Frontend-Test
+band die beiden JS-Nachbauten aneinander; mit dem Produzenten verglichen hatte ihn niemand.
+`sport_kategorie()` kennt **14 Kategorien** (Tischtennis, Cricket, Volleyball, Snooker, Badminton,
+Rugby, Handball, Darts …), der Nachbau kannte **vier** und warf den Rest auf „Sonstige".
+
+Der Nachbau existierte nur für Alt-Zeilen ohne `kat` — und genau dort saß der reale Schaden:
+*„Chicago Cubs – Milwaukee Brewers"* stand trotz US-Sport-Sperre in einer Kachel. `ledger_mischen()`
+trägt die Kategorie jetzt auf jeder Zeile nach (93 Alt-Zeilen beim ersten Lauf), beide Frontends
+lesen nur noch `w.kat`, und **eine Zeile ohne Kategorie fliegt raus statt an der Sperre vorbei** —
+fehlende Information ist keine Erlaubnis.
+
+**Gegengeprüft**, beide Wächter fangen die Rückkehr:
+
+> `main-dashboard.js baut die Sportart-Zuordnung wieder selbst — sie gehoert in stake_highroller_fetch.py`
+> `betfair-radar.js vergleicht roiUg wieder mit einer eigenen Schwelle: roiUg<=-0.05`
+
+**Die Lehre über die Tests selbst:** ein Test, der Kopien synchron hält, ist besser als keiner —
+aber er zementiert das Duplikat, statt es zu beseitigen, und er sieht die Kopie nicht, die er
+nicht kennt. Die neuen Tests verbieten das Duplikat, statt es abzugleichen.
+
+---
+
 ### 🪞 Warum die Übersicht immer wieder Fehler hat (04.09.2026)
 
 Lucas: *„Bin gespannt, wann wir die Übersicht mal fehlerfrei haben."* — Die drei Funde des Tages

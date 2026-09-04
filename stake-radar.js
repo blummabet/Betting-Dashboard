@@ -43,17 +43,17 @@
     var d = SR.daten || {};
     return (d.gesperrt && d.gesperrt.length) ? d.gesperrt : SR_GESPERRT_FALLBACK;
   }
-  // Kategorie einer Wette. Aus dem Feld, sonst grob nachgerechnet — Zeilen aus der Zeit
-  // vor dem Feld sollen nicht durch den Filter rutschen, nur weil sie älter sind.
-  function _srKat(w) {
-    if (w.kat) return w.kat;
-    var x = ' ' + String((w.sport || '') + ' ' + (w.liga || '')).toLowerCase() + ' ';
-    if (/\b(nba|mlb|nfl|nhl|wnba|ncaa)\b|basketball|baseball|ice-?hockey|american[- ]?football/.test(x)) return 'US-Sport';
-    if (/tennis| wta | atp /.test(x)) return 'Tennis';
-    if (/esport|cs2|csgo| lol |dota|valorant|counter-strike|league-of-legends|fifa/.test(x)) return 'E-Sport';
-    if (/soccer|liga|ligue|serie|premier|bundesliga|eredivisie| mls | epl | ucl | uel /.test(x)) return 'Fußball';
-    return 'Sonstige';
-  }
+  // 🔴 04.09.2026 (Lucas: „geh die verbleibenden Duplikate durch"). Hier stand — wie in der
+  // Übersicht — ein Nachbau von `sport_kategorie()` aus stake_highroller_fetch.py, als Rückfall
+  // für Alt-Zeilen ohne `kat`. Drei Kopien derselben Regel, von denen ein Test nur die beiden
+  // JS-Fassungen aneinander band; mit dem Produzenten war keine von beiden deckungsgleich:
+  // der kennt 14 Kategorien (Tischtennis, Cricket, Volleyball, Snooker, Badminton, Rugby,
+  // Handball, Darts …), der Nachbau vier und warf den Rest auf „Sonstige".
+  //
+  // Seit heute trägt `ledger_mischen()` die Kategorie auf jeder Zeile nach. Hier wird nur noch
+  // gelesen — und eine Zeile ohne Kategorie ist unbekannt, nicht „Sonstige". Bei einer SPERRE
+  // ist das der Unterschied, der zählt: unbekannt darf nicht durchrutschen.
+  function _srKat(w) { return w.kat || null; }
 
   var SR_STAKE_LIMITS = [1000, 2500, 5000, 10000, 25000];
   var SR_FENSTER = [6, 12, 24, 48];
@@ -320,7 +320,8 @@
   function _srSports() {
     var s = {}, w = (SR.daten && SR.daten.wetten) || [], sperr = _srGesperrt();
     w.forEach(function (b) {
-      if (b.sport && sperr.indexOf(_srKat(b)) < 0) s[b.sport] = 1;
+      var _bk = _srKat(b);
+      if (b.sport && _bk && sperr.indexOf(_bk) < 0) s[b.sport] = 1;
     });
     return Object.keys(s).sort().slice(0, 8);
   }
@@ -852,7 +853,8 @@
       var t = _srMs(w.ts); if (t == null || t < ab) return false;
       // Ein stiller Filter ist genau die Sorte Fehler, die wir hier ausräumen — deshalb
       // wird gezählt, was weggelassen wird, und die Zahl steht unten drunter.
-      if (sperr.indexOf(_srKat(w)) >= 0) { nGesperrt++; return false; }
+      var _k = _srKat(w);
+      if (!_k || sperr.indexOf(_k) >= 0) { nGesperrt++; return false; }   // unbekannt = keine Erlaubnis
       // Bei einer Kombi zaehlt die Gesamtquote, bei einer Einzelwette die des Beins —
       // beides steht als `quote` drin. Ohne Quote wird nicht gefiltert: unbekannt ist
       // nicht dasselbe wie niedrig.

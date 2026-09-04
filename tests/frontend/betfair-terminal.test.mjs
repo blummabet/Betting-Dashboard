@@ -55,7 +55,7 @@ function boot() {
   w._bfState.data = { matches: [] };   // sonst triggert renderBetfairRadar einen fetch (kein Netz im Test)
   w._bfState.consensus = consensusFixture();
   w._bfState.hist = histFixture();
-  w._bfState.track = { n: 500, byLeagueMarket: { 'Schwach Liga|Match Odds': { n: 44, roi: -0.12, roiUg: -0.12, hitRate: 0.30 } } };
+  w._bfState.track = { n: 500, byLeagueMarket: { 'Schwach Liga|Match Odds': { n: 44, roi: -0.12, roiUg: -0.12, urteil: 'verliert', hitRate: 0.30 } } };
   w._bfState.loading = false;
   w._bfState.view = 'terminal';
   return w;

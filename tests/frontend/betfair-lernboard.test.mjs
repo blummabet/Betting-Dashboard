@@ -49,9 +49,9 @@ test('die Schwellen im Radar sind die aus betfair_money.py', () => {
 // und davon keiner eine positive. Trotzdem galten 52 als „trägt" und 57 als „verliert". Seither
 // entscheidet roiUg — und ohne Untergrenze sagt der Chip „sammelt", nicht „unauffällig".
 test('jede Bandbreite bekommt ihre eigene Aussage', () => {
-  assert.strictEqual(W.f({ n: 40, roi: 0.12, roiUg: 0.04 }).art, 'boost');
-  assert.strictEqual(W.f({ n: 40, roi: -0.18, roiUg: -0.15 }).art, 'fade');
-  assert.strictEqual(W.f({ n: 40, roi: 0.12, roiUg: 0.0 }).art, 'neutral');
+  assert.strictEqual(W.f({ n: 40, roi: 0.12, roiUg: 0.04, urteil: 'traegt' }).art, 'boost');
+  assert.strictEqual(W.f({ n: 40, roi: -0.18, roiUg: -0.15, urteil: 'verliert' }).art, 'fade');
+  assert.strictEqual(W.f({ n: 40, roi: 0.12, roiUg: 0.0, urteil: 'neutral' }).art, 'neutral');
   assert.strictEqual(W.f({ n: 7, roi: 0.5 }).art, 'sammelt', 'ohne Untergrenze wirkt nichts, egal wie gut');
   assert.strictEqual(W.f(null), null);
   assert.strictEqual(W.f({ n: 30 }), null, 'ohne ROI keine Aussage');
@@ -63,20 +63,23 @@ test('ein glänzender ROI ohne Untergrenze bewegt gar nichts', () => {
   assert.strictEqual(W.f({ n: 10, roi: -0.211 }).art, 'sammelt', 'und in die andere Richtung genauso');
 });
 
-test('genau an den Schwellen kippt es — nicht daneben', () => {
-  assert.strictEqual(W.f({ n: 40, roi: 1, roiUg: W.boost }).art, 'neutral',
-    'die Boost-Schwelle muss ÜBERSCHRITTEN sein — genau null ist kein Beleg');
-  assert.strictEqual(W.f({ n: 40, roi: 1, roiUg: W.boost + 0.01 }).art, 'boost');
-  assert.strictEqual(W.f({ n: 40, roi: -1, roiUg: W.fade }).art, 'fade', 'die Fade-Schwelle zählt mit');
+test('das Urteil kommt fertig aus dem Artefakt — die Schwellen liegen beim Produzenten', () => {
+  // 04.09.2026: vorher verglich jede der drei Flächen `roiUg` selbst mit der Schwelle, und ein
+  // Test hielt die drei Zahlen gleich. Jetzt entscheidet betfair_track_record.py einmal.
+  assert.strictEqual(W.f({ n: 40, roi: 1, roiUg: 0.0, urteil: 'neutral' }).art, 'neutral');
+  assert.strictEqual(W.f({ n: 40, roi: 1, roiUg: 0.01, urteil: 'traegt' }).art, 'boost');
+  assert.strictEqual(W.f({ n: 40, roi: -1, roiUg: -0.10, urteil: 'verliert' }).art, 'fade');
+  assert.strictEqual(W.f({ n: 40, roi: 1, roiUg: 0.4 }).art, 'sammelt',
+    'ohne Urteil wird nichts behauptet, egal wie gut der ROI aussieht');
 });
 
 test('die Aussage steht in Worten da, nicht nur in Farbe', () => {
   // Grün/Rot ist für Rot-Grün-Blinde praktisch ununterscheidbar. Wer die Farben nicht trennen
   // kann, muss die Zeile trotzdem lesen können.
-  assert.match(W.f({ n: 40, roi: 0.12, roiUg: 0.04 }).txt, /trägt/);
-  assert.match(W.f({ n: 40, roi: -0.18, roiUg: -0.15 }).txt, /verliert/);
-  assert.match(W.f({ n: 40, roi: 0.12, roiUg: 0.04 }).sub, /verstärkt/);
-  assert.match(W.f({ n: 40, roi: -0.18, roiUg: -0.15 }).sub, /fadet/);
+  assert.match(W.f({ n: 40, roi: 0.12, roiUg: 0.04, urteil: 'traegt' }).txt, /trägt/);
+  assert.match(W.f({ n: 40, roi: -0.18, roiUg: -0.15, urteil: 'verliert' }).txt, /verliert/);
+  assert.match(W.f({ n: 40, roi: 0.12, roiUg: 0.04, urteil: 'traegt' }).sub, /verstärkt/);
+  assert.match(W.f({ n: 40, roi: -0.18, roiUg: -0.15, urteil: 'verliert' }).sub, /fadet/);
 });
 
 test('unter der Schwelle zeigt der Chip den Fortschritt statt gar nichts', () => {

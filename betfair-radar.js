@@ -1014,9 +1014,12 @@
   var BF_TR_BOOST = 0;        // = TR_BOOST_ROI → Signal wird verstärkt
   function bfTrackWirkung(v) {
     if (!v || !v.n || typeof v.roi !== 'number') return null;
-    if (typeof v.roiUg !== 'number') return { art: 'sammelt', txt: '⏳ sammelt', sub: 'n' + v.n + '/' + BF_TR_MIN_N, col: C.dim };
-    if (v.roiUg <= BF_TR_FADE) return { art: 'fade', txt: '⚠️ verliert hier', sub: 'Card fadet', col: C.lay };
-    if (v.roiUg > BF_TR_BOOST) return { art: 'boost', txt: '✅ trägt', sub: 'Card verstärkt', col: C.back };
+    // 04.09.2026: das Urteil kommt fertig aus betfair_track_record.py (`urteil`) — hier wird es
+    // nur noch uebersetzt. Vorher hat jede der drei Flaechen `roiUg` selbst mit der Schwelle
+    // verglichen, und beim Umbau musste die Regel dreimal von Hand nachgezogen werden.
+    if (!v.urteil) return { art: 'sammelt', txt: '⏳ sammelt', sub: 'n' + v.n + '/' + BF_TR_MIN_N, col: C.dim };
+    if (v.urteil === 'verliert') return { art: 'fade', txt: '⚠️ verliert hier', sub: 'Card fadet', col: C.lay };
+    if (v.urteil === 'traegt') return { art: 'boost', txt: '✅ trägt', sub: 'Card verstärkt', col: C.back };
     return { art: 'neutral', txt: '➖ neutral', sub: 'ohne Wirkung', col: C.mut };
   }
 
@@ -1074,7 +1077,9 @@
   // gibt es keine Untergrenze und deshalb keinen Mute: nichts zu wissen ist kein Grund wegzublenden.
   function _tMute(g){ var e=_tEdge(g), b=_tBucket(g);
     if(e==null) return {m:true,r:'kein Anker'};
-    if(b && typeof b.roiUg==='number' && b.roiUg<=-0.05) return {m:true,r:'Bucket UG '+Math.round(b.roiUg*100)+'% ROI'};
+    // 04.09.2026: dieselbe Quelle wie ueberall — das Urteil kommt aus dem Artefakt, nicht aus
+    // einer vierten Schwelle, die hier zufaellig -0.05 statt -0.10 hiess.
+    if(b && b.urteil==='verliert') return {m:true,r:'Bucket UG '+Math.round(b.roiUg*100)+'% ROI'};
     return {m:false,r:''}; }
   var _TSK={home:'hw',draw:'dr',away:'aw'};
   function _tSer(g){ var h=(_bf.hist||{})[String(g.matchId)]||[]; var key=_TSK[g.moneySide]||'hw'; var pts=[];
@@ -1370,8 +1375,10 @@
       // 04.09.2026: Farbe nur, wo eine Untergrenze existiert. Ein grüner Punkt auf n=10 ist eine
       // Behauptung — und „🟢 80% · n10" liest sich wie ein Befund, obwohl nichts gemessen ist.
       var clv;
-      if(r.b && typeof r.b.roiUg==='number'){
-        var _pos=r.b.roiUg>0;
+      if(r.b && r.b.urteil){
+        // 04.09.2026: auch die Farbe folgt dem Urteil des Produzenten, nicht einem eigenen
+        // Vorzeichen-Vergleich — sonst steht das Badge gruen, waehrend das Mute rot urteilt.
+        var _pos=r.b.urteil==='traegt';
         clv='<span title="Rendite-Untergrenze über '+r.b.n+' Plays" style="font-family:monospace;font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:5px;color:'+(_pos?'#2ee08a':'#ff5d5d')+';background:'+(_pos?'rgba(46,224,138,.1)':'rgba(255,93,93,.1)')+'">'+(_pos?'🟢':'🔴')+' UG '+(r.b.roiUg>0?'+':'')+Math.round(r.b.roiUg*100)+'% · n'+r.b.n+'</span>';
       } else if(r.b && r.b.n){
         clv='<span title="ROI '+Math.round((r.b.roi||0)*100)+'% auf nur '+r.b.n+' Plays — unter n='+(r.b.ugAb||30)+' gibt es keine Untergrenze und damit kein Urteil" style="color:'+C.dim+';font-size:10px">kein Urteil · n'+r.b.n+'</span>';

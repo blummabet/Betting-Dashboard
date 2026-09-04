@@ -22,37 +22,48 @@ const MD = readFileSync(new URL('main-dashboard.js', ROOT), 'utf8');
 const RADAR = readFileSync(new URL('betfair-radar.js', ROOT), 'utf8');
 const PY = readFileSync(new URL('sharp_signals/betfair_money.py', ROOT), 'utf8');
 
-test('die Schwellen stehen an drei Stellen — und überall gleich', () => {
-  // betfair_money.py (entscheidet), betfair-radar.js (zeigt), main-dashboard.js (rankt).
-  // Laufen sie auseinander, empfiehlt die Übersicht, was das Signal gerade fadet.
-  const py = {
-    n: Number(/^MIN_TR_N\s*=\s*(\d+)/m.exec(PY)[1]),
-    fade: Number(/^TR_FADE_ROI\s*=\s*(-?[\d.]+)/m.exec(PY)[1]),
-    boost: Number(/^TR_BOOST_ROI\s*=\s*(-?[\d.]+)/m.exec(PY)[1]),
-  };
-  const md = /var MD_BFTR_MIN_N = (\d+), MD_BFTR_FADE = (-?[\d.]+), MD_BFTR_BOOST = (-?[\d.]+)/.exec(MD);
-  assert.ok(md, 'die Schwellen in main-dashboard.js sind weg');
-  assert.deepStrictEqual([Number(md[1]), Number(md[2]), Number(md[3])], [py.n, py.fade, py.boost],
-    'Übersicht und Card-Signal rechnen mit verschiedenen Schwellen');
-  const rd = {
-    n: Number(/var BF_TR_MIN_N = (\d+)/.exec(RADAR)[1]),
-    fade: Number(/var BF_TR_FADE\s*=\s*(-?[\d.]+)/.exec(RADAR)[1]),
-    boost: Number(/var BF_TR_BOOST = (-?[\d.]+)/.exec(RADAR)[1]),
-  };
-  assert.deepStrictEqual([rd.n, rd.fade, rd.boost], [py.n, py.fade, py.boost],
-    'Radar und Card-Signal rechnen mit verschiedenen Schwellen');
+// 🔴 04.09.2026 (Lucas: „geh die verbleibenden Duplikate durch"). Dieser Test stand vorher
+// andersherum und hieß „die Schwellen stehen an drei Stellen — und überall gleich". Er hat
+// funktioniert (er schlug an, als die Schwellen auf die Untergrenze umgestellt wurden), aber er
+// hat drei Kopien SYNCHRON gehalten, statt die Kopien loszuwerden. Und er hat eine vierte
+// übersehen: `_tMute` im Terminal fadete bei −0,05, während alle drei „gleichen" bei −0,10
+// standen.
+//
+// Jetzt fällt betfair_track_record.py das Urteil einmal und schreibt es als `urteil` ins
+// Artefakt. Der Test sichert die neue Regel: im JS wird gelesen, nicht verglichen.
+test('die Schwelle steht an EINER Stelle — im Produzenten', () => {
+  const REC = readFileSync(new URL('betfair_track_record.py', ROOT), 'utf8');
+  assert.match(REC, /from sharp_signals\.betfair_money import TR_FADE_ROI, TR_BOOST_ROI/,
+    'der Produzent holt die Schwellen nicht mehr aus der einen Quelle');
+  assert.match(REC, /"urteil": _urteil/, 'der Produzent schreibt sein Urteil nicht ins Artefakt');
+  // Und die Schwellen selbst stehen genau einmal, im Signal.
+  assert.match(PY, /^TR_FADE_ROI\s*=/m);
+  assert.match(PY, /^TR_BOOST_ROI\s*=/m);
+});
+
+test('kein Frontend vergleicht roiUg noch selbst mit einer Schwelle', () => {
+  for (const [name, src] of [['main-dashboard.js', MD], ['betfair-radar.js', RADAR]]) {
+    const code = src.split('\n').filter(z => !z.trim().startsWith('//')).join('\n');
+    // Verboten ist der Vergleich mit einer SCHWELLE. `roiUg > 0` als Vorzeichen-Prüfung fürs
+    // Format („+3%" vs „-3%") ist keine Entscheidung und bleibt erlaubt.
+    const schwelle = code.match(/roiUg\s*(<=|>=|>|<)\s*-?\d*\.\d+/g) || [];
+    assert.deepStrictEqual(schwelle, [],
+      name + ' vergleicht roiUg wieder mit einer eigenen Schwelle: ' + schwelle.join(', '));
+    assert.ok(!/MD_BFTR_FADE|MD_BFTR_BOOST/.test(code),
+      name + ': die eigenen Fade/Boost-Konstanten sind zurück');
+  }
 });
 
 function trackFn() {
-  const von = MD.indexOf('var MD_BFTR_MIN_N');
+  const von = MD.indexOf('  function _mdBfTrack(');
   const bis = MD.indexOf('// ⚡ Sharpe Bewegungen');
   const g = {};
   // eslint-disable-next-line no-new-func
   new Function('exp', '_md', MD.slice(von, bis) + '\nexp.f=_mdBfTrack;')(
     g, { data: { bfTrack: { byLeagueMarket: {
-      'EPL|Match Odds': { n: 40, roi: 0.12, roiUg: 0.03 },
-      'EPL|Both teams to Score?': { n: 40, roi: -0.22, roiUg: -0.16 },
-      'EPL|Over/Under 2.5 Goals': { n: 40, roi: 0.08, roiUg: 0.0 },
+      'EPL|Match Odds': { n: 40, roi: 0.12, roiUg: 0.03, urteil: 'traegt' },
+      'EPL|Both teams to Score?': { n: 40, roi: -0.22, roiUg: -0.16, urteil: 'verliert' },
+      'EPL|Over/Under 2.5 Goals': { n: 40, roi: 0.08, roiUg: 0.0, urteil: 'neutral' },
       'Kleinkram|Match Odds': { n: 6, roi: 0.9 },
       // 04.09.2026: n groß genug für die alte Schwelle, aber ohne Untergrenze — der reale Fall.
       'Schoener Schein|Match Odds': { n: 20, roi: 0.42 },

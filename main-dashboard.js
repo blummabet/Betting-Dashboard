@@ -648,14 +648,18 @@
   // ganze 3 überhaupt eine Rendite-Untergrenze tragen und davon keiner eine positive.
   // 57 Zeilen sind also aus „Top-Wetten jetzt" geflogen, weil ein Eimer mit im Schnitt fünf
   // Plays das so aussehen ließ. Ab jetzt entscheidet die Untergrenze; ohne sie kein Urteil.
-  var MD_BFTR_MIN_N = 30, MD_BFTR_FADE = -0.10, MD_BFTR_BOOST = 0;   // = MIN_TR_N / TR_FADE_ROI / TR_BOOST_ROI
+  // 04.09.2026 (Lucas: „geh die verbleibenden Duplikate durch"). Die Schwellen standen an drei
+  // Stellen und wurden von Hand gleichgehalten. Jetzt faellt betfair_track_record.py das Urteil
+  // EINMAL und schreibt es als `urteil` ins Artefakt — hier wird nur noch gelesen. Die Zahlen
+  // bleiben als Anzeige-Werte erhalten (`fadeAb`/`boostAb` kommen mit), aber sie entscheiden
+  // hier nichts mehr, also kann auch nichts mehr auseinanderlaufen.
   function _mdBfTrack(league, market) {
     try {
       var blm = (_md.data.bfTrack || {}).byLeagueMarket || {};
       var v = blm[String(league) + '|' + String(market)];
-      if (!v || typeof v.roiUg !== 'number') return null;
+      if (!v || !v.urteil) return null;          // kein Urteil = keine Aussage, nicht „neutral"
       return { roi: v.roi, roiUg: v.roiUg, n: v.n,
-               traegt: v.roiUg > MD_BFTR_BOOST, verliert: v.roiUg <= MD_BFTR_FADE };
+               traegt: v.urteil === 'traegt', verliert: v.urteil === 'verliert' };
     } catch (e) { return null; }
   }
   // ⚡ Sharpe Bewegungen: Vor-Anpfiff-Quotenbewegung (pp). +pp = Quote fällt = Geld drauf, −pp = driftet.
@@ -960,15 +964,21 @@
   // haben sie nicht — und ohne diesen Rückfall rutschen sie durch den Filter, nur weil sie
   // älter sind. Genau das ist im ersten Testlauf passiert: „Chicago Cubs – Milwaukee Brewers"
   // stand in der Kachel, obwohl MLB gesperrt ist. Spiegel von _srKat im Stake-Terminal.
-  function _mdStakeKat(w) {
-    if (w.kat) return w.kat;
-    var x = ' ' + String((w.sport || '') + ' ' + (w.liga || '')).toLowerCase() + ' ';
-    if (/\b(nba|mlb|nfl|nhl|wnba|ncaa)\b|basketball|baseball|ice-?hockey|american[- ]?football/.test(x)) return 'US-Sport';
-    if (/tennis| wta | atp /.test(x)) return 'Tennis';
-    if (/esport|cs2|csgo| lol |dota|valorant|counter-strike|league-of-legends|fifa/.test(x)) return 'E-Sport';
-    if (/soccer|liga|ligue|serie|premier|bundesliga|eredivisie| mls | epl | ucl | uel /.test(x)) return 'Fußball';
-    return 'Sonstige';
-  }
+  // 🔴 04.09.2026 (Lucas: „geh die verbleibenden Duplikate durch"). Hier stand ein NACHBAU von
+  // `sport_kategorie()` aus stake_highroller_fetch.py — als Rückfall für Alt-Zeilen ohne `kat`.
+  // Zwei Dinge daran waren falsch:
+  //
+  //   1. Die beiden Regeln waren nie deckungsgleich. Der Produzent kennt 14 Kategorien
+  //      (Tischtennis, Cricket, Volleyball, Snooker, Badminton, Rugby, Handball, Darts …),
+  //      dieser Nachbau kannte vier und warf alles Übrige auf „Sonstige".
+  //   2. Ein Rückfall auf „Sonstige" ist bei einer SPERRE gefährlich: „Chicago Cubs – Milwaukee
+  //      Brewers" stand trotz US-Sport-Sperre in einer Kachel, weil die Alt-Zeile keine
+  //      Kategorie trug und damit an der Sperrliste vorbeirutschte.
+  //
+  // `ledger_mischen()` trägt die Kategorie seit heute auf jeder Zeile nach (93 Alt-Zeilen beim
+  // ersten Lauf). Hier wird deshalb nur noch gelesen — und eine Zeile OHNE Kategorie gilt als
+  // unbekannt und fliegt raus, statt eine Sperre stillschweigend zu passieren.
+  function _mdStakeKat(w) { return w.kat || null; }
 
   function _mdStakeWetten(stundenZurueck) {
     var d = _md.data.stake || {};
@@ -979,7 +989,9 @@
       var t = Date.parse(w.ts); if (!t || t < ab) return false;
       // Ohne Quote wird nicht gefiltert — unbekannt ist nicht dasselbe wie niedrig.
       if (w.quote != null && w.quote < MD_STAKE_MIN_QUOTE) return false;
-      return sperr.indexOf(_mdStakeKat(w)) < 0;
+      var k = _mdStakeKat(w);
+      if (!k) return false;                 // unbekannt ist keine Erlaubnis
+      return sperr.indexOf(k) < 0;
     });
   }
 

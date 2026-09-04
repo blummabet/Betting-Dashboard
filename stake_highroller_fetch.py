@@ -929,6 +929,19 @@ def ledger_mischen(alt: dict, neu: list, jetzt: str) -> dict:
         bekannt.add(w["id"])
         wetten.append(w)
         zugang += 1
+    # 04.09.2026 (Lucas: „geh die verbleibenden Duplikate durch"). Alt-Zeilen ohne `kat`
+    # zwangen das Frontend zu einem NACHBAU von sport_kategorie() — und der hat schon einmal
+    # geschadet: „Chicago Cubs – Milwaukee Brewers" stand trotz US-Sport-Sperre in einer Kachel,
+    # weil der Filter `w.kat || ''` las und die Alt-Zeile leer war. Der Nachbau ist seither eine
+    # zweite Wahrheit, die niemand mitpflegt.
+    #
+    # Statt das Raten im Frontend zu pflegen: hier nachtragen. Danach traegt JEDE Zeile ihre
+    # Kategorie, und das Frontend braucht keine eigene Regel mehr.
+    nachgetragen = 0
+    for w in wetten:
+        if not w.get("kat"):
+            w["kat"] = sport_kategorie(w.get("sport"), w.get("liga"))
+            nachgetragen += 1
     wetten.sort(key=lambda w: (w.get("ts") or ""), reverse=True)
     if len(wetten) > LEDGER_KEEP:
         wetten = wetten[:LEDGER_KEEP]
@@ -937,6 +950,7 @@ def ledger_mischen(alt: dict, neu: list, jetzt: str) -> dict:
         "aktualisiert": jetzt,
         "n": len(wetten),
         "zugangLetzterLauf": zugang,
+        "katNachgetragen": nachgetragen,   # 04.09.2026: Alt-Zeilen ohne Kategorie
         "ohneIdVerworfen": ohne_id,
         "wetten": wetten,
     }

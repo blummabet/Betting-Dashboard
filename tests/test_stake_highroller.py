@@ -894,3 +894,41 @@ def test_quote_eins_ergibt_keinen_gewinn():
     n = M.normalisiere({"id": "x", "bet": {"amount": 1000, "currency": "usdt",
                                            "potentialMultiplier": 1.0, "outcomes": [{}]}})
     assert n["gewinnUsd"] is None
+
+
+# ── 04.09.2026 (Lucas: „geh die verbleibenden Duplikate durch") ────────────────
+# Die Sportart-Zuordnung stand dreimal: hier im Produzenten, in stake-radar.js und in
+# main-dashboard.js. Ein Frontend-Test hielt die beiden JS-Kopien synchron — mit DIESER
+# Fassung war aber keine von beiden deckungsgleich: sport_kategorie kennt 14 Kategorien,
+# der Nachbau kannte vier und warf den Rest auf „Sonstige". Seit `ledger_mischen` die
+# Kategorie auf jeder Zeile nachtraegt, gibt es nur noch diese eine Regel.
+def test_ledger_mischen_traegt_fehlende_kategorien_nach():
+    alt = {"wetten": [
+        {"id": "a", "ts": "2026-09-01T10:00:00Z", "sport": "baseball", "liga": "MLB"},
+        {"id": "b", "ts": "2026-09-01T11:00:00Z", "sport": "soccer", "liga": "La Liga"},
+        {"id": "c", "ts": "2026-09-01T12:00:00Z", "kat": "Tennis", "sport": "baseball"},
+    ]}
+    out = M.ledger_mischen(alt, [], "2026-09-04T00:00:00Z")
+    nach = {w["id"]: w["kat"] for w in out["wetten"]}
+    assert nach["a"] == "US-Sport", "genau diese Zeile rutschte an der US-Sport-Sperre vorbei"
+    assert nach["b"] == "Fußball"
+    assert nach["c"] == "Tennis", "eine vorhandene Kategorie wird nicht ueberschrieben"
+    assert out["katNachgetragen"] == 2
+
+
+def test_nach_dem_nachtragen_hat_jede_zeile_eine_kategorie():
+    alt = {"wetten": [{"id": str(i), "ts": "2026-09-01T10:00:00Z", "sport": None, "liga": None}
+                      for i in range(5)]}
+    out = M.ledger_mischen(alt, [], "2026-09-04T00:00:00Z")
+    assert all(w.get("kat") for w in out["wetten"]), \
+        "das Frontend darf sich darauf verlassen — sonst braucht es wieder einen Nachbau"
+
+
+def test_der_produzent_kennt_mehr_kategorien_als_der_alte_nachbau():
+    """Der JS-Nachbau kannte US-Sport / Tennis / E-Sport / Fußball und sonst nichts."""
+    fein = {M.sport_kategorie(s, l) for s, l in (
+        ("table-tennis", "TT Elite"), ("cricket", "IPL"), ("volleyball", "Superlega"),
+        ("snooker", "UK Champ"), ("badminton", "BWF"), ("rugby", "Top 14"),
+        ("handball", "HBL"), ("darts", "PDC"))}
+    assert len(fein) >= 6, "genau diese fielen im Nachbau alle auf „Sonstige\""
+    assert "Sonstige" not in fein

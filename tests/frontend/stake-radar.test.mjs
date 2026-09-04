@@ -329,48 +329,53 @@ test('die Norm-Ansicht trennt gelernt von zu duenn', () => {
 });
 
 // ── Gesperrte Sportarten (03.09.2026, Lucas: „Ganze US-Sport brauch ich aktuell mal nicht") ──
-test('US-Sport wird als solcher erkannt — ueber Slug und ueber Liganamen', () => {
+// 04.09.2026: Die Erkennung selbst wird jetzt beim PRODUZENTEN geprueft
+// (tests/test_stake_highroller.py → sport_kategorie). Hier steht nur noch, dass das Frontend
+// liest statt zu raten — und dass eine Zeile ohne Kategorie nicht durchrutscht.
+test('das Frontend liest die Kategorie, statt sie zu bestimmen', () => {
   assert.equal(API._srKat({ kat: 'US-Sport' }), 'US-Sport');
-  assert.equal(API._srKat({ sport: 'baseball', liga: 'MLB' }), 'US-Sport');
-  assert.equal(API._srKat({ sport: 'american-football', liga: 'NFL' }), 'US-Sport');
-  assert.equal(API._srKat({ sport: null, liga: 'NBA Summer League' }), 'US-Sport');
-  assert.equal(API._srKat({ sport: null, liga: 'NHL Preseason' }), 'US-Sport');
-  // 03.09.2026: die Liga hiess 'NCAA, Regular' — ein Muster mit Leerzeichen statt
-  // Wortgrenzen lief daran vorbei, und american-football fehlte im Rueckfall ganz.
-  assert.equal(API._srKat({ sport: null, liga: 'NCAA, Regular' }), 'US-Sport');
-  assert.equal(API._srKat({ sport: 'american-football', liga: 'NCAA, Regular' }), 'US-Sport');
-  assert.equal(API._srKat({ sport: null, liga: 'NFL - Preseason' }), 'US-Sport');
+  assert.equal(API._srKat({ kat: 'Fußball', sport: 'baseball' }), 'Fußball',
+    'das gestempelte Feld gilt, nicht der Sport-Slug');
+  assert.equal(API._srKat({ sport: 'baseball', liga: 'MLB' }), null,
+    'ohne Feld gibt es kein Urteil — geraten wird nicht mehr');
+  assert.equal(API._srKat({}), null);
 });
 
-test('das Rueckfall-Muster steht in Terminal und Uebersicht gleich', () => {
-  // Zwei Flaechen, dasselbe Urteil — sonst zeigt die eine, was die andere sperrt.
-  // Verglichen wird der Mustertext selbst, nicht ein nachgebautes Regex: ein Test, der die
-  // Regel noch einmal formuliert, prueft nur sich selbst.
+test('weder Terminal noch Uebersicht bauen die Sportart-Regel nach', () => {
+  // 🔴 04.09.2026 (Lucas: „geh die verbleibenden Duplikate durch"). Dieser Test stand vorher
+  // andersherum: er verglich die beiden JS-NACHBAUTEN miteinander und hielt sie gleich. Das ist
+  // besser als nichts, aber es haelt zwei Kopien synchron, statt die Kopie loszuwerden — und
+  // mit dem PRODUZENTEN war keine von beiden deckungsgleich: sport_kategorie() kennt vierzehn
+  // Kategorien (Tischtennis, Cricket, Volleyball, Snooker, Badminton, Rugby, Handball, Darts …),
+  // der Nachbau kannte vier und warf den Rest auf „Sonstige".
+  //
+  // Seit `ledger_mischen()` die Kategorie auf jeder Zeile nachtraegt, gibt es nichts mehr
+  // nachzubauen. Der Test sichert jetzt, dass die Kopien nicht zurueckkommen.
   const uebersicht = readFileSync(new URL('main-dashboard.js', ROOT), 'utf8');
-  const holen = (src) => {
-    const i = src.indexOf("return 'US-Sport';");
-    assert.ok(i > 0, 'US-Sport-Zweig nicht gefunden');
-    const zeile = src.slice(src.lastIndexOf('\n', i), i);
-    const m = zeile.match(/\/(.+)\/\.test/);
-    assert.ok(m, 'kein Muster in der Zeile: ' + zeile.trim());
-    return m[1];
-  };
-  assert.equal(holen(JS), holen(uebersicht),
-    'Terminal und Uebersicht muessen dieselben Sportarten sperren');
-  assert.ok(holen(JS).includes('american'), 'american football muss drin sein');
-  assert.ok(holen(JS).includes('ncaa'), 'ncaa muss drin sein');
+  for (const [name, src] of [['stake-radar.js', JS], ['main-dashboard.js', uebersicht]]) {
+    assert.ok(!src.includes("return 'US-Sport';"),
+      name + ' baut die Sportart-Zuordnung wieder selbst — sie gehoert in stake_highroller_fetch.py');
+  }
+
+  assert.match(JS, /function _srKat\(w\) \{ return w\.kat \|\| null; \}/);
+  assert.match(uebersicht, /function _mdStakeKat\(w\) \{ return w\.kat \|\| null; \}/);
 });
 
-test('Fussball und Tennis bleiben unangetastet', () => {
-  assert.equal(API._srKat({ sport: 'soccer', liga: 'La Liga' }), 'Fußball');
-  assert.equal(API._srKat({ sport: 'soccer', liga: 'MLS' }), 'Fußball');
-  // Ohne Slug fiel MLS erst auf 'Sonstige' — gefunden vom Python-Zwilling dieses Tests.
-  assert.equal(API._srKat({ sport: null, liga: 'MLS' }), 'Fußball');
-  assert.equal(API._srKat({ sport: 'tennis', liga: 'US Open Men Singles' }), 'Tennis');
+test('eine Wette ohne Kategorie rutscht nicht an der Sperre vorbei', () => {
+  // Der reale Schaden: „Chicago Cubs – Milwaukee Brewers" stand trotz US-Sport-Sperre in einer
+  // Kachel, weil die Alt-Zeile keine Kategorie trug und der Filter `kat || ''` las.
+  const uebersicht = readFileSync(new URL('main-dashboard.js', ROOT), 'utf8');
+  assert.match(JS, /if \(!_k \|\| sperr\.indexOf\(_k\) >= 0\)/,
+    'Terminal: unbekannte Kategorie muss rausfliegen, nicht durchrutschen');
+  assert.match(uebersicht, /if \(!k\) return false;/,
+    'Uebersicht: unbekannte Kategorie muss rausfliegen');
 });
 
-test('das gestempelte Feld schlaegt die Rueckfall-Erkennung', () => {
-  assert.equal(API._srKat({ kat: 'Fußball', sport: 'baseball' }), 'Fußball');
+test('gestempelte Kategorien kommen unveraendert durch', () => {
+  for (const k of ['Fußball', 'Tennis', 'E-Sport', 'Cricket', 'Tischtennis', 'Snooker']) {
+    assert.equal(API._srKat({ kat: k }), k,
+      'der Produzent kennt 14 Kategorien — das Frontend darf keine davon verschlucken');
+  }
 });
 
 test('die Sperrliste wird nicht zweimal definiert', () => {

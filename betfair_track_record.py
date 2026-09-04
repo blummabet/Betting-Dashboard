@@ -29,6 +29,9 @@ from pathlib import Path
 from safe_write import write_json_atomic   # 25.08.2026: temp+replace statt halber Datei
 import betfair_track_store as _store       # 01.09.2026: kompaktes Ledger-Format (liest Altformat mit)
 from freigabe import UG_MIN_N, Z as UG_Z   # 04.09.2026: dieselbe Schranke wie ueberall
+# 04.09.2026: die Fade-/Boost-Schwellen kommen aus dem Signal, nicht aus einer Kopie —
+# damit gibt es fuer das Urteil genau EINE Quelle.
+from sharp_signals.betfair_money import TR_FADE_ROI, TR_BOOST_ROI
 
 BASE = Path(__file__).resolve().parent
 PRICES_FILE = BASE / "betfair_prices.json"
@@ -506,11 +509,27 @@ def _fin(b):
     def rate(w, n):
         return round(w / n, 4) if n else None
     _u = _ug(b["n"], b["roiSum"], b["roiSqSum"])
+    # ── 04.09.2026 (Lucas: „geh die verbleibenden Duplikate durch") ──────────────
+    # Die Schwellen standen an DREI Stellen: sharp_signals/betfair_money.py (entscheidet),
+    # betfair-radar.js (zeigt), main-dashboard.js (rankt). Ein Test hielt die ZAHLEN gleich —
+    # aber jede Seite verglich `roiUg` selbst mit `<=` bzw. `>`, und beim Umbau heute frueh
+    # musste die Regel an drei Stellen von Hand nachgezogen werden.
+    #
+    # Das Urteil gehoert dorthin, wo die Zahl entsteht. Hier faellt es EINMAL; die drei
+    # Verbraucher lesen nur noch. Die Schwellen wandern als Felder mit, damit die Anzeige sie
+    # weiterhin benennen kann („ab -10% dreht es um"), ohne sie selbst zu kennen.
+    _urteil = None
+    if _u is not None:
+        _urteil = "verliert" if _u <= TR_FADE_ROI else ("traegt" if _u > TR_BOOST_ROI else "neutral")
     return {"n": b["n"], "wins": b["wins"], "hitRate": rate(b["wins"], b["n"]),
             "roi": round(b["roiSum"] / b["n"], 4) if b["n"] else None,
             # Der Punktschaetzer bleibt sichtbar — er entscheidet nur nichts mehr.
             "roiUg": round(_u, 4) if _u is not None else None,
             "ugAb": UG_MIN_N,
+            # Das Urteil, EINMAL gefaellt (siehe _urteil oben). None = keine Untergrenze,
+            # also kein Urteil — und kein Urteil ist etwas anderes als „neutral".
+            "urteil": _urteil,
+            "fadeAb": TR_FADE_ROI, "boostAb": TR_BOOST_ROI,
             "nConc": b["nConc"], "hitRateConc": rate(b["winsConc"], b["nConc"]),
             "roiConc": round(b["roiConc"] / b["nConc"], 4) if b["nConc"] else None,
             "nInflow": b["nInflow"], "hitRateInflow": rate(b["winsInflow"], b["nInflow"]),
