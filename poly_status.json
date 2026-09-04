@@ -61,7 +61,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "64 geprueft, davon 6 abgeschnitten"
+      "note": "68 geprueft, davon 7 abgeschnitten"
     },
     {
       "id": "settlement_alive",
@@ -70,7 +70,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "atp-virtane-dimitro-2026-08-27: seit 8.7 Tagen offen — keine Auflösung gefunden"
+        "atp-virtane-dimitro-2026-08-27: seit 8.8 Tagen offen — keine Auflösung gefunden"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -91,7 +91,7 @@
       "nFail": 5,
       "failures": [
         "87/215 'bewiesene' Wallets mit bekanntem P&L sind netto-NEGATIV (40%) — Trefferquote allein trügt",
-        "   0x84cfffc3f1… n=116 Treffer 57% P&L $-7,634,444",
+        "   0x84cfffc3f1… n=117 Treffer 57% P&L $-7,634,444",
         "   0xc3c3b3ef30… n=338 Treffer 51% P&L $-3,975,494",
         "   0xa0f21e6d35… n=72 Treffer 64% P&L $-2,634,593",
         "   0xabb89972b2… n=26 Treffer 69% P&L $-2,563,982"
@@ -105,7 +105,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "Stichprobe auf n=21 geschrumpft (< 30) — Trefferquoten nicht belastbar"
+        "Stichprobe auf n=22 geschrumpft (< 30) — Trefferquoten nicht belastbar"
       ],
       "note": "poly_money_broad muss frisch sein und n groß genug, sonst ist 'folgt dem Geld' Zufall."
     },
@@ -138,5 +138,5 @@
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-09-04T17:30:46.699900+00:00"
+  "generatedAt": "2026-09-04T18:01:03.092049+00:00"
 }
