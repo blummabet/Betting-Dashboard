@@ -39,21 +39,41 @@ def _betfair_pulse(rec=None) -> dict | None:
             "roiPct": round(100.0 * (g.get("roi") or 0), 1)}
 
 
-def _poly_pulse(track=None) -> dict | None:
-    """Poly Public-Kandidaten (poly_shortlist_track.py → agg.public). 12.08.2026 (Lucas): der Puls zeigt
-    jetzt die HART GEGATETEN Public-Kandidaten (Conv≥7 + bewiesene Wallet + Mehrheit) statt der ganzen
-    Shortlist — das ist die Stufe, die wir wirklich senden wuerden. n/Treffer/ROI/Ø CLV + offene Public-Plays."""
+def _poly_pulse(track=None, record=None) -> dict | None:
+    """Poly Public-Kandidaten (poly_shortlist_track.py → agg.public).
+
+    12.08.2026 (Lucas): der Puls zeigt die HART GEGATETEN Public-Kandidaten (Conv>=7 + bewiesene
+    Wallet + Mehrheit) statt der ganzen Shortlist — das ist die Stufe, die wir senden WUERDEN.
+
+    🔴 04.09.2026 (Lucas-Uebersicht-Check). Genau dieses „wuerden" war das Problem. Die Kachel
+    hiess „🎮 Poly Public" und stand mit n=155 / 70 % / +5,0 % ganz oben im Puls — als waere das
+    die Bilanz des oeffentlichen Kanals. Sie ist es nicht: `poly-wallets.js` sagt an der Stelle
+    selbst „NUR Vorschau (sendet nicht)". Was wirklich in den Kanal geht, sind die Whale-Pushs
+    aus `poly_whale_watch.py`, und deren Buch (`poly_public_record.json`, seit 02.09.) stand an
+    dem Tag bei n=3.
+
+    Dieselbe Verwechslung hatte Lucas am Morgen im Track-Record gemeldet; dort steht die
+    Trennung seither auf dem Board — hier stand sie noch nicht. Also: die Kachel behaelt ihre
+    Zahlen (die Stufe ist eine sinnvolle Messgroesse), heisst aber nach dem, was sie misst, und
+    traegt die Zahl des ECHTEN Push-Buchs als eigenes Feld daneben.
+    """
     d = track if track is not None else _load("poly_shortlist_track.json")
     a = ((d or {}).get("agg") or {}).get("public") or {}
     if not a.get("n"):
         return None
     open_public = sum(1 for e in ((d or {}).get("open") or {}).values()
                       if isinstance(e, dict) and e.get("public"))
+    rec = record if record is not None else _load("poly_public_record.json")
+    gesendet = (rec or {}).get("gesamt")
     return {"n": a.get("n"),
             "hitPct": round(100.0 * (a.get("hit") or 0), 1),
             "roiPct": round(100.0 * (a.get("roi") or 0), 1),
             "clvAvg": a.get("clvAvg"),
-            "openN": open_public}
+            "openN": open_public,
+            # Was tatsaechlich gesendet wurde — getrennt gezaehlt, damit die Vorschau nie wieder
+            # als Kanal-Bilanz gelesen wird. None = das Buch gibt es (noch) nicht.
+            "sendet": False,
+            "gesendetN": gesendet if isinstance(gesendet, int) else None}
 
 
 # 29.08.2026 (Lucas-Checkup, „C"): stand auf 8, waehrend poly-wallets.js fuer DIESELBE Datei

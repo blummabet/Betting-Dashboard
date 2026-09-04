@@ -567,11 +567,33 @@
     return rows;
   }
   function bestCards() { return betPicks().slice(0, 5); }
+  // 🔴 04.09.2026 (Lucas-Übersicht-Check). Die Kachel sortierte nach LÄNGE — und stand damit
+  // fünfmal auf demselben Markt: „Chicago Fire · Team trifft 15× · Grundrate 82 %", „Inter Miami
+  // · Team trifft 15× · Grundrate 82 %", … Die Kachel schrieb die Grundrate selbst dazu und
+  // rankte trotzdem danach, dass sie hoch ist.
+  //
+  // „Team trifft" gelingt im Liga-Schnitt in vier von fünf Spielen — eine 15er-Serie darin ist
+  // fast Normalzustand (1 zu 26). „Zu null" gelingt in einem von vier; fünf am Stück sind 1 zu
+  // 3.700. compute_streaks liefert das seit heute als `zufallPct` mit, der Serien-Tab nutzt es
+  // — die Übersicht hatte ihre eigene Sortierung und bekam davon nichts mit.
+  function _mdStreakSelten(x) {
+    var z = x && x.zufallPct;
+    return (typeof z === 'number' && z > 0) ? z : null;
+  }
   function allStreaks() {
     var s = [];
     [_md.data.ligaStreaks, _md.data.mlsStreaks].forEach(function (d) { if (d && Array.isArray(d.streaks)) s = s.concat(d.streaks); });
     s = s.filter(function (x) { return (+x.length || 0) >= 4; });
-    s.sort(function (a, b) { var ra = (a.continuation && a.continuation.ratePct) || 0, rb = (b.continuation && b.continuation.ratePct) || 0; return ((+b.length || 0) - (+a.length || 0)) || (rb - ra); });
+    // Serien, die exakt dieselben Spiele beschreiben wie eine striktere (Ungeschlagen == Sieg-
+    // Serie), sind keine zweite Nachricht — sie gehören nicht in eine Fünfer-Kachel.
+    s = s.filter(function (x) { return !x.impliziertVon; });
+    s.sort(function (a, b) {
+      var za = _mdStreakSelten(a), zb = _mdStreakSelten(b);
+      if (za != null && zb != null) return za - zb;          // seltenste zuerst
+      if (za != null) return -1;
+      if (zb != null) return 1;
+      return (+b.length || 0) - (+a.length || 0);            // ohne Maßstab: alte Ordnung
+    });
     return s;
   }
   function bestStreaks() { return allStreaks().slice(0, 5); }
@@ -1415,7 +1437,13 @@
     var streaksBody = st.length ? st.map(function (s) {
       // 08.08.2026 (Lucas: „vernünftig bewerten"): „Grundrate X%" = Rate der Serien-Richtung VOR der Serie
       // (echte Basis). „reine Serie" = Serie füllt das 15-Spiele-Fenster → keine unabhängige Basis (kein Fake-100%).
-      var _bq = (s.basis === 'pure') ? ' · reine Serie' : ((s.continuation && s.continuation.ratePct != null) ? ' · Grundrate ' + s.continuation.ratePct + '%' : '');
+      // 04.09.2026: `basis: "pure"` gibt es nicht mehr — wo die Serie das Formfenster füllt,
+      // steht jetzt die LIGA-Grundrate statt einer tautologischen 100 %. Das muss auch dranstehen:
+      // „Grundrate" klang nach der des Teams, war aber je nach Fall etwas ganz anderes.
+      var _rp = (s.continuation && s.continuation.ratePct != null) ? s.continuation.ratePct : null;
+      var _bq = _rp == null ? '' : (s.basis === 'liga' ? ' · Liga-Schnitt ' + _rp + '%' : ' · vorher ' + _rp + '%');
+      var _z = _mdStreakSelten(s);
+      if (_z) { var _eins = Math.round(100 / _z); if (_eins >= 2) _bq += ' · 1 von ' + _eins.toLocaleString('de-DE'); }
       var sub = esc(String(s.leagueName || '')) + (s.continuation && s.continuation.state ? ' · ' + esc(s.continuation.state) : '') + _bq;
       var len = +s.length || 0;
       return rowEl(fl(_flagFrom(s.country, s.league, s.leagueName)) + esc(team(s.team)) + ' <span style="color:var(--mi3);font-weight:400">·</span> ' + esc(s.market || s.type || ''),
@@ -1544,11 +1572,17 @@
     }
     if (pl && pl.n) {
       cards.push('<button class="mpc" style="--ac:' + A.poly + '" onclick="showView(\'polywallets\')" title="→ Polymarket · Heute wetten">' +
-        '<span class="mpc-h">🎮 Poly Public<b>n' + pl.n + '</b></span>' +
-        '<div class="mpc-big" style="color:' + (pl.hitPct >= 50 ? A.good : 'var(--mi)') + '">' + (pl.hitPct == null ? '—' : Math.round(pl.hitPct) + '%') + '</div><div class="mpc-cap">Treffer · hart gegatet</div>' +
+        // 🔴 04.09.2026 (Lucas-Übersicht-Check): hieß „Poly Public" und las den Track der
+        // Public-KANDIDATEN — eine Vorschau, die nichts sendet (poly-wallets.js sagt das selbst).
+        // Ganz oben im Puls las sich das wie die Bilanz des öffentlichen Kanals. Die ging aber
+        // an dem Tag über n=3, nicht n=155. Jetzt heißt die Kachel nach dem, was sie misst.
+        '<span class="mpc-h">🎮 Poly-Kandidaten<b>n' + pl.n + '</b></span>' +
+        '<div class="mpc-big" style="color:' + (pl.hitPct >= 50 ? A.good : 'var(--mi)') + '">' + (pl.hitPct == null ? '—' : Math.round(pl.hitPct) + '%') + '</div><div class="mpc-cap">Treffer · Vorschau, sendet nicht</div>' +
         meter(pl.hitPct, A.good) +
         '<div class="mpc-subs">' + sub(pl.roiPct == null ? '—' : (pl.roiPct > 0 ? '+' : '') + (+pl.roiPct).toFixed(1) + '%', 'ROI', col0(pl.roiPct)) +
-        (pl.openN ? sub(pl.openN, 'offen', 'var(--mi2)') : '') + '</div></button>');
+        (pl.openN ? sub(pl.openN, 'offen', 'var(--mi2)') : '') +
+        // Was wirklich in den Kanal ging — daneben, damit die beiden nie wieder verschmelzen.
+        (pl.gesendetN != null ? sub(pl.gesendetN, 'echt gesendet', 'var(--mi2)') : '') + '</div></button>');
     }
     if ((ml && ml.n) || mmRows.length) {
       var kon = mmRows.filter(function (r) { return r.verdict === 'konsens'; }).length;
@@ -1966,8 +2000,40 @@
     if (frei.length) {
       body = frei.map(function (r) { return _mdFgZeile(r, minN); }).join('');
     } else {
+      // 🔴 04.09.2026 (Lucas-Übersicht-Check). Der Satz behauptete pauschal „keine Schublade hat
+      // ihre Untergrenze über null" — und war falsch. Gemessen an dem Tag:
+      //
+      //     Liga · ABWÄGEN   n46   ROI +24,4 %   ROI-UG +3,7 %   CLV-UG −2,16
+      //
+      // Die ROI-Untergrenze lag sehr wohl über null; gescheitert ist die Schublade an der
+      // CLV-Bedingung. Wer nur den Satz liest, hält die Renditen für chancenlos, obwohl die
+      // eine Hürde genommen war und eine ANDERE blockiert. Die Begründung kommt jetzt aus den
+      // Zahlen statt aus einer Annahme.
+      //
+      // Nebenbefund, der damit sichtbar wird: 7 der 18 Schubladen mit n≥30 tragen GAR KEINEN
+      // CLV-Wert (Over/Under 2.5 mit n=1668, Match Odds n=1654 …). „CLV-UG ≥ 0" ist mit einem
+      // fehlenden Wert nie erfüllbar — die sind strukturell nicht freigebbar, egal wie gut ihr
+      // ROI wird. Das gehört dazugesagt, statt es als „noch nicht so weit" zu tarnen.
+      var _reif = (f.alle || []).filter(function (r) { return (r.n || 0) >= minN; });
+      var _roiOk = _reif.filter(function (r) { return typeof r.roiLb === 'number' && r.roiLb > 0; });
+      var _ohneClv = _reif.filter(function (r) { return typeof r.clvLb !== 'number'; });
+      var _grund;
+      if (!_reif.length) {
+        _grund = 'noch hat keine Schublade die ' + minN + ' Plays zusammen.';
+      } else if (!_roiOk.length) {
+        _grund = 'keine der ' + _reif.length + ' reifen Schubladen hat ihre <b>Rendite-Untergrenze</b> über null.';
+      } else {
+        _grund = _roiOk.length + ' von ' + _reif.length + ' reifen Schubladen '
+          + (_roiOk.length === 1 ? 'hat' : 'haben') + ' die <b>Rendite-Untergrenze</b> über null ('
+          + _roiOk.map(function (r) { return esc(r.schublade); }).join(', ')
+          + ') — und scheiter' + (_roiOk.length === 1 ? 't' : 'n') + ' an der <b>CLV-Bedingung</b>.';
+      }
+      if (_ohneClv.length) {
+        _grund += ' <span style="color:var(--mi2)">' + _ohneClv.length + ' reife Schubladen tragen gar keinen CLV-Wert — '
+          + 'die können die Bedingung nie erfüllen, unabhängig vom ROI.</span>';
+      }
       body = '<div class="md-kl-foot" style="border-top:0;padding-top:8px;padding-bottom:2px">'
-        + '<b>Heute gibt es nichts, dem man blind folgen darf</b> — keine Schublade hat ihre Untergrenze über null. '
+        + '<b>Heute gibt es nichts, dem man blind folgen darf</b> — ' + _grund + ' '
         + 'Das ist ein Ergebnis, kein Fehler, und es gilt für alles darunter. Am nächsten dran:</div>'
         + (kand.length ? kand.map(function (r) { return _mdFgZeile(r, minN); }).join('')
                        : '<div class="md-kl-foot" style="border-top:0">Noch nicht einmal ein Kandidat — die Bücher sammeln.</div>');

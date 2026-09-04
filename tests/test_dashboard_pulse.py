@@ -21,13 +21,38 @@ def test_poly_pulse_aus_agg_public():
     # openN zaehlt nur offene Plays mit public=True.
     track = {"agg": {"public": {"n": 40, "hit": 0.75, "roi": 0.026, "clvAvg": 0.03}},
              "open": {"a": {"public": True}, "b": {"public": True}, "c": {"public": False}}}
-    out = bp._poly_pulse(track)
-    assert out == {"n": 40, "hitPct": 75.0, "roiPct": 2.6, "clvAvg": 0.03, "openN": 2}
+    out = bp._poly_pulse(track, record={"gesamt": 3})
+    assert out == {"n": 40, "hitPct": 75.0, "roiPct": 2.6, "clvAvg": 0.03, "openN": 2,
+                   "sendet": False, "gesendetN": 3}
+
+
+def test_die_vorschau_traegt_die_zahl_der_ECHTEN_pushs_daneben():
+    """🔴 04.09.2026 (Lucas-Uebersicht-Check).
+
+    Die Kachel hiess „🎮 Poly Public" und stand mit n=155 / 70 % / +5,0 % ganz oben im Puls —
+    als waere das die Bilanz des oeffentlichen Kanals. Ist sie nicht: poly-wallets.js sagt an
+    der Stelle selbst „NUR Vorschau (sendet nicht)". Was wirklich in den Kanal geht, sind die
+    Whale-Pushs, und deren Buch stand an dem Tag bei n=3.
+
+    `sendet: False` ist deshalb hart verdrahtet, und `gesendetN` traegt die echte Zahl daneben.
+    """
+    track = {"agg": {"public": {"n": 155, "hit": 0.70, "roi": 0.05}}, "open": {}}
+    out = bp._poly_pulse(track, record={"gesamt": 3})
+    assert out["sendet"] is False, "diese Stufe sendet nichts — das darf nie implizit werden"
+    assert out["gesendetN"] == 3
+    assert out["n"] == 155, "die Vorschau-Zahl bleibt, sie ist eine sinnvolle Messgroesse"
+
+
+def test_ohne_push_buch_wird_keine_null_erfunden():
+    """Kein Buch heisst „unbekannt", nicht „null gesendet"."""
+    track = {"agg": {"public": {"n": 40, "hit": 0.75, "roi": 0.026}}, "open": {}}
+    assert bp._poly_pulse(track, record={})["gesendetN"] is None
+    assert bp._poly_pulse(track, record={"gesamt": "kaputt"})["gesendetN"] is None
 
 
 def test_poly_pulse_leer_ist_none():
-    assert bp._poly_pulse({}) is None
-    assert bp._poly_pulse({"agg": {"public": {"n": 0}}}) is None
+    assert bp._poly_pulse({}, record={}) is None
+    assert bp._poly_pulse({"agg": {"public": {"n": 0}}}, record={}) is None
 
 
 # 03.09.2026 (Lucas-Checkup): `_best_bucket` bekommt keine fertigen Aggregate mehr, sondern die
