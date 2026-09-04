@@ -28,6 +28,7 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 from safe_write import write_json_atomic
+from freigabe import untergrenze   # 04.09.2026: dieselbe Schranke wie ueberall sonst
 
 BASE = Path(__file__).resolve().parent
 LEDGER_FILE = BASE / "poly_whale_public_ledger.json"
@@ -131,27 +132,59 @@ def settle(ledger, resolutions, close, now=None) -> list[dict]:
 
 def bilanz(rows) -> dict:
     """Kennzahlen über abgerechnete Zeilen. Trefferquote über ALLE settled (auch ohne Preis),
-    ROI/CLV nur über die mit Preis — die Differenz steht als `nOhnePreis` sichtbar dabei."""
+    ROI/CLV nur über die mit Preis — die Differenz steht als `nOhnePreis` sichtbar dabei.
+
+    🔴 04.09.2026 — der Fund, der heute schon `stake_analyse.py` umgebaut hat, gilt hier genauso:
+
+        EINE TREFFERQUOTE OHNE DIE PREISE IST KEINE ZAHL.
+
+    Dieses Buch gab bisher `hit` und `hitUg` aus und daneben einen ROI ohne jede Schranke. Das
+    ist die falsche Reihenfolge: 91% Treffer im Retro-Block klingen nach Beleg, aber dort ist
+    `nOhnePreis == n` — bei ALLEN elf fehlt der Einstiegspreis. Elf Treffer zu unbekannten
+    Quoten können +40% oder −40% Rendite sein; die Trefferquote unterscheidet die beiden Fälle
+    nicht. Deshalb:
+
+      · `roiUg` ist ab jetzt die Untergrenze der RENDITE (freigabe.untergrenze, dieselbe
+        Normalapproximation und dieselbe n≥30-Grenze wie im Rest des Repos).
+      · `belegt` hängt AUSSCHLIESSLICH an `roiUg > 0` — nie an der Trefferquote. Eine Serie
+        von Favoritensiegen zu 0,93 hat eine glänzende Quote und verliert Geld.
+      · `geldurteil` sagt beim Namen, ob über das Geld überhaupt geredet werden kann. Wo jede
+        Zeile ohne Preis dasteht, ist die Antwort „nein" — und das steht dann auch da, statt
+        dass eine Trefferquote die Lücke füllt.
+      · Die CLV-Untergrenze lief bisher über eine eigene Inline-Formel ab n>1. Genau die
+        Krankheit hat freigabe.untergrenze am 03.09. behandelt: drei ähnliche Werte ergeben
+        eine Streuung nahe null, und die „Untergrenze" fällt auf den Mittelwert zusammen. Im
+        gespeicherten Record stand deshalb `clvUg: -0.65` aus n=3. Jetzt dieselbe Schranke.
+    """
     rows = [r for r in (rows or []) if isinstance(r, dict) and r.get("result")]
     n = len(rows)
+    leer = {"n": 0, "wins": 0, "hit": None, "hitUg": None, "nOhnePreis": 0,
+            "pnl": 0.0, "stake": 0.0, "roi": None, "roiUg": None, "belegt": False,
+            "geldurteil": False, "clvAvg": None, "clvUg": None}
     if not n:
-        return {"n": 0, "wins": 0, "hit": None, "hitUg": None, "nOhnePreis": 0,
-                "pnl": 0.0, "stake": 0.0, "roi": None, "clvAvg": None, "clvUg": None}
+        return leer
     wins = sum(1 for r in rows if r["result"] == "win")
     mit = [r for r in rows if isinstance(r.get("stake"), (int, float)) and r["stake"]]
     pnl = sum(float(r.get("pnl") or 0) for r in mit)
     stake = sum(float(r["stake"]) for r in mit)
     clvs = [float(r["clvPP"]) for r in mit if isinstance(r.get("clvPP"), (int, float))]
-    clv_ug = None
-    if len(clvs) > 1:
-        m = sum(clvs) / len(clvs)
-        sd = (sum((c - m) ** 2 for c in clvs) / (len(clvs) - 1)) ** 0.5
-        clv_ug = round(m - SIG_Z * sd / math.sqrt(len(clvs)), 2)
+
+    # Rendite je Push — nicht die Gesamtsumme. Für eine Streuung braucht es die Einzelwerte.
+    renditen = [float(r["pnl"]) / float(r["stake"]) for r in mit
+                if isinstance(r.get("pnl"), (int, float))]
+    roi_ug = untergrenze(renditen) if renditen else None
+    clv_ug = untergrenze(clvs) if clvs else None
+
     return {"n": n, "wins": wins, "hit": round(wins / n, 4),
             "hitUg": round(wilson_lb(wins, n), 4), "nOhnePreis": n - len(mit),
             "pnl": round(pnl, 2), "stake": round(stake, 2),
             "roi": (round(pnl / stake, 4) if stake else None),
-            "clvAvg": (round(sum(clvs) / len(clvs), 2) if clvs else None), "clvUg": clv_ug}
+            "roiUg": (round(roi_ug, 4) if roi_ug is not None else None),
+            "belegt": bool(roi_ug is not None and roi_ug > 0),
+            # Über Geld lässt sich nur reden, wo Preise da sind. Sonst zählt nur der Treffer.
+            "geldurteil": bool(mit),
+            "clvAvg": (round(sum(clvs) / len(clvs), 2) if clvs else None),
+            "clvUg": (round(clv_ug, 2) if clv_ug is not None else None)}
 
 
 def bilanz_nach(rows, field) -> dict:
@@ -197,14 +230,28 @@ def main() -> int:
     kopf = (f"🐋 Public-Pushs: {rep['gesamt']} gesendet · {rep['offen']} offen · "
             f"{rep['unaufloesbar']} unauflösbar · {a['n']} abgerechnet")
     if a["n"]:
-        kopf += (f" · Treffer {a['hit']*100:.0f}% (UG {a['hitUg']*100:.0f}%)"
-                 + (f" · ROI {a['roi']*100:+.1f}%" if a["roi"] is not None else "")
-                 + (f" · CLV {a['clvAvg']:+.2f} pp" if a["clvAvg"] is not None else ""))
+        # Reihenfolge mit Absicht: erst das Geld, dann die Trefferquote. Die Quote ohne die
+        # Preise sagt nichts ueber die Rendite, und was zuerst dasteht, wird zuerst geglaubt.
+        if a["roi"] is not None:
+            kopf += f" · ROI {a['roi']*100:+.1f}%"
+            kopf += (f" (UG {a['roiUg']*100:+.1f}% — BELEGT)" if a["belegt"]
+                     else f" (UG {a['roiUg']*100:+.1f}%)" if a["roiUg"] is not None
+                     else " (kein Urteil, n zu klein)")
+        elif not a["geldurteil"]:
+            kopf += " · kein Geldurteil moeglich (kein Einstiegspreis)"
+        kopf += f" · Treffer {a['hit']*100:.0f}% (UG {a['hitUg']*100:.0f}%)"
+        if a["clvAvg"] is not None:
+            kopf += f" · CLV {a['clvAvg']:+.2f} pp"
     print(kopf)
     if rep["retro"]["n"]:
         ra = rep["retro"]["agg"]
-        print(f"   ℹ️  {rep['retro']['n']} rückwirkende Einträge als Kontext"
-              + (f" (Treffer {ra['hit']*100:.0f}% auf n={ra['n']}) — zählen NICHT ins Buch." if ra["n"] else ""))
+        hinweis = ""
+        if ra["n"]:
+            hinweis = f" (Treffer {ra['hit']*100:.0f}% auf n={ra['n']}"
+            hinweis += (", ohne Einstiegspreis → keine Rendite berechenbar)"
+                        if not ra["geldurteil"] else f", ROI {ra['roi']*100:+.1f}%)")
+            hinweis += " — zählen NICHT ins Buch."
+        print(f"   ℹ️  {rep['retro']['n']} rückwirkende Einträge als Kontext" + hinweis)
     return 0
 
 

@@ -792,6 +792,47 @@ Schublade nennt. Bis dahin ist die richtige Aussage: *noch nichts gefunden*, nic
 
 ---
 
+### 🐋 Die Public-Pushs — zwei Dinge, die gleich hießen (04.09.2026)
+
+Lucas: *„in diesem Track-Record haben wir ja die Public-Kandidaten … aktuell schicken wir aber
+schon Polymarket-Push in den Public-Channel, aber ich weiss nicht wie gut das abschneidet."*
+
+Die Frage ließ sich beantworten, aber erst nachdem klar war, dass sie **zwei verschiedene Dinge**
+meint, die bis heute beide „Public" hießen:
+
+| | was es ist | sendet? |
+|---|---|---|
+| **◆ Public-Kandidaten** (Track-Record) | Shortlist-Plays, die das harte Gate bestehen *würden* | **nein** — reine Vorschau |
+| **🐋 Public-Pushs** (`poly_whale_watch.py`) | Whale-Positionen einer Top-10-Wallet | **ja** — das geht raus |
+
+Die 156 abgerechneten Plays mit 70,5 % und +5,1 % ROI im Track-Record beschreiben also eine
+**Vorschau, die nie jemand bekommen hat**. Über die echten Pushs sagen sie nichts.
+
+**Das echte Buch** (`poly_public_eval.py` → `poly_public_record.json`, seit 02.09.) steht bei
+**n=3 vorwärts**: drei CS2-Märkte einer einzigen Wallet, alle getroffen, +$17,51 auf $30 = ROI
++58,4 %. Dazu 34 rückwirkend rekonstruierte Einträge, von denen **23 nie aufgelöst** wurden und
+bei den **11 übrigen der Einstiegspreis fehlt**.
+
+Zwei Korrekturen, beide dieselbe Lehre wie eine Etage höher:
+
+1. **Die Trefferquote urteilte.** Das Buch gab `hit`/`hitUg` aus und daneben einen ROI ohne jede
+   Schranke. Der Retro-Block zeigte damit „91 % Treffer (UG 68 %)" — bei elf Zeilen ohne
+   Einstiegspreis. Zehn Treffer zu unbekannten Quoten können +40 % oder −40 % sein. Seither
+   entscheidet `roiUg` (`freigabe.untergrenze`), und `geldurteil` sagt beim Namen, ob über Geld
+   überhaupt geredet werden kann.
+2. **Die CLV-Untergrenze war ein Mittelwert mit Etikett.** Sie lief über eine eigene Inline-Formel
+   ab n>1 — genau die Krankheit, die `freigabe.untergrenze` am 03.09. behandelt hat. Im
+   gespeicherten Record stand `clvUg: -0,65` aus **drei** Werten. Jetzt dieselbe n≥30-Grenze wie
+   überall; der Wert ist folgerichtig verschwunden.
+
+**Die ehrliche Antwort auf die Frage:** noch nicht messbar. +58,4 % aus drei Plays ist ein
+Punktschätzer. Bei der gemessenen Push-Rate — **37 Pushs in 30 Tagen, gut einer pro Tag** — ist
+n=30 in rund vier Wochen erreicht. Vorher gibt es keine Untergrenze, und ohne die kein Urteil.
+Der Block steht ab jetzt sichtbar auf dem Track-Record-Reiter, direkt unter den Kandidaten,
+damit die Verwechslung nicht wiederkommt.
+
+---
+
 ### 🧭 Das Lern-Gedächtnis war 18 Tage lang (04.09.2026)
 
 Lucas: *„der Bereich wo quasi gelernt wird steht immer noch mit 500 Plays — ist das eh kein hard

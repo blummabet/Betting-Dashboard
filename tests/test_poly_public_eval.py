@@ -109,12 +109,82 @@ class BilanzTest(unittest.TestCase):
         b = PE.bilanz([{"result": "win", "stake": 10.0, "pnl": 10.0}] * 5)
         self.assertLess(b["hitUg"], b["hit"])
 
-    def test_clv_untergrenze_erst_ab_zwei_werten(self):
+    def test_zwei_gleiche_werte_ergeben_KEINE_untergrenze(self):
+        """Dieser Test stand hier vorher andersherum — und war der Fehler.
+
+        Er behauptete „keine Streuung → UG = Mittel" und nagelte damit genau die Krankheit
+        fest, die freigabe.untergrenze am 03.09. behandelt hat: zwei oder drei aehnliche Werte
+        haben eine Streuung nahe null, die Schranke faellt auf den Punktschaetzer zusammen, und
+        heraus kommt ein Mittelwert mit dem Etikett „UG". Im gespeicherten Record stand deshalb
+        clvUg: -0.65 aus n=3. Eine Untergrenze aus drei Werten ist keine Untergrenze.
+        """
         einer = PE.bilanz([{"result": "win", "stake": 10.0, "pnl": 10.0, "clvPP": 3.0}])
         self.assertIsNone(einer["clvUg"])
-        zwei = PE.bilanz([{"result": "win", "stake": 10.0, "pnl": 10.0, "clvPP": 3.0},
-                          {"result": "win", "stake": 10.0, "pnl": 10.0, "clvPP": 3.0}])
-        self.assertEqual(zwei["clvUg"], 3.0)           # keine Streuung → UG = Mittel
+        zwei = PE.bilanz([{"result": "win", "stake": 10.0, "pnl": 10.0, "clvPP": 3.0}] * 2)
+        self.assertIsNone(zwei["clvUg"], "n=2 traegt keine Schranke, egal wie eng die Werte liegen")
+        viele = PE.bilanz([{"result": "win", "stake": 10.0, "pnl": 10.0, "clvPP": 3.0}] * 40)
+        self.assertEqual(viele["clvUg"], 3.0)          # ab n=30 gibt es eine Zahl
+
+
+class GeldUrteilTest(unittest.TestCase):
+    """04.09.2026 — dieselbe Lehre, die heute stake_analyse.py umgebaut hat, hier festgenagelt:
+
+        EINE TREFFERQUOTE OHNE DIE PREISE IST KEINE ZAHL.
+
+    Das Buch gab bisher hit/hitUg aus und daneben einen ROI ohne Schranke. Der Retro-Block
+    zeigte 91% Treffer auf n=11, waehrend bei ALLEN elf der Einstiegspreis fehlte — daraus ist
+    keine Rendite berechenbar, und die Trefferquote sagt darueber nichts.
+    """
+
+    def _wins(self, n, pnl=10.0):
+        return [{"result": "win", "stake": 10.0, "pnl": pnl, "clvPP": 1.0}] * n
+
+    def test_belegt_haengt_an_der_rendite_nicht_an_der_trefferquote(self):
+        """40 Favoritensiege zu 0,93: makellose Quote, und trotzdem Geld verloren."""
+        rows = [{"result": "win", "stake": 10.0, "pnl": 0.75}] * 36 + \
+               [{"result": "loss", "stake": 10.0, "pnl": -10.0}] * 4
+        b = PE.bilanz(rows)
+        self.assertEqual(b["hit"], 0.9)
+        self.assertGreater(b["hitUg"], 0.5, "die Trefferquote sieht glaenzend aus")
+        self.assertLess(b["roi"], 0, "und trotzdem ist Geld weg")
+        self.assertFalse(b["belegt"], "belegt darf NIE aus der Trefferquote kommen")
+
+    def test_belegt_wird_gesetzt_wenn_die_rendite_untergrenze_ueber_null_liegt(self):
+        b = PE.bilanz(self._wins(40))
+        self.assertIsNotNone(b["roiUg"])
+        self.assertGreater(b["roiUg"], 0)
+        self.assertTrue(b["belegt"])
+
+    def test_kleine_stichprobe_bekommt_keine_rendite_untergrenze(self):
+        """Der reale Stand am 04.09.: drei Pushs, alle getroffen, ROI +58%. Das ist ein
+        Punktschaetzer, kein Beleg — und muss auch so dastehen."""
+        b = PE.bilanz(self._wins(3, pnl=5.84))
+        self.assertGreater(b["roi"], 0.5)
+        self.assertIsNone(b["roiUg"], "unter n=30 gibt es keine Schranke")
+        self.assertFalse(b["belegt"])
+
+    def test_ohne_preis_gibt_es_kein_geldurteil(self):
+        rows = [{"result": "win", "stake": None, "pnl": None}] * 10 + \
+               [{"result": "loss", "stake": None, "pnl": None}]
+        b = PE.bilanz(rows)
+        self.assertEqual(b["hit"], round(10 / 11, 4))
+        self.assertEqual(b["nOhnePreis"], 11)
+        self.assertFalse(b["geldurteil"], "bei keiner Zeile ist ein Einstieg bekannt")
+        self.assertIsNone(b["roi"])
+        self.assertIsNone(b["roiUg"])
+        self.assertFalse(b["belegt"])
+
+    def test_geldurteil_sobald_wenigstens_eine_zeile_einen_preis_hat(self):
+        b = PE.bilanz([{"result": "win", "stake": 10.0, "pnl": 10.0},
+                       {"result": "win", "stake": None, "pnl": None}])
+        self.assertTrue(b["geldurteil"])
+        self.assertEqual(b["nOhnePreis"], 1)
+
+    def test_leere_bilanz_ist_nicht_belegt(self):
+        b = PE.bilanz([])
+        self.assertFalse(b["belegt"])
+        self.assertFalse(b["geldurteil"])
+        self.assertIsNone(b["roiUg"])
 
     def test_bilanz_nach_gruppiert_und_faengt_leerwerte(self):
         rows = [{"result": "win", "cat": "Fußball", "stake": 10.0, "pnl": 10.0},

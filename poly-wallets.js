@@ -268,8 +268,9 @@ function initPolyWallets(){
     jf('poly_money_broad_live_history.json'),
     jf('poly_live_signal_track.json'),       // 12.08.2026 (Lucas): Live-Signal Forward-CLV Track-Record
     jf('money_map.json'),                    // 21.08.2026 (Lucas): Betfair-Geld je Spiel → Gegencheck im Kanten-Scorer
-  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap])=>{
-    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap};
+    jf('poly_public_record.json'),           // 04.09.2026 (Lucas): wie schneiden die Public-Pushs WIRKLICH ab?
+  ]).then(([wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap,publicRec])=>{
+    _pwCache={wm,prices,wallets,hist,coherence,settlement,ledger,moneyAcc,moneyBroad,smart,broadLive,crossSport,broadHist,walletTrack,shortlistTrack,broadLiveNow,broadLiveHist,liveSigTrack,moneyMap,publicRec};
     _pwRender();
   }).catch(err=>{
     // 12.07.2026: Vorher gab es KEIN catch — eine Exception im Render (z.B. der
@@ -2905,6 +2906,103 @@ function _pwTrackSignalTable(bySig){
     +'<span class="pw-sec-note">Trefferquote/ROI/CLV je Auslöser-Signal. Ein Play kann mehrere Signale haben (zählt dann in mehreren Zeilen). Blasse Zeilen = noch zu wenige (n&lt;8).</span></div>'
     +'<div class="pw-tw"><table class="pw-tbl"><thead><tr><th>Signal</th><th>n</th><th>Treffer</th><th>ROI</th><th>Ø CLV</th><th>P&amp;L</th></tr></thead><tbody>'+body+'</tbody></table></div></section>';
 }
+// ═══════════════════════════════════════════════════════════════════════════════════════
+//  🐋 PUBLIC-CHANNEL — was dort WIRKLICH rausgeht und wie es abschneidet
+//  (04.09.2026, Lucas: „aktuell schicken wir aber schon Polymarket-Push in den Public-Channel,
+//   aber ich weiss nicht wie gut das abschneidet, würde mich interessieren, lässt sich das
+//   rausfinden?")
+//
+//  Ja — und der erste Fund ist, dass die Frage auf zwei verschiedene Dinge zielt, die bis heute
+//  gleich hiessen:
+//
+//    ◆ Public-Kandidaten (oben)   — Shortlist-Plays, die das harte Gate bestehen WÜRDEN.
+//                                   Reine Vorschau: `poly-wallets.js` sendet nichts, nie.
+//    🐋 Public-Pushs (hier)       — was `poly_whale_watch.py` tatsächlich in den Channel
+//                                   schickt: Whale-Positionen einer Top-10-Wallet.
+//
+//  Das sind NICHT dieselben Plays, und deshalb sagt die Bilanz der einen nichts über die andere.
+//  Genau diese Verwechslung stand in der Frage, also steht die Trennung jetzt auf dem Board —
+//  nicht nur in einem Kommentar, den niemand liest.
+//
+//  Gemessen wird wie überall sonst: die RENDITE mit Untergrenze entscheidet, nicht die
+//  Trefferquote. Eine Serie Favoritensiege zu 0,93 hat eine glänzende Quote und verliert Geld.
+function _pwPubKpi(lbl,val,col,sub){
+  return '<div style="flex:1;min-width:118px;background:#0f1626;border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px 14px">'
+    +'<div style="font-size:10.5px;color:#8b949e;text-transform:uppercase;letter-spacing:.4px;margin-bottom:4px">'+lbl+'</div>'
+    +'<div style="font-size:21px;font-weight:900;color:'+(col||'#e6edf3')+'">'+val+'</div>'
+    +(sub?'<div style="font-size:10px;color:#6e7681;margin-top:1px">'+sub+'</div>':'')+'</div>';
+}
+// Das Urteil in einem Satz. Es haengt an roiUg, nie an hit — und wo kein Preis da war, sagt es
+// das, statt die Luecke mit einer Trefferquote zu fuellen.
+function _pwPubUrteil(a){
+  if(!a || !a.n) return ['#8b949e','noch nichts abgerechnet'];
+  if(!a.geldurteil) return ['#e3b341','kein Geldurteil möglich — bei allen '+a.n+' fehlt der Einstiegspreis'];
+  if(a.belegt)      return ['#3fb950','belegt: Rendite-Untergrenze '+_pwtSig(Math.round(a.roiUg*1000)/10)+'% liegt über null'];
+  if(a.roiUg!=null) return ['#f85149','nicht belegt: Untergrenze '+_pwtSig(Math.round(a.roiUg*1000)/10)+'% — das schließt Verlust nicht aus'];
+  return ['#e3b341','kein Urteil: n='+a.n+' ist zu klein für eine Untergrenze (ab n=30)'];
+}
+function _pwPubBlock(a, label, hint){
+  const [uc,ut]=_pwPubUrteil(a);
+  const roiCol = (a&&a.n&&a.roi!=null)? (a.roi>0?'#3fb950':a.roi<0?'#f85149':'#8b949e') : '#8b949e';
+  return '<div style="margin:2px 0 14px">'
+    +'<div style="font-size:13px;font-weight:800;color:#e6edf3;margin-bottom:8px">'+label
+      +(hint?'<span style="font-size:11px;color:#6e7681;font-weight:600;margin-left:6px">'+hint+'</span>':'')+'</div>'
+    +'<div style="display:flex;gap:9px;flex-wrap:wrap">'
+      // Reihenfolge mit Absicht: das Geld zuerst. Was oben steht, wird zuerst geglaubt.
+      +_pwPubKpi('ROI', (a&&a.roi!=null)?_pwtSig(Math.round(a.roi*1000)/10)+'%':'—', roiCol,
+                 (a&&a.roiUg!=null)?('UG '+_pwtSig(Math.round(a.roiUg*1000)/10)+'%'):'UG — (n&lt;30)')
+      +_pwPubKpi('Netto P&amp;L', (a&&a.n&&a.stake)?_pwtUsd(a.pnl):'—', roiCol, 'Einsatz $'+Math.round((a&&a.stake)||0))
+      +_pwPubKpi('abgerechnet', (a&&a.n)||0, '#e6edf3', ((a&&a.wins)||0)+' Treffer')
+      +_pwPubKpi('Trefferquote', (a&&a.n)?_pwtPct(a.hit):'—', '#8b949e',
+                 (a&&a.nOhnePreis)?(a.nOhnePreis+'× ohne Preis'):'sagt nichts über die Rendite')
+      +_pwPubKpi('Ø CLV', (a&&a.clvAvg!=null)?_pwtSig(a.clvAvg)+'pp':'—',
+                 (a&&a.clvAvg>0)?'#3fb950':(a&&a.clvAvg<0)?'#f85149':'#8b949e', 'Einstieg→Schluss')
+    +'</div>'
+    +'<div style="font-size:11.5px;font-weight:700;color:'+uc+';margin-top:7px">'+ut+'</div></div>';
+}
+function _pwPubCats(byCat){
+  const keys=Object.keys(byCat||{}); if(!keys.length) return '';
+  const body=keys.map(k=>{
+    const a=byCat[k]||{};
+    const rc=a.roi!=null?(a.roi>0?'#3fb950':a.roi<0?'#f85149':'#8b949e'):'#8b949e';
+    return '<tr><td>'+_pwEsc(k)+'</td><td>'+(a.n||0)+'</td><td>'+(a.n?_pwtPct(a.hit):'—')+'</td>'
+      +'<td style="color:'+rc+';font-weight:700">'+(a.roi!=null?_pwtSig(Math.round(a.roi*1000)/10)+'%':'—')+'</td>'
+      +'<td class="pw-mut">'+(a.roiUg!=null?_pwtSig(Math.round(a.roiUg*1000)/10)+'%':'—')+'</td>'
+      +'<td>'+(a.clvAvg!=null?_pwtSig(a.clvAvg)+'pp':'—')+'</td></tr>';
+  }).join('');
+  return '<div class="pw-sec-head" style="margin-top:2px"><span class="pw-kicker">Je Sportart</span>'
+    +'<span class="pw-sec-note">Die Spalte UG entscheidet, nicht ROI — ein ROI ohne Untergrenze ist ein Punktschätzer.</span></div>'
+    +'<div class="pw-tw"><table class="pw-tbl"><thead><tr><th>Sportart</th><th>n</th><th>Treffer</th><th>ROI</th><th>UG</th><th>Ø CLV</th></tr></thead><tbody>'+body+'</tbody></table></div>';
+}
+function _pwPublicPush(rec){
+  const kopf='<section class="pw-sec"><div class="pw-sec-head">'
+    +'<span class="pw-kicker">🐋 Public-Channel — was dort wirklich rausgeht</span>'
+    +'<span class="pw-sec-note"><b>Nicht zu verwechseln mit ◆ Public-Kandidaten oben.</b> Die sind reine Vorschau und senden nichts. '
+    +'Hier steht, was <code>poly_whale_watch.py</code> tatsächlich gepostet hat: Whale-Positionen einer Top-10-Wallet, '
+    +'jede beim Absenden mit dem Preis eingebucht, den ein Leser in dem Moment bekommen hätte.</span></div>';
+  if(!rec || !rec.gesamt){
+    return kopf+'<div class="pw-none">Das Buch läuft, hat aber noch keinen gesendeten Push. Es startet am Tag seiner Einführung (02.09.2026) — '
+      +'rückwirkend Gutes herauszusuchen wäre kein Beleg, sondern eine Auswahl.</div></section>';
+  }
+  const upd=rec.updatedAt?('<div class="pw-mut" style="font-size:11px;margin:2px 0 10px">Stand '
+    +_pwEsc(String(rec.updatedAt).slice(0,16).replace('T',' '))+' · Buch beginnt '
+    +_pwEsc(String(rec.startAb||'').slice(0,10))+' · fixer Einsatz $10 je Push</div>'):'';
+  const offen=(rec.offen||rec.unaufloesbar)
+    ? '<div class="pw-mut" style="font-size:11px;margin:-6px 0 12px">'+(rec.offen||0)+' noch offen · '
+      +(rec.unaufloesbar||0)+' unauflösbar <span style="color:#6e7681">(nie aufgelöst — senkt sichtbar den Nenner, statt still zu verschwinden)</span></div>'
+    : '';
+  const r=rec.retro||{}, ra=r.agg||{};
+  const retro=r.n? '<div style="border-top:1px solid rgba(255,255,255,.07);margin-top:6px;padding-top:10px">'
+      +'<div style="font-size:12px;font-weight:800;color:#8b949e;margin-bottom:6px">ℹ️ '+r.n+' rückwirkend rekonstruierte Einträge — Kontext, kein Beleg</div>'
+      +'<div class="pw-mut" style="font-size:11.5px">'+(r.unaufloesbar||0)+' davon nie aufgelöst · '
+      +(ra.n?('bei den übrigen '+ra.n+': Treffer '+_pwtPct(ra.hit)):'nichts abgerechnet')
+      +(ra.n&&!ra.geldurteil?' — aber <b style="color:#e3b341">bei allen '+ra.n+' fehlt der Einstiegspreis</b>, also ist daraus keine Rendite berechenbar. '
+        +'Eine Trefferquote ohne die Preise ist keine Zahl: 10 von 11 Treffern können +40% oder −40% sein.':'')
+      +'</div></div>' : '';
+  return kopf+upd+offen
+    +_pwPubBlock(rec.agg, '🐋 Gesendete Pushs', '(vorwärts gebucht, seit Einführung des Buchs)')
+    +_pwPubCats(rec.byCat)+retro+'</section>';
+}
 function _pwTrackRecord(track){
   const intro='<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">📊 Track-Record — „Heute wetten" als Paper-Trade</span>'
     +'<span class="pw-sec-note">Jeder Scan schreibt die exakten Shortlist-Empfehlungen mit (fixer Einsatz, Einstieg = Snapshot-Preis) und rechnet bei Auflösung ab. <b>Es wird nichts gesetzt</b> — nur mitgeschrieben, damit wir sehen, ob sich echtes Nachspielen lohnt.</span></div>';
@@ -2916,7 +3014,8 @@ function _pwTrackRecord(track){
   return intro+upd
     +_pwTrackKpis(agg.bettable||agg.all||{n:0}, '🟢 Bespielbar', '(alle Sportarten, auf die gesetzt werden darf)')
     +_pwTrackBlocked(agg, track.reentry, track.blockedCats)
-    +_pwTrackKpis(agg.public||{n:0}, '◆ Public-Kandidaten', '(hart gegated: Conv≥7 + bewiesene Wallet + Mehrheit)')
+    +_pwTrackKpis(agg.public||{n:0}, '◆ Public-Kandidaten', '(nur Vorschau — sendet nichts; hart gegated: Conv≥7 + bewiesene Wallet + Mehrheit)')
+    +_pwPublicPush(_pwCache && _pwCache.publicRec)
     +_pwTrackConvTable(agg.byConv)
     +_pwCalibBoard()          // 29.08.2026: warum eine Stufe hoeher/tiefer — sichtbar statt Blackbox
     +_pwTrackSignalTable(agg.bySignal)
