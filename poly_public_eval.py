@@ -29,6 +29,7 @@ from pathlib import Path
 
 from safe_write import write_json_atomic
 from freigabe import untergrenze   # 04.09.2026: dieselbe Schranke wie ueberall sonst
+from poly_slug_urteil import aufloesbar   # 04.09.2026: Buendel-Slugs nicht raten
 
 BASE = Path(__file__).resolve().parent
 LEDGER_FILE = BASE / "poly_whale_public_ledger.json"
@@ -101,6 +102,12 @@ def settle(ledger, resolutions, close, now=None) -> list[dict]:
             continue
         r = (resolutions or {}).get(e.get("key")) if isinstance(resolutions, dict) else None
         winner = (r or {}).get("winner")
+        # 04.09.2026 (Lucas: „es war Over 2,5, weiss ich weil ich mir den Preis angesehen hab").
+        # Genau dieser Push stand hier als Treffer. Ein Buendel-Slug kann Over 1,5 und Over 2,5
+        # nicht auseinanderhalten — wo die Linie fehlt, wird nicht abgerechnet.
+        if winner and not aufloesbar(e.get("key"), e.get("side"), winner):
+            e["nichtAufloesbarGrund"] = "Buendel-Slug ohne Linie (%s)" % (e.get("side") or "?")
+            winner = None
         if not winner:
             age = _age_d(e.get("sentAt"), now)
             if age is not None and age > PENDING_TTL_D:

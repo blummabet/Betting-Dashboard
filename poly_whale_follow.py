@@ -23,6 +23,7 @@ from pathlib import Path
 
 from poly_shortlist_track import _agg_one, _age_days, _ok_price, load_emit
 from safe_write import write_json_atomic   # 25.08.2026: temp+replace statt halber Datei
+from poly_slug_urteil import aufloesbar   # 04.09.2026: Buendel-Slugs nicht raten
 
 BASE = Path(__file__).resolve().parent
 
@@ -99,6 +100,11 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE) -> dict:
         e = open_[ok]
         r = resolutions.get(e["key"]) if isinstance(resolutions, dict) else None
         winner = (r or {}).get("winner")
+        # 04.09.2026: ein Buendel-Slug ("-more-markets") kann Over 1,5 und Over 2,5 nicht
+        # auseinanderhalten. Wo der Sieger-Name die Linie nicht traegt, wird NICHT
+        # abgerechnet — der Eintrag bleibt offen statt einen Ausgang zu erfinden.
+        if winner and not aufloesbar(e["key"], e.get("side"), winner):
+            winner = None
         if not winner:
             continue
         entry, st = float(e["entryPrice"]), float(e.get("stake") or stake)

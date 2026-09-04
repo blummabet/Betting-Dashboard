@@ -27,6 +27,7 @@ import os
 from datetime import datetime, timezone
 from pathlib import Path
 from safe_write import write_json_atomic   # 25.08.2026: temp+replace statt halber Datei
+from poly_slug_urteil import aufloesbar   # 04.09.2026: Buendel-Slugs nicht raten
 
 BASE = Path(__file__).resolve().parent
 
@@ -116,6 +117,11 @@ def settle(bets, close, resolutions, now=None, prev=None) -> dict:
         close_ref = float(cp) if _ok_price(cp) else None
         r = resolutions.get(b["key"]) if isinstance(resolutions, dict) else None
         winner = (r or {}).get("winner")
+        # 04.09.2026: ein Buendel-Slug ("-more-markets") kann Over 1,5 und Over 2,5 nicht
+        # auseinanderhalten. Wo der Sieger-Name die Linie nicht traegt, wird NICHT
+        # abgerechnet — der Eintrag bleibt offen statt einen Ausgang zu erfinden.
+        if winner and not aufloesbar(b["key"], b.get("side"), winner):
+            winner = None
         if not winner:
             row = dict(b)
             row["closePrice"] = round(close_ref, 4) if close_ref else None
