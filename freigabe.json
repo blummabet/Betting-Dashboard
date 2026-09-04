@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-04T16:04:06.260814+00:00",
+ "generatedAt": "2026-09-04T16:19:11.403697+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -325,11 +325,11 @@
   {
    "schublade": "Over/Under 2.5 Goals",
    "strom": "betfair",
-   "n": 1697,
+   "n": 1700,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0128,
-   "roiLb": -0.0229,
+   "roi": 0.011,
+   "roiLb": -0.0247,
    "clv": null,
    "clvLb": null,
    "fehltN": 0,
@@ -359,11 +359,11 @@
   {
    "schublade": "Match Odds",
    "strom": "betfair",
-   "n": 1685,
+   "n": 1688,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0078,
-   "roiLb": -0.033,
+   "roi": 0.0083,
+   "roiLb": -0.0325,
    "clv": null,
    "clvLb": null,
    "fehltN": 0,
@@ -374,11 +374,11 @@
   {
    "schublade": "Both teams to Score?",
    "strom": "betfair",
-   "n": 1512,
+   "n": 1514,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0036,
-   "roiLb": -0.0366,
+   "roi": 0.005,
+   "roiLb": -0.0351,
    "clv": null,
    "clvLb": null,
    "fehltN": 0,
@@ -402,6 +402,21 @@
    "naeherung": true
   },
   {
+   "schublade": "Over/Under 3.5 Goals",
+   "strom": "betfair",
+   "n": 1631,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0199,
+   "roiLb": -0.0536,
+   "clv": null,
+   "clvLb": null,
+   "fehltN": 0,
+   "alterTage": null,
+   "art": "markt",
+   "naeherung": true
+  },
+  {
    "schublade": "Konjunktion · gehalten (Haltepreis)",
    "strom": "betfair",
    "n": 129,
@@ -412,24 +427,9 @@
    "clv": null,
    "clvLb": null,
    "fehltN": 0,
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "konjunktion_gehalten",
    "quelle": "killer_ledger.json"
-  },
-  {
-   "schublade": "Over/Under 3.5 Goals",
-   "strom": "betfair",
-   "n": 1628,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0208,
-   "roiLb": -0.0545,
-   "clv": null,
-   "clvLb": null,
-   "fehltN": 0,
-   "alterTage": null,
-   "art": "markt",
-   "naeherung": true
   },
   {
    "schublade": "First Half Goals 0.5",
@@ -714,7 +714,7 @@
    "clv": -1.0,
    "clvLb": null,
    "fehltN": 29,
-   "alterTage": 0.6,
+   "alterTage": 0.7,
    "art": "conviction",
    "wert": 3
   },
