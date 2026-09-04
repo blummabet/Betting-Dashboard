@@ -66,10 +66,29 @@ test('kein Frontend prüft auf ein `basis`, das compute_streaks nicht erzeugt', 
   for (const [name, js] of [['main-dashboard.js', MD], ['wm2026-renderer.js', WM]]) {
     for (const w of frontendWerte(js, 'basis')) {
       // „gelernt" gehört zur Liga-Norm (betfair/stake), nicht zu den Serien — anderes Feld,
-      // gleicher Name. Nur die Serien-Vokabeln werden hier geprüft.
-      if (w === 'gelernt' || w === 'zu' || w === 'duenn') continue;
+      // gleicher Name. Es wird im Test darunter gegen SEINEN Produzenten geprüft.
+      if (LIGANORM_BASIS.has(w)) continue;
       assert.ok(kann.has(w),
         `${name} prüft auf basis === '${w}', aber compute_streaks.py kann nur ${[...kann].join('/')} schreiben — toter Zweig`);
+    }
+  }
+});
+
+// Das Feld `basis` gibt es zweimal: an den Serien (compute_streaks.py) und an der Liga-Norm
+// (stake_league_norm.py). Gleicher Name, andere Vokabeln — beide brauchen ihren eigenen Wächter,
+// sonst deckt der eine den anderen zu.
+const LN = lies('stake_league_norm.py');
+const LIGANORM_BASIS = new Set([...LN.matchAll(/"basis":\s*"([a-z ]+)"/g)].map((m) => m[1]));
+
+test('kein Frontend prüft auf ein Liga-Norm-`basis`, das der Produzent nicht erzeugt', () => {
+  assert.ok(LIGANORM_BASIS.size >= 2, 'die basis-Werte der Liga-Norm sind nicht mehr auffindbar');
+  const SR = lies('stake-radar.js');
+  for (const [name, js] of [['main-dashboard.js', MD], ['stake-radar.js', SR]]) {
+    for (const w of frontendWerte(js, 'basis')) {
+      if (!LIGANORM_BASIS.has(w) && !['prior', 'liga', 'unbelegt'].includes(w)) {
+        assert.fail(`${name} prüft auf basis === '${w}' — weder compute_streaks noch ` +
+          `stake_league_norm schreiben das (${[...LIGANORM_BASIS].join('/')})`);
+      }
     }
   }
 });
