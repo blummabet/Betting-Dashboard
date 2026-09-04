@@ -172271,7 +172271,13 @@
     "usd": 1300,
     "ts": 1788518454
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "VARREL": 0.0,
+   "T1": 1.0
+  },
+  "resolvedAt": "2026-09-04T13:59:47.666586+00:00"
  },
  "cs2-hotu-ef1-2026-09-04": {
   "shares": {
@@ -173384,8 +173390,8 @@
  },
  "cs2-fal2-g2-2026-09-04": {
   "shares": {
-   "Team Falcons": 368254.0677915452,
-   "G2": 261228.19439057956
+   "Team Falcons": 592884.8389602453,
+   "G2": 420591.92295143957
   },
   "prices": {
    "Team Falcons": 0.585,
@@ -173397,8 +173403,14 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 731375,
+  "totalUsd": 1102955,
   "whales": [
+   {
+    "wallet": "0x7c37b52eb226bcb9411375ec48b0169663fb6aeb",
+    "side": "G2",
+    "usd": 189283,
+    "avgPrice": 0.4127
+   },
    {
     "wallet": "0xdb859a551fcf56e49416160911476bea7307152f",
     "side": "Team Falcons",
@@ -173406,26 +173418,20 @@
     "avgPrice": 0.59
    },
    {
-    "wallet": "0x7c37b52eb226bcb9411375ec48b0169663fb6aeb",
-    "side": "G2",
-    "usd": 88736,
-    "avgPrice": 0.41
-   },
-   {
-    "wallet": "0x1610db79f753a80207e1d66716be9e91e627ae49",
+    "wallet": "0x23d81ba9371e576015c1e562db09c689f56b0288",
     "side": "Team Falcons",
-    "usd": 39865,
-    "avgPrice": 0.5822
+    "usd": 58500,
+    "avgPrice": 0.58
    },
    {
-    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
-    "side": "G2",
-    "usd": 35169,
-    "avgPrice": 0.4129
+    "wallet": "0x73e3fec494611d73c170cb2f23850fd998b21be9",
+    "side": "Team Falcons",
+    "usd": 40950,
+    "avgPrice": 0.58
    }
   ],
-  "hoursToKickoff": 0.57,
-  "capturedAt": "2026-09-04T13:29:26.201740+00:00",
+  "hoursToKickoff": 0.06,
+  "capturedAt": "2026-09-04T13:59:47.666586+00:00",
   "cond": "0xd0ef28f31dd1dbcee925fca7b5d663240a352c632210247a853ebe61dcc75381",
   "frage": "Counter-Strike: Team Falcons vs G2 (BO3) - BLAST Open Porto Playoffs",
   "tokens": {
@@ -173441,91 +173447,115 @@
    "bids": [
     [
      0.58,
-     185004
+     13260
     ],
     [
      0.57,
-     593719
+     430113
     ],
     [
      0.56,
-     20623
+     18917
     ],
     [
      0.55,
-     26403
+     11188
     ],
     [
      0.54,
-     5224
+     1680
     ],
     [
      0.53,
-     5532
+     550
     ]
    ],
    "asks": [
     [
      0.59,
-     320137
+     421423
     ],
     [
      0.6,
-     99971
+     63158
     ],
     [
      0.61,
-     9159
+     4728
     ],
     [
      0.62,
-     49511
+     41815
     ],
     [
      0.63,
-     7850
+     1150
     ],
     [
      0.64,
-     2600
+     600
     ]
    ]
   },
   "trades": [
    {
-    "wallet": "0x79ae097215202b5d01f98e4479fb219102469a4a",
+    "wallet": "0x55932ce87559c7cfdafeef0c984ab5c1c69e2cd1",
+    "action": "BUY",
+    "side": "Team Falcons",
+    "price": 0.59,
+    "usd": 320,
+    "ts": 1788530247
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
     "action": "BUY",
     "side": "G2",
     "price": 0.42,
-    "usd": 22554,
-    "ts": 1788528099
+    "usd": 1429,
+    "ts": 1788530239
    },
    {
-    "wallet": "0x86e99faea12fccd8925de5d9f052471baf7a4cdf",
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "action": "BUY",
     "side": "Team Falcons",
     "price": 0.59,
-    "usd": 5605,
-    "ts": 1788528097
+    "usd": 478,
+    "ts": 1788530178
    },
    {
-    "wallet": "0x9d036d8c9eca9f0c1b03a37e59c0782d96bcd1fd",
+    "wallet": "0xd4f90db3fe7a658e744d3711779a37773c31f4ad",
     "action": "BUY",
     "side": "Team Falcons",
     "price": 0.59,
-    "usd": 300,
-    "ts": 1788527644
+    "usd": 1130,
+    "ts": 1788530146
+   },
+   {
+    "wallet": "0x689f7d0a49d2646dc199848ffbdb4757242e259c",
+    "action": "BUY",
+    "side": "G2",
+    "price": 0.42,
+    "usd": 865,
+    "ts": 1788530077
+   },
+   {
+    "wallet": "0xcf609d3256f0f37f0595e5dc64012fa3a8fea6f5",
+    "action": "BUY",
+    "side": "G2",
+    "price": 0.42,
+    "usd": 1050,
+    "ts": 1788530074
    }
   ]
  },
  "cs2-jjh-33-2026-09-04": {
   "shares": {
-   "JiJieHao": 45939.376549,
-   "BET-M 33": 45939.14516849998
+   "JiJieHao": 46804.29729409999,
+   "BET-M 33": 45877.34945920498
   },
   "prices": {
-   "JiJieHao": 0.5,
-   "BET-M 33": 0.5
+   "JiJieHao": 0.505,
+   "BET-M 33": 0.495
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -173533,35 +173563,35 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 92999,
+  "totalUsd": 93762,
   "whales": [
    {
     "wallet": "0x14af7564566edfd07d1996ae8b08d6235d7aca2c",
     "side": "JiJieHao",
-    "usd": 39904,
+    "usd": 40303,
     "avgPrice": 0.5284
    },
    {
     "wallet": "0xda3a9b7afff7b44ad4fd75308723194e0a11381f",
     "side": "BET-M 33",
-    "usd": 10000,
+    "usd": 9900,
     "avgPrice": 0.47
    },
    {
     "wallet": "0x6e9f61710b1703bb7e0ef7ebe1323c443a1d0eae",
     "side": "BET-M 33",
-    "usd": 8500,
+    "usd": 8415,
     "avgPrice": 0.48
    },
    {
     "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
     "side": "BET-M 33",
-    "usd": 4799,
+    "usd": 4751,
     "avgPrice": 0.47
    }
   ],
-  "hoursToKickoff": 0.57,
-  "capturedAt": "2026-09-04T13:29:26.201740+00:00",
+  "hoursToKickoff": 0.06,
+  "capturedAt": "2026-09-04T13:59:47.666586+00:00",
   "cond": "0x6bc2ae0149d89acf20f2f324a1e0e883196cade16d548d816b5dad21684c3828",
   "frage": "Counter-Strike: JiJieHao vs BET-M 33 (BO1) - PGL Masters European Open Qualifier #1 Playoffs",
   "tokens": {
@@ -173570,60 +173600,60 @@
   },
   "book": {
    "side": "JiJieHao",
-   "bid": 0.49,
-   "ask": 0.5,
+   "bid": 0.5,
+   "ask": 0.51,
    "spreadC": 1.0,
-   "spreadPct": 2.0,
+   "spreadPct": 1.96,
    "bids": [
     [
+     0.5,
+     21
+    ],
+    [
      0.49,
-     913
+     211
     ],
     [
      0.48,
-     1267
+     275
     ],
     [
      0.47,
-     11
+     91
     ],
     [
      0.46,
-     85
+     246
     ],
     [
      0.45,
-     640
-    ],
-    [
-     0.44,
-     574
+     790
     ]
    ],
    "asks": [
     [
-     0.5,
-     100
-    ],
-    [
      0.51,
-     1291
+     1183
     ],
     [
      0.52,
-     212
+     220
     ],
     [
      0.53,
-     305
+     430
     ],
     [
      0.54,
-     8270
+     7845
     ],
     [
      0.55,
-     23207
+     22402
+    ],
+    [
+     0.56,
+     6263
     ]
    ]
   },
@@ -173635,29 +173665,13 @@
     "price": 0.52,
     "usd": 450,
     "ts": 1788522370
-   },
-   {
-    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
-    "action": "BUY",
-    "side": "BET-M 33",
-    "price": 0.48,
-    "usd": 312,
-    "ts": 1788520516
-   },
-   {
-    "wallet": "0x14af7564566edfd07d1996ae8b08d6235d7aca2c",
-    "action": "BUY",
-    "side": "JiJieHao",
-    "price": 0.53,
-    "usd": 2565,
-    "ts": 1788519954
    }
   ]
  },
  "cs2-bbl1-wal2-2026-09-04": {
   "shares": {
-   "BBL": 8186.574694495001,
-   "Walczaki": 8024.459075820001
+   "BBL": 8346.048149594997,
+   "Walczaki": 8180.780075820002
   },
   "prices": {
    "BBL": 0.505,
@@ -173669,13 +173683,13 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 19389,
+  "totalUsd": 19528,
   "whales": [
    {
     "wallet": "0x0241074b85d852503ca4caa3cc58d32de9f1fd36",
     "side": "Walczaki",
-    "usd": 2514,
-    "avgPrice": 0.4886
+    "usd": 2702,
+    "avgPrice": 0.4887
    },
    {
     "wallet": "0x513587a2f36a8cb29333052a6a479091ef8a7217",
@@ -173696,8 +173710,8 @@
     "avgPrice": 0.3666
    }
   ],
-  "hoursToKickoff": 1.07,
-  "capturedAt": "2026-09-04T13:29:26.201740+00:00",
+  "hoursToKickoff": 0.56,
+  "capturedAt": "2026-09-04T13:59:47.666586+00:00",
   "cond": "0x9d28a9f7f1dae79641c560633b6691420ad6856d092f330a647d0550a74ed7d7",
   "frage": "Counter-Strike: BBL vs Walczaki (BO3) - Stake Ranked Episode 4: Closed Qualifier Playoffs",
   "tokens": {
@@ -173707,12 +173721,12 @@
  },
  "cs2-des-brute-2026-09-04": {
   "shares": {
-   "Desemprego": 3836.58238743,
-   "Brute": 15838.470926215
+   "Desemprego": 4078.6707314,
+   "Brute": 17388.29085669
   },
   "prices": {
-   "Desemprego": 0.195,
-   "Brute": 0.805
+   "Desemprego": 0.19,
+   "Brute": 0.81
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -173720,34 +173734,34 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 24047,
+  "totalUsd": 24957,
   "whales": [
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "Brute",
-    "usd": 9111,
+    "usd": 9167,
     "avgPrice": 0.7702
    },
    {
     "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
     "side": "Brute",
-    "usd": 2365,
+    "usd": 2379,
     "avgPrice": 0.7769
+   },
+   {
+    "wallet": "0x0e50849ef225489b1879e3418e5b7633355a2609",
+    "side": "Brute",
+    "usd": 1035,
+    "avgPrice": 0.7826
    },
    {
     "wallet": "0xe8c4d68aff65b38cac46987b9b65e01eb47d395d",
     "side": "Brute",
-    "usd": 723
-   },
-   {
-    "wallet": "0x709179e7392e59922ab2d73cb1141698b30096f8",
-    "side": "Brute",
-    "usd": 644,
-    "avgPrice": 0.8
+    "usd": 755
    }
   ],
-  "hoursToKickoff": 0.57,
-  "capturedAt": "2026-09-04T13:29:26.201740+00:00",
+  "hoursToKickoff": 0.06,
+  "capturedAt": "2026-09-04T13:59:47.666586+00:00",
   "cond": "0xbffa2fd64554d078073b292801afbfa7a8efe2e18a297865fe96dbfcc657cf73",
   "frage": "Counter-Strike: Desemprego vs Brute (BO1) - PGL Masters European Open Qualifier #1 Playoffs",
   "tokens": {
@@ -173757,8 +173771,8 @@
  },
  "cs2-hero-ef1-2026-09-04": {
   "shares": {
-   "Heroic": 73588.27184337996,
-   "Eternal Fire": 50089.50340654502
+   "Heroic": 73902.54890010996,
+   "Eternal Fire": 50303.423083815025
   },
   "prices": {
    "Heroic": 0.595,
@@ -173770,7 +173784,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 135138,
+  "totalUsd": 135706,
   "whales": [
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
@@ -173787,7 +173801,7 @@
    {
     "wallet": "0xafd492974cd531aae7786210438ae46b42047e61",
     "side": "Heroic",
-    "usd": 15801,
+    "usd": 15881,
     "avgPrice": 0.5938
    },
    {
@@ -173797,8 +173811,8 @@
     "avgPrice": 0.6245
    }
   ],
-  "hoursToKickoff": 1.57,
-  "capturedAt": "2026-09-04T13:29:26.201740+00:00",
+  "hoursToKickoff": 1.06,
+  "capturedAt": "2026-09-04T13:59:47.666586+00:00",
   "cond": "0xfcf935b89d09c498cf68ca41ddce12aa5b4c96f3bad10e6567a482b1fc1f6a1c",
   "frage": "Counter-Strike: Heroic vs Eternal Fire (BO3) - IEM Beijing: Global Qualifier Playoffs",
   "tokens": {
@@ -173814,15 +173828,15 @@
    "bids": [
     [
      0.59,
-     14074
+     25223
     ],
     [
      0.58,
-     64806
+     65498
     ],
     [
      0.57,
-     3512
+     3114
     ],
     [
      0.56,
@@ -173840,7 +173854,7 @@
    "asks": [
     [
      0.6,
-     70927
+     70779
     ],
     [
      0.61,
@@ -173848,19 +173862,19 @@
     ],
     [
      0.62,
-     4727
+     3938
     ],
     [
      0.63,
-     2408
+     2483
     ],
     [
      0.64,
-     5797
+     1060
     ],
     [
      0.65,
-     11848
+     13948
     ]
    ]
   },
@@ -173904,33 +173918,17 @@
     "price": 0.41,
     "usd": 820,
     "ts": 1788521433
-   },
-   {
-    "wallet": "0x6e9f61710b1703bb7e0ef7ebe1323c443a1d0eae",
-    "action": "BUY",
-    "side": "Eternal Fire",
-    "price": 0.41,
-    "usd": 8200,
-    "ts": 1788521344
-   },
-   {
-    "wallet": "0xafd492974cd531aae7786210438ae46b42047e61",
-    "action": "BUY",
-    "side": "Heroic",
-    "price": 0.6,
-    "usd": 6122,
-    "ts": 1788519903
    }
   ]
  },
  "cs2-b8-ntr-2026-09-04": {
   "shares": {
-   "B8": 81622.92938819996,
-   "Nuclear TigeRES": 65445.351371405006
+   "B8": 104862.24473903998,
+   "Nuclear TigeRES": 87545.49591560506
   },
   "prices": {
-   "B8": 0.555,
-   "Nuclear TigeRES": 0.445
+   "B8": 0.545,
+   "Nuclear TigeRES": 0.455
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -173938,35 +173936,35 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 144281,
+  "totalUsd": 191291,
   "whales": [
    {
     "wallet": "0x73e3fec494611d73c170cb2f23850fd998b21be9",
     "side": "B8",
-    "usd": 41625,
+    "usd": 40875,
     "avgPrice": 0.5499
    },
    {
     "wallet": "0x7c37b52eb226bcb9411375ec48b0169663fb6aeb",
     "side": "Nuclear TigeRES",
-    "usd": 22250,
+    "usd": 22750,
     "avgPrice": 0.45
    },
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "Nuclear TigeRES",
-    "usd": 9945,
-    "avgPrice": 0.4406
+    "usd": 19276,
+    "avgPrice": 0.445
    },
    {
-    "wallet": "0xda3a9b7afff7b44ad4fd75308723194e0a11381f",
-    "side": "Nuclear TigeRES",
-    "usd": 6675,
-    "avgPrice": 0.4566
+    "wallet": "0xf5592765133941c40c77e52bc56bbe7ec167f462",
+    "side": "B8",
+    "usd": 14601,
+    "avgPrice": 0.5598
    }
   ],
-  "hoursToKickoff": 1.57,
-  "capturedAt": "2026-09-04T13:29:26.201740+00:00",
+  "hoursToKickoff": 1.06,
+  "capturedAt": "2026-09-04T13:59:47.666586+00:00",
   "cond": "0xf30dfa2ac9ce84ec4ef3b3c1a53889a1d38eb23553dc466d57098cea8efab7ff",
   "frage": "Counter-Strike: B8 vs Nuclear TigeRES (BO3) - IEM Beijing: Global Qualifier Playoffs",
   "tokens": {
@@ -173975,134 +173973,102 @@
   },
   "book": {
    "side": "B8",
-   "bid": 0.55,
-   "ask": 0.56,
+   "bid": 0.54,
+   "ask": 0.55,
    "spreadC": 1.0,
-   "spreadPct": 1.79,
+   "spreadPct": 1.82,
    "bids": [
     [
-     0.55,
-     6025
-    ],
-    [
      0.54,
-     8154
+     9391
     ],
     [
      0.53,
-     7862
+     5391
     ],
     [
      0.52,
-     52770
+     58972
     ],
     [
      0.51,
-     2213
+     3407
     ],
     [
      0.5,
-     7721
+     8011
+    ],
+    [
+     0.49,
+     1927
     ]
    ],
    "asks": [
     [
+     0.55,
+     6003
+    ],
+    [
      0.56,
-     18317
+     11706
     ],
     [
      0.57,
-     24306
+     15960
     ],
     [
      0.58,
-     18001
+     26826
     ],
     [
      0.59,
-     12475
+     2491
     ],
     [
      0.6,
-     8833
-    ],
-    [
-     0.61,
-     3943
+     14476
     ]
    ]
   },
   "trades": [
    {
-    "wallet": "0x4d8b891995dd35401c65d20c29e04b147644ce22",
+    "wallet": "0x6b0e1a58bcf5aa11c19b8936b02343cebeb70517",
     "action": "BUY",
-    "side": "Nuclear TigeRES",
-    "price": 0.45,
-    "usd": 450,
-    "ts": 1788528369
-   },
-   {
-    "wallet": "0x4923f95a995eb398f13643f90a62e6312ac76866",
-    "action": "BUY",
-    "side": "Nuclear TigeRES",
-    "price": 0.45,
-    "usd": 315,
-    "ts": 1788527940
+    "side": "B8",
+    "price": 0.55,
+    "usd": 501,
+    "ts": 1788529594
    },
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "action": "BUY",
     "side": "Nuclear TigeRES",
     "price": 0.45,
-    "usd": 4239,
-    "ts": 1788527706
+    "usd": 4604,
+    "ts": 1788529497
    },
    {
-    "wallet": "0x7c37b52eb226bcb9411375ec48b0169663fb6aeb",
+    "wallet": "0xf5592765133941c40c77e52bc56bbe7ec167f462",
+    "action": "BUY",
+    "side": "B8",
+    "price": 0.5599,
+    "usd": 15000,
+    "ts": 1788528684
+   },
+   {
+    "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "action": "BUY",
     "side": "Nuclear TigeRES",
     "price": 0.45,
-    "usd": 22500,
-    "ts": 1788527392
-   },
-   {
-    "wallet": "0xe8c4d68aff65b38cac46987b9b65e01eb47d395d",
-    "action": "BUY",
-    "side": "Nuclear TigeRES",
-    "price": 0.45,
-    "usd": 527,
-    "ts": 1788527094
-   },
-   {
-    "wallet": "0xc86529aa919192640368b848ab6e1ff9d14a2f6e",
-    "action": "BUY",
-    "side": "B8",
-    "price": 0.56,
-    "usd": 560,
-    "ts": 1788525850
-   },
-   {
-    "wallet": "0xe3611dada6c5ea53af7bf22e80e07c005f48ae44",
-    "action": "BUY",
-    "side": "B8",
-    "price": 0.56,
-    "usd": 560,
-    "ts": 1788523180
-   },
-   {
-    "wallet": "0xea8e9d6ebea9eb507e6e743f0b2306e7188aee37",
-    "action": "BUY",
-    "side": "B8",
-    "price": 0.56,
-    "usd": 300,
-    "ts": 1788522568
+    "usd": 2709,
+    "ts": 1788528591
    }
   ]
  },
  "wta-kostyuk-alexand-2026-09-04": {
   "shares": {
-   "Marta Kostyuk": 25616.201029719992,
-   "Ekaterina Alexandrova": 8767.89708366
+   "Marta Kostyuk": 27381.154739309997,
+   "Ekaterina Alexandrova": 9372.008756070001
   },
   "prices": {
    "Marta Kostyuk": 0.745,
@@ -174114,7 +174080,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 79242,
+  "totalUsd": 80570,
   "whales": [
    {
     "wallet": "0xbc43c8bfbc4d77c2fc9011adad38ba43b88996d3",
@@ -174129,19 +174095,19 @@
     "avgPrice": 0.2625
    },
    {
+    "wallet": "0xdb859a551fcf56e49416160911476bea7307152f",
+    "side": "Ekaterina Alexandrova",
+    "usd": 2637,
+    "avgPrice": 0.2499
+   },
+   {
     "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
     "side": "Marta Kostyuk",
     "usd": 2274
-   },
-   {
-    "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
-    "side": "Marta Kostyuk",
-    "usd": 2235,
-    "avgPrice": 0.74
    }
   ],
-  "hoursToKickoff": 1.57,
-  "capturedAt": "2026-09-04T13:29:26.201740+00:00",
+  "hoursToKickoff": 1.06,
+  "capturedAt": "2026-09-04T13:59:47.666586+00:00",
   "cond": "0x57ac475163d2ee2da7ab3120460d0d23b1c546697a2edd2ec9ef1910f5bf2080",
   "frage": "US Open WTA: Marta Kostyuk vs Ekaterina Alexandrova",
   "tokens": {
@@ -174157,23 +174123,23 @@
    "bids": [
     [
      0.74,
-     135173
+     41675
     ],
     [
      0.73,
-     4358
+     9858
     ],
     [
      0.72,
-     2350
+     3952
     ],
     [
      0.71,
-     2273
+     3618
     ],
     [
      0.7,
-     6262
+     1626
     ],
     [
      0.69,
@@ -174183,31 +174149,47 @@
    "asks": [
     [
      0.75,
-     31620
+     30102
     ],
     [
      0.76,
-     12827
+     13190
     ],
     [
      0.77,
-     27694
+     30822
     ],
     [
      0.78,
-     64755
+     64649
     ],
     [
      0.79,
-     36657
+     32922
     ],
     [
      0.8,
-     34332
+     36514
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xcbef04dead0a5d75b28d2bb4ef149a222da10c11",
+    "action": "BUY",
+    "side": "Marta Kostyuk",
+    "price": 0.75,
+    "usd": 300,
+    "ts": 1788528637
+   },
+   {
+    "wallet": "0xf8ab270075d9bc4c2e786f59ced74c72511e13a1",
+    "action": "BUY",
+    "side": "Marta Kostyuk",
+    "price": 0.75,
+    "usd": 300,
+    "ts": 1788528534
+   },
    {
     "wallet": "0xdb859a551fcf56e49416160911476bea7307152f",
     "action": "BUY",
@@ -174239,29 +174221,13 @@
     "price": 0.25,
     "usd": 894,
     "ts": 1788514747
-   },
-   {
-    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
-    "action": "BUY",
-    "side": "Ekaterina Alexandrova",
-    "price": 0.24,
-    "usd": 379,
-    "ts": 1788512559
-   },
-   {
-    "wallet": "0x565c09cd32dbbde32d5b4fcd6c49d55dd84f878d",
-    "action": "SELL",
-    "side": "Ekaterina Alexandrova",
-    "price": 0.2342,
-    "usd": 2342,
-    "ts": 1788511930
    }
   ]
  },
  "wta-sabalen-rakhimo-2026-09-04": {
   "shares": {
-   "Aryna Sabalenka": 38088.633087560025,
-   "Kamilla Rakhimova": 2647.8723960650004
+   "Aryna Sabalenka": 37808.133087560025,
+   "Kamilla Rakhimova": 2628.3723960650004
   },
   "prices": {
    "Aryna Sabalenka": 0.935,
@@ -174273,7 +174239,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 68622,
+  "totalUsd": 70231,
   "whales": [
    {
     "wallet": "0x13851a686e88f8007445d348a3efe4cab3cbdb91",
@@ -174300,8 +174266,8 @@
     "avgPrice": 0.9399
    }
   ],
-  "hoursToKickoff": 1.57,
-  "capturedAt": "2026-09-04T13:29:26.201740+00:00",
+  "hoursToKickoff": 1.06,
+  "capturedAt": "2026-09-04T13:59:47.666586+00:00",
   "cond": "0xd84babb53a4ccb84755ad1f177f81cb81c80da52b33290e1668766c1ebf98232",
   "frage": "US Open WTA: Aryna Sabalenka vs Kamilla Rakhimova",
   "tokens": {
@@ -174317,15 +174283,15 @@
    "bids": [
     [
      0.93,
-     16773
+     16750
     ],
     [
      0.92,
-     9014
+     9114
     ],
     [
      0.91,
-     3540
+     2014
     ],
     [
      0.9,
@@ -174343,23 +174309,23 @@
    "asks": [
     [
      0.94,
-     1520
+     1033
     ],
     [
      0.95,
-     78209
+     59330
     ],
     [
      0.96,
-     55579
+     50997
     ],
     [
      0.97,
-     46592
+     35383
     ],
     [
      0.98,
-     38197
+     37947
     ],
     [
      0.99,
@@ -174436,8 +174402,8 @@
  },
  "wta-paolini-cirstea-2026-09-04": {
   "shares": {
-   "Jasmine Paolini": 9962.352611365002,
-   "Sorana Cirstea": 15914.281972439996
+   "Jasmine Paolini": 10004.523801580004,
+   "Sorana Cirstea": 15981.646341224994
   },
   "prices": {
    "Jasmine Paolini": 0.385,
@@ -174449,7 +174415,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 33358,
+  "totalUsd": 34138,
   "whales": [
    {
     "wallet": "0x9c3ce009c9b039956665cecc4cd14de862b5e8c9",
@@ -174470,12 +174436,12 @@
    {
     "wallet": "0xe8c4d68aff65b38cac46987b9b65e01eb47d395d",
     "side": "Jasmine Paolini",
-    "usd": 1981,
+    "usd": 1993,
     "avgPrice": 0.3799
    }
   ],
-  "hoursToKickoff": 1.57,
-  "capturedAt": "2026-09-04T13:29:26.201740+00:00",
+  "hoursToKickoff": 1.06,
+  "capturedAt": "2026-09-04T13:59:47.666586+00:00",
   "cond": "0x9c541af5380f1892cd9e75402f8f7f5c80fd35466e5067cbcf86408b029bf519",
   "frage": "US Open WTA: Jasmine Paolini vs Sorana Cirstea",
   "tokens": {
@@ -174485,12 +174451,12 @@
  },
  "lol-lds-doc-2026-09-04": {
   "shares": {
-   "Lodis": 11029.945119670001,
-   "DOCISK": 3579.4974998650014
+   "Lodis": 10906.137777695,
+   "DOCISK": 3733.2270692700013
   },
   "prices": {
-   "Lodis": 0.755,
-   "DOCISK": 0.245
+   "Lodis": 0.745,
+   "DOCISK": 0.255
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -174498,35 +174464,35 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 16592,
+  "totalUsd": 17169,
   "whales": [
    {
     "wallet": "0x6918ea182d963b1fb7888860b8a8b8bcfba5782b",
     "side": "Lodis",
-    "usd": 3576,
+    "usd": 3528,
     "avgPrice": 0.7154
    },
    {
     "wallet": "0x6e32312760e4604d45a8ae69cede9ef9a0b8ab65",
     "side": "Lodis",
-    "usd": 3070,
+    "usd": 3029,
     "avgPrice": 0.7461
    },
    {
     "wallet": "0x9c3ce009c9b039956665cecc4cd14de862b5e8c9",
     "side": "Lodis",
-    "usd": 1034,
+    "usd": 1021,
     "avgPrice": 0.73
    },
    {
     "wallet": "0x70dbec635412c1568b36174b039f621bcc20f73f",
     "side": "Lodis",
-    "usd": 670,
+    "usd": 662,
     "avgPrice": 0.6757
    }
   ],
-  "hoursToKickoff": 1.57,
-  "capturedAt": "2026-09-04T13:29:26.201740+00:00",
+  "hoursToKickoff": 1.06,
+  "capturedAt": "2026-09-04T13:59:47.666586+00:00",
   "cond": "0x2a062d8600f1dfda6f41db2735e6f71b6b29dfee2d1d14a33695bb30e1efbb39",
   "frage": "LoL: Lodis vs DOCISK (BO3) - Rift Legends Gauntlet Stage",
   "tokens": {
@@ -174673,8 +174639,8 @@
  },
  "wta-pegula-fernand-2026-09-04": {
   "shares": {
-   "Jessica Pegula": 26223.635952565,
-   "Leylah Fernandez": 5181.982911435001
+   "Jessica Pegula": 31475.75186285501,
+   "Leylah Fernandez": 6219.826175145002
   },
   "prices": {
    "Jessica Pegula": 0.835,
@@ -174686,34 +174652,34 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 31507,
+  "totalUsd": 31847,
   "whales": [
    {
     "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
     "side": "Jessica Pegula",
-    "usd": 18874
+    "usd": 19135
    },
    {
     "wallet": "0x3dfb153c197d4c19d3b31c1ecd2c7b6860eeabaf",
     "side": "Leylah Fernandez",
-    "usd": 4912,
+    "usd": 5006,
     "avgPrice": 0.1599
+   },
+   {
+    "wallet": "0x9c3ce009c9b039956665cecc4cd14de862b5e8c9",
+    "side": "Jessica Pegula",
+    "usd": 4781,
+    "avgPrice": 0.83
    },
    {
     "wallet": "0xdb83e85ffd22faa4009273034770f96ffc5b1e50",
     "side": "Jessica Pegula",
     "usd": 2830,
     "avgPrice": 0.8399
-   },
-   {
-    "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
-    "side": "Jessica Pegula",
-    "usd": 1252,
-    "avgPrice": 0.84
    }
   ],
-  "hoursToKickoff": 2.07,
-  "capturedAt": "2026-09-04T13:29:26.201740+00:00",
+  "hoursToKickoff": 1.56,
+  "capturedAt": "2026-09-04T13:59:47.666586+00:00",
   "cond": "0x90d7b6d3bbda0f9e47dda85754ec9bb7676e7074e79821c6e86ac0e265e851b4",
   "frage": "US Open WTA: Jessica Pegula vs Leylah Fernandez",
   "tokens": {
@@ -174774,8 +174740,8 @@
  },
  "cs2-1win-bw-2026-09-04": {
   "shares": {
-   "1WIN": 6069.380458865001,
-   "Bushido Wildcats": 2790.748093140001
+   "1WIN": 6805.944072930001,
+   "Bushido Wildcats": 3129.459828075
   },
   "prices": {
    "1WIN": 0.685,
@@ -174787,7 +174753,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 10799,
+  "totalUsd": 11293,
   "whales": [
    {
     "wallet": "0xcd48b60248f881852b785dfb4dc9e92da011395c",
@@ -174814,8 +174780,8 @@
     "avgPrice": 0.2933
    }
   ],
-  "hoursToKickoff": 0.57,
-  "capturedAt": "2026-09-04T13:29:26.201740+00:00",
+  "hoursToKickoff": 0.06,
+  "capturedAt": "2026-09-04T13:59:47.666586+00:00",
   "cond": "0xb87076c26b5deb0223eb7aad6a16d4835b78de9788da1155c4bd53babf6888df",
   "frage": "Counter-Strike: 1WIN vs Bushido Wildcats (BO1) - PGL Masters European Open Qualifier #1 Playoffs",
   "tokens": {
@@ -174825,12 +174791,12 @@
  },
  "ukr1-pol-kud-2026-09-04": {
   "shares": {
-   "FK Polissia": 3830.9831726099983,
-   "Draw (FK Polissia vs. FK Kudrivka)": 4.84375,
-   "FK Kudrivka": 15.57291645
+   "FK Polissia": 3962.8941077699983,
+   "Draw (FK Polissia vs. FK Kudrivka)": 5.61875,
+   "FK Kudrivka": 15.89791645
   },
   "prices": {
-   "FK Polissia": 0.795,
+   "FK Polissia": 0.815,
    "Draw (FK Polissia vs. FK Kudrivka)": 0.155,
    "FK Kudrivka": 0.065
   },
@@ -174840,34 +174806,34 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 7675,
+  "totalUsd": 7695,
   "whales": [
    {
     "wallet": "0x78698dddbc712aa621d0a1816cf4f729fd762233",
     "side": "FK Polissia",
-    "usd": 1170,
+    "usd": 1199,
     "avgPrice": 0.8156
    },
    {
     "wallet": "0x511a5239644e88fbde60d9fd56aa3e87b3da9745",
     "side": "FK Polissia",
-    "usd": 993,
+    "usd": 1018,
     "avgPrice": 0.8215
    },
    {
     "wallet": "0x70dbec635412c1568b36174b039f621bcc20f73f",
     "side": "FK Polissia",
-    "usd": 596,
+    "usd": 611,
     "avgPrice": 0.7999
    },
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
     "side": "FK Polissia",
-    "usd": 508
+    "usd": 521
    }
   ],
-  "hoursToKickoff": 1.57,
-  "capturedAt": "2026-09-04T13:29:26.201740+00:00",
+  "hoursToKickoff": 1.06,
+  "capturedAt": "2026-09-04T13:59:47.666586+00:00",
   "tokens": {
    "FK Polissia": "110112101055901484159750379817874482035372623710654337811005607798916746412129",
    "Draw (FK Polissia vs. FK Kudrivka)": "53962722905938288618166753021330754895797774177064908161069995106302041128078",
@@ -174876,12 +174842,12 @@
  },
  "cs2-g1-bcg-2026-09-04": {
   "shares": {
-   "GenOne": 11452.452079635004,
-   "BC.Game Esports": 24904.183465219994
+   "GenOne": 13619.405019445,
+   "BC.Game Esports": 31034.021560239977
   },
   "prices": {
-   "GenOne": 0.315,
-   "BC.Game Esports": 0.685
+   "GenOne": 0.305,
+   "BC.Game Esports": 0.695
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -174889,35 +174855,35 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 37707,
+  "totalUsd": 39686,
   "whales": [
    {
     "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
     "side": "BC.Game Esports",
-    "usd": 17125,
-    "avgPrice": 0.6993
+    "usd": 20991,
+    "avgPrice": 0.6977
    },
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "GenOne",
-    "usd": 6388,
+    "usd": 6185,
     "avgPrice": 0.2998
    },
    {
     "wallet": "0xbdd21cd4bdfa6764c6f43ea6d154c4b414d86657",
     "side": "BC.Game Esports",
-    "usd": 4774,
+    "usd": 4843,
     "avgPrice": 0.7
    },
    {
     "wallet": "0x7e1827a86edfc58e31bb38e86d4e892bb471872e",
     "side": "GenOne",
-    "usd": 1785,
+    "usd": 1728,
     "avgPrice": 0.2999
    }
   ],
-  "hoursToKickoff": 0.57,
-  "capturedAt": "2026-09-04T13:29:26.201740+00:00",
+  "hoursToKickoff": 0.06,
+  "capturedAt": "2026-09-04T13:59:47.666586+00:00",
   "cond": "0x473e5ee7ebe2c4a1559162487f4e6fb532a257c35ce6907b36ade8d60f71aa72",
   "frage": "Counter-Strike: GenOne vs BC.Game Esports (BO1) - PGL Masters European Open Qualifier #1 Playoffs",
   "tokens": {
@@ -174927,42 +174893,42 @@
  },
  "uzb1-nas-nef-2026-09-04-exact-score": {
   "shares": {
-   "PFC Nasaf 0 - 0 FK Neftchi Fargona": 1082.6792427,
-   "PFC Nasaf 0 - 1 FK Neftchi Fargona": 148.58,
+   "PFC Nasaf 0 - 0 FK Neftchi Fargona": 1313.9195651999999,
+   "PFC Nasaf 0 - 1 FK Neftchi Fargona": 123.3,
    "PFC Nasaf 1 - 0 FK Neftchi Fargona": 0.0,
-   "PFC Nasaf 0 - 2 FK Neftchi Fargona": 1.86,
+   "PFC Nasaf 0 - 2 FK Neftchi Fargona": 1.395,
    "PFC Nasaf 1 - 1 FK Neftchi Fargona": 0.0,
    "PFC Nasaf 2 - 0 FK Neftchi Fargona": 0.0,
    "PFC Nasaf 0 - 3 FK Neftchi Fargona": 0.0,
-   "PFC Nasaf 1 - 2 FK Neftchi Fargona": 3.7,
-   "PFC Nasaf 2 - 1 FK Neftchi Fargona": 0.0,
+   "PFC Nasaf 1 - 2 FK Neftchi Fargona": 3.145,
+   "PFC Nasaf 2 - 1 FK Neftchi Fargona": 27.522000000000002,
    "PFC Nasaf 3 - 0 FK Neftchi Fargona": 0.0,
    "PFC Nasaf 1 - 3 FK Neftchi Fargona": 0.0,
-   "PFC Nasaf 2 - 2 FK Neftchi Fargona": 264.66948950899996,
-   "PFC Nasaf 3 - 1 FK Neftchi Fargona": 0.0,
-   "PFC Nasaf 2 - 3 FK Neftchi Fargona": 197.34,
-   "PFC Nasaf 3 - 2 FK Neftchi Fargona": 0.0,
+   "PFC Nasaf 2 - 2 FK Neftchi Fargona": 335.88641614150004,
+   "PFC Nasaf 3 - 1 FK Neftchi Fargona": 0.1375,
+   "PFC Nasaf 2 - 3 FK Neftchi Fargona": 194.35,
+   "PFC Nasaf 3 - 2 FK Neftchi Fargona": 0.13,
    "PFC Nasaf 3 - 3 FK Neftchi Fargona": 0.0,
    "Any Other Score": 0.0
   },
   "prices": {
    "PFC Nasaf 0 - 0 FK Neftchi Fargona": 0.075,
-   "PFC Nasaf 0 - 1 FK Neftchi Fargona": 0.095,
-   "PFC Nasaf 1 - 0 FK Neftchi Fargona": 0.06,
-   "PFC Nasaf 0 - 2 FK Neftchi Fargona": 0.08,
-   "PFC Nasaf 1 - 1 FK Neftchi Fargona": 0.115,
-   "PFC Nasaf 2 - 0 FK Neftchi Fargona": 0.03,
-   "PFC Nasaf 0 - 3 FK Neftchi Fargona": 0.047,
-   "PFC Nasaf 1 - 2 FK Neftchi Fargona": 0.1,
-   "PFC Nasaf 2 - 1 FK Neftchi Fargona": 0.064,
-   "PFC Nasaf 3 - 0 FK Neftchi Fargona": 0.013,
-   "PFC Nasaf 1 - 3 FK Neftchi Fargona": 0.0545,
-   "PFC Nasaf 2 - 2 FK Neftchi Fargona": 0.059,
-   "PFC Nasaf 3 - 1 FK Neftchi Fargona": 0.0225,
-   "PFC Nasaf 2 - 3 FK Neftchi Fargona": 0.033,
-   "PFC Nasaf 3 - 2 FK Neftchi Fargona": 0.023,
-   "PFC Nasaf 3 - 3 FK Neftchi Fargona": 0.0125,
-   "Any Other Score": 0.16
+   "PFC Nasaf 0 - 1 FK Neftchi Fargona": 0.075,
+   "PFC Nasaf 1 - 0 FK Neftchi Fargona": 0.07,
+   "PFC Nasaf 0 - 2 FK Neftchi Fargona": 0.06,
+   "PFC Nasaf 1 - 1 FK Neftchi Fargona": 0.12,
+   "PFC Nasaf 2 - 0 FK Neftchi Fargona": 0.0425,
+   "PFC Nasaf 0 - 3 FK Neftchi Fargona": 0.0365,
+   "PFC Nasaf 1 - 2 FK Neftchi Fargona": 0.085,
+   "PFC Nasaf 2 - 1 FK Neftchi Fargona": 0.0695,
+   "PFC Nasaf 3 - 0 FK Neftchi Fargona": 0.018,
+   "PFC Nasaf 1 - 3 FK Neftchi Fargona": 0.0465,
+   "PFC Nasaf 2 - 2 FK Neftchi Fargona": 0.0665,
+   "PFC Nasaf 3 - 1 FK Neftchi Fargona": 0.0275,
+   "PFC Nasaf 2 - 3 FK Neftchi Fargona": 0.0325,
+   "PFC Nasaf 3 - 2 FK Neftchi Fargona": 0.026,
+   "PFC Nasaf 3 - 3 FK Neftchi Fargona": 0.015,
+   "Any Other Score": 0.155
   },
   "splitGuete": {
    "art": "abgeschnitten",
@@ -174970,8 +174936,14 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 23892,
+  "totalUsd": 31718,
   "whales": [
+   {
+    "wallet": "0xb43787991f8bf7fa86295ed514c54d7fd606cfb3",
+    "side": "PFC Nasaf 0 - 0 FK Neftchi Fargona",
+    "usd": 608,
+    "avgPrice": 0.0779
+   },
    {
     "wallet": "0xca7c00e2bf8e4571357f31631f05dbf231e6e994",
     "side": "PFC Nasaf 0 - 0 FK Neftchi Fargona",
@@ -174979,24 +174951,18 @@
     "avgPrice": 0.08
    },
    {
-    "wallet": "0xb43787991f8bf7fa86295ed514c54d7fd606cfb3",
-    "side": "PFC Nasaf 0 - 0 FK Neftchi Fargona",
-    "usd": 418,
-    "avgPrice": 0.0815
-   },
-   {
     "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
     "side": "PFC Nasaf 2 - 2 FK Neftchi Fargona",
-    "usd": 264
+    "usd": 335
    },
    {
-    "wallet": "0x2a69660046d7acc4ab204d7cc5ba78b0776cd2f7",
-    "side": "PFC Nasaf 2 - 3 FK Neftchi Fargona",
-    "usd": 197
+    "wallet": "0x4f1d5ae26fc31472966e951af3183308736d8de2",
+    "side": "PFC Nasaf 0 - 0 FK Neftchi Fargona",
+    "usd": 221
    }
   ],
-  "hoursToKickoff": 0.57,
-  "capturedAt": "2026-09-04T13:29:26.201740+00:00",
+  "hoursToKickoff": 0.06,
+  "capturedAt": "2026-09-04T13:59:47.666586+00:00",
   "tokens": {
    "PFC Nasaf 0 - 0 FK Neftchi Fargona": "28400306363375340162258349061946399033201962385553246065862712721946389874387",
    "PFC Nasaf 0 - 1 FK Neftchi Fargona": "55724572648446379364386873003965571150425973140539590083593070732759769824296",
@@ -175019,14 +174985,14 @@
  },
  "spl-abh-ett-2026-09-04": {
   "shares": {
-   "Abha Saudi Club": 550.07886018,
-   "Draw (Abha Saudi Club vs. Al Ettifaq Saudi Club)": 391.439388885,
-   "Al Ettifaq Saudi Club": 4648.258367775
+   "Abha Saudi Club": 565.57403934,
+   "Draw (Abha Saudi Club vs. Al Ettifaq Saudi Club)": 391.4393888850001,
+   "Al Ettifaq Saudi Club": 4672.615948674999
   },
   "prices": {
-   "Abha Saudi Club": 0.355,
+   "Abha Saudi Club": 0.365,
    "Draw (Abha Saudi Club vs. Al Ettifaq Saudi Club)": 0.255,
-   "Al Ettifaq Saudi Club": 0.405
+   "Al Ettifaq Saudi Club": 0.395
   },
   "splitGuete": {
    "art": "belastbar",
@@ -175034,35 +175000,35 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 17996,
+  "totalUsd": 19444,
   "whales": [
    {
     "wallet": "0x0f003f00e53f0dbb063e14b4da093ac8e3f473ce",
     "side": "Al Ettifaq Saudi Club",
-    "usd": 1224,
+    "usd": 1194,
     "avgPrice": 0.4299
    },
    {
     "wallet": "0x448861155279dbf833d041b963e3ac854599e319",
     "side": "Al Ettifaq Saudi Club",
-    "usd": 1012,
+    "usd": 987,
     "avgPrice": 0.42
    },
    {
     "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
     "side": "Al Ettifaq Saudi Club",
-    "usd": 753,
+    "usd": 735,
     "avgPrice": 0.4299
    },
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "Al Ettifaq Saudi Club",
-    "usd": 458,
-    "avgPrice": 0.4357
+    "usd": 467,
+    "avgPrice": 0.4338
    }
   ],
-  "hoursToKickoff": 2.57,
-  "capturedAt": "2026-09-04T13:29:26.201740+00:00",
+  "hoursToKickoff": 2.06,
+  "capturedAt": "2026-09-04T13:59:47.666586+00:00",
   "tokens": {
    "Abha Saudi Club": "28628340443817263662316151308939240133689004579450847365126728913930972676044",
    "Draw (Abha Saudi Club vs. Al Ettifaq Saudi Club)": "84947212935816807771105551416564517719064842974076107274321441185379972787545",
@@ -175084,7 +175050,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 8906,
+  "totalUsd": 9439,
   "whales": [
    {
     "wallet": "0x2005d16a84ceefa912d4e380cd32e7ff827875ea",
@@ -175110,8 +175076,8 @@
     "avgPrice": 0.6876
    }
   ],
-  "hoursToKickoff": 0.57,
-  "capturedAt": "2026-09-04T13:29:26.201740+00:00",
+  "hoursToKickoff": 0.06,
+  "capturedAt": "2026-09-04T13:59:47.666586+00:00",
   "cond": "0x1cb9fa52ebb587c380ff15e9c0799a32d5fa98ac6aeecb08036c7f5552270c50",
   "frage": "PFC Nasaf vs. FK Neftchi Fargona: O/U 1.5",
   "tokens": {
@@ -175121,14 +175087,14 @@
  },
  "uzb1-nas-nef-2026-09-04": {
   "shares": {
-   "PFC Nasaf": 81.85640936,
-   "Draw (PFC Nasaf vs. FK Neftchi Fargona)": 380.99516373,
-   "FK Neftchi Fargona": 3414.4520973750004
+   "PFC Nasaf": 103.21025527999998,
+   "Draw (PFC Nasaf vs. FK Neftchi Fargona)": 531.7420265499999,
+   "FK Neftchi Fargona": 4711.616572895
   },
   "prices": {
-   "PFC Nasaf": 0.23,
-   "Draw (PFC Nasaf vs. FK Neftchi Fargona)": 0.27,
-   "FK Neftchi Fargona": 0.495
+   "PFC Nasaf": 0.29,
+   "Draw (PFC Nasaf vs. FK Neftchi Fargona)": 0.29,
+   "FK Neftchi Fargona": 0.445
   },
   "splitGuete": {
    "art": "belastbar",
@@ -175136,34 +175102,35 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 9679,
+  "totalUsd": 12368,
   "whales": [
    {
     "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
     "side": "FK Neftchi Fargona",
-    "usd": 2803,
+    "usd": 2519,
     "avgPrice": 0.5065
    },
    {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "wallet": "0xd619b68e64f256f8ddd185b261c8679eacf0c461",
     "side": "FK Neftchi Fargona",
-    "usd": 232,
-    "avgPrice": 0.5321
+    "usd": 1218,
+    "avgPrice": 0.44
    },
    {
-    "wallet": "0x224f7ef690d952cf551a471846d5afb4892e514a",
+    "wallet": "0x16cf1a6b776f55181955ee0a0d3d68b46786a2fb",
     "side": "FK Neftchi Fargona",
-    "usd": 200
+    "usd": 353,
+    "avgPrice": 0.4767
    },
    {
     "wallet": "0x16cf1a6b776f55181955ee0a0d3d68b46786a2fb",
     "side": "Draw (PFC Nasaf vs. FK Neftchi Fargona)",
-    "usd": 117,
-    "avgPrice": 0.285
+    "usd": 215,
+    "avgPrice": 0.2829
    }
   ],
-  "hoursToKickoff": 0.57,
-  "capturedAt": "2026-09-04T13:29:26.201740+00:00",
+  "hoursToKickoff": 0.06,
+  "capturedAt": "2026-09-04T13:59:47.666586+00:00",
   "tokens": {
    "PFC Nasaf": "53531420543656975918872991034144950640236417557243353624853291701970186139734",
    "Draw (PFC Nasaf vs. FK Neftchi Fargona)": "43479164367252975954958164285969082559178399071966860922840934718330082357631",
@@ -175214,12 +175181,469 @@
     "avgPrice": 0.5549
    }
   ],
-  "hoursToKickoff": 0.57,
-  "capturedAt": "2026-09-04T13:29:26.201740+00:00",
+  "hoursToKickoff": 0.06,
+  "capturedAt": "2026-09-04T13:59:47.666586+00:00",
   "tokens": {
    "Al-Shamal": "94356026924452523227870780078057861215232310633629435597035440099148316156298",
    "Draw (Al-Shamal vs. Al Shahaniya)": "80233128820996604749905987822922491597112816498571351088221606508037550535398",
    "Al Shahaniya": "72586193087553879603455924423578176722076606731504642826855764609902649747649"
+  }
+ },
+ "atp-bublik-paul-2026-09-04": {
+  "shares": {
+   "Alexander Bublik": 60986.91108510002,
+   "Tommy Paul": 97420.59442084507
+  },
+  "prices": {
+   "Alexander Bublik": 0.385,
+   "Tommy Paul": 0.615
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 167723,
+  "whales": [
+   {
+    "wallet": "0x5f659bccbc353dbf7bcdffdee73bee60bb482036",
+    "side": "Alexander Bublik",
+    "usd": 44316,
+    "avgPrice": 0.3987
+   },
+   {
+    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
+    "side": "Tommy Paul",
+    "usd": 13754,
+    "avgPrice": 0.6073
+   },
+   {
+    "wallet": "0x43372356634781eea88d61bbdd7824cdce958882",
+    "side": "Tommy Paul",
+    "usd": 13667,
+    "avgPrice": 0.61
+   },
+   {
+    "wallet": "0x2c335066fe58fe9237c3d3dc7b275c2a034a0563",
+    "side": "Tommy Paul",
+    "usd": 13652,
+    "avgPrice": 0.59
+   }
+  ],
+  "hoursToKickoff": 2.56,
+  "capturedAt": "2026-09-04T13:59:47.666586+00:00",
+  "cond": "0xd1978d7fcee0893d8585c8f940f636f60b45d8d11f3c1469c3b88e2683050779",
+  "frage": "US Open ATP: Alexander Bublik vs Tommy Paul",
+  "tokens": {
+   "Alexander Bublik": "36758238887810647846048606590039121513287411296023612373670136315274783192499",
+   "Tommy Paul": "100988960096608635475320623906007369845022137553364542432867047120540556380748"
+  },
+  "book": {
+   "side": "Tommy Paul",
+   "bid": 0.61,
+   "ask": 0.62,
+   "spreadC": 1.0,
+   "spreadPct": 1.61,
+   "bids": [
+    [
+     0.61,
+     34462
+    ],
+    [
+     0.6,
+     6800
+    ],
+    [
+     0.59,
+     35447
+    ],
+    [
+     0.58,
+     63212
+    ],
+    [
+     0.57,
+     150
+    ],
+    [
+     0.56,
+     2791
+    ]
+   ],
+   "asks": [
+    [
+     0.62,
+     75901
+    ],
+    [
+     0.63,
+     106637
+    ],
+    [
+     0.64,
+     48969
+    ],
+    [
+     0.65,
+     29473
+    ],
+    [
+     0.66,
+     59634
+    ],
+    [
+     0.67,
+     32579
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Alexander Bublik",
+    "price": 0.39,
+    "usd": 390,
+    "ts": 1788530091
+   },
+   {
+    "wallet": "0x0344896d59107875ba42439553d94554aef3a65e",
+    "action": "BUY",
+    "side": "Alexander Bublik",
+    "price": 0.39,
+    "usd": 1000,
+    "ts": 1788530062
+   },
+   {
+    "wallet": "0xbbf379252411511adab081f016dc991aa6bbaa3a",
+    "action": "BUY",
+    "side": "Alexander Bublik",
+    "price": 0.39,
+    "usd": 2000,
+    "ts": 1788529992
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Alexander Bublik",
+    "price": 0.39,
+    "usd": 1120,
+    "ts": 1788529900
+   },
+   {
+    "wallet": "0xdc16718af9f04590b38a8e8aa32dedcd034740a5",
+    "action": "BUY",
+    "side": "Alexander Bublik",
+    "price": 0.39,
+    "usd": 500,
+    "ts": 1788529554
+   },
+   {
+    "wallet": "0x45e47fa688432060c52ee0f88d15176efee43c69",
+    "action": "BUY",
+    "side": "Alexander Bublik",
+    "price": 0.39,
+    "usd": 500,
+    "ts": 1788528559
+   }
+  ]
+ },
+ "atp-medvede-rinderk-2026-09-04": {
+  "shares": {
+   "Daniil Medvedev": 45373.21169167499,
+   "Arthur Rinderknech": 16359.152624974997
+  },
+  "prices": {
+   "Daniil Medvedev": 0.735,
+   "Arthur Rinderknech": 0.265
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 63331,
+  "whales": [
+   {
+    "wallet": "0xdb859a551fcf56e49416160911476bea7307152f",
+    "side": "Daniil Medvedev",
+    "usd": 27136,
+    "avgPrice": 0.7299
+   },
+   {
+    "wallet": "0x45e40dbee6f546c7b318498f8c9778560f5a7e20",
+    "side": "Daniil Medvedev",
+    "usd": 11025,
+    "avgPrice": 0.73
+   },
+   {
+    "wallet": "0x9c3ce009c9b039956665cecc4cd14de862b5e8c9",
+    "side": "Arthur Rinderknech",
+    "usd": 4907,
+    "avgPrice": 0.27
+   },
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "side": "Arthur Rinderknech",
+    "usd": 4333
+   }
+  ],
+  "hoursToKickoff": 2.56,
+  "capturedAt": "2026-09-04T13:59:47.666586+00:00",
+  "cond": "0xcf0068e024821f110944abb1ef212fc47d5eac39c020d354b58226910db15d14",
+  "frage": "US Open ATP: Daniil Medvedev vs Arthur Rinderknech",
+  "tokens": {
+   "Daniil Medvedev": "5140322808812526986548818590765388786172201760285868767454222849779019867294",
+   "Arthur Rinderknech": "44784349333355219326626711378361882468846936168043137274433064367676642620314"
+  },
+  "book": {
+   "side": "Daniil Medvedev",
+   "bid": 0.73,
+   "ask": 0.74,
+   "spreadC": 1.0,
+   "spreadPct": 1.35,
+   "bids": [
+    [
+     0.73,
+     16645
+    ],
+    [
+     0.72,
+     26154
+    ],
+    [
+     0.71,
+     72411
+    ],
+    [
+     0.7,
+     2746
+    ],
+    [
+     0.69,
+     287
+    ],
+    [
+     0.68,
+     2727
+    ]
+   ],
+   "asks": [
+    [
+     0.74,
+     45344
+    ],
+    [
+     0.75,
+     128682
+    ],
+    [
+     0.76,
+     40494
+    ],
+    [
+     0.77,
+     80851
+    ],
+    [
+     0.78,
+     37177
+    ],
+    [
+     0.79,
+     6900
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xdb859a551fcf56e49416160911476bea7307152f",
+    "action": "BUY",
+    "side": "Daniil Medvedev",
+    "price": 0.73,
+    "usd": 26818,
+    "ts": 1788526429
+   },
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "action": "BUY",
+    "side": "Arthur Rinderknech",
+    "price": 0.27,
+    "usd": 4415,
+    "ts": 1788524755
+   },
+   {
+    "wallet": "0x46986132369d9c20140e2fbdedd008cc4bf3d7a5",
+    "action": "BUY",
+    "side": "Daniil Medvedev",
+    "price": 0.7304,
+    "usd": 439,
+    "ts": 1788519243
+   },
+   {
+    "wallet": "0x2e31da14fb1ee55a1de99b1caebcbf7ed895d5fd",
+    "action": "BUY",
+    "side": "Daniil Medvedev",
+    "price": 0.73,
+    "usd": 300,
+    "ts": 1788519006
+   }
+  ]
+ },
+ "wta-townsen-shnaide-2026-09-04": {
+  "shares": {
+   "Taylor Townsend": 16366.183714265004,
+   "Diana Shnaider": 26142.845964990014
+  },
+  "prices": {
+   "Taylor Townsend": 0.385,
+   "Diana Shnaider": 0.615
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 43230,
+  "whales": [
+   {
+    "wallet": "0xdb859a551fcf56e49416160911476bea7307152f",
+    "side": "Diana Shnaider",
+    "usd": 24600,
+    "avgPrice": 0.6199
+   },
+   {
+    "wallet": "0x21f333307ac6d2e65ac82f014b3dd2b64cbc35e3",
+    "side": "Taylor Townsend",
+    "usd": 4065,
+    "avgPrice": 0.38
+   },
+   {
+    "wallet": "0x32b484581fc5606de9c1e43af4636b6be9bc8b21",
+    "side": "Taylor Townsend",
+    "usd": 2737,
+    "avgPrice": 0.38
+   },
+   {
+    "wallet": "0xe954ddb021c19495f1c556f59dadbd1494821ef1",
+    "side": "Taylor Townsend",
+    "usd": 2394,
+    "avgPrice": 0.38
+   }
+  ],
+  "hoursToKickoff": 2.56,
+  "capturedAt": "2026-09-04T13:59:47.666586+00:00",
+  "cond": "0x673bd8291973df612a7ddc23658d7471a31d8c9835014ffa2abd8d2cffde77e5",
+  "frage": "US Open WTA: Taylor Townsend vs Diana Shnaider",
+  "tokens": {
+   "Taylor Townsend": "18152684781227637776441691236751822355568466463931832266957390300258706070021",
+   "Diana Shnaider": "92522083696304001511034879371256139893174027360977230335107350647595259029180"
+  }
+ },
+ "bl2-h96-ksc-2026-09-04": {
+  "shares": {
+   "Hannover 96": 6663.37872935,
+   "Draw (Hannover 96 vs. Karlsruher SC)": 176.26295609000007,
+   "Karlsruher SC": 134.66081805
+  },
+  "prices": {
+   "Hannover 96": 0.635,
+   "Draw (Hannover 96 vs. Karlsruher SC)": 0.205,
+   "Karlsruher SC": 0.165
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 18829,
+  "whales": [
+   {
+    "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
+    "side": "Hannover 96",
+    "usd": 2778,
+    "avgPrice": 0.64
+   },
+   {
+    "wallet": "0x0346afae2603313d2bbee96b628536c8cbe352a5",
+    "side": "Hannover 96",
+    "usd": 1523,
+    "avgPrice": 0.63
+   },
+   {
+    "wallet": "0x70dbec635412c1568b36174b039f621bcc20f73f",
+    "side": "Hannover 96",
+    "usd": 646,
+    "avgPrice": 0.5899
+   },
+   {
+    "wallet": "0x1f624696c102b99bea92c75a502fa7e4a6d676f6",
+    "side": "Hannover 96",
+    "usd": 318,
+    "avgPrice": 0.63
+   }
+  ],
+  "hoursToKickoff": 2.56,
+  "capturedAt": "2026-09-04T13:59:47.666586+00:00",
+  "tokens": {
+   "Hannover 96": "85400615641817848481396685157136406086733643248057511900166428189516637312279",
+   "Draw (Hannover 96 vs. Karlsruher SC)": "106987805787078718733092086540839270689874391872662894515284909145160237658975",
+   "Karlsruher SC": "102272166700949423250264130677360302175377746508878583373475085013759719677017"
+  }
+ },
+ "lol-ot-exe-2026-09-05": {
+  "shares": {
+   "Onion Team": 2409.9437441200002,
+   "EXILE esports": 8543.89279458
+  },
+  "prices": {
+   "Onion Team": 0.22,
+   "EXILE esports": 0.78
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 11553,
+  "whales": [
+   {
+    "wallet": "0x214039968998abdcdbd998d15d699296f3570e12",
+    "side": "EXILE esports",
+    "usd": 2313,
+    "avgPrice": 0.7696
+   },
+   {
+    "wallet": "0x9cf7ddc18086e4377820a881a81648d23a808c87",
+    "side": "EXILE esports",
+    "usd": 1347,
+    "avgPrice": 0.7635
+   },
+   {
+    "wallet": "0x3ea04e5b7ab846810b2467f5dfcbe737548853d3",
+    "side": "Onion Team",
+    "usd": 1104,
+    "avgPrice": 0.2628
+   },
+   {
+    "wallet": "0xb6b8dfec3ed9a46dfd9088e4fef89c08a95e149b",
+    "side": "EXILE esports",
+    "usd": 881,
+    "avgPrice": 0.75
+   }
+  ],
+  "hoursToKickoff": 0.06,
+  "capturedAt": "2026-09-04T13:59:47.666586+00:00",
+  "cond": "0xcf1427fc2b6037ea95276af35603c7c64bcd40823b80e912f32c6a9fbeacee78",
+  "frage": "LoL: Onion Team vs EXILE esports (BO3) - Hitpoint Masters Regular Season",
+  "tokens": {
+   "Onion Team": "8542729894742481864794660780875101994751888917952609072368269326052090111952",
+   "EXILE esports": "10687054534089471833015851567861273991815407846960862976568054543928534614450"
   }
  }
 }
