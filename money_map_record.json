@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-04T21:49:37.798663+00:00",
+"generatedAt": "2026-09-04T22:04:46.352671+00:00",
 "byVerdict": {
 "konsens": {
-"n": 757,
-"wins": 625,
-"hitRate": 0.8256,
-"polyN": 706,
-"polyWins": 554,
-"polyHitRate": 0.7847,
+"n": 759,
+"wins": 626,
+"hitRate": 0.8248,
+"polyN": 708,
+"polyWins": 555,
+"polyHitRate": 0.7839,
 "pinnN": 66,
 "pinnHitRate": 0.8182,
-"nRoi": 85,
-"roi": 0.3909,
-"roiLb": 0.2739,
-"nClv": 85,
-"clv": 18.65,
-"clvLb": 14.0283
+"nRoi": 87,
+"roi": 0.377,
+"roiLb": 0.2596,
+"nClv": 87,
+"clv": 18.68,
+"clvLb": 14.1508
 },
 "uneinig": {
-"n": 267,
+"n": 268,
 "wins": 93,
-"hitRate": 0.3483,
-"polyN": 238,
+"hitRate": 0.347,
+"polyN": 239,
 "polyWins": 69,
-"polyHitRate": 0.2899,
-"pinnN": 142,
-"pinnHitRate": 0.5775,
-"nRoi": 35,
-"roi": -0.0423,
-"roiLb": -0.3251,
-"nClv": 35,
-"clv": -1.66,
-"clvLb": -11.5902
+"polyHitRate": 0.2887,
+"pinnN": 143,
+"pinnHitRate": 0.5804,
+"nRoi": 36,
+"roi": -0.0689,
+"roiLb": -0.3472,
+"nClv": 36,
+"clv": -3.54,
+"clvLb": -13.674
 },
 "teil": {
 "n": 11,
@@ -67,9 +67,9 @@
 "hitRate": 0.625
 },
 "Spanish La Liga": {
-"n": 31,
+"n": 32,
 "wins": 22,
-"hitRate": 0.7097
+"hitRate": 0.6875
 },
 "Argentinian Primera Division": {
 "n": 28,
@@ -116,6 +116,11 @@
 "wins": 14,
 "hitRate": 0.6364
 },
+"English Premier League": {
+"n": 21,
+"wins": 15,
+"hitRate": 0.7143
+},
 "Italian Serie A": {
 "n": 21,
 "wins": 18,
@@ -125,11 +130,6 @@
 "n": 20,
 "wins": 15,
 "hitRate": 0.75
-},
-"English Premier League": {
-"n": 20,
-"wins": 14,
-"hitRate": 0.7
 },
 "French Ligue 1": {
 "n": 20,
@@ -241,17 +241,17 @@
 "wins": 6,
 "hitRate": 0.5455
 },
+"Norwegian Eliteserien": {
+"n": 11,
+"wins": 7,
+"hitRate": 0.6364
+},
 "UEFA Champions League Qualifiers": {
 "n": 11,
 "wins": 7,
 "hitRate": 0.6364
 },
 "Dutch Eerste Divisie": {
-"n": 10,
-"wins": 7,
-"hitRate": 0.7
-},
-"Norwegian Eliteserien": {
 "n": 10,
 "wins": 7,
 "hitRate": 0.7
@@ -584,37 +584,94 @@
 },
 "byStrength": {
 "strong": {
-"n": 606,
-"wins": 493,
-"hitRate": 0.8135,
-"nRoi": 82,
-"roi": 0.3229,
-"roiLb": 0.1828,
-"nClv": 82,
-"clv": 15.88,
-"clvLb": 10.3355
+"n": 608,
+"wins": 494,
+"hitRate": 0.8125,
+"nRoi": 84,
+"roi": 0.3101,
+"roiLb": 0.1709,
+"nClv": 84,
+"clv": 15.1,
+"clvLb": 9.4196
 },
 "weak": {
-"n": 396,
+"n": 397,
 "wins": 210,
-"hitRate": 0.5303,
-"nRoi": 40,
-"roi": 0.0818,
-"roiLb": -0.1441,
-"nClv": 40,
-"clv": 4.71,
-"clvLb": -2.9091
+"hitRate": 0.529,
+"nRoi": 41,
+"roi": 0.0554,
+"roiLb": -0.1691,
+"nClv": 41,
+"clv": 4.72,
+"clvLb": -2.7149
 }
 },
 "divergence": {
-"n": 267,
+"n": 268,
 "betfairWins": 93,
-"betfairRate": 0.3483,
-"polyN": 238,
+"betfairRate": 0.347,
+"polyN": 239,
 "polyWins": 69,
-"polyRate": 0.2899
+"polyRate": 0.2887
 },
 "recent": [
+{
+"matchId": "35996596",
+"home": "Betis",
+"away": "Real Madrid",
+"league": "Spanish La Liga",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Real Madrid",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-09-04T19:00:00Z",
+"settledAt": "2026-09-04T22:04:46.185249+00:00"
+},
+{
+"matchId": "35974468",
+"home": "Ipswich",
+"away": "Liverpool",
+"league": "English Premier League",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Liverpool",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-09-04T19:00:00Z",
+"settledAt": "2026-09-04T22:04:46.185249+00:00"
+},
+{
+"matchId": "36014899",
+"home": "Sandefjord",
+"away": "Viking",
+"league": "Norwegian Eliteserien",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Sandefjord",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-04T19:00:00Z",
+"settledAt": "2026-09-04T22:04:46.185249+00:00"
+},
 {
 "matchId": "35979405",
 "home": "Genoa",
@@ -1317,75 +1374,18 @@
 ],
 "kickoff": "2026-09-03T18:30:00Z",
 "settledAt": "2026-09-03T21:32:06.318149+00:00"
-},
-{
-"matchId": "36015356",
-"home": "Anderlecht",
-"away": "Kortrijk",
-"league": "Belgian Pro League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Anderlecht",
-"polySide": "away",
-"winner": "home",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-09-03T18:30:00Z",
-"settledAt": "2026-09-03T21:32:06.318149+00:00"
-},
-{
-"matchId": "36005215",
-"home": "FC Basel",
-"away": "Sion",
-"league": "Swiss Super League",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Sion",
-"polySide": "home",
-"winner": "away",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-09-03T18:30:00Z",
-"settledAt": "2026-09-03T21:32:06.318149+00:00"
-},
-{
-"matchId": "35999671",
-"home": "Real Sociedad",
-"away": "Celta Vigo",
-"league": "Spanish La Liga",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Real Sociedad",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-09-03T19:00:00Z",
-"settledAt": "2026-09-03T21:01:56.646955+00:00"
 }
 ],
 "global": {
-"n": 1035,
-"wins": 721,
-"hitRate": 0.6966,
-"nRoi": 122,
-"roi": 0.2439,
-"roiLb": 0.1234,
-"nClv": 122,
-"clv": 12.22,
-"clvLb": 7.6816
+"n": 1038,
+"wins": 722,
+"hitRate": 0.6956,
+"nRoi": 125,
+"roi": 0.2266,
+"roiLb": 0.1067,
+"nClv": 125,
+"clv": 11.69,
+"clvLb": 7.1254
 },
-"pending": 18
+"pending": 17
 }
