@@ -88,7 +88,45 @@ def _close_price(close, key, side):
     return float(p) if _ok_price(p) else None
 
 
-def settle(ledger, resolutions, close, now=None) -> list[dict]:
+KORR_FILE = BASE / "poly_public_korrekturen.json"
+
+
+def _korrektur_anwenden(e: dict, korrekturen) -> None:
+    """Ein von Hand nachgeprüftes Ergebnis eintragen — mit engen Grenzen.
+
+    04.09.2026. Lucas hat den Leeds–Brentford-Push nachgeschlagen: *„es war Over 2,5, weiss ich
+    weil ich mir den Preis angesehen hab."* 1:1 sind zwei Tore, also verloren. Diese Information
+    ist echt, und sie einfach wegzulassen wäre die schlechtere Wahl: ohne den Eintrag stünde das
+    Buch bei 12:1 statt 12:2 — **das Weglassen eines bekannten Verlusts schönt die Bilanz.**
+
+    Damit daraus keine Hintertür wird, gilt hart:
+
+      · Es wird NUR eingetragen, wo die Maschine nichts entscheiden kann (`unaufloesbar`).
+        Ein maschinelles Ergebnis kann eine Korrektur nie überschreiben.
+      · Jeder Eintrag braucht `quelle` und `warum` — wer hat was nachgesehen.
+      · Der Report zählt sie getrennt (`korrigiert`), sie verschwinden nicht in der Summe.
+
+    Rückwirkend „das war doch eigentlich ein Treffer" ist damit ausgeschlossen: die Regel greift
+    nur dort, wo sonst GAR NICHTS stünde, und sie ist sichtbar.
+    """
+    if e.get("status") != "unaufloesbar" or not isinstance(korrekturen, dict):
+        return
+    k = korrekturen.get(e.get("k")) or korrekturen.get(e.get("key"))
+    if not isinstance(k, dict) or k.get("result") not in ("win", "loss"):
+        return
+    if not (k.get("quelle") and k.get("warum")):
+        return           # ohne Herkunft keine Korrektur
+    e["status"] = "settled"
+    e["result"] = k["result"]
+    e["korrigiert"] = {"quelle": k["quelle"], "warum": k["warum"]}
+    preis = k.get("preis")
+    if isinstance(preis, (int, float)) and 0.0 < preis < 1.0:
+        e["pushPrice"] = preis
+        e["stake"] = STAKE
+        e["pnl"] = round((STAKE / preis - STAKE) if k["result"] == "win" else -STAKE, 2)
+
+
+def settle(ledger, resolutions, close, now=None, korrekturen=None) -> list[dict]:
     """Jeden pending-Eintrag gegen den Slug-Sieger abrechnen. Verändert den Ledger IN PLACE-frei:
     gibt eine neue Liste zurück. Einmal abgerechnet bleibt abgerechnet (kein Nachbewerten)."""
     now = now or _now()
@@ -98,6 +136,21 @@ def settle(ledger, resolutions, close, now=None) -> list[dict]:
             continue
         e = dict(e)
         if e.get("status") != "pending":
+            # „Einmal abgerechnet bleibt abgerechnet" gilt fuer ein Ergebnis, das auf einer
+            # tragfaehigen Basis steht. Der Leeds-Brentford-Push stand als Treffer im Buch,
+            # obwohl die Linie nie bekannt war — so ein Ergebnis wird ZURUECKGENOMMEN, nicht
+            # konserviert. Mechanisch und fuer jeden solchen Eintrag, nicht fuer diesen einen.
+            # Nur EINMAL zuruecknehmen: sonst nimmt der naechste Lauf das korrigierte Ergebnis
+            # wieder zurueck und `war` protokolliert am Ende die Korrektur statt des Fehlers.
+            if (e.get("status") == "settled" and e.get("result")
+                    and not e.get("zurueckgenommen") and not e.get("korrigiert")
+                    and not aufloesbar(e.get("key"), e.get("side"), e.get("winner"))):
+                e["zurueckgenommen"] = {"war": e.get("result"), "am": (now or _now()).isoformat(),
+                                        "grund": "Buendel-Slug ohne Linie — Ausgang nie ableitbar"}
+                for f in ("result", "winner", "pnl", "stake", "clvPP"):
+                    e.pop(f, None)
+                e["status"] = "unaufloesbar"
+            _korrektur_anwenden(e, korrekturen)
             out.append(e)
             continue
         r = (resolutions or {}).get(e.get("key")) if isinstance(resolutions, dict) else None
@@ -113,6 +166,7 @@ def settle(ledger, resolutions, close, now=None) -> list[dict]:
             if age is not None and age > PENDING_TTL_D:
                 e["status"] = "unaufloesbar"
                 e["ageDays"] = round(age, 2)
+                _korrektur_anwenden(e, korrekturen)
             out.append(e)
             continue
         entry = e.get("pushPrice")
@@ -214,11 +268,16 @@ def report(ledger, now=None) -> dict:
         "gesamt": len(vor),
         "offen": sum(1 for e in vor if e.get("status") == "pending"),
         "unaufloesbar": sum(1 for e in vor if e.get("status") == "unaufloesbar"),
+        # Getrennt sichtbar: von Hand nachgeprueft, nicht maschinell abgerechnet.
+        "korrigiert": sum(1 for e in vor if e.get("korrigiert")),
+        "zurueckgenommen": sum(1 for e in vor if e.get("zurueckgenommen")),
         "agg": bilanz(settled),
         "byCat": bilanz_nach(settled, "cat"),
         "byRestock": bilanz_nach(settled, "restock"),
         "retro": {"n": len(retro),
                   "unaufloesbar": sum(1 for e in retro if e.get("status") == "unaufloesbar"),
+                  "korrigiert": sum(1 for e in retro if e.get("korrigiert")),
+                  "zurueckgenommen": sum(1 for e in retro if e.get("zurueckgenommen")),
                   "agg": bilanz([e for e in retro if e.get("status") == "settled"]),
                   "byCat": bilanz_nach([e for e in retro if e.get("status") == "settled"], "cat")},
     }
@@ -229,7 +288,7 @@ def main() -> int:
     if not isinstance(led, list):
         print("⚠️  poly_whale_public_ledger.json ist keine Liste — nichts ausgewertet.")
         return 0
-    led = settle(led, _load(RES_FILE, {}), _load(CLOSE_FILE, {}))
+    led = settle(led, _load(RES_FILE, {}), _load(CLOSE_FILE, {}), korrekturen=_load(KORR_FILE, {}))
     write_json_atomic(LEDGER_FILE, led, indent=0)
     rep = report(led)
     write_json_atomic(OUT_FILE, rep, indent=1)

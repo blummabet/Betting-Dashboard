@@ -35,6 +35,7 @@ from pathlib import Path
 import poly_money_accuracy as PMA
 from poly_money_accuracy import split_guete   # 02.09.2026: eine Quelle fuer die Split-Guete
 from safe_write import write_json_atomic   # 25.08.2026: temp+replace statt halber Datei
+from poly_slug_urteil import aufloesbar   # 04.09.2026: Buendel-Slugs nicht raten
 
 BASE = Path(__file__).resolve().parent
 
@@ -1554,6 +1555,18 @@ def update_wallet_track(prev, markets, now=None, keep_h=HIST_KEEP_H, frozen=None
     for ok in list(openp.keys()):
         e = openp[ok]
         if e["key"] not in winners:
+            continue
+        # 04.09.2026 (Lucas' Leeds-Brentford-Fall). Ein Buendel-Slug ("-more-markets") loest
+        # pauschal auf "Over"/"Under" auf, ohne die LINIE zu nennen — bei 1:1 gewinnt Over 1,5
+        # und verliert Over 2,5. Hier waere der Schaden am groessten: `wins/n` ist die
+        # Wallet-Trefferquote, und die entscheidet, wer ueberhaupt in den Public-Kanal darf.
+        # Ein erfundener Treffer macht eine Wallet "scharf", die es nicht ist.
+        #
+        # Die Position faellt deshalb ganz aus der Wertung — auch ihr CLV. Den CLV zu behalten
+        # ginge zwar (er misst Preise, nicht Ausgaenge), aber `n` ist der gemeinsame Nenner:
+        # n mitzaehlen ohne die Trefferchance waere ein stiller Fehlschlag.
+        if not aufloesbar(e["key"], e.get("side"), winners[e["key"]]):
+            del openp[ok]
             continue
         # 26.07.2026 (Lucas: „CLV misst nicht"): CLV gegen die EINGEFRORENE Closing-Linie, nicht
         # gegen lastPrice. Der lastPrice wird vor Auflösung oft nur EINMAL gesehen (Holder-Call-Cap +
