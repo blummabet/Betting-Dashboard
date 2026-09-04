@@ -126,6 +126,107 @@ class BilanzTest(unittest.TestCase):
         self.assertEqual(viele["clvUg"], 3.0)          # ab n=30 gibt es eine Zahl
 
 
+class RuecknahmeUndKorrekturTest(unittest.TestCase):
+    """04.09.2026 — Lucas hat einen Push nachgeschlagen, den unser Buch falsch hatte.
+
+    „💰 $41K auf Over" auf Leeds–Brentford, Endstand 1:1, Markt Over 2,5 → verloren. Im Buch
+    stand ein Treffer, weil poly_resolutions.json fuer den Buendel-Slug pauschal „Over" meldet.
+
+    Zwei Regeln werden hier festgehalten, und die zweite ist die heiklere:
+      1. Ein Ergebnis auf untragfaehiger Basis wird ZURUECKGENOMMEN — auch nachtraeglich.
+      2. Eine Korrektur von Hand darf NUR eintragen, wo die Maschine nichts weiss. Sonst waere
+         das Buch nicht mehr vorwaerts-gerichtet, sondern nachtraeglich zurechtgelegt.
+    """
+
+    LEE = "epl-lee-bre-2026-08-30-more-markets"
+
+    def _gebucht(self, **kw):
+        d = {"k": "0xw|" + self.LEE + "|Over", "key": self.LEE, "side": "Over",
+             "sentAt": (NOW - timedelta(days=5)).isoformat(), "status": "settled",
+             "result": "win", "winner": "Over", "stake": 10.0, "pnl": 9.0, "cat": "Fußball"}
+        d.update(kw)
+        return d
+
+    def test_ein_treffer_auf_untragfaehiger_basis_wird_zurueckgenommen(self):
+        out = PE.settle([self._gebucht()], {}, {}, now=NOW)[0]
+        self.assertEqual(out["status"], "unaufloesbar")
+        self.assertIsNone(out.get("result"))
+        self.assertIsNone(out.get("pnl"), "auch das Geld faellt weg, nicht nur das Etikett")
+        self.assertEqual(out["zurueckgenommen"]["war"], "win")
+
+    def test_die_ruecknahme_passiert_nur_einmal(self):
+        """Sonst nimmt der naechste Lauf die Korrektur wieder zurueck und `war` protokolliert
+        am Ende die Korrektur statt des Fehlers."""
+        e = self._gebucht()
+        for _ in range(3):
+            e = PE.settle([e], {}, {}, now=NOW)[0]
+        self.assertEqual(e["zurueckgenommen"]["war"], "win")
+
+    def test_ein_sauber_abgerechnetes_ergebnis_bleibt_unangetastet(self):
+        e = {"key": "cs2-mibr-eye-2026-09-03", "side": "MIBR", "status": "settled",
+             "result": "win", "winner": "MIBR", "stake": 10.0, "pnl": 3.61}
+        out = PE.settle([e], {}, {}, now=NOW)[0]
+        self.assertEqual(out["result"], "win")
+        self.assertNotIn("zurueckgenommen", out)
+
+    def test_ein_buendel_push_wird_gar_nicht_erst_abgerechnet(self):
+        offen = {"key": self.LEE, "side": "Over", "status": "pending",
+                 "sentAt": (NOW - timedelta(hours=2)).isoformat(), "pushPrice": 0.52}
+        out = PE.settle([offen], {self.LEE: {"winner": "Over"}}, {}, now=NOW)[0]
+        self.assertEqual(out["status"], "pending", "kein erfundener Treffer")
+        self.assertIn("Buendel", out.get("nichtAufloesbarGrund", ""))
+
+    # ── Die Korrektur und ihre Grenzen ──────────────────────────────────────
+    KORR = {"result": "loss", "quelle": "Lucas, 04.09.2026", "warum": "Markt war Over 2,5, 1:1"}
+
+    def test_ein_nachgeprueftes_ergebnis_kommt_ins_buch(self):
+        """Den bekannten Verlust wegzulassen waere die schlechtere Wahl: ohne ihn stuende das
+        Buch bei 12:1 statt 12:2 — Weglassen schoent."""
+        e = self._gebucht()
+        out = PE.settle([e], {}, {}, now=NOW, korrekturen={e["k"]: self.KORR})[0]
+        self.assertEqual(out["status"], "settled")
+        self.assertEqual(out["result"], "loss")
+        self.assertEqual(out["korrigiert"]["quelle"], "Lucas, 04.09.2026")
+
+    def test_eine_korrektur_kann_ein_maschinelles_ergebnis_NIE_ueberschreiben(self):
+        """Die wichtigste Grenze. Sonst waere das hier eine Hintertuer, um nachtraeglich
+        Treffer einzutragen — genau das, was ueberall sonst verboten ist."""
+        sauber = {"key": "cs2-mibr-eye-2026-09-03", "k": "x", "side": "MIBR",
+                  "status": "settled", "result": "win", "winner": "MIBR"}
+        out = PE.settle([sauber], {}, {}, now=NOW,
+                        korrekturen={"x": {"result": "loss", "quelle": "wer", "warum": "warum"}})[0]
+        self.assertEqual(out["result"], "win")
+        self.assertNotIn("korrigiert", out)
+
+    def test_ohne_herkunft_keine_korrektur(self):
+        e = self._gebucht()
+        for unvollstaendig in ({"result": "loss"},
+                               {"result": "loss", "quelle": "Lucas"},
+                               {"result": "loss", "warum": "weil"}):
+            out = PE.settle([e], {}, {}, now=NOW, korrekturen={e["k"]: unvollstaendig})[0]
+            self.assertEqual(out["status"], "unaufloesbar", unvollstaendig)
+
+    def test_unsinniges_ergebnis_wird_nicht_uebernommen(self):
+        e = self._gebucht()
+        out = PE.settle([e], {}, {}, now=NOW,
+                        korrekturen={e["k"]: {"result": "vielleicht", "quelle": "x", "warum": "y"}})[0]
+        self.assertEqual(out["status"], "unaufloesbar")
+
+    def test_mit_nachgetragenem_preis_zaehlt_die_korrektur_auch_geld(self):
+        e = self._gebucht()
+        k = dict(self.KORR, preis=0.52)
+        out = PE.settle([e], {}, {}, now=NOW, korrekturen={e["k"]: k})[0]
+        self.assertEqual(out["pnl"], -10.0)
+        self.assertEqual(out["stake"], 10.0)
+
+    def test_korrekturen_stehen_getrennt_im_report(self):
+        e = self._gebucht(quelle=None)
+        led = PE.settle([e], {}, {}, now=NOW, korrekturen={e["k"]: self.KORR})
+        rep = PE.report(led, now=NOW)
+        self.assertEqual(rep["korrigiert"], 1)
+        self.assertEqual(rep["zurueckgenommen"], 1)
+
+
 class GeldUrteilTest(unittest.TestCase):
     """04.09.2026 — dieselbe Lehre, die heute stake_analyse.py umgebaut hat, hier festgenagelt:
 

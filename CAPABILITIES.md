@@ -860,13 +860,58 @@ Public. Im Trades-Kanal bleiben sie, dort steht der Markt-Link daneben.
 
 | Trefferbilanz | Ø-Preis 63,8 ¢ (die 3 bekannten) | 70 ¢ | 76,9 ¢ (Deckel) |
 |---|---|---|---|
-| 12:2 (Lucas) | +34,3 % | +22,4 % | **+11,5 %** |
-| 13:1 (Buch) | +45,5 % | +32,7 % | +20,8 % |
+| **12:2** (Lucas — und nach der Korrektur auch das Buch) | +34,3 % | +22,4 % | **+11,5 %** |
 
 Also ja, es hat verdient. Was es **nicht** ist: ein Beleg. Die Trefferquote-Untergrenze steht bei
 12/14 auf 64,7 %, eine Rendite-Untergrenze gibt es erst ab n=30, und vor allem stammen die
 vierzehn Pushs aus **genau zwei Wallets** — 9 der 10 E-Sport-Treffer von `0x29b5…`, alle vier
 übrigen von `0x076d…`. Zwei Wochen messen hier zwei Wallets, nicht ein Verfahren.
+
+---
+
+### 🔴 Wir haben einen Gewinn erfunden (04.09.2026)
+
+Lucas hat nachgeschlagen: *„es war Over 2,5 — weiss ich, weil ich mir den Preis angesehen hab."*
+
+Der Push `💰 $41K auf Over` auf Leeds–Brentford stand als **Treffer** in unserem Buch. Endstand
+1:1 sind zwei Tore, der Markt war Over 2,5 — die Wette war **verloren**. Seine 12:2 stimmen,
+unsere 13:1 nicht.
+
+**Wie das passieren konnte.** Ein `-more-markets`-Slug ist auf Polymarket kein Markt, sondern ein
+**Bündel**: Over/Under auf mehreren Linien, BTTS, Ecken. `poly_resolutions.json` hält je Slug
+genau einen Sieger — `{key: "…-more-markets", winner: "Over"}` — und kann die Linien nicht
+auseinanderhalten. Bei 1:1 gewinnt Over 1,5 und verliert Over 2,5, und beide heißen „Over". Die
+Abrechnung verglich `side == winner`, fand „Over" == „Over" und buchte einen Gewinn.
+
+**Wie weit das reicht.** Im Bestand liegen **3.103 Bündel-Auflösungen, davon 3.029 mit
+Over/Under** (1.518 Under, 1.511 Over). Betroffen ist jede Abrechnung, die gegen Slug-Sieger
+läuft — und die teuerste ist nicht das Public-Buch, sondern `poly_wallet_track.json`: aus
+`wins/n` je Wallet entsteht die Trefferquote, und die entscheidet über `PUB_MIN_TR` /
+`PUB_MIN_HITRATE`, **wer überhaupt gepusht werden darf**. Ein erfundener Treffer macht dort eine
+Wallet „scharf", die es nicht ist — und die pusht dann weiter. 234 solcher Positionen lagen offen.
+
+**Die Regel** steht jetzt in `poly_slug_urteil.py` und gilt in allen fünf Abrechnungen
+(`poly_money_broad`, `poly_shortlist_track`, `poly_direct_bets`, `poly_whale_follow`,
+`poly_public_eval`): wo der Sieger-Name die Linie nicht trägt, wird **nicht abgerechnet** — weder
+als Treffer noch als Fehlschlag. Der Eintrag bleibt offen und läuft in `unaufloesbar`. Gesperrt
+wird, was mehrdeutig ist, nicht was einen bestimmten Slug hat: `…-more-markets → "England"`
+bleibt abrechenbar, und „Draw" ist im Moneyline-Markt ein echter Ausgang.
+
+**Zwei Entscheidungen, die begründet sein wollen:**
+
+- *Nachträglich zurücknehmen.* „Einmal abgerechnet bleibt abgerechnet" gilt für ein Ergebnis auf
+  tragfähiger Basis. Dieses war nie ableitbar, also wird es zurückgenommen — mechanisch, für
+  jeden solchen Eintrag, mit `zurueckgenommen: {war: "win", grund: …}` im Ledger.
+- *Den bekannten Verlust behalten.* Ihn nur zu streichen wäre bequemer und **schönt**: ohne ihn
+  stünde das Buch bei 12:1 statt 12:2. Er steht deshalb in `poly_public_korrekturen.json` mit
+  Herkunft und Begründung. Damit daraus keine Hintertür wird, greift eine Korrektur **nur**, wo
+  die Maschine `unaufloesbar` sagt — ein maschinelles Ergebnis kann sie nie überschreiben —, sie
+  braucht `quelle` und `warum`, und der Report zählt sie getrennt (`korrigiert`).
+
+Nebenbefund: die Marktfrage wird gar nicht erst gesammelt. In `poly_money_broad_close.json` tragen
+**alle 2.000 Märkte** weder `title` noch `question`. Deshalb sperrt `_pub_seite_benennbar`
+generische Ausgänge für den Public-Kanal — ein Tipp, den der Leser nicht nachvollziehen kann, ist
+dort wertlos.
 
 ---
 
