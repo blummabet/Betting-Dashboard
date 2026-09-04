@@ -50,10 +50,12 @@ function trackFn() {
   // eslint-disable-next-line no-new-func
   new Function('exp', '_md', MD.slice(von, bis) + '\nexp.f=_mdBfTrack;')(
     g, { data: { bfTrack: { byLeagueMarket: {
-      'EPL|Match Odds': { n: 40, roi: 0.12 },
-      'EPL|Both teams to Score?': { n: 40, roi: -0.22 },
-      'EPL|Over/Under 2.5 Goals': { n: 40, roi: 0.0 },
+      'EPL|Match Odds': { n: 40, roi: 0.12, roiUg: 0.03 },
+      'EPL|Both teams to Score?': { n: 40, roi: -0.22, roiUg: -0.16 },
+      'EPL|Over/Under 2.5 Goals': { n: 40, roi: 0.08, roiUg: 0.0 },
       'Kleinkram|Match Odds': { n: 6, roi: 0.9 },
+      // 04.09.2026: n groß genug für die alte Schwelle, aber ohne Untergrenze — der reale Fall.
+      'Schoener Schein|Match Odds': { n: 20, roi: 0.42 },
     } } } });
   return g.f;
 }
@@ -64,8 +66,18 @@ test('der Track urteilt auf der Übersicht wie im Radar', () => {
   assert.strictEqual(f('EPL', 'Both teams to Score?').verliert, true);
   const neutral = f('EPL', 'Over/Under 2.5 Goals');
   assert.ok(!neutral.traegt && !neutral.verliert, 'null ROI ist weder tragend noch verlierend');
-  assert.strictEqual(f('Kleinkram', 'Match Odds'), null, 'unter n=15 gibt es kein Urteil');
+  assert.strictEqual(f('Kleinkram', 'Match Odds'), null, 'ohne Untergrenze gibt es kein Urteil');
   assert.strictEqual(f('Gibtsnicht', 'Match Odds'), null);
+});
+
+// 04.09.2026 (Lucas: „mach ma mal Betfair-Check"). Die Schwelle war n>=15 auf dem
+// Punktschätzer. Gemessen: 1.641 Liga×Markt-Buckets mit Median n=5; 146 erreichten n>=15 und
+// davon galten 52 als „trägt" und 57 als „verliert" — während über ALLE Buckets nur drei
+// überhaupt eine Rendite-Untergrenze tragen und davon keiner eine positive. 57 Zeilen flogen
+// also aus „Top-Wetten jetzt", weil ein Eimer mit im Schnitt fünf Plays das so aussehen ließ.
+test('ein schöner ROI ohne Untergrenze ist kein Urteil', () => {
+  assert.strictEqual(trackFn()('Schoener Schein', 'Match Odds'), null,
+    '+42% auf n=20 darf weder boosten noch ausschließen');
 });
 
 test('verlierende Eimer kommen gar nicht erst in die Top-Wetten', () => {

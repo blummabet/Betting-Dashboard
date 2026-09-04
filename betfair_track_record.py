@@ -28,6 +28,7 @@ from datetime import datetime, timezone, timedelta
 from pathlib import Path
 from safe_write import write_json_atomic   # 25.08.2026: temp+replace statt halber Datei
 import betfair_track_store as _store       # 01.09.2026: kompaktes Ledger-Format (liest Altformat mit)
+from freigabe import UG_MIN_N, Z as UG_Z   # 04.09.2026: dieselbe Schranke wie ueberall
 
 BASE = Path(__file__).resolve().parent
 PRICES_FILE = BASE / "betfair_prices.json"
@@ -422,7 +423,7 @@ def _clv_pp_fair(entry, fair_prob):
 
 
 def _bucket():
-    return {"n": 0, "wins": 0, "roiSum": 0.0,
+    return {"n": 0, "wins": 0, "roiSum": 0.0, "roiSqSum": 0.0,
             "nConc": 0, "winsConc": 0, "roiConc": 0.0,
             "nInflow": 0, "winsInflow": 0, "roiInflow": 0.0,
             # 08.08.2026 (Lucas): Richtung — kam das Geld als Back (Quote kuerzer) oder driftete es?
@@ -441,6 +442,9 @@ def _add(b, r):
     b["n"] += 1
     b["wins"] += 1 if r.get("win") else 0
     b["roiSum"] += profit
+    # 04.09.2026: ohne Quadratsumme gibt es nur den Punktschaetzer — und auf genau den hat das
+    # Terminal seit dem 17.08. hart gemutet. Ein Feld, kein Call. (Siehe _fin/roiUg.)
+    b["roiSqSum"] += profit * profit
     if r.get("conc"):
         b["nConc"] += 1; b["winsConc"] += 1 if r.get("win") else 0; b["roiConc"] += profit
     if r.get("inflow"):
@@ -460,11 +464,53 @@ def _add(b, r):
         b["nClvPinn"] += 1; b["clvPinnSum"] += cp; b["beatPinn"] += 1 if cp > 0 else 0
 
 
+# 04.09.2026 (Lucas-Checkup des Betfair-Terminals) ──────────────────────────────
+# Am 05.08. steht ueber `aggregate` schon: „451 winzige Buckets -> pro Bucket sagt es fast
+# nichts." Am 17.08. hat `_tMute` im Terminal trotzdem hart darauf gegatet:
+#
+#     if (b && b.n >= 10 && b.roi <= -0.05) -> Zeile gemutet
+#
+# Gemessen am 04.09. sind die fuenf Ligen auf dem Board damit bei n = 9 bis 14:
+#
+#     English Premier League   n10  ROI -11,1%   -> 9 Zeilen gemutet
+#     French Ligue 1           n10  ROI -21,1%   -> gemutet
+#     German Bundesliga        n 9  ROI  -5,6%   -> NICHT gemutet, nur weil n=9 statt 10
+#     Spanish La Liga          n14  ROI +13,1%   -> "🟢 64%"
+#     Italian Serie A          n10  ROI +52,1%   -> "🟢 80%"
+#
+# Die Rauschprobe: zieht man dieselben Stichprobengroessen ZUFAELLIG aus dem gemeinsamen Topf
+# aller 1.652 Match-Odds-Plays (Gesamt-ROI +0,9%), ist die Spanne zwischen bester und
+# schlechtester Liga in 91% der Laeufe MINDESTENS so gross wie die beobachtete. Die Unterschiede
+# zwischen den Ligen sind also nicht nur unbelegt, sie sind kleiner als reiner Zufall ueblicherweise
+# erzeugt. Trotzdem hat das Board die drei ueberzeugtesten Zeilen des Tages weggeblendet
+# (Man City Konviktion 93, PSG 100, Arsenal 85).
+#
+# Deshalb faehrt jeder Bucket jetzt seine RENDITE-UNTERGRENZE mit — dieselbe Rechnung und
+# dieselbe n>=30-Grenze wie im Rest des Repos (freigabe.untergrenze). Unter 30 Plays gibt es
+# keine Zahl, und damit auch kein Urteil.
+def _ug(n, summe, quadratsumme):
+    """Einseitige 95%-Untergrenze der Rendite aus n/Summe/Quadratsumme. REIN.
+
+    Aus Summe und Quadratsumme laesst sich die Streuung rekonstruieren, ohne alle Einzelwerte
+    zu halten — dieselbe Formel, die freigabe.untergrenze auf der Werteliste rechnet."""
+    if n < max(3, UG_MIN_N):
+        return None
+    m = summe / n
+    var = (quadratsumme - n * m * m) / (n - 1)
+    if var <= 0:
+        return None          # keine Streuung heisst nicht Gewissheit, sondern zu wenig Daten
+    return m - UG_Z * (var ** 0.5) / (n ** 0.5)
+
+
 def _fin(b):
     def rate(w, n):
         return round(w / n, 4) if n else None
+    _u = _ug(b["n"], b["roiSum"], b["roiSqSum"])
     return {"n": b["n"], "wins": b["wins"], "hitRate": rate(b["wins"], b["n"]),
             "roi": round(b["roiSum"] / b["n"], 4) if b["n"] else None,
+            # Der Punktschaetzer bleibt sichtbar — er entscheidet nur nichts mehr.
+            "roiUg": round(_u, 4) if _u is not None else None,
+            "ugAb": UG_MIN_N,
             "nConc": b["nConc"], "hitRateConc": rate(b["winsConc"], b["nConc"]),
             "roiConc": round(b["roiConc"] / b["nConc"], 4) if b["nConc"] else None,
             "nInflow": b["nInflow"], "hitRateInflow": rate(b["winsInflow"], b["nInflow"]),

@@ -55,7 +55,7 @@ function boot() {
   w._bfState.data = { matches: [] };   // sonst triggert renderBetfairRadar einen fetch (kein Netz im Test)
   w._bfState.consensus = consensusFixture();
   w._bfState.hist = histFixture();
-  w._bfState.track = { n: 500, byLeagueMarket: { 'Schwach Liga|Match Odds': { n: 12, roi: -0.12, hitRate: 0.30 } } };
+  w._bfState.track = { n: 500, byLeagueMarket: { 'Schwach Liga|Match Odds': { n: 44, roi: -0.12, roiUg: -0.12, hitRate: 0.30 } } };
   w._bfState.loading = false;
   w._bfState.view = 'terminal';
   return w;
@@ -119,7 +119,7 @@ test('Auto-Mute (P1): kein-Anker & schwacher Bucket werden gemutet, nach unten s
   const board = panel(w);
   assert.match(board, /Nicht handelbar \(gemutet\)/, 'Trenn-Zeile für gemutete Reihen');
   assert.match(board, /🔇 kein Anker/, 'no-anchor-Zeile trägt kein-Anker-Tag');
-  assert.match(board, /🔇 Bucket -12% ROI/, 'schwacher-Bucket-Zeile trägt Bucket-Tag');
+  assert.match(board, /🔇 Bucket UG -12% ROI/, 'schwacher-Bucket-Zeile trägt Bucket-Tag');
   // gemutete Zeilen (C/D) stehen unter den handelbaren (Alpha/Gamma)
   assert.ok(board.indexOf('Alpha') < board.indexOf('Epsilon'), 'handelbar vor kein-Anker');
   assert.ok(board.indexOf('Gamma') < board.indexOf('Eta'), 'handelbar vor schwachem Bucket');
@@ -130,6 +130,26 @@ test('Auto-Mute (P1): kein-Anker & schwacher Bucket werden gemutet, nach unten s
   assert.match(hidden, /Alpha/, 'handelbare bleiben sichtbar');
   w._bfTermMute(false);
   assert.match(panel(w), /Epsilon/, 'Toggle zeigt gemutete wieder');
+});
+
+// 🔴 04.09.2026 (Lucas: „mach ma mal Betfair-Check"). Das Mute lief auf dem Punktschätzer:
+// `b.n>=10 && b.roi<=-0.05`. An dem Tag standen die fünf Ligen des Boards bei n = 9 bis 14 —
+// Premier League −11,1 % auf n=10 nahm neun Zeilen vom Board, darunter die drei überzeugtesten
+// (Man City 93, PSG 100, Arsenal 85). Bundesliga blieb bei −5,6 % nur deshalb stehen, weil n=9
+// statt 10 war: ein einziger abgerechneter Play entschied über eine ganze Liga.
+//
+// Rauschprobe über die echten 1.652 Match-Odds-Plays: dieselben Stichprobengrößen zufällig aus
+// einem gemeinsamen Topf gezogen ergeben in 91 % der Läufe eine mindestens so große Spanne
+// zwischen bester und schlechtester Liga. Der Bucket sortierte Rauschen.
+test('ein Bucket ohne Untergrenze mutet nicht — nichts zu wissen ist kein Grund wegzublenden', () => {
+  const w = boot();
+  w._bfState.track.byLeagueMarket['Schwach Liga|Match Odds'] = { n: 12, roi: -0.12, hitRate: 0.30 };
+  w._bfSetView('terminal');
+  const board = panel(w);
+  assert.ok(!/🔇 Bucket/.test(board), '−12 % auf n=12 ist ein Punktschätzer, kein Grund zu muten');
+  assert.match(board, /kein Urteil · n12/, 'stattdessen steht dran, dass nichts gemessen ist');
+  assert.ok(!/🟢|🔴/.test(board.slice(board.indexOf('Eta'), board.indexOf('Eta') + 900)),
+    'und keine Ampelfarbe, die einen Befund behauptet');
 });
 
 test('Konsens-View bleibt unbeschädigt (additiv)', () => {

@@ -44,28 +44,39 @@ test('die Schwellen im Radar sind die aus betfair_money.py', () => {
   assert.strictEqual(W.boost, Number(b[1]), 'Boost-Schwelle läuft auseinander');
 });
 
+// 04.09.2026 (Lucas: „mach ma mal Betfair-Check"): die Aussage hing am PUNKTSCHÄTZER. Gemessen
+// haben die Liga×Markt-Buckets Median n=5; von 1.641 tragen 3 überhaupt eine Rendite-Untergrenze,
+// und davon keiner eine positive. Trotzdem galten 52 als „trägt" und 57 als „verliert". Seither
+// entscheidet roiUg — und ohne Untergrenze sagt der Chip „sammelt", nicht „unauffällig".
 test('jede Bandbreite bekommt ihre eigene Aussage', () => {
-  assert.strictEqual(W.f({ n: 30, roi: 0.12 }).art, 'boost');
-  assert.strictEqual(W.f({ n: 30, roi: -0.18 }).art, 'fade');
-  assert.strictEqual(W.f({ n: 30, roi: 0.0 }).art, 'neutral');
-  assert.strictEqual(W.f({ n: 7, roi: 0.5 }).art, 'sammelt', 'unter n=15 wirkt nichts, egal wie gut');
+  assert.strictEqual(W.f({ n: 40, roi: 0.12, roiUg: 0.04 }).art, 'boost');
+  assert.strictEqual(W.f({ n: 40, roi: -0.18, roiUg: -0.15 }).art, 'fade');
+  assert.strictEqual(W.f({ n: 40, roi: 0.12, roiUg: 0.0 }).art, 'neutral');
+  assert.strictEqual(W.f({ n: 7, roi: 0.5 }).art, 'sammelt', 'ohne Untergrenze wirkt nichts, egal wie gut');
   assert.strictEqual(W.f(null), null);
   assert.strictEqual(W.f({ n: 30 }), null, 'ohne ROI keine Aussage');
 });
 
+test('ein glänzender ROI ohne Untergrenze bewegt gar nichts', () => {
+  // Der reale Fall: Serie A stand mit +52,1% auf n=10 als „🟢 80%" auf dem Board.
+  assert.strictEqual(W.f({ n: 10, roi: 0.521 }).art, 'sammelt');
+  assert.strictEqual(W.f({ n: 10, roi: -0.211 }).art, 'sammelt', 'und in die andere Richtung genauso');
+});
+
 test('genau an den Schwellen kippt es — nicht daneben', () => {
-  assert.strictEqual(W.f({ n: W.minN, roi: W.boost }).art, 'boost', 'die Boost-Schwelle zählt mit');
-  assert.strictEqual(W.f({ n: W.minN, roi: W.fade }).art, 'fade', 'die Fade-Schwelle zählt mit');
-  assert.strictEqual(W.f({ n: W.minN - 1, roi: 0.5 }).art, 'sammelt', 'eine unter der Mindest-Stichprobe');
+  assert.strictEqual(W.f({ n: 40, roi: 1, roiUg: W.boost }).art, 'neutral',
+    'die Boost-Schwelle muss ÜBERSCHRITTEN sein — genau null ist kein Beleg');
+  assert.strictEqual(W.f({ n: 40, roi: 1, roiUg: W.boost + 0.01 }).art, 'boost');
+  assert.strictEqual(W.f({ n: 40, roi: -1, roiUg: W.fade }).art, 'fade', 'die Fade-Schwelle zählt mit');
 });
 
 test('die Aussage steht in Worten da, nicht nur in Farbe', () => {
   // Grün/Rot ist für Rot-Grün-Blinde praktisch ununterscheidbar. Wer die Farben nicht trennen
   // kann, muss die Zeile trotzdem lesen können.
-  assert.match(W.f({ n: 30, roi: 0.12 }).txt, /trägt/);
-  assert.match(W.f({ n: 30, roi: -0.18 }).txt, /verliert/);
-  assert.match(W.f({ n: 30, roi: 0.12 }).sub, /verstärkt/);
-  assert.match(W.f({ n: 30, roi: -0.18 }).sub, /fadet/);
+  assert.match(W.f({ n: 40, roi: 0.12, roiUg: 0.04 }).txt, /trägt/);
+  assert.match(W.f({ n: 40, roi: -0.18, roiUg: -0.15 }).txt, /verliert/);
+  assert.match(W.f({ n: 40, roi: 0.12, roiUg: 0.04 }).sub, /verstärkt/);
+  assert.match(W.f({ n: 40, roi: -0.18, roiUg: -0.15 }).sub, /fadet/);
 });
 
 test('unter der Schwelle zeigt der Chip den Fortschritt statt gar nichts', () => {

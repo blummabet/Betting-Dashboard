@@ -1007,14 +1007,16 @@
   // Karte. Man sah die Zahl, aber nicht, was sie anrichtet.
   // Die Werte müssen mit betfair_money.py übereinstimmen — tests/frontend/betfair-lernboard.test.mjs
   // vergleicht beide Dateien, damit sie nicht auseinanderlaufen.
-  var BF_TR_MIN_N = 15;       // = MIN_TR_N
+  // 04.09.2026: Die Schwellen greifen auf der RENDITE-UNTERGRENZE, nicht auf dem Punktschätzer —
+  // ein eigenes n-Gate erübrigt sich damit, weil es die Untergrenze erst ab n=30 überhaupt gibt.
+  var BF_TR_MIN_N = 30;       // = MIN_TR_N (= freigabe.UG_MIN_N)
   var BF_TR_FADE  = -0.10;    // = TR_FADE_ROI  → Signal wird umgedreht
-  var BF_TR_BOOST = 0.05;     // = TR_BOOST_ROI → Signal wird verstärkt
+  var BF_TR_BOOST = 0;        // = TR_BOOST_ROI → Signal wird verstärkt
   function bfTrackWirkung(v) {
     if (!v || !v.n || typeof v.roi !== 'number') return null;
-    if (v.n < BF_TR_MIN_N) return { art: 'sammelt', txt: '⏳ sammelt', sub: 'n' + v.n + '/' + BF_TR_MIN_N, col: C.dim };
-    if (v.roi <= BF_TR_FADE) return { art: 'fade', txt: '⚠️ verliert hier', sub: 'Card fadet', col: C.lay };
-    if (v.roi >= BF_TR_BOOST) return { art: 'boost', txt: '✅ trägt', sub: 'Card verstärkt', col: C.back };
+    if (typeof v.roiUg !== 'number') return { art: 'sammelt', txt: '⏳ sammelt', sub: 'n' + v.n + '/' + BF_TR_MIN_N, col: C.dim };
+    if (v.roiUg <= BF_TR_FADE) return { art: 'fade', txt: '⚠️ verliert hier', sub: 'Card fadet', col: C.lay };
+    if (v.roiUg > BF_TR_BOOST) return { art: 'boost', txt: '✅ trägt', sub: 'Card verstärkt', col: C.back };
     return { art: 'neutral', txt: '➖ neutral', sub: 'ohne Wirkung', col: C.mut };
   }
 
@@ -1052,9 +1054,27 @@
   function _tBucket(g){ var t=(_bf.track&&_bf.track.byLeagueMarket)||{}; return t[(g.league||'')+'|Match Odds']||null; }
   // 17.08.2026 (Lucas P1): Auto-Mute — Zeilen, die keine handelbare Kante sind, ausgrauen & nach unten:
   // (a) kein Pinnacle-Anker (edge==null -> die illiquiden @110/@230-Ligen), (b) historisch schwacher CLV-Bucket.
+  //
+  // 🔴 04.09.2026 (Lucas: „mach ma mal Betfair-Check"). Bedingung (b) war falsch, und zwar teuer.
+  // Sie hat auf dem PUNKTSCHÄTZER gemutet: `b.n>=10 && b.roi<=-0.05`. Gemessen an dem Tag standen
+  // die fünf Ligen des Boards bei n = 9 bis 14:
+  //
+  //     Premier League  n10  −11,1%  → 9 Zeilen gemutet, darunter die drei überzeugtesten
+  //     Ligue 1         n10  −21,1%  → gemutet
+  //     Bundesliga      n 9   −5,6%  → NICHT gemutet, nur weil n=9 statt 10 war
+  //     La Liga         n14  +13,1%  → „🟢 64%"
+  //     Serie A         n10  +52,1%  → „🟢 80%"
+  //
+  // Die Rauschprobe: zieht man dieselben Stichprobengrößen zufällig aus dem gemeinsamen Topf aller
+  // 1.652 Match-Odds-Plays, ist die Spanne zwischen bester und schlechtester Liga in 91 % der
+  // Läufe MINDESTENS so groß wie die beobachtete. Der Bucket sortiert Rauschen — und blendete
+  // damit Man City (Konviktion 93), PSG (100) und Arsenal (85) vom Board.
+  //
+  // Ab jetzt entscheidet die RENDITE-UNTERGRENZE (roiUg, n>=30 wie überall sonst). Unter 30 Plays
+  // gibt es keine Untergrenze und deshalb keinen Mute: nichts zu wissen ist kein Grund wegzublenden.
   function _tMute(g){ var e=_tEdge(g), b=_tBucket(g);
     if(e==null) return {m:true,r:'kein Anker'};
-    if(b && b.n>=10 && typeof b.roi==='number' && b.roi<=-0.05) return {m:true,r:'Bucket '+Math.round(b.roi*100)+'% ROI'};
+    if(b && typeof b.roiUg==='number' && b.roiUg<=-0.05) return {m:true,r:'Bucket UG '+Math.round(b.roiUg*100)+'% ROI'};
     return {m:false,r:''}; }
   var _TSK={home:'hw',draw:'dr',away:'aw'};
   function _tSer(g){ var h=(_bf.hist||{})[String(g.matchId)]||[]; var key=_TSK[g.moneySide]||'hw'; var pts=[];
@@ -1332,7 +1352,7 @@
     var dot=function(on,c){ return '<i style="display:inline-block;width:8px;height:8px;border-radius:50%;margin-left:3px;background:'+(on?c:'#26324a')+'"></i>'; };
     var th=function(t,a){ return '<th style="font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:'+C.dim+';font-weight:700;text-align:'+(a||'right')+';padding:7px 10px;border-bottom:1px solid '+C.bd+';white-space:nowrap">'+t+'</th>'; };
     var head='<div style="display:flex;align-items:baseline;gap:10px;margin:2px 0 8px;flex-wrap:wrap"><span style="font-size:13px;font-weight:800;color:'+C.ink+'">🖥️ Terminal — handelbare Kanten</span>'
-      +'<span style="font-size:10.5px;color:'+C.dim+'">Edge = faire Pinnacle-% × Quote − 1 · Konviktion = Betfair-Fluss + Pinnacle-Steam + Poly (0–100) · CLV-Bucket = hist. Kante je Liga (n≥10) · Unsere Card = der gepostete Pick; ● grün/rot = Geld auf unserer Seite / dagegen · gemutet = nicht handelbar · Zeile klicken → Drilldown</span></div>';
+      +'<span style="font-size:10.5px;color:'+C.dim+'">Edge = faire Pinnacle-% × Quote − 1 · Konviktion = Betfair-Fluss + Pinnacle-Steam + Poly (0–100) · CLV-Bucket = hist. Kante je Liga, Urteil erst ab n≥30 (Rendite-Untergrenze) · Unsere Card = der gepostete Pick; ● grün/rot = Geld auf unserer Seite / dagegen · gemutet = nicht handelbar · Zeile klicken → Drilldown</span></div>';
     var bankBar='<div style="display:flex;align-items:center;gap:8px;margin:0 0 10px;font-size:11.5px;color:'+C.mut+'">Bankroll <span style="color:'+C.dim+'">€</span>'
       +'<input type="number" value="'+bank+'" min="0" step="50" onchange="_bfTermBank(this.value)" onclick="event.stopPropagation()" style="width:96px;background:'+C.card+';border:1px solid '+C.bd+';border-radius:7px;color:'+C.ink+';padding:4px 8px;font-family:monospace;font-size:12px"/>'
       +'<span style="color:'+C.dim+'">→ ½-Kelly-Stakes in € je Zeile</span>'
@@ -1343,11 +1363,19 @@
     var mutedStarted=false;
     shown.forEach(function(r){
       var g=r.g,e=r.edge,open=(String(_bf.termOpen)===String(g.matchId));
-      if(r.mute.m && !mutedStarted){ mutedStarted=true; out+='<tr><td colspan="9" style="padding:10px 10px 4px;font-size:10px;color:'+C.dim+';border-top:1px dashed '+C.bd+'">🔇 Nicht handelbar (gemutet) — kein Pinnacle-Anker oder historisch schwacher Bucket. Nach unten sortiert.</td></tr>'; }
+      if(r.mute.m && !mutedStarted){ mutedStarted=true; out+='<tr><td colspan="9" style="padding:10px 10px 4px;font-size:10px;color:'+C.dim+';border-top:1px dashed '+C.bd+'">🔇 Nicht handelbar (gemutet) — kein Pinnacle-Anker oder ein Bucket, dessen Rendite-UNTERGRENZE negativ ist. Nach unten sortiert.</td></tr>'; }
       var dirTag=g.moneyDir==='in'?'<span style="font-size:8.5px;font-weight:800;color:#2ee08a;background:rgba(46,224,138,.14);padding:1px 5px;border-radius:5px">BACK</span>'
                  :g.moneyDir==='out'?'<span style="font-size:8.5px;font-weight:800;color:#ff5d5d;background:rgba(255,93,93,.14);padding:1px 5px;border-radius:5px">DRIFT</span>':'';
       var conv=_tConvMeter(g);
-      var clv=(r.b&&r.b.n>=10)?('<span style="font-family:monospace;font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:5px;color:'+(r.b.roi>0?'#2ee08a':r.b.roi<0?'#ff5d5d':C.mut)+';background:'+(r.b.roi>0?'rgba(46,224,138,.1)':r.b.roi<0?'rgba(255,93,93,.1)':'transparent')+'">'+(r.b.roi>0?'🟢':r.b.roi<0?'🔴':'⚪')+' '+Math.round(r.b.hitRate*100)+'% · n'+r.b.n+'</span>'):'<span style="color:'+C.dim+';font-size:10px">dünn</span>';
+      // 04.09.2026: Farbe nur, wo eine Untergrenze existiert. Ein grüner Punkt auf n=10 ist eine
+      // Behauptung — und „🟢 80% · n10" liest sich wie ein Befund, obwohl nichts gemessen ist.
+      var clv;
+      if(r.b && typeof r.b.roiUg==='number'){
+        var _pos=r.b.roiUg>0;
+        clv='<span title="Rendite-Untergrenze über '+r.b.n+' Plays" style="font-family:monospace;font-size:10.5px;font-weight:700;padding:1px 6px;border-radius:5px;color:'+(_pos?'#2ee08a':'#ff5d5d')+';background:'+(_pos?'rgba(46,224,138,.1)':'rgba(255,93,93,.1)')+'">'+(_pos?'🟢':'🔴')+' UG '+(r.b.roiUg>0?'+':'')+Math.round(r.b.roiUg*100)+'% · n'+r.b.n+'</span>';
+      } else if(r.b && r.b.n){
+        clv='<span title="ROI '+Math.round((r.b.roi||0)*100)+'% auf nur '+r.b.n+' Plays — unter n='+(r.b.ugAb||30)+' gibt es keine Untergrenze und damit kein Urteil" style="color:'+C.dim+';font-size:10px">kein Urteil · n'+r.b.n+'</span>';
+      } else { clv='<span style="color:'+C.dim+';font-size:10px">dünn</span>'; }
       var ko=g.live?'<span style="color:#ff5d5d;font-weight:700;font-family:monospace">● LIVE</span>':'<span style="font-family:monospace;color:'+C.mut+'">'+_tKoTxt(g.kickoff)+'</span>';
       var stakeCell=r.hk>0?('<b>'+_tEur(bank*r.hk)+'</b> <span style="color:'+C.dim+';font-weight:600">'+(r.hk*100).toFixed(1)+'%</span>'):'—';
       out+='<tr onclick="_bfTermOpen(\''+g.matchId+'\')" style="border-bottom:1px solid rgba(255,255,255,.045);cursor:pointer;opacity:'+(r.mute.m?'0.5':'1')+';background:'+(open?'rgba(76,194,255,.06)':'transparent')+'">'
@@ -1507,8 +1535,8 @@
     return '<div style="margin:0 0 16px">'
       + '<div style="font-size:13px;font-weight:800;color:' + C.ink + ';margin-bottom:4px">🧭 Lern-Board — was das Geld-Signal in den Cards auslöst</div>'
       + '<div style="font-size:11.5px;color:' + C.mut + ';line-height:1.55;margin-bottom:10px">Ab <b style="color:' + C.ink + '">' + BF_TR_MIN_N + '</b> abgerechneten Spielen wirkt der Track-Record je Liga×Markt auf das Card-Signal <i>Betfair-Geld</i>: '
-      + '<b style="color:' + C.back + '">ab ' + Math.round(BF_TR_BOOST * 100) + '% ROI verstärkt</b> es, '
-      + '<b style="color:' + C.lay + '">ab ' + Math.round(BF_TR_FADE * 100) + '% dreht es um</b> (dem Geld dort zu folgen verliert → Fade). '
+      + '<b style="color:' + C.back + '">eine Untergrenze über 0% verstärkt</b> es, '
+      + '<b style="color:' + C.lay + '">ab ' + Math.round(BF_TR_FADE * 100) + '% Untergrenze dreht es um</b> (dem Geld dort zu folgen verliert → Fade). '
       + 'Die zwei feinen Linien im Balken sind genau diese Schwellen.</div>'
       + '<div style="font-size:11px;color:' + C.dim + ';line-height:1.5;margin:-6px 0 10px">Deshalb stehen hier weniger Ligen als in der Tabelle darunter: '
       + '<b style="color:' + C.mut + '">' + rows.length + ' von ' + nAlle + '</b> Liga×Markt-Kombinationen haben die ' + BF_TR_MIN_N + ' Spiele erreicht — '

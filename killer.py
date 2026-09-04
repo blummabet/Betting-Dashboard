@@ -126,14 +126,28 @@ def kern_ok(sig) -> bool:
     return bool(sig.get("conc")) and bool(sig.get("inflow")) and sig.get("dir") == "in"
 
 
+# 🔴 04.09.2026 (Lucas: „mach ma mal Betfair-Check"). Die Liga×Markt-Buckets haben MEDIAN n=5.
+# Von 1.641 Buckets erreichen 146 die n>=15-Schwelle, und auf dem Punktschaetzer allein galten
+# davon 52 als „traegt" (Empfehlung wird geboostet) und 57 als „verliert" (Zeile fliegt raus).
+# Traegt man die Rendite-Untergrenze nach, bleibt: 3 Buckets mit ueberhaupt einer Untergrenze,
+# davon 0 mit einer positiven. 52 Boosts und 57 Ausschluesse standen also auf nichts.
+#
+# Die Rauschprobe dazu: zieht man dieselben Stichprobengroessen zufaellig aus dem gemeinsamen Topf
+# aller 1.652 Match-Odds-Plays, ist die Spanne zwischen bester und schlechtester Liga in 91% der
+# Laeufe mindestens so gross wie die beobachtete. Es gibt hier nichts zu sortieren.
+#
+# Seither entscheidet `roiUg` (n>=30, freigabe.untergrenze). Ohne Untergrenze: kein Urteil — und
+# kein Urteil heisst nichts tun, nicht „unauffaellig".
 def _track_urteil(track, league, market):
     """Liga × Markt aus dem Track — dieselben Schwellen wie im Radar und auf der Übersicht."""
     d = ((track or {}).get("byLeagueMarket") or {}).get("%s|%s" % (league, market))
-    if not isinstance(d, dict) or (d.get("n") or 0) < 15 or d.get("roi") is None:
+    if not isinstance(d, dict) or d.get("roi") is None:
         return None
-    roi = d["roi"]
-    return {"n": d["n"], "roi": round(roi, 4),
-            "traegt": roi >= 0.05, "verliert": roi <= -0.10}
+    ug = d.get("roiUg")
+    if not isinstance(ug, (int, float)):
+        return None          # kein Urteil — und das ist etwas anderes als „unauffaellig"
+    return {"n": d["n"], "roi": round(d["roi"], 4), "roiUg": round(ug, 4),
+            "traegt": ug > 0, "verliert": ug <= -0.10}
 
 
 # 30.08.2026 (Lucas-Checkup, dritte Runde) — der Serien-Chip war in drei Punkten falsch:

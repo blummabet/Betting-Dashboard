@@ -99,7 +99,7 @@ class Auswahl(unittest.TestCase):
         self.assertEqual(out["stufe1"] + out["stufe2"], [])
 
     def test_verlierender_liga_eimer_fliegt_raus(self):
-        tr = {"byLeagueMarket": {"English Premier League|Match Odds": {"n": 40, "roi": -0.22}}}
+        tr = {"byLeagueMarket": {"English Premier League|Match Odds": {"n": 40, "roi": -0.22, "roiUg": -0.15}}}
         out = killer.baue(state(), cons(), tr, {"streaks": []}, now=NOW, latch_state=LEER)
         self.assertEqual(out["stufe1"] + out["stufe2"], [],
                          "belegt verlierender Eimer gehoert nicht in eine Empfehlung")
@@ -107,7 +107,16 @@ class Auswahl(unittest.TestCase):
     def test_duenner_liga_eimer_blockiert_nicht(self):
         tr = {"byLeagueMarket": {"English Premier League|Match Odds": {"n": 6, "roi": -0.9}}}
         out = killer.baue(state(), cons(), tr, {"streaks": []}, now=NOW, latch_state=LEER)
-        self.assertEqual(len(out["stufe1"]), 1, "unter n=15 gibt es kein Urteil, also auch kein Veto")
+        self.assertEqual(len(out["stufe1"]), 1, "ohne Untergrenze gibt es kein Urteil, also kein Veto")
+
+    def test_ein_eimer_ohne_untergrenze_vetot_nicht_egal_wie_schlecht_der_roi_aussieht(self):
+        """04.09.2026 (Lucas-Betfair-Check). Vorher reichten n>=15 und ROI <= -10%. Gemessen
+        erfuellten das 57 Buckets — und jede dieser Zeilen flog aus „Top-Wetten jetzt", obwohl
+        ueber alle 1.641 Buckets nur DREI ueberhaupt eine Untergrenze tragen. Median-n ist 5."""
+        tr = {"byLeagueMarket": {"English Premier League|Match Odds": {"n": 20, "roi": -0.35}}}
+        out = killer.baue(state(), cons(), tr, {"streaks": []}, now=NOW, latch_state=LEER)
+        self.assertEqual(len(out["stufe1"]), 1,
+                         "-35% auf n=20 ist ein Punktschaetzer, kein belegter Verlust")
 
     def test_nur_match_odds(self):
         st = state(signals={"Over/Under 2.5 Goals": sig(fav="OVER")})
