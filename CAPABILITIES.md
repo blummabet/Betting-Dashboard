@@ -1054,6 +1054,58 @@ von `compute_streaks.py` gilt unverändert.
 
 ---
 
+### 🧭 Guard-Batterie für die Übersicht (04.09.2026)
+
+Lucas: *„mir wäre es wichtig fehlerfrei zu sein, weil sonst ist die ganze Arbeit in Wahrheit
+umsonst."*
+
+Der Satz trifft einen echten Punkt, und zwar genauer, als er klingt: **eine Fläche, deren Sätze
+man nicht glauben kann, ist schlechter als keine Fläche** — sie erzeugt falsche Sicherheit. Der
+Beweis steht in diesem Repo: „Beide ausgeschieden — beide ohne Druck" hat einen Über-2.5-Pick
+*begründet*.
+
+Was der Satz nicht trifft: die Messungen selbst. Dass Stake bei −6,8 % ROI auf 950 Beinen steht,
+dass die Liga-Buckets Rauschen sind, dass die Public-Pushs bei n=3 stehen — das gilt unabhängig
+davon, was die Übersicht rendert. Die Bücher sind ehrlich; kaputt war die Verdichtung zu Sätzen.
+
+**Und die hat ein Muster.** Alle drei Funde des 04.09. waren derselbe Typ, und keiner war ein
+Absturz, eine Fehlrechnung oder ein Datenfehler:
+
+> eine Behauptung, die zum Schreibzeitpunkt stimmte und danach still veraltete.
+
+Das ist die gute Nachricht daran — dieser Typ ist schließbar, „Bugs allgemein" nicht.
+
+**Die Konsequenz:** Betfair, Poly und WM haben je eine Guard-Batterie auf ihre Daten
+(`betfair_data_integrity.py`, `poly_data_integrity.py`, `wm_data_integrity.py`). Die Übersicht —
+die einzige Fläche, die **elf** Engines zu Sätzen verdichtet — hatte keine. Jetzt gibt es
+`uebersicht_integrity.py`, sechs Guards, jeder benennt den Vorfall, aus dem er entstand:
+
+| Guard | Vorfall |
+|---|---|
+| Serien nach Seltenheit rangiert | „Team trifft 15× · Grundrate 82 %", fünfmal |
+| Freigabe-Grund ist ableitbar | „keine Schublade über null" bei ROI-UG +3,7 % |
+| Poly-Kachel ist keine Kanal-Bilanz | „Poly Public n155" für eine Vorschau, die nichts sendet |
+| Jede Stake-Wette trägt ihre Sportart | Cubs–Brewers trotz US-Sport-Sperre |
+| Betfair-Buckets tragen ihr Urteil | die Fade-Schwelle an vier Stellen |
+| Jede Quelle trägt einen Zeitstempel | „erfüllt ist nicht gemessen" (`_ageMin`, 03.09.) |
+
+Ein Test prüft, dass **jeder Guard seinen eigenen Fall fängt** — ein Guard, der das nicht tut, ist
+Dekoration — und dass ein abstürzender Guard die Batterie nicht kippt.
+
+**Beim ersten Lauf hat sie sofort etwas gefunden**, und zwar etwas, das kein Unit-Test sehen
+konnte: `dashboard_pulse.json` und `betfair_track_record.json` auf der Platte waren noch die
+alten, ohne die neuen Felder. Das Frontend las also `urteil: undefined` → der Betfair-Track wirkte
+gar nicht mehr. Ein Code-Fix ohne Neulauf des Produzenten ist eine **Rollout-Lücke**, und genau
+die sieht nur eine Batterie auf den Live-Artefakten. Beide Produzenten neu gelaufen, danach 6/6.
+
+**Ehrlich zur Zielgröße:** „fehlerfrei" kann ich nicht versprechen, solange die Übersicht Sätze
+über Zahlen formuliert. Was jetzt gilt: die Fehlerklasse, die heute dreimal zugeschlagen hat,
+wird bei **jedem Lauf** gegen die echten Daten geprüft statt nur gegen das, was jemand zu testen
+dachte. Der nächste strukturelle Schritt bleibt, dass die Übersicht solche Sätze gar nicht mehr
+selbst formuliert.
+
+---
+
 ### 🧹 Die letzten Logik-Duplikate aufgelöst (04.09.2026)
 
 Lucas: *„Ja bitte"* — auf das Angebot, die verbleibenden Duplikate durchzugehen. Erste Korrektur

@@ -204,6 +204,13 @@ jobs:
       - name: 🛡️ MLS Guard-Batterie (mls_status.json)
         run: python wm_data_integrity.py || true
 
+      # 04.09.2026 (Lucas: „mir waere es wichtig fehlerfrei zu sein"). Die Uebersicht verdichtet
+      # elf Engines zu Saetzen — dort entstanden am 04.09. drei Fehler an einem Tag, alle
+      # derselben Bauart: eine Behauptung, die die Zahl daneben widerlegt. Betfair, Poly und WM
+      # haben je eine Guard-Batterie; die Uebersicht hatte keine.
+      - name: 🧭 Uebersicht Guard-Batterie (uebersicht_integrity.json)
+        run: python uebersicht_integrity.py || true
+
       # ── Content-Ausspielung (01.07.2026 Phase B, Lucas): dataset-aware Telegram + TikTok für MLS ──
       # Zeit-gegated an US-Anpfiffe. 19:00-Lauf = PRE-Match (Digest + Previews vor den Abendspielen),
       # 07:00-Lauf = POST-Match (Recap + Reviews nach den Nachtspielen). Manueller Dispatch = PRE-Match.
@@ -385,6 +392,7 @@ jobs:
           git add dashboard_pulse.json 2>/dev/null || true
           git add mls_streaks.json 2>/dev/null || true
           git add mls_status.json 2>/dev/null || true
+          git add uebersicht_integrity.json 2>/dev/null || true
           git add mls_sharp_moves_log.json 2>/dev/null || true
           git add mls_sharp_dedup.json 2>/dev/null || true
           git add matches/mls-index.json 2>/dev/null || true

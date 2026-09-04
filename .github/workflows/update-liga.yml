@@ -225,6 +225,13 @@ jobs:
       - name: 🛡️ Liga Guard-Batterie (liga_status.json)
         run: python wm_data_integrity.py || true
 
+      # 04.09.2026 (Lucas: „mir waere es wichtig fehlerfrei zu sein"). Die Uebersicht verdichtet
+      # elf Engines zu Saetzen — und genau dort entstanden am 04.09. drei Fehler an einem Tag,
+      # alle derselben Bauart: eine Behauptung, die die Zahl daneben widerlegt. Betfair, Poly und
+      # WM haben je eine Guard-Batterie; die Uebersicht hatte keine.
+      - name: 🧭 Uebersicht Guard-Batterie (uebersicht_integrity.json)
+        run: python uebersicht_integrity.py || true
+
       # ── Content-Ausspielung (01.07.2026 Phase B, Lucas): dataset-aware Telegram + TikTok für Liga ──
       # 06:00-Lauf = PRE-Match (Digest + Previews vor den Nachmittagsspielen), 18:00-Lauf = POST-Match
       # (Recap + Reviews; decken den Vortag ab). Manueller Dispatch = PRE-Match.
@@ -415,6 +422,7 @@ jobs:
           git add dashboard_pulse.json 2>/dev/null || true
           git add liga_streaks.json 2>/dev/null || true
           git add liga_status.json 2>/dev/null || true
+          git add uebersicht_integrity.json 2>/dev/null || true
           git add liga_sharp_moves_log.json 2>/dev/null || true
           git add liga_sharp_dedup.json 2>/dev/null || true
           git add matches/liga-index.json 2>/dev/null || true
