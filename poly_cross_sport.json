@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-04T20:26:37.529558+00:00",
+ "generatedAt": "2026-09-04T20:56:39.201939+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,10 +9,10 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 571,
- "pinnKeys": 359,
- "matched": 245,
- "footballRows": 207,
+ "polyRowsSeen": 565,
+ "pinnKeys": 353,
+ "matched": 239,
+ "footballRows": 201,
  "crossRows": 364,
  "footballSkippedStale": 90,
  "seenBySport": {
@@ -21,46 +21,88 @@
   "icehockey_nhl": 88,
   "boxing_boxing": 48,
   "soccer_mls": 57,
-  "soccer_liga": 150
+  "soccer_liga": 144
  },
  "matchedBySport": {
   "baseball_mlb": 30,
   "boxing_boxing": 8,
   "soccer_mls": 57,
-  "soccer_liga": 150
+  "soccer_liga": 144
  },
  "trackRecord": {
-  "tracked": 271,
-  "converged": 72
+  "tracked": 274,
+  "converged": 71
  },
  "discrepancies": [
   {
-   "id": "baseball_mlb|clevelandguardians-detroittigers|detroittigers",
-   "sport": "baseball_mlb",
-   "event": "Detroit Tigers vs Cleveland Guardians",
-   "market": "Moneyline",
-   "outcome": "Detroit Tigers",
-   "polyPP": 89.5,
-   "pinnPP": 43.9,
-   "gapPP": 45.64,
-   "vol": 436436,
+   "id": "soccer_liga|realbetis-realmadrid|hw",
+   "sport": "soccer_liga",
+   "event": "Real Betis vs Real Madrid",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 58.5,
+   "pinnPP": 12.1,
+   "gapPP": 46.42,
+   "vol": 2257565,
    "richtung": "Poly zu hoch → faden",
-   "convergePP": -6.0,
-   "firstSeen": "2026-09-04T19:56:29.573639+00:00"
+   "convergePP": -40.35,
+   "firstSeen": "2026-08-29T08:43:35.836560+00:00"
   },
   {
-   "id": "baseball_mlb|clevelandguardians-detroittigers|clevelandguardians",
-   "sport": "baseball_mlb",
-   "event": "Detroit Tigers vs Cleveland Guardians",
-   "market": "Moneyline",
-   "outcome": "Cleveland Guardians",
-   "polyPP": 10.5,
-   "pinnPP": 56.1,
-   "gapPP": -45.64,
-   "vol": 436436,
+   "id": "soccer_liga|realbetis-realmadrid|aw",
+   "sport": "soccer_liga",
+   "event": "Real Betis vs Real Madrid",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 13.0,
+   "pinnPP": 45.8,
+   "gapPP": -32.78,
+   "vol": 2257565,
    "richtung": "Poly zu niedrig → backen",
-   "convergePP": -6.0,
-   "firstSeen": "2026-09-04T19:56:29.573639+00:00"
+   "convergePP": -23.2,
+   "firstSeen": "2026-08-29T08:03:55.807411+00:00"
+  },
+  {
+   "id": "soccer_liga|monaco-parissaintgermain|aw",
+   "sport": "soccer_liga",
+   "event": "Paris Saint Germain vs Monaco",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 62.7,
+   "pinnPP": 51.2,
+   "gapPP": 11.48,
+   "vol": 638559,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-04T20:56:39.201552+00:00"
+  },
+  {
+   "id": "soccer_liga|realbetis-realmadrid|dr",
+   "sport": "soccer_liga",
+   "event": "Real Betis vs Real Madrid",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 33.0,
+   "pinnPP": 42.1,
+   "gapPP": -9.13,
+   "vol": 2257565,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-04T20:56:39.201552+00:00"
+  },
+  {
+   "id": "soccer_liga|monaco-parissaintgermain|hw",
+   "sport": "soccer_liga",
+   "event": "Paris Saint Germain vs Monaco",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 6.5,
+   "pinnPP": 14.8,
+   "gapPP": -8.25,
+   "vol": 638559,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-04T20:56:39.201552+00:00"
   }
  ]
 }
