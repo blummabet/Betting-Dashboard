@@ -136,16 +136,52 @@ class TestBau:
 
     def test_freigegebene_stehen_oben(self):
         # Gleiche Rendite bei jedem Play -> Streuung null -> Untergrenze = Mittelwert.
+        #
+        # 05.09.2026 — `d["alle"][0]` ist derselbe stille Strick wie im Test darunter: `baue()`
+        # mischt Schubladen von der Platte dazu, und sortiert wird ueber ALLE. Steht dort
+        # irgendwann eine freigegebene mit besserer Untergrenze, prueft `[0]` nicht mehr das,
+        # was der Name sagt. Geprueft wird deshalb die Sortier-REGEL: kein Nicht-Freigegebener
+        # steht vor einem Freigegebenen.
         track = {"settled": _plays(40, 0.25, 1.2, ev="neu")}
         d = F.baue(engine="neu", track=track, cards=[], betfair={})
-        assert d["alle"][0]["status"] == "freigegeben"
         assert d["zusammenfassung"]["freigegeben"] >= 1
+        status = [r["status"] for r in d["alle"]]
+        assert status[0] == "freigegeben"
+        letzte_frei = max(i for i, s in enumerate(status) if s == "freigegeben")
+        assert set(status[:letzte_frei + 1]) == {"freigegeben"}, \
+            "zwischen den Freigegebenen darf nichts anderes stehen"
 
     def test_naechste_freigabe_zeigt_die_kuerzeste_distanz(self):
+        """05.09.2026 — dieser Test war nie dicht und ist deshalb irgendwann von selbst
+        umgefallen: er erwartete `MIN_N - 25 == 5`, bekam aber 4.
+
+        `baue()` baut NICHT nur aus dem, was man ihm uebergibt. Es liest zusaetzlich
+        `killer_schublade()`, `push_schubladen()` und `vorregistrierte_schubladen()` fest von
+        der Platte. Eine vorangemeldete Schublade stand an dem Tag bei 26 von 30 Plays SEIT
+        ihrer Anmeldung — also `fehltN = 4`, und das ist die kuerzeste Distanz. Der Wert war
+        richtig, die Erwartung war es nicht.
+
+        (Ihr `n` steht dabei auf 36, weil `n` die ganze Historie zaehlt und das Ziel nur die
+        Plays seit der Anmeldung — der `grund`-Text der Zeile sagt das ausdruecklich.)
+
+        Geprueft wird deshalb die REGEL statt einer Zahl, die von Live-Artefakten abhaengt:
+        die Karten-Schublade traegt ihre eigene Distanz, und die Zusammenfassung nennt die
+        kuerzeste ueber alle Kandidaten.
+        """
         cards = ([{"ds": "Liga", "verdict": "BET", "r": 0.2, "clv": 1.0}] * 25
                  + [{"ds": "MLS", "verdict": "BET", "r": 0.2, "clv": 1.0}] * 12)
         d = F.baue(track={"settled": []}, cards=cards, betfair={})
-        assert d["zusammenfassung"]["naechsteFreigabe"] == F.MIN_N - 25
+        kand = d["kandidaten"]
+        assert kand, "ohne Kandidaten sagt der Test nichts"
+
+        # 1. Die Schublade aus den uebergebenen Karten rechnet ihre Distanz richtig.
+        aus_karten = [r for r in kand if r["n"] in (25, 12) and r.get("quelle") is None]
+        assert {r["n"]: r["fehltN"] for r in aus_karten} == {25: F.MIN_N - 25, 12: F.MIN_N - 12}
+
+        # 2. Die Zusammenfassung nennt die kuerzeste Distanz ueber ALLE Kandidaten — auch die,
+        #    die baue() selbst von der Platte holt.
+        assert d["zusammenfassung"]["naechsteFreigabe"] == min(r["fehltN"] for r in kand)
+        assert d["zusammenfassung"]["naechsteFreigabe"] <= F.MIN_N - 25
 
 
 # ── Lebendig-Bedingung (29.08.2026, Lucas: „Was heisst bis WM BET? Was WM?") ─────────────
