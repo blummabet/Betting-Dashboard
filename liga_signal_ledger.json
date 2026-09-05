@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-09-04T20:56:02Z",
-    "total_records": 49
+    "updated_at": "2026-09-05T10:38:51Z",
+    "total_records": 57
   },
   "records": [
     {
@@ -325,6 +325,86 @@
       "clvPP": 0.94,
       "processVerdict": "JUSTIFIED",
       "clvResolved": true
+    },
+    {
+      "key": "ENG-3-57-40|Auswärtssieg",
+      "matchKey": "ENG-3-57-40",
+      "market": "Auswärtssieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "injury",
+          "score": -1.2
+        },
+        {
+          "name": "form_trend",
+          "score": -1.03
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 1.2
+        },
+        {
+          "name": "apif_predictions",
+          "score": -3.14
+        },
+        {
+          "name": "transfer_shift",
+          "score": 1.2
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "venue_form",
+          "score": -1.71
+        },
+        {
+          "name": "betfair_money",
+          "score": 3.94
+        }
+      ],
+      "resolvedAt": "2026-09-05T10:38:49Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -4.36,
+      "clvResolved": true,
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "ENG-3-57-40|Über 2.5 Tore",
+      "matchKey": "ENG-3-57-40",
+      "market": "Über 2.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 3.33
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 1.2
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.04
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        }
+      ],
+      "resolvedAt": "2026-09-05T10:38:49Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -3.36,
+      "clvResolved": true,
+      "processVerdict": "DESERVED_LOSS"
     },
     {
       "key": "ESP-1-529-531|AH Heim −1.25",
@@ -975,6 +1055,166 @@
       "clvResolved": true
     },
     {
+      "key": "ESP-4-543-541|AH Auswärts −1.25",
+      "matchKey": "ESP-4-543-541",
+      "market": "AH Auswärts −1.25",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "injury",
+          "score": 3.2
+        },
+        {
+          "name": "form_trend",
+          "score": 2.63
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 0.6
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.12
+        },
+        {
+          "name": "chance_creation",
+          "score": 1.26
+        },
+        {
+          "name": "form_rating",
+          "score": 4.7
+        },
+        {
+          "name": "transfer_shift",
+          "score": 1.2
+        },
+        {
+          "name": "opener_move",
+          "score": 1.93
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "betfair_money",
+          "score": 4.0
+        }
+      ],
+      "resolvedAt": "2026-09-05T10:38:49Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -4.35,
+      "clvResolved": true,
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "ESP-4-543-541|Auswärtssieg",
+      "matchKey": "ESP-4-543-541",
+      "market": "Auswärtssieg",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": -5.52
+        },
+        {
+          "name": "injury",
+          "score": 3.2
+        },
+        {
+          "name": "form_trend",
+          "score": 2.63
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 0.6
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.12
+        },
+        {
+          "name": "chance_creation",
+          "score": 1.26
+        },
+        {
+          "name": "form_rating",
+          "score": 4.7
+        },
+        {
+          "name": "transfer_shift",
+          "score": 1.2
+        },
+        {
+          "name": "opener_move",
+          "score": 1.93
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "betfair_money",
+          "score": 4.0
+        }
+      ],
+      "resolvedAt": "2026-09-05T10:38:49Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -4.5,
+      "clvResolved": true,
+      "processVerdict": "UNLUCKY"
+    },
+    {
+      "key": "ESP-4-543-541|Über 2.5 Tore",
+      "matchKey": "ESP-4-543-541",
+      "market": "Über 2.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": 1.28
+        },
+        {
+          "name": "injury",
+          "score": -5.0
+        },
+        {
+          "name": "form_trend",
+          "score": 1.73
+        },
+        {
+          "name": "h2h_pattern",
+          "score": -2.0
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.06
+        },
+        {
+          "name": "chance_creation",
+          "score": 6.0
+        },
+        {
+          "name": "betfair_money",
+          "score": 1.21
+        }
+      ],
+      "resolvedAt": "2026-09-05T10:38:49Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -0.58,
+      "clvResolved": true,
+      "processVerdict": "UNLUCKY"
+    },
+    {
       "key": "ESP-6-548-538|Heimsieg",
       "matchKey": "ESP-6-548-538",
       "market": "Heimsieg",
@@ -1097,6 +1337,122 @@
       "clvPP": 0.12,
       "processVerdict": "JUSTIFIED",
       "clvResolved": true
+    },
+    {
+      "key": "FRA-3-85-91|AH Heim −1.25",
+      "matchKey": "FRA-3-85-91",
+      "market": "AH Heim −1.25",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "chance_creation",
+          "score": 1.37
+        },
+        {
+          "name": "form_rating",
+          "score": -1.06
+        },
+        {
+          "name": "opener_move",
+          "score": 1.09
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "venue_form",
+          "score": 1.64
+        }
+      ],
+      "resolvedAt": "2026-09-05T10:38:49Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 0.0,
+      "clvResolved": false,
+      "processVerdict": "UNLUCKY"
+    },
+    {
+      "key": "FRA-3-85-91|AH Heim −1.5",
+      "matchKey": "FRA-3-85-91",
+      "market": "AH Heim −1.5",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "chance_creation",
+          "score": 1.37
+        },
+        {
+          "name": "form_rating",
+          "score": -1.06
+        },
+        {
+          "name": "freshness_leg",
+          "score": 2.5
+        },
+        {
+          "name": "opener_move",
+          "score": 1.09
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "venue_form",
+          "score": 1.64
+        }
+      ],
+      "resolvedAt": "2026-09-05T10:38:49Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": false,
+      "engineVersion": "v1",
+      "clvPP": 1.91,
+      "clvResolved": true,
+      "processVerdict": "DESERVED_LOSS"
+    },
+    {
+      "key": "FRA-3-85-91|Heimsieg",
+      "matchKey": "FRA-3-85-91",
+      "market": "Heimsieg",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": 4.73
+        },
+        {
+          "name": "chance_creation",
+          "score": 1.37
+        },
+        {
+          "name": "form_rating",
+          "score": -1.06
+        },
+        {
+          "name": "opener_move",
+          "score": 1.09
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "venue_form",
+          "score": 1.64
+        }
+      ],
+      "resolvedAt": "2026-09-05T10:38:49Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": 2.65,
+      "clvResolved": true,
+      "processVerdict": "UNLUCKY"
     },
     {
       "key": "FRA-3-96-79|Auswärtssieg",
