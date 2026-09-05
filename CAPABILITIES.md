@@ -1415,6 +1415,52 @@ Vertragstest hält fest, dass im Radar kein Nenner mehr steht.
 
 ---
 
+### 05.09.2026 — „Großer Whale-Einstieg" war eine Aussage über den Dollar-Betrag
+
+Lucas zur Karte *🐋 Großer Whale-Einstieg · $250,9K auf Leverkusen*: **„250.000 ist für mich
+ein Vermögen, für den wahrscheinlich ein normaler Bet."**
+
+Er hatte recht. Die Wallet nachgemessen: **Median-Ticket $175.782 über 10 Positionen**, größte
+$581.475 (Lyon), $523.731 (Monaco), $441.788 (Tommy Paul). Die gemeldeten $250.900 sind das
+**1,4-fache ihres Normaleinsatzes**. Die Karte nannte es „Großer Einstieg", weil die Schwelle
+`usd >= 50.000` war — ein fester Dollar-Betrag gegen alle Wallets der Welt.
+
+**Die Bauform ist dieselbe wie bei den Stake-Ligen einen Tag vorher:** eine absolute Größe
+gegen einen globalen Boden statt gegen die eigene Verteilung. Und sie versagt in beide
+Richtungen:
+
+- **9 Wallets haben ein Median-Ticket über $50.000.** Bei denen löst per Konstruktion mehr als
+  jede zweite Position aus — der Feed meldet, wer groß ist, nicht wer etwas Ungewöhnliches tut.
+- Umgekehrt **verschluckt** die Schwelle den interessanten Fall: ein Konto, das sonst $2.000
+  setzt und plötzlich $40.000 schiebt, ist das 20-fache seines Tickets — und fiel durch.
+
+`poly_wallet_norm.py` führt einen rollenden Einsatz-Speicher je Wallet und liefert das
+Vielfache des **eigenen** Median-Tickets. Zwei Dinge machen das sofort nutzbar statt in Wochen:
+
+1. **Eine Einsatzhöhe muss man nicht abwarten.** Sie steht fest, sobald wir die Position sehen —
+   anders als ein Ergebnis. Der Track Record bleibt davon unberührt und braucht weiter n≥30.
+2. **Der Bestand reicht schon.** `poly_money_broad_close.json` hielt 8.509 Wal-Positionen; mit
+   dem Live-Ledger sind es **10.246 über 1.744 Wallets, 224 mit Norm, 44 mit schätzbarem
+   Schwanz** — und getroffen sind genau die Vielsetzer, also die, die den Feed zumüllen.
+
+Dazu ein zweites, völlig historienfreies Maß: **der Anteil am Marktvolumen**. Gemessen über
+3.000 Positionen — Median 8 %, p75 16 %, p90 29 %. Ein Wal, der die Hälfte eines Marktes stellt,
+ist auch ohne Kontohistorie eine Aussage. Der Nenner ist allerdings nicht immer derselbe Markt
+wie der Zähler (der Kopf von `poly_money_broad.py` hält das fest: *„Event $1.24M, Markt
+~$150K"*); wo `usd > totalUsd`, **widerspricht der Nenner dem Zähler und es gibt keine Zahl** —
+nicht 100 %. Betrifft 21 von 8.509 Positionen.
+
+`_ist_gross()` fragt jetzt in dieser Reihenfolge: eigenes Ticket → Marktanteil → als Letztes
+die alte absolute Schwelle. Und wenn nichts davon greift, heißt die Karte **„Whale-Einstieg"**,
+nicht „Großer". Ein Konto, von dem wir die erste Position sehen, hat keine Normalgröße, und die
+Karte behauptet keine — *„unbekannt" ist nicht „normal"*.
+
+Beim Testen gefunden: `ticket_vergleich(True, …)` lieferte „0,01× das übliche Ticket" —
+`bool` ist in Python ein `int`. Dieselbe Falle steckte schon in `stake_seltenheit.py`; beide
+Stellen sind jetzt geklammert, und ein Test hält sie fest.
+
+---
+
 ## 8. Harte Arbeitsregeln
 
 - **Push nur über GitHub Desktop**, nie CLI.

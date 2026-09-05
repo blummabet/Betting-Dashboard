@@ -106,6 +106,13 @@ jobs:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
           TELEGRAM_TRADES_CHAT_ID: ${{ secrets.TELEGRAM_TRADES_CHAT_ID }}
 
+      # 05.09.2026 (Lucas: „250.000 ist fuer mich ein Vermoegen, fuer den ein normaler Bet") —
+      # MUSS vor dem Whale-Watch laufen: der baut daraus die Zeile „Normalgroesse fuer dieses
+      # Konto". Faellt der Schritt aus, fehlt die Zeile, der Push geht trotzdem raus.
+      - name: 📐 Wallet-Norm (was ist fuer DIESES Konto ein normaler Einsatz)
+        run: ${{ env.POLY_PYTHON }} poly_wallet_norm.py
+        continue-on-error: true
+
       - name: 🐋 Poly Whale-Watch (Trades-Channel + öffentlicher Whale-Push)
         run: ${{ env.POLY_PYTHON }} poly_whale_watch.py
         continue-on-error: true
@@ -169,6 +176,7 @@ jobs:
             poly_whale_public_ledger.json poly_public_record.json \
             poly_cross_sport.json poly_cross_sport_history.json poly_cross_sport_seen.json \
             poly_whale_seen.json poly_whale_public_seen.json \
+            poly_wallet_norm.json poly_wallet_norm_state.json \
             shortlist_push_seen.json \
             esports_poly_prices.json esports_poly_wallets.json esports_poly_smartmoney.json esports_poly_coherence.json esports_poly_status.json \
             health/poly-global.json; do

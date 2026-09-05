@@ -118,6 +118,7 @@ PUB_CHAT   = (os.environ.get("TELEGRAM_CHAT_ID") or "").strip()
 PUB_SEEN_FILE = BASE / "poly_whale_public_seen.json"
 PUB_LEDGER_FILE = BASE / "poly_whale_public_ledger.json"   # 02.09.2026 (Lucas): jeder Public-Push wird abgerechnet
 BROAD_FILE    = BASE / "poly_money_broad_close.json"
+WNORM_FILE    = BASE / "poly_wallet_norm.json"   # 05.09.2026: was ist fuer DIESES Konto normal?
 SHORTLIST_FILE = BASE / "poly_shortlist_track.json"   # 25.08.2026: traegt blockedCats — die EINE Sperrliste
 
 # league-Key → (Emoji, Klartext)
@@ -336,6 +337,89 @@ def _pub_in_top_n(scores, wallet, n=PUB_TOP_N):
     return bool(r and r <= n)
 
 
+# ── Groesse relativ statt absolut (05.09.2026) ────────────────────────────────
+# Lucas: „250.000 ist fuer mich ein Vermoegen, fuer den wahrscheinlich ein normaler Bet."
+# Die Schwelle war ein fester Dollar-Betrag. 9 Wallets haben ein MEDIAN-Ticket ueber
+# $50.000 — bei denen loest per Konstruktion jede zweite Position aus. Zwei relative
+# Masse ersetzen das Urteil; beide duerfen fehlen, und dann steht dort nichts.
+
+# Ab wann ein Anteil am Marktvolumen gross heisst. Gemessen ueber 3.000 Positionen:
+# Median 8 %, p75 16 %, p90 29 %. 25 % liegt also knapp unter dem obersten Zehntel.
+MARKT_ANTEIL_GROSS = float(os.environ.get("WHALE_MARKT_ANTEIL") or 0.25)
+# Ab welchem Vielfachen des eigenen Median-Tickets eine Position fuer DIESES Konto gross ist.
+TICKET_FAKTOR_GROSS = float(os.environ.get("WHALE_TICKET_FAKTOR") or 2.0)
+
+_WNORM_CACHE = None
+
+
+def _wallet_norm():
+    """poly_wallet_norm.json, einmal geladen. Fehlt sie, gibt es keine Vergleiche — und dann
+    steht auf der Karte nichts statt einer erfundenen Normalitaet."""
+    global _WNORM_CACHE
+    if _WNORM_CACHE is None:
+        _WNORM_CACHE = (_load(WNORM_FILE, {}) or {}).get("wallets") or {}
+    return _WNORM_CACHE
+
+
+def markt_anteil(pos: dict, broad: dict):
+    """Anteil dieser Position am Volumen ihres Markts. None, wenn nicht bestimmbar.
+
+    Der Nenner ist nicht immer derselbe Markt wie der Zaehler — poly_money_broad.py haelt das
+    im Kopf fest („Event $1.24M, Markt ~$150K"). Gemessen betrifft das 21 von 8.509 Positionen
+    (0,2 %), aber wo der Einsatz groesser ist als das gesamte Marktvolumen, widerspricht der
+    Nenner dem Zaehler — dann gibt es KEINE Zahl, nicht 100 %."""
+    usd = pos.get("usd")
+    m = (broad or {}).get(pos.get("key")) or {}
+    total = m.get("totalUsd")
+    if (not isinstance(usd, (int, float)) or isinstance(usd, bool)
+            or not isinstance(total, (int, float)) or isinstance(total, bool)):
+        return None
+    if usd <= 0 or total <= 0 or usd > total:
+        return None
+    return usd / total
+
+
+def ticket_vergleich(pos: dict):
+    """Wie gross ist die Position fuer DIESES Konto? None = zu wenig ueber das Konto bekannt.
+
+    „Unbekannt" ist ausdruecklich nicht „normal": ein Konto, von dem wir die erste Position
+    sehen, hat keine Normalgroesse, und die Karte darf keine behaupten."""
+    from poly_wallet_norm import ticket_vergleich as _tv
+    wal = str(pos.get("wallet") or "").lower()
+    return _tv(pos.get("usd"), _wallet_norm().get(wal))
+
+
+def _groessen_zeilen(pos: dict, broad: dict):
+    """Die Zeilen, die die Groesse einordnen. Leer, wenn nichts bekannt ist."""
+    out = []
+    tv = ticket_vergleich(pos)
+    if tv:
+        if tv["faktor"] >= TICKET_FAKTOR_GROSS:
+            out.append("📐 <b>%.1f×</b> das übliche Ticket dieses Kontos (Median %s aus %d Positionen)"
+                       % (tv["faktor"], _usd(tv["median"]), tv["n"]))
+        else:
+            out.append("📐 Für dieses Konto <b>Normalgröße</b> — %.1f× sein übliches Ticket "
+                       "(Median %s aus %d Positionen)" % (tv["faktor"], _usd(tv["median"]), tv["n"]))
+    a = markt_anteil(pos, broad)
+    if a is not None:
+        out.append("📊 <b>%d %%</b> des Marktvolumens%s" % (round(a * 100),
+                   " — das ist viel" if a >= MARKT_ANTEIL_GROSS else ""))
+    return out
+
+
+def _ist_gross(pos: dict, broad: dict) -> bool:
+    """Gross heisst: gross RELATIV — zum eigenen Ticket oder zum Markt. Ist beides unbekannt,
+    faellt es auf die alte absolute Schwelle zurueck, und das ist dann eine Aussage ueber den
+    Dollar-Betrag, nicht ueber Auffaelligkeit."""
+    tv = ticket_vergleich(pos)
+    if tv:
+        return tv["faktor"] >= TICKET_FAKTOR_GROSS
+    a = markt_anteil(pos, broad)
+    if a is not None:
+        return a >= MARKT_ANTEIL_GROSS
+    return (pos.get("usd") or 0) >= MIN_USD_UNTRACKED
+
+
 def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None, extra: int = 0,
                blocked=None) -> str:
     """Trades-Push (01.08.2026, Lucas: „entscheidungsreif") — Matchup, Anpfiff, Einstieg→Jetzt-Preis,
@@ -349,7 +433,7 @@ def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None, extra
     # 05.08.2026 (Lucas): Badge sagt WARUM die Karte kommt - Wal=grosses Geld, Feuer=bewiesen scharf,
     # beides=staerkstes Signal. Ein kleiner scharfer Einstieg ist kein 'Grosser' Einstieg.
     _sm  = _is_smart(scores.get(pos.get("wallet")) if isinstance(scores, dict) else None)
-    _big = (pos.get("usd") or 0) >= MIN_USD_UNTRACKED
+    _big = _ist_gross(pos, broad)
     if restock:
         header = "🐋🔥 <b>Whale stockt auf · scharf</b>" if _sm else "🐋 <b>Whale stockt auf</b>"
     elif _big and _sm:
@@ -359,7 +443,8 @@ def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None, extra
     elif _sm:
         header = "🔥 <b>Scharfe Wallet frisch drin</b>"
     else:
-        header = "🐋 <b>Großer Whale-Einstieg</b>"
+        # Weder relativ gross noch bewiesen scharf: dann heisst es auch nicht „Großer".
+        header = "🐋 <b>Whale-Einstieg</b>"
     lines = ["%s · %s %s" % (header, emoji, _esc(sport))]
     _tw = _rank_badge(scores, pos.get("wallet"))
     if _tw:
@@ -375,6 +460,7 @@ def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None, extra
         l2 += " · %s" % ko
     lines.append(l2)
     lines.append("💰 <b>%s</b> auf <b>%s</b>" % (_usd(usd), _esc(side)))
+    lines += _groessen_zeilen(pos, broad)
     pm = _price_move(pos)
     if pm:
         lines.append(pm)
@@ -627,6 +713,7 @@ def build_public_card(pos: dict, scores: dict, restock: bool, broad: dict) -> st
         if _lin:
             _label = _lin
     lines += ["", "💰 <b>%s</b> auf <b>%s</b>" % (_usd(pos.get("usd") or 0), _esc(_label))]
+    lines += _groessen_zeilen(pos, broad)
     pm = _price_move(pos)
     if pm:
         lines.append(pm)
