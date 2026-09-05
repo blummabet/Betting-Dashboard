@@ -425,7 +425,13 @@ class TestPubSeiteBenennbar(unittest.TestCase):
     """
 
     LEE = "epl-lee-bre-2026-08-30-more-markets"
-    MIT_LINIE = {LEE: {"frage": "Will there be over 2.5 goals in Leeds vs Brentford?"}}
+    # 05.09.2026 — diese Fixture war erfunden. Polymarket schreibt die Frage als
+    # „Leeds United FC vs. Brentford FC: O/U 2.5", NIE als „over 2.5 goals". Gemessen ueber den
+    # Bestand: von 42 postbaren generischen Maerkten trug KEIN einziger die hier getestete
+    # Schreibweise. Der Test war gruen, waehrend die Produktion zu 100 % durchfiel — deshalb
+    # laeuft er jetzt gegen die echte Form.
+    MIT_LINIE = {LEE: {"frage": "Leeds United FC vs. Brentford FC: O/U 2.5"}}
+    MIT_LINIE_PROSA = {LEE: {"frage": "Will there be over 2.5 goals in Leeds vs Brentford?"}}
 
     def test_der_reale_fall_geht_nicht_mehr_raus(self):
         self.assertFalse(P._pub_seite_benennbar({"key": self.LEE, "side": "Over"}))
@@ -446,12 +452,19 @@ class TestPubSeiteBenennbar(unittest.TestCase):
         self.assertFalse(P._pub_seite_benennbar({"key": self.LEE, "side": "Over"},
                                                 {self.LEE: {"frage": "   "}}))
 
-    def test_die_karte_nennt_die_linie_statt_nur_over(self):
+    def test_die_karte_nennt_SEITE_und_Linie(self):
+        """05.09.2026 (Lucas): „nun sieht man zwar line aber nicht welche Seite — Over oder
+        Under". Die Karte ersetzte die Seite durch die Marktfrage. Beides muss dastehen."""
         pos = {"key": self.LEE, "side": "Over", "usd": 40686.0, "league": "EPL",
                "firstPrice": 0.515, "wallet": "0xw"}
-        karte = P.build_public_card(pos, {}, False, self.MIT_LINIE)
-        self.assertIn("Over 2.5 goals", karte)
-        self.assertNotIn("auf <b>Over</b>", karte, 'das nackte Over darf nicht mehr dastehen')
+        for broad in (self.MIT_LINIE, self.MIT_LINIE_PROSA):
+            karte = P.build_public_card(pos, {}, False, broad)
+            self.assertIn("Over 2.5", karte)
+            self.assertNotIn("auf <b>Over</b>", karte, 'das nackte Over darf nicht mehr dastehen')
+            self.assertNotIn("Leeds United FC vs. Brentford FC: O/U", karte,
+                             'die ganze Marktfrage ist kein Ausgangs-Label')
+        unter = dict(pos, side="Under")
+        self.assertIn("Under 2.5", P.build_public_card(unter, {}, False, self.MIT_LINIE))
 
     def test_ohne_frage_bleibt_die_karte_beim_rohen_ausgang(self):
         """Sie wird ohnehin nicht gesendet — aber sie darf keine Linie erfinden."""

@@ -1461,6 +1461,137 @@ Stellen sind jetzt geklammert, und ein Test hält sie fest.
 
 ---
 
+### 05.09.2026 — Übersicht-Check: drei Funde, einer davon von gestern
+
+**1. „Parma · Unter 2,5 Tore · intakt · vorher 83% · 1 von 4.541"**
+
+Die zweite Zahl folgt nicht aus der ersten. `0,83^9 = 1 von 5`. Die 4.541 stammen aus der
+**Liga-Grundrate 39 %** (`0,39^9`). `zufallPct` rechnet immer gegen die Liga — das ist richtig
+und war der Fix gegen die Tautologie vom 04.09. Falsch war die Anzeige: `basis`/`ratePct`
+beschreiben, worauf der **Zustand** (intakt/wackelt) beruht, und standen ohne Kennzeichnung
+neben einer Seltenheit, die aus einer anderen Rate kam. Jetzt trägt die Seltenheit ihren
+eigenen Nenner (`1 von 4.541 (Liga-Basis 39%)`), die Eigenrate heißt „Eigenrate vor der Serie".
+
+Der Guard prüft die Rechnung, nicht den Text — und musste selbst korrigiert werden: der erste
+Entwurf verglich gegen den **gerundeten** `ligaBasisPct` mit fester Toleranz und meldete prompt
+acht gesunde Serien. Bei `p^9` wird aus 1 % Rundung ~9 % Abweichung; geprüft wird jetzt gegen
+das Intervall, das die Rundung zulässt.
+
+**2. „Brighton v Leeds · Poly · kein Markt" — bei $439.712 Poly-Geld im Markt**
+
+Dieselbe Übersicht zeigte zwei Kacheln weiter „Brighton · Geld 98 % · $440K". Drei Defekte
+übereinander, jeder für sich harmlos:
+
+- Polymarket schreibt den dritten 1X2-Ausgang als `Draw (Brighton & Hove Albion FC vs. Leeds
+  United FC)`. `_POLY_NON_TEAM` wurde **exakt** verglichen und hielt ihn für einen Teamnamen —
+  in **543 von 565 1X2-Märkten (96 %)**. Damit hatte `team_keys` drei statt zwei Einträge und
+  der Abkürzungs-Rückfall vom 12.08. („Paris St-G" ↔ „Paris Saint-Germain") konnte für
+  praktisch jedes Fußballspiel **nie greifen — tot seit dem Tag seiner Einführung**.
+- Selbst mit zwei Keys warf die Annahmezeile das Ergebnis wieder weg: `bsc` war
+  **Bestenliste UND Schwelle in einer Variable** (Start 0.99). „Brighton"↔„Brighton & Hove
+  Albion FC" ergibt 0,33, „Leeds"↔„Leeds United FC" 0,50 — Summe 0,83, abgelehnt. Der Rückfall
+  war gebaut, um genau diese Schwelle zu unterlaufen, und wurde von ihr erschlagen. Jetzt
+  getrennt: `bsc` rangiert, `RUECKFALL_MIN_SUMME = 0.60` nimmt an; direkte Treffer bleiben streng.
+- Der Miss-Zähler prüfte gegen den **gewählten** Pool — im Fehlerfall gerade der Rückfall-Pool,
+  der ausgewählt wurde, *weil* nichts matchte. Er war blind für genau die Fälle, die er zählen
+  soll: Brighton stand nicht in `nameMatchMissList`. Jetzt gegen alle durchsuchten Pools.
+
+Wirkung, gemessen an den 29 Zeilen des Boards: **26 hatten Poly, 2 kommen dazu** (Brighton,
+Preston), keine Falschpaarung. Auch der Guard dazu musste geschärft werden — sein erster
+Entwurf suchte nur den Heim-Namen und meldete „Villarreal v Deportivo" wegen eines
+Villarreal-Spiels vom 16.08.; geprüft wird jetzt die **Paarung**.
+
+**3. Die Stake-Kachel zeigte weiter die abgesetzte Zahl — mein eigener Rollout-Fehler**
+
+Rechts stand `faktor` (× Median der Liga): „4,7× über Erwartung … ×42,7" **über**
+„4,9× über Erwartung … ×129,9". Der längste Balken gehörte dem schwächeren Fund. Genau diese
+Größe wurde am 04.09. abgesetzt, weil sie mit der Stichprobengröße wächst (r = +0,68) —
+`stake-radar.js` war umgestellt, `main-dashboard.js` nicht. Jetzt zeigt die Kachel
+`% selten`, und die Balkenlänge kommt aus derselben Größe wie die Zahl daneben.
+
+**Nicht bestätigt** (gemessen, nicht vermutet): die Money-Map-Kachel „26 Konsens · 20× alle
+drei · 4 ohne Poly-Geld" — 26/20/4 stimmen alle gegen das Artefakt, die Zahlen partitionieren
+bloß nicht. Und `seq` mit 8 Punkten bei `length: 9` ist die dokumentierte Deckelung auf die
+letzten ~8 Spiele, kein Defekt.
+
+**Ein Test von gestern hielt den Defekt fest.** `uebersicht-check-0409.test.mjs` prüfte auf das
+Literal `' · vorher '` — also genau die Formulierung, die heute der Fund ist. Ersetzt durch die
+Regel dahinter: die Seltenheit muss ihren Nenner mittragen. *Ein Test, der eine Formulierung
+zementiert statt einer Regel, verlängert den Fehler.*
+
+---
+
+### 05.09.2026 — man sieht die Linie, aber nicht welche Seite
+
+Lucas zur Whale-Karte: *„$32.7K auf Manchester City FC vs. Coventry City FC: O/U 3.5"* —
+**die Linie stand da, die Seite war weg.** Over oder Under: nicht erkennbar.
+
+Zwei Defekte uebereinander, und der zweite erklaert, warum der erste nie auffiel.
+
+**1. Die Karte ersetzte die Seite, statt sie zu ergaenzen.** `_label = _lin` — der Ausgang
+(„Over") wurde durch die Marktfrage ueberschrieben. Ergaenzen war gemeint, ersetzen war es nie.
+
+**2. `_linie_kurz` hat in der Produktion NIE gegriffen.** Sie suchte `over\s*2.5`; Polymarket
+schreibt `„…: O/U 3.5"`. Gemessen ueber den Bestand: von 344 Maerkten mit rein generischen
+Ausgaengen tragen 42 eine Marktfrage — und die alte Regex traf **0 von 42**. Sie fiel also in
+100 % der postbaren Faelle auf ihren Rueckfall `return frage` durch, und weil der Aufrufer
+damit die Seite ersetzte, stand auf jeder dieser Karten die ganze Marktfrage.
+
+**Warum der Test das nicht fand:** er benutzte die Fixture
+`„Will there be over 2.5 goals in Leeds vs Brentford?"` — eine Schreibweise, die Polymarket nie
+liefert. Der Test war gruen, waehrend die Produktion zu 100 % danebenlag. *Eine erfundene
+Fixture prueft die Absicht des Autors, nicht die Wirklichkeit der Quelle.* Die Fixture steht
+jetzt in der echten Form, und ein zweiter Test laeuft direkt gegen
+`poly_money_broad_close.json`: jeder generische Markt mit Frage muss ein Label ergeben, das mit
+der Seite beginnt und nicht die Frage ist.
+
+`ausgang_label(side, frage)` ersetzt beides:
+
+- Teamname -> unveraendert.
+- `Over`/`Under` + lesbare Linie -> **„Over 3.5"**.
+- `Yes`/`No`/`Draw` -> Seite + gekuerzte Frage („Yes — Both Teams To Score"). Die **Linie haengt
+  nur an einer Over/Under-Seite**; „Yes 3.5" waere genau die Beinahe-Richtigkeit, aus der der
+  Leeds-Brentford-Fall entstand.
+- generischer Ausgang **ohne** Frage -> `None`, also weiterhin kein Post. Fehlende Information
+  ist keine Erlaubnis.
+
+Beide Kanaele benutzen jetzt dasselbe Label. Vorher zeigte der Public-Kanal die Marktfrage und
+der Trades-Kanal das nackte „Over" — zwei Auskuenfte ueber dieselbe Wette.
+
+---
+
+### 05.09.2026 — ein Halbzeit-Markt in der 50. Minute
+
+Lucas: *„🔵 Betfair Halftime Flow · HZ Over/Under 1.5 · Over 1.5 @1.74 … da ist grad 50 min.
+Und kommt als Push in public."*
+
+Der Markt war zu dem Zeitpunkt **entschieden**. Nachgestellt: `ht_alert` feuerte auf denselben
+Daten in der 20., in der **Pause** und in der 70. voellig identisch. Die Spielminute stand die
+ganze Zeit in `liveInfo.time`, daneben ein eigenes `is_ht`-Flag — **beides wurde nirgends
+gelesen**. `_ht_one` prueft Volumen, Einseitigkeit und Mindestquote; die Uhr kam darin nicht vor.
+
+Gemessen im Feed desselben Tages: **36 von 36** Live-Spielen jenseits der 46. fuehren weiter
+HZ-Maerkte mit Volumen. Betfair raeumt sie nicht ab — also muessen wir es.
+
+Das ist die Familie *„fehlende Information ist keine Erlaubnis"*, nur andersherum: **die
+Information war da und wurde nicht gefragt.** Die teuerste Sorte, weil nichts fehlt, was
+auffallen koennte.
+
+`ht_fenster_offen(m)` steht jetzt vor beiden HZ-Pfaden (`_ht_one` und der Fix-Vergleich
+„HZ > FT" — letzterer verglich sonst eine Tatsache mit einer Wahrscheinlichkeit):
+
+- keine Live-Minute -> offen (vor Anpfiff ist der HZ-Markt regulaer spielbar)
+- `is_ht` -> zu. Die **Nachspielzeit der ersten Haelfte meldet Betfair weiter als 45**, die
+  Pause trennt also das Flag, nicht die Minute — deshalb beide Kriterien.
+- `time > 45` oder `finished` -> zu
+- unlesbare Minute -> zu
+
+Das Signal selbst bleibt unveraendert; begrenzt wurde nur sein Fenster. Ein Test laeuft gegen
+`betfair_prices.json` statt gegen eine Fixture: kein Spiel jenseits der Pause darf noch einen
+HZ-Alert erzeugen.
+
+---
+
 ## 8. Harte Arbeitsregeln
 
 - **Push nur über GitHub Desktop**, nie CLI.

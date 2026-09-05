@@ -459,7 +459,10 @@ def build_card(pos: dict, scores: dict, restock: bool, broad: dict = None, extra
     if ko:
         l2 += " · %s" % ko
     lines.append(l2)
-    lines.append("💰 <b>%s</b> auf <b>%s</b>" % (_usd(usd), _esc(side)))
+    # 05.09.2026: dieselbe Beschriftung wie im Public-Kanal — hier stand vorher das nackte
+    # „Over", also die Seite ohne Linie. Zwei Kanaele, ein Label.
+    lines.append("💰 <b>%s</b> auf <b>%s</b>"
+                 % (_usd(usd), _esc(ausgang_label(side, _markt_frage(key, broad)) or side)))
     lines += _groessen_zeilen(pos, broad)
     pm = _price_move(pos)
     if pm:
@@ -707,11 +710,7 @@ def build_public_card(pos: dict, scores: dict, restock: bool, broad: dict) -> st
     if _tw:
         lines.append(_tw)
     # 04.09.2026: bei einem generischen Ausgang die LINIE nennen, nicht nur „Over".
-    _label = side
-    if str(side).strip().lower() in _PUB_GENERISCH:
-        _lin = _linie_kurz(_markt_frage(key, broad))
-        if _lin:
-            _label = _lin
+    _label = ausgang_label(side, _markt_frage(key, broad)) or side
     lines += ["", "💰 <b>%s</b> auf <b>%s</b>" % (_usd(pos.get("usd") or 0), _esc(_label))]
     lines += _groessen_zeilen(pos, broad)
     pm = _price_move(pos)
@@ -851,6 +850,58 @@ def _markt_frage(key, broad):
     m = (broad or {}).get(key) if isinstance(broad, dict) else None
     f = (m or {}).get("frage") if isinstance(m, dict) else None
     return str(f).strip() if isinstance(f, str) and f.strip() else None
+
+
+# Polymarket schreibt die Linie als „…: O/U 3.5", nie als „over 3.5". Gemessen am 05.09.2026:
+# von 344 Maerkten mit rein generischen Ausgaengen tragen 42 eine Marktfrage — und die alte
+# Regex (\bover\s*3.5) griff bei **0 von 42**. Sie fiel also IMMER auf „gib die ganze Frage
+# zurueck" durch, und der Aufrufer ERSETZTE damit die Seite. Auf der Karte stand deshalb
+# „$32.7K auf Manchester City FC vs. Coventry City FC: O/U 3.5" — Linie sichtbar, Seite weg.
+_LINIE = _re.compile(
+    r"(?:\bo\s*/\s*u\b|\bover\s*/\s*under\b|\b(?:over|under|ueber|über)\b)"
+    r"[^0-9]{0,12}(\d+(?:[.,]\d+)?)", _re.I)
+
+
+_OU_SEITEN = {"over", "under", "ueber", "über", "unter"}
+
+
+def _linie_zahl(frage):
+    """Die Linie aus der Marktfrage — „3.5". None, wenn keine dasteht. REIN/testbar."""
+    if not frage:
+        return None
+    m = _LINIE.search(str(frage))
+    return m.group(1).replace(",", ".") if m else None
+
+
+def _frage_kurz(frage, max_len=52):
+    """Die Marktfrage ohne den Paarungs-Vorspann („A vs. B: X" -> „X"). REIN."""
+    t = str(frage or "").strip()
+    if ":" in t:
+        t = t.split(":", 1)[1].strip() or t
+    return t if len(t) <= max_len else t[:max_len - 1].rstrip() + "…"
+
+
+def ausgang_label(side, frage):
+    """Wie heisst der bespielte Ausgang auf der Karte? None = nicht benennbar.
+
+    05.09.2026 (Lucas): „nun sieht man zwar line aber nicht welche Seite — Over oder Under".
+    Die Seite wird nie mehr ersetzt, nur ergaenzt. Ein nacktes „Over" bleibt verboten (der
+    Leeds-Brentford-Fall), aber die Antwort darauf ist „Over 3.5", nicht die ganze Frage.
+    """
+    s = str(side or "").strip()
+    if not s:
+        return None
+    if s.lower() not in _PUB_GENERISCH:
+        return s
+    if not frage:
+        return None                      # generischer Ausgang ohne Frage: nicht benennbar
+    # Die Linie gehoert NUR an eine Over/Under-Seite. „Yes 3.5" waere Unsinn — und genau die
+    # Sorte Beinahe-Richtigkeit, die den Leeds-Brentford-Fall verursacht hat.
+    if s.lower() in _OU_SEITEN:
+        z = _linie_zahl(frage)
+        if z:
+            return "%s %s" % (s, z)
+    return "%s — %s" % (s, _frage_kurz(frage))
 
 
 def _linie_kurz(frage):

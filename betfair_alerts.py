@@ -216,8 +216,47 @@ def _ht_thr(m) -> float:
     return HT_TOP_EUR if tier_of(m) == "top" else HT_REST_EUR
 
 
+# Bis wann ein Halbzeit-Markt ueberhaupt noch spielbar ist. Nachspielzeit der ersten Haelfte
+# meldet Betfair weiter als 45 — die Pause trennt `is_ht`, nicht die Minute.
+HT_MAX_MIN = int(os.environ.get("BF_HT_MAX_MIN") or 45)
+
+
+def ht_fenster_offen(m) -> bool:
+    """Laeuft die erste Halbzeit noch? REIN/testbar.
+
+    05.09.2026 (Lucas): „🔵 Betfair Halftime Flow · HZ Over/Under 1.5 · Over 1.5 @1.74 …
+    da ist grad 50 min. Und kommt als Push in public."
+
+    Der Markt war zu dem Zeitpunkt **entschieden**. `ht_alert` feuerte in der 20., in der
+    PAUSE und in der 70. exakt gleich — die Spielminute stand die ganze Zeit in
+    `liveInfo.time`, dazu ein eigenes `is_ht`-Flag, und beides wurde nirgends gelesen.
+    Gemessen im Bestand: **36 von 36** Live-Spielen jenseits der 46. fuehren weiter
+    HZ-Maerkte mit Volumen im Feed — die Quelle raeumt sie nicht ab, also muessen wir es.
+
+    Das ist die Familie „fehlende Information ist keine Erlaubnis", nur andersherum: die
+    Information war da und wurde nicht gefragt.
+
+    Vor Anpfiff (keine Live-Minute) ist der HZ-Markt regulaer spielbar — dort gibt es kein
+    Fenster zu schliessen.
+    """
+    li = m.get("liveInfo") or {}
+    if li.get("finished"):
+        return False
+    if li.get("is_ht"):
+        return False                      # Pause: die erste Haelfte ist vorbei
+    t = li.get("time")
+    if t is None:
+        return True                       # vor Anpfiff
+    try:
+        return float(t) <= HT_MAX_MIN
+    except (TypeError, ValueError):
+        return False                      # unlesbare Minute ist keine Erlaubnis
+
+
 def _ht_one(m, market_name, top_thr=HT_TOP_EUR, rest_thr=HT_REST_EUR):
     """Ein einzelner HZ-Markt (HZ-1X2 oder Über/Unter 1,5 HZ1): ≥ tier-Schwelle UND ≥85 % einseitig."""
+    if not ht_fenster_offen(m):
+        return None                       # erste Haelfte vorbei -> der Markt ist entschieden
     mk = (m.get("markets") or {}).get(market_name)
     if not mk:
         return None
@@ -301,6 +340,10 @@ def fix_alert(m):
     # groessten EINSEITIGEN Geld. Ein 50/50-O/U (viel Volumen, aber ausgewogen) ist kein Fix-Signal;
     # ein klar einseitig geladener HT-Markt (z.B. 7K auf Away HT) schon. leadShare-Gate + Auswahl nach lead_vol.
     best = None   # (lead_vol, name, total, lead_runner, lead_share)
+    # 05.09.2026: derselbe Fenster-Check wie in `_ht_one` — ein „HZ > FT"-Vergleich auf einem
+    # entschiedenen HZ-Markt vergleicht eine Tatsache mit einer Wahrscheinlichkeit.
+    if not ht_fenster_offen(m):
+        return None
     for name in FIX_HT_MARKETS:
         mk = mkts.get(name)
         if not mk:

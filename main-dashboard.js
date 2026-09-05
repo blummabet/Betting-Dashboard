@@ -1070,15 +1070,28 @@
       return empty(n ? 'Aktuell nichts über der Norm.'
                      : 'Noch keine Liga-Norm — die entsteht ab 15 Wetten je Liga.');
     }
-    var max = Math.max.apply(null, rows.map(function (r) { return r.faktor || 1; }));
+    // 05.09.2026 (Uebersicht-Check): hier stand rechts weiter `faktor` (× Median der Liga) —
+    // die Zahl, die am 04.09. ABGESETZT wurde, weil sie mit der Stichprobengroesse waechst
+    // (r = +0,68). Auf dem Board las sich das als „4,7× über Erwartung ... ×42,7" ueber
+    // „4,9× über Erwartung ... ×129,9": der laengste Balken gehoerte dem schwaecheren Fund.
+    // stake-radar.js war umgestellt, diese Kachel nicht — eine Rollout-Luecke von mir.
+    // Gemessenes Urteil zuerst, Median-Faktor nur, wo es keins gibt.
+    var _wert = function (r) {
+      if (r.zufallPct != null) return Math.round(r.zufallPct * 100) + '% selten';
+      return r.faktor != null ? '×' + r.faktor.toFixed(1) : usd(r.einsatzUsd);
+    };
+    // Balkenlaenge aus derselben Groesse wie die Zahl daneben: Seltenheit, wo gemessen.
+    var _staerke = function (r) {
+      if (r.zufallPct != null) return Math.min(1, 0.10 / Math.max(r.zufallPct, 0.01));
+      return null;
+    };
+    var maxF = Math.max.apply(null, rows.map(function (r) { return r.faktor || 1; }));
     return rows.map(function (r) {
-      // Ohne gelernte Norm gibt es keinen Faktor — dann trägt die Zeile den schwächeren
-      // Grund („kleine Liga"), und das steht auch dran statt einer erfundenen Zahl.
-      var wert = r.faktor != null ? '×' + r.faktor.toFixed(1) : usd(r.einsatzUsd);
-      return rowEl(esc(r.event || '—'), wert, A.soft,
+      var st = _staerke(r);
+      return rowEl(esc(r.event || '—'), _wert(r), A.soft,
         esc(r.liga || '') + ' · ' + usd(r.einsatzUsd) +
           (r.auswahl ? ' auf ' + esc(r.auswahl) : '') + ' · ' + esc(r.grund || ''),
-        _mdStakeBalken((r.faktor || 1) / max));
+        _mdStakeBalken(st != null ? st : (r.faktor || 1) / maxF));
     }).join('');
   }
 
@@ -1452,10 +1465,26 @@
       // 04.09.2026: `basis: "pure"` gibt es nicht mehr — wo die Serie das Formfenster füllt,
       // steht jetzt die LIGA-Grundrate statt einer tautologischen 100 %. Das muss auch dranstehen:
       // „Grundrate" klang nach der des Teams, war aber je nach Fall etwas ganz anderes.
+      // 05.09.2026 (Uebersicht-Check, Parma): „intakt · vorher 83% · 1 von 4.541" stellte zwei
+      // Zahlen nebeneinander, von denen die zweite NICHT aus der ersten folgt. `zufallPct`
+      // rechnet immer gegen die LIGA-Grundrate (hier 39 % → 0,39^9 = 1 von 4.541); 0,83^9 waere
+      // 1 von 5. `basis` beschreibt, worauf der ZUSTAND beruht (intakt/wackelt), nicht die
+      // Seltenheit. Deshalb traegt die Seltenheit ihren eigenen Nenner mit, und die Eigenrate
+      // steht als das dran, was sie ist.
       var _rp = (s.continuation && s.continuation.ratePct != null) ? s.continuation.ratePct : null;
-      var _bq = _rp == null ? '' : (s.basis === 'liga' ? ' · Liga-Schnitt ' + _rp + '%' : ' · vorher ' + _rp + '%');
+      var _bq = '';
       var _z = _mdStreakSelten(s);
-      if (_z) { var _eins = Math.round(100 / _z); if (_eins >= 2) _bq += ' · 1 von ' + _eins.toLocaleString('de-DE'); }
+      if (_z) {
+        var _eins = Math.round(100 / _z);
+        if (_eins >= 2) {
+          _bq += ' · 1 von ' + _eins.toLocaleString('de-DE');
+          if (s.ligaBasisPct != null) _bq += ' (Liga-Basis ' + s.ligaBasisPct + '%)';
+        }
+      }
+      if (_rp != null) {
+        _bq += s.basis === 'liga' ? ' · Zustand aus Liga-Schnitt ' + _rp + '%'
+                                  : ' · Eigenrate vor der Serie ' + _rp + '%';
+      }
       var sub = esc(String(s.leagueName || '')) + (s.continuation && s.continuation.state ? ' · ' + esc(s.continuation.state) : '') + _bq;
       var len = +s.length || 0;
       return rowEl(fl(_flagFrom(s.country, s.league, s.leagueName)) + esc(team(s.team)) + ' <span style="color:var(--mi3);font-weight:400">·</span> ' + esc(s.market || s.type || ''),

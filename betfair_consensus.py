@@ -359,11 +359,32 @@ def _flip(ev) -> dict:
 _POLY_NON_TEAM = {"yes", "no", "draw", "the draw", "tie", "over", "under"}
 
 
+def _ist_nicht_team(k) -> bool:
+    """Ist dieser Ausgangs-Key KEIN Teamname?
+
+    05.09.2026 (Uebersicht-Check, Brighton v Leeds): die Menge oben wurde exakt verglichen —
+    Polymarket schreibt den dritten Ausgang eines 1X2-Markts aber als
+    „Draw (Brighton & Hove Albion FC vs. Leeds United FC)". Gemessen im Bestand:
+    **543 von 565 1X2-Maerkten (96 %)** hatten damit einen Draw-Key, der als TEAMNAME galt.
+
+    Folge: `team_keys` hatte drei statt zwei Eintraege, und der Abkuerzungs-Rueckfall vom
+    12.08. („Paris St-G" vs „Paris Saint-Germain") konnte fuer praktisch JEDES Fussballspiel
+    nie greifen — ein Rueckfall, der seit dem Tag seiner Einfuehrung tot war. Brighton fiel
+    genau darueber aus der Money Map, obwohl $439.712 Poly-Geld im Markt lagen und dieselbe
+    Uebersicht sie zwei Kacheln weiter anzeigte.
+    """
+    t = str(k or "").strip().lower()
+    if t in _POLY_NON_TEAM:
+        return True
+    # „Draw (A vs. B)" / „The Draw (…)" — Klammerzusatz gehoert nicht zum Ausgang.
+    return t.startswith("draw (") or t.startswith("the draw (")
+
+
 def _poly_key_for(name, keys):
     """Bester Preis-Schluessel (Team-Name) fuer ein Team; None wenn nichts ordentlich matcht."""
     best, bsc = None, 0.49
     for k in keys:
-        if str(k).lower() in _POLY_NON_TEAM:
+        if _ist_nicht_team(k):
             continue
         sc = _name_score(name, k)
         if sc > bsc:
@@ -371,10 +392,20 @@ def _poly_key_for(name, keys):
     return best
 
 
+# Annahmeschwelle fuer den Abkuerzungs-Rueckfall (Summe beider Namens-Scores). Gemessen:
+# "Brighton"+"Leeds" gegen die offiziellen Namen ergibt 0,83; ein zufaelliges Fremdpaar, bei dem
+# eine Seite stark matcht und die andere nur ein Allerwelts-Token teilt, liegt darunter.
+RUECKFALL_MIN_SUMME = 0.60
+
+
 def _best_poly_entry(m, poly_entries):
     """Bester Poly-Eintrag zum Betfair-Spiel -> (pe, hk, ak) oder None. Beide Teams muessen matchen."""
     home, away = m.get("home"), m.get("away")
-    best, bsc = None, 0.99
+    # 05.09.2026: `bsc` war Bestenliste UND Annahmeschwelle in einer Variable (Start 0.99).
+    # Damit galt die strenge Direkt-Schwelle auch fuer den Abkuerzungs-Rueckfall, der genau
+    # dafuer gebaut wurde, sie zu unterlaufen — er konnte nie zum Zug kommen. Jetzt getrennt:
+    # `bsc` rangiert nur noch, angenommen wird gegen `schwelle`.
+    best, bsc = None, 0.0
     for pe in poly_entries:
         keys = list((pe.get("prices") or {}).keys())
         hk, ak = _poly_key_for(home, keys), _poly_key_for(away, keys)
@@ -382,19 +413,32 @@ def _best_poly_entry(m, poly_entries):
         # (Betfair "Paris St-G" vs Poly "Paris Saint-Germain" -> nur 0.33, unter der 0.49-Schwelle).
         # Bei genau 2 Team-Ausgaengen die fehlende Seite als den Gegner ableiten -- aber nur, wenn sie
         # mindestens EIN Token teilt (schuetzt vor Falsch-Paarung, wenn nur ein Team zufaellig gleich heisst).
-        team_keys = [k for k in keys if str(k).lower() not in _POLY_NON_TEAM]
+        team_keys = [k for k in keys if not _ist_nicht_team(k)]
+        rueckfall = False
         if len(team_keys) == 2:
             if hk and not ak:
                 cand = next((k for k in team_keys if k != hk), None)
                 if cand and _name_score(away, cand) > 0:
-                    ak = cand
+                    ak, rueckfall = cand, True
             elif ak and not hk:
                 cand = next((k for k in team_keys if k != ak), None)
                 if cand and _name_score(home, cand) > 0:
-                    hk = cand
+                    hk, rueckfall = cand, True
         if hk and ak and hk != ak:
             sc = _name_score(home, hk) + _name_score(away, ak)
-            if sc > bsc:
+            # 05.09.2026 (Uebersicht-Check): der Rueckfall oben setzte die Schluessel korrekt,
+            # und DIESE Zeile warf sie danach wieder weg. `_name_score` misst geteilte Tokens
+            # geteilt durch die groessere Menge — „Brighton" gegen „Brighton & Hove Albion FC"
+            # ergibt 0,33, „Leeds" gegen „Leeds United FC" 0,50. Summe 0,83, Schwelle 0,99:
+            # abgelehnt. Der Rueckfall war damit doppelt tot (die Draw-Erkennung davor auch),
+            # und Brighton v Leeds fehlte in der Money Map, obwohl $439.712 Poly-Geld im Markt
+            # lagen und dieselbe Uebersicht sie zwei Kacheln weiter zeigte.
+            #
+            # Wo der Rueckfall greift, ist das Paar bereits durch den MARKT festgenagelt: genau
+            # zwei Team-Ausgaenge, eine Seite ueber der Einzelschwelle, die andere teilt ein
+            # Token. Dann traegt eine niedrigere Annahmeschwelle. Direkte Treffer bleiben streng.
+            schwelle = RUECKFALL_MIN_SUMME if rueckfall else 0.99
+            if sc > schwelle and sc > bsc:
                 best, bsc = (pe, hk, ak), sc
     return best
 
@@ -583,7 +627,7 @@ def _poly_has_any_overlap(m, pools) -> bool:
     home, away = m.get("home"), m.get("away")
     for pe in (pools or []):
         for k in ((pe.get("prices") or {}).keys()):
-            if str(k).lower() in _POLY_NON_TEAM:
+            if _ist_nicht_team(k):
                 continue
             if _name_score(home, k) > 0 or _name_score(away, k) > 0:
                 return True
@@ -1294,7 +1338,15 @@ def main():
         mm_rows.append(_mmr)
         # 13.08.2026 (Lucas-Audit): Namens-Match-Miss zaehlen - Betfair-Geld da, Poly=None, aber im
         # Pool liegt ein Kandidat mit Token-Overlap (wahrscheinlich Abkuerzungs-Luecke).
-        if _mmr.get("betfair") and not _mmr.get("poly") and _poly_has_any_overlap(m, mm_pool):
+        # 05.09.2026 (Uebersicht-Check): geprueft wird gegen ALLE durchsuchten Pools, nicht nur
+        # gegen den gewaehlten. Vorher lief die Pruefung gegen `mm_pool` — und das ist im
+        # Fehlerfall gerade der Rueckfall-Pool (Scan), der ausgewaehlt wurde, WEIL nichts
+        # gematcht hat. Der Zaehler war damit genau fuer die Misses blind, um die es geht:
+        # Brighton v Leeds fehlte mit $439.712 Poly-Geld in der Map und tauchte in
+        # `nameMatchMissList` nicht auf.
+        _durchsucht = (poly_live_entries if is_live else []) + list(poly_entries) \
+            + list(poly_upcoming_entries) + list(mm_pool)
+        if _mmr.get("betfair") and not _mmr.get("poly") and _poly_has_any_overlap(m, _durchsucht):
             mm_name_misses.append({"matchId": mid, "home": m.get("home"), "away": m.get("away"), "league": m.get("league")})
         snap = {"ts": now}
         if ev and ev.get("pinn"):

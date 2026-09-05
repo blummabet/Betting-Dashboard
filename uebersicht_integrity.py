@@ -191,6 +191,97 @@ def check_quellen_haben_zeitstempel(ctx):
     return _c("Jede Quelle der Uebersicht traegt einen Zeitstempel", "warn", fails)
 
 
+def check_serie_seltenheit_nennt_ihren_nenner(ctx):
+    """05.09.2026 — auf der Uebersicht stand „Parma · Unter 2,5 Tore · intakt · vorher 83% ·
+    1 von 4.541". Die beiden Zahlen gehoeren nicht zueinander: 0,83^9 waere 1 von 5.
+    `zufallPct` rechnet IMMER gegen die Liga-Grundrate (hier 39 % → 0,39^9 = 1 von 4.541),
+    waehrend `basis`/`ratePct` beschreiben, worauf der ZUSTAND beruht.
+
+    Der Guard prueft die Rechnung selbst: `zufallPct` muss aus `ligaBasisPct` und `length`
+    folgen. Weicht sie ab, rechnet jemand wieder mit einer anderen Rate als der, die
+    danebensteht.
+    """
+    fails = []
+    for quelle in ("ligaStreaks", "mlsStreaks"):
+        for s in ((ctx.get(quelle) or {}).get("streaks") or []):
+            z, lb, ln = s.get("zufallPct"), s.get("ligaBasisPct"), s.get("length")
+            if z is None or lb is None or not ln:
+                continue
+            # `ligaBasisPct` ist GERUNDET (39 statt 39,37). Bei p^9 wird aus 1 % Rundung
+            # ~9 % Abweichung — ein fester Toleranzwert waere hier eine Fehlalarm-Maschine
+            # (erster Entwurf dieses Guards meldete prompt 8 gesunde Serien). Deshalb wird
+            # gegen das Intervall geprueft, das die Rundung ueberhaupt zulaesst.
+            lo = (max(lb - 0.5, 0.0) / 100.0) ** ln * 100
+            hi = (min(lb + 0.5, 100.0) / 100.0) ** ln * 100
+            if hi <= 0:
+                continue
+            if not (lo * 0.999 <= z <= hi * 1.001):
+                fails.append(f"{quelle}: {s.get('team')} {s.get('type')} {ln}x — zufallPct {z} "
+                             f"liegt ausserhalb dessen, was ligaBasisPct {lb}% zulaesst "
+                             f"({lo:.5f}..{hi:.5f}) — es wurde mit einer anderen Rate gerechnet")
+    return _c("Serien-Seltenheit folgt aus der Liga-Basis, die danebensteht", "error", fails[:8])
+
+
+def check_money_map_meldet_ihre_luecken(ctx):
+    """05.09.2026 — Brighton v Leeds stand in der Money Map mit „Poly · kein Markt" und 2/3
+    Quellen, waehrend dieselbe Uebersicht zwei Kacheln weiter $439.712 Poly-Geld auf Brighton
+    zeigte. Ursache: Polymarket schreibt den dritten 1X2-Ausgang als
+    „Draw (Brighton & Hove Albion FC vs. Leeds United FC)"; die Nicht-Team-Liste wurde exakt
+    verglichen und erkannte ihn als TEAMNAME. Damit hatte `team_keys` drei statt zwei
+    Eintraege und der Abkuerzungs-Rueckfall vom 12.08. konnte fuer **543 von 565 1X2-Maerkten
+    (96 %)** nie greifen — tot seit dem Tag seiner Einfuehrung.
+
+    Schlimmer: der Miss-Zaehler prueft(e) gegen den GEWAEHLTEN Pool, und das ist im Fehlerfall
+    gerade der Rueckfall-Pool, der ausgewaehlt wurde, WEIL nichts matchte. Der Zaehler war
+    blind fuer genau die Faelle, die er zaehlen soll — Brighton stand nicht in der Liste.
+
+    Der Guard misst deshalb nicht die Liste, sondern die Sache: eine Zeile mit Betfair-Geld,
+    ohne Poly, aber mit vorhandenem Poly-Markt ist eine stille Luecke.
+    """
+    fails = []
+    mm = ctx.get("moneyMap") or {}
+    rows = mm.get("rows") or []
+    poly = ctx.get("polyClose") or {}
+    if not rows or not poly:
+        return _c("Money Map meldet ihre Luecken", "warn", [])
+    # Erster Entwurf dieses Guards suchte nur den HEIM-Namen irgendwo in den Ausgaengen und
+    # meldete prompt „Villarreal v Deportivo" — getroffen hatte er ein Villarreal-Spiel vom
+    # 16.08. Die Bedingung muss die PAARUNG sein: beide Teams im selben Markt.
+    maerkte = [set(str(a).lower() for a in v["prices"])
+               for v in poly.values() if isinstance(v, dict) and v.get("prices")]
+    for r in rows:
+        if not r.get("betfair") or r.get("poly"):
+            continue
+        heim, gast = str(r.get("home") or "").lower(), str(r.get("away") or "").lower()
+        if len(heim) < 4 or len(gast) < 4:
+            continue
+        for aus in maerkte:
+            if any(heim in a for a in aus) and any(gast in a for a in aus):
+                fails.append(f"{r.get('home')} v {r.get('away')}: Money Map ohne Poly, aber ein "
+                             f"Poly-Markt mit BEIDEN Teams existiert — stille Luecke, nicht Abwesenheit")
+                break
+    return _c("Money Map meldet ihre Luecken", "error", fails[:8])
+
+
+def check_stake_kachel_zeigt_das_gemessene_urteil(ctx):
+    """05.09.2026 — die Uebersichts-Kachel „Stake · über der Norm" zeigte rechts weiter
+    `faktor` (× Median der Liga): „4,7× über Erwartung … ×42,7" ueber
+    „4,9× über Erwartung … ×129,9". Der laengste Balken gehoerte dem schwaecheren Fund.
+    `faktor` waechst mit der Stichprobengroesse (r = +0,68, Befund vom 04.09.) und wurde
+    deshalb abgesetzt; `stake-radar.js` war umgestellt, die Uebersicht nicht — eine
+    Rollout-Luecke.
+
+    Der Guard haelt fest, dass jede Zeile mit gemessenem Urteil dieses auch mitliefert.
+    """
+    fails = []
+    rows = ((ctx.get("stakeAus") or {}).get("auffaellige") or [])
+    for r in rows[:12]:
+        if r.get("ueberErwartung") is not None and r.get("zufallPct") is None:
+            fails.append(f"{r.get('event')}: ueberErwartung gesetzt, aber kein zufallPct — "
+                         f"die Kachel haette nur den abgesetzten Median-Faktor zu zeigen")
+    return _c("Stake-Auffaelligkeiten tragen ihr gemessenes Urteil", "error", fails[:8])
+
+
 UEBERSICHT_CHECKS = [
     check_serien_rangfolge,
     check_freigabe_grund,
@@ -198,6 +289,9 @@ UEBERSICHT_CHECKS = [
     check_stake_kategorien,
     check_betfair_urteil,
     check_quellen_haben_zeitstempel,
+    check_serie_seltenheit_nennt_ihren_nenner,
+    check_money_map_meldet_ihre_luecken,
+    check_stake_kachel_zeigt_das_gemessene_urteil,
 ]
 
 
@@ -225,6 +319,7 @@ def build_ctx_from_disk() -> dict:
         "mlsStreaks": _lade("mls_streaks.json", {}),
         "stake": _lade("stake_highroller.json", {}),
         "stakeAus": _lade("stake_auswertung.json", {}),
+        "polyClose": _lade("poly_money_broad_close.json", {}),
     }
 
 

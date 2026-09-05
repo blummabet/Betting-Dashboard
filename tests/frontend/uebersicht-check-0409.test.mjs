@@ -66,10 +66,24 @@ test('logisch eingeschlossene Serien fallen aus der Fünfer-Kachel', () => {
 
 test('das Label nennt, woher die Grundrate kommt', () => {
   // Vorher stand überall „Grundrate X%" — je nach Fall war das die Team-Historie ODER
-  // (seit heute) der Liga-Schnitt. Zwei verschiedene Dinge unter einem Namen.
+  // (seit 04.09.) der Liga-Schnitt. Zwei verschiedene Dinge unter einem Namen.
   assert.match(MD, /Liga-Schnitt '/);
-  assert.match(MD, /' · vorher '/);
   assert.ok(!/s\.basis === 'pure'/.test(MD), "basis „pure\" gibt es nicht mehr");
+});
+
+test('die Seltenheit trägt den Nenner, aus dem sie gerechnet wurde', () => {
+  // 05.09.2026 — auf dem Board stand „Parma · intakt · vorher 83% · 1 von 4.541".
+  // Die zweite Zahl folgt NICHT aus der ersten: `zufallPct` rechnet immer gegen die
+  // Liga-Grundrate (39 % → 0,39^9 = 1 von 4.541), 0,83^9 wäre 1 von 5. `basis`/`ratePct`
+  // beschreiben den ZUSTAND (intakt/wackelt), nicht die Seltenheit.
+  //
+  // Der alte Test hielt ausgerechnet die Formulierung fest, die der Fund war (' · vorher ') —
+  // ein Test, der den Defekt zementiert. Ersetzt durch die Regel dahinter.
+  assert.match(MD, /1 von '/, 'die Seltenheit steht auf dem Board');
+  assert.match(MD, /Liga-Basis '/, 'und nennt den Nenner, aus dem sie folgt');
+  assert.ok(!/' · vorher ' \+ _rp/.test(MD),
+    'eine nackte Eigenrate darf nicht direkt neben der Seltenheit stehen');
+  assert.match(MD, /Eigenrate vor der Serie/, 'die Eigenrate heißt, was sie ist');
 });
 
 // ── 2. Ebene 1 nannte den falschen Grund ────────────────────────────────────
