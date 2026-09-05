@@ -125,6 +125,7 @@
 '.sr-note{margin:12px 0 0;font-size:11.5px;line-height:1.6;color:#76819c}',
 '.sr-bad{font-size:9.5px;font-weight:800;letter-spacing:.3px;padding:2px 7px;border-radius:6px;white-space:nowrap}',
 '.sr-bad.sr-norm{color:#f2c14e;border:1px solid rgba(234,185,56,.45);background:rgba(234,185,56,.10)}',
+'.sr-bad.sr-norm-schwach{color:#9aa4b2;border:1px dashed rgba(154,164,178,.45);background:none;font-weight:700}',
 '.sr-bad.sr-konf{color:#e3b341;border:1px solid rgba(201,133,0,.42)}',
 '.sr-card.sr-card-norm{border-color:rgba(234,185,56,.38)}',
 '.sr-ko{color:#8fc0ff;font-weight:700}.sr-live{color:#ff7a70;font-weight:700}',
@@ -194,18 +195,37 @@
     return best;
   }
 
-  /** Der groesste EINZELNE Einsatz auf dieses Spiel, gemessen an der Norm seiner Liga.
-      Nicht die Summe: zehn Wetten a $2.000 sind ein normaler Abend, EINE ueber $30.000 ist
-      das Ereignis. Ohne gelernte Norm gibt es keinen Faktor — nicht 1.0, nicht 0. */
-  function _srNormFaktor(g) {
-    var n = (SR_AUS && SR_AUS.ligaNorm && SR_AUS.ligaNorm[g.liga]) || null;
-    if (!n || n.basis !== 'gelernt' || !n.median) return null;
-    var groesster = 0;
-    g.wetten.forEach(function (w) {
-      if (!w.kombi && w.einsatzUsd != null && w.einsatzUsd > groesster) groesster = w.einsatzUsd;
+  /** Hat der Erzeuger auf diesem Spiel etwas Auffaelliges gemessen?
+
+      04.09.2026 — vorher rechnete diese Funktion den Faktor SELBST: groesster Einsatz durch
+      den Liga-Median. Das war zweimal falsch. Erstens ist es Erzeuger-Logik im Frontend, die
+      Bug-Klasse, die uns hier schon Geld gekostet hat. Zweitens waechst `x Median` mit der
+      Stichprobengroesse (r = +0,68 ueber 31 Ligen) — die Kachel haette also markiert, wo wir
+      am laengsten gesammelt haben, nicht wo etwas passiert ist.
+
+      Jetzt wird nur noch nachgeschlagen, was `stake_analyse.py` geurteilt hat. Es gibt zwei
+      Staerken, und sie werden nicht vermischt:
+        `ueberErwartung` gesetzt → gemessenes Urteil, n-korrigiert.
+        sonst                    → nur „x Median", Liga fuer ein Urteil zu duenn (n < 40). */
+  var _SR_AUFF_IDX = null;
+  function _srAuffIndex() {
+    if (_SR_AUFF_IDX) return _SR_AUFF_IDX;
+    var m = {};
+    ((SR_AUS && SR_AUS.auffaellige) || []).forEach(function (r) {
+      var k = r.eventId || ((r.event || '?') + '|' + (r.liga || ''));
+      var alt = m[k];
+      // Gemessenes Urteil schlaegt Median-Faktor; unter gleichen Zeilen die staerkere.
+      var besser = !alt
+        || (r.zufallPct != null && alt.zufallPct == null)
+        || (r.zufallPct != null && alt.zufallPct != null && r.zufallPct < alt.zufallPct)
+        || (r.zufallPct == null && alt.zufallPct == null && (r.faktor || 0) > (alt.faktor || 0));
+      if (besser) m[k] = r;
     });
-    if (!groesster) return null;
-    return { faktor: groesster / n.median, median: n.median, n: n.n, groesster: groesster };
+    _SR_AUFF_IDX = m;
+    return m;
+  }
+  function _srNormFaktor(g) {
+    return _srAuffIndex()[g.key] || null;
   }
 
   /** Grosses Geld auf ZWEI Seiten heisst: der Markt ist sich uneinig, nicht dass jemand
@@ -384,14 +404,20 @@
 
     var nf = _srNormFaktor(g);
     var badges =
-      (nf && nf.faktor >= 3 ? '<span class="sr-bad sr-norm" title="Größter Einzeleinsatz ' +
-        _srUsd(nf.groesster) + ' gegen den Median dieser Liga (' + _srUsd(nf.median) +
-        ', aus n' + nf.n + ')">×' + nf.faktor.toFixed(1) + ' Norm</span>' : '') +
+      (nf && nf.zufallPct != null
+        ? '<span class="sr-bad sr-norm" title="' + _srEsc(nf.grund || '') + '. Gemessen gegen ' +
+          'den Schwanz dieser Liga selbst, nicht gegen ihren Median — der wächst mit der ' +
+          'Stichprobengröße.">' + Math.round(nf.zufallPct * 100) + '% selten</span>'
+        : nf && nf.ueberErwartung == null ? '<span class="sr-bad sr-norm-schwach" title="' + _srEsc(nf.grund || '') +
+          '. Schwächeres Kriterium: für ein Seltenheitsurteil hat diese Liga zu wenige Wetten ' +
+          '(unter 40), deshalb steht hier nur der Median-Faktor.">×' +
+          Number(nf.faktor || 0).toFixed(1) + ' Median <span class="sr-mut">(dünn)</span></span>'
+        : '') +
       (_srUmkaempft(g) ? '<span class="sr-bad sr-konf" title="Mindestens 30 % des Geldes ' +
         'liegen auf einer zweiten Seite — der Markt ist sich uneinig, das ist kein ' +
         'einheitlicher Fluss">⚔️ umkämpft</span>' : '');
 
-    return '<div class="sr-card' + (nf && nf.faktor >= 3 ? ' sr-card-norm' : '') + '">' +
+    return '<div class="sr-card' + (nf && nf.zufallPct != null ? ' sr-card-norm' : '') + '">' +
       '<div class="sr-ch"><span class="sr-ev">' + _srEsc(g.event || '—') + '</span>' + badges +
       '<span class="sr-lg">' + _srAnpfiffText(g) + ' · ' + _srEsc(g.liga || g.sport || '') + '</span></div>' +
       '<div class="sr-meta">' +
@@ -645,8 +671,9 @@
     var rows = (SR_AUS && SR_AUS.auffaellige) || [];
     if (!rows.length) {
       return '<div class="sr-empty">Noch nichts über der Norm.<br><span class="sr-mut">' +
-        'Eine Liga-Norm entsteht ab 15 Wetten in derselben Liga — vorher ist „auffällig" ' +
-        'nicht entscheidbar.</span></div>';
+        'Eine Liga-Norm entsteht ab 15 Wetten in derselben Liga; ein <b>Urteil</b> darüber, ' +
+        'ob ein Einsatz wirklich überraschend ist, erst ab 40 — darunter lässt sich der ' +
+        'Schwanz der Verteilung nicht schätzen, und geraten wird hier nicht.</span></div>';
     }
     return '<div class="sr-tw"><table class="sr-t"><thead><tr>' +
       '<th>Zeit</th><th>Liga</th><th>Spiel</th><th>Auswahl</th>' +
@@ -668,10 +695,19 @@
           '<td class="sr-mut">' + _srEsc(r.grund) + '</td>' +
           '<td>' + aus + '</td></tr>';
       }).join('') + '</tbody></table></div>' +
-      '<div class="sr-note">Zwei verschiedene Gründe, absichtlich nicht vermischt: ' +
-      '<b>× Median der Liga</b> ist gemessen — die Liga hat genug Wetten für eine Norm. ' +
-      '<b>kleine Liga</b> ist schwächer — dort gibt es keine Norm, nur wenige Wetten und einen ' +
-      'Einsatz über dem globalen 90 %-Punkt.</div>';
+      '<div class="sr-note"><b>Drei verschiedene Gründe, absichtlich nicht vermischt</b> — ' +
+      'sie stehen in dieser Reihenfolge, stärkstes Urteil zuerst:<br>' +
+      '<b>% selten</b> ist das einzige echte Urteil: wie oft eine völlig unauffällige Liga ' +
+      'dieser Größe so etwas überhaupt hervorbringt — gegen eine simulierte Nullverteilung, ' +
+      'nicht gegen ein Vielfaches. Ein festes Vielfaches ginge nicht: schon in einer Liga, in ' +
+      'der nichts passiert, liegt das Maximum in rund einem Viertel der Fälle bei „2× über ' +
+      'Erwartung". Gerechnet über mehrere Schwanz&shy;ausschnitte, gewertet wird der ' +
+      'konservativste.<br>' +
+      '<b>× Median (dünn)</b> ist schwächer: die Liga hat eine Norm, aber unter 40 Wetten und ' +
+      'damit keinen schätzbaren Schwanz. Dieser Faktor wächst mit der Sammeldauer — er ' +
+      'beschreibt, er urteilt nicht.<br>' +
+      '<b>kleine Liga</b> ist am schwächsten: keine Norm, nur wenige Wetten und ein Einsatz ' +
+      'über dem globalen 90 %-Punkt.</div>';
   }
 
   // ── Bilanz ──────────────────────────────────────────────────────────────────
@@ -930,8 +966,8 @@
       .catch(function () { SR.daten = { status: 'fehler', notiz: 'stake_highroller.json nicht erreichbar' }; _srRender(); });
     fetch('stake_auswertung.json?t=' + Date.now())
       .then(function (r) { return r.ok ? r.json() : null; })
-      .then(function (j) { SR_AUS = j; SR_AUS_STATUS = j ? 'da' : 'fehlt'; _srRender(); })
-      .catch(function () { SR_AUS = null; SR_AUS_STATUS = 'fehlt'; _srRender(); });
+      .then(function (j) { SR_AUS = j; SR_AUS_STATUS = j ? 'da' : 'fehlt'; _SR_AUFF_IDX = null; _srRender(); })
+      .catch(function () { SR_AUS = null; SR_AUS_STATUS = 'fehlt'; _SR_AUFF_IDX = null; _srRender(); });
   };
 
   // Für Tests
