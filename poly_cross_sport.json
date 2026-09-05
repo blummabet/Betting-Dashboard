@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-04T23:26:52.477193+00:00",
+ "generatedAt": "2026-09-04T23:56:49.258709+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,8 +10,8 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 554,
- "pinnKeys": 340,
- "matched": 228,
+ "pinnKeys": 342,
+ "matched": 230,
  "footballRows": 192,
  "crossRows": 362,
  "footballSkippedStale": 90,
@@ -24,14 +24,127 @@
   "soccer_liga": 135
  },
  "matchedBySport": {
-  "baseball_mlb": 28,
+  "baseball_mlb": 30,
   "boxing_boxing": 8,
   "soccer_mls": 57,
   "soccer_liga": 135
  },
  "trackRecord": {
-  "tracked": 276,
+  "tracked": 280,
   "converged": 73
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|atlantabraves-philadelphiaphillies|atlantabraves",
+   "sport": "baseball_mlb",
+   "event": "Atlanta Braves vs Philadelphia Phillies",
+   "market": "Moneyline",
+   "outcome": "Atlanta Braves",
+   "polyPP": 65.5,
+   "pinnPP": 40.6,
+   "gapPP": 24.91,
+   "vol": 516854,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -12.5,
+   "firstSeen": "2026-09-04T23:03:02.149928+00:00"
+  },
+  {
+   "id": "baseball_mlb|atlantabraves-philadelphiaphillies|philadelphiaphillies",
+   "sport": "baseball_mlb",
+   "event": "Atlanta Braves vs Philadelphia Phillies",
+   "market": "Moneyline",
+   "outcome": "Philadelphia Phillies",
+   "polyPP": 34.5,
+   "pinnPP": 59.4,
+   "gapPP": -24.91,
+   "vol": 516854,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -12.5,
+   "firstSeen": "2026-09-04T23:03:02.149928+00:00"
+  },
+  {
+   "id": "baseball_mlb|losangelesangels-pittsburghpirates|losangelesangels",
+   "sport": "baseball_mlb",
+   "event": "Los Angeles Angels vs Pittsburgh Pirates",
+   "market": "Moneyline",
+   "outcome": "Los Angeles Angels",
+   "polyPP": 20.5,
+   "pinnPP": 38.7,
+   "gapPP": -18.19,
+   "vol": 245370,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-04T23:56:49.257977+00:00"
+  },
+  {
+   "id": "baseball_mlb|losangelesangels-pittsburghpirates|pittsburghpirates",
+   "sport": "baseball_mlb",
+   "event": "Los Angeles Angels vs Pittsburgh Pirates",
+   "market": "Moneyline",
+   "outcome": "Pittsburgh Pirates",
+   "polyPP": 79.5,
+   "pinnPP": 61.3,
+   "gapPP": 18.19,
+   "vol": 245370,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-04T23:56:49.257977+00:00"
+  },
+  {
+   "id": "baseball_mlb|baltimoreorioles-bostonredsox|bostonredsox",
+   "sport": "baseball_mlb",
+   "event": "Boston Red Sox vs Baltimore Orioles",
+   "market": "Moneyline",
+   "outcome": "Boston Red Sox",
+   "polyPP": 66.5,
+   "pinnPP": 56.4,
+   "gapPP": 10.08,
+   "vol": 43785,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -2.11,
+   "firstSeen": "2026-09-03T23:24:51.492515+00:00"
+  },
+  {
+   "id": "baseball_mlb|baltimoreorioles-bostonredsox|baltimoreorioles",
+   "sport": "baseball_mlb",
+   "event": "Boston Red Sox vs Baltimore Orioles",
+   "market": "Moneyline",
+   "outcome": "Baltimore Orioles",
+   "polyPP": 33.5,
+   "pinnPP": 43.6,
+   "gapPP": -10.08,
+   "vol": 43785,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -2.11,
+   "firstSeen": "2026-09-03T23:24:51.492515+00:00"
+  },
+  {
+   "id": "baseball_mlb|cincinnatireds-milwaukeebrewers|milwaukeebrewers",
+   "sport": "baseball_mlb",
+   "event": "Milwaukee Brewers vs Cincinnati Reds",
+   "market": "Moneyline",
+   "outcome": "Milwaukee Brewers",
+   "polyPP": 66.5,
+   "pinnPP": 59.9,
+   "gapPP": 6.65,
+   "vol": 409858,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-04T23:56:49.257977+00:00"
+  },
+  {
+   "id": "baseball_mlb|cincinnatireds-milwaukeebrewers|cincinnatireds",
+   "sport": "baseball_mlb",
+   "event": "Milwaukee Brewers vs Cincinnati Reds",
+   "market": "Moneyline",
+   "outcome": "Cincinnati Reds",
+   "polyPP": 33.5,
+   "pinnPP": 40.1,
+   "gapPP": -6.65,
+   "vol": 409858,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-04T23:56:49.257977+00:00"
+  }
+ ]
 }
