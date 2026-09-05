@@ -53,6 +53,7 @@ BASE = Path(__file__).resolve().parent
 sys.path.insert(0, str(BASE))
 
 import stake_highroller_fetch as SH
+from stake_seltenheit import seltenheit
 from sharp_gate import wilson_lb
 from freigabe import untergrenze
 
@@ -67,6 +68,12 @@ MIN_N_LIGA = int(os.environ.get("STAKE_MIN_N_LIGA") or 20)
 NORM_MIN_N = int(os.environ.get("STAKE_NORM_MIN_N") or 15)   # darunter keine Liga-Norm
 KLEINE_LIGA_MAX = int(os.environ.get("STAKE_KLEINE_LIGA_MAX") or 25)
 AUFFAELLIG_FAKTOR = float(os.environ.get("STAKE_AUFFAELLIG_FAKTOR") or 5.0)
+# Ab welcher Seltenheit eine Wette auffaellig heisst — als Wahrscheinlichkeit gegen die
+# simulierte Nullverteilung, nicht als Vielfaches. Ein festes Vielfaches ginge nicht: schon
+# in einer voellig unauffaelligen Liga liegt das Maximum in ~25 % der Faelle bei „2x ueber
+# Erwartung", und die Nullverteilung waechst selbst mit n. 0.10 = hoechstens jede zehnte
+# unauffaellige Liga dieser Groesse braechte so etwas hervor.
+AUFFAELLIG_ZUFALL = float(os.environ.get("STAKE_AUFFAELLIG_ZUFALL") or 0.10)
 
 # Quotenbänder für die Auswertung. Nicht als Filter gedacht, sondern als Frage: trägt eine
 # Wette bei 1,10 genauso viel Information wie eine bei 2,50? Das entscheidet die Abrechnung.
@@ -273,31 +280,67 @@ def liga_norm(wetten: list = None) -> dict:
 
 
 def auffaellig(w: dict, norm: dict) -> dict:
-    """Wie weit über der Norm dieser Liga liegt dieser Einsatz?
+    """Wie überraschend ist dieser Einsatz für diese Liga?
 
-    -> {"faktor": x, "basis": "median", "n": ...} oder {"basis": "keine Norm"}.
-    Ohne Norm gibt es KEINEN Faktor — nicht 1.0, nicht 0. Fehlende Information ist keine
-    Erlaubnis, und 'unauffällig' wäre hier eine Behauptung.
+    -> {"faktor", "ueberErwartung", "erwartetN", "kSpanne", "basis", "n", "median"}
+
+    `faktor` (× Median) bleibt als BESCHREIBUNG erhalten, ist aber kein Urteil mehr — er
+    wächst mit der Stichprobengröße (r = +0,68 über 31 Ligen), und die Liga-Mediane liegen
+    ohnehin alle um 2.000. Das Urteil ist `ueberErwartung`: wie viele Wetten dieser Größe in
+    dem, was wir von dieser Liga gesehen haben, überhaupt zu erwarten waren. Begründung im
+    Kopf von `stake_seltenheit.py`.
+
+    Drei unterscheidbare Zustände, und keiner davon rendert als harmlose Zahl:
+      basis "n-korrigiert" → gemessenes Urteil (`ueberErwartung` gesetzt)
+      basis "nur median"   → Liga hat eine Norm, aber keinen schätzbaren Schwanz (n < 40)
+      basis "keine Norm"   → über diese Liga ist nichts bekannt
     """
     liga = w.get("liga")
     e = w.get("einsatzUsd")
     nrm = (norm or {}).get(liga) or {}
     if not e or nrm.get("basis") != "gelernt" or not nrm.get("median"):
-        return {"faktor": None, "basis": "keine Norm", "n": nrm.get("n", 0)}
-    return {"faktor": round(e / nrm["median"], 2), "basis": "median",
-            "median": nrm["median"], "n": nrm["n"]}
+        return {"faktor": None, "ueberErwartung": None, "zufallPct": None,
+                "basis": "keine Norm", "n": nrm.get("n", 0)}
+    out = {"faktor": round(e / nrm["median"], 2), "ueberErwartung": None,
+           "erwartetN": None, "zufallPct": None, "kSpanne": None, "basis": "nur median",
+           "median": nrm["median"], "n": nrm["n"]}
+    sel = seltenheit(e, nrm.get("schwanz"))
+    if sel:
+        out.update({"ueberErwartung": sel["ueberErwartung"], "erwartetN": sel["erwartetN"],
+                    "zufallPct": sel["zufallPct"], "kSpanne": sel["kSpanne"],
+                    "basis": "n-korrigiert"})
+    return out
+
+
+def _ueber_norm(a: dict) -> bool:
+    """Zählt diese Wette als „über der Liga-Norm"? Gemessenes Urteil schlägt Median-Faktor;
+    wo ein Urteil vorliegt, entscheidet NUR das. Sonst stünde eine gemessen unauffällige
+    Wette hier drin, bloß weil ihr Median-Faktor groß aussieht."""
+    z = a.get("zufallPct")
+    if z is not None:
+        return z <= AUFFAELLIG_ZUFALL
+    if a.get("ueberErwartung") is not None:
+        return False                     # gemessen, aber ohne Seltenheitsurteil -> kein Ja
+    return a.get("basis") == "nur median" and (a.get("faktor") or 0) >= AUFFAELLIG_FAKTOR
 
 
 # ── 3. Kleine Liga, grosses Geld ─────────────────────────────────────────────
 def kleine_liga_gross(wetten: list, norm: dict) -> list:
     """Die eigentliche Idee: wo eine sonst ruhige Liga plötzlich Geld sieht.
 
-    Zwei Wege, weil eine Liga mit zu wenig Wetten gar keine Norm hat — und genau die sind
-    die interessantesten:
-      · mit Norm    → Einsatz >= AUFFAELLIG_FAKTOR × Median der Liga
-      · ohne Norm   → die Liga hat insgesamt <= KLEINE_LIGA_MAX Wetten, der Einsatz liegt
-                      über dem globalen 90%-Punkt. Das ist ein SCHWÄCHERES Kriterium und
-                      wird als solches ausgewiesen (`grund`), nicht mit dem ersten vermischt.
+    Drei Wege, in absteigender Beweiskraft — und sie werden NICHT vermischt, sondern jeder
+    schreibt seinen eigenen `grund`:
+      · n-korrigiert → zufallPct <= AUFFAELLIG_ZUFALL. Das einzige echte Urteil, und es
+                       ist eine Wahrscheinlichkeit gegen die Nullverteilung, kein Vielfaches.
+      · nur median   → Liga hat eine Norm, aber keinen schätzbaren Schwanz (n < 40).
+                       Einsatz >= AUFFAELLIG_FAKTOR × Median. SCHWÄCHER, weil dieser Faktor
+                       mit der Stichprobengröße wächst (04.09.: r = +0,68).
+      · ohne Norm    → die Liga hat insgesamt <= KLEINE_LIGA_MAX Wetten, der Einsatz liegt
+                       über dem globalen 90%-Punkt. Am schwächsten.
+
+    Sortiert wird nach `ueberErwartung`, und Zeilen ohne dieses Urteil stehen dahinter — nicht
+    davor, nur weil ihr Median-Faktor zufällig größer ist. Sonst stünde wieder oben, wer am
+    längsten gesammelt hat.
     """
     je_liga = defaultdict(int)
     for w in wetten:
@@ -312,8 +355,15 @@ def kleine_liga_gross(wetten: list, norm: dict) -> list:
         if not e or w.get("kombi"):
             continue
         a = auffaellig(w, norm)
-        if a["faktor"] is not None and a["faktor"] >= AUFFAELLIG_FAKTOR:
-            grund = "%.1f× Median der Liga (n%d)" % (a["faktor"], a["n"])
+        ue, z = a.get("ueberErwartung"), a.get("zufallPct")
+        if z is not None and z <= AUFFAELLIG_ZUFALL:
+            grund = ("%.1f× über Erwartung — so etwas bringt höchstens %s%% der unauffälligen "
+                     "Ligen dieser Größe hervor (n%d)" % (ue, round(z * 100), a["n"]))
+        elif ue is not None:
+            continue                       # gemessen und unauffällig → raus, nicht durchreichen
+        elif a["basis"] == "nur median" and a["faktor"] is not None and a["faktor"] >= AUFFAELLIG_FAKTOR:
+            grund = ("%.1f× Median der Liga (n%d, für ein Seltenheitsurteil zu dünn)"
+                     % (a["faktor"], a["n"]))
         elif (a["basis"] == "keine Norm" and global_p90 and e >= global_p90
               and je_liga.get(w.get("liga"), 0) <= KLEINE_LIGA_MAX):
             grund = "kleine Liga (%d Wetten), Einsatz über globalem 90%%-Punkt" % je_liga.get(w.get("liga"), 0)
@@ -321,12 +371,18 @@ def kleine_liga_gross(wetten: list, norm: dict) -> list:
             continue
         out.append({
             "id": w.get("id"), "ts": w.get("ts"), "liga": w.get("liga"),
-            "event": w.get("event"), "markt": w.get("markt"), "auswahl": w.get("auswahl"),
+            "event": w.get("event"), "eventId": w.get("eventId"),
+            "markt": w.get("markt"), "auswahl": w.get("auswahl"),
             "einsatzUsd": round(e, 2), "quote": w.get("quote"), "phase": _phase(w),
-            "faktor": a["faktor"], "grund": grund,
+            "faktor": a["faktor"], "ueberErwartung": ue, "erwartetN": a.get("erwartetN"),
+            "zufallPct": a.get("zufallPct"), "kSpanne": a.get("kSpanne"),
+            "basis": a["basis"], "grund": grund,
             "ausgang": ([b.get("status") for b in _beine(w)] or [None])[0],
         })
-    out.sort(key=lambda x: -(x["faktor"] or 0))
+    # Gemessene Urteile zuerst (nach Überraschung), dahinter die schwächeren Kriterien.
+    out.sort(key=lambda x: (0 if x.get("zufallPct") is not None else 1,
+                            x.get("zufallPct") if x.get("zufallPct") is not None else 9,
+                            -(x.get("ueberErwartung") or 0), -(x["faktor"] or 0)))
     return out
 
 
@@ -425,7 +481,7 @@ def auswerten(led: dict, jetzt: str) -> dict:
         "einsatz_ab_10k": _schublade(filt(lambda w: (w.get("einsatzUsd") or 0) >= 10000)),
         "einsatz_1k_10k": _schublade(filt(lambda w: 1000 <= (w.get("einsatzUsd") or 0) < 10000)),
         "ueber_liga_norm": _schublade(filt(
-            lambda w: (auffaellig(w, norm)["faktor"] or 0) >= AUFFAELLIG_FAKTOR)),
+            lambda w: _ueber_norm(auffaellig(w, norm)))),
     }
 
     # 03.09.2026 (Lucas: „glaub Odds-Schwelle sollten wir auch bauen ... wollen wir die 1,35
