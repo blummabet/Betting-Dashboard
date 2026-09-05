@@ -1,24 +1,24 @@
 {
- "n": 45,
+ "n": 47,
  "minOdds": 1.35,
- "moneyHitRate": 0.444,
- "priceHitRate": 0.444,
- "brierMoney": 0.7454,
+ "moneyHitRate": 0.426,
+ "priceHitRate": 0.468,
+ "brierMoney": 0.7778,
  "brierPrice": 0.6655,
  "disagree": {
-  "n": 13,
+  "n": 15,
   "moneyWon": 1,
-  "priceWon": 1,
+  "priceWon": 3,
   "neither": 11
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
  "byLeague": [],
  "guete": {
-  "belastbar": 45,
-  "preis_echo": 257,
+  "belastbar": 47,
+  "preis_echo": 256,
   "abgeschnitten": 6,
-  "unbekannt": 454,
+  "unbekannt": 453,
   "leer": 0
  },
  "rows": [
@@ -243,11 +243,11 @@
    "league": "SOCCER:SAF1",
    "winner": "Draw (Marumo Gallants FC vs. Polokwane City)",
    "moneyFav": "Polokwane City",
-   "priceFav": "Polokwane City",
+   "priceFav": "Draw (Marumo Gallants FC vs. Polokwane City)",
    "moneyShare": 0.619,
    "priceProb": 0.357,
    "moneyOK": false,
-   "priceOK": false,
+   "priceOK": true,
    "totalUsd": 29721
   },
   {
@@ -323,6 +323,18 @@
    "totalUsd": 22000
   },
   {
+   "key": "arg-pla-rie-2026-09-04",
+   "league": "SOCCER:ARG",
+   "winner": "Draw (CA Platense vs. CD Riestra)",
+   "moneyFav": "CD Riestra",
+   "priceFav": "Draw (CA Platense vs. CD Riestra)",
+   "moneyShare": 0.505,
+   "priceProb": 0.36,
+   "moneyOK": false,
+   "priceOK": true,
+   "totalUsd": 21295
+  },
+  {
    "key": "ven1-met-tru-2026-09-03",
    "league": "SOCCER:VEN1",
    "winner": "Metropolitanos FC",
@@ -345,6 +357,18 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 18526
+  },
+  {
+   "key": "arg-bel-cah-2026-09-04",
+   "league": "SOCCER:ARG",
+   "winner": "Draw (CA Belgrano vs. CA Huracán)",
+   "moneyFav": "CA Belgrano",
+   "priceFav": "CA Belgrano",
+   "moneyShare": 0.874,
+   "priceProb": 0.463,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 16535
   },
   {
    "key": "nor-san-vik-2026-09-04",
@@ -477,33 +501,9 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 9685
-  },
-  {
-   "key": "sui-lug-ser-2026-09-03",
-   "league": "SOCCER:SUI",
-   "winner": "FC Lugano",
-   "moneyFav": "FC Lugano",
-   "priceFav": "FC Lugano",
-   "moneyShare": 0.981,
-   "priceProb": 0.443,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 9610
-  },
-  {
-   "key": "qat1-shm-sha-2026-09-04",
-   "league": "SOCCER:QAT1",
-   "winner": "Al-Shamal",
-   "moneyFav": "Al-Shamal",
-   "priceFav": "Al-Shamal",
-   "moneyShare": 0.683,
-   "priceProb": 0.562,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 9120
   }
  ],
- "generatedAt": "2026-09-04T23:59:52.402915+00:00",
+ "generatedAt": "2026-09-05T00:29:42.838998+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -514,7 +514,7 @@
   "mls": 749,
   "epl": 606,
   "soccer": 800,
-  "tennis": 578,
+  "tennis": 574,
   "ucl": 532,
   "la-liga": 662,
   "bundesliga": 563,
@@ -555,13 +555,13 @@
   "japan-j-league": 547,
   "japan-j2-league": 551,
   "k-league": 532,
-  "la-liga-2": 549,
+  "la-liga-2": 548,
   "liga-mx-apertura": 2,
   "ligue-2": 495,
   "naitons-league": 1,
-  "national-league": 648,
+  "national-league": 647,
   "nations-league": 25,
-  "norway-eliteserien": 505,
+  "norway-eliteserien": 504,
   "poland-ekstraklasa": 391,
   "premier-league": 597,
   "saudi-professional-league": 555,
@@ -583,7 +583,7 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 405
+  "sweepAdded": 406
  },
  "vorStats": {
   "kandidaten": 3,
@@ -595,14 +595,14 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1973,
-   "usd": 30370189,
-   "beispiel": "fifwc-fra-eng-2026-07-18-more-markets"
+   "n": 1908,
+   "usd": 29511039,
+   "beispiel": "fifwc-esp-cvi-2026-06-15-more-markets"
   },
   "nba": {
-   "n": 578,
-   "usd": 6777850,
-   "beispiel": "nba-nyk-sas-2026-06-05"
+   "n": 702,
+   "usd": 11530510,
+   "beispiel": "nba-sas-okc-2026-05-18"
   },
   "balance": {
    "n": 2,
@@ -610,89 +610,89 @@
    "beispiel": "balance-of-power-2026-midterms"
   },
   "nhl": {
-   "n": 224,
-   "usd": 1489396,
+   "n": 352,
+   "usd": 4601806,
    "beispiel": "nhl-phi-car-2026-05-02"
   },
   "cfb": {
-   "n": 115,
-   "usd": 1124248,
+   "n": 134,
+   "usd": 1741101,
    "beispiel": "cfb-sjst-emich-2026-09-04"
   },
-  "ecs": {
-   "n": 10,
-   "usd": 938230,
-   "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
-  },
-  "elon": {
-   "n": 331,
-   "usd": 800293,
-   "beispiel": "elon-musk-of-tweets-april-10-april-17"
-  },
   "cbb": {
-   "n": 87,
-   "usd": 675599,
+   "n": 122,
+   "usd": 1280713,
    "beispiel": "cbb-uconn-mich-2026-04-06"
   },
+  "ecs": {
+   "n": 9,
+   "usd": 930769,
+   "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
+  },
   "fed": {
-   "n": 19,
-   "usd": 369120,
+   "n": 25,
+   "usd": 572066,
    "beispiel": "fed-decision-in-september-762"
   },
   "fif": {
-   "n": 69,
-   "usd": 284158,
+   "n": 48,
+   "usd": 247412,
    "beispiel": "fif-usa-prt-2026-03-31"
   },
   "world": {
-   "n": 43,
-   "usd": 242442,
-   "beispiel": "world-cup-winner"
+   "n": 37,
+   "usd": 213753,
+   "beispiel": "world-cup-nation-to-reach-final"
   },
   "j2100": {
-   "n": 18,
-   "usd": 196898,
+   "n": 10,
+   "usd": 159460,
    "beispiel": "j2100-van-fuk-2026-06-01"
-  },
-  "clf": {
-   "n": 36,
-   "usd": 170107,
-   "beispiel": "clf-tot-tsg-2026-08-16"
   },
   "nbasl": {
    "n": 7,
    "usd": 122188,
    "beispiel": "nbasl-cle-nop-2026-07-15"
   },
-  "which": {
-   "n": 12,
-   "usd": 108191,
-   "beispiel": "which-party-will-win-the-house-in-2026"
-  },
   "2026": {
-   "n": 22,
-   "usd": 102147,
-   "beispiel": "2026-mens-us-open-winner-tennis"
+   "n": 23,
+   "usd": 107578,
+   "beispiel": "2026-nba-champion"
+  },
+  "which": {
+   "n": 11,
+   "usd": 103675,
+   "beispiel": "which-party-will-win-the-house-in-2026"
   },
   "us": {
    "n": 13,
    "usd": 89759,
    "beispiel": "us-x-iran-permanent-peace-deal-by"
   },
-  "aus": {
-   "n": 4,
-   "usd": 70237,
-   "beispiel": "aus-per-mct-2026-03-22"
+  "clf": {
+   "n": 19,
+   "usd": 73938,
+   "beispiel": "clf-tot-tsg-2026-08-16"
   },
   "democratic": {
    "n": 17,
-   "usd": 66062,
+   "usd": 65986,
    "beispiel": "democratic-presidential-nominee-2028"
   },
-  "ballon": {
-   "n": 9,
-   "usd": 65820,
-   "beispiel": "ballon-dor-winner-2026"
+  "aus": {
+   "n": 3,
+   "usd": 59858,
+   "beispiel": "aus-auc-syd-2026-05-23-more-markets"
+  },
+  "super": {
+   "n": 14,
+   "usd": 57397,
+   "beispiel": "super-bowl-champion-2026-731"
+  },
+  "what": {
+   "n": 11,
+   "usd": 52489,
+   "beispiel": "what-price-will-bitcoin-hit-before-2027"
   }
  }
 }
