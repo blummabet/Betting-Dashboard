@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-05T21:42:27.616452+00:00",
+"generatedAt": "2026-09-05T21:52:16.654864+00:00",
 "byVerdict": {
 "konsens": {
-"n": 795,
-"wins": 660,
-"hitRate": 0.8302,
+"n": 796,
+"wins": 661,
+"hitRate": 0.8304,
 "polyN": 743,
 "polyWins": 579,
 "polyHitRate": 0.7793,
 "pinnN": 72,
 "pinnHitRate": 0.8333,
-"nRoi": 123,
-"roi": 0.4723,
-"roiLb": 0.3649,
-"nClv": 123,
-"clv": 21.6,
-"clvLb": 17.8655
+"nRoi": 124,
+"roi": 0.4689,
+"roiLb": 0.3622,
+"nClv": 124,
+"clv": 21.43,
+"clvLb": 17.7105
 },
 "uneinig": {
-"n": 291,
+"n": 292,
 "wins": 96,
-"hitRate": 0.3299,
-"polyN": 257,
+"hitRate": 0.3288,
+"polyN": 258,
 "polyWins": 70,
-"polyHitRate": 0.2724,
-"pinnN": 161,
-"pinnHitRate": 0.5901,
-"nRoi": 59,
-"roi": -0.3539,
-"roiLb": -0.5526,
-"nClv": 59,
-"clv": -15.0,
-"clvLb": -22.412
+"polyHitRate": 0.2713,
+"pinnN": 162,
+"pinnHitRate": 0.5926,
+"nRoi": 60,
+"roi": -0.3647,
+"roiLb": -0.5609,
+"nClv": 60,
+"clv": -15.66,
+"clvLb": -23.0202
 },
 "teil": {
 "n": 14,
@@ -106,6 +106,11 @@
 "wins": 20,
 "hitRate": 0.8333
 },
+"French Ligue 1": {
+"n": 23,
+"wins": 13,
+"hitRate": 0.5652
+},
 "German Cup": {
 "n": 23,
 "wins": 20,
@@ -135,11 +140,6 @@
 "n": 21,
 "wins": 13,
 "hitRate": 0.619
-},
-"French Ligue 1": {
-"n": 21,
-"wins": 12,
-"hitRate": 0.5714
 },
 "Portuguese Primeira Liga": {
 "n": 21,
@@ -584,37 +584,75 @@
 },
 "byStrength": {
 "strong": {
-"n": 643,
+"n": 644,
 "wins": 518,
-"hitRate": 0.8056,
-"nRoi": 119,
-"roi": 0.2668,
-"roiLb": 0.1457,
-"nClv": 119,
-"clv": 13.2,
-"clvLb": 8.0228
+"hitRate": 0.8043,
+"nRoi": 120,
+"roi": 0.2563,
+"roiLb": 0.1349,
+"nClv": 120,
+"clv": 12.64,
+"clvLb": 7.4217
 },
 "weak": {
-"n": 424,
-"wins": 223,
-"hitRate": 0.5259,
-"nRoi": 68,
-"roi": 0.0068,
-"roiLb": -0.1958,
-"nClv": 68,
-"clv": -0.32,
-"clvLb": -6.8163
+"n": 425,
+"wins": 224,
+"hitRate": 0.5271,
+"nRoi": 69,
+"roi": 0.0074,
+"roiLb": -0.1922,
+"nClv": 69,
+"clv": -0.31,
+"clvLb": -6.7168
 }
 },
 "divergence": {
-"n": 291,
+"n": 292,
 "betfairWins": 96,
-"betfairRate": 0.3299,
-"polyN": 257,
+"betfairRate": 0.3288,
+"polyN": 258,
 "polyWins": 70,
-"polyRate": 0.2724
+"polyRate": 0.2713
 },
 "recent": [
+{
+"matchId": "36005512",
+"home": "Nice",
+"away": "Le Mans",
+"league": "French Ligue 1",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Nice",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+1
+],
+"kickoff": "2026-09-05T18:45:00Z",
+"settledAt": "2026-09-05T21:52:16.491683+00:00"
+},
+{
+"matchId": "36005519",
+"home": "Le Havre",
+"away": "Brest",
+"league": "French Ligue 1",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Brest",
+"polySide": null,
+"winner": "away",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-09-05T18:45:00Z",
+"settledAt": "2026-09-05T21:52:16.491683+00:00"
+},
 {
 "matchId": "36003837",
 "home": "Villarreal",
@@ -1336,56 +1374,18 @@
 ],
 "kickoff": "2026-09-05T12:00:00Z",
 "settledAt": "2026-09-05T15:23:20.260305+00:00"
-},
-{
-"matchId": "35974481",
-"home": "Newcastle",
-"away": "Bournemouth",
-"league": "English Premier League",
-"verdict": "teil",
-"moneySide": "away",
-"moneyName": "Bournemouth",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-09-05T11:30:00Z",
-"settledAt": "2026-09-05T14:37:04.660469+00:00"
-},
-{
-"matchId": "36015017",
-"home": "Shanghai Port FC",
-"away": "Beijing Guoan",
-"league": "Chinese Super League",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Shanghai Port FC",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-09-05T11:35:00Z",
-"settledAt": "2026-09-05T14:37:04.660469+00:00"
 }
 ],
 "global": {
-"n": 1100,
-"wins": 759,
-"hitRate": 0.69,
-"nRoi": 187,
-"roi": 0.1722,
-"roiLb": 0.0649,
-"nClv": 187,
-"clv": 8.28,
-"clvLb": 4.1653
+"n": 1102,
+"wins": 760,
+"hitRate": 0.6897,
+"nRoi": 189,
+"roi": 0.1654,
+"roiLb": 0.0587,
+"nClv": 189,
+"clv": 7.91,
+"clvLb": 3.7977
 },
-"pending": 10
+"pending": 11
 }
