@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-05T13:37:02.980441+00:00",
+ "generatedAt": "2026-09-05T13:52:14.035458+00:00",
  "stufe1": [
   {
    "matchId": "35974510",
@@ -351,7 +351,7 @@
    "gehaltenSeit": "2026-09-05T04:35:20.820650+00:00",
    "zuletztAktiv": "2026-09-05T13:23:30.984265+00:00",
    "haltePreis": 1.94,
-   "aktiv": true
+   "aktiv": false
   },
   {
    "matchId": "35999731",
@@ -561,7 +561,7 @@
    "gehaltenSeit": "2026-09-04T21:04:40.704255+00:00",
    "zuletztAktiv": "2026-09-05T13:23:30.984265+00:00",
    "haltePreis": 2.06,
-   "aktiv": true
+   "aktiv": false
   },
   {
    "matchId": "36003837",
@@ -970,28 +970,34 @@
    "aktiv": false
   },
   {
-   "matchId": "36031261",
-   "home": "Bani Yas",
-   "away": "Hatta",
-   "league": "UAE Arabian Gulf League",
-   "kickoff": "2026-09-05T13:45:00Z",
+   "matchId": "36000003",
+   "home": "Reading",
+   "away": "Blackpool",
+   "league": "English Sky Bet League 1",
+   "kickoff": "2026-09-05T14:00:00Z",
    "markt": "Match Odds",
    "seite": "home",
-   "name": "Bani Yas",
-   "odd": 1.79,
-   "entryOdd": 2.16,
-   "anteilPct": 86,
+   "name": "Reading",
+   "odd": 1.85,
+   "entryOdd": 2.04,
+   "anteilPct": 84,
    "stufe": 2,
-   "verstaerker": [],
-   "rang": 58.6,
+   "verstaerker": [
+    {
+     "art": "pinn",
+     "text": "Pinnacle stimmt zu",
+     "gewicht": 10
+    }
+   ],
+   "rang": 68.4,
    "track": null,
    "streak": null,
    "poly": null,
    "polyStatus": "unbekannt",
-   "pinnMovePP": null,
+   "pinnMovePP": -0.0,
    "punkte": {
-    "punkte": 3,
-    "moeglich": 4,
+    "punkte": 5,
+    "moeglich": 7,
     "dauerH": 0.13,
     "teile": [
      {
@@ -1002,13 +1008,13 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 86% auf der Seite"
+       "text": "Geld 84% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
-      "text": "Geld 86% auf der Seite"
+      "text": "Geld 84% auf der Seite"
      },
      {
       "buch": "POLY",
@@ -1023,12 +1029,18 @@
      {
       "buch": "PIN",
       "name": "Pinnacle",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "text": "Pinnacle nicht erhoben"
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "hat dieselbe Seite als Favorit"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein Move gemessen"
+      },
+      "text": "hat dieselbe Seite als Favorit"
      },
      {
       "buch": "ZEIT",
@@ -1045,10 +1057,10 @@
      }
     ]
    },
-   "wertVsPinn": null,
-   "gehaltenSeit": "2026-09-05T13:37:02.980441+00:00",
-   "zuletztAktiv": "2026-09-05T13:37:02.980441+00:00",
-   "haltePreis": 1.79,
+   "wertVsPinn": -0.0127,
+   "gehaltenSeit": "2026-09-05T13:52:14.035458+00:00",
+   "zuletztAktiv": "2026-09-05T13:52:14.035458+00:00",
+   "haltePreis": 1.85,
    "aktiv": true
   },
   {
@@ -1129,25 +1141,12 @@
    },
    "wertVsPinn": 0.0061,
    "gehaltenSeit": "2026-09-05T13:23:30.984265+00:00",
-   "zuletztAktiv": "2026-09-05T13:37:02.980441+00:00",
+   "zuletztAktiv": "2026-09-05T13:52:14.035458+00:00",
    "haltePreis": 2.78,
    "aktiv": true
   }
  ],
  "alleBewertet": [
-  {
-   "matchId": "35974510",
-   "markt": "Match Odds",
-   "liga": "English Premier League",
-   "name": "Brentford",
-   "seite": "home",
-   "odd": 1.74,
-   "kickoff": "2026-09-05T14:00:00Z",
-   "punkte": 9,
-   "moeglich": 10,
-   "dauerH": 7.41,
-   "torOk": true
-  },
   {
    "matchId": "35974520",
    "markt": "Match Odds",
@@ -1162,17 +1161,30 @@
    "torOk": false
   },
   {
-   "matchId": "35999731",
+   "matchId": "35974510",
    "markt": "Match Odds",
-   "liga": "English Sky Bet Championship",
-   "name": "Burnley",
+   "liga": "English Premier League",
+   "name": "Brentford",
    "seite": "home",
-   "odd": 2.08,
+   "odd": 1.78,
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 8,
    "moeglich": 10,
-   "dauerH": 0.38,
-   "torOk": true
+   "dauerH": 7.41,
+   "torOk": false
+  },
+  {
+   "matchId": "36005512",
+   "markt": "Match Odds",
+   "liga": "French Ligue 1",
+   "name": "Nice",
+   "seite": "home",
+   "odd": 1.83,
+   "kickoff": "2026-09-05T18:45:00Z",
+   "punkte": 8,
+   "moeglich": 10,
+   "dauerH": 4.88,
+   "torOk": false
   },
   {
    "matchId": "36005347",
@@ -1180,11 +1192,24 @@
    "liga": "French Ligue 1",
    "name": "Lens",
    "seite": "home",
-   "odd": 1.59,
+   "odd": 1.6,
    "kickoff": "2026-09-05T15:15:00Z",
    "punkte": 7,
    "moeglich": 10,
-   "dauerH": 1.63,
+   "dauerH": 1.38,
+   "torOk": false
+  },
+  {
+   "matchId": "35979413",
+   "markt": "Match Odds",
+   "liga": "Italian Serie A",
+   "name": "Roma",
+   "seite": "home",
+   "odd": 1.72,
+   "kickoff": "2026-09-05T18:45:00Z",
+   "punkte": 6,
+   "moeglich": 7,
+   "dauerH": 22.67,
    "torOk": false
   },
   {
@@ -1195,35 +1220,9 @@
    "seite": "home",
    "odd": 1.49,
    "kickoff": "2026-09-05T19:00:00Z",
-   "punkte": 7,
+   "punkte": 6,
    "moeglich": 7,
    "dauerH": 25.18,
-   "torOk": true
-  },
-  {
-   "matchId": "35979413",
-   "markt": "Match Odds",
-   "liga": "Italian Serie A",
-   "name": "Roma",
-   "seite": "home",
-   "odd": 1.71,
-   "kickoff": "2026-09-05T18:45:00Z",
-   "punkte": 6,
-   "moeglich": 7,
-   "dauerH": 22.67,
-   "torOk": false
-  },
-  {
-   "matchId": "36005512",
-   "markt": "Match Odds",
-   "liga": "French Ligue 1",
-   "name": "Nice",
-   "seite": "home",
-   "odd": 1.84,
-   "kickoff": "2026-09-05T18:45:00Z",
-   "punkte": 6,
-   "moeglich": 10,
-   "dauerH": 5.13,
    "torOk": false
   },
   {
@@ -1245,11 +1244,11 @@
    "liga": "Spanish La Liga",
    "name": "Atletico Madrid",
    "seite": "away",
-   "odd": 2.62,
+   "odd": 2.7,
    "kickoff": "2026-09-05T14:15:00Z",
    "punkte": 5,
    "moeglich": 10,
-   "dauerH": 0.63,
+   "dauerH": 0.38,
    "torOk": false
   },
   {
@@ -1275,7 +1274,7 @@
    "kickoff": "2026-09-05T23:30:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 9.88,
+   "dauerH": 9.63,
    "torOk": false
   },
   {
@@ -1284,11 +1283,11 @@
    "liga": "US MLS",
    "name": "Orlando City",
    "seite": "home",
-   "odd": 2.24,
+   "odd": 2.2,
    "kickoff": "2026-09-05T23:30:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 9.88,
+   "dauerH": 9.63,
    "torOk": false
   },
   {
@@ -1297,11 +1296,11 @@
    "liga": "US MLS",
    "name": "Inter Miami CF",
    "seite": "home",
-   "odd": 1.34,
+   "odd": 1.33,
    "kickoff": "2026-09-05T23:30:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 9.88,
+   "dauerH": 9.63,
    "torOk": false
   },
   {
@@ -1310,11 +1309,11 @@
    "liga": "US MLS",
    "name": "Philadelphia",
    "seite": "home",
-   "odd": 1.49,
+   "odd": 1.47,
    "kickoff": "2026-09-05T23:30:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 9.88,
+   "dauerH": 9.63,
    "torOk": false
   },
   {
@@ -1323,11 +1322,11 @@
    "liga": "US MLS",
    "name": "FC Dallas",
    "seite": "home",
-   "odd": 1.43,
+   "odd": 1.44,
    "kickoff": "2026-09-06T00:30:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 10.88,
+   "dauerH": 10.63,
    "torOk": false
   },
   {
@@ -1340,7 +1339,7 @@
    "kickoff": "2026-09-06T00:30:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 10.88,
+   "dauerH": 10.63,
    "torOk": false
   },
   {
@@ -1349,11 +1348,11 @@
    "liga": "US MLS",
    "name": "New England Revolution",
    "seite": "away",
-   "odd": 2.7,
+   "odd": 2.68,
    "kickoff": "2026-09-06T01:30:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 11.88,
+   "dauerH": 11.63,
    "torOk": false
   },
   {
@@ -1362,11 +1361,11 @@
    "liga": "US MLS",
    "name": "Vancouver Whitecaps",
    "seite": "home",
-   "odd": 1.53,
+   "odd": 1.52,
    "kickoff": "2026-09-06T02:30:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 12.88,
+   "dauerH": 12.63,
    "torOk": false
   },
   {
@@ -1379,7 +1378,7 @@
    "kickoff": "2026-09-06T01:30:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 11.88,
+   "dauerH": 11.63,
    "torOk": false
   },
   {
@@ -1388,11 +1387,11 @@
    "liga": "Italian Serie A",
    "name": "Parma",
    "seite": "home",
-   "odd": 2.74,
+   "odd": 2.76,
    "kickoff": "2026-09-06T13:00:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 23.38,
+   "dauerH": 23.13,
    "torOk": false
   },
   {
@@ -1405,7 +1404,7 @@
    "kickoff": "2026-09-06T13:00:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 23.38,
+   "dauerH": 23.13,
    "torOk": false
   },
   {
@@ -1414,7 +1413,7 @@
    "liga": "Spanish La Liga",
    "name": "Barcelona",
    "seite": "away",
-   "odd": 1.33,
+   "odd": 1.32,
    "kickoff": "2026-09-06T14:15:00Z",
    "punkte": 5,
    "moeglich": 7,
@@ -1427,11 +1426,11 @@
    "liga": "Spanish La Liga",
    "name": "Malaga",
    "seite": "home",
-   "odd": 2.48,
+   "odd": 2.5,
    "kickoff": "2026-09-06T16:30:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 26.88,
+   "dauerH": 26.63,
    "torOk": false
   },
   {
@@ -1444,7 +1443,7 @@
    "kickoff": "2026-09-06T18:45:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 29.13,
+   "dauerH": 28.88,
    "torOk": false
   },
   {
@@ -1457,7 +1456,7 @@
    "kickoff": "2026-09-06T19:00:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 29.38,
+   "dauerH": 29.13,
    "torOk": false
   },
   {
@@ -1470,7 +1469,7 @@
    "kickoff": "2026-09-07T16:30:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 50.88,
+   "dauerH": 50.63,
    "torOk": false
   },
   {
@@ -1483,20 +1482,7 @@
    "kickoff": "2026-09-07T17:00:00Z",
    "punkte": 5,
    "moeglich": 7,
-   "dauerH": 51.38,
-   "torOk": false
-  },
-  {
-   "matchId": "35974451",
-   "markt": "Match Odds",
-   "liga": "English Premier League",
-   "name": "Fulham",
-   "seite": "home",
-   "odd": 2.26,
-   "kickoff": "2026-09-05T14:00:00Z",
-   "punkte": 4,
-   "moeglich": 10,
-   "dauerH": 16.67,
+   "dauerH": 51.13,
    "torOk": false
   },
   {
@@ -1505,11 +1491,37 @@
    "liga": "English Sky Bet League 1",
    "name": "Reading",
    "seite": "home",
-   "odd": 1.87,
+   "odd": 1.85,
+   "kickoff": "2026-09-05T14:00:00Z",
+   "punkte": 5,
+   "moeglich": 7,
+   "dauerH": 0.13,
+   "torOk": true
+  },
+  {
+   "matchId": "35999731",
+   "markt": "Match Odds",
+   "liga": "English Sky Bet Championship",
+   "name": "Burnley",
+   "seite": "home",
+   "odd": 2.1,
+   "kickoff": "2026-09-05T14:00:00Z",
+   "punkte": 5,
+   "moeglich": 10,
+   "dauerH": 0.38,
+   "torOk": false
+  },
+  {
+   "matchId": "35974451",
+   "markt": "Match Odds",
+   "liga": "English Premier League",
+   "name": "Fulham",
+   "seite": "home",
+   "odd": 2.24,
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 4,
-   "moeglich": 7,
-   "dauerH": 0.38,
+   "moeglich": 10,
+   "dauerH": 16.67,
    "torOk": false
   },
   {
@@ -1518,11 +1530,37 @@
    "liga": "English Sky Bet Championship",
    "name": "West Brom",
    "seite": "home",
-   "odd": 1.8,
+   "odd": 1.81,
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 4,
    "moeglich": 7,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
+   "torOk": false
+  },
+  {
+   "matchId": "36015826",
+   "markt": "Match Odds",
+   "liga": "Scottish Premiership",
+   "name": "Aberdeen",
+   "seite": "home",
+   "odd": 1.72,
+   "kickoff": "2026-09-05T14:00:00Z",
+   "punkte": 4,
+   "moeglich": 7,
+   "dauerH": 0.13,
+   "torOk": false
+  },
+  {
+   "matchId": "35999972",
+   "markt": "Match Odds",
+   "liga": "English Sky Bet League 1",
+   "name": "Leicester",
+   "seite": "home",
+   "odd": 1.66,
+   "kickoff": "2026-09-05T14:00:00Z",
+   "punkte": 4,
+   "moeglich": 7,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -1531,24 +1569,11 @@
    "liga": "English Sky Bet League 2",
    "name": "York City",
    "seite": "away",
-   "odd": 2.5,
+   "odd": 2.56,
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 4,
    "moeglich": 7,
-   "dauerH": 0.38,
-   "torOk": false
-  },
-  {
-   "matchId": "35999971",
-   "markt": "Match Odds",
-   "liga": "English Sky Bet League 1",
-   "name": "Bradford",
-   "seite": "home",
-   "odd": 1.82,
-   "kickoff": "2026-09-05T14:00:00Z",
-   "punkte": 4,
-   "moeglich": 7,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -1561,7 +1586,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 4,
    "moeglich": 7,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -1570,24 +1595,37 @@
    "liga": "English Sky Bet League 2",
    "name": "Bristol Rovers",
    "seite": "home",
-   "odd": 1.67,
+   "odd": 1.68,
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 4,
    "moeglich": 7,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
-   "matchId": "36015833",
+   "matchId": "35999952",
    "markt": "Match Odds",
-   "liga": "Scottish Premiership",
-   "name": "Rangers",
-   "seite": "home",
-   "odd": 1.45,
+   "liga": "English Sky Bet League 1",
+   "name": "Cambridge Utd",
+   "seite": "away",
+   "odd": 2.8,
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 4,
    "moeglich": 7,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
+   "torOk": false
+  },
+  {
+   "matchId": "35999723",
+   "markt": "Match Odds",
+   "liga": "English Sky Bet Championship",
+   "name": "West Ham",
+   "seite": "home",
+   "odd": 1.38,
+   "kickoff": "2026-09-05T14:00:00Z",
+   "punkte": 4,
+   "moeglich": 7,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -1600,7 +1638,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 3,
    "moeglich": 10,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -1613,7 +1651,7 @@
    "kickoff": "2026-09-05T18:30:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 4.88,
+   "dauerH": 4.63,
    "torOk": false
   },
   {
@@ -1622,11 +1660,11 @@
    "liga": "French Ligue 1",
    "name": "Brest",
    "seite": "away",
-   "odd": 2.78,
+   "odd": 2.8,
    "kickoff": "2026-09-05T18:45:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 5.13,
+   "dauerH": 4.88,
    "torOk": false
   },
   {
@@ -1639,7 +1677,7 @@
    "kickoff": "2026-09-05T23:30:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 9.88,
+   "dauerH": 9.63,
    "torOk": false
   },
   {
@@ -1648,11 +1686,11 @@
    "liga": "US MLS",
    "name": "Columbus",
    "seite": "home",
-   "odd": 2.4,
+   "odd": 2.36,
    "kickoff": "2026-09-05T23:30:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 9.88,
+   "dauerH": 9.63,
    "torOk": false
   },
   {
@@ -1661,11 +1699,11 @@
    "liga": "US MLS",
    "name": "Portland Timbers",
    "seite": "home",
-   "odd": 2.44,
+   "odd": 2.4,
    "kickoff": "2026-09-06T02:30:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 12.88,
+   "dauerH": 12.63,
    "torOk": false
   },
   {
@@ -1678,7 +1716,7 @@
    "kickoff": "2026-09-06T11:30:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 21.88,
+   "dauerH": 21.63,
    "torOk": false
   },
   {
@@ -1687,11 +1725,11 @@
    "liga": "US MLS",
    "name": "Remis",
    "seite": "draw",
-   "odd": 4.0,
+   "odd": 3.95,
    "kickoff": "2026-09-06T00:30:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 10.88,
+   "dauerH": 10.63,
    "torOk": false
   },
   {
@@ -1700,11 +1738,11 @@
    "liga": "German Bundesliga",
    "name": "Mainz",
    "seite": "away",
-   "odd": 2.54,
+   "odd": 2.52,
    "kickoff": "2026-09-06T13:30:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 23.88,
+   "dauerH": 23.63,
    "torOk": false
   },
   {
@@ -1717,7 +1755,7 @@
    "kickoff": "2026-09-06T15:15:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 25.63,
+   "dauerH": 25.38,
    "torOk": false
   },
   {
@@ -1730,7 +1768,7 @@
    "kickoff": "2026-09-06T15:30:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 25.88,
+   "dauerH": 25.63,
    "torOk": false
   },
   {
@@ -1743,7 +1781,7 @@
    "kickoff": "2026-09-06T15:30:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 25.88,
+   "dauerH": 25.63,
    "torOk": false
   },
   {
@@ -1756,7 +1794,7 @@
    "kickoff": "2026-09-06T16:00:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 26.38,
+   "dauerH": 26.13,
    "torOk": false
   },
   {
@@ -1769,7 +1807,7 @@
    "kickoff": "2026-09-06T18:45:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 29.13,
+   "dauerH": 28.88,
    "torOk": false
   },
   {
@@ -1782,7 +1820,7 @@
    "kickoff": "2026-09-07T18:45:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 53.13,
+   "dauerH": 52.88,
    "torOk": false
   },
   {
@@ -1795,21 +1833,8 @@
    "kickoff": "2026-09-07T19:30:00Z",
    "punkte": 3,
    "moeglich": 7,
-   "dauerH": 53.88,
+   "dauerH": 53.63,
    "torOk": false
-  },
-  {
-   "matchId": "36031261",
-   "markt": "Match Odds",
-   "liga": "UAE Arabian Gulf League",
-   "name": "Bani Yas",
-   "seite": "home",
-   "odd": 1.79,
-   "kickoff": "2026-09-05T13:45:00Z",
-   "punkte": 3,
-   "moeglich": 4,
-   "dauerH": 0.13,
-   "torOk": true
   },
   {
    "matchId": "35999970",
@@ -1834,7 +1859,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -1847,7 +1872,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -1860,7 +1885,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -1873,7 +1898,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -1886,7 +1911,20 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
+   "torOk": false
+  },
+  {
+   "matchId": "35998906",
+   "markt": "Match Odds",
+   "liga": "Scottish League One",
+   "name": "Ross Co",
+   "seite": "away",
+   "odd": 1.62,
+   "kickoff": "2026-09-05T14:00:00Z",
+   "punkte": 2,
+   "moeglich": 4,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -1899,7 +1937,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -1912,33 +1950,20 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
-   "matchId": "36024449",
+   "matchId": "36024044",
    "markt": "Match Odds",
-   "liga": "Icelandic 1 Deild",
-   "name": "Fylkir",
+   "liga": "English National League North",
+   "name": "Chorley",
    "seite": "away",
-   "odd": 2.36,
+   "odd": 4.3,
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 0.38,
-   "torOk": false
-  },
-  {
-   "matchId": "35999883",
-   "markt": "Match Odds",
-   "liga": "English Sky Bet League 2",
-   "name": "Accrington",
-   "seite": "home",
-   "odd": 2.12,
-   "kickoff": "2026-09-05T14:00:00Z",
-   "punkte": 2,
-   "moeglich": 7,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -1947,11 +1972,11 @@
    "liga": "Scottish League One",
    "name": "Hamilton",
    "seite": "away",
-   "odd": 2.3,
+   "odd": 2.28,
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -1964,20 +1989,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 0.38,
-   "torOk": false
-  },
-  {
-   "matchId": "36015826",
-   "markt": "Match Odds",
-   "liga": "Scottish Premiership",
-   "name": "Aberdeen",
-   "seite": "home",
-   "odd": 1.75,
-   "kickoff": "2026-09-05T14:00:00Z",
-   "punkte": 2,
-   "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -1986,11 +1998,11 @@
    "liga": "English National League North",
    "name": "Brackley Town",
    "seite": "home",
-   "odd": 2.9,
+   "odd": 3.1,
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 2,
-   "moeglich": 4,
-   "dauerH": 0.38,
+   "moeglich": 7,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -1999,24 +2011,11 @@
    "liga": "English National League South",
    "name": "Salisbury City",
    "seite": "away",
-   "odd": 4.5,
+   "odd": 4.3,
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 0.38,
-   "torOk": false
-  },
-  {
-   "matchId": "35999749",
-   "markt": "Match Odds",
-   "liga": "English Sky Bet Championship",
-   "name": "Norwich",
-   "seite": "away",
-   "odd": 2.8,
-   "kickoff": "2026-09-05T14:00:00Z",
-   "punkte": 2,
-   "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2029,20 +2028,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 0.38,
-   "torOk": false
-  },
-  {
-   "matchId": "35999972",
-   "markt": "Match Odds",
-   "liga": "English Sky Bet League 1",
-   "name": "Leicester",
-   "seite": "home",
-   "odd": 1.73,
-   "kickoff": "2026-09-05T14:00:00Z",
-   "punkte": 2,
-   "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2051,11 +2037,11 @@
    "liga": "Latvian Virsliga",
    "name": "FK Jelgava",
    "seite": "home",
-   "odd": 1.93,
+   "odd": 2.08,
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2068,7 +2054,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2081,7 +2067,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2090,11 +2076,11 @@
    "liga": "Swedish Division 1",
    "name": "FC Trollhattan",
    "seite": "home",
-   "odd": 2.08,
+   "odd": 2.14,
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2107,7 +2093,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2120,20 +2106,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 0.38,
-   "torOk": false
-  },
-  {
-   "matchId": "36015831",
-   "markt": "Match Odds",
-   "liga": "Scottish Premiership",
-   "name": "Dundee Utd",
-   "seite": "home",
-   "odd": 2.14,
-   "kickoff": "2026-09-05T14:00:00Z",
-   "punkte": 2,
-   "moeglich": 7,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2142,24 +2115,24 @@
    "liga": "English National League South",
    "name": "Truro City",
    "seite": "home",
-   "odd": 1.86,
+   "odd": 1.77,
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 2,
    "moeglich": 10,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
-   "matchId": "36030882",
+   "matchId": "35999971",
    "markt": "Match Odds",
-   "liga": "Qatari Stars League",
-   "name": "Al Rayyan",
+   "liga": "English Sky Bet League 1",
+   "name": "Bradford",
    "seite": "home",
-   "odd": 2.68,
+   "odd": 1.82,
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 2,
-   "moeglich": 7,
-   "dauerH": 0.38,
+   "moeglich": 4,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2172,7 +2145,20 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
+   "torOk": false
+  },
+  {
+   "matchId": "36015833",
+   "markt": "Match Odds",
+   "liga": "Scottish Premiership",
+   "name": "Rangers",
+   "seite": "home",
+   "odd": 1.45,
+   "kickoff": "2026-09-05T14:00:00Z",
+   "punkte": 2,
+   "moeglich": 4,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2181,11 +2167,76 @@
    "liga": "English National League North",
    "name": "Morecambe",
    "seite": "home",
-   "odd": 2.64,
+   "odd": 2.74,
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 2,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
+   "torOk": false
+  },
+  {
+   "matchId": "35999925",
+   "markt": "Match Odds",
+   "liga": "English Sky Bet League 2",
+   "name": "Exeter",
+   "seite": "home",
+   "odd": 2.62,
+   "kickoff": "2026-09-05T14:00:00Z",
+   "punkte": 2,
+   "moeglich": 7,
+   "dauerH": 0.13,
+   "torOk": false
+  },
+  {
+   "matchId": "35999625",
+   "markt": "Match Odds",
+   "liga": "English National League",
+   "name": "AFC Fylde",
+   "seite": "home",
+   "odd": 1.79,
+   "kickoff": "2026-09-05T14:00:00Z",
+   "punkte": 2,
+   "moeglich": 4,
+   "dauerH": 0.13,
+   "torOk": false
+  },
+  {
+   "matchId": "35999360",
+   "markt": "Match Odds",
+   "liga": "Scottish League Two",
+   "name": "Elgin City FC",
+   "seite": "away",
+   "odd": 2.0,
+   "kickoff": "2026-09-05T14:00:00Z",
+   "punkte": 2,
+   "moeglich": 4,
+   "dauerH": 0.13,
+   "torOk": false
+  },
+  {
+   "matchId": "36024448",
+   "markt": "Match Odds",
+   "liga": "Icelandic 1 Deild",
+   "name": "Throttur",
+   "seite": "away",
+   "odd": 1.81,
+   "kickoff": "2026-09-05T14:00:00Z",
+   "punkte": 2,
+   "moeglich": 4,
+   "dauerH": 0.13,
+   "torOk": false
+  },
+  {
+   "matchId": "36020919",
+   "markt": "Match Odds",
+   "liga": "Swedish Division 1",
+   "name": "Remis",
+   "seite": "draw",
+   "odd": 4.0,
+   "kickoff": "2026-09-05T14:00:00Z",
+   "punkte": 2,
+   "moeglich": 4,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2194,11 +2245,11 @@
    "liga": "US MLS",
    "name": "Remis",
    "seite": "draw",
-   "odd": 4.0,
+   "odd": 3.9,
    "kickoff": "2026-09-05T23:30:00Z",
    "punkte": 1,
    "moeglich": 7,
-   "dauerH": 9.88,
+   "dauerH": 9.63,
    "torOk": false
   },
   {
@@ -2211,7 +2262,7 @@
    "kickoff": "2026-09-06T11:30:00Z",
    "punkte": 1,
    "moeglich": 7,
-   "dauerH": 21.88,
+   "dauerH": 21.63,
    "torOk": false
   },
   {
@@ -2220,11 +2271,11 @@
    "liga": "German Bundesliga 2",
    "name": "Greuther Furth",
    "seite": "home",
-   "odd": 3.25,
+   "odd": 3.1,
    "kickoff": "2026-09-06T11:30:00Z",
    "punkte": 1,
    "moeglich": 7,
-   "dauerH": 21.88,
+   "dauerH": 21.63,
    "torOk": false
   },
   {
@@ -2237,7 +2288,7 @@
    "kickoff": "2026-09-06T13:00:00Z",
    "punkte": 1,
    "moeglich": 7,
-   "dauerH": 23.38,
+   "dauerH": 23.13,
    "torOk": false
   },
   {
@@ -2250,7 +2301,7 @@
    "kickoff": "2026-09-06T13:00:00Z",
    "punkte": 1,
    "moeglich": 7,
-   "dauerH": 23.38,
+   "dauerH": 23.13,
    "torOk": false
   },
   {
@@ -2263,7 +2314,7 @@
    "kickoff": "2026-09-06T16:30:00Z",
    "punkte": 1,
    "moeglich": 7,
-   "dauerH": 26.88,
+   "dauerH": 26.63,
    "torOk": false
   },
   {
@@ -2276,7 +2327,7 @@
    "kickoff": "2026-09-05T16:30:00Z",
    "punkte": 0,
    "moeglich": 10,
-   "dauerH": 2.88,
+   "dauerH": 2.63,
    "torOk": false
   },
   {
@@ -2285,24 +2336,24 @@
    "liga": "English National League South",
    "name": "Remis",
    "seite": "draw",
-   "odd": 4.0,
+   "odd": 4.1,
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
    "matchId": "35999366",
    "markt": "Match Odds",
    "liga": "Scottish League Two",
-   "name": "Annan",
-   "seite": "away",
-   "odd": 3.35,
+   "name": "Kelty Hearts",
+   "seite": "home",
+   "odd": 2.32,
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2311,11 +2362,11 @@
    "liga": "Norwegian 1st Division",
    "name": "Hodd",
    "seite": "away",
-   "odd": 2.84,
+   "odd": 2.74,
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2328,33 +2379,20 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.38,
-   "torOk": false
-  },
-  {
-   "matchId": "35998906",
-   "markt": "Match Odds",
-   "liga": "Scottish League One",
-   "name": "Ross Co",
-   "seite": "away",
-   "odd": 1.49,
-   "kickoff": "2026-09-05T14:00:00Z",
-   "punkte": 0,
-   "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
    "matchId": "35999945",
    "markt": "Match Odds",
    "liga": "English Sky Bet League 2",
-   "name": "Oldham",
-   "seite": "away",
-   "odd": 2.32,
+   "name": "Tranmere",
+   "seite": "home",
+   "odd": 3.25,
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
-   "moeglich": 4,
-   "dauerH": 0.38,
+   "moeglich": 7,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2367,7 +2405,20 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
+   "torOk": false
+  },
+  {
+   "matchId": "36024449",
+   "markt": "Match Odds",
+   "liga": "Icelandic 1 Deild",
+   "name": "Fylkir",
+   "seite": "away",
+   "odd": 2.5,
+   "kickoff": "2026-09-05T14:00:00Z",
+   "punkte": 0,
+   "moeglich": 4,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2376,24 +2427,24 @@
    "liga": "English National League North",
    "name": "Bedford Town",
    "seite": "home",
-   "odd": 1.94,
+   "odd": 1.95,
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
-   "matchId": "36024044",
+   "matchId": "35999883",
    "markt": "Match Odds",
-   "liga": "English National League North",
-   "name": "Chorley",
-   "seite": "away",
-   "odd": 3.95,
+   "liga": "English Sky Bet League 2",
+   "name": "Accrington",
+   "seite": "home",
+   "odd": 2.12,
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2402,11 +2453,11 @@
    "liga": "English National League",
    "name": "Barrow",
    "seite": "home",
-   "odd": 2.18,
+   "odd": 2.1,
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2419,7 +2470,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2432,7 +2483,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2441,11 +2492,11 @@
    "liga": "Icelandic 1 Deild",
    "name": "Grindavik",
    "seite": "away",
-   "odd": 1.31,
+   "odd": 1.33,
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2458,7 +2509,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2471,7 +2522,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2484,7 +2535,20 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
+   "torOk": false
+  },
+  {
+   "matchId": "35999749",
+   "markt": "Match Odds",
+   "liga": "English Sky Bet Championship",
+   "name": "Norwich",
+   "seite": "away",
+   "odd": 2.78,
+   "kickoff": "2026-09-05T14:00:00Z",
+   "punkte": 0,
+   "moeglich": 7,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2497,7 +2561,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2510,7 +2574,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2523,7 +2587,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2536,20 +2600,46 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
+   "torOk": false
+  },
+  {
+   "matchId": "36015831",
+   "markt": "Match Odds",
+   "liga": "Scottish Premiership",
+   "name": "Dundee Utd",
+   "seite": "home",
+   "odd": 2.14,
+   "kickoff": "2026-09-05T14:00:00Z",
+   "punkte": 0,
+   "moeglich": 4,
+   "dauerH": 0.13,
+   "torOk": false
+  },
+  {
+   "matchId": "36030882",
+   "markt": "Match Odds",
+   "liga": "Qatari Stars League",
+   "name": "Al Rayyan",
+   "seite": "home",
+   "odd": 2.68,
+   "kickoff": "2026-09-05T14:00:00Z",
+   "punkte": 0,
+   "moeglich": 4,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
    "matchId": "36023890",
    "markt": "Match Odds",
    "liga": "English National League North",
-   "name": "Hebburn Town",
-   "seite": "home",
-   "odd": 4.3,
+   "name": "Chester",
+   "seite": "away",
+   "odd": 2.0,
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2562,7 +2652,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2571,11 +2661,11 @@
    "liga": "Norwegian 1st Division",
    "name": "Bryne",
    "seite": "away",
-   "odd": 2.14,
+   "odd": 2.24,
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2588,7 +2678,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2601,7 +2691,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2614,7 +2704,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2627,7 +2717,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2640,7 +2730,7 @@
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
    "moeglich": 4,
-   "dauerH": 0.38,
+   "dauerH": 0.13,
    "torOk": false
   },
   {
@@ -2652,8 +2742,34 @@
    "odd": 3.55,
    "kickoff": "2026-09-05T14:00:00Z",
    "punkte": 0,
-   "moeglich": 7,
-   "dauerH": 0.38,
+   "moeglich": 4,
+   "dauerH": 0.13,
+   "torOk": false
+  },
+  {
+   "matchId": "36014974",
+   "markt": "Match Odds",
+   "liga": "Norwegian 1st Division",
+   "name": "Sandnes Ulf",
+   "seite": "home",
+   "odd": 2.12,
+   "kickoff": "2026-09-05T14:00:00Z",
+   "punkte": 0,
+   "moeglich": 4,
+   "dauerH": 0.13,
+   "torOk": false
+  },
+  {
+   "matchId": "35997426",
+   "markt": "Match Odds",
+   "liga": "Scottish Championship",
+   "name": "Queens Park",
+   "seite": "home",
+   "odd": 2.56,
+   "kickoff": "2026-09-05T14:00:00Z",
+   "punkte": 0,
+   "moeglich": 4,
+   "dauerH": 0.13,
    "torOk": false
   }
  ],
@@ -2679,33 +2795,78 @@
  },
  "bilanz": {
   "gesamt": {
-   "n": 148,
-   "gewonnen": 91,
-   "verloren": 57,
-   "einheiten": 12.36,
-   "roi": 0.0835,
-   "roiLb": -0.0381
+   "n": 153,
+   "gewonnen": 93,
+   "verloren": 60,
+   "einheiten": 11.37,
+   "roi": 0.0743,
+   "roiLb": -0.0458
   },
   "jeStufe": {
    "1": {
-    "n": 32,
-    "gewonnen": 22,
-    "verloren": 10,
-    "einheiten": 6.54,
-    "roi": 0.2044,
-    "roiLb": -0.0462
+    "n": 36,
+    "gewonnen": 24,
+    "verloren": 12,
+    "einheiten": 6.55,
+    "roi": 0.1819,
+    "roiLb": -0.0597
    },
    "2": {
-    "n": 116,
+    "n": 117,
     "gewonnen": 69,
-    "verloren": 47,
-    "einheiten": 5.82,
-    "roi": 0.0502,
-    "roiLb": -0.0888
+    "verloren": 48,
+    "einheiten": 4.82,
+    "roi": 0.0412,
+    "roiLb": -0.0974
    }
   },
-  "offen": 14,
+  "offen": 10,
   "zeilen": [
+   {
+    "name": "Newcastle",
+    "liga": "English Premier League",
+    "stufe": 1,
+    "haltePreis": 2.18,
+    "schlussPreis": 2.18,
+    "win": false,
+    "settledAt": "2026-09-05T13:52:14.415311+00:00"
+   },
+   {
+    "name": "Shanghai Port FC",
+    "liga": "Chinese Super League",
+    "stufe": 1,
+    "haltePreis": 1.97,
+    "schlussPreis": 1.9,
+    "win": false,
+    "settledAt": "2026-09-05T13:52:14.415311+00:00"
+   },
+   {
+    "name": "Stoke",
+    "liga": "English Sky Bet Championship",
+    "stufe": 1,
+    "haltePreis": 2.06,
+    "schlussPreis": 2.06,
+    "win": true,
+    "settledAt": "2026-09-05T13:52:14.415311+00:00"
+   },
+   {
+    "name": "Stockport",
+    "liga": "English Sky Bet League 1",
+    "stufe": 1,
+    "haltePreis": 1.95,
+    "schlussPreis": 1.87,
+    "win": true,
+    "settledAt": "2026-09-05T13:52:14.415311+00:00"
+   },
+   {
+    "name": "Waldhof Mannheim",
+    "liga": "German 3 Liga",
+    "stufe": 2,
+    "haltePreis": 2.04,
+    "schlussPreis": 2.04,
+    "win": false,
+    "settledAt": "2026-09-05T13:52:14.415311+00:00"
+   },
    {
     "name": "Wolfsburg",
     "liga": "German Bundesliga 2",
@@ -2885,51 +3046,6 @@
     "schlussPreis": 2.94,
     "win": false,
     "settledAt": "2026-09-04T15:03:57.274149+00:00"
-   },
-   {
-    "name": "Cerro Porteno",
-    "liga": "Paraguayan Primera Division",
-    "stufe": 2,
-    "haltePreis": 1.99,
-    "schlussPreis": 1.99,
-    "win": true,
-    "settledAt": "2026-09-03T23:47:22.720783+00:00"
-   },
-   {
-    "name": "Vinotinto Ecuador",
-    "liga": "Ecuadorian Serie B",
-    "stufe": 2,
-    "haltePreis": 1.66,
-    "schlussPreis": 1.66,
-    "win": true,
-    "settledAt": "2026-09-03T22:47:17.554794+00:00"
-   },
-   {
-    "name": "Real Sociedad",
-    "liga": "Spanish La Liga",
-    "stufe": 1,
-    "haltePreis": 1.96,
-    "schlussPreis": 1.86,
-    "win": false,
-    "settledAt": "2026-09-03T21:01:58.726035+00:00"
-   },
-   {
-    "name": "Anderlecht",
-    "liga": "Belgian Pro League",
-    "stufe": 1,
-    "haltePreis": 1.45,
-    "schlussPreis": 1.43,
-    "win": true,
-    "settledAt": "2026-09-03T20:47:02.122478+00:00"
-   },
-   {
-    "name": "Lugano",
-    "liga": "Swiss Super League",
-    "stufe": 1,
-    "haltePreis": 2.62,
-    "schlussPreis": 2.6,
-    "win": true,
-    "settledAt": "2026-09-03T20:47:02.122478+00:00"
    }
   ]
  },
@@ -2951,16 +3067,16 @@
   {
    "punkte": 8,
    "moeglich": 10,
-   "n": 10,
-   "roi": 0.129,
-   "roiLb": -0.4
+   "n": 11,
+   "roi": 0.0264,
+   "roiLb": -0.4811
   },
   {
    "punkte": 7,
    "moeglich": 10,
-   "n": 11,
-   "roi": 0.4982,
-   "roiLb": 0.0983
+   "n": 14,
+   "roi": 0.4607,
+   "roiLb": 0.0903
   },
   {
    "punkte": 6,
@@ -2986,9 +3102,9 @@
   {
    "punkte": 5,
    "moeglich": 7,
-   "n": 12,
-   "roi": -0.1917,
-   "roiLb": -0.6216
+   "n": 13,
+   "roi": -0.2538,
+   "roiLb": -0.6623
   },
   {
    "punkte": 4,
@@ -3000,9 +3116,9 @@
   {
    "punkte": 4,
    "moeglich": 7,
-   "n": 14,
-   "roi": 0.5014,
-   "roiLb": 0.1336
+   "n": 16,
+   "roi": 0.4413,
+   "roiLb": 0.0798
   },
   {
    "punkte": 4,
@@ -3021,9 +3137,9 @@
   {
    "punkte": 3,
    "moeglich": 7,
-   "n": 3,
-   "roi": 0.56,
-   "roiLb": -0.7837
+   "n": 4,
+   "roi": 0.775,
+   "roiLb": -0.2388
   },
   {
    "punkte": 3,
@@ -3042,16 +3158,16 @@
   {
    "punkte": 2,
    "moeglich": 7,
-   "n": 24,
-   "roi": -0.2138,
-   "roiLb": -0.5716
+   "n": 25,
+   "roi": -0.1444,
+   "roiLb": -0.5061
   },
   {
    "punkte": 2,
    "moeglich": 4,
-   "n": 214,
-   "roi": 0.0163,
-   "roiLb": -0.1102
+   "n": 221,
+   "roi": 0.0075,
+   "roiLb": -0.1163
   },
   {
    "punkte": 1,
@@ -3063,9 +3179,9 @@
   {
    "punkte": 1,
    "moeglich": 4,
-   "n": 3,
-   "roi": 8.9667,
-   "roiLb": 5.9092
+   "n": 4,
+   "roi": 6.475,
+   "roiLb": 1.841
   },
   {
    "punkte": 0,
@@ -3084,9 +3200,9 @@
   {
    "punkte": 0,
    "moeglich": 4,
-   "n": 198,
-   "roi": 0.1141,
-   "roiLb": -0.0834
+   "n": 201,
+   "roi": 0.1064,
+   "roiLb": -0.0887
   }
  ]
 }
