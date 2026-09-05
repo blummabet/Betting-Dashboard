@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-05T04:27:13.890784+00:00",
+ "generatedAt": "2026-09-05T04:57:17.727264+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -33,5 +33,34 @@
   "tracked": 288,
   "converged": 75
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|athletics-seattlemariners|athletics",
+   "sport": "baseball_mlb",
+   "event": "Athletics vs Seattle Mariners",
+   "market": "Moneyline",
+   "outcome": "Athletics",
+   "polyPP": 79.0,
+   "pinnPP": 60.2,
+   "gapPP": 18.85,
+   "vol": 317683,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 27.18,
+   "firstSeen": "2026-09-05T02:57:06.574017+00:00"
+  },
+  {
+   "id": "baseball_mlb|athletics-seattlemariners|seattlemariners",
+   "sport": "baseball_mlb",
+   "event": "Athletics vs Seattle Mariners",
+   "market": "Moneyline",
+   "outcome": "Seattle Mariners",
+   "polyPP": 21.0,
+   "pinnPP": 39.8,
+   "gapPP": -18.85,
+   "vol": 317683,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 27.18,
+   "firstSeen": "2026-09-05T02:57:06.574017+00:00"
+  }
+ ]
 }
