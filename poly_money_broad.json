@@ -1,24 +1,24 @@
 {
- "n": 46,
+ "n": 47,
  "minOdds": 1.35,
- "moneyHitRate": 0.413,
- "priceHitRate": 0.413,
- "brierMoney": 0.7844,
- "brierPrice": 0.6829,
+ "moneyHitRate": 0.404,
+ "priceHitRate": 0.426,
+ "brierMoney": 0.7824,
+ "brierPrice": 0.6818,
  "disagree": {
-  "n": 14,
+  "n": 15,
   "moneyWon": 1,
-  "priceWon": 1,
+  "priceWon": 2,
   "neither": 12
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
  "byLeague": [],
  "guete": {
-  "belastbar": 46,
-  "preis_echo": 254,
+  "belastbar": 47,
+  "preis_echo": 256,
   "abgeschnitten": 6,
-  "unbekannt": 447,
+  "unbekannt": 446,
   "leer": 0
  },
  "rows": [
@@ -255,11 +255,11 @@
    "league": "SOCCER:SAF1",
    "winner": "Draw (Marumo Gallants FC vs. Polokwane City)",
    "moneyFav": "Polokwane City",
-   "priceFav": "Polokwane City",
+   "priceFav": "Draw (Marumo Gallants FC vs. Polokwane City)",
    "moneyShare": 0.619,
    "priceProb": 0.357,
    "moneyOK": false,
-   "priceOK": false,
+   "priceOK": true,
    "totalUsd": 29721
   },
   {
@@ -431,6 +431,18 @@
    "totalUsd": 12291
   },
   {
+   "key": "chl2-sw-iqu-2026-09-04",
+   "league": "SOCCER:CHL2",
+   "winner": "Santiago Wanderers",
+   "moneyFav": "Deportes Iquique",
+   "priceFav": "Deportes Iquique",
+   "moneyShare": 0.585,
+   "priceProb": 0.378,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 11583
+  },
+  {
    "key": "sui-fcb-sio-2026-09-03",
    "league": "SOCCER:SUI",
    "winner": "FC Sion",
@@ -489,32 +501,20 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 9610
-  },
-  {
-   "key": "qat1-shm-sha-2026-09-04",
-   "league": "SOCCER:QAT1",
-   "winner": "Al-Shamal",
-   "moneyFav": "Al-Shamal",
-   "priceFav": "Al-Shamal",
-   "moneyShare": 0.683,
-   "priceProb": 0.562,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 9120
   }
  ],
- "generatedAt": "2026-09-05T01:59:41.204572+00:00",
+ "generatedAt": "2026-09-05T02:29:55.861204+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 423,
   "nfl": 800,
-  "mlb": 758,
+  "mlb": 731,
   "nhl": 482,
-  "mls": 760,
+  "mls": 768,
   "epl": 606,
   "soccer": 800,
-  "tennis": 567,
+  "tennis": 569,
   "ucl": 532,
   "la-liga": 662,
   "bundesliga": 563,
@@ -526,7 +526,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 639,
+  "esports": 634,
   "cs2": 421,
   "lol": 400,
   "dota": 9,
@@ -586,17 +586,17 @@
   "sweepAdded": 405
  },
  "vorStats": {
-  "kandidaten": 5,
+  "kandidaten": 6,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 5,
-  "calls": 5
+  "mitAnteilen": 6,
+  "calls": 6
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1564,
-   "usd": 25454989,
+   "n": 1176,
+   "usd": 21259562,
    "beispiel": "fifwc-nor-eng-2026-07-11"
   },
   "balance": {
@@ -605,94 +605,94 @@
    "beispiel": "balance-of-power-2026-midterms"
   },
   "nba": {
-   "n": 371,
-   "usd": 5759159,
+   "n": 288,
+   "usd": 4746371,
    "beispiel": "nba-lebron-james-next-team"
   },
-  "cfb": {
-   "n": 101,
-   "usd": 1328203,
-   "beispiel": "cfb-toledo-mst-2026-09-04"
-  },
   "nhl": {
-   "n": 139,
-   "usd": 1218785,
+   "n": 116,
+   "usd": 970844,
    "beispiel": "nhl-car-las-2026-06-06"
   },
   "ecs": {
-   "n": 4,
-   "usd": 899379,
+   "n": 2,
+   "usd": 866679,
    "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
+  },
+  "cfb": {
+   "n": 71,
+   "usd": 652821,
+   "beispiel": "cfb-toledo-mst-2026-09-04"
   },
   "cbb": {
    "n": 34,
    "usd": 285743,
    "beispiel": "cbb-uconn-mich-2026-04-06"
   },
-  "fed": {
-   "n": 20,
-   "usd": 283807,
-   "beispiel": "fed-decision-in-september-762"
-  },
   "strait": {
    "n": 2,
    "usd": 152575,
    "beispiel": "strait-of-hormuz-traffic-returns-to-normal-by-august-31-20260702154212320"
   },
-  "which": {
-   "n": 14,
-   "usd": 126539,
-   "beispiel": "which-party-will-win-the-senate-in-2026"
-  },
-  "nbasl": {
-   "n": 4,
-   "usd": 119787,
-   "beispiel": "nbasl-cha-sac-2026-07-17"
-  },
-  "2026": {
-   "n": 24,
-   "usd": 115994,
-   "beispiel": "2026-mens-us-open-winner-tennis"
-  },
-  "world": {
+  "clf": {
    "n": 28,
-   "usd": 112313,
-   "beispiel": "world-cup-winner"
-  },
-  "fif": {
-   "n": 24,
-   "usd": 75709,
-   "beispiel": "fif-rus-tri-2026-06-09-more-markets"
+   "usd": 130984,
+   "beispiel": "clf-tot-tsg-2026-08-16"
   },
   "democratic": {
-   "n": 13,
-   "usd": 59242,
+   "n": 14,
+   "usd": 104162,
    "beispiel": "democratic-presidential-nominee-2028"
+  },
+  "nbasl": {
+   "n": 2,
+   "usd": 103755,
+   "beispiel": "nbasl-cle-nop-2026-07-15"
+  },
+  "fed": {
+   "n": 9,
+   "usd": 100889,
+   "beispiel": "fed-decision-in-september-762"
+  },
+  "which": {
+   "n": 11,
+   "usd": 98476,
+   "beispiel": "which-party-will-win-the-house-in-2026"
+  },
+  "2026": {
+   "n": 19,
+   "usd": 92867,
+   "beispiel": "2026-mens-us-open-winner-tennis"
   },
   "super": {
    "n": 14,
    "usd": 57397,
    "beispiel": "super-bowl-champion-2026-731"
   },
-  "clf": {
-   "n": 18,
-   "usd": 54415,
-   "beispiel": "clf-tot-tsg-2026-08-16"
-  },
   "us": {
-   "n": 9,
-   "usd": 52687,
+   "n": 7,
+   "usd": 49396,
    "beispiel": "us-open-novak-djokovic-vs-carlos-alcaraz-2025-09-05"
   },
-  "what": {
-   "n": 9,
-   "usd": 49522,
-   "beispiel": "what-price-will-bitcoin-hit-before-2027"
+  "how": {
+   "n": 4,
+   "usd": 39092,
+   "beispiel": "how-many-fed-rate-cuts-in-2026"
+  },
+  "fif": {
+   "n": 12,
+   "usd": 36895,
+   "beispiel": "fif-prt-nga-2026-06-10"
   },
   "clarity": {
-   "n": 3,
-   "usd": 42723,
+   "n": 1,
+   "usd": 34928,
    "beispiel": "clarity-act-signed-into-law-in-2026"
+  },
+  "presidential": {
+   "n": 9,
+   "usd": 31221,
+   "beispiel": "presidential-election-winner-2028"
   }
  }
 }
