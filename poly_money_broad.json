@@ -1,13 +1,13 @@
 {
- "n": 46,
+ "n": 45,
  "minOdds": 1.35,
- "moneyHitRate": 0.391,
- "priceHitRate": 0.391,
- "brierMoney": 0.7975,
- "brierPrice": 0.687,
+ "moneyHitRate": 0.378,
+ "priceHitRate": 0.4,
+ "brierMoney": 0.8143,
+ "brierPrice": 0.6888,
  "disagree": {
-  "n": 14,
-  "moneyWon": 1,
+  "n": 13,
+  "moneyWon": 0,
   "priceWon": 1,
   "neither": 12
  },
@@ -15,8 +15,8 @@
  "urteilMinN": 30,
  "byLeague": [],
  "guete": {
-  "belastbar": 46,
-  "preis_echo": 247,
+  "belastbar": 45,
+  "preis_echo": 246,
   "abgeschnitten": 6,
   "unbekannt": 446,
   "leer": 0
@@ -275,18 +275,6 @@
    "totalUsd": 28793
   },
   {
-   "key": "swe2-ost-nou-2026-09-04",
-   "league": "SOCCER:SWE2",
-   "winner": "Nordic United FC",
-   "moneyFav": "Nordic United FC",
-   "priceFav": "Osters IF",
-   "moneyShare": 0.854,
-   "priceProb": 0.377,
-   "moneyOK": true,
-   "priceOK": false,
-   "totalUsd": 27891
-  },
-  {
    "key": "bun-stu-koe-2026-09-04-exact-score",
    "league": "BUNDESLIGA",
    "winner": "Any Other Score",
@@ -501,9 +489,21 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 9120
+  },
+  {
+   "key": "mls-nyc-nas-2026-09-04-exact-score",
+   "league": "MLS",
+   "winner": "New York City FC 0 - 0 Nashville SC",
+   "moneyFav": "New York City FC 1 - 2 Nashville SC",
+   "priceFav": "New York City FC 1 - 1 Nashville SC",
+   "moneyShare": 0.174,
+   "priceProb": 0.125,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 8448
   }
  ],
- "generatedAt": "2026-09-05T11:32:19.045926+00:00",
+ "generatedAt": "2026-09-05T12:03:41.130170+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -514,7 +514,7 @@
   "mls": 780,
   "epl": 613,
   "soccer": 800,
-  "tennis": 546,
+  "tennis": 539,
   "ucl": 532,
   "la-liga": 669,
   "bundesliga": 570,
@@ -526,7 +526,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 632,
+  "esports": 630,
   "cs2": 421,
   "lol": 400,
   "dota": 9,
@@ -536,7 +536,7 @@
   "boxing": 258,
   "golf": 366,
   "f1": 380,
-  "cricket": 657,
+  "cricket": 648,
   "allsvenskan": 1,
   "austria-bundesliga": 235,
   "brazil-serie-b": 4,
@@ -559,7 +559,7 @@
   "liga-mx-apertura": 2,
   "ligue-2": 531,
   "naitons-league": 1,
-  "national-league": 652,
+  "national-league": 654,
   "nations-league": 25,
   "norway-eliteserien": 504,
   "poland-ekstraklasa": 391,
@@ -586,8 +586,8 @@
   "sweepAdded": 404
  },
  "vorStats": {
-  "kandidaten": 50,
-  "budgetLeer": 28,
+  "kandidaten": 49,
+  "budgetLeer": 27,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
   "mitAnteilen": 22,
@@ -595,9 +595,9 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 2030,
-   "usd": 32597827,
-   "beispiel": "fifwc-esp-bel-2026-07-10-more-markets"
+   "n": 1970,
+   "usd": 32285126,
+   "beispiel": "fifwc-bra-nor-2026-07-05-more-markets"
   },
   "balance": {
    "n": 3,
@@ -605,94 +605,94 @@
    "beispiel": "balance-of-power-2026-midterms"
   },
   "nba": {
-   "n": 423,
-   "usd": 5793511,
+   "n": 390,
+   "usd": 5709026,
    "beispiel": "nba-nyk-phi-2026-05-08"
   },
   "world": {
-   "n": 116,
-   "usd": 2236808,
+   "n": 110,
+   "usd": 2208716,
    "beispiel": "world-cup-winner"
   },
   "nhl": {
-   "n": 112,
-   "usd": 946994,
+   "n": 109,
+   "usd": 943645,
    "beispiel": "nhl-mon-car-2026-01-01"
-  },
-  "cbb": {
-   "n": 171,
-   "usd": 807735,
-   "beispiel": "cbb-pur-arz-2026-03-28"
-  },
-  "2026": {
-   "n": 160,
-   "usd": 557308,
-   "beispiel": "2026-mens-us-open-winner-tennis"
   },
   "fed": {
    "n": 29,
-   "usd": 494830,
+   "usd": 607780,
    "beispiel": "fed-decision-in-september-762"
+  },
+  "cbb": {
+   "n": 73,
+   "usd": 585595,
+   "beispiel": "cbb-pur-arz-2026-03-28"
   },
   "what": {
    "n": 41,
-   "usd": 455547,
+   "usd": 455462,
    "beispiel": "what-price-will-ethereum-hit-before-2027"
   },
-  "cfb": {
-   "n": 73,
-   "usd": 338736,
-   "beispiel": "cfb-ntx-ind-2026-09-05"
-  },
-  "will": {
-   "n": 22,
-   "usd": 335152,
-   "beispiel": "will-the-us-confirm-that-aliens-exist-before-2027"
+  "2026": {
+   "n": 158,
+   "usd": 365858,
+   "beispiel": "2026-mens-us-open-winner-tennis"
   },
   "fif": {
-   "n": 69,
-   "usd": 304095,
-   "beispiel": "fif-bra-egy-2026-06-06-more-markets"
+   "n": 78,
+   "usd": 351633,
+   "beispiel": "fif-prt-nga-2026-06-10"
   },
-  "clf": {
-   "n": 59,
-   "usd": 249997,
-   "beispiel": "clf-jej-bmu-2026-08-04-more-markets"
-  },
-  "uef": {
-   "n": 7,
-   "usd": 235350,
-   "beispiel": "uef-kvx-tur-2026-03-31"
+  "cfb": {
+   "n": 77,
+   "usd": 349454,
+   "beispiel": "cfb-ntx-ind-2026-09-05"
   },
   "efa": {
-   "n": 13,
-   "usd": 204112,
+   "n": 33,
+   "usd": 347518,
    "beispiel": "efa-mnc-liv-2026-04-04"
   },
-  "which": {
-   "n": 24,
-   "usd": 183593,
-   "beispiel": "which-party-will-win-the-senate-in-2026"
+  "will": {
+   "n": 18,
+   "usd": 332176,
+   "beispiel": "will-the-us-acquire-any-part-of-greenland-in-2026"
+  },
+  "clf": {
+   "n": 67,
+   "usd": 266358,
+   "beispiel": "clf-psg-mun-2026-08-08"
+  },
+  "uef": {
+   "n": 13,
+   "usd": 266049,
+   "beispiel": "uef-kvx-tur-2026-03-31"
   },
   "ecs": {
-   "n": 15,
-   "usd": 180188,
+   "n": 16,
+   "usd": 182188,
    "beispiel": "ecs-ars-mci-2026-08-16"
+  },
+  "which": {
+   "n": 26,
+   "usd": 152723,
+   "beispiel": "which-party-will-gain-most-seats-in-russian-parliamentary-election"
   },
   "strait": {
    "n": 2,
    "usd": 152575,
    "beispiel": "strait-of-hormuz-traffic-returns-to-normal-by-august-31-20260702154212320"
   },
-  "us": {
-   "n": 16,
-   "usd": 147061,
-   "beispiel": "us-x-iran-ceasefire-by"
-  },
   "republican": {
-   "n": 9,
-   "usd": 140487,
+   "n": 10,
+   "usd": 141916,
    "beispiel": "republican-presidential-nominee-2028"
+  },
+  "us": {
+   "n": 15,
+   "usd": 141329,
+   "beispiel": "us-x-iran-ceasefire-by"
   }
  }
 }
