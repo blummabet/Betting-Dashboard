@@ -498,7 +498,7 @@
    "gehaltenSeit": "2026-09-05T20:52:02.667887+00:00",
    "zuletztAktiv": "2026-09-05T22:52:21.577594+00:00",
    "haltePreis": 1.74,
-   "aktiv": true
+   "aktiv": false
   },
   "36025954|Match Odds": {
    "matchId": "36025954",
@@ -580,7 +580,7 @@
    "gehaltenSeit": "2026-09-05T22:37:20.047046+00:00",
    "zuletztAktiv": "2026-09-05T22:52:21.577594+00:00",
    "haltePreis": 1.79,
-   "aktiv": true
+   "aktiv": false
   },
   "35974012|Match Odds": {
    "matchId": "35974012",
@@ -591,7 +591,7 @@
    "markt": "Match Odds",
    "seite": "home",
    "name": "Columbus",
-   "odd": 2.06,
+   "odd": 2.04,
    "entryOdd": 2.22,
    "anteilPct": 69,
    "stufe": 1,
@@ -605,9 +605,14 @@
      "art": "pinn",
      "text": "Pinnacle stimmt zu",
      "gewicht": 10
+    },
+    {
+     "art": "pinnMove",
+     "text": "Pinnacle zieht mit +1.9pp",
+     "gewicht": 14
     }
    ],
-   "rang": 78.9,
+   "rang": 93.6,
    "track": null,
    "streak": null,
    "poly": {
@@ -618,7 +623,7 @@
    "polyStatus": "ja",
    "pinnMovePP": null,
    "punkte": {
-    "punkte": 8,
+    "punkte": 9,
     "moeglich": 10,
     "dauerH": 0.38,
     "teile": [
@@ -630,13 +635,13 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 69% auf der Seite"
+       "text": "Geld 76% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
-      "text": "Geld 69% auf der Seite"
+      "text": "Geld 76% auf der Seite"
      },
      {
       "buch": "POLY",
@@ -653,6 +658,115 @@
        "text": "2 bewiesene Wallets drauf"
       },
       "text": "Poly-Geld 98% auf derselben Seite"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "hat dieselbe Seite als Favorit"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "Move +1.9pp in unsere Richtung"
+      },
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "nein",
+      "punkte": 0,
+      "moeglich": 1,
+      "grund": {
+       "ok": false,
+       "text": "steht seit 0.4h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 0.4h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": -0.0186,
+   "gehaltenSeit": "2026-09-05T23:07:20.678022+00:00",
+   "zuletztAktiv": "2026-09-05T23:22:23.463560+00:00",
+   "haltePreis": 2.06,
+   "aktiv": true
+  },
+  "35974023|Match Odds": {
+   "matchId": "35974023",
+   "home": "Philadelphia",
+   "away": "CF Montreal",
+   "league": "US MLS",
+   "kickoff": "2026-09-05T23:30:00Z",
+   "markt": "Match Odds",
+   "seite": "home",
+   "name": "Philadelphia",
+   "odd": 1.49,
+   "entryOdd": 1.49,
+   "anteilPct": 74,
+   "stufe": 1,
+   "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly 85%",
+     "gewicht": 12
+    },
+    {
+     "art": "pinn",
+     "text": "Pinnacle stimmt zu",
+     "gewicht": 10
+    }
+   ],
+   "rang": 79.3,
+   "track": null,
+   "streak": null,
+   "poly": {
+    "anteilPct": 85,
+    "usd": 8847,
+    "odd": 1.48
+   },
+   "polyStatus": "ja",
+   "pinnMovePP": null,
+   "punkte": {
+    "punkte": 7,
+    "moeglich": 10,
+    "dauerH": 0.13,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 74% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "text": "Geld 74% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Geld 85% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "text": "Poly-Geld 85% auf derselben Seite"
      },
      {
       "buch": "PIN",
@@ -678,99 +792,17 @@
       "moeglich": 1,
       "grund": {
        "ok": false,
-       "text": "steht seit 0.4h vor Anpfiff"
+       "text": "steht seit 0.1h vor Anpfiff"
       },
       "tiefe": null,
-      "text": "steht seit 0.4h vor Anpfiff"
-     }
-    ]
-   },
-   "wertVsPinn": -0.0186,
-   "gehaltenSeit": "2026-09-05T23:07:20.678022+00:00",
-   "zuletztAktiv": "2026-09-05T23:07:20.678022+00:00",
-   "haltePreis": 2.06,
-   "aktiv": true
-  },
-  "36029474|Match Odds": {
-   "matchId": "36029474",
-   "home": "Cucuta Deportivo",
-   "away": "Deportivo Pasto",
-   "league": "Colombian Primera A",
-   "kickoff": "2026-09-05T23:10:00Z",
-   "markt": "Match Odds",
-   "seite": "home",
-   "name": "Cucuta Deportivo",
-   "odd": 2.16,
-   "entryOdd": 2.3,
-   "anteilPct": 80,
-   "stufe": 2,
-   "verstaerker": [],
-   "rang": 58.0,
-   "track": null,
-   "streak": null,
-   "poly": null,
-   "polyStatus": "unbekannt",
-   "pinnMovePP": null,
-   "punkte": {
-    "punkte": 3,
-    "moeglich": 4,
-    "dauerH": 0.04,
-    "teile": [
-     {
-      "buch": "BF",
-      "name": "Betfair",
-      "status": "ja",
-      "punkte": 3,
-      "moeglich": 3,
-      "grund": {
-       "ok": true,
-       "text": "Geld 80% auf der Seite"
-      },
-      "tiefe": {
-       "ok": true,
-       "text": "frischer Zufluss und Quote zieht mit"
-      },
-      "text": "Geld 80% auf der Seite"
-     },
-     {
-      "buch": "POLY",
-      "name": "Polymarket",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "text": "Polymarket nicht erhoben"
-     },
-     {
-      "buch": "PIN",
-      "name": "Pinnacle",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "text": "Pinnacle nicht erhoben"
-     },
-     {
-      "buch": "ZEIT",
-      "name": "Dauer",
-      "status": "nein",
-      "punkte": 0,
-      "moeglich": 1,
-      "grund": {
-       "ok": false,
-       "text": "steht seit 0.0h vor Anpfiff"
-      },
-      "tiefe": null,
-      "text": "steht seit 0.0h vor Anpfiff"
+      "text": "steht seit 0.1h vor Anpfiff"
      }
     ]
    },
    "wertVsPinn": null,
-   "gehaltenSeit": "2026-09-05T23:07:20.678022+00:00",
-   "zuletztAktiv": "2026-09-05T23:07:20.678022+00:00",
-   "haltePreis": 2.16,
+   "gehaltenSeit": "2026-09-05T23:22:23.463560+00:00",
+   "zuletztAktiv": "2026-09-05T23:22:23.463560+00:00",
+   "haltePreis": 1.49,
    "aktiv": true
   }
  }
