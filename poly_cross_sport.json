@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-05T18:18:24.683207+00:00",
+ "generatedAt": "2026-09-05T18:28:46.507189+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,29 +9,72 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 587,
- "pinnKeys": 333,
- "matched": 235,
- "footballRows": 201,
+ "polyRowsSeen": 584,
+ "pinnKeys": 330,
+ "matched": 232,
+ "footballRows": 198,
  "crossRows": 386,
- "footballSkippedStale": 75,
+ "footballSkippedStale": 64,
  "seenBySport": {
   "americanfootball_nfl": 156,
   "baseball_mlb": 94,
   "icehockey_nhl": 96,
   "boxing_boxing": 40,
   "soccer_mls": 54,
-  "soccer_liga": 147
+  "soccer_liga": 144
  },
  "matchedBySport": {
   "baseball_mlb": 30,
   "boxing_boxing": 4,
   "soccer_mls": 54,
-  "soccer_liga": 147
+  "soccer_liga": 144
  },
  "trackRecord": {
-  "tracked": 314,
+  "tracked": 317,
   "converged": 75
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|racingsantander-rayovallecano|hw",
+   "sport": "soccer_liga",
+   "event": "Rayo Vallecano vs Racing Santander",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 47.5,
+   "pinnPP": 74.5,
+   "gapPP": -27.03,
+   "vol": 91145,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-05T18:28:46.506887+00:00"
+  },
+  {
+   "id": "soccer_liga|racingsantander-rayovallecano|aw",
+   "sport": "soccer_liga",
+   "event": "Rayo Vallecano vs Racing Santander",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 26.5,
+   "pinnPP": 4.7,
+   "gapPP": 21.77,
+   "vol": 91145,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-05T18:28:46.506887+00:00"
+  },
+  {
+   "id": "soccer_liga|racingsantander-rayovallecano|dr",
+   "sport": "soccer_liga",
+   "event": "Rayo Vallecano vs Racing Santander",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 27.5,
+   "pinnPP": 20.7,
+   "gapPP": 6.76,
+   "vol": 91145,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-05T18:28:46.506887+00:00"
+  }
+ ]
 }
