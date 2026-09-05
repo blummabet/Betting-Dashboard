@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-05T13:52:00.544817+00:00",
+"generatedAt": "2026-09-05T14:06:32.260945+00:00",
 "byVerdict": {
 "konsens": {
-"n": 769,
-"wins": 635,
-"hitRate": 0.8257,
-"polyN": 718,
+"n": 771,
+"wins": 636,
+"hitRate": 0.8249,
+"polyN": 720,
 "polyWins": 563,
-"polyHitRate": 0.7841,
+"polyHitRate": 0.7819,
 "pinnN": 66,
 "pinnHitRate": 0.8182,
-"nRoi": 97,
-"roi": 0.3854,
-"roiLb": 0.275,
-"nClv": 97,
-"clv": 19.26,
-"clvLb": 14.9545
+"nRoi": 99,
+"roi": 0.3798,
+"roiLb": 0.2684,
+"nClv": 99,
+"clv": 19.56,
+"clvLb": 15.3052
 },
 "uneinig": {
-"n": 271,
+"n": 272,
 "wins": 94,
-"hitRate": 0.3469,
-"polyN": 242,
+"hitRate": 0.3456,
+"polyN": 243,
 "polyWins": 69,
-"polyHitRate": 0.2851,
-"pinnN": 145,
-"pinnHitRate": 0.5862,
-"nRoi": 39,
-"roi": -0.1115,
-"roiLb": -0.3741,
-"nClv": 39,
-"clv": -4.45,
-"clvLb": -13.8655
+"polyHitRate": 0.284,
+"pinnN": 146,
+"pinnHitRate": 0.589,
+"nRoi": 40,
+"roi": -0.1338,
+"roiLb": -0.3923,
+"nClv": 40,
+"clv": -5.27,
+"clvLb": -14.5457
 },
 "teil": {
 "n": 11,
@@ -146,6 +146,11 @@
 "wins": 15,
 "hitRate": 0.75
 },
+"German Bundesliga 2": {
+"n": 19,
+"wins": 14,
+"hitRate": 0.7368
+},
 "Portuguese Primeira Liga": {
 "n": 19,
 "wins": 15,
@@ -180,11 +185,6 @@
 "n": 16,
 "wins": 12,
 "hitRate": 0.75
-},
-"German Bundesliga 2": {
-"n": 16,
-"wins": 13,
-"hitRate": 0.8125
 },
 "Colombian Primera A": {
 "n": 15,
@@ -584,37 +584,94 @@
 },
 "byStrength": {
 "strong": {
-"n": 619,
-"wins": 503,
-"hitRate": 0.8126,
-"nRoi": 95,
-"roi": 0.3119,
-"roiLb": 0.1821,
-"nClv": 95,
-"clv": 15.66,
-"clvLb": 10.3761
+"n": 621,
+"wins": 504,
+"hitRate": 0.8116,
+"nRoi": 97,
+"roi": 0.3077,
+"roiLb": 0.1777,
+"nClv": 97,
+"clv": 16.04,
+"clvLb": 10.8288
 },
 "weak": {
-"n": 399,
+"n": 400,
 "wins": 211,
-"hitRate": 0.5288,
-"nRoi": 43,
-"roi": 0.0326,
-"roiLb": -0.1852,
-"nClv": 43,
-"clv": 3.97,
-"clvLb": -3.1878
+"hitRate": 0.5275,
+"nRoi": 44,
+"roi": 0.0091,
+"roiLb": -0.2071,
+"nClv": 44,
+"clv": 3.04,
+"clvLb": -4.1278
 }
 },
 "divergence": {
-"n": 271,
+"n": 272,
 "betfairWins": 94,
-"betfairRate": 0.3469,
-"polyN": 242,
+"betfairRate": 0.3456,
+"polyN": 243,
 "polyWins": 69,
-"polyRate": 0.2851
+"polyRate": 0.284
 },
 "recent": [
+{
+"matchId": "36015154",
+"home": "Wolfsburg",
+"away": "Cottbus",
+"league": "German Bundesliga 2",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Wolfsburg",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+4,
+4
+],
+"kickoff": "2026-09-05T11:00:00Z",
+"settledAt": "2026-09-05T14:06:32.048774+00:00"
+},
+{
+"matchId": "36014992",
+"home": "Holstein Kiel",
+"away": "Nurnberg",
+"league": "German Bundesliga 2",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Holstein Kiel",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-09-05T11:00:00Z",
+"settledAt": "2026-09-05T14:06:32.048774+00:00"
+},
+{
+"matchId": "36014836",
+"home": "Kaiserslautern",
+"away": "SV Darmstadt",
+"league": "German Bundesliga 2",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Kaiserslautern",
+"polySide": "away",
+"winner": "home",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+3,
+0
+],
+"kickoff": "2026-09-05T11:00:00Z",
+"settledAt": "2026-09-05T14:06:32.048774+00:00"
+},
 {
 "matchId": "36014947",
 "home": "Jeonbuk Motors",
@@ -1317,75 +1374,18 @@
 ],
 "kickoff": "2026-09-04T17:00:00Z",
 "settledAt": "2026-09-04T20:04:34.832156+00:00"
-},
-{
-"matchId": "36015158",
-"home": "Arminia Bielefeld",
-"away": "St Pauli",
-"league": "German Bundesliga 2",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Arminia Bielefeld",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-09-04T16:30:00Z",
-"settledAt": "2026-09-04T19:34:29.372049+00:00"
-},
-{
-"matchId": "36014888",
-"home": "Vasas",
-"away": "Nyiregyhaza",
-"league": "Hungarian NB I",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Vasas",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-2
-],
-"kickoff": "2026-09-04T16:30:00Z",
-"settledAt": "2026-09-04T19:34:29.372049+00:00"
-},
-{
-"matchId": "36005510",
-"home": "Lyon",
-"away": "Auxerre",
-"league": "French Ligue 1",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Lyon",
-"polySide": null,
-"winner": "home",
-"moneyWin": true,
-"polyWin": null,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-09-04T17:00:00Z",
-"settledAt": "2026-09-04T19:04:25.670650+00:00"
 }
 ],
 "global": {
-"n": 1051,
-"wins": 732,
-"hitRate": 0.6965,
-"nRoi": 138,
-"roi": 0.2249,
-"roiLb": 0.1116,
-"nClv": 138,
-"clv": 12.02,
-"clvLb": 7.6984
+"n": 1054,
+"wins": 733,
+"hitRate": 0.6954,
+"nRoi": 141,
+"roi": 0.2145,
+"roiLb": 0.1013,
+"nClv": 141,
+"clv": 11.99,
+"clvLb": 7.6895
 },
-"pending": 35
+"pending": 34
 }
