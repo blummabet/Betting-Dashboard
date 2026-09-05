@@ -2,21 +2,21 @@
  "n": 57,
  "minOdds": 1.35,
  "moneyHitRate": 0.351,
- "priceHitRate": 0.386,
- "brierMoney": 0.8667,
- "brierPrice": 0.6923,
+ "priceHitRate": 0.404,
+ "brierMoney": 0.8668,
+ "brierPrice": 0.6929,
  "disagree": {
   "n": 18,
   "moneyWon": 0,
-  "priceWon": 2,
-  "neither": 16
+  "priceWon": 3,
+  "neither": 15
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
  "byLeague": [],
  "guete": {
   "belastbar": 57,
-  "preis_echo": 252,
+  "preis_echo": 251,
   "abgeschnitten": 7,
   "unbekannt": 446,
   "leer": 0
@@ -177,18 +177,6 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 76302
-  },
-  {
-   "key": "el1-wig-sto-2026-09-05",
-   "league": "SOCCER:EL1",
-   "winner": "Stockport County FC",
-   "moneyFav": "Stockport County FC",
-   "priceFav": "Stockport County FC",
-   "moneyShare": 0.867,
-   "priceProb": 0.522,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 63561
   },
   {
    "key": "fr2-gre-fca-2026-09-04",
@@ -447,11 +435,11 @@
    "league": "K-LEAGUE",
    "winner": "FC Seoul 1 - 0 Incheon United FC",
    "moneyFav": "FC Seoul 0 - 2 Incheon United FC",
-   "priceFav": "FC Seoul 1 - 1 Incheon United FC",
+   "priceFav": "FC Seoul 1 - 0 Incheon United FC",
    "moneyShare": 0.385,
    "priceProb": 0.119,
    "moneyOK": false,
-   "priceOK": false,
+   "priceOK": true,
    "totalUsd": 18970
   },
   {
@@ -479,6 +467,18 @@
    "totalUsd": 17421
   },
   {
+   "key": "kor-jeo-poh-2026-09-05",
+   "league": "K-LEAGUE",
+   "winner": "Jeonbuk Hyundai Motors FC",
+   "moneyFav": "Jeonbuk Hyundai Motors FC",
+   "priceFav": "Jeonbuk Hyundai Motors FC",
+   "moneyShare": 0.852,
+   "priceProb": 0.497,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 16476
+  },
+  {
    "key": "nor-san-vik-2026-09-04",
    "league": "NORWAY-ELITESERIEN",
    "winner": "Draw (Sandefjord Fotball vs. Viking FK)",
@@ -503,7 +503,7 @@
    "totalUsd": 13019
   }
  ],
- "generatedAt": "2026-09-05T14:03:44.940252+00:00",
+ "generatedAt": "2026-09-05T14:33:22.372696+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -512,31 +512,31 @@
   "mlb": 713,
   "nhl": 482,
   "mls": 780,
-  "epl": 604,
+  "epl": 605,
   "soccer": 800,
-  "tennis": 533,
+  "tennis": 657,
   "ucl": 533,
   "la-liga": 672,
   "bundesliga": 570,
   "serie-a": 51,
-  "ligue-1": 568,
+  "ligue-1": 571,
   "primeira-liga": 542,
   "brazil-serie-a": 554,
   "brasileirao": 0,
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 613,
+  "esports": 609,
   "cs2": 421,
   "lol": 400,
   "dota": 9,
-  "valorant": 418,
+  "valorant": 419,
   "ufc": 454,
   "mma": 51,
   "boxing": 258,
   "golf": 366,
   "f1": 380,
-  "cricket": 642,
+  "cricket": 634,
   "allsvenskan": 1,
   "austria-bundesliga": 235,
   "brazil-serie-b": 4,
@@ -553,8 +553,8 @@
   "europa-league": 177,
   "israel-premier-league": 140,
   "japan-j-league": 541,
-  "japan-j2-league": 532,
-  "k-league": 516,
+  "japan-j2-league": 521,
+  "k-league": 508,
   "la-liga-2": 554,
   "liga-mx-apertura": 2,
   "ligue-2": 531,
@@ -563,7 +563,7 @@
   "nations-league": 25,
   "norway-eliteserien": 504,
   "poland-ekstraklasa": 391,
-  "premier-league": 598,
+  "premier-league": 596,
   "saudi-professional-league": 555,
   "scotland-league-cup": 165,
   "scottish-premiership": 482,
@@ -577,7 +577,7 @@
   "uefa-europa-league": 18,
   "uefa-nations-league": 35,
   "uefa-womens-champions-league": 1,
-  "ukraine-premier-liha": 504,
+  "ukraine-premier-liha": 498,
   "womens-champions-league": 400
  },
  "sweepStats": {
@@ -595,104 +595,104 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 2568,
-   "usd": 41068747,
-   "beispiel": "fifwc-bra-nor-2026-07-05-more-markets"
+   "n": 2402,
+   "usd": 40421883,
+   "beispiel": "fifwc-arg-aut-2026-06-22-more-markets"
   },
   "nba": {
-   "n": 450,
-   "usd": 6567473,
+   "n": 802,
+   "usd": 7378814,
    "beispiel": "nba-sas-okc-2026-05-18"
   },
   "balance": {
-   "n": 2,
-   "usd": 6000000,
+   "n": 3,
+   "usd": 6003752,
    "beispiel": "balance-of-power-2026-midterms"
   },
   "presidential": {
-   "n": 11,
-   "usd": 5031718,
+   "n": 16,
+   "usd": 5148876,
    "beispiel": "presidential-election-winner-2028"
   },
-  "nhl": {
-   "n": 136,
-   "usd": 1231506,
-   "beispiel": "nhl-phi-car-2026-05-02"
-  },
   "fed": {
-   "n": 27,
-   "usd": 1206663,
+   "n": 32,
+   "usd": 1440875,
    "beispiel": "fed-decision-in-september-762"
+  },
+  "will": {
+   "n": 54,
+   "usd": 1098387,
+   "beispiel": "will-trump-meet-with-zelenskyy-by"
+  },
+  "nhl": {
+   "n": 118,
+   "usd": 983271,
+   "beispiel": "nhl-phi-car-2026-05-02"
   },
   "ecs": {
    "n": 12,
    "usd": 974892,
    "beispiel": "ecs-ars-mci-2026-08-16"
   },
-  "will": {
-   "n": 41,
-   "usd": 971338,
-   "beispiel": "will-anyone-insult-donald-trump-during-the-2026-emmy-awards"
-  },
   "world": {
    "n": 74,
-   "usd": 802149,
+   "usd": 794023,
    "beispiel": "world-cup-winner"
   },
-  "cbb": {
-   "n": 72,
-   "usd": 567711,
-   "beispiel": "cbb-uconn-mich-2026-04-06"
-  },
   "cfb": {
-   "n": 82,
-   "usd": 504526,
+   "n": 106,
+   "usd": 602130,
    "beispiel": "cfb-ntx-ind-2026-09-05"
   },
+  "cbb": {
+   "n": 74,
+   "usd": 575581,
+   "beispiel": "cbb-uconn-mich-2026-04-06"
+  },
+  "2026": {
+   "n": 58,
+   "usd": 365873,
+   "beispiel": "2026-mens-us-open-winner-tennis"
+  },
   "fif": {
-   "n": 92,
-   "usd": 378495,
+   "n": 85,
+   "usd": 341309,
    "beispiel": "fif-prt-nga-2026-06-10"
   },
-  "clf": {
-   "n": 61,
-   "usd": 263347,
-   "beispiel": "clf-psg-mun-2026-08-08"
-  },
-  "uef": {
-   "n": 9,
-   "usd": 253437,
-   "beispiel": "uef-kvx-tur-2026-03-31"
-  },
   "strait": {
-   "n": 4,
-   "usd": 245714,
+   "n": 5,
+   "usd": 248496,
    "beispiel": "strait-of-hormuz-traffic-returns-to-normal-by-august-31-20260702154212320"
   },
+  "clf": {
+   "n": 50,
+   "usd": 240969,
+   "beispiel": "clf-psg-mun-2026-08-08"
+  },
   "trump": {
-   "n": 2,
-   "usd": 238102,
+   "n": 3,
+   "usd": 239600,
    "beispiel": "trump-out-as-president-before-2027"
   },
-  "efa": {
-   "n": 27,
-   "usd": 176041,
-   "beispiel": "efa-mnc-liv-2026-04-04"
+  "uef": {
+   "n": 6,
+   "usd": 234239,
+   "beispiel": "uef-kvx-tur-2026-03-31"
   },
-  "what": {
-   "n": 37,
-   "usd": 149993,
-   "beispiel": "what-price-will-bitcoin-hit-before-2027"
+  "which": {
+   "n": 28,
+   "usd": 200364,
+   "beispiel": "which-party-will-win-the-senate-in-2026"
+  },
+  "ballon": {
+   "n": 13,
+   "usd": 166478,
+   "beispiel": "ballon-dor-winner-2026"
   },
   "new": {
    "n": 6,
    "usd": 147563,
-   "beispiel": "new-jersey-republican-senate-primary-winner"
-  },
-  "which": {
-   "n": 20,
-   "usd": 143094,
-   "beispiel": "which-party-will-win-the-senate-in-2026"
+   "beispiel": "new-york-city-mayoral-election"
   }
  }
 }
