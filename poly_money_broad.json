@@ -1,22 +1,22 @@
 {
- "n": 86,
+ "n": 90,
  "minOdds": 1.35,
- "moneyHitRate": 0.302,
- "priceHitRate": 0.349,
- "brierMoney": 0.9319,
- "brierPrice": 0.7203,
+ "moneyHitRate": 0.3,
+ "priceHitRate": 0.367,
+ "brierMoney": 0.9475,
+ "brierPrice": 0.7238,
  "disagree": {
-  "n": 26,
+  "n": 27,
   "moneyWon": 0,
-  "priceWon": 4,
-  "neither": 22
+  "priceWon": 6,
+  "neither": 21
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
  "byLeague": [],
  "guete": {
-  "belastbar": 86,
-  "preis_echo": 256,
+  "belastbar": 90,
+  "preis_echo": 260,
   "abgeschnitten": 13,
   "unbekannt": 446,
   "leer": 0
@@ -39,7 +39,7 @@
    "league": "EPL",
    "winner": "Draw (Nottingham Forest FC vs. Tottenham Hotspur FC)",
    "moneyFav": "Tottenham Hotspur FC",
-   "priceFav": "Nottingham Forest FC",
+   "priceFav": "Tottenham Hotspur FC",
    "moneyShare": 0.584,
    "priceProb": 0.357,
    "moneyOK": false,
@@ -93,6 +93,18 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 432192
+  },
+  {
+   "key": "epl-bre-sun-2026-09-05",
+   "league": "EPL",
+   "winner": "Draw (Brentford FC vs. Sunderland AFC)",
+   "moneyFav": "Brentford FC",
+   "priceFav": "Brentford FC",
+   "moneyShare": 0.967,
+   "priceProb": 0.568,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 367524
   },
   {
    "key": "lal-bil-mad-2026-09-05",
@@ -489,21 +501,9 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 39264
-  },
-  {
-   "key": "chi-shp-bgu-2026-09-05",
-   "league": "SOCCER:CHI",
-   "winner": "Draw (Shanghai Haigang FC vs. Beijing Guoan FC)",
-   "moneyFav": "Shanghai Haigang FC",
-   "priceFav": "Shanghai Haigang FC",
-   "moneyShare": 0.897,
-   "priceProb": 0.552,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 32650
   }
  ],
- "generatedAt": "2026-09-05T18:03:31.637602+00:00",
+ "generatedAt": "2026-09-05T18:22:20.428081+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -512,11 +512,11 @@
   "mlb": 713,
   "nhl": 487,
   "mls": 787,
-  "epl": 573,
+  "epl": 563,
   "soccer": 800,
-  "tennis": 641,
+  "tennis": 639,
   "ucl": 534,
-  "la-liga": 664,
+  "la-liga": 667,
   "bundesliga": 517,
   "serie-a": 51,
   "ligue-1": 563,
@@ -526,12 +526,12 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 597,
+  "esports": 594,
   "cs2": 421,
   "lol": 400,
   "dota": 9,
   "valorant": 418,
-  "ufc": 451,
+  "ufc": 450,
   "mma": 51,
   "boxing": 258,
   "golf": 366,
@@ -547,7 +547,7 @@
   "chinese-super-league": 455,
   "czechia-fortuna-liga": 9,
   "denmark-superliga": 489,
-  "efl-championship": 624,
+  "efl-championship": 607,
   "english-premier-league": 2,
   "europa-conference-league": 400,
   "europa-league": 177,
@@ -559,11 +559,11 @@
   "liga-mx-apertura": 2,
   "ligue-2": 517,
   "naitons-league": 1,
-  "national-league": 636,
+  "national-league": 624,
   "nations-league": 25,
   "norway-eliteserien": 499,
   "poland-ekstraklasa": 391,
-  "premier-league": 564,
+  "premier-league": 554,
   "saudi-professional-league": 555,
   "scotland-league-cup": 165,
   "scottish-premiership": 476,
@@ -586,8 +586,8 @@
   "sweepAdded": 406
  },
  "vorStats": {
-  "kandidaten": 32,
-  "budgetLeer": 10,
+  "kandidaten": 31,
+  "budgetLeer": 9,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
   "mitAnteilen": 22,
@@ -595,8 +595,8 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1949,
-   "usd": 32436501,
+   "n": 2259,
+   "usd": 32875596,
    "beispiel": "fifwc-mex-ecu-2026-06-30"
   },
   "balance": {
@@ -610,58 +610,68 @@
    "beispiel": "presidential-election-winner-2028"
   },
   "nba": {
-   "n": 158,
-   "usd": 2848203,
+   "n": 171,
+   "usd": 2971993,
    "beispiel": "nba-2027-champion"
   },
   "nhl": {
-   "n": 344,
-   "usd": 1764955,
+   "n": 363,
+   "usd": 1883430,
    "beispiel": "nhl-las-car-2026-06-02"
   },
   "fed": {
    "n": 32,
-   "usd": 1415391,
+   "usd": 1409987,
    "beispiel": "fed-decision-in-october-20260617190323537"
   },
   "will": {
-   "n": 50,
-   "usd": 1106702,
+   "n": 51,
+   "usd": 1112496,
    "beispiel": "will-anthropic-or-openai-ipo-first"
   },
   "ecs": {
-   "n": 10,
-   "usd": 950874,
+   "n": 12,
+   "usd": 960049,
    "beispiel": "ecs-ars-mci-2026-08-16"
   },
   "world": {
-   "n": 102,
-   "usd": 930800,
+   "n": 99,
+   "usd": 919320,
    "beispiel": "world-cup-golden-boot-winner"
   },
   "cfb": {
-   "n": 118,
-   "usd": 803029,
+   "n": 162,
+   "usd": 898768,
    "beispiel": "cfb-toledo-mst-2026-09-04"
+  },
+  "elon": {
+   "n": 331,
+   "usd": 800293,
+   "beispiel": "elon-musk-of-tweets-april-10-april-17"
   },
   "2026": {
    "n": 56,
-   "usd": 539970,
+   "usd": 537167,
    "beispiel": "2026-mens-us-open-winner-tennis"
   },
   "what": {
    "n": 29,
-   "usd": 438141,
+   "usd": 438256,
    "beispiel": "what-price-will-bitcoin-hit-before-2027"
   },
+  "uef": {
+   "n": 15,
+   "usd": 410321,
+   "beispiel": "uef-kvx-tur-2026-03-31"
+  },
   "fif": {
-   "n": 74,
-   "usd": 291043,
+   "n": 66,
+   "usd": 281289,
    "beispiel": "fif-jor-col-2026-06-07-more-markets"
   },
   "strait": {
    "n": 7,
-   "usd": 274971,
+   "usd": 274951,
    "beispiel": "strait-of-hormuz-traffic-returns-to-normal-by-september-30-20260702154339440"
   },
   "trump": {
@@ -669,30 +679,20 @@
    "usd": 234374,
    "beispiel": "trump-announces-end-of-military-operations-against-iran-by"
   },
-  "uef": {
-   "n": 4,
-   "usd": 230785,
-   "beispiel": "uef-kvx-tur-2026-03-31"
-  },
-  "clf": {
-   "n": 40,
-   "usd": 203931,
-   "beispiel": "clf-tot-tsg-2026-08-16"
-  },
   "which": {
    "n": 20,
-   "usd": 179739,
+   "usd": 179956,
    "beispiel": "which-party-will-win-the-senate-in-2026"
   },
-  "new": {
-   "n": 2,
-   "usd": 141559,
-   "beispiel": "new-york-city-mayoral-election"
+  "clf": {
+   "n": 32,
+   "usd": 170963,
+   "beispiel": "clf-tot-tsg-2026-08-16"
   },
-  "us": {
-   "n": 21,
-   "usd": 104978,
-   "beispiel": "us-ceasefire-against-iran-continues-throughptptpt"
+  "efa": {
+   "n": 15,
+   "usd": 168338,
+   "beispiel": "efa-cfc-mnc-2026-05-16"
   }
  }
 }
