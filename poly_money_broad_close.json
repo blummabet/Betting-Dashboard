@@ -180614,7 +180614,13 @@
     "usd": 900,
     "ts": 1788555627
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Tomas Etcheverry": 1.0,
+   "Mariano Navone": 0.0
+  },
+  "resolvedAt": "2026-09-05T00:58:50.970338+00:00"
  },
  "sea-gen-com-2026-09-04-more-markets": {
   "shares": {
@@ -183439,8 +183445,8 @@
  },
  "atp-shelton-shapova-2026-09-04": {
   "shares": {
-   "Ben Shelton": 104579.98138583994,
-   "Denis Shapovalov": 28642.98426845997
+   "Ben Shelton": 104748.27788280993,
+   "Denis Shapovalov": 28689.09199498997
   },
   "prices": {
    "Ben Shelton": 0.785,
@@ -183452,7 +183458,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 151860,
+  "totalUsd": 155730,
   "whales": [
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
@@ -183479,8 +183485,8 @@
     "avgPrice": 0.7899
    }
   ],
-  "hoursToKickoff": 0.55,
-  "capturedAt": "2026-09-05T00:29:28.956194+00:00",
+  "hoursToKickoff": 0.3,
+  "capturedAt": "2026-09-05T00:58:50.970338+00:00",
   "cond": "0x021a81283e8def21a3c92a80dd13382d26f8470fdce1ab84b16197c7371ab843",
   "frage": "US Open ATP: Ben Shelton vs Denis Shapovalov",
   "tokens": {
@@ -183496,57 +183502,73 @@
    "bids": [
     [
      0.78,
-     36561
+     34276
     ],
     [
      0.77,
-     89547
+     88063
     ],
     [
      0.76,
-     8740
+     6015
     ],
     [
      0.75,
-     3698
+     4134
     ],
     [
      0.74,
-     103
+     746
     ],
     [
-     0.72,
-     2561
+     0.73,
+     2993
     ]
    ],
    "asks": [
     [
      0.79,
-     9053
+     12812
     ],
     [
      0.8,
-     73541
+     47825
     ],
     [
      0.81,
-     101080
+     119760
     ],
     [
      0.82,
-     31557
+     12447
     ],
     [
      0.83,
-     44302
+     4232
     ],
     [
      0.84,
-     6650
+     7130
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x17af7c192850311f95ecce5c90fc92d3c701b7e4",
+    "action": "BUY",
+    "side": "Ben Shelton",
+    "price": 0.79,
+    "usd": 1000,
+    "ts": 1788569707
+   },
+   {
+    "wallet": "0xbaac4adee9e1b1eff4097ab2e2cc5a25ba22ff10",
+    "action": "BUY",
+    "side": "Ben Shelton",
+    "price": 0.79,
+    "usd": 790,
+    "ts": 1788567928
+   },
    {
     "wallet": "0xc7e53ac4a7c76d6df8b794de2e7d0794265d2d3a",
     "action": "BUY",
@@ -183562,54 +183584,6 @@
     "price": 0.8,
     "usd": 1486,
     "ts": 1788566622
-   },
-   {
-    "wallet": "0x979fc186184ae75754d32c4ef68d8ca00f744032",
-    "action": "BUY",
-    "side": "Ben Shelton",
-    "price": 0.79,
-    "usd": 15752,
-    "ts": 1788565615
-   },
-   {
-    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
-    "action": "BUY",
-    "side": "Ben Shelton",
-    "price": 0.78,
-    "usd": 19118,
-    "ts": 1788565468
-   },
-   {
-    "wallet": "0xb5de1a37282dcd180f4547c907ed0c0b3566cabe",
-    "action": "BUY",
-    "side": "Ben Shelton",
-    "price": 0.78,
-    "usd": 1300,
-    "ts": 1788564613
-   },
-   {
-    "wallet": "0xe004d275622e574842cfa9f31427f213e387d87c",
-    "action": "BUY",
-    "side": "Ben Shelton",
-    "price": 0.78,
-    "usd": 300,
-    "ts": 1788562891
-   },
-   {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "action": "SELL",
-    "side": "Denis Shapovalov",
-    "price": 0.22,
-    "usd": 440,
-    "ts": 1788562870
-   },
-   {
-    "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
-    "action": "BUY",
-    "side": "Ben Shelton",
-    "price": 0.78,
-    "usd": 2188,
-    "ts": 1788562863
    }
   ]
  },
@@ -183845,12 +183819,12 @@
  },
  "wta-svitoli-kalinsk-2026-09-04": {
   "shares": {
-   "Elina Svitolina": 6341.4754939250015,
-   "Anna Kalinskaya": 2527.5650465100007
+   "Elina Svitolina": 8076.798689124999,
+   "Anna Kalinskaya": 3063.462813400002
   },
   "prices": {
-   "Elina Svitolina": 0.715,
-   "Anna Kalinskaya": 0.285
+   "Elina Svitolina": 0.725,
+   "Anna Kalinskaya": 0.275
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -183858,35 +183832,35 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 12261,
+  "totalUsd": 15638,
   "whales": [
    {
     "wallet": "0xadfb6cba33cebca02eab6111ace1e3924b9cc2ef",
     "side": "Elina Svitolina",
-    "usd": 1109,
+    "usd": 1125,
     "avgPrice": 0.7
    },
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "side": "Elina Svitolina",
-    "usd": 799,
+    "usd": 810,
     "avgPrice": 0.7099
    },
    {
     "wallet": "0xda5fff24aa9d889d6366da205029c73093102e9b",
     "side": "Elina Svitolina",
-    "usd": 794,
+    "usd": 806,
     "avgPrice": 0.7199
    },
    {
-    "wallet": "0x626230409681228856e5a4eb50a315382e0cb5c0",
-    "side": "Anna Kalinskaya",
-    "usd": 506,
-    "avgPrice": 0.3
+    "wallet": "0xbf00e864ca24efdc18a4aa55d6720b2fb1e31199",
+    "side": "Elina Svitolina",
+    "usd": 582,
+    "avgPrice": 0.7199
    }
   ],
-  "hoursToKickoff": 0.55,
-  "capturedAt": "2026-09-05T00:29:28.956194+00:00",
+  "hoursToKickoff": 0.3,
+  "capturedAt": "2026-09-05T00:58:50.970338+00:00",
   "cond": "0xed0456e5e97f4a3606d29e5f05e55c9ce8693f552b8900ffca1adcdee431b959",
   "frage": "US Open WTA: Elina Svitolina vs Anna Kalinskaya",
   "tokens": {
@@ -183947,8 +183921,8 @@
  },
  "mlb-nyy-sd-2026-09-04": {
   "shares": {
-   "New York Yankees": 54412.10961455998,
-   "San Diego Padres": 53334.506237265
+   "New York Yankees": 54616.78314111998,
+   "San Diego Padres": 53535.126822704995
   },
   "prices": {
    "New York Yankees": 0.505,
@@ -183960,7 +183934,7 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 113263,
+  "totalUsd": 113277,
   "whales": [
    {
     "wallet": "0x3dfb153c197d4c19d3b31c1ecd2c7b6860eeabaf",
@@ -183986,8 +183960,8 @@
     "avgPrice": 0.52
    }
   ],
-  "hoursToKickoff": 1.22,
-  "capturedAt": "2026-09-05T00:29:28.956194+00:00",
+  "hoursToKickoff": 0.72,
+  "capturedAt": "2026-09-05T00:58:50.970338+00:00",
   "cond": "0xfa9677517d7e515224d1b503e919fb4d97ff4cd397cc47c35e085cedd474f372",
   "frage": "New York Yankees vs. San Diego Padres",
   "tokens": {
@@ -184003,15 +183977,15 @@
    "bids": [
     [
      0.5,
-     69002
+     77990
     ],
     [
      0.49,
-     195676
+     196364
     ],
     [
      0.48,
-     45724
+     44898
     ],
     [
      0.47,
@@ -184029,27 +184003,27 @@
    "asks": [
     [
      0.51,
-     40749
+     40346
     ],
     [
      0.52,
-     255602
+     271182
     ],
     [
      0.53,
-     174559
+     173290
     ],
     [
      0.54,
-     39450
+     37478
     ],
     [
      0.55,
-     11820
+     11828
     ],
     [
      0.56,
-     3085
+     3094
     ]
    ]
   },
@@ -184083,8 +184057,8 @@
  "itf-sincla-qiansun-2026-09-05": {
   "shares": {},
   "prices": {
-   "Colin Sinclair": 0.57,
-   "Qian Sun": 0.43
+   "Colin Sinclair": 0.56,
+   "Qian Sun": 0.44
   },
   "splitGuete": {
    "art": "leer",
@@ -184094,8 +184068,8 @@
   "sport": "Tennis",
   "totalUsd": 11810,
   "whales": [],
-  "hoursToKickoff": 1.55,
-  "capturedAt": "2026-09-05T00:29:28.956194+00:00",
+  "hoursToKickoff": 1.05,
+  "capturedAt": "2026-09-05T00:58:50.970338+00:00",
   "cond": "0x2a4e7a5b5e9153e11539268eb9e4155b5adf691dc57ae05ba850ace21d0a9534",
   "frage": "M15 Wuning: Colin Sinclair vs Qian Sun",
   "tokens": {
@@ -184105,8 +184079,8 @@
  },
  "mlb-wsh-lad-2026-09-04": {
   "shares": {
-   "Over": 78953.35947183998,
-   "Under": 98469.91728311997
+   "Over": 79052.56540087999,
+   "Under": 98593.64898311997
   },
   "prices": {
    "Over": 0.445,
@@ -184118,7 +184092,7 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 177875,
+  "totalUsd": 178355,
   "whales": [
    {
     "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
@@ -184145,8 +184119,8 @@
     "avgPrice": 0.4565
    }
   ],
-  "hoursToKickoff": 1.72,
-  "capturedAt": "2026-09-05T00:29:28.956194+00:00",
+  "hoursToKickoff": 1.22,
+  "capturedAt": "2026-09-05T00:58:50.970338+00:00",
   "cond": "0xc895f38de37bd0e2e393b29ff2a2adc9a1e3c9c6e0106e3bf8beab6325a17313",
   "frage": "Washington Nationals vs. Los Angeles Dodgers: O/U 8.5",
   "tokens": {
@@ -184162,19 +184136,19 @@
    "bids": [
     [
      0.55,
-     159205
+     159342
     ],
     [
      0.54,
-     26335
+     26234
     ],
     [
      0.53,
-     106447
+     107716
     ],
     [
      0.52,
-     12431
+     12181
     ],
     [
      0.51,
@@ -184188,19 +184162,19 @@
    "asks": [
     [
      0.56,
-     8365
+     7136
     ],
     [
      0.57,
-     34511
+     43169
     ],
     [
      0.58,
-     24528
+     17492
     ],
     [
      0.59,
-     8052
+     8089
     ],
     [
      0.6,
@@ -184312,8 +184286,8 @@
     "avgPrice": 0.45
    }
   ],
-  "hoursToKickoff": 1.72,
-  "capturedAt": "2026-09-05T00:29:28.956194+00:00",
+  "hoursToKickoff": 1.22,
+  "capturedAt": "2026-09-05T00:58:50.970338+00:00",
   "cond": "0x4d13f16fe56807db72ca0e7d7c1c26de19800ba9f313f356eb5865fee650853e",
   "frage": "Athletics vs. Seattle Mariners: O/U 7.5",
   "tokens": {
@@ -184469,7 +184443,7 @@
   "shares": {
    "FC Juárez": 177.89839456500002,
    "Draw (FC Juárez vs. CF Pachuca)": 76.98317907500002,
-   "CF Pachuca": 5592.51982245
+   "CF Pachuca": 5594.894822450001
   },
   "prices": {
    "FC Juárez": 0.255,
@@ -184482,7 +184456,7 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 17057,
+  "totalUsd": 17130,
   "whales": [
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
@@ -184508,8 +184482,8 @@
     "usd": 712
    }
   ],
-  "hoursToKickoff": 2.55,
-  "capturedAt": "2026-09-05T00:29:28.956194+00:00",
+  "hoursToKickoff": 2.05,
+  "capturedAt": "2026-09-05T00:58:50.970338+00:00",
   "tokens": {
    "FC Juárez": "47984323649170526519606644674894526033810448396280309937499907667654237994092",
    "Draw (FC Juárez vs. CF Pachuca)": "63425683022204277562984768334334477890387088319610092434940393771085116940535",
