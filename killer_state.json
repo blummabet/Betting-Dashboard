@@ -217,7 +217,7 @@
    "markt": "Match Odds",
    "seite": "home",
    "name": "Newcastle",
-   "odd": 2.16,
+   "odd": 2.18,
    "entryOdd": 2.24,
    "anteilPct": 72,
    "stufe": 1,
@@ -249,7 +249,7 @@
    "polyStatus": "unbekannt",
    "pinnMovePP": -1.1,
    "punkte": {
-    "punkte": 9,
+    "punkte": 8,
     "moeglich": 10,
     "dauerH": 16.43,
     "teile": [
@@ -261,13 +261,13 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 72% auf der Seite"
+       "text": "Geld 71% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
-      "text": "Geld 72% auf der Seite"
+      "text": "Geld 71% auf der Seite"
      },
      {
       "buch": "POLY",
@@ -277,27 +277,27 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Poly-Geld 92% auf derselben Seite"
+       "text": "Poly-Geld 91% auf derselben Seite"
       },
       "tiefe": {
        "ok": false,
        "text": "kein bewiesenes Wallet auf der Seite"
       },
-      "text": "Poly-Geld 92% auf derselben Seite"
+      "text": "Poly-Geld 91% auf derselben Seite"
      },
      {
       "buch": "PIN",
       "name": "Pinnacle",
       "status": "ja",
-      "punkte": 3,
+      "punkte": 2,
       "moeglich": 3,
       "grund": {
        "ok": true,
        "text": "hat dieselbe Seite als Favorit"
       },
       "tiefe": {
-       "ok": true,
-       "text": "Move +1.7pp in unsere Richtung"
+       "ok": false,
+       "text": "kein Move gemessen"
       },
       "text": "hat dieselbe Seite als Favorit"
      },
@@ -318,9 +318,9 @@
    },
    "wertVsPinn": -0.0336,
    "gehaltenSeit": "2026-09-04T19:04:28.116131+00:00",
-   "zuletztAktiv": "2026-09-05T10:05:56.099632+00:00",
+   "zuletztAktiv": "2026-09-05T11:06:05.973027+00:00",
    "haltePreis": 2.18,
-   "aktiv": false
+   "aktiv": true
   },
   "35979413|Match Odds": {
    "matchId": "35979413",
@@ -419,7 +419,7 @@
    "gehaltenSeit": "2026-09-04T20:04:37.139467+00:00",
    "zuletztAktiv": "2026-09-05T10:35:57.040829+00:00",
    "haltePreis": 1.78,
-   "aktiv": true
+   "aktiv": false
   },
   "35974516|Match Odds": {
    "matchId": "35974516",
@@ -945,11 +945,16 @@
    "markt": "Match Odds",
    "seite": "away",
    "name": "Aston Villa",
-   "odd": 1.97,
+   "odd": 1.94,
    "entryOdd": 1.96,
    "anteilPct": 65,
-   "stufe": 2,
+   "stufe": 1,
    "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly 92%",
+     "gewicht": 12
+    },
     {
      "art": "pinn",
      "text": "Pinnacle stimmt zu",
@@ -957,19 +962,23 @@
     },
     {
      "art": "pinnMove",
-     "text": "Pinnacle zieht mit +33.7pp",
+     "text": "Pinnacle zieht mit +33.8pp",
      "gewicht": 8
     }
    ],
-   "rang": 74.5,
+   "rang": 86.8,
    "track": null,
    "streak": null,
-   "poly": null,
+   "poly": {
+    "anteilPct": 92,
+    "usd": 282903,
+    "odd": 1.94
+   },
    "polyStatus": "unbekannt",
    "pinnMovePP": 33.7,
    "punkte": {
-    "punkte": 7,
-    "moeglich": 7,
+    "punkte": 10,
+    "moeglich": 10,
     "dauerH": 11.91,
     "teile": [
      {
@@ -991,12 +1000,18 @@
      {
       "buch": "POLY",
       "name": "Polymarket",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "text": "Polymarket nicht erhoben"
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Geld 92% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "1 bewiesene Wallet drauf"
+      },
+      "text": "Poly-Geld 92% auf derselben Seite"
      },
      {
       "buch": "PIN",
@@ -1010,7 +1025,7 @@
       },
       "tiefe": {
        "ok": true,
-       "text": "Move +33.5pp in unsere Richtung"
+       "text": "Move +33.8pp in unsere Richtung"
       },
       "text": "hat dieselbe Seite als Favorit"
      },
@@ -1031,9 +1046,9 @@
    },
    "wertVsPinn": -0.0195,
    "gehaltenSeit": "2026-09-05T04:35:20.820650+00:00",
-   "zuletztAktiv": "2026-09-05T08:50:40.299080+00:00",
+   "zuletztAktiv": "2026-09-05T11:06:05.973027+00:00",
    "haltePreis": 1.94,
-   "aktiv": false
+   "aktiv": true
   },
   "35974510|Match Odds": {
    "matchId": "35974510",
@@ -1272,26 +1287,40 @@
    "markt": "Match Odds",
    "seite": "home",
    "name": "Shanghai Port FC",
-   "odd": 1.97,
+   "odd": 1.9,
    "entryOdd": 2.26,
    "anteilPct": 95,
-   "stufe": 2,
+   "stufe": 1,
    "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly 89%",
+     "gewicht": 12
+    },
     {
      "art": "pinn",
      "text": "Pinnacle stimmt zu",
      "gewicht": 10
+    },
+    {
+     "art": "pinnMove",
+     "text": "Pinnacle zieht mit +5.4pp",
+     "gewicht": 14
     }
    ],
-   "rang": 69.5,
+   "rang": 95.6,
    "track": null,
    "streak": null,
-   "poly": null,
+   "poly": {
+    "anteilPct": 89,
+    "usd": 28845,
+    "odd": 1.98
+   },
    "polyStatus": "unbekannt",
    "pinnMovePP": null,
    "punkte": {
-    "punkte": 5,
-    "moeglich": 7,
+    "punkte": 9,
+    "moeglich": 10,
     "dauerH": 1.24,
     "teile": [
      {
@@ -1302,37 +1331,43 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 95% auf der Seite"
+       "text": "Geld 96% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
-      "text": "Geld 95% auf der Seite"
+      "text": "Geld 96% auf der Seite"
      },
      {
       "buch": "POLY",
       "name": "Polymarket",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "text": "Polymarket nicht erhoben"
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Geld 89% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "2 bewiesene Wallets drauf"
+      },
+      "text": "Poly-Geld 89% auf derselben Seite"
      },
      {
       "buch": "PIN",
       "name": "Pinnacle",
       "status": "ja",
-      "punkte": 2,
+      "punkte": 3,
       "moeglich": 3,
       "grund": {
        "ok": true,
        "text": "hat dieselbe Seite als Favorit"
       },
       "tiefe": {
-       "ok": false,
-       "text": "kein Move gemessen"
+       "ok": true,
+       "text": "Move +5.4pp in unsere Richtung"
       },
       "text": "hat dieselbe Seite als Favorit"
      },
@@ -1353,9 +1388,9 @@
    },
    "wertVsPinn": -0.0861,
    "gehaltenSeit": "2026-09-05T10:20:53.925975+00:00",
-   "zuletztAktiv": "2026-09-05T10:20:53.925975+00:00",
+   "zuletztAktiv": "2026-09-05T11:06:05.973027+00:00",
    "haltePreis": 1.97,
-   "aktiv": false
+   "aktiv": true
   },
   "35999704|Match Odds": {
    "matchId": "35999704",
@@ -1464,116 +1499,7 @@
    "gehaltenSeit": "2026-09-05T10:35:57.040829+00:00",
    "zuletztAktiv": "2026-09-05T10:35:57.040829+00:00",
    "haltePreis": 2.06,
-   "aktiv": true
-  },
-  "36015154|Match Odds": {
-   "matchId": "36015154",
-   "home": "Wolfsburg",
-   "away": "Cottbus",
-   "league": "German Bundesliga 2",
-   "kickoff": "2026-09-05T11:00:00Z",
-   "markt": "Match Odds",
-   "seite": "home",
-   "name": "Wolfsburg",
-   "odd": 1.42,
-   "entryOdd": 1.35,
-   "anteilPct": 84,
-   "stufe": 1,
-   "verstaerker": [
-    {
-     "art": "poly",
-     "text": "Poly 90%",
-     "gewicht": 12
-    },
-    {
-     "art": "pinn",
-     "text": "Pinnacle stimmt zu",
-     "gewicht": 10
-    }
-   ],
-   "rang": 80.5,
-   "track": null,
-   "streak": null,
-   "poly": {
-    "anteilPct": 90,
-    "usd": 14871,
-    "odd": 1.42
-   },
-   "polyStatus": "ja",
-   "pinnMovePP": 0.0,
-   "punkte": {
-    "punkte": 8,
-    "moeglich": 10,
-    "dauerH": 0.15,
-    "teile": [
-     {
-      "buch": "BF",
-      "name": "Betfair",
-      "status": "ja",
-      "punkte": 3,
-      "moeglich": 3,
-      "grund": {
-       "ok": true,
-       "text": "Geld 84% auf der Seite"
-      },
-      "tiefe": {
-       "ok": true,
-       "text": "frischer Zufluss und Quote zieht mit"
-      },
-      "text": "Geld 84% auf der Seite"
-     },
-     {
-      "buch": "POLY",
-      "name": "Polymarket",
-      "status": "ja",
-      "punkte": 3,
-      "moeglich": 3,
-      "grund": {
-       "ok": true,
-       "text": "Poly-Geld 90% auf derselben Seite"
-      },
-      "tiefe": {
-       "ok": true,
-       "text": "1 bewiesene Wallet drauf"
-      },
-      "text": "Poly-Geld 90% auf derselben Seite"
-     },
-     {
-      "buch": "PIN",
-      "name": "Pinnacle",
-      "status": "ja",
-      "punkte": 2,
-      "moeglich": 3,
-      "grund": {
-       "ok": true,
-       "text": "hat dieselbe Seite als Favorit"
-      },
-      "tiefe": {
-       "ok": false,
-       "text": "kein Move gemessen"
-      },
-      "text": "hat dieselbe Seite als Favorit"
-     },
-     {
-      "buch": "ZEIT",
-      "name": "Dauer",
-      "status": "nein",
-      "punkte": 0,
-      "moeglich": 1,
-      "grund": {
-       "ok": false,
-       "text": "steht seit 0.1h vor Anpfiff"
-      },
-      "tiefe": null,
-      "text": "steht seit 0.1h vor Anpfiff"
-     }
-    ]
-   },
-   "wertVsPinn": -0.0189,
-   "gehaltenSeit": "2026-09-05T10:51:03.657187+00:00",
-   "zuletztAktiv": "2026-09-05T10:51:03.657187+00:00",
-   "haltePreis": 1.42,
-   "aktiv": true
+   "aktiv": false
   },
   "35999999|Match Odds": {
    "matchId": "35999999",
