@@ -5552,7 +5552,7 @@
 "leadOdd": 1.74,
 "value": 17845.96,
 "sentAt": "2026-09-05T15:42:00.955707+00:00",
-"status": "pending",
+"status": "won",
 "htScore": [
 2,
 3
@@ -5561,7 +5561,14 @@
 "verdict": "no_anchor",
 "agree": null
 },
-"serie": null
+"serie": null,
+"settledAt": "2026-09-05T18:51:53.512844+00:00",
+"ftScore": [
+3,
+6
+],
+"profit": 0.74,
+"resChk": true
 },
 {
 "k": "fresh:35974520:Match Odds",
@@ -5688,6 +5695,65 @@
 "basis": "liga",
 "state": "wackelt",
 "ligaBasisPct": 47
+}
+}
+},
+{
+"k": "fresh:36015218:Match Odds",
+"matchId": "36015218",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Serbian Super League",
+"home": "Macva Sabac",
+"away": "FK Radnicki 1923",
+"leadName": "The Draw",
+"leadOdd": 2.22,
+"value": 91419.36,
+"sentAt": "2026-09-05T18:51:52.914120+00:00",
+"status": "pending",
+"htScore": [
+0,
+0
+],
+"consensus": {
+"verdict": "no_anchor",
+"agree": null
+},
+"serie": {
+"gefunden": false,
+"grund": "kein Team-Treffer"
+}
+},
+{
+"k": "fresh:36003837:Match Odds",
+"matchId": "36003837",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Spanish La Liga",
+"home": "Villarreal",
+"away": "Deportivo",
+"leadName": "Villarreal",
+"leadOdd": 1.5,
+"value": 716176.58,
+"sentAt": "2026-09-05T18:51:53.241265+00:00",
+"status": "pending",
+"htScore": null,
+"consensus": {
+"verdict": "konsens",
+"agree": true
+},
+"serie": {
+"gefunden": true,
+"serie": {
+"team": "Villarreal",
+"venue": "H",
+"typ": "scored",
+"markt": "Team trifft",
+"laenge": 5,
+"zufallPct": 35.11291,
+"basis": "liga",
+"state": "intakt",
+"ligaBasisPct": 81
 }
 }
 }
