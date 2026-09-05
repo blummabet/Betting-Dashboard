@@ -217,26 +217,40 @@
    "markt": "Match Odds",
    "seite": "home",
    "name": "Newcastle",
-   "odd": 2.2,
+   "odd": 2.16,
    "entryOdd": 2.24,
    "anteilPct": 72,
-   "stufe": 2,
+   "stufe": 1,
    "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly 92%",
+     "gewicht": 12
+    },
     {
      "art": "pinn",
      "text": "Pinnacle stimmt zu",
      "gewicht": 10
+    },
+    {
+     "art": "pinnMove",
+     "text": "Pinnacle zieht mit +2.0pp",
+     "gewicht": 14
     }
    ],
-   "rang": 67.2,
+   "rang": 93.3,
    "track": null,
    "streak": null,
-   "poly": null,
+   "poly": {
+    "anteilPct": 92,
+    "usd": 509866,
+    "odd": 2.15
+   },
    "polyStatus": "unbekannt",
    "pinnMovePP": -1.1,
    "punkte": {
-    "punkte": 6,
-    "moeglich": 7,
+    "punkte": 9,
+    "moeglich": 10,
     "dauerH": 16.43,
     "teile": [
      {
@@ -258,26 +272,32 @@
      {
       "buch": "POLY",
       "name": "Polymarket",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "text": "Polymarket nicht erhoben"
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Geld 92% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "text": "Poly-Geld 92% auf derselben Seite"
      },
      {
       "buch": "PIN",
       "name": "Pinnacle",
       "status": "ja",
-      "punkte": 2,
+      "punkte": 3,
       "moeglich": 3,
       "grund": {
        "ok": true,
        "text": "hat dieselbe Seite als Favorit"
       },
       "tiefe": {
-       "ok": false,
-       "text": "kein Move gemessen"
+       "ok": true,
+       "text": "Move +2.0pp in unsere Richtung"
       },
       "text": "hat dieselbe Seite als Favorit"
      },
@@ -298,9 +318,9 @@
    },
    "wertVsPinn": -0.0336,
    "gehaltenSeit": "2026-09-04T19:04:28.116131+00:00",
-   "zuletztAktiv": "2026-09-05T00:19:59.890528+00:00",
+   "zuletztAktiv": "2026-09-05T08:50:40.299080+00:00",
    "haltePreis": 2.18,
-   "aktiv": false
+   "aktiv": true
   },
   "35979413|Match Odds": {
    "matchId": "35979413",
@@ -925,7 +945,7 @@
    "markt": "Match Odds",
    "seite": "away",
    "name": "Aston Villa",
-   "odd": 1.94,
+   "odd": 1.97,
    "entryOdd": 1.96,
    "anteilPct": 65,
    "stufe": 2,
@@ -960,13 +980,13 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 65% auf der Seite"
+       "text": "Geld 68% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
-      "text": "Geld 65% auf der Seite"
+      "text": "Geld 68% auf der Seite"
      },
      {
       "buch": "POLY",
@@ -990,7 +1010,7 @@
       },
       "tiefe": {
        "ok": true,
-       "text": "Move +33.7pp in unsere Richtung"
+       "text": "Move +33.5pp in unsere Richtung"
       },
       "text": "hat dieselbe Seite als Favorit"
      },
@@ -1011,9 +1031,9 @@
    },
    "wertVsPinn": -0.0195,
    "gehaltenSeit": "2026-09-05T04:35:20.820650+00:00",
-   "zuletztAktiv": "2026-09-05T04:35:20.820650+00:00",
+   "zuletztAktiv": "2026-09-05T08:50:40.299080+00:00",
    "haltePreis": 1.94,
-   "aktiv": false
+   "aktiv": true
   },
   "35974510|Match Odds": {
    "matchId": "35974510",
@@ -1024,7 +1044,7 @@
    "markt": "Match Odds",
    "seite": "home",
    "name": "Brentford",
-   "odd": 1.78,
+   "odd": 1.79,
    "entryOdd": 1.67,
    "anteilPct": 79,
    "stufe": 1,
@@ -1073,13 +1093,13 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 79% auf der Seite"
+       "text": "Geld 80% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
-      "text": "Geld 79% auf der Seite"
+      "text": "Geld 80% auf der Seite"
      },
      {
       "buch": "POLY",
@@ -1109,7 +1129,7 @@
       },
       "tiefe": {
        "ok": false,
-       "text": "Move -2.3pp in unsere Richtung"
+       "text": "Move -1.9pp in unsere Richtung"
       },
       "text": "hat dieselbe Seite als Favorit"
      },
@@ -1130,9 +1150,91 @@
    },
    "wertVsPinn": -0.018,
    "gehaltenSeit": "2026-09-05T06:35:29.768680+00:00",
-   "zuletztAktiv": "2026-09-05T06:35:29.768680+00:00",
+   "zuletztAktiv": "2026-09-05T08:50:40.299080+00:00",
    "haltePreis": 1.78,
-   "aktiv": false
+   "aktiv": true
+  },
+  "35997923|Match Odds": {
+   "matchId": "35997923",
+   "home": "Gloria Leordeni",
+   "away": "Bihor Oradea",
+   "league": "Romanian Liga II",
+   "kickoff": "2026-09-05T09:30:00Z",
+   "markt": "Match Odds",
+   "seite": "away",
+   "name": "Bihor Oradea",
+   "odd": 1.9,
+   "entryOdd": 2.04,
+   "anteilPct": 84,
+   "stufe": 2,
+   "verstaerker": [],
+   "rang": 58.4,
+   "track": null,
+   "streak": null,
+   "poly": null,
+   "polyStatus": "unbekannt",
+   "pinnMovePP": null,
+   "punkte": {
+    "punkte": 3,
+    "moeglich": 4,
+    "dauerH": 0.66,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 84% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "text": "Geld 84% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "text": "Polymarket nicht erhoben"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "unbekannt",
+      "punkte": 0,
+      "moeglich": 0,
+      "grund": null,
+      "tiefe": null,
+      "text": "Pinnacle nicht erhoben"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "nein",
+      "punkte": 0,
+      "moeglich": 1,
+      "grund": {
+       "ok": false,
+       "text": "steht seit 0.7h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 0.7h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": null,
+   "gehaltenSeit": "2026-09-05T08:50:40.299080+00:00",
+   "zuletztAktiv": "2026-09-05T08:50:40.299080+00:00",
+   "haltePreis": 1.9,
+   "aktiv": true
   }
  }
 }
