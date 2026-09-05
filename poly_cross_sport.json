@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-05T02:57:06.574326+00:00",
+ "generatedAt": "2026-09-05T03:27:09.345245+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -14,7 +14,7 @@
  "matched": 219,
  "footballRows": 189,
  "crossRows": 362,
- "footballSkippedStale": 82,
+ "footballSkippedStale": 81,
  "seenBySport": {
   "americanfootball_nfl": 156,
   "baseball_mlb": 70,
@@ -31,49 +31,21 @@
  },
  "trackRecord": {
   "tracked": 288,
-  "converged": 73
+  "converged": 75
  },
  "discrepancies": [
-  {
-   "id": "baseball_mlb|athletics-seattlemariners|athletics",
-   "sport": "baseball_mlb",
-   "event": "Athletics vs Seattle Mariners",
-   "market": "Moneyline",
-   "outcome": "Athletics",
-   "polyPP": 70.5,
-   "pinnPP": 24.5,
-   "gapPP": 46.03,
-   "vol": 159702,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": 0.0,
-   "firstSeen": "2026-09-05T02:57:06.574017+00:00"
-  },
-  {
-   "id": "baseball_mlb|athletics-seattlemariners|seattlemariners",
-   "sport": "baseball_mlb",
-   "event": "Athletics vs Seattle Mariners",
-   "market": "Moneyline",
-   "outcome": "Seattle Mariners",
-   "polyPP": 29.5,
-   "pinnPP": 75.5,
-   "gapPP": -46.03,
-   "vol": 159702,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": 0.0,
-   "firstSeen": "2026-09-05T02:57:06.574017+00:00"
-  },
   {
    "id": "baseball_mlb|coloradorockies-stlouiscardinals|stlouiscardinals",
    "sport": "baseball_mlb",
    "event": "St. Louis Cardinals vs Colorado Rockies",
    "market": "Moneyline",
    "outcome": "St. Louis Cardinals",
-   "polyPP": 17.5,
+   "polyPP": 87.5,
    "pinnPP": 52.8,
-   "gapPP": -35.31,
-   "vol": 481847,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": -26.62,
+   "gapPP": 34.69,
+   "vol": 538190,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -26.0,
    "firstSeen": "2026-09-05T01:26:56.423359+00:00"
   },
   {
@@ -82,41 +54,13 @@
    "event": "St. Louis Cardinals vs Colorado Rockies",
    "market": "Moneyline",
    "outcome": "Colorado Rockies",
-   "polyPP": 82.5,
+   "polyPP": 12.5,
    "pinnPP": 47.2,
-   "gapPP": 35.31,
-   "vol": 481847,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": -26.62,
-   "firstSeen": "2026-09-05T01:26:56.423359+00:00"
-  },
-  {
-   "id": "baseball_mlb|tampabayrays-texasrangers|tampabayrays",
-   "sport": "baseball_mlb",
-   "event": "Tampa Bay Rays vs Texas Rangers",
-   "market": "Moneyline",
-   "outcome": "Tampa Bay Rays",
-   "polyPP": 85.2,
-   "pinnPP": 50.0,
-   "gapPP": 35.15,
-   "vol": 446653,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": 9.27,
-   "firstSeen": "2026-09-04T01:25:27.661101+00:00"
-  },
-  {
-   "id": "baseball_mlb|tampabayrays-texasrangers|texasrangers",
-   "sport": "baseball_mlb",
-   "event": "Tampa Bay Rays vs Texas Rangers",
-   "market": "Moneyline",
-   "outcome": "Texas Rangers",
-   "polyPP": 14.8,
-   "pinnPP": 50.0,
-   "gapPP": -35.15,
-   "vol": 446653,
+   "gapPP": -34.69,
+   "vol": 538190,
    "richtung": "Poly zu niedrig → backen",
-   "convergePP": 9.27,
-   "firstSeen": "2026-09-04T01:25:27.661101+00:00"
+   "convergePP": -26.0,
+   "firstSeen": "2026-09-05T01:26:56.423359+00:00"
   },
   {
    "id": "baseball_mlb|losangelesdodgers-washingtonnationals|washingtonnationals",
@@ -124,12 +68,12 @@
    "event": "Washington Nationals vs Los Angeles Dodgers",
    "market": "Moneyline",
    "outcome": "Washington Nationals",
-   "polyPP": 7.0,
+   "polyPP": 5.5,
    "pinnPP": 33.3,
-   "gapPP": -26.26,
-   "vol": 683630,
+   "gapPP": -27.76,
+   "vol": 712262,
    "richtung": "Poly zu niedrig → backen",
-   "convergePP": 0.0,
+   "convergePP": -1.5,
    "firstSeen": "2026-09-05T02:57:06.574017+00:00"
   },
   {
@@ -138,12 +82,40 @@
    "event": "Washington Nationals vs Los Angeles Dodgers",
    "market": "Moneyline",
    "outcome": "Los Angeles Dodgers",
-   "polyPP": 93.0,
+   "polyPP": 94.5,
    "pinnPP": 66.7,
-   "gapPP": 26.26,
-   "vol": 683630,
+   "gapPP": 27.76,
+   "vol": 712262,
    "richtung": "Poly zu hoch → faden",
-   "convergePP": 0.0,
+   "convergePP": -1.5,
+   "firstSeen": "2026-09-05T02:57:06.574017+00:00"
+  },
+  {
+   "id": "baseball_mlb|athletics-seattlemariners|athletics",
+   "sport": "baseball_mlb",
+   "event": "Athletics vs Seattle Mariners",
+   "market": "Moneyline",
+   "outcome": "Athletics",
+   "polyPP": 44.0,
+   "pinnPP": 36.0,
+   "gapPP": 8.01,
+   "vol": 184983,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 38.02,
+   "firstSeen": "2026-09-05T02:57:06.574017+00:00"
+  },
+  {
+   "id": "baseball_mlb|athletics-seattlemariners|seattlemariners",
+   "sport": "baseball_mlb",
+   "event": "Athletics vs Seattle Mariners",
+   "market": "Moneyline",
+   "outcome": "Seattle Mariners",
+   "polyPP": 56.0,
+   "pinnPP": 64.0,
+   "gapPP": -8.01,
+   "vol": 184983,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 38.02,
    "firstSeen": "2026-09-05T02:57:06.574017+00:00"
   }
  ]
