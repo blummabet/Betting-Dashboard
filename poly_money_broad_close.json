@@ -182364,7 +182364,13 @@
     "usd": 4432,
     "ts": 1788560436
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Chicago Cubs": 1.0,
+   "Miami Marlins": 0.0
+  },
+  "resolvedAt": "2026-09-05T05:00:05.796954+00:00"
  },
  "atp-vachero-tiafoe-2026-09-04": {
   "shares": {
@@ -184189,7 +184195,13 @@
     "usd": 17231,
     "ts": 1788560398
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "New York Yankees": 0.0,
+   "San Diego Padres": 1.0
+  },
+  "resolvedAt": "2026-09-05T05:00:05.796954+00:00"
  },
  "itf-sincla-qiansun-2026-09-05": {
   "shares": {},
@@ -184890,7 +184902,14 @@
    "CR Brasil": "62810429265985353949563327123816735251162889962529645762977420918894901032441",
    "Draw (CR Brasil vs. América FC)": "89240469740440727115488465447922839574702534356010484627996902531943335937001",
    "América FC": "7771856512995680638346638373591557794566710922145217292031305454387790360177"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "CR Brasil": 1.0,
+   "Draw (CR Brasil vs. América FC)": 0.0,
+   "América FC": 0.0
+  },
+  "resolvedAt": "2026-09-05T05:00:05.796954+00:00"
  },
  "chi1-cd1-aci-2026-09-04": {
   "shares": {
@@ -184941,7 +184960,14 @@
    "CD Concepción": "17629999650634563912620038356423655307473115108550997523328280073294344571827",
    "Draw (CD Concepción vs. Audax CS Italiano)": "52053077389537382589270581276977109302532067336258378377613206433332194810472",
    "Audax CS Italiano": "112321214520580999786873595545761952590709755647484957881515689359060338338576"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "CD Concepción": 0.0,
+   "Draw (CD Concepción vs. Audax CS Italiano)": 0.0,
+   "Audax CS Italiano": 1.0
+  },
+  "resolvedAt": "2026-09-05T05:00:05.796954+00:00"
  },
  "mex-jua-pac-2026-09-04-more-markets": {
   "shares": {
@@ -185233,8 +185259,8 @@
  },
  "lol-ig1-tes-2026-09-05": {
   "shares": {
-   "Invictus Gaming": 50456.97880768989,
-   "Top Esports": 60437.26876857501
+   "Invictus Gaming": 51208.863347004895,
+   "Top Esports": 61337.877722260004
   },
   "prices": {
    "Invictus Gaming": 0.455,
@@ -185246,7 +185272,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 136142,
+  "totalUsd": 139402,
   "whales": [
    {
     "wallet": "0x0a5392910ef4f236c60d212b4b4cd2c82adb077b",
@@ -185257,7 +185283,7 @@
    {
     "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
     "side": "Top Esports",
-    "usd": 14234,
+    "usd": 14069,
     "avgPrice": 0.5349
    },
    {
@@ -185273,8 +185299,8 @@
     "avgPrice": 0.46
    }
   ],
-  "hoursToKickoff": 1.55,
-  "capturedAt": "2026-09-05T04:29:35.709973+00:00",
+  "hoursToKickoff": 1.05,
+  "capturedAt": "2026-09-05T05:00:05.796954+00:00",
   "cond": "0xd4c6117274d29195e8bce8779c8b5fbfa1f0378e87d0be58fba4b2ac353e16eb",
   "frage": "LoL: Invictus Gaming vs Top Esports (BO5) - LPL Playoffs",
   "tokens": {
@@ -185290,23 +185316,23 @@
    "bids": [
     [
      0.54,
-     52668
+     51632
     ],
     [
      0.53,
-     6068
+     6118
     ],
     [
      0.52,
-     81856
+     81901
     ],
     [
      0.51,
-     61742
+     61539
     ],
     [
      0.5,
-     5332
+     4939
     ],
     [
      0.49,
@@ -185316,31 +185342,39 @@
    "asks": [
     [
      0.55,
-     30708
+     30953
     ],
     [
      0.56,
-     29898
+     29485
     ],
     [
      0.57,
-     13502
+     16310
     ],
     [
      0.58,
-     26957
+     30427
     ],
     [
      0.59,
-     5302
+     5322
     ],
     [
      0.6,
-     9404
+     6424
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x81d12e02d411ea6784d14af0538c72ecf8bb4806",
+    "action": "BUY",
+    "side": "Top Esports",
+    "price": 0.55,
+    "usd": 391,
+    "ts": 1788584170
+   },
    {
     "wallet": "0x1b50896415336870148cac98d078e88f93ca87fb",
     "action": "BUY",
@@ -185348,14 +185382,142 @@
     "price": 0.55,
     "usd": 1000,
     "ts": 1788582241
+   }
+  ]
+ },
+ "dota2-nem-carst-2026-09-05": {
+  "shares": {
+   "Team Nemesis": 15355.393909960007,
+   "Carstensz": 4849.073490480001
+  },
+  "prices": {
+   "Team Nemesis": 0.76,
+   "Carstensz": 0.24
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 19441,
+  "whales": [
+   {
+    "wallet": "0x7e5972bfc25819775ee5a9d4f191919375487b8b",
+    "side": "Team Nemesis",
+    "usd": 3642,
+    "avgPrice": 0.7365
    },
    {
-    "wallet": "0xc4c1065d8dba0be248a3994fdefd97bd83ff6b32",
+    "wallet": "0x66b1c3fe0239c733b84f810f3d0b6e3a4b536b9d",
+    "side": "Carstensz",
+    "usd": 2879,
+    "avgPrice": 0.1689
+   },
+   {
+    "wallet": "0xc4fe817476491890086330a639ac417d51bf601f",
+    "side": "Team Nemesis",
+    "usd": 1885,
+    "avgPrice": 0.7918
+   },
+   {
+    "wallet": "0xc2f2d01b227948e59f25aeb3d49564b8975d0ff7",
+    "side": "Team Nemesis",
+    "usd": 1415,
+    "avgPrice": 0.61
+   }
+  ],
+  "hoursToKickoff": 1.05,
+  "capturedAt": "2026-09-05T05:00:05.796954+00:00",
+  "cond": "0xc16d16d50f92c39f6106fa8e23ba90d4b371723e3fd77d46b131f86320e2f229",
+  "frage": "Dota 2: Team Nemesis vs Carstensz (BO3) - EPL World Series Southeast Asia Group Stage",
+  "tokens": {
+   "Team Nemesis": "73824594964933110572857794321802191282832575676986975155112147652390663427147",
+   "Carstensz": "38804952912116214700653573590481652200755388277309147785787972734785699989947"
+  },
+  "book": {
+   "side": "Team Nemesis",
+   "bid": 0.76,
+   "ask": 0.78,
+   "spreadC": 2.0,
+   "spreadPct": 2.56,
+   "bids": [
+    [
+     0.76,
+     145
+    ],
+    [
+     0.75,
+     1408
+    ],
+    [
+     0.74,
+     7
+    ],
+    [
+     0.73,
+     124
+    ],
+    [
+     0.72,
+     20
+    ],
+    [
+     0.67,
+     40
+    ]
+   ],
+   "asks": [
+    [
+     0.78,
+     40
+    ],
+    [
+     0.79,
+     100
+    ],
+    [
+     0.8,
+     149
+    ],
+    [
+     0.81,
+     76
+    ],
+    [
+     0.82,
+     209
+    ],
+    [
+     0.83,
+     75
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x7e5972bfc25819775ee5a9d4f191919375487b8b",
     "action": "BUY",
-    "side": "Invictus Gaming",
-    "price": 0.46,
-    "usd": 500,
-    "ts": 1788579069
+    "side": "Team Nemesis",
+    "price": 0.7211,
+    "usd": 721,
+    "ts": 1788583882
+   },
+   {
+    "wallet": "0x7e5972bfc25819775ee5a9d4f191919375487b8b",
+    "action": "BUY",
+    "side": "Team Nemesis",
+    "price": 0.7437,
+    "usd": 744,
+    "ts": 1788583882
+   },
+   {
+    "wallet": "0x58f8f1138be2192696378629fc9aa23c7910dc70",
+    "action": "BUY",
+    "side": "Carstensz",
+    "price": 0.3763,
+    "usd": 1117,
+    "ts": 1788583599
    }
   ]
  }
