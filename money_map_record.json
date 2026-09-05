@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-09-05T18:51:48.291934+00:00",
+"generatedAt": "2026-09-05T19:06:58.858212+00:00",
 "byVerdict": {
 "konsens": {
 "n": 786,
@@ -18,20 +18,20 @@
 "clvLb": 17.2185
 },
 "uneinig": {
-"n": 284,
+"n": 286,
 "wins": 95,
-"hitRate": 0.3345,
-"polyN": 251,
+"hitRate": 0.3322,
+"polyN": 252,
 "polyWins": 69,
-"polyHitRate": 0.2749,
-"pinnN": 155,
-"pinnHitRate": 0.5935,
-"nRoi": 52,
-"roi": -0.3004,
-"roiLb": -0.5172,
-"nClv": 52,
-"clv": -11.88,
-"clvLb": -19.7345
+"polyHitRate": 0.2738,
+"pinnN": 157,
+"pinnHitRate": 0.5924,
+"nRoi": 54,
+"roi": -0.3263,
+"roiLb": -0.5372,
+"nClv": 54,
+"clv": -11.62,
+"clvLb": -19.1921
 },
 "teil": {
 "n": 14,
@@ -86,6 +86,11 @@
 "wins": 18,
 "hitRate": 0.6667
 },
+"Saudi Professional League": {
+"n": 26,
+"wins": 19,
+"hitRate": 0.7308
+},
 "Spanish Segunda Division": {
 "n": 26,
 "wins": 20,
@@ -95,11 +100,6 @@
 "n": 25,
 "wins": 16,
 "hitRate": 0.64
-},
-"Saudi Professional League": {
-"n": 25,
-"wins": 19,
-"hitRate": 0.76
 },
 "German Cup": {
 "n": 23,
@@ -261,6 +261,11 @@
 "wins": 7,
 "hitRate": 0.7
 },
+"Swiss Super League": {
+"n": 10,
+"wins": 9,
+"hitRate": 0.9
+},
 "Japanese J League 2": {
 "n": 9,
 "wins": 9,
@@ -280,11 +285,6 @@
 "n": 9,
 "wins": 4,
 "hitRate": 0.4444
-},
-"Swiss Super League": {
-"n": 9,
-"wins": 9,
-"hitRate": 1.0
 },
 "Austrian Bundesliga": {
 "n": 8,
@@ -595,26 +595,64 @@
 "clvLb": 8.9798
 },
 "weak": {
-"n": 415,
+"n": 417,
 "wins": 218,
-"hitRate": 0.5253,
-"nRoi": 59,
-"roi": -0.0103,
-"roiLb": -0.2238,
-"nClv": 59,
-"clv": -0.19,
-"clvLb": -7.1728
+"hitRate": 0.5228,
+"nRoi": 61,
+"roi": -0.0428,
+"roiLb": -0.2525,
+"nClv": 61,
+"clv": -0.35,
+"clvLb": -7.1022
 }
 },
 "divergence": {
-"n": 284,
+"n": 286,
 "betfairWins": 95,
-"betfairRate": 0.3345,
-"polyN": 251,
+"betfairRate": 0.3322,
+"polyN": 252,
 "polyWins": 69,
-"polyRate": 0.2749
+"polyRate": 0.2738
 },
 "recent": [
+{
+"matchId": "36014957",
+"home": "Al-Taawoun Buraidah",
+"away": "Al-Fateh (KSA)",
+"league": "Saudi Professional League",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Al-Taawoun Buraidah",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-09-05T15:55:00Z",
+"settledAt": "2026-09-05T19:06:58.672880+00:00"
+},
+{
+"matchId": "36016142",
+"home": "Young Boys",
+"away": "Luzern",
+"league": "Swiss Super League",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Young Boys",
+"polySide": null,
+"winner": "draw",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+3,
+3
+],
+"kickoff": "2026-09-05T16:00:00Z",
+"settledAt": "2026-09-05T19:06:58.672880+00:00"
+},
 {
 "matchId": "36020543",
 "home": "Al Faisaly ( KSA )",
@@ -1336,56 +1374,18 @@
 ],
 "kickoff": "2026-09-05T07:30:00Z",
 "settledAt": "2026-09-05T10:35:54.689693+00:00"
-},
-{
-"matchId": "36013726",
-"home": "FC Juarez",
-"away": "Pachuca",
-"league": "Mexican Liga MX",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Pachuca",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-2
-],
-"kickoff": "2026-09-05T03:00:00Z",
-"settledAt": "2026-09-05T05:07:45.139323+00:00"
-},
-{
-"matchId": "36003712",
-"home": "Deportes Concepcion",
-"away": "Audax Italiano",
-"league": "Chilean Primera Division",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Audax Italiano",
-"polySide": "home",
-"winner": "away",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-09-05T00:30:00Z",
-"settledAt": "2026-09-05T03:35:11.474613+00:00"
 }
 ],
 "global": {
-"n": 1084,
+"n": 1086,
 "wins": 749,
-"hitRate": 0.691,
-"nRoi": 171,
-"roi": 0.1749,
-"roiLb": 0.064,
-"nClv": 171,
-"clv": 9.2,
-"clvLb": 4.9695
+"hitRate": 0.6897,
+"nRoi": 173,
+"roi": 0.1613,
+"roiLb": 0.0506,
+"nClv": 173,
+"clv": 9.04,
+"clvLb": 4.8504
 },
-"pending": 24
+"pending": 22
 }
