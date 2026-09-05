@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-05T13:03:15.241913+00:00",
+ "generatedAt": "2026-09-05T13:28:20.803090+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,8 +10,8 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 573,
- "pinnKeys": 345,
- "matched": 233,
+ "pinnKeys": 341,
+ "matched": 229,
  "footballRows": 195,
  "crossRows": 378,
  "footballSkippedStale": 93,
@@ -25,13 +25,56 @@
  },
  "matchedBySport": {
   "baseball_mlb": 30,
-  "boxing_boxing": 8,
+  "boxing_boxing": 4,
   "soccer_mls": 54,
   "soccer_liga": 141
  },
  "trackRecord": {
-  "tracked": 288,
+  "tracked": 291,
   "converged": 75
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|bournemouth-newcastle|aw",
+   "sport": "soccer_liga",
+   "event": "Newcastle vs Bournemouth",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 12.0,
+   "pinnPP": 77.8,
+   "gapPP": -65.83,
+   "vol": 1369836,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-05T13:28:20.802783+00:00"
+  },
+  {
+   "id": "soccer_liga|bournemouth-newcastle|dr",
+   "sport": "soccer_liga",
+   "event": "Newcastle vs Bournemouth",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 76.5,
+   "pinnPP": 18.8,
+   "gapPP": 57.69,
+   "vol": 1369836,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-05T13:28:20.802783+00:00"
+  },
+  {
+   "id": "soccer_liga|bournemouth-newcastle|hw",
+   "sport": "soccer_liga",
+   "event": "Newcastle vs Bournemouth",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 11.6,
+   "pinnPP": 3.4,
+   "gapPP": 8.23,
+   "vol": 1369836,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-05T13:28:20.802783+00:00"
+  }
+ ]
 }

@@ -1,23 +1,23 @@
 {
- "n": 47,
+ "n": 48,
  "minOdds": 1.35,
- "moneyHitRate": 0.362,
- "priceHitRate": 0.426,
- "brierMoney": 0.8325,
- "brierPrice": 0.6938,
+ "moneyHitRate": 0.354,
+ "priceHitRate": 0.396,
+ "brierMoney": 0.8554,
+ "brierPrice": 0.6961,
  "disagree": {
-  "n": 14,
+  "n": 15,
   "moneyWon": 0,
   "priceWon": 2,
-  "neither": 12
+  "neither": 13
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
  "byLeague": [],
  "guete": {
-  "belastbar": 47,
+  "belastbar": 48,
   "preis_echo": 248,
-  "abgeschnitten": 7,
+  "abgeschnitten": 6,
   "unbekannt": 446,
   "leer": 0
  },
@@ -255,11 +255,11 @@
    "league": "SOCCER:SAF1",
    "winner": "Draw (Marumo Gallants FC vs. Polokwane City)",
    "moneyFav": "Polokwane City",
-   "priceFav": "Polokwane City",
+   "priceFav": "Draw (Marumo Gallants FC vs. Polokwane City)",
    "moneyShare": 0.619,
    "priceProb": 0.357,
    "moneyOK": false,
-   "priceOK": false,
+   "priceOK": true,
    "totalUsd": 29721
   },
   {
@@ -273,6 +273,18 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 28793
+  },
+  {
+   "key": "ja2-fuj-van-2026-09-05",
+   "league": "SOCCER:JA2",
+   "winner": "Draw (Fujieda MYFC vs. Vanraure Hachinohe FC)",
+   "moneyFav": "Fujieda MYFC",
+   "priceFav": "Fujieda MYFC",
+   "moneyShare": 0.98,
+   "priceProb": 0.493,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 24987
   },
   {
    "key": "bun-stu-koe-2026-09-04-exact-score",
@@ -363,11 +375,11 @@
    "league": "SOCCER:JAP",
    "winner": "Avispa Fukuoka 1 - 1 FC Mito Holly Hock",
    "moneyFav": "Avispa Fukuoka 3 - 1 FC Mito Holly Hock",
-   "priceFav": "Avispa Fukuoka 1 - 1 FC Mito Holly Hock",
+   "priceFav": "Avispa Fukuoka 1 - 0 FC Mito Holly Hock",
    "moneyShare": 0.107,
    "priceProb": 0.135,
    "moneyOK": false,
-   "priceOK": true,
+   "priceOK": false,
    "totalUsd": 17421
   },
   {
@@ -489,21 +501,9 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 9951
-  },
-  {
-   "key": "sui-lug-ser-2026-09-03",
-   "league": "SOCCER:SUI",
-   "winner": "FC Lugano",
-   "moneyFav": "FC Lugano",
-   "priceFav": "FC Lugano",
-   "moneyShare": 0.981,
-   "priceProb": 0.443,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 9610
   }
  ],
- "generatedAt": "2026-09-05T13:07:18.118747+00:00",
+ "generatedAt": "2026-09-05T13:33:56.819723+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -514,7 +514,7 @@
   "mls": 780,
   "epl": 613,
   "soccer": 800,
-  "tennis": 537,
+  "tennis": 534,
   "ucl": 533,
   "la-liga": 672,
   "bundesliga": 570,
@@ -526,7 +526,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 618,
+  "esports": 616,
   "cs2": 421,
   "lol": 400,
   "dota": 9,
@@ -553,7 +553,7 @@
   "europa-league": 177,
   "israel-premier-league": 140,
   "japan-j-league": 541,
-  "japan-j2-league": 551,
+  "japan-j2-league": 545,
   "k-league": 532,
   "la-liga-2": 554,
   "liga-mx-apertura": 2,
@@ -583,11 +583,11 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 405
+  "sweepAdded": 404
  },
  "vorStats": {
-  "kandidaten": 32,
-  "budgetLeer": 10,
+  "kandidaten": 33,
+  "budgetLeer": 11,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
   "mitAnteilen": 22,
@@ -595,13 +595,13 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 2170,
-   "usd": 35357603,
+   "n": 2399,
+   "usd": 35920295,
    "beispiel": "fifwc-bra-nor-2026-07-05-more-markets"
   },
   "nba": {
-   "n": 510,
-   "usd": 6889589,
+   "n": 474,
+   "usd": 6802611,
    "beispiel": "nba-nyk-phi-2026-05-08"
   },
   "balance": {
@@ -611,17 +611,12 @@
   },
   "presidential": {
    "n": 13,
-   "usd": 5035393,
+   "usd": 5035285,
    "beispiel": "presidential-election-winner-2028"
-  },
-  "world": {
-   "n": 76,
-   "usd": 1592341,
-   "beispiel": "world-cup-winner"
   },
   "fed": {
    "n": 26,
-   "usd": 1302457,
+   "usd": 1302481,
    "beispiel": "fed-decision-in-september-762"
   },
   "nhl": {
@@ -629,15 +624,20 @@
    "usd": 1201044,
    "beispiel": "nhl-mon-car-2026-01-01"
   },
+  "will": {
+   "n": 38,
+   "usd": 958489,
+   "beispiel": "will-the-us-confirm-that-aliens-exist-before-2027"
+  },
   "ecs": {
-   "n": 13,
-   "usd": 1009059,
+   "n": 10,
+   "usd": 954145,
    "beispiel": "ecs-ars-mci-2026-08-16"
   },
-  "will": {
-   "n": 39,
-   "usd": 960257,
-   "beispiel": "will-the-us-acquire-any-part-of-greenland-in-2026"
+  "world": {
+   "n": 62,
+   "usd": 650822,
+   "beispiel": "world-cup-winner"
   },
   "cbb": {
    "n": 72,
@@ -645,19 +645,14 @@
    "beispiel": "cbb-pur-arz-2026-03-28"
   },
   "cfb": {
-   "n": 82,
-   "usd": 507962,
+   "n": 79,
+   "usd": 502696,
    "beispiel": "cfb-ntx-ind-2026-09-05"
   },
   "fif": {
-   "n": 78,
-   "usd": 350843,
+   "n": 96,
+   "usd": 396024,
    "beispiel": "fif-nld-uzb-2026-06-08"
-  },
-  "efa": {
-   "n": 31,
-   "usd": 335458,
-   "beispiel": "efa-wol-liv-2026-03-07-more-markets"
   },
   "uef": {
    "n": 9,
@@ -675,29 +670,29 @@
    "beispiel": "trump-announces-end-of-military-operations-against-iran-by"
   },
   "clf": {
-   "n": 40,
-   "usd": 195496,
-   "beispiel": "clf-psg-mun-2026-08-08"
+   "n": 52,
+   "usd": 222175,
+   "beispiel": "clf-avl-bmu-2026-08-07-more-markets"
   },
-  "which": {
-   "n": 20,
-   "usd": 156388,
-   "beispiel": "which-party-will-gain-most-seats-in-russian-parliamentary-election"
+  "efa": {
+   "n": 25,
+   "usd": 171216,
+   "beispiel": "efa-cfc-mnc-2026-05-16"
   },
   "new": {
    "n": 5,
    "usd": 146526,
    "beispiel": "new-york-city-mayoral-election"
   },
-  "republican": {
-   "n": 5,
-   "usd": 131875,
-   "beispiel": "republican-presidential-nominee-2028"
+  "which": {
+   "n": 18,
+   "usd": 135243,
+   "beispiel": "which-party-will-win-the-senate-in-2026"
   },
   "what": {
-   "n": 25,
-   "usd": 127607,
-   "beispiel": "what-price-will-ethereum-hit-before-2027"
+   "n": 26,
+   "usd": 130767,
+   "beispiel": "what-iranian-demands-will-trump-agree-to-by-june-30"
   }
  }
 }
