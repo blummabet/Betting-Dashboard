@@ -15,7 +15,7 @@
     "basis": 0.563,
     "basisN": 171,
     "neutral": 0.544,
-    "last_updated": "2026-09-05T02:29:06Z",
+    "last_updated": "2026-09-05T02:44:06Z",
     "notes": "Initial-Weight 1.0. Wird aktualisiert sobald WM-Spiele resolved sind (ab 12.06.2026)."
   },
   "public_static_bias": {
@@ -29,7 +29,7 @@
     "basis": 0.563,
     "basisN": 171,
     "neutral": 0.563,
-    "last_updated": "2026-09-05T02:29:06Z",
+    "last_updated": "2026-09-05T02:44:06Z",
     "notes": "Migration aus generate_wm_picks.compute_public_bias(). Initial 1.0 (Elo-Familie). Wird ab 12.06. gelernt."
   },
   "travel_burden": {
@@ -43,7 +43,7 @@
     "basis": 0.563,
     "basisN": 171,
     "neutral": 0.563,
-    "last_updated": "2026-09-05T02:29:06Z",
+    "last_updated": "2026-09-05T02:44:06Z",
     "notes": "Killer-Differenzierung — kaum Bookies modellieren das. xG-basiert, gemeinsame Logik mit generate_wm_picks.travel_factor()."
   },
   "injury": {
@@ -57,7 +57,7 @@
     "basis": 0.563,
     "basisN": 171,
     "neutral": 0.563,
-    "last_updated": "2026-09-05T02:29:06Z",
+    "last_updated": "2026-09-05T02:44:06Z",
     "notes": "Positionsbewusst: GK > FWD > DEF/MID > Backup. Mehrere Ausfälle akkumulieren bis Cap 6pp/Team."
   },
   "form_trend": {
@@ -71,7 +71,7 @@
     "basis": 0.563,
     "basisN": 171,
     "neutral": 0.563,
-    "last_updated": "2026-09-05T02:29:06Z",
+    "last_updated": "2026-09-05T02:44:06Z",
     "notes": "Tore-Avg-Diff der letzten ~5 Spiele. Score = scoring_diff × 3 + conceding_diff × 2.5."
   },
   "h2h_pattern": {
@@ -85,7 +85,7 @@
     "basis": 0.563,
     "basisN": 171,
     "neutral": 0.563,
-    "last_updated": "2026-09-05T02:29:06Z",
+    "last_updated": "2026-09-05T02:44:06Z",
     "notes": "≥5 H2H Spiele Anforderung. Win-Rate (inkl. halber Draws) gegen 50% als Baseline."
   },
   "xg_strength": {
@@ -99,7 +99,7 @@
     "basis": 0.563,
     "basisN": 171,
     "neutral": 0.563,
-    "last_updated": "2026-09-05T02:29:06Z",
+    "last_updated": "2026-09-05T02:44:06Z",
     "notes": "Understat xGForAvg/xGAgainstAvg. xG-Diff zwischen Heim und Auswärts als Team-Stärke-Indikator."
   },
   "polymarket_sharp": {
@@ -127,7 +127,7 @@
     "basis": 0.563,
     "basisN": 171,
     "neutral": 0.563,
-    "last_updated": "2026-09-05T02:29:06Z",
+    "last_updated": "2026-09-05T02:44:06Z",
     "notes": "Tournament-Stage + Group-Standing + KO-Phase. MD1: leicht risikoavers. MD3: Must-Win-Boost für 0-Pkt-Teams. KO: Tor-Erwartung niedriger."
   },
   "lineup_signal": {
@@ -141,7 +141,7 @@
     "basis": 0.563,
     "basisN": 171,
     "neutral": 0.563,
-    "last_updated": "2026-09-05T02:29:06Z",
+    "last_updated": "2026-09-05T02:44:06Z",
     "notes": "T-1h Aufstellungs-Signal. Top-Scorer fehlt komplett → starke Auswirkung auf Goals + Outright. Unique-Group (kein Anti-Korr-Discount), volle Gewichtung weil orthogonal zu historischen Signalen."
   },
   "apif_predictions": {
@@ -155,7 +155,7 @@
     "basis": 0.563,
     "basisN": 171,
     "neutral": 0.563,
-    "last_updated": "2026-09-05T02:29:06Z",
+    "last_updated": "2026-09-05T02:44:06Z",
     "notes": "Externes Drittes-Modell (API-Football's eigenes Pricing-Modell). Cross-Check gegen Pinnacle pro 1X2/DNB-Pick. Unique-Group, volle Gewichtung."
   },
   "weather_signal": {
@@ -169,7 +169,7 @@
     "basis": 0.563,
     "basisN": 171,
     "neutral": 0.563,
-    "last_updated": "2026-09-05T02:29:06Z",
+    "last_updated": "2026-09-05T02:44:06Z",
     "notes": "Hitze-Penalty (≥30°C) für cold/temperate-climate Teams. Mittag-Anpfiff voll, Abend gedämpft. Context-Group mit Travel+Injury — Anti-Korr verhindert doppeltes Zählen wenn Hitze+Reise zusammen."
   },
   "incentive_signal": {
@@ -183,7 +183,7 @@
     "basis": 0.563,
     "basisN": 171,
     "neutral": 0.563,
-    "last_updated": "2026-09-05T02:29:06Z",
+    "last_updated": "2026-09-05T02:44:06Z",
     "notes": ""
   },
   "chance_creation": {
@@ -197,7 +197,7 @@
     "basis": 0.563,
     "basisN": 171,
     "neutral": 0.563,
-    "last_updated": "2026-09-05T02:29:06Z",
+    "last_updated": "2026-09-05T02:44:06Z",
     "notes": "neu 12.06.2026 — xG/Stats-Build"
   },
   "form_rating": {
@@ -211,7 +211,7 @@
     "basis": 0.563,
     "basisN": 171,
     "neutral": 0.563,
-    "last_updated": "2026-09-05T02:29:06Z",
+    "last_updated": "2026-09-05T02:44:06Z",
     "notes": "neu 12.06.2026 — xG/Stats-Build"
   },
   "freshness_leg": {
@@ -225,7 +225,7 @@
     "basis": 0.563,
     "basisN": 171,
     "neutral": 0.563,
-    "last_updated": "2026-09-05T02:29:06Z",
+    "last_updated": "2026-09-05T02:44:06Z",
     "notes": ""
   },
   "altitude_signal": {
@@ -239,7 +239,7 @@
     "basis": 0.563,
     "basisN": 171,
     "neutral": 0.563,
-    "last_updated": "2026-09-05T02:29:06Z",
+    "last_updated": "2026-09-05T02:44:06Z",
     "notes": ""
   },
   "smart_money": {
@@ -253,7 +253,7 @@
     "basis": 0.563,
     "basisN": 171,
     "neutral": 0.545,
-    "last_updated": "2026-09-05T02:29:06Z",
+    "last_updated": "2026-09-05T02:44:06Z",
     "notes": ""
   },
   "fixture_congestion": {
@@ -267,7 +267,7 @@
     "basis": 0.563,
     "basisN": 171,
     "neutral": 0.563,
-    "last_updated": "2026-09-05T02:29:06Z",
+    "last_updated": "2026-09-05T02:44:06Z",
     "notes": ""
   },
   "streak_momentum": {
@@ -281,7 +281,7 @@
     "basis": 0.563,
     "basisN": 171,
     "neutral": 0.563,
-    "last_updated": "2026-09-05T02:29:06Z",
+    "last_updated": "2026-09-05T02:44:06Z",
     "notes": ""
   },
   "reverse_line_move": {
@@ -295,7 +295,7 @@
     "basis": 0.563,
     "basisN": 171,
     "neutral": 0.551,
-    "last_updated": "2026-09-05T02:29:06Z",
+    "last_updated": "2026-09-05T02:44:06Z",
     "notes": ""
   },
   "opener_move": {
@@ -309,7 +309,7 @@
     "basis": 0.563,
     "basisN": 171,
     "neutral": 0.546,
-    "last_updated": "2026-09-05T02:29:06Z",
+    "last_updated": "2026-09-05T02:44:06Z",
     "notes": ""
   },
   "betfair_money": {
