@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-05T12:27:52.289511+00:00",
+ "generatedAt": "2026-09-05T17:08:45.831287+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,29 +9,58 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 546,
- "pinnKeys": 340,
- "matched": 228,
- "footballRows": 192,
- "crossRows": 354,
- "footballSkippedStale": 94,
+ "polyRowsSeen": 593,
+ "pinnKeys": 345,
+ "matched": 241,
+ "footballRows": 207,
+ "crossRows": 386,
+ "footballSkippedStale": 73,
  "seenBySport": {
   "americanfootball_nfl": 156,
-  "baseball_mlb": 70,
-  "icehockey_nhl": 88,
+  "baseball_mlb": 94,
+  "icehockey_nhl": 96,
   "boxing_boxing": 40,
   "soccer_mls": 54,
-  "soccer_liga": 138
+  "soccer_liga": 153
  },
  "matchedBySport": {
   "baseball_mlb": 30,
-  "boxing_boxing": 6,
+  "boxing_boxing": 4,
   "soccer_mls": 54,
-  "soccer_liga": 138
+  "soccer_liga": 153
  },
  "trackRecord": {
-  "tracked": 288,
+  "tracked": 314,
   "converged": 75
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|athleticclub-atleticomadrid|dr",
+   "sport": "soccer_liga",
+   "event": "Athletic Club vs Atletico Madrid",
+   "market": "1X2",
+   "outcome": "Remis",
+   "polyPP": 28.5,
+   "pinnPP": 39.4,
+   "gapPP": -10.89,
+   "vol": 253978,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-05T15:30:48.236568+00:00"
+  },
+  {
+   "id": "soccer_liga|athleticclub-atleticomadrid|hw",
+   "sport": "soccer_liga",
+   "event": "Athletic Club vs Atletico Madrid",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 33.5,
+   "pinnPP": 24.7,
+   "gapPP": 8.84,
+   "vol": 253978,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-05T15:30:48.236568+00:00"
+  }
+ ]
 }
