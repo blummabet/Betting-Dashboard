@@ -5575,7 +5575,7 @@
 "leadOdd": 1.95,
 "value": 1600201.03,
 "sentAt": "2026-09-05T17:09:39.977218+00:00",
-"status": "pending",
+"status": "lost",
 "htScore": [
 0,
 0
@@ -5587,7 +5587,16 @@
 "serie": {
 "gefunden": false,
 "grund": "keine Serie"
-}
+},
+"clvBf": -1.28,
+"clvPinn": 0.26,
+"settledAt": "2026-09-05T18:21:55.352349+00:00",
+"ftScore": [
+0,
+0
+],
+"profit": -1.0,
+"via": "track"
 },
 {
 "k": "fresh:36014987:Over/Under 3.5 Goals",
@@ -5613,6 +5622,72 @@
 "serie": {
 "gefunden": false,
 "grund": "kein Team-Treffer"
+}
+},
+{
+"k": "fresh:36005512:Match Odds",
+"matchId": "36005512",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "French Ligue 1",
+"home": "Nice",
+"away": "Le Mans",
+"leadName": "Nice",
+"leadOdd": 1.72,
+"value": 197097.64,
+"sentAt": "2026-09-05T18:21:54.795664+00:00",
+"status": "pending",
+"htScore": null,
+"consensus": {
+"verdict": "konsens",
+"agree": true
+},
+"serie": {
+"gefunden": true,
+"serie": {
+"team": "Nice",
+"venue": "H",
+"typ": "unbeaten",
+"markt": "Ungeschlagen",
+"laenge": 5,
+"zufallPct": 15.91254,
+"basis": "liga",
+"state": "intakt",
+"ligaBasisPct": 69
+}
+}
+},
+{
+"k": "fresh:35979413:Match Odds",
+"matchId": "35979413",
+"scenario": "fresh",
+"market": "Match Odds",
+"league": "Italian Serie A",
+"home": "Roma",
+"away": "Atalanta",
+"leadName": "Roma",
+"leadOdd": 1.75,
+"value": 507373.43,
+"sentAt": "2026-09-05T18:21:55.039358+00:00",
+"status": "pending",
+"htScore": null,
+"consensus": {
+"verdict": "konsens",
+"agree": true
+},
+"serie": {
+"gefunden": true,
+"serie": {
+"team": "Roma",
+"venue": "H",
+"typ": "win",
+"markt": "Sieg-Serie",
+"laenge": 3,
+"zufallPct": 10.25306,
+"basis": "liga",
+"state": "wackelt",
+"ligaBasisPct": 47
+}
 }
 }
 ]
