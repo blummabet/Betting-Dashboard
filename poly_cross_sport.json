@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-05T22:20:54.400134+00:00",
+ "generatedAt": "2026-09-05T22:29:06.665475+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -32,5 +32,62 @@
   "tracked": 313,
   "converged": 75
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|atlantabraves-philadelphiaphillies|atlantabraves",
+   "sport": "baseball_mlb",
+   "event": "Atlanta Braves vs Philadelphia Phillies",
+   "market": "Moneyline",
+   "outcome": "Atlanta Braves",
+   "polyPP": 16.5,
+   "pinnPP": 29.2,
+   "gapPP": -12.66,
+   "vol": 171974,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": -0.25,
+   "firstSeen": "2026-09-04T23:03:02.149928+00:00"
+  },
+  {
+   "id": "baseball_mlb|atlantabraves-philadelphiaphillies|philadelphiaphillies",
+   "sport": "baseball_mlb",
+   "event": "Atlanta Braves vs Philadelphia Phillies",
+   "market": "Moneyline",
+   "outcome": "Philadelphia Phillies",
+   "polyPP": 83.5,
+   "pinnPP": 70.8,
+   "gapPP": 12.66,
+   "vol": 171974,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": -0.25,
+   "firstSeen": "2026-09-04T23:03:02.149928+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagocubs-miamimarlins|chicagocubs",
+   "sport": "baseball_mlb",
+   "event": "Chicago Cubs vs Miami Marlins",
+   "market": "Moneyline",
+   "outcome": "Chicago Cubs",
+   "polyPP": 82.5,
+   "pinnPP": 73.2,
+   "gapPP": 9.3,
+   "vol": 436872,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 5.17,
+   "firstSeen": "2026-09-05T00:59:51.038984+00:00"
+  },
+  {
+   "id": "baseball_mlb|chicagocubs-miamimarlins|miamimarlins",
+   "sport": "baseball_mlb",
+   "event": "Chicago Cubs vs Miami Marlins",
+   "market": "Moneyline",
+   "outcome": "Miami Marlins",
+   "polyPP": 17.5,
+   "pinnPP": 26.8,
+   "gapPP": -9.3,
+   "vol": 436872,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 5.17,
+   "firstSeen": "2026-09-05T00:59:51.038984+00:00"
+  }
+ ]
 }
