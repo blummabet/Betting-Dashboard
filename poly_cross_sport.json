@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-05T20:43:42.893138+00:00",
+ "generatedAt": "2026-09-05T20:58:55.432253+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -29,8 +29,37 @@
   "soccer_liga": 156
  },
  "trackRecord": {
-  "tracked": 313,
+  "tracked": 315,
   "converged": 73
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|newyorkmets-sanfranciscogiants|sanfranciscogiants",
+   "sport": "baseball_mlb",
+   "event": "San Francisco Giants vs New York Mets",
+   "market": "Moneyline",
+   "outcome": "San Francisco Giants",
+   "polyPP": 50.5,
+   "pinnPP": 43.4,
+   "gapPP": 7.13,
+   "vol": 485133,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-05T20:58:55.431950+00:00"
+  },
+  {
+   "id": "baseball_mlb|newyorkmets-sanfranciscogiants|newyorkmets",
+   "sport": "baseball_mlb",
+   "event": "San Francisco Giants vs New York Mets",
+   "market": "Moneyline",
+   "outcome": "New York Mets",
+   "polyPP": 49.5,
+   "pinnPP": 56.6,
+   "gapPP": -7.13,
+   "vol": 485133,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-05T20:58:55.431950+00:00"
+  }
+ ]
 }
