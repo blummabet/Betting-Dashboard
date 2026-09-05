@@ -40,6 +40,7 @@ try:                                        # Anpfiff in Lucas' Zeit, nicht in U
 except Exception:                           # ohne tzdata lieber ehrlich UTC als falsche Ortszeit
     LOKAL = timezone.utc
 
+import betfair_track_store as _store   # 05.09.2026: der Ledger liegt kompakt — load() nimmt beide Formate
 import killer
 import telegram_trades as TG
 
@@ -226,9 +227,22 @@ def ledger_abrechnen(ledger, results=None, now=None) -> list:
     now = now or _now()
     ledger = [dict(r) for r in (ledger or [])]
     if results is None:
-        results = _load(BASE / "betfair_track_results.json", [])
+        # 05.09.2026 — hier stand `_load(...)`, der generische JSON-Leser. Seit dem 01.09. liegt
+        # der Ledger im Spaltenformat (`{fmt, basis, woerter, zeilen}`); ueber ein Dict zu
+        # iterieren liefert seine SCHLUESSEL, also Strings, und der Lauf starb mit
+        # „'str' object has no attribute 'get'". Alle anderen Leser wurden damals umgestellt
+        # (betfair_track_record, betfair_public_eval, killer, wm_data_integrity) — dieser eine
+        # nicht. Ein Formatwechsel ist erst fertig, wenn JEDER Leser ihn kennt.
+        results = _store.load(BASE / "betfair_track_results.json")
+    if not isinstance(results, list):
+        # Unbekannte Form: nichts abrechnen, aber laut. Offen zu lassen ist harmlos (der
+        # naechste Lauf holt es nach); ein Absturz kostet den ganzen Push, denn abgerechnet
+        # wird VOR dem Senden.
+        print("[killer_push] ⚠️ betfair_track_results.json in unerwarteter Form (%s) — "
+              "nichts abgerechnet, Zeilen bleiben offen" % type(results).__name__)
+        return ledger
     erg = {"%s|%s" % (r["matchId"], r["market"]): r
-           for r in (results or []) if r.get("matchId") and r.get("market")}
+           for r in results if isinstance(r, dict) and r.get("matchId") and r.get("market")}
     for r in ledger:
         if r.get("status") != "offen":
             continue
