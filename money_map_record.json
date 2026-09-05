@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-05T15:56:02.848402+00:00",
+"generatedAt": "2026-09-05T16:25:18.106690+00:00",
 "byVerdict": {
 "konsens": {
-"n": 777,
-"wins": 642,
-"hitRate": 0.8263,
-"polyN": 725,
+"n": 778,
+"wins": 643,
+"hitRate": 0.8265,
+"polyN": 726,
 "polyWins": 568,
-"polyHitRate": 0.7834,
+"polyHitRate": 0.7824,
 "pinnN": 68,
 "pinnHitRate": 0.8235,
-"nRoi": 105,
-"roi": 0.4305,
-"roiLb": 0.3128,
-"nClv": 105,
-"clv": 20.79,
-"clvLb": 16.6477
+"nRoi": 106,
+"roi": 0.4279,
+"roiLb": 0.3113,
+"nClv": 106,
+"clv": 20.64,
+"clvLb": 16.5276
 },
 "uneinig": {
-"n": 274,
+"n": 276,
 "wins": 94,
-"hitRate": 0.3431,
-"polyN": 245,
+"hitRate": 0.3406,
+"polyN": 246,
 "polyWins": 69,
-"polyHitRate": 0.2816,
-"pinnN": 147,
-"pinnHitRate": 0.5918,
-"nRoi": 42,
-"roi": -0.175,
-"roiLb": -0.4256,
-"nClv": 42,
-"clv": -6.98,
-"clvLb": -16.0312
+"polyHitRate": 0.2805,
+"pinnN": 148,
+"pinnHitRate": 0.5946,
+"nRoi": 44,
+"roi": -0.2125,
+"roiLb": -0.4554,
+"nClv": 44,
+"clv": -8.37,
+"clvLb": -17.1785
 },
 "teil": {
 "n": 13,
@@ -67,9 +67,9 @@
 "hitRate": 0.6364
 },
 "Spanish La Liga": {
-"n": 32,
-"wins": 22,
-"hitRate": 0.6875
+"n": 33,
+"wins": 23,
+"hitRate": 0.697
 },
 "Argentinian Primera Division": {
 "n": 30,
@@ -111,6 +111,11 @@
 "wins": 15,
 "hitRate": 0.6818
 },
+"Italian Serie A": {
+"n": 22,
+"wins": 18,
+"hitRate": 0.8182
+},
 "Japanese J League": {
 "n": 22,
 "wins": 16,
@@ -125,11 +130,6 @@
 "n": 21,
 "wins": 13,
 "hitRate": 0.619
-},
-"Italian Serie A": {
-"n": 21,
-"wins": 18,
-"hitRate": 0.8571
 },
 "Dutch Eredivisie": {
 "n": 20,
@@ -171,12 +171,12 @@
 "wins": 12,
 "hitRate": 0.6667
 },
-"Italian Coppa Italia": {
-"n": 17,
-"wins": 12,
-"hitRate": 0.7059
-},
 "Swedish Allsvenskan": {
+"n": 18,
+"wins": 12,
+"hitRate": 0.6667
+},
+"Italian Coppa Italia": {
 "n": 17,
 "wins": 12,
 "hitRate": 0.7059
@@ -584,37 +584,94 @@
 },
 "byStrength": {
 "strong": {
-"n": 628,
-"wins": 508,
-"hitRate": 0.8089,
-"nRoi": 104,
-"roi": 0.2913,
-"roiLb": 0.1634,
-"nClv": 104,
-"clv": 14.93,
-"clvLb": 9.6594
+"n": 630,
+"wins": 509,
+"hitRate": 0.8079,
+"nRoi": 106,
+"roi": 0.2779,
+"roiLb": 0.1508,
+"nClv": 106,
+"clv": 14.23,
+"clvLb": 8.9598
 },
 "weak": {
-"n": 403,
+"n": 404,
 "wins": 213,
-"hitRate": 0.5285,
-"nRoi": 47,
-"roi": 0.0755,
-"roiLb": -0.1662,
-"nClv": 47,
-"clv": 3.43,
-"clvLb": -4.1537
+"hitRate": 0.5272,
+"nRoi": 48,
+"roi": 0.0531,
+"roiLb": -0.1864,
+"nClv": 48,
+"clv": 2.82,
+"clvLb": -4.6756
 }
 },
 "divergence": {
-"n": 274,
+"n": 276,
 "betfairWins": 94,
-"betfairRate": 0.3431,
-"polyN": 245,
+"betfairRate": 0.3406,
+"polyN": 246,
 "polyWins": 69,
-"polyRate": 0.2816
+"polyRate": 0.2805
 },
 "recent": [
+{
+"matchId": "36003838",
+"home": "Athletic Bilbao",
+"away": "Atletico Madrid",
+"league": "Spanish La Liga",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Athletic Bilbao",
+"polySide": "away",
+"winner": "home",
+"moneyWin": true,
+"polyWin": false,
+"ftScore": [
+3,
+0
+],
+"kickoff": "2026-09-05T14:15:00Z",
+"settledAt": "2026-09-05T16:25:17.585921+00:00"
+},
+{
+"matchId": "35979372",
+"home": "Fiorentina",
+"away": "Torino",
+"league": "Italian Serie A",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "Fiorentina",
+"polySide": "home",
+"winner": "away",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+2
+],
+"kickoff": "2026-09-05T13:00:00Z",
+"settledAt": "2026-09-05T16:25:17.585921+00:00"
+},
+{
+"matchId": "36016165",
+"home": "GAIS",
+"away": "Hacken",
+"league": "Swedish Allsvenskan",
+"verdict": "uneinig",
+"moneySide": "home",
+"moneyName": "GAIS",
+"polySide": null,
+"winner": "draw",
+"moneyWin": false,
+"polyWin": null,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-09-05T13:00:00Z",
+"settledAt": "2026-09-05T16:25:17.585921+00:00"
+},
 {
 "matchId": "35999721",
 "home": "Millwall",
@@ -1317,75 +1374,18 @@
 ],
 "kickoff": "2026-09-04T18:00:00Z",
 "settledAt": "2026-09-04T21:04:38.578220+00:00"
-},
-{
-"matchId": "36015911",
-"home": "Heracles",
-"away": "De Graafschap",
-"league": "Dutch Eerste Divisie",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Heracles",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-5,
-0
-],
-"kickoff": "2026-09-04T18:00:00Z",
-"settledAt": "2026-09-04T21:04:38.578220+00:00"
-},
-{
-"matchId": "36015101",
-"home": "Almere City",
-"away": "Jong Ajax Amsterdam",
-"league": "Dutch Eerste Divisie",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Almere City",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-09-04T18:00:00Z",
-"settledAt": "2026-09-04T21:04:38.578220+00:00"
-},
-{
-"matchId": "36015016",
-"home": "Grenoble",
-"away": "Annecy",
-"league": "French Ligue 2",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Annecy",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-2
-],
-"kickoff": "2026-09-04T18:00:00Z",
-"settledAt": "2026-09-04T21:04:38.578220+00:00"
 }
 ],
 "global": {
-"n": 1064,
-"wins": 739,
-"hitRate": 0.6945,
-"nRoi": 151,
-"roi": 0.2242,
-"roiLb": 0.108,
-"nClv": 151,
-"clv": 11.35,
-"clvLb": 6.9762
+"n": 1067,
+"wins": 740,
+"hitRate": 0.6935,
+"nRoi": 154,
+"roi": 0.2079,
+"roiLb": 0.0925,
+"nClv": 154,
+"clv": 10.67,
+"clvLb": 6.3152
 },
-"pending": 26
+"pending": 25
 }
