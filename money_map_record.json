@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-05T02:20:06.510060+00:00",
+"generatedAt": "2026-09-05T02:35:12.047226+00:00",
 "byVerdict": {
 "konsens": {
-"n": 762,
-"wins": 628,
-"hitRate": 0.8241,
-"polyN": 711,
-"polyWins": 557,
-"polyHitRate": 0.7834,
+"n": 763,
+"wins": 629,
+"hitRate": 0.8244,
+"polyN": 712,
+"polyWins": 558,
+"polyHitRate": 0.7837,
 "pinnN": 66,
 "pinnHitRate": 0.8182,
-"nRoi": 90,
-"roi": 0.3643,
-"roiLb": 0.2477,
-"nClv": 90,
-"clv": 18.26,
-"clvLb": 13.7456
+"nRoi": 91,
+"roi": 0.3604,
+"roiLb": 0.2449,
+"nClv": 91,
+"clv": 18.06,
+"clvLb": 13.5827
 },
 "uneinig": {
-"n": 269,
+"n": 270,
 "wins": 93,
-"hitRate": 0.3457,
-"polyN": 240,
+"hitRate": 0.3444,
+"polyN": 241,
 "polyWins": 69,
-"polyHitRate": 0.2875,
-"pinnN": 144,
-"pinnHitRate": 0.5833,
-"nRoi": 37,
-"roi": -0.0941,
-"roiLb": -0.3679,
-"nClv": 37,
-"clv": -4.06,
-"clvLb": -13.9472
+"polyHitRate": 0.2863,
+"pinnN": 145,
+"pinnHitRate": 0.5862,
+"nRoi": 38,
+"roi": -0.1179,
+"roiLb": -0.3873,
+"nClv": 38,
+"clv": -4.57,
+"clvLb": -14.2317
 },
 "teil": {
 "n": 11,
@@ -52,9 +52,9 @@
 },
 "byLeague": {
 "US MLS": {
-"n": 54,
+"n": 55,
 "wins": 32,
-"hitRate": 0.5926
+"hitRate": 0.5818
 },
 "UEFA Europa Conference Qualifiers": {
 "n": 48,
@@ -116,6 +116,11 @@
 "wins": 14,
 "hitRate": 0.6364
 },
+"Brazilian Serie B": {
+"n": 21,
+"wins": 13,
+"hitRate": 0.619
+},
 "English Premier League": {
 "n": 21,
 "wins": 15,
@@ -125,11 +130,6 @@
 "n": 21,
 "wins": 18,
 "hitRate": 0.8571
-},
-"Brazilian Serie B": {
-"n": 20,
-"wins": 12,
-"hitRate": 0.6
 },
 "Dutch Eredivisie": {
 "n": 20,
@@ -584,15 +584,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 611,
-"wins": 496,
-"hitRate": 0.8118,
-"nRoi": 87,
-"roi": 0.2993,
-"roiLb": 0.1622,
-"nClv": 87,
-"clv": 14.79,
-"clvLb": 9.1955
+"n": 613,
+"wins": 497,
+"hitRate": 0.8108,
+"nRoi": 89,
+"roi": 0.2815,
+"roiLb": 0.1452,
+"nClv": 89,
+"clv": 14.19,
+"clvLb": 8.6735
 },
 "weak": {
 "n": 398,
@@ -607,14 +607,52 @@
 }
 },
 "divergence": {
-"n": 269,
+"n": 270,
 "betfairWins": 93,
-"betfairRate": 0.3457,
-"polyN": 240,
+"betfairRate": 0.3444,
+"polyN": 241,
 "polyWins": 69,
-"polyRate": 0.2875
+"polyRate": 0.2863
 },
 "recent": [
+{
+"matchId": "35974009",
+"home": "New York City",
+"away": "Nashville SC",
+"league": "US MLS",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "Nashville SC",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-09-04T23:30:00Z",
+"settledAt": "2026-09-05T02:35:11.893441+00:00"
+},
+{
+"matchId": "36014788",
+"home": "Athletic Club",
+"away": "Vila Nova",
+"league": "Brazilian Serie B",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Athletic Club",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+5,
+0
+],
+"kickoff": "2026-09-04T23:30:00Z",
+"settledAt": "2026-09-05T02:35:11.893441+00:00"
+},
 {
 "matchId": "36014810",
 "home": "Criciuma",
@@ -1336,56 +1374,18 @@
 ],
 "kickoff": "2026-09-04T09:00:00Z",
 "settledAt": "2026-09-04T12:03:39.241809+00:00"
-},
-{
-"matchId": "36013527",
-"home": "Deportivo Pereira",
-"away": "Ind Medellin",
-"league": "Colombian Primera A",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Ind Medellin",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-3
-],
-"kickoff": "2026-09-04T01:00:00Z",
-"settledAt": "2026-09-04T04:02:36.967355+00:00"
-},
-{
-"matchId": "36013901",
-"home": "Libertad FC",
-"away": "Emelec",
-"league": "Ecuadorian Serie A",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Libertad FC",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-09-04T00:00:00Z",
-"settledAt": "2026-09-04T03:02:35.681265+00:00"
 }
 ],
 "global": {
-"n": 1042,
-"wins": 724,
-"hitRate": 0.6948,
-"nRoi": 129,
-"roi": 0.2117,
-"roiLb": 0.0932,
-"nClv": 129,
-"clv": 11.3,
-"clvLb": 6.7911
+"n": 1044,
+"wins": 725,
+"hitRate": 0.6944,
+"nRoi": 131,
+"roi": 0.2009,
+"roiLb": 0.0832,
+"nClv": 131,
+"clv": 10.95,
+"clvLb": 6.4847
 },
-"pending": 18
+"pending": 16
 }
