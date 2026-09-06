@@ -2,13 +2,13 @@
  "n": 127,
  "minOdds": 1.35,
  "moneyHitRate": 0.291,
- "priceHitRate": 0.354,
+ "priceHitRate": 0.362,
  "brierMoney": 0.9885,
  "brierPrice": 0.7344,
  "disagree": {
-  "n": 38,
+  "n": 39,
   "moneyWon": 1,
-  "priceWon": 9,
+  "priceWon": 10,
   "neither": 28
  },
  "verdict": "preis_besser",
@@ -16,7 +16,7 @@
  "byLeague": [],
  "guete": {
   "belastbar": 127,
-  "preis_echo": 251,
+  "preis_echo": 250,
   "abgeschnitten": 21,
   "unbekannt": 419,
   "leer": 0
@@ -483,11 +483,11 @@
    "league": "MLS",
    "winner": "Los Angeles Galaxy",
    "moneyFav": "New England Revolution",
-   "priceFav": "New England Revolution",
+   "priceFav": "Los Angeles Galaxy",
    "moneyShare": 0.918,
    "priceProb": 0.377,
    "moneyOK": false,
-   "priceOK": false,
+   "priceOK": true,
    "totalUsd": 76093
   },
   {
@@ -503,7 +503,7 @@
    "totalUsd": 67583
   }
  ],
- "generatedAt": "2026-09-06T09:33:20.872820+00:00",
+ "generatedAt": "2026-09-06T10:03:52.323956+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -515,7 +515,7 @@
   "epl": 577,
   "soccer": 800,
   "tennis": 800,
-  "ucl": 538,
+  "ucl": 539,
   "la-liga": 676,
   "bundesliga": 539,
   "serie-a": 51,
@@ -531,12 +531,12 @@
   "lol": 400,
   "dota": 9,
   "valorant": 423,
-  "ufc": 458,
+  "ufc": 455,
   "mma": 51,
-  "boxing": 258,
+  "boxing": 251,
   "golf": 366,
   "f1": 380,
-  "cricket": 630,
+  "cricket": 627,
   "allsvenskan": 1,
   "austria-bundesliga": 249,
   "brazil-serie-b": 4,
@@ -553,7 +553,7 @@
   "europa-league": 177,
   "israel-premier-league": 141,
   "japan-j-league": 588,
-  "japan-j2-league": 567,
+  "japan-j2-league": 565,
   "k-league": 518,
   "la-liga-2": 550,
   "liga-mx-apertura": 2,
@@ -566,7 +566,7 @@
   "premier-league": 568,
   "saudi-professional-league": 534,
   "scotland-league-cup": 172,
-  "scottish-premiership": 479,
+  "scottish-premiership": 484,
   "serbian-superliga": 324,
   "serie-b": 557,
   "slovenia-prvaliga": 220,
@@ -586,8 +586,8 @@
   "sweepAdded": 405
  },
  "vorStats": {
-  "kandidaten": 39,
-  "budgetLeer": 17,
+  "kandidaten": 31,
+  "budgetLeer": 9,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
   "mitAnteilen": 22,
@@ -595,54 +595,69 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1431,
-   "usd": 18149986,
-   "beispiel": "fifwc-irq-nor-2026-06-16-more-markets"
+   "n": 1429,
+   "usd": 18115359,
+   "beispiel": "fifwc-fra-esp-2026-07-14-more-markets"
   },
   "nba": {
-   "n": 188,
-   "usd": 2572765,
-   "beispiel": "nba-por-min-2026-03-20"
+   "n": 186,
+   "usd": 3247809,
+   "beispiel": "nba-mvp-694"
   },
   "will": {
-   "n": 24,
-   "usd": 703576,
+   "n": 23,
+   "usd": 702360,
    "beispiel": "will-ukraine-recapture-crimean-territory-by-june-30-2026"
+  },
+  "presidential": {
+   "n": 5,
+   "usd": 544423,
+   "beispiel": "presidential-election-winner-2028"
+  },
+  "world": {
+   "n": 21,
+   "usd": 522414,
+   "beispiel": "world-cup-3rd-place-finish-20260713190252671"
   },
   "fed": {
    "n": 26,
-   "usd": 433869,
+   "usd": 429130,
    "beispiel": "fed-decision-in-september-762"
-  },
-  "presidential": {
-   "n": 3,
-   "usd": 344423,
-   "beispiel": "presidential-election-winner-2024"
   },
   "cfb": {
    "n": 89,
-   "usd": 312317,
-   "beispiel": "cfb-nill-iowa-2026-09-05"
+   "usd": 341294,
+   "beispiel": "cfb-sjst-emich-2026-09-04"
   },
   "nhl": {
-   "n": 21,
-   "usd": 254443,
+   "n": 28,
+   "usd": 332042,
    "beispiel": "nhl-nyr-tb-2026-04-15"
+  },
+  "fif": {
+   "n": 56,
+   "usd": 233572,
+   "beispiel": "fif-fra-nir-2026-06-08-more-markets"
   },
   "which": {
    "n": 16,
-   "usd": 206065,
+   "usd": 206083,
    "beispiel": "which-party-will-win-the-house-in-2026"
   },
-  "fif": {
-   "n": 36,
-   "usd": 172656,
-   "beispiel": "fif-lbr-sle-2026-06-09-more-markets"
+  "uef": {
+   "n": 11,
+   "usd": 179536,
+   "beispiel": "uef-kvx-tur-2026-03-31"
+  },
+  "efa": {
+   "n": 13,
+   "usd": 175516,
+   "beispiel": "efa-mnc-liv-2026-04-04"
   },
   "clf": {
-   "n": 38,
-   "usd": 164839,
-   "beispiel": "clf-bmg-avl-2026-08-15-more-markets"
+   "n": 40,
+   "usd": 160632,
+   "beispiel": "clf-gir-ars-2026-08-01"
   },
   "strait": {
    "n": 2,
@@ -651,18 +666,13 @@
   },
   "what": {
    "n": 40,
-   "usd": 152033,
+   "usd": 151819,
    "beispiel": "what-price-will-bitcoin-hit-before-2027"
   },
-  "bnb": {
-   "n": 13,
-   "usd": 127235,
-   "beispiel": "bnb-updown-5m-1784289600"
-  },
-  "world": {
-   "n": 17,
-   "usd": 113157,
-   "beispiel": "world-cup-3rd-place-finish-20260713190252671"
+  "2026": {
+   "n": 31,
+   "usd": 129111,
+   "beispiel": "2026-mens-french-open-winner"
   },
   "us": {
    "n": 11,
@@ -674,25 +684,15 @@
    "usd": 97044,
    "beispiel": "nbasl-cle-nop-2026-07-15"
   },
-  "2026": {
-   "n": 19,
-   "usd": 70353,
-   "beispiel": "2026-mens-us-open-winner-tennis"
-  },
-  "cbb": {
-   "n": 1,
-   "usd": 67887,
-   "beispiel": "cbb-uconn-mich-2026-04-06"
+  "cdr": {
+   "n": 5,
+   "usd": 92289,
+   "beispiel": "cdr-atm-fcb-2026-02-12"
   },
   "btc": {
-   "n": 25,
-   "usd": 66791,
-   "beispiel": "btc-updown-5m-1781807400"
-  },
-  "iran": {
-   "n": 11,
-   "usd": 63878,
-   "beispiel": "iran-leader-end-of-2026"
+   "n": 31,
+   "usd": 83369,
+   "beispiel": "btc-updown-5m-1788084000"
   }
  }
 }
