@@ -1,22 +1,22 @@
 {
- "n": 113,
+ "n": 112,
  "minOdds": 1.35,
- "moneyHitRate": 0.301,
- "priceHitRate": 0.354,
- "brierMoney": 0.9748,
- "brierPrice": 0.7356,
+ "moneyHitRate": 0.295,
+ "priceHitRate": 0.348,
+ "brierMoney": 0.9818,
+ "brierPrice": 0.7374,
  "disagree": {
-  "n": 34,
+  "n": 35,
   "moneyWon": 1,
   "priceWon": 7,
-  "neither": 26
+  "neither": 27
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
  "byLeague": [],
  "guete": {
-  "belastbar": 113,
-  "preis_echo": 261,
+  "belastbar": 112,
+  "preis_echo": 263,
   "abgeschnitten": 14,
   "unbekannt": 446,
   "leer": 0
@@ -63,7 +63,7 @@
    "league": "EPL",
    "winner": "Draw (Nottingham Forest FC vs. Tottenham Hotspur FC)",
    "moneyFav": "Tottenham Hotspur FC",
-   "priceFav": "Tottenham Hotspur FC",
+   "priceFav": "Nottingham Forest FC",
    "moneyShare": 0.584,
    "priceProb": 0.357,
    "moneyOK": false,
@@ -273,18 +273,6 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 175803
-  },
-  {
-   "key": "arg-slo-tal-2026-09-05",
-   "league": "SOCCER:ARG",
-   "winner": "CA San Lorenzo de Almagro",
-   "moneyFav": "CA San Lorenzo de Almagro",
-   "priceFav": "CA San Lorenzo de Almagro",
-   "moneyShare": 0.689,
-   "priceProb": 0.407,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 163715
   },
   {
    "key": "kor-seo-inc-2026-09-05",
@@ -501,32 +489,44 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 56848
+  },
+  {
+   "key": "elc-sto-cha-2026-09-05",
+   "league": "EFL-CHAMPIONSHIP",
+   "winner": "Stoke City FC",
+   "moneyFav": "Stoke City FC",
+   "priceFav": "Stoke City FC",
+   "moneyShare": 0.953,
+   "priceProb": 0.477,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 53958
   }
  ],
- "generatedAt": "2026-09-06T00:32:33.576532+00:00",
+ "generatedAt": "2026-09-06T01:02:31.201868+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 422,
   "nfl": 800,
-  "mlb": 797,
+  "mlb": 775,
   "nhl": 487,
   "mls": 787,
   "epl": 542,
   "soccer": 800,
   "tennis": 800,
-  "ucl": 535,
-  "la-liga": 645,
+  "ucl": 536,
+  "la-liga": 648,
   "bundesliga": 504,
   "serie-a": 51,
-  "ligue-1": 541,
+  "ligue-1": 544,
   "primeira-liga": 532,
-  "brazil-serie-a": 554,
+  "brazil-serie-a": 553,
   "brasileirao": 0,
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 610,
+  "esports": 607,
   "cs2": 420,
   "lol": 400,
   "dota": 9,
@@ -566,10 +566,10 @@
   "premier-league": 533,
   "saudi-professional-league": 534,
   "scotland-league-cup": 172,
-  "scottish-premiership": 455,
+  "scottish-premiership": 454,
   "serbian-superliga": 324,
   "serie-b": 527,
-  "slovenia-prvaliga": 218,
+  "slovenia-prvaliga": 220,
   "sweden-allsvenskan": 449,
   "switzerland-super-league": 276,
   "uefa-champions-league": 26,
@@ -583,25 +583,25 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 404
+  "sweepAdded": 405
  },
  "vorStats": {
-  "kandidaten": 3,
+  "kandidaten": 4,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 3,
-  "calls": 3
+  "mitAnteilen": 4,
+  "calls": 4
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 2324,
-   "usd": 32699860,
+   "n": 1519,
+   "usd": 27157003,
    "beispiel": "fifwc-esp-cvi-2026-06-15-more-markets"
   },
   "nba": {
-   "n": 589,
-   "usd": 6237209,
+   "n": 476,
+   "usd": 6159818,
    "beispiel": "nba-sas-okc-2026-05-18"
   },
   "balance": {
@@ -610,89 +610,89 @@
    "beispiel": "balance-of-power-2026-midterms"
   },
   "cfb": {
-   "n": 191,
-   "usd": 1500591,
-   "beispiel": "cfb-tulane-duke-2026-09-05"
+   "n": 209,
+   "usd": 1724202,
+   "beispiel": "cfb-unlv-hawaii-2026-09-05"
   },
-  "world": {
-   "n": 108,
-   "usd": 931873,
-   "beispiel": "world-cup-winner"
+  "nhl": {
+   "n": 158,
+   "usd": 1202404,
+   "beispiel": "nhl-phi-car-2026-05-02"
+  },
+  "cbb": {
+   "n": 192,
+   "usd": 991825,
+   "beispiel": "cbb-uconn-mich-2026-04-06"
   },
   "ecs": {
    "n": 5,
-   "usd": 889441,
+   "usd": 877154,
    "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
   },
-  "nhl": {
-   "n": 83,
-   "usd": 654337,
-   "beispiel": "nhl-phi-car-2026-05-02"
-  },
-  "peru": {
-   "n": 18,
-   "usd": 613253,
-   "beispiel": "peru-presidential-election-winner"
-  },
-  "cbb": {
-   "n": 123,
-   "usd": 503832,
-   "beispiel": "cbb-uconn-mich-2026-04-06"
-  },
   "fed": {
-   "n": 24,
-   "usd": 492534,
+   "n": 22,
+   "usd": 398379,
    "beispiel": "fed-decision-in-september-762"
   },
-  "fif": {
-   "n": 64,
-   "usd": 282187,
-   "beispiel": "fif-bra-egy-2026-06-06-more-markets"
-  },
   "2026": {
-   "n": 35,
-   "usd": 254147,
+   "n": 26,
+   "usd": 228522,
    "beispiel": "2026-mens-us-open-winner-tennis"
   },
-  "gpt": {
-   "n": 32,
-   "usd": 227280,
-   "beispiel": "gpt-5pt6-released-onptptpt-20260623051439980"
+  "fif": {
+   "n": 43,
+   "usd": 163422,
+   "beispiel": "fif-bra-hrv-2026-03-31"
   },
-  "clf": {
-   "n": 46,
-   "usd": 204511,
-   "beispiel": "clf-jej-bmu-2026-08-04-more-markets"
+  "world": {
+   "n": 32,
+   "usd": 152845,
+   "beispiel": "world-cup-winner"
   },
   "strait": {
    "n": 2,
    "usd": 152575,
    "beispiel": "strait-of-hormuz-traffic-returns-to-normal-by-august-31-20260702154212320"
   },
-  "which": {
-   "n": 19,
-   "usd": 131679,
-   "beispiel": "which-party-will-win-the-house-in-2026"
-  },
   "nbasl": {
    "n": 9,
    "usd": 113982,
    "beispiel": "nbasl-cle-nop-2026-07-15"
+  },
+  "clf": {
+   "n": 34,
+   "usd": 111538,
+   "beispiel": "clf-jej-bmu-2026-08-04-more-markets"
+  },
+  "democratic": {
+   "n": 14,
+   "usd": 105237,
+   "beispiel": "democratic-presidential-nominee-2028"
+  },
+  "btc": {
+   "n": 35,
+   "usd": 87964,
+   "beispiel": "btc-updown-5m-1772045700"
   },
   "j2100": {
    "n": 3,
    "usd": 84093,
    "beispiel": "j2100-van-fuk-2026-06-01"
   },
-  "next": {
-   "n": 16,
-   "usd": 79731,
-   "beispiel": "next-prime-minister-of-sweden"
+  "super": {
+   "n": 14,
+   "usd": 57397,
+   "beispiel": "super-bowl-champion-2026-731"
   },
-  "michigan": {
-   "n": 10,
-   "usd": 76078,
-   "beispiel": "michigan-senate-election-winner"
+  "what": {
+   "n": 20,
+   "usd": 55949,
+   "beispiel": "what-price-will-bitcoin-hit-before-2027"
+  },
+  "which": {
+   "n": 9,
+   "usd": 55160,
+   "beispiel": "which-party-will-win-the-house-in-2026"
   }
  }
 }

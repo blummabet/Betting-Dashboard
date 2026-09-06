@@ -201132,7 +201132,13 @@
     "usd": 300,
     "ts": 1788638841
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Detroit Tigers": 1.0,
+   "Cleveland Guardians": 0.0
+  },
+  "resolvedAt": "2026-09-06T01:02:21.605735+00:00"
  },
  "mlb-atl-phi-2026-09-05": {
   "shares": {
@@ -201183,7 +201189,13 @@
   "tokens": {
    "Atlanta Braves": "23714630331731361757629700539045062844868491846700762264835615875475804930939",
    "Philadelphia Phillies": "72224908579356574840655946520479965211920238299347242666966996799896634317870"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Atlanta Braves": 0.0,
+   "Philadelphia Phillies": 1.0
+  },
+  "resolvedAt": "2026-09-06T01:02:21.605735+00:00"
  },
  "mlb-mil-cin-2026-09-05": {
   "shares": {
@@ -203464,8 +203476,8 @@
  },
  "atp-zverev-tabilo-2026-09-05": {
   "shares": {
-   "Alexander Zverev": 106558.21615108995,
-   "Alejandro Tabilo": 24188.0903936
+   "Alexander Zverev": 123194.2576479149,
+   "Alejandro Tabilo": 27964.31014995501
   },
   "prices": {
    "Alexander Zverev": 0.815,
@@ -203477,7 +203489,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 154191,
+  "totalUsd": 162603,
   "whales": [
    {
     "wallet": "0xf3b04dd038fcf191692927c0aa5a38018ea323a1",
@@ -203499,12 +203511,12 @@
    {
     "wallet": "0xb0e3fcbe0d7f17168fdce93f89c0168d3fa329eb",
     "side": "Alexander Zverev",
-    "usd": 10435,
-    "avgPrice": 0.8186
+    "usd": 10579,
+    "avgPrice": 0.8185
    }
   ],
-  "hoursToKickoff": 0.76,
-  "capturedAt": "2026-09-06T00:32:24.416807+00:00",
+  "hoursToKickoff": 0.51,
+  "capturedAt": "2026-09-06T01:02:21.605735+00:00",
   "cond": "0xe888c2b0678be8df97f06e3e8f9e78f2beaf2675be0e801aba32625424b43ba6",
   "frage": "US Open ATP: Alexander Zverev vs Alejandro Tabilo",
   "tokens": {
@@ -203514,63 +203526,95 @@
   "book": {
    "side": "Alexander Zverev",
    "bid": 0.81,
-   "ask": 0.82,
-   "spreadC": 1.0,
-   "spreadPct": 1.22,
+   "ask": 0.83,
+   "spreadC": 2.0,
+   "spreadPct": 2.41,
    "bids": [
     [
      0.81,
-     13097
+     76949
     ],
     [
      0.8,
-     75315
+     17857
     ],
     [
      0.79,
-     2112
+     3418
     ],
     [
      0.78,
-     1619
+     232
     ],
     [
      0.77,
-     1410
+     3678
     ],
     [
-     0.76,
-     2532
+     0.72,
+     3290
     ]
    ],
    "asks": [
     [
-     0.82,
-     52584
-    ],
-    [
      0.83,
-     44850
+     24707
     ],
     [
      0.84,
-     122417
+     57142
     ],
     [
      0.85,
-     31177
+     83931
     ],
     [
      0.86,
-     69285
+     65927
     ],
     [
      0.87,
-     16443
+     12289
+    ],
+    [
+     0.88,
+     9562
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x86eb13b20d774810b92a3be064718fec5a926566",
+    "action": "BUY",
+    "side": "Alexander Zverev",
+    "price": 0.83,
+    "usd": 4600,
+    "ts": 1788655852
+   },
+   {
+    "wallet": "0x0bcd68e4735f566c2b2e2c2ac3f817f4b03a5df4",
+    "action": "BUY",
+    "side": "Alexander Zverev",
+    "price": 0.8291,
+    "usd": 1500,
+    "ts": 1788655428
+   },
+   {
+    "wallet": "0xb5de1a37282dcd180f4547c907ed0c0b3566cabe",
+    "action": "BUY",
+    "side": "Alexander Zverev",
+    "price": 0.82,
+    "usd": 380,
+    "ts": 1788655045
+   },
+   {
+    "wallet": "0xb5de1a37282dcd180f4547c907ed0c0b3566cabe",
+    "action": "BUY",
+    "side": "Alexander Zverev",
+    "price": 0.82,
+    "usd": 4500,
+    "ts": 1788655032
+   },
    {
     "wallet": "0x14e7752d2716cd3b5bcbe8c08d4561491d9ebb64",
     "action": "SELL",
@@ -203602,38 +203646,6 @@
     "price": 0.18,
     "usd": 1171,
     "ts": 1788646669
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "action": "BUY",
-    "side": "Alejandro Tabilo",
-    "price": 0.18,
-    "usd": 426,
-    "ts": 1788646465
-   },
-   {
-    "wallet": "0x032eb1bc893940263ad0b01889f262fc232f2a9e",
-    "action": "BUY",
-    "side": "Alejandro Tabilo",
-    "price": 0.18,
-    "usd": 366,
-    "ts": 1788646464
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "action": "BUY",
-    "side": "Alejandro Tabilo",
-    "price": 0.18,
-    "usd": 559,
-    "ts": 1788646464
-   },
-   {
-    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
-    "action": "BUY",
-    "side": "Alexander Zverev",
-    "price": 0.82,
-    "usd": 16250,
-    "ts": 1788645627
    }
   ]
  },
@@ -203738,7 +203750,13 @@
   "tokens": {
    "Chicken Coop Esports": "15613029547173388250390703216533457776338732209196479090001157094004698079073",
    "Villainous": "97596767514689546349650806064902478351103740201781587708587668535338019592698"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Chicken Coop Esports": 0.5,
+   "Villainous": 0.5
+  },
+  "resolvedAt": "2026-09-06T01:02:21.605735+00:00"
  },
  "col1-bcf-onc-2026-09-05-exact-score": {
   "shares": {
@@ -203998,8 +204016,8 @@
  },
  "mlb-wsh-lad-2026-09-05": {
   "shares": {
-   "Over": 31484.83211184,
-   "Under": 39267.70298112001
+   "Over": 39860.31952608,
+   "Under": 49713.53558112001
   },
   "prices": {
    "Over": 0.445,
@@ -204011,7 +204029,7 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 92940,
+  "totalUsd": 99166,
   "whales": [
    {
     "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
@@ -204025,20 +204043,20 @@
     "usd": 13964
    },
    {
-    "wallet": "0x3dfb153c197d4c19d3b31c1ecd2c7b6860eeabaf",
-    "side": "Under",
-    "usd": 10636,
-    "avgPrice": 0.4999
+    "wallet": "0x4bff30af91642dc7d2b19a8664378fe55c45fc26",
+    "side": "Over",
+    "usd": 10836,
+    "avgPrice": 0.44
    },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "Under",
-    "usd": 7637,
+    "usd": 10661,
     "avgPrice": 0.5599
    }
   ],
-  "hoursToKickoff": 0.68,
-  "capturedAt": "2026-09-06T00:32:24.416807+00:00",
+  "hoursToKickoff": 0.18,
+  "capturedAt": "2026-09-06T01:02:21.605735+00:00",
   "cond": "0xcb2250ae4e22ec3172d1bd89e80579ee7f123bc5e5b794e2335d902259bae5c1",
   "frage": "Washington Nationals vs. Los Angeles Dodgers: O/U 7.5",
   "tokens": {
@@ -204054,23 +204072,23 @@
    "bids": [
     [
      0.55,
-     53674
+     51104
     ],
     [
      0.54,
-     58889
+     33960
     ],
     [
      0.53,
-     8108
+     7565
     ],
     [
      0.52,
-     13113
+     6367
     ],
     [
      0.51,
-     14688
+     3022
     ],
     [
      0.5,
@@ -204080,31 +204098,63 @@
    "asks": [
     [
      0.56,
-     197658
+     178786
     ],
     [
      0.57,
-     130366
+     105885
     ],
     [
      0.58,
-     36327
+     36352
     ],
     [
      0.59,
-     30252
+     26190
     ],
     [
      0.6,
-     19736
+     18564
     ],
     [
      0.61,
-     7043
+     4043
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.56,
+    "usd": 668,
+    "ts": 1788655630
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.56,
+    "usd": 393,
+    "ts": 1788655284
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.56,
+    "usd": 473,
+    "ts": 1788655174
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Under",
+    "price": 0.56,
+    "usd": 362,
+    "ts": 1788654921
+   },
    {
     "wallet": "0x9c76cdb43fb46454da005fbc82047a64a18ec926",
     "action": "BUY",
@@ -204120,30 +204170,6 @@
     "price": 0.56,
     "usd": 982,
     "ts": 1788653202
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "action": "BUY",
-    "side": "Under",
-    "price": 0.56,
-    "usd": 491,
-    "ts": 1788653200
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "action": "BUY",
-    "side": "Under",
-    "price": 0.56,
-    "usd": 451,
-    "ts": 1788653199
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "action": "BUY",
-    "side": "Under",
-    "price": 0.56,
-    "usd": 811,
-    "ts": 1788653197
    }
   ]
  },
@@ -204251,8 +204277,8 @@
  },
  "mlb-oak-sea-2026-09-05": {
   "shares": {
-   "Athletics": 38141.41012352999,
-   "Seattle Mariners": 82942.43912279002
+   "Athletics": 45358.21156702499,
+   "Seattle Mariners": 98636.11066247504
   },
   "prices": {
    "Athletics": 0.315,
@@ -204264,13 +204290,19 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 164150,
+  "totalUsd": 190639,
   "whales": [
    {
     "wallet": "0xa71093cafc0c099b4ccab24c3cb8018d817923c4",
     "side": "Seattle Mariners",
-    "usd": 40880,
+    "usd": 41800,
     "avgPrice": 0.6799
+   },
+   {
+    "wallet": "0xf9fe29004c5a905c7b78bbb930ac57feea67366b",
+    "side": "Seattle Mariners",
+    "usd": 17125,
+    "avgPrice": 0.69
    },
    {
     "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
@@ -204283,16 +204315,10 @@
     "side": "Athletics",
     "usd": 10990,
     "avgPrice": 0.3191
-   },
-   {
-    "wallet": "0x32ed517a571c01b6e9adecf61ba81ca48ff2f960",
-    "side": "Seattle Mariners",
-    "usd": 6430,
-    "avgPrice": 0.68
    }
   ],
-  "hoursToKickoff": 1.18,
-  "capturedAt": "2026-09-06T00:32:24.416807+00:00",
+  "hoursToKickoff": 0.68,
+  "capturedAt": "2026-09-06T01:02:21.605735+00:00",
   "cond": "0x66b97a6688a80e88b59681121260ae04403ae904406cd54edafa4c3eabeaf6e2",
   "frage": "Athletics vs. Seattle Mariners",
   "tokens": {
@@ -204308,23 +204334,23 @@
    "bids": [
     [
      0.68,
-     166835
+     174210
     ],
     [
      0.67,
-     112813
+     117837
     ],
     [
      0.66,
-     120660
+     128879
     ],
     [
      0.65,
-     48509
+     48459
     ],
     [
      0.64,
-     1480
+     1485
     ],
     [
      0.63,
@@ -204334,31 +204360,47 @@
    "asks": [
     [
      0.69,
-     75934
+     62539
     ],
     [
      0.7,
-     128601
+     159746
     ],
     [
      0.71,
-     63994
+     63144
     ],
     [
      0.72,
-     13175
+     11675
     ],
     [
      0.73,
-     105
+     5110
     ],
     [
      0.74,
-     6908
+     1908
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xcba5b51fa8f722328a155b6136774768ad54cd88",
+    "action": "BUY",
+    "side": "Seattle Mariners",
+    "price": 0.69,
+    "usd": 300,
+    "ts": 1788656077
+   },
+   {
+    "wallet": "0xf9fe29004c5a905c7b78bbb930ac57feea67366b",
+    "action": "BUY",
+    "side": "Seattle Mariners",
+    "price": 0.69,
+    "usd": 17250,
+    "ts": 1788654625
+   },
    {
     "wallet": "0x4a3f86ed9ce6b3dac5b66e2d5478a6bf38cc4333",
     "action": "BUY",
@@ -204366,30 +204408,14 @@
     "price": 0.69,
     "usd": 761,
     "ts": 1788650214
-   },
-   {
-    "wallet": "0x4a3f86ed9ce6b3dac5b66e2d5478a6bf38cc4333",
-    "action": "BUY",
-    "side": "Seattle Mariners",
-    "price": 0.69,
-    "usd": 760,
-    "ts": 1788649300
-   },
-   {
-    "wallet": "0xa71093cafc0c099b4ccab24c3cb8018d817923c4",
-    "action": "BUY",
-    "side": "Seattle Mariners",
-    "price": 0.68,
-    "usd": 39688,
-    "ts": 1788649185
    }
   ]
  },
  "mls-lag-ner-2026-09-05": {
   "shares": {
-   "Los Angeles Galaxy": 1480.03862475,
-   "Draw (Los Angeles Galaxy vs. New England Revolution)": 159.19192177000005,
-   "New England Revolution": 12279.500211750006
+   "Los Angeles Galaxy": 1490.3609925,
+   "Draw (Los Angeles Galaxy vs. New England Revolution)": 164.65052177000004,
+   "New England Revolution": 19734.653803875008
   },
   "prices": {
    "Los Angeles Galaxy": 0.375,
@@ -204402,8 +204428,14 @@
   },
   "league": "MLS",
   "sport": "Fußball",
-  "totalUsd": 44660,
+  "totalUsd": 75275,
   "whales": [
+   {
+    "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
+    "side": "New England Revolution",
+    "usd": 11447,
+    "avgPrice": 0.3832
+   },
    {
     "wallet": "0x8ce7eb8a3ad1d6907b24368865c8487a68fb3150",
     "side": "New England Revolution",
@@ -204416,19 +204448,13 @@
     "usd": 1885
    },
    {
-    "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
-    "side": "New England Revolution",
-    "usd": 1612,
-    "avgPrice": 0.37
-   },
-   {
-    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
-    "side": "New England Revolution",
-    "usd": 1398
+    "wallet": "0xd48a81db62f742c4e42d86dfc23a7ee345366e90",
+    "side": "Los Angeles Galaxy",
+    "usd": 987
    }
   ],
-  "hoursToKickoff": 1.01,
-  "capturedAt": "2026-09-06T00:32:24.416807+00:00",
+  "hoursToKickoff": 0.51,
+  "capturedAt": "2026-09-06T01:02:21.605735+00:00",
   "tokens": {
    "Los Angeles Galaxy": "76940611393505123000697095257313015371547793758498245922075731825844895620192",
    "Draw (Los Angeles Galaxy vs. New England Revolution)": "64675862674083356535619191019028630486084660692162734856469154355122570413737",
@@ -204476,8 +204502,8 @@
     "usd": 334
    }
   ],
-  "hoursToKickoff": 1.01,
-  "capturedAt": "2026-09-06T00:32:24.416807+00:00",
+  "hoursToKickoff": 0.51,
+  "capturedAt": "2026-09-06T01:02:21.605735+00:00",
   "cond": "0xc8abe626f1228e465ba110ea81496bbfde0bb90534fec198df037e16207563fe",
   "frage": "Real Salt Lake vs. Los Angeles FC: O/U 10.5 Total Corners",
   "tokens": {
@@ -204639,7 +204665,7 @@
  },
  "mls-lag-ner-2026-09-05-first-half-exact-score": {
   "shares": {
-   "Los Angeles Galaxy 0 - 0 New England Revolution": 759.5046,
+   "Los Angeles Galaxy 0 - 0 New England Revolution": 801.6993000000001,
    "Los Angeles Galaxy 0 - 1 New England Revolution": 118.734,
    "Los Angeles Galaxy 1 - 0 New England Revolution": 431.05530000000005,
    "Los Angeles Galaxy 0 - 2 New England Revolution": 0.0,
@@ -204650,7 +204676,7 @@
    "Any Other Score": 0.0
   },
   "prices": {
-   "Los Angeles Galaxy 0 - 0 New England Revolution": 0.18,
+   "Los Angeles Galaxy 0 - 0 New England Revolution": 0.19,
    "Los Angeles Galaxy 0 - 1 New England Revolution": 0.12,
    "Los Angeles Galaxy 1 - 0 New England Revolution": 0.13,
    "Los Angeles Galaxy 0 - 2 New England Revolution": 0.062,
@@ -204658,7 +204684,7 @@
    "Los Angeles Galaxy 2 - 0 New England Revolution": 0.065,
    "Los Angeles Galaxy 1 - 2 New England Revolution": 0.0495,
    "Los Angeles Galaxy 2 - 1 New England Revolution": 0.0495,
-   "Any Other Score": 0.205
+   "Any Other Score": 0.265
   },
   "splitGuete": {
    "art": "abgeschnitten",
@@ -204671,13 +204697,13 @@
    {
     "wallet": "0x970998da056e60c707d9b1fc55cfdf3d68c252ab",
     "side": "Los Angeles Galaxy 0 - 0 New England Revolution",
-    "usd": 474,
+    "usd": 500,
     "avgPrice": 0.0919
    },
    {
     "wallet": "0x1d6819679e37b51fc1d01ac7691cb4f408dd4354",
     "side": "Los Angeles Galaxy 0 - 0 New England Revolution",
-    "usd": 268,
+    "usd": 283,
     "avgPrice": 0.0999
    },
    {
@@ -204693,8 +204719,8 @@
     "avgPrice": 0.1199
    }
   ],
-  "hoursToKickoff": 1.01,
-  "capturedAt": "2026-09-06T00:32:24.416807+00:00",
+  "hoursToKickoff": 0.51,
+  "capturedAt": "2026-09-06T01:02:21.605735+00:00",
   "tokens": {
    "Los Angeles Galaxy 0 - 0 New England Revolution": "14268177419794173665321767695663330281613448950922846672014974319347260934378",
    "Los Angeles Galaxy 0 - 1 New England Revolution": "43946693052218313364143051003165363417287982547586228905128930437792097814175",
@@ -204723,12 +204749,12 @@
    "Real Salt Lake 0 - 0 Los Angeles FC": 0.225,
    "Real Salt Lake 0 - 1 Los Angeles FC": 0.14,
    "Real Salt Lake 1 - 0 Los Angeles FC": 0.14,
-   "Real Salt Lake 0 - 2 Los Angeles FC": 0.07,
+   "Real Salt Lake 0 - 2 Los Angeles FC": 0.065,
    "Real Salt Lake 1 - 1 Los Angeles FC": 0.11,
    "Real Salt Lake 2 - 0 Los Angeles FC": 0.049,
-   "Real Salt Lake 1 - 2 Los Angeles FC": 0.0455,
+   "Real Salt Lake 1 - 2 Los Angeles FC": 0.0465,
    "Real Salt Lake 2 - 1 Los Angeles FC": 0.042,
-   "Any Other Score": 0.24
+   "Any Other Score": 0.245
   },
   "splitGuete": {
    "art": "abgeschnitten",
@@ -204763,8 +204789,8 @@
     "avgPrice": 0.1
    }
   ],
-  "hoursToKickoff": 1.01,
-  "capturedAt": "2026-09-06T00:32:24.416807+00:00",
+  "hoursToKickoff": 0.51,
+  "capturedAt": "2026-09-06T01:02:21.605735+00:00",
   "tokens": {
    "Real Salt Lake 0 - 0 Los Angeles FC": "68346956124635321445180512001404327939531158549808891143619377864925256653439",
    "Real Salt Lake 0 - 1 Los Angeles FC": "28107412005021849821974963506632336044615546095971573606404907940171930290899",
@@ -205006,9 +205032,9 @@
  },
  "mls-por-min-2026-09-05": {
   "shares": {
-   "Portland Timbers": 11052.7684822,
-   "Draw (Portland Timbers vs. Minnesota United FC)": 462.52952639999995,
-   "Minnesota United FC": 7016.605225764998
+   "Portland Timbers": 11294.4057822,
+   "Draw (Portland Timbers vs. Minnesota United FC)": 526.2795264,
+   "Minnesota United FC": 18036.962530024997
   },
   "prices": {
    "Portland Timbers": 0.395,
@@ -205021,12 +205047,18 @@
   },
   "league": "MLS",
   "sport": "Fußball",
-  "totalUsd": 52750,
+  "totalUsd": 83929,
   "whales": [
+   {
+    "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
+    "side": "Minnesota United FC",
+    "usd": 11065,
+    "avgPrice": 0.3657
+   },
    {
     "wallet": "0x04d5524a0a5af2eca6e39e03defc261d42fe66d8",
     "side": "Minnesota United FC",
-    "usd": 6621,
+    "usd": 6624,
     "avgPrice": 0.3497
    },
    {
@@ -205040,15 +205072,10 @@
     "side": "Portland Timbers",
     "usd": 2027,
     "avgPrice": 0.4767
-   },
-   {
-    "wallet": "0x21f333307ac6d2e65ac82f014b3dd2b64cbc35e3",
-    "side": "Portland Timbers",
-    "usd": 1555
    }
   ],
-  "hoursToKickoff": 2.01,
-  "capturedAt": "2026-09-06T00:32:24.416807+00:00",
+  "hoursToKickoff": 1.51,
+  "capturedAt": "2026-09-06T01:02:21.605735+00:00",
   "tokens": {
    "Portland Timbers": "9426531920323400165469152851595556143409138943951027145444001948357876890185",
    "Draw (Portland Timbers vs. Minnesota United FC)": "109534814480432841442430104716223065835462734692046301446855125571975668730179",
@@ -205108,9 +205135,9 @@
  },
  "mls-vwh-stl-2026-09-05": {
   "shares": {
-   "Vancouver Whitecaps FC": 2252.1520406700006,
+   "Vancouver Whitecaps FC": 2354.515327745001,
    "Draw (Vancouver Whitecaps FC vs. St. Louis City SC)": 68.68851365500001,
-   "St. Louis City SC": 832.2905976449999
+   "St. Louis City SC": 858.45824309
   },
   "prices": {
    "Vancouver Whitecaps FC": 0.665,
@@ -205123,7 +205150,7 @@
   },
   "league": "MLS",
   "sport": "Fußball",
-  "totalUsd": 7502,
+  "totalUsd": 9695,
   "whales": [
    {
     "wallet": "0x70dbec635412c1568b36174b039f621bcc20f73f",
@@ -205140,7 +205167,7 @@
    {
     "wallet": "0xa3b5da76ffbbe3325bb1b40a30f6a4634962941a",
     "side": "Vancouver Whitecaps FC",
-    "usd": 593,
+    "usd": 682,
     "avgPrice": 0.6599
    },
    {
@@ -205150,8 +205177,8 @@
     "avgPrice": 0.6499
    }
   ],
-  "hoursToKickoff": 2.01,
-  "capturedAt": "2026-09-06T00:32:24.416807+00:00",
+  "hoursToKickoff": 1.51,
+  "capturedAt": "2026-09-06T01:02:21.605735+00:00",
   "tokens": {
    "Vancouver Whitecaps FC": "80629869425134700265376883936889307572991941955706395684642989004182510718877",
    "Draw (Vancouver Whitecaps FC vs. St. Louis City SC)": "6041849907015666317228961100720310428832691499016284776836246088232554339113",
@@ -205160,12 +205187,12 @@
  },
  "cs2-spo-iowast-2026-09-05": {
   "shares": {
-   "SportsBetExpert": 12319.487096654999,
-   "Iowa Stormboar": 1600.8367313450003
+   "SportsBetExpert": 16046.297470290001,
+   "Iowa Stormboar": 1490.6400811349997
   },
   "prices": {
-   "SportsBetExpert": 0.885,
-   "Iowa Stormboar": 0.115
+   "SportsBetExpert": 0.915,
+   "Iowa Stormboar": 0.085
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -205173,39 +205200,192 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 9520,
+  "totalUsd": 18402,
   "whales": [
    {
     "wallet": "0x29b52d98ac9ef9414b04164246c95bc63d74cc6c",
     "side": "SportsBetExpert",
-    "usd": 8669,
+    "usd": 10437,
     "avgPrice": 0.8898
    },
    {
     "wallet": "0x513587a2f36a8cb29333052a6a479091ef8a7217",
     "side": "SportsBetExpert",
-    "usd": 1761,
+    "usd": 1820,
     "avgPrice": 0.9046
    },
    {
-    "wallet": "0x52b7fc8a97df5f18974c06a83909f60c81010aa1",
-    "side": "Iowa Stormboar",
-    "usd": 862,
-    "avgPrice": 0.11
+    "wallet": "0xc34b4901be324718c176100e350211d97b199296",
+    "side": "SportsBetExpert",
+    "usd": 1040
    },
    {
     "wallet": "0x4a3f86ed9ce6b3dac5b66e2d5478a6bf38cc4333",
     "side": "SportsBetExpert",
-    "usd": 754
+    "usd": 780
    }
   ],
-  "hoursToKickoff": 0.51,
-  "capturedAt": "2026-09-06T00:32:24.416807+00:00",
+  "hoursToKickoff": 0.01,
+  "capturedAt": "2026-09-06T01:02:21.605735+00:00",
   "cond": "0xd857dc9c19971b2a6965a4af3843cbc2c23622799bf41148a0a8286046be1ab2",
   "frage": "Counter-Strike: SportsBetExpert vs Iowa Stormboar (BO3) - NSTLGA League Group Stage",
   "tokens": {
    "SportsBetExpert": "13470071631381276969911390505892034534434590960648900335686947909526271544738",
    "Iowa Stormboar": "11062269784937828160168309151921235133389997911070157171055231758258495963814"
+  }
+ },
+ "mls-rsl-laf-2026-09-05": {
+  "shares": {
+   "Real Salt Lake": 704.8576179849999,
+   "Draw (Real Salt Lake vs. Los Angeles FC)": 399.99873750000006,
+   "Los Angeles FC": 17737.716383729992
+  },
+  "prices": {
+   "Real Salt Lake": 0.335,
+   "Draw (Real Salt Lake vs. Los Angeles FC)": 0.255,
+   "Los Angeles FC": 0.415
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "MLS",
+  "sport": "Fußball",
+  "totalUsd": 45768,
+  "whales": [
+   {
+    "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
+    "side": "Los Angeles FC",
+    "usd": 14525,
+    "avgPrice": 0.4199
+   },
+   {
+    "wallet": "0xec981ed70ae69c5cbcac08c1ba063e734f6bafcd",
+    "side": "Los Angeles FC",
+    "usd": 1221,
+    "avgPrice": 0.41
+   },
+   {
+    "wallet": "0x9913d9fced638b96e5e212b7dab6e44c5be55973",
+    "side": "Los Angeles FC",
+    "usd": 1058,
+    "avgPrice": 0.41
+   },
+   {
+    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
+    "side": "Real Salt Lake",
+    "usd": 312,
+    "avgPrice": 0.3333
+   }
+  ],
+  "hoursToKickoff": 0.51,
+  "capturedAt": "2026-09-06T01:02:21.605735+00:00",
+  "tokens": {
+   "Real Salt Lake": "9742743174882864612564246945821515568151211013564035612216844961493181424519",
+   "Draw (Real Salt Lake vs. Los Angeles FC)": "25343365370938238584810844597102053158324092341542780129210108121588809245564",
+   "Los Angeles FC": "27899740017372604281107599973373796284754009169357525591630715274975217626251"
+  }
+ },
+ "mls-rsl-laf-2026-09-05-more-markets": {
+  "shares": {
+   "Over": 36228.53138112,
+   "Under": 25700.585943739996
+  },
+  "prices": {
+   "Over": 0.585,
+   "Under": 0.415
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "MLS",
+  "sport": "Fußball",
+  "totalUsd": 42241,
+  "whales": [
+   {
+    "wallet": "0x04d5524a0a5af2eca6e39e03defc261d42fe66d8",
+    "side": "Over",
+    "usd": 36082,
+    "avgPrice": 0.5779
+   },
+   {
+    "wallet": "0xfe787d2da716d60e8acff57fb87eb13cd4d10319",
+    "side": "Under",
+    "usd": 8866
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Under",
+    "usd": 3251,
+    "avgPrice": 0.4206
+   },
+   {
+    "wallet": "0xfb07f48542d2b655e9d0bf1cc92a8a6feee8e2cc",
+    "side": "Under",
+    "usd": 2490,
+    "avgPrice": 0.42
+   }
+  ],
+  "hoursToKickoff": 0.51,
+  "capturedAt": "2026-09-06T01:02:21.605735+00:00",
+  "cond": "0x717ba6b70ee630291dadf96a3a8af44d381cc57d31fd756a56c502c3d477ca5c",
+  "frage": "Real Salt Lake vs. Los Angeles FC: O/U 2.5",
+  "tokens": {
+   "Over": "66133341572376476619487416282883295108227848610546008843006320507102241846296",
+   "Under": "31010586979554799995572910104740667232345820000715735430543256081233394615869"
+  }
+ },
+ "mex-tig-nec-2026-09-05": {
+  "shares": {
+   "Tigres de la UANL": 8750.630270655001,
+   "Draw (Tigres de la UANL vs. Club Necaxa)": 23.286040959999998,
+   "Club Necaxa": 3281.6740278000007
+  },
+  "prices": {
+   "Tigres de la UANL": 0.585,
+   "Draw (Tigres de la UANL vs. Club Necaxa)": 0.235,
+   "Club Necaxa": 0.175
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 32890,
+  "whales": [
+   {
+    "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
+    "side": "Tigres de la UANL",
+    "usd": 3074,
+    "avgPrice": 0.5899
+   },
+   {
+    "wallet": "0x821dab0565ebf5b327f51db06223fdcfe01acf16",
+    "side": "Tigres de la UANL",
+    "usd": 2354,
+    "avgPrice": 0.555
+   },
+   {
+    "wallet": "0x448861155279dbf833d041b963e3ac854599e319",
+    "side": "Tigres de la UANL",
+    "usd": 1501,
+    "avgPrice": 0.5891
+   },
+   {
+    "wallet": "0x8488ef25f79c0cf2ffdff307973b2ac10464588c",
+    "side": "Club Necaxa",
+    "usd": 1400,
+    "avgPrice": 0.18
+   }
+  ],
+  "hoursToKickoff": 0.01,
+  "capturedAt": "2026-09-06T01:02:21.605735+00:00",
+  "tokens": {
+   "Tigres de la UANL": "84195169628895195564523346336418799499588718253630497894939689558020464698976",
+   "Draw (Tigres de la UANL vs. Club Necaxa)": "29522472967884391997902436399558460022192375929422080320038340981046152171310",
+   "Club Necaxa": "44724256111887935865536578568528933654867872685013994257899781905023752710807"
   }
  }
 }
