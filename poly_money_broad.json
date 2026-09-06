@@ -1,23 +1,23 @@
 {
- "n": 127,
+ "n": 131,
  "minOdds": 1.35,
- "moneyHitRate": 0.291,
- "priceHitRate": 0.346,
- "brierMoney": 0.9885,
- "brierPrice": 0.7344,
+ "moneyHitRate": 0.29,
+ "priceHitRate": 0.336,
+ "brierMoney": 0.9989,
+ "brierPrice": 0.7368,
  "disagree": {
-  "n": 39,
+  "n": 37,
   "moneyWon": 1,
-  "priceWon": 8,
-  "neither": 30
+  "priceWon": 7,
+  "neither": 29
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
  "byLeague": [],
  "guete": {
-  "belastbar": 127,
-  "preis_echo": 250,
-  "abgeschnitten": 21,
+  "belastbar": 131,
+  "preis_echo": 244,
+  "abgeschnitten": 23,
   "unbekannt": 419,
   "leer": 0
  },
@@ -63,7 +63,7 @@
    "league": "EPL",
    "winner": "Draw (Nottingham Forest FC vs. Tottenham Hotspur FC)",
    "moneyFav": "Tottenham Hotspur FC",
-   "priceFav": "Nottingham Forest FC",
+   "priceFav": "Tottenham Hotspur FC",
    "moneyShare": 0.584,
    "priceProb": 0.357,
    "moneyOK": false,
@@ -311,6 +311,18 @@
    "totalUsd": 144833
   },
   {
+   "key": "jap-jef-gam-2026-09-06",
+   "league": "SOCCER:JAP",
+   "winner": "JEF United Ichihara Chiba",
+   "moneyFav": "Gamba Ōsaka",
+   "priceFav": "Gamba Ōsaka",
+   "moneyShare": 0.975,
+   "priceProb": 0.493,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 137508
+  },
+  {
    "key": "bun-scp-fre-2026-09-05",
    "league": "BUNDESLIGA",
    "winner": "SC Freiburg",
@@ -483,27 +495,15 @@
    "league": "MLS",
    "winner": "Los Angeles Galaxy",
    "moneyFav": "New England Revolution",
-   "priceFav": "Los Angeles Galaxy",
+   "priceFav": "New England Revolution",
    "moneyShare": 0.918,
    "priceProb": 0.377,
    "moneyOK": false,
-   "priceOK": true,
-   "totalUsd": 76093
-  },
-  {
-   "key": "epl-hul-ast-2026-09-05-exact-score",
-   "league": "EPL",
-   "winner": "Hull City AFC 0 - 0 Aston Villa FC",
-   "moneyFav": "Hull City AFC 0 - 0 Aston Villa FC",
-   "priceFav": "Hull City AFC 1 - 1 Aston Villa FC",
-   "moneyShare": 0.229,
-   "priceProb": 0.125,
-   "moneyOK": true,
    "priceOK": false,
-   "totalUsd": 67583
+   "totalUsd": 76093
   }
  ],
- "generatedAt": "2026-09-06T10:33:33.854181+00:00",
+ "generatedAt": "2026-09-06T11:34:29.760689+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
@@ -526,7 +526,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 651,
+  "esports": 649,
   "cs2": 420,
   "lol": 400,
   "dota": 9,
@@ -536,7 +536,7 @@
   "boxing": 251,
   "golf": 366,
   "f1": 380,
-  "cricket": 624,
+  "cricket": 620,
   "allsvenskan": 1,
   "austria-bundesliga": 249,
   "brazil-serie-b": 4,
@@ -547,19 +547,19 @@
   "chinese-super-league": 455,
   "czechia-fortuna-liga": 9,
   "denmark-superliga": 488,
-  "efl-championship": 637,
+  "efl-championship": 646,
   "english-premier-league": 2,
   "europa-conference-league": 400,
   "europa-league": 177,
   "israel-premier-league": 141,
-  "japan-j-league": 588,
+  "japan-j-league": 564,
   "japan-j2-league": 565,
   "k-league": 518,
   "la-liga-2": 550,
   "liga-mx-apertura": 2,
   "ligue-2": 534,
   "naitons-league": 1,
-  "national-league": 577,
+  "national-league": 632,
   "nations-league": 25,
   "norway-eliteserien": 503,
   "poland-ekstraklasa": 391,
@@ -583,11 +583,11 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 406
+  "sweepAdded": 405
  },
  "vorStats": {
-  "kandidaten": 31,
-  "budgetLeer": 9,
+  "kandidaten": 36,
+  "budgetLeer": 14,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
   "mitAnteilen": 22,
@@ -595,84 +595,79 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1509,
-   "usd": 27211866,
-   "beispiel": "fifwc-fra-esp-2026-07-14-more-markets"
+   "n": 1497,
+   "usd": 20639935,
+   "beispiel": "fifwc-irq-nor-2026-06-16-more-markets"
   },
   "nba": {
-   "n": 178,
-   "usd": 3347225,
+   "n": 304,
+   "usd": 4685472,
    "beispiel": "nba-mvp-694"
   },
-  "ecs": {
-   "n": 12,
-   "usd": 934260,
-   "beispiel": "ecs-ars-mci-2026-08-16"
-  },
-  "will": {
-   "n": 19,
-   "usd": 672138,
-   "beispiel": "will-ukraine-recapture-crimean-territory-by-june-30-2026"
+  "world": {
+   "n": 77,
+   "usd": 1162368,
+   "beispiel": "world-cup-3rd-place-finish-20260713190252671"
   },
   "presidential": {
-   "n": 14,
-   "usd": 576968,
-   "beispiel": "presidential-election-winner-2028"
+   "n": 3,
+   "usd": 944423,
+   "beispiel": "presidential-election-winner-2024"
   },
-  "world": {
-   "n": 31,
-   "usd": 533884,
-   "beispiel": "world-cup-3rd-place-finish-20260713190252671"
+  "nhl": {
+   "n": 110,
+   "usd": 874840,
+   "beispiel": "nhl-nyr-tb-2026-04-15"
+  },
+  "will": {
+   "n": 32,
+   "usd": 753423,
+   "beispiel": "will-ukraine-recapture-crimean-territory-by-june-30-2026"
+  },
+  "cbb": {
+   "n": 71,
+   "usd": 558586,
+   "beispiel": "cbb-pur-arz-2026-03-28"
+  },
+  "what": {
+   "n": 44,
+   "usd": 463296,
+   "beispiel": "what-price-will-bitcoin-hit-before-2027"
   },
   "cfb": {
    "n": 86,
-   "usd": 459421,
-   "beispiel": "cfb-sjst-emich-2026-09-04"
+   "usd": 410154,
+   "beispiel": "cfb-nill-iowa-2026-09-05"
   },
   "fed": {
-   "n": 24,
-   "usd": 403374,
+   "n": 21,
+   "usd": 387037,
    "beispiel": "fed-decision-in-october-20260617190323537"
   },
-  "nhl": {
-   "n": 32,
-   "usd": 365316,
-   "beispiel": "nhl-nyr-tb-2026-04-15"
-  },
   "fif": {
-   "n": 56,
-   "usd": 233572,
+   "n": 61,
+   "usd": 223229,
    "beispiel": "fif-fra-nir-2026-06-08-more-markets"
   },
+  "clf": {
+   "n": 37,
+   "usd": 181213,
+   "beispiel": "clf-joh-cfc-2026-08-09"
+  },
   "which": {
-   "n": 17,
-   "usd": 209700,
+   "n": 11,
+   "usd": 136824,
    "beispiel": "which-party-will-win-the-senate-in-2026"
   },
   "2026": {
-   "n": 40,
-   "usd": 184616,
-   "beispiel": "2026-mens-french-open-winner"
+   "n": 28,
+   "usd": 125384,
+   "beispiel": "2026-mens-us-open-winner-tennis"
   },
-  "uef": {
-   "n": 11,
-   "usd": 179536,
-   "beispiel": "uef-kvx-tur-2026-03-31"
-  },
-  "efa": {
-   "n": 13,
-   "usd": 175516,
-   "beispiel": "efa-mnc-liv-2026-04-04"
-  },
-  "clf": {
-   "n": 35,
-   "usd": 156459,
-   "beispiel": "clf-gir-ars-2026-08-01"
-  },
-  "strait": {
-   "n": 2,
-   "usd": 152575,
-   "beispiel": "strait-of-hormuz-traffic-returns-to-normal-by-august-31-20260702154212320"
+  "russia": {
+   "n": 4,
+   "usd": 110868,
+   "beispiel": "russia-x-ukraine-ceasefire-before-2027"
   },
   "nbasl": {
    "n": 1,
@@ -681,18 +676,23 @@
   },
   "us": {
    "n": 9,
-   "usd": 93369,
+   "usd": 96696,
    "beispiel": "us-recession-by-end-of-2026"
   },
-  "cdr": {
-   "n": 5,
-   "usd": 92289,
-   "beispiel": "cdr-atm-fcb-2026-02-12"
+  "btc": {
+   "n": 34,
+   "usd": 87537,
+   "beispiel": "btc-updown-5m-1788084000"
   },
-  "what": {
-   "n": 29,
-   "usd": 80817,
-   "beispiel": "what-price-will-bitcoin-hit-before-2027"
+  "ecs": {
+   "n": 12,
+   "usd": 70021,
+   "beispiel": "ecs-ars-mci-2026-08-16"
+  },
+  "bitcoin": {
+   "n": 20,
+   "usd": 69137,
+   "beispiel": "bitcoin-up-or-down-on-august-27-2026"
   }
  }
 }
