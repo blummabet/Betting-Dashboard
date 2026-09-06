@@ -21,7 +21,7 @@ Tournament-Phase: Volume steigt → Signal wird scharf.
 from __future__ import annotations
 from datetime import datetime, timezone, timedelta
 from typing import Optional
-from sharp_signals.base import Signal, SignalResult, poly_volumen
+from sharp_signals.base import Signal, SignalResult, poly_volumen, snapshot_am_fensteranfang
 
 
 DEFAULT_THRESHOLDS = {
@@ -107,15 +107,10 @@ class SteamLagSignal(Signal):
         now = datetime.now(timezone.utc)
         lookback = self._t["pinn_lookback_h"] * 3600
 
-        first_in_window = None
-        for s in history:
-            ts = _parse_ts(s.get("ts") or "")
-            if ts is None:
-                continue
-            age = (now - ts).total_seconds()
-            if 0 <= age <= lookback:
-                first_in_window = s
-                break
+        # 06.09.2026 — siehe base.snapshot_am_fensteranfang: ein fehlender Snapshot ist keine
+        # fehlende Information, sondern die Aussage „unveraendert". Vorher scheiterten hier
+        # 60 von 279 Liga-Picks an einem Fenster, in dem nur der neue Preis stand.
+        first_in_window = snapshot_am_fensteranfang(history, now, lookback)
         if first_in_window is None or first_in_window is history[-1]:
             return None
 

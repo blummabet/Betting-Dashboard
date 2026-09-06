@@ -28,7 +28,7 @@ weil verschiedene Bookies unterschiedliche Margins haben.
 from __future__ import annotations
 from datetime import datetime, timezone
 from typing import Optional
-from sharp_signals.base import Signal, SignalResult
+from sharp_signals.base import Signal, SignalResult, snapshot_am_fensteranfang
 
 
 # Schwellen — alle via cocobet_config.json profiles.<active>.lead_lag.* überschreibbar
@@ -278,16 +278,12 @@ class LeadLagBiasSignal(Signal):
 
         # Jüngster Snap = "nach"
         last = snaps[-1]
-        # Erster Snap im Lookback-Fenster = "vor"
-        first_in_window = None
-        for s in snaps:
-            ts = _parse_ts(s.get("ts") or "")
-            if ts is None:
-                continue
-            age = (snap_ts - ts).total_seconds()
-            if age <= lookback_seconds and age >= 0:
-                first_in_window = s
-                break
+        # 06.09.2026: der Preis, wie er am FENSTERANFANG stand — nicht der erste Snapshot
+        # im Fenster. Unsere Zeitreihe schreibt nur bei Preisaenderung fort; ein ruhiger
+        # Markt, der dann kippt, hatte im Fenster genau einen Eintrag und war unsichtbar.
+        # Ueber die ganze Liga-History: +288 sichtbare Moves >= 2 pp (+28 %).
+        # Siehe base.snapshot_am_fensteranfang.
+        first_in_window = snapshot_am_fensteranfang(snaps, snap_ts, lookback_seconds)
 
         if first_in_window is None:
             return None

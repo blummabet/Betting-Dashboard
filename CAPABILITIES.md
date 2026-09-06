@@ -1860,6 +1860,51 @@ Over/Under-Fixture, `assertIsNone(res["sharePct"])`, die Byte-Position im Render
 Code-String `"(_n_erg * basis + n_clv * 0.5) / n"`, `poly_vol` im Signal-Test, und diese Leiter.
 **Sieben. Ein Test, der die Form erfindet, in der er prueft, deckt nichts ab.**
 
+### 06.09.2026 — der Lern-Loop konnte nie sagen, dass etwas GUT ist
+
+Lucas: „ich dachte, die Signale lernen nach jedem Match und werden neu gewichtet — und wenn
+eins zum Scheissen ist, wird es runtergewichtet. Ich dachte, das funktioniert sowieso."
+
+Er lief. 164 Laeufe seit dem 26.06. Aber der Massstab war die eigene Trefferquote (~0,55-0,60),
+und `weight = posterior / neutral` landete damit fast zwangslaeufig unter 1:
+
+    Spanne ALLER Liga-Gewichte am 05.09.:  0,590 .. 1,034
+    erlaubt waere:                         0,300 .. 1,700
+    mediane Bewegung in 2,5 Monaten:       0,185
+
+**Kein Signal kam je nennenswert ueber 1,0.** Nur Abwerten, kein Aufwerten. Und der Hebel war
+klein: `weighted_score = score x weight x confidence` — die confidence, die jedes Signal sich
+SELBST gibt (0,35-0,9), bewegte mehr als alles Gelernte.
+
+Dazu: der Loop vergibt Gewichte, aber keine **Konfidenz**. Ein Gewicht von 0,9 sagt nicht, ob
+das belegt ist. Deshalb `signal_bilanz.py` — je Signal CLV und preis-justierter Ausgang mit
+einseitiger 95%-Grenze, Urteil nur wenn das Intervall die Neutrale meidet.
+
+**Die Bilanz hat sich am Tag ihrer Entstehung zweimal selbst korrigiert:**
+
+1. *Fester Nullpunkt.* Erster Lauf: fuenf Signale gleichzeitig „schadet" (CLV) UND „traegt bei"
+   (Ausgang). Unsere Picks steigen im Schnitt 2,2 pp unter dem Schlusskurs ein — diesen Sockel
+   erbt jedes Signal, das auf ihnen feuert. Gegen einen festen Nullpunkt waeren am Ende alle 33
+   „schaedlich" gewesen. → Vergleich gegen die Picks, auf denen das Signal SCHWIEG.
+2. *Signalzahl-Konfundierung.* Zweiter Lauf: 13 „traegt bei", null schaedlich.
+   `r(Anzahl gefeuerter Signale, CLV) = +0,131` — signalreiche Picks haben besseren CLV, und
+   jedes Signal erbte den Vorteil. → Geschichtet nach der Zahl der UEBRIGEN Signale,
+   invers-varianz-gepoolt.
+
+Danach bleibt eine differenzierte Tabelle: `lead_lag_bias` +3,29 pp [2,07; 4,52],
+`betfair_money` +2,62 pp und als einziges auch beim Geld positiv, `chance_creation` positiv im
+CLV und **negativ beim Geld**, und vier Signale ohne Urteil.
+
+**Die Bremse:** `signal_verlauf.py`. Ein Urteil wirkt erst nach 3 Messungen an verschiedenen
+Tagen ueber mindestens 14 Tage, ohne Unterbrechung — ein einziger abweichender Eintrag setzt
+zurueck. Bei ~30 gleichzeitig geprueften Signalen sind 1-2 Zufallstreffer pro Lauf zu erwarten;
+ein Loop, der sofort reagiert, laeuft dem Rauschen hinterher. Erst dann greift
+`bilanz_faktor`: x0,75 bei stabilem Schaden, x1,10 bei stabilem Beitrag — bewusst asymmetrisch,
+klein und umkehrbar. Fehlt der Verlauf, wirkt NICHTS.
+
+Nachgewiesen Ende-zu-Ende: form_trend 1,099 -> 0,824, lead_lag_bias 1,068 -> 1,175, alle
+anderen unveraendert.
+
 ## 8. Harte Arbeitsregeln
 
 - **Push nur über GitHub Desktop**, nie CLI.

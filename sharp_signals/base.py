@@ -12,6 +12,7 @@ Evidence (was hat zum Signal geführt — das wird auf der Card angezeigt).
 from __future__ import annotations
 from dataclasses import dataclass, field, asdict
 from abc import ABC, abstractmethod
+from datetime import datetime, timezone
 from typing import Optional, Any
 
 
@@ -98,6 +99,61 @@ def match_eintrag(container, context):
         if v is not None:
             return v
     return None
+
+
+def _ts(wert):
+    """Tolerantes ISO-Parsing fuer Snapshot-Zeitstempel. None, wenn unlesbar."""
+    if not wert:
+        return None
+    try:
+        t = datetime.fromisoformat(str(wert).replace("Z", "+00:00"))
+    except (TypeError, ValueError):
+        return None
+    return t if t.tzinfo else t.replace(tzinfo=timezone.utc)
+
+
+def snapshot_am_fensteranfang(snaps, bezug, lookback_sekunden):
+    """Der Preis, wie er am Anfang des Rueckblick-Fensters STAND. None, wenn unbestimmbar.
+
+    06.09.2026 — der teuerste Ein-Zeilen-Denkfehler des Tages.
+
+    `lead_lag_bias` und `steam_lag` suchten beide den ersten Snapshot INNERHALB des Fensters.
+    Unsere Zeitreihe wird aber nur fortgeschrieben, wenn sich der Preis AENDERT
+    (`fetch_liga_odds.append_snapshot`). Ein Markt, der zwei Tage ruhig steht und dann kippt,
+    hat im 24h-Fenster genau EINEN Eintrag — den neuen — und beide Signale gaben auf.
+
+    **Ein fehlender Snapshot ist keine fehlende Information. Er ist die Aussage
+    „unveraendert".** Der richtige Bezugspunkt ist der letzte Snapshot AM ODER VOR dem
+    Fensteranfang, fortgeschrieben. Nur wenn die Reihe erst im Fenster beginnt, ist ihr erster
+    Eintrag der Start.
+
+    Rueckgerechnet ueber die gesamte Liga-Odds-History:
+        Moves >= 2 pp, die die alte Fensterlogik sah:  1.032
+        Moves >= 2 pp, die diese Logik sieht:          1.320   (+288, +28 %)
+
+    Das trifft `lead_lag_bias` — das Signal mit dem staerksten gemessenen CLV-Zusammenhang
+    (r = +0,495) — genauso wie `steam_lag`.
+    """
+    if not snaps or bezug is None or not lookback_sekunden:
+        return None
+    grenze = bezug.timestamp() - float(lookback_sekunden)
+    basis = None
+    for s in snaps:
+        t = _ts((s or {}).get("ts"))
+        if t is None:
+            continue
+        if t.timestamp() > bezug.timestamp():
+            continue                   # in der Zukunft -> ueberspringen, nicht abbrechen:
+                                       # ein einzelner verrutschter Zeitstempel am Anfang der
+                                       # Liste darf nicht die ganze Reihe unbrauchbar machen
+        if t.timestamp() <= grenze:
+            basis = s                  # fortschreiben bis zum Fensteranfang
+        elif basis is None:
+            basis = s                  # Reihe beginnt erst im Fenster
+            break
+        else:
+            break
+    return basis
 
 
 @dataclass

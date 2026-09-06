@@ -198,6 +198,10 @@ jobs:
         run: |
           python build_signal_ledger.py --write || true
           python update_signal_weights.py || true
+          # 06.09.2026 (Lucas: „wenn ein Signal zum Scheissen ist, wird es runtergewichtet").
+          # Der Lern-Loop vergibt Gewichte, aber keine Konfidenz. Diese Bilanz sagt je Signal,
+          # ob sein Beitrag BELEGT ist — geschichtet nach der Zahl der uebrigen Signale.
+          python build_signal_bilanz.py || true
           python compute_pick_calibration.py --write || true   # 27.07.2026 (Lucas): Kalibrierung auch für MLS/Liga (lief nur WM)
           python build_dashboard_pulse.py || true   # 30.07.2026 (Lucas): Übersicht-Puls (letzte 30 Picks · CLV/Trefferquote)
 
@@ -388,6 +392,8 @@ jobs:
           git add mls_signal_ledger.json 2>/dev/null || true
           git add mls_pick_calibration.json 2>/dev/null || true
           git add mls_signal_weights.json 2>/dev/null || true
+          git add mls_signal_bilanz.json 2>/dev/null || true
+          git add mls_signal_verlauf.json 2>/dev/null || true
           git add mls_clv_summary.json 2>/dev/null || true
           git add dashboard_pulse.json 2>/dev/null || true
           git add mls_streaks.json 2>/dev/null || true
