@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-09-05T20:30:03Z",
-    "total_records": 73
+    "updated_at": "2026-09-06T12:51:06Z",
+    "total_records": 75
   },
   "records": [
     {
@@ -1269,6 +1269,54 @@
       "clvPP": -3.29,
       "processVerdict": "JUSTIFIED",
       "clvResolved": true
+    },
+    {
+      "key": "ESP-4-533-544|Heimsieg",
+      "matchKey": "ESP-4-533-544",
+      "market": "Heimsieg",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": 3.23
+        },
+        {
+          "name": "injury",
+          "score": -1.4
+        },
+        {
+          "name": "chance_creation",
+          "score": 2.88
+        },
+        {
+          "name": "freshness_leg",
+          "score": 2.65
+        },
+        {
+          "name": "transfer_shift",
+          "score": -0.48
+        },
+        {
+          "name": "move_following",
+          "score": 1.2
+        },
+        {
+          "name": "venue_form",
+          "score": -1.2
+        },
+        {
+          "name": "betfair_money",
+          "score": 4.0
+        }
+      ],
+      "resolvedAt": "2026-09-06T12:51:03Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -1.01,
+      "clvResolved": true,
+      "processVerdict": "UNLUCKY"
     },
     {
       "key": "ESP-4-543-541|AH Auswärts −1.25",
@@ -2721,6 +2769,54 @@
       "clvPP": -0.51,
       "processVerdict": "JUSTIFIED",
       "clvResolved": true
+    },
+    {
+      "key": "ITA-3-497-499|Heimsieg",
+      "matchKey": "ITA-3-497-499",
+      "market": "Heimsieg",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "injury",
+          "score": 2.6
+        },
+        {
+          "name": "form_trend",
+          "score": 2.43
+        },
+        {
+          "name": "h2h_pattern",
+          "score": -0.8
+        },
+        {
+          "name": "xg_strength",
+          "score": 0.88
+        },
+        {
+          "name": "transfer_shift",
+          "score": -0.48
+        },
+        {
+          "name": "move_following",
+          "score": 2.0
+        },
+        {
+          "name": "venue_form",
+          "score": 2.06
+        },
+        {
+          "name": "betfair_money",
+          "score": 4.0
+        }
+      ],
+      "resolvedAt": "2026-09-06T12:51:03Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -1.26,
+      "clvResolved": true,
+      "processVerdict": "JUSTIFIED"
     },
     {
       "key": "ITA-3-502-503|Unter 2.5 Tore",
