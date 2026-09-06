@@ -1690,21 +1690,42 @@
     if(!b||!b.rows||!b.rows.length) return '';
     _sbStyles();
     var base=b.baseWinPct;
-    // Belastbarkeit: Edge nur bei genug Faellen auf BEIDEN Seiten (supp>=8 & opp>=5); sonst
-    // „dafuer vs. Baseline" wenn die Stuetz-Seite dick genug ist (supp>=10); sonst zu wenig Daten.
-    var strength=function(r){
-      if(r.supp>=8 && r.opp>=5 && r.edge!=null) return r.edge;
-      if(r.supp>=10 && r.suppWinPct!=null) return r.suppWinPct-base;
-      return null;
+    // 06.09.2026 — hier stand `edge = Win%dafuer − Win%dagegen`, mit einem Rueckfall auf
+    // „dafuer vs. Ø", wenn die Gegen-Seite duenn war. Beides ist eine TREFFERQUOTE, und eine
+    // Trefferquote ohne die Quoten ist keine Zahl. Was das anrichtete, zeigt der Vergleich
+    // mit der gemessenen Bilanz (gleiche Picks, gleicher Tag):
+    //
+    //   Form-Rating    Tafel +53 %  ->  gemessen: kein Urteil (ΔCLV −0,28)
+    //   xG-Staerke     Tafel +27 %  ->  gemessen: kein Urteil
+    //   Betfair-Geld   Tafel  +1 %  ->  gemessen: TRAEGT BEI (ΔCLV +2,71, UG +1,16)
+    //   Torjaeger      Tafel −13 %  ->  gemessen: traegt bei
+    //
+    // Die Reihenfolge war nahezu invertiert — das beste Signal stand fast unten. Die Zahl
+    // rechts kommt jetzt aus `signal_bilanz` (dieselbe Rechnung wie Guard und Lern-Loop):
+    // Unterschied im CLV zu den Picks, auf denen das Signal SCHWIEG, geschichtet nach der Zahl
+    // der uebrigen Signale, mit einseitiger 95%-Grenze. Ein Urteil gibt es nur, wenn das
+    // Intervall die Null meidet. Die Win-Quoten bleiben als BESCHREIBUNG stehen.
+    var strength=function(r){ return (r.clvDiff!=null) ? r.clvDiff : null; };
+    var urteil=function(r){
+      // Widersprechen sich Markt (CLV) und Geld (Ausgang), ist das kein Urteil.
+      if(r.clvUrteil==='traegt bei' && r.ausgangUrteil==='schadet') return 'gemischt';
+      if(r.clvUrteil==='schadet' && r.ausgangUrteil==='traegt bei') return 'gemischt';
+      if(r.clvUrteil==='schadet' || r.ausgangUrteil==='schadet') return 'schadet';
+      if(r.clvUrteil==='traegt bei' || r.ausgangUrteil==='traegt bei') return 'traegt bei';
+      return 'kein Urteil';
     };
     var tier=function(r){
-      var s=strength(r);
-      if(s==null) return {c:'var(--mi3)'};
-      if(s>=10) return {c:A.good};
-      if(s<=-12) return {c:A.red};
-      return {c:A.gold};
+      var u=urteil(r);
+      if(u==='traegt bei') return {c:A.good};
+      if(u==='schadet')    return {c:A.red};
+      if(u==='gemischt')   return {c:A.gold};
+      return {c:'var(--mi3)'};
     };
     var rows=b.rows.slice().sort(function(x,y){
+      // Belegte Urteile zuerst, danach nach gemessener Groesse. Unbelegtes sortiert nach
+      // Feuerzahl ans Ende — es soll nicht zwischen den Befunden stehen.
+      var rx=(urteil(x)==='kein Urteil')?1:0, ry=(urteil(y)==='kein Urteil')?1:0;
+      if(rx!==ry) return rx-ry;
       var sx=strength(x), sy=strength(y);
       if(sx==null&&sy==null) return y.fire-x.fire;
       if(sx==null) return 1;
@@ -1726,9 +1747,12 @@
     var duenn=rows.filter(function(r){return (r.fire||0)<(d.signals&&d.signals.minFire||0);});
     rows=rows.filter(function(r){return (r.fire||0)>=(d.signals&&d.signals.minFire||0);});
     var lines=rows.map(function(r){
-      var L=_sigLabel(r.name), tg=tier(r), st=strength(r);
-      var viaBase=!(r.supp>=8&&r.opp>=5&&r.edge!=null)&&r.supp>=10;
-      var edgeTxt=st==null?'—':((st>0?'+':'')+Math.round(st)+'%'+(viaBase?'<i style="font-size:8px;color:var(--mi3);margin-left:1px">⌀</i>':''));
+      var L=_sigLabel(r.name), tg=tier(r), st=strength(r), u=urteil(r);
+      // Kein Punktschaetzer ohne sein Urteil: steht die Zahl nicht belegt da, sagt die Zeile das.
+      var edgeTxt = (st==null) ? 'kein Urteil'
+        : ((st>0?'+':'')+(Math.round(st*100)/100)+'pp'
+           + (u==='kein Urteil' ? '<i style="font-size:8px;color:var(--mi3);margin-left:2px">unbelegt</i>' : '')
+           + (u==='gemischt' ? '<i style="font-size:8px;color:var(--mi3);margin-left:2px">gemischt</i>' : ''));
       return '<div class="sb-row">'
         +'<span class="sb-dot" style="background:'+tg.c+'"></span>'
         +'<span class="sb-nm">'+L.ic+' '+esc(L.lb)+'</span>'
@@ -1749,8 +1773,9 @@
     return '<details class="md-pulse md-rise sb-wrap">'
       +'<summary class="sb-sum"><span class="md-pulse-h" style="margin:0">🧪 Signal-Bilanz</span>'
       +'<span class="mpc-hint">funktionieren die Signale? · '+b.n+' Picks · Ø '+Math.round(base)+'% Win</span></summary>'
-      +'<div class="sb-legend">🟢 trägt Richtungsinfo · 🟡 schwach · 🔴 evtl. schädlich · ⚪ zu wenig Daten. '
-      +'„dafür/gegen" = Win-Quote, wenn das Signal den Pick stützt bzw. dagegen steht · Zahl rechts = Edge (dafür−gegen), ⌀ = dafür vs. Ø bei dünner Gegen-Seite.</div>'
+      +'<div class="sb-legend">🟢 trägt belegt bei · 🟡 gemischt (Markt und Geld widersprechen sich) · 🔴 schadet belegt · ⚪ kein Urteil. '
+      +'„dafür/gegen" = Win-Quote, wenn das Signal den Pick stützt bzw. dagegen steht — <b>Beschreibung, kein Urteil</b> (eine Trefferquote ohne die Quoten ist keine Zahl). '
+      +'Zahl rechts = gemessener CLV-Unterschied zu den Picks, auf denen das Signal schwieg, geschichtet nach der Zahl der übrigen Signale; Urteil nur, wenn die 95%-Grenze die Null meidet.</div>'
       +'<div class="sb-list">'+lines+'</div></details>';
   }
 

@@ -78,10 +78,9 @@
       "label": "Poly-Deckung: Money-Scan gegen Liga-Fetcher",
       "severity": "error",
       "failures": [
-        "sea-bol-sas-2026-09-06 (Bologna FC 1909 v US Sassuolo Calcio, Anpfiff in 1.1h) — der Liga-Fetcher hat den Markt, der Money-Scan nie",
-        "sea-juv-mil-2026-09-06 (Juventus FC v AC Milan, Anpfiff in 3.8h) — der Liga-Fetcher hat den Markt, der Money-Scan nie"
+        "sea-juv-mil-2026-09-06 (Juventus FC v AC Milan, Anpfiff in 2.7h) — der Liga-Fetcher hat den Markt, der Money-Scan nie"
       ],
-      "nFail": 2,
+      "nFail": 1,
       "ok": false,
       "hinweis": ""
     },
@@ -105,8 +104,16 @@
       "nFail": 4,
       "ok": false,
       "hinweis": "10 von 33 Signalen schweigen ueber 142 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 4 an und trotzdem stumm."
+    },
+    {
+      "label": "Signal-Bilanz: schadet ein Signal belegt?",
+      "severity": "warn",
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
+      "hinweis": "0 Signale belegt beitragend, 0 belegt schaedlich. ~30 Signale gleichzeitig geprueft — 1-2 falsche Treffer sind zu erwarten. Nur was ueber mehrere Wochen haelt, ist ein Befund."
     }
   ],
   "nFail": 3,
-  "generatedAt": "2026-09-06T14:54:51.207657+00:00"
+  "generatedAt": "2026-09-06T16:03:58.695344+00:00"
 }

@@ -929,7 +929,25 @@ def _log_public_push(a, cidx=None) -> None:
                 # galt, stand nirgends. Deshalb hier stempeln, im Moment des Sendens.
                 # None = Markt nicht abgebildet; {"gefunden": False} = erkannt, aber ohne Serie
                 # bzw. kein Team-Treffer. Die drei Faelle sind beim Auswerten NICHT dasselbe.
-                "serie": _serie_fuer_push(a)})
+                "serie": _serie_fuer_push(a),
+                # 06.09.2026 (Lucas: „bitte unterbinde solche Pushes, wo einfach einer Fuehrung
+                # gefolgt wird — oder kannst du das widerlegen"). Konnte ich, aber nur ueber
+                # einen UMWEG: `onLeader` stand nirgends im Ledger, also musste ich aus
+                # `htScore` + `leadName` rekonstruieren, wer zur Halbzeit vorn lag. Fuer
+                # In-Play-Pushes zu beliebigen Minuten ist das ein Naeherungswert — ein Push in
+                # der 70. bei 1:0, aber 0:0 zur Pause, faellt in die falsche Gruppe.
+                #
+                # Das Ergebnis war deutlich genug, um trotzdem zu tragen (n=52, Treffer 80,8 %,
+                # ROI +27,8 %, einseitige Untergrenze +12,5 %), aber die naechste Antwort soll
+                # exakt sein statt naeherungsweise. Also stempeln wir die Fuehrungs-Lage jetzt
+                # im Moment des Sendens — dieselbe Lehre wie beim Serien-Stempel am 04.09.:
+                # eine Momentaufnahme laesst sich nicht rueckwirkend rekonstruieren.
+                "onLeader": bool(a.get("onLeader")),
+                "leadDir": a.get("leadDir"),
+                "leadShare": a.get("leadShare"),
+                "live": {"time": ((a.get("live") or {}).get("time")),
+                         "score": [(a.get("live") or {}).get("goal_v1"),
+                                   (a.get("live") or {}).get("goal_v2")]}})
     try:
         json.dump(led[-800:], open(PUB_LEDGER_FILE, "w", encoding="utf-8"), ensure_ascii=False, indent=0)
     except Exception as e:
