@@ -1,21 +1,21 @@
 {
- "n": 114,
+ "n": 117,
  "minOdds": 1.35,
- "moneyHitRate": 0.298,
- "priceHitRate": 0.342,
- "brierMoney": 0.9729,
- "brierPrice": 0.7358,
+ "moneyHitRate": 0.308,
+ "priceHitRate": 0.35,
+ "brierMoney": 0.9619,
+ "brierPrice": 0.7327,
  "disagree": {
-  "n": 35,
+  "n": 36,
   "moneyWon": 1,
   "priceWon": 6,
-  "neither": 28
+  "neither": 29
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
  "byLeague": [],
  "guete": {
-  "belastbar": 114,
+  "belastbar": 117,
   "preis_echo": 263,
   "abgeschnitten": 14,
   "unbekannt": 446,
@@ -63,7 +63,7 @@
    "league": "EPL",
    "winner": "Draw (Nottingham Forest FC vs. Tottenham Hotspur FC)",
    "moneyFav": "Tottenham Hotspur FC",
-   "priceFav": "Tottenham Hotspur FC",
+   "priceFav": "Nottingham Forest FC",
    "moneyShare": 0.584,
    "priceProb": 0.357,
    "moneyOK": false,
@@ -311,6 +311,18 @@
    "totalUsd": 129988
   },
   {
+   "key": "mls-orl-sdg-2026-09-05",
+   "league": "MLS",
+   "winner": "Orlando City SC",
+   "moneyFav": "Orlando City SC",
+   "priceFav": "Orlando City SC",
+   "moneyShare": 0.972,
+   "priceProb": 0.429,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 124985
+  },
+  {
    "key": "bra-sao-cam-2026-09-05",
    "league": "BRAZIL-SERIE-A",
    "winner": "São Paulo FC",
@@ -489,29 +501,17 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 58553
-  },
-  {
-   "key": "lal-rso-cel-2026-09-03-exact-score",
-   "league": "LA-LIGA",
-   "winner": "Real Sociedad de Fútbol 0 - 0 RC Celta de Vigo",
-   "moneyFav": "Real Sociedad de Fútbol 2 - 1 RC Celta de Vigo",
-   "priceFav": "Real Sociedad de Fútbol 1 - 1 RC Celta de Vigo",
-   "moneyShare": 0.178,
-   "priceProb": 0.125,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 56848
   }
  ],
- "generatedAt": "2026-09-06T02:02:23.409276+00:00",
+ "generatedAt": "2026-09-06T02:32:20.391334+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 422,
   "nfl": 800,
-  "mlb": 750,
+  "mlb": 738,
   "nhl": 487,
-  "mls": 787,
+  "mls": 761,
   "epl": 542,
   "soccer": 800,
   "tennis": 800,
@@ -521,7 +521,7 @@
   "serie-a": 51,
   "ligue-1": 544,
   "primeira-liga": 532,
-  "brazil-serie-a": 547,
+  "brazil-serie-a": 546,
   "brasileirao": 0,
   "belgium-pro-league": 0,
   "eredivisie": 0,
@@ -583,21 +583,21 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 406
+  "sweepAdded": 407
  },
  "vorStats": {
-  "kandidaten": 5,
+  "kandidaten": 6,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 5,
-  "calls": 5
+  "mitAnteilen": 6,
+  "calls": 6
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1850,
-   "usd": 30593875,
-   "beispiel": "fifwc-esp-cvi-2026-06-15-more-markets"
+   "n": 1615,
+   "usd": 27024171,
+   "beispiel": "fifwc-fra-esp-2026-07-14-total-corners"
   },
   "balance": {
    "n": 2,
@@ -605,94 +605,94 @@
    "beispiel": "balance-of-power-2026-midterms"
   },
   "nba": {
-   "n": 424,
-   "usd": 5120906,
+   "n": 578,
+   "usd": 5015460,
    "beispiel": "nba-sas-okc-2026-05-18"
   },
-  "nhl": {
-   "n": 466,
-   "usd": 2396492,
-   "beispiel": "nhl-phi-car-2026-05-02"
-  },
   "ecs": {
-   "n": 4,
-   "usd": 881566,
+   "n": 5,
+   "usd": 877123,
    "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
   },
+  "world": {
+   "n": 137,
+   "usd": 648828,
+   "beispiel": "world-cup-winner"
+  },
+  "nhl": {
+   "n": 63,
+   "usd": 566712,
+   "beispiel": "nhl-phi-car-2026-05-02"
+  },
   "fed": {
-   "n": 21,
-   "usd": 482717,
+   "n": 25,
+   "usd": 483529,
    "beispiel": "fed-decision-in-december"
   },
   "republican": {
-   "n": 7,
-   "usd": 472330,
+   "n": 9,
+   "usd": 472145,
    "beispiel": "republican-presidential-nominee-2028"
   },
-  "cbb": {
-   "n": 34,
-   "usd": 285743,
-   "beispiel": "cbb-uconn-mich-2026-04-06"
+  "2026": {
+   "n": 87,
+   "usd": 403201,
+   "beispiel": "2026-mens-us-open-winner-tennis"
   },
-  "presidential": {
-   "n": 13,
-   "usd": 277790,
-   "beispiel": "presidential-election-winner-2028"
+  "cbb": {
+   "n": 23,
+   "usd": 265565,
+   "beispiel": "cbb-uconn-mich-2026-04-06"
   },
   "will": {
    "n": 8,
-   "usd": 258582,
+   "usd": 258532,
    "beispiel": "will-trump-acquire-greenland-before-2027"
   },
-  "2026": {
-   "n": 38,
-   "usd": 254016,
-   "beispiel": "2026-the-cj-cup-byron-nelson-winner"
-  },
-  "fif": {
-   "n": 46,
-   "usd": 246236,
-   "beispiel": "fif-bra-hrv-2026-03-31"
-  },
   "clf": {
-   "n": 39,
-   "usd": 187114,
+   "n": 38,
+   "usd": 169654,
    "beispiel": "clf-tot-tsg-2026-08-16"
-  },
-  "world": {
-   "n": 33,
-   "usd": 161580,
-   "beispiel": "world-cup-golden-boot-winner"
   },
   "strait": {
    "n": 2,
    "usd": 152575,
    "beispiel": "strait-of-hormuz-traffic-returns-to-normal-by-august-31-20260702154212320"
   },
-  "nbasl": {
-   "n": 3,
-   "usd": 113076,
-   "beispiel": "nbasl-cle-nop-2026-07-15"
+  "which": {
+   "n": 33,
+   "usd": 147598,
+   "beispiel": "which-party-will-win-the-house-in-2026"
   },
-  "democratic": {
-   "n": 15,
-   "usd": 107203,
-   "beispiel": "democratic-presidential-nominee-2028"
+  "cricipl": {
+   "n": 17,
+   "usd": 141091,
+   "beispiel": "cricipl-del-raj-2026-05-17"
+  },
+  "elon": {
+   "n": 91,
+   "usd": 112020,
+   "beispiel": "elon-musk-of-tweets-june-11-june-13"
   },
   "us": {
-   "n": 7,
-   "usd": 104876,
-   "beispiel": "us-x-venezuela-military-engagement-by"
+   "n": 8,
+   "usd": 106994,
+   "beispiel": "us-anti-cartel-operation-outside-of-the-us-by-20260616214856017"
+  },
+  "nbasl": {
+   "n": 1,
+   "usd": 97044,
+   "beispiel": "nbasl-cle-nop-2026-07-15"
+  },
+  "fif": {
+   "n": 15,
+   "usd": 79736,
+   "beispiel": "fif-bra-pan-2026-05-31"
   },
   "j2100": {
    "n": 1,
    "usd": 77337,
    "beispiel": "j2100-van-fuk-2026-06-01"
-  },
-  "btc": {
-   "n": 30,
-   "usd": 75806,
-   "beispiel": "btc-updown-5m-1785960000"
   }
  }
 }
