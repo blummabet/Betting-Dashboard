@@ -86,7 +86,18 @@
     if(bf&&bfPos!=null){ var d=_dia(bf.eur); bub+='<div class="mm-bub mm-bf" style="left:'+bfPos+'%;top:56px;width:'+d+'px;height:'+d+'px">'+_eur(bf.eur)+'</div>'; }
     if(poly&&pPos!=null){ var d2=_dia(poly.usd); var _est=(poly.src==='upcoming')?' mm-poly-est':''; bub+='<div class="mm-bub mm-poly'+_est+'" title="'+((poly.src==='upcoming')?'Poly-Preis (vor Anpfiff, keine Geld-Verteilung)':'Poly-Geld')+'" style="left:'+pPos+'%;top:96px;width:'+d2+'px;height:'+d2+'px">'+_usd(poly.usd)+'</div>'; }
     var vtxt=kon?(strong?'✅ Konsens':'✅ knapp einig'):(div?(strong?'⚠️ Divergenz':'◽ knapp — Münzwurf'):(r.verdict==='teil'?'➖ teils einig':'—'));
-    var vsub=kon?(strong?('einig auf '+_esc((bf&&bf.name)||'')):'beide knapp — schwaches Signal'):(divS?'Geld & scharfe Linie klar uneinig':(div?'beide nahe 50/50 — kein klares Signal':''));
+    // 06.09.2026 (Uebersicht-Check) — hier stand fest getippt „beide nahe 50/50 — kein klares
+    // Signal". Bei Okayama v Hiroshima stand daneben: Poly 90 %, Pinnacle 51,6 % gegen 18,8 %.
+    // Nichts davon war nahe 50/50; nur der Betfair-Anteil lag bei 50. Der Satz behauptete, was
+    // die Zahlen in derselben Zeile widerlegen — Bug-Klasse 1 aus Abschnitt 7.
+    // Jetzt wird die schwache Seite BENANNT, statt eine zu unterstellen.
+    var _schwach=[];
+    if(bf&&typeof bf.sharePct==='number'&&bf.sharePct<60) _schwach.push('Betfair '+Math.round(bf.sharePct)+'%');
+    if(poly&&typeof poly.sharePct==='number'&&poly.sharePct<60) _schwach.push('Poly '+Math.round(poly.sharePct)+'%');
+    if(pn&&pn.fav&&(+pn[pn.fav]||0)<0.60) _schwach.push('Pinnacle '+Math.round((+pn[pn.fav]||0)*100)+'%');
+    var vsub=kon?(strong?('einig auf '+_esc((bf&&bf.name)||'')):'beide knapp — schwaches Signal')
+      :(divS?'Geld & scharfe Linie klar uneinig'
+      :(div?(_schwach.length?('uneinig · ohne klare Mehrheit: '+_schwach.join(' · ')):'uneinig — die Quellen zeigen auf verschiedene Seiten'):''));
     return '<div class="mm-card'+(konS?' mm-kon':(divS?' mm-div':''))+'">'
       +'<div class="mm-ch"><span>⚽</span><span class="mm-t">'+_esc(r.home)+' <span class="mm-vs">vs</span> '+_esc(r.away)+'</span>'+live+'<span class="mm-lg">'+_esc(r.league||'')+'</span></div>'
       +'<div class="mm-axis"><div class="mm-ends"><span>'+_esc(r.home)+'</span><span>'+_esc(r.away)+'</span></div>'

@@ -1625,6 +1625,83 @@ verhindert nur die naechste Fehlrechnung.
 
 ---
 
+### 06.09.2026 — „Serie A sind alle Spiele da" · drei Ursachen unter einem Symptom
+
+Lucas mit einem Polymarket-Screenshot: Bologna-Sassuolo **$49,99K**, Juventus-Milan **$94,62K**.
+Ich hatte vorher geschrieben, es gebe fuer diese Spiele keinen Markt — **falsch, und zwar genau
+nach der Bauart, die wir sonst jagen**: ich hatte aus „nicht in unseren Artefakten" auf „gibt es
+nicht" geschlossen. Die eigene Arbeitsregel sagt es woertlich: *leeres eigenes File = unser
+Fetcher-Bug, nicht die Quelle.*
+
+Unter dem einen Symptom (POLY ❔ auf dem Punktestand) lagen drei verschiedene Ursachen:
+
+**1. Namensbruecke — `Rennes` gegen `Stade Rennais FC 1901`.** Null geteilte Tokens; der
+Abkuerzungs-Rueckfall verlangt mindestens eines und verweigerte **zu Recht**, denn ohne diese
+Bedingung paart er irgendwann falsch. Ein niedrigerer Schwellwert waere die falsche Antwort
+gewesen. Die richtige: `rennais` und `rennes` sind dasselbe Wort — also ein Alias in `_ALIAS`,
+das ohnehin schon existierte (Man Utd, Wolves, Spurs).
+
+**2. Ein Pool, den niemand fragte.** `sea-juv-mil` und `sea-bol-sas` fehlten im Money-Scan,
+liegen aber mit Slug, Preisen und Volumen in **`liga_poly_prices.json`** — vom Liga-Fetcher
+laengst geholt. Wir hatten die Daten, der Konsens fragte sie nie. Jetzt als vierte Quelle
+(`src="liga"`) hinter live > close > upcoming; echtes Geld verdraengt sie nie.
+
+**3. Der eigentliche Grund fuer das ❔.** `sharePct` kam ausschliesslich aus `shares` — und die
+traegt **nur der close-Pool** (~3h-Freeze). Alles weiter draussen bekam `sharePct=None`,
+`killer.py` las daraus `polyStatus="unbekannt"`, und das Board zeigte ❔, obwohl Markt und Preis
+vorlagen. `money_map_row()` faellt an genau dieser Stelle seit dem 12.08. auf den Preis zurueck
+(*„auf Poly = geldgewichtete Wahrscheinlichkeit"*), `match_poly` tat es nie — **zwei Leser
+desselben Pools, einer mit Rueckfall, einer ohne.** Daher stand „Money Map: Konsens 3/3" neben
+„Punktestand: POLY ❔" fuer dasselbe Spiel.
+
+Jetzt liefert `match_poly` den Preis-Anteil, aber mit `shareSrc` (`"geld"` / `"preis"`) — denn
+ein Preis-Anteil ist kein Geldfluss, und wer das gleichsetzt, verkauft eine Wahrscheinlichkeit
+als Geld. `killer.py` schreibt entsprechend „Poly-Preis 46 %" statt „Poly-Geld".
+
+**Und wieder hat ein Test den Defekt festgehalten:**
+`test_match_poly_ohne_shares_liefert_odd_und_vol` pruefte `assertIsNone(res["sharePct"])` mit dem
+Kommentar *„kein Holder-Freeze -> Share None (Preis reicht)"*. Der Preis reichte eben nicht — die
+Zeile war der Fund. Das ist der dritte Test binnen zwei Tagen, der eine Beobachtung statt einer
+Regel zementiert hat (nach `' · vorher '` und der erfundenen Over/Under-Fixture).
+
+Wirkung, gemessen: Juventus-Milan, Bologna-Sassuolo, Angers-Rennes und Eintracht-Augsburg
+loesen jetzt alle auf (Juventus Heim-Quote 2,20 gegen 2,17 im Screenshot).
+
+---
+
+### 06.09.2026 — ein Scanner kann nicht melden, was er nie gesehen hat
+
+Nachtrag zum Serie-A-Fund: **warum** hatte `poly_money_broad.py` die Maerkte nicht?
+
+`MIN_VOL_USD = 7500` galt auch fuer die beiden **PREIS-ONLY**-Zweige („vor" und „upcoming").
+Dieser Boden existiert, um das teure **Holder-Budget** zu schuetzen — und genau diese Zweige
+machen ausdruecklich keinen Holder-Call (*„GRATIS mit Preis+Vol mitnehmen"*). Ein 1X2-Markt hat
+sechs Stunden vor Anpfiff typisch ein bis zwei Tausend Dollar; das Geld kommt spaet. Mit 7.500
+warf der Scan also **planmaessig genau die Spiele weg, die noch spielbar sind**, und nahm sie
+erst auf, wenn kaum noch Zeit blieb (Frosinone wurde bei htk **3,0** erfasst, mit $55K).
+
+`MIN_VOL_PREIS_USD = 250` trennt das jetzt. Der Holder-Pfad behaelt seinen Boden unveraendert.
+
+**Das eigentliche Problem war aber, dass es niemandem auffiel.** `health/poly-global.json` stand
+auf gruen, `poly_status.json` auf gruen — beide messen, ob der Lauf **durchlief**, nicht ob er
+**vollstaendig** war. Ein Scanner kann seine eigenen blinden Flecken nicht melden; dafuer braucht
+es eine **zweite, unabhaengige Quelle**.
+
+Die gab es die ganze Zeit: `liga_poly_prices.json` traegt Slug, Anpfiff und Preise, vom
+Liga-Fetcher gefuellt. `poly_deckung.py` (rein, kein I/O, kein API-Aufruf) haelt beide
+gegeneinander; der Guard `check_poly_deckung` meldet jede Paarung, die der Liga-Fetcher kennt
+und der Money-Scan **nie** hatte — history eingeschlossen, damit ein einmal erfasster Markt
+nicht als Luecke zaehlt.
+
+Fund beim ersten Lauf: **9 Maerkte, 5 im 8h-Latch-Fenster** — Parma-Monza (das 1X2!),
+Bologna-Sassuolo, Alavés-Osasuna, Marseille-Paris FC, Juventus-Milan. Alle unter $7.500.
+
+Faellt der Liga-Fetcher aus, meldet der Guard **nichts** statt gruen: ohne Vergleichsbasis gibt
+es kein Urteil ueber Vollstaendigkeit. Eine Deckungsmessung ohne zweite Quelle waere genau die
+Sorte Beruhigung, die den Fund ein halbes Jahr verzoegert hat.
+
+---
+
 ## 8. Harte Arbeitsregeln
 
 - **Push nur über GitHub Desktop**, nie CLI.

@@ -282,6 +282,34 @@ def check_stake_kachel_zeigt_das_gemessene_urteil(ctx):
     return _c("Stake-Auffaelligkeiten tragen ihr gemessenes Urteil", "error", fails[:8])
 
 
+def check_poly_deckung(ctx):
+    """06.09.2026 — Lucas zeigte einen Polymarket-Screenshot: Bologna-Sassuolo $49,99K,
+    Juventus-Milan $94,62K. Beide standen bei uns als „kein Markt". Ich hatte aus „nicht in
+    unseren Artefakten" auf „gibt es nicht" geschlossen.
+
+    Das Problem hinter dem Problem: **ein Scanner kann nicht melden, was er nie gesehen hat.**
+    `health/poly-global.json` und `poly_status.json` standen beide auf gruen — sie messen, ob
+    der Lauf DURCHLIEF, nicht ob er VOLLSTAENDIG war. Eine Lueckenmessung braucht eine zweite,
+    unabhaengige Quelle: `liga_poly_prices.json` vom Liga-Fetcher.
+
+    Gemessen am 06.09.: 9 Maerkte fehlten, 5 davon im 8h-Latch-Fenster, alle unter dem
+    Volumen-Boden von $7.500 — der auch fuer die kostenlosen PREIS-Zweige galt, obwohl er nur
+    das Holder-Budget schuetzen soll.
+    """
+    import poly_deckung as PD
+    lp = ctx.get("ligaPoly") or {}
+    if not (lp.get("prices")):
+        return _c("Poly-Deckung: Money-Scan gegen Liga-Fetcher", "warn", [])
+    keys = set(ctx.get("polyClose") or {}) | set(ctx.get("polyUpcoming") or {}) \
+        | set(ctx.get("polyHistory") or {})
+    if not keys:
+        return _c("Poly-Deckung: Money-Scan gegen Liga-Fetcher", "warn", [])
+    nah = PD.nah(PD.luecken(lp, keys))
+    fails = ["%s (%s v %s, Anpfiff in %.1fh) — der Liga-Fetcher hat den Markt, der Money-Scan nie"
+             % (r["slug"], r["home"], r["away"], r["htk"]) for r in nah]
+    return _c("Poly-Deckung: Money-Scan gegen Liga-Fetcher", "error", fails[:8])
+
+
 UEBERSICHT_CHECKS = [
     check_serien_rangfolge,
     check_freigabe_grund,
@@ -292,6 +320,7 @@ UEBERSICHT_CHECKS = [
     check_serie_seltenheit_nennt_ihren_nenner,
     check_money_map_meldet_ihre_luecken,
     check_stake_kachel_zeigt_das_gemessene_urteil,
+    check_poly_deckung,
 ]
 
 
@@ -320,6 +349,9 @@ def build_ctx_from_disk() -> dict:
         "stake": _lade("stake_highroller.json", {}),
         "stakeAus": _lade("stake_auswertung.json", {}),
         "polyClose": _lade("poly_money_broad_close.json", {}),
+        "polyUpcoming": _lade("poly_money_upcoming.json", {}),
+        "polyHistory": _lade("poly_money_broad_history.json", {}),
+        "ligaPoly": _lade("liga_poly_prices.json", {}),
     }
 
 
