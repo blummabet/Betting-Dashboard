@@ -1592,6 +1592,39 @@ HZ-Alert erzeugen.
 
 ---
 
+### 05.09.2026 — 207 Zeilen ohne Sportart, und ich bin selbst darauf hereingefallen
+
+Lucas: *„ich war so 180 vorne … und jetzt haben wir dort Minus, ich check's trotzdem nicht."*
+
+Die Delle war echt und harmlos: 03.09. **+191**, 05.09. **+60** — 68 Plays in zwei Tagen mit
+54,4 % Treffern statt 65,8 %, also 37 statt erwartbaren 44,7. **−2,0 Standardabweichungen**,
+das passiert etwa alle drei Wochen. Kein Defekt, sondern eine Grundlinie, die duenn genug ist,
+dass zwei normale Tage sie ausloeschen.
+
+**Der Fund lag daneben.** Beim Nachrechnen kam ich auf **549 bespielbare Plays und −118 $**,
+die Datei sagte **512 und +60 $** — und ich habe daraus voreilig „drei verschiedene Zahlen fuer
+denselben Topf" gemacht. Falsch war meine Rechnung: ich filterte nach dem rohen Feld `cat`, und
+das wird erst seit dem 24.08. gestempelt — es stand in **207 von 563 Zeilen auf null**. Damit
+habe ich 37 % der Zeilen ungeprueft als bespielbar durchgewinkt, gesperrte Sportarten
+eingeschlossen. Die maßgebliche Regel ist `_row_cat()`: Stempel, sonst aus der Liga abgeleitet.
+
+Das ist die Klasse *„fehlende Information rendert als harmloser Default"* — diesmal nicht im
+Repo, sondern in meiner eigenen Auswertung. Der Produzent war die ganze Zeit richtig.
+
+Trotzdem geaendert, weil sich die naechste Auswertung sonst genauso irrt: `update_track()`
+**traegt `cat` beim Schreiben nach** (207 Zeilen beim ersten Lauf, `katNachgetragen` weist es
+aus) und die Abrechnung stempelt `_row_cat(e)` statt `e.get("cat")`. Dieselbe Loesung wie
+`ledger_mischen()` fuer die Stake-Sportarten am 04.09.: **ein Feld, auf das sich jemand
+verlassen soll, wird gefuellt — nicht jedem Leser die Disziplin ueberlassen.**
+
+Dazu ein Vertragstest, der `\.get\("cat"\) (not )?in` im ganzen Repo verbietet, mit
+Gegenbeweis, dass das Muster seinen eigenen Fall faengt.
+
+Kennzahlen vorher/nachher identisch (512 / +60,25 $) — der Nachtrag korrigiert nichts, er
+verhindert nur die naechste Fehlrechnung.
+
+---
+
 ## 8. Harte Arbeitsregeln
 
 - **Push nur über GitHub Desktop**, nie CLI.

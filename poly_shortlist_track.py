@@ -248,6 +248,21 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE, blocked=
         (emit or {}).get("blockedCats") or (prev or {}).get("blockedCats") or [])
     open_ = {k: dict(v) for k, v in (prev.get("open") or {}).items() if isinstance(v, dict)}
     settled = [dict(s) for s in (prev.get("settled") or []) if isinstance(s, dict)]
+    # 05.09.2026 (Lucas: „ich check's trotzdem nicht, was da passiert ist") — beim Nachrechnen
+    # der Delle kam ich auf 549 bespielbare Plays und -118 $, die Datei sagte 512 und +60 $.
+    # Der Grund war nicht die Delle, sondern `cat`: das Feld wird erst seit dem 24.08. gestempelt
+    # und stand in **207 von 563** Zeilen auf null. `_row_cat()` faengt das ab, indem es die
+    # Kategorie aus der Liga ableitet — wer aber `cat` direkt liest, haelt jede alte Zeile fuer
+    # bespielbar, gesperrte Sportarten eingeschlossen. Fehlende Information als harmloser Default,
+    # und diesmal bin ich selbst darauf hereingefallen.
+    #
+    # Also wird das Feld nachgetragen, statt sich auf die Disziplin jedes Lesers zu verlassen —
+    # dieselbe Loesung wie `ledger_mischen()` fuer die Stake-Sportarten am 04.09.
+    _kat_nachgetragen = 0
+    for _r in list(open_.values()) + settled:
+        if not _r.get("cat"):
+            _r["cat"] = _cat_from_league(_r.get("league"))
+            _kat_nachgetragen += 1
     settled_keys = {(s.get("key"), s.get("side")) for s in settled}
 
     # 1) Neue Plays öffnen (fixer Einsatz, Entry = Snapshot-Preis der empfohlenen Seite)
@@ -304,7 +319,7 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE, blocked=
         clv = round((close_ref - entry) * 100, 2)
         settled.append({
             "key": e["key"], "side": e["side"], "verdict": e.get("verdict"),
-            "conv": e.get("conv"), "league": e.get("league"), "cat": e.get("cat"),
+            "conv": e.get("conv"), "league": e.get("league"), "cat": _row_cat(e),
             "entryPrice": round(entry, 4), "closePrice": round(close_ref, 4),
             "result": "win" if win else "loss", "winner": winner,
             "pnl": round(pnl, 2), "clvPP": clv, "stake": st,
@@ -331,6 +346,7 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE, blocked=
 
     settled = settled[-SETTLED_KEEP:]
     return {"updatedAt": now.isoformat(), "stake": stake, "expired": n_expired,
+            "katNachgetragen": _kat_nachgetragen,
             "blockedCats": _bl, "reentry": reentry_status(settled, _bl),
             "open": open_, "settled": settled, "agg": aggregate(settled, _bl)}
 
