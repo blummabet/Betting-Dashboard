@@ -202776,7 +202776,13 @@
   "tokens": {
    "Over": "25193506134620533562488865541814749832903298872540068468240280227239093692428",
    "Under": "29356541579905294866902940718832705680240895580121713651916191492709181247351"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Over": 1.0,
+   "Under": 0.0
+  },
+  "resolvedAt": "2026-09-06T06:32:12.754154+00:00"
  },
  "mls-clb-col-2026-09-05-more-markets": {
   "shares": {
@@ -203096,7 +203102,13 @@
     "usd": 313,
     "ts": 1788654978
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Jakub Mensik": 0.0,
+   "Learner Tien": 1.0
+  },
+  "resolvedAt": "2026-09-06T06:32:12.754154+00:00"
  },
  "atp-zverev-tabilo-2026-09-05": {
   "shares": {
@@ -206032,8 +206044,8 @@
  },
  "lol-t1-dk-2026-09-06": {
   "shares": {
-   "T1": 103743.31508014491,
-   "Dplus KIA": 73595.69255465994
+   "T1": 106323.08203412993,
+   "Dplus KIA": 75425.78364167492
   },
   "prices": {
    "T1": 0.585,
@@ -206045,7 +206057,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 188168,
+  "totalUsd": 193380,
   "whales": [
    {
     "wallet": "0x7e5e420a5cde8a322f3b5b93a12a164827f47315",
@@ -206072,8 +206084,8 @@
     "avgPrice": 0.5806
    }
   ],
-  "hoursToKickoff": 2.01,
-  "capturedAt": "2026-09-06T06:02:12.558764+00:00",
+  "hoursToKickoff": 1.51,
+  "capturedAt": "2026-09-06T06:32:12.754154+00:00",
   "cond": "0x8891b2021bbd8c42b0105d38f52d20e4d0512c46d564d501a5c4cfdcab8680c0",
   "frage": "LoL: T1 vs Dplus KIA (BO5) - LCK Playoffs",
   "tokens": {
@@ -206089,19 +206101,19 @@
    "bids": [
     [
      0.58,
-     160132
+     148579
     ],
     [
      0.57,
-     66585
+     58889
     ],
     [
      0.56,
-     8704
+     9337
     ],
     [
      0.55,
-     2650
+     2993
     ],
     [
      0.54,
@@ -206115,15 +206127,15 @@
    "asks": [
     [
      0.59,
-     212534
+     222339
     ],
     [
      0.6,
-     182572
+     181014
     ],
     [
      0.61,
-     54707
+     56203
     ],
     [
      0.62,
@@ -206131,15 +206143,31 @@
     ],
     [
      0.63,
-     17960
+     27925
     ],
     [
      0.64,
-     5702
+     5660
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x00c8ef6895e2fb38b538cac8c08edd6b82289ccd",
+    "action": "BUY",
+    "side": "T1",
+    "price": 0.59,
+    "usd": 500,
+    "ts": 1788675228
+   },
+   {
+    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
+    "action": "BUY",
+    "side": "T1",
+    "price": 0.59,
+    "usd": 530,
+    "ts": 1788674904
+   },
    {
     "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
     "action": "BUY",
@@ -206155,41 +206183,17 @@
     "price": 0.59,
     "usd": 2968,
     "ts": 1788673702
-   },
-   {
-    "wallet": "0x257aec64c9f39f4dac97449f80033a484e24b42a",
-    "action": "BUY",
-    "side": "Dplus KIA",
-    "price": 0.42,
-    "usd": 555,
-    "ts": 1788673326
-   },
-   {
-    "wallet": "0xac9b386454ed02ef205e0ebd189d8864fd02d4c5",
-    "action": "BUY",
-    "side": "T1",
-    "price": 0.59,
-    "usd": 590,
-    "ts": 1788673275
-   },
-   {
-    "wallet": "0x84cfffc3f16dcc353094de30d4a45226eccd2f63",
-    "action": "BUY",
-    "side": "T1",
-    "price": 0.59,
-    "usd": 1522,
-    "ts": 1788672243
    }
   ]
  },
  "val-ns1-ge1-2026-09-06": {
   "shares": {
-   "Nongshim RedForce": 9642.05417735,
-   "Global Esports": 4857.276813955002
+   "Nongshim RedForce": 10615.88734695,
+   "Global Esports": 5111.356050450002
   },
   "prices": {
-   "Nongshim RedForce": 0.665,
-   "Global Esports": 0.335
+   "Nongshim RedForce": 0.675,
+   "Global Esports": 0.325
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -206197,35 +206201,35 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 16725,
+  "totalUsd": 16878,
   "whales": [
    {
     "wallet": "0x7e5972bfc25819775ee5a9d4f191919375487b8b",
     "side": "Nongshim RedForce",
-    "usd": 2385,
+    "usd": 2421,
     "avgPrice": 0.6555
    },
    {
     "wallet": "0xee8e24c26b7d591a543972fd7ac424d8a8310a7b",
     "side": "Nongshim RedForce",
-    "usd": 1622,
+    "usd": 1646,
     "avgPrice": 0.64
    },
    {
     "wallet": "0xbad26fe5458e6219cec3e40272760e275e835296",
     "side": "Global Esports",
-    "usd": 1302,
+    "usd": 1264,
     "avgPrice": 0.3428
    },
    {
     "wallet": "0x70dbec635412c1568b36174b039f621bcc20f73f",
     "side": "Nongshim RedForce",
-    "usd": 1191,
+    "usd": 1209,
     "avgPrice": 0.6698
    }
   ],
-  "hoursToKickoff": 2.01,
-  "capturedAt": "2026-09-06T06:02:12.558764+00:00",
+  "hoursToKickoff": 1.51,
+  "capturedAt": "2026-09-06T06:32:12.754154+00:00",
   "cond": "0x6c7d87879fcb5ab5dacfb539d5597b67e1d783167b2ad9063ba072bd1275db6f",
   "frage": "Valorant: Nongshim RedForce vs Global Esports (BO5) - VCT Pacific Playoffs",
   "tokens": {
@@ -206234,64 +206238,72 @@
   },
   "book": {
    "side": "Nongshim RedForce",
-   "bid": 0.66,
-   "ask": 0.67,
+   "bid": 0.67,
+   "ask": 0.68,
    "spreadC": 1.0,
-   "spreadPct": 1.49,
+   "spreadPct": 1.47,
    "bids": [
     [
+     0.67,
+     473
+    ],
+    [
      0.66,
-     15
+     2153
     ],
     [
      0.65,
-     4369
+     3677
     ],
     [
      0.64,
-     3124
+     7044
     ],
     [
      0.63,
-     7409
+     4798
     ],
     [
      0.62,
-     5114
-    ],
-    [
-     0.56,
-     18
+     2539
     ]
    ],
    "asks": [
     [
-     0.67,
-     448
-    ],
-    [
      0.68,
-     2992
+     982
     ],
     [
      0.69,
-     2461
+     3872
     ],
     [
      0.7,
-     2528
+     2165
     ],
     [
      0.71,
-     30
+     2830
     ],
     [
      0.72,
-     1291
+     26
+    ],
+    [
+     0.73,
+     2188
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x85a938e5d8f59a9324a41eee4a9325ba2d5a4e21",
+    "action": "BUY",
+    "side": "Nongshim RedForce",
+    "price": 0.6783,
+    "usd": 757,
+    "ts": 1788675823
+   },
    {
     "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
     "action": "BUY",
@@ -206347,14 +206359,495 @@
     "price": 0.65,
     "usd": 500,
     "ts": 1788653635
+   }
+  ]
+ },
+ "lol-nip-lgd-2026-09-06": {
+  "shares": {
+   "Ninjas in Pyjamas": 61461.27947750003,
+   "LGD Gaming": 35328.13945485998
+  },
+  "prices": {
+   "Ninjas in Pyjamas": 0.635,
+   "LGD Gaming": 0.365
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 94649,
+  "whales": [
+   {
+    "wallet": "0xb99c7db4da4774477ee0207bf0755a3cb7677e96",
+    "side": "Ninjas in Pyjamas",
+    "usd": 14935,
+    "avgPrice": 0.64
+   },
+   {
+    "wallet": "0xe3763d38ba82a745900800ec11af21128f0e5149",
+    "side": "LGD Gaming",
+    "usd": 14600,
+    "avgPrice": 0.3649
    },
    {
     "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
+    "side": "Ninjas in Pyjamas",
+    "usd": 12425,
+    "avgPrice": 0.631
+   },
+   {
+    "wallet": "0x052cf003fa361dbb055f0c22c6842dc34f506762",
+    "side": "Ninjas in Pyjamas",
+    "usd": 4922,
+    "avgPrice": 0.6399
+   }
+  ],
+  "hoursToKickoff": 2.51,
+  "capturedAt": "2026-09-06T06:32:12.754154+00:00",
+  "cond": "0xe17d15ded77da56cf938cea59b06f45763e293797bf1850e09819c3a10ee7824",
+  "frage": "LoL: Ninjas in Pyjamas vs LGD Gaming (BO5) - LPL Playoffs",
+  "tokens": {
+   "Ninjas in Pyjamas": "20859581804759845678913966870704267539965185282824351457602954182729543078070",
+   "LGD Gaming": "39637948079812433993991074774778554016042559544016671570976968184623100626020"
+  },
+  "book": {
+   "side": "Ninjas in Pyjamas",
+   "bid": 0.63,
+   "ask": 0.64,
+   "spreadC": 1.0,
+   "spreadPct": 1.56,
+   "bids": [
+    [
+     0.63,
+     143474
+    ],
+    [
+     0.62,
+     32682
+    ],
+    [
+     0.61,
+     6541
+    ],
+    [
+     0.6,
+     5350
+    ],
+    [
+     0.59,
+     2040
+    ],
+    [
+     0.58,
+     1100
+    ]
+   ],
+   "asks": [
+    [
+     0.64,
+     6243
+    ],
+    [
+     0.65,
+     7689
+    ],
+    [
+     0.66,
+     7778
+    ],
+    [
+     0.67,
+     8906
+    ],
+    [
+     0.68,
+     13375
+    ],
+    [
+     0.69,
+     4992
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x052cf003fa361dbb055f0c22c6842dc34f506762",
     "action": "BUY",
-    "side": "Nongshim RedForce",
-    "price": 0.65,
+    "side": "Ninjas in Pyjamas",
+    "price": 0.64,
+    "usd": 4961,
+    "ts": 1788675000
+   },
+   {
+    "wallet": "0xe49d00fc3a7cbc329012ab6ee8824db09340cc93",
+    "action": "BUY",
+    "side": "Ninjas in Pyjamas",
+    "price": 0.64,
+    "usd": 1369,
+    "ts": 1788674574
+   },
+   {
+    "wallet": "0x746295855be6f49fe2da2accd69ea34b3cf23ac3",
+    "action": "BUY",
+    "side": "Ninjas in Pyjamas",
+    "price": 0.64,
     "usd": 300,
-    "ts": 1788652992
+    "ts": 1788674032
+   },
+   {
+    "wallet": "0x746295855be6f49fe2da2accd69ea34b3cf23ac3",
+    "action": "BUY",
+    "side": "Ninjas in Pyjamas",
+    "price": 0.64,
+    "usd": 300,
+    "ts": 1788674028
+   },
+   {
+    "wallet": "0x746295855be6f49fe2da2accd69ea34b3cf23ac3",
+    "action": "BUY",
+    "side": "Ninjas in Pyjamas",
+    "price": 0.64,
+    "usd": 300,
+    "ts": 1788674022
+   },
+   {
+    "wallet": "0x746295855be6f49fe2da2accd69ea34b3cf23ac3",
+    "action": "BUY",
+    "side": "Ninjas in Pyjamas",
+    "price": 0.64,
+    "usd": 300,
+    "ts": 1788674014
+   },
+   {
+    "wallet": "0x746295855be6f49fe2da2accd69ea34b3cf23ac3",
+    "action": "BUY",
+    "side": "Ninjas in Pyjamas",
+    "price": 0.64,
+    "usd": 300,
+    "ts": 1788674005
+   },
+   {
+    "wallet": "0x746295855be6f49fe2da2accd69ea34b3cf23ac3",
+    "action": "BUY",
+    "side": "Ninjas in Pyjamas",
+    "price": 0.64,
+    "usd": 300,
+    "ts": 1788673999
+   }
+  ]
+ },
+ "cs2-fnc-nip-2026-09-06": {
+  "shares": {
+   "fnatic": 16089.967129475013,
+   "NIP": 21768.615179649998
+  },
+  "prices": {
+   "fnatic": 0.425,
+   "NIP": 0.575
+  },
+  "splitGuete": {
+   "art": "preis_echo",
+   "trunc": false
+  },
+  "league": "ESPORTS",
+  "sport": "E-Sport",
+  "totalUsd": 37173,
+  "whales": [
+   {
+    "wallet": "0x30c7ac0158499ddc6761047f7f69bcf7d036ac3b",
+    "side": "NIP",
+    "usd": 8659,
+    "avgPrice": 0.5699
+   },
+   {
+    "wallet": "0xbca08c1bc204a34f2fddbe47b438b9bd42ac9705",
+    "side": "fnatic",
+    "usd": 3833,
+    "avgPrice": 0.4324
+   },
+   {
+    "wallet": "0x8e74984fb998be82444627906740dc1a19c35972",
+    "side": "NIP",
+    "usd": 2672,
+    "avgPrice": 0.5599
+   },
+   {
+    "wallet": "0xda3407bec4c1f26d40afceb442de75b8260b01a8",
+    "side": "fnatic",
+    "usd": 2357,
+    "avgPrice": 0.4442
+   }
+  ],
+  "hoursToKickoff": 2.51,
+  "capturedAt": "2026-09-06T06:32:12.754154+00:00",
+  "cond": "0xdca6972f2efa5ac11c657f096dc914ac79788803619e7813959d7e6bfbc13d5b",
+  "frage": "Counter-Strike: fnatic vs NIP (BO3) - Stake Ranked Episode 4: Closed Qualifier Playoffs",
+  "tokens": {
+   "fnatic": "103734937243840687151985254394430526336617948205313648566032676819033567415329",
+   "NIP": "54013037303037711431717053128146504718790422951372144258277759197003699397389"
+  },
+  "book": {
+   "side": "NIP",
+   "bid": 0.57,
+   "ask": 0.58,
+   "spreadC": 1.0,
+   "spreadPct": 1.72,
+   "bids": [
+    [
+     0.57,
+     51583
+    ],
+    [
+     0.56,
+     38440
+    ],
+    [
+     0.55,
+     15309
+    ],
+    [
+     0.54,
+     35771
+    ],
+    [
+     0.53,
+     3010
+    ],
+    [
+     0.52,
+     2300
+    ]
+   ],
+   "asks": [
+    [
+     0.58,
+     3846
+    ],
+    [
+     0.59,
+     2586
+    ],
+    [
+     0.6,
+     5108
+    ],
+    [
+     0.61,
+     50340
+    ],
+    [
+     0.62,
+     1269
+    ],
+    [
+     0.64,
+     176
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "fnatic",
+    "price": 0.43,
+    "usd": 372,
+    "ts": 1788675934
+   },
+   {
+    "wallet": "0xbe6c717bb08e69c2b646d3a6fe8caaa874e3a2c3",
+    "action": "BUY",
+    "side": "fnatic",
+    "price": 0.43,
+    "usd": 519,
+    "ts": 1788674124
+   },
+   {
+    "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
+    "action": "BUY",
+    "side": "NIP",
+    "price": 0.58,
+    "usd": 500,
+    "ts": 1788670957
+   },
+   {
+    "wallet": "0xbca08c1bc204a34f2fddbe47b438b9bd42ac9705",
+    "action": "BUY",
+    "side": "fnatic",
+    "price": 0.43,
+    "usd": 300,
+    "ts": 1788670501
+   },
+   {
+    "wallet": "0x6e5499610351827c22d83a6570b738e40a2f511e",
+    "action": "BUY",
+    "side": "fnatic",
+    "price": 0.43,
+    "usd": 334,
+    "ts": 1788670495
+   },
+   {
+    "wallet": "0xbca08c1bc204a34f2fddbe47b438b9bd42ac9705",
+    "action": "BUY",
+    "side": "fnatic",
+    "price": 0.43,
+    "usd": 300,
+    "ts": 1788670488
+   }
+  ]
+ },
+ "jap-ngr-zel-2026-09-06": {
+  "shares": {
+   "Nagoya Grampus": 177.177307685,
+   "Draw (Nagoya Grampus vs. FC Machida Zelvia)": 45.146213474999996,
+   "FC Machida Zelvia": 3660.365389444999
+  },
+  "prices": {
+   "Nagoya Grampus": 0.295,
+   "Draw (Nagoya Grampus vs. FC Machida Zelvia)": 0.275,
+   "FC Machida Zelvia": 0.445
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "SOCCER",
+  "sport": "Fußball",
+  "totalUsd": 8543,
+  "whales": [
+   {
+    "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
+    "side": "FC Machida Zelvia",
+    "usd": 1778,
+    "avgPrice": 0.4506
+   },
+   {
+    "wallet": "0xa901ef6add1ee94d41c54100fa280f9d14b4ec53",
+    "side": "FC Machida Zelvia",
+    "usd": 585,
+    "avgPrice": 0.4399
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "FC Machida Zelvia",
+    "usd": 571,
+    "avgPrice": 0.44
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "side": "FC Machida Zelvia",
+    "usd": 416,
+    "avgPrice": 0.4491
+   }
+  ],
+  "hoursToKickoff": 2.51,
+  "capturedAt": "2026-09-06T06:32:12.754154+00:00",
+  "tokens": {
+   "Nagoya Grampus": "33721013116823827199976672553247202754254155724660831110674123942232266087583",
+   "Draw (Nagoya Grampus vs. FC Machida Zelvia)": "1747715880912532242908997782093345274969409864633283808388014543686160020174",
+   "FC Machida Zelvia": "52848652500854408218178760739943163085884416076044810052279720544068982199951"
+  },
+  "book": {
+   "side": "FC Machida Zelvia",
+   "bid": 0.44,
+   "ask": 0.45,
+   "spreadC": 1.0,
+   "spreadPct": 2.22,
+   "bids": [
+    [
+     0.44,
+     11425
+    ],
+    [
+     0.43,
+     5672
+    ],
+    [
+     0.42,
+     10608
+    ],
+    [
+     0.41,
+     3066
+    ],
+    [
+     0.4,
+     2367
+    ],
+    [
+     0.39,
+     1840
+    ]
+   ],
+   "asks": [
+    [
+     0.45,
+     2184
+    ],
+    [
+     0.46,
+     11686
+    ],
+    [
+     0.47,
+     5258
+    ],
+    [
+     0.48,
+     6342
+    ],
+    [
+     0.49,
+     5009
+    ],
+    [
+     0.5,
+     3098
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.4537,
+    "usd": 300,
+    "ts": 1788671209
+   },
+   {
+    "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.45,
+    "usd": 1500,
+    "ts": 1788671202
+   },
+   {
+    "wallet": "0xe9076a87c5ed90ef16e6fe6529c943baeca0cff6",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.4493,
+    "usd": 381,
+    "ts": 1788670921
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.44,
+    "usd": 565,
+    "ts": 1788667669
+   },
+   {
+    "wallet": "0xa901ef6add1ee94d41c54100fa280f9d14b4ec53",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.44,
+    "usd": 578,
+    "ts": 1788666822
    }
   ]
  }
