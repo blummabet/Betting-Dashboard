@@ -422,3 +422,40 @@ test('KO-Card ist reich: Pick + Conviction + Signal-Grid + Form', () => {
   assert.match(html, /Form letzten 5/, 'Form-Block muss da sein');
   assert.match(html, /Elfenbeinküste/);
 });
+
+// ── 06.09.2026 (Cards-Check) — die Ueberschrift behauptete Edge, den der Erzeuger verneint ──
+// „🎯 Sieg-Pick mit Edge" stand ueber einem Pick, den `matches/data/*.json` als
+// `verdict: "ABWÄGEN"` mit `edgePP: -2` fuehrte. Die Ueberschrift kam ausschliesslich aus
+// Markt-String und Elo — `verdict` und `edgePP` kamen darin nicht vor.
+//
+// Gemessen ueber 731 Match-Dateien: von den Picks mit Edge-Wert haben **430 einen Edge <= 0
+// und nur 41 einen ueber null**; Verdicts 289 ABWÄGEN / 153 NOBET / 27 BET. „mit Edge" stand
+// also auf fast jeder Karte, und in neun von zehn Faellen widersprach die Zahl darunter.
+const CODE = readFileSync(WM_RENDERER, 'utf8');
+
+test('die Edge-Behauptung haengt am Urteil des Erzeugers, nicht am Markt-String', () => {
+  const nurCode = CODE.split('\n').filter((z) => !/^\s*(\/\/|\*|\/\*)/.test(z)).join('\n');
+  assert.ok(!/label: 'Sieg-Pick mit Edge'/.test(nurCode),
+    'die feste Behauptung „Sieg-Pick mit Edge" darf nicht mehr im Code stehen');
+  assert.ok(!/label: 'Pick mit Edge'/.test(nurCode),
+    'die feste Behauptung „Pick mit Edge" darf nicht mehr im Code stehen');
+  assert.match(nurCode, /_hatEdge\s*=\s*\(_v === 'BET'\)/,
+    'Edge nur, wenn der Erzeuger BET sagt');
+  assert.match(nurCode, /typeof _e === 'number' && _e > 0/,
+    'und nur bei positivem edgePP');
+});
+
+test('ohne edgePP wird weder Edge behauptet noch eine Zahl erfunden', () => {
+  // Kein Urteil ist etwas anderes als ein gemessenes Nein: 674 der 731 Dateien tragen gar
+  // keinen edgePP — dort darf schlicht nichts dranstehen.
+  const nurCode = CODE.split('\n').filter((z) => !/^\s*(\/\/|\*|\/\*)/.test(z)).join('\n');
+  assert.match(nurCode, /_edgeTxt = _hatEdge \? ' mit Edge'/);
+  assert.match(nurCode, /: \(typeof _e === 'number' \? ' · Edge '/,
+    'ein vorhandener negativer Edge wird BENANNT, nicht verschwiegen');
+  assert.match(nurCode, /: ''\)/, 'ohne edgePP bleibt das Label ohne Zusatz');
+});
+
+test('Kategorie-Labels bleiben unberuehrt — sie beschreiben den Markt, nicht den Edge', () => {
+  assert.match(CODE, /label: 'Tor-Fest erwartet'/);
+  assert.match(CODE, /label: 'Defensiv-Schlacht'/);
+});

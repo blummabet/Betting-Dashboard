@@ -1702,6 +1702,46 @@ Sorte Beruhigung, die den Fund ein halbes Jahr verzoegert hat.
 
 ---
 
+### 06.09.2026 — Cards-Check: „mit Edge" stand auf fast jeder Karte
+
+Ueber „Torino v AS Roma · Auswärtssieg @1.61" stand **„🎯 Sieg-Pick mit Edge"**. Im Artefakt
+steht derselbe Pick als `verdict: "ABWÄGEN"`, `modelOdds: 1.603`, **`edgePP: -2`** — und der
+zweite Pick derselben Karte, mit **identischem** Verdict und Edge, wurde als
+„ABWÄGEN · −2pp" gerendert. Zwei gleiche Zahlen, zwei verschiedene Auskuenfte.
+
+Ursache: die Ueberschrift wurde ausschliesslich aus **Markt-String und Elo** gewaehlt.
+`verdict` und `edgePP` kamen in der Funktion nicht vor. „mit Edge" war ein Kategorie-Label,
+kein Urteil — Bug-Klasse 1 aus Abschnitt 7, auf der ersten Zeile jeder Karte.
+
+Gemessen ueber **731 Match-Dateien**:
+
+| | |
+|---|---|
+| Picks mit `edgePP <= 0` | **430** |
+| Picks mit `edgePP > 0` | **41** |
+| Verdicts | 289 ABWÄGEN · 153 NOBET · **27 BET** |
+
+Neun von zehn Picks mit Edge-Wert liegen also bei null oder darunter — und alle trugen „mit
+Edge" in der Ueberschrift.
+
+Jetzt haengt die Behauptung am Urteil des Erzeugers: `BET` **und** `edgePP > 0` ergibt
+„mit Edge"; ein vorhandener negativer Edge wird **benannt** („Sieg-Pick · Edge −2pp") statt
+verschwiegen; ohne `edgePP` (674 der 731 Dateien) steht gar nichts dran — kein Urteil ist etwas
+anderes als ein gemessenes Nein. Kategorie-Labels („Tor-Fest erwartet", „Defensiv-Schlacht")
+beschreiben den MARKT und bleiben unveraendert.
+
+**Nicht bestaetigt** (gemessen, nicht vermutet): 76 Paarungen liegen in `matches/data/` unter
+mehreren Daten (z. B. Torino-Roma am 13. UND 14.09.). **Keine** davon steht doppelt im Index —
+der Renderer laedt nur indizierte Slugs. Altlast auf der Platte, kein Anzeigefehler.
+
+**Offen:** die Prozentleiste der Torino-Karte zeigte 20,7 / 25,3 / 54 %, das frische Artefakt
+(11:45) fuehrt 16,2 / 24,0 / 59,9 % — und die Datei vom 13.09. 17,3 / 25,5 / 57,2 %. Keine der
+beiden passt. Wahrscheinlichste Erklaerung: die eingefuegte Ansicht ist aelter als der
+11:45-Lauf (dazu passt, dass dieselben Picks dort noch stark bewertet waren). Nicht bewiesen —
+beim naechsten Board mit frischem Stand nachpruefen.
+
+---
+
 ## 8. Harte Arbeitsregeln
 
 - **Push nur über GitHub Desktop**, nie CLI.
