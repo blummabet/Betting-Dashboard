@@ -1,24 +1,24 @@
 {
- "n": 120,
+ "n": 123,
  "minOdds": 1.35,
- "moneyHitRate": 0.3,
- "priceHitRate": 0.342,
- "brierMoney": 0.9828,
- "brierPrice": 0.7343,
+ "moneyHitRate": 0.293,
+ "priceHitRate": 0.341,
+ "brierMoney": 0.9957,
+ "brierPrice": 0.7354,
  "disagree": {
-  "n": 34,
+  "n": 35,
   "moneyWon": 1,
-  "priceWon": 6,
+  "priceWon": 7,
   "neither": 27
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
  "byLeague": [],
  "guete": {
-  "belastbar": 120,
-  "preis_echo": 264,
-  "abgeschnitten": 19,
-  "unbekannt": 428,
+  "belastbar": 123,
+  "preis_echo": 267,
+  "abgeschnitten": 21,
+  "unbekannt": 426,
   "leer": 0
  },
  "rows": [
@@ -63,7 +63,7 @@
    "league": "EPL",
    "winner": "Draw (Nottingham Forest FC vs. Tottenham Hotspur FC)",
    "moneyFav": "Tottenham Hotspur FC",
-   "priceFav": "Tottenham Hotspur FC",
+   "priceFav": "Nottingham Forest FC",
    "moneyShare": 0.584,
    "priceProb": 0.357,
    "moneyOK": false,
@@ -455,6 +455,18 @@
    "totalUsd": 76302
   },
   {
+   "key": "mls-lag-ner-2026-09-05",
+   "league": "MLS",
+   "winner": "Los Angeles Galaxy",
+   "moneyFav": "New England Revolution",
+   "priceFav": "New England Revolution",
+   "moneyShare": 0.918,
+   "priceProb": 0.377,
+   "moneyOK": false,
+   "priceOK": false,
+   "totalUsd": 76093
+  },
+  {
    "key": "epl-hul-ast-2026-09-05-exact-score",
    "league": "EPL",
    "winner": "Hull City AFC 0 - 0 Aston Villa FC",
@@ -489,37 +501,25 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 62124
-  },
-  {
-   "key": "epl-new-bou-2026-09-05-exact-score",
-   "league": "EPL",
-   "winner": "Newcastle United FC 2 - 2 AFC Bournemouth",
-   "moneyFav": "Newcastle United FC 1 - 2 AFC Bournemouth",
-   "priceFav": "Any Other Score",
-   "moneyShare": 0.205,
-   "priceProb": 0.13,
-   "moneyOK": false,
-   "priceOK": false,
-   "totalUsd": 58553
   }
  ],
- "generatedAt": "2026-09-06T04:02:38.676342+00:00",
+ "generatedAt": "2026-09-06T04:31:08.937517+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 422,
   "nfl": 800,
-  "mlb": 706,
+  "mlb": 702,
   "nhl": 487,
-  "mls": 695,
-  "epl": 542,
+  "mls": 673,
+  "epl": 567,
   "soccer": 800,
   "tennis": 800,
   "ucl": 536,
   "la-liga": 648,
-  "bundesliga": 504,
+  "bundesliga": 529,
   "serie-a": 51,
-  "ligue-1": 544,
+  "ligue-1": 569,
   "primeira-liga": 532,
   "brazil-serie-a": 546,
   "brasileirao": 0,
@@ -541,13 +541,13 @@
   "austria-bundesliga": 249,
   "brazil-serie-b": 4,
   "bulgaria-parva-liga": 318,
-  "bundesliga-2": 502,
+  "bundesliga-2": 522,
   "champions-league": 298,
   "champions-league-final": 12,
   "chinese-super-league": 455,
   "czechia-fortuna-liga": 9,
   "denmark-superliga": 488,
-  "efl-championship": 588,
+  "efl-championship": 628,
   "english-premier-league": 2,
   "europa-conference-league": 400,
   "europa-league": 177,
@@ -563,14 +563,14 @@
   "nations-league": 25,
   "norway-eliteserien": 503,
   "poland-ekstraklasa": 391,
-  "premier-league": 549,
+  "premier-league": 558,
   "saudi-professional-league": 534,
   "scotland-league-cup": 172,
   "scottish-premiership": 454,
   "serbian-superliga": 324,
   "serie-b": 527,
   "slovenia-prvaliga": 220,
-  "sweden-allsvenskan": 449,
+  "sweden-allsvenskan": 455,
   "switzerland-super-league": 276,
   "uefa-champions-league": 26,
   "uefa-conference-league": 18,
@@ -583,71 +583,76 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 407
+  "sweepAdded": 408
  },
  "vorStats": {
-  "kandidaten": 5,
+  "kandidaten": 7,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 5,
-  "calls": 5
+  "mitAnteilen": 7,
+  "calls": 7
  },
  "whaleAusserhalb": {
   "fifwc": {
    "n": 1368,
-   "usd": 25071762,
-   "beispiel": "fifwc-fra-eng-2026-07-18-more-markets"
+   "usd": 25410632,
+   "beispiel": "fifwc-esp-cvi-2026-06-15-more-markets"
   },
   "nba": {
-   "n": 186,
-   "usd": 3139948,
-   "beispiel": "nba-sas-nyk-2026-06-10"
+   "n": 231,
+   "usd": 3559128,
+   "beispiel": "nba-sas-okc-2026-05-18"
   },
   "ecs": {
-   "n": 5,
-   "usd": 889027,
+   "n": 4,
+   "usd": 881566,
    "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
+  },
+  "nhl": {
+   "n": 49,
+   "usd": 485488,
+   "beispiel": "nhl-phi-car-2026-05-02"
   },
   "republican": {
    "n": 6,
    "usd": 470811,
    "beispiel": "republican-presidential-nominee-2028"
   },
-  "fed": {
-   "n": 19,
-   "usd": 370312,
-   "beispiel": "fed-decision-in-october-20260617190323537"
-  },
   "cbb": {
-   "n": 99,
-   "usd": 290027,
+   "n": 23,
+   "usd": 265565,
    "beispiel": "cbb-uconn-mich-2026-04-06"
   },
-  "nhl": {
-   "n": 23,
-   "usd": 276380,
-   "beispiel": "nhl-las-car-2026-06-04"
-  },
   "will": {
-   "n": 7,
-   "usd": 248512,
+   "n": 6,
+   "usd": 247417,
    "beispiel": "will-the-supreme-court-rule-on-trumps-tarriffs-by"
   },
-  "fif": {
-   "n": 59,
-   "usd": 240544,
-   "beispiel": "fif-bra-egy-2026-06-06-more-markets"
-  },
   "2026": {
-   "n": 33,
-   "usd": 184337,
+   "n": 32,
+   "usd": 184634,
    "beispiel": "2026-mens-us-open-winner-tennis"
   },
+  "fif": {
+   "n": 32,
+   "usd": 178256,
+   "beispiel": "fif-bra-egy-2026-06-06-more-markets"
+  },
+  "fed": {
+   "n": 13,
+   "usd": 174126,
+   "beispiel": "fed-decision-in-october-20260617190323537"
+  },
   "clf": {
-   "n": 26,
-   "usd": 149644,
+   "n": 25,
+   "usd": 148307,
    "beispiel": "clf-jej-bmu-2026-08-04-more-markets"
+  },
+  "which": {
+   "n": 14,
+   "usd": 111045,
+   "beispiel": "which-party-will-win-the-senate-in-2026"
   },
   "us": {
    "n": 8,
@@ -655,29 +660,24 @@
    "beispiel": "us-strikes-iran-by"
   },
   "nbasl": {
-   "n": 2,
-   "usd": 100143,
+   "n": 1,
+   "usd": 97044,
    "beispiel": "nbasl-cle-nop-2026-07-15"
   },
   "presidential": {
    "n": 10,
-   "usd": 76627,
+   "usd": 76500,
    "beispiel": "presidential-election-winner-2028"
   },
   "democratic": {
    "n": 13,
-   "usd": 60147,
+   "usd": 60216,
    "beispiel": "democratic-presidential-nominee-2028"
   },
   "super": {
    "n": 14,
    "usd": 57397,
    "beispiel": "super-bowl-champion-2026-731"
-  },
-  "which": {
-   "n": 10,
-   "usd": 48982,
-   "beispiel": "which-party-will-win-the-senate-in-2026"
   },
   "world": {
    "n": 18,
@@ -689,10 +689,10 @@
    "usd": 43892,
    "beispiel": "clarity-act-signed-into-law-in-2026"
   },
-  "kbo": {
-   "n": 17,
-   "usd": 39436,
-   "beispiel": "kbo-lg-lot-2026-08-28"
+  "what": {
+   "n": 6,
+   "usd": 27117,
+   "beispiel": "what-iranian-demands-will-trump-agree-to-by-june-30"
   }
  }
 }
