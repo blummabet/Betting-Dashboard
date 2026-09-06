@@ -1,5 +1,5 @@
 {
-"generatedAt": "2026-09-06T18:54:18.290151+00:00",
+"generatedAt": "2026-09-06T19:05:45.621302+00:00",
 "byVerdict": {
 "konsens": {
 "n": 852,
@@ -34,20 +34,20 @@
 "clvLb": -25.0859
 },
 "teil": {
-"n": 15,
+"n": 16,
 "wins": 3,
-"hitRate": 0.2,
-"polyN": 13,
+"hitRate": 0.1875,
+"polyN": 14,
 "polyWins": 1,
-"polyHitRate": 0.0769,
-"pinnN": 15,
-"pinnHitRate": 0.2,
-"nRoi": 6,
+"polyHitRate": 0.0714,
+"pinnN": 16,
+"pinnHitRate": 0.1875,
+"nRoi": 7,
 "roi": -1.0,
 "roiLb": -1.0,
-"nClv": 6,
-"clv": -40.1,
-"clvLb": -58.9708
+"nClv": 7,
+"clv": -34.37,
+"clvLb": -52.8957
 }
 },
 "byLeague": {
@@ -101,6 +101,11 @@
 "wins": 17,
 "hitRate": 0.6071
 },
+"Italian Serie A": {
+"n": 27,
+"wins": 22,
+"hitRate": 0.8148
+},
 "Saudi Professional League": {
 "n": 27,
 "wins": 20,
@@ -110,11 +115,6 @@
 "n": 26,
 "wins": 18,
 "hitRate": 0.6923
-},
-"Italian Serie A": {
-"n": 26,
-"wins": 22,
-"hitRate": 0.8462
 },
 "Turkish Super League": {
 "n": 26,
@@ -595,15 +595,15 @@
 "clvLb": 9.1541
 },
 "weak": {
-"n": 453,
+"n": 454,
 "wins": 239,
-"hitRate": 0.5276,
-"nRoi": 97,
-"roi": -0.0213,
-"roiLb": -0.19,
-"nClv": 97,
-"clv": -0.97,
-"clvLb": -6.2944
+"hitRate": 0.5264,
+"nRoi": 98,
+"roi": -0.0313,
+"roiLb": -0.1991,
+"nClv": 98,
+"clv": -0.96,
+"clvLb": -6.2299
 }
 },
 "divergence": {
@@ -615,6 +615,25 @@
 "polyRate": 0.2536
 },
 "recent": [
+{
+"matchId": "35979393",
+"home": "Bologna",
+"away": "Sassuolo",
+"league": "Italian Serie A",
+"verdict": "teil",
+"moneySide": "away",
+"moneyName": "Sassuolo",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-09-06T16:00:00Z",
+"settledAt": "2026-09-06T19:05:45.421430+00:00"
+},
 {
 "matchId": "36015186",
 "home": "Trabzonspor",
@@ -1355,37 +1374,18 @@
 ],
 "kickoff": "2026-09-06T11:00:00Z",
 "settledAt": "2026-09-06T14:04:17.085520+00:00"
-},
-{
-"matchId": "36015871",
-"home": "Chongqing Tonglianglong",
-"away": "Shanghai Shenhua",
-"league": "Chinese Super League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Shanghai Shenhua",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-3
-],
-"kickoff": "2026-09-06T11:00:00Z",
-"settledAt": "2026-09-06T14:04:17.085520+00:00"
 }
 ],
 "global": {
-"n": 1182,
+"n": 1183,
 "wins": 815,
-"hitRate": 0.6895,
-"nRoi": 269,
-"roi": 0.1629,
-"roiLb": 0.0709,
-"nClv": 269,
-"clv": 8.23,
-"clvLb": 4.8299
+"hitRate": 0.6889,
+"nRoi": 270,
+"roi": 0.1586,
+"roiLb": 0.0667,
+"nClv": 270,
+"clv": 8.2,
+"clvLb": 4.8117
 },
-"pending": 13
+"pending": 12
 }
