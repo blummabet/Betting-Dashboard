@@ -1,6 +1,6 @@
 {
-"generatedAt": "2026-09-06T17:39:07.053820+00:00",
-"count": 12,
+"generatedAt": "2026-09-06T17:54:09.543390+00:00",
+"count": 14,
 "rows": [
 {
 "matchId": "35979393",
@@ -9,13 +9,13 @@
 "league": "Italian Serie A",
 "live": true,
 "kickoff": "2026-09-06T16:00:00Z",
-"verdict": "uneinig",
+"verdict": "teil",
 "betfair": {
-"side": "home",
-"name": "Bologna",
-"sharePct": 50,
-"eur": 1275478,
-"odd": 27.0
+"side": "away",
+"name": "Sassuolo",
+"sharePct": 43,
+"eur": 1633057,
+"odd": 21.0
 },
 "poly": {
 "side": "away",
@@ -26,9 +26,9 @@
 },
 "pinn": {
 "fav": "away",
-"home": 0.0865,
-"draw": 0.2664,
-"away": 0.6471
+"home": 0.0324,
+"draw": 0.1874,
+"away": 0.7802
 },
 "mmStrong": false,
 "polyGeld": true,
@@ -45,9 +45,9 @@
 "betfair": {
 "side": "home",
 "name": "Alaves",
-"sharePct": 83,
-"eur": 317100,
-"odd": 1.12
+"sharePct": 85,
+"eur": 373863,
+"odd": 1.08
 },
 "poly": {
 "side": "home",
@@ -56,10 +56,15 @@
 "usd": 135859,
 "src": "close"
 },
-"pinn": null,
+"pinn": {
+"fav": "home",
+"home": 0.6741,
+"draw": 0.2445,
+"away": 0.0814
+},
 "mmStrong": true,
 "polyGeld": true,
-"nSources": 2
+"nSources": 3
 },
 {
 "matchId": "35979386",
@@ -72,9 +77,9 @@
 "betfair": {
 "side": "home",
 "name": "Juventus",
-"sharePct": 68,
-"eur": 310273,
-"odd": 2.32
+"sharePct": 66,
+"eur": 335076,
+"odd": 2.3
 },
 "poly": {
 "side": "home",
@@ -85,9 +90,41 @@
 },
 "pinn": {
 "fav": "home",
-"home": 0.4362,
-"draw": 0.3059,
-"away": 0.258
+"home": 0.4303,
+"draw": 0.3097,
+"away": 0.26
+},
+"mmStrong": false,
+"polyGeld": true,
+"nSources": 3
+},
+{
+"matchId": "36004317",
+"home": "Malaga",
+"away": "Levante",
+"league": "Spanish La Liga",
+"live": true,
+"kickoff": "2026-09-06T16:30:00Z",
+"verdict": "uneinig",
+"betfair": {
+"side": "home",
+"name": "Malaga",
+"sharePct": 50,
+"eur": 264214,
+"odd": 3.6
+},
+"poly": {
+"side": "away",
+"name": "Levante UD",
+"sharePct": 51,
+"usd": 41048,
+"src": "close"
+},
+"pinn": {
+"fav": "draw",
+"home": 0.3418,
+"draw": 0.4281,
+"away": 0.2301
 },
 "mmStrong": false,
 "polyGeld": true,
@@ -105,7 +142,7 @@
 "side": "home",
 "name": "Trabzonspor",
 "sharePct": 90,
-"eur": 241060,
+"eur": 243517,
 "odd": 1.02
 },
 "poly": {
@@ -121,36 +158,38 @@
 "nSources": 1
 },
 {
-"matchId": "36004317",
-"home": "Malaga",
-"away": "Levante",
-"league": "Spanish La Liga",
+"matchId": "36020909",
+"home": "Anderlecht",
+"away": "Genk",
+"league": "Belgian Pro League",
 "live": true,
 "kickoff": "2026-09-06T16:30:00Z",
 "verdict": "uneinig",
 "betfair": {
 "side": "home",
-"name": "Malaga",
-"sharePct": 53,
-"eur": 224433,
-"odd": 2.82
+"name": "Anderlecht",
+"sharePct": 67,
+"eur": 241957,
+"odd": 2.98
 },
 "poly": {
-"side": "away",
-"name": "Levante UD",
-"sharePct": 51,
-"usd": 41048,
-"src": "close"
+"side": "home",
+"name": "RSC Anderlecht",
+"sharePct": 54,
+"usd": 12356,
+"src": "scan"
 },
 "pinn": {
 "fav": "draw",
-"home": 0.3653,
-"draw": 0.4042,
-"away": 0.2305
+"home": 0.3565,
+"draw": 0.418,
+"away": 0.2255
 },
 "mmStrong": false,
-"polyGeld": true,
-"nSources": 3
+"polyGeld": false,
+"nSources": 2,
+"polyPreisAbwPP": 18.4,
+"polyPreisWeit": true
 },
 {
 "matchId": "36012467",
@@ -164,8 +203,8 @@
 "side": "home",
 "name": "Kocaelispor",
 "sharePct": 65,
-"eur": 219459,
-"odd": 1.75
+"eur": 225857,
+"odd": 1.69
 },
 "poly": {
 "side": "home",
@@ -176,49 +215,15 @@
 },
 "pinn": {
 "fav": "home",
-"home": 0.5696,
-"draw": 0.2865,
-"away": 0.1439
+"home": 0.5911,
+"draw": 0.2848,
+"away": 0.1241
 },
 "mmStrong": false,
 "polyGeld": false,
 "nSources": 2,
-"polyPreisAbwPP": 19.0,
+"polyPreisAbwPP": 21.1,
 "polyPreisWeit": true
-},
-{
-"matchId": "36020909",
-"home": "Anderlecht",
-"away": "Genk",
-"league": "Belgian Pro League",
-"live": true,
-"kickoff": "2026-09-06T16:30:00Z",
-"verdict": "konsens",
-"betfair": {
-"side": "home",
-"name": "Anderlecht",
-"sharePct": 68,
-"eur": 202995,
-"odd": 2.56
-},
-"poly": {
-"side": "home",
-"name": "RSC Anderlecht",
-"sharePct": 54,
-"usd": 12356,
-"src": "scan"
-},
-"pinn": {
-"fav": "home",
-"home": 0.3918,
-"draw": 0.355,
-"away": 0.2532
-},
-"mmStrong": false,
-"polyGeld": false,
-"nSources": 2,
-"polyPreisAbwPP": 14.8,
-"polyPreisWeit": false
 },
 {
 "matchId": "36005350",
@@ -232,7 +237,7 @@
 "side": "home",
 "name": "Marseille",
 "sharePct": 78,
-"eur": 191174,
+"eur": 198894,
 "odd": 1.99
 },
 "poly": {
@@ -244,9 +249,9 @@
 },
 "pinn": {
 "fav": "home",
-"home": 0.5039,
-"draw": 0.2559,
-"away": 0.2401
+"home": 0.5035,
+"draw": 0.2524,
+"away": 0.2441
 },
 "mmStrong": true,
 "polyGeld": true,
@@ -263,9 +268,9 @@
 "betfair": {
 "side": "home",
 "name": "Espanyol",
-"sharePct": 55,
-"eur": 87044,
-"odd": 2.44
+"sharePct": 58,
+"eur": 101064,
+"odd": 2.42
 },
 "poly": {
 "side": "away",
@@ -295,9 +300,9 @@
 "betfair": {
 "side": "away",
 "name": "Flamengo",
-"sharePct": 84,
-"eur": 34962,
-"odd": 1.52
+"sharePct": 86,
+"eur": 47542,
+"odd": 1.51
 },
 "poly": {
 "side": "away",
@@ -328,7 +333,7 @@
 "side": "away",
 "name": "Real Sociedad",
 "sharePct": 66,
-"eur": 27055,
+"eur": 27190,
 "odd": 2.46
 },
 "poly": {
@@ -360,8 +365,8 @@
 "side": "home",
 "name": "Getafe",
 "sharePct": 73,
-"eur": 24372,
-"odd": 2.58
+"eur": 24443,
+"odd": 2.6
 },
 "poly": {
 "side": "home",
@@ -379,10 +384,76 @@
 "mmStrong": false,
 "polyGeld": true,
 "nSources": 3
+},
+{
+"matchId": "36035215",
+"home": "Al Dhafra",
+"away": "Al Wahda (Abu Dhabi)",
+"league": "UAE Arabian Gulf League",
+"live": true,
+"kickoff": "2026-09-06T16:15:00Z",
+"verdict": "konsens",
+"betfair": {
+"side": "away",
+"name": "Al Wahda (Abu Dhabi)",
+"sharePct": 70,
+"eur": 15331,
+"odd": 4.2
+},
+"poly": {
+"side": "away",
+"name": "Al Ittihad Saudi Club",
+"sharePct": 89,
+"usd": 25369,
+"src": "close"
+},
+"pinn": null,
+"mmStrong": true,
+"polyGeld": true,
+"nSources": 2
+},
+{
+"matchId": "36015947",
+"home": "Guimaraes",
+"away": "Casa Pia",
+"league": "Portuguese Primeira Liga",
+"live": true,
+"kickoff": "2026-09-06T17:00:00Z",
+"verdict": "no_anchor",
+"betfair": {
+"side": "home",
+"name": "Guimaraes",
+"sharePct": 76,
+"eur": 172920,
+"odd": 1.78
+},
+"poly": null,
+"pinn": null,
+"mmStrong": false,
+"polyGeld": false,
+"nSources": 1
 }
 ],
-"nameMatchMisses": 8,
+"nameMatchMisses": 11,
 "nameMatchMissList": [
+{
+"matchId": "35975881",
+"home": "Rosario Central",
+"away": "Newells",
+"league": "Argentinian Primera Division"
+},
+{
+"matchId": "35973450",
+"home": "Otelul Galati",
+"away": "Rapid Bucharest",
+"league": "Romanian Liga I"
+},
+{
+"matchId": "36017243",
+"home": "US Cremonese",
+"away": "Padova",
+"league": "Italian Serie B"
+},
 {
 "matchId": "36014906",
 "home": "Kristiansund",
@@ -408,16 +479,16 @@
 "league": "Spanish Segunda Division"
 },
 {
-"matchId": "36014642",
-"home": "Hradec Kralove",
-"away": "Sparta Prague",
-"league": "Czech 1 Liga"
+"matchId": "36025710",
+"home": "Qarabag FK",
+"away": "Araz Nakhchivan PFK",
+"league": "Azerbaijan Premier League"
 },
 {
-"matchId": "36014975",
-"home": "Sporting Cristal",
-"away": "CD Los Chankas",
-"league": "Peruvian Primera Division"
+"matchId": "36015048",
+"home": "Central Espanol",
+"away": "Defensor Sporting",
+"league": "Uruguayan Primera Division"
 },
 {
 "matchId": "36013995",
