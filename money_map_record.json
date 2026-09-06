@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-09-06T00:22:22.326412+00:00",
+"generatedAt": "2026-09-06T00:37:21.730792+00:00",
 "byVerdict": {
 "konsens": {
-"n": 799,
-"wins": 663,
-"hitRate": 0.8298,
-"polyN": 746,
-"polyWins": 581,
-"polyHitRate": 0.7788,
+"n": 801,
+"wins": 665,
+"hitRate": 0.8302,
+"polyN": 747,
+"polyWins": 582,
+"polyHitRate": 0.7791,
 "pinnN": 72,
 "pinnHitRate": 0.8333,
-"nRoi": 127,
-"roi": 0.4546,
-"roiLb": 0.3488,
-"nClv": 127,
-"clv": 21.26,
-"clvLb": 17.6122
+"nRoi": 129,
+"roi": 0.4684,
+"roiLb": 0.3629,
+"nClv": 129,
+"clv": 21.79,
+"clvLb": 18.1526
 },
 "uneinig": {
 "n": 293,
@@ -77,9 +77,9 @@
 "hitRate": 0.5
 },
 "Brazilian Serie A": {
-"n": 28,
-"wins": 19,
-"hitRate": 0.6786
+"n": 29,
+"wins": 20,
+"hitRate": 0.6897
 },
 "English Premier League": {
 "n": 28,
@@ -121,6 +121,11 @@
 "wins": 14,
 "hitRate": 0.6087
 },
+"Brazilian Serie B": {
+"n": 22,
+"wins": 14,
+"hitRate": 0.6364
+},
 "Dutch Eredivisie": {
 "n": 22,
 "wins": 17,
@@ -140,11 +145,6 @@
 "n": 22,
 "wins": 18,
 "hitRate": 0.8182
-},
-"Brazilian Serie B": {
-"n": 21,
-"wins": 13,
-"hitRate": 0.619
 },
 "South Korean K1 League": {
 "n": 20,
@@ -584,26 +584,26 @@
 },
 "byStrength": {
 "strong": {
-"n": 647,
-"wins": 520,
-"hitRate": 0.8037,
-"nRoi": 123,
-"roi": 0.2467,
-"roiLb": 0.1272,
-"nClv": 123,
-"clv": 12.67,
-"clvLb": 7.5777
+"n": 648,
+"wins": 521,
+"hitRate": 0.804,
+"nRoi": 124,
+"roi": 0.2572,
+"roiLb": 0.1373,
+"nClv": 124,
+"clv": 13.05,
+"clvLb": 7.9595
 },
 "weak": {
-"n": 426,
-"wins": 224,
-"hitRate": 0.5258,
-"nRoi": 70,
-"roi": -0.007,
-"roiLb": -0.2052,
-"nClv": 70,
-"clv": -0.8,
-"clvLb": -7.1669
+"n": 427,
+"wins": 225,
+"hitRate": 0.5269,
+"nRoi": 71,
+"roi": 0.0092,
+"roiLb": -0.188,
+"nClv": 71,
+"clv": -0.06,
+"clvLb": -6.4484
 }
 },
 "divergence": {
@@ -615,6 +615,44 @@
 "polyRate": 0.2703
 },
 "recent": [
+{
+"matchId": "35982846",
+"home": "Sao Paulo",
+"away": "Atletico MG",
+"league": "Brazilian Serie A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Sao Paulo",
+"polySide": null,
+"winner": "home",
+"moneyWin": true,
+"polyWin": null,
+"ftScore": [
+2,
+0
+],
+"kickoff": "2026-09-05T21:30:00Z",
+"settledAt": "2026-09-06T00:37:21.573760+00:00"
+},
+{
+"matchId": "36014793",
+"home": "Ceara SC Fortaleza",
+"away": "Sport Recife",
+"league": "Brazilian Serie B",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Ceara SC Fortaleza",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-09-05T21:30:00Z",
+"settledAt": "2026-09-06T00:37:21.573760+00:00"
+},
 {
 "matchId": "36018354",
 "home": "Boyaca Chico",
@@ -1336,56 +1374,18 @@
 ],
 "kickoff": "2026-09-05T14:00:00Z",
 "settledAt": "2026-09-05T17:08:47.673467+00:00"
-},
-{
-"matchId": "35999720",
-"home": "West Brom",
-"away": "Watford",
-"league": "English Sky Bet Championship",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "West Brom",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-1,
-0
-],
-"kickoff": "2026-09-05T14:00:00Z",
-"settledAt": "2026-09-05T17:08:47.673467+00:00"
-},
-{
-"matchId": "36003838",
-"home": "Athletic Bilbao",
-"away": "Atletico Madrid",
-"league": "Spanish La Liga",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Athletic Bilbao",
-"polySide": "away",
-"winner": "home",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-3,
-0
-],
-"kickoff": "2026-09-05T14:15:00Z",
-"settledAt": "2026-09-05T16:25:17.585921+00:00"
 }
 ],
 "global": {
-"n": 1106,
-"wins": 762,
-"hitRate": 0.689,
-"nRoi": 193,
-"roi": 0.1547,
-"roiLb": 0.0493,
-"nClv": 193,
-"clv": 7.79,
-"clvLb": 3.7377
+"n": 1108,
+"wins": 764,
+"hitRate": 0.6895,
+"nRoi": 195,
+"roi": 0.1669,
+"roiLb": 0.0615,
+"nClv": 195,
+"clv": 8.28,
+"clvLb": 4.2323
 },
-"pending": 19
+"pending": 17
 }
