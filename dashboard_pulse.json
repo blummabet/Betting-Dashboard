@@ -1,18 +1,23 @@
 {
 "_meta": {
 "description": "Übersicht-Puls: letzte 30 abgerechnete Picks (CLV/Trefferquote).",
-"generatedAt": "2026-09-06T11:47:15Z",
-"updated_at": "2026-09-06T11:47:15Z"
+"generatedAt": "2026-09-06T12:51:06Z",
+"updated_at": "2026-09-06T12:51:06Z"
 },
 "n": 30,
 "nClv": 28,
 "nGraded": 27,
-"avgClvPP": -3.27,
-"pctBeatClose": 14.3,
-"winPct": 66.7,
-"wins": 18,
-"losses": 9,
+"avgClvPP": -2.82,
+"pctBeatClose": 22.2,
+"winPct": 55.6,
+"wins": 15,
+"losses": 12,
 "series": [
+2.65,
+1.91,
+-0.58,
+-4.5,
+-4.35,
 -3.36,
 -4.36,
 1.51,
@@ -32,18 +37,11 @@
 -2.47,
 -10.29,
 -12.94,
--2.23,
--4.42,
--0.56,
--2.75,
--0.69,
--4.03,
--2.56,
--5.33,
-1.55
+-1.26,
+-1.01
 ],
 "oldest": "2026-09-05T10:38:49Z",
-"newest": "2026-09-06T11:47:15Z",
+"newest": "2026-09-06T12:51:03Z",
 "betfair": {
 "n": 14238,
 "hitPct": 52.6,
@@ -63,7 +61,7 @@
 "hitPct": 68.8,
 "konHitPct": 83.2,
 "konN": 814,
-"openN": 21
+"openN": 23
 },
 "strip": {
 "engine": "2026-09-01",
@@ -83,79 +81,79 @@
 }
 },
 "signalBoard": {
-"n": 139,
+"n": 133,
 "baseWinPct": 61,
 "minFire": 6,
 "rows": [
 {
 "name": "form_trend",
-"fire": 111,
-"supp": 91,
+"fire": 107,
+"supp": 88,
 "suppWinPct": 65,
-"opp": 20,
-"oppWinPct": 50,
-"edge": 15,
-"clvAvg": -2.05
-},
-{
-"name": "xg_strength",
-"fire": 85,
-"supp": 78,
-"suppWinPct": 69,
-"opp": 7,
-"oppWinPct": 43,
-"edge": 26,
-"clvAvg": -1.82
-},
-{
-"name": "h2h_pattern",
-"fire": 69,
-"supp": 59,
-"suppWinPct": 69,
-"opp": 10,
-"oppWinPct": 60,
-"edge": 9,
+"opp": 19,
+"oppWinPct": 53,
+"edge": 12,
 "clvAvg": -2.02
 },
 {
+"name": "xg_strength",
+"fire": 79,
+"supp": 72,
+"suppWinPct": 71,
+"opp": 7,
+"oppWinPct": 43,
+"edge": 28,
+"clvAvg": -1.72
+},
+{
 "name": "betfair_money",
-"fire": 69,
-"supp": 55,
-"suppWinPct": 65,
+"fire": 70,
+"supp": 56,
+"suppWinPct": 64,
 "opp": 14,
 "oppWinPct": 64,
-"edge": 1,
-"clvAvg": -2.23
+"edge": 0,
+"clvAvg": -2.22
+},
+{
+"name": "h2h_pattern",
+"fire": 65,
+"supp": 54,
+"suppWinPct": 69,
+"opp": 11,
+"oppWinPct": 64,
+"edge": 5,
+"clvAvg": -1.91
 },
 {
 "name": "transfer_shift",
 "fire": 62,
-"supp": 32,
-"suppWinPct": 62,
+"supp": 31,
+"suppWinPct": 61,
 "opp": 11,
 "oppWinPct": 64,
-"edge": -2,
-"clvAvg": -2.31
-},
-{
-"name": "chance_creation",
-"fire": 60,
-"supp": 42,
-"suppWinPct": 55,
-"opp": 18,
-"oppWinPct": 56,
-"edge": -1,
-"clvAvg": -2.57
+"edge": -3,
+"clvAvg": -2.22
 },
 {
 "name": "injury",
-"fire": 59,
-"supp": 36,
-"suppWinPct": 67,
+"fire": 57,
+"supp": 34,
+"suppWinPct": 68,
 "opp": 23,
-"oppWinPct": 61,
-"edge": 6,
-"clvAvg": -2.96
+"oppWinPct": 57,
+"edge": 11,
+"clvAvg": -2.82
+},
+{
+"name": "chance_creation",
+"fire": 53,
+"supp": 37,
+"suppWinPct": 51,
+"opp": 16,
+"oppWinPct": 56,
+"edge": -5,
+"clvAvg": -2.51
 },
 {
 "name": "form_rating",
@@ -183,9 +181,9 @@
 "supp": 27,
 "suppWinPct": 63,
 "opp": 19,
-"oppWinPct": 58,
-"edge": 5,
-"clvAvg": -1.79
+"oppWinPct": 53,
+"edge": 10,
+"clvAvg": -1.73
 },
 {
 "name": "move_following",
@@ -200,12 +198,12 @@
 {
 "name": "lead_lag_bias",
 "fire": 37,
-"supp": 28,
-"suppWinPct": 50,
-"opp": 9,
-"oppWinPct": 33,
-"edge": 17,
-"clvAvg": -1.02
+"supp": 29,
+"suppWinPct": 48,
+"opp": 8,
+"oppWinPct": 38,
+"edge": 10,
+"clvAvg": -0.9
 },
 {
 "name": "opener_move",
@@ -238,14 +236,14 @@
 "clvAvg": -2.07
 },
 {
-"name": "league_pressure",
-"fire": 18,
-"supp": 10,
-"suppWinPct": 40,
+"name": "freshness_leg",
+"fire": 16,
+"supp": 16,
+"suppWinPct": 62,
 "opp": 0,
 "oppWinPct": null,
 "edge": null,
-"clvAvg": -2.41
+"clvAvg": -2.28
 },
 {
 "name": "freshness_leg",
@@ -330,19 +328,19 @@
 ]
 },
 "nobetBoard": {
-"n": 202,
-"wins": 104,
+"n": 198,
+"wins": 101,
 "winPct": 51,
-"clvAvg": -4.92,
+"clvAvg": -4.83,
 "minFire": 6,
 "clvBand": 1.0,
 "rows": [
 {
 "reason": "Conviction zu dünn",
-"n": 150,
-"wins": 71,
-"winPct": 47,
-"clvAvg": -5.1
+"n": 144,
+"wins": 66,
+"winPct": 46,
+"clvAvg": -4.99
 },
 {
 "reason": "Engine gegen den Pick",
