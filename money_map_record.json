@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-09-06T21:54:37.206967+00:00",
+"generatedAt": "2026-09-06T22:09:32.861263+00:00",
 "byVerdict": {
 "konsens": {
-"n": 855,
-"wins": 713,
-"hitRate": 0.8339,
-"polyN": 801,
-"polyWins": 619,
-"polyHitRate": 0.7728,
+"n": 858,
+"wins": 716,
+"hitRate": 0.8345,
+"polyN": 804,
+"polyWins": 622,
+"polyHitRate": 0.7736,
 "pinnN": 89,
 "pinnHitRate": 0.8315,
-"nRoi": 183,
-"roi": 0.4788,
-"roiLb": 0.3867,
-"nClv": 183,
-"clv": 22.65,
-"clvLb": 19.7563
+"nRoi": 186,
+"roi": 0.474,
+"roiLb": 0.3832,
+"nClv": 186,
+"clv": 22.37,
+"clvLb": 19.5009
 },
 "uneinig": {
 "n": 318,
@@ -71,15 +71,20 @@
 "wins": 27,
 "hitRate": 0.6923
 },
+"Brazilian Serie A": {
+"n": 33,
+"wins": 24,
+"hitRate": 0.7273
+},
 "Argentinian Primera Division": {
 "n": 31,
 "wins": 16,
 "hitRate": 0.5161
 },
-"Brazilian Serie A": {
+"Spanish Segunda Division": {
 "n": 31,
-"wins": 22,
-"hitRate": 0.7097
+"wins": 23,
+"hitRate": 0.7419
 },
 "English Premier League": {
 "n": 30,
@@ -90,11 +95,6 @@
 "n": 30,
 "wins": 23,
 "hitRate": 0.7667
-},
-"Spanish Segunda Division": {
-"n": 30,
-"wins": 22,
-"hitRate": 0.7333
 },
 "Italian Serie A": {
 "n": 28,
@@ -584,15 +584,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 697,
-"wins": 559,
-"hitRate": 0.802,
-"nRoi": 173,
-"roi": 0.2734,
-"roiLb": 0.1674,
-"nClv": 173,
-"clv": 13.68,
-"clvLb": 9.4139
+"n": 700,
+"wins": 562,
+"hitRate": 0.8029,
+"nRoi": 176,
+"roi": 0.2719,
+"roiLb": 0.1676,
+"nClv": 176,
+"clv": 13.53,
+"clvLb": 9.3336
 },
 "weak": {
 "n": 459,
@@ -615,6 +615,63 @@
 "polyRate": 0.2509
 },
 "recent": [
+{
+"matchId": "35982837",
+"home": "Remo",
+"away": "Flamengo",
+"league": "Brazilian Serie A",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Flamengo",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-09-06T19:00:00Z",
+"settledAt": "2026-09-06T22:09:32.694795+00:00"
+},
+{
+"matchId": "35982847",
+"home": "Internacional",
+"away": "Santos",
+"league": "Brazilian Serie A",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Santos",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+3
+],
+"kickoff": "2026-09-06T19:00:00Z",
+"settledAt": "2026-09-06T22:09:32.694795+00:00"
+},
+{
+"matchId": "36014982",
+"home": "Almeria",
+"away": "Cadiz",
+"league": "Spanish Segunda Division",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Almeria",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+3,
+2
+],
+"kickoff": "2026-09-06T19:00:00Z",
+"settledAt": "2026-09-06T22:09:32.694795+00:00"
+},
 {
 "matchId": "35979386",
 "home": "Juventus",
@@ -1317,75 +1374,18 @@
 ],
 "kickoff": "2026-09-06T12:00:00Z",
 "settledAt": "2026-09-06T15:08:54.444460+00:00"
-},
-{
-"matchId": "36014991",
-"home": "Eibar",
-"away": "Granada",
-"league": "Spanish Segunda Division",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Eibar",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-0
-],
-"kickoff": "2026-09-06T12:00:00Z",
-"settledAt": "2026-09-06T15:08:54.444460+00:00"
-},
-{
-"matchId": "36017230",
-"home": "Modena",
-"away": "Calcio Avellino SSD",
-"league": "Italian Serie B",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Modena",
-"polySide": "home",
-"winner": "away",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-1
-],
-"kickoff": "2026-09-06T13:00:00Z",
-"settledAt": "2026-09-06T15:08:54.444460+00:00"
-},
-{
-"matchId": "36015028",
-"home": "Tianjin Jinmen Tiger FC",
-"away": "Zhejiang Greentown",
-"league": "Chinese Super League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Tianjin Jinmen Tiger FC",
-"polySide": "away",
-"winner": "home",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-09-06T12:00:00Z",
-"settledAt": "2026-09-06T15:08:54.444460+00:00"
 }
 ],
 "global": {
-"n": 1189,
-"wins": 818,
-"hitRate": 0.688,
-"nRoi": 276,
-"roi": 0.1525,
-"roiLb": 0.0615,
-"nClv": 276,
-"clv": 7.94,
-"clvLb": 4.5604
+"n": 1192,
+"wins": 821,
+"hitRate": 0.6888,
+"nRoi": 279,
+"roi": 0.1528,
+"roiLb": 0.0628,
+"nClv": 279,
+"clv": 7.91,
+"clvLb": 4.564
 },
-"pending": 14
+"pending": 11
 }
