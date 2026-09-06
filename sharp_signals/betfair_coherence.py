@@ -33,6 +33,47 @@ SCALE         = 22.0     # Edge 0.10 → 2.2pp
 MAX_PP        = 3.0      # Modell-Signal bewusst kleiner gedeckelt als Geld-Signal
 MIN_RUNGS     = 3        # so viele bepreiste Ü/U-Sprossen für einen belastbaren λ-Fit
 
+# ── Fit-Schranke (06.09.2026) ───────────────────────────────────────────────────────────────
+# Gemessen ueber die 119 Betfair-Matches mit Ue/U-Leiter:
+#
+#     r(RMSE des Poisson-Fits, groesste gemeldete "Kante") = +0,985
+#
+# Die "Kante" dieses Signals WAR zu 97 % der eigene Misfit. Wo unser Ein-Lambda-Poisson die
+# Leiter nicht beschreiben kann (Bundesliga 2, Segunda, Thai League 2: RMSE 6-14 pp), meldete
+# es Abweichungen von 12-29 pp — und `rmse` senkte nur die `confidence`, blockte nie den
+# `score`. Ein Modell, das den Markt nicht abbilden kann, sprach ihm Inkohaerenz zu.
+# Das ist Bug-Klasse 5: eine Metrik, die sich selbst beurteilt.
+#
+# Die Schranke faellt nicht nach Geschmack, sondern aus der Messung:
+#
+#     RMSE <= 0,02  ->  84 Spiele,  0 davon mit "Kante" >= 4 pp   (groesste 3,9 pp)
+#     RMSE <= 0,03  ->  90 Spiele,  5 davon
+#     RMSE <= 0,06  -> 106 Spiele, 21 davon
+#
+# Wo wir die Leiter beschreiben koennen, stimmen wir mit ihr ueberein. Das ist der eigentliche
+# Befund: **die Betfair-Tormarkt-Leiter ist auf unserer Aufloesung arbitragefrei.** Mit dieser
+# Schranke wird das Signal fast nie feuern — richtigerweise. Ein Signal, das schweigt, weil es
+# nachgesehen und nichts gefunden hat, ist etwas anderes als eines, das nicht hinsehen konnte.
+MAX_RMSE      = 0.02     # schlechter Fit -> KEIN Urteil (nicht: schwaches Urteil)
+MIN_REST_RUNGS = 4       # so viele ANDERE Sprossen muessen das Lambda tragen (s. unten)
+
+# ── Leave-one-out (06.09.2026) ──────────────────────────────────────────────────────────────
+# Die Schranke allein hatte einen zweiten Fehler in sich: sie fittet Lambda ueber ALLE Sprossen
+# — auch ueber die, gegen die anschliessend geprueft wird. Eine echte Fehlbepreisung zieht das
+# Lambda zu sich, verschlechtert den RMSE und blockt damit ihre eigene Entdeckung.
+#
+# Nachgerechnet an einer sauberen Poisson-Leiter mit EINER um 7 pp verschobenen Sprosse:
+#   voller Fit  -> RMSE 0,0249  ->  geblockt, Kante unsichtbar
+#   ohne die geprueigte Sprosse -> RMSE 0,00000, Kante +7,00 pp  ->  gefunden
+#
+# Deshalb: Lambda aus den ANDEREN Sprossen, dann die geprueigte dagegen halten. Am echten
+# Betfair-Bestand (633 Sprossen aus 150 Spielen): 234 mit zu grobem Rest-Fit aussortiert,
+# **8 echte Kanten >= 4 pp** uebrig — alle in duennen Ligen (Kasachstan, Litauen, Norwegen 2,
+# Estland), **keine einzige in den Top 5**. Der volle Fit fand null.
+#
+# MIN_REST_RUNGS = 4, weil ein Rest von genau MIN_RUNGS unterbestimmt ist: er saugt die
+# Verzerrung ins Lambda und meldet sie als Kante (an der alten Test-Fixture nachgewiesen).
+
 
 def _devig2(a, b) -> Optional[float]:
     if not (isinstance(a, (int, float)) and isinstance(b, (int, float)) and a > 1 and b > 1):
@@ -163,10 +204,28 @@ class BetfairCoherenceSignal(Signal):
         rungs = _ou_rungs(markets)
         if len(rungs) < MIN_RUNGS:
             return None
-        fit = _fit_lambda(rungs)
+
+        # Lambda OHNE die Sprosse, gegen die gleich geprueft wird (s. Kopf). Fuer BTTS gibt es
+        # keine eigene Sprosse — dort traegt die ganze Leiter.
+        _eigene = None
+        if tok in ("OVER", "UNDER"):
+            try:
+                _eigene = float(market_name.split("Over/Under ")[1].split(" Goals")[0])
+            except Exception:
+                return None
+        _basis = {l: p for l, p in rungs.items() if l != _eigene} if _eigene is not None else rungs
+        _min = MIN_REST_RUNGS if _eigene is not None else MIN_RUNGS
+        if len(_basis) < _min:
+            return None
+        fit = _fit_lambda(_basis)
         if not fit:
             return None
         lam, _sse, rmse = fit
+        # Ohne brauchbaren Fit hat das Modell keine Grundlage, den Markt falsch zu nennen.
+        # Vorher senkte ein schlechter Fit nur die confidence — der score lief voll durch,
+        # und die gemeldete "Kante" war zu 97 % der eigene Misfit (r = +0,985).
+        if not isinstance(rmse, (int, float)) or rmse > MAX_RMSE:
+            return None
 
         pick_mk = markets.get(market_name)
         if not pick_mk:
@@ -180,10 +239,7 @@ class BetfairCoherenceSignal(Signal):
         detail = ""
 
         if tok in ("OVER", "UNDER"):
-            try:
-                line = float(market_name.split("Over/Under ")[1].split(" Goals")[0])
-            except Exception:
-                return None
+            line = _eigene
             o = _runner(pick_mk, lambda s: s.startswith("Over"))
             u = _runner(pick_mk, lambda s: s.startswith("Under"))
             mkt_over = _devig2(o and o.get("odd"), u and u.get("odd"))
