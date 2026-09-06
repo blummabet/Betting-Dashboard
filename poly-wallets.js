@@ -2512,7 +2512,15 @@ function _pwComboFor(sigs){
 // Schnitt wird leicht aufgewertet, drunter leicht abgewertet. So bleibt der Durchschnitt stabil,
 // nur die Rangfolge schaerft sich. Kein Signal fliegt raus.
 function _pwComboBaselineRoi(){
-  const a=_pwCache&&_pwCache.shortlistTrack&&_pwCache.shortlistTrack.agg&&_pwCache.shortlistTrack.agg.all;
+  // 06.09.2026 (Lucas-Checkup): hier stand `agg.all` — 606 Plays, ROI −3,4 %. Darin stecken
+  // aber die 51 GESPERRTEN Plays (US-Sport/Kampfsport) mit −40,9 %, auf die nie gesetzt wird.
+  // Der Lerner mass also jeden Signal-Mix gegen eine Mittellinie, die von Wetten gedrueckt
+  // wird, die es im Produkt gar nicht gibt: ein Mix bei −2,7 % stand dadurch „0,7 pp ueber
+  // Schnitt" und bekam „keine Anpassung" statt einer Abwertung.
+  // Die ehrliche Mittellinie ist `bettable` (555 Plays, +0,05 %) — dieselbe Menge, die auch
+  // die Schlagzeile bildet. Fallback auf `all`, falls die Aufteilung mal fehlt.
+  const g=_pwCache&&_pwCache.shortlistTrack&&_pwCache.shortlistTrack.agg;
+  const a=(g&&g.bettable)||(g&&g.all);
   return (a&&typeof a.roi==='number')?a.roi:0;
 }
 // Kontinuierliche, symmetrische Konviktions-Kalibrierung (21.08.2026, Lucas: „automatisch mitlernen
@@ -2778,8 +2786,19 @@ function _pwTrackKpis(a, label, hint){
       +card('abgerechnet', a.n, '#e6edf3', a.wins+' Treffer')
       +card('Trefferquote', a.n?_pwtPct(a.hit):'—', a.n?(a.hit>=0.5?'#3fb950':'#f85149'):'#8b949e')
       +card('ROI', a.n?_pwtSig(Math.round(a.roi*1000)/10)+'%':'—', roiCol, 'fixer Einsatz $'+ (a.stake&&a.n?Math.round(a.stake/a.n):10))
+      // 06.09.2026 (Lucas-Checkup): direkt unter den Whale-Pushes steht „Die Spalte UG
+      // entscheidet, nicht ROI — ein ROI ohne Untergrenze ist ein Punktschätzer", und dort
+      // wird bei n=6 korrekt „kein Urteil" gemeldet. Die Zahlen, an denen wirklich etwas
+      // hängt (bespielbar n=555, public n=172), standen darüber OHNE jede Schranke — und der
+      // Anleitungstext knüpft die Auto-Bet-Empfehlung an „klar im Plus". Mit Schranke ist
+      // KEINE Menge auf diesem Board belegt: bespielbar UG −6,1 %, public UG −3,2 %.
+      +card('ROI-Untergrenze',
+            (a.roiUg==null?'kein Urteil':_pwtSig(Math.round(a.roiUg*1000)/10)+'%'),
+            (a.roiUg==null?'#8b949e':(a.belegt?'#3fb950':'#e3b341')),
+            (a.roiUg==null?'n&lt;30 — keine Schranke':(a.belegt?'belegt über null':'schließt die Null ein')))
       +card('Netto P&amp;L', a.n?_pwtUsd(a.pnl):'—', roiCol, 'Einsatz $'+Math.round(a.stake||0))
-      +card('Ø CLV', a.n?_pwtSig(a.clvAvg)+'pp':'—', clvCol, 'Einstieg→Schluss')
+      +card('Ø CLV', a.n?_pwtSig(a.clvAvg)+'pp':'—', clvCol,
+            (a.clvUg==null?'Einstieg→Schluss':'Einstieg→Schluss · UG '+_pwtSig(a.clvUg)+'pp'))
     +'</div></div>';
 }
 // 24.08.2026 (Lucas: „ziehen die die Statistik runter?"). Ja — deshalb steht vorne die Zahl, die
@@ -2829,12 +2848,19 @@ function _pwTrackConvTable(byConv){
       +'<td class="pw-cn">'+a.n+'</td>'
       +'<td class="pw-cn" style="color:'+(a.hit>=0.5?'#3fb950':'#f85149')+'">'+_pwtPct(a.hit)+'</td>'
       +'<td class="pw-cn" style="font-weight:800;color:'+roiCol+'">'+_pwtSig(Math.round(a.roi*1000)/10)+'%</td>'
+      // 06.09.2026: die Auto-Bet-Empfehlung hing an „n≥8, klar >0" — ein Punktschätzer.
+      // 9/10 stand mit +9,9 % auf n=11 da; mit Schranke gibt es dort gar kein Urteil.
+      +'<td class="pw-cn" style="font-weight:800;color:'+(a.roiUg==null?'#8b949e':(a.belegt?'#3fb950':'#e3b341'))+'">'
+        +(a.roiUg==null?'—':_pwtSig(Math.round(a.roiUg*1000)/10)+'%')+'</td>'
       +'<td class="pw-cn" style="color:'+clvCol+'">'+_pwtSig(a.clvAvg)+'pp</td>'
       +'<td class="pw-cn pw-mut">'+_pwtUsd(a.pnl)+'</td></tr>';
   }).join('');
   return '<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🎯 Nach Conviction — wo lohnt sich das echte Setzen?</span>'
-    +'<span class="pw-sec-note">Je höher die Conviction, desto besser sollte ROI &amp; CLV sein. Erst wenn eine Stufe über genug Spiele (n≥8, klar &gt;0) im Plus ist, ist sie ein Auto-Bet-Kandidat. Blasse Zeilen = noch zu wenige.</span></div>'
-    +'<div class="pw-tw"><table class="pw-tbl"><thead><tr><th>Conviction</th><th>n</th><th>Treffer</th><th>ROI</th><th>Ø CLV</th><th>P&amp;L</th></tr></thead><tbody>'+body+'</tbody></table></div></section>';
+    +'<span class="pw-sec-note">Auto-Bet-Kandidat ist eine Stufe erst, wenn ihre <b>Untergrenze</b> über null liegt — nicht der ROI. '
+    +'Stand jetzt erfüllt das <b>keine</b> Stufe. Und die erwartete Ordnung „je höher die Conviction, desto besser" '
+    +'ist in den Zahlen nicht zu sehen: 10/10 −37,7 % (n=3), 9/10 +9,9 % (n=11), 7/10 +2,8 % (n=145). '
+    +'Blasse Zeilen = zu wenige für eine Schranke.</span></div>'
+    +'<div class="pw-tw"><table class="pw-tbl"><thead><tr><th>Conviction</th><th>n</th><th>Treffer</th><th>ROI</th><th>UG</th><th>Ø CLV</th><th>P&amp;L</th></tr></thead><tbody>'+body+'</tbody></table></div></section>';
 }
 function _pwTrackSettled(settled){
   const rows=(settled||[]).slice(-15).reverse();
@@ -2899,12 +2925,31 @@ function _pwTrackSignalTable(bySig){
       +'<td class="pw-cn">'+a.n+'</td>'
       +'<td class="pw-cn" style="color:'+(a.hit>=0.5?'#3fb950':'#f85149')+'">'+_pwtPct(a.hit)+'</td>'
       +'<td class="pw-cn" style="font-weight:800;color:'+roiCol+'">'+_pwtSig(Math.round(a.roi*1000)/10)+'%</td>'
+      +'<td class="pw-cn" style="font-weight:800;color:'+(a.roiUg==null?'#8b949e':(a.belegt?'#3fb950':'#e3b341'))+'">'
+        +(a.roiUg==null?'—':_pwtSig(Math.round(a.roiUg*1000)/10)+'%')+'</td>'
       +'<td class="pw-cn" style="color:'+clvCol+'">'+_pwtSig(a.clvAvg)+'pp</td>'
       +'<td class="pw-cn pw-mut">'+_pwtUsd(a.pnl)+'</td></tr>';
   }).join('');
+  // 06.09.2026 (Lucas-Checkup): in dieser Tabelle standen `calib+` (+26,9 %), `calib-` und
+  // `turned` zwischen den echten Auslösern. Das sind keine Signale, sondern die Marken, die
+  // der LERNER an einen Play hängt, nachdem er ihn hoch- oder runtergestuft hat — die
+  // Kalibrierung benotete hier ihre eigene Hausaufgabe, und zwar an der prominentesten
+  // Stelle. Sie stehen jetzt getrennt (`byKalibrierung`), nicht gelöscht.
+  const kal=(_pwCache&&_pwCache.shortlistTrack&&_pwCache.shortlistTrack.agg
+             &&_pwCache.shortlistTrack.agg.byKalibrierung)||{};
+  const kalRows=Object.keys(kal).map(k=>({k,a:kal[k]})).filter(r=>r.a&&r.a.n).sort((x,y)=>y.a.n-x.a.n);
+  const kalBlock=kalRows.length
+    ? '<div class="pw-sec-note" style="margin-top:8px">🧪 <b>Selbstkontrolle der Kalibrierung</b> — kein Auslöser-Signal: '
+      +kalRows.map(r=>(_PW_SIG_LABEL[r.k]||_pwEsc(r.k))+' n'+r.a.n+' '
+        +_pwtSig(Math.round(r.a.roi*1000)/10)+'%'
+        +(r.a.roiUg==null?' (kein Urteil)':' (UG '+_pwtSig(Math.round(r.a.roiUg*1000)/10)+'%)')).join(' · ')
+      +'. Diese Zeilen sagen, wie gut der Lerner sich selbst einschätzt — sie belegen keine Kante.</div>'
+    : '';
   return '<section class="pw-sec"><div class="pw-sec-head"><span class="pw-kicker">🧭 Welches Signal trägt die Kante?</span>'
-    +'<span class="pw-sec-note">Trefferquote/ROI/CLV je Auslöser-Signal. Ein Play kann mehrere Signale haben (zählt dann in mehreren Zeilen). Blasse Zeilen = noch zu wenige (n&lt;8).</span></div>'
-    +'<div class="pw-tw"><table class="pw-tbl"><thead><tr><th>Signal</th><th>n</th><th>Treffer</th><th>ROI</th><th>Ø CLV</th><th>P&amp;L</th></tr></thead><tbody>'+body+'</tbody></table></div></section>';
+    +'<span class="pw-sec-note">Trefferquote/ROI/CLV je <b>Auslöser</b>-Signal. Ein Play kann mehrere Signale haben (zählt dann in mehreren Zeilen). '
+    +'Entschieden wird an der <b>UG</b>: aktuell trägt <b>kein</b> Signal belegt — bf steht bei +5,7 %, aber mit Untergrenze −7,6 %.</span></div>'
+    +'<div class="pw-tw"><table class="pw-tbl"><thead><tr><th>Signal</th><th>n</th><th>Treffer</th><th>ROI</th><th>UG</th><th>Ø CLV</th><th>P&amp;L</th></tr></thead><tbody>'+body+'</tbody></table></div>'
+    +kalBlock+'</section>';
 }
 // ═══════════════════════════════════════════════════════════════════════════════════════
 //  🐋 PUBLIC-CHANNEL — was dort WIRKLICH rausgeht und wie es abschneidet

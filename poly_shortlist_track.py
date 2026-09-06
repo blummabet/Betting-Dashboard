@@ -157,17 +157,71 @@ def _ok_price(p):
     return isinstance(p, (int, float)) and 0.0 < float(p) < 1.0
 
 
+# Marken, die der LERNER an einen Play haengt — keine Ausloeser-Signale (s. aggregate()).
+KALIB_MARKEN = frozenset({"calib+", "calib-", "turned"})
+
+
+def _ug(werte):
+    """Einseitige 95%-Untergrenze — dieselbe Rechnung wie ueberall sonst im Haus.
+
+    `freigabe.untergrenze` haelt die harte Mindestzahl (UG_MIN_N) und gibt darunter None
+    zurueck: *kein Urteil ist etwas anderes als ein gemessenes Nein*. Ohne diese Sperre faellt
+    die Schranke bei wenigen aehnlichen Ergebnissen auf den Punktschaetzer zusammen — genau
+    der Fehler vom 03.09. („UG +74 %" aus drei Plays).
+    """
+    try:
+        from freigabe import untergrenze
+    except Exception:
+        return None
+    try:
+        return untergrenze([float(w) for w in (werte or [])])
+    except Exception:
+        return None
+
+
 def _agg_one(rows):
+    """Kennzahlen einer Menge Plays — MIT einseitiger 95%-Untergrenze.
+
+    06.09.2026 (Lucas-Checkup des Poly-Boards). Das Board schreibt an einer Stelle selbst:
+    *„Die Spalte UG entscheidet, nicht ROI — ein ROI ohne Untergrenze ist ein Punktschaetzer"*
+    — und meldet bei den Whale-Pushes korrekt „kein Urteil: n=6". Direkt darueber standen aber
+    die Zahlen, an denen wirklich etwas haengt, ohne jede Schranke:
+
+        bespielbar   n=555  ROI +0,1 %
+        public       n=172  ROI +6,0 %
+        Conviction 9/10  n=11  ROI +9,9 %
+        Signal calib+    n=19  ROI +26,9 %
+
+    Und der Anleitungstext sagt: „erst wenn eine Stufe ueber genug Spiele klar im Plus ist,
+    lohnt das echte Nachspielen". „Klar im Plus" ohne Schranke ist genau die Klasse
+    *ein Punktschaetzer entscheidet* — die Empfehlung zum echten Setzen haengt daran.
+
+    Die Schranke gehoert dorthin, wo die Zahl entsteht (nicht ins Frontend, sonst steht sie
+    zweimal da). `belegt` ist wahr, wenn die ganze Untergrenze ueber null liegt.
+    """
     n = len(rows)
     wins = sum(1 for r in rows if r.get("result") == "win")
     stake = sum(float(r.get("stake") or 0) for r in rows)
     pnl = sum(float(r.get("pnl") or 0) for r in rows)
     clv = sum(float(r.get("clvPP") or 0) for r in rows)
+    roi = (pnl / stake) if stake else 0.0
+    # Rendite je Play (nicht der Gesamt-ROI) traegt die Streuung — nur daraus wird eine Schranke.
+    renditen = []
+    for r in rows:
+        st = float(r.get("stake") or 0)
+        if st > 0:
+            renditen.append(float(r.get("pnl") or 0) / st)
+    roi_ug = _ug(renditen)
+    clv_werte = [float(r.get("clvPP")) for r in rows
+                 if isinstance(r.get("clvPP"), (int, float))]
     return {"n": n, "wins": wins,
             "hit": round(wins / n, 4) if n else 0.0,
             "pnl": round(pnl, 2), "stake": round(stake, 2),
-            "roi": round(pnl / stake, 4) if stake else 0.0,
-            "clvAvg": round(clv / n, 2) if n else 0.0}
+            "roi": round(roi, 4),
+            "roiUg": (round(roi_ug, 4) if roi_ug is not None else None),
+            "belegt": bool(roi_ug is not None and roi_ug > 0),
+            "clvAvg": round(clv / n, 2) if n else 0.0,
+            "clvUg": (lambda u: round(u, 2) if u is not None else None)(_ug(clv_werte))}
 
 
 def aggregate(settled, blocked=()):
@@ -197,17 +251,29 @@ def aggregate(settled, blocked=()):
     # 05.08.2026 (Lucas): Attribution je Ausloeser-Signal (welches Signal traegt die Kante?). Ein Play
     # kann mehrere Signale haben und zaehlt dann in mehreren Buckets (bewusste Ueberlappung).
     by_signal = {}
+    by_kalib = {}
     _sig_universe = set()
     for r in settled:
         for tg in (r.get("signals") or []):
             _sig_universe.add(tg)
     for tg in sorted(_sig_universe):
         rows = [r for r in settled if tg in (r.get("signals") or [])]
-        if rows:
-            by_signal[tg] = _agg_one(rows)
+        if not rows:
+            continue
+        # 06.09.2026 (Lucas-Checkup): `calib+`, `calib-` und `turned` standen in der Tabelle
+        # „Welches Signal traegt die Kante?" zwischen money/sharp/steam/bf — mit `calib+` bei
+        # +26,9 % ganz oben. Das sind aber keine AUSLOESER, sondern die Marken, die der Lerner
+        # selbst an einen Play haengt, nachdem er ihn hoch- oder runtergestuft hat.
+        #
+        # Damit benotete die Kalibrierung ihre eigene Hausaufgabe und stand als Beleg da, dass
+        # ein Signal die Kante traegt. Klasse: *eine Kennzahl urteilt ueber sich selbst.*
+        # Getrennt ausgewiesen — nicht geloescht, die Zahl ist als Selbstkontrolle interessant,
+        # nur nicht als Signal.
+        (by_kalib if tg in KALIB_MARKEN else by_signal)[tg] = _agg_one(rows)
     return {"all": _agg_one(allr), "public": _agg_one(pub),
             "bettable": _agg_one(bet), "blocked": _agg_one(blk), "byCat": by_cat,
-            "byConv": by_conv, "byVerdict": by_verdict, "bySignal": by_signal}
+            "byConv": by_conv, "byVerdict": by_verdict, "bySignal": by_signal,
+            "byKalibrierung": by_kalib}
 
 
 def reentry_status(settled, blocked, min_n=REENTRY_MIN_N, min_clv_n=REENTRY_MIN_CLV_N,

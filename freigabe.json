@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-06T17:54:16.154957+00:00",
+ "generatedAt": "2026-09-06T18:36:52.892807+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -11,32 +11,6 @@
  },
  "freigegeben": [],
  "kandidaten": [
-  {
-   "schublade": "🔒 Poly-Auswahl · von Betfair bestätigt",
-   "strom": "poly",
-   "n": 59,
-   "status": "kandidat",
-   "grund": "59 von 60 Plays SEIT der Anmeldung (2026-09-01) — vorher abgerechnete zählen nicht",
-   "roi": -0.0941,
-   "roiLb": -0.3063,
-   "clv": -0.305,
-   "clvLb": -2.23,
-   "fehltN": 1,
-   "alterTage": 0.0,
-   "art": "vorangemeldet",
-   "angemeldet": "2026-09-01T18:59:52.671883+00:00",
-   "zielN": 60,
-   "warum": "Die einzige Untergruppe der Rangliste mit einer ROI-Untergrenze ueber null. Traegt nicht die Menge der Poly-Signale, sondern die eine FREMDE Stimme: ohne Betfair liegen dieselben Plays bei -5,1% (n=425).",
-   "quelle": "poly_shortlist_track.json → settled",
-   "nDavor": 75,
-   "rueckblick": {
-    "n": 75,
-    "roi": 0.1811,
-    "roiLb": 0.0106,
-    "clv": 0.24,
-    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
-   }
-  },
   {
    "schublade": "Mix money+sharp+steam",
    "strom": "poly",
@@ -82,7 +56,7 @@
    "clv": 1.905,
    "clvLb": null,
    "fehltN": 15,
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "top5"
@@ -128,32 +102,6 @@
  ],
  "alle": [
   {
-   "schublade": "🔒 Poly-Auswahl · von Betfair bestätigt",
-   "strom": "poly",
-   "n": 59,
-   "status": "kandidat",
-   "grund": "59 von 60 Plays SEIT der Anmeldung (2026-09-01) — vorher abgerechnete zählen nicht",
-   "roi": -0.0941,
-   "roiLb": -0.3063,
-   "clv": -0.305,
-   "clvLb": -2.23,
-   "fehltN": 1,
-   "alterTage": 0.0,
-   "art": "vorangemeldet",
-   "angemeldet": "2026-09-01T18:59:52.671883+00:00",
-   "zielN": 60,
-   "warum": "Die einzige Untergruppe der Rangliste mit einer ROI-Untergrenze ueber null. Traegt nicht die Menge der Poly-Signale, sondern die eine FREMDE Stimme: ohne Betfair liegen dieselben Plays bei -5,1% (n=425).",
-   "quelle": "poly_shortlist_track.json → settled",
-   "nDavor": 75,
-   "rueckblick": {
-    "n": 75,
-    "roi": 0.1811,
-    "roiLb": 0.0106,
-    "clv": 0.24,
-    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
-   }
-  },
-  {
    "schublade": "Mix money+sharp+steam",
    "strom": "poly",
    "n": 18,
@@ -198,7 +146,7 @@
    "clv": 1.905,
    "clvLb": null,
    "fehltN": 15,
-   "alterTage": 0.0,
+   "alterTage": 0.1,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "top5"
@@ -330,7 +278,7 @@
    "clv": -1.741,
    "clvLb": -2.3,
    "fehltN": 0,
-   "alterTage": 1.2,
+   "alterTage": 1.3,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "Liga"
@@ -545,7 +493,7 @@
    "clv": -2.829,
    "clvLb": -3.792,
    "fehltN": 0,
-   "alterTage": 0.2,
+   "alterTage": 0.3,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "MLS"
@@ -608,6 +556,25 @@
    }
   },
   {
+   "schublade": "Conviction 5",
+   "strom": "poly",
+   "n": 104,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.09,
+   "roiLb": -0.2126,
+   "clv": -1.797,
+   "clvLb": -2.98,
+   "fehltN": 0,
+   "alterTage": 0.0,
+   "art": "conviction",
+   "wert": 5,
+   "nAlt": 135,
+   "roiAlt": -0.0164,
+   "clvAlt": 0.06,
+   "engineAlt": true
+  },
+  {
    "schublade": "English Sky Bet Championship · First Half Goals 0.5",
    "strom": "betfair",
    "n": 32,
@@ -623,25 +590,6 @@
    "naeherung": true
   },
   {
-   "schublade": "Conviction 5",
-   "strom": "poly",
-   "n": 103,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0983,
-   "roiLb": -0.2214,
-   "clv": -1.814,
-   "clvLb": -3.009,
-   "fehltN": 0,
-   "alterTage": 0.0,
-   "art": "conviction",
-   "wert": 5,
-   "nAlt": 135,
-   "roiAlt": -0.0164,
-   "clvAlt": 0.06,
-   "engineAlt": true
-  },
-  {
    "schublade": "ABWÄGEN · aussortiert",
    "strom": "cards",
    "n": 38,
@@ -655,25 +603,6 @@
    "alterTage": 0.2,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
-  },
-  {
-   "schublade": "Conviction 6",
-   "strom": "poly",
-   "n": 79,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0919,
-   "roiLb": -0.2416,
-   "clv": -0.932,
-   "clvLb": -2.31,
-   "fehltN": 0,
-   "alterTage": 0.0,
-   "art": "conviction",
-   "wert": 6,
-   "nAlt": 109,
-   "roiAlt": -0.038,
-   "clvAlt": 0.072,
-   "engineAlt": true
   },
   {
    "schublade": "English Sky Bet League 2 · Both teams to Score?",
@@ -704,6 +633,25 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": true
+  },
+  {
+   "schublade": "Conviction 6",
+   "strom": "poly",
+   "n": 80,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.1032,
+   "roiLb": -0.2523,
+   "clv": -0.933,
+   "clvLb": -2.293,
+   "fehltN": 0,
+   "alterTage": 0.0,
+   "art": "conviction",
+   "wert": 6,
+   "nAlt": 109,
+   "roiAlt": -0.038,
+   "clvAlt": 0.072,
+   "engineAlt": true
   },
   {
    "schublade": "English National League North · Match Odds",
@@ -826,6 +774,51 @@
    "naeherung": true
   },
   {
+   "schublade": "🔒 Poly-Auswahl · von Betfair bestätigt",
+   "strom": "poly",
+   "n": 61,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0948,
+   "roiLb": -0.3028,
+   "clv": -0.311,
+   "clvLb": -2.173,
+   "fehltN": 0,
+   "alterTage": 0.0,
+   "art": "vorangemeldet",
+   "angemeldet": "2026-09-01T18:59:52.671883+00:00",
+   "zielN": 60,
+   "warum": "Die einzige Untergruppe der Rangliste mit einer ROI-Untergrenze ueber null. Traegt nicht die Menge der Poly-Signale, sondern die eine FREMDE Stimme: ohne Betfair liegen dieselben Plays bei -5,1% (n=425).",
+   "quelle": "poly_shortlist_track.json → settled",
+   "nDavor": 75,
+   "rueckblick": {
+    "n": 75,
+    "roi": 0.1811,
+    "roiLb": 0.0106,
+    "clv": 0.24,
+    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
+   }
+  },
+  {
+   "schublade": "Mix bf+money",
+   "strom": "poly",
+   "n": 48,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.1531,
+   "roiLb": -0.3777,
+   "clv": -1.073,
+   "clvLb": -3.142,
+   "fehltN": 0,
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "bf+money",
+   "nAlt": 60,
+   "roiAlt": 0.1637,
+   "clvAlt": 0.233,
+   "engineAlt": true
+  },
+  {
    "schublade": "AFC U20 Asian Cup Qualifiers · Match Odds",
    "strom": "betfair",
    "n": 35,
@@ -839,25 +832,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": true
-  },
-  {
-   "schublade": "Mix bf+money",
-   "strom": "poly",
-   "n": 46,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.1548,
-   "roiLb": -0.3848,
-   "clv": -1.098,
-   "clvLb": -3.257,
-   "fehltN": 0,
-   "alterTage": 0.0,
-   "art": "mix",
-   "wert": "bf+money",
-   "nAlt": 60,
-   "roiAlt": 0.1637,
-   "clvAlt": 0.233,
-   "engineAlt": true
   },
   {
    "schublade": "English National League · First Half Goals 0.5",
@@ -1107,7 +1081,7 @@
    "clv": -0.705,
    "clvLb": null,
    "fehltN": 28,
-   "alterTage": 7.2,
+   "alterTage": 7.3,
    "art": "verdict",
    "wert": "BET",
    "datensatz": "MLS"
@@ -1139,7 +1113,7 @@
    "clv": -1.0,
    "clvLb": null,
    "fehltN": 29,
-   "alterTage": 2.7,
+   "alterTage": 2.8,
    "art": "conviction",
    "wert": 3
   },
@@ -1173,7 +1147,7 @@
    "clv": 0.0,
    "clvLb": null,
    "fehltN": 29,
-   "alterTage": 1.0,
+   "alterTage": 1.1,
    "art": "mix",
    "wert": "bf+sharp"
   },
@@ -1355,7 +1329,7 @@
    "clv": -2.199,
    "clvLb": -2.679,
    "fehltN": 0,
-   "alterTage": 49.2,
+   "alterTage": 49.3,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "WM"
@@ -1371,7 +1345,7 @@
    "clv": -0.609,
    "clvLb": null,
    "fehltN": 0,
-   "alterTage": 64.2,
+   "alterTage": 64.3,
    "art": "verdict",
    "wert": "BET",
    "datensatz": "WM"
@@ -1380,8 +1354,8 @@
  "zusammenfassung": {
   "schubladen": 76,
   "freigegeben": 0,
-  "kandidaten": 6,
+  "kandidaten": 5,
   "ruhend": 2,
-  "naechsteFreigabe": 1
+  "naechsteFreigabe": 12
  }
 }

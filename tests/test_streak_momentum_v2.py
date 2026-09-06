@@ -76,8 +76,18 @@ class TestStreakSignal(unittest.TestCase):
         # bleibt bewusst unter der Schwelle (Persistenz 0.5 = Backtest-Disziplin).
         corners3 = self._score("Über 9,5 Ecken", {"H": [_streak("cornersOver", length=3, rate=80)]})
         self.assertGreater(corners3, 0)   # 3er-Serie feuert → MIN_LENGTH wurde gelockert
+        # 06.09.2026: hier stand `assertEqual(lone_goal3, 0.0)` — eine schwache Tor-Serie
+        # sollte SCHWEIGEN. Gemessen war das Ergebnis dieser Disziplin aber, dass das Signal
+        # praktisch nie feuerte: auf den Ergebnis-Maerkten kam KEINER von 58 Faellen ueber die
+        # Schwelle 0,25 (hoechster Score 0,214). Ein Signal ohne Beobachtungen kann die Bilanz
+        # nie beurteilen — es konnte weder helfen noch widerlegt werden.
+        #
+        # Die Disziplin liegt jetzt in der GROESSE, nicht im Stummschalten: die Serie spricht,
+        # aber so leise, dass sie keinen Pick dreht. Genau das ist „nur mehr beobachten".
         lone_goal3 = self._score("Über 2,5 Tore", {"H": [_streak("over25", length=3, rate=80, xg=True)]})
-        self.assertEqual(lone_goal3, 0.0)  # schwache Tor-Serie allein: still (Disziplin)
+        self.assertGreater(lone_goal3, 0.0, "die Serie muss messbar sein, sonst lernen wir nie")
+        self.assertLess(lone_goal3, 0.5,
+                        "aber sie darf keinen Pick drehen — andere Signale liefern 1-3 pp")
 
     def test_beide_teams_stapeln(self):
         # zwei 3er-Tor-Serien (Heim+Auswärts) stapeln über die Schwelle

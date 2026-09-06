@@ -542,9 +542,30 @@ def vorregistrierte_schubladen(track=None, reg=None, now=None, schreiben=True) -
         # Eigenes Ziel-n: der Zuschnitt hat seines bei der Anmeldung genannt, damit niemand aufhoert
         # zu messen, sobald die Zahl gefaellt.
         if len(r) < ziel and z_row["status"] not in ("ruht",):
-            z_row["status"] = "sammelt" if len(r) < KANDIDAT_N else "kandidat"
-            z_row["grund"] = ("%d von %d Plays SEIT der Anmeldung (%s) — vorher abgerechnete zählen "
-                              "nicht" % (len(r), ziel, str(e.get("angemeldet"))[:10]))
+            # 06.09.2026 (Lucas: „ich versteh nicht, was da wirklich angezeigt wird und wieso").
+            # Hier stand die Ruecksetzung auf „kandidat" bedingungslos. Auf dem Board ergab das:
+            #
+            #   🔒 Poly-Auswahl · von Betfair bestaetigt — Kandidat, „59 von 60 Plays — noch 1"
+            #   dieselbe Zeile:  n=59, ROI −9,4 %, ROI-Untergrenze **−30,6 %**
+            #
+            # „Noch ein Play" liest sich wie kurz vor der Freigabe. Die Zahl daneben sagt das
+            # Gegenteil: bei 59 Plays und einer Untergrenze von −30,6 % kann ein einzelner Play
+            # nichts mehr drehen. Das ist die Klasse *ein Satz behauptet, was die Zahl daneben
+            # widerlegt* — und sie sass ausgerechnet in der obersten Kachel.
+            #
+            # Das Ziel-n aus der Anmeldung bleibt (niemand hoert auf zu messen, sobald die Zahl
+            # gefaellt). Aber eine bereits ENTSCHIEDENE Messung wird nicht mehr in Hoffnung
+            # umgeschrieben: liegt eine Untergrenze vor und ist sie klar negativ, bleibt das
+            # Urteil stehen und der Zaehlstand wandert in den Grund.
+            _entschieden = (z_row.get("roiLb") is not None and z_row["roiLb"] <= MIN_ROI_LB)
+            if _entschieden:
+                z_row["grund"] = ("ROI nicht belegt über null (Untergrenze %.1f %% aus %d Plays) — "
+                                  "das Ziel von %d Plays läuft weiter, ändert aber nichts mehr"
+                                  % (z_row["roiLb"] * 100, len(r), ziel))
+            else:
+                z_row["status"] = "sammelt" if len(r) < KANDIDAT_N else "kandidat"
+                z_row["grund"] = ("%d von %d Plays SEIT der Anmeldung (%s) — vorher abgerechnete "
+                                  "zählen nicht" % (len(r), ziel, str(e.get("angemeldet"))[:10]))
             z_row["fehltN"] = ziel - len(r)
         z_row["nDavor"] = len(rd)
         z_row["rueckblick"] = e.get("rueckblick")

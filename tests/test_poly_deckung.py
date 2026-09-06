@@ -75,14 +75,26 @@ class TestGuard(unittest.TestCase):
         import uebersicht_integrity as UI
         return next(c for c in UI.run_checks(ctx) if c["label"] == self.NAME)
 
+    # 06.09.2026: diese drei Faelle liefen ueber `JETZT`, eine feste Uhrzeit (10:00 UTC). Der
+    # GUARD kennt aber kein `now` — er rechnet gegen die echte Uhr. Um 18:07 lag der Anpfiff
+    # „JETZT + 7,1 h" (17:06) in der Vergangenheit, die Luecke verschwand, und der Test wurde
+    # rot, ohne dass sich etwas am Code geaendert hatte. Achter Test in diesem Projekt, der
+    # einen Moment festhaelt statt einer Regel. Der Anpfiff kommt jetzt aus der echten Uhr.
+    @staticmethod
+    def _bald(stunden, slug="sea-juv-mil", home="Juventus FC", away="AC Milan"):
+        from datetime import datetime, timezone, timedelta
+        ko = datetime.now(timezone.utc) + timedelta(hours=stunden)
+        return {"slug": slug, "homeName": home, "awayName": away, "vol": 1000,
+                "kickoff": ko.isoformat().replace("+00:00", "Z")}
+
     def test_der_reale_Fall_schlaegt_an(self):
-        c = self._lauf({"ligaPoly": _lp(_e("sea-juv-mil", 7.1, "Juventus FC", "AC Milan")),
+        c = self._lauf({"ligaPoly": _lp(self._bald(3.0)),
                         "polyClose": {"irgendwas": {}}})
         self.assertFalse(c["ok"])
         self.assertIn("sea-juv-mil", " ".join(c["failures"]))
 
     def test_gedeckt_ist_gruen(self):
-        c = self._lauf({"ligaPoly": _lp(_e("sea-juv-mil", 7.1)),
+        c = self._lauf({"ligaPoly": _lp(self._bald(3.0)),
                         "polyClose": {"sea-juv-mil": {}}})
         self.assertTrue(c["ok"])
 
