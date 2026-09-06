@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-06T20:24:25.579649+00:00",
+ "generatedAt": "2026-09-06T20:39:25.354223+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -11,6 +11,21 @@
  },
  "freigegeben": [],
  "kandidaten": [
+  {
+   "schublade": "ABWÄGEN · gepusht",
+   "strom": "cards",
+   "n": 25,
+   "status": "kandidat",
+   "grund": "25 von 30 Plays — noch 5",
+   "roi": 0.1896,
+   "roiLb": null,
+   "clv": null,
+   "clvLb": null,
+   "fehltN": 5,
+   "alterTage": 0.0,
+   "art": "push_filter",
+   "quelle": "pick_push_ledger.py"
+  },
   {
    "schublade": "Mix money+sharp+steam",
    "strom": "poly",
@@ -29,21 +44,6 @@
    "roiAlt": -0.1875,
    "clvAlt": 0.818,
    "engineAlt": true
-  },
-  {
-   "schublade": "ABWÄGEN · gepusht",
-   "strom": "cards",
-   "n": 17,
-   "status": "kandidat",
-   "grund": "17 von 30 Plays — noch 13",
-   "roi": 0.1682,
-   "roiLb": null,
-   "clv": null,
-   "clvLb": null,
-   "fehltN": 13,
-   "alterTage": 0.4,
-   "art": "push_filter",
-   "quelle": "pick_push_ledger.py"
   },
   {
    "schublade": "Konjunktion · Top-5 + MLS",
@@ -102,6 +102,21 @@
  ],
  "alle": [
   {
+   "schublade": "ABWÄGEN · gepusht",
+   "strom": "cards",
+   "n": 25,
+   "status": "kandidat",
+   "grund": "25 von 30 Plays — noch 5",
+   "roi": 0.1896,
+   "roiLb": null,
+   "clv": null,
+   "clvLb": null,
+   "fehltN": 5,
+   "alterTage": 0.0,
+   "art": "push_filter",
+   "quelle": "pick_push_ledger.py"
+  },
+  {
    "schublade": "Mix money+sharp+steam",
    "strom": "poly",
    "n": 19,
@@ -119,21 +134,6 @@
    "roiAlt": -0.1875,
    "clvAlt": 0.818,
    "engineAlt": true
-  },
-  {
-   "schublade": "ABWÄGEN · gepusht",
-   "strom": "cards",
-   "n": 17,
-   "status": "kandidat",
-   "grund": "17 von 30 Plays — noch 13",
-   "roi": 0.1682,
-   "roiLb": null,
-   "clv": null,
-   "clvLb": null,
-   "fehltN": 13,
-   "alterTage": 0.4,
-   "art": "push_filter",
-   "quelle": "pick_push_ledger.py"
   },
   {
    "schublade": "Konjunktion · Top-5 + MLS",
@@ -208,6 +208,22 @@
    "engineAlt": true
   },
   {
+   "schublade": "Liga · ABWÄGEN",
+   "strom": "cards",
+   "n": 84,
+   "status": "geprueft",
+   "grund": "CLV negativ belegt — der ROI kam aus der Varianz, nicht aus einer Kante",
+   "roi": 0.1537,
+   "roiLb": 0.0024,
+   "clv": -1.515,
+   "clvLb": -2.026,
+   "fehltN": 0,
+   "alterTage": 0.4,
+   "art": "verdict",
+   "wert": "ABWÄGEN",
+   "datensatz": "Liga"
+  },
+  {
    "schublade": "English Sky Bet League 2 · First Half Goals 1.5",
    "strom": "betfair",
    "n": 33,
@@ -225,11 +241,11 @@
   {
    "schublade": "Half Time",
    "strom": "betfair",
-   "n": 1860,
+   "n": 1863,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0485,
-   "roiLb": -0.0072,
+   "roi": 0.0468,
+   "roiLb": -0.0089,
    "clv": null,
    "clvLb": null,
    "fehltN": 0,
@@ -238,29 +254,13 @@
    "naeherung": false
   },
   {
-   "schublade": "Liga · ABWÄGEN",
-   "strom": "cards",
-   "n": 71,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.1407,
-   "roiLb": -0.0287,
-   "clv": -1.741,
-   "clvLb": -2.3,
-   "fehltN": 0,
-   "alterTage": 1.4,
-   "art": "verdict",
-   "wert": "ABWÄGEN",
-   "datensatz": "Liga"
-  },
-  {
    "schublade": "Both teams to Score?",
    "strom": "betfair",
-   "n": 2228,
+   "n": 2234,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0057,
-   "roiLb": -0.0289,
+   "roi": 0.0066,
+   "roiLb": -0.028,
    "clv": null,
    "clvLb": null,
    "fehltN": 0,
@@ -271,11 +271,11 @@
   {
    "schublade": "First Half Goals 1.5",
    "strom": "betfair",
-   "n": 1982,
+   "n": 1987,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0074,
-   "roiLb": -0.0322,
+   "roi": 0.0067,
+   "roiLb": -0.0329,
    "clv": null,
    "clvLb": null,
    "fehltN": 0,
@@ -286,11 +286,11 @@
   {
    "schublade": "Match Odds",
    "strom": "betfair",
-   "n": 2443,
+   "n": 2448,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0052,
-   "roiLb": -0.0431,
+   "roi": -0.0054,
+   "roiLb": -0.0432,
    "clv": null,
    "clvLb": null,
    "fehltN": 0,
@@ -301,11 +301,11 @@
   {
    "schublade": "Over/Under 2.5 Goals",
    "strom": "betfair",
-   "n": 2460,
+   "n": 2466,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0131,
-   "roiLb": -0.0447,
+   "roi": -0.013,
+   "roiLb": -0.0446,
    "clv": null,
    "clvLb": null,
    "fehltN": 0,
@@ -316,11 +316,11 @@
   {
    "schublade": "Over/Under 3.5 Goals",
    "strom": "betfair",
-   "n": 2363,
+   "n": 2369,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0145,
-   "roiLb": -0.0491,
+   "roi": -0.0118,
+   "roiLb": -0.0465,
    "clv": null,
    "clvLb": null,
    "fehltN": 0,
@@ -346,11 +346,11 @@
   {
    "schublade": "First Half Goals 0.5",
    "strom": "betfair",
-   "n": 2283,
+   "n": 2289,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0304,
-   "roiLb": -0.0633,
+   "roi": -0.03,
+   "roiLb": -0.0629,
    "clv": null,
    "clvLb": null,
    "fehltN": 0,
@@ -455,21 +455,6 @@
    "datensatz": "MLS"
   },
   {
-   "schublade": "Argentinian Primera Nacional · Over/Under 2.5 Goals",
-   "strom": "betfair",
-   "n": 30,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": 0.1433,
-   "roiLb": -0.1599,
-   "clv": null,
-   "clvLb": null,
-   "fehltN": 0,
-   "alterTage": null,
-   "art": "liga_markt",
-   "naeherung": false
-  },
-  {
    "schublade": "English Sky Bet Championship · Over/Under 3.5 Goals",
    "strom": "betfair",
    "n": 32,
@@ -483,6 +468,21 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
+  },
+  {
+   "schublade": "ABWÄGEN · aussortiert",
+   "strom": "cards",
+   "n": 44,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.0234,
+   "roiLb": -0.175,
+   "clv": null,
+   "clvLb": null,
+   "fehltN": 0,
+   "alterTage": 0.0,
+   "art": "push_filter",
+   "quelle": "pick_push_ledger.py"
   },
   {
    "schublade": "🔒 Bücher-Score ≥7 von 10",
@@ -533,6 +533,21 @@
    "grund": "ROI nicht belegt über null",
    "roi": 0.053,
    "roiLb": -0.1901,
+   "clv": null,
+   "clvLb": null,
+   "fehltN": 0,
+   "alterTage": null,
+   "art": "liga_markt",
+   "naeherung": false
+  },
+  {
+   "schublade": "Argentinian Primera Nacional · Over/Under 2.5 Goals",
+   "strom": "betfair",
+   "n": 31,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": 0.1065,
+   "roiLb": -0.193,
    "clv": null,
    "clvLb": null,
    "fehltN": 0,
@@ -622,21 +637,6 @@
    "roiAlt": -0.038,
    "clvAlt": 0.072,
    "engineAlt": true
-  },
-  {
-   "schublade": "ABWÄGEN · aussortiert",
-   "strom": "cards",
-   "n": 38,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0229,
-   "roiLb": -0.2406,
-   "clv": null,
-   "clvLb": null,
-   "fehltN": 0,
-   "alterTage": 0.3,
-   "art": "push_filter",
-   "quelle": "pick_push_ledger.py"
   },
   {
    "schublade": "English Sky Bet League 2 · Both teams to Score?",
@@ -1431,6 +1431,6 @@
   "freigegeben": 0,
   "kandidaten": 5,
   "ruhend": 2,
-  "naechsteFreigabe": 11
+  "naechsteFreigabe": 5
  }
 }
