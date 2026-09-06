@@ -201302,7 +201302,13 @@
   "tokens": {
    "Over": "101531310005079742493523203053658966963719240631913920660984520914892707324666",
    "Under": "28230744643247206465077648177041608034284539710706074469661035940361446169917"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Over": 0.0,
+   "Under": 1.0
+  },
+  "resolvedAt": "2026-09-06T02:02:04.569535+00:00"
  },
  "mlb-nyy-sd-2026-09-05": {
   "shares": {
@@ -202216,7 +202222,14 @@
    "São Paulo FC": "84606687660245224877939514675227666294966153270408244855976284843498382825475",
    "Draw (São Paulo FC vs. CA Mineiro)": "5417151629239473396598221142220612595069779495490371231037282322315869482348",
    "CA Mineiro": "54260288849060723643685324199465062153235235145739960097800505704237076519632"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "São Paulo FC": 1.0,
+   "Draw (São Paulo FC vs. CA Mineiro)": 0.0,
+   "CA Mineiro": 0.0
+  },
+  "resolvedAt": "2026-09-06T02:02:04.569535+00:00"
  },
  "mlb-min-cws-2026-09-05": {
   "shares": {
@@ -203342,12 +203355,33 @@
    "São Paulo FC 3 - 2 CA Mineiro": "20743779062480103353347089922594247352326595014618063559391424071789172046239",
    "São Paulo FC 3 - 3 CA Mineiro": "111893035749515249278976141569759574069915024858330469929165177745316935900679",
    "Any Other Score": "5298018158353974339357412417109935549272353052799926142595038775975777658780"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "São Paulo FC 0 - 0 CA Mineiro": 0.0,
+   "São Paulo FC 0 - 1 CA Mineiro": 0.0,
+   "São Paulo FC 1 - 0 CA Mineiro": 0.0,
+   "São Paulo FC 0 - 2 CA Mineiro": 0.0,
+   "São Paulo FC 1 - 1 CA Mineiro": 0.0,
+   "São Paulo FC 2 - 0 CA Mineiro": 1.0,
+   "São Paulo FC 0 - 3 CA Mineiro": 0.0,
+   "São Paulo FC 1 - 2 CA Mineiro": 0.0,
+   "São Paulo FC 2 - 1 CA Mineiro": 0.0,
+   "São Paulo FC 3 - 0 CA Mineiro": 0.0,
+   "São Paulo FC 1 - 3 CA Mineiro": 0.0,
+   "São Paulo FC 2 - 2 CA Mineiro": 0.0,
+   "São Paulo FC 3 - 1 CA Mineiro": 0.0,
+   "São Paulo FC 2 - 3 CA Mineiro": 0.0,
+   "São Paulo FC 3 - 2 CA Mineiro": 0.0,
+   "São Paulo FC 3 - 3 CA Mineiro": 0.0,
+   "Any Other Score": 0.0
+  },
+  "resolvedAt": "2026-09-06T02:02:04.569535+00:00"
  },
  "atp-mensik-tien-2026-09-05": {
   "shares": {
-   "Jakub Mensik": 87836.45446604998,
-   "Learner Tien": 114086.45636642988
+   "Jakub Mensik": 96478.38072673498,
+   "Learner Tien": 125311.02725674488
   },
   "prices": {
    "Jakub Mensik": 0.435,
@@ -203359,7 +203393,7 @@
   },
   "league": "TENNIS",
   "sport": "Tennis",
-  "totalUsd": 246846,
+  "totalUsd": 248297,
   "whales": [
    {
     "wallet": "0xdb859a551fcf56e49416160911476bea7307152f",
@@ -203374,20 +203408,20 @@
     "avgPrice": 0.4399
    },
    {
+    "wallet": "0x3dfb153c197d4c19d3b31c1ecd2c7b6860eeabaf",
+    "side": "Learner Tien",
+    "usd": 14405,
+    "avgPrice": 0.5673
+   },
+   {
     "wallet": "0x66b23cd8bcb651e11b70f6f340ce154864870fdf",
     "side": "Learner Tien",
     "usd": 14125,
     "avgPrice": 0.5563
-   },
-   {
-    "wallet": "0x79ae097215202b5d01f98e4479fb219102469a4a",
-    "side": "Jakub Mensik",
-    "usd": 10875,
-    "avgPrice": 0.4499
    }
   ],
-  "hoursToKickoff": 0.26,
-  "capturedAt": "2026-09-06T01:32:06.990450+00:00",
+  "hoursToKickoff": 0.01,
+  "capturedAt": "2026-09-06T02:02:04.569535+00:00",
   "cond": "0xb3bac12e12256a12da004e7bc8cc2127ed209d3781028293d3ad54ec2e0ef907",
   "frage": "US Open ATP: Jakub Mensik vs Learner Tien",
   "tokens": {
@@ -203396,64 +203430,72 @@
   },
   "book": {
    "side": "Learner Tien",
-   "bid": 0.56,
-   "ask": 0.57,
+   "bid": 0.57,
+   "ask": 0.58,
    "spreadC": 1.0,
-   "spreadPct": 1.75,
+   "spreadPct": 1.72,
    "bids": [
     [
+     0.57,
+     4668
+    ],
+    [
      0.56,
-     913
+     5499
     ],
     [
      0.55,
-     29189
+     26351
     ],
     [
      0.54,
-     76422
+     13974
     ],
     [
      0.53,
-     5445
+     10733
     ],
     [
      0.52,
-     113
-    ],
-    [
-     0.51,
-     3050
+     150
     ]
    ],
    "asks": [
     [
-     0.57,
-     18058
-    ],
-    [
      0.58,
-     101683
+     28041
     ],
     [
      0.59,
-     13981
+     20354
     ],
     [
      0.6,
-     4369
+     2678
     ],
     [
      0.61,
-     2203
+     1993
     ],
     [
      0.62,
-     4665
+     1991
+    ],
+    [
+     0.67,
+     32
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0x50cae4c048af15f22e46b263b2371505eaf6bfdd",
+    "action": "BUY",
+    "side": "Learner Tien",
+    "price": 0.57,
+    "usd": 570,
+    "ts": 1788658095
+   },
    {
     "wallet": "0xed8e476d7249ddc5eff2b7a509f32a44f0817ec6",
     "action": "BUY",
@@ -203485,14 +203527,6 @@
     "price": 0.44,
     "usd": 313,
     "ts": 1788654978
-   },
-   {
-    "wallet": "0x0353aaf82abbd3e69c00059df0a825bc198fc2ff",
-    "action": "BUY",
-    "side": "Learner Tien",
-    "price": 0.57,
-    "usd": 570,
-    "ts": 1788653434
    }
   ]
  },
@@ -205054,14 +205088,14 @@
  },
  "mls-por-min-2026-09-05": {
   "shares": {
-   "Portland Timbers": 11294.4057822,
-   "Draw (Portland Timbers vs. Minnesota United FC)": 526.2795264,
-   "Minnesota United FC": 18079.562530024996
+   "Portland Timbers": 11572.050792610002,
+   "Draw (Portland Timbers vs. Minnesota United FC)": 596.8066410000001,
+   "Minnesota United FC": 18859.395187075
   },
   "prices": {
-   "Portland Timbers": 0.395,
+   "Portland Timbers": 0.385,
    "Draw (Portland Timbers vs. Minnesota United FC)": 0.255,
-   "Minnesota United FC": 0.355
+   "Minnesota United FC": 0.365
   },
   "splitGuete": {
    "art": "belastbar",
@@ -205069,35 +205103,35 @@
   },
   "league": "MLS",
   "sport": "Fußball",
-  "totalUsd": 84540,
+  "totalUsd": 87193,
   "whales": [
    {
     "wallet": "0xeb739f5e4f45b0b68688bb252f08327bc01653b0",
     "side": "Minnesota United FC",
-    "usd": 11065,
+    "usd": 11377,
     "avgPrice": 0.3657
    },
    {
     "wallet": "0x04d5524a0a5af2eca6e39e03defc261d42fe66d8",
     "side": "Minnesota United FC",
-    "usd": 6667,
+    "usd": 6877,
     "avgPrice": 0.3497
    },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "Portland Timbers",
-    "usd": 2328,
-    "avgPrice": 0.4
+    "usd": 2400,
+    "avgPrice": 0.3994
    },
    {
     "wallet": "0xa0b87536071f0ce34ff9d8cd69572f19c151e424",
     "side": "Portland Timbers",
-    "usd": 2027,
+    "usd": 1976,
     "avgPrice": 0.4767
    }
   ],
-  "hoursToKickoff": 1.01,
-  "capturedAt": "2026-09-06T01:32:06.990450+00:00",
+  "hoursToKickoff": 0.51,
+  "capturedAt": "2026-09-06T02:02:04.569535+00:00",
   "tokens": {
    "Portland Timbers": "9426531920323400165469152851595556143409138943951027145444001948357876890185",
    "Draw (Portland Timbers vs. Minnesota United FC)": "109534814480432841442430104716223065835462734692046301446855125571975668730179",
@@ -205157,13 +205191,13 @@
  },
  "mls-vwh-stl-2026-09-05": {
   "shares": {
-   "Vancouver Whitecaps FC": 2390.4253250850006,
-   "Draw (Vancouver Whitecaps FC vs. St. Louis City SC)": 68.68851365500001,
-   "St. Louis City SC": 858.72949309
+   "Vancouver Whitecaps FC": 8395.12046796,
+   "Draw (Vancouver Whitecaps FC vs. St. Louis City SC)": 249.034153875,
+   "St. Louis City SC": 1327.36691002
   },
   "prices": {
-   "Vancouver Whitecaps FC": 0.665,
-   "Draw (Vancouver Whitecaps FC vs. St. Louis City SC)": 0.185,
+   "Vancouver Whitecaps FC": 0.645,
+   "Draw (Vancouver Whitecaps FC vs. St. Louis City SC)": 0.195,
    "St. Louis City SC": 0.155
   },
   "splitGuete": {
@@ -205172,35 +205206,34 @@
   },
   "league": "MLS",
   "sport": "Fußball",
-  "totalUsd": 9883,
+  "totalUsd": 22704,
   "whales": [
    {
-    "wallet": "0x70dbec635412c1568b36174b039f621bcc20f73f",
+    "wallet": "0xf68a281980f8c13828e84e147e3822381d6e5b1b",
     "side": "Vancouver Whitecaps FC",
-    "usd": 1191,
-    "avgPrice": 0.6699
-   },
-   {
-    "wallet": "0x2117ae94a97d69b78cbc81b6680a62deb1955c26",
-    "side": "St. Louis City SC",
-    "usd": 729,
-    "avgPrice": 0.16
+    "usd": 2150,
+    "avgPrice": 0.65
    },
    {
     "wallet": "0xa3b5da76ffbbe3325bb1b40a30f6a4634962941a",
     "side": "Vancouver Whitecaps FC",
-    "usd": 682,
+    "usd": 1290,
     "avgPrice": 0.6599
    },
    {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "wallet": "0x70dbec635412c1568b36174b039f621bcc20f73f",
     "side": "Vancouver Whitecaps FC",
-    "usd": 243,
-    "avgPrice": 0.6499
+    "usd": 1155,
+    "avgPrice": 0.6699
+   },
+   {
+    "wallet": "0x9703676286b93c2eca71ca96e8757104519a69c2",
+    "side": "Vancouver Whitecaps FC",
+    "usd": 1119
    }
   ],
-  "hoursToKickoff": 1.01,
-  "capturedAt": "2026-09-06T01:32:06.990450+00:00",
+  "hoursToKickoff": 0.51,
+  "capturedAt": "2026-09-06T02:02:04.569535+00:00",
   "tokens": {
    "Vancouver Whitecaps FC": "80629869425134700265376883936889307572991941955706395684642989004182510718877",
    "Draw (Vancouver Whitecaps FC vs. St. Louis City SC)": "6041849907015666317228961100720310428832691499016284776836246088232554339113",
@@ -205412,8 +205445,8 @@
  },
  "cfb-unlv-hawaii-2026-09-05": {
   "shares": {
-   "UNLV": 214105.13247696002,
-   "Hawai'i": 171669.88096789503
+   "UNLV": 247286.03541879007,
+   "Hawai'i": 198274.388732065
   },
   "prices": {
    "UNLV": 0.555,
@@ -205425,25 +205458,25 @@
   },
   "league": "CFB",
   "sport": null,
-  "totalUsd": 393910,
+  "totalUsd": 404569,
   "whales": [
    {
     "wallet": "0x4bff30af91642dc7d2b19a8664378fe55c45fc26",
     "side": "UNLV",
-    "usd": 194622,
-    "avgPrice": 0.5662
+    "usd": 222000,
+    "avgPrice": 0.5642
    },
    {
     "wallet": "0x224a89dbe0db0d6124b335edabd15b3f877da3d5",
     "side": "Hawai'i",
-    "usd": 82843,
-    "avgPrice": 0.4299
+    "usd": 85108,
+    "avgPrice": 0.4302
    },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "side": "Hawai'i",
-    "usd": 32694,
-    "avgPrice": 0.4371
+    "usd": 33837,
+    "avgPrice": 0.4375
    },
    {
     "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
@@ -205452,8 +205485,8 @@
     "avgPrice": 0.438
    }
   ],
-  "hoursToKickoff": 0.51,
-  "capturedAt": "2026-09-06T01:32:06.990450+00:00",
+  "hoursToKickoff": 0.01,
+  "capturedAt": "2026-09-06T02:02:04.569535+00:00",
   "cond": "0x5d55e68611d18120ef41e8100ac2a3ca5aaac1f8ceb969c6c5514fccb9eb8198",
   "frage": "UNLV vs. Hawai'i",
   "tokens": {
@@ -205462,64 +205495,104 @@
   },
   "book": {
    "side": "UNLV",
-   "bid": 0.55,
-   "ask": 0.56,
+   "bid": 0.53,
+   "ask": 0.54,
    "spreadC": 1.0,
-   "spreadPct": 1.79,
+   "spreadPct": 1.85,
    "bids": [
     [
-     0.55,
-     50739
-    ],
-    [
-     0.54,
-     20660
-    ],
-    [
      0.53,
-     52288
+     21282
     ],
     [
      0.52,
-     45936
+     4642
     ],
     [
      0.51,
-     23613
+     16396
     ],
     [
-     0.5,
-     1574
+     0.48,
+     147
+    ],
+    [
+     0.31,
+     139
+    ],
+    [
+     0.26,
+     142
     ]
    ],
    "asks": [
     [
+     0.54,
+     44380
+    ],
+    [
+     0.55,
+     30
+    ],
+    [
      0.56,
-     285240
+     119487
     ],
     [
      0.57,
-     62271
+     61143
     ],
     [
      0.58,
-     37251
+     5010
     ],
     [
-     0.59,
-     2255
-    ],
-    [
-     0.6,
-     3005
-    ],
-    [
-     0.61,
-     3800
+     0.62,
+     147
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Hawaii",
+    "price": 0.45,
+    "usd": 495,
+    "ts": 1788659835
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "action": "BUY",
+    "side": "Hawaii",
+    "price": 0.45,
+    "usd": 353,
+    "ts": 1788659824
+   },
+   {
+    "wallet": "0xffae9e30c19309d18f0ce40420ab95d39b7fadae",
+    "action": "BUY",
+    "side": "UNLV",
+    "price": 0.56,
+    "usd": 300,
+    "ts": 1788659406
+   },
+   {
+    "wallet": "0xbe6c717bb08e69c2b646d3a6fe8caaa874e3a2c3",
+    "action": "BUY",
+    "side": "Hawaii",
+    "price": 0.45,
+    "usd": 300,
+    "ts": 1788658674
+   },
+   {
+    "wallet": "0x6f6589b77c36b94c2a1304dfd40f44310725172c",
+    "action": "BUY",
+    "side": "UNLV",
+    "price": 0.56,
+    "usd": 4952,
+    "ts": 1788658387
+   },
    {
     "wallet": "0x6d3c5bd13984b2de47c3a88ddc455309aab3d294",
     "action": "BUY",
@@ -205543,46 +205616,6 @@
     "price": 0.44,
     "usd": 733,
     "ts": 1788656626
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "action": "BUY",
-    "side": "Hawaii",
-    "price": 0.44,
-    "usd": 1628,
-    "ts": 1788656608
-   },
-   {
-    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
-    "action": "BUY",
-    "side": "Hawaii",
-    "price": 0.44,
-    "usd": 4145,
-    "ts": 1788656592
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "action": "BUY",
-    "side": "Hawaii",
-    "price": 0.44,
-    "usd": 2557,
-    "ts": 1788656575
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "action": "BUY",
-    "side": "Hawaii",
-    "price": 0.44,
-    "usd": 743,
-    "ts": 1788656575
-   },
-   {
-    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
-    "action": "BUY",
-    "side": "Hawaii",
-    "price": 0.44,
-    "usd": 2557,
-    "ts": 1788656574
    }
   ]
  },
@@ -205762,8 +205795,8 @@
     "usd": 172
    }
   ],
-  "hoursToKickoff": 2.68,
-  "capturedAt": "2026-09-06T01:32:06.990450+00:00",
+  "hoursToKickoff": 2.18,
+  "capturedAt": "2026-09-06T02:02:04.569535+00:00",
   "cond": "0x2d38a6fe3bec7208b18cb5084b507bedf12a96b7d265d30a0a3e39f3bf4418ef",
   "frage": "Phan Thiet 3: Takuya Kumasaka vs Martin Borisiouk",
   "tokens": {

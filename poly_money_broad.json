@@ -1,22 +1,22 @@
 {
- "n": 112,
+ "n": 114,
  "minOdds": 1.35,
- "moneyHitRate": 0.295,
- "priceHitRate": 0.339,
- "brierMoney": 0.9818,
- "brierPrice": 0.7374,
+ "moneyHitRate": 0.298,
+ "priceHitRate": 0.342,
+ "brierMoney": 0.9729,
+ "brierPrice": 0.7358,
  "disagree": {
-  "n": 33,
+  "n": 35,
   "moneyWon": 1,
   "priceWon": 6,
-  "neither": 26
+  "neither": 28
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
  "byLeague": [],
  "guete": {
-  "belastbar": 112,
-  "preis_echo": 262,
+  "belastbar": 114,
+  "preis_echo": 263,
   "abgeschnitten": 14,
   "unbekannt": 446,
   "leer": 0
@@ -311,6 +311,18 @@
    "totalUsd": 129988
   },
   {
+   "key": "bra-sao-cam-2026-09-05",
+   "league": "BRAZIL-SERIE-A",
+   "winner": "São Paulo FC",
+   "moneyFav": "São Paulo FC",
+   "priceFav": "São Paulo FC",
+   "moneyShare": 0.941,
+   "priceProb": 0.487,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 110732
+  },
+  {
    "key": "bun-wer-lei-2026-09-05",
    "league": "BUNDESLIGA",
    "winner": "SV Werder Bremen",
@@ -489,27 +501,15 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 56848
-  },
-  {
-   "key": "elc-sto-cha-2026-09-05",
-   "league": "EFL-CHAMPIONSHIP",
-   "winner": "Stoke City FC",
-   "moneyFav": "Stoke City FC",
-   "priceFav": "Stoke City FC",
-   "moneyShare": 0.953,
-   "priceProb": 0.477,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 53958
   }
  ],
- "generatedAt": "2026-09-06T01:32:12.349234+00:00",
+ "generatedAt": "2026-09-06T02:02:23.409276+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 422,
   "nfl": 800,
-  "mlb": 761,
+  "mlb": 750,
   "nhl": 487,
   "mls": 787,
   "epl": 542,
@@ -521,12 +521,12 @@
   "serie-a": 51,
   "ligue-1": 544,
   "primeira-liga": 532,
-  "brazil-serie-a": 553,
+  "brazil-serie-a": 547,
   "brasileirao": 0,
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 609,
+  "esports": 607,
   "cs2": 420,
   "lol": 400,
   "dota": 9,
@@ -595,8 +595,8 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1819,
-   "usd": 30347584,
+   "n": 1850,
+   "usd": 30593875,
    "beispiel": "fifwc-esp-cvi-2026-06-15-more-markets"
   },
   "balance": {
@@ -605,13 +605,13 @@
    "beispiel": "balance-of-power-2026-midterms"
   },
   "nba": {
-   "n": 445,
-   "usd": 5885329,
+   "n": 424,
+   "usd": 5120906,
    "beispiel": "nba-sas-okc-2026-05-18"
   },
   "nhl": {
-   "n": 477,
-   "usd": 2594356,
+   "n": 466,
+   "usd": 2396492,
    "beispiel": "nhl-phi-car-2026-05-02"
   },
   "ecs": {
@@ -619,39 +619,49 @@
    "usd": 881566,
    "beispiel": "ecs-ars-mci-2026-08-16-more-markets"
   },
-  "cbb": {
-   "n": 93,
-   "usd": 756264,
-   "beispiel": "cbb-uconn-mich-2026-04-06"
-  },
   "fed": {
    "n": 21,
-   "usd": 392934,
+   "usd": 482717,
    "beispiel": "fed-decision-in-december"
   },
-  "fif": {
-   "n": 57,
-   "usd": 274804,
-   "beispiel": "fif-bra-hrv-2026-03-31"
+  "republican": {
+   "n": 7,
+   "usd": 472330,
+   "beispiel": "republican-presidential-nominee-2028"
+  },
+  "cbb": {
+   "n": 34,
+   "usd": 285743,
+   "beispiel": "cbb-uconn-mich-2026-04-06"
+  },
+  "presidential": {
+   "n": 13,
+   "usd": 277790,
+   "beispiel": "presidential-election-winner-2028"
   },
   "will": {
-   "n": 11,
-   "usd": 261664,
-   "beispiel": "will-the-supreme-court-rule-on-trumps-tarriffs-by"
-  },
-  "clf": {
-   "n": 49,
-   "usd": 213519,
-   "beispiel": "clf-jej-bmu-2026-08-04-more-markets"
+   "n": 8,
+   "usd": 258582,
+   "beispiel": "will-trump-acquire-greenland-before-2027"
   },
   "2026": {
-   "n": 30,
-   "usd": 196481,
+   "n": 38,
+   "usd": 254016,
    "beispiel": "2026-the-cj-cup-byron-nelson-winner"
+  },
+  "fif": {
+   "n": 46,
+   "usd": 246236,
+   "beispiel": "fif-bra-hrv-2026-03-31"
+  },
+  "clf": {
+   "n": 39,
+   "usd": 187114,
+   "beispiel": "clf-tot-tsg-2026-08-16"
   },
   "world": {
    "n": 33,
-   "usd": 157781,
+   "usd": 161580,
    "beispiel": "world-cup-golden-boot-winner"
   },
   "strait": {
@@ -660,13 +670,18 @@
    "beispiel": "strait-of-hormuz-traffic-returns-to-normal-by-august-31-20260702154212320"
   },
   "nbasl": {
-   "n": 5,
-   "usd": 106156,
+   "n": 3,
+   "usd": 113076,
    "beispiel": "nbasl-cle-nop-2026-07-15"
+  },
+  "democratic": {
+   "n": 15,
+   "usd": 107203,
+   "beispiel": "democratic-presidential-nominee-2028"
   },
   "us": {
    "n": 7,
-   "usd": 104219,
+   "usd": 104876,
    "beispiel": "us-x-venezuela-military-engagement-by"
   },
   "j2100": {
@@ -674,25 +689,10 @@
    "usd": 77337,
    "beispiel": "j2100-van-fuk-2026-06-01"
   },
-  "presidential": {
-   "n": 10,
-   "usd": 76507,
-   "beispiel": "presidential-election-winner-2028"
-  },
   "btc": {
    "n": 30,
-   "usd": 75605,
-   "beispiel": "btc-updown-5m-1788147900"
-  },
-  "democratic": {
-   "n": 14,
-   "usd": 61865,
-   "beispiel": "democratic-presidential-nominee-2028"
-  },
-  "super": {
-   "n": 14,
-   "usd": 57397,
-   "beispiel": "super-bowl-champion-2026-731"
+   "usd": 75806,
+   "beispiel": "btc-updown-5m-1785960000"
   }
  }
 }
