@@ -38,7 +38,27 @@ DEFAULTS = {
     "min_rate_pct":  55,     # Serie muss von der eigenen Grundrate gestützt sein
     "per_streak":    0.15,   # pp pro gestützter Serie (× Länge × Stärke × Persistenz × xG × Gegner)
     "max_pp":        2.5,    # harter Deckel (klein!)
-    "min_fire_abs":  0.25,   # darunter nicht feuern
+    # 06.09.2026 (Lucas: „mir kann keiner sagen, dass eine Serie keine Auswirkung hat").
+    # Nachgemessen ueber alle Liga-Picks: auf den ERGEBNIS-Maerkten (1X2/DC — 156 von 274 Picks)
+    # gab es 58 Faelle mit qualifizierter Serie, Median-Score 0,052, **Maximum 0,214**. Die
+    # Schwelle stand bei 0,25: null von 58 kamen durch. Bei Ueber/Unter dasselbe Bild
+    # (Median 0,101, Maximum 0,279). Daher 8 Feuerungen in 318 Picks — praktisch zufaellig.
+    #
+    # Das Signal war nicht vorsichtig, es war STUMM: die Multiplikatorenkette
+    # (0,15 x Laenge x Rate x Persistenz 0,4-0,5 x xG 0,35 x Gegner 0,8-1,25) loescht sich
+    # selbst aus. Der theoretische Bestfall liegt bei 0,60, real erreicht nichts die Haelfte.
+    # Am 04.07. wurde deshalb schon min_length 4->3 gesenkt — das Symptom, nicht die Kette.
+    #
+    # Der Zustand war der schlechteste denkbare: das Signal konnte weder helfen NOCH widerlegt
+    # werden. Keine Beobachtungen -> die Bilanz kann nie urteilen -> Gewicht bleibt ewig 1,0.
+    # „Serien wirken nicht" war nie gemessen; es war nie gefragt.
+    #
+    # Jetzt: feuern lassen und mitschreiben. Die Scores bleiben bei 0,05-0,28 und drehen keinen
+    # Pick (andere Signale liefern 1-3 pp) — aber sie landen im Ledger, und in ein paar Wochen
+    # sagt `signal_bilanz` mit Untergrenze, ob Serien tragen. Sagt sie „schadet", wertet der
+    # Loop automatisch ab. Das ist „runtergewichtet und nur mehr beobachtet", von der anderen
+    # Seite her.
+    "min_fire_abs":  0.05,   # darunter nicht feuern (bis 06.09.: 0,25 = faktisch nie)
     "backed_factor": 1.15,   # xgBacked == True → leichter Boost
     "unbacked_factor": 0.35, # xgBacked == False → stark dämpfen (Glückstore)
     "opp_scale_min": 0.80,   # Gegner-Normalisierung untere Grenze
