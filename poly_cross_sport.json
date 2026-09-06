@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-06T15:30:21.679320+00:00",
+ "generatedAt": "2026-09-06T16:00:25.848873+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,28 +9,57 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 561,
- "pinnKeys": 311,
- "matched": 219,
- "footballRows": 201,
- "crossRows": 360,
- "footballSkippedStale": 84,
+ "polyRowsSeen": 574,
+ "pinnKeys": 302,
+ "matched": 212,
+ "footballRows": 192,
+ "crossRows": 382,
+ "footballSkippedStale": 67,
  "seenBySport": {
   "americanfootball_nfl": 156,
-  "baseball_mlb": 82,
-  "icehockey_nhl": 96,
+  "baseball_mlb": 84,
+  "icehockey_nhl": 116,
   "boxing_boxing": 26,
   "soccer_mls": 30,
-  "soccer_liga": 171
+  "soccer_liga": 162
  },
  "matchedBySport": {
-  "baseball_mlb": 18,
+  "baseball_mlb": 20,
   "soccer_mls": 30,
-  "soccer_liga": 171
+  "soccer_liga": 162
  },
  "trackRecord": {
-  "tracked": 292,
+  "tracked": 294,
   "converged": 67
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|angers-rennes|aw",
+   "sport": "soccer_liga",
+   "event": "Angers vs Rennes",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 51.5,
+   "pinnPP": 71.0,
+   "gapPP": -19.45,
+   "vol": 14130,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-06T16:00:25.848264+00:00"
+  },
+  {
+   "id": "soccer_liga|angers-rennes|hw",
+   "sport": "soccer_liga",
+   "event": "Angers vs Rennes",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 23.5,
+   "pinnPP": 10.4,
+   "gapPP": 13.13,
+   "vol": 14130,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-06T16:00:25.848264+00:00"
+  }
+ ]
 }
