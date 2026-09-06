@@ -1,21 +1,21 @@
 {
-"generatedAt": "2026-09-06T18:24:17.143410+00:00",
+"generatedAt": "2026-09-06T18:39:25.819285+00:00",
 "byVerdict": {
 "konsens": {
-"n": 848,
-"wins": 706,
-"hitRate": 0.8325,
-"polyN": 794,
-"polyWins": 613,
-"polyHitRate": 0.772,
+"n": 850,
+"wins": 708,
+"hitRate": 0.8329,
+"polyN": 796,
+"polyWins": 615,
+"polyHitRate": 0.7726,
 "pinnN": 87,
 "pinnHitRate": 0.8276,
-"nRoi": 176,
-"roi": 0.4645,
-"roiLb": 0.3704,
-"nClv": 176,
-"clv": 22.2,
-"clvLb": 19.2225
+"nRoi": 178,
+"roi": 0.4667,
+"roiLb": 0.3737,
+"nClv": 178,
+"clv": 22.36,
+"clvLb": 19.4042
 },
 "uneinig": {
 "n": 315,
@@ -81,6 +81,11 @@
 "wins": 22,
 "hitRate": 0.7097
 },
+"English Premier League": {
+"n": 30,
+"wins": 17,
+"hitRate": 0.5667
+},
 "Japanese J League": {
 "n": 30,
 "wins": 23,
@@ -90,11 +95,6 @@
 "n": 30,
 "wins": 22,
 "hitRate": 0.7333
-},
-"English Premier League": {
-"n": 29,
-"wins": 16,
-"hitRate": 0.5517
 },
 "Mexican Liga MX": {
 "n": 28,
@@ -282,9 +282,9 @@
 "hitRate": 0.7
 },
 "Polish Ekstraklasa": {
-"n": 9,
-"wins": 5,
-"hitRate": 0.5556
+"n": 10,
+"wins": 6,
+"hitRate": 0.6
 },
 "Swedish Superettan": {
 "n": 9,
@@ -584,15 +584,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 694,
-"wins": 556,
-"hitRate": 0.8012,
-"nRoi": 170,
-"roi": 0.2621,
-"roiLb": 0.155,
-"nClv": 170,
-"clv": 13.16,
-"clvLb": 8.8509
+"n": 696,
+"wins": 558,
+"hitRate": 0.8017,
+"nRoi": 172,
+"roi": 0.2667,
+"roiLb": 0.1607,
+"nClv": 172,
+"clv": 13.42,
+"clvLb": 9.1541
 },
 "weak": {
 "n": 451,
@@ -615,6 +615,44 @@
 "polyRate": 0.2536
 },
 "recent": [
+{
+"matchId": "35974454",
+"home": "Arsenal",
+"away": "Chelsea",
+"league": "English Premier League",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Arsenal",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+2,
+1
+],
+"kickoff": "2026-09-06T15:30:00Z",
+"settledAt": "2026-09-06T18:39:25.643302+00:00"
+},
+{
+"matchId": "36008110",
+"home": "Lech Poznan",
+"away": "Rakow Czestochowa",
+"league": "Polish Ekstraklasa",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Lech Poznan",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-09-06T15:30:00Z",
+"settledAt": "2026-09-06T18:39:25.643302+00:00"
+},
 {
 "matchId": "36005370",
 "home": "Angers",
@@ -1336,56 +1374,18 @@
 ],
 "kickoff": "2026-09-06T10:30:00Z",
 "settledAt": "2026-09-06T13:38:46.345153+00:00"
-},
-{
-"matchId": "36014663",
-"home": "VfL Osnabruck",
-"away": "Braunschweig",
-"league": "German Bundesliga 2",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "VFL Osnabruck",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-1
-],
-"kickoff": "2026-09-06T11:30:00Z",
-"settledAt": "2026-09-06T13:23:32.317481+00:00"
-},
-{
-"matchId": "36020910",
-"home": "Cercle Brugge",
-"away": "Gent",
-"league": "Belgian Pro League",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Gent",
-"polySide": "away",
-"winner": "away",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-0,
-3
-],
-"kickoff": "2026-09-06T11:30:00Z",
-"settledAt": "2026-09-06T13:23:32.317481+00:00"
 }
 ],
 "global": {
-"n": 1178,
-"wins": 811,
-"hitRate": 0.6885,
-"nRoi": 265,
-"roi": 0.1518,
-"roiLb": 0.0593,
-"nClv": 265,
-"clv": 7.86,
-"clvLb": 4.4182
+"n": 1180,
+"wins": 813,
+"hitRate": 0.689,
+"nRoi": 267,
+"roi": 0.1556,
+"roiLb": 0.0637,
+"nClv": 267,
+"clv": 8.07,
+"clvLb": 4.645
 },
 "pending": 15
 }
