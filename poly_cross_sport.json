@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-06T21:00:47.721583+00:00",
+ "generatedAt": "2026-09-06T21:30:49.603015+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,127 +9,57 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 564,
- "pinnKeys": 274,
- "matched": 192,
- "footballRows": 180,
- "crossRows": 384,
- "footballSkippedStale": 86,
+ "polyRowsSeen": 557,
+ "pinnKeys": 269,
+ "matched": 187,
+ "footballRows": 177,
+ "crossRows": 380,
+ "footballSkippedStale": 85,
  "seenBySport": {
   "americanfootball_nfl": 156,
-  "baseball_mlb": 86,
+  "baseball_mlb": 82,
   "icehockey_nhl": 116,
   "boxing_boxing": 26,
-  "soccer_mls": 30,
-  "soccer_liga": 150
+  "soccer_mls": 33,
+  "soccer_liga": 144
  },
  "matchedBySport": {
-  "baseball_mlb": 12,
-  "soccer_mls": 30,
-  "soccer_liga": 150
+  "baseball_mlb": 10,
+  "soccer_mls": 33,
+  "soccer_liga": 144
  },
  "trackRecord": {
   "tracked": 299,
-  "converged": 67
+  "converged": 69
  },
  "discrepancies": [
   {
-   "id": "soccer_liga|espanyol-sevilla|hw",
-   "sport": "soccer_liga",
-   "event": "Espanyol vs Sevilla",
-   "market": "1X2",
-   "outcome": "Heim",
-   "polyPP": 84.5,
-   "pinnPP": 40.5,
-   "gapPP": 44.03,
-   "vol": 460742,
+   "id": "baseball_mlb|newyorkyankees-sandiegopadres|newyorkyankees",
+   "sport": "baseball_mlb",
+   "event": "New York Yankees vs San Diego Padres",
+   "market": "Moneyline",
+   "outcome": "New York Yankees",
+   "polyPP": 10.5,
+   "pinnPP": 17.4,
+   "gapPP": -6.87,
+   "vol": 337935,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 8.21,
+   "firstSeen": "2026-09-05T03:57:12.204392+00:00"
+  },
+  {
+   "id": "baseball_mlb|newyorkyankees-sandiegopadres|sandiegopadres",
+   "sport": "baseball_mlb",
+   "event": "New York Yankees vs San Diego Padres",
+   "market": "Moneyline",
+   "outcome": "San Diego Padres",
+   "polyPP": 89.5,
+   "pinnPP": 82.6,
+   "gapPP": 6.87,
+   "vol": 337935,
    "richtung": "Poly zu hoch → faden",
-   "convergePP": 0.0,
-   "firstSeen": "2026-09-06T20:50:45.366480+00:00"
-  },
-  {
-   "id": "soccer_liga|marseille-parisfc|aw",
-   "sport": "soccer_liga",
-   "event": "Marseille vs Paris FC",
-   "market": "1X2",
-   "outcome": "Auswärts",
-   "polyPP": 60.0,
-   "pinnPP": 19.2,
-   "gapPP": 40.77,
-   "vol": 834312,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": 0.0,
-   "firstSeen": "2026-09-06T20:50:45.366480+00:00"
-  },
-  {
-   "id": "soccer_liga|espanyol-sevilla|dr",
-   "sport": "soccer_liga",
-   "event": "Espanyol vs Sevilla",
-   "market": "1X2",
-   "outcome": "Remis",
-   "polyPP": 12.5,
-   "pinnPP": 49.6,
-   "gapPP": -37.09,
-   "vol": 460742,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": 0.0,
-   "firstSeen": "2026-09-06T20:50:45.366480+00:00"
-  },
-  {
-   "id": "soccer_liga|marseille-parisfc|dr",
-   "sport": "soccer_liga",
-   "event": "Marseille vs Paris FC",
-   "market": "1X2",
-   "outcome": "Remis",
-   "polyPP": 28.5,
-   "pinnPP": 52.5,
-   "gapPP": -23.99,
-   "vol": 834312,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": 0.0,
-   "firstSeen": "2026-09-06T20:50:45.366480+00:00"
-  },
-  {
-   "id": "soccer_liga|marseille-parisfc|hw",
-   "sport": "soccer_liga",
-   "event": "Marseille vs Paris FC",
-   "market": "1X2",
-   "outcome": "Heim",
-   "polyPP": 14.5,
-   "pinnPP": 28.3,
-   "gapPP": -13.78,
-   "vol": 834312,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": 0.0,
-   "firstSeen": "2026-09-06T20:50:45.366480+00:00"
-  },
-  {
-   "id": "soccer_liga|acmilan-juventus|aw",
-   "sport": "soccer_liga",
-   "event": "Juventus vs AC Milan",
-   "market": "1X2",
-   "outcome": "Auswärts",
-   "polyPP": 74.5,
-   "pinnPP": 66.8,
-   "gapPP": 7.7,
-   "vol": 834216,
-   "richtung": "Poly zu hoch → faden",
-   "convergePP": 0.0,
-   "firstSeen": "2026-09-06T20:50:45.366480+00:00"
-  },
-  {
-   "id": "soccer_liga|espanyol-sevilla|aw",
-   "sport": "soccer_liga",
-   "event": "Espanyol vs Sevilla",
-   "market": "1X2",
-   "outcome": "Auswärts",
-   "polyPP": 3.0,
-   "pinnPP": 9.9,
-   "gapPP": -6.94,
-   "vol": 460742,
-   "richtung": "Poly zu niedrig → backen",
-   "convergePP": 0.0,
-   "firstSeen": "2026-09-06T20:50:45.366480+00:00"
+   "convergePP": 8.21,
+   "firstSeen": "2026-09-05T03:57:12.204392+00:00"
   }
  ]
 }
