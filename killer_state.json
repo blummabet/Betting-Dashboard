@@ -500,36 +500,45 @@
    "haltePreis": 1.74,
    "aktiv": false
   },
-  "36003172|Match Odds": {
-   "matchId": "36003172",
-   "home": "Tigres",
-   "away": "Necaxa",
-   "league": "Mexican Liga MX",
-   "kickoff": "2026-09-06T01:00:00Z",
+  "35974018|Match Odds": {
+   "matchId": "35974018",
+   "home": "Real Salt Lake",
+   "away": "Los Angeles FC",
+   "league": "US MLS",
+   "kickoff": "2026-09-06T01:30:00Z",
    "markt": "Match Odds",
-   "seite": "home",
-   "name": "Tigres",
-   "odd": 1.71,
-   "entryOdd": 1.66,
-   "anteilPct": 77,
-   "stufe": 2,
+   "seite": "away",
+   "name": "Los Angeles FC",
+   "odd": 2.46,
+   "entryOdd": 2.44,
+   "anteilPct": 67,
+   "stufe": 1,
    "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly 94%",
+     "gewicht": 12
+    },
     {
      "art": "pinn",
      "text": "Pinnacle stimmt zu",
      "gewicht": 10
     }
    ],
-   "rang": 67.7,
+   "rang": 78.7,
    "track": null,
    "streak": null,
-   "poly": null,
-   "polyStatus": "unbekannt",
+   "poly": {
+    "anteilPct": 94,
+    "usd": 45768,
+    "odd": 2.41
+   },
+   "polyStatus": "ja",
    "pinnMovePP": null,
    "punkte": {
-    "punkte": 5,
-    "moeglich": 7,
-    "dauerH": 0.63,
+    "punkte": 7,
+    "moeglich": 10,
+    "dauerH": 0.38,
     "teile": [
      {
       "buch": "BF",
@@ -539,23 +548,29 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 70% auf der Seite"
+       "text": "Geld 67% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
-      "text": "Geld 70% auf der Seite"
+      "text": "Geld 67% auf der Seite"
      },
      {
       "buch": "POLY",
       "name": "Polymarket",
-      "status": "unbekannt",
-      "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "text": "Polymarket nicht erhoben"
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Poly-Geld 94% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "text": "Poly-Geld 94% auf derselben Seite"
      },
      {
       "buch": "PIN",
@@ -581,17 +596,17 @@
       "moeglich": 1,
       "grund": {
        "ok": false,
-       "text": "steht seit 0.6h vor Anpfiff"
+       "text": "steht seit 0.4h vor Anpfiff"
       },
       "tiefe": null,
-      "text": "steht seit 0.6h vor Anpfiff"
+      "text": "steht seit 0.4h vor Anpfiff"
      }
     ]
    },
    "wertVsPinn": null,
-   "gehaltenSeit": "2026-09-06T00:22:24.333980+00:00",
-   "zuletztAktiv": "2026-09-06T00:37:23.693790+00:00",
-   "haltePreis": 1.74,
+   "gehaltenSeit": "2026-09-06T01:07:29.914966+00:00",
+   "zuletztAktiv": "2026-09-06T01:07:29.914966+00:00",
+   "haltePreis": 2.46,
    "aktiv": true
   }
  }
