@@ -197708,7 +197708,13 @@
     "usd": 306,
     "ts": 1788627712
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "NRG": 0.0,
+   "LOUD": 1.0
+  },
+  "resolvedAt": "2026-09-06T00:02:00.520806+00:00"
  },
  "cs2-inox-zerote-2026-09-05": {
   "shares": {
@@ -200304,7 +200310,13 @@
   "tokens": {
    "Chicago Cubs": "17209618622260831944610778284941919639602078702766291779929602254967029773301",
    "Miami Marlins": "34798010727491588844384410298216199840559956372646168706737801155054249555586"
-  }
+  },
+  "resolved": true,
+  "resolvedPrices": {
+   "Chicago Cubs": 1.0,
+   "Miami Marlins": 0.0
+  },
+  "resolvedAt": "2026-09-06T00:02:00.520806+00:00"
  },
  "lal-vil-dep-2026-09-05-more-markets": {
   "shares": {
@@ -200757,7 +200769,14 @@
     "usd": 3000,
     "ts": 1788633408
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Red Bull Bragantino": 0.0,
+   "Draw (Red Bull Bragantino vs. EC Bahia)": 0.0,
+   "EC Bahia": 1.0
+  },
+  "resolvedAt": "2026-09-06T00:02:00.520806+00:00"
  },
  "es2-eld-rm-2026-09-05": {
   "shares": {
@@ -202934,12 +202953,12 @@
  },
  "bra-flu-vas-2026-09-05": {
   "shares": {
-   "Fluminense FC": 31380.567483315,
-   "Draw (Fluminense FC vs. CR Vasco da Gama)": 464.111609135,
-   "CR Vasco da Gama": 8985.19084843
+   "Fluminense FC": 205349.92221568504,
+   "Draw (Fluminense FC vs. CR Vasco da Gama)": 1389.59094218,
+   "CR Vasco da Gama": 11087.661732535002
   },
   "prices": {
-   "Fluminense FC": 0.415,
+   "Fluminense FC": 0.405,
    "Draw (Fluminense FC vs. CR Vasco da Gama)": 0.305,
    "CR Vasco da Gama": 0.305
   },
@@ -202949,19 +202968,19 @@
   },
   "league": "SOCCER",
   "sport": "Fußball",
-  "totalUsd": 48180,
+  "totalUsd": 372754,
   "whales": [
    {
     "wallet": "0x04d5524a0a5af2eca6e39e03defc261d42fe66d8",
     "side": "Fluminense FC",
-    "usd": 29588,
-    "avgPrice": 0.406
+    "usd": 201583,
+    "avgPrice": 0.417
    },
    {
     "wallet": "0xd202bf6d89dc6bab1b9f00ead175f75466348973",
     "side": "CR Vasco da Gama",
-    "usd": 2363,
-    "avgPrice": 0.2997
+    "usd": 4422,
+    "avgPrice": 0.2998
    },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
@@ -202970,19 +202989,144 @@
     "avgPrice": 0.299
    },
    {
-    "wallet": "0xaacac528e8af87ca25809824b384e169b558f5d5",
-    "side": "CR Vasco da Gama",
-    "usd": 700,
-    "avgPrice": 0.3166
+    "wallet": "0x448861155279dbf833d041b963e3ac854599e319",
+    "side": "Fluminense FC",
+    "usd": 1314,
+    "avgPrice": 0.4084
    }
   ],
-  "hoursToKickoff": 0.51,
-  "capturedAt": "2026-09-05T23:32:15.243657+00:00",
+  "hoursToKickoff": 0.02,
+  "capturedAt": "2026-09-06T00:02:00.520806+00:00",
   "tokens": {
    "Fluminense FC": "72623442810503545144222143094910295164864876687154052143813828579383389805207",
    "Draw (Fluminense FC vs. CR Vasco da Gama)": "39719464576611279766204906992526830200194466699752436828543104165480614511529",
    "CR Vasco da Gama": "46768517656098213404646076985165953877945775604941561322457952996270376258014"
-  }
+  },
+  "book": {
+   "side": "Fluminense FC",
+   "bid": 0.39,
+   "ask": 0.41,
+   "spreadC": 2.0,
+   "spreadPct": 4.88,
+   "bids": [
+    [
+     0.39,
+     1795
+    ],
+    [
+     0.38,
+     2546
+    ],
+    [
+     0.37,
+     1324
+    ],
+    [
+     0.36,
+     2025
+    ],
+    [
+     0.2,
+     510
+    ],
+    [
+     0.19,
+     526
+    ]
+   ],
+   "asks": [
+    [
+     0.41,
+     1791
+    ],
+    [
+     0.42,
+     1059
+    ],
+    [
+     0.43,
+     242
+    ],
+    [
+     0.44,
+     2212
+    ],
+    [
+     0.45,
+     108
+    ],
+    [
+     0.5,
+     50
+    ]
+   ]
+  },
+  "trades": [
+   {
+    "wallet": "0x9cb48ddd4185f3e947edf596589e40e574588285",
+    "action": "BUY",
+    "side": "No",
+    "price": 0.6,
+    "usd": 474,
+    "ts": 1788652434
+   },
+   {
+    "wallet": "0x04d5524a0a5af2eca6e39e03defc261d42fe66d8",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.42,
+    "usd": 75600,
+    "ts": 1788652380
+   },
+   {
+    "wallet": "0xe8c4d68aff65b38cac46987b9b65e01eb47d395d",
+    "action": "BUY",
+    "side": "Yes",
+    "price": 0.42,
+    "usd": 336,
+    "ts": 1788652176
+   },
+   {
+    "wallet": "0x16e588d2c09533bdbb3ff337fa74160a644cc50a",
+    "action": "BUY",
+    "side": "No",
+    "price": 0.59,
+    "usd": 603,
+    "ts": 1788652041
+   },
+   {
+    "wallet": "0x16e588d2c09533bdbb3ff337fa74160a644cc50a",
+    "action": "BUY",
+    "side": "No",
+    "price": 0.59,
+    "usd": 2204,
+    "ts": 1788652024
+   },
+   {
+    "wallet": "0xf059aff5075d2bb73405d9fe301f8ae20ed46dd9",
+    "action": "BUY",
+    "side": "No",
+    "price": 0.59,
+    "usd": 1180,
+    "ts": 1788651820
+   },
+   {
+    "wallet": "0xfed13032babfdb49ad387b7136e6a6fbd746eedb",
+    "action": "BUY",
+    "side": "No",
+    "price": 0.59,
+    "usd": 1180,
+    "ts": 1788651813
+   },
+   {
+    "wallet": "0x0c84d454825e9f42619497f6158b4753cd43a8ed",
+    "action": "BUY",
+    "side": "No",
+    "price": 0.59,
+    "usd": 1180,
+    "ts": 1788651783
+   }
+  ]
  },
  "mlb-stl-col-2026-09-05": {
   "shares": {
@@ -203025,8 +203169,8 @@
     "avgPrice": 0.43
    }
   ],
-  "hoursToKickoff": 0.68,
-  "capturedAt": "2026-09-05T23:32:15.243657+00:00",
+  "hoursToKickoff": 0.18,
+  "capturedAt": "2026-09-06T00:02:00.520806+00:00",
   "cond": "0x79b2887293f7185310db6c27735e19a52cb085c9bc5a48b8037171870ed8d5bb",
   "frage": "St. Louis Cardinals vs. Colorado Rockies: O/U 11.5",
   "tokens": {
@@ -203572,8 +203716,8 @@
  },
  "cs2-cce-vil1-2026-09-05": {
   "shares": {
-   "Chicken Coop Esports": 19908.104314709995,
-   "Villainous": 19513.879356014997
+   "Chicken Coop Esports": 19978.170587684996,
+   "Villainous": 19582.55817804
   },
   "prices": {
    "Chicken Coop Esports": 0.505,
@@ -203585,7 +203729,7 @@
   },
   "league": "ESPORTS",
   "sport": "E-Sport",
-  "totalUsd": 42883,
+  "totalUsd": 43067,
   "whales": [
    {
     "wallet": "0xf95b7145734ec1929104538c0c5c591d6d194b96",
@@ -203608,12 +203752,12 @@
    {
     "wallet": "0x969fd3c664f80f32b827ba55efce87970c55cbdc",
     "side": "Villainous",
-    "usd": 3162,
+    "usd": 3235,
     "avgPrice": 0.4898
    }
   ],
-  "hoursToKickoff": 1.01,
-  "capturedAt": "2026-09-05T23:32:15.243657+00:00",
+  "hoursToKickoff": 0.52,
+  "capturedAt": "2026-09-06T00:02:00.520806+00:00",
   "cond": "0x7e99fd168540f51814302e5dfd3828e010a91b9ada1e8284dc42cab7fc534f4a",
   "frage": "Counter-Strike: Chicken Coop Esports vs Villainous (BO3) - NSTLGA League Group Stage",
   "tokens": {
@@ -203717,9 +203861,9 @@
  },
  "mls-dal-skc-2026-09-05-first-half-exact-score": {
   "shares": {
-   "FC Dallas 0 - 0 Sporting Kansas City": 924.5356499999999,
+   "FC Dallas 0 - 0 Sporting Kansas City": 922.0369049999999,
    "FC Dallas 0 - 1 Sporting Kansas City": 161.145225,
-   "FC Dallas 1 - 0 Sporting Kansas City": 394.6825,
+   "FC Dallas 1 - 0 Sporting Kansas City": 411.4775,
    "FC Dallas 0 - 2 Sporting Kansas City": 0.0,
    "FC Dallas 1 - 1 Sporting Kansas City": 0.0,
    "FC Dallas 2 - 0 Sporting Kansas City": 0.0,
@@ -203728,15 +203872,15 @@
    "Any Other Score": 0.0
   },
   "prices": {
-   "FC Dallas 0 - 0 Sporting Kansas City": 0.185,
+   "FC Dallas 0 - 0 Sporting Kansas City": 0.1845,
    "FC Dallas 0 - 1 Sporting Kansas City": 0.0915,
-   "FC Dallas 1 - 0 Sporting Kansas City": 0.235,
-   "FC Dallas 0 - 2 Sporting Kansas City": 0.0265,
-   "FC Dallas 1 - 1 Sporting Kansas City": 0.095,
+   "FC Dallas 1 - 0 Sporting Kansas City": 0.245,
+   "FC Dallas 0 - 2 Sporting Kansas City": 0.025,
+   "FC Dallas 1 - 1 Sporting Kansas City": 0.09,
    "FC Dallas 2 - 0 Sporting Kansas City": 0.12,
-   "FC Dallas 1 - 2 Sporting Kansas City": 0.028,
+   "FC Dallas 1 - 2 Sporting Kansas City": 0.0265,
    "FC Dallas 2 - 1 Sporting Kansas City": 0.06,
-   "Any Other Score": 0.13
+   "Any Other Score": 0.2
   },
   "splitGuete": {
    "art": "abgeschnitten",
@@ -203749,13 +203893,13 @@
    {
     "wallet": "0x970998da056e60c707d9b1fc55cfdf3d68c252ab",
     "side": "FC Dallas 0 - 0 Sporting Kansas City",
-    "usd": 902,
+    "usd": 900,
     "avgPrice": 0.0835
    },
    {
     "wallet": "0x970998da056e60c707d9b1fc55cfdf3d68c252ab",
     "side": "FC Dallas 1 - 0 Sporting Kansas City",
-    "usd": 364,
+    "usd": 380,
     "avgPrice": 0.1054
    },
    {
@@ -203771,8 +203915,8 @@
     "avgPrice": 0.1
    }
   ],
-  "hoursToKickoff": 1.01,
-  "capturedAt": "2026-09-05T23:32:15.243657+00:00",
+  "hoursToKickoff": 0.52,
+  "capturedAt": "2026-09-06T00:02:00.520806+00:00",
   "tokens": {
    "FC Dallas 0 - 0 Sporting Kansas City": "12263743664180201200978279886083184241355565271037347219932043108170775792200",
    "FC Dallas 0 - 1 Sporting Kansas City": "85158062556438199854016501357976924497532795671104969917354503598713975279307",
@@ -203879,8 +204023,8 @@
  },
  "mlb-wsh-lad-2026-09-05": {
   "shares": {
-   "Washington Nationals": 26873.161320054995,
-   "Los Angeles Dodgers": 46751.92461635998
+   "Washington Nationals": 26972.569562074994,
+   "Los Angeles Dodgers": 46924.86772233997
   },
   "prices": {
    "Washington Nationals": 0.365,
@@ -203892,7 +204036,7 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 84567,
+  "totalUsd": 86857,
   "whales": [
    {
     "wallet": "0xa1ea446e42630a5e3835d99a453be573e31eb845",
@@ -203918,8 +204062,8 @@
     "avgPrice": 0.3396
    }
   ],
-  "hoursToKickoff": 1.68,
-  "capturedAt": "2026-09-05T23:32:15.243657+00:00",
+  "hoursToKickoff": 1.18,
+  "capturedAt": "2026-09-06T00:02:00.520806+00:00",
   "cond": "0x94fca9ce738cce6139fee983b9365d99304cb6c498061010027fa51ea3004e34",
   "frage": "Washington Nationals vs. Los Angeles Dodgers",
   "tokens": {
@@ -203935,45 +204079,45 @@
    "bids": [
     [
      0.63,
-     103341
+     103056
     ],
     [
      0.62,
-     67383
+     65549
     ],
     [
      0.61,
-     84674
+     91257
     ],
     [
      0.6,
-     38354
+     49469
     ],
     [
      0.59,
-     4213
+     5435
     ],
     [
      0.58,
-     3135
+     1880
     ]
    ],
    "asks": [
     [
      0.64,
-     527183
+     508652
     ],
     [
      0.65,
-     267936
+     262352
     ],
     [
      0.66,
-     75839
+     66899
     ],
     [
      0.67,
-     15019
+     10014
     ],
     [
      0.68,
@@ -203981,11 +204125,19 @@
     ],
     [
      0.69,
-     9208
+     6958
     ]
    ]
   },
   "trades": [
+   {
+    "wallet": "0xe8c4d68aff65b38cac46987b9b65e01eb47d395d",
+    "action": "BUY",
+    "side": "Los Angeles Dodgers",
+    "price": 0.64,
+    "usd": 1141,
+    "ts": 1788651183
+   },
    {
     "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
     "action": "BUY",
@@ -204033,22 +204185,6 @@
     "price": 0.35,
     "usd": 307,
     "ts": 1788645189
-   },
-   {
-    "wallet": "0x5268527977f700f9bf9b6d5cd843859e4e70135d",
-    "action": "BUY",
-    "side": "Washington Nationals",
-    "price": 0.34,
-    "usd": 2310,
-    "ts": 1788644803
-   },
-   {
-    "wallet": "0x9c76cdb43fb46454da005fbc82047a64a18ec926",
-    "action": "BUY",
-    "side": "Washington Nationals",
-    "price": 0.34,
-    "usd": 340,
-    "ts": 1788644802
    }
   ]
  },
@@ -204156,8 +204292,8 @@
  },
  "mlb-oak-sea-2026-09-05": {
   "shares": {
-   "Athletics": 38027.58959978999,
-   "Seattle Mariners": 82694.92392991003
+   "Athletics": 38141.41021865999,
+   "Seattle Mariners": 82942.43912279002
   },
   "prices": {
    "Athletics": 0.315,
@@ -204169,12 +204305,12 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 163653,
+  "totalUsd": 164135,
   "whales": [
    {
     "wallet": "0xa71093cafc0c099b4ccab24c3cb8018d817923c4",
     "side": "Seattle Mariners",
-    "usd": 40634,
+    "usd": 40880,
     "avgPrice": 0.6799
    },
    {
@@ -204196,8 +204332,8 @@
     "avgPrice": 0.68
    }
   ],
-  "hoursToKickoff": 2.18,
-  "capturedAt": "2026-09-05T23:32:15.243657+00:00",
+  "hoursToKickoff": 1.68,
+  "capturedAt": "2026-09-06T00:02:00.520806+00:00",
   "cond": "0x66b97a6688a80e88b59681121260ae04403ae904406cd54edafa4c3eabeaf6e2",
   "frage": "Athletics vs. Seattle Mariners",
   "tokens": {
@@ -204213,49 +204349,49 @@
    "bids": [
     [
      0.68,
-     154615
+     153346
     ],
     [
      0.67,
-     101604
+     112329
     ],
     [
      0.66,
-     119077
+     122787
     ],
     [
      0.65,
-     62255
+     53784
     ],
     [
      0.64,
-     1418
+     1518
     ],
     [
      0.63,
-     3175
+     3170
     ]
    ],
    "asks": [
     [
      0.69,
-     89003
+     95317
     ],
     [
      0.7,
-     124557
+     132396
     ],
     [
      0.71,
-     63240
+     64087
     ],
     [
      0.72,
-     12215
+     12175
     ],
     [
      0.73,
-     205
+     160
     ],
     [
      0.74,
@@ -204293,7 +204429,7 @@
  "mls-lag-ner-2026-09-05": {
   "shares": {
    "Los Angeles Galaxy": 1480.03862475,
-   "Draw (Los Angeles Galaxy vs. New England Revolution)": 95.98192177,
+   "Draw (Los Angeles Galaxy vs. New England Revolution)": 127.58692177000002,
    "New England Revolution": 12279.500211750006
   },
   "prices": {
@@ -204307,7 +204443,7 @@
   },
   "league": "MLS",
   "sport": "Fußball",
-  "totalUsd": 44323,
+  "totalUsd": 44376,
   "whales": [
    {
     "wallet": "0x8ce7eb8a3ad1d6907b24368865c8487a68fb3150",
@@ -204332,8 +204468,8 @@
     "usd": 1398
    }
   ],
-  "hoursToKickoff": 2.01,
-  "capturedAt": "2026-09-05T23:32:15.243657+00:00",
+  "hoursToKickoff": 1.52,
+  "capturedAt": "2026-09-06T00:02:00.520806+00:00",
   "tokens": {
    "Los Angeles Galaxy": "76940611393505123000697095257313015371547793758498245922075731825844895620192",
    "Draw (Los Angeles Galaxy vs. New England Revolution)": "64675862674083356535619191019028630486084660692162734856469154355122570413737",
@@ -204342,12 +204478,12 @@
  },
  "mls-rsl-laf-2026-09-05-total-corners": {
   "shares": {
-   "Over": 2961.480670015,
-   "Under": 2015.7977669850002
+   "Over": 2986.3670622000004,
+   "Under": 1990.9113748
   },
   "prices": {
-   "Over": 0.595,
-   "Under": 0.405
+   "Over": 0.6,
+   "Under": 0.4
   },
   "splitGuete": {
    "art": "preis_echo",
@@ -204360,29 +204496,29 @@
    {
     "wallet": "0x076daa87c4fe1a85402a9b6b8e0a866224388d4c",
     "side": "Over",
-    "usd": 2438,
+    "usd": 2459,
     "avgPrice": 0.5525
    },
    {
     "wallet": "0x26eb4b82e4bc8ff5b03cc2b8c10e83b24b2222d0",
     "side": "Under",
-    "usd": 1359,
+    "usd": 1342,
     "avgPrice": 0.4601
    },
    {
     "wallet": "0x4acb370b2008dfae9c6cdc1d75ff5d07d87bddd3",
     "side": "Under",
-    "usd": 601,
+    "usd": 593,
     "avgPrice": 0.4607
    },
    {
     "wallet": "0xc29198ad764bd6adaf7bb971a3757a689ece5d74",
     "side": "Over",
-    "usd": 334
+    "usd": 337
    }
   ],
-  "hoursToKickoff": 2.01,
-  "capturedAt": "2026-09-05T23:32:15.243657+00:00",
+  "hoursToKickoff": 1.52,
+  "capturedAt": "2026-09-06T00:02:00.520806+00:00",
   "cond": "0xc8abe626f1228e465ba110ea81496bbfde0bb90534fec198df037e16207563fe",
   "frage": "Real Salt Lake vs. Los Angeles FC: O/U 10.5 Total Corners",
   "tokens": {
@@ -204562,8 +204698,8 @@
    "Los Angeles Galaxy 1 - 1 New England Revolution": 0.11,
    "Los Angeles Galaxy 2 - 0 New England Revolution": 0.06,
    "Los Angeles Galaxy 1 - 2 New England Revolution": 0.053,
-   "Los Angeles Galaxy 2 - 1 New England Revolution": 0.053,
-   "Any Other Score": 0.11
+   "Los Angeles Galaxy 2 - 1 New England Revolution": 0.052,
+   "Any Other Score": 0.115
   },
   "splitGuete": {
    "art": "abgeschnitten",
@@ -204598,8 +204734,8 @@
     "avgPrice": 0.1199
    }
   ],
-  "hoursToKickoff": 2.01,
-  "capturedAt": "2026-09-05T23:32:15.243657+00:00",
+  "hoursToKickoff": 1.52,
+  "capturedAt": "2026-09-06T00:02:00.520806+00:00",
   "tokens": {
    "Los Angeles Galaxy 0 - 0 New England Revolution": "14268177419794173665321767695663330281613448950922846672014974319347260934378",
    "Los Angeles Galaxy 0 - 1 New England Revolution": "43946693052218313364143051003165363417287982547586228905128930437792097814175",
@@ -204629,7 +204765,7 @@
    "Real Salt Lake 0 - 1 Los Angeles FC": 0.145,
    "Real Salt Lake 1 - 0 Los Angeles FC": 0.15,
    "Real Salt Lake 0 - 2 Los Angeles FC": 0.07,
-   "Real Salt Lake 1 - 1 Los Angeles FC": 0.105,
+   "Real Salt Lake 1 - 1 Los Angeles FC": 0.115,
    "Real Salt Lake 2 - 0 Los Angeles FC": 0.0545,
    "Real Salt Lake 1 - 2 Los Angeles FC": 0.0435,
    "Real Salt Lake 2 - 1 Los Angeles FC": 0.0435,
@@ -204668,8 +204804,8 @@
     "avgPrice": 0.1
    }
   ],
-  "hoursToKickoff": 2.01,
-  "capturedAt": "2026-09-05T23:32:15.243657+00:00",
+  "hoursToKickoff": 1.52,
+  "capturedAt": "2026-09-06T00:02:00.520806+00:00",
   "tokens": {
    "Real Salt Lake 0 - 0 Los Angeles FC": "68346956124635321445180512001404327939531158549808891143619377864925256653439",
    "Real Salt Lake 0 - 1 Los Angeles FC": "28107412005021849821974963506632336044615546095971573606404907940171930290899",
@@ -204856,6 +204992,108 @@
    "Charlotte FC": "80701693546350315442980806168237968695124309543523224258731518352168832613007",
    "Draw (Charlotte FC vs. Houston Dynamo)": "4530737574044110531396690828000876542513695517232685782411606443951812678309",
    "Houston Dynamo": "70986367550881557375008414731554285088114054563705467439351929389670805125816"
+  }
+ },
+ "mls-sea-nyr-2026-09-05": {
+  "shares": {
+   "Seattle Sounders FC": 28022.699392949973,
+   "Draw (Seattle Sounders FC vs. New York Red Bulls)": 135.48033010499998,
+   "New York Red Bulls": 128.513568985
+  },
+  "prices": {
+   "Seattle Sounders FC": 0.535,
+   "Draw (Seattle Sounders FC vs. New York Red Bulls)": 0.235,
+   "New York Red Bulls": 0.235
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "MLS",
+  "sport": "Fußball",
+  "totalUsd": 55733,
+  "whales": [
+   {
+    "wallet": "0xc72d7dcdb23597d143a83536fb97b1d7db7efc21",
+    "side": "Seattle Sounders FC",
+    "usd": 25138,
+    "avgPrice": 0.5363
+   },
+   {
+    "wallet": "0xec981ed70ae69c5cbcac08c1ba063e734f6bafcd",
+    "side": "Seattle Sounders FC",
+    "usd": 802
+   },
+   {
+    "wallet": "0x3a48c75c6615a547ad5737e55df66ed99c9ae3a8",
+    "side": "Seattle Sounders FC",
+    "usd": 698,
+    "avgPrice": 0.5364
+   },
+   {
+    "wallet": "0xa71da74194b53b1ec39a5c3eb3cd6ddcca3b9854",
+    "side": "Seattle Sounders FC",
+    "usd": 295,
+    "avgPrice": 0.5399
+   }
+  ],
+  "hoursToKickoff": 0.52,
+  "capturedAt": "2026-09-06T00:02:00.520806+00:00",
+  "tokens": {
+   "Seattle Sounders FC": "34328469548920042805931011121817624128588530877309931538669485763516148879519",
+   "Draw (Seattle Sounders FC vs. New York Red Bulls)": "105099484034951458023912042186971502749975430854405917586699567868007420315001",
+   "New York Red Bulls": "43056554878224906949298944010628526042839503905730346048678042049098603830151"
+  }
+ },
+ "mls-por-min-2026-09-05": {
+  "shares": {
+   "Portland Timbers": 11052.7684822,
+   "Draw (Portland Timbers vs. Minnesota United FC)": 462.52952639999995,
+   "Minnesota United FC": 7014.633004094999
+  },
+  "prices": {
+   "Portland Timbers": 0.395,
+   "Draw (Portland Timbers vs. Minnesota United FC)": 0.255,
+   "Minnesota United FC": 0.355
+  },
+  "splitGuete": {
+   "art": "belastbar",
+   "trunc": false
+  },
+  "league": "MLS",
+  "sport": "Fußball",
+  "totalUsd": 52744,
+  "whales": [
+   {
+    "wallet": "0x04d5524a0a5af2eca6e39e03defc261d42fe66d8",
+    "side": "Minnesota United FC",
+    "usd": 6621,
+    "avgPrice": 0.3497
+   },
+   {
+    "wallet": "0xdc41c39b95453c943174f369926018f6963bdd7e",
+    "side": "Portland Timbers",
+    "usd": 2328,
+    "avgPrice": 0.4
+   },
+   {
+    "wallet": "0xa0b87536071f0ce34ff9d8cd69572f19c151e424",
+    "side": "Portland Timbers",
+    "usd": 2027,
+    "avgPrice": 0.4767
+   },
+   {
+    "wallet": "0x21f333307ac6d2e65ac82f014b3dd2b64cbc35e3",
+    "side": "Portland Timbers",
+    "usd": 1555
+   }
+  ],
+  "hoursToKickoff": 2.52,
+  "capturedAt": "2026-09-06T00:02:00.520806+00:00",
+  "tokens": {
+   "Portland Timbers": "9426531920323400165469152851595556143409138943951027145444001948357876890185",
+   "Draw (Portland Timbers vs. Minnesota United FC)": "109534814480432841442430104716223065835462734692046301446855125571975668730179",
+   "Minnesota United FC": "38539767027705866061156611264070624120547749197662991894763221499632268535015"
   }
  }
 }
