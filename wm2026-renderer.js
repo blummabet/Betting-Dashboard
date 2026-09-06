@@ -2288,6 +2288,22 @@
 
     const m = (pick.market || '').toLowerCase();
 
+    // 06.09.2026 (Cards-Check) — „🎯 Sieg-Pick mit Edge" stand ueber einem Pick, den der
+    // ERZEUGER als `verdict: "ABWÄGEN"` mit `edgePP: -2` ausgewiesen hatte. Die Ueberschrift
+    // wurde bisher ausschliesslich aus Markt-String und Elo gewaehlt — `verdict` und `edgePP`
+    // kamen darin nicht vor. Gemessen ueber 731 Match-Dateien: von den Picks mit Edge-Wert
+    // haben **430 einen Edge <= 0 und nur 41 einen ueber null**; Verdicts: 289 ABWÄGEN,
+    // 153 NOBET, 27 BET. „mit Edge" stand also auf fast jeder Karte, und in neun von zehn
+    // Faellen widersprach die Zahl darunter der Ueberschrift darueber.
+    //
+    // Kategorie-Labels („Tor-Fest erwartet", „Defensiv-Schlacht") beschreiben den MARKT und
+    // bleiben unveraendert. Nur die Edge-BEHAUPTUNG haengt jetzt am Urteil des Erzeugers.
+    const _e = pick.edgePP, _v = pick.verdict;
+    const _hatEdge = (_v === 'BET') && typeof _e === 'number' && _e > 0;
+    // Kein Urteil ist etwas anderes als ein gemessenes Nein: ohne edgePP steht gar nichts da.
+    const _edgeTxt = _hatEdge ? ' mit Edge'
+      : (typeof _e === 'number' ? ' · Edge ' + (_e > 0 ? '+' : '') + _e + 'pp' : '');
+
     // Anti-Drift-Fix 09.06.2026 — Klassen-Unterschied schlägt Tor-/Defensiv-Label.
     // Bei großem Elo-Vorsprung (>= 250) ist "Defensiv-Schlacht" bei Unter X.5
     // oder "Tor-Fest" bei Über X.5 inhaltlich falsch — es ist eine kontrollierte
@@ -2322,7 +2338,7 @@
         const wins = checkForm?.last5 ? checkForm.last5.filter(r => r === 'W').length : 0;
         if (wins >= 3) return { cls: 'cc-a-underdog', icon: '⚡', label: 'Underdog mit Form' };
       }
-      return { cls: 'cc-a-pflicht', icon: '🎯', label: 'Sieg-Pick mit Edge' };
+      return { cls: 'cc-a-pflicht', icon: '🎯', label: 'Sieg-Pick' + _edgeTxt };
     }
     // Unentschieden / DNB
     if (m.includes('unentsch') || m.includes('draw')) {
@@ -2331,7 +2347,7 @@
     }
     if (m.includes('dnb')) return { cls: 'cc-a-pflicht', icon: '🛡', label: 'Draw-No-Bet Sicherung' };
 
-    return { cls: 'cc-a-duell', icon: '🎯', label: 'Pick mit Edge' };
+    return { cls: 'cc-a-duell', icon: '🎯', label: 'Pick' + _edgeTxt };
   }
 
   // ─────────────────────────────────────────────────────
