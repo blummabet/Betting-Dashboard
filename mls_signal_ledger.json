@@ -2,8 +2,8 @@
   "_meta": {
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
-    "updated_at": "2026-09-05T21:11:07Z",
-    "total_records": 59
+    "updated_at": "2026-09-06T11:47:15Z",
+    "total_records": 67
   },
   "records": [
     {
@@ -1273,7 +1273,7 @@
           "score": 4.0
         }
       ],
-      "resolvedAt": "2026-09-05T21:11:07Z",
+      "resolvedAt": "2026-09-06T11:47:15Z",
       "source": "steam",
       "convictionScore": 5,
       "lateEntry": true,
@@ -2674,6 +2674,50 @@
       "clvResolved": true
     },
     {
+      "key": "MLS-23-1601-1607|Unter 3.5 Tore",
+      "matchKey": "MLS-23-1601-1607",
+      "market": "Unter 3.5 Tore",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "lead_lag_bias",
+          "score": -1.64
+        },
+        {
+          "name": "injury",
+          "score": 4.25
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 1.2
+        },
+        {
+          "name": "xg_strength",
+          "score": 3.09
+        },
+        {
+          "name": "chance_creation",
+          "score": -0.96
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": -0.42
+        },
+        {
+          "name": "transfer_shift",
+          "score": 0.36
+        }
+      ],
+      "resolvedAt": "2026-09-06T11:47:05Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -5.33,
+      "clvResolved": true,
+      "processVerdict": "DESERVED_LOSS"
+    },
+    {
       "key": "MLS-23-1604-9569|Doppelte Chance — X2",
       "matchKey": "MLS-23-1604-9569",
       "market": "Doppelte Chance — X2",
@@ -2712,6 +2756,282 @@
       "clvPP": 1.51,
       "clvResolved": true,
       "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "MLS-23-1605-1609|Doppelte Chance — X2",
+      "matchKey": "MLS-23-1605-1609",
+      "market": "Doppelte Chance — X2",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 2.13
+        },
+        {
+          "name": "xg_strength",
+          "score": 4.86
+        },
+        {
+          "name": "chance_creation",
+          "score": 2.74
+        },
+        {
+          "name": "form_rating",
+          "score": 2.83
+        },
+        {
+          "name": "league_pressure",
+          "score": 0.52
+        },
+        {
+          "name": "opener_move",
+          "score": 0.97
+        },
+        {
+          "name": "mls_travel",
+          "score": -1.44
+        }
+      ],
+      "resolvedAt": "2026-09-06T11:47:05Z",
+      "source": "steam",
+      "convictionScore": 7,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -2.56,
+      "clvResolved": true,
+      "processVerdict": "UNLUCKY"
+    },
+    {
+      "key": "MLS-23-1605-1609|Über 2.5 Tore",
+      "matchKey": "MLS-23-1605-1609",
+      "market": "Über 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "injury",
+          "score": -3.25
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 6.56
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.66
+        },
+        {
+          "name": "chance_creation",
+          "score": 3.78
+        }
+      ],
+      "resolvedAt": "2026-09-06T11:47:05Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -4.03,
+      "clvResolved": true,
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "MLS-23-1606-1616|Doppelte Chance — X2",
+      "matchKey": "MLS-23-1606-1616",
+      "market": "Doppelte Chance — X2",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "h2h_pattern",
+          "score": 0.6
+        },
+        {
+          "name": "xg_strength",
+          "score": 1.16
+        },
+        {
+          "name": "chance_creation",
+          "score": 2.6
+        },
+        {
+          "name": "form_rating",
+          "score": 2.76
+        },
+        {
+          "name": "league_pressure",
+          "score": 0.62
+        },
+        {
+          "name": "mls_travel",
+          "score": -0.37
+        },
+        {
+          "name": "venue_form",
+          "score": -1.71
+        },
+        {
+          "name": "betfair_money",
+          "score": 3.35
+        }
+      ],
+      "resolvedAt": "2026-09-06T11:47:05Z",
+      "source": "steam",
+      "convictionScore": 7,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -0.69,
+      "clvResolved": true,
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "MLS-23-1613-1610|Unter 3.5 Tore",
+      "matchKey": "MLS-23-1613-1610",
+      "market": "Unter 3.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "injury",
+          "score": 6.75
+        },
+        {
+          "name": "form_trend",
+          "score": 4.13
+        },
+        {
+          "name": "xg_strength",
+          "score": 4.49
+        },
+        {
+          "name": "chance_creation",
+          "score": -2.19
+        },
+        {
+          "name": "transfer_shift",
+          "score": 0.6
+        }
+      ],
+      "resolvedAt": "2026-09-06T11:47:05Z",
+      "source": "steam",
+      "convictionScore": 4,
+      "lateEntry": false,
+      "engineVersion": "v1",
+      "clvPP": -2.75,
+      "clvResolved": true,
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "MLS-23-1617-1612|Doppelte Chance — X2",
+      "matchKey": "MLS-23-1617-1612",
+      "market": "Doppelte Chance — X2",
+      "result": "LOSS",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": -2.17
+        },
+        {
+          "name": "xg_strength",
+          "score": 2.18
+        },
+        {
+          "name": "chance_creation",
+          "score": 2.52
+        },
+        {
+          "name": "form_rating",
+          "score": 1.87
+        },
+        {
+          "name": "league_pressure",
+          "score": 0.8
+        },
+        {
+          "name": "mls_travel",
+          "score": -1.0
+        }
+      ],
+      "resolvedAt": "2026-09-06T11:47:05Z",
+      "source": "steam",
+      "convictionScore": 7,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -0.56,
+      "clvResolved": true,
+      "processVerdict": "UNLUCKY"
+    },
+    {
+      "key": "MLS-23-1617-1612|Über 2.5 Tore",
+      "matchKey": "MLS-23-1617-1612",
+      "market": "Über 2.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "injury",
+          "score": 4.0
+        },
+        {
+          "name": "form_trend",
+          "score": 4.53
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 1.6
+        },
+        {
+          "name": "xg_strength",
+          "score": 3.58
+        },
+        {
+          "name": "chance_creation",
+          "score": 2.48
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 0.61
+        },
+        {
+          "name": "venue_form",
+          "score": 1.07
+        }
+      ],
+      "resolvedAt": "2026-09-06T11:47:05Z",
+      "source": "steam",
+      "convictionScore": 5,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -4.42,
+      "clvResolved": true,
+      "processVerdict": "JUSTIFIED"
+    },
+    {
+      "key": "MLS-23-9568-1608|Über 3.5 Tore",
+      "matchKey": "MLS-23-9568-1608",
+      "market": "Über 3.5 Tore",
+      "result": "WIN",
+      "signals": [
+        {
+          "name": "form_trend",
+          "score": 2.53
+        },
+        {
+          "name": "h2h_pattern",
+          "score": 1.0
+        },
+        {
+          "name": "chance_creation",
+          "score": 2.28
+        },
+        {
+          "name": "topscorer_momentum",
+          "score": 0.42
+        }
+      ],
+      "resolvedAt": "2026-09-06T11:47:05Z",
+      "source": "steam",
+      "convictionScore": 6,
+      "lateEntry": true,
+      "engineVersion": "v1",
+      "clvPP": -2.23,
+      "clvResolved": true,
+      "processVerdict": "LUCKY"
     }
   ]
 }

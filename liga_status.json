@@ -25,7 +25,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "🎰 Stake Radar (große Einzelwetten sammeln): seit 49 h kein Lauf mehr verzeichnet"
+        "🎰 Stake Radar (große Einzelwetten sammeln): seit 64 h kein Lauf mehr verzeichnet"
       ],
       "note": "Quelle: health/*.json (run_health.py). Leere Liste heisst hier wirklich 'nichts gescheitert' — ein nicht abfragbarer Lauf steht oben als UNBEKANNT."
     },
@@ -198,7 +198,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "77/77 mit AH · 77/77 mit Public-O/U."
+      "note": "73/73 mit AH · 73/73 mit Public-O/U."
     },
     {
       "id": "odds_freshness",
@@ -267,9 +267,14 @@
       "id": "lineup_present",
       "label": "Aufstellung da vor Anpfiff (T-90min)",
       "severity": "warn",
-      "ok": true,
-      "nFail": 0,
-      "failures": [],
+      "ok": false,
+      "nFail": 4,
+      "failures": [
+        "45-33: Anpfiff in 74min, KEINE Aufstellung",
+        "512-517: Anpfiff in 74min, KEINE Aufstellung",
+        "523-1579: Anpfiff in 74min, KEINE Aufstellung",
+        "110-95: Anpfiff in 74min, KEINE Aufstellung"
+      ],
       "note": "lineup_signal braucht die Startelf. War leer wegen Namens-Match + Wien-Zeit-Bug."
     },
     {
@@ -356,7 +361,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "532-529 Über 3.5 Tore @1.95: sichere Linie Über 2.5 Tore @1.38 verfügbar (≥1.35), nicht abgeleitet"
+        "532-529 Über 3.5 Tore @1.95: sichere Linie Über 2.5 Tore @1.35 verfügbar (≥1.35), nicht abgeleitet"
       ],
       "note": "Steam-Pick auf riskanter Linie obwohl sichere Linie ≥1.35 verfügbar — Ableitung greift nicht (oder Pick ist frozen von vor dem Fix)."
     },
@@ -547,7 +552,7 @@
       "ok": false,
       "nFail": 1,
       "failures": [
-        "Letzter Live-Scan vor 2.3h (Takt: 15 Min) — der Job startet nicht. Runner belegt? Workflow deaktiviert?"
+        "Letzter Live-Scan vor 2.9h (Takt: 15 Min) — der Job startet nicht. Runner belegt? Workflow deaktiviert?"
       ],
       "note": "Erwartet alle 15 Min; Alarm ab 90 Min. Live-Preise sind die Schluss-Referenz fuer den CLV — fehlen sie, misst der Nordstern nicht."
     },
@@ -567,7 +572,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "13385/40000 Zeilen · 10.1 Tage Fenster (2026-08-26 bis 2026-09-05). Kurzes Fenster bei freiem Deckel ist normal (der Track fuellt sich); kurzes Fenster AM Deckel ist der Fehler."
+      "note": "14141/40000 Zeilen · 10.7 Tage Fenster (2026-08-26 bis 2026-09-06). Kurzes Fenster bei freiem Deckel ist normal (der Track fuellt sich); kurzes Fenster AM Deckel ist der Fehler."
     },
     {
       "id": "betfair_liefert",
@@ -576,7 +581,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Job vor 0.4h · jüngste Daten vor 0.4h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 1.1h · jüngste Daten vor 1.1h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "poly_global_liefert",
@@ -585,7 +590,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "Job vor 0.4h · jüngste Daten vor 0.4h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
+      "note": "Job vor 1.2h · jüngste Daten vor 1.2h. Ein alter Job mit alten Daten ist ein Ausfall (das meldet der Lauf-Wächter); ein FRISCHER Job mit alten Daten ist ein stiller Schreibfehler."
     },
     {
       "id": "pinn_anker",
@@ -596,7 +601,7 @@
       "failures": [
         "Anker `soccer_conmebol_copa_libertadores` trifft keinen Ligastring im Feed (eingetragen als 'CONMEBOL Copa Libertadores'). Zwei Ursachen sehen von hier identisch aus — falsche Schreibweise (dann ist der Anker tot, wie MLS bis zum 01.09.) oder Liga ausser Saison (dann ist alles in Ordnung). Einmal gegen den echten Feed pruefen, dann ist es entschieden."
       ],
-      "note": "29 von 30 Ankern der Handliste treffen den Feed · 267 Ligastrings gesehen · Anker liegt auf 44% von 147 offenen Spielen (aus 49 geholten Wettbewerben). Eine niedrige Abdeckung der HANDLISTE ist kein Fehler mehr (der globale Pool faengt den Rest); ein toter Eintrag schon."
+      "note": "29 von 30 Ankern der Handliste treffen den Feed · 268 Ligastrings gesehen · Anker liegt auf 42% von 150 offenen Spielen (aus 50 geholten Wettbewerben). Eine niedrige Abdeckung der HANDLISTE ist kein Fehler mehr (der globale Pool faengt den Rest); ein toter Eintrag schon."
     },
     {
       "id": "buecher_punkte",
@@ -605,7 +610,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "82 Spiele bewertet · 50 mit mindestens einem fremden Buch · beste Punktzahl 8. Ein leeres Fenster ist kein Fehler; ein dauerhaft einsamer Betfair-Score schon."
+      "note": "102 Spiele bewertet · 51 mit mindestens einem fremden Buch · beste Punktzahl 10. Ein leeres Fenster ist kein Fehler; ein dauerhaft einsamer Betfair-Score schon."
     },
     {
       "id": "vorregistrierung",
@@ -614,7 +619,7 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "🔒 Bücher-Score ≥7 von 10: 38/40 seit 4d · 🔒 Poly-Auswahl · von Betfair bestätigt: 41/60 seit 4d"
+      "note": "🔒 Poly-Auswahl · von Betfair bestätigt: 51/60 seit 5d · 🔒 Bücher-Score ≥7 von 10: 47/40 seit 5d"
     },
     {
       "id": "killer_push_buch",
@@ -635,6 +640,6 @@
       "note": "0 von 0 ist ein ruhiger Tag. 0 von N ist ein Bruch."
     }
   ],
-  "nFail": 5,
-  "generatedAt": "2026-09-05T20:30:04.511881+00:00"
+  "nFail": 6,
+  "generatedAt": "2026-09-06T11:45:29.029626+00:00"
 }
