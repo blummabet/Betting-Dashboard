@@ -2838,6 +2838,21 @@ function _pwTrackBlocked(agg, reentry, blockedCats){
       +' · ROI <b style="color:'+roiCol+'">'+_pwtSig(Math.round(a.roi*1000)/10)+'%</b>'
       +' · Ø CLV <b style="color:'+clvCol+'">'+_pwtSig(a.clvAvg)+'pp</b></div>'+hint+'</div>';
 }
+// Der direkte Vergleich in einem Satz — die Zahl, um die es geht.
+function _pwWalletGateVergleich(mit, ohne){
+  const n1=mit.n||0, n2=ohne.n||0;
+  if(!n1 && !n2) return '';
+  if(n2<20) return '<div class="pw-sec-note" style="margin:-8px 0 16px">🧪 Die Kontrollgruppe sammelt noch ('
+    +n2+' Plays). Erst ab ~20 lohnt der Vergleich — bis dahin sagt die Differenz nichts.</div>';
+  const d=(mit.roi||0)-(ohne.roi||0);
+  const txt = d>0
+    ? 'Das Wallet-Tor trägt: <b>'+_pwtSig(Math.round(d*1000)/10)+' pp</b> besser als ohne.'
+    : 'Das Wallet-Tor trägt <b>nicht</b>: ohne Wallet-Nachweis liegt der ROI um <b>'
+      +_pwtSig(Math.round(-d*1000)/10)+' pp</b> höher.';
+  return '<div class="pw-sec-note" style="margin:-8px 0 16px">🧪 <b>Wallet-Tor im Vergleich:</b> '+txt
+    +' (mit n'+n1+' · ohne n'+n2+'). Entschieden ist das erst, wenn beide Untergrenzen es tragen — '
+    +'ein Unterschied zwischen zwei Punktschätzern ist selbst nur ein Punktschätzer.</div>';
+}
 function _pwTrackConvTable(byConv){
   const rows=Object.keys(byConv||{}).map(k=>({c:+k, a:byConv[k]})).sort((x,y)=>y.c-x.c);
   if(!rows.length) return '';
@@ -3060,6 +3075,15 @@ function _pwTrackRecord(track){
     +_pwTrackKpis(agg.bettable||agg.all||{n:0}, '🟢 Bespielbar', '(alle Sportarten, auf die gesetzt werden darf)')
     +_pwTrackBlocked(agg, track.reentry, track.blockedCats)
     +_pwTrackKpis(agg.public||{n:0}, '◆ Public-Kandidaten', '(nur Vorschau — sendet nichts; hart gegated: Conv≥7 + bewiesene Wallet + Mehrheit)')
+    // 06.09.2026 (Lucas: „ich will das direkt im Track-Record unter dem Public-Baustein sehen").
+    // Von 172 Public-Kandidaten waren 172 sharp — ohne Vergleichsgruppe war nicht messbar, ob
+    // das Wallet-Tor die Auswahl verbessert oder nur verkleinert. Diese Zeile ist die Kontrolle:
+    // gleiche Conviction, gleiche Geld-Mehrheit, nur OHNE bewiesene Wallet. Läuft mit, wird
+    // nie gesendet. Ist ihr ROI dauerhaft schlechter, trägt das Tor; ist er gleich oder besser,
+    // kostet es uns Auswahl ohne Gegenwert.
+    +_pwTrackKpis(agg.publicOhneWallet||{n:0}, '🧪 Kontrollgruppe — alles außer der Wallet',
+                  '(läuft nur mit, wird nie gesendet: gleiche Conviction + Mehrheit, aber keine bewiesene Wallet)')
+    +_pwWalletGateVergleich(agg.public||{n:0}, agg.publicOhneWallet||{n:0})
     +_pwPublicPush(_pwCache && _pwCache.publicRec)
     +_pwTrackConvTable(agg.byConv)
     +_pwCalibBoard()          // 29.08.2026: warum eine Stufe hoeher/tiefer — sichtbar statt Blackbox
@@ -3208,10 +3232,38 @@ function _pwTermMuted(r){
 // fuer den OEFFENTLICHEN Kanal nicht: dort kostet ein Fehlalarm Glaubwuerdigkeit. Ohne diese Zeile
 // haette die Lockerung still die Public-Schwelle mitgesenkt — die Bauform „eine Aenderung sickert
 // in eine Flaeche, fuer die sie nie gedacht war".
-function _pwTermIsPublic(r){
-  return !!(r && r.conv>=PW_PUBLIC_MIN_CONV && r.moneyPct>=0.60
-            && r.sharp && r.sharp.n>=8 && r.sharp.hit>=0.55
+// Die Wallet-Bedingung des Public-Gates, getrennt benannt — damit man sie WEGLASSEN kann.
+function _pwTermWalletOk(r){
+  return !!(r && r.sharp && r.sharp.n>=8 && r.sharp.hit>=0.55
             && (r.sharp.grade==null || r.sharp.grade>=1));   // nur BEWIESEN geht oeffentlich
+}
+// Alles am Public-Gate AUSSER der Wallet.
+function _pwTermPublicRest(r){
+  return !!(r && r.conv>=PW_PUBLIC_MIN_CONV && r.moneyPct>=0.60);
+}
+function _pwTermIsPublic(r){
+  return _pwTermPublicRest(r) && _pwTermWalletOk(r);
+}
+// 06.09.2026 (Lucas: „ich weiss nicht, ob wir da optimale Logik gebaut haben").
+//
+// Gemessen: von 172 abgerechneten Public-Kandidaten sind **172 sharp** — die Wallet-Pruefung ist
+// ein hartes Tor, also hat jeder sie bestanden. Damit gibt es keine Vergleichsgruppe, und wir
+// koennen NICHT wissen, ob sie etwas beitraegt. Dieselbe Falle wie das abgeschaltete Signal und
+// das stumme streak_momentum: was immer gilt, ist nicht messbar.
+//
+// Was dagegen spricht, dass sie viel beitraegt: ueber 736 Wallets und 2.935 Wetten sagt die
+// bisherige Bilanz einer Wallet nichts ueber ihre naechste (r = -0,005 bei >=8 Vorwetten), im
+// Live-Tracker ist „scharfe Wallet" das SCHLECHTESTE Kriterium (-2,6 pp Fwd-CLV), und
+// Conviction 7 OHNE sharp steht bei +17,9 % (n=21) — dem besten Punktschaetzer der Tabelle.
+//
+// Deshalb: die Plays, die alles ausser der Wallet erfuellen, laufen als SCHATTEN mit. Sie werden
+// nicht gesendet und nicht angezeigt — nur mitgeschrieben, damit der Vergleich in ein paar
+// Wochen dasteht statt weiter zu fehlen.
+function _pwTermIsPublicOhneWallet(r){
+  return _pwTermPublicRest(r) && !_pwTermWalletOk(r);
+}
+function _pwPublicOhneWalletPlays(){
+  return _pwTopPlays(0,false,false).filter(r=> !_pwBetBlocked(r) && _pwTermIsPublicOhneWallet(r));
 }
 
 // 18.08.2026 (Lucas) Slice 2 — Drilldown: Preis-Kurve (Variante A: Poly vs faire Pinnacle + Kante-Fläche),

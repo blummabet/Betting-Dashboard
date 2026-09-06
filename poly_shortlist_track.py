@@ -227,6 +227,10 @@ def _agg_one(rows):
 def aggregate(settled, blocked=()):
     allr = settled
     pub = [r for r in settled if r.get("public")]
+    # Die Vergleichsgruppe zum Public-Gate: gleiche Conviction, gleiche Geld-Mehrheit, nur ohne
+    # bewiesene Wallet. Erst der Unterschied dieser beiden Zeilen beantwortet, ob das Wallet-Tor
+    # die Auswahl verbessert — oder sie nur verkleinert.
+    pub_ow = [r for r in settled if r.get("ohneWallet")]
     # 24.08.2026 (Lucas): die Gesamt-Kennzahl mischte Sportarten, auf die nie gesetzt wird, mit
     # denen, auf die gesetzt wird — dadurch sah das Depot schlechter aus als das, was man wirklich
     # spielt. `all` bleibt unverändert (Kalibrierungs-Basis im Frontend hängt daran); `bettable`
@@ -271,6 +275,7 @@ def aggregate(settled, blocked=()):
         # nur nicht als Signal.
         (by_kalib if tg in KALIB_MARKEN else by_signal)[tg] = _agg_one(rows)
     return {"all": _agg_one(allr), "public": _agg_one(pub),
+            "publicOhneWallet": _agg_one(pub_ow),
             "bettable": _agg_one(bet), "blocked": _agg_one(blk), "byCat": by_cat,
             "byConv": by_conv, "byVerdict": by_verdict, "bySignal": by_signal,
             "byKalibrierung": by_kalib}
@@ -351,6 +356,10 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE, blocked=
             "entryPrice": round(float(price), 4), "firstTs": now.isoformat(),
             "lastPrice": round(float(price), 4), "lastTs": now.isoformat(),
             "htkAtEntry": pl.get("htk"), "public": bool(pl.get("public")),
+            # 06.09.2026: Schatten-Gruppe — alles am Public-Gate ausser der Wallet-Bedingung.
+            # Von 172 abgerechneten Public-Kandidaten waren 172 sharp; ohne Vergleichsgruppe ist
+            # nicht messbar, ob die Wallet-Pruefung etwas beitraegt. Diese Zeilen liefern sie.
+            "ohneWallet": bool(pl.get("ohneWallet")),
             "reasons": (pl.get("reasons") or [])[:3], "signals": list(pl.get("signals") or []), "stake": stake,
             # 29.08.2026 (Lucas): Engine-Version des Emits mitfuehren. Der Kalibrierer gewichtet
             # damit Plays aus einer aelteren Engine niedriger, statt sie fuer bare Muenze zu nehmen.
@@ -389,7 +398,8 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE, blocked=
             "entryPrice": round(entry, 4), "closePrice": round(close_ref, 4),
             "result": "win" if win else "loss", "winner": winner,
             "pnl": round(pnl, 2), "clvPP": clv, "stake": st,
-            "public": bool(e.get("public")), "signals": list(e.get("signals") or []), "firstTs": e.get("firstTs"),
+            "public": bool(e.get("public")), "ohneWallet": bool(e.get("ohneWallet")),
+            "signals": list(e.get("signals") or []), "firstTs": e.get("firstTs"),
             "ev": e.get("ev"),   # 29.08.2026: Engine-Stempel ueberlebt die Abrechnung
             "settledTs": now.isoformat(), "resolvedTs": (r or {}).get("ts"),
         })

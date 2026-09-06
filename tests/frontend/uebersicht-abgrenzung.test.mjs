@@ -80,12 +80,29 @@ test('die Köpfe nennen die Folge, nicht nur den Namen', () => {
 });
 
 test('ein Spiel in BEIDEN Sektionen wird als gedeckt markiert, nicht doppelt gezeigt', () => {
+  // 06.09.2026: hier stand /🔒 gedeckt/ und /Stufe 2/ als Text. Beides war eine ORTS-Angabe,
+  // keine Regel — als der Marker drei Zustände bekam (gleiche Seite / Gegenseite / Seite
+  // unbekannt) und die Stufe in den Tooltip wanderte, schlug der Test an, obwohl die Sache
+  // funktionierte. Zehnter Fall derselben Klasse in diesem Repo. Jetzt geprüft wird, WAS die
+  // Markierung aussagen muss: sie verweist auf die andere Ebene und nennt die Stufe.
   const { jetzt: jz } = render({
     killer: { stufe1: [], stufe2: [klZeile('42', 'Arsenal', 'Chelsea')] },
     flowRows: [flow('42', 'Arsenal', 'Chelsea')],
   });
-  assert.match(jz, /🔒 gedeckt/, 'die Brücke zwischen den Sektionen');
+  assert.match(jz, /auch Ebene 2/, 'die Brücke zwischen den Sektionen');
   assert.match(jz, /Stufe 2/, 'und sie sagt, welche Stufe');
+});
+
+test('ohne bekannte Seite behauptet der Marker keine Übereinstimmung', () => {
+  // Lucas' Punkt war „wenn in beiden Elemente selbe Team dann ja eindeutiger". Genau deshalb
+  // darf „dasselbe Spiel" nicht wie „dieselbe Seite" aussehen: der Betfair-Fluss unten trägt
+  // keinen Poly-Outcome-Namen, also ist die Seite hier NICHT feststellbar.
+  const { jetzt: jz } = render({
+    killer: { stufe1: [], stufe2: [klZeile('42', 'Arsenal', 'Chelsea')] },
+    flowRows: [flow('42', 'Arsenal', 'Chelsea')],
+  });
+  assert.doesNotMatch(jz, /gleiche Seite/, 'unbekannt darf nicht als Bestätigung rendern');
+  assert.doesNotMatch(jz, /dagegen/, 'unbekannt ist auch kein Widerspruch');
 });
 
 test('ohne Deckung bleibt die Top-Wette unmarkiert', () => {

@@ -291,6 +291,13 @@
       // gleichzeitig, kann leer sein), die andere eine RANGLISTE (bestes Einzelsignal, ist nie
       // leer). Das steht jetzt als erstes Wort in beiden Köpfen, in derselben Form.
       '.md-mech{font-size:9px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;padding:2px 6px;border-radius:5px;border:1px solid;white-space:nowrap;}',
+      // 06.09.2026 (Lucas: „die Heute spielenswert waeren doch auch aehnlich zu diesen 2 Elementen
+      // in Wahrheit oder?"). Erneut gemessen: Ueberschneidung wieder **null**. Der Grund steht
+      // jetzt in den Koepfen („gerade im Regal"): Ebene 2 kann nur Maerkte zeigen, die ALLE DREI
+      // Buecher quotieren — heute 4x Match Odds, also 1X2. Die Poly-Shortlist besteht dagegen zu
+      // zwei Dritteln aus Ueber/Unter, dazu Tennis, E-Sport und exakter Score. Sie konkurrieren
+      // nicht um dieselben Spiele, sie bedienen verschiedene Regale.
+      //
       // 01.09.2026 (Lucas: „das wirkt jetzt schon sehr oft quasi redundant, oder?"). Gemessen war
       // die Ueberschneidung null — die drei Sektionen zeigten NIE dasselbe Spiel. Redundant war
       // nicht der Inhalt, sondern die FORM: drei gleich gebaute Koepfe mit je eigenem Badge,
@@ -339,6 +346,11 @@
       '.md-kl-l1>.md-kl-halt,.md-kl-l1>.md-kl-live{margin-left:auto;}',
       '.md-kl-pick{font-size:16px;font-weight:800;color:var(--mi);margin-top:4px;line-height:1.2;letter-spacing:-.01em;}',
       '.md-kl-pick b{color:#4cc2ff;}',
+      // 06.09.2026 (Lucas: „die 2 Elemente müssen einfach simpel zeigen warum damit ich schnell
+      // weiß"). Eine Zeile Klartext direkt unter dem Pick — vor den Chips, nicht dahinter.
+      '.md-warum{font-size:11px;color:var(--mi2);margin-top:3px;line-height:1.45;}',
+      '.md-warum b{color:var(--mi);font-weight:700;}',
+      '.md-warum i{font-style:normal;color:var(--mi3);}',
       '.md-kl-pick .q{color:var(--mi3);font-weight:700;font-size:12px;}',
       '.md-kl-ch{display:flex;gap:5px;flex-wrap:wrap;margin-top:7px;}',
       // Deckungs-Profil (30.08.2026). Feste Plätze je Quelle → zwei Zeilen sind vergleichbar.
@@ -1986,7 +1998,27 @@
     [].concat((k && k.stufe1) || [], (k && k.stufe2) || []).forEach(function (z) {
       if (!_klSichtbar(z)) return;
       if (z.matchId) m['id:' + String(z.matchId)] = z.stufe || 2;
-      if (z.home && z.away) m['tm:' + team(z.home) + team(z.away)] = z.stufe || 2;
+      if (z.home && z.away) {
+        m['tm:' + team(z.home) + team(z.away)] = z.stufe || 2;
+        // Reihenfolge-unabhaengig: „Remo v Flamengo" und „Flamengo v Remo" sind ein Spiel.
+        m['tms:' + [team(z.home), team(z.away)].sort().join('')] = z.stufe || 2;
+      }
+      // 06.09.2026 (Lucas: „wenn in beiden Elementen dasselbe Team, dann ja eindeutiger").
+      // Der belastbare Schluessel ist der Poly-MARKTSCHLUESSEL, nicht der Teamname: Ebene 2
+      // fuehrt „Remo v Flamengo", die Poly-Zeile „CR Flamengo vs Clube do Remo" — gleiches
+      // Spiel, andere Namensform. Ihn hier aus Namen zu rekonstruieren waere Produzenten-Logik
+      // im Renderer (Bug-Klasse 2). Er kommt jetzt aus killer.json (`polyKey`), wo er entsteht.
+      if (z.polyKey) m['pk:' + z.polyKey] = z.stufe || 2;
+    });
+    return m;
+  }
+  // Dieselben Zeilen, aber nach Poly-Marktschluessel adressierbar — fuer die GEGENRICHTUNG des
+  // Abgleichs (Ebene 2 fragt: steht diese Zeile auch unten in der Rangliste?). Ein Marker, den
+  // nur eine der beiden Flaechen traegt, beantwortet Lucas' Frage nur zur Haelfte.
+  function _klNachPolyKey() {
+    var k = _md.data && _md.data.killer, m = {};
+    [].concat((k && k.stufe1) || [], (k && k.stufe2) || []).forEach(function (z) {
+      if (_klSichtbar(z) && z.polyKey) m[z.polyKey] = z;
     });
     return m;
   }
@@ -2031,7 +2063,33 @@
   // uebereinander VERGLEICHEN kann: Nummer (Strenge) · Frage · Bauart · eigener Stand.
   // Vorher hatte jede Sektion ihren eigenen Kopfbau — deshalb sahen drei Antworten aus wie
   // dreimal dieselbe Frage.
-  function _mdEbene(nr, frage, mech, mechCol, mechTitel, unter, badge, inhalt) {
+  // 06.09.2026 (Lucas: „die Heute spielenswert wären doch auch ähnlich zu diesen 2 Elementen
+  // in Wahrheit oder?"). Nachgemessen, und die Antwort ist nein — aber aus einem Grund, den die
+  // Flächen selbst nie sagen: sie bedienen **verschiedene Regale**.
+  //
+  //   Element 2 (Konsens)      aktuell 4 Zeilen, davon 4x „Match Odds" — also nur 1X2, und nur
+  //                            auf Spielen, die Betfair UND Poly UND Pinnacle quotieren.
+  //   Heute spielenswert       20 offene Plays: 13x Über/Unter, 4x 1X2, dazu Tennis, E-Sport,
+  //                            exakter Score — überwiegend Märkte, die es im Konsens gar nicht gibt.
+  //
+  //   Überschneidung heute: **0**. (Am 01.09. schon einmal gemessen, damals ebenfalls 0.)
+  //
+  // Ich hatte vorgeschlagen, die Überschneidung zu markieren („steht in beiden"). Das war
+  // falsch: der Marker würde nie feuern. Die Flächen sind nicht redundant, sie sind DISJUNKT —
+  // und das ist die Information, die gefehlt hat. Deshalb steht jetzt in jedem Kopf, WOMIT die
+  // Fläche gerade gefüllt ist, aus den Daten gerechnet statt behauptet.
+  function _mdRegal(items, marktVon) {
+    if (!items || !items.length) return '';
+    var z = {};
+    for (var i = 0; i < items.length; i++) {
+      var m = marktVon(items[i]) || '—';
+      z[m] = (z[m] || 0) + 1;
+    }
+    var paare = Object.keys(z).map(function (k) { return [k, z[k]]; })
+      .sort(function (a, b) { return b[1] - a[1]; }).slice(0, 3);
+    return paare.map(function (p) { return p[1] + '× ' + esc(p[0]); }).join(' · ');
+  }
+  function _mdEbene(nr, frage, mech, mechCol, mechTitel, unter, badge, inhalt, regal) {
     var rand = mechCol === A.good ? 'rgba(46,160,71,.45)' : mechCol === A.blue ? 'rgba(76,194,255,.45)' : 'var(--mln2)';
     if (!mechCol) mechCol = 'var(--mi2)';   // Ebene 3 traegt bewusst KEINE Signalfarbe: sie belegt nichts.
     return '<div class="md-eb">'
@@ -2040,7 +2098,10 @@
       + '<span class="md-mech" style="color:' + mechCol + ';border-color:' + rand + '" title="'
       + mechTitel + '">' + mech + '</span>'
       + (badge ? '<span class="md-eb-st" style="background:' + badge.bg + ';color:' + badge.col + '">' + badge.txt + '</span>' : '')
-      + '<span class="md-eb-s">' + unter + '</span></div>' + inhalt + '</div>';
+      + '<span class="md-eb-s">' + unter + '</span>'
+      + (regal ? '<span class="md-eb-s" style="display:block;color:var(--mi3);font-size:10.5px;margin-top:2px">'
+                 + '📚 gerade im Regal: ' + regal + '</span>' : '')
+      + '</div>' + inhalt + '</div>';
   }
   // ── Ebene 1: das Freigabe-Register ────────────────────────────────────────────────────
   // Beurteilt SCHUBLADEN ueber Wochen, nicht einzelne Spiele heute. Das ist der Grund, warum
@@ -2131,18 +2192,38 @@
       body + '<div class="md-kl-foot">' + eng + '</div>' + det);
   }
 
-  function _mdKiller() {
+  function _mdKiller(polyPlays) {
     var k = _md.data && _md.data.killer;
     var s1 = ((k && k.stufe1) || []).filter(_klSichtbar), s2 = ((k && k.stufe2) || []).filter(_klSichtbar);
+    // 06.09.2026 (Lucas: „wenn in beiden Elemente selbe Team dann ja eindeutiger"). Der Abgleich
+    // muss in BEIDE Richtungen sichtbar sein — wer auf Ebene 2 schaut, sieht sonst nicht, dass
+    // dieselbe Auswahl unten noch einmal auftaucht. Verglichen wird ueber den Poly-
+    // Marktschluessel, nicht ueber Teamnamen (die Flaechen schreiben sie verschieden).
+    var _jz = {};
+    (polyPlays || []).forEach(function (r) {
+      if (r && r.key && (r.verdict === 'BET' || r.verdict === 'ABWÄGEN')) _jz[r.key] = r;
+    });
     var st = _mdKillerStand(), bil = (k && k.bilanz) || null, bad = _mdKillerBadge(st, bil);
     // 01.09.2026: der Kopf heißt weiter „Mehrfach gedeckt", ist aber Ebene 2 EINER Sektion.
     // Der Badge spricht seit heute nur noch über das EIGENE Buch — das Urteil über die
     // Schublade steht eine Ebene höher und muss hier nicht ein zweites Mal stehen.
+    // Eigene id: die Poly-Plays kommen erst async: bis dahin kann Ebene 2 den Abgleich mit
+    // Ebene 3 nicht kennen. `_mdFillJetzt` tauscht deshalb BEIDE Kaesten, nicht nur den unteren
+    // — sonst traegt genau eine der zwei Flaechen den Marker, und das ist der Zustand, den
+    // Lucas beanstandet hat.
     var ebene = function (inhalt) {
-      return _mdEbene(2, 'Wie viele Bücher sind sich einig?', 'Punktestand', A.blue,
+      return '<div id="mdKillerBox">' + _mdEbene(2, 'Wie viele Bücher sind sich einig?', 'Punktestand', A.blue,
         'Je zustimmendem Buch 2 Punkte, 1 für Tiefe im selben Buch, 1 wenn es schon ≥3h vor Anpfiff steht. Nicht erhobene Bücher senken den Nenner — sie kosten keine Punkte.',
-        'Betfair · Polymarket · Pinnacle im Vergleich · gehalten bis zum Anpfiff · leer heißt leer',
-        bad, inhalt);
+        // 06.09.2026 (Lucas: „ich weiß nicht, ob man das nicht noch verbessern kann … damit
+        // ich wirklich check, was der Sinn der 2 Elemente ist"). Die Unterzeile sagt jetzt,
+        // was diese Ebene von der darunter UNTERSCHEIDET — das war die eigentliche Frage.
+        // Ebene 3 sagt an derselben Stelle: eine Quelle genügt, kein UND.
+        'mehrere Bücher <b>gleichzeitig</b> auf derselben Seite (UND) · gehalten bis zum Anpfiff · leer heißt leer',
+        bad, inhalt,
+        // Was hier landen KANN, ist durch die Bauart begrenzt: nur Märkte, die alle drei
+        // Bücher quotieren — praktisch 1X2. Die Poly-Shortlist spielt überwiegend Über/Unter,
+        // trifft sich mit dieser Ebene aber sehr wohl auf 1X2-Spielen (06.09.: Remo v Flamengo).
+        _mdRegal(s1.concat(s2), function (r) { return r.markt || r.market; })) + '</div>';
     };
     if (!s1.length && !s2.length) {
       var regel = (k && k.regeln && k.regeln.text) || 'Geldanteil, frischer Zufluss und mitziehende Quote müssen zusammenfallen.';
@@ -2268,7 +2349,15 @@
           '<b style="color:' + col + '">' + esc(t.buch) + '</b>' +
           '<i>' + (un ? '❔' : t.punkte + '/' + t.moeglich) + '</i></span>';
       }).join('');
-      return { html: bloecke, punkte: pk.punkte, moeglich: pk.moeglich, dauerH: pk.dauerH };
+      return { html: bloecke, punkte: pk.punkte, moeglich: pk.moeglich, dauerH: pk.dauerH,
+               // 06.09.2026 (Lucas: „müssen einfach simpel zeigen warum damit ich schnell
+               // weiß"). Der Grund stand bisher NUR im Tooltip der Buch-Bloecke — man musste
+               // ueber vier Kaestchen fahren, um zu erfahren, warum die Zeile ueberhaupt da
+               // ist. Die Begruendungen liegen fertig in killer.json
+               // (`punkte.teile[].grund.text`); hier werden sie NICHT neu formuliert,
+               // nur ausgeschrieben. Nur Buecher, die auch Punkte gegeben haben.
+               warum: (pk.teile || []).filter(function (t) { return t.punkte > 0 && t.grund && t.grund.text; })
+                        .map(function (t) { return t.grund.text; }) };
     }
 
     var row = function (x) {
@@ -2281,6 +2370,23 @@
       // Inter — das wechselt auch ohne dass ich die Seite aktualisiere"): der Treffer wird jetzt
       // bis zum Anpfiff gehalten. Damit das nicht wie ein eingefrorener Fehler aussieht, steht
       // dran, SEIT WANN er steht und ob die Bedingungen gerade noch anliegen.
+      // Gegenstueck zum Badge auf Ebene 3. Drei Zustaende, weil „gleiches Spiel" nicht
+      // „gleiche Seite" heisst — und eine Gegenseite ist keine Bestaetigung, sondern ein
+      // Widerspruch, den man sehen muss.
+      var _jzr = x.polyKey ? _jz[x.polyKey] : null;
+      var jzB = '';
+      if (_jzr) {
+        var _gl = (x.polySide && _jzr.side) ? (x.polySide === _jzr.side) : null;
+        var _w = (_gl === false)
+          ? { t: '⚠️ Ebene 3 dagegen', c: A.gold, b: 'rgba(201,133,0,.16)',
+              tip: 'Die Rangliste unten führt dasselbe Spiel, aber die andere Seite (' + (_jzr.side || '—') + '). Strittig, nicht eindeutiger.' }
+          : (_gl === true)
+          ? { t: '🎯 auch Ebene 3 · gleiche Seite', c: A.good, b: 'rgba(46,160,71,.18)',
+              tip: 'Dieselbe Auswahl steht unten in der Rangliste (Ebene 3). Bücher einig UND stärkstes Geld-Signal auf derselben Seite.' }
+          : { t: '🎯 auch Ebene 3', c: '#4cc2ff', b: 'rgba(76,194,255,.16)',
+              tip: 'Dasselbe Spiel steht unten in der Rangliste. Ob es dieselbe SEITE ist, ist hier nicht feststellbar — dann wird es nicht behauptet.' };
+        jzB = '<span class="md-badge" style="background:' + _w.b + ';color:' + _w.c + '" title="' + esc(_w.tip) + '">' + _w.t + '</span>';
+      }
       var seit = uhr(x.gehaltenSeit);
       var stand = x.aktiv
         ? '<span class="md-kl-live"><i></i>läuft' + (seit ? ' · seit ' + seit : '') + '</span>'
@@ -2319,8 +2425,11 @@
         // „⏳ 20.5h" — drei Zeitangaben, drei Bedeutungen, zwei fast gleiche Symbole und keine
         // Beschriftung. ⏱ ist der Anpfiff, ⏳ die Dauer der Übereinstimmung, „seit" der Beginn
         // der Haltung. Jetzt steht es dran statt im Tooltip.
-        stand + (ko ? '<span class="md-jz-ko" title="bis Anpfiff">⏱ Anpfiff ' + ko + '</span>' : '') + '</div>' +
+        stand + jzB + (ko ? '<span class="md-jz-ko" title="bis Anpfiff">⏱ Anpfiff ' + ko + '</span>' : '') + '</div>' +
         '<div class="md-kl-pick"><span style="color:var(--mi3)">→</span> <b>' + esc(x.name || '—') + '</b>' + oddTxt + '</div>' +
+        ((pkt && pkt.warum && pkt.warum.length)
+          ? '<div class="md-warum"><i>warum:</i> ' + esc(pkt.warum.slice(0, 3).join(' · ')) + '</div>'
+          : '') +
         '<div class="md-kl-deck">' +
           (pkt
             ? '<span class="md-kl-cnt" title="Punkte von möglichen — nicht erhobene Bücher senken den Nenner"'
@@ -2370,13 +2479,32 @@
     var mid = function (h, a, id) { return id || (team(h) + team(a)); };
     var _polyMaxInf = (polyPlays || []).reduce(function (a, p) { return Math.max(a, _mdPlayInflow(p)); }, 1);
     var _bfFlowMax = ((_md.data.bfOverview && _md.data.bfOverview.flow) || []).reduce(function (a, x) { return Math.max(a, +x.deltaEur || 0); }, 1);
-    var _klk = _klKeys();
+    var _klk = _klKeys(), _klPk = _klNachPolyKey();
     var cand = {};
+    // Reihenfolge-unabhaengiger Spielschluessel aus zwei Teamnamen.
+    var mids = function (h, a) {
+      if (!h || !a) return null;
+      return [team(h), team(a)].sort().join('');
+    };
     var put = function (o) {
       if (isNaN(o.k) || o.k < floor || o.k > soon) return;
       if (o.exotic) o.score -= 14;                 // duenner/exotischer Markt: Signal weniger verlaesslich
       // Deckungs-Abgleich: über matchId ODER Teamnamen — die Flächen liefern nicht dieselbe ID.
-      o.gedeckt = o.mk ? (_klk['id:' + o.mk] || _klk['tm:' + o.mk] || 0) : 0;
+      // Zuerst der exakte Marktschluessel (vom Produzenten gestempelt), dann die IDs, dann
+      // die Teamnamen. Ein Raten der Namensform findet hier NICHT statt.
+      o.gedeckt = (o.pk ? (_klk['pk:' + o.pk] || 0) : 0)
+        || (o.mk ? (_klk['id:' + o.mk] || _klk['tm:' + o.mk] || 0) : 0)
+        || (o.mks ? (_klk['tms:' + o.mks] || 0) : 0);
+      // „dasselbe Spiel" und „dieselbe Seite" sind zwei verschiedene Aussagen — und nur die
+      // zweite ist die, die Lucas meint („wenn in beiden Elementen dasselbe Team"). Wo beide
+      // Flaechen denselben Poly-Outcome-Namen fuehren, ist es dieselbe Seite; fuehren sie
+      // verschiedene, WIDERSPRECHEN sie sich, und das ist die wichtigere Nachricht.
+      // Ohne beide Namen (Altbestand ohne `polySide`) wird NICHTS behauptet.
+      o.deckSeite = null;
+      if (o.gedeckt && o.pk && o.polySide) {
+        var _z2 = _klPk[o.pk];
+        if (_z2 && _z2.polySide) o.deckSeite = (_z2.polySide === o.polySide) ? 'gleich' : 'anders';
+      }
       var e = cand[o.id];
       if (!e || o.score > e.score) cand[o.id] = o;  // dedup je Spiel: staerkstes Signal gewinnt
     };
@@ -2388,7 +2516,7 @@
         var lag = (p.signals || []).some(function (s) { return s && s.name === 'steam_lag' && (+s.score || 0) > 0; });
         if (!bet && !lag) return;
         var conv = +p.convictionScore || 0;
-        var o = { id: 'x' + mid(f.home, f.away, f.matchId), mk: mid(f.home, f.away, f.matchId), k: k, exotic: false, src: 'card', conv: conv, odd: p.odds,
+        var o = { id: 'x' + mid(f.home, f.away, f.matchId), mk: mid(f.home, f.away, f.matchId), mks: mids(f.home, f.away), k: k, exotic: false, src: 'card', conv: conv, odd: p.odds,
                   match: esc(fxTeam(f, 'home')) + vsp + esc(fxTeam(f, 'away')), pick: esc(short(p.market || '') || 'Pick') };
         if (bet) { o.score = 60 + conv * 3.5; o.badge = 'BET' + (conv ? ' ' + conv : ''); o.bc = A.good; }
         else { o.score = 48 + conv * 2; o.badge = '⚡ Poly-Lag'; o.bc = A.blue; }
@@ -2403,7 +2531,12 @@
       if (htk != null && !live && k > soon) return;
       var conv = +r.conv || 0;
       var ico = (typeof _pwSportIcon === 'function') ? _pwSportIcon(r.league) + ' ' : '';
+      // 06.09.2026: die Poly-Zeile war die EINZIGE ohne Spielschluessel — damit konnte
+      // `o.gedeckt` fuer sie nie etwas finden, und ausgerechnet die Poly-Fussballzeilen
+      // ueberschneiden sich am haeufigsten mit Ebene 2 (Beispiel vom 06.09.: Remo v Flamengo
+      // stand in beiden Ebenen, ohne dass eine der beiden es sagte).
       put({ id: 'p' + (r.key || (r.match || '')), k: k, live: live, exotic: false, odd: null, src: 'poly', poly: r,
+        pk: r.key || null, polySide: r.side || null,
         match: esc(String(r.match || '')), pick: esc(r.side || ''),
         score: (r.verdict === 'BET' ? 60 + conv * 3.5 : 48 + conv * 2), bc: A.poly, badge: ico + 'Poly ' + r.verdict });
     });
@@ -2421,7 +2554,7 @@
       // Liga × Match Odds.
       var trS = _mdBfTrack(x.league, 'Match Odds');
       if (trS && trS.verliert) return;   // dem Geld hier zu folgen verliert historisch -> keine Empfehlung
-      put({ id: 'b' + mid(x.home, x.away, x.matchId), mk: mid(x.home, x.away, x.matchId),
+      put({ id: 'b' + mid(x.home, x.away, x.matchId), mk: mid(x.home, x.away, x.matchId), mks: mids(x.home, x.away),
         k: x.kickoff ? Date.parse(String(x.kickoff).replace('Z', '+00:00')) : NaN,
         exotic: ex, src: 'bf', odd: x.odd, pp: pp, moneyIn: moneyIn, tr: trS,
         match: esc(team(x.home)) + vsp + esc(team(x.away)), pick: esc(short(x.sideName || '') || '—'),
@@ -2441,7 +2574,7 @@
       // „Anpfiff jetzt" in der Liste, waehrend der Poly-Block daneben korrekt „in 2h" sagte.
       // Der Anpfiff kommt jetzt aus dem Feed (build_betfair_overview.flow_list); fehlt er,
       // bleibt die Uhr-Chip weg statt eine Zeit zu erfinden.
-      put({ id: 'bf' + mid(x.home, x.away, x.matchId), mk: mid(x.home, x.away, x.matchId),
+      put({ id: 'bf' + mid(x.home, x.away, x.matchId), mk: mid(x.home, x.away, x.matchId), mks: mids(x.home, x.away),
         k: x.kickoff ? Date.parse(String(x.kickoff).replace('Z', '+00:00')) : NaN,
         live: !!_mdBfLiveById(x.matchId),
         exotic: ex, src: 'bfflow', odd: od, deltaEur: dv, nowEur: +x.nowEur || 0, sideName: x.sideName, dir: x.dir,
@@ -2455,7 +2588,7 @@
       if (strong === undefined) { var bs0 = (r.betfair && r.betfair.sharePct) || 0, ps0 = (r.poly && r.poly.sharePct) || 0; strong = bs0 >= 55 && ps0 >= 55; }
       if (!strong) return;
       var ex = !r.pinn;
-      put({ id: 'm' + mid(r.home, r.away, r.matchId), mk: mid(r.home, r.away, r.matchId),
+      put({ id: 'm' + mid(r.home, r.away, r.matchId), mk: mid(r.home, r.away, r.matchId), mks: mids(r.home, r.away),
         k: r.kickoff ? Date.parse(String(r.kickoff).replace('Z', '+00:00')) : NaN,
         exotic: ex, live: r.live, src: 'mm', odd: null, bf: r.betfair, pl: r.poly,
         match: esc(team(r.home)) + vsp + esc(team(r.away)), pick: 'Divergenz',
@@ -2511,6 +2644,27 @@
       var cv = +o.conv || 0;   // card
       return '<div class="md-sig">' + _mdSigCell('Conviction', cv + '/10', A.good, cv * 10, 'Engine-Pick · Verdikt-Gate') + '</div>';
     };
+    // 06.09.2026 (Lucas: „die 2 Elemente müssen einfach simpel zeigen warum damit ich schnell
+    // weiß"). Die Signal-Kacheln darunter zeigen ZAHLEN; wofuer sie stehen, musste man wissen.
+    // Ein Satz Klartext je Zeile, aus den Daten der Zeile — nichts wird neu bewertet.
+    // Wo eine Quelle ihre Begruendung selbst mitliefert (Poly `reasons`), wird sie zitiert,
+    // nicht nachgebaut.
+    var _jzWarum = function (o) {
+      if (o.src === 'poly') {
+        var rs = (o.poly && o.poly.reasons) || [];
+        if (rs.length) return rs.slice(0, 2).join(' · ');
+        return 'Poly-Shortlist · Conviction ' + (+((o.poly && o.poly.conv) || 0)) + '/10';
+      }
+      if (o.src === 'bf') {
+        return 'Betfair-Quote ist um ' + Math.abs(+o.pp || 0).toFixed(1) + ' pp gefallen — das Geld läuft auf diese Seite'
+          + (o.tr ? (o.tr.traegt ? ' · in dieser Liga hat das bisher getragen' : ' · in dieser Liga bisher neutral') : '');
+      }
+      if (o.src === 'bfflow') return 'in den letzten Minuten sind ' + eur(+o.deltaEur || 0) + ' frisches Geld auf diese Seite geflossen';
+      if (o.src === 'mm') return 'Betfair und Polymarket liegen auf VERSCHIEDENEN Seiten — das ist kein Tipp, sondern ein Hinweis auf eine Divergenz';
+      // card
+      return 'Engine-Pick durch das Verdikt-Gate · Conviction ' + (+o.conv || 0) + '/10'
+        + (o.badge && o.badge.indexOf('Poly-Lag') >= 0 ? ' · Poly bewegt sich, die Quote noch nicht' : '');
+    };
     var _mdTrCell = function (tr) {
       // Was der Track ueber diesen Liga×Markt sagt — dieselbe Sprache wie im Radar.
       if (!tr) return _mdSigMuted('Liga-Track', 'noch zu wenig Historie');
@@ -2527,9 +2681,20 @@
           : (min < 60 ? min + 'm' : Math.floor(min / 60) + 'h' + (min % 60 ? ' ' + (min % 60) + 'm' : '')));
       var live = x.live ? '<span class="md-badge" style="background:rgba(229,83,75,.16);color:' + A.red + '">● LIVE</span>' : '';
       var chip = x.exotic ? '<span class="md-badge" style="background:rgba(201,133,0,.14);color:' + A.gold + '" title="dünner/exotischer Markt — Signal weniger verlässlich">dünn</span>' : '';
-      var deck = x.gedeckt ? '<span class="md-badge" style="background:rgba(76,194,255,.16);color:#4cc2ff" ' +
-        'title="Steht auch oben in Mehrfach gedeckt (Stufe ' + x.gedeckt +
-        ') — alle Geld-Bedingungen liegen gleichzeitig an.">🔒 gedeckt</span>' : '';
+      // 06.09.2026 (Lucas: „wenn in beiden Elemente selbe Team, dann ja eindeutiger"). Drei
+      // Zustaende, drei Farben — „gleiches Spiel" allein ist ausdruecklich NICHT „eindeutiger".
+      var deck = '';
+      if (x.gedeckt) {
+        var _dw = (x.deckSeite === 'anders')
+          ? { t: '⚠️ Ebene 2 dagegen', c: A.gold, b: 'rgba(201,133,0,.16)',
+              tip: 'Dasselbe Spiel steht oben in Ebene 2 — aber auf der ANDEREN Seite. Zwei Flächen, zwei Antworten: hier ist nichts eindeutiger, sondern strittig.' }
+          : (x.deckSeite === 'gleich')
+          ? { t: '🔒✓ auch Ebene 2 · gleiche Seite', c: A.good, b: 'rgba(46,160,71,.18)',
+              tip: 'Dieselbe Seite steht oben in Ebene 2 (Stufe ' + x.gedeckt + '): die Bücher sind sich einig UND die Rangliste führt dieselbe Auswahl. Das ist der Fall, den Lucas „eindeutiger" nennt.' }
+          : { t: '🔒 auch Ebene 2', c: '#4cc2ff', b: 'rgba(76,194,255,.16)',
+              tip: 'Dasselbe Spiel steht oben in Ebene 2 (Stufe ' + x.gedeckt + '). Ob es auch dieselbe SEITE ist, ist hier nicht feststellbar — dann wird es auch nicht behauptet.' };
+        deck = '<span class="md-badge" style="background:' + _dw.b + ';color:' + _dw.c + '" title="' + esc(_dw.tip) + '">' + _dw.t + '</span>';
+      }
       var badge = '<span class="md-badge" style="background:rgba(120,130,150,.14);color:' + x.bc + '">' + x.badge + '</span>';
       var oddTxt = (x.odd != null) ? ' <span class="q">@' + (+x.odd).toFixed(2) + '</span>' : '';
       var pickLine = (x.src === 'mm')
@@ -2539,14 +2704,20 @@
         '<div class="md-jz-l1"><span class="md-jz-n">' + (i + 1) + '</span>' +
         '<span class="md-jz-nm">' + x.match + '</span>' + badge + deck + live + chip +
         (ko ? '<span class="md-jz-ko">⏱ ' + ko + '</span>' : '') + '</div>' +
-        pickLine + sigOf(x) + '</div>';
+        pickLine + '<div class="md-warum"><i>warum:</i> ' + esc(_jzWarum(x)) + '</div>' + sigOf(x) + '</div>';
     }).join('');
     // 01.09.2026: Ebene 3 derselben Sektion. Der Kasten behaelt seine id, weil _mdFillJetzt ihn
     // nach dem Poly-Nachladen per outerHTML ersetzt — er muss also allein austauschbar bleiben.
+    // 06.09.2026: Ebene 3 zieht aus MEHREREN Flächen (Poly, Betfair-Geld, Betfair-Flow,
+    // Money-Map, Cards). Welche gerade dominiert, entscheidet die Tagesform der Quellen —
+    // das steht jetzt im Kopf, statt dass man es aus den Zeilen zusammensucht.
+    var _quelleLabel = { poly: 'Poly', bf: 'Betfair-Steam', bfflow: 'Betfair-Fluss',
+                         mm: 'Money-Map', card: 'Cards' };
     return '<div id="mdJetztBox">' + _mdEbene(3, 'Was ist gerade das Stärkste?', 'Rangliste', null,
       'Disjunktion: das stärkste Einzelsignal über alle Flächen. EINE Quelle genügt — deshalb steht hier auch an einem schwachen Tag etwas.',
       'bestes Einzelsignal je Fläche — eine Quelle genügt, kein UND · <b>nicht</b> geprüft, nur sortiert',
-      null, '<div class="md-jz-paar">' + body + '</div>') + '</div>';
+      null, '<div class="md-jz-paar">' + body + '</div>',
+      _mdRegal(items, function (o) { return _quelleLabel[o.src] || o.src; })) + '</div>';
   }
   // ── Die Klammer: „Was kann ich spielen?" ──────────────────────────────────────────────
   // 01.09.2026, Lucas: „jetzt haben wir blindspielbar, mehrfach gedeckt darunter und top wetten
@@ -2569,7 +2740,7 @@
       + '<span class="md-sp-t">Was kann ich spielen?</span>'
       + '<span class="md-sp-s">Drei Ebenen von streng nach breit — <b>je weiter unten, desto mehr steht da '
       + 'und desto weniger ist belegt</b>. Ebene 1 sagt, wie ernst man die beiden darunter nehmen darf.</span></div>'
-      + _mdFreigabe() + _mdKiller() + _mdJetzt(polyPlays)
+      + _mdFreigabe() + _mdKiller(polyPlays) + _mdJetzt(polyPlays)
       + '</section>';
   }
   // 13.08.2026 (Lucas): Poly-Public-Plays sind erst async da → Box nach dem Laden mit ihnen neu ranken
@@ -2580,6 +2751,10 @@
     _pwEnsurePlaysData(function () {
       var el = document.getElementById('mdJetztBox'); if (!el) return;
       var plays = []; try { plays = _pwTopPlays(8, null, false) || []; } catch (e) { plays = []; }
+      // Reihenfolge: erst Ebene 2 (steht oben und wuerde sonst mit dem alten Markup stehen
+      // bleiben), dann Ebene 3. Fehlt der obere Kasten, bleibt der untere trotzdem aktuell.
+      var el2 = document.getElementById('mdKillerBox');
+      if (el2) el2.outerHTML = _mdKiller(plays);
       el.outerHTML = _mdJetzt(plays);
     });
   }
