@@ -484,7 +484,14 @@ class TestPolyUpcomingFallback(unittest.TestCase):
         self.assertIsNotNone(res, "Poly-Markt muss (per Namens-Match) gefunden werden")
         self.assertAlmostEqual(res["odd"], 1.36, places=2)     # 1/0.735
         self.assertEqual(res["vol"], 61467)
-        self.assertIsNone(res["sharePct"])                     # kein Holder-Freeze -> Share None (Preis reicht)
+        # 06.09.2026 — hier stand `assertIsNone(res["sharePct"])` mit dem Kommentar
+        # „kein Holder-Freeze -> Share None (Preis reicht)". Der Preis reichte eben NICHT:
+        # `killer.py` las aus `sharePct=None` ein `polyStatus="unbekannt"`, und das Board zeigte
+        # POLY ❔ fuer jedes Spiel ausserhalb des ~3h-Freeze — auch dort, wo Markt und Preis
+        # vorlagen und die Money Map daneben „Konsens 3/3" schrieb. Der Test hat das Verhalten
+        # zementiert, das der Fund war. Jetzt: Preis-Anteil ja, aber als solcher gekennzeichnet.
+        self.assertEqual(res["sharePct"], 74)                  # 0.735 -> 74 %
+        self.assertEqual(res["shareSrc"], "preis")             # und NICHT als Geld-Anteil ausgegeben
 
     def test_fallback_kette_close_leer_dann_upcoming(self):
         m = bf_match(home="Atletico Madrid", away="Malaga", league="Spanish La Liga", country="ES",

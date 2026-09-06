@@ -208,10 +208,21 @@ _NOISE = {
 # <-> "Manchester United", "Wolves" <-> "Wolverhampton"). Ohne diese Expansion teilen sie 0 Tokens und
 # der ganze Poly-Eintrag fiel still raus. NUR eindeutige, KEINE unterscheidenden Tokens (united/city bleiben
 # getrennt, weil sie separat gemappt/erhalten werden).
+#
+# 06.09.2026 (Lucas: „Angers v Rennes — wieso da kein Poly?"): Poly fuehrt Vereine mit ihrem vollen
+# historischen Namen. „Rennes" gegen „Stade Rennais FC 1901" teilt NULL Tokens — der Rueckfall
+# verlangt mindestens eines und verweigerte zu Recht, denn ohne diese Bedingung paart er
+# irgendwann falsch. Ein niedrigerer Schwellwert waere die falsche Antwort; die richtige ist,
+# dass „rennais" und „rennes" dasselbe Wort sind. Deshalb Alias statt Schwelle.
 _ALIAS = {
     "utd": "united", "man": "manchester", "wolves": "wolverhampton",
     "spurs": "tottenham", "sheff": "sheffield", "nottm": "nottingham",
     "wba": "westbrom", "qpr": "queensparkrangers",
+    # Vereinsnamen, die Poly voll ausschreibt und Betfair kurz fuehrt (06.09.2026):
+    "rennais": "rennes", "monchengladbach": "gladbach", "moenchengladbach": "gladbach",
+    "internazionale": "inter", "napoli": "napoli", "sassuolo": "sassuolo",
+    "hoffenheim": "hoffenheim", "leverkusen": "leverkusen",
+    "atletico": "atletico", "athletic": "athletic",
 }
 
 
@@ -460,7 +471,21 @@ def match_poly(m, ms, poly_entries):
         key = next((k for k in prices if str(k).lower() in ("draw", "the draw", "tie")), None)
     price = prices.get(key) if key else None
     tot = sum(v for v in shares.values() if isinstance(v, (int, float))) if shares else 0
-    share_pct = round(shares.get(key) / tot * 100) if (key and tot and isinstance(shares.get(key), (int, float))) else None
+    # 06.09.2026 (Lucas: „wieso da kein Poly?") — hier stand nur der Geld-Anteil aus `shares`, und
+    # Shares traegt AUSSCHLIESSLICH der close-Pool (~3h-Freeze). Alles von upcoming/liga/scan bekam
+    # `sharePct = None`, `killer.py` las daraus `polyStatus = "unbekannt"` und das Board zeigte ❔ —
+    # obwohl wir Markt UND Preis hatten. `money_map_row()` faellt genau hier seit dem 12.08. auf den
+    # PREIS zurueck („auf Poly = geldgewichtete Wahrscheinlichkeit"); `match_poly` tat es nie.
+    # Zwei Leser desselben Pools, einer mit Rueckfall, einer ohne — daher „Money Map: Konsens 3/3"
+    # neben „Punktestand: POLY ❔" fuer dasselbe Spiel.
+    #
+    # Preis-Anteil ist NICHT Geld-Anteil: `shareSrc` sagt, welcher von beiden es ist, damit niemand
+    # den einen als den anderen ausgibt.
+    share_pct, share_src = None, None
+    if key and tot and isinstance(shares.get(key), (int, float)):
+        share_pct, share_src = round(shares.get(key) / tot * 100), "geld"
+    elif key and isinstance(price, (int, float)) and 0.0 < price < 1.0:
+        share_pct, share_src = round(price * 100), "preis"
     # 01.09.2026 (Lucas: „Poly Top Wallet drauf"): die Wale des Poly-Marktes bis in die Konsens-Zeile
     # durchreichen — GEFILTERT auf unsere Seite, damit der Buecher-Score sie bewerten kann, ohne den
     # Markt ein zweites Mal zu joinen. Wer auf der GEGENSEITE steht, ist kein Verstaerker und faellt
@@ -470,6 +495,7 @@ def match_poly(m, ms, poly_entries):
     return {"vol": round(pe.get("totalUsd") or 0),
             "odd": round(1.0 / price, 2) if (isinstance(price, (int, float)) and price > 0) else None,
             "sharePct": share_pct,
+            "shareSrc": share_src,
             "key": pe.get("key"),
             # None (= nicht erhoben) und [] (= erhoben, keine Wale auf unserer Seite) sind
             # verschiedene Dinge. Ohne diese Trennung wuerde der Score ein fehlendes Holder-Fenster
@@ -480,7 +506,7 @@ def match_poly(m, ms, poly_entries):
 
 
 
-def pick_poly(m, ms, is_live, poly_close, poly_live, poly_upcoming):
+def pick_poly(m, ms, is_live, poly_close, poly_live, poly_upcoming, poly_liga=()):
     """Poly-Quelle je Phase (18.08.2026, Lucas): LAUFENDES Spiel -> frische Live-Poly ZUERST (sonst
     zeigt der Terminal auf einem Live-Spiel die eingefrorene Pre-Match-Quote aus dem Close-Pool).
     Nicht-live: Close (<=3h Freeze, mit Holder-Shares) zuerst, dann Upcoming (weit vor Anpfiff, Preis+Vol).
@@ -490,6 +516,10 @@ def pick_poly(m, ms, is_live, poly_close, poly_live, poly_upcoming):
         poly = match_poly(m, ms, poly_close)
     if poly is None:
         poly = match_poly(m, ms, poly_upcoming)
+    if poly is None:
+        # 06.09.2026: letzte Preis-Quelle aus dem Liga-Fetcher. Reiner Preis, kein Geld —
+        # deshalb ganz hinten und als `src="liga"` erkennbar.
+        poly = match_poly(m, ms, poly_liga)
     return poly
 
 def match_event(m, evs, max_h=None):
@@ -1252,6 +1282,31 @@ def main():
                     if isinstance(v, dict) and v.get("prices")
                     and not any(x in str(k) for x in ("-more-markets", "-exact-score", "-total", "-spread"))
                     and len(v.get("prices")) <= 4] if isinstance(poly_upcoming_raw, dict) else []
+    # 06.09.2026 (Lucas mit Polymarket-Screenshot: „Serie A sind alle Spiele da"). Er hatte recht und
+    # ich lag falsch — ich hatte aus „nicht in unseren Artefakten" auf „gibt es nicht" geschlossen.
+    # `poly_money_broad.py` hatte am 06.09. von vier Serie-A-Spielen nur zwei (fro-ven, par-mon);
+    # `sea-juv-mil` ($94,6K Event-Volumen) und `sea-bol-sas` ($50,0K) fehlten dort.
+    #
+    # Sie liegen aber laengst in `liga_poly_prices.json` — mit Slug, Preisen und Volumen, vom
+    # Liga-Fetcher erfasst. Wir HOLEN die Daten also, der Konsens fragte sie nur nie.
+    # Reine Preis-Quelle (keine Geld-Verteilung), deshalb `src="liga"` und hinter close/upcoming.
+    _lp = _load("liga_poly_prices.json", {})
+    poly_liga_entries = []
+    for _k, _v in ((_lp.get("prices") or {}) if isinstance(_lp, dict) else {}).items():
+        if not isinstance(_v, dict):
+            continue
+        _hn, _an = _v.get("homeName"), _v.get("awayName")
+        _hw, _dr, _aw = _v.get("hw"), _v.get("dr"), _v.get("aw")
+        if not (_hn and _an) or not all(isinstance(x, (int, float)) for x in (_hw, _dr, _aw)):
+            continue
+        # Ein Markt, in dem alle drei Ausgaenge gleich teuer sind, ist ein Platzhalter ohne Handel
+        # (im Bestand: „Bologna v Torino 0.5/0.5/0.5, vol 0"). Kein Preis ist besser als ein erfundener.
+        if _hw == _dr == _aw:
+            continue
+        poly_liga_entries.append({
+            "src": "liga", "key": _v.get("slug"), "totalUsd": round(_v.get("vol") or 0),
+            "prices": {_hn: _hw, "Draw (%s vs. %s)" % (_hn, _an): _dr, _an: _aw}})
+
     # 23.08.2026 (Lucas: „Serie A ist alles da, aber Money-Map zeigt kein Poly"): letzter Fallback ist
     # der FAIRE Poly-Preis aus dem Pinnacle×Poly-Scan (pinnacle_poly_scan.json). Er deckt auch dünne
     # Märkte ($597-Bücher), die durch die Volumen-Schwelle des Broad-Money-Scans fallen. Er füllt NUR
@@ -1315,7 +1370,8 @@ def main():
         # (Preis+Vol, kein Freeze) fuer Spiele weit vor Anpfiff. sharePct kann bei live/upcoming None sein.
         _li = m.get("liveInfo") or {}
         _isl = bool(_li.get("time")) and not _li.get("finished")
-        poly = pick_poly(m, money_side(m), _isl, poly_entries, poly_live_entries, poly_upcoming_entries)
+        poly = pick_poly(m, money_side(m), _isl, poly_entries, poly_live_entries,
+                         poly_upcoming_entries, poly_liga_entries)
         prevlist = hist.get(mid) or []
         # 29.08.2026: build_game bekommt die GANZE Fenster-Historie, nicht mehr nur den
         # letzten Snapshot — sonst misst pinn_move zwei Läufe im Abstand von Minuten.
@@ -1332,6 +1388,8 @@ def main():
             mm_pool, mm_g = poly_entries, g
         elif _best_poly_entry(m, poly_upcoming_entries) is not None:
             mm_pool, mm_g = poly_upcoming_entries, g   # Verdikt bleibt no_anchor; money_map_row leitet Konsens aus Betfair vs Poly ab
+        elif _best_poly_entry(m, poly_liga_entries) is not None:
+            mm_pool, mm_g = poly_liga_entries, g       # 06.09.2026: Preis aus dem Liga-Fetcher
         else:
             mm_pool, mm_g = poly_scan_entries, g   # 23.08.2026 (Lucas): dünner Markt -> fairer Poly-Preis aus dem Scan
         _mmr = money_map_row(mm_g, poly_fav(m, mm_pool))
