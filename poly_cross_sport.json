@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-06T15:30:21.679320+00:00",
+ "generatedAt": "2026-09-06T18:00:40.729617+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -9,28 +9,57 @@
   "soccer_mls"
  ],
  "minGapPP": 6.0,
- "polyRowsSeen": 561,
- "pinnKeys": 311,
- "matched": 219,
- "footballRows": 201,
- "crossRows": 360,
+ "polyRowsSeen": 571,
+ "pinnKeys": 299,
+ "matched": 209,
+ "footballRows": 189,
+ "crossRows": 382,
  "footballSkippedStale": 84,
  "seenBySport": {
   "americanfootball_nfl": 156,
-  "baseball_mlb": 82,
-  "icehockey_nhl": 96,
+  "baseball_mlb": 84,
+  "icehockey_nhl": 116,
   "boxing_boxing": 26,
   "soccer_mls": 30,
-  "soccer_liga": 171
+  "soccer_liga": 159
  },
  "matchedBySport": {
-  "baseball_mlb": 18,
+  "baseball_mlb": 20,
   "soccer_mls": 30,
-  "soccer_liga": 171
+  "soccer_liga": 159
  },
  "trackRecord": {
-  "tracked": 292,
+  "tracked": 296,
   "converged": 67
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "soccer_liga|bologna-sassuolo|aw",
+   "sport": "soccer_liga",
+   "event": "Bologna vs Sassuolo",
+   "market": "1X2",
+   "outcome": "Auswärts",
+   "polyPP": 46.5,
+   "pinnPP": 23.0,
+   "gapPP": 23.51,
+   "vol": 96669,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-06T16:30:37.671286+00:00"
+  },
+  {
+   "id": "soccer_liga|bologna-sassuolo|hw",
+   "sport": "soccer_liga",
+   "event": "Bologna vs Sassuolo",
+   "market": "1X2",
+   "outcome": "Heim",
+   "polyPP": 25.5,
+   "pinnPP": 48.1,
+   "gapPP": -22.57,
+   "vol": 96669,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-06T16:30:37.671286+00:00"
+  }
+ ]
 }
