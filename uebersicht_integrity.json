@@ -51,11 +51,9 @@
     {
       "label": "Serien-Seltenheit folgt aus der Liga-Basis, die danebensteht",
       "severity": "error",
-      "failures": [
-        "ligaStreaks: Newcastle over25 8x — zufallPct 2.03819 liegt ausserhalb dessen, was ligaBasisPct 52% zulaesst (0.49483..0.57713) — es wurde mit einer anderen Rate gerechnet"
-      ],
-      "nFail": 1,
-      "ok": false,
+      "failures": [],
+      "nFail": 0,
+      "ok": true,
       "hinweis": ""
     },
     {
@@ -88,20 +86,20 @@
       "failures": [],
       "nFail": 0,
       "ok": true,
-      "hinweis": "124 Picks im Fenster, 23 % ohne Preis-Signal."
+      "hinweis": "138 Picks im Fenster, 22 % ohne Preis-Signal."
     },
     {
       "label": "Stumme Signale: wer hat nie gefeuert?",
       "severity": "warn",
       "failures": [
-        "betfair_coherence: 0 Feuerungen in 142 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
-        "game_state_openness: 0 Feuerungen in 142 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
-        "polymarket_sharp: 0 Feuerungen in 142 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
-        "smart_money: 0 Feuerungen in 142 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)"
+        "betfair_coherence: 0 Feuerungen in 156 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
+        "game_state_openness: 0 Feuerungen in 156 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
+        "polymarket_sharp: 0 Feuerungen in 156 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)",
+        "smart_money: 0 Feuerungen in 156 abgerechneten Picks — entweder ohne Zustaendigkeit in diesem Datensatz oder stumm defekt (wie polymarket_sharp bis 06.09.)"
       ],
       "nFail": 4,
       "ok": false,
-      "hinweis": "10 von 33 Signalen schweigen ueber 142 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 4 an und trotzdem stumm."
+      "hinweis": "10 von 33 Signalen schweigen ueber 156 Picks — davon 6 bewusst abgeschaltet (altitude_signal, incentive_signal, pressure_index, steam_lag, travel_burden, weather_signal), 4 an und trotzdem stumm."
     },
     {
       "label": "Signal-Bilanz: schadet ein Signal belegt?",
@@ -112,6 +110,6 @@
       "hinweis": "0 Signale belegt beitragend, 0 belegt schaedlich. ~30 Signale gleichzeitig geprueft — 1-2 falsche Treffer sind zu erwarten. Nur was ueber mehrere Wochen haelt, ist ein Befund."
     }
   ],
-  "nFail": 2,
-  "generatedAt": "2026-09-06T19:48:27.319890+00:00"
+  "nFail": 1,
+  "generatedAt": "2026-09-06T20:30:42.385517+00:00"
 }
