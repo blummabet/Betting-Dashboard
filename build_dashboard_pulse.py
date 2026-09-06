@@ -248,15 +248,41 @@ def _signal_scoreboard(recs, exclude=BOARD_EXCLUDE) -> dict | None:
                 a["supp"] += 1; a["suppW"] += 1 if win else 0
             elif sc <= -SIG_SUPP_TH:
                 a["opp"] += 1; a["oppW"] += 1 if win else 0
+    # 06.09.2026 (Lucas: „auf der Uebersicht hast auch mal was eingebaut, das sollte man nicht
+    # vergessen") — und beim Hinsehen stand dort dieselbe Krankheit, die wir heute aus dem
+    # Lern-Loop entfernt haben: `edge = Win%dafuer - Win%dagegen`. **Eine Trefferquote ohne die
+    # Quoten ist keine Zahl** (Bug-Klasse 6). „Form-Rating +53 %" kam aus 62 % gegen 9 % — bei
+    # eir Gegen-Seite von elf Faellen, ohne jede Untergrenze.
+    #
+    # Der Docstring oben sagte selbst: „ROI bewusst NICHT: die Ledger speichern keine Quote je
+    # Pick. Kommt, sobald wir Quoten mitschreiben." Seit dem 06.09. schreiben wir sie mit.
+    #
+    # Das Urteil kommt jetzt aus `signal_bilanz` — derselben Rechnung, die der Guard und der
+    # Lern-Loop benutzen. Eine Definition von „traegt bei", nicht drei. Die Win-Quoten bleiben
+    # als BESCHREIBUNG stehen; sie sind kein Urteil und heissen auch nicht mehr so.
+    bil = {}
+    try:
+        import signal_bilanz as _SB
+        from update_signal_weights import _preis_justierter_outcome as _po
+        bil = _SB.bilanz(graded, _po)
+    except Exception as e:
+        print(f"  ⚠️  Signal-Bilanz nicht rechenbar: {e}")
+
     rows = []
     for nm, a in agg.items():
         sr = round(100.0 * a["suppW"] / a["supp"]) if a["supp"] else None
         orr = round(100.0 * a["oppW"] / a["opp"]) if a["opp"] else None
-        edge = (sr - orr) if (sr is not None and orr is not None) else None
+        b = bil.get(nm) or {}
         rows.append({"name": nm, "fire": a["fire"],
                      "supp": a["supp"], "suppWinPct": sr,
                      "opp": a["opp"], "oppWinPct": orr,
-                     "edge": edge,
+                     # Das gemessene Urteil: Unterschied im CLV zu den Picks, auf denen dieses
+                     # Signal SCHWIEG — geschichtet nach der Zahl der uebrigen Signale.
+                     "clvDiff": b.get("clvDiff"),
+                     "clvDiffUG": b.get("clvDiffUG"),
+                     "clvUrteil": b.get("clvUrteil") or "kein Urteil",
+                     "ausgangDiff": b.get("ausgangDiff"),
+                     "ausgangUrteil": b.get("ausgangUrteil") or "kein Urteil",
                      "clvAvg": round(a["clvSum"] / a["clvN"], 2) if a["clvN"] else None})
     rows.sort(key=lambda x: -x["fire"])
     return {"n": len(graded), "baseWinPct": round(100.0 * base_w / len(graded)),

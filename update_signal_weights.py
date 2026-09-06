@@ -67,6 +67,22 @@ MIN_OBS_FOR_TRUST = 10  # davor: konservatives Update (50% weight zur Prior)
 #  2. Unter BASIS_MIN_N ist die eigene Quote selbst zu verrauscht, um Massstab zu sein — dann
 #     bleibt es beim Muenzwurf. Und sie wird gedeckelt: eine Basis von 80% aus einer Gluecks-
 #     serie wuerde sonst jedes Signal unter Wasser druecken.
+# ── Die Bilanz wirkt auf die Gewichte (06.09.2026) ──────────────────────────────────────────
+# Lucas: „wenn wir draufkommen, ein Signal ist zum Scheissen, dann wird es runtergewichtet und
+# nur mehr beobachtet." Genau das passiert hier — mit zwei Bremsen.
+#
+# 1. Es wirkt NUR, was `signal_verlauf` als stabil ausweist: dasselbe Urteil ueber mehrere
+#    Messungen an verschiedenen Tagen und mindestens zwei Wochen, ohne Unterbrechung. Die
+#    Bilanz prueft ~30 Signale gleichzeitig — 1-2 Zufallstreffer pro Lauf sind zu erwarten,
+#    und ein Loop, der darauf sofort reagiert, laeuft dem Rauschen hinterher.
+# 2. Der Eingriff ist klein und umkehrbar. Er ersetzt das Gelernte nicht, er verschiebt es.
+#    Faellt ein Signal aus dem stabilen Zustand, ist der Faktor beim naechsten Lauf weg.
+#
+# Bewusst asymmetrisch: abwerten trifft haerter als aufwerten. Ein Signal, das belegt schadet,
+# soll spuerbar leiser werden; eines, das beitraegt, bekommt einen Schubs, keine Vollmacht.
+BILANZ_ABWERTUNG  = 0.75   # stabil schaedlich  -> Gewicht x0,75 (Untergrenze bleibt 0,3)
+BILANZ_AUFWERTUNG = 1.10   # stabil beitragend  -> Gewicht x1,10 (Obergrenze bleibt 1,7)
+
 BASIS_MIN_N = 40      # darunter ist die eigene Trefferquote kein belastbarer Massstab
 BASIS_MIN   = 0.45    # Deckel nach unten
 BASIS_MAX   = 0.70    # Deckel nach oben — Glueckssträhnen sollen den Massstab nicht kippen
@@ -88,6 +104,7 @@ def basisquote(picks):
 MIN_LEARN_MATCHDAY = 1 if _IS_LIGA else 2
 
 LEDGER_FILE  = D.file("wm_signal_ledger.json", "liga_signal_ledger.json")
+VERLAUF_FILE = D.file("wm_signal_verlauf.json", "liga_signal_verlauf.json")
 WEIGHTS_FILE = D.file("signal_weights.json", "liga_signal_weights.json")
 
 # ─────────────────────────────────────────────────────────────────────────────────────
@@ -298,6 +315,36 @@ def _preis_justierter_outcome(pick: dict) -> float | None:
     return max(0.0, min(1.0, 0.5 + (o - implizit) / 2.0))
 
 
+def _stabile_urteile() -> dict:
+    """{'schadet': [...], 'traegt bei': [...]} aus dem Bilanz-Verlauf. Leer, wenn nichts da ist.
+
+    Fehlt die Datei oder ist sie unlesbar, wirkt NICHTS — kein Rueckfall auf die Momentaufnahme.
+    *Fehlende Information ist keine Erlaubnis.*
+    """
+    if not VERLAUF_FILE.exists():
+        return {}
+    try:
+        d = json.loads(VERLAUF_FILE.read_text(encoding="utf-8")) or {}
+    except Exception as e:
+        print(f"⚠️  {VERLAUF_FILE.name} nicht lesbar: {e} — Bilanz wirkt diesmal nicht")
+        return {}
+    st = d.get("stabil")
+    return st if isinstance(st, dict) else {}
+
+
+def bilanz_faktor(sig_name: str, stabil: dict) -> float:
+    """Faktor, mit dem die Bilanz das gelernte Gewicht verschiebt. 1.0 = kein Eingriff."""
+    schlecht = set((stabil or {}).get("schadet") or [])
+    gut = set((stabil or {}).get("traegt bei") or [])
+    if sig_name in schlecht and sig_name in gut:
+        return 1.0            # Widerspruch ist kein Urteil
+    if sig_name in schlecht:
+        return BILANZ_ABWERTUNG
+    if sig_name in gut:
+        return BILANZ_AUFWERTUNG
+    return 1.0
+
+
 def update_weights() -> dict:
     """Hauptlogik: Bayesian-Update aller Signal-Weights."""
     weights = _load_weights()
@@ -352,6 +399,10 @@ def update_weights() -> dict:
     # wird nur noch berichtet, damit die Verschiebung im Log sichtbar bleibt.
     basis, basis_n = basisquote(picks)
     NEUTRAL_ERGEBNIS = 0.5
+    _stabil = _stabile_urteile()
+    if _stabil.get("schadet") or _stabil.get("traegt bei"):
+        print(f"  📉 stabil schaedlich: {_stabil.get('schadet') or '—'}")
+        print(f"  📈 stabil beitragend: {_stabil.get('traegt bei') or '—'}")
 
     # Backtest-Prior (nur Liga): Pseudo-Beobachtungen, die zu den Live-Counts addiert werden.
     # Signale ganz ohne Live-Trigger bekommen trotzdem ihren Prior-Vorsprung.
@@ -384,6 +435,10 @@ def update_weights() -> dict:
         neutral = max(0.30, min(0.80, neutral))     # kein Nullpunkt jenseits des Sinnvollen
         raw_weight  = post_mean / neutral
 
+        # Die Bilanz verschiebt das Gelernte — nur was ueber zwei Wochen gehalten hat.
+        faktor = bilanz_faktor(sig_name, _stabil)
+        raw_weight *= faktor
+
         # Sanity-Bound: weight ∈ [0.3, 1.7] damit ein einzelnes Signal das
         # System nie komplett dominiert oder neutralisiert
         clamped_weight = max(0.3, min(1.7, raw_weight))
@@ -410,6 +465,8 @@ def update_weights() -> dict:
             "basis":               round(basis, 3),
             "basisN":              basis_n,
             "neutral":             round(neutral, 3),
+            # Nachvollziehbar: hat die Bilanz eingegriffen, und wie stark?
+            "bilanzFaktor":        round(faktor, 3),
             "last_updated":        now_iso,
             "notes":               prev.get("notes") or "",
         }

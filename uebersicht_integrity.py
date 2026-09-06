@@ -392,6 +392,34 @@ def check_stumme_signale(ctx):
                          len(geteilt["stumm_trotz_an"])))
 
 
+def check_signal_bilanz(ctx):
+    """06.09.2026 — Lucas: „ich dachte, wenn ein Signal zum Scheissen ist, wird es
+    runtergewichtet; ich dachte, das funktioniert sowieso."
+
+    Der Lern-Loop lief (164 Laeufe seit dem 26.06.), aber er konnte nie sagen, dass etwas GUT
+    ist: der Massstab war die eigene Trefferquote, und damit landeten alle Gewichte unter 1 —
+    gemessene Spanne am 05.09.: **0,590 bis 1,034**, erlaubt waeren 0,300 bis 1,700. Er konnte
+    abwerten und praktisch nicht aufwerten. Ausserdem vergibt er Gewichte, aber keine Konfidenz:
+    ein Gewicht von 0,9 sagt nicht, ob das belegt ist.
+
+    Dieser Guard liest die Bilanz (`build_signal_bilanz.py`) und meldet, was BELEGT schadet —
+    geschichtet nach der Zahl der uebrigen Signale, damit nicht jedes Signal den Vorteil
+    signalreicher Picks erbt (r = +0,131 zwischen Signalzahl und CLV).
+    """
+    import signal_bilanz as SB
+    bil = dict((ctx.get("signalBilanz") or {}).get("signale") or {})
+    # MLS-Bilanz nur ergaenzend: Signale, die dort gemessen sind und in der Liga nicht.
+    for k, v in ((ctx.get("signalBilanzMls") or {}).get("signale") or {}).items():
+        bil.setdefault(k, v)
+    if not bil:
+        return _c("Signal-Bilanz: schadet ein Signal belegt?", "warn", [],
+                  hinweis="Keine Bilanz vorhanden — build_signal_bilanz.py laeuft nicht.")
+    gut, schlecht = SB.tragende(bil), SB.schaedliche(bil)
+    return _c("Signal-Bilanz: schadet ein Signal belegt?", "warn", SB.befunde(bil),
+              hinweis="%d Signale belegt beitragend, %d belegt schaedlich. %s"
+                      % (len(gut), len(schlecht), SB.MEHRFACHTEST_HINWEIS))
+
+
 UEBERSICHT_CHECKS = [
     check_serien_rangfolge,
     check_freigabe_grund,
@@ -405,6 +433,7 @@ UEBERSICHT_CHECKS = [
     check_poly_deckung,
     check_preis_signal_deckung,
     check_stumme_signale,
+    check_signal_bilanz,
 ]
 
 
@@ -438,6 +467,8 @@ def build_ctx_from_disk() -> dict:
         "ligaPoly": _lade("liga_poly_prices.json", {}),
         "ligaLedger": _lade("liga_signal_ledger.json", {}),
         "mlsLedger": _lade("mls_signal_ledger.json", {}),
+        "signalBilanz": _lade("liga_signal_bilanz.json", {}),
+        "signalBilanzMls": _lade("mls_signal_bilanz.json", {}),
     }
 
 

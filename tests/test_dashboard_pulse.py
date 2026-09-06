@@ -81,12 +81,20 @@ def test_best_bucket_sagt_ob_das_ergebnis_traegt():
     assert duenn["belegt"] is False and duenn["roiUgPct"] is None
 
 
-# 22.08.2026 (Lucas): Signal-Bilanz — pro-Signal Win% dafür/dagegen + Edge.
-def _rec(res, sigs):
-    return {"result": res, "resolvedAt": "2026-08-22T00:00:00Z", "clvPP": 0.0,
+# 22.08.2026 (Lucas): Signal-Bilanz — pro-Signal Win% dafür/dagegen.
+def _rec(res, sigs, odds=2.0):
+    return {"result": res, "resolvedAt": "2026-08-22T00:00:00Z", "clvPP": 0.0, "odds": odds,
             "signals": [{"name": n, "score": s} for n, s in sigs]}
 
-def test_signal_scoreboard_edge_und_seiten():
+def test_signal_scoreboard_seiten():
+    """06.09.2026: das Feld `edge` (Win%dafür − Win%dagegen) ist WEG.
+
+    Eine Trefferquote ohne die Quoten ist keine Zahl — dieselbe Bug-Klasse, die am selben Tag
+    aus dem Lern-Loop geflogen ist. Auf der Übersicht stand deshalb „Form-Rating +53 %" (62 %
+    gegen 9 % bei elf Gegen-Fällen) neben „Betfair-Geld +1 %", während die gemessene Bilanz
+    genau umgekehrt urteilt: Form-Rating kein Urteil, Betfair-Geld trägt belegt bei.
+
+    Die Win-Quoten bleiben als BESCHREIBUNG erhalten und werden hier weiter geprüft."""
     recs = [
         _rec("WIN",  [("form_trend", 3.0), ("h2h_pattern", -2.0)]),
         _rec("WIN",  [("form_trend", 2.0), ("h2h_pattern", -1.0)]),
@@ -97,7 +105,17 @@ def test_signal_scoreboard_edge_und_seiten():
     rows = {r["name"]: r for r in b["rows"]}
     ft = rows["form_trend"]
     assert ft["fire"] == 3 and ft["supp"] == 2 and ft["opp"] == 1
-    assert ft["suppWinPct"] == 100 and ft["oppWinPct"] == 0 and ft["edge"] == 100
+    assert ft["suppWinPct"] == 100 and ft["oppWinPct"] == 0
+    assert "edge" not in ft, "die Win-Quoten-Differenz ist zurück — das ist kein Urteil"
+
+def test_signal_scoreboard_traegt_das_gemessene_urteil():
+    """Jede Zeile muss ihr Urteil mitbringen, nicht nur Prozentzahlen."""
+    recs = [_rec("WIN" if i % 3 else "LOSS", [("form_trend", 2.0)]) for i in range(40)]
+    b = bp._signal_scoreboard(recs)
+    ft = {r["name"]: r for r in b["rows"]}["form_trend"]
+    for feld in ("clvUrteil", "ausgangUrteil"):
+        assert feld in ft, f"{feld} fehlt — die Kachel könnte wieder ohne Urteil anzeigen"
+    assert ft["clvUrteil"] in ("traegt bei", "schadet", "kein Urteil")
 
 def test_signal_scoreboard_leer_ist_none():
     assert bp._signal_scoreboard([]) is None
