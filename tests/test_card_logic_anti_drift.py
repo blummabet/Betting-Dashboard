@@ -110,9 +110,15 @@ class TestHeaderKlassenUnterschied(unittest.TestCase):
         # Suche das isLopsided-Pattern im _deriveAngle-Bereich
         self.assertIn("isLopsided", src,
             "isLopsided-Check muss existieren um Defensiv-Schlacht/Tor-Fest bei Klassen-Unterschied zu überschreiben")
-        # Pattern: isLopsided wird VOR der Über/Unter-Check geprüft
-        idx_lopsided = src.find("isLopsided")
-        idx_torfest  = src.find("Tor-Fest erwartet")
+        # 06.09.2026: dieser Test suchte das ERSTE Vorkommen der Literale irgendwo in der
+        # Datei — auch in einem Kommentar. Ein Kommentar, der „Tor-Fest erwartet" nur ERWAEHNT,
+        # liess ihn rot werden, obwohl die Reihenfolge im Code stimmte. Der Test hielt eine
+        # Byte-Position fest, nicht die Regel. Jetzt: die Regel ist, dass der Lopsided-ZWEIG
+        # vor dem Torfest-RUECKGABEWERT steht — beides Code, kein Prosa-Treffer moeglich.
+        idx_lopsided = src.find("const isLopsided")
+        idx_torfest  = src.find("label: 'Tor-Fest erwartet'")
+        self.assertGreaterEqual(idx_lopsided, 0, "const isLopsided nicht gefunden")
+        self.assertGreaterEqual(idx_torfest, 0, "Torfest-Rueckgabe nicht gefunden")
         self.assertLess(idx_lopsided, idx_torfest,
             "isLopsided-Check muss VOR Tor-Fest-Check stehen (sonst greift override nicht)")
 

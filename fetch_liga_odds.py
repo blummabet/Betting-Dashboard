@@ -529,10 +529,30 @@ def build_odds_entry(prices: dict, existing: dict, now_iso: str, hist: list | No
     return entry
 
 
-def _snap_changed(last: dict | None, hw, dr, aw) -> bool:
+def _snap_changed(last: dict | None, hw, dr, aw, neben: dict | None = None) -> bool:
+    """Hat sich seit dem letzten Snap etwas bewegt? 1X2 ODER eine Nebenlinie.
+
+    06.09.2026 (Lucas: „mit all den Infos muss doch was drin sein"). Bis heute fragte dieses
+    Gate NUR nach hw/dr/aw. Bewegte sich die O/U-Linie, waehrend das 1X2 stand, wurde GAR KEIN
+    Snapshot geschrieben — die O/U-Zeitreihe war ein Nebenprodukt der 1X2-Zeitreihe und hatte
+    genau dort Luecken, wo eine reine Tor-Bewegung stattfand. Genau die Bewegung, die ein
+    O/U-Pick braucht.
+
+    Gemessener Anlass: von 318 abgerechneten Picks trugen 162 KEIN einziges Preis-Signal, und
+    die fehlende Gruppe war fast vollstaendig Ueber/Unter und BTTS. Preis-Signale sind die
+    einzige Signalfamilie mit belegtem CLV-Zusammenhang (r=+0,35, p=0,0001) — die Haelfte
+    unserer Picks entstand blind zu der einen Haelfte, die etwas kann.
+
+    `neben` ist optional, damit bestehende Aufrufer (und ihre Tests) unveraendert gelten.
+    """
     if not last:
         return True
-    return (last.get("hw") != hw or last.get("dr") != dr or last.get("aw") != aw)
+    if last.get("hw") != hw or last.get("dr") != dr or last.get("aw") != aw:
+        return True
+    for k, v in (neben or {}).items():
+        if v is not None and last.get(k) != v:
+            return True
+    return False
 
 
 def _kickoff_passed(kickoff_iso) -> bool:
@@ -558,14 +578,26 @@ def append_snapshot(history: dict, key: str, prices: dict, now_iso: str, post_ko
     added = 0
     snaps = history.setdefault(key, [])
 
-    def _ou_fields(prefix: str) -> dict:
-        # O/U-Linien in den Snap (09.07.2026: lead_lag-O/U braucht Pinnacle+Public-Zeitreihe).
+    def _neben_felder(prefix: str) -> dict:
+        """O/U-Linien UND BTTS in den Snap.
+
+        09.07.2026: O/U rein (lead_lag-O/U braucht Pinnacle+Public-Zeitreihe).
+        06.09.2026: BTTS rein. `_extract_btts` holt bttsY/bttsN, `soft_consensus` mittelt sie,
+        `build_odds_entry` traegt sie im Eintrag — nur die ZEITREIHE hat sie nie gesehen:
+        0 von 27.086 Snapshots in liga+mls trugen BTTS. Die Information war da und wurde nie
+        gefragt. Ohne Zeitreihe kann kein bewegungsbasiertes Preis-Signal je auf einen
+        BTTS-Pick feuern.
+        """
         f = {}
         for suf in ("15", "25", "35"):
             v = prices.get(f"{prefix}o{suf}")
             if v:
                 f[f"o{suf}"] = v
                 f[f"u{suf}"] = prices.get(f"{prefix}u{suf}")
+        y = prices.get(f"{prefix}bttsY")
+        if y:
+            f["bttsY"] = y
+            f["bttsN"] = prices.get(f"{prefix}bttsN")
         return f
 
     # 20.07.2026 (MLS-Audit): Platzhalter-Quoten (hw/dr/aw ≈ 1.04/1.01/1.04, Overround ~2.9) NIE in die
@@ -576,16 +608,18 @@ def append_snapshot(history: dict, key: str, prices: dict, now_iso: str, post_ko
     hw, dr, aw = prices.get("hw"), prices.get("dr"), prices.get("aw")
     if hw and dr and aw and _plausible_1x2(hw, dr, aw):
         last_pinn = next((s for s in reversed(snaps) if s.get("bk") != "public"), None)
-        if _snap_changed(last_pinn, hw, dr, aw):
+        _nb = _neben_felder("")
+        if _snap_changed(last_pinn, hw, dr, aw, _nb):
             snaps.append({"ts": now_iso, "bk": "pinnacle", "hw": hw, "dr": dr, "aw": aw,
-                          **_ou_fields("")})
+                          **_nb})
             added += 1
     phw, pdr, paw = prices.get("public_hw"), prices.get("public_dr"), prices.get("public_aw")
     if phw and pdr and paw and _plausible_1x2(phw, pdr, paw):
         last_pub = next((s for s in reversed(snaps) if s.get("bk") == "public"), None)
-        if _snap_changed(last_pub, phw, pdr, paw):
+        _nbp = _neben_felder("public_")
+        if _snap_changed(last_pub, phw, pdr, paw, _nbp):
             snaps.append({"ts": now_iso, "bk": "public", "hw": phw, "dr": pdr, "aw": paw,
-                          **_ou_fields("public_")})
+                          **_nbp})
             added += 1
     return added
 

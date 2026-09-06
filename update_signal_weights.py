@@ -255,6 +255,49 @@ def _process_outcome_score(pick: dict) -> float | None:
     return None if w is None else (1.0 if w else 0.0)
 
 
+def _preis_justierter_outcome(pick: dict) -> float | None:
+    """Wie hat der Pick gegen SEINEN EIGENEN PREIS abgeschnitten? -> [0,1] oder None.
+
+    06.09.2026. Bis heute lernte dieser Loop an der Trefferquote — erst gegen den Muenzwurf,
+    seit 30.08. gegen die eigene Basisquote. Beides sind Trefferquoten, und **eine Trefferquote
+    ohne die Quoten ist keine Zahl**. Ein Signal, das auf 1,30-Favoriten feuert und 70 % trifft,
+    schlaegt jede Basisquote und wird belohnt — bei rund -9 % Rendite. Ein Signal, das auf 3,00
+    feuert und 35 % trifft, wird bestraft — bei +5 %.
+
+    Messbare Folge im Bestand: `lead_lag_bias`, das Signal mit dem staerksten gemessenen
+    CLV-Zusammenhang (r = +0,495), stand in liga auf 0,901 (gedaempft); `xg_strength`
+    (r = +0,058) auf 1,034. Der Loop hat die Preis-Signale abtrainiert und die
+    Staerke-Signale hochgezogen — und damit genau die Favoriten-Verzerrung erzeugt, die wir
+    am 06.09. gemessen haben (59,5 % Treffer gegen 71,4 % implizit, Obergrenze 65,1 %).
+
+    Der Massstab ist jetzt der Preis selbst:
+
+        wert = prozess-justierter Ausgang (0..1)  -  implizite Wahrscheinlichkeit (1/Quote)
+        score = 0,5 + wert/2
+
+    0,5 heisst damit per Konstruktion **„genau so ausgegangen, wie der Preis es sagte"** — der
+    neutrale Punkt faellt aus der Rechnung, statt aus einer geschaetzten Basisquote zu kommen.
+    Ueber 1 hinaus ist kein Kredit moeglich, unter 0 keine Strafe.
+
+    Die 1/Quote traegt die Marge des Buches; alle Signale werden dadurch gleich stark nach
+    unten gezogen, die RANGFOLGE bleibt unberuehrt. Das ist der konservative Fehler.
+
+    Ohne Quote gibt es KEINE Beobachtung — nicht ersatzweise die alte Trefferquote.
+    *Fehlende Information ist keine Erlaubnis.* Der Ledger stempelt die Quote seit dem
+    06.09. mit (`build_signal_ledger`), der Altbestand wurde nachgetragen.
+    """
+    o = _process_outcome_score(pick)
+    if o is None:
+        return None
+    q = pick.get("entryOdd")
+    if isinstance(q, bool) or not isinstance(q, (int, float)) or q <= 1.0:
+        q = pick.get("odds")
+    if isinstance(q, bool) or not isinstance(q, (int, float)) or q <= 1.0:
+        return None
+    implizit = 1.0 / float(q)
+    return max(0.0, min(1.0, 0.5 + (o - implizit) / 2.0))
+
+
 def update_weights() -> dict:
     """Hauptlogik: Bayesian-Update aller Signal-Weights."""
     weights = _load_weights()
@@ -268,7 +311,8 @@ def update_weights() -> dict:
     #   score < 0 = Signal sagte "schlechter Pick" → Loss = predicted correctly
     counts: dict[str, dict] = {}
     for pick in picks:
-        o     = _process_outcome_score(pick)   # ∈ [0,1], prozess-justiert (FIX 14.06.2026)
+        # 06.09.2026: gegen den PREIS, nicht gegen die Trefferquote (s. _preis_justierter_outcome).
+        o     = _preis_justierter_outcome(pick)
         o_clv = _clv_outcome_score(pick)       # ∈ [0,1], Markt-Zustimmung (18.07.2026)
 
         # CLV-Strom: getrennt gezählt, damit ein Pick OHNE Ergebnis (noch nicht gespielt, aber
@@ -301,8 +345,13 @@ def update_weights() -> dict:
             predicted_win = score > 0
             counts[name]["predicted_correctly"] += o if predicted_win else (1.0 - o)
 
-    # Der Massstab: unsere eigene Trefferquote, nicht der Muenzwurf (30.08.2026, s. Kopf).
+    # 06.09.2026: Der Massstab ist der PREIS des Picks, und der steckt seit
+    # `_preis_justierter_outcome` in jeder einzelnen Beobachtung. Damit ist der neutrale Punkt
+    # 0,5 per Konstruktion — „genau so ausgegangen, wie bepreist". Die geschaetzte Basisquote
+    # (30.08.) war der Zwischenschritt dorthin und wird nicht mehr als Nullpunkt gebraucht; sie
+    # wird nur noch berichtet, damit die Verschiebung im Log sichtbar bleibt.
     basis, basis_n = basisquote(picks)
+    NEUTRAL_ERGEBNIS = 0.5
 
     # Backtest-Prior (nur Liga): Pseudo-Beobachtungen, die zu den Live-Counts addiert werden.
     # Signale ganz ohne Live-Trigger bekommen trotzdem ihren Prior-Vorsprung.
@@ -331,7 +380,7 @@ def update_weights() -> dict:
         # Neutrale Erwartung: Ergebnis-Beobachtungen gegen die eigene Trefferquote, CLV-
         # Beobachtungen gegen 0.5 (dort heisst 0.5 „Linie stand still"). Siehe Kopf.
         _n_erg = n_live + n_prior
-        neutral = ((_n_erg * basis + n_clv * 0.5) / n) if n > 0 else basis
+        neutral = ((_n_erg * NEUTRAL_ERGEBNIS + n_clv * 0.5) / n) if n > 0 else NEUTRAL_ERGEBNIS
         neutral = max(0.30, min(0.80, neutral))     # kein Nullpunkt jenseits des Sinnvollen
         raw_weight  = post_mean / neutral
 

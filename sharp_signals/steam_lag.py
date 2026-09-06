@@ -21,7 +21,7 @@ Tournament-Phase: Volume steigt → Signal wird scharf.
 from __future__ import annotations
 from datetime import datetime, timezone, timedelta
 from typing import Optional
-from sharp_signals.base import Signal, SignalResult
+from sharp_signals.base import Signal, SignalResult, poly_volumen
 
 
 DEFAULT_THRESHOLDS = {
@@ -135,8 +135,9 @@ class SteamLagSignal(Signal):
 
         # Polymarket-Lag: zeigt Polymarket noch alte Quote?
         poly = context.get("poly_snapshot") or {}
-        vol = poly.get("poly_vol", 0) or 0
-        if vol < self._t["min_poly_volume"]:
+        # 06.09.2026: siehe base.poly_volumen — derselbe tote Feldname wie in polymarket_sharp.
+        vol = poly_volumen(poly)
+        if vol is None or vol < self._t["min_poly_volume"]:
             return None
 
         p_hw, p_dr, p_aw = poly.get("poly_hw"), poly.get("poly_dr"), poly.get("poly_aw")

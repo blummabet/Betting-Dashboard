@@ -387,9 +387,6 @@
         "altitude_signal",
         "weather_signal",
         "travel_burden",
-        "smart_money",
-        "polymarket_sharp",
-        "pressure_index",
         "steam_lag",
         "mls_travel"
       ],
@@ -629,6 +626,9 @@
           "5": 0.6,
           "6": 0.4
         }
+      },
+      "_notizen": {
+        "disabled_signals": "06.09.2026: smart_money, polymarket_sharp und pressure_index aktiviert. Die ersten beiden waren nicht nur abgeschaltet, sie waren defekt (Feldname 'poly_vol' statt 'vol'; Lookup nach matchKey statt Heim-Gast) — abgeschaltet fiel das nicht auf, und ein defektes Signal sieht aus wie eines, das nichts zu sagen hat. Weiterhin aus: weather_signal/travel_burden/altitude_signal/incentive_signal/mls_travel (keine Liga-Datenquelle) und steam_lag (feuert auch nach dem Volumen-Fix nicht — offen)."
       }
     },
     "mls_default": {

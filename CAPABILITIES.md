@@ -1742,6 +1742,124 @@ beim naechsten Board mit frischem Stand nachpruefen.
 
 ---
 
+### 06.09.2026 — die Engine hatte zwei Hälften, und wir haben nur die stumme gezeigt
+
+`sc` aus der Pick-Engine korreliert mit der Rendite mit **r = −0,007** (n = 1114). Nicht
+invertiert (das war meine erste, falsche Behauptung) — **leer**. Der Grund: `sc` summiert
+Form, xG, Serien und Motivations-Abzüge. Der Preis kommt darin nicht vor.
+
+Trennt man die Signale nach Herkunft, fällt die Summe auseinander:
+
+| Gruppe | n | r (Score ↔ CLV) | p |
+|---|---|---|---|
+| Preis/Geld-Signale | 156 | **+0,353** | 0,0001 |
+| Stärke-Signale | 315 | +0,003 | 0,956 |
+
+Bootstrap-KI der Korrelation [+0,21; +0,48]; hält in liga (+0,40) und mls (+0,47) einzeln.
+Preis-Terzile gegen den Schlusskurs: −3,40 / −1,67 / −0,69 pp, monoton. **Kein Band liegt
+über null** — das oberste ist vom Schlusskurs nicht unterscheidbar, das unterste klar darunter.
+Das ist kein Vorsprung, sondern der Unterschied zwischen „fairer Preis" und „zu spät".
+
+Die Stärke-Signale stellen 315 von 439 Feuerungen. Die Summe hat die Hälfte, die etwas kann,
+mit der Hälfte, die nichts kann, weggemittelt. → `preis_signal.py`.
+
+**Neue Bug-Klasse (7): eine Summe über Signale ungleicher Güte ist kein Score, sondern eine
+Verdünnung.** Wer aggregiert, bevor er die Teile einzeln gemessen hat, kann ein vorhandenes
+Signal nicht mehr sehen — und hält das Ergebnis für einen Befund über die Welt statt über
+seine eigene Rechnung.
+
+### 06.09.2026 — die Zuleitung, nicht das Modell
+
+162 von 318 Picks trugen **kein einziges** Preis-Signal. Die blinde Gruppe war nicht zufällig,
+sondern fast vollständig Über/Unter und BTTS. Ursache in `fetch_liga_odds.append_snapshot`:
+
+1. **BTTS wurde nie in die Zeitreihe geschrieben** — 0 von 27.086 Snapshots in liga+mls.
+   `_extract_btts` holt es, `soft_consensus` mittelt es, `build_odds_entry` trägt es. Nur
+   `_ou_fields` ließ es weg. *Die Information war da und wurde nie gefragt.* (Klasse 4)
+2. **Das Schreib-Gate fragte nur nach 1X2.** Bewegte sich die Torlinie bei stehendem 1X2,
+   entstand gar kein Snapshot. Die O/U-Zeitreihe war ein Nebenprodukt der 1X2-Zeitreihe —
+   mit Lücken genau dort, wo eine reine Tor-Bewegung stattfand.
+
+Beides behoben; `_snap_changed` nimmt jetzt optional die Nebenlinien. Rückwirkend füllbar ist
+die Zeitreihe nicht. Deckung wird ab jetzt gemessen: `preis_deckung.py` +
+`check_preis_signal_deckung` in der Übersicht-Batterie. **Ausgangswert 06.09.: 124 Picks im
+21-Tage-Fenster, 23 % blind — Ü/U 42,5 %, 1X2/DC/AH 14,3 %.**
+
+Offen: `market_side()` in `sharp_signals/base.py` gibt für BTTS `None` zurück. Selbst mit
+Daten überspringen alle Signale, die darauf gaten, jeden BTTS-Pick still.
+
+### 06.09.2026 — vierter Test, der einen Defekt statt einer Regel festhielt
+
+`test_lopsided_overrides_torfest_defshow` verglich `src.find("isLopsided")` mit
+`src.find("Tor-Fest erwartet")` — das erste Vorkommen *irgendwo* in der Datei. Ein Kommentar,
+der das Label nur erwähnt, machte den Test rot, obwohl die Code-Reihenfolge stimmte. Jetzt
+vergleicht er `const isLopsided` mit `label: 'Tor-Fest erwartet'` — beides Code.
+
+Reihe: das literale `' · vorher '`, die erfundene Over/Under-Fixture, `assertIsNone(res["sharePct"])`,
+und jetzt die Byte-Position. **Ein Test, der eine Stelle festhält statt einer Aussage, altert
+gegen uns.**
+
+### 06.09.2026 — die Engine sah die Haelfte des Hauses nie
+
+Drei Signale erreichten die Liga-Cards nicht, aus drei verschiedenen Gruenden — und alle drei
+Gruende sahen von aussen gleich aus: Stille.
+
+**1. Feldname.** `polymarket_sharp` und `steam_lag` lasen `poly_snapshot["poly_vol"]`; die
+Produktion schreibt `vol`. Default 0, Gate bei 5.000 USD → **nie gefeuert**, waehrend
+Everton–Manchester United mit 7,87 Mio. USD in unserer eigenen Datei stand. → `base.poly_volumen`,
+Default `None` statt 0.
+
+**2. Schluessel.** `smart_money` suchte `smartmoney[matchKey]` (`ENG-1-45-33`); die Datei
+schluesselt nach `45-33`. Kein Treffer, **3,04 Mio. USD ueber 39 Spiele** ungenutzt. In der WM
+stimmten die Formate zufaellig ueberein — dort feuerte es 35-mal. → `base.match_eintrag`.
+
+**3. Schalter.** `liga_default.disabled_signals` enthielt NEUN Eintraege, darunter genau diese
+beiden plus `pressure_index` (32 Feuerungen auf 277 echten Picks — nie WM-only gewesen).
+
+Die drei verstaerken sich: **ein abgeschaltetes Signal kann nicht zeigen, dass es kaputt ist,
+und ein kaputtes Signal sieht aus wie eines, das nichts zu sagen hat — also schaltet man es ab.**
+→ `signal_stille.py` + `check_stumme_signale` trennen jetzt „bewusst aus" von „an und trotzdem
+stumm", und ein neuer Test prueft die Gegenrichtung: *ein Signal mit vorhandener Quelle darf
+nicht abgeschaltet bleiben.* Der fehlte, deshalb blieb die Abschaltung stehen, als ihr Grund
+(„bis Polymarket Ligen listet") laengst weg war.
+
+### 06.09.2026 — betfair_coherence mass seinen eigenen Misfit
+
+Ueber die 119 Betfair-Leitern gemessen:
+
+    r(RMSE des Poisson-Fits, groesste gemeldete "Kante") = +0,985
+
+Die Kante WAR zu 97 % der Misfit. `rmse` senkte nur die `confidence`, blockte nie den `score` —
+in duennen Ligen (RMSE 6-14 pp) haette das Signal 12-29 pp Abweichung als Markt-Inkohaerenz
+gemeldet. **Bug-Klasse 5 in Reinform: eine Metrik, die sich selbst beurteilt.**
+
+Zwei Aenderungen, beide aus der Messung statt aus dem Gefuehl:
+- `MAX_RMSE = 0.02` — bei dieser Schranke hat KEINES der 84 verbleibenden Spiele eine "Kante"
+  >= 4 pp. Wo wir die Leiter beschreiben koennen, stimmen wir mit ihr ueberein.
+- **Leave-one-out**: das Lambda kommt aus den ANDEREN Sprossen. Sonst zieht eine echte
+  Fehlbepreisung das Lambda zu sich, verschlechtert den RMSE und blockt ihre eigene Entdeckung
+  (nachgerechnet: 7 pp Verschiebung → voller Fit RMSE 0,0249 = geblockt, Rest-Fit 0,00000 =
+  gefunden). `MIN_REST_RUNGS = 4`, weil ein Rest von genau `MIN_RUNGS` unterbestimmt ist.
+
+Am echten Bestand: 633 Sprossen, 234 mit zu grobem Rest-Fit aussortiert, **8 echte Kanten >= 4 pp
+— alle in duennen Ligen, keine einzige in den Top 5.** Der volle Fit fand null.
+
+**Der Befund dahinter: die Betfair-Tormarkt-Leiter ist auf unserer Aufloesung arbitragefrei.**
+Dass dieses Signal in den Top 5 schweigt, ist ein gemessenes Nein, kein Defekt.
+
+### 06.09.2026 — sechste und siebte Test-Fixture, die eine erfundene Form prueft
+
+`test_underpriced_over_fires_positive` baute eine Leiter mit RMSE 0,050 (echte Betfair-Leiter:
+0,001) und Residuen auf allen vier Sprossen — sie testete „unser Modell passt nicht", nicht
+„eine Sprosse ist fehlbepreist". Neu: saubere Poisson-Leiter, EINE Sprosse um 7 pp verschoben.
+`test_poly_volumen` und `test_match_eintrag` pruefen jetzt gegen die echten Artefakte statt
+gegen selbstgebaute Dicts.
+
+Reihe der Tests, die eine Stelle statt einer Aussage festhielten: `' · vorher '`, die erfundene
+Over/Under-Fixture, `assertIsNone(res["sharePct"])`, die Byte-Position im Renderer, der
+Code-String `"(_n_erg * basis + n_clv * 0.5) / n"`, `poly_vol` im Signal-Test, und diese Leiter.
+**Sieben. Ein Test, der die Form erfindet, in der er prueft, deckt nichts ab.**
+
 ## 8. Harte Arbeitsregeln
 
 - **Push nur über GitHub Desktop**, nie CLI.

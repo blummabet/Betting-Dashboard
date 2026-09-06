@@ -61,10 +61,32 @@ class TestSignalGating(unittest.TestCase):
             [sys.executable, "-c", snip], cwd=str(REPO), env=env).decode().strip().split(",")))
 
     def test_liga_disables_wm_only(self):
+        """Aus bleibt, wofuer es in der Liga KEINE Datenquelle gibt.
+
+        06.09.2026: hier standen zusaetzlich `smart_money`, `polymarket_sharp` und
+        `pressure_index`. Der Grund von damals ist abgelaufen bzw. war nie richtig:
+
+          · `pressure_index` liest `standings` — die liegen in liga-data.json fuer alle fuenf
+            Ligen. Gemessen: 32 Feuerungen auf 277 echten Liga-Picks. Nie WM-only gewesen.
+          · `smart_money` / `polymarket_sharp` lasen Polymarket, und der Kommentar sagte
+            „bis Polymarket Ligen listet". Polymarket listet sie: 104 Liga-Fixtures mit Preis,
+            3,04 Mio. USD Holder-Geld ueber 39 Spiele, davon 2,16 Mio. auf Everton–Man United.
+
+        Beide waren ausserdem DEFEKT (Feldname `poly_vol` statt `vol`; Lookup nach `matchKey`
+        statt Heim-Gast). Abgeschaltet konnte das nicht auffallen — genau deshalb steht die
+        Begruendung jetzt hier und nicht nur in der Liste.
+        """
         d = self._disabled("liga_default")
-        for s in ("incentive_signal", "altitude_signal", "weather_signal",
-                  "travel_burden", "smart_money", "polymarket_sharp", "pressure_index"):
-            self.assertIn(s, d)
+        for s in ("incentive_signal", "altitude_signal", "weather_signal", "travel_burden"):
+            self.assertIn(s, d, f"{s} hat keine Liga-Datenquelle und muss aus bleiben")
+
+    def test_liga_nutzt_die_quellen_die_es_gibt(self):
+        """Die Gegenrichtung, und die fehlte: ein Signal, dessen Quelle vorhanden ist, darf
+        nicht abgeschaltet bleiben. Ohne diesen Test bleibt eine Abschaltung ewig stehen,
+        auch wenn ihr Grund laengst weg ist."""
+        d = self._disabled("liga_default")
+        for s in ("smart_money", "polymarket_sharp", "pressure_index"):
+            self.assertNotIn(s, d, f"{s} hat eine Liga-Quelle und ist trotzdem aus")
 
     def test_liga_keeps_generic(self):
         d = self._disabled("liga_default")

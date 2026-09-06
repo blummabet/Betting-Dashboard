@@ -310,6 +310,88 @@ def check_poly_deckung(ctx):
     return _c("Poly-Deckung: Money-Scan gegen Liga-Fetcher", "error", fails[:8])
 
 
+def check_preis_signal_deckung(ctx):
+    """06.09.2026 — Lucas: „ich kann mir nicht vorstellen, dass wir mit all den Infos nichts
+    Vernuenftiges machen koennen." Konnte man; es lag nur nicht am Modell.
+
+    Gemessen ueber die drei Signal-Ledger: die Preis/Geld-Signale sind die EINZIGE Familie mit
+    belegtem CLV-Zusammenhang (r = +0,353, p = 0,0001, n = 156, Bootstrap-KI [+0,21; +0,48]).
+    Die Staerke-Signale (Form, xG, Serien) liegen bei r = +0,003. Und **162 von 318 Picks
+    trugen kein einziges Preis-Signal** — die blinde Haelfte war fast vollstaendig Ueber/Unter
+    und BTTS.
+
+    Die Ursache lag nicht in der Engine, sondern in der Zuleitung: `append_snapshot` schrieb
+    BTTS nie in die Zeitreihe (0 von 27.086 Snapshots) und legte ueberhaupt nur dann einen
+    Snapshot an, wenn sich das 1X2 bewegt hatte. Beides am 06.09. behoben.
+
+    Dieser Guard misst, ob der Fix ANKOMMT. Ein gruener Test an einer Funktion sagt nur, dass
+    die Funktion tut, was sie soll — nicht, dass ihr Ergebnis bei den Picks landet. Er sieht
+    nur die letzten `FENSTER_TAGE`, weil sich die Zeitreihe nicht rueckwirkend fuellen laesst
+    und der Altbestand den Befund sonst monatelang verduennt.
+    """
+    import preis_deckung as PD
+    recs = []
+    for k in ("ligaLedger", "mlsLedger"):
+        recs += ((ctx.get(k) or {}).get("records") or [])
+    d = PD.deckung(recs)
+    if d is None:
+        return _c("Preis-Signal-Deckung: entstehen Picks blind zum Markt?", "warn", [],
+                  hinweis="Noch keine %d abgerechneten Picks im %d-Tage-Fenster — kein Urteil."
+                          % (PD.MIN_N, int(PD.FENSTER_TAGE)))
+    return _c("Preis-Signal-Deckung: entstehen Picks blind zum Markt?", "error",
+              PD.befunde(d),
+              hinweis="%d Picks im Fenster, %.0f %% ohne Preis-Signal." % (d["n"], d["blindPct"]))
+
+
+def check_stumme_signale(ctx):
+    """06.09.2026 — `polymarket_sharp` las das Poly-Volumen unter `poly_vol`, die Produktion
+    schreibt es unter `vol`. Default 0, Gate bei 5.000 USD: **nie gefeuert**, in keinem von 318
+    abgerechneten Picks — waehrend in unserer eigenen Datei Everton–Manchester United mit
+    7,87 Mio. USD stand. Dasselbe bei `steam_lag`.
+
+    Auffallen konnte das nicht: ein defektes Signal sieht von aussen aus wie ein Signal, das
+    gerade nichts zu sagen hat. Stille meldet sich nicht von selbst.
+
+    Der Guard urteilt NICHT, ob ein Signal zu Recht schweigt — `mls_travel` hat in der Liga
+    nichts zu suchen, `altitude_signal` in den Top 5 auch nicht. Er stellt die Liste hin.
+    Deshalb `warn` und nicht `error`: die Deutung gehoert an den Menschen, das Hinsehen an die
+    Maschine.
+    """
+    import signal_stille as SS
+    try:
+        from sharp_signals.registry import SIGNAL_GROUPS
+    except Exception as e:
+        return _c("Stumme Signale: wer hat nie gefeuert?", "warn", [],
+                  hinweis="Registry nicht ladbar: %s" % e)
+    recs = []
+    for k in ("ligaLedger", "mlsLedger"):
+        recs += ((ctx.get(k) or {}).get("records") or [])
+    st = SS.stumme(recs, list(SIGNAL_GROUPS))
+    if st is None:
+        return _c("Stumme Signale: wer hat nie gefeuert?", "warn", [],
+                  hinweis="Weniger als %d abgerechnete Picks — Stille sagt hier nichts."
+                          % SS.MIN_RECORDS)
+    # NICHT ueber registry._load_disabled_signals: das liest COCOBET_PROFILE aus der Umgebung.
+    # Dieser Guard laeuft mal mit, mal ohne gesetztes Profil — dann haette er die WM-Liste
+    # gemeldet und behauptet, nichts sei abgeschaltet. Der Ledger hier ist liga+mls, also
+    # werden beide Profile direkt aus der Konfiguration gelesen.
+    aus = set()
+    try:
+        _cfg = json.loads((BASE / "cocobet_config.json").read_text(encoding="utf-8"))
+        for _p in ("liga_default", "mls_default"):
+            aus |= set(((_cfg.get("profiles") or {}).get(_p) or {}).get("disabled_signals") or [])
+    except Exception:
+        pass
+    geteilt = SS.abgeschaltet_und_stumm(st, aus)
+    zeilen = SS.befunde(geteilt["stumm_trotz_an"], recs)
+    return _c("Stumme Signale: wer hat nie gefeuert?", "warn", zeilen,
+              hinweis="%d von %d Signalen schweigen ueber %d Picks — davon %d bewusst "
+                      "abgeschaltet (%s), %d an und trotzdem stumm."
+                      % (len(st), len(SIGNAL_GROUPS), len(recs),
+                         len(geteilt["abgeschaltet"]), ", ".join(geteilt["abgeschaltet"]) or "—",
+                         len(geteilt["stumm_trotz_an"])))
+
+
 UEBERSICHT_CHECKS = [
     check_serien_rangfolge,
     check_freigabe_grund,
@@ -321,6 +403,8 @@ UEBERSICHT_CHECKS = [
     check_money_map_meldet_ihre_luecken,
     check_stake_kachel_zeigt_das_gemessene_urteil,
     check_poly_deckung,
+    check_preis_signal_deckung,
+    check_stumme_signale,
 ]
 
 
@@ -352,6 +436,8 @@ def build_ctx_from_disk() -> dict:
         "polyUpcoming": _lade("poly_money_upcoming.json", {}),
         "polyHistory": _lade("poly_money_broad_history.json", {}),
         "ligaPoly": _lade("liga_poly_prices.json", {}),
+        "ligaLedger": _lade("liga_signal_ledger.json", {}),
+        "mlsLedger": _lade("mls_signal_ledger.json", {}),
     }
 
 

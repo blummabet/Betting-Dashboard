@@ -3,7 +3,8 @@
     "description": "Append-only Lern-Gedächtnis: je aufgelöster Card-Pick ein Snapshot der gefeuerten Signale + Outcome. Quelle für update_signal_weights.py (Bayesian-Loop). Dedup nach matchKey|market.",
     "version": "1.0",
     "updated_at": "2026-09-06T12:51:06Z",
-    "total_records": 75
+    "total_records": 75,
+    "oddsBackfilled": "2026-09-06 — Quote/entryOdd aus den Pick-Dateien nachgetragen; der Ledger trug sie nie (0 von 318)."
   },
   "records": [
     {
@@ -44,7 +45,10 @@
       "engineVersion": "v1",
       "clvPP": -1.13,
       "processVerdict": "LUCKY",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 3.1,
+      "entryOdd": 3.1,
+      "entryBook": "soft"
     },
     {
       "key": "ENG-2-1346-64|Heimsieg",
@@ -88,7 +92,10 @@
       "engineVersion": "v1",
       "clvPP": -0.09,
       "processVerdict": "UNLUCKY",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 1.8,
+      "entryOdd": 1.8,
+      "entryBook": "soft"
     },
     {
       "key": "ENG-2-1346-64|Unter 3.5 Tore",
@@ -124,7 +131,10 @@
       "engineVersion": "v1",
       "clvPP": -6.05,
       "processVerdict": "JUSTIFIED",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 1.37,
+      "entryOdd": 1.37,
+      "entryBook": "soft"
     },
     {
       "key": "ENG-2-35-45|Unter 3.5 Tore",
@@ -152,7 +162,10 @@
       "engineVersion": "v1",
       "clvPP": -4.59,
       "processVerdict": "LUCKY",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 1.37,
+      "entryOdd": 1.37,
+      "entryBook": "soft"
     },
     {
       "key": "ENG-2-47-34|Über 2.5 Tore",
@@ -188,7 +201,10 @@
       "engineVersion": "v1",
       "clvPP": -3.11,
       "processVerdict": "UNLUCKY",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 1.62,
+      "entryOdd": 1.62,
+      "entryBook": "soft"
     },
     {
       "key": "ENG-2-49-51|Über 2.5 Tore",
@@ -216,7 +232,10 @@
       "engineVersion": "v1",
       "clvPP": 0.0,
       "processVerdict": "JUSTIFIED",
-      "clvResolved": false
+      "clvResolved": false,
+      "odds": 1.62,
+      "entryOdd": 1.62,
+      "entryBook": "soft"
     },
     {
       "key": "ENG-2-63-55|Unter 3.5 Tore",
@@ -244,7 +263,10 @@
       "engineVersion": "v1",
       "clvPP": 0.0,
       "processVerdict": "JUSTIFIED",
-      "clvResolved": false
+      "clvResolved": false,
+      "odds": 1.37,
+      "entryOdd": 1.37,
+      "entryBook": "soft"
     },
     {
       "key": "ENG-2-66-42|Auswärtssieg",
@@ -288,7 +310,10 @@
       "engineVersion": "v1",
       "clvPP": -2.84,
       "processVerdict": "JUSTIFIED",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 1.5,
+      "entryOdd": 1.5,
+      "entryBook": "soft"
     },
     {
       "key": "ENG-2-746-36|Doppelte Chance — 1X",
@@ -324,7 +349,10 @@
       "engineVersion": "v1",
       "clvPP": 0.94,
       "processVerdict": "JUSTIFIED",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 1.43,
+      "entryOdd": 1.43,
+      "entryBook": "soft"
     },
     {
       "key": "ENG-3-34-35|Über 2.5 Tore",
@@ -356,7 +384,10 @@
       "engineVersion": "v1",
       "clvPP": 0.0,
       "clvResolved": false,
-      "processVerdict": "LUCKY"
+      "processVerdict": "LUCKY",
+      "odds": 1.6,
+      "entryOdd": 1.6,
+      "entryBook": "soft"
     },
     {
       "key": "ENG-3-50-1346|AH Heim −2",
@@ -380,7 +411,10 @@
       "engineVersion": "v1",
       "clvPP": -2.47,
       "clvResolved": true,
-      "processVerdict": "DESERVED_LOSS"
+      "processVerdict": "DESERVED_LOSS",
+      "odds": 1.83,
+      "entryOdd": 1.83,
+      "entryBook": "pini"
     },
     {
       "key": "ENG-3-57-40|Auswärtssieg",
@@ -428,7 +462,10 @@
       "engineVersion": "v1",
       "clvPP": -4.36,
       "clvResolved": true,
-      "processVerdict": "JUSTIFIED"
+      "processVerdict": "JUSTIFIED",
+      "odds": 1.45,
+      "entryOdd": 1.45,
+      "entryBook": "soft"
     },
     {
       "key": "ENG-3-57-40|Über 2.5 Tore",
@@ -460,7 +497,10 @@
       "engineVersion": "v1",
       "clvPP": -3.36,
       "clvResolved": true,
-      "processVerdict": "DESERVED_LOSS"
+      "processVerdict": "DESERVED_LOSS",
+      "odds": 1.4,
+      "entryOdd": 1.4,
+      "entryBook": "soft"
     },
     {
       "key": "ENG-3-64-66|Doppelte Chance — 1X",
@@ -496,7 +536,10 @@
       "engineVersion": "v1",
       "clvPP": -4.07,
       "clvResolved": true,
-      "processVerdict": "LUCKY"
+      "processVerdict": "LUCKY",
+      "odds": 1.96,
+      "entryOdd": 1.96,
+      "entryBook": "soft"
     },
     {
       "key": "ENG-3-64-66|Unter 2.5 Tore",
@@ -540,7 +583,10 @@
       "engineVersion": "v1",
       "clvPP": -4.83,
       "clvResolved": true,
-      "processVerdict": "JUSTIFIED"
+      "processVerdict": "JUSTIFIED",
+      "odds": 1.86,
+      "entryOdd": 1.86,
+      "entryBook": "soft"
     },
     {
       "key": "ENG-3-64-66|Unter 3.5 Tore",
@@ -584,7 +630,10 @@
       "engineVersion": "v1",
       "clvPP": -2.02,
       "clvResolved": true,
-      "processVerdict": "JUSTIFIED"
+      "processVerdict": "JUSTIFIED",
+      "odds": 1.36,
+      "entryOdd": 1.36,
+      "entryBook": "soft"
     },
     {
       "key": "ENG-3-65-47|Doppelte Chance — 1X",
@@ -620,7 +669,10 @@
       "engineVersion": "v1",
       "clvPP": -5.51,
       "clvResolved": true,
-      "processVerdict": "JUSTIFIED"
+      "processVerdict": "JUSTIFIED",
+      "odds": 1.44,
+      "entryOdd": 1.44,
+      "entryBook": "soft"
     },
     {
       "key": "ESP-1-529-531|AH Heim −1.25",
@@ -652,7 +704,10 @@
       "engineVersion": "v1",
       "clvPP": 0.0,
       "processVerdict": "JUSTIFIED",
-      "clvResolved": false
+      "clvResolved": false,
+      "odds": 1.84,
+      "entryOdd": 1.84,
+      "entryBook": "pini"
     },
     {
       "key": "ESP-1-529-531|Über 2.5 Tore",
@@ -676,7 +731,10 @@
       "engineVersion": "v1",
       "clvPP": 0.1,
       "processVerdict": "UNLUCKY",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 1.37,
+      "entryOdd": 1.37,
+      "entryBook": "soft"
     },
     {
       "key": "ESP-1-532-543|Auswärtssieg",
@@ -716,7 +774,10 @@
       "engineVersion": "v1",
       "clvPP": -2.59,
       "processVerdict": "LUCKY",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 2.71,
+      "entryOdd": 2.71,
+      "entryBook": "soft"
     },
     {
       "key": "ESP-1-541-548|AH Heim −1.25",
@@ -768,7 +829,10 @@
       "engineVersion": "v1",
       "clvPP": 0.0,
       "processVerdict": "JUSTIFIED",
-      "clvResolved": false
+      "clvResolved": false,
+      "odds": 1.84,
+      "entryOdd": 1.84,
+      "entryBook": "pini"
     },
     {
       "key": "ESP-1-541-548|Über 2.5 Tore",
@@ -796,7 +860,10 @@
       "engineVersion": "v1",
       "clvPP": 1.07,
       "processVerdict": "JUSTIFIED",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 1.38,
+      "entryOdd": 1.38,
+      "entryBook": "soft"
     },
     {
       "key": "ESP-2-543-548|Heimsieg",
@@ -836,7 +903,10 @@
       "engineVersion": "v1",
       "clvPP": -2.39,
       "processVerdict": "LUCKY",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 2.1,
+      "entryOdd": 2.1,
+      "entryBook": "soft"
     },
     {
       "key": "ESP-2-727-539|Unter 2.5 Tore",
@@ -868,7 +938,10 @@
       "engineVersion": "v1",
       "clvPP": 1.46,
       "processVerdict": "JUSTIFIED",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 1.8,
+      "entryOdd": 1.8,
+      "entryBook": "soft"
     },
     {
       "key": "ESP-3-4665-797|Doppelte Chance — 1X",
@@ -908,7 +981,10 @@
       "engineVersion": "v1",
       "clvPP": -0.07,
       "processVerdict": "JUSTIFIED",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 1.35,
+      "entryOdd": 1.35,
+      "entryBook": "soft"
     },
     {
       "key": "ESP-3-4665-797|Heimsieg",
@@ -944,7 +1020,10 @@
       "engineVersion": "v1",
       "clvPP": -0.74,
       "processVerdict": "JUSTIFIED",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 2.09,
+      "entryOdd": 2.09,
+      "entryBook": "soft"
     },
     {
       "key": "ESP-3-4665-797|Über 2.5 Tore",
@@ -984,7 +1063,10 @@
       "engineVersion": "v1",
       "clvPP": -0.12,
       "processVerdict": "JUSTIFIED",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 1.8,
+      "entryOdd": 1.8,
+      "entryBook": "soft"
     },
     {
       "key": "ESP-3-529-728|AH Heim −1.75",
@@ -1032,7 +1114,10 @@
       "engineVersion": "v1",
       "clvPP": 0.0,
       "processVerdict": "LUCKY",
-      "clvResolved": false
+      "clvResolved": false,
+      "odds": 1.83,
+      "entryOdd": 1.83,
+      "entryBook": "pini"
     },
     {
       "key": "ESP-3-536-530|Auswärtssieg",
@@ -1072,7 +1157,10 @@
       "engineVersion": "v1",
       "clvPP": 2.59,
       "processVerdict": "LUCKY",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 2.05,
+      "entryOdd": 2.05,
+      "entryBook": "soft"
     },
     {
       "key": "ESP-3-538-531|Über 1.5 Tore",
@@ -1108,7 +1196,10 @@
       "engineVersion": "v1",
       "clvPP": -6.69,
       "processVerdict": "JUSTIFIED",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 1.35,
+      "entryOdd": 1.35,
+      "entryBook": "soft"
     },
     {
       "key": "ESP-3-539-543|Doppelte Chance — X2",
@@ -1160,7 +1251,10 @@
       "engineVersion": "v1",
       "clvPP": -3.74,
       "processVerdict": "DESERVED_LOSS",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 1.35,
+      "entryOdd": 1.35,
+      "entryBook": "soft"
     },
     {
       "key": "ESP-3-541-535|AH Heim −2.25",
@@ -1200,7 +1294,10 @@
       "engineVersion": "v1",
       "clvPP": 0.0,
       "processVerdict": "LUCKY",
-      "clvResolved": false
+      "clvResolved": false,
+      "odds": 1.85,
+      "entryOdd": 1.85,
+      "entryBook": "pini"
     },
     {
       "key": "ESP-3-542-533|Doppelte Chance — X2",
@@ -1228,7 +1325,10 @@
       "engineVersion": "v1",
       "clvPP": -1.59,
       "processVerdict": "UNLUCKY",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 1.39,
+      "entryOdd": 1.39,
+      "entryBook": "soft"
     },
     {
       "key": "ESP-3-544-532|Doppelte Chance — 1X",
@@ -1268,7 +1368,10 @@
       "engineVersion": "v1",
       "clvPP": -3.29,
       "processVerdict": "JUSTIFIED",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 1.39,
+      "entryOdd": 1.39,
+      "entryBook": "soft"
     },
     {
       "key": "ESP-4-533-544|Heimsieg",
@@ -1316,7 +1419,10 @@
       "engineVersion": "v1",
       "clvPP": -1.01,
       "clvResolved": true,
-      "processVerdict": "UNLUCKY"
+      "processVerdict": "UNLUCKY",
+      "odds": 1.48,
+      "entryOdd": 1.48,
+      "entryBook": "soft"
     },
     {
       "key": "ESP-4-543-541|AH Auswärts −1.25",
@@ -1372,7 +1478,10 @@
       "engineVersion": "v1",
       "clvPP": -4.35,
       "clvResolved": true,
-      "processVerdict": "JUSTIFIED"
+      "processVerdict": "JUSTIFIED",
+      "odds": 1.84,
+      "entryOdd": 1.84,
+      "entryBook": "pini"
     },
     {
       "key": "ESP-4-543-541|Auswärtssieg",
@@ -1432,7 +1541,10 @@
       "engineVersion": "v1",
       "clvPP": -4.5,
       "clvResolved": true,
-      "processVerdict": "UNLUCKY"
+      "processVerdict": "UNLUCKY",
+      "odds": 1.4,
+      "entryOdd": 1.4,
+      "entryBook": "soft"
     },
     {
       "key": "ESP-4-543-541|Über 2.5 Tore",
@@ -1476,7 +1588,10 @@
       "engineVersion": "v1",
       "clvPP": -0.58,
       "clvResolved": true,
-      "processVerdict": "UNLUCKY"
+      "processVerdict": "UNLUCKY",
+      "odds": 1.39,
+      "entryOdd": 1.39,
+      "entryBook": "soft"
     },
     {
       "key": "ESP-4-728-4665|Doppelte Chance — X2",
@@ -1524,7 +1639,10 @@
       "engineVersion": "v1",
       "clvPP": -7.23,
       "clvResolved": true,
-      "processVerdict": "DESERVED_LOSS"
+      "processVerdict": "DESERVED_LOSS",
+      "odds": 1.69,
+      "entryOdd": 1.69,
+      "entryBook": "soft"
     },
     {
       "key": "ESP-4-728-4665|Über 2.5 Tore",
@@ -1572,7 +1690,10 @@
       "engineVersion": "v1",
       "clvPP": 1.14,
       "clvResolved": true,
-      "processVerdict": "JUSTIFIED"
+      "processVerdict": "JUSTIFIED",
+      "odds": 1.82,
+      "entryOdd": 1.82,
+      "entryBook": "soft"
     },
     {
       "key": "ESP-6-548-538|Heimsieg",
@@ -1628,7 +1749,10 @@
       "engineVersion": "v1",
       "clvPP": 0.14,
       "clvResolved": true,
-      "processVerdict": "UNLUCKY"
+      "processVerdict": "UNLUCKY",
+      "odds": 1.9,
+      "entryOdd": 1.9,
+      "entryBook": "soft"
     },
     {
       "key": "FRA-1-1298-106|Unter 3.5 Tore",
@@ -1664,7 +1788,10 @@
       "engineVersion": "v1",
       "clvPP": -0.24,
       "processVerdict": "UNLUCKY",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 1.37,
+      "entryOdd": 1.37,
+      "entryBook": "soft"
     },
     {
       "key": "FRA-1-96-80|Unter 3.5 Tore",
@@ -1696,7 +1823,10 @@
       "engineVersion": "v1",
       "clvPP": 0.12,
       "processVerdict": "JUSTIFIED",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 1.4,
+      "entryOdd": 1.4,
+      "entryBook": "soft"
     },
     {
       "key": "FRA-3-85-91|AH Heim −1.25",
@@ -1732,7 +1862,10 @@
       "engineVersion": "v1",
       "clvPP": 0.0,
       "clvResolved": false,
-      "processVerdict": "UNLUCKY"
+      "processVerdict": "UNLUCKY",
+      "odds": 1.81,
+      "entryOdd": 1.81,
+      "entryBook": "pini"
     },
     {
       "key": "FRA-3-85-91|AH Heim −1.5",
@@ -1772,7 +1905,10 @@
       "engineVersion": "v1",
       "clvPP": 1.91,
       "clvResolved": true,
-      "processVerdict": "DESERVED_LOSS"
+      "processVerdict": "DESERVED_LOSS",
+      "odds": 1.99,
+      "entryOdd": 1.99,
+      "entryBook": "pini"
     },
     {
       "key": "FRA-3-85-91|Heimsieg",
@@ -1812,7 +1948,10 @@
       "engineVersion": "v1",
       "clvPP": 2.65,
       "clvResolved": true,
-      "processVerdict": "UNLUCKY"
+      "processVerdict": "UNLUCKY",
+      "odds": 1.41,
+      "entryOdd": 1.41,
+      "entryBook": "soft"
     },
     {
       "key": "FRA-3-96-79|Auswärtssieg",
@@ -1864,7 +2003,10 @@
       "engineVersion": "v1",
       "clvPP": 3.96,
       "clvResolved": true,
-      "processVerdict": "LUCKY"
+      "processVerdict": "LUCKY",
+      "odds": 2.06,
+      "entryOdd": 2.06,
+      "entryBook": "soft"
     },
     {
       "key": "GER-1-157-172|Über 3.5 Tore",
@@ -1896,7 +2038,10 @@
       "engineVersion": "v1",
       "clvPP": 2.42,
       "processVerdict": "JUSTIFIED",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 1.5,
+      "entryOdd": 1.5,
+      "entryBook": "soft"
     },
     {
       "key": "GER-1-164-185|Über 2.5 Tore",
@@ -1932,7 +2077,10 @@
       "engineVersion": "v1",
       "clvPP": 0.0,
       "processVerdict": "DESERVED_LOSS",
-      "clvResolved": false
+      "clvResolved": false,
+      "odds": 1.65,
+      "entryOdd": 1.65,
+      "entryBook": "soft"
     },
     {
       "key": "GER-1-173-163|Doppelte Chance — X2",
@@ -1964,7 +2112,10 @@
       "engineVersion": "v1",
       "clvPP": -3.99,
       "processVerdict": "DESERVED_LOSS",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 2.42,
+      "entryOdd": 2.42,
+      "entryBook": "soft"
     },
     {
       "key": "GER-1-182-169|Heimsieg",
@@ -2000,7 +2151,10 @@
       "engineVersion": "v1",
       "clvPP": -6.38,
       "processVerdict": "UNLUCKY",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 2.42,
+      "entryOdd": 2.42,
+      "entryBook": "soft"
     },
     {
       "key": "GER-1-182-169|Über 2.5 Tore",
@@ -2044,7 +2198,10 @@
       "engineVersion": "v1",
       "clvPP": 0.0,
       "processVerdict": "JUSTIFIED",
-      "clvResolved": false
+      "clvResolved": false,
+      "odds": 1.62,
+      "entryOdd": 1.62,
+      "entryBook": "soft"
     },
     {
       "key": "GER-2-162-173|Auswärtssieg",
@@ -2084,7 +2241,10 @@
       "engineVersion": "v1",
       "clvPP": -4.37,
       "clvResolved": true,
-      "processVerdict": "UNLUCKY"
+      "processVerdict": "UNLUCKY",
+      "odds": 1.74,
+      "entryOdd": 1.74,
+      "entryBook": "soft"
     },
     {
       "key": "GER-2-163-1660|Doppelte Chance — X2",
@@ -2120,7 +2280,10 @@
       "engineVersion": "v1",
       "clvPP": -1.36,
       "clvResolved": true,
-      "processVerdict": "LUCKY"
+      "processVerdict": "LUCKY",
+      "odds": 1.96,
+      "entryOdd": 1.96,
+      "entryBook": "soft"
     },
     {
       "key": "GER-2-174-157|AH Auswärts −1.5",
@@ -2160,7 +2323,10 @@
       "engineVersion": "v1",
       "clvPP": 0.0,
       "clvResolved": false,
-      "processVerdict": "LUCKY"
+      "processVerdict": "LUCKY",
+      "odds": 1.79,
+      "entryOdd": 1.79,
+      "entryBook": "pini"
     },
     {
       "key": "GER-2-174-157|Über 3.5 Tore",
@@ -2184,7 +2350,10 @@
       "engineVersion": "v1",
       "clvPP": -1.12,
       "clvResolved": true,
-      "processVerdict": "DESERVED_LOSS"
+      "processVerdict": "DESERVED_LOSS",
+      "odds": 1.56,
+      "entryOdd": 1.56,
+      "entryBook": "soft"
     },
     {
       "key": "GER-2-185-160|Auswärtssieg",
@@ -2224,7 +2393,10 @@
       "engineVersion": "v1",
       "clvPP": -0.21,
       "clvResolved": true,
-      "processVerdict": "JUSTIFIED"
+      "processVerdict": "JUSTIFIED",
+      "odds": 2.0,
+      "entryOdd": 2.0,
+      "entryBook": "soft"
     },
     {
       "key": "GER-2-185-160|Doppelte Chance — X2",
@@ -2268,7 +2440,10 @@
       "engineVersion": "v1",
       "clvPP": 0.32,
       "clvResolved": true,
-      "processVerdict": "JUSTIFIED"
+      "processVerdict": "JUSTIFIED",
+      "odds": 1.35,
+      "entryOdd": 1.35,
+      "entryBook": "soft"
     },
     {
       "key": "ITA-1-500-487|Auswärtssieg",
@@ -2304,7 +2479,10 @@
       "engineVersion": "v1",
       "clvPP": 1.28,
       "processVerdict": "LUCKY",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 3.74,
+      "entryOdd": 3.74,
+      "entryBook": "soft"
     },
     {
       "key": "ITA-1-503-489|Heimsieg",
@@ -2344,7 +2522,10 @@
       "engineVersion": "v1",
       "clvPP": -2.13,
       "processVerdict": "DESERVED_LOSS",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 4.55,
+      "entryOdd": 4.55,
+      "entryBook": "soft"
     },
     {
       "key": "ITA-1-523-490|Auswärtssieg",
@@ -2384,7 +2565,10 @@
       "engineVersion": "v1",
       "clvPP": 0.15,
       "processVerdict": "LUCKY",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 2.93,
+      "entryOdd": 2.93,
+      "entryBook": "soft"
     },
     {
       "key": "ITA-2-1579-494|Über 2.5 Tore",
@@ -2408,7 +2592,10 @@
       "engineVersion": "v1",
       "clvPP": -5.38,
       "processVerdict": "JUSTIFIED",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 2.25,
+      "entryOdd": 2.25,
+      "entryBook": "soft"
     },
     {
       "key": "ITA-2-487-495|Heimsieg",
@@ -2452,7 +2639,10 @@
       "engineVersion": "v1",
       "clvPP": -13.28,
       "processVerdict": "JUSTIFIED",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 1.85,
+      "entryOdd": 1.85,
+      "entryBook": "soft"
     },
     {
       "key": "ITA-2-489-517|Über 2.5 Tore",
@@ -2484,7 +2674,10 @@
       "engineVersion": "v1",
       "clvPP": -0.73,
       "processVerdict": "UNLUCKY",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 1.74,
+      "entryOdd": 1.74,
+      "entryBook": "soft"
     },
     {
       "key": "ITA-2-490-505|Auswärtssieg",
@@ -2524,7 +2717,10 @@
       "engineVersion": "v1",
       "clvPP": -1.8,
       "processVerdict": "JUSTIFIED",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 1.4,
+      "entryOdd": 1.4,
+      "entryBook": "soft"
     },
     {
       "key": "ITA-2-490-505|Über 2.5 Tore",
@@ -2552,7 +2748,10 @@
       "engineVersion": "v1",
       "clvPP": 2.29,
       "processVerdict": "UNLUCKY",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 1.83,
+      "entryOdd": 1.83,
+      "entryBook": "soft"
     },
     {
       "key": "ITA-2-492-895|Doppelte Chance — X2",
@@ -2588,7 +2787,10 @@
       "engineVersion": "v1",
       "clvPP": -2.21,
       "processVerdict": "LUCKY",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 1.55,
+      "entryOdd": 1.55,
+      "entryBook": "soft"
     },
     {
       "key": "ITA-2-492-895|Unter 2.5 Tore",
@@ -2620,7 +2822,10 @@
       "engineVersion": "v1",
       "clvPP": -5.47,
       "processVerdict": "UNLUCKY",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 1.57,
+      "entryOdd": 1.57,
+      "entryBook": "soft"
     },
     {
       "key": "ITA-2-496-523|AH Heim −1.5",
@@ -2668,7 +2873,10 @@
       "engineVersion": "v1",
       "clvPP": 0.0,
       "processVerdict": "LUCKY",
-      "clvResolved": false
+      "clvResolved": false,
+      "odds": 1.73,
+      "entryOdd": 1.73,
+      "entryBook": "pini"
     },
     {
       "key": "ITA-2-496-523|Unter 3.5 Tore",
@@ -2704,7 +2912,10 @@
       "engineVersion": "v1",
       "clvPP": -1.35,
       "processVerdict": "JUSTIFIED",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 1.46,
+      "entryOdd": 1.46,
+      "entryBook": "soft"
     },
     {
       "key": "ITA-2-867-497|Auswärtssieg",
@@ -2744,7 +2955,10 @@
       "engineVersion": "v1",
       "clvPP": -1.76,
       "processVerdict": "JUSTIFIED",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 1.45,
+      "entryOdd": 1.45,
+      "entryBook": "soft"
     },
     {
       "key": "ITA-2-867-497|Über 2.5 Tore",
@@ -2768,7 +2982,10 @@
       "engineVersion": "v1",
       "clvPP": -0.51,
       "processVerdict": "JUSTIFIED",
-      "clvResolved": true
+      "clvResolved": true,
+      "odds": 1.98,
+      "entryOdd": 1.98,
+      "entryBook": "soft"
     },
     {
       "key": "ITA-3-497-499|Heimsieg",
@@ -2816,7 +3033,10 @@
       "engineVersion": "v1",
       "clvPP": -1.26,
       "clvResolved": true,
-      "processVerdict": "JUSTIFIED"
+      "processVerdict": "JUSTIFIED",
+      "odds": 1.72,
+      "entryOdd": 1.72,
+      "entryBook": "soft"
     },
     {
       "key": "ITA-3-502-503|Unter 2.5 Tore",
@@ -2848,7 +3068,10 @@
       "engineVersion": "v1",
       "clvPP": -6.38,
       "clvResolved": true,
-      "processVerdict": "DESERVED_LOSS"
+      "processVerdict": "DESERVED_LOSS",
+      "odds": 1.69,
+      "entryOdd": 1.69,
+      "entryBook": "soft"
     },
     {
       "key": "ITA-3-505-492|Heimsieg",
@@ -2888,7 +3111,10 @@
       "engineVersion": "v1",
       "clvPP": -2.97,
       "clvResolved": true,
-      "processVerdict": "JUSTIFIED"
+      "processVerdict": "JUSTIFIED",
+      "odds": 1.62,
+      "entryOdd": 1.62,
+      "entryBook": "soft"
     }
   ]
 }

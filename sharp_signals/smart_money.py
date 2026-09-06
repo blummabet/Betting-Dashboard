@@ -20,7 +20,7 @@ Card-Anzeige violett (Split + Top-Trader). Vom Sandbox geoblockt → live nur am
 """
 from __future__ import annotations
 from typing import Optional
-from sharp_signals.base import Signal, SignalResult
+from sharp_signals.base import Signal, SignalResult, match_eintrag
 
 
 DEFAULT_THRESHOLDS = {
@@ -82,7 +82,9 @@ class SmartMoneySignal(Signal):
         outcome = _outcome_key(pick.get("market", ""))
         if not outcome:
             return None
-        data = (context.get("smartmoney") or {}).get(context.get("matchKey") or "")
+        # 06.09.2026: der Liga-matchKey (ENG-1-45-33) passt nicht auf die Schluessel der
+        # Smart-Money-Datei (45-33). Siehe base.match_eintrag — vorher: nie ein Treffer.
+        data = match_eintrag(context.get("smartmoney"), context)
         if not isinstance(data, dict):
             return None
         total = data.get("totalUsd") or 0

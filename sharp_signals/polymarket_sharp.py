@@ -16,7 +16,7 @@ Pre-Tournament-Märkte haben oft niedriges Volume → Signal überspringt sie.
 """
 from __future__ import annotations
 from typing import Optional
-from sharp_signals.base import Signal, SignalResult
+from sharp_signals.base import Signal, SignalResult, poly_volumen
 
 
 DEFAULT_THRESHOLDS = {
@@ -89,11 +89,14 @@ class PolymarketSharpSignal(Signal):
         # Polymarket implied probs (rohe Markt-Preise, schon prob-like)
         poly = context.get("poly_snapshot") or {}
         p_hw, p_dr, p_aw = poly.get("poly_hw"), poly.get("poly_dr"), poly.get("poly_aw")
-        vol = poly.get("poly_vol", 0) or 0
+        # 06.09.2026: liest jetzt `vol` UND `poly_vol` (s. base.poly_volumen). Vorher stand hier
+        # `poly.get("poly_vol", 0)` — ein Feld, das die Produktion nie schreibt. Dieses Signal
+        # hat deswegen nie gefeuert.
+        vol = poly_volumen(poly)
         if None in (p_hw, p_dr, p_aw):
             return None
-        if vol < self._t["min_volume_usdc"]:
-            return None  # zu wenig Geld dahinter
+        if vol is None or vol < self._t["min_volume_usdc"]:
+            return None  # kein bekanntes Volumen oder zu wenig Geld dahinter
 
         # Normalisieren (Polymarket-Implied sum ≈ 1.0 - 1.05)
         s = p_hw + p_dr + p_aw

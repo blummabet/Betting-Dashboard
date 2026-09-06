@@ -75,8 +75,11 @@ class TestLoopEndeZuEnde:
         U.update_weights()
         return gespeichert
 
-    def _pick(self, sig, score=1.0, result="WIN", clv=None):
-        p = {"result": result, "signals": [{"name": sig, "score": score}]}
+    def _pick(self, sig, score=1.0, result="WIN", clv=None, quote=2.00):
+        # 06.09.2026: der Ergebnis-Strom misst gegen den PREIS. Ohne Quote gibt es keine
+        # Ergebnis-Beobachtung mehr — die Fixture braucht eine. 2.00 haelt die Mischung
+        # 6:4 sichtbar ueber dem Nullpunkt, ohne an den Deckel zu stossen.
+        p = {"result": result, "odds": quote, "signals": [{"name": sig, "score": score}]}
         if clv is not None:
             p["clvPP"] = clv
         return p

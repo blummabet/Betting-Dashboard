@@ -32,6 +32,74 @@ def market_side(market: str) -> Optional[str]:
     return None
 
 
+def poly_volumen(poly_snapshot) -> float | None:
+    """USD-Volumen hinter einem Polymarket-Snapshot. None = nicht bekannt, NICHT 0.
+
+    06.09.2026 (Lucas: „wir haben Poly, wir haben Betfair, wir tracken Wallets — und sind mit
+    schlechter Engine unterwegs"). Er hatte recht, und hier lag der Beweis.
+
+    `polymarket_sharp` und `steam_lag` lasen beide `poly_snapshot.get("poly_vol", 0) or 0` und
+    gaten dann auf 5.000 bzw. 3.000 USD. Die Fixtures in `*_poly_prices.json → allFixtures`
+    tragen das Volumen aber unter **`vol`**. Von 104 Liga-Fixtures hatte KEINE EINZIGE ein Feld
+    `poly_vol` — 104 hatten `poly_hw`, die erste allein 182.263 USD unter `vol`.
+
+    Folge: `vol` war immer 0, das Gate schlug immer zu, und **beide Signale haben in 318
+    abgerechneten Picks kein einziges Mal gefeuert.** Nicht weil zu wenig Geld da war, sondern
+    weil nach einem Feldnamen gefragt wurde, den die Produktion nie schreibt. Die Tests dazu
+    bauten ihre Fixture mit `poly_vol` und waren gruen — ein Test, der die erfundene Form prueft
+    statt der echten, deckt genau nichts ab (dieselbe Klasse wie die erfundene
+    Over/Under-Fixture am 05.09.).
+
+    Der Default ist deshalb `None` und nicht 0: „kein Volumen bekannt" und „kein Geld da" sind
+    verschiedene Aussagen, und nur eine davon darf ein Signal stumm schalten.
+    """
+    if not isinstance(poly_snapshot, dict):
+        return None
+    for feld in ("vol", "poly_vol", "volume"):
+        v = poly_snapshot.get(feld)
+        if isinstance(v, bool) or not isinstance(v, (int, float)):
+            continue
+        if v >= 0:
+            return float(v)
+    return None
+
+
+def match_eintrag(container, context):
+    """Eintrag zu DIESEM Spiel aus einer nach Spiel geschluesselten Datei holen.
+
+    06.09.2026 (Lucas: „die anderen Signale muessen funktionieren"). Zweiter Fund derselben
+    Art wie `poly_volumen`: die Daten lagen da, gefragt wurde mit dem falschen Schluessel.
+
+    `smart_money` las `smartmoney[context["matchKey"]]`. Der Liga-matchKey ist
+    `ENG-1-45-33` (Gruppe-Spieltag-Heim-Gast), `liga_poly_smartmoney.json` schluesselt aber
+    nach `45-33` (Heim-ID-Gast-ID). Kein einziger Treffer — und damit **$3,04 Mio. Polymarket-
+    Holder-Geld ueber 39 Spiele, das nie in einen Liga-Pick eingeflossen ist**, darunter
+    Everton–Manchester United mit 2,16 Mio.
+
+    In der WM stimmten die Formate zufaellig ueberein; deshalb feuerte das Signal dort (35-mal)
+    und hier nie. Ein Signal, das in einem Datensatz laeuft, gilt schnell als „funktioniert".
+
+    Reihenfolge: exakter matchKey, dann Heim-Gast, dann Gast-Heim (fuer Dateien, die die
+    Ansetzung andersherum fuehren). Nichts gefunden -> None.
+    """
+    if not isinstance(container, dict) or not container:
+        return None
+    ctx = context if isinstance(context, dict) else {}
+    kandidaten = []
+    mk = ctx.get("matchKey")
+    if mk:
+        kandidaten.append(str(mk))
+    h, a = ctx.get("home_id"), ctx.get("away_id")
+    if h is not None and a is not None:
+        kandidaten.append(f"{h}-{a}")
+        kandidaten.append(f"{a}-{h}")
+    for k in kandidaten:
+        v = container.get(k)
+        if v is not None:
+            return v
+    return None
+
+
 @dataclass
 class SignalResult:
     """

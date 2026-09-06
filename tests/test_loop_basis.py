@@ -67,18 +67,31 @@ class Gewicht(unittest.TestCase):
 
 class ClvStrom(unittest.TestCase):
     def test_clv_bleibt_gegen_null_komma_fuenf_gemessen(self):
-        # Im Modul verdrahtet: der Nullpunkt ist das mit den Stroemen gewichtete Mittel aus
-        # Basis (Ergebnisse) und 0.5 (CLV). Reiner CLV -> 0.5, reines Ergebnis -> Basis.
-        import inspect
-        src = inspect.getsource(U.main) if hasattr(U, "main") else ""
-        quelle = inspect.getsource(U)
-        self.assertIn("(_n_erg * basis + n_clv * 0.5) / n", quelle,
-                      "CLV darf nicht gegen die Trefferquote gemessen werden")
+        """06.09.2026: dieser Test suchte einen CODE-STRING — `"(_n_erg * basis + n_clv * 0.5)
+        / n"`. Er hielt eine Zeile fest, nicht eine Regel, und wurde rot, sobald dieselbe Regel
+        anders geschrieben stand. Fuenfter Test dieser Art im Projekt.
 
-    def test_nullpunkt_mischt_richtig(self):
-        basis, n_erg, n_clv = 0.60, 30.0, 10.0
-        neutral = (n_erg * basis + n_clv * 0.5) / (n_erg + n_clv)
-        self.assertAlmostEqual(neutral, 0.575, 3)
+        Die REGEL: eine CLV-Beobachtung heisst „die Linie ist unseren Weg gelaufen" und wird
+        gegen 0,5 gemessen — dort heisst 0,5 „Linie stand still", nicht „Muenzwurf". Seit dem
+        06.09. ist auch der Ergebnis-Strom gegen 0,5 geeicht (der Preis steckt in jeder
+        Beobachtung), also muss der Nullpunkt in JEDER Mischung 0,5 sein."""
+        self.assertAlmostEqual(U._clv_outcome_score({"clvPP": 0.6}), 0.56, 2)
+        self.assertGreater(U._clv_outcome_score({"clvPP": 5.0}), 0.9)
+        self.assertLess(U._clv_outcome_score({"clvPP": -5.0}), 0.1)
+        # Deadband: winzige Bewegung ist keine Zustimmung, sondern Rauschen — und keine
+        # erfundene 0,5-Beobachtung, die echte Signale verwaessert.
+        self.assertIsNone(U._clv_outcome_score({"clvPP": 0.1}))
+
+    def test_nullpunkt_ist_der_preis_nicht_die_trefferquote(self):
+        """Der Ergebnis-Strom ist seit 06.09. gegen 0,5 geeicht: ein Pick, der genau so
+        ausgeht wie bepreist, traegt 0,5 bei. Das ist der Kern der Umstellung."""
+        w = U._preis_justierter_outcome({"result": "WIN", "odds": 2.0})
+        l = U._preis_justierter_outcome({"result": "LOSS", "odds": 2.0})
+        self.assertAlmostEqual((w + l) / 2, 0.5, places=6)
+        # Und der Favorit ist nicht mehr gratis: 4 Siege auf 1,25 sind genau erwartbar.
+        werte = [U._preis_justierter_outcome({"result": "WIN", "odds": 1.25}) for _ in range(4)]
+        werte.append(U._preis_justierter_outcome({"result": "LOSS", "odds": 1.25}))
+        self.assertAlmostEqual(sum(werte) / len(werte), 0.5, places=6)
 
 
 class Nachvollziehbar(unittest.TestCase):

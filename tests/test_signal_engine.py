@@ -460,7 +460,11 @@ class TestUpdateSignalWeights(unittest.TestCase):
         picks = []
         for _ in range(20):
             picks.append({
-                "result": "win",
+                # 06.09.2026: der Loop lernt seit heute gegen den PREIS. Ein Pick ohne Quote
+                # ist keine Beobachtung mehr — nicht aus Strenge, sondern weil ohne Quote
+                # gar nicht feststeht, ob 20 Siege gut oder schlecht waren. 2.00 = der Markt
+                # sagte 50/50, 20 Siege sind also ein echter Beitrag.
+                "result": "win", "odds": 2.00,
                 "signals": [{"name": "lead_lag_bias", "score": 2.0}]
             })
         with tempfile.TemporaryDirectory() as td:
@@ -481,7 +485,7 @@ class TestUpdateSignalWeights(unittest.TestCase):
         picks = []
         for _ in range(20):
             picks.append({
-                "result": "loss",
+                "result": "loss", "odds": 2.00,
                 "signals": [{"name": "lead_lag_bias", "score": 2.0}]
             })
         with tempfile.TemporaryDirectory() as td:
@@ -501,7 +505,11 @@ class TestUpdateSignalWeights(unittest.TestCase):
         picks = []
         for _ in range(3):
             picks.append({
-                "result": "win",
+                # 06.09.2026: der Loop lernt seit heute gegen den PREIS. Ein Pick ohne Quote
+                # ist keine Beobachtung mehr — nicht aus Strenge, sondern weil ohne Quote
+                # gar nicht feststeht, ob 20 Siege gut oder schlecht waren. 2.00 = der Markt
+                # sagte 50/50, 20 Siege sind also ein echter Beitrag.
+                "result": "win", "odds": 2.00,
                 "signals": [{"name": "lead_lag_bias", "score": 2.0}]
             })
         with tempfile.TemporaryDirectory() as td:

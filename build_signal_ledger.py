@@ -162,6 +162,23 @@ def collect_observations(wm: dict) -> list[dict]:
                 # Platzhalter-Nullen deshalb voll in den Ø CLV und in den Nenner von
                 # „schlaegt Close". Eine Datei, die nur die Haelfte weiss, darf nicht so tun.
                 "clvResolved":      bool(p.get("clvResolved")),
+                # 06.09.2026 (Lucas: „es kann nicht sein, dass wir ueberall schlechte Ergebnisse
+                # haben") — DIE QUOTE. Der Lern-Loop misst jedes Signal an der Trefferquote und
+                # sah die Quote nie, weil sie hier nie durchgereicht wurde: 0 von 318 Records
+                # trugen sie. Eine Trefferquote ohne die Quoten ist keine Zahl (Bug-Klasse 6) —
+                # ein Signal, das auf 1,30-Favoriten feuert und 70 % trifft, schlaegt jede
+                # Basisquote und wird belohnt, waehrend es Geld verliert.
+                #
+                # Messbare Folge: `lead_lag_bias` — das Signal mit dem staerksten gemessenen
+                # CLV-Zusammenhang (r = +0,495) — stand in liga auf Gewicht 0,901, also
+                # gedaempft; `xg_strength` (r = +0,058) auf 1,034. Der Loop hat monatelang
+                # genau die Signale abtrainiert, die etwas koennen.
+                #
+                # `entryOdd` ist der Preis, den wir wirklich genommen haben; `odds` der
+                # angezeigte. Beide mit, damit der Updater den echten Einstieg bevorzugen kann.
+                "odds":             p.get("odds"),
+                "entryOdd":         p.get("entryOdd"),
+                "entryBook":        p.get("entryBook"),
             }
             if _process_verdict:
                 pv = _process_verdict(market, result, _lookup_stats(stats_lookup, match_key))
