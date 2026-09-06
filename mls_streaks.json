@@ -1,7 +1,7 @@
 {
   "_meta": {
     "dataset": "mls",
-    "generatedAt": "2026-09-05T11:17:04.648316+00:00",
+    "generatedAt": "2026-09-05T21:08:25.813540+00:00",
     "minLen": 3,
     "strongLen": 5,
     "sortiert": "zufallPct",
@@ -118,9 +118,9 @@
       "venue": "H",
       "strong": true,
       "continuation": {
-        "state": "wackelt",
+        "state": "intakt",
         "ratePct": 38,
-        "label": "Eigen 38% + Gegner 33% → 36%"
+        "label": "Eigen 38% + Gegner 33% → 36% · Signale bestätigen"
       },
       "ratePct": 38,
       "seq": [
@@ -147,7 +147,20 @@
         "oppRatePct": 67
       },
       "oppSupportPct": 33,
-      "matchupPct": 36
+      "matchupPct": 36,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 4,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "xg_strength",
+          "chance_creation",
+          "transfer_shift"
+        ],
+        "market": "Unter 3.5 Tore"
+      }
     },
     {
       "teamId": "1616",
@@ -635,7 +648,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 62,
-        "label": "Eigen 62% + Gegner 67% → 64%"
+        "label": "Eigen 62% + Gegner 67% → 64% · Signale bestätigen"
       },
       "ratePct": 62,
       "seq": [
@@ -662,7 +675,21 @@
         "oppRatePct": 67
       },
       "oppSupportPct": 67,
-      "matchupPct": 64
+      "matchupPct": 64,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 7,
+        "conviction": 5,
+        "names": [
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation",
+          "topscorer_momentum"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "1616",
@@ -721,7 +748,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 71,
-        "label": "Eigen 71% + Gegner 67% → 69%"
+        "label": "Eigen 71% + Gegner 67% → 69% · Signale bestätigen"
       },
       "ratePct": 71,
       "seq": [
@@ -748,7 +775,20 @@
         "oppRatePct": 67
       },
       "oppSupportPct": 67,
-      "matchupPct": 69
+      "matchupPct": 69,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 4,
+        "conviction": 6,
+        "names": [
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "chance_creation",
+          "topscorer_momentum"
+        ],
+        "market": "Über 3.5 Tore"
+      }
     },
     {
       "teamId": "9568",
@@ -764,7 +804,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 62,
-        "label": "Eigen 62% + Gegner 67% → 64%"
+        "label": "Eigen 62% + Gegner 67% → 64% · Signale bestätigen"
       },
       "ratePct": 62,
       "seq": [
@@ -791,7 +831,20 @@
         "oppRatePct": 67
       },
       "oppSupportPct": 67,
-      "matchupPct": 64
+      "matchupPct": 64,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 4,
+        "conviction": 6,
+        "names": [
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "chance_creation",
+          "topscorer_momentum"
+        ],
+        "market": "Über 3.5 Tore"
+      }
     },
     {
       "teamId": "9569",
@@ -1667,9 +1720,9 @@
       "venue": "H",
       "strong": true,
       "continuation": {
-        "state": "neutral",
+        "state": "wackelt",
         "ratePct": 62,
-        "label": "Eigen 62% + Gegner 27% → 48%"
+        "label": "Eigen 62% + Gegner 27% → 48% · Linie/Signale dagegen"
       },
       "ratePct": 62,
       "seq": [
@@ -1696,7 +1749,20 @@
         "oppRatePct": 27
       },
       "oppSupportPct": 27,
-      "matchupPct": 48
+      "matchupPct": 48,
+      "signalInfo": {
+        "state": "contradict",
+        "count": 4,
+        "conviction": 4,
+        "names": [
+          "injury",
+          "form_trend",
+          "xg_strength",
+          "chance_creation",
+          "transfer_shift"
+        ],
+        "market": "Unter 3.5 Tore"
+      }
     },
     {
       "teamId": "1610",
@@ -3105,6 +3171,62 @@
       "matchupPct": 61
     },
     {
+      "teamId": "1608",
+      "team": "Atlanta United FC",
+      "flag": "<img src=\"https://media.api-sports.io/football/teams/1608.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
+      "league": "MLS",
+      "leagueName": "Major League Soccer",
+      "type": "over25",
+      "market": "Über 2,5 Tore",
+      "length": 4,
+      "venue": "A",
+      "strong": false,
+      "continuation": {
+        "state": "intakt",
+        "ratePct": 33,
+        "label": "Eigen 33% + Gegner 87% → 55% · Signale bestätigen"
+      },
+      "ratePct": 33,
+      "seq": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false,
+        true,
+        false
+      ],
+      "xgBacked": null,
+      "basis": "prior",
+      "preN": 6,
+      "zufallPct": 14.78269,
+      "ligaBasisPct": 62,
+      "next": {
+        "oppId": "9568",
+        "oppName": "Inter Miami",
+        "atHome": false,
+        "date": "2026-09-05",
+        "kickoff": "2026-09-05T23:30:00+00:00",
+        "oppRatePct": 87
+      },
+      "oppSupportPct": 87,
+      "matchupPct": 55,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 4,
+        "conviction": 6,
+        "names": [
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "chance_creation",
+          "topscorer_momentum"
+        ],
+        "market": "Über 3.5 Tore"
+      }
+    },
+    {
       "teamId": "1609",
       "team": "New England Revolution",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1609.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -3159,49 +3281,6 @@
       }
     },
     {
-      "teamId": "1608",
-      "team": "Atlanta United FC",
-      "flag": "<img src=\"https://media.api-sports.io/football/teams/1608.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
-      "league": "MLS",
-      "leagueName": "Major League Soccer",
-      "type": "over25",
-      "market": "Über 2,5 Tore",
-      "length": 4,
-      "venue": "A",
-      "strong": false,
-      "continuation": {
-        "state": "neutral",
-        "ratePct": 33,
-        "label": "Eigen 33% + Gegner 87% → 55%"
-      },
-      "ratePct": 33,
-      "seq": [
-        true,
-        true,
-        true,
-        true,
-        false,
-        false,
-        true,
-        false
-      ],
-      "xgBacked": null,
-      "basis": "prior",
-      "preN": 6,
-      "zufallPct": 14.78269,
-      "ligaBasisPct": 62,
-      "next": {
-        "oppId": "9568",
-        "oppName": "Inter Miami",
-        "atHome": false,
-        "date": "2026-09-05",
-        "kickoff": "2026-09-05T23:30:00+00:00",
-        "oppRatePct": 87
-      },
-      "oppSupportPct": 87,
-      "matchupPct": 55
-    },
-    {
       "teamId": "1612",
       "team": "Minnesota United FC",
       "flag": "<img src=\"https://media.api-sports.io/football/teams/1612.png\" style=\"width:18px;height:18px;vertical-align:middle;object-fit:contain;\" loading=\"lazy\" alt=\"\">",
@@ -3213,9 +3292,9 @@
       "venue": "H",
       "strong": false,
       "continuation": {
-        "state": "neutral",
+        "state": "intakt",
         "ratePct": 20,
-        "label": "Eigen 20% + Gegner 87% → 47%"
+        "label": "Eigen 20% + Gegner 87% → 47% · Signale bestätigen"
       },
       "ratePct": 20,
       "seq": [
@@ -3242,7 +3321,21 @@
         "oppRatePct": 87
       },
       "oppSupportPct": 87,
-      "matchupPct": 47
+      "matchupPct": 47,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 7,
+        "conviction": 5,
+        "names": [
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation",
+          "topscorer_momentum"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "9569",
@@ -4650,7 +4743,7 @@
       "continuation": {
         "state": "intakt",
         "ratePct": 58,
-        "label": "Eigen 58% + Gegner 87% → 70%"
+        "label": "Eigen 58% + Gegner 87% → 70% · Signale bestätigen"
       },
       "ratePct": 58,
       "seq": [
@@ -4677,7 +4770,21 @@
         "oppRatePct": 87
       },
       "oppSupportPct": 87,
-      "matchupPct": 70
+      "matchupPct": 70,
+      "signalInfo": {
+        "state": "confirm",
+        "count": 7,
+        "conviction": 5,
+        "names": [
+          "injury",
+          "form_trend",
+          "h2h_pattern",
+          "xg_strength",
+          "chance_creation",
+          "topscorer_momentum"
+        ],
+        "market": "Über 2.5 Tore"
+      }
     },
     {
       "teamId": "25484",
