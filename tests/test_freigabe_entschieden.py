@@ -88,3 +88,63 @@ class TestBoardBleibtLesbar(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class TestBetfairSchubladenNutzenDieEchteSchranke(unittest.TestCase):
+    """06.09.2026, Lucas: „ok, da hat es noch nichts rein geschafft? … könnte für immer leer
+    sein eigentlich."
+
+    Beim Nachrechnen: von drei Schubladen, die auf dem Board die ROI-Hürde nahmen, waren ZWEI
+    ein Artefakt der Betfair-Näherung. `freigabe.py` rekonstruierte eine eigene Untergrenze aus
+    n/hitRate/roi, obwohl `betfair_track_record.json` für denselben Eimer längst eine aus den
+    Rohzeilen mitschreibt (`roiUg`). Bei genau diesen beiden kam sie im VORZEICHEN anders heraus:
+
+        Half Time                                n=1840   Näherung +0,43 %   roiUg −0,26 %
+        Sky Bet League 2 · First Half Goals 1.5  n=  33   Näherung +4,63 %   roiUg −0,05 %
+
+    Zwei Untergrenzen für dieselbe Menge — die zweite entstand hier, nicht dort.
+    """
+
+    def _rec(self, roi_ug):
+        return {"byMarket": {"Half Time": {"n": 1840, "hitRate": 0.4022, "roi": 0.0536,
+                                           "roiUg": roi_ug, "nClvBf": 1840, "avgClvBf": 0.04}}}
+
+    def test_die_untergrenze_kommt_aus_dem_produzenten(self):
+        r = F.betfair_schubladen(self._rec(-0.0026))[0]
+        self.assertEqual(r["roiLb"], -0.0026)
+        self.assertFalse(r["naeherung"], "mit echter Schranke ist es keine Naeherung mehr")
+        self.assertEqual(r["status"], "geprueft")
+
+    def test_ohne_roiUg_bleibt_die_naeherung_und_sagt_es(self):
+        rec = self._rec(None)
+        rec["byMarket"]["Half Time"].pop("roiUg")
+        r = F.betfair_schubladen(rec)[0]
+        self.assertIsNotNone(r["roiLb"])
+        self.assertTrue(r["naeherung"])
+
+    def test_gemessener_clv_wird_nicht_als_fehlend_ausgegeben(self):
+        """„kein CLV im Ledger" und „CLV gemessen, aber ohne Streuung" sind zwei verschiedene
+        Zustaende. Kein Urteil ist etwas anderes als ein gemessenes Nein."""
+        r = F.betfair_schubladen(self._rec(0.02))[0]
+        self.assertGreater(r["roiLb"], 0)
+        self.assertEqual(r["clv"], 0.04)
+        self.assertIn("Streuung", r["grund"])
+        self.assertNotEqual(r["status"], "freigegeben", "ohne CLV-Untergrenze keine Freigabe")
+
+    def test_ohne_jeden_clv_sagt_der_grund_genau_das(self):
+        rec = self._rec(0.02)
+        rec["byMarket"]["Half Time"].pop("avgClvBf")
+        r = F.betfair_schubladen(rec)[0]
+        self.assertIn("gar kein CLV", r["grund"])
+
+    def test_gegen_den_echten_bestand_nimmt_keine_betfair_schublade_die_huerde(self):
+        """Stand 06.09.: null. Nimmt eine die Huerde, schlaegt dieser Test an — und DAS ist
+        die Nachricht."""
+        import json
+        from pathlib import Path
+        p = Path(__file__).resolve().parents[1] / "betfair_track_record.json"
+        if not p.exists():
+            self.skipTest("kein Track-Record")
+        rows = F.betfair_schubladen(json.loads(p.read_text(encoding="utf-8")))
+        pos = [r["schublade"] for r in rows if r.get("roiLb") is not None and r["roiLb"] > 0]
+        self.assertEqual(pos, [], f"Neu ueber der ROI-Huerde: {pos} — bitte ansehen.")

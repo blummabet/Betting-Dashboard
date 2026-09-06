@@ -387,13 +387,32 @@ def betfair_schubladen(rec=None, min_n=None) -> list:
             n, hit, roi = v.get("n") or 0, v.get("hitRate"), v.get("roi")
             if n < min_n or hit is None or roi is None:
                 continue
-            se = _betfair_streuung(n, hit, roi)
-            roi_lb = (roi - Z * se) if se is not None else None
+            # 06.09.2026 (Lucas: „ok, da hat es noch nichts rein geschafft? … könnte für immer
+            # leer sein eigentlich"). Beim Nachrechnen seiner Frage: von drei Schubladen, die
+            # auf dem Board die ROI-Huerde nahmen, waren ZWEI ein Artefakt genau dieser
+            # Naeherung — und beide sind Betfair:
+            #
+            #     Half Time                                    n=1840  Naeherung +0,43 %  ·  roiUg −0,26 %
+            #     Sky Bet League 2 · First Half Goals 1.5       n=  33  Naeherung +4,63 %  ·  roiUg −0,05 %
+            #
+            # `betfair_track_record.json` rechnet fuer diese Eimer laengst eine eigene
+            # Untergrenze (`roiUg`, ab n>=`ugAb`) — aus den Rohzeilen, nicht aus einer
+            # Binaer-Rekonstruktion. Hier stand eine ZWEITE Untergrenze fuer dieselbe Menge,
+            # und sie kam bei genau diesen beiden im VORZEICHEN anders heraus. Dieselbe Klasse
+            # wie ueberall sonst heute: das Urteil gehoert dorthin, wo die Zahl entsteht.
+            # Die Naeherung bleibt als Rueckfall fuer Eimer ohne `roiUg` — dann aber auch nur
+            # dort, und weiter als `naeherung` markiert.
+            _ug = v.get("roiUg")
+            if isinstance(_ug, (int, float)):
+                roi_lb, _naeh = float(_ug), False
+            else:
+                se = _betfair_streuung(n, hit, roi)
+                roi_lb, _naeh = ((roi - Z * se) if se is not None else None), True
             # Betfair fuehrt kein CLV je Signal -> die CLV-Bedingung kann hier NICHT geprueft
             # werden. Fail-closed: ohne CLV keine Freigabe. Der Strom kann Kandidat werden,
             # freigegeben wird er erst, wenn das Ledger CLV je Signal mitschreibt.
             eintrag = bewerte(name.replace("|", " · "), "betfair", [], [],
-                              {"art": art, "naeherung": True})
+                              {"art": art, "naeherung": _naeh})
             eintrag.update({"n": n, "roi": round(roi, 4),
                             "roiLb": round(roi_lb, 4) if roi_lb is not None else None,
                             "fehltN": max(0, MIN_N - n)})
@@ -401,7 +420,22 @@ def betfair_schubladen(rec=None, min_n=None) -> list:
                 eintrag["status"], eintrag["grund"] = "geprueft", "ROI nicht belegt über null"
             else:
                 eintrag["status"] = "geprueft"
-                eintrag["grund"] = "ROI belegt, aber kein CLV je Signal im Ledger — ohne den keine Freigabe"
+                # 06.09.2026: hier stand „kein CLV je Signal im Ledger". Das stimmt fuer die
+                # EINZELZEILE, war aber als Satz falsch: derselbe Eimer traegt `avgClvBf` —
+                # denselben Aggregat-Typ, aus dem hier auch der ROI kommt. Was wirklich fehlt,
+                # ist die STREUUNG, ohne die es keine Untergrenze gibt. Der Unterschied ist
+                # der zwischen „nicht gemessen" und „gemessen, aber nicht belegbar" — und
+                # gerade den soll dieses Register nie verwischen.
+                _clv = v.get("avgClvBf")
+                if isinstance(_clv, (int, float)):
+                    eintrag["clv"] = round(float(_clv), 3)
+                    eintrag["grund"] = (
+                        "ROI belegt · gemessener CLV %+.2f pp aus %d Zeilen, aber nur als Mittel "
+                        "ohne Streuung — ohne Untergrenze keine Freigabe"
+                        % (float(_clv), int(v.get("nClvBf") or n)))
+                else:
+                    eintrag["grund"] = ("ROI belegt, aber fuer diesen Eimer ist gar kein CLV "
+                                        "erhoben — ohne den keine Freigabe")
             out.append(eintrag)
     return out
 

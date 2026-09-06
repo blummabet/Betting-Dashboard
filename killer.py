@@ -396,6 +396,15 @@ def zeile(mid, eintrag, sig, cons_game, track, streaks, gehalten_seit=None,
                   "odd": poly.get("odd")} if poly_gleich else None),
         # Damit die Oberflaeche „dagegen" von „nicht gefragt" unterscheiden kann.
         "polyStatus": poly_status,
+        # 06.09.2026 (Lucas: „wenn in beiden Elementen dasselbe Team, dann ja eindeutiger").
+        # Der Polymarket-Marktschluessel — DER gemeinsame Schluessel zwischen dieser Zeile und
+        # „Heute spielenswert"/der Poly-Shortlist. Er steht unabhaengig davon hier, ob Poly
+        # zustimmt: er benennt den MARKT, nicht das Urteil. Ohne ihn muesste die Oberflaeche
+        # Teamnamen raten („Remo" vs „Clube do Remo") — also Produzenten-Logik nachbauen.
+        "polyKey": poly.get("key"),
+        # Der Poly-Outcome-Name UNSERER Seite. „dasselbe Spiel" und „dieselbe Seite" sind zwei
+        # verschiedene Aussagen — die zweite ist die staerkere, und sie darf nicht geraten werden.
+        "polySide": poly.get("sideKey"),
         "pinnMovePP": pm.get("movePP"),
         # 01.09.2026: der Buecher-Score. Steht auf JEDER Zeile, auch wenn die Oberflaeche nur die
         # besten zeigt — gemessen wird spaeter der Gradient ueber alle Punktzahlen, nicht nur die
@@ -426,6 +435,12 @@ def _halten(latch: dict, zeilen: list, now) -> dict:
             alt["zuletztAktiv"] = now.isoformat()
             alt["odd"] = z.get("odd")            # aktueller Preis, zum Vergleich mit haltePreis
             alt["kickoff"] = z.get("kickoff") or alt.get("kickoff")
+            # Der Marktschluessel ist Identitaet, kein Urteil: sobald er bekannt ist, wird er
+            # aufgefrischt — aber nie durch None ueberschrieben. Eine gehaltene Zeile, die vor
+            # dem Poly-Fetch entstand, bekaeme ihn sonst nie und bliebe unverbindbar.
+            if z.get("polyKey"):
+                alt["polyKey"] = z["polyKey"]
+                alt["polySide"] = z.get("polySide")
             # Der Score wird IMMER aufgefrischt, auch wenn er faellt: er beschreibt den
             # aktuellen Stand der Buecher, nicht den besten je erreichten. Der HALTEPREIS bleibt
             # davon unberuehrt — der ist der Preis, den die Sektion gezeigt hat.

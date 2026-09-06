@@ -36,6 +36,10 @@ await new Promise((res) => w._pwEnsurePlaysData(res));
 let plays = [], pub = [], blockedCats = [], whales = [];
 try { plays = w._pwTopPlays(0, false, false) || []; } catch { plays = []; }
 try { pub = w._pwPublicTopPlays() || []; } catch { pub = []; }
+// 06.09.2026: die Schatten-Gruppe — alles am Public-Gate ausser der Wallet-Bedingung.
+// Wird NICHT gesendet und nicht angezeigt, nur mitgeschrieben (s. _pwTermIsPublicOhneWallet).
+let pubOhneWallet = [];
+try { pubOhneWallet = w._pwPublicOhneWalletPlays() || []; } catch { pubOhneWallet = []; }
 
 try { blockedCats = w.PW_BLOCKED_BET_CATS || []; } catch { blockedCats = []; }
 // 24.08.2026 (Lucas, Whales-Tab): die noch spielbaren offenen Positionen der Top-20-Wallets —
@@ -46,6 +50,7 @@ for (const p of plays) {
 }
 
 const publicKeys = pub.map(p => p.key + '|' + p.side);
+const ohneWalletKeys = pubOhneWallet.map(p => p.key + '|' + p.side);
 const out = {
   generatedAt: new Date().toISOString(),
   blockedCats,                       // eine Quelle: kommt aus poly-wallets.js
@@ -82,7 +87,9 @@ const out = {
     sharpN: (p.sharp && p.sharp.n) || 0,
     sharpHit: (p.sharp && typeof p.sharp.hit === 'number') ? p.sharp.hit : null,
     public: publicKeys.includes(p.key + '|' + p.side),
+    ohneWallet: ohneWalletKeys.includes(p.key + '|' + p.side),
   })),
   public: publicKeys,
+  publicOhneWallet: ohneWalletKeys,
 };
 process.stdout.write(JSON.stringify(out));

@@ -231,13 +231,20 @@ function ladePublicGate() {
   const src = readFileSync(PW, 'utf8');
   const von = src.indexOf('const PW_PUBLIC_MIN_CONV=');
   const bisZeile = src.indexOf('\n', von);
-  const fnVon = src.indexOf('function _pwTermIsPublic');
-  const fnBis = src.indexOf('\n}', fnVon) + 2;
+  // 06.09.2026: das Gate wurde in seine Teile zerlegt (_pwTermWalletOk / _pwTermPublicRest),
+  // damit die Wallet-Bedingung für die Kontrollgruppe WEGGELASSEN werden kann. Der Extraktor
+  // schnitt vorher nur `_pwTermIsPublic` heraus und fand die Helfer nicht mehr. Er nimmt jetzt
+  // den ganzen Block — die Prüfung selbst bleibt unverändert: das öffentliche Gate darf sich
+  // durch die Zerlegung nicht gelockert haben.
+  const fnVon = src.indexOf('function _pwTermWalletOk');
+  const ende = src.indexOf('function _pwTermIsPublicOhneWallet');
+  const fnBis = ende > fnVon ? ende : (src.indexOf('\n}', src.indexOf('function _pwTermIsPublic')) + 2);
   assert.ok(von > 0 && fnVon > 0, 'Public-Gate in poly-wallets.js nicht gefunden');
   const g = {};
   // eslint-disable-next-line no-new-func
   new Function('exp', src.slice(von, bisZeile) + '\n' + src.slice(fnVon, fnBis)
-    + '\nexp.isPublic=_pwTermIsPublic; exp.minConv=PW_PUBLIC_MIN_CONV;')(g);
+    + '\nexp.isPublic=_pwTermIsPublic; exp.minConv=PW_PUBLIC_MIN_CONV;'
+    + '\nexp.walletOk=_pwTermWalletOk; exp.rest=_pwTermPublicRest;')(g);
   return g;
 }
 const PG = ladePublicGate();
@@ -274,4 +281,26 @@ test('Public-Gate ist EINE Quelle — nicht zweimal ausgeschrieben', () => {
   const treffer = src.match(/r\.sharp\.n>=8 && r\.sharp\.hit>=0\.55/g) || [];
   assert.strictEqual(treffer.length, 1,
     'die Public-Bedingung steht wieder an mehreren Stellen — sie läuft dann auseinander');
+});
+
+// ── 06.09.2026: die Kontrollgruppe darf das Gate nicht verändern ─────────────────────────────
+// Von 172 abgerechneten Public-Kandidaten waren 172 sharp — ohne Vergleichsgruppe ist nicht
+// messbar, ob das Wallet-Tor etwas beiträgt. Die Zerlegung schafft die Gruppe; sie darf aber
+// das öffentliche Gate nicht anfassen.
+test('Public bleibt exakt die Konjunktion aus Rest und Wallet', () => {
+  const ok = play();
+  assert.equal(PG.isPublic(ok), PG.rest(ok) && PG.walletOk(ok));
+  const ohneWallet = play({ sharp: { n: 20, hit: 0.6, grade: 0.6 } });
+  assert.equal(PG.isPublic(ohneWallet), false, 'unbewiesene Wallet darf nicht öffentlich werden');
+  assert.equal(PG.rest(ohneWallet), true, 'Conviction und Mehrheit stimmen ja');
+  assert.equal(PG.walletOk(ohneWallet), false);
+});
+
+test('die Kontrollgruppe ist genau der Rest ohne Wallet-Nachweis', () => {
+  const kandidat = play({ sharp: { n: 20, hit: 0.6, grade: 0.6 } });
+  assert.ok(PG.rest(kandidat) && !PG.walletOk(kandidat),
+    'genau diese Kombination bildet die Kontrollgruppe');
+  const zuWenigConv = play({ conv: PG.minConv - 1, sharp: { n: 20, hit: 0.6, grade: 0.6 } });
+  assert.equal(PG.rest(zuWenigConv), false,
+    'wer schon an der Conviction scheitert, gehört nicht in die Kontrollgruppe');
 });

@@ -497,6 +497,12 @@ def match_poly(m, ms, poly_entries):
             "sharePct": share_pct,
             "shareSrc": share_src,
             "key": pe.get("key"),
+            # 06.09.2026: der Poly-OUTCOME-Name unserer Seite („CR Flamengo"), so wie ihn der
+            # Markt schreibt. Er steht hier, damit die Oberflaeche „dasselbe Spiel" von
+            # „dieselbe Seite" unterscheiden kann, OHNE Namen zu raten: die Poly-Shortlist
+            # fuehrt exakt diese Zeichenkette als `side`. Ohne ihn muesste das Frontend
+            # „Flamengo" gegen „CR Flamengo" halten — Produzenten-Logik im Renderer.
+            "sideKey": key,
             # None (= nicht erhoben) und [] (= erhoben, keine Wale auf unserer Seite) sind
             # verschiedene Dinge. Ohne diese Trennung wuerde der Score ein fehlendes Holder-Fenster
             # als „kein Wal dafuer" lesen — derselbe Fehler wie das `or 0` bei sharePct.
@@ -1263,22 +1269,30 @@ def main():
 
     # Poly (globaler Broad-Scan, committet vom Poly-Workflow): nur Basis-Moneylines (kein
     # more-markets/exact-score/total), damit wir die Team-Preise + Volumen matchen koennen.
+    # 06.09.2026 (Lucas: „wenn in beiden Elementen dasselbe Team, dann ja eindeutiger"). Der
+    # Marktschluessel steht in diesen Pools NUR als Dict-Schluessel — `dict(v, src=...)` warf ihn
+    # weg, also lieferte `match_poly` fuer close/live/upcoming immer `key: None`. Nur der
+    # Liga-Fallback setzte ihn (`"key": _v.get("slug")`), und genau deshalb konnte niemand eine
+    # Konsens-Zeile mit einer Poly-Zeile verbinden: „Remo v Flamengo" und „bra-cre-fla-2026-09-06"
+    # sind dasselbe Spiel, aber der einzige gemeinsame Schluessel wurde hier verworfen.
+    # Dieselbe Klasse wie `match_eintrag` heute frueh: die Daten waren da, sie wurden nur nie
+    # weitergereicht. `v.get("key") or k` — ein eigenes Feld hat Vorrang, sonst der Dict-Schluessel.
     poly_raw = _load("poly_money_broad_close.json", {})
-    poly_entries = [dict(v, src="close") for k, v in poly_raw.items()
+    poly_entries = [dict(v, src="close", key=v.get("key") or k) for k, v in poly_raw.items()
                     if isinstance(v, dict) and v.get("prices")
                     and not any(x in str(k) for x in ("-more-markets", "-exact-score", "-total", "-spread"))
                     and len(v.get("prices")) <= 4] if isinstance(poly_raw, dict) else []
     # Stufe 4 (Live): fuer laufende Spiele die LIVE-Poly-Blase (poly_money_broad_live.json).
     # Additiv — nur die Money-Map nutzt sie; der Betfair-Radar (games) bleibt auf dem Close-Freeze.
     poly_live_raw = _load("poly_money_broad_live.json", {})
-    poly_live_entries = [dict(v, src="live") for k, v in poly_live_raw.items()
+    poly_live_entries = [dict(v, src="live", key=v.get("key") or k) for k, v in poly_live_raw.items()
                     if isinstance(v, dict) and v.get("prices")
                     and not any(x in str(k) for x in ("-more-markets", "-exact-score", "-total", "-spread"))
                     and len(v.get("prices")) <= 4] if isinstance(poly_live_raw, dict) else []
     # Money-Map (12.08.2026, Lucas): breitere "upcoming"-Erfassung (nur Preis+Vol, kein Holder-Call) ->
     # Poly-Blase auch fuer Spiele weit vor Anpfiff (Super Cup/Pokal), wenn close/live den Markt noch nicht hat.
     poly_upcoming_raw = _load("poly_money_upcoming.json", {})
-    poly_upcoming_entries = [dict(v, src="upcoming") for k, v in poly_upcoming_raw.items()
+    poly_upcoming_entries = [dict(v, src="upcoming", key=v.get("key") or k) for k, v in poly_upcoming_raw.items()
                     if isinstance(v, dict) and v.get("prices")
                     and not any(x in str(k) for x in ("-more-markets", "-exact-score", "-total", "-spread"))
                     and len(v.get("prices")) <= 4] if isinstance(poly_upcoming_raw, dict) else []
