@@ -2046,6 +2046,22 @@
     var pct = Math.max(0, Math.min(100, Math.round(n / ziel * 100)));
     var alt = (r.nAlt ? '<span class="md-kl-c" title="Plays aus einer früheren Engine-Version — sie zählen NICHT für die Freigabe, stehen hier nur als Kontext">'
       + '+' + r.nAlt + ' alt (' + _mdFgZahl(r.roiAlt == null ? null : r.roiAlt * 100, '%') + ')</span>' : '');
+    // 06.09.2026 (Lucas: „in 12 Plays nächste Chance … könnte für immer leer sein eigentlich").
+    // Der Balken misst gegen `minN` — die Zahl, ab der GERECHNET wird. Wie weit es bis zu einem
+    // BELEG ist, ist eine ganz andere Zahl, weil die Streuung der Renditen rund zehnmal so groß
+    // ist wie ihr Schnitt. Beispiel vom Tag: Balken „15/30", nötig wären ~263. Gerechnet wird
+    // das im Produzenten (`noetigNRoi`) — das Frontend hat die Einzelwerte gar nicht.
+    var weit = '';
+    if (n < ziel) {
+      if (r.noetigNRoi == null) {
+        weit = '<span class="md-kl-c" style="color:var(--mi3)" title="Bei nicht positivem Schnitt bestätigen weitere Plays das Minus, sie drehen es nicht.">Schnitt nicht positiv</span>';
+      } else if (r.noetigNRoi > ziel) {
+        weit = '<span class="md-kl-c" style="color:' + A.gold + '" title="Hochrechnung, keine Messung: so viele Plays bräuchte die ROI-Untergrenze bei GLEICHBLEIBENDEM Schnitt und gleicher Streuung, um über null zu kommen. Der Balken links misst nur bis zur Mindestzahl, ab der überhaupt gerechnet wird.">Beleg erst ab ~' + r.noetigNRoi + '</span>';
+      }
+      if (r.noetigNClv != null && r.noetigNClv <= n) {
+        weit += '<span class="md-kl-c" style="color:' + A.good + '" title="Die CLV-Untergrenze liegt bereits über null — CLV ist der schnelle Richter, der ROI der langsame.">CLV belegt</span>';
+      }
+    }
     return '<div class="md-kl-bz" style="align-items:center">'
       + '<span style="color:' + col + ';font-weight:800;flex-shrink:0">' + (frei ? '✓' : r.status === 'ruht' ? '·' : '◔') + '</span>'
       + '<span class="md-kl-bn">' + esc(String(r.schublade || '—')) + '</span>'
@@ -2057,27 +2073,26 @@
       +   'ROI ' + _mdFgZahl(r.roi == null ? null : r.roi * 100, '%')
       +   ' <i style="color:var(--mi3);font-style:normal">(UG ' + _mdFgZahl(r.roiLb == null ? null : r.roiLb * 100, '%') + ')</i></span>'
       + '<span class="md-kl-bs" title="CLV mit Untergrenze — bei kleinem n belastbarer als der ROI">'
-      +   'CLV ' + _mdFgZahl(r.clv, 'pp', 1) + '</span>' + alt + '</div>';
+      +   'CLV ' + _mdFgZahl(r.clv, 'pp', 1) + '</span>' + alt + weit + '</div>';
   }
   // Eine Ebene der Spielbar-Sektion. Alle drei bekommen denselben Kopf, damit man sie
   // uebereinander VERGLEICHEN kann: Nummer (Strenge) · Frage · Bauart · eigener Stand.
   // Vorher hatte jede Sektion ihren eigenen Kopfbau — deshalb sahen drei Antworten aus wie
   // dreimal dieselbe Frage.
   // 06.09.2026 (Lucas: „die Heute spielenswert wären doch auch ähnlich zu diesen 2 Elementen
-  // in Wahrheit oder?"). Nachgemessen, und die Antwort ist nein — aber aus einem Grund, den die
-  // Flächen selbst nie sagen: sie bedienen **verschiedene Regale**.
-  //
-  //   Element 2 (Konsens)      aktuell 4 Zeilen, davon 4x „Match Odds" — also nur 1X2, und nur
-  //                            auf Spielen, die Betfair UND Poly UND Pinnacle quotieren.
-  //   Heute spielenswert       20 offene Plays: 13x Über/Unter, 4x 1X2, dazu Tennis, E-Sport,
-  //                            exakter Score — überwiegend Märkte, die es im Konsens gar nicht gibt.
-  //
-  //   Überschneidung heute: **0**. (Am 01.09. schon einmal gemessen, damals ebenfalls 0.)
-  //
-  // Ich hatte vorgeschlagen, die Überschneidung zu markieren („steht in beiden"). Das war
-  // falsch: der Marker würde nie feuern. Die Flächen sind nicht redundant, sie sind DISJUNKT —
-  // und das ist die Information, die gefehlt hat. Deshalb steht jetzt in jedem Kopf, WOMIT die
+  // in Wahrheit oder?"). Die Flächen bedienen verschiedene REGALE — Ebene 2 praktisch nur 1X2
+  // auf Spielen, die Betfair UND Poly UND Pinnacle quotieren; „Heute spielenswert" überwiegend
+  // Über/Unter plus Tennis, E-Sport, exakter Score. Deshalb steht in jedem Kopf, WOMIT die
   // Fläche gerade gefüllt ist, aus den Daten gerechnet statt behauptet.
+  //
+  // ⚠️ Hier stand bis 06.09. abends: „Überschneidung heute: 0 … der Marker würde nie feuern."
+  // Das war MEINE Fehldiagnose, und Lucas hat sie mit seinem eigenen Board widerlegt (Ebene 2
+  // „Remo v Flamengo → Flamengo", Ebene 3 „CR Flamengo vs Clube do Remo → CR Flamengo").
+  // Gemessen hatte ich nur Shortlist × Ebene 2 und das Ergebnis auf alle drei Ebenen übertragen.
+  // Die echte Zahl nach dem Schlüssel-Fix (s. `polyKey`): 2 von 3 Zeilen der Ebene 2 stehen mit
+  // DERSELBEN Seite auch in Ebene 3. Ein Kommentar, der eine Null behauptet, während der Code
+  // daneben Treffer findet, ist genau die Krankheit, gegen die dieses Repo sonst antritt —
+  // deshalb steht die Korrektur hier und nicht nur im Verlauf.
   function _mdRegal(items, marktVon) {
     if (!items || !items.length) return '';
     var z = {};
@@ -2123,7 +2138,12 @@
     var frei = f.freigegeben || [], kand = (f.kandidaten || []).slice(0, 3);
     var bad = frei.length
       ? { txt: '✅ ' + frei.length + ' freigegeben', col: A.good, bg: 'rgba(46,160,71,.16)' }
-      : { txt: '👀 nichts freigegeben' + (z.naechsteFreigabe != null ? ' · nächste in ' + z.naechsteFreigabe + ' Plays' : ''),
+      // 06.09.2026, Lucas las hier „in 12 Plays nächste Chance" und fragte, ob dann wirklich
+      // ein Pick dastehen könnte. Nein: diese Zahl ist die Entfernung zur MINDESTZAHL, ab der
+      // überhaupt gerechnet wird. Die Entfernung zu einem BELEG ist eine andere — bei der
+      // stärksten Schublade heute 248 statt 15. Ein Badge, der die kleinere Zahl zeigt und die
+      // größere verschweigt, verspricht etwas, das die Daten daneben nicht hergeben.
+      : { txt: '👀 nichts freigegeben' + (z.naechsteFreigabe != null ? ' · in ' + z.naechsteFreigabe + ' Plays wird gerechnet' : ''),
           col: A.gold, bg: 'rgba(201,133,0,.14)' };
 
     var body;

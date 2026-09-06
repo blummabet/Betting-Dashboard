@@ -51,8 +51,23 @@ const reg = (over = {}) => ({
 test('leeres Register sagt „nichts freigegeben" — und dass das ein Ergebnis ist', () => {
   const h = render(reg());
   assert.match(h, /nichts freigegeben/);
-  assert.match(h, /nächste in 18 Plays/);
+  assert.match(h, /18 Plays/, 'die Entfernung zur Mindestzahl gehört in den Badge');
   assert.match(h, /Ergebnis, kein Fehler/, 'leer muss als Aussage erklärt werden, nicht als Panne');
+});
+
+test('der Badge verspricht keine Freigabe, wo nur gerechnet wird', () => {
+  // 06.09.2026, Lucas las „nächste in 18 Plays" als „in 18 Plays steht da ein Pick" und fragte
+  // nach — zu Recht. `naechsteFreigabe` ist die Entfernung zur MINDESTZAHL, ab der überhaupt
+  // eine Untergrenze gerechnet wird; die Entfernung zu einem BELEG ist eine ganz andere Zahl
+  // (bei der stärksten Schublade am selben Tag: 263 statt 30).
+  //
+  // Hier stand vorher /nächste in 18 Plays/ als Wortlaut — also wieder ein Test, der eine
+  // Formulierung festhielt statt einer Regel, und er schlug an, als genau diese irreführende
+  // Formulierung korrigiert wurde. Elfter Fall dieser Klasse. Jetzt geprüft wird die Aussage.
+  const h = render(reg());
+  assert.ok(!/nächste in 18 Plays/.test(h),
+    'das liest sich wie „in 18 Plays gibt es einen Pick" — genau das sagt die Zahl nicht');
+  assert.match(h, /wird gerechnet/, 'der Badge muss sagen, was bei der Zahl passiert');
 });
 
 test('fehlende Datei meldet ❔ UNBEKANNT — niemals „nichts freigegeben"', () => {

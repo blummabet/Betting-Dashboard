@@ -143,6 +143,39 @@ def _alter_tage(letzter, now):
     return (now - t).total_seconds() / 86400.0
 
 
+def noetiges_n(werte) -> int | None:
+    """Ab welchem n laege die 95%-Untergrenze ueber null, WENN Schnitt und Streuung so blieben?
+
+    06.09.2026, Lucas: „ok, da hat es noch nichts rein geschafft? In 12 Plays nächste Chance …
+    könnte für immer leer sein eigentlich."
+
+    Beim Nachrechnen seiner Frage stand auf dem Board bei der einzigen lebendigen Schublade
+    „15 von 30 Plays — noch 15". Das liest sich wie „gleich geschafft". Die echten Zahlen:
+
+        Konjunktion · Top-5 + MLS   ROI  Schnitt +9,7 %  Streuung 0,958  ->  UG>0 ab n≈263
+                                    CLV  Schnitt +1,91pp Streuung 2,980  ->  UG>0 ab n≈7 (erfuellt)
+
+    `MIN_N` = 30 ist eine MINDESTZAHL, keine hinreichende. Bei Renditen ist die Streuung ungefaehr
+    zehnmal so gross wie der Schnitt — das ist der Grund, warum CLV der schnelle Richter ist und
+    ROI der langsame. „Noch 15" war also wieder ein Satz, der behauptet, was die Zahl daneben
+    widerlegt (Bug-Klasse 1), diesmal in der Fortschrittsangabe selbst.
+
+    ⚠️ Das hier ist eine HOCHRECHNUNG, keine Messung: sie schreibt den heutigen Schnitt und die
+    heutige Streuung fort. Sie sagt nicht voraus, dass es klappt — sie sagt, wie weit es waere,
+    falls alles so bleibt. Bei nicht-positivem Schnitt gibt es keine Zahl: mehr Plays bestaetigen
+    dann das Negative, sie drehen es nicht. REIN/testbar."""
+    xs = [float(x) for x in (werte or []) if isinstance(x, (int, float))]
+    if len(xs) < 2:
+        return None
+    m = sum(xs) / len(xs)
+    if m <= 0:
+        return None
+    var = sum((x - m) ** 2 for x in xs) / (len(xs) - 1)
+    if var <= 0:
+        return len(xs)
+    return int(math.ceil((Z * math.sqrt(var) / m) ** 2))
+
+
 def bewerte(name: str, strom: str, renditen, clvs, meta=None, letzter=None, now=None) -> dict:
     """Eine Schublade -> ein Urteil. `renditen` sind Renditen JE PLAY (pnl/stake), nicht die
     Summe: nur so misst die Streuung das, was sie messen soll. `letzter` = Zeitstempel des
@@ -162,10 +195,25 @@ def bewerte(name: str, strom: str, renditen, clvs, meta=None, letzter=None, now=
                 "clvLb": round(clv_lb, 3) if clv_lb is not None else None,
                 "fehltN": 0, "alterTage": round(alter, 1), **(meta or {})}
 
+    # Die echte Entfernung zur Freigabe, nicht nur die zur Mindestzahl. `MIN_N` ist die
+    # Schwelle, ab der ueberhaupt gerechnet wird — nicht die, ab der etwas belegt ist.
+    _n_roi, _n_clv = noetiges_n(renditen), noetiges_n(clvs)
+    _weit = ""
+    if n < MIN_N:
+        if _n_roi is None:
+            _weit = (" · der ROI-Schnitt ist nicht positiv — mehr Plays bestätigen das, "
+                     "sie drehen es nicht")
+        else:
+            _fehlt = max(0, _n_roi - n)
+            _weit = (" · für einen ROI-Beleg wären bei diesem Schnitt und dieser Streuung "
+                     "rund %d Plays nötig%s" % (_n_roi, (", also noch ~%d" % _fehlt) if _fehlt else ""))
+            if _n_clv is not None and _n_clv <= n:
+                _weit += " — der CLV ist bereits belegt"
+
     if n < KANDIDAT_N:
-        status, grund = "sammelt", f"{n} von {MIN_N} Plays"
+        status, grund = "sammelt", f"{n} von {MIN_N} Plays{_weit}"
     elif n < MIN_N:
-        status, grund = "kandidat", f"{n} von {MIN_N} Plays — noch {MIN_N - n}"
+        status, grund = "kandidat", f"{n} von {MIN_N} Plays — noch {MIN_N - n}{_weit}"
     elif roi_lb is None or roi_lb <= MIN_ROI_LB:
         status, grund = "geprueft", "ROI nicht belegt über null"
     elif clv_lb is None:
@@ -188,6 +236,10 @@ def bewerte(name: str, strom: str, renditen, clvs, meta=None, letzter=None, now=
         "clv": round(clv, 3) if clv is not None else None,
         "clvLb": round(clv_lb, 3) if clv_lb is not None else None,
         "fehltN": max(0, MIN_N - n),
+        # Damit die Oberflaeche die Entfernung nicht selbst ausrechnet (sie hat die Einzelwerte
+        # gar nicht) und nicht wieder „noch 15" schreibt, wo ~248 gemeint sind.
+        "noetigNRoi": _n_roi,
+        "noetigNClv": _n_clv,
         "alterTage": round(alter, 1) if alter is not None else None,
         **(meta or {}),
     }
@@ -644,7 +696,17 @@ def baue(engine=None, track=None, cards=None, betfair=None, now=None) -> dict:
         "zusammenfassung": {
             "schubladen": len(zeilen), "freigegeben": len(frei), "kandidaten": len(kand),
             "ruhend": len([r for r in zeilen if r["status"] == "ruht"]),
+            # ⚠️ `naechsteFreigabe` ist die Entfernung zur MINDESTZAHL, nicht zur Freigabe.
+            # 06.09.2026, Lucas las den Badge als „in 12 Plays nächste Chance" — genau so ist er
+            # gemeint, und genau so ist er falsch: bei n=30 wird erst GERECHNET. Wie weit es
+            # wirklich waere, steht daneben und heisst jetzt auch so.
             "naechsteFreigabe": min([r["fehltN"] for r in kand], default=None),
+            # Die kleinste Zahl Plays, ab der bei heutigem Schnitt und heutiger Streuung
+            # ueberhaupt eine Schublade ihre ROI-Untergrenze ueber null haette. None = keine
+            # einzige hat einen positiven Schnitt; dann ist Warten keine Strategie.
+            "naechsterBeleg": min([r["noetigNRoi"] - r["n"] for r in kand
+                                   if r.get("noetigNRoi") and r["noetigNRoi"] > r["n"]],
+                                  default=None),
         },
     }
 

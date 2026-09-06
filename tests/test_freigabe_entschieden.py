@@ -148,3 +148,93 @@ class TestBetfairSchubladenNutzenDieEchteSchranke(unittest.TestCase):
         rows = F.betfair_schubladen(json.loads(p.read_text(encoding="utf-8")))
         pos = [r["schublade"] for r in rows if r.get("roiLb") is not None and r["roiLb"] > 0]
         self.assertEqual(pos, [], f"Neu ueber der ROI-Huerde: {pos} — bitte ansehen.")
+
+
+class TestEntfernungZumBeleg(unittest.TestCase):
+    """„In 12 Plays nächste Chance" war nicht die Entfernung zur Freigabe — 06.09.2026.
+
+    Lucas: „ok, da hat es noch nichts rein geschafft? In 12 Plays nächste Chance. Kann aber dann
+    wieder sein, dass nichts gezeigt wird. Sprich könnte für immer leer sein eigentlich."
+
+    Nachgerechnet an der stärksten lebendigen Schublade:
+
+        Konjunktion · Top-5 + MLS   n=15
+          ROI  Schnitt +9,7 %   Streuung 0,958  ->  Untergrenze>0 ab n≈263  (noch ~248)
+          CLV  Schnitt +1,91pp  Streuung 2,980  ->  Untergrenze>0 ab n≈7    (erfüllt)
+
+    Auf dem Board stand „noch 15". `MIN_N`=30 ist die Zahl, ab der überhaupt GERECHNET wird —
+    nicht die, ab der etwas belegt ist. Bei Renditen ist die Streuung rund zehnmal so groß wie
+    der Schnitt; genau deshalb ist CLV der schnelle und ROI der langsame Richter.
+    """
+
+    def test_die_hochrechnung_faellt_mit_der_streuung(self):
+        eng = F.noetiges_n([0.10, 0.11, 0.09, 0.10, 0.10])
+        weit = F.noetiges_n([1.2, -0.9, 1.1, -0.8, 0.9])
+        self.assertIsNotNone(eng)
+        self.assertIsNotNone(weit)
+        self.assertLess(eng, weit, "mehr Streuung muss mehr Plays verlangen, nicht weniger")
+
+    def test_ohne_positiven_schnitt_gibt_es_keine_zahl(self):
+        """Warten ist dann keine Strategie — mehr Plays bestaetigen das Minus."""
+        self.assertIsNone(F.noetiges_n([-0.1, -0.2, 0.05, -0.3]))
+        self.assertIsNone(F.noetiges_n([0.0, 0.0, 0.0]))
+
+    def test_zu_wenige_werte_erfinden_nichts(self):
+        self.assertIsNone(F.noetiges_n([]))
+        self.assertIsNone(F.noetiges_n([0.5]))
+        self.assertIsNone(F.noetiges_n(None))
+
+    def test_die_zahl_stimmt_mit_der_untergrenze_ueberein(self):
+        """Der Test der Rechnung selbst: bei genau `noetiges_n` Werten derselben Verteilung
+        muss `untergrenze` tatsaechlich ueber null liegen — sonst ist die Zahl geraten."""
+        muster = [0.9, -0.6, 0.8, -0.5, 0.7, -0.4]
+        k = F.noetiges_n(muster)
+        self.assertIsNotNone(k)
+        viele = (muster * (k // len(muster) + 2))[:k]
+        self.assertGreater(F.untergrenze(viele), 0)
+        knapp = (muster * (k // len(muster) + 2))[:max(2, int(k * 0.5))]
+        self.assertLessEqual(F.untergrenze(knapp) or -1, 0,
+                             "bei halber Stichprobe darf sie noch NICHT belegt sein")
+
+    def test_der_grund_nennt_die_echte_entfernung(self):
+        """Eine Zeile, die „noch 15" sagt, waehrend ~248 gemeint sind, ist derselbe Fehler wie
+        eine Prosa, die ihre eigene Zahl daneben widerlegt."""
+        r = F.bewerte("Test", "betfair", [0.9, -0.6, 0.8, -0.5, 0.7, -0.4] * 2,
+                      [2.0, 1.5, 2.5, 1.0, 2.2, 1.8] * 2, letzter="2026-09-06T12:00:00Z")
+        self.assertEqual(r["status"], "kandidat")
+        self.assertIn("Plays nötig", r["grund"])
+        self.assertIsNotNone(r["noetigNRoi"])
+        self.assertGreater(r["noetigNRoi"], r["n"])
+
+    def test_belegter_clv_wird_bei_offenem_roi_genannt(self):
+        """Der reale Fall: CLV schon belegt, ROI weit weg. Wer nur „noch 15" liest, sieht nicht,
+        dass die eine Huerde langst genommen ist und die ANDERE blockiert."""
+        r = F.bewerte("Test", "betfair", [0.9, -0.6, 0.8, -0.5, 0.7, -0.4] * 2,
+                      [2.0, 1.9, 2.1, 2.0, 1.95, 2.05] * 2, letzter="2026-09-06T12:00:00Z")
+        self.assertIn("CLV ist bereits belegt", r["grund"])
+
+    def test_reife_schubladen_bekommen_keine_hochrechnung_in_den_grund(self):
+        """Ab n>=MIN_N steht dort ein URTEIL. Eine Hochrechnung daneben wuerde es aufweichen."""
+        r = F.bewerte("Test", "poly", [-0.5] * 40, [0.0] * 40, letzter="2026-09-06T12:00:00Z")
+        self.assertEqual(r["status"], "geprueft")
+        self.assertNotIn("nötig", r["grund"])
+
+    def test_gegen_den_echten_bestand_ist_die_entfernung_groesser_als_der_balken(self):
+        """Haelt den Stand vom 06.09. fest: mindestens eine Kandidaten-Zeile braucht mehr Plays
+        als der Balken (n/30) suggeriert. Wird das eines Tages falsch, ist das die Nachricht."""
+        import json
+        from pathlib import Path
+        p = Path(__file__).resolve().parents[1] / "freigabe.json"
+        if not p.exists():
+            self.skipTest("freigabe.json fehlt")
+        d = json.loads(p.read_text(encoding="utf-8"))
+        kand = d.get("kandidaten") or []
+        if not kand:
+            self.skipTest("keine Kandidaten")
+        for r in kand:
+            if r.get("noetigNRoi") is None:
+                continue
+            self.assertIsInstance(r["noetigNRoi"], int)
+        weit = [r for r in kand if (r.get("noetigNRoi") or 0) > (d.get("regeln", {}).get("minN") or 30)]
+        self.assertTrue(weit, "keine Zeile braucht mehr als die Mindestzahl — bitte nachsehen, "
+                              "das waere neu")

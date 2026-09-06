@@ -142,3 +142,32 @@ test('die beiden Köpfe sagen, was sie voneinander unterscheidet', () => {
   assert.ok(/eine Quelle genügt, kein UND/.test(CODE),
     'Ebene 3 sagt nicht, dass sie eine Disjunktion ist');
 });
+
+// ── Freigabe-Register: der Balken misst nicht, was der Leser denkt ──────────────────────
+test('die Zeile nennt die Entfernung zum BELEG, nicht nur die zur Mindestzahl', () => {
+  // Lucas: „in 12 Plays nächste Chance … könnte für immer leer sein eigentlich."
+  // Der Balken zeigt n/30. Bei der stärksten Schublade am 06.09. wären ~263 Plays nötig
+  // gewesen, nicht 30 — die Streuung der Renditen ist rund zehnmal ihr Schnitt.
+  assert.ok(/r\.noetigNRoi/.test(CODE), 'die echte Entfernung wird nicht gelesen');
+  assert.ok(/Beleg erst ab ~/.test(CODE), 'sie wird nicht angezeigt');
+  assert.ok(/in ' \+ z\.naechsteFreigabe \+ ' Plays wird gerechnet/.test(CODE),
+    'der Badge verspricht weiter eine „Chance", wo nur gerechnet wird');
+});
+
+test('die Hochrechnung ist als solche markiert', () => {
+  // Sie schreibt Schnitt und Streuung von heute fort. Das ist keine Messung, und ein Register,
+  // das Belege von Vermutungen trennt, darf den Unterschied nicht selbst verwischen.
+  assert.ok(/Hochrechnung, keine Messung/.test(CODE));
+  assert.ok(/GLEICHBLEIBENDEM/.test(CODE));
+});
+
+test('ein nicht positiver Schnitt wird nicht als Fortschritt gezeigt', () => {
+  assert.ok(/Schnitt nicht positiv/.test(CODE),
+    'ohne diesen Fall sähe eine Schublade mit Minus-Schnitt aus wie eine, die nur noch sammelt');
+});
+
+test('die Hochrechnung wird im Produzenten gerechnet, nicht im Renderer', () => {
+  // Das Frontend hat die Einzelwerte gar nicht — es könnte die Streuung nur raten.
+  assert.ok(!/Math\.sqrt\([^)]*varianz/i.test(CODE));
+  assert.ok(/noetigNRoi/.test(CODE) && /noetigNClv/.test(CODE));
+});
