@@ -281,7 +281,8 @@ def buecher_punkte(sig, g, seite, gehalten_seit=None, kickoff=None, wallets=None
         "POLY", "Polymarket", "ja" if _poly_bekannt else "unbekannt",
         _poly_bekannt and g.get("moneySide") == seite and _pa >= POLY_MIN_ANTEIL,
         bool(_bewiesen),
-        ("Poly-Geld %d%% auf derselben Seite" % _pa) if _poly_bekannt else "",
+        (("Poly-%s %d%% auf derselben Seite"
+          % ("Preis" if poly.get("shareSrc") == "preis" else "Geld", _pa)) if _poly_bekannt else ""),
         ("%d bewiesene%s Wallet%s drauf" % (len(_bewiesen), "" if len(_bewiesen) == 1 else "",
                                             "" if len(_bewiesen) == 1 else "s"))
         if _bewiesen else "kein bewiesenes Wallet auf der Seite"))
@@ -359,7 +360,9 @@ def zeile(mid, eintrag, sig, cons_game, track, streaks, gehalten_seit=None,
 
     verst = []
     if poly_gleich:
-        verst.append({"art": "poly", "text": "Poly %d%%" % round(poly.get("sharePct") or 0),
+        verst.append({"art": "poly",
+                      "text": "Poly %s %d%%" % ("Preis" if poly.get("shareSrc") == "preis" else "Geld",
+                                                round(poly.get("sharePct") or 0)),
                       "gewicht": 12})
     if pinn_gleich:
         verst.append({"art": "pinn", "text": "Pinnacle stimmt zu", "gewicht": 10})

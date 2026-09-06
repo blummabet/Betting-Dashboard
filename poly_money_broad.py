@@ -539,6 +539,24 @@ def _hours_to_ko(ev, now):
         return None
 
 
+# 06.09.2026 (Lucas mit Polymarket-Screenshot: „Serie A sind alle Spiele da"). Waren sie — bei uns
+# nicht. Gegen `liga_poly_prices.json` gemessen fehlten dem Money-Scan an dem Tag **9 Maerkte**,
+# 5 davon innerhalb des 8h-Fensters: sea-juv-mil, sea-bol-sas, sea-par-mon (das 1X2!),
+# fl1-olm-pfc, lal-ala-osa.
+#
+# Ursache: `MIN_VOL_USD = 7500` galt auch fuer die beiden PREIS-ONLY-Zweige („vor" und
+# „upcoming"). Der Boden ist dort aber fehl am Platz — er existiert, um das teure Holder-Budget
+# zu schuetzen, und genau diese Zweige machen ausdruecklich **keinen Holder-Call** („GRATIS mit
+# Preis+Vol mitnehmen"). Ein 1X2-Markt hat sechs Stunden vor Anpfiff typisch ein bis zwei
+# Tausend Dollar; das Geld kommt spaet. Mit 7.500 warf der Scan also planmaessig genau die
+# Spiele weg, die noch spielbar sind, und nahm sie erst auf, wenn kaum noch Zeit blieb.
+#
+# Der Holder-Pfad behaelt seinen Boden unveraendert. Nur der gratis Preis-Eintrag bekommt einen
+# eigenen, niedrigen — ein Markt mit Preis und ein paar hundert Dollar ist als *Preis* brauchbar,
+# und als Preis ist er auch gekennzeichnet (`src`, und im Konsens `shareSrc="preis"`).
+MIN_VOL_PREIS_USD = float(os.environ.get("POLY_MIN_VOL_PREIS") or 250.0)
+
+
 def _capture_class(htk):
     """Klassifiziert nach Zeit-bis-Anpfiff: 'pre' (0<htk<=Fenster), 'live' (Anpfiff bis LIVE_TAIL_H
     danach), sonst None (zu frueh / lange vorbei / kein Anpfiff). REIN/testbar. 11.08.2026 (Lucas Stufe 1)."""
@@ -1154,7 +1172,7 @@ def fetch_markets(live_only=False):
                 # aus (Budget leer), bleibt die Zeile trotzdem mit Preis+Volumen stehen.
                 if cls == "vor" and not live_only:
                     uvol0 = float(ev.get("volume") or 0)
-                    if uvol0 >= min_vol:
+                    if uvol0 >= MIN_VOL_PREIS_USD:
                         uoc0 = _outcomes(ev)
                         if len(uoc0) >= 2 and not _is_exhibition(uoc0):
                             up0 = {o["label"]: o["price"] for o in uoc0 if o["price"] is not None}
@@ -1168,7 +1186,7 @@ def fetch_markets(live_only=False):
                     # GRATIS mit Preis+Vol mitnehmen -> Poly-Blase auch 12h vor Anpfiff, ohne Holder-Budget.
                     if not live_only and isinstance(htk, (int, float)) and 0 < htk <= UPCOMING_WINDOW_H:
                         uvol = float(ev.get("volume") or 0)
-                        if uvol >= min_vol:
+                        if uvol >= MIN_VOL_PREIS_USD:
                             uoc = _outcomes(ev)
                             if len(uoc) >= 2 and not _is_exhibition(uoc):
                                 uprices = {o["label"]: o["price"] for o in uoc if o["price"] is not None}

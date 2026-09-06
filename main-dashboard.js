@@ -1481,7 +1481,10 @@
           if (s.ligaBasisPct != null) _bq += ' (Liga-Basis ' + s.ligaBasisPct + '%)';
         }
       }
-      if (_rp != null) {
+      // 06.09.2026 — bei basis 'liga' IST die Zustandsrate die Liga-Basis: die Zeile stand dann
+      // zweimal mit derselben Zahl da („1 von 3.495 (Liga-Basis 20%) · Zustand aus Liga-Schnitt
+      // 20%"). Doppelt genannt heisst nicht doppelt belegt — also nur nennen, was etwas hinzufuegt.
+      if (_rp != null && !(s.basis === 'liga' && _rp === s.ligaBasisPct)) {
         _bq += s.basis === 'liga' ? ' · Zustand aus Liga-Schnitt ' + _rp + '%'
                                   : ' · Eigenrate vor der Serie ' + _rp + '%';
       }
