@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-06T09:38:23.358227+00:00",
+ "generatedAt": "2026-09-06T09:53:24.786819+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -67,7 +67,7 @@
    "clv": null,
    "clvLb": null,
    "fehltN": 15,
-   "alterTage": 0.5,
+   "alterTage": 0.6,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
   },
@@ -183,7 +183,7 @@
    "clv": null,
    "clvLb": null,
    "fehltN": 15,
-   "alterTage": 0.5,
+   "alterTage": 0.6,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
   },
@@ -277,11 +277,11 @@
   {
    "schublade": "Half Time",
    "strom": "betfair",
-   "n": 1675,
+   "n": 1679,
    "status": "geprueft",
    "grund": "ROI belegt, aber kein CLV je Signal im Ledger — ohne den keine Freigabe",
-   "roi": 0.0618,
-   "roiLb": 0.0101,
+   "roi": 0.0654,
+   "roiLb": 0.0137,
    "clv": null,
    "clvLb": null,
    "fehltN": 0,
@@ -308,11 +308,11 @@
   {
    "schublade": "Both teams to Score?",
    "strom": "betfair",
-   "n": 1989,
+   "n": 1994,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0033,
-   "roiLb": -0.032,
+   "roi": 0.0051,
+   "roiLb": -0.0302,
    "clv": null,
    "clvLb": null,
    "fehltN": 0,
@@ -323,11 +323,11 @@
   {
    "schublade": "First Half Goals 1.5",
    "strom": "betfair",
-   "n": 1800,
+   "n": 1805,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0052,
-   "roiLb": -0.0326,
+   "roi": 0.0046,
+   "roiLb": -0.0332,
    "clv": null,
    "clvLb": null,
    "fehltN": 0,
@@ -338,26 +338,11 @@
   {
    "schublade": "Match Odds",
    "strom": "betfair",
-   "n": 2203,
+   "n": 2208,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0037,
+   "roi": -0.0038,
    "roiLb": -0.0397,
-   "clv": null,
-   "clvLb": null,
-   "fehltN": 0,
-   "alterTage": null,
-   "art": "markt",
-   "naeherung": true
-  },
-  {
-   "schublade": "Over/Under 3.5 Goals",
-   "strom": "betfair",
-   "n": 2127,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0101,
-   "roiLb": -0.0399,
    "clv": null,
    "clvLb": null,
    "fehltN": 0,
@@ -368,7 +353,7 @@
   {
    "schublade": "Over/Under 2.5 Goals",
    "strom": "betfair",
-   "n": 2216,
+   "n": 2221,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
    "roi": -0.0092,
@@ -381,19 +366,19 @@
    "naeherung": true
   },
   {
-   "schublade": "Konjunktion · gehalten (Haltepreis)",
+   "schublade": "Over/Under 3.5 Goals",
    "strom": "betfair",
-   "n": 190,
+   "n": 2132,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": 0.0481,
-   "roiLb": -0.0608,
+   "roi": -0.0114,
+   "roiLb": -0.0412,
    "clv": null,
    "clvLb": null,
    "fehltN": 0,
-   "alterTage": 0.2,
-   "art": "konjunktion_gehalten",
-   "quelle": "killer_ledger.json"
+   "alterTage": null,
+   "art": "markt",
+   "naeherung": true
   },
   {
    "schublade": "English National League South · Over/Under 2.5 Goals",
@@ -426,6 +411,21 @@
    "naeherung": true
   },
   {
+   "schublade": "First Half Goals 0.5",
+   "strom": "betfair",
+   "n": 2045,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0331,
+   "roiLb": -0.0617,
+   "clv": null,
+   "clvLb": null,
+   "fehltN": 0,
+   "alterTage": null,
+   "art": "markt",
+   "naeherung": true
+  },
+  {
    "schublade": "English Sky Bet Championship · Over/Under 3.5 Goals",
    "strom": "betfair",
    "n": 31,
@@ -441,19 +441,19 @@
    "naeherung": true
   },
   {
-   "schublade": "First Half Goals 0.5",
+   "schublade": "Konjunktion · gehalten (Haltepreis)",
    "strom": "betfair",
-   "n": 2040,
+   "n": 191,
    "status": "geprueft",
    "grund": "ROI nicht belegt über null",
-   "roi": -0.0332,
-   "roiLb": -0.0619,
+   "roi": 0.0426,
+   "roiLb": -0.0661,
    "clv": null,
    "clvLb": null,
    "fehltN": 0,
-   "alterTage": null,
-   "art": "markt",
-   "naeherung": true
+   "alterTage": 0.0,
+   "art": "konjunktion_gehalten",
+   "quelle": "killer_ledger.json"
   },
   {
    "schublade": "Mix money+sharp",
@@ -557,7 +557,7 @@
    "clv": null,
    "clvLb": null,
    "fehltN": 0,
-   "alterTage": 0.5,
+   "alterTage": 0.6,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
   },
