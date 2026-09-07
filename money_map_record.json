@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-07T00:24:42.403130+00:00",
+"generatedAt": "2026-09-07T00:39:43.508130+00:00",
 "byVerdict": {
 "konsens": {
-"n": 861,
-"wins": 718,
-"hitRate": 0.8339,
-"polyN": 807,
-"polyWins": 623,
-"polyHitRate": 0.772,
+"n": 863,
+"wins": 720,
+"hitRate": 0.8343,
+"polyN": 809,
+"polyWins": 625,
+"polyHitRate": 0.7726,
 "pinnN": 90,
 "pinnHitRate": 0.8333,
-"nRoi": 189,
-"roi": 0.4753,
-"roiLb": 0.3843,
-"nClv": 189,
-"clv": 22.46,
-"clvLb": 19.5979
+"nRoi": 191,
+"roi": 0.4715,
+"roiLb": 0.3813,
+"nClv": 191,
+"clv": 22.31,
+"clvLb": 19.4677
 },
 "uneinig": {
-"n": 321,
+"n": 322,
 "wins": 102,
-"hitRate": 0.3178,
-"polyN": 285,
+"hitRate": 0.3168,
+"polyN": 286,
 "polyWins": 72,
-"polyHitRate": 0.2526,
-"pinnN": 188,
-"pinnHitRate": 0.6011,
-"nRoi": 89,
-"roi": -0.4666,
-"roiLb": -0.6211,
-"nClv": 89,
-"clv": -20.58,
-"clvLb": -26.2566
+"polyHitRate": 0.2517,
+"pinnN": 189,
+"pinnHitRate": 0.6032,
+"nRoi": 90,
+"roi": -0.4726,
+"roiLb": -0.6256,
+"nClv": 90,
+"clv": -20.78,
+"clvLb": -26.4098
 },
 "teil": {
 "n": 16,
@@ -72,9 +72,9 @@
 "hitRate": 0.6923
 },
 "Brazilian Serie A": {
-"n": 33,
+"n": 34,
 "wins": 24,
-"hitRate": 0.7273
+"hitRate": 0.7059
 },
 "Argentinian Primera Division": {
 "n": 32,
@@ -131,15 +131,15 @@
 "wins": 20,
 "hitRate": 0.8333
 },
+"Brazilian Serie B": {
+"n": 23,
+"wins": 15,
+"hitRate": 0.6522
+},
 "German Cup": {
 "n": 23,
 "wins": 20,
 "hitRate": 0.8696
-},
-"Brazilian Serie B": {
-"n": 22,
-"wins": 14,
-"hitRate": 0.6364
 },
 "English Football League Cup": {
 "n": 22,
@@ -391,6 +391,11 @@
 "wins": 3,
 "hitRate": 0.75
 },
+"Uruguayan Primera Division": {
+"n": 4,
+"wins": 4,
+"hitRate": 1.0
+},
 "Canadian Premier League": {
 "n": 3,
 "wins": 2,
@@ -412,11 +417,6 @@
 "hitRate": 0.3333
 },
 "Slovenian Premier League": {
-"n": 3,
-"wins": 3,
-"hitRate": 1.0
-},
-"Uruguayan Primera Division": {
 "n": 3,
 "wins": 3,
 "hitRate": 1.0
@@ -584,15 +584,15 @@
 },
 "byStrength": {
 "strong": {
-"n": 704,
-"wins": 564,
-"hitRate": 0.8011,
-"nRoi": 180,
-"roi": 0.2696,
-"roiLb": 0.1652,
-"nClv": 180,
-"clv": 13.25,
-"clvLb": 9.0442
+"n": 707,
+"wins": 566,
+"hitRate": 0.8006,
+"nRoi": 183,
+"roi": 0.2609,
+"roiLb": 0.1576,
+"nClv": 183,
+"clv": 12.91,
+"clvLb": 8.7394
 },
 "weak": {
 "n": 461,
@@ -607,14 +607,71 @@
 }
 },
 "divergence": {
-"n": 321,
+"n": 322,
 "betfairWins": 102,
-"betfairRate": 0.3178,
-"polyN": 285,
+"betfairRate": 0.3168,
+"polyN": 286,
 "polyWins": 72,
-"polyRate": 0.2526
+"polyRate": 0.2517
 },
 "recent": [
+{
+"matchId": "35982840",
+"home": "Botafogo FR",
+"away": "SE Palmeiras",
+"league": "Brazilian Serie A",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "SE Palmeiras",
+"polySide": "away",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+0,
+0
+],
+"kickoff": "2026-09-06T21:30:00Z",
+"settledAt": "2026-09-07T00:39:43.327411+00:00"
+},
+{
+"matchId": "36014830",
+"home": "Ponte Preta",
+"away": "Sao Bernardo",
+"league": "Brazilian Serie B",
+"verdict": "konsens",
+"moneySide": "away",
+"moneyName": "Sao Bernardo",
+"polySide": "away",
+"winner": "away",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+0,
+2
+],
+"kickoff": "2026-09-06T21:30:00Z",
+"settledAt": "2026-09-07T00:39:43.327411+00:00"
+},
+{
+"matchId": "36014876",
+"home": "Liverpool Montevideo",
+"away": "Boston River",
+"league": "Uruguayan Primera Division",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Liverpool Montevideo",
+"polySide": "home",
+"winner": "home",
+"moneyWin": true,
+"polyWin": true,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-09-06T22:30:00Z",
+"settledAt": "2026-09-07T00:39:43.327411+00:00"
+},
 {
 "matchId": "36034101",
 "home": "Leon",
@@ -1317,75 +1374,18 @@
 ],
 "kickoff": "2026-09-06T13:00:00Z",
 "settledAt": "2026-09-06T16:09:00.859341+00:00"
-},
-{
-"matchId": "36017224",
-"home": "Cesena",
-"away": "Mantova",
-"league": "Italian Serie B",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Mantova",
-"polySide": "away",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-1,
-1
-],
-"kickoff": "2026-09-06T13:00:00Z",
-"settledAt": "2026-09-06T16:09:00.859341+00:00"
-},
-{
-"matchId": "36016327",
-"home": "Oviedo",
-"away": "Burgos",
-"league": "Spanish Segunda Division",
-"verdict": "uneinig",
-"moneySide": "away",
-"moneyName": "Burgos",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-0,
-0
-],
-"kickoff": "2026-09-06T14:15:00Z",
-"settledAt": "2026-09-06T16:09:00.859341+00:00"
-},
-{
-"matchId": "36017235",
-"home": "Entella",
-"away": "LR Vicenza Virtus",
-"league": "Italian Serie B",
-"verdict": "konsens",
-"moneySide": "draw",
-"moneyName": "The Draw",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": true,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-09-06T13:00:00Z",
-"settledAt": "2026-09-06T16:09:00.859341+00:00"
 }
 ],
 "global": {
-"n": 1198,
-"wins": 823,
-"hitRate": 0.687,
-"nRoi": 285,
-"roi": 0.1449,
-"roiLb": 0.0552,
-"nClv": 285,
-"clv": 7.63,
-"clvLb": 4.2992
+"n": 1201,
+"wins": 825,
+"hitRate": 0.6869,
+"nRoi": 288,
+"roi": 0.1407,
+"roiLb": 0.0517,
+"nClv": 288,
+"clv": 7.47,
+"clvLb": 4.1615
 },
-"pending": 16
+"pending": 15
 }
