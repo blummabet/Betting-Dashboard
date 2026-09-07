@@ -53,6 +53,7 @@ BASE = Path(__file__).resolve().parent
 sys.path.insert(0, str(BASE))
 
 import stake_highroller_fetch as SH
+import stake_liga_stufe as LS   # Spielklasse je Liga — eine Tabelle, ein Ort
 from stake_seltenheit import seltenheit
 from sharp_gate import wilson_lb
 from freigabe import untergrenze
@@ -103,6 +104,17 @@ def _gewinn(w: dict):
     if e is None or q is None or q <= 1:
         return None
     return round(e * (q - 1), 2)
+
+
+def _ls_faktor(w: dict, norm: dict, ebmed: dict):
+    """Einsatz als Vielfaches des ueblichen Einsatzes — ueber stake_liga_stufe, nicht hier.
+
+    Der Grund fuer die Weiterleitung statt einer zweiten Rechnung: die Schwellen und die
+    Wahl der Referenz (eigene Liga, sonst Ebene) stehen an EINER Stelle. Eine Kopie hier
+    waere dieselbe Klasse wie die Frontend-Duplikate, die in diesem Repo schon zweimal
+    auseinandergelaufen sind.
+    """
+    return LS.faktor(w, norm, ebmed)
 
 
 def _erlaubt(w: dict) -> bool:
@@ -439,6 +451,25 @@ def vorregistrieren(jetzt: str) -> dict:
                       "diese Wetten schlechter INFORMIERT sind."),
             "zielN": 150,
         },
+        "randliga_hoher_einsatz": {
+            "signatur": ("Fussball, Spielklasse 2 oder tiefer (Tabelle in stake_liga_stufe.py), "
+                         "Einsatz >= 3x dem ueblichen Einsatz der Liga (bzw. der Ebene)"),
+            "warum": ("Lucas 07.09.: 'ne 50k Wette auf Arsenal sagt 0 / Eine 50k Wette auf ein "
+                      "2-3. Liga Team ist zumindest jemand der mehr dran glaubt'. Im Rueckblick "
+                      "auf 4 Tage steigt der ROI dort mit der Einsatzgroesse (+7,5% -> +46,7%), "
+                      "aber n=37 und n=12 in den oberen Zellen und die Schwelle wurde NACH dem "
+                      "Blick gesetzt. Deshalb vorwaerts."),
+            "zielN": 150,
+        },
+        "topliga_hoher_einsatz": {
+            "signatur": ("Fussball, oberste Spielklasse, Einsatz >= 6x dem ueblichen Einsatz "
+                         "der Liga"),
+            "warum": ("Die Gegenprobe zur Randliga-These und fuer sich interessant: im "
+                      "Rueckblick faellt der ROI hier mit steigendem Einsatz (-2,1% -> -13,9%, "
+                      "n=207 in der obersten Zelle). Faellt das vorwaerts genauso aus, ist es "
+                      "kein Folge- sondern ein Gegensignal."),
+            "zielN": 200,
+        },
         "live_frueh": {
             "signatur": "phase=='live' und Spielminute <= 30",
             "warum": ("Live ist 83% des Feeds, aber spaet im Spiel wertlos (Hapoel-Fall). "
@@ -466,6 +497,9 @@ def auswerten(led: dict, jetzt: str) -> dict:
     wetten = [w for w in alle if _erlaubt(w)]
     gesperrt = [w for w in alle if not _erlaubt(w)]
     norm = liga_norm(wetten)
+    # Der Referenzeinsatz je Spielklasse. Einmal gerechnet, nicht je Wette — sonst laeuft
+    # der Median ueber jede Filterzeile neu.
+    ebmed = LS.ebene_median(wetten)
 
     def filt(f):
         return [w for w in wetten if f(w)]
@@ -482,6 +516,20 @@ def auswerten(led: dict, jetzt: str) -> dict:
         "einsatz_1k_10k": _schublade(filt(lambda w: 1000 <= (w.get("einsatzUsd") or 0) < 10000)),
         "ueber_liga_norm": _schublade(filt(
             lambda w: _ueber_norm(auffaellig(w, norm)))),
+        # 07.09.2026 (Lucas: „ne 50k Wette auf Arsenal sagt 0 / Eine 50k Wette auf ein
+        # 2-3. Liga Team ist zumindest jemand der mehr dran glaubt"). Zwei Schubladen, weil
+        # gemessen zwei GEGENLAEUFIGE Reihen dastehen: auf Ebene 1 wird der Fluss mit
+        # steigendem Einsatz schlechter (-2,1% -> -13,9%), auf Ebene 2/3 besser
+        # (+7,5% -> +46,7%). Eine gemeinsame „grosser Einsatz"-Schublade mittelt genau
+        # diesen Unterschied weg — das ist die Dilutions-Klasse aus CAPABILITIES §7.
+        "randliga_hoher_einsatz": _schublade(filt(
+            lambda w: _ls_faktor(w, norm, ebmed)[0] is not None
+            and LS.randliga(w.get("ligaSlug"), w.get("sport"))
+            and _ls_faktor(w, norm, ebmed)[0] >= LS.KAND_AB)),
+        "topliga_hoher_einsatz": _schublade(filt(
+            lambda w: _ls_faktor(w, norm, ebmed)[0] is not None
+            and LS.stufe(w.get("ligaSlug"), w.get("sport")) == "1"
+            and _ls_faktor(w, norm, ebmed)[0] >= LS.TOP_AB)),
     }
 
     # 03.09.2026 (Lucas: „glaub Odds-Schwelle sollten wir auch bauen ... wollen wir die 1,35
@@ -538,6 +586,7 @@ def auswerten(led: dict, jetzt: str) -> dict:
         "jeMarkt": top(je_markt, MIN_N_LIGA),
         "ligaNorm": dict(sorted(norm.items(), key=lambda kv: -kv[1]["n"])[:60]),
         "auffaellige": kleine_liga_gross(wetten, norm)[:60],
+        "randliga": LS.block(wetten, norm),
         "abdeckung": abdeckung(led),
         "hinweis": ("Das Urteil haengt an der RENDITE-Untergrenze, nicht an der Trefferquote: "
                     "gemessen an den ersten 950 Beinen liegt die Trefferquote bei 63,9%%, die "

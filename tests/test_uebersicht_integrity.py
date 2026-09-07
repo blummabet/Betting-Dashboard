@@ -117,6 +117,46 @@ class StakeKategorien(unittest.TestCase):
             {"stake": {"wetten": [{"kat": "Fußball"}, {"kat": "US-Sport"}]}})["ok"])
 
 
+class StakeSpielklasse(unittest.TestCase):
+    """07.09.2026 — die Spielklasse kommt aus einer Tabelle, und eine Tabelle veraltet still.
+
+    Stake nimmt laufend neue Ligen auf. Eine Liga ohne Eintrag verschwindet aus jeder Zeile
+    der Ansicht, statt aufzufallen — der harmlose Default ist hier die LEERE.
+    """
+
+    def _ok_ctx(self, **ueber):
+        c = {"stakeAus": {
+            "randliga": {"nOhneEbene": 0, "ohneEbene": []},
+            "schubladen": {"randliga_hoher_einsatz": {"belegt": False, "beinRoiUg": None},
+                           "topliga_hoher_einsatz": {"belegt": False, "beinRoiUg": -0.14}}}}
+        c["stakeAus"].update(ueber)
+        return c
+
+    def test_vollstaendige_tabelle_ist_ok(self):
+        self.assertTrue(UI.check_stake_spielklasse(self._ok_ctx())["ok"])
+
+    def test_neue_liga_ohne_ebene_schlaegt_an(self):
+        c = self._ok_ctx(randliga={"nOhneEbene": 2, "ohneEbene": ["neue-liga", "noch-eine"]})
+        r = UI.check_stake_spielklasse(c)
+        self.assertFalse(r["ok"])
+        self.assertIn("neue-liga", r["failures"][0])
+
+    def test_zusammengelegte_richtungen_schlagen_an(self):
+        c = self._ok_ctx()
+        del c["stakeAus"]["schubladen"]["randliga_hoher_einsatz"]
+        self.assertFalse(UI.check_stake_spielklasse(c)["ok"])
+
+    def test_belegt_ohne_untergrenze_schlaegt_an(self):
+        c = self._ok_ctx()
+        c["stakeAus"]["schubladen"]["randliga_hoher_einsatz"] = {"belegt": True, "beinRoiUg": None}
+        self.assertFalse(UI.check_stake_spielklasse(c)["ok"])
+
+    def test_ohne_block_ist_es_eine_warnung_kein_fehler(self):
+        r = UI.check_stake_spielklasse({"stakeAus": {}})
+        self.assertTrue(r["ok"])
+        self.assertIn("nichts gesagt", r.get("hinweis", ""))
+
+
 class BetfairUrteil(unittest.TestCase):
     """Der Fund: die Fade-Schwelle stand an vier Stellen, die vierte bei -0,05 statt -0,10."""
 

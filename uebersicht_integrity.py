@@ -282,6 +282,46 @@ def check_stake_kachel_zeigt_das_gemessene_urteil(ctx):
     return _c("Stake-Auffaelligkeiten tragen ihr gemessenes Urteil", "error", fails[:8])
 
 
+def check_stake_spielklasse(ctx):
+    """07.09.2026 — Lucas: „ne 50k Wette auf Arsenal sagt 0 / Eine 50k Wette auf ein
+    2-3. Liga Team ist zumindest jemand der mehr dran glaubt."
+
+    Die Spielklasse steht in keinem Feld des Stake-Feeds; sie kommt aus einer Tabelle
+    (`stake_liga_stufe.py`). Eine Tabelle veraltet still: Stake nimmt laufend neue Ligen auf,
+    und eine Liga, die nicht drinsteht, verschwindet aus jeder Zeile der Ansicht — ohne dass
+    irgendwo etwas rot wird. Genau die Klasse „fehlende Information rendert als harmloser
+    Default", nur eine Ebene hoeher: hier ist der harmlose Default die LEERE.
+
+    Zweitens: die beiden Richtungen duerfen nicht zusammenfallen. Gemessen am 07.09. laufen
+    Ebene 1 und Ebene 2/3 gegenlaeufig (-2,1 % -> -13,9 % gegen +7,5 % -> +46,7 %). Steht in
+    der Auswertung nur noch eine gemeinsame Schublade, ist der Unterschied weggemittelt — und
+    der ganze Punkt der Ansicht damit weg.
+    """
+    a = ctx.get("stakeAus") or {}
+    r = a.get("randliga")
+    if not isinstance(r, dict):
+        return _c("Stake-Spielklasse: Tabelle vollstaendig?", "warn", [],
+                  hinweis="kein randliga-Block in stake_auswertung.json — dann ist ueber die "
+                          "Spielklassen nichts gesagt.")
+    fails = []
+    n_ohne = r.get("nOhneEbene") or 0
+    if n_ohne:
+        fails.append("%d Fussball-Ligen ohne Eintrag in stake_liga_stufe.py (%s) — sie fallen "
+                     "aus jeder Zeile der Ansicht, statt aufzufallen"
+                     % (n_ohne, ", ".join((r.get("ohneEbene") or [])[:6])))
+    sch = a.get("schubladen") or {}
+    for name in ("randliga_hoher_einsatz", "topliga_hoher_einsatz"):
+        if name not in sch:
+            fails.append("Schublade %s fehlt — die beiden Richtungen sind gegenlaeufig und "
+                         "duerfen nicht in einer Zahl zusammenfallen" % name)
+    for name in ("randliga_hoher_einsatz", "topliga_hoher_einsatz"):
+        d = sch.get(name) or {}
+        if d.get("belegt") and d.get("beinRoiUg") is None:
+            fails.append("%s heisst belegt, ohne Untergrenze — ein Punktschaetzer ist kein "
+                         "Beleg" % name)
+    return _c("Stake-Spielklasse: Tabelle vollstaendig, Richtungen getrennt", "error", fails[:8])
+
+
 def check_poly_deckung(ctx):
     """06.09.2026 — Lucas zeigte einen Polymarket-Screenshot: Bologna-Sassuolo $49,99K,
     Juventus-Milan $94,62K. Beide standen bei uns als „kein Markt". Ich hatte aus „nicht in
@@ -473,6 +513,7 @@ UEBERSICHT_CHECKS = [
     check_serie_seltenheit_nennt_ihren_nenner,
     check_money_map_meldet_ihre_luecken,
     check_stake_kachel_zeigt_das_gemessene_urteil,
+    check_stake_spielklasse,
     check_poly_deckung,
     check_preis_signal_deckung,
     check_stumme_signale,
