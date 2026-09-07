@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-07T17:54:49.863306+00:00",
+ "generatedAt": "2026-09-07T18:02:30.443867+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -29,8 +29,37 @@
   "soccer_liga": 147
  },
  "trackRecord": {
-  "tracked": 290,
+  "tracked": 292,
   "converged": 67
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|miamimarlins-newyorkmets|newyorkmets",
+   "sport": "baseball_mlb",
+   "event": "New York Mets vs Miami Marlins",
+   "market": "Moneyline",
+   "outcome": "New York Mets",
+   "polyPP": 33.5,
+   "pinnPP": 60.8,
+   "gapPP": -27.35,
+   "vol": 408782,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-07T18:02:30.443558+00:00"
+  },
+  {
+   "id": "baseball_mlb|miamimarlins-newyorkmets|miamimarlins",
+   "sport": "baseball_mlb",
+   "event": "New York Mets vs Miami Marlins",
+   "market": "Moneyline",
+   "outcome": "Miami Marlins",
+   "polyPP": 66.5,
+   "pinnPP": 39.2,
+   "gapPP": 27.35,
+   "vol": 408782,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-07T18:02:30.443558+00:00"
+  }
+ ]
 }
