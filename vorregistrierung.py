@@ -74,6 +74,29 @@ ZUSCHNITTE = {
         "pruef": lambda x: (x.get("moeglich") == 10 and isinstance(x.get("punkte"), int)
                             and x["punkte"] >= 7),
     },
+    "fade_unter": {
+        "name": "Fade-Unter · Ganzspiel-Torlinie",
+        "strom": "betfair",
+        "quelle": "betfair_track_results.json → fade_unter.py",
+        "zielN": 200,
+        "signatur": ("market in {Over/Under 2.5, Over/Under 3.5} und fav==UNDER | "
+                     "quelle=betfair_track_results | rendite=Gegenseite nach 5% Kommission | kein CLV"),
+        "warum": ("Lucas: „wenn wir sehen, dass die gespielten Sachen schlecht liefen, könnte man "
+                  "das ins Positive umkehren und faden.\" Gemessen ueber 15.945 abgerechnete Zeilen "
+                  "in getrennter Such- und Pruefhaelfte: von 16 Markt×Seite-Schnitten waren genau "
+                  "zwei in BEIDEN Haelften positiv, und beide sind Ganzspiel-Torlinien mit dem Geld "
+                  "auf UNTER. n=2.720, Geldseite trifft 59,2 % gegen 62,4 % implizit (-3,2 pp); der "
+                  "Fade brachte +5,5 % / +5,2 % nach Kommission. Kontrolle: auf Match Odds, BTTS und "
+                  "der 1.-HZ-Linie ist die Geldseite 1-2 pp BESSER als implizit, und dort verliert "
+                  "derselbe Fade korrekt -5,6 bis -7,8 %. "
+                  "⚠️ Der Gegenpreis war im Altbestand NICHT erhoben und musste rekonstruiert werden "
+                  "(haelt bis ~1 % Overround, stirbt bei 2 %); ausserdem 12 Tage Basis und ein "
+                  "nachtraeglich gepoolter Schnitt aus 16. Genau deshalb steht er hier: der "
+                  "Rueckblick ist der Fund, nicht der Beleg. zielN=200 statt 40, weil bei einer "
+                  "Streuung von ~1,3 je Play alles darunter nur ein Punktschaetzer waere."),
+        "pruef": lambda x: (x.get("market") in ("Over/Under 2.5 Goals", "Over/Under 3.5 Goals")
+                            and x.get("fav") == "UNDER"),
+    },
 }
 
 

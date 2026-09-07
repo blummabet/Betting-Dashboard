@@ -420,6 +420,49 @@ def check_signal_bilanz(ctx):
                       % (len(gut), len(schlecht), SB.MEHRFACHTEST_HINWEIS))
 
 
+def check_fade_kontrolle(ctx):
+    """06.09.2026 — der Fade-Unter-Befund haengt an seiner Kontrollgruppe.
+
+    Die Regel („Geld auf UNTER einer Ganzspiel-Torlinie → wir spielen ÜBER") kam aus einer Suche
+    ueber 16 Markt×Seite-Schnitte. Was sie von einem Zufallsfund unterscheidet, ist NICHT der
+    ROI, sondern dass dieselbe Rechnung auf drei Kontrollmaerkten korrekt VERLIERT:
+
+        Match Odds H                Geldseite +1,2 pp besser als implizit  →  Fade -4,6 %
+        Both teams to Score? YES               +1,8 pp besser              →  Fade -6,9 %
+        First Half Goals 1.5 UNDER             +1,1 pp besser              →  Fade -7,5 %
+
+    Gewinnt der Fade dort auch, dann erzeugt die Konstruktion eine Kante aus sich selbst — am
+    wahrscheinlichsten, weil der angenommene Overround verrutscht ist. Dann ist der Befund oben
+    wertlos, und das muss auffallen, BEVOR jemand danach spielt.
+
+    Zweitens: die Zeile darf nicht behaupten, belegt zu sein, solange sie nur aus dem Rueckblick
+    lebt. Der Rueckblick ist der Fund, nicht der Beleg.
+    """
+    d = ctx.get("fadeUnter")
+    if not isinstance(d, dict) or not d.get("regel"):
+        return _c("Fade-Unter: haelt die Kontrollgruppe?", "warn", [],
+                  hinweis="fade_unter.json fehlt — dann ist ueber die Regel nichts gesagt.")
+    fails = []
+    for k in (d.get("kontrolle") or []):
+        if isinstance(k.get("roi"), (int, float)) and k["roi"] > 0:
+            fails.append("%s %s: der Fade GEWINNT hier (%+.1f %%, Geldseite %+.1f pp) — die "
+                         "Rechnung misst sich selbst, der Befund traegt nicht"
+                         % (k.get("markt"), k.get("seite"), 100 * k["roi"], k.get("vorsprungPP") or 0))
+    if not (d.get("kontrolle") or []):
+        fails.append("keine Kontrollmaerkte im Artefakt — ein Befund ohne Kontrollgruppe ist "
+                     "eine Behauptung")
+    vr = d.get("vorreg") or {}
+    rb = d.get("rueckblick") or {}
+    if vr.get("belegt") is False and rb.get("belegt"):
+        pass   # normal: der Rueckblick sieht gut aus, der Beleg fehlt noch — genau so gedacht
+    return _c("Fade-Unter: haelt die Kontrollgruppe?", "error", fails,
+              hinweis="seit Vorregistrierung n=%d (%s) · Rueckblick n=%d, nicht Teil des Urteils."
+                      % (vr.get("n") or 0,
+                         ("UG %+.1f %%" % (100 * vr["roiUg"])) if vr.get("roiUg") is not None
+                         else "kein Urteil",
+                         rb.get("n") or 0))
+
+
 UEBERSICHT_CHECKS = [
     check_serien_rangfolge,
     check_freigabe_grund,
@@ -434,6 +477,7 @@ UEBERSICHT_CHECKS = [
     check_preis_signal_deckung,
     check_stumme_signale,
     check_signal_bilanz,
+    check_fade_kontrolle,
 ]
 
 
@@ -468,6 +512,7 @@ def build_ctx_from_disk() -> dict:
         "ligaLedger": _lade("liga_signal_ledger.json", {}),
         "mlsLedger": _lade("mls_signal_ledger.json", {}),
         "signalBilanz": _lade("liga_signal_bilanz.json", {}),
+        "fadeUnter": _lade("fade_unter.json", {}),
         "signalBilanzMls": _lade("mls_signal_bilanz.json", {}),
     }
 

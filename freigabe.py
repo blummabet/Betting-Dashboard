@@ -655,6 +655,33 @@ RANG = {"freigegeben": 0, "kandidat": 1, "geprueft": 2, "sammelt": 3, "ruht": 4}
 
 
 # ── Strom 6: vorangemeldete Kandidaten ──────────────────────────────────────────────────
+def _fade_unter_plays() -> list:
+    """Die Fade-Schublade als Plays, die `vorregistrierung._rendite` versteht.
+
+    Die Rendite kommt aus `fade_unter.fade_rendite()` — eine Quelle, nicht zwei. Baute diese
+    Funktion die Rechnung nach, haetten wir zwei Wahrheiten ueber dieselbe Zahl, und die
+    Schublade koennte etwas anderes messen als die Flaeche im Radar zeigt.
+    """
+    try:
+        import fade_unter as FU
+    except Exception:
+        return []
+    try:
+        zeilen = FU._store.load(str(BASE / "betfair_track_results.json"))
+    except Exception:
+        return []
+    raus = []
+    for z in (zeilen or []):
+        if not FU.gilt(z):
+            continue
+        wert, _q = FU.fade_rendite(z)
+        if wert is None:
+            continue
+        raus.append({"market": z.get("market"), "fav": z.get("fav"),
+                     "pnl": wert, "stake": 1.0, "settledAt": z.get("settledAt")})
+    return raus
+
+
 def vorregistrierte_schubladen(track=None, reg=None, now=None, schreiben=True) -> list:
     """Zuschnitte, die VOR der Messung festgeschrieben wurden — s. vorregistrierung.py.
 
@@ -677,7 +704,13 @@ def vorregistrierte_schubladen(track=None, reg=None, now=None, schreiben=True) -
     # Buecher-Score auf punkte_ledger.json — zwei verschiedene Buecher, ein Register.
     _quellen = {"poly_bf_bestaetigt": st,
                 "buecher_score_hoch": [x for x in (_load("punkte_ledger.json") or [])
-                                       if isinstance(x, dict)]}
+                                       if isinstance(x, dict)],
+                # 06.09.2026: der Fade misst NICHT die Zeile, wie sie im Ledger steht — er misst
+                # die GEGENSEITE. Deshalb kommt die Rendite hier fertig als pnl/stake herein,
+                # inklusive Kommission. Wuerde man die Rohzeile durchreichen, rechnete
+                # `_rendite` die Geldseite (odd/win) und die Schublade maesse das Gegenteil
+                # von dem, was sie behauptet.
+                "fade_unter": _fade_unter_plays()}
     reg = VR.laden() if reg is None else dict(reg)
     vorher = dict(reg)
     out = []

@@ -153,6 +153,54 @@ def _row_cat(r):
     return r.get("cat") or _cat_from_league(r.get("league"))
 
 
+def _iso(ts):
+    """ISO-Zeitstempel -> aware datetime, sonst None. Ein Zeitpunkt, den wir nicht lesen koennen,
+    ist keiner — er darf nicht als „jetzt" oder „ganz frueh" durchgehen."""
+    try:
+        t = datetime.fromisoformat(str(ts).replace("Z", "+00:00"))
+    except (ValueError, TypeError):
+        return None
+    return t.replace(tzinfo=timezone.utc) if t.tzinfo is None else t
+
+
+PRE_ENTRY_STUNDEN = 6.0        # Fenster, in dem die Bewegung vor dem Einstieg gemessen wird
+_PRE_ENTRY_PFAD = "poly_price_path.json"
+
+
+def _pre_entry_move(key, side, now, pfade=None, stunden: float = PRE_ENTRY_STUNDEN):
+    """Bewegung des Preises auf UNSERER Seite in den `stunden` vor jetzt, in Prozentpunkten.
+
+    None, wenn es keinen Pfad gibt oder er nicht weit genug zurueckreicht — fehlende Information
+    ist keine Bewegung. 0.0 waere die Aussage „stand still" und darf nicht fuer „unbekannt"
+    einspringen; das ist dieselbe Klasse wie `sharePct or 0` im Konsens.
+    REIN/testbar: `pfade` und `now` sind einsetzbar.
+    """
+    from datetime import timedelta
+    if pfade is None:
+        try:
+            pfade = json.loads((BASE / _PRE_ENTRY_PFAD).read_text(encoding="utf-8"))
+        except (OSError, ValueError):
+            return None
+    eintrag = (pfade or {}).get(key)
+    if not isinstance(eintrag, dict):
+        return None
+    punkte = []
+    for q in (eintrag.get("points") or []):
+        p = (q.get("p") or {}).get(side)
+        t = _iso(q.get("ts"))
+        if isinstance(p, (int, float)) and t is not None and t <= now:
+            punkte.append((t, float(p)))
+    if len(punkte) < 2:
+        return None
+    punkte.sort()
+    grenze = now - timedelta(hours=stunden)
+    im_fenster = [x for x in punkte if x[0] >= grenze]
+    # Kein Punkt im Fenster heisst: der Pfad reicht nicht zurueck. Dann wird nichts behauptet.
+    if len(im_fenster) < 2:
+        return None
+    return round((im_fenster[-1][1] - im_fenster[0][1]) * 100.0, 3)
+
+
 def _ok_price(p):
     return isinstance(p, (int, float)) and 0.0 < float(p) < 1.0
 
@@ -365,6 +413,14 @@ def update_track(prev, emit, close, resolutions, now=None, stake=STAKE, blocked=
             # damit Plays aus einer aelteren Engine niedriger, statt sie fuer bare Muenze zu nehmen.
             # Fehlt der Wert (Alt-Emit), bleibt er None -> gilt als Alt-Engine.
             "ev": pl.get("ev"),
+            # 06.09.2026 (Lucas nickt die Messung ab). Wie weit ist der Preis auf UNSERER Seite
+            # in den Stunden VOR dem Einstieg schon gelaufen? Gemessen an den 69 Plays, fuer die
+            # der Pfad damals zurueckreichte, war der Zusammenhang monoton — Preis lief vorher
+            # weg / kaum / zu uns ergab hinterher -45,6 % / -25,6 % / +3,7 %. n=23 je Eimer, viel
+            # zu duenn fuer eine Behauptung. Genau deshalb wird es ab jetzt auf JEDEM Play
+            # mitgeschrieben: in ein paar Wochen ist es eine Antwort statt einer Vermutung.
+            # None heisst „kein Pfad vorhanden", nicht „keine Bewegung" — 0.0 waere eine Aussage.
+            "movePreEntryPP": _pre_entry_move(key, side, now),
         }
 
     # 2) lastPrice aller offenen Plays aus dem Close-File nachziehen (beste Schluss-Referenz für CLV)

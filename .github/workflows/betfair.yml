@@ -98,6 +98,14 @@ jobs:
       - name: 📊 Track-Record aktualisieren (Trefferquote je Liga×Markt)
         run: ${{ env.BETFAIR_PY }} betfair_track_record.py
 
+      # 06.09.2026 (Lucas: „das ins Positive umkehren und faden … irgendwo tracken, dass ich
+      # mitschauen kann"). Vorregistrierte Schublade: die Regel steht fest, was ab dem 07.09.
+      # dazukommt, ist sauber out-of-sample. Laeuft NACH betfair_track_record.py, weil sie
+      # dessen Ledger UND den frischen Preis-Schnappschuss liest.
+      - name: 🔄 Fade-Unter (vorregistriert) neu rechnen
+        run: ${{ env.BETFAIR_PY }} fade_unter.py
+        continue-on-error: true
+
       # 29.08.2026 (Lucas: „sowas könnte man schon als super killer Element bauen"): die
       # Konjunktions-Sektion. Läuft NACH betfair_track_record.py und betfair_consensus.py,
       # weil sie beider Ausgaben liest (Signal-Stand + Poly/Pinnacle je Spiel).
@@ -189,6 +197,7 @@ jobs:
           # Workflow geschrieben, deshalb kann sie mit keinem anderen kollidieren.
           git add health/betfair.json 2>/dev/null || true
           git add betfair_coherence_watch.json 2>/dev/null || true   # ab wann liegt Geld in den Tormaerkten
+          git add fade_unter.json 2>/dev/null || true                # vorregistrierte Fade-Schublade
           # 🔴 02.09.2026 — DIE ZWEITE RUNDE DERSELBEN FALLE. `git add a b c` staged NICHTS,
           # sobald EIN Pfad nicht existiert (fatal: pathspec). Mit `2>/dev/null || true`
           # sieht man den Fehler nicht, danach ist der Index leer, `git diff --cached --quiet`

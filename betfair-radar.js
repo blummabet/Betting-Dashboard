@@ -100,13 +100,13 @@
             .then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; });
         });
     };
-    return Promise.all([jf('betfair_prices.json'), jf('betfair_history.json'), jf('betfair_track_record.json'), jf('betfair_public_record.json'), jf('betfair_direction.json'), jf('betfair_consensus.json'), jf('betfair_league_norm.json'), jf('betfair_card_link.json')]);
+    return Promise.all([jf('betfair_prices.json'), jf('betfair_history.json'), jf('betfair_track_record.json'), jf('betfair_public_record.json'), jf('betfair_direction.json'), jf('betfair_consensus.json'), jf('betfair_league_norm.json'), jf('betfair_card_link.json'), jf('fade_unter.json')]);
   }
   function _bfLoad() {
     if (_bf.data || _bf.loading) return;
     _bf.loading = true;
     _bfFetch3().then(function (a) {
-      _bf.data = a[0] || { matches: [] }; if (_bf.data && Array.isArray(_bf.data.matches)) _bf.data.matches = _bfDedupMatches(_bf.data.matches); _bf.hist = a[1] || {}; _bf.track = a[2] || null; _bf.pubrec = a[3] || null; _bf.dir = a[4] || {}; _bf.consensus = a[5] || null; _bf.lnorm = a[6] || null; _bf.cardLink = a[7] || null;
+      _bf.data = a[0] || { matches: [] }; if (_bf.data && Array.isArray(_bf.data.matches)) _bf.data.matches = _bfDedupMatches(_bf.data.matches); _bf.hist = a[1] || {}; _bf.track = a[2] || null; _bf.pubrec = a[3] || null; _bf.dir = a[4] || {}; _bf.consensus = a[5] || null; _bf.lnorm = a[6] || null; _bf.cardLink = a[7] || null; _bf.fade = a[8] || null;
       _bf._cohCache = {}; _bf._mixBase = null; _bf._normBase = null;
       _bf.loading = false; _bf.cardOpen = {};
       var p = document.getElementById('betfairRadarPanel');
@@ -133,6 +133,7 @@
       if (a[4] != null) _bf.dir = a[4];
       if (a[5] != null) _bf.consensus = a[5];
       if (a[6] != null) _bf.lnorm = a[6];
+      if (a[8] != null) _bf.fade = a[8];
       if (a[7] != null) _bf.cardLink = a[7];
       _bf._cohCache = {}; _bf._mixBase = null; _bf._normBase = null;
       _bf.loading = false;
@@ -1403,9 +1404,96 @@
     return out;
   }
 
+  // ══ FADE-UNTER (06.09.2026) ══════════════════════════════════════════════════════════════
+  // Lucas: „wenn wir sehen, dass die gespielten Sachen schlecht liefen, dann könnte man das ja
+  // auch ins Positive umkehren und faden … können wir das dann irgendwo tracken, dass ich wieder
+  // mitschauen kann, im Betfair-Radar als Extramenü."
+  //
+  // Die Fläche zeigt DREI Dinge in dieser Reihenfolge, und die Reihenfolge ist die Aussage:
+  //   1. was die Regel ist — sie steht fest, seit sie vorregistriert wurde
+  //   2. was sie SEITDEM gebracht hat (der einzige Beleg) — und daneben die Rückrechnung,
+  //      die sie gefunden hat, ausdrücklich als das markiert, was sie ist
+  //   3. welche Spiele gerade passen
+  //
+  // Die Kontrollmärkte stehen mit drauf. Ein Befund ohne Kontrollgruppe ist eine Behauptung,
+  // und die Kontrolle gehört dorthin, wo man den Befund liest — nicht in eine Fußnote.
+  function _fdZahl(v, suffix, stellen) {
+    if (v == null) return '<span style="color:' + C.dim + '">—</span>';
+    var x = (stellen === 1) ? (+v).toFixed(1) : Math.round(v);
+    return (v > 0 ? '+' : '') + x + (suffix || '');
+  }
+  function _fdMenge(lab, m, tip, betont) {
+    if (!m) return '';
+    var belegt = !!m.belegt;
+    var col = m.n === 0 ? C.dim : belegt ? C.back : C.amber;
+    var ug = (m.roiUg == null)
+      ? '<span style="color:' + C.dim + '" title="Unter der Mindestzahl gibt es keine Untergrenze — kein Urteil ist etwas anderes als ein gemessenes Nein.">kein Urteil</span>'
+      : '<b style="color:' + col + '">' + _fdZahl(100 * m.roiUg, ' %', 1) + '</b>';
+    return '<div style="display:flex;align-items:baseline;gap:10px;padding:7px 0;border-top:1px solid ' + C.bd + '">'
+      + '<span style="min-width:190px;font-size:12.5px;color:' + (betont ? C.ink : C.mut) + ';font-weight:' + (betont ? 800 : 600) + '" title="' + esc(tip || '') + '">' + esc(lab) + '</span>'
+      + '<span style="font-size:11.5px;color:' + C.mut + ';min-width:58px">n=' + (m.n || 0) + '</span>'
+      + '<span style="font-size:12.5px;color:' + C.ink + ';min-width:96px">ROI ' + _fdZahl(m.roi == null ? null : 100 * m.roi, ' %', 1) + '</span>'
+      + '<span style="font-size:12.5px;min-width:120px" title="einseitige 95%-Untergrenze — sie entscheidet, nicht der ROI">UG ' + ug + '</span>'
+      + '<span style="font-size:11.5px;color:' + C.mut + '" title="Trefferquote der Geldseite minus ihrer eigenen impliziten Wahrscheinlichkeit. Das ist die Größe, aus der die Kante kommt.">Geldseite ' + _fdZahl(m.vorsprungPP, ' pp', 1) + '</span>'
+      + '</div>';
+  }
+  function renderFadeBoard() {
+    var f = _bf.fade;
+    if (!f || !f.regel) {
+      return '<div style="margin-top:14px;padding:34px 22px;text-align:center;color:' + C.mut + ';font-size:13px;line-height:1.7;background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:14px">'
+        + '❔ <b>fade_unter.json fehlt oder ist nicht lesbar.</b><br>Ob die Regel gerade greift, lässt sich <b>nicht</b> sagen — das ist ausdrücklich nicht dasselbe wie „greift nicht".</div>';
+    }
+    var r = f.regel, vr = f.vorreg || {}, rb = f.rueckblick || {}, mg = f.mitGeld || {};
+    var kopf = '<div style="background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:14px;padding:14px 16px;margin-top:12px">'
+      + '<div style="font-size:15px;font-weight:800;color:' + C.ink + '">🔄 Fade-Unter <span style="font-weight:600;color:' + C.mut + ';font-size:12px">— vorregistriert am ' + esc(r.abDatum) + '</span></div>'
+      + '<div style="font-size:12.5px;color:' + C.ink + ';margin-top:6px;line-height:1.55">' + esc(r.text) + '</div>'
+      + '<div style="font-size:11px;color:' + C.mut + ';margin-top:5px">Gilt für ' + esc((r.maerkte || []).join(' · ')) + ' · gerechnet nach ' + _fdZahl(r.kommissionPct, ' %') + ' Kommission auf Gewinne.</div>'
+      + '</div>';
+    var bil = '<div style="background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:14px;padding:12px 16px;margin-top:10px">'
+      + '<div style="font-size:12px;color:' + C.mut + ';margin-bottom:2px">Stand</div>'
+      + _fdMenge('seit Vorregistrierung', vr, 'Der einzige echte Beleg: diese Plays sind entstanden, NACHDEM die Regel feststand.', true)
+      + _fdMenge('davon mit Geld dahinter', mg, 'Nur Spiele, bei denen auf der Gegenseite auch Volumen lag. Ein Preis ohne Geld dahinter ist keiner.', false)
+      + _fdMenge('Rückrechnung (fand die Regel)', rb, 'Die Daten, aus denen die Regel stammt. Sie kann sich selbst nicht bestätigen — und der Gegenpreis war darin nicht erhoben, sondern aus einem angenommenen Overround rekonstruiert.', false)
+      + '<div style="font-size:10.5px;color:' + C.dim + ';margin-top:9px;line-height:1.55">Die <b>Rückrechnung</b> ist kein Beleg — sie ist der Fund. Eine Regel, die an den Daten gemessen wird, aus denen sie stammt, bestätigt immer sich selbst. Was zählt, ist die erste Zeile.</div>'
+      + '</div>';
+    var ko = (f.kontrolle || []).map(function (k) {
+      var schlecht = (k.roi != null && k.roi < 0);
+      return '<div style="display:flex;gap:10px;align-items:baseline;padding:5px 0;font-size:12px">'
+        + '<span style="min-width:210px;color:' + C.mut + '">' + esc(k.markt) + ' · ' + esc(k.seite) + '</span>'
+        + '<span style="min-width:56px;color:' + C.mut + ';font-size:11.5px">n=' + k.n + '</span>'
+        + '<span style="min-width:92px;color:' + (schlecht ? C.back : C.amber) + '">' + _fdZahl(100 * k.roi, ' %', 1) + '</span>'
+        + '<span style="color:' + C.dim + ';font-size:11.5px">Geldseite ' + _fdZahl(k.vorsprungPP, ' pp', 1) + '</span></div>';
+    }).join('');
+    var kb = ko ? ('<div style="background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:14px;padding:12px 16px;margin-top:10px">'
+      + '<div style="font-size:12px;color:' + C.mut + ';margin-bottom:4px">Kontrolle — hier soll derselbe Fade <b>verlieren</b></div>'
+      + ko
+      + '<div style="font-size:10.5px;color:' + C.dim + ';margin-top:8px;line-height:1.55">Auf diesen Märkten trifft die Geldseite <b>besser</b> als ihre implizite Wahrscheinlichkeit. Verliert der Fade dort, misst die Rechnung wirklich etwas — und erzeugt keine Kante aus der Konstruktion. Wird eine dieser Zeilen grün, ist der Befund oben kaputt.</div></div>') : '';
+    var offen = (f.offen || []);
+    var zeilen = offen.slice(0, 40).map(function (o) {
+      var koT = o.kickoff ? new Date(String(o.kickoff).replace('Z', '+00:00')) : null;
+      var kt = (koT && isFinite(koT)) ? ('0' + koT.getHours()).slice(-2) + ':' + ('0' + koT.getMinutes()).slice(-2) : '—';
+      return '<tr style="border-top:1px solid ' + C.bd + ';opacity:' + (o.bespielbar ? 1 : 0.45) + '">'
+        + '<td style="padding:6px 8px;font-size:12px;color:' + C.ink + '">' + esc(o.home) + ' <span style="color:' + C.dim + '">v</span> ' + esc(o.away) + '<div style="font-size:10.5px;color:' + C.dim + '">' + esc(o.league || '') + ' · ' + kt + '</div></td>'
+        + '<td style="padding:6px 8px;font-size:11.5px;color:' + C.mut + '">' + esc(String(o.markt).replace('Over/Under ', 'Ü/U ').replace(' Goals', '')) + '</td>'
+        + '<td style="padding:6px 8px;font-size:11.5px;color:' + C.mut + '">' + esc(o.geldAuf) + ' @' + fO(o.geldOdd) + (o.geldAnteilPct != null ? ' <span style="color:' + C.dim + '">(' + o.geldAnteilPct + '%)</span>' : '') + '</td>'
+        + '<td style="padding:6px 8px;font-size:12.5px;color:' + C.gold + ';font-weight:700">' + esc(o.spielen) + ' @' + fO(o.spielenOdd) + '</td>'
+        + '<td style="padding:6px 8px;font-size:11.5px;color:' + (o.bespielbar ? C.back : C.dim) + '">' + (o.spielenVol != null ? fmtE(o.spielenVol) : '—') + (o.bespielbar ? '' : ' <span title="unter der Schwelle, ab der wir eine Gegenseite als bespielbar zählen">dünn</span>') + '</td>'
+        + '</tr>';
+    }).join('');
+    var tab = offen.length
+      ? '<div style="background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:14px;padding:12px 16px;margin-top:10px;overflow-x:auto">'
+        + '<div style="font-size:12px;color:' + C.mut + ';margin-bottom:4px">Gerade passend — ' + offen.length + ' Spiele, davon <b style="color:' + C.back + '">' + offen.filter(function (o) { return o.bespielbar; }).length + '</b> mit Geld auf der Gegenseite</div>'
+        + '<table style="width:100%;border-collapse:collapse;min-width:640px"><thead><tr style="text-align:left;color:' + C.dim + ';font-size:10.5px">'
+        + '<th style="padding:4px 8px">Spiel</th><th style="padding:4px 8px">Markt</th><th style="padding:4px 8px">Geld liegt auf</th><th style="padding:4px 8px">wir spielen</th><th style="padding:4px 8px">Geld dagegen</th>'
+        + '</tr></thead><tbody>' + zeilen + '</tbody></table>'
+        + '<div style="font-size:10.5px;color:' + C.dim + ';margin-top:8px;line-height:1.55">Ausgegraut = auf der Gegenseite liegt weniger als ' + fmtE(r.minGegenVol) + '. Faden heißt per Konstruktion die unbeliebtere Seite nehmen — deshalb steht die Liquidität in der Tabelle und nicht im Kleingedruckten.</div></div>'
+      : '<div style="background:' + C.card + ';border:1px solid ' + C.bd + ';border-radius:14px;padding:20px 16px;margin-top:10px;color:' + C.mut + ';font-size:12.5px">Gerade passt kein Spiel auf die Regel. Leer heißt leer.</div>';
+    return viewToggle() + kopf + bil + kb + tab;
+  }
+
   function viewToggle() {
     var b = function (id, lbl) { var on = _bf.view === id; return '<button onclick="_bfSetView(\'' + id + '\')" style="padding:6px 13px;border:1px solid ' + (on ? C.gold : C.bd) + ';background:' + (on ? 'rgba(255,184,12,.12)' : 'transparent') + ';color:' + (on ? C.gold : C.mut) + ';font-size:12px;font-weight:700;cursor:pointer">' + lbl + '</button>'; };
-    return '<div style="display:inline-flex;border-radius:9px;overflow:hidden;border:1px solid ' + C.bd + ';margin:6px 0 12px">' + b('live', '🔴 Live-Radar') + b('record', '📊 Trefferquoten') + b('push', '📈 Push-Bilanz') + b('consensus', '🧭 Konsens') + b('terminal', '🖥️ Terminal') + '</div>';
+    return '<div style="display:inline-flex;border-radius:9px;overflow:hidden;border:1px solid ' + C.bd + ';margin:6px 0 12px">' + b('live', '🔴 Live-Radar') + b('record', '📊 Trefferquoten') + b('push', '📈 Push-Bilanz') + b('consensus', '🧭 Konsens') + b('fade', '🔄 Fade-Unter') + b('terminal', '🖥️ Terminal') + '</div>';
   }
 
   // 05.08.2026 (Lucas: wissen wir, ob die Kohle erfolgreich war?): DIE Gesamt-Bilanz. Bisher gab es
@@ -1842,6 +1930,7 @@
     if (_bf.view === 'record') return head + renderTrackBoard();
     if (_bf.view === 'push') return head + renderPushBoard();
     if (_bf.view === 'consensus') return head + renderConsensusBoard();
+    if (_bf.view === 'fade') return head + renderFadeBoard();
 
     var fresh = (_bf.data.matches || []).filter(function (m) { return !isStale(m); });
     var fixCands = _fixCandidates(fresh);   // 21.08.2026 (Lucas): Fix-Verdacht scannt ALLE frischen Spiele (auch unter der Radar-Schwelle)

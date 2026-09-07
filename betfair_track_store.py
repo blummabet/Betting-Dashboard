@@ -82,6 +82,13 @@ SPALTEN = (
     ("matchId",   "roh",  None),
     ("ft",        "roh",  None),
     ("ht",        "roh",  None),
+    # 06.09.2026 (Lucas: „das ins Positive umkehren und faden"). Der ECHTE Gegenpreis der
+    # Zwei-Weg-Maerkte samt gematchtem Volumen. Ohne ihn liess sich der Fade nur aus einem
+    # angenommenen Overround rekonstruieren — s. betfair_track_record.gegenseite().
+    # ANGEHAENGT, nie dazwischen: alte Zeilen sind kuerzer und lesen weiterhin korrekt.
+    ("gegenOdd",  "roh",  None),
+    ("gegenVol",  "roh",  None),
+    ("entryGegenOdd", "roh", None),
 )
 _NAMEN = frozenset(f for f, _, _ in SPALTEN)
 

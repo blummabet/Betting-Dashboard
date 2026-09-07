@@ -163,6 +163,34 @@ def _lead(market):
     return best
 
 
+def gegenseite(market, lead):
+    """Der ANDERE Runner eines Zwei-Weg-Marktes: {name, odd, vol} — oder None.
+
+    06.09.2026 (Lucas: „wenn wir sehen, dass die gespielten Sachen schlecht liefen, könnte man
+    das ja ins Positive umkehren und faden").
+
+    Gemessen ueber 15.945 abgerechnete Zeilen: liegt das meiste Betfair-Geld auf dem UNTER einer
+    Ganzspiel-Torlinie, trifft diese Seite 59,2 % — implizit erwartet waeren 62,4 %. Die
+    Gegenseite zu spielen brachte in beiden Haelften der Daten +5,5 % / +5,2 % (nach 5 %
+    Kommission). Kontrolle: auf Match Odds, BTTS und der 1.-HZ-Linie ist die Geldseite 1–2 pp
+    BESSER als implizit, und dort verliert derselbe Fade korrekt −5,6 bis −7,8 %.
+
+    ⚠️ Bis heute stand im Ledger NUR der Preis der Geldseite. Den Fade musste ich deshalb aus
+    einem angenommenen Overround rekonstruieren — er haelt bis ~1 % und stirbt bei 2 %. Gemessen
+    sind 0,3 % Median, aber das ist eine Annahme je Zeile, kein Messwert. Ab jetzt wird der echte
+    Gegenpreis mitgeschrieben; damit ist die Frage in ein paar Wochen beantwortet statt geschaetzt.
+    Das VOLUMEN kommt mit, weil ein Preis ohne Geld dahinter keiner ist (Faden heisst per
+    Konstruktion, die unbeliebtere Seite zu nehmen).
+    """
+    rs = [r for r in (market.get("runners") or []) if isinstance(r.get("odd"), (int, float))]
+    if len(rs) != 2 or not lead:
+        return None                      # 3-Weg (1X2) hat keine eindeutige Gegenseite
+    for r in rs:
+        if r.get("name") != lead.get("name"):
+            return {"name": r.get("name"), "odd": r.get("odd"), "vol": r.get("vol")}
+    return None
+
+
 def _mkt_total(market):
     return sum((r.get("vol") or 0) for r in (market.get("runners") or []))
 
@@ -245,7 +273,15 @@ def capture(prices, history, state, now=None, direction=None, consensus=None):
                         _pf = _pd.get(_pside) if _pside else None
                         if isinstance(_pf, (int, float)) and 0.0 < _pf < 1.0:
                             _pinnFair = _pf
+                _geg = gegenseite(mk, lead)
                 sigs[mkid] = {"fav": fav, "share": round(share, 3), "odd": lead.get("odd"),
+                              # Der echte Gegenpreis — s. gegenseite(). None heisst „nicht
+                              # erhoben", nicht „kein Markt": fehlende Information ist kein Preis.
+                              "gegenOdd": (_geg or {}).get("odd"),
+                              "gegenVol": (_geg or {}).get("vol"),
+                              # Wie bei entryOdd: der Preis beim ERSTEN Sehen bleibt stehen —
+                              # sonst misst der Fade-CLV gegen sich selbst.
+                              "entryGegenOdd": _prev.get("entryGegenOdd", (_geg or {}).get("odd")),
                               "entryOdd": _prev.get("entryOdd", lead.get("odd")),
                               "pinnClose": (_pinn if _pinn is not None else _prev.get("pinnClose")),
                               "pinnFair": (_pinnFair if _pinnFair is not None else _prev.get("pinnFair")),
@@ -283,7 +319,11 @@ def settle(prices, state, results, now=None, results_fetch=None):
                             "clvBf": _clv_pp(_e, sig.get("odd")), "clvPinn": _clv_pp_fair(_e, sig.get("pinnFair")),
                             "conc": bool(sig.get("conc")), "inflow": bool(sig.get("inflow")),
                             "win": bool(win), "settledAt": now.isoformat(),
-                            "matchId": mid, "ft": ft, "ht": ht, "via": via, "dir": sig.get("dir")})
+                            "matchId": mid, "ft": ft, "ht": ht, "via": via, "dir": sig.get("dir"),
+                            # Der Gegenpreis wandert bis in die abgerechnete Zeile — sonst
+                            # steht er im pending und ist genau dann weg, wenn man ihn braucht.
+                            "gegenOdd": sig.get("gegenOdd"), "gegenVol": sig.get("gegenVol"),
+                            "entryGegenOdd": sig.get("entryGegenOdd")})
         pending.pop(mid, None)
 
     # 1) Feed zeigt „finished" → sauber abrechnen (der exakte Endstand).
