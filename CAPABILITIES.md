@@ -4,7 +4,7 @@
 
 **Pflege:** Neues Feature, deaktiviertes Feature oder geschlossene Lücke → hier eine Zeile ändern. Das ist Teil des Features, nicht Nacharbeit.
 
-**Stand:** 31.08.2026 (Übersicht/Konjunktion nachgetragen; §1 Poly-/Wallets-Zeilen sind Stand 24.08.)
+**Stand:** 07.09.2026 (Stake-Spielklasse + die drei Wege, auf denen ein fertiges Feature leer aussieht; §1 Poly-/Wallets-Zeilen sind Stand 24.08.)
 
 ---
 
@@ -428,6 +428,9 @@ Jede hat einen Guard. Wer eine ähnliche Änderung baut, prüft hier zuerst.
 10. **MLS-Event-Pages komplett leer** (19.07.): MLS rendert im Frontend unter `_mode='liga'`, also baute der Renderer die Event-Page-Slugs mit Prefix `liga-…`. Die JSONs schreibt `generate_wm_match_pages` aber mit dem **Datensatz**-Prefix `mls-…` → 404 → leere Seite. Wieder die `is_liga()`-gilt-auch-für-MLS-Familie, nur im Frontend. → `_mpPrefix(fx)` leitet den Prefix pro Fixture aus der Gruppe ab (`groupKey==='MLS'` → `mls-`), Test `mls-event-page-slug.test.mjs`. Die generierten Seiten decken nur das aktuelle Fenster (≈ letzte/nächste 2 Wochen) ab — ferne/vergangene Spieltage haben bewusst keine, genau wie Liga.
 11. **Poly-Fläche „fertig", liefert aber NIE Daten** (20.07.): Audit fand zwei verdrahtete Poly-Features, die seit Bau 0 Commits hatten. **Cross-Sport-Radar**: `fetch_poly_rows()` war ein Stub `return []` (`TODO(Runner)` nie umgesetzt) → Radar konnte sich nie füllen, zeigte aber „füllt sich am Runner". **E-Sport-Tab**: stieg bei 0 Events STILL aus (keine Datei, kein Grund). Exakt die CLV-tot-Klasse: verdrahtet, Frontend liest, hinten kommt nie was an, kein Guard sah hin. → (a) `fetch_poly_rows` echt gebaut (Gamma, `event_key` reihenfolge-unabhängig), (b) E-Sport schreibt `esports_poly_status.json` mit `rawEventsByTag`/`reason` statt still, (c) **Guard `check_poly_surfaces_alive`** in der Integritäts-Batterie: rot, wenn eine Fläche STEHT (nie/>30h keine Ausgabe) — leer-aber-frisch bleibt grün. Regel geschärft: **ein „fertiges" Feature muss beweisen, dass hinten Daten ankommen — Verdrahtung ≠ Ankunft.**
 12. **Fehlende Information ist keine Erlaubnis** (25.08.): Code-Audit über den ganzen Stack, **16 Befunde, keiner davon knallt** — alle sehen im Log wie Normalbetrieb aus. Eine Bauform: eine Sicherung, die bei kaputten Eingangsdaten den harmlosesten Wert zurückgibt (`except: pass`, `.get(x, default)`, `mkt_k="hw"`), sodass der Aufrufer „nichts gefunden" nicht von „fehlgeschlagen" unterscheiden kann — und dann über Geld entscheidet. → (a) alle Geld-Schreiber atomar (`safe_write.write_json_atomic`, temp→fsync→replace), (b) vier Loader merken sich Lesefehler (`_LOAD_FAILED`/`_LAZY_FAILED`/`_UNREADABLE`/`_stUnloadable`) und melden „❔ unbekannt" statt grün, (c) `polymarket_bet` bricht bei kaputter Wett-Datei ab (ohne sie greift KEIN Cap), (d) E-Sport-`clustersAll`/`matches` echt gebaut + Guard `check_wallet_clusters`, (e) `byLeague` beim **Konsumenten** repariert, nicht beim Producer — der kennt die Liga gar nicht, und so wird die alte Historie rückwirkend nutzbar. Offen: vier **tote Signale** (unerreichbare Schwellen) — das ist eine Entscheidung, keine Reparatur. Bericht: [[project_audit_stille_fehler_25_08]].
+
+13. **Ein Guard mit handgepflegter Liste ist kein Guard** (07.09.2026, dritter Fall derselben Klasse): `raw-first-fetch.test.mjs` existierte seit dem 29.08. und hielt fest, dass jede Dashboard-Datei ihre JSONs **raw-zuerst** holt (relativ = Pages-Snapshot = bis zu eine Stunde alt). Der Test führte die Dateien aber als **von Hand gepflegte Liste** — und `stake-radar.js` stand nicht drin. Ergebnis: der neue Spielklasse-Reiter blieb leer, während die drei Reiter daneben liefen (die brauchen nur Felder, die es im alten Artefakt schon gab). Ein **neues** Feld ist im Snapshot bis zu eine Stunde lang nicht da, und das sieht aus wie ein kaputter Produzent. → Der Test liest jetzt die Skriptliste aus `season-finish-v2.html` und prüft **jede** geladene Datei: wer JSON holt, holt raw-zuerst oder steht namentlich in `AUSNAHMEN`. Regel: **eine Liste, die man vergessen kann, gehört nicht in einen Guard — der Guard fragt die Wirklichkeit.**
+14. **Rollout-Lücke im Zuschnitt der Workflows** (07.09.2026): der Job, der „🎰 Stake Radar" heißt, sammelte nur; `stake_auswertung.json` entstand ausschließlich in `betfair.yml`. Ein Lauf von Hand nach einem Push tat also nichts Sichtbares. Die bekannte Rollout-Lücke (04.09., 06.09.), nur nicht im Code, sondern im **Namen** des Jobs. → `test_stake_workflow_rollout.py`: wer eine Datei anzeigt, muss sie auch erzeugen können.
 
 ---
 
@@ -1904,6 +1907,97 @@ klein und umkehrbar. Fehlt der Verlauf, wirkt NICHTS.
 
 Nachgewiesen Ende-zu-Ende: form_trend 1,099 -> 0,824, lead_lag_bias 1,068 -> 1,175, alle
 anderen unveraendert.
+
+### 07.09.2026 — die Spielklasse einer Liga steht in keinem Feld, und das Volumen ist kein Ersatz
+
+Lucas: *„ne 50k Wette auf Arsenal sagt 0 / Eine 50k Wette auf ein 2-3. Liga Team / Ist zumindest
+jemand der mehr dran glaubt mmn."* (Die 50k waren ein Beispiel, keine Schwelle — nachgereicht:
+*„bitte nicht zu wörtlich".*)
+
+**Erst gemessen, ob die Frage in der absoluten Form überhaupt beantwortbar ist.** In vier Tagen
+gab es 61 Fußball-Einzelwetten ab $50.000: 22 Premier League, 10 Serie A, 8 La Liga — und
+**genau eine** unterhalb der obersten Spielklasse. Absolut groß passiert dort, wo Liquidität ist.
+Auf der absoluten Achse ist nichts zu holen; gemessen wird deshalb als **Vielfaches des üblichen
+Einsatzes derselben Liga**.
+
+**Warum eine Tabelle und keine Messung.** Der naheliegende Ersatz für „Randliga" wäre die
+Marktgröße („wie viele Wetten sieht diese Liga bei uns"). Gemessen landen in der so gebildeten
+Gruppe *kleine Liga* die Süper Lig, die argentinische Primera, MLS, die Serie B Brasiliens und die
+englische Championship — mittelgroße Märkte, keine Randligen. Genau die Unterscheidung, um die es
+ging, fällt heraus. Die Spielklasse ist **Wissen, keine Messung**, und steht deshalb in
+`stake_liga_stufe.py` (158 Fußball-Slugs → `1|2|3` plus die Marken `kontinental`, `pokal`,
+`frauen`, `jugend`, `srl`, `reserve`).
+
+Zwei Fallen, die dabei scharf sind:
+
+- **Was nicht in der Tabelle steht, kommt als `None` zurück** — nicht als 1, nicht als „sonstige".
+  Eine unbekannte Liga darf nicht wie eine gemessene Spitzenliga aussehen (Bug-Klasse 12).
+- **Der Slug ist nicht sportartenrein.** Unter `bundesliga` laufen Fußball und Handball, unter
+  `premier-league-srl` Fußball und Cricket. `stufe()` nimmt deshalb die Sportart entgegen.
+
+**Der Befund, und er läuft in zwei Richtungen** (3.512 abgerechnete Fußball-Einzelwetten,
+Einsatz als Vielfaches der Liga- bzw. Ebenen-Norm):
+
+|  | <1.5× | 1.5–3× | 3–6× | >6× |
+|---|---|---|---|---|
+| **Ebene 1** (oberste) | −1,6 % | −2,3 % | −7,5 % | −14,1 % |
+| **Ebene 2/3** (Randliga) | +7,5 % | +5,9 % | +19,2 % | +46,7 % |
+
+Beide Reihen monoton, **gegenläufig**. Das ist zugleich die Erklärung, warum die bestehende
+„Auffällig"-Ansicht als Einheitsmaß nie funktionieren konnte: sie mittelt beide Richtungen
+zusammen — die Dilutions-Klasse aus §7.
+
+**Belegt ist davon fast nichts, und das steht auf der Fläche.** Auf Ebene 1 liegt bei `<1.5×`,
+`1.5–3×` und `3–6×` die **Obergrenze** unter null (−3,3 % / −0,2 % / −2,2 %) — der Fluss dort
+verliert gemessen. Ausgerechnet `>6×` ist mit n=207 zu streuend ([−22,8 % … +2,4 %]). Auf Ebene
+2/3 ist nichts belegt: n=37 und n=12 in den interessanten Zellen, Schwellen **nach** dem Blick auf
+die Zahlen gesetzt, vier Tage Datenbasis. Deshalb zwei vorregistrierte Schubladen,
+`randliga_hoher_einsatz` (Ziel n=150, ~12 Kandidaten/Tag) und `topliga_hoher_einsatz` (Ziel n=200).
+
+**Zwei Grenzen, zwei Aussagen.** Folgen belegt die **Unter**grenze über null, Dagegenhalten die
+**Ober**grenze unter null. Mit der Untergrenze allein wäre die ganze Ebene-1-Reihe auf ewig „kein
+Urteil" gewesen, obwohl sie genau die Aussage trägt, um die es hier geht (`belegt` /
+`belegtGegen` im Artefakt, beide unter dem harten Boden `n≥30`).
+
+**Gebaut:** `stake_liga_stufe.py` (Tabelle + Referenz + Kreuztabelle + Kandidaten) ·
+`stake_analyse.py` schreibt den Block `randliga` und die zwei Schubladen · Radar-Reiter
+**🏟️ Spielklasse** in `stake-radar.js` (rechnet nichts, liest alles) · Guard
+`check_stake_spielklasse` · Tests `test_stake_liga_stufe.py`, `stake-klasse.test.mjs`,
+`test_stake_workflow_rollout.py`.
+
+---
+
+### 07.09.2026 — drei Wege, auf denen ein fertiges Feature trotzdem leer aussieht
+
+Lucas: *„im Spielklasse Tab steht nur das [der Block fehlt] … hab Stake sogar die action laufen
+lassen nach dem push"*, dann *„na alle tabs klappen nur der nicht"*.
+
+Der Code war gepusht, 4.429 Python- und 876 Frontend-Tests grün, das Artefakt auf origin korrekt —
+und die Fläche leer. Drei verschiedene Ursachen, nacheinander, und **meine erste Diagnose war
+falsch**.
+
+1. **Timing.** Der Push kam 13:03 UTC, der letzte Analyse-Lauf davor war 12:56. Kein Fehler,
+   nur noch nicht gelaufen.
+2. **Der Job mit dem passenden Namen tat nichts.** `stake-radar.yml` heißt „🎰 Stake Radar" und
+   **sammelte nur**. `stake_auswertung.json` — die Datei, aus der jede Stake-Ansicht liest —
+   entstand ausschließlich in `betfair.yml`. Wer nach einem Push von Hand nachladen will, greift
+   zum Job mit dem passenden Namen. → `stake-radar.yml` ruft jetzt auch `stake_analyse.py` (mit
+   Rückfall, damit ein Anzeigefehler nie die Sammlung kostet; **ohne** `stake_league_norm.py`, der
+   führt einen wachsenden Stichprobenstand und den soll die `--ours`-Konfliktauflösung nicht aus
+   zwei Workflows anfassen). Guard: `test_stake_workflow_rollout.py`.
+3. **Die eigentliche Ursache.** `stake-radar.js` holte seine JSONs **relativ**, also aus dem
+   Pages-Snapshot, der am stündlichen Deploy hängt. Alle anderen Dashboard-Dateien holen seit dem
+   29.08. primär von `raw.githubusercontent.com/main`. Und genau deshalb sah es aus wie Lucas es
+   beschrieb: Bilanz, Norm und Auffällig brauchen nur Felder, die es im **alten** Artefakt schon
+   gab — die liefen. Der neue Reiter braucht ein **neues** Feld, und das ist im Snapshot bis zu
+   eine Stunde lang nicht da. **Ein fehlendes neues Feld sieht exakt aus wie ein Produzent, der
+   nicht läuft.**
+
+Nebenbefund, offen: fünf weitere geladene Dateien holen bis heute relativ — `renderer.js`,
+`ui.js`, `pinnacle-poly.js`, `signal-check.js`, `results-v2.js`. Sie stehen namentlich in
+`AUSNAHMEN`, damit die Zahl nicht wächst, ohne dass es jemand entscheidet.
+
+---
 
 ## 8. Harte Arbeitsregeln
 

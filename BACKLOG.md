@@ -1,7 +1,48 @@
 # CocoBet Backlog (Liga + WM)
 
-Stand 26.06.2026. Lebendige Liste aller offenen Punkte — Liga UND noch nicht umgesetzte WM-Sachen —
+Stand 07.09.2026 (oberster Block); Liga/WM-Teil darunter Stand 26.06.2026. Lebendige Liste aller offenen Punkte — Liga UND noch nicht umgesetzte WM-Sachen —
 damit wir alles abarbeiten können. ✅ = erledigt (Referenz), ⏳ = offen, 🔒 = blockiert.
+
+## ⏳ Offen aus der Session vom 07.09.2026
+
+Reihenfolge ist Absicht: oben, was ohne neue Entscheidung gebaut werden kann.
+
+### Stake
+- ⏳ **Die beiden vorregistrierten Schubladen abwarten.** `randliga_hoher_einsatz` (Ziel n=150,
+  ~12 Kandidaten/Tag → ca. zwei Wochen) und `topliga_hoher_einsatz` (Ziel n=200). Bis dahin ist
+  die Spielklasse-Ansicht **Anzeige, keine Empfehlung** — der Rückblick ist der Fund, nicht der
+  Beleg. Details: CAPABILITIES §„07.09.2026 — die Spielklasse einer Liga".
+- ⏳ **Die „🚩 Auffällig"-Ansicht ehrlich beschriften.** Ihre Prämisse ist gemessen invertiert:
+  Norm-Faktor >15× ergab ROI **−16,73 %** (n=131, Treffer 52,7 % gegen 58,5 % implizit), das
+  Top-1 % nach Norm −16,10 %. Die Fläche behauptet das Gegenteil, ohne es zu sagen.
+- ⏳ **Achse umstellen** auf live × Einsatzgröße statt „auffällig ja/nein". Gemessen: ≥5× Norm
+  live n=466 → −0,01 %, vor Anpfiff n=146 → **−11,77 %**.
+- ⏳ **Sortierung im Spielklasse-Reiter**: aktuell nur nach Faktor. Nach Betrag wäre die zweite
+  sinnvolle Achse (wie ungewöhnlich vs. wie viel Geld).
+- 🔒 **Verknüpfung zu den anderen Büchern** — bewusst zurückgestellt (Lucas 06.09.: *„lass mal
+  aus, das kommt erst wenn wir Stake als einzelne Quelle vernünftig verwenden"*).
+- ℹ️ **Kein Track-Record je Konto möglich.** `user` ist im Feed dauerhaft `null`; Stake
+  anonymisiert die Highroller-Liste vollständig. Nicht erneut versuchen.
+
+### Frontend-Hygiene
+- ⏳ **Fünf Dateien holen ihre JSONs relativ** und zeigen damit bis zu eine Stunde alte Daten:
+  `renderer.js`, `ui.js`, `pinnacle-poly.js`, `signal-check.js`, `results-v2.js`. Sie stehen
+  namentlich in `AUSNAHMEN` in `tests/frontend/raw-first-fetch.test.mjs`. Pro Datei dieselbe
+  fünfzeilige Änderung (siehe `_srJson` in `stake-radar.js`). Bug-Klasse 13.
+
+### Angeboten, nicht begonnen
+- ⏳ **Draw-No-Bet als Alternative auf gerichteten Cards** + eigene vorregistrierte Schublade.
+  Gemessen halbieren DNB/DC die Varianz: Beleg bräuchte ~176 statt ~950 Picks.
+- ⏳ **Vor-Einstiegs-Momentum als Vorfilter** verdrahten (`movePreEntryPP` wird seit 06.09.
+  gestempelt, aber nirgends als Filter benutzt).
+
+### Zurückgezogene Befunde — nicht wieder aufgreifen ohne neue Daten
+- ❌ **Leader-Following** (n=52, ROI +27,8 %): nicht reproduzierbar. Das volle Public-Ledger
+  steht bei −2,6 %, das HT-Szenario bei −22,8 %.
+- ❌ **Soft-Bookies als Quotenempfehlung**: verworfen (Lucas 06.09.). Der Soft-Median liegt
+  6,2–6,7 % unter fair; wir geben weiter Pinnacle bzw. den Median an.
+
+---
 
 ## Liga (auf WM-Stack, ~6 Wochen bis Saisonstart)
 
