@@ -623,7 +623,7 @@
 
   function _srNav() {
     var tabs = [['spiele', '⚽ Spiele'], ['auffaellig', '🚩 Auffällig'],
-                ['bilanz', '🧾 Bilanz'], ['norm', '📐 Norm']];
+                ['klasse', '🏟️ Spielklasse'], ['bilanz', '🧾 Bilanz'], ['norm', '📐 Norm']];
     return '<div class="sr-nav">' + tabs.map(function (t) {
       return '<button class="sr-nb' + (SR_TAB === t[0] ? ' on' : '') +
         '" onclick="_srTab(\'' + t[0] + '\')">' + t[1] + '</button>';
@@ -719,7 +719,128 @@
     ['einsatz_ab_10k', 'ab $10k', 'Trägt Größe allein etwas? Die Vorlage behauptet ja, ohne Beleg.'],
     ['einsatz_1k_10k', '$1k – $10k', 'Die Vergleichsgruppe dazu.'],
     ['ueber_liga_norm', 'über Liga-Norm', 'Die eigentliche These: auffällig ist relativ.'],
+    ['randliga_hoher_einsatz', 'Ebene 2/3, ab 3× Norm',
+     'Lucas 07.09.: „ne 50k Wette auf Arsenal sagt 0". Vorwärts gemessen.'],
+    ['topliga_hoher_einsatz', 'oberste Liga, ab 6× Norm',
+     'Die Gegenprobe — im Rückblick läuft diese Reihe nach unten.'],
   ];
+
+  // ── Spielklasse ───────────────────────────────────────────────────────────
+  // 07.09.2026 (Lucas: „ne 50k Wette auf Arsenal sagt 0 / Eine 50k Wette auf ein 2-3. Liga
+  // Team / Ist zumindest jemand der mehr dran glaubt mmn").
+  //
+  // Diese Ansicht rechnet NICHTS. Die Spielklasse, die Referenzeinsätze, die Schwellen und
+  // die Kreuztabelle kommen fertig aus stake_analyse.py (`randliga`), das sie wiederum aus
+  // stake_liga_stufe.py holt. Würde das Frontend die Schwelle noch einmal setzen, gäbe es
+  // sie zweimal — dieselbe Klasse, die in diesem Repo schon zweimal auseinandergelaufen ist.
+  var _SR_KL_EBENE = {
+    '1': ['oberste Spielklasse', 'Premier League, La Liga, Serie A …'],
+    '2': ['zweite Spielklasse', 'Championship, 2. Bundesliga, Serie B …'],
+    '3': ['dritte Klasse und tiefer', 'League One, Serie C, NPL, Amateur …'],
+    'kontinental': ['kontinental', 'Champions League, Libertadores, Leagues Cup'],
+    'pokal': ['Pokal', 'ein Pokalspiel ist kein Ligaspiel'],
+    'frauen': ['Frauen', ''],
+    'jugend': ['Jugend', ''],
+    'srl': ['Simulated Reality', 'simulierte Spiele — keine echte Partie']
+  };
+  var _SR_KL_SPALTEN = ['<1.5x', '1.5-3x', '3-6x', '>6x'];
+
+  function _srKlZelle(z) {
+    if (!z || !z.n) return '<td class="sr-r sr-mut">—</td>';
+    var roi = z.roi == null ? '—' : (z.roi > 0 ? '+' : '') + _srPct(z.roi);
+    // Zwei Grenzen, zwei Aussagen — und je nach Richtung entscheidet die andere.
+    // Folgen belegt die UNTERgrenze über null. Dagegenhalten belegt die OBERgrenze unter
+    // null. Stünde hier nur die Untergrenze, bliebe die Ebene-1-Reihe auf ewig „kein
+    // Urteil", obwohl sie genau die Aussage trägt, um die es in dieser Ansicht geht.
+    var spanne = (z.flachUg == null || z.flachOg == null)
+      ? '<span class="sr-mut" title="Unter n=30 geben wir keine Grenze aus — ein ' +
+        'Punktschätzer ist kein Beleg.">kein Urteil</span>'
+      : '<span class="sr-ug' + (z.belegt || z.belegtGegen ? ' sr-ok' : '') + '" ' +
+        'title="Einseitige 95 %-Grenzen der Rendite bei flachem Einsatz. Über null: dem ' +
+        'Fluss folgen trägt. Unter null: dagegenhalten trägt.">' +
+        (z.flachUg > 0 ? '+' : '') + _srPct(z.flachUg, 0) + ' … ' +
+        (z.flachOg > 0 ? '+' : '') + _srPct(z.flachOg, 0) + '</span>';
+    var marke = z.belegt ? ' <span class="sr-w">folgen</span>'
+              : z.belegtGegen ? ' <span class="sr-w">dagegen</span>' : '';
+    return '<td class="sr-r"><b class="' + (z.belegt || z.belegtGegen ? 'sr-w' : '') + '">' + roi + '</b>' +
+      '<div class="sr-mut sr-sm">n' + z.n + ' · ' + z.spiele + ' Spiele</div>' +
+      '<div class="sr-sm">' + spanne + marke + '</div></td>';
+  }
+
+  function _srKlasse() {
+    var r = SR_AUS && SR_AUS.randliga;
+    if (!r) {
+      return '<div class="sr-empty"><b>Der Block „randliga" fehlt in stake_auswertung.json.</b>' +
+        '<br><span class="sr-mut">Er entsteht auf dem Runner (stake_analyse.py → ' +
+        'stake_liga_stufe.py). Bis dahin steht hier nichts, statt einer leeren Tabelle.</span></div>';
+    }
+
+    // Kreuztabelle: Ebene × Einsatzgröße. Der Punkt der Ansicht ist, dass die Zeilen
+    // GEGENLÄUFIG sind — deshalb stehen sie untereinander und nicht in getrennten Kacheln.
+    var k = r.kreuz || {};
+    var zeilen = Object.keys(_SR_KL_EBENE).filter(function (e) { return k[e]; }).map(function (e) {
+      var m = _SR_KL_EBENE[e];
+      return '<tr><td><b>' + _srEsc(m[0]) + '</b>' +
+        (m[1] ? '<div class="sr-mut sr-sm">' + _srEsc(m[1]) + '</div>' : '') +
+        '<div class="sr-mut sr-sm">' + (r.jeEbene[e] || 0) + ' Wetten gesammelt</div></td>' +
+        _SR_KL_SPALTEN.map(function (c) { return _srKlZelle(k[e][c]); }).join('') + '</tr>';
+    }).join('');
+
+    var tabelle = '<div class="sr-tw"><table class="sr-t"><thead><tr><th>Spielklasse</th>' +
+      _SR_KL_SPALTEN.map(function (c) { return '<th class="sr-r">' + c + '</th>'; }).join('') +
+      '</tr></thead><tbody>' + zeilen + '</tbody></table></div>';
+
+    // Die Liste, um die Lucas gebeten hat: große Einsätze dort, wo groß selten ist.
+    var kand = r.kandidaten || [];
+    var liste = kand.length
+      ? '<div class="sr-tw"><table class="sr-t"><thead><tr><th>Faktor</th><th class="sr-r">Einsatz</th>' +
+        '<th>Liga</th><th>Spiel</th><th>Wette</th><th class="sr-r">Quote</th>' +
+        '<th>Ausgang</th></tr></thead><tbody>' +
+        kand.map(function (x) {
+          var aus = x.ausgang === 'won' ? '<span class="sr-w">Treffer</span>'
+                  : x.ausgang === 'lost' ? '<span class="sr-mut">daneben</span>'
+                  : '<span class="sr-mut">offen</span>';
+          return '<tr><td><b>' + Number(x.faktor).toFixed(1).replace('.', ',') + '×</b>' +
+            '<div class="sr-mut sr-sm" title="' +
+              (x.refBasis === 'liga'
+                ? 'gegen den gelernten Median DIESER Liga'
+                : 'diese Liga hat noch keine eigene Norm — gemessen gegen den Median ihrer Spielklasse') +
+              '">' + (x.refBasis === 'liga' ? 'Liga-Norm' : 'Ebene-Norm') + '</div></td>' +
+            '<td class="sr-r sr-geldz">' + _srUsd(x.einsatzUsd) + '</td>' +
+            '<td>' + _srEsc(x.liga || '') +
+              '<div class="sr-mut sr-sm">Ebene ' + _srEsc(x.ebene) + '</div></td>' +
+            '<td>' + _srEsc(x.event || '') + '</td>' +
+            '<td>' + _srEsc(x.markt || '') +
+              '<div class="sr-mut sr-sm">' + _srEsc(x.auswahl || '') + '</div></td>' +
+            '<td class="sr-r">' + (x.quote == null ? '—' : Number(x.quote).toFixed(2).replace('.', ',')) + '</td>' +
+            '<td>' + aus + '</td></tr>';
+        }).join('') + '</tbody></table></div>'
+      : '<div class="sr-empty">Gerade kein Einsatz ab ' + r.abFaktor +
+        '× der Norm auf Ebene 2 oder tiefer.</div>';
+
+    var ohne = r.nOhneEbene
+      ? '<div class="sr-basis"><span class="sr-mut" title="' + _srEsc((r.ohneEbene || []).join(', ')) +
+        '">' + r.nOhneEbene + ' Fußball-Ligen stehen nicht in der Tabelle — sie tauchen ' +
+        'in keiner Zeile oben auf, statt still als Ebene 1 zu zählen.</span></div>'
+      : '';
+
+    return '<div class="sr-basis"><span>Die Spielklasse steht in <b>keinem Feld</b> des Feeds ' +
+        'und lässt sich aus dem Volumen nicht ableiten — danach gelten Süper Lig, MLS und die ' +
+        'Championship als „kleine Liga". Sie kommt aus einer <b>Tabelle</b> ' +
+        '(stake_liga_stufe.py), nicht aus einer Messung.</span></div>' +
+      ohne +
+      '<h3 class="sr-h3">Rendite nach Spielklasse und Einsatzgröße</h3>' +
+      '<div class="sr-mut sr-sm">Einsatz als Vielfaches des üblichen Einsatzes derselben Liga ' +
+        '(hat die Liga noch keine eigene Norm: derselben Spielklasse). Nur abgerechnete ' +
+        'Einzelwetten. Die fette Zahl ist geldgewichtet, die UG ist die einseitige ' +
+        '95 %-Untergrenze bei flachem Einsatz — <b>nur die entscheidet</b>.</div>' +
+      tabelle +
+      '<div class="sr-mut sr-sm">' + _srEsc(r.warum || '') + '</div>' +
+      '<h3 class="sr-h3">Große Einsätze auf Ebene 2 und tiefer</h3>' +
+      '<div class="sr-mut sr-sm">Ab ' + r.abFaktor + '× der Norm. Ohne Ausgangsfilter: die ' +
+        'Liste zeigt, was gesetzt wurde, nicht was aufging.</div>' +
+      liste;
+  }
 
   function _srBilanz() {
     if (!SR_AUS) return '<div class="sr-empty">stake_auswertung.json fehlt noch.</div>';
@@ -943,6 +1064,7 @@
     var spiele = _srCtrl() + _srVerlauf(roh, SR_FENSTER_H) + treffer + koerper;
     var inhalt = SR_TAB === 'spiele' ? spiele
                : SR_TAB === 'auffaellig' ? _srAuffaellig()
+               : SR_TAB === 'klasse' ? _srKlasse()
                : SR_TAB === 'bilanz' ? _srBilanz()
                : _srNorm();
     if (SR_TAB !== 'spiele' && !SR_AUS) {
