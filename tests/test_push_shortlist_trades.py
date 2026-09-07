@@ -7,10 +7,17 @@ sys.path.insert(0, str(Path(__file__).parent.parent))
 import push_shortlist_trades as P
 
 
-def _play(key, side, conv, verdict="BET", price=0.6, league="UCL", htk=1.0, reasons=None, match=None):
+def _play(key, side, conv, verdict="BET", price=0.6, league="UCL", htk=1.0, reasons=None,
+          match=None, public=True):
+    # 07.09.2026: `public` kam dazu und ist hier per Default True. Seit dem 07.09. haengt die
+    # Auswahl am Public-Tor statt allein an der Conviction (gemessen: conv>=7 brachte +2,6 %
+    # ROI ueber 165 Plays, das Tor +6,4 % ueber 167 — bei praktisch gleichem Volumen). Die Tests
+    # in dieser Datei pruefen Preis-Deckel, Sperrliste, Sortierung und Deckel — nicht das Tor.
+    # Damit sie weiter genau das pruefen, kommen ihre Plays durchs Tor. Das Tor selbst hat eine
+    # eigene Datei: tests/test_push_shortlist_tor.py.
     return {"key": key, "side": side, "conv": conv, "verdict": verdict, "price": price,
             "league": league, "htk": htk, "reasons": reasons or ["Steam läuft rein (+3pp)"],
-            "match": match or (key + " match")}
+            "match": match or (key + " match"), "public": public}
 
 
 class TestSelect(unittest.TestCase):

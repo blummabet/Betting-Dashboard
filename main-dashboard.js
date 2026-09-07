@@ -1212,33 +1212,51 @@
     var maxInf = (plays && plays.length) ? plays.reduce(function (a, p) { return Math.max(a, _mdPlayInflow(p)); }, 1) : 1;
     var body = (plays && plays.length)
       ? plays.map(function (p) { return _mdPlayRow(p, maxInf); }).join('')
-      : empty('Keine klaren Plays gerade — kein Signal ist auch ein Ergebnis. Sobald Geld, Steam und scharfe Wallets sich einig sind, steht hier was.');
-    return tile('🔥', 'Heute spielenswert', A.red, 'rgba(229,83,75,.14)', 'rgba(229,83,75,.32)', 'polywallets', 'alle Plays', body, 10);
+      : empty('Gerade kommt nichts durch das Tor — kein Signal ist auch ein Ergebnis. Es braucht Conviction, eine echte Geld-Mehrheit und eine bewiesene Wallet gleichzeitig.');
+    // 07.09.2026: der Untertitel sagte „alle Plays" — und war ab der Umstellung falsch. Die
+    // Kachel zeigt seit heute die gefilterte Menge, nicht den ganzen Topf. Ein Etikett, das dem
+    // Inhalt widerspricht, ist hier die haeufigste Fehlerklasse ueberhaupt.
+    return tile('🔥', 'Heute spielenswert', A.red, 'rgba(229,83,75,.14)', 'rgba(229,83,75,.32)', 'polywallets', 'durchs Public-Tor', body, 10);
   }
+  // 07.09.2026 (Lucas: „ja, bitte stell das um").
+  //
+  // Hier stand `_pwTopPlays(3, null, false)` — die Top 3 nach Score aus dem GANZEN Topf, ohne
+  // das Public-Tor. Nachgerechnet an 570 abgerechneten, spielbaren Plays:
+  //
+  //     der Topf, aus dem die Kachel waehlte    n=570   63,3 % Treffer   +6,85 EUR   ROI +0,1 %
+  //     die Public-Kandidaten (durchs Tor)      n=167   70,7 %          +107,22 EUR  ROI +6,4 %
+  //
+  // Beide Mengen stammen aus derselben Engine. Die Kachel SORTIERTE nur; das Tor FILTERT. Der
+  // Gewinn kommt vom Filtern — und die Kachel zeigte ausgerechnet die ungefilterte Fassung.
+  //
+  // Lucas hatte das ueber Wochen als „Heute spielenswert = +103 EUR" gelesen; die +103 gehoerten
+  // aber der gefilterten Menge, die woanders stand. Zwei Flaechen, ein Name, zwei Bilanzen.
+  //
+  // Ob die Top-3-Sortierung fuer sich genommen etwas taugt, ist bis heute UNGEMESSEN: der Rang
+  // wird nirgends mitgeschrieben. Deshalb wird hier nicht „die schlechtere Sortierung" ersetzt,
+  // sondern eine ungemessene durch eine gemessene Auswahl.
   function _mdFillPlays() {
     var box = document.getElementById('md-cell-play'); if (!box) return;
     if (typeof _pwEnsurePlaysData !== 'function' || typeof _pwTopPlays !== 'function') return;   // Skelett bleibt
     _pwEnsurePlaysData(function () {
       var b2 = document.getElementById('md-cell-play'); if (!b2) return;
-      var plays = []; try { plays = _pwTopPlays(3, null, false) || []; } catch (e) { plays = []; }
+      var plays = [];
+      try {
+        // Dieselbe Quelle wie das Papier-Depot und der Trades-Push — eine Menge, ein Name.
+        plays = (typeof _pwPublicTopPlays === 'function' ? (_pwPublicTopPlays() || []) : []).slice(0, 3);
+      } catch (e) { plays = []; }
       b2.innerHTML = _mdPlaysHtml(plays);
     });
   }
 
-  // ── 🧪 Public-Kandidaten (Vorschau — sendet NICHT) (01.08.2026, Lucas). Zwei Logiken parallel,
-  //    ein paar Tage beobachten, bevor irgendwas in den Channel geht: (A) „Top-Play" hart gegatet
-  //    (Conv≥7 + bewiesene Wallet + echte Mehrheit), (B) „Whale-Watch" (Schwellen wie im Public-Push).
-  function _mdPubTopRow(r) {
-    var vcol = r.verdict === 'BET' ? A.good : A.gold, conv = +r.conv || 0;
-    var badge = '<span style="display:inline-block;padding:1px 7px;border-radius:10px;border:1px solid ' + vcol + ';color:' + vcol + ';font-weight:800;font-size:10px;margin-right:6px">' + r.verdict + '</span>';
-    var icon = (typeof _pwSportIcon === 'function') ? _pwSportIcon(r.league) + ' ' : '';
-    var live = (r.htk != null && r.htk < 0) ? _MD_LIVE : '';
-    var main = badge + icon + _mdPolyLink(r.key, esc(String(r.match).slice(0, 38)) + ' <span style="color:var(--mi3)">→</span> <b style="color:#4cc2ff">' + esc(r.side) + '</b>') + live;
-    var sh = r.sharp || {};
-    var rec = sh.n ? (sh.wins + '/' + sh.n + ' · ' + Math.round((sh.hit || 0) * 100) + '%') : '';
-    var sub = 'Geld ' + Math.round((r.moneyPct || 0) * 100) + '%' + (rec ? ' · Wallet ' + rec : '');
-    return _mdRingRow(main, sub, conv, _mdConvCol(conv));
-  }
+  // ── 🧪 Public-Kandidaten (01.08.2026, Lucas): zwei Logiken parallel beobachten, bevor etwas in
+  //    den Channel geht — (A) „Top-Play" hart gegatet, (B) „Whale-Watch".
+  //
+  //    07.09.2026: (A) ist beendet. Fuenf Wochen Beobachtung waren der Grund, die Auswahl nach
+  //    oben zu holen — „Heute spielenswert" zieht seit heute aus derselben Funktion, und der
+  //    Trades-Push ebenfalls. Die Kachel und ihre Zeilen-Funktion `_mdPubTopRow` sind damit weg:
+  //    zwei Flaechen mit identischem Inhalt auf einem Board, das ohnehin zu voll ist.
+  //    (B) laeuft unveraendert weiter.
   function _mdWhalePubRow(w) {
     var icon = (typeof _pwSportIcon === 'function') ? _pwSportIcon(w.league) + ' ' : '';
     var tag = w.tracked
@@ -1278,27 +1296,26 @@
       return rowEl(label, '×' + (+r.ratio).toFixed(1), col, sub, meter(mx ? (r.ratio / mx * 100) : 0, col));
     }).join('');
   }
+  // 07.09.2026 (Lucas: „ja nimm Top-Play raus").
+  //
+  // Die Kachel „🎯 Top-Play" war am 01.08. als Experiment angelegt — Untertitel wörtlich
+  // „🧪 Vorschau — sendet nicht · ein paar Tage beobachten". Sie rendert `_pwPublicTopPlays()`.
+  // Seit dem 07.09. zieht „Heute spielenswert" aus DERSELBEN Funktion (vorher: Top 3 nach Score
+  // aus dem ungefilterten Topf, gemessen +0,1 % ROI ueber 570 Plays gegen +6,4 % ueber 167).
+  //
+  // Damit standen zwei Kacheln mit identischem Inhalt auf einem Board, das Lucas selbst als zu
+  // komplex bezeichnet. Das Experiment lief fuenf Wochen, sein Ergebnis ist der Grund fuer die
+  // Umstellung — es ist damit beendet, nicht geloescht: der Inhalt lebt oben weiter.
+  //
   function _mdFillPubPreview() {
-    var cTop = document.getElementById('md-cell-top'), cWh = document.getElementById('md-cell-whale');
-    if (!cTop && !cWh) return;
-    if (typeof _pwEnsurePlaysData !== 'function' || typeof _pwPublicTopPlays !== 'function' || typeof _pwOverNormTop !== 'function') return;   // Skelett bleibt
+    var cWh = document.getElementById('md-cell-whale');
+    if (!cWh) return;
+    if (typeof _pwEnsurePlaysData !== 'function' || typeof _pwOverNormTop !== 'function') return;   // Skelett bleibt
     _pwEnsurePlaysData(function () {
-      var t = document.getElementById('md-cell-top'), w = document.getElementById('md-cell-whale');
-      var tops = [], over = [];
-      try { tops = _pwPublicTopPlays() || []; } catch (e) { tops = []; }
+      var w = document.getElementById('md-cell-whale');
+      var over = [];
       try { over = _pwOverNormTop(5) || []; } catch (e) { over = []; }
-      var note = '<div style="font-size:10px;color:var(--mi3);margin:-2px 0 8px">🧪 Vorschau — sendet nicht · ein paar Tage beobachten</div>';
-      var topBody = note + (tops.length ? tops.slice(0, 5).map(_mdPubTopRow).join('')
-        // 01.09.2026: hier stand „Conv≥7" fest getippt, die Schwelle steht aber seit dem 29.08.
-        // auf 6. Ein Leertext, der eine falsche Schwelle nennt, ist eine kleine Lüge über das
-        // eigene System — jetzt aus der Konstante gezogen. „Bewiesen" heißt seit dem Regler
-        // ausdrücklich: volle Wilson-Untergrenze, nicht bloß vielversprechend.
-        : empty('Kein Top-Play über der Schwelle — Conv≥'
-                + (typeof PW_PUBLIC_MIN_CONV === 'number' ? PW_PUBLIC_MIN_CONV : 6)
-                + ', bewiesene Wallet (n≥8, ≥55%, Beleg voll), Geld-Mehrheit ≥60%. Normalfall.'));
-      var overBody = _mdOverNormBody(over);
-      if (t) t.innerHTML = tile('🎯', 'Top-Play', A.good, 'rgba(46,160,67,.14)', 'rgba(46,160,67,.32)', 'polywallets', 'Wallets', topBody, 0);
-      if (w) w.innerHTML = tile('💰', 'Volumen über Norm', A.poly, 'rgba(25,158,112,.14)', 'rgba(25,158,112,.32)', 'polywallets', 'Wallets', overBody, 0);
+      if (w) w.innerHTML = tile('💰', 'Volumen über Norm', A.poly, 'rgba(25,158,112,.14)', 'rgba(25,158,112,.32)', 'polywallets', 'Wallets', _mdOverNormBody(over), 0);
     });
   }
 
@@ -1560,7 +1577,6 @@
       _mdMoneyMapWide() +
       // Reihe 4 — Poly
       tile('🐋', 'Poly Whale-Bets', A.poly, 'rgba(25,158,112,.14)', 'rgba(25,158,112,.32)', 'polywallets', 'Wallets', whBody, 160) +
-      '<div id="md-cell-top" class="md-cell">' + tile('🎯', 'Top-Play', A.good, 'rgba(46,160,67,.14)', 'rgba(46,160,67,.32)', 'polywallets', 'Wallets', empty('lädt …'), 170) + '</div>' +
       '<div id="md-cell-whale" class="md-cell">' + tile('💰', 'Volumen über Norm', A.poly, 'rgba(25,158,112,.14)', 'rgba(25,158,112,.32)', 'polywallets', 'Wallets', empty('lädt …'), 180) + '</div>' +
       // Reihe 4.7 — Stake (03.09.2026, Lucas): Geld · Norm · noch spielbar.
       // Die dritte Kachel ist die wichtigste: die ersten beiden zeigen fast immer Spiele,

@@ -29,14 +29,18 @@ function seed(w) {
   };
 }
 
-test('alle vier Poly-Kacheln verlinken aufs jeweilige polymarket.com/event/<slug>', () => {
+test('alle Poly-Kacheln verlinken aufs jeweilige polymarket.com/event/<slug>', () => {
   const w = load(); seed(w);
   w._renderMainDash();
   const h = w.document.getElementById('mainDashPanel').innerHTML;
-  // Poly Whale-Bets (aus dem close-Sidecar), Heute spielenswert, Top-Play, Volumen über Norm
+  // Poly Whale-Bets (aus dem close-Sidecar), Heute spielenswert, Volumen über Norm
   assert.match(h, /href="https:\/\/polymarket\.com\/event\/mlb-cws-tor-2026-07-19"/, 'Whale-Bets → Event');
-  assert.match(h, /href="https:\/\/polymarket\.com\/event\/nba-lal-bos-2026-07-25"/, 'Heute spielenswert → Event');
-  assert.match(h, /href="https:\/\/polymarket\.com\/event\/atp-alc-sin-2026-07-25"/, 'Top-Play → Event');
+  // 07.09.2026: „Heute spielenswert" zieht seit heute aus `_pwPublicTopPlays` statt aus
+  // `_pwTopPlays` (gemessen: der alte Topf +0,1 % ROI über 570 Plays, das Tor +6,4 % über 167).
+  // Die Kachel „🎯 Top-Play" rendert dieselbe Funktion und ist deshalb entfallen — zwei Flächen
+  // mit identischem Inhalt. Es sind also drei Poly-Kacheln, nicht mehr vier.
+  assert.match(h, /href="https:\/\/polymarket\.com\/event\/atp-alc-sin-2026-07-25"/, 'Heute spielenswert → Event');
+  assert.doesNotMatch(h, /md-tile-t">Top-Play</, 'die doppelte Kachel ist raus');
   assert.match(h, /href="https:\/\/polymarket\.com\/event\/lol-t1-geng-2026-07-25"/, 'Volumen über Norm → Event');
   // neuer Tab + noopener wie im Wallet-Reiter, plus ↗-Cue
   assert.match(h, /target="_blank" rel="noopener" class="md-polylink"/);

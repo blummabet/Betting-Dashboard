@@ -28,8 +28,12 @@ function render(p) {
   w.eval(readFileSync(MOD, 'utf8'));
   w._pwSportIcon = () => '🏀';
   w._pwEnsurePlaysData = (cb) => cb && cb();
+  // 07.09.2026: die Kachel „Heute spielenswert" zieht seit heute aus `_pwPublicTopPlays`
+  // (dem Public-Tor) statt aus `_pwTopPlays` (Top 3 nach Score, ungefiltert). Gemessen:
+  // der alte Topf +0,1 % ROI ueber 570 Plays, das Tor +6,4 % ueber 167. Diese Datei prueft
+  // die BETFAIR-ZELLE in der Zeile, nicht die Herkunft der Plays — der Stub zieht deshalb mit.
   w._pwTopPlays = () => [p];
-  w._pwPublicTopPlays = () => [];
+  w._pwPublicTopPlays = () => [p];
   w._pwOverNormTop = () => [];
   w._mdState.data = { liga: null, mls: null, ligaStreaks: null, mlsStreaks: null,
     betfair: { matches: [] }, whales: null };

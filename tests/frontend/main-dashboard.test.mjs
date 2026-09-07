@@ -127,8 +127,16 @@ test('Übersicht: Public-Kandidaten-Vorschau-Boxen rendern (sendet nicht)', asyn
   w._renderMainDash();
   await new Promise(r => setTimeout(r, 40));
   const html = w.document.getElementById('mainDashPanel').innerHTML;
-  assert.match(html, /sendet nicht/);        // Vorschau-Hinweis je Kachel
-  assert.match(html, /Top-Play/);            // eigene Kachel (Reihe 4)
-  assert.match(html, /Volumen über Norm/);         // eigene Kachel (Reihe 4)
-  assert.match(html, /Atlanta Braves/, 'Top-Play-Kandidat sichtbar');
+  // 07.09.2026: die Kachel „🎯 Top-Play" ist weg. Sie war am 01.08. als Experiment angelegt
+  // („🧪 Vorschau — sendet nicht · ein paar Tage beobachten") und rendert `_pwPublicTopPlays()`.
+  // Seit dem 07.09. zieht „Heute spielenswert" aus derselben Funktion (gemessen: der vorherige,
+  // ungefilterte Topf +0,1 % ROI über 570 Plays gegen +6,4 % über 167). Zwei Kacheln, ein
+  // Inhalt — also eine weg. Der Kandidat muss deshalb JETZT oben stehen.
+  // Auf die KACHEL prüfen, nicht auf den Namen: der KPI-Balken trägt weiterhin die Zeile
+  // „Top-Plays offen", und ein /Top-Play/ über das ganze HTML würde die treffen. Genau die
+  // Sorte Unschärfe, die heute schon dreimal einen Test hat anschlagen lassen, obwohl nichts
+  // kaputt war.
+  assert.doesNotMatch(html, /md-tile-t">Top-Play</, 'die doppelte Kachel ist raus');
+  assert.match(html, /md-tile-t">Heute spielenswert</);
+  assert.match(html, /md-tile-t">Volumen über Norm</);   // eigene Kachel, unverändert
 });

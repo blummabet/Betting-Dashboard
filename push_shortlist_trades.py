@@ -30,7 +30,10 @@ SEEN_FILE = BASE / "shortlist_push_seen.json"
 # Punkt. 8 auf der neuen Skala waere das alte 9 — also eine stille Verschaerfung, die niemand
 # beschlossen hat. 7 haelt die Strenge, die vorher 8 war. Ueber SHORTLIST_PUSH_MIN_CONV weiter
 # ueberschreibbar; zurueck auf die alte Zahl heisst: diese 7 wieder auf 8 setzen.
-MIN_CONV = int(os.environ.get("SHORTLIST_PUSH_MIN_CONV") or 7)
+# 07.09.2026: 7 -> 6. Nicht als Lockerung — die Auswahl trifft ab jetzt das PUBLIC-TOR (s.
+# select()), und dessen eigene Untergrenze ist 6. Bliebe hier 7 stehen, waere die Conviction
+# heimlich das schaerfere Kriterium und das Tor haette nur die Haelfte seiner Wirkung.
+MIN_CONV = int(os.environ.get("SHORTLIST_PUSH_MIN_CONV") or 6)
 MAX_PLAYS = int(os.environ.get("SHORTLIST_PUSH_MAX") or 6)
 MAX_PRICE = float(os.environ.get("SHORTLIST_PUSH_MAX_PRICE") or 0.92)   # Quasi-Locks raus (kein handelbarer Raum)
 SEEN_TTL_DAYS = 3
@@ -101,8 +104,37 @@ def select(plays, blocked_cats=None):
         cat = p.get("cat")
         return not (cat and str(cat) in blocked)
 
+    # 07.09.2026 (Lucas: „das haett ich gern dann halt auch als Push in den Trades Channel").
+    #
+    # Hier stand nur `conv >= MIN_CONV`. Damit war der Trades-Push eine VIERTE Menge — verschieden
+    # von der Uebersichts-Kachel (Top 3 nach Score) und von den Public-Kandidaten (das Tor).
+    # Nachgerechnet an 570 abgerechneten, spielbaren Plays:
+    #
+    #     Topf: alle spielbaren BET-Plays          n=570   63,3 %   +6,85 EUR    ROI +0,1 %
+    #     Trades-Push bisher (conv>=7)             n=165   64,8 %   +42,86 EUR   ROI +2,6 %
+    #     Public-Kandidaten (das Tor)              n=167   70,7 %   +107,22 EUR  ROI +6,4 %
+    #
+    # Praktisch dasselbe Volumen (7,5 gegen 8,0 Plays je Tag), zweieinhalbfacher Gewinn. Die
+    # Conviction-Schwelle war eine Naeherung an „stark"; das Tor MISST es (Conviction >= 6 UND
+    # Geld-Mehrheit >= 60 % UND bewiesene Wallet — bei E-Sport ab 55 Cent ohne die Wallet, weil
+    # sie dort nachweislich nichts trennt).
+    #
+    # `public` steht seit dem 06.09. an jedem Play im selben Emit. MIN_CONV bleibt als zweite,
+    # schwaechere Schranke stehen: das Tor beginnt bei 6, der Push soll nicht darunter rutschen,
+    # falls jemand PW_PUBLIC_MIN_CONV senkt.
+    _hat_flag = any(isinstance(p, dict) and "public" in p for p in (plays or []))
+
+    def _tor(p):
+        # Faellt das Feld (Alt-Emit), wird NICHT stillschweigend auf conv>=7 zurueckgefallen —
+        # das waere die alte Menge unter neuem Namen. Dann pusht dieser Lauf lieber nichts und
+        # sagt es (s. main). Fehlende Information ist keine Erlaubnis.
+        return bool(p.get("public"))
+
+    if not _hat_flag:
+        return []
     out = [p for p in (plays or []) if isinstance(p, dict)
-           and (p.get("conv") or 0) >= MIN_CONV and p.get("verdict") in ("BET", "FADE")
+           and _tor(p) and (p.get("conv") or 0) >= MIN_CONV
+           and p.get("verdict") in ("BET", "FADE")
            and _ok_price(p) and _erlaubt(p)]
     out.sort(key=lambda p: -(p.get("conv") or 0))
     return out[:MAX_PLAYS]
@@ -165,9 +197,19 @@ def main() -> int:
     if not emit:
         print("  ℹ️  kein Emit — Shortlist-Push uebersprungen (nicht fatal).")
         return 0
-    sel = select(emit.get("plays") or [], emit.get("blockedCats"))
+    _plays = emit.get("plays") or []
+    if _plays and not any(isinstance(p, dict) and "public" in p for p in _plays):
+        # Alt-Emit ohne das `public`-Feld. Auf conv>=MIN_CONV zurueckzufallen waere die ALTE
+        # Menge unter neuem Namen — und niemand wuerde es merken. Lieber nichts senden und es
+        # sagen: der naechste Emit hat das Feld wieder.
+        print("  ⚠️  Emit ohne `public`-Feld — es wird NICHTS gepusht. Der Push haengt seit dem "
+              "07.09. am Public-Tor, nicht mehr an der Conviction; ein stiller Rueckfall waere "
+              "eine andere Auswahl unter demselben Namen.")
+        return 0
+    sel = select(_plays, emit.get("blockedCats"))
     if not sel:
-        print("  ℹ️  keine Plays >= conv %d." % MIN_CONV)
+        print("  ℹ️  kein Play durch das Public-Tor (Conviction >= %d, Geld-Mehrheit, Wallet "
+              "bzw. E-Sport ab 55 Cent)." % MIN_CONV)
         return 0
     seen = _load(SEEN_FILE, {})
     if not isinstance(seen, dict):
