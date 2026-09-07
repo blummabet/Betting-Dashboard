@@ -100,8 +100,13 @@
    "odd": 2.24,
    "entryOdd": 2.48,
    "anteilPct": 68,
-   "stufe": 2,
+   "stufe": 1,
    "verstaerker": [
+    {
+     "art": "poly",
+     "text": "Poly Geld 94%",
+     "gewicht": 12
+    },
     {
      "art": "pinn",
      "text": "Pinnacle stimmt zu",
@@ -109,18 +114,22 @@
     },
     {
      "art": "pinnMove",
-     "text": "Pinnacle zieht mit +1.1pp",
-     "gewicht": 14
+     "text": "Pinnacle zieht mit +1.0pp",
+     "gewicht": 8
     }
    ],
-   "rang": 80.8,
+   "rang": 86.8,
    "track": null,
    "streak": null,
-   "poly": null,
+   "poly": {
+    "anteilPct": 94,
+    "usd": 73261,
+    "odd": 2.25
+   },
    "polyStatus": "nein",
    "pinnMovePP": 1.1,
    "punkte": {
-    "punkte": 7,
+    "punkte": 10,
     "moeglich": 10,
     "dauerH": 24.09,
     "teile": [
@@ -132,29 +141,29 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 74% auf der Seite"
+       "text": "Geld 68% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
-      "text": "Geld 74% auf der Seite"
+      "text": "Geld 68% auf der Seite"
      },
      {
       "buch": "POLY",
       "name": "Polymarket",
-      "status": "nein",
-      "punkte": 0,
+      "status": "ja",
+      "punkte": 3,
       "moeglich": 3,
       "grund": {
-       "ok": false,
-       "text": "Poly-Preis 44% auf derselben Seite"
+       "ok": true,
+       "text": "Poly-Geld 94% auf derselben Seite"
       },
       "tiefe": {
-       "ok": false,
-       "text": "kein bewiesenes Wallet auf der Seite"
+       "ok": true,
+       "text": "4 bewiesene Wallets drauf"
       },
-      "text": "Poly-Preis 44% auf derselben Seite"
+      "text": "Poly-Geld 94% auf derselben Seite"
      },
      {
       "buch": "PIN",
@@ -168,7 +177,7 @@
       },
       "tiefe": {
        "ok": true,
-       "text": "Move +1.8pp in unsere Richtung"
+       "text": "Move +1.0pp in unsere Richtung"
       },
       "text": "hat dieselbe Seite als Favorit"
      },
@@ -189,9 +198,9 @@
    },
    "wertVsPinn": 0.0016,
    "gehaltenSeit": "2026-09-06T19:24:28.665355+00:00",
-   "zuletztAktiv": "2026-09-07T08:10:34.860608+00:00",
+   "zuletztAktiv": "2026-09-07T12:11:01.740555+00:00",
    "haltePreis": 2.42,
-   "aktiv": false,
+   "aktiv": true,
    "polyKey": "lal-elc-rso-2026-09-07",
    "polySide": "Real Sociedad de Fútbol"
   },
