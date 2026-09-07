@@ -1086,18 +1086,39 @@
     el.innerHTML = kopf + basis + warn + _srNav() + inhalt;
   }
 
+  // 07.09.2026 (Lucas: „na alle tabs klappen nur der nicht"). Der Spielklasse-Reiter stand
+  // leer, waehrend Bilanz, Norm und Auffaellig daneben liefen — weil die drei nur Felder
+  // brauchen, die es im ALTEN Artefakt schon gab. Diese Datei holte relativ, also aus dem
+  // Pages-Schnappschuss, und der haengt am stuendlichen Deploy. Ein neues Feld ist dort bis
+  // zu eine Stunde lang nicht da, und das sieht aus wie „der Produzent laeuft nicht".
+  //
+  // Dritter Fall derselben Klasse: am 29.08. traf es poly-wallets.js und status-checks.js,
+  // danach die Cards. `raw-first-fetch.test.mjs` gab es da schon — aber als HANDGEPFLEGTE
+  // Liste, in der diese Datei fehlte. Eine Liste, die man vergessen kann, ist kein Guard;
+  // der Test prueft jetzt jede Datei, die das Dashboard laedt.
+  var _SR_RAW = 'https://raw.githubusercontent.com/blummabet/Betting-Dashboard/main';
+
+  function _srJson(u) {
+    var b = '?t=' + Date.now();
+    return fetch(_SR_RAW + '/' + u + b, { cache: 'no-store' })
+      .then(function (r) { if (r.ok) return r.json(); throw 0; })
+      .catch(function () {
+        return fetch(u + b, { cache: 'no-store' })
+          .then(function (r) { return r.ok ? r.json() : null; })
+          .catch(function () { return null; });
+      });
+  }
+
   // ── Einstieg ──────────────────────────────────────────────────────────────
   window.initStakeRadar = function () {
     _srStyle();
     if (SR.geladen) { _srRender(); return; }
     SR.geladen = true;
     _srRender();
-    fetch('stake_highroller.json?t=' + Date.now())
-      .then(function (r) { return r.ok ? r.json() : null; })
+    _srJson('stake_highroller.json')
       .then(function (j) { SR.daten = j || { status: 'fehler', notiz: 'stake_highroller.json nicht lesbar' }; _srRender(); })
       .catch(function () { SR.daten = { status: 'fehler', notiz: 'stake_highroller.json nicht erreichbar' }; _srRender(); });
-    fetch('stake_auswertung.json?t=' + Date.now())
-      .then(function (r) { return r.ok ? r.json() : null; })
+    _srJson('stake_auswertung.json')
       .then(function (j) { SR_AUS = j; SR_AUS_STATUS = j ? 'da' : 'fehlt'; _SR_AUFF_IDX = null; _srRender(); })
       .catch(function () { SR_AUS = null; SR_AUS_STATUS = 'fehlt'; _SR_AUFF_IDX = null; _srRender(); });
   };

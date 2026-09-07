@@ -200,8 +200,16 @@ test('Regler filtern nur die Anzeige, sie schreiben nichts zurueck', () => {
   assert.ok(!/fetch\([^)]*POST/i.test(CODE), 'der Tab darf nichts senden');
   // 03.09.2026: zwei Lesezugriffe, seit das Terminal die Auswertung mitlaedt. Was zaehlt,
   // ist NUR-lesen — und dass nichts anderes gelesen wird als diese beiden Dateien.
-  const gelesen = [...CODE.matchAll(/fetch\('([^']+)'/g)].map(m => m[1].split('?')[0]);
+  //
+  // 07.09.2026: hier stand `fetch\('([^']+)'` — das hat die SCHREIBWEISE festgenagelt, nicht
+  // die Regel. Seit die Datei raw-zuerst holt (_srJson), laeuft jeder Zugriff durch einen
+  // Helfer, und der Test schlug an, obwohl sich am Nur-Lesen nichts geaendert hatte. Also
+  // gefragt, was tatsaechlich geholt wird, statt wie es geschrieben ist.
+  const gelesen = [...CODE.matchAll(/_srJson\('([^']+)'/g)].map(m => m[1].split('?')[0]);
   assert.deepEqual(gelesen.sort(), ['stake_auswertung.json', 'stake_highroller.json']);
+  // und kein anderer Weg daran vorbei
+  const direkt = [...CODE.matchAll(/fetch\(\s*'([^']+\.json)/g)].map(m => m[1]);
+  assert.deepEqual(direkt, [], 'es wird an _srJson vorbei geholt: ' + direkt.join(', '));
 });
 
 test('gelesen wird die Sicht, nie das Ledger', () => {
