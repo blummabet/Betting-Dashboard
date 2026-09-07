@@ -21,7 +21,7 @@ Die eine echte Gefahr sind DYNAMISCH gebaute Dateinamen (`ds + '_poly_prices.jso
 zwei Sicherungen:
   1. Es wird nicht nur der volle Name gesucht, sondern auch jedes Namens-Endstueck ab einem
      Unterstrich — `mls_poly_prices.json` bleibt also auch, wenn im Code nur `_poly_prices.json`
-     oder `poly_prices.json` steht.
+     oder `poly_prices.json` steht. ABER nur an einer echten VERKETTUNGSGRENZE (siehe unten).
   2. tests/test_pages_artifact_size.py faehrt dieselbe Regel und prueft gegen, dass nichts
      Geloeschtes irgendwo referenziert ist. Faellt jemandem spaeter ein, eine dieser Dateien doch
      zu fetchen, faellt der Test — nicht die Live-Seite.
@@ -70,6 +70,30 @@ def _namensvarianten(name):
     return varianten
 
 
+# 07.09.2026 — das Sicherheitsnetz oben hatte ein Leck, und zwar ein teures. Ein Endstueck wie
+# `ledger.json` oder `_results.json` ist nicht selten, sondern GENERISCH: es kommt in jedem
+# Frontend vor, das irgendein anderes Ledger holt. Gemessen fuhren dadurch 34,1 MB als blinde
+# Passagiere im Deploy mit — allen voran `stake_bet_ledger.json` (15,4 MB), das keine Zeile
+# Frontend-Code je anfasst und nur deshalb blieb, weil irgendwo `liga_signal_ledger.json` steht.
+#
+# Ein dynamisch gebauter Name sieht im Code aber IMMER gleich aus: das Endstueck beginnt genau
+# dort, wo das Literal beginnt — `ds + '_poly_prices.json'`, `"_poly_prices.json"`,
+# `${ds}_poly_prices.json`. Deshalb zaehlt ein Endstueck nur noch direkt hinter einer dieser
+# Grenzen. Der volle Name zaehlt weiterhin ueberall: wer ihn schreibt, meint ihn.
+_GRENZEN = ("'", '"', "`", "}")
+
+
+def _wird_erwaehnt(name: str, text: str) -> bool:
+    if name in text:
+        return True
+    for v in _namensvarianten(name):
+        if v == name:
+            continue
+        if any((g + v) in text for g in _GRENZEN):
+            return True
+    return False
+
+
 def unbenutzte_wurzel_jsons(dateien=None, repo=REPO):
     """Die Wurzel-JSONs, die keine ausgelieferte HTML/JS/CSS-Datei erwaehnt. REIN/testbar."""
     dateien = dateien if dateien is not None else tracked(repo)
@@ -78,7 +102,7 @@ def unbenutzte_wurzel_jsons(dateien=None, repo=REPO):
     for f in dateien:
         if "/" in f or not f.endswith(".json"):
             continue
-        if any(v in text for v in _namensvarianten(f)):
+        if _wird_erwaehnt(f, text):
             continue
         raus.append(f)
     return sorted(raus)
