@@ -4291,6 +4291,9 @@ body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSy
 (function () {
   var v = Math.floor(Date.now() / 3600000);  // Stunden-Bucket
   var scripts = [
+    // 07.09.2026 — ZUERST: definiert window.rawJson (raw-zuerst, Snapshot als Rueckfall).
+    // Jede Datei darunter holt ihre JSONs darueber; siehe Kopf von raw-json.js.
+    "raw-json.js",
     "pick-engine.js", "pick-verdict.js", "_pick_helpers.js", "validator.js",
     "renderer.js", "share.js", "ui.js", "status-checks.js", "polymarket-tab.js",
     "poly-wallets.js", "money-map.js", "betfair-radar.js", "pinnacle-poly.js", "signal-check.js",

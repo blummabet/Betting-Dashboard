@@ -15,10 +15,14 @@ const V2_KEY        = 'betedge_picks_v2';
 // Hard cutoff: Mirror+Freeze system started 2026-05-05. Entries before this
 // date used a different format and must not appear in the tracking tab.
 const TRACKING_START = '2026-05-05';
-const V2_RESULTS_URLS = [
+// 07.09.2026 — Bug-Klasse 13: was hier stand, war der stuendliche Pages-Snapshot. _v2Urls
+// schiebt die raw-URL davor (localhost bleibt vorn, der ist der lokale Dev-Server).
+// Fallback ohne raw-json.js: unveraendert, damit eine fehlende Datei nichts kaputt macht.
+const _v2Urls = (l) => (typeof rawFirstUrls === 'function' ? rawFirstUrls(l) : l);
+const V2_RESULTS_URLS = _v2Urls([
   'http://localhost:3001/results-cache',
   'https://blummabet.github.io/Betting-Dashboard/results-cache.json',
-];
+]);
 
 // ── Statistik-Umfang (27.08.2026, Lucas) ─────────────────────────────────────
 // picks_history.json schleppt 20 Ligen aus dem alten breiten Card-System mit (Ungarn, Polen,
@@ -28,11 +32,11 @@ const V2_RESULTS_URLS = [
 //
 // Die Liste steht in stats_scope.json, NICHT hier — dieselbe Datei liest der Python-Guard.
 // Zwei getippte Listen driften auseinander, sobald eine angefasst wird.
-const V2_SCOPE_URLS = [
+const V2_SCOPE_URLS = _v2Urls([
   'http://localhost:3001/stats_scope',
   'stats_scope.json',
   'https://blummabet.github.io/Betting-Dashboard/stats_scope.json',
-];
+]);
 let _v2Scope = null;          // {code: {name, seasonStart}} — null = noch nicht geladen
 
 async function _v2LoadScope() {
@@ -208,7 +212,10 @@ async function autoResolveV2(silent = false) {
   if (!silent) {
     try {
       const _rawCache = results._meta || null;  // not present — checked via separate fetch below
-      const _genUrl = V2_RESULTS_URLS.find(u => u.includes('github.io')) || V2_RESULTS_URLS[1];
+      // Frische misst man an der frischesten Quelle, sonst meldet der Check das Alter des
+      // Snapshots statt das der Daten.
+      const _genUrl = V2_RESULTS_URLS.find(u => u.includes('raw.githubusercontent.com'))
+        || V2_RESULTS_URLS.find(u => u.includes('github.io')) || V2_RESULTS_URLS[1];
       fetch(_genUrl, { cache: 'no-store' })
         .then(r => r.json())
         .then(d => {
@@ -410,8 +417,8 @@ function _resolveAsian(actual, line, direction) {
 // ── Legacy import ─────────────────────────────────────────────────────────────
 function importLegacyPicks() {
   fetch('http://localhost:3001/picks_history')
-    .catch(() => fetch('https://blummabet.github.io/Betting-Dashboard/picks_history.json'))
     .then(r => r.ok ? r.json() : Promise.reject())
+    .catch(() => rawJson('picks_history.json'))
     .then(legacy => {
       if (!Array.isArray(legacy)) return;
       // Filter out duplicates / bad leagues
@@ -490,8 +497,7 @@ function initResultsV2() {
   // Load picks_history.json if Results tab hasn't loaded it yet —
   // needed for the localStorage-gap fallback in _renderV2Tab().
   if (!window._resultsData || !window._resultsData.length) {
-    fetch('./picks_history.json?t=' + Date.now())
-      .then(r => r.ok ? r.json() : []).catch(() => [])
+    rawJson('picks_history.json')
       .then(data => {
         if (!window._resultsData || !window._resultsData.length) {
           window._resultsData = data || [];

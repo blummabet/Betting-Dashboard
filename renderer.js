@@ -1758,7 +1758,7 @@ function _loadClvSummary() {
   if (_clvLoading[lk]) return;
   _clvLoading[lk] = true;
   const f = meta.clvFile;
-  fetch(f + '?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null)
+  rawJson(f)
     .then(j => { window[gkey] = j || {}; })
     .finally(() => { _clvLoading[lk] = false; renderSharpRadar(); });
 }
@@ -1930,16 +1930,16 @@ function _loadLigaSharpData() {
   _sharpLigaLoading = true;
   Promise.all([
     (window.LIGA_DATA ? Promise.resolve(window.LIGA_DATA)
-      : fetch('liga-data.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null)),
+      : rawJson('liga-data.json')),
     (window.LIGA_ODDS_HISTORY ? Promise.resolve(window.LIGA_ODDS_HISTORY)
-      : fetch('liga-odds-history.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null)),
+      : rawJson('liga-odds-history.json')),
     (window.LIGA_SIGNAL_WEIGHTS ? Promise.resolve(window.LIGA_SIGNAL_WEIGHTS)
-      : fetch('liga_signal_weights.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null)),
+      : rawJson('liga_signal_weights.json')),
     // 29.06.2026 (Lucas: MLS „wie die anderen Ligen") — MLS-Moves in den Liga-Radar mit-mergen.
-    fetch('mls-data.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
-    fetch('mls-odds-history.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
+    rawJson('mls-data.json'),
+    rawJson('mls-odds-history.json'),
     // 13.07.2026: MLS hat EIGENE Signal-Gewichte — ohne die zeigte der MLS-Radar die WM-Gewichte.
-    fetch('mls_signal_weights.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
+    rawJson('mls_signal_weights.json'),
   ]).then(([ld, lh, lw, md, mh, mw]) => {
     window.LIGA_DATA           = ld || {};
     window.LIGA_ODDS_HISTORY   = lh || {};

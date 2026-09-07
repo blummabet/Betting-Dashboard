@@ -6,10 +6,12 @@ import { readFileSync } from 'node:fs';
 import { JSDOM } from 'jsdom';
 
 const MOD = new URL('../../pinnacle-poly.js', import.meta.url);
+const RAWJSON = new URL('../../raw-json.js', import.meta.url);
 function boot(data) {
   const dom = new JSDOM('<!DOCTYPE html><body><div id="pinnPolyPanel"></div></body>', { url: 'https://x.com/', runScripts: 'outside-only' });
   const w = dom.window;
   w.fetch = () => Promise.resolve({ ok: true, json: () => Promise.resolve(data) });
+  w.eval(readFileSync(RAWJSON, 'utf8'));   // 07.09.2026: erstes Skript im Dashboard
   w.eval(readFileSync(MOD, 'utf8'));
   return w;
 }

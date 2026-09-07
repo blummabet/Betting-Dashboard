@@ -7,6 +7,7 @@ import { readFileSync } from 'node:fs';
 import { JSDOM } from 'jsdom';
 
 const RENDERER = new URL('../../renderer.js', import.meta.url);
+const RAWJSON  = new URL('../../raw-json.js', import.meta.url);
 const PICK_ENGINE = new URL('../../pick-engine.js', import.meta.url);
 
 function loadRenderer() {
@@ -15,6 +16,10 @@ function loadRenderer() {
   });
   const { window } = dom;
   window.fetch = () => Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+  // 07.09.2026: raw-json.js zuerst — im Browser ist es das erste Skript im Dashboard, und
+  // renderer.js holt seine JSONs ueber window.rawJson. Ohne das testet der Harness eine
+  // Umgebung, die es nicht gibt.
+  window.eval(readFileSync(RAWJSON, 'utf8'));
   window.eval(readFileSync(RENDERER, 'utf8'));
   return window;
 }
@@ -27,6 +32,7 @@ function loadFull() {
   });
   const { window } = dom;
   window.fetch = () => Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+  window.eval(readFileSync(RAWJSON, 'utf8'));
   window.eval(readFileSync(PICK_ENGINE, 'utf8'));
   window.eval(readFileSync(RENDERER, 'utf8'));
   return window;
@@ -183,10 +189,15 @@ test('Sharp Radar: MLS bleibt nicht im Lade-Zustand hängen (Re-Render nach Lazy
   ] };
 
   // Fetch nach Dateiname bedienen — so wie es im Browser wirklich läuft.
+  // 07.09.2026: Der Abgleich lief über startsWith und damit über den relativen Pfad. Seit
+  // rawJson() steht die raw-URL davor — der Name steht jetzt hinten, nicht vorn. Auf den
+  // DATEINAMEN prüfen ist das, was der Test eigentlich meint (und bleibt richtig, egal
+  // welche Basis morgen davor steht).
+  const datei = (u) => String(u).split('?')[0].split('/').pop();
   w.fetch = (url) => {
-    const u = String(url);
-    const body = u.startsWith('mls-data') ? mlsData
-      : u.startsWith('mls-odds-history') ? mlsHist
+    const f = datei(url);
+    const body = f === 'mls-data.json' ? mlsData
+      : f === 'mls-odds-history.json' ? mlsHist
       : {};
     return Promise.resolve({ ok: true, json: () => Promise.resolve(body) });
   };
@@ -351,9 +362,11 @@ test('Sharp Radar: Liga-Einstieg stößt den Lazy-Load selbst an', async () => {
   const { window: w } = dom;
   const geholt = [];
   w.fetch = (url) => {
-    geholt.push(String(url).split('?')[0]);
+    // Dateiname statt voller URL: seit rawJson() steht die raw-Basis davor (07.09.2026).
+    geholt.push(String(url).split('?')[0].split('/').pop());
     return Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
   };
+  w.eval(readFileSync(RAWJSON, 'utf8'));
   w.eval(readFileSync(PICK_ENGINE, 'utf8'));
   w.eval(readFileSync(RENDERER, 'utf8'));
   w.LEAGUES = {};

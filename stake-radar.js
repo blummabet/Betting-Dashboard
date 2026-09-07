@@ -123,6 +123,10 @@
 '.sr-kl{font-size:10.5px;color:#6b7480;text-transform:uppercase;letter-spacing:.03em;margin-top:2px}',
 '.sr-h3{font-size:13px;font-weight:800;margin:18px 0 8px;color:#c2ccd8}',
 '.sr-note{margin:12px 0 0;font-size:11.5px;line-height:1.6;color:#76819c}',
+'.sr-nav2{margin:6px 0 8px}',
+// Die gepoolte Zeile ist keine dritte Phase, sondern die Summe der beiden darueber —
+// abgesetzt, damit niemand sie mitzaehlt.
+'.sr-pool td{border-top:1px solid #2b3442;background:rgba(255,255,255,.02)}',
 '.sr-bad{font-size:9.5px;font-weight:800;letter-spacing:.3px;padding:2px 7px;border-radius:6px;white-space:nowrap}',
 '.sr-bad.sr-norm{color:#f2c14e;border:1px solid rgba(234,185,56,.45);background:rgba(234,185,56,.10)}',
 '.sr-bad.sr-norm-schwach{color:#9aa4b2;border:1px dashed rgba(154,164,178,.45);background:none;font-weight:700}',
@@ -622,7 +626,11 @@
   }
 
   function _srNav() {
-    var tabs = [['spiele', '⚽ Spiele'], ['auffaellig', '🚩 Auffällig'],
+    // 07.09.2026: hiess „🚩 Auffällig". Der Name allein war schon die Behauptung — er sagt
+    // „hier passiert etwas Beachtenswertes", und gemessen ist das Gegenteil belegt. Der
+    // Schlüssel bleibt 'auffaellig' (Artefakt, Tests, Verlinkungen), nur die Aufschrift sagt
+    // jetzt, was die Ansicht wirklich zeigt: Einsätze über der Norm ihrer Liga.
+    var tabs = [['spiele', '⚽ Spiele'], ['auffaellig', '📏 Über der Norm'],
                 ['klasse', '🏟️ Spielklasse'], ['bilanz', '🧾 Bilanz'], ['norm', '📐 Norm']];
     return '<div class="sr-nav">' + tabs.map(function (t) {
       return '<button class="sr-nb' + (SR_TAB === t[0] ? ' on' : '') +
@@ -666,43 +674,135 @@
       'Anpfiff nachgefragt. Ein Urteil gibt es ab n=' + (SR_AUS ? SR_AUS.urteilAb : 30) + '.</span></div>';
   }
 
-  // ── Auffällig ───────────────────────────────────────────────────────────────
+  // ── Über der Norm ───────────────────────────────────────────────────────────
+  // 07.09.2026 (Lucas, Backlog: „Die 'Auffällig'-Ansicht ehrlich beschriften" + „Achse
+  // umstellen auf live × Einsatzgröße statt auffällig ja/nein").
+  //
+  // Die Ansicht hiess „Auffällig" und behauptete damit etwas, das gemessen nicht stimmt.
+  // Zwei Änderungen, und nur die zweite ist Kosmetik:
+  //   1. Das Urteil über die eigene Prämisse steht OBEN und kommt aus dem Artefakt
+  //      (stake_analyse.norm_phase). Es wird nicht hier getippt — ein getippter Satz
+  //      veraltet mit den nächsten hundert Abrechnungen, und niemand merkt es.
+  //   2. Die Achse ist jetzt live × Einsatzgröße. „Auffällig ja/nein" trennt gemessen
+  //      nichts; die Trennung liegt zwischen den Phasen und im äussersten Band.
+  var _SR_NP_ZEILEN = {
+    'vor': ['vor Anpfiff', 'Nur hier wäre ein Schlusskurs-Vergleich überhaupt möglich.'],
+    'live': ['live', 'Der grösste Teil des Feeds.'],
+    'alle': ['beide zusammen', 'Gepoolt — nur hier wird das äusserste Band gross genug für eine Grenze.']
+  };
+
+  function _srNpBand(x) {
+    return (_SR_NP_ZEILEN[x.phase] ? _SR_NP_ZEILEN[x.phase][0] : x.phase) + ' · ' + x.band;
+  }
+
+  /** Der Urteilssatz — aus den Zahlen gebaut, nicht getippt. */
+  function _srNpUrteil(np) {
+    var u = (np && np.urteil) || {};
+    var gegen = (u.gegen || []).filter(function (x) {
+      return (np.auffBaender || []).indexOf(x.band) >= 0;
+    });
+    var folgen = (u.folgen || []).filter(function (x) {
+      return (np.auffBaender || []).indexOf(x.band) >= 0;
+    });
+    if (u.praemisse === 'gestuetzt' && folgen.length) {
+      return '<div class="sr-note"><b>Gemessen trägt das hier — vorerst.</b> Über der Norm ' +
+        'liegt die Rendite-<b>Unter</b>grenze über null bei: ' +
+        folgen.map(function (x) {
+          return _srEsc(_srNpBand(x)) + ' (' + _srPct(x.flachUg, 0) + ', n' + x.n + ')';
+        }).join(', ') + '. Die Schwellen wurden im Rückblick gesetzt — das Urteil fällt ' +
+        'vorwärts, in den vorregistrierten Schubladen.</div>';
+    }
+    if (u.praemisse === 'widerlegt' && gegen.length) {
+      return '<div class="sr-note"><b>Diese Ansicht ist keine Empfehlung — gemessen zeigt sie ' +
+        'ins Gegenteil.</b> Wo die Einsätze am weitesten über der Norm liegen, liegt die ' +
+        'Rendite-<b>Ober</b>grenze unter null: ' +
+        gegen.map(function (x) {
+          return _srEsc(_srNpBand(x)) + ' (' + _srPct(x.flach, 1) + ', Obergrenze ' +
+            _srPct(x.flachOg, 1) + ', n' + x.n + ')';
+        }).join('; ') + '. Ein grosser Einsatz ist danach eher ein Grund, <b>nicht</b> ' +
+        'mitzugehen. Die Liste unten bleibt trotzdem stehen: sie zeigt, was gesetzt wurde.</div>';
+    }
+    return '<div class="sr-note"><b>Über der Norm ist bisher weder belegt noch widerlegt.</b> ' +
+      'In keiner Zelle über 3× Norm kreuzt eine 95 %-Grenze die Null — die Ansicht ist damit ' +
+      'Anzeige, keine Empfehlung. Was sie <i>nicht</i> mehr behauptet: dass ein grosser Einsatz ' +
+      'für sich genommen etwas wert wäre.</div>';
+  }
+
+  function _srNpTabelle(np) {
+    var k = np.kreuz || {};
+    var spalten = np.spalten || [];
+    var zeilen = (np.zeilen || Object.keys(k)).filter(function (z) { return k[z]; }).map(function (z) {
+      var m = _SR_NP_ZEILEN[z] || [z, ''];
+      var n = spalten.reduce(function (a, c) { return a + ((k[z][c] && k[z][c].n) || 0); }, 0);
+      return '<tr' + (z === 'alle' ? ' class="sr-pool"' : '') + '><td><b>' + _srEsc(m[0]) + '</b>' +
+        (m[1] ? '<div class="sr-mut sr-sm">' + _srEsc(m[1]) + '</div>' : '') +
+        '<div class="sr-mut sr-sm">' + n + ' abgerechnete Wetten</div></td>' +
+        spalten.map(function (c) { return _srKlZelle(k[z][c]); }).join('') + '</tr>';
+    }).join('');
+    return '<div class="sr-tw"><table class="sr-t"><thead><tr><th>Phase</th>' +
+      spalten.map(function (c) { return '<th class="sr-r">' + _srEsc(c) + '</th>'; }).join('') +
+      '</tr></thead><tbody>' + zeilen + '</tbody></table></div>';
+  }
+
   function _srAuffaellig() {
+    var np = SR_AUS && SR_AUS.normPhase;
+    // Ein fehlender Block heisst „der Erzeuger war noch nicht dran", nicht „nichts gefunden".
+    // Der Unterschied ist der ganze Punkt (drei Wege, auf denen ein fertiges Feature leer
+    // aussieht — 07.09.2026).
+    var kopf = np
+      ? _srNpUrteil(np) +
+        '<h3 class="sr-h3">Rendite nach Phase und Einsatzgrösse</h3>' +
+        '<div class="sr-mut sr-sm">Einsatz als Vielfaches des üblichen Einsatzes derselben ' +
+          'Liga (ohne eigene Norm: derselben Spielklasse). Nur abgerechnete Einzelwetten. ' +
+          'Die fette Zahl ist geldgewichtet, die Spanne sind die einseitigen 95 %-Grenzen ' +
+          'bei flachem Einsatz — <b>nur die entscheiden</b>.</div>' +
+        _srNpTabelle(np) +
+        '<div class="sr-mut sr-sm">' + _srEsc(np.warum || '') + '</div>'
+      : '<div class="sr-empty"><b>Der Block „normPhase" fehlt in stake_auswertung.json.</b>' +
+        '<br><span class="sr-mut">Er entsteht auf dem Runner (stake_analyse.py). Bis dahin ' +
+        'steht hier kein Urteil — statt eines, das niemand nachgerechnet hat.</span></div>';
+
     var rows = (SR_AUS && SR_AUS.auffaellige) || [];
-    if (!rows.length) {
-      return '<div class="sr-empty">Noch nichts über der Norm.<br><span class="sr-mut">' +
+    var liste = rows.length
+      ? '<div class="sr-tw"><table class="sr-t"><thead><tr>' +
+        '<th>Zeit</th><th>Liga</th><th>Spiel</th><th>Auswahl</th>' +
+        '<th class="sr-r">Einsatz</th><th>gegen die Liga</th><th class="sr-r">Quote</th>' +
+        '<th>Warum hier gelistet</th><th>Ausgang</th>' +
+        '</tr></thead><tbody>' +
+        rows.map(function (r) {
+          var aus = r.ausgang === 'won' ? '<span class="sr-w">Treffer</span>'
+                  : r.ausgang === 'lost' ? '<span class="sr-l">daneben</span>'
+                  : '<span class="sr-mut">offen</span>';
+          return '<tr><td class="sr-mut">' + _srZeit(r.ts) + '</td>' +
+            '<td>' + _srEsc(r.liga || '—') + '</td>' +
+            '<td>' + _srEsc(r.event || '—') + '</td>' +
+            '<td>' + _srEsc(((r.markt ? r.markt + ': ' : '') + (r.auswahl || '—'))) + '</td>' +
+            '<td class="sr-r sr-geldz">' + _srUsd(r.einsatzUsd) + '</td>' +
+            '<td>' + _srNormMeter(r.einsatzUsd,
+              (SR_AUS && SR_AUS.ligaNorm && SR_AUS.ligaNorm[r.liga]) || null) + '</td>' +
+            '<td class="sr-r">' + (r.quote != null ? Number(r.quote).toFixed(2) : '—') + '</td>' +
+            '<td class="sr-mut">' + _srEsc(r.grund) + '</td>' +
+            '<td>' + aus + '</td></tr>';
+        }).join('') + '</tbody></table></div>'
+      : '<div class="sr-empty">Noch nichts über der Norm.<br><span class="sr-mut">' +
         'Eine Liga-Norm entsteht ab 15 Wetten in derselben Liga; ein <b>Urteil</b> darüber, ' +
         'ob ein Einsatz wirklich überraschend ist, erst ab 40 — darunter lässt sich der ' +
         'Schwanz der Verteilung nicht schätzen, und geraten wird hier nicht.</span></div>';
-    }
-    return '<div class="sr-tw"><table class="sr-t"><thead><tr>' +
-      '<th>Zeit</th><th>Liga</th><th>Spiel</th><th>Auswahl</th>' +
-      '<th class="sr-r">Einsatz</th><th>gegen die Liga</th><th class="sr-r">Quote</th>' +
-      '<th>Warum auffällig</th><th>Ausgang</th>' +
-      '</tr></thead><tbody>' +
-      rows.map(function (r) {
-        var aus = r.ausgang === 'won' ? '<span class="sr-w">Treffer</span>'
-                : r.ausgang === 'lost' ? '<span class="sr-l">daneben</span>'
-                : '<span class="sr-mut">offen</span>';
-        return '<tr><td class="sr-mut">' + _srZeit(r.ts) + '</td>' +
-          '<td>' + _srEsc(r.liga || '—') + '</td>' +
-          '<td>' + _srEsc(r.event || '—') + '</td>' +
-          '<td>' + _srEsc(((r.markt ? r.markt + ': ' : '') + (r.auswahl || '—'))) + '</td>' +
-          '<td class="sr-r sr-geldz">' + _srUsd(r.einsatzUsd) + '</td>' +
-          '<td>' + _srNormMeter(r.einsatzUsd,
-            (SR_AUS && SR_AUS.ligaNorm && SR_AUS.ligaNorm[r.liga]) || null) + '</td>' +
-          '<td class="sr-r">' + (r.quote != null ? Number(r.quote).toFixed(2) : '—') + '</td>' +
-          '<td class="sr-mut">' + _srEsc(r.grund) + '</td>' +
-          '<td>' + aus + '</td></tr>';
-      }).join('') + '</tbody></table></div>' +
+
+    return kopf +
+      '<h3 class="sr-h3">Die einzelnen Einsätze über der Norm</h3>' +
+      '<div class="sr-mut sr-sm">Anzeige, keine Empfehlung — welche Zeile etwas wert ist, ' +
+        'entscheidet die Tabelle darüber, nicht die Grösse des Einsatzes.</div>' +
+      liste +
       '<div class="sr-note"><b>Drei verschiedene Gründe, absichtlich nicht vermischt</b> — ' +
       'sie stehen in dieser Reihenfolge, stärkstes Urteil zuerst:<br>' +
-      '<b>% selten</b> ist das einzige echte Urteil: wie oft eine völlig unauffällige Liga ' +
-      'dieser Größe so etwas überhaupt hervorbringt — gegen eine simulierte Nullverteilung, ' +
-      'nicht gegen ein Vielfaches. Ein festes Vielfaches ginge nicht: schon in einer Liga, in ' +
-      'der nichts passiert, liegt das Maximum in rund einem Viertel der Fälle bei „2× über ' +
-      'Erwartung". Gerechnet über mehrere Schwanz&shy;ausschnitte, gewertet wird der ' +
-      'konservativste.<br>' +
+      '<b>% selten</b> ist das einzige echte Urteil <i>über die Seltenheit</i>: wie oft eine ' +
+      'völlig unauffällige Liga dieser Größe so etwas überhaupt hervorbringt — gegen eine ' +
+      'simulierte Nullverteilung, nicht gegen ein Vielfaches. Ein festes Vielfaches ginge ' +
+      'nicht: schon in einer Liga, in der nichts passiert, liegt das Maximum in rund einem ' +
+      'Viertel der Fälle bei „2× über Erwartung". Gerechnet über mehrere ' +
+      'Schwanz&shy;ausschnitte, gewertet wird der konservativste. Selten heisst <b>nicht</b> ' +
+      'spielenswert — das steht oben.<br>' +
       '<b>× Median (dünn)</b> ist schwächer: die Liga hat eine Norm, aber unter 40 Wetten und ' +
       'damit keinen schätzbaren Schwanz. Dieser Faktor wächst mit der Sammeldauer — er ' +
       'beschreibt, er urteilt nicht.<br>' +
@@ -745,6 +845,13 @@
     'reserve': ['Reserve', 'zweite Mannschaften — keine Spielklasse']
   };
   var _SR_KL_SPALTEN = ['<1.5x', '1.5-3x', '3-6x', '>6x'];
+
+  // 07.09.2026 (Backlog): zweite Achse für die Kandidatenliste. „Wie ungewöhnlich" und „wie
+  // viel Geld" sind zwei Fragen; die Liste beantwortete nur die erste. Die AUSWAHL macht der
+  // Erzeuger (Vereinigung beider Bestenlisten) — hier wird nur umsortiert. Sonst zeigte die
+  // Betrags-Sortierung die grössten Beträge einer nach Faktor abgeschnittenen Liste.
+  var SR_KL_SORT = 'faktor';
+  window._srKlSort = function (v) { SR_KL_SORT = v; _srRender(); };
 
   function _srKlZelle(z) {
     if (!z || !z.n) return '<td class="sr-r sr-mut">—</td>';
@@ -801,11 +908,20 @@
       '</tr></thead><tbody>' + zeilen + '</tbody></table></div>';
 
     // Die Liste, um die Lucas gebeten hat: große Einsätze dort, wo groß selten ist.
-    var kand = r.kandidaten || [];
+    var kand = (r.kandidaten || []).slice().sort(function (a, b) {
+      return SR_KL_SORT === 'betrag'
+        ? (b.einsatzUsd || 0) - (a.einsatzUsd || 0)
+        : (b.faktor || 0) - (a.faktor || 0);
+    });
+    var umschalter = '<div class="sr-nav sr-nav2">' +
+      [['faktor', 'nach Faktor'], ['betrag', 'nach Betrag']].map(function (t) {
+        return '<button class="sr-nb' + (SR_KL_SORT === t[0] ? ' on' : '') +
+          '" onclick="_srKlSort(\'' + t[0] + '\')">' + t[1] + '</button>';
+      }).join('') + '</div>';
     var liste = kand.length
       ? '<div class="sr-tw"><table class="sr-t"><thead><tr><th>Faktor</th><th class="sr-r">Einsatz</th>' +
         '<th>Liga</th><th>Spiel</th><th>Wette</th><th class="sr-r">Quote</th>' +
-        '<th>Ausgang</th></tr></thead><tbody>' +
+        '<th>drin über</th><th>Ausgang</th></tr></thead><tbody>' +
         kand.map(function (x) {
           var aus = x.ausgang === 'won' ? '<span class="sr-w">Treffer</span>'
                   : x.ausgang === 'lost' ? '<span class="sr-mut">daneben</span>'
@@ -823,6 +939,9 @@
             '<td>' + _srEsc(x.markt || '') +
               '<div class="sr-mut sr-sm">' + _srEsc(x.auswahl || '') + '</div></td>' +
             '<td class="sr-r">' + (x.quote == null ? '—' : Number(x.quote).toFixed(2).replace('.', ',')) + '</td>' +
+            // Warum diese Zeile überhaupt in der Auswahl ist. Eine Zeile, die nur über den
+            // Betrag hereinkam, ist beim Faktor-Blick sonst ein Rätsel — und umgekehrt.
+            '<td class="sr-mut sr-sm">' + _srEsc((x.warumDrin || ['faktor']).join(' + ')) + '</td>' +
             '<td>' + aus + '</td></tr>';
         }).join('') + '</tbody></table></div>'
       : '<div class="sr-empty">Gerade kein Einsatz ab ' + r.abFaktor +
@@ -848,7 +967,9 @@
       '<div class="sr-mut sr-sm">' + _srEsc(r.warum || '') + '</div>' +
       '<h3 class="sr-h3">Große Einsätze auf Ebene 2 und tiefer</h3>' +
       '<div class="sr-mut sr-sm">Ab ' + r.abFaktor + '× der Norm. Ohne Ausgangsfilter: die ' +
-        'Liste zeigt, was gesetzt wurde, nicht was aufging.</div>' +
+        'Liste zeigt, was gesetzt wurde, nicht was aufging.' +
+        (r.kandidatenAuswahl ? ' ' + _srEsc(r.kandidatenAuswahl) : '') + '</div>' +
+      umschalter +
       liste;
   }
 
@@ -1129,6 +1250,7 @@
                    _srBasis: _srBasis, _srRendite: _srRendite, _srPct: _srPct, _srKat: _srKat,
                    _srUmkaempft: _srUmkaempft, _srBisAnpfiff: _srBisAnpfiff,
                    _srVerlauf: _srVerlauf, _srNormMeter: _srNormMeter,
+                   _srNpUrteil: _srNpUrteil, _srNpTabelle: _srNpTabelle,
                    _srLigaBalken: _srLigaBalken, _srZeitachse: _srZeitachse };
   }
 })();

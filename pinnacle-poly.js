@@ -240,8 +240,7 @@
     if (_pp.loading) return;
     _pp.loading = true;
     p.innerHTML = '<div style="text-align:center;color:' + C.dim + ';padding:60px">Lade Scan-Daten …</div>';
-    fetch('pinnacle_poly_scan.json?t=' + Date.now())
-      .then(function (r) { return r.ok ? r.json() : null; })
+    rawJson('pinnacle_poly_scan.json')
       .then(function (d) { _pp.data = d; _pp.loading = false; _ppRender(); })
       .catch(function () { _pp.loading = false; _pp.data = null; _ppRender(); });
   }

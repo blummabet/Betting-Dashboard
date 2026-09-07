@@ -180,6 +180,59 @@ def test_kreuz_gibt_unter_30_keine_untergrenze():
     assert z["belegt"] is False and z["belegtGegen"] is False
 
 
+# ── Was der Slug selbst sagt (07.09.2026) ────────────────────────────────────
+def test_ordnungszahl_im_slug_wird_gelesen():
+    """„2nd-division-league" und „super-league-2" waren der zweite Nachtrag in zwei Tagen.
+    Beide Male stand die Antwort im Namen — eine handgepflegte Liste, die das nicht liest,
+    schweigt genau fuer die Ligen, die neu sind."""
+    assert LS.stufe("2nd-division-league") == "2"
+    assert LS.stufe("3rd-liga") == "3"
+    assert LS.stufe("super-league-2") == "2"
+
+
+def test_der_anhang_zaehlt_nur_hoch_wenn_der_rumpf_bekannt_ist():
+    """Sonst wird aus einer Gruppennummer still eine zweite Liga."""
+    assert LS.stufe("irgendwas-2") is None
+    assert LS.stufe("super-league") == "1", "der Rumpf bleibt, was er war"
+
+
+def test_die_regel_raet_nicht_bei_allem_anderen():
+    assert LS.stufe("gibt-es-nicht") is None
+    assert LS.stufe("2nd-division-league", sport="handball") is None
+
+
+def test_tabelle_schlaegt_regel():
+    """Die Tabelle ist Wissen, die Regel nur eine Lesehilfe — nie andersherum."""
+    assert LS.stufe("la-liga-2") == "2" and "la-liga-2" in LS.EBENE
+
+
+# ── Kandidatenauswahl: zwei Achsen, eine Auswahl ─────────────────────────────
+def test_kandidaten_kommen_ueber_faktor_ODER_betrag_herein():
+    """Eine nach Faktor abgeschnittene Liste laesst sich nicht ehrlich nach Betrag sortieren:
+    der groesste Betrag des Tages kann bei Faktor 3,1 liegen und waere nie in der Auswahl."""
+    norm = {"L": {"median": 1000.0, "basis": "gelernt", "n": 50}}
+    # 40 Zeilen mit hohem Faktor, aber kleinem Betrag — sie fuellen den Faktor-Deckel.
+    viele = [w("championship", 4000.0 + i, liga="L", event="hoch%d" % i) for i in range(40)]
+    # Eine mit dem groessten Betrag und dem KLEINSTEN Faktor der Auswahl.
+    dickes = w("championship", 3100.0, liga="L", event="dick")
+    dickes["einsatzUsd"] = 3100.0
+    k = LS.kandidaten(viele + [dickes], norm)
+    ids = {x["id"]: x for x in k}
+    assert "hoch39championship" in ids, "die Faktor-Achse fehlt"
+    # Und nun mit einem echten Brocken: er muss ueber die Betrags-Achse hereinkommen.
+    brocken = w("championship", 500000.0, liga="L", event="brocken")
+    k2 = {x["id"]: x for x in LS.kandidaten(viele + [brocken], norm)}
+    assert "brockenchampionship" in k2, "der groesste Betrag fehlt in der Auswahl"
+    assert "betrag" in k2["brockenchampionship"]["warumDrin"]
+
+
+def test_jede_zeile_sagt_warum_sie_drin_ist():
+    norm = {"L": {"median": 1000.0, "basis": "gelernt", "n": 50}}
+    k = LS.kandidaten([w("championship", 9000.0, liga="L", event="a")], norm)
+    assert k and set(k[0]["warumDrin"]) <= {"faktor", "betrag"}
+    assert k[0]["warumDrin"], "ohne Grund ist die Zeile beim anderen Blick ein Raetsel"
+
+
 def test_block_meldet_ligen_ohne_ebene():
     wetten = [w("gibt-es-nicht", 2000.0) for _ in range(3)]
     b = LS.block(wetten, {})

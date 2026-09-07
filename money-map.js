@@ -217,9 +217,10 @@
     _mmStyle();
     var p=document.getElementById('moneyMapPanel'); if(!p) return;
     if(!_mm.map) p.innerHTML='<div class="mm-loading">🔗 Lade Money Map…</div>';
-    var b='?t='+Date.now();
-    var jf=function(u){return fetch(u+b,{cache:'no-store'}).then(function(r){return r.ok?r.json():null;}).catch(function(){return null;});};
-    Promise.all([jf('money_map.json'),jf('money_map_record.json')]).then(function(res){ _mm.map=res[0]; _mm.rec=res[1]; _mmRender(); });
+    // 07.09.2026: holte relativ, zeigte also bis zu eine Stunde alte Money-Map — waehrend
+    // die Uebersicht dieselbe money_map.json laengst raw-zuerst hat. Gefunden hat das nicht
+    // ein Blick, sondern der breiter gefasste Guard (Bug-Klasse 13).
+    Promise.all([rawJson('money_map.json'),rawJson('money_map_record.json')]).then(function(res){ _mm.map=res[0]; _mm.rec=res[1]; _mmRender(); });
   }
   if(typeof window!=='undefined') window.initMoneyMap=initMoneyMap;
   if(typeof window!=='undefined'){ window._mmCardHtml=_mmCard; window._mmEnsureStyle=_mmStyle; }

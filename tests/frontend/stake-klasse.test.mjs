@@ -94,3 +94,21 @@ test('die Herkunft der Referenz steht in der Zeile', () => {
   assert.match(CODE, /refBasis === 'liga'/,
     '„3× der Norm" heißt etwas anderes je nachdem, ob die Norm aus der Liga oder der Ebene kommt');
 });
+
+// ── Zweite Achse: Betrag (07.09.2026, Backlog) ──────────────────────────────
+// „Wie ungewöhnlich" und „wie viel Geld" sind zwei Fragen. Die Liste beantwortete nur die
+// erste. Der Fallstrick dabei ist nicht die Sortierung, sondern der Deckel: eine nach Faktor
+// abgeschnittene Liste nach Betrag zu sortieren zeigt die grössten Beträge EINER AUSWAHL und
+// sieht trotzdem aus wie „die grössten Beträge".
+test('die Sortierung ist umschaltbar, die Auswahl macht der Erzeuger', () => {
+  assert.match(JS, /window\._srKlSort/, 'kein Umschalter');
+  assert.match(CODE, /SR_KL_SORT === 'betrag'/, 'nach Betrag wird nicht sortiert');
+  assert.match(CODE, /r\.kandidatenAuswahl/,
+    'die Fläche sagt nicht, wie die Auswahl zustande kam — dann liest sich die Liste wie „die grössten"');
+  assert.ok(!/\.slice\(0,\s*\d+\)/.test(CODE),
+    'der Renderer schneidet die Liste selbst ab — der Deckel gehört zum Erzeuger');
+});
+
+test('jede Zeile sagt, über welche Achse sie hereinkam', () => {
+  assert.match(CODE, /warumDrin/, 'ohne den Grund ist eine Zeile beim anderen Blick ein Rätsel');
+});

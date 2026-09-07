@@ -47,6 +47,7 @@ Urteil faellt vorwaerts. Bis dahin ist das hier eine Anzeige, keine Empfehlung.
 """
 from __future__ import annotations
 
+import re
 import statistics
 from collections import defaultdict
 
@@ -139,6 +140,32 @@ def art(slug: str):
     return None
 
 
+# 07.09.2026 — der zweite Nachtrag in zwei Tagen („2nd-division-league", „super-league-2"),
+# und beide Male stand die Antwort im Slug. Die Tabelle bleibt die Wahrheit fuer alles, was
+# man WISSEN muss; diese Regeln lesen nur, was der Slug selbst sagt. Nicht geraten wird
+# weiterhin alles andere: was hier nicht greift, bleibt None und faellt auf.
+_ORDNUNGSZAHL = re.compile(r"^([2-9])(?:st|nd|rd|th)?-(?:division|liga|league|lig)\b")
+_ANHANG = re.compile(r"^(.*)-([23])$")
+
+
+def _ebene_aus_slug(s: str):
+    """Ebene, wenn der Slug sie selbst nennt — sonst None.
+
+    Zwei Faelle, beide nur mit Beleg im Namen:
+      · „2nd-division-league", „3rd-liga"     → die Ordnungszahl steht vorne.
+      · „super-league-2", „thai-league-2"     → der Anhang zaehlt die Klasse HOCH, und der
+        Rumpf muss dafuer als oberste Klasse bekannt sein. Ohne diese Bedingung wuerde
+        „serie-a-2" oder eine Gruppennummer stillschweigend zur zweiten Liga.
+    """
+    m = _ORDNUNGSZAHL.match(s)
+    if m:
+        return min(int(m.group(1)), 3)
+    m = _ANHANG.match(s)
+    if m and EBENE.get(m.group(1)) == 1:
+        return int(m.group(2))
+    return None
+
+
 def stufe(slug: str, sport: str = SPORT):
     """'1' | '2' | '3' | 'kontinental' | 'pokal' | 'frauen' | 'jugend' | 'srl' — oder None.
 
@@ -150,7 +177,8 @@ def stufe(slug: str, sport: str = SPORT):
     a = art(slug)
     if a:
         return a
-    v = EBENE.get((slug or "").lower())
+    s = (slug or "").lower()
+    v = EBENE.get(s) or _ebene_aus_slug(s)
     return str(v) if v else None
 
 
@@ -214,12 +242,25 @@ KAND_AB = 3.0          # ab diesem Vielfachen gilt ein Einsatz auf Ebene 2/3 als
 TOP_AB = 6.0           # das Gegenstueck auf Ebene 1 (dort ist die Reihe negativ)
 STUFEN = [(1.5, "<1.5x"), (3.0, "1.5-3x"), (6.0, "3-6x"), (float("inf"), ">6x")]
 
+# 07.09.2026 — feinere Baender fuer die Phase-Ansicht (live vs vor Anpfiff). Die grobe
+# STUFEN-Liste bleibt, wie sie ist: sie traegt die Spielklasse-Tabelle, und eine Aenderung
+# dort waere eine stille Aenderung an einer laufenden Messung. Der Grund fuer den Schnitt
+# bei 15x: der Ausreisser-Schwanz verhaelt sich messbar anders als „3-6x", und in „>6x"
+# verschwand er zwischen den ruhigen Faellen.
+STUFEN_FEIN = [(1.5, "<1.5x"), (3.0, "1.5-3x"), (6.0, "3-6x"), (15.0, "6-15x"),
+               (float("inf"), ">15x")]
 
-def _bucket(f):
-    for grenze, name in STUFEN:
+
+def _bucket(f, stufen=None):
+    for grenze, name in (stufen or STUFEN):
         if f < grenze:
             return name
-    return STUFEN[-1][1]
+    return (stufen or STUFEN)[-1][1]
+
+
+def bucket(f, fein: bool = False):
+    """Oeffentlich, damit niemand die Schwellen anderswo nachbaut."""
+    return _bucket(f, STUFEN_FEIN if fein else STUFEN)
 
 
 def kandidaten(wetten: list, norm: dict, ab: float = KAND_AB, max_n: int = 60) -> list:
@@ -227,6 +268,16 @@ def kandidaten(wetten: list, norm: dict, ab: float = KAND_AB, max_n: int = 60) -
 
     Bewusst OHNE Ausgangsfilter: die Liste zeigt, was gesetzt wurde, nicht was aufging.
     Ob sie traegt, entscheidet die vorregistrierte Schublade, nicht diese Anzeige.
+
+    07.09.2026 (Backlog: „Sortierung im Spielklasse-Reiter: aktuell nur nach Faktor. Nach
+    Betrag waere die zweite sinnvolle Achse — wie ungewoehnlich vs. wie viel Geld").
+
+    Der Deckel macht daraus mehr als eine Sortierfrage: eine Liste, die nach Faktor
+    ABGESCHNITTEN ist, laesst sich nicht ehrlich nach Betrag sortieren — die groesste Summe
+    des Tages kann bei Faktor 3,1 liegen und waere dann nie in der Auswahl. Deshalb ist die
+    Auswahl jetzt die VEREINIGUNG der beiden Bestenlisten, und jede Zeile sagt in `warumDrin`,
+    ueber welche sie hereingekommen ist. Sortiert wird danach in der Flaeche; die Auswahl
+    haengt nicht mehr an der Sortierung.
     """
     ebmed = ebene_median(wetten)
     out = []
@@ -250,8 +301,19 @@ def kandidaten(wetten: list, norm: dict, ab: float = KAND_AB, max_n: int = 60) -
             "pnlUsd": a.get("pnlUsd"),
             "ausgang": ([b.get("status") for b in (a.get("beine") or [])] or [None])[0],
         })
-    out.sort(key=lambda x: -x["faktor"])
-    return out[:max_n]
+    # Zwei Bestenlisten, je halber Deckel, dann vereinigt: so ist keine der beiden Achsen
+    # von der anderen abhaengig. Ueberschneidung ist der Normalfall und kein Fehler — die
+    # Zeile steht dann mit beiden Gruenden da.
+    haelfte = max(1, max_n // 2)
+    nach_faktor = sorted(out, key=lambda x: -x["faktor"])[:haelfte]
+    nach_betrag = sorted(out, key=lambda x: -x["einsatzUsd"])[:haelfte]
+    drin = {}
+    for grund, liste in (("faktor", nach_faktor), ("betrag", nach_betrag)):
+        for x in liste:
+            z = drin.setdefault(id(x), x)
+            z.setdefault("warumDrin", []).append(grund)
+    aus = sorted(drin.values(), key=lambda x: -x["faktor"])
+    return aus[:max_n]
 
 
 def kreuz(wetten: list, norm: dict) -> dict:
@@ -332,6 +394,55 @@ def _obergrenze(werte: list):
     return m + 1.645 * sd / (n ** 0.5)
 
 
+def kreuz_phase(wetten: list, norm: dict, phase) -> dict:
+    """Phase x Einsatzgroesse — dieselbe Rechnung wie `kreuz`, andere Zeilenachse.
+
+    07.09.2026 (Lucas, Backlog: „Achse umstellen auf live x Einsatzgroesse statt auffaellig
+    ja/nein"). Der Grund fuer die Umstellung ist gemessen: „auffaellig ja/nein" trennt
+    nichts — die Trennung liegt zwischen live und vor Anpfiff und im aeussersten Band.
+
+    `phase` wird hereingereicht (stake_analyse._phase), damit die Nachrechnung fuer alte
+    Zeilen an EINER Stelle steht und nicht hier ein zweites Mal.
+    """
+    ebmed = ebene_median(wetten)
+    zellen = defaultdict(lambda: {"n": 0, "einsatz": 0.0, "pnl": 0.0, "flach": [],
+                                  "spiele": set()})
+    for w in wetten or []:
+        if w.get("kombi") or not w.get("einsatzUsd"):
+            continue
+        pnl = (w.get("abrechnung") or {}).get("pnlUsd")
+        if pnl is None:
+            continue
+        f, _ = faktor(w, norm, ebmed)
+        if f is None:
+            continue
+        b = _bucket(f, STUFEN_FEIN)
+        ph = phase(w)
+        for zeile in ({ph, "alle"} if ph in ("vor", "live") else {"alle"}):
+            z = zellen[(zeile, b)]
+            z["n"] += 1
+            z["einsatz"] += float(w["einsatzUsd"])
+            z["pnl"] += float(pnl)
+            z["spiele"].add(w.get("eventId"))
+            q = w.get("quote")
+            if q and q > 1:
+                z["flach"].append((q - 1) if pnl > 0 else -1.0)
+    out = {}
+    for (zeile, b), z in zellen.items():
+        u = _untergrenze(z["flach"])
+        o = _obergrenze(z["flach"])
+        out.setdefault(zeile, {})[b] = {
+            "n": z["n"], "spiele": len(z["spiele"]),
+            "roi": round(z["pnl"] / z["einsatz"], 4) if z["einsatz"] else None,
+            "flach": round(sum(z["flach"]) / len(z["flach"]), 4) if z["flach"] else None,
+            "flachUg": round(u, 4) if u is not None else None,
+            "flachOg": round(o, 4) if o is not None else None,
+            "belegt": bool(u is not None and u > 0),
+            "belegtGegen": bool(o is not None and o < 0),
+        }
+    return out
+
+
 def block(wetten: list, norm: dict) -> dict:
     """Der komplette `randliga`-Block fuer stake_auswertung.json."""
     ebmed = ebene_median(wetten)
@@ -351,6 +462,9 @@ def block(wetten: list, norm: dict) -> dict:
         "ohneEbene": ohne[:40],
         "nOhneEbene": len(ohne),
         "kandidaten": kandidaten(wetten, norm),
+        "kandidatenAuswahl": ("Vereinigung der besten 30 nach Faktor und der besten 30 nach "
+                              "Betrag — sonst haenge die Betrags-Sortierung an einer Liste, "
+                              "die nach Faktor abgeschnitten wurde."),
         "kreuz": kreuz(wetten, norm),
         "warum": ("Die Spielklasse steht in keinem Feld des Feeds und laesst sich aus dem "
                   "Volumen nicht ableiten — nach Volumen gelten Sueper Lig, MLS und die "

@@ -68,9 +68,13 @@
     }}
   };
 
+  // 07.09.2026 — raw-zuerst wie der Rest des Dashboards (Bug-Klasse 13). Studio-Config und
+  // -Pools aendern sich selten, aber „selten" heisst: wenn sie sich aendern, sucht man den
+  // Fehler eine Stunde lang im Generator statt im Deploy.
   async function fetchJson(path, fallback){
-    try { return await (await fetch(path)).json(); }
-    catch(e){ console.warn(`[Studio] ${path} fehlt:`, e); return fallback; }
+    const j = await rawJson(path);
+    if (j === null) { console.warn(`[Studio] ${path} fehlt`); return fallback; }
+    return j;
   }
   async function fetchText(path, fallback){
     try { return await (await fetch(path)).text(); }

@@ -9,12 +9,14 @@ import { JSDOM } from 'jsdom';
 
 const RENDERER = new URL('../../renderer.js', import.meta.url);
 const POLYTAB  = new URL('../../polymarket-tab.js', import.meta.url);
+const RAWJSON  = new URL('../../raw-json.js', import.meta.url);
 
 function win(src) {
   const dom = new JSDOM('<!DOCTYPE html><body><div id="mainContent"></div></body>',
     { url: 'https://example.com/', runScripts: 'outside-only', pretendToBeVisual: true });
   const { window: w } = dom;
   w.fetch = () => Promise.resolve({ ok: true, json: () => Promise.resolve({}) });
+  w.eval(readFileSync(RAWJSON, 'utf8'));   // 07.09.2026: erstes Skript im Dashboard
   w.eval(readFileSync(src, 'utf8'));
   return w;
 }

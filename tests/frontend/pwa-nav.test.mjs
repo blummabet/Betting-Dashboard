@@ -10,6 +10,7 @@ import { JSDOM } from 'jsdom';
 
 const HTML = new URL('../../season-finish-v2.html', import.meta.url);
 const UI   = new URL('../../ui.js', import.meta.url);
+const RAWJSON = new URL('../../raw-json.js', import.meta.url);
 
 test('PWA-Tags + Navi-Markup (Bottom-Nav, Sheet, Web-Dropdown) im HTML vorhanden', () => {
   const raw = readFileSync(HTML, 'utf8');
@@ -75,6 +76,7 @@ test('showView spiegelt aktiven Tab in Bottom-Nav + Web-Dropdown; Toggles auf/zu
     </div>
   </body>`, { runScripts: 'outside-only' });
   const w = dom.window;
+  w.eval(readFileSync(RAWJSON, 'utf8'));   // 07.09.2026: erstes Skript im Dashboard
   w.eval(readFileSync(UI, 'utf8'));
   // Stubs NACH dem eval — initStatus o.ä. sind in ui.js selbst deklariert und würden Stubs
   // davor überschreiben (echter initStatus macht async fetch → innerHTML auf fehlendem Element).

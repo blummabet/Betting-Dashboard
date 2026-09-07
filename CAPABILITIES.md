@@ -4,7 +4,7 @@
 
 **Pflege:** Neues Feature, deaktiviertes Feature oder geschlossene Lücke → hier eine Zeile ändern. Das ist Teil des Features, nicht Nacharbeit.
 
-**Stand:** 07.09.2026 (Stake-Spielklasse + die drei Wege, auf denen ein fertiges Feature leer aussieht; §1 Poly-/Wallets-Zeilen sind Stand 24.08.)
+**Stand:** 07.09.2026 abends (raw-first als Funktion statt als Konvention; „Über der Norm" statt „Auffällig"; zweite Achse in der Spielklasse-Liste. Davor: Stake-Spielklasse + die drei Wege, auf denen ein fertiges Feature leer aussieht; §1 Poly-/Wallets-Zeilen sind Stand 24.08.)
 
 ---
 
@@ -1993,9 +1993,80 @@ falsch**.
    eine Stunde lang nicht da. **Ein fehlendes neues Feld sieht exakt aus wie ein Produzent, der
    nicht läuft.**
 
-Nebenbefund, offen: fünf weitere geladene Dateien holen bis heute relativ — `renderer.js`,
-`ui.js`, `pinnacle-poly.js`, `signal-check.js`, `results-v2.js`. Sie stehen namentlich in
-`AUSNAHMEN`, damit die Zahl nicht wächst, ohne dass es jemand entscheidet.
+Nebenbefund, erledigt am selben Abend — und die Lösung ist nicht „fünfmal dieselbe Änderung":
+
+### 07.09.2026 abends — raw-first ist jetzt eine Funktion, keine Konvention
+
+Die fünf offenen Dateien (`renderer.js`, `ui.js`, `pinnacle-poly.js`, `signal-check.js`,
+`results-v2.js`) holen ihre JSONs über **`rawJson()` aus `raw-json.js`** — dem ersten Skript in
+`season-finish-v2.html`. Damit steht die Reihenfolge (raw zuerst, Snapshot als Rückfall) **einmal**
+statt fünfzehnmal abgeschrieben. Wer sie abschreibt, kann sie falsch abschreiben; wer sie aufruft,
+nicht.
+
+Drei Dinge, die dabei herauskamen und den Aufwand rechtfertigen:
+
+- **Der breiter gefasste Guard fand zwei weitere Fälle**, die vorher niemand gesucht hatte:
+  `money-map.js` (holte `money_map.json` relativ, während die Übersicht dieselbe Datei raw-zuerst
+  hat) und `tiktok-studio.js`. Die alte Erkennung sah nur ein Literal direkt im `fetch()` —
+  `results-v2.js` holt seine URLs aus einer Liste und wäre nie aufgefallen. **Genau die Datei, die
+  den Befund ausgelöst hat.**
+- **`AUSNAHMEN` ist jetzt leer** und bleibt als Ort stehen, an dem eine *bewusste* Ausnahme mit
+  Grund steht.
+- **Zwölf Render-Tests wurden rot — zu Recht.** Sie luden `renderer.js` in ein DOM ohne
+  `window.rawJson`, also in eine Umgebung, die es im Browser nicht gibt. Neuer Guard:
+  *kein jsdom-Harness testet eine Umgebung ohne `raw-json.js`* — er liest die Harness-Dateien
+  selbst und meldet jeden, der eine `rawJson()`-Datei ohne den Helfer lädt.
+
+`rawFirstUrls()` deckt den zweiten Fall ab: Stellen mit mehreren Quellen der Reihe nach
+(`results-v2.js` mit lokalem Dev-Server). Dort schiebt sie die raw-URL vor **jeden**
+Snapshot-Eintrag — auch vor die `blummabet.github.io`-URL, die genau derselbe stündliche Snapshot
+ist und vorher wie eine unabhängige Quelle aussah.
+
+---
+
+### 07.09.2026 abends — „🚩 Auffällig" heißt jetzt „📏 Über der Norm"
+
+Der Reiter behauptete mit seinem **Namen** etwas, das die Daten daneben widerlegen. Gemessen an
+13.432 gesammelten Wetten (Stand: dieser Abend): im Band **>15× Norm** liegt die Rendite bei flachem
+Einsatz bei **−22,1 %** mit **Obergrenze −2,5 % (n=71)** — die Ansicht zeigte also, gepoolt über
+beide Phasen, belegt in die *falsche* Richtung. Vor Anpfiff verliert sogar der ruhige Teil belegt
+(`<1.5×`: −11,5 %, OG −7,6 %, n=987), live nicht.
+
+Zwei Änderungen, und nur die zweite ist Kosmetik:
+
+1. **Das Urteil über die eigene Prämisse wird gerechnet, nicht getippt.** `stake_analyse.norm_phase`
+   liefert `normPhase.urteil.praemisse` als `gestuetzt | widerlegt | offen`; die Fläche liest ab.
+   Ein getippter Satz wäre heute richtig und in zwei Wochen still falsch. Ein Frontend-Test verbietet
+   feste Prozentzahlen im Urteilstext.
+2. **Die Achse ist live × Einsatzgröße** statt „auffällig ja/nein" — die alte Achse trennt gemessen
+   nichts. Neue Bänder `STUFEN_FEIN` (mit `>15×` als eigenem Schnitt; die grobe `STUFEN`-Liste der
+   Spielklasse-Ansicht bleibt unangetastet, eine Änderung dort wäre eine stille Änderung an einer
+   laufenden Messung). Die Zeile **„beide zusammen"** ist als Summe markiert (`sr-pool`): nur gepoolt
+   wird `>15×` groß genug für eine Grenze — getrennt sind es n=17 und n=54.
+
+Alle drei Ausgänge sind formuliert, auch der, den wir gerade nicht haben. Eine Fläche, die nur
+„widerlegt" sagen kann, misst nichts.
+
+---
+
+### 07.09.2026 abends — zweite Achse in der Spielklasse-Liste, und warum das kein Sortierproblem war
+
+Backlog: *„Sortierung im Spielklasse-Reiter: aktuell nur nach Faktor. Nach Betrag wäre die zweite
+sinnvolle Achse."* Der Fallstrick sitzt nicht in der Sortierung, sondern im **Deckel**: eine Liste,
+die nach Faktor auf 60 abgeschnitten ist, nach Betrag zu sortieren zeigt „die größten Beträge
+**dieser Auswahl**" und sieht aus wie „die größten Beträge". Der größte Einsatz des Tages kann bei
+Faktor 3,1 liegen und wäre nie drin.
+
+→ `kandidaten()` liefert jetzt die **Vereinigung** der besten 30 nach Faktor und der besten 30 nach
+Betrag; jede Zeile trägt `warumDrin` (`faktor`, `betrag` oder beides) und die Fläche zeigt es als
+Spalte. Umgeschaltet wird nur die Sortierung — die Auswahl macht weiter der Erzeuger.
+
+**Nebenbei ein Guard-Fund derselben Klasse wie oben:** `test_alle_ligen_im_echten_ledger_haben_eine_ebene`
+war rot (`2nd-division-league`, `super-league-2`). Beide Male stand die Antwort **im Slug**. Statt
+zum zweiten Mal in zwei Tagen von Hand nachzutragen, liest `_ebene_aus_slug()` jetzt, was der Name
+selbst sagt: eine Ordnungszahl vorne (`2nd-division-…`, `3rd-liga`) und einen Anhang `-2`/`-3`, aber
+nur, wenn der Rumpf als oberste Klasse **bekannt** ist (`super-league` → 1, also `super-league-2` → 2).
+`irgendwas-2` bleibt `None` — geraten wird weiterhin nicht.
 
 ---
 

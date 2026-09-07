@@ -398,6 +398,58 @@ def kleine_liga_gross(wetten: list, norm: dict) -> list:
     return out
 
 
+# ── 3b. Die Praemisse der Auffaellig-Ansicht, nachgerechnet ──────────────────
+# 07.09.2026 (Lucas, Backlog: „Die 'Auffaellig'-Ansicht ehrlich beschriften" + „Achse
+# umstellen auf live x Einsatzgroesse statt auffaellig ja/nein").
+#
+# Die Ansicht hiess „auffaellig" und war damit eine Behauptung: hier passiert etwas, das
+# man beachten sollte. Gemessen stimmt das Gegenteil — im aeussersten Band liegt die
+# OBERgrenze unter null. Statt diesen Satz in die Flaeche zu TIPPEN (und ihn dort veralten
+# zu lassen, sobald die naechsten hundert Wetten abgerechnet sind), rechnet der Produzent
+# das Urteil jedes Mal neu und die Flaeche liest es nur ab.
+AUFF_BAENDER = ("3-6x", "6-15x", ">15x")   # das Gebiet, das die Ansicht „auffaellig" nennt
+
+
+def norm_phase(wetten: list, norm: dict) -> dict:
+    """Phase x Einsatzgroesse + das daraus abgeleitete Urteil ueber die eigene Praemisse."""
+    kreuz = LS.kreuz_phase(wetten, norm, _phase)
+    folgen, gegen = [], []
+    # „alle" zaehlt MIT. Die staerkste Aussage ueber das aeusserste Band gibt es naemlich
+    # nur gepoolt: getrennt nach Phase hat >15x n=17 und n=54, zusammen n=71 — und erst da
+    # kreuzt die Obergrenze null. Die Zeile bleibt als solche erkennbar (phase="alle"),
+    # damit niemand sie fuer eine dritte Phase haelt.
+    for zeile, spalten in kreuz.items():
+        for band, z in spalten.items():
+            eintrag = {"phase": zeile, "band": band, "n": z["n"],
+                       "flach": z["flach"], "flachUg": z["flachUg"], "flachOg": z["flachOg"]}
+            if z["belegt"]:
+                folgen.append(eintrag)
+            elif z["belegtGegen"]:
+                gegen.append(eintrag)
+    auff_folgen = [x for x in folgen if x["band"] in AUFF_BAENDER]
+    auff_gegen = [x for x in gegen if x["band"] in AUFF_BAENDER]
+    # Drei Zustaende, nicht zwei: „offen" ist die ehrlichste Antwort, solange keine der
+    # beiden Grenzen null kreuzt — und der haeufigste Zustand bei dieser Datenmenge.
+    praemisse = ("gestuetzt" if auff_folgen else
+                 "widerlegt" if auff_gegen else "offen")
+    return {
+        "spalten": [n for _, n in LS.STUFEN_FEIN],
+        "zeilen": ["vor", "live", "alle"],
+        "auffBaender": list(AUFF_BAENDER),
+        "kreuz": kreuz,
+        "urteil": {
+            "praemisse": praemisse,
+            "folgen": sorted(folgen, key=lambda x: -(x["flachUg"] or 0)),
+            "gegen": sorted(gegen, key=lambda x: (x["flachOg"] if x["flachOg"] is not None else 0)),
+        },
+        "warum": ("Die Ansicht behauptet mit ihrem Namen, ein auffaellig grosser Einsatz sei "
+                  "beachtenswert. Diese Tabelle prueft genau das — und trennt dabei nach der "
+                  "Achse, die gemessen wirklich trennt: live gegen vor Anpfiff. Gewertet wird "
+                  "die einseitige 95%-Grenze bei flachem Einsatz; ueber null traegt Folgen, "
+                  "unter null traegt Dagegenhalten. Ein Punktschaetzer ist kein Beleg."),
+    }
+
+
 # ── 4. Abdeckung ─────────────────────────────────────────────────────────────
 def abdeckung(led: dict) -> dict:
     l = led.get("luecke") or {}
@@ -587,6 +639,7 @@ def auswerten(led: dict, jetzt: str) -> dict:
         "ligaNorm": dict(sorted(norm.items(), key=lambda kv: -kv[1]["n"])[:60]),
         "auffaellige": kleine_liga_gross(wetten, norm)[:60],
         "randliga": LS.block(wetten, norm),
+        "normPhase": norm_phase(wetten, norm),
         "abdeckung": abdeckung(led),
         "hinweis": ("Das Urteil haengt an der RENDITE-Untergrenze, nicht an der Trefferquote: "
                     "gemessen an den ersten 950 Beinen liegt die Trefferquote bei 63,9%%, die "

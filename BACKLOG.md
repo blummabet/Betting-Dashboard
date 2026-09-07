@@ -12,23 +12,37 @@ Reihenfolge ist Absicht: oben, was ohne neue Entscheidung gebaut werden kann.
   ~12 Kandidaten/Tag → ca. zwei Wochen) und `topliga_hoher_einsatz` (Ziel n=200). Bis dahin ist
   die Spielklasse-Ansicht **Anzeige, keine Empfehlung** — der Rückblick ist der Fund, nicht der
   Beleg. Details: CAPABILITIES §„07.09.2026 — die Spielklasse einer Liga".
-- ⏳ **Die „🚩 Auffällig"-Ansicht ehrlich beschriften.** Ihre Prämisse ist gemessen invertiert:
-  Norm-Faktor >15× ergab ROI **−16,73 %** (n=131, Treffer 52,7 % gegen 58,5 % implizit), das
-  Top-1 % nach Norm −16,10 %. Die Fläche behauptet das Gegenteil, ohne es zu sagen.
-- ⏳ **Achse umstellen** auf live × Einsatzgröße statt „auffällig ja/nein". Gemessen: ≥5× Norm
-  live n=466 → −0,01 %, vor Anpfiff n=146 → **−11,77 %**.
-- ⏳ **Sortierung im Spielklasse-Reiter**: aktuell nur nach Faktor. Nach Betrag wäre die zweite
-  sinnvolle Achse (wie ungewöhnlich vs. wie viel Geld).
+- ✅ **Die „🚩 Auffällig"-Ansicht ehrlich beschriftet** (07.09. abends): heißt jetzt
+  **„📏 Über der Norm"**, und das Urteil über die eigene Prämisse wird **gerechnet**
+  (`stake_analyse.norm_phase` → `normPhase.urteil.praemisse`), nicht getippt. Nachgemessen mit
+  der Faktor-Definition des Erzeugers: `>15×` gepoolt **−22,1 %, OG −2,5 %, n=71** → belegt
+  gegen die Prämisse. Ein Frontend-Test verbietet feste Prozentzahlen im Urteilstext.
+- ✅ **Achse umgestellt** auf live × Einsatzgröße (`STUFEN_FEIN`, neuer Schnitt bei 15×). Vor
+  Anpfiff verliert belegt (`<1.5×` −11,5 %, OG −7,6 %, n=987), live nicht — das ist die Achse,
+  die trennt.
+- ✅ **Sortierung im Spielklasse-Reiter** nach Betrag (07.09. abends). Kein reines Sortierthema:
+  die Auswahl ist jetzt die **Vereinigung** der besten 30 nach Faktor und nach Betrag, jede Zeile
+  mit `warumDrin`. Sonst zeigte „nach Betrag" die größten Beträge einer nach Faktor
+  abgeschnittenen Liste.
 - 🔒 **Verknüpfung zu den anderen Büchern** — bewusst zurückgestellt (Lucas 06.09.: *„lass mal
   aus, das kommt erst wenn wir Stake als einzelne Quelle vernünftig verwenden"*).
 - ℹ️ **Kein Track-Record je Konto möglich.** `user` ist im Feed dauerhaft `null`; Stake
   anonymisiert die Highroller-Liste vollständig. Nicht erneut versuchen.
 
 ### Frontend-Hygiene
-- ⏳ **Fünf Dateien holen ihre JSONs relativ** und zeigen damit bis zu eine Stunde alte Daten:
-  `renderer.js`, `ui.js`, `pinnacle-poly.js`, `signal-check.js`, `results-v2.js`. Sie stehen
-  namentlich in `AUSNAHMEN` in `tests/frontend/raw-first-fetch.test.mjs`. Pro Datei dieselbe
-  fünfzeilige Änderung (siehe `_srJson` in `stake-radar.js`). Bug-Klasse 13.
+- ✅ **raw-first ist jetzt eine Funktion** (07.09. abends): `raw-json.js` (`rawJson`,
+  `rawFirstUrls`) als erstes Skript im Dashboard; die fünf offenen Dateien rufen sie auf statt
+  die Reihenfolge abzuschreiben. `AUSNAHMEN` ist leer. Der breiter gefasste Guard fand dabei
+  **zwei weitere** Fälle (`money-map.js`, `tiktok-studio.js`) — die alte Erkennung sah nur
+  Literale direkt im `fetch()`. Neuer Guard: kein jsdom-Harness testet eine Umgebung ohne
+  `raw-json.js`.
+
+### Ops, offen
+- ⏳ **Das Pages-Artefakt steht bei 160,27 MB gegen ein Budget von 160 MB** —
+  `test_pages_artifact_size.py` ist deshalb rot, und zwar **vor** den Änderungen dieses Abends
+  (die wiegen ~14 KB). Größte Posten: Wurzel 110 MB, `matches/` 49 MB. Entscheidung nötig:
+  aufräumen (was darf weg?) oder Budget begründet anheben. Nicht stillschweigend hochsetzen —
+  der Test misst die Deploy-Dauer, nicht den Geschmack.
 
 ### Angeboten, nicht begonnen
 - ⏳ **Draw-No-Bet als Alternative auf gerichteten Cards** + eigene vorregistrierte Schublade.

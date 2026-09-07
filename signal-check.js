@@ -73,9 +73,7 @@ function initSignalCheck() {
   if (_signalCheckLoaded) return;
   _signalCheckLoaded = true;
   panel.innerHTML = '<p style="color:#8b949e;text-align:center;padding:40px">🔎 Lade Signal-Analyse…</p>';
-  fetch('signal_check.json?t=' + Date.now(), { cache: 'no-store' })
-    .then(function (r) { return r.ok ? r.json() : null; })
-    .catch(function () { return null; })
+  rawJson('signal_check.json')
     .then(function (d) { _scData = d; _scBuild(panel); });
 }
 

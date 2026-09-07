@@ -473,12 +473,12 @@ async function loadWmControlCenter() {
 
   // Parallel fetch aller Health-relevanten Files
   const [wmData, balance, autoBets, ks, health, results] = await Promise.all([
-    fetch('wm2026-data.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
-    fetch('wm_poly_balance.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
-    fetch('wm_auto_bets_placed.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
-    fetch('wm_kill_switch.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
-    fetch('position_health.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
-    fetch('wm_results.json?t=' + Date.now()).then(r => r.ok ? r.json() : null).catch(() => null),
+    rawJson('wm2026-data.json'),
+    rawJson('wm_poly_balance.json'),
+    rawJson('wm_auto_bets_placed.json'),
+    rawJson('wm_kill_switch.json'),
+    rawJson('position_health.json'),
+    rawJson('wm_results.json'),
   ]);
 
   // ── Stats berechnen ──
@@ -569,9 +569,8 @@ async function loadTelegramLog() {
   if (!el) return;
 
   try {
-    const r = await fetch('telegram-log.json?t=' + Date.now());
-    if (!r.ok) { el.innerHTML = '<div style="color:#f85149;padding:14px;text-align:center;">telegram-log.json nicht erreichbar</div>'; return; }
-    const log = await r.json();
+    const log = await rawJson('telegram-log.json');
+    if (!log) { el.innerHTML = '<div style="color:#f85149;padding:14px;text-align:center;">telegram-log.json nicht erreichbar</div>'; return; }
     if (!Array.isArray(log) || log.length === 0) {
       el.innerHTML = '<div style="color:var(--muted);padding:14px;text-align:center;">Keine Logs</div>';
       return;
@@ -641,9 +640,8 @@ async function initPolyTrader() {
     : Promise.resolve();
 
   try {
-    const res = await fetch('poly_trader_data.json?_=' + Date.now());
-    if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    _polyTraderData = await res.json();
+    _polyTraderData = await rawJson('poly_trader_data.json');
+    if (!_polyTraderData) throw new Error('poly_trader_data.json nicht erreichbar');
   } catch(e) {
     // Still show WM table even if poly_trader_data.json fails
     await wmPromise;
