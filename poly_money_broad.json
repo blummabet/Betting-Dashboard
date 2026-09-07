@@ -2,14 +2,14 @@
  "n": 169,
  "minOdds": 1.35,
  "moneyHitRate": 0.314,
- "priceHitRate": 0.361,
+ "priceHitRate": 0.367,
  "brierMoney": 0.9873,
  "brierPrice": 0.7262,
  "disagree": {
   "n": 48,
   "moneyWon": 2,
-  "priceWon": 10,
-  "neither": 36
+  "priceWon": 11,
+  "neither": 35
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -25,7 +25,7 @@
  ],
  "guete": {
   "belastbar": 169,
-  "preis_echo": 234,
+  "preis_echo": 233,
   "abgeschnitten": 23,
   "unbekannt": 417,
   "leer": 0
@@ -96,7 +96,7 @@
    "league": "EPL",
    "winner": "Draw (Nottingham Forest FC vs. Tottenham Hotspur FC)",
    "moneyFav": "Tottenham Hotspur FC",
-   "priceFav": "Nottingham Forest FC",
+   "priceFav": "Tottenham Hotspur FC",
    "moneyShare": 0.584,
    "priceProb": 0.357,
    "moneyOK": false,
@@ -512,13 +512,13 @@
    "totalUsd": 91002
   }
  ],
- "generatedAt": "2026-09-07T12:41:49.707161+00:00",
+ "generatedAt": "2026-09-07T13:05:23.691374+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 422,
   "nfl": 800,
-  "mlb": 654,
+  "mlb": 669,
   "nhl": 500,
   "mls": 733,
   "epl": 586,
@@ -535,7 +535,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 634,
+  "esports": 631,
   "cs2": 420,
   "lol": 402,
   "dota": 9,
@@ -545,7 +545,7 @@
   "boxing": 253,
   "golf": 366,
   "f1": 380,
-  "cricket": 644,
+  "cricket": 640,
   "allsvenskan": 1,
   "austria-bundesliga": 270,
   "brazil-serie-b": 4,
@@ -595,8 +595,8 @@
   "sweepAdded": 404
  },
  "vorStats": {
-  "kandidaten": 36,
-  "budgetLeer": 14,
+  "kandidaten": 37,
+  "budgetLeer": 15,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
   "mitAnteilen": 22,
@@ -604,39 +604,49 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1093,
-   "usd": 16264691,
-   "beispiel": "fifwc-mex-eng-2026-07-05-player-props"
+   "n": 884,
+   "usd": 14159529,
+   "beispiel": "fifwc-civ-ecu-2026-06-14"
   },
   "nba": {
-   "n": 88,
-   "usd": 1929565,
+   "n": 149,
+   "usd": 2142087,
    "beispiel": "nba-sas-okc-2026-05-18"
   },
   "nhl": {
-   "n": 29,
-   "usd": 231076,
+   "n": 31,
+   "usd": 239576,
    "beispiel": "nhl-phi-car-2026-05-02"
   },
+  "presidential": {
+   "n": 3,
+   "usd": 201227,
+   "beispiel": "presidential-election-winner-2028"
+  },
+  "fed": {
+   "n": 8,
+   "usd": 180708,
+   "beispiel": "fed-decision-in-september-762"
+  },
   "fif": {
-   "n": 41,
-   "usd": 197159,
-   "beispiel": "fif-alb-isr-2026-06-03"
+   "n": 35,
+   "usd": 172400,
+   "beispiel": "fif-prt-nga-2026-06-10"
   },
   "cfb": {
-   "n": 48,
-   "usd": 159903,
-   "beispiel": "cfb-unlv-hawaii-2026-09-05"
-  },
-  "clf": {
-   "n": 29,
-   "usd": 141927,
-   "beispiel": "clf-fey-ata-2026-08-02-more-markets"
+   "n": 50,
+   "usd": 166436,
+   "beispiel": "cfb-lou-miss-2026-09-06"
   },
   "2026": {
-   "n": 20,
-   "usd": 101427,
+   "n": 24,
+   "usd": 140682,
    "beispiel": "2026-mens-us-open-winner-tennis"
+  },
+  "clf": {
+   "n": 22,
+   "usd": 125573,
+   "beispiel": "clf-psg-mun-2026-08-08"
   },
   "nbasl": {
    "n": 1,
@@ -644,8 +654,8 @@
    "beispiel": "nbasl-cle-nop-2026-07-15"
   },
   "which": {
-   "n": 6,
-   "usd": 84726,
+   "n": 8,
+   "usd": 89729,
    "beispiel": "which-party-will-gain-most-seats-in-russian-parliamentary-election"
   },
   "cbb": {
@@ -653,15 +663,15 @@
    "usd": 78928,
    "beispiel": "cbb-uconn-mich-2026-04-06"
   },
-  "fed": {
-   "n": 5,
-   "usd": 76453,
-   "beispiel": "fed-decision-in-september-762"
-  },
   "world": {
-   "n": 25,
-   "usd": 59887,
+   "n": 23,
+   "usd": 57350,
    "beispiel": "world-cup-winner"
+  },
+  "btc": {
+   "n": 25,
+   "usd": 56814,
+   "beispiel": "btc-updown-15m-1770698700"
   },
   "democratic": {
    "n": 1,
@@ -673,35 +683,25 @@
    "usd": 35603,
    "beispiel": "ecs-ars-mci-2026-08-16"
   },
-  "btc": {
-   "n": 15,
-   "usd": 27947,
-   "beispiel": "btc-updown-5m-1788084000"
+  "ballon": {
+   "n": 2,
+   "usd": 27858,
+   "beispiel": "ballon-dor-winner-2026"
+  },
+  "michigan": {
+   "n": 2,
+   "usd": 26179,
+   "beispiel": "michigan-senate-election-winner"
   },
   "kbo": {
-   "n": 14,
-   "usd": 21251,
+   "n": 13,
+   "usd": 19987,
    "beispiel": "kbo-ssg-kiw-2026-09-03"
   },
   "the": {
    "n": 1,
    "usd": 18247,
    "beispiel": "the-international-2026-winner-20260629212545745"
-  },
-  "blast": {
-   "n": 1,
-   "usd": 15111,
-   "beispiel": "blast-open-porto-2026-winner-20260806201117422"
-  },
-  "bkfibaw": {
-   "n": 4,
-   "usd": 14838,
-   "beispiel": "bkfibaw-bel-aus-2026-09-07"
-  },
-  "skc": {
-   "n": 4,
-   "usd": 12966,
-   "beispiel": "skc-okh-kha-2026-08-18"
   }
  }
 }
