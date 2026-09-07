@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-07T22:32:49.747337+00:00",
+ "generatedAt": "2026-09-07T23:02:51.897819+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -10,11 +10,11 @@
  ],
  "minGapPP": 6.0,
  "polyRowsSeen": 580,
- "pinnKeys": 278,
- "matched": 188,
+ "pinnKeys": 286,
+ "matched": 194,
  "footballRows": 180,
  "crossRows": 400,
- "footballSkippedStale": 102,
+ "footballSkippedStale": 93,
  "seenBySport": {
   "americanfootball_nfl": 180,
   "baseball_mlb": 70,
@@ -24,13 +24,42 @@
   "soccer_liga": 144
  },
  "matchedBySport": {
-  "baseball_mlb": 8,
+  "baseball_mlb": 14,
   "soccer_mls": 36,
   "soccer_liga": 144
  },
  "trackRecord": {
-  "tracked": 297,
+  "tracked": 299,
   "converged": 69
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|cincinnatireds-losangelesdodgers|cincinnatireds",
+   "sport": "baseball_mlb",
+   "event": "Cincinnati Reds vs Los Angeles Dodgers",
+   "market": "Moneyline",
+   "outcome": "Cincinnati Reds",
+   "polyPP": 37.5,
+   "pinnPP": 25.8,
+   "gapPP": 11.71,
+   "vol": 337288,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-07T23:02:51.897187+00:00"
+  },
+  {
+   "id": "baseball_mlb|cincinnatireds-losangelesdodgers|losangelesdodgers",
+   "sport": "baseball_mlb",
+   "event": "Cincinnati Reds vs Los Angeles Dodgers",
+   "market": "Moneyline",
+   "outcome": "Los Angeles Dodgers",
+   "polyPP": 62.5,
+   "pinnPP": 74.2,
+   "gapPP": -11.71,
+   "vol": 337288,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 0.0,
+   "firstSeen": "2026-09-07T23:02:51.897187+00:00"
+  }
+ ]
 }

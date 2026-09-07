@@ -1,19 +1,27 @@
 {
- "n": 181,
+ "n": 184,
  "minOdds": 1.35,
- "moneyHitRate": 0.315,
- "priceHitRate": 0.354,
- "brierMoney": 0.9887,
- "brierPrice": 0.726,
+ "moneyHitRate": 0.326,
+ "priceHitRate": 0.364,
+ "brierMoney": 0.9746,
+ "brierPrice": 0.7215,
  "disagree": {
-  "n": 51,
+  "n": 50,
   "moneyWon": 3,
   "priceWon": 10,
-  "neither": 38
+  "neither": 37
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
  "byLeague": [
+  {
+   "league": "LA-LIGA",
+   "n": 21,
+   "moneyHitRate": 0.333,
+   "brierMoney": 1.0208,
+   "brierPrice": 0.8061,
+   "verdict": "preis_besser"
+  },
   {
    "league": "EPL",
    "n": 20,
@@ -21,18 +29,10 @@
    "brierMoney": 1.0273,
    "brierPrice": 0.7959,
    "verdict": "preis_besser"
-  },
-  {
-   "league": "LA-LIGA",
-   "n": 20,
-   "moneyHitRate": 0.3,
-   "brierMoney": 1.0597,
-   "brierPrice": 0.8218,
-   "verdict": "preis_besser"
   }
  ],
  "guete": {
-  "belastbar": 181,
+  "belastbar": 184,
   "preis_echo": 228,
   "abgeschnitten": 22,
   "unbekannt": 417,
@@ -104,7 +104,7 @@
    "league": "EPL",
    "winner": "Draw (Nottingham Forest FC vs. Tottenham Hotspur FC)",
    "moneyFav": "Tottenham Hotspur FC",
-   "priceFav": "Nottingham Forest FC",
+   "priceFav": "Tottenham Hotspur FC",
    "moneyShare": 0.584,
    "priceProb": 0.357,
    "moneyOK": false,
@@ -146,6 +146,18 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 476481
+  },
+  {
+   "key": "lal-elc-rso-2026-09-07",
+   "league": "LA-LIGA",
+   "winner": "Real Sociedad de Fútbol",
+   "moneyFav": "Real Sociedad de Fútbol",
+   "priceFav": "Real Sociedad de Fútbol",
+   "moneyShare": 0.608,
+   "priceProb": 0.427,
+   "moneyOK": true,
+   "priceOK": true,
+   "totalUsd": 459463
   },
   {
    "key": "fl1-olm-pfc-2026-09-06",
@@ -506,34 +518,22 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 100706
-  },
-  {
-   "key": "fl1-hac-sbr-2026-09-05",
-   "league": "LIGUE-1",
-   "winner": "Stade Brestois 29",
-   "moneyFav": "Le Havre AC",
-   "priceFav": "Stade Brestois 29",
-   "moneyShare": 0.517,
-   "priceProb": 0.381,
-   "moneyOK": false,
-   "priceOK": true,
-   "totalUsd": 97814
   }
  ],
- "generatedAt": "2026-09-07T22:35:46.491437+00:00",
+ "generatedAt": "2026-09-07T23:07:54.715829+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 422,
   "nfl": 800,
-  "mlb": 726,
+  "mlb": 722,
   "nhl": 505,
   "mls": 744,
   "epl": 586,
   "soccer": 800,
   "tennis": 800,
   "ucl": 547,
-  "la-liga": 658,
+  "la-liga": 657,
   "bundesliga": 538,
   "serie-a": 51,
   "ligue-1": 576,
@@ -543,7 +543,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 629,
+  "esports": 628,
   "cs2": 420,
   "lol": 402,
   "dota": 9,
@@ -572,9 +572,9 @@
   "japan-j-league": 547,
   "japan-j2-league": 544,
   "k-league": 532,
-  "la-liga-2": 562,
+  "la-liga-2": 555,
   "liga-mx-apertura": 2,
-  "ligue-2": 537,
+  "ligue-2": 531,
   "naitons-league": 1,
   "national-league": 654,
   "nations-league": 25,
@@ -585,7 +585,7 @@
   "scotland-league-cup": 179,
   "scottish-premiership": 481,
   "serbian-superliga": 344,
-  "serie-b": 547,
+  "serie-b": 541,
   "slovenia-prvaliga": 250,
   "sweden-allsvenskan": 449,
   "switzerland-super-league": 318,
@@ -603,17 +603,17 @@
   "sweepAdded": 404
  },
  "vorStats": {
-  "kandidaten": 10,
+  "kandidaten": 7,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 10,
-  "calls": 10
+  "mitAnteilen": 7,
+  "calls": 7
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1455,
-   "usd": 48781291,
+   "n": 1475,
+   "usd": 48896026,
    "beispiel": "fifwc-fra-eng-2026-07-18-more-markets"
   },
   "balance": {
@@ -622,13 +622,13 @@
    "beispiel": "balance-of-power-2026-midterms"
   },
   "nba": {
-   "n": 231,
-   "usd": 4944584,
+   "n": 162,
+   "usd": 4700922,
    "beispiel": "nba-sas-nyk-2026-06-10"
   },
   "ecs": {
-   "n": 6,
-   "usd": 1867745,
+   "n": 7,
+   "usd": 1869014,
    "beispiel": "ecs-ars-mci-2026-08-16"
   },
   "world": {
@@ -641,20 +641,20 @@
    "usd": 446962,
    "beispiel": "fed-decision-in-september-762"
   },
-  "nhl": {
-   "n": 87,
-   "usd": 428499,
-   "beispiel": "nhl-las-car-2026-06-04"
-  },
   "cfb": {
-   "n": 38,
-   "usd": 355670,
+   "n": 33,
+   "usd": 366779,
    "beispiel": "cfb-washst-wash-2026-09-06"
   },
   "usc": {
    "n": 4,
    "usd": 335318,
    "beispiel": "usc-psg-av-2026-08-12"
+  },
+  "nhl": {
+   "n": 43,
+   "usd": 292920,
+   "beispiel": "nhl-las-car-2026-06-04"
   },
   "will": {
    "n": 5,
@@ -663,22 +663,22 @@
   },
   "fif": {
    "n": 40,
-   "usd": 199261,
+   "usd": 201642,
    "beispiel": "fif-bra-egy-2026-06-06-more-markets"
   },
-  "cbb": {
-   "n": 50,
-   "usd": 177903,
-   "beispiel": "cbb-uconn-mich-2026-04-06"
-  },
   "clf": {
-   "n": 31,
-   "usd": 159709,
+   "n": 30,
+   "usd": 165451,
    "beispiel": "clf-jej-bmu-2026-08-04-more-markets"
   },
+  "cbb": {
+   "n": 37,
+   "usd": 155302,
+   "beispiel": "cbb-uconn-mich-2026-04-06"
+  },
   "2026": {
-   "n": 14,
-   "usd": 133450,
+   "n": 15,
+   "usd": 135350,
    "beispiel": "2026-mens-us-open-winner-tennis"
   },
   "nbasl": {
@@ -693,7 +693,7 @@
   },
   "ballon": {
    "n": 7,
-   "usd": 66434,
+   "usd": 66430,
    "beispiel": "ballon-dor-winner-2026"
   },
   "presidential": {
@@ -702,13 +702,13 @@
    "beispiel": "presidential-election-winner-2028"
   },
   "btc": {
-   "n": 21,
-   "usd": 36611,
+   "n": 20,
+   "usd": 35363,
    "beispiel": "btc-updown-5m-1784322000"
   },
   "argcopa": {
-   "n": 2,
-   "usd": 25980,
+   "n": 3,
+   "usd": 27099,
    "beispiel": "argcopa-rie-glp-2026-08-18"
   }
  }
