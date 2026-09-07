@@ -103,8 +103,17 @@ class TestGegenDieEchtenPools(unittest.TestCase):
         r = BC.match_poly({"home": "Remo", "away": "Flamengo"}, {"side": "away"}, ents)
         if not r or not r.get("key"):
             self.skipTest("das Spiel liegt nicht mehr im Close-Pool")
-        offen = json.loads(sl.read_text(encoding="utf-8")).get("open") or {}
-        treffer = [v for v in offen.values() if v.get("key") == r["key"]]
+        # 07.09.2026: hier stand nur `open`. Am Abend des 06.09. war Remo–Flamengo ein offener
+        # Play; am Morgen danach war es abgerechnet und aus `open` verschwunden — der Test fiel
+        # um, obwohl der Schluessel-Join tadellos funktionierte. Derselbe Fehler, den ich heute
+        # schon zwoelfmal in fremdem Code gefunden habe: ein Test haelt einen MOMENT fest statt
+        # einer Regel. Die Regel ist „der Schluessel findet die Zeile", nicht „die Zeile ist
+        # gerade offen".
+        _d = json.loads(sl.read_text(encoding="utf-8"))
+        _offen = _d.get("open") or {}
+        zeilen = list(_offen.values() if isinstance(_offen, dict) else _offen)
+        zeilen += list(_d.get("settled") or [])
+        treffer = [v for v in zeilen if isinstance(v, dict) and v.get("key") == r["key"]]
         self.assertTrue(treffer, f"kein Shortlist-Eintrag zu {r['key']}")
         self.assertIn(r["sideKey"], [v.get("side") for v in treffer],
                       "Marktschluessel gleich, Seite verschieden — dann waere es KEINE Bestaetigung")

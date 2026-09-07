@@ -47,6 +47,34 @@ def plausible_1x2(hw, dr, aw) -> bool:
     return MIN_OVERROUND <= overround <= MAX_OVERROUND
 
 
+# 07.09.2026 — die BESTPREIS-Linie braucht eine eigene Untergrenze, und zwar aus genau dem
+# Grund, aus dem die obere Regel richtig ist. `plausible_1x2` verwirft alles unter Overround 1,00
+# als „Arbitrage-Geschenk = Fehler". Fuer EIN Buch stimmt das. Die Best-of-N-Linie (Maximum ueber
+# ~29 Buecher je Ausgang) summiert dagegen regelmaessig UNTER 1,00 — das ist kein Fehler, das ist
+# ihr ganzer Zweck: nur dann gibt es ueberhaupt Value. Schon mit drei Buechern kam im Test
+# Booksum 0,9868 heraus.
+#
+# Deshalb eine zweite Regel statt einer aufgeweichten ersten: die alte Schwelle schuetzt weiter
+# die Steam-/CLV-Maschinerie (die auf Einzelbuch-Linien rechnet) unveraendert, und die neue laesst
+# genau das zu, was sie zulassen soll. Nach unten bleibt eine Grenze — eine Booksum unter 0,90
+# ueber 29 Buecher ist kein Markt, sondern ein Mapping-Fehler (falsche Seite, falsche Linie).
+MIN_OVERROUND_BEST = 0.90   # Best-of-N summiert bewusst unter 100 %
+
+
+def plausible_best_1x2(hw, dr, aw) -> bool:
+    """True = plausible BESTPREIS-Linie (Maximum ueber mehrere Buecher). Wie plausible_1x2,
+    aber mit gesenkter Overround-Untergrenze — s. Kommentar oben."""
+    if not (hw and dr and aw):
+        return False
+    try:
+        hw, dr, aw = float(hw), float(dr), float(aw)
+    except (TypeError, ValueError):
+        return False
+    if hw < MIN_SIDE_ODDS or aw < MIN_SIDE_ODDS or dr < MIN_DRAW_ODDS:
+        return False
+    return MIN_OVERROUND_BEST <= (1.0 / hw + 1.0 / dr + 1.0 / aw) <= MAX_OVERROUND
+
+
 def devig_1x2(hw, dr, aw):
     """De-viggte faire Wahrscheinlichkeiten {home,draw,away} — ODER None bei Platzhalter-Quoten.
 
