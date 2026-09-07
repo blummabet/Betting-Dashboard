@@ -217220,7 +217220,13 @@
     "usd": 311,
     "ts": 1788734529
    }
-  ]
+  ],
+  "resolved": true,
+  "resolvedPrices": {
+   "Ben Shelton": 1.0,
+   "Stefanos Tsitsipas": 0.0
+  },
+  "resolvedAt": "2026-09-07T02:03:38.169687+00:00"
  },
  "cs2-bhe-reda-2026-09-06": {
   "shares": {
@@ -218423,8 +218429,8 @@
  },
  "mlb-wsh-lad-2026-09-06": {
   "shares": {
-   "Washington Nationals": 39756.32212118501,
-   "Los Angeles Dodgers": 69164.71429284997
+   "Washington Nationals": 133948.33910843,
+   "Los Angeles Dodgers": 233033.00604379995
   },
   "prices": {
    "Washington Nationals": 0.365,
@@ -218436,35 +218442,35 @@
   },
   "league": "MLB",
   "sport": "US-Sport",
-  "totalUsd": 90098,
+  "totalUsd": 149034,
   "whales": [
    {
-    "wallet": "0x629c2844d5c0e36774a67fe10dcd43ca31a76c01",
+    "wallet": "0xdb859a551fcf56e49416160911476bea7307152f",
     "side": "Los Angeles Dodgers",
-    "usd": 12700,
-    "avgPrice": 0.64
-   },
-   {
-    "wallet": "0xb8532690dbc86a879d07cee40f99b9c50a520d33",
-    "side": "Washington Nationals",
-    "usd": 10555,
-    "avgPrice": 0.3699
+    "usd": 141273,
+    "avgPrice": 0.6399
    },
    {
     "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
     "side": "Washington Nationals",
-    "usd": 10318,
+    "usd": 65903,
     "avgPrice": 0.3599
    },
    {
-    "wallet": "0xd27cc742d023d06ef633a4c880cf1ff1836ec081",
+    "wallet": "0x3dfb153c197d4c19d3b31c1ecd2c7b6860eeabaf",
+    "side": "Washington Nationals",
+    "usd": 32444,
+    "avgPrice": 0.36
+   },
+   {
+    "wallet": "0x31706006a0ef88b2b8f6d093efbc83b359fbc6a0",
     "side": "Los Angeles Dodgers",
-    "usd": 6668,
+    "usd": 15875,
     "avgPrice": 0.64
    }
   ],
-  "hoursToKickoff": 0.65,
-  "capturedAt": "2026-09-07T01:33:41.286113+00:00",
+  "hoursToKickoff": 0.15,
+  "capturedAt": "2026-09-07T02:03:38.169687+00:00",
   "cond": "0x9c49a169f2a83d408fd70970c7fcb214afed99be97a837ab8dea870e3db2a01e",
   "frage": "Washington Nationals vs. Los Angeles Dodgers",
   "tokens": {
@@ -218473,95 +218479,127 @@
   },
   "book": {
    "side": "Los Angeles Dodgers",
-   "bid": 0.63,
-   "ask": 0.64,
+   "bid": 0.64,
+   "ask": 0.65,
    "spreadC": 1.0,
-   "spreadPct": 1.56,
+   "spreadPct": 1.54,
    "bids": [
     [
+     0.64,
+     181396
+    ],
+    [
      0.63,
-     135979
+     136940
     ],
     [
      0.62,
-     125977
+     120029
     ],
     [
      0.61,
-     93322
+     89590
     ],
     [
      0.6,
-     41945
+     33377
     ],
     [
      0.59,
      1805
-    ],
-    [
-     0.58,
-     3930
     ]
    ],
    "asks": [
     [
-     0.64,
-     177885
-    ],
-    [
      0.65,
-     269618
+     225289
     ],
     [
      0.66,
-     176367
+     159031
     ],
     [
      0.67,
-     44958
+     42683
     ],
     [
      0.68,
-     21790
+     16850
     ],
     [
      0.69,
-     7025
+     150
+    ],
+    [
+     0.7,
+     27789
     ]
    ]
   },
   "trades": [
    {
-    "wallet": "0xb8532690dbc86a879d07cee40f99b9c50a520d33",
-    "action": "BUY",
-    "side": "Washington Nationals",
-    "price": 0.37,
-    "usd": 10700,
-    "ts": 1788744414
-   },
-   {
-    "wallet": "0x5e9458202b5817a72cf81105ec8a30e6f3705ba1",
-    "action": "BUY",
-    "side": "Washington Nationals",
-    "price": 0.36,
-    "usd": 9649,
-    "ts": 1788743869
-   },
-   {
-    "wallet": "0x14e7752d2716cd3b5bcbe8c08d4561491d9ebb64",
+    "wallet": "0x92b66f8fd38cbf7526d97f6ce337231b256ff855",
     "action": "BUY",
     "side": "Los Angeles Dodgers",
-    "price": 0.65,
-    "usd": 1866,
-    "ts": 1788743392
+    "price": 0.64,
+    "usd": 700,
+    "ts": 1788746251
    },
    {
-    "wallet": "0xb357437166e9dc62a8c5aef1f5a8fb78bbeca4ae",
+    "wallet": "0x92b66f8fd38cbf7526d97f6ce337231b256ff855",
     "action": "BUY",
     "side": "Los Angeles Dodgers",
-    "price": 0.65,
-    "usd": 415,
-    "ts": 1788743101
+    "price": 0.64,
+    "usd": 700,
+    "ts": 1788746229
+   },
+   {
+    "wallet": "0x92b66f8fd38cbf7526d97f6ce337231b256ff855",
+    "action": "BUY",
+    "side": "Los Angeles Dodgers",
+    "price": 0.64,
+    "usd": 1000,
+    "ts": 1788746221
+   },
+   {
+    "wallet": "0x92b66f8fd38cbf7526d97f6ce337231b256ff855",
+    "action": "BUY",
+    "side": "Los Angeles Dodgers",
+    "price": 0.64,
+    "usd": 2100,
+    "ts": 1788746215
+   },
+   {
+    "wallet": "0x92b66f8fd38cbf7526d97f6ce337231b256ff855",
+    "action": "BUY",
+    "side": "Los Angeles Dodgers",
+    "price": 0.64,
+    "usd": 2000,
+    "ts": 1788746205
+   },
+   {
+    "wallet": "0x92b66f8fd38cbf7526d97f6ce337231b256ff855",
+    "action": "BUY",
+    "side": "Los Angeles Dodgers",
+    "price": 0.64,
+    "usd": 2000,
+    "ts": 1788746196
+   },
+   {
+    "wallet": "0x92b66f8fd38cbf7526d97f6ce337231b256ff855",
+    "action": "BUY",
+    "side": "Los Angeles Dodgers",
+    "price": 0.64,
+    "usd": 2000,
+    "ts": 1788746188
+   },
+   {
+    "wallet": "0x92b66f8fd38cbf7526d97f6ce337231b256ff855",
+    "action": "BUY",
+    "side": "Los Angeles Dodgers",
+    "price": 0.64,
+    "usd": 1000,
+    "ts": 1788746181
    }
   ]
  },
@@ -219019,13 +219057,36 @@
   "sport": "Tennis",
   "totalUsd": 9908,
   "whales": [],
-  "hoursToKickoff": 0.98,
-  "capturedAt": "2026-09-07T01:33:41.286113+00:00",
+  "hoursToKickoff": 0.48,
+  "capturedAt": "2026-09-07T02:03:38.169687+00:00",
   "cond": "0x1014918dd9f2ca90e0849e11d3b7bdd9847b2cb8c45984b06282680a00fab1cb",
   "frage": "M15 Wuning: Zhenxiong Dong vs Zichen Shao",
   "tokens": {
    "Zhenxiong Dong": "91901458441430328898734372795610721126156183583497757414805850772177688101",
    "Zichen Shao": "98231873221812719319786356071290110252907742245935673014271244359823913043828"
+  }
+ },
+ "itf-renjiez-nakajim-2026-09-07": {
+  "shares": {},
+  "prices": {
+   "Ren Jie Zhang": 0.5,
+   "Kazuki Nakajima": 0.5
+  },
+  "splitGuete": {
+   "art": "leer",
+   "trunc": null
+  },
+  "league": "TENNIS",
+  "sport": "Tennis",
+  "totalUsd": 10463,
+  "whales": [],
+  "hoursToKickoff": 0.48,
+  "capturedAt": "2026-09-07T02:03:38.169687+00:00",
+  "cond": "0x2f66eb2b02f55b34ed17fe4577a8c68111876a05320b310e5c27380bccd05556",
+  "frage": "M15 Wuning: Ren Jie Zhang vs Kazuki Nakajima",
+  "tokens": {
+   "Ren Jie Zhang": "92459361827557430510101919681886624245815025222593743664960409729572567172138",
+   "Kazuki Nakajima": "87646534204510462191555074269542171652691994018408170588908100189282966754943"
   }
  }
 }
