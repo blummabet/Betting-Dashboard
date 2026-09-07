@@ -1,15 +1,15 @@
 {
  "n": 180,
  "minOdds": 1.35,
- "moneyHitRate": 0.317,
- "priceHitRate": 0.367,
- "brierMoney": 0.9882,
- "brierPrice": 0.7254,
+ "moneyHitRate": 0.311,
+ "priceHitRate": 0.361,
+ "brierMoney": 0.9941,
+ "brierPrice": 0.7287,
  "disagree": {
-  "n": 50,
+  "n": 51,
   "moneyWon": 3,
   "priceWon": 12,
-  "neither": 35
+  "neither": 36
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -20,6 +20,14 @@
    "moneyHitRate": 0.2,
    "brierMoney": 1.0273,
    "brierPrice": 0.7959,
+   "verdict": "preis_besser"
+  },
+  {
+   "league": "LA-LIGA",
+   "n": 20,
+   "moneyHitRate": 0.3,
+   "brierMoney": 1.0597,
+   "brierPrice": 0.8218,
    "verdict": "preis_besser"
   }
  ],
@@ -42,18 +50,6 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 1538448
-  },
-  {
-   "key": "sea-udi-laz-2026-09-07",
-   "league": "SEA",
-   "winner": "SS Lazio",
-   "moneyFav": "SS Lazio",
-   "priceFav": "SS Lazio",
-   "moneyShare": 0.609,
-   "priceProb": 0.35,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 1327909
   },
   {
    "key": "epl-ars-che-2026-09-06",
@@ -510,22 +506,34 @@
    "moneyOK": false,
    "priceOK": false,
    "totalUsd": 100706
+  },
+  {
+   "key": "fl1-hac-sbr-2026-09-05",
+   "league": "LIGUE-1",
+   "winner": "Stade Brestois 29",
+   "moneyFav": "Le Havre AC",
+   "priceFav": "Stade Brestois 29",
+   "moneyShare": 0.517,
+   "priceProb": 0.381,
+   "moneyOK": false,
+   "priceOK": true,
+   "totalUsd": 97814
   }
  ],
- "generatedAt": "2026-09-07T21:38:23.819921+00:00",
+ "generatedAt": "2026-09-07T22:06:14.278812+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 422,
   "nfl": 800,
-  "mlb": 724,
+  "mlb": 721,
   "nhl": 505,
   "mls": 744,
   "epl": 586,
   "soccer": 800,
   "tennis": 800,
   "ucl": 547,
-  "la-liga": 668,
+  "la-liga": 658,
   "bundesliga": 538,
   "serie-a": 51,
   "ligue-1": 576,
@@ -535,7 +543,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 607,
+  "esports": 609,
   "cs2": 420,
   "lol": 402,
   "dota": 9,
@@ -549,7 +557,7 @@
   "allsvenskan": 1,
   "austria-bundesliga": 270,
   "brazil-serie-b": 4,
-  "bulgaria-parva-liga": 358,
+  "bulgaria-parva-liga": 360,
   "bundesliga-2": 530,
   "champions-league": 298,
   "champions-league-final": 12,
@@ -573,7 +581,7 @@
   "norway-eliteserien": 519,
   "poland-ekstraklasa": 425,
   "premier-league": 577,
-  "saudi-professional-league": 527,
+  "saudi-professional-league": 521,
   "scotland-league-cup": 179,
   "scottish-premiership": 481,
   "serbian-superliga": 344,
@@ -595,18 +603,18 @@
   "sweepAdded": 404
  },
  "vorStats": {
-  "kandidaten": 10,
+  "kandidaten": 11,
   "budgetLeer": 0,
   "ohneGeldSplit": 0,
   "nachgelegt": 0,
-  "mitAnteilen": 10,
-  "calls": 10
+  "mitAnteilen": 11,
+  "calls": 11
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1652,
-   "usd": 44878730,
-   "beispiel": "fifwc-eng-arg-2026-07-15-more-markets"
+   "n": 1570,
+   "usd": 49290529,
+   "beispiel": "fifwc-prt-hrv-2026-07-02-player-props"
   },
   "balance": {
    "n": 2,
@@ -614,94 +622,94 @@
    "beispiel": "balance-of-power-2026-midterms"
   },
   "nba": {
-   "n": 280,
-   "usd": 5643398,
-   "beispiel": "nba-sas-nyk-2026-06-10"
+   "n": 229,
+   "usd": 4941258,
+   "beispiel": "nba-2027-champion"
   },
   "ecs": {
-   "n": 7,
-   "usd": 1021088,
+   "n": 8,
+   "usd": 1876920,
    "beispiel": "ecs-ars-mci-2026-08-16"
   },
-  "nhl": {
-   "n": 101,
-   "usd": 658147,
-   "beispiel": "nhl-phi-car-2026-05-02"
-  },
   "world": {
-   "n": 14,
-   "usd": 613424,
+   "n": 10,
+   "usd": 523134,
    "beispiel": "world-cup-winner"
   },
-  "putin": {
-   "n": 1,
-   "usd": 496949,
-   "beispiel": "putin-out-before-2027"
+  "fed": {
+   "n": 19,
+   "usd": 451730,
+   "beispiel": "fed-decision-in-october-20260617190323537"
+  },
+  "nhl": {
+   "n": 83,
+   "usd": 420866,
+   "beispiel": "nhl-las-car-2026-06-04"
   },
   "cfb": {
-   "n": 63,
-   "usd": 386797,
-   "beispiel": "cfb-ucla-cah-2026-09-05"
-  },
-  "fed": {
-   "n": 16,
-   "usd": 353419,
-   "beispiel": "fed-decision-in-october-20260617190323537"
+   "n": 57,
+   "usd": 357120,
+   "beispiel": "cfb-washst-wash-2026-09-06"
   },
   "usc": {
    "n": 5,
    "usd": 337033,
    "beispiel": "usc-psg-av-2026-08-12"
   },
-  "cbb": {
-   "n": 34,
-   "usd": 285743,
-   "beispiel": "cbb-uconn-mich-2026-04-06"
+  "will": {
+   "n": 6,
+   "usd": 253003,
+   "beispiel": "will-the-supreme-court-rule-on-trumps-tarriffs-by"
   },
   "fif": {
-   "n": 47,
-   "usd": 237450,
-   "beispiel": "fif-prt-nga-2026-06-10"
+   "n": 36,
+   "usd": 193425,
+   "beispiel": "fif-bra-egy-2026-06-06-more-markets"
   },
-  "2026": {
-   "n": 17,
-   "usd": 197732,
-   "beispiel": "2026-mens-us-open-winner-tennis"
-  },
-  "uef": {
-   "n": 11,
-   "usd": 179536,
-   "beispiel": "uef-kvx-tur-2026-03-31"
-  },
-  "efa": {
-   "n": 12,
-   "usd": 163284,
-   "beispiel": "efa-cfc-mnc-2026-05-16"
+  "cbb": {
+   "n": 48,
+   "usd": 175480,
+   "beispiel": "cbb-uconn-mich-2026-04-06"
   },
   "clf": {
-   "n": 29,
-   "usd": 159404,
-   "beispiel": "clf-psg-mun-2026-08-08"
+   "n": 28,
+   "usd": 155289,
+   "beispiel": "clf-mun-lee-2026-08-12"
   },
   "strait": {
    "n": 2,
    "usd": 152375,
    "beispiel": "strait-of-hormuz-traffic-returns-to-normal-by-august-31-20260702154212320"
   },
-  "which": {
-   "n": 10,
-   "usd": 107004,
-   "beispiel": "which-party-will-win-the-senate-in-2026"
+  "2026": {
+   "n": 15,
+   "usd": 134348,
+   "beispiel": "2026-mens-us-open-winner-tennis"
   },
   "nbasl": {
    "n": 5,
    "usd": 106156,
    "beispiel": "nbasl-cle-nop-2026-07-15"
   },
-  "cdr": {
+  "us": {
    "n": 6,
-   "usd": 94489,
-   "beispiel": "cdr-val-ath-2026-02-04"
+   "usd": 103152,
+   "beispiel": "us-strikes-iran-by"
+  },
+  "democratic": {
+   "n": 4,
+   "usd": 83947,
+   "beispiel": "democratic-presidential-nominee-2028"
+  },
+  "ballon": {
+   "n": 9,
+   "usd": 71784,
+   "beispiel": "ballon-dor-winner-2026"
+  },
+  "btc": {
+   "n": 32,
+   "usd": 50661,
+   "beispiel": "btc-updown-5m-1784322000"
   }
  }
 }
