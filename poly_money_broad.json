@@ -1,15 +1,15 @@
 {
- "n": 171,
+ "n": 173,
  "minOdds": 1.35,
- "moneyHitRate": 0.322,
- "priceHitRate": 0.368,
- "brierMoney": 0.9803,
- "brierPrice": 0.7254,
+ "moneyHitRate": 0.312,
+ "priceHitRate": 0.358,
+ "brierMoney": 0.9907,
+ "brierPrice": 0.726,
  "disagree": {
-  "n": 49,
+  "n": 50,
   "moneyWon": 3,
   "priceWon": 11,
-  "neither": 35
+  "neither": 36
  },
  "verdict": "preis_besser",
  "urteilMinN": 30,
@@ -24,9 +24,9 @@
   }
  ],
  "guete": {
-  "belastbar": 171,
+  "belastbar": 173,
   "preis_echo": 233,
-  "abgeschnitten": 23,
+  "abgeschnitten": 24,
   "unbekannt": 417,
   "leer": 0
  },
@@ -174,18 +174,6 @@
    "moneyOK": true,
    "priceOK": true,
    "totalUsd": 432192
-  },
-  {
-   "key": "sea-cag-lec-2026-09-07",
-   "league": "SEA",
-   "winner": "Cagliari Calcio",
-   "moneyFav": "Cagliari Calcio",
-   "priceFav": "Cagliari Calcio",
-   "moneyShare": 0.915,
-   "priceProb": 0.437,
-   "moneyOK": true,
-   "priceOK": true,
-   "totalUsd": 391415
   },
   {
    "key": "bra-flu-vas-2026-09-05",
@@ -368,6 +356,18 @@
    "totalUsd": 175803
   },
   {
+   "key": "lal-get-cel-2026-09-07",
+   "league": "LA-LIGA",
+   "winner": "Draw (Getafe CF vs. RC Celta de Vigo)",
+   "moneyFav": "Getafe CF",
+   "priceFav": "Draw (Getafe CF vs. RC Celta de Vigo)",
+   "moneyShare": 0.721,
+   "priceProb": 0.36,
+   "moneyOK": false,
+   "priceOK": true,
+   "totalUsd": 158862
+  },
+  {
    "key": "kor-seo-inc-2026-09-05",
    "league": "K-LEAGUE",
    "winner": "FC Seoul",
@@ -512,20 +512,20 @@
    "totalUsd": 97814
   }
  ],
- "generatedAt": "2026-09-07T19:06:56.058441+00:00",
+ "generatedAt": "2026-09-07T19:36:07.407900+00:00",
  "minVolUsd": 7500.0,
  "scope": "broad_all_leagues",
  "rawByTag": {
   "nba": 422,
   "nfl": 800,
-  "mlb": 779,
+  "mlb": 767,
   "nhl": 505,
   "mls": 744,
   "epl": 586,
   "soccer": 800,
   "tennis": 800,
   "ucl": 547,
-  "la-liga": 676,
+  "la-liga": 665,
   "bundesliga": 538,
   "serie-a": 51,
   "ligue-1": 576,
@@ -535,7 +535,7 @@
   "belgium-pro-league": 0,
   "eredivisie": 0,
   "super-lig": 1,
-  "esports": 618,
+  "esports": 617,
   "cs2": 420,
   "lol": 402,
   "dota": 9,
@@ -573,7 +573,7 @@
   "norway-eliteserien": 519,
   "poland-ekstraklasa": 425,
   "premier-league": 577,
-  "saudi-professional-league": 534,
+  "saudi-professional-league": 528,
   "scotland-league-cup": 179,
   "scottish-premiership": 481,
   "serbian-superliga": 344,
@@ -592,7 +592,7 @@
  "sweepStats": {
   "sweepOpen": 500,
   "sweepClosed": 500,
-  "sweepAdded": 404
+  "sweepAdded": 405
  },
  "vorStats": {
   "kandidaten": 8,
@@ -604,8 +604,8 @@
  },
  "whaleAusserhalb": {
   "fifwc": {
-   "n": 1574,
-   "usd": 26490984,
+   "n": 1540,
+   "usd": 26050524,
    "beispiel": "fifwc-arg-aut-2026-06-22-more-markets"
   },
   "balance": {
@@ -614,34 +614,24 @@
    "beispiel": "balance-of-power-2026-midterms"
   },
   "nba": {
-   "n": 199,
-   "usd": 5771818,
+   "n": 156,
+   "usd": 5435989,
    "beispiel": "nba-mil-atl-2026-03-14"
-  },
-  "nhl": {
-   "n": 65,
-   "usd": 1662345,
-   "beispiel": "nhl-cbj-phi-2026-03-14"
   },
   "cbb": {
    "n": 20,
    "usd": 1583289,
    "beispiel": "cbb-verm-prnce-2025-12-30"
   },
+  "nhl": {
+   "n": 45,
+   "usd": 1537689,
+   "beispiel": "nhl-cbj-phi-2026-03-14"
+  },
   "ecs": {
-   "n": 15,
-   "usd": 989377,
+   "n": 14,
+   "usd": 988377,
    "beispiel": "ecs-ars-mci-2026-08-16"
-  },
-  "elon": {
-   "n": 337,
-   "usd": 822980,
-   "beispiel": "elon-musk-of-tweets-april-10-april-17"
-  },
-  "world": {
-   "n": 70,
-   "usd": 784249,
-   "beispiel": "world-cup-group-b-winner"
   },
   "btc": {
    "n": 173,
@@ -649,8 +639,8 @@
    "beispiel": "btc-updown-5m-1784322000"
   },
   "cfb": {
-   "n": 109,
-   "usd": 662979,
+   "n": 73,
+   "usd": 548429,
    "beispiel": "cfb-ala-aubrn-2025-11-29"
   },
   "uef": {
@@ -658,15 +648,15 @@
    "usd": 491628,
    "beispiel": "uef-kvx-tur-2026-03-31"
   },
-  "fed": {
-   "n": 28,
-   "usd": 452720,
-   "beispiel": "fed-decision-in-december"
-  },
   "strait": {
    "n": 8,
    "usd": 404679,
    "beispiel": "strait-of-hormuz-traffic-returns-to-normal-by-september-15-20260810150912478"
+  },
+  "fed": {
+   "n": 27,
+   "usd": 402744,
+   "beispiel": "fed-decision-in-december"
   },
   "fif": {
    "n": 74,
@@ -689,9 +679,9 @@
    "beispiel": "cdr-atm-fcb-2026-02-12"
   },
   "clf": {
-   "n": 43,
-   "usd": 194471,
-   "beispiel": "clf-lfc-wre-2026-07-29"
+   "n": 45,
+   "usd": 210219,
+   "beispiel": "clf-mun-lee-2026-08-12"
   },
   "acn": {
    "n": 8,
@@ -699,9 +689,19 @@
    "beispiel": "acn-sen-bot-2025-12-23"
   },
   "2026": {
-   "n": 29,
-   "usd": 185799,
+   "n": 24,
+   "usd": 167513,
    "beispiel": "2026-mens-australian-open-winner"
+  },
+  "which": {
+   "n": 15,
+   "usd": 156337,
+   "beispiel": "which-party-will-win-the-senate-in-2026"
+  },
+  "world": {
+   "n": 18,
+   "usd": 153579,
+   "beispiel": "world-cup-group-b-winner"
   }
  }
 }
