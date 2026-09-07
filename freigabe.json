@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-07T06:40:17.653290+00:00",
+ "generatedAt": "2026-09-07T06:55:19.755974+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -16,7 +16,7 @@
    "strom": "cards",
    "n": 25,
    "status": "kandidat",
-   "grund": "25 von 30 Plays — noch 5 · für einen ROI-Beleg wären bei diesem Schnitt und dieser Streuung rund 47 Plays nötig, also noch ~22",
+   "grund": "25 von 30 Plays — noch 5 · wie weit es bis zu einem Beleg ist, lässt sich bei 25 Plays NICHT schätzen (Bootstrap: 8 bis 2181 Plays, und in 11 % der Ziehungen ist der Schnitt gar nicht positiv)",
    "roi": 0.1896,
    "roiLb": null,
    "clv": null,
@@ -24,6 +24,13 @@
    "fehltN": 5,
    "noetigNRoi": 47,
    "noetigNClv": null,
+   "entfernung": {
+    "median": 36,
+    "lo": 8,
+    "hi": 2181,
+    "nieAnteil": 0.112,
+    "schaetzbar": false
+   },
    "alterTage": 0.4,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
@@ -33,7 +40,7 @@
    "strom": "poly",
    "n": 19,
    "status": "kandidat",
-   "grund": "19 von 30 Plays — noch 11 · für einen ROI-Beleg wären bei diesem Schnitt und dieser Streuung rund 24 Plays nötig, also noch ~5",
+   "grund": "19 von 30 Plays — noch 11 · wie weit es bis zu einem Beleg ist, lässt sich bei 19 Plays NICHT schätzen (Bootstrap: 3 bis 668 Plays, und in 7 % der Ziehungen ist der Schnitt gar nicht positiv)",
    "roi": 0.234,
    "roiLb": null,
    "clv": -0.895,
@@ -41,6 +48,13 @@
    "fehltN": 11,
    "noetigNRoi": 24,
    "noetigNClv": null,
+   "entfernung": {
+    "median": 20,
+    "lo": 3,
+    "hi": 668,
+    "nieAnteil": 0.072,
+    "schaetzbar": false
+   },
    "alterTage": 0.5,
    "art": "mix",
    "wert": "money+sharp+steam",
@@ -54,7 +68,7 @@
    "strom": "betfair",
    "n": 16,
    "status": "kandidat",
-   "grund": "16 von 30 Plays — noch 14 · für einen ROI-Beleg wären bei diesem Schnitt und dieser Streuung rund 3053 Plays nötig, also noch ~3037 — der CLV ist bereits belegt",
+   "grund": "16 von 30 Plays — noch 14 · wie weit es bis zu einem Beleg ist, lässt sich bei 16 Plays NICHT schätzen (Bootstrap: 8 bis 14967 Plays, und in 46 % der Ziehungen ist der Schnitt gar nicht positiv) — die bindende Hürde ist der ROI: der CLV wäre schon nach ~30 Plays belegbar",
    "roi": 0.0287,
    "roiLb": null,
    "clv": 1.581,
@@ -62,6 +76,13 @@
    "fehltN": 14,
    "noetigNRoi": 3053,
    "noetigNClv": 11,
+   "entfernung": {
+    "median": 85,
+    "lo": 8,
+    "hi": 14967,
+    "nieAnteil": 0.46,
+    "schaetzbar": false
+   },
    "alterTage": 0.4,
    "art": "konjunktion",
    "quelle": "killer.py",
@@ -80,6 +101,13 @@
    "fehltN": 15,
    "noetigNRoi": null,
    "noetigNClv": 71,
+   "entfernung": {
+    "median": 100,
+    "lo": 9,
+    "hi": 4889,
+    "nieAnteil": 0.573,
+    "schaetzbar": false
+   },
    "alterTage": 0.1,
    "art": "conviction",
    "wert": 7,
@@ -93,7 +121,7 @@
    "strom": "poly",
    "n": 13,
    "status": "kandidat",
-   "grund": "13 von 30 Plays — noch 17 · für einen ROI-Beleg wären bei diesem Schnitt und dieser Streuung rund 249 Plays nötig, also noch ~236",
+   "grund": "13 von 30 Plays — noch 17 · wie weit es bis zu einem Beleg ist, lässt sich bei 13 Plays NICHT schätzen (Bootstrap: 5 bis 2578 Plays, und in 36 % der Ziehungen ist der Schnitt gar nicht positiv)",
    "roi": 0.12,
    "roiLb": null,
    "clv": 0.654,
@@ -101,6 +129,13 @@
    "fehltN": 17,
    "noetigNRoi": 249,
    "noetigNClv": 70,
+   "entfernung": {
+    "median": 53,
+    "lo": 5,
+    "hi": 2578,
+    "nieAnteil": 0.357,
+    "schaetzbar": false
+   },
    "alterTage": 0.1,
    "art": "mix",
    "wert": "bf+money+sharp",
@@ -116,7 +151,7 @@
    "strom": "cards",
    "n": 25,
    "status": "kandidat",
-   "grund": "25 von 30 Plays — noch 5 · für einen ROI-Beleg wären bei diesem Schnitt und dieser Streuung rund 47 Plays nötig, also noch ~22",
+   "grund": "25 von 30 Plays — noch 5 · wie weit es bis zu einem Beleg ist, lässt sich bei 25 Plays NICHT schätzen (Bootstrap: 8 bis 2181 Plays, und in 11 % der Ziehungen ist der Schnitt gar nicht positiv)",
    "roi": 0.1896,
    "roiLb": null,
    "clv": null,
@@ -124,6 +159,13 @@
    "fehltN": 5,
    "noetigNRoi": 47,
    "noetigNClv": null,
+   "entfernung": {
+    "median": 36,
+    "lo": 8,
+    "hi": 2181,
+    "nieAnteil": 0.112,
+    "schaetzbar": false
+   },
    "alterTage": 0.4,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
@@ -133,7 +175,7 @@
    "strom": "poly",
    "n": 19,
    "status": "kandidat",
-   "grund": "19 von 30 Plays — noch 11 · für einen ROI-Beleg wären bei diesem Schnitt und dieser Streuung rund 24 Plays nötig, also noch ~5",
+   "grund": "19 von 30 Plays — noch 11 · wie weit es bis zu einem Beleg ist, lässt sich bei 19 Plays NICHT schätzen (Bootstrap: 3 bis 668 Plays, und in 7 % der Ziehungen ist der Schnitt gar nicht positiv)",
    "roi": 0.234,
    "roiLb": null,
    "clv": -0.895,
@@ -141,6 +183,13 @@
    "fehltN": 11,
    "noetigNRoi": 24,
    "noetigNClv": null,
+   "entfernung": {
+    "median": 20,
+    "lo": 3,
+    "hi": 668,
+    "nieAnteil": 0.072,
+    "schaetzbar": false
+   },
    "alterTage": 0.5,
    "art": "mix",
    "wert": "money+sharp+steam",
@@ -154,7 +203,7 @@
    "strom": "betfair",
    "n": 16,
    "status": "kandidat",
-   "grund": "16 von 30 Plays — noch 14 · für einen ROI-Beleg wären bei diesem Schnitt und dieser Streuung rund 3053 Plays nötig, also noch ~3037 — der CLV ist bereits belegt",
+   "grund": "16 von 30 Plays — noch 14 · wie weit es bis zu einem Beleg ist, lässt sich bei 16 Plays NICHT schätzen (Bootstrap: 8 bis 14967 Plays, und in 46 % der Ziehungen ist der Schnitt gar nicht positiv) — die bindende Hürde ist der ROI: der CLV wäre schon nach ~30 Plays belegbar",
    "roi": 0.0287,
    "roiLb": null,
    "clv": 1.581,
@@ -162,6 +211,13 @@
    "fehltN": 14,
    "noetigNRoi": 3053,
    "noetigNClv": 11,
+   "entfernung": {
+    "median": 85,
+    "lo": 8,
+    "hi": 14967,
+    "nieAnteil": 0.46,
+    "schaetzbar": false
+   },
    "alterTage": 0.4,
    "art": "konjunktion",
    "quelle": "killer.py",
@@ -180,6 +236,13 @@
    "fehltN": 15,
    "noetigNRoi": null,
    "noetigNClv": 71,
+   "entfernung": {
+    "median": 100,
+    "lo": 9,
+    "hi": 4889,
+    "nieAnteil": 0.573,
+    "schaetzbar": false
+   },
    "alterTage": 0.1,
    "art": "conviction",
    "wert": 7,
@@ -193,7 +256,7 @@
    "strom": "poly",
    "n": 13,
    "status": "kandidat",
-   "grund": "13 von 30 Plays — noch 17 · für einen ROI-Beleg wären bei diesem Schnitt und dieser Streuung rund 249 Plays nötig, also noch ~236",
+   "grund": "13 von 30 Plays — noch 17 · wie weit es bis zu einem Beleg ist, lässt sich bei 13 Plays NICHT schätzen (Bootstrap: 5 bis 2578 Plays, und in 36 % der Ziehungen ist der Schnitt gar nicht positiv)",
    "roi": 0.12,
    "roiLb": null,
    "clv": 0.654,
@@ -201,6 +264,13 @@
    "fehltN": 17,
    "noetigNRoi": 249,
    "noetigNClv": 70,
+   "entfernung": {
+    "median": 53,
+    "lo": 5,
+    "hi": 2578,
+    "nieAnteil": 0.357,
+    "schaetzbar": false
+   },
    "alterTage": 0.1,
    "art": "mix",
    "wert": "bf+money+sharp",
@@ -222,6 +292,13 @@
    "fehltN": 0,
    "noetigNRoi": 32,
    "noetigNClv": null,
+   "entfernung": {
+    "median": 30,
+    "lo": 6,
+    "hi": 813,
+    "nieAnteil": 0.052,
+    "schaetzbar": false
+   },
    "alterTage": 0.6,
    "art": "gate",
    "nAlt": 138,
@@ -242,6 +319,13 @@
    "fehltN": 0,
    "noetigNRoi": 82,
    "noetigNClv": null,
+   "entfernung": {
+    "median": 73,
+    "lo": 20,
+    "hi": 1233,
+    "nieAnteil": 0.057,
+    "schaetzbar": false
+   },
    "alterTage": 0.8,
    "art": "verdict",
    "wert": "ABWÄGEN",
@@ -260,6 +344,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -277,6 +362,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "markt",
    "naeherung": false
@@ -294,6 +380,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "markt",
    "naeherung": false
@@ -311,6 +398,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "markt",
    "naeherung": false
@@ -328,6 +416,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "markt",
    "naeherung": false
@@ -345,6 +434,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "markt",
    "naeherung": false
@@ -362,6 +452,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "markt",
    "naeherung": false
@@ -379,6 +470,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "markt",
    "naeherung": false
@@ -396,6 +488,13 @@
    "fehltN": 0,
    "noetigNRoi": 1758,
    "noetigNClv": null,
+   "entfernung": {
+    "median": 674,
+    "lo": 101,
+    "hi": 35122,
+    "nieAnteil": 0.273,
+    "schaetzbar": false
+   },
    "alterTage": 0.1,
    "art": "konjunktion_gehalten",
    "quelle": "killer_ledger.json"
@@ -413,6 +512,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -430,6 +530,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -447,6 +548,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -464,6 +566,13 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": {
+    "median": 775,
+    "lo": 74,
+    "hi": 140430,
+    "nieAnteil": 0.648,
+    "schaetzbar": false
+   },
    "alterTage": 0.3,
    "art": "mix",
    "wert": "money+sharp",
@@ -485,7 +594,14 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": 9,
-   "alterTage": 0.2,
+   "entfernung": {
+    "median": 935,
+    "lo": 85,
+    "hi": 56083,
+    "nieAnteil": 0.542,
+    "schaetzbar": false
+   },
+   "alterTage": 0.3,
    "art": "konjunktion",
    "quelle": "killer.py",
    "zuschnitt": "rest"
@@ -503,6 +619,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -520,6 +637,13 @@
    "fehltN": 0,
    "noetigNRoi": 3444,
    "noetigNClv": null,
+   "entfernung": {
+    "median": 320,
+    "lo": 40,
+    "hi": 44858,
+    "nieAnteil": 0.428,
+    "schaetzbar": false
+   },
    "alterTage": 0.8,
    "art": "verdict",
    "wert": "ABWÄGEN",
@@ -538,6 +662,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -555,6 +680,13 @@
    "fehltN": 0,
    "noetigNRoi": 3161,
    "noetigNClv": null,
+   "entfernung": {
+    "median": 215,
+    "lo": 21,
+    "hi": 26119,
+    "nieAnteil": 0.438,
+    "schaetzbar": false
+   },
    "alterTage": 0.4,
    "art": "push_filter",
    "quelle": "pick_push_ledger.py"
@@ -572,6 +704,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -589,6 +722,13 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": {
+    "median": 429,
+    "lo": 54,
+    "hi": 92567,
+    "nieAnteil": 0.51,
+    "schaetzbar": false
+   },
    "alterTage": 0.2,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-01T20:41:52.601081+00:00",
@@ -617,6 +757,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -634,6 +775,13 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": {
+    "median": 1143,
+    "lo": 75,
+    "hi": 85637,
+    "nieAnteil": 0.792,
+    "schaetzbar": false
+   },
    "alterTage": 0.0,
    "art": "conviction",
    "wert": 6,
@@ -655,6 +803,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -672,6 +821,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -689,6 +839,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -706,6 +857,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -723,6 +875,13 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": {
+    "median": 2618,
+    "lo": 250,
+    "hi": 97241,
+    "nieAnteil": 0.942,
+    "schaetzbar": false
+   },
    "alterTage": 0.2,
    "art": "conviction",
    "wert": 5,
@@ -744,6 +903,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -761,6 +921,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -778,6 +939,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -795,6 +957,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -812,6 +975,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -829,6 +993,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -846,6 +1011,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -863,6 +1029,13 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": {
+    "median": 958,
+    "lo": 70,
+    "hi": 46990,
+    "nieAnteil": 0.803,
+    "schaetzbar": false
+   },
    "alterTage": 0.0,
    "art": "vorangemeldet",
    "angemeldet": "2026-09-01T18:59:52.671883+00:00",
@@ -891,6 +1064,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -908,6 +1082,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -925,6 +1100,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -942,6 +1118,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -959,6 +1136,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -976,6 +1154,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -993,6 +1172,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -1010,6 +1190,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -1027,6 +1208,13 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": {
+    "median": 996,
+    "lo": 45,
+    "hi": 83247,
+    "nieAnteil": 0.845,
+    "schaetzbar": false
+   },
    "alterTage": 0.0,
    "art": "mix",
    "wert": "bf+money",
@@ -1048,6 +1236,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -1065,6 +1254,13 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": {
+    "median": 924,
+    "lo": 67,
+    "hi": 26910,
+    "nieAnteil": 0.968,
+    "schaetzbar": false
+   },
    "alterTage": 0.1,
    "art": "mix",
    "wert": "money+steam",
@@ -1086,6 +1282,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -1103,6 +1300,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -1120,6 +1318,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -1137,6 +1336,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -1154,6 +1354,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -1171,6 +1372,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -1188,6 +1390,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -1205,6 +1408,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -1222,6 +1426,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -1239,6 +1444,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -1256,6 +1462,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -1273,6 +1480,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -1290,6 +1498,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -1307,6 +1516,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -1324,6 +1534,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
@@ -1333,15 +1544,16 @@
    "strom": "poly",
    "n": 5,
    "status": "sammelt",
-   "grund": "5 von 30 Plays · der ROI-Schnitt ist nicht positiv — mehr Plays bestätigen das, sie drehen es nicht",
+   "grund": "5 von 30 Plays · für eine Hochrechnung sind es noch zu wenige Plays",
    "roi": -0.6582,
    "roiLb": null,
    "clv": 0.6,
    "clvLb": null,
    "fehltN": 25,
    "noetigNRoi": null,
-   "noetigNClv": 164,
-   "alterTage": 2.4,
+   "noetigNClv": null,
+   "entfernung": null,
+   "alterTage": 2.5,
    "art": "mix",
    "wert": "sharp+steam",
    "nAlt": 7,
@@ -1354,14 +1566,15 @@
    "strom": "poly",
    "n": 4,
    "status": "sammelt",
-   "grund": "4 von 30 Plays · für einen ROI-Beleg wären bei diesem Schnitt und dieser Streuung rund 2 Plays nötig",
+   "grund": "4 von 30 Plays · für eine Hochrechnung sind es noch zu wenige Plays",
    "roi": 0.7702,
    "roiLb": null,
    "clv": 8.125,
    "clvLb": null,
    "fehltN": 26,
-   "noetigNRoi": 2,
-   "noetigNClv": 10,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "entfernung": null,
    "alterTage": 1.3,
    "art": "conviction",
    "wert": 8,
@@ -1375,14 +1588,15 @@
    "strom": "poly",
    "n": 2,
    "status": "sammelt",
-   "grund": "2 von 30 Plays · für einen ROI-Beleg wären bei diesem Schnitt und dieser Streuung rund 1 Plays nötig",
+   "grund": "2 von 30 Plays · für eine Hochrechnung sind es noch zu wenige Plays",
    "roi": 0.5635,
    "roiLb": null,
    "clv": 3.0,
    "clvLb": null,
    "fehltN": 28,
-   "noetigNRoi": 1,
-   "noetigNClv": 10,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "entfernung": null,
    "alterTage": 0.5,
    "art": "conviction",
    "wert": 3
@@ -1392,7 +1606,7 @@
    "strom": "cards",
    "n": 2,
    "status": "sammelt",
-   "grund": "2 von 30 Plays · der ROI-Schnitt ist nicht positiv — mehr Plays bestätigen das, sie drehen es nicht",
+   "grund": "2 von 30 Plays · für eine Hochrechnung sind es noch zu wenige Plays",
    "roi": -1.0,
    "roiLb": null,
    "clv": -0.705,
@@ -1400,6 +1614,7 @@
    "fehltN": 28,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": 7.8,
    "art": "verdict",
    "wert": "BET",
@@ -1410,14 +1625,15 @@
    "strom": "cards",
    "n": 2,
    "status": "sammelt",
-   "grund": "2 von 30 Plays · für einen ROI-Beleg wären bei diesem Schnitt und dieser Streuung rund 1 Plays nötig",
+   "grund": "2 von 30 Plays · für eine Hochrechnung sind es noch zu wenige Plays",
    "roi": 0.81,
    "roiLb": null,
    "clv": -0.555,
    "clvLb": null,
    "fehltN": 28,
-   "noetigNRoi": 1,
+   "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "verdict",
    "wert": "BEOBACHTEN",
@@ -1428,7 +1644,7 @@
    "strom": "poly",
    "n": 1,
    "status": "sammelt",
-   "grund": "1 von 30 Plays · der ROI-Schnitt ist nicht positiv — mehr Plays bestätigen das, sie drehen es nicht",
+   "grund": "1 von 30 Plays · für eine Hochrechnung sind es noch zu wenige Plays",
    "roi": 0.515,
    "roiLb": null,
    "clv": 0.0,
@@ -1436,6 +1652,7 @@
    "fehltN": 29,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": 4.3,
    "art": "mix",
    "wert": "bf+money+steam",
@@ -1449,7 +1666,7 @@
    "strom": "poly",
    "n": 1,
    "status": "sammelt",
-   "grund": "1 von 30 Plays · der ROI-Schnitt ist nicht positiv — mehr Plays bestätigen das, sie drehen es nicht",
+   "grund": "1 von 30 Plays · für eine Hochrechnung sind es noch zu wenige Plays",
    "roi": -1.0,
    "roiLb": null,
    "clv": 0.0,
@@ -1457,6 +1674,7 @@
    "fehltN": 29,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": 1.6,
    "art": "mix",
    "wert": "bf+sharp"
@@ -1466,7 +1684,7 @@
    "strom": "poly",
    "n": 1,
    "status": "sammelt",
-   "grund": "1 von 30 Plays · der ROI-Schnitt ist nicht positiv — mehr Plays bestätigen das, sie drehen es nicht",
+   "grund": "1 von 30 Plays · für eine Hochrechnung sind es noch zu wenige Plays",
    "roi": 1.597,
    "roiLb": null,
    "clv": 31.0,
@@ -1474,6 +1692,7 @@
    "fehltN": 29,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": 1.3,
    "art": "mix",
    "wert": "bf+money+sharp+steam"
@@ -1491,6 +1710,7 @@
    "fehltN": 30,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "conviction",
    "wert": 10,
@@ -1512,6 +1732,7 @@
    "fehltN": 30,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "conviction",
    "wert": 9,
@@ -1533,6 +1754,7 @@
    "fehltN": 30,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "conviction",
    "wert": 4,
@@ -1554,6 +1776,7 @@
    "fehltN": 30,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "mix",
    "wert": "sharp",
@@ -1575,6 +1798,7 @@
    "fehltN": 30,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "mix",
    "wert": "steam",
@@ -1596,6 +1820,7 @@
    "fehltN": 30,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "mix",
    "wert": "money+pinn",
@@ -1617,6 +1842,7 @@
    "fehltN": 30,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "mix",
    "wert": "money+pinn+sharp",
@@ -1638,6 +1864,7 @@
    "fehltN": 30,
    "noetigNRoi": null,
    "noetigNClv": null,
+   "entfernung": null,
    "alterTage": null,
    "art": "mix",
    "wert": "pinn+steam",
@@ -1645,6 +1872,35 @@
    "roiAlt": -1.0,
    "clvAlt": 0.0,
    "engineAlt": true
+  },
+  {
+   "schublade": "🔒 Fade-Unter · Ganzspiel-Torlinie",
+   "strom": "betfair",
+   "n": 0,
+   "status": "sammelt",
+   "grund": "0 von 200 Plays SEIT der Anmeldung (2026-09-07) — vorher abgerechnete zählen nicht",
+   "roi": null,
+   "roiLb": null,
+   "clv": null,
+   "clvLb": null,
+   "fehltN": 200,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "entfernung": null,
+   "alterTage": null,
+   "art": "vorangemeldet",
+   "angemeldet": "2026-09-07T06:34:08.582101+00:00",
+   "zielN": 200,
+   "warum": "Lucas: „wenn wir sehen, dass die gespielten Sachen schlecht liefen, könnte man das ins Positive umkehren und faden.\" Gemessen ueber 15.945 abgerechnete Zeilen in getrennter Such- und Pruefhaelfte: von 16 Markt×Seite-Schnitten waren genau zwei in BEIDEN Haelften positiv, und beide sind Ganzspiel-Torlinien mit dem Geld auf UNTER. n=2.720, Geldseite trifft 59,2 % gegen 62,4 % implizit (-3,2 pp); der Fade brachte +5,5 % / +5,2 % nach Kommission. Kontrolle: auf Match Odds, BTTS und der 1.-HZ-Linie ist die Geldseite 1-2 pp BESSER als implizit, und dort verliert derselbe Fade korrekt -5,6 bis -7,8 %. ⚠️ Der Gegenpreis war im Altbestand NICHT erhoben und musste rekonstruiert werden (haelt bis ~1 % Overround, stirbt bei 2 %); ausserdem 12 Tage Basis und ein nachtraeglich gepoolter Schnitt aus 16. Genau deshalb steht er hier: der Rueckblick ist der Fund, nicht der Beleg. zielN=200 statt 40, weil bei einer Streuung von ~1,3 je Play alles darunter nur ein Punktschaetzer waere.",
+   "quelle": "betfair_track_results.json → fade_unter.py",
+   "nDavor": 2755,
+   "rueckblick": {
+    "n": 2720,
+    "roi": 0.0546,
+    "roiLb": 0.0099,
+    "clv": null,
+    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
+   }
   },
   {
    "schublade": "WM · ABWÄGEN",
@@ -1680,7 +1936,7 @@
   }
  ],
  "zusammenfassung": {
-  "schubladen": 86,
+  "schubladen": 87,
   "freigegeben": 0,
   "kandidaten": 5,
   "ruhend": 2,
