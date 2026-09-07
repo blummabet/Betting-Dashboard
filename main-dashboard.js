@@ -2055,8 +2055,17 @@
     if (n < ziel) {
       if (r.noetigNRoi == null) {
         weit = '<span class="md-kl-c" style="color:var(--mi3)" title="Bei nicht positivem Schnitt bestätigen weitere Plays das Minus, sie drehen es nicht.">Schnitt nicht positiv</span>';
+      } else if (r.entfernung && r.entfernung.schaetzbar === false) {
+        // 06.09.2026, zwei Stunden nach der ersten Fassung: hier stand „Beleg erst ab ~263".
+        // Ein einziger neuer Play machte daraus 3053. Der Bootstrap sagt, warum — bei diesen
+        // Stichproben reicht die 5–95-%-Spanne über Größenordnungen. Eine einzelne Zahl wäre
+        // hier derselbe Fehler wie ein ROI ohne Untergrenze, nur eine Ebene höher.
+        weit = '<span class="md-kl-c" style="color:' + A.gold + '" title="Bootstrap über die eigenen Plays: die nötige Anzahl liegt zwischen '
+          + r.entfernung.lo + ' und ' + r.entfernung.hi + ' Plays, und in '
+          + Math.round(100 * r.entfernung.nieAnteil) + ' % der Ziehungen ist der Schnitt gar nicht positiv. '
+          + 'Diese Schublade lässt sich nicht verplanen.">Entfernung nicht schätzbar</span>';
       } else if (r.noetigNRoi > ziel) {
-        weit = '<span class="md-kl-c" style="color:' + A.gold + '" title="Hochrechnung, keine Messung: so viele Plays bräuchte die ROI-Untergrenze bei GLEICHBLEIBENDEM Schnitt und gleicher Streuung, um über null zu kommen. Der Balken links misst nur bis zur Mindestzahl, ab der überhaupt gerechnet wird.">Beleg erst ab ~' + r.noetigNRoi + '</span>';
+        weit = '<span class="md-kl-c" style="color:' + A.gold + '" title="Hochrechnung, keine Messung: so viele Plays bräuchte die ROI-Untergrenze bei GLEICHBLEIBENDEM Schnitt und gleicher Streuung, um über null zu kommen.">Beleg erst ab ~' + r.noetigNRoi + '</span>';
       }
       if (r.noetigNClv != null && r.noetigNClv <= n) {
         weit += '<span class="md-kl-c" style="color:' + A.good + '" title="Die CLV-Untergrenze liegt bereits über null — CLV ist der schnelle Richter, der ROI der langsame.">CLV belegt</span>';

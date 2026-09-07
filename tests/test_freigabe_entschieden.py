@@ -168,8 +168,12 @@ class TestEntfernungZumBeleg(unittest.TestCase):
     """
 
     def test_die_hochrechnung_faellt_mit_der_streuung(self):
-        eng = F.noetiges_n([0.10, 0.11, 0.09, 0.10, 0.10])
-        weit = F.noetiges_n([1.2, -0.9, 1.1, -0.8, 0.9])
+        # 06.09.2026 nachgezogen: die Muster hatten n=5. Seit dem Fund „zwei Gluecksplays
+        # sind kein fertig" verlangt `noetiges_n` mindestens NOETIG_MIN_N Werte — mit fuenf
+        # gaebe es die Zahl gar nicht mehr, und der Test haette eine Regel geprueft, die es
+        # unter dieser Stichprobe nicht gibt.
+        eng = F.noetiges_n([0.10, 0.11, 0.09, 0.10, 0.10] * 4)
+        weit = F.noetiges_n([1.2, -0.9, 1.1, -0.8, 0.9] * 4)
         self.assertIsNotNone(eng)
         self.assertIsNotNone(weit)
         self.assertLess(eng, weit, "mehr Streuung muss mehr Plays verlangen, nicht weniger")
@@ -187,7 +191,7 @@ class TestEntfernungZumBeleg(unittest.TestCase):
     def test_die_zahl_stimmt_mit_der_untergrenze_ueberein(self):
         """Der Test der Rechnung selbst: bei genau `noetiges_n` Werten derselben Verteilung
         muss `untergrenze` tatsaechlich ueber null liegen — sonst ist die Zahl geraten."""
-        muster = [0.9, -0.6, 0.8, -0.5, 0.7, -0.4]
+        muster = [0.9, -0.6, 0.8, -0.5, 0.7, -0.4] * 2
         k = F.noetiges_n(muster)
         self.assertIsNotNone(k)
         viele = (muster * (k // len(muster) + 2))[:k]
@@ -199,10 +203,14 @@ class TestEntfernungZumBeleg(unittest.TestCase):
     def test_der_grund_nennt_die_echte_entfernung(self):
         """Eine Zeile, die „noch 15" sagt, waehrend ~248 gemeint sind, ist derselbe Fehler wie
         eine Prosa, die ihre eigene Zahl daneben widerlegt."""
+        # 06.09.2026 nachgezogen: der Grund nennt seit dem Bootstrap-Fund entweder eine Zahl
+        # ODER, wenn die Spanne ueber Groessenordnungen geht, ausdruecklich KEINE. Beides ist
+        # die echte Entfernung — „noch 15" ist es in keinem Fall.
         r = F.bewerte("Test", "betfair", [0.9, -0.6, 0.8, -0.5, 0.7, -0.4] * 2,
                       [2.0, 1.5, 2.5, 1.0, 2.2, 1.8] * 2, letzter="2026-09-06T12:00:00Z")
         self.assertEqual(r["status"], "kandidat")
-        self.assertIn("Plays nötig", r["grund"])
+        self.assertTrue("Plays nötig" in r["grund"] or "NICHT schätzen" in r["grund"],
+                        "der Grund nennt weder eine Entfernung noch dass es keine gibt")
         self.assertIsNotNone(r["noetigNRoi"])
         self.assertGreater(r["noetigNRoi"], r["n"])
 
@@ -211,7 +219,10 @@ class TestEntfernungZumBeleg(unittest.TestCase):
         dass die eine Huerde langst genommen ist und die ANDERE blockiert."""
         r = F.bewerte("Test", "betfair", [0.9, -0.6, 0.8, -0.5, 0.7, -0.4] * 2,
                       [2.0, 1.9, 2.1, 2.0, 1.95, 2.05] * 2, letzter="2026-09-06T12:00:00Z")
-        self.assertIn("CLV ist bereits belegt", r["grund"])
+        # „Belegt" heisst Untergrenze ueber null — die gibt es unter UG_MIN_N gar nicht.
+        # Unterhalb sagt der Grund deshalb, welche Huerde BINDET, nicht was bewiesen sei.
+        self.assertIn("bindende Hürde ist der ROI", r["grund"])
+        self.assertLess(r["n"], F.MIN_N, "der Fall lebt nur unterhalb der Mindestzahl")
 
     def test_reife_schubladen_bekommen_keine_hochrechnung_in_den_grund(self):
         """Ab n>=MIN_N steht dort ein URTEIL. Eine Hochrechnung daneben wuerde es aufweichen."""
@@ -238,3 +249,87 @@ class TestEntfernungZumBeleg(unittest.TestCase):
         weit = [r for r in kand if (r.get("noetigNRoi") or 0) > (d.get("regeln", {}).get("minN") or 30)]
         self.assertTrue(weit, "keine Zeile braucht mehr als die Mindestzahl — bitte nachsehen, "
                               "das waere neu")
+
+
+class TestDiePrognoseTraegtIhreEigeneSchranke(unittest.TestCase):
+    """Die Hochrechnung war selbst ein Punktschätzer — 06.09.2026, zwei Stunden nach ihrem Bau.
+
+    Ich hatte Lucas geschrieben: „rund 263 Plays nötig, das sind bei diesem Tempo rund vier
+    Monate." Ein einziger neuer Play später stand dort 3053. Faktor 12 durch eine Zeile.
+
+    Bootstrap auf den echten Konjunktions-Zeilen (4.000 Ziehungen je Stichprobengröße):
+
+        n=15   Median  71   5–95 %    9 –  5833   ·  32 % der Ziehungen gar nicht positiv
+        n=30   Median 166   5–95 %   31 – 11543   ·  19 %
+        n=49   Median 131   5–95 %   20 –  8681   ·  25 %
+
+    Die Entfernung ist bei diesen Stichproben nicht schätzbar. Eine nackte Zahl dort ist
+    derselbe Fehler wie ein ROI ohne Untergrenze — eine Ebene höher.
+    """
+
+    def test_eine_prognose_ohne_spanne_gibt_es_nicht(self):
+        e = F.entfernung([0.9, -0.6, 0.8, -0.5, 0.7, -0.4] * 3)
+        self.assertIsNotNone(e)
+        for feld in ("median", "lo", "hi", "nieAnteil", "schaetzbar"):
+            self.assertIn(feld, e)
+        self.assertLessEqual(e["lo"], e["median"])
+        self.assertLessEqual(e["median"], e["hi"])
+
+    def test_weite_streuung_ist_nicht_schaetzbar(self):
+        """Der reale Fall: grosse Quotenstreuung, kleiner Schnitt."""
+        werte = [4.0, -1.0, -1.0, -1.0, 3.0, -1.0, -1.0, 5.0, -1.0, -1.0, -1.0, 2.0]
+        e = F.entfernung(werte)
+        self.assertFalse(e["schaetzbar"],
+                         "eine Spanne ueber Groessenordnungen darf nicht als Plan durchgehen")
+
+    def test_enge_verteilung_ist_schaetzbar(self):
+        e = F.entfernung([0.11, 0.09, 0.10, 0.12, 0.08, 0.10, 0.11, 0.09, 0.10, 0.10,
+                          0.09, 0.11, 0.10, 0.10, 0.09, 0.11] * 3)
+        self.assertTrue(e["schaetzbar"])
+        self.assertEqual(e["nieAnteil"], 0.0)
+
+    def test_unter_der_mindestzahl_gibt_es_keine_prognose(self):
+        self.assertIsNone(F.entfernung([0.5, -1.0, 0.4]))
+
+    def test_sie_ist_reproduzierbar(self):
+        w = [0.9, -0.6, 0.8, -0.5, 0.7, -0.4] * 3
+        self.assertEqual(F.entfernung(w), F.entfernung(w),
+                         "eine Zahl, die sich bei jedem Aufruf aendert, ist keine Grundlage")
+
+    def test_zwei_gluecksplays_sind_kein_fertig(self):
+        """🔴 Eigener Fehler: `noetiges_n` meldete fuer „WM · BEOBACHTEN" (n=2, ROI +81 %)
+        und „Conviction 8" (n=4, ROI +77 %) ein noetiges n von 2 bzw. 4 — also „fertig",
+        aus zwei gluecklichen Plays. Aus zwei Werten gibt es keine Streuung."""
+        self.assertIsNone(F.noetiges_n([4.0, 3.0]))
+        self.assertIsNone(F.noetiges_n([4.0, 3.0, 5.0, 2.0]))
+
+    def test_die_prognose_unterbietet_die_mindestzahl_nie(self):
+        """Unter MIN_N wird ohnehin nicht geurteilt — eine kleinere Zahl verspraeche eine
+        Freigabe, die es dort gar nicht geben kann."""
+        # Die Klemmung sitzt im TEXT, nicht in der Rechnung: `noetiges_n` ist eine reine
+        # statistische Groesse (sonst kaeme fuer ROI und CLV beides „30" heraus und der
+        # ganze Unterschied zwischen schnellem und langsamem Richter waere weg).
+        k = F.noetiges_n([0.10] * 12 + [0.09, 0.11])
+        self.assertIsNotNone(k)
+        r = F.bewerte("T", "poly", [0.10] * 12 + [0.09, 0.11], [], letzter="2026-09-06T12:00:00Z")
+        self.assertIn("%d Plays nötig" % max(k, F.MIN_N), r["grund"])
+
+    def test_der_grund_sagt_nicht_schaetzbar_statt_einer_zahl(self):
+        r = F.bewerte("Test", "betfair",
+                      [4.0, -1.0, -1.0, -1.0, 3.0, -1.0, -1.0, 5.0, -1.0, -1.0, -1.0, 2.0],
+                      [], letzter="2026-09-06T12:00:00Z")
+        self.assertIn("NICHT schätzen", r["grund"])
+        self.assertIsNotNone(r["entfernung"])
+        self.assertFalse(r["entfernung"]["schaetzbar"])
+
+    def test_gegen_den_echten_bestand_ist_heute_keine_schublade_verplanbar(self):
+        """Stand 06.09.: keine einzige. Wird eine es, schlaegt der Test an — DAS waere neu."""
+        import json
+        from pathlib import Path
+        p = Path(__file__).resolve().parents[1] / "freigabe.json"
+        if not p.exists():
+            self.skipTest("freigabe.json fehlt")
+        d = json.loads(p.read_text(encoding="utf-8"))
+        plan = [r["schublade"] for r in (d.get("kandidaten") or [])
+                if (r.get("entfernung") or {}).get("schaetzbar")]
+        self.assertEqual(plan, [], f"Erstmals verplanbar: {plan} — bitte ansehen.")

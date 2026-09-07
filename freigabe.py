@@ -54,6 +54,8 @@ OUT_FILE = "freigabe.json"
 # Alle vier muessen gelten. Faellt eine, faellt die Freigabe — automatisch, ohne Zutun.
 MIN_N        = int(os.environ.get("FREIGABE_MIN_N") or 30)    # genug Historie
 Z            = 1.645                                          # einseitige 95%-Grenze
+NOETIG_MIN_N = 10     # so viele Plays braucht schon die HOCHRECHNUNG — aus 2 Werten gibt es
+                      # keine Streuung, und ohne Streuung ist die Zahl frei erfunden
 MIN_ROI_LB   = 0.0                                            # ROI-Untergrenze ueber null
 MIN_CLV_LB   = 0.0                                            # CLV-Untergrenze nicht negativ
 # Ab so vielen Plays wird eine Schublade ueberhaupt als „Kandidat" gefuehrt (darunter: sammelt).
@@ -165,15 +167,79 @@ def noetiges_n(werte) -> int | None:
     falls alles so bleibt. Bei nicht-positivem Schnitt gibt es keine Zahl: mehr Plays bestaetigen
     dann das Negative, sie drehen es nicht. REIN/testbar."""
     xs = [float(x) for x in (werte or []) if isinstance(x, (int, float))]
-    if len(xs) < 2:
+    # 🔴 Eigener Fehler, noch am selben Abend gefunden: hier stand `len(xs) < 2`. Damit meldete
+    # die Funktion fuer „Conviction 8" (n=4, ROI +77 %) und „WM · BEOBACHTEN" (n=2, ROI +81 %)
+    # ein noetiges n von 2 bis 4 — also „fertig", aus zwei gluecklichen Plays. Aus zwei Werten
+    # laesst sich keine Streuung schaetzen; die Formel bekam nur eine winzige sd geliefert und
+    # antwortete brav. Genau die Krankheit, gegen die dieses Register gebaut ist, in dem Code,
+    # der sie messen soll: ein Punktschaetzer entscheidet.
+    if len(xs) < NOETIG_MIN_N:
         return None
     m = sum(xs) / len(xs)
     if m <= 0:
         return None
     var = sum((x - m) ** 2 for x in xs) / (len(xs) - 1)
-    if var <= 0:
-        return len(xs)
-    return int(math.ceil((Z * math.sqrt(var) / m) ** 2))
+    # Reine statistische Groesse, NICHT auf MIN_N geklemmt. Der erste Entwurf klemmte hier —
+    # damit kamen fuer ROI und CLV beide „30" heraus, und der ganze Punkt (CLV braucht ~7,
+    # ROI ~260) war weg. Wo die Mindestzahl gilt, gilt sie beim VERWENDEN, nicht beim Rechnen.
+    return len(xs) if var <= 0 else int(math.ceil((Z * math.sqrt(var) / m) ** 2))
+
+
+def entfernung(werte, ziehungen: int = 600, saat: int = 7) -> dict | None:
+    """Wie weit ist ein Beleg — MIT der Unsicherheit dieser Schaetzung. REIN (feste Saat).
+
+    🔴 06.09.2026, zwei Stunden nach `noetiges_n` gebaut, weil die Zahl selbst nicht hielt:
+
+        20:1x Uhr   Konjunktion Top-5   n=15   ->  „rund 263 Plays noetig"
+        20:4x Uhr   ein Play spaeter    n=16   ->  „rund 3053 Plays noetig"
+
+    Ein einziger neuer Play hat die Hochrechnung um den Faktor 12 bewegt. Ich hatte Lucas daraus
+    „rund vier Monate" gerechnet — das war meine zweite zu praezise Aussage an dem Tag.
+
+    Nachgemessen per Bootstrap auf den echten Konjunktions-Zeilen (4.000 Ziehungen):
+
+        bei n=15   Median  71   5–95 %      9 –  5833   ·  in 32 % der Ziehungen gar nicht positiv
+        bei n=30   Median 166   5–95 %     31 – 11543   ·  in 19 %
+        bei n=49   Median 131   5–95 %     20 –  8681   ·  in 25 %
+
+    Die Entfernung ist bei diesen Stichproben schlicht **nicht schaetzbar**. Eine einzelne Zahl
+    dorthin zu schreiben ist derselbe Fehler wie ein ROI ohne Untergrenze — nur eine Ebene
+    hoeher: diesmal traegt der Punktschaetzer der PROGNOSE keine Schranke.
+
+    Zurueck kommt deshalb nie eine nackte Zahl, sondern {median, lo, hi, nieAnteil, schaetzbar}.
+    `schaetzbar` ist falsch, sobald die Spanne ueber eine Groessenordnung geht oder ein
+    nennenswerter Teil der Ziehungen gar keinen positiven Schnitt hat.
+    """
+    xs = [float(x) for x in (werte or []) if isinstance(x, (int, float))]
+    if len(xs) < NOETIG_MIN_N:
+        return None
+    import random as _r
+    rng = _r.Random(saat)
+    endlich, nie = [], 0
+    for _ in range(ziehungen):
+        probe = [xs[rng.randrange(len(xs))] for _ in xs]
+        k = noetiges_n(probe)
+        if k:
+            endlich.append(k)
+        else:
+            nie += 1
+    if not endlich:
+        return {"median": None, "lo": None, "hi": None, "nieAnteil": 1.0, "schaetzbar": False}
+    endlich.sort()
+    lo = endlich[int(0.05 * (len(endlich) - 1))]
+    hi = endlich[int(0.95 * (len(endlich) - 1))]
+    med = endlich[len(endlich) // 2]
+    nie_anteil = nie / float(ziehungen)
+    # Schaetzbar heisst: die Spanne bleibt innerhalb einer Groessenordnung UND der Schnitt ist
+    # in fast allen Ziehungen positiv. Beides ist heute bei keiner Schublade der Fall — genau
+    # das soll die Oberflaeche sagen duerfen, statt eine Zahl zu erfinden.
+    # Zwei Wege zu „schaetzbar": entweder liegt selbst das pessimistische Ende schon unter der
+    # Mindestzahl — dann ist die Prognose gar nicht die bindende Groesse, sondern MIN_N —, oder
+    # die Spanne bleibt innerhalb einer Groessenordnung. Ohne den ersten Zweig faellt eine sehr
+    # enge Verteilung durch, nur weil 14 mehr als das Zehnfache von 1 ist.
+    schaetzbar = (nie_anteil <= 0.10) and (hi <= MIN_N or hi <= 10 * max(1, lo))
+    return {"median": med, "lo": lo, "hi": hi,
+            "nieAnteil": round(nie_anteil, 3), "schaetzbar": bool(schaetzbar)}
 
 
 def bewerte(name: str, strom: str, renditen, clvs, meta=None, letzter=None, now=None) -> dict:
@@ -198,17 +264,37 @@ def bewerte(name: str, strom: str, renditen, clvs, meta=None, letzter=None, now=
     # Die echte Entfernung zur Freigabe, nicht nur die zur Mindestzahl. `MIN_N` ist die
     # Schwelle, ab der ueberhaupt gerechnet wird — nicht die, ab der etwas belegt ist.
     _n_roi, _n_clv = noetiges_n(renditen), noetiges_n(clvs)
+    _ent = entfernung(renditen)
     _weit = ""
     if n < MIN_N:
-        if _n_roi is None:
+        if _n_roi is None and _ent is None:
+            _weit = " · für eine Hochrechnung sind es noch zu wenige Plays"
+        elif _n_roi is None:
             _weit = (" · der ROI-Schnitt ist nicht positiv — mehr Plays bestätigen das, "
                      "sie drehen es nicht")
+        elif _ent and not _ent["schaetzbar"]:
+            # Der ehrliche Fall, und heute der einzige: die Entfernung schwankt ueber
+            # Groessenordnungen. „Noch 248" waere hier so falsch wie „noch 15".
+            _weit = (" · wie weit es bis zu einem Beleg ist, lässt sich bei %d Plays NICHT "
+                     "schätzen (Bootstrap: %d bis %d Plays, und in %d %% der Ziehungen ist der "
+                     "Schnitt gar nicht positiv)"
+                     % (n, _ent["lo"], _ent["hi"], round(100 * _ent["nieAnteil"])))
         else:
-            _fehlt = max(0, _n_roi - n)
-            _weit = (" · für einen ROI-Beleg wären bei diesem Schnitt und dieser Streuung "
-                     "rund %d Plays nötig%s" % (_n_roi, (", also noch ~%d" % _fehlt) if _fehlt else ""))
-            if _n_clv is not None and _n_clv <= n:
-                _weit += " — der CLV ist bereits belegt"
+            _ziel_roi = max(_n_roi, MIN_N)   # unter der Mindestzahl wird nicht geurteilt
+            _fehlt = max(0, _ziel_roi - n)
+            _weit = (" · für einen ROI-Beleg wären rund %d Plays nötig%s"
+                     % (_ziel_roi, (", also noch ~%d" % _fehlt) if _fehlt else ""))
+        # 🔴 Dritte Ueberbehauptung an diesem Abend, und sie stand schon in einer Nachricht an
+        # Lucas: „der CLV ist bereits belegt". Belegt heisst hier IMMER: Untergrenze ueber null.
+        # `untergrenze` hat einen harten Boden bei UG_MIN_N=30 — unterhalb davon gibt es gar
+        # keine, also kann dort auch nichts belegt sein. Was stimmt, ist etwas anderes und
+        # nuetzlicheres: der CLV waere mit einem Bruchteil der Plays belegbar. Das ist eine
+        # Aussage ueber die BINDENDE Huerde, keine ueber einen Beweis.
+        if clv_lb is not None and clv_lb > MIN_CLV_LB:
+            _weit += " — der CLV ist bereits belegt"
+        elif _n_clv is not None and _n_roi is not None and _n_clv * 4 <= _n_roi:
+            _weit += (" — die bindende Hürde ist der ROI: der CLV wäre schon nach ~%d Plays "
+                      "belegbar" % max(_n_clv, MIN_N))
 
     if n < KANDIDAT_N:
         status, grund = "sammelt", f"{n} von {MIN_N} Plays{_weit}"
@@ -240,6 +326,9 @@ def bewerte(name: str, strom: str, renditen, clvs, meta=None, letzter=None, now=
         # gar nicht) und nicht wieder „noch 15" schreibt, wo ~248 gemeint sind.
         "noetigNRoi": _n_roi,
         "noetigNClv": _n_clv,
+        # Die Prognose MIT ihrer eigenen Schranke — ohne die ist sie nur ein Punktschaetzer
+        # eine Ebene hoeher (s. `entfernung`).
+        "entfernung": _ent,
         "alterTage": round(alter, 1) if alter is not None else None,
         **(meta or {}),
     }
