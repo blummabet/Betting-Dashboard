@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-07T05:40:16.919786+00:00",
+ "generatedAt": "2026-09-07T06:10:17.796492+00:00",
  "engine": "2026-09-01",
  "engineGefiltert": true,
  "regeln": {
@@ -242,7 +242,7 @@
    "fehltN": 0,
    "noetigNRoi": 82,
    "noetigNClv": null,
-   "alterTage": 0.7,
+   "alterTage": 0.8,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "Liga"
@@ -520,7 +520,7 @@
    "fehltN": 0,
    "noetigNRoi": 3444,
    "noetigNClv": null,
-   "alterTage": 0.7,
+   "alterTage": 0.8,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "MLS"
@@ -622,6 +622,27 @@
    "naeherung": false
   },
   {
+   "schublade": "Conviction 6",
+   "strom": "poly",
+   "n": 85,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0637,
+   "roiLb": -0.2072,
+   "clv": -0.961,
+   "clvLb": -2.262,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "alterTage": 0.0,
+   "art": "conviction",
+   "wert": 6,
+   "nAlt": 109,
+   "roiAlt": -0.038,
+   "clvAlt": 0.072,
+   "engineAlt": true
+  },
+  {
    "schublade": "Argentinian Primera Nacional · Match Odds",
    "strom": "betfair",
    "n": 36,
@@ -637,27 +658,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "Conviction 6",
-   "strom": "poly",
-   "n": 84,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.0692,
-   "roiLb": -0.2142,
-   "clv": -0.829,
-   "clvLb": -2.128,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "alterTage": 0.1,
-   "art": "conviction",
-   "wert": 6,
-   "nAlt": 109,
-   "roiAlt": -0.038,
-   "clvAlt": 0.072,
-   "engineAlt": true
   },
   {
    "schublade": "Argentinian Primera Nacional · Over/Under 2.5 Goals",
@@ -723,7 +723,7 @@
    "fehltN": 0,
    "noetigNRoi": null,
    "noetigNClv": null,
-   "alterTage": 0.1,
+   "alterTage": 0.2,
    "art": "conviction",
    "wert": 5,
    "nAlt": 135,
@@ -851,6 +851,34 @@
    "naeherung": false
   },
   {
+   "schublade": "🔒 Poly-Auswahl · von Betfair bestätigt",
+   "strom": "poly",
+   "n": 68,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.0968,
+   "roiLb": -0.2899,
+   "clv": -0.279,
+   "clvLb": -1.981,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "alterTage": 0.0,
+   "art": "vorangemeldet",
+   "angemeldet": "2026-09-01T18:59:52.671883+00:00",
+   "zielN": 60,
+   "warum": "Die einzige Untergruppe der Rangliste mit einer ROI-Untergrenze ueber null. Traegt nicht die Menge der Poly-Signale, sondern die eine FREMDE Stimme: ohne Betfair liegen dieselben Plays bei -5,1% (n=425).",
+   "quelle": "poly_shortlist_track.json → settled",
+   "nDavor": 75,
+   "rueckblick": {
+    "n": 75,
+    "roi": 0.1811,
+    "roiLb": 0.0106,
+    "clv": 0.24,
+    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
+   }
+  },
+  {
    "schublade": "English Sky Bet League 2 · Over/Under 2.5 Goals",
    "strom": "betfair",
    "n": 33,
@@ -866,34 +894,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "🔒 Poly-Auswahl · von Betfair bestätigt",
-   "strom": "poly",
-   "n": 67,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.1042,
-   "roiLb": -0.2998,
-   "clv": -0.104,
-   "clvLb": -1.807,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "alterTage": 0.1,
-   "art": "vorangemeldet",
-   "angemeldet": "2026-09-01T18:59:52.671883+00:00",
-   "zielN": 60,
-   "warum": "Die einzige Untergruppe der Rangliste mit einer ROI-Untergrenze ueber null. Traegt nicht die Menge der Poly-Signale, sondern die eine FREMDE Stimme: ohne Betfair liegen dieselben Plays bei -5,1% (n=425).",
-   "quelle": "poly_shortlist_track.json → settled",
-   "nDavor": 75,
-   "rueckblick": {
-    "n": 75,
-    "roi": 0.1811,
-    "roiLb": 0.0106,
-    "clv": 0.24,
-    "hinweis": "Anlass der Anmeldung — NICHT Teil des Urteils (rueckwaerts geschnitten)"
-   }
   },
   {
    "schublade": "Japanese J League · First Half Goals 1.5",
@@ -1015,6 +1015,27 @@
    "naeherung": false
   },
   {
+   "schublade": "Mix bf+money",
+   "strom": "poly",
+   "n": 53,
+   "status": "geprueft",
+   "grund": "ROI nicht belegt über null",
+   "roi": -0.1432,
+   "roiLb": -0.3539,
+   "clv": -1.104,
+   "clvLb": -3.014,
+   "fehltN": 0,
+   "noetigNRoi": null,
+   "noetigNClv": null,
+   "alterTage": 0.0,
+   "art": "mix",
+   "wert": "bf+money",
+   "nAlt": 60,
+   "roiAlt": 0.1637,
+   "clvAlt": 0.233,
+   "engineAlt": true
+  },
+  {
    "schublade": "Italian Serie C · Over/Under 3.5 Goals",
    "strom": "betfair",
    "n": 30,
@@ -1030,27 +1051,6 @@
    "alterTage": null,
    "art": "liga_markt",
    "naeherung": false
-  },
-  {
-   "schublade": "Mix bf+money",
-   "strom": "poly",
-   "n": 52,
-   "status": "geprueft",
-   "grund": "ROI nicht belegt über null",
-   "roi": -0.1536,
-   "roiLb": -0.3677,
-   "clv": -0.894,
-   "clvLb": -2.81,
-   "fehltN": 0,
-   "noetigNRoi": null,
-   "noetigNClv": null,
-   "alterTage": 0.1,
-   "art": "mix",
-   "wert": "bf+money",
-   "nAlt": 60,
-   "roiAlt": 0.1637,
-   "clvAlt": 0.233,
-   "engineAlt": true
   },
   {
    "schublade": "Mix money+steam",
@@ -1383,7 +1383,7 @@
    "fehltN": 28,
    "noetigNRoi": 1,
    "noetigNClv": 10,
-   "alterTage": 0.4,
+   "alterTage": 0.5,
    "art": "conviction",
    "wert": 3
   },
@@ -1400,7 +1400,7 @@
    "fehltN": 28,
    "noetigNRoi": null,
    "noetigNClv": null,
-   "alterTage": 7.7,
+   "alterTage": 7.8,
    "art": "verdict",
    "wert": "BET",
    "datensatz": "MLS"
@@ -1657,7 +1657,7 @@
    "clv": -2.199,
    "clvLb": -2.679,
    "fehltN": 0,
-   "alterTage": 49.7,
+   "alterTage": 49.8,
    "art": "verdict",
    "wert": "ABWÄGEN",
    "datensatz": "WM"
@@ -1673,7 +1673,7 @@
    "clv": -0.609,
    "clvLb": null,
    "fehltN": 0,
-   "alterTage": 64.7,
+   "alterTage": 64.8,
    "art": "verdict",
    "wert": "BET",
    "datensatz": "WM"
