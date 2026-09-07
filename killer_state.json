@@ -204,7 +204,7 @@
    "markt": "Match Odds",
    "seite": "home",
    "name": "Rizespor",
-   "odd": 1.92,
+   "odd": 1.89,
    "entryOdd": 1.91,
    "anteilPct": 97,
    "stufe": 2,
@@ -223,7 +223,7 @@
    "pinnMovePP": null,
    "punkte": {
     "punkte": 6,
-    "moeglich": 7,
+    "moeglich": 10,
     "dauerH": 21.09,
     "teile": [
      {
@@ -234,23 +234,29 @@
       "moeglich": 3,
       "grund": {
        "ok": true,
-       "text": "Geld 97% auf der Seite"
+       "text": "Geld 94% auf der Seite"
       },
       "tiefe": {
        "ok": true,
        "text": "frischer Zufluss und Quote zieht mit"
       },
-      "text": "Geld 97% auf der Seite"
+      "text": "Geld 94% auf der Seite"
      },
      {
       "buch": "POLY",
       "name": "Polymarket",
-      "status": "unbekannt",
+      "status": "nein",
       "punkte": 0,
-      "moeglich": 0,
-      "grund": null,
-      "tiefe": null,
-      "text": "Polymarket nicht erhoben"
+      "moeglich": 3,
+      "grund": {
+       "ok": false,
+       "text": "Poly-Preis 52% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "text": "Poly-Preis 52% auf derselben Seite"
      },
      {
       "buch": "PIN",
@@ -285,9 +291,11 @@
    },
    "wertVsPinn": null,
    "gehaltenSeit": "2026-09-06T19:54:26.248976+00:00",
-   "zuletztAktiv": "2026-09-06T19:54:26.248976+00:00",
+   "zuletztAktiv": "2026-09-07T07:10:21.839068+00:00",
    "haltePreis": 1.92,
-   "aktiv": false
+   "aktiv": true,
+   "polyKey": "tur-riz-ala-2026-09-07",
+   "polySide": "Çaykur Rizespor"
   },
   "36017249|Match Odds": {
    "matchId": "36017249",
@@ -390,6 +398,118 @@
    "zuletztAktiv": "2026-09-07T05:53:59.767969+00:00",
    "haltePreis": 1.8,
    "aktiv": false
+  },
+  "35979407|Match Odds": {
+   "matchId": "35979407",
+   "home": "Cagliari",
+   "away": "Lecce",
+   "league": "Italian Serie A",
+   "kickoff": "2026-09-07T16:30:00Z",
+   "markt": "Match Odds",
+   "seite": "home",
+   "name": "Cagliari",
+   "odd": 2.16,
+   "entryOdd": 2.1,
+   "anteilPct": 70,
+   "stufe": 2,
+   "verstaerker": [
+    {
+     "art": "pinn",
+     "text": "Pinnacle stimmt zu",
+     "gewicht": 10
+    },
+    {
+     "art": "streak",
+     "text": "Ungeschlagen ×5",
+     "gewicht": 8
+    }
+   ],
+   "rang": 75.0,
+   "track": null,
+   "streak": {
+    "art": "Ungeschlagen",
+    "laenge": 5,
+    "quote": 69,
+    "liga": "Serie A"
+   },
+   "poly": null,
+   "polyStatus": "nein",
+   "polyKey": "sea-cag-lec-2026-09-07",
+   "polySide": "Cagliari Calcio",
+   "pinnMovePP": -1.5,
+   "punkte": {
+    "punkte": 6,
+    "moeglich": 10,
+    "dauerH": 9.08,
+    "teile": [
+     {
+      "buch": "BF",
+      "name": "Betfair",
+      "status": "ja",
+      "punkte": 3,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "Geld 70% auf der Seite"
+      },
+      "tiefe": {
+       "ok": true,
+       "text": "frischer Zufluss und Quote zieht mit"
+      },
+      "text": "Geld 70% auf der Seite"
+     },
+     {
+      "buch": "POLY",
+      "name": "Polymarket",
+      "status": "nein",
+      "punkte": 0,
+      "moeglich": 3,
+      "grund": {
+       "ok": false,
+       "text": "Poly-Preis 46% auf derselben Seite"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "kein bewiesenes Wallet auf der Seite"
+      },
+      "text": "Poly-Preis 46% auf derselben Seite"
+     },
+     {
+      "buch": "PIN",
+      "name": "Pinnacle",
+      "status": "ja",
+      "punkte": 2,
+      "moeglich": 3,
+      "grund": {
+       "ok": true,
+       "text": "hat dieselbe Seite als Favorit"
+      },
+      "tiefe": {
+       "ok": false,
+       "text": "Move -1.5pp in unsere Richtung"
+      },
+      "text": "hat dieselbe Seite als Favorit"
+     },
+     {
+      "buch": "ZEIT",
+      "name": "Dauer",
+      "status": "ja",
+      "punkte": 1,
+      "moeglich": 1,
+      "grund": {
+       "ok": true,
+       "text": "steht seit 9.1h vor Anpfiff"
+      },
+      "tiefe": null,
+      "text": "steht seit 9.1h vor Anpfiff"
+     }
+    ]
+   },
+   "wertVsPinn": -0.0055,
+   "gehaltenSeit": "2026-09-07T07:25:23.328289+00:00",
+   "zuletztAktiv": "2026-09-07T07:25:23.328289+00:00",
+   "haltePreis": 2.16,
+   "aktiv": true
   }
  }
 }
