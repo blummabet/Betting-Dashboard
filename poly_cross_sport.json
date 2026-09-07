@@ -1,5 +1,5 @@
 {
- "generatedAt": "2026-09-07T03:31:17.159646+00:00",
+ "generatedAt": "2026-09-07T04:01:17.941447+00:00",
  "sports": [
   "americanfootball_nfl",
   "baseball_mlb",
@@ -30,7 +30,36 @@
  },
  "trackRecord": {
   "tracked": 290,
-  "converged": 65
+  "converged": 67
  },
- "discrepancies": []
+ "discrepancies": [
+  {
+   "id": "baseball_mlb|losangelesdodgers-washingtonnationals|washingtonnationals",
+   "sport": "baseball_mlb",
+   "event": "Washington Nationals vs Los Angeles Dodgers",
+   "market": "Moneyline",
+   "outcome": "Washington Nationals",
+   "polyPP": 58.0,
+   "pinnPP": 41.1,
+   "gapPP": 16.88,
+   "vol": 1280198,
+   "richtung": "Poly zu hoch → faden",
+   "convergePP": 9.38,
+   "firstSeen": "2026-09-05T02:57:06.574017+00:00"
+  },
+  {
+   "id": "baseball_mlb|losangelesdodgers-washingtonnationals|losangelesdodgers",
+   "sport": "baseball_mlb",
+   "event": "Washington Nationals vs Los Angeles Dodgers",
+   "market": "Moneyline",
+   "outcome": "Los Angeles Dodgers",
+   "polyPP": 42.0,
+   "pinnPP": 58.9,
+   "gapPP": -16.88,
+   "vol": 1280198,
+   "richtung": "Poly zu niedrig → backen",
+   "convergePP": 9.38,
+   "firstSeen": "2026-09-05T02:57:06.574017+00:00"
+  }
+ ]
 }
