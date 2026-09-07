@@ -1,6 +1,6 @@
 {
-"generatedAt": "2026-09-07T12:10:55.695091+00:00",
-"n": 139,
+"generatedAt": "2026-09-07T12:25:58.289532+00:00",
+"n": 141,
 "hinweis": "Zweitmeinungen OHNE die Radar-Volumenschwelle — Quelle fuer den Buecher-Punktestand. `games` in betfair_consensus.json bleibt die Radar-Liste.",
 "anker": {
 "36043006": {
@@ -59,14 +59,28 @@
 "kickoff": "2026-09-07T11:00:00Z",
 "verdict": "no_anchor"
 },
-"36013822": {
-"moneySide": "draw",
-"moneyName": "The Draw",
-"poly": null,
+"36013832": {
+"moneySide": "away",
+"moneyName": "Orlando City",
+"poly": {
+"vol": 8555,
+"odd": 4.26,
+"sharePct": 49,
+"shareSrc": "geld",
+"key": "mls-min-orl-2026-08-29",
+"sideKey": "Orlando City SC",
+"whales": [
+{
+"wallet": "0x240a1e22b913099a96acd7221a09ade7684f814c",
+"usd": 636
+}
+],
+"whaleUsd": 636
+},
 "pinn": {
-"home": 0.3677,
-"draw": 0.2675,
-"away": 0.3648,
+"home": 0.4597,
+"draw": 0.2373,
+"away": 0.303,
 "fav": "home"
 },
 "pinnMove": null,
@@ -104,28 +118,14 @@
 "kickoff": "2026-09-09T23:30:00Z",
 "verdict": "uneinig"
 },
-"36013832": {
-"moneySide": "away",
-"moneyName": "Orlando City",
-"poly": {
-"vol": 8555,
-"odd": 4.26,
-"sharePct": 49,
-"shareSrc": "geld",
-"key": "mls-min-orl-2026-08-29",
-"sideKey": "Orlando City SC",
-"whales": [
-{
-"wallet": "0x240a1e22b913099a96acd7221a09ade7684f814c",
-"usd": 636
-}
-],
-"whaleUsd": 636
-},
+"36013822": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": null,
 "pinn": {
-"home": 0.4597,
-"draw": 0.2373,
-"away": 0.303,
+"home": 0.3677,
+"draw": 0.2675,
+"away": 0.3648,
 "fav": "home"
 },
 "pinnMove": null,
@@ -172,6 +172,54 @@
 "kickoff": "2026-09-10T00:00:00Z",
 "verdict": "uneinig"
 },
+"36013830": {
+"moneySide": "home",
+"moneyName": "Minnesota Utd",
+"poly": {
+"vol": 438,
+"odd": 1.94,
+"sharePct": 52,
+"shareSrc": "preis",
+"key": "mls-min-dal-2026-09-09",
+"sideKey": "Minnesota United FC",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.5141,
+"draw": 0.2337,
+"away": 0.2523,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "US MLS",
+"kickoff": "2026-09-10T00:30:00Z",
+"verdict": "konsens"
+},
+"36013811": {
+"moneySide": "home",
+"moneyName": "Houston Dynamo",
+"poly": {
+"vol": 337,
+"odd": 1.82,
+"sharePct": 55,
+"shareSrc": "preis",
+"key": "mls-hou-rsl-2026-09-09",
+"sideKey": "Houston Dynamo",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.5416,
+"draw": 0.24,
+"away": 0.2184,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "US MLS",
+"kickoff": "2026-09-10T00:30:00Z",
+"verdict": "konsens"
+},
 "36013823": {
 "moneySide": "home",
 "moneyName": "Chicago Fire",
@@ -209,30 +257,6 @@
 "kickoff": "2026-09-10T00:30:00Z",
 "verdict": "konsens"
 },
-"36013830": {
-"moneySide": "home",
-"moneyName": "Minnesota Utd",
-"poly": {
-"vol": 438,
-"odd": 1.94,
-"sharePct": 52,
-"shareSrc": "preis",
-"key": "mls-min-dal-2026-09-09",
-"sideKey": "Minnesota United FC",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.5141,
-"draw": 0.2337,
-"away": 0.2523,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "US MLS",
-"kickoff": "2026-09-10T00:30:00Z",
-"verdict": "konsens"
-},
 "36013803": {
 "moneySide": "home",
 "moneyName": "Austin FC",
@@ -246,69 +270,6 @@
 "pinnMove": null,
 "league": "US MLS",
 "kickoff": "2026-09-10T00:30:00Z",
-"verdict": "konsens"
-},
-"36013811": {
-"moneySide": "home",
-"moneyName": "Houston Dynamo",
-"poly": {
-"vol": 337,
-"odd": 1.82,
-"sharePct": 55,
-"shareSrc": "preis",
-"key": "mls-hou-rsl-2026-09-09",
-"sideKey": "Houston Dynamo",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.5416,
-"draw": 0.24,
-"away": 0.2184,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "US MLS",
-"kickoff": "2026-09-10T00:30:00Z",
-"verdict": "konsens"
-},
-"36013833": {
-"moneySide": "away",
-"moneyName": "St Louis City SC",
-"poly": {
-"vol": 380,
-"odd": 3.08,
-"sharePct": 32,
-"shareSrc": "preis",
-"key": "mls-por-stl-2026-09-09",
-"sideKey": "St. Louis City SC",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.4193,
-"draw": 0.2525,
-"away": 0.3282,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "US MLS",
-"kickoff": "2026-09-10T02:30:00Z",
-"verdict": "uneinig"
-},
-"36013824": {
-"moneySide": "home",
-"moneyName": "San Diego FC",
-"poly": null,
-"pinn": {
-"home": 0.5245,
-"draw": 0.2223,
-"away": 0.2532,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "US MLS",
-"kickoff": "2026-09-10T02:30:00Z",
 "verdict": "konsens"
 },
 "36037637": {
@@ -340,6 +301,30 @@
 "kickoff": "2026-09-10T02:30:00Z",
 "verdict": "konsens"
 },
+"36013833": {
+"moneySide": "away",
+"moneyName": "St Louis City SC",
+"poly": {
+"vol": 380,
+"odd": 3.08,
+"sharePct": 32,
+"shareSrc": "preis",
+"key": "mls-por-stl-2026-09-09",
+"sideKey": "St. Louis City SC",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.4193,
+"draw": 0.2525,
+"away": 0.3282,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "US MLS",
+"kickoff": "2026-09-10T02:30:00Z",
+"verdict": "uneinig"
+},
 "36013825": {
 "moneySide": "away",
 "moneyName": "LA Galaxy",
@@ -363,6 +348,69 @@
 "league": "US MLS",
 "kickoff": "2026-09-10T02:30:00Z",
 "verdict": "uneinig"
+},
+"36013824": {
+"moneySide": "home",
+"moneyName": "San Diego FC",
+"poly": null,
+"pinn": {
+"home": 0.5245,
+"draw": 0.2223,
+"away": 0.2532,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "US MLS",
+"kickoff": "2026-09-10T02:30:00Z",
+"verdict": "konsens"
+},
+"36017387": {
+"moneySide": "home",
+"moneyName": "Marko",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Greek Super League 2",
+"kickoff": "2026-09-07T13:00:00Z",
+"verdict": "no_anchor"
+},
+"36043015": {
+"moneySide": "home",
+"moneyName": "Korea DPR U20 (W)",
+"poly": {
+"vol": 4199,
+"odd": 1.22,
+"sharePct": 82,
+"shareSrc": "preis",
+"key": "u20wwc-dpr-por-2026-09-07",
+"sideKey": "DPR Korea",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": null,
+"pinnMove": null,
+"league": "FIFA Ladies U20 World Cup",
+"kickoff": "2026-09-07T13:00:00Z",
+"verdict": "no_anchor"
+},
+"36040097": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": {
+"vol": 32146,
+"odd": null,
+"sharePct": null,
+"shareSrc": null,
+"key": "tur-riz-ala-2026-09-07",
+"sideKey": null,
+"whales": [],
+"whaleUsd": 0
+},
+"pinn": null,
+"pinnMove": null,
+"league": "Turkish U19",
+"kickoff": "2026-09-07T13:00:00Z",
+"verdict": "no_anchor"
 },
 "36039846": {
 "moneySide": "draw",
@@ -393,54 +441,6 @@
 "kickoff": "2026-09-07T13:00:00Z",
 "verdict": "no_anchor"
 },
-"36043015": {
-"moneySide": "home",
-"moneyName": "Korea DPR U20 (W)",
-"poly": {
-"vol": 4199,
-"odd": 1.22,
-"sharePct": 82,
-"shareSrc": "preis",
-"key": "u20wwc-dpr-por-2026-09-07",
-"sideKey": "DPR Korea",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": null,
-"pinnMove": null,
-"league": "FIFA Ladies U20 World Cup",
-"kickoff": "2026-09-07T13:00:00Z",
-"verdict": "no_anchor"
-},
-"36017387": {
-"moneySide": "home",
-"moneyName": "Marko",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Greek Super League 2",
-"kickoff": "2026-09-07T13:00:00Z",
-"verdict": "no_anchor"
-},
-"36040097": {
-"moneySide": "draw",
-"moneyName": "The Draw",
-"poly": {
-"vol": 32146,
-"odd": null,
-"sharePct": null,
-"shareSrc": null,
-"key": "tur-riz-ala-2026-09-07",
-"sideKey": null,
-"whales": [],
-"whaleUsd": 0
-},
-"pinn": null,
-"pinnMove": null,
-"league": "Turkish U19",
-"kickoff": "2026-09-07T13:00:00Z",
-"verdict": "no_anchor"
-},
 "36041897": {
 "moneySide": "home",
 "moneyName": "Ajman U23",
@@ -461,22 +461,62 @@
 "kickoff": "2026-09-07T13:50:00Z",
 "verdict": "no_anchor"
 },
+"36042321": {
+"moneySide": "home",
+"moneyName": "CA Penarol (Res)",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Uruguayan Reserves",
+"kickoff": "2026-09-07T14:00:00Z",
+"verdict": "no_anchor"
+},
 "36038519": {
-"moneySide": "away",
-"moneyName": "El Geish",
+"moneySide": "draw",
+"moneyName": "The Draw",
 "poly": {
 "vol": 18583,
-"odd": 3.64,
-"sharePct": 1,
-"shareSrc": "geld",
+"odd": null,
+"sharePct": null,
+"shareSrc": null,
 "key": "egy1-elq-teg-2026-09-07",
-"sideKey": "El Qanah Club",
+"sideKey": null,
 "whales": [],
 "whaleUsd": 0
 },
 "pinn": null,
 "pinnMove": null,
 "league": "Egyptian Premier",
+"kickoff": "2026-09-07T14:00:00Z",
+"verdict": "no_anchor"
+},
+"36017529": {
+"moneySide": "home",
+"moneyName": "Kallithea",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Greek Super League 2",
+"kickoff": "2026-09-07T14:00:00Z",
+"verdict": "no_anchor"
+},
+"36023876": {
+"moneySide": "away",
+"moneyName": "76 Igdir Belediyespor",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Turkish 1 Lig",
+"kickoff": "2026-09-07T14:00:00Z",
+"verdict": "no_anchor"
+},
+"36038731": {
+"moneySide": "home",
+"moneyName": "FK Struga Trim-Lum",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Republic of North Macedonian Soccer",
 "kickoff": "2026-09-07T14:00:00Z",
 "verdict": "no_anchor"
 },
@@ -496,16 +536,6 @@
 "pinn": null,
 "pinnMove": null,
 "league": "Egyptian Premier",
-"kickoff": "2026-09-07T14:00:00Z",
-"verdict": "no_anchor"
-},
-"36042321": {
-"moneySide": "home",
-"moneyName": "CA Penarol (Res)",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Uruguayan Reserves",
 "kickoff": "2026-09-07T14:00:00Z",
 "verdict": "no_anchor"
 },
@@ -540,36 +570,6 @@
 "pinn": null,
 "pinnMove": null,
 "league": "Qatari Stars League 2",
-"kickoff": "2026-09-07T14:00:00Z",
-"verdict": "no_anchor"
-},
-"36038731": {
-"moneySide": "home",
-"moneyName": "FK Struga Trim-Lum",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Republic of North Macedonian Soccer",
-"kickoff": "2026-09-07T14:00:00Z",
-"verdict": "no_anchor"
-},
-"36017529": {
-"moneySide": "home",
-"moneyName": "Kallithea",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Greek Super League 2",
-"kickoff": "2026-09-07T14:00:00Z",
-"verdict": "no_anchor"
-},
-"36023876": {
-"moneySide": "away",
-"moneyName": "76 Igdir Belediyespor",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Turkish 1 Lig",
 "kickoff": "2026-09-07T14:00:00Z",
 "verdict": "no_anchor"
 },
@@ -612,6 +612,26 @@
 "kickoff": "2026-09-07T14:30:00Z",
 "verdict": "no_anchor"
 },
+"36041778": {
+"moneySide": "home",
+"moneyName": "Montevideo CT (Res)",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Uruguayan Reserves",
+"kickoff": "2026-09-07T15:00:00Z",
+"verdict": "no_anchor"
+},
+"36039134": {
+"moneySide": "away",
+"moneyName": "Skanstes SK",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Latvian 1 Liga",
+"kickoff": "2026-09-07T15:00:00Z",
+"verdict": "no_anchor"
+},
 "36013750": {
 "moneySide": "home",
 "moneyName": "Asteras Tripolis",
@@ -627,16 +647,6 @@
 "kickoff": "2026-09-07T15:00:00Z",
 "verdict": "konsens"
 },
-"36039134": {
-"moneySide": "away",
-"moneyName": "Skanstes SK",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Latvian 1 Liga",
-"kickoff": "2026-09-07T15:00:00Z",
-"verdict": "no_anchor"
-},
 "36021040": {
 "moneySide": "draw",
 "moneyName": "The Draw",
@@ -644,16 +654,6 @@
 "pinn": null,
 "pinnMove": null,
 "league": "Slovakian 2 Liga",
-"kickoff": "2026-09-07T15:00:00Z",
-"verdict": "no_anchor"
-},
-"36041778": {
-"moneySide": "home",
-"moneyName": "Montevideo CT (Res)",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Uruguayan Reserves",
 "kickoff": "2026-09-07T15:00:00Z",
 "verdict": "no_anchor"
 },
@@ -667,39 +667,39 @@
 "kickoff": "2026-09-07T15:00:00Z",
 "verdict": "no_anchor"
 },
-"36032449": {
-"moneySide": "draw",
-"moneyName": "The Draw",
-"poly": {
-"vol": 30712,
-"odd": null,
-"sharePct": null,
-"shareSrc": null,
-"key": "spl-riy-nsr-2026-08-21",
-"sideKey": null,
-"whales": [],
-"whaleUsd": 0
-},
-"pinn": {
-"home": 0.4195,
-"draw": 0.2609,
-"away": 0.3196,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "Saudi Professional League",
-"kickoff": "2026-09-07T15:30:00Z",
-"verdict": "uneinig"
-},
 "36039888": {
-"moneySide": "draw",
-"moneyName": "The Draw",
+"moneySide": "home",
+"moneyName": "Al-Adalh",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
 "league": "Saudi 1st Division",
 "kickoff": "2026-09-07T15:30:00Z",
 "verdict": "no_anchor"
+},
+"36032449": {
+"moneySide": "away",
+"moneyName": "Al Riyadh SC",
+"poly": {
+"vol": 30712,
+"odd": 13.33,
+"sharePct": 1,
+"shareSrc": "geld",
+"key": "spl-riy-nsr-2026-08-21",
+"sideKey": "Al Riyadh Saudi Club",
+"whales": [],
+"whaleUsd": 0
+},
+"pinn": {
+"home": 0.3948,
+"draw": 0.2665,
+"away": 0.3386,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "Saudi Professional League",
+"kickoff": "2026-09-07T15:30:00Z",
+"verdict": "uneinig"
 },
 "36024562": {
 "moneySide": "draw",
@@ -763,26 +763,6 @@
 "kickoff": "2026-09-07T16:00:00Z",
 "verdict": "no_anchor"
 },
-"36040854": {
-"moneySide": "home",
-"moneyName": "Spain U20 (W)",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "FIFA Ladies U20 World Cup",
-"kickoff": "2026-09-07T16:00:00Z",
-"verdict": "no_anchor"
-},
-"36033996": {
-"moneySide": "home",
-"moneyName": "FC Telavi",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Georgian Erovnuli Liga 2",
-"kickoff": "2026-09-07T16:00:00Z",
-"verdict": "no_anchor"
-},
 "36034020": {
 "moneySide": "away",
 "moneyName": "Ludogorets Razgrad B",
@@ -790,6 +770,65 @@
 "pinn": null,
 "pinnMove": null,
 "league": "Bulgarian B League",
+"kickoff": "2026-09-07T16:00:00Z",
+"verdict": "no_anchor"
+},
+"36024736": {
+"moneySide": "home",
+"moneyName": "FK Riga",
+"poly": {
+"vol": 2853,
+"odd": 1.24,
+"sharePct": 80,
+"shareSrc": "preis",
+"key": "lva1-rfc-bfc-2026-09-07",
+"sideKey": "Riga FC",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": null,
+"pinnMove": null,
+"league": "Latvian Virsliga",
+"kickoff": "2026-09-07T16:00:00Z",
+"verdict": "no_anchor"
+},
+"36040851": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Israeli National League",
+"kickoff": "2026-09-07T16:00:00Z",
+"verdict": "no_anchor"
+},
+"36038259": {
+"moneySide": "away",
+"moneyName": "FK Backa Topola",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Serbian First League",
+"kickoff": "2026-09-07T16:00:00Z",
+"verdict": "no_anchor"
+},
+"36033996": {
+"moneySide": "away",
+"moneyName": "Samtredia",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Georgian Erovnuli Liga 2",
+"kickoff": "2026-09-07T16:00:00Z",
+"verdict": "no_anchor"
+},
+"36024811": {
+"moneySide": "home",
+"moneyName": "Rigas Futbola Skola",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Latvian Virsliga",
 "kickoff": "2026-09-07T16:00:00Z",
 "verdict": "no_anchor"
 },
@@ -826,16 +865,6 @@
 "kickoff": "2026-09-07T16:00:00Z",
 "verdict": "konsens"
 },
-"36040851": {
-"moneySide": "draw",
-"moneyName": "The Draw",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Israeli National League",
-"kickoff": "2026-09-07T16:00:00Z",
-"verdict": "no_anchor"
-},
 "36017483": {
 "moneySide": "home",
 "moneyName": "Klubi-04",
@@ -846,86 +875,23 @@
 "kickoff": "2026-09-07T16:00:00Z",
 "verdict": "no_anchor"
 },
-"36016325": {
-"moneySide": "home",
-"moneyName": "Pafos FC",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Cypriot 1st Division",
-"kickoff": "2026-09-07T16:00:00Z",
-"verdict": "no_anchor"
-},
-"36024811": {
-"moneySide": "home",
-"moneyName": "Rigas Futbola Skola",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Latvian Virsliga",
-"kickoff": "2026-09-07T16:00:00Z",
-"verdict": "no_anchor"
-},
-"36024736": {
-"moneySide": "home",
-"moneyName": "FK Riga",
-"poly": {
-"vol": 2853,
-"odd": 1.24,
-"sharePct": 80,
-"shareSrc": "preis",
-"key": "lva1-rfc-bfc-2026-09-07",
-"sideKey": "Riga FC",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": null,
-"pinnMove": null,
-"league": "Latvian Virsliga",
-"kickoff": "2026-09-07T16:00:00Z",
-"verdict": "no_anchor"
-},
-"36038259": {
+"36042193": {
 "moneySide": "away",
-"moneyName": "FK Backa Topola",
+"moneyName": "Namungo FC",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
-"league": "Serbian First League",
+"league": "Tanzanian Premier League",
 "kickoff": "2026-09-07T16:00:00Z",
 "verdict": "no_anchor"
 },
-"36017396": {
-"moneySide": "away",
-"moneyName": "Zaglebie Lubin",
-"poly": {
-"vol": 8025,
-"odd": 3.51,
-"sharePct": 28,
-"shareSrc": "preis",
-"key": "pol-wie-zag-2026-09-07",
-"sideKey": "Zaglebie Lubin",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.4552,
-"draw": 0.2589,
-"away": 0.2859,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "Polish Ekstraklasa",
-"kickoff": "2026-09-07T16:00:00Z",
-"verdict": "uneinig"
-},
-"36042251": {
-"moneySide": "draw",
-"moneyName": "The Draw",
+"36040854": {
+"moneySide": "home",
+"moneyName": "Spain U20 (W)",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
-"league": "Israeli National League",
+"league": "FIFA Ladies U20 World Cup",
 "kickoff": "2026-09-07T16:00:00Z",
 "verdict": "no_anchor"
 },
@@ -958,6 +924,26 @@
 "kickoff": "2026-09-07T16:00:00Z",
 "verdict": "no_anchor"
 },
+"36042251": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Israeli National League",
+"kickoff": "2026-09-07T16:00:00Z",
+"verdict": "no_anchor"
+},
+"36016325": {
+"moneySide": "home",
+"moneyName": "Pafos FC",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Cypriot 1st Division",
+"kickoff": "2026-09-07T16:00:00Z",
+"verdict": "no_anchor"
+},
 "36034019": {
 "moneySide": "away",
 "moneyName": "Hebar",
@@ -978,15 +964,29 @@
 "kickoff": "2026-09-07T16:00:00Z",
 "verdict": "no_anchor"
 },
-"36042193": {
+"36017396": {
 "moneySide": "away",
-"moneyName": "Namungo FC",
-"poly": null,
-"pinn": null,
+"moneyName": "Zaglebie Lubin",
+"poly": {
+"vol": 8025,
+"odd": 3.51,
+"sharePct": 28,
+"shareSrc": "preis",
+"key": "pol-wie-zag-2026-09-07",
+"sideKey": "Zaglebie Lubin",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.4535,
+"draw": 0.262,
+"away": 0.2845,
+"fav": "home"
+},
 "pinnMove": null,
-"league": "Tanzanian Premier League",
+"league": "Polish Ekstraklasa",
 "kickoff": "2026-09-07T16:00:00Z",
-"verdict": "no_anchor"
+"verdict": "uneinig"
 },
 "36039239": {
 "moneySide": "home",
@@ -1024,6 +1024,16 @@
 "pinnMove": null,
 "league": "Israeli Premier League",
 "kickoff": "2026-09-07T16:45:00Z",
+"verdict": "no_anchor"
+},
+"36039014": {
+"moneySide": "home",
+"moneyName": "Vardar Skopje",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Republic of North Macedonian Soccer",
+"kickoff": "2026-09-07T17:00:00Z",
 "verdict": "no_anchor"
 },
 "36016193": {
@@ -1077,6 +1087,50 @@
 "kickoff": "2026-09-07T17:00:00Z",
 "verdict": "no_anchor"
 },
+"36041835": {
+"moneySide": "home",
+"moneyName": "Club Oriental (Res)",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Uruguayan Reserves",
+"kickoff": "2026-09-07T17:00:00Z",
+"verdict": "no_anchor"
+},
+"36016198": {
+"moneySide": "home",
+"moneyName": "Malmo FF",
+"poly": {
+"vol": 3983,
+"odd": 1.77,
+"sharePct": 56,
+"shareSrc": "preis",
+"key": "swe-mal-aik-2026-09-07",
+"sideKey": "Malmo FF",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.5555,
+"draw": 0.2302,
+"away": 0.2142,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "Swedish Allsvenskan",
+"kickoff": "2026-09-07T17:00:00Z",
+"verdict": "konsens"
+},
+"36018262": {
+"moneySide": "home",
+"moneyName": "Aris FC Limassol",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Cypriot 1st Division",
+"kickoff": "2026-09-07T17:00:00Z",
+"verdict": "no_anchor"
+},
 "36017430": {
 "moneySide": "draw",
 "moneyName": "The Draw",
@@ -1096,15 +1150,29 @@
 "kickoff": "2026-09-07T17:00:00Z",
 "verdict": "no_anchor"
 },
-"36039014": {
+"36016199": {
 "moneySide": "home",
-"moneyName": "Vardar Skopje",
-"poly": null,
-"pinn": null,
+"moneyName": "Mjallby",
+"poly": {
+"vol": 1829,
+"odd": 2.41,
+"sharePct": 42,
+"shareSrc": "preis",
+"key": "swe-mja-ifk-2026-09-07",
+"sideKey": "Mjallby AIF",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.4099,
+"draw": 0.2725,
+"away": 0.3176,
+"fav": "home"
+},
 "pinnMove": null,
-"league": "Republic of North Macedonian Soccer",
+"league": "Swedish Allsvenskan",
 "kickoff": "2026-09-07T17:00:00Z",
-"verdict": "no_anchor"
+"verdict": "konsens"
 },
 "36015194": {
 "moneySide": "home",
@@ -1133,64 +1201,15 @@
 "whaleUsd": 14359
 },
 "pinn": {
-"home": 0.4882,
-"draw": 0.2794,
-"away": 0.2324,
+"home": 0.4768,
+"draw": 0.283,
+"away": 0.2402,
 "fav": "home"
 },
 "pinnMove": null,
 "league": "Turkish Super League",
 "kickoff": "2026-09-07T17:00:00Z",
 "verdict": "konsens"
-},
-"36025212": {
-"moneySide": "home",
-"moneyName": "Mardin Buyuksehir Beled",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Turkish 1 Lig",
-"kickoff": "2026-09-07T17:00:00Z",
-"verdict": "no_anchor"
-},
-"36026863": {
-"moneySide": "draw",
-"moneyName": "The Draw",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Portuguese Segunda Liga",
-"kickoff": "2026-09-07T17:00:00Z",
-"verdict": "no_anchor"
-},
-"36041835": {
-"moneySide": "home",
-"moneyName": "Club Oriental (Res)",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Uruguayan Reserves",
-"kickoff": "2026-09-07T17:00:00Z",
-"verdict": "no_anchor"
-},
-"36019579": {
-"moneySide": "home",
-"moneyName": "Hapoel Tel Aviv",
-"poly": {
-"vol": 5085,
-"odd": 1.44,
-"sharePct": 70,
-"shareSrc": "preis",
-"key": "isr-hta-rgg-2026-09-07",
-"sideKey": "Hapoel Tel Aviv FC",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": null,
-"pinnMove": null,
-"league": "Israeli Premier League",
-"kickoff": "2026-09-07T17:00:00Z",
-"verdict": "no_anchor"
 },
 "36038780": {
 "moneySide": "away",
@@ -1226,9 +1245,9 @@
 "moneyName": "Midtjylland",
 "poly": null,
 "pinn": {
-"home": 0.4931,
-"draw": 0.2491,
-"away": 0.2577,
+"home": 0.4954,
+"draw": 0.2477,
+"away": 0.2569,
 "fav": "home"
 },
 "pinnMove": null,
@@ -1236,39 +1255,34 @@
 "kickoff": "2026-09-07T17:00:00Z",
 "verdict": "konsens"
 },
-"36018262": {
-"moneySide": "draw",
-"moneyName": "The Draw",
+"36025212": {
+"moneySide": "home",
+"moneyName": "Mardin Buyuksehir Beled",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
-"league": "Cypriot 1st Division",
+"league": "Turkish 1 Lig",
 "kickoff": "2026-09-07T17:00:00Z",
 "verdict": "no_anchor"
 },
-"36016198": {
+"36019579": {
 "moneySide": "home",
-"moneyName": "Malmo FF",
+"moneyName": "Hapoel Tel Aviv",
 "poly": {
-"vol": 3983,
-"odd": 1.77,
-"sharePct": 56,
+"vol": 5085,
+"odd": 1.44,
+"sharePct": 70,
 "shareSrc": "preis",
-"key": "swe-mal-aik-2026-09-07",
-"sideKey": "Malmo FF",
+"key": "isr-hta-rgg-2026-09-07",
+"sideKey": "Hapoel Tel Aviv FC",
 "whales": null,
 "whaleUsd": null
 },
-"pinn": {
-"home": 0.5559,
-"draw": 0.2293,
-"away": 0.2149,
-"fav": "home"
-},
+"pinn": null,
 "pinnMove": null,
-"league": "Swedish Allsvenskan",
+"league": "Israeli Premier League",
 "kickoff": "2026-09-07T17:00:00Z",
-"verdict": "konsens"
+"verdict": "no_anchor"
 },
 "36017466": {
 "moneySide": "draw",
@@ -1280,29 +1294,15 @@
 "kickoff": "2026-09-07T17:00:00Z",
 "verdict": "no_anchor"
 },
-"36016199": {
-"moneySide": "home",
-"moneyName": "Mjallby",
-"poly": {
-"vol": 1829,
-"odd": 2.41,
-"sharePct": 42,
-"shareSrc": "preis",
-"key": "swe-mja-ifk-2026-09-07",
-"sideKey": "Mjallby AIF",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": {
-"home": 0.4099,
-"draw": 0.2725,
-"away": 0.3176,
-"fav": "home"
-},
+"36026863": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": null,
+"pinn": null,
 "pinnMove": null,
-"league": "Swedish Allsvenskan",
+"league": "Portuguese Segunda Liga",
 "kickoff": "2026-09-07T17:00:00Z",
-"verdict": "konsens"
+"verdict": "no_anchor"
 },
 "36021442": {
 "moneySide": "draw",
@@ -1318,9 +1318,9 @@
 "whaleUsd": null
 },
 "pinn": {
-"home": 0.34,
-"draw": 0.2794,
-"away": 0.3806,
+"home": 0.3247,
+"draw": 0.2791,
+"away": 0.3961,
 "fav": "away"
 },
 "pinnMove": null,
@@ -1357,22 +1357,13 @@
 "kickoff": "2026-09-07T17:20:00Z",
 "verdict": "no_anchor"
 },
-"36020344": {
-"moneySide": "home",
-"moneyName": "Hapoel Be'er Sheva",
-"poly": {
-"vol": 5624,
-"odd": 2.41,
-"sharePct": 42,
-"shareSrc": "preis",
-"key": "isr-hbs-mta-2026-09-07",
-"sideKey": "Hapoel Be`er Sheva FC",
-"whales": null,
-"whaleUsd": null
-},
+"36025044": {
+"moneySide": "away",
+"moneyName": "Diosgyori",
+"poly": null,
 "pinn": null,
 "pinnMove": null,
-"league": "Israeli Premier League",
+"league": "Hungarian NB II",
 "kickoff": "2026-09-07T17:30:00Z",
 "verdict": "no_anchor"
 },
@@ -1395,6 +1386,25 @@
 "kickoff": "2026-09-07T17:30:00Z",
 "verdict": "no_anchor"
 },
+"36020344": {
+"moneySide": "home",
+"moneyName": "Hapoel Be'er Sheva",
+"poly": {
+"vol": 5624,
+"odd": 2.41,
+"sharePct": 42,
+"shareSrc": "preis",
+"key": "isr-hbs-mta-2026-09-07",
+"sideKey": "Hapoel Be`er Sheva FC",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": null,
+"pinnMove": null,
+"league": "Israeli Premier League",
+"kickoff": "2026-09-07T17:30:00Z",
+"verdict": "no_anchor"
+},
 "35986420": {
 "moneySide": "away",
 "moneyName": "Slavia Sofia",
@@ -1405,35 +1415,6 @@
 "kickoff": "2026-09-07T17:30:00Z",
 "verdict": "no_anchor"
 },
-"36025044": {
-"moneySide": "away",
-"moneyName": "Diosgyori",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Hungarian NB II",
-"kickoff": "2026-09-07T17:30:00Z",
-"verdict": "no_anchor"
-},
-"36015929": {
-"moneySide": "draw",
-"moneyName": "The Draw",
-"poly": {
-"vol": 555,
-"odd": null,
-"sharePct": null,
-"shareSrc": null,
-"key": "ned2-utr-ein-2026-09-07",
-"sideKey": null,
-"whales": null,
-"whaleUsd": null
-},
-"pinn": null,
-"pinnMove": null,
-"league": "Dutch Eerste Divisie",
-"kickoff": "2026-09-07T18:00:00Z",
-"verdict": "no_anchor"
-},
 "36042072": {
 "moneySide": "home",
 "moneyName": "Cerro Largo (Res)",
@@ -1441,6 +1422,35 @@
 "pinn": null,
 "pinnMove": null,
 "league": "Uruguayan Reserves",
+"kickoff": "2026-09-07T18:00:00Z",
+"verdict": "no_anchor"
+},
+"36029902": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": {
+"vol": 6015,
+"odd": null,
+"sharePct": null,
+"shareSrc": null,
+"key": "uru1-alb-pro-2026-09-05",
+"sideKey": null,
+"whales": null,
+"whaleUsd": null
+},
+"pinn": null,
+"pinnMove": null,
+"league": "Uruguayan Primera Division",
+"kickoff": "2026-09-07T18:00:00Z",
+"verdict": "no_anchor"
+},
+"36038734": {
+"moneySide": "home",
+"moneyName": "Reading U21",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "English U21 Premier League Cup",
 "kickoff": "2026-09-07T18:00:00Z",
 "verdict": "no_anchor"
 },
@@ -1460,6 +1470,35 @@
 "pinn": null,
 "pinnMove": null,
 "league": "Saudi U21 Elite League",
+"kickoff": "2026-09-07T18:00:00Z",
+"verdict": "no_anchor"
+},
+"36015955": {
+"moneySide": "home",
+"moneyName": "Jong PSV Eindhoven",
+"poly": {
+"vol": 35610,
+"odd": 3.33,
+"sharePct": 3,
+"shareSrc": "geld",
+"key": "ned2-dbo-ein-2026-08-21",
+"sideKey": "FC Eindhoven",
+"whales": [],
+"whaleUsd": 0
+},
+"pinn": null,
+"pinnMove": null,
+"league": "Dutch Eerste Divisie",
+"kickoff": "2026-09-07T18:00:00Z",
+"verdict": "no_anchor"
+},
+"36038743": {
+"moneySide": "away",
+"moneyName": "Peterborough United U21",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "English U21 Premier League Cup",
 "kickoff": "2026-09-07T18:00:00Z",
 "verdict": "no_anchor"
 },
@@ -1499,45 +1538,6 @@
 "kickoff": "2026-09-07T18:00:00Z",
 "verdict": "no_anchor"
 },
-"36038734": {
-"moneySide": "home",
-"moneyName": "Reading U21",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "English U21 Premier League Cup",
-"kickoff": "2026-09-07T18:00:00Z",
-"verdict": "no_anchor"
-},
-"36029902": {
-"moneySide": "draw",
-"moneyName": "The Draw",
-"poly": {
-"vol": 6015,
-"odd": null,
-"sharePct": null,
-"shareSrc": null,
-"key": "uru1-alb-pro-2026-09-05",
-"sideKey": null,
-"whales": null,
-"whaleUsd": null
-},
-"pinn": null,
-"pinnMove": null,
-"league": "Uruguayan Primera Division",
-"kickoff": "2026-09-07T18:00:00Z",
-"verdict": "no_anchor"
-},
-"36038743": {
-"moneySide": "away",
-"moneyName": "Peterborough United U21",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "English U21 Premier League Cup",
-"kickoff": "2026-09-07T18:00:00Z",
-"verdict": "no_anchor"
-},
 "36015843": {
 "moneySide": "away",
 "moneyName": "FK IMT Novi Beograd",
@@ -1557,25 +1557,6 @@
 "kickoff": "2026-09-07T18:00:00Z",
 "verdict": "no_anchor"
 },
-"36015955": {
-"moneySide": "home",
-"moneyName": "Jong PSV Eindhoven",
-"poly": {
-"vol": 35610,
-"odd": 3.33,
-"sharePct": 3,
-"shareSrc": "geld",
-"key": "ned2-dbo-ein-2026-08-21",
-"sideKey": "FC Eindhoven",
-"whales": [],
-"whaleUsd": 0
-},
-"pinn": null,
-"pinnMove": null,
-"league": "Dutch Eerste Divisie",
-"kickoff": "2026-09-07T18:00:00Z",
-"verdict": "no_anchor"
-},
 "36038892": {
 "moneySide": "draw",
 "moneyName": "The Draw",
@@ -1584,6 +1565,35 @@
 "pinnMove": null,
 "league": "English U21 Premier League Cup",
 "kickoff": "2026-09-07T18:00:00Z",
+"verdict": "no_anchor"
+},
+"36015929": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": {
+"vol": 555,
+"odd": null,
+"sharePct": null,
+"shareSrc": null,
+"key": "ned2-utr-ein-2026-09-07",
+"sideKey": null,
+"whales": null,
+"whaleUsd": null
+},
+"pinn": null,
+"pinnMove": null,
+"league": "Dutch Eerste Divisie",
+"kickoff": "2026-09-07T18:00:00Z",
+"verdict": "no_anchor"
+},
+"36024465": {
+"moneySide": "home",
+"moneyName": "Catania",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Italian Serie C",
+"kickoff": "2026-09-07T18:30:00Z",
 "verdict": "no_anchor"
 },
 "36018076": {
@@ -1602,16 +1612,6 @@
 "pinn": null,
 "pinnMove": null,
 "league": "Polish Ekstraklasa",
-"kickoff": "2026-09-07T18:30:00Z",
-"verdict": "no_anchor"
-},
-"36024465": {
-"moneySide": "home",
-"moneyName": "Catania",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Italian Serie C",
 "kickoff": "2026-09-07T18:30:00Z",
 "verdict": "no_anchor"
 },
@@ -1663,9 +1663,29 @@
 "kickoff": "2026-09-07T18:45:00Z",
 "verdict": "konsens"
 },
-"36020152": {
-"moneySide": "away",
-"moneyName": "Treviso",
+"36020215": {
+"moneySide": "draw",
+"moneyName": "The Draw",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Italian Serie C",
+"kickoff": "2026-09-07T19:00:00Z",
+"verdict": "no_anchor"
+},
+"36042245": {
+"moneySide": "home",
+"moneyName": "Sporting Braga U23",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Portuguese U23",
+"kickoff": "2026-09-07T19:00:00Z",
+"verdict": "no_anchor"
+},
+"36020174": {
+"moneySide": "draw",
+"moneyName": "The Draw",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
@@ -1697,16 +1717,6 @@
 "kickoff": "2026-09-07T19:00:00Z",
 "verdict": "uneinig"
 },
-"36020151": {
-"moneySide": "draw",
-"moneyName": "The Draw",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Italian Serie C",
-"kickoff": "2026-09-07T19:00:00Z",
-"verdict": "no_anchor"
-},
 "36020292": {
 "moneySide": "draw",
 "moneyName": "The Draw",
@@ -1714,26 +1724,6 @@
 "pinn": null,
 "pinnMove": null,
 "league": "Italian Serie C",
-"kickoff": "2026-09-07T19:00:00Z",
-"verdict": "no_anchor"
-},
-"36031407": {
-"moneySide": "home",
-"moneyName": "Guarani (Par)",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Paraguayan Primera Division",
-"kickoff": "2026-09-07T19:00:00Z",
-"verdict": "no_anchor"
-},
-"36042245": {
-"moneySide": "home",
-"moneyName": "Sporting Braga U23",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Portuguese U23",
 "kickoff": "2026-09-07T19:00:00Z",
 "verdict": "no_anchor"
 },
@@ -1747,9 +1737,19 @@
 "kickoff": "2026-09-07T19:00:00Z",
 "verdict": "no_anchor"
 },
-"36020215": {
-"moneySide": "draw",
-"moneyName": "The Draw",
+"36031407": {
+"moneySide": "home",
+"moneyName": "Guarani (Par)",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Paraguayan Primera Division",
+"kickoff": "2026-09-07T19:00:00Z",
+"verdict": "no_anchor"
+},
+"36020152": {
+"moneySide": "away",
+"moneyName": "Treviso",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
@@ -1757,7 +1757,7 @@
 "kickoff": "2026-09-07T19:00:00Z",
 "verdict": "no_anchor"
 },
-"36020174": {
+"36020151": {
 "moneySide": "draw",
 "moneyName": "The Draw",
 "poly": null,
@@ -1868,35 +1868,6 @@
 "kickoff": "2026-09-07T21:30:00Z",
 "verdict": "no_anchor"
 },
-"36031283": {
-"moneySide": "away",
-"moneyName": "Estudiantes de Merida",
-"poly": {
-"vol": 1553,
-"odd": 6.06,
-"sharePct": 16,
-"shareSrc": "preis",
-"key": "ven1-cfc-edm-2026-09-07",
-"sideKey": "Estudiantes de Merida",
-"whales": null,
-"whaleUsd": null
-},
-"pinn": null,
-"pinnMove": null,
-"league": "Venezuelan Primera Division",
-"kickoff": "2026-09-07T22:00:00Z",
-"verdict": "no_anchor"
-},
-"36028203": {
-"moneySide": "home",
-"moneyName": "Plaza Colonia",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Uruguayan Segunda Division",
-"kickoff": "2026-09-07T22:00:00Z",
-"verdict": "no_anchor"
-},
 "35975880": {
 "moneySide": "draw",
 "moneyName": "The Draw",
@@ -1921,38 +1892,33 @@
 "kickoff": "2026-09-07T22:00:00Z",
 "verdict": "uneinig"
 },
-"35982931": {
+"36031283": {
 "moneySide": "home",
-"moneyName": "EC Vitoria Salvador",
+"moneyName": "Carabobo FC",
 "poly": {
-"vol": 1986,
-"odd": 2.2,
-"sharePct": 46,
+"vol": 1553,
+"odd": 1.68,
+"sharePct": 60,
 "shareSrc": "preis",
-"key": "bra-vit-gre-2026-09-07",
-"sideKey": "EC Vitória",
+"key": "ven1-cfc-edm-2026-09-07",
+"sideKey": "Carabobo FC",
 "whales": null,
 "whaleUsd": null
 },
-"pinn": {
-"home": 0.4543,
-"draw": 0.2863,
-"away": 0.2594,
-"fav": "home"
-},
-"pinnMove": null,
-"league": "Brazilian Serie A",
-"kickoff": "2026-09-07T23:00:00Z",
-"verdict": "konsens"
-},
-"36031297": {
-"moneySide": "away",
-"moneyName": "Puerto Cabello",
-"poly": null,
 "pinn": null,
 "pinnMove": null,
 "league": "Venezuelan Primera Division",
-"kickoff": "2026-09-07T23:00:00Z",
+"kickoff": "2026-09-07T22:00:00Z",
+"verdict": "no_anchor"
+},
+"36028203": {
+"moneySide": "home",
+"moneyName": "Plaza Colonia",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Uruguayan Segunda Division",
+"kickoff": "2026-09-07T22:00:00Z",
 "verdict": "no_anchor"
 },
 "36019173": {
@@ -1979,6 +1945,79 @@
 "kickoff": "2026-09-07T23:00:00Z",
 "verdict": "konsens"
 },
+"35982931": {
+"moneySide": "home",
+"moneyName": "EC Vitoria Salvador",
+"poly": {
+"vol": 1986,
+"odd": 2.2,
+"sharePct": 46,
+"shareSrc": "preis",
+"key": "bra-vit-gre-2026-09-07",
+"sideKey": "EC Vitória",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": {
+"home": 0.4421,
+"draw": 0.2882,
+"away": 0.2697,
+"fav": "home"
+},
+"pinnMove": null,
+"league": "Brazilian Serie A",
+"kickoff": "2026-09-07T23:00:00Z",
+"verdict": "konsens"
+},
+"36043906": {
+"moneySide": "home",
+"moneyName": "Llaneros FC",
+"poly": {
+"vol": 4418,
+"odd": 2.78,
+"sharePct": 36,
+"shareSrc": "preis",
+"key": "col1-llf-cdt-2026-08-14",
+"sideKey": "Llaneros FC",
+"whales": null,
+"whaleUsd": null
+},
+"pinn": null,
+"pinnMove": null,
+"league": "Colombian Primera A",
+"kickoff": "2026-09-07T23:00:00Z",
+"verdict": "no_anchor"
+},
+"36031297": {
+"moneySide": "away",
+"moneyName": "Puerto Cabello",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Venezuelan Primera Division",
+"kickoff": "2026-09-07T23:00:00Z",
+"verdict": "no_anchor"
+},
+"36030062": {
+"moneySide": "home",
+"moneyName": "Excursionistas",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Argentinian Primera B Metropolitana",
+"kickoff": "2026-09-07T23:00:00Z",
+"verdict": "no_anchor"
+},
+"36029129": {
+"moneySide": "home",
+"moneyName": "Mushuc Runa",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Ecuadorian Serie A",
+"kickoff": "2026-09-08T00:00:00Z",
+"verdict": "no_anchor"
+},
 "36032345": {
 "moneySide": "home",
 "moneyName": "Orense Sporting Club",
@@ -1999,30 +2038,30 @@
 "kickoff": "2026-09-08T00:00:00Z",
 "verdict": "no_anchor"
 },
-"36029129": {
-"moneySide": "home",
-"moneyName": "Mushuc Runa",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Ecuadorian Serie A",
-"kickoff": "2026-09-08T00:00:00Z",
-"verdict": "no_anchor"
-},
 "35975904": {
 "moneySide": "away",
 "moneyName": "Instituto",
 "poly": null,
 "pinn": {
-"home": 0.3379,
-"draw": 0.3242,
-"away": 0.3379,
+"home": 0.3386,
+"draw": 0.3239,
+"away": 0.3375,
 "fav": "home"
 },
 "pinnMove": null,
 "league": "Argentinian Primera Division",
 "kickoff": "2026-09-08T00:15:00Z",
 "verdict": "uneinig"
+},
+"36038276": {
+"moneySide": "away",
+"moneyName": "Municipal Grecia",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Costa Rican Liga de Ascenso",
+"kickoff": "2026-09-08T01:00:00Z",
+"verdict": "no_anchor"
 },
 "36030016": {
 "moneySide": "draw",
@@ -2034,16 +2073,6 @@
 "kickoff": "2026-09-08T01:00:00Z",
 "verdict": "no_anchor"
 },
-"36038276": {
-"moneySide": "home",
-"moneyName": "A.D. Cofutpa",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Costa Rican Liga de Ascenso",
-"kickoff": "2026-09-08T01:00:00Z",
-"verdict": "no_anchor"
-},
 "36020727": {
 "moneySide": "draw",
 "moneyName": "The Draw",
@@ -2052,6 +2081,16 @@
 "pinnMove": null,
 "league": "Colombian Cup",
 "kickoff": "2026-09-08T01:15:00Z",
+"verdict": "no_anchor"
+},
+"36043275": {
+"moneySide": "home",
+"moneyName": "GD Estoril Praia U23",
+"poly": null,
+"pinn": null,
+"pinnMove": null,
+"league": "Portuguese U23",
+"kickoff": "2026-09-08T10:00:00Z",
 "verdict": "no_anchor"
 },
 "36043391": {
@@ -2067,16 +2106,6 @@
 "36043478": {
 "moneySide": "away",
 "moneyName": "Felgueiras U23",
-"poly": null,
-"pinn": null,
-"pinnMove": null,
-"league": "Portuguese U23",
-"kickoff": "2026-09-08T10:00:00Z",
-"verdict": "no_anchor"
-},
-"36043275": {
-"moneySide": "home",
-"moneyName": "GD Estoril Praia U23",
 "poly": null,
 "pinn": null,
 "pinnMove": null,
