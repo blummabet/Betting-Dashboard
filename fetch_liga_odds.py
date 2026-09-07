@@ -297,6 +297,26 @@ def soft_consensus(bks: list, home_name: str, away_name: str):
     gesetzte public_*-Felder. Orientierungs-agnostisch (per Name gemappt), rein/testbar."""
     acc = {k: [] for k in ("hw", "dr", "aw", "o15", "u15", "o25", "u25",
                            "o35", "u35", "bttsY", "bttsN")}
+    # 07.09.2026 — der teuerste Einzelfehler dieses Repos, gemessen:
+    #
+    # Fuer Value-Betting gegen einen entvigten Sharp-Anker (Buchdahl, 111.909 Quotenpaare /
+    # 37.303 Spiele: +2,5 % Yield ueber alle Value-Wetten, +5,7 % ab Schwelle 2 %) braucht man
+    # den PREIS, DEN MAN BEKOMMT — also das Maximum ueber die Buecher. Hier stand nur der
+    # Median. Gemessen an unseren eigenen 264 Spielen liegt der Median-Konsens
+    #
+    #     1X2       6,70 % unter dem fairen Preis (Shin-entvigtes Pinnacle)
+    #     Ü/U 2,5   6,19 % darunter
+    #     Ü/U 3,5   6,50 % darunter
+    #
+    # In 0,3 % der Faelle lag er ueberhaupt ueber fair. Ein Median-Konsens von 29 Buechern KANN
+    # per Konstruktion fast nie Value zeigen — er traegt die volle Soft-Marge (Overround-Median
+    # 6,63 % gegen 3,74 % bei Pinnacle). Wir haben 29 Buecher je Spiel geholt und 28 davon
+    # weggeworfen.
+    #
+    # Der Median bleibt (er ist der ehrliche „was verlangt der Markt"-Wert und faehrt alle
+    # bestehenden Vergleiche weiter); daneben steht ab jetzt das Maximum und WELCHES Buch es
+    # bietet — ohne den Buchnamen ist ein Bestpreis nicht nachspielbar.
+    beste = {}          # feld -> (quote, buch)
     books_1x2, n_ou, n_btts = [], 0, 0
     for b in _soft_bookmakers(bks):
         key = (b.get("key") or "").lower()
@@ -306,6 +326,9 @@ def soft_consensus(bks: list, home_name: str, away_name: str):
             if hw and dr and aw:
                 acc["hw"].append(hw); acc["dr"].append(dr); acc["aw"].append(aw)
                 books_1x2.append(key)
+                for _f, _v in (("hw", hw), ("dr", dr), ("aw", aw)):
+                    if _v > (beste.get(_f) or (0, None))[0]:
+                        beste[_f] = (_v, key)
         tot = (_market_outcomes(b, "totals") or []) + (_market_outcomes(b, "alternate_totals") or [])
         if tot:
             ou = _extract_ou(tot)
@@ -314,6 +337,8 @@ def soft_consensus(bks: list, home_name: str, away_name: str):
                 for kk, vv in ou.items():
                     if vv:
                         acc[kk].append(vv)
+                        if float(vv) > (beste.get(kk) or (0, None))[0]:
+                            beste[kk] = (float(vv), key)
         bt_outs = _market_outcomes(b, "btts")
         if bt_outs:
             bt = _extract_btts(bt_outs)
@@ -322,11 +347,21 @@ def soft_consensus(bks: list, home_name: str, away_name: str):
                 for kk, vv in bt.items():
                     if vv:
                         acc[kk].append(vv)
+                        if float(vv) > (beste.get(kk) or (0, None))[0]:
+                            beste[kk] = (float(vv), key)
     pub = {}
     for k, vals in acc.items():
         m = _median_odd(vals)
         if m is not None:
             pub[f"public_{k}"] = m
+        # Bestpreis nur, wenn mindestens ZWEI Buecher den Ausgang quotiert haben. Aus einem
+        # einzigen Buch ist „das Maximum" keine Auswahl, sondern derselbe Preis mit besserem
+        # Namen — und genau so entstuende Scheinvalue aus einem Ausreisser-Buch.
+        b = beste.get(k)
+        if b and len(vals) >= 2:
+            pub[f"best_{k}"] = round(b[0], 3)
+            pub[f"bestBook_{k}"] = b[1]
+            pub[f"nBooks_{k}"] = len(vals)
     return pub, books_1x2, n_ou, n_btts
 
 
@@ -369,6 +404,7 @@ def extract_prices(event: dict, orientation: str, home_name: str, away_name: str
 
 
 from odds_plausibility import plausible_1x2 as _plausible_1x2   # 13.07.2026: EINE Quelle
+from odds_plausibility import plausible_best_1x2 as _plausible_best_1x2   # 07.09.2026: Best-of-N darf unter 100 % summieren
 from odds_plausibility import derive_double_chance             # 25.07.2026: DC für Safer-Line
 from odds_plausibility import clean_snaps as _clean_snaps      # 10.08.2026: Selbstheilung Alt-Platzhalter
 # (08.07.2026, Lucas: Radar zeigte Fake-Drops bis -84pp.) Beim Markt-Opening liefert The Odds API
@@ -607,7 +643,11 @@ def append_snapshot(history: dict, key: str, prices: dict, now_iso: str, post_ko
     # Ghost-Moves-Fix gatete nur odds_open; hier ist die Schreibgrenze der Zeitreihe selbst.
     hw, dr, aw = prices.get("hw"), prices.get("dr"), prices.get("aw")
     if hw and dr and aw and _plausible_1x2(hw, dr, aw):
-        last_pinn = next((s for s in reversed(snaps) if s.get("bk") != "public"), None)
+        # 07.09.2026: hier stand `!= "public"`. Mit der neuen best-Spur haette das den letzten
+        # BESTPREIS-Snapshot als „letzten Pinnacle" gelesen — und der Aenderungs-Vergleich
+        # haette echte Pinnacle-Bewegungen verschluckt. Altzeilen ohne `bk` bleiben absichtlich
+        # eingeschlossen (die stammen aus der Zeit vor dem Feld).
+        last_pinn = next((s for s in reversed(snaps) if s.get("bk") not in ("public", "best")), None)
         _nb = _neben_felder("")
         if _snap_changed(last_pinn, hw, dr, aw, _nb):
             snaps.append({"ts": now_iso, "bk": "pinnacle", "hw": hw, "dr": dr, "aw": aw,
@@ -620,6 +660,21 @@ def append_snapshot(history: dict, key: str, prices: dict, now_iso: str, post_ko
         if _snap_changed(last_pub, phw, pdr, paw, _nbp):
             snaps.append({"ts": now_iso, "bk": "public", "hw": phw, "dr": pdr, "aw": paw,
                           **_nbp})
+            added += 1
+    # 07.09.2026: die BESTE verfuegbare Quote je Ausgang als eigene Spur. Sie ist der Preis, den
+    # man wirklich bekommt — der Median-Konsens daneben ist der Preis, den man NICHT bekommt.
+    # Ohne diese Spur ist Value gegen einen entvigten Sharp-Anker nicht messbar; mit dem Median
+    # lag sie an unseren 264 Spielen in 0,3 % der Faelle ueberhaupt ueber fair.
+    # `bestBook_*` wandert mit: ein Bestpreis ohne Buchnamen ist nicht nachspielbar.
+    bhw, bdr, baw = prices.get("best_hw"), prices.get("best_dr"), prices.get("best_aw")
+    if bhw and bdr and baw and _plausible_best_1x2(bhw, bdr, baw):
+        last_best = next((s for s in reversed(snaps) if s.get("bk") == "best"), None)
+        _nbb = _neben_felder("best_")
+        if _snap_changed(last_best, bhw, bdr, baw, _nbb):
+            _buecher = {("bb_" + k[len("bestBook_"):]): v
+                        for k, v in prices.items() if k.startswith("bestBook_")}
+            snaps.append({"ts": now_iso, "bk": "best", "hw": bhw, "dr": bdr, "aw": baw,
+                          **_nbb, **_buecher})
             added += 1
     return added
 

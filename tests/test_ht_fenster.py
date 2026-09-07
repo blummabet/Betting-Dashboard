@@ -93,7 +93,18 @@ class TestGegenEchteDaten(unittest.TestCase):
             spaet += 1
             self.assertIsNone(A.ht_alert(m),
                               f"{m.get('home')} v {m.get('away')} Min {t}: HZ-Alert nach der Pause")
-        self.assertGreater(spaet, 0, "keine Spiele nach der Pause im Feed — Test wertlos")
+        # 07.09.2026: hier stand `assertGreater(spaet, 0, "Test wertlos")`. Das machte den Test
+        # von der UHRZEIT abhaengig — um 07:30 UTC laeuft kein europaeisches Spiel, der
+        # Schnappschuss enthielt 0 von 130 Spielen nach Minute 45, und die ganze Suite war rot,
+        # obwohl nichts kaputt war. Zwoelfter Fall derselben Klasse in diesem Repo: ein Test
+        # haelt einen MOMENT fest statt einer Regel.
+        #
+        # Die Regel selbst bleibt scharf: liegt auch nur ein Spiel nach der Pause im Feed, darf
+        # keines davon einen HZ-Alert erzeugen (die Schleife oben prueft das). Liegt keines vor,
+        # ist die Aussage nicht pruefbar — und „nicht pruefbar" ist ein Skip, kein Fehlschlag.
+        if spaet == 0:
+            self.skipTest("gerade kein Spiel nach der Pause im Feed — die Regel ist hier "
+                          "nicht pruefbar (kein Befund, nur kein Material)")
 
 
 if __name__ == "__main__":

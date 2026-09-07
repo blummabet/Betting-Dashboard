@@ -44,6 +44,13 @@ jobs:
           FETCH_EXTRA_MARKETS: '1'   # 20.08.2026 (Lucas): Pinnacle-BTTS + alternate_totals pro Spiel holen (Credits aufgeladen) → fair_btts wird berechnet, BTTS handelbar statt ~Modell
         run: python fetch_liga_odds.py
 
+      # 07.09.2026 (Lucas: „wir brauchen eine Lösung, um mehr Edge zu generieren").
+      # Value gegen den entvigten Pinnacle-Anker, gemessen an der BESTEN von ~29 Quoten.
+      # Laeuft direkt nach dem Fetch, weil er genau dessen `best_*`-Felder liest.
+      - name: 🎯 Value-Scanner (Bestpreis gegen entvigtes Pinnacle)
+        run: python wert_scanner.py
+        continue-on-error: true
+
       - name: 📡 Liga Sharp-Moves erkennen (Radar)
         env:
           TELEGRAM_TOKEN:          ${{ secrets.TELEGRAM_TOKEN }}
@@ -111,6 +118,7 @@ jobs:
           git add health/liga-odds-dense.json 2>/dev/null || true
           git add liga-data.json 2>/dev/null || true
           git add liga-odds-history.json 2>/dev/null || true
+          git add wert_scanner.json 2>/dev/null || true             # Bestpreis gegen entvigtes Pinnacle
           git add liga_closing_lines.json 2>/dev/null || true
           git add liga_sharp_moves_log.json 2>/dev/null || true
           git add liga_sharp_dedup.json 2>/dev/null || true
