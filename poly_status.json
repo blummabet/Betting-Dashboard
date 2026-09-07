@@ -61,16 +61,17 @@
       "ok": true,
       "nFail": 0,
       "failures": [],
-      "note": "285 geprueft, davon 34 abgeschnitten"
+      "note": "288 geprueft, davon 34 abgeschnitten"
     },
     {
       "id": "settlement_alive",
       "label": "Settlement lebt (keine ewig offenen Positionen)",
       "severity": "error",
       "ok": false,
-      "nFail": 1,
+      "nFail": 2,
       "failures": [
-        "atp-virtane-dimitro-2026-08-27: seit 11.6 Tagen offen — keine Auflösung gefunden"
+        "atp-virtane-dimitro-2026-08-27: seit 11.7 Tagen offen — keine Auflösung gefunden",
+        "nor-ffk-bog-2026-09-04-more-markets: seit 3.0 Tagen offen — Auflösung existiert, matcht aber den Key nicht!"
       ],
       "note": "Paper-Positionen älter als 3 Tage, die nie abrechnen = Settlement-Key-Mismatch (Markt löst unter anderem Slug auf)."
     },
@@ -136,5 +137,5 @@
     }
   ],
   "nFail": 2,
-  "generatedAt": "2026-09-07T15:35:50.991862+00:00"
+  "generatedAt": "2026-09-07T16:06:52.307107+00:00"
 }
