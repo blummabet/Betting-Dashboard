@@ -741,7 +741,8 @@
     'pokal': ['Pokal', 'ein Pokalspiel ist kein Ligaspiel'],
     'frauen': ['Frauen', ''],
     'jugend': ['Jugend', ''],
-    'srl': ['Simulated Reality', 'simulierte Spiele — keine echte Partie']
+    'srl': ['Simulated Reality', 'simulierte Spiele — keine echte Partie'],
+    'reserve': ['Reserve', 'zweite Mannschaften — keine Spielklasse']
   };
   var _SR_KL_SPALTEN = ['<1.5x', '1.5-3x', '3-6x', '>6x'];
 
@@ -777,9 +778,18 @@
 
     // Kreuztabelle: Ebene × Einsatzgröße. Der Punkt der Ansicht ist, dass die Zeilen
     // GEGENLÄUFIG sind — deshalb stehen sie untereinander und nicht in getrennten Kacheln.
+    // Die Zeilen kommen aus dem ARTEFAKT, nicht aus der Beschriftungsliste unten. Andersherum
+    // wäre eine Ebene, die der Produzent kennt und der Renderer noch nicht, still aus der
+    // Tabelle gefallen — dieselbe Klasse wie „fehlende Information rendert als harmloser
+    // Default", nur ist der harmlose Default hier die Leerstelle. Die Liste liefert nur den
+    // Klartext; fehlt er, steht der rohe Schlüssel da und fällt auf.
     var k = r.kreuz || {};
-    var zeilen = Object.keys(_SR_KL_EBENE).filter(function (e) { return k[e]; }).map(function (e) {
-      var m = _SR_KL_EBENE[e];
+    var reihenfolge = Object.keys(_SR_KL_EBENE);
+    var zeilen = Object.keys(k).sort(function (a, b) {
+      var ia = reihenfolge.indexOf(a), ib = reihenfolge.indexOf(b);
+      return (ia < 0 ? 99 : ia) - (ib < 0 ? 99 : ib);
+    }).map(function (e) {
+      var m = _SR_KL_EBENE[e] || [e, 'noch ohne Beschriftung im Radar'];
       return '<tr><td><b>' + _srEsc(m[0]) + '</b>' +
         (m[1] ? '<div class="sr-mut sr-sm">' + _srEsc(m[1]) + '</div>' : '') +
         '<div class="sr-mut sr-sm">' + (r.jeEbene[e] || 0) + ' Wetten gesammelt</div></td>' +

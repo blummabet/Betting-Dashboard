@@ -85,7 +85,22 @@ jobs:
           RC=$?
           echo "Sammler rc=$RC (1 = nichts geholt; die Sicht sagt warum)"
 
-          for f in stake_highroller.json stake_bet_ledger.json; do
+          # 07.09.2026 (Lucas: „im Spielklasse Tab steht nur das ... hab Stake sogar die
+          # action laufen lassen nach dem push"). Und genau so war es: dieser Workflow hat
+          # nur GESAMMELT. Die Auswertung, aus der die Stake-Ansichten leben
+          # (stake_auswertung.json), entstand ausschliesslich in betfair.yml — der Job, der
+          # „Stake Radar" heisst, erzeugte kein einziges Stake-ARTEFAKT fuer das Dashboard.
+          # Wer nach einem Push von Hand nachlaedt, greift zum Job mit dem passenden Namen,
+          # und der tat dann nichts Sichtbares. Rollout-Luecke, dieselbe Klasse wie am 04.09.
+          # beim Auffaelligkeits-Mass: der Code war da, der Produzent nicht neu gelaufen.
+          #
+          # Nur die AUSWERTUNG, bewusst nicht stake_league_norm.py: die fuehrt einen
+          # wachsenden Stichprobenstand, und den soll die --ours-Konfliktaufloesung weiter
+          # unten nicht aus zwei Workflows gleichzeitig anfassen koennen. Der Norm-Stand
+          # waechst in betfair.yml alle 15 Minuten ohnehin weiter.
+          "${STAKE_PYTHON}" stake_analyse.py || echo "  ⚠️ Stake-Auswertung fehlgeschlagen (Sammlung steht trotzdem)"
+
+          for f in stake_highroller.json stake_bet_ledger.json stake_auswertung.json stake_vorregistrierung.json; do
             [ -f "$f" ] && git add "$f"
           done
           if git diff --staged --quiet; then

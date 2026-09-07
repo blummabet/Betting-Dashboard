@@ -48,6 +48,16 @@ test('fehlender Block sagt das, statt eine leere Tabelle zu zeigen', () => {
     'ohne den Block müsste dastehen, dass er fehlt');
 });
 
+test('eine dem Radar unbekannte Ebene fällt nicht aus der Tabelle', () => {
+  // 07.09.2026: am Tag nach dem Bau kam „Primera Division Reserve" dazu. Lief die
+  // Zeilenauswahl über die Beschriftungsliste im Renderer, wäre jede Ebene, die der
+  // Produzent kennt und das Frontend noch nicht, still verschwunden.
+  assert.match(CODE, /Object\.keys\(k\)/,
+    'die Zeilen kommen aus der Frontend-Liste statt aus dem Artefakt');
+  assert.match(CODE, /_SR_KL_EBENE\[e\] \|\|/,
+    'ohne Rückfall auf den rohen Schlüssel bleibt eine unbekannte Ebene unsichtbar');
+});
+
 test('Ligen ohne Ebene bleiben sichtbar', () => {
   assert.match(CODE, /nOhneEbene/,
     'eine Liga ohne Eintrag muss auffallen, nicht still als Ebene 1 zählen');

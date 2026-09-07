@@ -110,6 +110,13 @@ ART = {
 # nur die Faelle ab, bei denen der Slug die Antwort selbst mitbringt.
 _MUSTER = (
     ("srl", lambda s: s.endswith("-srl") or "-srl-" in s),          # Simulated Reality League
+    # 07.09.2026 — am Tag nach dem Bau tauchte „Primera Division Reserve, Clausura" auf und
+    # stand als einzige Liga ohne Ebene da. Eine Reserveliga ist keine Spielklasse: es sind
+    # zweite Mannschaften eines Vereins, die Aufstellung ist naeher an einer Jugendliga als
+    # an der Liga, deren Namen sie traegt. Deshalb eine eigene Marke statt einer Zahl — und
+    # als MUSTER, damit die naechste Reserveliga nicht wieder von Hand nachgetragen werden
+    # muss.
+    ("reserve", lambda s: "reserve" in s or s.endswith("-ii")),
     ("jugend", lambda s: s[:3] in ("u17", "u19", "u20", "u21", "u23")),
     ("frauen", lambda s: ("women" in s or "femenina" in s or "feminin" in s
                           or "damallsvenskan" in s or "frauen" in s)),

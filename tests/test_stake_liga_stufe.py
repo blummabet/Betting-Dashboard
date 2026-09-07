@@ -68,6 +68,15 @@ def test_wettbewerbe_bekommen_eine_marke_statt_einer_zahl():
     assert not LS.randliga("fa-cup")
 
 
+def test_reservemannschaften_sind_keine_spielklasse():
+    """07.09.2026 — am Tag nach dem Bau stand „Primera Division Reserve, Clausura" als
+    einzige Liga ohne Ebene da. Zweite Mannschaften sind keine Spielklasse; sie bekommen eine
+    Marke, und zwar per MUSTER, damit die naechste nicht wieder von Hand nachkommen muss."""
+    assert LS.stufe("primera-division-reserve-clausura") == "reserve"
+    assert LS.stufe("bundesliga-reserve") == "reserve"
+    assert not LS.randliga("primera-division-reserve-clausura")
+
+
 def test_srl_faellt_nicht_als_echte_liga_durch():
     """Simulated Reality League sind simulierte Spiele. Sie duerfen nicht als Ebene 1 gelten,
     nur weil der Slug wie die echte Liga anfaengt."""
