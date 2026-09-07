@@ -1,37 +1,37 @@
 {
-"generatedAt": "2026-09-06T23:54:41.022472+00:00",
+"generatedAt": "2026-09-07T00:09:36.545582+00:00",
 "byVerdict": {
 "konsens": {
-"n": 860,
+"n": 861,
 "wins": 718,
-"hitRate": 0.8349,
-"polyN": 806,
+"hitRate": 0.8339,
+"polyN": 807,
 "polyWins": 623,
-"polyHitRate": 0.773,
+"polyHitRate": 0.772,
 "pinnN": 90,
 "pinnHitRate": 0.8333,
-"nRoi": 188,
-"roi": 0.4832,
-"roiLb": 0.3926,
-"nClv": 188,
-"clv": 22.66,
-"clvLb": 19.7984
+"nRoi": 189,
+"roi": 0.4753,
+"roiLb": 0.3843,
+"nClv": 189,
+"clv": 22.46,
+"clvLb": 19.5979
 },
 "uneinig": {
-"n": 319,
+"n": 321,
 "wins": 102,
-"hitRate": 0.3197,
-"polyN": 283,
-"polyWins": 71,
-"polyHitRate": 0.2509,
-"pinnN": 187,
-"pinnHitRate": 0.6043,
-"nRoi": 87,
-"roi": -0.4544,
-"roiLb": -0.6117,
-"nClv": 87,
-"clv": -19.95,
-"clvLb": -25.719
+"hitRate": 0.3178,
+"polyN": 285,
+"polyWins": 72,
+"polyHitRate": 0.2526,
+"pinnN": 188,
+"pinnHitRate": 0.6011,
+"nRoi": 89,
+"roi": -0.4666,
+"roiLb": -0.6211,
+"nClv": 89,
+"clv": -20.58,
+"clvLb": -26.2566
 },
 "teil": {
 "n": 16,
@@ -161,6 +161,11 @@
 "wins": 13,
 "hitRate": 0.65
 },
+"North American Leagues Cup": {
+"n": 19,
+"wins": 12,
+"hitRate": 0.6316
+},
 "UEFA Europa League Qualifiers": {
 "n": 19,
 "wins": 15,
@@ -186,20 +191,15 @@
 "wins": 9,
 "hitRate": 0.5
 },
-"North American Leagues Cup": {
-"n": 18,
-"wins": 12,
-"hitRate": 0.6667
+"Colombian Primera A": {
+"n": 17,
+"wins": 10,
+"hitRate": 0.5882
 },
 "Italian Coppa Italia": {
 "n": 17,
 "wins": 12,
 "hitRate": 0.7059
-},
-"Colombian Primera A": {
-"n": 16,
-"wins": 10,
-"hitRate": 0.625
 },
 "German Bundesliga": {
 "n": 16,
@@ -222,9 +222,9 @@
 "hitRate": 0.4286
 },
 "Ecuadorian Serie A": {
-"n": 13,
+"n": 14,
 "wins": 9,
-"hitRate": 0.6923
+"hitRate": 0.6429
 },
 "Elite Friendlies": {
 "n": 13,
@@ -584,37 +584,94 @@
 },
 "byStrength": {
 "strong": {
-"n": 702,
+"n": 704,
 "wins": 564,
-"hitRate": 0.8034,
-"nRoi": 178,
-"roi": 0.2838,
-"roiLb": 0.1797,
-"nClv": 178,
-"clv": 13.94,
-"clvLb": 9.757
+"hitRate": 0.8011,
+"nRoi": 180,
+"roi": 0.2696,
+"roiLb": 0.1652,
+"nClv": 180,
+"clv": 13.25,
+"clvLb": 9.0442
 },
 "weak": {
-"n": 460,
+"n": 461,
 "wins": 241,
-"hitRate": 0.5239,
-"nRoi": 104,
-"roi": -0.0597,
-"roiLb": -0.221,
-"nClv": 104,
-"clv": -1.9,
-"clvLb": -7.0387
+"hitRate": 0.5228,
+"nRoi": 105,
+"roi": -0.0687,
+"roiLb": -0.2291,
+"nClv": 105,
+"clv": -2.02,
+"clvLb": -7.1145
 }
 },
 "divergence": {
-"n": 319,
+"n": 321,
 "betfairWins": 102,
-"betfairRate": 0.3197,
-"polyN": 283,
-"polyWins": 71,
-"polyRate": 0.2509
+"betfairRate": 0.3178,
+"polyN": 285,
+"polyWins": 72,
+"polyRate": 0.2526
 },
 "recent": [
+{
+"matchId": "36034101",
+"home": "Leon",
+"away": "CF America",
+"league": "North American Leagues Cup",
+"verdict": "uneinig",
+"moneySide": "away",
+"moneyName": "CF America",
+"polySide": "away",
+"winner": "home",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+1,
+0
+],
+"kickoff": "2026-09-06T22:00:00Z",
+"settledAt": "2026-09-07T00:09:36.393846+00:00"
+},
+{
+"matchId": "36032344",
+"home": "Delfin",
+"away": "Univ Catolica (Ecu)",
+"league": "Ecuadorian Serie A",
+"verdict": "uneinig",
+"moneySide": "draw",
+"moneyName": "The Draw",
+"polySide": "away",
+"winner": "away",
+"moneyWin": false,
+"polyWin": true,
+"ftScore": [
+0,
+1
+],
+"kickoff": "2026-09-06T21:00:00Z",
+"settledAt": "2026-09-07T00:09:36.393846+00:00"
+},
+{
+"matchId": "36029477",
+"home": "Internacional de Bogotá",
+"away": "Aguilas Doradas",
+"league": "Colombian Primera A",
+"verdict": "konsens",
+"moneySide": "home",
+"moneyName": "Internacional de Bogotá",
+"polySide": "home",
+"winner": "draw",
+"moneyWin": false,
+"polyWin": false,
+"ftScore": [
+2,
+2
+],
+"kickoff": "2026-09-06T21:00:00Z",
+"settledAt": "2026-09-07T00:09:36.393846+00:00"
+},
 {
 "matchId": "35975909",
 "home": "Central Cordoba (SdE)",
@@ -1317,75 +1374,18 @@
 ],
 "kickoff": "2026-09-06T13:00:00Z",
 "settledAt": "2026-09-06T16:09:00.859341+00:00"
-},
-{
-"matchId": "36015863",
-"home": "Hearts",
-"away": "Dundee",
-"league": "Scottish Premiership",
-"verdict": "uneinig",
-"moneySide": "home",
-"moneyName": "Hearts",
-"polySide": null,
-"winner": "home",
-"moneyWin": true,
-"polyWin": null,
-"ftScore": [
-2,
-1
-],
-"kickoff": "2026-09-06T14:00:00Z",
-"settledAt": "2026-09-06T16:09:00.859341+00:00"
-},
-{
-"matchId": "36015188",
-"home": "Corum Belediyespor",
-"away": "Eyupspor",
-"league": "Turkish Super League",
-"verdict": "konsens",
-"moneySide": "home",
-"moneyName": "Corum Belediyespor",
-"polySide": "home",
-"winner": "home",
-"moneyWin": true,
-"polyWin": true,
-"ftScore": [
-3,
-0
-],
-"kickoff": "2026-09-06T14:00:00Z",
-"settledAt": "2026-09-06T15:53:52.869718+00:00"
-},
-{
-"matchId": "36005151",
-"home": "SC Telstar",
-"away": "Cambuur Leeuwarden",
-"league": "Dutch Eredivisie",
-"verdict": "konsens",
-"moneySide": "away",
-"moneyName": "Cambuur Leeuwarden",
-"polySide": "home",
-"winner": "draw",
-"moneyWin": false,
-"polyWin": false,
-"ftScore": [
-2,
-2
-],
-"kickoff": "2026-09-06T12:30:00Z",
-"settledAt": "2026-09-06T15:39:02.776716+00:00"
 }
 ],
 "global": {
-"n": 1195,
+"n": 1198,
 "wins": 823,
-"hitRate": 0.6887,
-"nRoi": 282,
-"roi": 0.1571,
-"roiLb": 0.0672,
-"nClv": 282,
-"clv": 8.1,
-"clvLb": 4.7683
+"hitRate": 0.687,
+"nRoi": 285,
+"roi": 0.1449,
+"roiLb": 0.0552,
+"nClv": 285,
+"clv": 7.63,
+"clvLb": 4.2992
 },
-"pending": 16
+"pending": 13
 }
